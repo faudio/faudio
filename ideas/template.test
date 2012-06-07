@@ -1,0 +1,22 @@
+
+#include "sclaudiox.h"
+
+using namespace scorecleaner;
+
+void foo_before(SclTest* test)
+{                  
+}
+void foo_after(SclTest* test)
+{    
+}
+
+int foo_bar_p(SclTest* test)
+{ 
+}
+
+   
+void declare_tuple(SclTest* parent)
+{
+    SCL_TEST_SUITE_STD(parent, foo);
+    SCL_TEST_STD(foo, foo_bar);
+}

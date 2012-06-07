@@ -1,0 +1,117 @@
+##
+##   ScoreCleaner Audio Engine
+##
+##   Copyright (c) 2012 DoReMIR Music Research AB.
+##   All rights reserved.
+##
+
+##
+##   This file builds any of the following:
+##
+##     * An OS X framework (ScoreCleanerAudio.framework)
+##     * An OS X dynamic library (libsclaudio.dylib)
+##     * A Windows dynamic library (sclaudio.dll)
+##
+##   It can also build the sclaudio command line tool, which is useful for 
+##   testing the library without any need to link to external code.
+## 
+
+
+set(SCLAUDIOX_SOURCES sclaudiox/processor.cc
+                      sclaudiox/stream.cc
+                      
+                      sclaudiox/scheduling/future.cc
+                      
+                      sclaudiox/processor/plugin/au.mm
+                      sclaudiox/processor/plugin/vst2.cc
+                      sclaudiox/processor/synth/fluid.cc
+                      
+                      sclaudiox/device/audio.cc
+                      sclaudiox/device/midi.cc
+                      sclaudiox/device/session.cc
+                      sclaudiox/stream/device/audio.cc
+                      sclaudiox/stream/device/midi.cc
+                      
+                      sclaudiox/util/symbol.cc)
+                      
+                      
+set(SCLAUDIO_SOURCES  ${SCLAUDIOX_SOURCES}
+                      sclaudio.cc)
+
+
+##
+## Build library
+##
+
+message("Compiler definitions (library): ${SCLAUDIO_DEFINITIONS}")
+
+if(${SCLAUDIO_OSX})
+    option(BUILD_SCLAUDIO_DYLIB     "Build an OS X dynamic library" FALSE)
+    option(BUILD_SCLAUDIO_FRAMEWORK "Build an OS X framework"       TRUE)
+                     
+    if(${BUILD_SCLAUDIO_DYLIB})
+        message(FATAL_ERROR "Build of OS X dynamic library not supported yet")
+    endif()    
+    if(${BUILD_SCLAUDIO_FRAMEWORK})
+        add_library(SCLAUDIO SHARED ${SCLAUDIO_SOURCES})
+        set_target_properties(SCLAUDIO
+            PROPERTIES
+                OUTPUT_NAME                 "ScoreCleanerAudio"
+                FRAMEWORK                   TRUE
+                FRAMEWORK_VERSION           "${SCLAUDIO_VERSION}"
+                INSTALL_NAME_DIR            "@executable_path/../Frameworks/ScoreCleanerAudio.framework/ScoreCleanerAudio"
+                OSX_ARCHITECTURES           i386
+                XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0"
+                LIBRARY_OUTPUT_DIRECTORY    "../"
+                COMPILE_DEFINITIONS         "${SCLAUDIO_DEFINITIONS}")
+        target_link_libraries(SCLAUDIO ${SCLAUDIO_LIBRARIES})
+    endif()
+endif()
+
+
+if(${SCLAUDIO_WIN})
+    option(BUILD_SCLAUDIO_DLL "Build a Windows dynamic library" TRUE)
+    
+    if(${BUILD_SCLAUDIO_DLL})
+        add_library(SCLAUDIO SHARED ${SCLAUDIO_SOURCES})
+        set_target_properties(SCLAUDIO
+            PROPERTIES
+                OUTPUT_NAME              sclaudio
+                LIBRARY_OUTPUT_DIRECTORY ""
+                COMPILE_DEFINITIONS      "${SCLAUDIO_DEFINITIONS}")
+        target_link_libraries(SCLAUDIO ${SCLAUDIO_LIBRARIES})
+    endif()
+endif()
+
+
+
+##
+## Build command-line tool
+##
+
+option(BUILD_SCLAUDIO_CL "Build the sclaudio command-line tool" TRUE)
+
+if(${BUILD_SCLAUDIO_CL})
+    set(SCLAUDIO_CL_DEFINITIONS ${SCLAUDIO_DEFINITIONS})
+    message("Compiler definitions (command-line tool): ${SCLAUDIO_CL_DEFINITIONS}")
+
+    add_executable(SCLAUDIO_CL "main.cc")
+
+    if(${SCLAUDIO_OSX})
+        set_target_properties(SCLAUDIO_CL
+            PROPERTIES
+                OUTPUT_NAME                 "sclaudio"
+                OSX_ARCHITECTURES           i386
+                RUNTIME_OUTPUT_DIRECTORY    "../bin"
+            COMPILE_DEFINITIONS             "${SCLAUDIO_CL_DEFINITIONS}")
+    endif()
+    if(${SCLAUDIO_WIN})
+        set_target_properties(SCLAUDIO_CL
+            PROPERTIES
+                OUTPUT_NAME                 "sclaudio_test"
+                RUNTIME_OUTPUT_DIRECTORY    ""
+                COMPILE_DEFINITIONS         "${SCLAUDIO_CL_DEFINITIONS}")
+    endif()
+
+    target_link_libraries(SCLAUDIO_CL SCLAUDIO)           
+endif()

@@ -1,0 +1,17 @@
+The ScoreCleaner Audio Engine
+
+    * Processor
+        Constructing audio computations
+            * Analyzer (fold)
+            * Filter   (map)
+            * Synth    (unfold)
+    * Scheduler
+        Sending and receiving messages, controlling audio computation
+            * Send relative
+            * Send absolute
+    * Stream
+        Performing audio computation
+        
+        
+
+
