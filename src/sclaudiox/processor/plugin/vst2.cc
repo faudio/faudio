@@ -5,7 +5,6 @@
     All rights reserved.
  */
 
-// specific includes
 #include "pluginterfaces/vst2.x/aeffectx.h"
 
 #if _WIN32

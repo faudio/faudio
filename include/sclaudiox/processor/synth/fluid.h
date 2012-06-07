@@ -77,7 +77,6 @@ public:
     void process(AudioProcessingInformation& info, AudioProcessingBuffer &signal);
     void cleanup(AudioProcessingInformation& info, AudioProcessingBuffer &signal);
 private:
-    static void handleLogMessage(int level, char* message, void* data);
     FluidSynthData* mData;
 };
 
