@@ -5,8 +5,8 @@
     All rights reserved.
  */
 /**
-    \file    fluid.cc
-    \authors Hans Hoglund <hans.hoglund@doremir.com>
+    @file   sclaudiox/processor/synth/fluid.cc
+    @author Hans Hoglund
  */
 
 #include "fluidsynth.h"

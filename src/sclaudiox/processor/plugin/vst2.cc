@@ -4,6 +4,10 @@
     Copyright (c) 2012 DoReMIR Music Research AB.
     All rights reserved.
  */
+/**
+    @file   sclaudiox/processor/plugin/vst2.cc
+    @author Hans Hoglund
+ */
 
 #include "pluginterfaces/vst2.x/aeffectx.h"
 

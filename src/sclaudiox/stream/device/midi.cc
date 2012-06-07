@@ -4,6 +4,10 @@
     Copyright (c) 2012 DoReMIR Music Research AB.
     All rights reserved.
  */
+/**
+    @file   sclaudiox/stream/device/midi.cc
+    @author Hans Hoglund
+ */
 
 #include "sclaudiox/stream/device/midi.h"
 

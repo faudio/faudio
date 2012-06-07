@@ -4,6 +4,10 @@
     Copyright (c) 2012 DoReMIR Music Research AB.
     All rights reserved.
  */
+/**
+    @file   sclaudiox/processor/plugin/nil.cc
+    @author Hans Hoglund
+ */
 
 // specific includes
 

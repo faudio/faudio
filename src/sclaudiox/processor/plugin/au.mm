@@ -4,6 +4,10 @@
     Copyright (c) 2012 DoReMIR Music Research AB.
     All rights reserved.
  */
+/**
+    @file   sclaudiox/processor/plugin/au.mm
+    @author Hans Hoglund
+ */
 
 #include <AudioUnit/AudioUnit.h>
 #include <AudioUnit/AUCocoaUIView.h>

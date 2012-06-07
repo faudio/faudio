@@ -18,7 +18,7 @@ class NilPluginProcessorData;
 class NilPluginData;
 
 /**
-    Description of an Vst 2 plugin or processor.
+    Description of an NilPlugin or processor.
  */
 class NilPluginDescription : public PluginAudioProcessorDescription
 {
@@ -55,7 +55,7 @@ private:
 };
 
 /**
-    An Vst 2 plugin instance.
+    An NilPlugin instance.
  */
 class NilPluginProcessor : public PluginAudioProcessor
 {
@@ -89,7 +89,7 @@ private:
 };
 
 /**
-    An Vst 2 plugin.
+    An template audio plugin, useful as a starting point for plugin host implementations.
  */
 class NilPlugin : public AudioPlugin
 {
@@ -106,13 +106,13 @@ public:
     /* (see AudioPlugin) */
     void* nativePlugin();
     
-    /** Creates an VST-specific description of this plugin. */
-    NilPluginDescription* vst2PluginDescription();
+    /** Creates an Nil-specific description of this plugin. */
+    NilPluginDescription* nilPluginDescription();
 
-    /** Creates an VST-specific instance of this plugin. */
+    /** Creates an Nil-specific instance of this plugin. */
     NilPluginProcessor* createNilPluginProcessor();
 
-    static std::list<NilPlugin*> vst2Plugins(FilePath path);
+    // custom factory methods
 
 private:     
     NilPluginData* mData;

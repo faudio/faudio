@@ -4,6 +4,10 @@
     Copyright (c) 2012 DoReMIR Music Research AB.
     All rights reserved.
  */
+/**
+    @file   sclaudiox/device/audio.cc
+    @author Hans Hoglund
+ */
 
 #include "portaudio.h"
 #include "sclaudiox/device/audio.h"
