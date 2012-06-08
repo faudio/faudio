@@ -3,15 +3,6 @@ Build and install
 =========================
 
 
-Build requirements
-------------------
-
-  * CMake 2.8
-  * Supported compilers:
-    * Xcode 3.2
-    * Visual Studio (or Express) C++ 2010 
-    * GNU Make 3.8 with GCC 4.2
-  
 Dependencies
 ------------
 
@@ -23,22 +14,26 @@ Dependencies
 
   * Portaudio (for real-time audio)
   * Portmidi (for real-time midi)
-  * Sndfile (for file streams)
+  * libsndfile (for file streams)
   * Fluidsynth (for built in synthesis)
-  * Google Test (for running test suite)
+  * Google Test (for running the test suite)
 
-### For building
+### Build tools
 
-  * CMake
-
-### For documentation
+  * CMake 2.8 or later
+  * Supported build systems:
+    * GNU Make 3.8 with GCC 4.2
+    * Apple Developer Tools
+    * Visual Studio C++ 2010 
+  
+### Documentation tools
                                                   
   * Doxygen (for all documentation)
   * LaTeX (for PDF documentation)
-  * Haskell (for generating the Lisp documentation)
+  * Haskell Platform or GHC (for generating the Lisp documentation)
 
 
-OS X Build
+Basic build
 ----------
 
 All dependencies included except:

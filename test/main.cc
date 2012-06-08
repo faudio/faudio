@@ -6,6 +6,7 @@
 #include "sclaudiox/util/logging.h"
 #include "sclaudiox/util/symbol.h"
 #include "sclaudiox/processor/plugin/au.h"
+#include "sclaudiox/processor/synth/rand.h"
 
 // ASSERT EXPECT:
 
@@ -91,6 +92,7 @@ namespace test_cpp_api
 {
     using namespace doremir::scl;
 
+/*
     TEST(AudioDevices, AudioInputAvailable)
     {
         EXPECT_NO_THROW( AudioDevice::defaultInputDevice() );
@@ -121,30 +123,7 @@ namespace test_cpp_api
     }
     
     
-    TEST(FluidSynth, PlayNotes)
-    {
-        AudioProcessor*   synth  = new FluidSynth(SOUNDFONT_PATH);
-        AudioDevice*      in     = AudioDevice::defaultInputDevice();
-        AudioDevice*      out    = AudioDevice::defaultOutputDevice();
-        Stream*           stream = DeviceStream::open(in, out, synth);
-        MessageScheduler* sched  = stream->audioScheduler();
-    
-        stream->start();
-    
-        foreach( int p, list::create(0,2,4,5,7) )
-        {
-            Message on  = messageFrom(0x90, 60 + p, 70);
-            Message off = messageFrom(0x90, 60 + p, 0);
-    
-            sched->sendNow(list::create(on));
-            sched->sendLater(100, list::create(off));
-            sleepMillis(100);
-        }
-        sleepMillis(500);
-    
-    }
-    
-    
+
     TEST(Atomic, AtomicReplace)
     {
         Atomic<int> x (0);
@@ -241,6 +220,7 @@ namespace test_cpp_api
         x.decrement(1232);
         EXPECT_EQ( x.value(), 0 );    
     }
+*/
        
     // FIXME
 /*
@@ -305,20 +285,126 @@ namespace test_cpp_api
         EXPECT_NE( foo, bar );
     }
     
+    TEST(AudioUnit, Count)
+    {
+        std::list<AudioUnit*> units = AudioUnit::audioUnits();
+        std::cout << "Number of Audio Units: " << units.size();
+        std::cout << "\n";        
+    }                       
+
+    // TEST(Rand, Play)
+    // {
+    //     try 
+    //     {            
+    //         AudioProcessor* synth = new Rand();
+    //         AudioDevice*      in     = NULL;
+    //         AudioDevice*      out    = AudioDevice::defaultOutputDevice();
+    //         Stream*           stream = DeviceStream::open(in, out, synth);
+    //         MessageScheduler* sched  = stream->audioScheduler();
+    //             
+    //         stream->start();  
+    //         sleepMillis(500);
+    //         stream->stop();
+    //         sleepMillis(500);
+    //     } 
+    //     catch (const Error& e)
+    //     {
+    //         std::cerr << "Error: " << const_cast<Error&>(e).message() << "\n";
+    //     }              
+    // }
+
+    TEST(FluidSynth, PlayNotes)
+    {
+        AudioProcessor*   synth  = new FluidSynth(SOUNDFONT_PATH);
+        AudioDevice*      in     = AudioDevice::defaultInputDevice();
+        AudioDevice*      out    = AudioDevice::defaultOutputDevice();
+        Stream*           stream = DeviceStream::open(in, out, synth);
+        MessageScheduler* sched  = stream->audioScheduler();
     
+        stream->start();
+    
+        foreach( int p, list::create(0,2,4,5,7) )
+        {
+            Message on  = messageFrom(0x90, 60 + p, 70);
+            Message off = messageFrom(0x90, 60 + p, 0);
+    
+            sched->sendNow(list::create(on));
+            sched->sendLater(100, list::create(off));
+            sleepMillis(100);
+        }
+        sleepMillis(500);
+    
+    }
+    
+
 /*
     TEST(AudioUnit, List)
-    {
+    {       
+        try
+        {
+            
         std::list<AudioUnit*> units = AudioUnit::audioUnits();
         foreach ( AudioUnit* unit, units )
         {             
-            std::cout << "    " <<   unit->description()->name();
-            std::cout << "\n";
-            std::cout << "    " << ( unit->description()->isPlugin() ? "Plugin" : "Non-plugin" );
-            std::cout << "\n";
-        }
+            std::cout << "" <<   unit->description()->name() << "\n";
+            std::cout << "    " << ( unit->description()->isPlugin() ? "Plugin" : "Non-plugin" ) << "\n";
+            std::cout << "    " << ( unit->description()->isAtomic() ? "Atomic" : "Non-atomic" ) << "\n";
+            std::cout << "    " << ( unit->description()->isStateful() ? "Stateful" : "Non-stateful" ) << "\n";
+            std::cout << "    Inputs: " << unit->description()->numberOfInputs() << "\n";
+            std::cout << "    Outputs: " << unit->description()->numberOfOutputs() << "\n";
+
+        }                     
+        std::cout << "\n";
+        std::cout << "Number of Audio Units: " << units.size();
+        std::cout << "\n";
+
+        }   
+        catch (const Error& e)
+        {
+            std::cerr << "Error: " << const_cast<Error&>(e).message() << "\n";
+        }              
+
+    }    */
+ 
+    TEST(AudioUnit, Play)
+    {   
+        try 
+        {            
+            AudioUnit* unit  = AudioUnit::dlsMusicDevice();
+            std::cout << "Address: " << unit << "\n";
+
+            std::cout << "  Name: " << unit->description()->name() << "\n";
+            std::cout << "  Atomic: " << unit->description()->isAtomic() << "\n";
+            std::cout << "  Stateful: " << unit->description()->isStateful() << "\n";
+            std::cout << "  Plugin: " << unit->description()->isPlugin() << "\n";
+            std::cout << "  Num inputs: " << unit->description()->numberOfInputs() << "\n";
+            std::cout << "  Num outputs: " << unit->description()->numberOfOutputs() << "\n";
+
+            AudioProcessor* synth  = unit->createProcessor();
+            
+
+            AudioDevice*      in     = NULL;
+            AudioDevice*      out    = AudioDevice::defaultOutputDevice();
+            Stream*           stream = DeviceStream::open(in, out, synth);
+            MessageScheduler* sched  = stream->audioScheduler();
+                
+            stream->start();  
+                
+            foreach( int p, list::create(0,2,4,5,7) )
+            {
+                // Message on  = messageFrom(0x90, 60 + p, 70);
+                // Message off = messageFrom(0x90, 60 + p, 0);    
+                // sched->sendNow(list::create(on));
+                // sched->sendLater(100, list::create(off));
+                sleepMillis(100);
+            }
+            sleepMillis(500);   
+        } 
+        catch (const Error& e)
+        {
+            std::cerr << "Error: " << const_cast<Error&>(e).message() << "\n";
+        }              
     }
-*/
 
 }
 
