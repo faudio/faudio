@@ -15,12 +15,27 @@ Build requirements
 Dependencies
 ------------
 
-  * Portaudio
-  * Portmidi
-  * Fluidsynth
-  * Boost.Thread
-  * International Components for Unicode (ICU)  
-  * Windows or OS X SDK
+### Required
+
+  * Boost (Thread, DateTime)
+
+### Optional                          
+
+  * Portaudio (for real-time audio)
+  * Portmidi (for real-time midi)
+  * Sndfile (for file streams)
+  * Fluidsynth (for built in synthesis)
+  * Google Test (for running test suite)
+
+### For building
+
+  * CMake
+
+### For documentation
+                                                  
+  * Doxygen (for all documentation)
+  * LaTeX (for PDF documentation)
+  * Haskell (for generating the Lisp documentation)
 
 
 OS X Build
