@@ -36,9 +36,10 @@ namespace scl {
 typedef UnicodeString String;
 #else
 typedef std::string   String;
-#endif
-
+#endif  
+  
 // Dummy to keep track of which parts of ICU interface we use
+
 /*
 class String
 {
@@ -53,7 +54,9 @@ public:
     void extract(UChar*, int32_t&, UErrorCode&){}
 };
 inline String& operator+ (const String& x, const String& y){}
-inline std::ostream& operator<< (const std::ostream& o, const String& s){}*/
+inline bool    operator< (const String& x, const String& y){}
+inline std::ostream& operator<< (const std::ostream& o, const String& s){}
+*/
 
 
 /**

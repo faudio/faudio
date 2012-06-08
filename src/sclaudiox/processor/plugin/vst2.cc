@@ -9,15 +9,17 @@
     @author Hans Hoglund
  */
 
-#include "pluginterfaces/vst2.x/aeffectx.h"
-
-#if _WIN32
-#include <windows.h>
-#elif TARGET_API_MAC_CARBON
-#include <CoreFoundation/CoreFoundation.h>
-#endif
-
 #include <stdio.h>
+#include "sclaudiox/defines.h"
+
+#ifdef SCL_WIN
+    #include <windows.h>
+#endif
+#ifdef SCL_OSX
+    #include <CoreFoundation/CoreFoundation.h>
+#endif
+#include <pluginterfaces/vst2.x/aeffectx.h>
+
 #include "sclaudiox/processor/plugin/vst2.h"
 #include "sclaudiox/util/misc.h"
 
