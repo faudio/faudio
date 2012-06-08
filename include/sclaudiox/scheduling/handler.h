@@ -19,7 +19,7 @@ class Handler
 {
 public:       
     virtual ~Handler() {}
-    virtual void accept(Time time, T& object) const = 0;
+    virtual void accept(Time time, T& object) = 0;
 };
 
 } // namespace

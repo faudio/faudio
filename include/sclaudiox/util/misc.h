@@ -157,6 +157,18 @@ namespace math
     T negate(T x)
     {
         return x * -1;
+    }          
+    
+    template <class T>
+    T maximum(const T a, const T b)
+    {
+        if (a > b) return a; else return b;
+    }       
+    
+    template <class T>
+    T minimum(const T a, const T b)
+    {
+        if (a < b) return a; else return b;
     }
 }
 

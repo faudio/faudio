@@ -15,6 +15,31 @@
 namespace doremir {
 namespace scl {
 
+#define kMidiNoteOff         0x80
+#define kMidiNoteOn          0x90
+#define kMidiAfterTouch      0xA0
+#define kMidiControlChange   0xB0
+#define kMidiProgramChange   0xC0
+#define kMidiChannelPressure 0xD0
+#define kMidiPitchWheel      0xE0
+#define kMidiSysEx           0xF0
+
+inline int getAction(int status)
+{
+    return status & 0xf0;
+}   
+
+inline int getChannel(int status)
+{
+    return status & 0x0f;
+}
+
+inline bool isSysEx(int status)
+{
+    return getAction(status) == kMidiSysEx;
+}
+
+
 enum AtomType
 {
     kIntAtom,
@@ -36,7 +61,7 @@ public:
     /**
         Get the type of atom.
      */
-    inline AtomType type() const
+    inline AtomType type()
     { 
         return mType; 
     }
@@ -45,7 +70,7 @@ public:
         Extract an integer from this atom.
         The result is undefined unless <code>type() == AtomInt</code>.
      */
-    inline int getInt() const
+    inline int getInt()
     { 
         int x;
         access(x);
@@ -56,7 +81,7 @@ public:
         Extract an double from this atom.
         The result is undefined unless <code>type() == AtomInt</code>.
      */
-    inline double getDouble() const
+    inline double getDouble()
     { 
         double x;
         access(x);
@@ -67,7 +92,7 @@ public:
         Extract a string from this atom.
         The result is undefined unless <code>type() == AtomInt</code>.
      */
-    inline String getString() const
+    inline String getString()
     { 
         String x;
         access(x);
@@ -75,17 +100,17 @@ public:
     }
 
 private:  
-    inline void access(int& x) const
+    inline void access(int& x)
     {
         x = mPrimVal.integer;
     }
 
-    inline void access(double& x) const
+    inline void access(double& x)
     {
         x = mPrimVal.doubleFloating;
     }
 
-    inline void access(String& x) const
+    inline void access(String& x)
     {
         x = mStringVal;
     }

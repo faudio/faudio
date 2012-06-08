@@ -25,7 +25,7 @@ public:
     explicit FluidSynthError(String message);
     explicit FluidSynthError(FluidSynthData* data);
     
-    String message() const;            
+    String message();            
 
 private:
     String specificMessage;
@@ -37,14 +37,14 @@ private:
 class SCLAUDIO_API FluidSynthDescription : public AudioProcessorDescription
 {
 public:
-    String name() const { return "FluidSynth"; }
-    int numberOfInputs() const { return 0; }     
-    int numberOfOutputs() const { return 2; } 
-    int numberOfBuses() const { return 0; }            
+    String name() { return "FluidSynth"; }
+    int numberOfInputs() { return 0; }     
+    int numberOfOutputs() { return 2; } 
+    int numberOfBuses() { return 0; }            
     
-    bool isAtomic() const { return true; }                   
-    bool isStateful() const { return true; }                   
-    bool isPlugin() const { return false; }
+    bool isAtomic() { return true; }                   
+    bool isStateful() { return true; }                   
+    bool isPlugin() { return false; }
 }; 
 
 
@@ -69,7 +69,7 @@ public:
      */
     ~FluidSynth();
 
-    AudioProcessorDescription* description() const;
+    AudioProcessorDescription* description();
 
     void accept(Message message);
 

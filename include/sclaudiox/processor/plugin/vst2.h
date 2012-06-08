@@ -20,34 +20,34 @@ class Vst2PluginData;
 /**
     Description of an Vst 2 plugin or processor.
  */
-class Vst2PluginDescription : public PluginAudioProcessorDescription
+class Vst2PluginDescription : public AudioPluginProcessorDescription
 {
 public:
     Vst2PluginDescription(Vst2PluginDescriptionData* data);    
     ~Vst2PluginDescription();    
 
     /* (see AudioProcessorDescription) */
-    String name() const;
+    String name();
 
     /* (see AudioProcessorDescription) */
-    bool isAtomic() const;
+    bool isAtomic();
 
     /* (see AudioProcessorDescription) */
-    bool isStateful() const;
+    bool isStateful();
 
     /* (see AudioProcessorDescription) */
-    bool isPlugin() const;
+    bool isPlugin();
 
     /* (see AudioProcessorDescription) */
-    int numberOfInputs() const;
+    int numberOfInputs();
 
     /* (see AudioProcessorDescription) */
-    int numberOfOutputs() const;
+    int numberOfOutputs();
 
     /* (see AudioProcessorDescription) */
-    int numberOfBuses() const;
+    int numberOfBuses();
 
-    /* (see PluginAudioProcessorDescription) */
+    /* (see AudioPluginProcessorDescription) */
     AudioPlugin* plugin();
 
 private:
@@ -57,14 +57,14 @@ private:
 /**
     An Vst 2 plugin instance.
  */
-class Vst2PluginProcessor : public PluginAudioProcessor
+class Vst2PluginProcessor : public AudioPluginProcessor
 {
 public:     
     Vst2PluginProcessor(Vst2PluginProcessorData* data);    
     ~Vst2PluginProcessor();    
 
     /* (see AudioProcessor) */
-    AudioProcessorDescription* description() const;
+    AudioProcessorDescription* description();
 
     /* (see AudioProcessor) */
     void accept(Message message);
@@ -78,10 +78,10 @@ public:
     /* (see AudioProcessor) */
     void cleanup(AudioProcessingInformation& info, AudioProcessingBuffer &signal);
 
-    /* (see PluginAudioProcessor) */
+    /* (see AudioPluginProcessor) */
     AudioPlugin* plugin();
         
-    /* (see PluginAudioProcessor) */
+    /* (see AudioPluginProcessor) */
     void* nativePluginInstance();
 
 private:                  
@@ -98,10 +98,10 @@ public:
     ~Vst2Plugin();
 
     /* (see AudioPlugin) */
-    PluginAudioProcessorDescription* description();
+    AudioPluginProcessorDescription* description();
 
     /* (see AudioPlugin) */
-    PluginAudioProcessor* createProcessor();
+    AudioPluginProcessor* createProcessor();
 
     /* (see AudioPlugin) */
     void* nativePlugin();

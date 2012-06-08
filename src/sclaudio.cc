@@ -749,14 +749,14 @@ class CallbackErrorHandler : public Handler<Error>
 public:
     CallbackErrorHandler(SclErrorHandler callback) : callback(callback) {}
 
-    void accept(Time time, Error& error) const
+    void accept(Time time, Error& error)
     {
         StreamError *error2 = new StreamError(error.message()); // FIXME
         callback(time, ex<Error>(error2));
     }
 
 private:    
-    SclErrorHandler const callback;
+    SclErrorHandler callback;
 };
 
 
@@ -1084,24 +1084,24 @@ int* scl_receive_options_get_channels(SclReceiveOptions obj, int* len)
 class CallbackAction : public Action
 {
 public:
-    void accept(Time time) const
+    void accept(Time time)
     {
         callback(time);
     }
     
-    void accept(Time time, MessageInfo info) const
+    void accept(Time time, MessageInfo info)
     {
         callback(time);
     }
     
     CallbackAction(SclAction callback) : callback(callback) {}
-    SclAction const callback;
+    SclAction callback;
 };
 
 class CallbackReceiver : public Receiver
 {
 public:
-    void accept(Time time, Message msg, MessageInfo info) const
+    void accept(Time time, Message msg, MessageInfo info)
     {    
         int len;
         SclAtom* extMsg = exportList(list::copyAll(msg), &len);
@@ -1110,7 +1110,7 @@ public:
     
     CallbackReceiver(SclReceiver callback) : callback(callback) {}
 private:
-    SclReceiver const callback;
+    SclReceiver callback;
 };
 
 

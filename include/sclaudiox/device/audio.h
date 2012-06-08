@@ -59,7 +59,7 @@ public:
        Creates a standard error message by prepending 'Portaudio:' to the
        specific error returned by errorString().
      */
-    String message() const;
+    String message();
 
     /**
         Returns the Portaudio error code.
@@ -69,10 +69,10 @@ public:
     /**
         Returns a string describing the specific error.
      */
-    String errorString() const;
+    String errorString();
 
 private:
-    const Code mError;
+    Code mError;
 };
 
 

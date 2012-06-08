@@ -29,7 +29,7 @@ class AbstractProcessCombinator : public virtual AudioProcessor
 {
 public:
     // TODO
-    // int numberOfBuses() const
+    // int numberOfBuses()
     // {
     //     int result = 0;
     //     foreach(AudioProcessor* child, children)
@@ -37,7 +37,7 @@ public:
     //     return result;
     // }
 
-    virtual std::list<String> controls() const
+    virtual std::list<String> controls()
     {
         throw Unimplemented();
     }
@@ -68,12 +68,12 @@ protected:
 class SequenceAudioProcessor : public AbstractProcessCombinator
 {
 public:
-    // int numberOfInputs() const 
+    // int numberOfInputs() 
     // {
     //     return children.front()->numberOfInputs();
     // }
     // 
-    // int numberOfOutputs() const
+    // int numberOfOutputs()
     // {
     //     return children.back()->numberOfOutputs();
     // }
@@ -89,7 +89,7 @@ public:
 class ParallelAudioProcessor : public AbstractProcessCombinator
 {
 public:    
-    // int numberOfInputs() const 
+    // int numberOfInputs() 
     // {
     //     int result = 0;
     //     foreach(AudioProcessor* child, children)
@@ -97,7 +97,7 @@ public:
     //     return result;
     // }
     // 
-    // int numberOfOutputs() const
+    // int numberOfOutputs()
     // {
     //     int result = 0;
     //     foreach(AudioProcessor* child, children)

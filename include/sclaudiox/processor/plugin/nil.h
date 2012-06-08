@@ -20,34 +20,34 @@ class NilPluginData;
 /**
     Description of an NilPlugin or processor.
  */
-class NilPluginDescription : public PluginAudioProcessorDescription
+class NilPluginDescription : public AudioPluginProcessorDescription
 {
 public:
     NilPluginDescription(NilPluginDescriptionData* data);    
     ~NilPluginDescription();    
 
     /* (see AudioProcessorDescription) */
-    String name() const;
+    String name();
 
     /* (see AudioProcessorDescription) */
-    bool isAtomic() const;
+    bool isAtomic();
 
     /* (see AudioProcessorDescription) */
-    bool isStateful() const;
+    bool isStateful();
 
     /* (see AudioProcessorDescription) */
-    bool isPlugin() const;
+    bool isPlugin();
 
     /* (see AudioProcessorDescription) */
-    int numberOfInputs() const;
+    int numberOfInputs();
 
     /* (see AudioProcessorDescription) */
-    int numberOfOutputs() const;
+    int numberOfOutputs();
 
     /* (see AudioProcessorDescription) */
-    int numberOfBuses() const;
+    int numberOfBuses();
 
-    /* (see PluginAudioProcessorDescription) */
+    /* (see AudioPluginProcessorDescription) */
     AudioPlugin* plugin();
 
 private:
@@ -57,14 +57,14 @@ private:
 /**
     An NilPlugin instance.
  */
-class NilPluginProcessor : public PluginAudioProcessor
+class NilPluginProcessor : public AudioPluginProcessor
 {
 public:     
     NilPluginProcessor(NilPluginProcessorData* data);    
     ~NilPluginProcessor();    
 
     /* (see AudioProcessor) */
-    AudioProcessorDescription* description() const;
+    AudioProcessorDescription* description();
 
     /* (see AudioProcessor) */
     void accept(Message message);
@@ -78,10 +78,10 @@ public:
     /* (see AudioProcessor) */
     void cleanup(AudioProcessingInformation& info, AudioProcessingBuffer &signal);
 
-    /* (see PluginAudioProcessor) */
+    /* (see AudioPluginProcessor) */
     AudioPlugin* plugin();
         
-    /* (see PluginAudioProcessor) */
+    /* (see AudioPluginProcessor) */
     void* nativePluginInstance();
 
 private:                  
@@ -98,10 +98,10 @@ public:
     ~NilPlugin();
 
     /* (see AudioPlugin) */
-    PluginAudioProcessorDescription* description();
+    AudioPluginProcessorDescription* description();
 
     /* (see AudioPlugin) */
-    PluginAudioProcessor* createProcessor();
+    AudioPluginProcessor* createProcessor();
 
     /* (see AudioPlugin) */
     void* nativePlugin();

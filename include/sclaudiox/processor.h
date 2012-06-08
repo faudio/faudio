@@ -33,7 +33,7 @@ class SCLAUDIO_API DspError : public Error
 public:    
     explicit DspError() {}
 
-    String message () const
+    String message ()
     {
         return "A signal processing error occured";
     }
@@ -59,7 +59,7 @@ private:
 //     /**
 //         Returns the name of the controls used by this processor.
 //      */
-//     virtual std::list<Control> controls() const 
+//     virtual std::list<Control> controls() 
 //     { 
 //         return list::create<Control>(); 
 //     }
@@ -94,19 +94,19 @@ public:
     /** 
         Returns the name of the audio processor.
      */
-    virtual String name() const = 0;
+    virtual String name() = 0;
     
     /**
         Whether or not the audio processor is atomic.
         `isAtomic()` implies `!isCompound()`.
      */
-    virtual bool isAtomic() const = 0;
+    virtual bool isAtomic() = 0;
 
     /**
         Whether or not the audio processor is compound.
         `isCompound()` implies `!isAtomic()`.
      */
-    virtual bool isCompound() const
+    virtual bool isCompound()
     {
         return !isAtomic();
     } 
@@ -121,33 +121,33 @@ public:
         - `process()` does not modify the processor (but may modify its arguments)
         - `process()` may be called by concurrent threads
      */
-    virtual bool isStateful() const = 0;  
+    virtual bool isStateful() = 0;  
 
     /**
         Whether the processor is loaded from a plugin. 
         This implies that it is a subclass of PluginAudioProcessor.
      */
-    virtual bool isPlugin() const = 0;
+    virtual bool isPlugin() = 0;
 
     /** 
         Returns the number of input channels.
      */
-    virtual int numberOfInputs() const = 0;
+    virtual int numberOfInputs() = 0;
 
     /** 
         Returns the number of output channels.
      */
-    virtual int numberOfOutputs() const = 0;
+    virtual int numberOfOutputs() = 0;
 
     /** 
         Returns the number of bus channels.
      */
-    virtual int numberOfBuses() const = 0;
+    virtual int numberOfBuses() = 0;
 
     /**
         Returns the total number of channels.
      */
-    inline int numberOfChannels() const
+    inline int numberOfChannels()
     {
         return std::max(numberOfInputs(), numberOfOutputs()) + numberOfBuses();
     }
@@ -157,7 +157,7 @@ public:
         For atomic processors, this function does nothing. 
         @throws DspError
      */
-    virtual void checkInputsAndOutputs() const
+    virtual void checkInputsAndOutputs()
     {
         // nothing
     }    
@@ -185,28 +185,29 @@ public:
     /**
         Returns a description of this audio processor.
      */
-    virtual AudioProcessorDescription* description() const = 0;
+    virtual AudioProcessorDescription* description() = 0;
 
     /**
         Accepts a message.
+        \throw DspError
      */
     virtual void accept(Message message) {};
 
     /** 
         Called once before audio processing begins.
-        @throws DspError
+        \throw DspError
      */
     virtual void prepare(AudioProcessingInformation& info, AudioProcessingBuffer &signal) {};
 
     /** 
         Called repeatedly during audio processing.
-        @throws DspError
+        \throw DspError
      */
     virtual void process(AudioProcessingInformation& info, AudioProcessingBuffer &signal) = 0;
 
     /** 
         Called once after audio processing is finished.
-        @throws DspError
+        \throw DspError
      */
     virtual void cleanup(AudioProcessingInformation& info, AudioProcessingBuffer &signal) {};
 

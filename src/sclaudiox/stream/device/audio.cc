@@ -355,8 +355,8 @@ int AudioDeviceStream::audioProcessingCallback( const void                     *
 
         // For now, handle underflow/overflow uncompromisingly
         // TODO
-        // if (statusFlags & paInputOverflow)   throw new PortaudioError(paInputOverflowed);
-        // if (statusFlags & paOutputUnderflow) throw new PortaudioError(paOutputUnderflowed);
+        // if (statusFlags & paInputOverflow)   throw PortaudioError(paInputOverflowed);
+        // if (statusFlags & paOutputUnderflow) throw PortaudioError(paOutputUnderflowed);
 
         return paContinue;
     }

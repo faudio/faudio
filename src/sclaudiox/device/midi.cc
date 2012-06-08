@@ -37,7 +37,7 @@ PortmidiToken::~PortmidiToken()
 
 // =============================================================================
 
-String PortmidiError::getErrorString() const
+String PortmidiError::getErrorString()
 {
     switch (mError) 
     {        
@@ -59,10 +59,10 @@ String PortmidiError::getErrorString() const
     }
 }
 
-String PortmidiError::message () const 
+String PortmidiError::message () 
 {
     String msg = getErrorString();
-    return "Portmidi error: " + msg;
+    return "Portmidi: " + msg;
 }
 
 PortmidiError::Code PortmidiError::errorCode() 

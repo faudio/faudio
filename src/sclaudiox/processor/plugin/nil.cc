@@ -44,34 +44,34 @@ NilPluginDescription::~NilPluginDescription()
     delete mData;
 }
 
-String NilPluginDescription::name() const
+String NilPluginDescription::name()
 {         
     // TODO implement
 }                  
-bool NilPluginDescription::isAtomic() const
+bool NilPluginDescription::isAtomic()
 {
     // TODO implement
 }
-bool NilPluginDescription::isStateful() const
+bool NilPluginDescription::isStateful()
 {
     // TODO implement
 }
-bool NilPluginDescription::isPlugin() const
-{
-    // TODO implement
-}
-
-int NilPluginDescription::numberOfInputs() const
+bool NilPluginDescription::isPlugin()
 {
     // TODO implement
 }
 
-int NilPluginDescription::numberOfOutputs() const
+int NilPluginDescription::numberOfInputs()
 {
     // TODO implement
 }
 
-int NilPluginDescription::numberOfBuses() const
+int NilPluginDescription::numberOfOutputs()
+{
+    // TODO implement
+}
+
+int NilPluginDescription::numberOfBuses()
 {
     // TODO implement
 }
@@ -94,7 +94,7 @@ NilPluginProcessor::~NilPluginProcessor()
 }
 
 
-AudioProcessorDescription* NilPluginProcessor::description() const
+AudioProcessorDescription* NilPluginProcessor::description()
 {
     // TODO implement
 }
@@ -140,12 +140,12 @@ NilPlugin::~NilPlugin()
     delete mData;
 }
 
-PluginAudioProcessorDescription* NilPlugin::description()
+AudioPluginProcessorDescription* NilPlugin::description()
 {
     return vst2PluginDescription();
 }
 
-PluginAudioProcessor* NilPlugin::createProcessor()
+AudioPluginProcessor* NilPlugin::createProcessor()
 {
     return createNilPluginProcessor();
 }               

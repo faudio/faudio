@@ -27,54 +27,56 @@ class AudioUnitData;
 /**
     Description of an AudioUnit plugin or processor.
  */
-class SCLAUDIO_API AudioUnitDescription : public PluginAudioProcessorDescription
+class SCLAUDIO_API AudioUnitDescription : public AudioPluginProcessorDescription
 {
 public:
     AudioUnitDescription(AudioUnitDescriptionData* data);    
     ~AudioUnitDescription();    
 
     /* (see AudioProcessorDescription) */
-    String name() const;
+    String name();
 
     /* (see AudioProcessorDescription) */
-    bool isAtomic() const;
+    bool isAtomic();
 
     /* (see AudioProcessorDescription) */
-    bool isStateful() const;
+    bool isStateful();
 
     /* (see AudioProcessorDescription) */
-    bool isPlugin() const;
+    bool isPlugin();
 
     /* (see AudioProcessorDescription) */
-    int numberOfInputs() const;
+    int numberOfInputs();
 
     /* (see AudioProcessorDescription) */
-    int numberOfOutputs() const;
+    int numberOfOutputs();
 
     /* (see AudioProcessorDescription) */
-    int numberOfBuses() const;
+    int numberOfBuses();
 
-    /* (see PluginAudioProcessorDescription) */
+    /* (see AudioPluginProcessorDescription) */
     AudioPlugin* plugin();
 
     /** Returns the version of this audio unit. */
     AudioUnitVersion  version();
 
 private:
+    void assureProcessor();
+    void assureChannelInfo();
     AudioUnitDescriptionData* mData;
 };
 
 /**
     An AudioUnit plugin instance.
  */
-class SCLAUDIO_API AudioUnitProcessor : public PluginAudioProcessor
+class SCLAUDIO_API AudioUnitProcessor : public AudioPluginProcessor
 {
 public:     
     AudioUnitProcessor(AudioUnitProcessorData* data);    
     ~AudioUnitProcessor();    
 
     /* (see AudioProcessor) */
-    AudioProcessorDescription* description() const;
+    AudioProcessorDescription* description();
 
     /* (see AudioProcessor) */
     void accept(Message message);
@@ -88,13 +90,14 @@ public:
     /* (see AudioProcessor) */
     void cleanup(AudioProcessingInformation& info, AudioProcessingBuffer &signal);
 
-    /* (see PluginAudioProcessor) */
+    /* (see AudioPluginProcessor) */
     AudioPlugin* plugin();
         
-    /* (see PluginAudioProcessor) */
+    /* (see AudioPluginProcessor) */
     void* nativePluginInstance();
 
 private:                  
+    friend class AudioUnitDescription;
     AudioUnitProcessorData* mData; 
 };
 
@@ -108,10 +111,10 @@ public:
     ~AudioUnit();
 
     /* (see AudioPlugin) */
-    PluginAudioProcessorDescription* description();
+    AudioPluginProcessorDescription* description();
 
     /* (see AudioPlugin) */
-    PluginAudioProcessor* createProcessor();
+    AudioPluginProcessor* createProcessor();
 
     /* (see AudioPlugin) */
     void* nativePlugin();
@@ -125,7 +128,13 @@ public:
     /** Returns a list of available AudioUnit instances. */
     static std::list<AudioUnit*> audioUnits();
 
-private:     
+    /** Returns the DLSMusicDevice software synth, or `NULL` if it is not available. */
+    static AudioUnit* dlsMusicDevice();
+
+private:      
+    friend class AudioUnitDescription;
+    friend class AudioUnitProcessor;   
+    void assureProcessor();
     AudioUnitData* mData;
 };
 

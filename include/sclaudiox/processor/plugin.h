@@ -14,14 +14,50 @@ namespace doremir {
 namespace scl {
 
 class AudioPlugin;
+class AudioPluginProcessor;
     
+
+// =============================================================================
+
+/** 
+    An error replated to an AudioPlugin.
+ */
+class SCLAUDIO_API AudioPluginError : public Error
+{
+public:
+    /**
+        Constructor.
+     */
+    AudioPluginError(AudioPlugin* plugin, AudioPluginProcessor* processor) 
+        : mPlugin(plugin)
+        , mProcessor(processor) {}
+            
+    /**
+        Returns a plugin-specific error message.
+     */
+    String message() = 0;
+
+    /**
+        Returns the plugin that caused the error.
+     */
+    AudioPlugin* plugin() { return mPlugin; }
+
+    /**
+        Returns the plugin processor that caused the error, if any.
+     */
+    AudioPluginProcessor* processor() { return mProcessor; }
+
+private:
+    AudioPlugin* mPlugin;
+    AudioPluginProcessor* mProcessor;
+};
 
 // =============================================================================
 
 /**
     Description of an audio plugin or processor.     
  */
-class PluginAudioProcessorDescription : public AudioProcessorDescription
+class AudioPluginProcessorDescription : public AudioProcessorDescription
 {
 public:    
     /** 
@@ -36,7 +72,7 @@ public:
 /**
     An AudioProcessor delegating to an audio plugin.     
  */
-class PluginAudioProcessor : public AudioProcessor
+class AudioPluginProcessor : public AudioProcessor
 {
 public:   
     /** 
@@ -70,12 +106,14 @@ public:
         full instance. Some architectures will load instances at on demand to provide descriptions and
         then cache the information.
     */
-    virtual PluginAudioProcessorDescription* description() = 0;
+    virtual AudioPluginProcessorDescription* description() = 0;
     
     /** 
         Creates an instance of this plugin.
+        \throw
+            AudioPluginError If the plugin could not be created.
       */
-    virtual PluginAudioProcessor* createProcessor() = 0;
+    virtual AudioPluginProcessor* createProcessor() = 0;
                       
     /** 
         Returns a pointer to the native plug-in object. 

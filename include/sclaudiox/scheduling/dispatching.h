@@ -93,7 +93,7 @@ public:
     }
 
 private:
-    Stream* const stream;
+    Stream* stream;
 };  
 
 } // namespace

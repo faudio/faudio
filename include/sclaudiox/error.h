@@ -20,7 +20,7 @@ namespace scl {
 class SCLAUDIO_API Error : public Resource
 {
 public:  
-    virtual String message() const = 0;
+    virtual String message() = 0;
 };
 
 /**
@@ -32,7 +32,7 @@ public:
     class SCLAUDIO_API NAME : public Error                                     \
     {                                                                          \
     public:                                                                    \
-        String message() const                                                 \
+        String message()                                                       \
         {                                                                      \
             return #NAME;                                                      \
         }                                                                      \
@@ -53,7 +53,7 @@ public:
         NAME(String msg)                                                   \
             : mMsg(msg) {}                                                 \
                                                                            \
-        String message() const                                             \
+        String message()                                                   \
         {                                                                  \
             return fromSimpleString<kDefaultCharSet>(#NAME) + ": " + mMsg; \
         }                                                                  \
@@ -81,7 +81,8 @@ SCL_DECLARE_CONDITION(Limitation);
 SCL_DECLARE_CONDITION(Unimplemented);
             
 /**
-    A template without default initiation.
+    A template without default initiation (usually caused by a missing
+    template concept).
  */
 SCL_DECLARE_CONDITION(NoDefaultInitiation);
 

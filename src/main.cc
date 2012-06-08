@@ -518,11 +518,48 @@ void interactive()
     	}                     
 	}
 }
+
+void testAu()
+{      
+    AudioUnit* unit  = AudioUnit::dlsMusicDevice();
+    std::cout << "Address: " << unit << "\n";
     
+    
+    try 
+    {
+        AudioProcessor*   synth  = unit->createProcessor();
+        AudioDevice*      in     = AudioDevice::defaultInputDevice();
+        AudioDevice*      out    = AudioDevice::defaultOutputDevice();
+        Stream*           stream = DeviceStream::open(in, out, synth);
+        MessageScheduler* sched  = stream->audioScheduler();
+            
+        stream->start();  
+
+        foreach( int p, list::create(0,2,4,5,7) )
+        {
+            Message on  = messageFrom(0x90, 60 + p, 70);
+            Message off = messageFrom(0x90, 60 + p, 0);    
+            sched->sendNow(list::create(on));
+            sched->sendLater(100, list::create(off));
+            sleepMillis(100);
+        }
+        sleepMillis(500);    
+    } 
+    catch (Error& e)
+    {
+        std::cerr << "Error : " << e.message();
+    }              
+    catch (...)
+    {
+        std::cerr << "Unknown error";
+    }       
+    
+}    
 
 int main(int argc, int* argv) 
-{  
-    interactive();
+{             
+    testAu();
+    // interactive();
 
     // testAtomic();
     // testAudioStream();

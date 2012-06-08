@@ -52,7 +52,7 @@ public:
        Creates a standard error message by prepending 'Portmidi:' to the
        specific error returned by errorString().
      */
-    String message () const;
+    String message ();
 
     /**
         Returns the Portmidi error code.
@@ -62,10 +62,10 @@ public:
     /**
         Returns a string describing the specific error.
      */
-    String getErrorString() const;
+    String getErrorString();
 
 private:
-    const Code mError;
+    Code mError;
 };
 
 

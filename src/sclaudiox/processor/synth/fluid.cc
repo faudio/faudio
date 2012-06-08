@@ -41,7 +41,7 @@ FluidSynthError::FluidSynthError(FluidSynthData* data)
     specificMessage = fluid_synth_error(data->synth);
 }
 
-String FluidSynthError::message() const
+String FluidSynthError::message()
 {
     return "FluidSynth error: " + specificMessage;
 }  
@@ -111,20 +111,10 @@ FluidSynth::~FluidSynth()
     delete mData;
 }
 
-AudioProcessorDescription* FluidSynth::description() const
+AudioProcessorDescription* FluidSynth::description()
 {
     return mData->description;
 }       
-
-#define kMidiNoteOff         0x80
-#define kMidiNoteOn          0x90
-#define kMidiAfterTouch      0xA0
-#define kMidiControlChange   0xB0
-#define kMidiProgramChange   0xC0
-#define kMidiChannelPressure 0xD0
-#define kMidiPitchWheel      0xE0
-#define kMidiSysEx           0xF0
-
 
 void FluidSynth::accept(Message message)
 {

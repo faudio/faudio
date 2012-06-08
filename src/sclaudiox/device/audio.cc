@@ -28,9 +28,9 @@ struct AudioDeviceData
 };
 
 
-// =============================================================================
+// =======================================================================================
 
-String PortaudioError::errorString() const
+String PortaudioError::errorString()
 {
     switch (mError)
     {
@@ -74,10 +74,10 @@ String PortaudioError::errorString() const
     }
 }
 
-String PortaudioError::message () const
+String PortaudioError::message ()
 {
     String msg = errorString();
-    return "Portaudio error: " + msg;
+    return "Portaudio: " + msg;
 }
 
 int PortaudioError::errorCode()
@@ -85,7 +85,7 @@ int PortaudioError::errorCode()
     return mError;
 }
 
-// =============================================================================
+// =======================================================================================
 
 PortaudioToken::PortaudioToken()
 {
@@ -100,7 +100,7 @@ PortaudioToken::~PortaudioToken()
 }
 
 
-// =============================================================================
+// =======================================================================================
 
 AudioHost::AudioHost(Index           index, 
                      PortaudioToken* token) 
@@ -183,7 +183,7 @@ AudioHost* AudioHost::defaultHost()
     return new AudioHost(Pa_GetDefaultHostApi(), token);
 }
 
-// =============================================================================
+// =======================================================================================
 
 AudioDevice::AudioDevice(Index           index, 
                          PortaudioToken* token)

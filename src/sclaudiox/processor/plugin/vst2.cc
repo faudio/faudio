@@ -46,6 +46,8 @@ struct Vst2PluginData
 };
 
 
+// =======================================================================================
+
 Vst2PluginDescription::Vst2PluginDescription(Vst2PluginDescriptionData* data)
     : mData(data) {}
     
@@ -54,34 +56,34 @@ Vst2PluginDescription::~Vst2PluginDescription()
     delete mData;
 }
 
-String Vst2PluginDescription::name() const
+String Vst2PluginDescription::name()
 {         
     // FIXME
 }                  
-bool Vst2PluginDescription::isAtomic() const
+bool Vst2PluginDescription::isAtomic()
 {
     // FIXME
 }
-bool Vst2PluginDescription::isStateful() const
+bool Vst2PluginDescription::isStateful()
 {
     // FIXME
 }
-bool Vst2PluginDescription::isPlugin() const
-{
-    // FIXME
-}
-
-int Vst2PluginDescription::numberOfInputs() const
+bool Vst2PluginDescription::isPlugin()
 {
     // FIXME
 }
 
-int Vst2PluginDescription::numberOfOutputs() const
+int Vst2PluginDescription::numberOfInputs()
 {
     // FIXME
 }
 
-int Vst2PluginDescription::numberOfBuses() const
+int Vst2PluginDescription::numberOfOutputs()
+{
+    // FIXME
+}
+
+int Vst2PluginDescription::numberOfBuses()
 {
     // FIXME
 }
@@ -93,7 +95,7 @@ AudioPlugin* Vst2PluginDescription::plugin()
 }              
 
 
-
+// =======================================================================================
 
 Vst2PluginProcessor::Vst2PluginProcessor(Vst2PluginProcessorData* data)
     : mData(data) {}
@@ -104,7 +106,7 @@ Vst2PluginProcessor::~Vst2PluginProcessor()
 }
 
 
-AudioProcessorDescription* Vst2PluginProcessor::description() const
+AudioProcessorDescription* Vst2PluginProcessor::description()
 {
     // FIXME
 }
@@ -140,7 +142,7 @@ void* Vst2PluginProcessor::nativePluginInstance()
 }
                                       
 
-
+// =======================================================================================
 
 Vst2Plugin::Vst2Plugin(Vst2PluginData* data)
     : mData(data) {}
@@ -150,12 +152,12 @@ Vst2Plugin::~Vst2Plugin()
     delete mData;
 }
 
-PluginAudioProcessorDescription* Vst2Plugin::description()
+AudioPluginProcessorDescription* Vst2Plugin::description()
 {
     return vst2PluginDescription();
 }
 
-PluginAudioProcessor* Vst2Plugin::createProcessor()
+AudioPluginProcessor* Vst2Plugin::createProcessor()
 {
     return createVst2PluginProcessor();
 }               

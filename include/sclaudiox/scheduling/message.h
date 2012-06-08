@@ -99,7 +99,7 @@ class SCLAUDIO_API Receiver
 {
 public:        
     virtual ~Receiver() {}
-    virtual void accept(Time time, Message message, MessageInfo info) const = 0;
+    virtual void accept(Time time, Message message, MessageInfo info) = 0;
 };    
 
 /**
@@ -109,8 +109,8 @@ class SCLAUDIO_API Sender
 {
 public:        
     virtual ~Sender() {}
-    virtual void addReceiver(Receiver* recv) const = 0;
-    virtual void removeReceiver(Receiver* recv) const = 0;
+    virtual void addReceiver(Receiver* recv) = 0;
+    virtual void removeReceiver(Receiver* recv) = 0;
 };    
 
 class SCLAUDIO_API AbstractSender
@@ -118,8 +118,8 @@ class SCLAUDIO_API AbstractSender
 public:
     AbstractSender(){}
     ~AbstractSender(){}
-    void addReceiver(Receiver* recv) const {}
-    void removeReceiver(Receiver* recv) const {};
+    void addReceiver(Receiver* recv) {}
+    void removeReceiver(Receiver* recv) {};
 };
 
 

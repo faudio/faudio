@@ -19,7 +19,7 @@ class SCLAUDIO_API Action
 {
 public: 
     virtual ~Action() {}
-    virtual void accept(Time time) const = 0;
+    virtual void accept(Time time) = 0;
 };
 
 
