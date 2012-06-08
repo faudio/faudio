@@ -22,8 +22,7 @@ if(${BUILD_SCLAUDIO_TESTS})
     set(SCLAUDIO_TEST_DEFINITIONS ${SCLAUDIO_DEFINITIONS})
     message("Compiler definitions (unit tests): ${SCLAUDIO_TEST_DEFINITIONS}")
 
-    add_executable(SCLAUDIO_TESTS "test.cc"
-                                  "main.cc")
+    add_executable(SCLAUDIO_TESTS "main.cc")
 
     if(${SCLAUDIO_OSX})
         set_target_properties(SCLAUDIO_TESTS
