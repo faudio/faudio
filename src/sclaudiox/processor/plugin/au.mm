@@ -16,6 +16,7 @@
 
 #include "sclaudiox/processor/plugin/au.h"
 #include "sclaudiox/util/misc.h"
+#include "sclaudiox/util/logging.h"
 
 
 namespace doremir {
@@ -29,15 +30,17 @@ struct AudioUnitDescriptionData
 
 struct AudioUnitProcessorData
 {
-    AudioUnit* unit;
-    AudioUnitDescription* description; // lazy
+    AudioUnit*                  unit;
+    AudioUnitDescription*       description; // lazy
 
-    int                   maxChannels;
-    int                   maxFrames;
-    AudioBufferList*      bufferList;   
-    AudioTimeStamp*       timeStamp;
+    AudioUnitRenderActionFlags  renderActionFlags;
+    AudioTimeStamp              timeStamp;
+    int                         busNumber;
+    int                         maxChannels;
+    int                         maxFrames;
+    AudioBufferList*            bufferList;   
     
-    AudioComponentInstance instance; // the instance
+    AudioComponentInstance      instance; // the instance
 };
 
 struct AudioUnitData
@@ -53,7 +56,7 @@ struct AudioUnitData
 
 namespace
 {           
-    String fromOsStatus(OSStatus err)
+    String fromOSStatus(OSStatus err)
     {
         return fromSimpleString<kDefaultCharSet>(GetMacOSStatusErrorString(err));        
     }                                                                          
@@ -79,7 +82,7 @@ public:
         
     String message()
     {
-        return "Audio Unit: " + fromOsStatus(mStatus);
+        return "Audio Unit: " + fromOSStatus(mStatus);
     }              
 private:
     OSStatus mStatus;
@@ -94,7 +97,7 @@ public:
         
     String message()
     {
-        return "Audio Unit: " + fromOsStatus(mStatus);
+        return "Audio Unit: " + mProcessor->description()->name() + ": " + fromOSStatus(mStatus);
     }              
 private:        
     AudioUnitProcessor* mProcessor;
@@ -113,6 +116,16 @@ namespace
     {
         if (status != noErr)  
             throw AudioUnitProcessorError(processor, status);
+    }
+
+    inline void failOsStatus(AudioUnit* plugin, AudioUnitProcessor* processor, OSStatus status)
+    {
+        throw AudioUnitError(plugin, processor, status);
+    }
+    
+    inline void failOsStatusProc(AudioUnitProcessor* processor, OSStatus status)
+    {
+        throw AudioUnitProcessorError(processor, status);
     }
 }
 
@@ -185,8 +198,36 @@ void AudioUnitDescription::assureProcessor()
 
 namespace
 {
-    // FIXME
-    void getNumChannels (AudioComponentInstance instance, int& numIns, int& numOuts)
+    typedef std::list< std::list<int> > ChannelList;
+
+    /** 
+        Returns a list on the form ((2,2), (1,1)) representing the channel configuration of each bus 
+    */
+    inline ChannelList getChannelList(AudioComponentInstance instance)
+    {
+        ChannelList channelList;
+
+        AUChannelInfo supportedChannels [128];
+        UInt32 supportedChannelsSize = sizeof (supportedChannels);
+
+        if (AudioUnitGetProperty (instance, kAudioUnitProperty_SupportedNumChannels, kAudioUnitScope_Global,
+                                  0, supportedChannels, &supportedChannelsSize) == noErr
+                   && 
+            supportedChannelsSize > 0)
+        {
+            for (int i = 0; i < supportedChannelsSize / sizeof (AUChannelInfo); ++i)
+            {
+                std::list<int> channels;
+                channels.push_back(supportedChannels[i].inChannels);
+                channels.push_back(supportedChannels[i].outChannels);
+                channelList.push_back(channels);
+            }
+        }
+        return channelList;
+    }
+
+    
+    inline void getNumChannels(AudioComponentInstance instance, int& numIns, int& numOuts)
     {
         numIns = 0;
         numOuts = 0;
@@ -196,7 +237,8 @@ namespace
 
         if (AudioUnitGetProperty (instance, kAudioUnitProperty_SupportedNumChannels, kAudioUnitScope_Global,
                                   0, supportedChannels, &supportedChannelsSize) == noErr
-            && supportedChannelsSize > 0)
+                   && 
+            supportedChannelsSize > 0)
         {
             for (int i = 0; i < supportedChannelsSize / sizeof (AUChannelInfo); ++i)
             {
@@ -206,9 +248,23 @@ namespace
         }
         else
         {
-                // (this really means the plugin will take any number of ins/outs as long
-                // as they are the same)
-            numIns = numOuts = 2;
+            numIns = numOuts = 1;
+        }
+    }
+
+    inline int getNumBuses(AudioComponentInstance instance)
+    {
+        AUChannelInfo supportedChannels [128];
+        UInt32 supportedChannelsSize = sizeof (supportedChannels);
+
+        if (AudioUnitGetProperty (instance, kAudioUnitProperty_SupportedNumChannels, kAudioUnitScope_Global,
+                                  0, supportedChannels, &supportedChannelsSize) == noErr)
+        {
+            return supportedChannelsSize / sizeof (AUChannelInfo);
+        }
+        else
+        {
+            return -1;
         }
     }
     
@@ -230,8 +286,13 @@ int AudioUnitDescription::numberOfOutputs()
     return outputs;
 }
 
+int AudioUnitDescription::numberOfAUBuses()
+{        
+    return getNumBuses(mData->processor->mData->instance);
+}
+
 int AudioUnitDescription::numberOfBuses()
-{
+{        
     return 0;
 }
 
@@ -259,21 +320,14 @@ AudioUnitProcessor::~AudioUnitProcessor()
     delete mData;
 }
 
-// FIXME throws
-void AudioUnit::assureProcessor()
-{
-    if (mData->example)
-        return;
-    mData->example = createAudioUnitProcessor();
-}
-
 AudioProcessorDescription* AudioUnitProcessor::description()
 {
-    if(!mData->description)
+    if (!mData->description)
     {                                                   
         AudioUnitDescriptionData* data = new AudioUnitDescriptionData();
         data->unit      = mData->unit;
         data->processor = const_cast<AudioUnitProcessor*>(this);
+
         mData->description = new AudioUnitDescription(data);
     }   
     return mData->description;
@@ -291,97 +345,137 @@ void AudioUnitProcessor::accept(Message message)
 
     if (!isSysEx(status))
     {
-        err = MusicDeviceMIDIEvent( mData->instance, status, data1, data2, 0 );
+        if (err = MusicDeviceMIDIEvent(mData->instance, status, data1, data2, 0))
+            failOsStatusProc(this, err);
     }
     else
     {         
-        err = noErr;
     }    
-    checkOsStatusProc(this, err);
 }
 
 namespace
-{
-    /**
-        Allocate a buffer list, containing one buffer with the given channel configuration.
+{         
+    // TODO some utility function for this, in case we ever need to switch from 32-bit
+    inline Sample float32ToSample(Float32 x) { return x; }
+    inline Float32 sampleToFloat32(Sample x) { return x; }
+    
+    /*
+        Allocate a buffer list.
      */
-    AudioBufferList* allocateBufferList(int numChannels, int numFrames)
+    AudioBufferList* createBufferList(int numBuffers, int numChannels, int numFrames)
     {                        
-        size_t bufferSize = sizeof(Float32) * numChannels * numFrames;
-          
-        AudioBufferList* list = (AudioBufferList*) 
-            calloc(1, 
-                sizeof(UInt32) + // mNumberBuffers
-                sizeof(UInt32) + // mNumberChannels
-                sizeof(UInt32) + // mDataByteSize
-                bufferSize);
+        size_t bufferSize     = sizeof(Float32) * numChannels * numFrames;
+        size_t bufferListSize = sizeof(UInt32) + bufferSize * numBuffers;
         
-        list->mNumberBuffers = 1;
-        list->mBuffers[0].mNumberChannels = numChannels;
-        list->mBuffers[0].mDataByteSize   = bufferSize;
+        AudioBufferList* list = (AudioBufferList*) calloc(1, bufferListSize);
+        
+        list->mNumberBuffers = numBuffers;
+        
+        for(int i = 0; i < numBuffers; ++i)
+        {             
+            Float32 * buffer = (Float32*) calloc(1, bufferSize);
+
+            list->mBuffers[i].mNumberChannels = numChannels;
+            list->mBuffers[i].mDataByteSize   = bufferSize;
+            list->mBuffers[i].mData           = buffer;            
+        }
         return list;
     }
 
     void freeBufferList(AudioBufferList* list)
-    {              
+    {          
+        for (int i = 0; i < list->mNumberBuffers; ++i)      
+            free(list->mBuffers[i].mData);
         free(list);
-    }
+    }   
 }          
 
 
 void AudioUnitProcessor::prepare(AudioProcessingInformation& info, AudioProcessingBuffer &signal)
 {                                                       
-    OSStatus err = AudioUnitInitialize(mData->instance);
-    checkOsStatusProc(this, err);
+    OSStatus err;
+    if (err = AudioUnitInitialize(mData->instance))
+        failOsStatusProc(this, err);
 
-    mData->maxChannels = signal.numberOfChannels;
-    mData->maxFrames   = signal.numberOfFrames;
-    mData->bufferList  = allocateBufferList(mData->maxChannels, mData->maxFrames);
-    mData->timeStamp   = new AudioTimeStamp;
-    FillOutAudioTimeStampWithSampleTime(*mData->timeStamp, 
-        ((Float64) info.sampleCount) / ((Float64) info.sampleRate));
+    mData->maxChannels       = 2/*signal.numberOfChannels*/;
+    mData->maxFrames         = 256/*signal.numberOfFrames*/;
+    mData->bufferList        = createBufferList(2, 1/*mData->maxChannels*/, 256/*mData->maxFrames*/);
+    mData->renderActionFlags = 0;
+    mData->busNumber         = 0;
+    
+    UInt32 sampleCount = mData->maxFrames;
+    Float64 sampleRate = info.sampleRate;
+                                    
+    AudioUnitSetProperty (mData->instance, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0, 
+                          &sampleCount, sizeof(sampleCount));
+    
+    AudioUnitSetProperty (mData->instance, kAudioUnitProperty_SampleRate, kAudioUnitScope_Global, 0, 
+                          &sampleRate, sizeof(sampleRate));
+
+SCL_WRITE_LOG( ">>>>> " << sampleCount << "\n" );
+SCL_WRITE_LOG( ">>>>> " << sampleRate << "\n" );
+SCL_WRITE_LOG( ">>>>> " << toString(getChannelList(mData->instance)) << "\n" );
+
 }
 
+static int c = 0;
 void AudioUnitProcessor::process(AudioProcessingInformation& info, AudioProcessingBuffer &signal)
 {
-    OSStatus                   err;      
-    AudioUnitRenderActionFlags flags = 0;
+    OSStatus err;      
+                                                               
+    Float64 time = ((Float64) info.sampleCount) / ((Float64) info.sampleRate);
+    FillOutAudioTimeStampWithSampleTime(mData->timeStamp, time);
 
-    FillOutAudioTimeStampWithSampleTime(*mData->timeStamp, 
-        ((Float64) info.sampleCount) / ((Float64) info.sampleRate));
+//     if (!(c++ % 10))
+//     {
+// SCL_WRITE_LOG( "Inst  : " << mData->instance << "\n" );
+// SCL_WRITE_LOG( "Flags : " << mData->renderActionFlags << "\n" );
+// SCL_WRITE_LOG( "Time  : " << mData->timeStamp.mSampleTime << "\n" );
+// SCL_WRITE_LOG( "Bus   : " << mData->busNumber << "\n" );
+// SCL_WRITE_LOG( "Frs   : " << signal.numberOfFrames << "\n" );
+// SCL_WRITE_LOG( "Bufs  : " << mData->bufferList->mNumberBuffers << "\n" );
+// for (int i = 0; i < mData->bufferList->mNumberBuffers; ++i) {
+//   SCL_WRITE_LOG( "  Bch :  " << mData->bufferList->mBuffers[i].mNumberChannels << "\n" );
+//   SCL_WRITE_LOG( "  Bsz :  " << mData->bufferList->mBuffers[i].mDataByteSize << "\n" );
+// }
+// SCL_WRITE_LOG( "=======\n" );
+// 
+//     }
 
-    // err = AudioUnitRender (
-    //     mData->instance,
-    //     &flags,
-    //     mData->timeStamp,
-    //     0,
-    //     mData->maxFrames,
-    //     mData->bufferList
-    // );       
+    if (err = AudioUnitRender (mData->instance, &mData->renderActionFlags, &mData->timeStamp,
+                               mData->busNumber, signal.numberOfFrames, mData->bufferList))       
+        failOsStatusProc(this, err);
     
-    Sample* buffer = (Sample*) mData->bufferList->mBuffers[0].mData;
     int numChannels = mData->maxChannels;
-    int numFrames = mData->maxFrames;
+    int numFrames   = signal.numberOfFrames;
 
-    float sig;
     for(int channel = 0; channel < numChannels; ++channel)
     {
+        // TODO assert (channel < mData->bufferList->mNumberBuffers)
+        // TODO assert (frame < mData->bufferList->mDataByteSize / sizeof(Float32))
+        Float32* buffer = (Float32*) mData->bufferList->mBuffers[channel].mData;
+
+        float x;
         for(int frame = 0; frame < numFrames; ++frame)
-        {                                              
-            // signal.data[channel * numFrames + frame] = sig;
-            // sig = sig + 0.1;
-            signal.data[channel * numFrames + frame] = buffer[frame * numChannels + channel];
+        {            
+            // if (!channel)
+            //     signal.data[channel * numFrames + frame] = sin(time * 50);
+            // else
+            //     signal.data[channel * numFrames + frame] = sin(time * 52);
+            
+            signal.data[channel * numFrames + frame] = buffer[frame];
+
+            // signal.data[channel * numFrames + frame] = 0;
         }
     }   
-    checkOsStatusProc(this, err);
 }
 
 void AudioUnitProcessor::cleanup(AudioProcessingInformation& info, AudioProcessingBuffer &signal)
 {
-    OSStatus err = AudioUnitUninitialize(mData->instance);
-    checkOsStatusProc(this, err);
+    OSStatus err;
+    if (err = AudioUnitUninitialize(mData->instance))
+        failOsStatusProc(this, err);
     freeBufferList(mData->bufferList);   
-    delete mData->timeStamp;
 }
 
 AudioPlugin* AudioUnitProcessor::plugin()
@@ -407,6 +501,14 @@ AudioUnit::~AudioUnit()
     delete mData;
 }
 
+// FIXME throws
+void AudioUnit::assureProcessor()
+{
+    if (mData->example)
+        return;
+    mData->example = createAudioUnitProcessor();
+}
+
 AudioPluginProcessorDescription* AudioUnit::description()
 {
     return audioUnitDescription();
@@ -424,7 +526,7 @@ void* AudioUnit::nativePlugin()
 
 AudioUnitDescription* AudioUnit::audioUnitDescription()
 {                       
-    if(!mData->description)
+    if (!mData->description)
     {                                                   
         AudioUnitDescriptionData* data = new AudioUnitDescriptionData();
         data->unit = this;

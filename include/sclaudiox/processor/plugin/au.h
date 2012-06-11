@@ -53,6 +53,7 @@ public:
 
     /* (see AudioProcessorDescription) */
     int numberOfBuses();
+    int numberOfAUBuses(); // FIXME
 
     /* (see AudioPluginProcessorDescription) */
     AudioPlugin* plugin();

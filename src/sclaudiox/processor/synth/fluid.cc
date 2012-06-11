@@ -55,6 +55,7 @@ namespace
     {
         if (!ref) throw FluidSynthError(msg);
     }    
+    
     inline void fluid_check(int status, String msg)
     {
         if (status == FLUID_FAILED) throw FluidSynthError(msg);
@@ -189,15 +190,9 @@ void FluidSynth::process(AudioProcessingInformation& info,
     int err;
     {
         int numberOfFrames = signal.numberOfFrames;
-    	err = fluid_synth_write_float
-    	    (
-    	    mData->synth,
-            numberOfFrames,
-            signal.data, 0, 1,
-            signal.data, numberOfFrames, 1
-            );
+    	err = fluid_synth_write_float (mData->synth, numberOfFrames,
+                                       signal.data, 0, 1, signal.data, numberOfFrames, 1);
     }
-
     if (err == FLUID_FAILED)
     {
         if (strlen(fluid_synth_error(mData->synth)) > 0)

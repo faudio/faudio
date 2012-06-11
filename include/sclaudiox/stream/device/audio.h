@@ -26,7 +26,7 @@ class SCLAUDIO_API AudioDeviceStreamDescription : public StreamDescription
 public:        
     StreamType type()
     {
-        kDeviceStream & kAudioStream;
+        return (StreamType) ( kDeviceStream & kAudioStream );
     }      
     bool isRealtime()
     {
@@ -201,8 +201,8 @@ private:
         {
             for (int channel = 0; channel < numberOfOutputs; ++channel)
             {
-                outputBuffer[frame * numberOfOutputs + channel] = 
-                    buffer->data[frame + channel * numberOfFrames];
+                outputBuffer[frame * numberOfOutputs + channel] =   // interleaved: frame big, channel small
+                    buffer->data[channel * numberOfFrames + frame]; // non-interleaved: channel big, frame small
             }
         }
     }

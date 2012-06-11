@@ -561,7 +561,7 @@ namespace list
     template <class T, class P>
     list<T> difference(list<T> s, P p, T y)
     {
-    }
+    }       
     
     /**@}*/ 
     

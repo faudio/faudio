@@ -28,7 +28,7 @@ struct SCLAUDIO_API AudioProcessingInformation
     /**
         Number of samples processed before the current call to process().
      */
-    Sample sampleCount;
+    Time sampleCount;
 };
 
 

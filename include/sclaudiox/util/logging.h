@@ -24,6 +24,7 @@
     #define SCL_WRITE_LOG(EXPR)                 \
         {                                       \
             ReentrantLock lock (printMutex());  \
+            initLog();                          \
             logStream() << EXPR;                \
             logStream().flush();                \
         }                                       \
@@ -93,6 +94,16 @@ inline std::ostream& logStream()
     return *log;
 #endif
 }       
+
+static bool initLogDone = false;
+inline void initLog()
+{    
+    if (!initLogDone)
+    {
+        logStream() << "ScoreCleaner Audio Engine v" << SCL_VERSION << "\n";
+        initLogDone = true;
+    }
+}
 
 class DefaultLogTraits
 {

@@ -172,7 +172,8 @@ template<class T> T fromAtom(Atom val)
 }
 
 template <>
-inline String toString(Atom value)
+inline
+String toString(Atom value)
 {
     switch (value.type()) 
     {

@@ -19,7 +19,7 @@ class SCLAUDIO_API AudioMidiDeviceStreamDescription : public StreamDescription
 public:        
     StreamType type()
     {
-        kDeviceStream & kMidiStream & kAudioStream;
+        return (StreamType) ( kDeviceStream & kMidiStream & kAudioStream );
     }   
     bool isRealtime()
     {

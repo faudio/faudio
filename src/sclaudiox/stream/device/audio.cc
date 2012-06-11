@@ -368,7 +368,7 @@ int AudioDeviceStream::audioProcessingCallback( const void                     *
     }
     catch (...)
     {
-        SCL_WRITE_LOG("Unexpected error in audio thread\n");
+        SCL_WRITE_LOG("Unexpected error in the audio thread\n");
         return paAbort;
     }
 }

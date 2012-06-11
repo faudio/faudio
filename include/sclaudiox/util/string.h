@@ -12,6 +12,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <utility>
 
 #ifdef SCL_UNICODE
     #ifdef SCL_WIN
@@ -21,7 +22,9 @@
     #include "unicode/unistr.h"
     #include "unicode/ustream.h"
     #include "unicode/stringpiece.h"
-#endif
+#endif       
+
+#include "sclaudiox/util/foreach.h"
 
 namespace doremir {
 namespace scl {
@@ -58,15 +61,8 @@ inline bool    operator< (const String& x, const String& y){}
 inline std::ostream& operator<< (const std::ostream& o, const String& s){}
 */
 
-
-/**
-    Converts the given value to a String.
-
-    The default implementation can be used for all built-in types including 
-    numbers, characters and strings.
- */
-template <class Type>
-String toString(Type value)
+template <class T>
+String toString(T value)
 {
     std::stringstream ss;
     ss << value;
@@ -76,28 +72,32 @@ String toString(Type value)
     return ss.str();
 #endif
 }
-
-/**
-    Converts the given list to a String.
-
-    Returns a String containing the result of converting all elements of the
-    list to strings, separated by a space character and enclosed in brackets.
- */
-template <class Element, class Iterator>
-String toString(std::list<Element> lst)
+        
+template <class T>
+String toString(std::list<T> lst)
 {
-    String buffer;
+    typedef typename std::list<T>   List;
+    typedef typename List::iterator Iterator;
 
+    String buffer;
     buffer += "(";
-    for (Iterator i = lst.begin(); i != lst.end(); ++i) 
+    buffer += " ";
+    for (Iterator it = lst.begin(); it != lst.end(); ++it) 
     {
-        buffer += toString(*lst);
+        buffer += toString(*it);
         buffer += " ";
     }
     buffer += ")";
 
     return buffer;
+}     
+
+template <class A, class B>
+String toString(std::pair<A,B> pair)
+{
+    return "{" + toString<A>(pair.first) + "," + toString<B>(pair.second) + "}";
 }
+
 
 enum CharacterSet
 {

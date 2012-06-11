@@ -94,7 +94,7 @@ public:
      */
     virtual bool isNonRealtime()
     {
-        !isNonRealtime();
+        return !isNonRealtime();
     }
 
     /**

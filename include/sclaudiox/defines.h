@@ -8,6 +8,8 @@
 #ifndef _SCLAUDIOX_DEFINES                                      
 #define _SCLAUDIOX_DEFINES                                      
 
+#define SCL_VERSION "2.0.5"
+
 #ifdef _WIN32
     #define SCL_WIN
     #define SCL_OS WIN
