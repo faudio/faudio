@@ -233,11 +233,13 @@ void scl_test_nothing()
     // nothing
 }
 
+SCL_DECLARE_SIMPLE_ERROR(TestError);
+
 void scl_test_error(int variant, SclError* err)
 {
     switch (variant) {
         case 0:
-            *err = ex<Error>(new Assert("Test error"));
+            *err = ex<Error>(new TestError("Test error"));
             break;
         default:
             break;

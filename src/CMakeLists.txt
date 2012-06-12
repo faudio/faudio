@@ -50,8 +50,18 @@ if(${SCLAUDIO_OSX})
     option(BUILD_SCLAUDIO_FRAMEWORK "Build an OS X framework"       TRUE)
                      
     if(${BUILD_SCLAUDIO_DYLIB})
-        message(FATAL_ERROR "Build of OS X dynamic library not supported yet")
+        add_library(SCLAUDIO_DYLIB SHARED ${SCLAUDIO_SOURCES})
+        set_target_properties(SCLAUDIO_DYLIB
+            PROPERTIES
+                OUTPUT_NAME                 "sclaudio"
+                INSTALL_NAME_DIR            "/usr/local/lib/sclaudio.dylib"
+                OSX_ARCHITECTURES           i386
+                XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0"
+                LIBRARY_OUTPUT_DIRECTORY    "../"
+                COMPILE_DEFINITIONS         "${SCLAUDIO_DEFINITIONS}")
+        target_link_libraries(SCLAUDIO_DYLIB ${SCLAUDIO_LIBRARIES})
     endif()    
+
     if(${BUILD_SCLAUDIO_FRAMEWORK})
         add_library(SCLAUDIO SHARED ${SCLAUDIO_SOURCES})
         set_target_properties(SCLAUDIO
@@ -113,5 +123,6 @@ if(${BUILD_SCLAUDIO_CL})
                 COMPILE_DEFINITIONS         "${SCLAUDIO_CL_DEFINITIONS}")
     endif()
 
+    # TODO if building dylib and/or framework on OS X, this only links with framwork
     target_link_libraries(SCLAUDIO_CL SCLAUDIO)           
 endif()
