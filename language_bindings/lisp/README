@@ -1,0 +1,12 @@
+
+
+Installation:
+
+  Start your Lisp image in the audio-engine/language_bindings/lisp directory
+  or add the latter to your ASDF registry:
+
+    (push #p"/path/to/audio-engine/language_bindings_lisp/" asdf:*central-registry*)
+
+  Don't forget the terminating slash.
+
+  Then load with (asdf:load-system :audio-engine)

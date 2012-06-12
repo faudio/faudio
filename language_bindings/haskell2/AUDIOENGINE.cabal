@@ -1,0 +1,21 @@
+-- AUDIOENGINE.cabal is generated automatically: do not edit
+Name: AUDIOENGINE
+Version: 0.0
+Build-type: Custom
+Build-depends: base >= 4.0 && < 5, HSFFIG
+Exposed-modules: HS_AUDIOENGINE_H
+Other-modules:
+  HS_AUDIOENGINE_H_C_0,
+  HS_AUDIOENGINE_H_C_1,
+  HS_AUDIOENGINE_H_C_2,
+  HS_AUDIOENGINE_H_C,
+  HS_AUDIOENGINE_H_S,
+  HS_AUDIOENGINE_H_S_d,
+  HS_AUDIOENGINE_H_S_t,
+  HS_AUDIOENGINE_H_S_n,
+  HS_AUDIOENGINE_H_E,
+  HS_AUDIOENGINE_H_F
+Extra-lib-dirs:
+  ../../build/
+Extra-libraries:
+  sclaudio
