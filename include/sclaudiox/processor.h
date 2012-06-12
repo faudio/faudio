@@ -46,33 +46,6 @@ private:
 
 // =============================================================================
 
-// typedef String Control;
-// 
-// /**
-//     An object supporting control messages.
-//  */
-// class SCLAUDIO_API Controlled
-// {    
-// public:     
-//     virtual ~Controlled() {}
-// 
-//     /**
-//         Returns the name of the controls used by this processor.
-//      */
-//     virtual std::list<Control> controls() 
-//     { 
-//         return list::create<Control>(); 
-//     }
-// 
-//     /**
-//         Accepts a message.
-//      */
-//     virtual void accept(Message message) {};
-// };  
-
-
-// =============================================================================
-
 /**
     An abstract description of an audio processor.
     Used to retreive information about an AudioProcessor or AudioPlugin. 

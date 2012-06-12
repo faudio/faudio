@@ -564,6 +564,14 @@ namespace list
     }       
     
     /**@}*/ 
+
+    template <class T>
+    list<T> fromRange(T begin, T end)
+    {
+        list<T> lst;
+        do lst.push_back(begin); while (++begin < end);
+        return lst;
+    }
     
     namespace predicate
     {

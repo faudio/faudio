@@ -5,6 +5,7 @@
 #include "sclaudiox/util/atomic.h"
 #include "sclaudiox/util/logging.h"
 #include "sclaudiox/util/symbol.h"
+#include "sclaudiox/util/string.h"
 #include "sclaudiox/processor/plugin/au.h"
 #include "sclaudiox/processor/synth/rand.h"
 
@@ -237,10 +238,24 @@ namespace test_cpp_api
         EXPECT_EQ ( x.value(), 0 );
         EXPECT_EQ ( y.value(), 0 );
 
-    }*/
-
-
+    }*/ 
     
+    TEST(List, Range)
+    {
+        std::list<int> xs = list::fromRange(0, 10);
+        std::cout << toString(xs) << "\n";
+    }
+    
+    TEST(String, Conversions)
+    {                            
+        std::cout << toString(1) << "\n";
+        
+        std::list<int> xs = list::create(1, 2, 3, 4);
+        std::cout << toString(xs) << "\n";
+
+        std::pair<int,int> p = std::make_pair(1, 2);
+        std::cout << toString(p) << "\n";
+    }
     
     TEST(Logging, Base)
     {           
@@ -292,28 +307,29 @@ namespace test_cpp_api
         std::cout << "\n";        
     }                       
 
-    // TEST(Rand, Play)
-    // {
-    //     try 
-    //     {            
-    //         AudioProcessor* synth = new Rand();
-    //         AudioDevice*      in     = NULL;
-    //         AudioDevice*      out    = AudioDevice::defaultOutputDevice();
-    //         Stream*           stream = DeviceStream::open(in, out, synth);
-    //         MessageScheduler* sched  = stream->audioScheduler();
-    //             
-    //         stream->start();  
-    //         sleepMillis(500);
-    //         stream->stop();
-    //         sleepMillis(500);
-    //     } 
-    //     catch (const Error& e)
-    //     {
-    //         std::cerr << "Error: " << const_cast<Error&>(e).message() << "\n";
-    //     }              
-    // }
+    TEST(Rand, Play)
+    {
+        try 
+        {            
+            AudioProcessor* synth = new Rand();
+            AudioDevice*      in     = NULL;
+            AudioDevice*      out    = AudioDevice::defaultOutputDevice();
+            Stream*           stream = DeviceStream::open(in, out, synth);
+            MessageScheduler* sched  = stream->audioScheduler();
+                
+            stream->start();  
+            sleepMillis(2000);
+            stream->stop();
+            sleepMillis(1000);
+        } 
+        catch (const Error& e)
+        {
+            std::cerr << "Error: " << const_cast<Error&>(e).message() << "\n";
+        }              
+    }              
 
-    TEST(FluidSynth, PlayNotes)
+
+    TEST(Synth_FluidSynth, PlayNotes)
     {
         AudioProcessor*   synth  = new FluidSynth(SOUNDFONT_PATH);
         AudioDevice*      in     = AudioDevice::defaultInputDevice();
@@ -321,19 +337,17 @@ namespace test_cpp_api
         Stream*           stream = DeviceStream::open(in, out, synth);
         MessageScheduler* sched  = stream->audioScheduler();
     
-        stream->start();
-    
-        foreach( int p, list::create(0,2,4,5,7) )
+        stream->start();    
+        foreach( int p, list::fromRange(0,24) )
         {
             Message on  = messageFrom(0x90, 60 + p, 70);
-            Message off = messageFrom(0x90, 60 + p, 0);
-    
+            Message off = messageFrom(0x90, 60 + p, 0);    
             sched->sendNow(list::create(on));
-            sched->sendLater(100, list::create(off));
+            sched->sendLater(90, list::create(off));
             sleepMillis(100);
         }
-        sleepMillis(500);
-    
+        stream->stop();
+        sleepMillis(1000);
     }
     
 
@@ -366,7 +380,7 @@ namespace test_cpp_api
 
     }    */
  
-    TEST(AudioUnit, Play)
+    TEST(Synth_AudioUnit, Play)
     {   
         try 
         {            
@@ -379,6 +393,7 @@ namespace test_cpp_api
             std::cout << "  Plugin: " << unit->description()->isPlugin() << "\n";
             std::cout << "  Num inputs: " << unit->description()->numberOfInputs() << "\n";
             std::cout << "  Num outputs: " << unit->description()->numberOfOutputs() << "\n";
+            std::cout << "  Num buses: " << unit->audioUnitDescription()->numberOfAUBuses() << "\n";
 
             AudioProcessor* synth  = unit->createProcessor();
             
@@ -388,17 +403,19 @@ namespace test_cpp_api
             Stream*           stream = DeviceStream::open(in, out, synth);
             MessageScheduler* sched  = stream->audioScheduler();
                 
-            stream->start();  
-                
-            foreach( int p, list::create(0,2,4,5,7) )
+            stream->start();     
+            SCL_WRITE_LOG("Sending notes...\n");
+            foreach( int p, list::fromRange(0,24) )
             {
-                // Message on  = messageFrom(0x90, 60 + p, 70);
-                // Message off = messageFrom(0x90, 60 + p, 0);    
-                // sched->sendNow(list::create(on));
-                // sched->sendLater(100, list::create(off));
+                Message on  = messageFrom(0x90, 60 + p, 70);
+                Message off = messageFrom(0x90, 60 + p, 0);    
+                sched->sendNow(list::create(on));
+                sched->sendLater(90, list::create(off));
                 sleepMillis(100);
             }
-            sleepMillis(500);   
+            stream->stop();
+            
+            sleepMillis(1000);   
         } 
         catch (const Error& e)
         {

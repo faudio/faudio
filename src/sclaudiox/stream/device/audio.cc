@@ -297,7 +297,7 @@ void AudioDeviceStream::prepareNonBlocking()
     Pa_SetStreamFinishedCallback(portaudioStream, audioProcessingFinishedCallback);
     audioThreadError = NULL;
 
-    int numberOfChannels = processor->description()->numberOfChannels();
+    int numberOfChannels = processor->description()->numberOfChannels(); // TODO should it not be instance->numberOfChannels() ?
     int numberOfFrames   = options.audioBufferSize;
 
     SCL_WRITE_LOG ( "Preparing audio processing\n"
@@ -404,7 +404,7 @@ void AudioDeviceStream::processAudioStream(AudioDeviceStream* instance)
 
     int numberOfInputs   = instance->numberOfInputs();
     int numberOfOutputs  = instance->numberOfOutputs();
-    int numberOfChannels = instance->processor->description()->numberOfChannels();
+    int numberOfChannels = instance->processor->description()->numberOfChannels(); // TODO should it not be instance->numberOfChannels() ?
     int numberOfFrames   = instance->options.audioBufferSize;
 
     SCL_WRITE_LOG ( "Entering audio loop\n"
