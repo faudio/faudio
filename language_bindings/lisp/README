@@ -10,3 +10,5 @@ Installation:
   Don't forget the terminating slash.
 
   Then load with (asdf:load-system :audio-engine)
+
+  You must call (audio-engine:load-library) once before you call any other function.
