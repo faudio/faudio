@@ -18,6 +18,7 @@
   :serial t
   :components
   ((:file "package")
+   (:file "misc")
    (:file "util")
    (:module "backends"
      :components
@@ -26,6 +27,6 @@
       #+cffi      (:file "cffi")))
    (:file "base")
    (:file "device")
+   (:file "stream")
    (:file "scheduling")
-   (:file "processor")
-   (:file "stream")))
+   (:file "processor")))

@@ -11,4 +11,5 @@ Installation:
 
   Then load with (asdf:load-system :audio-engine)
 
-  You must call (audio-engine:load-library) once before you call any other function.
+  You must call (audio-engine:load-library) once before you call any other function,
+  alternatively you can wrap all invocations in (audio-engine:with-library).
