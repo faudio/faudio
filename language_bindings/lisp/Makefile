@@ -19,6 +19,8 @@ clean-lw-gen:
 .PHONY: examples
 examples: lw-gen
 		tools/lisp examples/playnotes/deliver.lisp;
+		tools/lisp examples/list-au/deliver.lisp;
 
 clean-examples:
 		rm -f playnotes;
+		rm -f list-au;

@@ -33,10 +33,15 @@
   (:documentation "An error in portaudio."))
 
 (define-condition stream-error (audio-error) ()
-  (:documentation "An error related to a stream."))
+  (:documentation "An error related to a stream.")) ; TODO get stream
 
 (define-condition dsp-error (audio-error) ()
   (:documentation "An error related to an audio processor."))
+
+(define-condition plugin-error ()
+  ((plugin    :type :audio-plugin)
+   (processor :type :audio-processor))
+  (:documentation "An error related to an audio plugin."))
 
 (defmethod message ((obj audio-error))
 "A string describing the error."
@@ -50,4 +55,5 @@
 "Portaudio-specific error code"
   (native-call scl-portaudio-error-code :int ((obj :portaudio-error))))
 
-
+(defmethod plugin ((obj plugin-error))
+  (native-call scl-plugin-from-error :audio-plugin ((obj :plugin-error))))

@@ -9,15 +9,18 @@
   (let ((opts (default-send-options)))
     (setf (kind opts) :audio) opts))
 
-(defun main ()
+(defun playnotes ()
   (with-library
     (handler-case
       (let* ((output (default-audio-output-device))
-             (processor (load-fluidsynth +sfpath+))
+             (plugin (load-dls-music-device))
+             (processor (make-processor plugin))
+             ; (processor (load-fluidsynth +sfpath+))
              (stream (open-device-stream 
                        :audio-output output 
                        :audio-processor processor)))
         (format *standard-output* "Starting audio...~%")
+        (format *standard-output* "Playing notes on ~s~%" (name processor))
         (start stream)
         (send-later stream 0    '(#xc0 11)     (send-audio)) ; Change program to marimba
         (send-later stream 200  '(#x90 60 100) (send-audio)) ; Schedule note onsets
@@ -30,4 +33,4 @@
         (stop stream))
       (audio-error (e) (print (message e)))))) 
 
-#-deliver (main)
+#-deliver (playnotes)
