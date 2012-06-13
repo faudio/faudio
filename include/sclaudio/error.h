@@ -26,6 +26,7 @@ typedef void  *SclPortaudioError;
 typedef void  *SclPortmidiError;
 
 typedef void  *SclDspError;
+typedef void  *SclAudioPluginError;
 typedef void  *SclStreamError;
 
 typedef void  (*SclErrorHandler) (SclTime time, SclError err);

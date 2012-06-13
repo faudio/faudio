@@ -29,13 +29,20 @@ public:
         Constructor.
      */
     AudioPluginError(AudioPlugin* plugin, AudioPluginProcessor* processor) 
-        : mPlugin(plugin)
+        : mCopy(false)
+        , mPlugin(plugin)
         , mProcessor(processor) {}
+
+    AudioPluginError(const AudioPluginError& other) 
+        : mCopy(false)
+        , mPlugin(other.mPlugin)
+        , mProcessor(other.mProcessor)
+        , mCachedMessage(const_cast<AudioPluginError&>(other).message()) {}
             
     /**
         Returns a plugin-specific error message.
      */
-    String message() = 0;
+    String message() { if (mCopy) return mCachedMessage; else return ""; }
 
     /**
         Returns the plugin that caused the error.
@@ -47,7 +54,9 @@ public:
      */
     AudioPluginProcessor* processor() { return mProcessor; }
 
-private:
+private:                 
+    bool mCopy;
+    String mCachedMessage;
     AudioPlugin* mPlugin;
     AudioPluginProcessor* mProcessor;
 };

@@ -131,7 +131,7 @@ std::list<Internal*> importList(void** arr, int length)
 #define WITH_ONE_EXCEPTION(E1, V) \
     try { \
         return V; \
-    } catch (E1 e) { \
+    } catch (E1& e) { \
         *err = new E1(e); \
         return NULL; \
     }
@@ -667,11 +667,37 @@ SclAudioDevice scl_default_audio_output_device(SclPortaudioError *err)
 
 // =============================================================================
 
+/** @depracated FIXME is it used?*/
 SclString* scl_processor_controls(SclAudioProcessor obj, int *length)
 {
     throw Unimplemented();
-    // return exportList<String,SclString>(in<AudioProcessor>(obj)->controls(), length);
 }
+
+SclString scl_processor_name(SclAudioProcessor obj)
+{
+    return ex<String,SclString>(in<AudioProcessor>(obj)->description()->name());
+}
+
+int scl_processor_is_atomic(SclAudioProcessor obj)
+{   
+    return in<AudioProcessor>(obj)->description()->isAtomic();
+}
+
+int scl_processor_is_compound(SclAudioProcessor obj)
+{   
+    return in<AudioProcessor>(obj)->description()->isCompound();
+}
+
+int scl_processor_is_stateful(SclAudioProcessor obj)
+{
+    return in<AudioProcessor>(obj)->description()->isStateful();
+}
+
+int scl_processor_is_plugin(SclAudioProcessor obj)
+{   
+    return in<AudioProcessor>(obj)->description()->isPlugin();
+}
+
 
 int scl_processor_num_inputs(SclAudioProcessor obj)
 {
@@ -682,6 +708,12 @@ int scl_processor_num_outputs(SclAudioProcessor obj)
 {
     return in<AudioProcessor>(obj)->description()->numberOfOutputs();
 }
+
+int scl_processor_num_buses(SclAudioProcessor obj)
+{
+    return in<AudioProcessor>(obj)->description()->numberOfBuses();
+}
+
 
 SclAudioProcessor scl_sequence(SclAudioProcessor *objs, int len, SclDspError *err)
 {
@@ -701,6 +733,58 @@ SclAudioProcessor scl_load_fluidsynth(SclString path, SclDspError *err)
         ex(acquire(new FluidSynth(in<String,SclString>(path)))));
 	return NULL;
 }
+
+SCLAUDIO_API SclAudioPlugin scl_plugin_from_error(SclAudioPluginError obj)
+{
+    return ex(acquire(in<AudioPluginError>(obj)->plugin()));
+}
+
+SCLAUDIO_API SclAudioPlugin scl_plugin_from_processor(SclAudioProcessor obj)
+{
+    return ex(acquire(in<AudioPluginProcessor>(obj)->plugin()));
+}
+
+SCLAUDIO_API SclString scl_plugin_name(SclAudioPlugin obj)
+{
+    return ex<String,SclString>(in<AudioPlugin>(obj)->description()->name());
+}
+
+SCLAUDIO_API int scl_plugin_num_inputs(SclAudioPlugin obj)
+{
+    return in<AudioPlugin>(obj)->description()->numberOfInputs();
+}
+
+SCLAUDIO_API int scl_plugin_num_outputs(SclAudioPlugin obj)
+{
+    return in<AudioPlugin>(obj)->description()->numberOfOutputs();
+}
+
+SCLAUDIO_API int scl_plugin_num_buses(SclAudioPlugin obj)
+{
+    return in<AudioPlugin>(obj)->description()->numberOfBuses();
+}
+
+SCLAUDIO_API SclAudioProcessor scl_plugin_create_processor(SclAudioPlugin obj, SclAudioPluginError* err)
+{
+    WITH_ONE_EXCEPTION(AudioPluginError, 
+        ex(acquire(in<AudioPlugin>(obj)->createProcessor())));
+	return NULL;
+}
+
+
+
+
+
+SclAudioProcessor* scl_load_audio_units(int *length)
+{
+    return exportList(acquireAll(AudioUnit::audioUnits()), length);
+}                                
+
+SclAudioPlugin scl_load_dls_music_device()
+{
+    return ex(acquire(AudioUnit::dlsMusicDevice()));
+}
+
 
 
 // =================================================================================================
@@ -855,69 +939,69 @@ SclInterruptionMode scl_future_group_interruption_mode(SclFutureGroup group)
 
 // =================================================================================================
 
-SCLAUDIO_API SclDeviceStreamOptions scl_default_device_stream_options()
+SclDeviceStreamOptions scl_default_device_stream_options()
 {
     DeviceStreamOptions* opts = new DeviceStreamOptions;
     return ex<DeviceStreamOptions>(opts);
 }
 
-SCLAUDIO_API int scl_device_stream_options_get_sample_rate(SclDeviceStreamOptions obj)
+int scl_device_stream_options_get_sample_rate(SclDeviceStreamOptions obj)
 {
     return in<DeviceStreamOptions>(obj)->sampleRate;
 }
 
-SCLAUDIO_API int scl_device_stream_options_get_audio_buffer_size(SclDeviceStreamOptions obj)
+int scl_device_stream_options_get_audio_buffer_size(SclDeviceStreamOptions obj)
 {
     return in<DeviceStreamOptions>(obj)->audioBufferSize;
 }
 
-SCLAUDIO_API SclRealTime scl_device_stream_options_get_audio_latency(SclDeviceStreamOptions obj)
+SclRealTime scl_device_stream_options_get_audio_latency(SclDeviceStreamOptions obj)
 {
     return in<DeviceStreamOptions>(obj)->audioLatency;
 }
 
-SCLAUDIO_API SclRealTime scl_device_stream_options_get_midi_latency(SclDeviceStreamOptions obj)
+SclRealTime scl_device_stream_options_get_midi_latency(SclDeviceStreamOptions obj)
 {
     return in<DeviceStreamOptions>(obj)->midiLatency;
 }
 
-SCLAUDIO_API int scl_device_stream_options_is_non_blocking(SclDeviceStreamOptions obj)
+int scl_device_stream_options_is_non_blocking(SclDeviceStreamOptions obj)
 {
     return in<DeviceStreamOptions>(obj)->useNonBlocking;
 }
 
-SCLAUDIO_API int scl_device_stream_options_is_exclusive_mode(SclDeviceStreamOptions obj)
+int scl_device_stream_options_is_exclusive_mode(SclDeviceStreamOptions obj)
 {
     return in<DeviceStreamOptions>(obj)->useExclusiveMode;
 }
 
 
-SCLAUDIO_API void scl_device_stream_options_set_sample_rate(SclDeviceStreamOptions obj, int value)
+void scl_device_stream_options_set_sample_rate(SclDeviceStreamOptions obj, int value)
 {
     in<DeviceStreamOptions>(obj)->sampleRate = value;
 }
 
-SCLAUDIO_API void scl_device_stream_options_set_audio_buffer_size(SclDeviceStreamOptions obj, int value)
+void scl_device_stream_options_set_audio_buffer_size(SclDeviceStreamOptions obj, int value)
 {
     in<DeviceStreamOptions>(obj)->audioBufferSize = value;
 }
 
-SCLAUDIO_API void scl_device_stream_options_set_audio_latency(SclDeviceStreamOptions obj, SclRealTime value)
+void scl_device_stream_options_set_audio_latency(SclDeviceStreamOptions obj, SclRealTime value)
 {
     in<DeviceStreamOptions>(obj)->audioLatency = value;
 }
 
-SCLAUDIO_API void scl_device_stream_options_set_midi_latency(SclDeviceStreamOptions obj, SclRealTime value)
+void scl_device_stream_options_set_midi_latency(SclDeviceStreamOptions obj, SclRealTime value)
 {
     in<DeviceStreamOptions>(obj)->midiLatency = value;
 }
 
-SCLAUDIO_API SclRealTime scl_device_stream_options_set_non_blocking(SclDeviceStreamOptions obj, int value)
+SclRealTime scl_device_stream_options_set_non_blocking(SclDeviceStreamOptions obj, int value)
 {
     return in<DeviceStreamOptions>(obj)->useNonBlocking = value;
 }
 
-SCLAUDIO_API SclRealTime scl_device_stream_options_set_exclusive_mode(SclDeviceStreamOptions obj, int value)
+SclRealTime scl_device_stream_options_set_exclusive_mode(SclDeviceStreamOptions obj, int value)
 {
     return in<DeviceStreamOptions>(obj)->useExclusiveMode = value;
 }
