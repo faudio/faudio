@@ -1,2 +1,2 @@
 #!/bin/bash
-tools/lw tools/lwfli.lisp
+tools/lisp tools/lwfli.lisp $@

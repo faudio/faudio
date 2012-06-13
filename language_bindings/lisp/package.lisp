@@ -7,7 +7,10 @@
 ;;  All rights reserved
 ;;
 
-(in-package #:cl-user)
+;(in-package #:cl-user)
+
+(defpackage misc
+  (:use :common-lisp))
 
 (defpackage audio-engine
 
@@ -18,6 +21,8 @@
      If you are reading this in the source, please see the generated documentation
      in `audio-engine/doc/build`.")
 
+  (:nicknames :audio :ae)
+  
   (:use
     :common-lisp)
 
@@ -31,7 +36,7 @@
   (:export
     :object
     
-    :error
+    :audio-error
     :message
     :error-code
     
@@ -100,7 +105,8 @@
     :wait-for           
     :runningp
     :with-running-stream
-    :set-error-handler
+    :set-error-handler 
+    :open-device-stream
 
     :future
     :future-group
@@ -110,8 +116,22 @@
     :wait-for
     :donep
     :result
+    
+    :device-stream-options
+    :default-device-stream-options
+    :send-options
+    :default-send-options
+    :do-now
+    :do-later
+    :do-at
+    :send-now
+    :send-later
+    :send-at
+    :kind
 
     :load-library    
+    :unload-library    
+    :with-library    
     )
   )
   

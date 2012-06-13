@@ -16,8 +16,14 @@
     :scorecleaneraudio
     :real-name
       #+:win32 "sclaudio"
-      #+:macosx "@executable_path/../Frameworks/ScoreCleanerAudio.framework/ScoreCleanerAudio"
+      #+:macosx "libsclaudio.dylib"
+;      #+:macosx "@executable_path/../Frameworks/ScoreCleanerAudio.framework/ScoreCleanerAudio"
     :connection-style :immediate))
+
+(defun lispworks-unload-library ()
+  (fli:disconnect-module
+    :scorecleaneraudio
+    :remove t))
 
 (defun lispworks-call (func type args errors)
   (lispworks-call-impl func type args errors)) 

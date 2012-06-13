@@ -14,6 +14,9 @@
 (defun cffi-load-library ()
   nil)
 
+(defun cffi-unload-library ()
+  nil)
+
 (defun cffi-call (func type args errors)
   nil)
 
