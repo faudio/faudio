@@ -17,7 +17,7 @@
   (format stream "    -p      package in which the generated code will be included~%")
   (format stream "    -c      case sensitive~%")
   nil)
-
+  
 (defun main ()
   (let* ( 
           (out  *standard-output*)
@@ -29,19 +29,21 @@
         (return-from main))
       (with-parsed-args args
         (let* (
-                (include-path   (find-option :i)) 
+                (include-path   (expand-path (find-option :i))) 
                 (to-package     (find-option :p)) 
                 (case-sensitive (find-option :c)) 
-                (cpp-options    (find-option :x)) 
-                (input          (first *arguments*))
-                (output         (second *arguments*))
-              )
-        ; (format out "include: ~s~%" include-path)
-        ; (format out "include: ~s~%" to-package) 
-        ; (format out "include: ~s~%" case-sensitive)
-        ; (format out "include: ~s~%" cpp-options)
-        ; (format out "include: ~s~%" input)
-        ; (format out "include: ~s~%" output)
+                (cpp-options    (split-sequence #\; (find-option :x))) 
+                (input          (expand-path (first *arguments*)))
+                (output         (expand-path (second *arguments*)))
+              )    
+        (print (command-line-args))
+        (format out ">>>>>>>>>>>>>>>>>>>> include: ~s~%" include-path)
+        (format out ">>>>>>>>>>>>>>>>>>>> package: ~s~%" to-package) 
+        (format out ">>>>>>>>>>>>>>>>>>>> casesens: ~s~%" case-sensitive)
+        (format out ">>>>>>>>>>>>>>>>>>>> cppoptions: ~s~%" cpp-options)
+        (format out ">>>>>>>>>>>>>>>>>>>> input: ~s~%" input)
+        (format out ">>>>>>>>>>>>>>>>>>>> output: ~s~%" output)
+
         (setf *preprocessor-include-path* include-path)
 
         (foreign-parser:process-foreign-file input 

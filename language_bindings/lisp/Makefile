@@ -6,9 +6,9 @@ lw-gen:
 		touch backends/lispworks-gen.lisp;
 	  tools/lwfli \
 			  -p "audio" \
-			  -I "/Users/hans/modus/audio/include/" -x "-DSCL_UNICODE" \
-			  "/Users/hans/modus/audio/include/sclaudio.h" \
-			  "/Users/hans/modus/audio/language_bindings/lisp/backends/lispworks-gen.lisp";
+			  -I "../../include/" -x "-DSCL_UNICODE;-DSCL_LISPWORKS" \
+			  "../../include/sclaudio.h" \
+			  "backends/lispworks-gen.lisp";
 		sleep 0.5;                         
 	  touch backends/lispworks-gen.lisp; \
     sed -e "s/\"audio\"/:audio/" -i "" backends/lispworks-gen.lisp;

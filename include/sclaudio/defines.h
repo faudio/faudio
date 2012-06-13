@@ -18,4 +18,10 @@
     #endif
 #endif
 
+#ifdef SCL_LISPWORKS
+    #define SCL_INLINE
+#else
+    #define SCL_INLINE inline
+#endif
+
 #endif
