@@ -585,6 +585,8 @@ namespace
         descr.componentType         = kAudioUnitType_MusicDevice;
         descr.componentSubType      = kAudioUnitSubType_DLSSynth;
         descr.componentManufacturer = kAudioUnitManufacturer_Apple;
+        descr.componentFlags        = 0;
+        descr.componentFlagsMask    = 0;
 
         return findAudioComponents(&descr);
     }

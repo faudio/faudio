@@ -97,7 +97,7 @@ namespace
 }
 
 String MidiDevice::name()
-{
+{   
     return fromSimpleString<Portmidi::characterSet>(Pm_GetDeviceInfo(mData->mIndex)->name);
 }
 

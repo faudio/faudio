@@ -147,6 +147,13 @@ inline String fromSimpleString<kIso885915>(const char* str)
 {
     return UnicodeString(str, "ISO-8859-15");
 }
+
+template <>
+inline String fromSimpleString<kDefaultCharSet>(const char* str)
+{
+    return UnicodeString(str, ""); // FIXME is this right?
+}
+
 #endif // SCL_UNICODE
 
 typedef String FilePath;
