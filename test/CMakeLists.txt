@@ -41,7 +41,9 @@ if(${BUILD_SCLAUDIO_TESTS})
                 COMPILE_DEFINITIONS      "${SCLAUDIO_TEST_DEFINITIONS}")
     endif()
 
-    find_library(GTEST              "libgtest")
+    # set(CMAKE_LIBRARY_PATH          "../lib/mac/static" 
+    #                                 "../lib/mac/shared")
+    find_library(GTEST              "libgtest.a")
 
     target_link_libraries(SCLAUDIO_TESTS 
                           SCLAUDIO              

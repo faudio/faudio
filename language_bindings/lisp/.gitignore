@@ -1,2 +1,6 @@
 libsclaudio.dylib
 *-gen*
+*.xfasl
+*.ofasl
+list-au
+playnotes

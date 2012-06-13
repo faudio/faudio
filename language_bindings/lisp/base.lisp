@@ -11,6 +11,12 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defconstant +type-key-off+ 8)
+(defconstant +type-key-on+ 9)
+(defconstant +type-control-change+ 11)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defclass object ()
   ((native-object :initarg :native-object))
   (:documentation

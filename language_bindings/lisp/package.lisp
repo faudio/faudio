@@ -89,9 +89,9 @@
     :*
     :/
     :%     
-    :load-au-plugin
-    :load-vst2-plugin
-    :make-plugin-processor    
+    :load-audio-units
+    :load-dls-music-device
+    :make-processor    
     :load-fluidsynth
     
     :stream
@@ -102,7 +102,8 @@
     :start
     :stop
     :abort
-    :wait-for           
+    :wait-for
+    :running ; FIXME
     :runningp
     :with-running-stream
     :set-error-handler 
@@ -131,7 +132,11 @@
 
     :load-library    
     :unload-library    
-    :with-library    
+    :with-library
+    
+    :+type-key-on+
+    :+type-key-off+
+    :+type-control-change+    
     )
   )
   
