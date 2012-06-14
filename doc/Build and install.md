@@ -41,23 +41,52 @@ All dependencies included except:
   * Boost headers: Download or install and put a symlink from the boost header directory to `external/boost`
   * Standard OS X frameworks (CoreAudio etc): Expected to be in `/System/Library/Frameworks`
 
-For command line build:
+### Makefile build:
     
     $ mkdir build
     $ cd build
     $ cmake ..
+
+This creates a default build. To see and review the build options interactively, do:
+
+    $ cmake -i ..
+
+The values you select are stored in the `CMakeCache.txt` file in the current directory. To change them you can run the wizard again, edit the file directly, or do:
+
+    $ cmake -MY_OPTION_NAME=my_option_value ..
+
+To switch between debug and release builds, do:
+
+    $ cmake -DCMAKE_BUILD_TYPE=Debug ..
+
+or 
+
+    $ cmake -DCMAKE_BUILD_TYPE=Release ..
+
+To run the build, do:
+
     $ make
     
-For Xcode build:
+### Xcode build:
 
     $ mkdir build
     $ cd build
-    $ cmake -G Xcode ..
 
-Then open generated project and build.
-                                     
-To build with non-standard options (logging, no unicode etc), pass the `-i` flag to cmake.
-    
+To create and open a default build, do:
+
+    $ cmake -G Xcode ..
+    $ open *.xcodeproj
+
+To see and review the build options interactively, do:
+
+    $ cmake -i ..
+
+The values you select are stored in the `CMakeCache.txt` file in the current directory. To change them you can run the wizard again, edit the file directly, or do:
+
+    $ cmake -MY_OPTION_NAME=my_option_value ..
+
+If you update the the options cache you must overwrite the Xcode project with a fresh one by running `cmake -G Xcode` again.
+                                         
 
 Windows build
 -------------

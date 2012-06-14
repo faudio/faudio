@@ -1,5 +1,10 @@
 #!/usr/bin/env runhaskell
 
+--  Converts inline Lisp documentation to Doxygen/Markdown modules
+--  Requires the Haskell platform + pandoc and pandoc-types from hackage.org
+
+--  Copyright (c) Hans Hoglund 2012
+
 import Control.Monad
 import Data.Monoid
 import System.Environment (getArgs)
