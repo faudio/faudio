@@ -117,5 +117,12 @@ endif()
                       
 add_subdirectory(lib)
 add_subdirectory(src)
-add_subdirectory(test)
+add_subdirectory(test)  
+
+##
+## TODO Distribution, compression etc
+##
+
+
+
 
