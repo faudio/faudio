@@ -12,4 +12,10 @@ Installation:
   Then load with (asdf:load-system :audio-engine)
 
   You must call (audio-engine:load-library) once before you call any other function,
-  alternatively you can wrap all invocations in (audio-engine:with-library).
+  or, equivalently, wrap all invocations in (audio-engine:with-library).
+  
+Backends:
+  
+  The audio-engine library can connect to the underlying C library using LispWorks FLI or CFFI.
+  An appropriate backend will be selected automatically, see util.lisp for details.
+  

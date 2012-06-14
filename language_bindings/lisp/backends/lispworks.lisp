@@ -33,6 +33,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+#|
+  TODO                             
+    - Make macros hygienic (to get rid of the cascades of compiler warnings)
+    - Check allocation of atoms etc
+    - Optimize options passing etc using (with-dynamic-foreign-objects) ?
+
+|#
 
 (defun always-list (x)
 "If the given value is a list it is returned, otherwise a singleton 
@@ -97,13 +104,13 @@ list containing the given value is returned."
   ; #-audio-unicode
     ; (scl-uchars-to-string (fli:convert-to-foreign-string str :external-format :ascii)) 
   ; #+audio-unicode
-    (fli:convert-to-foreign-string str :external-format :unicode)) 
+    (fli:convert-to-foreign-string str :external-format :unicode :null-terminated-p t)) 
 
 (defun from-foreign-string (str)
   ; #-audio-unicode
     ; (fli:convert-from-foreign-string str :external-format :ascii)
   ; #+audio-unicode
-    (fli:convert-from-foreign-string str :external-format :unicode))
+    (fli:convert-from-foreign-string str :external-format :unicode :null-terminated-p t))
                                
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

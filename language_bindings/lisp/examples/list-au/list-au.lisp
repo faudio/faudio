@@ -3,14 +3,11 @@
 (asdf:load-system :audio-engine)
 (in-package       :audio-engine)
 
-(defconstant +sfpath+ "/Users/hans/Documents/Kod/doremir/modus/app/resources/soundfonts/sound.sf2")
-
 (defun list-au ()
   (with-library
     (handler-case
-      (progn
+      (let* ((units (load-audio-units)))
         (format *standard-output* "Listing Audio Units...~%~%")
-        (setf units (load-audio-units))
         (dolist (x units) 
           (format *standard-output* "~s~%" (name x))
           ; (format *standard-output* "  Inputs: ~s~%" (num-inputs x))
