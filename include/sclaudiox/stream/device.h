@@ -116,6 +116,7 @@ public:
         : TimeProvider(options.sampleRate)
         , options(options)
         , errorHandler(NULL)      
+        , mDescription(NULL)
         , actionSchedulerInstance(new RealtimeActionScheduler(this))
         , messageSchedulerInstance(new DispatchingScheduler(this))
         , actionExecutorThread(NULL)
@@ -126,7 +127,8 @@ public:
         Destructor.
      */
     ~DeviceStream()
-    {               
+    {                     
+        if (mDescription) delete mDescription;
         delete actionSchedulerInstance;
         delete messageSchedulerInstance;
         // TODO clean up surviving threads if the stream is not stopped/was stopped from exception
@@ -346,7 +348,8 @@ public:
 protected:
     DeviceStreamOptions      options;
     Handler<Error>*          errorHandler;
-
+    StreamDescription *      mDescription;
+    
 private:    
     RealtimeActionScheduler* actionSchedulerInstance;
     DispatchingScheduler*    messageSchedulerInstance;

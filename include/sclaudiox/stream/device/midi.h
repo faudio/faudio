@@ -55,8 +55,9 @@ public:
 
     inline StreamDescription* description()
     {   
-        // FIXME
-        return new MidiDeviceStreamDescription();
+        if (!mDescription)
+            mDescription = new MidiDeviceStreamDescription();
+        return mDescription;
     }
 
 
@@ -86,16 +87,16 @@ private:
      */
     static void midiOpenCloseRoutine(MidiDeviceStream* instance);
 
-    MidiDevice    *inputDevice, *outputDevice;
-    MidiScheduler *midiSchedulerInstance;
-    Thread        *midiThread;
+    MidiDevice                  * inputDevice, * outputDevice;
+    MidiScheduler               * midiSchedulerInstance;
+    Thread                      * midiThread;
     
-    Thread        *midiOpenCloseThread;
-    SharedMutex   midiOpenCloseMutex, midiOpenCloseDoneMutex;
+    Thread            * midiOpenCloseThread;
+    SharedMutex       midiOpenCloseMutex, midiOpenCloseDoneMutex;
     ConditionVariable openMidiSignal, closeMidiSignal, openMidiDone, closeMidiDone;
-    PmError       midiOpenCloseError;
+    PmError           midiOpenCloseError;
     
-    PmStream      *inputStream, *outputStream;
+    PmStream * inputStream, * outputStream;
 };
 
 } // namespace

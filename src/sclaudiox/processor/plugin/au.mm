@@ -284,11 +284,6 @@ int AudioUnitDescription::numberOfOutputs()
     return outputs;
 }
 
-int AudioUnitDescription::numberOfAUBuses()
-{
-    return getNumBuses(mData->processor->mData->instance);
-}
-
 int AudioUnitDescription::numberOfBuses()
 {
     return 0;

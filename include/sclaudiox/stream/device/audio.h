@@ -71,9 +71,10 @@ public:
     bool useInternalTimer();
 
     inline StreamDescription* description()
-    {   
-        // FIXME
-        return new AudioDeviceStreamDescription();
+    {                 
+        if (!mDescription)
+            mDescription = new AudioDeviceStreamDescription();
+        return mDescription;
     }
 
 private:
@@ -217,12 +218,12 @@ private:
 //  static ThreadLocal<WindowsComToken> windowsComToken;
 // #endif
 	
-    AudioDevice                 *inputDevice, *outputDevice;
-    AudioProcessor              *processor;
-    AudioProcessingInformation  *info;
-    AudioProcessingBuffer       *buffer;
+    AudioDevice                  *inputDevice, *outputDevice;
+    AudioProcessor               *processor;
+    AudioProcessingInformation   *info;
+    AudioProcessingBuffer        *buffer;
 
-    PaStream                    *portaudioStream;
+    PaStream                     *portaudioStream;
 
     typedef boost::tuple< AudioProcessor*, 
                           std::list<Message> > TimedMessage;
@@ -230,12 +231,12 @@ private:
     typedef Queue< TimedMessage* >             IncomingMessagesQueue;
 
 
-    IncomingMessagesQueue       *incomingMessagesQueue;
-    AudioScheduler              *audioSchedulerInstance;
-    Thread                      *messageHandlerThread, *audioThread;
-    Error                       *audioThreadError;
+    IncomingMessagesQueue        *incomingMessagesQueue;
+    AudioScheduler               *audioSchedulerInstance;
+    Thread                       *messageHandlerThread, *audioThread;
+    Error                        *audioThreadError;
         
-    AtomicNumber<Time>          sampleCount;
+    AtomicNumber<Time>           sampleCount;
 };
 
 } // namespace

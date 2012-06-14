@@ -8,6 +8,7 @@
 #ifndef  _SCLAUDIOX_DEVICE_MIDI
 #define  _SCLAUDIOX_DEVICE_MIDI
 
+#include "portmidi.h" // FIXME remove, see below
 #include "sclaudiox/error.h"
 #include "sclaudiox/control.h"
 #include "sclaudiox/defines.h"
@@ -15,7 +16,6 @@
 
 #define SCL_MIDI_INPUT_BUFFER_SIZE  256
 #define SCL_MIDI_OUTPUT_BUFFER_SIZE 256
-
 
 namespace doremir {
 namespace scl {
@@ -104,7 +104,8 @@ class SCLAUDIO_API MidiDevice
     , public Resource
 {
 public:
-    typedef int Index;
+    // FIXME make opaque
+    typedef PmDeviceID Index;
     
     MidiDevice(MidiDeviceData* data);
     ~MidiDevice();

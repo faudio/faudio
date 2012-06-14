@@ -667,12 +667,6 @@ SclAudioDevice scl_default_audio_output_device(SclPortaudioError *err)
 
 // =============================================================================
 
-/** @depracated FIXME is it used?*/
-SclString* scl_processor_controls(SclAudioProcessor obj, int *length)
-{
-    throw Unimplemented();
-}
-
 SclString scl_processor_name(SclAudioProcessor obj)
 {
     return ex<String,SclString>(in<AudioProcessor>(obj)->description()->name());

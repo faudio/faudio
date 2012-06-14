@@ -29,9 +29,9 @@ typedef DWORD     SclWord32;
 typedef DWORDLONG SclWord64;
 
 #ifdef SCL_UNICODE
-    typedef unsigned short SclChar;
+    typedef SclWord16 SclChar;
 #else
-    typedef char SclChar;
+    typedef char      SclChar;
 #endif
 
 typedef float  SclFloat32;
@@ -47,9 +47,9 @@ typedef uint32_t SclWord32;
 typedef uint64_t SclWord64;
 
 #ifdef SCL_UNICODE
-    typedef unsigned short SclChar;
+    typedef SclWord16   SclChar;
 #else
-    typedef char           SclChar;
+    typedef char        SclChar;
 #endif
 
 typedef float               SclFloat32;

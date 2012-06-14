@@ -23,8 +23,6 @@ extern "C" {
 typedef void    *SclAudioProcessor;
 typedef void    *SclAudioPlugin;
 
-/** @depracated */
-SCLAUDIO_API SclString* scl_processor_controls(SclAudioProcessor obj, int *length);
 
 SCLAUDIO_API SclString  scl_processor_name(SclAudioProcessor obj);
 SCLAUDIO_API int        scl_processor_is_atomic(SclAudioProcessor obj);

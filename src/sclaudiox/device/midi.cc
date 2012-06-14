@@ -75,7 +75,8 @@ PortmidiError::Code PortmidiError::errorCode()
 MidiDevice::MidiDevice(MidiDeviceData* data) 
     : mData(new MidiDeviceData)
     {                         
-        mData = data;
+        mData->mIndex = data->mIndex;
+        mData->mToken = data->mToken;
         acquire(mData->mToken);
     }
 
@@ -85,29 +86,18 @@ MidiDevice::~MidiDevice()
     delete mData;
 }  
 
-namespace 
-{
-    MidiDevice* createDevice(MidiDevice::Index index, PortmidiToken* token)
-    {
-        MidiDeviceData data;
-        data.mIndex = index;
-        data.mToken = token;
-        return new MidiDevice(&data);
-    }
-}
-
-String MidiDevice::name()
-{   
-    return fromSimpleString<Portmidi::characterSet>(Pm_GetDeviceInfo(mData->mIndex)->name);
-}
-
 MidiDevice::Index MidiDevice::index()
 {
     return mData->mIndex;
 }
 
+String MidiDevice::name()
+{                 
+   return fromSimpleString<Portmidi::characterSet>(Pm_GetDeviceInfo(mData->mIndex)->name);
+}
+
 String MidiDevice::hostName()
-{
+{                 
     return fromSimpleString<Portmidi::characterSet>(Pm_GetDeviceInfo(mData->mIndex)->interf);
 }
 
@@ -120,6 +110,18 @@ bool MidiDevice::hasOutput()
 {
     return Pm_GetDeviceInfo(mData->mIndex)->output;
 }
+
+namespace 
+{
+    MidiDevice* createDevice(MidiDevice::Index index, PortmidiToken* token)
+    {
+        MidiDeviceData data;
+        data.mIndex = index;
+        data.mToken = token;
+        return new MidiDevice(&data);
+    }
+}
+
 
 std::list<MidiDevice*> MidiDevice::devices()
 {

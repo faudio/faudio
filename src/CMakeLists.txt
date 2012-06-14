@@ -12,8 +12,7 @@
 ##     * An OS X dynamic library (libsclaudio.dylib)
 ##     * A Windows dynamic library (sclaudio.dll)
 ##
-##   It can also build the sclaudio command line tool, which is useful for 
-##   testing the library without any need to link to external code.
+##   It optionally build the command line tool bin/sclaudio.
 ## 
 
 

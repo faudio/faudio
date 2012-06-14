@@ -56,8 +56,9 @@ public:
     
     inline StreamDescription* description()
     {   
-        // FIXME
-        return new AudioMidiDeviceStreamDescription();
+        if (!mDescription)
+            mDescription = new AudioMidiDeviceStreamDescription();
+        return mDescription;
     }
 
 
