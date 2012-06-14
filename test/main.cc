@@ -93,7 +93,7 @@ namespace test_cpp_api
 {
     using namespace doremir::scl;
 
-/*
+
     TEST(AudioDevices, AudioInputAvailable)
     {
         EXPECT_NO_THROW( AudioDevice::defaultInputDevice() );
@@ -112,6 +112,21 @@ namespace test_cpp_api
     {
         EXPECT_NO_THROW( MidiDevice::defaultOutputDevice() );
     }
+    TEST(MidiDevices, ListMidiDevices)
+    {
+        std::list<MidiDevice*> devices =  MidiDevice::devices();
+        foreach (MidiDevice* device, devices)
+        {
+            std::cout << ""     << device->name() << "\n";
+            std::cout << "    " << device->hostName() << "\n";
+            std::cout << "    " 
+                << ( device->hasInput() ? "Input" : "-" ) 
+                << "/" 
+                << ( device->hasOutput() ? "Output" : "-" ) << "\n";
+        }
+        std::cout << "\n";
+    }
+
     TEST(FluidSynth, Base)
     {
         EXPECT_NO_THROW( FluidSynth fs (SOUNDFONT_PATH) );
@@ -122,8 +137,6 @@ namespace test_cpp_api
         EXPECT_EQ ( true, list::isEmpty(list::create<int>()) );
         EXPECT_EQ ( false, list::isEmpty(list::create(1)) );
     }
-    
-    
 
     TEST(Atomic, AtomicReplace)
     {
@@ -221,7 +234,6 @@ namespace test_cpp_api
         x.decrement(1232);
         EXPECT_EQ( x.value(), 0 );    
     }
-*/
        
     // FIXME
 /*
@@ -351,24 +363,23 @@ namespace test_cpp_api
     }
     
 
-/*
     TEST(AudioUnit, List)
     {       
         try
         {
             
         std::list<AudioUnit*> units = AudioUnit::audioUnits();
-        foreach ( AudioUnit* unit, units )
-        {             
-            std::cout << "" <<   unit->description()->name() << "\n";
-            std::cout << "    " << ( unit->description()->isPlugin() ? "Plugin" : "Non-plugin" ) << "\n";
-            std::cout << "    " << ( unit->description()->isAtomic() ? "Atomic" : "Non-atomic" ) << "\n";
-            std::cout << "    " << ( unit->description()->isStateful() ? "Stateful" : "Non-stateful" ) << "\n";
-            std::cout << "    Inputs: " << unit->description()->numberOfInputs() << "\n";
-            std::cout << "    Outputs: " << unit->description()->numberOfOutputs() << "\n";
-
-        }                     
-        std::cout << "\n";
+        // foreach ( AudioUnit* unit, units )
+        // {             
+        //     std::cout << "" <<   unit->description()->name() << "\n";
+        //     std::cout << "    " << ( unit->description()->isPlugin() ? "Plugin" : "Non-plugin" ) << "\n";
+        //     std::cout << "    " << ( unit->description()->isAtomic() ? "Atomic" : "Non-atomic" ) << "\n";
+        //     std::cout << "    " << ( unit->description()->isStateful() ? "Stateful" : "Non-stateful" ) << "\n";
+        //     std::cout << "    Inputs: " << unit->description()->numberOfInputs() << "\n";
+        //     std::cout << "    Outputs: " << unit->description()->numberOfOutputs() << "\n";
+        // 
+        // }                     
+        // std::cout << "\n";
         std::cout << "Number of Audio Units: " << units.size();
         std::cout << "\n";
 
@@ -378,7 +389,7 @@ namespace test_cpp_api
             std::cerr << "Error: " << const_cast<Error&>(e).message() << "\n";
         }              
 
-    }    */
+    }    
  
     TEST(Synth_AudioUnit, Play)
     {   
@@ -393,7 +404,6 @@ namespace test_cpp_api
             std::cout << "  Plugin: " << unit->description()->isPlugin() << "\n";
             std::cout << "  Num inputs: " << unit->description()->numberOfInputs() << "\n";
             std::cout << "  Num outputs: " << unit->description()->numberOfOutputs() << "\n";
-            std::cout << "  Num buses: " << unit->audioUnitDescription()->numberOfAUBuses() << "\n";
 
             AudioProcessor* synth  = unit->createProcessor();
             

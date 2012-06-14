@@ -22,11 +22,9 @@ typedef void    *SclFuture;
 typedef void    *SclFutureGroup;
             
 SCLAUDIO_API void scl_interrupt_future(SclFuture obj);
-
 SCLAUDIO_API void scl_interrupt_future_group(SclFutureGroup obj);
 
 SCLAUDIO_API SclFutureGroup scl_new_future_group(SclInterruptionMode mode);
-
 SCLAUDIO_API SclInterruptionMode scl_future_group_interruption_mode(SclFutureGroup group);
 
 

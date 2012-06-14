@@ -24,15 +24,10 @@
 #include "sclaudiox/util/misc.h"
 
 #ifdef SCL_WIN
-    #if !( defined(SCL_ATOMIC_WIN) || defined(SCL_ATOMIC_OSX) || defined(SCL_ATOMIC_GCC) )
-        #define SCL_ATOMIC_WIN
-    #endif
+    #define SCL_ATOMIC_WIN
 #endif
 #ifdef SCL_OSX
-    #if !( defined(SCL_ATOMIC_WIN) || defined(SCL_ATOMIC_OSX) || defined(SCL_ATOMIC_GCC) )
-        // #define SCL_ATOMIC_OSX
-        #define SCL_ATOMIC_GCC
-    #endif
+    #define SCL_ATOMIC_GCC
 #endif
 
 
@@ -455,27 +450,25 @@ bool operator !=(const AtomicNumber<T>& a, const AtomicNumber<T>& b)
 }
    
 
-typedef AtomicNumber<char> atomic_char;
-typedef AtomicNumber<unsigned char> atomic_uchar;
-typedef AtomicNumber<signed char> atomic_schar;
-typedef AtomicNumber<uint8_t> atomic_uint8_t;
-typedef AtomicNumber<int8_t> atomic_int8_t;
-typedef AtomicNumber<unsigned short> atomic_ushort;
-typedef AtomicNumber<short> atomic_short;
-typedef AtomicNumber<uint16_t> atomic_uint16_t;
-typedef AtomicNumber<int16_t> atomic_int16_t;
-typedef AtomicNumber<unsigned int> atomic_uint;
-typedef AtomicNumber<int> atomic_int;
-typedef AtomicNumber<uint32_t> atomic_uint32_t;
-typedef AtomicNumber<int32_t> atomic_int32_t;
-typedef AtomicNumber<unsigned long> atomic_ulong;
-typedef AtomicNumber<long> atomic_long;
-typedef AtomicNumber<uint64_t> atomic_uint64_t;
-typedef AtomicNumber<int64_t> atomic_int64_t;
-typedef AtomicNumber<unsigned long long> atomic_ullong;
-typedef AtomicNumber<long long> atomic_llong;
-typedef AtomicNumber<void*> atomic_address;
-typedef AtomicNumber<bool> atomic_bool;
+typedef AtomicNumber<char>              atomic_char;
+typedef AtomicNumber<unsigned char>     atomic_uchar;
+typedef AtomicNumber<signed char>       atomic_schar;
+typedef AtomicNumber<unsigned short>    atomic_ushort;
+typedef AtomicNumber<short>             atomic_short;
+typedef AtomicNumber<unsigned int>      atomic_uint;
+typedef AtomicNumber<int>               atomic_int;
+typedef AtomicNumber<unsigned long>     atomic_ulong;
+typedef AtomicNumber<long>              atomic_long;
+typedef AtomicNumber<uint8_t>           atomic_uint8_t;
+typedef AtomicNumber<int8_t>            atomic_int8_t;
+typedef AtomicNumber<uint16_t>          atomic_uint16_t;
+typedef AtomicNumber<int16_t>           atomic_int16_t;
+typedef AtomicNumber<uint32_t>          atomic_uint32_t;
+typedef AtomicNumber<int32_t>           atomic_int32_t;
+typedef AtomicNumber<uint64_t>          atomic_uint64_t;
+typedef AtomicNumber<int64_t>           atomic_int64_t;
+typedef AtomicNumber<void*>             atomic_address;
+typedef AtomicNumber<bool>              atomic_bool;
 
 
 } // namespace

@@ -7,8 +7,6 @@
 
 #include "sclaudiox/util/logging.h"
 #include "sclaudiox/util/concurrency.h"
-#include "sclaudiox/util/thread_local.h"
-#include "sclaudiox/util/semaphore.h"
 
 using namespace doremir::scl;
 

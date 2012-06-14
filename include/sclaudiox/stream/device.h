@@ -135,6 +135,12 @@ public:
     }
 
     
+    Time millisecondTime()
+    {
+        SharedLock lock (timeMutex);
+        return time;
+    }
+
     /**
         Returns the sample rate used by this stream.
         @throws StreamError
@@ -147,12 +153,6 @@ public:
      */
     virtual int audioBufferSize() = 0;
     
-    Time millisecondTime()
-    {
-        SharedLock lock (timeMutex);
-        return time;
-    }
-
     /**
         Returns whether or not an internal timer should be used (true by default). 
         

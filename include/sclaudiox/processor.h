@@ -23,8 +23,6 @@ class Stream;
 class Processor;
 
 
-// =============================================================================
-
 /**
     A signal processing error.
  */
@@ -43,8 +41,6 @@ private:
     Processor* processor;
 };
 
-
-// =============================================================================
 
 /**
     An abstract description of an audio processor.
@@ -137,8 +133,6 @@ public:
 };
 
 
-// =============================================================================
-
 /**
     An object that transforms audio signals. May be atomic or created by combinators.    
  */
@@ -194,7 +188,6 @@ public:
      */
     static AudioProcessor* parallel(std::list<AudioProcessor*> outputs);
 };   
-
 
 
 } // namespace

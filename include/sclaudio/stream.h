@@ -20,9 +20,7 @@ extern "C" {
 typedef void    *SclStream;
 
 SCLAUDIO_API int scl_stream_sample_rate(SclStream stream);
-
 SCLAUDIO_API int scl_stream_audio_buffer_size(SclStream stream);
-
 SCLAUDIO_API int scl_stream_running(SclStream stream);
 
 SCLAUDIO_API void scl_stream_start(SclStream stream, 

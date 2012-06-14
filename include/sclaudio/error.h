@@ -32,13 +32,8 @@ typedef void  *SclStreamError;
 typedef void  (*SclErrorHandler) (SclTime time, SclError err);
 
 
-/**
-    Returns an error message string.
- */
 SCLAUDIO_API SclString  scl_error_message(SclError obj);
-
 SCLAUDIO_API int        scl_portaudio_error_code(SclPortaudioError obj);
-
 SCLAUDIO_API int        scl_portmidi_error_code(SclPortmidiError obj);
 
 

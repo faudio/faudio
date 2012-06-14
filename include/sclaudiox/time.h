@@ -11,10 +11,7 @@
 namespace doremir {
 namespace scl {
 
-/**
-    We measure time in samples or milliseconds. The relation between these two
-    depends on the sample rate of the audio stream.
- */
+
 enum TimeUnit
 {
     kSamples,
@@ -56,7 +53,6 @@ typedef Int32 Time;
     Approximate real-word time in seconds.
   */
 typedef Float64 RealTime;
-
 
 
 
@@ -104,21 +100,6 @@ public:
         return (frame * rate) + ((offset * rate) / rate);
     }
 
-
-// TODO using both samples and milliseconds in schedulers
-    
-//    virtual TimeUnit timeUnit() = 0;
-//    
-//    Time normalizeTime(Time time, TimeUnit unit)
-//    {
-//        if (timeUnit() == unit)   return time;
-//        switch (unit)
-//        {
-//            case Milliseconds: return millisecondsToSamples(time, sampleRate);
-//            case Samples:      return samplesToMilliseconds(time, sampleRate);
-//        }
-//    }
-    
     const Time sampleRate;
 };
 

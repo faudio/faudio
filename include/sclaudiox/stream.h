@@ -21,46 +21,34 @@ namespace scl {
 
 
 SCL_DECLARE_SIMPLE_ERROR(StreamError);
-
 SCL_DECLARE_SIMPLE_ERROR(InvalidStreamState);
 
 
-
-// =============================================================================
-
 enum StreamType 
 {
-    /** 
-        Device streams contain at least one audio or midi device and runs in
+    /** Device streams contain at least one audio or midi device and runs in
         real-time, using external or internal synchronization. 
       */
     kDeviceStream = 0x0,
 
-    /** 
-        File streams operate on files and generally run as fast as the file 
+    /** File streams operate on files and generally run as fast as the file 
         system allows. 
       */
     kFileStream = 0x1,
 
-    /**
-        Buffer streams operate on the internal memory and runs as fast as possible.
+    /** Buffer streams operate on the internal memory and runs as fast as possible.
       */
     kBufferStream = 0x2,
 
-    /**
-        Indicates that the stream provides audio.
+    /** Indicates that the stream provides audio.
       */
     kAudioStream = 0x10,
 
-    /**
-        Indicates that the stream provides midi.
+    /** Indicates that the stream provides midi.
       */
     kMidiStream = 0x20
 };
 
-
-
-// =============================================================================
 
 /**
     An abstract description of a stream.
@@ -114,11 +102,9 @@ public:
     }
 };
 
-// =============================================================================
-
 
 /**
-    A synchronous audio computation.
+    An audio computation.
 
     Each stream contains a specific TimeProvider, which is used by schedulers to synchronize actions
     and messages. Each stream may contain an unspecified numbers of schedulers running in one or
@@ -211,8 +197,6 @@ public:
      */
     virtual void setHandler(Handler<Error>* handler) = 0;
 };
-
-// =============================================================================
 
 } // namespace
 } // namespace

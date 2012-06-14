@@ -17,9 +17,6 @@ extern "C" {
     \file 
   */
 
-/**
-    An object that transforms audio signals. May be atomic or created by combinators.    
- */
 typedef void    *SclAudioProcessor;
 typedef void    *SclAudioPlugin;
 
