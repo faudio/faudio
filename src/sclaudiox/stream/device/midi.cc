@@ -9,9 +9,16 @@
     @author Hans Hoglund
  */
 
+#include "portmidi.h"
 #include "sclaudiox/stream/device/midi.h"
 
-using namespace doremir::scl;
+namespace doremir {
+namespace scl {
+
+struct MidiDeviceIndex
+{
+    PmDeviceID mId;
+};
 
 void MidiDeviceStream::startMidi()
 {
@@ -68,7 +75,7 @@ void MidiDeviceStream::openMidiStreams(PmError* err)
     {
         *err = Pm_OpenInput(
             &inputStream, 
-            inputDevice->index(), 
+            inputDevice->index()->mId, 
             SCL_MIDI_PM_DRIVER_INFO, 
             SCL_MIDI_INPUT_BUFFER_SIZE, 
             (PmTimeProcPtr) timeCallback, 
@@ -79,7 +86,7 @@ void MidiDeviceStream::openMidiStreams(PmError* err)
     {
         *err = Pm_OpenOutput(
             &outputStream, 
-            outputDevice->index(), 
+            outputDevice->index()->mId, 
             SCL_MIDI_PM_DRIVER_INFO, 
             SCL_MIDI_OUTPUT_BUFFER_SIZE, 
             (PmTimeProcPtr) timeCallback, 
@@ -118,8 +125,6 @@ void MidiDeviceStream::midiOpenCloseRoutine(MidiDeviceStream* instance)
 }         
 
 
-// =============================================================================
-
 MidiDeviceStream::MidiDeviceStream(MidiDevice* inputDevice,
                                    MidiDevice* outputDevice,
                                    DeviceStreamOptions options)
@@ -147,4 +152,6 @@ MidiDeviceStream::~MidiDeviceStream()
     // TODO detach instead of join?
 }
 
-
+    
+} // namespace    
+} // namespace

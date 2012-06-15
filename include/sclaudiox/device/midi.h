@@ -8,7 +8,6 @@
 #ifndef  _SCLAUDIOX_DEVICE_MIDI
 #define  _SCLAUDIOX_DEVICE_MIDI
 
-#include "portmidi.h" // FIXME remove, see below
 #include "sclaudiox/error.h"
 #include "sclaudiox/control.h"
 #include "sclaudiox/defines.h"
@@ -95,6 +94,7 @@ public:
 // =============================================================================
 
 class MidiDeviceData;
+class MidiDeviceIndex;
 
 /**
     Represents a Midi device.
@@ -104,8 +104,7 @@ class SCLAUDIO_API MidiDevice
     , public Resource
 {
 public:
-    // FIXME make opaque
-    typedef PmDeviceID Index;
+    typedef MidiDeviceIndex* Index;
     
     MidiDevice(MidiDeviceData* data);
     ~MidiDevice();

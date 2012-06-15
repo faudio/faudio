@@ -19,6 +19,10 @@ struct MidiDeviceData
 {
     MidiDevice::Index mIndex;
     PortmidiToken*    mToken;
+};  
+struct MidiDeviceIndex
+{
+    PmDeviceID mId;
 };
 
 // =============================================================================
@@ -82,7 +86,8 @@ MidiDevice::MidiDevice(MidiDeviceData* data)
 
 MidiDevice::~MidiDevice() 
 {                             
-    release(mData->mToken);
+    release(mData->mToken); 
+    delete mData->mIndex;
     delete mData;
 }  
 
@@ -93,31 +98,32 @@ MidiDevice::Index MidiDevice::index()
 
 String MidiDevice::name()
 {                 
-   return fromSimpleString<Portmidi::characterSet>(Pm_GetDeviceInfo(mData->mIndex)->name);
+   return fromSimpleString<Portmidi::characterSet>(Pm_GetDeviceInfo(mData->mIndex->mId)->name);
 }
 
 String MidiDevice::hostName()
 {                 
-    return fromSimpleString<Portmidi::characterSet>(Pm_GetDeviceInfo(mData->mIndex)->interf);
+    return fromSimpleString<Portmidi::characterSet>(Pm_GetDeviceInfo(mData->mIndex->mId)->interf);
 }
 
 bool MidiDevice::hasInput()
 {
-    return Pm_GetDeviceInfo(mData->mIndex)->input;
+    return Pm_GetDeviceInfo(mData->mIndex->mId)->input;
 }
 
 bool MidiDevice::hasOutput()
 {
-    return Pm_GetDeviceInfo(mData->mIndex)->output;
+    return Pm_GetDeviceInfo(mData->mIndex->mId)->output;
 }
 
 namespace 
 {
-    MidiDevice* createDevice(MidiDevice::Index index, PortmidiToken* token)
+    MidiDevice* createDevice(PmDeviceID id, PortmidiToken* token)
     {
         MidiDeviceData data;
-        data.mIndex = index;
-        data.mToken = token;
+        data.mIndex = new MidiDeviceIndex;
+        data.mIndex->mId = id;
+        data.mToken      = token;
         return new MidiDevice(&data);
     }
 }
