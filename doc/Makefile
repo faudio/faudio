@@ -2,7 +2,7 @@
 main : lispdoc doxygen
 
 lispdoc :
-	doc/tool/lispdoc.hs language_bindings/lisp/audio.lisp > doc/Lisp.md;
+	# doc/tool/lispdoc.hs language_bindings/lisp/*.lisp > doc/Lisp.md;
 
 doxygen :
 	mkdir -p doc/build/html; \

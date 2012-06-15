@@ -59,12 +59,6 @@ See [AudioProcessor](@ref doremir::scl::AudioProcessor)."))
 ; "See [VstProcessor](@ref doremir::scl::VstProcessor)."))
 
 
-(defun load-fluidsynth (soundfont-path)
-"Creates a FluidSynth instance using the given sound font.
-May signal dsp-error."
-  (native-call scl-load-fluidsynth :audio-processor
-    ((soundfont-path :string)) :errors (dsp-error)))
-    
 
 (defun sequence (&rest processors)
 "Creates a sequential processor from the given processors.
@@ -96,13 +90,10 @@ number of outputs."
 "Provides a uniform interface to various audio plug-in architectures such as AU, VST, Ladspa, LV2 etc.  
 
 Each instance of this class corresponds to a named plug-in such as a synth, delay or reverb effect.
-Plug-ins can typically be loaded several times, each instance corresponding to an AudioProcessor. The
+Plug-ins can typically be initiated several times, each instance corresponding to an (audio-processor). The
 (make-processor) method provides new instances.
 
 See [AudioPlugin](@ref doremir::scl::AudioPlugin)."))
-
-(defclass audio-plugin-processor (audio-processor)
-  ((plugin :type :audio-plugin))) 
 
 (defmethod name ((obj audio-plugin))
   (native-call scl-plugin-name :string ((obj :audio-plugin))))
@@ -120,16 +111,29 @@ See [AudioPlugin](@ref doremir::scl::AudioPlugin)."))
   (native-call scl-plugin-create-processor :audio-plugin-processor ((obj :audio-plugin))
   :errors (audio-plugin-error)))
 
+
+
+(defclass audio-plugin-processor (audio-processor)
+  ((plugin :type :audio-plugin))) 
+
 (defmethod plugin ((obj audio-plugin-processor))
 "Returns the plugin that created the processor."
   (native-call scl-plugin-from-processor :audio-plugin ((obj :audio-plugin-processor))))
 
+
+
 (defun load-audio-units ()
-"Returns a list of AudioUnits available on the system."
+"Returns a list of Audio Units available on the system."
   (native-call scl-load-audio-units (:list :audio-plugin) ()))
 
 (defun load-dls-music-device ()
-"Returns the DLSMusicDevice, also known as the Quicktime Synthesizer."
+"Returns the DLSMusicDevice, also known as the Quicktime Synthesizer.
+If the DLSMusicDevice is not available, this function returns nil."
   (native-call scl-load-dls-music-device :audio-plugin ()))
 
-
+(defun load-fluidsynth (soundfont-path)
+"Creates a FluidSynth instance using the given sound font.
+May signal dsp-error."
+  (native-call scl-load-fluidsynth :audio-processor
+    ((soundfont-path :string)) :errors (dsp-error)))
+    
