@@ -11,9 +11,9 @@ project(sclaudio C CXX)
 cmake_minimum_required(VERSION 2.8)
 cmake_policy(SET CMP0015 NEW)
 
-set(SCLAUDIO_VERSION_MAJOR 2)
-set(SCLAUDIO_VERSION_MINOR 0)
-set(SCLAUDIO_VERSION_MICRO 5)
+set(SCLAUDIO_VERSION_MAJOR 1)
+set(SCLAUDIO_VERSION_MINOR 5)
+set(SCLAUDIO_VERSION_MICRO 0)
 set(SCLAUDIO_VERSION 
     "${SCLAUDIO_VERSION_MAJOR}.${SCLAUDIO_VERSION_MINOR}.${SCLAUDIO_VERSION_MICRO}")
 
@@ -119,10 +119,55 @@ add_subdirectory(lib)
 add_subdirectory(src)
 add_subdirectory(test)  
 
-##
-## TODO Distribution, compression etc
-##
 
 
+##
+## Make distribution
+##
+
+# #message("Installing to ${CMAKE_INSTALL_PREFIX}")
+# 
+# file(REMOVE_RECURSE build/dist/sclaudio-${SCLAUDIO_VERSION})
+# file(MAKE_DIRECTORY build/dist/sclaudio-${SCLAUDIO_VERSION})
+# 
+# file(INSTALL
+#     build/libsclaudio.dylib 
+#     build/ScoreCleanerAudio.framework 
+#     FILE_PERMISSIONS WORLD_EXECUTE
+#     DESTINATION dist/sclaudio-${SCLAUDIO_VERSION}/)
+# 
+# file(INSTALL
+#     doc/build/html/
+#     DESTINATION dist/sclaudio-${SCLAUDIO_VERSION}/doc/html)
+# 
+# # file(RENAME
+# #     "doc/build/latex/refman.pdf"
+# #     "doc/build/latex/ScoreCleanerAudioEngine.pdf")
+# # file(INSTALL
+# #     "doc/build/latex/ScoreCleanerAudioEngine.pdf"
+# #     DESTINATION dist/sclaudio-${SCLAUDIO_VERSION}/doc)
+# 
+# file(INSTALL
+#     include/
+#     DESTINATION dist/sclaudio-${SCLAUDIO_VERSION}/include)
+# 
+# file(INSTALL
+#     language_bindings/lisp/audio-engine.asd
+#     language_bindings/lisp/examples
+#     language_bindings/lisp/tools
+#     DESTINATION dist/sclaudio-${SCLAUDIO_VERSION}/language_bindings/lisp)
+# file(COPY
+#     language_bindings/lisp/
+#     DESTINATION dist/sclaudio-${SCLAUDIO_VERSION}/language_bindings/lisp
+#     PATTERN "*xfasl" EXCLUDE
+#     PATTERN "*dylib" EXCLUDE
+#     PATTERN "Makefile" EXCLUDE)                    
+
+add_custom_command(
+  OUTPUT FOO_CMD  
+  COMMAND echo "foo"
+  DEPENDS ${trofiles}
+)
+add_custom_target(foo DEPENDS FOO_CMD)
 
 
