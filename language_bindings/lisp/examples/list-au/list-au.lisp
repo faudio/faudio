@@ -8,10 +8,10 @@
     (handler-case
       (let* ((units (load-audio-units)))
         (format *standard-output* "Listing Audio Units...~%~%")
-        (dolist (x units) 
+        (dolist (x units)
           (format *standard-output* "~s~%" (name x))
           ; (format *standard-output* "  Inputs: ~s~%" (num-inputs x))
-          ; (format *standard-output* "  Outputs: ~s~%" (num-outputs x)) ; FIXME
+          ; (format *standard-output* "  Outputs: ~s~%" (num-outputs x))
           )
         (format *standard-output* "~%")
         )

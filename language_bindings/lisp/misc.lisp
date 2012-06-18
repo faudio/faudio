@@ -171,10 +171,14 @@ Otherwise, return nil"
   (setf arguments nil)
   (dolist (x arglist)
     (if last       
-      (progn (push (cons last (funcall reader x)) options) (setf last nil))
+      (progn 
+        (push (cons last (funcall reader x)) options) 
+        (setf last nil))
       (if (parse-flag x) 
           (setf last (make-keyword (parse-flag x))) 
-          (progn (push (funcall reader x) arguments) (setf last nil)))))
+          (progn 
+            (push (funcall reader x) arguments) 
+            (setf last nil)))))
   (cons options (reverse arguments)))
 
 
