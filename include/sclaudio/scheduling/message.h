@@ -101,10 +101,12 @@ SCLAUDIO_API SclFuture scl_receive(SclStream stream,
                                    SclReceiveOptions opts,
                                    SclStreamError* err);    
 
+/*
 SCLAUDIO_API SclFuture scl_receive_buffered(SclStream stream, 
                                             SclBufferedReceiver receiver, 
                                             SclReceiveOptions opts,
                                             SclStreamError* err);    
+*/
 
 
 #ifdef __cplusplus
