@@ -8,29 +8,28 @@ Dependencies
 
 ### Required
 
-  * Boost (Thread, DateTime)
-
-### Optional                          
-
-  * Portaudio (for real-time audio)
-  * Portmidi (for real-time midi)
-  * libsndfile (for file streams)
-  * Fluidsynth (for built in synthesis)
-  * Google Test (for running the test suite)
+  * Boost Thread
+  * Portaudio (optional, for real-time audio)
+  * Portmidi (optional, for real-time midi)
+  * libsndfile (optional, for file streams)
+  * Fluidsynth (optional, for built in synthesis)
+  * Google Test (optional, for running the test suite)
+  * CoreAudio, AudioUnit, AudioToolbox (Mac OS X only, for audio units)
 
 ### Build tools
 
   * CMake 2.8 or later
   * Supported build systems:
-    * GNU Make 3.8 with GCC 4.2
-    * Apple Developer Tools
+    * Make/bash GCC 4.2 or later
+    * XCode 3.2 or later
     * Visual Studio C++ 2010 
+  * Make/bash is *required* for building the Lisp bindings (and documentation)
   
 ### Documentation tools
 
-  * GNU Make
+  * Make
   * Doxygen (for documentation)
-  * Haskell Platform or GHC (for generating the Lisp documentation)
+  * The Haskell Platform with the Pandoc packages (for generating the Lisp documentation)
 
 Fetching the source code
 ----------
@@ -41,7 +40,7 @@ Fetching the source code
 To update, you can do
 
     $ cd audio-engine
-    $ git pull --rebase
+    $ git pull
     $ git submodule update
 
 
@@ -119,24 +118,50 @@ The values you select are stored in the `CMakeCache.txt` file in the current dir
 If you update the the options cache you must overwrite the Xcode project with a fresh one by running `cmake -G Xcode` again.
                                          
 
-Windows build
--------------
-
-Boost must be installed, typically by downloading an installer from http://www.boostpro.com/download/.
-
-Install to `C:\Program\boost`, or change path in ./CMakeList.txt.
+### Visual Studio build
 
     > mkdir build
     > cd build
+
+To create and open a default build, do:
+
     > cmake -G "Visual Studio 10" ..
-    
-To compile, open the generated `.sln` file from inside Visual Studio and choose Project > Build Solution.
+    > open *.sln
+
+To see and review the build options interactively, do:
+
+    > cmake -i ..
+
+The values you select are stored in the `CMakeCache.txt` file in the current directory. To change them you can run the wizard again, edit the file directly, or do:
+
+    > cmake -MY_OPTION_NAME=my_option_value ..
+
+If you update the the options cache you must overwrite the Xcode project with a fresh one by running `cmake -G "Visual Studio 10"` again.
+
+In Visual Studio choose Project > Build Solution.
 
 
-Unit tests
+Running the unit tests
 ----------
 
-To run unit tests as part of the build, set the CMake option `RUN_SCLAUDIO_TESTS` to non-false.
+To run unit tests as part of the build, set the CMake option `RUN_SCLAUDIO_TESTS` to non-false, then run `make` again. The unit test can be run separately as `build/bin/sclaudio_tests`. Beware that the whole test suite may take several minutes to complete.
 
+
+Building the language bindings
+----------
+
+TODO
+
+
+Building the documentation
+----------
+
+TODO
+
+
+Likning the audio engine into ScoreCleaner
+----------
+
+TODO
 
 
