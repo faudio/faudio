@@ -21,8 +21,8 @@ typedef void    *SclSendOptions;
 typedef void    *SclReceiveOptions;
 typedef void    *SclMessageInfo;
 
-typedef void    (*SclReceiver)         (SclTime time, SclAtom* message, int len);
-typedef void    (*SclBufferedReceiver) (SclTime time, SclAtom **message, int *len, int len2);
+typedef void    (*SclReceiver) (SclTime time, SclAtom* message, int len);
+typedef void    (*SclSender)   (SclReceiver receiver, int status);
 
 // =================================================================================================
 

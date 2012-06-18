@@ -10,7 +10,6 @@
  */
 
 #include <list>
-#include <sstream>
 
 #include "sclaudiox/error.h"
 #include "sclaudiox/processor.h"
@@ -19,55 +18,64 @@
 namespace doremir {
 namespace scl {
 
-
-// =============================================================================
-
+class AbstractProcessCombinatorDescription;
+    
 /**
     Base implementation for process combinators.
  */
-class AbstractProcessCombinator : public virtual AudioProcessor
+class AbstractProcessCombinator : public AudioProcessor
 {
 public:
-    // TODO
-    // int numberOfBuses()
-    // {
-    //     int result = 0;
-    //     foreach(AudioProcessor* child, children)
-    //         result += child->numberOfBuses();
-    //     return result;
-    // }
+    AbstractProcessCombinator(std::list<AudioProcessor*> processors) 
+        : mChildren(processors) {}
 
-    virtual std::list<String> controls()
+    void accept(Message message)
     {
-        throw Unimplemented();
+        // FIXME
     }
 
     void prepare(AudioProcessingInformation& info, AudioProcessingBuffer &signal)
     {
-        foreach(AudioProcessor* child, children)
+        foreach(AudioProcessor* child, mChildren)
             child->prepare(info, signal);
     }
     
     void cleanup(AudioProcessingInformation& info, AudioProcessingBuffer &signal)
     {
-        foreach(AudioProcessor* child, children)
+        foreach(AudioProcessor* child, mChildren)
             child->cleanup(info, signal);
     }
 
-    AbstractProcessCombinator(std::list<AudioProcessor*> children) 
-        : children(children) {}
-
-protected:
-    std::list<AudioProcessor*> children;
+protected:    
+    friend class AbstractProcessCombinatorDescription;
+    std::list<AudioProcessor*> mChildren;
 };
 
+class AbstractProcessCombinatorDescription : public AudioProcessorDescription
+{
+    int numberOfBuses()
+    {
+        int result = 0;
+        foreach(AudioProcessor* child, mProcessor->mChildren)
+            result += child->description()->numberOfBuses();
+        return result;
+    }                                  
+private:
+    AbstractProcessCombinator* mProcessor;
+};
 
-
-// =============================================================================
 
 class SequenceAudioProcessor : public AbstractProcessCombinator
 {
 public:
+    SequenceAudioProcessor(std::list<AudioProcessor*> processors)
+        : AbstractProcessCombinator(processors) {}
+
+    AudioProcessorDescription* description()
+    {
+        // FIXME
+    }
+
     // int numberOfInputs() 
     // {
     //     return children.front()->numberOfInputs();
@@ -77,18 +85,26 @@ public:
     // {
     //     return children.back()->numberOfOutputs();
     // }
-    // 
-    SequenceAudioProcessor(std::list<AudioProcessor*> procs)
-        : AbstractProcessCombinator(procs) {}
+    //    
+    void process(AudioProcessingInformation& info, AudioProcessingBuffer &signal)
+    {
+        // FIXME
+    }
 
 };
 
 
-// =============================================================================
-
 class ParallelAudioProcessor : public AbstractProcessCombinator
 {
-public:    
+public:
+    ParallelAudioProcessor(std::list<AudioProcessor*> processors)
+        : AbstractProcessCombinator(processors) {}
+
+    AudioProcessorDescription* description()
+    {
+        // FIXME
+    }
+
     // int numberOfInputs() 
     // {
     //     int result = 0;
@@ -103,23 +119,23 @@ public:
     //     foreach(AudioProcessor* child, children)
     //         result += child->numberOfOutputs();
     //     return result;
-    // }
+    // }     
     
-    ParallelAudioProcessor(std::list<AudioProcessor*> procs)
-        : AbstractProcessCombinator(procs) {}
+    void process(AudioProcessingInformation& info, AudioProcessingBuffer &signal)
+    {
+        // FIXME
+    }
 };
 
 
-// =============================================================================
-
-AudioProcessor* AudioProcessor::sequence(std::list<AudioProcessor*> procs) 
+AudioProcessor* AudioProcessor::sequence(std::list<AudioProcessor*> processors) 
 {
-    throw Unimplemented();
+    return new SequenceAudioProcessor(processors);
 }
 
-AudioProcessor* AudioProcessor::parallel(std::list<AudioProcessor*> procs) 
+AudioProcessor* AudioProcessor::parallel(std::list<AudioProcessor*> processors) 
 {
-    throw Unimplemented();
+    return new ParallelAudioProcessor(processors);
 }
 
 } // namespace
