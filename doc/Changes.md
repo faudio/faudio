@@ -20,10 +20,17 @@ v1.5
 (*Unreleased, planned changes:*)
 
 v1.6
-----
+----              
+* Sessions        
+* Depracating `AudioHost::hosts()` and friends 
 * Support for VST2
-* Support for non-realtime file streams
 
+v1.7
+----
+* Support for non-realtime file streams
+* Improved message passing interface
+* Depracating actions
+* Depracating absolute scheduler methods
 
 v2.0
 ----

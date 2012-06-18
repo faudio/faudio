@@ -1,23 +1,24 @@
 
 
-Sources, sinks and activators
+Device traits
 ========
 
-The audio engine use a simple categorization of devices called *sources*, *sinks* and *activators*. Sources and sinks produce and consume data respectively, while activators provide notifications data data is to be produced or consumed.
+Device traits:
 
-Stream composition refers to the process of composing 
+- Interface: *input* and/or *output*
+- Operation: *active* (a.k.a non-blocking) or *passive* (a.k.a blocking)
+- Type: *audio*, *midi* or *raw*
+
+Example:
+    
+    NonBlockingAudioDevice : ActiveAudioInputDevice
+    BlockingAudioDevice : PassiveAudioInputDevice
 
 
+Stream traits
+========
 
+Stream traits:
 
-    DeviceInOutStream
-    DeviceInStream
-    DeviceOutStream
-    FileInStream
-    FileOutStream
-    BufferInStream
-    BufferOutStream
-
-    define-processor x y
-        (+ x y)
-        
+- Interface: *input* and/or *output*
+- Type: *audio*, *midi* and/or *raw*

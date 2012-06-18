@@ -27,19 +27,50 @@ Dependencies
     * Visual Studio C++ 2010 
   
 ### Documentation tools
-                                                  
-  * Doxygen (for all documentation)
-  * LaTeX (for PDF documentation)
+
+  * GNU Make
+  * Doxygen (for documentation)
   * Haskell Platform or GHC (for generating the Lisp documentation)
 
-
-Basic build
+Fetching the source code
 ----------
 
-All dependencies included except:
-  
-  * Boost headers: Download or install and put a symlink from the boost header directory to `external/boost`
-  * Standard OS X frameworks (CoreAudio etc): Expected to be in `/System/Library/Frameworks`
+    $ git clone --recursive git@notes.doremir.com:/repositories/audio-engine.git
+    $ cd audio-engine
+
+To update, you can do
+
+    $ cd audio-engine
+    $ git pull --rebase
+    $ git submodule update
+
+
+Building the dependencies
+----------
+
+### Portaudio
+
+    $ cd external_libraries/portaudio
+    -- flags etc?
+    $ ./configure
+    $ make
+    -- no install, just copy lib/.libs/libportaudio.a
+
+### Portmidi
+
+    $ cd external_libraries/portmidi
+    $ mkdir build
+    $ cd build
+    $ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURE=i386
+    $ make
+    -- no install, just copy build/libportmidi_s.a
+
+### Sndfile
+### GTest    
+
+
+Building the Audio Engine
+----------
 
 ### Makefile build:
     
