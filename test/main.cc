@@ -6,6 +6,7 @@
 #include "sclaudiox/util/logging.h"
 #include "sclaudiox/util/symbol.h"
 #include "sclaudiox/util/string.h"
+#include "sclaudiox/util/single.h"
 #include "sclaudiox/processor/plugin/au.h"
 #include "sclaudiox/processor/synth/rand.h"
 
@@ -251,6 +252,15 @@ namespace test_cpp_api
         EXPECT_EQ ( y.value(), 0 );
 
     }*/ 
+
+    TEST(Single, Base)
+    {
+        Single<int> single(1);
+        foreach (int v, single)
+        {
+            std::cout << "The single value is " << v << "\n";
+        }
+    }
     
     TEST(List, Range)
     {

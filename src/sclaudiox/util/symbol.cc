@@ -27,6 +27,17 @@ struct SymbolData
 {
     String name;
 };
+
+bool Symbol::operator ==(const Symbol& other)
+{
+    return this->mData->name == other.mData->name;
+}
+
+bool Symbol::operator !=(const Symbol& other)
+{
+    return this->mData->name == other.mData->name;
+}
+
     
 Symbol* Symbol::intern(String name)
 {

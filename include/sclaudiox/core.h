@@ -43,8 +43,11 @@ namespace scl {
           - Each subclass no methods or custom destructors.
      */
     class SCLAUDIO_API Options {};
+
+    class SCLAUDIO_API Copyable {};
     
     class SCLAUDIO_API NonCopyable : public boost::noncopyable {};
+
 
     /**
         A mangaged resource.
