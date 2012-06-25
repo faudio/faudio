@@ -1,4 +1,6 @@
 
+#include <boost/concept_check.hpp>
+
 #include "gtest/gtest.h"
 #include "sclaudio.h"
 #include "sclaudiox.h"
@@ -442,8 +444,28 @@ namespace test_cpp_api
             std::cerr << "Error: " << const_cast<Error&>(e).message() << "\n";
         }              
     }
+                  
 
-}
+    template <class T>
+    void do_with_concept(T x)
+    {
+      BOOST_CONCEPT_ASSERT((boost::Integer<T>));
+    };
+
+
+
+    TEST(ConceptCheck, Base)
+    {
+        do_with_concept(0.5);
+        
+        
+        
+        
+    }
+
+}     
+
+
 
 
 

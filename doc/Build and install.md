@@ -113,7 +113,7 @@ To see and review the build options interactively, do:
 
 The values you select are stored in the `CMakeCache.txt` file in the current directory. To change them you can run the wizard again, edit the file directly, or do:
 
-    $ cmake -MY_OPTION_NAME=my_option_value ..
+    $ cmake -DMY_OPTION_NAME=my_option_value ..
 
 If you update the the options cache you must overwrite the Xcode project with a fresh one by running `cmake -G Xcode` again.
                                          
@@ -134,7 +134,7 @@ To see and review the build options interactively, do:
 
 The values you select are stored in the `CMakeCache.txt` file in the current directory. To change them you can run the wizard again, edit the file directly, or do:
 
-    > cmake -MY_OPTION_NAME=my_option_value ..
+    > cmake -DMY_OPTION_NAME=my_option_value ..
 
 If you update the the options cache you must overwrite the Xcode project with a fresh one by running `cmake -G "Visual Studio 10"` again.
 
@@ -144,7 +144,7 @@ In Visual Studio choose Project > Build Solution.
 Running the unit tests
 ----------
 
-To run unit tests as part of the build, set the CMake option `RUN_SCLAUDIO_TESTS` to non-false, then run `make` again. The unit test can be run separately as `build/bin/sclaudio_tests`. Beware that the whole test suite may take several minutes to complete.
+To run unit tests as part of the build, set the CMake option `RUN_SCLAUDIO_TESTS` to `ON`, then run `make` again. The unit test can be run separately as `build/bin/sclaudio_tests`. Beware that the whole test suite may take several minutes to complete.
 
 
 Building the language bindings
