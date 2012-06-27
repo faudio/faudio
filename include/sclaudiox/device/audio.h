@@ -32,7 +32,7 @@ public:
         The character set used by Portaudio.
      */
 #ifdef SCL_WIN
-    static const CharacterSet characterSet = DefaultCharacterSet;
+    static const CharacterSet characterSet = kDefaultCharSet;
 #else
     static const CharacterSet characterSet = kUtf8;
 #endif

@@ -86,14 +86,14 @@ public:
     }
 
 
-    static inline SCLAUDIO_API Time samplesToMilliseconds(Time input, Time rate)
+    static inline Time samplesToMilliseconds(Time input, Time rate)
     {
         Time frame  = input / rate;
         Time offset = input % rate;
         return (frame * 1000) + ((offset * 1000) / rate);
     }
 
-    static inline SCLAUDIO_API Time millisecondsToSamples(Time input, Time rate)
+    static inline Time millisecondsToSamples(Time input, Time rate)
     {
         Time frame  = input / 1000;
         Time offset = input % 1000;
