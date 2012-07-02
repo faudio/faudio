@@ -843,11 +843,13 @@ private:
 int scl_stream_sample_rate(SclStream obj)
 {
     // FIXME
+    return 0;
 }
 
 int scl_stream_audio_buffer_size(SclStream obj)
 {
     // FIXME
+    return 0;
 }
 
 int scl_stream_running(SclStream obj)

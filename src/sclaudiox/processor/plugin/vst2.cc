@@ -58,40 +58,48 @@ Vst2PluginDescription::~Vst2PluginDescription()
 
 String Vst2PluginDescription::name()
 {         
-    // FIXME
+    // FIXME   
+    return "";
 }                  
 bool Vst2PluginDescription::isAtomic()
 {
-    // FIXME
+    // FIXME  
+    return false;
 }
 bool Vst2PluginDescription::isStateful()
 {
-    // FIXME
+    // FIXME     
+    return false;
 }
 bool Vst2PluginDescription::isPlugin()
 {
-    // FIXME
+    // FIXME     
+    return false;
 }
 
 int Vst2PluginDescription::numberOfInputs()
 {
-    // FIXME
+    // FIXME     
+    return 0;
 }
 
 int Vst2PluginDescription::numberOfOutputs()
 {
-    // FIXME
+    // FIXME 
+    return 0;
 }
 
 int Vst2PluginDescription::numberOfBuses()
 {
-    // FIXME
+    // FIXME 
+    return 0;
 }
 
 
 AudioPlugin* Vst2PluginDescription::plugin()
 {
-    // FIXME
+    // FIXME 
+    return 0;
 }              
 
 
@@ -109,6 +117,7 @@ Vst2PluginProcessor::~Vst2PluginProcessor()
 AudioProcessorDescription* Vst2PluginProcessor::description()
 {
     // FIXME
+    return NULL;
 }
 
 void Vst2PluginProcessor::accept(Message message)
@@ -118,7 +127,7 @@ void Vst2PluginProcessor::accept(Message message)
 
 void Vst2PluginProcessor::prepare(AudioProcessingInformation& info, AudioProcessingBuffer &signal)
 {
-    // FIXME
+    // FIXME    
 }
 
 void Vst2PluginProcessor::process(AudioProcessingInformation& info, AudioProcessingBuffer &signal)
@@ -134,11 +143,13 @@ void Vst2PluginProcessor::cleanup(AudioProcessingInformation& info, AudioProcess
 AudioPlugin* Vst2PluginProcessor::plugin()
 {
     // FIXME
+    return NULL;
 }
     
 void* Vst2PluginProcessor::nativePluginInstance()
 {
     // FIXME
+    return NULL;
 }
                                       
 
@@ -165,6 +176,7 @@ AudioPluginProcessor* Vst2Plugin::createProcessor()
 void* Vst2Plugin::nativePlugin()
 {
     // FIXME
+    return NULL;
 }
 
 Vst2PluginDescription* Vst2Plugin::vst2PluginDescription()
@@ -179,11 +191,13 @@ Vst2PluginDescription* Vst2Plugin::vst2PluginDescription()
 Vst2PluginProcessor* Vst2Plugin::createVst2PluginProcessor()
 {
     // FIXME
+    return NULL;
 } 
 
 std::list<Vst2Plugin*> Vst2Plugin::vst2Plugins(FilePath path)
 {                                                
     // FIXME
+    return list::create<Vst2Plugin*>();
 }
 
 
@@ -495,8 +509,8 @@ Vst2Plugin* Vst2Plugin::loadVst2Plugin(FilePath path)
 	    // FIXME throw
 	}
 
-
-    
+    // FIXME
+    return NULL;
 }
 
 

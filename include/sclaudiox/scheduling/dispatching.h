@@ -27,6 +27,7 @@ public:
     Future* schedule(Future* future)
     {
         // nothing
+		return NULL;
     }             
     
     void execute(Time time)

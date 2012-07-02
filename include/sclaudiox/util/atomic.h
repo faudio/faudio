@@ -111,11 +111,11 @@ namespace scl {
     {
         static bool swap(T** a, T* x, T* y)
         {
-            return ( comparand == InterlockedCompareExchangePointer((void**) a, (void*) y, (void*) x) );
+            return ( x == InterlockedCompareExchangePointer((void**) a, (void*) y, (void*) x) );
         }
         static T* get(T** a)
         {
-            return InterlockedCompareExchangePointer((void**) a, (void*) 0, (void*) 0);
+            return reinterpret_cast<T*>(InterlockedCompareExchangePointer((void**) a, (void*) 0, (void*) 0));
         }
     };
 #endif
@@ -299,65 +299,9 @@ public:
         newVal = function(oldVal);
         return AtomicTraits::swap((T*) mAddress, oldVal, newVal);
     }
-                  
-protected:
-    void*  mAddress;
-};
-              
 
-/**
-    An atomic number.
+    // Atomic number
     
-    This class extends Atomic with the usual increment and decrement operators. There are no ordinary arithmetic
-    operators, as this class represents a variable and not a value.
- */
-template <
-    typename T, 
-    typename AtomicTraits = DefaultAtomicTraits<T>
->
-class SCLAUDIO_API AtomicNumber : public Atomic<T, AtomicTraits>
-{
-public:
-    typedef AtomicNumber<T, AtomicTraits> this_type;
-    typedef Atomic<T, AtomicTraits>       parent_type;
-
-    /**
-        Constructs an atomic number using a nullary constructor.
-        \note
-            Non-atomic operation.
-     */
-    AtomicNumber() 
-        : Atomic<T>() {}
-    
-    /**
-        Constructs an atomic number using a unary constructor.
-        \note
-            Non-atomic operation.
-     */
-    template <
-        class U
-    > 
-    explicit AtomicNumber(U value) 
-        : Atomic<U>(value) {}
-    
-    /**
-        Destroys the atomic number.
-        \note
-            Non-atomic operation.
-     */
-    ~AtomicNumber() {}    
-
-    /**
-        Assignment operator.
-        Replaces the current value with the value of the given atomic number.
-        \note
-            Atomic operation.
-     */
-    void operator =(const AtomicNumber<T>& other)
-    {
-        replace(other.value());
-    }
-
     /**
         Prefix increment operator.
         \note
@@ -387,7 +331,7 @@ public:
      */
     inline Atomic<T, AtomicTraits> operator ++(int post)
     {              
-        AtomicNumber temp (this);
+        Atomic temp (this);
         increment(1);
         return temp;
     }
@@ -399,7 +343,7 @@ public:
      */
     inline Atomic<T, AtomicTraits> operator --(int post)
     {
-        AtomicNumber temp (this);
+        Atomic temp (this);
         decrement(1);
         return temp;
     }      
@@ -423,7 +367,134 @@ public:
     {
         return increment(math::negate(amount));
     }
+                  
+protected:
+    void*  mAddress;
 };
+              
+
+// /**
+//     An atomic number.
+//     
+//     This class extends Atomic with the usual increment and decrement operators. There are no ordinary arithmetic
+//     operators, as this class represents a variable and not a value.
+//  */
+// template <
+//     typename T, 
+//     typename AtomicTraits = DefaultAtomicTraits<T>
+// >
+// class SCLAUDIO_API AtomicNumber : public Atomic<T, AtomicTraits>
+// {
+// public:
+//     typedef AtomicNumber<T, AtomicTraits> this_type;
+//     typedef Atomic<T, AtomicTraits>       parent_type;
+// 
+//     /**
+//         Constructs an atomic number using a nullary constructor.
+//         \note
+//             Non-atomic operation.
+//      */
+//     AtomicNumber() 
+//         : Atomic<T>() {}
+//     
+//     /**
+//         Constructs an atomic number using a unary constructor.
+//         \note
+//             Non-atomic operation.
+//      */
+//     template <
+//         class U
+//     > 
+//     explicit AtomicNumber(U value) 
+//         : Atomic<U>(value) {}
+// 
+//     AtomicNumber(const Atomic<T>& other)
+//         : mAddress( new T(other.value()) ) {}
+// 
+//     /**
+//         Destroys the atomic number.
+//         \note
+//             Non-atomic operation.
+//      */
+//     ~AtomicNumber() {}    
+// 
+//     /**
+//         Assignment operator.
+//         Replaces the current value with the value of the given atomic number.
+//         \note
+//             Atomic operation.
+//      */
+//     void operator =(const AtomicNumber<T>& other)
+//     {
+//         parent_type::replace(other.value());
+//     }
+// 
+//     /**
+//         Prefix increment operator.
+//         \note
+//             Atomic operation.
+//      */
+//     inline Atomic<T, AtomicTraits>& operator ++()
+//     {
+//         increment(1);
+//         return *this;
+//     }
+// 
+//     /**
+//         Prefix decrement operator.
+//         \note
+//             Atomic operation.
+//      */
+//     inline Atomic<T, AtomicTraits>& operator --()
+//     {
+//         decrement(1);
+//         return *this;
+//     }
+// 
+//     /**
+//         Postfix increment operator.
+//         \note
+//             Atomic operation.
+//      */
+//     inline Atomic<T, AtomicTraits> operator ++(int post)
+//     {              
+//         AtomicNumber temp (this);
+//         increment(1);
+//         return temp;
+//     }
+// 
+//     /**
+//         Postfix decrement operator.
+//         \note
+//             Atomic operation.
+//      */
+//     inline Atomic<T, AtomicTraits> operator --(int post)
+//     {
+//         AtomicNumber temp (this);
+//         decrement(1);
+//         return temp;
+//     }      
+//     
+//     /**
+//         Increase the atomic number by the given amount.
+//         \note
+//             Atomic operation.
+//      */
+//     inline void increment(T amount)
+//     {
+//         return AtomicTraits::add((T*) Atomic<T, AtomicTraits>::mAddress, amount);
+//     }
+// 
+//     /**
+//         Decrease the atomic number by the given amount.
+//         \note
+//             Atomic operation.
+//      */
+//     inline void decrement(T amount)
+//     {
+//         return increment(math::negate(amount));
+//     }
+// };
 
 template <class T>
 bool operator ==(const Atomic<T>& a, const Atomic<T>& b)
@@ -437,39 +508,39 @@ bool operator !=(const Atomic<T>& a, const Atomic<T>& b)
     return a.value() != b.value();	    
 }
 
-template <class T>
-bool operator ==(const AtomicNumber<T>& a, const AtomicNumber<T>& b)
-{
-    return a.value() == b.value();
-}  
-
-template <class T>
-bool operator !=(const AtomicNumber<T>& a, const AtomicNumber<T>& b)
-{
-    return a.value() != b.value();	    
-}
+// template <class T>
+// bool operator ==(const AtomicNumber<T>& a, const AtomicNumber<T>& b)
+// {
+//     return a.value() == b.value();
+// }  
+// 
+// template <class T>
+// bool operator !=(const AtomicNumber<T>& a, const AtomicNumber<T>& b)
+// {
+//     return a.value() != b.value();       
+// }                                   
    
 
-typedef AtomicNumber<char>              atomic_char;
-typedef AtomicNumber<unsigned char>     atomic_uchar;
-typedef AtomicNumber<signed char>       atomic_schar;
-typedef AtomicNumber<unsigned short>    atomic_ushort;
-typedef AtomicNumber<short>             atomic_short;
-typedef AtomicNumber<unsigned int>      atomic_uint;
-typedef AtomicNumber<int>               atomic_int;
-typedef AtomicNumber<unsigned long>     atomic_ulong;
-typedef AtomicNumber<long>              atomic_long;
-typedef AtomicNumber<uint8_t>           atomic_uint8_t;
-typedef AtomicNumber<int8_t>            atomic_int8_t;
-typedef AtomicNumber<uint16_t>          atomic_uint16_t;
-typedef AtomicNumber<int16_t>           atomic_int16_t;
-typedef AtomicNumber<uint32_t>          atomic_uint32_t;
-typedef AtomicNumber<int32_t>           atomic_int32_t;
-typedef AtomicNumber<uint64_t>          atomic_uint64_t;
-typedef AtomicNumber<int64_t>           atomic_int64_t;
-typedef AtomicNumber<void*>             atomic_address;
-typedef AtomicNumber<bool>              atomic_bool;
-
+// typedef AtomicNumber<char>              atomic_char;
+// typedef AtomicNumber<unsigned char>     atomic_uchar;
+// typedef AtomicNumber<signed char>       atomic_schar;
+// typedef AtomicNumber<unsigned short>    atomic_ushort;
+// typedef AtomicNumber<short>             atomic_short;
+// typedef AtomicNumber<unsigned int>      atomic_uint;
+// typedef AtomicNumber<int>               atomic_int;
+// typedef AtomicNumber<unsigned long>     atomic_ulong;
+// typedef AtomicNumber<long>              atomic_long;
+// typedef AtomicNumber<uint8_t>           atomic_uint8_t;
+// typedef AtomicNumber<int8_t>            atomic_int8_t;
+// typedef AtomicNumber<uint16_t>          atomic_uint16_t;
+// typedef AtomicNumber<int16_t>           atomic_int16_t;
+// typedef AtomicNumber<uint32_t>          atomic_uint32_t;
+// typedef AtomicNumber<int32_t>           atomic_int32_t;
+// typedef AtomicNumber<uint64_t>          atomic_uint64_t;
+// typedef AtomicNumber<int64_t>           atomic_int64_t;
+// typedef AtomicNumber<void*>             atomic_address;
+// typedef AtomicNumber<bool>              atomic_bool;
+//                                                         
 
 } // namespace
 } // namespace

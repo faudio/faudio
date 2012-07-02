@@ -106,9 +106,30 @@ if(CMAKE_BUILD_TYPE MATCHES Debug)
     set(SCLAUDIO_DEFINITIONS "SCL_DEBUG;${SCLAUDIO_DEFINITIONS}")
 endif()
 
-if(${sclaudio_win})
+if(${SCLAUDIO_WIN})
     set(SCLAUDIO_DEFINITIONS "NOMINMAX;${SCLAUDIO_DEFINITIONS}")
 endif()
+
+
+##
+## Misc
+##     
+
+##  Hack to get around the "Debug" and "Release" directories cmake tries to add on Windows
+##      http://stackoverflow.com/questions/543203/cmake-runtime-output-directory-on-windows
+
+# For each configuration (Debug, Release... )
+foreach(CONF ${CMAKE_CONFIGURATION_TYPES})
+# Go uppercase (DEBUG, RELEASE...)
+string(TOUPPER "${CONF}" CONF)
+set("CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${CONF}" "${CMAKE_CURRENT_BINARY_DIR}")
+set("CMAKE_RUNTIME_OUTPUT_DIRECTORY_${CONF}" "${CMAKE_CURRENT_BINARY_DIR}")
+if(WIN32)
+  set("CMAKE_LIBRARY_OUTPUT_DIRECTORY_${CONF}" "${CMAKE_CURRENT_BINARY_DIR}")
+else()
+  set("CMAKE_LIBRARY_OUTPUT_DIRECTORY_${CONF}" "${CMAKE_CURRENT_BINARY_DIR}")
+endif()
+endforeach()
 
 
 ##

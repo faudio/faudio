@@ -22,12 +22,12 @@
 #define SCL_CHECK_PORTAUDIO_ERROR(ERR) \
     if (ERR != paNoError) throw PortaudioError(ERR)
 
-#ifdef SCL_WIN
-    #define SCL_ASSURE_COINIT() \
-        AudioDeviceStream::windowsComToken.get();
-#else
-    #define SCL_ASSURE_COINIT()
-#endif
+// #ifdef SCL_WIN
+//     #define SCL_ASSURE_COINIT() \
+//         AudioDeviceStream::windowsComToken.get();
+// #else
+#define SCL_ASSURE_COINIT()
+// #endif
 
 using namespace doremir::scl;
 
@@ -553,8 +553,8 @@ AudioDeviceStream::~AudioDeviceStream()
 
 // =============================================================================
 
-#ifdef SCL_WIN
-    ThreadLocal<WindowsComToken> AudioDeviceStream::windowsComToken;
-#endif
+// #ifdef SCL_WIN
+//     ThreadLocal<WindowsComToken> AudioDeviceStream::windowsComToken;
+// #endif
 
 
