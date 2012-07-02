@@ -98,7 +98,6 @@ if(${SCLAUDIO_WIN})
         set_target_properties(SCLAUDIO
             PROPERTIES
                 OUTPUT_NAME              sclaudio
-                LIBRARY_OUTPUT_DIRECTORY ""
                 COMPILE_DEFINITIONS      "${SCLAUDIO_DEFINITIONS}")
         target_link_libraries(SCLAUDIO ${SCLAUDIO_LIBRARIES})
     endif()
@@ -129,9 +128,12 @@ if(${BUILD_SCLAUDIO_CL})
     if(${SCLAUDIO_WIN})
         set_target_properties(SCLAUDIO_CL
             PROPERTIES
-                OUTPUT_NAME                 "sclaudio_test"
-                RUNTIME_OUTPUT_DIRECTORY    ""
+                OUTPUT_NAME                 "sclaudio_cl"
                 COMPILE_DEFINITIONS         "${SCLAUDIO_CL_DEFINITIONS}")
+    endif()
+
+    if (MSVC_IDE)
+        set_target_properties(SCLAUDIO_CL PROPERTIES PREFIX "../")
     endif()
 
     # TODO if building dylib and/or framework on OS X, this only links with framwork

@@ -37,7 +37,6 @@ if(${BUILD_SCLAUDIO_TESTS})
         set_target_properties(SCLAUDIO_TESTS
             PROPERTIES
                 OUTPUT_NAME              "sclaudio_tests"
-                RUNTIME_OUTPUT_DIRECTORY "../src"
                 COMPILE_DEFINITIONS      "${SCLAUDIO_TEST_DEFINITIONS}")
     endif()
 
@@ -54,8 +53,7 @@ if(${BUILD_SCLAUDIO_TESTS})
 
     target_link_libraries(SCLAUDIO_TESTS
                           SCLAUDIO
-                          ${GTEST}
-                          ${SCLAUDIO_LIBRARIES})
+                          ${GTEST})
 endif()
 
 ##
@@ -65,9 +63,14 @@ endif()
 option(RUN_SCLAUDIO_TESTS "Run unit tests after build" TRUE)
 
 if (${RUN_SCLAUDIO_TESTS})
-    #enable_testing()
-    #add_test()
-    add_custom_command(TARGET SCLAUDIO_TESTS POST_BUILD
-                       COMMAND "${CMAKE_CURRENT_BINARY_DIR}/../bin/sclaudio_tests")
+    if(${SCLAUDIO_OSX})
+        add_custom_command(TARGET SCLAUDIO_TESTS POST_BUILD
+                           COMMAND "${CMAKE_CURRENT_BINARY_DIR}/../bin/sclaudio_tests")
+    endif()
+    if(${SCLAUDIO_WIN})
+        message(${CMAKE_CURRENT_BINARY_DIR})
+        add_custom_command(TARGET SCLAUDIO_TESTS POST_BUILD
+                           COMMAND "${CMAKE_CURRENT_BINARY_DIR}/../sclaudio_tests.exe") # this should work on OS X too!
+    endif()
 endif()
 
