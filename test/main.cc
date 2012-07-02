@@ -25,7 +25,7 @@
 
 #ifdef SCL_OSX
     #define SOUNDFONT_PATH \
-        "/Users/hans/Documents/Kod/doremir/modus/app/resources/soundfonts/sound.sf2"
+        "/Users/hans/Documents/Kod/doremir/modus/resources/audio/FluidR3_GM.sf2"
 #else
     #define SOUNDFONT_PATH \
         "C:/modus/app/resources/soundfonts/sound.sf2"
