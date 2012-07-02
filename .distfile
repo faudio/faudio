@@ -1,0 +1,20 @@
+[package "audio-engine"]
+site    = doremir
+version = 1.5
+subpath = build/dist
+path    = audio-engine-lisp-1.5
+mode    = get/put
+
+[package "audio-engine-doc"]
+site    = doremir
+version = 1.5
+subpath = build/dist
+path    = audio-engine-doc-1.5
+mode    = get/put
+
+[package "audio-engine-lisp"]
+site    = doremir
+version = 1.5
+subpath = build/dist
+path    = audio-engine-1.5
+mode    = get/put
