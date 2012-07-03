@@ -193,50 +193,50 @@ namespace test_cpp_api
         EXPECT_EQ( x, y );
     }
 
-    TEST(AtomicNumber, AtomicNumberCopy)
-    {
-        AtomicNumber<int> x (0);
-        AtomicNumber<int> y (x);
-        EXPECT_EQ( x, y );
-        
-        x.replace(1);
-        EXPECT_NE( x, y);
-        
-        y.replace(1);
-        EXPECT_EQ( x, y );
-    }
-
-    TEST(AtomicNumber, AtomicNumberAssign)
-    {
-        AtomicNumber<int> x (0);
-        AtomicNumber<int> y (0);
-        EXPECT_EQ( x, y );
-        
-        x.replace(1);
-        EXPECT_NE( x, y);
-        
-        y = x;
-        EXPECT_EQ( x, y );
-    }
-
-
-    TEST(AtomicNumber, AtomicNumberAddSub)
-    {
-        AtomicNumber<int> x (0);
-        EXPECT_EQ( x.value(), 0 );
-    
-        x.increment(1);
-        EXPECT_EQ( x.value(), 1 );
-
-        x.decrement(1);
-        EXPECT_EQ( x.value(), 0 );
-
-        x.increment(1232);
-        EXPECT_EQ( x.value(), 1232 );
-
-        x.decrement(1232);
-        EXPECT_EQ( x.value(), 0 );    
-    }
+    // TEST(AtomicNumber, AtomicNumberCopy)
+    // {
+    //     AtomicNumber<int> x (0);
+    //     AtomicNumber<int> y (x);
+    //     EXPECT_EQ( x, y );
+    //     
+    //     x.replace(1);
+    //     EXPECT_NE( x, y);
+    //     
+    //     y.replace(1);
+    //     EXPECT_EQ( x, y );
+    // }
+    // 
+    // TEST(AtomicNumber, AtomicNumberAssign)
+    // {
+    //     AtomicNumber<int> x (0);
+    //     AtomicNumber<int> y (0);
+    //     EXPECT_EQ( x, y );
+    //     
+    //     x.replace(1);
+    //     EXPECT_NE( x, y);
+    //     
+    //     y = x;
+    //     EXPECT_EQ( x, y );
+    // }
+    // 
+    // 
+    // TEST(AtomicNumber, AtomicNumberAddSub)
+    // {
+    //     AtomicNumber<int> x (0);
+    //     EXPECT_EQ( x.value(), 0 );
+    // 
+    //     x.increment(1);
+    //     EXPECT_EQ( x.value(), 1 );
+    // 
+    //     x.decrement(1);
+    //     EXPECT_EQ( x.value(), 0 );
+    // 
+    //     x.increment(1232);
+    //     EXPECT_EQ( x.value(), 1232 );
+    // 
+    //     x.decrement(1232);
+    //     EXPECT_EQ( x.value(), 0 );    
+    // }                  
        
     // FIXME
 /*

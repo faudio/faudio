@@ -554,7 +554,7 @@ void testAu()
     
 }    
 
-int main(int argc, int* argv) 
+int main(int argc, char const* argv[]) 
 {             
     testAu();
     // interactive();

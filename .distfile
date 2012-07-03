@@ -1,0 +1,27 @@
+[package "audio-engine-mac"]
+site    = doremir
+version = 1.5.0
+subpath = build
+path    = ScoreCleanerAudio.framework, libsclaudio.dylib
+mode    = put
+
+[package "audio-engine-win"]
+site    = doremir
+version = 1.5.0
+subpath = build
+path    = sclaudio.dll
+mode    = put
+
+[package "audio-engine-doc"]
+site    = doremir
+version = 1.5.0
+subpath = doc/build
+path    = html
+mode    = put
+
+[package "audio-engine-lisp"]
+site    = doremir
+version = 1.5.0
+subpath = dist/audio-engine-lisp
+path    = audio-engine
+mode    = put

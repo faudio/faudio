@@ -15,13 +15,25 @@
 ##   It optionally build the command line tool bin/sclaudio.
 ## 
 
+set(SCLAUDIOX_OSX_SOURCES sclaudiox/processor/plugin/au.mm)
 
-set(SCLAUDIOX_SOURCES sclaudiox/processor.cc
+set(SCLAUDIOX_WIN_SOURCES sclaudiox/processor/plugin/au_nil.cc)
+
+if (${SCLAUDIO_OSX})
+    set(SCLAUDIOX_NATIVE_SOURCES ${SCLAUDIOX_OSX_SOURCES})
+endif ()
+
+if (${SCLAUDIO_WIN})
+    set(SCLAUDIOX_NATIVE_SOURCES ${SCLAUDIOX_WIN_SOURCES})
+endif ()
+
+set(SCLAUDIOX_SOURCES ${SCLAUDIOX_NATIVE_SOURCES}
+                      
+                      sclaudiox/processor.cc
                       sclaudiox/stream.cc
                       
                       sclaudiox/scheduling/future.cc
                       
-                      sclaudiox/processor/plugin/au.mm
                       sclaudiox/processor/plugin/vst2.cc
                       sclaudiox/processor/synth/fluid.cc
                       
@@ -31,12 +43,12 @@ set(SCLAUDIOX_SOURCES sclaudiox/processor.cc
                       sclaudiox/stream/device/audio.cc
                       sclaudiox/stream/device/midi.cc
                       
-                      sclaudiox/util/symbol.cc)
-                      
+                      sclaudiox/util/symbol.cc)  
                       
 set(SCLAUDIO_SOURCES  ${SCLAUDIOX_SOURCES}
                       sclaudio.cc)
 
+message("Including the following source files: ${SCLAUDIO_SOURCES}")
 
 ##
 ## Build library
@@ -86,7 +98,6 @@ if(${SCLAUDIO_WIN})
         set_target_properties(SCLAUDIO
             PROPERTIES
                 OUTPUT_NAME              sclaudio
-                LIBRARY_OUTPUT_DIRECTORY ""
                 COMPILE_DEFINITIONS      "${SCLAUDIO_DEFINITIONS}")
         target_link_libraries(SCLAUDIO ${SCLAUDIO_LIBRARIES})
     endif()
@@ -117,9 +128,12 @@ if(${BUILD_SCLAUDIO_CL})
     if(${SCLAUDIO_WIN})
         set_target_properties(SCLAUDIO_CL
             PROPERTIES
-                OUTPUT_NAME                 "sclaudio_test"
-                RUNTIME_OUTPUT_DIRECTORY    ""
+                OUTPUT_NAME                 "sclaudio_cl"
                 COMPILE_DEFINITIONS         "${SCLAUDIO_CL_DEFINITIONS}")
+    endif()
+
+    if (MSVC_IDE)
+        set_target_properties(SCLAUDIO_CL PROPERTIES PREFIX "../")
     endif()
 
     # TODO if building dylib and/or framework on OS X, this only links with framwork
