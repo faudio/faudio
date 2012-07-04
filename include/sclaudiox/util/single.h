@@ -25,19 +25,19 @@ namespace scl {
 template <
     class T
 >
-class SCLAUDIO_API SingleIterator 
+class SCLAUDIO_API pointer_iterator 
     : public std::iterator<std::input_iterator_tag, T>
 { 
 public:
-    SingleIterator(T* x) 
+    pointer_iterator(T* x) 
         : mPtr(x) {}
-    SingleIterator(const SingleIterator& mit) 
+    pointer_iterator(const pointer_iterator& mit) 
         : mPtr(mit.mPtr) {}
     
-    SingleIterator& operator++() { ++mPtr; return *this; }
-    SingleIterator operator++(T) { SingleIterator tmp(*this); operator++(); return tmp; }
-    bool operator==(const SingleIterator& other) { return mPtr == other.mPtr; }
-    bool operator!=(const SingleIterator& other) { return mPtr != other.mPtr; }
+    pointer_iterator& operator++() { ++mPtr; return *this; }
+    pointer_iterator operator++(T) { pointer_iterator tmp(*this); operator++(); return tmp; }
+    bool operator==(const pointer_iterator& other) { return mPtr == other.mPtr; }
+    bool operator!=(const pointer_iterator& other) { return mPtr != other.mPtr; }
     T& operator*() { return *mPtr; }
 private:
     T* mPtr;
@@ -46,19 +46,19 @@ private:
 /**
     A trivial singleton collection.
  */
-template <class T> class SCLAUDIO_API Single
+template <class T> class SCLAUDIO_API pointer
 {
 public:                                     
     typedef T                 value_type;
-    typedef SingleIterator<T> iterator;
-    typedef SingleIterator<T> const_iterator;
+    typedef pointer_iterator<T> iterator;
+    typedef pointer_iterator<T> const_iterator;
     typedef T&                reference_type;
     typedef const T&          const_reference;
     typedef T*                pointer_type;
     typedef ptrdiff_t         difference_type;
     typedef size_t            size_type;
     
-    Single(T value)
+    pointer(T value)
         : mValue(value) {}
 
     iterator begin()
@@ -70,7 +70,7 @@ public:
         return ++iterator(&mValue);
     }
 
-    virtual ~Single() {}
+    virtual ~pointer() {}
 private:
     T mValue;
 };

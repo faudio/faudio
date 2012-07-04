@@ -43,6 +43,8 @@ set(SCLAUDIOX_SOURCES ${SCLAUDIOX_NATIVE_SOURCES}
                       sclaudiox/stream/device/audio.cc
                       sclaudiox/stream/device/midi.cc
                       
+                      sclaudiox/util/immutable_list.cc
+                      sclaudiox/util/fib_heap.cc
                       sclaudiox/util/symbol.cc)  
                       
 set(SCLAUDIO_SOURCES  ${SCLAUDIOX_SOURCES}
