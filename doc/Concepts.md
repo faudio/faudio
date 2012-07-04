@@ -2,11 +2,7 @@
 Concepts
 ========
 
-
-### Range <*T*>
-
-    T::iterator begin()
-    T::iterator end()
+The following concepts are used in the audio engine. They can be checked using the Boost concept check library.
 
 ### Default <*T*>
 
@@ -35,6 +31,11 @@ Concepts
 
 ### Monoid <*T*> : Semigroup<*T*>, Default<*T*>
     
+### Range <*T*>
+
+    T::iterator begin()
+    T::iterator end()
+
 ### Writeable <*T*>
                      
     std::ostream << T
@@ -46,7 +47,6 @@ Concepts
 
 ## Standard
 
-### Assignable
 ### InputIterator
 ### OutputIterator
 ### ForwardIterator

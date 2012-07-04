@@ -2,9 +2,9 @@
 main : lispdoc doxygen
 
 lispdoc :
-	# doc/tool/lispdoc.hs language_bindings/lisp/*.lisp > doc/Lisp.md;
+	# tool/lispdoc.hs language_bindings/lisp/*.lisp > Lisp.md;
 
 doxygen :
-	mkdir -p doc/build/html; \
-	cp doc/include/styles.css doc/build/html/; \
-	doxygen doc/Doxyfile	
+	mkdir -p build/html; \
+	cp include/styles.css build/html/; \
+	doxygen Doxyfile	
