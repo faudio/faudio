@@ -146,7 +146,7 @@ private:
 // Sequence
 
 /**
-    Immutable, singly linked list.
+    Persistent, immutable singly linked list.
  */
 template <class T, class Alloc = std::allocator<T> >
 class ilist
