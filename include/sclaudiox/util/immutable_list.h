@@ -14,6 +14,8 @@
 namespace doremir {
 namespace scl {
 
+using boost::add_const;
+using boost::remove_const;
 
 struct ilist_node_base
 {
@@ -70,7 +72,6 @@ void ilist_node_free(ilist_node<T> * xs, Alloc allocator)
 
 
 
-
 template <class T>
 class ilist_iterator
 {
@@ -79,7 +80,7 @@ private:
 
 public:
     typedef 
-        typename boost::remove_const<T>::type                           
+        typename remove_const<T>::type                           
         value_type;
     typedef value_type*                 pointer;
     typedef value_type&                 reference;
@@ -156,14 +157,14 @@ private:
         Self;
 public:
     typedef 
-        typename boost::remove_const<T>::type
+        typename remove_const<T>::type
         value_type;
 
     typedef 
-        ilist_iterator< typename boost::remove_const<T>::type >
+        ilist_iterator< typename remove_const<T>::type >
         iterator;
     typedef 
-        ilist_iterator< typename boost::add_const<T>::type >
+        ilist_iterator< typename add_const<T>::type >
         const_iterator;
     
     typedef value_type&         reference;
