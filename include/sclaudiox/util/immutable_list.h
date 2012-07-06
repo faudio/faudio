@@ -75,13 +75,10 @@ void ilist_node_free(ilist_node<T> * xs, Alloc allocator)
 template <class T>
 class ilist_iterator
 {
-private:
-    typedef ilist_iterator<T> Self;
-
 public:
-    typedef 
-        typename remove_const<T>::type                           
-        value_type;
+    typedef          ilist_iterator<T>      this_type;
+    typedef typename remove_const<T>::type  value_type;
+
     typedef value_type*                 pointer;
     typedef value_type&                 reference;
     typedef std::forward_iterator_tag   iterator_category;
@@ -92,32 +89,31 @@ public:
     ilist_iterator(ilist_node<value_type> * node) : mNode(node) {}
     ~ilist_iterator() {}
 
-    static Self singular_iterator()
+    static this_type singular_iterator()
     {
         return ilist_iterator();
     }
 
     reference operator*()
     {
-        // throw something better if null (?)
         return mNode->data;
     }
 
     const pointer operator->()
     {
-        // throw something better if null (?)
         return mNode->data;
     }
 
-    Self& operator++()
+    this_type& operator++()
     {
-        inc();
+        increment();
         return *this;
     }
-    Self operator++(int)
+    
+    this_type operator++(int)
     {
-        Self tmp = *this;
-        inc();
+        this_type tmp = *this;
+        increment();
         return tmp;
     }
 
@@ -125,15 +121,15 @@ public:
     {
         return mNode == y.mNode;
     }
+    
     bool operator!=(const ilist_iterator<T>& y)
     {
         return mNode != y.mNode;
     }
 
 private:
-    void inc()
+    void increment()
     {
-        // throw something better if null (?)
         mNode = static_cast< ilist_node<value_type>* >(mNode->next);
     }
 
@@ -141,24 +137,15 @@ private:
 };
 
 
-
-
-
-// Sequence
-
 /**
-    Persistent, immutable singly linked list.
+    Immutable singly linked list.
  */
 template <class T, class Alloc = std::allocator<T> >
 class ilist
 {
-private:
-    typedef ilist<T, Alloc>
-        Self;
 public:
-    typedef 
-        typename remove_const<T>::type
-        value_type;
+    typedef          ilist<T, Alloc>        this_type;
+    typedef typename remove_const<T>::type  value_type;
 
     typedef 
         ilist_iterator< typename remove_const<T>::type >
@@ -171,6 +158,7 @@ public:
     typedef const value_type&   const_reference;
 
     typedef Alloc               allocator_type;
+    
     // FIXME piggyback on allocator definitions instead
     typedef value_type*         pointer;
     typedef const value_type*   const_pointer;
@@ -178,40 +166,51 @@ public:
     typedef size_t              size_type;
 
 private:
-    typedef ilist_node<value_type> Node;
-    typedef std::allocator< ilist_node<value_type> > NodeAlloc;
+    typedef ilist_node<value_type>  Node;
+    typedef std::allocator<Node>    NodeAlloc;
     
 public:
-
+    /** Default constructor. Creates an empty list. */
     ilist() 
         : mNode(ilist_node_nil<T,Alloc>()) {}
 
-    ilist(const ilist<T>& x) 
-        : mNode(x.mNode) {}
-        
+    /** Copy constructor. Creates by appending the given value to the given list. */
+    ilist(value_type x, const ilist<T>& xs)
+        : mNode(ilist_node_cons(x, xs.mNode, xs.mNodeAlloc)) {}
+
+    /** Copy constructor. Creates a list sharing the elements of the given list. */
+    ilist(const ilist<T>& xs) 
+        : mNode(xs.mNode) {}
+
+    /** Destroy the given list. */
     ~ilist()
     {
-//        ilist_node_free(mNode, mNodeAlloc); // FIXME
+       ilist_node_free(mNode, mNodeAlloc);
     }
-
-private:
-    explicit ilist(Node * node) 
-        : mNode(node) {}
     
 public:    
-    Self prepend(value_type x)
-    {
-        Node * node = ilist_node_cons(x, mNode, mNodeAlloc);
-        return ilist(node);
-    }
 
+    /** Updates this list to have the contents of the given list.
+        \note
+            O(1) complexity 
+      */
     void operator=(const ilist<T>& x) 
     {
-        // ilist<T> y (x);
-        // swap(this, y);
-        mNode = x.mNode;
+        ilist<T> y (x);
+        swap(y);
     }
-
+    
+    /** Swaps contents with the given list.
+        \note
+            O(1) complexity 
+      */
+    void swap(ilist<T>& y)
+    {
+        Node * n = y.mNode;
+        y.mNode  = mNode;
+        mNode    = n;
+    }
+    
     iterator begin()
     {
         return iterator(mNode);
@@ -232,101 +231,123 @@ public:
         return const_iterator::singular_iterator();
     }
 
+    /** Returns the number of elements in this list.
+        \note
+            O(n) complexity 
+      */
     size_type size() const
     {
         return std::distance(begin(), end());
     }
 
+    /** Returns the maximal number of elements in this list.
+        \note
+            O(n) complexity 
+      */
     size_type max_size()  const
     {
         return size();
     }
 
+    /** Returns whether this list is emtpy or not.
+        \note
+            O(1) complexity 
+      */
     size_type empty() const
     {
         return begin() == end();
     }
 
-    void swap(const ilist<T>& y)
+    /** Returns a list with the given value prepended to this list.
+        \note
+            O(1) complexity 
+      */
+    this_type add_before(value_type x)
     {
-        ilist_node<T> temp;
-        temp = y.mNode;
-        y.mNode = mNode;
-        mNode = temp;
+        return ilist(x, *this);
     }
 
+    /** Returns a list with the given value appended to this list.
+        \note
+            O(1) complexity 
+      */
+    this_type add_after(value_type x)
+    {
+        // FIXME
+    }
+                   
+    template <int N>
+    this_type drop()
+    {
+        // FIXME
+    }
+
+    template <int N>
+    this_type take()
+    {
+        // FIXME
+    }
+
+    template <int M, int N>
+    this_type slice()
+    {
+        // FIXME
+    }
+
+    this_type append(this_type y)
+    {
+        // FIXME
+    }
+    
+
 private:
-    Node * mNode;
-    NodeAlloc mNodeAlloc;
+    Node      * mNode;
+    NodeAlloc   mNodeAlloc;
 };
 
 
-
-
-
-
-
 template <class T, class Alloc>
-bool operator==(const ilist<T, Alloc>& x, const ilist<T, Alloc>& y)
+bool operator== (const ilist<T, Alloc>& x, const ilist<T, Alloc>& y)
 {
-    typedef typename ilist<T,Alloc>::const_iterator const_iterator;
-    const_iterator end1 = x.end();
-    const_iterator end2 = y.end();
-
-    const_iterator i1 = x.begin();
-    const_iterator i2 = y.begin();
-    while (i1 != end1 && i2 != end2 && *i1 == *i2) {
-        ++i1;
-        ++i2;
-    }
-    return i1 == end1 && i2 == end2;
+    return std::equal(x.begin(), x.end(), y.begin());
 }
 
 template <class T, class Alloc>
-bool operator!=(const ilist<T, Alloc>& x, const ilist<T, Alloc>& y)
+bool operator< (const ilist<T, Alloc>& x, const ilist<T, Alloc>& y)
 {
-    typedef typename ilist<T,Alloc>::const_iterator const_iterator;
-    const_iterator end1 = x.end();
-    const_iterator end2 = y.end();
-
-    const_iterator i1 = x.begin();
-    const_iterator i2 = y.begin();
-    while (i1 != end1 && i2 != end2 && *i1 != *i2) {
-        ++i1;
-        ++i2;
-    }
-    return i1 != end1 || i2 != end2;
+    return std::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end());
 }
 
 template <class T, class Alloc>
-bool operator<(const ilist<T, Alloc>& x, const ilist<T, Alloc>& y)
+bool operator!= (const ilist<T, Alloc>& x, const ilist<T, Alloc>& y)
 {
-    // FIXME
+    return !(x == y);
 }
 
 template <class T, class Alloc>
-bool operator>(const ilist<T, Alloc>& x, const ilist<T, Alloc>& y)
+bool operator> (const ilist<T, Alloc>& x, const ilist<T, Alloc>& y)
 {
-    // FIXME
+    return y < x;
 }
 
 template <class T, class Alloc>
-bool operator<=(const ilist<T, Alloc>& x, const ilist<T, Alloc>& y)
+bool operator<= (const ilist<T, Alloc>& x, const ilist<T, Alloc>& y)
 {
-    // FIXME
+    return !(y < x);
 }
 
 template <class T, class Alloc>
-bool operator>=(const ilist<T, Alloc>& x, const ilist<T, Alloc>& y)
+bool operator>= (const ilist<T, Alloc>& x, const ilist<T, Alloc>& y)
 {
-    // FIXME
+    return !(x < y);
 }
 
 template <class T, class Alloc>
 void swap(const ilist<T, Alloc>& x, const ilist<T, Alloc>& y)
 {
-    // FIXME
+    x.swap(y);
 }
+
 
 
 } // namespace doremir
