@@ -19,8 +19,9 @@
 #ifndef _SCLAUDIOX_UTIL_ATOMIC
 #define _SCLAUDIOX_UTIL_ATOMIC
 
+#include <boost/type_traits.hpp>
+
 #include "sclaudiox/error.h"
-#include "sclaudiox/numeric.h"
 #include "sclaudiox/util/misc.h"
 
 #ifdef SCL_WIN
@@ -48,7 +49,7 @@ namespace scl {
         It is the standard backend for Atomic.
      */
     template <class T>
-    struct DefaultAtomicTraits
+    struct default_atomic_traits
     {
         static T    get(T* a);
         static void add(T* a, T x);
@@ -57,24 +58,24 @@ namespace scl {
     
 #ifdef SCL_ATOMIC_OSX
     template <>
-    struct DefaultAtomicTraits<Int32>
+    struct default_atomic_traits<int32_t>
     {
-        inline static bool swap(Int32* a, Int32 x, Int32 y)
+        inline static bool swap(int32_t* a, int32_t x, int32_t y)
         {
             return OSAtomicCompareAndSwap32Barrier(x, y, a);
         }
-        static Int32 get(Int32* a)
+        static int32_t get(int32_t* a)
         {
             return OSAtomicAdd32Barrier(0, a);
         }
-        static void add(Int32* a, Int32 x)
+        static void add(int32_t* a, int32_t x)
         {
             OSAtomicAdd32Barrier(x, a);
         }
     };
 
     template <class T>
-    struct DefaultAtomicTraits<T*>
+    struct default_atomic_traits<T*>
     {
         static bool swap(T** a, T* x, T* y)
         {
@@ -90,24 +91,24 @@ namespace scl {
 
 #ifdef SCL_ATOMIC_WIN
     template <>
-    struct DefaultAtomicTraits<Int32>
+    struct default_atomic_traits<int32_t>
     {
-        static bool swap(Int32* a, Int32 x, Int32 y)
+        static bool swap(int32_t* a, int32_t x, int32_t y)
         {
             return ( x == InterlockedCompareExchange((LONG*) a, (LONG) y, (LONG) x) );
         }
-        static Int32 get(Int32* a)
+        static int32_t get(int32_t* a)
         {
             return InterlockedCompareExchange((LONG*) a, (LONG) 0, (LONG) 0);
         }
-        static void add(Int32* a, Int32 x)
+        static void add(int32_t* a, int32_t x)
         {
             InterlockedExchangeAdd((LONG*) a, (LONG) x);
         }
     };
 
     template <class T>
-    struct DefaultAtomicTraits<T*>
+    struct default_atomic_traits<T*>
     {
         static bool swap(T** a, T* x, T* y)
         {
@@ -122,24 +123,24 @@ namespace scl {
 
 #ifdef SCL_ATOMIC_GCC
     template <>
-    struct DefaultAtomicTraits<Int32>
+    struct default_atomic_traits<int32_t>
     {
-        static bool swap(Int32* a, Int32 x, Int32 y)
+        static bool swap(int32_t* a, int32_t x, int32_t y)
         {
             return __sync_bool_compare_and_swap(a, x, y);
         }
-        static Int32 get(Int32* a)
+        static int32_t get(int32_t* a)
         {
             return __sync_val_compare_and_swap(a, 0, 0);
         }
-        static void add(Int32* a, Int32 x)
+        static void add(int32_t* a, int32_t x)
         {
             __sync_fetch_and_add (a, x);
         }
     };
 
     template <class T>
-    struct DefaultAtomicTraits<T*>
+    struct default_atomic_traits<T*>
     {
         static bool swap(T** a, T* x, T* y)
         {
@@ -154,44 +155,24 @@ namespace scl {
 
 
 /**
-    An atomic value.
     
-    The value() and tryReplace() methods are usually implemented through compiler intrisics or
-    platform-specific functions. replace() is implemented in terms of tryReplace() using
-    a spin-lock.
-    
-    Atomics should be through of as special variables, rather than as values.
-    In the following example integer variables are replaced by atomic integer variables:
-    
-        int foo = 1;
-        int bar = 2;
-        bar = foo;
-        
-        Atomic<int> foo = 1;
-        Atomic<int> bar = 2;
-        bar = foo;
-
-    \invariant
-        T is supported by the underlying AtomicTraits. 
-        Using the default traits this means `int`, `unsigned int` and pointers.
   */
 template <
     typename T, 
-    typename AtomicTraits = DefaultAtomicTraits<T>
+    typename atomic_traits = default_atomic_traits<T>
 >
-class SCLAUDIO_API Atomic
+class SCLAUDIO_API atomic
 {
 public:   
-    typedef Atomic<T, AtomicTraits> this_type;
-    typedef T                       value_type;
+    typedef          atomic<T, atomic_traits>      this_type;
+    typedef typename boost::remove_const<T>::type  value_type;
             
     /**
         Constructs an atomic value using the nullary constructor `T()`.
         \note
             Non-atomic operation.
      */
-    Atomic() 
-        : mAddress( new T ) {}
+    atomic() {}
     
     /**
         Constructs an atomic value using a unary constructor `T(U x)`.
@@ -201,8 +182,7 @@ public:
     template <
         class U
     > 
-    explicit Atomic(U value) 
-        : mAddress( new T(value) ) {}
+    explicit atomic(U value) : mData(value) {}
 
     /**
         Copy constructor.
@@ -210,18 +190,14 @@ public:
         \note
             Non-atomic operation.
      */
-    Atomic(const Atomic<T>& other)
-        : mAddress( new T(other.value()) ) {}
+    atomic(const atomic<T>& other) : mData(other.value()) {}
 
     /**
         Destroys the atomic value.
         \note
             Non-atomic operation.
      */
-    virtual ~Atomic()
-    {
-        delete (T*) mAddress;
-    }   
+    virtual ~atomic() {}   
 
     /**
         Assignment operator.
@@ -229,7 +205,7 @@ public:
         \note
             Atomic operation.
      */
-    void operator =(const Atomic<T>& other)
+    void operator =(const atomic<T>& other)
     {
         replace(other.value());
     }
@@ -241,7 +217,7 @@ public:
      */
     inline T value() const
     {
-        return AtomicTraits::get((T*) mAddress);
+        return atomic_traits::get(const_cast<value_type*>(&mData));
     }
     
     /**
@@ -253,7 +229,7 @@ public:
     {
         T oldVal;
         do 
-            oldVal = AtomicTraits::get((T*) mAddress); 
+            oldVal = atomic_traits::get(&mData); 
         while (!tryReplace(oldVal, newVal));
     }
     
@@ -265,7 +241,7 @@ public:
      */
     inline bool tryReplace(T oldVal, T newVal)
     {
-        return AtomicTraits::swap((T*) mAddress, oldVal, newVal);
+        return atomic_traits::swap(&mData, oldVal, newVal);
     }  
 
     /**
@@ -295,19 +271,17 @@ public:
     inline bool tryModify(Function<T,T> function)
     {
         T oldVal, newVal;
-        oldVal = AtomicTraits::get((T*) mAddress);
+        oldVal = atomic_traits::get(&mData);
         newVal = function(oldVal);
-        return AtomicTraits::swap((T*) mAddress, oldVal, newVal);
+        return atomic_traits::swap(&mData, oldVal, newVal);
     }
-
-    // Atomic number
     
     /**
         Prefix increment operator.
         \note
             Atomic operation.
      */
-    inline Atomic<T, AtomicTraits>& operator ++()
+    inline this_type& operator ++()
     {
         increment(1);
         return *this;
@@ -318,7 +292,7 @@ public:
         \note
             Atomic operation.
      */
-    inline Atomic<T, AtomicTraits>& operator --()
+    inline this_type& operator --()
     {
         decrement(1);
         return *this;
@@ -329,9 +303,9 @@ public:
         \note
             Atomic operation.
      */
-    inline Atomic<T, AtomicTraits> operator ++(int post)
+    inline this_type operator ++(int post)
     {              
-        Atomic temp (this);
+        atomic temp (this);
         increment(1);
         return temp;
     }
@@ -341,9 +315,9 @@ public:
         \note
             Atomic operation.
      */
-    inline Atomic<T, AtomicTraits> operator --(int post)
+    inline this_type operator --(int post)
     {
-        Atomic temp (this);
+        atomic temp (this);
         decrement(1);
         return temp;
     }      
@@ -355,7 +329,7 @@ public:
      */
     inline void increment(T amount)
     {
-        return AtomicTraits::add((T*) Atomic<T, AtomicTraits>::mAddress, amount);
+        return atomic_traits::add(&mData, amount);
     }
 
     /**
@@ -368,179 +342,41 @@ public:
         return increment(math::negate(amount));
     }
                   
-protected:
-    void*  mAddress;
+private:
+    value_type mData;
 };
               
-
-// /**
-//     An atomic number.
-//     
-//     This class extends Atomic with the usual increment and decrement operators. There are no ordinary arithmetic
-//     operators, as this class represents a variable and not a value.
-//  */
-// template <
-//     typename T, 
-//     typename AtomicTraits = DefaultAtomicTraits<T>
-// >
-// class SCLAUDIO_API AtomicNumber : public Atomic<T, AtomicTraits>
-// {
-// public:
-//     typedef AtomicNumber<T, AtomicTraits> this_type;
-//     typedef Atomic<T, AtomicTraits>       parent_type;
-// 
-//     /**
-//         Constructs an atomic number using a nullary constructor.
-//         \note
-//             Non-atomic operation.
-//      */
-//     AtomicNumber() 
-//         : Atomic<T>() {}
-//     
-//     /**
-//         Constructs an atomic number using a unary constructor.
-//         \note
-//             Non-atomic operation.
-//      */
-//     template <
-//         class U
-//     > 
-//     explicit AtomicNumber(U value) 
-//         : Atomic<U>(value) {}
-// 
-//     AtomicNumber(const Atomic<T>& other)
-//         : mAddress( new T(other.value()) ) {}
-// 
-//     /**
-//         Destroys the atomic number.
-//         \note
-//             Non-atomic operation.
-//      */
-//     ~AtomicNumber() {}    
-// 
-//     /**
-//         Assignment operator.
-//         Replaces the current value with the value of the given atomic number.
-//         \note
-//             Atomic operation.
-//      */
-//     void operator =(const AtomicNumber<T>& other)
-//     {
-//         parent_type::replace(other.value());
-//     }
-// 
-//     /**
-//         Prefix increment operator.
-//         \note
-//             Atomic operation.
-//      */
-//     inline Atomic<T, AtomicTraits>& operator ++()
-//     {
-//         increment(1);
-//         return *this;
-//     }
-// 
-//     /**
-//         Prefix decrement operator.
-//         \note
-//             Atomic operation.
-//      */
-//     inline Atomic<T, AtomicTraits>& operator --()
-//     {
-//         decrement(1);
-//         return *this;
-//     }
-// 
-//     /**
-//         Postfix increment operator.
-//         \note
-//             Atomic operation.
-//      */
-//     inline Atomic<T, AtomicTraits> operator ++(int post)
-//     {              
-//         AtomicNumber temp (this);
-//         increment(1);
-//         return temp;
-//     }
-// 
-//     /**
-//         Postfix decrement operator.
-//         \note
-//             Atomic operation.
-//      */
-//     inline Atomic<T, AtomicTraits> operator --(int post)
-//     {
-//         AtomicNumber temp (this);
-//         decrement(1);
-//         return temp;
-//     }      
-//     
-//     /**
-//         Increase the atomic number by the given amount.
-//         \note
-//             Atomic operation.
-//      */
-//     inline void increment(T amount)
-//     {
-//         return AtomicTraits::add((T*) Atomic<T, AtomicTraits>::mAddress, amount);
-//     }
-// 
-//     /**
-//         Decrease the atomic number by the given amount.
-//         \note
-//             Atomic operation.
-//      */
-//     inline void decrement(T amount)
-//     {
-//         return increment(math::negate(amount));
-//     }
-// };
-
 template <class T>
-bool operator ==(const Atomic<T>& a, const Atomic<T>& b)
+bool operator ==(const atomic<T>& a, const atomic<T>& b)
 {
     return a.value() == b.value();
 }  
 
 template <class T>
-bool operator !=(const Atomic<T>& a, const Atomic<T>& b)
+bool operator !=(const atomic<T>& a, const atomic<T>& b)
 {
     return a.value() != b.value();	    
 }
 
-// template <class T>
-// bool operator ==(const AtomicNumber<T>& a, const AtomicNumber<T>& b)
-// {
-//     return a.value() == b.value();
-// }  
-// 
-// template <class T>
-// bool operator !=(const AtomicNumber<T>& a, const AtomicNumber<T>& b)
-// {
-//     return a.value() != b.value();       
-// }                                   
-   
-
-// typedef AtomicNumber<char>              atomic_char;
-// typedef AtomicNumber<unsigned char>     atomic_uchar;
-// typedef AtomicNumber<signed char>       atomic_schar;
-// typedef AtomicNumber<unsigned short>    atomic_ushort;
-// typedef AtomicNumber<short>             atomic_short;
-// typedef AtomicNumber<unsigned int>      atomic_uint;
-// typedef AtomicNumber<int>               atomic_int;
-// typedef AtomicNumber<unsigned long>     atomic_ulong;
-// typedef AtomicNumber<long>              atomic_long;
-// typedef AtomicNumber<uint8_t>           atomic_uint8_t;
-// typedef AtomicNumber<int8_t>            atomic_int8_t;
-// typedef AtomicNumber<uint16_t>          atomic_uint16_t;
-// typedef AtomicNumber<int16_t>           atomic_int16_t;
-// typedef AtomicNumber<uint32_t>          atomic_uint32_t;
-// typedef AtomicNumber<int32_t>           atomic_int32_t;
-// typedef AtomicNumber<uint64_t>          atomic_uint64_t;
-// typedef AtomicNumber<int64_t>           atomic_int64_t;
-// typedef AtomicNumber<void*>             atomic_address;
-// typedef AtomicNumber<bool>              atomic_bool;
-//                                                         
+typedef atomic<char>            atomic_char;
+typedef atomic<unsigned char>   atomic_uchar;
+typedef atomic<signed char>     atomic_schar;
+typedef atomic<unsigned short>  atomic_ushort;
+typedef atomic<short>           atomic_short;
+typedef atomic<unsigned int>    atomic_uint;
+typedef atomic<int>             atomic_int;
+typedef atomic<unsigned long>   atomic_ulong;
+typedef atomic<long>            atomic_long;
+typedef atomic<uint8_t>         atomic_uint8_t;
+typedef atomic<int8_t>          atomic_int8_t;
+typedef atomic<uint16_t>        atomic_uint16_t;
+typedef atomic<int16_t>         atomic_int16_t;
+typedef atomic<uint32_t>        atomic_uint32_t;
+typedef atomic<int32_t>         atomic_int32_t;
+typedef atomic<uint64_t>        atomic_uint64_t;
+typedef atomic<int64_t>         atomic_int64_t;
+typedef atomic<void*>           atomic_address;
+typedef atomic<bool>            atomic_bool;
 
 } // namespace
 } // namespace

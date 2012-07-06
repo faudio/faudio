@@ -87,12 +87,12 @@ private:
     struct Node
     {
         T             elem;
-        Atomic<Node*> next;
+        atomic<Node*> next;
     };
 
-    Atomic<Node*> mFirst;
-    Atomic<Node*> mDivide;
-    Atomic<Node*> mLast;
+    atomic<Node*> mFirst;
+    atomic<Node*> mDivide;
+    atomic<Node*> mLast;
 };        
 
 } // namespace

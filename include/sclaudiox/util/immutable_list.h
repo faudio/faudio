@@ -9,7 +9,6 @@
 #define _SCLAUDIOX_UTIL_IMMUTABLE_LIST
 
 #include <boost/type_traits.hpp>
-#include "sclaudiox/core.h"
 
 namespace doremir {
 namespace scl {
@@ -17,59 +16,74 @@ namespace scl {
 using boost::add_const;
 using boost::remove_const;
 
-struct ilist_node_base
+/** \cond ignore */
+namespace
 {
-    ilist_node_base * next;
-    int reference_count;
-};
-
-
-
-template <class T>
-struct ilist_node :
-    public ilist_node_base
-{
-    T data;
-};
-
-template <class T, class Alloc>
-ilist_node<T> * ilist_node_nil()
-{
-    return NULL;
-}
-
-template <class T, class Alloc>
-ilist_node<T> * ilist_node_cons(T x, ilist_node<T> * xs, Alloc allocator)
-{
-    // typedef typename Alloc::pointer   pointer;
-    // typedef typename Alloc::const_reference const_reference;
-    // pointer   ysp;
-    // const_reference ys;
-    // 
-    // ysp = allocator.allocate(1); // FIXME handle bac_alloc
-    // allocator.construct(ysp, &ys);
-
-    ilist_node<T> * ys = new ilist_node<T>();
-    ys->data = x;
-    ys->next = xs;
-    if (xs) xs->reference_count++;
-    return ys;
-}
-
-template <class T, class Alloc>
-void ilist_node_free(ilist_node<T> * xs, Alloc allocator)
-{
-    if (!xs) return;
-    ilist_node_free(reinterpret_cast < ilist_node<T>* >(xs->next), allocator);
-    xs->reference_count--;
-    if (!xs->reference_count)
+    struct ilist_node_base
     {
-        delete xs;
-        // allocator.destroy(xs);
-        // allocator.deallocate(xs, 1);
-    }
-}
+        int               reference_count;
+        ilist_node_base * next;
+    };
 
+    template <class T>
+    struct ilist_node : public ilist_node_base
+    {
+        T data;
+    };
+
+    /* The nil node, representing end of list */
+    template <class T>
+    ilist_node<T> * ilist_node_nil()
+    {
+        return NULL;
+    }
+
+    /* Returns the cons of x and xs, adding a reference to xs */
+    template <class T, class Alloc>
+    ilist_node<T> * ilist_node_cons(T x, ilist_node<T> * xs, Alloc allocator)
+    {
+        // FIXME use allocator
+        ilist_node<T> * ys = new ilist_node<T>();
+        ys->reference_count = 0;
+        ys->data = x;
+        ys->next = ilist_node_acquire(xs);
+        return ys;
+    }
+
+    template <class T>
+    ilist_node<T> * ilist_node_acquire(ilist_node<T> * xs)
+    {
+        if (xs)
+        {
+            xs->reference_count++;
+            return xs;
+        }
+    }
+
+    /* Releases a reference to xs */
+    template <class T, class Alloc>
+    void ilist_node_release(ilist_node<T> * xs, Alloc allocator)
+    {
+        if (xs)
+        {
+            ilist_node_release(ilist_node_next(xs), allocator);
+            xs->reference_count--;
+            if (!xs->reference_count)
+            {
+                // FIXME use allocator
+                delete xs;
+            }
+        }
+    }
+
+    /* Returns the xs in (x:xs) */
+    template <class T>
+    ilist_node<T> * ilist_node_next(ilist_node<T> * xs)
+    {
+        return static_cast<ilist_node<T>*>(xs->next);
+    }               
+}
+/** \endcond */
 
 
 template <class T>
@@ -85,14 +99,16 @@ public:
     typedef size_t                      size_type;
     typedef ptrdiff_t                   difference_type;
 
-    ilist_iterator() : mNode(0) {}
-    ilist_iterator(ilist_node<value_type> * node) : mNode(node) {}
-    ~ilist_iterator() {}
+    ilist_iterator() 
+        : mNode(0) {}
+    
+    ilist_iterator(ilist_node<value_type> * node) 
+        : mNode(node) {}
 
-    static this_type singular_iterator()
-    {
-        return ilist_iterator();
-    }
+    ~ilist_iterator() {}
+                       
+    // TODO Assignable
+    // TODO ForwardIterator
 
     reference operator*()
     {
@@ -130,15 +146,27 @@ public:
 private:
     void increment()
     {
-        mNode = static_cast< ilist_node<value_type>* >(mNode->next);
+        mNode = ilist_node_next(mNode);
     }
 
     ilist_node<value_type> * mNode;
 };
 
 
+template <class T, class Alloc = std::allocator<T> >
+class ilist_builder
+{
+};
+
 /**
-    Immutable singly linked list.
+    Immutable single-linked list. 
+    
+    This implementation use structural sharing, so every instance is a pointer to a
+    reference-counted node. The tail, init, drop, take and slice methods returns
+    pointers to subranges, no copying is performed. 
+
+    You can safely use all non-mutating algorithms on immutable structures. For
+    mutating algorithms, use the copying variant with ilist_builder.
  */
 template <class T, class Alloc = std::allocator<T> >
 class ilist
@@ -152,7 +180,13 @@ public:
         iterator;
     typedef 
         ilist_iterator< typename add_const<T>::type >
-        const_iterator;
+        const_iterator;       
+    typedef
+        ilist_builder< typename remove_const<T>::type, Alloc >
+        builder;
+    typedef
+        ilist_builder< typename add_const<T>::type, Alloc >
+        const_builder;
     
     typedef value_type&         reference;
     typedef const value_type&   const_reference;
@@ -172,21 +206,18 @@ private:
 public:
     /** Default constructor. Creates an empty list. */
     ilist() 
-        : mNode(ilist_node_nil<T,Alloc>()) {}
+        : mNode(ilist_node_acquire(ilist_node_nil<T>())) {}
 
-    /** Copy constructor. Creates by appending the given value to the given list. */
+    /** Join constructor. Creates by appending the given value to the given list. */
     ilist(value_type x, const ilist<T>& xs)
-        : mNode(ilist_node_cons(x, xs.mNode, xs.mNodeAlloc)) {}
+        : mNode(ilist_node_acquire(ilist_node_cons(x, xs.mNode, xs.mNodeAlloc))) {}
 
     /** Copy constructor. Creates a list sharing the elements of the given list. */
     ilist(const ilist<T>& xs) 
-        : mNode(xs.mNode) {}
+        : mNode(ilist_node_acquire(xs.mNode)) {}
 
     /** Destroy the given list. */
-    ~ilist()
-    {
-       ilist_node_free(mNode, mNodeAlloc);
-    }
+    ~ilist() { ilist_node_release(mNode, mNodeAlloc); }
     
 public:    
 
@@ -218,7 +249,7 @@ public:
 
     iterator end()
     {
-        return iterator::singular_iterator();
+        return iterator();
     }
 
     const_iterator begin() const
@@ -228,7 +259,7 @@ public:
 
     const_iterator end() const
     {
-        return const_iterator::singular_iterator();
+        return const_iterator();
     }
 
     /** Returns the number of elements in this list.
@@ -299,7 +330,6 @@ public:
         // FIXME
     }
     
-
 private:
     Node      * mNode;
     NodeAlloc   mNodeAlloc;
@@ -347,8 +377,6 @@ void swap(const ilist<T, Alloc>& x, const ilist<T, Alloc>& y)
 {
     x.swap(y);
 }
-
-
 
 } // namespace doremir
 } // namespace scl
