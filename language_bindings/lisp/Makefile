@@ -7,8 +7,9 @@ INSTALL_DIR = ../../dist/audio-engine-lisp/audio-engine
 install:
 	rm -rf   $(INSTALL_DIR); \
 	mkdir -p $(INSTALL_DIR); \
-	find . -name "*.lisp" | cpio -pvdm $(INSTALL_DIR); \
 	find . -name "README" | cpio -pvdm $(INSTALL_DIR); \
+	find . -name "*.asd"  | cpio -pvdm $(INSTALL_DIR); \
+	find . -name "*.lisp" | cpio -pvdm $(INSTALL_DIR); \
 	echo "Successfully installed audio-engine to $(INSTALL_DIR)"
 
 lw-gen:
