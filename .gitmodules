@@ -13,3 +13,9 @@
 [submodule "external_libraries/fluidsynth"]
 	path = external_libraries/fluidsynth
 	url = git@notes.doremir.com:/repositories/dependencies/fluidsynth.git
+[submodule "external_libraries/boost"]
+	path = external_libraries/boost
+	url = git@git.doremir.com:/repositories/dependencies/boost.git
+[submodule "external_libraries/glib"]
+	path = external_libraries/glib
+	url = git@git.doremir.com:/repositories/dependencies/glib.git
