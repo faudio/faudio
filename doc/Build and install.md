@@ -34,43 +34,62 @@ Dependencies
 Fetching the source code
 ----------
 
+The source code, as well as sources for the documentation and language bindings is stored in the repository `audio-engine.git`. Its dependencies are stored in separate repositories which are linked into the main repository as submodules. To fetch the source code for the audio engine and its dependencies, perform a recursive clone in Git:
+
     $ git clone --recursive git@git.doremir.com:/repositories/audio-engine.git
     $ cd audio-engine
 
 The last command will change your directory to the checked out repository. All following commands assume that you are already standing in this directory.
 
-To update, do:
+To update, you can do:
 
     $ git pull
     $ git submodule update
 
-Fetching the dependencies
+Building the dependencies
 ----------
 
-Usually, the dependencies can simply be fetched from the package server by running `dist get -a`. This will
-download precompiled versions of the dependencies. If you definately need to build a dependency, follow the steps
+Usually, the dependencies can simply be fetched from the package server by running `dist get --all`. This will
+download a precompiled version of each dependency. If you definitely need to build a dependency, follow the steps
 below.
 
-*Note on Mac OS X Lion:* Several of the dependency builds depends on the system SDKs being in `/Developer/SDKs`, which may not be the case in Mac OS 10.7 or later. If a build fails, create a symbolic link to the actual location (may vary depending on your OS version) like so:
+### Mac OS X
+
+Below is a step-by-step instruction for building the dependencies on Mac OS X. We try to build all dependencies as univeral binaries containing static libraries for both the 32-bit (i386) and 64-bit architectures (x86_64). In some cases this is not possible, so we have to build 32 and 64-bit versions separately. We also try to build everything locally, to avoid differences in machine configurations etc. If you want to install some library to your local machine (i.e. to `/usr/local` or similar), you should do a separate build or use a package manager such as Macports or Homebrew.
+
+*Mac OS X Lion note:* Several of the dependency builds require that the system SDKs reside in `/Developer/SDKs`, which may not be the case in Mac 10.7 or later. Before attempting to build you must create a symbolic link to the actual location (which may vary depending on your OS) like so:
 
     sudo ln -s /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer /
 
 
 #### Portaudio
 
-To build Portaudio on Mac OS X, simply run the configure script and use the generated Makefile. You should install it into `external_libraries/portaudio/results` instead of the default path.
+To build Portaudio on Mac OS X, simply run the configure script and use the generated Makefile.
 
     $ cd external_libraries/portaudio
     $ ./configure --prefix=`pwd`/result
     $ make install
 
+To get all headers, you need to do:
+
+    $ cp -R include/ result/include/
+
+Portaudio builds a universal binary containing i386 and x86_84 by default.
+
 #### Portmidi
 
     $ cd external_libraries/portmidi
-    $ mkdir build
-    $ cd build
+    $ mkdir result
+    $ cd result                  
+    $ cmake .. \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY="" \
+        -DCMAKE_LIBRARY_OUTPUT_DIRECTORY="" \
+        -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="" \
+        -DCMAKE_OSX_ARCHITECTURES="i386;x86_64"
+    $ make
     
-FIXME
+This builds a universal binary containing i386 and x86_84.
 
 #### Sndfile
 
@@ -80,6 +99,7 @@ FIXME
       ./configure --prefix=`pwd`/result
     $ make install
 
+The current build can not build universal libraries, so the i386 architecture must be specified.
 
 #### Fluidsynth
 
