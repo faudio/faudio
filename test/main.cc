@@ -1,4 +1,9 @@
 
+#include <numeric> // for accumulate
+#include <iterator> // for ostream_iterator
+#include <boost/array.hpp>
+#include <boost/range/algorithm.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include "gtest/gtest.h"
 #include "sclaudio.h"
@@ -97,434 +102,497 @@ namespace test_cpp_api
 {
     using namespace doremir::scl;
 
-    // TEST(StaticList, Base)
-    // {
-    //     SCL_CONCEPT_ASSERT(( ForwardContainer< ilist      <int> > ));
-    // 
-    //     ilist<int> xs;
-    //     xs = xs.prepend(1);
-    //     xs = xs.prepend(2);
-    //     xs = xs.prepend(3);
-    //     
-    //     ilist<int>::iterator xs1 = xs.begin();
-    //     ilist<int>::iterator xs2 = xs.end();
-    // }
+    TEST(StaticList, Base)
+    {
+        SCL_CONCEPT_ASSERT(( ForwardContainer< ilist      <int> > ));
+    
+        ilist<int> xs;
+        xs = xs.add_before(1);
+        xs = xs.add_before(2);
+        xs = xs.add_before(3);
+        
+        ilist<int>::iterator xs1 = xs.begin();
+        ilist<int>::iterator xs2 = xs.end();
+    }
     
 
-//     TEST(AudioDevices, AudioInputAvailable)
-//     {
-//         EXPECT_NO_THROW( AudioDevice::defaultInputDevice() );
-//     }
-//     TEST(AudioDevices, AudioOutputAvailable)
-//     {
-//         EXPECT_NO_THROW( AudioDevice::defaultOutputDevice() );
-//     }
-//     
-//     
-//     TEST(MidiDevices, MidiInputAvailable)
-//     {
-//         EXPECT_NO_THROW( MidiDevice::defaultInputDevice() );
-//     }
-//     TEST(MidiDevices, MidiOutputAvailable)
-//     {
-//         EXPECT_NO_THROW( MidiDevice::defaultOutputDevice() );
-//     }
-//     TEST(MidiDevices, ListMidiDevices)
-//     {
-//         std::list<MidiDevice*> devices =  MidiDevice::devices();
-//         foreach (MidiDevice* device, devices)
-//         {
-//             std::cout << ""     << device->name() << "\n";
-//             std::cout << "    " << device->hostName() << "\n";
-//             std::cout << "    " 
-//                 << ( device->hasInput() ? "Input" : "-" ) 
-//                 << "/" 
-//                 << ( device->hasOutput() ? "Output" : "-" ) << "\n";
-//         }
-//         std::cout << "\n";
-//     }
-// 
-//     TEST(FluidSynth, Base)
-//     {
-//         EXPECT_NO_THROW( FluidSynth fs (SOUNDFONT_PATH) );
-//     }     
-//         
-//     TEST(List, Base)
-//     {
-//         EXPECT_EQ ( true, list::isEmpty(list::create<int>()) );
-//         EXPECT_EQ ( false, list::isEmpty(list::create(1)) );
-//     }
-// 
-//     TEST(Atomic, AtomicReplace)
-//     {
-//         Atomic<int> x (0);
-//         EXPECT_EQ( x.value(), 0 );
-//     
-//         x.replace(1);
-//         EXPECT_EQ( x.value(), 1 );
-//     
-//         x.replace(2312);
-//         EXPECT_EQ( x.value(), 2312 );
-//     }
-//     
-//     TEST(Atomic, AtomicTryReplace)
-//     {
-//         Atomic<int> x (0);
-//         EXPECT_EQ( x.value(), 0 );
-//     
-//         x.tryReplace(0, 1);
-//         x.tryReplace(0, 2);
-//         EXPECT_EQ( x.value(), 1 );
-//     
-//         x.tryReplace(3, 0);
-//         x.tryReplace(1, 5);
-//         EXPECT_EQ( x.value(), 5 );
-//     }           
-//     
-//     TEST(Atomic, AtomicCopy)
-//     {
-//         Atomic<int> x (0);
-//         Atomic<int> y (x);
-//         EXPECT_EQ( x, y );
-//         
-//         x.replace(1);
-//         EXPECT_NE( x, y);
-//         
-//         y.replace(1);
-//         EXPECT_EQ( x, y );
-//     }
-// 
-//     TEST(Atomic, AtomicAssign)
-//     {
-//         Atomic<int> x (0);
-//         Atomic<int> y (0);
-//         EXPECT_EQ( x, y );
-//         
-//         x.replace(1);
-//         EXPECT_NE( x, y);
-//         
-//         y = x;
-//         EXPECT_EQ( x, y );
-//     }
-// 
-//     // TEST(AtomicNumber, AtomicNumberCopy)
-//     // {
-//     //     AtomicNumber<int> x (0);
-//     //     AtomicNumber<int> y (x);
-//     //     EXPECT_EQ( x, y );
-//     //     
-//     //     x.replace(1);
-//     //     EXPECT_NE( x, y);
-//     //     
-//     //     y.replace(1);
-//     //     EXPECT_EQ( x, y );
-//     // }
-//     // 
-//     // TEST(AtomicNumber, AtomicNumberAssign)
-//     // {
-//     //     AtomicNumber<int> x (0);
-//     //     AtomicNumber<int> y (0);
-//     //     EXPECT_EQ( x, y );
-//     //     
-//     //     x.replace(1);
-//     //     EXPECT_NE( x, y);
-//     //     
-//     //     y = x;
-//     //     EXPECT_EQ( x, y );
-//     // }
-//     // 
-//     // 
-//     // TEST(AtomicNumber, AtomicNumberAddSub)
-//     // {
-//     //     AtomicNumber<int> x (0);
-//     //     EXPECT_EQ( x.value(), 0 );
-//     // 
-//     //     x.increment(1);
-//     //     EXPECT_EQ( x.value(), 1 );
-//     // 
-//     //     x.decrement(1);
-//     //     EXPECT_EQ( x.value(), 0 );
-//     // 
-//     //     x.increment(1232);
-//     //     EXPECT_EQ( x.value(), 1232 );
-//     // 
-//     //     x.decrement(1232);
-//     //     EXPECT_EQ( x.value(), 0 );    
-//     // }                  
-//        
-//     // FIXME
-// /*
-//     TEST(AtomicNumber, AtomicNumberInc)
-//     {
-//         AtomicNumber<int> x (0);
-//         AtomicNumber<int> y (0);
-//                            
-//         y = ++x;
-//         EXPECT_EQ ( x.value(), 1 );
-//         EXPECT_EQ ( y.value(), 1 );
-// 
-//         y = --x;
-//         EXPECT_EQ ( x.value(), 0 );
-//         EXPECT_EQ ( y.value(), 0 );
-// 
-//     }*/ 
-// 
-//     TEST(pointer, Base)
-//     {
-//         pointer<int> single(1);
-//         foreach (int v, single)
-//         {
-//             std::cout << "The single value is " << v << "\n";
-//         }
-//     }
-//     
-//     TEST(List, Range)
-//     {
-//         std::list<int> xs = list::fromRange(0, 10);
-//         std::cout << toString(xs) << "\n";
-//     }
-//     
-//     TEST(String, Conversions)
-//     {                            
-//         std::cout << toString(1) << "\n";
-//         
-//         std::list<int> xs = list::create(1, 2, 3, 4);
-//         std::cout << toString(xs) << "\n";
-// 
-//         std::pair<int,int> p = std::make_pair(1, 2);
-//         std::cout << toString(p) << "\n";
-//     }
-//     
-//     TEST(Logging, Base)
-//     {           
-//         std::cout << logPath();
-//     }
-//     
-//     TEST(Error, Base)
-//     {
-//     }
-//     TEST(Queue, Base)
-//     {
-//     }
-//     TEST(Resource, Base)
-//     {
-//     }
-//     TEST(String, Base)
-//     {
-//     }
-//     TEST(ThreadLocal, Base)
-//     {
-//     }
-//     
-//     TEST(Misc, Base)
-//     {
-//         std::list<int> xs = list::create(1, 2, 3);
-//         std::list<int> ys = list::replace(xs, 1, 2);
-//         
-//         EXPECT_EQ( xs, xs );
-//         EXPECT_EQ( ys, ys );
-//         EXPECT_NE( xs, ys );
-//     }
-//     
-//     TEST(Symbol, Base)
-//     {
-//         Symbol* foo = Symbol::intern("foo");
-//         Symbol* foo2 = Symbol::intern("foo");
-//         Symbol* bar = Symbol::intern("bar");
-//         Symbol* bar2 = Symbol::intern("bar");
-//      
-//         EXPECT_EQ( foo, foo2 );
-//         EXPECT_EQ( bar, bar2 );
-//         EXPECT_NE( foo, bar );
-//     }
-//     
-//     TEST(AudioUnit, Count)
-//     {
-//         std::list<AudioUnit*> units = AudioUnit::audioUnits();
-//         std::cout << "Number of Audio Units: " << units.size();
-//         std::cout << "\n";        
-//     }                       
-// 
-//     TEST(Rand, Play)
-//     {
-//         try 
-//         {            
-//             AudioProcessor* synth = new Rand();
-//             AudioDevice*      in     = NULL;
-//             AudioDevice*      out    = AudioDevice::defaultOutputDevice();
-//             Stream*           stream = DeviceStream::open(in, out, synth);
-//             MessageScheduler* sched  = stream->audioScheduler();
-//                 
-//             stream->start();  
-//             sleepMillis(2000);
-//             stream->stop();
-//             sleepMillis(1000);
-//         } 
-//         catch (const Error& e)
-//         {
-//             std::cerr << "Error: " << const_cast<Error&>(e).message() << "\n";
-//         }              
-//     }              
-// 
-// 
-//     TEST(Synth_FluidSynth, PlayNotes)
-//     {
-//         AudioProcessor*   synth  = new FluidSynth(SOUNDFONT_PATH);
-//         AudioDevice*      in     = AudioDevice::defaultInputDevice();
-//         AudioDevice*      out    = AudioDevice::defaultOutputDevice();
-//         Stream*           stream = DeviceStream::open(in, out, synth);
-//         MessageScheduler* sched  = stream->audioScheduler();
-//     
-//         stream->start();    
-//         foreach( int p, list::fromRange(0,24) )
-//         {
-//             Message on  = messageFrom(0x90, 60 + p, 70);
-//             Message off = messageFrom(0x90, 60 + p, 0);    
-//             sched->sendNow(list::create(on));
-//             sched->sendLater(90, list::create(off));
-//             sleepMillis(100);
-//         }
-//         stream->stop();
-//         sleepMillis(1000);
-//     }
-//     
-// 
-//     TEST(AudioUnit, List)
-//     {       
-//         try
-//         {
-//             
-//         std::list<AudioUnit*> units = AudioUnit::audioUnits();
-//         // foreach ( AudioUnit* unit, units )
-//         // {             
-//         //     std::cout << "" <<   unit->description()->name() << "\n";
-//         //     std::cout << "    " << ( unit->description()->isPlugin() ? "Plugin" : "Non-plugin" ) << "\n";
-//         //     std::cout << "    " << ( unit->description()->isAtomic() ? "Atomic" : "Non-atomic" ) << "\n";
-//         //     std::cout << "    " << ( unit->description()->isStateful() ? "Stateful" : "Non-stateful" ) << "\n";
-//         //     std::cout << "    Inputs: " << unit->description()->numberOfInputs() << "\n";
-//         //     std::cout << "    Outputs: " << unit->description()->numberOfOutputs() << "\n";
-//         // 
-//         // }                     
-//         // std::cout << "\n";
-//         std::cout << "Number of Audio Units: " << units.size();
-//         std::cout << "\n";
-// 
-//         }   
-//         catch (const Error& e)
-//         {
-//             std::cerr << "Error: " << const_cast<Error&>(e).message() << "\n";
-//         }              
-// 
-//     }    
-//  
-//     TEST(Synth_AudioUnit, Play)
-//     {   
-//         try 
-//         {            
-//             AudioUnit* unit  = AudioUnit::dlsMusicDevice();
-//             std::cout << "Address: " << unit << "\n";
-// 
-//             std::cout << "  Name: " << unit->description()->name() << "\n";
-//             std::cout << "  Atomic: " << unit->description()->isAtomic() << "\n";
-//             std::cout << "  Stateful: " << unit->description()->isStateful() << "\n";
-//             std::cout << "  Plugin: " << unit->description()->isPlugin() << "\n";
-//             std::cout << "  Num inputs: " << unit->description()->numberOfInputs() << "\n";
-//             std::cout << "  Num outputs: " << unit->description()->numberOfOutputs() << "\n";
-// 
-//             AudioProcessor* synth  = unit->createProcessor();
-//             
-// 
-//             AudioDevice*      in     = NULL;
-//             AudioDevice*      out    = AudioDevice::defaultOutputDevice();
-//             Stream*           stream = DeviceStream::open(in, out, synth);
-//             MessageScheduler* sched  = stream->audioScheduler();
-//                 
-//             stream->start();     
-//             SCL_WRITE_LOG("Sending notes...\n");
-//             foreach( int p, list::fromRange(0,24) )
-//             {
-//                 Message on  = messageFrom(0x90, 60 + p, 70);
-//                 Message off = messageFrom(0x90, 60 + p, 0);    
-//                 sched->sendNow(list::create(on));
-//                 sched->sendLater(90, list::create(off));
-//                 sleepMillis(100);
-//             }
-//             stream->stop();
-//             
-//             sleepMillis(1000);   
-//         } 
-//         catch (const Error& e)
-//         {
-//             std::cerr << "Error: " << const_cast<Error&>(e).message() << "\n";
-//         }              
-//     }
-//                   
-// 
-//     template <class T>
-//     void do_with_concept(T x)
-//     {
-//         BOOST_CONCEPT_ASSERT((boost::Integer<T>));
-//     };
-//     
-//     
-//     
-//     TEST(ConceptCheck, Base)
-//     {
-//         do_with_concept(5);
-//         
-//         
-//         
-//         
-//     }
-// 
+    TEST(AudioDevices, AudioInputAvailable)
+    {
+        EXPECT_NO_THROW( AudioDevice::defaultInputDevice() );
+    }
+    TEST(AudioDevices, AudioOutputAvailable)
+    {
+        EXPECT_NO_THROW( AudioDevice::defaultOutputDevice() );
+    }
+    
+    
+    TEST(MidiDevices, MidiInputAvailable)
+    {
+        EXPECT_NO_THROW( MidiDevice::defaultInputDevice() );
+    }
+    TEST(MidiDevices, MidiOutputAvailable)
+    {
+        EXPECT_NO_THROW( MidiDevice::defaultOutputDevice() );
+    }
+    TEST(MidiDevices, ListMidiDevices)
+    {
+        std::list<MidiDevice*> devices =  MidiDevice::devices();
+        foreach (MidiDevice* device, devices)
+        {
+            std::cout << ""     << device->name() << "\n";
+            std::cout << "    " << device->hostName() << "\n";
+            std::cout << "    " 
+                << ( device->hasInput() ? "Input" : "-" ) 
+                << "/" 
+                << ( device->hasOutput() ? "Output" : "-" ) << "\n";
+        }
+        std::cout << "\n";
+    }
 
-}     
+    TEST(FluidSynth, Base)
+    {
+        EXPECT_NO_THROW( FluidSynth fs (SOUNDFONT_PATH) );
+    }     
+        
+    TEST(List, Base)
+    {
+        EXPECT_EQ ( true, list::isEmpty(list::create<int>()) );
+        EXPECT_EQ ( false, list::isEmpty(list::create(1)) );
+    }
+
+    TEST(Atomic, AtomicReplace)
+    {
+        atomic<int> x (0);
+        EXPECT_EQ( x.value(), 0 );
+    
+        x.replace(1);
+        EXPECT_EQ( x.value(), 1 );
+    
+        x.replace(2312);
+        EXPECT_EQ( x.value(), 2312 );
+    }
+    
+    TEST(Atomic, AtomicTryReplace)
+    {
+        atomic<int> x (0);
+        EXPECT_EQ( x.value(), 0 );
+    
+        x.try_replace(0, 1);
+        x.try_replace(0, 2);
+        EXPECT_EQ( x.value(), 1 );
+    
+        x.try_replace(3, 0);
+        x.try_replace(1, 5);
+        EXPECT_EQ( x.value(), 5 );
+    }           
+    
+    TEST(Atomic, AtomicCopy)
+    {
+        atomic<int> x (0);
+        atomic<int> y (x);
+        EXPECT_EQ( x, y );
+        
+        x.replace(1);
+        EXPECT_NE( x, y);
+        
+        y.replace(1);
+        EXPECT_EQ( x, y );
+    }
+
+    TEST(Atomic, AtomicAssign)
+    {
+        atomic<int> x (0);
+        atomic<int> y (0);
+        EXPECT_EQ( x, y );
+        
+        x.replace(1);
+        EXPECT_NE( x, y);
+        
+        y = x;
+        EXPECT_EQ( x, y );
+    }
+
+    // TEST(AtomicNumber, AtomicNumberCopy)
+    // {
+    //     AtomicNumber<int> x (0);
+    //     AtomicNumber<int> y (x);
+    //     EXPECT_EQ( x, y );
+    //     
+    //     x.replace(1);
+    //     EXPECT_NE( x, y);
+    //     
+    //     y.replace(1);
+    //     EXPECT_EQ( x, y );
+    // }
+    // 
+    // TEST(AtomicNumber, AtomicNumberAssign)
+    // {
+    //     AtomicNumber<int> x (0);
+    //     AtomicNumber<int> y (0);
+    //     EXPECT_EQ( x, y );
+    //     
+    //     x.replace(1);
+    //     EXPECT_NE( x, y);
+    //     
+    //     y = x;
+    //     EXPECT_EQ( x, y );
+    // }
+    // 
+    // 
+    // TEST(AtomicNumber, AtomicNumberAddSub)
+    // {
+    //     AtomicNumber<int> x (0);
+    //     EXPECT_EQ( x.value(), 0 );
+    // 
+    //     x.increment(1);
+    //     EXPECT_EQ( x.value(), 1 );
+    // 
+    //     x.decrement(1);
+    //     EXPECT_EQ( x.value(), 0 );
+    // 
+    //     x.increment(1232);
+    //     EXPECT_EQ( x.value(), 1232 );
+    // 
+    //     x.decrement(1232);
+    //     EXPECT_EQ( x.value(), 0 );    
+    // }                  
+       
+    // FIXME
+/*
+    TEST(AtomicNumber, AtomicNumberInc)
+    {
+        AtomicNumber<int> x (0);
+        AtomicNumber<int> y (0);
+                           
+        y = ++x;
+        EXPECT_EQ ( x.value(), 1 );
+        EXPECT_EQ ( y.value(), 1 );
+
+        y = --x;
+        EXPECT_EQ ( x.value(), 0 );
+        EXPECT_EQ ( y.value(), 0 );
+
+    }*/ 
+
+    TEST(pointer, Base)
+    {
+        pointer<int> single(1);
+        foreach (int v, single)
+        {
+            std::cout << "The single value is " << v << "\n";
+        }
+    }
+    
+    TEST(List, Range)
+    {
+        std::list<int> xs = list::fromRange(0, 10);
+        std::cout << toString(xs) << "\n";
+    }
+    
+    TEST(String, Conversions)
+    {                            
+        std::cout << toString(1) << "\n";
+        
+        std::list<int> xs = list::create(1, 2, 3, 4);
+        std::cout << toString(xs) << "\n";
+
+        std::pair<int,int> p = std::make_pair(1, 2);
+        std::cout << toString(p) << "\n";
+    }
+    
+    TEST(Logging, Base)
+    {           
+        std::cout << logPath();
+    }
+    
+    TEST(Error, Base)
+    {
+    }
+    TEST(Queue, Base)
+    {
+    }
+    TEST(Resource, Base)
+    {
+    }
+    TEST(String, Base)
+    {
+    }
+    TEST(ThreadLocal, Base)
+    {
+    }
+    
+    TEST(Misc, Base)
+    {
+        std::list<int> xs = list::create(1, 2, 3);
+        std::list<int> ys = list::replace(xs, 1, 2);
+        
+        EXPECT_EQ( xs, xs );
+        EXPECT_EQ( ys, ys );
+        EXPECT_NE( xs, ys );
+    }
+    
+    TEST(Symbol, Base)
+    {
+        Symbol* foo = Symbol::intern("foo");
+        Symbol* foo2 = Symbol::intern("foo");
+        Symbol* bar = Symbol::intern("bar");
+        Symbol* bar2 = Symbol::intern("bar");
+     
+        EXPECT_EQ( foo, foo2 );
+        EXPECT_EQ( bar, bar2 );
+        EXPECT_NE( foo, bar );
+    }
+    
+    TEST(AudioUnit, Count)
+    {
+        std::list<AudioUnit*> units = AudioUnit::audioUnits();
+        std::cout << "Number of Audio Units: " << units.size();
+        std::cout << "\n";        
+    }                       
+
+    TEST(Rand, Play)
+    {
+        try 
+        {            
+            AudioProcessor* synth = new Rand();
+            AudioDevice*      in     = NULL;
+            AudioDevice*      out    = AudioDevice::defaultOutputDevice();
+            Stream*           stream = DeviceStream::open(in, out, synth);
+            MessageScheduler* sched  = stream->audioScheduler();
+                
+            stream->start();  
+            sleepMillis(2000);
+            stream->stop();
+            sleepMillis(1000);
+        } 
+        catch (const Error& e)
+        {
+            std::cerr << "Error: " << const_cast<Error&>(e).message() << "\n";
+        }              
+    }              
+
+
+    TEST(Synth_FluidSynth, PlayNotes)
+    {
+        AudioProcessor*   synth  = new FluidSynth(SOUNDFONT_PATH);
+        AudioDevice*      in     = AudioDevice::defaultInputDevice();
+        AudioDevice*      out    = AudioDevice::defaultOutputDevice();
+        Stream*           stream = DeviceStream::open(in, out, synth);
+        MessageScheduler* sched  = stream->audioScheduler();
+    
+        stream->start();    
+        foreach( int p, list::fromRange(0,24) )
+        {
+            Message on  = messageFrom(0x90, 60 + p, 70);
+            Message off = messageFrom(0x90, 60 + p, 0);    
+            sched->sendNow(list::create(on));
+            sched->sendLater(90, list::create(off));
+            sleepMillis(100);
+        }
+        stream->stop();
+        sleepMillis(1000);
+    }
+    
+
+    TEST(AudioUnit, List)
+    {       
+        try
+        {
+            
+        std::list<AudioUnit*> units = AudioUnit::audioUnits();
+        // foreach ( AudioUnit* unit, units )
+        // {             
+        //     std::cout << "" <<   unit->description()->name() << "\n";
+        //     std::cout << "    " << ( unit->description()->isPlugin() ? "Plugin" : "Non-plugin" ) << "\n";
+        //     std::cout << "    " << ( unit->description()->isAtomic() ? "Atomic" : "Non-atomic" ) << "\n";
+        //     std::cout << "    " << ( unit->description()->isStateful() ? "Stateful" : "Non-stateful" ) << "\n";
+        //     std::cout << "    Inputs: " << unit->description()->numberOfInputs() << "\n";
+        //     std::cout << "    Outputs: " << unit->description()->numberOfOutputs() << "\n";
+        // 
+        // }                     
+        // std::cout << "\n";
+        std::cout << "Number of Audio Units: " << units.size();
+        std::cout << "\n";
+
+        }   
+        catch (const Error& e)
+        {
+            std::cerr << "Error: " << const_cast<Error&>(e).message() << "\n";
+        }              
+
+    }    
+ 
+    TEST(Synth_AudioUnit, Play)
+    {   
+        try 
+        {            
+            AudioUnit* unit  = AudioUnit::dlsMusicDevice();
+            std::cout << "Address: " << unit << "\n";
+
+            std::cout << "  Name: " << unit->description()->name() << "\n";
+            std::cout << "  Atomic: " << unit->description()->isAtomic() << "\n";
+            std::cout << "  Stateful: " << unit->description()->isStateful() << "\n";
+            std::cout << "  Plugin: " << unit->description()->isPlugin() << "\n";
+            std::cout << "  Num inputs: " << unit->description()->numberOfInputs() << "\n";
+            std::cout << "  Num outputs: " << unit->description()->numberOfOutputs() << "\n";
+
+            AudioProcessor* synth  = unit->createProcessor();
+            
+
+            AudioDevice*      in     = NULL;
+            AudioDevice*      out    = AudioDevice::defaultOutputDevice();
+            Stream*           stream = DeviceStream::open(in, out, synth);
+            MessageScheduler* sched  = stream->audioScheduler();
+                
+            stream->start();     
+            SCL_WRITE_LOG("Sending notes...\n");
+            foreach( int p, list::fromRange(0,24) )
+            {
+                Message on  = messageFrom(0x90, 60 + p, 70);
+                Message off = messageFrom(0x90, 60 + p, 0);    
+                sched->sendNow(list::create(on));
+                sched->sendLater(90, list::create(off));
+                sleepMillis(100);
+            }
+            stream->stop();
+            
+            sleepMillis(1000);   
+        } 
+        catch (const Error& e)
+        {
+            std::cerr << "Error: " << const_cast<Error&>(e).message() << "\n";
+        }              
+    }
+                  
+
+    template <class T>
+    void do_with_concept(T x)
+    {
+        BOOST_CONCEPT_ASSERT((boost::Integer<T>));
+    };
+    
+    
+    
+    TEST(ConceptCheck, Base)
+    {
+        do_with_concept(5);
+        
+        
+        
+        
+    }
+}    
+
+template <class InputIterator> 
+InputIterator preceding(InputIterator x)
+{
+    InputIterator y (x);
+    return --y;
+}
+
+template <class InputIterator> 
+InputIterator succeding(InputIterator x)
+{
+    InputIterator y (x);
+    return ++y;
+}
+
+template <class InputRange, class InputIterator> 
+InputIterator in_range(InputRange m, InputIterator x)
+{
+    // FIXME overload on all Boost ranges?
+    m.begin() <= x && x < m.end();
+}
+
+
+namespace std
+{
+    template<>
+    int toupper(int x, const std::locale& loc)
+    {
+        return x - 32;
+    }
+}
+
+
+int char2int(char x) { return x; }
+char int2char(int x) { return (char) x; }
+
+int scl_test_boost_string_pred()
+{
+    std::string x = "abcdefg";
+    std::vector<char> y (x.size());
+    std::vector<int>  z (x.size());
+
+    boost::range::copy      (x, y.begin());
+    boost::range::transform (x, z.begin(), char2int);
+
+    boost::algorithm::to_upper(y);
+    boost::algorithm::to_upper(z);
+
+    boost::range::copy(y, std::ostream_iterator<char>(std::cout));
+    std::cout << "\n";
+    boost::range::transform(z, std::ostream_iterator<char>(std::cout), int2char);
+    std::cout << "\n";
+}
+
+
+
+
+
+
+
+
+
 
 template<class List>
-List prepend(typename List::value_type x, List xs)
+List add_before(typename List::value_type x, List xs)
 {
-    return xs.prepend(x);
-}
-template<>
-std::list<int> prepend(std::list<int>::value_type x, std::list<int> xs)
-{
-    std::list<int> ys (xs);
-    ys.push_front(x);
+    List ys (xs);
+    ys.push_back(x);
     return ys;
 }
 
+template<>
+doremir::scl::ilist<int> 
+add_before(doremir::scl::ilist<int>::value_type x, 
+           doremir::scl::ilist<int> xs)
+{
+    return xs.add_before(x);
+}
 
-void scl_test_ilist()
+
+int succ(int x) { return x + 1; }
+int pred(int x) { return x - 1; }
+
+
+int scl_test_ilist()
 {
     using namespace doremir::scl;
-#define xlist ilist    
-    SCL_CONCEPT_ASSERT(( ForwardContainer< xlist<int> > ));
+// #define xlist(T) ilist<T>
+// #define xlist(T) std::list<T>
+#define xlist(T) std::vector<T>
+//    SCL_CONCEPT_ASSERT(( ForwardContainer< xlist(int) > ));
 
-    xlist<int> xs;
-    for(int i = 0; i < 5000; ++i)
-        xs = prepend(i, xs);
+    xlist(int) xs;
+    for(int i = 0; i < 10000; ++i)
+        xs = add_before(i, xs);
     
-//    *xs.begin() = 999;
-    
-    // xlist<int>::iterator xs1 = xs.begin();
-    // xlist<int>::iterator xs2 = xs.end();
-
-    foreach( int x, xs )
-        std::cout << "---> " << x << "\n";
+    // std::copy( xs.begin(), xs.end(), xs.begin() );
     
     std::cout << "\n";
-
-    std::cout << "Empty : " << xs.empty() << "\n";
+    std::cout << "Empty : "   << xs.empty() << "\n";
     std::cout << "Size is : " << xs.size() << "\n";
+    std::cout << "Sum is : "  << std::accumulate(xs.begin(), xs.end(), 0) << "\n";
 
-    // int* xp = NULL;
-    // int  pp = *xp;
+    return 0;
 }
 
 
 int main(int argc, char **argv)
 {
-    scl_test_ilist();
+    // return scl_test_ilist();
+    return scl_test_boost_string_pred();
     
     // ::testing::InitGoogleTest(&argc, argv);
     // return RUN_ALL_TESTS();
