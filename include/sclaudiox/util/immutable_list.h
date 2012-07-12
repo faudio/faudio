@@ -21,7 +21,7 @@ namespace
 {
     struct ilist_node_base
     {
-        int               reference_count;
+        int               refs;
         ilist_node_base * next;
     };
 
@@ -44,10 +44,16 @@ namespace
     {
         // FIXME use allocator
         ilist_node<T> * ys = new ilist_node<T>();
-        ys->reference_count = 0;
+        ys->refs = 0;
         ys->data = x;
         ys->next = ilist_node_acquire(xs);
         return ys;
+    }
+
+    template <class T, class Alloc>
+    ilist_node<T> * ilist_set_cdr(ilist_node<T> * xs, ilist_node<T> * ys, Alloc allocator)
+    {                            
+        // FIXME
     }
 
     template <class T>
@@ -55,9 +61,9 @@ namespace
     {
         if (xs)
         {
-            xs->reference_count++;
-            return xs;
+            xs->refs++;
         }
+        return xs;
     }
 
     /* Releases a reference to xs */
@@ -66,10 +72,10 @@ namespace
     {
         if (xs)
         {
-            ilist_node_release(ilist_node_next(xs), allocator);
-            xs->reference_count--;
-            if (!xs->reference_count)
+            xs->refs--;
+            if (!xs->refs)
             {
+                ilist_node_release(ilist_node_next(xs), allocator);
                 // FIXME use allocator
                 delete xs;
             }
@@ -153,6 +159,14 @@ private:
 };
 
 
+/**
+    FIXME 
+        Should model an OutputIterator
+        This is so that we can pass ilists as ranges to algoritms, i.e.
+                                          
+            ilist xs = ilist::create(1, 2, 3);
+            ilist ys = algorithm::transform(xs, ilist::build(), math::negate).finish();
+ */ 
 template <class T, class Alloc = std::allocator<T> >
 class ilist_builder
 {

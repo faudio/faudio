@@ -60,14 +60,14 @@ public:
         while (mFirst != mDivide)
         {
             Node* temp = mFirst.value();
-            mFirst.tryReplace(temp, temp->next.value());
+            mFirst.try_replace(temp, temp->next.value());
             delete temp;
         }
 
         mLast.value()->elem = newElem;
         mLast.value()->next.replace(new Node());        
         
-        mLast.tryReplace(mLast.value(), mLast.value()->next.value());
+        mLast.try_replace(mLast.value(), mLast.value()->next.value());
         return true;
     }
 
@@ -78,7 +78,7 @@ public:
         else
         {
             *nextElem = mDivide.value()->elem;                   
-            mDivide.tryReplace(mDivide.value(), mDivide.value()->next.value());
+            mDivide.try_replace(mDivide.value(), mDivide.value()->next.value());
             return true;
         }
     }

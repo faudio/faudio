@@ -230,7 +230,7 @@ public:
         T oldVal;
         do 
             oldVal = atomic_traits::get(&mData); 
-        while (!tryReplace(oldVal, newVal));
+        while (!try_replace(oldVal, newVal));
     }
     
     /**
@@ -239,7 +239,7 @@ public:
         \note
             Atomic operation.
      */
-    inline bool tryReplace(T oldVal, T newVal)
+    inline bool try_replace(T oldVal, T newVal)
     {
         return atomic_traits::swap(&mData, oldVal, newVal);
     }  
@@ -254,7 +254,7 @@ public:
      */
     void modify(Function<T,T> function)
     {      
-        while(!tryModify(function));
+        while(!try_modify(function));
     }
 
     /**
@@ -268,7 +268,7 @@ public:
         \note
             Atomic operation.
      */
-    inline bool tryModify(Function<T,T> function)
+    inline bool try_modify(Function<T,T> function)
     {
         T oldVal, newVal;
         oldVal = atomic_traits::get(&mData);
