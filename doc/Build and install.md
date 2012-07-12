@@ -105,9 +105,9 @@ The current build can not build universal libraries, so the i386 architecture mu
 
 #### Fluidsynth
 
-The CMake script requires pkg-config. Install any way you like it.
+The CMake script requires pkg-config. Install this using your favourite package manager.
 
-We use a checked-in version of GLib. To update this, use your favourite package manager and copy the files like this (replacing `/usr/local` with the appropriate path):
+We use a checked-in version of GLib. You can update this via the package manager and copy the files as follows (replacing `/usr/local` with the appropriate path):
 
     $ cd external_libraries/glib
     $ rm -f include/*
