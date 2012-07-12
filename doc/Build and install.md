@@ -2,13 +2,12 @@
 Build and install
 =========================
 
-
-Dependencies
+Prerequisites
 ------------
 
-### Required
+### Dependencies
 
-  * Boost Thread
+  * Boost
   * Portaudio (optional, for real-time audio)
   * Portmidi (optional, for real-time midi)
   * libsndfile (optional, for file streams)
@@ -18,18 +17,14 @@ Dependencies
 
 ### Build tools
 
-  * CMake 2.8 or later
-  * Supported build systems:
-    * Make/bash GCC 4.2 or later
-    * XCode 3.2 or later
-    * Visual Studio C++ 2010 
-  * Make/bash is *required* for building the Lisp bindings (and documentation)
+  * CMake 2.8 or later, generating one of the following build systems:
+    * GNU Make with GCC 4.2 or later
+    * XCode with GCC 4.2 or later
+    * Visual Studio C++ 2010 or later
   
-### Documentation tools
-
-  * Make
-  * Doxygen (for documentation)
-  * The Haskell Platform with the Pandoc packages (for generating the Lisp documentation)
+  * Pandoc (optional, for documentation)
+  * Doxygen (optional, for documentation)
+  * GNU Make (optional, for Lisp bindings and documentation)
 
 Fetching the source code
 ----------
@@ -50,10 +45,10 @@ Building the dependencies
 ### Portaudio
 
     $ cd external_libraries/portaudio
-    -- flags etc?
+    # ?
     $ ./configure
     $ make
-    -- no install, just copy lib/.libs/libportaudio.a
+    # no install, just copy lib/.libs/libportaudio.a
 
 ### Portmidi
 
@@ -62,10 +57,9 @@ Building the dependencies
     $ cd build
     $ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURE=i386
     $ make
-    -- no install, just copy build/libportmidi_s.a
+    # no install, just copy build/libportmidi_s.a
 
-### Sndfile
-### GTest    
+FIXME
 
 
 Building the Audio Engine
@@ -85,12 +79,9 @@ The values you select are stored in the `CMakeCache.txt` file in the current dir
 
     $ cmake -MY_OPTION_NAME=my_option_value ..
 
-To switch between debug and release builds, do:
+To switch between debug and release builds, do one of the following:
 
     $ cmake -DCMAKE_BUILD_TYPE=Debug ..
-
-or 
-
     $ cmake -DCMAKE_BUILD_TYPE=Release ..
 
 To run the build, do:
@@ -159,9 +150,8 @@ Building the documentation
 TODO
 
 
-Likning the audio engine into ScoreCleaner
+Linking the audio engine into another application
 ----------
 
-TODO
-
+By default, dynamic libraries are built. On Mac OS X this is a framework called ScoreCleanerAudio.framework and a dynamic library called libsclaudio.dylib; either may be used. On Windows, a library file named sclaudio.lib and a dynamic library file named sclaudio.dll is generated. You can load any of these dynamically, using the appropriate system-specific API.
 

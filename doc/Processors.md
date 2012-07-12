@@ -3,9 +3,13 @@
 Audio processors
 ==========
 
-The Audio Engine provides a high-level interface to signal processing, based on the signals and processors. A signal is a time-varying value derived from some external source, or generated internally in the audio engine. Similarly, a processor is a transformer function from signals to signals. In theory, the signal and processor concept could be applied to any data type, but the audio engine typically use 32-bit floating point values representing audio amplitude.
+The audio engine provides a high-level interface to DSP, based on the *signals* and *processors*. 
 
-An audio processing network is created by applying processors to signals. Each application of a processor to a signal yields a new signal, similar to the application of functions to values in a programming language.
+A signal is a time-varying value, which may be derived from some external source, or generated internally in the audio engine. Examples of external sources are microphones, sound files on the hard drive or chunks of audio received over a network socket. Examples of signals generated internally are accumulating signals (which change over time according to some formula) or constant signals (which never change).
+
+A processor is a transformer function from signals to signals. Examples are low-pass filters, delay lines or reverb units. 
+
+A *processing network* is created by applying processors to signals. Each application yields a new signal which may be applied by further processors. A processing graph can be defined explicitly, by applying signals, or implicitly by composing processors. Internally, the audio engine optimizes signals and processors so that the style used to program the network has no direct effect on the output.
 
 
 Primitive processors
@@ -29,7 +33,9 @@ The delay processor takes an input signal and outputs the same signal delayed by
 
 ### Lifted processors
 
-Ordinary C/C++ functions can be lifted to processors. 
+Ordinary functions can be lifted to processors.
+
+Lifted processors are provided for all functions defined in the header `<math.h>` as well as for all standard operators on fixed and floating-point values.
 
 
 Derived processors
@@ -49,13 +55,36 @@ The `parallel(processors...)` function takes any number of processors and runs t
 The `loop(processors)` function takes a single processor and splits it output into a loop, which is fed back into the original processor.
 
 
-Other processors
+
+Stateful vs non-stateful processors
+----------
+
+Stateful processors accept messages to change their state.
+
+FIXME conversions
+
+    stage   :: (m ! a ~> b)    -> (([m], a) ~> b)
+    unstage :: (([m], a) ~> b) -> (m ! a ~> b)
+
+
+
+
+
+External processors
 ----------
 
 ### Plugins
 
-The Audio Engine provides a generic wrapping functionality for external audio-plugins such as AU or VST. Each instance of a plugin is cast as a distinct processor. Each plugin architecture provides its own functionality for loading and initalizing a plugin: for example VST plugins are loaded from binary files while AU plugins are loaded using the CoreServices component manager.
+The Audio Engine provides a generic wrapping functionality for external audio-plugins such as AU or VST. Each instance of a plugin is cast as a distinct processor. Each plugin architecture provides its own functionality for loading and initalizing a plugin: for example VST plugins are loaded from binary files while AU plugins are loaded using the native component manager.
 
 ### Fluidsynth
 
 The Audio Engine provides a wrapper for the Fluidsynth synthesizer. Fluidsynth generates audio using a collection of sampels known as a SoundFont.
+
+### Custom processors
+
+New processors may be added by implemnting the `AudioProcessor` interface.
+
+
+
+

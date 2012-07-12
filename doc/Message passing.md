@@ -19,3 +19,4 @@ A [Scheduler](@ref doremir::scl::Scheduler) is an asynchronous sender, driven by
 <!-- * Scheduled messages
 * Notification messages
 * Error messages -->
+
