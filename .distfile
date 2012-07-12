@@ -30,10 +30,15 @@ mode    = put
 
 # Mac OS X dependencies
 
+# boost is source only/no-build
+
 [package "fluidsynth-mac"]
 site    = doremir
 version = 1.1.15
 mode	= get/put
+# FIXME
+
+# glib is no-build
 
 [package "gtest-mac"]
 site    = doremir
@@ -53,7 +58,7 @@ mode	= get/put
 site 	= doremir
 version = 2.17.0
 subpath = external_libraries/portmidi/result
-path    = lib/libportmidi.a
+path    = libportmidi_s.a
 mode	= get/put
 
 [package "sndfile-mac"]
@@ -62,3 +67,36 @@ version = 1.0.25
 subpath = external_libraries/sndfile/result
 path    = lib/libsndfile.a
 mode	= get/put
+
+
+
+# Windows dependencies
+
+# boost is source only/no-build
+
+[package "fluidsynth-win"]
+site    = doremir
+version = 0
+# FIXME
+
+# glib is no-build
+
+[package "gtest-win"]
+site    = doremir
+version = 0
+# FIXME
+
+[package "portaudio-win"]
+site    = doremir
+version = 0
+# FIXME
+
+[package "portmidi-win"]
+site 	= doremir
+version = 0
+# FIXME
+
+[package "sndfile-win"]
+site 	= doremir
+version = 0
+# FIXME
