@@ -18,7 +18,8 @@ Dependencies
 
 ### Build tools
 
-  * CMake 2.8 or later
+  * CMake 2.8 or later  
+  * pkg-config (for compiling GLib)
   * Supported build systems:
     * Make/bash GCC 4.2 or later
     * XCode 3.2 or later
@@ -93,6 +94,7 @@ This builds a universal binary containing i386 and x86_84.
 
 #### Sndfile
 
+    $ cd external_libraries/sndfile
     $ CFLAGS="-arch i386 -I /Developer/SDKs/MacOSX10.7.sdk/Developer/Headers/FlatCarbon/" \
       CXXFLAGS="-arch i386" \
       LDFLAGS="-arch i386" \
@@ -102,6 +104,16 @@ This builds a universal binary containing i386 and x86_84.
 The current build can not build universal libraries, so the i386 architecture must be specified.
 
 #### Fluidsynth
+
+The CMake script requires pkg-config. Install any way you like it.
+
+We use a checked-in version of GLib. To update this, use your favourite package manager and copy the files like this (replacing `/usr/local` with the appropriate path):
+
+    $ cd external_libraries/glib
+    $ rm -f include/*
+    $ rm -f lib/*
+    $ find /usr/local/lib/libg* | xargs -J % cp % lib/
+    $ cp -R /usr/local/include/glib-2.0/ include/
 
 FIXME
 
