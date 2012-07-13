@@ -13,7 +13,6 @@
  */
 
 #include "sclaudio/defines.h"
-#include "sclaudio/numeric.h"
 #include "sclaudio/enum.h"
 #include "sclaudio/string.h"
 #include "sclaudio/atom.h"

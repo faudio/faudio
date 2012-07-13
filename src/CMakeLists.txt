@@ -43,12 +43,17 @@ set(SCLX_SOURCES ${SCLX_NATIVE_SOURCES}
                       sclaudiox/stream/device/audio.cc
                       sclaudiox/stream/device/midi.cc
                       
+                      sclaudiox/util/immutable_list.cc
                       sclaudiox/util/symbol.cc)  
                       
 set(SCL_SOURCES  ${SCLX_SOURCES}
                       sclaudio.cc)
 
 message("Including the following source files: ${SCL_SOURCES}")
+
+if(${CMAKE_COMPILER_IS_GNUCC})
+    add_definitions("-Wreturn-type")
+endif()
 
 ##
 ## Build library

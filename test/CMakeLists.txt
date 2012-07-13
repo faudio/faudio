@@ -15,6 +15,12 @@
 ## Build unit tests
 ##
 
+option(SCLAUDIO_PROFILE "Compile with profiler flags -pg set" FALSE)
+
+if(${SCLAUDIO_PROFILE})
+    add_definitions("-pg")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pg")
+endif()
 
 option(BUILD_SCL_TESTS "Build unit tests" TRUE)
 

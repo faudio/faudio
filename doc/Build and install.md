@@ -2,13 +2,12 @@
 Build and install
 =========================
 
-
-Dependencies
+Prerequisites
 ------------
 
-### Required
+### Dependencies
 
-  * Boost Thread
+  * Boost
   * Portaudio (optional, for real-time audio)
   * Portmidi (optional, for real-time midi)
   * libsndfile (optional, for file streams)
@@ -18,18 +17,14 @@ Dependencies
 
 ### Build tools
 
-  * CMake 2.8 or later
-  * Supported build systems:
-    * Make/bash GCC 4.2 or later
-    * XCode 3.2 or later
-    * Visual Studio C++ 2010 
-  * Make/bash is *required* for building the Lisp bindings (and documentation)
+  * CMake 2.8 or later, generating one of the following build systems:
+    * GNU Make with GCC 4.2 or later
+    * XCode with GCC 4.2 or later
+    * Visual Studio C++ 2010 or later
   
-### Documentation tools
-
-  * Make
-  * Doxygen (for documentation)
-  * The Haskell Platform with the Pandoc packages (for generating the Lisp documentation)
+  * Pandoc (optional, for documentation)
+  * Doxygen (optional, for documentation)
+  * GNU Make (optional, for Lisp bindings and documentation)
 
 Fetching the source code
 ----------
@@ -111,12 +106,9 @@ The values you select are stored in the `CMakeCache.txt` file in the current dir
 
     $ cmake -MY_OPTION_NAME=my_option_value ..
 
-To switch between debug and release builds, do:
+To switch between debug and release builds, do one of the following:
 
     $ cmake -DCMAKE_BUILD_TYPE=Debug ..
-
-or 
-
     $ cmake -DCMAKE_BUILD_TYPE=Release ..
 
 To run the build, do:
@@ -139,7 +131,7 @@ To see and review the build options interactively, do:
 
 The values you select are stored in the `CMakeCache.txt` file in the current directory. To change them you can run the wizard again, edit the file directly, or do:
 
-    $ cmake -MY_OPTION_NAME=my_option_value ..
+    $ cmake -DMY_OPTION_NAME=my_option_value ..
 
 If you update the the options cache you must overwrite the Xcode project with a fresh one by running `cmake -G Xcode` again.
                                          
@@ -160,7 +152,7 @@ To see and review the build options interactively, do:
 
 The values you select are stored in the `CMakeCache.txt` file in the current directory. To change them you can run the wizard again, edit the file directly, or do:
 
-    > cmake -MY_OPTION_NAME=my_option_value ..
+    > cmake -DMY_OPTION_NAME=my_option_value ..
 
 If you update the the options cache you must overwrite the Xcode project with a fresh one by running `cmake -G "Visual Studio 10"` again.
 
@@ -170,7 +162,7 @@ In Visual Studio choose Project > Build Solution.
 Running the unit tests
 ----------
 
-To run unit tests as part of the build, set the CMake option `RUN_SCLAUDIO_TESTS` to non-false, then run `make` again. The unit test can be run separately as `build/bin/sclaudio_tests`. Beware that the whole test suite may take several minutes to complete.
+To run unit tests as part of the build, set the CMake option `RUN_SCLAUDIO_TESTS` to `ON`, then run `make` again. The unit test can be run separately as `build/bin/sclaudio_tests`. Beware that the whole test suite may take several minutes to complete.
 
 
 Building the language bindings
@@ -185,9 +177,8 @@ Building the documentation
 TODO
 
 
-Likning the audio engine into ScoreCleaner
+Linking the audio engine into another application
 ----------
 
-TODO
-
+By default, dynamic libraries are built. On Mac OS X this is a framework called ScoreCleanerAudio.framework and a dynamic library called libsclaudio.dylib; either may be used. On Windows, a library file named sclaudio.lib and a dynamic library file named sclaudio.dll is generated. You can load any of these dynamically, using the appropriate system-specific API.
 

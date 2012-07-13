@@ -15,9 +15,9 @@ namespace scl {
 
 struct AudioUnitVersion
 {
-    Int16 major;
-    Int16 minor;
-    Int16 dot;
+    int16_t major;
+    int16_t minor;
+    int16_t dot;
 };
 
 class AudioUnitDescriptionData;

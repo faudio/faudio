@@ -34,16 +34,19 @@ public:
      */
     ~Symbol();
     
+    bool operator ==(const Symbol& other);
+    bool operator !=(const Symbol& other);
+    
     /**
         Returns an interned version of the given string.
      */
-    static Symbol* intern(String name);
+    static Symbol * intern(String name);
     
     /**
         Returns an locally interned version of the given string.
         For use in single-threaded applications only.
      */
-    static Symbol* unsafeIntern(String name);
+    static Symbol * unsafeIntern(String name);
 
     /**
         Returns the interned string.
@@ -53,6 +56,28 @@ public:
 private:    
     Symbol(String name);    
     SymbolData* mData;    
+};
+
+
+/**
+    Copyable reference to a symbol.
+ */
+class SCLAUDIO_API SymbolRef : public Copyable
+{   
+public:
+    explicit SymbolRef(String string)
+        : mSymbol(acquire(Symbol::intern(string))) {}
+    
+    explicit SymbolRef(Symbol * symbol)
+        : mSymbol(acquire(symbol)) {}
+    
+    SymbolRef(const SymbolRef& other)
+        : mSymbol(acquire(other.mSymbol)) {}
+
+    ~SymbolRef() { release(mSymbol); }
+
+private:
+    Symbol * mSymbol;
 };
 
 

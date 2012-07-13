@@ -15,7 +15,7 @@ In C++, every class and functions reside in the namespace `scl`. C functions and
 * `scl::math`       
   * Math-related classes and functions.
 * `scl::list`       
-  * List-related classes andfunctions.
+  * List-related classes and functions.
 * `scl::thread`     
   * Thread- and concurrency-related classes and functions.
 * `scl::util`       
