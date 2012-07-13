@@ -29,35 +29,62 @@ Prerequisites
 Fetching the source code
 ----------
 
-    $ git clone --recursive git@notes.doremir.com:/repositories/audio-engine.git
+    $ git clone --recursive git@git.doremir.com:/repositories/audio-engine.git
     $ cd audio-engine
 
-To update, you can do
+The last command will change your directory to the checked out repository. All following commands assume that you are already standing in this directory.
 
-    $ cd audio-engine
+To update, do:
+
     $ git pull
     $ git submodule update
 
-
-Building the dependencies
+Fetching the dependencies
 ----------
 
-### Portaudio
+Usually, the dependencies can simply be fetched from the package server by running `dist get -a`. This will
+download precompiled versions of the dependencies. If you definately need to build a dependency, follow the steps
+below.
+
+*Note on Mac OS X Lion:* Several of the dependency builds depends on the system SDKs being in `/Developer/SDKs`, which may not be the case in Mac OS 10.7 or later. If a build fails, create a symbolic link to the actual location (may vary depending on your OS version) like so:
+
+    sudo ln -s /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer /
+
+
+#### Portaudio
+
+To build Portaudio on Mac OS X, simply run the configure script and use the generated Makefile. You should install it into `external_libraries/portaudio/results` instead of the default path.
 
     $ cd external_libraries/portaudio
-    # ?
-    $ ./configure
-    $ make
-    # no install, just copy lib/.libs/libportaudio.a
+    $ ./configure --prefix=`pwd`/result
+    $ make install
 
-### Portmidi
+#### Portmidi
 
     $ cd external_libraries/portmidi
     $ mkdir build
     $ cd build
-    $ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURE=i386
-    $ make
-    # no install, just copy build/libportmidi_s.a
+    
+FIXME
+
+#### Sndfile
+
+    $ CFLAGS="-arch i386 -I /Developer/SDKs/MacOSX10.7.sdk/Developer/Headers/FlatCarbon/" \
+      CXXFLAGS="-arch i386" \
+      LDFLAGS="-arch i386" \
+      ./configure --prefix=`pwd`/result
+    $ make install
+
+
+#### Fluidsynth
+
+FIXME
+
+#### GTest    
+
+FIXME
+
+#### Boost
 
 FIXME
 

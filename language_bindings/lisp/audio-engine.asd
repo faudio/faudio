@@ -7,10 +7,13 @@
 ;;  All rights reserved
 ;;
 
-(in-package :asdf)
+(defpackage #:audio-engine-asd
+  (:use :cl :asdf))
+
+(in-package :audio-engine-asd)
 
 (defsystem :audio-engine
-  :version "0.0.1"
+  :version "1.5.0"
   :description "The ScoreCleaner Audio Engine"
   :author "Hans Hoglund <hans.hoglund@doremir.com>"
   :maintainer "Hans Hoglund <hans.hoglund@doremir.com>"
