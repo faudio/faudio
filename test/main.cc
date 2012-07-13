@@ -1,11 +1,20 @@
 
+#include <numeric> // for accumulate
+#include <iterator> // for ostream_iterator
+#include <boost/array.hpp>
+#include <boost/range/algorithm.hpp>
+#include <boost/algorithm/string.hpp>
+
 #include "gtest/gtest.h"
 #include "sclaudio.h"
 #include "sclaudiox.h"
 #include "sclaudiox/util/atomic.h"
+#include "sclaudiox/util/concepts.h"
 #include "sclaudiox/util/logging.h"
 #include "sclaudiox/util/symbol.h"
 #include "sclaudiox/util/string.h"
+#include "sclaudiox/util/single.h"
+#include "sclaudiox/util/immutable_list.h"
 #include "sclaudiox/processor/plugin/au.h"
 #include "sclaudiox/processor/synth/rand.h"
 
@@ -93,6 +102,19 @@ namespace test_cpp_api
 {
     using namespace doremir::scl;
 
+    TEST(StaticList, Base)
+    {
+        SCL_CONCEPT_ASSERT(( ForwardContainer< ilist      <int> > ));
+    
+        ilist<int> xs;
+        xs = xs.add_before(1);
+        xs = xs.add_before(2);
+        xs = xs.add_before(3);
+        
+        ilist<int>::iterator xs1 = xs.begin();
+        ilist<int>::iterator xs2 = xs.end();
+    }
+    
 
     TEST(AudioDevices, AudioInputAvailable)
     {
@@ -140,7 +162,7 @@ namespace test_cpp_api
 
     TEST(Atomic, AtomicReplace)
     {
-        Atomic<int> x (0);
+        atomic<int> x (0);
         EXPECT_EQ( x.value(), 0 );
     
         x.replace(1);
@@ -152,22 +174,22 @@ namespace test_cpp_api
     
     TEST(Atomic, AtomicTryReplace)
     {
-        Atomic<int> x (0);
+        atomic<int> x (0);
         EXPECT_EQ( x.value(), 0 );
     
-        x.tryReplace(0, 1);
-        x.tryReplace(0, 2);
+        x.try_replace(0, 1);
+        x.try_replace(0, 2);
         EXPECT_EQ( x.value(), 1 );
     
-        x.tryReplace(3, 0);
-        x.tryReplace(1, 5);
+        x.try_replace(3, 0);
+        x.try_replace(1, 5);
         EXPECT_EQ( x.value(), 5 );
     }           
     
     TEST(Atomic, AtomicCopy)
     {
-        Atomic<int> x (0);
-        Atomic<int> y (x);
+        atomic<int> x (0);
+        atomic<int> y (x);
         EXPECT_EQ( x, y );
         
         x.replace(1);
@@ -179,8 +201,8 @@ namespace test_cpp_api
 
     TEST(Atomic, AtomicAssign)
     {
-        Atomic<int> x (0);
-        Atomic<int> y (0);
+        atomic<int> x (0);
+        atomic<int> y (0);
         EXPECT_EQ( x, y );
         
         x.replace(1);
@@ -251,6 +273,15 @@ namespace test_cpp_api
         EXPECT_EQ ( y.value(), 0 );
 
     }*/ 
+
+    TEST(pointer, Base)
+    {
+        pointer<int> single(1);
+        foreach (int v, single)
+        {
+            std::cout << "The single value is " << v << "\n";
+        }
+    }
     
     TEST(List, Range)
     {
@@ -432,13 +463,137 @@ namespace test_cpp_api
             std::cerr << "Error: " << const_cast<Error&>(e).message() << "\n";
         }              
     }
+                  
 
+    template <class T>
+    void do_with_concept(T x)
+    {
+        BOOST_CONCEPT_ASSERT((boost::Integer<T>));
+    };
+    
+    
+    
+    TEST(ConceptCheck, Base)
+    {
+        do_with_concept(5);
+        
+        
+        
+        
+    }
+}    
+
+template <class InputIterator> 
+InputIterator preceding(InputIterator x)
+{
+    InputIterator y (x);
+    return --y;
+}
+
+template <class InputIterator> 
+InputIterator succeding(InputIterator x)
+{
+    InputIterator y (x);
+    return ++y;
+}
+
+template <class InputRange, class InputIterator> 
+InputIterator in_range(InputRange m, InputIterator x)
+{
+    // FIXME overload on all Boost ranges?
+    m.begin() <= x && x < m.end();
+}
+
+
+namespace std
+{
+    template<>
+    int toupper(int x, const std::locale& loc)
+    {
+        return x - 32;
+    }
+}
+
+
+int char2int(char x) { return x; }
+char int2char(int x) { return (char) x; }
+
+int scl_test_boost_string_pred()
+{
+    std::string x = "abcdefg";
+    std::vector<char> y (x.size());
+    std::vector<int>  z (x.size());
+
+    boost::range::copy      (x, y.begin());
+    boost::range::transform (x, z.begin(), char2int);
+
+    boost::algorithm::to_upper(y);
+    boost::algorithm::to_upper(z);
+
+    boost::range::copy(y, std::ostream_iterator<char>(std::cout));
+    std::cout << "\n";
+    boost::range::transform(z, std::ostream_iterator<char>(std::cout), int2char);
+    std::cout << "\n";
 }
 
 
 
+
+
+
+
+
+
+
+template<class List>
+List add_before(typename List::value_type x, List xs)
+{
+    List ys (xs);
+    ys.push_back(x);
+    return ys;
+}
+
+template<>
+doremir::scl::ilist<int> 
+add_before(doremir::scl::ilist<int>::value_type x, 
+           doremir::scl::ilist<int> xs)
+{
+    return xs.add_before(x);
+}
+
+
+int succ(int x) { return x + 1; }
+int pred(int x) { return x - 1; }
+
+
+int scl_test_ilist()
+{
+    using namespace doremir::scl;
+// #define xlist(T) ilist<T>
+// #define xlist(T) std::list<T>
+#define xlist(T) std::vector<T>
+//    SCL_CONCEPT_ASSERT(( ForwardContainer< xlist(int) > ));
+
+    xlist(int) xs;
+    for(int i = 0; i < 10000; ++i)
+        xs = add_before(i, xs);
+    
+    // std::copy( xs.begin(), xs.end(), xs.begin() );
+    
+    std::cout << "\n";
+    std::cout << "Empty : "   << xs.empty() << "\n";
+    std::cout << "Size is : " << xs.size() << "\n";
+    std::cout << "Sum is : "  << std::accumulate(xs.begin(), xs.end(), 0) << "\n";
+
+    return 0;
+}
+
+
 int main(int argc, char **argv)
 {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
+    // return scl_test_ilist();
+    return scl_test_boost_string_pred();
+    
+    // ::testing::InitGoogleTest(&argc, argv);
+    // return RUN_ALL_TESTS();
 }

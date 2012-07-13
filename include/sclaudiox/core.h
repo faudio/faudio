@@ -12,7 +12,6 @@
 #include <boost/utility.hpp>
 
 #include "sclaudiox/defines.h"
-#include "sclaudiox/numeric.h"
 #include "sclaudiox/time.h"
 #include "sclaudiox/util/string.h"
 #include "sclaudiox/util/misc.h"
@@ -24,10 +23,13 @@
 namespace doremir {
 namespace scl {
 
+    typedef SclChar Char;
+
     /**
         An audio sample.
      */
     typedef float Sample;  
+
 
     class SCLAUDIO_API FileHandle;
 
@@ -43,8 +45,11 @@ namespace scl {
           - Each subclass no methods or custom destructors.
      */
     class SCLAUDIO_API Options {};
+
+    class SCLAUDIO_API Copyable {};
     
     class SCLAUDIO_API NonCopyable : public boost::noncopyable {};
+
 
     /**
         A mangaged resource.

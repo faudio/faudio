@@ -236,7 +236,7 @@ private:
     Thread                       *messageHandlerThread, *audioThread;
     Error                        *audioThreadError;
         
-    Atomic<Time>                 sampleCount;
+    atomic<Time>                 sampleCount;
 };
 
 } // namespace

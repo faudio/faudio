@@ -9,25 +9,25 @@
 ##   This file builds any of the following:
 ##
 ##     * An OS X framework (ScoreCleanerAudio.framework)
-##     * An OS X dynamic library (libsclaudio.dylib)
-##     * A Windows dynamic library (sclaudio.dll)
+##     * An OS X dynamic library (libSCL.dylib)
+##     * A Windows dynamic library (SCL.dll)
 ##
-##   It optionally build the command line tool bin/sclaudio.
+##   It optionally build the command line tool bin/SCL.
 ## 
 
-set(SCLAUDIOX_OSX_SOURCES sclaudiox/processor/plugin/au.mm)
+set(SCLX_OSX_SOURCES sclaudiox/processor/plugin/au.mm)
 
-set(SCLAUDIOX_WIN_SOURCES sclaudiox/processor/plugin/au_nil.cc)
+set(SCLX_WIN_SOURCES sclaudiox/processor/plugin/au_nil.cc)
 
-if (${SCLAUDIO_OSX})
-    set(SCLAUDIOX_NATIVE_SOURCES ${SCLAUDIOX_OSX_SOURCES})
+if (${SCL_OSX})
+    set(SCLX_NATIVE_SOURCES ${SCLX_OSX_SOURCES})
 endif ()
 
-if (${SCLAUDIO_WIN})
-    set(SCLAUDIOX_NATIVE_SOURCES ${SCLAUDIOX_WIN_SOURCES})
+if (${SCL_WIN})
+    set(SCLX_NATIVE_SOURCES ${SCLX_WIN_SOURCES})
 endif ()
 
-set(SCLAUDIOX_SOURCES ${SCLAUDIOX_NATIVE_SOURCES}
+set(SCLX_SOURCES ${SCLX_NATIVE_SOURCES}
                       
                       sclaudiox/processor.cc
                       sclaudiox/stream.cc
@@ -43,63 +43,68 @@ set(SCLAUDIOX_SOURCES ${SCLAUDIOX_NATIVE_SOURCES}
                       sclaudiox/stream/device/audio.cc
                       sclaudiox/stream/device/midi.cc
                       
+                      sclaudiox/util/immutable_list.cc
                       sclaudiox/util/symbol.cc)  
                       
-set(SCLAUDIO_SOURCES  ${SCLAUDIOX_SOURCES}
+set(SCL_SOURCES  ${SCLX_SOURCES}
                       sclaudio.cc)
 
-message("Including the following source files: ${SCLAUDIO_SOURCES}")
+message("Including the following source files: ${SCL_SOURCES}")
+
+if(${CMAKE_COMPILER_IS_GNUCC})
+    add_definitions("-Wreturn-type")
+endif()
 
 ##
 ## Build library
 ##
 
-message("Compiler definitions (library): ${SCLAUDIO_DEFINITIONS}")
+message("Compiler definitions (library): ${SCL_DEFINITIONS}")
 
-if(${SCLAUDIO_OSX})
-    option(BUILD_SCLAUDIO_DYLIB     "Build an OS X dynamic library" FALSE)
-    option(BUILD_SCLAUDIO_FRAMEWORK "Build an OS X framework"       TRUE)
+if(${SCL_OSX})
+    option(BUILD_SCL_DYLIB     "Build an OS X dynamic library" FALSE)
+    option(BUILD_SCL_FRAMEWORK "Build an OS X framework"       TRUE)
                      
-    if(${BUILD_SCLAUDIO_DYLIB})
-        add_library(SCLAUDIO_DYLIB SHARED ${SCLAUDIO_SOURCES})
-        set_target_properties(SCLAUDIO_DYLIB
+    if(${BUILD_SCL_DYLIB})
+        add_library(SCL_DYLIB SHARED ${SCL_SOURCES})
+        set_target_properties(SCL_DYLIB
             PROPERTIES
-                OUTPUT_NAME                 "sclaudio"
-                INSTALL_NAME_DIR            "/usr/local/lib/sclaudio.dylib"
+                OUTPUT_NAME                 "SCL"
+                INSTALL_NAME_DIR            "/usr/local/lib/SCL.dylib"
                 OSX_ARCHITECTURES           i386
                 XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0"
                 LIBRARY_OUTPUT_DIRECTORY    "../"
-                COMPILE_DEFINITIONS         "${SCLAUDIO_DEFINITIONS}")
-        target_link_libraries(SCLAUDIO_DYLIB ${SCLAUDIO_LIBRARIES})
+                COMPILE_DEFINITIONS         "${SCL_DEFINITIONS}")
+        target_link_libraries(SCL_DYLIB ${SCL_LIBRARIES})
     endif()    
 
-    if(${BUILD_SCLAUDIO_FRAMEWORK})
-        add_library(SCLAUDIO SHARED ${SCLAUDIO_SOURCES})
-        set_target_properties(SCLAUDIO
+    if(${BUILD_SCL_FRAMEWORK})
+        add_library(SCL SHARED ${SCL_SOURCES})
+        set_target_properties(SCL
             PROPERTIES
                 OUTPUT_NAME                 "ScoreCleanerAudio"
                 FRAMEWORK                   TRUE
-                FRAMEWORK_VERSION           "${SCLAUDIO_VERSION}"
+                FRAMEWORK_VERSION           "${SCL_VERSION}"
                 INSTALL_NAME_DIR            "@executable_path/../Frameworks/ScoreCleanerAudio.framework/ScoreCleanerAudio"
                 OSX_ARCHITECTURES           i386
                 XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0"
                 LIBRARY_OUTPUT_DIRECTORY    "../"
-                COMPILE_DEFINITIONS         "${SCLAUDIO_DEFINITIONS}")
-        target_link_libraries(SCLAUDIO ${SCLAUDIO_LIBRARIES})
+                COMPILE_DEFINITIONS         "${SCL_DEFINITIONS}")
+        target_link_libraries(SCL ${SCL_LIBRARIES})
     endif()
 endif()
 
 
-if(${SCLAUDIO_WIN})
-    option(BUILD_SCLAUDIO_DLL "Build a Windows dynamic library" TRUE)
+if(${SCL_WIN})
+    option(BUILD_SCL_DLL "Build a Windows dynamic library" TRUE)
     
-    if(${BUILD_SCLAUDIO_DLL})
-        add_library(SCLAUDIO SHARED ${SCLAUDIO_SOURCES})
-        set_target_properties(SCLAUDIO
+    if(${BUILD_SCL_DLL})
+        add_library(SCL SHARED ${SCL_SOURCES})
+        set_target_properties(SCL
             PROPERTIES
-                OUTPUT_NAME              sclaudio
-                COMPILE_DEFINITIONS      "${SCLAUDIO_DEFINITIONS}")
-        target_link_libraries(SCLAUDIO ${SCLAUDIO_LIBRARIES})
+                OUTPUT_NAME              SCL
+                COMPILE_DEFINITIONS      "${SCL_DEFINITIONS}")
+        target_link_libraries(SCL ${SCL_LIBRARIES})
     endif()
 endif()
 
@@ -109,33 +114,33 @@ endif()
 ## Build command-line tool
 ##
 
-option(BUILD_SCLAUDIO_CL "Build the sclaudio command-line tool" TRUE)
+option(BUILD_SCL_CL "Build the SCL command-line tool" TRUE)
 
-if(${BUILD_SCLAUDIO_CL})
-    set(SCLAUDIO_CL_DEFINITIONS ${SCLAUDIO_DEFINITIONS})
-    message("Compiler definitions (command-line tool): ${SCLAUDIO_CL_DEFINITIONS}")
+if(${BUILD_SCL_CL})
+    set(SCL_CL_DEFINITIONS ${SCL_DEFINITIONS})
+    message("Compiler definitions (command-line tool): ${SCL_CL_DEFINITIONS}")
 
-    add_executable(SCLAUDIO_CL "main.cc")
+    add_executable(SCL_CL "main.cc")
 
-    if(${SCLAUDIO_OSX})
-        set_target_properties(SCLAUDIO_CL
+    if(${SCL_OSX})
+        set_target_properties(SCL_CL
             PROPERTIES
-                OUTPUT_NAME                 "sclaudio"
+                OUTPUT_NAME                 "SCL"
                 OSX_ARCHITECTURES           i386
                 RUNTIME_OUTPUT_DIRECTORY    "../bin"
-            COMPILE_DEFINITIONS             "${SCLAUDIO_CL_DEFINITIONS}")
+            COMPILE_DEFINITIONS             "${SCL_CL_DEFINITIONS}")
     endif()
-    if(${SCLAUDIO_WIN})
-        set_target_properties(SCLAUDIO_CL
+    if(${SCL_WIN})
+        set_target_properties(SCL_CL
             PROPERTIES
-                OUTPUT_NAME                 "sclaudio_cl"
-                COMPILE_DEFINITIONS         "${SCLAUDIO_CL_DEFINITIONS}")
+                OUTPUT_NAME                 "SCL_cl"
+                COMPILE_DEFINITIONS         "${SCL_CL_DEFINITIONS}")
     endif()
 
     if (MSVC_IDE)
-        set_target_properties(SCLAUDIO_CL PROPERTIES PREFIX "../")
+        set_target_properties(SCL_CL PROPERTIES PREFIX "../")
     endif()
 
     # TODO if building dylib and/or framework on OS X, this only links with framwork
-    target_link_libraries(SCLAUDIO_CL SCLAUDIO)           
+    target_link_libraries(SCL_CL SCL)           
 endif()

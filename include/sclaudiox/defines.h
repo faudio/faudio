@@ -8,6 +8,9 @@
 #ifndef _SCLAUDIOX_DEFINES                                      
 #define _SCLAUDIOX_DEFINES                                      
 
+#include <stdint.h>
+#include "sclaudio/defines.h"
+
 #define SCL_VERSION "2.0.5"
 
 #ifdef _WIN32

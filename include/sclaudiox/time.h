@@ -22,7 +22,7 @@ enum TimeUnit
     Basic type used in to schedule actions and messages.
     TODO Make into a class, tagged with TimeUnit.
  */
-typedef Int32 Time;
+typedef int32_t Time;
 
 // namespace tentative 
 // {
@@ -52,7 +52,7 @@ typedef Int32 Time;
 /**
     Approximate real-word time in seconds.
   */
-typedef Float64 RealTime;
+typedef double RealTime;
 
 
 

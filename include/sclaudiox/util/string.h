@@ -12,7 +12,9 @@
 #include <string>
 #include <sstream>
 #include <iostream>
-#include <utility>
+#include <utility>   
+
+#include <iconv.h>
 
 #ifdef SCL_UNICODE
     #ifdef SCL_WIN
