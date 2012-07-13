@@ -40,28 +40,33 @@ The source code, as well as sources for the documentation and language bindings 
     $ git clone --recursive git@git.doremir.com:/repositories/audio-engine.git
     $ cd audio-engine
 
-The last command will change your directory to the checked out repository. All following commands assume that you are already standing in this directory.
+The last command will change your directory to the checked out repository. All following commands assume that you are already in this directory.
 
 To update, you can do:
 
     $ git pull
     $ git submodule update
 
-Building the dependencies
+Fetching the dependencies
 ----------
 
 Usually, the dependencies can simply be fetched from the package server by running `dist get --all`. This will
-download a precompiled version of each dependency. If you definitely need to build a dependency, follow the steps
-below.
+download a precompiled version of each required library. The following instructions apply if you need to build a particular library from source.
+
+Building the dependencies
+----------
+
+Whenever possible, we try to build all dependencies as universal binaries containing static libraries for both 32 and 64-bit architectures. In some cases this is not possible, so we have to build 32 and 64-bit versions separately. We also try to build everything locally, to avoid depending on the configuration of a particular 
+system for the main build. You may or may not have these libraries installed on your local system; this should not interfere with the build. 
+
+Note that some dependencies (i.e. Boost) are source only – they do not require a separate build. Yet other dependencies are included in the operating system.
+
 
 ### Mac OS X
 
-Below is a step-by-step instruction for building the dependencies on Mac OS X. We try to build all dependencies as univeral binaries containing static libraries for both the 32-bit (i386) and 64-bit architectures (x86_64). In some cases this is not possible, so we have to build 32 and 64-bit versions separately. We also try to build everything locally, to avoid differences in machine configurations etc. If you want to install some library to your local machine (i.e. to `/usr/local` or similar), you should do a separate build or use a package manager such as Macports or Homebrew.
-
-*Mac OS X Lion note:* Several of the dependency builds require that the system SDKs reside in `/Developer/SDKs`, which may not be the case in Mac 10.7 or later. Before attempting to build you must create a symbolic link to the actual location (which may vary depending on your OS) like so:
+Several of the dependency builds require that the system SDKs reside in `/Developer/SDKs`, which may not be the case in Mac 10.7 or later. Before attempting to build on these systems you must create a symbolic link to the actual location (which may vary depending on your OS) like so:
 
     sudo ln -s /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer /
-
 
 #### Portaudio
 
@@ -103,27 +108,20 @@ This builds a universal binary containing i386 and x86_84.
 
 The current build can not build universal libraries, so the i386 architecture must be specified.
 
+
 #### Fluidsynth
 
-The CMake script requires pkg-config. Install this using your favourite package manager.
-
-We use a checked-in version of GLib. You can update this via the package manager and copy the files as follows (replacing `/usr/local` with the appropriate path):
-
-    $ cd external_libraries/glib
-    $ rm -f include/*
-    $ rm -f lib/*
-    $ find /usr/local/lib/libg* | xargs -J % cp % lib/
-    $ cp -R /usr/local/include/glib-2.0/ include/
-
-FIXME
+FIXME This requires a proper recompilation of 32-bit GLib.
+We currently have a working 32-bit framework.
 
 #### GTest    
 
-FIXME
+FIXME We currently have a working 32-bit library.
 
 #### Boost
 
 FIXME
+
 
 
 Building the Audio Engine
