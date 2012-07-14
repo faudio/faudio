@@ -1,14 +1,13 @@
-##
-##   ScoreCleaner Audio Engine
-##
-##   Copyright (c) 2012 DoReMIR Music Research AB.
-##   All rights reserved.
-##
 
-##
-##   This file builds the SCL unit test suite and optionally run it as
-##   part of the CMake build.
-##
+
+
+
+
+
+
+
+
+
 
 
 ##

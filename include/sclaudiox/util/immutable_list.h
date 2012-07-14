@@ -180,7 +180,12 @@ class ilist_builder
     pointers to subranges, no copying is performed. 
 
     You can safely use all non-mutating algorithms on immutable structures. For
-    mutating algorithms, use the copying variant with ilist_builder.
+    mutating algorithms, use the copying variant with an accumulator, i.e.
+				                                             
+				my_list xs;
+				my_list::accumulator a;
+				std::transform(my_list.begin(), my_list.end(), a);
+				my_list ys = a.result();
  */
 template <class T, class Alloc = std::allocator<T> >
 class ilist

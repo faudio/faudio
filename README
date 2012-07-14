@@ -1,0 +1,13 @@
+
+ScoreCleaner Audio Engine
+=========================
+
+For a basic build, try
+    
+    $ ./boot && make
+
+or
+
+    $ CMAKE_OSX_ARCHITECTURES=i386 $ ./boot && make
+
+More detailed instructions in 'doc/Build and install.md'.

@@ -5,6 +5,21 @@ This page is a simple overview of the architecture and implementation of the aud
 
 The audio engine is implemented in C++ with bindings available for other languages. There is a C level API providing wrapper functions for C++ methods and classes. This allow the C++ API to be consumed by any language that interfaces with C.
 
+Files
+----------
+
+    doc                 Documentation
+    external            External libraries (as Git submodules)
+    bindings            Bindings to other languages
+    include             Header files         
+        scl
+            util
+            thread
+            audio
+    src                 Sources for library
+    test                Sources for unit tests 
+    tool                Sources for tools
+
 Naming conventions
 ----------
 

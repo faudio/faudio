@@ -2,28 +2,57 @@
 Build and install
 =========================
 
+Building the audio engine should be as simple as:
+
+    $ git clone --recursive git@git.doremir.com:/repositories/audio-engine.git
+    $ cd audio-engine
+    $ ./boot && make
+    $ sudo make install
+
+To test it with an instance of ScoreCleaner on the desktop, use:
+
+    $ make run-scorecleaner
+
+
 Prerequisites
 ------------
 
-### Dependencies
+#### Dependencies
+
+### Required
 
   * Boost
-  * Portaudio (optional, for real-time audio)
-  * Portmidi (optional, for real-time midi)
-  * libsndfile (optional, for file streams)
-  * Fluidsynth (optional, for built in synthesis)
-  * Google Test (optional, for running the test suite)
-  * CoreAudio, AudioUnit, AudioToolbox (Mac OS X only, for audio units)
+
+### Optional
+
+  * Portaudio (for real-time audio)
+  * Portmidi (for real-time midi)
+  * libsndfile (for non-realtime audio)
+  * Fluidsynth (for built in synthesis)     
+  * libfft (for FFT and IFFT processors)
+  * libosc++ (for OSC messages)
+  * Google Test (for running the test suite)
 
 ### Build tools
 
-  * CMake 2.8 or later, generating one of the following build systems:
-    * GNU Make with GCC 4.2 or later
-    * XCode with GCC 4.2 or later
-    * Visual Studio C++ 2010 or later  
-  * Pandoc (optional, for documentation)
-  * Doxygen (optional, for documentation)
-  * GNU Make (optional, for Lisp bindings and documentation)
+#### Required
+
+  * CMake
+
+#### Optional
+
+  * Pandoc (for documentation)
+  * Doxygen (for documentation)
+  * GNU Make (for Lisp bindings)
+
+### Compilers
+
+Any of the following:
+
+  * clang >= 3.1
+  * GCC >= 4.4
+  * MSVC >= 10.0
+
 
 Fetching the source code
 ----------
@@ -115,76 +144,6 @@ FIXME We currently have a working 32-bit library.
 
 FIXME
 
-
-
-Building the Audio Engine
-----------
-
-### Makefile build:
-    
-    $ mkdir build
-    $ cd build
-    $ cmake ..
-
-This creates a default build. To see and review the build options interactively, do:
-
-    $ cmake -i ..
-
-The values you select are stored in the `CMakeCache.txt` file in the current directory. To change them you can run the wizard again, edit the file directly, or do:
-
-    $ cmake -MY_OPTION_NAME=my_option_value ..
-
-To switch between debug and release builds, do one of the following:
-
-    $ cmake -DCMAKE_BUILD_TYPE=Debug ..
-    $ cmake -DCMAKE_BUILD_TYPE=Release ..
-
-To run the build, do:
-
-    $ make
-    
-### Xcode build:
-
-    $ mkdir build
-    $ cd build
-
-To create and open a default build, do:
-
-    $ cmake -G Xcode ..
-    $ open *.xcodeproj
-
-To see and review the build options interactively, do:
-
-    $ cmake -i ..
-
-The values you select are stored in the `CMakeCache.txt` file in the current directory. To change them you can run the wizard again, edit the file directly, or do:
-
-    $ cmake -DMY_OPTION_NAME=my_option_value ..
-
-If you update the the options cache you must overwrite the Xcode project with a fresh one by running `cmake -G Xcode` again.
-                                         
-
-### Visual Studio build
-
-    > mkdir build
-    > cd build
-
-To create and open a default build, do:
-
-    > cmake -G "Visual Studio 10" ..
-    > open *.sln
-
-To see and review the build options interactively, do:
-
-    > cmake -i ..
-
-The values you select are stored in the `CMakeCache.txt` file in the current directory. To change them you can run the wizard again, edit the file directly, or do:
-
-    > cmake -DMY_OPTION_NAME=my_option_value ..
-
-If you update the the options cache you must overwrite the Xcode project with a fresh one by running `cmake -G "Visual Studio 10"` again.
-
-In Visual Studio choose Project > Build Solution.
 
 
 Running the unit tests

@@ -1,194 +1,137 @@
-##
-##   ScoreCleaner Audio Engine
-##
-##   Copyright (c) 2012 DoReMIR Music Research AB. 
-##   All rights reserved. 
-##
+#
+# CMake build for the ScoreCleaner Audio Engine
+#
+# test with 
+#   rm -rf build && ./boot && make edit_cache
+# or
+# rm -rf build && \
+#     CMAKE_OSX_ARCHITECTURES=i386 ./boot && \
+#     make edit_cachec
 
+cmake_minimum_required ( VERSION 2.8.8 )
+set ( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake )
 
-project(sclaudio C CXX)
+project ( ScoreCleanerAudioEngine C CXX )
+set ( VERSION_PRE "" )
+set ( VERSION_X 1 )
+set ( VERSION_Y 5 )
+set ( VERSION_Z 0 )
+set ( VERSION_SUFF "" )
+set ( VERSION "${VERSION_PRE}${VERSION_X}.${VERSION_Y}.${VERSION_Z}${VERSION_SUFF}" )
 
-cmake_minimum_required(VERSION 2.8)
-cmake_policy(SET CMP0015 NEW)
+option ( ENABLE_UNICODE           "Enable Unicode support"                    TRUE )       
+option ( ENABLE_LOGGING           "Enable standard logging"                   FALSE )      
+option ( REDIRECT_LOG             "Redirect log messages to standard output"  FALSE )       
+option ( ENABLE_REALTIME_AUDIO    "" )
+option ( ENABLE_REALTIME_MIDI     "" )
+option ( ENABLE_NONREALTIME_AUDIO "" )
+option ( ENABLE_FLUIDSYNTH        "" )
+option ( ENABLE_FFT               "" )
 
-set(SCLAUDIO_VERSION_MAJOR 1)
-set(SCLAUDIO_VERSION_MINOR 5)
-set(SCLAUDIO_VERSION_MICRO 0)
-set(SCLAUDIO_VERSION 
-    "${SCLAUDIO_VERSION_MAJOR}.${SCLAUDIO_VERSION_MINOR}.${SCLAUDIO_VERSION_MICRO}")
+option ( BUILD_DYLIB              "Build an OS X dynamic library"             FALSE )
+option ( BUILD_FRAMEWORK          "Build an OS X framework"                   TRUE )
+option ( PROFILING                "Compile with profiler flags -pg set"       FALSE )
+option ( BUILD_TESTS              "Build unit tests"                          TRUE )
+option ( RUN_TESTS                "Run unit tests after build"                TRUE )
 
+option ( BUILD_SOUNDFONT_TOOL     "" )
+option ( BUILD_SOUNDFILE_TOOL     "" )
+option ( BUILD_OSC_SERVER         "" )
+option ( BUILD_HTTP_SERVER        "" )
 
-##
-## Check OS
-##
+option ( PREFER_NONBLOCKING       "Use non-blocking audio by default"         TRUE )       
+option ( PREFER_EXCLUSIVE         "Use exclusive audio streams by default"    TRUE )
 
-if(${CMAKE_SYSTEM} MATCHES "Darwin")
-    set(SCLAUDIO_OSX TRUE)
-endif()
-
-if(WIN32)
-    set(SCLAUDIO_WIN TRUE)
-endif()
-             
-
-
-##
-## Global path options
-##
-
-if(${SCLAUDIO_WIN})
-    set(SCLAUDIO_BOOST "C:/Program/boost/boost_1_47")
-else()
-    set(SCLAUDIO_BOOST "")
-endif()
-
-include_directories("include" 
-                    "external" 
-                    ${SCLAUDIO_BOOST})
-
-set(PROJECT_SOURCE_DIR "src")
-set(PROJECT_BINARY_DIR "build")
-
-
-##
-## Global options
-##
-
-option(ENABLE_LOGGING 
-       "Enable standard logging"                
-       FALSE)
+# This should hold
+#   CMAKE_OSX_DEPLOYMENT_TARGET <= CMAKE_OSX_SYSROOT <= (build system version)
+#
+# CMAKE_OSX_DEPLOYMENT_TARGET should be the minimum supported version
+# CMAKE_OSX_SYSROOT should be the maximum supported versions
+#
+# See the Apple documentation 'Frameworks and Weak Linking'
       
-option(REDIRECT_LOG_TO_STDOUT 
-       "Redirect log messages to standard output"     
-       FALSE)
-       
-option(ENABLE_UNICODE 
-       "Enable Unicode support"                       
-       TRUE)
-       
-option(SCL_PREFER_NONBLOCKING_AUDIO 
-       "Use non-blocking audio by default"                       
-       TRUE)
-       
-option(SCL_PREFER_EXCLUSIVE_AUDIO 
-       "Open audio streams in exclusive mode by default"                       
-       TRUE)
-      
-option(USE_DEBUG_LIBRARIES 
-       "Use debug libraries" 
-       FALSE)
+include_directories ( "include" )
+include_directories ( "external_libraries/boost" )
+include_directories ( "external_libraries/portmidi/pm_common" )
+include_directories ( "external_libraries/vst" )
+include_directories ( "external_libraries/unicode" )
+include_directories ( "external_libraries/portaudio/result/include" )
+include_directories ( "external_libraries/fluidsynth_headers" )
 
 
-set(SCLAUDIO_DEFINITIONS "")
+set ( CMAKE_LIBRARY_PATH
+  "external_libraries/portaudio/result/lib"
+  "external_libraries/portmidi/result"
+  "external_libraries/sndfile/result/lib"
+  "external_libraries/gtest/result"
+  "lib/mac/shared" # for ICU, remove soon
+  # "lib/mac/static" # for boost_thread, remove soon
+    )
+  
+set ( CMAKE_FRAMEWORK_PATH 
+  "/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/"
+  "lib/mac/frameworks" # for FluidSynth, remove soon
+    )                                         
 
-if(ENABLE_LOGGING)
-    set(SCLAUDIO_DEFINITIONS "SCL_LOG;${SCLAUDIO_DEFINITIONS}")
-endif()
+find_library ( BOOST_THREAD       "libboost_thread-mt.a") 
+find_library ( ICONV              "iconv") 
 
-if(REDIRECT_LOG_TO_STDOUT)
-    set(SCLAUDIO_DEFINITIONS "SCL_LOG_TO_STDOUT;${SCLAUDIO_DEFINITIONS}")
-endif()
+find_library ( SNDFILE            "libsndfile.a" )
+find_library ( PORTAUDIO          "libportaudio.a" )
+find_library ( PORTMIDI           "libportmidi_s.a" )
+                                  
+find_library ( ICU_DATA           "libicudata.48.1.1.dylib" )
+find_library ( ICU_IO             "libicuio.48.1.1.dylib" )
+find_library ( ICU_UC             "libicuuc.48.1.1.dylib" )
+find_library ( GTEST              "libgtest.dylib" )
+               
+find_library ( COCOA              Cocoa )
+find_library ( COREAUDIO          CoreAudio )
+find_library ( COREMIDI           CoreMidi )
+find_library ( AUDIOUNIT          AudioUnit )
+find_library ( AUDIOTOOLBOX       AudioToolbox )
+find_library ( FLUIDSYNTH         FluidSynth )
+# fftw or libfft ?
+# libmicrohttpd ?
+# oscpack
 
-if(ENABLE_UNICODE)
-    set(SCLAUDIO_DEFINITIONS "SCL_UNICODE;${SCLAUDIO_DEFINITIONS}")
-endif()
+# list ( APPEND DEPS ${BOOST_THREAD} )
+list ( APPEND DEPS ${ICONV} )
+list ( APPEND DEPS ${SNDFILE} )
+list ( APPEND DEPS ${PORTAUDIO} )
+list ( APPEND DEPS ${PORTMIDI} )
+list ( APPEND DEPS ${ICU_DATA} )
+list ( APPEND DEPS ${ICU_IO} )
+list ( APPEND DEPS ${ICU_UC} )
+list ( APPEND DEPS ${GTEST} )
+list ( APPEND DEPS ${COCOA} )
+list ( APPEND DEPS ${COREAUDIO} )
+list ( APPEND DEPS ${COREMIDI} )
+list ( APPEND DEPS ${AUDIOUNIT} )
+list ( APPEND DEPS ${AUDIOTOOLBOX} )
+list ( APPEND DEPS ${FLUIDSYNTH} )
 
-if(SCL_PREFER_NONBLOCKING_AUDIO)
-    set(SCLAUDIO_DEFINITIONS "SCL_PREFER_NONBLOCKING_AUDIO;${SCLAUDIO_DEFINITIONS}")
-endif()
+find_package(Pthreads)
+add_subdirectory ( external_libraries )
 
-if(SCL_PREFER_EXCLUSIVE_AUDIO)
-    set(SCLAUDIO_DEFINITIONS "SCL_PREFER_EXCLUSIVE_AUDIO;${SCLAUDIO_DEFINITIONS}")
-endif()
+list ( APPEND DEPS boost_system )
+list ( APPEND DEPS boost_filesystem )
+list ( APPEND DEPS boost_thread )
 
+add_subdirectory( src )
+# add_subdirectory( test )
+# add_subdirectory( tool )
 
-if(CMAKE_BUILD_TYPE MATCHES Debug)
-    set(SCLAUDIO_DEFINITIONS "SCL_DEBUG;${SCLAUDIO_DEFINITIONS}")
-endif()
-
-if(${SCLAUDIO_WIN})
-    set(SCLAUDIO_DEFINITIONS "NOMINMAX;${SCLAUDIO_DEFINITIONS}")
-endif()
-
-
-##
-## Misc
-##     
-
-##  Hack to get around the "Debug" and "Release" directories cmake tries to add on Windows
-##      http://stackoverflow.com/questions/543203/cmake-runtime-output-directory-on-windows
-
-# For each configuration (Debug, Release... )
-foreach(CONF ${CMAKE_CONFIGURATION_TYPES})
-# Go uppercase (DEBUG, RELEASE...)
-string(TOUPPER "${CONF}" CONF)
-set("CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${CONF}" "${CMAKE_CURRENT_BINARY_DIR}")
-set("CMAKE_RUNTIME_OUTPUT_DIRECTORY_${CONF}" "${CMAKE_CURRENT_BINARY_DIR}")
-if(WIN32)
-  set("CMAKE_LIBRARY_OUTPUT_DIRECTORY_${CONF}" "${CMAKE_CURRENT_BINARY_DIR}")
-else()
-  set("CMAKE_LIBRARY_OUTPUT_DIRECTORY_${CONF}" "${CMAKE_CURRENT_BINARY_DIR}")
-endif()
-endforeach()
-
-
-##
-## Process child directories
-##
-                      
-add_subdirectory(lib)
-add_subdirectory(src)
-add_subdirectory(test)  
+add_custom_target ( foo ALL
+  COMMAND echo 1 )
+  
+configure_file ( 
+  ${CMAKE_SOURCE_DIR}/include/sclaudiox/config.h.in
+  ${CMAKE_BINARY_DIR}/include/sclaudiox/config.h
+  )
 
 
 
-##
-## Make distribution
-##
 
-# #message("Installing to ${CMAKE_INSTALL_PREFIX}")
-# 
-# file(REMOVE_RECURSE build/dist/sclaudio-${SCLAUDIO_VERSION})
-# file(MAKE_DIRECTORY build/dist/sclaudio-${SCLAUDIO_VERSION})
-# 
-# file(INSTALL
-#     build/libsclaudio.dylib 
-#     build/ScoreCleanerAudio.framework 
-#     FILE_PERMISSIONS WORLD_EXECUTE
-#     DESTINATION dist/sclaudio-${SCLAUDIO_VERSION}/)
-# 
-# file(INSTALL
-#     doc/build/html/
-#     DESTINATION dist/sclaudio-${SCLAUDIO_VERSION}/doc/html)
-# 
-# # file(RENAME
-# #     "doc/build/latex/refman.pdf"
-# #     "doc/build/latex/ScoreCleanerAudioEngine.pdf")
-# # file(INSTALL
-# #     "doc/build/latex/ScoreCleanerAudioEngine.pdf"
-# #     DESTINATION dist/sclaudio-${SCLAUDIO_VERSION}/doc)
-# 
-# file(INSTALL
-#     include/
-#     DESTINATION dist/sclaudio-${SCLAUDIO_VERSION}/include)
-# 
-# file(INSTALL
-#     language_bindings/lisp/audio-engine.asd
-#     language_bindings/lisp/examples
-#     language_bindings/lisp/tools
-#     DESTINATION dist/sclaudio-${SCLAUDIO_VERSION}/language_bindings/lisp)
-# file(COPY
-#     language_bindings/lisp/
-#     DESTINATION dist/sclaudio-${SCLAUDIO_VERSION}/language_bindings/lisp
-#     PATTERN "*xfasl" EXCLUDE
-#     PATTERN "*dylib" EXCLUDE
-#     PATTERN "Makefile" EXCLUDE)                    
-
-add_custom_command(
-  OUTPUT FOO_CMD  
-  COMMAND echo "foo"
-  DEPENDS ${trofiles}
-)
-add_custom_target(foo DEPENDS FOO_CMD)
 
 
