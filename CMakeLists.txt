@@ -52,10 +52,11 @@ option ( PREFER_EXCLUSIVE         "Use exclusive audio streams by default"    TR
       
 include_directories ( "include" )
 include_directories ( "external_libraries/boost" )
-include_directories ( "external_libraries/portmidi/pm_common" )
 include_directories ( "external_libraries/vst" )
 include_directories ( "external_libraries/unicode" )
 include_directories ( "external_libraries/portaudio/result/include" )
+include_directories ( "external_libraries/portmidi/result" )
+include_directories ( "external_libraries/sndfile/result/include" )
 include_directories ( "external_libraries/fluidsynth_headers" )
 
 
