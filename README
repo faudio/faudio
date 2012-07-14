@@ -8,6 +8,6 @@ For a basic build, try
 
 or
 
-    $ CMAKE_OSX_ARCHITECTURES=i386 $ ./boot && make
+    $ CMAKE_OSX_ARCHITECTURES=i386 ./boot && make
 
 More detailed instructions in 'doc/Build and install.md'.
