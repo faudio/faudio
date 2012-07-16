@@ -15,6 +15,17 @@ set ( VERSION_Z 0 )
 set ( VERSION_SUFF "" )
 set ( VERSION "${VERSION_PRE}${VERSION_X}.${VERSION_Y}.${VERSION_Z}${VERSION_SUFF}" )
 
+
+## Build options
+
+#  This should hold
+#    CMAKE_OSX_DEPLOYMENT_TARGET <= CMAKE_OSX_SYSROOT <= (build machine OS X version)
+#  
+#  CMAKE_OSX_DEPLOYMENT_TARGET should be the minimum supported version (i.e. 10.5)
+#  CMAKE_OSX_SYSROOT should be the SDK of the maximum supported version (i.e. /Developer/SDKs/MacOSX10.7.sdk)
+#  
+#  See the Apple documentation 'Frameworks and Weak Linking'
+
 option ( ENABLE_UNICODE           "Enable Unicode support"                    TRUE )       
 option ( ENABLE_LOGGING           "Enable standard logging"                   FALSE )      
 option ( REDIRECT_LOG             "Redirect log messages to standard output"  FALSE )       
@@ -38,17 +49,19 @@ option ( BUILD_HTTP_SERVER        "" )
 option ( PREFER_NONBLOCKING       "Use non-blocking audio by default"         TRUE )       
 option ( PREFER_EXCLUSIVE         "Use exclusive audio streams by default"    TRUE )
 
-# This should hold
-#   CMAKE_OSX_DEPLOYMENT_TARGET <= CMAKE_OSX_SYSROOT <= (build system version)
-#
-# CMAKE_OSX_DEPLOYMENT_TARGET should be the minimum supported version
-# CMAKE_OSX_SYSROOT should be the maximum supported versions
-#
-# See the Apple documentation 'Frameworks and Weak Linking'
 
+## Misc settings
+
+include ( profiling )
+
+
+## Find libraries
 
 find_package ( pthreads )
 find_package ( iconv )
+
+add_definitions ( ${PTHREAD_DEFINITIONS} )
+add_definitions ( ${ICONV_DEFINITIONS} )
       
 include_directories ( "include" )
 include_directories ( "${CMAKE_BINARY_DIR}/include" )
@@ -62,17 +75,14 @@ include_directories ( "external_libraries/portmidi/result" )
 include_directories ( "external_libraries/sndfile/result/include" )
 include_directories ( "external_libraries/fluidsynth_headers" )
 
-
 set ( CMAKE_LIBRARY_PATH
   ${PTHREADS_LIBRARIES}
   ${ICONV_LIBRARIES}
   "external_libraries/portaudio/result/lib"
   "external_libraries/portmidi/result"
   "external_libraries/sndfile/result/lib"
-  # "external_libraries/gtest/result"
   "lib/mac/shared" # for ICU, remove soon
   "lib/mac/gtest" # for gtest, remove soon
-  # "lib/mac/static" # for boost_thread, remove soon
     )
   
 set ( CMAKE_FRAMEWORK_PATH 
@@ -84,31 +94,32 @@ find_library ( SNDFILE            "libsndfile.a" )
 find_library ( PORTAUDIO          "libportaudio.a" )
 find_library ( PORTMIDI           "libportmidi_s.a" )
 find_library ( GTEST              "gtest" )
-               
-find_library ( COCOA              Cocoa )
-find_library ( COREAUDIO          CoreAudio )
-find_library ( COREMIDI           CoreMidi )
-find_library ( AUDIOUNIT          AudioUnit )
-find_library ( AUDIOTOOLBOX       AudioToolbox )
-find_library ( FLUIDSYNTH         FluidSynth )
-# fftw or libfft ?
-# libmicrohttpd ?
-# oscpack
 
 list ( APPEND DEPENDENCIES ${ICONV} )
 list ( APPEND DEPENDENCIES ${SNDFILE} )
 list ( APPEND DEPENDENCIES ${PORTAUDIO} )
 list ( APPEND DEPENDENCIES ${PORTMIDI} )
 list ( APPEND DEPENDENCIES ${GTEST} )
-list ( APPEND DEPENDENCIES ${COCOA} )
-list ( APPEND DEPENDENCIES ${COREAUDIO} )
-list ( APPEND DEPENDENCIES ${COREMIDI} )
-list ( APPEND DEPENDENCIES ${AUDIOUNIT} )
-list ( APPEND DEPENDENCIES ${AUDIOTOOLBOX} )
-list ( APPEND DEPENDENCIES ${FLUIDSYNTH} )
 
-add_definitions ( ${PTHREAD_DEFINITIONS} )
-add_definitions ( ${ICONV_DEFINITIONS} )
+if ( APPLE )
+  find_library ( COCOA              Cocoa )
+  find_library ( COREAUDIO          CoreAudio )
+  find_library ( COREMIDI           CoreMidi )
+  find_library ( AUDIOUNIT          AudioUnit )
+  find_library ( AUDIOTOOLBOX       AudioToolbox )
+  find_library ( FLUIDSYNTH         FluidSynth )
+
+  list ( APPEND DEPENDENCIES ${COCOA} )
+  list ( APPEND DEPENDENCIES ${COREAUDIO} )
+  list ( APPEND DEPENDENCIES ${COREMIDI} )
+  list ( APPEND DEPENDENCIES ${AUDIOUNIT} )
+  list ( APPEND DEPENDENCIES ${AUDIOTOOLBOX} )
+  list ( APPEND DEPENDENCIES ${FLUIDSYNTH} )
+endif ()
+
+# fftw or libfft ?
+# libmicrohttpd ?
+# oscpack
 
 add_subdirectory ( external_libraries )
 
@@ -116,10 +127,8 @@ list ( APPEND DEPENDENCIES BoostSystem )
 list ( APPEND DEPENDENCIES BoostFilesystem )
 list ( APPEND DEPENDENCIES BoostThread )
 
-if ( PROFILING AND CMAKE_COMPILER_IS_GNUCXX )
-  add_definitions("-pg")
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pg")
-endif ()
+
+## Configuration file
 
 set ( VERSION_STRING "\"${VERSION}\"" )
 configure_file ( 
@@ -128,11 +137,8 @@ configure_file (
   )
 
 
+## Process source
+
 add_subdirectory( src )
 add_subdirectory( test )
 # add_subdirectory( tool )
-
-
-
-
-
