@@ -20,7 +20,7 @@
 #endif
 
 
-#ifdef SCL_LOG
+#ifdef SCL_AUDIO_ENABLE_LOGGING
     #define SCL_WRITE_LOG(EXPR)                 \
         {                                       \
             ReentrantLock lock (printMutex());  \
@@ -37,12 +37,12 @@
         if (!COND)                              \
             SCL_WRITE_LOG(EXPR);                \
 
-#else // SCL_LOG
+#else // SCL_AUDIO_ENABLE_LOGGING
     #define SCL_WRITE_LOG(EXPR)
     #define SCL_WRITE_LOG_IF(COND, EXPR)
     #define SCL_WRITE_LOG_IFN(COND, EXPR)
 
-#endif // SCL_LOG
+#endif // SCL_AUDIO_ENABLE_LOGGING
 
 
 namespace doremir {
@@ -87,7 +87,7 @@ inline String logPath()
 
 inline std::ostream& logStream()
 {
-#ifdef SCL_LOG_TO_STDOUT
+#ifdef SCL_AUDIO_REDIRECT_LOG
     return std::cout;
 #else
     static std::ofstream *log = new std::ofstream(toSimpleString(logPath()));

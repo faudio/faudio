@@ -36,13 +36,13 @@
     #define SCL_DEF_MIDI_LATENCY        0.0
 #endif
 
-#ifdef SCL_PREFER_NONBLOCKING_AUDIO
+#ifdef SCL_AUDIO_PREFER_NONBLOCKING
     #define SCL_NONBLOCKING_AUDIO true
 #else
     #define SCL_NONBLOCKING_AUDIO false
 #endif
 
-#ifdef SCL_PREFER_EXCLUSIVE_AUDIO
+#ifdef SCL_AUDIO_PREFER_EXCLUSIVE
     #define SCL_EXCLUSIVE_AUDIO true
 #else
     #define SCL_EXCLUSIVE_AUDIO false

@@ -26,7 +26,6 @@ set ( VERSION "${VERSION_PRE}${VERSION_X}.${VERSION_Y}.${VERSION_Z}${VERSION_SUF
 #  
 #  See the Apple documentation 'Frameworks and Weak Linking'
 
-option ( ENABLE_UNICODE           "Enable Unicode support"                    TRUE )       
 option ( ENABLE_LOGGING           "Enable standard logging"                   FALSE )      
 option ( REDIRECT_LOG             "Redirect log messages to standard output"  FALSE )       
 option ( ENABLE_REALTIME_AUDIO    "" )
@@ -131,6 +130,19 @@ list ( APPEND DEPENDENCIES BoostThread )
 ## Configuration file
 
 set ( VERSION_STRING "\"${VERSION}\"" )
+if ( PREFER_NONBLOCKING )
+  set ( SCL_AUDIO_PREFER_NONBLOCKING True )
+endif ()
+if ( PREFER_EXCLUSIVE )
+  set ( SCL_AUDIO_PREFER_EXCLUSIVE True )
+endif ()
+if ( ENABLE_LOGGING )
+  set ( SCL_AUDIO_ENABLE_LOGGING True )
+endif ()
+if ( REDIRECT_LOG )
+  set ( SCL_AUDIO_REDIRECT_LOG True )
+endif ()
+
 configure_file ( 
   ${CMAKE_SOURCE_DIR}/include/sclaudiox/config.h.in
   ${CMAKE_BINARY_DIR}/include/sclaudiox/config.h

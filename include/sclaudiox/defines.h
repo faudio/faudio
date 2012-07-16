@@ -12,10 +12,6 @@
 #include "sclaudio/defines.h"
 #include "sclaudiox/config.h"
 
-// FIXME test, remove soon
-#define SCL_PREFER_NONBLOCKING_AUDIO
-#define SCL_PREFER_EXCLUSIVE_AUDIO
-
 #ifdef _WIN32
     #define SCL_WIN
     #define SCL_OS WIN
