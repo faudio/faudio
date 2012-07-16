@@ -42,11 +42,15 @@ if( APPLE AND BUILD_FRAMEWORK )
     FRAMEWORK                   TRUE
     OUTPUT_NAME                 ScoreCleanerAudio
     FRAMEWORK_VERSION           ${VERSION}
-    LIBRARY_OUTPUT_DIRECTORY    "../"
-    INSTALL_NAME_DIR
-      "@executable_path/../Frameworks/ScoreCleanerAudio.framework/ScoreCleanerAudio"
+    LIBRARY_OUTPUT_DIRECTORY    "../Frameworks"
+    INSTALL_NAME_DIR            "@executable_path/../Frameworks/ScoreCleanerAudio.framework/ScoreCleanerAudio"
     )
   target_link_libraries ( ScoreCleanerAudio_framework ${DEPENDENCIES} )
+
+  add_custom_command ( TARGET ScoreCleanerAudio_framework POST_BUILD
+    COMMAND mkdir -p ../Frameworks
+    COMMAND cp    -R ../../lib/mac/frameworks/ ../Frameworks 
+    )
 endif ()
 
 
