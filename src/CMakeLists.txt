@@ -49,7 +49,8 @@ if( APPLE AND BUILD_FRAMEWORK )
 
   add_custom_command ( TARGET ScoreCleanerAudio_framework POST_BUILD
     COMMAND mkdir -p ../Frameworks
-    COMMAND cp    -R ../../lib/mac/frameworks/ ../Frameworks 
+    COMMAND rm -rf ../Frameworks/FluidSynth.framework
+    COMMAND cp -R ../../lib/mac/frameworks/FluidSynth.framework ../Frameworks/FluidSynth.framework
     )
 endif ()
 

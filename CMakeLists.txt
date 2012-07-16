@@ -45,12 +45,17 @@ option ( PREFER_EXCLUSIVE         "Use exclusive audio streams by default"    TR
 # CMAKE_OSX_SYSROOT should be the maximum supported versions
 #
 # See the Apple documentation 'Frameworks and Weak Linking'
+
+
+find_package ( pthreads )
+find_package ( iconv )
       
 include_directories ( "include" )
 include_directories ( "${CMAKE_BINARY_DIR}/include" )
+include_directories ( ${PTHREADS_INCLUDE_DIRS} )
+include_directories ( ${ICONV_INCLUDE_DIRS} )
 include_directories ( "external_libraries/boost" )
 include_directories ( "external_libraries/vst" )
-# include_directories ( "external_libraries/unicode" )
 include_directories ( "external_libraries/gtest/include" )
 include_directories ( "external_libraries/portaudio/result/include" )
 include_directories ( "external_libraries/portmidi/result" )
@@ -59,6 +64,8 @@ include_directories ( "external_libraries/fluidsynth_headers" )
 
 
 set ( CMAKE_LIBRARY_PATH
+  ${PTHREADS_LIBRARIES}
+  ${ICONV_LIBRARIES}
   "external_libraries/portaudio/result/lib"
   "external_libraries/portmidi/result"
   "external_libraries/sndfile/result/lib"
@@ -73,15 +80,9 @@ set ( CMAKE_FRAMEWORK_PATH
   "lib/mac/frameworks" # for FluidSynth, remove soon
     )                                         
 
-find_library ( ICONV              "iconv") 
-
 find_library ( SNDFILE            "libsndfile.a" )
 find_library ( PORTAUDIO          "libportaudio.a" )
 find_library ( PORTMIDI           "libportmidi_s.a" )
-                                  
-#find_library ( ICU_DATA           "libicudata.dylib" )
-#find_library ( ICU_IO             "libicuio.dylib" )
-#find_library ( ICU_UC             "libicuuc.dylib" )
 find_library ( GTEST              "gtest" )
                
 find_library ( COCOA              Cocoa )
@@ -98,9 +99,6 @@ list ( APPEND DEPENDENCIES ${ICONV} )
 list ( APPEND DEPENDENCIES ${SNDFILE} )
 list ( APPEND DEPENDENCIES ${PORTAUDIO} )
 list ( APPEND DEPENDENCIES ${PORTMIDI} )
-# list ( APPEND DEPENDENCIES ${ICU_DATA} )
-# list ( APPEND DEPENDENCIES ${ICU_IO} )
-# list ( APPEND DEPENDENCIES ${ICU_UC} )
 list ( APPEND DEPENDENCIES ${GTEST} )
 list ( APPEND DEPENDENCIES ${COCOA} )
 list ( APPEND DEPENDENCIES ${COREAUDIO} )
@@ -109,8 +107,9 @@ list ( APPEND DEPENDENCIES ${AUDIOUNIT} )
 list ( APPEND DEPENDENCIES ${AUDIOTOOLBOX} )
 list ( APPEND DEPENDENCIES ${FLUIDSYNTH} )
 
-find_package ( pthreads )
-find_package ( iconv )
+add_definitions ( ${PTHREAD_DEFINITIONS} )
+add_definitions ( ${ICONV_DEFINITIONS} )
+
 add_subdirectory ( external_libraries )
 
 list ( APPEND DEPENDENCIES BoostSystem )
