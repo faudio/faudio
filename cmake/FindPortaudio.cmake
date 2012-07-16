@@ -10,9 +10,9 @@ include (Let)
 include (DistUniverse)
 include (FindPackageHandleStandardArgs)
 
-macro (is_portaudio_missing RESULT)
+macro (is_dependency_missing NAME RESULT)
   execute_process ( 
-    COMMAND cmake/test-portaudio
+    COMMAND cmake/test-${NAME}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     RESULT_VARIABLE ${RESULT} 
     OUTPUT_QUIET
@@ -46,7 +46,7 @@ if (PORTAUDIO_LIBRARIES AND PORTAUDIO_INCLUDE_DIRS)
   
 else (PORTAUDIO_LIBRARIES AND PORTAUDIO_INCLUDE_DIRS)  
   message (STATUS "Searching for portaudio")
-  is_portaudio_missing (PORTAUDIO_MISSING)
+  is_dependency_missing (portaudio PORTAUDIO_MISSING)
 
   if (PORTAUDIO_MISSING)
     if (BUILD_DEPENDENCIES)
@@ -81,7 +81,7 @@ else (PORTAUDIO_LIBRARIES AND PORTAUDIO_INCLUDE_DIRS)
       )
   endletmany (CMAKE_FIND_LIBRARY_SUFFIXES) 
 
-  find_package_handle_standard_args (Portaudio 
+  find_package_handle_standard_args (portaudio 
     DEFAULT_MSG 
     PORTAUDIO_LIBRARY
     PORTAUDIO_INCLUDE_DIR
