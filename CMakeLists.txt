@@ -154,3 +154,11 @@ configure_file (
 add_subdirectory( src )
 add_subdirectory( test )
 # add_subdirectory( tool )
+
+
+
+# Testing ...
+add_custom_target( install_dist )
+
+include ( "InstallDist" )
+
