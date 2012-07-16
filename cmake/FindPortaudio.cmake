@@ -5,103 +5,89 @@
 #  PORTAUDIO_INCLUDE_DIRS - the Portaudio include directory
 #  PORTAUDIO_LIBRARIES - Link these to use Portaudio
 #  PORTAUDIO_DEFINITIONS - Compiler switches required for using Portaudio
-#  PORTAUDIO_VERSION - Portaudio version
-#
-#  Copyright (c) 2006 Andreas Schneider <mail@cynapses.org>
-#
-# Redistribution and use is allowed according to the terms of the New BSD license.
-# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
-#
+
+include (Let)
+include (DistUniverse)
+include (FindPackageHandleStandardArgs)
+
+macro (is_portaudio_missing RESULT)
+  execute_process ( 
+    COMMAND cmake/test-portaudio
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    RESULT_VARIABLE ${RESULT} 
+    OUTPUT_QUIET
+    ERROR_QUIET 
+    )
+endmacro ()
+
+macro (build_dependency NAME RESULT)
+  execute_process( 
+    COMMAND cmake/build-${NAME}
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    RESULT_VARIABLE ${RESULT}
+    OUTPUT_QUIET
+    ERROR_QUIET 
+    )
+endmacro ()
+
+macro (get_dependency NAME RESULT)
+  execute_process( 
+    COMMAND dist get ${NAME}-${DIST_UNIVERSE}
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    RESULT_VARIABLE ${RESULT}
+    OUTPUT_QUIET
+    ERROR_QUIET 
+    )
+endmacro ()
 
 
 if (PORTAUDIO_LIBRARIES AND PORTAUDIO_INCLUDE_DIRS)
-  # in cache already
-  set(PORTAUDIO_FOUND TRUE)
-else (PORTAUDIO_LIBRARIES AND PORTAUDIO_INCLUDE_DIRS)
-  if (NOT WIN32)
-   include(FindPkgConfig)
-   pkg_check_modules(PORTAUDIO2 portaudio-2.0)
-  endif (NOT WIN32)
+  set(PORTAUDIO_FOUND TRUE)             
+  
+else (PORTAUDIO_LIBRARIES AND PORTAUDIO_INCLUDE_DIRS)  
+  message (STATUS "Searching for portaudio")
+  is_portaudio_missing (PORTAUDIO_MISSING)
 
-  if (PORTAUDIO2_FOUND)
-    set(PORTAUDIO_INCLUDE_DIRS
-      ${PORTAUDIO2_INCLUDE_DIRS}
-    )
-    if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-      set(PORTAUDIO_LIBRARIES "${PORTAUDIO2_LIBRARY_DIRS}/lib${PORTAUDIO2_LIBRARIES}.dylib")
-    else (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-      set(PORTAUDIO_LIBRARIES
-        ${PORTAUDIO2_LIBRARIES}
+  if (PORTAUDIO_MISSING)
+    if (BUILD_DEPENDENCIES)
+      message(STATUS "Searching for portaudio -- missing, trying to build locally...")
+      build_dependency (portaudio PORTAUDIO_COMPILE_RESULT)
+      if (NOT PORTAUDIO_COMPILE_RESULT)
+        message(STATUS "Searching for portaudio -- done")
+      else ()
+        message(FATAL_ERROR "Could not build portaudio")
+      endif ()
+    else ()
+      message(STATUS "Searching for portaudio -- missing, trying to download from package server...")
+      get_dependency (portaudio PORTAUDIO_GET_RESULT)
+      if (NOT PORTAUDIO_GET_RESULT)
+        message(STATUS "Searching for portaudio -- done")
+      else ()
+        message(FATAL_ERROR "Could not download portaudio")
+      endif ()
+    endif ()
+  endif ()
+
+  letmany (CMAKE_FIND_LIBRARY_SUFFIXES ".a") 
+    find_path (PORTAUDIO_INCLUDE_DIR 
+      NAMES portaudio.h
+      PATH_SUFFIXES include
+      PATHS ${CMAKE_SOURCE_DIR}/external_libraries/portaudio/result
       )
-    endif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    set(PORTAUDIO_VERSION
-      19
-    )
-    set(PORTAUDIO_FOUND TRUE)
-  else (PORTAUDIO2_FOUND)
-    find_path(PORTAUDIO_INCLUDE_DIR
-      NAMES
-        portaudio.h
-      PATHS
-        /usr/include
-        /usr/local/include
-        /opt/local/include
-        /sw/include
-    )
-   
-    find_library(PORTAUDIO_LIBRARY
-      NAMES
-        portaudio
-      PATHS
-        /usr/lib
-        /usr/local/lib
-        /opt/local/lib
-        /sw/lib
-    )
-   
-    find_path(PORTAUDIO_LIBRARY_DIR
-      NAMES
-        portaudio
-      PATHS
-        /usr/lib
-        /usr/local/lib
-        /opt/local/lib
-        /sw/lib
-    )
-   
-    set(PORTAUDIO_INCLUDE_DIRS
-      ${PORTAUDIO_INCLUDE_DIR}
-    )
-    set(PORTAUDIO_LIBRARIES
-      ${PORTAUDIO_LIBRARY}
-    )
-   
-    set(PORTAUDIO_LIBRARY_DIRS
-      ${PORTAUDIO_LIBRARY_DIR}
-    )
-   
-    set(PORTAUDIO_VERSION
-      18
-    )
-   
-    if (PORTAUDIO_INCLUDE_DIRS AND PORTAUDIO_LIBRARIES)
-       set(PORTAUDIO_FOUND TRUE)
-    endif (PORTAUDIO_INCLUDE_DIRS AND PORTAUDIO_LIBRARIES)
-   
-    if (PORTAUDIO_FOUND)
-      if (NOT Portaudio_FIND_QUIETLY)
-        message(STATUS "Found Portaudio: ${PORTAUDIO_LIBRARIES}")
-      endif (NOT Portaudio_FIND_QUIETLY)
-    else (PORTAUDIO_FOUND)
-      if (Portaudio_FIND_REQUIRED)
-        message(FATAL_ERROR "Could not find Portaudio")
-      endif (Portaudio_FIND_REQUIRED)
-    endif (PORTAUDIO_FOUND)
-  endif (PORTAUDIO2_FOUND)
+    find_library (PORTAUDIO_LIBRARY
+      NAMES portaudio
+      PATH_SUFFIXES lib
+      PATHS ${CMAKE_SOURCE_DIR}/external_libraries/portaudio/result
+      )
+  endletmany (CMAKE_FIND_LIBRARY_SUFFIXES) 
 
-
-  # show the PORTAUDIO_INCLUDE_DIRS and PORTAUDIO_LIBRARIES variables only in the advanced view
-  mark_as_advanced(PORTAUDIO_INCLUDE_DIRS PORTAUDIO_LIBRARIES)
+  find_package_handle_standard_args (Portaudio 
+    DEFAULT_MSG 
+    PORTAUDIO_LIBRARY
+    PORTAUDIO_INCLUDE_DIR
+    )                
+  set(PORTAUDIO_LIBRARIES    ${PORTAUDIO_LIBRARY})
+  set(PORTAUDIO_INCLUDE_DIRS ${PORTAUDIO_INCLUDE_DIR})
 
 endif (PORTAUDIO_LIBRARIES AND PORTAUDIO_INCLUDE_DIRS)
 

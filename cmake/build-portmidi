@@ -1,0 +1,16 @@
+#!/bin/bash
+pushd external_libraries/portmidi;
+
+mkdir -p result \
+	&& pushd result \
+	&& cmake .. \
+	    -DCMAKE_BUILD_TYPE=Release \
+	    -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY="" \
+	    -DCMAKE_LIBRARY_OUTPUT_DIRECTORY="" \
+	    -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="" \
+	    -DCMAKE_OSX_ARCHITECTURES="i386;x86_64" \
+	&& make \
+	&& popd \
+	&& cp pm_common/portmidi.h result/portmidi.h
+
+popd;

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+pushd external_libraries/portaudio;
+rm -rf result;
+popd;

@@ -7,10 +7,26 @@
 
 set ( INSTALL_SCRIPT_LOCATION   https://raw.github.com/gist/3123346 )
 
+macro ( has_internet_connection result )
+  execute_process (
+    COMMAND ping -W 1 -c 1 google.com
+    RESULT_VARIABLE RES
+    OUTPUT_QUIET
+    ERROR_QUIET
+    )
+  if ( RES EQUAL 0 )
+    set ( ${result} TRUE )
+  else ()
+    set ( ${result} FALSE)
+  endif ()
+endmacro ()
+
 macro ( dist_installed result )
   execute_process ( 
     COMMAND which dist
-    RESULT_VARIABLE RES )
+    RESULT_VARIABLE RES
+    OUTPUT_QUIET 
+    )
   if ( RES EQUAL 0 )
     set ( ${result} TRUE )
   else ()
@@ -19,17 +35,36 @@ macro ( dist_installed result )
 endmacro ()
 
 macro ( install_dist )
-  execute_process ( COMMAND wget "${INSTALL_SCRIPT_LOCATION}/install-dist" )
-  execute_process ( COMMAND cmhod "o+x" "install-dist" )
-  execute_process ( COMMAND bash install-dist )
-  execute_process ( COMMAND rm install-dist )  
+  execute_process ( 
+    COMMAND wget "${INSTALL_SCRIPT_LOCATION}/install-dist"
+    OUTPUT_QUIET 
+  )
+  execute_process ( 
+    COMMAND cmhod "o+x" "install-dist"
+    OUTPUT_QUIET 
+  )
+  execute_process ( 
+    COMMAND bash install-dist
+    OUTPUT_QUIET 
+  )
+  execute_process ( 
+    COMMAND rm install-dist
+    OUTPUT_QUIET 
+  )
 endmacro ()
+
+message ( "-- Checking for dist" )
 
 dist_installed ( DIST_INSTALLED )
 if ( DIST_INSTALLED )
-  message ( "-- dist is already installed ")
+  message ( "-- Checking for dist -- already installed" )
 else ()
-  message ( "-- dist is missing, attempting to install: ")
-  install_dist ()
+  message ( "-- Checking for dist -- missing, attempting to install:" )
+  has_internet_connection ( HAS_INTERNET_CONNECTION )
+  if ( HAS_INTERNET_CONNECTION)
+    install_dist ()
+  else ()
+    message ( FATAL_ERROR "No internet connection" )
+  endif ()
 endif ()
 

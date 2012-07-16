@@ -15,6 +15,12 @@ set ( VERSION_Z 0 )
 set ( VERSION_SUFF "" )
 set ( VERSION "${VERSION_PRE}${VERSION_X}.${VERSION_Y}.${VERSION_Z}${VERSION_SUFF}" )
 
+if ( APPLE )
+  string( COMPARE NOTEQUAL "${CMAKE_OSX_ARCHITECTURES}" "i386" ARCH_NOT_32_BIT )
+  if ( ARCH_NOT_32_BIT )
+    message ( FATAL_ERROR "The Audio Engine does not support 64-bit mode yet." )
+  endif ()
+endif ()
 
 ## Build options
 
@@ -48,11 +54,16 @@ option ( BUILD_HTTP_SERVER        "" )
 option ( PREFER_NONBLOCKING       "Use non-blocking audio by default"         TRUE )       
 option ( PREFER_EXCLUSIVE         "Use exclusive audio streams by default"    TRUE )
 
+option ( BUILD_DEPENDENCIES       "Build dependencies locally"                FALSE)
+
 
 ## Misc settings
 
-include ( profiling )
-
+include ( Profiling )
+include ( InstallDist )
+include ( FindPortaudio )
+include ( FindPortmidi )
+include ( FindSndfile )
 
 ## Find libraries
 
@@ -160,5 +171,4 @@ add_subdirectory( test )
 # Testing ...
 add_custom_target( install_dist )
 
-include ( "InstallDist" )
 

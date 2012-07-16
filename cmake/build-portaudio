@@ -1,0 +1,8 @@
+#!/bin/bash
+pushd external_libraries/portaudio;
+
+./configure --prefix=`pwd`/result \
+		&& make install \
+		&& cp -R include/ result/include/
+
+popd;
