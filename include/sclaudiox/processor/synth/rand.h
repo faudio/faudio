@@ -29,6 +29,7 @@ public:
     bool isPlugin() { return false; }
 }; 
 
+#define SCL_PROCESSOR_RAND_TABLE_SIZE 529200
 
 // =============================================================================
 
@@ -36,7 +37,11 @@ class SCLAUDIO_API Rand : public AudioProcessor
 {
 public:    
     Rand()
-        : mDescr(NULL) {}
+        : mDescr(NULL)
+		, position(0)
+	{
+		fillTable();
+	}
 
     ~Rand() 
     {
@@ -57,13 +62,23 @@ public:
     {
         srand((unsigned) time(0));
     }
+
     void process(AudioProcessingInformation& info, AudioProcessingBuffer &signal)
-    {
-        for (int i = 0; i < (signal.numberOfChannels * signal.numberOfFrames); ++i)
-            signal.data[i] = (((float)rand()/(float)RAND_MAX) * 2.0 - 1.0) * 0.1;
+    {                             
+		int length = signal.numberOfChannels * signal.numberOfFrames;
+        for (int i = 0; i < length; ++i)
+            signal.data[i] = table[(++position) % SCL_PROCESSOR_RAND_TABLE_SIZE];
     }
     void cleanup(AudioProcessingInformation& info, AudioProcessingBuffer &signal) {}
-private:
+private:                                                                        
+	void fillTable()
+	{
+		for (int i = 0; i < SCL_PROCESSOR_RAND_TABLE_SIZE; ++i)
+			table[i] = ((float)rand()/((float)RAND_MAX/2) - 1) * 0.1;
+	}
+	
+	Sample table[SCL_PROCESSOR_RAND_TABLE_SIZE];
+	int position;
     RandDescription* mDescr;
 };
 

@@ -1,7 +1,7 @@
 # - Find sndfile
 # Find the native sndfile includes and libraries
 #
-#  SNDFILE_INCLUDE_DIR - where to find sndfile.h, etc.
+#  SNDFILE_INCLUDE_DIRS - where to find sndfile.h, etc.
 #  SNDFILE_LIBRARIES   - List of libraries when using libsndfile.
 #  SNDFILE_FOUND       - True if libsndfile found.
 
@@ -10,15 +10,15 @@ if(NO_LIBSNDFILE)
 	#	message(STATUS "FindSndfile: sndfile deactivated (NO_LIBSNDFILE)")
 	#endif()
 	set(SNDFILE_FOUND False)
-	set(SNDFILE_INCLUDE_DIR "nowhere")  # for onceonly check above
+	set(SNDFILE_INCLUDE_DIRS "nowhere")  # for onceonly check above
 	set(SNDFILE_LIBRARIES "")
 	add_definitions("-DNO_LIBSNDFILE")
-elseif (SNDFILE_INCLUDE_DIR AND SNDFILE_LIBRARY)
+elseif (SNDFILE_INCLUDE_DIRS AND SNDFILE_LIBRARY)
 	set(SNDFILE_LIBRARIES ${SNDFILE_LIBRARY})
 	set(SNDFILE_FOUND TRUE)
 elseif (APPLE)
 	set(SNDFILE_FOUND TRUE)
-	set(SNDFILE_INCLUDE_DIR ${CMAKE_CURRENT_LIST_DIR}/../external_libraries/libsndfile/)
+	set(SNDFILE_INCLUDE_DIRS ${CMAKE_CURRENT_LIST_DIR}/../external_libraries/libsndfile/)
 	set(SNDFILE_LIBRARIES ${CMAKE_CURRENT_LIST_DIR}/../platform/mac/lib/scUBlibsndfile.a)
 	add_definitions("-isystem ${CMAKE_CURRENT_LIST_DIR}/../external_libraries/libsndfile")
 
@@ -27,7 +27,7 @@ elseif (APPLE)
 	add_definitions("-DLIBSNDFILE_1018")
 
 else()
-	find_path(SNDFILE_INCLUDE_DIR sndfile.h)
+	find_path(SNDFILE_INCLUDE_DIRS sndfile.h)
 
 	find_library(SNDFILE_LIBRARY NAMES sndfile)
 
@@ -35,7 +35,7 @@ else()
 	# all listed variables are TRUE.
 	include(FindPackageHandleStandardArgs)
 	find_package_handle_standard_args(Sndfile DEFAULT_MSG
-		SNDFILE_LIBRARY SNDFILE_INCLUDE_DIR)
+		SNDFILE_LIBRARY SNDFILE_INCLUDE_DIRS)
 
 	if(SNDFILE_FOUND)
 		set(SNDFILE_LIBRARIES ${SNDFILE_LIBRARY})
@@ -44,4 +44,4 @@ else()
 	endif(SNDFILE_FOUND)
 
 endif()
-mark_as_advanced(SNDFILE_INCLUDE_DIR SNDFILE_LIBRARY)
+mark_as_advanced(SNDFILE_INCLUDE_DIRS SNDFILE_LIBRARY)

@@ -35,7 +35,7 @@ public:
         : mPtr(mit.mPtr) {}
     
     pointer_iterator& operator++() { ++mPtr; return *this; }
-    pointer_iterator operator++(T) { pointer_iterator tmp(*this); operator++(); return tmp; }
+    pointer_iterator operator++(int) { pointer_iterator tmp(*this); operator++(); return tmp; }
     bool operator==(const pointer_iterator& other) { return mPtr == other.mPtr; }
     bool operator!=(const pointer_iterator& other) { return mPtr != other.mPtr; }
     T& operator*() { return *mPtr; }

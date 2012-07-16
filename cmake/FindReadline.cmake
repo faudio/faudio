@@ -1,17 +1,17 @@
-if(NOT READLINE_INCLUDE_DIR OR NOT READLINE_LIBRARY)
-    find_path(READLINE_INCLUDE_DIR readline/readline.h)
+if(NOT READLINE_INCLUDE_DIRS OR NOT READLINE_LIBRARY)
+    find_path(READLINE_INCLUDE_DIRS readline/readline.h)
     find_library(READLINE_LIBRARY NAMES readline)
 endif()
 
-if (READLINE_INCLUDE_DIR AND READLINE_LIBRARY)
+if (READLINE_INCLUDE_DIRS AND READLINE_LIBRARY)
     set(READLINE_FOUND TRUE)
 endif()
 
-if (READLINE_INCLUDE_DIR AND EXISTS "${READLINE_INCLUDE_DIR}/readline/readline.h")
-  file(STRINGS "${READLINE_INCLUDE_DIR}/readline/readline.h"
+if (READLINE_INCLUDE_DIRS AND EXISTS "${READLINE_INCLUDE_DIRS}/readline/readline.h")
+  file(STRINGS "${READLINE_INCLUDE_DIRS}/readline/readline.h"
                READLINE_MAJOR_VERSION
        REGEX "^#define RL_VERSION_MAJOR.*$")
-  file(STRINGS "${READLINE_INCLUDE_DIR}/readline/readline.h"
+  file(STRINGS "${READLINE_INCLUDE_DIRS}/readline/readline.h"
                READLINE_MINOR_VERSION
        REGEX "^#define RL_VERSION_MINOR.*$")
 

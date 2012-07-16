@@ -1,12 +1,8 @@
-#
-# CMake build for the ScoreCleaner Audio Engine
-#
-# test with 
-#   rm -rf build && ./boot && make edit_cache
-# or
-# rm -rf build && \
-#     CMAKE_OSX_ARCHITECTURES=i386 ./boot && \
-#     make edit_cachec
+##
+##  CMake build for the ScoreCleaner Audio Engine
+##
+##  Test with
+##      rm -rf build && ./boot && make edit_cache
 
 cmake_minimum_required ( VERSION 2.8.8 )
 set ( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake )
@@ -51,9 +47,11 @@ option ( PREFER_EXCLUSIVE         "Use exclusive audio streams by default"    TR
 # See the Apple documentation 'Frameworks and Weak Linking'
       
 include_directories ( "include" )
+include_directories ( "${CMAKE_BINARY_DIR}/include" )
 include_directories ( "external_libraries/boost" )
 include_directories ( "external_libraries/vst" )
 include_directories ( "external_libraries/unicode" )
+include_directories ( "external_libraries/gtest/include" )
 include_directories ( "external_libraries/portaudio/result/include" )
 include_directories ( "external_libraries/portmidi/result" )
 include_directories ( "external_libraries/sndfile/result/include" )
@@ -64,8 +62,9 @@ set ( CMAKE_LIBRARY_PATH
   "external_libraries/portaudio/result/lib"
   "external_libraries/portmidi/result"
   "external_libraries/sndfile/result/lib"
-  "external_libraries/gtest/result"
+  # "external_libraries/gtest/result"
   "lib/mac/shared" # for ICU, remove soon
+  "lib/mac/gtest" # for gtest, remove soon
   # "lib/mac/static" # for boost_thread, remove soon
     )
   
@@ -84,7 +83,7 @@ find_library ( PORTMIDI           "libportmidi_s.a" )
 find_library ( ICU_DATA           "libicudata.48.1.1.dylib" )
 find_library ( ICU_IO             "libicuio.48.1.1.dylib" )
 find_library ( ICU_UC             "libicuuc.48.1.1.dylib" )
-find_library ( GTEST              "libgtest.dylib" )
+find_library ( GTEST              "gtest" )
                
 find_library ( COCOA              Cocoa )
 find_library ( COREAUDIO          CoreAudio )
@@ -96,41 +95,44 @@ find_library ( FLUIDSYNTH         FluidSynth )
 # libmicrohttpd ?
 # oscpack
 
-# list ( APPEND DEPS ${BOOST_THREAD} )
-list ( APPEND DEPS ${ICONV} )
-list ( APPEND DEPS ${SNDFILE} )
-list ( APPEND DEPS ${PORTAUDIO} )
-list ( APPEND DEPS ${PORTMIDI} )
-list ( APPEND DEPS ${ICU_DATA} )
-list ( APPEND DEPS ${ICU_IO} )
-list ( APPEND DEPS ${ICU_UC} )
-list ( APPEND DEPS ${GTEST} )
-list ( APPEND DEPS ${COCOA} )
-list ( APPEND DEPS ${COREAUDIO} )
-list ( APPEND DEPS ${COREMIDI} )
-list ( APPEND DEPS ${AUDIOUNIT} )
-list ( APPEND DEPS ${AUDIOTOOLBOX} )
-list ( APPEND DEPS ${FLUIDSYNTH} )
+list ( APPEND DEPENDENCIES ${ICONV} )
+list ( APPEND DEPENDENCIES ${SNDFILE} )
+list ( APPEND DEPENDENCIES ${PORTAUDIO} )
+list ( APPEND DEPENDENCIES ${PORTMIDI} )
+list ( APPEND DEPENDENCIES ${ICU_DATA} )
+list ( APPEND DEPENDENCIES ${ICU_IO} )
+list ( APPEND DEPENDENCIES ${ICU_UC} )
+list ( APPEND DEPENDENCIES ${GTEST} )
+list ( APPEND DEPENDENCIES ${COCOA} )
+list ( APPEND DEPENDENCIES ${COREAUDIO} )
+list ( APPEND DEPENDENCIES ${COREMIDI} )
+list ( APPEND DEPENDENCIES ${AUDIOUNIT} )
+list ( APPEND DEPENDENCIES ${AUDIOTOOLBOX} )
+list ( APPEND DEPENDENCIES ${FLUIDSYNTH} )
 
-find_package(Pthreads)
+find_package ( pthreads )
+find_package ( iconv )
 add_subdirectory ( external_libraries )
 
-list ( APPEND DEPS boost_system )
-list ( APPEND DEPS boost_filesystem )
-list ( APPEND DEPS boost_thread )
+list ( APPEND DEPENDENCIES BoostSystem )
+list ( APPEND DEPENDENCIES BoostFilesystem )
+list ( APPEND DEPENDENCIES BoostThread )
 
-add_subdirectory( src )
-# add_subdirectory( test )
-# add_subdirectory( tool )
+if ( PROFILING AND CMAKE_COMPILER_IS_GNUCXX )
+  add_definitions("-pg")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pg")
+endif ()
 
-add_custom_target ( foo ALL
-  COMMAND echo 1 )
-  
+set ( VERSION_STRING "\"${VERSION}\"" )
 configure_file ( 
   ${CMAKE_SOURCE_DIR}/include/sclaudiox/config.h.in
   ${CMAKE_BINARY_DIR}/include/sclaudiox/config.h
   )
 
+
+add_subdirectory( src )
+add_subdirectory( test )
+# add_subdirectory( tool )
 
 
 

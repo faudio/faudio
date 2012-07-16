@@ -6,9 +6,9 @@
 #
 #  PTHREADS_FOUND
 #      True if the Pthreads library was found
-#  PTHREADS_LIBRARY
+#  PTHREADS_LIBRARIES
 #      The location of the Pthreads library
-#  PTHREADS_INCLUDE_DIR
+#  PTHREADS_INCLUDE_DIRS
 #      The include directory of the Pthreads library
 #  PTHREADS_DEFINITIONS
 #      Preprocessor definitions to define (HAVE_PTHREAD_H is a fairly common

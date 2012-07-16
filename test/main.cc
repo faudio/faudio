@@ -34,7 +34,7 @@
 
 #ifdef SCL_OSX
     #define SOUNDFONT_PATH \
-        "/Users/hans/Documents/Kod/doremir/modus/resources/audio/FluidR3_GM.sf2"
+        "/Users/hans/modus/resources/audio/FluidR3_GM.sf2"
 #else
     #define SOUNDFONT_PATH \
         "C:/modus/app/resources/soundfonts/sound.sf2"
@@ -372,26 +372,26 @@ namespace test_cpp_api
     }              
 
 
-    TEST(Synth_FluidSynth, PlayNotes)
-    {
-        AudioProcessor*   synth  = new FluidSynth(SOUNDFONT_PATH);
-        AudioDevice*      in     = AudioDevice::defaultInputDevice();
-        AudioDevice*      out    = AudioDevice::defaultOutputDevice();
-        Stream*           stream = DeviceStream::open(in, out, synth);
-        MessageScheduler* sched  = stream->audioScheduler();
-    
-        stream->start();    
-        foreach( int p, list::fromRange(0,24) )
-        {
-            Message on  = messageFrom(0x90, 60 + p, 70);
-            Message off = messageFrom(0x90, 60 + p, 0);    
-            sched->sendNow(list::create(on));
-            sched->sendLater(90, list::create(off));
-            sleepMillis(100);
-        }
-        stream->stop();
-        sleepMillis(1000);
-    }
+    // TEST(Synth_FluidSynth, PlayNotes)
+    // {
+    //     AudioProcessor*   synth  = new FluidSynth(SOUNDFONT_PATH);
+    //     AudioDevice*      in     = AudioDevice::defaultInputDevice();
+    //     AudioDevice*      out    = AudioDevice::defaultOutputDevice();
+    //     Stream*           stream = DeviceStream::open(in, out, synth);
+    //     MessageScheduler* sched  = stream->audioScheduler();
+    // 
+    //     stream->start();    
+    //     foreach( int p, list::fromRange(0,24) )
+    //     {
+    //         Message on  = messageFrom(0x90, 60 + p, 70);
+    //         Message off = messageFrom(0x90, 60 + p, 0);    
+    //         sched->sendNow(list::create(on));
+    //         sched->sendLater(90, list::create(off));
+    //         sleepMillis(100);
+    //     }
+    //     stream->stop();
+    //     sleepMillis(1000);
+    // }
     
 
     TEST(AudioUnit, List)
@@ -400,17 +400,17 @@ namespace test_cpp_api
         {
             
         std::list<AudioUnit*> units = AudioUnit::audioUnits();
-        // foreach ( AudioUnit* unit, units )
-        // {             
-        //     std::cout << "" <<   unit->description()->name() << "\n";
-        //     std::cout << "    " << ( unit->description()->isPlugin() ? "Plugin" : "Non-plugin" ) << "\n";
-        //     std::cout << "    " << ( unit->description()->isAtomic() ? "Atomic" : "Non-atomic" ) << "\n";
-        //     std::cout << "    " << ( unit->description()->isStateful() ? "Stateful" : "Non-stateful" ) << "\n";
-        //     std::cout << "    Inputs: " << unit->description()->numberOfInputs() << "\n";
-        //     std::cout << "    Outputs: " << unit->description()->numberOfOutputs() << "\n";
-        // 
-        // }                     
-        // std::cout << "\n";
+        foreach ( AudioUnit* unit, units )
+        {             
+            std::cout << "" <<   unit->description()->name() << "\n";
+            // std::cout << "    " << ( unit->description()->isPlugin() ? "Plugin" : "Non-plugin" ) << "\n";
+            // std::cout << "    " << ( unit->description()->isAtomic() ? "Atomic" : "Non-atomic" ) << "\n";
+            // std::cout << "    " << ( unit->description()->isStateful() ? "Stateful" : "Non-stateful" ) << "\n";
+            // std::cout << "    Inputs: " << unit->description()->numberOfInputs() << "\n";
+            // std::cout << "    Outputs: " << unit->description()->numberOfOutputs() << "\n";
+        
+        }                     
+        std::cout << "\n";
         std::cout << "Number of Audio Units: " << units.size();
         std::cout << "\n";
 
@@ -589,11 +589,12 @@ int scl_test_ilist()
 }
 
 
+
 int main(int argc, char **argv)
 {
     // return scl_test_ilist();
-    return scl_test_boost_string_pred();
+    // return scl_test_boost_string_pred();
     
-    // ::testing::InitGoogleTest(&argc, argv);
-    // return RUN_ALL_TESTS();
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

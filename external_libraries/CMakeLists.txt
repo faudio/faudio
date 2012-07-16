@@ -1,51 +1,28 @@
 
+# Boost headers
+include_directories ( boost )
 
-if(TRUE)
-	include_directories(boost)
+# Boost.System library
+aux_source_directory(boost/libs/system/src BOOST_SYSTEM_SRC )
+add_library ( BoostSystem STATIC ${BOOST_SYSTEM_SRC} )
 
-	# boost system
-	aux_source_directory(boost/libs/system/src/ boost_system )
-	add_library(boost_system STATIC ${boost_system})
-
-	# boost filesystem
-	aux_source_directory(boost/libs/filesystem/src boost_filesystem_src)
-	add_library(boost_filesystem STATIC ${boost_filesystem_src})
-
-	# boost thread
-	#aux_source_directory(boost/libs/thread/src/ boost_thread_src )
-	list ( APPEND boost_thread_src boost/libs/thread/src/future.cpp )
-	
-	if(WIN32)
-		aux_source_directory(boost/libs/thread/src/win32/ boost_thread_platform )
-		add_definitions(-DBOOST_THREAD_BUILD_LIB)
-	elseif(PTHREADS_FOUND)
-		aux_source_directory(boost/libs/thread/src/pthread/ boost_thread_platform )
-	else()
-		message(SEND_ERROR "we need to implement boost_thread")
-	endif()
-
-	include_directories(${PTHREADS_INCLUDE_DIR})
-
-  # if(LTO)
-  #   set_property(TARGET boost_program_options boost_system boost_filesystem
-  #          APPEND PROPERTY COMPILE_FLAGS "-flto -flto-report")
-  # 
-  #   set_property(TARGET boost_program_options boost_system boost_filesystem
-  #          APPEND PROPERTY LINK_FLAGS "-flto -flto-report")
-  # endif()
-
-  # if (${DSO_VISIBILITY})
-  #   remove_definitions(-fvisibility=hidden)
-  # endif()
-
-	add_library(boost_thread STATIC ${boost_thread_src} ${boost_thread_platform})
+# Boost.Filesystem library
+aux_source_directory ( boost/libs/filesystem/src BOOST_FILESYSTEM_SRC )
+add_library ( BoostFilesystem STATIC ${BOOST_FILESYSTEM_SRC} )
 
 
-  # if(LTO)
-  #   set_property(TARGET boost_thread
-  #         APPEND PROPERTY COMPILE_FLAGS "-flto -flto-report")
-  # 
-  #   set_property(TARGET boost_thread
-  #         APPEND PROPERTY LINK_FLAGS "-flto -flto-report")
-  # endif()
-endif()
+# Boost.Thread library
+set ( BOOST_THREAD_SRC boost/libs/thread/src/future.cpp )
+
+if ( WIN32 )
+	aux_source_directory ( boost/libs/thread/src/win32/ BOOST_THREAD_PLATFORM )
+	add_definitions ( -DBOOST_THREAD_BUILD_LIB )
+elseif ( PTHREADS_FOUND )
+	aux_source_directory(boost/libs/thread/src/pthread/ BOOST_THREAD_PLATFORM )
+	include_directories(${PTHREADS_INCLUDE_DIRS} )
+else ()
+	message ( SEND_ERROR "Boost.Thread: Needs either pthreads or Windows" )
+endif ()
+
+add_library ( BoostThread STATIC ${BOOST_THREAD_SRC} ${BOOST_THREAD_PLATFORM} )
+

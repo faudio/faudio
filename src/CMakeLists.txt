@@ -1,62 +1,52 @@
 
-
-
-
 if ( APPLE )
-  list ( APPEND LIB_SRCS sclaudiox/processor/plugin/au.mm)
+  list ( APPEND SOURCE_FILES sclaudiox/processor/plugin/au.mm )
 endif ()
 
 if ( WIN32 )
-  list ( APPEND LIB_SRCS sclaudiox/processor/plugin/au_nil.cc)
+  list ( APPEND SOURCE_FILES sclaudiox/processor/plugin/au_nil.cc )
 endif ()
 
-list ( APPEND LIB_SRCS sclaudiox/scheduling/future.cc )
-list ( APPEND LIB_SRCS sclaudiox/processor.cc )
-list ( APPEND LIB_SRCS sclaudiox/processor/plugin/vst2.cc )
-list ( APPEND LIB_SRCS sclaudiox/processor/synth/fluid.cc )
-list ( APPEND LIB_SRCS sclaudiox/device/audio.cc )
-list ( APPEND LIB_SRCS sclaudiox/device/midi.cc )
-list ( APPEND LIB_SRCS sclaudiox/device/session.cc )
-list ( APPEND LIB_SRCS sclaudiox/stream.cc )
-list ( APPEND LIB_SRCS sclaudiox/stream/device/audio.cc )
-list ( APPEND LIB_SRCS sclaudiox/stream/device/midi.cc )
-list ( APPEND LIB_SRCS sclaudiox/util/immutable_list.cc )
-list ( APPEND LIB_SRCS sclaudiox/util/symbol.cc )
-list ( APPEND LIB_SRCS sclaudio.cc )
+list ( APPEND SOURCE_FILES 
+  sclaudiox/scheduling/future.cc
+  sclaudiox/processor.cc
+  sclaudiox/processor/plugin/vst2.cc
+  sclaudiox/processor/synth/fluid.cc
+  sclaudiox/device/audio.cc
+  sclaudiox/device/midi.cc
+  sclaudiox/device/session.cc
+  sclaudiox/stream.cc
+  sclaudiox/stream/device/audio.cc
+  sclaudiox/stream/device/midi.cc
+  sclaudiox/util/immutable_list.cc
+  sclaudiox/util/symbol.cc
+  sclaudio.cc )
 
 
-if ( ${APPLE} AND ${BUILD_DYLIB} )
+if ( APPLE AND BUILD_DYLIB )
   add_library ( sclaudio_dylib SHARED
-    ${LIB_SRCS}
+    ${SOURCE_FILES}
     )
   set_target_properties ( sclaudio_dylib PROPERTIES
-    OUTPUT_NAME
-      "sclaudio"
-    INSTALL_NAME_DIR
-      "/usr/local/lib/sclaudio.dylib"
-    LIBRARY_OUTPUT_DIRECTORY
-      "../"
+    OUTPUT_NAME                 sclaudio-${VERSION}
+    LIBRARY_OUTPUT_DIRECTORY    "../"
     )
-  target_link_libraries ( sclaudio_dylib ${DEPS} )
+  target_link_libraries ( sclaudio_dylib ${DEPENDENCIES} )
 endif()
 
-if( ${APPLE} AND ${BUILD_FRAMEWORK} )
+if( APPLE AND BUILD_FRAMEWORK )
   add_library ( ScoreCleanerAudio_framework SHARED
-    ${LIB_SRCS}
+    ${SOURCE_FILES}
     )
   set_target_properties ( ScoreCleanerAudio_framework PROPERTIES
-    FRAMEWORK
-      TRUE
-    OUTPUT_NAME
-      ScoreCleanerAudio
-    FRAMEWORK_VERSION
-      ${VERSION}
-    LIBRARY_OUTPUT_DIRECTORY
-      "../"
+    FRAMEWORK                   TRUE
+    OUTPUT_NAME                 ScoreCleanerAudio
+    FRAMEWORK_VERSION           ${VERSION}
+    LIBRARY_OUTPUT_DIRECTORY    "../"
     INSTALL_NAME_DIR
       "@executable_path/../Frameworks/ScoreCleanerAudio.framework/ScoreCleanerAudio"
     )
-  target_link_libraries ( ScoreCleanerAudio_framework ${DEPS} )
+  target_link_libraries ( ScoreCleanerAudio_framework ${DEPENDENCIES} )
 endif ()
 
 
@@ -72,102 +62,6 @@ endif ()
 
 
 
-
-
-# set(SCLX_OSX_SOURCES sclaudiox/processor/plugin/au.mm)
-#
-# set(SCLX_WIN_SOURCES sclaudiox/processor/plugin/au_nil.cc)
-#
-# if (${SCL_OSX})
-#   set(SCLX_NATIVE_SOURCES ${SCLX_OSX_SOURCES})
-# endif ()
-#
-# if (${SCL_WIN})
-#   set(SCLX_NATIVE_SOURCES ${SCLX_WIN_SOURCES})
-# endif ()
-#
-# set(SCLX_SOURCES ${SCLX_NATIVE_SOURCES}
-#
-#             sclaudiox/processor.cc
-#             sclaudiox/stream.cc
-#
-#             sclaudiox/scheduling/future.cc
-#
-#             sclaudiox/processor/plugin/vst2.cc
-#             sclaudiox/processor/synth/fluid.cc
-#
-#             sclaudiox/device/audio.cc
-#             sclaudiox/device/midi.cc
-#             sclaudiox/device/session.cc
-#             sclaudiox/stream/device/audio.cc
-#             sclaudiox/stream/device/midi.cc
-#
-#             sclaudiox/util/immutable_list.cc
-#             sclaudiox/util/symbol.cc)
-#
-# set(SCL_SOURCES  ${SCLX_SOURCES}
-#             sclaudio.cc)
-#
-# message("Including the following source files: ${SCL_SOURCES}")
-#
-# if(${CMAKE_COMPILER_IS_GNUCC})
-#   add_definitions("-Wreturn-type")
-# endif()
-#
-# ##
-# ## Build library
-# ##
-#
-# message("Compiler definitions (library): ${SCL_DEFINITIONS}")
-#
-# if(${SCL_OSX})
-#   option(BUILD_SCL_DYLIB   "Build an OS X dynamic library" FALSE)
-#   option(BUILD_SCL_FRAMEWORK "Build an OS X framework"     TRUE)
-#
-#   if(${BUILD_SCL_DYLIB})
-#     add_library(SCL_DYLIB SHARED ${SCL_SOURCES})
-#     set_target_properties(SCL_DYLIB
-#       PROPERTIES
-#         OUTPUT_NAME         "SCL"
-#         INSTALL_NAME_DIR      "/usr/local/lib/SCL.dylib"
-#         OSX_ARCHITECTURES       i386
-#         XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0"
-#         LIBRARY_OUTPUT_DIRECTORY  "../"
-#         COMPILE_DEFINITIONS     "${SCL_DEFINITIONS}")
-#     target_link_libraries(SCL_DYLIB ${SCL_LIBRARIES})
-#   endif()
-#
-#   if(${BUILD_SCL_FRAMEWORK})
-#     add_library(SCL SHARED ${SCL_SOURCES})
-#     set_target_properties(SCL
-#       PROPERTIES
-#         OUTPUT_NAME         "ScoreCleanerAudio"
-#         FRAMEWORK           TRUE
-#         FRAMEWORK_VERSION       "${SCL_VERSION}"
-#         INSTALL_NAME_DIR      "@executable_path/../Frameworks/ScoreCleanerAudio.framework/ScoreCleanerAudio"
-#         OSX_ARCHITECTURES       i386
-#         XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0"
-#         LIBRARY_OUTPUT_DIRECTORY  "../"
-#         COMPILE_DEFINITIONS     "${SCL_DEFINITIONS}")
-#     target_link_libraries(SCL ${SCL_LIBRARIES})
-#   endif()
-# endif()
-#
-#
-# if(${SCL_WIN})
-#   option(BUILD_SCL_DLL "Build a Windows dynamic library" TRUE)
-#
-#   if(${BUILD_SCL_DLL})
-#     add_library(SCL SHARED ${SCL_SOURCES})
-#     set_target_properties(SCL
-#       PROPERTIES
-#         OUTPUT_NAME        SCL
-#         COMPILE_DEFINITIONS    "${SCL_DEFINITIONS}")
-#     target_link_libraries(SCL ${SCL_LIBRARIES})
-#   endif()
-# endif()
-#
-#
 #
 # ##
 # ## Build command-line tool

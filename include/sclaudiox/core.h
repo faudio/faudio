@@ -27,8 +27,9 @@ namespace scl {
 
     /**
         An audio sample.
-     */
-    typedef float Sample;  
+     */                  
+    // FIXME
+    typedef float Sample;
 
 
     class SCLAUDIO_API FileHandle;

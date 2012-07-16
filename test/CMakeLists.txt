@@ -1,81 +1,26 @@
 
-
-
-
-
-
-
-
-
-
-
-
-##
-## Build unit tests
-##
-
-option(SCLAUDIO_PROFILE "Compile with profiler flags -pg set" FALSE)
-
-if(${SCLAUDIO_PROFILE})
-    add_definitions("-pg")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pg")
+if ( BUILD_TESTS )
+  set ( SCL_TEST_DEFINITIONS ${SCL_DEFINITIONS} )
+  add_executable ( scl_audio_tests "main.cc" )
+  if ( APPLE )
+    set_target_properties ( scl_audio_tests PROPERTIES
+      OUTPUT_NAME               "scl_audio_tests"
+      RUNTIME_OUTPUT_DIRECTORY  "../bin" 
+      )
+  endif ()
+  if ( WIN32 )
+    set_target_properties ( scl_audio_tests PROPERTIES
+      OUTPUT_NAME               "scl_audio_tests"
+      )
+  endif()
+  target_link_libraries ( scl_audio_tests
+    ScoreCleanerAudio_framework
+    # sclaudio_dylib
+    ${GTEST} )
 endif()
 
-option(BUILD_SCL_TESTS "Build unit tests" TRUE)
-
-if(${BUILD_SCL_TESTS})
-    set(SCL_TEST_DEFINITIONS ${SCL_DEFINITIONS})
-    message("Compiler definitions (unit tests): ${SCL_TEST_DEFINITIONS}")
-
-    add_executable(SCL_TESTS "main.cc")
-
-    if(${SCL_OSX})
-        set_target_properties(SCL_TESTS
-            PROPERTIES
-                OUTPUT_NAME               "SCL_tests"
-                OSX_ARCHITECTURES         i386
-                RUNTIME_OUTPUT_DIRECTORY  "../bin"
-                COMPILE_DEFINITIONS       "${SCL_TEST_DEFINITIONS}")
-    endif()
-
-    if(${SCL_WIN})
-        set_target_properties(SCL_TESTS
-            PROPERTIES
-                OUTPUT_NAME              "SCL_tests"
-                COMPILE_DEFINITIONS      "${SCL_TEST_DEFINITIONS}")
-    endif()
-
-    if(${SCL_OSX})
-        set(CMAKE_LIBRARY_PATH          "../lib/mac/static"
-                                        "../lib/mac/shared")
-        find_library(GTEST              "libgtest.a")
-    endif()
-    if(${SCL_WIN})
-        set(CMAKE_LIBRARY_PATH          "../lib/win/static"
-                                        "../lib/win/shared")
-        find_library(GTEST              "gtest.lib")
-    endif()
-
-    target_link_libraries(SCL_TESTS
-                          SCL
-                          ${GTEST})
-endif()
-
-##
-## Run tests after build
-##
-
-option(RUN_SCL_TESTS "Run unit tests after build" TRUE)
-
-if (${RUN_SCL_TESTS})
-    if(${SCL_OSX})
-        add_custom_command(TARGET SCL_TESTS POST_BUILD
-                           COMMAND "${CMAKE_CURRENT_BINARY_DIR}/../bin/SCL_tests")
-    endif()
-    if(${SCL_WIN})
-        message(${CMAKE_CURRENT_BINARY_DIR})
-        add_custom_command(TARGET SCL_TESTS POST_BUILD
-                           COMMAND "${CMAKE_CURRENT_BINARY_DIR}/../SCL_tests.exe") # this should work on OS X too!
-    endif()
-endif()
+add_custom_target ( test        
+  COMMENT "Run test suite"
+  DEPENDS scl_audio_tests
+  COMMAND "${CMAKE_CURRENT_BINARY_DIR}/../bin/scl_audio_tests" )
 

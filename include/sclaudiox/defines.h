@@ -6,12 +6,15 @@
  */
  
 #ifndef _SCLAUDIOX_DEFINES                                      
-#define _SCLAUDIOX_DEFINES                                      
+#define _SCLAUDIOX_DEFINES
 
 #include <stdint.h>
 #include "sclaudio/defines.h"
+#include "sclaudiox/config.h"
 
-#define SCL_VERSION "2.0.5"
+// FIXME test, remove soon
+#define SCL_PREFER_NONBLOCKING_AUDIO
+#define SCL_PREFER_EXCLUSIVE_AUDIO
 
 #ifdef _WIN32
     #define SCL_WIN

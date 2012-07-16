@@ -1,0 +1,8 @@
+
+Minor tasks, committed as 
+    AE-10 Minor fixes
+    
+- Set visibility=hidden on OS X. See Apple documentation 'Dynamic Library
+  Programming Topics'
+- Update ScoreCleanerAudio/Resources/Info.plist, see Apple documentation
+  'Framework Programming Guide'

@@ -100,7 +100,7 @@ inline void initLog()
 {    
     if (!initLogDone)
     {
-        logStream() << "ScoreCleaner Audio Engine v" << SCL_VERSION << "\n";
+        logStream() << "ScoreCleaner Audio Engine v" << SCL_AUDIO_ENGINE_VERSION << "\n";
         initLogDone = true;
     }
 }
