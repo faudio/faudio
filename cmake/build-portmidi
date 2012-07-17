@@ -14,3 +14,11 @@ mkdir -p result \
 	&& cp pm_common/portmidi.h result/portmidi.h
 
 popd;
+
+# Windows
+
+# cmake .. -G "MSYS Makefiles" \
+# 	-DCMAKE_BUILD_TYPE=Release \
+# 	-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY="" \
+# 	-DCMAKE_LIBRARY_OUTPUT_DIRECTORY="" \
+# 	-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=""

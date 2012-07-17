@@ -5,4 +5,9 @@ pushd external_libraries/portaudio;
 		&& make install \
 		&& cp -R include/ result/include/
 
-popd;
+popd;                                                 
+
+# Windows:
+# 	./configure --with-winapi=wasapi,asio --with-asiodir=../asio/ASIOSDK2/
+# 	make
+# 	ls lib/.libs

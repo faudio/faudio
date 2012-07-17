@@ -11,7 +11,7 @@ fi
 
 mkdir -p $BUILD_DIRECTORY;
 pushd $BUILD_DIRECTORY;
-cmake $@ ..;
+cmake "$@" ..;
 
 if [ $? -eq 0 ]; then
 	popd;
