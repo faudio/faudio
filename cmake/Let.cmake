@@ -16,7 +16,7 @@
 # 
 # 
 #    letmany ( CMAKE_FIND_LIBRARY_SUFFIXES ".a" )
-#      message(${CMAKE_FIND_LIBRARY_SUFFIXES})       # CMAKE_FIND_LIBRARY_SUFFIXES has value '.a'
+#      message (${CMAKE_FIND_LIBRARY_SUFFIXES})      # CMAKE_FIND_LIBRARY_SUFFIXES has value '.a'
 #    endletmany ( CMAKE_FIND_LIBRARY_SUFFIXES )      # CMAKE_FIND_LIBRARY_SUFFIXES is restored to its initial value
 
 
