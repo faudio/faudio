@@ -8,6 +8,6 @@ pushd external_libraries/portaudio;
 popd;                                                 
 
 # Windows:
-# 	./configure --with-winapi=wasapi,asio --with-asiodir=../asio/ASIOSDK2/
+# 	./configure --with-winapi=wasapi,asio --with-asiodir=../asio/ASIOSDK2/ --prefix=`pwd`/result
 # 	make
 # 	ls lib/.libs

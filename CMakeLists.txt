@@ -15,6 +15,9 @@ set ( VERSION_Z 0 )
 set ( VERSION_SUFF "" )
 set ( VERSION "${VERSION_PRE}${VERSION_X}.${VERSION_Y}.${VERSION_Z}${VERSION_SUFF}" )
 
+
+## Sanity checks
+
 if ( APPLE )
   string( COMPARE NOTEQUAL "${CMAKE_OSX_ARCHITECTURES}" "i386" ARCH_NOT_32_BIT )
   if ( ARCH_NOT_32_BIT )

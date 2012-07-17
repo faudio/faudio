@@ -73,6 +73,6 @@ endmacro ()
 if (APPLE)
   install_dist_osx ()
 else ()
-  message (STATUS "Could not install dist for this OS")
+  message (STATUS "Could not install dist for this OS -- ignoring ")
 endif ()
 
