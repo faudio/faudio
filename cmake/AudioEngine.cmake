@@ -1,10 +1,47 @@
 
 
-# function(make_existance_predicate 
-#   file 
-#   result)
-#   set(${result} "exists")
-# endfunction()
+function(make_existance_predicate 
+  result
+  file 
+  )
+  set(${result} exists ${file} PARENT_SCOPE)
+endfunction()
+
+
+function(run_predicate
+  result
+  predicate_type
+  predicate_argument
+  )
+
+  string(COMPARE EQUAL ${predicate_type} exists pred_is_exists)
+  
+  if(pred_is_exists)
+    run_predicate_exist(temp_result ${predicate_argument})
+    set(result ${temp_result} PARENT_SCOPE)
+  else()
+    message(FATAL_ERROR "Predicate type '${predicate_type}' does not exist")
+  endif()
+endfunction()  
+
+function(run_predicate_exist 
+  result
+  file 
+  )
+  # TODO really no cross-platform check in CMake?
+  execute_process(
+    COMMAND test -e ${file}
+    RESULT_VARIABLE temp_res)  
+  if(NOT temp_res)
+    set(${result} True PARENT_SCOPE)
+  else()
+    set(${result} False PARENT_SCOPE)
+  endif()
+endfunction()
+
+
+
+
 
 
 # Add a component to be compiled or fetched
@@ -26,7 +63,8 @@ endfunction()
 
 # Resolve all components
 function(resolve_components
-  component_list)
+  component_list
+  )
   foreach(name ${component_list})
     set(predicate         AudioEngine_${name}_predicate)
     set(build_executable  AudioEngine_${name}_build_executable)
@@ -47,8 +85,8 @@ function(resolve_component
   predicate
   build_executable
   clean_executable
-  package_name)
-  
+  package_name
+  )
   set(base_message "Resolving component ${name}")
   message(STATUS "${base_message}")
 
@@ -76,7 +114,11 @@ function(resolve_component
   endif()   
 endfunction()
 
-function(build_component name executable result)
+function(build_component 
+  name 
+  executable 
+  result
+  )
   execute_process( 
     COMMAND           executable
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -87,7 +129,11 @@ function(build_component name executable result)
   set(result ${execute_process_result} PARENT_SCOPE)
 endfunction()
 
-function(get_component name package_name result)
+function(get_component 
+  name 
+  package_name 
+  result
+  )
   execute_process( 
     COMMAND dist get ${package_name}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
