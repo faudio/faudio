@@ -1,0 +1,21 @@
+#!/bin/bash
+pushd external_libraries/portmidi;
+
+mkdir -p result \
+	&& pushd result \
+	&& cmake .. -G "MSYS Makefiles" \
+	    -DCMAKE_BUILD_TYPE=Release \
+	    -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY="lib" \
+	    -DCMAKE_LIBRARY_OUTPUT_DIRECTORY="lib" \
+	    -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="lib" \
+	    -DCMAKE_OSX_ARCHITECTURES="i386;x86_64" \
+	&& make \
+	&& popd \
+	&& mkdir -p result/include \
+	&& mkdir -p result/lib \
+	&& mv result/libportmidi.dll 	result/lib \
+	&& mv result/libportmidi.dll.a  result/lib \
+	&& mv result/libportmidi_s.a  	result/lib \
+	&& cp pm_common/portmidi.h result/include/portmidi.h;
+
+popd;

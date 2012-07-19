@@ -1,0 +1,11 @@
+#!/bin/bash
+pushd external_libraries/portaudio;
+
+./configure \
+	--with-winapi=wasapi,asio \
+	--with-asiodir=../asio/ASIOSDK2/ \
+	--prefix=`pwd`/result \
+		&& make install \
+		&& cp -R include/ result/include/
+
+popd;                                                 
