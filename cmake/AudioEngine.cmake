@@ -13,12 +13,11 @@ function(run_predicate
   predicate_type
   predicate_argument
   )
-
   string(COMPARE EQUAL ${predicate_type} exists pred_is_exists)
   
   if(pred_is_exists)
     run_predicate_exist(temp_result ${predicate_argument})
-    set(result ${temp_result} PARENT_SCOPE)
+    set(${result} ${temp_result} PARENT_SCOPE)
   else()
     message(FATAL_ERROR "Predicate type '${predicate_type}' does not exist")
   endif()
@@ -46,30 +45,30 @@ endfunction()
 
 # Add a component to be compiled or fetched
 # For each library, specify
-function(add_component
-  component_list             
+macro(add_component
+  component_list
   name
   predicate
-  build_excecutable
+  build_executable
   clean_executable
   package_name
   )
-  list(APPEND ${component_list} ${name} PARENT_SCOPE)
-  set(AudioEngine_${name}_predicate         ${predicate}        PARENT_SCOPE)
-  set(AudioEngine_${name}_build_executable  ${build_executable} PARENT_SCOPE)
-  set(AudioEngine_${name}_clean_executable  ${clean_executable} PARENT_SCOPE)
-  set(AudioEngine_${name}_package_name      ${package_name}     PARENT_SCOPE)
-endfunction()
+  list(APPEND ${component_list} ${name})
+  set(AudioEngine_${name}_predicate         ${predicate}        )
+  set(AudioEngine_${name}_build_executable  ${build_executable} )
+  set(AudioEngine_${name}_clean_executable  ${clean_executable} )
+  set(AudioEngine_${name}_package_name      ${package_name}     )
+endmacro()
 
 # Resolve all components
 function(resolve_components
   component_list
   )
-  foreach(name ${component_list})
-    set(predicate         AudioEngine_${name}_predicate)
-    set(build_executable  AudioEngine_${name}_build_executable)
-    set(clean_executable  AudioEngine_${name}_build_executable)
-    set(package_name      AudioEngine_${name}_package_name)
+  foreach(name ${${component_list}})
+    set(predicate         ${AudioEngine_${name}_predicate})
+    set(build_executable  ${AudioEngine_${name}_build_executable})
+    set(clean_executable  ${AudioEngine_${name}_clean_executable})
+    set(package_name      ${AudioEngine_${name}_package_name})
     resolve_component(
       ${name}
       ${predicate}
@@ -87,14 +86,21 @@ function(resolve_component
   clean_executable
   package_name
   )
+  # message(">> ${name}")
+  # message(">> ${predicate}")
+  # message(">> ${build_executable}")
+  # message(">> ${clean_executable}")
+  # message(">> ${package_name}")    
+  
   set(base_message "Resolving component ${name}")
   message(STATUS "${base_message}")
 
-  run_predicate(predicate predicate_result)
+  run_predicate(predicate_result ${${predicate}})
+
   if(predicate_result)
     message(STATUS "${base_message} -- found")    
   else()
-    if(build_dependencies)
+    if(BUILD_DEPENDENCIES) # FIXME global
       message(STATUS "${base_message} -- missing, trying to build locally...")
       build_component(${name} ${build_executable} compile_result)
       if(NOT compile_result)
@@ -111,7 +117,7 @@ function(resolve_component
         message(FATAL_ERROR "Could not download ${NAME}")
       endif()
     endif()
-  endif()   
+  endif()      
 endfunction()
 
 function(build_component 
@@ -120,11 +126,9 @@ function(build_component
   result
   )
   execute_process( 
-    COMMAND           executable
+    COMMAND           ${executable}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     RESULT_VARIABLE   execute_process_result
-    OUTPUT_QUIET
-    ERROR_QUIET 
     )                                        
   set(result ${execute_process_result} PARENT_SCOPE)
 endfunction()
@@ -138,8 +142,6 @@ function(get_component
     COMMAND dist get ${package_name}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     RESULT_VARIABLE ${RESULT}
-    OUTPUT_QUIET
-    ERROR_QUIET 
     )
   set(result ${execute_process_result} PARENT_SCOPE)
 endfunction()
