@@ -3,3 +3,4 @@
 cmake/clean-portaudio;
 cmake/clean-portmidi;
 cmake/clean-sndfile;
+cmake/clean-gtest;

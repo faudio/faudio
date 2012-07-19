@@ -62,16 +62,17 @@ option ( BUILD_DEPENDENCIES       "Build dependencies locally"                FA
 
 ## Misc settings
 
-include ( Profiling )
+include ( Profiling ) 
 include ( InstallDist )
-include ( FindPortaudio )
-include ( FindPortmidi )
-include ( FindSndfile )
 
 ## Find libraries
 
-find_package ( pthreads )
-find_package ( iconv )
+# find_package ( pthreads )
+# find_package ( iconv )
+# find_package ( portaudio )
+# find_package ( portmidi )
+# find_package ( sndfile )
+find_package ( gtest )
 
 add_definitions ( ${PTHREAD_DEFINITIONS} )
 add_definitions ( ${ICONV_DEFINITIONS} )
