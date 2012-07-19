@@ -1,5 +1,0 @@
-#!/bin/bash
-
-pushd external_libraries/portmidi;
-rm -rf result;
-popd;

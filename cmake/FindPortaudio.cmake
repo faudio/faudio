@@ -6,8 +6,7 @@
 #  PORTAUDIO_LIBRARIES - Link these to use Portaudio
 #  PORTAUDIO_DEFINITIONS - Compiler switches required for using Portaudio
 
-include (Let)
-include (DistUniverse)
+include (DynamicLet)
 include (FindPackageHandleStandardArgs)
 
 macro (is_dependency_missing NAME RESULT)

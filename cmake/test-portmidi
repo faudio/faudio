@@ -1,2 +1,0 @@
-#!/bin/bash
-test -e external_libraries/portmidi/result/portmidi.h

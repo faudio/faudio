@@ -21,19 +21,6 @@ macro ( has_internet_connection result )
   endif ()
 endmacro ()
 
-macro ( dist_installed result )
-  execute_process ( 
-    COMMAND which dist
-    RESULT_VARIABLE RES
-    OUTPUT_QUIET 
-    )
-  if ( RES EQUAL 0 )
-    set ( ${result} TRUE )
-  else ()
-    set ( ${result} FALSE)
-  endif ()
-endmacro ()
-
 macro ( install_dist )
   execute_process ( 
     COMMAND wget "${INSTALL_SCRIPT_LOCATION}/install-dist"
