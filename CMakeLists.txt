@@ -166,13 +166,13 @@ configure_file (
 
 ## Process source
 
-add_subdirectory( src )
-add_subdirectory( test )
+# add_subdirectory( src )
+# add_subdirectory( test )
 # add_subdirectory( tool )
 
 
 
 # Testing ...
-add_custom_target( install_dist )
+# add_custom_target( install_dist )
 
 

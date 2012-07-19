@@ -1,4 +1,7 @@
 #!/bin/bash
+git submodule init   external_libraries/sndfile;
+git submodule update external_libraries/sndfile;
+
 pushd external_libraries/sndfile;
 
 CFLAGS="-arch i386 -I /Developer/SDKs/MacOSX10.7.sdk/Developer/Headers/FlatCarbon/" \

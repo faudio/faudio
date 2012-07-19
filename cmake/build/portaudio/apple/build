@@ -1,13 +1,11 @@
 #!/bin/bash
+git submodule init   external_libraries/portaudio;
+git submodule update external_libraries/portaudio;
+
 pushd external_libraries/portaudio;
 
 ./configure --prefix=`pwd`/result \
 		&& make install \
 		&& cp -R include/ result/include/
 
-popd;                                                 
-
-# Windows:
-# 	./configure --with-winapi=wasapi,asio --with-asiodir=../asio/ASIOSDK2/ --prefix=`pwd`/result
-# 	make
-# 	ls lib/.libs
+popd;
