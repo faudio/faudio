@@ -129,6 +129,8 @@ function(build_component
     COMMAND           ${executable}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     RESULT_VARIABLE   execute_process_result
+    OUTPUT_QUIET
+    ERROR_QUIET 
     )                                        
   set(result ${execute_process_result} PARENT_SCOPE)
 endfunction()
@@ -142,6 +144,8 @@ function(get_component
     COMMAND dist get ${package_name}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     RESULT_VARIABLE ${RESULT}
+    OUTPUT_QUIET
+    ERROR_QUIET 
     )
   set(result ${execute_process_result} PARENT_SCOPE)
 endfunction()
