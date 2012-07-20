@@ -1,5 +1,5 @@
 #!/bin/bash
 
-# pushd external_libraries/sndfile;
-# rm -rf result;
-# popd;
+pushd external_libraries/sndfile;
+rm -rf result;
+popd;

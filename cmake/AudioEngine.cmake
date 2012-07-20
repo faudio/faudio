@@ -1,6 +1,7 @@
 
 
-function(make_existance_predicate 
+
+function(predicate_file_exists 
   result
   file 
   )
@@ -10,16 +11,16 @@ endfunction()
 
 function(run_predicate
   result
-  predicate_type
-  predicate_argument
+  type
+  args
   )
-  string(COMPARE EQUAL ${predicate_type} exists pred_is_exists)
+  string(COMPARE EQUAL ${type} exists pred_is_exists)
   
   if(pred_is_exists)
-    run_predicate_exist(temp_result ${predicate_argument})
+    run_predicate_exist(temp_result ${args})
     set(${result} ${temp_result} PARENT_SCOPE)
   else()
-    message(FATAL_ERROR "Predicate type '${predicate_type}' does not exist")
+    message(FATAL_ERROR "Predicate type '${type}' does not exist")
   endif()
 endfunction()  
 
@@ -39,10 +40,6 @@ function(run_predicate_exist
 endfunction()
 
 
-
-
-
-
 # Add a component to be compiled or fetched
 # For each library, specify
 macro(add_component
@@ -54,10 +51,10 @@ macro(add_component
   package_name
   )
   list(APPEND ${component_list} ${name})
-  set(AudioEngine_${name}_predicate         ${predicate}        )
-  set(AudioEngine_${name}_build_executable  ${build_executable} )
-  set(AudioEngine_${name}_clean_executable  ${clean_executable} )
-  set(AudioEngine_${name}_package_name      ${package_name}     )
+  set(AudioEngine_${name}_predicate         ${predicate})
+  set(AudioEngine_${name}_build_executable  ${build_executable})
+  set(AudioEngine_${name}_clean_executable  ${clean_executable})
+  set(AudioEngine_${name}_package_name      ${package_name})
 endmacro()
 
 # Resolve all components
@@ -79,19 +76,16 @@ function(resolve_components
 endfunction()
 
 
+
+# Internals
+
 function(resolve_component
   name
   predicate
   build_executable
   clean_executable
   package_name
-  )
-  # message(">> ${name}")
-  # message(">> ${predicate}")
-  # message(">> ${build_executable}")
-  # message(">> ${clean_executable}")
-  # message(">> ${package_name}")    
-  
+  )  
   set(base_message "Resolving component ${name}")
   message(STATUS "${base_message}")
 

@@ -51,21 +51,21 @@ path    = libgtest.dylib
 site    = doremir
 version = 19.0.0
 subpath = external_libraries/portaudio/result
-path    = lib/libportaudio.a, include
+path    = include, lib
 mode	= get/put
 
 [package "portmidi-mac"]
 site 	= doremir
 version = 2.17.0
 subpath = external_libraries/portmidi/result
-path    = libportmidi_s.a, portmidi.h
+path    = include, lib
 mode	= get/put
 
 [package "sndfile-mac"]
 site 	= doremir
 version = 1.0.25
 subpath = external_libraries/sndfile/result
-path    = lib/libsndfile.a, include
+path    = include, lib
 mode	= get/put
 
 
