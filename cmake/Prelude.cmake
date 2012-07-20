@@ -37,11 +37,17 @@ function(bool k x)
 endfunction()
 
 function(assert x m)
-    if(NOT assert)
+    if(NOT ${x})
         message(FATAL_ERROR ${m})
     endif()
 endfunction()
 
+
+# Nested structures
+
+macro(deref k x)
+    set(${k} ${${x}})
+endmacro()
 
 
 
@@ -140,32 +146,78 @@ endfunction()
 # -----------–-----------–-----------–-----------–-----------–-----------–
 message(STATUS "negate")
 
-set(x True)
-negate(y ${x})
-negate(z ${y})
-message(${x})
-message(${y})
-message(${z})
+function(test)
+    set(x True)
+    negate(y ${x})
+    negate(z ${y})
+    message(${x})
+    message(${y})
+    message(${z})
+endfunction()
+test()
+
+# -----------–-----------–-----------–-----------–-----------–-----------–
+message(STATUS "deref")
+
+function(test)
+    set(fox 12345)
+    set(fox2 fox)
+    deref(k ${fox2})
+    message(${k})
+endfunction()
+test()
+
 
 # -----------–-----------–-----------–-----------–-----------–-----------–
 message(STATUS "head")
 
-set(xs 1 2 3)
-head(k ${xs})
-message(${k})
-
+function(test)
+    set(xs 1 2 3)
+    head(k ${xs})
+    message(${k})
+endfunction()
+test()
 
 # -----------–-----------–-----------–-----------–-----------–-----------–
 message(STATUS "apply_unary")
 
-set(x 1)          
-apply_unary(a succ ${x})
-message(${a})
-
+function(test)
+    set(x 1)          
+    apply_unary(a succ ${x})
+    message(${a})
+endfunction()
+test()
 
 # -----------–-----------–-----------–-----------–-----------–-----------–
-message(STATUS "map")
+# message(STATUS "map")
+# 
+# set(as 1 2 3 4 5)          
+# map(bs succ ${as})
+# message(${bs})
 
-set(as 1 2 3 4 5)          
-map(bs succ ${as})
-message(${bs})
+function(foo x y z)
+    message("ARGC is ${ARGC}")
+    message("ARGV is ${ARGV}")
+    message("ARGN is ${ARGN}")
+    message("ARGV0 is ${ARGV0}")
+    message("ARGV1 is ${ARGV1}")
+    message("ARGV2 is ${ARGV2}")
+    message("x is ${x}")
+    message("y is ${y}")
+    message("z is ${z}")
+endfunction()
+
+set(x "1;2")
+foo("1;2" 3 4 5)
+
+# Variables in arg list are expanded
+# ARGC, ARGV0 ... ARGVn , parameters and ARGN are bound
+# ARGV are bound by concatenating ARGV0 ... ARGVn
+
+
+
+
+
+
+
+

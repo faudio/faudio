@@ -31,6 +31,15 @@ edit_cache:
 rebuild_cache: 
 	@pushd $(BUILD_DIRECTORY); make rebuild_cache; popd;
 
-.PHONY: foo
-foo: 
-	@pushd $(BUILD_DIRECTORY); make foo; popd;
+.PHONY: print_components
+print_components: 
+	@pushd $(BUILD_DIRECTORY); make print_components; popd;
+
+.PHONY: resolve_components
+resolve_components: 
+	@pushd $(BUILD_DIRECTORY); make resolve_components; popd;
+
+.PHONY: clean_components
+clean_components: 
+	@pushd $(BUILD_DIRECTORY); make clean_components; popd;
+

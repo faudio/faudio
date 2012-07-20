@@ -1,14 +1,28 @@
+# - Component manager for the Audio Engine
+# Author : Hans Hoglund 2012
+#
+#
+# Variables that influence the behaviour of this module:
+#
+#     AUDIO_ENGINE_SYSTEM_NAME            
+#         May be set to anything, otherwise deault to osx, msvc or msys.
+#
+#     AUDIO_ENGINE_SHOW_COMPONENT_OUTPUT
+#         To show intermediate build results on stdout/stderr.
+#
+#     AUDIO_ENGINE_BUILD_COMPONENTS
+#         To compile components locally.
 
-# FIXME  -  BUILD_DEPENDENCIES is global
-# FIXME  -  build_component and get_component should optionally show their output
 
-if(APPLE)
-  set(AUDIO_ENGINE_SYSTEM_NAME "osx")
-elseif(MSVC)
-  set(AUDIO_ENGINE_SYSTEM_NAME "msvc")
-elseif()
-  # TODO string(COMPRARE EQUAL ${CMAKE_GENERATOR} "MSYS Makefiles") or something
-  set(AUDIO_ENGINE_SYSTEM_NAME "msys")
+if (NOT AUDIO_ENGINE_SYSTEM_NAME)
+  if(APPLE)
+    set(AUDIO_ENGINE_SYSTEM_NAME "osx")
+  elseif(MSVC)
+    set(AUDIO_ENGINE_SYSTEM_NAME "msvc")
+  elseif()
+    # TODO string(COMPRARE EQUAL ${CMAKE_GENERATOR} "MSYS Makefiles") or something
+    set(AUDIO_ENGINE_SYSTEM_NAME "msys")
+  endif()
 endif()
 
 function(predicate_file_exists 
@@ -100,9 +114,26 @@ function(print_components
       ${predicate}
       ${build_executable}
       ${clean_executable}
-      ${package_name})
+      ${package_name}
+      )
   endforeach()
 endfunction()
+
+# TODO build, get, check status
+
+# Clean all components
+function(clean_components
+  list
+  )
+  foreach(name ${${list}})
+    set(clean_executable  ${AudioEngine_${list}_${name}_clean_executable})
+    clean_component(
+      ${name}
+      ${clean_executable}
+      )
+  endforeach()
+endfunction()
+
 
 # Resolve all components
 function(resolve_components
@@ -118,7 +149,8 @@ function(resolve_components
       ${predicate}
       ${build_executable}
       ${clean_executable}
-      ${package_name})
+      ${package_name}
+      )
   endforeach()
 endfunction()
 
@@ -139,6 +171,20 @@ function(print_component
   message(STATUS "    ${package_name}")
 endfunction()
 
+function(clean_component
+  name
+  executable
+  )           
+  set(base_message "Cleaning component ${name}")
+  message(STATUS ${base_message})
+  run_executable(${name} ${executable} clean_result)
+  if(NOT clean_result)
+    message(STATUS "${base_message} -- done")
+  else()
+    message(SEND_ERROR "${base_message} -- failed")
+  endif()
+endfunction()
+
 function(resolve_component
   name
   predicate
@@ -147,16 +193,16 @@ function(resolve_component
   package_name
   )  
   set(base_message "Resolving component ${name}")
-  message(STATUS "${base_message}")
+  message(STATUS ${base_message})
 
   run_predicate(predicate_result ${${predicate}})
 
   if(predicate_result)
     message(STATUS "${base_message} -- found")    
   else()
-    if(BUILD_DEPENDENCIES)
+    if(AUDIO_ENGINE_BUILD_COMPONENTS)
       message(STATUS "${base_message} -- missing, trying to build locally...")
-      build_component(${name} ${build_executable} compile_result)
+      run_executable(${name} ${build_executable} compile_result)
       if(NOT compile_result)
         message(STATUS "${base_message} -- done")
       else()
@@ -164,7 +210,7 @@ function(resolve_component
       endif()
     else()
       message(STATUS "${base_message} -- missing, trying to download from package server...")
-      get_component(${name} ${package_name} get_result)
+      run_package_manager(${name} ${package_name} get_result)
       if(NOT get_result)
         message(STATUS "${base_message} -- done")
       else()
@@ -174,8 +220,8 @@ function(resolve_component
   endif()      
 endfunction()
 
-function(build_component 
-  name 
+
+function(run_executable 
   executable 
   result
   )            
@@ -193,8 +239,7 @@ function(build_component
   set(result ${execute_process_result} PARENT_SCOPE)
 endfunction()
 
-function(get_component 
-  name 
+function(run_package_manager 
   package_name 
   result
   )
@@ -203,6 +248,7 @@ function(get_component
   else()
     set(execute_process_args OUTPUT_QUIET ERROR_QUIET)
   endif()
+  # FIXME name and command style of package manager is hardcoded
   execute_process( 
     COMMAND             dist get ${package_name}
     WORKING_DIRECTORY   ${CMAKE_SOURCE_DIR}
