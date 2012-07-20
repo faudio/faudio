@@ -12,7 +12,13 @@
 #
 #     AUDIO_ENGINE_BUILD_COMPONENTS
 #         To compile components locally.
+#
+#     AUDIO_ENGINE_WORKING_DIR
+#         Dir in which to run executables.
 
+message(">>>>>> "${AUDIO_ENGINE_BUILD_COMPONENTS})
+message(">>>>>> "${AUDIO_ENGINE_SHOW_COMPONENT_OUTPUT})
+message(">>>>>> "${AUDIO_ENGINE_WORKING_DIR})
 
 if (NOT AUDIO_ENGINE_SYSTEM_NAME)
   if(APPLE)
@@ -37,9 +43,17 @@ function(run_predicate_file_exists
   file 
   )
   # TODO really no cross-platform check in CMake?
+  if(${AUDIO_ENGINE_SHOW_COMPONENT_OUTPUT})
+    set(execute_process_args "")
+  else()
+    set(execute_process_args OUTPUT_QUIET ERROR_QUIET)
+  endif()
   execute_process(
     COMMAND test -e ${file}
-    RESULT_VARIABLE temp_result)  
+    RESULT_VARIABLE temp_result
+    WORKING_DIRECTORY ${AUDIO_ENGINE_WORKING_DIR}
+    ${execute_process_args}
+    )  
   # TODO use negate_inline from Prelude?
   if(NOT temp_result)
     set(${result} True PARENT_SCOPE)
@@ -177,7 +191,7 @@ function(clean_component
   )           
   set(base_message "Cleaning component ${name}")
   message(STATUS ${base_message})
-  run_executable(${name} ${executable} clean_result)
+  run_executable(${executable} clean_result)
   if(NOT clean_result)
     message(STATUS "${base_message} -- done")
   else()
@@ -202,7 +216,7 @@ function(resolve_component
   else()
     if(AUDIO_ENGINE_BUILD_COMPONENTS)
       message(STATUS "${base_message} -- missing, trying to build locally...")
-      run_executable(${name} ${build_executable} compile_result)
+      run_executable(${build_executable} compile_result)
       if(NOT compile_result)
         message(STATUS "${base_message} -- done")
       else()
@@ -229,11 +243,14 @@ function(run_executable
     set(execute_process_args "")
   else()
     set(execute_process_args OUTPUT_QUIET ERROR_QUIET)
-  endif()
+  endif()                          
+message(">>>> ${executable}")
+message(">>>> ${AUDIO_ENGINE_WORKING_DIR}")
+  
   execute_process( 
     COMMAND           ${executable}
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     RESULT_VARIABLE   execute_process_result
+    WORKING_DIRECTORY ${AUDIO_ENGINE_WORKING_DIR}
     ${execute_process_args} 
     )                                        
   set(result ${execute_process_result} PARENT_SCOPE)
@@ -251,8 +268,8 @@ function(run_package_manager
   # FIXME name and command style of package manager is hardcoded
   execute_process( 
     COMMAND             dist get ${package_name}
-    WORKING_DIRECTORY   ${CMAKE_SOURCE_DIR}
     RESULT_VARIABLE     execute_process_result
+    WORKING_DIRECTORY ${AUDIO_ENGINE_WORKING_DIR}
     ${execute_process_args}
     )
   set(result ${execute_process_result} PARENT_SCOPE)

@@ -181,10 +181,10 @@ option ( BUILD_DEPENDENCIES       "Build dependencies locally"                FA
 # run_predicate(result ${foo_exists})
 # message(${result})
 
+# TODO pass AUDIO_ENGINE_BUILD_COMPONENTS and friends
 
 add_custom_target(print_components
   COMMAND cmake -P "${CMAKE_SOURCE_DIR}/cmake/print_components.cmake"
-  
   )
 
 add_custom_target(resolve_components
