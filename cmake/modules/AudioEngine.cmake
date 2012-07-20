@@ -1,32 +1,23 @@
 # - Component manager for the Audio Engine
 # Author : Hans Hoglund 2012
 #
-#
 # Variables that influence the behaviour of this module:
 #
 #     AUDIO_ENGINE_SYSTEM_NAME
 #         May be set to anything, otherwise deault to osx, msvc or msys.
-#
 #     AUDIO_ENGINE_SHOW_COMPONENT_OUTPUT
 #         Set to non-false to show intermediate build results on stdout/stderr.
-#
 #     AUDIO_ENGINE_BUILD_COMPONENTS
 #         Set to non-false to compile components locally.
-#
 #     AUDIO_ENGINE_WORKING_DIR
-#         Directory in which to run executables.
+#         Directory in which to run the supplied executables.
 
-if (NOT AUDIO_ENGINE_SYSTEM_NAME)
-  if(APPLE)
-    set(AUDIO_ENGINE_SYSTEM_NAME "osx")
-  elseif(MSVC)
-    set(AUDIO_ENGINE_SYSTEM_NAME "msvc")
-  elseif()
-    # TODO string(COMPRARE EQUAL ${CMAKE_GENERATOR} "MSYS Makefiles") or something
-    set(AUDIO_ENGINE_SYSTEM_NAME "msys")
-  endif()
-endif()
+# ==============================================================================
+# Public functions
+# ==============================================================================
 
+# Set a variable to a predicate that checks whether the given file exists. 
+# The passed variable can then be passed to run_predicate().
 function(predicate_file_exists
   result
   file
@@ -34,30 +25,8 @@ function(predicate_file_exists
   set(${result} file_exists ${file} PARENT_SCOPE)
 endfunction()
 
-function(run_predicate_file_exists
-  result
-  file
-  )
-  # TODO really no cross-platform check in CMake?
-  if(${AUDIO_ENGINE_SHOW_COMPONENT_OUTPUT})
-    set(execute_process_args "")
-  else()
-    set(execute_process_args OUTPUT_QUIET ERROR_QUIET)
-  endif()
-  execute_process(
-    COMMAND test -e ${file}
-    RESULT_VARIABLE temp_result
-    WORKING_DIRECTORY ${AUDIO_ENGINE_WORKING_DIR}
-    ${execute_process_args}
-    )
-  # TODO use negate_inline from Prelude?
-  if(NOT temp_result)
-    set(${result} True PARENT_SCOPE)
-  else()
-    set(${result} False PARENT_SCOPE)
-  endif()
-endfunction()
-
+# Set a variable to a predicate that checks whether the given file exists. 
+# The passed variable can then be passed to run_predicate().
 function(run_predicate
   result
   type
@@ -73,11 +42,10 @@ function(run_predicate
   endif()
 endfunction()
 
-# Add a component to be compiled or fetched
+# Add a component to be built or downloaded.
 #
 # The component should have a standard structure, providing a folder in ${AUDIO_ENGINE_COMPONENTS_DIR}
 # named ${name}, with a build/build and build/clean executable.
-#
 macro(add_standard_component
   list
   name
@@ -93,7 +61,15 @@ macro(add_standard_component
     "${name}-${system}")
 endmacro()
 
-# Add a component to be compiled or fetched
+# Add a component to be built or downloaded.
+#   predicate         
+#     Should be a predicate (see above) to check it the component needs to be built or downloaded.
+#   build_executable  
+#     Should be the name of an executable that will build the component if requested.           
+#   clean_executable  
+#     Should be the name of an executable that will remove the component if requested.           
+#   package_name      
+#     Should be the name of the component on the package server.           
 macro(add_component
   list
   name
@@ -145,7 +121,9 @@ function(clean_components
 endfunction()
 
 
-# Resolve all components
+# Resolve all components. That is, for each component check whether it needs
+# to be resolved using the predicate, then either download or compile it
+# based on the value of AUDIO_ENGINE_BUILD_COMPONENTS.
 function(resolve_components
   list
   )
@@ -165,7 +143,33 @@ function(resolve_components
 endfunction()
 
 
-# Internals
+# ==============================================================================
+# Internal functions
+# ==============================================================================
+
+function(run_predicate_file_exists
+  result
+  file
+  )
+  # TODO really no cross-platform check in CMake?
+  if(${AUDIO_ENGINE_SHOW_COMPONENT_OUTPUT})
+    set(execute_process_args "")
+  else()
+    set(execute_process_args OUTPUT_QUIET ERROR_QUIET)
+  endif()
+  execute_process(
+    COMMAND test -e ${file}
+    RESULT_VARIABLE temp_result
+    WORKING_DIRECTORY ${AUDIO_ENGINE_WORKING_DIR}
+    ${execute_process_args}
+    )
+  # TODO use negate_inline from Prelude?
+  if(NOT temp_result)
+    set(${result} True PARENT_SCOPE)
+  else()
+    set(${result} False PARENT_SCOPE)
+  endif()
+endfunction()
 
 function(print_component
   name
@@ -269,5 +273,23 @@ function(run_package_manager
   set(result ${execute_process_result} PARENT_SCOPE)
 endfunction()
 
+# ==============================================================================
+# Module init
+# ==============================================================================
 
+macro(init_audio_engine)
+  if (NOT AUDIO_ENGINE_SYSTEM_NAME)
+    if(APPLE)
+      set(AUDIO_ENGINE_SYSTEM_NAME "osx")
+    elseif(MSVC)
+      set(AUDIO_ENGINE_SYSTEM_NAME "msvc")
+    elseif()
+      # TODO string(COMPRARE EQUAL ${CMAKE_GENERATOR} "MSYS Makefiles") or something
+      set(AUDIO_ENGINE_SYSTEM_NAME "msys")
+    endif()
+    # TODO else FATAL_ERROR unknown system
+  endif()
+endmacro()
+
+init_audio_engine()
 
