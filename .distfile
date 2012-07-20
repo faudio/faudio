@@ -32,41 +32,41 @@ mode    = put
 
 # boost is source only/no-build
 
-[package "fluidsynth-mac"]
+[package "fluidsynth-osx"]
 site    = doremir
 version = 1.1.15
-mode	= get/put
+mode	  = get/put
 # FIXME
 
 # glib is no-build
 
-[package "gtest-mac"]
+[package "gtest-osx"]
 site    = doremir
 version = 0.0.0
-mode	= get/put
+mode	  = get/put
 subpath = external_libraries/gtest/result
 path    = libgtest.dylib
 
-[package "portaudio-mac"]
+[package "portaudio-osx"]
 site    = doremir
 version = 19.0.0
 subpath = external_libraries/portaudio/result
 path    = include, lib
-mode	= get/put
+mode	  = get/put
 
-[package "portmidi-mac"]
-site 	= doremir
+[package "portmidi-osx"]
+site 	  = doremir
 version = 2.17.0
 subpath = external_libraries/portmidi/result
 path    = include, lib
-mode	= get/put
+mode	  = get/put
 
-[package "sndfile-mac"]
-site 	= doremir
+[package "sndfile-osx"]
+site 	  = doremir
 version = 1.0.25
 subpath = external_libraries/sndfile/result
 path    = include, lib
-mode	= get/put
+mode	  = get/put
 
 
 

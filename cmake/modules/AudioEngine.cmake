@@ -4,21 +4,17 @@
 #
 # Variables that influence the behaviour of this module:
 #
-#     AUDIO_ENGINE_SYSTEM_NAME            
+#     AUDIO_ENGINE_SYSTEM_NAME
 #         May be set to anything, otherwise deault to osx, msvc or msys.
 #
 #     AUDIO_ENGINE_SHOW_COMPONENT_OUTPUT
-#         To show intermediate build results on stdout/stderr.
+#         Set to non-false to show intermediate build results on stdout/stderr.
 #
 #     AUDIO_ENGINE_BUILD_COMPONENTS
-#         To compile components locally.
+#         Set to non-false to compile components locally.
 #
 #     AUDIO_ENGINE_WORKING_DIR
-#         Dir in which to run executables.
-
-message(">>>>>> "${AUDIO_ENGINE_BUILD_COMPONENTS})
-message(">>>>>> "${AUDIO_ENGINE_SHOW_COMPONENT_OUTPUT})
-message(">>>>>> "${AUDIO_ENGINE_WORKING_DIR})
+#         Directory in which to run executables.
 
 if (NOT AUDIO_ENGINE_SYSTEM_NAME)
   if(APPLE)
@@ -31,16 +27,16 @@ if (NOT AUDIO_ENGINE_SYSTEM_NAME)
   endif()
 endif()
 
-function(predicate_file_exists 
+function(predicate_file_exists
   result
-  file 
+  file
   )
   set(${result} file_exists ${file} PARENT_SCOPE)
 endfunction()
 
-function(run_predicate_file_exists 
+function(run_predicate_file_exists
   result
-  file 
+  file
   )
   # TODO really no cross-platform check in CMake?
   if(${AUDIO_ENGINE_SHOW_COMPONENT_OUTPUT})
@@ -53,7 +49,7 @@ function(run_predicate_file_exists
     RESULT_VARIABLE temp_result
     WORKING_DIRECTORY ${AUDIO_ENGINE_WORKING_DIR}
     ${execute_process_args}
-    )  
+    )
   # TODO use negate_inline from Prelude?
   if(NOT temp_result)
     set(${result} True PARENT_SCOPE)
@@ -68,7 +64,7 @@ function(run_predicate
   args
   )
   string(COMPARE EQUAL ${type} file_exists pred_is_file_exists)
-  
+
   if(pred_is_file_exists)
     run_predicate_file_exists(temp_result ${args})
     set(${result} ${temp_result} PARENT_SCOPE)
@@ -77,7 +73,7 @@ function(run_predicate
   endif()
 endfunction()
 
-# Add a component to be compiled or fetched                      
+# Add a component to be compiled or fetched
 #
 # The component should have a standard structure, providing a folder in ${AUDIO_ENGINE_COMPONENTS_DIR}
 # named ${name}, with a build/build and build/clean executable.
@@ -116,7 +112,7 @@ endmacro()
 # Print all components
 function(print_components
   list
-  )           
+  )
   message(STATUS "Listing components:")
   foreach(name ${${list}})
     set(predicate         ${AudioEngine_${list}_${name}_predicate})
@@ -177,7 +173,7 @@ function(print_component
   build_executable
   clean_executable
   package_name
-  )           
+  )
   message(STATUS "  ${name}")
   message(STATUS "    ${predicate}")
   message(STATUS "    ${build_executable}")
@@ -188,7 +184,7 @@ endfunction()
 function(clean_component
   name
   executable
-  )           
+  )
   set(base_message "Cleaning component ${name}")
   message(STATUS ${base_message})
   run_executable(${executable} clean_result)
@@ -205,14 +201,14 @@ function(resolve_component
   build_executable
   clean_executable
   package_name
-  )  
+  )
   set(base_message "Resolving component ${name}")
   message(STATUS ${base_message})
 
   run_predicate(predicate_result ${${predicate}})
 
   if(predicate_result)
-    message(STATUS "${base_message} -- found")    
+    message(STATUS "${base_message} -- found")
   else()
     if(AUDIO_ENGINE_BUILD_COMPONENTS)
       message(STATUS "${base_message} -- missing, trying to build locally...")
@@ -231,33 +227,31 @@ function(resolve_component
         message(FATAL_ERROR "Could not download ${NAME}")
       endif()
     endif()
-  endif()      
+  endif()
 endfunction()
 
 
-function(run_executable 
-  executable 
+function(run_executable
+  executable
   result
-  )            
+  )
   if(${AUDIO_ENGINE_SHOW_COMPONENT_OUTPUT})
     set(execute_process_args "")
   else()
     set(execute_process_args OUTPUT_QUIET ERROR_QUIET)
-  endif()                          
-message(">>>> ${executable}")
-message(">>>> ${AUDIO_ENGINE_WORKING_DIR}")
-  
-  execute_process( 
+  endif()
+
+  execute_process(
     COMMAND           ${executable}
     RESULT_VARIABLE   execute_process_result
     WORKING_DIRECTORY ${AUDIO_ENGINE_WORKING_DIR}
-    ${execute_process_args} 
-    )                                        
+    ${execute_process_args}
+    )
   set(result ${execute_process_result} PARENT_SCOPE)
 endfunction()
 
-function(run_package_manager 
-  package_name 
+function(run_package_manager
+  package_name
   result
   )
   if(${AUDIO_ENGINE_SHOW_COMPONENT_OUTPUT})
@@ -266,7 +260,7 @@ function(run_package_manager
     set(execute_process_args OUTPUT_QUIET ERROR_QUIET)
   endif()
   # FIXME name and command style of package manager is hardcoded
-  execute_process( 
+  execute_process(
     COMMAND             dist get ${package_name}
     RESULT_VARIABLE     execute_process_result
     WORKING_DIRECTORY ${AUDIO_ENGINE_WORKING_DIR}

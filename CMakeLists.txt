@@ -5,7 +5,7 @@
 ##      rm -rf build && ./boot && make edit_cache
 
 cmake_minimum_required ( VERSION 2.8.8 )
-set ( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake )
+set ( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules )
 
 project ( ScoreCleanerAudioEngine C CXX )
 set ( VERSION_PRE "" )
@@ -184,15 +184,15 @@ option ( BUILD_DEPENDENCIES       "Build dependencies locally"                FA
 # TODO pass AUDIO_ENGINE_BUILD_COMPONENTS and friends
 
 add_custom_target(print_components
-  COMMAND cmake -P "${CMAKE_SOURCE_DIR}/cmake/print_components.cmake"
+  COMMAND cmake -P "${CMAKE_SOURCE_DIR}/cmake/scripts/print_components.cmake"
   )
 
 add_custom_target(resolve_components
-  COMMAND cmake -P "${CMAKE_SOURCE_DIR}/cmake/resolve_components.cmake"
+  COMMAND cmake -P "${CMAKE_SOURCE_DIR}/cmake/scripts/resolve_components.cmake"
   )
 
 add_custom_target(clean_components
-  COMMAND cmake -P "${CMAKE_SOURCE_DIR}/cmake/clean_components.cmake"
+  COMMAND cmake -P "${CMAKE_SOURCE_DIR}/cmake/scripts/clean_components.cmake"
   )
 
 
