@@ -25,8 +25,7 @@ function(predicate_file_exists
   set(${result} file_exists ${file} PARENT_SCOPE)
 endfunction()
 
-# Set a variable to a predicate that checks whether the given file exists. 
-# The passed variable can then be passed to run_predicate().
+# Run a given predicate (created by a predicate_ ... function).
 function(run_predicate
   result
   type
