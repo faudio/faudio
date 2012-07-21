@@ -183,16 +183,16 @@ option ( BUILD_DEPENDENCIES       "Build dependencies locally"                FA
 
 # TODO pass AUDIO_ENGINE_BUILD_COMPONENTS and friends
 
-add_custom_target(print_components
-  COMMAND cmake -P "${CMAKE_SOURCE_DIR}/cmake/scripts/print_components.cmake"
+add_custom_target(components_print
+  COMMAND cmake -P "${CMAKE_SOURCE_DIR}/cmake/scripts/components_print.cmake"
   )
 
-add_custom_target(resolve_components
-  COMMAND cmake -P "${CMAKE_SOURCE_DIR}/cmake/scripts/resolve_components.cmake"
+add_custom_target(components_resolve
+  COMMAND cmake -P "${CMAKE_SOURCE_DIR}/cmake/scripts/components_resolve.cmake"
   )
 
-add_custom_target(clean_components
-  COMMAND cmake -P "${CMAKE_SOURCE_DIR}/cmake/scripts/clean_components.cmake"
+add_custom_target(components_clean
+  COMMAND cmake -P "${CMAKE_SOURCE_DIR}/cmake/scripts/components_clean.cmake"
   )
 
 
