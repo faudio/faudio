@@ -6,9 +6,8 @@ pushd external_libraries/portaudio/source;
 
 ./configure \
     --prefix=`pwd`/../result \
-		
+	  && make \
 		&& make install \
-		
 		&& cp -R include/ ../result/include/
 
 popd;
