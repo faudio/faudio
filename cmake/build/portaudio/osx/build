@@ -1,11 +1,11 @@
 #!/bin/bash
-git submodule init   external_libraries/portaudio;
-git submodule update external_libraries/portaudio;
+git submodule init   external_libraries/portaudio/source;
+git submodule update external_libraries/portaudio/source;
 
-pushd external_libraries/portaudio;
+pushd external_libraries/portaudio/source;
 
-./configure --prefix=`pwd`/result \
+./configure --prefix=`pwd`/../result \
 		&& make install \
-		&& cp -R include/ result/include/
+		&& cp -R include/ ../result/include/
 
 popd;

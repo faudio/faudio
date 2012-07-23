@@ -1,11 +1,11 @@
 #!/bin/bash
-git submodule init   external_libraries/portmidi;
-git submodule update external_libraries/portmidi;
+git submodule init   external_libraries/portmidi/source;
+git submodule update external_libraries/portmidi/source;
 
-pushd external_libraries/portmidi;
+pushd external_libraries/portmidi/source;
 
-mkdir -p result \
-	&& pushd result \
+mkdir -p build \
+	&& pushd build \
 	&& cmake .. -G "MSYS Makefiles" \
 	    -DCMAKE_BUILD_TYPE=Release \
 	    -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY="lib" \
@@ -14,11 +14,11 @@ mkdir -p result \
 	    -DCMAKE_OSX_ARCHITECTURES="i386;x86_64" \
 	&& make \
 	&& popd \
-	&& mkdir -p result/include \
-	&& mkdir -p result/lib \
-	&& mv result/libportmidi.dll 	result/lib \
-	&& mv result/libportmidi.dll.a  result/lib \
-	&& mv result/libportmidi_s.a  	result/lib \
-	&& cp pm_common/portmidi.h result/include/portmidi.h;
+	&& mkdir -p ../result/include \
+	&& mkdir -p ../result/lib \
+	&& mv build/libportmidi.dll 	  ../result/lib \
+	&& mv build/libportmidi.dll.a   ../result/lib \
+	&& mv build/libportmidi_s.a  	  ../result/lib \
+	&& cp pm_common/portmidi.h      ../result/include/portmidi.h;
 
 popd;
