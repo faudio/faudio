@@ -132,7 +132,15 @@ if (COMPONENTS_RESOLVED)
   set(CMAKE_FRAMEWORK_PATH 
     "/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/"
     "lib/mac/frameworks" # for FluidSynth, remove soon
-    )                                        
+    )
+
+  list(APPEND DEPENDENCIES ${PTHREADS_LIBRARIES})
+  list(APPEND DEPENDENCIES ${ICONV_LIBRARIES})
+  list(APPEND DEPENDENCIES ${PORTAUDIO_LIBRARIES})
+  list(APPEND DEPENDENCIES ${PORTMIDI_LIBRARIES})
+  list(APPEND DEPENDENCIES ${SNDFILE_LIBRARIES})
+  list(APPEND DEPENDENCIES ${GTEST_LIBRARIES})
+  # FluidSynth?
 
   if(APPLE)
     find_library(COCOA              Cocoa)
@@ -184,7 +192,7 @@ if (COMPONENTS_RESOLVED)
   ## Process source
 
   add_subdirectory(src)
-  # add_subdirectory(test)
+  add_subdirectory(test)
   # add_subdirectory(tool)
 
 endif(COMPONENTS_RESOLVED)
