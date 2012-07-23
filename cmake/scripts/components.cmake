@@ -1,19 +1,10 @@
 # Include to define the components of the audio engine
 
-if(BUILD_DEPENDENCIES)
-  set(AUDIO_ENGINE_BUILD_COMPONENTS True)
-endif()
-
-# FIXME can't pass these yet
-set(AUDIO_ENGINE_BUILD_COMPONENTS True)
-# set(AUDIO_ENGINE_SHOW_COMPONENT_OUTPUT True)
-
-set(AUDIO_ENGINE_WORKING_DIR "${CMAKE_SOURCE_DIR}/..")
-
 include(AudioEngine)
-# message(${AUDIO_ENGINE_SYSTEM_NAME})
+message(">>>> ${AUDIO_ENGINE_WORKING_DIR}")
+message(">>>> ${AUDIO_ENGINE_BUILD_COMPONENTS}")
+message(">>>> ${AUDIO_ENGINE_SHOW_COMPONENT_OUTPUT}")
 
-# FIXME remove hardcoded paths, use add_standard_component() instead
 
 predicate_file_exists(portaudio_exists
   "external_libraries/portaudio/result/include/portaudio.h"

@@ -346,7 +346,7 @@ function(run_package_manager
   execute_process(
     COMMAND             dist get ${package_name}
     RESULT_VARIABLE     execute_process_result
-    WORKING_DIRECTORY ${AUDIO_ENGINE_WORKING_DIR}
+    WORKING_DIRECTORY   ${AUDIO_ENGINE_WORKING_DIR}
     ${execute_process_args}
     )
   set(result ${execute_process_result} PARENT_SCOPE)
