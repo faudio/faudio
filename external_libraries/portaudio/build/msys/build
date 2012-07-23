@@ -5,9 +5,10 @@ git submodule update external_libraries/portaudio/source;
 pushd external_libraries/portaudio/source;
 
 ./configure \
-	--with-winapi=wasapi,asio \
-	--with-asiodir=../asio/ASIOSDK2/ \
-	--prefix=`pwd`/../result \
+	  --with-winapi=wasapi,asio \
+	  --with-asiodir=../../asio/ASIOSDK2/ \
+	  --prefix=`pwd`/../result \
+	  && make \
 		&& make install \
 		&& cp -R include/ ../result/
 

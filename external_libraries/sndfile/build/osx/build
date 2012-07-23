@@ -7,7 +7,8 @@ pushd external_libraries/sndfile/source;
 CFLAGS="-arch i386 -I /Developer/SDKs/MacOSX10.7.sdk/Developer/Headers/FlatCarbon/" \
 CXXFLAGS="-arch i386" \
 LDFLAGS="-arch i386" \
-./configure --prefix=`pwd`/../result \
+./configure \
+    --prefix=`pwd`/../result \
 		&& make install \
 		&& cp -R include/ result/include/
 
