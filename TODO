@@ -1,4 +1,8 @@
 
+- Remove lib directory (move FluidSynth?)
+- Remove external directory
+- Remove external_libraries/unicode
+
 Minor tasks, committed as 
     AE-10 Minor fixes
     
