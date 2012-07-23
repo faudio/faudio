@@ -64,6 +64,7 @@ option(SHOW_COMPONENT_OUTPUT    "Show output while building components"     FALS
 
 # include(Profiling)
 # include(InstallDist)
+include(FixOSXLionPaths)
 
 ## Find libraries
 
