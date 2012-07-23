@@ -83,14 +83,15 @@ macro(add_standard_component
   name
   predicate
   system
-  )
+  )              
+  string(TOLOWER ${name} lowercase_name)
   add_component(
     ${list}
     ${name}
     ${predicate}
     "cmake/build/${name}/${system}/build"
     "cmake/build/${name}/${system}/clean"
-    "${name}-${system}")
+    "${lowercase_name}-${system}")
 endmacro()
 
 # Add a component to be built or downloaded.
@@ -299,15 +300,16 @@ function(resolve_component
       if(NOT compile_result)
         message(STATUS "${base_message} -- done")
       else()
-        message(FATAL_ERROR "Could not build ${NAME}")
+        message(FATAL_ERROR "Could not build ${name}")
       endif()
     else()
       message(STATUS "${base_message} -- missing, trying to download from package server...")
-      run_package_manager(${name} ${package_name} get_result)
+      run_package_manager(${package_name} get_result)
       if(NOT get_result)
         message(STATUS "${base_message} -- done")
-      else()
-        message(FATAL_ERROR "Could not download ${NAME}")
+      else() 
+        # message(">>>> ${get_result}")
+        message(FATAL_ERROR "Could not download ${name}")
       endif()
     endif()
   endif()
@@ -343,6 +345,7 @@ function(run_package_manager
     set(execute_process_args OUTPUT_QUIET ERROR_QUIET)
   endif()
   # FIXME name and command style of package manager is hardcoded
+  # message(">>>> dist get ${package_name}")
   execute_process(
     COMMAND             dist get ${package_name}
     RESULT_VARIABLE     execute_process_result
