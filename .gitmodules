@@ -1,3 +1,6 @@
+[submodule "external_libraries/boost"]
+	path = external_libraries/boost
+	url = git@git.doremir.com:/repositories/dependencies/boost.git
 [submodule "external_libraries/portaudio/source"]
 	path = external_libraries/portaudio/source
 	url = git@notes.doremir.com:/repositories/dependencies/portaudio.git
@@ -13,6 +16,3 @@
 [submodule "external_libraries/fluidsynth/source"]
 	path = external_libraries/fluidsynth/source
 	url = git@notes.doremir.com:/repositories/dependencies/fluidsynth.git
-[submodule "external_libraries/boost"]
-	path = external_libraries/boost
-	url = git@git.doremir.com:/repositories/dependencies/boost.git
