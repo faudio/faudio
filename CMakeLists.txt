@@ -195,7 +195,7 @@ endif()
 list(APPEND COMPONENT_SCRIPT_DEFINES
   "-DAUDIO_ENGINE_WORKING_DIR=${CMAKE_SOURCE_DIR}")
 
-message("~~~ ${COMPONENT_SCRIPT_DEFINES}")
+# message("~~~ ${COMPONENT_SCRIPT_DEFINES}")
 
 include(AudioEngine)
 

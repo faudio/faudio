@@ -1,9 +1,9 @@
 # Include to define the components of the audio engine
 
 include(AudioEngine)
-message(">>>> ${AUDIO_ENGINE_WORKING_DIR}")
-message(">>>> ${AUDIO_ENGINE_BUILD_COMPONENTS}")
-message(">>>> ${AUDIO_ENGINE_SHOW_COMPONENT_OUTPUT}")
+# message(">>>> ${AUDIO_ENGINE_WORKING_DIR}")
+# message(">>>> ${AUDIO_ENGINE_BUILD_COMPONENTS}")
+# message(">>>> ${AUDIO_ENGINE_SHOW_COMPONENT_OUTPUT}")
 
 
 predicate_file_exists(portaudio_exists
