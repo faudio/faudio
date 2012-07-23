@@ -6,6 +6,7 @@
 #  PORTAUDIO_LIBRARIES - Link these to use Portaudio
 #  PORTAUDIO_DEFINITIONS - Compiler switches required for using Portaudio
 
+include (DynamicLet)
 include (FindPackageHandleStandardArgs)
 
 letmany (CMAKE_FIND_LIBRARY_SUFFIXES ".a") 
@@ -28,8 +29,6 @@ find_package_handle_standard_args (portaudio
 )                
 set(PORTAUDIO_LIBRARIES    ${PORTAUDIO_LIBRARY})
 set(PORTAUDIO_INCLUDE_DIRS ${PORTAUDIO_INCLUDE_DIR})
-
-endif (PORTAUDIO_LIBRARIES AND PORTAUDIO_INCLUDE_DIRS)
 
 
 

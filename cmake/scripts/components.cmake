@@ -35,7 +35,7 @@ add_standard_component(COMPONENTS Sndfile
   )
 
 predicate_file_exists(gtest_exists
-  "external_libraries/gtest/result/gtest/gtest.h"
+  "external_libraries/gtest/result/include/gtest/gtest.h"
   )
 add_standard_component(COMPONENTS Gtest
   gtest_exists

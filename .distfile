@@ -30,72 +30,75 @@ mode    = put
 
 # Mac OS X dependencies
 
-# boost is source only/no-build
-
 [package "portaudio-osx"]
 site    = doremir
 version = 19.0.0
 subpath = external_libraries/portaudio/result
-path    = include, lib
-mode	  = get/put
+path    = include, lib, bin
+mode	= get/put
 
 [package "portmidi-osx"]
-site 	  = doremir
+site 	= doremir
 version = 2.17.0
 subpath = external_libraries/portmidi/result
-path    = include, lib
-mode	  = get/put
+path    = include, lib, bin
+mode	= get/put
 
 [package "sndfile-osx"]
-site 	  = doremir
+site    = doremir
 version = 1.0.25
 subpath = external_libraries/sndfile/result
-path    = include, lib
-mode	  = get/put
+path    = include, lib, bin
+mode    = get/put
 
 [package "fluidsynth-osx"]
 site    = doremir
 version = 1.1.15
-mode	  = get/put
+mode    = get/put
 # FIXME
 
 [package "gtest-osx"]
 site    = doremir
-version = 0.0.0
-mode	  = get/put
+version = 1.6.0
 subpath = external_libraries/gtest/result
-path    = libgtest.dylib
+path    = include, lib, bin
+mode	= get/put
 
 
 
+# Windows/MinGW dependencies
 
-# Windows dependencies
-
-# boost is source only/no-build
-
-[package "fluidsynth-win"]
+[package "portaudio-msys"]
 site    = doremir
-version = 0
-# FIXME
+version = 19.0.0
+subpath = external_libraries/portaudio/result
+path    = include, lib, bin
+mode	= get/put
 
-# glib is no-build
-
-[package "gtest-win"]
-site    = doremir
-version = 0
-# FIXME
-
-[package "portaudio-win"]
-site    = doremir
-version = 0
-# FIXME
-
-[package "portmidi-win"]
+[package "portmidi-msys"]
 site 	= doremir
-version = 0
+version = 2.17.0
+subpath = external_libraries/portmidi/result
+path    = include, lib, bin
+mode	= get/put
+
+[package "sndfile-msys"]
+site    = doremir
+version = 1.0.25
+subpath = external_libraries/sndfile/result
+path    = include, lib, bin
+mode    = get/put
+
+[package "fluidsynth-msys"]
+site    = doremir
+version = 1.1.15
+mode    = get/put
 # FIXME
 
-[package "sndfile-win"]
-site 	= doremir
-version = 0
-# FIXME
+[package "gtest-msys"]
+site    = doremir
+version = 1.6.0
+subpath = external_libraries/gtest/result
+path    = include, lib, bin
+mode	= get/put
+

@@ -4,6 +4,9 @@ git submodule update external_libraries/portaudio/source;
 
 pushd external_libraries/portaudio/source;
 
+CFLAGS="-arch i386" \
+CXXFLAGS="-arch i386" \
+LDFLAGS="-arch i386" \
 ./configure \
     --prefix=`pwd`/../result \
 	  && make \

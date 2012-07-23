@@ -2,4 +2,5 @@
 
 pushd external_libraries/portmidi;
 rm -rf result;
+# FIXME rm -rf build
 popd;

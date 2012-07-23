@@ -16,15 +16,6 @@ set(VERSION_SUFF "")
 set(VERSION "${VERSION_PRE}${VERSION_X}.${VERSION_Y}.${VERSION_Z}${VERSION_SUFF}")
 
 
-## Sanity checks
-
-# if(APPLE)
-#   string( COMPARE NOTEQUAL "${CMAKE_OSX_ARCHITECTURES}" "i386" ARCH_NOT_32_BIT)
-#   if(ARCH_NOT_32_BIT)
-#     message(FATAL_ERROR "The Audio Engine does not support 64-bit mode yet.")
-#   endif ()
-# endif ()
-
 ## Build options
 
 #  This should hold
@@ -60,165 +51,140 @@ option(PREFER_EXCLUSIVE         "Use exclusive audio streams by default"    TRUE
 option(BUILD_COMPONENTS         "Build dependent components locally"        FALSE)
 option(SHOW_COMPONENT_OUTPUT    "Show output while building components"     FALSE)
 
+
 ## Misc settings
 
-# include(Profiling)
-# include(InstallDist)
+include(Profiling)
+# include(InstallDist) # FIXME
 include(FixOSXLionPaths)
 
-## Find libraries
 
-# find_package(pthreads)
-# find_package(iconv)
-# find_package(portaudio)
-# find_package(portmidi)
-# find_package(sndfile)
-# find_package(gtest)
+## Sanity checks
 
-# add_definitions(${PTHREAD_DEFINITIONS})
-# add_definitions(${ICONV_DEFINITIONS})
-#       
-# include_directories("include")
-# include_directories("${CMAKE_BINARY_DIR}/include")
-# include_directories(${PTHREADS_INCLUDE_DIRS})
-# include_directories(${ICONV_INCLUDE_DIRS})
-# include_directories("external_libraries/boost")
-# include_directories("external_libraries/vst")
-# include_directories("external_libraries/gtest/include")
-# include_directories("external_libraries/portaudio/result/include")
-# include_directories("external_libraries/portmidi/result")
-# include_directories("external_libraries/sndfile/result/include")
-# include_directories("external_libraries/fluidsynth_headers")
-# 
-# set(CMAKE_LIBRARY_PATH
-#   ${PTHREADS_LIBRARIES}
-#   ${ICONV_LIBRARIES}
-#   "external_libraries/portaudio/result/lib"
-#   "external_libraries/portmidi/result"
-#   "external_libraries/sndfile/result/lib"
-#   "lib/mac/shared" # for ICU, remove soon
-#   "lib/mac/gtest" # for gtest, remove soon
-#    )
-#   
-# set(CMAKE_FRAMEWORK_PATH 
-#   "/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/"
-#   "lib/mac/frameworks" # for FluidSynth, remove soon
-#   )                                        
-# 
-# find_library(SNDFILE            "libsndfile.a")
-# find_library(PORTAUDIO          "libportaudio.a")
-# find_library(PORTMIDI           "libportmidi_s.a")
-# find_library(GTEST              "gtest")
-# 
-# list(APPEND COMPONENTS ${ICONV})
-# list(APPEND COMPONENTS ${SNDFILE})
-# list(APPEND COMPONENTS ${PORTAUDIO})
-# list(APPEND COMPONENTS ${PORTMIDI})
-# list(APPEND COMPONENTS ${GTEST})
-# 
-# if(APPLE)
-#   find_library(COCOA              Cocoa)
-#   find_library(COREAUDIO          CoreAudio)
-#   find_library(COREMIDI           CoreMidi)
-#   find_library(AUDIOUNIT          AudioUnit)
-#   find_library(AUDIOTOOLBOX       AudioToolbox)
-#   find_library(FLUIDSYNTH         FluidSynth)
-# 
-#   list(APPEND COMPONENTS ${COCOA})
-#   list(APPEND COMPONENTS ${COREAUDIO})
-#   list(APPEND COMPONENTS ${COREMIDI})
-#   list(APPEND COMPONENTS ${AUDIOUNIT})
-#   list(APPEND COMPONENTS ${AUDIOTOOLBOX})
-#   list(APPEND COMPONENTS ${FLUIDSYNTH})
-# endif ()
-# 
-# # fftw or libfft ?
-# # libmicrohttpd ?
-# # oscpack
-# 
-# add_subdirectory(external_libraries)
-# 
-# list(APPEND COMPONENTS BoostSystem)
-# list(APPEND COMPONENTS BoostFilesystem)
-# list(APPEND COMPONENTS BoostThread)
-# 
-# 
-# ## Configuration file
-# 
-# set(VERSION_STRING "\"${VERSION}\"")
-# if(PREFER_NONBLOCKING)
-#   set(SCL_AUDIO_PREFER_NONBLOCKING True)
-# endif ()
-# if(PREFER_EXCLUSIVE)
-#   set(SCL_AUDIO_PREFER_EXCLUSIVE True)
-# endif ()
-# if(ENABLE_LOGGING)
-#   set(SCL_AUDIO_ENABLE_LOGGING True)
-# endif ()
-# if(REDIRECT_LOG)
-#   set(SCL_AUDIO_REDIRECT_LOG True)
-# endif ()
-# 
-# configure_file(
-#   ${CMAKE_SOURCE_DIR}/include/sclaudiox/config.h.in
-#   ${CMAKE_BINARY_DIR}/include/sclaudiox/config.h
-#  )
-#            
-
-## Process source
-
-# add_subdirectory( src)
-# add_subdirectory( test)
-# add_subdirectory( tool)
+if(APPLE)
+  string( COMPARE NOTEQUAL "${CMAKE_OSX_ARCHITECTURES}" "i386" ARCH_NOT_32_BIT)
+  if(ARCH_NOT_32_BIT)
+    message(FATAL_ERROR "The Audio Engine does not support 64-bit mode yet.")
+  endif ()
+endif ()
 
 
-
-# Testing ...
-# add_custom_target( install_dist)
-
-
-
-
-
-
-set(COMPONENT_SCRIPT_DEFINES "")
+## Component manager
 
 if(BUILD_COMPONENTS)
-  list(APPEND COMPONENT_SCRIPT_DEFINES 
+  list(APPEND COMPONENT_DEFINES 
     "-DAUDIO_ENGINE_BUILD_COMPONENTS=True")
 endif()
-
 if(SHOW_COMPONENT_OUTPUT)
-  list(APPEND COMPONENT_SCRIPT_DEFINES 
+  list(APPEND COMPONENT_DEFINES 
     "-DAUDIO_ENGINE_SHOW_COMPONENT_OUTPUT=True")
 endif()
-
-list(APPEND COMPONENT_SCRIPT_DEFINES
+list(APPEND COMPONENT_DEFINES
   "-DAUDIO_ENGINE_WORKING_DIR=${CMAKE_SOURCE_DIR}")
-
-# message("~~~ ${COMPONENT_SCRIPT_DEFINES}")
 
 include(AudioEngine)
 
 add_custom_target(components_print
-  COMMAND cmake 
-    ${COMPONENT_SCRIPT_DEFINES}
-    -P "${CMAKE_SOURCE_DIR}/cmake/scripts/components_print.cmake"
- )
+  COMMAND cmake ${COMPONENT_DEFINES} -P "${CMAKE_SOURCE_DIR}/cmake/scripts/components_print.cmake")
 
 add_custom_target(components_resolve
-  COMMAND cmake 
-    ${COMPONENT_SCRIPT_DEFINES}
-    -P "${CMAKE_SOURCE_DIR}/cmake/scripts/components_resolve.cmake"
- )
+  COMMAND cmake ${COMPONENT_DEFINES} -P "${CMAKE_SOURCE_DIR}/cmake/scripts/components_resolve.cmake")
 
 add_custom_target(components_clean
-  COMMAND cmake
-    ${COMPONENT_SCRIPT_DEFINES}
-    -P "${CMAKE_SOURCE_DIR}/cmake/scripts/components_clean.cmake"
- )
+  COMMAND cmake ${COMPONENT_DEFINES} -P "${CMAKE_SOURCE_DIR}/cmake/scripts/components_clean.cmake")
 
 
+if (COMPONENTS_RESOLVED)
 
+  ## Find libraries
 
+  find_package(Pthreads)
+  find_package(Iconv)
+  find_package(Portaudio)
+  find_package(Portmidi)
+  find_package(Sndfile)
+  find_package(Gtest)
 
+  add_definitions(${PTHREAD_DEFINITIONS})
+  add_definitions(${ICONV_DEFINITIONS})
+
+  include_directories("include")
+  include_directories("${CMAKE_BINARY_DIR}/include") # for the conf file
+  include_directories(${PTHREADS_INCLUDE_DIRS})
+  include_directories(${ICONV_INCLUDE_DIRS})
+  include_directories(${PORTAUDIO_INCLUDE_DIRS})
+  include_directories(${PORTMIDI_INCLUDE_DIRS})
+  include_directories(${SNDFILE_INCLUDE_DIRS})
+  include_directories(${GTEST_INCLUDE_DIRS})
+  include_directories("external_libraries/boost")
+  include_directories("external_libraries/vst")
+  include_directories("external_libraries/fluidsynth_headers") # FIXME move
+
+  set(CMAKE_LIBRARY_PATH
+    ${PTHREADS_LIBRARIES}
+    ${ICONV_LIBRARIES}
+    ${PORTAUDIO_LIBRARIES}
+    ${PORTMIDI_LIBRARIES}
+    ${SNDFILE_LIBRARIES}
+    ${GTEST_LIBRARIES}
+    )
+
+  set(CMAKE_FRAMEWORK_PATH 
+    "/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/"
+    "lib/mac/frameworks" # for FluidSynth, remove soon
+    )                                        
+
+  if(APPLE)
+    find_library(COCOA              Cocoa)
+    find_library(COREAUDIO          CoreAudio)
+    find_library(COREMIDI           CoreMidi)
+    find_library(AUDIOUNIT          AudioUnit)
+    find_library(AUDIOTOOLBOX       AudioToolbox)
+    find_library(FLUIDSYNTH         FluidSynth)
+
+    list(APPEND DEPENDENCIES ${COCOA})
+    list(APPEND DEPENDENCIES ${COREAUDIO})
+    list(APPEND DEPENDENCIES ${COREMIDI})
+    list(APPEND DEPENDENCIES ${AUDIOUNIT})
+    list(APPEND DEPENDENCIES ${AUDIOTOOLBOX})
+    list(APPEND DEPENDENCIES ${FLUIDSYNTH})
+  endif ()
+
+  # fftw or libfft ?
+  # libmicrohttpd ?
+  # oscpack
+
+  add_subdirectory(external_libraries)
+
+  list(APPEND DEPENDENCIES BoostSystem)
+  list(APPEND DEPENDENCIES BoostFilesystem)
+  list(APPEND DEPENDENCIES BoostThread)
+
+  ## Configuration file
+
+  set(VERSION_STRING "\"${VERSION}\"")
+  if(PREFER_NONBLOCKING)
+    set(SCL_AUDIO_PREFER_NONBLOCKING True)
+  endif ()
+  if(PREFER_EXCLUSIVE)
+    set(SCL_AUDIO_PREFER_EXCLUSIVE True)
+  endif ()
+  if(ENABLE_LOGGING)
+    set(SCL_AUDIO_ENABLE_LOGGING True)
+  endif ()
+  if(REDIRECT_LOG)
+    set(SCL_AUDIO_REDIRECT_LOG True)
+  endif ()
+
+  configure_file(
+    ${CMAKE_SOURCE_DIR}/include/sclaudiox/config.h.in
+    ${CMAKE_BINARY_DIR}/include/sclaudiox/config.h
+   )
+
+  ## Process source
+
+  add_subdirectory(src)
+  # add_subdirectory(test)
+  # add_subdirectory(tool)
+
+endif(COMPONENTS_RESOLVED)
