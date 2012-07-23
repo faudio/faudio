@@ -89,8 +89,8 @@ macro(add_standard_component
     ${list}
     ${name}
     ${predicate}
-    "external_libraries/${name}/build/${system}/build"
-    "external_libraries/${name}/build/${system}/clean"
+    "external_libraries/${lowercase_name}/build/${system}/build"
+    "external_libraries/${lowercase_name}/build/${system}/clean"
     "${lowercase_name}-${system}")
 endmacro()
 
