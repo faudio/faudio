@@ -1,6 +1,6 @@
 .DS_Store
 .svn
-*build
+build/
 doc/Lisp.md
 dist
 external_libraries/*/result/
