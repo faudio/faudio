@@ -315,8 +315,17 @@ function(resolve_component
   endif()
 endfunction()
 
+macro(run_executable
+  )
+  string(COMPARE EQUAL ${AUDIO_ENGINE_SYSTEM_NAME} msys is_msys)
+  if (NOT is_msys)
+    run_executable_std(${ARGN})
+  else()
+    run_executable_msys(${ARGN})
+  endif()
+endmacro()
 
-function(run_executable
+function(run_executable_std
   executable
   result
   )
@@ -334,6 +343,35 @@ function(run_executable
     )
   set(result ${execute_process_result} PARENT_SCOPE)
 endfunction()
+
+function(fix_posix_path
+  path
+  result)
+  set(str ${path})
+  # string(REPLACE "C:/" "C:/" str ${str})
+  # string(REPLACE "y:/" "Y:/" str ${str})
+  set(${result} ${str} PARENT_SCOPE)
+endfunction()                        
+
+function(run_executable_msys
+  executable
+  result
+  )
+  if(${AUDIO_ENGINE_SHOW_COMPONENT_OUTPUT})
+    set(execute_process_args "")
+  else()
+    set(execute_process_args OUTPUT_QUIET ERROR_QUIET)
+  endif()                        
+
+  execute_process(           
+    COMMAND           sh ${executable}
+    RESULT_VARIABLE   execute_process_result
+    WORKING_DIRECTORY ${AUDIO_ENGINE_WORKING_DIR}
+    ${execute_process_args}
+    )
+  set(result ${execute_process_result} PARENT_SCOPE)
+endfunction()
+
 
 function(run_package_manager
   package_name
@@ -365,8 +403,7 @@ macro(init_audio_engine)
       set(AUDIO_ENGINE_SYSTEM_NAME "osx")
     elseif(MSVC)
       set(AUDIO_ENGINE_SYSTEM_NAME "msvc")
-    elseif()
-      # TODO string(COMPRARE EQUAL ${CMAKE_GENERATOR} "MSYS Makefiles") or something
+    elseif(True)  # TODO string(COMPRARE EQUAL ${CMAKE_GENERATOR} "MSYS Makefiles") or something
       set(AUDIO_ENGINE_SYSTEM_NAME "msys")
     endif()
     # TODO else FATAL_ERROR unknown system

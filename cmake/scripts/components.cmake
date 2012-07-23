@@ -1,6 +1,8 @@
 # Include to define the components of the audio engine
 
 include(AudioEngine)
+
+# message(">>>> ${AUDIO_ENGINE_SYSTEM_NAME}")
 # message(">>>> ${AUDIO_ENGINE_WORKING_DIR}")
 # message(">>>> ${AUDIO_ENGINE_BUILD_COMPONENTS}")
 # message(">>>> ${AUDIO_ENGINE_SHOW_COMPONENT_OUTPUT}")
