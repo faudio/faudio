@@ -33,3 +33,11 @@ add_standard_component(COMPONENTS Sndfile
   sndfile_exists
   ${AUDIO_ENGINE_SYSTEM_NAME}
   )
+
+predicate_file_exists(gtest_exists
+  "external_libraries/gtest/result/gtest/gtest.h"
+  )
+add_standard_component(COMPONENTS Gtest
+  gtest_exists
+  ${AUDIO_ENGINE_SYSTEM_NAME}
+  )
