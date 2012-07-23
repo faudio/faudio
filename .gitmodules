@@ -1,17 +1,17 @@
-[submodule "external_libraries/portaudio"]
-	path = external_libraries/portaudio
+[submodule "external_libraries/portaudio/source"]
+	path = external_libraries/portaudio/source
 	url = git@notes.doremir.com:/repositories/dependencies/portaudio.git
-[submodule "external_libraries/portmidi"]
-	path = external_libraries/portmidi
+[submodule "external_libraries/portmidi/source"]
+	path = external_libraries/portmidi/source
 	url = git@notes.doremir.com:/repositories/dependencies/portmidi.git
-[submodule "external_libraries/sndfile"]
-	path = external_libraries/sndfile
+[submodule "external_libraries/sndfile/source"]
+	path = external_libraries/sndfile/source
 	url = git@notes.doremir.com:/repositories/dependencies/sndfile.git
-[submodule "external_libraries/gtest"]
-	path = external_libraries/gtest
+[submodule "external_libraries/gtest/source"]
+	path = external_libraries/gtest/source
 	url = git@notes.doremir.com:/repositories/dependencies/gtest.git
-[submodule "external_libraries/fluidsynth"]
-	path = external_libraries/fluidsynth
+[submodule "external_libraries/fluidsynth/source"]
+	path = external_libraries/fluidsynth/source
 	url = git@notes.doremir.com:/repositories/dependencies/fluidsynth.git
 [submodule "external_libraries/boost"]
 	path = external_libraries/boost
