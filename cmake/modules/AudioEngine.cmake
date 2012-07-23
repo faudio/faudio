@@ -25,17 +25,50 @@ function(predicate_file_exists
   set(${result} file_exists ${file} PARENT_SCOPE)
 endfunction()
 
+function(predicate_constant
+  result                        
+  value
+  )
+  set(${result} constant ${value} PARENT_SCOPE)
+endfunction()
+
+function(predicate_some
+  result
+  # predicates ...
+  )
+  set(${result} some ${ARGN} PARENT_SCOPE)
+endfunction()
+
+function(predicate_all
+  result
+  # predicates ...
+  )
+  set(${result} all ${ARGN} PARENT_SCOPE)
+endfunction()
+
 # Run a given predicate (created by a predicate_ ... function).
 function(run_predicate
   result
   type
-  args
+  # args ...
   )
-  string(COMPARE EQUAL ${type} file_exists pred_is_file_exists)
+  string(COMPARE EQUAL ${type} file_exists is_file_exists)
+  string(COMPARE EQUAL ${type} constant    is_constant)
+  string(COMPARE EQUAL ${type} some        is_some)
+  string(COMPARE EQUAL ${type} all         is_all)
 
-  if(pred_is_file_exists)
-    run_predicate_file_exists(temp_result ${args})
-    set(${result} ${temp_result} PARENT_SCOPE)
+  if(is_file_exists)
+    run_predicate_file_exists(k ${ARGN})
+    set(${result} ${k} PARENT_SCOPE)
+  elseif(is_constant)
+    run_predicate_constant(k ${ARGN})
+    set(${result} ${k} PARENT_SCOPE)
+  elseif(is_some)
+    run_predicate_some(k ${ARGN})
+    set(${result} ${k} PARENT_SCOPE)
+  elseif(is_all)
+    run_predicate_all(k ${ARGN})
+    set(${result} ${k} PARENT_SCOPE)
   else()
     message(FATAL_ERROR "Predicate type '${type}' does not exist")
   endif()
@@ -147,7 +180,7 @@ endfunction()
 # ==============================================================================
 
 function(run_predicate_file_exists
-  result
+  k
   file
   )
   # TODO really no cross-platform check in CMake?
@@ -158,17 +191,64 @@ function(run_predicate_file_exists
   endif()
   execute_process(
     COMMAND test -e ${file}
-    RESULT_VARIABLE temp_result
+    RESULT_VARIABLE j
     WORKING_DIRECTORY ${AUDIO_ENGINE_WORKING_DIR}
     ${execute_process_args}
     )
   # TODO use negate_inline from Prelude?
-  if(NOT temp_result)
-    set(${result} True PARENT_SCOPE)
+  # message(">>> '${file}'")
+  # message(">>> ${j}")
+  if(NOT j)
+    set(${k} True PARENT_SCOPE)
   else()
-    set(${result} False PARENT_SCOPE)
+    set(${k} False PARENT_SCOPE)
   endif()
 endfunction()
+
+function(run_predicate_constant
+  k
+  value
+  )
+  if(${value})
+    set(${k} True PARENT_SCOPE)
+  else()
+    set(${k} False PARENT_SCOPE)
+  endif()
+endfunction()
+
+function(run_predicate_some
+  k
+  # ps ...
+  )       
+  set(ps ${ARGN})
+  foreach(p ${ps})
+    run_predicate(r ${${p}})
+    if(${r})
+      set(${k} True PARENT_SCOPE)
+      return()
+    endif()
+  endforeach()
+  set(${k} False PARENT_SCOPE)
+endfunction()
+
+function(run_predicate_all
+  k
+  # ps ...
+  )       
+  set(ps ${ARGN})
+  foreach(p ${ps})
+    # message(">>> ${p}")
+    # message(">>> ${${p}}")
+    run_predicate(r ${${p}})
+    if(NOT ${r})
+      set(${k} False PARENT_SCOPE)
+      return()
+    endif()
+  endforeach()
+  set(${k} True PARENT_SCOPE)
+endfunction()
+
+
 
 function(print_component
   name
@@ -287,6 +367,10 @@ macro(init_audio_engine)
       set(AUDIO_ENGINE_SYSTEM_NAME "msys")
     endif()
     # TODO else FATAL_ERROR unknown system
+  endif()
+
+  if(NOT AUDIO_ENGINE_WORKING_DIR)
+    set(AUDIO_ENGINE_WORKING_DIR ${CMAKE_SOURCE_DIR})
   endif()
 endmacro()
 

@@ -176,7 +176,7 @@ option ( BUILD_DEPENDENCIES       "Build dependencies locally"                FA
 # add_custom_target( install_dist )
 
 
-# include(AudioEngine)
+include(AudioEngine)
 # predicate_file_exists(foo_exists "/Users/hans/foo")
 # run_predicate(result ${foo_exists})
 # message(${result})
@@ -194,6 +194,7 @@ add_custom_target(components_resolve
 add_custom_target(components_clean
   COMMAND cmake -P "${CMAKE_SOURCE_DIR}/cmake/scripts/components_clean.cmake"
   )
+
 
 
 
