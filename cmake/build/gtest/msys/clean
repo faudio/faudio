@@ -1,5 +1,0 @@
-#!/bin/bash
-
-pushd external_libraries/gtest;
-rm -rf result;
-popd;

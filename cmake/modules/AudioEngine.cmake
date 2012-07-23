@@ -89,8 +89,8 @@ macro(add_standard_component
     ${list}
     ${name}
     ${predicate}
-    "cmake/build/${name}/${system}/build"
-    "cmake/build/${name}/${system}/clean"
+    "external_libraries/${name}/build/${system}/build"
+    "external_libraries/${name}/build/${system}/clean"
     "${lowercase_name}-${system}")
 endmacro()
 
