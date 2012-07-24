@@ -372,26 +372,26 @@ namespace test_cpp_api
     }              
 
 
-    // TEST(Synth_FluidSynth, PlayNotes)
-    // {
-    //     AudioProcessor*   synth  = new FluidSynth(SOUNDFONT_PATH);
-    //     AudioDevice*      in     = AudioDevice::defaultInputDevice();
-    //     AudioDevice*      out    = AudioDevice::defaultOutputDevice();
-    //     Stream*           stream = DeviceStream::open(in, out, synth);
-    //     MessageScheduler* sched  = stream->audioScheduler();
-    // 
-    //     stream->start();    
-    //     foreach( int p, list::fromRange(0,24) )
-    //     {
-    //         Message on  = messageFrom(0x90, 60 + p, 70);
-    //         Message off = messageFrom(0x90, 60 + p, 0);    
-    //         sched->sendNow(list::create(on));
-    //         sched->sendLater(90, list::create(off));
-    //         sleepMillis(100);
-    //     }
-    //     stream->stop();
-    //     sleepMillis(1000);
-    // }
+    TEST(Synth_FluidSynth, PlayNotes)
+    {
+        AudioProcessor*   synth  = new FluidSynth(SOUNDFONT_PATH);
+        AudioDevice*      in     = AudioDevice::defaultInputDevice();
+        AudioDevice*      out    = AudioDevice::defaultOutputDevice();
+        Stream*           stream = DeviceStream::open(in, out, synth);
+        MessageScheduler* sched  = stream->audioScheduler();
+    
+        stream->start();    
+        foreach( int p, list::fromRange(0,24) )
+        {
+            Message on  = messageFrom(0x90, 60 + p, 70);
+            Message off = messageFrom(0x90, 60 + p, 0);    
+            sched->sendNow(list::create(on));
+            sched->sendLater(90, list::create(off));
+            sleepMillis(100);
+        }
+        stream->stop();
+        sleepMillis(1000);
+    }
     
 
     TEST(AudioUnit, List)

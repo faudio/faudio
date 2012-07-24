@@ -64,7 +64,9 @@ include(FixOSXLionPaths)
 if(APPLE)
   string(COMPARE NOTEQUAL "${CMAKE_OSX_ARCHITECTURES}" "i386" ARCH_NOT_32_BIT)
   if(ARCH_NOT_32_BIT)
-    message(FATAL_ERROR "The Audio Engine does not support 64-bit mode yet.")
+    message(FATAL_ERROR 
+      "\nThe Audio Engine does not support 64-bit mode yet."
+      "\nTry -D CMAKE_OSX_ARCHITECTURES=i386.")
   endif()
 endif()
 
@@ -103,7 +105,9 @@ if (COMPONENTS_RESOLVED)
   find_package(Portaudio)
   find_package(Portmidi)
   find_package(Sndfile)
-  find_package(Gtest)
+  find_package(Glib)
+  find_package(Fluidsynth)
+  find_package(Gtest)         
 
   add_definitions(${PTHREAD_DEFINITIONS})
   add_definitions(${ICONV_DEFINITIONS})
@@ -115,10 +119,11 @@ if (COMPONENTS_RESOLVED)
   include_directories(${PORTAUDIO_INCLUDE_DIRS})
   include_directories(${PORTMIDI_INCLUDE_DIRS})
   include_directories(${SNDFILE_INCLUDE_DIRS})
+  include_directories(${FLUIDSYNTH_INCLUDE_DIRS})
   include_directories(${GTEST_INCLUDE_DIRS})
+
   include_directories("external_libraries/boost")
   include_directories("external_libraries/vst")
-  include_directories("external_libraries/fluidsynth_headers") # FIXME move
 
   set(CMAKE_LIBRARY_PATH
     ${PTHREADS_LIBRARIES}
@@ -126,12 +131,15 @@ if (COMPONENTS_RESOLVED)
     ${PORTAUDIO_LIBRARIES}
     ${PORTMIDI_LIBRARIES}
     ${SNDFILE_LIBRARIES}
+    ${FLUIDSYNTH_LIBRARIES}
+    ${GLIB_LIBRARIES}
     ${GTEST_LIBRARIES}
     )
 
   set(CMAKE_FRAMEWORK_PATH 
+# FIXME use sysroot here (or don't set?)
     "/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/"
-    "lib/mac/frameworks" # for FluidSynth, remove soon
+#    "lib/mac/frameworks" # for FluidSynth, remove soon
     )
 
   list(APPEND DEPENDENCIES ${PTHREADS_LIBRARIES})
@@ -139,6 +147,8 @@ if (COMPONENTS_RESOLVED)
   list(APPEND DEPENDENCIES ${PORTAUDIO_LIBRARIES})
   list(APPEND DEPENDENCIES ${PORTMIDI_LIBRARIES})
   list(APPEND DEPENDENCIES ${SNDFILE_LIBRARIES})
+  list(APPEND DEPENDENCIES ${FLUIDSYNTH_LIBRARIES})
+  list(APPEND DEPENDENCIES ${GLIB_LIBRARIES})
   list(APPEND DEPENDENCIES ${GTEST_LIBRARIES})
   # FluidSynth?
 
@@ -148,14 +158,12 @@ if (COMPONENTS_RESOLVED)
     find_library(COREMIDI           CoreMidi)
     find_library(AUDIOUNIT          AudioUnit)
     find_library(AUDIOTOOLBOX       AudioToolbox)
-    find_library(FLUIDSYNTH         FluidSynth)
 
     list(APPEND DEPENDENCIES ${COCOA})
     list(APPEND DEPENDENCIES ${COREAUDIO})
     list(APPEND DEPENDENCIES ${COREMIDI})
     list(APPEND DEPENDENCIES ${AUDIOUNIT})
     list(APPEND DEPENDENCIES ${AUDIOTOOLBOX})
-    list(APPEND DEPENDENCIES ${FLUIDSYNTH})
   endif ()
 
   # fftw or libfft ?

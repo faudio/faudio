@@ -27,12 +27,13 @@ cmake ..                                           \
         -Denable-floats=OFF                        \
         -Denable-trap-on-fpe=OFF                   \
         -Denable-framework=OFF                     \
+        -DBUILD_SHARED_LIBS=False                  \
         -DFRAMEWORK_INSTALL_DIR="Frameworks"       \
     && make \
     && make install;
 
 # TODO use install_name_tool to fix dependency on glib
-
+# Alt, just use BUILD_SHARED_LIBS=False
 
 popd;
 popd;
