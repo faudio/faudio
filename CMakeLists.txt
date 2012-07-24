@@ -94,6 +94,10 @@ add_custom_target(components_resolve
 add_custom_target(components_clean
   COMMAND cmake ${COMPONENT_DEFINES} -P "${CMAKE_SOURCE_DIR}/cmake/scripts/components_clean.cmake")
 
+add_custom_target(run_scorecleaner
+  COMMAND sh "${CMAKE_SOURCE_DIR}/cmake/scripts/run_scorecleaner.sh"
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
 
 if (COMPONENTS_RESOLVED)
 

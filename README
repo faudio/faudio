@@ -10,4 +10,13 @@ or
 
     $ CMAKE_OSX_ARCHITECTURES=i386 ./boot && make
 
+
+To run unit tests:
+
+    $ make test
+  
+To test with ScoreCleaner (must be on the desktop, set $SCORECLEANER to override):
+
+    $ make run_scorecleaner
+
 More detailed instructions in 'doc/Build and install.md'.
