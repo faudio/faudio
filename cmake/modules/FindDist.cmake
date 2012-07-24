@@ -40,7 +40,7 @@ endif(DIST_EXECUTABLE)
 
 # handle the QUIETLY and REQUIRED arguments and set DIST_FOUND to TRUE if 
 # all listed variables are TRUE
-include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
+include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(dist
                                   REQUIRED_VARS DIST_EXECUTABLE
                                   VERSION_VAR DIST_VERSION_STRING)

@@ -55,9 +55,8 @@ option(SHOW_COMPONENT_OUTPUT    "Show output while building components"     FALS
 ## Misc settings
 
 include(Profiling)
-# include(InstallDist) # FIXME
 include(FixOSXLionPaths)
-
+find_package(Dist)
 
 ## Sanity checks
 
@@ -136,10 +135,9 @@ if (COMPONENTS_RESOLVED)
     ${GTEST_LIBRARIES}
     )
 
+  # TODO Do we really need to explicitly set this?
   set(CMAKE_FRAMEWORK_PATH 
-# FIXME use sysroot here (or don't set?)
-    "/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/"
-#    "lib/mac/frameworks" # for FluidSynth, remove soon
+    "${CMAKE_OSX_SYSROOT}/System/Library/Frameworks/"
     )
 
   list(APPEND DEPENDENCIES ${PTHREADS_LIBRARIES})
@@ -150,7 +148,6 @@ if (COMPONENTS_RESOLVED)
   list(APPEND DEPENDENCIES ${FLUIDSYNTH_LIBRARIES})
   list(APPEND DEPENDENCIES ${GLIB_LIBRARIES})
   list(APPEND DEPENDENCIES ${GTEST_LIBRARIES})
-  # FluidSynth?
 
   if(APPLE)
     find_library(COCOA              Cocoa)

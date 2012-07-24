@@ -196,9 +196,6 @@ function(run_predicate_file_exists
     WORKING_DIRECTORY ${AUDIO_ENGINE_WORKING_DIR}
     ${execute_process_args}
     )
-  # TODO use negate_inline from Prelude?
-  # message(">>> '${file}'")
-  # message(">>> ${j}")
   if(NOT j)
     set(${k} True PARENT_SCOPE)
   else()
@@ -382,10 +379,9 @@ function(run_package_manager
   else()
     set(execute_process_args OUTPUT_QUIET ERROR_QUIET)
   endif()
-  # FIXME name and command style of package manager is hardcoded
-  # message(">>>> dist get ${package_name}")
+  # FIXME command style of package manager is hardcoded
   execute_process(
-    COMMAND             dist get ${package_name}
+    COMMAND             ${DIST_EXECUTABLE} get ${package_name}
     RESULT_VARIABLE     execute_process_result
     WORKING_DIRECTORY   ${AUDIO_ENGINE_WORKING_DIR}
     ${execute_process_args}
