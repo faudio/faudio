@@ -1,18 +1,20 @@
 #!/bin/bash
-git submodule init external_libraries/gtest;
-git submodule update external_libraries/gtest;
+git submodule init external_libraries/gtest/source;
+git submodule update external_libraries/gtest/source;
 
-pushd external_libraries/gtest;
+pushd external_libraries/gtest/source;
 
-mkdir -p result \
-	&& pushd result \
-	&& cmake -G "MSYS Makefiles" -Dgtest_disable_pthreads=True .. \
+mkdir -p build \
+	&& pushd build \
+	&& cmake .. \
+		-G "MSYS Makefiles" \
+		-D gtest_disable_pthreads=True .. \
 	&& make \
 	&& popd \
-	&& mkdir -p result/include \
-	&& mkdir -p result/lib \
-	&& mv result/libgtest.a result/lib \
-	&& cp -R include/ result/include;
+	&& mkdir -p 				../result/include \
+	&& mkdir -p 				../result/lib \
+	&& mv build/libgtest.a	 	../result/lib \
+	&& cp -R include 			../result;
 
 popd;
 
