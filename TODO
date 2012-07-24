@@ -1,6 +1,5 @@
 
-- Remove lib directory (move FluidSynth?)
-- TODO use install_name_tool to fix dependency of Fluidsynth on glib
+- Remove lib directory
 - Remove external directory
 - Remove external_libraries/unicode
 

@@ -32,9 +32,12 @@
 #define EXPECT_NULL(E) EXPECT_EQ ( 0, (int) E )
 #define EXPECT_VAL(E)  EXPECT_NE ( 0, (int) E )
 
+
+// FIXME expand ~ here
+
 #ifdef SCL_OSX
     #define SOUNDFONT_PATH \
-        "/Users/hans/modus/resources/audio/FluidR3_GM.sf2"
+        "/Users/hans/Library/Sounds/Font/Default.sf2"
 #else
     #define SOUNDFONT_PATH \
         "C:/modus/app/resources/soundfonts/sound.sf2"
