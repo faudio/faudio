@@ -27,8 +27,8 @@ Prerequisites
 
   * Portaudio (for real-time audio)
   * Portmidi (for real-time midi)
-  * libsndfile (for non-realtime audio)
   * Fluidsynth (for built in synthesis)     
+  * libsndfile (for non-realtime audio)
   * libfft (for FFT and IFFT processors)
   * libosc++ (for OSC messages)
   * Google Test (for running the test suite)
@@ -38,12 +38,13 @@ Prerequisites
 #### Required
 
   * CMake
+  * A unix shell (on Windows either MinGW/MSYS or Cygwin)
 
 #### Optional
 
   * Pandoc (for documentation)
   * Doxygen (for documentation)
-  * GNU Make (for Lisp bindings)
+  * Make (for Lisp bindings)
 
 ### Compilers
 
@@ -167,5 +168,5 @@ TODO
 Linking the audio engine into another application
 ----------
 
-By default, dynamic libraries are built. On Mac OS X this is a framework called ScoreCleanerAudio.framework and a dynamic library called libsclaudio.dylib; either may be used. On Windows, a library file named sclaudio.lib and a dynamic library file named sclaudio.dll is generated. You can load any of these dynamically, using the appropriate system-specific API.
+By default, dynamic libraries are built. On Mac OS X this is a framework called ScoreCleanerAudio.framework and a dynamic library called libsclaudio.dylib. They are different ways of packaging the same executable code. On Windows, a library file named sclaudio.lib and a dynamic library file named sclaudio.dll is generated. You can load any of these dynamically, using the appropriate system-specific API.
 

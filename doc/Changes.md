@@ -24,6 +24,7 @@ v1.6
 * Sessions        
 * Depracating `AudioHost::hosts()` and friends 
 * Support for VST2
+* No dependency on ICU, much smaller library
 
 v1.7
 ----

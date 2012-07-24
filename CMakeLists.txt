@@ -62,11 +62,11 @@ include(FixOSXLionPaths)
 ## Sanity checks
 
 if(APPLE)
-  string( COMPARE NOTEQUAL "${CMAKE_OSX_ARCHITECTURES}" "i386" ARCH_NOT_32_BIT)
+  string(COMPARE NOTEQUAL "${CMAKE_OSX_ARCHITECTURES}" "i386" ARCH_NOT_32_BIT)
   if(ARCH_NOT_32_BIT)
     message(FATAL_ERROR "The Audio Engine does not support 64-bit mode yet.")
-  endif ()
-endif ()
+  endif()
+endif()
 
 
 ## Component manager
