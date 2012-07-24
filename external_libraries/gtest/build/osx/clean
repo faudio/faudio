@@ -2,4 +2,5 @@
 
 pushd external_libraries/gtest;
 rm -rf result;
+rm -rf source/build;
 popd;

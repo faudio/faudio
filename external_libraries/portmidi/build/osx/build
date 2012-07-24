@@ -7,17 +7,14 @@ pushd external_libraries/portmidi/source;
 mkdir -p build \
   	&& pushd build \
   	&& cmake .. \
-  	    -DCMAKE_BUILD_TYPE=Release \
-  	    -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY="" \
-  	    -DCMAKE_LIBRARY_OUTPUT_DIRECTORY="" \
-  	    -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="" \
-  	    -DCMAKE_OSX_ARCHITECTURES="i386" \
+  	    -DCMAKE_BUILD_TYPE=Release                  \
+  	    -DCMAKE_OSX_ARCHITECTURES="i386"            \
   	&& make \
   	&& popd \
   	&& mkdir -p ../result/include \
   	&& mkdir -p ../result/lib \
-  	&& mv build/libportmidi.dylib 	../result/lib \
+  	&& mv build/libportmidi.dylib 	  ../result/lib \
   	&& mv build/libportmidi_s.a  	  ../result/lib \
-  	&& cp pm_common/portmidi.h      ../result/include/portmidi.h;
+  	&& cp pm_common/portmidi.h        ../result/include/portmidi.h;
 
 popd;

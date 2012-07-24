@@ -34,6 +34,14 @@ add_standard_component(COMPONENTS Sndfile
   ${AUDIO_ENGINE_SYSTEM_NAME}
   )
 
+predicate_file_exists(fluidsynth_exists
+  "external_libraries/fluidsynth/result/include/fluidsynth.h"
+  )
+add_standard_component(COMPONENTS Fluidsynth
+  fluidsynth_exists
+  ${AUDIO_ENGINE_SYSTEM_NAME}
+  )
+
 predicate_file_exists(gtest_exists
   "external_libraries/gtest/result/include/gtest/gtest.h"
   )
@@ -41,3 +49,4 @@ add_standard_component(COMPONENTS Gtest
   gtest_exists
   ${AUDIO_ENGINE_SYSTEM_NAME}
   )
+

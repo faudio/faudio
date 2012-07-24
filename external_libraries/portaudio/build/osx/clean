@@ -2,5 +2,7 @@
 
 pushd external_libraries/portaudio;
 rm -rf result;
-# FIXME distclean
+pushd source;
+make distclean;
+popd;
 popd;

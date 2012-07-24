@@ -9,7 +9,5 @@ CXXFLAGS="-arch i386" \
 LDFLAGS="-arch i386" \
 ./configure \
     --prefix=`pwd`/../result \
-		&& make install \
-		&& cp -R include/ result/include/
-
+		&& make install;
 popd;
