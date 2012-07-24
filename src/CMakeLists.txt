@@ -46,12 +46,6 @@ if( APPLE AND BUILD_FRAMEWORK )
     INSTALL_NAME_DIR            "@executable_path/../Frameworks/ScoreCleanerAudio.framework/ScoreCleanerAudio"
     )
   target_link_libraries ( ScoreCleanerAudio_framework ${DEPENDENCIES} )
-
-  add_custom_command ( TARGET ScoreCleanerAudio_framework POST_BUILD
-    COMMAND mkdir -p ../Frameworks
-    COMMAND rm -rf ../Frameworks/FluidSynth.framework
-    COMMAND cp -R ../../lib/mac/frameworks/FluidSynth.framework ../Frameworks/FluidSynth.framework
-    )
 endif ()
 
 
