@@ -7,11 +7,11 @@ Building the audio engine should be as simple as:
     $ git clone --recursive git@git.doremir.com:/repositories/audio-engine.git
     $ cd audio-engine
     $ ./boot && make
-    $ sudo make install
 
 To test it with an instance of ScoreCleaner on the desktop, use:
 
     $ make run-scorecleaner
+
 
 
 Prerequisites
@@ -51,8 +51,7 @@ Prerequisites
 Any of the following:
 
   * clang >= 3.1
-  * GCC >= 4.4
-  * MSVC >= 10.0
+  * GCC   >= 4.6.2
 
 
 Fetching the source code

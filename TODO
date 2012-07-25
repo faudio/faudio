@@ -12,4 +12,3 @@ Minor tasks, committed as
 - Update ScoreCleanerAudio/Resources/Info.plist, see Apple documentation
   'Framework Programming Guide'
 - Logging functions on OS X must create dir ~/Library/Logs/ScoreCleaner if not present
-- Auto-download packages not present
