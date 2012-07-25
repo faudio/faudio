@@ -40,7 +40,7 @@
         "/Users/hans/Library/Sounds/Fonts/Default.sf2"
 #else
     #define SOUNDFONT_PATH \
-        "C:/modus/app/resources/soundfonts/sound.sf2"
+        "C:/Users/hans/AppData/Roaming/Soundfonts/Default.sf2"
 #endif
 
 
@@ -345,14 +345,16 @@ namespace test_cpp_api
         EXPECT_EQ( bar, bar2 );
         EXPECT_NE( foo, bar );
     }
-    
+
+#ifdef SCL_OSX    
     TEST(AudioUnit, Count)
     {
         std::list<AudioUnit*> units = AudioUnit::audioUnits();
         std::cout << "Number of Audio Units: " << units.size();
         std::cout << "\n";        
     }                       
-
+#endif
+	
     TEST(Rand, Play)
     {
         try 
@@ -375,28 +377,28 @@ namespace test_cpp_api
     }              
 
 
-    // TEST(Synth_FluidSynth, PlayNotes)
-    // {
-        // AudioProcessor*   synth  = new FluidSynth(SOUNDFONT_PATH);
-        // AudioDevice*      in     = AudioDevice::defaultInputDevice();
-        // AudioDevice*      out    = AudioDevice::defaultOutputDevice();
-        // Stream*           stream = DeviceStream::open(in, out, synth);
-        // MessageScheduler* sched  = stream->audioScheduler();
+    TEST(Synth_FluidSynth, PlayNotes)
+    {
+        AudioProcessor*   synth  = new FluidSynth(SOUNDFONT_PATH);
+        AudioDevice*      in     = AudioDevice::defaultInputDevice();
+        AudioDevice*      out    = AudioDevice::defaultOutputDevice();
+        Stream*           stream = DeviceStream::open(in, out, synth);
+        MessageScheduler* sched  = stream->audioScheduler();
     
-        // stream->start();    
-        // foreach( int p, list::fromRange(0,24) )
-        // {
-            // Message on  = messageFrom(0x90, 60 + p, 70);
-            // Message off = messageFrom(0x90, 60 + p, 0);    
-            // sched->sendNow(list::create(on));
-            // sched->sendLater(90, list::create(off));
-            // sleepMillis(100);
-        // }
-        // stream->stop();
-        // sleepMillis(1000);
-    // }
+        stream->start();    
+        foreach( int p, list::fromRange(0,24) )
+        {
+            Message on  = messageFrom(0x90, 60 + p, 70);
+            Message off = messageFrom(0x90, 60 + p, 0);    
+            sched->sendNow(list::create(on));
+            sched->sendLater(90, list::create(off));
+            sleepMillis(100);
+        }
+        stream->stop();
+        sleepMillis(1000);
+    }
     
-
+#ifdef SCL_OSX    
     TEST(AudioUnit, List)
     {       
         try
@@ -422,7 +424,6 @@ namespace test_cpp_api
         {
             std::cerr << "Error: " << const_cast<Error&>(e).message() << "\n";
         }              
-
     }    
  
     TEST(Synth_AudioUnit, Play)
@@ -466,7 +467,7 @@ namespace test_cpp_api
             std::cerr << "Error: " << const_cast<Error&>(e).message() << "\n";
         }              
     }
-                  
+#endif                  
 
     template <class T>
     void do_with_concept(T x)
