@@ -11,8 +11,8 @@ list ( APPEND SOURCE_FILES
   sclaudiox/scheduling/future.cc
   sclaudiox/processor.cc
   sclaudiox/processor/plugin/vst2.cc
-#  sclaudiox/processor/synth/fluid.cc
-  sclaudiox/processor/synth/fluid_nil.cc
+  sclaudiox/processor/synth/fluid.cc
+  # sclaudiox/processor/synth/fluid_nil.cc
   sclaudiox/device/audio.cc
   sclaudiox/device/midi.cc
   sclaudiox/device/session.cc

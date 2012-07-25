@@ -112,16 +112,17 @@ if (COMPONENTS_RESOLVED)
   find_package(Portaudio)
   find_package(Portmidi)
   find_package(Sndfile)
-  # find_package(Glib)
-  # find_package(Fluidsynth)
+  find_package(Fluidsynth)
+  find_package(Glib)
   find_package(Gtest)         
 
   add_definitions(${PTHREAD_DEFINITIONS})
   add_definitions(${ICONV_DEFINITIONS})
   if (WIN32) # only MSYS really...
-    add_definitions(-static-libgcc)
-	add_definitions(-static-libstdc++)
+    # add_definitions(-static-libgcc)	 FIXME
+	# add_definitions(-static-libstdc++) FIXME
     add_definitions(-DBOOST_THREAD_USE_LIB=1)
+	add_definitions(-DFLUIDSYNTH_NOT_A_DLL=1)
   endif()
   add_definitions(-DBOOST_CHRONO_HEADER_ONLY=1)
 
@@ -132,7 +133,7 @@ if (COMPONENTS_RESOLVED)
   include_directories(${PORTAUDIO_INCLUDE_DIRS})
   include_directories(${PORTMIDI_INCLUDE_DIRS})
   include_directories(${SNDFILE_INCLUDE_DIRS})
-  # include_directories(${FLUIDSYNTH_INCLUDE_DIRS})
+  include_directories(${FLUIDSYNTH_INCLUDE_DIRS})
   include_directories(${GTEST_INCLUDE_DIRS})
 
   include_directories("external_libraries/boost")
@@ -144,7 +145,7 @@ if (COMPONENTS_RESOLVED)
     ${PORTAUDIO_LIBRARIES}
     ${PORTMIDI_LIBRARIES}
     ${SNDFILE_LIBRARIES}
-    # ${FLUIDSYNTH_LIBRARIES}
+    ${FLUIDSYNTH_LIBRARIES}
     ${GLIB_LIBRARIES}
     ${GTEST_LIBRARIES}
 	"/mingw/lib"
@@ -158,21 +159,24 @@ if (COMPONENTS_RESOLVED)
 
   # list(APPEND DEPENDENCIES ${PTHREADS_LIBRARIES})
   # list(APPEND DEPENDENCIES ${ICONV_LIBRARIES})
-  find_library (MINGW32 NAMES mingw32 PATH_SUFFIXES libPATHS /mingw)
-  find_library (OLE32   NAMES ole32   PATH_SUFFIXES libPATHS /mingw)
-  find_library (WINMM   NAMES winmm   PATH_SUFFIXES libPATHS /mingw)
 
-  # list(APPEND DEPENDENCIES ${WINMM})
   list(APPEND DEPENDENCIES ${PORTAUDIO_LIBRARIES})
   list(APPEND DEPENDENCIES ${PORTMIDI_LIBRARIES})
   list(APPEND DEPENDENCIES ${SNDFILE_LIBRARIES})
-  list(APPEND DEPENDENCIES ${WINMM})
-  list(APPEND DEPENDENCIES ${OLE32})
-  list(APPEND DEPENDENCIES ${MINGW32})
-  # list(APPEND DEPENDENCIES ${FLUIDSYNTH_LIBRARIES})
-  # list(APPEND DEPENDENCIES ${GLIB_LIBRARIES})
+  list(APPEND DEPENDENCIES ${FLUIDSYNTH_LIBRARIES})
+  list(APPEND DEPENDENCIES ${GLIB_LIBRARIES})
   list(APPEND DEPENDENCIES ${GTEST_LIBRARIES})
 
+  if (WIN32)
+    find_library (MINGW32 NAMES mingw32 PATH_SUFFIXES libPATHS /mingw)
+    find_library (OLE32   NAMES ole32   PATH_SUFFIXES libPATHS /mingw)
+    find_library (WINMM   NAMES winmm   PATH_SUFFIXES libPATHS /mingw)
+	find_library (WINSOCK NAMES ws2_32  PATH_SUFFIXES libPATHS /mingw)
+    list(APPEND DEPENDENCIES ${WINSOCK})
+    list(APPEND DEPENDENCIES ${WINMM})
+    list(APPEND DEPENDENCIES ${OLE32})
+    list(APPEND DEPENDENCIES ${MINGW32})
+  endif()
   
   if(APPLE)
     find_library(COCOA              Cocoa)
@@ -180,7 +184,6 @@ if (COMPONENTS_RESOLVED)
     find_library(COREMIDI           CoreMidi)
     find_library(AUDIOUNIT          AudioUnit)
     find_library(AUDIOTOOLBOX       AudioToolbox)
-
     list(APPEND DEPENDENCIES ${COCOA})
     list(APPEND DEPENDENCIES ${COREAUDIO})
     list(APPEND DEPENDENCIES ${COREMIDI})

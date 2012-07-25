@@ -9,54 +9,64 @@
 include (DynamicLet)
 include (FindPackageHandleStandardArgs)
 
-letmany (CMAKE_FIND_LIBRARY_SUFFIXES ".a") 
+letmany (CMAKE_FIND_LIBRARY_SUFFIXES ".a;.lib") 
+
+set(GLIB_PATHS
+  /usr/local
+  C:/fluidsynth-deps
+  )
 
 # Not really necessary ...
 find_path (GLIB_INCLUDE_DIR 
   NAMES glib-2.0/glib.h
   PATH_SUFFIXES include
-  PATHS /usr/local
+  PATHS ${GLIB_PATHS}
   )
 
 find_library (GLIB_LIBRARY
   NAMES glib-2.0
   PATH_SUFFIXES lib
-  PATHS /usr/local
+  PATHS ${GLIB_PATHS}
   )
 find_library (GIO_LIBRARY
   NAMES gio-2.0
   PATH_SUFFIXES lib
-  PATHS /usr/local
+  PATHS ${GLIB_PATHS}
   )
 find_library (GTHREAD_LIBRARY
   NAMES gthread-2.0
   PATH_SUFFIXES lib
-  PATHS /usr/local
+  PATHS ${GLIB_PATHS}
   )
 find_library (INTL_LIBRARY
   NAMES intl
   PATH_SUFFIXES lib
-  PATHS /usr/local
+  PATHS ${GLIB_PATHS}
   )
 
 endletmany (CMAKE_FIND_LIBRARY_SUFFIXES) 
 
-set(GLIB_LIBRARIES    
+set(GLIB_LIBRARIES2    
   ${GLIB_LIBRARY}
   ${GIO_LIBRARY}
   ${GTHREAD_LIBRARY}
   ${INTL_LIBRARY}
   )
-set(GLIB_INCLUDE_DIRS 
+set(GLIB_INCLUDE_DIRS2 
   ${GLIB_INCLUDE_DIR}
   )
+# message(${GLIB_LIBRARIES2})
 
 find_package_handle_standard_args (glib 
   DEFAULT_MSG 
-  GLIB_LIBRARIES
-  GLIB_INCLUDE_DIRS
+  GLIB_LIBRARIES2
+  GLIB_INCLUDE_DIRS2
 )                
 
+if(GLIB_INCLUDE_DIRS2 AND GLIB_LIBRARIES2)
+    set(GLIB_INCLUDE_DIRS ${GLIB_INCLUDE_DIRS2})
+    set(GLIB_LIBRARIES    ${GLIB_LIBRARIES2})
+endif()
 
 
 
