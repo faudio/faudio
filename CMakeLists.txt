@@ -118,7 +118,11 @@ if (COMPONENTS_RESOLVED)
 
   add_definitions(${PTHREAD_DEFINITIONS})
   add_definitions(${ICONV_DEFINITIONS})
-  add_definitions(-DBOOST_THREAD_USE_LIB=1)
+  if (WIN32) # only MSYS really...
+    add_definitions(-static-libgcc)
+	add_definitions(-static-libstdc++)
+    add_definitions(-DBOOST_THREAD_USE_LIB=1)
+  endif()
   add_definitions(-DBOOST_CHRONO_HEADER_ONLY=1)
 
   include_directories("include")

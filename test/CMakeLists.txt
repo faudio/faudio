@@ -11,6 +11,7 @@ if(BUILD_TESTS)
   if(WIN32)
     set_target_properties(scl_audio_tests PROPERTIES
       OUTPUT_NAME               "scl_audio_tests"
+      RUNTIME_OUTPUT_DIRECTORY  "../bin" 
      )
   endif()
   target_link_libraries(scl_audio_tests

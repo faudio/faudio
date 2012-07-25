@@ -30,7 +30,7 @@ if ( APPLE AND BUILD_DYLIB )
     )
   set_target_properties ( sclaudio_dylib PROPERTIES
     OUTPUT_NAME                 sclaudio-${VERSION}
-    LIBRARY_OUTPUT_DIRECTORY    "../"
+    LIBRARY_OUTPUT_DIRECTORY    "../lib"
     )
   target_link_libraries ( sclaudio_dylib ${DEPENDENCIES} )
   set(MAIN_LIBRARY sclaudio_dylib PARENT_SCOPE)
@@ -58,56 +58,11 @@ if (WIN32)
     )
   set_target_properties ( sclaudio_dll PROPERTIES
     OUTPUT_NAME                 sclaudio-${VERSION}
-    LIBRARY_OUTPUT_DIRECTORY    "../"
+    LIBRARY_OUTPUT_DIRECTORY    "../bin"
+    ARCHIVE_OUTPUT_DIRECTORY    "../bin"
+    RUNTIME_OUTPUT_DIRECTORY    "../bin"
     )
   target_link_libraries ( sclaudio_dll ${DEPENDENCIES} )
   set(MAIN_LIBRARY sclaudio_dll PARENT_SCOPE)
 endif()
 
-
-
-
-
-
-
-
-
-
-
-
-
-#
-# ##
-# ## Build command-line tool
-# ##
-#
-# option(BUILD_SCL_CL "Build the SCL command-line tool" TRUE)
-#
-# if(${BUILD_SCL_CL})
-#   set(SCL_CL_DEFINITIONS ${SCL_DEFINITIONS})
-#   message("Compiler definitions (command-line tool): ${SCL_CL_DEFINITIONS}")
-#
-#   add_executable(SCL_CL "main.cc")
-#
-#   if(${SCL_OSX})
-#     set_target_properties(SCL_CL
-#       PROPERTIES
-#         OUTPUT_NAME         "SCL"
-#         OSX_ARCHITECTURES       i386
-#         RUNTIME_OUTPUT_DIRECTORY  "../bin"
-#       COMPILE_DEFINITIONS       "${SCL_CL_DEFINITIONS}")
-#   endif()
-#   if(${SCL_WIN})
-#     set_target_properties(SCL_CL
-#       PROPERTIES
-#         OUTPUT_NAME         "SCL_cl"
-#         COMPILE_DEFINITIONS     "${SCL_CL_DEFINITIONS}")
-#   endif()
-#
-#   if (MSVC_IDE)
-#     set_target_properties(SCL_CL PROPERTIES PREFIX "../")
-#   endif()
-#
-#   # TODO if building dylib and/or framework on OS X, this only links with framwork
-#   target_link_libraries(SCL_CL SCL)
-# endif()
