@@ -120,9 +120,9 @@ if (COMPONENTS_RESOLVED)
   add_definitions(${ICONV_DEFINITIONS})
   if (WIN32) # only MSYS really...
     # add_definitions(-static-libgcc)	 FIXME
-	# add_definitions(-static-libstdc++) FIXME
+    # add_definitions(-static-libstdc++) FIXME
     add_definitions(-DBOOST_THREAD_USE_LIB=1)
-	add_definitions(-DFLUIDSYNTH_NOT_A_DLL=1)
+    add_definitions(-DFLUIDSYNTH_NOT_A_DLL=1)
   endif()
   add_definitions(-DBOOST_CHRONO_HEADER_ONLY=1)
 
@@ -148,8 +148,8 @@ if (COMPONENTS_RESOLVED)
     ${FLUIDSYNTH_LIBRARIES}
     ${GLIB_LIBRARIES}
     ${GTEST_LIBRARIES}
-	"/mingw/lib"
-	"/mingw"
+    "/mingw/lib"
+    "/mingw"
     )
 
   # TODO Do we really need to explicitly set this?
@@ -157,9 +157,8 @@ if (COMPONENTS_RESOLVED)
     "${CMAKE_OSX_SYSROOT}/System/Library/Frameworks/"
     )
 
-  # list(APPEND DEPENDENCIES ${PTHREADS_LIBRARIES})
-  # list(APPEND DEPENDENCIES ${ICONV_LIBRARIES})
-
+  list(APPEND DEPENDENCIES ${PTHREADS_LIBRARIES})
+  list(APPEND DEPENDENCIES ${ICONV_LIBRARIES})
   list(APPEND DEPENDENCIES ${PORTAUDIO_LIBRARIES})
   list(APPEND DEPENDENCIES ${PORTMIDI_LIBRARIES})
   list(APPEND DEPENDENCIES ${SNDFILE_LIBRARIES})
@@ -171,7 +170,7 @@ if (COMPONENTS_RESOLVED)
     find_library (MINGW32 NAMES mingw32 PATH_SUFFIXES libPATHS /mingw)
     find_library (OLE32   NAMES ole32   PATH_SUFFIXES libPATHS /mingw)
     find_library (WINMM   NAMES winmm   PATH_SUFFIXES libPATHS /mingw)
-	find_library (WINSOCK NAMES ws2_32  PATH_SUFFIXES libPATHS /mingw)
+    find_library (WINSOCK NAMES ws2_32  PATH_SUFFIXES libPATHS /mingw)
     list(APPEND DEPENDENCIES ${WINSOCK})
     list(APPEND DEPENDENCIES ${WINMM})
     list(APPEND DEPENDENCIES ${OLE32})
