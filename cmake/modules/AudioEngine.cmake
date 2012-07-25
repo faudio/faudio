@@ -379,6 +379,7 @@ function(run_package_manager
   else()
     set(execute_process_args OUTPUT_QUIET ERROR_QUIET)
   endif()
+  # message(">>>> ${DIST_EXECUTABLE}")
   # FIXME command style of package manager is hardcoded
   execute_process(
     COMMAND             ${DIST_EXECUTABLE} get ${package_name}
