@@ -14,8 +14,7 @@ if(BUILD_TESTS)
      )
   endif()
   target_link_libraries(scl_audio_tests
-    ScoreCleanerAudio_framework
-    # sclaudio_dylib
+    ${MAIN_LIBRARY}
     ${GTEST})
 endif()
 

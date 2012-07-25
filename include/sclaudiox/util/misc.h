@@ -8,6 +8,8 @@
 #ifndef _SCLAUDIOX_UTIL_MISC
 #define _SCLAUDIOX_UTIL_MISC
 
+#include <algorithm>
+
 namespace doremir {
 namespace scl {
 

@@ -11,7 +11,8 @@ list ( APPEND SOURCE_FILES
   sclaudiox/scheduling/future.cc
   sclaudiox/processor.cc
   sclaudiox/processor/plugin/vst2.cc
-  sclaudiox/processor/synth/fluid.cc
+#  sclaudiox/processor/synth/fluid.cc
+  sclaudiox/processor/synth/fluid_nil.cc
   sclaudiox/device/audio.cc
   sclaudiox/device/midi.cc
   sclaudiox/device/session.cc
@@ -32,6 +33,7 @@ if ( APPLE AND BUILD_DYLIB )
     LIBRARY_OUTPUT_DIRECTORY    "../"
     )
   target_link_libraries ( sclaudio_dylib ${DEPENDENCIES} )
+  set(MAIN_LIBRARY sclaudio_dylib PARENT_SCOPE)
 endif()
 
 if( APPLE AND BUILD_FRAMEWORK )
@@ -46,8 +48,21 @@ if( APPLE AND BUILD_FRAMEWORK )
     INSTALL_NAME_DIR            "@executable_path/../Frameworks/ScoreCleanerAudio.framework/ScoreCleanerAudio"
     )
   target_link_libraries ( ScoreCleanerAudio_framework ${DEPENDENCIES} )
+  set(MAIN_LIBRARY ScoreCleanerAudio_framework PARENT_SCOPE)
 endif ()
 
+message(">>> DEPENDENCIES ${DEPENDENCIES}")
+if (WIN32)
+  add_library ( sclaudio_dll SHARED
+    ${SOURCE_FILES}
+    )
+  set_target_properties ( sclaudio_dll PROPERTIES
+    OUTPUT_NAME                 sclaudio-${VERSION}
+    LIBRARY_OUTPUT_DIRECTORY    "../"
+    )
+  target_link_libraries ( sclaudio_dll ${DEPENDENCIES} )
+  set(MAIN_LIBRARY sclaudio_dll PARENT_SCOPE)
+endif()
 
 
 

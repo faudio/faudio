@@ -112,12 +112,14 @@ if (COMPONENTS_RESOLVED)
   find_package(Portaudio)
   find_package(Portmidi)
   find_package(Sndfile)
-  find_package(Glib)
-  find_package(Fluidsynth)
+  # find_package(Glib)
+  # find_package(Fluidsynth)
   find_package(Gtest)         
 
   add_definitions(${PTHREAD_DEFINITIONS})
   add_definitions(${ICONV_DEFINITIONS})
+  add_definitions(-DBOOST_THREAD_USE_LIB=1)
+  add_definitions(-DBOOST_CHRONO_HEADER_ONLY=1)
 
   include_directories("include")
   include_directories("${CMAKE_BINARY_DIR}/include") # for the conf file
@@ -126,7 +128,7 @@ if (COMPONENTS_RESOLVED)
   include_directories(${PORTAUDIO_INCLUDE_DIRS})
   include_directories(${PORTMIDI_INCLUDE_DIRS})
   include_directories(${SNDFILE_INCLUDE_DIRS})
-  include_directories(${FLUIDSYNTH_INCLUDE_DIRS})
+  # include_directories(${FLUIDSYNTH_INCLUDE_DIRS})
   include_directories(${GTEST_INCLUDE_DIRS})
 
   include_directories("external_libraries/boost")
@@ -138,9 +140,11 @@ if (COMPONENTS_RESOLVED)
     ${PORTAUDIO_LIBRARIES}
     ${PORTMIDI_LIBRARIES}
     ${SNDFILE_LIBRARIES}
-    ${FLUIDSYNTH_LIBRARIES}
+    # ${FLUIDSYNTH_LIBRARIES}
     ${GLIB_LIBRARIES}
     ${GTEST_LIBRARIES}
+	"/mingw/lib"
+	"/mingw"
     )
 
   # TODO Do we really need to explicitly set this?
@@ -148,15 +152,24 @@ if (COMPONENTS_RESOLVED)
     "${CMAKE_OSX_SYSROOT}/System/Library/Frameworks/"
     )
 
-  list(APPEND DEPENDENCIES ${PTHREADS_LIBRARIES})
-  list(APPEND DEPENDENCIES ${ICONV_LIBRARIES})
+  # list(APPEND DEPENDENCIES ${PTHREADS_LIBRARIES})
+  # list(APPEND DEPENDENCIES ${ICONV_LIBRARIES})
+  find_library (MINGW32 NAMES mingw32 PATH_SUFFIXES libPATHS /mingw)
+  find_library (OLE32   NAMES ole32   PATH_SUFFIXES libPATHS /mingw)
+  find_library (WINMM   NAMES winmm   PATH_SUFFIXES libPATHS /mingw)
+
+  # list(APPEND DEPENDENCIES ${WINMM})
   list(APPEND DEPENDENCIES ${PORTAUDIO_LIBRARIES})
   list(APPEND DEPENDENCIES ${PORTMIDI_LIBRARIES})
   list(APPEND DEPENDENCIES ${SNDFILE_LIBRARIES})
-  list(APPEND DEPENDENCIES ${FLUIDSYNTH_LIBRARIES})
-  list(APPEND DEPENDENCIES ${GLIB_LIBRARIES})
+  list(APPEND DEPENDENCIES ${WINMM})
+  list(APPEND DEPENDENCIES ${OLE32})
+  list(APPEND DEPENDENCIES ${MINGW32})
+  # list(APPEND DEPENDENCIES ${FLUIDSYNTH_LIBRARIES})
+  # list(APPEND DEPENDENCIES ${GLIB_LIBRARIES})
   list(APPEND DEPENDENCIES ${GTEST_LIBRARIES})
 
+  
   if(APPLE)
     find_library(COCOA              Cocoa)
     find_library(COREAUDIO          CoreAudio)
@@ -177,9 +190,10 @@ if (COMPONENTS_RESOLVED)
 
   add_subdirectory(external_libraries)
 
-  list(APPEND DEPENDENCIES BoostSystem)
-  list(APPEND DEPENDENCIES BoostFilesystem)
   list(APPEND DEPENDENCIES BoostThread)
+  list(APPEND DEPENDENCIES BoostFilesystem)
+  list(APPEND DEPENDENCIES BoostSystem)
+  # list(APPEND DEPENDENCIES BoostChrono)
 
   ## Configuration file
 
