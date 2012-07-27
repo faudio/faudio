@@ -4,12 +4,7 @@ ScoreCleaner Audio Engine
 
 For a basic build, try
     
-    $ ./boot && make
-
-or
-
-    $ CMAKE_OSX_ARCHITECTURES=i386 ./boot && make
-
+    $ ./bootstrap && make
 
 To run unit tests:
 
