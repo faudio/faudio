@@ -103,8 +103,12 @@ add_custom_target(run_scorecleaner
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 
-if (COMPONENTS_RESOLVED)
+if (NOT COMPONENTS_RESOLVED)
+  # message(STATUS
+  #   "\n Note: The flag COMPONENTS_RESOLVED is not set."
+  #   )
 
+else (NOT COMPONENTS_RESOLVED)
   ## Find libraries
 
   find_package(Pthreads)
@@ -228,4 +232,4 @@ if (COMPONENTS_RESOLVED)
   add_subdirectory(test)
   # add_subdirectory(tool)
 
-endif(COMPONENTS_RESOLVED)
+endif(NOT COMPONENTS_RESOLVED)

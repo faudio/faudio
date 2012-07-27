@@ -11,7 +11,7 @@ fi
 
 mkdir -p $BUILD_DIRECTORY;
 pushd $BUILD_DIRECTORY;
-cmake "$@" ..;
+cmake "$@" .. && make components_resolve;
 
 if [ $? -eq 0 ]; then
 	popd;
