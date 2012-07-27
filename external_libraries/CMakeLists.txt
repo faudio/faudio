@@ -1,4 +1,8 @@
 
+execute_process(
+  COMMAND git submodule update "--init" "external_libraries/boost"
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
 # Boost headers
 include_directories(boost)
 
