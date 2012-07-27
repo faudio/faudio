@@ -19,6 +19,7 @@ if(APPLE)
 endif()
 
 find_package(Pthreads)
+find_package(Iconv)
 
 
 
@@ -67,11 +68,13 @@ add_executable(iterator           iterator.cc)
 add_executable(lambda             lambda.cc)
 add_executable(smart_pointers     smart_pointers.cc)
 add_executable(thread             thread.cc)
-target_link_libraries(thread BoostThread BoostSystem)
 add_executable(type_traits        type_traits.cc)
 add_executable(typeindex          typeindex.cc)
 add_executable(unicode            unicode.cc)
 add_executable(valarray           valarray.cc)
+
+target_link_libraries(thread  BoostThread BoostSystem)
+target_link_libraries(unicode ${ICONV_LIBRARIES})
 
 
 add_custom_target(clean

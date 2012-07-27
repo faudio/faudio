@@ -1,4 +1,7 @@
 
+// TODO differences between C++0x and Boost
+// Use intersection
+
 #define USE_BOOST_THREAD
 
 #ifndef USE_BOOST_THREAD
