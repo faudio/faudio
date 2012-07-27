@@ -9,11 +9,23 @@
 include (DynamicLet)
 include (FindPackageHandleStandardArgs)
 
+# FIXME Duplicates code in AudioEngine.cmake
+if (NOT GLIB_SYSTEM_NAME)
+  if(APPLE)
+    set(GLIB_SYSTEM_NAME "osx")
+  elseif(MSVC)
+    set(GLIB_SYSTEM_NAME "msvc")
+  elseif(True)  # TODO string(COMPRARE EQUAL ${CMAKE_GENERATOR} "MSYS Makefiles") or something
+    set(GLIB_SYSTEM_NAME "msys")
+  endif()
+  # TODO else FATAL_ERROR unknown system
+endif()
+
+
 letmany (CMAKE_FIND_LIBRARY_SUFFIXES ".a;.lib") 
 
 set(GLIB_PATHS
-  /usr/local
-  C:/fluidsynth-deps
+  ${CMAKE_SOURCE_DIR}/external_libraries/fluidsynth/glib/${GLIB_SYSTEM_NAME}
   )
 
 # Not really necessary ...
@@ -28,11 +40,6 @@ find_library (GLIB_LIBRARY
   PATH_SUFFIXES lib
   PATHS ${GLIB_PATHS}
   )
-find_library (GIO_LIBRARY
-  NAMES gio-2.0
-  PATH_SUFFIXES lib
-  PATHS ${GLIB_PATHS}
-  )
 find_library (GTHREAD_LIBRARY
   NAMES gthread-2.0
   PATH_SUFFIXES lib
@@ -43,6 +50,11 @@ find_library (INTL_LIBRARY
   PATH_SUFFIXES lib
   PATHS ${GLIB_PATHS}
   )
+# find_library (GIO_LIBRARY
+#   NAMES gio-2.0
+#   PATH_SUFFIXES lib
+#   PATHS ${GLIB_PATHS}
+#   )
 
 endletmany (CMAKE_FIND_LIBRARY_SUFFIXES) 
 

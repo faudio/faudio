@@ -51,7 +51,6 @@ if( APPLE AND BUILD_FRAMEWORK )
   set(MAIN_LIBRARY ScoreCleanerAudio_framework PARENT_SCOPE)
 endif ()
 
-message(">>> DEPENDENCIES ${DEPENDENCIES}")
 if (WIN32)
   add_library ( sclaudio_dll SHARED
     ${SOURCE_FILES}
