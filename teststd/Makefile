@@ -2,20 +2,22 @@
 UNAME := $(shell uname)
 
 ifeq ($(UNAME), Darwin)
-CXX = xcrun c++ -stdlib=libc++ -std=c++0x -I ../external_libraries/boost/
+CXX = xcrun c++ -std=c++0x -stdlib=libc++ -I ../external_libraries/boost/
+EXE = ""
 else
-CXX = c++ -stdlib=libc++ -std=c++0x -I ../external_libraries/boost/
+CXX = c++ -std=c++0x -I ../external_libraries/boost/
+EXE = ".exe"
 endif
 
 
 all: lambda unicode
 
 clean:
-	rm lambda;
-	rm unicode;
+	rm lambda$(EXE);
+	rm unicode$(EXE);
 
 lambda: lambda.cc
-	$(CXX) -o lambda lambda.cc && ./lambda
+	$(CXX) -o lambda$(EXE) lambda.cc && ./lambda
 
 unicode: unicode.cc
-	$(CXX) -o unicode unicode.cc && ./unicode
+	$(CXX) -o unicode$(EXE) unicode.cc && ./unicode
