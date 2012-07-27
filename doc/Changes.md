@@ -17,6 +17,10 @@ v1.5
 ----
 * Support for Audio Units
 
+v1.5.1
+----
+* New build system
+
 (*Unreleased, planned changes:*)
 
 v1.6
