@@ -2,10 +2,12 @@
 ScoreCleaner Audio Engine
 =========================
 
-For a basic build, try
+For a basic build:
     
     $ ./bootstrap && make
 
+This may require a network connection, as the ./bootstrap script may need to download dependent libraries from the package server.
+	
 To run unit tests:
 
     $ make test
