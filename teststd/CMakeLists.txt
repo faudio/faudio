@@ -50,6 +50,9 @@ endif()
 
 add_library(BoostThread STATIC ${BOOST_THREAD_SRC} ${BOOST_THREAD_PLATFORM})
 
+if(WIN32)
+  add_definitions(-DBOOST_THREAD_USE_LIB=1)
+endif()
 
 
 ## Files
