@@ -143,13 +143,15 @@ public:
 
     /**
         Returns the sample rate used by this stream.
-        @throws StreamError
+        \throw
+            StreamError
      */
     virtual int sampleRate() = 0;
 
     /**
         Returns the size of the audio buffer used by this stream.
-        @throws StreamError
+        \throw
+            StreamError
      */
     virtual int audioBufferSize() = 0;
     
@@ -335,7 +337,7 @@ public:
 
     /**
         Returns a stream on the given devices or NULL if no devices are provided.                
-        @throws 
+        \throw 
             PortaudioError, PortmidiError, DspError
      */
     static Stream* open ( MidiDevice*         midiInput      = NULL,
