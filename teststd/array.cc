@@ -2,8 +2,6 @@
 #include <array>
 #include <iostream>
 
-
-
 int array()
 {
     std::array<int, 10> xs = { 1, 2, 3, 4 };

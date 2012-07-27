@@ -58,12 +58,21 @@ add_definitions(-DBOOST_CHRONO_HEADER_ONLY=1)
 
 ## Files
 
-add_executable(lambda   lambda.cc)
-add_executable(unicode  unicode.cc)
-add_executable(array    array.cc)
-
-add_executable(thread   thread.cc)
+add_executable(array              array.cc)
+add_executable(bind               bind.cc)
+add_executable(constexpr          constexpr.cc)
+add_executable(extern_template    extern_template.cc)
+add_executable(initializer_list   initializer_list.cc)
+add_executable(iterator           iterator.cc)
+add_executable(lambda             lambda.cc)
+add_executable(smart_pointers     smart_pointers.cc)
+add_executable(thread             thread.cc)
 target_link_libraries(thread BoostThread BoostSystem)
+add_executable(type_traits        type_traits.cc)
+add_executable(typeindex          typeindex.cc)
+add_executable(unicode            unicode.cc)
+add_executable(valarray           valarray.cc)
+
 
 add_custom_target(clean
   COMMAND rm lambda
