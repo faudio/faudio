@@ -37,10 +37,25 @@ int mapping()
     return 0;
 }
 
+int capture()
+{
+    auto foo = [] (int x, int y) {
+        return [=] () -> int {
+            return x + y;
+        };
+    };
+    auto bar = foo(1, 2);
+    
+    std::cout << "Lazy value: " << bar();
+    std::cout << "\n";
+    return 0;
+}
+
 int main (int argc, char const *argv[])
 {
     return
        hello()
     || mapping()
+    || capture()
     ;
 }
