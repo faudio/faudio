@@ -17,4 +17,11 @@ To test with ScoreCleaner (must be on the desktop, set $SCORECLEANER to override
 
     $ make run_scorecleaner
 
-More detailed instructions in 'doc/Build and install.md'.
+To generate documentation:
+    
+    $ cd doc
+    $ make html
+    $ make pdf
+
+For more detailed instructions, see the documentation page Build and install.
+

@@ -1,16 +1,21 @@
 
-- Components_resolve should invoke cmake -D COMPONENTS_RESOLVED=1 to run the find... modules
-- Check if we can make Fluidsynth compile against checked in Glib binaries instead of /usr/local
-- Come up with better way to include ASIOSDK in Portaudio (new submodule? nested?)
 
+* Components_resolve should invoke cmake -D COMPONENTS_RESOLVED=1 to
+  run the find... modules
 
-Minor tasks, committed as 
-    AE-10 Minor fixes
-    
-- Set visibility=hidden on OS X. See Apple documentation 'Dynamic Library
-  Programming Topics'
-- Update ScoreCleanerAudio/Resources/Info.plist, see Apple documentation
-  'Framework Programming Guide'
-- Logging functions on OS X must create dir ~/Library/Logs/ScoreCleaner if not present
+* Check if we can make Fluidsynth compile against checked in Glib
+  binaries instead of /usr/local
 
-- DLL name and linkage on Windows
+* Come up with better way to include ASIOSDK in Portaudio (new
+  submodule? nested?)
+
+* Set visibility=hidden on OS X. See Apple documentation 'Dynamic
+  Library Programming Topics'
+
+* Update ScoreCleanerAudio/Resources/Info.plist, see Apple
+  documentation 'Framework Programming Guide'
+
+* Logging functions on OS X must create dir ~/Library/Logs/ScoreCleaner
+  if not present
+
+* DLL name and linkage on Windows
