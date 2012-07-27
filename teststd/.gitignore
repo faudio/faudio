@@ -1,5 +1,3 @@
-lambda*
-unicode*
-
-array*
-thread*
+*
+!Makefile
+!*.cc
