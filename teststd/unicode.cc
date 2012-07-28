@@ -7,7 +7,7 @@
 // TODO what about the boost algorithms?
 // overload (inefficiently?) by using converters to/from utf8?
 
-#include <iconv.h>
+
 
 #include <string>
 #include <iostream>
@@ -15,6 +15,9 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/join.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
+
+// #include <iconv.h> // not supported on MSYS yet
+
 
 
 int strs()
@@ -87,8 +90,8 @@ void convert(std::u32string in, std::u32string& out) {}
 
 int iconv()
 {
-    iconv_t x = iconv_open("ASCII", "ASCII");
-    return 0;
+    // iconv_t x = iconv_open("ASCII", "ASCII");
+    // return 0;
 }
 
 
