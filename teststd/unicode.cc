@@ -14,6 +14,7 @@
 #include <stdexcept>
 #include <algorithm>
 
+#include <boost/range/algorithm/transform.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/join.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
@@ -23,6 +24,75 @@
 
 #include <iconv.h> // not supported on MSYS yet
 
+
+
+template <class T, class Container = std::basic_string<T>>
+class string_adapter
+{
+public:
+    using container_type  = Container;
+    using value_type      = typename container_type::value_type;
+    using size_type       = typename container_type::size_type;
+    using reference       = typename container_type::reference;
+    using const_reference = typename container_type::const_reference;
+    using iterator        = typename container_type::iterator;
+    using const_iterator  = typename container_type::const_iterator;
+
+    explicit string_adapter(container_type& str) : mStr(str) {}
+    iterator       begin()       { return mStr.begin(); }
+    iterator       end()         { return mStr.end();   }
+    const_iterator begin() const { return mStr.begin(); }
+    const_iterator end()   const { return mStr.end();   }
+private:
+    container_type& mStr;
+};
+
+
+template <class T>
+struct value_type_of
+{
+    using type = typename T::value_type;
+};
+
+template <class T>
+struct adapter_of
+{                                           
+    using type = string_adapter
+        < typename value_type_of<T>::type
+        , T 
+        >;
+};
+
+template <class Str>
+typename adapter_of<Str>::type unicode(Str& str)
+{                       
+    return typename adapter_of<Str>::type(str);
+}
+
+
+int adapter()
+{
+    std::u16string str = u"Hans Hoglund";
+    std::u16string str2;
+    str2.resize(str.size());
+
+    // boost::transform(
+    //     unicode(str),
+    //     unicode(str2).begin(),
+    //     [] (char16_t c){ return c + 0; });
+
+    std::transform(
+        unicode(str).begin(),
+        unicode(str).end(),
+        unicode(str2).begin(),
+        [] (char16_t c){ return c + 1; });
+
+    for (char c : str2)
+        std::cout << c;
+    std::cout << '\n';
+
+    return 0;
+}
 
 
 int strs()
@@ -84,7 +154,7 @@ int iconv()
 
 
 int sizes()
-{            
+{
     std::cout << "sizeof(char):     " << sizeof(char)     << "\n";
     std::cout << "sizeof(wchar_t):  " << sizeof(wchar_t)  << "\n";
     std::cout << "sizeof(char16_t): " << sizeof(char16_t) << "\n";
@@ -95,9 +165,10 @@ int sizes()
 
 
 int main (int argc, char const *argv[])
-{                 
+{
     return
          sizes()
+       | adapter()
        | strs()
        | algorithms()
        | iconv()
