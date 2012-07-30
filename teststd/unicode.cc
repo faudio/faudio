@@ -12,11 +12,16 @@
 #include <string>
 #include <iostream>
 #include <stdexcept>
+#include <algorithm>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/join.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 
-// #include <iconv.h> // not supported on MSYS yet
+// #include "Converter.h"
+// #include "Converter.cc"
+
+#include <iconv.h> // not supported on MSYS yet
 
 
 
@@ -37,23 +42,26 @@ int strs()
 
 ////////////////
 
+
+
 int algorithms()
 {
-#define STR std::u16string
-    // STR x (L"hans");
-    // STR y;
-    // y.resize(x.size());
-    // boost::to_upper_copy(y.begin(), x);
-    // std::cout << y;
-    // std::cout << "\n";
+    std::string x ("hans");
+    std::string y;
+    y.resize(x.size());
+    boost::to_upper_copy(y.begin(), x);
+    return 0;
+}
 
-    STR a (u"hans");
-    STR b (u"sven");
-    std::list<STR> strs;
+int algorithms2()
+{
+    std::u16string a (u"hans");
+    std::u16string b (u"sven");
+    std::list<std::u16string> strs;
     strs.push_back(a);
     strs.push_back(b);
 
-    STR k = boost::algorithm::join(strs, ",");
+    std::u16string k = boost::algorithm::join(strs, ",");
 
     // std::u16string x16 (u"hans");
     // std::u16string y16;
@@ -68,39 +76,29 @@ int algorithms()
 
 ////////////////
 
-void convert(std::string in,    std::string& out);
-void convert(std::u16string in, std::u16string& out);
-void convert(std::u32string in, std::u32string& out);
-
-
-void convert(std::string in, std::string& out)
-{
-    std::copy(in.begin(), in.end(), out.end());
-}
-
-void convert(std::u16string in, std::u16string& out) {}
-void convert(std::u32string in, std::u32string& out) {}
-
-
-
-// ((char*, size_t) -> (char*, size_t)) -> (CharRange -> CharRange)
-
-
-////////////////
-
 int iconv()
 {
-    // iconv_t x = iconv_open("ASCII", "ASCII");
-    // return 0;
+    iconv_t x = iconv_open("ASCII", "ASCII");
+    return 0;
 }
 
 
+int sizes()
+{            
+    std::cout << "sizeof(char):     " << sizeof(char)     << "\n";
+    std::cout << "sizeof(wchar_t):  " << sizeof(wchar_t)  << "\n";
+    std::cout << "sizeof(char16_t): " << sizeof(char16_t) << "\n";
+    std::cout << "sizeof(char32_t): " << sizeof(char32_t) << "\n";
+
+    return 0;
+}
 
 
 int main (int argc, char const *argv[])
-{
+{                 
     return
-         strs()
+         sizes()
+       | strs()
        | algorithms()
        | iconv()
     ;
