@@ -1,6 +1,7 @@
 *
 !Makefile
-!*.cc
 !*.a
+!*.h
+!*.cc
 !CMakeLists.txt
 !cmakebuild
