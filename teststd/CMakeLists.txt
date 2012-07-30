@@ -76,9 +76,3 @@ target_link_libraries(thread  BoostThread BoostSystem)
 target_link_libraries(unicode ${ICONV_LIBRARIES})
 
 
-add_custom_target(clean
-  COMMAND rm lambda
-  COMMAND rm unicode
-  COMMAND rm array
-  COMMAND rm thread
-  )
