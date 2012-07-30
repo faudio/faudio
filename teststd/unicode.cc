@@ -13,7 +13,9 @@
 #include <iostream>
 #include <stdexcept>
 #include <algorithm>
+#include <array>
 
+#include <boost/range/algorithm/copy.hpp>
 #include <boost/range/algorithm/transform.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/join.hpp>
@@ -31,10 +33,6 @@ class string_adapter
 {
 public:
     using container_type  = Container;
-    using value_type      = typename container_type::value_type;
-    using size_type       = typename container_type::size_type;
-    using reference       = typename container_type::reference;
-    using const_reference = typename container_type::const_reference;
     using iterator        = typename container_type::iterator;
     using const_iterator  = typename container_type::const_iterator;
 
@@ -56,16 +54,16 @@ struct value_type_of
 
 template <class T>
 struct adapter_of
-{                                           
+{
     using type = string_adapter
         < typename value_type_of<T>::type
-        , T 
+        , T
         >;
 };
 
 template <class Str>
 typename adapter_of<Str>::type unicode(Str& str)
-{                       
+{
     return typename adapter_of<Str>::type(str);
 }
 
@@ -76,16 +74,16 @@ int adapter()
     std::u16string str2;
     str2.resize(str.size());
 
-    // boost::transform(
-    //     unicode(str),
-    //     unicode(str2).begin(),
-    //     [] (char16_t c){ return c + 0; });
-
-    std::transform(
-        unicode(str).begin(),
-        unicode(str).end(),
+    boost::transform(
+        unicode(str),
         unicode(str2).begin(),
-        [] (char16_t c){ return c + 1; });
+        [] (char16_t c){ return c + 10; });
+
+    // std::transform(
+    //     unicode(str2).begin(),
+    //     unicode(str2).end(),
+    //     unicode(str2).begin(),
+    //     [] (char16_t c){ return c + 1; });
 
     for (char c : str2)
         std::cout << c;
@@ -112,6 +110,80 @@ int strs()
 
 ////////////////
 
+namespace range 
+{
+    using boost::copy;
+}
+using std::copy;
+
+
+
+template < class SinglePassRange
+         , class OutputIterator >
+void iconv_range(const SinglePassRange& input,
+                       OutputIterator   output,
+                       iconv_t          converter)
+{        
+    // TODO some concept check to see that range::value_type is convertible to char
+    size_t size    = boost::size(input);
+    size_t insize  = sizeof(char) * size;
+    size_t outsize = insize;
+
+    std::unique_ptr<char> inbuf  (new char[size]);
+    std::unique_ptr<char> outbuf (new char[size]);
+    char *inbuf_ptr  = inbuf.get();
+    char *outbuf_ptr = outbuf.get();
+
+    range::copy(input, inbuf.get());
+    size_t conv_result = iconv(converter, &inbuf_ptr, &insize, &outbuf_ptr, &outsize);
+    copy(outbuf.get(), outbuf.get() + size, output);
+}
+
+
+// template < class SinglePassRange
+//          , class OutputIterator >
+// bool iconv_range(const SinglePassRange& input,
+//                        OutputIterator   output,
+//                        iconv_t          converter)
+// {        
+//     // TODO some concept check to see that range::value_type is convertible to char
+//     size_t size = boost::size(input);
+//     size_t insize  = sizeof(char) * size;
+//     size_t outsize = insize;
+// 
+//     char *inbuf2,  *inbuf;  
+//     char *outbuf2, *outbuf;
+//     inbuf  = inbuf2  = new char[size];
+//     outbuf = outbuf2 = new char[size];
+// 
+//     range::copy(input, inbuf);
+//     size_t conv_result = iconv(converter, &inbuf2, &insize, &outbuf2, &outsize);
+//     copy(outbuf, outbuf + size, output);
+// 
+//     delete [] inbuf;
+//     delete [] outbuf;
+//     return true;
+// }
+
+
+int test_iconv_range2()
+{
+//    std::array<char,4> x = { 'h', 'a', 'n', 's' };
+    char x[5] = "hans";
+    std::string y;
+    y.resize(4);
+
+    iconv_t cd = iconv_open("ASCII", "MacRoman");
+    if (cd == reinterpret_cast<iconv_t>(-1))
+    {
+        std::cerr << "Could not open converter\n";
+        return -1;
+    }
+    iconv_range(x, y.begin(), cd);
+    // std::cout << "x is " << x << "\n";
+    std::cout << "y is " << y << "\n";
+    return 0;
+}
 
 
 int algorithms()
@@ -172,5 +244,6 @@ int main (int argc, char const *argv[])
        | strs()
        | algorithms()
        | iconv()
+       | test_iconv_range2()
     ;
 }
