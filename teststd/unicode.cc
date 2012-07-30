@@ -21,11 +21,9 @@
 #include <boost/algorithm/string/join.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 
-// #include "Converter.h"
-// #include "Converter.cc"
+#include "iconv_cpp.h"
 
 #include <iconv.h> // not supported on MSYS yet
-
 
 
 template <class T, class Container = std::basic_string<T>>
@@ -138,6 +136,7 @@ void iconv_range(const SinglePassRange& input,
     size_t conv_result = iconv(converter, &inbuf_ptr, &insize, &outbuf_ptr, &outsize);
     copy(outbuf.get(), outbuf.get() + size, output);
 }
+
 
 
 // template < class SinglePassRange
