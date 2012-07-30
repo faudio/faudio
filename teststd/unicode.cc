@@ -31,12 +31,12 @@ class string_adapter
 {
 public:
   using container_type = Container;
-  using iterator       = typename container_type::iterator;
+  using iterator     = typename container_type::iterator;
   using const_iterator = typename container_type::const_iterator;
 
   explicit string_adapter(container_type& str) : mStr(str) {}
-  iterator       begin()       { return mStr.begin(); }
-  iterator       end()         { return mStr.end();   }
+  iterator     begin()     { return mStr.begin(); }
+  iterator     end()     { return mStr.end();   }
   const_iterator begin() const { return mStr.begin(); }
   const_iterator end()   const { return mStr.end();   }
 private:
@@ -54,9 +54,9 @@ template <class T>
 struct adapter_of
 {
   using type = string_adapter
-    < typename value_type_of<T>::type
-    , T
-    >;
+  < typename value_type_of<T>::type
+  , T
+  >;
 };
 
 template <class Str>
@@ -73,9 +73,9 @@ int adapter()
   str2.resize(str.size());
 
   boost::transform(
-    unicode(str),
-    unicode(str2).begin(),
-    [] (char16_t c){ return c + 10; });
+  unicode(str),
+  unicode(str2).begin(),
+  [] (char16_t c){ return c + 10; });
 
   // std::transform(
   //   unicode(str2).begin(),
@@ -84,7 +84,7 @@ int adapter()
   //   [] (char16_t c){ return c + 1; });
 
   for (char c : str2)
-    std::cout << c;
+  std::cout << c;
   std::cout << '\n';
 
   return 0;
@@ -122,9 +122,9 @@ template
   class OutputIterator 
 >
 void iconv_range(const SinglePassRange& input,
-                       OutputIterator   output,
-                       iconv_t          converter)
-{    
+             OutputIterator   output,
+             iconv_t      converter)
+{  
   // TODO some concept check to see that range::value_type is convertible to char
   size_t size  = boost::size(input);
   std::unique_ptr<char> inbuf  (new char[size]);
@@ -133,12 +133,12 @@ void iconv_range(const SinglePassRange& input,
   range::copy(input, inbuf.get());
 
   {
-    char *inbuf_ptr  = inbuf.get();
-    char *outbuf_ptr = outbuf.get();
-    size_t insize    = sizeof(char) * size;
-    size_t outsize   = insize;
+  char *inbuf_ptr  = inbuf.get();
+  char *outbuf_ptr = outbuf.get();
+  size_t insize  = sizeof(char) * size;
+  size_t outsize   = insize;
 
-    size_t conv_result = iconv(converter, &inbuf_ptr, &insize, &outbuf_ptr, &outsize);
+  size_t conv_result = iconv(converter, &inbuf_ptr, &insize, &outbuf_ptr, &outsize);
   }
 
   copy(outbuf.get(), outbuf.get() + size, output);
@@ -155,8 +155,8 @@ int test_iconv_range2()
   iconv_t cd = iconv_open("ASCII", "MacRoman");
   if (cd == reinterpret_cast<iconv_t>(-1))
   {
-    std::cerr << "Could not open converter\n";
-    return -1;
+  std::cerr << "Could not open converter\n";
+  return -1;
   }
   iconv_range(x, y.begin(), cd);
   std::cout << "y is " << y << "\n";
@@ -206,7 +206,7 @@ int iconv()
 
 int sizes()
 {
-  std::cout << "sizeof(char):     " << sizeof(char)   << "\n";
+  std::cout << "sizeof(char):   " << sizeof(char)   << "\n";
   std::cout << "sizeof(wchar_t):  " << sizeof(wchar_t)  << "\n";
   std::cout << "sizeof(char16_t): " << sizeof(char16_t) << "\n";
   std::cout << "sizeof(char32_t): " << sizeof(char32_t) << "\n";
@@ -215,14 +215,13 @@ int sizes()
 }
 
 
-int main (int argc, char const *argv[])
+int main(int argc, char const *argv[])
 {
-  return
-     sizes()
-     | adapter()
-     | strs()
-     | algorithms()
-     | iconv()
-     | test_iconv_range2()
-  ;
+  return 0
+   || sizes()
+   || adapter()
+   || strs()
+   || algorithms()
+   || iconv()
+   || test_iconv_range2();
 }

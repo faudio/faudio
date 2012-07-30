@@ -1,13 +1,13 @@
 
 #include <iostream>
 
-int foo()
+int test_foo()
 {
 }   
 
-int main (int argc, char const *argv[])
+int main(int argc, char const *argv[])
 {
-    return
-       foo()
-    ;
+  return 0
+     || test_foo()
+  ;
 }
