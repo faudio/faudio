@@ -70,7 +70,6 @@ add_executable(smart_pointers     smart_pointers.cc)
 add_executable(thread             thread.cc)
 add_executable(type_traits        type_traits.cc)
 add_executable(unicode            unicode.cc)
-add_executable(valarray           valarray.cc)
 
 target_link_libraries(thread  BoostThread BoostSystem)
 target_link_libraries(unicode ${ICONV_LIBRARIES})
