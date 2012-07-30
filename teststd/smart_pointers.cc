@@ -42,16 +42,16 @@ int test_unique_ptr()
     std::unique_ptr<a> x (new a);
     std::unique_ptr<a> y;
     
-    std::cout << "x has address " << x.get() << "\n";
+    std::cout << "x has address " << x.get()  << "\n";
     std::cout << "x is named "    << *x.get() << "\n";
-    std::cout << "y has address " << y.get() << "\n";
+    std::cout << "y has address " << y.get()  << "\n";
     // std::cout << "y is named "    << *y.get() << "\n";
 
     y = std::move(x);
 
     std::cout << "x has address " << x.get() << "\n";
     // std::cout << "x is named "    << *x.get() << "\n";
-    std::cout << "y has address " << y.get() << "\n";
+    std::cout << "y has address " << y.get()  << "\n";
     std::cout << "y is named "    << *y.get() << "\n";
     
     return 0;
