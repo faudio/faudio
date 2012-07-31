@@ -1,78 +1,57 @@
 
-#include <functional>
-#include <initializer_list>
-#include <iostream>
+#include <array>
+#include <boost/range/algorithm/transform.hpp>
+
+#include <sprout/array.hpp>
+#include <sprout/algorithm/transform.hpp>
 
 
-template <class T>
-struct plus : public std::binary_function<T, T, T>
+int test_runtime()
 {
-  constexpr T operator()(T x, T y)
-  {
-    return x + y;
-  }
-};
-
-template <class T>
-struct min : public std::binary_function<T, T, T>
-{
-  constexpr T operator()(T x, T y)
-  {
-    return (x < y ? x : y);
-  }
-};
-
-template <class T>
-struct HasZero : public std::binary_function<T, bool, bool>
-{
-  constexpr bool operator()(T x, bool y)
-  {
-    return y || (x == 0);
-  }
-};
-
-template < class F,
-           class A = typename F::first_argument_type,
-           class B = typename F::result_type >
-constexpr B foldr_(const A* xs, int off, int size, const B& z)
-{
-  return (off >= size 
-    ? z 
-    : F()(xs[off], foldr_<F, A, B>(xs, off + 1, size, z)));
-}
-
-template < class F,
-           class A = typename F::first_argument_type,
-           class B = typename F::result_type >
-constexpr B foldr(const B& z, const std::initializer_list<A>& xs)
-{
-  return foldr_<F, A, B>(xs.begin(), 0, xs.size(), z);
-}
-
-template <class T>
-constexpr T sum(const std::initializer_list<T>& xs)
-{
-  return foldr<plus<T>>(0, xs);
+  std::array<int,10> xs = { 1, 2, 3 };
+  std::array<int,10> ys;
+  boost::transform(xs, ys.begin(), [] (int x) -> int { return x + 10; });
+  for (int y : ys)
+    std::cout << y << " ";
+  std::cout << "\n";
+  
+  return 0;
 }
 
 
+template<typename T>
+struct add_10 {
+public:
+	typedef T argument_type;
+	typedef T result_type;
+public:
+	constexpr T operator()(T const& x) { return x + 10; }
+};
 
-int test_foo()
+int test_compile_time()
 {
-  std::cout << "Sum: "           << foldr<plus<double>> (0, {1, 2, 3})      << "\n";
-  std::cout << "Contains Zero: " << foldr<HasZero<int>> (false, {1, 2, 0})  << "\n";
-  std::cout << "Least value: "   << foldr<min<double>>  (1e9, { -1, -3, 0}) << "\n";
-  // static_assert(foldr<plus<double>>(0, {1,2,3}) == 6, "sum");
-  // static_assert(foldr<HasZero<int>>(false, {1,2,0}), "zero");
-  // static_assert(foldr<min<double>>(1e9, {-1,-3,0}) == -3, "min");
-  // static_assert(sum({1,2,3}) == 6, "Sum is not 6");
+  constexpr sprout::array<int,10> xs = { 1, 2, 3 };
+  constexpr sprout::array<int,10> ys = {};
+  constexpr auto zs = sprout::transform(
+    sprout::begin(xs), 
+    sprout::end(xs),
+    ys,
+    add_10<int>()
+    );
+  for (int z : zs)
+    std::cout << z << " ";
+  std::cout << "\n";
+
 
   return 0;
 }
 
+
+
 int main(int argc, char const* argv[])
 {
   return 0
-         || test_foo()
-         ;
+    || test_runtime()
+    || test_compile_time()
+    ;
 }

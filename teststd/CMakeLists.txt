@@ -8,15 +8,17 @@ if(APPLE)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
 else()
   set(CMAKE_CXX_COMPILER 
-    "c++")
+    "c++"
+    )
 endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
 include_directories(../external_libraries/boost)
+include_directories(../external_libraries/sprout)
 
-if(APPLE)
-  add_definitions("-stdlib=libc++")
-endif()
+# if(APPLE)
+  # add_definitions("-stdlib=libc++")
+# endif()
 
 find_package(Pthreads)
 find_package(Iconv)
@@ -66,10 +68,15 @@ add_executable(extern_template    extern_template.cc)
 add_executable(initializer_list   initializer_list.cc)
 add_executable(iterator           iterator.cc)
 add_executable(lambda             lambda.cc)
+add_executable(mpl                mpl.cc)
 add_executable(smart_pointers     smart_pointers.cc)
 add_executable(thread             thread.cc)
 add_executable(type_traits        type_traits.cc)
 add_executable(unicode            unicode.cc)
+
+add_executable(logging            logging.cc)
+add_executable(atomic             atomic.cc)
+
 
 target_link_libraries(thread  BoostThread BoostSystem)
 target_link_libraries(unicode ${ICONV_LIBRARIES})
