@@ -3,16 +3,16 @@
 	url = git@git.doremir.com:/repositories/dependencies/boost.git
 [submodule "external_libraries/portaudio/source"]
 	path = external_libraries/portaudio/source
-	url = git@notes.doremir.com:/repositories/dependencies/portaudio.git
+	url = git@git.doremir.com:/repositories/dependencies/portaudio.git
 [submodule "external_libraries/portmidi/source"]
 	path = external_libraries/portmidi/source
-	url = git@notes.doremir.com:/repositories/dependencies/portmidi.git
+	url = git@git.doremir.com:/repositories/dependencies/portmidi.git
 [submodule "external_libraries/sndfile/source"]
 	path = external_libraries/sndfile/source
-	url = git@notes.doremir.com:/repositories/dependencies/sndfile.git
+	url = git@git.doremir.com:/repositories/dependencies/sndfile.git
 [submodule "external_libraries/gtest/source"]
 	path = external_libraries/gtest/source
-	url = git@notes.doremir.com:/repositories/dependencies/gtest.git
+	url = git@git.doremir.com:/repositories/dependencies/gtest.git
 [submodule "external_libraries/fluidsynth/source"]
 	path = external_libraries/fluidsynth/source
-	url = git@notes.doremir.com:/repositories/dependencies/fluidsynth.git
+	url = git@git.doremir.com:/repositories/dependencies/fluidsynth.git
