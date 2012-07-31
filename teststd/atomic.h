@@ -2,7 +2,7 @@
 #ifndef _ATOMIC
 #define _ATOMIC
 
-#define SCLAUDIO_API
+#define SCL_API
 
 #include "atomic_impl.h"
 
@@ -15,50 +15,23 @@ namespace math
   }
 }
 
-/** Implements atomics as specified in the C++0x standard 29.5, with the following limitations:
+// Implements atomics as specified in the C++0x standard 29.5, with the following limitations:
+// 
+//       * No exchange,         see try_replace
+//       * No compare_exchange, see try_replace
+//   
 
-      * No exchange,         see try_replace
-      * No compare_exchange, see try_replace
-  */
-template < 
-  class T, 
-  class AtomicTraits = default_atomic_traits<T>
->
-class SCLAUDIO_API atomic
+template < class T, 
+           class AtomicTraits = default_atomic_traits<T> >
+class SCL_API atomic
 {
 public:
   using traits_type = AtomicTraits;
   using value_type  = typename std::remove_const<T>::type;
   using this_type   = atomic<T, traits_type>;
 
-  /**
-    Constructs an atomic value using the nullary constructor `T()`.
-    \note
-      Non-atomic operation.
-   */
   atomic() {}
 
-  /**
-    Constructs an atomic value using a unary constructor `T(U x)`.
-    \note
-      Non-atomic operation.
-   */
-  template <class U> explicit
-  atomic(U value) : mData(value) {}
-
-  /**
-    Copy constructor.
-    Creates a new atomic value by copying the value of the given atomic variable.
-    \note
-      Non-atomic operation.
-   */
-  atomic(const atomic<T>& other) : mData(other.load()) {}
-
-  /**
-    Destroys the atomic value.
-    \note
-      Non-atomic operation.
-   */
   ~atomic() {}
 
   bool is_lock_free() const volatile
@@ -71,12 +44,6 @@ public:
     return true;
   }
 
-  /**
-    Assignment operator.
-    Replaces the current value with the value of the given atomic variable.
-    \note
-      Atomic operation.
-   */
   void operator =(const atomic<T>& other)
   {
     store(other.load());
@@ -92,12 +59,6 @@ public:
     return load();
   }
 
-
-  /**
-    Retreive the current value.
-    \note
-      Atomic operation.
-   */
   inline T load() const volatile
   {
     return traits_type::get(const_cast<value_type*>(&mData));
@@ -108,11 +69,6 @@ public:
     return traits_type::get(const_cast<value_type*>(&mData));
   }
 
-  /**
-    Replace the current value with the given value.
-    \note
-      Atomic operation.
-   */
   void store(T y) const volatile
   {
     T x;
@@ -129,41 +85,16 @@ public:
     while (!try_replace(x, y));
   }
 
-  /**
-    Replace the current value with the given new value, if the given old value
-    equals the current value.
-    \note
-      Atomic operation.
-   */
   inline bool try_replace(T x, T y) const
   {
     return traits_type::swap(const_cast<value_type*>(&mData), x, y);
   }
 
-  /**
-    Update the current value by applying the given function.
-
-    \invariant
-      The given function should be free of side-effects.
-    \note
-      Atomic operation.
-   */
   void update(std::function<T(T)> function) const
   {
     while (!try_update(function));
   }
 
-  /**
-    Attempt to update the current value by applying the given function.
-
-    If the value was modified, this method returns `true`.
-
-    If the current value changed while the new value was being computed, no modification
-    occurs and this method returns `false`.
-
-    \note
-      Atomic operation.
-   */
   inline bool try_update(std::function<T(T)> function) const
   {
     T x, y;
@@ -172,33 +103,18 @@ public:
     return traits_type::swap(const_cast<value_type*>(&mData), x, y);
   }
 
-  /**
-    Prefix increment operator.
-    \note
-      Atomic operation.
-   */
   inline this_type& operator ++()
   {
     increment(1);
     return *this;
   }
 
-  /**
-    Prefix decrement operator.
-    \note
-      Atomic operation.
-   */
   inline this_type& operator --()
   {
     decrement(1);
     return *this;
   }
 
-  /**
-    Postfix increment operator.
-    \note
-      Atomic operation.
-   */
   inline this_type operator ++(int post)
   {
     atomic temp(this);
@@ -206,11 +122,6 @@ public:
     return temp;
   }
 
-  /**
-    Postfix decrement operator.
-    \note
-      Atomic operation.
-   */
   inline this_type operator --(int post)
   {
     atomic temp(this);
@@ -218,26 +129,16 @@ public:
     return temp;
   }
 
-  /**
-    Increase the atomic number by the given amount.
-    \note
-      Atomic operation.
-   */
   inline void increment(T amount)
   {
     return traits_type::add(&mData, amount);
   }
 
-  /**
-    Decrease the atomic number by the given amount.
-    \note
-      Atomic operation.
-   */
   inline void decrement(T amount)
   {
     return increment(math::negate(amount));
   }
-
+  
 private:
   value_type mData;
 };

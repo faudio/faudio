@@ -31,12 +31,12 @@ class string_adapter
 {
 public:
   using container_type = Container;
-  using iterator     = typename container_type::iterator;
+  using iterator       = typename container_type::iterator;
   using const_iterator = typename container_type::const_iterator;
 
   explicit string_adapter(container_type& str) : mStr(str) {}
-  iterator     begin()     { return mStr.begin(); }
-  iterator     end()     { return mStr.end();   }
+  iterator       begin()       { return mStr.begin(); }
+  iterator       end()         { return mStr.end();   }
   const_iterator begin() const { return mStr.begin(); }
   const_iterator end()   const { return mStr.end();   }
 private:
@@ -133,12 +133,15 @@ void iconv_range(const SinglePassRange& input,
   range::copy(input, inbuf.get());
 
   {
-  char *inbuf_ptr  = inbuf.get();
-  char *outbuf_ptr = outbuf.get();
-  size_t insize  = sizeof(char) * size;
-  size_t outsize   = insize;
+    char *inbuf_ptr  = inbuf.get();
+    char *outbuf_ptr = outbuf.get();
+    size_t insize    = sizeof(char) * size;
+    size_t outsize   = insize;
 
-  size_t conv_result = iconv(converter, &inbuf_ptr, &insize, &outbuf_ptr, &outsize);
+    size_t conv_result = iconv(converter, 
+      &inbuf_ptr,  &insize, 
+      &outbuf_ptr, &outsize
+    );
   }
 
   copy(outbuf.get(), outbuf.get() + size, output);
@@ -206,7 +209,7 @@ int iconv()
 
 int sizes()
 {
-  std::cout << "sizeof(char):   " << sizeof(char)   << "\n";
+  std::cout << "sizeof(char):     " << sizeof(char)     << "\n";
   std::cout << "sizeof(wchar_t):  " << sizeof(wchar_t)  << "\n";
   std::cout << "sizeof(char16_t): " << sizeof(char16_t) << "\n";
   std::cout << "sizeof(char32_t): " << sizeof(char32_t) << "\n";

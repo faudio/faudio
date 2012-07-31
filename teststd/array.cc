@@ -8,7 +8,7 @@ int test_array()
   for (int x : xs)
     std::cout << x << "\n";
 
-  std::cout << "Size is : "   << xs.size()   << "\n";
+  std::cout << "Size is : "     << xs.size()     << "\n";
   std::cout << "Max size is : " << xs.max_size() << "\n";
     
   return 0;
