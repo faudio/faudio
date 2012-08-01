@@ -42,6 +42,8 @@ int test_compile_time()
     std::cout << z << " ";
   std::cout << "\n";
 
+  static_assert(zs[0] == 11, "zs[0] == 11");
+
 
   return 0;
 }

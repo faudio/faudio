@@ -4,6 +4,7 @@
 
 #define SCL_API
 
+#include <functional>
 #include "atomic_impl.h"
 
 namespace math
@@ -188,7 +189,7 @@ using atomic_uint_fast64_t      = atomic<uint_fast64_t>;
 using atomic_intptr_t           = atomic<intptr_t>;
 using atomic_uintptr_t          = atomic<uintptr_t>;
 using atomic_size_t             = atomic<size_t>;
-using atomic_ptrdiff_t          = atomic<ptrdiff_t>;
+// using atomic_ptrdiff_t          = atomic<ptrdiff_t>;
 using atomic_intmax_t           = atomic<intmax_t>;
 using atomic_uintmax_t          = atomic<uintmax_t>;
 
