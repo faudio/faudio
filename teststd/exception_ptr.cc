@@ -1,6 +1,5 @@
 
 #include <iostream>
-#include <exception>
 #include "thread.h"
 
 class foo_exception : public std::exception 

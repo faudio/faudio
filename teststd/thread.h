@@ -4,7 +4,7 @@
   #include <thread>
   #include <condition_variable>
   #include <atomic>
-  #include <exception_ptr>
+  #include <exception>
   namespace thread    = std;
   namespace exception = std;
 #else
