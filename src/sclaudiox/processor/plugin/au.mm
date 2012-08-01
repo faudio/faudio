@@ -293,6 +293,7 @@ int AudioUnitDescription::numberOfBuses()
 AudioUnitVersion AudioUnitDescription::version()
 {
     // FIXME
+    return AudioUnitVersion();
 }
 
 AudioPlugin* AudioUnitDescription::plugin()

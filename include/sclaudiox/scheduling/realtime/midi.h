@@ -37,8 +37,9 @@ public:
         int bufferIndex = 0;
         foreach (Message msg, messages)
         {
-            if (bufferIndex < SCL_MIDI_OUTPUT_BUFFER_SIZE)
-                ; // FIXME handle
+            // FIXME handle
+            // if (bufferIndex < SCL_MIDI_OUTPUT_BUFFER_SIZE)
+                // ; 
                 
             foreach(int ch, channels)
             {

@@ -37,8 +37,11 @@ public:
     /** Whether or not the computation has occured. */
     bool is_done();
     
-    /** Access the value, if available. */
-    maybe<T> value() throw no_value;
+    /** Access the value, if available.
+        \throw
+          novalue
+     */
+    maybe<T> value();
 };
 
 
