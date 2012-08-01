@@ -106,8 +106,6 @@ int strs()
 }
 
 
-////////////////
-
 namespace range 
 {
   using boost::copy;
