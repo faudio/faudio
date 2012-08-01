@@ -12,7 +12,7 @@ namespace scl
       seconds;
       milliseconds;
       microseconds;
-    };      
+    };
 
     //! Used for non-sample-accurate timing
     struct approxime
@@ -20,14 +20,14 @@ namespace scl
       double    time;
       time_unit unit;
     };
-    
+
     // Used for sample-accurate timing
     struct time
     {
       rational<int64> time;
       time_unit       unit;
     };
-    
+
     // Used for sample-accurate timing, faster than time where sample rate is known
     struct sampleime
     {

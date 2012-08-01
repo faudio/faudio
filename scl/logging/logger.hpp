@@ -2,7 +2,7 @@
 namespace scl
 {
   class logger
-  {  
+  {
   };
 }
 

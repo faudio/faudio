@@ -44,6 +44,10 @@ components_resolve:
 components_clean: 
 	@pushd $(BUILD_DIRECTORY); $(MAKE) components_clean; popd;
 
+.PHONY: format
+format: 
+	@pushd $(BUILD_DIRECTORY); $(MAKE) format; popd;
+
 .PHONY: run_scorecleaner
 run_scorecleaner: 
 	@pushd $(BUILD_DIRECTORY); $(MAKE) run_scorecleaner; popd;

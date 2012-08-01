@@ -3,7 +3,7 @@ namespace scl
 {
   namespace audio
   {
-    
+
   }
 }
 
