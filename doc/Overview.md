@@ -8,59 +8,113 @@ The audio engine is implemented in C++ with bindings available for other languag
 Files
 ----------
 
-    doc/                Documentation
-    external/           External libraries (as Git submodules)
-    bindings/           Bindings to other languages
-    include/
-        scl/                C++ Header files
-            util/
-            thread/
-            audio/
-        scl-c/              C Header files
-            util/
-            thread/
-            audio/
-    src/                Sources for libraries
-        atomic/
-        thread/
-        parallel/
-        refcount/
+    doc/                            Documentation
+    external/                       External libraries
+    bindings/                       Bindings to other languages
+    scl/                            C++ Header files
+        atomic/                     Cross platform atomic ops, C++0x subset
+        thread/                     Cross platform threads, C++0x subset
+        future/                     Cross platform futures, C++0x superset!
+            future.h
+            shared_future.h
+            interruptible_future.h
+        fifo/
+            fifo.h
+        parallel_range/
+            parallel_range.h
         immutable/
-        util/
+            immutable_list.h
+            immutable_sequence.h
+        logging/
+            logger.h
         audio/
             device/
+                session.h
+                device.h
+                audio/
+                    portaudio_session.h
+                    portaudio_device.h
+                midi/
+                    portaudio_session.h
+                    portmidi_device.h
+                file/
+                    sndfile_device.h
+            scheduler/
+                scheduler.h
+                sync_scheduler.h
+                async_scheduler.h
             processor/
-            scheduling/
+                processor.h
+                simple/  
+                    identity.h
+                    constant.h
+                    random.h
+                    unary.h
+                    binary.h
+                    ternary.h
+                compound/
+                    sequence.h
+                    parallel.h
+                    feedback.h
+                    delay.h
+                synth/
+                    fluidsynth.h
+                analysis/
+                    cuex.h
+                plugin/
+                    au.h
+                    nil.h
+                    vst2.h
             stream/
-    test/               Sources for unit tests
-        scl-audio-tests
-    tools/              Sources for tools
-        scl-sftool
-        scl-audio-httpd
-        scl-audio-oscd
+                stream.h
+                realtime/
+                    portaudio_stream.h
+                    portmidi_stream.h
+                nonrealtime/
+                    sndfile_stream.h
 
-Naming conventions
-----------
-
-In C++, every class and functions reside in the namespace `scl`. C functions and macros are prefixed with `scl` and `SCL` respectively. This should minimize conflicts with other libraries that may be present in the same library or excutable. Furthermore, the API is organized in several sub-namespaces of `scl`:
-
-* `scl::base`       
-  * Core classes, required by everything else.
-* `scl::math`       
-  * Math-related classes and functions.
-* `scl::list`       
-  * List-related classes and functions.
-* `scl::thread`     
-  * Thread- and concurrency-related classes and functions.
-* `scl::util`       
-  * Utility classes and functions, generally not dependent on anything else.
-
-
-* `scl::audio::processor`
-  * Provides creation and composition of audio processors. 
-* `scl::audio::device`
-  * Provides enumeration and management of real-time audio and midi-devices. 
-* `scl::audio::scheduling`
-  * Provides scheduling and communication.
-* `scl::audio::stream`
-  * Provides streams, which encapsulate the device, processor and scheduling functionality into an audio computation.
+        
+    scl-c/                          C Header files
+    libs/                           Sources for libraries
+        atomic/
+            src/
+            test/
+        thread/
+            src/
+            test/
+        parallel_range/
+            src/
+            test/
+        refcount/
+            src/
+            test/
+        immutable/
+            src/
+            test/
+        logging
+            src/
+            test/
+        audio/
+            device/
+                src/
+                test/
+            processor/
+                src/
+                test/
+            scheduling/
+                src/
+                test/
+            stream/
+                src/
+                test/
+    test/                           Sources for unit tests
+        scl-audio-tests/
+            main.cc
+    tools/                          Sources for tools
+        scl-sftool/
+            main.cc
+        scl-audio-httpd/
+            main.cc
+        scl-audio-oscd/
+            main.cc
+            

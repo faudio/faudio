@@ -1,0 +1,8 @@
+
+namespace scl
+{
+  class logger
+  {  
+  };
+}
+

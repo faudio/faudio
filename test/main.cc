@@ -46,7 +46,7 @@
 
 namespace test_c_api
 {
-/*
+
     TEST(AudioDevices, AudioInputAvailable)
     {
         SclPortaudioError err = NULL;
@@ -98,7 +98,7 @@ namespace test_c_api
     TEST(ThreadLocal, Base)
     {
     }
-*/
+
 }
 
 namespace test_cpp_api
