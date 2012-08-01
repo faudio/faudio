@@ -9,6 +9,7 @@
 #define  _SCLAUDIOX_CONTROL
          
 #include "sclaudiox/core.h"
+#include "sclaudiox/error.h"
 #include "sclaudiox/util/misc.h"
 #include "portmidi.h"
 
@@ -179,7 +180,9 @@ String toString(Atom value)
     {
         case kIntAtom:    return toString(value.getInt());
         case kDoubleAtom: return toString(value.getDouble());
-        case kStringAtom: value.getString();
+        case kStringAtom: return value.getString();
+        default: 
+          throw Impossible();
     }
 }
 
@@ -312,7 +315,7 @@ inline Message midiToMessage(PmMessage midiMsg)
 inline PmMessage messageToMidi(Message msg)
 {
     int status, data1, data2;
-    if (msg.front().getInt() & 0xf0 == 0xC)
+    if ((msg.front().getInt() & 0xf0) == 0xC)
     {
         messageTo(msg, status, data1);        // TODO 
         data2 = 0;

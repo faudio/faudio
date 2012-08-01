@@ -16,3 +16,9 @@
 [submodule "external_libraries/fluidsynth/source"]
 	path = external_libraries/fluidsynth/source
 	url = git@git.doremir.com:/repositories/dependencies/fluidsynth.git
+[submodule "sprout"]
+	path = sprout
+	url = git@git.doremir.com:repositories/dependencies/sprout.git
+[submodule "external_libraries/sprout"]
+	path = external_libraries/sprout
+	url = git@git.doremir.com:repositories/dependencies/sprout.git

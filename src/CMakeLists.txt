@@ -46,6 +46,7 @@ if( APPLE AND BUILD_FRAMEWORK )
     FRAMEWORK_VERSION           ${VERSION}
     LIBRARY_OUTPUT_DIRECTORY    "../Frameworks"
     INSTALL_NAME_DIR            "@executable_path/../Frameworks/ScoreCleanerAudio.framework/ScoreCleanerAudio"
+    COMPILE_FLAGS               "-Wno-deprecated-declarations -Wno-shift-overflow -Wno-parentheses"
     )
   target_link_libraries ( ScoreCleanerAudio_framework ${DEPENDENCIES} )
   set(MAIN_LIBRARY ScoreCleanerAudio_framework PARENT_SCOPE)

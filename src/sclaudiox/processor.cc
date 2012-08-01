@@ -74,6 +74,7 @@ public:
     AudioProcessorDescription* description()
     {
         // FIXME
+        return NULL;
     }
 
     // int numberOfInputs() 
@@ -103,6 +104,7 @@ public:
     AudioProcessorDescription* description()
     {
         // FIXME
+      return NULL;
     }
 
     // int numberOfInputs() 
