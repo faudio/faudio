@@ -2,21 +2,8 @@
 // TODO differences between C++0x and Boost
 // Use intersection
 
-#define USE_BOOST_THREAD
-
-#ifndef USE_BOOST_THREAD
-  #warning "Not using boost threads"
-  #include <thread>
-  #include <condition_variable>
-  #include <atomic>
-  namespace thread = std;
-#else
-  #warning "Using boost threads"
-  #include <boost/thread.hpp>
-  namespace thread = boost;
-#endif
-
 #include <iostream>
+#include "thread.h"
 
 static thread::mutex foo_bar_mutex;
 void foo()

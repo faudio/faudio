@@ -24,7 +24,6 @@ find_package(Pthreads)
 find_package(Iconv)
 
 
-
 ## Boost
 
 # Boost headers
@@ -38,25 +37,32 @@ add_library (BoostSystem STATIC ${BOOST_SYSTEM_SRC})
 aux_source_directory("../external_libraries/boost/libs/filesystem/src" BOOST_FILESYSTEM_SRC)
 add_library(BoostFilesystem STATIC ${BOOST_FILESYSTEM_SRC})
 
-# Boost.Thread library
-set(BOOST_THREAD_SRC "../external_libraries/boost/libs/thread/src/future.cpp")
+macro(add_boost_thread)
+  # Boost.Thread library
+  set(BOOST_THREAD_SRC "../external_libraries/boost/libs/thread/src/future.cpp")
 
-if(WIN32)
-	aux_source_directory("../external_libraries/boost/libs/thread/src/win32/" BOOST_THREAD_PLATFORM)
-	add_definitions(-DBOOST_THREAD_BUILD_LIB)
-elseif(PTHREADS_FOUND)
-	aux_source_directory("../external_libraries/boost/libs/thread/src/pthread/" BOOST_THREAD_PLATFORM)
-	include_directories(${PTHREADS_INCLUDE_DIRS})
-else()
-	message(FATAL_ERROR "Boost.Thread: Needs either pthreads or Windows")
-endif()
+  if(WIN32)
+  	aux_source_directory("../external_libraries/boost/libs/thread/src/win32/" BOOST_THREAD_PLATFORM)
+  	add_definitions(-DBOOST_THREAD_BUILD_LIB)
+  elseif(PTHREADS_FOUND)
+  	aux_source_directory("../external_libraries/boost/libs/thread/src/pthread/" BOOST_THREAD_PLATFORM)
+  	include_directories(${PTHREADS_INCLUDE_DIRS})
+  else()
+  	message(FATAL_ERROR "Boost.Thread: Needs either pthreads or Windows")
+  endif()
 
-add_library(BoostThread STATIC ${BOOST_THREAD_SRC} ${BOOST_THREAD_PLATFORM})
+  add_library(BoostThread STATIC ${BOOST_THREAD_SRC} ${BOOST_THREAD_PLATFORM})
+  set(BOOST_THREAD_LIB BoostThread)
 
-if(WIN32)
+  add_definitions(-DBOOST_CHRONO_HEADER_ONLY=1)
   add_definitions(-DBOOST_THREAD_USE_LIB=1)
+  add_definitions(-DUSE_BOOST_THREAD)
+endmacro()
+
+option(USE_BOOST_THREAD "Force using Boost threads" FALSE)
+if (USE_BOOST_THREAD OR WIN32)
+  add_boost_thread()
 endif()
-add_definitions(-DBOOST_CHRONO_HEADER_ONLY=1)
 
 
 ## Files
@@ -64,6 +70,7 @@ add_definitions(-DBOOST_CHRONO_HEADER_ONLY=1)
 add_executable(array              array.cc)
 add_executable(bind               bind.cc)
 add_executable(constexpr          constexpr.cc)
+add_executable(exception_ptr      exception_ptr.cc)
 add_executable(extern_template    extern_template.cc)
 add_executable(initializer_list   initializer_list.cc)
 add_executable(iterator           iterator.cc)
@@ -77,7 +84,7 @@ add_executable(logging            logging.cc)
 add_executable(atomic             atomic.cc)
 
 
-target_link_libraries(thread  BoostThread BoostSystem)
+target_link_libraries(thread  ${BOOST_THREAD_LIB} BoostSystem)
 target_link_libraries(unicode ${ICONV_LIBRARIES})
 
 
