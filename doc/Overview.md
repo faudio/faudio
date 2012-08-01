@@ -8,17 +8,36 @@ The audio engine is implemented in C++ with bindings available for other languag
 Files
 ----------
 
-    doc                 Documentation
-    external            External libraries (as Git submodules)
-    bindings            Bindings to other languages
-    include             Header files         
-        scl
-            util
-            thread
-            audio
-    src                 Sources for library
-    test                Sources for unit tests 
-    tool                Sources for tools
+    doc/                Documentation
+    external/           External libraries (as Git submodules)
+    bindings/           Bindings to other languages
+    include/
+        scl/                C++ Header files
+            util/
+            thread/
+            audio/
+        scl-c/              C Header files
+            util/
+            thread/
+            audio/
+    src/                Sources for libraries
+        atomic/
+        thread/
+        parallel/
+        refcount/
+        immutable/
+        util/
+        audio/
+            device/
+            processor/
+            scheduling/
+            stream/
+    test/               Sources for unit tests
+        scl-audio-tests
+    tools/              Sources for tools
+        scl-sftool
+        scl-audio-httpd
+        scl-audio-oscd
 
 Naming conventions
 ----------
