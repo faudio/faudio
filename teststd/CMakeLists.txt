@@ -84,7 +84,8 @@ add_executable(logging            logging.cc)
 add_executable(atomic             atomic.cc)
 
 
-target_link_libraries(thread  ${BOOST_THREAD_LIB} BoostSystem)
-target_link_libraries(unicode ${ICONV_LIBRARIES})
+target_link_libraries(thread  		 ${BOOST_THREAD_LIB} BoostSystem)
+target_link_libraries(exception_ptr  ${BOOST_THREAD_LIB} BoostSystem)
+target_link_libraries(unicode 		 ${ICONV_LIBRARIES})
 
 

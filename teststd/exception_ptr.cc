@@ -17,8 +17,8 @@ class bar_exception : public std::exception
     return "Bar &/#!!";
   }
 };
-static std::exception_ptr foo_exception_ptr;
-static std::exception_ptr bar_exception_ptr;
+static exception::exception_ptr foo_exception_ptr;
+static exception::exception_ptr bar_exception_ptr;
 
 
 void foo()
@@ -30,7 +30,7 @@ void foo()
   }
   catch (const std::exception& e)
   {
-    foo_exception_ptr = std::current_exception();
+    foo_exception_ptr = exception::current_exception();
   }
 }
 
@@ -43,18 +43,18 @@ void bar()
   }
   catch (const std::exception& e)
   {                 
-    bar_exception_ptr = std::current_exception();
+    bar_exception_ptr = exception::current_exception();
   }
 }
 
 
-void handle_eptr(std::string msg, std::exception_ptr e)
+void handle_eptr(std::string msg, exception::exception_ptr e)
 {
   try
   {
     if (e)
     {
-      std::rethrow_exception(e);
+      exception::rethrow_exception(e);
     }
   }
   catch (const std::exception& e)

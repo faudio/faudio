@@ -44,8 +44,6 @@ int test_compile_time()
   
   static_assert(zs[0] == 11, "zs[0] == 11");
 
-  static_assert(zs[0] == 11, "zs[0] == 11");
-
 
   return 0;
 }

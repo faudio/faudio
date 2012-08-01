@@ -4,9 +4,13 @@
   #include <thread>
   #include <condition_variable>
   #include <atomic>
-  namespace thread = std;
+  #include <exception_ptr>
+  namespace thread    = std;
+  namespace exception = std;
 #else
   #warning "Using boost threads"
   #include <boost/thread.hpp>
-  namespace thread = boost;
+  #include <boost/exception/exception.hpp>
+  namespace thread    = boost;
+  namespace exception = boost;
 #endif
