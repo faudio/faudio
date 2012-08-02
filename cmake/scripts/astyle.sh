@@ -1,2 +1,3 @@
 #!/bin/bash
-find $1 -name *.hpp | xargs astyle -n
+find -E $@ -regex ".*\\.(h|hpp|c|cc)" \
+    | xargs astyle -n

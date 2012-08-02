@@ -44,9 +44,10 @@ components_resolve:
 components_clean: 
 	@pushd $(BUILD_DIRECTORY); $(MAKE) components_clean; popd;
 
-.PHONY: format
+.PHONY: format                      
+DIRS=scl scl-c
 format: 
-	@pushd $(BUILD_DIRECTORY); $(MAKE) format; popd;
+	./cmake/scripts/astyle.sh $(DIRS)
 
 .PHONY: run_scorecleaner
 run_scorecleaner: 

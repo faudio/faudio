@@ -1,9 +1,12 @@
 
+#ifndef _SCL_REFERENCE_REFERENCE
+#define _SCL_REFERENCE_REFERENCE
+
 #include "scl/atomic.hpp"
 
 namespace scl
 {
-  namespace immutable
+  namespace reference
   {
     template <class Self>
     class reference_counted
@@ -16,7 +19,7 @@ namespace scl
     private:
       atomic_int reference_count;
     };
-    
+
     template <class Self>
     Self retain()
     {
@@ -31,6 +34,12 @@ namespace scl
         delete this;
     }
   }
+
+  template <class Self>
+  struct reference_counted
+  {
+    using type = reference::reference_counted;
+  };
 }
 
 #ifndef SCL_REFERENCE_NO_BOOST
@@ -47,3 +56,4 @@ namespace boost
 }
 #endif
 
+#endif
