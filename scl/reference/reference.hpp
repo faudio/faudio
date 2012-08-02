@@ -1,9 +1,10 @@
 
+#include "scl/atomic.hpp"
+
 namespace scl
 {
   namespace immutable
   {
-    // Reference counted mixin
     template <class Self>
     class reference_counted
     {
@@ -13,8 +14,22 @@ namespace scl
       Self retain();
       void release();
     private:
-      int reference_count;
+      atomic_int reference_count;
     };
+    
+    template <class Self>
+    Self retain()
+    {
+      ++reference_count;
+      return this;
+    }
+
+    template <class Self>
+    void release()
+    {
+      if (--reference_count == 0)
+        delete this;
+    }
   }
 }
 

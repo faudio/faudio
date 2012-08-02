@@ -2,39 +2,29 @@
 namespace scl
 {
   namespace parallel
-  {
-    template <
-    class ParallelInputIterator
-    >
-    ParallelInputIterator divide(ParallelInputIterator begin, ParallelInputIterator end)
-    {
+  {                        
+    // concept ParallelForwardIterator
+    // concept ParallelForwardRange
+
+    
+    template <class InputRange> 
+    InputRange::iterator middle(InputRange range)
+    {             
+      auto _begin = begin(range)
+      auto _end   = end(range)
+      return _begin + distance(_begin, _end) / 2;
     }
 
-    template <
-    class ParallelInputRange
-    >
-    std::pair<ParallelInputRange, ParallelInputRange> divide(ParallelInputRange range)
-    {
-    }
 
-    template <
-    class ParallelInputIterator,
-          class ParallelInputIteratorIterator,
-          int N
-          >
-    ParallelInputIteratorIterator
-    divide_many(ParallelInputIterator begin, ParallelInputIterator end)
+    // Main interface
+    
+    template <class InputRange>
+    std::pair<InputRange, InputRange> split(InputRange range)
     {
-    }
-
-    template <
-    class ParallelInputRange,
-          class ParallelInputRangeRange,
-          int N
-          >
-    ParallelInputRangeRange
-    divide_many(ParallelInputRange range)
-    {
+      begin  = begin(range)
+      middle = middle(range)
+      end    = end(range)
+      return splitted_range(begin, middle, end);
     }
   }
 }

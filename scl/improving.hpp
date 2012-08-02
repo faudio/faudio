@@ -14,7 +14,7 @@ namespace scl
     bool wait() const;
   };
 
-// < :: improving a -> improving a -> improving a
+// (<) :: improving a -> improving a -> improving a
 // x < y  is known to be true  iff x is known and x < y (as y can only grow)
 // x < y  is known to be false iff y is known and !(x < y) (as x can only grow)
 
