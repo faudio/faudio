@@ -16,7 +16,8 @@
     :scorecleaneraudio
     :real-name
       #+:win32 "sclaudio"
-      #+:macosx "libsclaudio.dylib"
+      #+:macosx "libsclaudio.dylib"  
+; FIXME should NOT be hardcoded
 ;      #+:macosx "@executable_path/../Frameworks/ScoreCleanerAudio.framework/ScoreCleanerAudio"
     :connection-style :immediate))
 
