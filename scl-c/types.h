@@ -16,7 +16,7 @@ typedef SclRatio SclRational;
 typedef SclRatio SclRational32;
 typedef SclRatio SclRational64;
 
-SclRational scl_rational_create(SclAny* nom, SclAny* denom);
+SclRational  scl_rational_create(SclAny* nom, SclAny* denom, size_t size);
 void         scl_rational_get_nom(SclRational pair, SclAny* value);
 void         scl_rational_get_denom(SclRational pair, SclAny* value);
 void         scl_rational__free(SclRational pair);
@@ -35,7 +35,8 @@ SclSequence scl_to_string(SclAny);
 
 // ------------------------------------------------------------------------------------------------
 
-/** Pair structure 
+/** 
+    Pair structure 
 
     Note the unsafe create and get methods, each function that provides or accepts pairs is supposed 
     to document the polymorphic type.
@@ -44,7 +45,7 @@ typedef struct SclPairHandle;
 typedef SclPairHandle* SclPair;
 
 
-SclPair scl_pair_create(SclAny* value, SclAny* value);
+SclPair scl_pair_create(SclAny* first, size_t firstSize, SclAny* second, size_t secondSize);
 void    scl_pair_get_left(SclPair pair, SclAny* value);
 void    scl_pair_get_right(SclPair pair, SclAny* value);
 void    scl_pair_free(SclPair pair);
@@ -52,7 +53,8 @@ void    scl_pair_free(SclPair pair);
 
 // ------------------------------------------------------------------------------------------------
 
-/** Sequence structure                             
+/** 
+    Sequence structure                             
 
     Note the unsafe create and get methods, each function that provides or accepts pairs is supposed 
     to document the polymorphic type.
@@ -62,7 +64,7 @@ typedef SclSequenceHandle* SclSequence;
 
                 
 SclSequence     scl_sequence_empty();
-SclSequence     scl_sequence_create(SclAny* value, SclSequence rest);
+SclSequence     scl_sequence_create(SclAny* value, size_t valueSize, SclSequence rest);
 
 int             scl_sequence_is_empty(SclSequence value);
 void            scl_sequence_get_first(SclSequence sequence, SclAny* value);
@@ -74,8 +76,6 @@ void            scl_sequence_free(SclSequence sequence);
 
 // ------------------------------------------------------------------------------------------------
 
-/** A full-fledged discriminated union.
- */
 typedef struct SclDynamicHandle;
 typedef SclDynamicHandle* SclDynamic;
 
