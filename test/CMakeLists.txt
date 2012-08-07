@@ -40,7 +40,8 @@ if(BUILD_TESTS)
   endif()
   target_link_libraries(scl_audio_tests
     ${MAIN_LIBRARY}
-    ${GTEST})
+    ${GTEST_LIBRARY}
+    )
 endif()
 
 add_custom_target(test        

@@ -7,6 +7,25 @@
 cmake_minimum_required(VERSION 2.8.8)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
+## Select language version
+# include(FindC++0x)
+if(APPLE)
+  set(CMAKE_CXX_COMPILER
+    "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++"
+    )
+  set(CMAKE_CXX_FLAGS 
+    "${CMAKE_CXX_FLAGS} -stdlib=libc++"
+    )
+else()
+  set(CMAKE_CXX_COMPILER
+    "c++"
+    )
+endif()
+set(CMAKE_CXX_FLAGS 
+  "${CMAKE_CXX_FLAGS} -std=c++0x"
+  )
+# # #
+
 project(ScoreCleanerAudioEngine C CXX)
 set(VERSION_PRE "")
 set(VERSION_X 1)
@@ -128,6 +147,9 @@ else (NOT COMPONENTS_RESOLVED)
 
   add_definitions(${PTHREAD_DEFINITIONS})
   add_definitions(${ICONV_DEFINITIONS})
+  if (APPLE)
+    add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=1)
+  endif()
   if (WIN32) # only MSYS really...
     # add_definitions(-static-libgcc)	 FIXME
     # add_definitions(-static-libstdc++) FIXME
@@ -235,7 +257,7 @@ else (NOT COMPONENTS_RESOLVED)
 
   ## Process source
 
-  add_subdirectory(src)
+  # add_subdirectory(src)
   add_subdirectory(test)
   # add_subdirectory(tool)
 
