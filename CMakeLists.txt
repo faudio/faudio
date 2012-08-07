@@ -137,6 +137,7 @@ else (NOT COMPONENTS_RESOLVED)
   add_definitions(-DBOOST_CHRONO_HEADER_ONLY=1)
 
   include_directories("include")
+  include_directories(${CMAKE_SOURCE_DIR}) # for scl and scl-c
   include_directories("${CMAKE_BINARY_DIR}/include") # for the conf file
   include_directories(${PTHREADS_INCLUDE_DIRS})
   include_directories(${ICONV_INCLUDE_DIRS})

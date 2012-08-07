@@ -1,7 +1,31 @@
 
+## Add more test here...
+
+aux_source_directory(concept    CONCEPT_SRC)
+aux_source_directory(future     FUTURE_SRC)
+# aux_source_directory(immutable  IMMUTABLE_SRC)
+aux_source_directory(improving  IMPROVING_SRC)
+aux_source_directory(lockfree   LOCKFREE_SRC)
+aux_source_directory(logging    LOGGING_SRC)
+aux_source_directory(parallel   PARALLEL_SRC)
+aux_source_directory(reference  REFERENCE_SRC)
+
+set(SRCS
+  ${CONCEPT_SRC}
+  ${FUTURE_SRC}
+  # ${IMMUTABLE_SRC}
+  ${IMPROVING_SRC}
+  ${LOCKFREE_SRC}
+  ${LOGGING_SRC}
+  ${PARALLEL_SRC}
+  ${REFERENCE_SRC}
+  )
+
 if(BUILD_TESTS)
   set(SCL_TEST_DEFINITIONS ${SCL_DEFINITIONS})
-  add_executable(scl_audio_tests "main.cc")
+  add_executable(scl_audio_tests
+    ${SRCS}
+    "main.cc")
   if(APPLE)
     set_target_properties(scl_audio_tests PROPERTIES
       OUTPUT_NAME               "scl_audio_tests"
