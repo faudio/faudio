@@ -10,6 +10,5 @@ template <class T>
 struct Monoid
   : Semigroup<T>
   , boost::DefaultConstructible<T>
-{
-};
+{};
 

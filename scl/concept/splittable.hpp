@@ -15,7 +15,7 @@ struct Splittable
     p = scl::split(a);
   }
 private:
-  std::pair<T,T> p;
+  std::pair<T, T> p;
   T a;
 };
 
