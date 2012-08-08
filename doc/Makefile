@@ -1,12 +1,21 @@
 
-main : lispdoc doxygen
+all : pdf html
+
+html : lispdoc doxygen
 
 lispdoc :
 	# tool/lispdoc.hs language_bindings/lisp/*.lisp > Lisp.md;
 
-book:
+pdf:
 	mkdir -p build/book; \
-	pandoc -S --table-of-contents -o "build/book/Audio Engine.pdf" *.md; \
+	pandoc -S --table-of-contents -o "build/book/Audio Engine.pdf" \
+		Reference.md \
+		Basic\ concepts.md \
+		Types\ of\ devices.md \
+		Audio\ types.md \
+		Midi\ types.md \
+		Signals\ and\ processors.md \
+		Build\ and\ install.md;
 
 cat-build-scripts :
 	;

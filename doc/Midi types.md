@@ -1,0 +1,6 @@
+
+Midi types
+==========
+
+\pagebreak
+

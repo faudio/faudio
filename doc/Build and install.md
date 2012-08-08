@@ -2,19 +2,32 @@
 Build and install
 =========================
 
-Platforms
+Prerequisites
 ------------
+
+This is a complete list of platforms, libraries and toolchains required to build the Audio Engine. For
+the standard platforms, most dependencies are available as binaries on the DoReMIR package server. See
+below for a step-by-step instruction on how to build.
+
+### Platforms
 
 Currently supported:
 
 * Mac OS X 10.5 (32-bit)
 * Windows XP or later (32-bit)
 
-It should be relatively easy to port the Audio Engine to other platforms, provided that the required dependencies and
-tools are available (see below):
+It should be relatively easy to port the Audio Engine to other platforms, provided that the required
+libraries and tools are available (see below).
 
-Prerequisites
-------------
+### Compilers
+
+A compiler supporting C++0x (aka C++11 and C++11x) is required. Currently tested are:
+
+  * clang 3.1   or later, using libc++ (Apple call this compiler "4.0.0 based of SVN 3.1")
+  * GCC   4.6.2 or later, using libstdc++
+
+
+### Libraries
 
 #### Boost
 
@@ -22,13 +35,13 @@ The Boost libraries are required on all systems. The libraries we currently use 
 
 FIXME
 
-On some system (notably MinGW) we additionally require Boost Thread and Boost Atomic. Other platforms use C++0x
-standard library for atomic operations and threads. Note that Boost.Atomic is not part of the official Boost distribution
-while Boost.Thread is.
+On some system (notably MinGW) we additionally require Boost.Thread and Boost.Atomic. Other platforms use
+C++0x standard library for atomic operations and threads. Note that Boost.Atomic is not part of the official
+Boost distribution while Boost.Thread is.
 
-#### Boost Lockfree
+#### Boost.Lockfree
 
-Boost Lockfree is required on all systems. It is not part of the official Boost distribution.
+Boost.Lockfree is required on all systems. It is not part of the official Boost distribution.
 
 #### Portaudio
 
@@ -53,7 +66,7 @@ by setting `SCL_AUDIO_ENABLE_OSX` or `SCL_AUDIO_ENABLE_WIN`.
 
 #### Google Test (gtest)
 
-Only required for runnning the unit tests.
+Required for runnning the unit tests.
  
 
 
@@ -86,17 +99,10 @@ Required for generating the detailed API documentation (HTML or PDF).
 
 
 
-### Compilers
-
-A compiler supporting C++0x (aka C++11 and C++11x) is required. Currently tested are:
-
-  * clang >= 3.1, using libc++
-  * GCC   >= 4.6.2, using libstdc++
-
-
-
-Downloading the source code
+Step by step
 ----------
+
+### Downloading the source code
 
 The source code, as well as sources for the documentation and language bindings is stored in the repository
 `audio-engine.git`. Its dependencies are stored in separate repositories which are linked into the main repository as
@@ -108,21 +114,18 @@ submodules. To fetch the source code for the audio engine and its dependencies, 
 The last command will change your directory to the checked out repository. All following commands assume that you are
 already in this directory.
 
-Setting up the build environment
-----------     
+### Setting up the build environment
 
     ./bootstrap
     make help
 
-Downloading dependencies
-----------
+### Downloading dependencies
 
     make components_resolve
 
 FIXME
 
-Building dependencies
-----------
+### Building dependencies
 
     make edit_cache -DBUILD_COMPONENTS=1
     make components_resolve
@@ -137,13 +140,11 @@ may or may not have these libraries installed on your local system; this should 
 Note that some dependencies (i.e. Boost) are source only – they do not require a separate build. Yet other dependencies
 are included in the operating system.
 
-Building the audio engine
-----------
+### Building the audio engine
 
     make
 
-Testing the audio engine
-----------
+### Testing the audio engine
 
     make test
 
@@ -152,33 +153,31 @@ Testing the audio engine
 FIXME
 
 
-Building the language bindings
-----------
+### Building the language bindings
 
     make bindings
 
 FIXME
 
-Building the documentation
-----------
+### Building the documentation
 
     make documentation
 
 FIXME
 
-Distributing the audio engine
-----------
+### Distributing the audio engine
 
     make distribute
 
 FIXME
 
 
-Linking the audio engine into another application
-----------
+### Linking the audio engine into another application
 
 By default, dynamic libraries are built. On Mac OS X this is a framework called ScoreCleanerAudio.framework and a dynamic
 library called libsclaudio.dylib. They are different ways of packaging the same executable code. On Windows, a library
 file named sclaudio.lib and a dynamic library file named sclaudio.dll is generated. You can load any of these
 dynamically, using the appropriate system-specific API.
+
+\pagebreak
 
