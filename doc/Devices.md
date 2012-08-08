@@ -1,5 +1,4 @@
 
-
 Device traits
 ========
 

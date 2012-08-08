@@ -1,9 +1,3 @@
 
-
-
-Stream traits
+Streams
 ========
-
-Stream traits:
-
-- Interface: *input* and/or *output*
