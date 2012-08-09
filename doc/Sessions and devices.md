@@ -1,5 +1,5 @@
 
-Midi types
+Sessions and devices
 ==========
 
 \pagebreak

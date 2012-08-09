@@ -1,6 +1,0 @@
-
-Types of devices
-==========
-
-\pagebreak
-

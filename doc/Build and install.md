@@ -33,7 +33,14 @@ A compiler supporting C++0x (aka C++11 and C++11x) is required. Currently tested
 
 The Boost libraries are required on all systems. The libraries we currently use are:
 
-FIXME
+* Concept Check
+* Range
+* Algorithms
+* String Algorithms
+* Lexical Cast
+* Variant
+* Optional
+* Any
 
 On some system (notably MinGW) we additionally require Boost.Thread and Boost.Atomic. Other platforms use
 C++0x standard library for atomic operations and threads. Note that Boost.Atomic is not part of the official

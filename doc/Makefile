@@ -9,12 +9,11 @@ lispdoc :
 pdf:
 	mkdir -p build/book; \
 	pandoc -S --table-of-contents -o "build/book/Audio Engine.pdf" \
-		Reference.md \
-		Basic\ concepts.md \
-		Types\ of\ devices.md \
-		Audio\ types.md \
-		Midi\ types.md \
+		Introduction.md \
+		Overview.md \
+		Sessions\ and\ devices.md \
 		Signals\ and\ processors.md \
+		Scheduling.md \
 		Build\ and\ install.md;
 
 cat-build-scripts :
