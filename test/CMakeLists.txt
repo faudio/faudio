@@ -4,7 +4,7 @@
 aux_source_directory(atomic     ATOMIC_SRC)
 aux_source_directory(concept    CONCEPT_SRC)
 aux_source_directory(future     FUTURE_SRC)
-# aux_source_directory(immutable  IMMUTABLE_SRC)
+aux_source_directory(immutable  IMMUTABLE_SRC)
 aux_source_directory(improving  IMPROVING_SRC)
 aux_source_directory(lockfree   LOCKFREE_SRC)
 aux_source_directory(logging    LOGGING_SRC)
@@ -16,7 +16,7 @@ set(SRCS
   ${ATOMIC_SRC}
   ${CONCEPT_SRC}
   ${FUTURE_SRC}
-  # ${IMMUTABLE_SRC}
+  ${IMMUTABLE_SRC}
   ${IMPROVING_SRC}
   ${LOCKFREE_SRC}
   ${LOGGING_SRC}
