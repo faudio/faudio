@@ -1,6 +1,7 @@
 
 ## Add more test here...
 
+aux_source_directory(atomic     ATOMIC_SRC)
 aux_source_directory(concept    CONCEPT_SRC)
 aux_source_directory(future     FUTURE_SRC)
 # aux_source_directory(immutable  IMMUTABLE_SRC)
@@ -9,8 +10,10 @@ aux_source_directory(lockfree   LOCKFREE_SRC)
 aux_source_directory(logging    LOGGING_SRC)
 aux_source_directory(parallel   PARALLEL_SRC)
 aux_source_directory(reference  REFERENCE_SRC)
+aux_source_directory(thread     THREAD_SRC)
 
 set(SRCS
+  ${ATOMIC_SRC}
   ${CONCEPT_SRC}
   ${FUTURE_SRC}
   # ${IMMUTABLE_SRC}
@@ -19,6 +22,7 @@ set(SRCS
   ${LOGGING_SRC}
   ${PARALLEL_SRC}
   ${REFERENCE_SRC}
+  ${THREAD_SRC}
   )
 
 if(BUILD_TESTS)

@@ -1,6 +1,5 @@
 
-#ifndef _SCL_REFERENCE_REFERENCE
-#define _SCL_REFERENCE_REFERENCE
+#pragma once
 
 #include "scl/atomic.hpp"
 
@@ -54,6 +53,4 @@ namespace boost
     p.release();
   }
 }
-#endif
-
 #endif

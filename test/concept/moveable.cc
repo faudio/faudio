@@ -1,4 +1,5 @@
 //
+// #include <gtest/gtest.h>
 // #include <scl/concept/moveable.hpp>
 //
 // struct move_me
@@ -16,3 +17,6 @@
 // BOOST_CONCEPT_ASSERT((Copyable<move_me>));
 // // BOOST_CONCEPT_ASSERT((Copyable<dont_move_me>)); // should not compile
 //
+// 
+// TEST(Concept, Moveable) {}
+// 

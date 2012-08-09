@@ -1,4 +1,5 @@
 
+#include <gtest/gtest.h>
 #include <scl/concept/copyable.hpp>
 
 struct copy_me
@@ -16,3 +17,4 @@ BOOST_CONCEPT_ASSERT((Copyable<int>));
 BOOST_CONCEPT_ASSERT((Copyable<copy_me>));
 // BOOST_CONCEPT_ASSERT((Copyable<dont_copy_me>)); // should not compile
 
+TEST(Concept, Copyable) {}

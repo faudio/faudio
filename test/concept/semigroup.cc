@@ -1,5 +1,6 @@
 
 #include <string>
+#include <gtest/gtest.h>
 #include <scl/concept/semigroup.hpp>
 
 struct a_semigroup
@@ -26,3 +27,5 @@ BOOST_CONCEPT_ASSERT((Semigroup<double>));
 BOOST_CONCEPT_ASSERT((Semigroup<std::string>));
 BOOST_CONCEPT_ASSERT((Semigroup<std::u16string>));
 BOOST_CONCEPT_ASSERT((Semigroup<std::u32string>));
+
+TEST(Concept, Semigroup) {}

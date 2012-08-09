@@ -1,5 +1,6 @@
 
 #include <string>
+#include <gtest/gtest.h>
 #include <scl/concept/monoid.hpp>
 
 struct a_monoid
@@ -26,3 +27,5 @@ BOOST_CONCEPT_ASSERT((Monoid<double>));
 BOOST_CONCEPT_ASSERT((Monoid<std::string>));
 BOOST_CONCEPT_ASSERT((Monoid<std::u16string>));
 BOOST_CONCEPT_ASSERT((Monoid<std::u32string>));
+
+TEST(Concept, Monoid) {}
