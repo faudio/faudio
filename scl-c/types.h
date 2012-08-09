@@ -35,10 +35,10 @@ SclSequence scl_to_string(SclAny);
 
 // ------------------------------------------------------------------------------------------------
 
-/** 
-    Pair structure 
+/**
+    Pair structure
 
-    Note the unsafe create and get methods, each function that provides or accepts pairs is supposed 
+    Note the unsafe create and get methods, each function that provides or accepts pairs is supposed
     to document the polymorphic type.
   */
 typedef struct SclPairHandle;
@@ -53,16 +53,16 @@ void    scl_pair_free(SclPair pair);
 
 // ------------------------------------------------------------------------------------------------
 
-/** 
-    Sequence structure                             
+/**
+    Sequence structure
 
-    Note the unsafe create and get methods, each function that provides or accepts pairs is supposed 
+    Note the unsafe create and get methods, each function that provides or accepts pairs is supposed
     to document the polymorphic type.
   */
 typedef struct SclSequenceHandle;
 typedef SclSequenceHandle* SclSequence;
 
-                
+
 SclSequence     scl_sequence_empty();
 SclSequence     scl_sequence_create(SclAny* value, size_t valueSize, SclSequence rest);
 
@@ -71,7 +71,7 @@ void            scl_sequence_get_first(SclSequence sequence, SclAny* value);
 scl_sequence    scl_sequence_get_rest(SclSequence sequence);
 
 void            scl_sequence_free(SclSequence sequence);
-                
+
 
 
 // ------------------------------------------------------------------------------------------------
@@ -114,7 +114,7 @@ float           scl_dynamic_get_float(SclDynamic value);
 double          scl_dynamic_get_double(SclDynamic value);
 SclPair         scl_dynamic_get_pair(SclDynamic value);
 SclSequence     scl_dynamic_get_sequence(SclDynamic value);
-                
+
 SclDynamic      scl_dynamic_create_int(int value);
 SclDynamic      scl_dynamic_create_uint(unsigned int value);
 SclDynamic      scl_dynamic_create_int8(int8_t value);
