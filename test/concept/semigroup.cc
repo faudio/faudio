@@ -17,15 +17,15 @@ struct not_a_semigroup
   not_a_semigroup() = delete;
 };
 
-BOOST_CONCEPT_ASSERT((Semigroup<a_semigroup>));
-// BOOST_CONCEPT_ASSERT((Semigroup<not_a_semigroup>)); // should not compile
+BOOST_CONCEPT_ASSERT((scl::Semigroup<a_semigroup>));
+// BOOST_CONCEPT_ASSERT((scl::Semigroup<not_a_semigroup>)); // should not compile
 
-BOOST_CONCEPT_ASSERT((Semigroup<char>));
-BOOST_CONCEPT_ASSERT((Semigroup<int>));
-BOOST_CONCEPT_ASSERT((Semigroup<float>));
-BOOST_CONCEPT_ASSERT((Semigroup<double>));
-BOOST_CONCEPT_ASSERT((Semigroup<std::string>));
-BOOST_CONCEPT_ASSERT((Semigroup<std::u16string>));
-BOOST_CONCEPT_ASSERT((Semigroup<std::u32string>));
+BOOST_CONCEPT_ASSERT((scl::Semigroup<char>));
+BOOST_CONCEPT_ASSERT((scl::Semigroup<int>));
+BOOST_CONCEPT_ASSERT((scl::Semigroup<float>));
+BOOST_CONCEPT_ASSERT((scl::Semigroup<double>));
+BOOST_CONCEPT_ASSERT((scl::Semigroup<std::string>));
+BOOST_CONCEPT_ASSERT((scl::Semigroup<std::u16string>));
+BOOST_CONCEPT_ASSERT((scl::Semigroup<std::u32string>));
 
 TEST(Concept, Semigroup) {}

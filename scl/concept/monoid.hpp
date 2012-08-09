@@ -6,9 +6,11 @@
 #include <boost/concept/requires.hpp>
 #include <scl/concept/semigroup.hpp>
 
-template <class T>
-struct Monoid
-  : Semigroup<T>
-  , boost::DefaultConstructible<T>
-{};
-
+namespace scl
+{
+  template <class T>
+  struct Monoid
+    : Semigroup<T>
+    , boost::DefaultConstructible<T>
+  {};
+}

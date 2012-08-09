@@ -7,15 +7,17 @@
 #include <boost/concept/requires.hpp>
 #include <scl/parallel/split.hpp>
 
-template <class T>
-struct Splittable
+namespace scl
 {
-  BOOST_CONCEPT_USAGE(Splittable)
+  template <class T>
+  struct Splittable
   {
-    p = scl::split(a);
-  }
-private:
-  std::pair<T, T> p;
-  T a;
-};
-
+    BOOST_CONCEPT_USAGE(Splittable)
+    {
+      p = scl::split(a);
+    }
+  private:
+    std::pair<T, T> p;
+    T a;
+  };
+}

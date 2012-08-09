@@ -13,8 +13,8 @@ struct dont_copy_me
   dont_copy_me& operator =(const dont_copy_me&) = delete;
 };
 
-BOOST_CONCEPT_ASSERT((Copyable<int>));
-BOOST_CONCEPT_ASSERT((Copyable<copy_me>));
-// BOOST_CONCEPT_ASSERT((Copyable<dont_copy_me>)); // should not compile
+BOOST_CONCEPT_ASSERT((scl::Copyable<int>));
+BOOST_CONCEPT_ASSERT((scl::Copyable<copy_me>));
+// BOOST_CONCEPT_ASSERT((scl::Copyable<dont_copy_me>)); // should not compile
 
 TEST(Concept, Copyable) {}

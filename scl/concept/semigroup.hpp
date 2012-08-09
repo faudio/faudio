@@ -5,16 +5,19 @@
 #include <boost/concept/assert.hpp>
 #include <boost/concept/requires.hpp>
 
-template <class T>
-struct Semigroup
+namespace scl
 {
-  BOOST_CONCEPT_USAGE(Semigroup)
+  template <class T>
+  struct Semigroup
   {
-    c = a + b;
-  }
-private:
-  T a;
-  T b;
-  T c;
-};
+    BOOST_CONCEPT_USAGE(Semigroup)
+    {
+      c = a + b;
+    }
+  private:
+    T a;
+    T b;
+    T c;
+  };
+}
 
