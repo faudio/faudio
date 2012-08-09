@@ -10,12 +10,13 @@ namespace scl
   template <class T>
   struct MoveConstructible
   {
-    BOOST_CONCEPT_USAGE(MoveConstructible) 
+    BOOST_CONCEPT_USAGE(MoveConstructible)
     {
       T a(std::move(b));    // require move constructor
     }
-   private:
-    void const_constraints(const T& a) {
+  private:
+    void const_constraints(const T& a)
+    {
     }
     T b;
   };
@@ -27,19 +28,19 @@ namespace scl
     {
       a = std::move(b);     // require move assignment
     }
-   private:
+  private:
     void const_constraints(const T& x)
     {
     }
-   private:
+  private:
     T a;
     T b;
   };
 
   template <class T>
   struct Moveable
-    : MoveConstructible<T>
-    , MoveAssignable<T>
+      : MoveConstructible<T>
+      , MoveAssignable<T>
   {};
 }
 

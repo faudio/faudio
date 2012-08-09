@@ -6,7 +6,7 @@
 #include <boost/concept/assert.hpp>
 #include <boost/concept/requires.hpp>
 
-namespace scl 
+namespace scl
 {
   /**
       A type with a lower bound. Note that any DefaultConstructible type models LowerBound.

@@ -7,6 +7,7 @@ namespace scl
 {
   namespace lockfree
   {
-    using stack = boost::lockfree:stack;
+using stack = boost::lockfree:
+                  stack;
   }
 }
