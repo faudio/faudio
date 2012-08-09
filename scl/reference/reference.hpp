@@ -24,14 +24,14 @@ namespace scl
     Self retain()
     {
       ++reference_count;
-      return this;
+      return reinterpret_cast<Self>(this);
     }
 
     template <class Self>
     void release()
     {
       if (--reference_count == 0)
-        delete this;
+        delete reinterpret_cast<Self>(this);
     }
   }
 

@@ -2,7 +2,7 @@
 namespace scl
 {
   namespace future
-  {  
+  {
     concept
     class Interrupible
     {
@@ -19,11 +19,11 @@ namespace scl
       void enable(int priorities);
     };
 
-    
+
     class interruptible_future
     {
     };
-    
+
   }
 }
 

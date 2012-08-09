@@ -8,7 +8,7 @@ namespace scl
     class future_set
     {
     };
-    
+
   }
 }
 
