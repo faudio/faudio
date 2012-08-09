@@ -1,11 +1,10 @@
 
+#include <scl/atomic.hpp>
 #include <scl/thread.hpp>
 #include <scl/concept.hpp>
 
 namespace scl
 {
-  using scl::thread::future;
-
   /** 
       An *improving value* is the continuous version of a future. While a future only have two
       states: not available or available, an improving value generalizes this by proving a
@@ -21,34 +20,31 @@ namespace scl
   public:
     BOOST_CONCEPT_ASSERT((LowerBound<T>));
     BOOST_CONCEPT_ASSERT((LessThanComparable<T>));
+    using value_type = T;
 
-    // ==>
-    // LessThanComparable<improving<T>>
-    // EqualityComparable<improving<T>>
-    // Monoid<improving<T>>
+    improving() noexcept;        // Fixed at std::numeric_limits::lowest()
+    improving(const T) noexcept; // Fixed at the given value
+    ~improving() noexcept;
 
-  //   improving();        // Fixed at std::numeric_limits::lowest()
-  //   improving(const T);
-  //   ~improving();
-  // 
-  //   T value() const;
-  //   T & value() const;  //see future
-  //   void value() const; //see future
-  //   bool known() const;
-  //   bool wait() const;
-  //   future<T> to_future() const;
-  // 
-  // private:
-  //   thread::atomic<T>    current;
-  //   thread::future<void> computation;
+    bool known() const noexcept;
+    T value() const;
+    void wait() const;
+    thread::future<T> to_future() const;
+
+  private:
+    atomic::atomic<T>    current;
+    thread::future<void> computation;
   };
 
   // (<) :: improving a -> improving a -> improving a
   // x < y  is known to be true  iff x is known and x < y (as y can only grow)
   // x < y  is known to be false iff y is known and !(x < y) (as x can only grow)
-//   int operator <(const improving<T>& x, const improving<T>& y)
-//   {
-//   }
+  template <class T>
+  bool operator <(const improving<T>& x, const improving<T>& y)
+  {
+    return false;
+  }
+
 //   int operator ==(const improving<T>& x, const improving<T>& y)
 //   {
 //   }
@@ -59,6 +55,7 @@ namespace scl
 //   {
 //   }
 // 
+
 // 
 //   /**
 //       The improving analogue to a promise.Can improve or fix the improving value, or set an
