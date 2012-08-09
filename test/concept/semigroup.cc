@@ -1,6 +1,5 @@
 
 #include <string>
-#include <gtest/gtest.h>
 #include <scl/concept/semigroup.hpp>
 
 struct a_semigroup

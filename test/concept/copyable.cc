@@ -1,5 +1,4 @@
 
-#include <gtest/gtest.h>
 #include <scl/concept/copyable.hpp>
 
 struct copy_me

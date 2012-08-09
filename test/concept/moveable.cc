@@ -1,5 +1,4 @@
 //
-// #include <gtest/gtest.h>
 // #include <scl/concept/moveable.hpp>
 //
 // struct move_me
