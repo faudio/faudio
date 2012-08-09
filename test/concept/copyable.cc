@@ -2,19 +2,19 @@
 #include <gtest/gtest.h>
 #include <scl/concept/copyable.hpp>
 
-struct copy_me
+struct copy
 {
-  copy_me(const copy_me&) = default;
-  copy_me& operator =(const copy_me&) = default;
+  copy(const copy&) = default;
+  copy& operator =(const copy&) = default;
 };
-struct dont_copy_me
+struct no_copy
 {
-  dont_copy_me(const dont_copy_me&) = delete;
-  dont_copy_me& operator =(const dont_copy_me&) = delete;
+  no_copy(const no_copy&) = delete;
+  no_copy& operator =(const no_copy&) = delete;
 };
 
 BOOST_CONCEPT_ASSERT((scl::Copyable<int>));
-BOOST_CONCEPT_ASSERT((scl::Copyable<copy_me>));
-// BOOST_CONCEPT_ASSERT((scl::Copyable<dont_copy_me>)); // should not compile
+BOOST_CONCEPT_ASSERT((scl::Copyable<copy>));
+// BOOST_CONCEPT_ASSERT((scl::Copyable<no_copy>)); // should not compile
 
 TEST(Concept, Copyable) {}

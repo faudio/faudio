@@ -30,7 +30,7 @@ namespace scl
   {
     BOOST_CONCEPT_USAGE(CopyAssignable)
     {
-      a = b;              // require assignment operator
+      a = b;              // require copy assignment
       const_constraints(b);
     }
   private:
