@@ -7,68 +7,81 @@
 
 namespace scl
 {
-  namespace detail
+  namespace future
   {
-    template <class Event>
-    struct wakeup_service_state
+    namespace wakeup_service
     {
-      wakeup_service_state() : blocked(0)
-        , pending(0) {}
-      using event_type = Event;
-      event_type event;
-      thread::mutex mutex;
-      thread::condition_variable condition;
-      atomic::atomic_int blocked; // number of threads blocking
-      atomic::atomic_int pending; // number of threads waiting to read update condition
-    };
+      using ::scl::atomic::atomic_int;
+      using ::scl::thread::mutex;
+      using ::scl::thread::condition_variable;
+
+      template <class Event>
+      struct wakeup_service_state
+      {
+        using event_type = Event;
+
+        wakeup_service_state()
+          : blocked(0)
+          , pending(0) {}
+
+        event_type         event;
+        mutex              mutex;
+        condition_variable condition;
+        atomic_int         blocked; // number of threads blocking
+        atomic_int         pending; // number of threads waiting to read update condition
+      };
+
+      /** Provides composable blocking
+
+          Similar to a condition variable, with the difference that a thread may block on
+          a series of wakeups.
+
+          Construction, destruction and moving is not thread-safe.
+        */
+      template <class Event>
+      class wakeup_service
+      {
+      public:
+        BOOST_CONCEPT_ASSERT((DefaultConstructible<Event>));
+        BOOST_CONCEPT_ASSERT((Copyable<Event>));
+        using event_type     = Event;
+        using this_type      = wakeup_service<event_type>;
+        using predicate_type = std::function<bool(event_type)>;
+      private:
+        using state_type     = wakeup_service_state<event_type>;
+      public:
+
+        wakeup_service() : state(new state_type) {}
+        wakeup_service(const this_type& other) = delete;
+        wakeup_service(this_type && other) = delete;
+        ~wakeup_service() = default;
+
+        this_type& operator= (const this_type& other) = delete;
+        this_type& operator= (this_type && other) = delete;
+
+        class error : public std::exception
+        {
+          const char* what() const noexcept
+          {
+            return "Inconsistent state in wakeup_service";
+          }
+        };
+
+        /** Block until an event mathcing the predicate occurs */
+        void sleep(std::function<bool(event_type)> predicate);
+
+        /** Signal the given event */
+        void wake(event_type event);
+
+      private:
+        std::unique_ptr<state_type> state;
+      };
+
+    }
   }
 
-  /** Provides composable blocking
-
-      Similar to a condition variable, with the difference that a thread may block on
-      a series of wakeups.
-
-      Construction, destruction and moving is not thread-safe.
-    */
-  template <class Event>
-  class wakeup_service
-  {
-  public:
-    BOOST_CONCEPT_ASSERT((DefaultConstructible<Event>));
-    BOOST_CONCEPT_ASSERT((Copyable<Event>));
-    using event_type     = Event;
-    using this_type      = wakeup_service<event_type>;
-    using predicate_type = std::function<bool(event_type)>;
-  private:
-    using state_type     = detail::wakeup_service_state<event_type>;
-  public:
-
-    wakeup_service() : state(new state_type) {}
-    wakeup_service(const this_type& other) = delete;
-    wakeup_service(this_type && other) = delete;
-    ~wakeup_service() = default;
-
-    this_type& operator= (const this_type& other) = delete;
-    this_type& operator= (this_type && other) = delete;
-
-    class error : public std::exception
-    {
-      const char* what() const noexcept
-      {
-        return "Inconsistent state in wakeup_service";
-      }
-    };
-
-    /** Block until an event mathcing the predicate occurs */
-    void sleep(std::function<bool(event_type)> predicate);
-
-    /** Signal the given event */
-    void wake(event_type event);
-
-  private:
-    std::unique_ptr<state_type> state;
-  };
-
+  using future::wakeup_service::wakeup_service;
+  
   template <class T>
   void wakeup_service<T>::sleep(std::function<bool(event_type)> predicate)
   {
