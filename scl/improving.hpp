@@ -46,21 +46,34 @@ namespace scl
 
     bool known() const noexcept
     {
+      // if single, true
+      // if accumulator, return val == max
+      // if binary, OP(val1, val2) == OP(max1, max2)       always OK ??????
     }
     T value() const
     {
+      // if single, val
+      // if accumulator, val
+      // if binary, OP(val1, val2)
     }
     void wait() const
     {
+      // if single, return
+      // if accumulator, block until known()
+      // if binary, block until left.known() && right.known()
     }
 
     thread::future<T> to_future() const;
 
-  private:
-    bool is_compound;
-    std::function<T(T,T)>             binary_op;
-    std::shared_ptr<accumulator_type> acc_left;
-    std::shared_ptr<accumulator_type> acc_right;
+  private:  
+
+    T val;
+
+    std::shared_ptr<accumulator<T>> acc;
+
+    std::function<T(T,T)>         binary_op;
+    std::shared_ptr<improving<T>> acc_left;
+    std::shared_ptr<improving<T>> acc_right;
   };
   
   //  fixed
