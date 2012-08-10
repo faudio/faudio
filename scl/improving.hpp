@@ -9,10 +9,6 @@
 
 namespace scl
 {
-
-  template <class T>
-  class accumulator;
-
   /**
       An *improving value* is the continuous version of a future. While a future only have two
       states: not available or available, an improving value generalizes this by proving a
@@ -23,6 +19,19 @@ namespace scl
       the value becomes fixed. As with std::future, wait blocks forever if this does not happen.
 
   */
+  template <class T> class improving;
+
+  /**
+      The improving analogue to a promise.Can improve or fix the improving value, or set an
+      exception that will be transported to the reading thread.
+   */
+  template <class T> class accumulator;
+
+
+
+
+
+
   template <class T>
   class improving
   {
@@ -104,12 +113,13 @@ namespace scl
 
 
 
+
+
+
+
+
   static wakeup_service<intptr_t> accumulator_static_wakeup;
 
-  /**
-      The improving analogue to a promise.Can improve or fix the improving value, or set an
-      exception that will be transported to the reading thread.
-   */
   template <class T>
   class accumulator
   {
