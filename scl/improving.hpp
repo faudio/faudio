@@ -114,17 +114,9 @@ namespace scl
   {
     template <class Event>
     struct wakeup_service_state
-    {      
-      wakeup_service_state() 
-        : blocked(0)
-        , pending(0) 
-      {
-        std::cout << "Wakeup state created!\n";
-      }
-      // ~wakeup_service_state()
-      // {
-      //   std::cout << "Wakeup state deleted!\n";
-      // }    
+    {
+      wakeup_service_state() : blocked(0)
+        , pending(0) {}
       using event_type = Event;
       event_type event;
       thread::mutex mutex;
@@ -138,7 +130,7 @@ namespace scl
 
       Similar to a condition variable, with the difference that a thread may block on
       a series of wakeups.
-      
+
       Construction, destruction and moving is not thread-safe.
     */
   template <class Event>
@@ -152,28 +144,16 @@ namespace scl
     using predicate_type = std::function<bool(event_type)>;
   private:
     using state_type     = detail::wakeup_service_state<event_type>;
-  public:    
-    
-    wakeup_service()
-      : state(new state_type) {}
-    // wakeup_service(this_type&& other)
-    //   : state(std::move(other.state)) 
-    //   {
-    //     other.state.reset();
-    //   }
+  public:
 
-    // this_type& operator= (this_type&& other)
-    // {
-    //   this_type temp (std::move(other));
-    //   temp.swap(*this);
-    //   return *this;
-    // }
+    wakeup_service() : state(new state_type) {}
+    wakeup_service(const this_type& other) = delete;
+    wakeup_service(this_type && other) = delete;
+    ~wakeup_service() = default;
 
-    // void swap(this_type& other)
-    // {
-    //   std::swap(state, other.state);
-    // }
-    
+    this_type& operator= (const this_type& other) = delete;
+    this_type& operator= (this_type && other) = delete;
+
     class error : public std::exception
     {
       const char* what() const noexcept
@@ -182,45 +162,52 @@ namespace scl
       }
     };
 
-    // Block until an event mathcing the predicate occurs
-    void sleep(std::function<bool(event_type)> predicate)
-    {
-      using thread::mutex;
-      using thread::unique_lock;
-      if (!state) throw error();
-      {
-        unique_lock<mutex> lock (state->mutex);
-        std::cout << "sleep state is : " << state.get() << "\n";
-        state->blocked += 1;
-        do
-        {
-          state->condition.wait(lock);
-          state->pending -= 1;
-        }
-        while (!predicate(state->event));
-        state->blocked -= 1;
-      }
-    }
+    /** Block until an event mathcing the predicate occurs */
+    void sleep(std::function<bool(event_type)> predicate);
 
-    // Signal the given event
-    void wake(event_type event)
-    {
-      using thread::mutex;
-      using thread::unique_lock;
-      if (!state) throw error();
-      while (state->pending > 0); // busy-wait until the wake has been propagated
-      {                              
-        unique_lock<mutex> lock (state->mutex);
-        std::cout << "wake state is : " << state.get() << "\n";
-        state->event  = event;
-        int b = state->blocked;
-        state->pending = b;
-      }
-      state->condition.notify_all();
-    }
+    /** Signal the given event */
+    void wake(event_type event);
 
-  private:                                  
+  private:
     std::unique_ptr<state_type> state;
   };
+
+  template <class T>
+  void wakeup_service<T>::sleep(std::function<bool(event_type)> predicate)
+  {
+    using thread::mutex;
+    using thread::unique_lock;
+    if (!state) throw error();
+    {
+      unique_lock<mutex> lock(state->mutex);
+      std::cout << "sleep state is : " << state.get() << "\n";
+      state->blocked += 1;
+      do
+      {
+        state->condition.wait(lock);
+        state->pending -= 1;
+      }
+      while (!predicate(state->event));
+      state->blocked -= 1;
+    }
+  }
+
+  template <class T>
+  void wakeup_service<T>::wake(event_type event)
+  {
+    using thread::mutex;
+    using thread::unique_lock;
+    if (!state) throw error();
+    while (state->pending > 0); // busy-wait until former wakes have been propagated
+    {
+      unique_lock<mutex> lock(state->mutex);
+      std::cout << "wake state is : " << state.get() << "\n";
+      state->event  = event;
+      int b = state->blocked;
+      state->pending = b;
+    }
+    state->condition.notify_all();
+  }
+
 
 }

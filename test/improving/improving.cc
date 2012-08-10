@@ -6,7 +6,7 @@
 
 namespace scl
 {
-  BOOST_CONCEPT_ASSERT((Moveable<wakeup_service<int>>));    
+  // BOOST_CONCEPT_ASSERT((Moveable<wakeup_service<int>>));    
 
   enum signal 
   {
