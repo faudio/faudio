@@ -13,54 +13,52 @@ namespace scl
     foo, bar, baz
   };
   
-  static thread::mutex print_mutex;
+  using wakeup_ptr = std::shared_ptr<wakeup_service<signal>>;
+             
   static atomic::atomic_int count (0);
-           
-  void sleep_until(wakeup_service<signal>* wakeup, signal sig)
+  void sleep_until(wakeup_ptr wakeup, signal sig)
   {
   
     std::function<bool(signal)> pred = 
       [=] (signal event) { return event == sig; };
-
     wakeup->sleep(pred);
-
     count++;
-    // {
-    //   thread::unique_lock<thread::mutex>(print_mutex);
-    //   std::cout << "sleep_until woke up on signal: " << sig << "\n";      
-    //   std::cout.flush();
-    // }
   }  
   
   TEST(Improving, WakeupService)
-  {
-    using thread::thread;
-    wakeup_service<signal> wakeup;
- 
-    for (int i = 0; i < 500; ++i)
+  { 
+    using thread::thread;    
+    static const int thread_iterations = 10;
+
+    wakeup_ptr w (new wakeup_service<signal>());
+   
+    for (int i = 0; i < thread_iterations; ++i)
     {
-      thread x (sleep_until, &wakeup, foo);
-      thread y (sleep_until, &wakeup, bar);
-      thread z (sleep_until, &wakeup, baz);
+      thread x (sleep_until, w, foo);
+      thread y (sleep_until, w, bar);
+      thread z (sleep_until, w, baz);
       x.detach();
       y.detach();
       z.detach();
-    }                                      
+    }
     
-    std::chrono::milliseconds d( 1000 );
-    // std::this_thread::yield();
-    
-    std::this_thread::sleep_for(d);
+    std::chrono::milliseconds d (1000);
+    // std::this_thread::sleep_for(d);
 
     std::cout << "Beginning wakeup\n";
-    wakeup.wake(foo);
-    wakeup.wake(bar);
-    wakeup.wake(baz);
+    w->wake(foo);
+    w->wake(foo);
+    w->wake(foo);
+    w->wake(foo);
+    w->wake(bar);
+    w->wake(baz);
     std::cout << "Finishing wakeup\n";
 
-    std::this_thread::sleep_for(d * 2);
-    std::cout << "Number of woken threads: " << count << "\n";
-  }
+    std::this_thread::sleep_for(d);
+    std::cout << "Number of woken threads: " << count << "\n";    
+    assert(count == thread_iterations * 3);
+  }     
+
   
 }
 
