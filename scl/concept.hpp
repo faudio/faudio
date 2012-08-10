@@ -11,4 +11,7 @@
 namespace scl
 {
   using boost::LessThanComparable;
+  using boost::DefaultConstructible;
+
+  // TODO add all...
 }
