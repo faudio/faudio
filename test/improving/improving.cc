@@ -1,6 +1,7 @@
 
 #include <iostream>
-#include <chrono>
+#include <chrono>       
+#include <memory>
 #include <gtest/gtest.h>
 #include <scl/improving.hpp>
 
@@ -40,6 +41,17 @@ namespace scl
 TEST(Improving, Basic)
 {             
   std::cout << "Size of improving<int> is: " << sizeof(improving<int>) << "\n";
+
+  std::shared_ptr<accumulator<unsigned int>> acc (new accumulator<unsigned int>);
+  improving<unsigned int> x;
+  improving<unsigned int> y (3);
+  improving<unsigned int> z (acc);
+  // improving<int>   zz = acc->get_improving();
+  
+  std::cout << "x is " << x.value() << ", " << (x.known() ? "fixed" : "improving") << "\n";
+  std::cout << "y is " << y.value() << ", " << (y.known() ? "fixed" : "improving") << "\n";
+  std::cout << "z is " << z.value() << ", " << (z.known() ? "fixed" : "improving") << "\n";
+  
   
   // accumulator<int> x;
   // accumulator<int> y;
