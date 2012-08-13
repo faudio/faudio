@@ -31,19 +31,19 @@ namespace scl
         atomic_int         pending; // number of threads waiting to read update condition
       };
 
-/**
-    Provides composable blocking, allowing a thread to wait for a *set* of events
-    instead of a single event as in a condition variable. As with a condition
-    variable, care should be taken to assure that one-time wakeups are not missed
-    by the blocking thread.
+      /**
+          Provides composable blocking, allowing a thread to wait for a *set* of events
+          instead of a single event as in a condition variable. As with a condition
+          variable, care should be taken to assure that one-time wakeups are not missed
+          by the blocking thread.
 
-    More formally, for any p and x such that p(x) is true, if a thread A calls
-    sleep(p) and another thread B calls wake(x) and the call to sleep happens
-    before the call to wake, all statements preceding the call to wake happens
-    before any statements following the call to sleep.
+          More formally, for any p and x such that p(x) is true, if a thread A calls
+          sleep(p) and another thread B calls wake(x) and the call to sleep happens
+          before the call to wake, all statements preceding the call to wake happens
+          before any statements following the call to sleep.
 
-    Construction, destruction and moving is not thread-safe.
-*/
+          Construction, destruction and moving is not thread-safe.
+      */
       template <class Event>
       class wakeup_service
       {
@@ -87,7 +87,7 @@ namespace scl
   }
 
   using future::wakeup_service::wakeup_service;
-  
+
   template <class T>
   void wakeup_service<T>::sleep(std::function<bool(event_type)> predicate)
   {
@@ -112,15 +112,15 @@ namespace scl
   {
     using thread::mutex;
     using thread::unique_lock;
-    if (!state) throw error(); 
-/*
-    To avoid an extra lock, we busy wait until all other threads have been woken
-    This should be fast, as only the predicate will run before the mutex is
-    released and the next thread is woken.
-    
-    Note that even after the wait we may block on the mutex for the last predicate.
-*/
-    while (state->pending > 0);    
+    if (!state) throw error();
+    /*
+        To avoid an extra lock, we busy wait until all other threads have been woken
+        This should be fast, as only the predicate will run before the mutex is
+        released and the next thread is woken.
+
+        Note that even after the wait we may block on the mutex for the last predicate.
+    */
+    while (state->pending > 0);
     {
       unique_lock<mutex> lock(state->mutex);
       state->event  = event;
