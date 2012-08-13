@@ -8,35 +8,12 @@
 
 namespace scl
 {
- // BOOST_CONCEPT_ASSERT((Moveable<improving<int>>));
-//   // EqualityComparable<improving<T>>
-//   // Monoid<improving<T>>
-// 
-// 
-// void produce(accumulator<int>& x, int interval)
-// {
-//   for (int i; i < 10; ++i)
-//   {
-//     thread::sleep_millis(interval);
-//     x += 1;
-//   }
-//   x.fix();
-// }         
-// 
-// void poll(improving<int>& a, improving<int>& b, improving<int>& c, improving<int>& d, int interval)
-// {
-//   for (int i; i < 10; ++i)
-//   {
-//     thread::sleep_millis(interval);
-//     std::cout << "a: " << a.value() << "\n";
-//     std::cout << "b: " << b.value() << "\n";
-//     std::cout << "c: " << c.value() << "\n";
-//     std::cout << "d: " << d.value() << "\n";
-//     std::cout << "\n";
-//   }
-// }
-// 
-// 
+  BOOST_CONCEPT_ASSERT((Moveable<improving<int>>));
+  
+  // These do not hold, as improving<bool> is not convertible to bool:  
+  //    BOOST_CONCEPT_ASSERT((EqualityComparable<improving<int>>));
+  //    BOOST_CONCEPT_ASSERT((LessThanComparable<improving<int>>));
+
 
 TEST(Improving, Min)
 {             
@@ -132,9 +109,9 @@ void poll(improving<float>* a,
           improving<float>* c,
           improving<float>* d)
 {
-  for (int i = 0; i < 100; ++i)
+  for (int i = 0; i < 50; ++i)
   {
-    std::chrono::milliseconds dur (50);
+    std::chrono::milliseconds dur (100);
     std::this_thread::sleep_for(dur);    
 
     std::cout << "  a: " << *a << print_bar(a->value() / 100) << "\n";
@@ -155,8 +132,10 @@ TEST(Improving, Poll)
   
   improving<float> a = x->get_improving();
   improving<float> b = y->get_improving();
-  improving<float> c = min(a, b);
-  improving<float> d = max(a, b);
+  improving<float> n (30);   
+  // FIXME does not go from accumulating to fixed at threshold
+  improving<float> c = min(a, n);
+  improving<float> d = min(b, n);
 
   thread::thread poller (poll, &a, &b, &c, &d);  
   px.join();
