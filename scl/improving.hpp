@@ -11,7 +11,7 @@ namespace scl
 {
   template <class T> class improving;
   template <class T> class accumulator;
-  // FIXME do we really need to pass the wakeup?
+
   static wakeup_service<std::nullptr_t> accumulator_static_wakeup;
   
   // Current state of an improving value, one of:
@@ -28,7 +28,8 @@ namespace scl
   };
   
   template <class T> struct imp_state_ptr
-  {
+  {         
+    imp_state_ptr() = delete;
     using type = typename std::shared_ptr<imp_state<T>>;
   };
 
@@ -106,15 +107,11 @@ namespace scl
 
     bool known() const 
     {
-      bool lk = left->known();
-      bool rk = right->known();
-      return lk && rk;
+      return left->known() && right->known();
     }
     T value() const 
     {
-      T lv = left->value();
-      T rv = right->value();
-      return func(lv, rv);
+      return func(left->value(), right->value());
     }
     void wait()  const 
     {
@@ -123,91 +120,128 @@ namespace scl
       accumulator_static_wakeup.sleep(pred);
     }
   private:
-    std::function<T(T, T)> func;                 // 16
-    typename imp_state_ptr<T>::type left;  // 8
-    typename imp_state_ptr<T>::type right; // 8
+    std::function<T(T, T)>          func;
+    typename imp_state_ptr<T>::type left;
+    typename imp_state_ptr<T>::type right;
   };
   
   
   template<typename T>
   typename imp_state_ptr<T>::type 
-  min(const imp_state<T>& x, const imp_state<T>& y)
+  min(typename imp_state_ptr<T>::type x, 
+      typename imp_state_ptr<T>::type y)
   {
-    if (x.known() && x.value() <= y.value())
+    if (x->known() && x->value() <= y->value())
       return x;
-    if (y.known() && y.value() <= x.value())
+    if (y->known() && y->value() <= x->value())
       return y;
-    if (x.known() && y.known() && x.value() == y.value())
+    if (x->known() && y->known() && x->value() == y->value())
       return x;
+    return typename imp_state_ptr<T>::type(
+      new imp_binary<T>(
+        [] (T x, T y) -> T { return std::min(x, y); }, 
+        x, y));
   }
+
   template<typename T>
   typename imp_state_ptr<T>::type 
   max(const imp_state<T>& x, const imp_state<T>& y)
   {
-    if (x.known() && x.value() <= y.value())
+    if (x->known() && x->value() <= y->value())
       return y;
-    if (y.known() && y.value() <= x.value())
+    if (y->known() && y->value() <= x->value())
       return x;
-    if (x.known() && y.known() && x.value() == y.value())
+    if (x->known() && y->known() && x->value() == y->value())
       return x;
+    return typename imp_state_ptr<T>::type(
+      new imp_binary<T>(
+        [] (T x, T y) -> T { return std::max(x, y); }, 
+        x, y));
   }
 
   template<typename T>
   typename imp_state_ptr<T>::type 
   operator+ (const imp_state<T>& x, const imp_state<T>& y)
   {
+    return typename imp_state_ptr<T>::type(
+      new imp_binary<T>(
+        std::plus<T>(),
+        x, y));
   }
   template<typename T>
   typename imp_state_ptr<T>::type 
   operator- (const imp_state<T>& x, const T& y)
   {
+    // FIXME
   }
   template<typename T>
   typename imp_state_ptr<T>::type 
   operator* (const imp_state<T>& x, const imp_state<T>& y)
   {
+    return typename imp_state_ptr<T>::type(
+      new imp_binary<T>(
+        std::multiplies<T>(),
+        x, y));
   }
   template<typename T>
   typename imp_state_ptr<T>::type 
   operator/ (const imp_state<T>& x, const T& y)
-  {
+  {                    
+    // FIXME
   }
 
   template<typename T>
   typename imp_state_ptr<bool>::type 
   operator< (const imp_state<T>& x, const imp_state<T>& y)
   {
-    if (x.known() && x.value() < y.value())
+    if (x->known() && x->value() < y->value())
       return imp_state_ptr<bool>::type(new imp_const<bool>(true));
 
-    if (y.known() && y.value() < x.value())
+    if (y->known() && y->value() < x->value())
       return imp_state_ptr<bool>::type(new imp_const<bool>(false));
 
-    if (x.known() && y.known() && x.value() == y.value())
+    if (x->known() && y->known() && x->value() == y->value())
       return imp_state_ptr<bool>::type(new imp_const<bool>(false));
+
+    return typename imp_state_ptr<T>::type(
+      new imp_binary<T>(
+        std::less<T>(),
+        x, y));
   }
+
   template<typename T>
   typename imp_state_ptr<bool>::type 
   operator<= (const imp_state<T>& x, const imp_state<T>& y)
   {
-    if (x.known() && x.value() <= y.value())
+    if (x->known() && x->value() <= y->value())
       return imp_state_ptr<bool>::type(new imp_const<bool>(true));
 
-    if (x.known() && y.known() && x.value() == y.value())
+    if (x->known() && y->known() && x->value() == y->value())
       return imp_state_ptr<bool>::type(new imp_const<bool>(true));
+
+    return typename imp_state_ptr<T>::type(
+      new imp_binary<T>(
+        std::less_equal<T>(),
+        x, y));
   }
+
   template<typename T>
   typename imp_state_ptr<bool>::type 
   operator== (const imp_state<T>& x, const imp_state<T>& y)
   {
-    if (x.known() && x.value() < y.value())
+    if (x->known() && x->value() < y->value())
       return imp_state_ptr<bool>::type(new imp_const<bool>(false));
 
-    if (y.known() && y.value() < x.value())
+    if (y->known() && y->value() < x->value())
       return imp_state_ptr<bool>::type(new imp_const<bool>(false));
 
-    if (x.known() && y.known() && x.value() == y.value())
+    if (x->known() && y->known() && x->value() == y->value())
       return imp_state_ptr<bool>::type(new imp_const<bool>(true));
+
+    return typename imp_state_ptr<T>::type(
+      new imp_binary<T>(
+        std::equal<T>(),
+        x, y));
   }
   
 
@@ -227,9 +261,11 @@ namespace scl
     improving() noexcept
       : state(new imp_const<T>(std::numeric_limits<T>::lowest()))
     {}
+    explicit 
     improving(const T value) noexcept
       : state(new imp_const<T>(value))
     {}
+    explicit 
     improving(std::shared_ptr<accumulator<T>> acc) noexcept
       : state(new imp_acc<T>(acc))
     {}
@@ -238,6 +274,10 @@ namespace scl
     {}
     ~improving() noexcept
     {}
+  public: // FIXME make private after friending ops
+    improving(typename imp_state_ptr<T>::type state)
+      : state(state) {}
+  public:
 
     void operator =(this_type&& other)
     {
@@ -264,80 +304,64 @@ namespace scl
     }
 
     thread::future<T> to_future() const;
-
-  private:
+       
+  // FIXME friend the operators
+  // private:
     typename imp_state_ptr<T>::type state;
   };
 
 
-  //  fixed
-  //  min
-  //  max
-  //  <
-  //  <=
+  template<typename T>
+  improving<T> min(const improving<T>& x, const improving<T>& y)
+  {
+    return improving<T>(min(x.state, y.state));
+  }
 
-  // template<typename T>
-  // improving<T> min(const improving<T>& x, const improving<T>& y)
-  // {
-  //   if (x.known() && x.value() <= y.value())
-  //     return x;
-  //   if (y.known() && y.value() <= x.value())
-  //     return y;
-  //   if (x.known() && y.known() && x.value() == y.value())
-  //     return x;
-  // }
-  // template<typename T>
-  // improving<T> max(const improving<T>& x, const improving<T>& y)
-  // {
-  //   if (x.known() && x.value() <= y.value())
-  //     return y;
-  //   if (y.known() && y.value() <= x.value())
-  //     return x;
-  //   if (x.known() && y.known() && x.value() == y.value())
-  //     return x;
-  // }
-  // 
-  // template<typename T>
-  // improving<T> operator+ (const improving<T>& x, const improving<T>& y);
-  // template<typename T>
-  // improving<T> operator- (const improving<T>& x, const T& y);
-  // template<typename T>
-  // improving<T> operator* (const improving<T>& x, const improving<T>& y);
-  // template<typename T>
-  // improving<T> operator/ (const improving<T>& x, const T& y)
-  // {
-  // }
-  // 
-  // template<typename T>
-  // improving<bool> operator< (const improving<T>& x, const improving<T>& y)
-  // {
-  //   if (x.known() && x.value() < y.value())
-  //     return true;
-  //   if (y.known() && y.value() < x.value())
-  //     return false;
-  //   if (x.known() && y.known() && x.value() == y.value())
-  //     return false;
-  // }
-  // template<typename T>
-  // improving<bool> operator<= (const improving<T>& x, const improving<T>& y)
-  // {
-  //   if (x.known() && x.value() <= y.value())
-  //     return true;
-  //   // if (y.known() && y.value() <= x.value())
-  //   //   return false;
-  //   if (x.known() && y.known() && x.value() == y.value())
-  //     return true;
-  // }
-  // template<typename T>
-  // improving<bool> operator== (const improving<T>& x, const improving<T>& y)
-  // {
-  //   if (x.known() && x.value() < y.value())
-  //     return false;
-  //   if (y.known() && y.value() < x.value())
-  //     return false;
-  //   if (x.known() && y.known() && x.value() == y.value())
-  //     return true;
-  // }
+  template<typename T>
+  improving<T> max(const improving<T>& x, const improving<T>& y)
+  {
+    return improving<T>(max(x.state, y.state));
+  }
+  
+  template<typename T>
+  improving<T> operator+ (const improving<T>& x, const improving<T>& y)
+  {
+    return improving<T>(x.state + y.state);
+  }
+
+  template<typename T>
+  improving<T> operator- (const improving<T>& x, const T& y)
+  {
+    // FIXME
+  }
+
+  template<typename T>
+  improving<T> operator* (const improving<T>& x, const improving<T>& y)
+  {
+    return improving<T>(x.state * y.state);
+  }
+
+  template<typename T>
+  improving<T> operator/ (const improving<T>& x, const T& y)
+  {
+    // FIXME
+  }
+  
+  template<typename T>
+  improving<bool> operator< (const improving<T>& x, const improving<T>& y)
+  {
+    return improving<bool>(x.state < y.state);
+  }
+  template<typename T>
+  improving<bool> operator<= (const improving<T>& x, const improving<T>& y)
+  {
+    return improving<bool>(x.state <= y.state);
+  }
+  template<typename T>
+  improving<bool> operator== (const improving<T>& x, const improving<T>& y)
+  {
+    return improving<bool>(x.state == y.state);
+  }                      
 
 
 

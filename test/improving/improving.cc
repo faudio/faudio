@@ -67,6 +67,10 @@ TEST(Improving, Basic)
   acc->fix();
   std::cout << "z is " << z << "\n";
   
+  imp_state_ptr<int>::type xp (new imp_const<int>(1));
+  min<int>(xp, xp);
+
+  min<unsigned int>(x, y);
   
   // accumulator<int> x;
   // accumulator<int> y;
