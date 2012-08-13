@@ -232,10 +232,12 @@ else (NOT COMPONENTS_RESOLVED)
 
   add_subdirectory(external_libraries)
 
-  list(APPEND DEPENDENCIES BoostSystem)
-  list(APPEND DEPENDENCIES BoostFilesystem)
-  list(APPEND DEPENDENCIES BoostThread)
-  # list(APPEND DEPENDENCIES BoostChrono)
+  if (USE_BOOST_THREAD)
+    list(APPEND DEPENDENCIES BoostSystem)
+    list(APPEND DEPENDENCIES BoostFilesystem)
+    list(APPEND DEPENDENCIES BoostThread)
+    # list(APPEND DEPENDENCIES BoostChrono)
+  endif()
 
   ## Configuration file
 
