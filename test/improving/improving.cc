@@ -37,41 +37,100 @@ namespace scl
 // 
 // 
 
-template <class T>
-std::ostream& operator<<(std::ostream &out, const improving<T> &x) 
-{
-  out << (x.known() ? "@{" : "~{")
-      << x.value()
-      << (x.known() ? "}" : "}");
-  return out;
+TEST(Improving, Min)
+{             
+  std::shared_ptr<accumulator<float>> acc (
+    new accumulator<float>(0));
+
+  improving<float> x (acc);
+  improving<float> y (10);
+  
+  ASSERT_EQ( x.value(),   min(x, y).value() );
+
+  acc->increment(6);
+  ASSERT_EQ( x.value(),   min(x, y).value() );
+
+  acc->increment(6);
+  ASSERT_EQ( y.value(),   min(x, y).value() );
 }
+
+TEST(Improving, Min2)
+{             
+  std::shared_ptr<accumulator<float>> acc (
+    new accumulator<float>(0));
+
+  improving<float> x (10);
+  improving<float> y (acc);
+  
+  ASSERT_EQ( y.value(),   min(x, y).value() );
+
+  acc->increment(6);
+  ASSERT_EQ( y.value(),   min(x, y).value() );
+
+  acc->increment(6);
+  ASSERT_EQ( x.value(),   min(x, y).value() );
+}
+
+TEST(Improving, Max)
+{             
+  std::shared_ptr<accumulator<float>> acc (
+    new accumulator<float>(0));
+
+  improving<float> x (acc);
+  improving<float> y (10);
+  
+  ASSERT_EQ( y.value(),   max(x, y).value() );
+
+  acc->increment(6);
+  ASSERT_EQ( y.value(),   max(x, y).value() );
+
+  acc->increment(6);
+  ASSERT_EQ( x.value(),   max(x, y).value() );
+}
+
+TEST(Improving, Max2)
+{             
+  std::shared_ptr<accumulator<float>> acc (
+    new accumulator<float>(0));
+
+  improving<float> x (10);
+  improving<float> y (acc);
+  
+  ASSERT_EQ( x.value(),   max(x, y).value() );
+
+  acc->increment(6);
+  ASSERT_EQ( x.value(),   max(x, y).value() );
+
+  acc->increment(6);
+  ASSERT_EQ( y.value(),   max(x, y).value() );
+}
+
+
+
+
 
 TEST(Improving, Basic)
 {             
-  std::cout << "Size of improving<int> is: " << sizeof(improving<int>) << "\n";
-
-  std::shared_ptr<accumulator<unsigned int>> acc (new accumulator<unsigned int>);
-  improving<unsigned int> x;
-  improving<unsigned int> y (3);
-  improving<unsigned int> z (acc);
-  // improving<int>   zz = acc->get_improving();
+  std::shared_ptr<accumulator<float>> acc (new accumulator<float>(0));
+  improving<float> x (acc);
+  improving<float> y (10);
   
   std::cout << "x is " << x << "\n";
   std::cout << "y is " << y << "\n";
-  std::cout << "z is " << z << "\n";
+  std::cout << "min(x,y) is " << min(x,y) << "\n";
   
-  acc->increment(10);
-  std::cout << "z is " << z << "\n";
+  acc->increment(6);
+  std::cout << "x is " << x << "\n";
+  std::cout << "y is " << y << "\n";
+  std::cout << "min(x,y) is " << min(x,y) << "\n";
 
-  acc->increment(10);
-  acc->fix();
-  std::cout << "z is " << z << "\n";
-  
-  imp_state_ptr<int>::type xp (new imp_const<int>(1));
-  min<int>(xp, xp);
+  acc->increment(6);
+  std::cout << "x is " << x << "\n";
+  std::cout << "y is " << y << "\n";
+  std::cout << "min(x,y) is " << min(x,y) << "\n";
 
-  min<unsigned int>(x, y);
-  
+
+
   // accumulator<int> x;
   // accumulator<int> y;
   // x.increment(1);
