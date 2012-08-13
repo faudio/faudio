@@ -1,6 +1,5 @@
 
 #include <iostream>
-#include <chrono>
 #include <gtest/gtest.h>
 #include <scl/future/wakeup_service.hpp>
 
@@ -27,22 +26,22 @@ namespace scl
   
   TEST(Future, WakeupService)
   { 
-    using thread::thread;    
+	namespace t = thread;
     static const int thread_iterations = 10;
 
     wakeup_ptr w (new wakeup_service<signal>());
    
     for (int i = 0; i < thread_iterations; ++i)
     {
-      thread x (sleep_until, w, foo);
-      thread y (sleep_until, w, bar);
-      thread z (sleep_until, w, baz);
+      t::thread x (sleep_until, w, foo);
+      t::thread y (sleep_until, w, bar);
+      t::thread z (sleep_until, w, baz);
       x.detach();
       y.detach();
       z.detach();
     }
     
-    std::chrono::milliseconds d (1000);
+    ::scl::chrono::milliseconds d (1000);
     // std::this_thread::sleep_for(d);
 
     std::cout << "Beginning wakeup\n";
@@ -54,7 +53,7 @@ namespace scl
     w->wake(baz);
     std::cout << "Finishing wakeup\n";
 
-    std::this_thread::sleep_for(d);
+    t::this_thread::sleep_for(d);
     std::cout << "Number of woken threads: " << count << "\n";    
     assert(count == thread_iterations * 3);
   }     

@@ -368,7 +368,8 @@ namespace scl
       state->wait();
     }
 
-    thread::future<T> to_future() const;
+	// FIXME
+    // thread::future<T> to_future() const;
 
     // FIXME friend the operators
     // private:

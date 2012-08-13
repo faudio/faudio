@@ -8,7 +8,15 @@ struct not_bounded
   not_bounded() = delete;
 };
 
-BOOST_CONCEPT_ASSERT((scl::LowerBound<bounded>));
+// template <> class std::numeric_limits<bounded>
+// {
+// public:
+	// static constexpr bounded min() { return bounded() };
+	// static constexpr bounded max() { return bounded() };
+	// static constexpr bounded lowest() { return bounded() };
+// };
+
+// BOOST_CONCEPT_ASSERT((scl::LowerBound<bounded>));
 // BOOST_CONCEPT_ASSERT((scl::LowerBound<not_bounded>)); // should not compile
 
 BOOST_CONCEPT_ASSERT((scl::LowerBound<char>));

@@ -38,15 +38,15 @@ TEST(Thread, Basic)
 
 // Futures
 
-TEST(Thread, Future)
-{
-  using namespace scl::thread;
+// TEST(Thread, Future)
+// {
+  // using namespace scl::thread;
 
-  packaged_task<int()> task([](){return 7;});
-  future<int> result = task.get_future();
-  thread(move(task)).detach();
-  cout << "Waiting...";
-  result.wait();
-  cout << "Done!\nResult is " << result.get() << '\n';
-}
+  // packaged_task<int()> task([](){return 7;});
+  // future<int> result = task.get_future();
+  // thread(move(task)).detach();
+  // cout << "Waiting...";
+  // result.wait();
+  // cout << "Done!\nResult is " << result.get() << '\n';
+// }
 
