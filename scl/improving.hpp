@@ -474,6 +474,7 @@ namespace scl
 
     void fix()
     {
+      // FIXME can race
       T val_ = val;
       T max_ = max;
       if (max.compare_exchange_strong(max_, val_))
@@ -489,15 +490,14 @@ namespace scl
       while (!val.compare_exchange_strong(x, x + amount));
       accumulator_static_wakeup.wake(nullptr);
     }
-    // void increment_and_fix(const T& amount)
-    // {
-    //   increment(amount);
-    //   fix();
-    // }
+    void increment_and_fix(const T& amount)
+    {
+      // FIXME
+    }
+
     // private:
     atomic::atomic<T> val;
     atomic::atomic<T> max;
   };
-
 
 }
