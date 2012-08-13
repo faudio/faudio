@@ -37,6 +37,14 @@ namespace scl
 // 
 // 
 
+template <class T>
+std::ostream& operator<<(std::ostream &out, const improving<T> &x) 
+{
+  out << (x.known() ? "@{" : "~{")
+      << x.value()
+      << (x.known() ? "}" : "}");
+  return out;
+}
 
 TEST(Improving, Basic)
 {             
@@ -48,9 +56,16 @@ TEST(Improving, Basic)
   improving<unsigned int> z (acc);
   // improving<int>   zz = acc->get_improving();
   
-  std::cout << "x is " << x.value() << ", " << (x.known() ? "fixed" : "improving") << "\n";
-  std::cout << "y is " << y.value() << ", " << (y.known() ? "fixed" : "improving") << "\n";
-  std::cout << "z is " << z.value() << ", " << (z.known() ? "fixed" : "improving") << "\n";
+  std::cout << "x is " << x << "\n";
+  std::cout << "y is " << y << "\n";
+  std::cout << "z is " << z << "\n";
+  
+  acc->increment(10);
+  std::cout << "z is " << z << "\n";
+
+  acc->increment(10);
+  acc->fix();
+  std::cout << "z is " << z << "\n";
   
   
   // accumulator<int> x;

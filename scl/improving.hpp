@@ -35,18 +35,23 @@ namespace scl
   template <class T>
   struct imp_const : public imp_state<T>
   {
+    imp_const() = delete;
+    explicit imp_const(T val) : val(val) {}
+
     T    value() const { return val; }
     bool known() const { return true; }
     void wait()  const { return; }
-    imp_const() = delete;
-    explicit imp_const(T val) : val(val) {}
   private:
     T val;
   };
 
   template <class T>
   struct imp_acc : public imp_state<T>
-  {
+  {        
+    imp_acc() = delete;
+    explicit imp_acc(std::shared_ptr<accumulator<T>> acc)
+      : acc(acc) {}
+
     T    value() const { return acc->val; }
     bool known() const { return acc->val == acc->max; }
     void wait()  const 
@@ -55,8 +60,6 @@ namespace scl
         [this] (std::nullptr_t) { return this->known(); };
       accumulator_static_wakeup.sleep(pred);
     }
-    imp_acc(std::shared_ptr<accumulator<T>> acc)
-      : acc(acc) {}
   private:
     std::shared_ptr<accumulator<T>> acc; // 8
   };
@@ -64,6 +67,13 @@ namespace scl
   template <class T>
   struct imp_unary : public imp_state<T>
   {
+    imp_unary() = delete;
+    imp_unary(
+      std::function<T(T,T)>           func,
+      typename imp_state_ptr<T>::type arg)
+      : func(func),
+        arg(arg) {}
+    
     bool known() const 
     {
       return arg->known();
@@ -76,11 +86,6 @@ namespace scl
     {
       return arg->wait();
     }
-    imp_unary(
-      std::function<T(T,T)>           func,
-      typename imp_state_ptr<T>::type arg)
-      : func(func),
-        arg(arg) {}
   private:
     std::function<T(T)>             func;             
     typename imp_state_ptr<T>::type arg;
@@ -90,6 +95,15 @@ namespace scl
   template <class T>
   struct imp_binary : public imp_state<T>
   {
+    imp_binary() = delete;
+    imp_binary(
+      std::function<T(T,T)>           func,
+      typename imp_state_ptr<T>::type left,
+      typename imp_state_ptr<T>::type right)
+      : func(func),
+        left(left),
+        right(right) {}
+
     bool known() const 
     {
       bool lk = left->known();
@@ -108,13 +122,6 @@ namespace scl
         [this] (std::nullptr_t wakeup) { return this->known(); };
       accumulator_static_wakeup.sleep(pred);
     }
-    imp_binary(
-      std::function<T(T,T)>                 func,
-      typename imp_state_ptr<T>::type left,
-      typename imp_state_ptr<T>::type right)
-      : func(func),
-        left(left),
-        right(right) {}
   private:
     std::function<T(T, T)> func;                 // 16
     typename imp_state_ptr<T>::type left;  // 8
@@ -219,14 +226,10 @@ namespace scl
   public:
     improving() noexcept
       : state(new imp_const<T>(std::numeric_limits<T>::lowest()))
-    {
-std::cout << "<<< min value " << "\n";
-    }
+    {}
     improving(const T value) noexcept
       : state(new imp_const<T>(value))
-    {
-std::cout << "<<< value " << value << "\n";
-    }
+    {}
     improving(std::shared_ptr<accumulator<T>> acc) noexcept
       : state(new imp_acc<T>(acc))
     {}
@@ -350,20 +353,35 @@ std::cout << "<<< value " << value << "\n";
   : public std::enable_shared_from_this<accumulator<T>>
   {
   public:
+    using value_type = T;
+    using this_type  = accumulator<T>;
+
+    accumulator()
+      : val(std::numeric_limits<T>::lowest()) 
+      , max(std::numeric_limits<T>::max()) {}
+    accumulator(value_type value)
+      : val(val) 
+      , max(std::numeric_limits<T>::max()) {}
+    ~accumulator() = default;
+    
     // improving<T> get_improving() const
     // {
     //   std::shared_ptr<accumulator<T>> acc (shared_from_this());
     //   return improving<T> (acc);
     // }
-
+    
+    // FIXME potential race here
+    // use CAS in loop to set max
     void fix()
     {
-      T x = val;
-      max = x;
-      accumulator_static_wakeup.wake(nullptr);
+      T val_ = val;
+      T max_ = max;
+      if (max.compare_exchange_strong(max_, val_))
+        accumulator_static_wakeup.wake(nullptr);
     }
     void increment(const T& amount)
-    {
+    { 
+      // FIXME throw if called after fix
       val += amount;
       accumulator_static_wakeup.wake(nullptr);
     }
