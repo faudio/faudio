@@ -6,11 +6,14 @@ if(APPLE)
   set(CMAKE_CXX_FLAGS 
     "${CMAKE_CXX_FLAGS} -stdlib=libc++"
     )
+  set(CMAKE_CXX_FLAGS 
+  "${CMAKE_CXX_FLAGS} -std=c++0x"
+  )
 else()
   set(CMAKE_CXX_COMPILER
     "c++"
     )
-endif()
-set(CMAKE_CXX_FLAGS 
-  "${CMAKE_CXX_FLAGS} -std=c++0x"
+  set(CMAKE_CXX_FLAGS 
+  "${CMAKE_CXX_FLAGS} -std=gnu++0x"
   )
+endif()

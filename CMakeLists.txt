@@ -8,23 +8,7 @@ cmake_minimum_required(VERSION 2.8.8)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
 ## Select language version
-# include(FindC++0x)
-if(APPLE)
-  set(CMAKE_CXX_COMPILER
-    "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++"
-    )
-  set(CMAKE_CXX_FLAGS 
-    "${CMAKE_CXX_FLAGS} -stdlib=libc++"
-    )
-else()
-  set(CMAKE_CXX_COMPILER
-    "c++"
-    )
-endif()
-set(CMAKE_CXX_FLAGS 
-  "${CMAKE_CXX_FLAGS} -std=c++0x"
-  )
-# # #
+include(FindC++0x)
 
 project(ScoreCleanerAudioEngine C CXX)
 set(VERSION_PRE "")
