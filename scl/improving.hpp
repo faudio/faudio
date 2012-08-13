@@ -41,7 +41,7 @@ namespace scl
     imp_const() = delete;
     explicit imp_const(T val) : val(val) {}
 
-    T    value() const
+    T value() const
     {
       return val;
     }
@@ -64,7 +64,7 @@ namespace scl
     explicit imp_acc(std::shared_ptr<accumulator<T>> acc)
       : acc(acc) {}
 
-    T    value() const
+    T value() const
     {
       return acc->val;
     }
@@ -90,7 +90,7 @@ namespace scl
   {
     imp_unary() = delete;
     imp_unary(
-      std::function<T(T, T)>           func,
+      std::function<T(T, T)>          func,
       typename imp_state_ptr<T>::type arg)
       : func(func),
         arg(arg) {}
@@ -118,7 +118,7 @@ namespace scl
   {
     imp_binary() = delete;
     imp_binary(
-      std::function<T(T, T)>           func,
+      std::function<T(T, T)>          func,
       typename imp_state_ptr<T>::type left,
       typename imp_state_ptr<T>::type right)
       : func(func),
@@ -453,14 +453,13 @@ namespace scl
       , max(std::numeric_limits<T>::max()) {}
     ~accumulator() = default;
 
-    // improving<T> get_improving() const
-    // {
-    //   std::shared_ptr<accumulator<T>> acc (shared_from_this());
-    //   return improving<T> (acc);
-    // }
+    improving<T> get_improving() // FIXME const
+    {                         
+      return improving<T> (
+        std::enable_shared_from_this<this_type>
+          ::shared_from_this());
+    }
 
-    // FIXME potential race here
-    // use CAS in loop to set max
     void fix()
     {
       T val_ = val;

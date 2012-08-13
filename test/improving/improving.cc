@@ -1,8 +1,9 @@
 
 #include <iostream>
-#include <chrono>       
 #include <memory>
+#include <chrono>       
 #include <gtest/gtest.h>
+#include <scl/thread.hpp>       
 #include <scl/improving.hpp>
 
 namespace scl
@@ -107,45 +108,60 @@ TEST(Improving, Max2)
 
 
 
+void produce(std::shared_ptr<accumulator<float>> x, float a)
+{
+  for (int i = 0; i < 100; ++i)
+  {
+    std::chrono::milliseconds dur (50);
+    std::this_thread::sleep_for(dur);    
+    x->increment(a);
+  }
+}
 
+std::string print_bar(double x)
+{                     
+  const double max_bars = 80;
+  double amount = x * max_bars;
+  for (double d = 0; d < amount; ++d)
+    std::cout << "|";
+  return "";
+}
 
-TEST(Improving, Basic)
+void poll(improving<float>* a,
+          improving<float>* b,
+          improving<float>* c,
+          improving<float>* d)
+{
+  for (int i = 0; i < 100; ++i)
+  {
+    std::chrono::milliseconds dur (50);
+    std::this_thread::sleep_for(dur);    
+
+    std::cout << "  a: " << *a << print_bar(a->value() / 100) << "\n";
+    std::cout << "  b: " << *b << print_bar(b->value() / 100) << "\n";
+    std::cout << "  c: " << *c << print_bar(c->value() / 100) << "\n";
+    std::cout << "  d: " << *d << print_bar(d->value() / 100) << "\n";
+    std::cout << "\n";
+  }
+}
+
+TEST(Improving, Poll)
 {             
-  std::shared_ptr<accumulator<float>> acc (new accumulator<float>(0));
-  improving<float> x (acc);
-  improving<float> y (10);
+  std::shared_ptr<accumulator<float>> x (new accumulator<float>(0));
+  std::shared_ptr<accumulator<float>> y (new accumulator<float>(0));
   
-  std::cout << "x is " << x << "\n";
-  std::cout << "y is " << y << "\n";
-  std::cout << "min(x,y) is " << min(x,y) << "\n";
+  thread::thread px (produce, x, 1);
+  thread::thread py (produce, y, 0.5);
   
-  acc->increment(6);
-  std::cout << "x is " << x << "\n";
-  std::cout << "y is " << y << "\n";
-  std::cout << "min(x,y) is " << min(x,y) << "\n";
+  improving<float> a = x->get_improving();
+  improving<float> b = y->get_improving();
+  improving<float> c = min(a, b);
+  improving<float> d = max(a, b);
 
-  acc->increment(6);
-  std::cout << "x is " << x << "\n";
-  std::cout << "y is " << y << "\n";
-  std::cout << "min(x,y) is " << min(x,y) << "\n";
-
-
-
-  // accumulator<int> x;
-  // accumulator<int> y;
-  // x.increment(1);
-  
-  // thread::thread(produce(x));
-  // thread::thread(produce(y));
-  // 
-  // improving<int> a.get_improving();
-  // improving<int> b.get_improving();
-  // improving<int> c = min(a, b);
-  // improving<int> d = max(a, b);
-  // 
-  // produce(x, 10);
-  // produce(y, 11);
-  // poll(a, b, c, d, 100);
+  thread::thread poller (poll, &a, &b, &c, &d);  
+  px.join();
+  py.join();
+  poller.join();
 }
 
                           
