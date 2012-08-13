@@ -25,7 +25,7 @@ namespace scl
           , pending(0) {}
 
         event_type         event;
-        mutex              mutex;
+        mutex              mutx;
         condition_variable condition;
         atomic_int         blocked; // number of threads blocking
         atomic_int         pending; // number of threads waiting to read update condition
@@ -95,7 +95,7 @@ namespace scl
     using thread::unique_lock;
     if (!state) throw error();
     {
-      unique_lock<mutex> lock(state->mutex);
+      unique_lock<mutex> lock(state->mutx);
       state->blocked += 1;
       do
       {
@@ -122,10 +122,10 @@ namespace scl
     */
     while (state->pending > 0);
     {
-      unique_lock<mutex> lock(state->mutex);
+      unique_lock<mutex> lock(state->mutx);
       state->event  = event;
       int b = state->blocked;
-      state->pending = b;
+      state->pending.store(b);
     }
     state->condition.notify_all();
   }

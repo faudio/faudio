@@ -89,8 +89,8 @@ void produce(std::shared_ptr<accumulator<float>> x, float a)
 {
   for (int i = 0; i < 100; ++i)
   {
-    std::chrono::milliseconds dur (50);
-    std::this_thread::sleep_for(dur);    
+    scl::chrono::milliseconds dur (50);
+    thread::this_thread::sleep_for(dur);    
     x->increment(a);
   }
 }
@@ -111,8 +111,8 @@ void poll(improving<float>* a,
 {
   for (int i = 0; i < 50; ++i)
   {
-    std::chrono::milliseconds dur (100);
-    std::this_thread::sleep_for(dur);    
+    scl::chrono::milliseconds dur (100);
+    thread::this_thread::sleep_for(dur);    
 
     std::cout << "  a: " << *a << print_bar(a->value() / 100) << "\n";
     std::cout << "  b: " << *b << print_bar(b->value() / 100) << "\n";
