@@ -15,11 +15,11 @@ namespace scl
   template <class T> class accumulator;
 
   static wakeup_service<std::nullptr_t> accumulator_static_wakeup;
-  
+
   // Current state of an improving value, one of:
   //   imp_const    Constant value
   //   imp_acc      Still accumulating
-  //   imp_unary    Improving value applied to a unary function 
+  //   imp_unary    Improving value applied to a unary function
   //   imp_binary   Improving values applied to a binary function
   template <class T>
   struct imp_state
@@ -28,9 +28,9 @@ namespace scl
     virtual bool known() const = 0;
     virtual void wait()  const = 0;
   };
-  
+
   template <class T> struct imp_state_ptr
-  {         
+  {
     imp_state_ptr() = delete;
     using type = typename std::shared_ptr<imp_state<T>>;
   };
@@ -41,26 +41,44 @@ namespace scl
     imp_const() = delete;
     explicit imp_const(T val) : val(val) {}
 
-    T    value() const { return val; }
-    bool known() const { return true; }
-    void wait()  const { return; }
+    T    value() const
+    {
+      return val;
+    }
+    bool known() const
+    {
+      return true;
+    }
+    void wait()  const
+    {
+      return;
+    }
   private:
     T val;
   };
 
   template <class T>
   struct imp_acc : public imp_state<T>
-  {        
+  {
     imp_acc() = delete;
     explicit imp_acc(std::shared_ptr<accumulator<T>> acc)
       : acc(acc) {}
 
-    T    value() const { return acc->val; }
-    bool known() const { return acc->val == acc->max; }
-    void wait()  const 
+    T    value() const
     {
-      std::function<bool(std::nullptr_t)> pred = 
-        [this] (std::nullptr_t) { return this->known(); };
+      return acc->val;
+    }
+    bool known() const
+    {
+      return acc->val == acc->max;
+    }
+    void wait()  const
+    {
+      std::function<bool(std::nullptr_t)> pred =
+        [this](std::nullptr_t)
+      {
+        return this->known();
+      };
       accumulator_static_wakeup.sleep(pred);
     }
   private:
@@ -72,53 +90,56 @@ namespace scl
   {
     imp_unary() = delete;
     imp_unary(
-      std::function<T(T,T)>           func,
+      std::function<T(T, T)>           func,
       typename imp_state_ptr<T>::type arg)
       : func(func),
         arg(arg) {}
-    
-    bool known() const 
+
+    bool known() const
     {
       return arg->known();
     }
-    T value() const 
+    T value() const
     {
       return func(arg->value());
     }
-    void wait()  const 
+    void wait()  const
     {
       return arg->wait();
     }
   private:
-    std::function<T(T)>             func;             
+    std::function<T(T)>             func;
     typename imp_state_ptr<T>::type arg;
   };
-   
+
 
   template <class T>
   struct imp_binary : public imp_state<T>
   {
     imp_binary() = delete;
     imp_binary(
-      std::function<T(T,T)>           func,
+      std::function<T(T, T)>           func,
       typename imp_state_ptr<T>::type left,
       typename imp_state_ptr<T>::type right)
       : func(func),
         left(left),
         right(right) {}
 
-    bool known() const 
+    bool known() const
     {
       return left->known() && right->known();
     }
-    T value() const 
+    T value() const
     {
       return func(left->value(), right->value());
     }
-    void wait()  const 
+    void wait()  const
     {
-      std::function<bool(std::nullptr_t)> pred = 
-        [this] (std::nullptr_t wakeup) { return this->known(); };
+      std::function<bool(std::nullptr_t)> pred =
+        [this](std::nullptr_t wakeup)
+      {
+        return this->known();
+      };
       accumulator_static_wakeup.sleep(pred);
     }
   private:
@@ -126,87 +147,93 @@ namespace scl
     typename imp_state_ptr<T>::type left;
     typename imp_state_ptr<T>::type right;
   };
-  
-  
+
+
   template<typename T>
-  typename imp_state_ptr<T>::type 
-  min(typename imp_state_ptr<T>::type x, 
+  typename imp_state_ptr<T>::type
+  min(typename imp_state_ptr<T>::type x,
       typename imp_state_ptr<T>::type y)
   {
 #ifdef SCL_IMPROVING_OPTIMIZE
     if (x->known() && x->value() <= y->value())
       return x;
+
     if (y->known() && y->value() <= x->value())
       return y;
+
     if (x->known() && y->known() && x->value() == y->value())
       return x;
 #endif // SCL_IMPROVING_OPTIMIZE
+
     return typename imp_state_ptr<T>::type(
-      new imp_binary<T>(
-        [] (T x, T y) -> T { return std::min(x, y); }, 
-        x, y));
+             new imp_binary<T>(
+               [](T x, T y) -> T { return std::min(x, y); },
+               x, y));
   }
 
   template<typename T>
-  typename imp_state_ptr<T>::type 
-  max(typename imp_state_ptr<T>::type x, 
+  typename imp_state_ptr<T>::type
+  max(typename imp_state_ptr<T>::type x,
       typename imp_state_ptr<T>::type y)
   {
 #ifdef SCL_IMPROVING_OPTIMIZE
     if (x->known() && x->value() <= y->value())
       return y;
+    
     if (y->known() && y->value() <= x->value())
       return x;
+    
     if (x->known() && y->known() && x->value() == y->value())
       return x;
 #endif // SCL_IMPROVING_OPTIMIZE
+
     return typename imp_state_ptr<T>::type(
-      new imp_binary<T>(
-        [] (T x, T y) -> T { return std::max(x, y); }, 
-        x, y));
+             new imp_binary<T>(
+               [](T x, T y) -> T { return std::max(x, y); },
+               x, y));
   }
 
   template<typename T>
-  typename imp_state_ptr<T>::type 
-  operator+ (typename imp_state_ptr<T>::type x, 
+  typename imp_state_ptr<T>::type
+  operator+ (typename imp_state_ptr<T>::type x,
              typename imp_state_ptr<T>::type y)
   {
     return typename imp_state_ptr<T>::type(
-      new imp_binary<T>(
-        std::plus<T>(),
-        x, y));
+             new imp_binary<T>(
+               std::plus<T>(),
+               x, y));
   }
 
   template<typename T>
-  typename imp_state_ptr<T>::type 
-  operator- (typename imp_state_ptr<T>::type x, 
+  typename imp_state_ptr<T>::type
+  operator- (typename imp_state_ptr<T>::type x,
              typename imp_state_ptr<T>::type y)
   {
     // FIXME
   }
 
   template<typename T>
-  typename imp_state_ptr<T>::type 
-  operator* (typename imp_state_ptr<T>::type x, 
+  typename imp_state_ptr<T>::type
+  operator* (typename imp_state_ptr<T>::type x,
              typename imp_state_ptr<T>::type y)
   {
     return typename imp_state_ptr<T>::type(
-      new imp_binary<T>(
-        std::multiplies<T>(),
-        x, y));
+             new imp_binary<T>(
+               std::multiplies<T>(),
+               x, y));
   }
 
   template<typename T>
-  typename imp_state_ptr<T>::type 
-  operator/ (typename imp_state_ptr<T>::type x, 
+  typename imp_state_ptr<T>::type
+  operator/ (typename imp_state_ptr<T>::type x,
              typename imp_state_ptr<T>::type y)
-  {                    
+  {
     // FIXME
   }
 
   template<typename T>
-  typename imp_state_ptr<bool>::type 
-  operator< (typename imp_state_ptr<T>::type x, 
+  typename imp_state_ptr<bool>::type
+  operator< (typename imp_state_ptr<T>::type x,
              typename imp_state_ptr<T>::type y)
   {
 #ifdef SCL_IMPROVING_OPTIMIZE
@@ -221,14 +248,14 @@ namespace scl
 #endif // SCL_IMPROVING_OPTIMIZE
 
     return typename imp_state_ptr<bool>::type(
-      new imp_binary<T>(
-        std::less<T>(),
-        x, y));
+             new imp_binary<T>(
+               std::less<T>(),
+               x, y));
   }
 
   template<typename T>
-  typename imp_state_ptr<bool>::type 
-  operator<= (typename imp_state_ptr<T>::type x, 
+  typename imp_state_ptr<bool>::type
+  operator<= (typename imp_state_ptr<T>::type x,
               typename imp_state_ptr<T>::type y)
   {
 #ifdef SCL_IMPROVING_OPTIMIZE
@@ -237,17 +264,17 @@ namespace scl
 
     if (x->known() && y->known() && x->value() == y->value())
       return imp_state_ptr<bool>::type(new imp_const<bool>(true));
-
 #endif // SCL_IMPROVING_OPTIMIZE
+
     return typename imp_state_ptr<bool>::type(
-      new imp_binary<T>(
-        std::less_equal<T>(),
-        x, y));
+             new imp_binary<T>(
+               std::less_equal<T>(),
+               x, y));
   }
 
   template<typename T>
-  typename imp_state_ptr<bool>::type 
-  operator== (typename imp_state_ptr<T>::type x, 
+  typename imp_state_ptr<bool>::type
+  operator== (typename imp_state_ptr<T>::type x,
               typename imp_state_ptr<T>::type y)
   {
 #ifdef SCL_IMPROVING_OPTIMIZE
@@ -262,11 +289,11 @@ namespace scl
 #endif // SCL_IMPROVING_OPTIMIZE
 
     return typename imp_state_ptr<bool>::type(
-      new imp_binary<T>(
-        std::equal<T>(),
-        x, y));
+             new imp_binary<T>(
+               std::equal<T>(),
+               x, y));
   }
-  
+
 
 
 
@@ -282,17 +309,20 @@ namespace scl
     using this_type  = improving<T>;
   public:
     improving() noexcept
-      : state(new imp_const<T>(std::numeric_limits<T>::lowest()))
+  :
+    state(new imp_const<T>(std::numeric_limits<T>::lowest()))
     {}
-    explicit 
+    explicit
     improving(const T value) noexcept
-      : state(new imp_const<T>(value))
+  :
+    state(new imp_const<T>(value))
     {}
-    explicit 
+    explicit
     improving(std::shared_ptr<accumulator<T>> acc) noexcept
-      : state(new imp_acc<T>(acc))
+  :
+    state(new imp_acc<T>(acc))
     {}
-    improving(this_type&& other)
+    improving(this_type && other)
       : state(std::move(other.state))
     {}
     ~improving() noexcept
@@ -302,7 +332,7 @@ namespace scl
       : state(state) {}
   public:
 
-    void operator= (this_type&& other)
+    void operator= (this_type && other)
     {
       this_type tmp = std::move(other);
       return tmp.swap(*this);
@@ -313,7 +343,7 @@ namespace scl
     }
 
     bool known() const noexcept
-    {  
+    {
       return state->known();
     }
 
@@ -327,9 +357,9 @@ namespace scl
     }
 
     thread::future<T> to_future() const;
-       
-  // FIXME friend the operators
-  // private:
+
+    // FIXME friend the operators
+    // private:
     typename imp_state_ptr<T>::type state;
   };
 
@@ -338,21 +368,21 @@ namespace scl
   improving<T> min(const improving<T>& x, const improving<T>& y)
   {
     return improving<T>(
-      scl::min<T>(x.state, y.state));
+             scl::min<T>(x.state, y.state));
   }
 
   template<typename T>
   improving<T> max(const improving<T>& x, const improving<T>& y)
   {
     return improving<T>(
-      scl::max<T>(x.state, y.state));
+             scl::max<T>(x.state, y.state));
   }
-  
+
   template<typename T>
   improving<T> operator+ (const improving<T>& x, const improving<T>& y)
   {
     return improving<T>(
-      scl::operator+ <T>(x.state, y.state));
+             scl::operator+ <T>(x.state, y.state));
   }
 
   template<typename T>
@@ -365,7 +395,7 @@ namespace scl
   improving<T> operator* (const improving<T>& x, const improving<T>& y)
   {
     return improving<T>(
-      scl::operator* <T>(x.state, y.state));
+             scl::operator* <T>(x.state, y.state));
   }
 
   template<typename T>
@@ -373,28 +403,28 @@ namespace scl
   {
     // FIXME
   }
-  
+
   template<typename T>
   improving<bool> operator< (const improving<T>& x, const improving<T>& y)
   {
     return improving<bool>(
-      scl::operator< <T>(x.state, y.state));
+             scl::operator< <T>(x.state, y.state));
   }
   template<typename T>
   improving<bool> operator<= (const improving<T>& x, const improving<T>& y)
   {
     return improving<bool>(
-      scl::operator<= <T>(x.state, y.state));
+             scl::operator<= <T>(x.state, y.state));
   }
   template<typename T>
   improving<bool> operator== (const improving<T>& x, const improving<T>& y)
   {
     return improving<bool>(
-      scl::operator== <T>(x.state, y.state));
-  }                      
+             scl::operator== <T>(x.state, y.state));
+  }
 
   template <class T>
-  std::ostream& operator<< (std::ostream &out, const improving<T> &x) 
+  std::ostream& operator<< (std::ostream& out, const improving<T>& x)
   {
     out << (x.known() ? "@{" : "~{")
         << x.value()
@@ -409,26 +439,26 @@ namespace scl
 
   template <class T>
   class accumulator
-  : public std::enable_shared_from_this<accumulator<T>>
+    : public std::enable_shared_from_this<accumulator<T>>
   {
   public:
     using value_type = T;
     using this_type  = accumulator<T>;
 
     accumulator()
-      : val(std::numeric_limits<T>::lowest()) 
+      : val(std::numeric_limits<T>::lowest())
       , max(std::numeric_limits<T>::max()) {}
     accumulator(value_type value)
-      : val(value) 
+      : val(value)
       , max(std::numeric_limits<T>::max()) {}
     ~accumulator() = default;
-    
+
     // improving<T> get_improving() const
     // {
     //   std::shared_ptr<accumulator<T>> acc (shared_from_this());
     //   return improving<T> (acc);
     // }
-    
+
     // FIXME potential race here
     // use CAS in loop to set max
     void fix()
@@ -439,12 +469,13 @@ namespace scl
         accumulator_static_wakeup.wake(nullptr);
     }
     void increment(const T& amount)
-    { 
+    {
       T x;
       do
       {
         x = val;
-      } while (!val.compare_exchange_strong(x, x + amount));
+      }
+      while (!val.compare_exchange_strong(x, x + amount));
       accumulator_static_wakeup.wake(nullptr);
     }
     // void increment_and_fix(const T& amount)
