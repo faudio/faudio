@@ -22,3 +22,6 @@
 [submodule "external_libraries/sprout"]
 	path = external_libraries/sprout
 	url = git@git.doremir.com:repositories/dependencies/sprout.git
+[submodule "external_libraries/boost_lockfree"]
+	path = external_libraries/boost_lockfree
+	url = git@git.doremir.com:repositories/dependencies/boost_lockfree
