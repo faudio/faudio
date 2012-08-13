@@ -137,10 +137,44 @@ TEST(Improving, Poll)
   improving<float> c = min(a, n);
   improving<float> d = min(b, n);
 
-  thread::thread poller (poll, &a, &b, &c, &d);  
+  thread::thread pp (poll, &a, &b, &c, &d);  
   px.join();
   py.join();
-  poller.join();
+  pp.join();
+}
+
+void block_until(improving<float>* x)
+{
+  x->wait();
+  std::cout << "========================================\n";
+  std::cout << "Woke up on: " << x->value() << "\n";
+  std::cout << "========================================\n";
+}
+
+
+TEST(Improving, Block)
+{             
+  std::shared_ptr<accumulator<float>> x (new accumulator<float>(0));
+  std::shared_ptr<accumulator<float>> y (new accumulator<float>(0));
+  
+  thread::thread px (produce, x, 1.13);
+  thread::thread py (produce, y, 0.513);
+  
+  improving<float> a = x->get_improving();
+  improving<float> b = y->get_improving();
+  improving<float> n (30);   
+  // FIXME does not go from accumulating to fixed at threshold
+  improving<float> c = min(a, n);
+  improving<float> d = min(b, n);
+
+  thread::thread bc (block_until, &c);
+  thread::thread bd (block_until, &d);
+  thread::thread pp (poll, &a, &b, &c, &d);  
+  px.join();
+  py.join();
+  bc.join();
+  bd.join();
+  pp.join();
 }
 
                           
