@@ -127,7 +127,19 @@ namespace scl
 
     bool known() const
     {
-      return left->known() && right->known();
+      if (left->known())
+      {
+        if (right->known())
+          return true;
+        if (left->value() <= right->value())
+          return true;
+      }
+      if (right->known())
+      {
+        if (right->value() <= left->value())
+          return true;
+      }
+      return false;
     }
     T value() const
     {
