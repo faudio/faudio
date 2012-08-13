@@ -38,7 +38,9 @@ namespace scl
 
 
 TEST(Improving, Basic)
-{
+{             
+  std::cout << "Size of improving<int> is: " << sizeof(improving<int>) << "\n";
+  
   // accumulator<int> x;
   // accumulator<int> y;
   // x.increment(1);

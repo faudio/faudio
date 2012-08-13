@@ -9,22 +9,7 @@
 
 namespace scl
 {
-  /**
-      An *improving value* is the continuous version of a future. While a future only have two
-      states: not available or available, an improving value generalizes this by proving a
-      success of monotonically increasing states.
-
-      Eventually, an improving value may become *fixed*, meaning that it will not improve
-      further. A thread holding an improving value may poll the current state, or block until
-      the value becomes fixed. As with std::future, wait blocks forever if this does not happen.
-
-  */
   template <class T> class improving;
-
-  /**
-      The improving analogue to a promise.Can improve or fix the improving value, or set an
-      exception that will be transported to the reading thread.
-   */
   template <class T> class accumulator;
 
 
@@ -35,15 +20,13 @@ namespace scl
   template <class T>
   class improving
   {
-  public:
-#ifdef DOXYGEN_SHOULD_SKIP_THIS
+  private:
     BOOST_CONCEPT_ASSERT((LowerBound<T>));
     BOOST_CONCEPT_ASSERT((LessThanComparable<T>));
-#endif
+    using accumulator_type = accumulator<T>;
+  public:
     using value_type = T;
     using this_type  = improving<T>;
-  private:
-    using accumulator_type = accumulator<T>;
   public:
     improving() noexcept;        // Fixed at std::numeric_limits::lowest()
     improving(const T) noexcept; // Fixed at the given value
@@ -61,28 +44,25 @@ namespace scl
     }
     T value() const
     {
-      // if single, val
+      // if single, the value
       // if accumulator, val
       // if binary, OP(val1, val2)
     }
     void wait() const
     {
       // if single, return
-      // if accumulator, block until known()
-      // if binary, block until left.known() && right.known()
+      // if otherwise, block until known()
     }
 
     thread::future<T> to_future() const;
 
-  private:  
+  private:
+    T val; // 4
+    std::shared_ptr<accumulator<T>> acc; // 8
 
-    T val;
-
-    std::shared_ptr<accumulator<T>> acc;
-
-    std::function<T(T,T)>         binary_op;
-    std::shared_ptr<improving<T>> acc_left;
-    std::shared_ptr<improving<T>> acc_right;
+    std::function<T(T,T)>         binary_op; // 16
+    std::shared_ptr<improving<T>> acc_left; // 8
+    std::shared_ptr<improving<T>> acc_right; // 8
   };
   
   //  fixed
