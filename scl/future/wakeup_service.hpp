@@ -31,13 +31,19 @@ namespace scl
         atomic_int         pending; // number of threads waiting to read update condition
       };
 
-      /** Provides composable blocking
+/**
+    Provides composable blocking, allowing a thread to wait for a *set* of events
+    instead of a single event as in a condition variable. As with a condition
+    variable, care should be taken to assure that one-time wakeups are not missed
+    by the blocking thread.
 
-          Similar to a condition variable, with the difference that a thread may block on
-          a series of wakeups.
+    More formally, for any p and x such that p(x) is true, if a thread A calls
+    sleep(p) and another thread B calls wake(x) and the call to sleep happens
+    before the call to wake, all statements preceding the call to wake happens
+    before any statements following the call to sleep.
 
-          Construction, destruction and moving is not thread-safe.
-        */
+    Construction, destruction and moving is not thread-safe.
+*/
       template <class Event>
       class wakeup_service
       {
@@ -90,7 +96,6 @@ namespace scl
     if (!state) throw error();
     {
       unique_lock<mutex> lock(state->mutex);
-      std::cout << "sleep state is : " << state.get() << "\n";
       state->blocked += 1;
       do
       {
@@ -107,11 +112,17 @@ namespace scl
   {
     using thread::mutex;
     using thread::unique_lock;
-    if (!state) throw error();
-    while (state->pending > 0); // busy-wait until former wakes have been propagated
+    if (!state) throw error(); 
+/*
+    To avoid an extra lock, we busy wait until all other threads have been woken
+    This should be fast, as only the predicate will run before the mutex is
+    released and the next thread is woken.
+    
+    Note that even after the wait we may block on the mutex for the last predicate.
+*/
+    while (state->pending > 0);    
     {
       unique_lock<mutex> lock(state->mutex);
-      std::cout << "wake state is : " << state.get() << "\n";
       state->event  = event;
       int b = state->blocked;
       state->pending = b;
