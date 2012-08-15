@@ -45,12 +45,12 @@ namespace scl
     // std::this_thread::sleep_for(d);
 
     std::cout << "Beginning wakeup\n";
-    w->wake(foo);
-    w->wake(foo);
-    w->wake(foo);
-    w->wake(foo);
-    w->wake(bar);
-    w->wake(baz);
+    w->notify(foo);
+    w->notify(foo);
+    w->notify(foo);
+    w->notify(foo);
+    w->notify(bar);
+    w->notify(baz);
     std::cout << "Finishing wakeup\n";
 
     t::this_thread::sleep_for(d);

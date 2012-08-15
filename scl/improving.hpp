@@ -478,7 +478,7 @@ namespace scl
       T val_ = val;
       T max_ = max;
       if (max.compare_exchange_strong(max_, val_))
-        accumulator_static_wakeup.wake(nullptr);
+        accumulator_static_wakeup.notify(nullptr);
     }
     void increment(const T& amount)
     {
@@ -488,7 +488,7 @@ namespace scl
         x = val;
       }
       while (!val.compare_exchange_strong(x, x + amount));
-      accumulator_static_wakeup.wake(nullptr);
+      accumulator_static_wakeup.notify(nullptr);
     }
     void increment_and_fix(const T& amount)
     {

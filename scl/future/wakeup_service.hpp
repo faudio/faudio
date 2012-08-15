@@ -38,8 +38,8 @@ namespace scl
           by the blocking thread.
 
           More formally, for any p and x such that p(x) is true, if a thread A calls
-          sleep(p) and another thread B calls wake(x) and the call to sleep happens
-          before the call to wake, all statements preceding the call to wake happens
+          sleep(p) and another thread B calls notify(x) and the call to sleep happens
+          before the call to notify, all statements preceding the call to notify happens
           before any statements following the call to sleep.
 
           Construction, destruction and moving is not thread-safe.
@@ -77,7 +77,7 @@ namespace scl
         void sleep(std::function<bool(event_type)> predicate);
 
         /** Signal the given event */
-        void wake(event_type event);
+        void notify(event_type event);
 
       private:
         std::unique_ptr<state_type> state;
@@ -108,7 +108,7 @@ namespace scl
   }
 
   template <class T>
-  void wakeup_service<T>::wake(event_type event)
+  void wakeup_service<T>::notify(event_type event)
   {
     using thread::mutex;
     using thread::unique_lock;
@@ -121,10 +121,11 @@ namespace scl
         Note that even after the wait we may block on the mutex for the last predicate.
         
         Room for improvement:
+
           Current implementation will run all predicates sequentially. We could run
           them in parallel using a shared_mutex, but this is not supported by std (Boost only).
           Maybe some other implementation using atomic/CAS? Anyway, care must be taken to assure
-          proper interleaving of notify/wakeup.
+          proper interleaving.
     */
     while (state->pending > 0);
     {
