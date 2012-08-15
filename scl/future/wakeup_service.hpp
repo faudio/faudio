@@ -123,11 +123,11 @@ namespace scl
     while (state->pending > 0);
     {
       unique_lock<mutex> lock(state->mutx);
-      state->event  = event;
+      state->event = event;
       int b = state->blocked;
       state->pending.store(b);
+      state->condition.notify_all();
     }
-    state->condition.notify_all();
   }
 }
 

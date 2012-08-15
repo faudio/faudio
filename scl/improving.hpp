@@ -70,7 +70,7 @@ namespace scl
     }
     bool known() const
     {
-      return acc->val == acc->max;
+      return acc->val >= acc->max;
     }
     void wait()  const
     {
@@ -475,7 +475,6 @@ namespace scl
 
     void fix()
     {
-      // FIXME can race
       T val_ = val;
       T max_ = max;
       if (max.compare_exchange_strong(max_, val_))
