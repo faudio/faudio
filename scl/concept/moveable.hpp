@@ -39,7 +39,7 @@ namespace scl
 
   template <class T>
   struct Moveable
-    : MoveConstructible<T>
-    , MoveAssignable<T> {};
+      : MoveConstructible<T>
+      , MoveAssignable<T> {};
 }
 

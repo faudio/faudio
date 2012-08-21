@@ -7,7 +7,6 @@ namespace scl
 {
   namespace lockfree
   {
-using queue = boost::lockfree:
-                  fifo;
+    using queue = boost::lockfree::fifo;
   }
 }

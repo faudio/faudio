@@ -7,8 +7,7 @@ namespace scl
 {
   namespace lockfree
   {
-using circular_buffer = boost::lockfree:
-                            ringbuffer;
+    using circular_buffer = boost::lockfree::ringbuffer;
   }
 }
 

@@ -117,9 +117,9 @@ namespace scl
         To avoid an extra lock, we busy wait until all other threads have been woken
         This should be fast, as only the predicate will run before the mutex is
         released and the next thread is woken.
-        
+
         Note that even after the wait we may block on the mutex for the last predicate.
-        
+
         Room for improvement:
 
           Current implementation will run all predicates sequentially. We could run

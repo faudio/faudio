@@ -169,14 +169,11 @@ namespace scl
 #ifdef SCL_IMPROVING_OPTIMIZE
     if (x->known() && x->value() <= y->value())
       return x;
-
     if (y->known() && y->value() <= x->value())
       return y;
-
     if (x->known() && y->known() && x->value() == y->value())
       return x;
 #endif // SCL_IMPROVING_OPTIMIZE
-
     return typename imp_state_ptr<T>::type(
              new imp_binary<T>(
                [](T x, T y) -> T { return std::min(x, y); },
@@ -191,14 +188,11 @@ namespace scl
 #ifdef SCL_IMPROVING_OPTIMIZE
     if (x->known() && x->value() <= y->value())
       return y;
-    
     if (y->known() && y->value() <= x->value())
       return x;
-    
     if (x->known() && y->known() && x->value() == y->value())
       return x;
 #endif // SCL_IMPROVING_OPTIMIZE
-
     return typename imp_state_ptr<T>::type(
              new imp_binary<T>(
                [](T x, T y) -> T { return std::max(x, y); },
@@ -251,14 +245,11 @@ namespace scl
 #ifdef SCL_IMPROVING_OPTIMIZE
     if (x->known() && x->value() < y->value())
       return imp_state_ptr<bool>::type(new imp_const<bool>(true));
-
     if (y->known() && y->value() < x->value())
       return imp_state_ptr<bool>::type(new imp_const<bool>(false));
-
     if (x->known() && y->known() && x->value() == y->value())
       return imp_state_ptr<bool>::type(new imp_const<bool>(false));
 #endif // SCL_IMPROVING_OPTIMIZE
-
     return typename imp_state_ptr<bool>::type(
              new imp_binary<T>(
                std::less<T>(),
@@ -273,11 +264,9 @@ namespace scl
 #ifdef SCL_IMPROVING_OPTIMIZE
     if (x->known() && x->value() <= y->value())
       return imp_state_ptr<bool>::type(new imp_const<bool>(true));
-
     if (x->known() && y->known() && x->value() == y->value())
       return imp_state_ptr<bool>::type(new imp_const<bool>(true));
 #endif // SCL_IMPROVING_OPTIMIZE
-
     return typename imp_state_ptr<bool>::type(
              new imp_binary<T>(
                std::less_equal<T>(),
@@ -292,14 +281,11 @@ namespace scl
 #ifdef SCL_IMPROVING_OPTIMIZE
     if (x->known() && x->value() < y->value())
       return imp_state_ptr<bool>::type(new imp_const<bool>(false));
-
     if (y->known() && y->value() < x->value())
       return imp_state_ptr<bool>::type(new imp_const<bool>(false));
-
     if (x->known() && y->known() && x->value() == y->value())
       return imp_state_ptr<bool>::type(new imp_const<bool>(true));
 #endif // SCL_IMPROVING_OPTIMIZE
-
     return typename imp_state_ptr<bool>::type(
              new imp_binary<T>(
                std::equal<T>(),
@@ -368,7 +354,7 @@ namespace scl
       state->wait();
     }
 
-	// FIXME
+    // FIXME
     // thread::future<T> to_future() const;
 
     // FIXME friend the operators
@@ -467,10 +453,10 @@ namespace scl
     ~accumulator() = default;
 
     improving<T> get_improving() // FIXME const
-    {                         
+    {
       return improving<T> (
-        std::enable_shared_from_this<this_type>
-          ::shared_from_this());
+               std::enable_shared_from_this<this_type>
+               ::shared_from_this());
     }
 
     void fix()

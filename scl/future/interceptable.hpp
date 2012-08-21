@@ -11,17 +11,16 @@ namespace scl
   {
     template <class T>
     class Interrupible
-    {                 
+    {
       BOOST_CONCEPT_USAGE(Interruptible)
       {
-      // void interrupt();
-      // bool is_interrupted();
+        // void interrupt();
+        // bool is_interrupted();
       }
     private:
       void const_constrains(const T& a)
       {
-        
-      } 
+      }
       T a;
     };
   }
