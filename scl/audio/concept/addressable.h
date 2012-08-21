@@ -7,20 +7,24 @@
 
 namespace scl
 {
-  /*
-  concept Addressable<typename X>
-  {
-    typename address_type;
-    list<Dispatcher<T>> X::get_dispatcher(address_type);
-    // Models: portaudio_stream, sndfile_stream
-  }
+  /**
+      ### Synopsis ###
 
+          concept Addressable<typename X>
+          {
+            typename address_type;
+            list<Dispatcher<T>> X::get_dispatcher(address_type);
+          }
+
+      ### Models ###
+
+      portaudio_stream, sndfile_stream
   */
 
   template <class X>
-  struct Abortable
+  struct Addressable
   {
-    BOOST_CONCEPT_USAGE(Timer)
+    BOOST_CONCEPT_USAGE(Addressable)
     {
     }
   private:

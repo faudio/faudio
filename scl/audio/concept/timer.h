@@ -7,15 +7,20 @@
 
 namespace scl
 {
-  /*
-  concept Timer<typename X>
-  {
-    typename time_type;
-    requires (LessThanComparable<time_type>);
-    requires (LowerBounded<time_type>);
-    improving<time_type> X::time();
-  }
+  /**
+      ### Synopsis ###
 
+          concept Timer<typename X>
+          {
+            typename time_type;
+            requires (LessThanComparable<time_type>);
+            requires (LowerBounded<time_type>);
+            improving<time_type> X::time();
+          }
+
+      ### Models ###
+
+      (none)
   */
 
   template <class X>

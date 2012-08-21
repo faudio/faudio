@@ -7,19 +7,24 @@
 
 namespace scl
 {
-  /*
-  concept Abortable<typename X>
-  {
-    void X::abort();
-    bool X::is_aborted();
-  }
+  /**
+      ### Synopsis ###
 
+          concept Abortable<typename X>
+          {
+            void X::abort();
+            bool X::is_aborted();
+          }
+
+      ### Models ###
+
+      (none)
   */
 
   template <class X>
   struct Abortable
   {
-    BOOST_CONCEPT_USAGE(Timer)
+    BOOST_CONCEPT_USAGE(Abortable)
     {
     }
   private:

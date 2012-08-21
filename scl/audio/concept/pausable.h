@@ -7,21 +7,25 @@
 
 namespace scl
 {
-  /*
-  concept Pausable<typename X> : Abortable<X>
-  {
-    void X::paus();
-    void X::resume();
-    bool X::is_running();
-    // Models: future
-  }
+  /**
+      ### Synopsis ###
 
+          concept Pausable<typename X> : Abortable<X>
+          {
+            void X::paus();
+            void X::resume();
+            bool X::is_running();
+          }
+
+      ### Models ###
+
+      future
   */
 
   template <class X>
-  struct Abortable
+  struct Pausable
   {
-    BOOST_CONCEPT_USAGE(Timer)
+    BOOST_CONCEPT_USAGE(Pausable)
     {
     }
   private:

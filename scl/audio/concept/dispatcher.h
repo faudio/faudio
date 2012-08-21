@@ -7,18 +7,22 @@
 
 namespace scl
 {
-  /*
-  concept Dispatcher<typename X> : Receiver<X>, Sender<X>
-  {
-    // Models: blocking_dispatcher, nonblocking_dispatcher, bidirectional_dispatcher
-  }
+  /**
+      ### Synopsis ###
 
+          concept Dispatcher<typename X> : Receiver<X>, Sender<X>
+          {
+          }
+
+      ### Models ###
+
+      blocking_dispatcher, nonblocking_dispatcher, bidirectional_dispatcher
   */
 
   template <class X>
-  struct Abortable
+  struct Dispatcher
   {
-    BOOST_CONCEPT_USAGE(Timer)
+    BOOST_CONCEPT_USAGE(Dispatcher)
     {
     }
   private:

@@ -7,19 +7,24 @@
 
 namespace scl
 {
-  /*
-  concept Sender<typename X>
-  {
-    typename message_type;
-    requires (Copyable<message_type>);
-    template void X::send(MessageTypeReceiver);
-  }
+  /**
+      ### Synopsis ###
 
+          concept Sender<typename X>
+          {
+            typename message_type;
+            requires (Copyable<message_type>);
+            template void X::send(MessageTypeReceiver);
+          }
+
+      ### Models ###
+
+      (none)
   */
   template <class X>
-  struct Abortable
+  struct Sender
   {
-    BOOST_CONCEPT_USAGE(Timer)
+    BOOST_CONCEPT_USAGE(Sender)
     {
     }
   private:
