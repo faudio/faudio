@@ -44,8 +44,7 @@ namespace scl
 
   template <class T>
   struct Copyable
-      : CopyConstructible<T>
-      , CopyAssignable<T>
-  {};
+    : CopyConstructible<T>
+    , CopyAssignable<T> {};
 }
 
