@@ -12,7 +12,7 @@ namespace scl
   {
     BOOST_CONCEPT_USAGE(MoveConstructible)
     {
-      T a(std::move(b));    // require move constructor
+      T a(std::move(b));
     }
   private:
     void const_constraints(const T& a)
@@ -26,7 +26,7 @@ namespace scl
   {
     BOOST_CONCEPT_USAGE(MoveAssignable)
     {
-      a = std::move(b);     // require move assignment
+      a = std::move(b);
     }
   private:
     void const_constraints(const T& x)

@@ -12,15 +12,15 @@ namespace scl
   {
     BOOST_CONCEPT_USAGE(CopyConstructible)
     {
-      T a(b);             // require copy constructor
-      T* ptr = &a;        // require address of operator
+      T a(b);
+      T* ptr = &a;
       const_constraints(a);
     }
   private:
     void const_constraints(const T& a)
     {
-      T c(a);             // require const copy constructor
-      const T* ptr = &a;  // require const address of operator
+      T c(a);
+      const T* ptr = &a;
     }
     T b;
   };
@@ -30,13 +30,13 @@ namespace scl
   {
     BOOST_CONCEPT_USAGE(CopyAssignable)
     {
-      a = b;              // require copy assignment
+      a = b;
       const_constraints(b);
     }
   private:
     void const_constraints(const T& x)
     {
-      a = x;              // const required for argument to assignment
+      a = x;
     }
     T a;
     T b;
