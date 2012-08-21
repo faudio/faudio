@@ -1,14 +1,14 @@
 
-all: concept
+all: concepts interactions
 
-concept:
+concepts:
 	cat concepts.dot \
 		| cpp \
 		| dot -Tpdf \
 		> concepts.pdf \
 		&& open concepts.pdf;
 
-interaction:
+interactions:
 	cat interactions.dot \
 		| cpp \
 		| dot -Tpdf \

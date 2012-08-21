@@ -23,11 +23,8 @@ digraph graphname {
 
   subgraph scl
   {
-    Runnable;
     Abortable;
-    Runnable -> Startable; 
     Abortable -> Startable;
-    Runnable -> Pausable; 
     Abortable -> Pausable;
 
     Scheduler;
@@ -50,7 +47,7 @@ digraph graphname {
     Semigroup -> Stream;
     Addressable -> Stream;
     Addressable -> Processor;
-    Timed -> Stream;
+    Timer -> Stream;
   }
   
   // --------------------------------------------------------------------------------
@@ -114,10 +111,8 @@ digraph graphname {
   { 
     edge [style=invis];
     node [style=invis];
-    __misc -> Runnable;
     __misc -> Semigroup;
     __misc -> Abortable;
-    __misc -> Runnable
     "portmidi_session::stream_type" -> __misc2;
     __misc2 -> Device;
     __misc2 -> DeviceGroup;
