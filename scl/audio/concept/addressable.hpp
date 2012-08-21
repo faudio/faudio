@@ -1,9 +1,7 @@
 
 #pragma once
 
-#include <boost/concept_check.hpp>
-#include <boost/concept/assert.hpp>
-#include <boost/concept/requires.hpp>
+#include <scl/concept.hpp>
 
 namespace scl
 {
@@ -13,6 +11,9 @@ namespace scl
           concept Addressable<typename X>
           {
             typename address_type;
+
+            requires (EqualityComparable<address_type>);
+
             list<Dispatcher<T>> X::get_dispatcher(address_type);
           }
 
@@ -24,8 +25,11 @@ namespace scl
   template <class X>
   struct Addressable
   {
+    using address_type = typename X::address_type;
+    BOOST_CONCEPT_ASSERT((EqualityComparable<address_type>));
     BOOST_CONCEPT_USAGE(Addressable)
     {
+      // TODO get_dispatcher
     }
   private:
     X t;

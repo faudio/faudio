@@ -10,6 +10,7 @@
 
 namespace scl
 {
+  using boost::EqualityComparable;
   using boost::LessThanComparable;
   using boost::DefaultConstructible;
 

@@ -1,9 +1,7 @@
 
 #pragma once
 
-#include <boost/concept_check.hpp>
-#include <boost/concept/assert.hpp>
-#include <boost/concept/requires.hpp>
+#include <scl/concept.hpp>
 
 namespace scl
 {
@@ -23,7 +21,7 @@ namespace scl
   */
 
   template <class X>
-  struct Startable
+  struct Startable : Abortable<X>
   {
     BOOST_CONCEPT_USAGE(Startable)
     {

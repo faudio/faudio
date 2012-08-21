@@ -1,9 +1,7 @@
 
 #pragma once
 
-#include <boost/concept_check.hpp>
-#include <boost/concept/assert.hpp>
-#include <boost/concept/requires.hpp>
+#include <scl/concept.hpp>
 
 namespace scl
 {
@@ -26,8 +24,10 @@ namespace scl
   {
     BOOST_CONCEPT_USAGE(Abortable)
     {
+      x.abort();
+      bool state = x.is_aborted();
     }
   private:
-    X t;
+    X x;
   };
 }

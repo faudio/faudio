@@ -1,16 +1,14 @@
 
 #pragma once
 
-#include <boost/concept_check.hpp>
-#include <boost/concept/assert.hpp>
-#include <boost/concept/requires.hpp>
+#include <scl/concept.hpp>
 
 namespace scl
 {
   /**
       ### Synopsis ###
 
-          concept Dispatcher<typename X> : Receiver<X>, Sender<X>
+          concept Dispatcher<typename X> : Sender<X>, Receiver<X>
           {
           }
 
@@ -20,12 +18,7 @@ namespace scl
   */
 
   template <class X>
-  struct Dispatcher
+  struct Dispatcher : Sender<X>, Receiver<X>
   {
-    BOOST_CONCEPT_USAGE(Dispatcher)
-    {
-    }
-  private:
-    X t;
   };
 }

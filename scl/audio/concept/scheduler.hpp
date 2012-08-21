@@ -1,9 +1,7 @@
 
 #pragma once
 
-#include <boost/concept_check.hpp>
-#include <boost/concept/assert.hpp>
-#include <boost/concept/requires.hpp>
+#include <scl/concept.hpp>
 
 namespace scl
 {
@@ -14,6 +12,7 @@ namespace scl
           {
             typename task_type
             typename time_type = timer_type::time_type;
+
             requires (Callable<task_type>);
             requires (Moveable<task_type>);
             requires (LessThanComparable<time_type>);

@@ -1,9 +1,7 @@
 
 #pragma once
 
-#include <boost/concept_check.hpp>
-#include <boost/concept/assert.hpp>
-#include <boost/concept/requires.hpp>
+#include <scl/concept.hpp>
 
 namespace scl
 {
@@ -20,6 +18,7 @@ namespace scl
             typename output_message_type;
             typename input_type;
             typename output_type;
+
             void X::prepare(const argument_type&);
             void X::cleanup(result_type&);
             void X::load(const state_type&);
@@ -37,7 +36,7 @@ namespace scl
   */
 
   template <class X>
-  struct Processor
+  struct Processor : Addressable<X>
   {
     BOOST_CONCEPT_USAGE(Processor)
     {

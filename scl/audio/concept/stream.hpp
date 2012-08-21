@@ -1,9 +1,7 @@
 
 #pragma once
 
-#include <boost/concept_check.hpp>
-#include <boost/concept/assert.hpp>
-#include <boost/concept/requires.hpp>
+#include <scl/concept.hpp>
 
 namespace scl
 {
@@ -16,10 +14,16 @@ namespace scl
             , Addressable<X>
           {
             typename session_type;
+            typename device_group_type;
             typename device_type;
             typename time_type;
             typename processor_type;
             typename result_type = processor_type::result_type;
+            
+            requires (Session<session_type>);
+            requires (DeviceGroup<device_group_type>);
+            requires (Device<device_type>);
+            
                                   X::X(device_type& in, processor_type& proc, device_type& out);
                                   ~X::X();
             improving<time_type>  X::time();
@@ -35,6 +39,9 @@ namespace scl
 
   template <class X>
   struct Stream
+    : Startable<X>
+    , Semigroup<X>
+    , Addressable<X>
   {
     BOOST_CONCEPT_USAGE(Stream)
     {

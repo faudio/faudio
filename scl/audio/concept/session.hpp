@@ -1,9 +1,7 @@
 
 #pragma once
 
-#include <boost/concept_check.hpp>
-#include <boost/concept/assert.hpp>
-#include <boost/concept/requires.hpp>
+#include <scl/concept.hpp>
 
 namespace scl
 {
@@ -17,6 +15,11 @@ namespace scl
             typename device_group_type;
             typename device_type;
             typename stream_type;
+            
+            requires (DeviceGroup<device_group_type>);
+            requires (Device<device_type>);
+            requires (Stream<stream_type>);
+
                                             X::X();
                                             ~X::X();
             list<device_group_type>         X::device_groups() const;
@@ -33,6 +36,8 @@ namespace scl
 
   template <class X>
   struct Session
+    : Abortable<X>
+    , Semigroup<X>
   {
     BOOST_CONCEPT_USAGE(Session)
     {

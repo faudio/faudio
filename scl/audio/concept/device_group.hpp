@@ -1,9 +1,7 @@
 
 #pragma once
 
-#include <boost/concept_check.hpp>
-#include <boost/concept/assert.hpp>
-#include <boost/concept/requires.hpp>
+#include <scl/concept.hpp>
 
 namespace scl
 {
@@ -12,6 +10,15 @@ namespace scl
 
           concept DeviceGroup<typename X>
           {
+            typename session_type;
+            typename device_group_type;
+            typename device_type;
+            typename stream_type;
+            
+            requires (Session<session_type>);
+            requires (Device<device_type>);
+            requires (Stream<stream_type>);
+            
             pair<list<device_type>,list<device_type>> X::devices() const;
             list<device_type>                         X::input_devices() const;
             list<device_type>                         X::output_devices() const;
