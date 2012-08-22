@@ -9,8 +9,22 @@
 namespace scl
 {
   /**
-      A type with a lower bound. Note that any DefaultConstructible type models LowerBound.
-   */
+    Concept describing types with a lower bound.
+
+    Note that any DefaultConstructible type models LowerBound due to the specification
+    of std::numeric_limits in the standard library.
+
+    Synopsis:
+
+        concept Monoid<typename X>
+          : Semigroup<X>
+          : DefaultConstructible<X>
+        {
+        }
+
+    Models:
+      signed int
+  */
   template <class T>
   struct LowerBound
   {

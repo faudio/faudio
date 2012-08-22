@@ -1,16 +1,16 @@
 
 #pragma once
 
+#include <limits>
 #include <boost/concept_check.hpp>
 #include <boost/concept/assert.hpp>
 #include <boost/concept/requires.hpp>
-#include <scl/concept/semigroup.hpp>
 
 namespace scl
 {
-  using boost::DefaultConstructible;
-
   /**
+    Concept describing types with a upper bound.
+
     Synopsis:
 
         concept Monoid<typename X>
@@ -20,12 +20,20 @@ namespace scl
         }
 
     Models:
-      int,
-      double,
-      std::list
+
+      - signed char
+      - signed int
+
   */
   template <class T>
-  struct Monoid
-      : Semigroup<T>
-      , DefaultConstructible<T> {};
+  struct UpperBound
+  {
+    BOOST_CONCEPT_USAGE(UpperBound)
+    {
+      x = std::numeric_limits<T>::max();
+    }
+  private:
+    T x;
+  };
 }
+

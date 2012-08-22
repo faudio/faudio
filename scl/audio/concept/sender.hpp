@@ -6,20 +6,18 @@
 namespace scl
 {
   /**
-      ### Synopsis ###
+    Synopsis:
 
-          concept Sender<typename X>
-          {
-            typename message_type;
+        concept Sender<typename X>
+        {
+          typename message_type;
 
-            requires (Copyable<message_type>);
+          requires (Copyable<message_type>);
 
-            template void X::send(MessageTypeReceiver);
-          }
+          template void X::send(MessageTypeReceiver);
+        }
 
-      ### Models ###
-
-      (none)
+    Models: none
   */
   template <class X>
   struct Sender

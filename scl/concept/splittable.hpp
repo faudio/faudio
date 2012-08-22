@@ -9,6 +9,20 @@
 
 namespace scl
 {
+  /**
+    Synopsis:
+
+        concept Copyable<typename X>
+          : CopyConstructible<X>
+          , CopyAssignable<X>
+        {
+        }
+
+    Models:
+      int,
+      double,
+      std::list
+  */
   template <class T>
   struct Splittable
   {

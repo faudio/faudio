@@ -6,20 +6,18 @@
 namespace scl
 {
   /**
-      ### Synopsis ###
+    Synopsis:
 
-          concept Pausable<typename X> : Abortable<X>
-          {
-            void X::paus();
-            void X::resume();
-            bool X::is_running();
-          }
+        concept Pausable<typename X> : Abortable<X>
+        {
+          void X::paus();
+          void X::resume();
+          bool X::is_running();
+        }
 
-      ### Models ###
-
+    Models:
       future
   */
-
   template <class X>
   struct Pausable : Abortable<X>
   {

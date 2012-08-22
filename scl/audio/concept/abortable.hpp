@@ -6,19 +6,17 @@
 namespace scl
 {
   /**
-      ### Synopsis ###
+    Synopsis:
 
-          concept Abortable<typename X>
-          {
-            void X::abort();
-            bool X::is_aborted();
-          }
+        concept Abortable<typename X>
+        {
+          void X::abort();
+          bool X::is_aborted();
+        }
 
-      ### Models ###
-
+    Models:
       future
   */
-
   template <class X>
   struct Abortable
   {

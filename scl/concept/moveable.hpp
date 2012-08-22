@@ -7,6 +7,20 @@
 
 namespace scl
 {
+  /**
+    Synopsis:
+
+        concept Moveable<typename X>
+          : MoveConstructible<X>
+          , MoveAssignable<X>
+        {
+        }
+
+    Models:
+      int,
+      double,
+      std::list
+  */
   template <class T>
   struct MoveConstructible
   {
@@ -21,6 +35,20 @@ namespace scl
     T b;
   };
 
+  /**
+    Synopsis:
+
+        concept Moveable<typename X>
+          : MoveConstructible<X>
+          , MoveAssignable<X>
+        {
+        }
+
+    Models:
+      int,
+      double,
+      std::list
+  */
   template <class T>
   struct MoveAssignable
   {
@@ -37,6 +65,20 @@ namespace scl
     T b;
   };
 
+  /**
+    Synopsis:
+
+        concept Moveable<typename X>
+          : MoveConstructible<X>
+          , MoveAssignable<X>
+        {
+        }
+
+    Models:
+      int,
+      double,
+      std::list
+  */
   template <class T>
   struct Moveable
       : MoveConstructible<T>

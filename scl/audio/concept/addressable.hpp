@@ -6,22 +6,21 @@
 namespace scl
 {
   /**
-      ### Synopsis ###
+    Synopsis:
 
-          concept Addressable<typename X>
-          {
-            typename address_type;
+        concept Addressable<typename X>
+        {
+          typename address_type;
 
-            requires (EqualityComparable<address_type>);
+          requires (EqualityComparable<address_type>);
 
-            list<Dispatcher<T>> X::get_dispatcher(address_type);
-          }
+          list<Dispatcher<T>> X::get_dispatcher(address_type);
+        }
 
-      ### Models ###
-
-      portaudio_stream, sndfile_stream
+    Models:
+      portaudio_stream,
+      sndfile_stream
   */
-
   template <class X>
   struct Addressable
   {
