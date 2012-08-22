@@ -1,9 +1,0 @@
-
-namespace scl
-{
-  namespace audio
-  {
-
-  }
-}
-

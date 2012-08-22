@@ -32,8 +32,17 @@ namespace scl
           bool         X::is_active();
         }
 
+    Semantics:
+      - `x.name()` The name of the device, convertible to scl::ustring.
+      - `x.info()` A structure type, providing device-specific information.
+      - `x.session()` The session in which the device was loaded.
+      - `x.is_valid()` Equivalent to `x.session().is_valid()`.
+      - `x.is_active()` Whether the device has non-aborted streams.
+
     Models:
-      none
+      - portaudio_device
+      - portmidi_device
+      - sndfile_device
   */
   template <class X>
   struct Device
