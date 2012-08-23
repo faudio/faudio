@@ -39,9 +39,8 @@ namespace scl
     };
   
   /*
-    double                  
-    int
-    void*
+    sample32                  
+    sample64
     <T>
     [T]
     (T,T)

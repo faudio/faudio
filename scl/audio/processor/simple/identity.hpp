@@ -49,14 +49,15 @@ namespace scl
       };
       
       void* dynamic_identity_processor(audio_type type)
-      {
-        if (type.tag == audio_type_tag::sample32)
+      {                       
+        using tag = audio_type_tag;
+        if (type.tag == tag::sample32)
           return new identity_processor<sample32>;
 
-        if (type.tag == audio_type_tag::sample64)
+        if (type.tag == tag::sample64)
           return new identity_processor<sample64>;
 
-        if (type.tag == audio_type_tag::sample32)
+        if (type.tag == tag::sample32)
           return new identity_processor<sample32>;
       }
 
