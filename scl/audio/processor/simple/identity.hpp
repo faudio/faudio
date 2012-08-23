@@ -9,7 +9,7 @@ namespace scl
 {
   namespace audio
   {
-    namespace processors
+    namespace processor
     {
       using std::pair;
       using unit = std::nullptr_t;
