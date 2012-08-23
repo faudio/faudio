@@ -18,6 +18,7 @@ namespace scl
       template <class T> class improving;
       template <class T> class accumulator;
 
+      /** @cond internal */
       static wakeup_service<std::nullptr_t> accumulator_static_wakeup;
 
       /*
@@ -298,9 +299,29 @@ namespace scl
                    x, y));
       }
 
+      /** @endcond */
 
+      /**
+        Synopsis:
 
+            template <class T>
+            class improving
+            {
+            public:
+              using value_type;
+              using this_type;
+              explicit improving(const T value) noexcept;
+              explicit improving(std::shared_ptr<accumulator<T>> acc) noexcept;
+              improving(this_type && other);
+              ~improving() noexcept;
 
+              void operator= (this_type && other)
+              void swap(this_type& other)
+              bool known() const noexcept
+              T value() const
+              void wait() const
+            };
+       */
       template <class T>
       class improving
       {
@@ -315,21 +336,24 @@ namespace scl
 
       public:
         improving() noexcept
-          : state(new imp_const<T>(std::numeric_limits<T>::lowest())) {}
-        
+      :
+        state(new imp_const<T>(std::numeric_limits<T>::lowest())) {}
+
         explicit
         improving(const T value) noexcept
-          : state(new imp_const<T>(value)) {}
-        
+      :
+        state(new imp_const<T>(value)) {}
+
         explicit
         improving(std::shared_ptr<accumulator<T>> acc) noexcept
-          : state(new imp_acc<T>(acc)) {}
-        
+      :
+        state(new imp_acc<T>(acc)) {}
+
         improving(this_type && other)
           : state(std::move(other.state)) {}
-        
+
         ~improving() noexcept {}
-      
+
       public: // FIXME make private after friending ops
         improving(typename imp_state_ptr<T>::type state)
           : state(state) {}
