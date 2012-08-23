@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <memory>
 #include <scl/concept.hpp>
 
 namespace scl

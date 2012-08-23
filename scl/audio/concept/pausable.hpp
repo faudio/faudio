@@ -1,7 +1,10 @@
 
 #pragma once
 
+#include <memory>
 #include <scl/concept.hpp>
+#include <scl/exception.hpp>
+#include <scl/utility.hpp>
 #include <scl/audio/concept/abortable.hpp>
 
 namespace scl
