@@ -11,7 +11,7 @@ namespace scl
         concept Scheduler<typename X>
         {
           typename task_type
-          typename time_type = timer_type::time_type;
+          typename time_type;
 
           requires (Callable<task_type>);
           requires (Moveable<task_type>);

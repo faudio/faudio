@@ -29,6 +29,8 @@ namespace scl
           bool                            X::is_valid() nothrow const;
         }
 
+    Semantics:
+    
     Models:
       portaudio_session,
       sndfile_session,

@@ -24,10 +24,14 @@ namespace scl
   template <class X>
   struct Timer
   {
+    using time_type = X::time_type;
+    BOOST_CONCEPT_ASSERT((LessThanComparable<address_type>));
+    BOOST_CONCEPT_ASSERT((LowerBounded<address_type>));
     BOOST_CONCEPT_USAGE(Timer)
     {
+      time_type = x.time();
     }
   private:
-    X t;
+    X x;
   };
 }
