@@ -15,6 +15,8 @@ namespace scl
       using ::scl::thread::mutex;
       using ::scl::thread::condition_variable;
 
+      /** @cond internal */
+
       template <class Event>
       struct wakeup_service_state
       {
@@ -30,6 +32,8 @@ namespace scl
         atomic_int         blocked; // number of threads blocking
         atomic_int         pending; // number of threads waiting to read update condition
       };
+
+      /** @endcond */
 
       /**
           Provides composable blocking, allowing a thread to wait for a *set* of events
@@ -73,10 +77,10 @@ namespace scl
           }
         };
 
-        /** Block until an event mathcing the predicate occurs */
+        /** Block until an event mathcing the predicate is signaled. */
         void sleep(std::function<bool(event_type)> predicate);
 
-        /** Signal the given event */
+        /** Signal the given event. */
         void notify(event_type event);
 
       private:
