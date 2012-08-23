@@ -19,12 +19,16 @@ namespace scl
     constexpr int  midi_status_channel(int status);
     constexpr bool midi_status_is_sysex(int status);
 
-    // TODO simple midi functions that works on any Range<Integral>
-    // TODO midi file functions that works on any Range<pair<Integral,option<midi_message,midi_sysex_message>>
+    // TODO simple midi functions that works on list<Integral>
+    // TODO midi file functions that works on list<pair<Integral,option<midi_message,midi_sysex_message>>
 
     // TODO simple wrapper class
     class midi_simple_message
     {
+      int status_type();
+      int status_channel();
+      int data1();
+      int data2();
     };
 
     class midi_sysex_message
