@@ -54,14 +54,14 @@ namespace scl
 
 
 
-      // (a ~> (a,a))
+      // a ~> (a,a)
       class raw_split_processor : public raw_processor
       {
       public:
+        using parent_type = raw_processor;
+
         raw_split_processor(size_t size)
-          : raw_processor(0, 0, 0,
-                          size,
-                          size * 2) {}
+          : raw_processor(0, 0, 0, size, size * 2) {}
 
         void load(intptr_t state) {}
         void store(intptr_t state) {}
@@ -74,18 +74,13 @@ namespace scl
           return true;
         }
 
-        void process(intptr_t in_msg,
-                     intptr_t input,
-                     intptr_t output,
-                     intptr_t out_msg)
+        void process(intptr_t in_msg, intptr_t input, intptr_t output, intptr_t out_msg)
         {
-          size_t size = raw_processor::input_size;
+          size_t size = parent_type::input_size;
           scl::raw_copy(input, input + size, output);
           scl::raw_copy(input, input + size, output + size);
         }
       };
-
-
     }
   }
 }

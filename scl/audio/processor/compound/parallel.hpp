@@ -57,6 +57,8 @@ namespace scl
       {
         raw_processor_ptr x, y;
       public:
+        using parent_type = raw_processor;
+
         raw_parallel_processor(raw_processor_ptr x,
                                raw_processor_ptr y)
           
@@ -86,13 +88,12 @@ namespace scl
           return x->is_ready() && y->is_ready();
         }
 
-        void process(intptr_t in_msg,
-                     intptr_t in,
-                     intptr_t out,
-                     intptr_t out_msg)
-        {
-          x->process(in_msg, in, out, out_msg);
-          y->process(in_msg, in, out, out_msg);
+        void process(intptr_t in_msg, intptr_t input, intptr_t output, intptr_t out_msg)
+        {        
+          size_t input2  = input  + x->input_size;
+          size_t output2 = output + x->output_size;
+          x->process(in_msg, input,  output,  out_msg);
+          y->process(in_msg, input2, output2, out_msg);
         }
       };
 

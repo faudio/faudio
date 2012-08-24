@@ -57,44 +57,40 @@ namespace scl
 
 
 
-      // (b ~> a)
+      // _ ~> a
       class raw_constant_processor : public raw_processor
       {
-        std::unique_ptr<char> buffer;
+        raw_buffer buffer;
       public:
+        using parent_type = raw_processor;
+
         raw_constant_processor(size_t size)
-          : raw_processor(0, 0, 0,
-                          0, size) {}
+          : raw_processor(0, 0, 0, 0, size) {}
 
         void load(intptr_t state) {}
         void store(intptr_t state) {}
 
         void prepare(intptr_t arg)
         {
-          size_t size = raw_processor::output_size;
-          buffer.reset(new char[size]);
-          intptr_t buf = (intptr_t)(buffer.get());
-          scl::raw_copy(arg, arg + size, buf);
+          size_t size = parent_type::output_size;
+          buffer.resize(size);
+          scl::raw_copy(arg, arg + size, buffer.begin());
         }
 
         void cleanup(intptr_t res)
         {
-          buffer.reset();
+          buffer.clear();
         }
 
         bool is_ready()
         {
-          return true;
+          return buffer.size() > 0;
         }
 
-        void process(intptr_t in_msg,
-                     intptr_t input,
-                     intptr_t output,
-                     intptr_t out_msg)
+        void process(intptr_t in_msg, intptr_t input, intptr_t output, intptr_t out_msg)
         {
-          size_t size = raw_processor::output_size;
-          intptr_t buf = (intptr_t)(buffer.get());
-          scl::raw_copy(buf, buf + size, output);
+          size_t size = parent_type::output_size;
+          scl::raw_copy(buffer.begin(), buffer.begin() + size, output);
         }
       };
 

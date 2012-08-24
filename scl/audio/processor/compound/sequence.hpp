@@ -59,13 +59,14 @@ namespace scl
       {
         raw_processor_ptr f, g;
       public:
+        using parent_type = raw_processor;
+
         raw_sequence_processor(raw_processor_ptr f,
                                raw_processor_ptr g)
 
           : raw_processor(0, 0, 0,
                           f->input_size,
                           g->output_size)
-
           , f(f)
           , g(g) 
         { 
@@ -92,23 +93,20 @@ namespace scl
           return f->is_ready() && g->is_ready();
         }
 
-        void process(intptr_t in_msg,
-                     intptr_t in,
-                     intptr_t out,
-                     intptr_t out_msg)
+        void process(intptr_t in_msg, intptr_t input, intptr_t output, intptr_t out_msg)
         {
-          size_t size = raw_processor::input_size;
+          size_t size = parent_type::input_size;
           if (f->input_size < g->output_size) // compare sizes
           {
-            f->process(in_msg, in, out, out_msg);
-            g->process(in_msg, out, in, out_msg);
-            scl::raw_copy(in, in + size, out);
+            f->process(in_msg, input, output, out_msg);
+            g->process(in_msg, output, input, out_msg);
+            scl::raw_copy(input, input + size, output);
           }
           else
           {
-            scl::raw_copy(in, in + size, out);
-            f->process(in_msg, out, in, out_msg);
-            g->process(in_msg, in, out, out_msg);
+            scl::raw_copy(input, input + size, output);
+            f->process(in_msg, output, input, out_msg);
+            g->process(in_msg, input, output, out_msg);
           }
         }
       };
