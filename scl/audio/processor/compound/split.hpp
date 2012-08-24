@@ -22,7 +22,7 @@ namespace scl
       // {
       // public:
       //   split_processor() = default;
-      // 
+      //
       //   void prepare(const argument_type& argument)
       //   {
       //   }
@@ -54,35 +54,34 @@ namespace scl
 
 
 
-
+      // (a ~> (a,a))
       class raw_split_processor : public raw_processor
       {
-        std::unique_ptr<char> buffer;
       public:
         raw_split_processor(size_t size)
-          : raw_processor(0, 0, 0, size, size * 2) {}
-        void prepare(intptr_t argument)
-        {
-          size_t size = raw_processor::output_size;
-          buffer.reset(new char[size]);
-        }
-        void cleanup(intptr_t argument)
-        {
-          buffer.reset();
-        }
-        void load(intptr_t argument) {}
-        void store(intptr_t argument) {}
+          : raw_processor(0, 0, 0,
+                          size,
+                          size * 2) {}
+
+        void load(intptr_t state) {}
+        void store(intptr_t state) {}
+
+        void prepare(intptr_t arg) {}
+        void cleanup(intptr_t res) {}
+
         bool is_ready()
         {
-          return buffer != nullptr;
+          return true;
         }
-        void process(intptr_t input_messages,
+
+        void process(intptr_t in_msg,
                      intptr_t input,
                      intptr_t output,
-                     intptr_t output_messages)
+                     intptr_t out_msg)
         {
-          // std::copy(input, input + size, output);
-          // std::copy(input, input + size, output + size);
+          size_t size = raw_processor::input_size;
+          scl::raw_copy(input, input + size, output);
+          scl::raw_copy(input, input + size, output + size);
         }
       };
 

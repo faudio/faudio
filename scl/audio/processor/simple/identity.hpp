@@ -42,7 +42,7 @@ namespace scl
         {
           return true;
         }
-        unit process(const std::list<unit>& input_messages,
+        unit process(const std::list<unit>& in_msg,
                      const A& input,
                      A& output,
                      std::list<unit>& output_messages)
@@ -56,26 +56,30 @@ namespace scl
 
 
 
-
+      // a ~> a
       class raw_identity_processor : public raw_processor
       {
       public:
         raw_identity_processor(size_t size)
           : raw_processor(0, 0, 0, size, size) {}
-        void prepare(intptr_t argument) {}
-        void cleanup(intptr_t argument) {}
-        void load(intptr_t argument) {}
-        void store(intptr_t argument) {}
+
+        void load(intptr_t state) {}
+        void store(intptr_t state) {}
+
+        void prepare(intptr_t arg) {}
+        void cleanup(intptr_t res) {}
+
         bool is_ready()
         {
           return true;
         }
-        void process(intptr_t input_messages,
+
+        void process(intptr_t in_msg,
                      intptr_t input,
                      intptr_t output,
-                     intptr_t output_messages)
-        {                          
-          size_t size = raw_processor::output_size;
+                     intptr_t out_msg)
+        {
+          size_t size = raw_processor::input_size;
           scl::raw_copy(input, input + size, output);
         }
       };

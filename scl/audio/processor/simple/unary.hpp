@@ -22,7 +22,7 @@ namespace scl
       // public:
       //   unary_processor(std::function<C(A, B)> function)
       //     : function(function) {}
-      // 
+      //
       //   void prepare(const argument_type& argument)
       //   {
       //   }

@@ -23,7 +23,7 @@ namespace scl
       // public:
       //   parallel_processor(value_type value)
       //     : value(value) {}
-      // 
+      //
       //   void prepare(const argument_type& argument)
       //   {
       //   }
@@ -45,47 +45,54 @@ namespace scl
       //                list<output_message_type>& output_messages)
       //   {
       //   }
-      // 
+      //
       // private:
       // };
 
 
 
 
-
-
-
+      // (a ~> b) -> (c ~> d) -> ((a,b) ~> (c,d))
       class raw_parallel_processor : public raw_processor
-      {                        
-        raw_processor_ptr fst;
-        raw_processor_ptr snd;
+      {
+        raw_processor_ptr x, y;
       public:
-        raw_parallel_processor(
-          raw_processor_ptr fst,
-          raw_processor_ptr snd
-        )
+        raw_parallel_processor(raw_processor_ptr x,
+                               raw_processor_ptr y)
+          
           : raw_processor(0, 0, 0,
-                          fst->input_size + snd->input_size,
-                          fst->output_size + snd->output_size)
-          , fst(fst)
-          , snd(snd)
-        {}
-        void prepare(intptr_t argument) {}
-        void cleanup(intptr_t argument) {}
-        void load(intptr_t argument) {}
-        void store(intptr_t argument) {}
+                          x->input_size + y->input_size,
+                          x->output_size + y->output_size)
+          , x(x)
+          , y(y) {}
+
+        void load(intptr_t state) {}
+        void store(intptr_t state) {}
+
+        void prepare(intptr_t arg)
+        {
+          x->prepare(arg);
+          y->prepare(arg); // TODO in parallel
+        }
+
+        void cleanup(intptr_t res)
+        {
+          x->cleanup(res);
+          y->cleanup(res); // TODO in parallel
+        }
+
         bool is_ready()
         {
-          return fst->is_ready() && snd->is_ready();
+          return x->is_ready() && y->is_ready();
         }
-        void process(intptr_t input_messages,
-                     intptr_t input,
-                     intptr_t output,
-                     intptr_t output_messages)
+
+        void process(intptr_t in_msg,
+                     intptr_t in,
+                     intptr_t out,
+                     intptr_t out_msg)
         {
-          // split input
-          // run both processors
-          // join output
+          x->process(in_msg, in, out, out_msg);
+          y->process(in_msg, in, out, out_msg);
         }
       };
 

@@ -23,7 +23,7 @@ namespace scl
       // public:
       //   sequence_processor(value_type value)
       //     : value(value) {}
-      // 
+      //
       //   void prepare(const argument_type& argument)
       //   {
       //   }
@@ -35,7 +35,7 @@ namespace scl
       //   }
       //   void store(state_type& state)
       //   {
-      //   }
+      //   }        7
       //   bool is_ready()
       //   {
       //   }
@@ -45,55 +45,71 @@ namespace scl
       //                list<output_message_type>& output_messages)
       //   {
       //   }
-      // 
+      //
       // private:
-      // }; 
+      // };
 
 
 
 
 
 
-
+      // (a ~> b) -> (b ~> c) -> (a ~> c)
       class raw_sequence_processor : public raw_processor
-      {   
-        raw_processor_ptr f; 
-        raw_processor_ptr g; 
-        std::unique_ptr<char> xs;
-        std::unique_ptr<char> ys;
+      {
+        raw_processor_ptr f, g;
       public:
-        raw_sequence_processor(
-          raw_processor_ptr f,
-          raw_processor_ptr g
-        )
-          : raw_processor(0, 0, 0, f->input_size, g->output_size)
+        raw_sequence_processor(raw_processor_ptr f,
+                               raw_processor_ptr g)
+
+          : raw_processor(0, 0, 0,
+                          f->input_size,
+                          g->output_size)
+
           , f(f)
-          , g(g)
-        {
-          assert((g->input_size == 0) || f->output_size == g->input_size);
+          , g(g) 
+        { 
+          assert(g->input_size == 0 || f->output_size == g->input_size); 
         }
-        void prepare(intptr_t argument)
+
+        void load(intptr_t state) {}
+        void store(intptr_t state) {}
+
+        void prepare(intptr_t arg)
         {
-          
+          f->prepare(arg);
+          g->prepare(arg);
         }
-        void cleanup(intptr_t argument)
+
+        void cleanup(intptr_t res)
         {
-          
+          f->cleanup(res);
+          g->cleanup(res);
         }
-        void load(intptr_t argument) {}
-        void store(intptr_t argument) {}
+
         bool is_ready()
         {
           return f->is_ready() && g->is_ready();
         }
-        void process(intptr_t input_messages,
-                     intptr_t input,
-                     intptr_t output,
-                     intptr_t output_messages)
+
+        void process(intptr_t in_msg,
+                     intptr_t in,
+                     intptr_t out,
+                     intptr_t out_msg)
         {
-          // split input
-          // run both processors
-          // join output
+          size_t size = raw_processor::input_size;
+          if (f->input_size < g->output_size) // compare sizes
+          {
+            f->process(in_msg, in, out, out_msg);
+            g->process(in_msg, out, in, out_msg);
+            scl::raw_copy(in, in + size, out);
+          }
+          else
+          {
+            scl::raw_copy(in, in + size, out);
+            f->process(in_msg, out, in, out_msg);
+            g->process(in_msg, in, out, out_msg);
+          }
         }
       };
     }

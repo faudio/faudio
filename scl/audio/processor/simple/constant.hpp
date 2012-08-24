@@ -24,7 +24,7 @@ namespace scl
       // public:
       //   constant_processor(output_type value)
       //     : value(value) {}
-      // 
+      //
       //   void prepare(const argument_type& argument)
       //   {
       //   }
@@ -48,48 +48,52 @@ namespace scl
       //   {
       //     output = value;
       //   }
-      // 
+      //
       // private:
       //   output_type value;
-      // };  
+      // };
 
 
 
 
 
-
-
+      // (b ~> a)
       class raw_constant_processor : public raw_processor
-      {         
+      {
         std::unique_ptr<char> buffer;
       public:
         raw_constant_processor(size_t size)
-          : raw_processor(0, 0, 0, 0, size)
-        {                          
-        }
-        void prepare(intptr_t argument)
+          : raw_processor(0, 0, 0,
+                          0, size) {}
+
+        void load(intptr_t state) {}
+        void store(intptr_t state) {}
+
+        void prepare(intptr_t arg)
         {
           size_t size = raw_processor::output_size;
           buffer.reset(new char[size]);
-          scl::raw_copy(argument, argument + size, (intptr_t) buffer.get());
+          intptr_t buf = (intptr_t)(buffer.get());
+          scl::raw_copy(arg, arg + size, buf);
         }
-        void cleanup(intptr_t argument)
+
+        void cleanup(intptr_t res)
         {
           buffer.reset();
         }
-        void load(intptr_t argument) {}
-        void store(intptr_t argument) {}
+
         bool is_ready()
         {
           return true;
         }
-        void process(intptr_t input_messages,
+
+        void process(intptr_t in_msg,
                      intptr_t input,
                      intptr_t output,
-                     intptr_t output_messages)
+                     intptr_t out_msg)
         {
           size_t size = raw_processor::output_size;
-          intptr_t buf = (intptr_t) (buffer.get());
+          intptr_t buf = (intptr_t)(buffer.get());
           scl::raw_copy(buf, buf + size, output);
         }
       };
