@@ -84,7 +84,7 @@ namespace scl
         void store(intptr_t argument) {}
         bool is_ready()
         {
-          return true;
+          return f->is_ready() && g->is_ready();
         }
         void process(intptr_t input_messages,
                      intptr_t input,

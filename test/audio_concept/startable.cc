@@ -8,8 +8,8 @@ struct startable
   void abort() {}
   void start() {}
   void stop() {}
-  bool is_aborted() {}
-  bool is_running() {}
+  bool is_aborted() { return false; }
+  bool is_running() { return false; }
 };
 struct not_startable
 {

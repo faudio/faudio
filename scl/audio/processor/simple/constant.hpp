@@ -61,16 +61,22 @@ namespace scl
 
       class raw_constant_processor : public raw_processor
       {         
-        std::unique_ptr<char> value;
+        std::unique_ptr<char> buffer;
       public:
-        raw_constant_processor(intptr_t input, size_t size)
+        raw_constant_processor(size_t size)
           : raw_processor(0, 0, 0, 0, size)
         {                          
-          value.reset(new char[size]);
-          scl::raw_copy(input, input + size, (intptr_t) value.get());
         }
-        void prepare(intptr_t argument) {}
-        void cleanup(intptr_t argument) {}
+        void prepare(intptr_t argument)
+        {
+          size_t size = raw_processor::output_size;
+          buffer.reset(new char[size]);
+          scl::raw_copy(argument, argument + size, (intptr_t) buffer.get());
+        }
+        void cleanup(intptr_t argument)
+        {
+          buffer.reset();
+        }
         void load(intptr_t argument) {}
         void store(intptr_t argument) {}
         bool is_ready()
@@ -83,8 +89,8 @@ namespace scl
                      intptr_t output_messages)
         {
           size_t size = raw_processor::output_size;
-          intptr_t val = (intptr_t) (value.get());
-          scl::raw_copy(val, val + size, output);
+          intptr_t buf = (intptr_t) (buffer.get());
+          scl::raw_copy(buf, buf + size, output);
         }
       };
 

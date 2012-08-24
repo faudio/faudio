@@ -12,8 +12,9 @@ TEST(AudioTypes, Basic)
   audio_type x = dynamic::type::sample32();
   audio_type y = dynamic::type::pair(dynamic::type::list(x), dynamic::type::vector(x));
   audio_type z = dynamic::type::pair(x, dynamic::type::pair(x, x));
-  std::cout << x << "\n";
-  std::cout << y << "\n";
-  std::cout << z << "\n";
-  
+  std::cout << "Name: " << x << "\n Levels: " << x.levels() << "\n";
+  std::cout << "Name: " << y << "\n Levels: " << y.levels() << "\n";
+  std::cout << "Name: " << z << "\n Levels: " << z.levels() << "\n";
+                                                         
+  // generate(3);
 }
