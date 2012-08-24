@@ -63,7 +63,6 @@ namespace scl
 
         raw_sequence_processor(raw_processor_ptr f,
                                raw_processor_ptr g)
-
           : raw_processor(0, 0, 0,
                           f->input_size,
                           g->output_size)
