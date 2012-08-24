@@ -35,8 +35,7 @@ namespace scl
 
       /** @endcond */
 
-      /**
-          Provides composable blocking, allowing a thread to wait for a *set* of events
+      /** Provides composable blocking, allowing a thread to wait for a *set* of events
           instead of a single event as in a condition variable. As with a condition
           variable, care should be taken to assure that one-time wakeups are not missed
           by the blocking thread.
@@ -117,21 +116,11 @@ namespace scl
     using thread::mutex;
     using thread::unique_lock;
     if (!state) throw error();
-    /*
-        To avoid an extra lock, we busy wait until all other threads have been woken
-        This should be fast, as only the predicate will run before the mutex is
-        released and the next thread is woken.
-
-        Note that even after the wait we may block on the mutex for the last predicate.
-
-        Room for improvement:
-
-          Current implementation will run all predicates sequentially. We could run
-          them in parallel using a shared_mutex, but this is not supported by std (Boost only).
-          Maybe some other implementation using atomic/CAS? Anyway, care must be taken to assure
-          proper interleaving.
+    /* Busy wait until all other threads have been woken. This could be replaced bv
+       a secondary condition variable if the predicates takes up to much time.
+       Note that even after the wait we may block on the mutex for the last predicate.
     */
-    while (state->pending > 0);
+    do {} while (state->pending > 0);
     {
       unique_lock<mutex> lock(state->mutx);
       state->event = event;
