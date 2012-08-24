@@ -41,9 +41,9 @@ namespace scl
   /*
     sample32                  
     sample64
-    <T>
-    [T]
     (T,T)
+    [T]
+    {T x N}
 
     identity : () a ~> a
     const    : () b ~> a
@@ -78,13 +78,15 @@ namespace scl
       
       audio_type(tag_type tag) 
         : tag(tag) {}
+      
       audio_type(tag_type tag, audio_type fst) 
         : tag(tag)
-        , fst{new audio_type(fst)} {}
+        , fst(new audio_type(fst)) {}
+      
       audio_type(tag_type tag, audio_type fst, audio_type snd) 
         : tag(tag)
-        , fst{new audio_type(fst)}
-        , snd{new audio_type(snd)} {}
+        , fst(new audio_type(fst))
+        , snd(new audio_type(snd)) {}
       
       std::string str() const
       {   
@@ -94,9 +96,9 @@ namespace scl
         switch(tag)
         {
           case tag_type::sample32:
-            return "sample32";
+            return "f32";
           case tag_type::sample64:
-            return "sample64";
+            return "f64";
           case tag_type::pair:
             return "(" + fst->str() + ", " + snd->str() + ")";
           case tag_type::list:
@@ -112,14 +114,17 @@ namespace scl
       return a << b.str();
     }
 
-    namespace audio_types
+    namespace dynamic
     {
+      namespace type
+      {
       using tag_type = audio_type_tag;
       inline audio_type sample32() { return audio_type(tag_type::sample32); }
       inline audio_type sample64() { return audio_type(tag_type::sample64); }
       inline audio_type pair(audio_type fst, audio_type snd) { return audio_type(tag_type::pair, fst, snd); }
       inline audio_type list(audio_type type) { return audio_type(tag_type::list, type); }
       inline audio_type vector(audio_type type) { return audio_type(tag_type::vector, type); }
+      }
     }
   
   }

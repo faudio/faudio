@@ -47,18 +47,43 @@ namespace scl
           output = input;
         }
       };
-      
-      void* dynamic_identity_processor(audio_type type)
+
+      template <template <class U> class T>
+      void* create_dynamic_processor(audio_type type)
       {                       
         using tag = audio_type_tag;
+        
+        // sample32
         if (type.tag == tag::sample32)
-          return new identity_processor<sample32>;
+          return new T<sample32>;
 
+        // sample64
         if (type.tag == tag::sample64)
-          return new identity_processor<sample64>;
+          return new T<sample64>;
 
-        if (type.tag == tag::sample32)
-          return new identity_processor<sample32>;
+        // (sample32, sample32)
+        if (type.tag == tag::pair 
+            && type.fst->tag == tag::sample32 
+            && type.snd->tag == tag::sample32) 
+          return new T<audio_pair<sample32, sample32>::type>;
+
+        // [sample32]
+        if (type.tag == tag::list
+            && type.fst->tag == tag::sample32) 
+          return new T<audio_list<sample32>::type>;
+
+        // {sample32 x N}
+        if (type.tag == tag::vector
+            && type.fst->tag == tag::sample32) 
+          return new T<audio_vector<sample32>::type>;
+      }
+
+
+
+      
+      void* create_identity_processor(audio_type type)
+      {
+        return create_dynamic_processor<identity_processor>(type);
       }
 
     }
