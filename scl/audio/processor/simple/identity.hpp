@@ -1,7 +1,9 @@
 
 #pragma once
 
+#include <algorithm>
 #include <utility>
+#include <scl/utility.hpp>
 #include <scl/audio/audio_types.hpp>
 #include <scl/audio/processor.hpp>
 
@@ -72,8 +74,9 @@ namespace scl
                      intptr_t input,
                      intptr_t output,
                      intptr_t output_messages)
-        {
-          std::copy(input, input + size, output);
+        {                          
+          size_t size = raw_processor::output_size;
+          scl::raw_copy(input, input + size, output);
         }
       };
 

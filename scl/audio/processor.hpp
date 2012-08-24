@@ -2,6 +2,7 @@
 #pragma once
 
 #include <list>
+#include <memory>
 #include <scl/exception.hpp>
 
 namespace scl
@@ -221,7 +222,9 @@ namespace scl
                              intptr_t input_data,
                              intptr_t output_data,
                              intptr_t output_messages) = 0;
-      };
+      }; 
+      
+      using raw_processor_ptr = std::shared_ptr<raw_processor>;
     }
   }
 }

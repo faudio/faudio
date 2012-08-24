@@ -1,6 +1,9 @@
 
 #pragma once
 
+#include <algorithm>
+#include <scl/utility.hpp>
+
 namespace scl
 {
   namespace audio
@@ -22,25 +25,28 @@ namespace scl
         {}
         void prepare(intptr_t argument)
         {
-          buffer = new char[size];
+          size_t size = raw_processor::output_size;
+          buffer.reset(new char[size]);
         }
         void cleanup(intptr_t argument)
         {
-          delete buffer;
+          buffer.reset();
         }
         void load(intptr_t argument) {}
         void store(intptr_t argument) {}
         bool is_ready()
         {
-          return true;
+          return buffer != nullptr;
         }
         void process(intptr_t input_messages,
                      intptr_t input,
                      intptr_t output,
                      intptr_t output_messages)
-        {
-          std::copy(input, size, buffer);
-          std::copy(buffer, size, output);
+        {                           
+          size_t size = raw_processor::output_size;
+          intptr_t buf = (intptr_t) (buffer.get());
+          scl::raw_copy(buf, buf + size, output);
+          scl::raw_copy(input, input + size, buf);
         }
       };
 

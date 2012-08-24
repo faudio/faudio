@@ -14,3 +14,10 @@
     return b.swap(*this);                 \
   }                                       \
    
+namespace scl
+{
+  inline intptr_t raw_copy(intptr_t begin, intptr_t end, intptr_t out)
+  {
+    return (intptr_t) std::copy((char*)begin, (char*)end, (char*)out);
+  }
+}
