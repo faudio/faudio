@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <memory> // for unique_ptr
+
 #define SCL_STANDARD_ASSIGN(THIS_TYPE)    \
   void operator= (const THIS_TYPE& other) \
   {                                       \
