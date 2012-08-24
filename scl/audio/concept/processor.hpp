@@ -28,7 +28,7 @@ namespace scl
                                 output_type&,
                                 list<output_message_type>&);
         }
-    
+
     Semantics:
       - `x.prepare(arg)`
         - Precondition: `x` is not in ready state
@@ -45,7 +45,7 @@ namespace scl
       - `x.process(in_msgs, in, out, out_msgs)`
         - Precondition: `x` is in ready state
         - Postcondition: `x` is in ready state
-  
+
     Models:
       - unary_processor,
       - fluidsynth,
@@ -72,7 +72,7 @@ namespace scl
       x.process(in_msgs, in, out, out_msgs);
     }
   private:
-    X x;  
+    X x;
     state_type state;
     argument_type arg;
     result_type res;

@@ -16,18 +16,19 @@ namespace scl
 
       template <class A>
       class identity_processor
-        : public processor<unit, unit, unit,
-                           unit, unit,
-                           A, A>
+        : public processor <
+        unit, unit, unit,
+        unit, unit,
+        A, A >
       {
       public:
         identity_processor() = default;
 
         unit prepare(const unit& argument)
-        {          
+        {
         }
         unit cleanup(unit& result)
-        {          
+        {
         }
         unit load(const unit& state)
         {
@@ -41,50 +42,40 @@ namespace scl
         }
         unit process(const std::list<unit>& input_messages,
                      const A& input,
-                           A& output,
-                           std::list<unit>& output_messages)
+                     A& output,
+                     std::list<unit>& output_messages)
         {
           output = input;
         }
       };
 
-      template <template <class U> class T>
-      void* create_dynamic_processor(audio_type type)
-      {                       
-        using tag = audio_type_tag;
-        
-        // sample32
-        if (type.tag == tag::sample32)
-          return new T<sample32>;
-
-        // sample64
-        if (type.tag == tag::sample64)
-          return new T<sample64>;
-
-        // (sample32, sample32)
-        if (type.tag == tag::pair 
-            && type.fst->tag == tag::sample32 
-            && type.snd->tag == tag::sample32) 
-          return new T<audio_pair<sample32, sample32>::type>;
-
-        // [sample32]
-        if (type.tag == tag::list
-            && type.fst->tag == tag::sample32) 
-          return new T<audio_list<sample32>::type>;
-
-        // {sample32 x N}
-        if (type.tag == tag::vector
-            && type.fst->tag == tag::sample32) 
-          return new T<audio_vector<sample32>::type>;
-      }
 
 
 
-      
-      void* create_identity_processor(audio_type type)
+
+
+
+      class raw_identity_processor : public raw_processor
       {
-        return create_dynamic_processor<identity_processor>(type);
-      }
+      public:
+        raw_identity_processor(size_t size)
+          : raw_processor(0, 0, 0, size, size) {}
+        void prepare(intptr_t argument) {}
+        void cleanup(intptr_t argument) {}
+        void load(intptr_t argument) {}
+        void store(intptr_t argument) {}
+        bool is_ready()
+        {
+          return true;
+        }
+        void process(intptr_t input_messages,
+                     intptr_t input,
+                     intptr_t output,
+                     intptr_t output_messages)
+        {
+          std::copy(input, input + size, output);
+        }
+      };
 
     }
   }

@@ -12,7 +12,7 @@ namespace scl
   /**
     Refines Abortable with pause and resume functions. In constrast to abort,
     these operations are not permanent.
-    
+
     Synopsis:
 
         concept Pausable<typename X> : Abortable<X>
@@ -52,7 +52,7 @@ namespace scl
   private:
     X t;
   };
-  
+
   class dynamic_pausable
   {
   public:
@@ -72,31 +72,72 @@ namespace scl
     dynamic_pausable_wrapper(const T& x)
       : x(x) {}
     ~dynamic_pausable_wrapper() {}
-    void pause() { x.pause(); }
-    void resume() { x.resume(); }
-    void abort() { x.abort(); }
-    bool is_running() { return x.is_running(); }
-    bool is_aborted() { return x.is_aborted(); }
+    void pause()
+    {
+      x.pause();
+    }
+    void resume()
+    {
+      x.resume();
+    }
+    void abort()
+    {
+      x.abort();
+    }
+    bool is_running()
+    {
+      return x.is_running();
+    }
+    bool is_aborted()
+    {
+      return x.is_aborted();
+    }
   };
-  
+
   class any_pausable
   {
     std::shared_ptr<dynamic_pausable> x;
-    inline void check() { if (!x) throw bad_state(); }
+    inline void check()
+    {
+      if (!x) throw bad_state();
+    }
   public:
     template <class T>
     explicit any_pausable(T x)
       : x(new dynamic_pausable_wrapper<T>(x)) {}
     any_pausable(const any_pausable& other) : x(other.x) {}
     any_pausable(any_pausable && other) : x(std::move(other.x)) {}
-    void swap(any_pausable& other) { std::swap(this->x, other.x); }
+    void swap(any_pausable& other)
+    {
+      std::swap(this->x, other.x);
+    }
     SCL_STANDARD_ASSIGN(any_pausable);
 
-    void pause() { check(); x->pause(); }
-    void resume() { check(); x->resume(); }
-    void abort() { check(); x->abort(); }
-    bool is_running() { check(); return x->is_running(); }
-    bool is_aborted() { check(); return x->is_aborted(); }
+    void pause()
+    {
+      check();
+      x->pause();
+    }
+    void resume()
+    {
+      check();
+      x->resume();
+    }
+    void abort()
+    {
+      check();
+      x->abort();
+    }
+    bool is_running()
+    {
+      check();
+      return x->is_running();
+    }
+    bool is_aborted()
+    {
+      check();
+      return x->is_aborted();
+    }
   };
 }
 

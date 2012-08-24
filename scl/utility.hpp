@@ -7,11 +7,10 @@
     THIS_TYPE b = other;                  \
     return b.swap(*this);                 \
   }                                       \
-                                          \
+  \
   void operator= (THIS_TYPE&& other)      \
   {                                       \
     THIS_TYPE b = std::move(other);       \
     return b.swap(*this);                 \
   }                                       \
-
-  
+   

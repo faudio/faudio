@@ -30,7 +30,7 @@ namespace scl
         }
 
     Semantics:
-    
+
     Models:
       portaudio_session,
       sndfile_session,

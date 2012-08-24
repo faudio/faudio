@@ -22,7 +22,7 @@ namespace scl
   */
   template <class X>
   struct Sender
-  { 
+  {
     using message_type = X::message_type;
     BOOST_CONCEPT_ASSERT((Copyable<message_type>));
     BOOST_CONCEPT_USAGE(Sender)

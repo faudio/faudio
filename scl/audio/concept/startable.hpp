@@ -67,30 +67,71 @@ namespace scl
     dynamic_startable_wrapper(const T& x)
       : x(x) {}
     ~dynamic_startable_wrapper() {}
-    void start() { x.start(); }
-    void stop() { x.stop(); }
-    void abort() { x.abort(); }
-    bool is_running() { return x.is_running(); }
-    bool is_aborted() { return x.is_aborted(); }
+    void start()
+    {
+      x.start();
+    }
+    void stop()
+    {
+      x.stop();
+    }
+    void abort()
+    {
+      x.abort();
+    }
+    bool is_running()
+    {
+      return x.is_running();
+    }
+    bool is_aborted()
+    {
+      return x.is_aborted();
+    }
   };
-  
+
   class any_startable
   {
     std::shared_ptr<dynamic_startable> x;
-    inline void check() { if (!x) throw bad_state(); }
+    inline void check()
+    {
+      if (!x) throw bad_state();
+    }
   public:
     template <class T>
     explicit any_startable(T x)
       : x(new dynamic_startable_wrapper<T>(x)) {}
     any_startable(const any_startable& other) : x(other.x) {}
     any_startable(any_startable && other) : x(std::move(other.x)) {}
-    void swap(any_startable& other) { std::swap(this->x, other.x); }
+    void swap(any_startable& other)
+    {
+      std::swap(this->x, other.x);
+    }
     SCL_STANDARD_ASSIGN(any_startable);
 
-    void start() { check(); x->start(); }
-    void stop() { check(); x->stop(); }
-    void abort() { check(); x->abort(); }
-    bool is_running() { check(); return x->is_running(); }
-    bool is_aborted() { check(); return x->is_aborted(); }
+    void start()
+    {
+      check();
+      x->start();
+    }
+    void stop()
+    {
+      check();
+      x->stop();
+    }
+    void abort()
+    {
+      check();
+      x->abort();
+    }
+    bool is_running()
+    {
+      check();
+      return x->is_running();
+    }
+    bool is_aborted()
+    {
+      check();
+      return x->is_aborted();
+    }
   };
 }
