@@ -1,15 +1,17 @@
 
 #include <gtest/gtest.h>
+
 #include <scl/audio/processor/simple/identity.hpp>
 #include <scl/audio/processor/simple/constant.hpp>
 #include <scl/audio/processor/simple/unary.hpp>
 // #include <scl/audio/processor/simple/binary.hpp>
 // #include <scl/audio/processor/simple/ternary.hpp>
 // #include <scl/audio/processor/simple/random.hpp>
+#include <scl/audio/processor/simple/split.hpp>
+#include <scl/audio/processor/simple/delay.hpp>
+
 #include <scl/audio/processor/compound/sequence.hpp>
 #include <scl/audio/processor/compound/parallel.hpp>
-#include <scl/audio/processor/compound/split.hpp>
-#include <scl/audio/processor/compound/delay.hpp>
 // #include <scl/audio/processor/compound/feedback.hpp>
 
 TEST(AudioProcessor, RawIdentity)
