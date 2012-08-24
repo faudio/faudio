@@ -67,17 +67,17 @@ namespace scl
         raw_constant_processor(size_t size)
           : raw_processor(0, 0, 0, 0, size) {}
 
-        void load(intptr_t state) {}
-        void store(intptr_t state) {}
+        void load(ptr_t state) {}
+        void store(ptr_t state) {}
 
-        void prepare(intptr_t arg)
+        void prepare(ptr_t arg)
         {
           size_t size = parent_type::output_size;
           buffer.resize(size);
           scl::raw_copy(arg, arg + size, buffer.begin());
         }
 
-        void cleanup(intptr_t res)
+        void cleanup(ptr_t res)
         {
           buffer.clear();
         }
@@ -87,7 +87,7 @@ namespace scl
           return buffer.size() > 0;
         }
 
-        void process(intptr_t in_msg, intptr_t input, intptr_t output, intptr_t out_msg)
+        void process(ptr_t in_msg, ptr_t input, ptr_t output, ptr_t out_msg)
         {
           size_t size = parent_type::output_size;
           scl::raw_copy(buffer.begin(), buffer.begin() + size, output);

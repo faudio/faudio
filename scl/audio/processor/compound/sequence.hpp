@@ -67,21 +67,21 @@ namespace scl
                           f->input_size,
                           g->output_size)
           , f(f)
-          , g(g) 
-        { 
-          assert(g->input_size == 0 || f->output_size == g->input_size); 
+          , g(g)
+        {
+          assert(g->input_size == 0 || f->output_size == g->input_size);
         }
 
-        void load(intptr_t state) {}
-        void store(intptr_t state) {}
+        void load(ptr_t state) {}
+        void store(ptr_t state) {}
 
-        void prepare(intptr_t arg)
+        void prepare(ptr_t arg)
         {
           f->prepare(arg);
           g->prepare(arg);
         }
 
-        void cleanup(intptr_t res)
+        void cleanup(ptr_t res)
         {
           f->cleanup(res);
           g->cleanup(res);
@@ -92,7 +92,7 @@ namespace scl
           return f->is_ready() && g->is_ready();
         }
 
-        void process(intptr_t in_msg, intptr_t input, intptr_t output, intptr_t out_msg)
+        void process(ptr_t in_msg, ptr_t input, ptr_t output, ptr_t out_msg)
         {
           size_t size = parent_type::input_size;
           if (f->input_size < g->output_size) // compare sizes

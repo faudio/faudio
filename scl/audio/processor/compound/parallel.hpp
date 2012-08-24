@@ -61,23 +61,23 @@ namespace scl
 
         raw_parallel_processor(raw_processor_ptr x,
                                raw_processor_ptr y)
-          
+
           : raw_processor(0, 0, 0,
                           x->input_size + y->input_size,
                           x->output_size + y->output_size)
           , x(x)
           , y(y) {}
 
-        void load(intptr_t state) {}
-        void store(intptr_t state) {}
+        void load(ptr_t state) {}
+        void store(ptr_t state) {}
 
-        void prepare(intptr_t arg)
+        void prepare(ptr_t arg)
         {
           x->prepare(arg);
           y->prepare(arg); // TODO in parallel
         }
 
-        void cleanup(intptr_t res)
+        void cleanup(ptr_t res)
         {
           x->cleanup(res);
           y->cleanup(res); // TODO in parallel
@@ -88,8 +88,8 @@ namespace scl
           return x->is_ready() && y->is_ready();
         }
 
-        void process(intptr_t in_msg, intptr_t input, intptr_t output, intptr_t out_msg)
-        {        
+        void process(ptr_t in_msg, ptr_t input, ptr_t output, ptr_t out_msg)
+        {
           size_t input2  = input  + x->input_size;
           size_t output2 = output + x->output_size;
           x->process(in_msg, input,  output,  out_msg);

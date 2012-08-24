@@ -18,46 +18,52 @@
    
 namespace scl
 {
+
+  using ptr_t = intptr_t;
+
+  /**
+      A moveable, non-copyable byte buffer.
+   */
   class raw_buffer
   {
     std::unique_ptr<char> mBuffer;
-    size_t mSize;            
-  
+    size_t mSize;
+
   public:
     raw_buffer() : mSize(0) {}
-    
+
     void resize(size_t size)
-    { 
+    {
       if (size > 0)
         mBuffer.reset(new char[size]);
       else
-        mBuffer.reset();              
+        mBuffer.reset();
       mSize = size;
-    }                  
-    
+    }
+
     void clear()
     {
       resize(0);
     }
-    
-    intptr_t begin()
+
+    ptr_t begin()
     {
-      return (intptr_t) mBuffer.get();
+      return (ptr_t) mBuffer.get();
     }
-    
-    intptr_t end()
+
+    ptr_t end()
     {
       return begin() + size();
     }
-    
+
     size_t size()
     {
       return mSize;
     }
   };
 
-  inline intptr_t raw_copy(intptr_t begin, intptr_t end, intptr_t out)
+  inline ptr_t raw_copy(ptr_t begin, ptr_t end, ptr_t out)
   {
-    return (intptr_t) std::copy((char*)begin, (char*)end, (char*)out);
+    return (ptr_t) std::copy((char*)begin, (char*)end, (char*)out);
   }
 }

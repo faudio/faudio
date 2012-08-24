@@ -14,6 +14,13 @@
 #include <scl/audio/processor/compound/parallel.hpp>
 // #include <scl/audio/processor/compound/feedback.hpp>
 
+TEST(AudioProcessor, RawBuffer)
+{
+  scl::raw_buffer b;
+  scl::raw_buffer b2 = std::move(b);
+}
+
+
 TEST(AudioProcessor, RawIdentity)
 {
   using namespace scl::audio::processor;
