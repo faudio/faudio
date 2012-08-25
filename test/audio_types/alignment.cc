@@ -40,6 +40,11 @@ void print_align()
   std::cout << "  size:      " << sizeof(T) << "\n";
   std::cout << "  alignment: " << alignof(T) << "\n";
 }
+template<class T>
+void print_offset()
+{
+  std::cout << "  offset:    " << offsetof(T,second) << "\n";
+}
   
 TEST(AudioTypes, Alignment)
 {                               
@@ -47,32 +52,37 @@ TEST(AudioTypes, Alignment)
   using std::array;
   using namespace scl::audio;
 
-  print_name(" midi_simple_message ");
-  print_align< midi_simple_message >();
+  print_name (" midi_simple_message ");
+  print_align < midi_simple_message >();
                
-  print_name(" midi_sysex_message ");
-  print_align< midi_sysex_message >();
+  print_name (" midi_sysex_message ");
+  print_align < midi_sysex_message >();
                
-  print_name(" sample32 ");
-  print_align< sample32 >();
+  print_name (" sample32 ");
+  print_align < sample32 >();
 
-  print_name(" pair<sample32,sample32> ");
-  print_align< pair<sample32,sample32> >();
+  print_name (" pair<sample32,sample32> ");
+  print_align < pair<sample32,sample32> >();
+  print_offset< pair<sample32,sample32> >();
 
-  print_name(" pair<sample32,sample64> ");
-  print_align< pair<sample32,sample64> >();
+  print_name (" pair<sample32,sample64> ");
+  print_align < pair<sample32,sample64> >();
+  print_offset< pair<sample32,sample64> >();
 
-  print_name(" pair<sample64,sample64> ");
-  print_align< pair<sample64,sample64> >();
+  print_name (" pair<sample64,sample64> ");
+  print_align < pair<sample64,sample64> >();
+  print_offset< pair<sample64,sample64> >();
 
-  print_name(" array<sample64,10> ");
-  print_align< array<sample64,10> >();
+  print_name (" array<sample64,10> ");
+  print_align < array<sample64,10> >();
 
-  print_name(" pair<array<pair<sample32,sample64>10>,array<sample32,20>> ");
-  print_align< pair<array<pair<sample32,sample32>,10>,array<sample32,20>> >();
+  print_name (" pair<array<pair<sample32,sample64>10>,array<sample32,20>> ");
+  print_align < pair<array<pair<sample32,sample32>,10>,array<sample32,20>> >();
+  print_offset< pair<array<pair<sample32,sample32>,10>,array<sample32,20>> >();
 
-  print_name(" pair<array<pair<sample32,sample32>10>,array<sample32,20>> ");
-  print_align< pair<array<pair<sample32,sample32>,10>,array<sample32,20>> >();
+  print_name (" pair<array<pair<sample32,sample32>10>,array<sample32,20>> ");
+  print_align < pair<array<pair<sample32,sample32>,10>,array<sample32,20>> >();
+  print_offset< pair<array<pair<sample32,sample32>,10>,array<sample32,20>> >();
 
   // std::cout << "foo is trivially copyable: " << 
   //   std::is_trivially_copyable<foo<int,int>>::value << "\n";
