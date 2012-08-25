@@ -8,6 +8,13 @@
 #include <scl/audio/midi_types.hpp>
 #include <scl/audio/audio_types.hpp>
 
+#ifdef __clang__
+  #define ALIGNAS(N) alignas(N)
+#else
+  #define ALIGNAS(N)
+#endif
+
+
 // using std::pair;
 // using std::array;
 using namespace scl::audio;
@@ -18,12 +25,12 @@ struct pair2 {
   // pair2(const pair2&) = default;
   // pair2(pair2&&) = default;
   // pair2(A first, B second) : first(first), second(second) {} 
-  alignas(int64_t) A first; 
-  alignas(int64_t) B second; }; 
+  ALIGNAS(8) A first; 
+  ALIGNAS(8) B second; }; 
 
 template <class A, int N>
 struct array2 { 
-  alignas(int64_t) A values[N]; }; 
+  ALIGNAS(8) A values[N]; }; 
 
 // #define pair std::pair
 // #define array std::array
