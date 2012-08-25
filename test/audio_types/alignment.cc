@@ -17,12 +17,12 @@ struct pair2 {
   // pair2(const pair2&) = default;
   // pair2(pair2&&) = default;
   // pair2(A first, B second) : first(first), second(second) {} 
-  alignas(8) A first; 
-  alignas(8) B second; }; 
+  alignas(int64_t) A first; 
+  alignas(int64_t) B second; }; 
 
 template <class A, int N>
 struct array2 { 
-  alignas(8) A values[N]; }; 
+  alignas(int64_t) A values[N]; }; 
 
 // #define pair std::pair
 // #define array std::array
