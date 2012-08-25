@@ -68,6 +68,9 @@ TEST(AudioTypes, Alignment)
   print_name(" array<sample64,10> ");
   print_align< array<sample64,10> >();
 
+  print_name(" pair<array<pair<sample32,sample64>10>,array<sample32,20>> ");
+  print_align< pair<array<pair<sample32,sample32>,10>,array<sample32,20>> >();
+
   print_name(" pair<array<pair<sample32,sample32>10>,array<sample32,20>> ");
   print_align< pair<array<pair<sample32,sample32>,10>,array<sample32,20>> >();
 
