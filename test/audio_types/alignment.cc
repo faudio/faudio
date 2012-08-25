@@ -1,4 +1,5 @@
 
+#include <cstdint>
 #include <array>
 #include <utility>
 #include <type_traits>
