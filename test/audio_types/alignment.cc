@@ -1,7 +1,8 @@
 
-#include <cstring> // for memcpy
+#include <array>
 #include <utility>
 #include <type_traits>
+#include <cstring> // for memcpy
 #include <gtest/gtest.h>
 #include <scl/audio/midi_types.hpp>
 #include <scl/audio/audio_types.hpp>
@@ -30,14 +31,43 @@ TEST(AudioTypes, PairCopy)
   std::cout << p.first << ", " << p.second << "\n";
 }
   
+#define print_name(TYPE) \
+  std::cout << TYPE << "\n"
 
-TEST(AudioTypes, Alignment)
-{ 
-  using namespace scl::audio;
+template<class T>
+void print_align()
+{
+  std::cout << "  size:      " << sizeof(T) << "\n";
+  std::cout << "  alignment: " << alignof(T) << "\n";
+}
   
-  std::cout << "midi_simple_message" << "\n";
-  std::cout << "  size:      " << sizeof(midi_simple_message) << "\n";
-  std::cout << "  alignment: " << alignof(midi_simple_message) << "\n";
+TEST(AudioTypes, Alignment)
+{                               
+  using std::pair;
+  using std::array;
+  using namespace scl::audio;
+
+  print_name(" midi_simple_message ");
+  print_align< midi_simple_message >();
+               
+  print_name(" midi_sysex_message ");
+  print_align< midi_sysex_message >();
+               
+  print_name(" sample32 ");
+  print_align< sample32 >();
+
+  print_name(" pair<sample32,sample32> ");
+  print_align< pair<sample32,sample32> >();
+
+  print_name(" pair<sample32,sample64> ");
+  print_align< pair<sample32,sample64> >();
+
+  print_name(" pair<sample64,sample64> ");
+  print_align< pair<sample64,sample64> >();
+
+  print_name(" array<sample64,10> ");
+  print_align< array<sample64,10> >();
+
 
   // std::cout << "foo is trivially copyable: " << 
   //   std::is_trivially_copyable<foo<int,int>>::value << "\n";
