@@ -56,7 +56,24 @@ namespace scl
       parallel : () (a ~> b) -> (c ~> d) -> ((a,c) ~> (b,d))
       feedback : () ((a,c) ~> (b,c)) -> (a ~> b)
       delay    : () a ~> a
-    */
+
+      
+      -- how much to add to make the next element align with a
+      pad x a = (a - x) % a
+      
+      size sample32 = 4
+      size sample64 = 8
+      size [a]      = <size of ptr>
+      size [a x n]  = size a * n
+      size (a,b)    = pad (size a) (align b) + pad (size b) (align (a,b))
+
+      align sample32 = 4
+      align sample64 = 8
+      align [a]      = <align of ptr>
+      align [a x n]  = align a
+      align (a,b)    = align a `max` align b
+    */                                   
+   
 
     enum class audio_type_tag
     {

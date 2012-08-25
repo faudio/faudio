@@ -1,18 +1,22 @@
 
+#pragma once
+
+#include <scl/utility.hpp>
+
 namespace scl
 {
   namespace audio
   {
-    enum midi_status
+    enum class midi_status
     {
-      note_off         = 0x80;
-      note_on          = 0x90;
-      after_touch      = 0xa0;
-      control_change   = 0xb0;
-      program_change   = 0xc0;
-      channel_pressure = 0xd0;
-      pitch_wheel      = 0xe0;
-      sysex            = 0xf0;
+      note_off         = 0x80,
+      note_on          = 0x90,
+      after_touch      = 0xa0,
+      control_change   = 0xb0,
+      program_change   = 0xc0,
+      channel_pressure = 0xd0,
+      pitch_wheel      = 0xe0,
+      sysex            = 0xf0
     };
 
     constexpr int  midi_status_type(int status);
@@ -25,17 +29,17 @@ namespace scl
     // TODO simple wrapper class
     class midi_simple_message
     {
-      int status_type();
-      int status_channel();
-      int data1();
-      int data2();
+      char bytes[3];
+    public:
     };
 
     class midi_sysex_message
     {
+      std::shared_ptr<raw_buffer> data; // not incuding terminators f0 and f7
+    public:
     };
 
-    using midi_message = variant<midi_simple_message, midi_sysex_message>;
+    // using midi_message = variant<midi_simple_message, midi_sysex_message>;
 
 
 
@@ -58,7 +62,8 @@ namespace scl
 
     constexpr bool midi_status_is_sysex(int status)
     {
-      return midi_status_type(status) == midi_status::sysex;
+      return 0;
+      // return midi_status_type(status) == midi_status::sysex;
     }
   }
 }
