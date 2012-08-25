@@ -8,20 +8,32 @@
 #include <scl/audio/audio_types.hpp>
 
 // using std::pair;
-using std::array;
+// using std::array;
 using namespace scl::audio;
 
 template <class A, class B>
-struct foo { 
-  foo() {}
-  foo(const foo&) = default;
-  foo(foo&&) = default;
-  foo(A first, B second) : first(first), second(second) {} 
-  A first; B second; }; 
+struct pair2 { 
+  // pair2() {}
+  // pair2(const pair2&) = default;
+  // pair2(pair2&&) = default;
+  // pair2(A first, B second) : first(first), second(second) {} 
+  alignas(8) A first; 
+  alignas(8) B second; }; 
+
+template <class A, int N>
+struct array2 { 
+  alignas(8) A values[N]; }; 
+
+// #define pair std::pair
+// #define array std::array
+#define pair pair2
+#define array array2
+#define sample32 int32_t
+#define sample64 int64_t
 
 TEST(AudioTypes, PairCopy)
 {
-  std::pair<int, int> p;
+  pair<int, int> p;
   p.first = 10;
   p.second = 20;
 
@@ -56,8 +68,6 @@ struct pair32_64
   sample64 second;
 };
 
-// #define pair std::pair
-#define pair foo 
   
 TEST(AudioTypes, Alignment)
 {                               
@@ -110,8 +120,8 @@ TEST(AudioTypes, Alignment)
   print_align < pair<array<pair<sample32,sample32>,10>,array<sample32,20>> >();
   print_offset< pair<array<pair<sample32,sample32>,10>,array<sample32,20>> >();
 
-  // std::cout << "foo is trivially copyable: " << 
-  //   std::is_trivially_copyable<foo<int,int>>::value << "\n";
+  // std::cout << "pair2 is trivially copyable: " << 
+  //   std::is_trivially_copyable<pair2<int,int>>::value << "\n";
   // std::cout << "std::pair is trivially copyable: " << 
   //   std::is_trivially_copyable<std::pair<int,int>>::value << "\n";
   // std::cout << "std::tuple is trivially copyable: " << 
