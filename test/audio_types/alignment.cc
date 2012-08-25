@@ -8,11 +8,11 @@
 #include <scl/audio/midi_types.hpp>
 #include <scl/audio/audio_types.hpp>
 
-#ifdef __clang__
-  #define ALIGNAS(N) alignas(N)
-#else
+// #ifdef __clang__
+//   #define ALIGNAS(N) alignas(N)
+// #else
   #define ALIGNAS(N)
-#endif
+// #endif
 
 
 // using std::pair;
@@ -119,10 +119,13 @@ TEST(AudioTypes, Alignment)
   print_align < array<pair32_64,10> >();
 
   print_name (" array<pair<sample32,sample64>,10> ");
-  print_align < array<pair<sample32,sample32>,10> >();
+  print_align < array<pair<sample32,sample64>,10> >();
+
+  print_name (" array<pair<sample64,sample32>,10> ");
+  print_align < array<pair<sample64,sample32>,10> >();
 
   print_name (" array<pair<sample64,sample64>,10> ");
-  print_align < array<pair<sample64,sample32>,10> >();
+  print_align < array<pair<sample64,sample64>,10> >();
 
   print_name (" pair<array<pair<sample32,sample64>,10>,array<sample32,20>> ");
   print_align < pair<array<pair<sample32,sample32>,10>,array<sample32,20>> >();
@@ -142,52 +145,4 @@ TEST(AudioTypes, Alignment)
 
 
 /*
-   midi_simple_message                                                                               
-    size:      3                                                                                     
-    alignment: 1                                                                                     
-   midi_sysex_message                                                                                
-    size:      8                                                                                     
-    alignment: 4                                                                                     
-   sample32                                                                                          
-    size:      4                                                                                     
-    alignment: 4                                                                                     
-   sample64                                                                                          
-    size:      8                                                                                     
-    alignment: 8                                                                                     
-   pair32_64                                                                                         
-    size:      16                                                                                    
-    alignment: 8                                                                                     
-    offset:    8                                                                                     
-   pair<sample32,sample32>                                                                           
-    size:      8                                                                                     
-    alignment: 4                                                                                     
-    offset:    4                                                                                     
-   pair<sample32,sample64>                                                                           
-    size:      16                                                                                    
-    alignment: 8                                                                                     
-    offset:    8                                                                                     
-   pair<sample64,sample64>                                                                           
-    size:      16                                                                                    
-    alignment: 8                                                                                     
-    offset:    8                                                                                     
-   array<sample64,10>                                                                                
-    size:      80                                                                                    
-    alignment: 8                                                                                     
-   array<pair32_64,10>                                                                               
-    size:      160                                                                                   
-    alignment: 8                                                                                     
-   array<pair<sample32,sample64>,10>                                                                 
-    size:      80                                                                                    
-    alignment: 4                                                                                     
-   array<pair<sample64,sample64>,10>                                                                 
-    size:      160                                                                                   
-    alignment: 8                                                                                     
-   pair<array<pair<sample32,sample64>,10>,array<sample32,20>>                                        
-    size:      160                                                                                   
-    alignment: 4                                                                                     
-    offset:    80                                                                                    
-   pair<array<pair<sample32,sample32>,10>,array<sample32,20>>                                        
-    size:      160                                                                                   
-    alignment: 4                                                                                     
-    offset:    80
  */
