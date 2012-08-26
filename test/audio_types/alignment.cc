@@ -8,11 +8,11 @@
 #include <scl/audio/midi_types.hpp>
 #include <scl/audio/audio_types.hpp>
 
-// #ifdef __clang__
-//   #define ALIGNAS(N) alignas(N)
-// #else
-  #define ALIGNAS(N)
-// #endif
+#ifdef __clang__
+  #define ALIGNAS(N) alignas(N)
+#else
+  #define ALIGNAS(N) __aligned(N)__
+#endif
 
 
 // using std::pair;
@@ -20,24 +20,23 @@
 using namespace scl::audio;
 
 template <class A, class B>
-struct pair2 { 
-  // pair2() {}
-  // pair2(const pair2&) = default;
-  // pair2(pair2&&) = default;
-  // pair2(A first, B second) : first(first), second(second) {} 
-  ALIGNAS(8) A first; 
-  ALIGNAS(8) B second; }; 
+struct pair2 {
+  // static constexpr size_t pad1 = (8 - sizeof(A)) % 8;
+  // static constexpr size_t pad2 = (8 - (sizeof(A) + pad1 + sizeof(B))) % 8;
+  ALIGNAS(8) A first;
+  ALIGNAS(8) B second; 
+  }; 
 
 template <class A, int N>
 struct array2 { 
-  ALIGNAS(8) A values[N]; }; 
+  A values[N]; }; 
 
 // #define pair std::pair
 // #define array std::array
 #define pair pair2
 #define array array2
-#define sample32 int32_t
-#define sample64 int64_t
+#define s32 int32_t
+#define s64 int64_t
 
 TEST(AudioTypes, PairCopy)
 {
@@ -70,11 +69,11 @@ void print_offset()
   std::cout << "  offset:    " << offsetof(T,second) << "\n";
 }
 
-struct pair32_64
-{
-  sample32 first;
-  sample64 second;
-};
+// struct pair32_64
+// {
+//   s32 first;
+//   s64 second;
+// };
 
   
 TEST(AudioTypes, Alignment)
@@ -86,54 +85,54 @@ TEST(AudioTypes, Alignment)
   print_name (" midi_sysex_message ");
   print_align < midi_sysex_message >();
                
-  print_name (" sample32 ");
-  print_align < sample32 >();
+  print_name (" s32 ");
+  print_align < s32 >();
 
-  print_name (" sample64 ");
-  print_align < sample64 >();
+  print_name (" s64 ");
+  print_align < s64 >();
 
-  print_name (" pair32_64 ");
-  print_align < pair32_64 >();
-  print_offset< pair32_64 >();
+  // print_name (" pair32_64 ");
+  // print_align < pair32_64 >();
+  // print_offset< pair32_64 >();
 
-  print_name (" pair<sample32,sample32> ");
-  print_align < pair<sample32,sample32> >();
-  print_offset< pair<sample32,sample32> >();
+  print_name (" pair<s32,s32> ");
+  print_align < pair<s32,s32> >();
+  print_offset< pair<s32,s32> >();
 
-  print_name (" pair<sample32,sample64> ");
-  print_align < pair<sample32,sample64> >();
-  print_offset< pair<sample32,sample64> >();
+  print_name (" pair<s32,s64> ");
+  print_align < pair<s32,s64> >();
+  print_offset< pair<s32,s64> >();
 
-  print_name (" pair<sample64,sample32> ");
-  print_align < pair<sample64,sample32> >();
-  print_offset< pair<sample64,sample32> >();
+  print_name (" pair<s64,s32> ");
+  print_align < pair<s64,s32> >();
+  print_offset< pair<s64,s32> >();
 
-  print_name (" pair<sample64,sample64> ");
-  print_align < pair<sample64,sample64> >();
-  print_offset< pair<sample64,sample64> >();
+  print_name (" pair<s64,s64> ");
+  print_align < pair<s64,s64> >();
+  print_offset< pair<s64,s64> >();
 
-  print_name (" array<sample64,10> ");
-  print_align < array<sample64,10> >();
+  print_name (" array<s64,10> ");
+  print_align < array<s64,10> >();
 
-  print_name (" array<pair32_64,10> ");
-  print_align < array<pair32_64,10> >();
+  // print_name (" array<pair32_64,10> ");
+  // print_align < array<pair32_64,10> >();
 
-  print_name (" array<pair<sample32,sample64>,10> ");
-  print_align < array<pair<sample32,sample64>,10> >();
+  print_name (" array<pair<s32,s64>,10> ");
+  print_align < array<pair<s32,s64>,10> >();
 
-  print_name (" array<pair<sample64,sample32>,10> ");
-  print_align < array<pair<sample64,sample32>,10> >();
+  print_name (" array<pair<s64,s32>,10> ");
+  print_align < array<pair<s64,s32>,10> >();
 
-  print_name (" array<pair<sample64,sample64>,10> ");
-  print_align < array<pair<sample64,sample64>,10> >();
+  print_name (" array<pair<s64,s64>,10> ");
+  print_align < array<pair<s64,s64>,10> >();
 
-  print_name (" pair<array<pair<sample32,sample64>,10>,array<sample32,20>> ");
-  print_align < pair<array<pair<sample32,sample32>,10>,array<sample32,20>> >();
-  print_offset< pair<array<pair<sample32,sample32>,10>,array<sample32,20>> >();
+  print_name (" pair<array<pair<s32,s64>,10>,array<s32,20>> ");
+  print_align < pair<array<pair<s32,s32>,10>,array<s32,20>> >();
+  print_offset< pair<array<pair<s32,s32>,10>,array<s32,20>> >();
 
-  print_name (" pair<array<pair<sample32,sample32>,10>,array<sample32,20>> ");
-  print_align < pair<array<pair<sample32,sample32>,10>,array<sample32,20>> >();
-  print_offset< pair<array<pair<sample32,sample32>,10>,array<sample32,20>> >();
+  print_name (" pair<array<pair<s32,s32>,10>,array<s32,20>> ");
+  print_align < pair<array<pair<s32,s32>,10>,array<s32,20>> >();
+  print_offset< pair<array<pair<s32,s32>,10>,array<s32,20>> >();
 
   // std::cout << "pair2 is trivially copyable: " << 
   //   std::is_trivially_copyable<pair2<int,int>>::value << "\n";
@@ -144,5 +143,61 @@ TEST(AudioTypes, Alignment)
 }
 
 
-/*
+/* 
+
+    midi_simple_message                                                                               
+     size:      3                                                                                     
+     alignment: 1                                                                                     
+    midi_sysex_message                                                                                
+     size:      8                                                                                     
+     alignment: 4                                                                                     
+    s32                                                                                          
+     size:      4                                                                                     
+     alignment: 4                                                                                     
+    s64                                                                                          
+     size:      8                                                                                     
+     alignment: 8                                                                                     
+    pair32_64                                                                                         
+     size:      16                                                                                    
+     alignment: 8                                                                                     
+     offset:    8                                                                                     
+    pair<s32,s32>                                                                           
+     size:      8                                                                                     
+     alignment: 4                                                                                     
+     offset:    4                                                                                     
+    pair<s32,s64>                                                                           
+     size:      16                                                                                    
+     alignment: 8                                                                                     
+     offset:    8                                                                                     
+    pair<s64,s32>                                                                           
+     size:      16                                                                                    
+     alignment: 8                                                                                     
+     offset:    8                                                                                     
+    pair<s64,s64>                                                                           
+     size:      16                                                                                    
+     alignment: 8                                                                                     
+     offset:    8                                                                                     
+    array<s64,10>                                                                                
+     size:      80                                                                                    
+     alignment: 8                                                                                     
+    array<pair32_64,10>                                                                               
+     size:      160                                                                                   
+     alignment: 8                                                                                     
+    array<pair<s32,s64>,10>                                                                 
+     size:      160                                                                                   
+     alignment: 8                                                                                     
+    array<pair<s64,s32>,10>                                                                 
+     size:      160                                                                                   
+     alignment: 8                                                                                     
+    array<pair<s64,s64>,10>                                                                 
+     size:      160                                                                                   
+     alignment: 8                                                                                     
+    pair<array<pair<s32,s64>,10>,array<s32,20>>                                        
+     size:      160                                                                                   
+     alignment: 4                                                                                     
+     offset:    80                                                                                    
+    pair<array<pair<s32,s32>,10>,array<s32,20>>                                        
+     size:      160                                                                                   
+     alignment: 4                                                                                     
+     offset:    80
  */
