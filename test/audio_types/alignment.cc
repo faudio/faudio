@@ -9,9 +9,9 @@
 #include <scl/audio/audio_types.hpp>
 
 #ifdef __clang__
-  #define ALIGNAS(N) alignas(N)
+  #define ALIGNED(N,Decl) alignas(N) Decl
 #else
-  #define ALIGNAS(N) __aligned(N)__
+  #define ALIGNED(N,Decl) Decl  __attribute__ ((__aligned__ (N)))
 #endif
 
 
@@ -23,8 +23,8 @@ template <class A, class B>
 struct pair2 {
   // static constexpr size_t pad1 = (8 - sizeof(A)) % 8;
   // static constexpr size_t pad2 = (8 - (sizeof(A) + pad1 + sizeof(B))) % 8;
-  ALIGNAS(8) A first;
-  ALIGNAS(8) B second; 
+  ALIGNED(8, A first);
+  ALIGNED(8, B second); 
   }; 
 
 template <class A, int N>
