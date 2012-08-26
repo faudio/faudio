@@ -1,6 +1,4 @@
 
-## Add more test here...
-
 aux_source_directory(atomic           ATOMIC_SRC)
 aux_source_directory(audio_concept    AUDIO_CONCEPT_SRC)
 aux_source_directory(audio_processor  AUDIO_PROCESSOR_SRC)
@@ -32,27 +30,17 @@ set(SRCS
   )
 
 if(BUILD_TESTS)
-  set(SCL_TEST_DEFINITIONS ${SCL_DEFINITIONS})
-  # add_definitions("-S")
   add_executable(scl_audio_tests
     ${SRCS}
     "main.cc")
-  if(APPLE)
-    set_target_properties(scl_audio_tests PROPERTIES
-      OUTPUT_NAME               "scl_audio_tests"
-      RUNTIME_OUTPUT_DIRECTORY  "../bin" 
-     )
-  endif ()
-  if(WIN32)
-    set_target_properties(scl_audio_tests PROPERTIES
-      OUTPUT_NAME               "scl_audio_tests"
-      RUNTIME_OUTPUT_DIRECTORY  "../bin" 
-     )
-  endif()
+  set_target_properties(scl_audio_tests PROPERTIES
+    OUTPUT_NAME               "scl_audio_tests"
+    RUNTIME_OUTPUT_DIRECTORY  "../bin" 
+   )
   target_link_libraries(scl_audio_tests
     ${DEPENDENCIES}
-    ${GTEST_LIBRARY}
     ${MAIN_LIBRARY}
+    ${GTEST_LIBRARY}
     )
 endif()
 

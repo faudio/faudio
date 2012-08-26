@@ -5,13 +5,18 @@
 #include <type_traits>
 #include <cstring> // for memcpy
 #include <gtest/gtest.h>
+#include <boost/format.hpp>
 #include <scl/audio/midi_types.hpp>
 #include <scl/audio/audio_types.hpp>
 
-#ifdef __clang__
-  #define ALIGNED(N,Decl) alignas(N) Decl
+#ifdef __alignas_is_defined
+  #define SCL_ALIGN(N) alignas(N)
 #else
-  #define ALIGNED(N,Decl) Decl  __attribute__ ((__aligned__ (N)))
+  #ifdef __GNUC__
+    #define SCL_ALIGN(N)  __attribute__ ((__aligned__ (N)))
+  #else
+    #error "Need either __GNUC__ or alignas"
+  #endif
 #endif
 
 
@@ -21,10 +26,8 @@ using namespace scl::audio;
 
 template <class A, class B>
 struct pair2 {
-  // static constexpr size_t pad1 = (8 - sizeof(A)) % 8;
-  // static constexpr size_t pad2 = (8 - (sizeof(A) + pad1 + sizeof(B))) % 8;
-  ALIGNED(8, A first);
-  ALIGNED(8, B second); 
+  A first SCL_ALIGN(8);
+  B second SCL_ALIGN(8); 
   }; 
 
 template <class A, int N>
@@ -77,7 +80,8 @@ void print_offset()
 
   
 TEST(AudioTypes, Alignment)
-{                               
+{ 
+  std::cout << boost::format("Max align: %d\n") % alignof(std::max_align_t);
 
   print_name (" midi_simple_message ");
   print_align < midi_simple_message >();
@@ -90,6 +94,9 @@ TEST(AudioTypes, Alignment)
 
   print_name (" s64 ");
   print_align < s64 >();
+
+  print_name (" long double ");
+  print_align < long double >();
 
   // print_name (" pair32_64 ");
   // print_align < pair32_64 >();
