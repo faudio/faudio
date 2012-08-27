@@ -42,6 +42,10 @@ add_library (BoostSystem STATIC ${BOOST_SYSTEM_SRC})
 aux_source_directory("boost/libs/filesystem/src" BOOST_FILESYSTEM_SRC)
 add_library(BoostFilesystem STATIC ${BOOST_FILESYSTEM_SRC})
 
+# Boost.Program Options library
+aux_source_directory("boost/libs/program_options/src" BOOST_PROGRAM_OPTIONS_SRC)
+add_library(BoostProgramOptions STATIC ${BOOST_PROGRAM_OPTIONS_SRC})
+
 
 macro(add_boost_thread)
   # Boost.Thread library
