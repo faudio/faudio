@@ -120,7 +120,8 @@ namespace scl
        a secondary condition variable if the predicates takes up to much time.
        Note that even after the wait we may block on the mutex for the last predicate.
     */
-    do {} while (state->pending > 0);
+    do {}
+    while (state->pending > 0);
     {
       unique_lock<mutex> lock(state->mutx);
       state->event = event;

@@ -45,17 +45,17 @@ namespace scl
       [T]
       {T x N}
 
-      identity : () a ~> a
-      const    : () b ~> a
-      unary    : () a ~> b
-      binary   : () (a,b) ~> c
-      ternary  : () (a,b,c) ~> d
-      random   : () b ~> a
-      split    : () a ~> (a,a)
-      sequence : () (a ~> b) -> (b ~> c) -> (a ~> c)
-      parallel : () (a ~> b) -> (c ~> d) -> ((a,c) ~> (b,d))
-      feedback : () ((a,c) ~> (b,c)) -> (a ~> b)
-      delay    : () a ~> a
+      identity : a ~> a
+      const    : b ~> a
+      unary    : a ~> b
+      binary   : (a,b) ~> c
+      ternary  : (a,(b,c)) ~> d
+      random   : b ~> a
+      split    : a ~> (a,a)
+      sequence : (a ~> b) -> (b ~> c) -> (a ~> c)
+      parallel : (a ~> b) -> (c ~> d) -> ((a,c) ~> (b,d))
+      feedback : ((a,c) ~> (b,c)) -> (a ~> b)
+      delay    : a ~> a
 
 
       -- how much to add to make the next element align with a
@@ -116,6 +116,13 @@ namespace scl
         , fst(other.fst)
         , snd(other.snd)
         , size(other.size) {}
+
+      // ~audio_type() { std::cout << "<<<<< Destroying " << this << "\n"; }
+
+      bool is_pair()
+      {
+        return tag == tag_type::pair;
+      }
 
       int kind() const
       {
@@ -267,55 +274,6 @@ namespace scl
         return dynamic::type::vector(a, N);
       }
     };
-
-    inline std::list<audio_type> next_generation(std::list<audio_type> prev, int max_level)
-    {
-      std::list<audio_type> next;
-      for (audio_type type : prev)
-      {
-        if (type.levels() < max_level)
-        {
-          next.push_back(dynamic::type::list(type));
-          static constexpr size_t powers[] = { 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 };
-          for (size_t p : powers)
-            next.push_back(dynamic::type::vector(type, p));
-        }
-      }
-      for (audio_type type : prev)
-      {
-        for (audio_type type2 : prev)
-        {
-          if ((type.levels() < max_level) && (type2.levels() < max_level))
-            next.push_back(dynamic::type::pair(type, type2));
-        }
-      }
-      return next;
-    }
-
-    inline std::list<audio_type> generate(int max_level)
-    {
-      std::list<audio_type> all;
-      std::list<audio_type> gen;
-      gen.push_back(dynamic::type::sample32());
-      gen.push_back(dynamic::type::sample64());
-      gen = next_generation(gen, max_level);
-      do
-      {
-        std::cout << "==================================================\n";
-        std::cout << "Number of types in generation: " << gen.size() << "\n";
-        for (auto t : gen)
-        {
-          std::cout << t << "\n";
-        }
-        all.insert(all.end(), gen.begin(), gen.end());
-        gen = next_generation(gen, max_level);
-      }
-      while (gen.size() > 0);
-      return all;
-    }
-
-
-
   }
 }
 

@@ -205,6 +205,8 @@ namespace scl
           size_t result_size,
           size_t input_size,
           size_t output_size
+          // bool   input_ptr, FIXME not sure about this
+          // bool   output_ptr
         ) :
           state_size(state_size),
           argument_size(argument_size),

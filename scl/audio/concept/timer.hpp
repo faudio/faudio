@@ -21,17 +21,18 @@ namespace scl
     Models:
       none
   */
-  template <class X>
-  struct Timer
+  scl_concept(X) struct Timer
   {
-    using time_type = X::time_type;
-    BOOST_CONCEPT_ASSERT((LessThanComparable<address_type>));
-    BOOST_CONCEPT_ASSERT((LowerBounded<address_type>));
-    BOOST_CONCEPT_USAGE(Timer)
-    {
-      time_type = x.time();
-    }
-  private:
+    scl_typename(time_type);
+
+    scl_requires(LessThanComparable<address_type>);
+    scl_requires(LowerBounded<address_type>);
+    scl_requires(Timer)
+
     X x;
+    scl_usage(Timer)
+    {
+      improving<time_type> t = x.time();
+    }
   };
 }

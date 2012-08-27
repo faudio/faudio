@@ -8,6 +8,11 @@
 #include <scl/concept/lower_bound.hpp>
 #include <scl/concept/splittable.hpp>
 
+#define scl_concept(X)  template <class X>
+#define scl_usage(X)    public: BOOST_CONCEPT_USAGE(X)
+#define scl_typename(T) using T = typename X::T
+#define scl_requires(E) BOOST_CONCEPT_ASSERT((E))
+
 namespace scl
 {
   using boost::EqualityComparable;

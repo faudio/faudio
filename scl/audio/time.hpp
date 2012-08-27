@@ -5,16 +5,16 @@ namespace scl
 {
   namespace audio
   {
-    enum time_unit
+    enum class time_unit
     {
-      hours;
-      minutes;
-      seconds;
-      milliseconds;
-      microseconds;
+      hours,
+      minutes,
+      seconds,
+      milliseconds,
+      microseconds
     };
 
-    constexpr unsigned long conversion_factor(time_unit t)
+    constexpr uint64_t conversion_factor(time_unit t)
     {
       switch (t)
       {
@@ -41,6 +41,11 @@ namespace scl
       double    time;
       time_unit unit;
     };
+    // (x * a) + (x * b) =
+    // (x * a) + (x * b)
+    // (x * a) - (x * b)
+    // (x * a) / (x * b)
+    // (x * a) % (x * b)
 
     // Used for sample-accurate timing
     struct time
@@ -55,6 +60,66 @@ namespace scl
       int64_t sample_count;
       time    sample_rate;
     };
+
+    approximate_time operator+ (approximate_time x, approximate_time y)
+    {}
+    approximate_time operator- (approximate_time x, approximate_time y)
+    {}
+    approximate_time operator* (approximate_time x, approximate_time y)
+    {}
+    approximate_time operator/ (approximate_time x, approximate_time y)
+    {}
+    approximate_time operator% (approximate_time x, approximate_time y)
+    {}
+    approximate_time operator++ (approximate_time x)
+    {}
+    approximate_time operator++ (approximate_time x, int)
+    {}
+    approximate_time operator-- (approximate_time x)
+    {}
+    approximate_time operator-- (approximate_time x, int)
+    {}
+
+    sample_time operator+ (sample_time x, sample_time y)
+    {}
+    sample_time operator- (sample_time x, sample_time y)
+    {}
+    sample_time operator* (sample_time x, sample_time y)
+    {}
+    sample_time operator/ (sample_time x, sample_time y)
+    {}
+    sample_time operator% (sample_time x, sample_time y)
+    {}
+    sample_time operator++ (sample_time x)
+    {}
+    sample_time operator++ (sample_time x, int)
+    {}
+    sample_time operator-- (sample_time x)
+    {}
+    sample_time operator-- (sample_time x, int)
+    {}
+
+
+    time operator+ (time x, time y)
+    {}
+    time operator- (time x, time y)
+    {}
+    time operator* (time x, time y)
+    {}
+    time operator/ (time x, time y)
+    {}
+    time operator% (time x, time y)
+    {}
+    time operator++ (time x)
+    {}
+    time operator++ (time x, int)
+    {}
+    time operator-- (time x)
+    {}
+    time operator-- (time x, int)
+    {}
+
+
   }
 }
 
