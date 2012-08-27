@@ -27,8 +27,8 @@ using namespace scl::audio;
 
 template <class A, class B>
 struct pair2 {
-  A first  SCL_ALIGN(alignof(A)) SCL_ALIGN(alignof(B));
-  B second SCL_ALIGN(alignof(A)) SCL_ALIGN(alignof(B)); 
+  A first  SCL_ALIGN(8);
+  B second SCL_ALIGN(8); 
   }; 
 
 template <class A, int N>
@@ -83,9 +83,8 @@ void print_offset()
   
 TEST(AudioTypes, Alignment)
 { 
-  std::cout << boost::format("Max align: %d\n") % alignof(std::max_align_t);
+  // std::cout << boost::format("Max align: %d\n") % alignof(std::max_align_t);
 
-/*
   print_name (" midi_simple_message ");
   print_align < midi_simple_message >();
                
@@ -143,7 +142,6 @@ TEST(AudioTypes, Alignment)
   print_name (" pair<array<pair<s32,s32>,10>,array<s32,20>> ");
   print_align < pair<array<pair<s32,s32>,10>,array<s32,20>> >();
   print_offset< pair<array<pair<s32,s32>,10>,array<s32,20>> >();
-   */
 
   // std::cout << "pair2 is trivially copyable: " << 
   //   std::is_trivially_copyable<pair2<int,int>>::value << "\n";
