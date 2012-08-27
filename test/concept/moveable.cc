@@ -4,13 +4,13 @@
 
 struct move
 {
-  move(move&&) = default;
-  move& operator =(move&&) = default;
+  move(move &&) = default;
+  move& operator =(move &&) = default;
 };
 struct no_move
 {
-  no_move(no_move&&) = delete;
-  no_move& operator =(no_move&&) = delete;
+  no_move(no_move &&) = delete;
+  no_move& operator =(no_move &&) = delete;
 };
 
 BOOST_CONCEPT_ASSERT((scl::Moveable<int>));

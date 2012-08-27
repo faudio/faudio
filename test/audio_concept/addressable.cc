@@ -7,7 +7,7 @@ struct not_eq_comp
 };
 
 struct addressable
-{       
+{
   // using address_type = not_eq_comp;
   using address_type = intptr_t;
 };

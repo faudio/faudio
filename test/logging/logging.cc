@@ -6,23 +6,21 @@
 using namespace scl;
 
 namespace foo
-{                  
+{
   struct t
   {
     static const auto value = true;
   };
-  
-  boost::enable_if<t, void> 
+
+  boost::enable_if<t, void>
   log()
   {
-    
   }
-  
-  
+
+
 }
 
 TEST(Logging, Base)
 {
-  
 }
 

@@ -1,5 +1,5 @@
-// 
-// 
+//
+//
 // template<class List>
 // List add_before(typename List::value_type x, List xs)
 // {
@@ -7,7 +7,7 @@
 //   ys.push_back(x);
 //   return ys;
 // }
-// 
+//
 // template<>
 // doremir::scl::ilist<int>
 // add_before(doremir::scl::ilist<int>::value_type x,
@@ -15,8 +15,8 @@
 // {
 //   return xs.add_before(x);
 // }
-// 
-// 
+//
+//
 // int succ(int x)
 // {
 //   return x + 1;
@@ -25,8 +25,8 @@
 // {
 //   return x - 1;
 // }
-// 
-// 
+//
+//
 // int scl_test_ilist()
 // {
 //   using namespace doremir::scl;

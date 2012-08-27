@@ -73,7 +73,7 @@ namespace scl
         void prepare(ptr_t arg)
         {
           size_t size = parent_type::output_size;
-          buffer.resize(size);
+          buffer.reset(size);
           scl::raw_copy(arg, arg + size, buffer.begin());
         }
 
