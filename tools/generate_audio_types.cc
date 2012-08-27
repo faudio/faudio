@@ -41,8 +41,8 @@ static bool normal_output      = true;
 inline std::list<audio_type> first_generation()
 {
   std::list<audio_type> gen;
-  gen.push_back(dynamic::type::sample32());
-  gen.push_back(dynamic::type::sample64());
+  gen.push_back(type::sample32());
+  gen.push_back(type::sample64());
   return gen;
 }
 
@@ -54,10 +54,10 @@ inline std::list<audio_type> next_generation(std::list<audio_type> prev, int max
   {
     if (type.levels() < max_level)
     {
-      next.push_back(dynamic::type::list(type));
+      next.push_back(type::list(type));
       static constexpr size_t powers[] = { 512 };
       for (size_t p : powers)
-        next.push_back(dynamic::type::vector(type, p));
+        next.push_back(type::vector(type, p));
     }
   }
   for (audio_type type : prev)
@@ -65,7 +65,7 @@ inline std::list<audio_type> next_generation(std::list<audio_type> prev, int max
     for (audio_type type2 : prev)
     {
       if ((type.levels() < max_level) && (type2.levels() < max_level))
-        next.push_back(dynamic::type::pair(type, type2));
+        next.push_back(type::pair(type, type2));
     }
   }
   return next;

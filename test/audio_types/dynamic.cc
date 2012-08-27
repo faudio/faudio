@@ -8,10 +8,10 @@ TEST(AudioTypes, Basic)
   
   // std::shared_ptr<audio_type> a {{ audio_type_tag::sample32 }};
   // std::shared_ptr<audio_type> b {{ audio_type_tag::sample32 }};
-
-  audio_type x = dynamic::type::sample32();
-  audio_type y = dynamic::type::pair(dynamic::type::list(x), dynamic::type::vector(x, 10));
-  audio_type z = dynamic::type::pair(x, dynamic::type::pair(x, x));
+              
+  audio_type x = type::sample32();
+  audio_type y = type::pair(type::list(x), type::vector(x, 10));
+  audio_type z = type::pair(x, type::pair(x, x));
   std::cout << "Name: " << x << "\n Levels: " << x.declaration() << "\n";
   std::cout << "Name: " << y << "\n Levels: " << y.declaration() << "\n";
   std::cout << "Name: " << z << "\n Levels: " << z.declaration() << "\n";

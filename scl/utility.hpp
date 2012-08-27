@@ -20,7 +20,7 @@
 namespace scl
 {
 
-  using ptr_t = unsigned char*;
+  using ptr_t = unsigned char* ;
 
   /**
       A moveable, non-copyable byte buffer.
@@ -80,14 +80,12 @@ namespace scl
       fmt = boost::format("%02x");
     else
       fmt = boost::format("%04d");
-      
     std::cout << boost::format("Dumping range %x to %x\n") % ((void*) begin) % ((void*) end);
-    
     while (pos < end)
     {
-      if (((intptr_t) (pos - begin)) % column_size == 0)
+      if (((intptr_t)(pos - begin)) % column_size == 0)
         std::cout << "\n ";
-      if (((intptr_t) (pos - begin)) % group_size == 0)
+      if (((intptr_t)(pos - begin)) % group_size == 0)
         std::cout << " ";
       std::cout << fmt % ((int) *pos) << " ";
       pos++;
