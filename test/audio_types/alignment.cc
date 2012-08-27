@@ -27,8 +27,8 @@ using namespace scl::audio;
 
 template <class A, class B>
 struct pair2 {
-  A first SCL_ALIGN(8);
-  B second SCL_ALIGN(8); 
+  A first  SCL_ALIGN(alignof(A)) SCL_ALIGN(alignof(B));
+  B second SCL_ALIGN(alignof(A)) SCL_ALIGN(alignof(B)); 
   }; 
 
 template <class A, int N>
