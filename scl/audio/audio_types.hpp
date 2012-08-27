@@ -7,45 +7,70 @@
 #include <memory>
 #include <iostream>
 #include <boost/lexical_cast.hpp>
+#include <scl/audio/midi_types.hpp>
 
 namespace scl
 {
   namespace audio
   {
     /*
-      sample32
-      sample64
-      (T,T)
-      [T]
-      {T x N}
+      Type system of audio computations:
 
-      identity : a ~> a
-      const    : b ~> a
-      unary    : a ~> b
-      binary   : (a,b) ~> c
-      ternary  : (a,(b,c)) ~> d
-      random   : b ~> a
-      split    : a ~> (a,a)
-      sequence : (a ~> b) -> (b ~> c) -> (a ~> c)
-      parallel : (a ~> b) -> (c ~> d) -> ((a,c) ~> (b,d))
-      feedback : ((a,c) ~> (b,c)) -> (a ~> b)
-      delay    : a ~> a
+          sample32      32-bit floating point sample
+          sample64      64-bit floating point sample
+          midi_message  Midi message
 
+          (A,B)         Pair of A and B
+          [A]           Variable sized list of A
+          {A x N}       N-sized array of A
 
-      -- how much to add to make the next element align with a
-      pad x a = (a - x) % a
+          identity : a ~> a
+          const    : b ~> a
+          unary    : a ~> b
+          binary   : (a,b) ~> c
+          ternary  : (a,(b,c)) ~> d
+          random   : b ~> a
+          split    : a ~> (a,a)
+          sequence : (a ~> b) -> (b ~> c) -> (a ~> c)
+          parallel : (a ~> b) -> (c ~> d) -> ((a,c) ~> (b,d))
+          feedback : ((a,c) ~> (b,c)) -> (a ~> b)
+          delay    : a ~> a
 
-      size sample32 = 4
-      size sample64 = 8
-      size [a]      = <size of ptr>
-      size [a x n]  = size a * n
-      size (a,b)    = pad (size a) (align b) + pad (size b) (align (a,b))
+      The audio_type class representation these types at runtime and provides
+      dynamic type checking (but not inference).
 
-      align sample32 = 4
-      align sample64 = 8
-      align [a]      = <align of ptr>
-      align [a x n]  = align a
-      align (a,b)    = align a `max` align b
+      The static version of the audio types:
+        sample32;
+        sample64;
+        audio_pair<A,B>::type;
+        audio_list<A>::type;
+        audio_vector<A,N>::type;
+
+      The runtime representation of the audio types:
+        audio_type::sample32();
+        audio_type::sample64();
+        audio_type::pair(audio_type fst, audio_type snd);
+        audio_type::list(audio_type type);
+        audio_type::vector(audio_type type, size_t size);
+
+        audio_type audio_type::get<T>()
+          Returns the runtime representation of the given type.
+
+      Conversion functions, specialized for each audio type:
+        void audio_read<T>(const raw_buffer&, T&);
+        void audio_write<T>(const T&, raw_buffer&);
+
+      Binary format:
+        - Concrete types maps to their binary representation
+        - (A,B)  maps to the binary representation of A padded with zero to occupy 8n bytes,
+          followed by the binary representation of B padded with 0 to occupy 8n bytes
+        - <A x N> maps to an array of N elements of type A
+        - [A] maps to a pointer to a structure { ptr_t rest, size_t count, A... elems }
+          - If the pointer is zero, the list is empty
+          - rest contains eventual extra elements of the list
+          - count contains number of elements in the current node
+          - A ... is a an array of length count
+
     */
 
 
@@ -60,7 +85,7 @@ namespace scl
 
     class audio_type;
     namespace type
-    {   
+    {
       inline audio_type sample32();
       inline audio_type sample64();
       inline audio_type pair(audio_type fst, audio_type snd);
@@ -239,9 +264,12 @@ namespace scl
       using type = audio_pair<Sample, void>;
     };
 
+
     template <class A>
     struct get_audio_type
     {
+      // This class has no value() method, so that an erronous type parameter will cause
+      // a compile time error, instead of creating an invalid audio_type at runtime.
     };
 
     template <>
@@ -289,6 +317,13 @@ namespace scl
         return type::vector(a, N);
       }
     };
+
+    template <class A>
+    audio_type get_audio_type2()
+    {
+      return get_audio_type<A>::value();
+    };
+
   }
 }
 

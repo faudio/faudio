@@ -33,7 +33,7 @@ namespace scl
   public:
     raw_buffer() : mSize(0) {}
 
-    void resize(size_t size)
+    void reset(size_t size)
     {
       if (size > 0)
         mBuffer.reset(new char[size]);
@@ -44,7 +44,7 @@ namespace scl
 
     void clear()
     {
-      resize(0);
+      reset(0);
     }
 
     ptr_t begin()
@@ -100,6 +100,12 @@ namespace scl
                        size_t column_size = 16)
   {
     raw_dump(range.begin(), range.end(), hex, group_size, column_size);
+  }
+
+  template <class Sized>
+  inline typename Sized::size_type size(Sized x)
+  {
+    return x.size();
   }
 
 }

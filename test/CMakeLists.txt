@@ -3,23 +3,22 @@ aux_source_directory(atomic           ATOMIC_SRC)
 aux_source_directory(audio_concept    AUDIO_CONCEPT_SRC)
 aux_source_directory(audio_processor  AUDIO_PROCESSOR_SRC)
 aux_source_directory(audio_types      AUDIO_TYPES_SRC)
-aux_source_directory(audio_utility    AUDIO_UTILITY_SRC)
-# aux_source_directory(concept          CONCEPT_SRC)
-# aux_source_directory(future           FUTURE_SRC)
-# aux_source_directory(immutable        IMMUTABLE_SRC)
+aux_source_directory(concept          CONCEPT_SRC)
+aux_source_directory(future           FUTURE_SRC)
+aux_source_directory(immutable        IMMUTABLE_SRC)
 # aux_source_directory(improving        IMPROVING_SRC)
-# aux_source_directory(lockfree         LOCKFREE_SRC)
-# aux_source_directory(logging          LOGGING_SRC)
-# aux_source_directory(parallel         PARALLEL_SRC)
-# aux_source_directory(reference        REFERENCE_SRC)
-# aux_source_directory(thread           THREAD_SRC) 
+aux_source_directory(lockfree         LOCKFREE_SRC)
+aux_source_directory(logging          LOGGING_SRC)
+aux_source_directory(parallel         PARALLEL_SRC)
+aux_source_directory(reference        REFERENCE_SRC)
+aux_source_directory(thread           THREAD_SRC) 
+aux_source_directory(utility          UTILITY_SRC)
 
 set(SRCS
   ${ATOMIC_SRC}
   ${AUDIO_CONCEPT_SRC}
   ${AUDIO_PROCESSOR_SRC}
   ${AUDIO_TYPES_SRC}
-  ${AUDIO_UTILITY_SRC}
   ${CONCEPT_SRC}
   ${FUTURE_SRC}
   ${IMMUTABLE_SRC}
@@ -29,6 +28,7 @@ set(SRCS
   ${PARALLEL_SRC}
   ${REFERENCE_SRC}
   ${THREAD_SRC}
+  ${UTILITY_SRC}
   )
 
 if(BUILD_TESTS)
