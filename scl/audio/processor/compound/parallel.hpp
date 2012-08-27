@@ -91,10 +91,10 @@ namespace scl
         void process(ptr_t in_msg, ptr_t input, ptr_t output, ptr_t out_msg)
         {
           // FIXME alignment
-          size_t input2  = input  + x->input_size;
-          size_t output2 = output + x->output_size;
-          x->process(in_msg, input,  output,  out_msg);
-          y->process(in_msg, input2, output2, out_msg);
+          // size_t input2  = input  + x->input_size;
+          // size_t output2 = output + x->output_size;
+          // x->process(in_msg, input,  output,  out_msg);
+          // y->process(in_msg, input2, output2, out_msg);
         }
       };
 

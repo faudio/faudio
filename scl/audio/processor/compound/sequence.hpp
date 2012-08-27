@@ -95,18 +95,18 @@ namespace scl
         void process(ptr_t in_msg, ptr_t input, ptr_t output, ptr_t out_msg)
         {
           size_t size = parent_type::input_size;
-          if (f->input_size < g->output_size) // compare sizes
-          {
-            f->process(in_msg, input, output, out_msg);
-            g->process(in_msg, output, input, out_msg);
-            scl::raw_copy(input, input + size, output);
-          }
-          else
-          {
-            scl::raw_copy(input, input + size, output);
-            f->process(in_msg, output, input, out_msg);
-            g->process(in_msg, input, output, out_msg);
-          }
+          // if (f->input_size < g->output_size) // compare sizes
+          // {
+          //   f->process(in_msg, input, output, out_msg);
+          //   g->process(in_msg, output, input, out_msg);
+          //   scl::raw_copy(input, input + size, output);
+          // }
+          // else
+          // {
+          //   scl::raw_copy(input, input + size, output);
+          //   f->process(in_msg, output, input, out_msg);
+          //   g->process(in_msg, input, output, out_msg);
+          // }
         }
       };
     }

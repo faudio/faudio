@@ -14,29 +14,24 @@
 #include <scl/audio/processor/compound/parallel.hpp>
 // #include <scl/audio/processor/compound/feedback.hpp>
 
-TEST(AudioProcessor, RawBuffer)
-{
-  scl::raw_buffer b;
-  scl::raw_buffer b2 = std::move(b);
-}
-
-
 TEST(AudioProcessor, RawIdentity)
 {
+  using namespace scl;
   using namespace scl::audio::processor;
   
   char in[10]  = "abcdefghi"; 
   char out[10];          
   
   raw_processor_ptr p { new raw_identity_processor(sizeof(char) * 10) };
-  p->process(NULL, (intptr_t)in, (intptr_t)out, NULL);
+  p->process(NULL, (ptr_t)in, (ptr_t)out, NULL);
   
   std::cout << "Input:  " << in << "\n";
   std::cout << "Output: " << out << "\n";
 }
 
 TEST(AudioProcessor, RawConstant)
-{
+{                             
+  using namespace scl;
   using namespace scl::audio::processor;
   
   char in[10]  = "abcdefghi"; 
@@ -44,8 +39,8 @@ TEST(AudioProcessor, RawConstant)
   char out[10];          
   
   raw_processor_ptr p { new raw_constant_processor(sizeof(char) * 10) };
-  p->prepare((intptr_t) in2);
-  p->process(NULL, (intptr_t)in, (intptr_t)out, NULL);
+  p->prepare((ptr_t) in2);
+  p->process(NULL, (ptr_t)in, (ptr_t)out, NULL);
   
   std::cout << "Input:  " << in << "\n";
   std::cout << "Output: " << out << "\n";

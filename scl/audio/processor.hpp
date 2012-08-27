@@ -215,15 +215,15 @@ namespace scl
           output_size(output_size)
         {}
         virtual ~raw_processor() {}
-        virtual void prepare(intptr_t argument) = 0;
-        virtual void cleanup(intptr_t argument) = 0;
-        virtual void load(intptr_t argument) = 0;
-        virtual void store(intptr_t argument) = 0;
+        virtual void prepare(ptr_t argument) = 0;
+        virtual void cleanup(ptr_t argument) = 0;
+        virtual void load(ptr_t argument) = 0;
+        virtual void store(ptr_t argument) = 0;
         virtual bool is_ready() = 0;
-        virtual void process(intptr_t input_messages,
-                             intptr_t input_data,
-                             intptr_t output_data,
-                             intptr_t output_messages) = 0;
+        virtual void process(ptr_t input_messages,
+                             ptr_t input_data,
+                             ptr_t output_data,
+                             ptr_t output_messages) = 0;
       };
 
       using raw_processor_ptr = std::shared_ptr<raw_processor>;

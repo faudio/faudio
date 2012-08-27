@@ -77,8 +77,8 @@ namespace scl
         void process(ptr_t in_msg, ptr_t input, ptr_t output, ptr_t out_msg)
         {
           size_t size = parent_type::input_size;
-          scl::raw_copy(input, input + size, output);
-          scl::raw_copy(input, input + size, output + size);
+          // scl::raw_copy(input, input + size, output);
+          // scl::raw_copy(input, input + size, output + size);
         }
       };
     }
