@@ -1,5 +1,6 @@
 
 #include <cstdint>
+#include <list>
 #include <array>
 #include <utility>
 #include <type_traits>
@@ -38,6 +39,7 @@ struct array2 {
 // #define array std::array
 #define pair pair2
 #define array array2
+#define list std::list
 #define s32 int32_t
 #define s64 int64_t
 
@@ -83,6 +85,7 @@ TEST(AudioTypes, Alignment)
 { 
   std::cout << boost::format("Max align: %d\n") % alignof(std::max_align_t);
 
+/*
   print_name (" midi_simple_message ");
   print_align < midi_simple_message >();
                
@@ -140,6 +143,7 @@ TEST(AudioTypes, Alignment)
   print_name (" pair<array<pair<s32,s32>,10>,array<s32,20>> ");
   print_align < pair<array<pair<s32,s32>,10>,array<s32,20>> >();
   print_offset< pair<array<pair<s32,s32>,10>,array<s32,20>> >();
+   */
 
   // std::cout << "pair2 is trivially copyable: " << 
   //   std::is_trivially_copyable<pair2<int,int>>::value << "\n";
@@ -150,61 +154,6 @@ TEST(AudioTypes, Alignment)
 }
 
 
-/* 
-
-    midi_simple_message                                                                               
-     size:      3                                                                                     
-     alignment: 1                                                                                     
-    midi_sysex_message                                                                                
-     size:      8                                                                                     
-     alignment: 4                                                                                     
-    s32                                                                                          
-     size:      4                                                                                     
-     alignment: 4                                                                                     
-    s64                                                                                          
-     size:      8                                                                                     
-     alignment: 8                                                                                     
-    pair32_64                                                                                         
-     size:      16                                                                                    
-     alignment: 8                                                                                     
-     offset:    8                                                                                     
-    pair<s32,s32>                                                                           
-     size:      8                                                                                     
-     alignment: 4                                                                                     
-     offset:    4                                                                                     
-    pair<s32,s64>                                                                           
-     size:      16                                                                                    
-     alignment: 8                                                                                     
-     offset:    8                                                                                     
-    pair<s64,s32>                                                                           
-     size:      16                                                                                    
-     alignment: 8                                                                                     
-     offset:    8                                                                                     
-    pair<s64,s64>                                                                           
-     size:      16                                                                                    
-     alignment: 8                                                                                     
-     offset:    8                                                                                     
-    array<s64,10>                                                                                
-     size:      80                                                                                    
-     alignment: 8                                                                                     
-    array<pair32_64,10>                                                                               
-     size:      160                                                                                   
-     alignment: 8                                                                                     
-    array<pair<s32,s64>,10>                                                                 
-     size:      160                                                                                   
-     alignment: 8                                                                                     
-    array<pair<s64,s32>,10>                                                                 
-     size:      160                                                                                   
-     alignment: 8                                                                                     
-    array<pair<s64,s64>,10>                                                                 
-     size:      160                                                                                   
-     alignment: 8                                                                                     
-    pair<array<pair<s32,s64>,10>,array<s32,20>>                                        
-     size:      160                                                                                   
-     alignment: 4                                                                                     
-     offset:    80                                                                                    
-    pair<array<pair<s32,s32>,10>,array<s32,20>>                                        
-     size:      160                                                                                   
-     alignment: 4                                                                                     
-     offset:    80
- */
+TEST(AudioTypes, GenAlignment)
+{  
+}

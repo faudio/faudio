@@ -9,6 +9,7 @@ if(BUILD_SCL_GENERATE_AUDIO_TYPES)
     RUNTIME_OUTPUT_DIRECTORY  "../bin" 
    )
   target_link_libraries(scl_generate_audio_types
+    BoostProgramOptions
     ${DEPENDENCIES}
     ${MAIN_LIBRARY}
     )
