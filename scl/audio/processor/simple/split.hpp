@@ -60,7 +60,9 @@ namespace scl
       public:
         using parent_type = raw_processor;
 
-        raw_split_processor(size_t size)
+        raw_split_processor(
+          size_t size
+        )
           : raw_processor(0, 0, 0, size, size * 2) {}
 
         void load(ptr_t state) {}

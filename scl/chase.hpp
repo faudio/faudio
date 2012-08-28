@@ -165,12 +165,13 @@ namespace scl
 
     SCL_STANDARD_ASSIGN(this_type);
 
-    /** Unsafe */
+    /** Unsafe. Obtains the track pointer of this without releasing ownership. */
     track_pointer get()
     {
       return ptr;
     }
 
+    /** Release ownership and return track pointer. */
     track_pointer release()
     {
       track_pointer qtr = ptr;
@@ -178,6 +179,7 @@ namespace scl
       return qtr;
     }
 
+    /** Destroy previous track and take ownership of the given track. */
     void reset(track_pointer val)
     {
       track_destroy(ptr);

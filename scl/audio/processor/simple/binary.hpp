@@ -56,6 +56,36 @@ namespace scl
       private:
         std::function<C(A, B)> function;
       };
+      
+      class raw_binary_processor : public raw_processor
+      {
+        ptr_t function;
+      public:
+        raw_binary_processor(
+          ptr_t function, 
+          size_t first_size, 
+          size_t second_size, 
+          size_t out_size
+          )
+          : raw_processor(0, 0, 0, first_size + second_size, out_size)
+        {
+        }
+        void prepare(ptr_t argument) {}
+        void cleanup(ptr_t argument) {}
+        void load(ptr_t argument) {}
+        void store(ptr_t argument) {}
+        bool is_ready()
+        {
+          return true;
+        }
+        void process(ptr_t input_messages,
+                     ptr_t input,
+                     ptr_t output,
+                     ptr_t output_messages)
+        {
+          // function(input, output);
+        }
+      };
 
     }
   }
