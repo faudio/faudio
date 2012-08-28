@@ -179,12 +179,6 @@ FIXME
 FIXME
 
 
-### Linking the audio engine into another application
-
-By default, dynamic libraries are built. On Mac OS X this is a framework called ScoreCleanerAudio.framework and a dynamic
-library called libsclaudio.dylib. They are different ways of packaging the same executable code. On Windows, a library
-file named sclaudio.lib and a dynamic library file named sclaudio.dll is generated. You can load any of these
-dynamically, using the appropriate system-specific API.
 
 \pagebreak
 

@@ -4,6 +4,12 @@ Basic concepts
 
 This chapter provides some brief definitions of the concepts used in the Audio Engine.
 
+### Future and improving values
+
+The Audio Engine use an opaque asynchronous interface. Two special kinds of asynchronous values
+are provided. A *future* value represents a value which may not be immediatly available. An
+*improving* value represents a value which may gradually approach its final value.
+
 ### Sessions
 
 A *session* provides a snapshot of devices currently available on the system.
@@ -36,15 +42,12 @@ specifically a processor from *A* to *B* may be applied to a signal of *A* to yi
 ### Messages
 
 A *message* is an value of some type *M*, used for communication between different parts
-of an audio processing application.
+of an audio processing application. *Senders* and *receiver* emits and reacts to messages
+respectively. *Dispatchers* provides routing points where messages can be sent and received.
 
 ### Schedulers
 
-A *scheduler* provides timely execution of *tasks* (usually message delivery).
-
-### Dispatchers
-
-A *dispatcher* provides delivery of messages to some *address*.
+A *scheduler* provides timely execution of *tasks*.
 
 ### Streams
 
