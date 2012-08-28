@@ -7,57 +7,42 @@
 
 namespace scl
 {
+
+  /** @cond internal */
+
   template <class A>
-  struct chase_node
+  struct track
   {
-    chase_node<A>* rest;
+    track<A>* rest;
     size_t count;
     A elem[1];
   };
 
-// last node or nullptr
-  template <class A>
-  chase_node<A>* chase_node_last_node(chase_node<A>* xs)
-  {
-    if (!xs) return nullptr;
-    while (xs->rest)
-      xs = xs->rest;
-    return xs;
-  }
-
-// destructive append
-// future delete will handle both xs and ys
-  template <class A>
-  chase_node<A>* chase_node_append(chase_node<A>* xs, chase_node<A>* ys)
-  {
-    if (!xs) return ys;
-    chase_node_last_node(xs)->rest = ys;
-    return xs;
-  }
-
   template <class Sequence>
-  chase_node<typename Sequence::value_type>* chase_node_new(Sequence xs)
+  track<typename Sequence::value_type>* track_create(Sequence xs)
   {
     using size_type = typename Sequence::size_type;
     using value_type = typename Sequence::value_type;
     size_type n = scl::size(xs);
-    chase_node<value_type>* node = (chase_node<value_type>*)
-                                   new char[sizeof(ptr_t) + sizeof(size_t) + sizeof(value_type) * n];
-    node->rest  = nullptr;
-    node->count = n;
+    
+    track<value_type>* ptr = (track<value_type>*)
+      new char[sizeof(ptr_t) + sizeof(size_t) + sizeof(value_type) * n];
+    ptr->rest  = nullptr;
+    ptr->count = n;
+    
     int i = 0;
     for (value_type x : xs)
     {
       assert(i < n);
-      node->elem[i++] = x;
+      ptr->elem[i++] = x;
     }
-    return node;
+    return ptr;
   }
 
   template <class A>
-  void chase_node_free(chase_node<A>* xs)
+  void track_destroy(track<A>* xs)
   {
-    chase_node<A>* ys;
+    track<A>* ys;
     while (xs)
     {
       ys = xs->rest;
@@ -66,6 +51,31 @@ namespace scl
     }
   }
 
+  /*
+    Returns the last valid track.
+   */
+  template <class A>
+  track<A>* track_last(track<A>* xs)
+  {
+    if (!xs) return nullptr;
+    while (xs->rest)
+      xs = xs->rest;
+    return xs;
+  }
+
+  /*
+    Destructive append
+    Future delete will handle both xs and ys
+  */
+  template <class A>
+  track<A>* track_append(track<A>* xs, track<A>* ys)
+  {
+    if (!xs) return ys;
+    track_last(xs)->rest = ys;
+    return xs;
+  }
+
+
   template <class A>
   class chase_iterator
     : public boost::iterator_facade <
@@ -73,7 +83,7 @@ namespace scl
     , A
     , boost::forward_traversal_tag >
   {
-    chase_node<A>* xs;
+    track<A>* xs;
     int i;
 
     template <class B>
@@ -107,13 +117,15 @@ namespace scl
   public:
     chase_iterator()
       : xs(nullptr), i(0) {}
-    chase_iterator(chase_node<A>* xs)
+    chase_iterator(track<A>* xs)
       : xs(xs), i(0) {}
   };
+  
+  /** @endcond internal */
 
   /**
-    A chase is a series of (uniquely) linked nodes of variable length. It has an O(1)
-    destructive append operation and can be moved indirectly, using the release method.
+    A *chase* is a series of *tracks*, that is, uniquely linked arrays of variable length. It has an
+    efficient destructive append operation and can be moved indirectly, by releasing the track pointer.
 
         chase<int> xs = { 1, 2, 3 };
         auto n = xs.release();      // moves elements out of xs
@@ -125,17 +137,18 @@ namespace scl
   template <class A>
   class chase
   {
-    chase_node<A>* ptr;
+    track<A>* ptr;
   public:
     using value_type = A;
-    using this_type = chase<A>;
-    using node_type = chase_node<A>;
+    using this_type  = chase<A>;
+    using track_type = track<A>;
+    using track_pointer = track<A>*;
     using iterator = chase_iterator<A>;
 
     chase() : ptr(nullptr) {}
-    explicit chase(node_type* xs) : ptr(xs) {}
+    explicit chase(track_pointer xs) : ptr(xs) {}
     chase(std::initializer_list<A> elems)
-      : ptr(chase_node_new<std::initializer_list<A>>(elems)) {}
+      : ptr(track_create<std::initializer_list<A>>(elems)) {}
 
     chase(const chase&) = delete;
     chase(chase && other) : ptr(other.release()) {}
@@ -153,28 +166,28 @@ namespace scl
     SCL_STANDARD_ASSIGN(this_type);
 
     /** Unsafe */
-    node_type* get()
+    track_pointer get()
     {
       return ptr;
     }
 
-    node_type* release()
+    track_pointer release()
     {
-      node_type* qtr = ptr;
+      track_pointer qtr = ptr;
       ptr = nullptr;
       return qtr;
     }
 
-    void reset(node_type* val)
+    void reset(track_pointer val)
     {
-      chase_node_free(ptr);
+      track_destroy(ptr);
       ptr = val;
     }
 
     /** Append ys to this and clear ys, effectively moving the contents of ys to this. */
     this_type& append(this_type& ys)
     {
-      ptr = chase_node_append(ptr, ys.release());
+      ptr = track_append(ptr, ys.release());
       return *this;
     }
 
@@ -195,16 +208,20 @@ namespace scl
   };
 }
 
+/** @cond internal */
+
 namespace std
 {
   template <class A>
-  scl::chase_iterator<A> begin(scl::chase_node<A>* xs)
+  scl::chase_iterator<A> begin(scl::track<A>* xs)
   {
     return scl::chase_iterator<A>(xs);
   }
   template <class A>
-  scl::chase_iterator<A> end(scl::chase_node<A>* xs)
+  scl::chase_iterator<A> end(scl::track<A>* xs)
   {
     return scl::chase_iterator<A>();
   }
 }
+
+/** @endcond internal */
