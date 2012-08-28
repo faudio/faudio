@@ -1,4 +1,6 @@
 
+#pragma once
+
 #include <boost/rational.hpp>
 
 namespace scl
