@@ -69,10 +69,10 @@ namespace scl
   template <class A>
   class chase_iterator
     : public boost::iterator_facade <
-      chase_iterator<A>
+    chase_iterator<A>
     , A
     , boost::forward_traversal_tag >
-  {    
+  {
     chase_node<A>* xs;
     int i;
 
@@ -81,7 +81,7 @@ namespace scl
     {
       return xs == other.xs && i == other.i;
     }
-    
+
     void increment()
     {
       if (xs)
@@ -114,33 +114,36 @@ namespace scl
   /**
     A chase is a series of (uniquely) linked nodes of variable length. It has an O(1)
     destructive append operation and can be moved indirectly, using the release method.
-      
+
         chase<int> xs = { 1, 2, 3 };
-        auto n = xs.release();      // moves elements out of xs      
+        auto n = xs.release();      // moves elements out of xs
         chase<int> ys (n);          // moves elements into ys
-    
+
     Model of Movable, Swappable, ForwardRange.
-    
+
    */
   template <class A>
   class chase
   {
     chase_node<A>* ptr;
-  public:                
+  public:
     using value_type = A;
     using this_type = chase<A>;
     using node_type = chase_node<A>;
     using iterator = chase_iterator<A>;
-    
+
     chase() : ptr(nullptr) {}
     explicit chase(node_type* xs) : ptr(xs) {}
-    chase(std::initializer_list<A> elems) 
+    chase(std::initializer_list<A> elems)
       : ptr(chase_node_new<std::initializer_list<A>>(elems)) {}
-    
-    chase(const chase&) = delete;
-    chase(chase&& other) : ptr(other.release()) {}
 
-    ~chase() { reset(nullptr); }
+    chase(const chase&) = delete;
+    chase(chase && other) : ptr(other.release()) {}
+
+    ~chase()
+    {
+      reset(nullptr);
+    }
 
     void swap(this_type& other)
     {
@@ -154,27 +157,37 @@ namespace scl
     {
       return ptr;
     }
-    
+
     node_type* release()
     {
-      node_type* ptr2 = ptr;
+      node_type* qtr = ptr;
       ptr = nullptr;
-      return ptr2;
+      return qtr;
     }
-    
+
     void reset(node_type* val)
     {
       chase_node_free(ptr);
       ptr = val;
-    }      
-    
+    }
+
     /** Append ys to this and clear ys, effectively moving the contents of ys to this. */
     this_type& append(this_type& ys)
     {
       ptr = chase_node_append(ptr, ys.release());
       return *this;
     }
-    
+
+    iterator begin()
+    {
+      return iterator(ptr);
+    }
+
+    iterator end()
+    {
+      return iterator(nullptr);
+    }
+
     operator bool()
     {
       return ptr != nullptr;
@@ -183,7 +196,7 @@ namespace scl
 }
 
 namespace std
-{ 
+{
   template <class A>
   scl::chase_iterator<A> begin(scl::chase_node<A>* xs)
   {
@@ -194,14 +207,4 @@ namespace std
   {
     return scl::chase_iterator<A>();
   }
-  template <class A>
-  scl::chase_iterator<A> begin(scl::chase<A>& xs)
-  {
-    return scl::chase_iterator<A>(xs.get());
-  }
-  template <class A>
-  scl::chase_iterator<A> end(scl::chase<A>& xs)
-  {
-    return scl::chase_iterator<A>(nullptr);
-  }  
 }

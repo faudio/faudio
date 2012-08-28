@@ -19,8 +19,11 @@
    
 namespace scl
 {
-
+  /**
+      Generic pointer type, with byte-based arithmetic.
+   */
   using ptr_t = unsigned char* ;
+  using voidptr_t = void* ;
 
   /**
       A moveable, non-copyable byte buffer.
@@ -74,21 +77,22 @@ namespace scl
                        size_t group_size = 4,
                        size_t column_size = 16)
   {
-    ptr_t pos = begin;
     boost::format fmt;
     if (hex)
       fmt = boost::format("%02x");
     else
       fmt = boost::format("%04d");
-    std::cout << boost::format("Dumping range %x to %x\n") % ((void*) begin) % ((void*) end);
+    std::cout << boost::format("Dumping range %x to %x\n") % ((voidptr_t) begin) % ((voidptr_t) end);
+    ptr_t pos = begin;
     while (pos < end)
     {
-      if (((intptr_t)(pos - begin)) % column_size == 0)
+      intptr_t off = (intptr_t)(pos - begin);
+      if (off % column_size == 0)
         std::cout << "\n ";
-      if (((intptr_t)(pos - begin)) % group_size == 0)
+      if (off % group_size == 0)
         std::cout << " ";
       std::cout << fmt % ((int) *pos) << " ";
-      pos++;
+      ++pos;
     }
     std::cout << "\n\n";
   }
