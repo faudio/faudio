@@ -161,11 +161,11 @@ namespace scl
         switch (tag)
         {
         case tag_type::sample32:
-          return sizeof(sample32);
+          return sizeof(::scl::audio::sample32);
         case tag_type::sample64:
-          return sizeof(sample64);
+          return sizeof(::scl::audio::sample64);
         case tag_type::unit:
-          return sizeof(unit);
+          return sizeof(::scl::audio::unit);
         case tag_type::list:
           return sizeof(ptr_t);
         case tag_type::vector:
@@ -180,11 +180,11 @@ namespace scl
         switch (tag)
         {
         case tag_type::sample32:
-          return alignof(sample32);
+          return alignof(::scl::audio::sample32);
         case tag_type::sample64:
-          return alignof(sample64);
+          return alignof(::scl::audio::sample64);
         case tag_type::unit:
-          return alignof(unit);
+          return alignof(::scl::audio::unit);
         case tag_type::list:
           return alignof(ptr_t);
         case tag_type::vector:
