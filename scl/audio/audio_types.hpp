@@ -141,14 +141,10 @@ namespace scl
         , snd()
         , n(n) {}
 
-      friend audio_type type::sample32();
-      friend audio_type type::sample64();
-      friend audio_type type::pair(audio_type fst, audio_type snd);
-      friend audio_type type::list(audio_type type);
-      friend audio_type type::vector(audio_type type, size_t n);
-
+      friend bool operator ==(const audio_type& a, const audio_type& b);
+      friend bool operator !=(const audio_type& a, const audio_type& b);
+      
     public:
-
       audio_type(const audio_type& other)
         : tag(other.tag)
         , fst(other.fst)
@@ -270,8 +266,28 @@ namespace scl
         }
       }
 
-      friend bool operator ==(const audio_type& a, const audio_type& b);
-      friend bool operator !=(const audio_type& a, const audio_type& b);
+      static audio_type sample32()
+      {
+        return audio_type(tag_type::sample32);
+      }
+      static audio_type sample64()
+      {
+        return audio_type(tag_type::sample64);
+      }
+      static audio_type pair(audio_type fst, audio_type snd)
+      {
+        return audio_type(tag_type::pair, fst, snd);
+      }
+      static audio_type list(audio_type type)
+      {
+        return audio_type(tag_type::list, type);
+      }
+      static audio_type vector(audio_type type, size_t n)
+      {
+        return audio_type(tag_type::vector, type, n);
+      }
+      
+      template <class A> static audio_type get();      
     };
 
     inline bool operator ==(const audio_type& a, const audio_type& b)
@@ -292,30 +308,30 @@ namespace scl
       return a << b.name();
     }
 
-    namespace type
-    {
-      using tag_type = audio_type_tag;
-      inline audio_type sample32()
-      {
-        return audio_type(tag_type::sample32);
-      }
-      inline audio_type sample64()
-      {
-        return audio_type(tag_type::sample64);
-      }
-      inline audio_type pair(audio_type fst, audio_type snd)
-      {
-        return audio_type(tag_type::pair, fst, snd);
-      }
-      inline audio_type list(audio_type type)
-      {
-        return audio_type(tag_type::list, type);
-      }
-      inline audio_type vector(audio_type type, size_t n)
-      {
-        return audio_type(tag_type::vector, type, n);
-      }
-    }
+    // namespace type
+    // {
+    //   using tag_type = audio_type_tag;
+    //   inline audio_type sample32()
+    //   {
+    //     return audio_type(tag_type::sample32);
+    //   }
+    //   inline audio_type sample64()
+    //   {
+    //     return audio_type(tag_type::sample64);
+    //   }
+    //   inline audio_type pair(audio_type fst, audio_type snd)
+    //   {
+    //     return audio_type(tag_type::pair, fst, snd);
+    //   }
+    //   inline audio_type list(audio_type type)
+    //   {
+    //     return audio_type(tag_type::list, type);
+    //   }
+    //   inline audio_type vector(audio_type type, size_t n)
+    //   {
+    //     return audio_type(tag_type::vector, type, n);
+    //   }
+    // }
 
     template <class A, class B> struct audio_pair
     {
@@ -353,7 +369,7 @@ namespace scl
     {
       static audio_type value()
       {
-        return type::sample32();
+        return audio_type::sample32();
       }
     };
     template <>
@@ -361,7 +377,7 @@ namespace scl
     {
       static audio_type value()
       {
-        return type::sample64();
+        return audio_type::sample64();
       }
     };
 
@@ -371,7 +387,7 @@ namespace scl
       static audio_type value()
       {
         audio_type a = get_audio_type<A>::value();
-        return type::list(a);
+        return audio_type::list(a);
       }
     };
     template <class A, class B>
@@ -381,7 +397,7 @@ namespace scl
       {
         audio_type a = get_audio_type<A>::value();
         audio_type b = get_audio_type<B>::value();
-        return type::pair(a, b);
+        return audio_type::pair(a, b);
       }
     };
     template <class A, size_t N>
@@ -390,12 +406,12 @@ namespace scl
       static audio_type value()
       {
         audio_type a = get_audio_type<A>::value();
-        return type::vector(a, N);
+        return audio_type::vector(a, N);
       }
     };
 
     template <class A>
-    audio_type get_audio_type2()
+    audio_type audio_type::get()
     {
       return get_audio_type<A>::value();
     };
