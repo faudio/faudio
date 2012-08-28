@@ -62,10 +62,23 @@ TEST(AudioUtility, ChaseConvert)
 {
   using namespace scl;
 
-  chase<long long> xs = { 1, 2, 3, 4, 5 };
-  chase<char> ys ((chase<char>::track_pointer) xs.release());
+  chase<int64_t> xs = { 1, 2, 3, 4, 5 };
+  chase<nullptr_t> ys ((chase<nullptr_t>::track_pointer) xs.release());
     
   ASSERT_EQ(ys.size(), 5);
+} 
+
+TEST(AudioUtility, ChaseConvert2)
+{
+  using namespace scl;
+
+  chase<int64_t> xs = { 123, 456, -789 };
+  chase<int8_t> ys ((chase<int8_t>::track_pointer) xs.release());       // ys.size() == 3
+  chase<uint64_t> zs ((chase<uint64_t>::track_pointer) ys.release());  // zs has elements { 1, 2, 3 }
+    
+  std::cout << "zs: \n";
+  for (int z : zs)
+    std::cout << z << "\n";
 } 
 
 

@@ -56,17 +56,17 @@ namespace scl
       private:
         std::function<C(A, B)> function;
       };
-      
+
       class raw_binary_processor : public raw_processor
       {
         ptr_t function;
       public:
         raw_binary_processor(
-          ptr_t function, 
-          size_t first_size, 
-          size_t second_size, 
+          ptr_t function,
+          size_t first_size,
+          size_t second_size,
           size_t out_size
-          )
+        )
           : raw_processor(0, 0, 0, first_size + second_size, out_size)
         {
         }

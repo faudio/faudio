@@ -28,6 +28,12 @@ namespace scl
   {
     bad_state() : simple_exception("bad_state") {}
   };
+
+  struct bad_argument : public simple_exception
+  {
+    bad_argument() : simple_exception("bad_argument") {}
+  };
+
   struct bad_allocation : public simple_exception
   {
     bad_allocation() : simple_exception("bad_allocation") {}

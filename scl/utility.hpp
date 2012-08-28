@@ -19,10 +19,42 @@
    
 namespace scl
 {
+
   /**
-      Generic pointer type, with byte-based arithmetic.
+      Counterpart to fail.
+   */
+  struct succeed {};
+
+  /**
+      A class that can be created to force a compile time error.
+  */
+  struct fail
+  {
+    fail() = delete;
+  };
+
+  template <bool T> struct try_
+  {
+    fail _;
+  };
+
+  template <> struct try_<true>
+  {
+    succeed _;
+  };
+
+
+  using std::intptr_t;
+  using std::nullptr_t;
+
+  /**
+      Generic pointer type with byte-based arithmetic.
    */
   using ptr_t = unsigned char* ;
+
+  /**
+      Generic pointer type without arithmetic.
+   */
   using voidptr_t = void* ;
 
   /**

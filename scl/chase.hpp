@@ -24,12 +24,10 @@ namespace scl
     using size_type = typename Sequence::size_type;
     using value_type = typename Sequence::value_type;
     size_type n = scl::size(xs);
-    
     track<value_type>* ptr = (track<value_type>*)
-      new char[sizeof(ptr_t) + sizeof(size_t) + sizeof(value_type) * n];
+                             new char[sizeof(ptr_t) + sizeof(size_t) + sizeof(value_type) * n];
     ptr->rest  = nullptr;
     ptr->count = n;
-    
     int i = 0;
     for (value_type x : xs)
     {
@@ -94,17 +92,13 @@ namespace scl
 
     void increment()
     {
-      if (xs)
+      if (!xs) return;
+      if ((i + 1) < xs->count)
+        ++i;
+      else
       {
-        if ((i + 1) < xs->count)
-        {
-          ++i;
-        }
-        else
-        {
-          i = 0;
-          xs = xs->rest;
-        }
+        i = 0;
+        xs = xs->rest;
       }
     }
 
@@ -120,16 +114,20 @@ namespace scl
     chase_iterator(track<A>* xs)
       : xs(xs), i(0) {}
   };
-  
+
   /** @endcond internal */
 
   /**
     A *chase* is a series of *tracks*, that is, uniquely linked arrays of variable length. It has an
-    efficient destructive append operation and can be moved indirectly, by releasing the track pointer.
+    efficient destructive append operation, supports indirect moving and is structurally invariant under casts.
 
         chase<int> xs = { 1, 2, 3 };
         auto n = xs.release();      // moves elements out of xs
         chase<int> ys (n);          // moves elements into ys
+
+        chase<int64_t> xs = { 1, 2, 3 };
+        chase<int8_t> ys ((chase<int8_t>::track_pointer) xs.release());       // ys.size() == 3
+        chase<uint64_t> zs ((chase<uint64_t>::track_pointer) ys.release());   // zs has elements { 1, 2, 3 }
 
     Model of Movable, Swappable, ForwardRange.
 
@@ -143,7 +141,7 @@ namespace scl
     using size_type  = size_t;
     using this_type  = chase<A>;
     using track_type = track<A>;
-    using track_pointer = track<A>*;
+    using track_pointer = track<A>* ;
     using iterator = chase_iterator<A>;
 
     chase() : ptr(nullptr) {}

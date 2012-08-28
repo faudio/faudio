@@ -1,8 +1,9 @@
 
+#include <vector>
 #include <gtest/gtest.h>
 #include <scl/audio/audio_types.hpp>
 
-TEST(AudioTypes, Basic)
+TEST(AudioTypes, Dynamic)
 {
   using namespace scl::audio;
   // std::shared_ptr<audio_type> a {{ audio_type_tag::sample32 }};
@@ -15,7 +16,7 @@ TEST(AudioTypes, Basic)
   std::cout << "Name: " << z << "\n Levels: " << z.declaration() << "\n";
   using T =
     audio_pair < audio_vector<sample32, 256>::type,
-    sample64
+    std::pair<sample32,sample32>
     >::type;
   audio_type t = get_audio_type2<T>();
   std::cout << "Name: " << t << "\n Levels: " << t.levels() << "\n";

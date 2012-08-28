@@ -1,11 +1,10 @@
 
 #pragma once
 
-#include <vector>
 #include <list>
-#include <utility>
-#include <memory>
-#include <iostream>
+#include <array>
+#include <utility> // for pair
+#include <memory> // for shared_ptr
 #include <boost/lexical_cast.hpp>
 #include <scl/audio/midi_types.hpp>
 
@@ -13,6 +12,11 @@ namespace scl
 {
   namespace audio
   {
+    using sample32 = float;
+    using sample64 = double;
+
+    constexpr int max_frames = 4096;
+
     /*
       Type system of audio computations:
 
@@ -65,12 +69,7 @@ namespace scl
         - (A,B)  maps to the binary representation of A padded with zero to occupy 8n bytes,
           followed by the binary representation of B padded with 0 to occupy 8n bytes
         - <A x N> maps to an array of N elements of type A
-        - [A] maps to a pointer to a structure { ptr_t rest, size_t count, A... elems }
-          - If the pointer is zero, the list is empty
-          - rest contains eventual extra elements of the list
-          - count contains number of elements in the current node
-          - A ... is a an array of length count
-
+        - [A] maps to a chase of A
     */
 
 
@@ -82,6 +81,21 @@ namespace scl
       list,
       vector,
     };
+
+    inline intptr_t pad(intptr_t x, size_t a)
+    {
+      return (a - x) % a;
+    }
+    inline intptr_t next_aligned(intptr_t x, size_t a)
+    {
+      return x + pad(x, a);
+    }
+
+    template <class A>
+    inline A* next_aligned(A* x, size_t a)
+    {
+      return (intptr_t) next_aligned((intptr_t) x, a);
+    }
 
     class audio_type;
     namespace type
@@ -101,7 +115,7 @@ namespace scl
       tag_type tag;
       type_ptr fst;
       type_ptr snd;
-      size_t size;
+      size_t n;
 
       audio_type(tag_type tag)
         : tag(tag) {}
@@ -115,16 +129,16 @@ namespace scl
         , fst(new audio_type(fst))
         , snd(new audio_type(snd)) {}
 
-      audio_type(tag_type tag, audio_type fst, size_t size)
+      audio_type(tag_type tag, audio_type fst, size_t n)
         : tag(tag)
         , fst(new audio_type(fst))
-        , size(size) {}
+        , n(n) {}
 
       friend audio_type type::sample32();
       friend audio_type type::sample64();
       friend audio_type type::pair(audio_type fst, audio_type snd);
       friend audio_type type::list(audio_type type);
-      friend audio_type type::vector(audio_type type, size_t size);
+      friend audio_type type::vector(audio_type type, size_t n);
 
     public:
 
@@ -132,13 +146,56 @@ namespace scl
         : tag(other.tag)
         , fst(other.fst)
         , snd(other.snd)
-        , size(other.size) {}
-
-      // ~audio_type() { std::cout << "<<<<< Destroying " << this << "\n"; }
+        , n(other.n) {}
 
       bool is_pair()
       {
         return tag == tag_type::pair;
+      }
+
+      size_t size()
+      {
+        switch (tag)
+        {
+        case tag_type::sample32:
+          return sizeof(sample32);
+        case tag_type::sample64:
+          return sizeof(sample64);
+        case tag_type::list:
+          return sizeof(ptr_t);
+        case tag_type::vector:
+          return fst->size() * n;
+        case tag_type::pair:
+          return next_aligned(offset() + snd->size(), align());
+        }
+      }
+
+      size_t offset()
+      {
+        switch (tag)
+        {
+        case tag_type::pair:
+          return next_aligned(fst->size(), snd->align());
+        default:
+          return 0;
+        }
+      }
+
+      size_t align()
+      {
+        switch (tag)
+        {
+        case tag_type::sample32:
+          return alignof(sample32);
+        case tag_type::sample64:
+          return alignof(sample64);
+        case tag_type::list:
+          return alignof(ptr_t);
+        case tag_type::vector:
+          return fst->align();
+        case tag_type::pair:
+          return std::max(fst->align(), snd->align());
+        }
       }
 
       int kind() const
@@ -183,7 +240,7 @@ namespace scl
         case tag_type::pair:
           return "(" + fst->name() + ", " + snd->name() + ")";
         case tag_type::vector:
-          return "<" + fst->name() + " x " + lexical_cast<string>(size) + ">";
+          return "<" + fst->name() + " x " + lexical_cast<string>(n) + ">";
         }
       }
 
@@ -202,7 +259,7 @@ namespace scl
         case tag_type::pair:
           return "pair<" + fst->declaration() + "," + snd->declaration() + ">";
         case tag_type::vector:
-          return "array<" + fst->declaration() + "," + lexical_cast<string>(size) + ">";
+          return "array<" + fst->declaration() + "," + lexical_cast<string>(n) + ">";
         }
       }
 
@@ -232,16 +289,11 @@ namespace scl
       {
         return audio_type(tag_type::list, type);
       }
-      inline audio_type vector(audio_type type, size_t size)
+      inline audio_type vector(audio_type type, size_t n)
       {
-        return audio_type(tag_type::vector, type, size);
+        return audio_type(tag_type::vector, type, n);
       }
     }
-
-    using sample32 = float;
-    using sample64 = double;
-
-    constexpr int max_frames = 4096;
 
     template <class A, class B> struct audio_pair
     {
@@ -264,12 +316,14 @@ namespace scl
       using type = audio_pair<Sample, void>;
     };
 
-
     template <class A>
     struct get_audio_type
     {
-      // This class has no value() method, so that an erronous type parameter will cause
-      // a compile time error, instead of creating an invalid audio_type at runtime.
+      struct not_an_audio_type : public fail {};
+      static audio_type value()
+      {
+        throw not_an_audio_type();
+      }
     };
 
     template <>
