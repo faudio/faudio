@@ -7,35 +7,36 @@
 #include <scl/utility.hpp>
 #include <scl/audio/concept/abortable.hpp>
 
-///
-/// Synopsis:
-///
-///     concept Startable<typename X> : Abortable<X>
-///     {
-///       void X::start();
-///       void X::stop();
-///       bool X::is_running();
-///     }
-///
-/// Semantics:
-///   - `x.start()`
-///     - Precondition: The state of `x` is not aborted
-///     - Postcondition: The state of `x` is running.
-///   - `x.stop()`
-///     - Precondition: The state of `x` is not aborted
-///     - Postcondition: The state of `x` is not running.
-///   - `x.is_running()`
-///     - Whether `x` is running or not.
-///
-/// Invariants:
-///   - `x.is_aborted()` implies `!x.is_running()`.
-///
-/// Models:
-///   sndfile_stream
-///
-
 namespace scl
 {
+  namespace audio
+  {
+  /**
+    Synopsis:
+
+        concept Startable<typename X> : Abortable<X>
+        {
+          void X::start();
+          void X::stop();
+          bool X::is_running();
+        }
+
+        Semantics:
+        - `x.start()`
+          - Precondition: The state of `x` is not aborted
+          - Postcondition: The state of `x` is running.
+          - `x.stop()`
+          - Precondition: The state of `x` is not aborted
+          - Postcondition: The state of `x` is not running.
+          - `x.is_running()`
+          - Whether `x` is running or not.
+
+          Invariants:
+        - `x.is_aborted()` implies `!x.is_running()`.
+
+          Models:
+        sndfile_stream
+   */
   scl_concept(X) struct Startable : Abortable<X>
   {
     X x;
@@ -134,3 +135,5 @@ namespace scl
     }
   };
 }
+}
+

@@ -6,6 +6,8 @@
 
 namespace scl
 {
+  namespace audio
+  {
   /**
     The abortable concept describes types with a one-time abort action.
     The abortion of a task is not reversible.
@@ -101,5 +103,6 @@ namespace scl
       return x->is_aborted();
     }
   };
-
 }
+}
+

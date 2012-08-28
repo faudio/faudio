@@ -9,6 +9,8 @@
 
 namespace scl
 {
+  namespace audio
+  {
   /**
     Refines Abortable with pause and resume functions. In constrast to abort,
     these operations are not permanent.
@@ -139,5 +141,6 @@ namespace scl
       return x->is_aborted();
     }
   };
+}
 }
 

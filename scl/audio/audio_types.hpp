@@ -107,17 +107,6 @@ namespace scl
       vector,
     };
 
-    class audio_type;
-    namespace type
-    {
-      inline audio_type sample32();
-      inline audio_type sample64();
-      inline audio_type unit();
-      inline audio_type pair(audio_type fst, audio_type snd);
-      inline audio_type list(audio_type type);
-      inline audio_type vector(audio_type type, size_t size);
-    }
-
     class audio_type
     {
       using tag_type = audio_type_tag;

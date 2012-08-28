@@ -5,6 +5,8 @@
 
 namespace scl
 {
+  namespace audio
+  {
   /**
     Synopsis:
 
@@ -48,3 +50,5 @@ namespace scl
     X t;
   };
 }
+}
+
