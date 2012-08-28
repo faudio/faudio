@@ -12,11 +12,6 @@ namespace scl
 {
   namespace audio
   {
-    using sample32 = float;
-    using sample64 = double;
-
-    constexpr int max_frames = 4096;
-
     /*
       Type system of audio computations:
 
@@ -72,36 +67,52 @@ namespace scl
         - [A] maps to a chase of A
     */
 
+    constexpr int max_frames = 4096;
+
+    using unit     = nullptr_t;
+    using sample32 = float;
+    using sample64 = double;
+
+    template <class A, class B> struct audio_pair
+    {
+      using type = std::pair<A, B>;
+    };
+
+    template <class A> struct audio_list
+    {
+      using type = std::list<A>;
+    };
+
+    template <class A, int MaxFrames = max_frames> struct audio_vector
+    {
+      using type = std::array<A, MaxFrames>;
+    };
+
+    template <class Sample, int N> struct audio_channels
+    {
+      using type = typename audio_pair<Sample, typename audio_channels<Sample, N - 1>::type>::type;
+    };
+    template <class Sample> struct audio_channels<Sample, 0>
+    {
+      using type = unit; // FIXME
+    };
 
     enum class audio_type_tag
     {
       sample32,
       sample64,
+      unit,
       pair,
       list,
       vector,
     };
-
-    inline intptr_t pad(intptr_t x, size_t a)
-    {
-      return (a - x) % a;
-    }
-    inline intptr_t next_aligned(intptr_t x, size_t a)
-    {
-      return x + pad(x, a);
-    }
-
-    template <class A>
-    inline A* next_aligned(A* x, size_t a)
-    {
-      return (intptr_t) next_aligned((intptr_t) x, a);
-    }
 
     class audio_type;
     namespace type
     {
       inline audio_type sample32();
       inline audio_type sample64();
+      inline audio_type unit();
       inline audio_type pair(audio_type fst, audio_type snd);
       inline audio_type list(audio_type type);
       inline audio_type vector(audio_type type, size_t size);
@@ -164,6 +175,8 @@ namespace scl
           return sizeof(sample32);
         case tag_type::sample64:
           return sizeof(sample64);
+        case tag_type::unit:
+          return sizeof(unit);
         case tag_type::list:
           return sizeof(ptr_t);
         case tag_type::vector:
@@ -181,6 +194,8 @@ namespace scl
           return alignof(sample32);
         case tag_type::sample64:
           return alignof(sample64);
+        case tag_type::unit:
+          return alignof(unit);
         case tag_type::list:
           return alignof(ptr_t);
         case tag_type::vector:
@@ -208,6 +223,8 @@ namespace scl
         case tag_type::sample32:
           return 0;
         case tag_type::sample64:
+          return 0;
+        case tag_type::unit:
           return 0;
         case tag_type::pair:
           return 2;
@@ -238,6 +255,8 @@ namespace scl
           return "sample32";
         case tag_type::sample64:
           return "sample64";
+        case tag_type::unit:
+          return "()";
         case tag_type::list:
           return "[" + fst->name() + "]";
         case tag_type::pair:
@@ -257,6 +276,8 @@ namespace scl
           return "sample32";
         case tag_type::sample64:
           return "sample64";
+        case tag_type::unit:
+          return "unit";
         case tag_type::list:
           return "audio_list<" + fst->declaration() + ">::type";
         case tag_type::pair:
@@ -273,6 +294,10 @@ namespace scl
       static audio_type sample64()
       {
         return audio_type(tag_type::sample64);
+      }
+      static audio_type unit()
+      {
+        return audio_type(tag_type::unit);
       }
       static audio_type pair(audio_type fst, audio_type snd)
       {
@@ -308,119 +333,86 @@ namespace scl
       return a << b.name();
     }
 
-    // namespace type
-    // {
-    //   using tag_type = audio_type_tag;
-    //   inline audio_type sample32()
-    //   {
-    //     return audio_type(tag_type::sample32);
-    //   }
-    //   inline audio_type sample64()
-    //   {
-    //     return audio_type(tag_type::sample64);
-    //   }
-    //   inline audio_type pair(audio_type fst, audio_type snd)
-    //   {
-    //     return audio_type(tag_type::pair, fst, snd);
-    //   }
-    //   inline audio_type list(audio_type type)
-    //   {
-    //     return audio_type(tag_type::list, type);
-    //   }
-    //   inline audio_type vector(audio_type type, size_t n)
-    //   {
-    //     return audio_type(tag_type::vector, type, n);
-    //   }
-    // }
+    namespace detail
+    {
+      /** @cond internal */
 
-    template <class A, class B> struct audio_pair
-    {
-      using type = std::pair<A, B>;
-    };
-    template <class A> struct audio_list
-    {
-      using type = std::list<A>;
-    };
-    template <class A, int MaxFrames = max_frames> struct audio_vector
-    {
-      using type = std::array<A, MaxFrames>;
-    };
-    template <class Sample, int Channels> struct audio_channels
-    {
-      using type = audio_pair < Sample, audio_channels < Sample, Channels - 1 >>;
-    };
-    template <class Sample> struct audio_channels<Sample, 1>
-    {
-      using type = audio_pair<Sample, void>;
-    };
+      template <class A>
+      struct get_audio_type
+      {
+        struct not_an_audio_type : public fail {};
+        static audio_type value()
+        {
+          throw not_an_audio_type();
+        }
+      };
 
-    /** @cond internal */
+      template <>
+      struct get_audio_type<sample32>
+      {
+        static audio_type value()
+        {
+          return audio_type::sample32();
+        }
+      };
 
-    template <class A>
-    struct get_audio_type
-    {
-      struct not_an_audio_type : public fail {};
-      static audio_type value()
+      template <>
+      struct get_audio_type<sample64>
       {
-        throw not_an_audio_type();
-      }
-    };
+        static audio_type value()
+        {
+          return audio_type::sample64();
+        }
+      };
 
-    template <>
-    struct get_audio_type<sample32>
-    {
-      static audio_type value()
+      template <>
+      struct get_audio_type<unit>
       {
-        return audio_type::sample32();
-      }
-    };
-    template <>
-    struct get_audio_type<sample64>
-    {
-      static audio_type value()
-      {
-        return audio_type::sample64();
-      }
-    };
+        static audio_type value()
+        {
+          return audio_type::unit();
+        }
+      };
 
-    template <class A>
-    struct get_audio_type<std::list<A>>
-    {
-      static audio_type value()
+      template <class A>
+      struct get_audio_type<std::list<A>>
       {
-        audio_type a = get_audio_type<A>::value();
-        return audio_type::list(a);
-      }
-    };
-    template <class A, class B>
-    struct get_audio_type<std::pair<A, B>>
-    {
-      static audio_type value()
-      {
-        audio_type a = get_audio_type<A>::value();
-        audio_type b = get_audio_type<B>::value();
-        return audio_type::pair(a, b);
-      }
-    };
-    template <class A, size_t N>
-    struct get_audio_type<std::array<A, N>>
-    {
-      static audio_type value()
-      {
-        audio_type a = get_audio_type<A>::value();
-        return audio_type::vector(a, N);
-      }
-    };
+        static audio_type value()
+        {
+          audio_type a = get_audio_type<A>::value();
+          return audio_type::list(a);
+        }
+      };
 
+      template <class A, class B>
+      struct get_audio_type<std::pair<A, B>>
+      {
+        static audio_type value()
+        {
+          audio_type a = get_audio_type<A>::value();
+          audio_type b = get_audio_type<B>::value();
+          return audio_type::pair(a, b);
+        }
+      };
+
+      template <class A, size_t N>
+      struct get_audio_type<std::array<A, N>>
+      {
+        static audio_type value()
+        {
+          audio_type a = get_audio_type<A>::value();
+          return audio_type::vector(a, N);
+        }
+      };
+    }   
+
+    /** @endcond internal */
+    
     template <class A>
     audio_type audio_type::get()
     {
-      return get_audio_type<A>::value();
+      return detail::get_audio_type<A>::value();
     };
-
-    /** @endcond internal */
-
-
   }
 }
 

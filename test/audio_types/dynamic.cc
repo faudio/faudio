@@ -9,14 +9,17 @@ TEST(AudioTypes, Dynamic)
   using namespace scl::audio;
   using typ = audio_type;
 
-  // std::shared_ptr<audio_type> a {{ audio_type_tag::sample32 }};
-  // std::shared_ptr<audio_type> b {{ audio_type_tag::sample32 }};
   audio_type x = typ::sample32();
   audio_type y = typ::pair(typ::list(x), typ::vector(x, 10));
   audio_type z = typ::pair(x, typ::pair(x, x));
   std::cout << "Name: " << x << "\n Levels: " << x.declaration() << "\n";
   std::cout << "Name: " << y << "\n Levels: " << y.declaration() << "\n";
   std::cout << "Name: " << z << "\n Levels: " << z.declaration() << "\n";
+}
+
+TEST(AudioTypes, DynamicGet)
+{
+  using namespace scl::audio;
 
   using my_audio_type =
     audio_pair < 
@@ -25,8 +28,13 @@ TEST(AudioTypes, Dynamic)
     >::type;
 
   audio_type t = audio_type::get<my_audio_type>();
-
   std::cout << "Name: " << t << "\n Levels: " << t.levels() << "\n";
+
+  using my_audio_type2 =
+    audio_channels<sample32, 8>::type;
+
+  audio_type t2 = audio_type::get<my_audio_type2>();
+  std::cout << "Name: " << t2 << "\n Levels: " << t2.levels() << "\n";
 }
 
 TEST(AudioTypes, DynamicEq)

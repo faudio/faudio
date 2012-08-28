@@ -33,16 +33,18 @@ namespace scl
     fail() = delete;
   };
 
-  template <bool T> struct try_
-  {
-    fail _;
-  };
+  template <bool T> struct try_ : public fail{};
+  template <> struct try_<true> : public succeed {};
 
-  template <> struct try_<true>
+  /**
+      Generic size.
+   */
+  template <class Sized>
+  inline typename Sized::size_type size(Sized& x)
   {
-    succeed _;
-  };
-  
+    return x.size();
+  }
+
   /**
       Equality of referenced values modulo null.
    */
@@ -76,6 +78,22 @@ namespace scl
    */
   using voidptr_t = void* ;
 
+  inline intptr_t pad(intptr_t x, size_t a)
+  {
+    return (a - x) % a;
+  }
+
+  inline intptr_t next_aligned(intptr_t x, size_t a)
+  {
+    return x + pad(x, a);
+  }
+
+  template <class A>
+  inline A* next_aligned(A* x, size_t a)
+  {
+    return (intptr_t) next_aligned((intptr_t) x, a);
+  }
+  
   /**
       A moveable, non-copyable byte buffer.
    */
@@ -156,11 +174,4 @@ namespace scl
   {
     raw_dump(range.begin(), range.end(), hex, group_size, column_size);
   }
-
-  template <class Sized>
-  inline typename Sized::size_type size(Sized& x)
-  {
-    return x.size();
-  }
-
 }
