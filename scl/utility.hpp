@@ -107,7 +107,7 @@ namespace scl
   }
 
   template <class Sized>
-  inline typename Sized::size_type size(Sized x)
+  inline typename Sized::size_type size(Sized& x)
   {
     return x.size();
   }

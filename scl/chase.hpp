@@ -140,6 +140,7 @@ namespace scl
     track<A>* ptr;
   public:
     using value_type = A;
+    using size_type  = size_t;
     using this_type  = chase<A>;
     using track_type = track<A>;
     using track_pointer = track<A>*;
@@ -201,6 +202,16 @@ namespace scl
     iterator end()
     {
       return iterator(nullptr);
+    }
+
+    size_type size()
+    {
+      size_t n = 0;
+      iterator i = begin();
+      iterator j = end();
+      while (i++ != j)
+        ++n;
+      return n;
     }
 
     operator bool()

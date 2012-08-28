@@ -41,7 +41,6 @@ if(BUILD_TESTS)
    )
   target_link_libraries(scl_audio_tests
     ${DEPENDENCIES}
-    ${MAIN_LIBRARY}
     ${GTEST_LIBRARY}
     )
 endif()
