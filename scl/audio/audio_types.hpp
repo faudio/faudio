@@ -118,20 +118,27 @@ namespace scl
       size_t n;
 
       audio_type(tag_type tag)
-        : tag(tag) {}
+        : tag(tag)
+        , fst()
+        , snd()
+        , n() {}
 
       audio_type(tag_type tag, audio_type fst)
         : tag(tag)
-        , fst(new audio_type(fst)) {}
+        , fst(new audio_type(fst))
+        , snd()
+        , n() {}
 
       audio_type(tag_type tag, audio_type fst, audio_type snd)
         : tag(tag)
         , fst(new audio_type(fst))
-        , snd(new audio_type(snd)) {}
+        , snd(new audio_type(snd))
+        , n() {}
 
       audio_type(tag_type tag, audio_type fst, size_t n)
         : tag(tag)
         , fst(new audio_type(fst))
+        , snd()
         , n(n) {}
 
       friend audio_type type::sample32();
@@ -170,17 +177,6 @@ namespace scl
         }
       }
 
-      size_t offset()
-      {
-        switch (tag)
-        {
-        case tag_type::pair:
-          return next_aligned(fst->size(), snd->align());
-        default:
-          return 0;
-        }
-      }
-
       size_t align()
       {
         switch (tag)
@@ -195,6 +191,17 @@ namespace scl
           return fst->align();
         case tag_type::pair:
           return std::max(fst->align(), snd->align());
+        }
+      }
+
+      size_t offset()
+      {
+        switch (tag)
+        {
+        case tag_type::pair:
+          return next_aligned(fst->size(), snd->align());
+        default:
+          return 0;
         }
       }
 
@@ -255,15 +262,30 @@ namespace scl
         case tag_type::sample64:
           return "sample64";
         case tag_type::list:
-          return "list<" + fst->declaration() + ">";
+          return "audio_list<" + fst->declaration() + ">::type";
         case tag_type::pair:
-          return "pair<" + fst->declaration() + "," + snd->declaration() + ">";
+          return "audio_pair<" + fst->declaration() + "," + snd->declaration() + ">::type";
         case tag_type::vector:
-          return "array<" + fst->declaration() + "," + lexical_cast<string>(n) + ">";
+          return "audio_vector<" + fst->declaration() + "," + lexical_cast<string>(n) + ">::type";
         }
       }
 
+      friend bool operator ==(const audio_type& a, const audio_type& b);
+      friend bool operator !=(const audio_type& a, const audio_type& b);
     };
+
+    inline bool operator ==(const audio_type& a, const audio_type& b)
+    {
+      return a.tag == b.tag
+             && compare_ptr(a.fst, b.fst)
+             && compare_ptr(a.snd, b.snd)
+             && a.n == b.n;
+    }
+
+    inline bool operator !=(const audio_type& a, const audio_type& b)
+    {
+      return !(a == b);
+    }
 
     inline std::ostream& operator<< (std::ostream& a, const audio_type& b)
     {

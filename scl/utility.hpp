@@ -42,7 +42,26 @@ namespace scl
   {
     succeed _;
   };
-
+  
+  /**
+      Equality of referenced values modulo null.
+   */
+  template <class A, class B>
+  bool compare_ptr(A a, B b)
+  {
+    if (a)
+    {
+      if (b)
+        return *a == *b;
+      else
+        return false;
+    }
+    if (b)
+    {
+      return false;
+    }
+    return true;
+  }
 
   using std::intptr_t;
   using std::nullptr_t;

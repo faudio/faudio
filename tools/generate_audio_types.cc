@@ -37,6 +37,7 @@ static int  num_generations    = 2;
 static bool print_test_routine = false;
 static bool print_declaration  = false;
 static bool normal_output      = true;
+static bool include_info       = false;
 
 inline std::list<audio_type> first_generation()
 {
@@ -92,11 +93,12 @@ inline std::list<audio_type> generate(int max_level)
   std::list<audio_type> gen;
   gen = first_generation();
   gen = next_generation(gen, max_level);
-  int generation = 0;
+  
+  int gen_count = 0;
   do
   {
-    ++generation;
-    print_generation(generation, gen.size());
+    print_generation(++gen_count, gen.size());
+
     for (auto t : gen)
     {
       if (print_test_routine)
@@ -114,6 +116,13 @@ inline std::list<audio_type> generate(int max_level)
       else
       {
         print_normal(t << "\n");
+      }
+
+      if (include_info)
+      {
+        print_normal(boost::format("  Size:      %d\n") % t.size());
+        print_normal(boost::format("  Alignment: %d\n") % t.align());
+        print_normal(boost::format("  Offset:    %d\n") % t.offset());
       }
     }
     std::cout << "\n";
@@ -139,6 +148,7 @@ int main(int argc, char const* argv[])
   ("depth,n",  value<int>(),
    "Maximum level of nesting")
   ("count,C", "Display number of elements in each generation")
+  ("info,i",  "Include type information")
   ("cpp",     "Generate C++ syntax")
   ("test",    "Generate C++ test code")
   ;
@@ -151,6 +161,8 @@ int main(int argc, char const* argv[])
     print_test_routine = true;
   if (vm.count("count"))
     normal_output = false;
+  if (vm.count("info"))
+    include_info = true;
   if (vm.count("depth"))
     num_generations = vm["depth"].as<int>();
   if (vm.count("help"))
