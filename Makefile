@@ -49,6 +49,10 @@ DIRS=scl scl-c
 format: 
 	./cmake/scripts/astyle.sh $(DIRS)
 
+.PHONY: doc
+doc: 
+	./cmake/scripts/doc.sh
+
 .PHONY: run_scorecleaner
 run_scorecleaner: 
 	@pushd $(BUILD_DIRECTORY); $(MAKE) run_scorecleaner; popd;
