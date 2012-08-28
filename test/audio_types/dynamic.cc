@@ -7,11 +7,13 @@
 TEST(AudioTypes, Dynamic)
 {
   using namespace scl::audio;
+  using typ = audio_type;
+
   // std::shared_ptr<audio_type> a {{ audio_type_tag::sample32 }};
   // std::shared_ptr<audio_type> b {{ audio_type_tag::sample32 }};
-  audio_type x = audio_type::sample32();
-  audio_type y = audio_type::pair(audio_type::list(x), audio_type::vector(x, 10));
-  audio_type z = audio_type::pair(x, audio_type::pair(x, x));
+  audio_type x = typ::sample32();
+  audio_type y = typ::pair(typ::list(x), typ::vector(x, 10));
+  audio_type z = typ::pair(x, typ::pair(x, x));
   std::cout << "Name: " << x << "\n Levels: " << x.declaration() << "\n";
   std::cout << "Name: " << y << "\n Levels: " << y.declaration() << "\n";
   std::cout << "Name: " << z << "\n Levels: " << z.declaration() << "\n";
@@ -30,16 +32,17 @@ TEST(AudioTypes, Dynamic)
 TEST(AudioTypes, DynamicEq)
 {
   using namespace scl::audio;
+  using typ = audio_type;
 
-  audio_type a = audio_type::pair(audio_type::list(audio_type::sample32()), audio_type::vector(audio_type::sample32(), 10));
-  audio_type b = audio_type::pair(audio_type::list(audio_type::sample32()), audio_type::vector(audio_type::sample32(), 10));
+  audio_type a = typ::pair(typ::list(typ::sample32()), typ::vector(typ::sample32(), 10));
+  audio_type b = typ::pair(typ::list(typ::sample32()), typ::vector(typ::sample32(), 10));
   ASSERT_EQ(a, b);
 
-  audio_type c = audio_type::pair(audio_type::list(audio_type::sample32()), audio_type::vector(audio_type::sample32(), 10));
-  audio_type d = audio_type::pair(audio_type::list(audio_type::sample32()), audio_type::vector(audio_type::sample32(), 20));
+  audio_type c = typ::pair(typ::list(typ::sample32()), typ::vector(typ::sample32(), 10));
+  audio_type d = typ::pair(typ::list(typ::sample32()), typ::vector(typ::sample32(), 20));
   ASSERT_NE(c, d);
 
-  audio_type e = audio_type::vector(audio_type::sample32(), 10);
-  audio_type f = audio_type::sample32();
+  audio_type e = typ::vector(typ::sample32(), 10);
+  audio_type f = typ::sample32();
   ASSERT_NE(e, f);
 }

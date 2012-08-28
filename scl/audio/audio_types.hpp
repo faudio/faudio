@@ -354,6 +354,8 @@ namespace scl
       using type = audio_pair<Sample, void>;
     };
 
+    /** @cond internal */
+
     template <class A>
     struct get_audio_type
     {
@@ -415,6 +417,9 @@ namespace scl
     {
       return get_audio_type<A>::value();
     };
+
+    /** @endcond internal */
+
 
   }
 }
