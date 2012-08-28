@@ -397,8 +397,9 @@ table.memberdecls {
 }
 
 .memTemplParams {
-    font-size: 0%;
-	color: #4665A2;
+  /* Not showing templates */
+    font-size: 90%;  
+	  color: #4665A2;
     white-space: nowrap;
 }
 
@@ -411,7 +412,8 @@ table.memberdecls {
 br.typebreak { display: none; }
 
 .memtemplate {
-	font-size: 0%;
+  /* Not showing templates */
+	font-size: 90%;
 	color: #4665A2;
 	font-weight: normal;
 	margin-left: 9px;

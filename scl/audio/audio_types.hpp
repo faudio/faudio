@@ -14,10 +14,11 @@ namespace scl
   {
     /*
       Type system of audio computations:
-
+          
           sample32      32-bit floating point sample
           sample64      64-bit floating point sample
           midi_message  Midi message
+          ()            Unit value
 
           (A,B)         Pair of A and B
           [A]           Variable sized list of A
@@ -67,7 +68,7 @@ namespace scl
         - [A] maps to a chase of A
     */
 
-    constexpr int max_frames = 4096;
+    constexpr size_t max_frames = 4096;
 
     using unit     = nullptr_t;
     using sample32 = float;
@@ -322,10 +323,10 @@ namespace scl
       return a << b.name();
     }
 
+    /** @cond internal */
+
     namespace detail
     {
-      /** @cond internal */
-
       template <class A>
       struct get_audio_type
       {

@@ -215,6 +215,8 @@ namespace scl
           output_size(output_size)
         {}
         virtual ~raw_processor() {}
+        virtual audio_type input_type_value() {}
+        virtual audio_type output_type_value() {}
         virtual void prepare(ptr_t argument) = 0;
         virtual void cleanup(ptr_t argument) = 0;
         virtual void load(ptr_t argument) = 0;

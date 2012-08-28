@@ -23,7 +23,7 @@ namespace scl
     Models:
       none
   */
-  scl_concept(X) struct Timer
+  template<class X> struct Timer
   {
     scl_typename(time_type);
 

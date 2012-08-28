@@ -2,15 +2,23 @@
 Implementation notes
 ====================
 
-## C++0x support
-
-Requires a relatively complete implementation of the C++0x standard (see supported compilers). On some compilers third-party libraries (i.e. Boost) are used in place of the unsupported standard libraries. These can be replaced by the standard library when all compilers have implemented it.
-
 ## Library organization
 
 For C++ code we follow the conventions of the Boost libraries. There is a top namespace (called `scl`) in which every declaration resides. Inside this namespace, there are subnamespaces corresponding to functionality. 
 
 Code directly related to the audio processing resides in the `scl::audio` namespace hierarchy, while generic and utility code reside in their own namespaces. Some of these namespaces are simply alisases for standard library or third-party implementations, for example `scl::thread` is an alias for `std` if supported or `boost` otherwise.
+
+## C++0x support
+
+The Audio Engine requires a relatively complete implementation of the C++0x standard (see supported compilers). 
+
+### Missing standard library features
+
+On some compilers third-party libraries (i.e. Boost) are used in place of the unsupported standard libraries. These can be replaced by the standard library when all compilers have implemented it. The `scl/thread` and `scl/atomic` directories are candidates for replacement (see above).
+
+### Concepts
+
+C++0x does not support concepts, although these are needed for serious template programming. We use Boost Concept Check as a rough replacement. If proper templates are ever added to the C++ language, the relevant concept checking code could be replaced by proper definitions. All concept checks reside in `scl/concept` and `scl/audio/concept`.
 
 ## Including and linking
 
