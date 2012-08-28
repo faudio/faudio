@@ -21,8 +21,8 @@ struct not_startable
 {
 };
 
-BOOST_CONCEPT_ASSERT((scl::Startable<startable>));
-// BOOST_CONCEPT_ASSERT((scl::Startable<not_startable>)); // should not compile
+BOOST_CONCEPT_ASSERT((scl::audio::Startable<startable>));
+// BOOST_CONCEPT_ASSERT((scl::audio::Startable<not_startable>)); // should not compile
 
 TEST(AudioConcept, Startable) {}
 
@@ -30,7 +30,7 @@ TEST(AudioConcept, Startable) {}
 
 
 
-BOOST_CONCEPT_ASSERT((scl::Startable<scl::any_startable>));
+BOOST_CONCEPT_ASSERT((scl::audio::Startable<scl::audio::any_startable>));
 
 
 
@@ -83,19 +83,19 @@ struct bar
   }
 };
 
-BOOST_CONCEPT_ASSERT((scl::Startable<foo>));
-BOOST_CONCEPT_ASSERT((scl::Startable<bar>));
+BOOST_CONCEPT_ASSERT((scl::audio::Startable<foo>));
+BOOST_CONCEPT_ASSERT((scl::audio::Startable<bar>));
 
 
 TEST(AudioConcept, StartableAny)
 {
   foo x;
   bar y;
-  scl::any_startable s(x);
+  scl::audio::any_startable s(x);
   s.start();
   s.stop();
   s.abort();
-  scl::any_startable t(y);
+  scl::audio::any_startable t(y);
   t.start();
   t.stop();
   t.abort();

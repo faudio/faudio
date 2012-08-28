@@ -15,7 +15,7 @@ struct not_addressable
 {
 };
 
-BOOST_CONCEPT_ASSERT((scl::Addressable<addressable>));
-// BOOST_CONCEPT_ASSERT((scl::Addressable<not_addressable>)); // should not compile
+BOOST_CONCEPT_ASSERT((scl::audio::Addressable<addressable>));
+// BOOST_CONCEPT_ASSERT((scl::audio::Addressable<not_addressable>)); // should not compile
 
 TEST(AudioConcept, Addressable) {}
