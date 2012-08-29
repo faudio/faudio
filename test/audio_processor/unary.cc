@@ -147,7 +147,9 @@ TEST(AudioProcessor, Unary)
 
   // Lambda captures addend by reference
   in addend = 500;
-  unary_processor<in, out> p ([&] (in x) -> out { return x + addend; });
+  // unary_processor<in, out> p ([&] (in x) -> out { return x + addend; });
+  std::function<out(in)> f = [&] (in x) -> out { return x + addend; };
+  unary_processor<in, out> p (f);
 
   unit_list msg;
   in  x = 100;
