@@ -72,8 +72,8 @@ TEST(AudioProcessorRaw, Unary)
   char in[11]  = "abcdefghij";
   char out[11] = "__________";
   
-  raw_processor_ptr p { new raw_unary_processor(typ, typ, (function_type) succ, NULL) };
-  raw_processor_ptr q { new raw_unary_processor(typ, typ, (function_type) pred, NULL) };
+  raw_processor_ptr p { new raw_unary_processor(typ, typ, (function_type) succ, NULL, NULL) };
+  raw_processor_ptr q { new raw_unary_processor(typ, typ, (function_type) pred, NULL, NULL) };
 
   p->prepare(NULL);
   q->process(NULL, (ptr_t) in, (ptr_t) out, NULL);
@@ -90,8 +90,8 @@ TEST(AudioProcessorRaw, Seq)
   char in[11]  = "abcdefghij";
   char out[11] = "__________";
   
-  raw_processor_ptr p { new raw_unary_processor(typ, typ, (function_type) succ, NULL) };
-  raw_processor_ptr q { new raw_unary_processor(typ, typ, (function_type) pred, NULL) };
+  raw_processor_ptr p { new raw_unary_processor(typ, typ, (function_type) succ, NULL, NULL) };
+  raw_processor_ptr q { new raw_unary_processor(typ, typ, (function_type) pred, NULL, NULL) };
   raw_processor_ptr s { new raw_sequence_processor(p, p) };
   raw_processor_ptr t { new raw_sequence_processor(s, s) };
 
@@ -109,8 +109,8 @@ TEST(AudioProcessorRaw, Par)
   char in[21]  = "abcdefghijabcdefghij";
   char out[21] = "____________________";
   
-  raw_processor_ptr p { new raw_unary_processor(typ, typ, (function_type) succ, NULL) };
-  raw_processor_ptr q { new raw_unary_processor(typ, typ, (function_type) pred, NULL) };
+  raw_processor_ptr p { new raw_unary_processor(typ, typ, (function_type) succ, NULL, NULL) };
+  raw_processor_ptr q { new raw_unary_processor(typ, typ, (function_type) pred, NULL, NULL) };
   raw_processor_ptr s { new raw_parallel_processor(p, q) };
 
   s->prepare(NULL);

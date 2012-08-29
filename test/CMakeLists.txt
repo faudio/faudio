@@ -38,7 +38,7 @@ if(BUILD_TESTS)
   set_target_properties(scl_audio_tests PROPERTIES
     OUTPUT_NAME               "scl_audio_tests"
     RUNTIME_OUTPUT_DIRECTORY  "../bin" 
-   )
+   )     
   target_link_libraries(scl_audio_tests
     ${DEPENDENCIES}
     ${GTEST_LIBRARY}

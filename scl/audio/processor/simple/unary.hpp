@@ -21,21 +21,31 @@ namespace scl
       {
         audio_type in_type;
         audio_type out_type;
-
-        void (*function)(ptr_t data, ptr_t input, ptr_t output);
-        ptr_t data;
-
       public:
         using function_type = void (*) (ptr_t data, ptr_t input, ptr_t output);
-
-        raw_unary_processor(audio_type in_type,
-                            audio_type out_type,
+        using deleter_type  = void (*) (ptr_t data);
+        using data_type     = ptr_t;
+      private:
+        function_type function;
+        deleter_type deleter;
+        data_type data;
+      public:
+        raw_unary_processor(audio_type    in_type,
+                            audio_type    out_type,
                             function_type function,
-                            ptr_t data)
+                            deleter_type  deleter,
+                            data_type     data)
           : in_type(in_type)
           , out_type(out_type)
           , function(function)
+          , deleter(deleter)
           , data(data) {}
+        
+        ~raw_unary_processor()
+        {
+          if (deleter)
+            deleter(data);
+        }
 
         audio_type input_type()
         {
@@ -82,12 +92,17 @@ namespace scl
           f(a, b);
         }
 
-        static void function(ptr_t f, ptr_t x, ptr_t y)
+        static void caller(ptr_t f, ptr_t x, ptr_t y)
         {
           ((this_type*) f)->call(x, y);
         }
 
-        static ptr_t value(std::function<void(const A&, B&)> f)
+        static void deleter(ptr_t f)
+        { 
+          delete ((this_type*) f);
+        }
+
+        static ptr_t data(std::function<void(const A&, B&)> f)
         {
           return (ptr_t) new this_type(f);
         }
@@ -112,8 +127,9 @@ namespace scl
             new raw_unary_processor(
               audio_type::get<A>(),
               audio_type::get<B>(),
-              unary_closure<A, B>::function,
-              unary_closure<A, B>::value(f))) {}
+              unary_closure<A, B>::caller,
+              unary_closure<A, B>::deleter,
+              unary_closure<A, B>::data(f))) {}
 
         void load(const unit& state)
         {
