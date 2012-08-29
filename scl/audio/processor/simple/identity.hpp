@@ -13,52 +13,9 @@ namespace scl
   {
     namespace processor
     {
-      using std::pair;
-      using unit = std::nullptr_t;
-
-      template <class A>
-      class identity_processor
-        : public processor <
-        unit, unit, unit,
-        unit, unit,
-        A, A >
-      {
-      public:
-        identity_processor() = default;
-
-        unit prepare(const unit& argument)
-        {
-        }
-        unit cleanup(unit& result)
-        {
-        }
-        unit load(const unit& state)
-        {
-        }
-        unit store(unit& state)
-        {
-        }
-        bool is_ready()
-        {
-          return true;
-        }
-        unit process(const std::list<unit>& in_msg,
-                     const A& input,
-                     A& output,
-                     std::list<unit>& output_messages)
-        {
-          output = input;
-        }
-      };
-
-
-
-
-
-
       // a ~> a
       class raw_identity_processor : public raw_processor
-      {                                               
+      {
         audio_type type;
       public:
         using parent_type = raw_processor;
@@ -96,6 +53,49 @@ namespace scl
           scl::raw_copy(input, input + size, output);
         }
       };
+
+      template <class A>
+      class identity_processor : public processor <
+        unit, unit, unit,
+        unit, unit,
+        A, A >
+      {
+        raw_processor_ptr raw;
+      public:
+        identity_processor()
+          : raw(
+            new raw_identity_processor(
+              audio_type::get<A>())) {}
+
+        unit load(const unit& state)
+        {
+          raw->load(state);
+        }
+        unit store(unit& state)
+        {
+          raw->load(state);
+        }
+        unit prepare(const unit& argument)
+        {
+          raw->load(argument);
+        }
+        unit cleanup(unit& result)
+        {
+          raw->load(result);
+        }
+        bool is_ready()
+        {
+          return raw->is_ready();
+        }
+        unit process(const std::list<unit>& input_messages,
+                     const A& input,
+                     A& output,
+                     std::list<unit>& output_messages)
+        {
+          raw->process(input_messages, input, output, output_messages);
+        }
+      };
+
     }
   }
 }

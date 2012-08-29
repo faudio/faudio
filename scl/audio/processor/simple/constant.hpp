@@ -13,49 +13,6 @@ namespace scl
   {
     namespace processor
     {
-      using std::pair;
-
-      // template <class A, class B>
-      // class constant_processor
-      //   : public processor < void, void, void,
-      //     void, void,
-      //     A, B >
-      // {
-      // public:
-      //   constant_processor(output_type value)
-      //     : value(value) {}
-      //
-      //   void prepare(const argument_type& argument)
-      //   {
-      //   }
-      //   void cleanup(result_type& result)
-      //   {
-      //   }
-      //   void load(const state_type& state)
-      //   {
-      //   }
-      //   void store(state_type& state)
-      //   {
-      //   }
-      //   bool is_ready()
-      //   {
-      //     return value ? true : false;
-      //   }
-      //   void process(const list<input_message_type>& input_messages,
-      //                const input_type& input,
-      //                output_type& output,
-      //                list<output_message_type>& output_messages)
-      //   {
-      //     output = value;
-      //   }
-      //
-      // private:
-      //   output_type value;
-      // };
-
-
-
-
 
       // _ ~> a
       class raw_constant_processor : public raw_processor
@@ -105,6 +62,50 @@ namespace scl
                      ptr_t out_msg)
         {
           scl::raw_copy(buffer.begin(), buffer.end(), output);
+        }
+      };
+
+      template <class A, class B>
+      class constant_processor
+        : public processor <
+        unit, unit, unit,
+        unit, unit,
+        A, B >
+      {
+        raw_processor_ptr raw;
+      public:
+        constant_processor()
+          : raw(
+            new raw_constant_processor(
+              audio_type::get<A>(),
+              audio_type::get<B>())) {}
+
+        unit load(const unit& state)
+        {
+          raw->load(state);
+        }
+        unit store(unit& state)
+        {
+          raw->load(state);
+        }
+        unit prepare(const unit& argument)
+        {
+          raw->load(argument);
+        }
+        unit cleanup(unit& result)
+        {
+          raw->load(result);
+        }
+        bool is_ready()
+        {
+          return raw->is_ready();
+        }
+        unit process(const std::list<unit>& input_messages,
+                     const A& input,
+                     A& output,
+                     std::list<unit>& output_messages)
+        {
+          raw->process(input_messages, input, output, output_messages);
         }
       };
 

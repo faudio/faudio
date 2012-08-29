@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <utility>
 #include <scl/utility.hpp>
+#include <scl/audio/audio_types.hpp>
 #include <scl/audio/processor.hpp>
 
 namespace scl
@@ -98,7 +99,7 @@ namespace scl
                      ptr_t input,
                      ptr_t output,
                      ptr_t out_msg)
-        {  
+        {
           ptr_t input2  = input  + input_type().offset();
           ptr_t output2 = output + output_type().offset();
           x->process(NULL, input, output, NULL);

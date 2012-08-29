@@ -107,7 +107,7 @@ namespace scl
     };
 
     enum class audio_type_tag
-    {      
+    {
       int8,
       int16,
       int32,

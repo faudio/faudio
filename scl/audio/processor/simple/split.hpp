@@ -2,8 +2,8 @@
 #pragma once
 
 #include <algorithm>
-#include <utility>
 #include <scl/utility.hpp>
+#include <scl/audio/audio_types.hpp>
 #include <scl/audio/processor.hpp>
 
 namespace scl
@@ -12,48 +12,6 @@ namespace scl
   {
     namespace processor
     {
-      using std::pair;
-
-      // template <class A>
-      // class split_processor
-      //   : public processor < void, void, void,
-      //     void, void,
-      //     A, pair<A, A >>
-      // {
-      // public:
-      //   split_processor() = default;
-      //
-      //   void prepare(const argument_type& argument)
-      //   {
-      //   }
-      //   void cleanup(result_type& result)
-      //   {
-      //   }
-      //   void load(const state_type& state)
-      //   {
-      //   }
-      //   void store(state_type& state)
-      //   {
-      //   }
-      //   bool is_ready()
-      //   {
-      //     return true;
-      //   }
-      //   void process(const list<input_message_type>& input_messages,
-      //                const input_type& input,
-      //                output_type& output,
-      //                list<output_message_type>& output_messages)
-      //   {
-      //     output.first  = input;
-      //     output.second = input;
-      //   }
-      // };
-
-
-
-
-
-
       // a ~> (a,a)
       class raw_split_processor : public raw_processor
       {
@@ -94,6 +52,49 @@ namespace scl
           size_t offset = out_type.offset();
           scl::raw_copy(input, input + size, output);
           scl::raw_copy(input, input + size, output + offset);
+        }
+      };
+
+      template <class A>
+      class split_processor
+        : public processor <
+        unit, unit, unit,
+        unit, unit,
+        A, typename audio_pair<A, A>::type >
+      {                                        
+        raw_processor_ptr raw;
+      public:
+        split_processor()
+          : raw(
+            new raw_split_processor(
+              audio_type::get<A>())) {}
+
+        unit load(const unit& state)
+        {
+          raw->load(state);
+        }
+        unit store(unit& state)
+        {
+          raw->load(state);
+        }
+        unit prepare(const unit& argument)
+        {
+          raw->load(argument);
+        }
+        unit cleanup(unit& result)
+        {
+          raw->load(result);
+        }
+        bool is_ready()
+        {
+          return raw->is_ready();
+        }
+        unit process(const std::list<unit>& input_messages,
+                     const A& input,
+                     A& output,
+                     std::list<unit>& output_messages)
+        {
+          raw->process(input_messages, input, output, output_messages);
         }
       };
     }

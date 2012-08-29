@@ -1,7 +1,9 @@
 
 #pragma once
 
+#include <list>
 #include <scl/concept.hpp>
+#include <scl/audio/concept/addressable.hpp>
 
 namespace scl
 {
