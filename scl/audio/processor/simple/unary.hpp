@@ -26,7 +26,7 @@ namespace scl
         ptr_t data;
 
       public:
-        using function_type = void (*)(ptr_t data, ptr_t input, ptr_t output);
+        using function_type = void (*) (ptr_t data, ptr_t input, ptr_t output);
 
         raw_unary_processor(audio_type in_type,
                             audio_type out_type,
@@ -75,11 +75,11 @@ namespace scl
         unary_closure(std::function<void(const A&, B&)> f)
           : f(f) {}
 
-        inline void call(ptr_t in, ptr_t out)
+        inline void call(ptr_t x, ptr_t y)
         {
-          const A& in2  = *(const A*)(in);
-          B&       out2 = *(B*)(out);
-          f(in2, out2);
+          const A& a = *(const A*) (x);
+          B&       b = *(B*)       (y);
+          f(a, b);
         }
 
         static void function(ptr_t f, ptr_t x, ptr_t y)
@@ -101,9 +101,9 @@ namespace scl
       template <class A, class B>
       class unary_processor
         : public processor <
-        unit, unit, unit,
-        unit, unit,
-        A, B >
+            unit, unit, unit,
+            unit, unit,
+            A, B >
       {
         raw_processor_ptr raw;
       public:
@@ -113,8 +113,7 @@ namespace scl
               audio_type::get<A>(),
               audio_type::get<B>(),
               unary_closure<A, B>::function,
-              unary_closure<A, B>::value(f))
-          ) {}
+              unary_closure<A, B>::value(f))) {}
 
         void load(const unit& state)
         {
