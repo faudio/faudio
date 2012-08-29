@@ -77,39 +77,66 @@ namespace scl
 
 
       template <class A, class B>
-      class unary_closure
+      class unary_ref_closure
       {
-        using this_type = unary_closure<A, B>;
+        using this_type = unary_ref_closure<A, B>;
         std::function<void(const A&, B&)> f;
       public:
-        unary_closure(std::function<void(const A&, B&)> f)
+        unary_ref_closure(std::function<void(const A&, B&)> f)
           : f(f) {}
-
+      
         inline void call(ptr_t x, ptr_t y)
         {
           const A& a = *(const A*) (x);
           B&       b = *(B*)       (y);
           f(a, b);
         }
+      
+        static void caller(ptr_t f, ptr_t x, ptr_t y)
+        {
+          ((this_type*) f)->call(x, y);
+        }
+        static void deleter(ptr_t f)
+        { 
+          delete ((this_type*) f);
+        }
+        static ptr_t data(std::function<void(const A&, B&)> f)
+        {
+          return (ptr_t) new this_type(f);
+        }
+      };   
+
+      template <class A, class B>
+      class unary_val_closure
+      {
+        using this_type = unary_val_closure<A, B>;
+        std::function<B(A)> f;
+      public:
+        unary_val_closure(std::function<B(A)> f)
+          : f(f) {}
+
+        inline void call(ptr_t x, ptr_t y)
+        {      
+          A a;
+          scl::raw_copy(x, x + sizeof(A), (ptr_t) &a);
+          B b = f(a);
+          scl::raw_copy((ptr_t)&b, (ptr_t)&b + sizeof(B), y);
+        }
 
         static void caller(ptr_t f, ptr_t x, ptr_t y)
         {
           ((this_type*) f)->call(x, y);
         }
-
         static void deleter(ptr_t f)
         { 
           delete ((this_type*) f);
         }
-
-        static ptr_t data(std::function<void(const A&, B&)> f)
+        static ptr_t data(std::function<B(A)> f)
         {
           return (ptr_t) new this_type(f);
         }
       };
 
-      // TODO storage duration of the closure?
-      // Maybe refactor raw_unary to pass this as prepare()
 
       /** @endcond internal */
 
@@ -122,14 +149,23 @@ namespace scl
       {
         raw_processor_ptr raw;
       public:
+        unary_processor(std::function<B(A)> f)
+          : raw(
+            new raw_unary_processor(
+              audio_type::get<A>(),
+              audio_type::get<B>(),
+              unary_val_closure<A, B>::caller,
+              unary_val_closure<A, B>::deleter,
+              unary_val_closure<A, B>::data(f))) {}
+
         unary_processor(std::function<void(const A&, B&)> f)
           : raw(
             new raw_unary_processor(
               audio_type::get<A>(),
               audio_type::get<B>(),
-              unary_closure<A, B>::caller,
-              unary_closure<A, B>::deleter,
-              unary_closure<A, B>::data(f))) {}
+              unary_ref_closure<A, B>::caller,
+              unary_ref_closure<A, B>::deleter,
+              unary_ref_closure<A, B>::data(f))) {}
 
         void load(const unit& state)
         {
