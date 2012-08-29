@@ -13,6 +13,8 @@ namespace scl
   {
     namespace processor
     {
+      /** @cond internal */
+
       // (a ~> b) -> (b ~> c) -> (a ~> c)
       class raw_sequence_processor : public raw_processor
       {
@@ -71,6 +73,8 @@ namespace scl
           f->process(NULL, buffer.begin(), output, NULL);
         }
       };
+      
+      /** @endcond internal */
 
       // template <class A, class B, class C>
       // class sequence_processor
@@ -81,7 +85,7 @@ namespace scl
       // public:
       //   sequence_processor(value_type value)
       //     : value(value) {}
-      // };      
+      // };
 
     }
   }

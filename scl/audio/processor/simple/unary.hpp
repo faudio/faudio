@@ -14,6 +14,8 @@ namespace scl
   {
     namespace processor
     {
+      /** @cond internal */
+
       // (a -> b) -> (a ~> b)
       class raw_unary_processor : public raw_processor
       {
@@ -64,31 +66,37 @@ namespace scl
 
 
 
-
-      struct dynamic_unary
-      {
-        virtual void call(ptr_t in, ptr_t out) = 0;
-      };
-      inline void call_dynamic_unary(ptr_t f, ptr_t x, ptr_t y)
-      {
-        ((dynamic_unary*) f)->call(x, y);
-      }
-
       template <class A, class B>
-      struct dynamic_unary_wrapper : public dynamic_unary
+      class unary_closure
       {
+        using this_type = unary_closure<A, B>;
         std::function<void(const A&, B&)> f;
-        dynamic_unary_wrapper(std::function<void(const A&, B&)> f) 
+      public:
+        unary_closure(std::function<void(const A&, B&)> f)
           : f(f) {}
 
-        void call(ptr_t in, ptr_t out)
+        inline void call(ptr_t in, ptr_t out)
         {
-          // TODO translation
-          const A& in2  = *(const A*) (in);
-          B&       out2 = *(B*)       (out);
+          const A& in2  = *(const A*)(in);
+          B&       out2 = *(B*)(out);
           f(in2, out2);
         }
+
+        static void function(ptr_t f, ptr_t x, ptr_t y)
+        {
+          ((this_type*) f)->call(x, y);
+        }
+
+        static ptr_t value(std::function<void(const A&, B&)> f)
+        {
+          return (ptr_t) new this_type(f);
+        }
       };
+
+      // TODO storage duration of the closure?
+      // Maybe refactor raw_unary to pass this as prepare()
+
+      /** @endcond internal */
 
       template <class A, class B>
       class unary_processor
@@ -97,34 +105,32 @@ namespace scl
         unit, unit,
         A, B >
       {
-        std::function<void(const A&, B&)> function;
         raw_processor_ptr raw;
       public:
-        unary_processor(std::function<void(const A&,B&)> function)
-          : function(function)
-          , raw(
+        unary_processor(std::function<void(const A&, B&)> f)
+          : raw(
             new raw_unary_processor(
               audio_type::get<A>(),
               audio_type::get<B>(),
-              call_dynamic_unary,
-              (ptr_t) new dynamic_unary_wrapper<A,B>(function))
+              unary_closure<A, B>::function,
+              unary_closure<A, B>::value(f))
           ) {}
-        
+
         void load(const unit& state)
         {
-          raw->load(state);
+          raw->load((ptr_t) &state);
         }
         void store(unit& state)
         {
-          raw->load(state);
+          raw->store((ptr_t) &state);
         }
         void prepare(const unit& argument)
         {
-          raw->load(argument);
+          raw->prepare((ptr_t) &argument);
         }
         void cleanup(unit& result)
         {
-          raw->load(result);
+          raw->cleanup((ptr_t) &result);
         }
         bool is_ready()
         {
@@ -135,9 +141,10 @@ namespace scl
                      A& output,
                      std::list<unit>& output_messages)
         {
-          raw->process((ptr_t) &input_messages, 
-            (ptr_t) &input, 
-            (ptr_t) &output, 
+          raw->process(
+            (ptr_t) &input_messages,
+            (ptr_t) &input,
+            (ptr_t) &output,
             (ptr_t) &output_messages);
         }
       };

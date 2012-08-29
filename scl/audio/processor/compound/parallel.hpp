@@ -51,7 +51,7 @@ namespace scl
       // };
 
 
-
+      /** @cond internal */
 
       // (a ~> b) -> (c ~> d) -> ((a,b) ~> (c,d))
       class raw_parallel_processor : public raw_processor
@@ -106,6 +106,8 @@ namespace scl
           y->process(NULL, input2, output2, NULL);
         }
       };
+
+      /** @endcond internal */
 
     }
   }

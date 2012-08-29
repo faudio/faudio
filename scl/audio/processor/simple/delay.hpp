@@ -12,10 +12,7 @@ namespace scl
   {
     namespace processor
     {
-
-
-
-
+      /** @cond internal */
 
       // a ~> a
       class raw_delay_processor : public raw_processor
@@ -61,6 +58,8 @@ namespace scl
           // scl::raw_copy(input, input + size, buffer.begin());
         }
       };
+
+      /** @endcond internal */
 
     }
   }

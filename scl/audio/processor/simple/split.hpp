@@ -12,6 +12,8 @@ namespace scl
   {
     namespace processor
     {
+      /** @cond internal */
+
       // a ~> (a,a)
       class raw_split_processor : public raw_processor
       {
@@ -55,6 +57,8 @@ namespace scl
         }
       };
 
+      /** @endcond internal */
+
       template <class A>
       class split_processor
         : public processor <
@@ -71,19 +75,19 @@ namespace scl
 
         void load(const unit& state)
         {
-          raw->load(state);
+          raw->load((ptr_t) &state);
         }
         void store(unit& state)
         {
-          raw->load(state);
+          raw->store((ptr_t) &state);
         }
         void prepare(const unit& argument)
         {
-          raw->load(argument);
+          raw->prepare((ptr_t) &argument);
         }
         void cleanup(unit& result)
         {
-          raw->load(result);
+          raw->cleanup((ptr_t) &result);
         }
         bool is_ready()
         {
@@ -91,10 +95,14 @@ namespace scl
         }
         void process(const std::list<unit>& input_messages,
                      const A& input,
-                     A& output,
+                     typename audio_pair<A, A>::type& output,
                      std::list<unit>& output_messages)
         {
-          raw->process(input_messages, input, output, output_messages);
+          raw->process(
+            (ptr_t) &input_messages,
+            (ptr_t) &input,
+            (ptr_t) &output,
+            (ptr_t) &output_messages);
         }
       };
     }

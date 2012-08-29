@@ -171,7 +171,7 @@ namespace scl
 
 
 
-
+      /** @cond internal */
 
       class raw_processor
       {
@@ -191,6 +191,8 @@ namespace scl
       };
 
       using raw_processor_ptr = std::shared_ptr<raw_processor>;
+
+      /** @endcond internal */
     }
   }
 }

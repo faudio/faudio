@@ -13,6 +13,7 @@ namespace scl
   {
     namespace processor
     {
+      /** @cond internal */
 
       // _ ~> a
       class raw_constant_processor : public raw_processor
@@ -65,6 +66,8 @@ namespace scl
         }
       };
 
+      /** @endcond internal */
+
       template <class A, class B>
       class constant_processor
         : public processor <
@@ -82,19 +85,19 @@ namespace scl
 
         void load(const unit& state)
         {
-          raw->load(state);
+          raw->load((ptr_t) &state);
         }
         void store(unit& state)
         {
-          raw->load(state);
+          raw->store((ptr_t) &state);
         }
-        void prepare(const unit& argument)
+        void prepare(const B& argument)
         {
-          raw->load(argument);
+          raw->prepare((ptr_t) &argument);
         }
         void cleanup(unit& result)
         {
-          raw->load(result);
+          raw->cleanup((ptr_t) &result);
         }
         bool is_ready()
         {
@@ -105,7 +108,11 @@ namespace scl
                      A& output,
                      std::list<unit>& output_messages)
         {
-          raw->process(input_messages, input, output, output_messages);
+          raw->process(
+            (ptr_t) &input_messages,
+            (ptr_t) &input,
+            (ptr_t) &output,
+            (ptr_t) &output_messages);
         }
       };
 

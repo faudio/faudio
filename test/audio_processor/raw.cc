@@ -18,7 +18,7 @@ using namespace scl;
 using namespace scl::audio;
 using namespace scl::audio::processor;
 
-TEST(AudioProcessor, RawIdentity)
+TEST(AudioProcessorRaw, Identity)
 {
   audio_type typ = audio_type::vector(audio_type::int8(), 10);
   char in[11]  = "abcdefghij";
@@ -32,7 +32,7 @@ TEST(AudioProcessor, RawIdentity)
   std::cout << "Output: " << out << "\n";
 }
 
-TEST(AudioProcessor, RawConstant)
+TEST(AudioProcessorRaw, Constant)
 {
   audio_type typ = audio_type::vector(audio_type::int8(), 10);
   char in[11]  = "abcdefghij";
@@ -47,7 +47,7 @@ TEST(AudioProcessor, RawConstant)
   std::cout << "Output: " << out << "\n";
 }
 
-TEST(AudioProcessor, RawSplit)
+TEST(AudioProcessorRaw, Split)
 {
   audio_type typ = audio_type::vector(audio_type::int8(), 10);
   char in[11]  = "abcdefghij";
@@ -65,7 +65,7 @@ TEST(AudioProcessor, RawSplit)
 void succ(void* _, char* x, char* r) { for(int i = 0; i < 10; ++i) *(r+i) = *(x+i) + 1; }
 void pred(void* _, char* x, char* r) { for(int i = 0; i < 10; ++i) *(r+i) = *(x+i) - 1; }
 
-TEST(AudioProcessor, RawUnary)
+TEST(AudioProcessorRaw, Unary)
 { 
   using function_type = raw_unary_processor::function_type;
   audio_type typ = audio_type::vector(audio_type::int8(), 10);
@@ -83,7 +83,7 @@ TEST(AudioProcessor, RawUnary)
 }
 
 
-TEST(AudioProcessor, RawSeq)
+TEST(AudioProcessorRaw, Seq)
 { 
   using function_type = raw_unary_processor::function_type;
   audio_type typ = audio_type::vector(audio_type::int8(), 10);
@@ -102,7 +102,7 @@ TEST(AudioProcessor, RawSeq)
   std::cout << "Output: " << out << "\n";
 }
 
-TEST(AudioProcessor, RawPar)
+TEST(AudioProcessorRaw, Par)
 { 
   using function_type = raw_unary_processor::function_type;
   audio_type typ = audio_type::vector(audio_type::int8(), 10);
