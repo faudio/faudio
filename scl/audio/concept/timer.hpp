@@ -7,36 +7,36 @@ namespace scl
 {
   namespace audio
   {
-  /**
-    Synopsis:
+    /**
+      Synopsis:
 
-        concept Timer<typename X>
-        {
-          typename time_type;
+          concept Timer<typename X>
+          {
+            typename time_type;
 
-          requires (LessThanComparable<time_type>);
-          requires (LowerBounded<time_type>);
+            requires (LessThanComparable<time_type>);
+            requires (LowerBounded<time_type>);
 
-          improving<time_type> X::time();
-        }
+            improving<time_type> X::time();
+          }
 
-    Models:
-      none
-  */
-  template<class X> struct Timer
-  {
-    scl_typename(time_type);
-
-    scl_requires(LessThanComparable<address_type>);
-    scl_requires(LowerBounded<address_type>);
-    scl_requires(Timer)
-
-    X x;
-    scl_usage(Timer)
+      Models:
+        none
+    */
+    template<class X> struct Timer
     {
-      improving<time_type> t = x.time();
-    }
-  };
-}
+      scl_typename(time_type);
+
+      scl_requires(LessThanComparable<address_type>);
+      scl_requires(LowerBounded<address_type>);
+      scl_requires(Timer)
+
+      X x;
+      scl_usage(Timer)
+      {
+        improving<time_type> t = x.time();
+      }
+    };
+  }
 }
 

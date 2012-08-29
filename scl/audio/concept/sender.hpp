@@ -8,31 +8,31 @@ namespace scl
 {
   namespace audio
   {
-  /**
-    Synopsis:
+    /**
+      Synopsis:
 
-        concept Sender<typename X>
-        {
-          typename message_type;
+          concept Sender<typename X>
+          {
+            typename message_type;
 
-          requires (Copyable<message_type>);
+            requires (Copyable<message_type>);
 
-          template void X::send(MessageTypeReceiver);
-        }
+            template void X::send(MessageTypeReceiver);
+          }
 
-    Models: none
-  */
-  template <class X>
-  struct Sender
-  {
-    using message_type = X::message_type;
-    BOOST_CONCEPT_ASSERT((Copyable<message_type>));
-    BOOST_CONCEPT_USAGE(Sender)
+      Models: none
+    */
+    template <class X>
+    struct Sender
     {
-    }
-  private:
-    X t;
-  };
-}
+      using message_type = X::message_type;
+      BOOST_CONCEPT_ASSERT((Copyable<message_type>));
+      BOOST_CONCEPT_USAGE(Sender)
+      {
+      }
+    private:
+      X t;
+    };
+  }
 }
 
