@@ -13,7 +13,7 @@ TEST(AudioProcessor, Constant)
 
   constant_processor<type, type> p;  
 
-  std::list<nullptr_t> msg;
+  unit_list msg;
   type x = 100;
   type c = 200;
   type y;

@@ -105,6 +105,9 @@ namespace scl
     {
       using type = unit;
     };
+    
+    using unit_list = audio_list<unit>::type;
+    using unit_pair = audio_pair<unit, unit>::type;
 
     enum class audio_type_tag
     {

@@ -20,7 +20,7 @@ TEST(AudioProcessor, Unary)
 
   unary_processor<in, out> p (f);        
 
-  std::list<nullptr_t> msg;
+  unit_list msg;
   in  x = 100;
   out y;
   p.prepare(nullptr);

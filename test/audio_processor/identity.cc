@@ -13,7 +13,7 @@ TEST(AudioProcessor, Identity)
 
   identity_processor<type> p;  
 
-  std::list<nullptr_t> msg;
+  unit_list msg;
   type x = 100;
   type y;
   p.prepare(nullptr);
@@ -30,7 +30,7 @@ TEST(AudioProcessor, IdentityVec)
 
   identity_processor<type> p;  
 
-  std::list<nullptr_t> msg;
+  unit_list msg;
   type x = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
   type y;
   p.prepare(nullptr);
