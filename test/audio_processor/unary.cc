@@ -3,6 +3,8 @@
 #include <scl/audio/concept/processor.hpp>
 #include <scl/audio/processor/simple/unary.hpp>
 
+#include <cmath>
+
 using namespace scl;
 using namespace scl::audio;
 using namespace scl::audio::processor;
@@ -137,26 +139,15 @@ using namespace scl::audio::processor;
     }
   };*/
 
-        
-
 
 TEST(AudioProcessor, Unary)
 {
   using in  = sample32;
   using out = sample32;  
 
-  // std::function<sample32(sample32)> f { [] (sample32 x) -> sample32 { return 0; } };
-  // std::function<sample32(sample32)> g = f;
-
   // Lambda captures addend by reference
   in addend = 500;
-
-  // std::function<void(const in&, out&)> f = 
-  //   [&addend] (const in& x, out& r) { r = x + addend; };
-  std::function<out(in)> f = 
-    [&addend] (in x) -> out { return x + addend; };
-
-  unary_processor<in, out> p (f);        
+  unary_processor<in, out> p ([&] (in x) -> out { return x + addend; });
 
   unit_list msg;
   in  x = 100;
@@ -171,5 +162,29 @@ TEST(AudioProcessor, Unary)
   p.process(msg, x, y, msg);  
   std::cout << "Argument: " << x << "\n";
   std::cout << "Result:   " << y << "\n";
+}
 
+
+TEST(AudioProcessor, Primitives)
+{                   
+  using in  = sample32;
+  using out = sample32;  
+
+  unary_processor<in, out> p = math32::cos;
+
+  unit_list msg;
+  in  x = 100;
+  out y;
+  p.prepare(nullptr);
+
+  x = 0.1234;
+  p.process(msg, x, y, msg);
+  
+  std::cout << "Argument: " << x << "\n";
+  std::cout << "Result:   " << y << "\n";
+
+  x = M_PI;
+  p.process(msg, x, y, msg);  
+  std::cout << "Argument: " << x << "\n";
+  std::cout << "Result:   " << y << "\n";
 }

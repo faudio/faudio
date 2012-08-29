@@ -73,7 +73,7 @@ namespace scl
           f->process(NULL, buffer.begin(), output, NULL);
         }
       };
-      
+
       /** @endcond internal */
 
       // template <class A, class B, class C>
