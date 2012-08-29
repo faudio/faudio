@@ -42,13 +42,15 @@ static bool include_info       = false;
 inline std::list<audio_type> first_generation()
 {
   std::list<audio_type> gen;
+  gen.push_back(audio_type::int8());
+  gen.push_back(audio_type::int16());
+  gen.push_back(audio_type::int32());
   gen.push_back(audio_type::sample32());
   gen.push_back(audio_type::sample64());
   return gen;
 }
 
 inline std::list<audio_type> next_generation(std::list<audio_type> prev, int max_level)
-
 {
   std::list<audio_type> next;
   for (audio_type type : prev)
@@ -56,6 +58,7 @@ inline std::list<audio_type> next_generation(std::list<audio_type> prev, int max
     if (type.levels() < max_level)
     {
       next.push_back(audio_type::list(type));
+      
       static constexpr size_t powers[] = { 512 };
       for (size_t p : powers)
         next.push_back(audio_type::vector(type, p));
