@@ -62,8 +62,8 @@ TEST(AudioProcessor, RawSplit)
 }
 
 
-void succ(char* x, char* r) { for(int i = 0; i < 10; ++i) *(r+i) = *(x+i) + 1; }
-void pred(char* x, char* r) { for(int i = 0; i < 10; ++i) *(r+i) = *(x+i) - 1; }
+void succ(void* _, char* x, char* r) { for(int i = 0; i < 10; ++i) *(r+i) = *(x+i) + 1; }
+void pred(void* _, char* x, char* r) { for(int i = 0; i < 10; ++i) *(r+i) = *(x+i) - 1; }
 
 TEST(AudioProcessor, RawUnary)
 { 
@@ -72,8 +72,8 @@ TEST(AudioProcessor, RawUnary)
   char in[11]  = "abcdefghij";
   char out[11] = "__________";
   
-  raw_processor_ptr p { new raw_unary_processor(typ, typ, (function_type) succ) };
-  raw_processor_ptr q { new raw_unary_processor(typ, typ, (function_type) pred) };
+  raw_processor_ptr p { new raw_unary_processor(typ, typ, (function_type) succ, NULL) };
+  raw_processor_ptr q { new raw_unary_processor(typ, typ, (function_type) pred, NULL) };
 
   p->prepare(NULL);
   q->process(NULL, (ptr_t) in, (ptr_t) out, NULL);
@@ -90,8 +90,8 @@ TEST(AudioProcessor, RawSeq)
   char in[11]  = "abcdefghij";
   char out[11] = "__________";
   
-  raw_processor_ptr p { new raw_unary_processor(typ, typ, (function_type) succ) };
-  raw_processor_ptr q { new raw_unary_processor(typ, typ, (function_type) pred) };
+  raw_processor_ptr p { new raw_unary_processor(typ, typ, (function_type) succ, NULL) };
+  raw_processor_ptr q { new raw_unary_processor(typ, typ, (function_type) pred, NULL) };
   raw_processor_ptr s { new raw_sequence_processor(p, p) };
   raw_processor_ptr t { new raw_sequence_processor(s, s) };
 
@@ -109,8 +109,8 @@ TEST(AudioProcessor, RawPar)
   char in[21]  = "abcdefghijabcdefghij";
   char out[21] = "____________________";
   
-  raw_processor_ptr p { new raw_unary_processor(typ, typ, (function_type) succ) };
-  raw_processor_ptr q { new raw_unary_processor(typ, typ, (function_type) pred) };
+  raw_processor_ptr p { new raw_unary_processor(typ, typ, (function_type) succ, NULL) };
+  raw_processor_ptr q { new raw_unary_processor(typ, typ, (function_type) pred, NULL) };
   raw_processor_ptr s { new raw_parallel_processor(p, q) };
 
   s->prepare(NULL);

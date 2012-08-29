@@ -61,7 +61,7 @@ namespace scl
         unit, unit, unit,
         unit, unit,
         A, typename audio_pair<A, A>::type >
-      {                                        
+      {
         raw_processor_ptr raw;
       public:
         split_processor()
@@ -69,19 +69,19 @@ namespace scl
             new raw_split_processor(
               audio_type::get<A>())) {}
 
-        unit load(const unit& state)
+        void load(const unit& state)
         {
           raw->load(state);
         }
-        unit store(unit& state)
+        void store(unit& state)
         {
           raw->load(state);
         }
-        unit prepare(const unit& argument)
+        void prepare(const unit& argument)
         {
           raw->load(argument);
         }
-        unit cleanup(unit& result)
+        void cleanup(unit& result)
         {
           raw->load(result);
         }
@@ -89,7 +89,7 @@ namespace scl
         {
           return raw->is_ready();
         }
-        unit process(const std::list<unit>& input_messages,
+        void process(const std::list<unit>& input_messages,
                      const A& input,
                      A& output,
                      std::list<unit>& output_messages)

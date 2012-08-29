@@ -13,48 +13,6 @@ namespace scl
   {
     namespace processor
     {
-      using std::pair;
-
-      // template <class A, class B, class C>
-      // class sequence_processor
-      //   : public processor < void, void, void,
-      //     void, void,
-      //     A, C >
-      // {
-      // public:
-      //   sequence_processor(value_type value)
-      //     : value(value) {}
-      //
-      //   void prepare(const argument_type& argument)
-      //   {
-      //   }
-      //   void cleanup(result_type& result)
-      //   {
-      //   }
-      //   void load(const state_type& state)
-      //   {
-      //   }
-      //   void store(state_type& state)
-      //   {
-      //   }        7
-      //   bool is_ready()
-      //   {
-      //   }
-      //   void process(const list<input_message_type>& input_messages,
-      //                const input_type& input,
-      //                output_type& output,
-      //                list<output_message_type>& output_messages)
-      //   {
-      //   }
-      //
-      // private:
-      // };
-
-
-
-
-
-
       // (a ~> b) -> (b ~> c) -> (a ~> c)
       class raw_sequence_processor : public raw_processor
       {
@@ -113,6 +71,18 @@ namespace scl
           f->process(NULL, buffer.begin(), output, NULL);
         }
       };
+
+      // template <class A, class B, class C>
+      // class sequence_processor
+      //   : public processor < void, void, void,
+      //     void, void,
+      //     A, C >
+      // {
+      // public:
+      //   sequence_processor(value_type value)
+      //     : value(value) {}
+      // };      
+
     }
   }
 }
