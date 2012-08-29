@@ -22,16 +22,24 @@ namespace scl
       public:
         using parent_type = raw_processor;
 
-        raw_delay_processor(size_t size)
-          : raw_processor(0, 0, 0, size, size) {}
+        raw_delay_processor(size_t size) {}
+
+        audio_type input_type_value()
+        {
+          throw "TODO";
+        }
+        audio_type output_type_value()
+        {
+          throw "TODO";
+        }
 
         void load(ptr_t state) {}
         void store(ptr_t state) {}
 
         void prepare(ptr_t arg)
         {
-          size_t size = parent_type::output_size;
-          buffer.reset(size);
+          // size_t size = parent_type::output_size;
+          // buffer.reset(size);
         }
 
         void cleanup(ptr_t res)
@@ -46,7 +54,7 @@ namespace scl
 
         void process(ptr_t in_msg, ptr_t input, ptr_t output, ptr_t out_msg)
         {
-          size_t size = parent_type::output_size;
+          // size_t size = parent_type::output_size;
           // scl::raw_copy(buffer.begin(), buffer.begin() + size, output);
           // scl::raw_copy(input, input + size, buffer.begin());
         }

@@ -60,19 +60,31 @@ namespace scl
       // _ ~> a
       class raw_constant_processor : public raw_processor
       {
+        audio_type dummy_type;
+        audio_type type;
         raw_buffer buffer;
       public:
         using parent_type = raw_processor;
 
-        raw_constant_processor(size_t size)
-          : raw_processor(0, 0, 0, 0, size) {}
+        raw_constant_processor(audio_type dummy_type, audio_type type)
+          : dummy_type(dummy_type), type(type) {}
+
+        audio_type input_type()
+        {
+          return dummy_type;
+        }
+
+        audio_type output_type()
+        {
+          return type;
+        }
 
         void load(ptr_t state) {}
         void store(ptr_t state) {}
 
         void prepare(ptr_t arg)
         {
-          size_t size = parent_type::output_size;
+          size_t size = type.size();
           buffer.reset(size);
           scl::raw_copy(arg, arg + size, buffer.begin());
         }
@@ -87,10 +99,12 @@ namespace scl
           return buffer.size() > 0;
         }
 
-        void process(ptr_t in_msg, ptr_t input, ptr_t output, ptr_t out_msg)
+        void process(ptr_t in_msg,
+                     ptr_t input,
+                     ptr_t output,
+                     ptr_t out_msg)
         {
-          // size_t size = parent_type::output_size;
-          // scl::raw_copy(buffer.begin(), buffer.begin() + size, output);
+          scl::raw_copy(buffer.begin(), buffer.end(), output);
         }
       };
 

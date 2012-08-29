@@ -2,7 +2,7 @@
 aux_source_directory(atomic           ATOMIC_SRC)
 aux_source_directory(audio_concept    AUDIO_CONCEPT_SRC)
 aux_source_directory(audio_processor  AUDIO_PROCESSOR_SRC)
-aux_source_directory(audio_types      AUDIO_TYPES_SRC)
+# aux_source_directory(audio_types      AUDIO_TYPES_SRC)
 # aux_source_directory(concept          CONCEPT_SRC)
 # aux_source_directory(future           FUTURE_SRC)
 # aux_source_directory(immutable        IMMUTABLE_SRC)

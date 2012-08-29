@@ -93,7 +93,7 @@ namespace scl
     void increment()
     {
       if (!xs) return;
-      if ((i + 1) < xs->count)
+      if (i + 1 < xs->count)
         ++i;
       else
       {

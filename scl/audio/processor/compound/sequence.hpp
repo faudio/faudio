@@ -57,19 +57,27 @@ namespace scl
       // (a ~> b) -> (b ~> c) -> (a ~> c)
       class raw_sequence_processor : public raw_processor
       {
-        raw_processor_ptr f, g;
+        raw_processor_ptr g;
+        raw_processor_ptr f;
+        raw_buffer buffer;
       public:
         using parent_type = raw_processor;
 
-        raw_sequence_processor(raw_processor_ptr f,
-                               raw_processor_ptr g)
-          : raw_processor(0, 0, 0,
-                          f->input_size,
-                          g->output_size)
-          , f(f)
-          , g(g)
+        raw_sequence_processor(raw_processor_ptr g,
+                               raw_processor_ptr f)
+          : g(g), f(f)
         {
-          assert(g->input_size == 0 || f->output_size == g->input_size);
+          assert(g->output_type() == f->input_type());
+        }
+
+        audio_type input_type()
+        {
+          return g->input_type();
+        }
+
+        audio_type output_type()
+        {
+          return f->output_type();
         }
 
         void load(ptr_t state) {}
@@ -77,36 +85,31 @@ namespace scl
 
         void prepare(ptr_t arg)
         {
+          size_t size = g->output_type().size();
+// std::cout << "-------- buffer size: " << size << "\n";
+          buffer.reset(size);
+          g->prepare(arg); // TODO is this right?
           f->prepare(arg);
-          g->prepare(arg);
         }
 
         void cleanup(ptr_t res)
         {
+          g->cleanup(res); // TODO is this right?
           f->cleanup(res);
-          g->cleanup(res);
         }
 
         bool is_ready()
         {
-          return f->is_ready() && g->is_ready();
+          return g->is_ready() && f->is_ready();
         }
 
-        void process(ptr_t in_msg, ptr_t input, ptr_t output, ptr_t out_msg)
+        void process(ptr_t in_msg,
+                     ptr_t input,
+                     ptr_t output,
+                     ptr_t out_msg)
         {
-          size_t size = parent_type::input_size;
-          // if (f->input_size < g->output_size) // compare sizes
-          // {
-          //   f->process(in_msg, input, output, out_msg);
-          //   g->process(in_msg, output, input, out_msg);
-          //   scl::raw_copy(input, input + size, output);
-          // }
-          // else
-          // {
-          //   scl::raw_copy(input, input + size, output);
-          //   f->process(in_msg, output, input, out_msg);
-          //   g->process(in_msg, input, output, out_msg);
-          // }
+          g->process(NULL, input, buffer.begin(), NULL);
+          f->process(NULL, buffer.begin(), output, NULL);
         }
       };
     }

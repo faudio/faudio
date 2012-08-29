@@ -57,13 +57,22 @@ namespace scl
       // a ~> (a,a)
       class raw_split_processor : public raw_processor
       {
+        audio_type in_type;
+        audio_type out_type;
       public:
         using parent_type = raw_processor;
 
-        raw_split_processor(
-          size_t size
-        )
-          : raw_processor(0, 0, 0, size, size * 2) {}
+        raw_split_processor(audio_type type)
+          : in_type(type), out_type(audio_type::pair(type, type)) {}
+
+        audio_type input_type()
+        {
+          return in_type;
+        }
+        audio_type output_type()
+        {
+          return out_type;
+        }
 
         void load(ptr_t state) {}
         void store(ptr_t state) {}
@@ -76,11 +85,15 @@ namespace scl
           return true;
         }
 
-        void process(ptr_t in_msg, ptr_t input, ptr_t output, ptr_t out_msg)
+        void process(ptr_t in_msg,
+                     ptr_t input,
+                     ptr_t output,
+                     ptr_t out_msg)
         {
-          size_t size = parent_type::input_size;
-          // scl::raw_copy(input, input + size, output);
-          // scl::raw_copy(input, input + size, output + size);
+          size_t size   = in_type.size();
+          size_t offset = out_type.offset();
+          scl::raw_copy(input, input + size, output);
+          scl::raw_copy(input, input + size, output + offset);
         }
       };
     }

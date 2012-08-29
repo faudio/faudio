@@ -66,10 +66,17 @@ namespace scl
           size_t first_size,
           size_t second_size,
           size_t out_size
-        )
-          : raw_processor(0, 0, 0, first_size + second_size, out_size)
+        ) {}
+
+        audio_type input_type_value()
         {
+          throw "TODO";
         }
+        audio_type output_type_value()
+        {
+          throw "TODO";
+        }
+
         void prepare(ptr_t argument) {}
         void cleanup(ptr_t argument) {}
         void load(ptr_t argument) {}

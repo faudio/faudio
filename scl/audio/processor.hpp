@@ -193,30 +193,9 @@ namespace scl
       class raw_processor
       {
       public:
-        const size_t state_size;
-        const size_t argument_size;
-        const size_t result_size;
-        const size_t input_size;
-        const size_t output_size;
-        raw_processor
-        (
-          size_t state_size,
-          size_t argument_size,
-          size_t result_size,
-          size_t input_size,
-          size_t output_size
-          // bool   input_ptr, FIXME not sure about this
-          // bool   output_ptr
-        ) :
-          state_size(state_size),
-          argument_size(argument_size),
-          result_size(result_size),
-          input_size(input_size),
-          output_size(output_size)
-        {}
         virtual ~raw_processor() {}
-        virtual audio_type input_type_value() {}
-        virtual audio_type output_type_value() {}
+        virtual audio_type input_type() = 0;
+        virtual audio_type output_type() = 0;
         virtual void prepare(ptr_t argument) = 0;
         virtual void cleanup(ptr_t argument) = 0;
         virtual void load(ptr_t argument) = 0;

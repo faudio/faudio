@@ -58,12 +58,23 @@ namespace scl
 
       // a ~> a
       class raw_identity_processor : public raw_processor
-      {
+      {                                               
+        audio_type type;
       public:
         using parent_type = raw_processor;
 
-        raw_identity_processor(size_t size)
-          : raw_processor(0, 0, 0, size, size) {}
+        raw_identity_processor(audio_type type)
+          : type(type) {}
+
+        audio_type input_type()
+        {
+          return type;
+        }
+
+        audio_type output_type()
+        {
+          return type;
+        }
 
         void load(ptr_t state) {}
         void store(ptr_t state) {}
@@ -76,10 +87,13 @@ namespace scl
           return true;
         }
 
-        void process(ptr_t in_msg, ptr_t input, ptr_t output, ptr_t out_msg)
+        void process(ptr_t in_msg,
+                     ptr_t input,
+                     ptr_t output,
+                     ptr_t out_msg)
         {
-          // size_t size = parent_type::input_size;
-          // scl::raw_copy(input, input + size, output);
+          size_t size = type.size();
+          scl::raw_copy(input, input + size, output);
         }
       };
     }

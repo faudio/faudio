@@ -14,7 +14,10 @@ namespace scl
   {
     /*
       Type system of audio computations:
-          
+
+          int8          Signed 8-bit integer
+          int32         Signed 32-bit integer
+          int64         Signed 64-bit integer
           sample32      32-bit floating point sample
           sample64      64-bit floating point sample
           midi_message  Midi message
@@ -23,6 +26,7 @@ namespace scl
           (A,B)         Pair of A and B
           [A]           Variable sized list of A
           {A x N}       N-sized array of A
+          A ~> B        Processor from A to B
 
           identity : a ~> a
           const    : b ~> a
@@ -62,17 +66,20 @@ namespace scl
 
       Binary format:
         - Concrete types maps to their binary representation
-        - (A,B)  maps to the binary representation of A padded with zero to occupy 8n bytes,
-          followed by the binary representation of B padded with 0 to occupy 8n bytes
-        - <A x N> maps to an array of N elements of type A
-        - [A] maps to a chase of A
+        - (A,B)  maps to the binary representation of A followed by a padding, followed by the represention of B folowed by a padding
+          - The size and offset of (A,B) is determined by audio_type
+        - <A x N> maps to A[N]
+        - [A] maps to chase<A>::track_pointer
     */
 
     constexpr size_t max_frames = 4096;
 
-    using unit     = nullptr_t;
+    using int8     = int8_t;
+    using int16    = int16_t;
+    using int32    = int32_t;
     using sample32 = float;
     using sample64 = double;
+    using unit     = nullptr_t;
 
     template <class A, class B> struct audio_pair
     {
@@ -91,15 +98,19 @@ namespace scl
 
     template <class Sample, int N> struct audio_channels
     {
-      using type = typename audio_pair<Sample, typename audio_channels<Sample, N - 1>::type>::type;
+      using type = typename audio_pair < Sample, typename audio_channels < Sample, N - 1 >::type >::type;
     };
+
     template <class Sample> struct audio_channels<Sample, 0>
     {
-      using type = unit; // FIXME
+      using type = unit;
     };
 
     enum class audio_type_tag
-    {
+    {      
+      int8,
+      int16,
+      int32,
       sample32,
       sample64,
       unit,
@@ -144,7 +155,7 @@ namespace scl
 
       friend bool operator ==(const audio_type& a, const audio_type& b);
       friend bool operator !=(const audio_type& a, const audio_type& b);
-      
+
     public:
       audio_type(const audio_type& other)
         : tag(other.tag)
@@ -161,6 +172,12 @@ namespace scl
       {
         switch (tag)
         {
+        case tag_type::int8:
+          return sizeof(::scl::audio::int8);
+        case tag_type::int16:
+          return sizeof(::scl::audio::int16);
+        case tag_type::int32:
+          return sizeof(::scl::audio::int32);
         case tag_type::sample32:
           return sizeof(::scl::audio::sample32);
         case tag_type::sample64:
@@ -180,6 +197,12 @@ namespace scl
       {
         switch (tag)
         {
+        case tag_type::int8:
+          return alignof(::scl::audio::int8);
+        case tag_type::int16:
+          return alignof(::scl::audio::int16);
+        case tag_type::int32:
+          return alignof(::scl::audio::int32);
         case tag_type::sample32:
           return alignof(::scl::audio::sample32);
         case tag_type::sample64:
@@ -210,29 +233,28 @@ namespace scl
       {
         switch (tag)
         {
-        case tag_type::sample32:
-          return 0;
-        case tag_type::sample64:
-          return 0;
-        case tag_type::unit:
-          return 0;
         case tag_type::pair:
           return 2;
         case tag_type::list:
           return 1;
         case tag_type::vector:
           return 1;
+        default:
+          return 0;
         }
       }
 
       int levels() const
       {
-        if (kind() == 0)
+        switch (kind())
+        {
+        case 0:
           return 0;
-        if (kind() == 1)
+        case 1:
           return fst->levels() + 1;
-        else
+        default:
           return std::max(fst->levels(), snd->levels()) + 1;
+        }
       }
 
       std::string name() const
@@ -241,6 +263,12 @@ namespace scl
         using std::string;
         switch (tag)
         {
+        case tag_type::int8:
+          return "int8";
+        case tag_type::int16:
+          return "int16";
+        case tag_type::int32:
+          return "int32";
         case tag_type::sample32:
           return "sample32";
         case tag_type::sample64:
@@ -262,6 +290,12 @@ namespace scl
         using std::string;
         switch (tag)
         {
+        case tag_type::int8:
+          return "int8";
+        case tag_type::int16:
+          return "int16";
+        case tag_type::int32:
+          return "int32";
         case tag_type::sample32:
           return "sample32";
         case tag_type::sample64:
@@ -277,6 +311,18 @@ namespace scl
         }
       }
 
+      static audio_type int8()
+      {
+        return audio_type(tag_type::int8);
+      }
+      static audio_type int16()
+      {
+        return audio_type(tag_type::int16);
+      }
+      static audio_type int32()
+      {
+        return audio_type(tag_type::int32);
+      }
       static audio_type sample32()
       {
         return audio_type(tag_type::sample32);
@@ -301,8 +347,8 @@ namespace scl
       {
         return audio_type(tag_type::vector, type, n);
       }
-      
-      template <class A> static audio_type get();      
+
+      template <class A> static audio_type get();
     };
 
     inline bool operator ==(const audio_type& a, const audio_type& b)
@@ -334,6 +380,33 @@ namespace scl
         static audio_type value()
         {
           throw not_an_audio_type();
+        }
+      };
+
+      template <>
+      struct get_audio_type<int8>
+      {
+        static audio_type value()
+        {
+          return audio_type::int8();
+        }
+      };
+
+      template <>
+      struct get_audio_type<int16>
+      {
+        static audio_type value()
+        {
+          return audio_type::int16();
+        }
+      };
+
+      template <>
+      struct get_audio_type<int32>
+      {
+        static audio_type value()
+        {
+          return audio_type::int32();
         }
       };
 
@@ -394,10 +467,10 @@ namespace scl
           return audio_type::vector(a, N);
         }
       };
-    }   
+    }
 
     /** @endcond internal */
-    
+
     template <class A>
     audio_type audio_type::get()
     {

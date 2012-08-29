@@ -59,12 +59,28 @@ namespace scl
 
       class raw_unary_processor : public raw_processor
       {
-        ptr_t function;
+        audio_type in_type;
+        audio_type out_type;
+        void (*function)(ptr_t, ptr_t);
       public:
-        raw_unary_processor(ptr_t function, size_t in_size, size_t out_size)
-          : raw_processor(0, 0, 0, in_size, out_size)
+        using function_type = void (*)(ptr_t, ptr_t);
+
+        raw_unary_processor(audio_type in_type,
+                            audio_type out_type,
+                            function_type function)
+          : in_type(in_type)
+          , out_type(out_type)
+          , function(function) {}
+
+        audio_type input_type()
         {
+          return in_type;
         }
+        audio_type output_type()
+        {
+          return out_type;
+        }
+
         void prepare(ptr_t argument) {}
         void cleanup(ptr_t argument) {}
         void load(ptr_t argument) {}
@@ -73,12 +89,13 @@ namespace scl
         {
           return true;
         }
+
         void process(ptr_t input_messages,
                      ptr_t input,
                      ptr_t output,
                      ptr_t output_messages)
         {
-          // function(input, output);
+          function(input, output);
         }
       };
 

@@ -3,6 +3,7 @@
 
 #include <memory> // for unique_ptr
 #include <boost/format.hpp>
+#include <boost/optional.hpp>
 
 #define SCL_STANDARD_ASSIGN(THIS_TYPE)    \
   void operator= (const THIS_TYPE& other) \
@@ -19,6 +20,9 @@
    
 namespace scl
 {
+  using boost::none;
+  using boost::none_t;
+  using boost::optional;
 
   /**
       Counterpart to fail.
@@ -33,7 +37,7 @@ namespace scl
     fail() = delete;
   };
 
-  template <bool T> struct try_ : public fail{};
+  template <bool T> struct try_ : public fail {};
   template <> struct try_<true> : public succeed {};
 
   /**
@@ -93,7 +97,7 @@ namespace scl
   {
     return (intptr_t) next_aligned((intptr_t) x, a);
   }
-  
+
   /**
       A moveable, non-copyable byte buffer.
    */

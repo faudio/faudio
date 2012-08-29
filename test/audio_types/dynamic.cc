@@ -31,7 +31,7 @@ TEST(AudioTypes, DynamicGet)
   std::cout << "Name: " << t << "\n Levels: " << t.levels() << "\n";
 
   using my_audio_type2 =
-    audio_channels<sample32, 8>::type;
+    audio_channels<int8, 8>::type;
 
   audio_type t2 = audio_type::get<my_audio_type2>();
   std::cout << "Name: " << t2 << "\n Levels: " << t2.levels() << "\n";

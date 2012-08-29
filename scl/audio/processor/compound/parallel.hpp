@@ -55,32 +55,38 @@ namespace scl
       // (a ~> b) -> (c ~> d) -> ((a,b) ~> (c,d))
       class raw_parallel_processor : public raw_processor
       {
-        raw_processor_ptr x, y;
+        raw_processor_ptr x;
+        raw_processor_ptr y;
       public:
         using parent_type = raw_processor;
 
         raw_parallel_processor(raw_processor_ptr x,
                                raw_processor_ptr y)
+          : x(x), y(y) {}
 
-          : raw_processor(0, 0, 0,
-                          x->input_size + y->input_size,
-                          x->output_size + y->output_size)
-          , x(x)
-          , y(y) {}
+        audio_type input_type()
+        {
+          return audio_type::pair(x->input_type(), y->input_type());
+        }
+
+        audio_type output_type()
+        {
+          return audio_type::pair(x->output_type(), y->output_type());
+        }
 
         void load(ptr_t state) {}
         void store(ptr_t state) {}
 
         void prepare(ptr_t arg)
         {
-          x->prepare(arg);
-          y->prepare(arg); // TODO in parallel
+          x->prepare(arg); // TODO is this right?
+          y->prepare(arg);
         }
 
         void cleanup(ptr_t res)
         {
-          x->cleanup(res);
-          y->cleanup(res); // TODO in parallel
+          x->cleanup(res); // TODO is this right?
+          y->cleanup(res);
         }
 
         bool is_ready()
@@ -88,13 +94,15 @@ namespace scl
           return x->is_ready() && y->is_ready();
         }
 
-        void process(ptr_t in_msg, ptr_t input, ptr_t output, ptr_t out_msg)
-        {
-          // FIXME alignment
-          // size_t input2  = input  + x->input_size;
-          // size_t output2 = output + x->output_size;
-          // x->process(in_msg, input,  output,  out_msg);
-          // y->process(in_msg, input2, output2, out_msg);
+        void process(ptr_t in_msg,
+                     ptr_t input,
+                     ptr_t output,
+                     ptr_t out_msg)
+        {  
+          ptr_t input2  = input  + input_type().offset();
+          ptr_t output2 = output + output_type().offset();
+          x->process(NULL, input, output, NULL);
+          y->process(NULL, input2, output2, NULL);
         }
       };
 
