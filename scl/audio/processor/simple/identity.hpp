@@ -57,8 +57,28 @@ namespace scl
       };
 
 
-      /** @endcond internal */
+      /** @endcond */
 
+      /** 
+        ## Description
+          Returns its input unchanged.
+        
+        ## Associated types
+          ### State
+            `unit`
+          ### Argument
+            `unit`
+          ### Result
+            `unit`
+          ### Message Input
+            `unit`
+          ### Message Output
+            `unit`
+          ### Input
+            An arbitrary type `A`.
+          ### Output
+            The same type `A`.
+       */
       template <class A>
       class identity_processor : public processor <
         unit, unit, unit,

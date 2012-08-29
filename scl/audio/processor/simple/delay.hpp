@@ -59,7 +59,7 @@ namespace scl
         }
       };
 
-      /** @endcond internal */
+      /** @endcond */
 
     }
   }

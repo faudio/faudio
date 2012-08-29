@@ -66,8 +66,28 @@ namespace scl
         }
       };
 
-      /** @endcond internal */
+      /** @endcond */
 
+      /** 
+        ## Description
+          Ignores its input and outputs a constant value.
+        
+        ## Associated types
+          ### State
+            `unit`
+          ### Argument
+            `unit`
+          ### Result
+            `unit`
+          ### Message Input
+            `unit`
+          ### Message Output
+            `unit`
+          ### Input
+            An arbitrary type.
+          ### Output
+            The type of the constant value.
+       */
       template <class A, class B>
       class constant_processor
         : public processor <

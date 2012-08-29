@@ -74,12 +74,12 @@ namespace scl
 
     constexpr size_t max_frames = 4096;
 
-    using int8     = int8_t;
-    using int16    = int16_t;
-    using int32    = int32_t;
-    using sample32 = float;
-    using sample64 = double;
-    using unit     = nullptr_t;
+    typedef int8_t int8;
+    typedef int16_t int16;
+    typedef int32_t int32;
+    typedef float sample32;
+    typedef double sample64;
+    typedef nullptr_t unit;
 
     template <class A, class B> struct audio_pair
     {

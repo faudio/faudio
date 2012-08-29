@@ -57,8 +57,28 @@ namespace scl
         }
       };
 
-      /** @endcond internal */
+      /** @endcond */
 
+      /** 
+        ## Description
+          Duplicates its input.
+        
+        ## Associated types
+          ### State
+            `unit`
+          ### Argument
+            `unit`
+          ### Result
+            `unit`
+          ### Message Input
+            `unit`
+          ### Message Output
+            `unit`
+          ### Input
+            An arbitrary type `A`.
+          ### Output
+            The type `(A,A)`.
+       */
       template <class A>
       class split_processor
         : public processor <

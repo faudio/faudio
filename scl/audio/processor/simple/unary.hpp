@@ -139,8 +139,28 @@ namespace scl
       };
 
 
-      /** @endcond internal */
+      /** @endcond */
 
+      /** 
+        ## Description
+          Applies a unary function.
+        
+        ## Associated types
+          ### State
+            `unit`
+          ### Argument
+            `unit`
+          ### Result
+            `unit`
+          ### Message Input
+            `unit`
+          ### Message Output
+            `unit`
+          ### Input
+            The argument of the function.
+          ### Output
+            The result of the function.
+       */
       template <class A, class B>
       class unary_processor
         : public processor <
@@ -208,7 +228,7 @@ namespace scl
       }
                  
       namespace math32
-      {
+      {             
         static const unary_processor<sample32,sample32> fabs   = lift<sample32,sample32>(std::fabs);
         static const unary_processor<sample32,sample32> exp    = lift<sample32,sample32>(std::exp);
         static const unary_processor<sample32,sample32> exp2   = lift<sample32,sample32>(std::exp2);
@@ -242,6 +262,43 @@ namespace scl
         static const unary_processor<sample32,sample32> floor  = lift<sample32,sample32>(std::floor);
         static const unary_processor<sample32,sample32> trunc  = lift<sample32,sample32>(std::trunc);
         static const unary_processor<sample32,sample32> round  = lift<sample32,sample32>(std::round);
+      };
+
+      namespace math64
+      {             
+        static const unary_processor<sample64,sample64> fabs   = lift<sample64,sample64>(std::fabs);
+        static const unary_processor<sample64,sample64> exp    = lift<sample64,sample64>(std::exp);
+        static const unary_processor<sample64,sample64> exp2   = lift<sample64,sample64>(std::exp2);
+        static const unary_processor<sample64,sample64> expm1  = lift<sample64,sample64>(std::expm1);
+        static const unary_processor<sample64,sample64> log    = lift<sample64,sample64>(std::log);
+        static const unary_processor<sample64,sample64> log10  = lift<sample64,sample64>(std::log10);
+        static const unary_processor<sample64,sample64> log1p  = lift<sample64,sample64>(std::log1p);
+        static const unary_processor<sample64,sample64> log2   = lift<sample64,sample64>(std::log2);
+        static const unary_processor<sample64,sample64> sqrt   = lift<sample64,sample64>(std::sqrt);
+        static const unary_processor<sample64,sample64> cbrt   = lift<sample64,sample64>(std::cbrt);
+
+        static const unary_processor<sample64,sample64> sin    = lift<sample64,sample64>(std::sin);
+        static const unary_processor<sample64,sample64> cos    = lift<sample64,sample64>(std::cos);
+        static const unary_processor<sample64,sample64> tan    = lift<sample64,sample64>(std::tan);
+        static const unary_processor<sample64,sample64> asin   = lift<sample64,sample64>(std::asin);
+        static const unary_processor<sample64,sample64> acos   = lift<sample64,sample64>(std::acos);
+        static const unary_processor<sample64,sample64> atan   = lift<sample64,sample64>(std::atan);
+        static const unary_processor<sample64,sample64> sinh   = lift<sample64,sample64>(std::sinh);
+        static const unary_processor<sample64,sample64> cosh   = lift<sample64,sample64>(std::cosh);
+        static const unary_processor<sample64,sample64> tanh   = lift<sample64,sample64>(std::tanh);
+        static const unary_processor<sample64,sample64> asinh  = lift<sample64,sample64>(std::asinh);
+        static const unary_processor<sample64,sample64> acosh  = lift<sample64,sample64>(std::acosh);
+        static const unary_processor<sample64,sample64> atanh  = lift<sample64,sample64>(std::atanh);
+
+        static const unary_processor<sample64,sample64> erf    = lift<sample64,sample64>(std::erf);
+        static const unary_processor<sample64,sample64> erfc   = lift<sample64,sample64>(std::erfc);
+        static const unary_processor<sample64,sample64> lgamma = lift<sample64,sample64>(std::lgamma);
+        static const unary_processor<sample64,sample64> tgamma = lift<sample64,sample64>(std::tgamma);
+
+        static const unary_processor<sample64,sample64> ceil   = lift<sample64,sample64>(std::ceil);
+        static const unary_processor<sample64,sample64> floor  = lift<sample64,sample64>(std::floor);
+        static const unary_processor<sample64,sample64> trunc  = lift<sample64,sample64>(std::trunc);
+        static const unary_processor<sample64,sample64> round  = lift<sample64,sample64>(std::round);
       };
     }
   }

@@ -12,7 +12,7 @@ namespace scl
       The abortable concept describes types with a one-time abort action.
       The abortion of a task is not reversible.
 
-      Synopsis:
+      ### Synopsis
 
           concept Abortable<typename X>
           {
@@ -20,14 +20,14 @@ namespace scl
             bool X::is_aborted();
           }
 
-      Semantics:
+      ### Semantics
         - `x.abort()`
           - Precondition: None
           - Postcondition: The state of `x` is aborted.
         - `x.is_aborted()`
           - Whether `x` is aborted or not.
 
-      Models:
+      ### Models
         - future
     */
     template <class X>
