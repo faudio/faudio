@@ -204,7 +204,7 @@ namespace scl
       template <class A, class B>
       inline unary_processor<A, B> lift(B(*f)(A))
       {
-        return unary_processor<A, B>(f);
+        return unary_processor<A,B>(std::function<B(A)>(f));
       }
                  
       namespace math32
