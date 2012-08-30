@@ -83,27 +83,27 @@ namespace scl
 
     template <class A, class B> struct audio_pair
     {
-      using type = std::pair<A, B>;
+      typedef std::pair<A, B> type;
     };
 
     template <class A> struct audio_list
     {
-      using type = std::list<A>;
+      typedef std::list<A> type;
     };
 
     template <class A, int MaxFrames = max_frames> struct audio_vector
     {
-      using type = std::array<A, MaxFrames>;
+      typedef std::array<A, MaxFrames> type;
     };
 
     template <class Sample, int N> struct audio_channels
     {
-      using type = typename audio_pair < Sample, typename audio_channels < Sample, N - 1 >::type >::type;
+      typedef typename audio_pair < Sample, typename audio_channels < Sample, N - 1 >::type >::type type;
     };
 
     template <class Sample> struct audio_channels<Sample, 0>
     {
-      using type = unit;
+      typedef unit type;
     };
 
     using unit_list = audio_list<unit>::type;

@@ -78,68 +78,55 @@ namespace scl
 
 
       template <class A, class B>
-      class unary_ref_closure
+      class adapt_pass_by_reference
       {
-        using this_type = unary_ref_closure<A, B>;
+        using this_type = adapt_pass_by_reference<A,B>;
         std::function<void(const A&, B&)> f;
+
+        inline void call(ptr_t a, ptr_t b)
+        {
+          const A& aRef = *(const A*)(a);
+          B&       bRef = *(B*)(b);
+          f(aRef, bRef);
+        }
       public:
-        unary_ref_closure(std::function<void(const A&, B&)> f)
-          : f(f) {}
+        adapt_pass_by_reference(std::function<void(const A&, B&)> f): f(f) {}
 
-        inline void call(ptr_t x, ptr_t y)
-        {
-          const A& a = *(const A*)(x);
-          B&       b = *(B*)(y);
-          f(a, b);
-        }
-
-        static void caller(ptr_t f, ptr_t x, ptr_t y)
-        {
-          ((this_type*) f)->call(x, y);
-        }
-        static void deleter(ptr_t f)
-        {
-          delete((this_type*) f);
-        }
-        static ptr_t data(std::function<void(const A&, B&)> f)
-        {
-          return (ptr_t) new this_type(f);
-        }
+        static void  function(ptr_t f, ptr_t x, ptr_t y) { ((this_type*) f)->call(x, y); }
+        static ptr_t data(std::function<B(A)> f)         { return (ptr_t) new this_type(f); }
+        static void  deleter(ptr_t f)                    { delete ((this_type*) f); }
       };
 
       template <class A, class B>
-      class unary_val_closure
+      class adapt_pass_by_value
       {
-        using this_type = unary_val_closure<A, B>;
+        using this_type = adapt_pass_by_value<A,B>;
         std::function<B(A)> f;
+
+        inline void call(ptr_t a, ptr_t b)
+        {
+          A aVal;
+          scl::raw_copy(a, a + sizeof(A), (ptr_t) &aVal);
+          B bVal = f(aVal);
+          scl::raw_copy((ptr_t) &bVal, (ptr_t) &bVal + sizeof(B), b);
+        }
       public:
-        unary_val_closure(std::function<B(A)> f)
-          : f(f) {}
+        adapt_pass_by_value(std::function<B(A)> f) : f(f) {}
 
-        inline void call(ptr_t x, ptr_t y)
-        {
-          A a;
-          scl::raw_copy(x, x + sizeof(A), (ptr_t) &a);
-          B b = f(a);
-          scl::raw_copy((ptr_t)&b, (ptr_t)&b + sizeof(B), y);
-        }
-
-        static void caller(ptr_t f, ptr_t x, ptr_t y)
-        {
-          ((this_type*) f)->call(x, y);
-        }
-        static void deleter(ptr_t f)
-        {
-          delete((this_type*) f);
-        }
-        static ptr_t data(std::function<B(A)> f)
-        {
-          return (ptr_t) new this_type(f);
-        }
+        static void  function(ptr_t f, ptr_t x, ptr_t y) { ((this_type*) f)->call(x, y); }
+        static ptr_t data(std::function<B(A)> f)         { return (ptr_t) new this_type(f); }
+        static void  deleter(ptr_t f)                    { delete ((this_type*) f); }
       };
-
+      
 
       /** @endcond */
+
+      struct unary_closure
+      {
+        void (*function) (ptr_t data, ptr_t input, ptr_t output);
+        void (*deleter) (ptr_t data);
+        ptr_t data;
+      };
 
       /** 
         ## Description
@@ -166,7 +153,7 @@ namespace scl
         : public processor <
         unit, unit, unit,
         unit, unit,
-        A, B >
+        A,B >
       {
         raw_processor_ptr raw;
       public:
@@ -175,18 +162,27 @@ namespace scl
             new raw_unary_processor(
               audio_type::get<A>(),
               audio_type::get<B>(),
-              unary_val_closure<A, B>::caller,
-              unary_val_closure<A, B>::deleter,
-              unary_val_closure<A, B>::data(f))) {}
+              adapt_pass_by_value<A,B>::function,
+              adapt_pass_by_value<A,B>::deleter,
+              adapt_pass_by_value<A,B>::data(f))) {}
 
         unary_processor(std::function<void(const A&, B&)> f)
           : raw(
             new raw_unary_processor(
               audio_type::get<A>(),
               audio_type::get<B>(),
-              unary_ref_closure<A, B>::caller,
-              unary_ref_closure<A, B>::deleter,
-              unary_ref_closure<A, B>::data(f))) {}
+              adapt_pass_by_reference<A,B>::function,
+              adapt_pass_by_reference<A,B>::deleter,
+              adapt_pass_by_reference<A,B>::data(f))) {}
+        
+        unary_processor(unary_closure f)
+          : raw(
+            new raw_unary_processor(
+              audio_type::get<A>(),
+              audio_type::get<B>(),
+              f.function,
+              f.deleter,
+              f.data)) {}
 
         void load(const unit& state)
         {
@@ -222,7 +218,7 @@ namespace scl
       };
 
       template <class A, class B>
-      inline unary_processor<A, B> lift(B(*f)(A))
+      inline unary_processor<A,B> lift(B(*f)(A))
       {
         return unary_processor<A,B>(std::function<B(A)>(f));
       }
