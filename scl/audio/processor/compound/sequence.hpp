@@ -18,27 +18,27 @@ namespace scl
       // (a ~> b) -> (b ~> c) -> (a ~> c)
       class raw_sequence_processor : public raw_processor
       {
-        raw_processor_ptr g;
         raw_processor_ptr f;
+        raw_processor_ptr g;
         raw_buffer buffer;
       public:
         using parent_type = raw_processor;
 
-        raw_sequence_processor(raw_processor_ptr g,
-                               raw_processor_ptr f)
-          : g(g), f(f)
+        raw_sequence_processor(raw_processor_ptr f,
+                               raw_processor_ptr g)
+          : f(f), g(g)
         {
-          assert(g->output_type() == f->input_type());
+          assert(f->output_type() == g->input_type());
         }
 
         audio_type input_type()
         {
-          return g->input_type();
+          return f->input_type();
         }
 
         audio_type output_type()
         {
-          return f->output_type();
+          return g->output_type();
         }
 
         void load(ptr_t state) {}
@@ -46,22 +46,22 @@ namespace scl
 
         void prepare(ptr_t arg)
         {
-          size_t size = g->output_type().size();
+          size_t size = f->output_type().size();
 // std::cout << "-------- buffer size: " << size << "\n";
           buffer.reset(size);
-          g->prepare(arg); // TODO is this right?
-          f->prepare(arg);
+          f->prepare(arg); // TODO is this right?
+          g->prepare(arg);
         }
 
         void cleanup(ptr_t res)
         {
-          g->cleanup(res); // TODO is this right?
-          f->cleanup(res);
+          f->cleanup(res); // TODO is this right?
+          g->cleanup(res);
         }
 
         bool is_ready()
         {
-          return g->is_ready() && f->is_ready();
+          return f->is_ready() && g->is_ready();
         }
 
         void process(ptr_t in_msg,
@@ -69,23 +69,51 @@ namespace scl
                      ptr_t output,
                      ptr_t out_msg)
         {
-          g->process(NULL, input, buffer.begin(), NULL);
-          f->process(NULL, buffer.begin(), output, NULL);
+          f->process(NULL, input, buffer.begin(), NULL);
+          g->process(NULL, buffer.begin(), output, NULL);
         }
       };
 
-      /** @endcond internal */
+      /** @endcond */
 
-      // template <class A, class B, class C>
-      // class sequence_processor
-      //   : public processor < void, void, void,
-      //     void, void,
-      //     A, C >
-      // {
-      // public:
-      //   sequence_processor(value_type value)
-      //     : value(value) {}
-      // };
+      /** 
+        ## Description
+          Runs two processors *f* and *g* in sequence.
+        
+        ## Associated types
+          ### State
+            `unit`
+          ### Argument
+            `unit`
+          ### Result
+            `unit`
+          ### Message Input
+            `unit`
+          ### Message Output
+            `unit`
+          ### Input
+            The input type of *f*.
+          ### Output
+            The output type of *g*.
+       */
+      template <class G, class F>
+      class sequence_processor
+        : public processor < 
+          void, void, void,
+          void, void,
+          typename F::input_type, 
+          typename G::output_type
+          >
+          // TODO enable if to assure (F::out ~ G::in)
+      {
+        raw_processor_ptr raw;
+      public:
+        sequence_processor(F f, G g)
+          : raw(
+            new raw_sequence_processor(
+              f.get_raw(), 
+              g.get_raw())) {}
+      };      
 
     }
   }

@@ -13,44 +13,6 @@ namespace scl
   {
     namespace processor
     {
-      using std::pair;
-
-      // template <class A, class B, class C, class D>
-      // class parallel_processor
-      //   : public processor < void, void, void,
-      //     void, void,
-      //     pair<A, C>, pair<B, D >>
-      // {
-      // public:
-      //   parallel_processor(value_type value)
-      //     : value(value) {}
-      //
-      //   void prepare(const argument_type& argument)
-      //   {
-      //   }
-      //   void cleanup(result_type& result)
-      //   {
-      //   }
-      //   void load(const state_type& state)
-      //   {
-      //   }
-      //   void store(state_type& state)
-      //   {
-      //   }
-      //   bool is_ready()
-      //   {
-      //   }
-      //   void process(const list<input_message_type>& input_messages,
-      //                const input_type& input,
-      //                output_type& output,
-      //                list<output_message_type>& output_messages)
-      //   {
-      //   }
-      //
-      // private:
-      // };
-
-
       /** @cond internal */
 
       // (a ~> b) -> (c ~> d) -> ((a,b) ~> (c,d))
@@ -107,8 +69,43 @@ namespace scl
         }
       };
 
-      /** @endcond internal */
+      /** @endcond */
 
+      /** 
+        ## Description
+          Runs two processors *x* and *y* in parallel.
+        
+        ## Associated types
+          ### State
+            `unit`
+          ### Argument
+            `unit`
+          ### Result
+            `unit`
+          ### Message Input
+            `unit`
+          ### Message Output
+            `unit`
+          ### Input
+            The pair of inputs of *f* and *g*.
+          ### Output
+            The pair of outputs of *f* and *g*.
+       */
+      
+      template <class X, class Y>
+      class parallel_processor
+        : public processor < 
+          void, void, void,
+          void, void,
+          typename audio_pair<typename X::input_type,  typename Y::input_type>::type, 
+          typename audio_pair<typename X::output_type, typename Y::output_type>::type
+          >
+      {
+        raw_processor_ptr raw;
+      public:
+        parallel_processor(X x, Y y)
+          : raw(new raw_parallel_processor(x.get_raw(), y.get_raw())) {}
+      };      
     }
   }
 }
