@@ -39,3 +39,4 @@ namespace scl
     bad_allocation() : simple_exception("bad_allocation") {}
   };
 }
+

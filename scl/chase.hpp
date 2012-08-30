@@ -121,14 +121,6 @@ namespace scl
     A *chase* is a series of *tracks*, that is, uniquely linked arrays of variable length. It has an
     efficient destructive append operation, supports indirect moving and is structurally invariant under casts.
 
-        chase<int> xs = { 1, 2, 3 };
-        auto n = xs.release();      // moves elements out of xs
-        chase<int> ys (n);          // moves elements into ys
-
-        chase<int64_t> xs = { 1, 2, 3 };
-        chase<int8_t> ys ((chase<int8_t>::track_pointer) xs.release());       // ys.size() == 3
-        chase<uint64_t> zs ((chase<uint64_t>::track_pointer) ys.release());   // zs has elements { 1, 2, 3 }
-
     Model of Movable, Swappable, ForwardRange.
 
    */

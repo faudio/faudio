@@ -179,3 +179,4 @@ namespace scl
     raw_dump(range.begin(), range.end(), hex, group_size, column_size);
   }
 }
+

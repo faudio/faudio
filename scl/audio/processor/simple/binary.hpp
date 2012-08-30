@@ -78,9 +78,9 @@ namespace scl
 
 
       template <class A, class B>
-      class adapt_pass_by_reference
+      class adapt_pass_by_reference2
       {
-        using this_type = adapt_pass_by_reference<A,B>;
+        using this_type = adapt_pass_by_reference2<A,B>;
         std::function<void(const A&, B&)> f;
 
         inline void call(ptr_t a, ptr_t b)
@@ -96,9 +96,9 @@ namespace scl
       };
 
       template <class A, class B>
-      class adapt_pass_by_value
+      class adapt_pass_by_value2
       {
-        using this_type = adapt_pass_by_value<A,B>;
+        using this_type = adapt_pass_by_value2<A,B>;
         std::function<B(A)> f;
 
         inline void call(ptr_t a, ptr_t b)
