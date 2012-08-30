@@ -12,7 +12,7 @@ aux_source_directory(audio_processor  AUDIO_PROCESSOR_SRC)
 # aux_source_directory(parallel         PARALLEL_SRC)
 # aux_source_directory(reference        REFERENCE_SRC)
 # aux_source_directory(thread           THREAD_SRC) 
-# aux_source_directory(utility          UTILITY_SRC)
+aux_source_directory(utility          UTILITY_SRC)
 
 set(SRCS
   ${ATOMIC_SRC}
