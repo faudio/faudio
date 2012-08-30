@@ -428,6 +428,19 @@ void AudioUnitProcessor::prepare(AudioProcessingInformation& info, AudioProcessi
 
     if (err = AudioUnitInitialize(mData->instance))
         failOsStatusProc(this, err);
+
+// #ifdef SCL_ADJUST_AU_VOLUME   
+//       AudioUnitSetParameter(mData->instance, 
+//         kMultiChannelMixerParam_Volume, // id
+//         kAudioUnitScope_Output, 0, 
+//         0, // value 
+//         0);
+//       AudioUnitSetParameter(mData->instance, 
+//         kHALOutputParam_Volume, // id
+//         kAudioUnitScope_Output, 0, 
+//         0, // value 
+//         0);
+// #endif // SCL_ADJUST_AU_VOLUME
 }
 
 void AudioUnitProcessor::process(AudioProcessingInformation& info, AudioProcessingBuffer &signal)
@@ -438,6 +451,11 @@ void AudioUnitProcessor::process(AudioProcessingInformation& info, AudioProcessi
     Float64 sampleTime       = (Float64) info.sampleCount;
     int     numberOfChannels = signal.numberOfChannels;
     int     numberOfFrames   = signal.numberOfFrames;
+#ifdef SCL_ADJUST_AU_VOLUME
+    Float64 gain = 16;
+#else
+    Float64 gain = 1;
+#endif
 
     mData->timeStamp.mSampleTime = sampleTime;
 
@@ -452,7 +470,7 @@ void AudioUnitProcessor::process(AudioProcessingInformation& info, AudioProcessi
         Float32* buffer = (Float32*) mData->bufferList->mBuffers[channel].mData;
 
         for(int frame = 0; frame < numberOfFrames; ++frame)
-            signal.data[channel * numberOfFrames + frame] = buffer[frame];
+            signal.data[channel * numberOfFrames + frame] = buffer[frame] * gain;
     }
 }
 
