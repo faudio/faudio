@@ -76,7 +76,7 @@ namespace scl
           ### State
             `unit`
           ### Argument
-            `unit`
+            Type of the constant value.
           ### Result
             `unit`
           ### Message Input
@@ -86,7 +86,7 @@ namespace scl
           ### Input
             An arbitrary type.
           ### Output
-            The type of the constant value.
+            Type of the constant value.
        */
       template <class A, class B>
       class constant_processor
@@ -135,7 +135,6 @@ namespace scl
             (ptr_t) &output_messages);
         }
       };
-
     }
   }
 }

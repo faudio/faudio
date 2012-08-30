@@ -115,7 +115,7 @@ namespace scl
       : xs(xs), i(0) {}
   };
 
-  /** @endcond internal */
+  /** @endcond */
 
   /**
     A *chase* is a series of *tracks*, that is, uniquely linked arrays of variable length. It has an
@@ -157,7 +157,7 @@ namespace scl
     SCL_STANDARD_ASSIGN(this_type);
 
     /** Unsafe. Obtains the track pointer of this without releasing ownership. */
-    track_pointer get()
+    track_pointer unsafe_get()
     {
       return ptr;
     }

@@ -217,6 +217,9 @@ namespace scl
         }
       };
 
+      /**
+         Lift a unary function to a processor.
+       */
       template <class A, class B>
       inline unary_processor<A,B> lift(B(*f)(A))
       {

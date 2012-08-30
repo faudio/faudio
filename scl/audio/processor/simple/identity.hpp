@@ -75,9 +75,9 @@ namespace scl
           ### Message Output
             `unit`
           ### Input
-            An arbitrary type `A`.
+            An arbitrary type.
           ### Output
-            The same type `A`.
+            Same as the input type.
        */
       template <class A>
       class identity_processor : public processor <

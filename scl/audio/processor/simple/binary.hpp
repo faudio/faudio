@@ -216,6 +216,9 @@ namespace scl
         }
       };
 
+      /**
+         Lift a binary function to a processor.
+       */
       template <class A, class B, class C>
       inline binary_processor<A,B,C> lift2(C(*f)(A,B))
       {
