@@ -84,7 +84,8 @@ namespace scl
         : public processor <
         unit, unit, unit,
         unit, unit,
-        A, typename audio_pair<A, A>::type >
+        A, 
+        typename audio_pair<A, A>::type >
       {
         raw_processor_ptr raw;
       public:

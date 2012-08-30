@@ -144,9 +144,9 @@ namespace scl
           ### Message Output
             `unit`
           ### Input
-            The argument of the function.
+            The argument to the function `A`.
           ### Output
-            The result of the function.
+            The result of the function `B`.
        */
       template <class A, class B>
       class unary_processor
