@@ -4,9 +4,9 @@ Implementation notes
 
 ## Library organization
 
-For C++ code we follow the conventions of the Boost libraries. There is a top namespace (called `scl`) in which every declaration resides. Inside this namespace, there are subnamespaces corresponding to functionality. 
+For C++ code we follow the conventions of the Boost libraries. There is a top namespace ::scl in which every declaration resides. Inside this namespace, there are subnamespaces corresponding to functionality. 
 
-Code directly related to the audio processing resides in the `scl::audio` namespace hierarchy, while generic and utility code reside in their own namespaces. Some of these namespaces are simply alisases for standard library or third-party implementations, for example `scl::thread` is an alias for `std` if supported or `boost` otherwise.
+Code directly related to the audio processing resides in the ::scl::audio namespace hierarchy, while generic and utility code reside in their own namespaces. Some of these namespaces are simply alisases for standard library or third-party implementations, for example `scl::thread` is an alias for `std` if supported or `boost` otherwise.
 
 ## C++0x support
 
@@ -22,7 +22,7 @@ C++0x does not support concepts, although these are needed for serious template 
 
 ## Including and linking
 
-Linking C++ based libraries is badly supported on most operating system: instead we use the "header-only" approach. The C++ library is header only. The C library is contains precisely the C++ library headers and the C wrapper code. 
+Linking C++ based libraries is badly supported on most operating system: instead we use the header only approach. The C++ library is header only, while the C library is contains precisely the C++ library headers and some C wrapper code. 
 
 Building a C++ application based on the library amounts to including the right headers, add application-specific code, and defining a suitable main function. Building a C application amounts to including the C headers, adding application-specific code and a main function, and linking (statically or dynamically) with the C library. 
 
