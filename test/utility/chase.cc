@@ -10,8 +10,8 @@ TEST(AudioUtility, Chase)
   chase<int> xs = { 1, 2, 3 };
   chase<int> ys = { 5, 6, 7, 8, 9 };
   
-  raw_dump((ptr_t) xs.get(), ((ptr_t) xs.get()) + 32);
-  raw_dump((ptr_t) ys.get(), ((ptr_t) ys.get()) + 32);
+  raw_dump((ptr_t) xs.unsafe_get(), ((ptr_t) xs.unsafe_get()) + 32);
+  raw_dump((ptr_t) ys.unsafe_get(), ((ptr_t) ys.unsafe_get()) + 32);
 
   std::cout << "size of xs: " << scl::size(xs) << "\n";
   std::cout << "size of ys: " << scl::size(ys) << "\n";
@@ -26,7 +26,7 @@ TEST(AudioUtility, Chase)
     
   xs = std::move(xs.append(ys));
 
-  raw_dump((ptr_t) xs.get(), ((ptr_t) xs.get()) + 32);
+  raw_dump((ptr_t) xs.unsafe_get(), ((ptr_t) xs.unsafe_get()) + 32);
 
   std::cout << "size of xs: " << scl::size(xs) << "\n";
   std::cout << "size of ys: " << scl::size(ys) << "\n";
