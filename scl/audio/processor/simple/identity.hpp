@@ -92,6 +92,10 @@ namespace scl
             new raw_identity_processor(
               audio_type::get<A>())) {}
 
+        raw_processor_ptr get_raw()
+        {
+          return raw;
+        }
         void load(const unit& state)
         {
           raw->load((ptr_t) &state);

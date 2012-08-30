@@ -179,10 +179,10 @@ namespace scl
         virtual ~raw_processor() {}
         virtual audio_type input_type() = 0;
         virtual audio_type output_type() = 0;
-        virtual void prepare(ptr_t argument) = 0;
-        virtual void cleanup(ptr_t argument) = 0;
         virtual void load(ptr_t argument) = 0;
         virtual void store(ptr_t argument) = 0;
+        virtual void prepare(ptr_t argument) = 0;
+        virtual void cleanup(ptr_t argument) = 0;
         virtual bool is_ready() = 0;
         virtual void process(ptr_t input_messages,
                              ptr_t input_data,

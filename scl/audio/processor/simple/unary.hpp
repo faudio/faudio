@@ -183,6 +183,11 @@ namespace scl
               f.function,
               f.deleter,
               f.data)) {}
+        
+        raw_processor_ptr get_raw()
+        {
+          return raw;
+        }
 
         void load(const unit& state)
         {
