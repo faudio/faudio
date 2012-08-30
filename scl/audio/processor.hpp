@@ -16,13 +16,13 @@ namespace scl
                class MessageInput, class MessageOutput, class Input, class Output >
       struct processor
       {
-        using state_type = State;
-        using argument_type = Argument;
-        using result_type = Result;
-        using message_input_type = MessageInput;
-        using message_output_type = MessageOutput;
-        using input_type = Input;
-        using output_type = Output;
+        typedef State state_type;
+        typedef Argument argument_type;
+        typedef Result result_type;
+        typedef MessageInput message_input_type;
+        typedef MessageOutput message_output_type;
+        typedef Input input_type;
+        typedef Output output_type;
       };
 
       // template < class State, class Argument, class Result,

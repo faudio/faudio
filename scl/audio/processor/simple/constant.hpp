@@ -91,7 +91,7 @@ namespace scl
       template <class A, class B>
       class constant_processor
         : public processor <
-        unit, unit, unit,
+        unit, B, unit,
         unit, unit,
         A, B >
       {

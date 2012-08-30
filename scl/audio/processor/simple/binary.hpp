@@ -149,7 +149,7 @@ namespace scl
         unit, unit, unit,
         unit, unit,
         typename audio_pair<A,B>::type, 
-        B >
+        C >
       {
         raw_processor_ptr raw;
       public:

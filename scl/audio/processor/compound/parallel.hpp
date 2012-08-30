@@ -87,16 +87,16 @@ namespace scl
           ### Message Output
             `unit`
           ### Input
-            The pair of inputs of *f* and *g*.
+            The pair `(a,b)` where *a* is the input to *x* and *b* is the input to *y*.
           ### Output
-            The pair of outputs of *f* and *g*.
+            The pair `(c,d)` where *c* is the output of *x* and *d* is the output of *y*.
        */
       
       template <class X, class Y>
       class parallel_processor
         : public processor < 
-          void, void, void,
-          void, void,
+          unit, unit, unit,
+          unit, unit,
           typename audio_pair<typename X::input_type,  typename Y::input_type>::type, 
           typename audio_pair<typename X::output_type, typename Y::output_type>::type
           >

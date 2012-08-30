@@ -118,8 +118,9 @@ namespace scl
   /** @endcond */
 
   /**
-    A *chase* is a series of *tracks*, that is, uniquely linked arrays of variable length. It has an
-    efficient destructive append operation, supports indirect moving and is structurally invariant under casts.
+    A *chase* is a sequence represented as a series of *tracks*, that is, uniquely linked arrays
+    of variable length. It has an efficient destructive append operation, supports indirect moving
+    and is structurally invariant under casts.
 
     Model of Movable, Swappable, ForwardRange.
 

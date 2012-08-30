@@ -96,11 +96,11 @@ namespace scl
           ### Output
             The output type of *g*.
        */
-      template <class G, class F>
+      template <class F, class G>
       class sequence_processor
         : public processor < 
-          void, void, void,
-          void, void,
+          unit, unit, unit,
+          unit, unit,
           typename F::input_type, 
           typename G::output_type
           >

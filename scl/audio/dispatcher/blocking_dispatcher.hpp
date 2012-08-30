@@ -7,7 +7,7 @@ namespace scl
   {
     namespace dispatcher
     {
-
+      class blocking_dispatcher {};
     }
   }
 }

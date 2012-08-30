@@ -7,7 +7,7 @@ namespace scl
   {
     namespace scheduler
     {
-
+      class locked_scheduler {};
     }
   }
 }

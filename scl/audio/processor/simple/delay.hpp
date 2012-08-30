@@ -24,8 +24,7 @@ namespace scl
 
         raw_delay_processor(audio_type type)
           : type(type) {}
-
-        audio_type input_type()
+                                           audio_type input_type()
         {
           return type;
         }
@@ -73,9 +72,9 @@ namespace scl
         
         ## Associated types
           ### State
-            `unit`
+            Type of the next value to output.
           ### Argument
-            The type of the initial delayed value.
+            Type of the the initial delayed value.
           ### Result
             `unit`
           ### Message Input
@@ -85,22 +84,21 @@ namespace scl
           ### Input
             An arbitrary type.
           ### Output
-            The type of the delayed value.
+            Type of the next value to output.
        */
-      template <class A, class B>
+      template <class A>
       class delay_processor
         : public processor <
-        unit, unit, unit,
+        A, A, unit,
         unit, unit,
-        A, B >
+        A, A >
       {
         raw_processor_ptr raw;
       public:
         delay_processor()
           : raw(
             new raw_delay_processor(
-              audio_type::get<A>(),
-              audio_type::get<B>())) {}
+              audio_type::get<A>())) {}
 
         raw_processor_ptr get_raw()
         {
