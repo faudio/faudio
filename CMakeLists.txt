@@ -7,6 +7,9 @@
 cmake_minimum_required(VERSION 2.8.8)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
+## Select language version
+include(FindC++0x)
+
 project(ScoreCleanerAudioEngine C CXX)
 set(VERSION_PRE "")
 set(VERSION_X 1)
@@ -98,9 +101,15 @@ add_custom_target(components_resolve
 add_custom_target(components_clean
   COMMAND cmake ${COMPONENT_DEFINES} -P "${CMAKE_SOURCE_DIR}/cmake/scripts/components_clean.cmake")
 
+# add_custom_target(format
+#   COMMAND sh "${CMAKE_SOURCE_DIR}/cmake/scripts/astyle.sh" scl
+#   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+#   )
+
 add_custom_target(run_scorecleaner
   COMMAND sh "${CMAKE_SOURCE_DIR}/cmake/scripts/run_scorecleaner.sh"
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  )
 
 
 if (NOT COMPONENTS_RESOLVED)
@@ -119,9 +128,14 @@ else (NOT COMPONENTS_RESOLVED)
   find_package(Fluidsynth)
   find_package(Glib)
   find_package(Gtest)         
+  find_package(ICU)
 
   add_definitions(${PTHREAD_DEFINITIONS})
   add_definitions(${ICONV_DEFINITIONS})
+  add_definitions(-DSCL_UNICODE=1)
+  if (APPLE)
+    add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=1)
+  endif()
   if (WIN32) # only MSYS really...
     # add_definitions(-static-libgcc)	 FIXME
     # add_definitions(-static-libstdc++) FIXME
@@ -131,6 +145,7 @@ else (NOT COMPONENTS_RESOLVED)
   add_definitions(-DBOOST_CHRONO_HEADER_ONLY=1)
 
   include_directories("include")
+  include_directories(${CMAKE_SOURCE_DIR}) # for scl and scl-c
   include_directories("${CMAKE_BINARY_DIR}/include") # for the conf file
   include_directories(${PTHREADS_INCLUDE_DIRS})
   include_directories(${ICONV_INCLUDE_DIRS})
@@ -141,6 +156,7 @@ else (NOT COMPONENTS_RESOLVED)
   include_directories(${GTEST_INCLUDE_DIRS})
 
   include_directories("external_libraries/boost")
+  include_directories("external_libraries/boost_lockfree")
   include_directories("external_libraries/vst")
 
   set(CMAKE_LIBRARY_PATH
@@ -169,7 +185,16 @@ else (NOT COMPONENTS_RESOLVED)
   list(APPEND DEPENDENCIES ${FLUIDSYNTH_LIBRARIES})
   list(APPEND DEPENDENCIES ${GLIB_LIBRARIES})
   list(APPEND DEPENDENCIES ${GTEST_LIBRARIES})
-
+# message("<<<<<<< ${ICU_LIBRARIES}")
+  # list(APPEND DEPENDENCIES ${ICU_LIBRARIES})
+  list(APPEND DEPENDENCIES "icudata")
+  list(APPEND DEPENDENCIES "icui18n")
+  list(APPEND DEPENDENCIES "icuio")
+  list(APPEND DEPENDENCIES "icule")
+  list(APPEND DEPENDENCIES "iculx")
+  list(APPEND DEPENDENCIES "icutu")  
+  list(APPEND DEPENDENCIES "icuuc")
+  
   if (WIN32)
     find_library (MINGW32 NAMES mingw32 PATH_SUFFIXES lib PATHS "C:/MinGW")
     find_library (OLE32   NAMES ole32   PATH_SUFFIXES lib PATHS "C:/MinGW")
@@ -197,13 +222,33 @@ else (NOT COMPONENTS_RESOLVED)
   # fftw or libfft ?
   # libmicrohttpd ?
   # oscpack
+  
+  if(WIN32)
+    set(USE_BOOST_THREAD_DEFAULT True)
+    set(USE_BOOST_ATOMIC_DEFAULT True)
+  else()
+    set(USE_BOOST_THREAD_DEFAULT True) # Change from upward commits
+    set(USE_BOOST_ATOMIC_DEFAULT False)
+  endif()
+  
+  option(USE_BOOST_THREAD "Force using Boost threads" ${USE_BOOST_THREAD_DEFAULT})
+  if (USE_BOOST_THREAD)
+    add_definitions(-DSCL_USE_BOOST_THREAD=1)
+  endif()
+  
+  option(USE_BOOST_ATOMIC "Force using Boost atomics" ${USE_BOOST_ATOMIC_DEFAULT})
+  if (USE_BOOST_THREAD)
+    add_definitions(-DSCL_USE_BOOST_ATOMIC=1)
+  endif()
 
   add_subdirectory(external_libraries)
 
-  list(APPEND DEPENDENCIES BoostThread)
-  list(APPEND DEPENDENCIES BoostFilesystem)
-  list(APPEND DEPENDENCIES BoostSystem)
-  # list(APPEND DEPENDENCIES BoostChrono)
+  if (USE_BOOST_THREAD)
+    list(APPEND DEPENDENCIES BoostSystem)
+    list(APPEND DEPENDENCIES BoostFilesystem)
+    list(APPEND DEPENDENCIES BoostThread)
+    # list(APPEND DEPENDENCIES BoostChrono)
+  endif()
 
   ## Configuration file
 
@@ -230,6 +275,6 @@ else (NOT COMPONENTS_RESOLVED)
 
   add_subdirectory(src)
   add_subdirectory(test)
-  # add_subdirectory(tool)
+  # add_subdirectory(tools)
 
 endif(NOT COMPONENTS_RESOLVED)

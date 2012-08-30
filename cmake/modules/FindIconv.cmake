@@ -45,10 +45,11 @@ include (FindPackageHandleStandardArgs)
 
 set(ICONV_PATHS
   "/usr"
+  "/usr/local"
   "C:/MinGW"
   )
 
-letmany (CMAKE_FIND_LIBRARY_SUFFIXES ".a") 
+letmany (CMAKE_FIND_LIBRARY_SUFFIXES ".a;.dylib") 
 find_path (ICONV_INCLUDE_DIR 
   NAMES iconv.h
   PATH_SUFFIXES include
