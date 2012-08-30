@@ -3,7 +3,7 @@
 
 #ifndef SCL_USE_BOOST_ATOMIC
 
-#warning "Not using boost atomics"
+// #warning "Not using boost atomics"
 #include <atomic>
 
 namespace scl
@@ -13,7 +13,7 @@ namespace scl
 
 #else
 
-#warning "Using boost atomics"
+// #warning "Using boost atomics"
 #include <boost/atomic.hpp>
 
 namespace scl

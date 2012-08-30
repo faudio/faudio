@@ -3,7 +3,7 @@
 
 #ifndef SCL_USE_BOOST_THREAD
 
-#warning "Not using boost threads"
+// #warning "Not using boost threads"
 #include <thread>
 #include <mutex>
 #include <condition_variable>
@@ -20,7 +20,7 @@ namespace scl
 
 #else
 
-#warning "Using boost threads"
+// #warning "Using boost threads"
 #include <boost/thread.hpp>
 #include <boost/exception/exception.hpp>
 #include <boost/chrono.hpp>

@@ -31,7 +31,7 @@ namespace scl
       Access the referenced shared_ptr, if one exists. Otherwise, return an empty shared_ptr. 
    */
   template <class A>
-  inline std::shared_ptr<A> get_reserved_ptr(ptr_t ptr, reserve_context_ptr context);
+  inline std::shared_ptr<A> get_reserved_ptr(A* ptr, reserve_context_ptr context);
 
   /** @cond internal */
 
@@ -94,10 +94,13 @@ namespace scl
   }
 
   template <class A>
-  inline std::shared_ptr<A> get_reserved_ptr(ptr_t raw_ptr, reserve_context_ptr context)
-  {
+  inline std::shared_ptr<A> get_reserved_ptr(A* ptr, reserve_context_ptr context)
+  {      
+    ptr_t raw_ptr = (ptr_t) ptr;
+    
     if (!context || !context->ptrs[raw_ptr])
       return std::shared_ptr<A>();
+    
     ptr_wrapper_of_type<A>* wrapped_ptr = (ptr_wrapper_of_type<A>*) context->ptrs[raw_ptr];
     return wrapped_ptr->ptr;
   }
