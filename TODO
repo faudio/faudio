@@ -1,4 +1,6 @@
 
+* Rewrite reserve_ptr in C++ style
+  * Just a class, unreserve etc are methods
 
 * Lifted function/processors in C++ can not handle tuples and lists, only vectors and raw types
 
