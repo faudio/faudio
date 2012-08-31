@@ -437,6 +437,9 @@ void AudioUnitProcessor::process(AudioProcessingInformation& info, AudioProcessi
     Float64 sampleTime       = (Float64) info.sampleCount;
     int     numberOfChannels = signal.numberOfChannels;
     int     numberOfFrames   = signal.numberOfFrames;
+#ifdef SCL_ADJUST_AU_VOLUME
+    Float64 gain = 8;
+#endif
 
     mData->timeStamp.mSampleTime = sampleTime;
 
@@ -451,7 +454,13 @@ void AudioUnitProcessor::process(AudioProcessingInformation& info, AudioProcessi
         Float32* buffer = (Float32*) mData->bufferList->mBuffers[channel].mData;
 
         for(int frame = 0; frame < numberOfFrames; ++frame)
+        {
+#ifdef SCL_ADJUST_AU_VOLUME
+            signal.data[channel * numberOfFrames + frame] = buffer[frame] * gain;
+#else
             signal.data[channel * numberOfFrames + frame] = buffer[frame];
+#endif
+        }
     }
 }
 

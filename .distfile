@@ -1,0 +1,7 @@
+[package "audio-engine-mac"]
+	version = 1.5.2
+	mode = put
+	site = doremir
+	subpath = build
+	path = ScoreCleanerAudio.framework
+

@@ -11,9 +11,9 @@ project(sclaudio C CXX)
 cmake_minimum_required(VERSION 2.8)
 cmake_policy(SET CMP0015 NEW)
 
-set(SCLAUDIO_VERSION_MAJOR 2)
-set(SCLAUDIO_VERSION_MINOR 0)
-set(SCLAUDIO_VERSION_MICRO 5)
+set(SCLAUDIO_VERSION_MAJOR 1)
+set(SCLAUDIO_VERSION_MINOR 5)
+set(SCLAUDIO_VERSION_MICRO 2)
 set(SCLAUDIO_VERSION 
     "${SCLAUDIO_VERSION_MAJOR}.${SCLAUDIO_VERSION_MINOR}.${SCLAUDIO_VERSION_MICRO}")
 
@@ -43,7 +43,7 @@ else()
 endif()
 
 include_directories("include" 
-                    "external" 
+                    "external"
                     ${SCLAUDIO_BOOST})
 
 set(PROJECT_SOURCE_DIR "src")
@@ -114,10 +114,12 @@ endif()
 ##
 ## Process child directories
 ##
+
+add_definitions(-DSCL_ADJUST_AU_VOLUME=1)
                       
 add_subdirectory(lib)
 add_subdirectory(src)
-add_subdirectory(test)  
+# add_subdirectory(test)  
 
 ##
 ## TODO Distribution, compression etc

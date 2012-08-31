@@ -26,10 +26,10 @@ find -X     build/ScoreCleanerAudio.framework/Frameworks -name ".svn" | xargs rm
 
 # XCode version
 
-mkdir -p    build-xcode/Debug/ScoreCleanerAudio.framework/Libraries
-mkdir -p    build-xcode/Debug/ScoreCleanerAudio.framework/Frameworks
-cp -R       lib/mac/shared/     build-xcode/Debug/ScoreCleanerAudio.framework/Libraries
-cp -R       lib/mac/frameworks/ build-xcode/Debug/ScoreCleanerAudio.framework/Frameworks
-
-find -X     build-xcode/Debug/ScoreCleanerAudio.framework/Libraries  -name ".svn" | xargs rm -rf
-find -X     build-xcode/Debug/ScoreCleanerAudio.framework/Frameworks -name ".svn" | xargs rm -rf
+# mkdir -p    build-xcode/Debug/ScoreCleanerAudio.framework/Libraries
+# mkdir -p    build-xcode/Debug/ScoreCleanerAudio.framework/Frameworks
+# cp -R       lib/mac/shared/     build-xcode/Debug/ScoreCleanerAudio.framework/Libraries
+# cp -R       lib/mac/frameworks/ build-xcode/Debug/ScoreCleanerAudio.framework/Frameworks
+# 
+# find -X     build-xcode/Debug/ScoreCleanerAudio.framework/Libraries  -name ".svn" | xargs rm -rf
+# find -X     build-xcode/Debug/ScoreCleanerAudio.framework/Frameworks -name ".svn" | xargs rm -rf
