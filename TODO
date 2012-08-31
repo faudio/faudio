@@ -1,5 +1,7 @@
 
 
+* Lifted function/processors in C++ can not handle tuples and lists, only vectors and raw types
+
 * Remove non concept-checking code out of the /concept namespaces
   (These should be Boost Concept Check definitions ONLY, to make transition easier)
 
