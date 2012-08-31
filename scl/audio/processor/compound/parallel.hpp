@@ -21,8 +21,6 @@ namespace scl
         raw_processor_ptr x;
         raw_processor_ptr y;
       public:
-        using parent_type = raw_processor;
-
         raw_parallel_processor(raw_processor_ptr x,
                                raw_processor_ptr y)
           : x(x), y(y) {}
@@ -102,9 +100,50 @@ namespace scl
           >
       {
         raw_processor_ptr raw;
-      public:
+      public:                                       
+        using input_type = typename X::input_type;
+        using output_type = typename Y::output_type;
         parallel_processor(X x, Y y)
-          : raw(new raw_parallel_processor(x.get_raw(), y.get_raw())) {}
+          : raw(
+            new raw_parallel_processor(
+              x.get_raw(), 
+              y.get_raw())) {}
+
+        raw_processor_ptr get_raw()
+        {
+          return raw;
+        }
+        void load(const unit& state)
+        {
+          raw->load((ptr_t) &state);
+        }
+        void store(unit& state)
+        {
+          raw->store((ptr_t) &state);
+        }
+        void prepare(const unit& argument)
+        {
+          raw->prepare((ptr_t) &argument);
+        }
+        void cleanup(unit& result)
+        {
+          raw->cleanup((ptr_t) &result);
+        }
+        bool is_ready()
+        {
+          return raw->is_ready();
+        }
+        void process(const std::list<unit>& input_messages,
+                     const input_type& input,
+                     output_type& output,
+                     std::list<unit>& output_messages)
+        {
+          raw->process(
+            (ptr_t) &input_messages,
+            (ptr_t) &input,
+            (ptr_t) &output,
+            (ptr_t) &output_messages);
+        }
       };      
     }
   }

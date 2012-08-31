@@ -20,8 +20,6 @@ namespace scl
         audio_type in_type;
         audio_type out_type;
       public:
-        using parent_type = raw_processor;
-
         raw_split_processor(audio_type type)
           : in_type(type), out_type(audio_type::pair(type, type)) {}
 

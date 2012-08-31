@@ -20,8 +20,6 @@ namespace scl
         audio_type type;
         raw_buffer buffer;
       public:
-        using parent_type = raw_processor;
-
         raw_delay_processor(audio_type type)
           : type(type) {}
                                            audio_type input_type()

@@ -22,8 +22,6 @@ namespace scl
         raw_processor_ptr g;
         raw_buffer buffer;
       public:
-        using parent_type = raw_processor;
-
         raw_sequence_processor(raw_processor_ptr f,
                                raw_processor_ptr g)
           : f(f), g(g)
@@ -47,15 +45,14 @@ namespace scl
         void prepare(ptr_t arg)
         {
           size_t size = f->output_type().size();
-// std::cout << "-------- buffer size: " << size << "\n";
           buffer.reset(size);
-          f->prepare(arg); // TODO is this right?
+          f->prepare(arg);
           g->prepare(arg);
         }
 
         void cleanup(ptr_t res)
         {
-          f->cleanup(res); // TODO is this right?
+          f->cleanup(res);
           g->cleanup(res);
         }
 

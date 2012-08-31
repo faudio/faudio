@@ -22,8 +22,6 @@ namespace scl
         audio_type type;
         raw_buffer buffer;
       public:
-        using parent_type = raw_processor;
-
         raw_constant_processor(audio_type dummy_type, audio_type type)
           : dummy_type(dummy_type), type(type) {}
 

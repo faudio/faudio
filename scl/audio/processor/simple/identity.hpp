@@ -20,8 +20,6 @@ namespace scl
       {
         audio_type type;
       public:
-        using parent_type = raw_processor;
-
         raw_identity_processor(audio_type type)
           : type(type) {}
 
