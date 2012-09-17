@@ -9,9 +9,9 @@
 #include <scl/concept/splittable.hpp>
 
 #define scl_concept(X)  template <class X>
-#define scl_usage(X)    public: BOOST_CONCEPT_USAGE(X)
 #define scl_typename(T) using T = typename X::T
 #define scl_requires(E) BOOST_CONCEPT_ASSERT((E))
+#define scl_usage(X)    public: BOOST_CONCEPT_USAGE(X)
 
 namespace scl
 {

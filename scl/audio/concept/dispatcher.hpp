@@ -2,6 +2,8 @@
 #pragma once
 
 #include <scl/concept.hpp>
+#include <scl/audio/concept/sender.hpp>
+#include <scl/audio/concept/receiver.hpp>
 
 namespace scl
 {

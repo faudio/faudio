@@ -25,10 +25,14 @@ namespace scl
     template <class X>
     struct Sender
     {
-      using message_type = X::message_type;
-      BOOST_CONCEPT_ASSERT((Copyable<message_type>));
-      BOOST_CONCEPT_USAGE(Sender)
-      {
+      scl_typename(message_type);
+      scl_requires(Copyable<message_type>);
+      
+      scl_usage(Sender)
+      {             
+        // TODO
+        // class test_receiver {};       
+        // x.send();
       }
     private:
       X t;
