@@ -1,7 +1,10 @@
 #!/bin/bash
 
-rm -rf  ~/Desktop/ScoreCleaner.app/Contents/Frameworks/ScoreCleanerAudio.framework;
-cp -R   ~/audio/build/ScoreCleanerAudio.framework ~/Desktop/ScoreCleaner.app/Contents/Frameworks/;
+APP="/Users/`whoami`/Desktop/ScoreCleaner.app"
+DEST="$APP/Contents/Frameworks"
+SRC="build"
 
-open    ~/Desktop/ScoreCleaner.app;
-#~/Desktop/ScoreCleaner.app/Contents/MacOS/ScoreCleaner
+rm -rf  "$DEST/ScoreCleanerAudio.framework";
+cp -R   "$SRC/ScoreCleanerAudio.framework" "$DEST/";
+
+open $APP;

@@ -23,7 +23,7 @@ set(SCLAUDIOX_SOURCES sclaudiox/processor.cc
                       
                       sclaudiox/processor/plugin/au.mm
                       sclaudiox/processor/plugin/vst2.cc
-                      sclaudiox/processor/synth/fluid.cc
+                      # sclaudiox/processor/synth/fluid.cc
                       
                       sclaudiox/device/audio.cc
                       sclaudiox/device/midi.cc
@@ -31,7 +31,8 @@ set(SCLAUDIOX_SOURCES sclaudiox/processor.cc
                       sclaudiox/stream/device/audio.cc
                       sclaudiox/stream/device/midi.cc
                       
-                      sclaudiox/util/symbol.cc)
+                      sclaudiox/util/symbol.cc
+                      sclaudiox/util/libc_workaround.cc)
                       
                       
 set(SCLAUDIO_SOURCES  ${SCLAUDIOX_SOURCES}
@@ -44,22 +45,28 @@ set(SCLAUDIO_SOURCES  ${SCLAUDIOX_SOURCES}
 
 message("Compiler definitions (library): ${SCLAUDIO_DEFINITIONS}")
 
+message("Deployment target is: ${CMAKE_OSX_DEPLOYMENT_TARGET}")
+message("Sysroot is: ${CMAKE_OSX_SYSROOT}")                          
+
+set(DEPT_SYSR "-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET} -isysroot ${CMAKE_OSX_SYSROOT}")
+add_definitions(${DEPT_SYSR})
+
 if(${SCLAUDIO_OSX})
     option(BUILD_SCLAUDIO_DYLIB     "Build an OS X dynamic library" FALSE)
     option(BUILD_SCLAUDIO_FRAMEWORK "Build an OS X framework"       TRUE)
                      
-    if(${BUILD_SCLAUDIO_DYLIB})
-        add_library(SCLAUDIO_DYLIB SHARED ${SCLAUDIO_SOURCES})
-        set_target_properties(SCLAUDIO_DYLIB
-            PROPERTIES
-                OUTPUT_NAME                 "sclaudio"
-                INSTALL_NAME_DIR            "/usr/local/lib/sclaudio.dylib"
-                OSX_ARCHITECTURES           i386
-                XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0"
-                LIBRARY_OUTPUT_DIRECTORY    "../"
-                COMPILE_DEFINITIONS         "${SCLAUDIO_DEFINITIONS}")
-        target_link_libraries(SCLAUDIO_DYLIB ${SCLAUDIO_LIBRARIES})
-    endif()    
+    # if(${BUILD_SCLAUDIO_DYLIB})
+    #     add_library(SCLAUDIO_DYLIB SHARED ${SCLAUDIO_SOURCES})
+    #     set_target_properties(SCLAUDIO_DYLIB
+    #         PROPERTIES
+    #             OUTPUT_NAME                 "sclaudio"
+    #             INSTALL_NAME_DIR            "/usr/local/lib/sclaudio.dylib"
+    #             # OSX_ARCHITECTURES           i386
+    #             # XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0"
+    #             LIBRARY_OUTPUT_DIRECTORY    "../"
+    #             COMPILE_DEFINITIONS         "${SCLAUDIO_DEFINITIONS}")
+    #     target_link_libraries(SCLAUDIO_DYLIB ${SCLAUDIO_LIBRARIES})
+    # endif()    
 
     if(${BUILD_SCLAUDIO_FRAMEWORK})
         add_library(SCLAUDIO SHARED ${SCLAUDIO_SOURCES})
@@ -69,9 +76,10 @@ if(${SCLAUDIO_OSX})
                 FRAMEWORK                   TRUE
                 FRAMEWORK_VERSION           "${SCLAUDIO_VERSION}"
                 INSTALL_NAME_DIR            "@executable_path/../Frameworks/ScoreCleanerAudio.framework/ScoreCleanerAudio"
-                OSX_ARCHITECTURES           i386
-                XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0"
+                # OSX_ARCHITECTURES           i386
+                # XCODE_ATTRIBUTE_GCC_VERSION "com.apple.compilers.llvm.clang.1_0"
                 LIBRARY_OUTPUT_DIRECTORY    "../"
+                LINK_FLAGS                  "${DEPT_SYSR}"
                 COMPILE_DEFINITIONS         "${SCLAUDIO_DEFINITIONS}")
         target_link_libraries(SCLAUDIO ${SCLAUDIO_LIBRARIES})
     endif()

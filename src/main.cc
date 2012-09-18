@@ -364,8 +364,8 @@ void openStream(int host, int device)
 {                                    
     AudioDevice* output = list::index(list::index(AudioHost::hosts(), host)->devices(), device);
     
-    if (!currentSynth)
-        currentSynth = new FluidSynth(SOUNDFONT_LOCATION);
+    // if (!currentSynth)
+    //     currentSynth = new FluidSynth(SOUNDFONT_LOCATION);
     
     Stream* temp = currentStream;
     currentStream = DeviceStream::open(NULL, NULL, NULL, output, currentSynth);
