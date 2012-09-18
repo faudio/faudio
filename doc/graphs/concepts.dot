@@ -1,0 +1,128 @@
+
+digraph graphname {
+  graph [ranksep=0.5, nodesep=0.5];
+
+  // subgraph std {    
+  //   Integer;
+  //   Integer -> SignedInteger;
+  //   Integer -> UnsignedInteger;
+  //   DefaultConstructible;
+  //   CopyConstructible;
+  //   MoveConstructible;
+  //   CopyAssignable;
+  //   MoveAssignable;
+  //   CopyConstructible -> Copyable; CopyAssignable -> Copyable;  
+  //   MoveConstructible -> Moveable; MoveAssignable -> Moveable;  
+  //   Destructible;
+  //   EqualityComparable;
+  //   LessThanComparable;
+  //   Swappable;
+  //   Hash;
+  //   Callable;
+  // }
+
+  subgraph scl
+  {
+    Abortable;
+    Abortable -> Startable;
+    Abortable -> Pausable;
+
+    Scheduler;
+    Receiver;
+    Sender;
+    Receiver -> Dispatcher; 
+    Sender -> Dispatcher;
+
+    Processor;
+    Processor -> Synth;
+    Processor -> Analyzer;
+    Processor -> Filter -> Attenuator;
+    Signal;
+
+    Semigroup -> Session;
+    Abortable -> Session;
+    Device;
+    DeviceGroup;
+    Startable -> Stream; 
+    Semigroup -> Stream;
+    Addressable -> Stream;
+    Addressable -> Processor;
+    Timer -> Stream;
+  }
+  
+  // --------------------------------------------------------------------------------
+  node [shape="rectangle", color="grey"];
+  
+  Pausable -> future;
+  improving;
+  Scheduler -> locked_scheduler;
+  Scheduler -> unlocked_scheduler;
+  // Scheduler -> reentrant_scheduler;
+  
+  Dispatcher -> queue_dispatcher;
+  // Dispatcher -> stack_dispatcher;
+  // Dispatcher -> buffered_dispatcher;
+  Dispatcher -> blocking_dispatcher;
+
+  Processor -> combinatory_processor;
+  combinatory_processor -> static_sequence;
+  combinatory_processor -> static_parallel;
+  combinatory_processor -> static_delay;
+  combinatory_processor -> sequence;
+  combinatory_processor -> parallel;
+  combinatory_processor -> delay;
+  combinatory_processor -> identity;
+  combinatory_processor -> constant;
+  combinatory_processor -> split;
+  combinatory_processor -> unary;
+  combinatory_processor -> binary;
+  combinatory_processor -> ternary;
+  combinatory_processor -> switch;
+
+  Processor -> plugin_processor;
+  plugin_processor -> au_plugin;
+  plugin_processor -> vst_plugin;
+  plugin_processor -> scl_plugin;
+  
+  Processor -> buffer_processor;
+  buffer_processor -> read;
+  buffer_processor -> write;
+  buffer_processor -> record;
+  buffer_processor -> playback;
+  
+  Processor -> any_processor;
+  
+  Session -> portaudio_session;
+  Session -> portmidi_session;
+  Session -> sndfile_session;
+  Device -> "portaudio_session::device_type";
+  Device -> "portmidi_session::device_type";
+  Device -> "sndfile_session::device_type";
+  DeviceGroup -> "portaudio_session::device_group_type";
+  DeviceGroup -> "portmidi_session::device_group_type";
+  DeviceGroup -> "sndfile_session::device_group_type";
+  Stream -> "portaudio_session::stream_type";
+  Stream -> "portmidi_session::stream_type";
+  Stream -> "sndfile_session::stream_type";
+
+  // --------------------------------------------------------------------------------
+
+  subgraph __pos
+  { 
+    edge [style=invis];
+    node [style=invis];
+    __misc -> Semigroup;
+    __misc -> Abortable;
+    "portmidi_session::stream_type" -> __misc2;
+    __misc2 -> Device;
+    __misc2 -> DeviceGroup;
+    __proc -> Processor;
+    __proc -> Signal;   
+    // "improving" -> __proc;
+    __sched -> Scheduler;
+    __sched -> Dispatcher;
+    __sched -> Addressable;
+    __sched -> improving;
+  }
+
+}

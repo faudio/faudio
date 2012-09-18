@@ -2,170 +2,183 @@
 Build and install
 =========================
 
-Building the audio engine should be as simple as:
-
-    $ git clone --recursive git@git.doremir.com:/repositories/audio-engine.git
-    $ cd audio-engine
-    $ ./boot && make
-
-To test it with an instance of ScoreCleaner on the desktop, use:
-
-    $ make run-scorecleaner
-
-
-
 Prerequisites
 ------------
 
-#### Dependencies
+This is a complete list of platforms, libraries and toolchains required to build the Audio Engine. For
+the standard platforms, most dependencies are available as binaries on the DoReMIR package server. See
+below for a step-by-step instruction on how to build.
 
-### Required
+### Platforms
 
-  * Boost
+Currently supported:
 
-### Optional
+* Mac OS X 10.5 (32-bit)
+* Windows XP or later (32-bit)
 
-  * Portaudio (for real-time audio)
-  * Portmidi (for real-time midi)
-  * Fluidsynth (for built in synthesis)     
-  * libsndfile (for non-realtime audio)
-  * libfft (for FFT and IFFT processors)
-  * libosc++ (for OSC messages)
-  * Google Test (for running the test suite)
-
-### Build tools
-
-#### Required
-
-  * CMake
-  * A unix shell (on Windows either MinGW/MSYS or Cygwin)
-
-#### Optional
-
-  * Pandoc (for documentation)
-  * Doxygen (for documentation)
-  * Make (for Lisp bindings)
+It should be relatively easy to port the Audio Engine to other platforms, provided that the required
+libraries and tools are available (see below).
 
 ### Compilers
 
-Any of the following:
+A compiler supporting C++0x (aka C++11 and C++11x) is required. Currently tested are:
 
-  * clang >= 3.1
-  * GCC   >= 4.6.2
-
-
-Fetching the source code
-----------
-
-The source code, as well as sources for the documentation and language bindings is stored in the repository `audio-engine.git`. Its dependencies are stored in separate repositories which are linked into the main repository as submodules. To fetch the source code for the audio engine and its dependencies, perform a recursive clone in Git:
-
-    $ git clone --recursive git@git.doremir.com:/repositories/audio-engine.git
-    $ cd audio-engine
-
-The last command will change your directory to the checked out repository. All following commands assume that you are already in this directory.
-
-To update, you can do:
-
-    $ git pull
-    $ git submodule update
-
-Fetching the dependencies
-----------
-
-Usually, the dependencies can simply be fetched from the package server by running `dist get --all`. This will
-download a precompiled version of each required library. The following instructions apply if you need to build a particular library from source.
-
-Building the dependencies
-----------
-
-Whenever possible, we try to build all dependencies as universal binaries containing static libraries for both 32 and 64-bit architectures. In some cases this is not possible, so we have to build 32 and 64-bit versions separately. We also try to build everything locally, to avoid depending on the configuration of a particular 
-system for the main build. You may or may not have these libraries installed on your local system; this should not interfere with the build. 
-
-Note that some dependencies (i.e. Boost) are source only – they do not require a separate build. Yet other dependencies are included in the operating system.
+  * clang 3.1   or later, using libc++ (Apple call this compiler "4.0.0 based of SVN 3.1")
+  * GCC   4.6.2 or later, using libstdc++
 
 
-### Mac OS X
+### Libraries
 
-Several of the dependency builds require that the system SDKs reside in `/Developer/SDKs`, which may not be the case in Mac 10.7 or later. Before attempting to build on these systems you must create a symbolic link to the actual location (which may vary depending on your OS) like so:
+#### Boost
 
-    sudo ln -s /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer /
+The Boost libraries are required on all systems. The libraries we currently use are:
+
+* Concept Check
+* Range
+* Algorithms
+* String Algorithms
+* Lexical Cast
+* Variant
+* Optional
+* Any
+
+On some system (notably MinGW) we additionally require Boost.Thread and Boost.Atomic. Other platforms use
+C++0x standard library for atomic operations and threads. Note that Boost.Atomic is not part of the official
+Boost distribution while Boost.Thread is.
+
+#### Boost.Lockfree
+
+Boost.Lockfree is required on all systems. It is not part of the official Boost distribution.
 
 #### Portaudio
 
-To build Portaudio on Mac OS X, simply run the configure script and use the generated Makefile.
+Required for real-time audio streams on all systems. Disable by setting `SCL_AUDIO_ENABLE_PORTAUDIO=0`.
 
-    $ cd external_libraries/portaudio
-    $ ./configure --prefix=`pwd`/result
-    $ make install
+#### Portmidi                                       
 
-To get all headers, you need to do:
-
-    $ cp -R include/ result/include/
-
-Portaudio builds a universal binary containing i386 and x86_84 by default.
-
-#### Portmidi
-
-    $ cd external_libraries/portmidi
-    $ mkdir result
-    $ cd result                  
-    $ cmake .. \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY="" \
-        -DCMAKE_LIBRARY_OUTPUT_DIRECTORY="" \
-        -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="" \
-        -DCMAKE_OSX_ARCHITECTURES="i386;x86_64"
-    $ make
-    
-This builds a universal binary containing i386 and x86_84.
-
-#### Sndfile
-
-    $ cd external_libraries/sndfile
-    $ CFLAGS="-arch i386 -I /Developer/SDKs/MacOSX10.7.sdk/Developer/Headers/FlatCarbon/" \
-      CXXFLAGS="-arch i386" \
-      LDFLAGS="-arch i386" \
-      ./configure --prefix=`pwd`/result
-    $ make install
-
-The current build can not build universal libraries, so the i386 architecture must be specified.
-
+Required for real-time midi streams on all systems. Disable by setting `SCL_AUDIO_ENABLE_PORTMIDI=0`.
 
 #### Fluidsynth
 
-FIXME This requires a proper recompilation of 32-bit GLib.
-We currently have a working 32-bit framework.
+Required for using the Fluidsynth audio processor. Disable by setting `SCL_AUDIO_ENABLE_FLUIDSYNTH=0`.
 
-#### GTest    
+#### Libsndfile
 
-FIXME We currently have a working 32-bit library.
+Required for non-real-time audio streams on all systems. Disable by setting `SCL_AUDIO_ENABLE_SNDFILE=0`.
 
-#### Boost
+#### System-specific code
+
+The audio engine automatically include certain system headers on both OS X and Windows. You can control this exlicitly
+by setting `SCL_AUDIO_ENABLE_OSX` or `SCL_AUDIO_ENABLE_WIN`.
+
+#### Google Test (gtest)
+
+Required for runnning the unit tests.
+ 
+
+
+### Build tools
+
+#### CMake
+
+Required for building the libraries and binaries.
+
+Supported generators are Unix makefiles and XCode on OS X, and MinGW or MSYS Makefiles on Windows. Cygwin might work,
+but beware that the Cygwin/GCC compiler might not generate standard Windows binaries.
+
+#### A Unix shell
+
+Required for running certain build scripts, and for building language bindings and documentation. On Windows the
+MinGW/MSYS shell is tested, but Cygwin might work as well.
+
+#### Dist
+
+Required for automatic package resolution. If you prefer to build packages locally, set `SCL_BUILD_PACKAGES=1`. In this
+case Dist is not required.
+
+#### Pandoc
+
+Required for generating the reference manual (HTML or PDF).
+  
+#### Doxygen
+
+Required for generating the detailed API documentation (HTML or PDF).
+
+
+
+Step by step
+----------
+
+### Downloading the source code
+
+The source code, as well as sources for the documentation and language bindings is stored in the repository
+`audio-engine.git`. Its dependencies are stored in separate repositories which are linked into the main repository as
+submodules. To fetch the source code for the audio engine and its dependencies, perform a recursive clone in Git:
+
+    $ git clone --recursive git@git.doremir.com:repositories/audio-engine
+    $ cd audio-engine
+
+The last command will change your directory to the checked out repository. All following commands assume that you are
+already in this directory.
+
+### Setting up the build environment
+
+    ./bootstrap
+    make help
+
+### Downloading dependencies
+
+    make components_resolve
+
+FIXME
+
+### Building dependencies
+
+    make edit_cache -DBUILD_COMPONENTS=1
+    make components_resolve
+
+FIXME                
+
+Whenever possible, we try to build all dependencies as universal binaries containing static libraries for both 32 and
+64-bit architectures. In some cases this is not possible, so we have to build 32 and 64-bit versions separately. We also
+try to build everything locally, to avoid depending on the configuration of a particular system for the main build. You
+may or may not have these libraries installed on your local system; this should not interfere with the build.
+
+Note that some dependencies (i.e. Boost) are source only – they do not require a separate build. Yet other dependencies
+are included in the operating system.
+
+### Building the audio engine
+
+    make
+
+### Testing the audio engine
+
+    make test
+
+    make run_scorecleaner
+
+FIXME
+
+
+### Building the language bindings
+
+    make bindings
+
+FIXME
+
+### Building the documentation
+
+    make documentation
+
+FIXME
+
+### Distributing the audio engine
+
+    make distribute
 
 FIXME
 
 
 
-Running the unit tests
-----------
-
-To run unit tests as part of the build, set the CMake option `RUN_SCLAUDIO_TESTS` to `ON`, then run `make` again. The unit test can be run separately as `build/bin/sclaudio_tests`. Beware that the whole test suite may take several minutes to complete.
-
-
-Building the language bindings
-----------
-
-TODO
-
-
-Building the documentation
-----------
-
-TODO
-
-
-Linking the audio engine into another application
-----------
-
-By default, dynamic libraries are built. On Mac OS X this is a framework called ScoreCleanerAudio.framework and a dynamic library called libsclaudio.dylib. They are different ways of packaging the same executable code. On Windows, a library file named sclaudio.lib and a dynamic library file named sclaudio.dll is generated. You can load any of these dynamically, using the appropriate system-specific API.
+\pagebreak
 

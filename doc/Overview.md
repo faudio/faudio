@@ -1,66 +1,62 @@
-Overview
-==========
 
-This page is a simple overview of the architecture and implementation of the audio engine.
+Basic concepts
+--------------
 
-The audio engine is implemented in C++ with bindings available for other languages. There is a C level API providing wrapper functions for C++ methods and classes. This allow the C++ API to be consumed by any language that interfaces with C.
+This chapter provides some brief definitions of the concepts used in the Audio Engine.
 
-Files
-----------
+### Future and improving values
 
-    doc/                Documentation
-    external/           External libraries (as Git submodules)
-    bindings/           Bindings to other languages
-    include/
-        scl/                C++ Header files
-            util/
-            thread/
-            audio/
-        scl-c/              C Header files
-            util/
-            thread/
-            audio/
-    src/                Sources for libraries
-        atomic/
-        thread/
-        parallel/
-        refcount/
-        immutable/
-        util/
-        audio/
-            device/
-            processor/
-            scheduling/
-            stream/
-    test/               Sources for unit tests
-        scl-audio-tests
-    tools/              Sources for tools
-        scl-sftool
-        scl-audio-httpd
-        scl-audio-oscd
+The Audio Engine use an opaque asynchronous interface. Two special kinds of asynchronous values
+are provided. A *future* value represents a value which may not be immediatly available. An
+*improving* value represents a value which may gradually approach its final value.
 
-Naming conventions
-----------
+### Sessions
 
-In C++, every class and functions reside in the namespace `scl`. C functions and macros are prefixed with `scl` and `SCL` respectively. This should minimize conflicts with other libraries that may be present in the same library or excutable. Furthermore, the API is organized in several sub-namespaces of `scl`:
+A *session* provides a snapshot of devices currently available on the system.
 
-* `scl::base`       
-  * Core classes, required by everything else.
-* `scl::math`       
-  * Math-related classes and functions.
-* `scl::list`       
-  * List-related classes and functions.
-* `scl::thread`     
-  * Thread- and concurrency-related classes and functions.
-* `scl::util`       
-  * Utility classes and functions, generally not dependent on anything else.
+### Devices
+
+A *device* is a provider of values of some type *B* and consumer of values of some type *A*. For
+example, an audio device provides and consumes audio samples while a midi device provides and
+consumes midi messages. A device may or may not correspond to a physical device, such as a sound
+card or midi keyboard.
+
+A device with no output is called a *source*, while a device with no input is called a *sink*.
+
+### Processors
+
+A *processor* provides a computation transforming a stream of values of some type *A* to a
+stream of values of some type *B*. The Audio Engine provide several primitive processors as well
+as wrappers for external audio plugins. Processors can be *composed* to create new processors.
+
+A processor with no input is often called an *unfold* or *synth*, while a processor with no
+input is called a *fold* or an *analyzer*. An intermediate processor is called a *map* or a
+*filter*.
+
+### Signals
+
+A signal is a stream of values of some type *A*. Signals and processors interact by application,
+specifically a processor from *A* to *B* may be applied to a signal of *A* to yield a signal of
+*B*.
+
+### Messages
+
+A *message* is an value of some type *M*, used for communication between different parts
+of an audio processing application. *Senders* and *receiver* emits and reacts to messages
+respectively. *Dispatchers* provides routing points where messages can be sent and received.
+
+### Schedulers
+
+A *scheduler* provides timely execution of *tasks*.
+
+### Streams
+
+A *stream* is a wrapper for one or more streaming computations, each involving a device and a
+processor. Processors may interact with each other and the outside world by messages. Each
+stream provides a scheduler and a dispatcher to manage communication.
+
+![Overview of the concepts used in the Audio Engine](images/stream.eps "")
 
 
-* `scl::audio::processor`
-  * Provides creation and composition of audio processors. 
-* `scl::audio::device`
-  * Provides enumeration and management of real-time audio and midi-devices. 
-* `scl::audio::scheduling`
-  * Provides scheduling and communication.
-* `scl::audio::stream`
-  * Provides streams, which encapsulate the device, processor and scheduling functionality into an audio computation.
+\pagebreak
+

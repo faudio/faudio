@@ -132,8 +132,9 @@ else (NOT COMPONENTS_RESOLVED)
 
   add_definitions(${PTHREAD_DEFINITIONS})
   add_definitions(${ICONV_DEFINITIONS})
-  add_definitions(-DSCL_UNICODE=1)
-  # add_definitions(-DSCL_ADJUST_AU_VOLUME=1)
+  add_definitions(-DSCL_UNICODE=1)            # Note: Has no effect in rewrite
+  # add_definitions(-DSCL_ADJUST_AU_VOLUME=1) # Note: Has no effect in rewrite
+  
   if (APPLE)
     add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=1)
   endif()
@@ -228,7 +229,7 @@ else (NOT COMPONENTS_RESOLVED)
     set(USE_BOOST_THREAD_DEFAULT True)
     set(USE_BOOST_ATOMIC_DEFAULT True)
   else()
-    set(USE_BOOST_THREAD_DEFAULT True) # Change from upward commits
+    set(USE_BOOST_THREAD_DEFAULT False)
     set(USE_BOOST_ATOMIC_DEFAULT False)
   endif()
   
@@ -274,8 +275,8 @@ else (NOT COMPONENTS_RESOLVED)
 
   ## Process source
 
-  add_subdirectory(src)
+  # add_subdirectory(src)
   add_subdirectory(test)
-  # add_subdirectory(tools)
+  add_subdirectory(tools)
 
 endif(NOT COMPONENTS_RESOLVED)

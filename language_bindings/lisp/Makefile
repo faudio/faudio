@@ -1,7 +1,7 @@
 
-all:   lw-gen examples
+all:     lw-gen examples
 install: lw-gen
-clean: clean-lw-gen clean-examples
+clean:   clean-lw-gen clean-examples
 
 INSTALL_DIR = ../../dist/audio-engine-lisp/audio-engine
 install:

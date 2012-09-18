@@ -165,6 +165,12 @@ pre.fragment {
 	line-height: 125%;
 }
 
+div.line {
+/*  border: 1px solid #C4CFE5;*/
+  font-family: monospace;
+  font-size: 11px;
+}
+
 div.ah {
 	background-color: black;
 	font-weight: bold;
@@ -397,8 +403,9 @@ table.memberdecls {
 }
 
 .memTemplParams {
-    font-size: 0%;
-	color: #4665A2;
+  /* Not showing templates */
+    font-size: 90%;  
+	  color: #4665A2;
     white-space: nowrap;
 }
 
@@ -411,7 +418,8 @@ table.memberdecls {
 br.typebreak { display: none; }
 
 .memtemplate {
-	font-size: 0%;
+  /* Not showing templates */
+	font-size: 90%;
 	color: #4665A2;
 	font-weight: normal;
 	margin-left: 9px;

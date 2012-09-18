@@ -1,0 +1,51 @@
+
+#define RELATE1(a, how) \
+  a -> a [label = how]
+#define RELATE2(a, how, b) \
+  a -> b [label = how]
+// #define RELATE3(a, b, how, c) \
+  // a -> c [label = how]; \
+  // b -> c [label = how]
+#define RELATE3(a, b, how, c) \
+  a; b; c; \
+  "abc"      [shape=point]; \
+  a -> "abc" [arrowhead=none]; \
+  b -> "abc" [arrowhead=none]; \
+  "abc" -> c [label = how]
+
+
+digraph graphname {
+  graph [ranksep=0.5, nodesep=0.5];
+  
+  RELATE1(Session,              "can be added to"                     );
+  RELATE2(Session,              "provides",               DeviceGroup );
+
+  RELATE2(DeviceGroup,          "enumerates",             Device      );
+  RELATE2(DeviceGroup,          "provides default",       Device      );
+
+  RELATE1(Processor,            "can be composed with"                );
+  RELATE2(Processor,            "maps adresses to",       Dispatcher  );
+  RELATE2(Dispatcher,           "sends messages to",      Processor   );
+  RELATE2(Dispatcher,           "receives messages from", Processor   );
+
+  // RELATE3(Processor, Signal,    "can be applied to create", Signal   );
+  RELATE3(Device, Processor,    "opens",                  Stream      );
+  RELATE1(Stream,               "can be added to"                     );
+  RELATE2(Session,              "aborts",                 Stream      );
+  RELATE2(Stream,               "maps adresses to",       Dispatcher  );
+  RELATE2(Stream,               "provides completion",    future      );
+  RELATE2(Stream,               "provides",               "improving<time>" );
+
+  RELATE2("improving<time>",    "generalizes",            future      );
+
+  RELATE2("improving<time>",    "creates",                Scheduler   );
+  RELATE2(Scheduler,            "executes",               Tasks       );
+  RELATE2(Scheduler,            "returns",                future      );
+  RELATE2(future,               "aborts",                 Scheduler   );
+
+  subgraph __pos
+  { 
+    edge [style=invis];
+    node [style=invis];
+  }
+}
