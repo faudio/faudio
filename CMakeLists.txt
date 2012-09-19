@@ -68,7 +68,14 @@ if(APPLE)
   if(ARCH_NOT_32_BIT)
     message(FATAL_ERROR 
       "\nThe Audio Engine does not support 64-bit mode yet."
-      "\nTry -D CMAKE_OSX_ARCHITECTURES=i386.")
+      "\nTry -DCMAKE_OSX_ARCHITECTURES=i386.")
+  endif()
+  
+  string(COMPARE EQUAL "${CMAKE_OSX_DEPLOYMENT_TARGET}" "" NO_DEP_TARGET)
+  if(NO_DEP_TARGET)
+    message(FATAL_ERROR 
+      "\nNo OS X deployment target set."
+      "\nTry -DCMAKE_OSX_DEPLOYMENT_TARGET=10.5.")    
   endif()
 endif()
 
