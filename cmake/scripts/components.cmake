@@ -50,3 +50,10 @@ add_standard_component(COMPONENTS Gtest
   ${AUDIO_ENGINE_SYSTEM_NAME}
   )
 
+predicate_file_exists(icu_exists
+  "external_libraries/icu2/result/include/unicode/uchar.h"
+  )
+add_standard_component(COMPONENTS ICU
+  icu_exists
+  ${AUDIO_ENGINE_SYSTEM_NAME}
+  )

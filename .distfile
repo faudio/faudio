@@ -69,6 +69,13 @@
     path    = include, lib
     mode    = get/put
 
+[package "icu-osx"]
+    site    = doremir
+    version = 49.1.1
+    subpath = external_libraries/icu2/result
+    path    = include, lib
+    mode    = get/put
+
 
 
 # Windows/MinGW dependencies
