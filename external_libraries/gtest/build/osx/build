@@ -7,6 +7,8 @@ pushd external_libraries/gtest/source;
 mkdir -p build \
     && pushd build \
     && cmake .. \
+        -DCMAKE_OSX_SYSROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk" \
+        -DCMAKE_OSX_DEPLOYMENT_TARGET="10.5" \
         -DCMAKE_OSX_ARCHITECTURES="i386;x86_64" \
     && make \
     && popd \

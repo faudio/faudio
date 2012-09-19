@@ -9,8 +9,9 @@ CXXFLAGS="-arch i386" \
 LDFLAGS="-arch i386" \
 ./configure \
     --prefix=`pwd`/../result \
+    --enable-mac-universal \
 	  && make \
-		&& make install \
-		&& cp -R include/ ../result/include/
+	  && make install \
+	  && cp -R include/ ../result/include/
 
 popd;

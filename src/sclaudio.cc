@@ -721,12 +721,12 @@ SclAudioProcessor scl_parallel(SclAudioProcessor *objs, int len, SclDspError *er
         ex(acquire(AudioProcessor::parallel(importList<AudioProcessor>(objs, len)))));
 }
 
-SclAudioProcessor scl_load_fluidsynth(SclString path, SclDspError *err)
-{
-    WITH_ONE_EXCEPTION(FluidSynthError, 
-        ex(acquire(new FluidSynth(in<String,SclString>(path)))));
-	return NULL;
-}
+// SclAudioProcessor scl_load_fluidsynth(SclString path, SclDspError *err)
+// {
+//     WITH_ONE_EXCEPTION(FluidSynthError, 
+//         ex(acquire(new FluidSynth(in<String,SclString>(path)))));
+//  return NULL;
+// }
 
 SCLAUDIO_API SclAudioPlugin scl_plugin_from_error(SclAudioPluginError obj)
 {

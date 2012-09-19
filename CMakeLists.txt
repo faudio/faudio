@@ -14,7 +14,7 @@ project(ScoreCleanerAudioEngine C CXX)
 set(VERSION_PRE "")
 set(VERSION_X 1)
 set(VERSION_Y 5)
-set(VERSION_Z 2)
+set(VERSION_Z 3)
 set(VERSION_SUFF "")
 set(VERSION "${VERSION_PRE}${VERSION_X}.${VERSION_Y}.${VERSION_Z}${VERSION_SUFF}")
 
@@ -125,18 +125,26 @@ else (NOT COMPONENTS_RESOLVED)
   find_package(Portaudio)
   find_package(Portmidi)
   find_package(Sndfile)
-  find_package(Fluidsynth)
-  find_package(Glib)
+  # find_package(Fluidsynth)
+  # find_package(Glib)
   find_package(Gtest)         
-  find_package(ICU)
+  # find_package(ICU)
 
   add_definitions(${PTHREAD_DEFINITIONS})
   add_definitions(${ICONV_DEFINITIONS})
   add_definitions(-DSCL_UNICODE=1)            # Note: Has no effect in rewrite
-  # add_definitions(-DSCL_ADJUST_AU_VOLUME=1) # Note: Has no effect in rewrite
+  add_definitions(-DSCL_ADJUST_AU_VOLUME=1)   # Note: Has no effect in rewrite
   
   if (APPLE)
-    add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=1)
+    add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=1)                          
+    # message("Sysroot is " ${CMAKE_OSX_SYSROOT})
+    # message("Target is "${CMAKE_OSX_DEPLOYMENT_TARGET}) 
+    add_definitions("-mmin-macosx-version=${CMAKE_OSX_DEPLOYMENT_TARGET}")
+    add_definitions("-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
+    add_definitions("-isysroot ${CMAKE_OSX_SYSROOT}")
+    set(STD_LINK_FLAGS "${STD_LINK_FLAGS} -mmin-macosx-version=${CMAKE_OSX_DEPLOYMENT_TARGET}")
+    set(STD_LINK_FLAGS "${STD_LINK_FLAGS} -mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
+    set(STD_LINK_FLAGS "${STD_LINK_FLAGS} -isysroot ${CMAKE_OSX_SYSROOT}")
   endif()
   if (WIN32) # only MSYS really...
     # add_definitions(-static-libgcc)	 FIXME
@@ -147,15 +155,16 @@ else (NOT COMPONENTS_RESOLVED)
   add_definitions(-DBOOST_CHRONO_HEADER_ONLY=1)
 
   include_directories("include")
-  include_directories(${CMAKE_SOURCE_DIR}) # for scl and scl-c
   include_directories("${CMAKE_BINARY_DIR}/include") # for the conf file
+  include_directories(${CMAKE_SOURCE_DIR})           # for scl and scl-c
   include_directories(${PTHREADS_INCLUDE_DIRS})
   include_directories(${ICONV_INCLUDE_DIRS})
   include_directories(${PORTAUDIO_INCLUDE_DIRS})
   include_directories(${PORTMIDI_INCLUDE_DIRS})
-  include_directories(${SNDFILE_INCLUDE_DIRS})
-  include_directories(${FLUIDSYNTH_INCLUDE_DIRS})
+  # include_directories(${SNDFILE_INCLUDE_DIRS})
+  # include_directories(${FLUIDSYNTH_INCLUDE_DIRS})
   include_directories(${GTEST_INCLUDE_DIRS})
+  include_directories("external_libraries/icu2/result/include")
 
   include_directories("external_libraries/boost")
   include_directories("external_libraries/boost_lockfree")
@@ -166,10 +175,11 @@ else (NOT COMPONENTS_RESOLVED)
     ${ICONV_LIBRARIES}
     ${PORTAUDIO_LIBRARIES}
     ${PORTMIDI_LIBRARIES}
-    ${SNDFILE_LIBRARIES}
-    ${FLUIDSYNTH_LIBRARIES}
+    # ${SNDFILE_LIBRARIES}
+    # ${FLUIDSYNTH_LIBRARIES}
     ${GLIB_LIBRARIES}
     ${GTEST_LIBRARIES}
+    "external_libraries/icu2/result/lib"
     "/mingw/lib"
     "/mingw"
     )
@@ -183,19 +193,17 @@ else (NOT COMPONENTS_RESOLVED)
   list(APPEND DEPENDENCIES ${ICONV_LIBRARIES})
   list(APPEND DEPENDENCIES ${PORTAUDIO_LIBRARIES})
   list(APPEND DEPENDENCIES ${PORTMIDI_LIBRARIES})
-  list(APPEND DEPENDENCIES ${SNDFILE_LIBRARIES})
-  list(APPEND DEPENDENCIES ${FLUIDSYNTH_LIBRARIES})
+  # list(APPEND DEPENDENCIES ${SNDFILE_LIBRARIES})
+  # list(APPEND DEPENDENCIES ${FLUIDSYNTH_LIBRARIES})
   list(APPEND DEPENDENCIES ${GLIB_LIBRARIES})
   list(APPEND DEPENDENCIES ${GTEST_LIBRARIES})
-# message("<<<<<<< ${ICU_LIBRARIES}")
-  # list(APPEND DEPENDENCIES ${ICU_LIBRARIES})
-  list(APPEND DEPENDENCIES "icudata")
-  list(APPEND DEPENDENCIES "icui18n")
-  list(APPEND DEPENDENCIES "icuio")
-  list(APPEND DEPENDENCIES "icule")
-  list(APPEND DEPENDENCIES "iculx")
-  list(APPEND DEPENDENCIES "icutu")  
-  list(APPEND DEPENDENCIES "icuuc")
+  list(APPEND DEPENDENCIES "${CMAKE_SOURCE_DIR}/external_libraries/icu2/result/lib/libicudata.a")
+  list(APPEND DEPENDENCIES "${CMAKE_SOURCE_DIR}/external_libraries/icu2/result/lib/libicui18n.a")
+  list(APPEND DEPENDENCIES "${CMAKE_SOURCE_DIR}/external_libraries/icu2/result/lib/libicuio.a")
+  list(APPEND DEPENDENCIES "${CMAKE_SOURCE_DIR}/external_libraries/icu2/result/lib/libicule.a")
+  list(APPEND DEPENDENCIES "${CMAKE_SOURCE_DIR}/external_libraries/icu2/result/lib/libiculx.a")
+  list(APPEND DEPENDENCIES "${CMAKE_SOURCE_DIR}/external_libraries/icu2/result/lib/libicutu.a")  
+  list(APPEND DEPENDENCIES "${CMAKE_SOURCE_DIR}/external_libraries/icu2/result/lib/libicuuc.a")
   
   if (WIN32)
     find_library (MINGW32 NAMES mingw32 PATH_SUFFIXES lib PATHS "C:/MinGW")
@@ -229,8 +237,8 @@ else (NOT COMPONENTS_RESOLVED)
     set(USE_BOOST_THREAD_DEFAULT True)
     set(USE_BOOST_ATOMIC_DEFAULT True)
   else()
-    set(USE_BOOST_THREAD_DEFAULT False)
-    set(USE_BOOST_ATOMIC_DEFAULT False)
+    set(USE_BOOST_THREAD_DEFAULT True)
+    set(USE_BOOST_ATOMIC_DEFAULT True)
   endif()
   
   option(USE_BOOST_THREAD "Force using Boost threads" ${USE_BOOST_THREAD_DEFAULT})
@@ -275,8 +283,8 @@ else (NOT COMPONENTS_RESOLVED)
 
   ## Process source
 
-  # add_subdirectory(src)
-  add_subdirectory(test)
-  add_subdirectory(tools)
+  add_subdirectory(src)
+  # add_subdirectory(test)
+  # add_subdirectory(tools)
 
 endif(NOT COMPONENTS_RESOLVED)

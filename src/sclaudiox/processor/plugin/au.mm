@@ -452,7 +452,7 @@ void AudioUnitProcessor::process(AudioProcessingInformation& info, AudioProcessi
     int     numberOfChannels = signal.numberOfChannels;
     int     numberOfFrames   = signal.numberOfFrames;
 #ifdef SCL_ADJUST_AU_VOLUME
-    Float64 gain = 1;
+    Float64 gain = 8;
 #endif
 
     mData->timeStamp.mSampleTime = sampleTime;

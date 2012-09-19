@@ -1,106 +1,111 @@
 
+[package "dummy"]
+
+## Exported libraries
+
 [package "audio-engine-mac"]
-site    = doremir
-version = 1.5.0
-subpath = build
-path    = ScoreCleanerAudio.framework, libsclaudio.dylib
-mode    = put
+    site    = doremir
+    version = 1.5.3
+    subpath = build
+    path    = ScoreCleanerAudio.framework, libsclaudio.dylib
+    mode    = put
 
 [package "audio-engine-win"]
-site    = doremir
-version = 1.5.0
-subpath = build
-path    = sclaudio.dll
-mode    = put
+    site    = doremir
+    version = 1.5.0
+    subpath = build
+    path    = sclaudio.dll
+    mode    = put
 
 [package "audio-engine-doc"]
-site    = doremir
-version = 1.5.0
-subpath = doc/build
-path    = html
-mode    = put
+    site    = doremir
+    version = 1.5.0
+    subpath = doc/build
+    path    = html
+    mode    = put
 
 [package "audio-engine-lisp"]
-site    = doremir
-version = 1.5.0
-subpath = dist/audio-engine-lisp
-path    = audio-engine
-mode    = put
+    site    = doremir
+    version = 1.5.3
+    subpath = dist/audio-engine-lisp
+    path    = audio-engine
+    mode    = put
 
 
 # Mac OS X dependencies
 
 [package "portaudio-osx"]
-site    = doremir
-version = 19.0.0
-subpath = external_libraries/portaudio/result
-path    = include, lib
-mode	= get/put
+    site    = doremir
+    version = 19.0.0
+    subpath = external_libraries/portaudio/result
+    path    = include, lib
+    mode    = get/put
 
 [package "portmidi-osx"]
-site 	= doremir
-version = 2.17.0
-subpath = external_libraries/portmidi/result
-path    = include, lib
-mode	= get/put
+    site    = doremir
+    version = 2.17.0
+    subpath = external_libraries/portmidi/result
+    path    = include, lib
+    mode    = get/put
 
 [package "sndfile-osx"]
-site    = doremir
-version = 1.0.25
-subpath = external_libraries/sndfile/result
-path    = include, lib, bin, share
-mode    = get/put
+    site    = doremir
+    version = 1.0.25
+    subpath = external_libraries/sndfile/result
+    path    = include, lib, bin, share
+    mode    = get/put
 
 [package "fluidsynth-osx"]
-site    = doremir
-version = 1.1.5
-subpath = external_libraries/fluidsynth/result
-path    = include, lib, bin, share
-mode    = get/put
+    site    = doremir
+    version = 1.1.5
+    subpath = external_libraries/fluidsynth/result
+    path    = include, lib, bin, share
+    mode    = get/put
 
 [package "gtest-osx"]
-site    = doremir
-version = 1.6.0
-subpath = external_libraries/gtest/result
-path    = include, lib
-mode	= get/put
+    site    = doremir
+    version = 1.6.0
+    subpath = external_libraries/gtest/result
+    path    = include, lib
+    mode    = get/put
 
 
 
 # Windows/MinGW dependencies
 
 [package "portaudio-msys"]
-site    = doremir
-version = 19.0.0
-subpath = external_libraries/portaudio/result
-path    = include, lib
-mode	= get/put
+    site    = doremir
+    version = 19.0.0
+    subpath = external_libraries/portaudio/result
+    path    = include, lib
+    mode    = get/put
 
 [package "portmidi-msys"]
-site 	= doremir
-version = 2.17.0
-subpath = external_libraries/portmidi/result
-path    = include, lib
-mode	= get/put
+    site    = doremir
+    version = 2.17.0
+    subpath = external_libraries/portmidi/result
+    path    = include, lib
+    mode    = get/put
 
 [package "sndfile-msys"]
-site    = doremir
-version = 1.0.25
-subpath = external_libraries/sndfile/result
-path    = include, lib, bin
-mode    = get/put
+    site    = doremir
+    version = 1.0.25
+    subpath = external_libraries/sndfile/result
+    path    = include, lib, bin
+    mode    = get/put
 
 [package "fluidsynth-msys"]
-site    = doremir
-version = 1.1.5
-subpath = external_libraries/fluidsynth/result
-path    = include, lib, bin
-mode    = get/put
+    site    = doremir
+    version = 1.1.5
+    subpath = external_libraries/fluidsynth/result
+    path    = include, lib, bin
+    mode    = get/put
 
 [package "gtest-msys"]
-site    = doremir
-version = 1.6.0
-subpath = external_libraries/gtest/result
-path    = include, lib
-mode	= get/put
+    site    = doremir
+    version = 1.6.0
+    subpath = external_libraries/gtest/result
+    path    = include, lib
+    mode    = get/put
+
 

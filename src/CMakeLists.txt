@@ -11,7 +11,7 @@ list(APPEND SOURCE_FILES
   sclaudiox/scheduling/future.cc
   sclaudiox/processor.cc
   sclaudiox/processor/plugin/vst2.cc
-  sclaudiox/processor/synth/fluid.cc
+  # sclaudiox/processor/synth/fluid.cc
   # sclaudiox/processor/synth/fluid_nil.cc
   sclaudiox/device/audio.cc
   sclaudiox/device/midi.cc
@@ -47,30 +47,8 @@ if( APPLE AND BUILD_FRAMEWORK)
     LIBRARY_OUTPUT_DIRECTORY    "../Frameworks"
     INSTALL_NAME_DIR            "@executable_path/../Frameworks/ScoreCleanerAudio.framework/ScoreCleanerAudio"
     COMPILE_FLAGS               "-Wno-deprecated-declarations -Wno-shift-overflow -Wno-parentheses"
+    LINK_FLAGS                  "${STD_LINK_FLAGS}"
    )
   target_link_libraries(ScoreCleanerAudio_framework ${DEPENDENCIES})
   set(MAIN_LIBRARY ScoreCleanerAudio_framework PARENT_SCOPE)
 endif ()
-
-if (WIN32)
-  add_library(sclaudio_dll SHARED
-    ${SOURCE_FILES}
-   )
-  set_target_properties(sclaudio_dll PROPERTIES
-    OUTPUT_NAME                 sclaudio-${VERSION}
-    LIBRARY_OUTPUT_DIRECTORY    "../bin"
-    ARCHIVE_OUTPUT_DIRECTORY    "../bin"
-    RUNTIME_OUTPUT_DIRECTORY    "../bin"
-   )
-
-  target_link_libraries(sclaudio_dll ${DEPENDENCIES})
-
-  add_custom_target(copy_libs_msys
-    COMMAND sh "${CMAKE_SOURCE_DIR}/cmake/scripts/copy_libs_msys.sh"
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-   )
-  add_dependencies(sclaudio_dll copy_libs_msys)
-
-  set(MAIN_LIBRARY sclaudio_dll PARENT_SCOPE)
-endif()
-
