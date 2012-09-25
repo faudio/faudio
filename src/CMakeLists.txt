@@ -52,3 +52,11 @@ if( APPLE AND BUILD_FRAMEWORK)
   target_link_libraries(ScoreCleanerAudio_framework ${DEPENDENCIES})
   set(MAIN_LIBRARY ScoreCleanerAudio_framework PARENT_SCOPE)
 endif ()
+
+add_executable(scl_main "main.cc")
+set_target_properties(scl_main PROPERTIES
+  RUNTIME_OUTPUT_DIRECTORY    "../bin" 
+  COMPILE_FLAGS               "-Wno-deprecated-declarations -Wno-shift-overflow -Wno-parentheses"
+  LINK_FLAGS                  "${STD_LINK_FLAGS}"
+ )
+target_link_libraries(scl_main ScoreCleanerAudio_framework)

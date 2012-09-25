@@ -12,10 +12,6 @@
 #include "sclaudiox/scheduling/realtime/scheduler.h"
 #include "sclaudiox/util/foreach.h"
 
-#ifdef SCL_LOG
-    #define SCL_LOG_MIDI
-#endif
-
 namespace doremir {
 namespace scl {
 
@@ -89,9 +85,7 @@ public:
                 Message message = midiToMessage(resetMidiChannel(events[bufferIndex].message));
                 info.channel    = midiChannel(events[bufferIndex].message);
 
-#ifdef SCL_LOG_MIDI_RECV
-                SCL_WRITE_LOG(toString(message));
-#endif
+                SCL_WRITE_LOG(toString(message) << "\n");
 
                 receiver->accept(time, message, info);
             }

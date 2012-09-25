@@ -12,11 +12,7 @@
 #include "sclaudiox/scheduling/future.h"
 #include "sclaudiox/util/logging.h"
 
-#ifdef SCL_LOG
-    #ifndef SCL_NO_SCHEDULER_LOG
-        #define SCL_LOG_SCHEDULER 1000
-    #endif
-#endif
+#define SCL_AUDIO_LOG_SCHEDULER 1000
 
 namespace doremir {
 namespace scl {
@@ -47,13 +43,13 @@ public:
     {
         Lock lock (queueMutex);
 
-#ifdef SCL_LOG_SCHEDULER
-            SCL_WRITE_LOG_IFN( time % SCL_LOG_SCHEDULER,
-                               "Scheduler: "    << this 
-                            << "  Thread : "    << boost::this_thread::get_id() 
-                            << "  Queue size: " << queue.size() 
-                            << "  Top: "        << (queue.size() ? queue.top()->time() : -1) 
-                            << "  Time: "       << time << "\n" );
+#ifdef SCL_AUDIO_LOG_SCHEDULER
+        SCL_WRITE_LOG_IFN( time % SCL_AUDIO_LOG_SCHEDULER,
+                           "Scheduler: "    << this 
+                        << "  Thread : "    << boost::this_thread::get_id() 
+                        << "  Queue size: " << queue.size() 
+                        << "  Top: "        << (queue.size() ? queue.top()->time() : -1) 
+                        << "  Time: "       << time << "\n" );
 #endif
 
         while (queue.size()    > 0 

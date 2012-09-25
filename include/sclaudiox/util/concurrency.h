@@ -74,11 +74,6 @@ inline void waitForThread(Thread* thread)
     }
 }
 
-
-// =============================================================================
-
-// Concurrent printing
-
 static RecursiveMutex *printMutexInst;
 
 /**
@@ -91,8 +86,32 @@ inline RecursiveMutex& printMutex()
     return *printMutexInst;
 }
 
-
-// =============================================================================
+template <class T>
+class SendVar
+{      
+  T s;
+  bool full;
+  ConditionVariable cond;
+  Mutex mutex;
+public:       
+  SendVar()
+    : full(false) {}
+  void put(T x)
+  {
+    boost::unique_lock<Mutex> lock (mutex);
+    s = x;      
+    full = true;
+    cond.notify_one();
+  }
+  void take(T* x)
+  {
+    boost::unique_lock<Mutex> lock (mutex);
+    while (!full)
+      cond.wait(lock);
+    full = false;
+    *x = s;
+  }
+};
 
 #ifdef _WIN32_DCOM
 /**
@@ -106,14 +125,14 @@ class WindowsComToken : public NonCopyable
 public:
     WindowsComToken()
     {
-#ifdef SCL_LOG
+#ifdef SCL_AUDIO_ENABLE_LOGGING
         SCL_WRITE_LOG("Calling CoInitializeEx\n");
 #endif
         mErr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
         
         if ( mErr == RPC_E_CHANGED_MODE )
         {          
-#ifdef SCL_LOG
+#ifdef SCL_AUDIO_ENABLE_LOGGING
             SCL_WRITE_LOG("CoInitializeEx failed with RPC_E_CHANGED_MODE");
 #endif
 		}
@@ -121,7 +140,7 @@ public:
 
     ~WindowsComToken() 
 	{ 
-#ifdef SCL_LOG
+#ifdef SCL_AUDIO_ENABLE_LOGGING
             SCL_WRITE_LOG("Calling CoUninitialize\n");
 #endif
 		// TODO when to call safely?
@@ -134,13 +153,6 @@ private:
 };
 #endif // _WIN32_DCOM
 
-
-
-#ifdef _WIN32_DCOM
-    #define SCL_WINDOWS_COM_INIT WindowsComToken SCL_WINDOWS_COM_INIT__windowsComToken
-#else
-    #define SCL_WINDOWS_COM_INIT
-#endif
 
 } // namespace
 } // namespace

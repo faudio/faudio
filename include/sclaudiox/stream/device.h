@@ -14,7 +14,7 @@
 #include "sclaudiox/util/concurrency.h"
 #include "sclaudiox/util/logging.h"
 
-#ifdef SCL_LOG
+#ifdef SCL_AUDIO_ENABLE_LOGGING
   #define SCL_LOG_TIMER 100
   #define SCL_LOG_EXEC 100
 #endif
@@ -226,7 +226,9 @@ public:
      */
     static void executor(DeviceStream* instance, RealtimeScheduler* scheduler)
     {
-        SCL_WINDOWS_COM_INIT;
+#ifdef _WIN32_DCOM
+        WindowsComToken windowsComToken;
+#endif
         
         try 
         {
@@ -257,7 +259,9 @@ public:
      */
     static void timer(DeviceStream* instance, int interval)
     {
-        SCL_WINDOWS_COM_INIT;
+#ifdef _WIN32_DCOM
+        WindowsComToken windowsComToken;
+#endif
 
         try
         {

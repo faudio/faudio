@@ -15,12 +15,14 @@
 #define SCL_MIDI_PM_DRIVER_INFO   NULL
 #define SCL_MIDI_PM_LATENCY       0
 
-#ifdef SCL_LOG
-  #define SCL_LOG_MIDI
-#endif
-
 namespace doremir {
 namespace scl {
+
+enum MidiStartupMessage
+{
+    kMidiOpen,
+    kMidiClose
+};
 
 class SCLAUDIO_API MidiDeviceStreamDescription : public StreamDescription
 {
@@ -87,16 +89,15 @@ private:
      */
     static void midiOpenCloseRoutine(MidiDeviceStream* instance);
 
-    MidiDevice                  * inputDevice, * outputDevice;
-    MidiScheduler               * midiSchedulerInstance;
-    Thread                      * midiThread;
+    MidiDevice    *inputDevice, *outputDevice;
+    MidiScheduler *midiSchedulerInstance;
+    Thread        *midiThread;
+
+    SendVar<MidiStartupMessage> midiStartupMessage;
+    SendVar<PmError> midiStartupResult;
+    Thread  *midiOpenCloseThread;
     
-    Thread            * midiOpenCloseThread;
-    SharedMutex       midiOpenCloseMutex, midiOpenCloseDoneMutex;
-    ConditionVariable openMidiSignal, closeMidiSignal, openMidiDone, closeMidiDone;
-    PmError           midiOpenCloseError;
-    
-    PmStream * inputStream, * outputStream;
+    PmStream *inputStream, *outputStream;
 };
 
 } // namespace

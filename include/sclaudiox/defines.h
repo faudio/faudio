@@ -34,10 +34,4 @@
     #endif
 #endif
 
-#ifdef SCL_DEBUG
-    #ifndef SCL_LOG
-        #define SCL_LOG
-    #endif
-#endif
-
 #endif

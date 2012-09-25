@@ -20,6 +20,7 @@ struct MidiDeviceIndex
     PmDeviceID mId;
 };
 
+
 void MidiDeviceStream::startMidi()
 {
 #ifdef SCL_LOG_MIDI
@@ -30,14 +31,14 @@ void MidiDeviceStream::startMidi()
               << "    Output device: " << (outputDevice == NULL ? "N/A" : outputDevice->name()) << "\n");
 	}    
 #endif      
+    midiStartupMessage.put(kMidiOpen);
 
-    openMidiSignal.notify_all();
-    UniqueLock lock (midiOpenCloseDoneMutex);
-    {
-        openMidiDone.wait(lock);
-    }          
-    if (midiOpenCloseError != pmNoError) 
-        throw PortmidiError(midiOpenCloseError);
+    PmError result;
+    midiStartupResult.take(&result);    
+    SCL_WRITE_LOG("  Receving from Midi control thread\n");
+
+    if (result != pmNoError) 
+        throw PortmidiError(result);
     
     midiThread = new Thread(executor, this, midiSchedulerInstance);
 }
@@ -50,15 +51,41 @@ void MidiDeviceStream::stopMidi()
         midiThread->join();
         midiThread = NULL;
     }       
+    midiStartupMessage.put(kMidiClose);
 
-    closeMidiSignal.notify_all();
-    UniqueLock lock (midiOpenCloseDoneMutex);
-    {
-        closeMidiDone.wait(lock);
-    }       
-    if (midiOpenCloseError != pmNoError) 
-        throw PortmidiError(midiOpenCloseError);
+    PmError result;
+    midiStartupResult.take(&result);
+    if (result != pmNoError) 
+        throw PortmidiError(result);
 }
+
+
+void MidiDeviceStream::midiOpenCloseRoutine(MidiDeviceStream* instance) 
+{
+    while (true) 
+    {   
+        MidiStartupMessage message;
+        PmError result;
+
+        instance->midiStartupMessage.take(&message);
+        switch (message) 
+        {
+        case kMidiOpen:
+            SCL_WRITE_LOG("  Midi control thread received start\n");
+            instance->openMidiStreams(&result);
+            break;
+        case kMidiClose:
+            SCL_WRITE_LOG("  Midi control thread received stop\n");
+            instance->closeMidiStreams(&result);
+            break;
+        default:
+            SCL_WRITE_LOG("  Midi control thread received unknown message\n");            
+        }
+        instance->midiStartupResult.put(result);
+    }
+}         
+
+
 
 
 PmTimestamp MidiDeviceStream::timeCallback(void* obj)
@@ -108,21 +135,6 @@ void MidiDeviceStream::closeMidiStreams(PmError* err)
     }
 }
 
-void MidiDeviceStream::midiOpenCloseRoutine(MidiDeviceStream* instance) 
-{
-    while (true) 
-    {
-        UniqueLock lock (instance->midiOpenCloseMutex);
-
-        instance->openMidiSignal.wait(lock);
-        instance->openMidiStreams(&instance->midiOpenCloseError);
-        instance->openMidiDone.notify_all();
-
-        instance->closeMidiSignal.wait(lock);
-        instance->closeMidiStreams(&instance->midiOpenCloseError);            
-        instance->closeMidiDone.notify_all();
-    }
-}         
 
 
 MidiDeviceStream::MidiDeviceStream(MidiDevice* inputDevice,
