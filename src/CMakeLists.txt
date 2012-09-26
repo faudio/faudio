@@ -66,10 +66,10 @@ if(WIN32)
   endif()
 endif()
 
-add_executable(scl_main "main.cc")
-set_target_properties(scl_main PROPERTIES
-  RUNTIME_OUTPUT_DIRECTORY    "../bin" 
-  COMPILE_FLAGS               "-Wno-deprecated-declarations -Wno-shift-overflow -Wno-parentheses"
-  LINK_FLAGS                  "${STD_LINK_FLAGS}"
- )
-target_link_libraries(scl_main ${MAIN_LIBRARY})
+#add_executable(scl_main "main.cc")
+#set_target_properties(scl_main PROPERTIES
+#  RUNTIME_OUTPUT_DIRECTORY    "../bin" 
+#  COMPILE_FLAGS               "-Wno-deprecated-declarations -Wno-shift-overflow -Wno-parentheses"
+#  LINK_FLAGS                  "${STD_LINK_FLAGS}"
+# )
+#target_link_libraries(scl_main ${MAIN_LIBRARY})
