@@ -1,15 +1,16 @@
 
 if(APPLE)
   list(APPEND SOURCE_FILES 
-    sclaudiox/processor/plugin/au.mm
-    sclaudiox/processor/synth/fluid_nil.cc)
+    sclaudiox/processor/plugin/au.mm)
+else()
+  list(APPEND SOURCE_FILES 
+    sclaudiox/processor/plugin/au_nil.cc)
 endif ()
 
-if(WIN32)
+if(ENABLE_FLUIDSYNTH)
   list(APPEND SOURCE_FILES 
-    sclaudiox/processor/plugin/au_nil.cc
     sclaudiox/processor/synth/fluid.cc)
-endif ()
+endif()
 
 list(APPEND SOURCE_FILES 
   sclaudiox/scheduling/future.cc

@@ -23,18 +23,22 @@ set(VERSION "${VERSION_PRE}${VERSION_X}.${VERSION_Y}.${VERSION_Z}${VERSION_SUFF}
 
 #  This should hold
 #    CMAKE_OSX_DEPLOYMENT_TARGET <= CMAKE_OSX_SYSROOT <= (build machine OS X version)
-#  
+#
 #  CMAKE_OSX_DEPLOYMENT_TARGET should be the minimum supported version (i.e. 10.5)
 #  CMAKE_OSX_SYSROOT should be the SDK of the maximum supported version (i.e. /Developer/SDKs/MacOSX10.7.sdk)
-#  
+#
 #  See the Apple documentation 'Frameworks and Weak Linking'
 
-option(ENABLE_LOGGING           "Enable standard logging"                   FALSE)     
-option(REDIRECT_LOG             "Redirect log messages to standard output"  FALSE)      
+option(ENABLE_LOGGING           "Enable standard logging"                   FALSE)
+option(REDIRECT_LOG             "Redirect log messages to standard output"  FALSE)
 option(ENABLE_REALTIME_AUDIO    "")
 option(ENABLE_REALTIME_MIDI     "")
 option(ENABLE_NONREALTIME_AUDIO "")
-option(ENABLE_FLUIDSYNTH        "")
+if(APPLE)
+  option(ENABLE_FLUIDSYNTH      "Enable the Fluidsynth processor"           FALSE)
+else()
+  option(ENABLE_FLUIDSYNTH      "Enable the Fluidsynth processor"           TRUE)
+endif()
 option(ENABLE_FFT               "")
 
 if(APPLE)
@@ -53,7 +57,7 @@ option(BUILD_SOUNDFILE_TOOL     "")
 option(BUILD_OSC_SERVER         "")
 option(BUILD_HTTP_SERVER        "")
 
-option(PREFER_NONBLOCKING       "Use non-blocking audio by default"         TRUE)      
+option(PREFER_NONBLOCKING       "Use non-blocking audio by default"         TRUE)
 option(PREFER_EXCLUSIVE         "Use exclusive audio streams by default"    TRUE)
 
 option(BUILD_COMPONENTS         "Build dependent components locally"        FALSE)
@@ -71,16 +75,16 @@ find_package(Dist)
 if(APPLE)
   string(COMPARE NOTEQUAL "${CMAKE_OSX_ARCHITECTURES}" "i386" ARCH_NOT_32_BIT)
   if(ARCH_NOT_32_BIT)
-    message(FATAL_ERROR 
+    message(FATAL_ERROR
       "\nThe Audio Engine does not support 64-bit mode yet."
       "\nTry -DCMAKE_OSX_ARCHITECTURES=i386.")
   endif()
-  
+
   string(COMPARE EQUAL "${CMAKE_OSX_DEPLOYMENT_TARGET}" "" NO_DEP_TARGET)
   if(NO_DEP_TARGET)
-    message(FATAL_ERROR 
+    message(FATAL_ERROR
       "\nNo OS X deployment target set."
-      "\nTry -DCMAKE_OSX_DEPLOYMENT_TARGET=10.5.")    
+      "\nTry -DCMAKE_OSX_DEPLOYMENT_TARGET=10.5.")
   endif()
 endif()
 
@@ -88,15 +92,15 @@ endif()
 ## Component manager
 
 if(BUILD_COMPONENTS)
-  list(APPEND COMPONENT_DEFINES 
+  list(APPEND COMPONENT_DEFINES
     "-DAUDIO_ENGINE_BUILD_COMPONENTS=True")
 endif()
 if(SHOW_COMPONENT_OUTPUT)
-  list(APPEND COMPONENT_DEFINES 
+  list(APPEND COMPONENT_DEFINES
     "-DAUDIO_ENGINE_SHOW_COMPONENT_OUTPUT=True")
 endif()
 if(DIST_EXECUTABLE)
-  list(APPEND COMPONENT_DEFINES 
+  list(APPEND COMPONENT_DEFINES
     "-DDIST_EXECUTABLE=${DIST_EXECUTABLE}")
 endif()
 list(APPEND COMPONENT_DEFINES
@@ -137,20 +141,22 @@ else (NOT COMPONENTS_RESOLVED)
   find_package(Portaudio)
   find_package(Portmidi)
   find_package(Sndfile)
-  # find_package(Fluidsynth)
-  # find_package(Glib)
-  find_package(Gtest)         
+  find_package(Gtest)
   find_package(ICU)
+  if(ENABLE_FLUIDSYNTH)
+    find_package(Fluidsynth)
+    find_package(Glib)
+  endif()
 
   add_definitions(${PTHREAD_DEFINITIONS})
   add_definitions(${ICONV_DEFINITIONS})
   add_definitions(-DSCL_UNICODE=1)            # Note: Has no effect in rewrite
   add_definitions(-DSCL_ADJUST_AU_VOLUME=1)   # Note: Has no effect in rewrite
-  
+
   if (APPLE)
-    add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=1)                          
+    add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=1)
     # message("Sysroot is " ${CMAKE_OSX_SYSROOT})
-    # message("Target is "${CMAKE_OSX_DEPLOYMENT_TARGET}) 
+    # message("Target is "${CMAKE_OSX_DEPLOYMENT_TARGET})
     add_definitions("-mmin-macosx-version=${CMAKE_OSX_DEPLOYMENT_TARGET}")
     add_definitions("-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
     add_definitions("-isysroot ${CMAKE_OSX_SYSROOT}")
@@ -174,9 +180,10 @@ else (NOT COMPONENTS_RESOLVED)
   include_directories(${PORTAUDIO_INCLUDE_DIRS})
   include_directories(${PORTMIDI_INCLUDE_DIRS})
   # include_directories(${SNDFILE_INCLUDE_DIRS})
-  # include_directories(${FLUIDSYNTH_INCLUDE_DIRS})
   include_directories(${GTEST_INCLUDE_DIRS})
   include_directories(${ICU_INCLUDE_DIRS})
+  include_directories(${GLIB_INCLUDE_DIRS})       # May be empty
+  include_directories(${FLUIDSYNTH_INCLUDE_DIRS}) # May be empty
 
   include_directories("external_libraries/boost")
   include_directories("external_libraries/boost_lockfree")
@@ -188,16 +195,16 @@ else (NOT COMPONENTS_RESOLVED)
     ${PORTAUDIO_LIBRARIES}
     ${PORTMIDI_LIBRARIES}
     # ${SNDFILE_LIBRARIES}
-    # ${FLUIDSYNTH_LIBRARIES}
-    ${GLIB_LIBRARIES}
     ${GTEST_LIBRARIES}
     ${ICU_LIBRARIES}
+    ${FLUIDSYNTH_LIBRARIES} # May be empty
+    ${GLIB_LIBRARIES}       # May be empty
     "/mingw/lib"
     "/mingw"
     )
 
   # TODO Do we really need to explicitly set this?
-  set(CMAKE_FRAMEWORK_PATH 
+  set(CMAKE_FRAMEWORK_PATH
     "${CMAKE_OSX_SYSROOT}/System/Library/Frameworks/"
     )
 
@@ -206,18 +213,11 @@ else (NOT COMPONENTS_RESOLVED)
   list(APPEND DEPENDENCIES ${PORTAUDIO_LIBRARIES})
   list(APPEND DEPENDENCIES ${PORTMIDI_LIBRARIES})
   # list(APPEND DEPENDENCIES ${SNDFILE_LIBRARIES})
-  # list(APPEND DEPENDENCIES ${FLUIDSYNTH_LIBRARIES})
-  list(APPEND DEPENDENCIES ${GLIB_LIBRARIES})
   list(APPEND DEPENDENCIES ${GTEST_LIBRARIES})
   list(APPEND DEPENDENCIES ${ICU_LIBRARIES})
-  # list(APPEND DEPENDENCIES "${CMAKE_SOURCE_DIR}/external_libraries/icu2/result/lib/libicudata.a")
-  # list(APPEND DEPENDENCIES "${CMAKE_SOURCE_DIR}/external_libraries/icu2/result/lib/libicui18n.a")
-  # list(APPEND DEPENDENCIES "${CMAKE_SOURCE_DIR}/external_libraries/icu2/result/lib/libicuio.a")
-  # list(APPEND DEPENDENCIES "${CMAKE_SOURCE_DIR}/external_libraries/icu2/result/lib/libicule.a")
-  # list(APPEND DEPENDENCIES "${CMAKE_SOURCE_DIR}/external_libraries/icu2/result/lib/libiculx.a")
-  # list(APPEND DEPENDENCIES "${CMAKE_SOURCE_DIR}/external_libraries/icu2/result/lib/libicutu.a")  
-  # list(APPEND DEPENDENCIES "${CMAKE_SOURCE_DIR}/external_libraries/icu2/result/lib/libicuuc.a")
-  
+  list(APPEND DEPENDENCIES ${FLUIDSYNTH_LIBRARIES}) # May be empty
+  list(APPEND DEPENDENCIES ${GLIB_LIBRARIES})       # May be empty
+
   if (WIN32)
     find_library (MINGW32 NAMES mingw32 PATH_SUFFIXES lib PATHS "C:/MinGW")
     find_library (OLE32   NAMES ole32   PATH_SUFFIXES lib PATHS "C:/MinGW")
@@ -228,7 +228,7 @@ else (NOT COMPONENTS_RESOLVED)
     list(APPEND DEPENDENCIES ${OLE32})
     list(APPEND DEPENDENCIES ${MINGW32})
   endif()
-  
+
   if(APPLE)
     find_library(COCOA              Cocoa)
     find_library(COREAUDIO          CoreAudio)
@@ -245,7 +245,7 @@ else (NOT COMPONENTS_RESOLVED)
   # fftw or libfft ?
   # libmicrohttpd ?
   # oscpack
-  
+
   if(WIN32)
     set(USE_BOOST_THREAD_DEFAULT True)
     set(USE_BOOST_ATOMIC_DEFAULT True)
@@ -253,12 +253,12 @@ else (NOT COMPONENTS_RESOLVED)
     set(USE_BOOST_THREAD_DEFAULT True)
     set(USE_BOOST_ATOMIC_DEFAULT True)
   endif()
-  
+
   option(USE_BOOST_THREAD "Force using Boost threads" ${USE_BOOST_THREAD_DEFAULT})
   if (USE_BOOST_THREAD)
     add_definitions(-DSCL_USE_BOOST_THREAD=1)
   endif()
-  
+
   option(USE_BOOST_ATOMIC "Force using Boost atomics" ${USE_BOOST_ATOMIC_DEFAULT})
   if (USE_BOOST_THREAD)
     add_definitions(-DSCL_USE_BOOST_ATOMIC=1)
@@ -287,7 +287,11 @@ else (NOT COMPONENTS_RESOLVED)
   endif ()
   if(REDIRECT_LOG)
     set(SCL_AUDIO_REDIRECT_LOG True)
-  endif ()
+  endif()
+  if(ENABLE_FLUIDSYNTH)
+    set(SCL_AUDIO_ENABLE_FLUIDSYNTH)
+  endif()
+
 
   configure_file(
     ${CMAKE_SOURCE_DIR}/include/sclaudiox/config.h.in
