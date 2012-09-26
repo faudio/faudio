@@ -17,9 +17,9 @@
 #include <iconv.h>
 
 #ifdef SCL_UNICODE
-    #ifdef SCL_WIN
-        #include "unicode/pwin32.h"
-    #endif
+//    #ifdef SCL_WIN
+//        #include "unicode/pwin32.h"
+//    #endif
     #include "unicode/utypes.h"
     #include "unicode/unistr.h"
     #include "unicode/ustream.h"
