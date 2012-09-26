@@ -9,6 +9,7 @@
 #define _SCLAUDIO_DEFINES
 
 #include <stdint.h>
+#include "sclaudiox/config.h"
 
 #ifdef _WIN32
     #ifndef SCLAUDIO_API

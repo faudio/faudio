@@ -15,6 +15,10 @@
 #include "sclaudiox/util/concurrency.h"
 #include "sclaudiox/processor/synth/fluid.h"
 
+#ifndef SCL_AUDIO_ENABLE_FLUIDSYNTH
+    #error Fluidsynth not enabled but fluid.cc included
+#endif
+
 #ifdef SCL_LOG
 #define SCL_FLUID_LOG
 #endif // SCL_LOG
