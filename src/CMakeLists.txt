@@ -71,4 +71,4 @@ set_target_properties(scl_main PROPERTIES
   COMPILE_FLAGS               "-Wno-deprecated-declarations -Wno-shift-overflow -Wno-parentheses"
   LINK_FLAGS                  "${STD_LINK_FLAGS}"
  )
-target_link_libraries(scl_main ScoreCleanerAudio_framework)
+target_link_libraries(scl_main ${MAIN_LIBRARY})
