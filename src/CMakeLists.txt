@@ -1,18 +1,20 @@
 
 if(APPLE)
-  list(APPEND SOURCE_FILES sclaudiox/processor/plugin/au.mm)
+  list(APPEND SOURCE_FILES 
+    sclaudiox/processor/plugin/au.mm
+    sclaudiox/processor/synth/fluid_nil.cc)
 endif ()
 
 if(WIN32)
-  list(APPEND SOURCE_FILES sclaudiox/processor/plugin/au_nil.cc)
+  list(APPEND SOURCE_FILES 
+    sclaudiox/processor/plugin/au_nil.cc
+    sclaudiox/processor/synth/fluid.cc)
 endif ()
 
 list(APPEND SOURCE_FILES 
   sclaudiox/scheduling/future.cc
   sclaudiox/processor.cc
   sclaudiox/processor/plugin/vst2.cc
-  # sclaudiox/processor/synth/fluid.cc
-  # sclaudiox/processor/synth/fluid_nil.cc
   sclaudiox/device/audio.cc
   sclaudiox/device/midi.cc
   sclaudiox/device/session.cc
@@ -24,34 +26,44 @@ list(APPEND SOURCE_FILES
   sclaudio.cc)
 
 
-if(APPLE AND BUILD_DYLIB)
-  add_library(sclaudio_dylib SHARED
-    ${SOURCE_FILES}
-   )
-  set_target_properties(sclaudio_dylib PROPERTIES
-    OUTPUT_NAME                 sclaudio-${VERSION}
-    LIBRARY_OUTPUT_DIRECTORY    "../lib"
-   )
-  target_link_libraries(sclaudio_dylib ${DEPENDENCIES})
-  set(MAIN_LIBRARY sclaudio_dylib PARENT_SCOPE)
-endif()
-
-if( APPLE AND BUILD_FRAMEWORK)
-  add_library(ScoreCleanerAudio_framework SHARED
-    ${SOURCE_FILES}
-   )
-  set_target_properties(ScoreCleanerAudio_framework PROPERTIES
-    FRAMEWORK                   TRUE
-    OUTPUT_NAME                 ScoreCleanerAudio
-    FRAMEWORK_VERSION           ${VERSION}
-    LIBRARY_OUTPUT_DIRECTORY    "../Frameworks"
-    INSTALL_NAME_DIR            "@executable_path/../Frameworks/ScoreCleanerAudio.framework/ScoreCleanerAudio"
-    COMPILE_FLAGS               "-Wno-deprecated-declarations -Wno-shift-overflow -Wno-parentheses"
-    LINK_FLAGS                  "${STD_LINK_FLAGS}"
-   )
-  target_link_libraries(ScoreCleanerAudio_framework ${DEPENDENCIES})
-  set(MAIN_LIBRARY ScoreCleanerAudio_framework PARENT_SCOPE)
+if(APPLE)
+  if(BUILD_DYLIB)
+    add_library(sclaudio SHARED ${SOURCE_FILES})
+    set_target_properties(sclaudio PROPERTIES 
+      OUTPUT_NAME                 "sclaudio-${VERSION}"
+      LIBRARY_OUTPUT_DIRECTORY    "../lib"
+      INSTALL_NAME_DIR            "@executable_path/../lib/sclaudio-${VERSION}.dylib"
+      )
+    target_link_libraries(sclaudio ${DEPENDENCIES})
+    set(MAIN_LIBRARY sclaudio PARENT_SCOPE)
+  endif()
+  if(BUILD_FRAMEWORK)
+    add_library(ScoreCleanerAudio SHARED ${SOURCE_FILES})
+    set_target_properties(ScoreCleanerAudio PROPERTIES
+      FRAMEWORK                   TRUE
+      OUTPUT_NAME                 "ScoreCleanerAudio"
+      FRAMEWORK_VERSION           ${VERSION}
+      LIBRARY_OUTPUT_DIRECTORY    "../Frameworks"
+      INSTALL_NAME_DIR            "@executable_path/../Frameworks/ScoreCleanerAudio.framework/ScoreCleanerAudio"
+      COMPILE_FLAGS               "-Wno-deprecated-declarations -Wno-shift-overflow -Wno-parentheses"
+      LINK_FLAGS                  "${STD_LINK_FLAGS}"
+     )
+    target_link_libraries(ScoreCleanerAudio ${DEPENDENCIES})
+    set(MAIN_LIBRARY ScoreCleanerAudio PARENT_SCOPE)
+  endif()
 endif ()
+
+if(WIN32)
+  if(BUILD_SHARED)
+    add_library(sclaudio SHARED ${SOURCE_FILES})
+    set_target_properties(sclaudio PROPERTIES 
+      OUTPUT_NAME                 "sclaudio-${VERSION}"
+      LIBRARY_OUTPUT_DIRECTORY    "../bin"
+      )
+    target_link_libraries(sclaudio ${DEPENDENCIES})
+    set(MAIN_LIBRARY sclaudio PARENT_SCOPE)    
+  endif()
+endif()
 
 add_executable(scl_main "main.cc")
 set_target_properties(scl_main PROPERTIES
