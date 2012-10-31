@@ -17,6 +17,13 @@
     path    = sclaudio.dll
     mode    = put
 
+[package "audio-engine-win-test"]
+    site    = doremir
+    version = 1
+    subpath = build
+    path    = sclaudio.dll
+    mode    = put
+
 [package "audio-engine-doc"]
     site    = doremir
     version = 1.5.0
@@ -115,18 +122,17 @@
     path    = include, lib
     mode    = get/put
 
-[package "audio-engine-win-test"]
-    site = doremir
-    version = 1
-    subpath = build
-    path = sclaudio.dll
-    mode = put/get
-
+[package "icu-msys"]
+    site    = doremir
+    version = 49.1.2
+    subpath = external_libraries/icu2/result
+    path    = include, lib
+    mode    = get/put
 
 [package "stdlib-msys"]
-    mode = put/get
-    site = doremir
-    path = libgcc_s_dw2-1.dll libstdc++-6.dll
-    subpath = build
+    site    = doremir
     version = 0.5
+    mode    = get/put
+    subpath = build
+    path    = libgcc_s_dw2-1.dll, libstdc++-6.dll
 

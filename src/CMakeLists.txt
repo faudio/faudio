@@ -58,8 +58,8 @@ if(WIN32)
   if(BUILD_SHARED)
     add_library(sclaudio SHARED ${SOURCE_FILES})
     set_target_properties(sclaudio PROPERTIES 
-      OUTPUT_NAME                 "sclaudio-${VERSION}"
-      LIBRARY_OUTPUT_DIRECTORY    "../bin"
+      OUTPUT_NAME                 "sclaudio"
+      RUNTIME_OUTPUT_DIRECTORY    "../bin"
       )
     target_link_libraries(sclaudio ${DEPENDENCIES})
     set(MAIN_LIBRARY sclaudio PARENT_SCOPE)    

@@ -88,6 +88,14 @@ if(APPLE)
   endif()
 endif()
 
+if(WIN32)
+  string(COMPARE NOTEQUAL "${CMAKE_GENERATOR}" "MSYS Makefiles" GENERATOR_NOT_MSYS)
+  if(GENERATOR_NOT_MSYS)
+    message(FATAL_ERROR
+      "\nMust use MSYS Makefiles generator."
+      "\nTry -G 'MSYS Makefiles'.")
+  endif()
+endif()
 
 ## Component manager
 

@@ -57,8 +57,8 @@ find_package_handle_standard_args (ICU
 )
 set(ICU_LIBRARIES    ${ICU_LIBRARY})
 set(ICU_INCLUDE_DIRS ${ICU_INCLUDE_DIR})
-message(">>>>>>> ${ICU_INCLUDE_DIRS}")
-message(">>>>>>> ${ICU_LIBRARIES}")
+#message(">>>>>>> ${ICU_INCLUDE_DIRS}")
+#message(">>>>>>> ${ICU_LIBRARIES}")
 
 
 
