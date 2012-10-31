@@ -63,7 +63,7 @@
   (native-call scl-device-stream-options-set-non-blocking :void
     ((obj :device-stream-options) (value :boolean))) value)
 
-(defmethod exclusive-mode ((obj device-stream-options))
+(defmethod (setf exclusive-mode) ((obj device-stream-options))
   (native-call scl-device-stream-options-is-exclusive-mode :boolean
     ((obj :device-stream-options))))
 
