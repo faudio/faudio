@@ -115,4 +115,18 @@
     path    = include, lib
     mode    = get/put
 
+[package "audio-engine-win-test"]
+    site = doremir
+    version = 1
+    subpath = build
+    path = sclaudio.dll
+    mode = put/get
+
+
+[package "stdlib-msys"]
+    mode = put/get
+    site = doremir
+    path = libgcc_s_dw2-1.dll libstdc++-6.dll
+    subpath = build
+    version = 0.5
 
