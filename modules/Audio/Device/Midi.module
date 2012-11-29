@@ -7,7 +7,7 @@
  */
 module Doremir.Audio.Device.Midi
 {
-    type MidiDevice = IntPtr;
+    type MidiDevice = Intptr;
 
     create  : () -> MidiDevice;
     destroy : (MidiDevice) -> Void;

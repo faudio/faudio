@@ -4,9 +4,9 @@
  */
 module Doremir.Thread
 {
-    type Thread = IntPtr;
-    type Mutex = IntPtr;
-    type Condition = IntPtr;
+    type Thread = Intptr;
+    type Mutex = Intptr;
+    type Condition = Intptr;
     
     createThread : () -> Thread;
     join : (Thread) -> Void;

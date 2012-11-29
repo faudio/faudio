@@ -6,8 +6,8 @@
  */
 module Doremir.Map 
 {
-    type Map = IntPtr;
-    type Value = IntPtr;
+    type Map = Intptr;
+    type Value = Intptr;
     
     empty   : () -> Map;
     single  : (Key, Value) -> Map;

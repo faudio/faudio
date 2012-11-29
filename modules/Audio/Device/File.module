@@ -7,7 +7,7 @@
  */
 module Doremir.Audio.Device.File
 {
-    type AudioDevice = IntPtr;
+    type AudioDevice = Intptr;
     type FilePath    = Int;
 
     create  : (FilePath, FilePath) -> FileDevice;

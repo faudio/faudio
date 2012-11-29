@@ -6,8 +6,8 @@
  */
 module Doremir.Set
 {
-    type Set = IntPtr;
-    type Value = IntPtr;
+    type Set = Intptr;
+    type Value = Intptr;
     
     elem           : (Set, Value) -> Bool;
     subsetOf       : (Set, Set) -> Bool;

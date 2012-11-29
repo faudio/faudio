@@ -7,13 +7,13 @@
  */
 module Doremir.List
 {
-    type Value   = IntPtr;
-    type Filter  = IntPtr;
-    type Eq      = IntPtr;
-    type Ord     = IntPtr;
-    type Num     = IntPtr;
-    type Builder = IntPtr;
-    type List    = IntPtr;
+    type Value   = Intptr;
+    type Filter  = Intptr;
+    type Eq      = Intptr;
+    type Ord     = Intptr;
+    type Num     = Intptr;
+    type Builder = Intptr;
+    type List    = Intptr;
             
     nil     : () -> List;
     cons    : (Elem, List) -> List;

@@ -7,16 +7,16 @@
  */
 module Doremir.Atomic
 {
-    type Atomic = IntPtr;
-    type Updater = (IntPtr) -> IntPtr;
+    type Atomic = Intptr;
+    type Updater = (Intptr) -> Intptr;
     
     create  : () -> Atomic;
     destroy : (Atomic) -> Void;
     copy    : (Atomic) -> Atomic;
     swap    : (Atomic, Atomic) -> Void;
     
-    get : (Atomic) -> IntPtr;
-    set : (Atomic, IntPtr) -> Void;
+    get : (Atomic) -> Intptr;
+    set : (Atomic, Intptr) -> Void;
     modify : (Atomic, Updater) -> Void;
 }
 

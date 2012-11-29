@@ -11,9 +11,9 @@
  */
 module Doremir.Chase 
 {
-    type Value  = IntPtr;
-    type Track  = IntPtr;
-    type Chase  = IntPtr;
+    type Value  = Intptr;
+    type Track  = Intptr;
+    type Chase  = Intptr;
             
     empty       : () -> Chase;
     create      : (Size, Size) -> Chase;

@@ -4,8 +4,8 @@
  */
 module Doremir.Future
 {
-    type Future = IntPtr;
-    type Value  = IntPtr;
+    type Future = Intptr;
+    type Value  = Intptr;
 
     // TODO obtain result from what?
     create  : () -> Future;

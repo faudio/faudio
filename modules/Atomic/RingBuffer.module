@@ -5,13 +5,13 @@
  */
 module Doremir.Atomic.RingBuffer
 {
-    type RingBuffer = IntPtr;
+    type RingBuffer = Intptr;
 
     create : (RingBuffer) -> RingBuffer;
     copy : (RingBuffer) -> RingBuffer;
     destroy : (RingBuffer) -> Void;
 
-    read : (RingBuffer) -> IntPtr;
-    write : (RingBuffer, IntPtr) -> IntPtr;
+    read : (RingBuffer) -> Intptr;
+    write : (RingBuffer, Intptr) -> Intptr;
 }
 

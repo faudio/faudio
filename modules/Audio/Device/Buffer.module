@@ -7,7 +7,7 @@
  */
 module Doremir.Audio.Device.Buffer
 {
-    type BufferDevice = IntPtr;
+    type BufferDevice = Intptr;
     
     create  : (Size, Type) -> BufferDevice;
     destroy : (BufferDevice) -> Void;

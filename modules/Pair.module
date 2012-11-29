@@ -6,5 +6,5 @@
  */
 module Doremir.Pair
 {
-    type Pair = struct { fst : IntPtr, snd : IntPtr };
+    type Pair = struct { fst : Intptr, snd : Intptr };
 }

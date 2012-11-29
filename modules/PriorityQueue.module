@@ -6,5 +6,5 @@
  */
 module Doremir.PriorityQueue
 {
-    type PriorityQueue = IntPtr;
+    type PriorityQueue = Intptr;
 }

@@ -5,12 +5,12 @@
  */
 module Doremir.Atomic.Stack
 {
-    type Stack = IntPtr;
+    type Stack = Intptr;
     
     create : () -> Stack;
     destroy : (Stack) -> Void;
     
-    read : (Stack) -> IntPtr;
-    write : (Stack, IntPtr) -> IntPtr;
+    read : (Stack) -> Intptr;
+    write : (Stack, Intptr) -> Intptr;
 }
 

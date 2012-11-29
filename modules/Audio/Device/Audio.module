@@ -7,7 +7,7 @@
  */
 module Doremir.Audio.Device.Audio
 {
-    type AudioDevice = IntPtr;
+    type AudioDevice = Intptr;
 
     create  : () -> AudioDevice;
     destroy : (AudioDevice) -> Void;

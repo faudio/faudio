@@ -6,8 +6,8 @@
 
     Kind           | Type
     -------------- | --------------------------
-    State          | `()`
-    Argument       | `time`
+    State          | `a`
+    Argument       | `()`
     Result         | `()`
     Input          | `a`
     Output         | `a`
