@@ -2,48 +2,47 @@
 all:	gen
 
 gen:
-	modulo --language=c    <modules/Atomic.module    		>modules2/Atomic.h; \
-	modulo --language=c    <modules/Atomic/Queue.module       	>modules2/Atomic/Queue.h; \
-	modulo --language=c    <modules/Atomic/Stack.module       	>modules2/Atomic/Stack.h; \
-	modulo --language=c    <modules/Atomic/RingBuffer.module  	>modules2/Atomic/RingBuffer.h; \
-	modulo --language=c    <modules/Thread.module    		>modules2/Thread.h;
-	modulo --language=c    <modules/Thread/Future.module    	>modules2/Thread/Future.h;
-	modulo --language=c    <modules/Thread/Improving.module    	>modules2/Thread/Improving.h;
-
-	modulo --language=c    <modules/Chase.module    		>modules2/Chase.h;
-	modulo --language=c    <modules/List.module    			>modules2/List.h;
-	modulo --language=c    <modules/Set.module    			>modules2/Set.h;
-	modulo --language=c    <modules/Pair.module    			>modules2/Pair.h;
-	modulo --language=c    <modules/Map.module    			>modules2/Map.h;
-
-	modulo --language=c    <modules/Audio/Types.module    		>modules2/Audio/Types.h;
-	modulo --language=c    <modules/Audio/Time.module    		>modules2/Audio/Time.h;
-
-	modulo --language=c    <modules/Audio/Processor.module  	>modules2/Audio/Processor.h;
-	modulo --language=c    <modules/Audio/Processor/Unary.module  	>modules2/Audio/Processor/Unary.h;
-	modulo --language=c    <modules/Audio/Processor/Binary.module  	>modules2/Audio/Processor/Binary.h;
-	modulo --language=c    <modules/Audio/Processor/Ternary.module  >modules2/Audio/Processor/Ternary.h;
-	modulo --language=c    <modules/Audio/Processor/Delay.module  	>modules2/Audio/Processor/Split.h;
-	modulo --language=c    <modules/Audio/Processor/Split.module  	>modules2/Audio/Processor/Delay.h;
-	modulo --language=c    <modules/Audio/Processor/Sequence.module >modules2/Audio/Processor/Sequence.h;
-	modulo --language=c    <modules/Audio/Processor/Parallel.module >modules2/Audio/Processor/Parallel.h;
-	modulo --language=c    <modules/Audio/Processor/Loop.module	>modules2/Audio/Processor/Loop.h;
-
-	modulo --language=c    <modules/Audio/Device.module    		>modules2/Audio/Device.h;
-	modulo --language=c    <modules/Audio/Device/Buffer.module    		>modules2/Audio/Device/Buffer.h;
-	modulo --language=c    <modules/Audio/Device/File.module    		>modules2/Audio/Device/File.h;
-	modulo --language=c    <modules/Audio/Device/Audio.module    		>modules2/Audio/Device/Audio.h;
-	modulo --language=c    <modules/Audio/Device/Midi.module    		>modules2/Audio/Device/Midi.h;
-
-
-	modulo --language=c    <modules/Audio/Scheduler.module  	>modules2/Audio/Scheduler.h;
-	modulo --language=c    <modules/Audio/Dispatcher.module 	>modules2/Audio/Dispatcher.h;
-
+	modulo --language=c    <modules/Atomic.module    		>inc/doremir/atomic.h; \
+	modulo --language=c    <modules/Atomic/Queue.module       	>inc/doremir/atomic/queue.h; \
+	modulo --language=c    <modules/Atomic/Stack.module       	>inc/doremir/atomic/stack.h; \
+	modulo --language=c    <modules/Atomic/RingBuffer.module  	>inc/doremir/atomic/ring_buffer.h; \
+	modulo --language=c    <modules/Thread.module    		>inc/doremir/thread.h;
+	modulo --language=c    <modules/Thread/Future.module    	>inc/doremir/thread/future.h;
+	modulo --language=c    <modules/Thread/Improving.module    	>inc/doremir/thread/improving.h;
+                                                                                          
+	modulo --language=c    <modules/Chase.module    		>inc/doremir/chase.h;
+	modulo --language=c    <modules/List.module    			>inc/doremir/list.h; 
+	modulo --language=c    <modules/Set.module    			>inc/doremir/set.h;  
+	modulo --language=c    <modules/Pair.module    			>inc/doremir/pair.h; 
+	modulo --language=c    <modules/Map.module    			>inc/doremir/map.h;  
+                                                                                          
+	modulo --language=c    <modules/Audio/Types.module    		>inc/doremir/audio/types.h;
+	modulo --language=c    <modules/Audio/Time.module    		>inc/doremir/audio/time.h;
+                                                                                         
+	modulo --language=c    <modules/Audio/Processor.module  	>inc/doremir/audio/processor.h;
+	modulo --language=c    <modules/Audio/Processor/Unary.module  	>inc/doremir/audio/processor/unary.h;
+	modulo --language=c    <modules/Audio/Processor/Binary.module  	>inc/doremir/audio/processor/binary.h;
+	modulo --language=c    <modules/Audio/Processor/Ternary.module  >inc/doremir/audio/processor/ternary.h;
+	modulo --language=c    <modules/Audio/Processor/Delay.module  	>inc/doremir/audio/processor/split.h;
+	modulo --language=c    <modules/Audio/Processor/Split.module  	>inc/doremir/audio/processor/delay.h;
+	modulo --language=c    <modules/Audio/Processor/Sequence.module >inc/doremir/audio/processor/sequence.h;
+	modulo --language=c    <modules/Audio/Processor/Parallel.module >inc/doremir/audio/processor/parallel.h;
+	modulo --language=c    <modules/Audio/Processor/Loop.module	>inc/doremir/audio/processor/loop.h;
+                                                                                                   
+	modulo --language=c    <modules/Audio/Device.module    		>inc/doremir/audio/device.h;
+	modulo --language=c    <modules/Audio/Device/Buffer.module	>inc/doremir/audio/device/buffer.h;
+	modulo --language=c    <modules/Audio/Device/File.module    	>inc/doremir/audio/device/file.h;
+	modulo --language=c    <modules/Audio/Device/Audio.module    	>inc/doremir/audio/device/audio.h;
+	modulo --language=c    <modules/Audio/Device/Midi.module    	>inc/doremir/audio/device/midi.h;
+                                                                                                
+	modulo --language=c    <modules/Audio/Scheduler.module  	>inc/doremir/audio/scheduler.h;
+	modulo --language=c    <modules/Audio/Dispatcher.module 	>inc/doremir/audio/dispatcher.h;
+                                                                                         
 
 
 doc:    gen
-	doxygen modules2/Doxyfile
+	doxygen inc/Doxyfile
 
 clean:
-	rm modules2/*.h; \
-	rm modules2/*.lisp;
+	rm inc/*.h; \
+	rm inc/*.lisp;
