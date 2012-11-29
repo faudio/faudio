@@ -1,6 +1,6 @@
 
 /** 
-    Provides signal feedback.
+    Provides recursive composition of audio processors.
 
     ### Associated types
 
@@ -13,7 +13,7 @@
     Output         | `b`
     
     
-    @defgroup   DoremirAudioProcessorLoop Audio processors: Feedback
+    @defgroup   DoremirAudioProcessorLoop Audio processors: Loop
     @author     Hans Höglund
  */
 module Doremir.Audio.Processor.Loop

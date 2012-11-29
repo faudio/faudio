@@ -1,7 +1,6 @@
 
-
 /** 
-    Delays an audio signal.
+    Provides the primitive delay processor.
 
     ### Associated types
 

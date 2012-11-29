@@ -1,6 +1,5 @@
 
 /**
-    @defgroup   DoremirAudioSchedulerLocked Scheduling: Locked schedulers
     @author     Hans Höglund
  */
 module Doremir.Audio.Scheduler.Locked

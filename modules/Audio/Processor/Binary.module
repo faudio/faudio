@@ -1,6 +1,6 @@
 
 /** 
-    Lifts binary functions into audio processors.
+    Provides lifting of binary functions into audio processors.
 
     ### Associated types
 

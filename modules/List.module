@@ -16,11 +16,11 @@ module Doremir.List
     nil     : () -> List;
     cons    : (Elem, List) -> List;
     snoc    : (Elem, List) -> List;
-    copy    : (List) -> Void;
     destroy : (List) -> Void;
+    copy    : (List) -> List;
     swap    : (List, List) -> Void;
 
-    empty   : (List) -> Bool;
+    isEmpty : (List) -> Bool;
     lenght  : (List) -> Int;
 
     head    : (List) -> Elem;

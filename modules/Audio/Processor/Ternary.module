@@ -1,6 +1,6 @@
 
 /** 
-    Lifts ternary functions into audio processors.
+    Provides lifting of ternary functions into audio processors.
 
     ### Associated types
 

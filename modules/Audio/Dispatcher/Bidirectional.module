@@ -1,6 +1,5 @@
 
 /**
-    @defgroup   DoremirAudioDispatcherBidirectional Dispatcher: Bidirectional
     @author     Hans Höglund
  */
 module Doremir.Audio.Dispatcher.Bidirectional

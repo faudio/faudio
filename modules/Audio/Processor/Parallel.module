@@ -1,8 +1,10 @@
 
 /**
-    Runs two processors *a* and *b* in parallel.
-
+    Provides parallel composition of audio processors.
+    
     ### Associated types
+
+    Given audio processors *a* and *b*, *f *** g* has the following properties:
 
     Kind           | Type
     -------------- | --------------------------

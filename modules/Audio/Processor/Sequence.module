@@ -1,8 +1,10 @@
 
 /** 
-    Runs processors *f* and *g* in sequence.
+    Provides sequence composition of audio processors.
 
     ### Associated types
+
+    Given audio processors *f* and *g*, *f >>> g* has the following properties:
 
     Kind           | Type
     -------------- | --------------------------

@@ -1,7 +1,7 @@
 
 /** 
-    Splits an audio signal.
-
+    Provides the primitive split processor.
+    
     ### Associated types
 
     Kind           | Type

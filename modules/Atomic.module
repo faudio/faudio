@@ -9,8 +9,10 @@ module Doremir.Atomic
     type Atomic = IntPtr;
     type Updater = (IntPtr) -> IntPtr;
     
-    createAtomic : () -> Atomic;
-    destroyAtomic : (Atomic) -> Void;
+    create  : () -> Atomic;
+    destroy : (Atomic) -> Void;
+    copy    : (Atomic) -> Atomic;
+    swap    : (Atomic, Atomic) -> Void;
     
     get : (Atomic) -> IntPtr;
     set : (Atomic, IntPtr) -> Void;
