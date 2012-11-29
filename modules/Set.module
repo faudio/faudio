@@ -1,0 +1,26 @@
+
+/**
+    @defgroup SclSet Data structures: Sets
+ */
+module Scl.Set
+{
+    type Set = IntPtr;
+    type Value = IntPtr;
+    
+    elem           : (Set, Value) -> Bool;
+    subsetOf       : (Set, Set) -> Bool;
+    properSubsetOf : (Set, Set) -> Bool;
+
+    empty   : () -> Set;
+    // TODO what about equality?
+    add     : (Set, Value) -> Set;
+    remove  : (Set, Value) -> Void;
+    addUnique     : (Set, Value) -> Set;
+    removeUnique  : (Set, Value) -> Void;
+
+    unionOf : (Set, Set) -> Set;
+    productOf : (Set, Set) -> Set;
+    symmetricDifferenceOf : (Set, Set) -> Set;
+    cartesianProductOf : (Set, Set) -> Set;
+    powerSetOf : (Set) -> Set;
+}

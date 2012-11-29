@@ -1,0 +1,8 @@
+
+/**
+    @defgroup SclAudioTypes Misc: Audio types
+ */
+module Scl.Audio.Types
+{
+    
+}

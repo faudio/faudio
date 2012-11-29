@@ -1,0 +1,21 @@
+
+/** 
+    Lifts unary functions into audio processors.
+
+    ### Associated types
+
+    Kind           | Type
+    -------------- | --------------------------
+    State          | `()`
+    Argument       | `()`
+    Result         | `()`
+    Input          | `a`
+    Output         | `b`
+    
+    @defgroup   SclAudioProcessorUnary Audio processors: Unary
+    @author     Hans Höglund
+ */
+module Scl.Audio.Processor.Unary
+{
+    
+}

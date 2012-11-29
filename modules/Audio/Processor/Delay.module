@@ -1,0 +1,22 @@
+
+
+/** 
+    Delays an audio signal.
+
+    ### Associated types
+
+    Kind           | Type
+    -------------- | --------------------------
+    State          | `()`
+    Argument       | `time`
+    Result         | `()`
+    Input          | `a`
+    Output         | `a`
+    
+    @defgroup   SclAudioProcessorDelay Audio processors: Delay
+    @author     Hans Höglund
+ */
+module Scl.Audio.Processor.Delay
+{
+    
+}

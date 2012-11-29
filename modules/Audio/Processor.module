@@ -1,0 +1,8 @@
+
+/**
+    @defgroup SclAudioProcessor Interface: Processor
+ */
+module Scl.Audio.Processor
+{
+    
+}

@@ -1,0 +1,8 @@
+
+/**
+    @defgroup SclAudioDispatcher Interface: Dispatcher
+ */
+module Scl.Audio.Dispatcher
+{
+    
+}

@@ -1,0 +1,10 @@
+
+/**
+    @defgroup SclFuture Concurrency: Futures
+ */
+module Scl.Future
+{
+    
+    
+}
+

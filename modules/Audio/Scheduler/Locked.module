@@ -1,0 +1,9 @@
+
+/**
+    @defgroup   SclAudioSchedulerLocked Scheduling: Locked schedulers
+    @author     Hans Höglund
+ */
+module Scl.Audio.Scheduler.Locked
+{
+    
+}

@@ -1,0 +1,8 @@
+
+/**
+    @defgroup SclPair Data structures: Pairs
+ */
+module Scl.Pair
+{
+    
+}

@@ -1,0 +1,9 @@
+
+/**
+    @defgroup   AudioDispatcherBidirectional Dispatcher: Bidirectional
+    @author     Hans Höglund
+ */
+module Audio.Dispatcher.Bidirectional
+{
+    
+}

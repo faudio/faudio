@@ -1,0 +1,26 @@
+
+/**
+    @defgroup SclThread Concurrency: Threads and mutexes
+ */
+module Scl.Thread
+{
+    type Thread = IntPtr;
+    type Mutex = IntPtr;
+    type Condition = IntPtr;
+    
+    createThread : () -> Thread;
+    join : (Thread) -> Void;
+    detach : (Thread) -> Void;
+    
+    createLock : () -> Lock;
+    destroyLock : (Lock) -> Void;
+    lock : (Mutex) -> Bool;
+    tryLock : (Mutex) -> Bool;
+    unlock : (Mutex) -> Bool;
+
+    createCondition : () -> Condition;
+    waitFor : (Condition) -> Void;
+    notify : (Condition) -> Void;
+    notifyAll : (Condition) -> Void;
+}
+

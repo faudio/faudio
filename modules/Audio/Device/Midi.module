@@ -1,0 +1,11 @@
+
+/** 
+    Provides real-time midi input and output.
+
+    @defgroup   SclAudioDeviceMidi Devices: Midi
+    @author     Hans Höglund
+ */
+module Scl.Audio.Device.Midi
+{
+    
+}

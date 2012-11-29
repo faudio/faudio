@@ -1,0 +1,22 @@
+
+/** 
+    Provides signal feedback.
+
+    ### Associated types
+
+    Kind           | Type
+    -------------- | --------------------------
+    State          | `c`
+    Argument       | `()`
+    Result         | `()`
+    Input          | `a`
+    Output         | `b`
+    
+    
+    @defgroup   SclAudioProcessorLoop Audio processors: Feedback
+    @author     Hans Höglund
+ */
+module Scl.Audio.Processor.Loop
+{
+    
+}

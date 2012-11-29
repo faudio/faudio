@@ -1,0 +1,22 @@
+
+/** 
+    Runs processors *f* and *g* in sequence.
+
+    ### Associated types
+
+    Kind           | Type
+    -------------- | --------------------------
+    State          | `(state f, state g)`
+    Argument       | `(argument f, argument g)`
+    Result         | `(result f, result g)`
+    Input          | `input f`
+    Output         | `output g`
+
+    
+    @defgroup   SclAudioProcessorSequence Audio processors: Sequence
+    @author     Hans Höglund
+ */
+module Scl.Audio.Processor.Sequence
+{
+    
+}

@@ -1,0 +1,8 @@
+
+/**
+    @defgroup SclAudioScheduler Interface: Scheduler
+ */
+module Scl.Audio.Scheduler
+{
+    
+}

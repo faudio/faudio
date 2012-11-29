@@ -1,0 +1,30 @@
+
+/** 
+    Provides the chase data structure. 
+    
+    A *chase* is a sequence represented as a series of *tracks*, that is, uniquely linked arrays of
+    variable length. It has an efficient destructive append operation, supports indirect moving and is
+    structurally invariant under casts.
+
+    @defgroup   SclChase Data structures: Chases
+    @author     Hans Höglund
+ */
+module Scl.Chase 
+{
+    type Value  = IntPtr;
+    type Track  = IntPtr;
+    type Chase  = IntPtr;
+            
+    empty       : () -> Chase;
+    create      : (Size, Size) -> Chase;
+    destroy     : (Chase) -> Void;
+
+    release     : (Chase) -> Track;
+    reset       : (Track) -> Chase;
+    append      : (Chase, Chase) -> Void;
+    
+    empty       : (Chase) -> Bool;
+    lenght      : (Chase) -> Int;
+    map         : (Trans, Chase) -> Chase;
+    dmap        : (Trans, Chase) -> Chase;
+}

@@ -1,0 +1,8 @@
+
+/**
+    @defgroup SclMap Data structures: Maps
+ */
+module Scl.Map 
+{
+    
+}

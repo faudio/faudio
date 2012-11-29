@@ -1,0 +1,21 @@
+
+/**
+    Runs two processors *a* and *b* in parallel.
+
+    ### Associated types
+
+    Kind           | Type
+    -------------- | --------------------------
+    State          | `(state a, state b)`
+    Argument       | `(argument a, argument b)`
+    Result         | `(result a, result b)`
+    Input          | `(input a, input b)`
+    Output         | `(output a, output b)`
+
+    @defgroup   SclAudioProcessorParallel Audio processors: Parallel
+    @author     Hans Höglund
+ */
+module Scl.Audio.Processor.Parallel
+{
+
+}

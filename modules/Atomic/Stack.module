@@ -1,0 +1,16 @@
+
+/**
+    @defgroup SclAtomicStack Concurrency: Atomic stacks
+    @brief Atomic stack (FILO) data structure
+ */
+module Scl.Atomic.Stack
+{
+    type Stack = IntPtr;
+    
+    create : () -> Stack;
+    destroy : (Stack) -> Void;
+    
+    read : (Stack) -> IntPtr;
+    write : (Stack, IntPtr) -> IntPtr;
+}
+

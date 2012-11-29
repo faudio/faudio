@@ -1,0 +1,8 @@
+
+/**
+    @defgroup SclAudioTime Misc: Time types
+ */
+module Scl.Audio.Time
+{
+    
+}

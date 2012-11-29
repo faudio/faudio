@@ -1,0 +1,64 @@
+
+/**
+    @defgroup   SclList Data structures: Lists
+    @author     Hans Höglund
+ */
+module Scl.List
+{
+    type Value   = IntPtr;
+    type Filter  = IntPtr;
+    type Eq      = IntPtr;
+    type Ord     = IntPtr;
+    type Num     = IntPtr;
+    type Builder = IntPtr;
+    type List    = IntPtr;
+            
+    nil     : () -> List;
+    cons    : (Elem, List) -> List;
+    snoc    : (Elem, List) -> List;
+    copy    : (List) -> Void;
+    destroy : (List) -> Void;
+    swap    : (List, List) -> Void;
+
+    empty   : (List) -> Bool;
+    lenght  : (List) -> Int;
+
+    head    : (List) -> Elem;
+    tail    : (List) -> List;
+    init    : (List) -> List;
+    last    : (List) -> Elem;
+
+    reverse : (List) -> List;
+    sort    : (Ord, List) -> List;
+
+    reverse         : (List) -> List;
+    intersperse     : (Elem, List) -> List;
+
+    transpose       : (List) -> List;
+    subsequences    : (List) -> List;
+    permutations    : (List) -> List;
+    concat          : (List) -> List;
+    and             : (List) -> Bool;
+    or              : (List) -> Bool;
+    any             : (Filter, List) -> Bool;
+    all             : (Filter, List) -> Bool;
+    sum             : (Num, List) -> Elem;
+    product         : (Num, List) -> Elem;
+    maximum         : (Ord, List) -> Elem;
+    minimum         : (Ord, List) -> Elem;
+    // iterate         : (a -> a) -> a -> List;
+    repeat          : (Elem) -> List;
+    replicate       : (Int, Elem) -> List;
+    cycle           : (List) -> List;
+    take            : (Int, List) -> List;
+    drop            : (Int, List) -> List;
+    isPrefixOf      : (Eq, List, List) -> Bool;
+    isSuffixOf      : (Eq, List, List) -> Bool;
+    isInfixOf       : (Eq, List, List) -> Bool;
+    elem            : (Eq, Elem, List) -> Bool;
+    notElem         : (Eq, Elem, List) -> Bool;
+    // find            : (a -> Bool) -> List -> Maybe a
+    // filter          : (a -> Bool) -> List -> List
+    // partition       : (a -> Bool) -> List -> (List, List)
+
+}

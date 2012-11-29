@@ -1,0 +1,16 @@
+
+/**
+    @defgroup SclAtomicQueue Concurrency: Atomic queues
+    @brief Atomic queue (FIFO) data structure
+ */
+module Scl.Atomic.Queue
+{
+    type Queue = IntPtr;
+    
+    create : () -> Queue;
+    destroy : (Queue) -> Void;
+    
+    read : (Queue) -> IntPtr;
+    write : (Queue, IntPtr) -> IntPtr;
+}
+

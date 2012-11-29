@@ -1,0 +1,11 @@
+
+/** 
+    Provides real-time audio input and output.
+
+    @defgroup   SclAudioDeviceAudio Devices: Audio
+    @author     Hans Höglund
+ */
+module Scl.Audio.Device.Audio
+{
+    
+}

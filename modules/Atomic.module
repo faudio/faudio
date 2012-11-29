@@ -1,0 +1,19 @@
+
+/**
+    @defgroup   SclAtomic Concurrency: Atomic variables
+    @brief      Atomic variables
+    @author     Hans Höglund
+ */
+module Scl.Atomic
+{
+    type Atomic = IntPtr;
+    type Updater = (IntPtr) -> IntPtr;
+    
+    createAtomic : () -> Atomic;
+    destroyAtomic : (Atomic) -> Void;
+    
+    get : (Atomic) -> IntPtr;
+    set : (Atomic, IntPtr) -> Void;
+    modify : (Atomic, Updater) -> Void;
+}
+

@@ -1,0 +1,21 @@
+
+/** 
+    Lifts ternary functions into audio processors.
+
+    ### Associated types
+
+    Kind           | Type
+    -------------- | --------------------------
+    State          | `()`
+    Argument       | `()`
+    Result         | `()`
+    Input          | `(a,b,c)`
+    Output         | `d`
+    
+    @defgroup   SclAudioProcessorTernary Audio processors: Ternary
+    @author     Hans Höglund
+ */
+module Scl.Audio.Processor.Ternary
+{
+    
+}

@@ -1,0 +1,8 @@
+
+/**
+    @defgroup SclAudioDevice Interface: Device
+ */
+module Scl.Audio.Device
+{
+    
+}

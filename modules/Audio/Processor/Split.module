@@ -1,0 +1,21 @@
+
+/** 
+    Splits an audio signal.
+
+    ### Associated types
+
+    Kind           | Type
+    -------------- | --------------------------
+    State          | `()`
+    Argument       | `()`
+    Result         | `()`
+    Input          | `a`
+    Output         | `(a,a)`
+
+    @defgroup   SclAudioProcessorSplit Audio processors: Split
+    @author     Hans Höglund
+ */
+module Scl.Audio.Processor.Split
+{
+    
+}
