@@ -1,7 +1,7 @@
 
 /**
+    Provides an atomic queue (first in, first out) data structure
     @defgroup DoremirAtomicQueue Concurrency: Atomic queues
-    @brief Atomic queue (FIFO) data structure
  */
 module Doremir.Atomic.Queue
 {

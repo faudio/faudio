@@ -1,5 +1,7 @@
 
 /**
+    Provides the pair data structure. 
+    
     @defgroup DoremirPair Data structures: Pairs
  */
 module Doremir.Pair

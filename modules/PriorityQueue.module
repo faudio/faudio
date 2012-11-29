@@ -1,0 +1,10 @@
+
+/**
+    Provides the priority queue data structure. 
+    
+    @defgroup DoremirPriorityQueue Data structures: Priority queues
+ */
+module Doremir.PriorityQueue
+{
+    type PriorityQueue = IntPtr;
+}

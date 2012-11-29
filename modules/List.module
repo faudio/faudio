@@ -1,5 +1,7 @@
 
 /**
+    Provides the list data structure. 
+
     @defgroup   DoremirList Data structures: Lists
     @author     Hans Höglund
  */

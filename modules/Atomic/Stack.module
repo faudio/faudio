@@ -1,7 +1,7 @@
 
 /**
+    Provides an atomic queue (first in, last out) data structure
     @defgroup DoremirAtomicStack Concurrency: Atomic stacks
-    @brief Atomic stack (FILO) data structure
  */
 module Doremir.Atomic.Stack
 {

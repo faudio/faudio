@@ -1,5 +1,7 @@
 
 /**
+    Provides the map data structure. 
+    
     @defgroup DoremirMap Data structures: Maps
  */
 module Doremir.Map 
