@@ -6,10 +6,10 @@
     variable length. It has an efficient destructive append operation, supports indirect moving and is
     structurally invariant under casts.
 
-    @defgroup   SclChase Data structures: Chases
+    @defgroup   DoremirChase Data structures: Chases
     @author     Hans Höglund
  */
-module Scl.Chase 
+module Doremir.Chase 
 {
     type Value  = IntPtr;
     type Track  = IntPtr;

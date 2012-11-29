@@ -1,9 +1,9 @@
 
 /**
-    @defgroup   AudioDispatcherBidirectional Dispatcher: Bidirectional
+    @defgroup   DoremirAudioDispatcherBidirectional Dispatcher: Bidirectional
     @author     Hans Höglund
  */
-module Audio.Dispatcher.Bidirectional
+module Doremir.Audio.Dispatcher.Bidirectional
 {
     
 }

@@ -13,10 +13,10 @@
     Output         | `output g`
 
     
-    @defgroup   SclAudioProcessorSequence Audio processors: Sequence
+    @defgroup   DoremirAudioProcessorSequence Audio processors: Sequence
     @author     Hans Höglund
  */
-module Scl.Audio.Processor.Sequence
+module Doremir.Audio.Processor.Sequence
 {
     
 }

@@ -1,8 +1,8 @@
 
 /**
-    @defgroup SclAudioDevice Interface: Device
+    @defgroup DoremirAudioDevice Interface: Device
  */
-module Scl.Audio.Device
+module Doremir.Audio.Device
 {
     
 }

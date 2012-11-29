@@ -1,9 +1,9 @@
 
 /**
-    @defgroup SclAtomicRingBuffer Concurrency: Atomic ringbuffer
+    @defgroup DoremirAtomicRingBuffer Concurrency: Atomic ringbuffer
     @brief Atomic circular buffer
  */
-module Scl.Atomic.RingBuffer
+module Doremir.Atomic.RingBuffer
 {
     type RingBuffer = IntPtr;
 

@@ -2,10 +2,13 @@
 /** 
     Provides real-time audio input and output.
 
-    @defgroup   SclAudioDeviceAudio Devices: Audio
+    @defgroup   DoremirAudioDeviceAudio Devices: Audio
     @author     Hans Höglund
  */
-module Scl.Audio.Device.Audio
+module Doremir.Audio.Device.Audio
 {
-    
+    type AudioDevice = IntPtr;
+
+    create  : () -> AudioDevice;
+    destroy : (AudioDevice) -> Void;
 }

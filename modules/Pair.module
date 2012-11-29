@@ -1,8 +1,8 @@
 
 /**
-    @defgroup SclPair Data structures: Pairs
+    @defgroup DoremirPair Data structures: Pairs
  */
-module Scl.Pair
+module Doremir.Pair
 {
-    
+    type Pair = struct { fst : IntPtr, snd : IntPtr };
 }

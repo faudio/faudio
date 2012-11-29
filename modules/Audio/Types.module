@@ -1,8 +1,8 @@
 
 /**
-    @defgroup SclAudioTypes Misc: Audio types
+    @defgroup DoremirAudioTypes Misc: Audio types
  */
-module Scl.Audio.Types
+module Doremir.Audio.Types
 {
     
 }

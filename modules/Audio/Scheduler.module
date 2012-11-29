@@ -1,8 +1,8 @@
 
 /**
-    @defgroup SclAudioScheduler Interface: Scheduler
+    @defgroup DoremirAudioScheduler Interface: Scheduler
  */
-module Scl.Audio.Scheduler
+module Doremir.Audio.Scheduler
 {
     
 }

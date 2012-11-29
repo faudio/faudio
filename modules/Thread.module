@@ -1,8 +1,8 @@
 
 /**
-    @defgroup SclThread Concurrency: Threads and mutexes
+    @defgroup DoremirThread Concurrency: Threads and mutexes
  */
-module Scl.Thread
+module Doremir.Thread
 {
     type Thread = IntPtr;
     type Mutex = IntPtr;

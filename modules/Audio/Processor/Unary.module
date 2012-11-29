@@ -12,10 +12,10 @@
     Input          | `a`
     Output         | `b`
     
-    @defgroup   SclAudioProcessorUnary Audio processors: Unary
+    @defgroup   DoremirAudioProcessorUnary Audio processors: Unary
     @author     Hans Höglund
  */
-module Scl.Audio.Processor.Unary
+module Doremir.Audio.Processor.Unary
 {
     
 }

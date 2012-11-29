@@ -2,10 +2,13 @@
 /** 
     Provides real-time midi input and output.
 
-    @defgroup   SclAudioDeviceMidi Devices: Midi
+    @defgroup   DoremirAudioDeviceMidi Devices: Midi
     @author     Hans Höglund
  */
-module Scl.Audio.Device.Midi
+module Doremir.Audio.Device.Midi
 {
-    
+    type MidiDevice = IntPtr;
+
+    create  : () -> MidiDevice;
+    destroy : (MidiDevice) -> Void;
 }

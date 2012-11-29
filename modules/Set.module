@@ -1,8 +1,8 @@
 
 /**
-    @defgroup SclSet Data structures: Sets
+    @defgroup DoremirSet Data structures: Sets
  */
-module Scl.Set
+module Doremir.Set
 {
     type Set = IntPtr;
     type Value = IntPtr;

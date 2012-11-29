@@ -1,9 +1,9 @@
 
 /**
-    @defgroup   SclList Data structures: Lists
+    @defgroup   DoremirList Data structures: Lists
     @author     Hans Höglund
  */
-module Scl.List
+module Doremir.List
 {
     type Value   = IntPtr;
     type Filter  = IntPtr;

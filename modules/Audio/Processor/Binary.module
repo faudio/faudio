@@ -12,10 +12,10 @@
     Input          | `(a,b)`
     Output         | `c`
 
-    @defgroup   SclAudioProcessorBinary Audio processors: Binary
+    @defgroup   DoremirAudioProcessorBinary Audio processors: Binary
     @author     Hans Höglund
  */
-module Scl.Audio.Processor.Binary
+module Doremir.Audio.Processor.Binary
 {
     
 }

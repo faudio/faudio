@@ -13,10 +13,10 @@
     Output         | `b`
     
     
-    @defgroup   SclAudioProcessorLoop Audio processors: Feedback
+    @defgroup   DoremirAudioProcessorLoop Audio processors: Feedback
     @author     Hans Höglund
  */
-module Scl.Audio.Processor.Loop
+module Doremir.Audio.Processor.Loop
 {
     
 }

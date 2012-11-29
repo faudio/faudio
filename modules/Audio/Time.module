@@ -1,8 +1,8 @@
 
 /**
-    @defgroup SclAudioTime Misc: Time types
+    @defgroup DoremirAudioTime Misc: Time types
  */
-module Scl.Audio.Time
+module Doremir.Audio.Time
 {
     
 }

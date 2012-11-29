@@ -1,9 +1,9 @@
 
 /**
-    @defgroup SclAtomicStack Concurrency: Atomic stacks
+    @defgroup DoremirAtomicStack Concurrency: Atomic stacks
     @brief Atomic stack (FILO) data structure
  */
-module Scl.Atomic.Stack
+module Doremir.Atomic.Stack
 {
     type Stack = IntPtr;
     

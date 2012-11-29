@@ -2,10 +2,14 @@
 /** 
     Provides non-real-time audio input and output.
 
-    @defgroup   SclAudioDeviceFile Devices: Sound files
+    @defgroup   DoremirAudioDeviceFile Devices: Sound files
     @author     Hans Höglund
  */
-module Scl.Audio.Device.File
+module Doremir.Audio.Device.File
 {
-    
+    type AudioDevice = IntPtr;
+    type FilePath    = Int;
+
+    create  : (FilePath, FilePath) -> FileDevice;
+    destroy : (FileDevice) -> Void;
 }

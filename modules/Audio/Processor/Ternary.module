@@ -12,10 +12,10 @@
     Input          | `(a,b,c)`
     Output         | `d`
     
-    @defgroup   SclAudioProcessorTernary Audio processors: Ternary
+    @defgroup   DoremirAudioProcessorTernary Audio processors: Ternary
     @author     Hans Höglund
  */
-module Scl.Audio.Processor.Ternary
+module Doremir.Audio.Processor.Ternary
 {
     
 }

@@ -1,8 +1,8 @@
 
 /**
-    @defgroup SclMap Data structures: Maps
+    @defgroup DoremirMap Data structures: Maps
  */
-module Scl.Map 
+module Doremir.Map 
 {
     
 }

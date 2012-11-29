@@ -1,9 +1,9 @@
 
 /**
-    @defgroup SclAtomicQueue Concurrency: Atomic queues
+    @defgroup DoremirAtomicQueue Concurrency: Atomic queues
     @brief Atomic queue (FIFO) data structure
  */
-module Scl.Atomic.Queue
+module Doremir.Atomic.Queue
 {
     type Queue = IntPtr;
     

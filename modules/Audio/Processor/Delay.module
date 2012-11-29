@@ -13,10 +13,10 @@
     Input          | `a`
     Output         | `a`
     
-    @defgroup   SclAudioProcessorDelay Audio processors: Delay
+    @defgroup   DoremirAudioProcessorDelay Audio processors: Delay
     @author     Hans Höglund
  */
-module Scl.Audio.Processor.Delay
+module Doremir.Audio.Processor.Delay
 {
     
 }

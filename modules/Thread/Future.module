@@ -1,8 +1,8 @@
 
 /**
-    @defgroup SclFuture Concurrency: Futures
+    @defgroup DoremirFuture Concurrency: Futures
  */
-module Scl.Future
+module Doremir.Future
 {
     
     

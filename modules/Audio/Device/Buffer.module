@@ -2,12 +2,13 @@
 /** 
     Provides in-memory input and output.
 
-    @defgroup   SclAudioDeviceBuffer Devices: Buffers
+    @defgroup   DoremirAudioDeviceBuffer Devices: Buffers
     @author     Hans Höglund
  */
-module Scl.Audio.Device.Buffer
+module Doremir.Audio.Device.Buffer
 {
     type BufferDevice = IntPtr;
     
-    create : (Size, Type) -> BufferDevice;
+    create  : (Size, Type) -> BufferDevice;
+    destroy : (BufferDevice) -> Void;
 }

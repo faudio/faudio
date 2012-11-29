@@ -1,8 +1,8 @@
 
 /**
-    @defgroup SclImproving Concurrency: Improving values
+    @defgroup DoremirImproving Concurrency: Improving values
  */
-module Scl.Improving
+module Doremir.Improving
 {
     
     

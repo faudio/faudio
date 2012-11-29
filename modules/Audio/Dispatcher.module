@@ -1,8 +1,8 @@
 
 /**
-    @defgroup SclAudioDispatcher Interface: Dispatcher
+    @defgroup DoremirAudioDispatcher Interface: Dispatcher
  */
-module Scl.Audio.Dispatcher
+module Doremir.Audio.Dispatcher
 {
     
 }

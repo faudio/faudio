@@ -1,10 +1,10 @@
 
 /**
-    @defgroup   SclAtomic Concurrency: Atomic variables
+    @defgroup   DoremirAtomic Concurrency: Atomic variables
     @brief      Atomic variables
     @author     Hans Höglund
  */
-module Scl.Atomic
+module Doremir.Atomic
 {
     type Atomic = IntPtr;
     type Updater = (IntPtr) -> IntPtr;

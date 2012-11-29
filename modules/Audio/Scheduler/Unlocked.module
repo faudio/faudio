@@ -1,9 +1,9 @@
 
 /**
-    @defgroup   SclAudioSchedulerLocked Scheduling: Unlocked schedulers
+    @defgroup   DoremirAudioSchedulerLocked Scheduling: Unlocked schedulers
     @author     Hans Höglund
  */
-module Scl.Audio.Scheduler.Unlocked
+module Doremir.Audio.Scheduler.Unlocked
 {
     
 }
