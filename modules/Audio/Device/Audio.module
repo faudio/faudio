@@ -7,8 +7,16 @@
  */
 module Doremir.Audio.Device.Audio
 {
-    type AudioDevice = Intptr;
+    type Device = Intptr;
+    type Session = Intptr;
+    type Stream = Intptr;
+    type DeviceList = List;
 
-    create  : () -> AudioDevice;
-    destroy : (AudioDevice) -> Void;
+    beginSession : () -> Session;
+    endSession   : (Session) -> Void;
+
+    devices         : (Session) -> DeviceList;
+    standardDevices : (Session) -> DevicePair;
+    openStream      : (Device, Proc) -> Stream;
+    closeStream     : (Stream) -> Void;
 }

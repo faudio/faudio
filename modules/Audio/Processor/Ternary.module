@@ -17,5 +17,7 @@
  */
 module Doremir.Audio.Processor.Ternary
 {
-    
+    type Func = Intptr;
+    type Proc = Intptr;    
+    lift : (Func) -> Proc;   
 }

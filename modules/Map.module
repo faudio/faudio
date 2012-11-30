@@ -7,6 +7,7 @@
 module Doremir.Map 
 {
     type Map = Intptr;
+    type Key = Intptr;
     type Value = Intptr;
     
     empty   : () -> Map;

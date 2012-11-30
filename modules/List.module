@@ -2,65 +2,80 @@
 /**
     Provides the list data structure. 
 
+    TODO
+        
+        Tagging like this?
+        
+        000 Default pointer
+        010 Pointer with interfaces
+
+        001 int
+        011 uint
+        101 float
+        111
+
+
+        doremir_eq
+        doremir_ord
+        doremir_num
+        
+
     @defgroup   DoremirList Data structures: Lists
     @author     Hans Höglund
  */
 module Doremir.List
 {
-    type Value   = Intptr;
-    type Filter  = Intptr;
-    type Eq      = Intptr;
-    type Ord     = Intptr;
-    type Num     = Intptr;
-    type Builder = Intptr;
-    type List    = Intptr;
+    type List   = Intptr;
+    type Value  = Intptr; // a
             
-    nil     : () -> List;
-    cons    : (Elem, List) -> List;
-    snoc    : (Elem, List) -> List;
-    destroy : (List) -> Void;
-    copy    : (List) -> List;
-    swap    : (List, List) -> Void;
+    empty       : () -> List;
+    cons        : (Value, List) -> List;
+    snoc        : (Value, List) -> List;
+    destroy     : (List) -> Void;
+    copy        : (List) -> List;
+    swap        : (List, List) -> Void;
 
-    isEmpty : (List) -> Bool;
-    lenght  : (List) -> Int;
+    isEmpty     : (List) -> Bool;
+    lenght      : (List) -> Int;
+    head        : (List) -> MaybeValue;
+    tail        : (List) -> MaybeList;
+    init        : (List) -> MaybeList;
+    last        : (List) -> MaybeValue;
 
-    head    : (List) -> Elem;
-    tail    : (List) -> List;
-    init    : (List) -> List;
-    last    : (List) -> Elem;
+    take        : (Int, List) -> List;
+    drop        : (Int, List) -> List;
+    isElem      : (Value, List) -> Bool;
+    
+    reverse     : (List) -> List;
+    sort        : (List) -> List;
+    sep         : (Value, List) -> List;
+    concat      : (List) -> List;
+    concatSep   : (List) -> List;
 
-    reverse : (List) -> List;
-    sort    : (Ord, List) -> List;
+    type Pred   = Intptr; // a -> Bool
 
-    reverse         : (List) -> List;
-    intersperse     : (Elem, List) -> List;
+    find        : (Pred, List) -> MaybeValue;
+    filter      : (Pred, List) -> List;
 
-    transpose       : (List) -> List;
-    subsequences    : (List) -> List;
-    permutations    : (List) -> List;
-    concat          : (List) -> List;
-    and             : (List) -> Bool;
-    or              : (List) -> Bool;
-    any             : (Filter, List) -> Bool;
-    all             : (Filter, List) -> Bool;
-    sum             : (Num, List) -> Elem;
-    product         : (Num, List) -> Elem;
-    maximum         : (Ord, List) -> Elem;
-    minimum         : (Ord, List) -> Elem;
-    // iterate         : (a -> a) -> a -> List;
-    repeat          : (Elem) -> List;
-    replicate       : (Int, Elem) -> List;
-    cycle           : (List) -> List;
-    take            : (Int, List) -> List;
-    drop            : (Int, List) -> List;
-    isPrefixOf      : (Eq, List, List) -> Bool;
-    isSuffixOf      : (Eq, List, List) -> Bool;
-    isInfixOf       : (Eq, List, List) -> Bool;
-    elem            : (Eq, Elem, List) -> Bool;
-    notElem         : (Eq, Elem, List) -> Bool;
-    // find            : (a -> Bool) -> List -> Maybe a
-    // filter          : (a -> Bool) -> List -> List
-    // partition       : (a -> Bool) -> List -> (List, List)
+    type UnaryFunc  = Intptr; // a -> b
+    type BinaryFunc = Intptr; // a -> a -> b
 
+    map         : (List, Func)             -> List;
+    foldl       : (List, BinaryFunc, Value) -> List;
+    
+    and         : (List) -> Bool;
+    or          : (List) -> Bool;
+    any         : (Pred, List) -> Bool;
+    all         : (Pred, List) -> Bool;
+    sum         : (Num, List) -> Value;
+    product     : (Num, List) -> Value;
+    maximum     : (List) -> Value;
+    minimum     : (List) -> Value;
+                                
+    consDestroy    : (Value, List) -> List;
+    snocDestroy    : (Value, List) -> List;    
+    reverseDestroy : (List) -> List;
+    sortDestroy    : (List) -> List;
+    mapDestroy     : (List, Func) -> List;
+    
 }

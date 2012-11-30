@@ -5,8 +5,8 @@
         int8          Signed 8-bit integer
         int32         Signed 32-bit integer
         int64         Signed 64-bit integer
-        sample32      32-bit floating point sample
-        sample64      64-bit floating point sample
+        float32       32-bit floating point sample
+        float64       64-bit floating point sample
         midi_message  Midi message
         ()            Unit value
 
@@ -55,31 +55,4 @@
 module Doremir.Audio.Types
 {
 
-    type MidiStatus = enum
-    {
-      note_off         ,
-      note_on          ,
-      after_touch      ,
-      control_change   ,
-      program_change   ,
-      channel_pressure ,
-      pitch_wheel      ,
-      sysex            
-    };
-
-    midiStatusType        : (Int) -> Int;
-    midiStatusChannel     : (Int) -> Int;
-    midiStatusIsSysEx     : (Int) -> Bool;
-
-    type MidiSimpleMessage = struct
-    {
-        bytes : [Char x 3]
-    };
-
-    // TODO simple midi functions that works on list<Integral>
-    // TODO midi file functions that works on list<pair<Integral,option<midi_message,midi_sysex_message>>
-
-
-    type MidiSysexMessage = struct { data : RawDataBuffer };
-    
 }

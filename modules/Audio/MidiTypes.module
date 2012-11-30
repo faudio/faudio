@@ -1,0 +1,32 @@
+
+/**
+    @defgroup DoremirMidiTypes Misc: Midi types
+ */
+module Doremir.Midi.Types
+{
+    type Status = enum {
+      NoteOff,
+      NoteOn,
+      AfterTouch,
+      ControlChange,
+      ProgramChange,
+      ChannelPressure,
+      PitchWheel,
+      Sysex 
+    };
+
+    statusType    : (Int) -> Int;
+    statusChannel : (Int) -> Int;
+    statusIsSysEx : (Int) -> Bool;
+
+    type SimpleMessage = struct {
+        bytes : [UInt8 x 3]
+    };
+
+    // TODO simple midi functions that works on list<Integral>
+    // TODO midi file functions that works on list<pair<Integral,option<midi_message,midi_sysex_message>>
+
+
+    type SysexMessage = struct { data : RawBuffer };
+    
+}

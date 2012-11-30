@@ -1,0 +1,13 @@
+
+/** 
+    @defgroup   DoremirRatio Data structures: Rational numbers
+    @author     Hans Höglund
+ */
+module Doremir.Ratio 
+{
+    type Ratio  = Intptr;
+    type Nom    = Int32;
+    type Denom  = UInt32;
+            
+
+}

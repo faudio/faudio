@@ -7,9 +7,10 @@
  */
 module Doremir.Audio.Device.File
 {
-    type AudioDevice = Intptr;
-    type FilePath    = Int;
+    type Device = Intptr;
 
-    create  : (FilePath, FilePath) -> FileDevice;
-    destroy : (FileDevice) -> Void;
+    create      : (FilePath, FilePath) -> Device;
+    destroy     : (Device) -> Void;
+    openStream  : (Device, Proc) -> Stream;
+    closeStream : (Stream) -> Void;
 }

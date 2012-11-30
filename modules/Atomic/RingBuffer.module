@@ -9,6 +9,7 @@ module Doremir.Atomic.RingBuffer
 
     create : (RingBuffer) -> RingBuffer;
     copy : (RingBuffer) -> RingBuffer;
+    swap : (RingBuffer, RingBuffer) -> Void;
     destroy : (RingBuffer) -> Void;
 
     read : (RingBuffer) -> Intptr;

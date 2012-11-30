@@ -17,5 +17,7 @@
  */
 module Doremir.Audio.Processor.Unary
 {
-    
+    type Func = Intptr;
+    type Proc = Intptr;    
+    lift : (Func) -> Proc;   
 }

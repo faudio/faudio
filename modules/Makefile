@@ -10,13 +10,15 @@ gen:
 	modulo --language=c    <modules/Thread/Future.module    	>inc/doremir/thread/future.h;
 	modulo --language=c    <modules/Thread/Improving.module    	>inc/doremir/thread/improving.h;
                                                                                           
+	modulo --language=c    <modules/Ratio.module    		>inc/doremir/ratio.h;
 	modulo --language=c    <modules/Chase.module    		>inc/doremir/chase.h;
 	modulo --language=c    <modules/List.module    			>inc/doremir/list.h; 
 	modulo --language=c    <modules/Set.module    			>inc/doremir/set.h;  
 	modulo --language=c    <modules/Pair.module    			>inc/doremir/pair.h; 
 	modulo --language=c    <modules/Map.module    			>inc/doremir/map.h;  
                                                                                           
-	modulo --language=c    <modules/Audio/Types.module    		>inc/doremir/audio/types.h;
+	modulo --language=c    <modules/Audio/AudioTypes.module    	>inc/doremir/audio/audio_types.h;
+	modulo --language=c    <modules/Audio/MidiTypes.module    	>inc/doremir/audio/midi_types.h;
 	modulo --language=c    <modules/Audio/Time.module    		>inc/doremir/audio/time.h;
                                                                                          
 	modulo --language=c    <modules/Audio/Processor.module  	>inc/doremir/audio/processor.h;

@@ -11,20 +11,23 @@
  */
 module Doremir.Chase 
 {
-    type Value  = Intptr;
-    type Track  = Intptr;
     type Chase  = Intptr;
+    type Value  = Intptr;
+    // type Track  = Intptr;
             
     empty       : () -> Chase;
-    create      : (Size, Size) -> Chase;
+    create      : (Type, Size) -> Chase;
     destroy     : (Chase) -> Void;
 
-    release     : (Chase) -> Track;
-    reset       : (Track) -> Chase;
+    // release     : (Chase) -> Track;
+    // reset       : (Track) -> Chase;
     append      : (Chase, Chase) -> Void;
     
-    empty       : (Chase) -> Bool;
+    isEmpty     : (Chase) -> Bool;
+    isSingle    : (Chase) -> Bool;
     lenght      : (Chase) -> Int;
-    map         : (Trans, Chase) -> Chase;
-    dmap        : (Trans, Chase) -> Chase;
+
+    type UnaryFunc = Intptr;
+    map         : (UnaryFunc, Chase) -> Chase;
+    mapDest     : (UnaryFunc, Chase) -> Chase;
 }

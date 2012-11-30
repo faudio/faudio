@@ -7,8 +7,16 @@
  */
 module Doremir.Audio.Device.Midi
 {
-    type MidiDevice = Intptr;
+    type Session = Intptr;
+    type Device = Intptr;
+    type Stream = Intptr;
+    type DeviceList = List;
 
-    create  : () -> MidiDevice;
-    destroy : (MidiDevice) -> Void;
+    beginSession : () -> Session;
+    endSession   : (Session) -> Void;
+
+    devices         : (Session) -> DeviceList;
+    standardDevices : (Session) -> DevicePair;
+    openStream      : (Device, Proc) -> Stream;
+    closeStream     : (Stream) -> Void;
 }
