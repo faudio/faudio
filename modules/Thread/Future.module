@@ -1,8 +1,7 @@
 
 /**
-    @defgroup DoremirFuture Concurrency: Futures
  */
-module Doremir.Future
+module Doremir.Thread.Future
 {
     type Future = Intptr;
     type Value  = Intptr;

@@ -1,6 +1,5 @@
 
 /**
-    @defgroup DoremirAudioTime Misc: Time types
  */
 module Doremir.Audio.Time
 {

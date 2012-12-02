@@ -19,8 +19,6 @@
         doremir_ord
         doremir_num
         
-
-    @defgroup   DoremirList Data structures: Lists
     @author     Hans Höglund
  */
 module Doremir.List

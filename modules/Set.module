@@ -1,8 +1,6 @@
 
 /**
     Provides the set data structure. 
-    
-    @defgroup DoremirSet Data structures: Sets
  */
 module Doremir.Set
 {

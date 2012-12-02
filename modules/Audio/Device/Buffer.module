@@ -1,11 +1,9 @@
 
 /** 
     Provides in-memory input and output.
-
-    @defgroup   DoremirAudioDeviceBuffer Devices: Buffers
     @author     Hans Höglund
  */
-module Doremir.Audio.Device.Buffer
+module Doremir.Audio.Device.BufferDevice
 {
     type BufferDevice = Intptr;
     

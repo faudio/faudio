@@ -1,0 +1,37 @@
+
+/**
+ */
+module Doremir.Midi
+{
+    type Status = enum {
+        NoteOff,
+        NoteOn,
+        AfterTouch,
+        ControlChange,
+        ProgramChange,
+        ChannelPressure,
+        PitchWheel,
+        Sysex 
+    };
+
+    statusType    : (Int) -> Int;
+    statusChannel : (Int) -> Int;
+    statusIsSysex : (Int) -> Bool;
+
+    type SimpleMessage = struct {
+        bytes : [UInt8 x 3]
+    };
+
+    // TODO simple midi functions that works on list<Integral>
+    // TODO midi file functions that works on list<pair<Integral,option<midi_message,midi_sysex_message>>
+
+    type SysexMessage = struct { data : RawBuffer };    
+
+    type MessageTag = enum { SimpleMessageTag, SysexMessageTag };
+    type Message = struct { 
+        tag : MessageTag, 
+        value : union { 
+            simple : SimpleMessage, 
+            sysex : SysexMessage 
+    }};    
+}

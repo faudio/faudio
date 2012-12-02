@@ -1,10 +1,10 @@
 
 /**
     Provides the pair data structure. 
-    
-    @defgroup DoremirPair Data structures: Pairs
  */
 module Doremir.Pair
 {
     type Pair = struct { fst : Intptr, snd : Intptr };
+    
+    map : (Func, Pair) -> Pair;
 }

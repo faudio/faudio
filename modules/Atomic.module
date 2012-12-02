@@ -1,8 +1,6 @@
 
 /**
     Provides atomic variables
-    
-    @defgroup   DoremirAtomic Concurrency: Atomic variables
     @author     Hans Höglund
  */
 module Doremir.Atomic

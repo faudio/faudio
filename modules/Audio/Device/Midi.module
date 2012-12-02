@@ -1,22 +1,20 @@
 
 /** 
     Provides real-time midi input and output.
-
-    @defgroup   DoremirAudioDeviceMidi Devices: Midi
     @author     Hans Höglund
  */
-module Doremir.Audio.Device.Midi
+module Doremir.Audio.Device.MidiDevice
 {
     type Session = Intptr;
-    type Device = Intptr;
+    type MidiDevice = Intptr;
     type Stream = Intptr;
-    type DeviceList = List;
+    type MidiDeviceList = List;
 
     beginSession : () -> Session;
     endSession   : (Session) -> Void;
 
-    devices         : (Session) -> DeviceList;
-    standardDevices : (Session) -> DevicePair;
-    openStream      : (Device, Proc) -> Stream;
-    closeStream     : (Stream) -> Void;
+    devices     : (Session) -> MidiDeviceList;
+    standard    : (Session) -> MidiDevicePair;
+    openStream  : (MidiDevice, Proc) -> Stream;
+    closeStream : (Stream) -> Void;
 }

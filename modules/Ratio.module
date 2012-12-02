@@ -1,6 +1,5 @@
 
 /** 
-    @defgroup   DoremirRatio Data structures: Rational numbers
     @author     Hans Höglund
  */
 module Doremir.Ratio 

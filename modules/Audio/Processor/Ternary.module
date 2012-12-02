@@ -12,7 +12,6 @@
     Input          | `(a,b,c)`
     Output         | `d`
     
-    @defgroup   DoremirAudioProcessorTernary Audio processors: Ternary
     @author     Hans Höglund
  */
 module Doremir.Audio.Processor.Ternary

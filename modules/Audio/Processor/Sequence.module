@@ -15,7 +15,6 @@
     Output         | `output g`
 
     
-    @defgroup   DoremirAudioProcessorSequence Audio processors: Sequence
     @author     Hans Höglund
  */
 module Doremir.Audio.Processor.Sequence

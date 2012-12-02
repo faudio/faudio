@@ -12,7 +12,6 @@
     Input          | `a`
     Output         | `(a,a)`
 
-    @defgroup   DoremirAudioProcessorSplit Audio processors: Split
     @author     Hans Höglund
  */
 module Doremir.Audio.Processor.Split

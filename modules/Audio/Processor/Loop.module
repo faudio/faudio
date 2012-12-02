@@ -13,7 +13,6 @@
     Output         | `b`
     
     
-    @defgroup   DoremirAudioProcessorLoop Audio processors: Loop
     @author     Hans Höglund
  */
 module Doremir.Audio.Processor.Loop

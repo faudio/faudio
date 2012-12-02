@@ -14,7 +14,6 @@
     Input          | `(input a, input b)`
     Output         | `(output a, output b)`
 
-    @defgroup   DoremirAudioProcessorParallel Audio processors: Parallel
     @author     Hans Höglund
  */
 module Doremir.Audio.Processor.Parallel

@@ -16,9 +16,11 @@ gen:
 	modulo --language=c    <modules/Set.module    			>inc/doremir/set.h;  
 	modulo --language=c    <modules/Pair.module    			>inc/doremir/pair.h; 
 	modulo --language=c    <modules/Map.module    			>inc/doremir/map.h;  
+	modulo --language=c    <modules/PriorityQueue.module		>inc/doremir/priority_queue.h;  
                                                                                           
-	modulo --language=c    <modules/Audio/AudioTypes.module    	>inc/doremir/audio/audio_types.h;
-	modulo --language=c    <modules/Audio/MidiTypes.module    	>inc/doremir/audio/midi_types.h;
+	modulo --language=c    <modules/Midi.module    			>inc/doremir/midi.h;
+	modulo --language=c    <modules/Audio.module    		>inc/doremir/audio.h;
+
 	modulo --language=c    <modules/Audio/Time.module    		>inc/doremir/audio/time.h;
                                                                                          
 	modulo --language=c    <modules/Audio/Processor.module  	>inc/doremir/audio/processor.h;

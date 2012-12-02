@@ -1,8 +1,7 @@
 
 /**
-    @defgroup DoremirImproving Concurrency: Improving values
  */
-module Doremir.Improving
+module Doremir.Thread.Improving
 {
     
     

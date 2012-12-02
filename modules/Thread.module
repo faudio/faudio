@@ -1,6 +1,5 @@
 
 /**
-    @defgroup DoremirThread Concurrency: Threads and mutexes
  */
 module Doremir.Thread
 {

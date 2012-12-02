@@ -1,6 +1,5 @@
 
 /**
-    @defgroup DoremirAudioDispatcher Interface: Dispatcher
  */
 module Doremir.Audio.Dispatcher
 {

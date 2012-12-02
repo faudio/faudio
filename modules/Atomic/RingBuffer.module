@@ -1,7 +1,6 @@
 
 /**
     Provides an atomic circular buffer
-    @defgroup DoremirAtomicRingBuffer Concurrency: Atomic ringbuffer
  */
 module Doremir.Atomic.RingBuffer
 {

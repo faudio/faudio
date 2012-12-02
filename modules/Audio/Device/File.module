@@ -1,16 +1,14 @@
 
 /** 
     Provides non-real-time audio input and output.
-
-    @defgroup   DoremirAudioDeviceFile Devices: Sound files
     @author     Hans Höglund
  */
-module Doremir.Audio.Device.File
+module Doremir.Audio.Device.FileDevice
 {
-    type Device = Intptr;
+    type FileDevice = Intptr;
 
-    create      : (FilePath, FilePath) -> Device;
-    destroy     : (Device) -> Void;
-    openStream  : (Device, Proc) -> Stream;
+    create      : (FilePath, FilePath) -> FileDevice;
+    destroy     : (FileDevice) -> Void;
+    openStream  : (FileDevice, Proc) -> Stream;
     closeStream : (Stream) -> Void;
 }

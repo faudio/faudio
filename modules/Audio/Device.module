@@ -1,6 +1,5 @@
 
 /**
-    @defgroup DoremirAudioDevice Interface: Device
  */
 module Doremir.Audio.Device
 {

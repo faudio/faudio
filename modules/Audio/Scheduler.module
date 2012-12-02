@@ -1,6 +1,5 @@
 
 /**
-    @defgroup DoremirAudioScheduler Interface: Scheduler
  */
 module Doremir.Audio.Scheduler
 {

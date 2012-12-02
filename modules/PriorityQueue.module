@@ -1,10 +1,17 @@
 
 /**
     Provides the priority queue data structure. 
-    
-    @defgroup DoremirPriorityQueue Data structures: Priority queues
  */
 module Doremir.PriorityQueue
 {
     type PriorityQueue = Intptr;
+    type Value = Intptr;
+    
+    create  : () -> PriorityQueue;
+    swap    : (PriorityQueue, PriorityQueue) -> Void;
+    destroy : (PriorityQueue) -> Void;
+    
+    insert  : (PriorityQueue, Value) -> Void;
+    peek    : (PriorityQueue) -> Value;
+    pop     : (PriorityQueue) -> Value;
 }

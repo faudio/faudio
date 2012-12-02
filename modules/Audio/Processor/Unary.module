@@ -12,7 +12,6 @@
     Input          | `a`
     Output         | `b`
     
-    @defgroup   DoremirAudioProcessorUnary Audio processors: Unary
     @author     Hans Höglund
  */
 module Doremir.Audio.Processor.Unary

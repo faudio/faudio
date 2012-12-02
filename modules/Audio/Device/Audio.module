@@ -1,22 +1,20 @@
 
 /** 
     Provides real-time audio input and output.
-
-    @defgroup   DoremirAudioDeviceAudio Devices: Audio
     @author     Hans Höglund
  */
-module Doremir.Audio.Device.Audio
+module Doremir.Audio.Device.AudioDevice
 {
-    type Device = Intptr;
+    type AudioDevice = Intptr;
     type Session = Intptr;
     type Stream = Intptr;
-    type DeviceList = List;
+    type AudioDeviceList = List;
 
     beginSession : () -> Session;
     endSession   : (Session) -> Void;
 
-    devices         : (Session) -> DeviceList;
-    standardDevices : (Session) -> DevicePair;
-    openStream      : (Device, Proc) -> Stream;
-    closeStream     : (Stream) -> Void;
+    devices     : (Session) -> AudioDeviceList;
+    standard    : (Session) -> AudioDevicePair;
+    openStream  : (AudioDevice, Proc) -> Stream;
+    closeStream : (Stream) -> Void;
 }

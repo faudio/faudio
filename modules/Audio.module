@@ -50,9 +50,8 @@
       - <A x N> maps to A[N]
       - [A] maps to chase<A>::track_pointer
 
-    @defgroup DoremirAudioTypes Misc: Audio types
  */
-module Doremir.Audio.Types
+module Doremir.Audio
 {
 
 }
