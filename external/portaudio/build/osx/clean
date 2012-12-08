@@ -1,0 +1,8 @@
+#!/bin/bash
+
+pushd external_libraries/portaudio;
+rm -rf result;
+pushd source;
+make distclean;
+popd;
+popd;

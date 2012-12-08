@@ -1,0 +1,31 @@
+#!/bin/bash
+git submodule init   external_libraries/fluidsynth/source;
+git submodule update external_libraries/fluidsynth/source;
+
+pushd external_libraries/fluidsynth/source;
+mkdir -p build;
+pushd build;
+
+cmake ..                                           \
+        -G "MSYS Makefiles"                        \
+        -DCMAKE_BUILD_TYPE=Release                 \
+        -DCMAKE_INSTALL_PREFIX="../../result"      \
+        -Denable-dbus=OFF                          \
+        -Denable-debug=OFF                         \
+        -Denable-aufile=OFF                        \
+        -Denable-fpe-check=OFF                     \
+        -Denable-jack=OFF                          \
+        -Denable-ladspa=OFF                        \
+        -Denable-libsndfile=OFF                    \
+        -Denable-portaudio=OFF                     \
+        -Denable-profiling=OFF                     \
+        -Denable-pulseaudio=OFF                    \
+        -Denable-readline=OFF                      \
+        -Denable-floats=OFF                        \
+        -Denable-trap-on-fpe=OFF                   \
+        -DBUILD_SHARED_LIBS=False                  \
+    && make \
+    && make install;
+
+popd;
+popd;

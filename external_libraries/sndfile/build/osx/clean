@@ -1,8 +1,0 @@
-#!/bin/bash
-
-pushd external_libraries/sndfile;
-rm -rf result;
-pushd source;
-make distclean;
-popd;
-popd;

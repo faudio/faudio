@@ -1,0 +1,21 @@
+#!/bin/bash
+git submodule init   external_libraries/portmidi/source;
+git submodule update external_libraries/portmidi/source;
+
+pushd external_libraries/portmidi/source;
+
+mkdir -p build \
+      && pushd build \
+      && cmake .. \
+          -DCMAKE_OSX_DEPLOYMENT_TARGET="10.5"        \
+          -DCMAKE_BUILD_TYPE=Release                  \
+          -DCMAKE_OSX_ARCHITECTURES="i386"            \
+      && VERBOSE=1 make \
+      && popd \
+      && mkdir -p ../result/include \
+      && mkdir -p ../result/lib \
+      && mv build/libportmidi.dylib       ../result/lib \
+      && mv build/libportmidi_s.a        ../result/lib \
+      && cp pm_common/portmidi.h        ../result/include/portmidi.h;
+
+popd;

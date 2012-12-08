@@ -1,0 +1,20 @@
+#!/bin/bash
+git submodule init external_libraries/gtest/source;
+git submodule update external_libraries/gtest/source;
+
+pushd external_libraries/gtest/source;
+
+mkdir -p build \
+	&& pushd build \
+	&& cmake .. \
+		-G "MSYS Makefiles" \
+		-D gtest_disable_pthreads=True .. \
+	&& make \
+	&& popd \
+	&& mkdir -p 				../result/include \
+	&& mkdir -p 				../result/lib \
+	&& mv build/libgtest.a	 	../result/lib \
+	&& cp -R include 			../result;
+
+popd;
+

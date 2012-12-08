@@ -1,0 +1,6 @@
+#!/bin/bash
+
+pushd external_libraries/portmidi;
+rm -rf result;
+rm -rf source/build;
+popd;

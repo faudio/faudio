@@ -1,5 +1,5 @@
 
-ScoreCleaner Audio Engine
+DoReMIR Audio Engine
 =========================
 
 For a basic build:
@@ -19,9 +19,7 @@ To test with ScoreCleaner (must be on the desktop, set $SCORECLEANER to override
 
 To generate documentation:
     
-    $ cd doc
-    $ make html
-    $ make pdf
+    $ make doc
 
 For more detailed instructions, see the documentation page Build and install.
 
