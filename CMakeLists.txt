@@ -1,5 +1,5 @@
 ##
-##  CMake build for the ScoreCleaner Audio Engine
+##  CMake build for the DoReMIR Audio Engine
 ##
 ##  Test with
 ##      rm -rf build && ./boot && make edit_cache
