@@ -7,22 +7,26 @@
 cmake_minimum_required(VERSION 2.8.8)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
-## Select language version
-include(FindC++0x)
-
-project(ScoreCleanerAudioEngine C CXX)
+project(DoReMIRAudioEngine C CXX)
 set(VERSION_PRE "")
-set(VERSION_X 1)
-set(VERSION_Y 5)
-set(VERSION_Z 3)
+set(VERSION_X 2)
+set(VERSION_Y 0)
+set(VERSION_Z 0)
 set(VERSION_SUFF "")
 set(VERSION "${VERSION_PRE}${VERSION_X}.${VERSION_Y}.${VERSION_Z}${VERSION_SUFF}")
+
+if(APPLE)
+  set(NOT_APPLE False)
+else()
+  set(NOT_APPLE True)
+endif()
 
 
 ## Build options
 
 #  This should hold
-#    CMAKE_OSX_DEPLOYMENT_TARGET <= CMAKE_OSX_SYSROOT <= (build machine OS X version)
+#    
+#  CMAKE_OSX_DEPLOYMENT_TARGET <= CMAKE_OSX_SYSROOT <= (build machine OS X version)
 #
 #  CMAKE_OSX_DEPLOYMENT_TARGET should be the minimum supported version (i.e. 10.5)
 #  CMAKE_OSX_SYSROOT should be the SDK of the maximum supported version (i.e. /Developer/SDKs/MacOSX10.7.sdk)
@@ -30,36 +34,22 @@ set(VERSION "${VERSION_PRE}${VERSION_X}.${VERSION_Y}.${VERSION_Z}${VERSION_SUFF}
 #  See the Apple documentation 'Frameworks and Weak Linking'
 
 option(ENABLE_LOGGING           "Enable standard logging"                   FALSE)
-option(REDIRECT_LOG             "Redirect log messages to standard output"  FALSE)
-option(ENABLE_REALTIME_AUDIO    "")
-option(ENABLE_REALTIME_MIDI     "")
-option(ENABLE_NONREALTIME_AUDIO "")
-if(APPLE)
-  option(ENABLE_FLUIDSYNTH      "Enable the Fluidsynth processor"           FALSE)
-else()
-  option(ENABLE_FLUIDSYNTH      "Enable the Fluidsynth processor"           TRUE)
-endif()
-option(ENABLE_FFT               "")
+option(ENABLE_REALTIME_AUDIO    "Enable real-time audio")
+option(ENABLE_REALTIME_MIDI     "Enable real-time midi")
+option(ENABLE_NONREALTIME_AUDIO "Enable non-real-time audio")
+option(ENABLE_FLUIDSYNTH        "Enable the Fluidsynth processor"           ${NOT_APPLE})
 
-if(APPLE)
-  option(BUILD_DYLIB            "Build an OS X dynamic library"             FALSE)
-  option(BUILD_FRAMEWORK        "Build an OS X framework"                   TRUE)
-else()
-  option(BUILD_SHARED           "Build a shared library"                    TRUE)
-endif()
-
-option(PROFILING                "Compile with profiler flags -pg set"       FALSE)
+option(BUILD_DYLIB              "Build an OS X dynamic library"             FALSE)
+option(BUILD_FRAMEWORK          "Build an OS X framework"                   TRUE)
+option(BUILD_SHARED             "Build a shared library"                    ${APPLEx})
 option(BUILD_TESTS              "Build unit tests"                          TRUE)
-option(RUN_TESTS                "Run unit tests after build"                TRUE)
 
-option(BUILD_SOUNDFONT_TOOL     "")
-option(BUILD_SOUNDFILE_TOOL     "")
-option(BUILD_OSC_SERVER         "")
-option(BUILD_HTTP_SERVER        "")
-
+option(REDIRECT_LOG             "Redirect log messages to standard output"  FALSE)
 option(PREFER_NONBLOCKING       "Use non-blocking audio by default"         TRUE)
 option(PREFER_EXCLUSIVE         "Use exclusive audio streams by default"    TRUE)
+option(PROFILING                "Compile with profiler flags -pg set"       FALSE)
 
+option(RUN_TESTS                "Run unit tests after build"                TRUE)
 option(BUILD_COMPONENTS         "Build dependent components locally"        FALSE)
 option(SHOW_COMPONENT_OUTPUT    "Show output while building components"     FALSE)
 
@@ -136,14 +126,10 @@ add_custom_target(run_scorecleaner
   )
 
 
-if (NOT COMPONENTS_RESOLVED)
-  # message(STATUS
-  #   "\n Note: The flag COMPONENTS_RESOLVED is not set."
-  #   )
 
-else (NOT COMPONENTS_RESOLVED)
-  ## Find libraries
 
+if (COMPONENTS_RESOLVED)
+  
   find_package(Pthreads)
   find_package(Iconv)
   find_package(Portaudio)
@@ -151,6 +137,7 @@ else (NOT COMPONENTS_RESOLVED)
   find_package(Sndfile)
   find_package(Gtest)
   find_package(ICU)
+  
   if(ENABLE_FLUIDSYNTH)
     find_package(Fluidsynth)
     find_package(Glib)
@@ -158,8 +145,6 @@ else (NOT COMPONENTS_RESOLVED)
 
   add_definitions(${PTHREAD_DEFINITIONS})
   add_definitions(${ICONV_DEFINITIONS})
-  add_definitions(-DSCL_UNICODE=1)            # Note: Has no effect in rewrite
-  add_definitions(-DSCL_ADJUST_AU_VOLUME=1)   # Note: Has no effect in rewrite
 
   if (APPLE)
     add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=1)
@@ -173,12 +158,8 @@ else (NOT COMPONENTS_RESOLVED)
     set(STD_LINK_FLAGS "${STD_LINK_FLAGS} -isysroot ${CMAKE_OSX_SYSROOT}")
   endif()
   if (WIN32) # only MSYS really...
-    # add_definitions(-static-libgcc)	 FIXME
-    # add_definitions(-static-libstdc++) FIXME
-    add_definitions(-DBOOST_THREAD_USE_LIB=1)
     add_definitions(-DFLUIDSYNTH_NOT_A_DLL=1)
   endif()
-  add_definitions(-DBOOST_CHRONO_HEADER_ONLY=1)
 
   include_directories("include")
   include_directories("${CMAKE_BINARY_DIR}/include") # for the conf file
@@ -187,7 +168,7 @@ else (NOT COMPONENTS_RESOLVED)
   include_directories(${ICONV_INCLUDE_DIRS})
   include_directories(${PORTAUDIO_INCLUDE_DIRS})
   include_directories(${PORTMIDI_INCLUDE_DIRS})
-  # include_directories(${SNDFILE_INCLUDE_DIRS})
+  include_directories(${SNDFILE_INCLUDE_DIRS})
   include_directories(${GTEST_INCLUDE_DIRS})
   include_directories(${ICU_INCLUDE_DIRS})
   include_directories(${GLIB_INCLUDE_DIRS})       # May be empty
@@ -202,7 +183,7 @@ else (NOT COMPONENTS_RESOLVED)
     ${ICONV_LIBRARIES}
     ${PORTAUDIO_LIBRARIES}
     ${PORTMIDI_LIBRARIES}
-    # ${SNDFILE_LIBRARIES}
+    ${SNDFILE_LIBRARIES}
     ${GTEST_LIBRARIES}
     ${ICU_LIBRARIES}
     ${FLUIDSYNTH_LIBRARIES} # May be empty
@@ -211,18 +192,12 @@ else (NOT COMPONENTS_RESOLVED)
     "/mingw"
     )
 
-  # TODO Do we really need to explicitly set this?
-  set(CMAKE_FRAMEWORK_PATH
-    "${CMAKE_OSX_SYSROOT}/System/Library/Frameworks/"
-    )
-
   list(APPEND DEPENDENCIES ${PTHREADS_LIBRARIES})
   list(APPEND DEPENDENCIES ${ICONV_LIBRARIES})
   list(APPEND DEPENDENCIES ${PORTAUDIO_LIBRARIES})
   list(APPEND DEPENDENCIES ${PORTMIDI_LIBRARIES})
-  # list(APPEND DEPENDENCIES ${SNDFILE_LIBRARIES})
+  list(APPEND DEPENDENCIES ${SNDFILE_LIBRARIES})
   list(APPEND DEPENDENCIES ${GTEST_LIBRARIES})
-  list(APPEND DEPENDENCIES ${ICU_LIBRARIES})
   list(APPEND DEPENDENCIES ${FLUIDSYNTH_LIBRARIES}) # May be empty
   list(APPEND DEPENDENCIES ${GLIB_LIBRARIES})       # May be empty
 
@@ -250,66 +225,42 @@ else (NOT COMPONENTS_RESOLVED)
     list(APPEND DEPENDENCIES ${AUDIOTOOLBOX})
   endif ()
 
-  # fftw or libfft ?
-  # libmicrohttpd ?
-  # oscpack
-
   if(WIN32)
-    set(USE_BOOST_THREAD_DEFAULT True)
-    set(USE_BOOST_ATOMIC_DEFAULT True)
-  else()
-    set(USE_BOOST_THREAD_DEFAULT True)
-    set(USE_BOOST_ATOMIC_DEFAULT True)
   endif()
 
-  option(USE_BOOST_THREAD "Force using Boost threads" ${USE_BOOST_THREAD_DEFAULT})
-  if (USE_BOOST_THREAD)
-    add_definitions(-DSCL_USE_BOOST_THREAD=1)
-  endif()
+  add_subdirectory(external)
 
-  option(USE_BOOST_ATOMIC "Force using Boost atomics" ${USE_BOOST_ATOMIC_DEFAULT})
-  if (USE_BOOST_THREAD)
-    add_definitions(-DSCL_USE_BOOST_ATOMIC=1)
-  endif()
-
-  add_subdirectory(external_libraries)
-
-  if (USE_BOOST_THREAD)
-    list(APPEND DEPENDENCIES BoostSystem)
-    list(APPEND DEPENDENCIES BoostFilesystem)
-    list(APPEND DEPENDENCIES BoostThread)
-    # list(APPEND DEPENDENCIES BoostChrono)
-  endif()
-
+  ## ----------------------------------------------------------------------
   ## Configuration file
 
   set(VERSION_STRING "\"${VERSION}\"")
   if(PREFER_NONBLOCKING)
-    set(SCL_AUDIO_PREFER_NONBLOCKING True)
+    set(DOREMIR_PREFER_NONBLOCKING True)
   endif ()
   if(PREFER_EXCLUSIVE)
-    set(SCL_AUDIO_PREFER_EXCLUSIVE True)
+    set(DOREMIR_PREFER_EXCLUSIVE True)
   endif ()
   if(ENABLE_LOGGING)
-    set(SCL_AUDIO_ENABLE_LOGGING True)
+    set(DOREMIR_ENABLE_LOGGING True)
   endif ()
   if(REDIRECT_LOG)
-    set(SCL_AUDIO_REDIRECT_LOG True)
+    set(DOREMIR_REDIRECT_LOG True)
   endif()
   if(ENABLE_FLUIDSYNTH)
-    set(SCL_AUDIO_ENABLE_FLUIDSYNTH True)
+    set(DOREMIR_ENABLE_FLUIDSYNTH True)
   endif()
 
-
   configure_file(
-    ${CMAKE_SOURCE_DIR}/include/sclaudiox/config.h.in
-    ${CMAKE_BINARY_DIR}/include/sclaudiox/config.h
+    ${CMAKE_SOURCE_DIR}/include/doremir/audio/config.h.in
+    ${CMAKE_BINARY_DIR}/include/doremir/audio/config.h
    )
 
+
+  ## ----------------------------------------------------------------------
   ## Process source
 
   add_subdirectory(src)
-  # add_subdirectory(test)
-  # add_subdirectory(tools)
+  add_subdirectory(test)
+  add_subdirectory(tools)
 
-endif(NOT COMPONENTS_RESOLVED)
+endif(COMPONENTS_RESOLVED)
