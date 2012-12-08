@@ -41,6 +41,50 @@ gen:
                                                                                                 
 	modulo --language=c    <modules/Audio/Scheduler.module  	>inc/doremir/audio/scheduler.h;
 	modulo --language=c    <modules/Audio/Dispatcher.module 	>inc/doremir/audio/dispatcher.h;
+
+
+
+
+
+	modulo --language=lisp <modules/Atomic.module    		>lsp/doremir/atomic.lisp; \
+	modulo --language=lisp <modules/Atomic/Queue.module       	>lsp/doremir/atomic/queue.lisp; \
+	modulo --language=lisp <modules/Atomic/Stack.module       	>lsp/doremir/atomic/stack.lisp; \
+	modulo --language=lisp <modules/Atomic/RingBuffer.module  	>lsp/doremir/atomic/ring_buffer.lisp; \
+	modulo --language=lisp <modules/Thread.module    		>lsp/doremir/thread.lisp;
+	modulo --language=lisp <modules/Thread/Future.module    	>lsp/doremir/thread/future.lisp;
+	modulo --language=lisp <modules/Thread/Improving.module    	>lsp/doremir/thread/improving.lisp;
+                                                                                          
+	modulo --language=lisp <modules/Ratio.module    		>lsp/doremir/ratio.lisp;
+	modulo --language=lisp <modules/Chase.module    		>lsp/doremir/chase.lisp;
+	modulo --language=lisp <modules/List.module    			>lsp/doremir/list.lisp; 
+	modulo --language=lisp <modules/Set.module    			>lsp/doremir/set.lisp;  
+	modulo --language=lisp <modules/Pair.module    			>lsp/doremir/pair.lisp; 
+	modulo --language=lisp <modules/Map.module    			>lsp/doremir/map.lisp;  
+	modulo --language=lisp <modules/PriorityQueue.module		>lsp/doremir/priority_queue.lisp;  
+                                                                                          
+	modulo --language=lisp <modules/Midi.module    			>lsp/doremir/midi.lisp;
+	modulo --language=lisp <modules/Audio.module    		>lsp/doremir/audio.lisp;
+
+	modulo --language=lisp <modules/Audio/Time.module    		>lsp/doremir/audio/time.lisp;
+                                                                                         
+	modulo --language=lisp <modules/Audio/Processor.module  	>lsp/doremir/audio/processor.lisp;
+	modulo --language=lisp <modules/Audio/Processor/Unary.module  	>lsp/doremir/audio/processor/unary.lisp;
+	modulo --language=lisp <modules/Audio/Processor/Binary.module  	>lsp/doremir/audio/processor/binary.lisp;
+	modulo --language=lisp <modules/Audio/Processor/Ternary.module  >lsp/doremir/audio/processor/ternary.lisp;
+	modulo --language=lisp <modules/Audio/Processor/Delay.module  	>lsp/doremir/audio/processor/split.lisp;
+	modulo --language=lisp <modules/Audio/Processor/Split.module  	>lsp/doremir/audio/processor/delay.lisp;
+	modulo --language=lisp <modules/Audio/Processor/Sequence.module >lsp/doremir/audio/processor/sequence.lisp;
+	modulo --language=lisp <modules/Audio/Processor/Parallel.module >lsp/doremir/audio/processor/parallel.lisp;
+	modulo --language=lisp <modules/Audio/Processor/Loop.module	>lsp/doremir/audio/processor/loop.lisp;
+                                                                                                   
+	modulo --language=lisp <modules/Audio/Device.module    		>lsp/doremir/audio/device.lisp;
+	modulo --language=lisp <modules/Audio/Device/Buffer.module	>lsp/doremir/audio/device/buffer.lisp;
+	modulo --language=lisp <modules/Audio/Device/File.module    	>lsp/doremir/audio/device/file.lisp;
+	modulo --language=lisp <modules/Audio/Device/Audio.module    	>lsp/doremir/audio/device/audio.lisp;
+	modulo --language=lisp <modules/Audio/Device/Midi.module    	>lsp/doremir/audio/device/midi.lisp;
+                                                                                                
+	modulo --language=lisp <modules/Audio/Scheduler.module  	>lsp/doremir/audio/scheduler.lisp;
+	modulo --language=lisp <modules/Audio/Dispatcher.module 	>lsp/doremir/audio/dispatcher.lisp;
                                                                                          
 
 
