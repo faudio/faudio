@@ -5,10 +5,6 @@ Build and install
 Prerequisites
 ------------
 
-This is a complete list of platforms, libraries and toolchains required to build the Audio Engine. For
-the standard platforms, most dependencies are available as binaries on the DoReMIR package server. See
-below for a step-by-step instruction on how to build.
-
 ### Platforms
 
 Currently supported:
@@ -16,64 +12,40 @@ Currently supported:
 * Mac OS X 10.5 (32-bit)
 * Windows XP or later (32-bit)
 
-It should be relatively easy to port the Audio Engine to other platforms, provided that the required
-libraries and tools are available (see below).
 
 ### Compilers
 
-A compiler supporting C++0x (aka C++11 and C++11x) is required. Currently tested are:
+A compiler supporting the C99 standard is required. Currently tested are:
 
-  * clang 3.1   or later, using libc++ (Apple call this compiler "4.0.0 based of SVN 3.1")
-  * GCC   4.6.2 or later, using libstdc++
-
+  * clang 3.1   or later (Apple call this compiler "4.0.0 based of SVN 3.1")
+  * GCC   4.6.2 or later
 
 ### Libraries
 
-#### Boost
-
-The Boost libraries are required on all systems. The libraries we currently use are:
-
-* Concept Check
-* Range
-* Algorithms
-* String Algorithms
-* Lexical Cast
-* Variant
-* Optional
-* Any
-
-On some system (notably MinGW) we additionally require Boost.Thread and Boost.Atomic. Other platforms use
-C++0x standard library for atomic operations and threads. Note that Boost.Atomic is not part of the official
-Boost distribution while Boost.Thread is.
-
-#### Boost.Lockfree
-
-Boost.Lockfree is required on all systems. It is not part of the official Boost distribution.
-
 #### Portaudio
 
-Required for real-time audio streams on all systems. Disable by setting `SCL_AUDIO_ENABLE_PORTAUDIO=0`.
+Required for real-time audio streams on all systems. Disable by setting `DOREMIR_ENABLE_PORTAUDIO=0`.
 
 #### Portmidi                                       
 
-Required for real-time midi streams on all systems. Disable by setting `SCL_AUDIO_ENABLE_PORTMIDI=0`.
+Required for real-time midi streams on all systems. Disable by setting `DOREMIR_ENABLE_PORTMIDI=0`.
 
 #### Fluidsynth
 
-Required for using the Fluidsynth audio processor. Disable by setting `SCL_AUDIO_ENABLE_FLUIDSYNTH=0`.
+Required for using the Fluidsynth audio processor. Disable by setting `DOREMIR_ENABLE_FLUIDSYNTH=0`.
 
 #### Libsndfile
 
-Required for non-real-time audio streams on all systems. Disable by setting `SCL_AUDIO_ENABLE_SNDFILE=0`.
+Required for non-real-time audio streams on all systems. Disable by setting `DOREMIR_ENABLE_SNDFILE=0`.
 
 #### System-specific code
 
-The audio engine automatically include certain system headers on both OS X and Windows. You can control this exlicitly
-by setting `SCL_AUDIO_ENABLE_OSX` or `SCL_AUDIO_ENABLE_WIN`.
+The audio engine automatically include certain system headers on both OS X and Windows. You can control this explicitly
+by setting `DOREMIR_ENABLE_OSX` or `DOREMIR_ENABLE_WIN`.
 
-#### Google Test (gtest)
+#### Google Test
 
-Required for runnning the unit tests.
+Required for running the unit tests.
  
 
 
