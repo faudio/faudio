@@ -3,16 +3,16 @@
  */
 module Doremir.Thread
 {
-    type Thread = Intptr;
-    type Mutex = Intptr;
-    type Condition = Intptr;
+    type Thread = opaque;
+    type Mutex = opaque;
+    type Condition = opaque;
     
     createThread : () -> Thread;
     join : (Thread) -> Void;
     detach : (Thread) -> Void;
     
-    createLock : () -> Lock;
-    destroyLock : (Lock) -> Void;
+    createMutex : () -> Mutex;
+    destroyMutex : (Mutex) -> Void;
     lock : (Mutex) -> Bool;
     tryLock : (Mutex) -> Bool;
     unlock : (Mutex) -> Bool;

@@ -4,7 +4,7 @@
  */
 module Doremir.Set
 {
-    type Set = Intptr;
+    type Set = opaque;
     type Value = Intptr;
     
     elem           : (Set, Value) -> Bool;

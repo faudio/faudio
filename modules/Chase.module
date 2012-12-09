@@ -10,6 +10,8 @@
  */
 module Doremir.Chase 
 {
+    import Doremir.Pair;
+    
     type Chase  = Intptr;
     type Value  = Intptr;
     // type Track  = Intptr;

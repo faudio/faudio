@@ -4,6 +4,7 @@
  */
 module Doremir.Pair
 {
+    type Type = Int;
     type Pair = struct { fst : Intptr, snd : Intptr };
     
     map : (Func, Pair) -> Pair;

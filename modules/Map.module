@@ -3,7 +3,9 @@
     Provides the map data structure. 
  */
 module Doremir.Map 
-{
+{                       
+    
+    
     type Map = Intptr;
     type Key = Intptr;
     type Value = Intptr;
@@ -14,6 +16,7 @@ module Doremir.Map
     destroy : (Map) -> Void;
     copy    : (Map) -> Map;
     swap    : (Map, Map) -> Void;
+    fromPair : (Pair) -> Map;
 
     key            : (Map, Key) -> Bool;
     elem           : (Map, Value) -> Bool;
