@@ -172,7 +172,7 @@ if (COMPONENTS_RESOLVED)
   include_directories(${GLIB_INCLUDE_DIRS})       # May be empty
   include_directories(${FLUIDSYNTH_INCLUDE_DIRS}) # May be empty
 
-  include_directories("external_libraries/vst")
+  include_directories("external/vst")
 
   set(CMAKE_LIBRARY_PATH
     ${PTHREADS_LIBRARIES}
