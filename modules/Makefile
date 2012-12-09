@@ -10,6 +10,7 @@ gen:
 	modulo -Mmodules --language=c    <modules/Doremir/Thread/Future.module    	>include/doremir/thread/future.h;
 	modulo -Mmodules --language=c    <modules/Doremir/Thread/Improving.module    	>include/doremir/thread/improving.h;
                                                                                           
+	modulo -Mmodules --language=c    <modules/Doremir/Std.module    		>include/doremir/std.h;
 	modulo -Mmodules --language=c    <modules/Doremir/String.module    		>include/doremir/string.h;
 	modulo -Mmodules --language=c    <modules/Doremir/Buffer.module    		>include/doremir/buffer.h;
 	modulo -Mmodules --language=c    <modules/Doremir/Ratio.module    		>include/doremir/ratio.h;

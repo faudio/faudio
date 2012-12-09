@@ -3,6 +3,8 @@
  */
 module Doremir.Thread
 {
+    import Doremir.Std;
+
     type Thread = opaque;
     type Mutex = opaque;
     type Condition = opaque;
