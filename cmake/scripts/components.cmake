@@ -1,15 +1,10 @@
+
 # Include to define the components of the audio engine
 
 include(AudioEngine)
 
-# message(">>>> ${AUDIO_ENGINE_SYSTEM_NAME}")
-# message(">>>> ${AUDIO_ENGINE_WORKING_DIR}")
-# message(">>>> ${AUDIO_ENGINE_BUILD_COMPONENTS}")
-# message(">>>> ${AUDIO_ENGINE_SHOW_COMPONENT_OUTPUT}")
-
-
 predicate_file_exists(portaudio_exists
-  "external_libraries/portaudio/result/include/portaudio.h"
+  "external/portaudio/result/include/portaudio.h"
   )
 add_standard_component(COMPONENTS Portaudio
   portaudio_exists
@@ -18,7 +13,7 @@ add_standard_component(COMPONENTS Portaudio
 
 
 predicate_file_exists(portmidi_exists
-  "external_libraries/portmidi/result/include/portmidi.h"
+  "external/portmidi/result/include/portmidi.h"
   )
 add_standard_component(COMPONENTS Portmidi
   portmidi_exists
@@ -27,7 +22,7 @@ add_standard_component(COMPONENTS Portmidi
 
 
 predicate_file_exists(sndfile_exists
-  "external_libraries/sndfile/result/include/sndfile.h"
+  "external/sndfile/result/include/sndfile.h"
   )
 add_standard_component(COMPONENTS Sndfile
   sndfile_exists
@@ -35,7 +30,7 @@ add_standard_component(COMPONENTS Sndfile
   )
 
 predicate_file_exists(fluidsynth_exists
-  "external_libraries/fluidsynth/result/include/fluidsynth.h"
+  "external/fluidsynth/result/include/fluidsynth.h"
   )
 add_standard_component(COMPONENTS Fluidsynth
   fluidsynth_exists
@@ -43,7 +38,7 @@ add_standard_component(COMPONENTS Fluidsynth
   )
 
 predicate_file_exists(gtest_exists
-  "external_libraries/gtest/result/include/gtest/gtest.h"
+  "external/gtest/result/include/gtest/gtest.h"
   )
 add_standard_component(COMPONENTS Gtest
   gtest_exists
@@ -51,7 +46,7 @@ add_standard_component(COMPONENTS Gtest
   )
 
 predicate_file_exists(icu_exists
-  "external_libraries/icu2/result/include/unicode/uchar.h"
+  "external/icu2/result/include/unicode/uchar.h"
   )
 add_standard_component(COMPONENTS ICU
   icu_exists

@@ -4,16 +4,14 @@ Types
 
 We use the following notation for types:
 
-Name                     Description
-----                     ----
-`int32, float32, string` concrete types
-`A`                      type variable
-`(A, B)`                 pair of *A* and *B*
-`vector A`               vector of A
-`[A]`                    list of A
-`A -> A`                 function from *A* to *B*
-`~A`                     signal of *A*
-`A ~> B`                 processor from *A* to *B*
+Name                     | Description
+------------------------ | ----------------------------
+`int32, float32, string` | concrete types
+`A`                      | type variable
+`(A, B)`                 | pair of *A* and *B*
+`[A x n]`                | vector of A
+`~A`                     | signal of *A*
+`A ~> B`                 | processor from *A* to *B*
 
 Midi types
 ----------

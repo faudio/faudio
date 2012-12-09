@@ -172,8 +172,6 @@ if (COMPONENTS_RESOLVED)
   include_directories(${GLIB_INCLUDE_DIRS})       # May be empty
   include_directories(${FLUIDSYNTH_INCLUDE_DIRS}) # May be empty
 
-  include_directories("external_libraries/boost")
-  include_directories("external_libraries/boost_lockfree")
   include_directories("external_libraries/vst")
 
   set(CMAKE_LIBRARY_PATH
@@ -226,7 +224,7 @@ if (COMPONENTS_RESOLVED)
   if(WIN32)
   endif()
 
-  add_subdirectory(external)
+  # add_subdirectory(external)
 
   ## ----------------------------------------------------------------------
   ## Configuration file
@@ -248,17 +246,17 @@ if (COMPONENTS_RESOLVED)
     set(DOREMIR_ENABLE_FLUIDSYNTH True)
   endif()
 
-  configure_file(
-    ${CMAKE_SOURCE_DIR}/include/doremir/audio/config.h.in
-    ${CMAKE_BINARY_DIR}/include/doremir/audio/config.h
-   )
+  # configure_file(
+  #   ${CMAKE_SOURCE_DIR}/include/doremir/audio/config.h.in
+  #   ${CMAKE_BINARY_DIR}/include/doremir/audio/config.h
+  #  )
 
 
   ## ----------------------------------------------------------------------
   ## Process source
 
-  add_subdirectory(src)
-  add_subdirectory(test)
-  add_subdirectory(tools)
+  # add_subdirectory(src)
+  # add_subdirectory(test)
+  # add_subdirectory(tools)
 
 endif(COMPONENTS_RESOLVED)
