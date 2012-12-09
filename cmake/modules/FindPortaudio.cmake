@@ -13,12 +13,12 @@ letmany (CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 find_path (PORTAUDIO_INCLUDE_DIR 
   NAMES portaudio.h
   PATH_SUFFIXES include
-  PATHS ${CMAKE_SOURCE_DIR}/external_libraries/portaudio/result
+  PATHS ${CMAKE_SOURCE_DIR}/external/portaudio/result
   )
 find_library (PORTAUDIO_LIBRARY
   NAMES portaudio
   PATH_SUFFIXES lib
-  PATHS ${CMAKE_SOURCE_DIR}/external_libraries/portaudio/result
+  PATHS ${CMAKE_SOURCE_DIR}/external/portaudio/result
   )
 endletmany (CMAKE_FIND_LIBRARY_SUFFIXES) 
 

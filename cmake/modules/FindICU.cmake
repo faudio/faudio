@@ -10,7 +10,7 @@ include(DynamicLet)
 include(FindPackageHandleStandardArgs)
 
 set(ICU_PATHS
-  ${CMAKE_SOURCE_DIR}/external_libraries/icu2/result)
+  ${CMAKE_SOURCE_DIR}/external/icu2/result)
 
 find_path (ICU_INCLUDE_DIR
   NAMES "unicode/ustring.h"

@@ -13,12 +13,12 @@ letmany (CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 find_path (PORTMIDI_INCLUDE_DIR 
   NAMES portmidi.h
   PATH_SUFFIXES include
-  PATHS ${CMAKE_SOURCE_DIR}/external_libraries/portmidi/result
+  PATHS ${CMAKE_SOURCE_DIR}/external/portmidi/result
   )
 find_library (PORTMIDI_LIBRARY
   NAMES portmidi portmidi_s
   PATH_SUFFIXES lib
-  PATHS ${CMAKE_SOURCE_DIR}/external_libraries/portmidi/result
+  PATHS ${CMAKE_SOURCE_DIR}/external/portmidi/result
   )
 endletmany (CMAKE_FIND_LIBRARY_SUFFIXES) 
 

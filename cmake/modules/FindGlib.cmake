@@ -25,7 +25,7 @@ endif()
 letmany (CMAKE_FIND_LIBRARY_SUFFIXES ".a;.lib") 
 
 set(GLIB_PATHS
-  ${CMAKE_SOURCE_DIR}/external_libraries/fluidsynth/glib/${GLIB_SYSTEM_NAME}
+  ${CMAKE_SOURCE_DIR}/external/fluidsynth/glib/${GLIB_SYSTEM_NAME}
   )
 
 # Not really necessary ...

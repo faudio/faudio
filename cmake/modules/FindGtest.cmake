@@ -13,12 +13,12 @@ letmany (CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 find_path (GTEST_INCLUDE_DIR 
   NAMES gtest/gtest.h
   PATH_SUFFIXES include
-  PATHS ${CMAKE_SOURCE_DIR}/external_libraries/gtest/result
+  PATHS ${CMAKE_SOURCE_DIR}/external/gtest/result
   )
 find_library (GTEST_LIBRARY
   NAMES gtest
   PATH_SUFFIXES lib
-  PATHS ${CMAKE_SOURCE_DIR}/external_libraries/gtest/result
+  PATHS ${CMAKE_SOURCE_DIR}/external/gtest/result
   )
 endletmany (CMAKE_FIND_LIBRARY_SUFFIXES) 
 

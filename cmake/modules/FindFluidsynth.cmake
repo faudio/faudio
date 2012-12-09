@@ -13,12 +13,12 @@ letmany (CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 find_path (FLUIDSYNTH_INCLUDE_DIR 
   NAMES fluidsynth.h
   PATH_SUFFIXES include
-  PATHS ${CMAKE_SOURCE_DIR}/external_libraries/fluidsynth/result
+  PATHS ${CMAKE_SOURCE_DIR}/external/fluidsynth/result
   )
 find_library (FLUIDSYNTH_LIBRARY
   NAMES fluidsynth
   PATH_SUFFIXES lib
-  PATHS ${CMAKE_SOURCE_DIR}/external_libraries/fluidsynth/result
+  PATHS ${CMAKE_SOURCE_DIR}/external/fluidsynth/result
   )
 endletmany (CMAKE_FIND_LIBRARY_SUFFIXES) 
 

@@ -13,12 +13,12 @@ letmany (CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 find_path (SNDFILE_INCLUDE_DIR 
   NAMES sndfile.h
   PATH_SUFFIXES include
-  PATHS ${CMAKE_SOURCE_DIR}/external_libraries/sndfile/result
+  PATHS ${CMAKE_SOURCE_DIR}/external/sndfile/result
   )
 find_library (SNDFILE_LIBRARY
   NAMES sndfile sndfile-1
   PATH_SUFFIXES lib
-  PATHS ${CMAKE_SOURCE_DIR}/external_libraries/sndfile/result
+  PATHS ${CMAKE_SOURCE_DIR}/external/sndfile/result
   )
 endletmany (CMAKE_FIND_LIBRARY_SUFFIXES) 
 
