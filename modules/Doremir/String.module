@@ -1,0 +1,6 @@
+
+module Doremir.String
+{
+    type String = char*;
+    type FilePath = String;
+}

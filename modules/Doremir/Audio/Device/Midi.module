@@ -5,16 +5,20 @@
  */
 module Doremir.Audio.Device.MidiDevice
 {
+    import Doremir.List;
+    import Doremir.Pair;
+    
     type Session = Intptr;
     type MidiDevice = Intptr;
     type Stream = Intptr;
     type MidiDeviceList = List;
+    type MidiDevicePair = Pair;
 
     beginSession : () -> Session;
     endSession   : (Session) -> Void;
 
     devices     : (Session) -> MidiDeviceList;
     standard    : (Session) -> MidiDevicePair;
-    openStream  : (MidiDevice, Proc) -> Stream;
+    // openStream  : (MidiDevice, Proc) -> Stream;
     closeStream : (Stream) -> Void;
 }

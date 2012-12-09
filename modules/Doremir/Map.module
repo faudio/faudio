@@ -3,8 +3,8 @@
     Provides the map data structure. 
  */
 module Doremir.Map 
-{                       
-    
+{
+    import Doremir.Pair;
     
     type Map = Intptr;
     type Key = Intptr;

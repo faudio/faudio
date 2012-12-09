@@ -5,6 +5,7 @@
  */
 module Doremir.Audio.Device.BufferDevice
 {
+    import Doremir.Audio;
     type BufferDevice = Intptr;
     
     create  : (Size, Type) -> BufferDevice;

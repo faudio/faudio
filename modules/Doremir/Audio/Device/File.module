@@ -4,11 +4,14 @@
     @author     Hans Höglund
  */
 module Doremir.Audio.Device.FileDevice
-{
-    type FileDevice = Intptr;
+{                       
+    import Doremir.String;
+    
+    type FileDevice = opaque;
+    type Stream = opaque;
 
     create      : (FilePath, FilePath) -> FileDevice;
     destroy     : (FileDevice) -> Void;
-    openStream  : (FileDevice, Proc) -> Stream;
+    // openStream  : (FileDevice, Proc) -> Stream;
     closeStream : (Stream) -> Void;
 }

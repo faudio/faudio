@@ -53,5 +53,5 @@
  */
 module Doremir.Audio
 {
-
+    type Type = opaque;
 }

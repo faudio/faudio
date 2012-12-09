@@ -24,7 +24,11 @@
 module Doremir.List
 {
     type List   = Intptr;
-    type Value  = Intptr; // a
+    type Value  = Intptr;
+    type Func   = Intptr;
+    type Num    = Intptr;
+    type MaybeValue = Intptr;
+    type MaybeList = Intptr;
             
     empty       : () -> List;
     cons        : (Value, List) -> List;

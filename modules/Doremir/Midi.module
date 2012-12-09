@@ -3,6 +3,8 @@
  */
 module Doremir.Midi
 {
+    import Doremir.Buffer;
+    
     type Status = enum {
         NoteOff,
         NoteOn,
@@ -25,7 +27,7 @@ module Doremir.Midi
     // TODO simple midi functions that works on list<Integral>
     // TODO midi file functions that works on list<pair<Integral,option<midi_message,midi_sysex_message>>
 
-    type SysexMessage = struct { data : RawBuffer };    
+    type SysexMessage = struct { data : Buffer };    
 
     type MessageTag = enum { SimpleMessageTag, SysexMessageTag };
     type Message = struct { 
