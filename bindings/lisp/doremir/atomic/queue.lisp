@@ -1,9 +1,9 @@
-(defctype Queue :long)
+(defctype Doremir.Queue :pointer)
 
-(defcfun "create" :Doremir.Atomic.Queue.Queue ())
+(defcfun "Doremir.Atomic.Queue.create" :Doremir.Queue ())
 
-(defcfun "destroy" :void (:Doremir.Atomic.Queue.Queue))
+(defcfun "Doremir.Atomic.Queue.destroy" :void (:Doremir.Queue))
 
-(defcfun "read" :long (:Doremir.Atomic.Queue.Queue))
+(defcfun "Doremir.Atomic.Queue.read" :pointer (:Doremir.Queue))
 
-(defcfun "write" :long (:Doremir.Atomic.Queue.Queue :long))
+(defcfun "Doremir.Atomic.Queue.write" :pointer (:Doremir.Queue :pointer))

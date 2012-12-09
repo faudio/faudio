@@ -1,19 +1,15 @@
-(defctype Session :long)
+(defctype Doremir.Audio.Device.MidiDevice.Session :pointer)
 
-(defctype MidiDevice :long)
+(defctype Doremir.MidiDevice :pointer)
 
-(defctype Stream :long)
+(defctype Doremir.Audio.Device.MidiDevice.Stream :pointer)
 
-(defctype MidiDeviceList :List)
+(defcfun "Doremir.Audio.Device.MidiDevice.beginSession" :Doremir.Audio.Device.MidiDevice.Session ())
 
-(defcfun "beginSession" :Doremir.Audio.Device.MidiDevice.Session ())
+(defcfun "Doremir.Audio.Device.MidiDevice.endSession" :void (:Doremir.Audio.Device.MidiDevice.Session))
 
-(defcfun "endSession" :void (:Doremir.Audio.Device.MidiDevice.Session))
+(defcfun "Doremir.Audio.Device.MidiDevice.devices" :Doremir.List (:Doremir.Audio.Device.MidiDevice.Session))
 
-(defcfun "devices" :Doremir.Audio.Device.MidiDevice.MidiDeviceList (:Doremir.Audio.Device.MidiDevice.Session))
+(defcfun "Doremir.Audio.Device.MidiDevice.standard" :Doremir.Pair (:Doremir.Audio.Device.MidiDevice.Session))
 
-(defcfun "standard" :MidiDevicePair (:Doremir.Audio.Device.MidiDevice.Session))
-
-(defcfun "openStream" :Doremir.Audio.Device.MidiDevice.Stream (:Doremir.Audio.Device.MidiDevice.MidiDevice :Proc))
-
-(defcfun "closeStream" :void (:Doremir.Audio.Device.MidiDevice.Stream))
+(defcfun "Doremir.Audio.Device.MidiDevice.closeStream" :void (:Doremir.Audio.Device.MidiDevice.Stream))

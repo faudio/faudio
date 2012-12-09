@@ -1,13 +1,13 @@
-(defctype RingBuffer :long)
+(defctype Doremir.RingBuffer :pointer)
 
-(defcfun "create" :Doremir.Atomic.RingBuffer.RingBuffer (:Doremir.Atomic.RingBuffer.RingBuffer))
+(defcfun "Doremir.Atomic.RingBuffer.create" :Doremir.RingBuffer (:Doremir.RingBuffer))
 
-(defcfun "copy" :Doremir.Atomic.RingBuffer.RingBuffer (:Doremir.Atomic.RingBuffer.RingBuffer))
+(defcfun "Doremir.Atomic.RingBuffer.copy" :Doremir.RingBuffer (:Doremir.RingBuffer))
 
-(defcfun "swap" :void (:Doremir.Atomic.RingBuffer.RingBuffer :Doremir.Atomic.RingBuffer.RingBuffer))
+(defcfun "Doremir.Atomic.RingBuffer.swap" :void (:Doremir.RingBuffer :Doremir.RingBuffer))
 
-(defcfun "destroy" :void (:Doremir.Atomic.RingBuffer.RingBuffer))
+(defcfun "Doremir.Atomic.RingBuffer.destroy" :void (:Doremir.RingBuffer))
 
-(defcfun "read" :long (:Doremir.Atomic.RingBuffer.RingBuffer))
+(defcfun "Doremir.Atomic.RingBuffer.read" :pointer (:Doremir.RingBuffer))
 
-(defcfun "write" :long (:Doremir.Atomic.RingBuffer.RingBuffer :long))
+(defcfun "Doremir.Atomic.RingBuffer.write" :pointer (:Doremir.RingBuffer :pointer))

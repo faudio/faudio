@@ -1,15 +1,15 @@
-(defctype PriorityQueue :long)
+(defctype Doremir.PriorityQueue :pointer)
 
-(defctype Value :long)
+(defctype Doremir.PriorityQueue.Value :pointer)
 
-(defcfun "create" :Doremir.PriorityQueue.PriorityQueue ())
+(defcfun "Doremir.PriorityQueue.create" :Doremir.PriorityQueue ())
 
-(defcfun "swap" :void (:Doremir.PriorityQueue.PriorityQueue :Doremir.PriorityQueue.PriorityQueue))
+(defcfun "Doremir.PriorityQueue.swap" :void (:Doremir.PriorityQueue :Doremir.PriorityQueue))
 
-(defcfun "destroy" :void (:Doremir.PriorityQueue.PriorityQueue))
+(defcfun "Doremir.PriorityQueue.destroy" :void (:Doremir.PriorityQueue))
 
-(defcfun "insert" :void (:Doremir.PriorityQueue.PriorityQueue :Doremir.PriorityQueue.Value))
+(defcfun "Doremir.PriorityQueue.insert" :void (:Doremir.PriorityQueue :Doremir.PriorityQueue.Value))
 
-(defcfun "peek" :Doremir.PriorityQueue.Value (:Doremir.PriorityQueue.PriorityQueue))
+(defcfun "Doremir.PriorityQueue.peek" :Doremir.PriorityQueue.Value (:Doremir.PriorityQueue))
 
-(defcfun "pop" :Doremir.PriorityQueue.Value (:Doremir.PriorityQueue.PriorityQueue))
+(defcfun "Doremir.PriorityQueue.pop" :Doremir.PriorityQueue.Value (:Doremir.PriorityQueue))

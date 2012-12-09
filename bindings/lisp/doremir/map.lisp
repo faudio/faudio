@@ -1,35 +1,37 @@
-(defctype Map :long)
+(defctype Doremir.Map :pointer)
 
-(defctype Key :long)
+(defctype Doremir.Map.Key :pointer)
 
-(defctype Value :long)
+(defctype Doremir.Map.Value :pointer)
 
-(defcfun "empty" :Doremir.Map.Map ())
+(defcfun "Doremir.Map.empty" :Doremir.Map ())
 
-(defcfun "single" :Doremir.Map.Map (:Doremir.Map.Key :Doremir.Map.Value))
+(defcfun "Doremir.Map.single" :Doremir.Map (:Doremir.Map.Key :Doremir.Map.Value))
 
-(defcfun "append" :Doremir.Map.Map (:Doremir.Map.Map :Doremir.Map.Map))
+(defcfun "Doremir.Map.append" :Doremir.Map (:Doremir.Map :Doremir.Map))
 
-(defcfun "destroy" :void (:Doremir.Map.Map))
+(defcfun "Doremir.Map.destroy" :void (:Doremir.Map))
 
-(defcfun "copy" :Doremir.Map.Map (:Doremir.Map.Map))
+(defcfun "Doremir.Map.copy" :Doremir.Map (:Doremir.Map))
 
-(defcfun "swap" :void (:Doremir.Map.Map :Doremir.Map.Map))
+(defcfun "Doremir.Map.swap" :void (:Doremir.Map :Doremir.Map))
 
-(defcfun "key" :bool (:Doremir.Map.Map :Doremir.Map.Key))
+(defcfun "Doremir.Map.fromPair" :Doremir.Map (:Doremir.Pair))
 
-(defcfun "elem" :bool (:Doremir.Map.Map :Doremir.Map.Value))
+(defcfun "Doremir.Map.key" :boolean (:Doremir.Map :Doremir.Map.Key))
 
-(defcfun "entry" :bool (:Doremir.Map.Map :Pair))
+(defcfun "Doremir.Map.elem" :boolean (:Doremir.Map :Doremir.Map.Value))
 
-(defcfun "submapOf" :bool (:Doremir.Map.Map :Doremir.Map.Map))
+(defcfun "Doremir.Map.entry" :boolean (:Doremir.Map :Doremir.Pair))
 
-(defcfun "properSubmapOf" :bool (:Doremir.Map.Map :Doremir.Map.Map))
+(defcfun "Doremir.Map.submapOf" :boolean (:Doremir.Map :Doremir.Map))
 
-(defcfun "add" :Doremir.Map.Map (:Doremir.Map.Map :Doremir.Map.Key :Doremir.Map.Value))
+(defcfun "Doremir.Map.properSubmapOf" :boolean (:Doremir.Map :Doremir.Map))
 
-(defcfun "remove" :void (:Doremir.Map.Map :Doremir.Map.Key :Doremir.Map.Value))
+(defcfun "Doremir.Map.add" :Doremir.Map (:Doremir.Map :Doremir.Map.Key :Doremir.Map.Value))
 
-(defcfun "addDest" :Doremir.Map.Map (:Doremir.Map.Map :Doremir.Map.Key :Doremir.Map.Value))
+(defcfun "Doremir.Map.remove" :void (:Doremir.Map :Doremir.Map.Key :Doremir.Map.Value))
 
-(defcfun "removeDest" :void (:Doremir.Map.Map :Doremir.Map.Key :Doremir.Map.Value))
+(defcfun "Doremir.Map.addDest" :Doremir.Map (:Doremir.Map :Doremir.Map.Key :Doremir.Map.Value))
+
+(defcfun "Doremir.Map.removeDest" :void (:Doremir.Map :Doremir.Map.Key :Doremir.Map.Value))

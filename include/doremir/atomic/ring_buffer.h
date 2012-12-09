@@ -12,14 +12,14 @@
     @{
     */
 
-typedef intptr_t doremir_atomic_ring_buffer_t;
-doremir_atomic_ring_buffer_doremir_atomic_ringbuffer_ring_buffer_t doremir_atomic_ring_buffer_create(doremir_atomic_ring_buffer_doremir_atomic_ringbuffer_ring_buffer_t);
-doremir_atomic_ring_buffer_doremir_atomic_ringbuffer_ring_buffer_t doremir_atomic_ring_buffer_copy(doremir_atomic_ring_buffer_doremir_atomic_ringbuffer_ring_buffer_t);
-void doremir_atomic_ring_buffer_swap(doremir_atomic_ring_buffer_doremir_atomic_ringbuffer_ring_buffer_t,
-                                     doremir_atomic_ring_buffer_doremir_atomic_ringbuffer_ring_buffer_t);
-void doremir_atomic_ring_buffer_destroy(doremir_atomic_ring_buffer_doremir_atomic_ringbuffer_ring_buffer_t);
-intptr_t doremir_atomic_ring_buffer_read(doremir_atomic_ring_buffer_doremir_atomic_ringbuffer_ring_buffer_t);
-intptr_t doremir_atomic_ring_buffer_write(doremir_atomic_ring_buffer_doremir_atomic_ringbuffer_ring_buffer_t,
+typedef struct _doremir_ring_buffer_t * doremir_ring_buffer_t;
+doremir_ring_buffer_t doremir_atomic_ring_buffer_create(doremir_ring_buffer_t);
+doremir_ring_buffer_t doremir_atomic_ring_buffer_copy(doremir_ring_buffer_t);
+void doremir_atomic_ring_buffer_swap(doremir_ring_buffer_t,
+                                     doremir_ring_buffer_t);
+void doremir_atomic_ring_buffer_destroy(doremir_ring_buffer_t);
+intptr_t doremir_atomic_ring_buffer_read(doremir_ring_buffer_t);
+intptr_t doremir_atomic_ring_buffer_write(doremir_ring_buffer_t,
                                           intptr_t);
 
 /** @}

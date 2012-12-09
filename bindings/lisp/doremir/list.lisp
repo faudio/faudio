@@ -1,83 +1,91 @@
-(defctype List :long)
+(defctype Doremir.List :pointer)
 
-(defctype Value :long)
+(defctype Doremir.List.Value :pointer)
 
-(defcfun "empty" :Doremir.List.List ())
+(defctype Doremir.List.Func :pointer)
 
-(defcfun "cons" :Doremir.List.List (:Doremir.List.Value :Doremir.List.List))
+(defctype Doremir.List.Num :pointer)
 
-(defcfun "snoc" :Doremir.List.List (:Doremir.List.Value :Doremir.List.List))
+(defctype Doremir.List.MaybeValue :pointer)
 
-(defcfun "destroy" :void (:Doremir.List.List))
+(defctype Doremir.List.MaybeList :pointer)
 
-(defcfun "copy" :Doremir.List.List (:Doremir.List.List))
+(defcfun "Doremir.List.empty" :Doremir.List ())
 
-(defcfun "swap" :void (:Doremir.List.List :Doremir.List.List))
+(defcfun "Doremir.List.cons" :Doremir.List (:Doremir.List.Value :Doremir.List))
 
-(defcfun "isEmpty" :bool (:Doremir.List.List))
+(defcfun "Doremir.List.snoc" :Doremir.List (:Doremir.List.Value :Doremir.List))
 
-(defcfun "lenght" :int (:Doremir.List.List))
+(defcfun "Doremir.List.destroy" :void (:Doremir.List))
 
-(defcfun "head" :MaybeValue (:Doremir.List.List))
+(defcfun "Doremir.List.copy" :Doremir.List (:Doremir.List))
 
-(defcfun "tail" :MaybeList (:Doremir.List.List))
+(defcfun "Doremir.List.swap" :void (:Doremir.List :Doremir.List))
 
-(defcfun "init" :MaybeList (:Doremir.List.List))
+(defcfun "Doremir.List.isEmpty" :boolean (:Doremir.List))
 
-(defcfun "last" :MaybeValue (:Doremir.List.List))
+(defcfun "Doremir.List.lenght" :int (:Doremir.List))
 
-(defcfun "take" :Doremir.List.List (:int :Doremir.List.List))
+(defcfun "Doremir.List.head" :Doremir.List.MaybeValue (:Doremir.List))
 
-(defcfun "drop" :Doremir.List.List (:int :Doremir.List.List))
+(defcfun "Doremir.List.tail" :Doremir.List.MaybeList (:Doremir.List))
 
-(defcfun "isElem" :bool (:Doremir.List.Value :Doremir.List.List))
+(defcfun "Doremir.List.init" :Doremir.List.MaybeList (:Doremir.List))
 
-(defcfun "reverse" :Doremir.List.List (:Doremir.List.List))
+(defcfun "Doremir.List.last" :Doremir.List.MaybeValue (:Doremir.List))
 
-(defcfun "sort" :Doremir.List.List (:Doremir.List.List))
+(defcfun "Doremir.List.take" :Doremir.List (:int :Doremir.List))
 
-(defcfun "sep" :Doremir.List.List (:Doremir.List.Value :Doremir.List.List))
+(defcfun "Doremir.List.drop" :Doremir.List (:int :Doremir.List))
 
-(defcfun "concat" :Doremir.List.List (:Doremir.List.List))
+(defcfun "Doremir.List.isElem" :boolean (:Doremir.List.Value :Doremir.List))
 
-(defcfun "concatSep" :Doremir.List.List (:Doremir.List.List))
+(defcfun "Doremir.List.reverse" :Doremir.List (:Doremir.List))
 
-(defctype Pred :long)
+(defcfun "Doremir.List.sort" :Doremir.List (:Doremir.List))
 
-(defcfun "find" :MaybeValue (:Doremir.List.Pred :Doremir.List.List))
+(defcfun "Doremir.List.sep" :Doremir.List (:Doremir.List.Value :Doremir.List))
 
-(defcfun "filter" :Doremir.List.List (:Doremir.List.Pred :Doremir.List.List))
+(defcfun "Doremir.List.concat" :Doremir.List (:Doremir.List))
 
-(defctype UnaryFunc :long)
+(defcfun "Doremir.List.concatSep" :Doremir.List (:Doremir.List))
 
-(defctype BinaryFunc :long)
+(defctype Doremir.List.Pred :pointer)
 
-(defcfun "map" :Doremir.List.List (:Doremir.List.List :Func))
+(defcfun "Doremir.List.find" :Doremir.List.MaybeValue (:Doremir.List.Pred :Doremir.List))
 
-(defcfun "foldl" :Doremir.List.List (:Doremir.List.List :Doremir.List.BinaryFunc :Doremir.List.Value))
+(defcfun "Doremir.List.filter" :Doremir.List (:Doremir.List.Pred :Doremir.List))
 
-(defcfun "and" :bool (:Doremir.List.List))
+(defctype Doremir.List.UnaryFunc (:pointer :void))
 
-(defcfun "or" :bool (:Doremir.List.List))
+(defctype Doremir.List.BinaryFunc (:pointer :void))
 
-(defcfun "any" :bool (:Doremir.List.Pred :Doremir.List.List))
+(defcfun "Doremir.List.map" :Doremir.List (:Doremir.List :Doremir.List.Func))
 
-(defcfun "all" :bool (:Doremir.List.Pred :Doremir.List.List))
+(defcfun "Doremir.List.foldl" :Doremir.List (:Doremir.List :Doremir.List.BinaryFunc :Doremir.List.Value))
 
-(defcfun "sum" :Doremir.List.Value (:Num :Doremir.List.List))
+(defcfun "Doremir.List.and" :boolean (:Doremir.List))
 
-(defcfun "product" :Doremir.List.Value (:Num :Doremir.List.List))
+(defcfun "Doremir.List.or" :boolean (:Doremir.List))
 
-(defcfun "maximum" :Doremir.List.Value (:Doremir.List.List))
+(defcfun "Doremir.List.any" :boolean (:Doremir.List.Pred :Doremir.List))
 
-(defcfun "minimum" :Doremir.List.Value (:Doremir.List.List))
+(defcfun "Doremir.List.all" :boolean (:Doremir.List.Pred :Doremir.List))
 
-(defcfun "consDestroy" :Doremir.List.List (:Doremir.List.Value :Doremir.List.List))
+(defcfun "Doremir.List.sum" :Doremir.List.Value (:Doremir.List.Num :Doremir.List))
 
-(defcfun "snocDestroy" :Doremir.List.List (:Doremir.List.Value :Doremir.List.List))
+(defcfun "Doremir.List.product" :Doremir.List.Value (:Doremir.List.Num :Doremir.List))
 
-(defcfun "reverseDestroy" :Doremir.List.List (:Doremir.List.List))
+(defcfun "Doremir.List.maximum" :Doremir.List.Value (:Doremir.List))
 
-(defcfun "sortDestroy" :Doremir.List.List (:Doremir.List.List))
+(defcfun "Doremir.List.minimum" :Doremir.List.Value (:Doremir.List))
 
-(defcfun "mapDestroy" :Doremir.List.List (:Doremir.List.List :Func))
+(defcfun "Doremir.List.consDestroy" :Doremir.List (:Doremir.List.Value :Doremir.List))
+
+(defcfun "Doremir.List.snocDestroy" :Doremir.List (:Doremir.List.Value :Doremir.List))
+
+(defcfun "Doremir.List.reverseDestroy" :Doremir.List (:Doremir.List))
+
+(defcfun "Doremir.List.sortDestroy" :Doremir.List (:Doremir.List))
+
+(defcfun "Doremir.List.mapDestroy" :Doremir.List (:Doremir.List :Doremir.List.Func))

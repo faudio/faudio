@@ -1,15 +1,15 @@
-(defctype Status (:pointer :void))
+(defctype Doremir.Midi.Status (:pointer :void))
 
-(defcfun "statusType" :int (:int))
+(defcfun "Doremir.Midi.statusType" :int (:int))
 
-(defcfun "statusChannel" :int (:int))
+(defcfun "Doremir.Midi.statusChannel" :int (:int))
 
-(defcfun "statusIsSysex" :bool (:int))
+(defcfun "Doremir.Midi.statusIsSysex" :boolean (:int))
 
-(defctype SimpleMessage (:pointer :void))
+(defctype Doremir.Midi.SimpleMessage (:pointer :void))
 
-(defctype SysexMessage (:pointer :void))
+(defctype Doremir.Midi.SysexMessage (:pointer :void))
 
-(defctype MessageTag (:pointer :void))
+(defctype Doremir.Midi.MessageTag (:pointer :void))
 
-(defctype Message (:pointer :void))
+(defctype Doremir.Midi.Message (:pointer :void))

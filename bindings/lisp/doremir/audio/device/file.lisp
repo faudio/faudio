@@ -1,9 +1,9 @@
-(defctype FileDevice :long)
+(defctype Doremir.FileDevice :pointer)
 
-(defcfun "create" :Doremir.Audio.Device.FileDevice.FileDevice (:FilePath :FilePath))
+(defctype Doremir.Audio.Device.FileDevice.Stream :pointer)
 
-(defcfun "destroy" :void (:Doremir.Audio.Device.FileDevice.FileDevice))
+(defcfun "Doremir.Audio.Device.FileDevice.create" :Doremir.FileDevice (:Doremir.String.FilePath :Doremir.String.FilePath))
 
-(defcfun "openStream" :Stream (:Doremir.Audio.Device.FileDevice.FileDevice :Proc))
+(defcfun "Doremir.Audio.Device.FileDevice.destroy" :void (:Doremir.FileDevice))
 
-(defcfun "closeStream" :void (:Stream))
+(defcfun "Doremir.Audio.Device.FileDevice.closeStream" :void (:Doremir.Audio.Device.FileDevice.Stream))

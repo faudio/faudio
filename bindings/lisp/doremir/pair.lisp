@@ -1,3 +1,7 @@
-(defctype Pair (:pointer :void))
+(defctype Doremir.Pair.Type :size)
 
-(defcfun "map" :Doremir.Pair.Pair (:Func :Doremir.Pair.Pair))
+(defctype Doremir.Pair.Func :pointer)
+
+(defctype Doremir.Pair (:pointer :void))
+
+(defcfun "Doremir.Pair.map" :Doremir.Pair (:Doremir.Pair.Func :Doremir.Pair))

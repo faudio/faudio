@@ -10,7 +10,7 @@
     @{
     */
 
-
+typedef struct _doremir_audio_type_t * doremir_audio_type_t;
 
 /** @}
     @}

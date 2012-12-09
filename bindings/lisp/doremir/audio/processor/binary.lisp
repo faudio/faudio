@@ -1,5 +1,5 @@
-(defctype Func :long)
+(defctype Doremir.Audio.Processor.Binary.Func :pointer)
 
-(defctype Proc :long)
+(defctype Doremir.Audio.Processor.Binary.Proc :pointer)
 
-(defcfun "lift" :Doremir.Audio.Processor.Binary.Proc (:Doremir.Audio.Processor.Binary.Func))
+(defcfun "Doremir.Audio.Processor.Binary.lift" :Doremir.Audio.Processor.Binary.Proc (:Doremir.Audio.Processor.Binary.Func))

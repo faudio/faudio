@@ -1,23 +1,23 @@
-(defctype Chase :long)
+(defctype Doremir.Chase :pointer)
 
-(defctype Value :long)
+(defctype Doremir.Chase.Value :pointer)
 
-(defcfun "empty" :Doremir.Chase.Chase ())
+(defcfun "Doremir.Chase.empty" :Doremir.Chase ())
 
-(defcfun "create" :Doremir.Chase.Chase (:Type :long))
+(defcfun "Doremir.Chase.create" :Doremir.Chase (:Doremir.Pair.Type :size))
 
-(defcfun "destroy" :void (:Doremir.Chase.Chase))
+(defcfun "Doremir.Chase.destroy" :void (:Doremir.Chase))
 
-(defcfun "append" :void (:Doremir.Chase.Chase :Doremir.Chase.Chase))
+(defcfun "Doremir.Chase.append" :void (:Doremir.Chase :Doremir.Chase))
 
-(defcfun "isEmpty" :bool (:Doremir.Chase.Chase))
+(defcfun "Doremir.Chase.isEmpty" :boolean (:Doremir.Chase))
 
-(defcfun "isSingle" :bool (:Doremir.Chase.Chase))
+(defcfun "Doremir.Chase.isSingle" :boolean (:Doremir.Chase))
 
-(defcfun "lenght" :int (:Doremir.Chase.Chase))
+(defcfun "Doremir.Chase.lenght" :int (:Doremir.Chase))
 
-(defctype UnaryFunc :long)
+(defctype Doremir.Chase.UnaryFunc :pointer)
 
-(defcfun "map" :Doremir.Chase.Chase (:Doremir.Chase.UnaryFunc :Doremir.Chase.Chase))
+(defcfun "Doremir.Chase.map" :Doremir.Chase (:Doremir.Chase.UnaryFunc :Doremir.Chase))
 
-(defcfun "mapDest" :Doremir.Chase.Chase (:Doremir.Chase.UnaryFunc :Doremir.Chase.Chase))
+(defcfun "Doremir.Chase.mapDest" :Doremir.Chase (:Doremir.Chase.UnaryFunc :Doremir.Chase))

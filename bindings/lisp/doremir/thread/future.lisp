@@ -1,13 +1,13 @@
-(defctype Future :long)
+(defctype Doremir.Future :pointer)
 
-(defctype Value :long)
+(defctype Doremir.Thread.Future.Value :pointer)
 
-(defcfun "create" :Doremir.Thread.Future.Future ())
+(defcfun "Doremir.Thread.Future.create" :Doremir.Future ())
 
-(defcfun "destroy" :void (:Doremir.Thread.Future.Future))
+(defcfun "Doremir.Thread.Future.destroy" :void (:Doremir.Future))
 
-(defcfun "isDone" :bool (:Doremir.Thread.Future.Future))
+(defcfun "Doremir.Thread.Future.isDone" :boolean (:Doremir.Future))
 
-(defcfun "wait" :void (:Doremir.Thread.Future.Future))
+(defcfun "Doremir.Thread.Future.wait" :void (:Doremir.Future))
 
-(defcfun "get" :Doremir.Thread.Future.Value (:Doremir.Thread.Future.Future))
+(defcfun "Doremir.Thread.Future.get" :Doremir.Thread.Future.Value (:Doremir.Future))

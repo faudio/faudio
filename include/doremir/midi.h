@@ -2,7 +2,7 @@
 #ifndef _DOREMIR_MIDI
 #define _DOREMIR_MIDI
 
-
+#include <Doremir/Buffer.h>
 
 /** @defgroup Doremir
     @{
@@ -27,16 +27,16 @@ typedef struct {
             uint8_t bytes[3];
         } doremir_midi_simple_message_t;
 typedef struct {
-            doremir_midi_raw_buffer_t data;
+            doremir_buffer_t data;
         } doremir_midi_sysex_message_t;
 typedef enum {
             simple_message_tag, sysex_message_tag
         } doremir_midi_message_tag_t;
 typedef struct {
-            doremir_midi_doremir_midi_message_tag_t tag;
+            doremir_midi_message_tag_t tag;
             union {
-                doremir_midi_doremir_midi_simple_message_t simple;
-                doremir_midi_doremir_midi_sysex_message_t sysex;
+                doremir_midi_simple_message_t simple;
+                doremir_midi_sysex_message_t sysex;
             } value;
         } doremir_midi_message_t;
 

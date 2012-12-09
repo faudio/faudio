@@ -1,5 +1,5 @@
-(defctype Ratio :long)
+(defctype Doremir.Ratio.Nom :int32)
 
-(defctype Nom :int32)
+(defctype Doremir.Ratio.Denom :uint32)
 
-(defctype Denom :uint32)
+(defctype Doremir.Ratio (:pointer :void))

@@ -1,9 +1,9 @@
-(defctype Stack :long)
+(defctype Doremir.Stack :pointer)
 
-(defcfun "create" :Doremir.Atomic.Stack.Stack ())
+(defcfun "Doremir.Atomic.Stack.create" :Doremir.Stack ())
 
-(defcfun "destroy" :void (:Doremir.Atomic.Stack.Stack))
+(defcfun "Doremir.Atomic.Stack.destroy" :void (:Doremir.Stack))
 
-(defcfun "read" :long (:Doremir.Atomic.Stack.Stack))
+(defcfun "Doremir.Atomic.Stack.read" :pointer (:Doremir.Stack))
 
-(defcfun "write" :long (:Doremir.Atomic.Stack.Stack :long))
+(defcfun "Doremir.Atomic.Stack.write" :pointer (:Doremir.Stack :pointer))

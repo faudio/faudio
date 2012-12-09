@@ -1,5 +1,5 @@
-(defctype BufferDevice :long)
+(defctype Doremir.BufferDevice :pointer)
 
-(defcfun "create" :Doremir.Audio.Device.BufferDevice.BufferDevice (:long :Type))
+(defcfun "Doremir.Audio.Device.BufferDevice.create" :Doremir.BufferDevice (:size :Doremir.Audio.Type))
 
-(defcfun "destroy" :void (:Doremir.Audio.Device.BufferDevice.BufferDevice))
+(defcfun "Doremir.Audio.Device.BufferDevice.destroy" :void (:Doremir.BufferDevice))

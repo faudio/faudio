@@ -16,7 +16,7 @@
 
 typedef intptr_t doremir_audio_processor_binary_func_t;
 typedef intptr_t doremir_audio_processor_binary_proc_t;
-doremir_audio_processor_binary_doremir_audio_processor_binary_proc_t doremir_audio_processor_binary_lift(doremir_audio_processor_binary_doremir_audio_processor_binary_func_t);
+doremir_audio_processor_binary_proc_t doremir_audio_processor_binary_lift(doremir_audio_processor_binary_func_t);
 
 /** @}
     @}

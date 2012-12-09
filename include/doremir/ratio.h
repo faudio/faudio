@@ -10,9 +10,11 @@
     @{
     */
 
-typedef intptr_t doremir_ratio_t;
 typedef int32_t doremir_ratio_nom_t;
 typedef uint32_t doremir_ratio_denom_t;
+typedef struct {
+            doremir_ratio_nom_t nom; doremir_ratio_denom_t denom;
+        } doremir_ratio_t;
 
 /** @}
     @}
