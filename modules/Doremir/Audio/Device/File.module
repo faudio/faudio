@@ -11,7 +11,7 @@ module Doremir.Audio.Device.FileDevice
     type Stream = opaque;
 
     create      : (FilePath, FilePath) -> FileDevice;
-    destroy     : (FileDevice) -> Void;
+    destroy     : FileDevice -> Void;
     // openStream  : (FileDevice, Proc) -> Stream;
-    closeStream : (Stream) -> Void;
+    closeStream : Stream -> Void;
 }

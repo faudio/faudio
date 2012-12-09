@@ -16,9 +16,9 @@ module Doremir.Midi
         Sysex 
     };
 
-    statusType    : (Int) -> Int;
-    statusChannel : (Int) -> Int;
-    statusIsSysex : (Int) -> Bool;
+    statusType    : Int -> Int;
+    statusChannel : Int -> Int;
+    statusIsSysex : Int -> Bool;
 
     type SimpleMessage = struct {
         bytes : [UInt8 x 3]

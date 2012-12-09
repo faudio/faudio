@@ -13,10 +13,10 @@ module Doremir.Map
     empty   : () -> Map;
     single  : (Key, Value) -> Map;
     append  : (Map, Map) -> Map;
-    destroy : (Map) -> Void;
-    copy    : (Map) -> Map;
+    destroy : Map -> Void;
+    copy    : Map -> Map;
     swap    : (Map, Map) -> Void;
-    fromPair : (Pair) -> Map;
+    fromPair : Pair -> Map;
 
     key            : (Map, Key) -> Bool;
     elem           : (Map, Value) -> Bool;

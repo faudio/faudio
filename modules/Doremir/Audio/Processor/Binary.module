@@ -18,5 +18,5 @@ module Doremir.Audio.Processor.Binary
 {
     type Func = Intptr;
     type Proc = Intptr;    
-    lift : (Func) -> Proc;
+    lift : Func -> Proc;
 }

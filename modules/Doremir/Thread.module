@@ -8,18 +8,18 @@ module Doremir.Thread
     type Condition = opaque;
     
     createThread : () -> Thread;
-    join : (Thread) -> Void;
-    detach : (Thread) -> Void;
+    join : Thread -> Void;
+    detach : Thread -> Void;
     
     createMutex : () -> Mutex;
-    destroyMutex : (Mutex) -> Void;
-    lock : (Mutex) -> Bool;
-    tryLock : (Mutex) -> Bool;
-    unlock : (Mutex) -> Bool;
+    destroyMutex : Mutex -> Void;
+    lock : Mutex -> Bool;
+    tryLock : Mutex -> Bool;
+    unlock : Mutex -> Bool;
 
     createCondition : () -> Condition;
-    waitFor : (Condition) -> Void;
-    notify : (Condition) -> Void;
-    notifyAll : (Condition) -> Void;
+    waitFor : Condition -> Void;
+    notify : Condition -> Void;
+    notifyAll : Condition -> Void;
 }
 

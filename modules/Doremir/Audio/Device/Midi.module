@@ -13,10 +13,10 @@ module Doremir.Audio.Device.MidiDevice
     type Stream = opaque;
 
     beginSession : () -> Session;
-    endSession   : (Session) -> Void;
+    endSession   : Session -> Void;
 
-    devices     : (Session) -> List;
-    standard    : (Session) -> Pair;
+    devices     : Session -> List;
+    standard    : Session -> Pair;
     // openStream  : (MidiDevice, Proc) -> Stream;
-    closeStream : (Stream) -> Void;
+    closeStream : Stream -> Void;
 }

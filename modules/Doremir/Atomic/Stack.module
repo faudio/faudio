@@ -7,9 +7,9 @@ module Doremir.Atomic.Stack
     type Stack = opaque;
     
     create : () -> Stack;
-    destroy : (Stack) -> Void;
+    destroy : Stack -> Void;
     
-    read : (Stack) -> Intptr;
+    read : Stack -> Intptr;
     write : (Stack, Intptr) -> Intptr;
 }
 

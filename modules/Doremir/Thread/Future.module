@@ -8,10 +8,10 @@ module Doremir.Thread.Future
 
     // TODO obtain result from what?
     create  : () -> Future;
-    destroy : (Future) -> Void;
+    destroy : Future -> Void;
     
-    isDone : (Future) -> Bool;
-    wait   : (Future) -> Void;
-    get    : (Future) -> Value;    
+    isDone : Future -> Bool;
+    wait   : Future -> Void;
+    get    : Future -> Value;    
 }
 

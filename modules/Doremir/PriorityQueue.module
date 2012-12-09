@@ -9,9 +9,9 @@ module Doremir.PriorityQueue
     
     create  : () -> PriorityQueue;
     swap    : (PriorityQueue, PriorityQueue) -> Void;
-    destroy : (PriorityQueue) -> Void;
+    destroy : PriorityQueue -> Void;
     
     insert  : (PriorityQueue, Value) -> Void;
-    peek    : (PriorityQueue) -> Value;
-    pop     : (PriorityQueue) -> Value;
+    peek    : PriorityQueue -> Value;
+    pop     : PriorityQueue -> Value;
 }

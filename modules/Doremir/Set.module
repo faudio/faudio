@@ -22,5 +22,5 @@ module Doremir.Set
     productOf : (Set, Set) -> Set;
     symmetricDifferenceOf : (Set, Set) -> Set;
     cartesianProductOf : (Set, Set) -> Set;
-    powerSetOf : (Set) -> Set;
+    powerSetOf : Set -> Set;
 }

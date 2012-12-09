@@ -9,5 +9,5 @@ module Doremir.Audio.Device.BufferDevice
     type BufferDevice = opaque;
     
     create  : (Size, Type) -> BufferDevice;
-    destroy : (BufferDevice) -> Void;
+    destroy : BufferDevice -> Void;
 }

@@ -33,51 +33,51 @@ module Doremir.List
     empty       : () -> List;
     cons        : (Value, List) -> List;
     snoc        : (Value, List) -> List;
-    destroy     : (List) -> Void;
-    copy        : (List) -> List;
+    destroy     : List -> Void;
+    copy        : List -> List;
     swap        : (List, List) -> Void;
 
-    isEmpty     : (List) -> Bool;
-    lenght      : (List) -> Int;
-    head        : (List) -> MaybeValue;
-    tail        : (List) -> MaybeList;
-    init        : (List) -> MaybeList;
-    last        : (List) -> MaybeValue;
+    isEmpty     : List -> Bool;
+    lenght      : List -> Int;
+    head        : List -> MaybeValue;
+    tail        : List -> MaybeList;
+    init        : List -> MaybeList;
+    last        : List -> MaybeValue;
 
     take        : (Int, List) -> List;
     drop        : (Int, List) -> List;
     isElem      : (Value, List) -> Bool;
     
-    reverse     : (List) -> List;
-    sort        : (List) -> List;
+    reverse     : List -> List;
+    sort        : List -> List;
     sep         : (Value, List) -> List;
-    concat      : (List) -> List;
-    concatSep   : (List) -> List;
+    concat      : List -> List;
+    concatSep   : List -> List;
 
     type Pred   = Intptr; // a -> Bool
 
     find        : (Pred, List) -> MaybeValue;
     filter      : (Pred, List) -> List;
 
-    type UnaryFunc  = Intptr; // a -> b
-    type BinaryFunc = Intptr; // a -> a -> b
+    type UnaryFunc  = Value -> Value*;
+    type BinaryFunc = (Value, Value) -> Value*;
 
     map         : (List, Func)             -> List;
     foldl       : (List, BinaryFunc, Value) -> List;
     
-    and         : (List) -> Bool;
-    or          : (List) -> Bool;
+    and         : List -> Bool;
+    or          : List -> Bool;
     any         : (Pred, List) -> Bool;
     all         : (Pred, List) -> Bool;
     sum         : (Num, List) -> Value;
     product     : (Num, List) -> Value;
-    maximum     : (List) -> Value;
-    minimum     : (List) -> Value;
+    maximum     : List -> Value;
+    minimum     : List -> Value;
                                 
     consDestroy    : (Value, List) -> List;
     snocDestroy    : (Value, List) -> List;    
-    reverseDestroy : (List) -> List;
-    sortDestroy    : (List) -> List;
+    reverseDestroy : List -> List;
+    sortDestroy    : List -> List;
     mapDestroy     : (List, Func) -> List;
     
 }
