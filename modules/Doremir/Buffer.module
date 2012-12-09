@@ -3,5 +3,5 @@
  */
 module Doremir.Buffer
 {
-    type Buffer = Opaque;  
+    type Buffer = opaque;  
 }
