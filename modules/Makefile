@@ -13,7 +13,6 @@ gen:
 	modulo -Mmodules --language=c    <modules/Doremir/String.module    		>include/doremir/string.h;
 	modulo -Mmodules --language=c    <modules/Doremir/Buffer.module    		>include/doremir/buffer.h;
 	modulo -Mmodules --language=c    <modules/Doremir/Ratio.module    		>include/doremir/ratio.h;
-	modulo -Mmodules --language=c    <modules/Doremir/Chase.module    		>include/doremir/chase.h;
 	modulo -Mmodules --language=c    <modules/Doremir/List.module    			>include/doremir/list.h; 
 	modulo -Mmodules --language=c    <modules/Doremir/Set.module    			>include/doremir/set.h;  
 	modulo -Mmodules --language=c    <modules/Doremir/Pair.module    			>include/doremir/pair.h; 
@@ -59,7 +58,6 @@ gen:
 	modulo -Mmodules --language=lisp <modules/Doremir/String.module    		>bindings/lisp/doremir/string.lisp;
 	modulo -Mmodules --language=lisp <modules/Doremir/Buffer.module    		>bindings/lisp/doremir/buffer.lisp;
 	modulo -Mmodules --language=lisp <modules/Doremir/Ratio.module    		>bindings/lisp/doremir/ratio.lisp;
-	modulo -Mmodules --language=lisp <modules/Doremir/Chase.module    		>bindings/lisp/doremir/chase.lisp;
 	modulo -Mmodules --language=lisp <modules/Doremir/List.module    			>bindings/lisp/doremir/list.lisp; 
 	modulo -Mmodules --language=lisp <modules/Doremir/Set.module    			>bindings/lisp/doremir/set.lisp;  
 	modulo -Mmodules --language=lisp <modules/Doremir/Pair.module    			>bindings/lisp/doremir/pair.lisp; 
