@@ -6,7 +6,7 @@
 module Doremir.Audio.Device.BufferDevice
 {
     import Doremir.Audio;
-    type BufferDevice = Intptr;
+    type BufferDevice = opaque;
     
     create  : (Size, Type) -> BufferDevice;
     destroy : (BufferDevice) -> Void;

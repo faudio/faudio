@@ -4,7 +4,7 @@
  */
 module Doremir.Atomic.Stack
 {
-    type Stack = Intptr;
+    type Stack = opaque;
     
     create : () -> Stack;
     destroy : (Stack) -> Void;

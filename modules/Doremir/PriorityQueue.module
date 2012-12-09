@@ -4,7 +4,7 @@
  */
 module Doremir.PriorityQueue
 {
-    type PriorityQueue = Intptr;
+    type PriorityQueue = opaque;
     type Value = Intptr;
     
     create  : () -> PriorityQueue;

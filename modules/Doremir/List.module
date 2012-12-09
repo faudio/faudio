@@ -23,7 +23,7 @@
  */
 module Doremir.List
 {
-    type List   = Intptr;
+    type List   = opaque;
     type Value  = Intptr;
     type Func   = Intptr;
     type Num    = Intptr;

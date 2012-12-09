@@ -4,7 +4,7 @@
  */
 module Doremir.Atomic.Queue
 {
-    type Queue = Intptr;
+    type Queue = opaque;
     
     create : () -> Queue;
     destroy : (Queue) -> Void;

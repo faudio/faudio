@@ -4,8 +4,10 @@
  */
 module Doremir.Pair
 {
-    type Type = Int;
-    type Func   = Intptr;
+    // FIXME needed by some allocation routines
+    type Type = Size;
+
+    type Func = Intptr;
     type Pair = struct { fst : Intptr, snd : Intptr };
     
     map : (Func, Pair) -> Pair;

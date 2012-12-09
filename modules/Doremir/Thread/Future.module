@@ -3,7 +3,7 @@
  */
 module Doremir.Thread.Future
 {
-    type Future = Intptr;
+    type Future = opaque;
     type Value  = Intptr;
 
     // TODO obtain result from what?

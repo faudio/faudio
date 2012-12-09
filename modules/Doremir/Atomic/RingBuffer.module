@@ -4,7 +4,7 @@
  */
 module Doremir.Atomic.RingBuffer
 {
-    type RingBuffer = Intptr;
+    type RingBuffer = opaque;
 
     create : (RingBuffer) -> RingBuffer;
     copy : (RingBuffer) -> RingBuffer;

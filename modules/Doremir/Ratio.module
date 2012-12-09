@@ -4,9 +4,9 @@
  */
 module Doremir.Ratio 
 {
-    type Ratio  = Intptr;
     type Nom    = Int32;
     type Denom  = UInt32;
+    type Ratio  = struct { nom : Nom, denom : Denom };
             
 
 }

@@ -6,7 +6,7 @@ module Doremir.Map
 {
     import Doremir.Pair;
     
-    type Map = Intptr;
+    type Map = opaque;
     type Key = Intptr;
     type Value = Intptr;
     

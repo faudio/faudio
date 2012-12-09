@@ -5,7 +5,7 @@
  */
 module Doremir.Atomic
 {
-    type Atomic = Intptr;
+    type Atomic = opaque;
     type Updater = (Intptr) -> Intptr;
     
     create  : () -> Atomic;
