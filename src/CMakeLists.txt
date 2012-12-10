@@ -2,12 +2,41 @@
 # Uses EXTS, APPLE and MSYS + options
 # Sets MAIN_LIBRARY
 
-aux_source_directory("doremir"        SRCS)
-aux_source_directory("doremir/midi"   SRCS_MIDI)
-aux_source_directory("doremir/atomic" SRCS_ATOMIC)
-aux_source_directory("doremir/thread" SRCS_THREAD)
+# To update, use 
+#  find src -name '*'
+list(APPEND SRCS
+  doremir/atomic
+  doremir/atomic/queue.c
+  doremir/atomic/ring_buffer.c
+  doremir/atomic/stack.c
+  doremir/atomic.c
+  doremir/audio.c
+  doremir/buffer.c
+  doremir/list.c
+  doremir/map.c
+  doremir/midi.c
+  doremir/pair.c
+  doremir/priority_queue.c
+  doremir/ratio.c
+  doremir/set.c
+  doremir/string.c
+  doremir/thread
+  doremir/thread/future.c
+  doremir/thread/improving.c
+  )
+list(APPEND SRCS_OSX
+  doremir/thread_osx.c
+  )
+list(APPEND SRCS_WIN
+  doremir/thread_win.c
+  )
 
-set (SRCS_ALL ${SRCS} ${SRCS_MIDI} ${SRCS_ATOMIC} ${SRCS_THREAD})
+if(APPLE)
+  set(SRCS_ALL ${SRCS} ${SRCS_OSX})
+endif()
+if(WIN)
+  set(SRCS_ALL ${SRCS} ${SRCS_WIN})
+endif()
 
 if(APPLE)
   if(BUILD_SHARED)
