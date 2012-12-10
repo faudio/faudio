@@ -1,6 +1,10 @@
 
 /** 
-    @author     Hans Höglund
+    @addtogroup Doremir
+    @addtogroup Ratio
+    
+    Fixed-precision rational numbers.
+
  */
 module Doremir.Ratio 
 {

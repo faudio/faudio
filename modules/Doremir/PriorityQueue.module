@@ -1,6 +1,10 @@
 
-/**
-    Provides the priority queue data structure. 
+/** 
+    @addtogroup Doremir
+    @addtogroup PriorityQueue
+    
+    Priority queue data structure.
+
  */
 module Doremir.PriorityQueue
 {

@@ -1,4 +1,11 @@
 
+/** 
+    @addtogroup Doremir
+    @addtogroup String
+    
+    String operations.
+
+ */
 module Doremir.String
 {
     type String = Char*;

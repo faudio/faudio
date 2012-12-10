@@ -1,6 +1,10 @@
 
-/**
-    Provides an atomic queue (first in, last out) data structure
+/** 
+    @addtogroup Doremir
+    @addtogroup Atomic
+    @addtogroup Stack
+    
+    Lock-free stack (FILO) data structure
  */
 module Doremir.Atomic.Stack
 {

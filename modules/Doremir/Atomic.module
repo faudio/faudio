@@ -1,10 +1,12 @@
 
-/** @addtogroup Doremir
+/** 
+    @addtogroup Doremir
     @addtogroup Atomic
-    This is barely atomics.
-    */
+    
+    Cross-platform atomic variables. Submodules contains lock-free data structures.
 
- module Doremir.Atomic
+ */
+module Doremir.Atomic
 {
     type Atomic = opaque;
     type Updater = Intptr -> Intptr;

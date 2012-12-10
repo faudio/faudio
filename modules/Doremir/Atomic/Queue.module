@@ -1,6 +1,10 @@
 
-/**
-    Provides an atomic queue (first in, first out) data structure
+/** 
+    @addtogroup Doremir
+    @addtogroup Atomic
+    @addtogroup Queue
+    
+    Lock-free queue (FIFO) data structure.
  */
 module Doremir.Atomic.Queue
 {

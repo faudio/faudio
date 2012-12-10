@@ -1,6 +1,10 @@
 
-/**
-    Provides the pair data structure. 
+/** 
+    @addtogroup Doremir
+    @addtogroup Pair
+    
+    Pair data structure and some utility functions.
+
  */
 module Doremir.Pair
 {

@@ -1,6 +1,10 @@
 
-/**
-    Provides the set data structure. 
+/** 
+    @addtogroup Doremir
+    @addtogroup Set
+    
+    Immutable ordered set data structure.
+
  */
 module Doremir.Set
 {

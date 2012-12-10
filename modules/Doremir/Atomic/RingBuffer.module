@@ -1,6 +1,10 @@
 
-/**
-    Provides an atomic circular buffer
+/** 
+    @addtogroup Doremir
+    @addtogroup Atomic
+    @addtogroup RingBuffer
+    
+    Circular buffer data structure.
  */
 module Doremir.Atomic.RingBuffer
 {

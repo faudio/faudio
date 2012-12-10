@@ -3,11 +3,11 @@
 #define _DOREMIR_ATOMIC
 
 
+
 /** @defgroup Doremir
     @{
     @defgroup Atomic
     @{
-        
     */
 
 typedef struct _doremir_atomic_t * doremir_atomic_t;

@@ -1,4 +1,11 @@
 
+/** 
+    @addtogroup Doremir
+    @addtogroup Std
+    
+    This module just exports the C standard library.
+
+ */
 module Doremir.Std
 {
     import "C" assert;

@@ -1,6 +1,10 @@
 
-/**
-    Provides the map data structure. 
+/** 
+    @addtogroup Doremir
+    @addtogroup Map
+    
+    Immutable ordered map data structure.
+
  */
 module Doremir.Map 
 {
