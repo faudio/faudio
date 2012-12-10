@@ -1,27 +1,27 @@
-[submodule "external_libraries/boost"]
-	path = external_libraries/boost
+[submodule "external/boost"]
+	path = external/boost
 	url = git@git.doremir.com:/repositories/dependencies/boost.git
-[submodule "external_libraries/portaudio/source"]
-	path = external_libraries/portaudio/source
+[submodule "external/portaudio/source"]
+	path = external/portaudio/source
 	url = git@git.doremir.com:/repositories/dependencies/portaudio.git
-[submodule "external_libraries/portmidi/source"]
-	path = external_libraries/portmidi/source
+[submodule "external/portmidi/source"]
+	path = external/portmidi/source
 	url = git@git.doremir.com:/repositories/dependencies/portmidi.git
-[submodule "external_libraries/sndfile/source"]
-	path = external_libraries/sndfile/source
+[submodule "external/sndfile/source"]
+	path = external/sndfile/source
 	url = git@git.doremir.com:/repositories/dependencies/sndfile.git
-[submodule "external_libraries/gtest/source"]
-	path = external_libraries/gtest/source
+[submodule "external/gtest/source"]
+	path = external/gtest/source
 	url = git@git.doremir.com:/repositories/dependencies/gtest.git
-[submodule "external_libraries/fluidsynth/source"]
-	path = external_libraries/fluidsynth/source
+[submodule "external/fluidsynth/source"]
+	path = external/fluidsynth/source
 	url = git@git.doremir.com:/repositories/dependencies/fluidsynth.git
 [submodule "sprout"]
 	path = sprout
 	url = git@git.doremir.com:repositories/dependencies/sprout.git
-[submodule "external_libraries/sprout"]
-	path = external_libraries/sprout
+[submodule "external/sprout"]
+	path = external/sprout
 	url = git@git.doremir.com:repositories/dependencies/sprout.git
-[submodule "external_libraries/boost_lockfree"]
-	path = external_libraries/boost_lockfree
+[submodule "external/boost_lockfree"]
+	path = external/boost_lockfree
 	url = git@git.doremir.com:repositories/dependencies/boost_lockfree
