@@ -5,11 +5,9 @@
 # To update, use 
 #  find src -name '*'
 list(APPEND SRCS
-  doremir/atomic
   doremir/atomic/queue.c
   doremir/atomic/ring_buffer.c
   doremir/atomic/stack.c
-  doremir/atomic.c
   doremir/audio.c
   doremir/buffer.c
   doremir/list.c
@@ -20,14 +18,15 @@ list(APPEND SRCS
   doremir/ratio.c
   doremir/set.c
   doremir/string.c
-  doremir/thread
   doremir/thread/future.c
   doremir/thread/improving.c
   )
 list(APPEND SRCS_OSX
+  doremir/atomic_osx.c
   doremir/thread_osx.c
   )
 list(APPEND SRCS_MSYS
+  doremir/atomic_win.c
   doremir/thread_win.c
   )
 

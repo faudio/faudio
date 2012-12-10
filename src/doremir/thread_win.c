@@ -1,4 +1,5 @@
 
+#include <Windows.h>
 #include <doremir/thread.h>
 
 struct _doremir_thread_t
