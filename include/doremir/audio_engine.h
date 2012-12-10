@@ -9,7 +9,6 @@
 #include <doremir/map.h>
 #include <doremir/midi.h>
 #include <doremir/pair.h>
-#include <doremir/priorityqueue.h>
 #include <doremir/ratio.h>
 #include <doremir/set.h>
 #include <doremir/string.h>

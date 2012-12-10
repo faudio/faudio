@@ -9,7 +9,7 @@ module Doremir.AudioEngine
     import Doremir.Map;
     import Doremir.Midi;
     import Doremir.Pair;
-    import Doremir.PriorityQueue;
+    // import Doremir.PriorityQueue; FIXME not properly unmangled
     import Doremir.Ratio;
     import Doremir.Set;
     import Doremir.String;
