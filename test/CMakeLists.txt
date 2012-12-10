@@ -10,5 +10,5 @@ if(BUILD_TESTS)
     OUTPUT_NAME                 "doremir_audio_tests"
     RUNTIME_OUTPUT_DIRECTORY    "../bin"
     )
-  target_link_libraries(doremir_audio_tests ${MAIN_LIBRARY})
+  target_link_libraries(doremir_audio_tests ${MAIN_STATIC_LIBRARY})
 endif(BUILD_TESTS)

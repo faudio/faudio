@@ -73,4 +73,13 @@ if(MSYS)
     target_link_libraries(doremir_audio ${EXTS})
     set(MAIN_LIBRARY doremir_audio PARENT_SCOPE)    
   endif(BUILD_SHARED)
+  if(True)
+    add_library(doremir_audio_static ${SRCS_ALL})
+    set_target_properties(doremir_audio_static PROPERTIES 
+      OUTPUT_NAME                 "doremir_audio"
+      RUNTIME_OUTPUT_DIRECTORY    "../lib"
+      )
+    target_link_libraries(doremir_audio_static ${EXTS})
+    set(MAIN_STATIC_LIBRARY doremir_audio_static PARENT_SCOPE)    
+  endif(True)
 endif(MSYS)
