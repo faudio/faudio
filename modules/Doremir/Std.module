@@ -24,7 +24,6 @@ module Doremir.Std
     import "C" stdarg;
     import "C" stdbool;
     import "C" stddef;
-    import "C" stdint;
     import "C" stdio;
     import "C" stdlib;
     import "C" string;
