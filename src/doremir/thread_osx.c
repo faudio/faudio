@@ -15,8 +15,8 @@ struct _doremir_thread_mutex_t
 
 struct _doremir_thread_condition_t
 {             
-    doremir_thread_mutex_t  mutex;
     pthread_cond_t          native;
+    doremir_thread_mutex_t  mutex;
 };   
 
 static void doremir_thread_fatal(int error);

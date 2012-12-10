@@ -4,41 +4,80 @@
 
 struct _doremir_thread_t
 {
+    HANDLE native;
 };
 
 struct _doremir_thread_mutex_t
 {
+    HANDLE native;
 };
 
 struct _doremir_thread_condition_t
 {
+    HANDLE native;
+    doremir_thread_mutex_t  mutex;
 };
 
-doremir_thread_t doremir_thread_create()
+static void doremir_thread_fatal(int error);
+
+
+// --------------------------------------------------------------------------------
+// Threads
+// --------------------------------------------------------------------------------
+
+/** Create a new thread executing the given function asynhronously.
+
+    Threads have single-ownership semantics and must be finalized by passing it
+    to a destroy function.    
+ */
+doremir_thread_t doremir_thread_create(doremir_thread_runnable_t run)
 {
     doremir_thread_t t = malloc(sizeof(struct _doremir_thread_t));
-    // TODO
-    int r = 0;
-    if (r != 0)
-        ; // TODO fatal
+    int r = CreateThread(
+        NULL,
+        0,
+        run.f, // TODO type?
+        run.x,
+        0
+        );
+    if (r == NULL)
+        doremir_thread_fatal(GetLastError());
+    t->native = r;
     return t;
 }
 
-void doremir_thread_join(doremir_thread_t t)
+void doremir_thread_sleep(doremir_thread_milli_seconds_t s)
 {
-    int r = 0;
-    free(t);
-    if (r != 0)
-        ; // TODO fatal
+    Sleep(s);
 }
 
-void doremir_thread_detach(doremir_thread_t t)
+/** Destroy a thread, and return after its associated function has returned.
+  */
+void doremir_thread_join(doremir_thread_t t)
 {
-    int r = 0;
+    int r = pthread_join(t->native, NULL);
     free(t);
     if (r != 0)
-        ; // TODO fatal
+        doremir_thread_fatal(r);
 }
+
+/** Destroy a thread and return directly. The associated function may continous executing
+    in the background.
+  */
+void doremir_thread_detach(doremir_thread_t t)
+{
+    int r = pthread_detach(t->native);
+    free(t);
+    if (r != 0)
+        doremir_thread_fatal(r);
+}
+
+
+
+
+
+
+
 
 doremir_thread_mutex_t doremir_thread_create_mutex()
 {
@@ -114,4 +153,15 @@ void doremir_thread_notify_all(doremir_thread_condition_t c)
     int r = 0;
     if (r != 0)
         ; // TODO fatal
+}
+
+
+// --------------------------------------------------------------------------------
+// Utility
+// --------------------------------------------------------------------------------
+
+void doremir_thread_fatal(int error)
+{               
+    // TODO log
+    exit(error);
 }
