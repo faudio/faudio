@@ -2,6 +2,7 @@
 all:	gen
 
 gen:
+	modulo -Mmodules --language=c    <modules/Doremir/AudioEngine.module    	>include/doremir/audio_engine.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Atomic.module    		>include/doremir/atomic.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Atomic/Queue.module       	>include/doremir/atomic/queue.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Atomic/Stack.module       	>include/doremir/atomic/stack.h && \
