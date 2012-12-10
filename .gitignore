@@ -5,4 +5,4 @@
 build/
 doc/Lisp.md
 dist
-external_libraries/*/result/
+external/*/result/

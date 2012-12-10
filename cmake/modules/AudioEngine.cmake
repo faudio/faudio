@@ -89,8 +89,8 @@ macro(add_standard_component
     ${list}
     ${name}
     ${predicate}
-    "external_libraries/${lowercase_name}/build/${system}/build"
-    "external_libraries/${lowercase_name}/build/${system}/clean"
+    "external/${lowercase_name}/build/${system}/build"
+    "external/${lowercase_name}/build/${system}/clean"
     "${lowercase_name}-${system}")
 endmacro()
 
@@ -332,6 +332,7 @@ function(run_executable_std
     set(execute_process_args OUTPUT_QUIET ERROR_QUIET)
   endif()
 
+  message(">>>> OS X, running ${executable} ${execute_process_args}")
   execute_process(
     COMMAND           ${executable}
     RESULT_VARIABLE   execute_process_result
@@ -359,7 +360,8 @@ function(run_executable_msys
   else()
     set(execute_process_args OUTPUT_QUIET ERROR_QUIET)
   endif()                        
-
+  
+  message(">>>> MSYS, running ${executable} ${execute_process_args}")
   execute_process(           
     COMMAND           sh ${executable}
     RESULT_VARIABLE   execute_process_result
@@ -379,7 +381,8 @@ function(run_package_manager
   else()
     set(execute_process_args OUTPUT_QUIET ERROR_QUIET)
   endif()
-  # message(">>>> ${DIST_EXECUTABLE}")
+
+  message(">>>> ${DIST_EXECUTABLE} get ${package_name}")
   # FIXME command style of package manager is hardcoded
   execute_process(
     COMMAND             ${DIST_EXECUTABLE} get ${package_name}
