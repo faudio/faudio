@@ -27,15 +27,15 @@ list(APPEND SRCS
 list(APPEND SRCS_OSX
   doremir/thread_osx.c
   )
-list(APPEND SRCS_WIN
+list(APPEND SRCS_MSYS
   doremir/thread_win.c
   )
 
 if(APPLE)
   set(SRCS_ALL ${SRCS} ${SRCS_OSX})
 endif()
-if(WIN)
-  set(SRCS_ALL ${SRCS} ${SRCS_WIN})
+if(MSYS)
+  set(SRCS_ALL ${SRCS} ${SRCS_MSYS})
 endif()
 
 if(APPLE)
