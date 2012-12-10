@@ -1,15 +1,4 @@
 
-* Rewrite reserve_ptr in C++ style
-  * Just a class, unreserve etc are methods
-
-* Lifted function/processors in C++ can not handle tuples and lists, only vectors and raw types
-
-* Remove non concept-checking code out of the /concept namespaces
-  (These should be Boost Concept Check definitions ONLY, to make transition easier)
-
-* Components_resolve should invoke cmake -D COMPONENTS_RESOLVED=1 to
-  run the find... modules
-
 * Check if we can make Fluidsynth compile against checked in Glib
   binaries instead of /usr/local
   * Done? 
