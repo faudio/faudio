@@ -2,7 +2,7 @@
 #ifndef _DOREMIR_ATOMIC
 #define _DOREMIR_ATOMIC
 
-
+#include <doremir/std.h>
 
 /** @defgroup Doremir
     @{
@@ -11,7 +11,7 @@
     */
 
 typedef struct _doremir_atomic_t * doremir_atomic_t;
-typedef intptr_t doremir_atomic_updater_t(intptr_t);
+typedef intptr_t (* doremir_atomic_updater_t)(intptr_t);
 doremir_atomic_t doremir_atomic_create();
 doremir_atomic_t doremir_atomic_copy(doremir_atomic_t);
 void doremir_atomic_swap(doremir_atomic_t, doremir_atomic_t);

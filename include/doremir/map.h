@@ -2,7 +2,7 @@
 #ifndef _DOREMIR_MAP
 #define _DOREMIR_MAP
 
-#include <Doremir/Pair.h>
+#include <doremir/pair.h>
 
 /** @defgroup Doremir
     @{

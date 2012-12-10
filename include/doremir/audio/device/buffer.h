@@ -2,7 +2,7 @@
 #ifndef _DOREMIR_AUDIO_DEVICE_BUFFERDEVICE
 #define _DOREMIR_AUDIO_DEVICE_BUFFERDEVICE
 
-#include <Doremir/Audio.h>
+#include <doremir/audio.h>
 
 /** @defgroup Doremir
     @{

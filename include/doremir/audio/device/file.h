@@ -2,7 +2,7 @@
 #ifndef _DOREMIR_AUDIO_DEVICE_FILEDEVICE
 #define _DOREMIR_AUDIO_DEVICE_FILEDEVICE
 
-#include <Doremir/String.h>
+#include <doremir/string.h>
 
 /** @defgroup Doremir
     @{

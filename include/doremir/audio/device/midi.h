@@ -2,8 +2,8 @@
 #ifndef _DOREMIR_AUDIO_DEVICE_MIDIDEVICE
 #define _DOREMIR_AUDIO_DEVICE_MIDIDEVICE
 
-#include <Doremir/List.h>
-#include <Doremir/Pair.h>
+#include <doremir/list.h>
+#include <doremir/pair.h>
 
 /** @defgroup Doremir
     @{
