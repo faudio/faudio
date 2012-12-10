@@ -9,7 +9,6 @@
 module Doremir.Thread
 {
     import Doremir.Std;
-    import "C" Doremir.Bool;
 
     type Thread = opaque;
     type Mutex = opaque;

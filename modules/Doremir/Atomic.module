@@ -9,7 +9,6 @@
 module Doremir.Atomic
 {
     import Doremir.Std;
-    import "C" Doremir.Bool;
     
     type Atomic = opaque;
     type Updater = (Intptr -> Intptr)*;

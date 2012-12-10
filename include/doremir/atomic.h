@@ -3,7 +3,6 @@
 #define _DOREMIR_ATOMIC
 
 #include <doremir/std.h>
-#include <doremir/bool.h>
 
 /** @defgroup Doremir
     @{
