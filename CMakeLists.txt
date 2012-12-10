@@ -1,9 +1,16 @@
+
 ##
 ##  CMake build for the DoReMIR Audio Engine
+##
+##  This script is slighly unusual, in that it requires components_resolve to be called once before
+##  building anything. Follow the instructions in README and all we be well.
 ##
 
 cmake_minimum_required(VERSION 2.8.8)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
+
+## ----------------------------------------------------------------------
+## Basic definitions
 
 project(DoReMIRAudioEngine C CXX)
 set(VERSION_PRE "")
@@ -18,18 +25,27 @@ if(APPLE)
 else()
   set(NOT_APPLE True)
 endif()
+if(WIN32) # TODO better check
+  set(MSYS     True)
+  set(NOT_MSYS False)
+else()
+  set(MSYS     False)
+  set(NOT_MSYS True)
+endif()
 
 
+## ----------------------------------------------------------------------
 ## Build options
 
+#
 #  This should hold
-#    
-#  CMAKE_OSX_DEPLOYMENT_TARGET <= CMAKE_OSX_SYSROOT <= (build machine OS X version)
-#
-#  CMAKE_OSX_DEPLOYMENT_TARGET should be the minimum supported version (i.e. 10.5)
-#  CMAKE_OSX_SYSROOT should be the SDK of the maximum supported version (i.e. /Developer/SDKs/MacOSX10.7.sdk)
-#
-#  See the Apple documentation 'Frameworks and Weak Linking'
+#      CMAKE_OSX_DEPLOYMENT_TARGET 
+#         <= CMAKE_OSX_SYSROOT 
+#         <= (build machine OS X version)
+#  
+#      CMAKE_OSX_DEPLOYMENT_TARGET is minimum supported version (i.e. 10.5)
+#      CMAKE_OSX_SYSROOT is path to SDK of maximum supported version
+#  
 
 option(ENABLE_LOGGING           "Enable standard logging"                   FALSE)
 option(ENABLE_REALTIME_AUDIO    "Enable real-time audio")
@@ -39,7 +55,7 @@ option(ENABLE_FLUIDSYNTH        "Enable the Fluidsynth processor"           ${NO
 
 option(BUILD_DYLIB              "Build an OS X dynamic library"             FALSE)
 option(BUILD_FRAMEWORK          "Build an OS X framework"                   TRUE)
-option(BUILD_SHARED             "Build a shared library"                    ${APPLEx})
+option(BUILD_SHARED             "Build a shared library"                    ${APPLE})
 option(BUILD_TESTS              "Build unit tests"                          TRUE)
 
 option(REDIRECT_LOG             "Redirect log messages to standard output"  FALSE)
@@ -52,12 +68,15 @@ option(BUILD_COMPONENTS         "Build dependent components locally"        FALS
 option(SHOW_COMPONENT_OUTPUT    "Show output while building components"     FALSE)
 
 
-## Misc settings
+## ----------------------------------------------------------------------
+## Misc setup
 
 include(Profiling)
 include(FixOSXLionPaths)
 find_package(Dist)
 
+
+## ----------------------------------------------------------------------
 ## Sanity checks
 
 if(APPLE)
@@ -76,7 +95,7 @@ if(APPLE)
   endif()
 endif()
 
-if(WIN32)
+if(MSYS)
   string(COMPARE NOTEQUAL "${CMAKE_GENERATOR}" "MSYS Makefiles" GENERATOR_NOT_MSYS)
   if(GENERATOR_NOT_MSYS)
     message(FATAL_ERROR
@@ -85,7 +104,17 @@ if(WIN32)
   endif()
 endif()
 
+
+## ----------------------------------------------------------------------
 ## Component manager
+
+# 
+#  These steps sets up the component manager and adds the components_resolve target
+# 
+#  Usually there is no need to use this explicitly, as the boot script calls 
+#  "make components_resolve" and it only needs to be called once. Note that components_resolve
+#  calls cmake again to proceed below the guard below.
+# 
 
 if(BUILD_COMPONENTS)
   list(APPEND COMPONENT_DEFINES
@@ -105,18 +134,24 @@ list(APPEND COMPONENT_DEFINES
 include(AudioEngine)
 
 add_custom_target(components_print
-  COMMAND cmake ${COMPONENT_DEFINES} -P "${CMAKE_SOURCE_DIR}/cmake/scripts/components_print.cmake")
+  COMMAND cmake 
+  ${COMPONENT_DEFINES} 
+  -P "${CMAKE_SOURCE_DIR}/cmake/scripts/components_print.cmake")
 
 add_custom_target(components_resolve
-  COMMAND cmake ${COMPONENT_DEFINES} -P "${CMAKE_SOURCE_DIR}/cmake/scripts/components_resolve.cmake")
+  COMMAND cmake 
+  ${COMPONENT_DEFINES} 
+  -P "${CMAKE_SOURCE_DIR}/cmake/scripts/components_resolve.cmake")
 
 add_custom_target(components_clean
-  COMMAND cmake ${COMPONENT_DEFINES} -P "${CMAKE_SOURCE_DIR}/cmake/scripts/components_clean.cmake")
+  COMMAND cmake 
+  ${COMPONENT_DEFINES} 
+  -P "${CMAKE_SOURCE_DIR}/cmake/scripts/components_clean.cmake")
 
-# add_custom_target(format
-#   COMMAND sh "${CMAKE_SOURCE_DIR}/cmake/scripts/astyle.sh" scl
-#   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-#   )
+add_custom_target(format
+  COMMAND sh "${CMAKE_SOURCE_DIR}/cmake/scripts/astyle.sh" scl
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  )
 
 add_custom_target(run_scorecleaner
   COMMAND sh "${CMAKE_SOURCE_DIR}/cmake/scripts/run_scorecleaner.sh"
@@ -124,22 +159,30 @@ add_custom_target(run_scorecleaner
   )
 
 
+## ----------------------------------------------------------------------
+## Add main targets
 
+#  We only proceed here if the component mangager has been run, as per above.
 
 if (COMPONENTS_RESOLVED)
   
+  ## ----------------------------------------------------------------------
+  # Find packages
+
   find_package(Pthreads)
   find_package(Iconv)
   find_package(Portaudio)
   find_package(Portmidi)
   find_package(Sndfile)
-  find_package(Gtest)
-  find_package(ICU)
-  
+  # find_package(Gtest)
+  # find_package(ICU)
   if(ENABLE_FLUIDSYNTH)
     find_package(Fluidsynth)
     find_package(Glib)
   endif()
+
+  ## ----------------------------------------------------------------------
+  ## Add compiler defs
 
   add_definitions(${PTHREAD_DEFINITIONS})
   add_definitions(${ICONV_DEFINITIONS})
@@ -148,6 +191,7 @@ if (COMPONENTS_RESOLVED)
     add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=1)
     # message("Sysroot is " ${CMAKE_OSX_SYSROOT})
     # message("Target is "${CMAKE_OSX_DEPLOYMENT_TARGET})
+    # FIXME one of the following 2 is unnecessary
     add_definitions("-mmin-macosx-version=${CMAKE_OSX_DEPLOYMENT_TARGET}")
     add_definitions("-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
     add_definitions("-isysroot ${CMAKE_OSX_SYSROOT}")
@@ -155,9 +199,12 @@ if (COMPONENTS_RESOLVED)
     set(STD_LINK_FLAGS "${STD_LINK_FLAGS} -mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
     set(STD_LINK_FLAGS "${STD_LINK_FLAGS} -isysroot ${CMAKE_OSX_SYSROOT}")
   endif()
-  if (WIN32) # only MSYS really...
+  if (MSYS)
     add_definitions(-DFLUIDSYNTH_NOT_A_DLL=1)
   endif()
+
+  ## ----------------------------------------------------------------------
+  ## Add include directories
 
   include_directories("include")
   include_directories("${CMAKE_BINARY_DIR}/include") # for the conf file
@@ -171,8 +218,10 @@ if (COMPONENTS_RESOLVED)
   include_directories(${ICU_INCLUDE_DIRS})
   include_directories(${GLIB_INCLUDE_DIRS})       # May be empty
   include_directories(${FLUIDSYNTH_INCLUDE_DIRS}) # May be empty
-
   include_directories("external/vst")
+
+  ## ----------------------------------------------------------------------
+  ## Add libraries
 
   set(CMAKE_LIBRARY_PATH
     ${PTHREADS_LIBRARIES}
@@ -197,7 +246,7 @@ if (COMPONENTS_RESOLVED)
   list(APPEND DEPENDENCIES ${FLUIDSYNTH_LIBRARIES}) # May be empty
   list(APPEND DEPENDENCIES ${GLIB_LIBRARIES})       # May be empty
 
-  if (WIN32)
+  if (MSYS)
     find_library (MINGW32 NAMES mingw32 PATH_SUFFIXES lib PATHS "C:/MinGW")
     find_library (OLE32   NAMES ole32   PATH_SUFFIXES lib PATHS "C:/MinGW")
     find_library (WINMM   NAMES winmm   PATH_SUFFIXES lib PATHS "C:/MinGW")
@@ -221,13 +270,17 @@ if (COMPONENTS_RESOLVED)
     list(APPEND DEPENDENCIES ${AUDIOTOOLBOX})
   endif ()
 
-  if(WIN32)
+  if(MSYS)
   endif()
 
-  # add_subdirectory(external)
+  ## ----------------------------------------------------------------------
+  ## Add targets for source-only libraries
+  
+  add_subdirectory(external)
+
 
   ## ----------------------------------------------------------------------
-  ## Configuration file
+  ## Config file
 
   set(VERSION_STRING "\"${VERSION}\"")
   if(PREFER_NONBLOCKING)
@@ -253,7 +306,7 @@ if (COMPONENTS_RESOLVED)
 
 
   ## ----------------------------------------------------------------------
-  ## Process source
+  ## Add main targets
 
   # add_subdirectory(src)
   # add_subdirectory(test)
