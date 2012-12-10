@@ -29,6 +29,7 @@ void test_thread()
     doremir_thread_runnable_t r2 = { printer, 11 };
     doremir_thread_t t2 = doremir_thread_create(&r2);
 
+    doremir_thread_sleep(10000);
     doremir_thread_join(t);
     doremir_thread_join(t2);
 }
