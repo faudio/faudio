@@ -9,6 +9,7 @@
 module Doremir.Atomic
 {
     import Doremir.Std;
+    import "C" Doremir.Bool;
     
     type Atomic = opaque;
     type Updater = (Intptr -> Intptr)*;
@@ -18,8 +19,10 @@ module Doremir.Atomic
     swap    : (Atomic, Atomic) -> Void;
     destroy : Atomic -> Void;
 
+    exchange : (Atomic, Intptr) -> Bool;
+    add     : (Atomic, Intptr) -> Void;
     get     : Atomic -> Intptr;
-    set     : (Atomic, Intptr) -> Void;
     modify  : (Atomic, Updater) -> Void;
+    set     : (Atomic, Intptr) -> Void;
 }
 

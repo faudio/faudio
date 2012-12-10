@@ -10,8 +10,12 @@
 
 (defcfun "Doremir.Atomic.destroy" :void (:Doremir.Atomic))
 
+(defcfun "Doremir.Atomic.exchange" :boolean (:Doremir.Atomic :pointer))
+
+(defcfun "Doremir.Atomic.add" :void (:Doremir.Atomic :pointer))
+
 (defcfun "Doremir.Atomic.get" :pointer (:Doremir.Atomic))
 
-(defcfun "Doremir.Atomic.set" :void (:Doremir.Atomic :pointer))
-
 (defcfun "Doremir.Atomic.modify" :void (:Doremir.Atomic :Doremir.Atomic.Updater))
+
+(defcfun "Doremir.Atomic.set" :void (:Doremir.Atomic :pointer))

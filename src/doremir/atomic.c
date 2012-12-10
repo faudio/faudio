@@ -25,16 +25,24 @@ void doremir_atomic_destroy(doremir_atomic_t a)
 {
 }
 
-intptr_t doremir_atomic_get(doremir_atomic_t a)
+bool doremir_atomic_exchange(doremir_atomic_t a, intptr_t v)
 {
 }
 
-void doremir_atomic_set(doremir_atomic_t a, intptr_t v)
+void doremir_atomic_add(doremir_atomic_t a, intptr_t v)
+{
+}
+
+intptr_t doremir_atomic_get(doremir_atomic_t a)
 {
 }
 
 void doremir_atomic_modify(doremir_atomic_t a,
                            doremir_atomic_updater_t f)
+{
+}
+
+void doremir_atomic_set(doremir_atomic_t a, intptr_t v)
 {
 }
 
