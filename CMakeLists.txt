@@ -215,8 +215,8 @@ if (COMPONENTS_RESOLVED)
   include_directories(${SNDFILE_INCLUDE_DIRS})
   include_directories(${GTEST_INCLUDE_DIRS})
   include_directories(${ICU_INCLUDE_DIRS})
-  include_directories(${GLIB_INCLUDE_DIRS})       # May be empty
   include_directories(${FLUIDSYNTH_INCLUDE_DIRS}) # May be empty
+  include_directories(${GLIB_INCLUDE_DIRS})       # May be empty
   include_directories("external/vst")
 
   ## ----------------------------------------------------------------------
@@ -230,8 +230,8 @@ if (COMPONENTS_RESOLVED)
     ${SNDFILE_LIBRARIES}
     ${GTEST_LIBRARIES}
     ${ICU_LIBRARIES}
-    ${GLIB_LIBRARIES}       # May be empty
     ${FLUIDSYNTH_LIBRARIES} # May be empty
+    ${GLIB_LIBRARIES}       # May be empty
     "/mingw/lib"
     "/mingw"
     )
@@ -242,8 +242,8 @@ if (COMPONENTS_RESOLVED)
   list(APPEND EXTS ${PORTMIDI_LIBRARIES})
   list(APPEND EXTS ${SNDFILE_LIBRARIES})
   list(APPEND EXTS ${GTEST_LIBRARIES})
-  list(APPEND EXTS ${GLIB_LIBRARIES})       # May be empty
   list(APPEND EXTS ${FLUIDSYNTH_LIBRARIES}) # May be empty
+  list(APPEND EXTS ${GLIB_LIBRARIES})       # May be empty
 
   if (MSYS)
     # some of these may be in CMAKE_C_STANDARD_LIBRARIES
