@@ -34,7 +34,11 @@ static void doremir_thread_fatal(int error);
 doremir_thread_t doremir_thread_create(doremir_thread_runnable_t run)
 {
     doremir_thread_t t = malloc(sizeof(struct _doremir_thread_t));
-    int r = pthread_create(&t->native, NULL, (void*(*)(void*)) run.f, (void*)run.x);
+    int r = pthread_create(
+        &t->native, 
+        NULL, 
+        (void*(*)(void*)) run.f, 
+        (void*)run.x);
     if (r != 0)
         doremir_thread_fatal(r);
     return t;
@@ -188,6 +192,7 @@ void doremir_thread_notify_all(doremir_thread_condition_t c)
 void doremir_thread_fatal(int error)
 {               
     // TODO log
+    printf("DoReMIR audio fatal error: %d\n", error);
     exit(error);
 }
 
