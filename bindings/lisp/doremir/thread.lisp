@@ -1,10 +1,12 @@
+(defctype Doremir.Thread.Runnable (:pointer :void))
+
 (defctype Doremir.Thread :pointer)
 
 (defctype Doremir.Thread.Mutex :pointer)
 
 (defctype Doremir.Thread.Condition :pointer)
 
-(defcfun "Doremir.Thread.create" :Doremir.Thread ())
+(defcfun "Doremir.Thread.create" :Doremir.Thread ((:pointer :Doremir.Thread.Runnable)))
 
 (defcfun "Doremir.Thread.join" :void (:Doremir.Thread))
 
@@ -20,7 +22,7 @@
 
 (defcfun "Doremir.Thread.unlock" :boolean (:Doremir.Thread.Mutex))
 
-(defcfun "Doremir.Thread.createCondition" :Doremir.Thread.Condition ())
+(defcfun "Doremir.Thread.createCondition" :Doremir.Thread.Condition (:Doremir.Thread.Mutex))
 
 (defcfun "Doremir.Thread.destroyCondition" :void (:Doremir.Thread.Condition))
 

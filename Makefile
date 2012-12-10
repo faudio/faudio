@@ -8,6 +8,9 @@ MAKE			= make --no-print-directory
 all: 
 	@pushd $(BUILD_DIRECTORY); $(MAKE) all; popd;
 
+.PHONY: fresh
+fresh:  clean all
+
 .PHONY: help
 help: 
 	@pushd $(BUILD_DIRECTORY); $(MAKE) help; popd;

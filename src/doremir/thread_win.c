@@ -78,7 +78,7 @@ bool doremir_thread_unlock(doremir_thread_mutex_t t)
         ; // TODO fatal
 }
 
-doremir_thread_condition_t doremir_thread_create_condition()
+doremir_thread_condition_t doremir_thread_create_condition(doremir_thread_mutex_t m)
 {
     int r = 0;
     if (r != 0)

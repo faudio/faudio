@@ -15,11 +15,12 @@ module Doremir.Thread
 {
     import Doremir.Std;
 
+    type Runnable = struct { f : (Intptr -> Intptr)*, x : Intptr };
     type Thread = opaque;
     type Mutex = opaque;
     type Condition = opaque;
     
-    create : () -> Thread;
+    create : (Runnable*) -> Thread;
     join : Thread -> Void;
     detach : Thread -> Void;
     
@@ -29,7 +30,7 @@ module Doremir.Thread
     tryLock : Mutex -> Bool;
     unlock : Mutex -> Bool;
 
-    createCondition : () -> Condition;
+    createCondition : Mutex -> Condition;
     destroyCondition : Condition -> Void;
     waitFor : Condition -> Void;
     notify : Condition -> Void;
