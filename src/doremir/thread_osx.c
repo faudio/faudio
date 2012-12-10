@@ -31,14 +31,10 @@ static void doremir_thread_fatal(int error);
     Threads have single-ownership semantics and must be finalized by passing it
     to a destroy function.    
  */
-doremir_thread_t doremir_thread_create(doremir_thread_runnable_t run)
+doremir_thread_t doremir_thread_create(doremir_thread_runnable_t* run)
 {
     doremir_thread_t t = malloc(sizeof(struct _doremir_thread_t));
-    int r = pthread_create(
-        &t->native, 
-        NULL, 
-        (void*(*)(void*)) run.f, 
-        (void*)run.x);
+    int r = pthread_create(&t->native, NULL, (void*(*)(void*)) run->f, (void*)run->x);
     if (r != 0)
         doremir_thread_fatal(r);
     return t;

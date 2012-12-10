@@ -24,10 +24,10 @@ intptr_t printer(intptr_t x)
 void test_thread()
 {                                               
     doremir_thread_runnable_t r = { printer, 10 };
-    doremir_thread_t t = doremir_thread_create(r);
+    doremir_thread_t t = doremir_thread_create(&r);
 
     doremir_thread_runnable_t r2 = { printer, 11 };
-    doremir_thread_t t2 = doremir_thread_create(r2);
+    doremir_thread_t t2 = doremir_thread_create(&r2);
 
     doremir_thread_join(t);
     doremir_thread_join(t2);
