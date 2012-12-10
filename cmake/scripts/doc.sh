@@ -1,4 +1,2 @@
 #!/bin/bash
-pushd doc;
-make;
-popd;
+make -f doc/Makefile;
