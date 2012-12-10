@@ -47,25 +47,26 @@ endif()
 #      CMAKE_OSX_SYSROOT is path to SDK of maximum supported version
 #  
 
-option(ENABLE_LOGGING           "Enable standard logging"                   FALSE)
-option(ENABLE_REALTIME_AUDIO    "Enable real-time audio")
-option(ENABLE_REALTIME_MIDI     "Enable real-time midi")
-option(ENABLE_NONREALTIME_AUDIO "Enable non-real-time audio")
+option(ENABLE_REALTIME_AUDIO    "Enable real-time audio"                    True)
+option(ENABLE_REALTIME_MIDI     "Enable real-time midi"                     True)
+option(ENABLE_NONREALTIME_AUDIO "Enable non-real-time audio"                True)
 option(ENABLE_FLUIDSYNTH        "Enable the Fluidsynth processor"           ${NOT_APPLE})
+option(ENABLE_AUDIO_UNIT        "Enable AudioUnit processors"               ${APPLE})
+option(ENABLE_VST               "Enable VST processors"                     True)
+option(ENABLE_LOGGING           "Enable standard logging"                   False)
 
-option(BUILD_DYLIB              "Build an OS X dynamic library"             FALSE)
-option(BUILD_FRAMEWORK          "Build an OS X framework"                   TRUE)
-option(BUILD_SHARED             "Build a shared library"                    ${APPLE})
-option(BUILD_TESTS              "Build unit tests"                          TRUE)
+option(BUILD_FRAMEWORK          "Build an OS X framework"                   ${APPLE})
+option(BUILD_SHARED             "Build a shared library"                    ${NOT_APPLE})
+option(BUILD_TESTS              "Build unit tests"                          False)
 
-option(REDIRECT_LOG             "Redirect log messages to standard output"  FALSE)
-option(PREFER_NONBLOCKING       "Use non-blocking audio by default"         TRUE)
-option(PREFER_EXCLUSIVE         "Use exclusive audio streams by default"    TRUE)
-option(PROFILING                "Compile with profiler flags -pg set"       FALSE)
+option(PREFER_NONBLOCKING       "Use non-blocking audio by default"         True)
+option(PREFER_EXCLUSIVE         "Use exclusive audio streams by default"    True)
+option(REDIRECT_LOG             "Redirect log messages to standard output"  False)
+option(PROFILING                "Compile with profiler flags -pg set"       False)
 
-option(RUN_TESTS                "Run unit tests after build"                TRUE)
-option(BUILD_COMPONENTS         "Build dependent components locally"        FALSE)
-option(SHOW_COMPONENT_OUTPUT    "Show output while building components"     FALSE)
+option(RUN_TESTS                "Run unit tests after build"                True)
+option(BUILD_COMPONENTS         "Build dependent components locally"        False)
+option(SHOW_COMPONENT_OUTPUT    "Show output while building components"     False)
 
 
 ## ----------------------------------------------------------------------
