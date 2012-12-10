@@ -129,10 +129,18 @@ if(DIST_EXECUTABLE)
   list(APPEND COMPONENT_DEFINES
     "-DDIST_EXECUTABLE=${DIST_EXECUTABLE}")
 endif()
+if(APPLE)
+  list(APPEND COMPONENT_DEFINES
+    "-DAUDIO_ENGINE_SYSTEM_NAME=OSX")
+endif()
+if(MSYS)
+  list(APPEND COMPONENT_DEFINES
+    "-DAUDIO_ENGINE_SYSTEM_NAME=MSYS")
+endif()
 list(APPEND COMPONENT_DEFINES
   "-DAUDIO_ENGINE_WORKING_DIR=${CMAKE_SOURCE_DIR}")
 
-include(AudioEngine)
+# include(AudioEngine)
 
 add_custom_target(components_print
   COMMAND cmake 
@@ -246,6 +254,7 @@ if (COMPONENTS_RESOLVED)
   list(APPEND EXTS ${FLUIDSYNTH_LIBRARIES}) # May be empty
 
   if (MSYS)
+    # some of these may be in CMAKE_C_STANDARD_LIBRARIES
     find_library (MINGW32 NAMES mingw32 PATH_SUFFIXES lib PATHS "C:/MinGW")
     find_library (OLE32   NAMES ole32   PATH_SUFFIXES lib PATHS "C:/MinGW")
     find_library (WINMM   NAMES winmm   PATH_SUFFIXES lib PATHS "C:/MinGW")
