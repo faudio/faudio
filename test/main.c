@@ -1,5 +1,9 @@
 
 #include <doremir/audio_engine.h>
+// #include <pthread.h>
+// #include <sndfile.h>
+// #include <portaudio.h>
+// #include <portmidi.h>
 
 int version[3] = { 2, 0, 0 };
 
