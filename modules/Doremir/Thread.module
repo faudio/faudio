@@ -19,8 +19,10 @@ module Doremir.Thread
     type Thread = opaque;
     type Mutex = opaque;
     type Condition = opaque;
+    type MilliSeconds = Int;
     
-    create : (Runnable*) -> Thread;
+    create : (Runnable) -> Thread;
+    sleep : MilliSeconds -> Void;
     join : Thread -> Void;
     detach : Thread -> Void;
     
