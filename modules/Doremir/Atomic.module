@@ -1,19 +1,30 @@
 
 /**
-    Provides atomic variables
-    @author     Hans Höglund
+    @defgroup Doremir
+    @{
+    @defgroup Atomic
+    @{
+        Atomics.
+    @}
+    @}
  */
-module Doremir.Atomic
+ module Doremir.Atomic
 {
     type Atomic = opaque;
     type Updater = Intptr -> Intptr;
-    
+
+    /** Create an atomic */
     create  : () -> Atomic;
+
+    /** Copy an atomic */
     copy    : Atomic -> Atomic;
-    swap    : Atomic, Atomic -> Void;
+
+    swap    : (Atomic, Atomic) -> Void;
+
     destroy : Atomic -> Void;
-    
+
     get     : Atomic -> Intptr;
+
     set     : (Atomic, Intptr) -> Void;
     modify  : (Atomic, Updater) -> Void;
 }
