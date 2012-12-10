@@ -14,8 +14,6 @@ int main (int argc, char const *argv[])
   printf("sizeof(int32_t) = %d\n", sizeof(int32_t));
   printf("sizeof(uint32_t) = %d\n", sizeof(uint32_t));
 
-  printf("%u\n", d);
-  
   
   return 0;
 }
