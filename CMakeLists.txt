@@ -57,7 +57,7 @@ option(ENABLE_LOGGING           "Enable standard logging"                   Fals
 
 option(BUILD_FRAMEWORK          "Build an OS X framework"                   ${APPLE})
 option(BUILD_SHARED             "Build a shared library"                    ${NOT_APPLE})
-option(BUILD_TESTS              "Build unit tests"                          False)
+option(BUILD_TESTS              "Build unit tests"                          True)
 
 option(PREFER_NONBLOCKING       "Use non-blocking audio by default"         True)
 option(PREFER_EXCLUSIVE         "Use exclusive audio streams by default"    True)
@@ -308,7 +308,7 @@ if (COMPONENTS_RESOLVED)
   ## Add main targets
 
   add_subdirectory(src)
-  # add_subdirectory(test)
+  add_subdirectory(test)
   # add_subdirectory(tools)
 
 endif(COMPONENTS_RESOLVED)
