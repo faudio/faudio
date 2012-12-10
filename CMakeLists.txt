@@ -257,11 +257,12 @@ if (COMPONENTS_RESOLVED)
   list(APPEND EXTS ${GLIB_LIBRARIES})       # May be empty
 
   if (MSYS)
-    # some of these may be in CMAKE_C_STANDARD_LIBRARIES
-    find_library (MINGW32 NAMES mingw32 PATH_SUFFIXES lib PATHS "C:/MinGW")
-    find_library (OLE32   NAMES ole32   PATH_SUFFIXES lib PATHS "C:/MinGW")
-    find_library (WINMM   NAMES winmm   PATH_SUFFIXES lib PATHS "C:/MinGW")
-    find_library (WINSOCK NAMES ws2_32  PATH_SUFFIXES lib PATHS "C:/MinGW")
+    # find_library (MINGW32 NAMES mingw32 PATH_SUFFIXES lib PATHS "C:/MinGW")
+    # find_library (OLE32   NAMES ole32   PATH_SUFFIXES lib PATHS "C:/MinGW")
+    # find_library (WINMM   NAMES winmm   PATH_SUFFIXES lib PATHS "C:/MinGW")
+    # find_library (WINSOCK NAMES ws2_32  PATH_SUFFIXES lib PATHS "C:/MinGW")
+    
+    set(CMAKE_C_STANDARD_LIBRARIES "-lws2_32 ${CMAKE_C_STANDARD_LIBRARIES}")
     list(APPEND EXTS ${WINSOCK})
     list(APPEND EXTS ${WINMM})
     list(APPEND EXTS ${OLE32})
