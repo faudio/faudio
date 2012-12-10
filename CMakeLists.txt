@@ -192,8 +192,6 @@ if (COMPONENTS_RESOLVED)
     add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=1)
     # message("Sysroot is " ${CMAKE_OSX_SYSROOT})
     # message("Target is "${CMAKE_OSX_DEPLOYMENT_TARGET})
-    # FIXME one of the following 2 is unnecessary
-    add_definitions("-mmin-macosx-version=${CMAKE_OSX_DEPLOYMENT_TARGET}")
     add_definitions("-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
     add_definitions("-isysroot ${CMAKE_OSX_SYSROOT}")
     set(STD_LINK_FLAGS "${STD_LINK_FLAGS} -mmin-macosx-version=${CMAKE_OSX_DEPLOYMENT_TARGET}")
@@ -238,24 +236,24 @@ if (COMPONENTS_RESOLVED)
     "/mingw"
     )
 
-  list(APPEND DEPENDENCIES ${PTHREADS_LIBRARIES})
-  list(APPEND DEPENDENCIES ${ICONV_LIBRARIES})
-  list(APPEND DEPENDENCIES ${PORTAUDIO_LIBRARIES})
-  list(APPEND DEPENDENCIES ${PORTMIDI_LIBRARIES})
-  list(APPEND DEPENDENCIES ${SNDFILE_LIBRARIES})
-  list(APPEND DEPENDENCIES ${GTEST_LIBRARIES})
-  list(APPEND DEPENDENCIES ${FLUIDSYNTH_LIBRARIES}) # May be empty
-  list(APPEND DEPENDENCIES ${GLIB_LIBRARIES})       # May be empty
+  list(APPEND EXTS ${PTHREADS_LIBRARIES})
+  list(APPEND EXTS ${ICONV_LIBRARIES})
+  list(APPEND EXTS ${PORTAUDIO_LIBRARIES})
+  list(APPEND EXTS ${PORTMIDI_LIBRARIES})
+  list(APPEND EXTS ${SNDFILE_LIBRARIES})
+  list(APPEND EXTS ${GTEST_LIBRARIES})
+  list(APPEND EXTS ${FLUIDSYNTH_LIBRARIES}) # May be empty
+  list(APPEND EXTS ${GLIB_LIBRARIES})       # May be empty
 
   if (MSYS)
     find_library (MINGW32 NAMES mingw32 PATH_SUFFIXES lib PATHS "C:/MinGW")
     find_library (OLE32   NAMES ole32   PATH_SUFFIXES lib PATHS "C:/MinGW")
     find_library (WINMM   NAMES winmm   PATH_SUFFIXES lib PATHS "C:/MinGW")
     find_library (WINSOCK NAMES ws2_32  PATH_SUFFIXES lib PATHS "C:/MinGW")
-    list(APPEND DEPENDENCIES ${WINSOCK})
-    list(APPEND DEPENDENCIES ${WINMM})
-    list(APPEND DEPENDENCIES ${OLE32})
-    list(APPEND DEPENDENCIES ${MINGW32})
+    list(APPEND EXTS ${WINSOCK})
+    list(APPEND EXTS ${WINMM})
+    list(APPEND EXTS ${OLE32})
+    list(APPEND EXTS ${MINGW32})
   endif()
 
   if(APPLE)
@@ -264,11 +262,11 @@ if (COMPONENTS_RESOLVED)
     find_library(COREMIDI           CoreMidi)
     find_library(AUDIOUNIT          AudioUnit)
     find_library(AUDIOTOOLBOX       AudioToolbox)
-    list(APPEND DEPENDENCIES ${COCOA})
-    list(APPEND DEPENDENCIES ${COREAUDIO})
-    list(APPEND DEPENDENCIES ${COREMIDI})
-    list(APPEND DEPENDENCIES ${AUDIOUNIT})
-    list(APPEND DEPENDENCIES ${AUDIOTOOLBOX})
+    list(APPEND EXTS ${COCOA})
+    list(APPEND EXTS ${COREAUDIO})
+    list(APPEND EXTS ${COREMIDI})
+    list(APPEND EXTS ${AUDIOUNIT})
+    list(APPEND EXTS ${AUDIOTOOLBOX})
   endif ()
 
   if(MSYS)
@@ -309,7 +307,7 @@ if (COMPONENTS_RESOLVED)
   ## ----------------------------------------------------------------------
   ## Add main targets
 
-  # add_subdirectory(src)
+  add_subdirectory(src)
   # add_subdirectory(test)
   # add_subdirectory(tools)
 
