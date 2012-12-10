@@ -8,6 +8,8 @@
  */
 module Doremir.Ratio 
 {
+    import Doremir.Std;
+
     type Nom    = Int32;
     type Denom  = UInt32;
     type Ratio  = struct { nom : Nom, denom : Denom };

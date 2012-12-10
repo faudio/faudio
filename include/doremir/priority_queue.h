@@ -2,7 +2,7 @@
 #ifndef _DOREMIR_PRIORITYQUEUE
 #define _DOREMIR_PRIORITYQUEUE
 
-
+#include <doremir/std.h>
 
 /** @defgroup Doremir
     @{

@@ -8,6 +8,7 @@
  */
 module Doremir.Map 
 {
+    import Doremir.Std;
     import Doremir.Pair;
     
     type Map = opaque;

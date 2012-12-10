@@ -2,7 +2,7 @@
 #ifndef _DOREMIR_LIST
 #define _DOREMIR_LIST
 
-
+#include <doremir/std.h>
 
 /** @defgroup Doremir
     @{

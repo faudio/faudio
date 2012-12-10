@@ -8,6 +8,8 @@
  */
 module Doremir.Pair
 {
+    import Doremir.Std;
+
     // FIXME needed by some allocation routines
     type Type = Size;
 

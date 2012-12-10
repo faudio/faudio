@@ -2,7 +2,7 @@
 #ifndef _DOREMIR_THREAD_FUTURE
 #define _DOREMIR_THREAD_FUTURE
 
-
+#include <doremir/std.h>
 
 /** @defgroup Doremir
     @{

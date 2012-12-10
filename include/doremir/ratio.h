@@ -2,7 +2,7 @@
 #ifndef _DOREMIR_RATIO
 #define _DOREMIR_RATIO
 
-
+#include <doremir/std.h>
 
 /** @defgroup Doremir
     @{

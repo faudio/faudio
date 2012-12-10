@@ -2,6 +2,7 @@
 #ifndef _DOREMIR_MIDI
 #define _DOREMIR_MIDI
 
+#include <doremir/std.h>
 #include <doremir/buffer.h>
 
 /** @defgroup Doremir

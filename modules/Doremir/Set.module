@@ -8,6 +8,8 @@
  */
 module Doremir.Set
 {
+    import Doremir.Std;
+
     type Set = opaque;
     type Value = Intptr;
     

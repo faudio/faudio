@@ -2,7 +2,8 @@
 #ifndef _DOREMIR_THREAD
 #define _DOREMIR_THREAD
 
-
+#include <doremir/std.h>
+#include <doremir/bool.h>
 
 /** @defgroup Doremir
     @{

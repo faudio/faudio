@@ -8,6 +8,8 @@
  */
 module Doremir.PriorityQueue
 {
+    import Doremir.Std;
+
     type PriorityQueue = opaque;
     type Value = Intptr;
     

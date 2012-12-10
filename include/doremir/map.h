@@ -2,6 +2,7 @@
 #ifndef _DOREMIR_MAP
 #define _DOREMIR_MAP
 
+#include <doremir/std.h>
 #include <doremir/pair.h>
 
 /** @defgroup Doremir

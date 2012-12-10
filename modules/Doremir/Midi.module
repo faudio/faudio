@@ -8,6 +8,7 @@
  */
 module Doremir.Midi
 {
+    import Doremir.Std;
     import Doremir.Buffer;
     
     type Status = enum {

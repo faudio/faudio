@@ -3,6 +3,8 @@
  */
 module Doremir.Thread.Future
 {
+    import Doremir.Std;
+
     type Future = opaque;
     type Value  = Intptr;
 

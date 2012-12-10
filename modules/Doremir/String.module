@@ -8,6 +8,8 @@
  */
 module Doremir.String
 {
+    import Doremir.Std;
+
     type String = Char*;
     type FilePath = String;
 }

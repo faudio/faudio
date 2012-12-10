@@ -18,6 +18,8 @@
  */
 module Doremir.List
 {
+    import Doremir.Std;
+
     type List   = opaque;
     type Value  = Intptr;
     type Func   = Intptr;
