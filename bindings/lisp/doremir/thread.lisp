@@ -4,7 +4,7 @@
 
 (defctype Doremir.Thread.Condition :pointer)
 
-(defcfun "Doremir.Thread.createThread" :Doremir.Thread ())
+(defcfun "Doremir.Thread.create" :Doremir.Thread ())
 
 (defcfun "Doremir.Thread.join" :void (:Doremir.Thread))
 
@@ -21,6 +21,8 @@
 (defcfun "Doremir.Thread.unlock" :boolean (:Doremir.Thread.Mutex))
 
 (defcfun "Doremir.Thread.createCondition" :Doremir.Thread.Condition ())
+
+(defcfun "Doremir.Thread.destroyCondition" :void (:Doremir.Thread.Condition))
 
 (defcfun "Doremir.Thread.waitFor" :void (:Doremir.Thread.Condition))
 

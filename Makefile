@@ -24,6 +24,10 @@ clean:
 depend: 
 	@pushd $(BUILD_DIRECTORY); $(MAKE) depend; popd;
 
+.PHONY: modules
+modules: 
+	make -f modules/Makefile;
+
 .PHONY: edit_cache
 edit_cache: 
 	@pushd $(BUILD_DIRECTORY); $(MAKE) edit_cache; popd;

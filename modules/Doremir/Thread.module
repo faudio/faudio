@@ -4,6 +4,11 @@
     @addtogroup Thread
     
     Cross-platform threads.
+    
+    Standard low-level constructs such as threads, mutexes and conditions are 
+    provided by this module. For more high-level blocking constructs, see
+    the \ref Future and \ref Improving modules. For non-blocking communication
+    see the \ref Atomic modules.
 
  */
 module Doremir.Thread
@@ -14,7 +19,7 @@ module Doremir.Thread
     type Mutex = opaque;
     type Condition = opaque;
     
-    createThread : () -> Thread;
+    create : () -> Thread;
     join : Thread -> Void;
     detach : Thread -> Void;
     
@@ -25,6 +30,7 @@ module Doremir.Thread
     unlock : Mutex -> Bool;
 
     createCondition : () -> Condition;
+    destroyCondition : Condition -> Void;
     waitFor : Condition -> Void;
     notify : Condition -> Void;
     notifyAll : Condition -> Void;
