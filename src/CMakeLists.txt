@@ -11,38 +11,38 @@ set (SRCS_ALL ${SRCS} ${SRCS_MIDI} ${SRCS_ATOMIC} ${SRCS_THREAD})
 
 if(APPLE)
   if(BUILD_SHARED)
-    add_library(sclaudio SHARED ${SRCS_ALL})
-    set_target_properties(sclaudio PROPERTIES 
-      OUTPUT_NAME                 "sclaudio-${VERSION}"
+    add_library(doremir_audio SHARED ${SRCS_ALL})
+    set_target_properties(doremir_audio PROPERTIES 
+      OUTPUT_NAME                 "doremir_audio-${VERSION}"
       LIBRARY_OUTPUT_DIRECTORY    "../lib"
-      INSTALL_NAME_DIR            "@executable_path/../lib/sclaudio-${VERSION}.dylib"
+      INSTALL_NAME_DIR            "@executable_path/../lib/doremir_audio-${VERSION}.dylib"
       )
-    target_link_libraries(sclaudio ${EXTS})
-    set(MAIN_LIBRARY sclaudio PARENT_SCOPE)
+    target_link_libraries(doremir_audio ${EXTS})
+    set(MAIN_LIBRARY doremir_audio PARENT_SCOPE)
   endif(BUILD_SHARED)
   if(BUILD_FRAMEWORK)
-    add_library(ScoreCleanerAudio SHARED ${SRCS_ALL})
-    set_target_properties(ScoreCleanerAudio PROPERTIES
+    add_library(DoReMIRAudio SHARED ${SRCS_ALL})
+    set_target_properties(DoReMIRAudio PROPERTIES
       FRAMEWORK                   TRUE
-      OUTPUT_NAME                 "ScoreCleanerAudio"
+      OUTPUT_NAME                 "DoReMIRAudio"
       FRAMEWORK_VERSION           ${VERSION}
       LIBRARY_OUTPUT_DIRECTORY    "../Frameworks"
-      INSTALL_NAME_DIR            "@executable_path/../Frameworks/ScoreCleanerAudio.framework/ScoreCleanerAudio"
+      INSTALL_NAME_DIR            "@executable_path/../Frameworks/DoReMIRAudio.framework/DoReMIRAudio"
       LINK_FLAGS                  "${STD_LINK_FLAGS}"
      )
-    target_link_libraries(ScoreCleanerAudio ${EXTS})
-    set(MAIN_LIBRARY ScoreCleanerAudio PARENT_SCOPE)
+    target_link_libraries(DoReMIRAudio ${EXTS})
+    set(MAIN_LIBRARY DoReMIRAudio PARENT_SCOPE)
   endif(BUILD_FRAMEWORK)
 endif(APPLE)
 
 if(MSYS)
   if(BUILD_SHARED)
-    add_library(sclaudio SHARED ${SRCS_ALL})
-    set_target_properties(sclaudio PROPERTIES 
-      OUTPUT_NAME                 "sclaudio"
+    add_library(doremir_audio SHARED ${SRCS_ALL})
+    set_target_properties(doremir_audio PROPERTIES 
+      OUTPUT_NAME                 "doremir_audio"
       RUNTIME_OUTPUT_DIRECTORY    "../bin"
       )
-    target_link_libraries(sclaudio ${EXTS})
-    set(MAIN_LIBRARY sclaudio PARENT_SCOPE)    
+    target_link_libraries(doremir_audio ${EXTS})
+    set(MAIN_LIBRARY doremir_audio PARENT_SCOPE)    
   endif(BUILD_SHARED)
 endif(MSYS)
