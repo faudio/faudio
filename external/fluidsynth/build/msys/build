@@ -1,8 +1,8 @@
 #!/bin/bash
-git submodule init   external_libraries/fluidsynth/source;
-git submodule update external_libraries/fluidsynth/source;
+git submodule init   external/fluidsynth/source;
+git submodule update external/fluidsynth/source;
 
-pushd external_libraries/fluidsynth/source;
+pushd external/fluidsynth/source;
 mkdir -p build;
 pushd build;
 

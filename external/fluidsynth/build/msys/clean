@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pushd external_libraries/fluidsynth;
+pushd external/fluidsynth;
 rm -rf result;
 rm -rf source/build;
 popd;

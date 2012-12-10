@@ -1,8 +1,8 @@
 #!/bin/bash
-git submodule init   external_libraries/portaudio/source;
-git submodule update external_libraries/portaudio/source;
+git submodule init   external/portaudio/source;
+git submodule update external/portaudio/source;
 
-pushd external_libraries/portaudio/source;
+pushd external/portaudio/source;
 
 ./configure \
 	  --with-winapi=wasapi,asio \

@@ -1,8 +1,8 @@
 #!/bin/bash
-git submodule init external_libraries/gtest/source;
-git submodule update external_libraries/gtest/source;
+git submodule init external/gtest/source;
+git submodule update external/gtest/source;
 
-pushd external_libraries/gtest/source;
+pushd external/gtest/source;
 
 mkdir -p build \
 	&& pushd build \

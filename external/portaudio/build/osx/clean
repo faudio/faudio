@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pushd external_libraries/portaudio;
+pushd external/portaudio;
 rm -rf result;
 pushd source;
 make distclean;

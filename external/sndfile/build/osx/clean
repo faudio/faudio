@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pushd external_libraries/sndfile;
+pushd external/sndfile;
 rm -rf result;
 pushd source;
 make distclean;
