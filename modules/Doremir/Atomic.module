@@ -1,13 +1,9 @@
 
-/**
-    @defgroup Doremir
-    @{
-    @defgroup Atomic
-    @{
-        Atomics.
-    @}
-    @}
- */
+/** @addtogroup Doremir
+    @addtogroup Atomic
+    This is barely atomics.
+    */
+
  module Doremir.Atomic
 {
     type Atomic = opaque;
