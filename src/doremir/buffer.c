@@ -4,7 +4,7 @@
 struct _doremir_buffer_t
 {
     size_t size;
-    void * data;
+    uint8_t * data;
 };
 
 /**

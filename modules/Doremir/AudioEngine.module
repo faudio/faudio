@@ -1,4 +1,15 @@
 
+/** 
+    @addtogroup Doremir
+    @addtogroup AudioEngine
+    
+    This is the top level module. Top import the audio engine, use
+    
+    ~~~~~~~~~~~~~~~~~~~~~{.c}
+    #import <doremir/audio_engine.h>
+    ~~~~~~~~~~~~~~~~~~~~~
+    
+ */
 module Doremir.AudioEngine
 {
     import Doremir.Atomic;

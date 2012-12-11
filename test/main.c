@@ -123,6 +123,7 @@ int main (int argc, char const *argv[])
   printf("sizeof(intptr_t) = %d\n", (unsigned int) sizeof(intptr_t));
   printf("sizeof(int32_t) = %d\n", (unsigned int) sizeof(int32_t));
   printf("sizeof(uint32_t) = %d\n", (unsigned int) sizeof(uint32_t));
+  printf("sizeof(void*) = %d\n", (unsigned int) sizeof(void*));
   
   // int c = getopt(argc, (char**) argv, "abc:");
   // iconv_t cd = iconv_open("WCHAR_T", "UTF-8");
