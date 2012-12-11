@@ -20,6 +20,8 @@ struct _doremir_thread_condition_t
 
 static void doremir_thread_fatal(char* msg, int error);
 
+static const long doremir_thread_join_interval = 50;
+
 
 // --------------------------------------------------------------------------------
 // Threads
@@ -28,16 +30,13 @@ static void doremir_thread_fatal(char* msg, int error);
 static 
 DWORD WINAPI doremir_thread_start(LPVOID x) 
 {                
-    printf(">>>> Starting up a thread.\n");
     doremir_thread_runnable_t *run = x;
-    printf(">>>> Value is: %d.\n", run->x);
     return run->f(run->x);
     return 0;
 }
 
 doremir_thread_t doremir_thread_create(doremir_thread_runnable_t* run)
 {
-    printf(">>>> Trying to start up a thread.\n");
     doremir_thread_t t = malloc(sizeof(struct _doremir_thread_t));
     
     HANDLE r = CreateThread(
@@ -65,9 +64,10 @@ void doremir_thread_join(doremir_thread_t t)
     DWORD c;
     do
     {
+        Sleep(doremir_thread_join_interval);
         r = GetExitCodeThread(t->native, &c);
-        if (r != 0)
-            doremir_thread_fatal("doremir_thread_join", GetLastError());
+        if (!r)
+            doremir_thread_fatal("doremir_thread_join", GetLastError());            
     } while (c == STILL_ACTIVE);
     free(t);                
 }
