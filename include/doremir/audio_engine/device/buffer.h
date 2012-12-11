@@ -1,6 +1,6 @@
 
-#ifndef _DOREMIR_AUDIOENGINE_DEVICE_BUFFERED
-#define _DOREMIR_AUDIOENGINE_DEVICE_BUFFERED
+#ifndef _DOREMIR_AUDIOENGINE_DEVICE_BUFFER
+#define _DOREMIR_AUDIOENGINE_DEVICE_BUFFER
 
 
 
@@ -10,13 +10,13 @@
     @{
     @defgroup Device
     @{
-    @defgroup Buffered
+    @defgroup Buffer
     @{
     */
 
-typedef struct _doremir_buffered_t * doremir_buffered_t;
-doremir_buffered_t doremir_audio_engine_device_buffered_create(size_t);
-void doremir_audio_engine_device_buffered_destroy(doremir_buffered_t);
+typedef struct _doremir_buffer_t * doremir_buffer_t;
+doremir_buffer_t doremir_audio_engine_device_buffer_create(size_t);
+void doremir_audio_engine_device_buffer_destroy(doremir_buffer_t);
 
 /** @}
     @}
@@ -24,5 +24,5 @@ void doremir_audio_engine_device_buffered_destroy(doremir_buffered_t);
     @}
     */
 
-#endif // _DOREMIR_AUDIOENGINE_DEVICE_BUFFERED
+#endif // _DOREMIR_AUDIOENGINE_DEVICE_BUFFER
 
