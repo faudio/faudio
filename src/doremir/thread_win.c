@@ -20,7 +20,7 @@ struct _doremir_thread_condition_t
 
 static void doremir_thread_fatal(char* msg, int error);
 
-static const long doremir_thread_join_interval = 50;
+static const long kJoinInterval = 50;
 
 
 // --------------------------------------------------------------------------------
@@ -29,53 +29,52 @@ static const long doremir_thread_join_interval = 50;
 
 static DWORD WINAPI doremir_thread_start(LPVOID x) 
 {                
-    doremir_thread_runnable_t *run = x;
-    return run->f(run->x);
+    doremir_thread_runnable_t *runnable = x;
+    return runnable->f(runnable->x);
     return 0;
 }
 
-doremir_thread_t doremir_thread_create(doremir_thread_runnable_t* run)
+doremir_thread_t doremir_thread_create(doremir_thread_runnable_t* runnable)
 {
-    doremir_thread_t t = malloc(sizeof(struct _doremir_thread_t));
+    doremir_thread_t thread = malloc(sizeof(struct _doremir_thread_t));
     
-    HANDLE r = CreateThread(NULL, 0, doremir_thread_start, run, 0, NULL);
-    if (r == NULL)
-    {        
-        doremir_thread_fatal("doremir_thread_create", GetLastError());
-    }
-    t->native = r;
-    return t;
+    HANDLE result = CreateThread(NULL, 0, doremir_thread_start, runnable, 0, NULL);
+
+    if (!result)
+        doremir_thread_fatal("create", GetLastError());
+
+    thread->native = result;
+    return thread;
 }
 
-void doremir_thread_sleep(doremir_thread_milli_seconds_t s)
+void doremir_thread_sleep(doremir_thread_milli_seconds_t millis)
 {
-    Sleep(s);
+    Sleep(millis);
 }
 
-void doremir_thread_join(doremir_thread_t t)
+void doremir_thread_join(doremir_thread_t thread)
 {         
-    BOOL r;
-    DWORD c;
+    BOOL result;
+    DWORD exitCode;
     do
     {
-        Sleep(doremir_thread_join_interval);
-        r = GetExitCodeThread(t->native, &c);
-        if (!r)
-        {
-            doremir_thread_fatal("doremir_thread_join", GetLastError());            
-        }
-    } while (c == STILL_ACTIVE);
-    free(t);                
+        Sleep(kJoinInterval);
+        result = GetExitCodeThread(thread->native, &exitCode);
+
+        if (!result)
+            doremir_thread_fatal("join", GetLastError());            
+
+    } while (exitCode == STILL_ACTIVE);
+    free(thread);                
 }
 
-void doremir_thread_detach(doremir_thread_t t)
+void doremir_thread_detach(doremir_thread_t thread)
 {
-    BOOL r = CloseHandle(t->native);
-    free(t);
-    if (!r)
-    {
-        doremir_thread_fatal("doremir_thread_detach", GetLastError());
-    }
+    BOOL result = CloseHandle(thread->native);
+    free(thread);
+
+    if (!result)
+        doremir_thread_fatal("detach", GetLastError());
 }
 
 
@@ -92,10 +91,12 @@ doremir_thread_mutex_t doremir_thread_create_mutex()
 {
     doremir_thread_mutex_t mutex = malloc(sizeof(struct _doremir_thread_mutex_t));
 
-    int result = pthread_mutex_init(&mutex->native, NULL);
+    HANDLE result = CreateMutex(NULL, false, NULL);
 
-    if (result != 0)
-        doremir_thread_fatal("create_mutex", result);
+    if (!result)
+        doremir_thread_fatal("create_mutex", GetLastError());
+    
+    mutex->native = result;
     return mutex;
 }
 
@@ -103,58 +104,33 @@ doremir_thread_mutex_t doremir_thread_create_mutex()
  */
 void doremir_thread_destroy_mutex(doremir_thread_mutex_t mutex)
 {
-    int result = pthread_mutex_destroy(&mutex->native);
+    BOOL result = CloseHandle(mutex->native); // FIXME
     free(mutex);
 
-    if (result != 0)
-        doremir_thread_fatal("destroy_mutex", result);
+    if (!result)
+        doremir_thread_fatal("destroy_mutex", GetLastError());
 }
 
 /** Acquire the lock of a mutex object.
  */
 bool doremir_thread_lock(doremir_thread_mutex_t mutex)
 {
-    int result = pthread_mutex_lock(&mutex->native);
-
-    if (result == 0)
-        return true;
-    else
-    {
-        doremir_thread_fatal("unlock", result);
-        assert(false);
-    }
+    // TODO
+    // need to do DuplicateHandle or similar
 }
 
 /** Try acquiring the lock of a mutex object.
  */
 bool doremir_thread_try_lock(doremir_thread_mutex_t mutex)
 {
-    int result = pthread_mutex_trylock(&mutex->native);
-
-    switch (result)
-    {
-    case 0:
-        return true;
-    case EBUSY:
-        return false;
-    default:
-        doremir_thread_fatal("try_lock", result);
-    }
+    // TODO
 }
 
 /** Release the lock of a mutex object.
  */
 bool doremir_thread_unlock(doremir_thread_mutex_t mutex)
 {
-    int result = pthread_mutex_unlock(&mutex->native);
-
-    if (result == 0)
-        return true;
-    else
-    {
-        doremir_thread_fatal("unlock", result);
-        assert(false);
-    }
+    // TODO
 }
 
 
