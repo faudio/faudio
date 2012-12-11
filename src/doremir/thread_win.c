@@ -80,6 +80,120 @@ void doremir_thread_detach(doremir_thread_t t)
 
 
 // --------------------------------------------------------------------------------
+// Mutexes
+// --------------------------------------------------------------------------------
+
+/** Create a mutex object.   
+
+    Mutexes have single-ownership semantics and must be finalized by passing it
+    to a destroy function.        
+ */
+doremir_thread_mutex_t doremir_thread_create_mutex()
+{
+    doremir_thread_mutex_t m = malloc(sizeof(struct _doremir_thread_mutex_t));
+    int r = pthread_mutex_init(&m->native, NULL);
+    if (r != 0)
+        doremir_thread_fatal(r);
+    return m;
+}
+
+/** Destroy a mutex object.
+ */
+void doremir_thread_destroy_mutex(doremir_thread_mutex_t m)
+{                     
+    int r = pthread_mutex_destroy(&m->native);
+    free(m);
+    if (r != 0)
+        doremir_thread_fatal(r);
+}
+
+/** Acquire the lock of a mutex object.
+ */
+bool doremir_thread_lock(doremir_thread_mutex_t t)
+{ 
+    int r = 0;
+    if (r != 0)
+        doremir_thread_fatal(r);
+    return true;
+}
+
+/** Try acquiring the lock of a mutex object.
+ */
+bool doremir_thread_try_lock(doremir_thread_mutex_t t)
+{
+    int r = 0;
+    if (r != 0)
+        doremir_thread_fatal(r);
+    return true; // TODO
+}
+
+/** Release the lock of a mutex object.
+ */
+bool doremir_thread_unlock(doremir_thread_mutex_t t)
+{
+    int r = 0;
+    if (r != 0)
+        doremir_thread_fatal(r);
+    return true; // TODO
+}
+
+
+// --------------------------------------------------------------------------------
+// Conditions
+// --------------------------------------------------------------------------------
+
+/** Create a condition object.   
+
+    Conditions have single-ownership semantics and must be finalized by passing it
+    to a destroy function.        
+ */
+doremir_thread_condition_t doremir_thread_create_condition(doremir_thread_mutex_t m)
+{
+    doremir_thread_condition_t c = malloc(sizeof(struct _doremir_thread_condition_t));
+    c->mutex = m;
+    int r = pthread_cond_init(&c->native, NULL);
+    if (r != 0)
+        doremir_thread_fatal(r);
+    return c;
+}
+
+void doremir_thread_destroy_condition(doremir_thread_condition_t c)
+{           
+    int r = pthread_cond_destroy(&c->native);
+    free(c);
+    if (r != 0)
+        doremir_thread_fatal(r);
+}
+
+/** Wait for a condition to be signaled.        
+ */
+void doremir_thread_wait_for(doremir_thread_condition_t c)
+{
+    int r = pthread_cond_wait(&c->native, &c->mutex->native);
+    if (r != 0)
+        doremir_thread_fatal(r);
+}
+
+/** Signal a condition to one listener.        
+ */
+void doremir_thread_notify(doremir_thread_condition_t c)
+{
+    int r = pthread_cond_signal(&c->native);
+    if (r != 0)
+        doremir_thread_fatal(r);
+}
+
+/** Signal a condition to all listeners.
+ */
+void doremir_thread_notify_all(doremir_thread_condition_t c)
+{
+    int r = pthread_cond_broadcast(&c->native);
+    if (r != 0)
+        doremir_thread_fatal(r);
+}
+
+
+// --------------------------------------------------------------------------------
 // Utility
 // --------------------------------------------------------------------------------
 
