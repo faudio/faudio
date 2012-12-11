@@ -224,7 +224,7 @@ void doremir_thread_notify_all(doremir_thread_condition_t cond)
 void doremir_thread_fatal(char* msg, int error)
 {
     // TODO log
-    printf("Fatal error: doremir: thread: %s: %d\n", msg, error);
+    printf("Fatal error: Doremir: Thread: %s: %d\n", msg, error);
     exit(error);
 }
 
