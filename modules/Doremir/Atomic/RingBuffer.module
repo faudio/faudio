@@ -16,6 +16,6 @@ module Doremir.Atomic.RingBuffer
     destroy : RingBuffer -> Void;
 
     read : RingBuffer -> Intptr;
-    write : (RingBuffer, Intptr) -> Intptr;
+    write : (RingBuffer, Intptr) -> Void;
 }
 

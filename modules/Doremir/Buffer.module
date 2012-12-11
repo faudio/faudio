@@ -8,5 +8,16 @@
  */
 module Doremir.Buffer
 {
-    type Buffer = opaque;  
+    import Doremir.Std;
+
+    type Buffer = opaque;
+
+    create : (Size) -> Buffer;
+    copy : Buffer -> Buffer;
+    swap : (Buffer, Buffer) -> Void;
+    destroy : Buffer -> Void;
+
+    size : Buffer -> Size;  
+    peek : (Buffer, Int) -> UInt8;
+    poke : (Buffer, Int, UInt8) -> Void;
 }

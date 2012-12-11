@@ -16,4 +16,20 @@ module Doremir.String
     type Utf32 = UInt32*;
 
     type FilePath = String;
+
+    // toUtf8  : String -> Utf8;
+    // toUtf16 : String -> Utf16;
+    // toUtf32 : String -> Utf32;
+    // fromUtf8  : Utf8 -> String;
+    // fromUtf16 : Utf16 -> String;
+    // fromUtf32 : Utf32 -> String;
+    
+    create : () -> String;
+    length : String -> Int;
+    length : String -> Int;
+
+    type Unary  = (Char -> Char)*;
+    type Binary = ((Char, Char) -> Char)*;
+    map  : (String, Unary)        -> String;
+    fold : (String, Binary, Char) -> String;
 }

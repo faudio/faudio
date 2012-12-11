@@ -10,4 +10,4 @@
 
 (defcfun "Doremir.Atomic.RingBuffer.read" :pointer (:Doremir.RingBuffer))
 
-(defcfun "Doremir.Atomic.RingBuffer.write" :pointer (:Doremir.RingBuffer :pointer))
+(defcfun "Doremir.Atomic.RingBuffer.write" :void (:Doremir.RingBuffer :pointer))
