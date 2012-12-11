@@ -3,6 +3,7 @@
 #define _DOREMIR_THREAD_FUTURE
 
 #include <doremir/std.h>
+#include <doremir/thread.h>
 
 /** @defgroup Doremir
     @{
@@ -14,7 +15,7 @@
 
 typedef struct _doremir_future_t * doremir_future_t;
 typedef intptr_t doremir_thread_future_value_t;
-doremir_future_t doremir_thread_future_create();
+doremir_future_t doremir_thread_future_create(doremir_thread_runnable_t);
 void doremir_thread_future_destroy(doremir_future_t);
 bool doremir_thread_future_is_done(doremir_future_t);
 void doremir_thread_future_wait(doremir_future_t);

@@ -1,0 +1,8 @@
+
+module Doremir.AudioEngine.Device.Buffered
+{
+    type Buffered = opaque;
+
+    create : (Size) -> Buffered;
+    destroy : Buffered -> Void;
+}

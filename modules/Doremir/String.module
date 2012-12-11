@@ -4,6 +4,9 @@
     @addtogroup String
     
     String operations.
+    
+    We use plain char arrays, pretending that they are immutable. 
+    Please do not modify them.
 
  */
 module Doremir.String
@@ -11,9 +14,9 @@ module Doremir.String
     import Doremir.Std;
 
     type String = Char*;    
-    type Utf8  = UInt8*;
-    type Utf16 = UInt16*;
-    type Utf32 = UInt32*;
+    // type Utf8  = UInt8*;
+    // type Utf16 = UInt16*;
+    // type Utf32 = UInt32*;
 
     type FilePath = String;
 

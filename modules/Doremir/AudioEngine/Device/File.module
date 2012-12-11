@@ -1,0 +1,13 @@
+
+module Doremir.AudioEngine.Device.File
+{
+    import Doremir.String;
+
+    type File = opaque;
+    type Stream = opaque;
+
+    create : (FilePath, FilePath) -> File;
+    destroy : File -> Void;
+    // openStream : (File, Proc) -> Stream;
+    closeStream : Stream -> Void;
+}

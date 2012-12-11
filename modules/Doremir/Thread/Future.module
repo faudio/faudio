@@ -4,12 +4,13 @@
 module Doremir.Thread.Future
 {
     import Doremir.Std;
+    import Doremir.Thread;
 
     type Future = opaque;
     type Value  = Intptr;
 
     // TODO obtain result from what?
-    create  : () -> Future;
+    create  : Runnable -> Future;
     destroy : Future -> Void;
     
     isDone : Future -> Bool;
