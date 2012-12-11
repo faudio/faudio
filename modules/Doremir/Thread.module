@@ -15,7 +15,7 @@ module Doremir.Thread
 {
     import Doremir.Std;
 
-    type Runnable = struct { f : (Intptr -> Intptr)*, x : Intptr };
+    type Runnable = struct { func : (Intptr -> Intptr)*, val : Intptr };
     type Thread = opaque;
     type Mutex = opaque;
     type Condition = opaque;

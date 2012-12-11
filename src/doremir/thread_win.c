@@ -30,7 +30,7 @@ static const long kJoinInterval = 50;
 static DWORD WINAPI doremir_thread_start(LPVOID x) 
 {                
     doremir_thread_runnable_t *runnable = x;
-    return runnable->f(runnable->x);
+    return runnable->func(runnable->val);
     return 0;
 }
 

@@ -11,7 +11,7 @@
     */
 
 typedef struct {
-            intptr_t (* f)(intptr_t); intptr_t x;
+            intptr_t (* func)(intptr_t); intptr_t val;
         } doremir_thread_runnable_t;
 typedef struct _doremir_thread_t * doremir_thread_t;
 typedef struct _doremir_thread_mutex_t * doremir_thread_mutex_t;
