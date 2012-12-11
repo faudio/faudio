@@ -15,10 +15,6 @@ fresh:  clean all
 help: 
 	@pushd $(BUILD_DIRECTORY); $(MAKE) help; popd;
 
-.PHONY: test
-test: 
-	@pushd $(BUILD_DIRECTORY); $(MAKE) test; popd;
-
 .PHONY: clean
 clean: 
 	@pushd $(BUILD_DIRECTORY); $(MAKE) clean; popd;
@@ -59,6 +55,11 @@ format:
 .PHONY: doc
 doc: 
 	./cmake/scripts/doc.sh
+
+.PHONY: test
+test: all
+	echo; \
+	build/bin/doremir_audio_tests;
 
 .PHONY: run_scorecleaner
 run_scorecleaner: 
