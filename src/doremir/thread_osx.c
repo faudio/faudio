@@ -147,6 +147,7 @@ doremir_thread_try_lock(doremir_thread_mutex_t mutex)
         return false;
     default:
         doremir_thread_fatal("try_lock", result);
+        assert(false);
     }
 }
 
