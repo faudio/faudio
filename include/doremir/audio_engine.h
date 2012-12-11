@@ -10,9 +10,9 @@
 #include <doremir/audio_engine/scheduler.h>
 #include <doremir/audio_engine/time.h>
 
-/** @defgroup Doremir
+/** @defgroup Doremir Doremir
     @{
-    @defgroup AudioEngine
+    @defgroup DoremirAudioEngine AudioEngine
     @{
     */
 

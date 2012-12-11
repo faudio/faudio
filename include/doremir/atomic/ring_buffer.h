@@ -4,11 +4,11 @@
 
 
 
-/** @defgroup Doremir
+/** @defgroup Doremir Doremir
     @{
-    @defgroup Atomic
+    @defgroup DoremirAtomic Atomic
     @{
-    @defgroup RingBuffer
+    @defgroup DoremirAtomicRingBuffer RingBuffer
     @{
     */
 

@@ -4,13 +4,13 @@
 
 #include <doremir/string.h>
 
-/** @defgroup Doremir
+/** @defgroup Doremir Doremir
     @{
-    @defgroup AudioEngine
+    @defgroup DoremirAudioEngine AudioEngine
     @{
-    @defgroup Device
+    @defgroup DoremirAudioEngineDevice Device
     @{
-    @defgroup File
+    @defgroup DoremirAudioEngineDeviceFile File
     @{
     */
 

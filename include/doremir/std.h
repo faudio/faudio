@@ -25,9 +25,9 @@
 #include <wchar.h>
 #include <wctype.h>
 
-/** @defgroup Doremir
+/** @defgroup Doremir Doremir
     @{
-    @defgroup Std
+    @defgroup DoremirStd Std
     @{
     */
 

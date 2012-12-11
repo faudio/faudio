@@ -4,9 +4,9 @@
 
 #include <doremir/std.h>
 
-/** @defgroup Doremir
+/** @defgroup Doremir Doremir
     @{
-    @defgroup Ratio
+    @defgroup DoremirRatio Ratio
     @{
     */
 

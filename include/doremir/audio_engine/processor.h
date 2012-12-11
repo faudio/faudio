@@ -5,11 +5,11 @@
 #include <doremir/std.h>
 #include <doremir/buffer.h>
 
-/** @defgroup Doremir
+/** @defgroup Doremir Doremir
     @{
-    @defgroup AudioEngine
+    @defgroup DoremirAudioEngine AudioEngine
     @{
-    @defgroup Processor
+    @defgroup DoremirAudioEngineProcessor Processor
     @{
     */
 

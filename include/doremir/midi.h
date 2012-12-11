@@ -5,9 +5,9 @@
 #include <doremir/std.h>
 #include <doremir/buffer.h>
 
-/** @defgroup Doremir
+/** @defgroup Doremir Doremir
     @{
-    @defgroup Midi
+    @defgroup DoremirMidi Midi
     @{
     */
 

@@ -4,11 +4,11 @@
 
 #include <doremir/thread/improving.h>
 
-/** @defgroup Doremir
+/** @defgroup Doremir Doremir
     @{
-    @defgroup AudioEngine
+    @defgroup DoremirAudioEngine AudioEngine
     @{
-    @defgroup Scheduler
+    @defgroup DoremirAudioEngineScheduler Scheduler
     @{
     */
 

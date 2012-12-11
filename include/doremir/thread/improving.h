@@ -4,11 +4,11 @@
 
 #include <doremir/std.h>
 
-/** @defgroup Doremir
+/** @defgroup Doremir Doremir
     @{
-    @defgroup Thread
+    @defgroup DoremirThread Thread
     @{
-    @defgroup Improving
+    @defgroup DoremirThreadImproving Improving
     @{
     */
 

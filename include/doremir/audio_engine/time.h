@@ -4,11 +4,11 @@
 
 
 
-/** @defgroup Doremir
+/** @defgroup Doremir Doremir
     @{
-    @defgroup AudioEngine
+    @defgroup DoremirAudioEngine AudioEngine
     @{
-    @defgroup Time
+    @defgroup DoremirAudioEngineTime Time
     @{
     */
 

@@ -5,11 +5,11 @@
 #include <doremir/std.h>
 #include <doremir/thread.h>
 
-/** @defgroup Doremir
+/** @defgroup Doremir Doremir
     @{
-    @defgroup Thread
+    @defgroup DoremirThread Thread
     @{
-    @defgroup Future
+    @defgroup DoremirThreadFuture Future
     @{
     */
 

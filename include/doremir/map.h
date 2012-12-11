@@ -5,9 +5,9 @@
 #include <doremir/std.h>
 #include <doremir/pair.h>
 
-/** @defgroup Doremir
+/** @defgroup Doremir Doremir
     @{
-    @defgroup Map
+    @defgroup DoremirMap Map
     @{
     */
 

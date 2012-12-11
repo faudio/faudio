@@ -4,9 +4,9 @@
 
 #include <doremir/std.h>
 
-/** @defgroup Doremir
+/** @defgroup Doremir Doremir
     @{
-    @defgroup Atomic
+    @defgroup DoremirAtomic Atomic
     @{
     */
 

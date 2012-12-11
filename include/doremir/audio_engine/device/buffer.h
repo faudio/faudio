@@ -4,13 +4,13 @@
 
 
 
-/** @defgroup Doremir
+/** @defgroup Doremir Doremir
     @{
-    @defgroup AudioEngine
+    @defgroup DoremirAudioEngine AudioEngine
     @{
-    @defgroup Device
+    @defgroup DoremirAudioEngineDevice Device
     @{
-    @defgroup Buffer
+    @defgroup DoremirAudioEngineDeviceBuffer Buffer
     @{
     */
 
