@@ -12,7 +12,7 @@
 
 (defcfun "Doremir.Atomic.destroy" :void (:Doremir.Atomic))
 
-(defcfun "Doremir.Atomic.exchange" :boolean (:Doremir.Atomic :Doremir.Atomic.Value))
+(defcfun "Doremir.Atomic.exchange" :boolean (:Doremir.Atomic :Doremir.Atomic.Value :Doremir.Atomic.Value))
 
 (defcfun "Doremir.Atomic.add" :void (:Doremir.Atomic :Doremir.Atomic.Value))
 

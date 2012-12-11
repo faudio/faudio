@@ -18,6 +18,7 @@ doremir_atomic_t doremir_atomic_copy(doremir_atomic_t);
 void doremir_atomic_swap(doremir_atomic_t, doremir_atomic_t);
 void doremir_atomic_destroy(doremir_atomic_t);
 bool doremir_atomic_exchange(doremir_atomic_t,
+                             doremir_atomic_value_t,
                              doremir_atomic_value_t);
 void doremir_atomic_add(doremir_atomic_t, doremir_atomic_value_t);
 doremir_atomic_value_t doremir_atomic_get(doremir_atomic_t);

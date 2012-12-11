@@ -19,7 +19,7 @@ module Doremir.Atomic
     swap    : (Atomic, Atomic) -> Void;
     destroy : Atomic -> Void;
 
-    exchange : (Atomic, Value) -> Bool;
+    exchange : (Atomic, Value, Value) -> Bool;
     add     : (Atomic, Value) -> Void;
     get     : Atomic -> Value;
     modify  : (Atomic, Updater) -> Void;
