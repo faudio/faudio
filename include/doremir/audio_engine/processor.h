@@ -16,7 +16,7 @@
 typedef doremir_buffer_t doremir_audio_engine_processor_samples_t;
 typedef struct {
             doremir_audio_engine_processor_samples_t (* process)(doremir_audio_engine_processor_samples_t);
-        } doremir_processor_t;
+        } doremir_audio_engine_processor_t;
 
 /** @}
     @}

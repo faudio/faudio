@@ -1,7 +1,6 @@
 
 #include <doremir/audio_engine.h>
-#include <getopt.h>
-#include <iconv.h>
+#include <doremir/thread.h>
 
 int version[3] = { 2, 0, 0 };
 

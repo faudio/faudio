@@ -14,9 +14,9 @@
     @{
     */
 
-typedef struct _doremir_buffer_t * doremir_buffer_t;
-doremir_buffer_t doremir_audio_engine_device_buffer_create(size_t);
-void doremir_audio_engine_device_buffer_destroy(doremir_buffer_t);
+typedef struct _doremir_audio_engine_device_buffer_t * doremir_audio_engine_device_buffer_t;
+doremir_audio_engine_device_buffer_t doremir_audio_engine_device_buffer_create(size_t);
+void doremir_audio_engine_device_buffer_destroy(doremir_audio_engine_device_buffer_t);
 
 /** @}
     @}

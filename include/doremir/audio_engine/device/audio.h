@@ -16,7 +16,7 @@
     */
 
 typedef struct _doremir_audio_engine_device_audio_session_t * doremir_audio_engine_device_audio_session_t;
-typedef struct _doremir_audio_t * doremir_audio_t;
+typedef struct _doremir_audio_engine_device_audio_t * doremir_audio_engine_device_audio_t;
 typedef struct _doremir_audio_engine_device_audio_stream_t * doremir_audio_engine_device_audio_stream_t;
 doremir_audio_engine_device_audio_session_t doremir_audio_engine_device_audio_begin_session();
 void doremir_audio_engine_device_audio_end_session(doremir_audio_engine_device_audio_session_t);

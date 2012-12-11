@@ -17,7 +17,7 @@ typedef doremir_list_t doremir_audio_engine_dispatcher_message_t;
 typedef struct {
             void (* receive)(doremir_list_t);
             void (* send)(void (*)(doremir_list_t));
-        } doremir_dispatcher_t;
+        } doremir_audio_engine_dispatcher_t;
 
 /** @}
     @}

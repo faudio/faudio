@@ -1,3 +1,3 @@
 (defctype Doremir.AudioEngine.Dispatcher.Message :Doremir.List)
 
-(defctype Doremir.Dispatcher (:pointer :void))
+(defctype Doremir.Audio.Engine.Dispatcher (:pointer :void))

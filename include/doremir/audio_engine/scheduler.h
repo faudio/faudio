@@ -18,11 +18,11 @@ typedef struct {
             void (* schedule)(doremir_audio_engine_scheduler_time_t,
                               doremir_audio_engine_scheduler_action_t);
             void (* execute)();
-        } doremir_scheduler_t;
-doremir_scheduler_t doremir_audio_engine_scheduler_create(doremir_improving_t);
-void doremir_audio_engine_scheduler_destroy(doremir_scheduler_t);
-void doremir_audio_engine_scheduler_swap(doremir_scheduler_t,
-                                         doremir_scheduler_t);
+        } doremir_audio_engine_scheduler_t;
+doremir_audio_engine_scheduler_t doremir_audio_engine_scheduler_create(doremir_thread_improving_t);
+void doremir_audio_engine_scheduler_destroy(doremir_audio_engine_scheduler_t);
+void doremir_audio_engine_scheduler_swap(doremir_audio_engine_scheduler_t,
+                                         doremir_audio_engine_scheduler_t);
 
 /** @}
     @}

@@ -1,3 +1,3 @@
 (defctype Doremir.AudioEngine.Processor.Samples :Doremir.Buffer)
 
-(defctype Doremir.Processor (:pointer :void))
+(defctype Doremir.Audio.Engine.Processor (:pointer :void))
