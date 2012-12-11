@@ -11,17 +11,18 @@ module Doremir.Atomic
     import Doremir.Std;
     
     type Atomic = opaque;
-    type Updater = (Intptr -> Intptr)*;
+    type Value = Intptr;
+    type Updater = (Value -> Value)*;
 
     create  : () -> Atomic;
     copy    : Atomic -> Atomic;
     swap    : (Atomic, Atomic) -> Void;
     destroy : Atomic -> Void;
 
-    exchange : (Atomic, Intptr) -> Bool;
-    add     : (Atomic, Intptr) -> Void;
-    get     : Atomic -> Intptr;
+    exchange : (Atomic, Value) -> Bool;
+    add     : (Atomic, Value) -> Void;
+    get     : Atomic -> Value;
     modify  : (Atomic, Updater) -> Void;
-    set     : (Atomic, Intptr) -> Void;
+    set     : (Atomic, Value) -> Void;
 }
 
