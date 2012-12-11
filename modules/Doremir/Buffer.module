@@ -1,7 +1,6 @@
 
 /** 
-    @addtogroup Doremir
-    @addtogroup Buffer
+    @addtogroup DoremirBuffer
     
     Low-level buffer data structure.
 

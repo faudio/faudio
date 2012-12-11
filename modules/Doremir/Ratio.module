@@ -1,7 +1,6 @@
 
 /** 
-    @addtogroup Doremir
-    @addtogroup Ratio
+    @addtogroup DoremirRatio
     
     Fixed-precision rational numbers.
 

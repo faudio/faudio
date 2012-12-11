@@ -1,7 +1,6 @@
 
 /** 
-    @addtogroup Doremir
-    @addtogroup Set
+    @addtogroup DoremirSet
     
     Immutable ordered set data structure.
 

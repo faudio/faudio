@@ -1,20 +1,8 @@
 
 /** 
-    @addtogroup Doremir
-    @addtogroup List
+    @addtogroup DoremirList
     
     Immutable list data structure.
- */
-/*
-    Tagging like this?
-    
-    000 Default pointer
-    010 Pointer with interfaces
-
-    001 int
-    011 uint
-    101 float
-    111
  */
 module Doremir.List
 {

@@ -1,7 +1,6 @@
 
 /** 
-    @addtogroup Doremir
-    @addtogroup Atomic
+    @addtogroup DoremirAtomic
     
     Cross-platform atomic variables. Submodules contains lock-free data structures.
 

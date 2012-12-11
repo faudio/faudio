@@ -1,8 +1,6 @@
 
 /** 
-    @addtogroup Doremir
-    @addtogroup Atomic
-    @addtogroup RingBuffer
+    @addtogroup DoremirAtomicRingBuffer
     
     Circular buffer data structure.
  */

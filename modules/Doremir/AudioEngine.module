@@ -1,7 +1,6 @@
 
 /** 
-    @addtogroup Doremir
-    @addtogroup AudioEngine
+    @addtogroup DoremirAudioEngine
     
     This is the top level module. Top import the audio engine, use
     

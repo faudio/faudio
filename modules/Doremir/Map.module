@@ -1,7 +1,6 @@
 
 /** 
-    @addtogroup Doremir
-    @addtogroup Map
+    @addtogroup DoremirMap
     
     Immutable ordered map data structure.
 

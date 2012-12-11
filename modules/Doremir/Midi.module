@@ -1,7 +1,6 @@
 
 /** 
-    @addtogroup Doremir
-    @addtogroup Midi
+    @addtogroup DoremirMidi
     
     Midi representation.
 

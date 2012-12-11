@@ -1,8 +1,6 @@
 
 /** 
-    @addtogroup Doremir
-    @addtogroup Atomic
-    @addtogroup Queue
+    @addtogroup DoremirAtomicQueue
     
     Lock-free queue (FIFO) data structure.
  */

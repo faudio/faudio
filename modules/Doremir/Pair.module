@@ -1,7 +1,6 @@
 
 /** 
-    @addtogroup Doremir
-    @addtogroup Pair
+    @addtogroup DoremirPair
     
     Pair data structure and some utility functions.
 

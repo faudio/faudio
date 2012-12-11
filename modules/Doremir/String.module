@@ -1,7 +1,6 @@
 
 /** 
-    @addtogroup Doremir
-    @addtogroup String
+    @addtogroup DoremirString
     
     String operations.
     

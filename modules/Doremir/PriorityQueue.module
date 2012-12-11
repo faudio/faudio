@@ -1,7 +1,6 @@
 
 /** 
-    @addtogroup Doremir
-    @addtogroup PriorityQueue
+    @addtogroup DoremirPriorityQueue
     
     Priority queue data structure.
 

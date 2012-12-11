@@ -1,8 +1,6 @@
 
 /** 
-    @addtogroup Doremir
-    @addtogroup Atomic
-    @addtogroup Stack
+    @addtogroup DoremirAtomicStack
     
     Lock-free stack (FILO) data structure
  */

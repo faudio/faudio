@@ -1,7 +1,6 @@
 
 /** 
-    @addtogroup Doremir
-    @addtogroup Std
+    @addtogroup DoremirStd
     
     This module just exports the C standard library.
 

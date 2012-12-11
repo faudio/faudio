@@ -1,7 +1,6 @@
 
 /** 
-    @addtogroup Doremir
-    @addtogroup Thread
+    @addtogroup DoremirThread
     
     Cross-platform threads.
     
