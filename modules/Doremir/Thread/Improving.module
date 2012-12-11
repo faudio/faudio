@@ -3,7 +3,17 @@
  */
 module Doremir.Thread.Improving
 {
+    import Doremir.Std;
+
+    type Improving = opaque;
+    type Value  = Intptr;
+
+    // TODO obtain result from what?
+    create  : () -> Improving;
+    destroy : Improving -> Void;
     
-    
+    isDone : Improving -> Bool;
+    wait   : Improving -> Void;
+    get    : Improving -> Value;    
 }
 

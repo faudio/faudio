@@ -12,7 +12,8 @@
     @{
     */
 
-
+typedef int doremir_audio_device_session_t;
+typedef int doremir_device_t;
 
 /** @}
     @}

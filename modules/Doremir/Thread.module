@@ -9,6 +9,37 @@
     provided by this module. For more high-level blocking constructs, see
     the \ref Future and \ref Improving modules. For non-blocking communication
     see the \ref Atomic modules.
+    
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.c}
+    typedef struct { doremir_thread_mutex_t mut; int val; } Locker;
+    intptr_t locker(intptr_t x)
+    {
+        Locker *i = (Locker*) x;
+
+        doremir_thread_lock(i->mut);
+        printf("Acquired lock in thread %d\n", i->val);
+        doremir_thread_sleep(200);
+        doremir_thread_unlock(i->mut);
+        printf("Released lock in thread %d\n", i->val);
+
+        return 0;
+    }
+    void test_mutex()
+    {   
+        doremir_thread_mutex_t m = doremir_thread_create_mutex();
+
+        for (int j = 0; j < 10; ++j)
+        {
+            Locker i = { m, j };
+            doremir_thread_runnable_t r = { locker, (intptr_t) &i };
+            doremir_thread_t t = doremir_thread_create(&r);
+            doremir_thread_sleep(100);
+            doremir_thread_detach(t);
+        }   
+
+        doremir_thread_sleep(1200);
+    }     
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  */
 module Doremir.Thread

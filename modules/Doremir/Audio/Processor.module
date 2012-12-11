@@ -3,5 +3,13 @@
  */
 module Doremir.Audio.Processor
 {
+    import Doremir.Std;
+    import Doremir.Buffer;
+
+    type Samples = Buffer; 
+
+    type Processor = struct {        
+        process : (Samples -> Samples)*
+    };
     
 }

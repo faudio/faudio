@@ -3,5 +3,7 @@
  */
 module Doremir.Audio.Device
 {
+    type Session = Int;
+    type Device = Int;
     
 }

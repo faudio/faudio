@@ -2,6 +2,20 @@
 /**
  */
 module Doremir.Audio.Scheduler
-{
+{                              
+    import Doremir.Thread.Improving;
+
+    type Time = Int; // TODO
+    type Action = (() -> Void)*; // TODO
+    
+    type Scheduler = struct {
+        schedule : ((Time, Action) -> Void)*,
+        execute : (() -> Void)*
+    };
+    
+    create : Improving -> Scheduler;
+    destroy : Scheduler -> Void;
+    swap : (Scheduler, Scheduler) -> Void;
+    
     
 }
