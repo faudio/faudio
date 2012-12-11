@@ -58,7 +58,7 @@ doc:
 
 .PHONY: test
 test: all
-	echo; \
+	echo && \
 	build/bin/doremir_audio_tests;
 
 .PHONY: run_scorecleaner
