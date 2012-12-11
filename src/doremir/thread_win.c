@@ -27,8 +27,7 @@ static const long doremir_thread_join_interval = 50;
 // Threads
 // --------------------------------------------------------------------------------
 
-static 
-DWORD WINAPI doremir_thread_start(LPVOID x) 
+static DWORD WINAPI doremir_thread_start(LPVOID x) 
 {                
     doremir_thread_runnable_t *run = x;
     return run->f(run->x);
@@ -39,16 +38,11 @@ doremir_thread_t doremir_thread_create(doremir_thread_runnable_t* run)
 {
     doremir_thread_t t = malloc(sizeof(struct _doremir_thread_t));
     
-    HANDLE r = CreateThread(
-        NULL,
-        0,
-        doremir_thread_start,
-        run,
-        0,
-        NULL
-        );
+    HANDLE r = CreateThread(NULL, 0, doremir_thread_start, run, 0, NULL);
     if (r == NULL)
+    {        
         doremir_thread_fatal("doremir_thread_create", GetLastError());
+    }
     t->native = r;
     return t;
 }
@@ -67,7 +61,9 @@ void doremir_thread_join(doremir_thread_t t)
         Sleep(doremir_thread_join_interval);
         r = GetExitCodeThread(t->native, &c);
         if (!r)
+        {
             doremir_thread_fatal("doremir_thread_join", GetLastError());            
+        }
     } while (c == STILL_ACTIVE);
     free(t);                
 }
@@ -77,7 +73,9 @@ void doremir_thread_detach(doremir_thread_t t)
     BOOL r = CloseHandle(t->native);
     free(t);
     if (!r)
+    {
         doremir_thread_fatal("doremir_thread_detach", GetLastError());
+    }
 }
 
 

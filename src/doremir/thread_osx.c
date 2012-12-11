@@ -40,6 +40,8 @@ doremir_thread_t doremir_thread_create(doremir_thread_runnable_t* run)
     return t;
 }
 
+/** Sleep the current thread for the given time.
+ */
 void doremir_thread_sleep(doremir_thread_milli_seconds_t s)
 {
     usleep(s * 1000);
