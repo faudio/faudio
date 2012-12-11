@@ -87,7 +87,9 @@ void doremir_thread_detach(doremir_thread_t thread)
 doremir_thread_mutex_t doremir_thread_create_mutex()
 {
     doremir_thread_mutex_t mutex = malloc(sizeof(struct _doremir_thread_mutex_t));
+
     int result = pthread_mutex_init(&mutex->native, NULL);
+
     if (result != 0)
         doremir_thread_fatal("create_mutex", result);
     return mutex;
@@ -99,6 +101,7 @@ void doremir_thread_destroy_mutex(doremir_thread_mutex_t mutex)
 {
     int result = pthread_mutex_destroy(&mutex->native);
     free(mutex);
+
     if (result != 0)
         doremir_thread_fatal("destroy_mutex", result);
 }
@@ -108,10 +111,14 @@ void doremir_thread_destroy_mutex(doremir_thread_mutex_t mutex)
 bool doremir_thread_lock(doremir_thread_mutex_t mutex)
 {
     int result = pthread_mutex_lock(&mutex->native);
+
     if (result == 0)
         return true;
     else
+    {
         doremir_thread_fatal("unlock", result);
+        assert(false);
+    }
 }
 
 /** Try acquiring the lock of a mutex object.
@@ -119,6 +126,7 @@ bool doremir_thread_lock(doremir_thread_mutex_t mutex)
 bool doremir_thread_try_lock(doremir_thread_mutex_t mutex)
 {
     int result = pthread_mutex_trylock(&mutex->native);
+
     switch (result)
     {
     case 0:
@@ -135,10 +143,14 @@ bool doremir_thread_try_lock(doremir_thread_mutex_t mutex)
 bool doremir_thread_unlock(doremir_thread_mutex_t mutex)
 {
     int result = pthread_mutex_unlock(&mutex->native);
+
     if (result == 0)
         return true;
     else
+    {
         doremir_thread_fatal("unlock", result);
+        assert(false);
+    }
 }
 
 
@@ -155,16 +167,21 @@ doremir_thread_condition_t doremir_thread_create_condition(doremir_thread_mutex_
 {
     doremir_thread_condition_t cond = malloc(sizeof(struct _doremir_thread_condition_t));
     cond->mutex = mutex;
+
     int result = pthread_cond_init(&cond->native, NULL);
+
     if (result != 0)
         doremir_thread_fatal("create_condition", result);
     return cond;
 }
 
+/** Destroy a condition object.
+ */
 void doremir_thread_destroy_condition(doremir_thread_condition_t cond)
 {
     int result = pthread_cond_destroy(&cond->native);
     free(cond);
+
     if (result != 0)
         doremir_thread_fatal("destroy_condition", result);
 }
@@ -174,6 +191,7 @@ void doremir_thread_destroy_condition(doremir_thread_condition_t cond)
 void doremir_thread_wait_for(doremir_thread_condition_t cond)
 {
     int result = pthread_cond_wait(&cond->native, &cond->mutex->native);
+
     if (result != 0)
         doremir_thread_fatal("wait_for", result);
 }
@@ -183,6 +201,7 @@ void doremir_thread_wait_for(doremir_thread_condition_t cond)
 void doremir_thread_notify(doremir_thread_condition_t cond)
 {
     int result = pthread_cond_signal(&cond->native);
+
     if (result != 0)
         doremir_thread_fatal("notify", result);
 }
@@ -192,6 +211,7 @@ void doremir_thread_notify(doremir_thread_condition_t cond)
 void doremir_thread_notify_all(doremir_thread_condition_t cond)
 {
     int result = pthread_cond_broadcast(&cond->native);
+
     if (result != 0)
         doremir_thread_fatal("notify_all", result);
 }
