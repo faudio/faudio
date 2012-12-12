@@ -1,4 +1,22 @@
 
+* Factor out AudioEngine submod to top level (to long names)
+
+* Add AU, VST, record and play processors
+
+* Add audio_type_t and time_t
+
+* Move runnable, unary, binary etc to top level (pair? util?), unify
+
+* Sort out type class/interface idea (Eq, Num, Dynamic)
+
+* Wrappers for bool/int/float (top implement Dynamic interface for messages)
+
+* Ownership semantics for collections
+
+
+
+
+
 * Check if we can make Fluidsynth compile against checked in Glib
   binaries instead of /usr/local
   * Done? 
