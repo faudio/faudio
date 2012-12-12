@@ -7,7 +7,7 @@
  */
 module Doremir.Processor
 {
-    import Doremir.Std;
+    import Doremir;
     import Doremir.Buffer;
 
     type Samples = Buffer;
@@ -20,8 +20,8 @@ module Doremir.Processor
 
     /** @interface doremir_processor_t */
     type Processor = struct {
-        before : (Info* -> Void)*,
-        process : ((Info*, Samples) -> Samples)*,
-        after : (Info* -> Void)*
+        before : ((Ptr, Info*) -> Void)*,
+        process : ((Ptr, Info*, Samples) -> Samples)*,
+        after : ((Ptr, Info*) -> Void)*
     };
 }

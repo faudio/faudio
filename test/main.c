@@ -5,23 +5,23 @@
 int version[3] = { 2, 0, 0 };
 
 
-intptr_t printer(intptr_t x)
+doremir_ptr_t printer(doremir_ptr_t x)
 {
     int n = 0;
     while (n < 100)
     {
         printf("%d\n", n);
-        n = n + x;
+        n = n + (int) x;
         doremir_thread_sleep(100);
     }
     return 0;
 }
 void test_thread()
 {                                               
-    doremir_closure_t r = { printer, 10 };
+    doremir_closure_t r = { printer, (doremir_ptr_t) 10 };
     doremir_thread_t t = doremir_thread_create(&r);
 
-    doremir_closure_t r2 = { printer, 11 };
+    doremir_closure_t r2 = { printer, (doremir_ptr_t) 11 };
     doremir_thread_t t2 = doremir_thread_create(&r2);
 
     doremir_thread_sleep(1000);
@@ -31,7 +31,7 @@ void test_thread()
 
 
 typedef struct { doremir_thread_mutex_t mut; int val; } lock_index;
-intptr_t locker(intptr_t x)
+doremir_ptr_t locker(doremir_ptr_t x)
 {
     lock_index *i = (lock_index*) x;
 
@@ -50,7 +50,7 @@ void test_mutex()
     for (int j = 0; j < 10; ++j)
     {
         lock_index i = { m, j };
-        doremir_closure_t r = { locker, (intptr_t) &i };
+        doremir_closure_t r = { locker, (doremir_ptr_t) &i };
         doremir_thread_t t = doremir_thread_create(&r);
         doremir_thread_sleep(100);
         doremir_thread_detach(t);
@@ -66,7 +66,7 @@ typedef struct {
     doremir_thread_condition_t cond; 
     doremir_string_t msg;
     } send_hub;
-intptr_t sender(intptr_t x)
+doremir_ptr_t sender(doremir_ptr_t x)
 {
     send_hub *h = (send_hub*) x;
     static const doremir_string_t msgs[10] = {
@@ -86,7 +86,7 @@ intptr_t sender(intptr_t x)
 
     return 0;
 }
-intptr_t receiver(intptr_t x)
+doremir_ptr_t receiver(doremir_ptr_t x)
 {
     send_hub *h = (send_hub*) x;
     
@@ -106,9 +106,9 @@ void test_cond()
     doremir_thread_condition_t c = doremir_thread_create_condition(m);
     send_hub h = { m, c, 0 };
 
-    doremir_closure_t sr = { sender, (intptr_t) &h };
+    doremir_closure_t sr = { sender, (doremir_ptr_t) &h };
     doremir_thread_t s = doremir_thread_create(&sr);
-    doremir_closure_t rr = { receiver, (intptr_t) &h };
+    doremir_closure_t rr = { receiver, (doremir_ptr_t) &h };
     doremir_thread_t r = doremir_thread_create(&rr);
 
     doremir_thread_join(s);
@@ -119,7 +119,7 @@ void test_cond()
 int main (int argc, char const *argv[])
 {
   printf("DoReMIR Audio engine v%d.%d.%d\n", version[0], version[1], version[2]);
-  printf("sizeof(intptr_t) = %d\n", (unsigned int) sizeof(intptr_t));
+  printf("sizeof(doremir_ptr_t) = %d\n", (unsigned int) sizeof(doremir_ptr_t));
   printf("sizeof(int32_t) = %d\n", (unsigned int) sizeof(int32_t));
   printf("sizeof(uint32_t) = %d\n", (unsigned int) sizeof(uint32_t));
   printf("sizeof(void*) = %d\n", (unsigned int) sizeof(void*));

@@ -24,17 +24,17 @@ module Doremir.Dispatcher
 
     /** @interface doremir_dispatcher_sender_t */
     type Sender = struct {
-        send : ((Address, List) -> Void)*
+        send : ((Ptr, Address, List) -> Void)*
     };
 
     /** @interface doremir_dispatcher_receiver_t */
     type Receiver = struct {
-        receive : (Sender* -> Void)*
+        receive : ((Ptr, Sender*) -> Void)*
     };
 
     /** @interface doremir_dispatcher_t */
     type Dispatcher = struct {
-        send : ((Address, List) -> Void)*,
-        receive : (Sender* -> Void)*
+        send : ((Ptr, Address, List) -> Void)*,
+        receive : ((Ptr, Sender*) -> Void)*
     };
 }

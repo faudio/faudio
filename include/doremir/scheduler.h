@@ -14,9 +14,10 @@
 typedef int doremir_scheduler_time_t;
 typedef doremir_nullary_t doremir_scheduler_action_t;
 typedef struct {
-            void (* schedule)(doremir_scheduler_time_t,
+            void (* schedule)(doremir_ptr_t,
+                              doremir_scheduler_time_t,
                               doremir_scheduler_action_t);
-            void (* execute)();
+            void (* execute)(doremir_ptr_t);
         } doremir_scheduler_t;
 doremir_scheduler_t doremir_scheduler_create(doremir_thread_improving_t);
 void doremir_scheduler_destroy(doremir_scheduler_t);

@@ -11,7 +11,7 @@ module Doremir.Thread.Future
     import Doremir.Thread;
 
     type Future = opaque;
-    type Value  = Intptr;
+    type Value  = Ptr;
 
     // TODO obtain result from what?
     create  : Closure -> Future;

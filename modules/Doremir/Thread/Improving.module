@@ -11,7 +11,7 @@ module Doremir.Thread.Improving
     import Doremir.Thread;
 
     type Improving = opaque;
-    type Value  = Intptr;
+    type Value  = Ptr;
 
     // TODO obtain result from what?
     create  : () -> Improving;

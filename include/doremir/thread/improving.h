@@ -14,7 +14,7 @@
     */
 
 typedef struct _doremir_thread_improving_t * doremir_thread_improving_t;
-typedef intptr_t doremir_thread_improving_value_t;
+typedef doremir_ptr_t doremir_thread_improving_value_t;
 doremir_thread_improving_t doremir_thread_improving_create();
 void doremir_thread_improving_destroy(doremir_thread_improving_t);
 bool doremir_thread_improving_is_done(doremir_thread_improving_t);
