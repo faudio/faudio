@@ -7,7 +7,7 @@
     Standard low-level constructs such as threads, mutexes and conditions are 
     provided by this module. For more high-level blocking constructs, see
     the \ref DoremirThreadFuture and \ref DoremirThreadImproving modules. For non-blocking communication
-    see the \ref Atomic modules.
+    see the \ref DoremirAtomic modules.
     
  */
 module Doremir.Thread
