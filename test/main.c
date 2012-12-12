@@ -130,6 +130,6 @@ int main (int argc, char const *argv[])
   test_thread();
   test_mutex();
   test_cond();
-  
+
   return 0;
 }

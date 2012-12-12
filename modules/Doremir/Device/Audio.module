@@ -9,16 +9,20 @@ module Doremir.Device.Audio
 {
     import Doremir.List;
     import Doremir.Pair;
+    import Doremir.Processor;
 
     type Session = opaque;
-    type Device = opaque;
     type Stream = opaque;
+    type Audio = opaque;
 
     beginSession : () -> Session;
     endSession : Session -> Void;
 
     devices : Session -> List;
     standard : Session -> Pair;
+    standardInput : Session -> Audio;
+    standardOutput : Session -> Audio;
+    
+    openStream : (Audio, Processor, Audio) -> Stream;
     closeStream : Stream -> Void;
-    // openStream : (Audio, Proc) -> Stream;
 }

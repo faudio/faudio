@@ -8,7 +8,7 @@ list(APPEND SRCS
   doremir/atomic/queue.c
   doremir/atomic/ring_buffer.c
   doremir/atomic/stack.c
-  doremir/audio.c
+  doremir/device/audio.c
   doremir/buffer.c
   doremir/list.c
   doremir/map.c

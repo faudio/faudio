@@ -18,10 +18,22 @@ module Doremir.Dispatcher
     import Doremir.List;
 
     type Message = List;
+    type Address = Intptr;
+
+
+    /** @interface doremir_dispatcher_sender_t */
+    type Sender = struct {
+        send : ((Address, List) -> Void)*
+    };
+
+    /** @interface doremir_dispatcher_receiver_t */
+    type Receiver = struct {
+        receive : (Sender* -> Void)*
+    };
 
     /** @interface doremir_dispatcher_t */
     type Dispatcher = struct {
-        receive : (List -> Void)*,
-        send : ((List -> Void)* -> Void)*
+        send : ((Address, List) -> Void)*,
+        receive : (Sender* -> Void)*
     };
 }
