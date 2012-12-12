@@ -26,12 +26,15 @@ module Doremir.String
     // fromUtf16 : Utf16 -> String;
     // fromUtf32 : Utf32 -> String;
     
-    create : () -> String;
+    empty : () -> String;
+    single : Char -> String;
     length : String -> Int;
     length : String -> Int;
 
-    type Unary  = (Char -> Char)*;
-    type Binary = ((Char, Char) -> Char)*;
+    type Nullary = (() -> Char)*;
+    type Unary   = (Char -> Char)*;
+    type Binary  = ((Char, Char) -> Char)*;
     map  : (String, Unary)        -> String;
-    fold : (String, Binary, Char) -> String;
+    reduce : (String, Nullary, Binary, Char) -> String;
+    mapReduce : (String, Nullary, Unary, Binary, Char) -> String;
 }
