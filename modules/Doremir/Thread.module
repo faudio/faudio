@@ -11,18 +11,16 @@
     
  */
 module Doremir.Thread
-{
+{                   
+    import Doremir;
     import Doremir.Std;
-    
-    /** @interface doremir_thread_runnable_t */
-    type Runnable = struct { func : (Intptr -> Intptr)*, val : Intptr };
-    
+        
     type Thread = opaque;
     type Mutex = opaque;
     type Condition = opaque;
     type MilliSeconds = Int;
     
-    create : Runnable* -> Thread;
+    create : Closure* -> Thread;
     sleep : MilliSeconds -> Void;
     join : Thread -> Void;
     detach : Thread -> Void;

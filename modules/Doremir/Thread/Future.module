@@ -14,7 +14,7 @@ module Doremir.Thread.Future
     type Value  = Intptr;
 
     // TODO obtain result from what?
-    create  : Runnable -> Future;
+    create  : Closure -> Future;
     destroy : Future -> Void;
     
     isDone : Future -> Bool;

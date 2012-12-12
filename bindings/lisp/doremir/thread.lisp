@@ -1,5 +1,3 @@
-(defctype Doremir.Thread.Runnable (:pointer :void))
-
 (defctype Doremir.Thread :pointer)
 
 (defctype Doremir.Thread.Mutex :pointer)
@@ -8,7 +6,7 @@
 
 (defctype Doremir.Thread.MilliSeconds :int)
 
-(defcfun "Doremir.Thread.create" :Doremir.Thread ((:pointer :Doremir.Thread.Runnable)))
+(defcfun "Doremir.Thread.create" :Doremir.Thread ((:pointer :Doremir.Closure)))
 
 (defcfun "Doremir.Thread.sleep" :void (:Doremir.Thread.MilliSeconds))
 

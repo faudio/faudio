@@ -18,10 +18,10 @@ intptr_t printer(intptr_t x)
 }
 void test_thread()
 {                                               
-    doremir_thread_runnable_t r = { printer, 10 };
+    doremir_closure_t r = { printer, 10 };
     doremir_thread_t t = doremir_thread_create(&r);
 
-    doremir_thread_runnable_t r2 = { printer, 11 };
+    doremir_closure_t r2 = { printer, 11 };
     doremir_thread_t t2 = doremir_thread_create(&r2);
 
     doremir_thread_sleep(1000);
@@ -50,7 +50,7 @@ void test_mutex()
     for (int j = 0; j < 10; ++j)
     {
         lock_index i = { m, j };
-        doremir_thread_runnable_t r = { locker, (intptr_t) &i };
+        doremir_closure_t r = { locker, (intptr_t) &i };
         doremir_thread_t t = doremir_thread_create(&r);
         doremir_thread_sleep(100);
         doremir_thread_detach(t);
@@ -106,9 +106,9 @@ void test_cond()
     doremir_thread_condition_t c = doremir_thread_create_condition(m);
     send_hub h = { m, c, 0 };
 
-    doremir_thread_runnable_t sr = { sender, (intptr_t) &h };
+    doremir_closure_t sr = { sender, (intptr_t) &h };
     doremir_thread_t s = doremir_thread_create(&sr);
-    doremir_thread_runnable_t rr = { receiver, (intptr_t) &h };
+    doremir_closure_t rr = { receiver, (intptr_t) &h };
     doremir_thread_t r = doremir_thread_create(&rr);
 
     doremir_thread_join(s);

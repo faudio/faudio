@@ -2,6 +2,7 @@
 all:	gen
 
 gen:
+	modulo -Mmodules --language=c    <modules/Doremir.module    			>include/doremir.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/AudioEngine.module    	>include/doremir/audio_engine.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Atomic.module    		>include/doremir/atomic.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Atomic/Queue.module       	>include/doremir/atomic/queue.h && \
@@ -38,6 +39,7 @@ gen:
 	modulo -Mmodules --language=c    <modules/Doremir/Device/Midi.module    	>include/doremir/device/midi.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Scheduler.module  		>include/doremir/scheduler.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Dispatcher.module 		>include/doremir/dispatcher.h && \
+	modulo -Mmodules --language=c    <modules/Doremir.module    			>bindings/lisp/doremir.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Atomic.module    		>bindings/lisp/doremir/atomic.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Atomic/Queue.module       	>bindings/lisp/doremir/atomic/queue.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Atomic/Stack.module       	>bindings/lisp/doremir/atomic/stack.lisp && \

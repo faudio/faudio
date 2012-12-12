@@ -32,6 +32,17 @@ doremir_buffer_copy(doremir_buffer_t buffer)
     assert(false && "Not implemented");
 }
 
+/** Copy the given buffer using the given size.
+    @note
+        O(1)
+ */
+doremir_buffer_t 
+doremir_buffer_copy_sized(size_t size,
+                          doremir_buffer_t buffer)
+{
+    
+}
+
 /** Swap the contents of the given buffers.
     @note
         O(1)

@@ -4,6 +4,8 @@
 
 (defcfun "Doremir.Buffer.copy" :Doremir.Buffer (:Doremir.Buffer))
 
+(defcfun "Doremir.Buffer.copySized" :Doremir.Buffer (:size :Doremir.Buffer))
+
 (defcfun "Doremir.Buffer.swap" :void (:Doremir.Buffer :Doremir.Buffer))
 
 (defcfun "Doremir.Buffer.destroy" :void (:Doremir.Buffer))

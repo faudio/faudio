@@ -1,0 +1,17 @@
+
+/** 
+    @addtogroup Doremir
+    
+    Core definitions. Import \ref DoremirAudioEngine instead of this.
+    
+ */
+module Doremir
+{
+    type Ptr = Void*;
+    type Nullary = (() -> Ptr)*;
+    type Unary   = (Ptr -> Ptr)*;
+    type Binary  = ((Ptr, Ptr) -> Ptr)*;
+    type Closure = struct { 
+        function : (Intptr -> Intptr)*, 
+        value    : Intptr };    
+}

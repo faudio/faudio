@@ -13,5 +13,14 @@ module Doremir.Ratio
     type Denom  = UInt32;
     type Ratio  = struct { nom : Nom, denom : Denom };
             
+    add : (Ratio, Ratio) -> Ratio;
+    subtract : (Ratio, Ratio) -> Ratio;
+    multiply : (Ratio, Ratio) -> Ratio;
+    divide : (Ratio, Ratio) -> Ratio;
+    remainder : (Ratio, Ratio) -> Ratio;
+    succ : Ratio -> Ratio;
+    pred : Ratio -> Ratio;
+    negate : Ratio -> Ratio;
+    recip : Ratio -> Ratio;
 
 }

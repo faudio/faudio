@@ -13,6 +13,7 @@ module Doremir.Buffer
 
     create : (Size) -> Buffer;
     copy : Buffer -> Buffer;
+    copySized : (Size, Buffer) -> Buffer;
     swap : (Buffer, Buffer) -> Void;
     destroy : Buffer -> Void;
 

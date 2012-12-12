@@ -2,7 +2,7 @@
 
 (defctype Doremir.Thread.Future.Value :pointer)
 
-(defcfun "Doremir.Thread.Future.create" :Doremir.Thread.Future (:Doremir.Thread.Runnable))
+(defcfun "Doremir.Thread.Future.create" :Doremir.Thread.Future (:Doremir.Closure))
 
 (defcfun "Doremir.Thread.Future.destroy" :void (:Doremir.Thread.Future))
 

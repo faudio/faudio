@@ -18,9 +18,9 @@ doremir_atomic_ring_buffer_t doremir_atomic_ring_buffer_copy(doremir_atomic_ring
 void doremir_atomic_ring_buffer_swap(doremir_atomic_ring_buffer_t,
                                      doremir_atomic_ring_buffer_t);
 void doremir_atomic_ring_buffer_destroy(doremir_atomic_ring_buffer_t);
-intptr_t doremir_atomic_ring_buffer_read(doremir_atomic_ring_buffer_t);
+uint8_t doremir_atomic_ring_buffer_read(doremir_atomic_ring_buffer_t);
 void doremir_atomic_ring_buffer_write(doremir_atomic_ring_buffer_t,
-                                      intptr_t);
+                                      uint8_t);
 
 /** @}
     @}

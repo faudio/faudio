@@ -33,7 +33,7 @@ static void doremir_thread_fatal(char* msg, int error);
     to a destroy function.
  */
 doremir_thread_t
-doremir_thread_create(doremir_thread_runnable_t* run)
+doremir_thread_create(doremir_closure_t* run)
 {
     typedef void*(*func)(void*);
     typedef void *ptr;
@@ -41,7 +41,7 @@ doremir_thread_create(doremir_thread_runnable_t* run)
     doremir_thread_t thread = doremir_new(thread);
 
     int result = pthread_create(&thread->native, NULL,
-        (func) run->func, (ptr) run->val);
+        (func) run->function, (ptr) run->value);
 
     if (result != 0)
         doremir_thread_fatal("create", result);

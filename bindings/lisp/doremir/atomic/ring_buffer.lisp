@@ -8,6 +8,6 @@
 
 (defcfun "Doremir.Atomic.RingBuffer.destroy" :void (:Doremir.Atomic.RingBuffer))
 
-(defcfun "Doremir.Atomic.RingBuffer.read" :pointer (:Doremir.Atomic.RingBuffer))
+(defcfun "Doremir.Atomic.RingBuffer.read" :uint8 (:Doremir.Atomic.RingBuffer))
 
-(defcfun "Doremir.Atomic.RingBuffer.write" :void (:Doremir.Atomic.RingBuffer :pointer))
+(defcfun "Doremir.Atomic.RingBuffer.write" :void (:Doremir.Atomic.RingBuffer :uint8))

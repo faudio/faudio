@@ -3,6 +3,8 @@
     @addtogroup DoremirAtomicRingBuffer
     
     Circular buffer data structure.
+    
+    Note that while this structure is called a \ref DoremirBuffer, it does not support random access.
  */
 module Doremir.Atomic.RingBuffer
 {
@@ -13,7 +15,7 @@ module Doremir.Atomic.RingBuffer
     swap : (RingBuffer, RingBuffer) -> Void;
     destroy : RingBuffer -> Void;
 
-    read : RingBuffer -> Intptr;
-    write : (RingBuffer, Intptr) -> Void;
+    read : RingBuffer -> UInt8;
+    write : (RingBuffer, UInt8) -> Void;
 }
 
