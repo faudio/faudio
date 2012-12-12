@@ -5,8 +5,6 @@
 
 * Move runnable, unary, binary etc to top level (pair? util?), unify
 
-* Add AU, VST, record and play processors
-
 * Sort out type class/interface idea (Eq, Num, Dynamic)
 
 * Wrappers for bool/int/float (top implement Dynamic interface for messages)
