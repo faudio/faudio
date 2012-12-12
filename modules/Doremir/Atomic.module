@@ -6,11 +6,12 @@
 
  */
 module Doremir.Atomic
-{
+{                   
+    import Doremir;
     import Doremir.Std;
     
     type Atomic = opaque;
-    type Value = Intptr;
+    type Value = Ptr;
     type Updater = (Value -> Value)*;
 
     create  : () -> Atomic;
