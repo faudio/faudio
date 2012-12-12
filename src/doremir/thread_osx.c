@@ -52,7 +52,7 @@ doremir_thread_create(doremir_closure_t* run)
 /** Sleep the current thread for the given time.
  */
 void
-doremir_thread_sleep(doremir_thread_milli_seconds_t s)
+doremir_thread_sleep(doremir_thread_millis_t s)
 {
     usleep(s * 1000);
 }

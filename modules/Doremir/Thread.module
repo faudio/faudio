@@ -6,7 +6,7 @@
     
     Standard low-level constructs such as threads, mutexes and conditions are 
     provided by this module. For more high-level blocking constructs, see
-    the \ref Future and \ref Improving modules. For non-blocking communication
+    the \ref DoremirThreadFuture and \ref DoremirThreadImproving modules. For non-blocking communication
     see the \ref Atomic modules.
     
  */
@@ -18,10 +18,10 @@ module Doremir.Thread
     type Thread = opaque;
     type Mutex = opaque;
     type Condition = opaque;
-    type MilliSeconds = Int;
+    type Millis = Int;
     
     create : Closure* -> Thread;
-    sleep : MilliSeconds -> Void;
+    sleep : Millis -> Void;
     join : Thread -> Void;
     detach : Thread -> Void;
     

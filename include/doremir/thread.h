@@ -14,9 +14,9 @@
 typedef struct _doremir_thread_t * doremir_thread_t;
 typedef struct _doremir_thread_mutex_t * doremir_thread_mutex_t;
 typedef struct _doremir_thread_condition_t * doremir_thread_condition_t;
-typedef int doremir_thread_milli_seconds_t;
+typedef int doremir_thread_millis_t;
 doremir_thread_t doremir_thread_create(doremir_closure_t *);
-void doremir_thread_sleep(doremir_thread_milli_seconds_t);
+void doremir_thread_sleep(doremir_thread_millis_t);
 void doremir_thread_join(doremir_thread_t);
 void doremir_thread_detach(doremir_thread_t);
 doremir_thread_mutex_t doremir_thread_create_mutex();

@@ -4,11 +4,11 @@
 
 (defctype Doremir.Thread.Condition :pointer)
 
-(defctype Doremir.Thread.MilliSeconds :int)
+(defctype Doremir.Thread.Millis :int)
 
 (defcfun "Doremir.Thread.create" :Doremir.Thread ((:pointer :Doremir.Closure)))
 
-(defcfun "Doremir.Thread.sleep" :void (:Doremir.Thread.MilliSeconds))
+(defcfun "Doremir.Thread.sleep" :void (:Doremir.Thread.Millis))
 
 (defcfun "Doremir.Thread.join" :void (:Doremir.Thread))
 
