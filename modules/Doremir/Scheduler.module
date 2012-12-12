@@ -12,7 +12,7 @@ module Doremir.Scheduler
     type Time = Int; // TODO
     type Action = (() -> Void)*; // TODO
 
-    /** @interface doremir_audio_engine_scheduler_t */
+    /** @interface doremir_scheduler_t */
     type Scheduler = struct {
         schedule : ((Time, Action) -> Void)*,
         execute : (() -> Void)*

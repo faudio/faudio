@@ -12,7 +12,7 @@ module Doremir.Processor
 
     type Samples = Buffer;
 
-    /** @interface doremir_audio_engine_processor_t */
+    /** @interface doremir_processor_t */
     type Processor = struct {
         process : (Samples -> Samples)*
     };

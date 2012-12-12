@@ -8,6 +8,7 @@
 module Doremir.Device.Buffer
 {
     type Buffer = opaque;
+    type Stream = opaque;
 
     create : (Size) -> Buffer;
     destroy : Buffer -> Void;

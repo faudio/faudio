@@ -19,7 +19,7 @@ module Doremir.Dispatcher
 
     type Message = List;
 
-    /** @interface doremir_thread_dispatcher_t */
+    /** @interface doremir_dispatcher_t */
     type Dispatcher = struct {
         receive : (List -> Void)*,
         send : ((List -> Void)* -> Void)*
