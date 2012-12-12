@@ -1,4 +1,17 @@
 
+/**
+    @addtogroup DoremirAudioEngineDevice
+    
+    Provides input and output devices.
+    
+ */
+
+/**
+    @addtogroup DoremirAudioEngineDispatcher
+    
+    Provides message dispatching.
+    
+ */
 module Doremir.AudioEngine.Dispatcher
 {
     import Doremir.Std;

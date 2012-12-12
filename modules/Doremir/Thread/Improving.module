@@ -1,9 +1,14 @@
 
 /**
+    @addtogroup DoremirThreadImproving
+    
+    Improving values.
+    
  */
 module Doremir.Thread.Improving
 {
     import Doremir.Std;
+    import Doremir.Thread;
 
     type Improving = opaque;
     type Value  = Intptr;

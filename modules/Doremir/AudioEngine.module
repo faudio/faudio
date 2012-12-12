@@ -2,9 +2,9 @@
 /** 
     @addtogroup DoremirAudioEngine
     
-    This is the top level module. Top import the audio engine, use
+    This modules exports the entire audio engine. To import it, you can simply use:
     
-    ~~~~~~~~~~~~~~~~~~~~~{.c}
+    ~~~~~~~~~~~~~~~~~~~~~
     #import <doremir/audio_engine.h>
     ~~~~~~~~~~~~~~~~~~~~~
     

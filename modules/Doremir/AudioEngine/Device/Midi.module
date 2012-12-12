@@ -1,4 +1,10 @@
 
+/**
+    @addtogroup DoremirAudioEngineDeviceMidi
+    
+    Real-time midi device.
+    
+ */
 module Doremir.AudioEngine.Device.Midi
 {
     import Doremir.List;

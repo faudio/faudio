@@ -1,4 +1,10 @@
 
+/**
+    @addtogroup DoremirAudioEngineProcessor
+    
+    Provides signal processors.
+    
+ */
 module Doremir.AudioEngine.Processor
 {
     import Doremir.Std;

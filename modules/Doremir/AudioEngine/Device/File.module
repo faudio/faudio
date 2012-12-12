@@ -1,4 +1,10 @@
 
+/**
+    @addtogroup DoremirAudioEngineDeviceFile
+    
+    Non-real-time file device.
+    
+ */
 module Doremir.AudioEngine.Device.File
 {
     import Doremir.String;

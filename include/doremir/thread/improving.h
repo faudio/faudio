@@ -3,6 +3,7 @@
 #define _DOREMIR_THREAD_IMPROVING
 
 #include <doremir/std.h>
+#include <doremir/thread.h>
 
 /** @defgroup Doremir Doremir
     @{

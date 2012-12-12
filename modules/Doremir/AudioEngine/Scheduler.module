@@ -1,4 +1,10 @@
 
+/**
+    @addtogroup DoremirAudioEngineScheduler
+    
+    Provides task scheduling.
+    
+ */
 module Doremir.AudioEngine.Scheduler
 {
     import Doremir.Thread.Improving;

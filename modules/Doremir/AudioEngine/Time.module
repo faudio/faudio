@@ -1,4 +1,10 @@
 
+/**
+    @addtogroup DoremirAudioEngineTime
+    
+    Provides a time representation.
+    
+ */
 module Doremir.AudioEngine.Time
 {
     

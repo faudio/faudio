@@ -1,5 +1,9 @@
 
 /**
+    @addtogroup DoremirThreadFuture
+    
+    Future values.
+    
  */
 module Doremir.Thread.Future
 {

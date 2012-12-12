@@ -1,4 +1,10 @@
 
+/**
+    @addtogroup DoremirAudioEngineDeviceAudio
+    
+    Real-time audio device.
+    
+ */
 module Doremir.AudioEngine.Device.Audio
 {
     import Doremir.List;

@@ -1,4 +1,10 @@
 
+/**
+    @addtogroup DoremirAudioEngineDeviceBuffer
+    
+    Non-real-time memory device.
+    
+ */
 module Doremir.AudioEngine.Device.Buffer
 {
     type Buffer = opaque;
