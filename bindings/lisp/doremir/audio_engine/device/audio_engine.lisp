@@ -1,6 +1,6 @@
 (defctype Doremir.AudioEngine.Device.Audio.Session :pointer)
 
-(defctype Doremir.Audio.Engine.Device.Audio :pointer)
+(defctype Doremir.AudioEngine.Device.Audio.Device :pointer)
 
 (defctype Doremir.AudioEngine.Device.Audio.Stream :pointer)
 

@@ -11,7 +11,7 @@ module Doremir.AudioEngine.Device.Audio
     import Doremir.Pair;
 
     type Session = opaque;
-    type Audio = opaque;
+    type Device = opaque;
     type Stream = opaque;
 
     beginSession : () -> Session;
@@ -19,6 +19,6 @@ module Doremir.AudioEngine.Device.Audio
 
     devices : Session -> List;
     standard : Session -> Pair;
-    // openStream : (Audio, Proc) -> Stream;
     closeStream : Stream -> Void;
+    // openStream : (Audio, Proc) -> Stream;
 }

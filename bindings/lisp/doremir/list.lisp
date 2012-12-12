@@ -28,23 +28,9 @@
 
 (defcfun "Doremir.List.sort" :Doremir.List (:Doremir.List))
 
-(defcfun "Doremir.List.sep" :Doremir.List (:Doremir.List.Value :Doremir.List))
-
-(defcfun "Doremir.List.concat" :Doremir.List (:Doremir.List))
-
-(defcfun "Doremir.List.concatSep" :Doremir.List (:Doremir.List))
-
 (defctype Doremir.List.Pred (:pointer (:pointer :void)))
 
 (defcfun "Doremir.List.filter" :Doremir.List (:Doremir.List.Pred :Doremir.List))
-
-(defcfun "Doremir.List.and" :boolean (:Doremir.List))
-
-(defcfun "Doremir.List.or" :boolean (:Doremir.List))
-
-(defcfun "Doremir.List.any" :boolean (:Doremir.List.Pred :Doremir.List))
-
-(defcfun "Doremir.List.all" :boolean (:Doremir.List.Pred :Doremir.List))
 
 (defctype Doremir.List.Unary (:pointer (:pointer :void)))
 
@@ -55,7 +41,3 @@
 (defcfun "Doremir.List.foldl" :Doremir.List (:Doremir.List :Doremir.List.Binary :Doremir.List.Value))
 
 (defctype Doremir.List.Num (:pointer :void))
-
-(defcfun "Doremir.List.maximum" :Doremir.List.Value (:Doremir.List))
-
-(defcfun "Doremir.List.minimum" :Doremir.List.Value (:Doremir.List))

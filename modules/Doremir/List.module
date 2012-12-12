@@ -33,18 +33,15 @@ module Doremir.List
     
     reverse     : List -> List;
     sort        : List -> List;
-    sep         : (Value, List) -> List;
-    concat      : List -> List;
-    concatSep   : List -> List;
+    // concat      : List -> List;
+    // concatSep   : List -> List;
 
     type Pred   = (Value -> Bool)*;
 
     // find        : (Pred, List) -> MaybeValue;
     filter      : (Pred, List) -> List;
-    and         : List -> Bool;
-    or          : List -> Bool;
-    any         : (Pred, List) -> Bool;
-    all         : (Pred, List) -> Bool;
+    // any         : (Pred, List) -> Bool;
+    // all         : (Pred, List) -> Bool;
 
     type Unary  = (Value -> Value)*;
     type Binary = ((Value, Value) -> Value)*;
@@ -63,8 +60,8 @@ module Doremir.List
     };
     // sum         : (Num, List) -> Value;
     // product     : (Num, List) -> Value;
-    maximum     : List -> Value;
-    minimum     : List -> Value;
+    // maximum     : List -> Value;
+    // minimum     : List -> Value;
                                 
     // consDestroy    : (Value, List) -> List;
     // snocDestroy    : (Value, List) -> List;    
