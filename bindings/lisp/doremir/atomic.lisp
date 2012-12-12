@@ -1,6 +1,6 @@
 (defctype Doremir.Atomic :pointer)
 
-(defctype Doremir.Atomic.Value :pointer)
+(defctype Doremir.Atomic.Value :Doremir.Ptr)
 
 (defctype Doremir.Atomic.Updater (:pointer (:pointer :void)))
 
