@@ -5,7 +5,7 @@
     Non-real-time memory device.
     
  */
-module Doremir.AudioEngine.Device.Buffer
+module Doremir.Device.Buffer
 {
     type Buffer = opaque;
 

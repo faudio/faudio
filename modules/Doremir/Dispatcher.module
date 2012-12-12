@@ -12,7 +12,7 @@
     Provides message dispatching.
     
  */
-module Doremir.AudioEngine.Dispatcher
+module Doremir.Dispatcher
 {
     import Doremir.Std;
     import Doremir.List;

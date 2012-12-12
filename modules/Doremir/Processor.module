@@ -5,7 +5,7 @@
     Provides signal processors.
     
  */
-module Doremir.AudioEngine.Processor
+module Doremir.Processor
 {
     import Doremir.Std;
     import Doremir.Buffer;

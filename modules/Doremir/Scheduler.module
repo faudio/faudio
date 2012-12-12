@@ -5,7 +5,7 @@
     Provides task scheduling.
     
  */
-module Doremir.AudioEngine.Scheduler
+module Doremir.Scheduler
 {
     import Doremir.Thread.Improving;
 

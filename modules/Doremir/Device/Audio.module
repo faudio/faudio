@@ -1,17 +1,17 @@
 
 /**
-    @addtogroup DoremirAudioEngineDeviceMidi
+    @addtogroup DoremirAudioEngineDeviceAudio
     
-    Real-time midi device.
+    Real-time audio device.
     
  */
-module Doremir.AudioEngine.Device.Midi
+module Doremir.Device.Audio
 {
     import Doremir.List;
     import Doremir.Pair;
 
     type Session = opaque;
-    type Midi = opaque;
+    type Device = opaque;
     type Stream = opaque;
 
     beginSession : () -> Session;
@@ -19,6 +19,6 @@ module Doremir.AudioEngine.Device.Midi
 
     devices : Session -> List;
     standard : Session -> Pair;
-    // openStream : (Midi, Proc) -> Stream;
     closeStream : Stream -> Void;
+    // openStream : (Audio, Proc) -> Stream;
 }

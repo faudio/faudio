@@ -5,7 +5,7 @@
     Non-real-time file device.
     
  */
-module Doremir.AudioEngine.Device.File
+module Doremir.Device.File
 {
     import Doremir.String;
 

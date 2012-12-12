@@ -11,11 +11,11 @@
  */
 module Doremir.AudioEngine
 {
-    import Doremir.AudioEngine.Device.Audio;
-    import Doremir.AudioEngine.Device.Midi;  
-    import Doremir.AudioEngine.Device.File;
-    import Doremir.AudioEngine.Processor;
-    import Doremir.AudioEngine.Dispatcher;
-    import Doremir.AudioEngine.Scheduler;
-    import Doremir.AudioEngine.Time;    
+    import Doremir.Device.Audio;
+    import Doremir.Device.Midi;  
+    import Doremir.Device.File;
+    import Doremir.Processor;
+    import Doremir.Dispatcher;
+    import Doremir.Scheduler;
+    import Doremir.Time;    
 }

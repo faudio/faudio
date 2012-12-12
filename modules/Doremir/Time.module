@@ -5,7 +5,7 @@
     Provides a time representation.
     
  */
-module Doremir.AudioEngine.Time
+module Doremir.Time
 {
     
 }
