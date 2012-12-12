@@ -29,6 +29,9 @@ gen:
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Sequence.module 	>include/doremir/processor/sequence.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Parallel.module 	>include/doremir/processor/parallel.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Loop.module		>include/doremir/processor/loop.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/Processor/AudioUnit.module	>include/doremir/processor/audio_unit.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/Processor/VST.module		>include/doremir/processor/vst.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/Processor/FluidSynth.module	>include/doremir/processor/fluid_synth.lisp && \
 	modulo -Mmodules --language=c    <modules/Doremir/Device/Buffer.module		>include/doremir/device/buffer.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Device/File.module    	>include/doremir/device/file.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Device/Audio.module    	>include/doremir/device/audio.h && \
@@ -61,6 +64,9 @@ gen:
 	modulo -Mmodules --language=lisp <modules/Doremir/Processor/Sequence.module 	>bindings/lisp/doremir/processor/sequence.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Processor/Parallel.module 	>bindings/lisp/doremir/processor/parallel.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Processor/Loop.module		>bindings/lisp/doremir/processor/loop.lisp && \
+	modulo -Mmodules --language=lisp <modules/Doremir/Processor/AudioUnit.module	>bindings/lisp/doremir/processor/audio_unit.lisp && \
+	modulo -Mmodules --language=lisp <modules/Doremir/Processor/VST.module		>bindings/lisp/doremir/processor/vst.lisp && \
+	modulo -Mmodules --language=lisp <modules/Doremir/Processor/FluidSynth.module	>bindings/lisp/doremir/processor/fluid_synth.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Device/Buffer.module		>bindings/lisp/doremir/device/buffer.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Device/File.module    	>bindings/lisp/doremir/device/file.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Device/Audio.module    	>bindings/lisp/doremir/device/audio_engine.lisp && \
