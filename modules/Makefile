@@ -38,9 +38,7 @@ gen:
 	modulo -Mmodules --language=c    <modules/Doremir/Device/Audio.module    	>include/doremir/device/audio.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Device/Midi.module    	>include/doremir/device/midi.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Scheduler.module  		>include/doremir/scheduler.h && \
-	modulo -Mmodules --language=c    <modules/Doremir/Dispatcher.module 		>include/doremir/dispatcher.h && \
-	modulo -Mmodules --language=c    <modules/Doremir.module    			>bindings/lisp/doremir.lisp;
-
+	modulo -Mmodules --language=c    <modules/Doremir/Dispatcher.module 		>include/doremir/dispatcher.h;
 
 
 doc:    gen
