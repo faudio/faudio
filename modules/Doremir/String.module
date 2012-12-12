@@ -12,11 +12,7 @@ module Doremir.String
 {
     import Doremir;
 
-    type String = Char*;    
-    // type Utf8  = UInt8*;
-    // type Utf16 = UInt16*;
-    // type Utf32 = UInt32*;
-
+    type String = opaque;
     type FilePath = String;
 
     // toUtf8  : String -> Utf8;

@@ -64,12 +64,12 @@ void test_mutex()
 typedef struct { 
     doremir_thread_mutex_t mut;
     doremir_thread_condition_t cond; 
-    doremir_string_t msg;
+    char* msg;
     } send_hub;
 doremir_ptr_t sender(doremir_ptr_t x)
 {
     send_hub *h = (send_hub*) x;
-    static const doremir_string_t msgs[10] = {
+    static char * const msgs[10] = {
         "Sur", "le", "pond", "d'Avignon", "on", "y", "danse", "tous", "en", "round"
     };
 

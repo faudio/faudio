@@ -10,7 +10,7 @@
     @{
     */
 
-typedef char * doremir_string_t;
+typedef struct _doremir_string_t * doremir_string_t;
 typedef doremir_string_t doremir_string_file_path_t;
 doremir_string_t doremir_string_empty();
 doremir_string_t doremir_string_single(char);
