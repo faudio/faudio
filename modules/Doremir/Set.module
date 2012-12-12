@@ -7,21 +7,20 @@
  */
 module Doremir.Set
 {
-    import Doremir.Std;
+    import Doremir;
 
     type Set = opaque;
-    type Value = Intptr;
     
-    elem           : (Set, Value) -> Bool;
+    elem           : (Set, Ptr) -> Bool;
     subsetOf       : (Set, Set) -> Bool;
     properSubsetOf : (Set, Set) -> Bool;
 
     empty   : () -> Set;
     // TODO what about equality?
-    add     : (Set, Value) -> Set;
-    remove  : (Set, Value) -> Void;
-    addUnique     : (Set, Value) -> Set;
-    removeUnique  : (Set, Value) -> Void;
+    add     : (Set, Ptr) -> Set;
+    remove  : (Set, Ptr) -> Void;
+    addUnique     : (Set, Ptr) -> Set;
+    removeUnique  : (Set, Ptr) -> Void;
 
     unionOf : (Set, Set) -> Set;
     productOf : (Set, Set) -> Set;

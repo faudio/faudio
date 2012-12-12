@@ -14,11 +14,12 @@
  */
 module Doremir.Dispatcher
 {
+    import Doremir;
     import Doremir.Std;
     import Doremir.List;
 
     type Message = List;
-    type Address = Intptr;
+    type Address = Ptr;
 
 
     /** @interface doremir_dispatcher_sender_t */

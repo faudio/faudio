@@ -2,7 +2,7 @@
 #ifndef _DOREMIR_STRING
 #define _DOREMIR_STRING
 
-#include <doremir/std.h>
+#include <doremir.h>
 
 /** @defgroup Doremir Doremir
     @{

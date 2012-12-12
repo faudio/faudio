@@ -6,12 +6,14 @@
  */
 module Doremir.Atomic.Queue
 {
+    import Doremir;
+    
     type Queue = opaque;
     
     create : () -> Queue;
     destroy : Queue -> Void;
     
-    read : Queue -> Intptr;
-    write : (Queue, Intptr) -> Intptr;
+    read : Queue -> Ptr;
+    write : (Queue, Ptr) -> Ptr;
 }
 

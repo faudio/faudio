@@ -7,16 +7,15 @@
  */
 module Doremir.PriorityQueue
 {
-    import Doremir.Std;
+    import Doremir;
 
     type PriorityQueue = opaque;
-    type Value = Intptr;
     
     create  : () -> PriorityQueue;
     swap    : (PriorityQueue, PriorityQueue) -> Void;
     destroy : PriorityQueue -> Void;
     
-    insert  : (PriorityQueue, Value) -> Void;
-    peek    : PriorityQueue -> Value;
-    pop     : PriorityQueue -> Value;
+    insert  : (PriorityQueue, Ptr) -> Void;
+    peek    : PriorityQueue -> Ptr;
+    pop     : PriorityQueue -> Ptr;
 }

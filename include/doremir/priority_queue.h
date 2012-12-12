@@ -2,7 +2,7 @@
 #ifndef _DOREMIR_PRIORITYQUEUE
 #define _DOREMIR_PRIORITYQUEUE
 
-#include <doremir/std.h>
+#include <doremir.h>
 
 /** @defgroup Doremir Doremir
     @{
@@ -11,15 +11,14 @@
     */
 
 typedef struct _doremir_priority_queue_t * doremir_priority_queue_t;
-typedef intptr_t doremir_priority_queue_value_t;
 doremir_priority_queue_t doremir_priority_queue_create();
 void doremir_priority_queue_swap(doremir_priority_queue_t,
                                  doremir_priority_queue_t);
 void doremir_priority_queue_destroy(doremir_priority_queue_t);
 void doremir_priority_queue_insert(doremir_priority_queue_t,
-                                   doremir_priority_queue_value_t);
-doremir_priority_queue_value_t doremir_priority_queue_peek(doremir_priority_queue_t);
-doremir_priority_queue_value_t doremir_priority_queue_pop(doremir_priority_queue_t);
+                                   doremir_ptr_t);
+doremir_ptr_t doremir_priority_queue_peek(doremir_priority_queue_t);
+doremir_ptr_t doremir_priority_queue_pop(doremir_priority_queue_t);
 
 /** @}
     @}

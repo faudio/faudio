@@ -7,13 +7,14 @@
  */
 module Doremir.Pair
 {
+    import Doremir;
     import Doremir.Std;
 
     // FIXME needed by some allocation routines
     type Type = Size;
 
-    type Func = Intptr;
-    type Pair = struct { fst : Intptr, snd : Intptr };
+    type Unary = Ptr;
+    type Pair = struct { fst : Ptr, snd : Ptr };
     
-    map : (Func, Pair) -> Pair;
+    map : (Unary, Pair) -> Pair;
 }

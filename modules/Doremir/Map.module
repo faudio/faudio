@@ -7,15 +7,15 @@
  */
 module Doremir.Map 
 {
+    import Doremir;
     import Doremir.Std;
     import Doremir.Pair;
     
     type Map = opaque;
-    type Key = Intptr;
-    type Value = Intptr;
+    type Key = Ptr;
     
     empty   : () -> Map;
-    single  : (Key, Value) -> Map;
+    single  : (Key, Ptr) -> Map;
     append  : (Map, Map) -> Map;
     destroy : Map -> Void;
     copy    : Map -> Map;
@@ -23,15 +23,15 @@ module Doremir.Map
     fromPair : Pair -> Map;
 
     key            : (Map, Key) -> Bool;
-    elem           : (Map, Value) -> Bool;
+    elem           : (Map, Ptr) -> Bool;
     entry          : (Map, Pair) -> Bool;
     submapOf       : (Map, Map) -> Bool;
     properSubmapOf : (Map, Map) -> Bool;
 
     // TODO what about equality?    
                                 
-    add           : (Map, Key, Value) -> Map;
-    remove        : (Map, Key, Value) -> Void;
-    addDest       : (Map, Key, Value) -> Map;
-    removeDest    : (Map, Key, Value) -> Void;
+    add           : (Map, Key, Ptr) -> Map;
+    remove        : (Map, Key, Ptr) -> Void;
+    addDest       : (Map, Key, Ptr) -> Map;
+    removeDest    : (Map, Key, Ptr) -> Void;
 }

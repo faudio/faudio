@@ -2,6 +2,7 @@
 #ifndef _DOREMIR_SCHEDULER
 #define _DOREMIR_SCHEDULER
 
+#include <doremir.h>
 #include <doremir/thread/improving.h>
 
 /** @defgroup Doremir Doremir
@@ -11,7 +12,7 @@
     */
 
 typedef int doremir_scheduler_time_t;
-typedef void (* doremir_scheduler_action_t)();
+typedef doremir_nullary_t doremir_scheduler_action_t;
 typedef struct {
             void (* schedule)(doremir_scheduler_time_t,
                               doremir_scheduler_action_t);

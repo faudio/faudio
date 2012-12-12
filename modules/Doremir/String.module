@@ -10,7 +10,7 @@
  */
 module Doremir.String
 {
-    import Doremir.Std;
+    import Doremir;
 
     type String = Char*;    
     // type Utf8  = UInt8*;

@@ -6,12 +6,14 @@
  */
 module Doremir.Atomic.Stack
 {
+    import Doremir;
+
     type Stack = opaque;
     
     create : () -> Stack;
     destroy : Stack -> Void;
     
-    read : Stack -> Intptr;
-    write : (Stack, Intptr) -> Intptr;
+    read : Stack -> Ptr;
+    write : (Stack, Ptr) -> Ptr;
 }
 

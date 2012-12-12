@@ -39,7 +39,8 @@ void doremir_device_audio_terminate()
 
 /** Begin a new session.
  */
-doremir_device_audio_session_t doremir_device_audio_begin_session()
+doremir_device_audio_session_t 
+doremir_device_audio_begin_session()
 {
     if (!pa_mutex) assert(false && "Not initalized");
 

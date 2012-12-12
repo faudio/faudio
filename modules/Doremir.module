@@ -7,6 +7,8 @@
  */
 module Doremir
 {
+    import Doremir.Std;
+
     type Ptr = Void*;
     type Nullary = (() -> Ptr)*;
     type Unary   = (Ptr -> Ptr)*;
