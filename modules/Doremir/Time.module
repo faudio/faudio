@@ -1,6 +1,6 @@
 
 /**
-    @addtogroup DoremirAudioEngineTime
+    @addtogroup DoremirTime
     
     Provides a time representation.
     

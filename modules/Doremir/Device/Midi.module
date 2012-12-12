@@ -1,6 +1,6 @@
 
 /**
-    @addtogroup DoremirAudioEngineDeviceMidi
+    @addtogroup DoremirDeviceMidi
     
     Real-time midi device.
     

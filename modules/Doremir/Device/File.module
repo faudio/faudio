@@ -1,6 +1,6 @@
 
 /**
-    @addtogroup DoremirAudioEngineDeviceFile
+    @addtogroup DoremirDeviceFile
     
     Non-real-time file device.
     

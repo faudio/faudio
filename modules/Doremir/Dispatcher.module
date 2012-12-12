@@ -1,13 +1,13 @@
 
 /**
-    @addtogroup DoremirAudioEngineDevice
+    @addtogroup DoremirDevice
     
     Provides input and output devices.
     
  */
 
 /**
-    @addtogroup DoremirAudioEngineDispatcher
+    @addtogroup DoremirDispatcher
     
     Provides message dispatching.
     

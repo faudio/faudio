@@ -1,6 +1,6 @@
 
 /**
-    @addtogroup DoremirAudioEngineProcessor
+    @addtogroup DoremirProcessor
     
     Provides signal processors.
     

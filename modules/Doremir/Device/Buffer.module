@@ -1,6 +1,6 @@
 
 /**
-    @addtogroup DoremirAudioEngineDeviceBuffer
+    @addtogroup DoremirDeviceBuffer
     
     Non-real-time memory device.
     

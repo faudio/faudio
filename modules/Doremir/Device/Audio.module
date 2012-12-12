@@ -1,6 +1,6 @@
 
 /**
-    @addtogroup DoremirAudioEngineDeviceAudio
+    @addtogroup DoremirDeviceAudio
     
     Real-time audio device.
     
