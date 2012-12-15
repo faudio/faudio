@@ -1,25 +1,32 @@
 
 ## Interfaces
 
-The Audio Engine provides ad-hoc polymorphism using interfaces. An interface is a collection of methods designated by a unique interface identifier. Each type may provide an implementation for any number of interfaces.
+The Audio Engine provides ad-hoc polymorphism using interfaces. An interface is a collection of methods
+designated by a unique interface identifier. Each type may provide an implementation for any number of
+interfaces.
 
-Some basic interfaces include doremir_eq_t, doremir_ord_t and doremir_num_t.
+Some basic interfaces include doremir_equal_t, doremir_order_t and doremir_number_t.
 
-By convention, the interface identifier is a global constant of the same name as the interface type, except for the `_t` suffix, so the identifier for the above interfaces are doremir_eq, doremir_ord and doremir_num respectively.
+By convention, the interface identifier is a global constant of the same name as the interface type,
+except for the `_t` suffix, so the identifier for the above interfaces are doremir_eq, doremir_ord and
+doremir_num respectively.
 
 
 ### Using an interface
 
-Interface methods are called by invoking \ref doremir_get_interface, passing the value and the pointer instance. Note that this is the *only* way to call an interface method: in particular it is not safe to cast a pointer of some type to the interface type, even if the type happen to implement the interface.
+Interface methods are called by invoking \ref doremir_get_interface, passing the value and the pointer
+instance. Note that this is the *only* way to call an interface method: in particular it is not safe to
+cast a pointer of some type to the interface type, even if the type happen to implement the interface.
 
-For example, this is a way to implement the *min* function for any type supporing the \ref doremir_ord_t interface:
+For example, this is a way to implement the *min* function for any type supporing the \ref doremir_order_t
+interface:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 doremir_ptr_t
 doremir_min(doremir_ptr_t a, doremir_ptr_t b)
 {             
-    doremir_ord_t * ord = doremir_get_interface(doremir_ord, a);
-    return ord->lt(a, b) ? a : b;
+    doremir_order_t * ord = doremir_get_interface(doremir_ord, a);
+    return ord->less_than(a, b) ? a : b;
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -29,7 +36,7 @@ Note that most interfaces define wrappers for the the \ref doremir_get_interface
 doremir_ptr_t
 doremir_min(doremir_ptr_t a, doremir_ptr_t b)
 {
-    return doremir_lt(a, b) ? a : b;
+    return doremir_less_than(a, b) ? a : b;
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -57,9 +64,9 @@ The struct is simply a typedef defining the types of the interface, for example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 typedef struct {
-            bool (* lt)(doremir_ptr_t, doremir_ptr_t);
-            bool (* gt)(doremir_ptr_t, doremir_ptr_t);
-        } doremir_ord_t;
+            bool (* less_than)(doremir_ptr_t, doremir_ptr_t);
+            bool (* greater_than)(doremir_ptr_t, doremir_ptr_t);
+        } doremir_order_t;
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -72,13 +79,14 @@ const doremir_id_t doremir_ord = doremir_id("doremir_ord");
 As described above, it is good style to also provide a global wrapper for each method:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-inline bool doremir_lt (doremir_ptr_t, doremir_ptr_t)
+inline bool doremir_less_than (doremir_ptr_t, doremir_ptr_t)
 {
-    return doremir_get_interface(doremir_ord, a)->lt(a, b);
+    return doremir_get_interface(doremir_ord, a)->less_than(a, b);
 }
-inline bool doremir_gt (doremir_ptr_t, doremir_ptr_t)
+
+inline bool doremir_greater_than (doremir_ptr_t, doremir_ptr_t)
 {
-    return doremir_get_interface(doremir_ord, a)->gt(a, b);
+    return doremir_get_interface(doremir_ord, a)->greater_than(a, b);
 }
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -97,34 +105,34 @@ incoming interface identifiers, returning a pointer to the appropriate interface
 struct.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bool
-_foo_eq(doremir_ptr_t a, doremir_ptr_t b)
-{
-    return false;
-}
-bool
-_foo_lt(doremir_ptr_t a, doremir_ptr_t b)
-{
-    return false;
-}
-bool
-_foo_gt(doremir_ptr_t a, doremir_ptr_t b)
+bool foo_equal(doremir_ptr_t a, doremir_ptr_t b)
 {
     return false;
 }
 
-doremir_ptr_t
-foo_impl(doremir_id_t interface)
+bool foo_less_than(doremir_ptr_t a, doremir_ptr_t b)
 {
-    static doremir_eq_t  foo_eq_impl  = { _foo_eq };
-    static doremir_ord_t foo_ord_impl = { _foo_lt, _foo_gt };
+    return false;
+}
+
+bool foo_greater_than(doremir_ptr_t a, doremir_ptr_t b)
+{
+    return false;
+}
+
+doremir_ptr_t foo_impl(doremir_id_t interface)
+{
+    static doremir_equal_t  foo_equal_impl = { foo_equal };
+    static doremir_order_t foo_order_impl = { foo_less_than, foo_greater_than };
 
     switch (interface)
     {
-    case doremir_eq:
-        return &foo_eq_impl;
-    case doremir_ord:
-        return &foo_ord_impl;
+    case doremir_equal:
+        return &foo_equal_impl;
+
+    case doremir_order:
+        return &foo_order_impl;
+
     default:
         return NULL;
     }

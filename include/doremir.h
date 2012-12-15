@@ -18,20 +18,20 @@ typedef struct {
             doremir_unary_t function; doremir_ptr_t value;
         } doremir_closure_t;
 typedef struct {
-            bool (* eq)(doremir_ptr_t, doremir_ptr_t);
-        } doremir_eq_t;
+            bool (* equal)(doremir_ptr_t, doremir_ptr_t);
+        } doremir_equal_t;
 typedef struct {
-            bool (* lt)(doremir_ptr_t, doremir_ptr_t);
-            bool (* gt)(doremir_ptr_t, doremir_ptr_t);
-        } doremir_ord_t;
+            bool (* less_than)(doremir_ptr_t, doremir_ptr_t);
+            bool (* greater_than)(doremir_ptr_t, doremir_ptr_t);
+        } doremir_order_t;
 typedef struct {
             doremir_ptr_t (* add)(doremir_ptr_t, doremir_ptr_t);
-            doremir_ptr_t (* sub)(doremir_ptr_t, doremir_ptr_t);
-            doremir_ptr_t (* mul)(doremir_ptr_t, doremir_ptr_t);
-            doremir_ptr_t (* div)(doremir_ptr_t, doremir_ptr_t);
-            doremir_ptr_t (* mod)(doremir_ptr_t, doremir_ptr_t);
-            doremir_ptr_t (* abs)(doremir_ptr_t, doremir_ptr_t);
-        } doremir_num_t;
+            doremir_ptr_t (* subtract)(doremir_ptr_t, doremir_ptr_t);
+            doremir_ptr_t (* multiply)(doremir_ptr_t, doremir_ptr_t);
+            doremir_ptr_t (* divide)(doremir_ptr_t, doremir_ptr_t);
+            doremir_ptr_t (* modulo)(doremir_ptr_t, doremir_ptr_t);
+            doremir_ptr_t (* absolute)(doremir_ptr_t, doremir_ptr_t);
+        } doremir_number_t;
 bool doremir_to_bool(doremir_ptr_t);
 int doremir_to_int(doremir_ptr_t);
 int8_t doremir_to_int8(doremir_ptr_t);

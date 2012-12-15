@@ -1,6 +1,7 @@
 
 #include <doremir/audio_engine.h>
 #include <doremir/thread.h>
+#include <doremir/util.h>
 
 int version[3] = { 2, 0, 0 };
 
@@ -124,6 +125,47 @@ void test_cond()
 }
 
 
+enum { doremir_equal  = 1 };
+enum { doremir_order = 2 };
+
+bool foo_equal(doremir_ptr_t a, doremir_ptr_t b)
+{
+    return false;
+}
+
+bool foo_less_than(doremir_ptr_t a, doremir_ptr_t b)
+{
+    return false;
+}
+
+bool foo_greater_than(doremir_ptr_t a, doremir_ptr_t b)
+{
+    return false;
+}
+
+doremir_ptr_t foo_impl(doremir_id_t interface)
+{
+    static doremir_equal_t  foo_equal_impl = { foo_equal };
+    static doremir_order_t foo_order_impl = { foo_less_than, foo_greater_than };
+
+    switch (interface)
+    {
+    case doremir_equal:
+        return &foo_equal_impl;
+
+    case doremir_order:
+        return &foo_order_impl;
+
+    default:
+        return NULL;
+    }
+}
+
+// void test_list()
+// {
+//     list_t xs = lempty();
+// }
+
 int main (int argc, char const *argv[])
 {
   printf("DoReMIR Audio engine v%d.%d.%d\n", version[0], version[1], version[2]);
@@ -141,7 +183,5 @@ int main (int argc, char const *argv[])
   test_mutex();
   test_cond();
   
-  doremir_ptr_t x = &main;
-
   return 0;
 }

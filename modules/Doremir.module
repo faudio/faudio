@@ -24,24 +24,24 @@ module Doremir
 
     /** @interface doremir_eq_t 
     */
-    type Eq   = struct {
-        eq : ((Ptr, Ptr) -> Bool)*
+    type Equal   = struct {
+        equal : ((Ptr, Ptr) -> Bool)*
     };
     /** @interface doremir_ord_t 
     */
-    type Ord  = struct {
-        lt : ((Ptr, Ptr) -> Bool)*,
-        gt : ((Ptr, Ptr) -> Bool)*
+    type Order  = struct {
+        lessThan : ((Ptr, Ptr) -> Bool)*,
+        greaterThan : ((Ptr, Ptr) -> Bool)*
     };
     /** @interface doremir_num_t 
     */
-    type Num = struct {
-        add : ((Ptr, Ptr) -> Ptr)*,
-        sub : ((Ptr, Ptr) -> Ptr)*,
-        mul : ((Ptr, Ptr) -> Ptr)*,
-        div : ((Ptr, Ptr) -> Ptr)*,
-        mod : ((Ptr, Ptr) -> Ptr)*,
-        abs : ((Ptr, Ptr) -> Ptr)*
+    type Number = struct {
+        add      : ((Ptr, Ptr) -> Ptr)*,
+        subtract : ((Ptr, Ptr) -> Ptr)*,
+        multiply : ((Ptr, Ptr) -> Ptr)*,
+        divide   : ((Ptr, Ptr) -> Ptr)*,
+        modulo   : ((Ptr, Ptr) -> Ptr)*,
+        absolute : ((Ptr, Ptr) -> Ptr)*
     };
 
     toBool     : Ptr -> Bool;
