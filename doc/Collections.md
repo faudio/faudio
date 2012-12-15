@@ -22,7 +22,7 @@ The collections can store reference types (as \ref doremir_ptr_t) and primitive 
 The Audio Engine use single-ownership semantics for all of its reference types. Each collection provides a set of construct, copy and destruct function, and each collection must be destructed exactly once. The correct usage pattern is to call the destructor whenever the variable holding the collection goes out of scope. It is good practice to introduce an extra block to mark out the scope of the collection variable.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-foo_list_t xs = doremir_list_from(1, 2, 3);
+doremir_list_t xs = doremir_list_from(1, 2, 3);
 {
     ...
 }
@@ -31,7 +31,7 @@ doremir_list_destroy(xs);
 
 The reference types can be shared as long as the original reference is in scope.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-foo_list_t xs = doremir_list_from(1, 2, 3);
+doremir_list_t xs = doremir_list_from(1, 2, 3);
 {
     int sum = doremir_list_sum(xs);
     ...
@@ -43,7 +43,7 @@ If a reference type is required to persist beyond the original scope it can be c
 The \ref doremir_move function does nothing, it just serves as a mnemonic to mark out that
 ownership is being transfered.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-foo_list_t xs = doremir_list_from(1, 2, 3);
+doremir_list_t xs = doremir_list_from(1, 2, 3);
 {
     doremir_dispatcher_send(out1, doremir_copy(xs));
     doremir_dispatcher_send(out1, doremir_copy(xs));
@@ -51,7 +51,7 @@ foo_list_t xs = doremir_list_from(1, 2, 3);
 }
 doremir_list_destroy(xs);
 
-foo_list_t ys = doremir_list_from(1, 2, 3);
+doremir_list_t ys = doremir_list_from(1, 2, 3);
 {
     doremir_dispatcher_send(out1, doremir_copy(ys));
     doremir_dispatcher_send(out1, doremir_move(ys));
@@ -64,7 +64,7 @@ Functions operating on collections come in two variants: a non-destructive varia
 new collection (the default), and a destructive variant which destructs the old collections while
 constructing the new one. The destructive functions should be used whenever a variable is updated locally.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-foo_list_t xs = doremir_list_empty();
+doremir_list_t xs = doremir_list_empty();
 {
     xs = doremir_list_consd(1, xs);
     xs = doremir_list_consd(2, xs);
@@ -76,7 +76,7 @@ doremir_list_destroy(xs);
 Functions that are unsymmetric in their construct/destruct calls becomes construct/destruct functions
 themselves.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-foo_list_t doremir_list_single(doremir_ptr_t x)
+doremir_list_t doremir_list_single(doremir_ptr_t x)
 {                                
     doremir_list_t xs = doremir_list_empty();
     xs = doremir_list_consd(1, xs);
@@ -87,39 +87,47 @@ foo_list_t doremir_list_single(doremir_ptr_t x)
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+### Collections and interfaces
+
+Many functions operating on collections require the contained type to implement a certain interface. For
+example \ref doremir_list_sort requires the contents of the given list to implenent doremir_ord_t.
+
 
 \anchor WrapperFunctions
 
 ### Wrapper functions
 
 The wrapper functions can be used to convert primitive values to \ref doremir_ptr_t and back, and is the preferred
-way of storing primitive types in a collection. The standard version of the wrapper functions are declared in the \ref Doremir module:
+way of storing primitive types in a collection. The standard version of the wrapper functions are declared in the \ref Doremir module,
+but the shorter aliases in \ref doremir/util.h are usually more conventient.
 
-Type   | From pointer             | To pointer
--------| -------------------------|--------------------
-bool   | \ref doremir_to_bool     | \ref doremir_to_bool
-int8   | \ref doremir_to_int8     | \ref doremir_to_int8
-int16  | \ref doremir_to_int16    | \ref doremir_to_int16
-int32  | \ref doremir_to_int32    | \ref doremir_to_int32
-float  | \ref doremir_to_float    | \ref doremir_to_float
-double | \ref doremir_to_double   | \ref doremir_to_double
+Type   | From pointer                          | To pointer
+-------| --------------------------------------|--------------------
+bool   | \ref doremir_to_bool, \ref d_bool     | \ref doremir_from_bool, \ref d_fbool
+int8   | \ref doremir_to_int8, \ref d_int8       | \ref doremir_from_int8, \ref d_int8
+int16  | \ref doremir_to_int16, \ref d_int16     | \ref doremir_from_int16, \ref d_int16
+int32  | \ref doremir_to_int32, \ref d_int32     | \ref doremir_from_int32, \ref d_fint32
+float  | \ref doremir_to_float, \ref d_float     | \ref doremir_from_float, \ref d_ffloat
+double | \ref doremir_to_double, \ref d_double   | \ref doremir_from_double, \ref d_fdouble
 
 The wrapping pointers have the same life cycle collections, that is: create once, use, destroy once. Typically they should be used in conjunction with collection functions.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-foo_list_t xs = doremir_list_empty();
+doremir_list_t xs = doremir_list_empty();
 {
-    xs = doremir_list_consd(doremir_from_double(1.4142135623730951), xs);
-    xs = doremir_list_consd(doremir_from_double(3.141592653589793), xs);
-    double s = doremir_to_double(doremir_list_sum());
+    xs = doremir_list_consd(d_double(1.4142135623730951), xs);
+    xs = doremir_list_consd(d_double(3.141592653589793), xs);
+    double s = d_fdouble(doremir_list_sum());
 }
 doremir_list_destroy(xs);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-### Collections and interfaces
+The wrapping pointers implement the standard interfaces (\ref doremir_eq_t, \ref doremir_ord_t and \ref
+doremir_num_t) and can be used with \ref doremir_get_interface.
 
-Many functions operating on collections require the contained type to implement a certain interface. For example
-doremir_list_sort requires the contents of the given list to implenent doremir_ord_t.
+### Dynamic collections
 
-The wrapping pointers implement the standard interfaces (\ref doremir_eq_t, \ref doremir_ord_t and \ref doremir_num_t) for this purpose.
+Collections containing only primitives or references implementing \ref doremir_get_interface can be used
+with the \ref DoremirDynamic functions.
+
 

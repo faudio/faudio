@@ -36,22 +36,22 @@ module Doremir.List
     
     reverse     : List -> List;
     sort        : List -> List;
-    // concat      : List -> List;
+    concat      : List -> List;
     // concatSep   : List -> List;
 
-    // find        : (Pred, List) -> MaybePtr;
+    find        : (Pred, List) -> Ptr;
     filter      : (Pred, List) -> List;
-    // any         : (Pred, List) -> Bool;
-    // all         : (Pred, List) -> Bool;
+    any         : (Pred, List) -> Bool;
+    all         : (Pred, List) -> Bool;
 
     map         : (List, Unary)         -> List;
     foldl       : (List, Binary, Ptr) -> List;
     
 
-    // sum         : (Num, List) -> Ptr;
-    // product     : (Num, List) -> Ptr;
-    // maximum     : List -> Ptr;
-    // minimum     : List -> Ptr;
+    sum         : List -> Ptr;
+    product     : List -> Ptr;
+    maximum     : List -> Ptr;
+    minimum     : List -> Ptr;
                                 
     consd    : (Ptr, List) -> List;
     snocd    : (Ptr, List) -> List;    
