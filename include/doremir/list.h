@@ -20,6 +20,10 @@ doremir_list_t doremir_list_copy(doremir_list_t);
 void doremir_list_swap(doremir_list_t, doremir_list_t);
 bool doremir_list_is_empty(doremir_list_t);
 int doremir_list_lenght(doremir_list_t);
+doremir_ptr_t doremir_list_head(doremir_list_t);
+doremir_ptr_t doremir_list_tail(doremir_list_t);
+doremir_ptr_t doremir_list_init(doremir_list_t);
+doremir_ptr_t doremir_list_last(doremir_list_t);
 doremir_list_t doremir_list_take(int, doremir_list_t);
 doremir_list_t doremir_list_drop(int, doremir_list_t);
 bool doremir_list_is_elem(doremir_ptr_t, doremir_list_t);
@@ -30,6 +34,11 @@ doremir_list_t doremir_list_map(doremir_list_t, doremir_unary_t);
 doremir_list_t doremir_list_foldl(doremir_list_t,
                                   doremir_binary_t,
                                   doremir_ptr_t);
+doremir_list_t doremir_list_consd(doremir_ptr_t, doremir_list_t);
+doremir_list_t doremir_list_snocd(doremir_ptr_t, doremir_list_t);
+doremir_list_t doremir_list_reversed(doremir_list_t);
+doremir_list_t doremir_list_sortd(doremir_list_t);
+doremir_list_t doremir_list_mapd(doremir_list_t, doremir_unary_t);
 
 /** @}
     @}

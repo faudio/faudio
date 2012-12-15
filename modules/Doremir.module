@@ -60,5 +60,11 @@ module Doremir
     fromFloat  : Float -> Ptr;
     fromDouble : Double -> Ptr;
     
-    getInterface : (Int64,Ptr) -> Ptr;
+    copy : Ptr -> Ptr;
+    move : Ptr -> Ptr;
+    destroy : Ptr -> Void;
+
+    type Id = Int64;
+    type Impl = (Id -> Ptr)*;
+    getInterface : (Id, Ptr) -> Ptr;
 }

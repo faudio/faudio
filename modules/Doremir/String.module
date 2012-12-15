@@ -3,9 +3,6 @@
     @addtogroup DoremirString
     
     String operations.
-    
-    We use plain char arrays, pretending that they are immutable. 
-    Please do not modify them.
 
  */
 module Doremir.String

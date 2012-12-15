@@ -4,6 +4,8 @@
     
     Pair data structure and some utility functions.
 
+    \warning To store a primitive (non-pointer) value in a collection, the \ref WrapperFunctions must be used.
+
  */
 module Doremir.Pair
 {

@@ -3,6 +3,9 @@
     @addtogroup DoremirList
     
     Immutable list data structure.
+
+    \warning To store a primitive (non-pointer) value in a collection, the \ref WrapperFunctions must be used.
+
  */
 module Doremir.List
 {
@@ -22,10 +25,10 @@ module Doremir.List
 
     isEmpty     : List -> Bool;
     lenght      : List -> Int;
-    // head        : List -> MaybePtr;
-    // tail        : List -> MaybeList;
-    // init        : List -> MaybeList;
-    // last        : List -> MaybePtr;
+    head        : List -> Ptr; // FIXME what about partiality?
+    tail        : List -> Ptr;
+    init        : List -> Ptr;
+    last        : List -> Ptr;
 
     take        : (Int, List) -> List;
     drop        : (Int, List) -> List;
@@ -50,10 +53,10 @@ module Doremir.List
     // maximum     : List -> Ptr;
     // minimum     : List -> Ptr;
                                 
-    // consDestroy    : (Ptr, List) -> List;
-    // snocDestroy    : (Ptr, List) -> List;    
-    // reverseDestroy : List -> List;
-    // sortDestroy    : List -> List;
-    // mapDestroy     : (List, Unary) -> List;
+    consd    : (Ptr, List) -> List;
+    snocd    : (Ptr, List) -> List;    
+    reversed : List -> List;
+    sortd    : List -> List;
+    mapd     : (List, Unary) -> List;
     
 }
