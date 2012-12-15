@@ -7,9 +7,9 @@ interfaces.
 
 Some basic interfaces include doremir_equal_t, doremir_order_t and doremir_number_t.
 
-By convention, the interface identifier is a global constant of the same name as the interface type,
+<!-- By convention, the interface identifier is a global constant of the same name as the interface type,
 except for the `_t` suffix, so the identifier for the above interfaces are doremir_eq, doremir_ord and
-doremir_num respectively.
+doremir_num respectively. -->
 
 
 ### Using an interface
@@ -22,19 +22,18 @@ For example, this is a way to implement the *min* function for any type supporin
 interface:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-doremir_ptr_t
-doremir_min(doremir_ptr_t a, doremir_ptr_t b)
+doremir_ptr_t doremir_min(doremir_ptr_t a, doremir_ptr_t b)
 {             
-    doremir_order_t * ord = doremir_get_interface(doremir_ord, a);
-    return ord->less_than(a, b) ? a : b;
+    return doremir_get_interface(doremir_ord, a)->less_than(a, b) ? a : b;
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Note that most interfaces define wrappers for the the \ref doremir_get_interface call. By convention, the wrapper should be a function of the same name as the interface mehtod. This function is equivalent to the above definition:
+Note that most interfaces define wrappers for the the \ref doremir_get_interface call. By convention, the
+wrapper should be a function of the same name as the interface method. This function is equivalent to the
+above definition:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-doremir_ptr_t
-doremir_min(doremir_ptr_t a, doremir_ptr_t b)
+doremir_ptr_t doremir_min(doremir_ptr_t a, doremir_ptr_t b)
 {
     return doremir_less_than(a, b) ? a : b;
 }
@@ -42,12 +41,12 @@ doremir_min(doremir_ptr_t a, doremir_ptr_t b)
 
 
 As \ref doremir_get_interface returns a pointer to the interface or `null`, it can be used for dynamically inspecting a whether an arbitrary pointer supports an interface or not. If a type is known to support an
-interface at compile-time, this check can be ommited.
+interface at compile-time, this check can be omitted.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-bool has_eq(doremir_ptr a)
+bool has_equality(doremir_ptr a)
 {
-    return !!doremir_get_interface(doremir_eq, a);
+    return doremir_get_interface(doremir_eq, a);
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -64,9 +63,12 @@ The struct is simply a typedef defining the types of the interface, for example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 typedef struct {
-            bool (* less_than)(doremir_ptr_t, doremir_ptr_t);
-            bool (* greater_than)(doremir_ptr_t, doremir_ptr_t);
-        } doremir_order_t;
+
+    bool (* less_than)(doremir_ptr_t, doremir_ptr_t);
+
+    bool (* greater_than)(doremir_ptr_t, doremir_ptr_t);
+
+} doremir_order_t;
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -99,10 +101,14 @@ To implement an interface for a pointer type, the following has to be provided:
 
 * Functions implementing the interface methods
 * A \ref doremir_impl_t lookup function
+* A construction routine that sets the pointer to the lookup function
 
 The lookup function is unique for each type, and performs a case matching on the
 incoming interface identifiers, returning a pointer to the appropriate interface
-struct.
+struct. 
+
+For \ref doremir_get_interface to work properly, the lookup function has to be the *first* element
+of the type (i.e. have the same address as the type).
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 bool foo_equal(doremir_ptr_t a, doremir_ptr_t b)
@@ -122,7 +128,7 @@ bool foo_greater_than(doremir_ptr_t a, doremir_ptr_t b)
 
 doremir_ptr_t foo_impl(doremir_id_t interface)
 {
-    static doremir_equal_t  foo_equal_impl = { foo_equal };
+    static doremir_equal_t foo_equal_impl = { foo_equal };
     static doremir_order_t foo_order_impl = { foo_less_than, foo_greater_than };
 
     switch (interface)
@@ -137,23 +143,21 @@ doremir_ptr_t foo_impl(doremir_id_t interface)
         return NULL;
     }
 }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For \ref doremir_get_interface to work properly, the lookup function has to be the *first* element
-of the type (i.e. have the same address as the type).
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-struct _foo
+struct foo
 {
     doremir_impl_t impl;
     ...
 };
 
-struct _foo * create_foo()
+struct foo * create_foo()
 {
-    struct _foo * = malloc(sizeof(_foo));
-    foo->impl = &foo_impl;
+    struct foo *ptr = malloc(sizeof(_foo));
+    ptr->impl = &foo_impl;
+    ...
+    return ptr;
 }
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
                            

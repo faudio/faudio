@@ -3,7 +3,6 @@
     @addtogroup DoremirAtomic
     
     Cross-platform atomic variables. Submodules contains lock-free data structures.
-
  */
 module Doremir.Atomic
 {                   

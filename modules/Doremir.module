@@ -22,18 +22,18 @@ module Doremir
         value    : Ptr 
     };
 
-    /** @interface doremir_eq_t 
+    /** @interface doremir_equal_t 
     */
     type Equal   = struct {
         equal : ((Ptr, Ptr) -> Bool)*
     };
-    /** @interface doremir_ord_t 
+    /** @interface doremir_order_t 
     */
     type Order  = struct {
         lessThan : ((Ptr, Ptr) -> Bool)*,
         greaterThan : ((Ptr, Ptr) -> Bool)*
     };
-    /** @interface doremir_num_t 
+    /** @interface doremir_number_t 
     */
     type Number = struct {
         add      : ((Ptr, Ptr) -> Ptr)*,
@@ -43,6 +43,11 @@ module Doremir
         modulo   : ((Ptr, Ptr) -> Ptr)*,
         absolute : ((Ptr, Ptr) -> Ptr)*
     };
+    /** @interface doremir_dynamic_t 
+    */
+    type Dynamic = struct {
+    };
+
 
     toBool     : Ptr -> Bool;
     toInt      : Ptr -> Int;

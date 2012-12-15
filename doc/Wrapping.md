@@ -1,5 +1,5 @@
 
-## Wrap and unwrap functions
+\anchor WrapFunctions
 
 The wrap and unwrap functions can be used to convert primitive values to \ref doremir_ptr_t and back, and is
 the preferred way of storing primitive types in a collection. The standard version of the wrapper
@@ -20,7 +20,7 @@ list_t xs = doremir_list_empty();
 doremir_list_destroy(xs);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The wrapped values implement \ref doremir_eq_t, \ref doremir_ord_t, \ref doremir_num_t and \ref
+The wrapped values implement \ref doremir_equal_t, \ref doremir_order_t, \ref doremir_number_t and \ref
 doremir_dynamic_t.
 
 

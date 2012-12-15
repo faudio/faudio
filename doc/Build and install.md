@@ -148,11 +148,3 @@ Required for automatic package resolution. If you prefer to build packages local
 #### Doxygen
 
 Required for generating the detailed API documentation (HTML or PDF).
-
-<!--
-#### Pandoc
-
-Required for generating the reference manual (HTML or PDF).
--->     
-\pagebreak
-
