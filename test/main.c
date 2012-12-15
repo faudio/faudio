@@ -5,6 +5,14 @@
 int version[3] = { 2, 0, 0 };
 
 
+doremir_closure_t* new_closure(doremir_unary_t function, doremir_ptr_t value)
+{
+    doremir_closure_t *r = malloc(sizeof(doremir_closure_t));
+    r->function = function;
+    r->value = value;
+    return r;
+}
+
 doremir_ptr_t printer(doremir_ptr_t x)
 {
     int n = 0;
@@ -18,8 +26,8 @@ doremir_ptr_t printer(doremir_ptr_t x)
 }
 void test_thread()
 {                                               
-    doremir_closure_t r = { printer, (doremir_ptr_t) 10 };
-    doremir_thread_t t = doremir_thread_create(&r);
+    // doremir_closure_t r = { printer, (doremir_ptr_t) 10 };
+    doremir_thread_t t = doremir_thread_create(new_closure(printer, (doremir_ptr_t) 10));
 
     doremir_closure_t r2 = { printer, (doremir_ptr_t) 11 };
     doremir_thread_t t2 = doremir_thread_create(&r2);
@@ -123,6 +131,8 @@ int main (int argc, char const *argv[])
   printf("sizeof(int32_t) = %d\n", (unsigned int) sizeof(int32_t));
   printf("sizeof(uint32_t) = %d\n", (unsigned int) sizeof(uint32_t));
   printf("sizeof(void*) = %d\n", (unsigned int) sizeof(void*));
+
+  doremir_audio_engine_initialize();
   
   // int c = getopt(argc, (char**) argv, "abc:");
   // iconv_t cd = iconv_open("WCHAR_T", "UTF-8");
@@ -130,6 +140,8 @@ int main (int argc, char const *argv[])
   test_thread();
   test_mutex();
   test_cond();
+  
+  doremir_ptr_t x = &main;
 
   return 0;
 }

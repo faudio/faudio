@@ -5,6 +5,7 @@
 # To update, use 
 #  find src -name '*'
 list(APPEND SRCS
+  doremir/audio_engine.c
   doremir/atomic/queue.c
   doremir/atomic/ring_buffer.c
   doremir/atomic/stack.c

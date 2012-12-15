@@ -16,7 +16,8 @@
     @{
     */
 
-
+void doremir_audio_engine_initialize();
+void doremir_audio_engine_terminate();
 
 /** @}
     @}

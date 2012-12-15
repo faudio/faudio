@@ -9,16 +9,20 @@ module Doremir.Device.Midi
 {
     import Doremir.List;
     import Doremir.Pair;
+    import Doremir.Processor;
 
     type Session = opaque;
-    type Midi = opaque;
     type Stream = opaque;
+    type Midi = opaque;
 
     beginSession : () -> Session;
     endSession : Session -> Void;
 
     devices : Session -> List;
     standard : Session -> Pair;
-    // openStream : (Midi, Proc) -> Stream;
+    standardInput : Session -> Midi;
+    standardOutput : Session -> Midi;
+    
+    openStream : (Midi, Processor, Midi) -> Stream;
     closeStream : Stream -> Void;
 }

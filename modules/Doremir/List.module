@@ -36,28 +36,15 @@ module Doremir.List
     // concat      : List -> List;
     // concatSep   : List -> List;
 
-    type Pred   = (Ptr -> Bool)*;
-
     // find        : (Pred, List) -> MaybePtr;
     filter      : (Pred, List) -> List;
     // any         : (Pred, List) -> Bool;
     // all         : (Pred, List) -> Bool;
 
-    type Unary  = (Ptr -> Ptr)*;
-    type Binary = ((Ptr, Ptr) -> Ptr)*;
-
     map         : (List, Unary)         -> List;
     foldl       : (List, Binary, Ptr) -> List;
     
 
-    type Num = struct {
-        add : ((Ptr, Ptr) -> Ptr)*,
-        sub : ((Ptr, Ptr) -> Ptr)*,
-        mul : ((Ptr, Ptr) -> Ptr)*,
-        div : ((Ptr, Ptr) -> Ptr)*,
-        mod : ((Ptr, Ptr) -> Ptr)*,
-        abs : ((Ptr, Ptr) -> Ptr)*
-    };
     // sum         : (Num, List) -> Ptr;
     // product     : (Num, List) -> Ptr;
     // maximum     : List -> Ptr;

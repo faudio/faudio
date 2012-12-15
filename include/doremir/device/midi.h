@@ -4,6 +4,7 @@
 
 #include <doremir/list.h>
 #include <doremir/pair.h>
+#include <doremir/processor.h>
 
 /** @defgroup Doremir Doremir
     @{
@@ -14,12 +15,17 @@
     */
 
 typedef struct _doremir_device_midi_session_t * doremir_device_midi_session_t;
-typedef struct _doremir_device_midi_t * doremir_device_midi_t;
 typedef struct _doremir_device_midi_stream_t * doremir_device_midi_stream_t;
+typedef struct _doremir_device_midi_t * doremir_device_midi_t;
 doremir_device_midi_session_t doremir_device_midi_begin_session();
 void doremir_device_midi_end_session(doremir_device_midi_session_t);
 doremir_list_t doremir_device_midi_devices(doremir_device_midi_session_t);
 doremir_pair_t doremir_device_midi_standard(doremir_device_midi_session_t);
+doremir_device_midi_t doremir_device_midi_standard_input(doremir_device_midi_session_t);
+doremir_device_midi_t doremir_device_midi_standard_output(doremir_device_midi_session_t);
+doremir_device_midi_stream_t doremir_device_midi_open_stream(doremir_device_midi_t,
+                                                             doremir_processor_t,
+                                                             doremir_device_midi_t);
 void doremir_device_midi_close_stream(doremir_device_midi_stream_t);
 
 /** @}

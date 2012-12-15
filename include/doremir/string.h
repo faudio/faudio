@@ -30,6 +30,7 @@ doremir_string_t doremir_string_map_reduce(doremir_string_t,
                                            doremir_string_unary_t,
                                            doremir_string_binary_t,
                                            char);
+typedef doremir_string_t (* doremir_string_show_t)(doremir_ptr_t);
 
 /** @}
     @}

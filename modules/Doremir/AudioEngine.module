@@ -2,11 +2,22 @@
 /** 
     @addtogroup DoremirAudioEngine
     
-    This modules exports the entire audio engine. To import it, you can simply use:
+    This modules exports the entire audio engine. Example usage:
     
-    ~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.c}
+
     #import <doremir/audio_engine.h>
-    ~~~~~~~~~~~~~~~~~~~~~
+    
+    int main (int argc, char const *argv[])
+    {
+        doremir_audio_engine_initialize();
+        
+        ...
+
+        doremir_audio_engine_terminate();
+        return 0;
+    }
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
  */
 module Doremir.AudioEngine
@@ -17,5 +28,8 @@ module Doremir.AudioEngine
     import Doremir.Processor;
     import Doremir.Dispatcher;
     import Doremir.Scheduler;
-    import Doremir.Time;    
+    import Doremir.Time;
+    
+    initialize : () -> Void;
+    terminate : () -> Void;    
 }

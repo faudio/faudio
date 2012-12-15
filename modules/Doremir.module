@@ -10,10 +10,55 @@ module Doremir
     import Doremir.Std;
 
     type Ptr = Void*;
+
     type Nullary = (() -> Ptr)*;
     type Unary   = (Ptr -> Ptr)*;
     type Binary  = ((Ptr, Ptr) -> Ptr)*;
+
+    type Pred   = (Ptr -> Bool)*;
+
     type Closure = struct { 
-        function : (Ptr -> Ptr)*, 
-        value    : Ptr };    
+        function : Unary, 
+        value    : Ptr 
+    };
+
+    /** @interface doremir_eq_t 
+    */
+    type Eq   = struct {
+        eq : ((Ptr, Ptr) -> Bool)*
+    };
+    /** @interface doremir_ord_t 
+    */
+    type Ord  = struct {
+        lt : ((Ptr, Ptr) -> Bool)*,
+        gt : ((Ptr, Ptr) -> Bool)*
+    };
+    /** @interface doremir_num_t 
+    */
+    type Num = struct {
+        add : ((Ptr, Ptr) -> Ptr)*,
+        sub : ((Ptr, Ptr) -> Ptr)*,
+        mul : ((Ptr, Ptr) -> Ptr)*,
+        div : ((Ptr, Ptr) -> Ptr)*,
+        mod : ((Ptr, Ptr) -> Ptr)*,
+        abs : ((Ptr, Ptr) -> Ptr)*
+    };
+
+    toBool     : Ptr -> Bool;
+    toInt      : Ptr -> Int;
+    toInt8     : Ptr -> Int8;
+    toInt16    : Ptr -> Int16;
+    toInt32    : Ptr -> Int32;
+    toFloat    : Ptr -> Float;
+    toDouble   : Ptr -> Double;
+
+    fromBool   : Bool -> Ptr;
+    fromInt    : Int -> Ptr;
+    fromInt8   : Int8 -> Ptr;
+    fromInt16  : Int16 -> Ptr;
+    fromInt32  : Int32 -> Ptr;
+    fromFloat  : Float -> Ptr;
+    fromDouble : Double -> Ptr;
+    
+    getInterface : (Int64,Ptr) -> Ptr;
 }

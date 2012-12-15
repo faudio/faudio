@@ -33,4 +33,7 @@ module Doremir.String
     map  : (String, Unary)        -> String;
     reduce : (String, Nullary, Binary, Char) -> String;
     mapReduce : (String, Nullary, Unary, Binary, Char) -> String;
+
+    type Show = (Ptr -> String)*;
+
 }

@@ -25,18 +25,17 @@ static const long kJoinInterval = 50;
 
 // --------------------------------------------------------------------------------
 
-static DWORD WINAPI doremir_thread_start(LPVOID x) 
+static DWORD WINAPI start(LPVOID x) 
 {                
-    doremir_thread_runnable_t *runnable = x;
-    return runnable->func(runnable->val);
-    return 0;
+    doremir_closure_t *closure = x;
+    return closure->function(closure->value);
 }
 
-doremir_thread_t doremir_thread_create(doremir_thread_runnable_t* runnable)
+doremir_thread_t doremir_thread_create(doremir_closure_t* closure)
 {
     doremir_thread_t thread = malloc(sizeof(struct _doremir_thread_t));
     
-    HANDLE result = CreateThread(NULL, 0, doremir_thread_start, runnable, 0, NULL);
+    HANDLE result = CreateThread(NULL, 0, start, closure, 0, NULL);
 
     if (!result)
         doremir_thread_fatal("create", GetLastError());
