@@ -1,6 +1,0 @@
-
-Sessions and devices
-==========
-
-\pagebreak
-

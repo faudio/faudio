@@ -1,6 +1,0 @@
-
-Signals and processors
-==========
-
-\pagebreak
-

@@ -3,15 +3,18 @@
     @addtogroup DoremirList
     
     Immutable list data structure.
-
-    \warning To store a primitive (non-pointer) value in a collection, the \ref WrapperFunctions must be used.
-
+    Implements doremir_eq_t, doremir_ord_t, doremir_dynamic_t, doremir_destroy_t
+    
  */
 module Doremir.List
 {
     import Doremir;
     import Doremir.Std;
 
+    /** @class doremir_list_t
+        @implements
+            doremir_eq_t, doremir_ord_t, doremir_dynamic_t, doremir_destroy_t
+        */
     type List   = opaque;
     // type MaybePtr = Ptr;
     // type MaybeList = Ptr;

@@ -3,7 +3,6 @@
     @addtogroup DoremirBuffer
     
     Low-level buffer data structure.
-
  */
 module Doremir.Buffer
 {
