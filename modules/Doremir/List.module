@@ -20,22 +20,26 @@ module Doremir.List
 
     /** @class doremir_list_t
         @implements
-            doremir_eq_t, doremir_ord_t, doremir_dynamic_t, doremir_destroy_t
+            doremir_eq_t, doremir_ord_t, doremir_copy_t, doremir_destroy_t, doremir_dynamic_t
         */
     type List   = opaque;
+    type OrdList = List;
+    type ListList = List;
     // type MaybePtr = Ptr;
     // type MaybeList = Ptr;
+    // FIXME what about partiality?
             
     empty       : () -> List;
+    single      : Ptr -> List;
     cons        : (Ptr, List) -> List;
     snoc        : (Ptr, List) -> List;
-    destroy     : List -> Void;
+    append      : (List, List) -> List;
     copy        : List -> List;
-    swap        : (List, List) -> Void;
+    destroy     : List -> Void;
 
     isEmpty     : List -> Bool;
     lenght      : List -> Int;
-    head        : List -> Ptr; // FIXME what about partiality?
+    head        : List -> Ptr;
     tail        : List -> Ptr;
     init        : List -> Ptr;
     last        : List -> Ptr;
@@ -45,19 +49,17 @@ module Doremir.List
     isElem      : (Ptr, List) -> Bool;
     
     reverse     : List -> List;
-    sort        : List -> List;
-    concat      : List -> List;
-    // concatSep   : List -> List;
+    sort        : OrdList -> List;
 
     find        : (Pred, List) -> Ptr;
     filter      : (Pred, List) -> List;
     any         : (Pred, List) -> Bool;
     all         : (Pred, List) -> Bool;
 
-    map         : (List, Unary)         -> List;
-    foldl       : (List, Binary, Ptr) -> List;
+    map         : (Unary, List)       -> List;
+    fold        : (Binary, Ptr, List) -> List;
+    concat      : ListList -> List;
     
-
     sum         : List -> Ptr;
     product     : List -> Ptr;
     maximum     : List -> Ptr;
@@ -67,6 +69,6 @@ module Doremir.List
     snocd    : (Ptr, List) -> List;    
     reversed : List -> List;
     sortd    : List -> List;
-    mapd     : (List, Unary) -> List;
-    
+    mapd     : (Unary, List) -> List;
+    foldd    : (Binary, Ptr, List) -> List;   
 }
