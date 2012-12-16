@@ -8,6 +8,7 @@
 module Doremir
 {
     import Doremir.Std;
+    import "C" Doremir.Interfaces; // TODO
 
     /** @typedef doremir_ptr_t
         Generic pointer type.

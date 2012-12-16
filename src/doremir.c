@@ -148,28 +148,26 @@ doremir_ptr_t doremir_from_double(double a)
 }
 
 
-// TODO move to separate file
-
-#define doremir_equal_i     0
-#define doremir_copy_i      1
-#define doremir_destroy_i   2
-
 bool doremir_equal(doremir_ptr_t a, doremir_ptr_t b)
 {              
     return ((doremir_equal_t*) doremir_interface(doremir_equal_i, a))->equal(a, b);
 }
+
 doremir_ptr_t doremir_copy(doremir_ptr_t a)
 {              
     return ((doremir_copy_t*) doremir_interface(doremir_copy_i, a))->copy(a);
 }
+
 void doremir_destroy(doremir_ptr_t a)
 {              
     return ((doremir_destroy_t*) doremir_interface(doremir_destroy_i, a))->destroy(a);
 }
+
 doremir_ptr_t doremir_move(doremir_ptr_t a)
 {
     return a;
 }
+
 
 
 doremir_ptr_t doremir_interface(doremir_id_t type, doremir_ptr_t pointer)

@@ -172,7 +172,7 @@ void test_wrap()
     assert(tbool(fbool(true)) == true);
     assert(tbool(fbool(false)) == false);
 
-    printf("int8: %s\n", doremir_type_str(fint8(12372)));
+    printf("int8: %s\n", doremir_type_str(fint8(62)));
     assert(tint8(fint8('h')) == 'h');
     assert(tint8(fint8(121)) == 121);
     assert(tint8(fint8(-42)) == -42);
@@ -213,9 +213,9 @@ int main (int argc, char const *argv[])
       // int c = getopt(argc, (char**) argv, "abc:");
       // iconv_t cd = iconv_open("WCHAR_T", "UTF-8");
 
-      test_thread();
-      test_mutex();
-      test_cond();
+      // test_thread();
+      // test_mutex();
+      // test_cond();
       test_wrap();
 
       doremir_audio_engine_initialize();

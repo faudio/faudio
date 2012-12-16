@@ -3,6 +3,7 @@
 #define _DOREMIR
 
 #include <doremir/std.h>
+#include <doremir/interfaces.h>
 
 /** @defgroup Doremir Doremir
     @{
