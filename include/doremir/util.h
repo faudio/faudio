@@ -5,12 +5,14 @@
 #define tint8   doremir_to_int8
 #define tint16  doremir_to_int16
 #define tint32  doremir_to_int32
+#define tint64  doremir_to_int64
 #define tfloat  doremir_to_float
 #define tdouble doremir_to_double
 #define fbool   doremir_from_bool
 #define fint8   doremir_from_int8
 #define fint16  doremir_from_int16
 #define fint32  doremir_from_int32
+#define fint64  doremir_from_int64
 #define ffloat  doremir_from_float
 #define fdouble doremir_from_double
 

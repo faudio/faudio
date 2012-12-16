@@ -165,23 +165,58 @@ doremir_ptr_t foo_impl(doremir_id_t interface)
 // {
 //     list_t xs = lempty();
 // }
+     
+void test_wrap()
+{
+    printf("bool: %s\n", doremir_type_str(fbool(true)));
+    assert(tbool(fbool(true)) == true);
+    assert(tbool(fbool(false)) == false);
+
+    printf("int8: %s\n", doremir_type_str(fint8(12372)));
+    assert(tint8(fint8('h')) == 'h');
+    assert(tint8(fint8(121)) == 121);
+    assert(tint8(fint8(-42)) == -42);
+
+    printf("int16: %s\n", doremir_type_str(fint16(12372)));
+    printf("int16:%d\n", tint16(fint16(1267)));
+    assert(tint16(fint16(1267)) == 1267);
+    assert(tint16(fint16(-8712)) == -8712);
+
+    printf("int32: %s\n", doremir_type_str(fint32(12372)));
+    printf("int32:%d\n", tint32(fint32(1267)));
+    assert(tint32(fint32(2147483646)) == 2147483646);
+    assert(tint32(fint32(-343646748)) == -343646748);
+
+    printf("int64: %s\n", doremir_type_str(fint64(12372)));
+    printf("int64: %lli\n", tint64(fint64(9223372036854775807ll)));
+    assert(tint64(fint64(4872837827878787871ll)) == 4872837827878787871ll);
+    assert(tint64(fint64(-6888881236767676711ll)) == -6888881236767676711ll);
+
+    printf("double: %s\n", doremir_type_str(fdouble(12372)));
+    printf("double: %f\n", tdouble(fdouble(3.141592653589793)));
+    assert(tdouble(fdouble(3.141592653589793)) == 3.141592653589793);
+    assert(tdouble(fdouble(-1.4142135623730951)) == -1.4142135623730951);
+}
+
 
 int main (int argc, char const *argv[])
 {
   printf("DoReMIR Audio engine v%d.%d.%d\n", version[0], version[1], version[2]);
   printf("sizeof(doremir_ptr_t) = %d\n", (unsigned int) sizeof(doremir_ptr_t));
   printf("sizeof(int32_t) = %d\n", (unsigned int) sizeof(int32_t));
-  printf("sizeof(uint32_t) = %d\n", (unsigned int) sizeof(uint32_t));
-  printf("sizeof(void*) = %d\n", (unsigned int) sizeof(void*));
+  printf("sizeof(int64_t) = %d\n", (unsigned int) sizeof(int64_t));
+  // printf("sizeof(uint32_t) = %d\n", (unsigned int) sizeof(uint32_t));
+  // printf("sizeof(void*) = %d\n", (unsigned int) sizeof(void*));
 
   doremir_audio_engine_initialize();
   
   // int c = getopt(argc, (char**) argv, "abc:");
   // iconv_t cd = iconv_open("WCHAR_T", "UTF-8");
   
-  test_thread();
-  test_mutex();
-  test_cond();
+  // test_thread();
+  // test_mutex();
+  // test_cond();
+  test_wrap();
   
   return 0;
 }

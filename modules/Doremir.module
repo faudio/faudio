@@ -9,31 +9,56 @@ module Doremir
 {
     import Doremir.Std;
 
+    /** @typedef doremir_ptr_t
+        Generic pointer type.
+    */
     type Ptr = Void*;
 
+    /** @typedef doremir_nullary_t
+        Generic nullary function.
+    */
     type Nullary = (() -> Ptr)*;
+
+    /** @typedef doremir_unary_t
+        Generic unary function.
+    */
     type Unary   = (Ptr -> Ptr)*;
+
+    /** @typedef doremir_binary_t
+    Generic binary function.
+    */
     type Binary  = ((Ptr, Ptr) -> Ptr)*;
 
+    /** @typedef doremir_pred_t
+        Generic predicate.
+    */
     type Pred   = (Ptr -> Bool)*;
 
+    /** @class doremir_closure_t
+        Generic closure.
+    */
     type Closure = struct { 
         function : Unary, 
         value    : Ptr 
     };
 
-    /** @interface doremir_equal_t 
+    /** @interface doremir_equal_t
+        Equality comparison.
     */
     type Equal   = struct {
         equal : ((Ptr, Ptr) -> Bool)*
     };
+
     /** @interface doremir_order_t 
+        Less-than comparison.
     */
     type Order  = struct {
-        lessThan : ((Ptr, Ptr) -> Bool)*,
+        lessThan    : ((Ptr, Ptr) -> Bool)*,
         greaterThan : ((Ptr, Ptr) -> Bool)*
     };
+
     /** @interface doremir_number_t 
+        Arithmetic operations.
     */
     type Number = struct {
         add      : ((Ptr, Ptr) -> Ptr)*,
@@ -43,33 +68,58 @@ module Doremir
         modulo   : ((Ptr, Ptr) -> Ptr)*,
         absolute : ((Ptr, Ptr) -> Ptr)*
     };
-    /** @interface doremir_dynamic_t 
+
+    /** @struct doremir_type_repr_t
+        Represents a type at runtime.
     */
-    // type Dynamic = struct {
-    // };
+    type TypeRepr = struct {
+        tag : enum { TypeInt8, TypeInt16, TypeInt32, 
+                     TypeUInt8, TypeUInt16, TypeUInt32, 
+                     TypeFloat, TypeDouble, 
+                     TypePair, TypeList, TypeMap, TypeSet },
+        args : [Ptr x 2]
+    };
+
+    /** @interface doremir_dynamic_t
+        Dynamic type introspection.
+    */
+    type Dynamic = struct {
+        getType : (Ptr -> TypeRepr)*
+    };
+
 
 
     toBool     : Ptr -> Bool;
-    toInt      : Ptr -> Int;
     toInt8     : Ptr -> Int8;
     toInt16    : Ptr -> Int16;
     toInt32    : Ptr -> Int32;
+    toInt64    : Ptr -> Int64;
     toFloat    : Ptr -> Float;
     toDouble   : Ptr -> Double;
 
     fromBool   : Bool -> Ptr;
-    fromInt    : Int -> Ptr;
     fromInt8   : Int8 -> Ptr;
     fromInt16  : Int16 -> Ptr;
     fromInt32  : Int32 -> Ptr;
+    fromInt64  : Int64 -> Ptr;
     fromFloat  : Float -> Ptr;
     fromDouble : Double -> Ptr;
+    
+    typeStr : Ptr -> Char*;
     
     copy : Ptr -> Ptr;
     move : Ptr -> Ptr;
     destroy : Ptr -> Void;
 
+    /** @typedef doremir_id_t
+        Unique identifier. Only used for interface lookup at the moment.
+    */
     type Id = Int64;
+
+    /** @typedef doremir_impl_t
+        Callback to lookup an interface implementation.
+    */
     type Impl = (Id -> Ptr)*;
+
     interface : (Id, Ptr) -> Ptr;
 }

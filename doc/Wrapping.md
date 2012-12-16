@@ -1,14 +1,13 @@
 
 \anchor WrapFunctions
 
-The wrap and unwrap functions can be used to convert primitive values to \ref doremir_ptr_t and back, and is
-the preferred way of storing primitive types in a collection. The standard version of the wrapper
-functions are declared in the \ref doremir.h header, but the shorter aliases in \ref doremir/util.h are
-usually more convenient to use.
+The wrap functions can be used to convert primitive values to \ref doremir_ptr_t and vice versa. 
+They are the preferred way of storing primitive types in a collection. 
 
 The wrapped values have the same life cycle collections, that is: create once, use, destroy once.
 Typically they should be used in conjunction with collection functions. The wrap and unwrap functions
-are implemented without heap allocation whenever possible, but the double type is always heap-allocated.
+are implemented without heap allocation whenever possible, but some types (notably double) 
+are to large to fit into a pointer and are always heap-allocated.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 list_t xs = doremir_list_empty();
@@ -23,9 +22,10 @@ doremir_list_destroy(xs);
 The wrapped values implement \ref doremir_equal_t, \ref doremir_order_t, \ref doremir_number_t and \ref
 doremir_dynamic_t.
 
+The standard version of the wrapper functions are declared in the \ref doremir.h header, but the shorter
+aliases in \ref doremir/util.h are usually more convenient to use.
 
-
-### Wrap/unwrap in doremir/util.h
+### Defined in doremir/util.h
 
 |        | doremir_ptr_t | doremir_ptr_t
 |--------| --------------|--------------------
@@ -36,7 +36,7 @@ doremir_dynamic_t.
 | float  | \ref tfloat   | \ref ffloat
 | double | \ref tdouble  | \ref fdouble
 
-### Wrap/unwrap in doremir.h
+### Defined in doremir.h
 
 |        | doremir_ptr_t           | doremir_ptr_t
 |--------| ------------------------|--------------------
