@@ -4,7 +4,13 @@
 #pragma GCC diagnostic ignored "-Wparentheses"
 
 /*
-    Layout for doremir_ptr_t
+    doremir_ptr_t
+
+    v = value
+    _ = anything
+
+    Layout                                  Tag
+    ===================================     ===
 
     bool
     _______v ________ ________ _____111     0x7
@@ -30,7 +36,7 @@ int doremir_type(doremir_ptr_t a)
     return ((intptr_t) a) & 0x7;
 }
 
-char * doremir_type_str(doremir_ptr_t a)
+char *doremir_type_str(doremir_ptr_t a)
 {
     switch (doremir_type(a))
     {
@@ -60,17 +66,19 @@ char * doremir_type_str(doremir_ptr_t a)
 // Wrapper functions
 // --------------------------------------------------------------------------------
 
-
 bool doremir_to_bool(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x7 && "Wrong type");
     return (p & ~0x7) >> 24;
 }
+
 doremir_ptr_t doremir_from_bool(bool a)
 {
     return (doremir_ptr_t) (a << 24 & ~0x7 | 0x7);
 }
+
+// --------------------------------------------------------------------------------
 
 int8_t doremir_to_int8(doremir_ptr_t a)
 {
@@ -78,10 +86,13 @@ int8_t doremir_to_int8(doremir_ptr_t a)
     assert((p & 0x7) == 0x6 && "Wrong type");
     return (p & ~0x7) >> 24;
 }
+
 doremir_ptr_t doremir_from_int8(int8_t a)
 {
     return (doremir_ptr_t) (a << 24 & ~0x7 | 0x6);
 }
+
+// --------------------------------------------------------------------------------
 
 int16_t doremir_to_int16(doremir_ptr_t a)
 {
@@ -89,10 +100,13 @@ int16_t doremir_to_int16(doremir_ptr_t a)
     assert((p & 0x7) == 0x5 && "Wrong type");
     return (p & ~0x7) >> 8;
 }
+
 doremir_ptr_t doremir_from_int16(int16_t a)
 {
     return (doremir_ptr_t) (a << 8 & ~0x7 | 0x5);
 }
+
+// --------------------------------------------------------------------------------
 
 int32_t doremir_to_int32(doremir_ptr_t a)
 {
@@ -102,12 +116,15 @@ int32_t doremir_to_int32(doremir_ptr_t a)
     free((int32_t*) (p & ~0x7));
     return v;
 }
+
 doremir_ptr_t doremir_from_int32(int32_t a)
 {
     int32_t *p = malloc(sizeof(int32_t));
     *p = a;
     return (doremir_ptr_t) (((intptr_t) p) | 0x4);
 }
+
+// --------------------------------------------------------------------------------
 
 int64_t doremir_to_int64(doremir_ptr_t a)
 {
@@ -117,12 +134,15 @@ int64_t doremir_to_int64(doremir_ptr_t a)
     free((int64_t*) (p & ~0x7));
     return v;
 }
+
 doremir_ptr_t doremir_from_int64(int64_t a)
 {
     int64_t *p = malloc(sizeof(int64_t));
     *p = a;
     return (doremir_ptr_t) (((intptr_t) p) & ~0x7 | 0x3);
 }
+
+// --------------------------------------------------------------------------------
 
 float doremir_to_float(doremir_ptr_t a)
 {
@@ -132,12 +152,15 @@ float doremir_to_float(doremir_ptr_t a)
     free((float*) (p & ~0x7));
     return v;
 }
+
 doremir_ptr_t doremir_from_float(float a)
 {
     float *p = malloc(sizeof(float));
     *p = a;
     return (doremir_ptr_t) (((intptr_t) p) & ~0x7 | 0x2);
 }
+
+// --------------------------------------------------------------------------------
 
 double doremir_to_double(doremir_ptr_t a)
 {
@@ -147,6 +170,7 @@ double doremir_to_double(doremir_ptr_t a)
     free((double*) (p & ~0x7));
     return v;
 }
+
 doremir_ptr_t doremir_from_double(double a)
 {
     double *p = malloc(sizeof(double));
@@ -183,99 +207,141 @@ doremir_ptr_t doremir_move(doremir_ptr_t a)
 // Wrapped implementations
 // --------------------------------------------------------------------------------
 
-bool bool_equal(doremir_ptr_t a, doremir_ptr_t b)
-{
-    return doremir_from_bool(doremir_to_bool(a) == doremir_to_bool(b));
-}
-bool bool_less_than(doremir_ptr_t a, doremir_ptr_t b)
-{
-    return doremir_from_bool(doremir_to_bool(a) < doremir_to_bool(b));
-}
-bool bool_greater_than(doremir_ptr_t a, doremir_ptr_t b)
-{
-    return doremir_from_bool(doremir_to_bool(a) > doremir_to_bool(b));
-}
-doremir_ptr_t bool_add(doremir_ptr_t a, doremir_ptr_t b)
-{
-    return doremir_from_bool(doremir_to_bool(a) + doremir_to_bool(b));
-}
-doremir_ptr_t bool_subtract(doremir_ptr_t a, doremir_ptr_t b)
-{
-    return doremir_from_bool(doremir_to_bool(a) - doremir_to_bool(b));
-}
-doremir_ptr_t bool_multiply(doremir_ptr_t a, doremir_ptr_t b)
-{
-    return doremir_from_bool(doremir_to_bool(a) * doremir_to_bool(b));
-}
-doremir_ptr_t bool_divide(doremir_ptr_t a, doremir_ptr_t b)
-{
-    return doremir_from_bool(doremir_to_bool(a) / doremir_to_bool(b));
-}
-doremir_ptr_t bool_modulo(doremir_ptr_t a, doremir_ptr_t b)
-{
-    return doremir_from_bool(doremir_to_bool(a) % doremir_to_bool(b));
-}
-doremir_ptr_t bool_absolute(doremir_ptr_t a)
-{
-    return doremir_from_bool(abs(doremir_to_bool(a)));
-}
-doremir_ptr_t bool_copy(doremir_ptr_t a)
-{
-    return a;
-}
-void bool_destroy(doremir_ptr_t a)
-{
-    // nothing to do
-}
-
-doremir_ptr_t bool_impl(doremir_id_t interface)
-{
-    static doremir_equal_t   bool_equal_impl   = { bool_equal };
-    static doremir_order_t   bool_order_impl   = { bool_less_than, bool_greater_than };
-    static doremir_number_t  bool_number_impl  = { bool_add, bool_subtract, bool_multiply, bool_divide, bool_modulo, bool_absolute };
-    static doremir_copy_t    bool_copy_impl    = { bool_copy };
-    static doremir_destroy_t bool_destroy_impl = { bool_destroy };
-
-    switch (interface)
-    {
-    case doremir_equal_i:
-        return &bool_equal_impl;
-    case doremir_order_i:
-        return &bool_order_impl;
-    case doremir_number_i:
-        return &bool_number_impl;
-    case doremir_copy_i:
-        return &bool_number_impl;
-    case doremir_destroy_i:
-        return &bool_number_impl;
-    default:
-        return NULL;
+/* Generates T_impl
+ */
+#define IMPLEMENT_WRAPPER(T) \
+    doremir_ptr_t T##_impl(doremir_id_t interface)                                          \
+    {                                                                                       \
+        static doremir_equal_t   T##_equal_impl   =                                         \
+            { T##_equal };                                                                  \
+        static doremir_order_t   T##_order_impl   =                                         \
+            { T##_less_than, T##_greater_than };                                            \
+        static doremir_number_t  T##_number_impl  =                                         \
+            { T##_add, T##_subtract, T##_multiply, T##_divide, T##_modulo, T##_absolute };  \
+        static doremir_copy_t    T##_copy_impl    =                                         \
+            { T##_copy };                                                                   \
+        static doremir_destroy_t T##_destroy_impl =                                         \
+            { T##_destroy };                                                                \
+                                                                                            \
+        switch (interface)                                                                  \
+        {                                                                                   \
+        case doremir_equal_i:                                                               \
+            return &T##_equal_impl;                                                         \
+        case doremir_order_i:                                                               \
+            return &T##_order_impl;                                                         \
+        case doremir_number_i:                                                              \
+            return &T##_number_impl;                                                        \
+        case doremir_copy_i:                                                                \
+            return &T##_number_impl;                                                        \
+        case doremir_destroy_i:                                                             \
+            return &T##_number_impl;                                                        \
+        default:                                                                            \
+            return NULL;                                                                    \
+        }                                                                                   \
     }
-}
 
-doremir_ptr_t int8_impl(doremir_id_t interface)
-{
-}
+#define UNBOXED_WRAPPER_IMPL(T) \
+    bool T##_equal(doremir_ptr_t a, doremir_ptr_t b)                                        \
+    {                                                                                       \
+        return doremir_from_##T(doremir_to_##T(a) == doremir_to_##T(b));                    \
+    }                                                                                       \
+    bool T##_less_than(doremir_ptr_t a, doremir_ptr_t b)                                    \
+    {                                                                                       \
+        return doremir_from_##T(doremir_to_##T(a) < doremir_to_##T(b));                     \
+    }                                                                                       \
+    bool T##_greater_than(doremir_ptr_t a, doremir_ptr_t b)                                 \
+    {                                                                                       \
+        return doremir_from_##T(doremir_to_##T(a) > doremir_to_##T(b));                     \
+    }                                                                                       \
+    doremir_ptr_t T##_add(doremir_ptr_t a, doremir_ptr_t b)                                 \
+    {                                                                                       \
+        return doremir_from_##T(doremir_to_##T(a) + doremir_to_##T(b));                     \
+    }                                                                                       \
+    doremir_ptr_t T##_subtract(doremir_ptr_t a, doremir_ptr_t b)                            \
+    {                                                                                       \
+        return doremir_from_##T(doremir_to_##T(a) - doremir_to_##T(b));                     \
+    }                                                                                       \
+    doremir_ptr_t T##_multiply(doremir_ptr_t a, doremir_ptr_t b)                            \
+    {                                                                                       \
+        return doremir_from_##T(doremir_to_##T(a) * doremir_to_##T(b));                     \
+    }                                                                                       \
+    doremir_ptr_t T##_divide(doremir_ptr_t a, doremir_ptr_t b)                              \
+    {                                                                                       \
+        return doremir_from_##T(doremir_to_##T(a) / doremir_to_##T(b));                     \
+    }                                                                                       \
+    doremir_ptr_t T##_modulo(doremir_ptr_t a, doremir_ptr_t b)                              \
+    {                                                                                       \
+        return doremir_from_##T(doremir_to_##T(a) % doremir_to_##T(b));                     \
+    }                                                                                       \
+    doremir_ptr_t T##_absolute(doremir_ptr_t a)                                             \
+    {                                                                                       \
+        return doremir_from_##T(abs(doremir_to_##T(a)));                                    \
+    }                                                                                       \
+    doremir_ptr_t T##_copy(doremir_ptr_t a)                                                 \
+    {                                                                                       \
+        return a;                                                                           \
+    }                                                                                       \
+    void T##_destroy(doremir_ptr_t a)                                                       \
+    {                                                                                       \
+        /* nothing to do */                                                                 \
+    }
 
-doremir_ptr_t int16_impl(doremir_id_t interface)
-{
-}
+// bool bool_equal(doremir_ptr_t a, doremir_ptr_t b)
+// {
+//     return doremir_from_bool(doremir_to_bool(a) == doremir_to_bool(b));
+// }
+// bool bool_less_than(doremir_ptr_t a, doremir_ptr_t b)
+// {
+//     return doremir_from_bool(doremir_to_bool(a) < doremir_to_bool(b));
+// }
+// bool bool_greater_than(doremir_ptr_t a, doremir_ptr_t b)
+// {
+//     return doremir_from_bool(doremir_to_bool(a) > doremir_to_bool(b));
+// }
+// doremir_ptr_t bool_add(doremir_ptr_t a, doremir_ptr_t b)
+// {
+//     return doremir_from_bool(doremir_to_bool(a) + doremir_to_bool(b));
+// }
+// doremir_ptr_t bool_subtract(doremir_ptr_t a, doremir_ptr_t b)
+// {
+//     return doremir_from_bool(doremir_to_bool(a) - doremir_to_bool(b));
+// }
+// doremir_ptr_t bool_multiply(doremir_ptr_t a, doremir_ptr_t b)
+// {
+//     return doremir_from_bool(doremir_to_bool(a) * doremir_to_bool(b));
+// }
+// doremir_ptr_t bool_divide(doremir_ptr_t a, doremir_ptr_t b)
+// {
+//     return doremir_from_bool(doremir_to_bool(a) / doremir_to_bool(b));
+// }
+// doremir_ptr_t bool_modulo(doremir_ptr_t a, doremir_ptr_t b)
+// {
+//     return doremir_from_bool(doremir_to_bool(a) % doremir_to_bool(b));
+// }
+// doremir_ptr_t bool_absolute(doremir_ptr_t a)
+// {
+//     return doremir_from_bool(abs(doremir_to_bool(a)));
+// }
+// doremir_ptr_t bool_copy(doremir_ptr_t a)
+// {
+//     return a;
+// }
+// void bool_destroy(doremir_ptr_t a)
+// {
+//     // nothing to do
+// }
 
-doremir_ptr_t int32_impl(doremir_id_t interface)
-{
-}
+UNBOXED_WRAPPER_IMPL(bool);
+UNBOXED_WRAPPER_IMPL(int8);
+UNBOXED_WRAPPER_IMPL(int16);
 
-doremir_ptr_t int64_impl(doremir_id_t interface)
-{
-}
-
-doremir_ptr_t float_impl(doremir_id_t interface)
-{
-}
-
-doremir_ptr_t double_impl(doremir_id_t interface)
-{
-}
+IMPLEMENT_WRAPPER(bool);
+IMPLEMENT_WRAPPER(int8);
+IMPLEMENT_WRAPPER(int16);
+// IMPLEMENT_WRAPPER(int32);
+// IMPLEMENT_WRAPPER(int64);
+// IMPLEMENT_WRAPPER(float);
+// IMPLEMENT_WRAPPER(double);
 
 
 doremir_ptr_t doremir_interface(doremir_id_t type, doremir_ptr_t pointer)
@@ -288,14 +354,14 @@ doremir_ptr_t doremir_interface(doremir_id_t type, doremir_ptr_t pointer)
         return int8_impl(type);
     case 5:
         return int16_impl(type);
-    case 4:
-        return int32_impl(type);
-    case 3:
-        return int64_impl(type);
-    case 2:
-        return float_impl(type);
-    case 1:
-        return double_impl(type);
+    // case 4:
+    //     return int32_impl(type);
+    // case 3:
+    //     return int64_impl(type);
+    // case 2:
+    //     return float_impl(type);
+    // case 1:
+    //     return double_impl(type);
     default:
         return ((doremir_impl_t) pointer) (type);
     }
