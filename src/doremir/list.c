@@ -11,19 +11,20 @@ struct Node
     struct Node*  next;
     doremir_ptr_t value;
 };
+typedef struct Node *NodeRef;
 
-inline static struct Node *
-NewNode(doremir_ptr_t x, struct Node *xs)
+inline static NodeRef 
+NewNode(doremir_ptr_t x, NodeRef xs)
 {
-    struct Node *node = malloc(sizeof(struct Node));
+    NodeRef node = malloc(sizeof(struct Node));
     node->count = 1;
     node->next  = xs;
     node->value = x;
     return node;
 }
 
-inline static struct Node*
-TakeNode(struct Node* node)
+inline static NodeRef
+TakeNode(NodeRef node)
 {
     if (!node) return node;
     node->count++;
@@ -31,7 +32,7 @@ TakeNode(struct Node* node)
 }
 
 inline static void
-ReleaseNode (struct Node *node)
+ReleaseNode (NodeRef node)
 {
     if (!node) return;
     
@@ -50,11 +51,11 @@ struct _doremir_list_t
 };
 
 inline static doremir_list_t 
-NewList()
+NewList(NodeRef node)
 {
     doremir_list_t xs = doremir_new(list);
     xs->impl = &list_impl;    
-    xs->node = NULL;
+    xs->node = node;
     return xs;
 }
 
@@ -66,40 +67,39 @@ NewList()
 
 doremir_list_t doremir_list_empty()
 {   
-    doremir_list_t xs = NewList();
+    doremir_list_t xs = NewList(NULL);
     return xs;
 }
 
 doremir_list_t doremir_list_single(doremir_ptr_t x)
 {
-    doremir_list_t xs = NewList();
-    xs->node = NewNode(x, NULL);
+    doremir_list_t xs = NewList(
+        NewNode(x, NULL));
     return xs;
 }
 
 doremir_list_t doremir_list_cons(doremir_ptr_t x, doremir_list_t xs)
 {
-    doremir_list_t ys = NewList();    
-    ys->node = NewNode(x, TakeNode(xs->node));
+    doremir_list_t ys = NewList(
+        NewNode(x, TakeNode(xs->node)));    
     return ys;
 }
 
 doremir_list_t doremir_list_snoc(doremir_ptr_t x, doremir_list_t xs)
 {
-    doremir_list_t ys = NewList();    
+    // doremir_list_t ys = NewList(NULL);    
     assert(false && "Not implemented");
 }
 
 doremir_list_t doremir_list_append(doremir_list_t xs, doremir_list_t ys)
 {
-    doremir_list_t zs = NewList();    
+    // doremir_list_t zs = NewList(NULL);    
     assert(false && "Not implemented");
 }
 
 doremir_list_t doremir_list_copy(doremir_list_t xs)
 {
-    doremir_list_t ys = NewList();    
-    ys->node = TakeNode(xs->node);
+    doremir_list_t ys = NewList(TakeNode(xs->node));
     return ys;
 }
 
