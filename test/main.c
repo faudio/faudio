@@ -3,8 +3,8 @@
 #include <doremir/thread.h>
 #include <doremir/util.h>
 
-int version[3] = { 2, 0, 0 };
-
+int  version[3] = { 2, 0, 0 };
+char *bits      = sizeof(void*) == 4 ? "32-bit" : "64-bit";
 
 doremir_closure_t* new_closure(doremir_unary_t function, doremir_ptr_t value)
 {
@@ -197,7 +197,9 @@ void test_wrap()
 
 void test_generic()
 {
-    // printf("2    *  3.2   = %d\n", tfloat(doremir_add(ffloat(32), ffloat(32))));
+    printf("2    *  3.2   = %f\n", tdouble(doremir_multiply(fdouble(2.0), fdouble(3.2))));
+    printf("1    /  3     = %f\n", tdouble(doremir_divide(fdouble(1), fdouble(3))));
+
     printf("32   +  32    = %i\n", tint8(doremir_add(fint8(32), fint8(32))));
     printf("5123 +  5123  = %i\n", tint16(doremir_add(fint16(5123), fint16(5123))));
     printf("2147483646          + 1  = %i\n", tint32(doremir_add(fint32(2147483646), fint32(1))));
@@ -212,7 +214,7 @@ void test_generic()
 
 int main (int argc, char const *argv[])
 {
-  printf("DoReMIR Audio engine v%d.%d.%d\n", version[0], version[1], version[2]);
+  printf("DoReMIR Audio engine %s v%d.%d.%d\n", bits, version[0], version[1], version[2]);
   printf("sizeof(doremir_ptr_t) = %d\n", (unsigned int) sizeof(doremir_ptr_t));
   printf("sizeof(int32_t) = %d\n", (unsigned int) sizeof(int32_t));
   printf("sizeof(int64_t) = %d\n", (unsigned int) sizeof(int64_t));
@@ -230,7 +232,7 @@ int main (int argc, char const *argv[])
       test_wrap();
       test_generic();
 
-      doremir_audio_engine_initialize();
+      doremir_audio_engine_terminate();
   }
   return 0;
 }
