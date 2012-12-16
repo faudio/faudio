@@ -1,6 +1,9 @@
 
 #include <doremir/audio_engine.h>
 
+/*  Forward declare internal routines.
+    One initializer and terminator for each module.
+ */
 void doremir_device_audio_initialize();
 void doremir_device_audio_terminate();
 
@@ -14,7 +17,8 @@ static int count = 0;
     doremir_audio_engine_initialize() may be called again and so on.
  */
 void doremir_audio_engine_initialize()
-{
+{       
+    count++;
     doremir_device_audio_initialize();
 }
 
@@ -25,5 +29,6 @@ void doremir_audio_engine_initialize()
  */
 void doremir_audio_engine_terminate()
 {
+    count--;
     doremir_device_audio_terminate();
 }
