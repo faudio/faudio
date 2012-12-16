@@ -8,7 +8,7 @@
 module Doremir
 {
     import Doremir.Std;
-    import "C" Doremir.Interfaces; // TODO
+    import "C" Doremir.Interfaces;
 
     /** @typedef doremir_ptr_t
         Generic pointer type.
@@ -42,6 +42,24 @@ module Doremir
         function : Unary, 
         value    : Ptr 
     };
+    
+
+    // Interfaces
+    equal       : (Ptr, Ptr) -> Bool;
+    lessThan    : (Ptr, Ptr) -> Bool;
+    greaterThan : (Ptr, Ptr) -> Bool;
+    add         : (Ptr, Ptr) -> Ptr;
+    subtract    : (Ptr, Ptr) -> Ptr;
+    multiply    : (Ptr, Ptr) -> Ptr;
+    divide      : (Ptr, Ptr) -> Ptr;
+    modulo      : (Ptr, Ptr) -> Ptr;
+    absolute    : Ptr -> Ptr;
+
+    copy : Ptr -> Ptr;
+    move : Ptr -> Ptr;
+    destroy : Ptr -> Void;
+
+    
 
     /** @interface doremir_equal_t
         Equality comparison.
@@ -103,8 +121,10 @@ module Doremir
         getType : (Ptr -> TypeRepr)*
     };
 
+    // TODO relation to Dynamic?
+    typeStr : Ptr -> Char*;
 
-
+    // Conversion functions
     toBool     : Ptr -> Bool;
     toInt8     : Ptr -> Int8;
     toInt16    : Ptr -> Int16;
@@ -121,12 +141,6 @@ module Doremir
     fromFloat  : Float -> Ptr;
     fromDouble : Double -> Ptr;
     
-    typeStr : Ptr -> Char*;
-    
-    copy : Ptr -> Ptr;
-    move : Ptr -> Ptr;
-    destroy : Ptr -> Void;
-
     /** @typedef doremir_id_t
         Unique identifier. Only used for interface lookup at the moment.
     */

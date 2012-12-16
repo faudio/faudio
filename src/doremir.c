@@ -69,7 +69,7 @@ char *doremir_type_str(doremir_ptr_t a)
 bool doremir_to_bool(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
-    assert((p & 0x7) == 0x7 && "Wrong type");
+    assert((p & 0x7) == 0x7 && "Wrong type, expected bool");
     return (p & ~0x7) >> 24;
 }
 
@@ -83,7 +83,7 @@ doremir_ptr_t doremir_from_bool(bool a)
 int8_t doremir_to_int8(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
-    assert((p & 0x7) == 0x6 && "Wrong type");
+    assert((p & 0x7) == 0x6 && "Wrong type, expected int8");
     return (p & ~0x7) >> 24;
 }
 
@@ -97,7 +97,7 @@ doremir_ptr_t doremir_from_int8(int8_t a)
 int16_t doremir_to_int16(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
-    assert((p & 0x7) == 0x5 && "Wrong type");
+    assert((p & 0x7) == 0x5 && "Wrong type, expected int16");
     return (p & ~0x7) >> 8;
 }
 
@@ -111,7 +111,7 @@ doremir_ptr_t doremir_from_int16(int16_t a)
 int32_t doremir_to_int32(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
-    assert((p & 0x7) == 0x4 && "Wrong type");
+    assert((p & 0x7) == 0x4 && "Wrong type, expected int32");
     int32_t v = *((int32_t*) (p & ~0x7));
     free((int32_t*) (p & ~0x7));
     return v;
@@ -129,7 +129,7 @@ doremir_ptr_t doremir_from_int32(int32_t a)
 int64_t doremir_to_int64(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
-    assert((p & 0x7) == 0x3 && "Wrong type");
+    assert((p & 0x7) == 0x3 && "Wrong type, expected int64");
     int64_t v = *((int64_t*) (p & ~0x7));
     free((int64_t*) (p & ~0x7));
     return v;
@@ -147,7 +147,7 @@ doremir_ptr_t doremir_from_int64(int64_t a)
 float doremir_to_float(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
-    assert((p & 0x7) == 0x2 && "Wrong type");
+    assert((p & 0x7) == 0x2 && "Wrong type, expected float");
     float v = *((float*) (p & ~0x7));
     free((float*) (p & ~0x7));
     return v;
@@ -165,7 +165,7 @@ doremir_ptr_t doremir_from_float(float a)
 double doremir_to_double(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
-    assert((p & 0x7) == 0x1 && "Wrong type");
+    assert((p & 0x7) == 0x1 && "Wrong type, expected double");
     double v = *((double*) (p & ~0x7));
     free((double*) (p & ~0x7));
     return v;
@@ -182,21 +182,30 @@ doremir_ptr_t doremir_from_double(double a)
 // Generic functions
 // --------------------------------------------------------------------------------
 
+#define GENERIC1(I,F,A,B) \
+    B doremir_##F(A a)                                                                      \
+    {                                                                                       \
+        return ((doremir_##I##_t*) doremir_interface(doremir_##I##_i, a))->F(a);            \
+    }
 
-bool doremir_equal(doremir_ptr_t a, doremir_ptr_t b)
-{
-    return ((doremir_equal_t*) doremir_interface(doremir_equal_i, a))->equal(a, b);
-}
+#define GENERIC2(I,F,A,B,C) \
+    C doremir_##F(A a, B b)                                                                 \
+    {                                                                                       \
+        return ((doremir_##I##_t*) doremir_interface(doremir_##I##_i, a))->F(a, b);         \
+    }
+    
 
-doremir_ptr_t doremir_copy(doremir_ptr_t a)
-{
-    return ((doremir_copy_t*) doremir_interface(doremir_copy_i, a))->copy(a);
-}
-
-void doremir_destroy(doremir_ptr_t a)
-{
-    return ((doremir_destroy_t*) doremir_interface(doremir_destroy_i, a))->destroy(a);
-}
+GENERIC2(equal,     equal,          doremir_ptr_t, doremir_ptr_t, bool);
+GENERIC2(order,     less_than,      doremir_ptr_t, doremir_ptr_t, bool);
+GENERIC2(order,     greater_than,   doremir_ptr_t, doremir_ptr_t, bool);
+GENERIC2(number,    add,            doremir_ptr_t, doremir_ptr_t, doremir_ptr_t);
+GENERIC2(number,    subtract,       doremir_ptr_t, doremir_ptr_t, doremir_ptr_t);
+GENERIC2(number,    multiply,       doremir_ptr_t, doremir_ptr_t, doremir_ptr_t);
+GENERIC2(number,    divide,         doremir_ptr_t, doremir_ptr_t, doremir_ptr_t);
+GENERIC2(number,    modulo,         doremir_ptr_t, doremir_ptr_t, doremir_ptr_t);
+GENERIC1(number,    absolute,       doremir_ptr_t, doremir_ptr_t);
+GENERIC1(copy,      copy,           doremir_ptr_t, doremir_ptr_t);
+GENERIC1(destroy,   destroy,        doremir_ptr_t, void);
 
 doremir_ptr_t doremir_move(doremir_ptr_t a)
 {
@@ -285,51 +294,6 @@ doremir_ptr_t doremir_move(doremir_ptr_t a)
     {                                                                                       \
         /* nothing to do */                                                                 \
     }
-
-// bool bool_equal(doremir_ptr_t a, doremir_ptr_t b)
-// {
-//     return doremir_from_bool(doremir_to_bool(a) == doremir_to_bool(b));
-// }
-// bool bool_less_than(doremir_ptr_t a, doremir_ptr_t b)
-// {
-//     return doremir_from_bool(doremir_to_bool(a) < doremir_to_bool(b));
-// }
-// bool bool_greater_than(doremir_ptr_t a, doremir_ptr_t b)
-// {
-//     return doremir_from_bool(doremir_to_bool(a) > doremir_to_bool(b));
-// }
-// doremir_ptr_t bool_add(doremir_ptr_t a, doremir_ptr_t b)
-// {
-//     return doremir_from_bool(doremir_to_bool(a) + doremir_to_bool(b));
-// }
-// doremir_ptr_t bool_subtract(doremir_ptr_t a, doremir_ptr_t b)
-// {
-//     return doremir_from_bool(doremir_to_bool(a) - doremir_to_bool(b));
-// }
-// doremir_ptr_t bool_multiply(doremir_ptr_t a, doremir_ptr_t b)
-// {
-//     return doremir_from_bool(doremir_to_bool(a) * doremir_to_bool(b));
-// }
-// doremir_ptr_t bool_divide(doremir_ptr_t a, doremir_ptr_t b)
-// {
-//     return doremir_from_bool(doremir_to_bool(a) / doremir_to_bool(b));
-// }
-// doremir_ptr_t bool_modulo(doremir_ptr_t a, doremir_ptr_t b)
-// {
-//     return doremir_from_bool(doremir_to_bool(a) % doremir_to_bool(b));
-// }
-// doremir_ptr_t bool_absolute(doremir_ptr_t a)
-// {
-//     return doremir_from_bool(abs(doremir_to_bool(a)));
-// }
-// doremir_ptr_t bool_copy(doremir_ptr_t a)
-// {
-//     return a;
-// }
-// void bool_destroy(doremir_ptr_t a)
-// {
-//     // nothing to do
-// }
 
 UNBOXED_WRAPPER_IMPL(bool);
 UNBOXED_WRAPPER_IMPL(int8);
