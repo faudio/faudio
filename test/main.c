@@ -125,41 +125,38 @@ void test_cond()
 }
 
 
-enum { doremir_equal  = 1 };
-enum { doremir_order = 2 };
-
-bool foo_equal(doremir_ptr_t a, doremir_ptr_t b)
-{
-    return false;
-}
-
-bool foo_less_than(doremir_ptr_t a, doremir_ptr_t b)
-{
-    return false;
-}
-
-bool foo_greater_than(doremir_ptr_t a, doremir_ptr_t b)
-{
-    return false;
-}
-
-doremir_ptr_t foo_impl(doremir_id_t interface)
-{
-    static doremir_equal_t  foo_equal_impl = { foo_equal };
-    static doremir_order_t foo_order_impl = { foo_less_than, foo_greater_than };
-
-    switch (interface)
-    {
-    case doremir_equal:
-        return &foo_equal_impl;
-
-    case doremir_order:
-        return &foo_order_impl;
-
-    default:
-        return NULL;
-    }
-}
+// bool foo_equal(doremir_ptr_t a, doremir_ptr_t b)
+// {
+//     return false;
+// }
+// 
+// bool foo_less_than(doremir_ptr_t a, doremir_ptr_t b)
+// {
+//     return false;
+// }
+// 
+// bool foo_greater_than(doremir_ptr_t a, doremir_ptr_t b)
+// {
+//     return false;
+// }
+// 
+// doremir_ptr_t foo_impl(doremir_id_t interface)
+// {
+//     static doremir_equal_t  foo_equal_impl = { foo_equal };
+//     static doremir_order_t foo_order_impl = { foo_less_than, foo_greater_than };
+// 
+//     switch (interface)
+//     {
+//     case doremir_equal:
+//         return &foo_equal_impl;
+// 
+//     case doremir_order:
+//         return &foo_order_impl;
+// 
+//     default:
+//         return NULL;
+//     }
+// }             
 
 // void test_list()
 // {
@@ -198,6 +195,16 @@ void test_wrap()
     assert(tdouble(fdouble(-1.4142135623730951)) == -1.4142135623730951);
 }
 
+void test_generic()
+{
+    // printf("2    *  3.2   = %d\n", tfloat(doremir_add(ffloat(32), ffloat(32))));
+    printf("32   +  32    = %i\n", tint8(doremir_add(fint8(32), fint8(32))));
+    printf("5123 +  5123  = %i\n", tint16(doremir_add(fint16(5123), fint16(5123))));
+
+    printf("true == false = %s\n", (doremir_equal(fbool(true), fbool(true))) ? "true" : false);
+    printf("32   == 32    = %s\n", (doremir_equal(fint8(32), fint8(32))) ? "true" : false);
+    printf("5123 == 5123  = %s\n", (doremir_equal(fint16(5123), fint16(5123))) ? "true" : false);
+}
 
 int main (int argc, char const *argv[])
 {
@@ -217,6 +224,7 @@ int main (int argc, char const *argv[])
       // test_mutex();
       // test_cond();
       test_wrap();
+      test_generic();
 
       doremir_audio_engine_initialize();
   }
