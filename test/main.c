@@ -200,10 +200,14 @@ void test_generic()
     // printf("2    *  3.2   = %d\n", tfloat(doremir_add(ffloat(32), ffloat(32))));
     printf("32   +  32    = %i\n", tint8(doremir_add(fint8(32), fint8(32))));
     printf("5123 +  5123  = %i\n", tint16(doremir_add(fint16(5123), fint16(5123))));
+    printf("2147483646          + 1  = %i\n", tint32(doremir_add(fint32(2147483646), fint32(1))));
+    printf("4872837827878787871 + 1  = %lli\n", tint64(doremir_add(fint64(4872837827878787871ll), fint64(1))));
 
     printf("true == false = %s\n", (doremir_equal(fbool(true), fbool(true))) ? "true" : false);
     printf("32   == 32    = %s\n", (doremir_equal(fint8(32), fint8(32))) ? "true" : false);
     printf("5123 == 5123  = %s\n", (doremir_equal(fint16(5123), fint16(5123))) ? "true" : false);
+
+
 }
 
 int main (int argc, char const *argv[])
