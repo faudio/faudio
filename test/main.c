@@ -197,13 +197,25 @@ void test_wrap()
 
 void test_generic()
 {
-    printf("2    *  3.2   = %f\n", tdouble(doremir_multiply(fdouble(2.0), fdouble(3.2))));
+    printf("2    *  3.2   = %f\n", tdouble(doremir_multiply(fdouble(2), fdouble(3.2))));
     printf("1    /  3     = %f\n", tdouble(doremir_divide(fdouble(1), fdouble(3))));
+    printf("1    +  1.5   = %f\n", tdouble(doremir_add(fdouble(1), fdouble(1.5))));
 
-    printf("32   +  32    = %i\n", tint8(doremir_add(fint8(32), fint8(32))));
-    printf("5123 +  5123  = %i\n", tint16(doremir_add(fint16(5123), fint16(5123))));
-    printf("2147483646          + 1  = %i\n", tint32(doremir_add(fint32(2147483646), fint32(1))));
+    
+    printf("32                  + 1  = %i\n",   tint8(doremir_add(fint8(32), fint8(1))));
+    printf("5123                + 1  = %i\n",   tint16(doremir_add(fint16(5123), fint16(1))));
+    printf("2147483646          + 1  = %i\n",   tint32(doremir_add(fint32(2147483646), fint32(1))));
     printf("4872837827878787871 + 1  = %lli\n", tint64(doremir_add(fint64(4872837827878787871ll), fint64(1))));
+    printf("32                  - 1  = %i\n",   tint8(doremir_subtract(fint8(32), fint8(1))));
+    printf("5123                - 1  = %i\n",   tint16(doremir_subtract(fint16(5123), fint16(1))));
+    printf("2147483646          - 1  = %i\n",   tint32(doremir_subtract(fint32(2147483646), fint32(1))));
+    printf("4872837827878787871 - 1  = %lli\n", tint64(doremir_subtract(fint64(4872837827878787871ll), fint64(1))));
+    printf("3                   / 2  = %i\n",   tint8(doremir_divide(fint8(33), fint8(2))));
+    printf("3333                / 2  = %i\n",   tint16(doremir_divide(fint16(3333), fint16(2))));
+    printf("3333333333          / 2  = %i\n",   tint32(doremir_divide(fint32(3333333333l), fint32(2))));
+    printf("3333333333333333333 / 2  = %lli\n", tint64(doremir_divide(fint64(3333333333333333333ll), fint64(2))));
+
+    printf("3                   / 1  = %i\n", tint8(doremir_divide(fint8(32), fint8(1))));
 
     printf("true == false = %s\n", (doremir_equal(fbool(true), fbool(true))) ? "true" : false);
     printf("32   == 32    = %s\n", (doremir_equal(fint8(32), fint8(32))) ? "true" : false);

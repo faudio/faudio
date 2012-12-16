@@ -61,6 +61,10 @@ test: all
 	echo && \
 	build/bin/doremir_audio_tests;
 
+.PHONY: debug
+debug: all
+	gdb build/bin/doremir_audio_tests;
+
 .PHONY: run_scorecleaner
 run_scorecleaner: 
 	@pushd $(BUILD_DIRECTORY); $(MAKE) run_scorecleaner; popd;

@@ -99,7 +99,6 @@ module Doremir
         subtract : ((Ptr, Ptr) -> Ptr)*,
         multiply : ((Ptr, Ptr) -> Ptr)*,
         divide   : ((Ptr, Ptr) -> Ptr)*,
-        // modulo   : ((Ptr, Ptr) -> Ptr)*,
         absolute : (Ptr -> Ptr)*
     };
 
