@@ -2,6 +2,9 @@
 #include <doremir/list.h>
 #include <doremir/util.h>
 
+doremir_ptr_t list_impl(doremir_id_t interface);
+
+/*  List entry, end represented by null. */
 struct Node
 {
     size_t        count;
@@ -9,23 +12,57 @@ struct Node
     doremir_ptr_t value;
 };
 
+inline static struct Node *
+NewNode(doremir_ptr_t x, struct Node *xs)
+{
+    struct Node *node = malloc(sizeof(struct Node));
+    node->count = 1;
+    node->next  = xs;
+    node->value = x;
+    return node;
+}
+
+inline static struct Node*
+TakeNode(struct Node* node)
+{
+    if (!node) return node;
+    node->count++;
+    return node;
+}
+
+inline static void
+ReleaseNode (struct Node *node)
+{
+    if (!node) return;
+    
+    node->count--;
+    if (node->count <= 0)
+    {
+        ReleaseNode(node->next);
+        free(node);
+    }
+}             
+
 struct _doremir_list_t
 {
     doremir_impl_t  impl;
     struct Node*    node;
 };
 
-doremir_ptr_t list_impl(doremir_id_t interface);
-
-// --------------------------------------------------------------------------------
-
-inline static doremir_list_t NewList()
+inline static doremir_list_t 
+NewList()
 {
     doremir_list_t xs = doremir_new(list);
     xs->impl = &list_impl;    
     xs->node = NULL;
     return xs;
 }
+
+#define DeleteList doremir_delete
+
+
+
+// --------------------------------------------------------------------------------
 
 doremir_list_t doremir_list_empty()
 {   
@@ -36,17 +73,15 @@ doremir_list_t doremir_list_empty()
 doremir_list_t doremir_list_single(doremir_ptr_t x)
 {
     doremir_list_t xs = NewList();
-    xs->node = malloc(sizeof(struct Node));
-    xs->node->count = 1;
-    xs->node->next  = NULL;
-    xs->node->value = x;
+    xs->node = NewNode(x, NULL);
     return xs;
 }
 
 doremir_list_t doremir_list_cons(doremir_ptr_t x, doremir_list_t xs)
 {
     doremir_list_t ys = NewList();    
-    assert(false && "Not implemented");
+    ys->node = NewNode(x, TakeNode(xs->node));
+    return ys;
 }
 
 doremir_list_t doremir_list_snoc(doremir_ptr_t x, doremir_list_t xs)
@@ -64,22 +99,22 @@ doremir_list_t doremir_list_append(doremir_list_t xs, doremir_list_t ys)
 doremir_list_t doremir_list_copy(doremir_list_t xs)
 {
     doremir_list_t ys = NewList();    
-    assert(false && "Not implemented");
+    ys->node = TakeNode(xs->node);
+    return ys;
 }
 
 void doremir_list_destroy(doremir_list_t xs)
 {                      
-    // TODO optionally run registered deleter (a la CoreFoundation?)
-    // TODO uncount/release node
-    doremir_delete(xs);
-    assert(false && "Not implemented");
+    // TODO optionally map registered deleter (a la CoreFoundation?)
+    ReleaseNode(xs->node);
+    DeleteList(xs);
 }
 
 // --------------------------------------------------------------------------------
 
 bool doremir_list_is_empty(doremir_list_t xs)
 {
-    return doremir_list_lenght(xs) == 0;
+    return !xs->node;
 }
 
 int doremir_list_lenght(doremir_list_t xs)
