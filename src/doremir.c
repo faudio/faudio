@@ -230,11 +230,39 @@ doremir_ptr_t doremir_from_double(double a)
 GENERIC2(equal,     equal,          doremir_ptr_t, doremir_ptr_t, bool);
 GENERIC2(order,     less_than,      doremir_ptr_t, doremir_ptr_t, bool);
 GENERIC2(order,     greater_than,   doremir_ptr_t, doremir_ptr_t, bool);
+
+bool doremir_not_equal(doremir_ptr_t a, doremir_ptr_t b)
+{
+    return !doremir_equal(a, b);
+}
+
+bool doremir_less_than_equal(doremir_ptr_t a, doremir_ptr_t b)
+{
+    return doremir_less_than(a, b) || doremir_equal(a, b);
+}
+
+bool doremir_greater_than_equal(doremir_ptr_t a, doremir_ptr_t b)
+{
+    return doremir_greater_than(a, b) || doremir_equal(a, b);
+}
+
+doremir_ptr_t doremir_min(doremir_ptr_t a, doremir_ptr_t b)
+{
+    return doremir_less_than(a, b) ? a : b;
+}
+
+doremir_ptr_t doremir_max(doremir_ptr_t a, doremir_ptr_t b)
+{
+    return doremir_greater_than(a, b) ? a : b;
+}
+
+
 GENERIC2(number,    add,            doremir_ptr_t, doremir_ptr_t, doremir_ptr_t);
 GENERIC2(number,    subtract,       doremir_ptr_t, doremir_ptr_t, doremir_ptr_t);
 GENERIC2(number,    multiply,       doremir_ptr_t, doremir_ptr_t, doremir_ptr_t);
 GENERIC2(number,    divide,         doremir_ptr_t, doremir_ptr_t, doremir_ptr_t);
 GENERIC1(number,    absolute,       doremir_ptr_t, doremir_ptr_t);
+
 GENERIC1(copy,      copy,           doremir_ptr_t, doremir_ptr_t);
 GENERIC1(destroy,   destroy,        doremir_ptr_t, void);
 

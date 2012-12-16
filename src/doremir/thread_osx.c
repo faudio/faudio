@@ -19,8 +19,6 @@ struct _doremir_thread_condition_t
     doremir_thread_mutex_t  mutex;
 };
 
-#define doremir_new(T) malloc(sizeof(struct _doremir_##T##_t))
-#define doremir_delete(x) free(x)
 static void doremir_thread_fatal(char* msg, int error);
 
 // --------------------------------------------------------------------------------

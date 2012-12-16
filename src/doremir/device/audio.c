@@ -18,8 +18,6 @@ struct _doremir_device_audio_stream_t
     
 };
 
-#define doremir_new(T) malloc(sizeof(struct _doremir_##T##_t))
-#define doremir_delete(x) free(x)
 static void fatal(char* msg, int error);
 
 static doremir_thread_mutex_t   pa_mutex    = NULL;

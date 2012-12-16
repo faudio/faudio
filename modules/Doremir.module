@@ -8,6 +8,7 @@
 module Doremir
 {
     import Doremir.Std;
+    import "C" Doremir.Alloc;
     import "C" Doremir.Interfaces;
 
     /** @typedef doremir_ptr_t
@@ -45,9 +46,15 @@ module Doremir
     
 
     // Interfaces
-    equal       : (Ptr, Ptr) -> Bool;
-    lessThan    : (Ptr, Ptr) -> Bool;
-    greaterThan : (Ptr, Ptr) -> Bool;
+    equal            : (Ptr, Ptr) -> Bool;
+    notEqual         : (Ptr, Ptr) -> Bool;
+    lessThan         : (Ptr, Ptr) -> Bool;
+    greaterThan      : (Ptr, Ptr) -> Bool;
+    lessThanEqual    : (Ptr, Ptr) -> Bool;
+    greaterThanEqual : (Ptr, Ptr) -> Bool;
+    min              : (Ptr, Ptr) -> Ptr;
+    max              : (Ptr, Ptr) -> Ptr;
+    
     add         : (Ptr, Ptr) -> Ptr;
     subtract    : (Ptr, Ptr) -> Ptr;
     multiply    : (Ptr, Ptr) -> Ptr;

@@ -15,49 +15,83 @@ struct _doremir_list_t
     struct Node*    node;
 };
 
-doremir_list_t doremir_list_empty()
+doremir_ptr_t list_impl(doremir_id_t interface);
+
+// --------------------------------------------------------------------------------
+
+inline static doremir_list_t NewList()
 {
-    assert(false && "Not implemented");
+    doremir_list_t xs = doremir_new(list);
+    xs->impl = &list_impl;    
+    xs->node = NULL;
+    return xs;
+}
+
+doremir_list_t doremir_list_empty()
+{   
+    doremir_list_t xs = NewList();
+    return xs;
 }
 
 doremir_list_t doremir_list_single(doremir_ptr_t x)
 {
-    assert(false && "Not implemented");
+    doremir_list_t xs = NewList();
+    xs->node = malloc(sizeof(struct Node));
+    xs->node->count = 1;
+    xs->node->next  = NULL;
+    xs->node->value = x;
+    return xs;
 }
 
 doremir_list_t doremir_list_cons(doremir_ptr_t x, doremir_list_t xs)
 {
+    doremir_list_t ys = NewList();    
     assert(false && "Not implemented");
 }
 
 doremir_list_t doremir_list_snoc(doremir_ptr_t x, doremir_list_t xs)
 {
+    doremir_list_t ys = NewList();    
     assert(false && "Not implemented");
 }
 
 doremir_list_t doremir_list_append(doremir_list_t xs, doremir_list_t ys)
 {
+    doremir_list_t zs = NewList();    
     assert(false && "Not implemented");
 }
 
 doremir_list_t doremir_list_copy(doremir_list_t xs)
 {
+    doremir_list_t ys = NewList();    
     assert(false && "Not implemented");
 }
 
 void doremir_list_destroy(doremir_list_t xs)
-{
+{                      
+    // TODO optionally run registered deleter (a la CoreFoundation?)
+    // TODO uncount/release node
+    doremir_delete(xs);
     assert(false && "Not implemented");
 }
+
+// --------------------------------------------------------------------------------
 
 bool doremir_list_is_empty(doremir_list_t xs)
 {
-    assert(false && "Not implemented");
+    return doremir_list_lenght(xs) == 0;
 }
 
 int doremir_list_lenght(doremir_list_t xs)
-{
-    assert(false && "Not implemented");
+{                                      
+    int          count = 0;
+    struct Node* node  = xs->node;
+    while (node)
+    {                     
+        count++;
+        node = node->next;
+    }
+    return count;
 }
 
 doremir_ptr_t doremir_list_head(doremir_list_t xs)
@@ -95,6 +129,9 @@ bool doremir_list_is_elem(doremir_ptr_t x, doremir_list_t xs)
     assert(false && "Not implemented");
 }
 
+
+// --------------------------------------------------------------------------------
+
 doremir_list_t doremir_list_reverse(doremir_list_t xs)
 {
     assert(false && "Not implemented");
@@ -115,15 +152,17 @@ doremir_list_t doremir_list_filter(doremir_pred_t p, doremir_list_t xs)
     assert(false && "Not implemented");
 }
 
-bool doremir_list_any(doremir_pred_t p, doremir_list_t xs)
-{
-    assert(false && "Not implemented");
-}
+// bool doremir_list_any(doremir_pred_t p, doremir_list_t xs)
+// {
+//     assert(false && "Not implemented");
+// }
+// 
+// bool doremir_list_all(doremir_pred_t p, doremir_list_t xs)
+// {
+//     assert(false && "Not implemented");
+// }
 
-bool doremir_list_all(doremir_pred_t p, doremir_list_t xs)
-{
-    assert(false && "Not implemented");
-}
+// --------------------------------------------------------------------------------
 
 doremir_list_t doremir_list_map(doremir_unary_t f, doremir_list_t xs)
 {
@@ -144,21 +183,25 @@ doremir_list_t doremir_list_concat(doremir_list_list_list_t xss)
 
 doremir_ptr_t doremir_list_sum(doremir_list_t xs)
 {
-    assert(false && "Not implemented");
+    // TODO type of 0?
+    return doremir_list_fold(doremir_add, fint32(0), xs);
 }
 
 doremir_ptr_t doremir_list_product(doremir_list_t xs)
 {
-    assert(false && "Not implemented");
+    // TODO type of 0?
+    return doremir_list_fold(doremir_multiply, fint32(1), xs);
 }
 
 doremir_ptr_t doremir_list_maximum(doremir_list_t xs)
 {
+    // return doremir_list_fold(doremir_max, fint32(INT_MIN), xs);
     assert(false && "Not implemented");
 }
 
 doremir_ptr_t doremir_list_minimum(doremir_list_t xs)
 {
+    // return doremir_list_fold(doremir_min, fint32(INT_MAX), xs);
     assert(false && "Not implemented");
 }
 

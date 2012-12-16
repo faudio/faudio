@@ -3,6 +3,7 @@
 #define _DOREMIR
 
 #include <doremir/std.h>
+#include <doremir/alloc.h>
 #include <doremir/interfaces.h>
 
 /** @defgroup Doremir Doremir
@@ -19,8 +20,13 @@ typedef struct {
             doremir_unary_t function; doremir_ptr_t value;
         } doremir_closure_t;
 bool doremir_equal(doremir_ptr_t, doremir_ptr_t);
+bool doremir_not_equal(doremir_ptr_t, doremir_ptr_t);
 bool doremir_less_than(doremir_ptr_t, doremir_ptr_t);
 bool doremir_greater_than(doremir_ptr_t, doremir_ptr_t);
+bool doremir_less_than_equal(doremir_ptr_t, doremir_ptr_t);
+bool doremir_greater_than_equal(doremir_ptr_t, doremir_ptr_t);
+doremir_ptr_t doremir_min(doremir_ptr_t, doremir_ptr_t);
+doremir_ptr_t doremir_max(doremir_ptr_t, doremir_ptr_t);
 doremir_ptr_t doremir_add(doremir_ptr_t, doremir_ptr_t);
 doremir_ptr_t doremir_subtract(doremir_ptr_t, doremir_ptr_t);
 doremir_ptr_t doremir_multiply(doremir_ptr_t, doremir_ptr_t);
