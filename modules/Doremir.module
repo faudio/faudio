@@ -45,8 +45,8 @@ module Doremir
     };
     /** @interface doremir_dynamic_t 
     */
-    type Dynamic = struct {
-    };
+    // type Dynamic = struct {
+    // };
 
 
     toBool     : Ptr -> Bool;
@@ -71,5 +71,5 @@ module Doremir
 
     type Id = Int64;
     type Impl = (Id -> Ptr)*;
-    getInterface : (Id, Ptr) -> Ptr;
+    interface : (Id, Ptr) -> Ptr;
 }

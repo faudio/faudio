@@ -4,6 +4,8 @@
     
     Immutable ordered set data structure.
 
+    @par Requires 
+        doremir_order_t
     @par Implements 
         doremir_equal_t
         doremir_order_t

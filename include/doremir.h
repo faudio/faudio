@@ -51,7 +51,7 @@ doremir_ptr_t doremir_move(doremir_ptr_t);
 void doremir_destroy(doremir_ptr_t);
 typedef int64_t doremir_id_t;
 typedef doremir_ptr_t (* doremir_impl_t)(doremir_id_t);
-doremir_ptr_t doremir_get_interface(doremir_id_t, doremir_ptr_t);
+doremir_ptr_t doremir_interface(doremir_id_t, doremir_ptr_t);
 
 /** @}
     */

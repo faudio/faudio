@@ -24,22 +24,25 @@ The collections can store reference types (as \ref doremir_ptr_t) and primitive 
 The Audio Engine use single-ownership semantics for all of its reference types. Each collection provides a set of construct, copy and destruct function, and each collection must be destructed exactly once. The correct usage pattern is to call the destructor whenever the variable holding the collection goes out of scope. It is good practice to introduce an extra block to mark out the scope of the collection variable.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-doremir_list_t xs = doremir_list(1, 2, 3);
 {
+    doremir_list_t xs = doremir_list(1, 2, 3);
+    
     ... // xs can be used here
+    
+    doremir_destroy(xs);
 }
-doremir_destroy(xs);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The reference types can be shared as long as the original reference is in scope.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-doremir_list_t xs = doremir_list(1, 2, 3);
 {
+    doremir_list_t xs = doremir_list(1, 2, 3);
+    
     int z = doremir_list_sum(xs); // xs passed "by reference"
-    ...
+
+    doremir_destroy(xs);
 }
-doremir_destroy(xs);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If a reference type is required to persist beyond the original scope it can be copied or moved.
@@ -47,20 +50,24 @@ The \ref doremir_move function does nothing, it just serves as a mnemonic to mar
 ownership is being transfered.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-doremir_list_t xs = doremir_list(1, 2, 3);
 {
+    doremir_list_t xs = doremir_list(1, 2, 3);
+    
     doremir_send(out1, doremir_copy(xs)); // xs passed "by copy"
     doremir_send(out1, doremir_copy(xs)); // xs passed "by copy"
     ...
-}
-doremir_destroy(xs);
 
-doremir_list_t ys = doremir_list(1, 2, 3);
+    doremir_destroy(xs);
+}
+
 {
+    doremir_list_t ys = doremir_list(1, 2, 3);
+    
     doremir_send(out1, doremir_copy(ys)); // ys passed "by copy"
     doremir_send(out1, doremir_move(ys)); // ys passed "by value"
+
+    // no destroy needed
 }                                                   
-// no destroy needed
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -72,19 +79,25 @@ Note that the destructive functions *invalidates* the original collection rather
 Invalidating a collection does not affect copies.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-doremir_list_t xs;
-doremir_list_t ys;
 {
+    doremir_list_t xs;
+    doremir_list_t ys;
+    int i;
+
     xs = doremir_list();
-    xs = doremir_list_consd(1, xs);
-    xs = doremir_list_consd(2, xs);
+    for (i = 0; i < 10; ++i)
+        xs = doremir_list_consd(i, xs);
+    
     ys = doremir_copy(xs);
-    xs = doremir_list_consd(3, xs);
-    // xs is [1,2,3]
-    // ys is [1,2]
+    for (i = 10; i < 15; ++i)
+        ys = doremir_list_consd(3, ys);
+    
+    // xs is [1..9]
+    // ys is [1..14]
+
+    doremir_destroy(ys);
+    doremir_destroy(xs);
 }
-doremir_destroy(ys);
-doremir_destroy(xs);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 <!--
