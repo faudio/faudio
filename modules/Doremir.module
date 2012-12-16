@@ -56,6 +56,21 @@ module Doremir
         lessThan    : ((Ptr, Ptr) -> Bool)*,
         greaterThan : ((Ptr, Ptr) -> Bool)*
     };
+    
+    /** @interface doremir_copy_t
+        Generic copying.
+    */
+    type Copy   = struct {
+        copy : (Ptr -> Ptr)*
+    };
+
+    /** @interface doremir_destroy_t
+        Generic destruction.
+    */
+    type Destroy   = struct {
+        destroy : (Ptr -> Void)*
+    };
+
 
     /** @interface doremir_number_t 
         Arithmetic operations.

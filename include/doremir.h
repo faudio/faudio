@@ -25,6 +25,12 @@ typedef struct {
             bool (* greater_than)(doremir_ptr_t, doremir_ptr_t);
         } doremir_order_t;
 typedef struct {
+            doremir_ptr_t (* copy)(doremir_ptr_t);
+        } doremir_copy_t;
+typedef struct {
+            void (* destroy)(doremir_ptr_t);
+        } doremir_destroy_t;
+typedef struct {
             doremir_ptr_t (* add)(doremir_ptr_t, doremir_ptr_t);
             doremir_ptr_t (* subtract)(doremir_ptr_t, doremir_ptr_t);
             doremir_ptr_t (* multiply)(doremir_ptr_t, doremir_ptr_t);

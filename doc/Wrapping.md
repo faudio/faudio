@@ -19,8 +19,8 @@ list_t xs = doremir_list_empty();
 doremir_list_destroy(xs);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The wrapped values implement \ref doremir_equal_t, \ref doremir_order_t, \ref doremir_number_t and \ref
-doremir_dynamic_t.
+The wrapped values implement \ref doremir_equal_t, \ref doremir_order_t, \ref doremir_number_t, \ref
+doremir_copy_t, \ref doremir_destroy_t and \ref doremir_dynamic_t.
 
 The standard version of the wrapper functions are declared in the \ref doremir.h header, but the shorter
 aliases in \ref doremir/util.h are usually more convenient to use.

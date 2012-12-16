@@ -23,11 +23,14 @@
 
  */
 
+int doremir_type(doremir_ptr_t a)
+{
+    return ((intptr_t) a) & 0x7;
+}
+
 char * doremir_type_str(doremir_ptr_t a)
 {
-    intptr_t p = (intptr_t) a;
-    int type = p & 0x7;
-    switch (type)
+    switch (doremir_type(a))
     {
     case 7:
         return "bool";
@@ -88,7 +91,9 @@ int32_t doremir_to_int32(doremir_ptr_t a)
 {                    
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x4 && "Wrong type");
-    return *((int32_t*) (p & ~0x7));
+    int32_t v = *((int32_t*) (p & ~0x7));
+    free((int32_t*) (p & ~0x7));
+    return v;
 }
 doremir_ptr_t doremir_from_int32(int32_t a)
 {
@@ -101,7 +106,9 @@ int64_t doremir_to_int64(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x3 && "Wrong type");
-    return *((int64_t*) (p & ~0x7));
+    int64_t v = *((int64_t*) (p & ~0x7));
+    free((int64_t*) (p & ~0x7));
+    return v;
 }
 doremir_ptr_t doremir_from_int64(int64_t a)
 {
@@ -114,7 +121,9 @@ float doremir_to_float(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x2 && "Wrong type");
-    return *((float*) (p & ~0x7));
+    float v = *((float*) (p & ~0x7));
+    free((float*) (p & ~0x7));
+    return v;
 }
 doremir_ptr_t doremir_from_float(float a)
 {
@@ -127,7 +136,9 @@ double doremir_to_double(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x1 && "Wrong type");
-    return *((double*) (p & ~0x7));
+    double v = *((double*) (p & ~0x7));
+    free((double*) (p & ~0x7));
+    return v;
 }
 doremir_ptr_t doremir_from_double(double a)
 {
@@ -137,25 +148,49 @@ doremir_ptr_t doremir_from_double(double a)
 }
 
 
+// TODO move to separate file
 
+#define doremir_equal_i     0
+#define doremir_copy_i      1
+#define doremir_destroy_i   2
 
-
-doremir_ptr_t doremir_copy(doremir_ptr_t a)
-{
-    assert(false && "Not implemented");
+bool doremir_equal(doremir_ptr_t a, doremir_ptr_t b)
+{              
+    return ((doremir_equal_t*) doremir_interface(doremir_equal_i, a))->equal(a, b);
 }
-
+doremir_ptr_t doremir_copy(doremir_ptr_t a)
+{              
+    return ((doremir_copy_t*) doremir_interface(doremir_copy_i, a))->copy(a);
+}
+void doremir_destroy(doremir_ptr_t a)
+{              
+    return ((doremir_destroy_t*) doremir_interface(doremir_destroy_i, a))->destroy(a);
+}
 doremir_ptr_t doremir_move(doremir_ptr_t a)
 {
-    assert(false && "Not implemented");
+    return a;
 }
 
-void doremir_destroy(doremir_ptr_t a)
-{
-    assert(false && "Not implemented");
-}
 
 doremir_ptr_t doremir_interface(doremir_id_t type, doremir_ptr_t pointer)
 {
-    assert(false && "Not implemented");
+    switch (doremir_type(pointer))
+    {
+    // case 7:
+    //     assert(false && "Not implemented");    
+    // case 6:
+    //     assert(false && "Not implemented");    
+    // case 5:
+    //     assert(false && "Not implemented");    
+    // case 4:
+    //     assert(false && "Not implemented");    
+    // case 3:
+    //     assert(false && "Not implemented");    
+    // case 2:
+    //     assert(false && "Not implemented");    
+    // case 1:
+    //     assert(false && "Not implemented");    
+    default:
+        return ((doremir_impl_t) pointer) (type);
+    }
 }

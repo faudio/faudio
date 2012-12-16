@@ -67,7 +67,7 @@
       <constructors title=""/>
       <functions title=""/>
       <related title=""/>
-      <variables title=""/>
+      <!-- <variables title=""/> -->
       <properties title=""/>
       <events title=""/>
     </memberdef>
@@ -85,7 +85,7 @@
       <typedefs title=""/>
       <enums title=""/>
       <functions title=""/>
-      <variables title=""/>
+      <!-- <variables title=""/> -->
       <membergroups visible="yes"/>
     </memberdecl>
     <detaileddescription title=""/>
@@ -94,7 +94,7 @@
       <typedefs title=""/>
       <enums title=""/>
       <functions title=""/>
-      <variables title=""/>
+      <!-- <variables title=""/> -->
     </memberdef>
     <authorsection visible="yes"/>
   </namespace>
@@ -113,7 +113,7 @@
       <typedefs title=""/>
       <enums title=""/>
       <functions title=""/>
-      <variables title=""/>
+      <!-- <variables title=""/> -->
       <membergroups visible="yes"/>
     </memberdecl>
     <detaileddescription title=""/>
@@ -123,7 +123,7 @@
       <typedefs title=""/>
       <enums title=""/>
       <functions title=""/>
-      <variables title=""/>
+      <!-- <variables title=""/> -->
     </memberdef>
     <authorsection/>
   </file>
@@ -143,7 +143,7 @@
       <enums title=""/>
       <enumvalues title=""/>
       <functions title=""/>
-      <variables title=""/>
+      <!-- <variables title=""/> -->
       <signals title=""/>
       <publicslots title=""/>
       <protectedslots title=""/>
@@ -162,7 +162,7 @@
       <enums title=""/>
       <enumvalues title=""/>
       <functions title=""/>
-      <variables title=""/>
+      <!-- <variables title=""/> -->
       <signals title=""/>
       <publicslots title=""/>
       <protectedslots title=""/>

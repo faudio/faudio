@@ -208,15 +208,17 @@ int main (int argc, char const *argv[])
   // printf("sizeof(uint32_t) = %d\n", (unsigned int) sizeof(uint32_t));
   // printf("sizeof(void*) = %d\n", (unsigned int) sizeof(void*));
 
-  doremir_audio_engine_initialize();
-  
-  // int c = getopt(argc, (char**) argv, "abc:");
-  // iconv_t cd = iconv_open("WCHAR_T", "UTF-8");
-  
-  // test_thread();
-  // test_mutex();
-  // test_cond();
-  test_wrap();
-  
+  {
+      doremir_audio_engine_initialize();
+      // int c = getopt(argc, (char**) argv, "abc:");
+      // iconv_t cd = iconv_open("WCHAR_T", "UTF-8");
+
+      test_thread();
+      test_mutex();
+      test_cond();
+      test_wrap();
+
+      doremir_audio_engine_initialize();
+  }
   return 0;
 }
