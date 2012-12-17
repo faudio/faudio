@@ -17,6 +17,7 @@ doremir_string_t doremir_string_single(uint16_t);
 doremir_string_t doremir_string_copy(doremir_string_t);
 void doremir_string_destroy(doremir_string_t);
 int doremir_string_length(doremir_string_t);
+uint16_t doremir_string_char_at(int, doremir_string_t);
 typedef struct {
             doremir_string_t (* show)(doremir_ptr_t);
         } doremir_string_show_t;

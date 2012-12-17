@@ -18,6 +18,7 @@ module Doremir.String
     destroy : String -> Void;
 
     length : String -> Int;
+    charAt : (Int,String) -> UInt16;
 
     /** @interface doremir_string_show_t 
         Printable objects.

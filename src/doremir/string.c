@@ -6,9 +6,10 @@
 struct _doremir_string_t
 {               
     size_t   size;
-    uint16_t *data; // UTF-16
+    uint16_t *data;
 };
-static const size_t kCharSize = sizeof(uint16_t);
+#define kCharSize sizeof(uint16_t)
+#define kStdCode  "UTF-16LE" // TODO match to endianness of platform
 
 doremir_string_t NewString(size_t size, uint16_t *data)
 {
@@ -49,13 +50,16 @@ void doremir_string_destroy(doremir_string_t str)
     doremir_delete(str);
 }
 
-
-
-
-
 int doremir_string_length(doremir_string_t str)
 {
     return str->size;
+}     
+
+uint16_t doremir_string_char_at(int n, doremir_string_t str)
+{                       
+    if (n < 0 || n >= str->size)
+        assert(false && "Out of range");
+    return str->data[n];
 }
 
 doremir_string_utf8_t doremir_string_to_utf8(doremir_string_t str)
@@ -67,7 +71,7 @@ doremir_string_utf8_t doremir_string_to_utf8(doremir_string_t str)
     char* in  = str->data;
     char* out = buf;
     {
-        iconv_t conv = iconv_open("UTF-8", "UTF-16BE");
+        iconv_t conv = iconv_open("UTF-8", kStdCode);
         size_t res = iconv(conv, &in, &inSize, &out, &outSize);
         iconv_close(conv);
 
@@ -132,7 +136,7 @@ doremir_string_t doremir_string_from_utf8(doremir_string_utf8_t cstr)
     char* in  = cstr;
     char* out = buf;
     {
-        iconv_t conv = iconv_open("UTF-16BE", "UTF-8");
+        iconv_t conv = iconv_open(kStdCode, "UTF-8");
         size_t res = iconv(conv, &in, &inSize, &out, &outSize);
         iconv_close(conv);
 
