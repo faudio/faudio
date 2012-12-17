@@ -26,7 +26,7 @@ doremir_ptr_t printer(doremir_ptr_t x)
     return 0;
 }
 void test_thread()
-{                                               
+{
     // doremir_closure_t r = { printer, (doremir_ptr_t) 10 };
     doremir_thread_t t = doremir_thread_create(new_closure(printer, (doremir_ptr_t) 10));
 
@@ -49,13 +49,13 @@ doremir_ptr_t locker(doremir_ptr_t x)
     doremir_thread_sleep(200);
     doremir_thread_unlock(i->mut);
     printf("Released lock in thread %d\n", i->val);
-    
+
     return 0;
 }
 void test_mutex()
-{   
+{
     doremir_thread_mutex_t m = doremir_thread_create_mutex();
-                               
+
     for (int j = 0; j < 10; ++j)
     {
         lock_index i = { m, j };
@@ -63,16 +63,16 @@ void test_mutex()
         doremir_thread_t t = doremir_thread_create(&r);
         doremir_thread_sleep(100);
         doremir_thread_detach(t);
-    }   
-    
+    }
+
     doremir_thread_sleep(1200);
-}     
+}
 
 
 
-typedef struct { 
+typedef struct {
     doremir_thread_mutex_t mut;
-    doremir_thread_condition_t cond; 
+    doremir_thread_condition_t cond;
     char* msg;
     } send_hub;
 doremir_ptr_t sender(doremir_ptr_t x)
@@ -82,7 +82,7 @@ doremir_ptr_t sender(doremir_ptr_t x)
         "Sur", "le", "pond", "d'Avignon", "on", "y", "danse", "tous", "en", "round"
     };
 
-    for (int i = 0; i < 10; ++i)           
+    for (int i = 0; i < 10; ++i)
     {
         doremir_thread_lock(h->mut);
         h->msg = msgs[i];
@@ -90,7 +90,7 @@ doremir_ptr_t sender(doremir_ptr_t x)
         doremir_thread_notify(h->cond);
         doremir_thread_unlock(h->mut);
 
-        doremir_thread_sleep(100);        
+        doremir_thread_sleep(100);
     }
 
     return 0;
@@ -98,13 +98,13 @@ doremir_ptr_t sender(doremir_ptr_t x)
 doremir_ptr_t receiver(doremir_ptr_t x)
 {
     send_hub *h = (send_hub*) x;
-    
+
     while (true)
     {
         doremir_thread_lock(h->mut);
         doremir_thread_wait_for(h->cond);
         printf("                        Received: %s\n", h->msg);
-        doremir_thread_unlock(h->mut);        
+        doremir_thread_unlock(h->mut);
     }
 
     return 0;
@@ -129,44 +129,44 @@ void test_cond()
 // {
 //     return false;
 // }
-// 
+//
 // bool foo_less_than(doremir_ptr_t a, doremir_ptr_t b)
 // {
 //     return false;
 // }
-// 
+//
 // bool foo_greater_than(doremir_ptr_t a, doremir_ptr_t b)
 // {
 //     return false;
 // }
-// 
+//
 // doremir_ptr_t foo_impl(doremir_id_t interface)
 // {
 //     static doremir_equal_t  foo_equal_impl = { foo_equal };
 //     static doremir_order_t foo_order_impl = { foo_less_than, foo_greater_than };
-// 
+//
 //     switch (interface)
 //     {
 //     case doremir_equal:
 //         return &foo_equal_impl;
-// 
+//
 //     case doremir_order:
 //         return &foo_order_impl;
-// 
+//
 //     default:
 //         return NULL;
 //     }
-// }             
+// }
 
 // void test_list()
 // {
 //     list_t xs = lempty();
 // }
-     
+
 void test_wrap()
-{             
+{
     // FIXME leaks
-    
+
     printf("bool: %s\n", doremir_type_str(fbool(true)));
     assert(tbool(fbool(true)) == true);
     assert(tbool(fbool(false)) == false);
@@ -205,7 +205,7 @@ void test_generic()
     printf("1    /  3     = %f\n", tdouble(doremir_divide(fdouble(1), fdouble(3))));
     printf("1    +  1.5   = %f\n", tdouble(doremir_add(fdouble(1), fdouble(1.5))));
 
-    
+
     printf("32                  + 1  = %i\n",   tint8(doremir_add(fint8(32), fint8(1))));
     printf("5123                + 1  = %i\n",   tint16(doremir_add(fint16(5123), fint16(1))));
     printf("2147483646          + 1  = %i\n",   tint32(doremir_add(fint32(2147483646), fint32(1))));
@@ -229,21 +229,21 @@ void test_generic()
 }
 
 void test_list()
-{      
+{
     // TODO leaks
     {
-        list_t xs = list(3,  fint16(1),fint16(2),fint16(3));
+        list_t xs = doremir_list(3,  fint16(1),fint16(2),fint16(3));
         list_t ys = doremir_copy(xs);
         printf("length: %d\n", doremir_list_length(xs));
         printf("length: %d\n", doremir_list_length(ys));
-        printf("xs == ys: %d\n", doremir_equal(xs, ys));    
+        printf("xs == ys: %d\n", doremir_equal(xs, ys));
         // TODO destroy wrapped values
         doremir_destroy(xs);
         doremir_destroy(ys);
-    }                       
-    
+    }
+
     {
-        list_t  xs = list(3, fint32(1),fint32(2),fint32(3));
+        list_t  xs = doremir_list(3, fint32(1),fint32(2),fint32(3));
         int32_t z  = tint32(doremir_list_sum(xs));
         int32_t p  = tint32(doremir_list_product(xs));
         int32_t m  = tint32(doremir_list_minimum(xs));
@@ -255,11 +255,11 @@ void test_list()
         // TODO destroy wrapped values
         doremir_destroy(xs);
     }
-    
-}    
+
+}
 
 static inline void memdump(void* s, size_t n)
-{        
+{
     for (size_t i = 0; i < n; ++i)
         printf("%x ", *((unsigned char*) (s + i)) );
     printf("\n");
@@ -269,11 +269,7 @@ void test_string()
 {
     {
         string_t s = doremir_string_single('v');
-        {
-            char* ss = unstring(s);
-            printf("str: '%s'\n", ss);
-            free(ss);            
-        }
+        doremir_print("str: '%s'\n", s);
         doremir_destroy(s);
     }
 
@@ -283,11 +279,7 @@ void test_string()
 
         string_t s = string(cs);
         printf("len: %i\n", slength(s));
-        {
-            char* ss = unstring(s);
-            printf("str: '%s'\n", ss);
-            free(ss);            
-        }
+        doremir_print("str: '%s'\n", s);
         // printf("str: '%s'\n", unstring(string(unstring(s)))); // works but leaks
 
         printf("charAt 0: %x\n", char_at(0,s));
@@ -299,24 +291,10 @@ void test_string()
     {
         string_t s = string("foo");
         string_t t = string("bar");
-        {
-            char* ss = unstring(s);
-            printf("str: '%s'\n", ss);
-            free(ss);            
-        }
-        {
-            char* ss = unstring(t);
-            printf("str: '%s'\n", ss);
-            free(ss);            
-        }
-
         string_t u = sappend(s, t);
-        {
-            char* ss = unstring(u);
-            printf("str: '%s'\n", ss);
-            free(ss);            
-        }
-
+        doremir_print("str: '%s'\n", s);
+        doremir_print("str: '%s'\n", t);
+        doremir_print("str: '%s'\n", u);
         doremir_destroy(s);
         doremir_destroy(t);
         doremir_destroy(u);
@@ -325,38 +303,28 @@ void test_string()
     {
         string_t s = string("foo");
         string_t t = string("bar");
+        doremir_print("str: '%s'\n", s);
+        doremir_print("str: '%s'\n", t);
         {
-            char* ss = unstring(s);
-            printf("str: '%s'\n", ss);
-            free(ss);            
+            string_t u = sdappend(s, t);
+            doremir_print("str: '%s'\n", u);
+            doremir_destroy(u);
         }
-        {
-            char* ss = unstring(t);
-            printf("str: '%s'\n", ss);
-            free(ss);            
-        }
-
-        string_t u = sdappend(s, t);
-        {
-            char* ss = unstring(u);
-            printf("str: '%s'\n", ss);
-            free(ss);            
-        }
-        
         doremir_destroy(t);
-        doremir_destroy(u);
     }
 
-}    
+}
 
 void test_show()
-{                     
+{
     doremir_print("\n", NULL);
+    doremir_print("%s\n", fbool(0));
     doremir_print("%s\n", fint8(129));
     doremir_print("%s\n", fint16(129));
     doremir_print("%s\n", fint32(64000));
     doremir_print("%s\n", fdouble(3.1415));
-    doremir_print("%s\n", list(1, 1,2,3));
+    doremir_print("%s\n", doremir_list(3, fint8(1), fint8(2), fbool(true)));
+    doremir_print("%s\n", doremir_list(3, fint8(1), fint8(2), doremir_list(3, fint8(1), fint8(2), fbool(true))));
 }
 
 int main (int argc, char const *argv[])
@@ -368,20 +336,20 @@ int main (int argc, char const *argv[])
   printf("sizeof(wchar_t) = %d\n", (unsigned int) sizeof(wchar_t));
   // printf("sizeof(uint32_t) = %d\n", (unsigned int) sizeof(uint32_t));
   // printf("sizeof(void*) = %d\n", (unsigned int) sizeof(void*));
-  
+
   // while(true)
   {
       doremir_audio_engine_initialize();
 
       // int c = getopt(argc, (char**) argv, "abc:");
-      
+
       // test_thread();
       // test_mutex();
       // test_cond();
-      // test_wrap();
-      // test_generic();
-      // test_list();
-      // test_string();
+      test_wrap();
+      test_generic();
+      test_list();
+      test_string();
       test_show();
 
       doremir_audio_engine_terminate();
