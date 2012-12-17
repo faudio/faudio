@@ -224,39 +224,49 @@ void test_generic()
 
 }
 
-void test_list()
-{   
-    {
-        list_t xs = list(3,  fint16(1),fint16(2),fint16(3));
-        list_t ys = doremir_list_copy(xs);
-        printf("length: %d\n", doremir_list_length(xs));
-        printf("length: %d\n", doremir_list_length(ys));
-        printf("xs == ys: %d\n", doremir_equal(xs, ys));    
-        // TODO destroy wrapped values
-        doremir_destroy(xs);
-        doremir_destroy(ys);
-    }                       
-    
-    {
-        list_t  xs = list(3, fint32(1),fint32(2),fint32(3));
-        int32_t z  = tint32(doremir_list_sum(xs));
-        int32_t p  = tint32(doremir_list_product(xs));
-        int32_t m  = tint32(doremir_list_minimum(xs));
-        int32_t n  = tint32(doremir_list_maximum(xs));
-        printf("sum:  %d\n", z);
-        printf("prod: %d\n", p);
-        printf("min:  %d\n", m);
-        printf("max:  %d\n", n);
-    }
-    
-}  
+// void test_list()
+// {   
+//     {
+//         list_t xs = list(3,  fint16(1),fint16(2),fint16(3));
+//         list_t ys = doremir_list_copy(xs);
+//         printf("length: %d\n", doremir_list_length(xs));
+//         printf("length: %d\n", doremir_list_length(ys));
+//         printf("xs == ys: %d\n", doremir_equal(xs, ys));    
+//         // TODO destroy wrapped values
+//         doremir_destroy(xs);
+//         doremir_destroy(ys);
+//     }                       
+//     
+//     {
+//         list_t  xs = list(3, fint32(1),fint32(2),fint32(3));
+//         int32_t z  = tint32(doremir_list_sum(xs));
+//         int32_t p  = tint32(doremir_list_product(xs));
+//         int32_t m  = tint32(doremir_list_minimum(xs));
+//         int32_t n  = tint32(doremir_list_maximum(xs));
+//         printf("sum:  %d\n", z);
+//         printf("prod: %d\n", p);
+//         printf("min:  %d\n", m);
+//         printf("max:  %d\n", n);
+//     }
+//     
+// }  
+
+static inline void memdump(void* s, size_t n)
+{        
+    for (size_t i = 0; i < n; ++i)
+        printf("%x ", *((unsigned char*) (s + i)) );
+    printf("\n");
+}
 
 void test_string()
 {
-    // char cs[] = {'h',0xc3,0xb6,'g','s',0};
-    string_t s = doremir_string_from_utf8("högste");
-    printf("len: %d\n", doremir_string_length(s));   // FIXME
-    printf("str: %s\n", doremir_string_to_utf8(s));  // FIXME
+    char* cs = " 新隶体 ";
+    // char* cs = "hans höglund är tonsättare";
+
+    string_t s = doremir_string_from_utf8(cs);
+    printf("len: %i\n", doremir_string_length(s));
+    printf("str: %s\n", doremir_string_to_utf8(s));
+    printf("str: %s\n", doremir_string_to_utf8(doremir_string_from_utf8(doremir_string_to_utf8(s))));
 }
 
 int main (int argc, char const *argv[])
@@ -279,7 +289,7 @@ int main (int argc, char const *argv[])
       // test_cond();
       // test_wrap();
       test_generic();
-      test_list();
+      // test_list();
       test_string();
 
       doremir_audio_engine_terminate();
