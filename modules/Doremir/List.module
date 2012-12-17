@@ -10,6 +10,7 @@
         doremir_copy_t
         doremir_destroy_t
         doremir_dynamic_t
+        doremir_string_show_t
     @see 
         \ref Collections
     

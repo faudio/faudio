@@ -36,7 +36,7 @@ module Doremir
     */
     type Pred   = (Ptr -> Bool)*;
 
-    /** @class doremir_closure_t
+    /** @struct doremir_closure_t
         Generic closure.
     */
     type Closure = struct { 
