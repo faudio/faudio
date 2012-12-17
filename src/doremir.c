@@ -108,6 +108,14 @@ doremir_ptr_t doremir_from_int16(int16_t a)
 
 // --------------------------------------------------------------------------------
 
+int32_t doremir_peek_int32(doremir_ptr_t a)
+{
+    intptr_t p = (intptr_t) a;
+    assert((p & 0x7) == 0x4 && "Wrong type, expected int32");
+    int32_t v = *((int32_t*) (p & ~0x7));
+    return v;
+}
+
 int32_t doremir_to_int32(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
@@ -133,6 +141,14 @@ doremir_ptr_t doremir_from_int32(int32_t a)
 }
 
 // --------------------------------------------------------------------------------
+
+int64_t doremir_peek_int64(doremir_ptr_t a)
+{
+    intptr_t p = (intptr_t) a;
+    assert((p & 0x7) == 0x3 && "Wrong type, expected int64");
+    int64_t v = *((int64_t*) (p & ~0x7));
+    return v;
+}
 
 int64_t doremir_to_int64(doremir_ptr_t a)
 {
@@ -160,6 +176,13 @@ doremir_ptr_t doremir_from_int64(int64_t a)
 
 // --------------------------------------------------------------------------------
 
+float doremir_peek_float(doremir_ptr_t a)
+{
+    intptr_t p = (intptr_t) a;
+    assert((p & 0x7) == 0x2 && "Wrong type, expected float");
+    float v = *((float*) (p & ~0x7));
+    return v;
+}
 float doremir_to_float(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
@@ -186,6 +209,13 @@ doremir_ptr_t doremir_from_float(float a)
 
 // --------------------------------------------------------------------------------
 
+double doremir_peek_double(doremir_ptr_t a)
+{
+    intptr_t p = (intptr_t) a;
+    assert((p & 0x7) == 0x1 && "Wrong type, expected double");
+    double v = *((double*) (p & ~0x7));
+    return v;
+}
 double doremir_to_double(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
@@ -353,35 +383,35 @@ doremir_ptr_t doremir_move(doremir_ptr_t a)
 #define BOXED_WRAPPER_IMPL(T) \
     bool T##_equal(doremir_ptr_t a, doremir_ptr_t b)                                        \
     {                                                                                       \
-        return doremir_from_##T(doremir_to_##T(a) == doremir_to_##T(b));                    \
+        return doremir_from_##T(doremir_peek_##T(a) == doremir_peek_##T(b));                \
     }                                                                                       \
     bool T##_less_than(doremir_ptr_t a, doremir_ptr_t b)                                    \
     {                                                                                       \
-        return doremir_from_##T(doremir_to_##T(a) < doremir_to_##T(b));                     \
+        return doremir_from_##T(doremir_peek_##T(a) < doremir_peek_##T(b));                 \
     }                                                                                       \
     bool T##_greater_than(doremir_ptr_t a, doremir_ptr_t b)                                 \
     {                                                                                       \
-        return doremir_from_##T(doremir_to_##T(a) > doremir_to_##T(b));                     \
+        return doremir_from_##T(doremir_peek_##T(a) > doremir_peek_##T(b));                 \
     }                                                                                       \
     doremir_ptr_t T##_add(doremir_ptr_t a, doremir_ptr_t b)                                 \
     {                                                                                       \
-        return doremir_from_##T(doremir_to_##T(a) + doremir_to_##T(b));                     \
+        return doremir_from_##T(doremir_peek_##T(a) + doremir_peek_##T(b));                 \
     }                                                                                       \
     doremir_ptr_t T##_subtract(doremir_ptr_t a, doremir_ptr_t b)                            \
     {                                                                                       \
-        return doremir_from_##T(doremir_to_##T(a) - doremir_to_##T(b));                     \
+        return doremir_from_##T(doremir_peek_##T(a) - doremir_peek_##T(b));                 \
     }                                                                                       \
     doremir_ptr_t T##_multiply(doremir_ptr_t a, doremir_ptr_t b)                            \
     {                                                                                       \
-        return doremir_from_##T(doremir_to_##T(a) * doremir_to_##T(b));                     \
+        return doremir_from_##T(doremir_peek_##T(a) * doremir_peek_##T(b));                 \
     }                                                                                       \
     doremir_ptr_t T##_divide(doremir_ptr_t a, doremir_ptr_t b)                              \
     {                                                                                       \
-        return doremir_from_##T(doremir_to_##T(a) / doremir_to_##T(b));                     \
+        return doremir_from_##T(doremir_peek_##T(a) / doremir_peek_##T(b));                 \
     }                                                                                       \
     doremir_ptr_t T##_absolute(doremir_ptr_t a)                                             \
     {                                                                                       \
-        return doremir_from_##T(abs(doremir_to_##T(a))); /* TODO use tg? */                 \
+        return doremir_from_##T(abs(doremir_peek_##T(a))); /* TODO use tg? */               \
     }                                                                                       \
     doremir_ptr_t T##_copy(doremir_ptr_t a)                                                 \
     {                                                                                       \
@@ -409,6 +439,8 @@ IMPLEMENT_WRAPPER(int64);
 IMPLEMENT_WRAPPER(float);
 IMPLEMENT_WRAPPER(double);
 
+// Dummy struct as clang (C99?) does not allow us to call the pointer directly
+struct doremir_impl_disp { doremir_impl_t impl; };
 
 doremir_ptr_t doremir_interface(doremir_id_t type, doremir_ptr_t pointer)
 {
@@ -429,6 +461,6 @@ doremir_ptr_t doremir_interface(doremir_id_t type, doremir_ptr_t pointer)
     case 1:
         return double_impl(type);
     default:
-        return ((doremir_impl_t) pointer) (type);
+        return ((struct doremir_impl_disp*) pointer)->impl(type);
     }
 }
