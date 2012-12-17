@@ -114,7 +114,7 @@ doremir_list_t doremir_list(int count, ...)
     for (int i = 0; i < count; ++i)
     {
         doremir_ptr_t x = va_arg(ap,doremir_ptr_t);
-        xs = doremir_list_consd(x, xs);
+        xs = doremir_list_consd(x, xs); // TODO should be snocd
     }
     va_end(ap);                    
 
@@ -236,6 +236,8 @@ doremir_list_t doremir_list_map(doremir_unary_t f, doremir_list_t xs)
     return NewList(yn);
 }
 
+// TODO this is foldl
+// other variants?
 doremir_ptr_t doremir_list_fold(doremir_binary_t f,
                                 doremir_ptr_t    z,
                                 doremir_list_t   xs)
@@ -342,9 +344,19 @@ bool list_greater_than(doremir_ptr_t a, doremir_ptr_t b)
     assert(false && "Not implemented");
 }
 
-doremir_string_t list_show(doremir_ptr_t a)
-{               
-    return string("[]"); // TODO
+doremir_string_t list_show(doremir_ptr_t xs)
+{                               
+    NodeRef xn = ((ListRef) xs)->node;
+    string_t s = string("[");
+    while(xn)
+    {
+        s = sdappend(s, doremir_string_show(xn->value));
+        xn = xn->next;
+        if (xn) 
+            s = sdappend(s, string(","));
+    };
+    s = sdappend(s, string("]"));
+    return s;
 }
 
 doremir_ptr_t list_copy(doremir_ptr_t a)
