@@ -237,7 +237,7 @@ doremir_string_t doremir_string_from_utf32(doremir_string_utf32_t cstr)
 doremir_string_t doremir_string_show(doremir_ptr_t a)
 {
     return ((doremir_string_show_t*) doremir_interface(doremir_string_show_i, a))->show(a);
-}
+}     
 
 // --------------------------------------------------------------------------------
 

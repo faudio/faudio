@@ -7,6 +7,9 @@
 
 doremir_list_t doremir_list(int count, ...);
 
+#define ptr_t  doremir_ptr_t
+#define list_t doremir_list_t
+
 #define tbool   doremir_to_bool
 #define tint8   doremir_to_int8
 #define tint16  doremir_to_int16
@@ -22,7 +25,6 @@ doremir_list_t doremir_list(int count, ...);
 #define ffloat  doremir_from_float
 #define fdouble doremir_from_double
 
-#define list_t doremir_list_t
 #define list doremir_list
 #define empty doremir_list_empty
 #define cons doremir_list_cons

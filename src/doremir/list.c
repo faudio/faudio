@@ -1,6 +1,7 @@
 
 #include <doremir/list.h>
 #include <doremir/util.h>
+#include <doremir/string.h>
 
 doremir_ptr_t list_impl(doremir_id_t interface);
 
@@ -341,6 +342,11 @@ bool list_greater_than(doremir_ptr_t a, doremir_ptr_t b)
     assert(false && "Not implemented");
 }
 
+doremir_string_t list_show(doremir_ptr_t a)
+{               
+    return string("[]"); // TODO
+}
+
 doremir_ptr_t list_copy(doremir_ptr_t a)
 {
     return doremir_list_copy(a);
@@ -355,6 +361,7 @@ doremir_ptr_t list_impl(doremir_id_t interface)
 {
     static doremir_equal_t list_equal_impl = { list_equal };
     static doremir_copy_t list_copy_impl = { list_copy };
+    static doremir_string_show_t list_show_impl = { list_show };
     static doremir_destroy_t list_destroy_impl = { list_destroy };
     static doremir_order_t list_order_impl = { list_less_than, list_greater_than };
 
@@ -365,6 +372,9 @@ doremir_ptr_t list_impl(doremir_id_t interface)
 
     case doremir_order_i:
         return &list_order_impl;
+
+    case doremir_string_show_i:
+        return &list_show_impl;
 
     case doremir_copy_i:
         return &list_copy_impl;

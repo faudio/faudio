@@ -76,9 +76,10 @@ module Doremir
     // modulo      : (Ptr, Ptr) -> Ptr;
     absolute    : Ptr -> Ptr;
 
-    copy : Ptr -> Ptr;
-    move : Ptr -> Ptr;
+    copy    : Ptr -> Ptr;
+    move    : Ptr -> Ptr;
     destroy : Ptr -> Void;
+    print   : (Char*,Ptr) -> Void;
 
     
 

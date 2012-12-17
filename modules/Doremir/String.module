@@ -58,7 +58,7 @@ module Doremir.String
     type Show  = struct {
         show : (Ptr -> String)*
     };
-    show : Ptr -> String;
+    show   : Ptr -> String;
 
     toUtf8  : String -> Utf8;
     toUtf16 : String -> Utf16;

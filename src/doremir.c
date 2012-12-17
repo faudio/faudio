@@ -1,5 +1,6 @@
 
 #include <doremir.h>
+#include <doremir/string.h>
 
 #pragma GCC diagnostic ignored "-Wparentheses"
 
@@ -255,7 +256,7 @@ doremir_ptr_t doremir_from_double(double a)
     {                                                                                       \
         return ((doremir_##I##_t*) doremir_interface(doremir_##I##_i, a))->F(a, b);         \
     }
-    
+
 
 GENERIC2(equal,     equal,          doremir_ptr_t, doremir_ptr_t, bool);
 GENERIC2(order,     less_than,      doremir_ptr_t, doremir_ptr_t, bool);
@@ -296,6 +297,23 @@ GENERIC1(number,    absolute,       doremir_ptr_t, doremir_ptr_t);
 GENERIC1(copy,      copy,           doremir_ptr_t, doremir_ptr_t);
 GENERIC1(destroy,   destroy,        doremir_ptr_t, void);
 
+doremir_string_t doremir_show(doremir_ptr_t a)
+{
+    return doremir_string_show(a);
+}
+
+void doremir_print(char* f, doremir_ptr_t a)
+{                         
+    if (a)
+    {
+        doremir_string_t str = doremir_string_show(a);
+        printf(f, doremir_string_to_utf8(str));
+        doremir_destroy(str);        
+    }
+    else
+        printf(f);
+}
+
 doremir_ptr_t doremir_move(doremir_ptr_t a)
 {
     return a;
@@ -316,6 +334,8 @@ doremir_ptr_t doremir_move(doremir_ptr_t a)
             { T##_less_than, T##_greater_than };                                            \
         static doremir_number_t  T##_number_impl  =                                         \
             { T##_add, T##_subtract, T##_multiply, T##_divide, T##_absolute };              \
+        static doremir_string_show_t    T##_show_impl    =                                  \
+            { T##_show };                                                                   \
         static doremir_copy_t    T##_copy_impl    =                                         \
             { T##_copy };                                                                   \
         static doremir_destroy_t T##_destroy_impl =                                         \
@@ -329,6 +349,8 @@ doremir_ptr_t doremir_move(doremir_ptr_t a)
             return &T##_order_impl;                                                         \
         case doremir_number_i:                                                              \
             return &T##_number_impl;                                                        \
+        case doremir_string_show_i:                                                         \
+            return &T##_show_impl;                                                          \
         case doremir_copy_i:                                                                \
             return &T##_copy_impl;                                                          \
         case doremir_destroy_i:                                                             \
@@ -422,6 +444,25 @@ doremir_ptr_t doremir_move(doremir_ptr_t a)
         doremir_to_##T(a);                                                                  \
     }
 
+#define UNBOXED_SHOW_IMPL(T,F) \
+    doremir_string_t T##_show(doremir_ptr_t a)                                              \
+    {                                                                                       \
+        int  n;                                                                             \
+        char cs[16];                                                                        \
+        n = snprintf(cs, 16, F, doremir_to_##T(a));                                         \
+        cs[n] = 0; /* terminate */                                                          \
+        return doremir_string_from_utf8(cs);                                                \
+    }
+
+#define BOXED_SHOW_IMPL(T,F) \
+    doremir_string_t T##_show(doremir_ptr_t a)                                              \
+    {                                                                                       \
+        int  n;                                                                             \
+        char cs[16];                                                                        \
+        n = snprintf(cs, 16, F, doremir_peek_##T(a));                                       \
+        cs[n] = 0; /* terminate */                                                          \
+        return doremir_string_from_utf8(cs);                                                \
+    }
 
 UNBOXED_WRAPPER_IMPL(bool);
 UNBOXED_WRAPPER_IMPL(int8);
@@ -431,6 +472,20 @@ BOXED_WRAPPER_IMPL(int64);
 BOXED_WRAPPER_IMPL(float);
 BOXED_WRAPPER_IMPL(double);
 
+doremir_string_t bool_show(doremir_ptr_t a)
+{
+    return doremir_to_bool(a) ? doremir_string_from_utf8("true")
+                              : doremir_string_from_utf8("false");
+}
+
+UNBOXED_SHOW_IMPL(int8, "%i");
+UNBOXED_SHOW_IMPL(int16, "%i");
+BOXED_SHOW_IMPL(int32, "%i");
+BOXED_SHOW_IMPL(int64, "%" PRId64);
+BOXED_SHOW_IMPL(float, "%f");
+BOXED_SHOW_IMPL(double, "%f");
+
+
 IMPLEMENT_WRAPPER(bool);
 IMPLEMENT_WRAPPER(int8);
 IMPLEMENT_WRAPPER(int16);
@@ -438,6 +493,7 @@ IMPLEMENT_WRAPPER(int32);
 IMPLEMENT_WRAPPER(int64);
 IMPLEMENT_WRAPPER(float);
 IMPLEMENT_WRAPPER(double);
+
 
 // Dummy struct as clang (C99?) does not allow us to call the pointer directly
 struct doremir_impl_disp { doremir_impl_t impl; };
