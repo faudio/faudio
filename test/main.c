@@ -164,7 +164,9 @@ void test_cond()
 // }
      
 void test_wrap()
-{
+{             
+    // FIXME leaks
+    
     printf("bool: %s\n", doremir_type_str(fbool(true)));
     assert(tbool(fbool(true)) == true);
     assert(tbool(fbool(false)) == false);
@@ -197,6 +199,8 @@ void test_wrap()
 
 void test_generic()
 {
+    // TODO leaks
+
     printf("2    *  3.2   = %f\n", tdouble(doremir_multiply(fdouble(2), fdouble(3.2))));
     printf("1    /  3     = %f\n", tdouble(doremir_divide(fdouble(1), fdouble(3))));
     printf("1    +  1.5   = %f\n", tdouble(doremir_add(fdouble(1), fdouble(1.5))));
@@ -224,32 +228,33 @@ void test_generic()
 
 }
 
-// void test_list()
-// {   
-//     {
-//         list_t xs = list(3,  fint16(1),fint16(2),fint16(3));
-//         list_t ys = doremir_list_copy(xs);
-//         printf("length: %d\n", doremir_list_length(xs));
-//         printf("length: %d\n", doremir_list_length(ys));
-//         printf("xs == ys: %d\n", doremir_equal(xs, ys));    
-//         // TODO destroy wrapped values
-//         doremir_destroy(xs);
-//         doremir_destroy(ys);
-//     }                       
-//     
-//     {
-//         list_t  xs = list(3, fint32(1),fint32(2),fint32(3));
-//         int32_t z  = tint32(doremir_list_sum(xs));
-//         int32_t p  = tint32(doremir_list_product(xs));
-//         int32_t m  = tint32(doremir_list_minimum(xs));
-//         int32_t n  = tint32(doremir_list_maximum(xs));
-//         printf("sum:  %d\n", z);
-//         printf("prod: %d\n", p);
-//         printf("min:  %d\n", m);
-//         printf("max:  %d\n", n);
-//     }
-//     
-// }  
+void test_list()
+{      
+    // TODO leaks
+    {
+        list_t xs = list(3,  fint16(1),fint16(2),fint16(3));
+        list_t ys = doremir_copy(xs);
+        printf("length: %d\n", doremir_list_length(xs));
+        printf("length: %d\n", doremir_list_length(ys));
+        printf("xs == ys: %d\n", doremir_equal(xs, ys));    
+        // TODO destroy wrapped values
+        doremir_destroy(xs);
+        doremir_destroy(ys);
+    }                       
+    
+    {
+        list_t  xs = list(3, fint32(1),fint32(2),fint32(3));
+        int32_t z  = tint32(doremir_list_sum(xs));
+        int32_t p  = tint32(doremir_list_product(xs));
+        int32_t m  = tint32(doremir_list_minimum(xs));
+        int32_t n  = tint32(doremir_list_maximum(xs));
+        printf("sum:  %d\n", z);
+        printf("prod: %d\n", p);
+        printf("min:  %d\n", m);
+        printf("max:  %d\n", n);
+    }
+    
+}    
 
 static inline void memdump(void* s, size_t n)
 {        
@@ -261,46 +266,85 @@ static inline void memdump(void* s, size_t n)
 void test_string()
 {
     {
-        // char* cs = " 新隶体 ";
-        char* cs = "höglund är tonsättare";
-
-        string_t s = doremir_string_from_utf8(cs);
-        printf("len: %i\n", doremir_string_length(s));
-        printf("str: %s\n", doremir_string_to_utf8(s));
-        printf("str: %s\n", doremir_string_to_utf8(doremir_string_from_utf8(doremir_string_to_utf8(s))));
-
-        printf("charAt 0: %x\n", doremir_string_char_at(0,s));
-        printf("charAt 1: %x\n", doremir_string_char_at(1,s));
-        printf("charAt 2: %x\n", doremir_string_char_at(2,s));
-        doremir_string_destroy(s);
+        string_t s = doremir_string_single('v');
+        {
+            char* ss = unstring(s);
+            printf("str: '%s'\n", ss);
+            free(ss);            
+        }
+        doremir_destroy(s);
     }
 
     {
-        string_t s = doremir_string_from_utf8("foo");
-        string_t t = doremir_string_from_utf8("bar");
-        printf("str: %s\n", doremir_string_to_utf8(s));
-        printf("str: %s\n", doremir_string_to_utf8(t));
+        // char* cs = " 新隶体 "; // length 5
+        char* cs = "höglund";
 
-        string_t u = doremir_string_append(s, t);
-        printf("str: %s\n", doremir_string_to_utf8(u));
+        string_t s = string(cs);
+        printf("len: %i\n", slength(s));
+        {
+            char* ss = unstring(s);
+            printf("str: '%s'\n", ss);
+            free(ss);            
+        }
+        // printf("str: '%s'\n", unstring(string(unstring(s)))); // works but leaks
 
-        doremir_string_destroy(s);
-        doremir_string_destroy(t);
-        doremir_string_destroy(u);
+        printf("charAt 0: %x\n", char_at(0,s));
+        printf("charAt 1: %x\n", char_at(1,s));
+        printf("charAt 2: %x\n", char_at(2,s));
+        doremir_destroy(s);
     }
 
     {
-        string_t s = doremir_string_from_utf8("foo");
-        string_t t = doremir_string_from_utf8("bar");
-        printf("str: %s\n", doremir_string_to_utf8(s));
-        printf("str: %s\n", doremir_string_to_utf8(t));
+        string_t s = string("foo");
+        string_t t = string("bar");
+        {
+            char* ss = unstring(s);
+            printf("str: '%s'\n", ss);
+            free(ss);            
+        }
+        {
+            char* ss = unstring(t);
+            printf("str: '%s'\n", ss);
+            free(ss);            
+        }
 
-        string_t u = doremir_string_dappend(s, t);
-        printf("str: %s\n", doremir_string_to_utf8(u));
+        string_t u = sappend(s, t);
+        {
+            char* ss = unstring(u);
+            printf("str: '%s'\n", ss);
+            free(ss);            
+        }
+
+        doremir_destroy(s);
+        doremir_destroy(t);
+        doremir_destroy(u);
+    }
+
+    {
+        string_t s = string("foo");
+        string_t t = string("bar");
+        {
+            char* ss = unstring(s);
+            printf("str: '%s'\n", ss);
+            free(ss);            
+        }
+        {
+            char* ss = unstring(t);
+            printf("str: '%s'\n", ss);
+            free(ss);            
+        }
+
+        string_t u = sdappend(s, t);
+        {
+            char* ss = unstring(u);
+            printf("str: '%s'\n", ss);
+            free(ss);            
+        }
         
-        doremir_string_destroy(t);
-        doremir_string_destroy(u);
+        doremir_destroy(t);
+        doremir_destroy(u);
     }
+
 }
 
 int main (int argc, char const *argv[])
@@ -312,17 +356,18 @@ int main (int argc, char const *argv[])
   printf("sizeof(wchar_t) = %d\n", (unsigned int) sizeof(wchar_t));
   // printf("sizeof(uint32_t) = %d\n", (unsigned int) sizeof(uint32_t));
   // printf("sizeof(void*) = %d\n", (unsigned int) sizeof(void*));
-
+  
+  while(true)
   {
       doremir_audio_engine_initialize();
+
       // int c = getopt(argc, (char**) argv, "abc:");
-      // iconv_t cd = iconv_open("WCHAR_T", "UTF-8");
 
       // test_thread();
       // test_mutex();
       // test_cond();
       // test_wrap();
-      test_generic();
+      // test_generic();
       // test_list();
       test_string();
 

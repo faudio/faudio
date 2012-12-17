@@ -3,6 +3,9 @@
 #define _DOREMIR_UTIL
 
 #include <doremir.h>
+#include <doremir/list.h> // for list forward decl
+
+doremir_list_t doremir_list(int count, ...);
 
 #define tbool   doremir_to_bool
 #define tint8   doremir_to_int8
@@ -49,6 +52,12 @@
 #define sum doremir_list_sum
 
 #define string_t doremir_string_t
+#define string   doremir_string_from_utf8
+#define unstring doremir_string_to_utf8
+#define slength  doremir_string_length
+#define sappend  doremir_string_append
+#define sdappend doremir_string_dappend
+#define char_at  doremir_string_char_at
 
 
 #endif // _DOREMIR_UTIL
