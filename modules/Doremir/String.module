@@ -27,10 +27,15 @@ module Doremir.String
     type Nullary = (() -> Char)*;
     type Unary   = (Char -> Char)*;
     type Binary  = ((Char, Char) -> Char)*;
-    map  : (String, Unary)        -> String;
-    reduce : (String, Nullary, Binary, Char) -> String;
+    map       : (String, Unary)        -> String;
+    reduce    : (String, Nullary, Binary, Char) -> String;
     mapReduce : (String, Nullary, Unary, Binary, Char) -> String;
 
-    type Show = (Ptr -> String)*;
+    /** @interface doremir_string_show_t 
+        Printable objects.
+    */
+    type Show  = struct {
+        show : (Ptr -> String)*
+    };
 
 }

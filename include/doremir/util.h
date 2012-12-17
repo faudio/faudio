@@ -1,4 +1,7 @@
 
+#ifndef _DOREMIR_UTIL
+#define _DOREMIR_UTIL
+
 #include <doremir.h>
 
 #define tbool   doremir_to_bool
@@ -17,6 +20,7 @@
 #define fdouble doremir_from_double
 
 #define list_t doremir_list_t
+#define list doremir_list
 #define empty doremir_list_empty
 #define cons doremir_list_cons
 #define snoc doremir_list_snoc
@@ -43,3 +47,8 @@
 // #define sortd doremir_list_sortd
 // #define mapd doremir_list_mapd
 #define sum doremir_list_sum
+
+doremir_list_t doremir_list(int count, ...);
+
+#endif // _DOREMIR_UTIL
+

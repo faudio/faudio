@@ -224,6 +224,19 @@ void test_generic()
 
 }
 
+void test_list()
+{   
+    
+    list_t xs = list(3,  fint16(1),fint16(2),fint16(3));
+    list_t ys = doremir_list_copy(xs);
+    printf("length: %d\n", doremir_list_length(xs));
+    printf("length: %d\n", doremir_list_length(ys));
+    printf("xs == ys: %d\n", doremir_equal(xs, ys));    
+    // TODO destroy wrapped values
+    doremir_destroy(xs);
+    doremir_destroy(ys);
+}
+
 int main (int argc, char const *argv[])
 {
   printf("DoReMIR Audio engine %s v%d.%d.%d\n", bits, version[0], version[1], version[2]);
@@ -241,8 +254,10 @@ int main (int argc, char const *argv[])
       // test_thread();
       // test_mutex();
       // test_cond();
-      test_wrap();
+      // test_wrap();
       test_generic();
+      while(1)
+          test_list();
 
       doremir_audio_engine_terminate();
   }

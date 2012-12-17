@@ -39,7 +39,7 @@ module Doremir.List
     destroy     : List -> Void;
 
     isEmpty     : List -> Bool;
-    lenght      : List -> Int;
+    length      : List -> Int;
     head        : List -> Ptr;
     tail        : List -> Ptr;
     init        : List -> Ptr;
