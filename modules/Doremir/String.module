@@ -8,19 +8,40 @@
 module Doremir.String
 {
     import Doremir;
+    /**
+        @typedef doremir_string_t
+        An immutable Unicode string.
 
+        @typedef doremir_string_file_path_t
+        A file path.
+
+        @typedef doremir_string_utf8_t
+        A UTF-8 encoded string.
+        This type use the endianness of the system, and is terminated by a null character.
+
+        @typedef doremir_string_utf16_t
+        A UTF-16 encoded string.
+        This type use the endianness of the system, and is terminated by a null character.
+
+        @typedef doremir_string_utf32_t
+        A UTF-32 encoded string.
+        This type use the endianness of the system, and is terminated by a null character.
+     */
     type String = opaque;
     type FilePath = String;
+    type Utf8  = Char8*;
+    type Utf16 = Char16*;
+    type Utf32 = Char32*;
     
     empty   : () -> String;
-    single  : UInt16 -> String;
+    single  : Char16 -> String;
     copy    : String -> String;
     append  : (String,String) -> String;
     dappend : (String,String) -> String;
     destroy : String -> Void;
 
     length : String -> Int;
-    charAt : (Int,String) -> UInt16;
+    charAt : (Int,String) -> Char16;
 
     /** @interface doremir_string_show_t 
         Printable objects.
@@ -28,26 +49,6 @@ module Doremir.String
     type Show  = struct {
         show : (Ptr -> String)*
     };
-
-
-    // Misc conversion
-    /**
-        @typedef doremir_string_utf8_t
-        String represented in the UTF-8 encoding, terminated by a null character.
-     */
-    type Utf8  = Char*;
-
-    /**
-        @typedef doremir_string_utf16_t
-        String represented in the UTF-16 encoding using the endianness of the system, terminated by a null character (two zero bytes).
-     */
-    type Utf16 = UInt16*;
-
-    /**
-        @typedef doremir_string_utf32_t
-        String represented in the UTF-16 encoding using the endianness of the system, terminated by a null character (four zero bytes).
-     */
-    type Utf32 = UInt32*;
 
     toUtf8  : String -> Utf8;
     toUtf16 : String -> Utf16;

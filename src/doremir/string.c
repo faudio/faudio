@@ -12,8 +12,10 @@ struct _doremir_string_t
     uint16_t        *data;
 };
 
+// TODO This should be based on the platform endianness
+#define kStdCode  "UTF-16LE" 
 #define kCharSize sizeof(uint16_t)
-#define kStdCode  "UTF-16LE" // TODO match to endianness of platform
+
 
 // static void memdump(void* s, size_t n)
 // {        
@@ -21,7 +23,6 @@ struct _doremir_string_t
 //         printf("%02x ", *((unsigned char*) s + i) );
 //     printf("\n");
 // }
-
 
 doremir_string_t NewString(size_t size, uint16_t *data)
 {
@@ -31,6 +32,8 @@ doremir_string_t NewString(size_t size, uint16_t *data)
     str->data = data;
     return str;
 }
+
+// --------------------------------------------------------------------------------
 
 doremir_string_t doremir_string_empty()
 {
@@ -83,6 +86,10 @@ void doremir_string_destroy(doremir_string_t str)
     doremir_delete(str);
 }
 
+// --------------------------------------------------------------------------------
+// Predicates etc
+// --------------------------------------------------------------------------------
+
 int doremir_string_length(doremir_string_t str)
 {
     return str->size;
@@ -94,6 +101,10 @@ uint16_t doremir_string_char_at(int n, doremir_string_t str)
         assert(false && "Out of range");
     return str->data[n];
 }
+
+// --------------------------------------------------------------------------------
+// Conversion functions
+// --------------------------------------------------------------------------------
 
 doremir_string_utf8_t doremir_string_to_utf8(doremir_string_t str)
 {   
@@ -126,9 +137,13 @@ doremir_string_utf8_t doremir_string_to_utf8(doremir_string_t str)
     return buf;
 }
 
-doremir_string_utf16_t doremir_string_to_utf16(doremir_string_t str)
+doremir_string_utf16_t doremir_string_to_utf16(doremir_string_t as)
 {
-    assert(false && "Not implemented");
+    size_t size = as->size;
+    uint16_t* cstr = malloc((size + 1)*kCharSize);
+    memcpy(cstr, as->data, as->size*kCharSize);
+    cstr[size] = 0;
+    return cstr;
 }
 
 doremir_string_utf32_t doremir_string_to_utf32(doremir_string_t str)
@@ -146,6 +161,20 @@ doremir_string_utf32_t doremir_string_to_utf32(doremir_string_t str)
 //    return j;
 // }
 static size_t RawSize(char *s) 
+{
+   size_t i = 0;
+   while (s[i])
+     i++;
+   return i;
+}     
+static size_t RawSize16(uint16_t *s) 
+{
+   size_t i = 0;
+   while (s[i])
+     i++;
+   return i;
+}     
+static size_t RawSize32(uint32_t *s) 
 {
    size_t i = 0;
    while (s[i])
@@ -189,8 +218,13 @@ doremir_string_t doremir_string_from_utf8(doremir_string_utf8_t cstr)
 
 doremir_string_t doremir_string_from_utf16(doremir_string_utf16_t cstr)
 {
-    // TODO normalize byte order to BE
-    assert(false && "Not implemented");
+    size_t size = RawSize16(cstr);
+
+    doremir_string_t as = NewString(size, NULL);
+    as->data = malloc(size*kCharSize);
+
+    memcpy(cstr, as->data, as->size*kCharSize);
+    return as;
 }
 
 doremir_string_t doremir_string_from_utf32(doremir_string_utf32_t cstr)
@@ -198,9 +232,7 @@ doremir_string_t doremir_string_from_utf32(doremir_string_utf32_t cstr)
     assert(false && "Not implemented");
 }   
 
-
 // --------------------------------------------------------------------------------
-
 
 bool string_equal(doremir_ptr_t a, doremir_ptr_t b)
 {

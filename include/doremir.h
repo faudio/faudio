@@ -19,6 +19,9 @@ typedef bool (* doremir_pred_t)(doremir_ptr_t);
 typedef struct {
             doremir_unary_t function; doremir_ptr_t value;
         } doremir_closure_t;
+typedef char doremir_char8_t;
+typedef uint16_t doremir_char16_t;
+typedef uint32_t doremir_char32_t;
 bool doremir_equal(doremir_ptr_t, doremir_ptr_t);
 bool doremir_not_equal(doremir_ptr_t, doremir_ptr_t);
 bool doremir_less_than(doremir_ptr_t, doremir_ptr_t);
