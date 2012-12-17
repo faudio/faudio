@@ -11,12 +11,14 @@ Some basic interfaces include doremir_equal_t, doremir_order_t and doremir_numbe
 
 ### Using an interface
 
-Interface methods are called by invoking \ref doremir_interface, passing the value and the value on which
-the method is going to be dispatched. 
+Interface methods are called by invoking \ref doremir_interface, passing the interface identifier and the 
+value on which the interface is going to be dispatched. This is usually one of the arguments to the invoked
+method, but it can be any value. If the given value does not implement the interface, \ref doremir_interface
+returns null.
 
-Note that under the hood, \ref doremir_interface is the *only* way to call a method: it is not safe to
-cast a pointer of some type to the interface type regardless of whether the type implements the interface
-or not.
+Note that \ref doremir_interface is actually the *only* way to call am interface method: in particular 
+it is not safe to cast a pointer of some type to the interface type and call the methods from that pointer.
+Interfaces are commonly used to implement generic functions, which accept the generic \ref doremir_ptr_t.
 
 For example, this is a way to implement the *min* function for any type supporing the \ref doremir_order_t
 interface.
