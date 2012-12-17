@@ -252,6 +252,8 @@ void test_list()
         printf("prod: %d\n", p);
         printf("min:  %d\n", m);
         printf("max:  %d\n", n);
+        // TODO destroy wrapped values
+        doremir_destroy(xs);
     }
     
 }    
@@ -357,18 +359,18 @@ int main (int argc, char const *argv[])
   // printf("sizeof(uint32_t) = %d\n", (unsigned int) sizeof(uint32_t));
   // printf("sizeof(void*) = %d\n", (unsigned int) sizeof(void*));
   
-  while(true)
+  // while(true)
   {
       doremir_audio_engine_initialize();
 
       // int c = getopt(argc, (char**) argv, "abc:");
-
-      // test_thread();
-      // test_mutex();
-      // test_cond();
-      // test_wrap();
-      // test_generic();
-      // test_list();
+      
+      test_thread();
+      test_mutex();
+      test_cond();
+      test_wrap();
+      test_generic();
+      test_list();
       test_string();
 
       doremir_audio_engine_terminate();
