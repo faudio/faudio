@@ -6,6 +6,19 @@
     
  */
 module Doremir.Time
-{
+{     
+    import Doremir;
+    import Doremir.Ratio;
     
+    type Unit = enum {
+        Second,
+        Minute,
+        Hour,
+        Day
+    };
+
+    type Time = struct {
+        value : Ratio,
+        unit : Unit
+    };
 }
