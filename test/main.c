@@ -347,6 +347,16 @@ void test_string()
         doremir_destroy(u);
     }
 
+}    
+
+void test_show()
+{                     
+    doremir_print("\n", NULL);
+    doremir_print("%s\n", fint8(129));
+    doremir_print("%s\n", fint16(129));
+    doremir_print("%s\n", fint32(64000));
+    doremir_print("%s\n", fdouble(3.1415));
+    doremir_print("%s\n", list(1, 1,2,3));
 }
 
 int main (int argc, char const *argv[])
@@ -365,13 +375,14 @@ int main (int argc, char const *argv[])
 
       // int c = getopt(argc, (char**) argv, "abc:");
       
-      test_thread();
-      test_mutex();
-      test_cond();
-      test_wrap();
-      test_generic();
-      test_list();
-      test_string();
+      // test_thread();
+      // test_mutex();
+      // test_cond();
+      // test_wrap();
+      // test_generic();
+      // test_list();
+      // test_string();
+      test_show();
 
       doremir_audio_engine_terminate();
   }
