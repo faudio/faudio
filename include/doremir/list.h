@@ -37,9 +37,9 @@ doremir_list_t doremir_list_filter(doremir_pred_t, doremir_list_t);
 bool doremir_list_any(doremir_pred_t, doremir_list_t);
 bool doremir_list_all(doremir_pred_t, doremir_list_t);
 doremir_list_t doremir_list_map(doremir_unary_t, doremir_list_t);
-doremir_list_t doremir_list_fold(doremir_binary_t,
-                                 doremir_ptr_t,
-                                 doremir_list_t);
+doremir_ptr_t doremir_list_fold(doremir_binary_t,
+                                doremir_ptr_t,
+                                doremir_list_t);
 doremir_list_t doremir_list_concat(doremir_list_list_list_t);
 doremir_ptr_t doremir_list_sum(doremir_list_t);
 doremir_ptr_t doremir_list_product(doremir_list_t);

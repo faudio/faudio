@@ -22,14 +22,6 @@ module Doremir.String
     empty : () -> String;
     single : Char -> String;
     length : String -> Int;
-    length : String -> Int;
-
-    type Nullary = (() -> Char)*;
-    type Unary   = (Char -> Char)*;
-    type Binary  = ((Char, Char) -> Char)*;
-    map       : (String, Unary)        -> String;
-    reduce    : (String, Nullary, Binary, Char) -> String;
-    mapReduce : (String, Nullary, Unary, Binary, Char) -> String;
 
     /** @interface doremir_string_show_t 
         Printable objects.

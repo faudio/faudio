@@ -58,7 +58,7 @@ module Doremir.List
     all         : (Pred, List) -> Bool;
 
     map         : (Unary, List)       -> List;
-    fold        : (Binary, Ptr, List) -> List;
+    fold        : (Binary, Ptr, List) -> Ptr;
     concat      : ListList -> List;
     
     sum         : List -> Ptr;

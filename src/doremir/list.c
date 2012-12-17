@@ -149,6 +149,8 @@ doremir_ptr_t doremir_list_tail(doremir_list_t xs)
     return xs->node->next;
 }
 
+// --------------------------------------------------------------------------------
+
 doremir_ptr_t doremir_list_init(doremir_list_t xs)
 {
     assert(false && "Not implemented");
@@ -221,14 +223,30 @@ doremir_list_t doremir_list_filter(doremir_pred_t p, doremir_list_t xs)
 
 doremir_list_t doremir_list_map(doremir_unary_t f, doremir_list_t xs)
 {
-    assert(false && "Not implemented");
+    struct Node* xn = xs->node;
+    struct Node* yn = NewNode(0, NULL);
+    do
+    {                        
+        yn->value = xn->value;
+        yn->next  = NewNode(0, NULL);
+        yn = yn->next;
+        xn = xn->next;
+    } while(xn);
+    return NewList(yn);
 }
 
-doremir_list_t doremir_list_fold(doremir_binary_t f,
-                                 doremir_ptr_t    z,
-                                 doremir_list_t   xs)
+doremir_ptr_t doremir_list_fold(doremir_binary_t f,
+                                doremir_ptr_t    z,
+                                doremir_list_t   xs)
 {
-    assert(false && "Not implemented");
+    struct Node* xn = xs->node;
+    doremir_ptr_t v = z;
+    do
+    {
+        v  = f(v, xn->value);
+        xn = xn->next;
+    } while(xn);
+    return v;
 }
 
 doremir_list_t doremir_list_concat(doremir_list_list_list_t xss)
@@ -236,28 +254,26 @@ doremir_list_t doremir_list_concat(doremir_list_list_list_t xss)
     assert(false && "Not implemented");
 }
 
+
+// TODO type of z
 doremir_ptr_t doremir_list_sum(doremir_list_t xs)
 {
-    // TODO type of 0?
     return doremir_list_fold(doremir_add, fint32(0), xs);
 }
 
 doremir_ptr_t doremir_list_product(doremir_list_t xs)
 {
-    // TODO type of 0?
     return doremir_list_fold(doremir_multiply, fint32(1), xs);
 }
 
 doremir_ptr_t doremir_list_maximum(doremir_list_t xs)
 {
-    // return doremir_list_fold(doremir_max, fint32(INT_MIN), xs);
-    assert(false && "Not implemented");
+    return doremir_list_fold(doremir_max, fint32(INT_MIN), xs);
 }
 
 doremir_ptr_t doremir_list_minimum(doremir_list_t xs)
 {
-    // return doremir_list_fold(doremir_min, fint32(INT_MAX), xs);
-    assert(false && "Not implemented");
+    return doremir_list_fold(doremir_min, fint32(INT_MAX), xs);
 }
 
 // --------------------------------------------------------------------------------
