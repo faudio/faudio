@@ -226,15 +226,37 @@ void test_generic()
 
 void test_list()
 {   
+    {
+        list_t xs = list(3,  fint16(1),fint16(2),fint16(3));
+        list_t ys = doremir_list_copy(xs);
+        printf("length: %d\n", doremir_list_length(xs));
+        printf("length: %d\n", doremir_list_length(ys));
+        printf("xs == ys: %d\n", doremir_equal(xs, ys));    
+        // TODO destroy wrapped values
+        doremir_destroy(xs);
+        doremir_destroy(ys);
+    }                       
     
-    list_t xs = list(3,  fint16(1),fint16(2),fint16(3));
-    list_t ys = doremir_list_copy(xs);
-    printf("length: %d\n", doremir_list_length(xs));
-    printf("length: %d\n", doremir_list_length(ys));
-    printf("xs == ys: %d\n", doremir_equal(xs, ys));    
-    // TODO destroy wrapped values
-    doremir_destroy(xs);
-    doremir_destroy(ys);
+    {
+        list_t  xs = list(3, fint32(1),fint32(2),fint32(3));
+        int32_t z  = tint32(doremir_list_sum(xs));
+        int32_t p  = tint32(doremir_list_product(xs));
+        int32_t m  = tint32(doremir_list_minimum(xs));
+        int32_t n  = tint32(doremir_list_maximum(xs));
+        printf("sum:  %d\n", z);
+        printf("prod: %d\n", p);
+        printf("min:  %d\n", m);
+        printf("max:  %d\n", n);
+    }
+    
+}  
+
+void test_string()
+{
+    // char cs[] = {'h',0xc3,0xb6,'g','s',0};
+    string_t s = doremir_string_from_utf8("högste");
+    printf("len: %d\n", doremir_string_length(s));   // FIXME
+    printf("str: %s\n", doremir_string_to_utf8(s));  // FIXME
 }
 
 int main (int argc, char const *argv[])
@@ -243,6 +265,7 @@ int main (int argc, char const *argv[])
   printf("sizeof(doremir_ptr_t) = %d\n", (unsigned int) sizeof(doremir_ptr_t));
   printf("sizeof(int32_t) = %d\n", (unsigned int) sizeof(int32_t));
   printf("sizeof(int64_t) = %d\n", (unsigned int) sizeof(int64_t));
+  printf("sizeof(wchar_t) = %d\n", (unsigned int) sizeof(wchar_t));
   // printf("sizeof(uint32_t) = %d\n", (unsigned int) sizeof(uint32_t));
   // printf("sizeof(void*) = %d\n", (unsigned int) sizeof(void*));
 
@@ -256,8 +279,8 @@ int main (int argc, char const *argv[])
       // test_cond();
       // test_wrap();
       test_generic();
-      while(1)
-          test_list();
+      test_list();
+      test_string();
 
       doremir_audio_engine_terminate();
   }

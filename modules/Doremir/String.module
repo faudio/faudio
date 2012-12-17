@@ -11,16 +11,12 @@ module Doremir.String
 
     type String = opaque;
     type FilePath = String;
-
-    // toUtf8  : String -> Utf8;
-    // toUtf16 : String -> Utf16;
-    // toUtf32 : String -> Utf32;
-    // fromUtf8  : Utf8 -> String;
-    // fromUtf16 : Utf16 -> String;
-    // fromUtf32 : Utf32 -> String;
     
-    empty : () -> String;
-    single : Char -> String;
+    empty   : () -> String;
+    single  : UInt16 -> String;
+    copy    : String -> String;
+    destroy : String -> Void;
+
     length : String -> Int;
 
     /** @interface doremir_string_show_t 
@@ -29,5 +25,18 @@ module Doremir.String
     type Show  = struct {
         show : (Ptr -> String)*
     };
+
+
+    // Misc conversion
+    type Utf8  = Char*;
+    type Utf16 = UInt16*;
+    type Utf32 = UInt32*;
+
+    toUtf8  : String -> Utf8;
+    toUtf16 : String -> Utf16;
+    toUtf32 : String -> Utf32;
+    fromUtf8  : Utf8 -> String;
+    fromUtf16 : Utf16 -> String;
+    fromUtf32 : Utf32 -> String;
 
 }

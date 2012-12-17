@@ -48,7 +48,8 @@
 // #define mapd doremir_list_mapd
 #define sum doremir_list_sum
 
-doremir_list_t doremir_list(int count, ...);
+#define string_t doremir_string_t
+
 
 #endif // _DOREMIR_UTIL
 
