@@ -260,13 +260,17 @@ static inline void memdump(void* s, size_t n)
 
 void test_string()
 {
-    char* cs = " 新隶体 ";
-    // char* cs = "hans höglund är tonsättare";
+    // char* cs = " 新隶体 ";
+    char* cs = "höglund är tonsättare";
 
     string_t s = doremir_string_from_utf8(cs);
     printf("len: %i\n", doremir_string_length(s));
     printf("str: %s\n", doremir_string_to_utf8(s));
     printf("str: %s\n", doremir_string_to_utf8(doremir_string_from_utf8(doremir_string_to_utf8(s))));
+
+    printf("charAt 0: %x\n", doremir_string_char_at(0,s));
+    printf("charAt 1: %x\n", doremir_string_char_at(1,s));
+    printf("charAt 2: %x\n", doremir_string_char_at(2,s));
 }
 
 int main (int argc, char const *argv[])
