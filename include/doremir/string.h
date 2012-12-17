@@ -15,6 +15,10 @@ typedef doremir_string_t doremir_string_file_path_t;
 doremir_string_t doremir_string_empty();
 doremir_string_t doremir_string_single(uint16_t);
 doremir_string_t doremir_string_copy(doremir_string_t);
+doremir_string_t doremir_string_append(doremir_string_t,
+                                       doremir_string_t);
+doremir_string_t doremir_string_dappend(doremir_string_t,
+                                        doremir_string_t);
 void doremir_string_destroy(doremir_string_t);
 int doremir_string_length(doremir_string_t);
 uint16_t doremir_string_char_at(int, doremir_string_t);

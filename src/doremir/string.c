@@ -11,6 +11,15 @@ struct _doremir_string_t
 #define kCharSize sizeof(uint16_t)
 #define kStdCode  "UTF-16LE" // TODO match to endianness of platform
 
+static void memdump(void* s, size_t n)
+{        
+    for (size_t i = 0; i < n; ++i)
+        printf("%02x ", *((unsigned char*) s + i) );
+    printf("\n");
+}
+
+
+
 doremir_string_t NewString(size_t size, uint16_t *data)
 {
     doremir_string_t str = doremir_new(string);
@@ -42,6 +51,25 @@ doremir_string_t doremir_string_copy(doremir_string_t str)
     memcpy(pst->data, str->data, str->size * kCharSize);
 
     return pst;
+}
+
+doremir_string_t doremir_string_append(doremir_string_t as,
+                                       doremir_string_t bs)
+{
+    doremir_string_t cs = NewString(as->size + bs->size, NULL);
+    cs->data = malloc(cs->size*kCharSize);
+    memcpy(cs->data, as->data, as->size*kCharSize);
+    memcpy(cs->data + as->size, bs->data, bs->size*kCharSize);
+    return cs;
+}
+
+doremir_string_t doremir_string_dappend(doremir_string_t as,
+                                       doremir_string_t bs)
+{
+    doremir_string_t cs = NewString(as->size + bs->size, NULL);
+    cs->data = realloc(as->data, cs->size*kCharSize);
+    memcpy(cs->data + as->size, bs->data, bs->size*kCharSize);
+    return cs;
 }
 
 void doremir_string_destroy(doremir_string_t str)
@@ -119,13 +147,6 @@ static size_t RawSize(char *s)
      i++;
    return i;
 }     
-
-static void memdump(void* s, size_t n)
-{        
-    for (size_t i = 0; i < n; ++i)
-        printf("%x ", *((unsigned char*) s + i) );
-    printf("\n");
-}
 
 doremir_string_t doremir_string_from_utf8(doremir_string_utf8_t cstr)
 {
