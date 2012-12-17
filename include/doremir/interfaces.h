@@ -12,6 +12,7 @@ enum doremir_interfaces {
     doremir_copy_i,
     doremir_destroy_i,
     doremir_dynamic,
+    doremir_string_show_i,
     doremir_scheduler_i,
     doremir_processor_i,
     doremir_number_i

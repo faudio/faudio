@@ -4,10 +4,18 @@
     
     String operations.
 
+    @par Implements 
+        doremir_equal_t
+        doremir_order_t
+        doremir_copy_t
+        doremir_destroy_t
+        doremir_dynamic_t
+
  */
 module Doremir.String
 {
     import Doremir;
+    
     /**
         @typedef doremir_string_t
         An immutable Unicode string.
@@ -16,15 +24,15 @@ module Doremir.String
         A file path.
 
         @typedef doremir_string_utf8_t
-        A UTF-8 encoded string.
+        A UTF-8 encoded raw string.
         This type use the endianness of the system, and is terminated by a null character.
 
         @typedef doremir_string_utf16_t
-        A UTF-16 encoded string.
+        A UTF-16 encoded raw string.
         This type use the endianness of the system, and is terminated by a null character.
 
         @typedef doremir_string_utf32_t
-        A UTF-32 encoded string.
+        A UTF-32 encoded raw string.
         This type use the endianness of the system, and is terminated by a null character.
      */
     type String = opaque;
@@ -36,19 +44,20 @@ module Doremir.String
     empty   : () -> String;
     single  : Char16 -> String;
     copy    : String -> String;
-    append  : (String,String) -> String;
-    dappend : (String,String) -> String;
+    append  : (String, String) -> String;
+    dappend : (String, String) -> String;
     destroy : String -> Void;
 
     length : String -> Int;
     charAt : (Int,String) -> Char16;
 
     /** @interface doremir_string_show_t 
-        Printable objects.
+        String conversion.
     */
     type Show  = struct {
         show : (Ptr -> String)*
     };
+    show : Ptr -> String;
 
     toUtf8  : String -> Utf8;
     toUtf16 : String -> Utf16;

@@ -28,6 +28,7 @@ doremir_char16_t doremir_string_char_at(int, doremir_string_t);
 typedef struct {
             doremir_string_t (* show)(doremir_ptr_t);
         } doremir_string_show_t;
+doremir_string_t doremir_string_show(doremir_ptr_t);
 doremir_string_utf8_t doremir_string_to_utf8(doremir_string_t);
 doremir_string_utf16_t doremir_string_to_utf16(doremir_string_t);
 doremir_string_utf32_t doremir_string_to_utf32(doremir_string_t);

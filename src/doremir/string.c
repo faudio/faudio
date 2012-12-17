@@ -174,13 +174,13 @@ static size_t RawSize16(uint16_t *s)
      i++;
    return i;
 }     
-static size_t RawSize32(uint32_t *s) 
-{
-   size_t i = 0;
-   while (s[i])
-     i++;
-   return i;
-}     
+// static size_t RawSize32(uint32_t *s) 
+// {
+//    size_t i = 0;
+//    while (s[i])
+//      i++;
+//    return i;
+// }     
 
 doremir_string_t doremir_string_from_utf8(doremir_string_utf8_t cstr)
 {
@@ -234,6 +234,13 @@ doremir_string_t doremir_string_from_utf32(doremir_string_utf32_t cstr)
 
 // --------------------------------------------------------------------------------
 
+doremir_string_t doremir_string_show(doremir_ptr_t a)
+{
+    return ((doremir_string_show_t*) doremir_interface(doremir_string_show_i, a))->show(a);
+}
+
+// --------------------------------------------------------------------------------
+
 bool string_equal(doremir_ptr_t a, doremir_ptr_t b)
 {
     assert(false && "Not implemented");
@@ -247,6 +254,11 @@ bool string_less_than(doremir_ptr_t a, doremir_ptr_t b)
 bool string_greater_than(doremir_ptr_t a, doremir_ptr_t b)
 {
     assert(false && "Not implemented");
+}
+
+doremir_string_t string_show(doremir_ptr_t a)
+{               
+    return doremir_string_copy(a);    
 }
 
 doremir_ptr_t string_copy(doremir_ptr_t a)
@@ -263,6 +275,7 @@ doremir_ptr_t string_impl(doremir_id_t interface)
 {
     static doremir_equal_t string_equal_impl = { string_equal };
     static doremir_copy_t string_copy_impl = { string_copy };
+    static doremir_string_show_t string_show_impl = { string_show };
     static doremir_destroy_t string_destroy_impl = { string_destroy };
     static doremir_order_t string_order_impl = { string_less_than, string_greater_than };
 
@@ -273,6 +286,9 @@ doremir_ptr_t string_impl(doremir_id_t interface)
 
     case doremir_order_i:
         return &string_order_impl;
+
+    case doremir_string_show_i:
+        return &string_show_impl;
 
     case doremir_copy_i:
         return &string_copy_impl;
