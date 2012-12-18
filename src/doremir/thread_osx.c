@@ -28,7 +28,7 @@ static void doremir_thread_fatal(char* msg, int error);
 /** Create a new thread executing the given function asynhronously.
 
     Threads have single-ownership semantics and must be finalized by passing it
-    to a destroy function.
+    to a destructive function.
  */
 doremir_thread_t
 doremir_thread_create(doremir_closure_t* closure)
@@ -85,7 +85,7 @@ doremir_thread_detach(doremir_thread_t thread)
 /** Create a mutex object.
 
     Mutexes have single-ownership semantics and must be finalized by passing it
-    to a destroy function.
+    to a destructive function.
  */
 doremir_thread_mutex_t
 doremir_thread_create_mutex()
@@ -170,7 +170,7 @@ doremir_thread_unlock(doremir_thread_mutex_t mutex)
 /** Create a condition object.
 
     Conditions have single-ownership semantics and must be finalized by passing it
-    to a destroy function.
+    to a destructive function.
  */
 doremir_thread_condition_t
 doremir_thread_create_condition(doremir_thread_mutex_t mutex)

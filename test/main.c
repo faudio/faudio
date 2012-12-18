@@ -204,17 +204,17 @@ void test_list()
     }
 
     {
-        list_t  xs = list(i32(1),i32(2),i32(3));
-        int32_t z  = ti32(doremir_list_sum(xs));
-        int32_t p  = ti32(doremir_list_product(xs));
-        int32_t m  = ti32(doremir_list_minimum(xs));
-        int32_t n  = ti32(doremir_list_maximum(xs));
-        printf("sum:  %d\n", z);
-        printf("prod: %d\n", p);
-        printf("min:  %d\n", m);
-        printf("max:  %d\n", n);
-        // TODO destroy wrapped values
-        doremir_destroy(xs);
+        // list_t  xs = list(i32(1),i32(2),i32(3));
+        // int32_t z  = ti32(doremir_list_sum(xs));
+        // int32_t p  = ti32(doremir_list_product(xs));
+        // int32_t m  = ti32(doremir_list_minimum(xs));
+        // int32_t n  = ti32(doremir_list_maximum(xs));
+        // printf("sum:  %d\n", z);
+        // printf("prod: %d\n", p);
+        // printf("min:  %d\n", m);
+        // printf("max:  %d\n", n);
+        // // TODO destroy wrapped values
+        // doremir_destroy(xs);
     }
 
 }

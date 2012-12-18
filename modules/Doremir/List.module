@@ -20,57 +20,46 @@ module Doremir.List
     import Doremir;
     import Doremir.Std;
 
-    /** @class doremir_list_t
-        @implements
-            doremir_eq_t, doremir_ord_t, doremir_copy_t, doremir_destroy_t, doremir_dynamic_t
-        */
     type List   = opaque;
     type OrdList = List;
     type ListList = List;
-    // type MaybePtr = Ptr;
-    // type MaybeList = Ptr;
-    // FIXME what about partiality?
             
     empty       : () -> List;
     single      : Ptr -> List;
     cons        : (Ptr, List) -> List;
-    snoc        : (Ptr, List) -> List;
+    // snoc        : (Ptr, List) -> List;
     append      : (List, List) -> List;
+    // dcons       : (Ptr, List) -> List;
+    // dsnoc       : (Ptr, List) -> List;
+    // dappend     : (List, List) -> List;
     copy        : List -> List;
     destroy     : List -> Void;
 
-    isEmpty     : List -> Bool;
+    // isEmpty     : List -> Bool;
     length      : List -> Int;
     head        : List -> Ptr;
-    tail        : List -> Ptr;
-    init        : List -> Ptr;
-    last        : List -> Ptr;
-
-    take        : (Int, List) -> List;
-    drop        : (Int, List) -> List;
-    isElem      : (Ptr, List) -> Bool;
+    tail        : List -> List;
+    // init        : List -> List;
+    // last        : List -> Ptr;
+    // take        : (Int, List) -> List;
+    // drop        : (Int, List) -> List;
     
-    reverse     : List -> List;
-    sort        : OrdList -> List;
 
     find        : (Pred, List) -> Ptr;
     filter      : (Pred, List) -> List;
-    any         : (Pred, List) -> Bool;
-    all         : (Pred, List) -> Bool;
+    // any         : (Pred, List) -> Bool;
+    // all         : (Pred, List) -> Bool;
+    reverse     : List -> List;
+    sort        : OrdList -> List;
 
-    map         : (Unary, List)       -> List;
+    map         : (Unary, List) -> List;
     fold        : (Binary, Ptr, List) -> Ptr;
-    concat      : ListList -> List;
+    // dmap        : (Unary, List) -> List;
+    // dfold       : (Binary, Ptr, List) -> List;   
     
-    sum         : List -> Ptr;
-    product     : List -> Ptr;
-    maximum     : List -> Ptr;
-    minimum     : List -> Ptr;
-                                
-    consd    : (Ptr, List) -> List;
-    snocd    : (Ptr, List) -> List;    
-    reversed : List -> List;
-    sortd    : List -> List;
-    mapd     : (Unary, List) -> List;
-    foldd    : (Binary, Ptr, List) -> List;   
+    // sum         : List -> Ptr;
+    // product     : List -> Ptr;
+    // maximum     : List -> Ptr;
+    // minimum     : List -> Ptr;                                
+    concat      : ListList -> List;
 }

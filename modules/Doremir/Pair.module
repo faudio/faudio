@@ -2,7 +2,7 @@
 /** 
     @addtogroup DoremirPair
     
-    Pair data structure and some utility functions.
+    Pair data structure.
 
     @par Implements 
         doremir_equal_t
@@ -20,10 +20,6 @@ module Doremir.Pair
     import Doremir;
     import Doremir.Std;
 
-    // FIXME needed by some allocation routines
-    type Type = Size;
-
-    type Unary = Ptr;
     type Pair = struct { fst : Ptr, snd : Ptr };
     
     map : (Unary, Pair) -> Pair;
