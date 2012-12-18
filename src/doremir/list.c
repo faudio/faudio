@@ -19,7 +19,7 @@ struct _doremir_list_t {
 inline static node_t
 new_node(doremir_ptr_t x, node_t xs)
 {
-    node_t node = malloc(sizeof(struct _node_t));
+    node_t node = doremir_new_struct(node);
     node->count = 1;
     node->value = x;
     node->next  = xs;
@@ -39,15 +39,16 @@ release_node (node_t node)
 {
     if (!node) return;
     
-    node->count--; // TODO make atomic?
+    node->count--;
     if (node->count == 0)
     {
         release_node(node->next);
-        free(node);
+        doremir_delete(node);
     }
 }             
 
-doremir_ptr_t list_impl(doremir_id_t interface);
+doremir_ptr_t 
+list_impl(doremir_id_t interface);
 
 inline static list_t 
 new_list(node_t node)
@@ -109,18 +110,21 @@ void doremir_list_destroy(list_t xs)
 
 list_t doremir_list(int count, ...)
 {
-    list_t xs = doremir_list_empty();
+    node_t n, *p;
     va_list ap;
 
     va_start(ap, count);
+    n = NULL;
+    p = &n;
     for (int i = 0; i < count; ++i)
     {
         doremir_ptr_t x = va_arg(ap,doremir_ptr_t);
-        xs = doremir_list_consd(x, xs); // TODO should be snocd
+        *p = new_node(x,NULL);
+        p = &(*p)->next;
     }
     va_end(ap);                    
 
-    return xs;
+    return new_list(n);
 } 
 
 bool doremir_list_is_empty(list_t xs)

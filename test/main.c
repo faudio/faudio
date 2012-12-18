@@ -323,6 +323,7 @@ void test_show()
     doremir_print("%s\n", fint16(129));
     doremir_print("%s\n", fint32(64000));
     doremir_print("%s\n", fdouble(3.1415));
+    doremir_print("%s\n", doremir_list(0));
     doremir_print("%s\n", doremir_list(3, fint8(1), fint8(2), fbool(true)));
     doremir_print("%s\n", doremir_list(3, fint8(1), fint8(2), doremir_list(3, fint8(1), fint8(2), fbool(true))));
 }
