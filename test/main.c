@@ -230,7 +230,7 @@ void test_string()
 {
     {
         string_t s = doremir_string_single('v');
-        doremir_print("str: '%s'\n", s);
+        doremir_print("str: %s\n", s);
         doremir_destroy(s);
     }
 
@@ -240,8 +240,7 @@ void test_string()
 
         string_t s = string(cs);
         printf("len: %i\n", slength(s));
-        doremir_print("str: '%s'\n", s);
-        // printf("str: '%s'\n", unstring(string(unstring(s)))); // works but leaks
+        doremir_print("str: %s\n", s);
 
         printf("charAt 0: %x\n", char_at(0,s));
         printf("charAt 1: %x\n", char_at(1,s));
@@ -253,9 +252,9 @@ void test_string()
         string_t s = string("foo");
         string_t t = string("bar");
         string_t u = sappend(s, t);
-        doremir_print("str: '%s'\n", s);
-        doremir_print("str: '%s'\n", t);
-        doremir_print("str: '%s'\n", u);
+        doremir_print("str: %s\n", s);
+        doremir_print("str: %s\n", t);
+        doremir_print("str: %s\n", u);
         doremir_destroy(s);
         doremir_destroy(t);
         doremir_destroy(u);
@@ -264,11 +263,11 @@ void test_string()
     {
         string_t s = string("foo");
         string_t t = string("bar");
-        doremir_print("str: '%s'\n", s);
-        doremir_print("str: '%s'\n", t);
+        doremir_print("str: %s\n", s);
+        doremir_print("str: %s\n", t);
         {
             string_t u = sdappend(s, t);
-            doremir_print("str: '%s'\n", u);
+            doremir_print("str: %s\n", u);
             doremir_destroy(u);
         }
         doremir_destroy(t);
@@ -287,6 +286,7 @@ void test_show()
     doremir_print("%s\n", empty() );
     doremir_print("%s\n", list(i8(1)));
     doremir_print("%s\n", list(i8(1), i8(2), list(i8(1), i8(2), b(true))));
+    doremir_print("%s\n", list(string("hans"),string("höglund")));
 }     
 
 void test_compare()

@@ -278,8 +278,14 @@ bool string_greater_than(doremir_ptr_t as, doremir_ptr_t bs)
 }
 
 doremir_string_t string_show(doremir_ptr_t a)
-{               
-    return doremir_string_copy(a);    
+{                
+    doremir_string_t s = string("");
+
+    s = sdappend(s, string("\""));
+    s = sdappend(s, a);
+    s = sdappend(s, string("\""));
+
+    return s;
 }
 
 doremir_ptr_t string_copy(doremir_ptr_t a)
