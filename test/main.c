@@ -128,63 +128,63 @@ void test_wrap()
 {
     // FIXME leaks
 
-    printf("bool: %s\n", doremir_type_str(fbool(true)));
-    assert(tbool(fbool(true)) == true);
-    assert(tbool(fbool(false)) == false);
+    printf("bool: %s\n", doremir_type_str(b(true)));
+    assert(tb(b(true)) == true);
+    assert(tb(b(false)) == false);
 
-    printf("int8: %s\n", doremir_type_str(fint8(62)));
-    assert(tint8(fint8('h')) == 'h');
-    assert(tint8(fint8(121)) == 121);
-    assert(tint8(fint8(-42)) == -42);
+    printf("int8: %s\n", doremir_type_str(i8(62)));
+    assert(ti8(i8('h')) == 'h');
+    assert(ti8(i8(121)) == 121);
+    assert(ti8(i8(-42)) == -42);
 
-    printf("int16: %s\n", doremir_type_str(fint16(12372)));
-    printf("int16:%d\n", tint16(fint16(1267)));
-    assert(tint16(fint16(1267)) == 1267);
-    assert(tint16(fint16(-8712)) == -8712);
+    printf("int16: %s\n", doremir_type_str(i16(12372)));
+    printf("int16:%d\n", ti16(i16(1267)));
+    assert(ti16(i16(1267)) == 1267);
+    assert(ti16(i16(-8712)) == -8712);
 
-    printf("int32: %s\n", doremir_type_str(fint32(12372)));
-    printf("int32:%d\n", tint32(fint32(1267)));
-    assert(tint32(fint32(2147483646)) == 2147483646);
-    assert(tint32(fint32(-343646748)) == -343646748);
+    printf("int32: %s\n", doremir_type_str(i32(12372)));
+    printf("int32:%d\n", ti32(i32(1267)));
+    assert(ti32(i32(2147483646)) == 2147483646);
+    assert(ti32(i32(-343646748)) == -343646748);
 
-    printf("int64: %s\n", doremir_type_str(fint64(12372)));
-    printf("int64: %lli\n", tint64(fint64(9223372036854775807ll)));
-    assert(tint64(fint64(4872837827878787871ll)) == 4872837827878787871ll);
-    assert(tint64(fint64(-6888881236767676711ll)) == -6888881236767676711ll);
+    printf("int64: %s\n", doremir_type_str(i64(12372)));
+    printf("int64: %lli\n", ti64(i64(9223372036854775807ll)));
+    assert(ti64(i64(4872837827878787871ll)) == 4872837827878787871ll);
+    assert(ti64(i64(-6888881236767676711ll)) == -6888881236767676711ll);
 
-    printf("double: %s\n", doremir_type_str(fdouble(12372)));
-    printf("double: %f\n", tdouble(fdouble(3.141592653589793)));
-    assert(tdouble(fdouble(3.141592653589793)) == 3.141592653589793);
-    assert(tdouble(fdouble(-1.4142135623730951)) == -1.4142135623730951);
+    printf("double: %s\n", doremir_type_str(d(12372)));
+    printf("double: %f\n", td(d(3.141592653589793)));
+    assert(td(d(3.141592653589793)) == 3.141592653589793);
+    assert(td(d(-1.4142135623730951)) == -1.4142135623730951);
 }
 
 void test_generic()
 {
     // TODO leaks
 
-    printf("2    *  3.2   = %f\n", tdouble(doremir_multiply(fdouble(2), fdouble(3.2))));
-    printf("1    /  3     = %f\n", tdouble(doremir_divide(fdouble(1), fdouble(3))));
-    printf("1    +  1.5   = %f\n", tdouble(doremir_add(fdouble(1), fdouble(1.5))));
+    printf("2    *  3.2   = %f\n", td(doremir_multiply(d(2), d(3.2))));
+    printf("1    /  3     = %f\n", td(doremir_divide(d(1), d(3))));
+    printf("1    +  1.5   = %f\n", td(doremir_add(d(1), d(1.5))));
 
 
-    printf("32                  + 1  = %i\n",   tint8(doremir_add(fint8(32), fint8(1))));
-    printf("5123                + 1  = %i\n",   tint16(doremir_add(fint16(5123), fint16(1))));
-    printf("2147483646          + 1  = %i\n",   tint32(doremir_add(fint32(2147483646), fint32(1))));
-    printf("4872837827878787871 + 1  = %lli\n", tint64(doremir_add(fint64(4872837827878787871ll), fint64(1))));
-    printf("32                  - 1  = %i\n",   tint8(doremir_subtract(fint8(32), fint8(1))));
-    printf("5123                - 1  = %i\n",   tint16(doremir_subtract(fint16(5123), fint16(1))));
-    printf("2147483646          - 1  = %i\n",   tint32(doremir_subtract(fint32(2147483646), fint32(1))));
-    printf("4872837827878787871 - 1  = %lli\n", tint64(doremir_subtract(fint64(4872837827878787871ll), fint64(1))));
-    printf("3                   / 2  = %i\n",   tint8(doremir_divide(fint8(33), fint8(2))));
-    printf("3333                / 2  = %i\n",   tint16(doremir_divide(fint16(3333), fint16(2))));
-    printf("3333333333          / 2  = %i\n",   tint32(doremir_divide(fint32(3333333333l), fint32(2))));
-    printf("3333333333333333333 / 2  = %lli\n", tint64(doremir_divide(fint64(3333333333333333333ll), fint64(2))));
+    printf("32                  + 1  = %i\n",   ti8(doremir_add(i8(32), i8(1))));
+    printf("5123                + 1  = %i\n",   ti16(doremir_add(i16(5123), i16(1))));
+    printf("2147483646          + 1  = %i\n",   ti32(doremir_add(i32(2147483646), i32(1))));
+    printf("4872837827878787871 + 1  = %lli\n", ti64(doremir_add(i64(4872837827878787871ll), i64(1))));
+    printf("32                  - 1  = %i\n",   ti8(doremir_subtract(i8(32), i8(1))));
+    printf("5123                - 1  = %i\n",   ti16(doremir_subtract(i16(5123), i16(1))));
+    printf("2147483646          - 1  = %i\n",   ti32(doremir_subtract(i32(2147483646), i32(1))));
+    printf("4872837827878787871 - 1  = %lli\n", ti64(doremir_subtract(i64(4872837827878787871ll), i64(1))));
+    printf("3                   / 2  = %i\n",   ti8(doremir_divide(i8(33), i8(2))));
+    printf("3333                / 2  = %i\n",   ti16(doremir_divide(i16(3333), i16(2))));
+    printf("3333333333          / 2  = %i\n",   ti32(doremir_divide(i32(3333333333l), i32(2))));
+    printf("3333333333333333333 / 2  = %lli\n", ti64(doremir_divide(i64(3333333333333333333ll), i64(2))));
 
-    printf("3                   / 1  = %i\n", tint8(doremir_divide(fint8(32), fint8(1))));
+    printf("3                   / 1  = %i\n", ti8(doremir_divide(i8(32), i8(1))));
 
-    printf("true == false = %s\n", (doremir_equal(fbool(true), fbool(true))) ? "true" : false);
-    printf("32   == 32    = %s\n", (doremir_equal(fint8(32), fint8(32))) ? "true" : false);
-    printf("5123 == 5123  = %s\n", (doremir_equal(fint16(5123), fint16(5123))) ? "true" : false);
+    printf("true == false = %s\n", (doremir_equal(b(true), b(true))) ? "true" : false);
+    printf("32   == 32    = %s\n", (doremir_equal(i8(32), i8(32))) ? "true" : false);
+    printf("5123 == 5123  = %s\n", (doremir_equal(i16(5123), i16(5123))) ? "true" : false);
 
 
 }
@@ -193,7 +193,7 @@ void test_list()
 {
     // TODO leaks
     {
-        list_t xs = doremir_list(3,  fint16(1),fint16(2),fint16(3));
+        list_t xs = list(i16(1),i16(2),i16(3));
         list_t ys = doremir_copy(xs);
         printf("length: %d\n", doremir_list_length(xs));
         printf("length: %d\n", doremir_list_length(ys));
@@ -204,11 +204,11 @@ void test_list()
     }
 
     {
-        list_t  xs = doremir_list(3, fint32(1),fint32(2),fint32(3));
-        int32_t z  = tint32(doremir_list_sum(xs));
-        int32_t p  = tint32(doremir_list_product(xs));
-        int32_t m  = tint32(doremir_list_minimum(xs));
-        int32_t n  = tint32(doremir_list_maximum(xs));
+        list_t  xs = list(i32(1),i32(2),i32(3));
+        int32_t z  = ti32(doremir_list_sum(xs));
+        int32_t p  = ti32(doremir_list_product(xs));
+        int32_t m  = ti32(doremir_list_minimum(xs));
+        int32_t n  = ti32(doremir_list_maximum(xs));
         printf("sum:  %d\n", z);
         printf("prod: %d\n", p);
         printf("min:  %d\n", m);
@@ -294,7 +294,7 @@ void test_compare()
     doremir_print("abc <  abd == %s\n", b(doremir_less_than(string("abc"), string("abd"))));
     doremir_print("abc <= abd == %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
     doremir_print("abc >  abd == %s\n", b(doremir_greater_than(string("abc"), string("abd"))));
-    doremir_print("abc >= abd == %s\n", b(doremir_greater_than_equal(string("abc"), string("abd"))));
+    doremir_print("abc >= abd == %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
 }
 
 int main (int argc, char const *argv[])
