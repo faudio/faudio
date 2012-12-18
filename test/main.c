@@ -189,6 +189,15 @@ void test_generic()
 
 }
 
+bool is_even16(ptr_t p)
+{
+    return ti16(p) % 2 == 0;
+}
+bool is_odd16(ptr_t p)
+{
+    return ti16(p) % 2 != 0;
+}
+
 void test_list()
 {
     // TODO leaks
@@ -223,6 +232,14 @@ void test_list()
         for (int i = 0; i < 20; ++i)
             xs = doremir_list_append(xs,as);
         list_t ys = reverse(xs);
+        doremir_print("%s\n", xs);
+        doremir_print("%s\n", ys);
+        doremir_destroy(xs);
+    }
+
+    {
+        list_t xs = list(i16(1),i16(2),i16(3),i16(4),i16(5));
+        list_t ys = doremir_list_filter(is_odd16,xs);
         doremir_print("%s\n", xs);
         doremir_print("%s\n", ys);
         doremir_destroy(xs);
@@ -281,7 +298,6 @@ void test_string()
             doremir_print("str: %s\n", u);
             doremir_destroy(u);
         }
-        doremir_destroy(t);
     }
 
 }

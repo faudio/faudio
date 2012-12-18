@@ -54,31 +54,30 @@ bool pair_equal(doremir_ptr_t a, doremir_ptr_t b)
 {
     pair_t c = (pair_t) a;
     pair_t d = (pair_t) b;
-    return doremir_equal(c->fst, d->fst) && doremir_equal(c->snd, d->snd);
+    return eq(c->fst, d->fst) && eq(c->snd, d->snd);
 }
 
 bool pair_less_than(doremir_ptr_t a, doremir_ptr_t b)
 {
     pair_t c = (pair_t) a;
     pair_t d = (pair_t) b;
-    return doremir_less_than(c->fst, d->fst) || (doremir_equal(c->fst, d->fst) && doremir_less_than(c->snd, d->snd));
+    return lt(c->fst, d->fst) || (eq(c->fst, d->fst) && lt(c->snd, d->snd));
 }
 
 bool pair_greater_than(doremir_ptr_t a, doremir_ptr_t b)
 {          
     pair_t c = (pair_t) a;
     pair_t d = (pair_t) b;
-    return doremir_greater_than(c->fst, d->fst) 
-        || (doremir_equal(c->fst, d->fst) && doremir_greater_than(c->snd, d->snd));
+    return gt(c->fst, d->fst) || (eq(c->fst, d->fst) && gt(c->snd, d->snd));
 }
 
 doremir_string_t pair_show(doremir_ptr_t a)
 {
     pair_t b = (pair_t) a;
     string_t s = string("(");
-    s = sdappend(s, doremir_string_show(b->fst));
+    s = sdappend(s, sshow(b->fst));
     s = sdappend(s, string(","));
-    s = sdappend(s, doremir_string_show(b->snd));
+    s = sdappend(s, sshow(b->snd));
     s = sdappend(s, string(")"));
     return s;
 }

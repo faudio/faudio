@@ -72,12 +72,20 @@ doremir_string_t doremir_string_append(doremir_string_t as,
 
 doremir_string_t doremir_string_dappend(doremir_string_t as,
                                        doremir_string_t bs)
-{
-    doremir_string_t cs = new_string(as->size + bs->size, NULL);
-    cs->data = realloc(as->data, cs->size*kchar_size);
-    memcpy(cs->data + as->size, bs->data, bs->size*kchar_size);
-    doremir_delete(as);
-    return cs;
+{                            
+    size_t oldSize = as->size;     
+    as->size = as->size + bs->size;
+    as->data = realloc(as->data, as->size*kchar_size);
+    memcpy(as->data + oldSize, bs->data, bs->size*kchar_size);
+    doremir_delete(bs);
+    return as;
+
+    // doremir_string_t cs = new_string(as->size + bs->size, NULL);
+    // cs->data = realloc(as->data, cs->size*kchar_size);
+    // memcpy(cs->data + as->size, bs->data, bs->size*kchar_size);
+    // doremir_delete(as);
+    // doremir_delete(bs);
+    // return cs;
 }
 
 void doremir_string_destroy(doremir_string_t str)
@@ -263,7 +271,7 @@ doremir_string_t string_show(doremir_ptr_t a)
     doremir_string_t s = string("");
 
     s = sdappend(s, string("\""));
-    s = sdappend(s, a);
+    s = sdappend(s, doremir_string_copy(a));
     s = sdappend(s, string("\""));
 
     return s;

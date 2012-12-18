@@ -23,12 +23,12 @@ struct _doremir_list_t {
 };
 
 inline static node_t
-new_node(doremir_ptr_t x, node_t xs)
+new_node(doremir_ptr_t x, node_t list)
 {
     node_t node = doremir_new_struct(node);
     node->count = 1;
     node->value = x;
-    node->next  = xs;
+    node->next  = list;
     return node;
 }
 
@@ -59,11 +59,25 @@ list_impl(doremir_id_t interface);
 inline static list_t
 new_list(node_t node)
 {
-    list_t xs = doremir_new(list);
-    xs->impl = &list_impl;
-    xs->node = node;
-    return xs;
+    list_t list = doremir_new(list);
+    list->impl = &list_impl;
+    list->node = node;
+    return list;
 }
+
+inline static bool has_node(list_t list) { return list->node; }
+inline static bool has_head(list_t list) { return list->node && list->node->value; }
+inline static bool has_tail(list_t list) { return list->node && list->node->next; }
+
+// inline static void
+// swap_tail(list_t xs, list_t ys)
+// {
+//     node_t n;
+//     n              = xs->node->next;
+//     xs->node->next = ys->node->next;
+//     ys->node->next = n;
+// }
+
 
 inline static void
 delete_list(list_t list)
@@ -168,14 +182,14 @@ list_t doremir_list(int count, ...)
  */
 bool doremir_list_is_empty(doremir_list_t xs)
 {
-    return !xs->node;
+    return !has_node(xs);
 }
 
 /** Returns whether the given list is empty.
  */
 bool doremir_list_is_single(doremir_list_t xs)
 {
-    return (xs->node && !xs->node->next);
+    return has_node(xs) && !has_tail(xs);
 }
 
 /** Returns the lenght of the given list.
@@ -209,12 +223,17 @@ doremir_list_t doremir_list_tail(doremir_list_t xs)
         return new_list(take_node(xs->node->next));
 }
 
+doremir_list_t doremir_list_dtail(doremir_list_t xs)
+{
+    assert(false && "Not implemented");
+}
+
 // --------------------------------------------------------------------------------
 
 doremir_list_t doremir_list_init(doremir_list_t xs)
 {
-    if (is_empty(xs)) 
-        return NULL; // TODO fatal
+    if (is_empty(xs))
+        assert(false && "No init");
     if (is_single(xs))
         return empty();
     return cons(head(xs), init(xs));
@@ -222,8 +241,8 @@ doremir_list_t doremir_list_init(doremir_list_t xs)
 
 doremir_ptr_t doremir_list_last(doremir_list_t xs)
 {
-    if (is_empty(xs)) 
-        return NULL; // TODO fatal
+    if (is_empty(xs))
+        assert(false && "No last");
     if (is_single(xs))
         return head(xs);
     return last(xs);
@@ -245,17 +264,18 @@ list_t doremir_list_drop(int n, doremir_list_t xs)
 
 bool doremir_list_has_elem(doremir_ptr_t x, doremir_list_t xs)
 {
-    return doremir_equal(x, head(xs)) || has_elem(x, xs);
+    return eq(x, head(xs)) || has_elem(x, xs);
 }
 
 
 // --------------------------------------------------------------------------------
 
-static inline list_t revap(list_t xs, list_t ys)
+static inline list_t
+revap(list_t xs, list_t ys)
 {
-    if (is_empty(xs)) 
+    if (is_empty(xs))
         return ys;
-    else                                             
+    else
         return revap(tail(xs), cons(head(xs), ys));
 }
 
@@ -271,11 +291,23 @@ list_t doremir_list_append(doremir_list_t xs, doremir_list_t ys)
     else
         return cons(head(xs), doremir_list_append(tail(xs), ys));
 }
-
-
-list_t doremir_list_sort(doremir_list_t xs)
+list_t doremir_list_dappend(doremir_list_t xs, doremir_list_t ys)
 {
     assert(false && "Not implemented");
+}
+
+
+static inline
+list_t quicksort(list_t xs)
+{
+    // list_t small = doremir_list_filter();// TODO
+    // list_t large = doremir_list_filter();
+    // return append(quicksort(small), cons(head(xs), quicksort(large)));
+    assert(false && "Not implemented");
+}
+list_t doremir_list_sort(doremir_list_t xs)
+{
+    return quicksort(xs);
 }
 
 doremir_ptr_t doremir_list_find(doremir_pred_t p, doremir_list_t xs)
@@ -285,7 +317,20 @@ doremir_ptr_t doremir_list_find(doremir_pred_t p, doremir_list_t xs)
 
 list_t doremir_list_filter(doremir_pred_t p, doremir_list_t xs)
 {
-    assert(false && "Not implemented");
+    node_t n, *np;
+    node_t xn = xs->node;
+    n  = NULL;
+    np = &n;
+    while(xn)
+    {
+        if (p(xn->value))
+        {
+            *np = new_node(xn->value,NULL);
+            np = &(*np)->next;
+        }
+        xn = xn->next;
+    }
+    return new_list(n);
 }
 
 // bool doremir_list_any(doremir_pred_t p, doremir_list_t xs)
@@ -302,16 +347,7 @@ list_t doremir_list_filter(doremir_pred_t p, doremir_list_t xs)
 
 list_t doremir_list_map(doremir_unary_t f, doremir_list_t xs)
 {
-    node_t xn = xs->node;
-    node_t yn = new_node(0, NULL);
-    do
-    {
-        yn->value = xn->value;
-        yn->next  = new_node(0, NULL);
-        yn = yn->next;
-        xn = xn->next;
-    } while(xn);
-    return new_list(yn);
+    assert(false && "Not implemented");
 }
 
 // TODO this is foldl
@@ -320,13 +356,13 @@ doremir_ptr_t doremir_list_fold_left(doremir_binary_t f,
                                      doremir_ptr_t    z,
                                      doremir_list_t   xs)
 {
-    node_t xn = xs->node;
     doremir_ptr_t v = z;
-    do
+    node_t xn = xs->node;
+    while(xn)
     {
         v  = f(v, xn->value);
         xn = xn->next;
-    } while(xn);
+    }
     return v;
 }
 
@@ -365,7 +401,7 @@ bool list_equal(doremir_ptr_t a, doremir_ptr_t b)
     node_t bn = ((list_t) b)->node;
     while (an && bn)
     {
-        if (doremir_not_equal(an->value, bn->value))
+        if (!eq(an->value, bn->value))
             return false;
         an = an->next;
         bn = bn->next;
@@ -375,24 +411,46 @@ bool list_equal(doremir_ptr_t a, doremir_ptr_t b)
 
 bool list_less_than(doremir_ptr_t a, doremir_ptr_t b)
 {
-    assert(false && "Not implemented");
+    node_t an = ((list_t) a)->node;
+    node_t bn = ((list_t) b)->node;
+    while (an && bn)
+    {
+        if (lt(an->value, bn->value))
+            return true;
+        if (gt(an->value, bn->value))
+            return false;
+        an = an->next;
+        bn = bn->next;
+    }
+    return bn && !an;
 }
 
 bool list_greater_than(doremir_ptr_t a, doremir_ptr_t b)
 {
-    assert(false && "Not implemented");
+    node_t an = ((list_t) a)->node;
+    node_t bn = ((list_t) b)->node;
+    while (an && bn)
+    {
+        if (gt(an->value, bn->value))
+            return true;
+        if (lt(an->value, bn->value))
+            return false;
+        an = an->next;
+        bn = bn->next;
+    }
+    return an && !bn;
 }
 
 doremir_string_t list_show(doremir_ptr_t xs)
 {
-    node_t xn = ((list_t) xs)->node;
     string_t s = string("[");
+    node_t xn = ((list_t) xs)->node;
     while(xn)
     {
-        s = doremir_string_dappend(s, doremir_string_show(xn->value));
+        s = sdappend(s, sshow(xn->value));
         xn = xn->next;
         if (xn)
-            s = doremir_string_dappend(s, string(","));
+            s = sdappend(s, string(","));
     };
     s = sdappend(s, string("]"));
     return s;
