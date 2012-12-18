@@ -1,6 +1,6 @@
 (defctype Doremir.Thread.Future :pointer)
 
-(defctype Doremir.Thread.Future.Value :pointer)
+(defctype Doremir.Thread.Future.Value :Doremir.Ptr)
 
 (defcfun "Doremir.Thread.Future.create" :Doremir.Thread.Future (:Doremir.Closure))
 

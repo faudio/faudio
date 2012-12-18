@@ -1,6 +1,6 @@
 (defctype Doremir.Scheduler.Time :int)
 
-(defctype Doremir.Scheduler.Action (:pointer (:pointer :void)))
+(defctype Doremir.Scheduler.Action :Doremir.Nullary)
 
 (defctype Doremir.Scheduler (:pointer :void))
 

@@ -1,6 +1,6 @@
 (defctype Doremir.Thread.Improving :pointer)
 
-(defctype Doremir.Thread.Improving.Value :pointer)
+(defctype Doremir.Thread.Improving.Value :Doremir.Ptr)
 
 (defcfun "Doremir.Thread.Improving.create" :Doremir.Thread.Improving ())
 

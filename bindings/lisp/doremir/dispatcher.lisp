@@ -1,6 +1,6 @@
 (defctype Doremir.Dispatcher.Message :Doremir.List)
 
-(defctype Doremir.Dispatcher.Address :pointer)
+(defctype Doremir.Dispatcher.Address :Doremir.Ptr)
 
 (defctype Doremir.Dispatcher.Sender (:pointer :void))
 
