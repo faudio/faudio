@@ -32,7 +32,7 @@ gen:
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Loop.module		>include/doremir/processor/loop.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/AudioUnit.module	>include/doremir/processor/audio_unit.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/VST.module		>include/doremir/processor/vst.h && \
-	modulo -Mmodules --language=c    <modules/Doremir/Processor/FluidSynth.module	>include/doremir/processor/fluid_synth.lisp && \
+	modulo -Mmodules --language=c    <modules/Doremir/Processor/FluidSynth.module	>include/doremir/processor/fluid_synth.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Device/Buffer.module		>include/doremir/device/buffer.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Device/File.module    	>include/doremir/device/file.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Device/Audio.module    	>include/doremir/device/audio.h && \
