@@ -25,6 +25,10 @@ doremir_list_t doremir_list(int count, ...);
 #define i64     doremir_from_int64
 #define d       doremir_from_double
 
+#define eq      doremir_equal
+#define gt      doremir_greater_than
+#define lt      doremir_less_than
+
 #define tbool   doremir_to_bool
 #define tint8   doremir_to_int8
 #define tint16  doremir_to_int16
@@ -59,6 +63,7 @@ doremir_list_t doremir_list(int count, ...);
 #define empty doremir_list_empty
 #define cons doremir_list_cons
 #define snoc doremir_list_snoc
+#define append  doremir_list_append
 #define destroy doremir_list_destroy
 #define copy doremir_list_copy
 #define swap doremir_list_swap
@@ -88,6 +93,7 @@ doremir_list_t doremir_list(int count, ...);
 #define sappend  doremir_string_append
 #define sdappend doremir_string_dappend
 #define char_at  doremir_string_char_at
+#define sshow    doremir_string_show
 
 
 #endif // _DOREMIR_UTIL
