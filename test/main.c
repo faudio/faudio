@@ -216,6 +216,17 @@ void test_list()
         // // TODO destroy wrapped values
         // doremir_destroy(xs);
     }
+    
+    {
+        list_t as = list(i16(1),i16(2),i16(3),i16(4),i16(5));
+        list_t xs = empty();
+        for (int i = 0; i < 20; ++i)
+            xs = doremir_list_append(xs,as);
+        list_t ys = reverse(xs);
+        doremir_print("%s\n", xs);
+        doremir_print("%s\n", ys);
+        doremir_destroy(xs);
+    }
 
 }
 
@@ -283,10 +294,14 @@ void test_show()
     doremir_print("%s\n", i16(129));
     doremir_print("%s\n", i32(64000));
     doremir_print("%s\n", d(3.1415));
-    doremir_print("%s\n", empty() );
+    doremir_print("%s\n", empty());
     doremir_print("%s\n", list(i8(1)));
     doremir_print("%s\n", list(i8(1), i8(2), list(i8(1), i8(2), b(true))));
-    doremir_print("%s\n", list(string("hans"),string("höglund")));
+    doremir_print("%s\n", list(
+        pair(string("hans"), string("höglund")),
+        pair(string("lisa"), string("streich")),
+        pair(string("mats"), string("erlandsson"))    
+    ));
 }     
 
 void test_compare()
@@ -314,10 +329,10 @@ int main (int argc, char const *argv[])
       // test_cond();
       test_wrap();
       test_generic();
-      test_list();
       test_string();
       test_show();
       test_compare();
+      test_list();
 
       doremir_audio_engine_terminate();
   }

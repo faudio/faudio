@@ -1,14 +1,33 @@
 
-* Sort out type class/interface idea (Eq, Num, Dynamic)
+==========
+Additions
 
-* Wrappers for bool/int/float (top implement Dynamic interface for messages)
+* Specify Dynamic interface
+    * Fix Dispatcher interface
 
-* Ownership semantics for collections
+* Add audio_type_t (or just channel count?)
+    * Fix Processor interface
 
-* Add audio_type_t and time_t
+* Implement buffer
+
+* Implement atomic structures
+
+* Implement realtime audio streams
+
+* Implement realtime midi streams
+
+* Implement non-realtime
+
+* Implement schedulers
+
+* High-level Lisp bindings
 
 
 
+
+
+==========
+Misc issues
 
 * Check if we can make Fluidsynth compile against checked in Glib
   binaries instead of /usr/local
