@@ -287,6 +287,14 @@ void test_show()
     doremir_print("%s\n", empty() );
     doremir_print("%s\n", list(i8(1)));
     doremir_print("%s\n", list(i8(1), i8(2), list(i8(1), i8(2), b(true))));
+}     
+
+void test_compare()
+{
+    doremir_print("abc <  abd == %s\n", b(doremir_less_than(string("abc"), string("abd"))));
+    doremir_print("abc <= abd == %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
+    doremir_print("abc >  abd == %s\n", b(doremir_greater_than(string("abc"), string("abd"))));
+    doremir_print("abc >= abd == %s\n", b(doremir_greater_than_equal(string("abc"), string("abd"))));
 }
 
 int main (int argc, char const *argv[])
@@ -309,6 +317,7 @@ int main (int argc, char const *argv[])
       test_list();
       test_string();
       test_show();
+      test_compare();
 
       doremir_audio_engine_terminate();
   }
