@@ -9,17 +9,20 @@
 #include <doremir/util.h>
 #include <iconv.h>
 
+#define kstd_code   "UTF-16LE"          /* Internal string code */
+#define kchar_size  sizeof(uint16_t)    /* Internal char size */
+
 struct _doremir_string_t {               
         doremir_impl_t  impl;
         size_t          size;
         uint16_t        *data;
 };
 
+
+// --------------------------------------------------------------------------------
+
 doremir_ptr_t string_impl(doremir_id_t interface);
 static void fatal(char* msg, int error);
-
-#define kstd_code  "UTF-16LE"
-#define kchar_size sizeof(uint16_t)
 
 doremir_string_t new_string(size_t size, uint16_t *data)
 {
