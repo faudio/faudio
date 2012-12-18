@@ -226,7 +226,7 @@ list_t doremir_list_reverse(doremir_list_t xs)
     assert(false && "Not implemented");
 }
 
-list_t doremir_list_sort(doremir_list_ord_list_t xs)
+list_t doremir_list_sort(doremir_list_t xs)
 {
     assert(false && "Not implemented");
 }
@@ -269,9 +269,9 @@ list_t doremir_list_map(doremir_unary_t f, doremir_list_t xs)
 
 // TODO this is foldl
 // other variants?
-doremir_ptr_t doremir_list_fold(doremir_binary_t f,
-                                doremir_ptr_t    z,
-                                doremir_list_t   xs)
+doremir_ptr_t doremir_list_fold_left(doremir_binary_t f,
+                                     doremir_ptr_t    z,
+                                     doremir_list_t   xs)
 {
     node_t xn = xs->node;
     doremir_ptr_t v = z;
@@ -283,7 +283,7 @@ doremir_ptr_t doremir_list_fold(doremir_binary_t f,
     return v;
 }
 
-list_t doremir_list_concat(doremir_list_list_list_t xss)
+list_t doremir_list_concat(doremir_list_t xss)
 {
     assert(false && "Not implemented");
 }
@@ -292,22 +292,22 @@ list_t doremir_list_concat(doremir_list_list_list_t xss)
 // TODO type of z
 doremir_ptr_t doremir_list_sum(doremir_list_t xs)
 {
-    return doremir_list_fold(doremir_add, i32(0), xs);
+    return doremir_list_fold_left(doremir_add, i32(0), xs);
 }
 
 doremir_ptr_t doremir_list_product(doremir_list_t xs)
 {
-    return doremir_list_fold(doremir_multiply, i32(1), xs);
+    return doremir_list_fold_left(doremir_multiply, i32(1), xs);
 }
 
 doremir_ptr_t doremir_list_maximum(doremir_list_t xs)
 {
-    return doremir_list_fold(doremir_max, i32(INT_MIN), xs);
+    return doremir_list_fold_left(doremir_max, i32(INT_MIN), xs);
 }
 
 doremir_ptr_t doremir_list_minimum(doremir_list_t xs)
 {
-    return doremir_list_fold(doremir_min, i32(INT_MAX), xs);
+    return doremir_list_fold_left(doremir_min, i32(INT_MAX), xs);
 }
 
 // --------------------------------------------------------------------------------

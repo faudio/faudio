@@ -21,8 +21,6 @@ module Doremir.List
     import Doremir.Std;
 
     type List   = opaque;
-    type OrdList = List;
-    type ListList = List;
             
     empty       : () -> List;
     single      : Ptr -> List;
@@ -35,7 +33,8 @@ module Doremir.List
     copy        : List -> List;
     destroy     : List -> Void;
 
-    // isEmpty     : List -> Bool;
+    isEmpty     : List -> Bool;
+    isSingle    : List -> Bool;
     length      : List -> Int;
     head        : List -> Ptr;
     tail        : List -> List;
@@ -47,19 +46,15 @@ module Doremir.List
 
     find        : (Pred, List) -> Ptr;
     filter      : (Pred, List) -> List;
-    // any         : (Pred, List) -> Bool;
-    // all         : (Pred, List) -> Bool;
     reverse     : List -> List;
-    sort        : OrdList -> List;
+    sort        : List -> List;
 
     map         : (Unary, List) -> List;
-    fold        : (Binary, Ptr, List) -> Ptr;
-    // dmap        : (Unary, List) -> List;
-    // dfold       : (Binary, Ptr, List) -> List;   
+    foldLeft    : (Binary, Ptr, List) -> Ptr;
     
     // sum         : List -> Ptr;
     // product     : List -> Ptr;
     // maximum     : List -> Ptr;
     // minimum     : List -> Ptr;                                
-    concat      : ListList -> List;
+    concat      : List -> List;
 }

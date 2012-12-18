@@ -22,20 +22,23 @@ module Doremir.Set
 
     type Set = opaque;
     
-    elem           : (Set, Ptr) -> Bool;
-    subsetOf       : (Set, Set) -> Bool;
-    properSubsetOf : (Set, Set) -> Bool;
+    empty            : () -> Set;
+    add              : (Ptr, Set) -> Set;
+    remove           : (Ptr, Set) -> Void;
+    copy             : Set -> Set;
+    destroy          : Set -> Void;
 
-    empty   : () -> Set;
-    // TODO what about equality?
-    add     : (Set, Ptr) -> Set;
-    remove  : (Set, Ptr) -> Void;
-    addUnique     : (Set, Ptr) -> Set;
-    removeUnique  : (Set, Ptr) -> Void;
+    has              : (Set, Ptr) -> Bool;
+    size             : Set -> Int;
 
-    unionOf : (Set, Set) -> Set;
-    productOf : (Set, Set) -> Set;
-    symmetricDifferenceOf : (Set, Set) -> Set;
-    cartesianProductOf : (Set, Set) -> Set;
-    powerSetOf : Set -> Set;
+    isEmpty          : Set -> Bool;
+    isSingle         : Set -> Bool;
+    isSubsetOf       : (Set, Set) -> Bool;
+    isProperSubsetOf : (Set, Set) -> Bool;
+
+    sum              : (Set, Set) -> Set;
+    product          : (Set, Set) -> Set;
+    difference       : (Set, Set) -> Set;
+    cartesian        : (Set, Set) -> Set;
+    power            : Set -> Set;
 }
