@@ -3,6 +3,7 @@
 #define _DOREMIR_SET
 
 #include <doremir.h>
+#include <doremir/string.h>
 
 /** @defgroup Doremir Doremir
     @{
@@ -27,6 +28,10 @@ doremir_set_t doremir_set_product(doremir_set_t, doremir_set_t);
 doremir_set_t doremir_set_difference(doremir_set_t, doremir_set_t);
 doremir_set_t doremir_set_cartesian(doremir_set_t, doremir_set_t);
 doremir_set_t doremir_set_power(doremir_set_t);
+bool doremir_set_equal(doremir_set_t, doremir_set_t);
+bool doremir_set_less_than(doremir_set_t, doremir_set_t);
+bool doremir_set_greater_than(doremir_set_t, doremir_set_t);
+doremir_string_t doremir_set_show(doremir_set_t);
 
 /** @}
     @}

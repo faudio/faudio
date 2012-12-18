@@ -8,6 +8,7 @@
 doremir_list_t doremir_list(int count, ...);
 
 #define ptr_t  doremir_ptr_t
+#define pair_t doremir_pair_t
 #define list_t doremir_list_t
 #define string_t doremir_string_t
 
@@ -39,16 +40,20 @@ doremir_list_t doremir_list(int count, ...);
 #define ffloat  doremir_from_float
 #define fdouble doremir_from_double
 
-#define VA_NARGS_IMPL(_1, _2, _3, _4, _5, N, ...) N
-#define VA_NARGS(...) VA_NARGS_IMPL(X,##__VA_ARGS__, 4, 3, 2, 1, 0)
+#define pair(a,b)           doremir_pair_create(a,b)
+
+#define VA_NARGS_IMPL(_1, _2, _3, _4, _5, _6, N, ...) N
+#define VA_NARGS(...) VA_NARGS_IMPL(X,##__VA_ARGS__, 5, 4, 3, 2, 1, 0)
 #define VARARG_IMPL2(base, count, ...) base##count(__VA_ARGS__)
 #define VARARG_IMPL(base, count, ...) VARARG_IMPL2(base, count, __VA_ARGS__) 
 #define VARARG(base, ...) VARARG_IMPL(base, VA_NARGS(__VA_ARGS__), __VA_ARGS__)
 
-#define list0()         doremir_list(0)
-#define list1(a)        doremir_list(1,a)
-#define list2(a,b)      doremir_list(2,a,b)
-#define list3(a,b,c)    doremir_list(3,a,b,c)
+#define list0()             doremir_list(0)
+#define list1(a)            doremir_list(1,a)
+#define list2(a,b)          doremir_list(2,a,b)
+#define list3(a,b,c)        doremir_list(3,a,b,c)
+#define list4(a,b,c,d)      doremir_list(4,a,b,c,d)
+#define list5(a,b,c,d,e)    doremir_list(5,a,b,c,d,e)
 #define list(...) VARARG(list, __VA_ARGS__)
 
 #define empty doremir_list_empty
@@ -58,6 +63,7 @@ doremir_list_t doremir_list(int count, ...);
 #define copy doremir_list_copy
 #define swap doremir_list_swap
 #define is_empty doremir_list_is_empty
+#define is_single doremir_list_is_single
 #define lenght doremir_list_lenght
 #define head doremir_list_head
 #define tail doremir_list_tail
@@ -65,7 +71,7 @@ doremir_list_t doremir_list(int count, ...);
 #define last doremir_list_last
 #define take doremir_list_take
 #define drop doremir_list_drop
-#define elem doremir_list_is_elem
+#define has_elem doremir_list_has_elem
 #define reverse doremir_list_reverse
 #define sort doremir_list_sort
 #define filter doremir_list_filter

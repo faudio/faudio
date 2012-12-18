@@ -97,16 +97,18 @@ doremir_pair_t doremir_device_audio_standard(doremir_device_audio_session_t sess
  */
 doremir_device_audio_t doremir_device_audio_standard_input(doremir_device_audio_session_t session)
 {             
-    doremir_pair_t std = doremir_device_audio_standard(session);
-    return (doremir_device_audio_t) std.fst;
+    // doremir_pair_t std = doremir_device_audio_standard(session);
+    // return (doremir_device_audio_t) std.fst;
+    assert(false && "Not implemented");
 }
 
 /** Get the standard output device of the given session.
  */
 doremir_device_audio_t doremir_device_audio_standard_output(doremir_device_audio_session_t session)
 {
-    doremir_pair_t std = doremir_device_audio_standard(session);
-    return (doremir_device_audio_t) std.snd;
+    // doremir_pair_t std = doremir_device_audio_standard(session);
+    // return (doremir_device_audio_t) std.snd;
+    assert(false && "Not implemented");
 }
 
 // --------------------------------------------------------------------------------

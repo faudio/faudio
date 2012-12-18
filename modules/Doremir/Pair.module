@@ -18,9 +18,25 @@
 module Doremir.Pair
 {
     import Doremir;
-    import Doremir.Std;
+    import Doremir.String;
 
-    type Pair = struct { fst : Ptr, snd : Ptr };
+    type Pair = opaque;
+
+    create : (Ptr, Ptr) -> Pair;
+    destroy : Pair -> Void;
+
+    fst : Pair -> Ptr;
+    snd : Pair -> Ptr;
+
+    dup : Ptr -> Pair;
+    swap : Pair -> Pair;
+    assoc : Pair -> Pair;
     
     map : (Unary, Pair) -> Pair;
+
+    equal       : (Pair, Pair) -> Bool;
+    lessThan    : (Pair, Pair) -> Bool;
+    greaterThan : (Pair, Pair) -> Bool;
+
+    show        : Pair -> String;
 }

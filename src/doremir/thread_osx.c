@@ -3,20 +3,20 @@
 #include <pthread.h>
 #include <unistd.h>
 
-struct _doremir_thread_t
-{
-    pthread_t native;
+struct _doremir_thread_t {
+        doremir_impl_t  impl;       /* Interface dispatcher */
+        pthread_t native;
 };
 
-struct _doremir_thread_mutex_t
-{
-    pthread_mutex_t native;
+struct _doremir_thread_mutex_t {
+        doremir_impl_t  impl;       /* Interface dispatcher */
+        pthread_mutex_t native;
 };
 
-struct _doremir_thread_condition_t
-{
-    pthread_cond_t          native;
-    doremir_thread_mutex_t  mutex;
+struct _doremir_thread_condition_t {
+        doremir_impl_t  impl;       /* Interface dispatcher */
+        pthread_cond_t          native;
+        doremir_thread_mutex_t  mutex;
 };
 
 static void doremir_thread_fatal(char* msg, int error);

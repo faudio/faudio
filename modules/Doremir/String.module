@@ -2,7 +2,11 @@
 /** 
     @addtogroup DoremirString
     
-    String operations.
+    String type and conversion functions.
+    
+    The Audio Engine provide an immutable Unicode string type. Note that \ref doremir_string_t is not
+    a \ref Collections "collection", but can be converted to one using \ref doremir_string_list_convert and
+    \ref doremir_string_list_unconvert respectively.
 
     @par Implements 
         doremir_equal_t
@@ -66,5 +70,4 @@ module Doremir.String
     fromUtf8  : Utf8 -> String;
     fromUtf16 : Utf16 -> String;
     fromUtf32 : Utf32 -> String;
-
 }

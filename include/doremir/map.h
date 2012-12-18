@@ -3,8 +3,8 @@
 #define _DOREMIR_MAP
 
 #include <doremir.h>
-#include <doremir/std.h>
 #include <doremir/pair.h>
+#include <doremir/string.h>
 
 /** @defgroup Doremir Doremir
     @{
@@ -27,6 +27,10 @@ bool doremir_map_is_empty(doremir_map_t);
 bool doremir_map_is_single(doremir_map_t);
 bool doremir_map_is_submap_of(doremir_map_t, doremir_map_t);
 bool doremir_map_is_proper_submap_of(doremir_map_t, doremir_map_t);
+bool doremir_map_equal(doremir_map_t, doremir_map_t);
+bool doremir_map_less_than(doremir_map_t, doremir_map_t);
+bool doremir_map_greater_than(doremir_map_t, doremir_map_t);
+doremir_string_t doremir_map_show(doremir_map_t);
 
 /** @}
     @}

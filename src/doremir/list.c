@@ -165,6 +165,13 @@ bool doremir_list_is_empty(doremir_list_t xs)
     return !xs->node;
 }
 
+/** Returns whether the given list is empty.
+ */
+bool doremir_list_is_single(doremir_list_t xs)
+{
+    return (xs->node && !xs->node->next);
+}
+
 /** Returns the lenght of the given list.
  */
 int doremir_list_length(doremir_list_t xs)
@@ -181,50 +188,84 @@ int doremir_list_length(doremir_list_t xs)
 
 doremir_ptr_t doremir_list_head(doremir_list_t xs)
 {
-    if (!xs->node) return NULL;
+    if (!xs->node)
+        assert(false && "No head");
     return xs->node->value;
 }
 
-doremir_ptr_t list_tail(doremir_list_t xs)
+doremir_list_t doremir_list_tail(doremir_list_t xs)
 {
-    if (!xs->node) return NULL;
-    return xs->node->next;
+    if (!xs->node)
+        assert(false && "No tail");
+    if(!xs->node->next)
+        return empty();
+    else
+        return new_list(take_node(xs->node->next));
 }
 
 // --------------------------------------------------------------------------------
 
 doremir_list_t doremir_list_init(doremir_list_t xs)
 {
-    assert(false && "Not implemented");
+    if (is_empty(xs)) 
+        return NULL; // TODO fatal
+    if (is_single(xs))
+        return empty();
+    return cons(head(xs), init(xs));
 }
 
 doremir_ptr_t doremir_list_last(doremir_list_t xs)
 {
-    assert(false && "Not implemented");
+    if (is_empty(xs)) 
+        return NULL; // TODO fatal
+    if (is_single(xs))
+        return head(xs);
+    return last(xs);
 }
 
-list_t list_take(int n, doremir_list_t xs)
+list_t doremir_list_take(int n, doremir_list_t xs)
 {
-    assert(false && "Not implemented");
+    if (n <= 0 || is_empty(xs))
+        return empty();
+    return cons(head(xs), take(n - 1, xs));
 }
 
 list_t doremir_list_drop(int n, doremir_list_t xs)
 {
-    assert(false && "Not implemented");
+    if (n <= 0 || is_empty(xs))
+        return empty();
+    return drop(n - 1, xs);
 }
 
-bool doremir_list_is_elem(doremir_ptr_t x, doremir_list_t xs)
+bool doremir_list_has_elem(doremir_ptr_t x, doremir_list_t xs)
 {
-    assert(false && "Not implemented");
+    return doremir_equal(x, head(xs)) || has_elem(x, xs);
 }
 
 
 // --------------------------------------------------------------------------------
 
+static inline list_t revap(list_t xs, list_t ys)
+{
+    if (is_empty(xs)) 
+        return ys;
+    else                                             
+        return revap(tail(xs), cons(head(xs), ys));
+}
+
 list_t doremir_list_reverse(doremir_list_t xs)
 {
-    assert(false && "Not implemented");
+    return revap(xs, empty());
 }
+
+list_t doremir_list_append(doremir_list_t xs, doremir_list_t ys)
+{
+    if (is_empty(xs))
+        return ys;
+    else
+        return cons(head(xs), doremir_list_append(tail(xs), ys));
+}
+
 
 list_t doremir_list_sort(doremir_list_t xs)
 {
@@ -312,8 +353,6 @@ doremir_ptr_t doremir_list_minimum(doremir_list_t xs)
 
 // --------------------------------------------------------------------------------
 
-
-
 bool list_equal(doremir_ptr_t a, doremir_ptr_t b)
 {
     node_t an = ((list_t) a)->node;
@@ -366,10 +405,10 @@ void list_destroy(doremir_ptr_t a)
 doremir_ptr_t list_impl(doremir_id_t interface)
 {
     static doremir_equal_t list_equal_impl = { list_equal };
-    static doremir_copy_t list_copy_impl = { list_copy };
-    static doremir_string_show_t list_show_impl = { list_show };
-    static doremir_destroy_t list_destroy_impl = { list_destroy };
     static doremir_order_t list_order_impl = { list_less_than, list_greater_than };
+    static doremir_string_show_t list_show_impl = { list_show };
+    static doremir_copy_t list_copy_impl = { list_copy };
+    static doremir_destroy_t list_destroy_impl = { list_destroy };
 
     switch (interface)
     {

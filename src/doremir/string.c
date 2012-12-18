@@ -3,11 +3,10 @@
 #include <doremir/util.h>
 #include <iconv.h>
 
-struct _doremir_string_t
-{               
-    doremir_impl_t  impl;
-    size_t          size;
-    uint16_t        *data;
+struct _doremir_string_t {               
+        doremir_impl_t  impl;
+        size_t          size;
+        uint16_t        *data;
 };
 
 doremir_ptr_t string_impl(doremir_id_t interface);

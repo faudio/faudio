@@ -5,9 +5,9 @@
 /* 
     Strictly 32-bit for now
  */
-struct _doremir_atomic_t
-{
-    doremir_ptr_t value;
+struct _doremir_atomic_t {
+        doremir_impl_t  impl;       /* Interface dispatcher */
+        doremir_ptr_t   value;
 };
 
 doremir_atomic_t doremir_atomic_create()

@@ -18,7 +18,7 @@
 module Doremir.List
 {
     import Doremir;
-    import Doremir.Std;
+    import Doremir.String;
 
     type List   = opaque;
             
@@ -38,12 +38,12 @@ module Doremir.List
     length      : List -> Int;
     head        : List -> Ptr;
     tail        : List -> List;
-    // init        : List -> List;
-    // last        : List -> Ptr;
-    // take        : (Int, List) -> List;
-    // drop        : (Int, List) -> List;
+    init        : List -> List;
+    last        : List -> Ptr;
+    take        : (Int, List) -> List;
+    drop        : (Int, List) -> List;
     
-
+    has         : (Ptr, List) -> Bool;
     find        : (Pred, List) -> Ptr;
     filter      : (Pred, List) -> List;
     reverse     : List -> List;
@@ -57,4 +57,9 @@ module Doremir.List
     // maximum     : List -> Ptr;
     // minimum     : List -> Ptr;                                
     concat      : List -> List;
+
+    equal       : (List, List) -> Bool;
+    lessThan    : (List, List) -> Bool;
+    greaterThan : (List, List) -> Bool;
+    show        : List -> String;
 }

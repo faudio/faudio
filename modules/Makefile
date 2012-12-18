@@ -13,6 +13,7 @@ c:
 	modulo -Mmodules --language=c    <modules/Doremir/Thread/Improving.module    	>include/doremir/thread/improving.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Std.module    		>include/doremir/std.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/String.module    		>include/doremir/string.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/String/List.module    	>include/doremir/string/list.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Buffer.module    		>include/doremir/buffer.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Ratio.module    		>include/doremir/ratio.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/List.module    		>include/doremir/list.h && \
@@ -52,6 +53,7 @@ lisp:
 	modulo -Mmodules --language=lisp <modules/Doremir/Thread/Improving.module    	>bindings/lisp/doremir/thread/improving.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Std.module    		>bindings/lisp/doremir/std.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/String.module    		>bindings/lisp/doremir/string.lisp && \
+	modulo -Mmodules --language=lisp <modules/Doremir/String/List.module    	>bindings/lisp/doremir/string/list.h && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Buffer.module    		>bindings/lisp/doremir/buffer.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Ratio.module    		>bindings/lisp/doremir/ratio.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/List.module    		>bindings/lisp/doremir/list.lisp && \

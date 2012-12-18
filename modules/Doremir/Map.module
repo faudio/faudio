@@ -19,8 +19,8 @@
 module Doremir.Map 
 {
     import Doremir;
-    import Doremir.Std;
     import Doremir.Pair;
+    import Doremir.String;
     
     type Map = opaque;
     type Key = Ptr;
@@ -43,4 +43,10 @@ module Doremir.Map
     isSingle         : Map -> Bool;
     isSubmapOf       : (Map, Map) -> Bool;
     isProperSubmapOf : (Map, Map) -> Bool;
+
+    equal       : (Map, Map) -> Bool;
+    lessThan    : (Map, Map) -> Bool;
+    greaterThan : (Map, Map) -> Bool;
+    show        : Map -> String;
+
 }

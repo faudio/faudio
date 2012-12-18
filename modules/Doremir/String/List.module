@@ -1,0 +1,14 @@
+
+/**
+    @addtogroup DoremirStringList
+    
+    This module solves the recursive dependency between \ref DoremirString and \ref DoremirList.
+ */
+module Doremir.String.List
+{                          
+    import Doremir.String;
+    import Doremir.List;
+    
+    convert : String -> List;
+    unconvert : List -> String;
+}

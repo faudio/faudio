@@ -19,6 +19,7 @@
 module Doremir.Set
 {
     import Doremir;
+    import Doremir.String;
 
     type Set = opaque;
     
@@ -41,4 +42,10 @@ module Doremir.Set
     difference       : (Set, Set) -> Set;
     cartesian        : (Set, Set) -> Set;
     power            : Set -> Set;
+
+    equal       : (Set, Set) -> Bool;
+    lessThan    : (Set, Set) -> Bool;
+    greaterThan : (Set, Set) -> Bool;
+    show        : Set -> String;
+
 }
