@@ -35,7 +35,7 @@ take_node(node_t node)
 }
 
 inline static void
-release_node (node_t node)
+release_node(node_t node)
 {
     if (!node) return;
     

@@ -12,9 +12,9 @@ are to large to fit into a pointer and are always heap-allocated.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 list_t xs = doremir_list_empty();
 {
-    xs = doremir_list_consd(fdouble(1.4142135623730951), xs);
-    xs = doremir_list_consd(fdouble(3.141592653589793), xs);
-    double s = tdouble(doremir_list_sum());
+    xs = doremir_list_consd(d(1.4142135623730951), xs);
+    xs = doremir_list_consd(d(3.141592653589793), xs);
+    double s = td(doremir_list_sum());
 }
 doremir_list_destroy(xs);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -29,12 +29,12 @@ aliases in \ref doremir/util.h are usually more convenient to use.
 
 |        | doremir_ptr_t | doremir_ptr_t
 |--------| --------------|--------------------
-| bool   | \ref tbool    | \ref fbool
-| int8   | \ref tint8    | \ref fint8
-| int16  | \ref tint16   | \ref fint16
-| int32  | \ref tint32   | \ref fint32
-| float  | \ref tfloat   | \ref ffloat
-| double | \ref tdouble  | \ref fdouble
+| bool   | \ref tb        | \ref b
+| int8   | \ref ti8       | \ref i8
+| int16  | \ref ti16      | \ref i16
+| int32  | \ref ti32      | \ref i32
+| int32  | \ref ti64      | \ref i64
+| double | \ref td        | \ref d
 
 ### Defined in doremir.h
 
@@ -44,6 +44,5 @@ aliases in \ref doremir/util.h are usually more convenient to use.
 | int8   | \ref doremir_to_int8    | \ref doremir_from_int8
 | int16  | \ref doremir_to_int16   | \ref doremir_from_int16
 | int32  | \ref doremir_to_int32   | \ref doremir_from_int32
-| float  | \ref doremir_to_float   | \ref doremir_from_float
 | double | \ref doremir_to_double  | \ref doremir_from_double
 
