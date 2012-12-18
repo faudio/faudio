@@ -1,6 +1,6 @@
 
-#include <Windows.h>
 #include <doremir/atomic.h>
+#include <Windows.h>
 
 /* 
     TODO these are strictly 32-bit for now

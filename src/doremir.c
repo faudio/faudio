@@ -311,7 +311,7 @@ void doremir_print(char* f, doremir_ptr_t a)
         doremir_destroy(str);        
     }
     else
-        printf(f);
+        printf("%s", f);
 }
 
 doremir_ptr_t doremir_move(doremir_ptr_t a)

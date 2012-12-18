@@ -1,6 +1,6 @@
 
-#include <libkern/OSAtomic.h>
 #include <doremir/atomic.h>
+#include <libkern/OSAtomic.h>
 
 /* 
     Strictly 32-bit for now

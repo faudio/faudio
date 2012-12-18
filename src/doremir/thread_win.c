@@ -1,6 +1,6 @@
 
-#include <Windows.h>
 #include <doremir/thread.h>
+#include <Windows.h>
 
 struct _doremir_thread_t
 {
