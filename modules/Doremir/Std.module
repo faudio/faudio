@@ -19,7 +19,6 @@ module Doremir.Std
     import "C" math;
     import "C" setjmp;
     import "C" signal;
-    // import "C" stdalign;
     import "C" stdarg;
     import "C" stdbool;
     import "C" stddef;

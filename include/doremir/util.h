@@ -9,6 +9,20 @@ doremir_list_t doremir_list(int count, ...);
 
 #define ptr_t  doremir_ptr_t
 #define list_t doremir_list_t
+#define string_t doremir_string_t
+
+#define tb      doremir_to_bool
+#define ti8     doremir_to_int8
+#define ti16    doremir_to_int16
+#define ti32    doremir_to_int32
+#define ti64    doremir_to_int64
+#define td      doremir_to_double
+#define b       doremir_from_bool
+#define i8      doremir_from_int8
+#define i16     doremir_from_int16
+#define i32     doremir_from_int32
+#define i64     doremir_from_int64
+#define d       doremir_from_double
 
 #define tbool   doremir_to_bool
 #define tint8   doremir_to_int8
@@ -25,7 +39,18 @@ doremir_list_t doremir_list(int count, ...);
 #define ffloat  doremir_from_float
 #define fdouble doremir_from_double
 
-#define list doremir_list
+#define VA_NARGS_IMPL(_1, _2, _3, _4, _5, N, ...) N
+#define VA_NARGS(...) VA_NARGS_IMPL(X,##__VA_ARGS__, 4, 3, 2, 1, 0)
+#define VARARG_IMPL2(base, count, ...) base##count(__VA_ARGS__)
+#define VARARG_IMPL(base, count, ...) VARARG_IMPL2(base, count, __VA_ARGS__) 
+#define VARARG(base, ...) VARARG_IMPL(base, VA_NARGS(__VA_ARGS__), __VA_ARGS__)
+
+#define list0()         doremir_list(0)
+#define list1(a)        doremir_list(1,a)
+#define list2(a,b)      doremir_list(2,a,b)
+#define list3(a,b,c)    doremir_list(3,a,b,c)
+#define list(...) VARARG(list, __VA_ARGS__)
+
 #define empty doremir_list_empty
 #define cons doremir_list_cons
 #define snoc doremir_list_snoc
@@ -44,16 +69,13 @@ doremir_list_t doremir_list(int count, ...);
 #define reverse doremir_list_reverse
 #define sort doremir_list_sort
 #define filter doremir_list_filter
-// #define map doremir_list_map
-// #define foldl doremir_list_foldl
 #define consd doremir_list_consd
-// #define snocd doremir_list_snocd
-// #define reversed doremir_list_reversed
-// #define sortd doremir_list_sortd
-// #define mapd doremir_list_mapd
+#define snocd doremir_list_snocd
+#define reversed doremir_list_reversed
+#define sortd doremir_list_sortd
+#define mapd doremir_list_mapd
 #define sum doremir_list_sum
 
-#define string_t doremir_string_t
 #define string   doremir_string_from_utf8
 #define unstring doremir_string_to_utf8
 #define slength  doremir_string_length

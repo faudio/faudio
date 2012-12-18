@@ -71,9 +71,9 @@ void test_mutex()
 
 
 typedef struct {
-    doremir_thread_mutex_t mut;
-    doremir_thread_condition_t cond;
-    char* msg;
+        doremir_thread_mutex_t mut;
+        doremir_thread_condition_t cond;
+        char* msg;
     } send_hub;
 doremir_ptr_t sender(doremir_ptr_t x)
 {
@@ -123,45 +123,6 @@ void test_cond()
     doremir_thread_join(s);
     doremir_thread_detach(r);
 }
-
-
-// bool foo_equal(doremir_ptr_t a, doremir_ptr_t b)
-// {
-//     return false;
-// }
-//
-// bool foo_less_than(doremir_ptr_t a, doremir_ptr_t b)
-// {
-//     return false;
-// }
-//
-// bool foo_greater_than(doremir_ptr_t a, doremir_ptr_t b)
-// {
-//     return false;
-// }
-//
-// doremir_ptr_t foo_impl(doremir_id_t interface)
-// {
-//     static doremir_equal_t  foo_equal_impl = { foo_equal };
-//     static doremir_order_t foo_order_impl = { foo_less_than, foo_greater_than };
-//
-//     switch (interface)
-//     {
-//     case doremir_equal:
-//         return &foo_equal_impl;
-//
-//     case doremir_order:
-//         return &foo_order_impl;
-//
-//     default:
-//         return NULL;
-//     }
-// }
-
-// void test_list()
-// {
-//     list_t xs = lempty();
-// }
 
 void test_wrap()
 {
@@ -318,14 +279,14 @@ void test_string()
 void test_show()
 {
     doremir_print("\n", NULL);
-    doremir_print("%s\n", fbool(0));
-    doremir_print("%s\n", fint8(129));
-    doremir_print("%s\n", fint16(129));
-    doremir_print("%s\n", fint32(64000));
-    doremir_print("%s\n", fdouble(3.1415));
-    doremir_print("%s\n", doremir_list(0));
-    doremir_print("%s\n", doremir_list(3, fint8(1), fint8(2), fbool(true)));
-    doremir_print("%s\n", doremir_list(3, fint8(1), fint8(2), doremir_list(3, fint8(1), fint8(2), fbool(true))));
+    doremir_print("%s\n", b(0));
+    doremir_print("%s\n", i8(129));
+    doremir_print("%s\n", i16(129));
+    doremir_print("%s\n", i32(64000));
+    doremir_print("%s\n", d(3.1415));
+    doremir_print("%s\n", empty() );
+    doremir_print("%s\n", list(i8(1)));
+    doremir_print("%s\n", list(i8(1), i8(2), list(i8(1), i8(2), b(true))));
 }
 
 int main (int argc, char const *argv[])
@@ -335,14 +296,10 @@ int main (int argc, char const *argv[])
   printf("sizeof(int32_t) = %d\n", (unsigned int) sizeof(int32_t));
   printf("sizeof(int64_t) = %d\n", (unsigned int) sizeof(int64_t));
   printf("sizeof(wchar_t) = %d\n", (unsigned int) sizeof(wchar_t));
-  // printf("sizeof(uint32_t) = %d\n", (unsigned int) sizeof(uint32_t));
-  // printf("sizeof(void*) = %d\n", (unsigned int) sizeof(void*));
 
   // while(true)
   {
       doremir_audio_engine_initialize();
-
-      // int c = getopt(argc, (char**) argv, "abc:");
 
       // test_thread();
       // test_mutex();
