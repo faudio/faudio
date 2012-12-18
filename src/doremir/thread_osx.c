@@ -1,4 +1,10 @@
 
+/*
+    DoReMIR Audio Engine
+    Copyright (c) DoReMIR Music Research 2012-2013
+    All rights reserved.
+ */
+
 #include <doremir/thread.h>
 #include <pthread.h>
 #include <unistd.h>

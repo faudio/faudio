@@ -1,4 +1,10 @@
 
+/*
+    DoReMIR Audio Engine
+    Copyright (c) DoReMIR Music Research 2012-2013
+    All rights reserved.
+ */
+
 #include <doremir/list.h>
 #include <doremir/util.h>
 #include <doremir/string.h>
