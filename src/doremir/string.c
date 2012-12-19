@@ -26,7 +26,7 @@ static void fatal(char* msg, int error);
 
 doremir_string_t new_string(size_t size, uint16_t *data)
 {
-    doremir_string_t str = doremir_new(string);
+    string_t str = doremir_new(string);
     str->impl = &string_impl;    
     str->size = size;
     str->data = data;
@@ -35,14 +35,22 @@ doremir_string_t new_string(size_t size, uint16_t *data)
 
 // --------------------------------------------------------------------------------
 
+/** Create an empty string.
+    
+    The returned string should be destroyed by the caller.
+ */
 doremir_string_t doremir_string_empty()
 {
     return new_string(0, NULL);
 }
 
+/** Create a single-char string.
+
+    The returned string should be destroyed by the caller.
+ */
 doremir_string_t doremir_string_single(uint16_t chr)
 {
-    doremir_string_t str = new_string(1, NULL);
+    string_t str = new_string(1, NULL);
 
     str->data = malloc(kchar_size);
     str->data[0] = chr;
@@ -50,9 +58,13 @@ doremir_string_t doremir_string_single(uint16_t chr)
     return str;
 }
 
+/** Copy the given string.
+
+    The returned string should be destroyed by the caller.
+ */
 doremir_string_t doremir_string_copy(doremir_string_t str)
 {
-    doremir_string_t pst = new_string(str->size, NULL);
+    string_t pst = new_string(str->size, NULL);
 
     pst->data = malloc(str->size * kchar_size);
     memcpy(pst->data, str->data, str->size * kchar_size);
@@ -60,16 +72,24 @@ doremir_string_t doremir_string_copy(doremir_string_t str)
     return pst;
 }
 
+/** Append the given strings.
+
+    The returned string should be destroyed by the caller.
+ */
 doremir_string_t doremir_string_append(doremir_string_t as,
                                        doremir_string_t bs)
 {
-    doremir_string_t cs = new_string(as->size + bs->size, NULL);
+    string_t cs = new_string(as->size + bs->size, NULL);
     cs->data = malloc(cs->size*kchar_size);
     memcpy(cs->data, as->data, as->size*kchar_size);
     memcpy(cs->data + as->size, bs->data, bs->size*kchar_size);
     return cs;
 }
 
+/** Append the given strings, which are both destroyed.
+
+    The returned string should be destroyed by the caller.
+ */
 doremir_string_t doremir_string_dappend(doremir_string_t as,
                                        doremir_string_t bs)
 {                            
@@ -80,7 +100,7 @@ doremir_string_t doremir_string_dappend(doremir_string_t as,
     doremir_delete(bs);
     return as;
 
-    // doremir_string_t cs = new_string(as->size + bs->size, NULL);
+    // string_t cs = new_string(as->size + bs->size, NULL);
     // cs->data = realloc(as->data, cs->size*kchar_size);
     // memcpy(cs->data + as->size, bs->data, bs->size*kchar_size);
     // doremir_delete(as);
@@ -88,6 +108,8 @@ doremir_string_t doremir_string_dappend(doremir_string_t as,
     // return cs;
 }
 
+/** Destroy the given string.
+ */
 void doremir_string_destroy(doremir_string_t str)
 {                     
     free(str->data);
@@ -98,11 +120,15 @@ void doremir_string_destroy(doremir_string_t str)
 // Predicates etc
 // --------------------------------------------------------------------------------
 
+/** Return the number of characters in the given string.
+ */
 int doremir_string_length(doremir_string_t str)
 {
     return str->size;
 }     
 
+/** Return the character at the given position in the string.
+ */
 uint16_t doremir_string_char_at(int n, doremir_string_t str)
 {                       
     if (n < 0 || n >= str->size)
@@ -193,7 +219,7 @@ doremir_string_t doremir_string_from_utf8(doremir_string_utf8_t cstr)
     size_t size = out - buf; // written bytes
     buf = realloc(buf, size);
     
-    doremir_string_t pst = new_string(size / 2, NULL);
+    string_t pst = new_string(size / 2, NULL);
     pst->data = (uint16_t*) buf;
     return pst;
 }
@@ -202,7 +228,7 @@ doremir_string_t doremir_string_from_utf16(doremir_string_utf16_t cstr)
 {
     size_t size = raw_size_16(cstr);
 
-    doremir_string_t as = new_string(size, NULL);
+    string_t as = new_string(size, NULL);
     as->data = malloc(size*kchar_size);
 
     memcpy(cstr, as->data, as->size*kchar_size);
@@ -225,8 +251,8 @@ doremir_string_t doremir_string_show(doremir_ptr_t a)
 
 bool string_equal(doremir_ptr_t as, doremir_ptr_t bs)
 {                                                   
-    doremir_string_t cs = (doremir_string_t) as;
-    doremir_string_t ds = (doremir_string_t) bs;
+    string_t cs = (string_t) as;
+    string_t ds = (string_t) bs;
     
     for (int i = 0; i < cs->size && i < ds->size; ++i)
     {
@@ -238,8 +264,8 @@ bool string_equal(doremir_ptr_t as, doremir_ptr_t bs)
 
 bool string_less_than(doremir_ptr_t as, doremir_ptr_t bs)
 {
-    doremir_string_t cs = (doremir_string_t) as;
-    doremir_string_t ds = (doremir_string_t) bs;
+    string_t cs = (string_t) as;
+    string_t ds = (string_t) bs;
     
     for (int i = 0; i < cs->size && i < ds->size; ++i)
     {
@@ -253,8 +279,8 @@ bool string_less_than(doremir_ptr_t as, doremir_ptr_t bs)
 
 bool string_greater_than(doremir_ptr_t as, doremir_ptr_t bs)
 {
-    doremir_string_t cs = (doremir_string_t) as;
-    doremir_string_t ds = (doremir_string_t) bs;
+    string_t cs = (string_t) as;
+    string_t ds = (string_t) bs;
     
     for (int i = 0; i < cs->size && i < ds->size; ++i)
     {
@@ -268,7 +294,7 @@ bool string_greater_than(doremir_ptr_t as, doremir_ptr_t bs)
 
 doremir_string_t string_show(doremir_ptr_t a)
 {                
-    doremir_string_t s = string("");
+    string_t s = string("");
 
     s = sdappend(s, string("\""));
     s = sdappend(s, doremir_string_copy(a));
