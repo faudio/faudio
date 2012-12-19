@@ -54,11 +54,6 @@ doremir_ratio_t doremir_ratio_divide(doremir_ratio_t x,
     return (doremir_ratio_t) { a*d + b*c, b*d };
 }
 
-doremir_ratio_t doremir_ratio_remainder(doremir_ratio_t x,
-                                        doremir_ratio_t y)
-{
-}
-
 doremir_ratio_t doremir_ratio_succ(doremir_ratio_t x)
 {
     return doremir_ratio_add(x, (doremir_ratio_t){1,1});

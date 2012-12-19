@@ -292,16 +292,16 @@ bool string_greater_than(doremir_ptr_t as, doremir_ptr_t bs)
     return false;
 }
 
+ 
 doremir_string_t string_show(doremir_ptr_t a)
 {                
     string_t s = string("");
-
-    s = sdappend(s, string("\""));
-    s = sdappend(s, doremir_string_copy(a));
-    s = sdappend(s, string("\""));
-
+    sap(s, string("\""));
+    sap(s, scopy(a));
+    sap(s, string("\""));
     return s;
 }
+
 
 doremir_ptr_t string_copy(doremir_ptr_t a)
 {

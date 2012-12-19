@@ -5,6 +5,7 @@
 #include <doremir.h>
 #include <doremir/list.h> // for list forward decl
 
+// This should be moved to a separate header...
 doremir_list_t doremir_list(int count, ...);
 
 #define ptr_t  doremir_ptr_t
@@ -90,10 +91,18 @@ doremir_list_t doremir_list(int count, ...);
 #define string   doremir_string_from_utf8
 #define unstring doremir_string_to_utf8
 #define slength  doremir_string_length
+#define scopy    doremir_string_copy
 #define sappend  doremir_string_append
 #define sdappend doremir_string_dappend
 #define char_at  doremir_string_char_at
 #define sshow    doremir_string_show
+
+#define ap(V,L) \
+    V = doremir_list_dappend(V, L)
+
+#define sap(V,S) \
+    V = doremir_string_dappend(V, S)
+
 
 
 #endif // _DOREMIR_UTIL

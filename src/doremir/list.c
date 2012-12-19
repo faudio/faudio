@@ -447,12 +447,12 @@ doremir_string_t list_show(doremir_ptr_t xs)
     node_t xn = ((list_t) xs)->node;
     while(xn)
     {
-        s = sdappend(s, sshow(xn->value));
+        sap(s, sshow(xn->value));
         xn = xn->next;
         if (xn)
-            s = sdappend(s, string(","));
+            sap(s, string(","));
     };
-    s = sdappend(s, string("]"));
+    sap(s, string("]"));
     return s;
 }
 
