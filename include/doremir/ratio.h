@@ -11,10 +11,13 @@
     */
 
 typedef int32_t doremir_ratio_nom_t;
-typedef uint32_t doremir_ratio_denom_t;
-typedef struct {
-            doremir_ratio_nom_t nom; doremir_ratio_denom_t denom;
-        } doremir_ratio_t;
+typedef int32_t doremir_ratio_denom_t;
+typedef struct _doremir_ratio_t * doremir_ratio_t;
+doremir_ratio_t doremir_ratio_create(doremir_ratio_nom_t,
+                                     doremir_ratio_denom_t);
+doremir_ratio_nom_t doremir_ratio_nom(doremir_ratio_t);
+doremir_ratio_denom_t doremir_ratio_denom(doremir_ratio_t);
+void doremir_ratio_destroy(doremir_ratio_t);
 doremir_ratio_t doremir_ratio_add(doremir_ratio_t,
                                   doremir_ratio_t);
 doremir_ratio_t doremir_ratio_subtract(doremir_ratio_t,

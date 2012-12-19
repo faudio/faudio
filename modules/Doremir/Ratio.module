@@ -10,8 +10,13 @@ module Doremir.Ratio
     import Doremir.Std;
 
     type Nom    = Int32;
-    type Denom  = UInt32;
-    type Ratio  = struct { nom : Nom, denom : Denom };
+    type Denom  = Int32;
+    type Ratio  = opaque;
+
+    create  : (Nom, Denom) -> Ratio;
+    nom     : Ratio -> Nom;
+    denom   : Ratio -> Denom;
+    destroy : Ratio -> Void;
             
     add : (Ratio, Ratio) -> Ratio;
     subtract : (Ratio, Ratio) -> Ratio;
@@ -22,5 +27,4 @@ module Doremir.Ratio
     pred : Ratio -> Ratio;
     negate : Ratio -> Ratio;
     recip : Ratio -> Ratio;
-
 }

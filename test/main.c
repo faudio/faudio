@@ -126,6 +126,7 @@ void test_cond()
 
 void test_wrap()
 {
+    doremir_print("\n\n--------------------\n", NULL);
     // FIXME leaks
 
     printf("bool: %s\n", doremir_type_str(b(true)));
@@ -160,6 +161,7 @@ void test_wrap()
 
 void test_generic()
 {
+    doremir_print("\n\n--------------------\n", NULL);
     // TODO leaks
 
     printf("2    *  3.2   = %f\n", td(doremir_multiply(d(2), d(3.2))));
@@ -182,9 +184,9 @@ void test_generic()
 
     printf("3                   / 1  = %i\n", ti8(doremir_divide(i8(32), i8(1))));
 
-    printf("true == false = %s\n", (doremir_equal(b(true), b(true))) ? "true" : false);
-    printf("32   == 32    = %s\n", (doremir_equal(i8(32), i8(32))) ? "true" : false);
-    printf("5123 == 5123  = %s\n", (doremir_equal(i16(5123), i16(5123))) ? "true" : false);
+    printf("true => false = %s\n", (doremir_equal(b(true), b(true))) ? "true" : false);
+    printf("32   => 32    = %s\n", (doremir_equal(i8(32), i8(32))) ? "true" : false);
+    printf("5123 => 5123  = %s\n", (doremir_equal(i16(5123), i16(5123))) ? "true" : false);
 
 
 }
@@ -200,6 +202,7 @@ bool is_odd16(ptr_t p)
 
 void test_list()
 {
+    doremir_print("\n\n--------------------\n", NULL);
     // TODO leaks
     {
         list_t xs = list(i16(1),i16(2),i16(3));
@@ -256,6 +259,7 @@ static inline void memdump(void* s, size_t n)
 
 void test_string()
 {
+    doremir_print("\n\n--------------------\n", NULL);
     {
         string_t s = doremir_string_single('v');
         doremir_print("str: %s\n", s);
@@ -304,6 +308,7 @@ void test_string()
 
 void test_show()
 {
+    doremir_print("\n\n--------------------\n", NULL);
     doremir_print("\n", NULL);
     doremir_print("%s\n", b(0));
     doremir_print("%s\n", i8(129));
@@ -322,10 +327,21 @@ void test_show()
 
 void test_compare()
 {
-    doremir_print("abc <  abd == %s\n", b(doremir_less_than(string("abc"), string("abd"))));
-    doremir_print("abc <= abd == %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
-    doremir_print("abc >  abd == %s\n", b(doremir_greater_than(string("abc"), string("abd"))));
-    doremir_print("abc >= abd == %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
+    doremir_print("\n\n--------------------\n", NULL);
+    doremir_print("abc <  abd => %s\n", b(doremir_less_than(string("abc"), string("abd"))));
+    doremir_print("abc <= abd => %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
+    doremir_print("abc >  abd => %s\n", b(doremir_greater_than(string("abc"), string("abd"))));
+    doremir_print("abc >= abd => %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
+}
+
+void test_rational()
+{                
+    doremir_print("\n\n--------------------\n", NULL);
+    doremir_print("1/3 <  1/2     => %s\n", b(lt(ratio(1,3), ratio(1,2))));    
+    doremir_print("1/3 >  1/2     => %s\n", b(gt(ratio(1,3), ratio(1,2))));    
+    doremir_print("1/3 == 2/6     => %s\n", b(eq(ratio(1,3), ratio(2,6))));    
+    doremir_print("1/3 == 254/762 => %s\n", b(eq(ratio(1,3), ratio(254,762))));    
+    doremir_print("1/3 <= 7/8     => %s\n", b(eq(ratio(1,3), ratio(254,762))));    
 }
 
 int main (int argc, char const *argv[])
@@ -349,6 +365,7 @@ int main (int argc, char const *argv[])
       test_show();
       test_compare();
       test_list();
+      test_rational();
 
       doremir_audio_engine_terminate();
   }

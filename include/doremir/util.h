@@ -12,6 +12,7 @@ doremir_list_t doremir_list(int count, ...);
 #define pair_t doremir_pair_t
 #define list_t doremir_list_t
 #define string_t doremir_string_t
+#define ratio_t doremir_ratio_t
 
 #define tb      doremir_to_bool
 #define ti8     doremir_to_int8
@@ -29,6 +30,8 @@ doremir_list_t doremir_list(int count, ...);
 #define eq      doremir_equal
 #define gt      doremir_greater_than
 #define lt      doremir_less_than
+#define gte     doremir_greater_than_equal
+#define ltE     doremir_less_than_equal
 
 #define tbool   doremir_to_bool
 #define tint8   doremir_to_int8
@@ -61,6 +64,10 @@ doremir_list_t doremir_list(int count, ...);
 #define list5(a,b,c,d,e)    doremir_list(5,a,b,c,d,e)
 #define list(...) VARARG(list, __VA_ARGS__)
 
+#define string   doremir_string_from_utf8
+#define unstring doremir_string_to_utf8
+#define ratio    doremir_ratio_create
+
 #define empty doremir_list_empty
 #define cons doremir_list_cons
 #define snoc doremir_list_snoc
@@ -88,8 +95,6 @@ doremir_list_t doremir_list(int count, ...);
 #define mapd doremir_list_mapd
 #define sum doremir_list_sum
 
-#define string   doremir_string_from_utf8
-#define unstring doremir_string_to_utf8
 #define slength  doremir_string_length
 #define scopy    doremir_string_copy
 #define sappend  doremir_string_append

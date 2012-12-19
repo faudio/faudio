@@ -2,7 +2,8 @@
 # Makefile to invoke build/Makefile
 
 BUILD_DIRECTORY = build
-MAKE			= make --no-print-directory
+DEBUGGER	= lldb
+MAKE		= make --no-print-directory
 
 .PHONY: all
 all: 
@@ -63,7 +64,7 @@ test: all
 
 .PHONY: debug
 debug: all
-	gdb build/bin/doremir_audio_tests;
+	$(DEBUGGER) build/bin/doremir_audio_tests;
 
 .PHONY: run_scorecleaner
 run_scorecleaner: 
