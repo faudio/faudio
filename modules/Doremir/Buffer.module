@@ -3,6 +3,10 @@
     @addtogroup DoremirBuffer
     
     Low-level buffer data structure.
+
+    @par Implements 
+        doremir_destroy_t
+        doremir_string_show_t
  */
 module Doremir.Buffer
 {
