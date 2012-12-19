@@ -13,6 +13,7 @@ doremir_list_t doremir_list(int count, ...);
 #define list_t doremir_list_t
 #define string_t doremir_string_t
 #define ratio_t doremir_ratio_t
+#define buffer_t doremir_buffer_t
 
 #define tb      doremir_to_bool
 #define ti8     doremir_to_int8

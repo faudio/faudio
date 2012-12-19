@@ -6,6 +6,7 @@
  */
 
 #include <doremir.h>
+#include <doremir/util.h>
 #include <doremir/buffer.h>
 
 struct _doremir_buffer_t {
@@ -19,6 +20,9 @@ struct _doremir_buffer_t {
     The buffer.
  */
 
+doremir_ptr_t buffer_impl(doremir_id_t interface);
+
+
 /** Create a new buffer.
     @note
         O(n)
@@ -26,7 +30,11 @@ struct _doremir_buffer_t {
 doremir_buffer_t 
 doremir_buffer_create(size_t size)
 {
-    assert(false && "Not implemented");
+    buffer_t b = doremir_new(buffer);
+    b->impl = &buffer_impl;
+    b->size = size;
+    b->data = malloc(size);
+    return b;
 }
 
 /** Copy the given buffer.
@@ -36,7 +44,7 @@ doremir_buffer_create(size_t size)
 doremir_buffer_t 
 doremir_buffer_copy(doremir_buffer_t buffer)
 {
-    assert(false && "Not implemented");
+    return doremir_buffer_resize(buffer->size, buffer);
 }
 
 /** Copy the given buffer using the given size.
@@ -44,20 +52,15 @@ doremir_buffer_copy(doremir_buffer_t buffer)
         O(1)
  */
 doremir_buffer_t 
-doremir_buffer_copy_sized(size_t size,
-                          doremir_buffer_t buffer)
+doremir_buffer_resize(size_t size,
+                      doremir_buffer_t buffer)
 {
-    
-}
-
-/** Swap the contents of the given buffers.
-    @note
-        O(1)
- */
-void 
-doremir_buffer_swap(doremir_buffer_t a, doremir_buffer_t b)
-{
-    assert(false && "Not implemented");
+    buffer_t copy = doremir_new(buffer);
+    copy->impl = &buffer_impl;
+    copy->size = size;  
+    copy->data = malloc(size);
+    copy->data = memcpy(copy->data, buffer->data, size);
+    return copy;
 }
 
 /** Destroy the given buffer.
@@ -67,7 +70,8 @@ doremir_buffer_swap(doremir_buffer_t a, doremir_buffer_t b)
 void 
 doremir_buffer_destroy(doremir_buffer_t buffer)
 {
-    assert(false && "Not implemented");
+    free(buffer->data);
+    doremir_delete(buffer);
 }
 
 /** Return the size of the buffer.
@@ -77,7 +81,7 @@ doremir_buffer_destroy(doremir_buffer_t buffer)
 size_t 
 doremir_buffer_size(doremir_buffer_t buffer)
 {
-    assert(false && "Not implemented");
+    return buffer->size;
 }
 
 /** Read a value from the buffer.
@@ -87,7 +91,7 @@ doremir_buffer_size(doremir_buffer_t buffer)
 uint8_t 
 doremir_buffer_peek(doremir_buffer_t buffer, int index)
 {
-    assert(false && "Not implemented");
+    return buffer->data[index];
 }
 
 /** Update a value in the buffer.
@@ -97,6 +101,52 @@ doremir_buffer_peek(doremir_buffer_t buffer, int index)
 void 
 doremir_buffer_poke(doremir_buffer_t buffer, int index, uint8_t value)
 {
-    assert(false && "Not implemented");
+    buffer->data[index] = value;
 }
 
+
+// --------------------------------------------------------------------------------
+
+doremir_string_t buffer_show(doremir_ptr_t a)
+{
+    buffer_t b = (buffer_t) a;
+    string_t s = string("<Buffer");
+
+    // TODO nodejs-style dump
+    doremir_print("", b); // use b to kill warning
+
+    s = sdappend(s, string(">"));
+    return s;
+}
+
+doremir_ptr_t buffer_copy(doremir_ptr_t a)
+{
+    return doremir_buffer_copy(a);
+}
+
+void buffer_destroy(doremir_ptr_t a)
+{
+    doremir_buffer_destroy(a);
+}
+
+doremir_ptr_t buffer_impl(doremir_id_t interface)
+{
+    static doremir_string_show_t buffer_show_impl = { buffer_show };
+    static doremir_copy_t buffer_copy_impl = { buffer_copy };
+    static doremir_destroy_t buffer_destroy_impl = { buffer_destroy };
+
+    switch (interface)
+    {
+    case doremir_string_show_i:
+        return &buffer_show_impl;
+
+    case doremir_copy_i:
+        return &buffer_copy_impl;
+
+    case doremir_destroy_i:
+        return &buffer_destroy_impl;
+
+    default:
+        return NULL;
+    }
+}        

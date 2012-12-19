@@ -10,10 +10,9 @@ module Doremir.Buffer
 
     type Buffer = opaque;
 
-    create : (Size) -> Buffer;
-    copy : Buffer -> Buffer;
-    copySized : (Size, Buffer) -> Buffer;
-    swap : (Buffer, Buffer) -> Void;
+    create  : (Size) -> Buffer;
+    copy    : Buffer -> Buffer;
+    resize  : (Size, Buffer) -> Buffer;
     destroy : Buffer -> Void;
 
     size : Buffer -> Size;  
