@@ -20,6 +20,7 @@ list(APPEND SRCS
   doremir/ratio.c
   doremir/set.c
   doremir/string.c
+  doremir/time.c
   doremir/thread/future.c
   doremir/thread/improving.c
   )

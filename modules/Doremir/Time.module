@@ -2,13 +2,29 @@
 /**
     @addtogroup DoremirTime
     
-    Provides a time representation.
+    Immutable time representation.
+    
+    Represents a point in time from an arbitrary offset using standard units. This type uses
+    rational numbers to support arbitrary divisions of a second. Allthough day is the longest
+    unit, times longer than a day are supported by this type (they are simply expressed as
+    days instead of weeks, months etc).
+    
+    
+    @par Implements 
+        doremir_equal_t
+        doremir_order_t
+        doremir_string_show_t
+        doremir_copy_t
+        doremir_destroy_t
+        doremir_dynamic_t
+        doremir_number_t
     
  */
 module Doremir.Time
 {     
     import Doremir;
     import Doremir.Ratio;
+    import Doremir.String;
     
     type Unit = enum {
         Second,
@@ -17,8 +33,7 @@ module Doremir.Time
         Day
     };
 
-    type Time = struct {
-        value : Ratio,
-        unit : Unit
-    };
+    type Time = opaque;
+    
+    toIso : Time -> String;
 }

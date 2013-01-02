@@ -4,6 +4,7 @@
 
 #include <doremir.h>
 #include <doremir/ratio.h>
+#include <doremir/string.h>
 
 /** @defgroup Doremir Doremir
     @{
@@ -14,9 +15,8 @@
 typedef enum {
             second, minute, hour, day
         } doremir_time_unit_t;
-typedef struct {
-            doremir_ratio_t value; doremir_time_unit_t unit;
-        } doremir_time_t;
+typedef struct _doremir_time_t * doremir_time_t;
+doremir_string_t doremir_time_to_iso(doremir_time_t);
 
 /** @}
     @}
