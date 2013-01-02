@@ -39,7 +39,7 @@ doremir_buffer_create(size_t size)
 
 /** Copy the given buffer.
     @note
-        O(1)
+        O(n)
  */
 doremir_buffer_t 
 doremir_buffer_copy(doremir_buffer_t buffer)
@@ -49,7 +49,7 @@ doremir_buffer_copy(doremir_buffer_t buffer)
 
 /** Copy the given buffer using the given size.
     @note
-        O(1)
+        O(n)
  */
 doremir_buffer_t 
 doremir_buffer_resize(size_t size,
@@ -65,7 +65,7 @@ doremir_buffer_resize(size_t size,
 
 /** Destroy the given buffer.
     @note
-        O(1)
+        O(n)
  */
 void 
 doremir_buffer_destroy(doremir_buffer_t buffer)
@@ -76,7 +76,7 @@ doremir_buffer_destroy(doremir_buffer_t buffer)
 
 /** Return the size of the buffer.
     @note
-        O(n)
+        O(1)
  */
 size_t 
 doremir_buffer_size(doremir_buffer_t buffer)
@@ -84,6 +84,11 @@ doremir_buffer_size(doremir_buffer_t buffer)
     return buffer->size;
 }          
 
+/** Return the address of the buffer.
+    This function is unsafe as it provides access to the buffer contents without ownership semantics.
+    @note
+        O(1)
+ */
 void * doremir_buffer_unsafe_address(doremir_buffer_t buffer)
 {
     return buffer->data;
@@ -133,8 +138,9 @@ doremir_string_t buffer_show(doremir_ptr_t a)
     for (size_t i = 0; i < length; ++i)
     {                             
         str = sdappend(str, string(" "));
-        str = sdappend(str, doremir_string_format_integer("%02x", doremir_buffer_peek(buffer, i)));
-        // TODO correct value
+        str = sdappend(str, doremir_string_format_integer(
+            "%02x", 
+            doremir_buffer_peek(buffer, i)));
     }
     if (more)
     {
