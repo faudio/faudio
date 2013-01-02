@@ -53,7 +53,7 @@ lisp:
 	modulo -Mmodules --language=lisp <modules/Doremir/Thread/Improving.module    	>bindings/lisp/doremir/thread/improving.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Std.module    		>bindings/lisp/doremir/std.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/String.module    		>bindings/lisp/doremir/string.lisp && \
-	modulo -Mmodules --language=lisp <modules/Doremir/String/List.module    	>bindings/lisp/doremir/string/list.h && \
+	modulo -Mmodules --language=lisp <modules/Doremir/String/List.module    	>bindings/lisp/doremir/string/list.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Buffer.module    		>bindings/lisp/doremir/buffer.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Ratio.module    		>bindings/lisp/doremir/ratio.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/List.module    		>bindings/lisp/doremir/list.lisp && \

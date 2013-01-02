@@ -1,8 +1,16 @@
 (defctype Doremir.Ratio.Nom :int32)
 
-(defctype Doremir.Ratio.Denom :uint32)
+(defctype Doremir.Ratio.Denom :int32)
 
-(defctype Doremir.Ratio (:pointer :void))
+(defctype Doremir.Ratio :pointer)
+
+(defcfun "Doremir.Ratio.create" :Doremir.Ratio (:Doremir.Ratio.Nom :Doremir.Ratio.Denom))
+
+(defcfun "Doremir.Ratio.nom" :Doremir.Ratio.Nom (:Doremir.Ratio))
+
+(defcfun "Doremir.Ratio.denom" :Doremir.Ratio.Denom (:Doremir.Ratio))
+
+(defcfun "Doremir.Ratio.destroy" :void (:Doremir.Ratio))
 
 (defcfun "Doremir.Ratio.add" :Doremir.Ratio (:Doremir.Ratio :Doremir.Ratio))
 

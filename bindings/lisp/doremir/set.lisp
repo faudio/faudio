@@ -1,27 +1,41 @@
 (defctype Doremir.Set :pointer)
 
-(defcfun "Doremir.Set.elem" :boolean (:Doremir.Set :Doremir.Ptr))
-
-(defcfun "Doremir.Set.subsetOf" :boolean (:Doremir.Set :Doremir.Set))
-
-(defcfun "Doremir.Set.properSubsetOf" :boolean (:Doremir.Set :Doremir.Set))
-
 (defcfun "Doremir.Set.empty" :Doremir.Set ())
 
-(defcfun "Doremir.Set.add" :Doremir.Set (:Doremir.Set :Doremir.Ptr))
+(defcfun "Doremir.Set.add" :Doremir.Set (:Doremir.Ptr :Doremir.Set))
 
-(defcfun "Doremir.Set.remove" :void (:Doremir.Set :Doremir.Ptr))
+(defcfun "Doremir.Set.remove" :void (:Doremir.Ptr :Doremir.Set))
 
-(defcfun "Doremir.Set.addUnique" :Doremir.Set (:Doremir.Set :Doremir.Ptr))
+(defcfun "Doremir.Set.copy" :Doremir.Set (:Doremir.Set))
 
-(defcfun "Doremir.Set.removeUnique" :void (:Doremir.Set :Doremir.Ptr))
+(defcfun "Doremir.Set.destroy" :void (:Doremir.Set))
 
-(defcfun "Doremir.Set.unionOf" :Doremir.Set (:Doremir.Set :Doremir.Set))
+(defcfun "Doremir.Set.has" :boolean (:Doremir.Set :Doremir.Ptr))
 
-(defcfun "Doremir.Set.productOf" :Doremir.Set (:Doremir.Set :Doremir.Set))
+(defcfun "Doremir.Set.size" :int (:Doremir.Set))
 
-(defcfun "Doremir.Set.symmetricDifferenceOf" :Doremir.Set (:Doremir.Set :Doremir.Set))
+(defcfun "Doremir.Set.isEmpty" :boolean (:Doremir.Set))
 
-(defcfun "Doremir.Set.cartesianProductOf" :Doremir.Set (:Doremir.Set :Doremir.Set))
+(defcfun "Doremir.Set.isSingle" :boolean (:Doremir.Set))
 
-(defcfun "Doremir.Set.powerSetOf" :Doremir.Set (:Doremir.Set))
+(defcfun "Doremir.Set.isSubsetOf" :boolean (:Doremir.Set :Doremir.Set))
+
+(defcfun "Doremir.Set.isProperSubsetOf" :boolean (:Doremir.Set :Doremir.Set))
+
+(defcfun "Doremir.Set.sum" :Doremir.Set (:Doremir.Set :Doremir.Set))
+
+(defcfun "Doremir.Set.product" :Doremir.Set (:Doremir.Set :Doremir.Set))
+
+(defcfun "Doremir.Set.difference" :Doremir.Set (:Doremir.Set :Doremir.Set))
+
+(defcfun "Doremir.Set.cartesian" :Doremir.Set (:Doremir.Set :Doremir.Set))
+
+(defcfun "Doremir.Set.power" :Doremir.Set (:Doremir.Set))
+
+(defcfun "Doremir.Set.equal" :boolean (:Doremir.Set :Doremir.Set))
+
+(defcfun "Doremir.Set.lessThan" :boolean (:Doremir.Set :Doremir.Set))
+
+(defcfun "Doremir.Set.greaterThan" :boolean (:Doremir.Set :Doremir.Set))
+
+(defcfun "Doremir.Set.show" :Doremir.String (:Doremir.Set))
