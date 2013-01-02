@@ -34,6 +34,16 @@ module Doremir.Time
     };
 
     type Time = opaque;
+
+    create      : (Int32, Int32, Int32, Ratio) -> Time;
+    copy        : Time -> Time;
+    destroy     : Time -> Void;
+    
+    divisions   : Time -> Ratio;
+    seconds     : Time -> Int32;
+    minutes     : Time -> Int32;
+    hours       : Time -> Int32;
+    days        : Time -> Int32;
     
     toIso : Time -> String;
 }

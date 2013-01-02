@@ -103,6 +103,13 @@ doremir_list_t doremir_list(int count, ...);
 #define char_at  doremir_string_char_at
 #define sshow    doremir_string_show
 
+#define doremir_add3(A,B,C) \
+    doremir_add(A,doremir_add(B,C))
+#define doremir_add4(A,B,C,D) \
+    doremir_add(A,doremir_add3(B,C,D))
+#define doremir_add5(A,B,C,D,E) \
+    doremir_add(A,doremir_add4(B,C,D,E))
+
 #define ap(V,L) \
     V = doremir_list_dappend(V, L)
 

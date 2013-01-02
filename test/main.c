@@ -376,8 +376,19 @@ void test_buffer()
 
         doremir_print("size(b)        => %s\n", i32(doremir_buffer_size(b)));
     }
-
 }
+
+void test_time()
+{
+    doremir_test_section();
+
+    doremir_time_t t = doremir_time_create(1,0,0,ratio(25,8));
+    doremir_time_t u = doremir_time_create(0,1,1,ratio(58,1));
+    doremir_print("t              => %s\n", t);
+    doremir_print("u              => %s\n", u);
+    doremir_print("t + u          => %s\n", doremir_add(t, u));
+}
+
 
 int main (int argc, char const *argv[])
 {
@@ -402,6 +413,7 @@ int main (int argc, char const *argv[])
       test_list();
       test_rational();
       test_buffer();
+      test_time();
 
       doremir_audio_engine_terminate();
   }

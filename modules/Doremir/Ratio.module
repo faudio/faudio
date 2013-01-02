@@ -25,6 +25,7 @@ module Doremir.Ratio
     create  : (Nom, Denom) -> Ratio;
     nom     : Ratio -> Nom;
     denom   : Ratio -> Denom;
+    match   : (Ratio, Nom*, Denom*) -> Void;
     destroy : Ratio -> Void;
             
     add : (Ratio, Ratio) -> Ratio;

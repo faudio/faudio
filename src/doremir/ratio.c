@@ -51,7 +51,30 @@ void doremir_ratio_destroy(doremir_ratio_t p)
     delete_ratio(p);
 }
 
+
 // --------------------------------------------------------------------------------
+
+doremir_ratio_nom_t doremir_ratio_nom(doremir_ratio_t x)
+{                                                      
+    return x->nom;
+}
+
+doremir_ratio_denom_t doremir_ratio_denom(doremir_ratio_t x)
+{                 
+    return x->denom;
+}                   
+
+void doremir_ratio_match(doremir_ratio_t x,
+                         doremir_ratio_nom_t *a,
+                         doremir_ratio_denom_t *b)
+{
+    *a = x->nom;
+    *b = x->denom;
+}
+
+
+// --------------------------------------------------------------------------------
+
 doremir_ratio_t doremir_ratio_add(doremir_ratio_t x,
                                   doremir_ratio_t y)
 {
