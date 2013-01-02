@@ -115,9 +115,10 @@ int32_t doremir_time_days(doremir_time_t time)
 
 
 /**
-    Print the time as an ISO 8601 duration, possibly losing precision.
-
-    For example `P0000-00-00T00:01:24.3333` for 1 minute and 24 1/3 seconds.
+    Print the time as an ISO 8601 duration.
+    
+    The ISO represenation use decimal fractions of a second, and may lose precision. For example 
+    the duration of 1 min 24 1/3 sec would be represented as `P0000-00-00T00:01:24.3333`.
  */
 doremir_string_t doremir_time_to_iso(doremir_time_t time)
 {

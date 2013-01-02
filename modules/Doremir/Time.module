@@ -39,11 +39,11 @@ module Doremir.Time
     copy        : Time -> Time;
     destroy     : Time -> Void;
     
-    divisions   : Time -> Ratio;
-    seconds     : Time -> Int32;
-    minutes     : Time -> Int32;
-    hours       : Time -> Int32;
     days        : Time -> Int32;
+    hours       : Time -> Int32;
+    minutes     : Time -> Int32;
+    seconds     : Time -> Int32;
+    divisions   : Time -> Ratio;
     
     toIso : Time -> String;
 }
