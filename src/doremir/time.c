@@ -34,26 +34,35 @@ void delete_time(doremir_time_t time)
 
 // --------------------------------------------------------------------------------
 
+/** Create a new time interval.
+    @param
+        days
+        hours
+        minutes
+        seconds
+ */
 doremir_time_t doremir_time_create(int32_t d, int32_t h, int32_t m, doremir_ratio_t n)
 {
     ratio_t value = doremir_add(ratio(d*60*60*24 + h*60*60 + m*60, 1), n); // TODO leaks ratio  
     return new_time(value);
 }
 
+/** Copy the given time interval.
+ */
 doremir_time_t doremir_time_copy(doremir_time_t time)
 {
     return new_time(time->value);
 }
 
+/** Destroy the given time interval.
+ */
 void doremir_time_destroy(doremir_time_t time)
 {                    
     delete_time(time);
 }
 
 
-
-
-// TODO simplify these
+// --------------------------------------------------------------------------------
 
 /**
     Returns the fractions of a second in this time interval.
