@@ -3,6 +3,8 @@
     @addtogroup DoremirPriorityQueue
     
     Priority queue data structure.
+    
+    Note that priority queues are not collections as their contents are mutable.
 
     @par Requires 
         doremir_order_t
