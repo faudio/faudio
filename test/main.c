@@ -351,20 +351,32 @@ void test_rational()
 
 void test_buffer()
 {
-    doremir_buffer_t b = doremir_buffer_create(1024);
     doremir_test_section();
 
-    doremir_print("b              => %s\n", b);
+    {
+        doremir_buffer_t b = doremir_buffer_create(16);
 
-    for(int i = 0; i < 1024; ++i)
-        doremir_buffer_poke(b, i, i);
+        doremir_print("b              => %s\n", b);
+        for(int i = 0; i < 16; ++i) doremir_buffer_poke(b, i, i);
+        doremir_print("b              => %s\n", b);
+        for(int i = 0; i < 16; ++i) doremir_buffer_poke(b, i, 0xff);
+        doremir_print("b              => %s\n", b);
 
-    for(int i = 0; i < 1024; ++i)
-        doremir_buffer_poke(b, i, 0xff);
+        doremir_print("size(b)        => %s\n", i32(doremir_buffer_size(b)));
+    }
+    
+    {
+        doremir_buffer_t b = doremir_buffer_create(1024);
 
-    doremir_print("b              => %s\n", b);
+        doremir_print("b              => %s\n", b);
+        for(int i = 0; i < 1024; ++i) doremir_buffer_poke(b, i, i);
+        doremir_print("b              => %s\n", b);
+        for(int i = 0; i < 1024; ++i) doremir_buffer_poke(b, i, 0xff);
+        doremir_print("b              => %s\n", b);
 
-    doremir_print("size(b)        => %s\n", i32(doremir_buffer_size(b)));
+        doremir_print("size(b)        => %s\n", i32(doremir_buffer_size(b)));
+    }
+
 }
 
 int main (int argc, char const *argv[])

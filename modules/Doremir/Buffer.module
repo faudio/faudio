@@ -3,7 +3,7 @@
     @addtogroup DoremirBuffer
     
     Low-level buffer data structure. Each buffer is a mutable sequence of bytes with single-ownership
-    semantics. The length of a buffer can never change, but their memory can be reused using the destructive
+    semantics. The length of a buffer can never change, but its memory can be reused using the destructive
     resize operation.
     
     Buffers are not collections as their contents are mutable.
@@ -25,6 +25,6 @@ module Doremir.Buffer
     destroy : Buffer -> Void;
 
     size : Buffer -> Size;  
-    peek : (Buffer, Int) -> UInt8;
-    poke : (Buffer, Int, UInt8) -> Void;
+    peek : (Buffer, Size) -> UInt8;
+    poke : (Buffer, Size, UInt8) -> Void;
 }

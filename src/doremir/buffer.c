@@ -89,7 +89,7 @@ doremir_buffer_size(doremir_buffer_t buffer)
         O(1)
  */
 uint8_t 
-doremir_buffer_peek(doremir_buffer_t buffer, int index)
+doremir_buffer_peek(doremir_buffer_t buffer, size_t index)
 {
     return buffer->data[index];
 }
@@ -99,7 +99,7 @@ doremir_buffer_peek(doremir_buffer_t buffer, int index)
         O(1)
  */
 void 
-doremir_buffer_poke(doremir_buffer_t buffer, int index, uint8_t value)
+doremir_buffer_poke(doremir_buffer_t buffer, size_t index, uint8_t value)
 {
     buffer->data[index] = value;
 }
