@@ -53,6 +53,10 @@ module Doremir.String
     dappend : (String, String) -> String;
     destroy : String -> Void;
 
+    // sprintf wrappers
+    formatInteger : (Char*, Long) -> String;
+    formatDouble  : (Char*, Double) -> String;
+
     length : String -> Int;
     charAt : (Int,String) -> Char16;
 

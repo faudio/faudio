@@ -12,7 +12,7 @@
 #define kstd_code   "UTF-16LE"          /* Internal string code */
 #define kchar_size  sizeof(uint16_t)    /* Internal char size */
 
-struct _doremir_string_t {               
+struct _doremir_string_t {
         doremir_impl_t  impl;
         size_t          size;
         uint16_t        *data;
@@ -27,7 +27,7 @@ static void fatal(char* msg, int error);
 doremir_string_t new_string(size_t size, uint16_t *data)
 {
     string_t str = doremir_new(string);
-    str->impl = &string_impl;    
+    str->impl = &string_impl;
     str->size = size;
     str->data = data;
     return str;
@@ -36,7 +36,7 @@ doremir_string_t new_string(size_t size, uint16_t *data)
 // --------------------------------------------------------------------------------
 
 /** Create an empty string.
-    
+
     The returned string should be destroyed by the caller.
  */
 doremir_string_t doremir_string_empty()
@@ -92,8 +92,8 @@ doremir_string_t doremir_string_append(doremir_string_t as,
  */
 doremir_string_t doremir_string_dappend(doremir_string_t as,
                                        doremir_string_t bs)
-{                            
-    size_t oldSize = as->size;     
+{
+    size_t oldSize = as->size;
     as->size = as->size + bs->size;
     as->data = realloc(as->data, as->size*kchar_size);
     memcpy(as->data + oldSize, bs->data, bs->size*kchar_size);
@@ -111,7 +111,7 @@ doremir_string_t doremir_string_dappend(doremir_string_t as,
 /** Destroy the given string.
  */
 void doremir_string_destroy(doremir_string_t str)
-{                     
+{
     free(str->data);
     doremir_delete(str);
 }
@@ -125,16 +125,38 @@ void doremir_string_destroy(doremir_string_t str)
 int doremir_string_length(doremir_string_t str)
 {
     return str->size;
-}     
+}
 
 /** Return the character at the given position in the string.
  */
 uint16_t doremir_string_char_at(int n, doremir_string_t str)
-{                       
+{
     if (n < 0 || n >= str->size)
         assert(false && "Out of range");
     return str->data[n];
 }
+
+// --------------------------------------------------------------------------------
+// Formatting functions
+// --------------------------------------------------------------------------------
+
+#define FORMAT_FUNCTION(T,U) \
+    doremir_string_t                                \
+    doremir_string_format_##T(char* f, U a)         \
+    {                                               \
+        char buffer[100];                           \
+        int  numChars;                              \
+        numChars = snprintf(buffer, 100, f, a);     \
+        if (numChars > 100)                         \
+            fatal("To many characters", -1);        \
+                                                    \
+        buffer[numChars] = 0;                       \
+        return doremir_string_from_utf8(buffer);    \
+    }
+
+FORMAT_FUNCTION(integer, long);
+FORMAT_FUNCTION(double, double);
+
 
 // --------------------------------------------------------------------------------
 // Conversion functions
@@ -152,7 +174,7 @@ static inline void iconv_fail()
 }
 
 doremir_string_utf8_t doremir_string_to_utf8(doremir_string_t str)
-{   
+{
     size_t inSize  = str->size * kchar_size;
     size_t outSize = inSize * 3 / 2; // worst case, we resize after iconv
 
@@ -163,7 +185,7 @@ doremir_string_utf8_t doremir_string_to_utf8(doremir_string_t str)
         iconv_t conv = iconv_open("UTF-8", kstd_code);
         size_t status = iconv(conv, &in, &inSize, &out, &outSize);
         iconv_close(conv);
-        if (status < 0) 
+        if (status < 0)
             iconv_fail();
     }
     size_t size = out - buf;
@@ -186,20 +208,20 @@ doremir_string_utf32_t doremir_string_to_utf32(doremir_string_t str)
     assert(false && "Not implemented");
 }
 
-static inline size_t raw_size(char *s) 
+static inline size_t raw_size(char *s)
 {
    size_t i = 0;
    while (s[i])
      i++;
    return i;
-}     
-static inline size_t raw_size_16(uint16_t *s) 
+}
+static inline size_t raw_size_16(uint16_t *s)
 {
    size_t i = 0;
    while (s[i])
      i++;
    return i;
-}     
+}
 
 doremir_string_t doremir_string_from_utf8(doremir_string_utf8_t cstr)
 {
@@ -213,12 +235,12 @@ doremir_string_t doremir_string_from_utf8(doremir_string_utf8_t cstr)
         iconv_t conv = iconv_open(kstd_code, "UTF-8");
         size_t status = iconv(conv, &in, &inSize, &out, &outSize);
         iconv_close(conv);
-        if (status < 0) 
+        if (status < 0)
             iconv_fail();
     }
     size_t size = out - buf; // written bytes
     buf = realloc(buf, size);
-    
+
     string_t pst = new_string(size / 2, NULL);
     pst->data = (uint16_t*) buf;
     return pst;
@@ -238,22 +260,22 @@ doremir_string_t doremir_string_from_utf16(doremir_string_utf16_t cstr)
 doremir_string_t doremir_string_from_utf32(doremir_string_utf32_t cstr)
 {
     assert(false && "Not implemented");
-}   
+}
 
 // --------------------------------------------------------------------------------
 
 doremir_string_t doremir_string_show(doremir_ptr_t a)
 {
     return ((doremir_string_show_t*) doremir_interface(doremir_string_show_i, a))->show(a);
-}     
+}
 
 // --------------------------------------------------------------------------------
 
 bool string_equal(doremir_ptr_t as, doremir_ptr_t bs)
-{                                                   
+{
     string_t cs = (string_t) as;
     string_t ds = (string_t) bs;
-    
+
     for (int i = 0; i < cs->size && i < ds->size; ++i)
     {
         if (cs->data[i] != ds->data[i])
@@ -266,7 +288,7 @@ bool string_less_than(doremir_ptr_t as, doremir_ptr_t bs)
 {
     string_t cs = (string_t) as;
     string_t ds = (string_t) bs;
-    
+
     for (int i = 0; i < cs->size && i < ds->size; ++i)
     {
         if (cs->data[i] < ds->data[i])
@@ -281,7 +303,7 @@ bool string_greater_than(doremir_ptr_t as, doremir_ptr_t bs)
 {
     string_t cs = (string_t) as;
     string_t ds = (string_t) bs;
-    
+
     for (int i = 0; i < cs->size && i < ds->size; ++i)
     {
         if (cs->data[i] > ds->data[i])
@@ -292,9 +314,9 @@ bool string_greater_than(doremir_ptr_t as, doremir_ptr_t bs)
     return false;
 }
 
- 
+
 doremir_string_t string_show(doremir_ptr_t a)
-{                
+{
     string_t s = string("");
     sap(s, string("\""));
     sap(s, scopy(a));

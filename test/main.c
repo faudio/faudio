@@ -6,6 +6,11 @@
 int  version[3] = { 2, 0, 0 };
 char *bits      = sizeof(void*) == 4 ? "32-bit" : "64-bit";
 
+void doremir_test_section()
+{
+    doremir_print("\n\n--------------------\n", NULL);
+}
+
 doremir_closure_t* new_closure(doremir_unary_t function, doremir_ptr_t value)
 {
     doremir_closure_t *r = malloc(sizeof(doremir_closure_t));
@@ -126,7 +131,7 @@ void test_cond()
 
 void test_wrap()
 {
-    doremir_print("\n\n--------------------\n", NULL);
+    doremir_test_section();
     // FIXME leaks
 
     printf("bool: %s\n", doremir_type_str(b(true)));
@@ -161,7 +166,7 @@ void test_wrap()
 
 void test_generic()
 {
-    doremir_print("\n\n--------------------\n", NULL);
+    doremir_test_section();
     // TODO leaks
 
     printf("2    *  3.2   = %f\n", td(doremir_multiply(d(2), d(3.2))));
@@ -202,7 +207,7 @@ bool is_odd16(ptr_t p)
 
 void test_list()
 {
-    doremir_print("\n\n--------------------\n", NULL);
+    doremir_test_section();
     // TODO leaks
     {
         list_t xs = list(i16(1),i16(2),i16(3));
@@ -259,7 +264,7 @@ static inline void memdump(void* s, size_t n)
 
 void test_string()
 {
-    doremir_print("\n\n--------------------\n", NULL);
+    doremir_test_section();
     {
         string_t s = doremir_string_single('v');
         doremir_print("str: %s\n", s);
@@ -308,7 +313,7 @@ void test_string()
 
 void test_show()
 {
-    doremir_print("\n\n--------------------\n", NULL);
+    doremir_test_section();
     doremir_print("\n", NULL);
     doremir_print("%s\n", b(0));
     doremir_print("%s\n", i8(129));
@@ -327,7 +332,7 @@ void test_show()
 
 void test_compare()
 {
-    doremir_print("\n\n--------------------\n", NULL);
+    doremir_test_section();
     doremir_print("abc <  abd => %s\n", b(doremir_less_than(string("abc"), string("abd"))));
     doremir_print("abc <= abd => %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
     doremir_print("abc >  abd => %s\n", b(doremir_greater_than(string("abc"), string("abd"))));
@@ -336,12 +341,30 @@ void test_compare()
 
 void test_rational()
 {                
-    doremir_print("\n\n--------------------\n", NULL);
+    doremir_test_section();
     doremir_print("1/3 <  1/2     => %s\n", b(lt(ratio(1,3), ratio(1,2))));    
     doremir_print("1/3 >  1/2     => %s\n", b(gt(ratio(1,3), ratio(1,2))));    
     doremir_print("1/3 == 2/6     => %s\n", b(eq(ratio(1,3), ratio(2,6))));    
     doremir_print("1/3 == 254/762 => %s\n", b(eq(ratio(1,3), ratio(254,762))));    
     doremir_print("1/3 <= 7/8     => %s\n", b(eq(ratio(1,3), ratio(254,762))));    
+}  
+
+void test_buffer()
+{
+    doremir_buffer_t b = doremir_buffer_create(1024);
+    doremir_test_section();
+
+    doremir_print("b              => %s\n", b);
+
+    for(int i = 0; i < 1024; ++i)
+        doremir_buffer_poke(b, i, i);
+
+    for(int i = 0; i < 1024; ++i)
+        doremir_buffer_poke(b, i, 0xff);
+
+    doremir_print("b              => %s\n", b);
+
+    doremir_print("size(b)        => %s\n", i32(doremir_buffer_size(b)));
 }
 
 int main (int argc, char const *argv[])
@@ -366,6 +389,7 @@ int main (int argc, char const *argv[])
       test_compare();
       test_list();
       test_rational();
+      test_buffer();
 
       doremir_audio_engine_terminate();
   }

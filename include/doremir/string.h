@@ -23,6 +23,8 @@ doremir_string_t doremir_string_append(doremir_string_t,
 doremir_string_t doremir_string_dappend(doremir_string_t,
                                         doremir_string_t);
 void doremir_string_destroy(doremir_string_t);
+doremir_string_t doremir_string_format_integer(char *, long);
+doremir_string_t doremir_string_format_double(char *, double);
 int doremir_string_length(doremir_string_t);
 doremir_char16_t doremir_string_char_at(int, doremir_string_t);
 typedef struct {
