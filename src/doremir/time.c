@@ -35,11 +35,10 @@ void delete_time(doremir_time_t time)
 // --------------------------------------------------------------------------------
 
 /** Create a new time interval.
-    @param
-        days
-        hours
-        minutes
-        seconds
+    @param d    Number of days.
+    @param h    Number of hours.
+    @param m    Number of minutes.
+    @param s    Number of seconds.
  */
 doremir_time_t doremir_time_create(int32_t d, int32_t h, int32_t m, doremir_ratio_t n)
 {

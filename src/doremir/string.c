@@ -100,12 +100,14 @@ doremir_string_t doremir_string_dappend(doremir_string_t as,
     doremir_delete(bs);
     return as;
 
-    // string_t cs = new_string(as->size + bs->size, NULL);
-    // cs->data = realloc(as->data, cs->size*kchar_size);
-    // memcpy(cs->data + as->size, bs->data, bs->size*kchar_size);
-    // doremir_delete(as);
-    // doremir_delete(bs);
-    // return cs;
+/*
+    string_t cs = new_string(as->size + bs->size, NULL);
+    cs->data = realloc(as->data, cs->size*kchar_size);
+    memcpy(cs->data + as->size, bs->data, bs->size*kchar_size);
+    doremir_delete(as);
+    doremir_delete(bs);
+    return cs;
+*/
 }
 
 /** Destroy the given string.
@@ -115,6 +117,7 @@ void doremir_string_destroy(doremir_string_t str)
     free(str->data);
     doremir_delete(str);
 }
+
 
 // --------------------------------------------------------------------------------
 // Predicates etc
@@ -136,6 +139,7 @@ uint16_t doremir_string_char_at(int n, doremir_string_t str)
     return str->data[n];
 }
 
+
 // --------------------------------------------------------------------------------
 // Formatting functions
 // --------------------------------------------------------------------------------
@@ -155,6 +159,7 @@ uint16_t doremir_string_char_at(int n, doremir_string_t str)
     }
 
 FORMAT_FUNCTION(integer, long);
+
 FORMAT_FUNCTION(double, double);
 
 
@@ -173,6 +178,12 @@ static inline void iconv_fail()
     }
 }
 
+/** Encode the given string as UTF-8.
+
+    @param  str String to encode.
+    @return 
+        A heap-allocated encoded string.
+ */
 doremir_string_utf8_t doremir_string_to_utf8(doremir_string_t str)
 {
     size_t inSize  = str->size * kchar_size;
@@ -194,6 +205,12 @@ doremir_string_utf8_t doremir_string_to_utf8(doremir_string_t str)
     return buf;
 }
 
+/** Encode the given string as UTF-16.
+
+    @param  str String to encode.
+    @return 
+        A heap-allocated encoded string.
+ */
 doremir_string_utf16_t doremir_string_to_utf16(doremir_string_t as)
 {
     size_t size = as->size;
@@ -203,6 +220,12 @@ doremir_string_utf16_t doremir_string_to_utf16(doremir_string_t as)
     return cstr;
 }
 
+/** Encode the given string as UTF-32.
+
+    @param  str String to encode.
+    @return 
+        A heap-allocated encoded string.
+ */
 doremir_string_utf32_t doremir_string_to_utf32(doremir_string_t str)
 {
     assert(false && "Not implemented");
@@ -223,6 +246,12 @@ static inline size_t raw_size_16(uint16_t *s)
    return i;
 }
 
+/** Deencode a string from UTF-8.
+
+    @param  str Encoded string.
+    @return 
+        A new string.
+ */
 doremir_string_t doremir_string_from_utf8(doremir_string_utf8_t cstr)
 {
     size_t inSize  = raw_size(cstr);
@@ -246,6 +275,12 @@ doremir_string_t doremir_string_from_utf8(doremir_string_utf8_t cstr)
     return pst;
 }
 
+/** Deencode a string from UTF-16.
+
+    @param  str Encoded string.
+    @return 
+        A new string.
+ */
 doremir_string_t doremir_string_from_utf16(doremir_string_utf16_t cstr)
 {
     size_t size = raw_size_16(cstr);
@@ -257,17 +292,35 @@ doremir_string_t doremir_string_from_utf16(doremir_string_utf16_t cstr)
     return as;
 }
 
+/** Deencode a string from UTF-32.
+
+    @param  str Encoded string.
+    @return 
+        A new string.
+ */
 doremir_string_t doremir_string_from_utf32(doremir_string_utf32_t cstr)
 {
     assert(false && "Not implemented");
 }
 
+
 // --------------------------------------------------------------------------------
 
+/** Generic version of the \ref doremir_string_show_t interface.
+
+    Ideally, this should be in the \ref Doremir module, but this would create a recursive
+    dependency.
+
+    @param a Value to convert.
+    @return 
+        A new string created from the given value.
+ */
 doremir_string_t doremir_string_show(doremir_ptr_t a)
 {
     return ((doremir_string_show_t*) doremir_interface(doremir_string_show_i, a))->show(a);
 }
+
+
 
 // --------------------------------------------------------------------------------
 
@@ -366,8 +419,6 @@ doremir_ptr_t string_impl(doremir_id_t interface)
 }
 
 
-// --------------------------------------------------------------------------------
-// Utility
 // --------------------------------------------------------------------------------
 
 static void fatal(char* msg, int error)
