@@ -82,7 +82,13 @@ size_t
 doremir_buffer_size(doremir_buffer_t buffer)
 {
     return buffer->size;
+}          
+
+void * doremir_buffer_unsafe_address(doremir_buffer_t buffer)
+{
+    return buffer->data;
 }
+
 
 /** Read a value from the buffer.
     @note
