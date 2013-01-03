@@ -7,7 +7,7 @@
 #define list_t              doremir_list_t
 #define set_t               doremir_set_t
 #define map_t               doremir_map_t
-#define priority_queue_t    doremir_priority_queue_t
+#define pqueue_t            doremir_priority_queue_t
 #define string_t            doremir_string_t
 #define ratio_t             doremir_ratio_t
 #define buffer_t            doremir_buffer_t
@@ -29,7 +29,7 @@
 #define gt                  doremir_greater_than
 #define lt                  doremir_less_than
 #define gte                 doremir_greater_than_equal
-#define ltE                 doremir_less_than_equal
+#define lte                 doremir_less_than_equal
                             
 #define tbool               doremir_to_bool
 #define tint8               doremir_to_int8
