@@ -18,6 +18,6 @@ module Doremir.Atomic.RingBuffer
 
     size : RingBuffer -> Size;  
     read : RingBuffer -> UInt8;
-    write : (RingBuffer, UInt8) -> Void;
+    write : (RingBuffer, UInt8) -> Bool;
 }
 
