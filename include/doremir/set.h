@@ -17,7 +17,7 @@ doremir_set_t doremir_set_add(doremir_ptr_t, doremir_set_t);
 void doremir_set_remove(doremir_ptr_t, doremir_set_t);
 doremir_set_t doremir_set_copy(doremir_set_t);
 void doremir_set_destroy(doremir_set_t);
-bool doremir_set_has(doremir_set_t, doremir_ptr_t);
+bool doremir_set_has(doremir_ptr_t, doremir_set_t);
 int doremir_set_size(doremir_set_t);
 bool doremir_set_is_empty(doremir_set_t);
 bool doremir_set_is_single(doremir_set_t);

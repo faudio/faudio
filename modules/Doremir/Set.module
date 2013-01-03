@@ -29,7 +29,7 @@ module Doremir.Set
     copy             : Set -> Set;
     destroy          : Set -> Void;
 
-    has              : (Set, Ptr) -> Bool;
+    has              : (Ptr, Set) -> Bool;
     size             : Set -> Int;
 
     isEmpty          : Set -> Bool;

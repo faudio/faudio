@@ -34,9 +34,9 @@ module Doremir.Map
     // fromPair         : Pair -> Map;
     // fromList         : Pair -> Map;
 
-    hasKey           : (Map, Key) -> Bool;
-    hasElem          : (Map, Ptr) -> Bool;
-    hasEntry         : (Map, Pair) -> Bool;
+    hasKey           : (Key, Map) -> Bool;
+    hasElem          : (Ptr, Map) -> Bool;
+    hasEntry         : (Pair, Map) -> Bool;
     size             : Map -> Int;
 
     isEmpty          : Map -> Bool;

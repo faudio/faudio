@@ -32,17 +32,17 @@ void doremir_map_destroy(doremir_map_t map)
     assert(false && "Not implemented");
 }
 
-bool doremir_map_has_key(doremir_map_t map, doremir_map_key_t key)
+bool doremir_map_has_key(doremir_map_key_t key, doremir_map_t map)
 {
     assert(false && "Not implemented");
 }
 
-bool doremir_map_has_elem(doremir_map_t map, doremir_ptr_t x)
+bool doremir_map_has_elem(doremir_ptr_t x, doremir_map_t map)
 {
     assert(false && "Not implemented");
 }
 
-bool doremir_map_has_entry(doremir_map_t map, doremir_pair_t entry)
+bool doremir_map_has_entry(doremir_pair_t entry, doremir_map_t map)
 {
     assert(false && "Not implemented");
 }
