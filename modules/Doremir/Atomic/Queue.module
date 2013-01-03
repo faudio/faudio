@@ -14,6 +14,6 @@ module Doremir.Atomic.Queue
     destroy : Queue -> Void;
     
     read : Queue -> Ptr;
-    write : (Queue, Ptr) -> Ptr;
+    write : (Queue, Ptr) -> Bool;
 }
 

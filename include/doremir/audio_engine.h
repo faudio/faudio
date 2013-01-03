@@ -2,6 +2,8 @@
 #ifndef _DOREMIR_AUDIOENGINE
 #define _DOREMIR_AUDIOENGINE
 
+#include <doremir/atomic.h>
+#include <doremir/thread.h>
 #include <doremir/device/audio.h>
 #include <doremir/device/midi.h>
 #include <doremir/device/file.h>

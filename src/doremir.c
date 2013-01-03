@@ -35,7 +35,8 @@
     vvvvvvvv vvvvvvvv vvvvvvvv vvvvv001     0x1
     ptr
     vvvvvvvv vvvvvvvv vvvvvvvv vvvvv000     0x0
-
+    
+    Note: ptr includes 0 (NULL)
  */
 
 int doremir_type(doremir_ptr_t a)

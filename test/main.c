@@ -412,6 +412,43 @@ void test_midi()
     }
 }
 
+ptr_t add10(ptr_t x) { return (ptr_t) ((int) x + 10); }
+void test_atomic()
+{
+    test_section();
+
+    // treat as integer
+    {
+        doremir_atomic_t a = doremir_atomic_create();
+        doremir_print("a              => %s\n", a);
+
+        doremir_atomic_set(a, (ptr_t) 0x5);
+        doremir_print("a              => %s\n", a);
+
+        doremir_atomic_modify(a, add10);
+        doremir_print("a              => %s\n", a);
+
+        doremir_atomic_add(a, (ptr_t) -0xf);
+        doremir_print("a              => %s\n", a);
+        
+        doremir_atomic_exchange(a, (ptr_t) 1, (ptr_t) 0xfe);
+        doremir_print("a              => %s\n", a); // fails, still 0
+
+        doremir_atomic_exchange(a, (ptr_t) 0, (ptr_t) 0xff);
+        doremir_print("a              => %s\n", a); // now ff
+    }
+}
+
+void test_atomic_queue()
+{
+    test_section();
+}
+
+void test_atomic_ring_buffer()
+{
+    test_section();
+}
+
 
 int main (int argc, char const *argv[])
 {
@@ -425,9 +462,6 @@ int main (int argc, char const *argv[])
   {
       doremir_audio_engine_initialize();
 
-      // test_thread();
-      // test_mutex();
-      // test_cond();
       test_wrap();
       test_generic();
       test_string();
@@ -440,15 +474,21 @@ int main (int argc, char const *argv[])
       test_midi();
       
       // priority queue
-      // atomic types
+
+      test_atomic();
+      test_atomic_queue();
+      test_atomic_ring_buffer();
+
+      // test_thread();
+      // test_mutex();
+      // test_cond();
       // futures
       // improvings
+
       
       // audio_types
       // processors
       // dispatchers
-      
-      
       
       
       doremir_audio_engine_terminate();
