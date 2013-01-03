@@ -6,7 +6,7 @@
 int  version[3] = { 2, 0, 0 };
 char *bits      = sizeof(void*) == 4 ? "32-bit" : "64-bit";
 
-void doremir_test_section()
+void test_section()
 {
     printf("\n\n--------------------\n");
 }
@@ -133,7 +133,7 @@ void test_cond()
 
 void test_wrap()
 {
-    doremir_test_section();
+    test_section();
     // FIXME leaks
 
     printf("bool: %s\n", doremir_type_str(b(true)));
@@ -168,7 +168,7 @@ void test_wrap()
 
 void test_generic()
 {
-    doremir_test_section();
+    test_section();
     // TODO leaks
 
     printf("2    *  3.2   = %f\n", td(doremir_multiply(d(2), d(3.2))));
@@ -209,7 +209,7 @@ bool is_odd16(ptr_t p)
 
 void test_list()
 {
-    doremir_test_section();
+    test_section();
     // TODO leaks
     {
         list_t xs = list(i16(1),i16(2),i16(3));
@@ -266,7 +266,7 @@ static inline void memdump(void* s, size_t n)
 
 void test_string()
 {
-    doremir_test_section();
+    test_section();
     {
         // string_t s = doremir_string_single('v');
         // doremir_print("str: %s\n", s);
@@ -315,7 +315,7 @@ void test_string()
 
 void test_show()
 {
-    doremir_test_section();
+    test_section();
     doremir_print("\n", NULL);
     doremir_print("%s\n", b(0));
     doremir_print("%s\n", i8(129));
@@ -334,7 +334,7 @@ void test_show()
 
 void test_compare()
 {
-    doremir_test_section();
+    test_section();
     doremir_print("abc <  abd => %s\n", b(doremir_less_than(string("abc"), string("abd"))));
     doremir_print("abc <= abd => %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
     doremir_print("abc >  abd => %s\n", b(doremir_greater_than(string("abc"), string("abd"))));
@@ -343,7 +343,7 @@ void test_compare()
 
 void test_rational()
 {                
-    doremir_test_section();
+    test_section();
     doremir_print("1/3 <  1/2     => %s\n", b(lt(ratio(1,3), ratio(1,2))));    
     doremir_print("1/3 >  1/2     => %s\n", b(gt(ratio(1,3), ratio(1,2))));    
     doremir_print("1/3 == 2/6     => %s\n", b(eq(ratio(1,3), ratio(2,6))));    
@@ -353,7 +353,7 @@ void test_rational()
 
 void test_buffer()
 {
-    doremir_test_section();
+    test_section();
 
     {
         doremir_buffer_t b = doremir_buffer_create(16);
@@ -382,7 +382,7 @@ void test_buffer()
 
 void test_time()
 {
-    doremir_test_section();
+    test_section();
 
     doremir_time_t t = doremir_time_create(1,0,0,ratio(25,8));
     doremir_time_t u = doremir_time_create(0,1,1,ratio(58,1));
@@ -396,7 +396,7 @@ void test_time()
 
 void test_midi()
 {
-    doremir_test_section();
+    test_section();
     
     {
         doremir_midi_t m = doremir_midi_create_simple(0xa, 60, 127);
