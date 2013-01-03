@@ -28,6 +28,7 @@ module Doremir.AudioEngine
     import Doremir.Processor;
     import Doremir.Dispatcher;
     import Doremir.Scheduler;
+    import Doremir.Midi;
     import Doremir.Time;
     
     initialize : () -> Void;

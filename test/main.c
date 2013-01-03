@@ -8,7 +8,7 @@ char *bits      = sizeof(void*) == 4 ? "32-bit" : "64-bit";
 
 void doremir_test_section()
 {
-    doremir_print("\n\n--------------------\n", NULL);
+    printf("\n\n--------------------\n");
 }
 
 doremir_closure_t* new_closure(doremir_unary_t function, doremir_ptr_t value)
@@ -268,49 +268,49 @@ void test_string()
 {
     doremir_test_section();
     {
-        string_t s = doremir_string_single('v');
-        doremir_print("str: %s\n", s);
-        doremir_destroy(s);
+        // string_t s = doremir_string_single('v');
+        // doremir_print("str: %s\n", s);
+        // doremir_destroy(s);
     }
 
-    {
-        // char* cs = " 新隶体 "; // length 5
-        char* cs = "höglund";
-
-        string_t s = string(cs);
-        printf("len: %i\n", slength(s));
-        doremir_print("str: %s\n", s);
-
-        printf("charAt 0: %x\n", char_at(0,s));
-        printf("charAt 1: %x\n", char_at(1,s));
-        printf("charAt 2: %x\n", char_at(2,s));
-        doremir_destroy(s);
-    }
-
-    {
-        string_t s = string("foo");
-        string_t t = string("bar");
-        string_t u = sappend(s, t);
-        doremir_print("str: %s\n", s);
-        doremir_print("str: %s\n", t);
-        doremir_print("str: %s\n", u);
-        doremir_destroy(s);
-        doremir_destroy(t);
-        doremir_destroy(u);
-    }
-
-    {
-        string_t s = string("foo");
-        string_t t = string("bar");
-        doremir_print("str: %s\n", s);
-        doremir_print("str: %s\n", t);
-        {
-            string_t u = sdappend(s, t);
-            doremir_print("str: %s\n", u);
-            doremir_destroy(u);
-        }
-    }
-
+    // {
+    //     // char* cs = " 新隶体 "; // length 5
+    //     char* cs = "höglund";
+    // 
+    //     string_t s = string(cs);
+    //     printf("len: %i\n", slength(s));
+    //     doremir_print("str: %s\n", s);
+    // 
+    //     printf("charAt 0: %x\n", char_at(0,s));
+    //     printf("charAt 1: %x\n", char_at(1,s));
+    //     printf("charAt 2: %x\n", char_at(2,s));
+    //     doremir_destroy(s);
+    // }
+    // 
+    // {
+    //     string_t s = string("foo");
+    //     string_t t = string("bar");
+    //     string_t u = sappend(s, t);
+    //     doremir_print("str: %s\n", s);
+    //     doremir_print("str: %s\n", t);
+    //     doremir_print("str: %s\n", u);
+    //     doremir_destroy(s);
+    //     doremir_destroy(t);
+    //     doremir_destroy(u);
+    // }
+    // 
+    // {
+    //     string_t s = string("foo");
+    //     string_t t = string("bar");
+    //     doremir_print("str: %s\n", s);
+    //     doremir_print("str: %s\n", t);
+    //     {
+    //         string_t u = sdappend(s, t);
+    //         doremir_print("str: %s\n", u);
+    //         doremir_destroy(u);
+    //     }
+    // }
+    //    
 }
 
 void test_show()
@@ -438,6 +438,17 @@ int main (int argc, char const *argv[])
       test_buffer();
       test_time();
       test_midi();
+      
+      // priority queue
+      // atomic types
+      // futures
+      // improvings
+      
+      // audio_types
+      // processors
+      // dispatchers
+      
+      
       
       
       doremir_audio_engine_terminate();

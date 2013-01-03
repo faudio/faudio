@@ -313,7 +313,9 @@ void doremir_print(char* f, doremir_ptr_t a)
     if (a)
     {
         doremir_string_t str = doremir_string_show(a);
-        printf(f, doremir_string_to_utf8(str));
+        char* cstr = doremir_string_to_utf8(str);
+        printf(f, cstr);                         
+        free(cstr);
         doremir_destroy(str);        
     }
     else
