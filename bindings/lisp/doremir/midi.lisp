@@ -1,15 +1,27 @@
 (defctype Doremir.Midi.Status (:pointer :void))
 
-(defcfun "Doremir.Midi.statusType" :int (:int))
+(defctype Doremir.Midi.Channel :int)
 
-(defcfun "Doremir.Midi.statusChannel" :int (:int))
+(defctype Doremir.Midi.Data :int)
 
-(defcfun "Doremir.Midi.statusIsSysex" :boolean (:int))
+(defctype Doremir.Midi :pointer)
 
-(defctype Doremir.Midi.SimpleMessage (:pointer :void))
+(defcfun "Doremir.Midi.createSimple" :Doremir.Midi (:Doremir.Midi.Status :int :int))
 
-(defctype Doremir.Midi.SysexMessage (:pointer :void))
+(defcfun "Doremir.Midi.createSysex" :Doremir.Midi (:Doremir.Buffer))
 
-(defctype Doremir.Midi.MessageTag (:pointer :void))
+(defcfun "Doremir.Midi.copy" :Doremir.Midi (:Doremir.Midi))
 
-(defctype Doremir.Midi.Message (:pointer :void))
+(defcfun "Doremir.Midi.destroy" :void (:Doremir.Midi))
+
+(defcfun "Doremir.Midi.status" :Doremir.Midi.Status (:Doremir.Midi))
+
+(defcfun "Doremir.Midi.channel" :Doremir.Midi.Channel (:Doremir.Midi))
+
+(defcfun "Doremir.Midi.isSimple" :boolean (:Doremir.Midi))
+
+(defcfun "Doremir.Midi.simpleData" :Doremir.Pair (:Doremir.Midi))
+
+(defcfun "Doremir.Midi.isSysex" :boolean (:Doremir.Midi))
+
+(defcfun "Doremir.Midi.sysexData" :Doremir.Buffer (:Doremir.Midi))

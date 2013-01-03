@@ -12,10 +12,10 @@
 
 (defcfun "Doremir.Atomic.exchange" :boolean (:Doremir.Atomic :Doremir.Ptr :Doremir.Ptr))
 
-(defcfun "Doremir.Atomic.add" :void (:Doremir.Atomic :Doremir.Ptr))
-
 (defcfun "Doremir.Atomic.get" :Doremir.Ptr (:Doremir.Atomic))
 
-(defcfun "Doremir.Atomic.modify" :void (:Doremir.Atomic :Doremir.Atomic.Updater))
-
 (defcfun "Doremir.Atomic.set" :void (:Doremir.Atomic :Doremir.Ptr))
+
+(defcfun "Doremir.Atomic.add" :void (:Doremir.Atomic :Doremir.Ptr))
+
+(defcfun "Doremir.Atomic.modify" :void (:Doremir.Atomic :Doremir.Atomic.Updater))

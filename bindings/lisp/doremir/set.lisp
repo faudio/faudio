@@ -2,21 +2,23 @@
 
 (defcfun "Doremir.Set.empty" :Doremir.Set ())
 
+(defcfun "Doremir.Set.single" :Doremir.Set (:Doremir.Ptr))
+
 (defcfun "Doremir.Set.add" :Doremir.Set (:Doremir.Ptr :Doremir.Set))
 
-(defcfun "Doremir.Set.remove" :void (:Doremir.Ptr :Doremir.Set))
+(defcfun "Doremir.Set.remove" :Doremir.Set (:Doremir.Ptr :Doremir.Set))
 
 (defcfun "Doremir.Set.copy" :Doremir.Set (:Doremir.Set))
 
 (defcfun "Doremir.Set.destroy" :void (:Doremir.Set))
-
-(defcfun "Doremir.Set.has" :boolean (:Doremir.Set :Doremir.Ptr))
 
 (defcfun "Doremir.Set.size" :int (:Doremir.Set))
 
 (defcfun "Doremir.Set.isEmpty" :boolean (:Doremir.Set))
 
 (defcfun "Doremir.Set.isSingle" :boolean (:Doremir.Set))
+
+(defcfun "Doremir.Set.has" :boolean (:Doremir.Ptr :Doremir.Set))
 
 (defcfun "Doremir.Set.isSubsetOf" :boolean (:Doremir.Set :Doremir.Set))
 
@@ -31,11 +33,3 @@
 (defcfun "Doremir.Set.cartesian" :Doremir.Set (:Doremir.Set :Doremir.Set))
 
 (defcfun "Doremir.Set.power" :Doremir.Set (:Doremir.Set))
-
-(defcfun "Doremir.Set.equal" :boolean (:Doremir.Set :Doremir.Set))
-
-(defcfun "Doremir.Set.lessThan" :boolean (:Doremir.Set :Doremir.Set))
-
-(defcfun "Doremir.Set.greaterThan" :boolean (:Doremir.Set :Doremir.Set))
-
-(defcfun "Doremir.Set.show" :Doremir.String (:Doremir.Set))

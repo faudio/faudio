@@ -1,12 +1,12 @@
-(defctype Doremir.String :pointer)
-
-(defctype Doremir.String.FilePath :Doremir.String)
-
 (defctype Doremir.String.Utf8 (:pointer :Doremir.Char8))
 
 (defctype Doremir.String.Utf16 (:pointer :Doremir.Char16))
 
 (defctype Doremir.String.Utf32 (:pointer :Doremir.Char32))
+
+(defctype Doremir.String :pointer)
+
+(defctype Doremir.String.FilePath :Doremir.String)
 
 (defcfun "Doremir.String.empty" :Doremir.String ())
 
@@ -20,15 +20,9 @@
 
 (defcfun "Doremir.String.destroy" :void (:Doremir.String))
 
-(defcfun "Doremir.String.formatInteger" :Doremir.String ((:pointer :char) :long))
-
 (defcfun "Doremir.String.length" :int (:Doremir.String))
 
 (defcfun "Doremir.String.charAt" :Doremir.Char16 (:int :Doremir.String))
-
-(defctype Doremir.String.Show (:pointer :void))
-
-(defcfun "Doremir.String.show" :Doremir.String (:Doremir.Ptr))
 
 (defcfun "Doremir.String.toUtf8" :Doremir.String.Utf8 (:Doremir.String))
 
@@ -41,3 +35,9 @@
 (defcfun "Doremir.String.fromUtf16" :Doremir.String (:Doremir.String.Utf16))
 
 (defcfun "Doremir.String.fromUtf32" :Doremir.String (:Doremir.String.Utf32))
+
+(defcfun "Doremir.String.formatInteger" :Doremir.String ((:pointer :char) :long))
+
+(defctype Doremir.String.Show (:pointer :void))
+
+(defcfun "Doremir.String.show" :Doremir.String (:Doremir.Ptr))
