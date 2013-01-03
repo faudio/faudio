@@ -10,8 +10,6 @@
 
 doremir_ptr_t time_impl(doremir_id_t interface);
 
-// typedef doremir_time_unit_t unit_t;
-
 struct _doremir_time_t {         
         doremir_impl_t      impl;       /* Interface dispatcher */
         doremir_ratio_t     value; 
@@ -22,7 +20,6 @@ new_time(ratio_t value)
 {
     doremir_time_t t = doremir_new(time);
     t->impl  = &time_impl;
-    // t->value = doremir_ratio_copy(value);
     t->value = doremir_copy(value);
     return t;
 }
@@ -82,7 +79,7 @@ int32_t doremir_time_seconds(doremir_time_t time)
 {
     int32_t a, b;
     doremir_ratio_match(time->value, &a, &b);
-    return (a/b) % /*(60*60*24) % (60*60) %*/ 60;
+    return (a/b) % 60;
 }
 
 
@@ -93,7 +90,7 @@ int32_t doremir_time_minutes(doremir_time_t time)
 {
     int32_t a, b;
     doremir_ratio_match(time->value, &a, &b);
-    return (a/b) % /*(60*60*24) % */(60*60) / 60;
+    return (a/b) % (60*60) / 60;
 }
 
 /**
@@ -170,24 +167,28 @@ doremir_ptr_t time_add(doremir_ptr_t a, doremir_ptr_t b)
     doremir_time_t y = (doremir_time_t) b;
     return new_time(doremir_add(x->value, y->value));
 }                                                                                  
+
 doremir_ptr_t time_subtract(doremir_ptr_t a, doremir_ptr_t b)                     
 {                                                                                  
     doremir_time_t x = (doremir_time_t) a;
     doremir_time_t y = (doremir_time_t) b;
     return new_time(doremir_subtract(x->value, y->value));
 }                                                                                  
+
 doremir_ptr_t time_multiply(doremir_ptr_t a, doremir_ptr_t b)                     
 {                                                                                  
     doremir_time_t x = (doremir_time_t) a;
     doremir_time_t y = (doremir_time_t) b;
     return new_time(doremir_multiply(x->value, y->value));
 }                                                                                  
+
 doremir_ptr_t time_divide(doremir_ptr_t a, doremir_ptr_t b)                       
 {                                                                                  
     doremir_time_t x = (doremir_time_t) a;
     doremir_time_t y = (doremir_time_t) b;
     return new_time(doremir_divide(x->value, y->value));
 }                                                                                  
+
 doremir_ptr_t time_absolute(doremir_ptr_t a)                                      
 {                                                                                  
     doremir_time_t x = (doremir_time_t) a;
@@ -198,13 +199,6 @@ doremir_string_t time_show(doremir_ptr_t a)
 {
     doremir_time_t t = (doremir_time_t) a;
     string_t s = string("<Time");
-
-    // s = sdappend(s, doremir_string_format_integer(" %2id", doremir_time_days(t)));
-    // s = sdappend(s, doremir_string_format_integer(" %2ih", doremir_time_hours(t)));
-    // s = sdappend(s, doremir_string_format_integer(" %2im", doremir_time_minutes(t)));
-    // s = sdappend(s, doremir_string_format_integer(" %2i+", doremir_time_seconds(t)));
-    // s = sdappend(s, doremir_string_show(doremir_time_divisions(t)));
-    // s = sdappend(s, doremir_string_format_integer("s", NULL));
 
     s = sdappend(s, doremir_string_format_integer(" %02i", doremir_time_days(t)));
     s = sdappend(s, doremir_string_format_integer(":%02i", doremir_time_hours(t)));
@@ -225,11 +219,6 @@ void time_destroy(doremir_ptr_t a)
 {
     doremir_time_destroy(a);
 } 
-
-
-
-
-
 doremir_ptr_t time_impl(doremir_id_t interface)
 {
     static doremir_equal_t time_equal_impl = { time_equal };
