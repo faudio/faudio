@@ -2,12 +2,21 @@
 /** 
     @addtogroup DoremirMidi
     
-    Midi representation.
+    Midi messages.
 
+    @par Implements 
+        doremir_equal_t
+        doremir_order_t
+        doremir_string_show_t
+        doremir_copy_t
+        doremir_destroy_t
+        doremir_dynamic_t
+    
  */
 module Doremir.Midi
 {
     import Doremir.Std;
+    import Doremir.Pair;
     import Doremir.Buffer;
     
     type Status = enum {
@@ -19,26 +28,22 @@ module Doremir.Midi
         ChannelPressure,
         PitchWheel,
         Sysex 
-    };
+    };     
 
-    statusType    : Int -> Int;
-    statusChannel : Int -> Int;
-    statusIsSysex : Int -> Bool;
+    type Channel = Int;    
+    type Data    = Int;    
+    type Midi    = opaque;
 
-    type SimpleMessage = struct {
-        bytes : [UInt8 x 3]
-    };
+    createSimple : (Status, Int, Int) -> Midi;
+    createSysex  : Buffer -> Midi;
+    copy         : Midi -> Midi;
+    destroy      : Midi -> Void;
 
-    // TODO simple midi functions that works on list<Integral>
-    // TODO midi file functions that works on list<pair<Integral,option<midi_message,midi_sysex_message>>
+    status  : Midi -> Status;
+    channel : Midi -> Channel;
 
-    type SysexMessage = struct { data : Buffer };    
-
-    type MessageTag = enum { SimpleMessageTag, SysexMessageTag };
-    type Message = struct { 
-        tag : MessageTag, 
-        value : union { 
-            simple : SimpleMessage, 
-            sysex : SysexMessage 
-    }};    
+    isSimple      : Midi -> Bool;
+    simpleData    : Midi -> Pair;
+    isSysex       : Midi -> Bool;
+    sysexData     : Midi -> Buffer;    
 }

@@ -32,11 +32,13 @@ doremir_ptr_t printer(doremir_ptr_t x)
 }
 void test_thread()
 {
-    // doremir_closure_t r = { printer, (doremir_ptr_t) 10 };
-    doremir_thread_t t = doremir_thread_create(new_closure(printer, (doremir_ptr_t) 10));
+    doremir_thread_t t, t2;
+    t = doremir_thread_create(new_closure(printer, (doremir_ptr_t) 10));
 
-    doremir_closure_t r2 = { printer, (doremir_ptr_t) 11 };
-    doremir_thread_t t2 = doremir_thread_create(&r2);
+    for(doremir_closure_t r2 = { printer, (doremir_ptr_t) 11 }, *r2r = &r2; false;)
+    {
+        t2 = doremir_thread_create(r2r);
+    }
 
     doremir_thread_sleep(1000);
     doremir_thread_join(t);
@@ -390,6 +392,24 @@ void test_time()
 
     doremir_print("doremir_time_to_iso(t) => %s\n", doremir_time_to_iso(t));
     doremir_print("doremir_time_to_iso(u) => %s\n", doremir_time_to_iso(u));
+}   
+
+void test_midi()
+{
+    doremir_test_section();
+    
+    {
+        doremir_midi_t m = doremir_midi_create_simple(0xa, 60, 127);
+        doremir_print("m              => %s\n", m);
+    }
+
+    {
+        doremir_buffer_t b = doremir_buffer_create(32);
+        for(int i = 0; i < 32; ++i) doremir_buffer_poke(b, i, i);
+        
+        doremir_midi_t m = doremir_midi_create_sysex(b);
+        doremir_print("m              => %s\n", m);
+    }
 }
 
 
@@ -417,7 +437,9 @@ int main (int argc, char const *argv[])
       test_rational();
       test_buffer();
       test_time();
-
+      test_midi();
+      
+      
       doremir_audio_engine_terminate();
   }
   return 0;

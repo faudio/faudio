@@ -8,7 +8,7 @@
     @{
     @defgroup DoremirProcessor Processor
     @{
-    @defgroup DoremirProcessorVST VST
+    @defgroup DoremirProcessorVst Vst
     @{
     */
 

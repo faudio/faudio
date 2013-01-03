@@ -3,6 +3,7 @@
 #define _DOREMIR_MIDI
 
 #include <doremir/std.h>
+#include <doremir/pair.h>
 #include <doremir/buffer.h>
 
 /** @defgroup Doremir Doremir
@@ -21,25 +22,21 @@ typedef enum {
             pitch_wheel,
             sysex
         } doremir_midi_status_t;
-int doremir_midi_status_type(int);
-int doremir_midi_status_channel(int);
-bool doremir_midi_status_is_sysex(int);
-typedef struct {
-            uint8_t bytes[3];
-        } doremir_midi_simple_message_t;
-typedef struct {
-            doremir_buffer_t data;
-        } doremir_midi_sysex_message_t;
-typedef enum {
-            simple_message_tag, sysex_message_tag
-        } doremir_midi_message_tag_t;
-typedef struct {
-            doremir_midi_message_tag_t tag;
-            union {
-                doremir_midi_simple_message_t simple;
-                doremir_midi_sysex_message_t sysex;
-            } value;
-        } doremir_midi_message_t;
+typedef int doremir_midi_channel_t;
+typedef int doremir_midi_data_t;
+typedef struct _doremir_midi_t * doremir_midi_t;
+doremir_midi_t doremir_midi_create_simple(doremir_midi_status_t,
+                                          int,
+                                          int);
+doremir_midi_t doremir_midi_create_sysex(doremir_buffer_t);
+doremir_midi_t doremir_midi_copy(doremir_midi_t);
+void doremir_midi_destroy(doremir_midi_t);
+doremir_midi_status_t doremir_midi_status(doremir_midi_t);
+doremir_midi_channel_t doremir_midi_channel(doremir_midi_t);
+bool doremir_midi_is_simple(doremir_midi_t);
+doremir_pair_t doremir_midi_simple_data(doremir_midi_t);
+bool doremir_midi_is_sysex(doremir_midi_t);
+doremir_buffer_t doremir_midi_sysex_data(doremir_midi_t);
 
 /** @}
     @}
