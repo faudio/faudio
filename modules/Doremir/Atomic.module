@@ -18,9 +18,9 @@ module Doremir.Atomic
     destroy : Atomic -> Void;
 
     exchange : (Atomic, Ptr, Ptr) -> Bool;
-    add     : (Atomic, Ptr) -> Void;
     get     : Atomic -> Ptr;
-    modify  : (Atomic, Updater) -> Void;
     set     : (Atomic, Ptr) -> Void;
+    add     : (Atomic, Ptr) -> Void;
+    modify  : (Atomic, Updater) -> Void;
 }
 

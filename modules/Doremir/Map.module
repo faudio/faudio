@@ -25,22 +25,36 @@ module Doremir.Map
     type Map = opaque;
     type Key = Ptr;
 
+    // Constructors
     empty            : () -> Map;
-    add              : (Ptr, Map) -> Map;
-    remove           : (Ptr, Map) -> Void;
+    add              : (Pair, Map) -> Map;
+    remove           : (Pair, Map) -> Void;
     copy             : Map -> Map;
     destroy          : Map -> Void;
 
-    // fromPair         : Pair -> Map;
-    // fromList         : Pair -> Map;
+    fromPair         : Pair -> Map;
+    fromList         : Pair -> Map;
 
+    // Size
+    size             : Map -> Int;
+    isEmpty          : Map -> Bool;
+    isSingle         : Map -> Bool;
+
+    // Lookup function
+    get              : (Key, Map) -> Ptr;
+
+    // Predicates
     hasKey           : (Key, Map) -> Bool;
     hasElem          : (Ptr, Map) -> Bool;
     hasEntry         : (Pair, Map) -> Bool;
-    size             : Map -> Int;
-
-    isEmpty          : Map -> Bool;
-    isSingle         : Map -> Bool;
     isSubmapOf       : (Map, Map) -> Bool;
     isProperSubmapOf : (Map, Map) -> Bool;
+
+    // Set operations
+    sum              : (Map, Map) -> Map;
+    product          : (Map, Map) -> Map;
+    difference       : (Map, Map) -> Map;
+    cartesian        : (Map, Map) -> Map;
+    power            : Map -> Map;
+
 }

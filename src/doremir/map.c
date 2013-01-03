@@ -12,12 +12,12 @@ doremir_map_t doremir_map_empty()
     assert(false && "Not implemented");
 }
 
-doremir_map_t doremir_map_add(doremir_ptr_t x, doremir_map_t map)
+doremir_map_t doremir_map_add(doremir_pair_t x, doremir_map_t map)
 {
     assert(false && "Not implemented");
 }
 
-void doremir_map_remove(doremir_ptr_t x, doremir_map_t map)
+void doremir_map_remove(doremir_pair_t x, doremir_map_t map)
 {
     assert(false && "Not implemented");
 }

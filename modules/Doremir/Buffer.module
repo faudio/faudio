@@ -6,7 +6,7 @@
     semantics. The length of a buffer can never change, but its memory can be reused using the destructive
     resize operation.
     
-    Buffers are not collections as their contents are mutable.
+    Note that buffers are not collections as their contents are mutable.
 
     @par Implements 
         doremir_copy_t

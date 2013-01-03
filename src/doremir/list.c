@@ -12,14 +12,17 @@
 /*  This type implement classic immutable, singly-linked list.
 
     * For memory management we use structural sharing with one reference count per node.
+        
         * Pros: Copying a list is O(1)
+        
         * Cons: No destructive optimizations, all destrutive methods are wrappers
+        
+        * We could add a "transient list" with no sharing: such a type would have 
+          efficient destrucive operations but no 'copy'. (See also the string type, 
+          which has fast 'dappend' and slow 'copy'.)
 
-    * We could add a "transient list" efficient destructive modification but no sharing.
-        * Such a type should probably forbid copying, as there is no way to implement this efficiently.
-
-    * The list type is a wrapper structure containing the dispatcher
-        * This saves memory as not all nodes will be used as list roots
+    * The list type is a wrapper structure containing the dispatcher. This saves memory as 
+      not all nodes will be used as list roots.
  */
 
 struct node {

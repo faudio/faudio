@@ -23,24 +23,29 @@ module Doremir.Set
 
     type Set = opaque;
     
+    // Constructors
     empty            : () -> Set;
+    single           : Ptr -> Set;
     add              : (Ptr, Set) -> Set;
     remove           : (Ptr, Set) -> Set;
     copy             : Set -> Set;
-    destroy          : Set -> Void;
+    destroy          : Set -> Void;    
 
-    has              : (Ptr, Set) -> Bool;
+    // Size
     size             : Set -> Int;
-
     isEmpty          : Set -> Bool;
     isSingle         : Set -> Bool;
+
+    // Predicates
+    has              : (Ptr, Set) -> Bool;
     isSubsetOf       : (Set, Set) -> Bool;
     isProperSubsetOf : (Set, Set) -> Bool;
 
+    // Set operations
     sum              : (Set, Set) -> Set;
     product          : (Set, Set) -> Set;
     difference       : (Set, Set) -> Set;
     cartesian        : (Set, Set) -> Set;
     power            : Set -> Set;
-
 }
+

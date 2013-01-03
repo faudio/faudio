@@ -22,50 +22,58 @@ module Doremir.List
 
     type List   = opaque;
             
+    // Constructors
     empty       : () -> List;
     single      : Ptr -> List;
     cons        : (Ptr, List) -> List;
-    // snoc        : (Ptr, List) -> List;
-    // dcons       : (Ptr, List) -> List;
-    // dsnoc       : (Ptr, List) -> List;
     append      : (List, List) -> List;
     dappend     : (List, List) -> List;
     copy        : List -> List;
     destroy     : List -> Void;
 
+    // Predicates
     isEmpty     : List -> Bool;
     isSingle    : List -> Bool;
     length      : List -> Int;
+
+    // Sequential access
     head        : List -> Ptr;
     tail        : List -> List;
-    taild       : List -> List;
+    dtail       : List -> List;
     init        : List -> List;
-    initd       : List -> List;
+    dinit       : List -> List;
     last        : List -> Ptr;
     
+    // Random access
+    take         : (Int, List) -> List;
+    drop         : (Int, List) -> List;
+    range        : (Int, Int, List) -> List;
+    index        : (Int, List) -> Ptr;
+    insert       : (Int, Ptr, List) -> List;
+    remove       : (Int, List) -> List;
+    removeRange  : (Int, Int, List) -> List;
+    dremove      : (Int, List) -> List;
+    dremoveRange : (Int, Int, List) -> List;
+    
+    // Searching
     has         : (Ptr, List) -> Bool;
     find        : (Pred, List) -> Ptr;
     findIndex   : (Pred, List) -> Int;
-
-    take        : (Int, List) -> List;
-    drop        : (Int, List) -> List;
-    range       : (Int, Int, List) -> List;
-    removeRange : (Int, Int, List) -> List;
-    remove      : (Int, List) -> List;
-    removed     : (Int, List) -> List;
-    insert      : (Int, Ptr, List) -> List;
     
-
+    // Maps and folds
     map         : (Unary, List) -> List;
+    dmap        : (Unary, List) -> List;
+    concatMap   : (Unary, List) -> List;
+    dconcatMap  : (Unary, List) -> List;
     filter      : (Pred, List) -> List;
+    dfilter     : (Pred, List) -> List;
     foldLeft    : (Binary, Ptr, List) -> Ptr;
-    
-    // sum         : List -> Ptr;
-    // product     : List -> Ptr;
-    // maximum     : List -> Ptr;
-    // minimum     : List -> Ptr;                                
+    dfoldLeft   : (Binary, Ptr, List) -> Ptr;
     concat      : List -> List;
-
-    reverse     : List -> List;
+    
+    // Misc operations
     sort        : List -> List;
+    dsort       : List -> List;
+    reverse     : List -> List;
+    dreverse    : List -> List;
 }
