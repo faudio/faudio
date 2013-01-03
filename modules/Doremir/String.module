@@ -21,12 +21,6 @@ module Doremir.String
     import Doremir;
     
     /**
-        @typedef doremir_string_t
-        An immutable Unicode string.
-
-        @typedef doremir_string_file_path_t
-        A file path.
-
         @typedef doremir_string_utf8_t
         A UTF-8 encoded raw string.
         This type use the endianness of the system, and is terminated by a null character.
@@ -39,23 +33,42 @@ module Doremir.String
         A UTF-32 encoded raw string.
         This type use the endianness of the system, and is terminated by a null character.
      */
-    type String = opaque;
-    type FilePath = String;
     type Utf8  = Char8*;
     type Utf16 = Char16*;
     type Utf32 = Char32*;
+
+    /**
+        @typedef doremir_string_t
+        An immutable Unicode string.
+
+        @typedef doremir_string_file_path_t
+        A file path.
+     */
+    type String = opaque;
+    type FilePath = String;
     
+    // Constructors
     empty   : () -> String;
     single  : Char16 -> String;
     copy    : String -> String;
     append  : (String, String) -> String;
     dappend : (String, String) -> String;
     destroy : String -> Void;
-
-    formatInteger : (Char*, Long) -> String;
-
+    
+    // Predicate and lookup
     length : String -> Int;
     charAt : (Int,String) -> Char16;
+
+    // Conversion
+    toUtf8  : String -> Utf8;
+    toUtf16 : String -> Utf16;
+    toUtf32 : String -> Utf32;
+    fromUtf8  : Utf8 -> String;
+    fromUtf16 : Utf16 -> String;
+    fromUtf32 : Utf32 -> String;
+
+    // Formatting
+    formatInteger : (Char*, Long) -> String;
 
     /** @interface doremir_string_show_t 
         String conversion.
@@ -63,12 +76,7 @@ module Doremir.String
     type Show  = struct {
         show : (Ptr -> String)*
     };
+
     show   : Ptr -> String;
 
-    toUtf8  : String -> Utf8;
-    toUtf16 : String -> Utf16;
-    toUtf32 : String -> Utf32;
-    fromUtf8  : Utf8 -> String;
-    fromUtf16 : Utf16 -> String;
-    fromUtf32 : Utf32 -> String;
 }
