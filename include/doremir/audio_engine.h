@@ -8,7 +8,6 @@
 #include <doremir/processor.h>
 #include <doremir/dispatcher.h>
 #include <doremir/scheduler.h>
-#include <doremir/midi.h>
 #include <doremir/time.h>
 
 /** @defgroup Doremir Doremir
