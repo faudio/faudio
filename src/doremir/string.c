@@ -369,9 +369,9 @@ bool string_greater_than(doremir_ptr_t as, doremir_ptr_t bs)
 doremir_string_t string_show(doremir_ptr_t a)
 {
     string_t s = string("");
-    sap(s, string("\""));
-    sap(s, scopy(a));
-    sap(s, string("\""));
+    s = sdappend(s, string("\""));
+    s = sdappend(s, scopy(a));
+    s = sdappend(s, string("\""));
     return s;
 }
 
