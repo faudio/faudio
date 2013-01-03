@@ -26,13 +26,6 @@ module Doremir.Time
     import Doremir.Ratio;
     import Doremir.String;
     
-    // type Unit = enum {
-    //     Second,
-    //     Minute,
-    //     Hour,
-    //     Day
-    // };
-    // 
     type Time = opaque;
 
     create      : (Int32, Int32, Int32, Ratio) -> Time;

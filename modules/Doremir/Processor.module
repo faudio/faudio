@@ -20,8 +20,8 @@ module Doremir.Processor
 
     /** @interface doremir_processor_t */
     type Processor = struct {
-        before : ((Ptr, Info*) -> Void)*,
+        before  : ((Ptr, Info*) -> Void)*,
         process : ((Ptr, Info*, Samples) -> Samples)*,
-        after : ((Ptr, Info*) -> Void)*
+        after   : ((Ptr, Info*) -> Void)*
     };
 }

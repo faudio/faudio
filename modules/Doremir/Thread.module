@@ -20,21 +20,21 @@ module Doremir.Thread
     type Condition = opaque;
     type Millis = Int;
     
-    create : Closure* -> Thread;
-    sleep : Millis -> Void;
-    join : Thread -> Void;
-    detach : Thread -> Void;
+    create  : Closure* -> Thread;
+    sleep   : Millis -> Void;
+    join    : Thread -> Void;
+    detach  : Thread -> Void;
     
-    createMutex : () -> Mutex;
-    destroyMutex : Mutex -> Void;
-    lock : Mutex -> Bool;
-    tryLock : Mutex -> Bool;
-    unlock : Mutex -> Bool;
+    createMutex     : () -> Mutex;
+    destroyMutex    : Mutex -> Void;
+    lock            : Mutex -> Bool;
+    tryLock         : Mutex -> Bool;
+    unlock          : Mutex -> Bool;
 
-    createCondition : Mutex -> Condition;
-    destroyCondition : Condition -> Void;
-    waitFor : Condition -> Void;
-    notify : Condition -> Void;
-    notifyAll : Condition -> Void;
+    createCondition     : Mutex -> Condition;
+    destroyCondition    : Condition -> Void;
+    waitFor             : Condition -> Void;
+    notify              : Condition -> Void;
+    notifyAll           : Condition -> Void;
 }
 

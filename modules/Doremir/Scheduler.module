@@ -18,10 +18,10 @@ module Doremir.Scheduler
     */
     type Scheduler = struct {
         schedule : ((Ptr, Time, Action) -> Void)*,
-        execute : (Ptr -> Void)*
+        execute  : (Ptr -> Void)*
     };
 
-    create : Improving -> Scheduler;
+    create  : Improving -> Scheduler;
     destroy : Scheduler -> Void;
-    swap : (Scheduler, Scheduler) -> Void;
+    swap    : (Scheduler, Scheduler) -> Void;
 }

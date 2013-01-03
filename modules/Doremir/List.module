@@ -46,7 +46,9 @@ module Doremir.List
     
     // Random access
     take         : (Int, List) -> List;
+    dtake        : (Int, List) -> List;
     drop         : (Int, List) -> List;
+    ddrop        : (Int, List) -> List;
     range        : (Int, Int, List) -> List;
     index        : (Int, List) -> Ptr;
     insert       : (Int, Ptr, List) -> List;

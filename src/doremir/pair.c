@@ -16,10 +16,12 @@ struct _doremir_pair_t {
 
 doremir_ptr_t pair_impl(doremir_id_t interface);
 
-pair_t new_pair()
+pair_t new_pair(doremir_ptr_t fst, doremir_ptr_t snd)
 {
     pair_t p = doremir_new(pair);
     p->impl = &pair_impl;
+    p->fst  = fst;
+    p->snd  = snd;
     return p;
 }
 void delete_pair(pair_t p)
@@ -29,24 +31,54 @@ void delete_pair(pair_t p)
 
 doremir_pair_t doremir_pair_create(doremir_ptr_t fst, doremir_ptr_t snd)
 {
-    pair_t p = new_pair();
-    p->fst  = fst;
-    p->snd  = snd;
+    pair_t p = new_pair(fst, snd);
     return p;
 }
 
 doremir_pair_t doremir_pair_copy(doremir_pair_t p)
 {
-    pair_t q = new_pair();
-    q->fst = p->fst;
-    q->snd = p->snd;
-    return q;
+    return new_pair(p->fst, p->snd);
 }
 
 void doremir_pair_destroy(doremir_pair_t p)
 {
     delete_pair(p);
 }
+
+// --------------------------------------------------------------------------------
+
+doremir_ptr_t doremir_pair_fst(doremir_pair_t p)
+{
+    return p->fst;
+}
+
+doremir_ptr_t doremir_pair_snd(doremir_pair_t p)
+{
+    return p->snd;
+}
+
+doremir_pair_t doremir_pair_dup(doremir_ptr_t x)
+{                                              
+    return new_pair(x, x);
+}
+
+doremir_pair_t doremir_pair_swap(doremir_pair_t p)
+{
+    return new_pair(p->snd, p->fst);
+}
+
+// (a, (b, c)) -> ((a, b), c)
+doremir_pair_t doremir_pair_assoc(doremir_pair_t p)
+{                                     
+    return new_pair(new_pair(p->fst, ((pair_t) p->snd)->fst), ((pair_t) p->snd)->snd);
+}
+
+// ((a, b), c) -> (a, (b, c))
+doremir_pair_t doremir_pair_unassoc(doremir_pair_t p)
+{                                     
+    return new_pair(((pair_t) p->fst)->fst, new_pair(((pair_t) p->fst)->snd, p->snd));
+}
+
 
 // --------------------------------------------------------------------------------
 

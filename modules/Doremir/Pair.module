@@ -22,7 +22,8 @@ module Doremir.Pair
 
     type Pair = opaque;
 
-    create : (Ptr, Ptr) -> Pair;
+    create  : (Ptr, Ptr) -> Pair;
+    copy   : Pair -> Pair;
     destroy : Pair -> Void;
 
     fst : Pair -> Ptr;
@@ -30,13 +31,6 @@ module Doremir.Pair
 
     dup : Ptr -> Pair;
     swap : Pair -> Pair;
-    assoc : Pair -> Pair;
-    
-    map : (Unary, Pair) -> Pair;
-
-    equal       : (Pair, Pair) -> Bool;
-    lessThan    : (Pair, Pair) -> Bool;
-    greaterThan : (Pair, Pair) -> Bool;
-
-    show        : Pair -> String;
+    assoc : Pair -> Pair;    
+    unassoc : Pair -> Pair;    
 }

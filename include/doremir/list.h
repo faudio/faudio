@@ -30,7 +30,9 @@ doremir_list_t doremir_list_init(doremir_list_t);
 doremir_list_t doremir_list_dinit(doremir_list_t);
 doremir_ptr_t doremir_list_last(doremir_list_t);
 doremir_list_t doremir_list_take(int, doremir_list_t);
+doremir_list_t doremir_list_dtake(int, doremir_list_t);
 doremir_list_t doremir_list_drop(int, doremir_list_t);
+doremir_list_t doremir_list_ddrop(int, doremir_list_t);
 doremir_list_t doremir_list_range(int, int, doremir_list_t);
 doremir_ptr_t doremir_list_index(int, doremir_list_t);
 doremir_list_t doremir_list_insert(int,
