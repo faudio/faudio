@@ -10,7 +10,7 @@
 
 doremir_ptr_t time_impl(doremir_id_t interface);
 
-typedef doremir_time_unit_t unit_t;
+// typedef doremir_time_unit_t unit_t;
 
 struct _doremir_time_t {         
         doremir_impl_t      impl;       /* Interface dispatcher */
@@ -35,14 +35,15 @@ void delete_time(doremir_time_t time)
 // --------------------------------------------------------------------------------
 
 /** Create a new time interval.
-    @param d    Number of days.
-    @param h    Number of hours.
-    @param m    Number of minutes.
-    @param s    Number of seconds.
+    @param days     Number of days.
+    @param hours    Number of hours.
+    @param minutes  Number of minutes.
+    @param seconds  Number of seconds.
+    @return         A new time value.
  */
-doremir_time_t doremir_time_create(int32_t d, int32_t h, int32_t m, doremir_ratio_t n)
+doremir_time_t doremir_time_create(int32_t days, int32_t hours, int32_t minutes, doremir_ratio_t seconds)
 {
-    ratio_t value = doremir_add(ratio(d*60*60*24 + h*60*60 + m*60, 1), n); // TODO leaks ratio  
+    ratio_t value = doremir_add(ratio(days*60*60*24 + hours*60*60 + minutes*60, 1), seconds); // TODO leaks ratio  
     return new_time(value);
 }
 
@@ -81,8 +82,7 @@ int32_t doremir_time_seconds(doremir_time_t time)
 {
     int32_t a, b;
     doremir_ratio_match(time->value, &a, &b);
-    return (a/b) % (60*60*24) % (60*60) % 60;
-    // return (a/b);
+    return (a/b) % /*(60*60*24) % (60*60) %*/ 60;
 }
 
 
@@ -93,8 +93,7 @@ int32_t doremir_time_minutes(doremir_time_t time)
 {
     int32_t a, b;
     doremir_ratio_match(time->value, &a, &b);
-    return (a/b) % (60*60*24) % (60*60) / 60;
-    // return 0;
+    return (a/b) % /*(60*60*24) % */(60*60) / 60;
 }
 
 /**
@@ -105,7 +104,6 @@ int32_t doremir_time_hours(doremir_time_t time)
     int32_t a, b;
     doremir_ratio_match(time->value, &a, &b);
     return (a/b) % (60*60*24) / (60*60);
-    // return 0;
 }
 
 
@@ -117,7 +115,6 @@ int32_t doremir_time_days(doremir_time_t time)
     int32_t a, b;
     doremir_ratio_match(time->value, &a, &b);
     return (a/b) / (60*60*24);
-    // return 0;
 }
 
 
@@ -130,7 +127,17 @@ int32_t doremir_time_days(doremir_time_t time)
  */
 doremir_string_t doremir_time_to_iso(doremir_time_t time)
 {
-    
+    doremir_time_t t = (doremir_time_t) time;
+    string_t s = string("P0000-00");
+
+    s = sdappend(s, doremir_string_format_integer("-%02i", doremir_time_days(t)));
+    s = sdappend(s, doremir_string_format_integer("T%02i", doremir_time_hours(t)));
+    s = sdappend(s, doremir_string_format_integer(":%02i", doremir_time_minutes(t)));
+    s = sdappend(s, doremir_string_format_integer(":%02i", doremir_time_seconds(t)));
+    // TODO approximate ratio
+    s = sdappend(s, doremir_string_format_integer(".0000", NULL));
+
+    return s;  
 }
 
 
@@ -190,8 +197,6 @@ doremir_ptr_t time_absolute(doremir_ptr_t a)
 doremir_string_t time_show(doremir_ptr_t a)
 {
     doremir_time_t t = (doremir_time_t) a;
-
-    doremir_time_t b = (doremir_time_t) a;
     string_t s = string("<Time");
 
     // s = sdappend(s, doremir_string_format_integer(" %2id", doremir_time_days(t)));

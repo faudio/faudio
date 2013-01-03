@@ -69,16 +69,6 @@ inline static bool has_node(list_t list) { return list->node; }
 inline static bool has_head(list_t list) { return list->node && list->node->value; }
 inline static bool has_tail(list_t list) { return list->node && list->node->next; }
 
-// inline static void
-// swap_tail(list_t xs, list_t ys)
-// {
-//     node_t n;
-//     n              = xs->node->next;
-//     xs->node->next = ys->node->next;
-//     ys->node->next = n;
-// }
-
-
 inline static void
 delete_list(list_t list)
 {

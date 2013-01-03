@@ -387,6 +387,9 @@ void test_time()
     doremir_print("t              => %s\n", t);
     doremir_print("u              => %s\n", u);
     doremir_print("t + u          => %s\n", doremir_add(t, u));
+
+    doremir_print("doremir_time_to_iso(t) => %s\n", doremir_time_to_iso(t));
+    doremir_print("doremir_time_to_iso(u) => %s\n", doremir_time_to_iso(u));
 }
 
 

@@ -144,24 +144,22 @@ uint16_t doremir_string_char_at(int n, doremir_string_t str)
 // Formatting functions
 // --------------------------------------------------------------------------------
 
-#define FORMAT_FUNCTION(T,U) \
-    doremir_string_t                                \
-    doremir_string_format_##T(char* f, U a)         \
-    {                                               \
-        char buffer[100];                           \
-        int  numChars;                              \
-        numChars = snprintf(buffer, 100, f, a);     \
-        if (numChars > 100)                         \
-            fatal("To many characters", -1);        \
-                                                    \
-        buffer[numChars] = 0;                       \
-        return doremir_string_from_utf8(buffer);    \
-    }
-
-FORMAT_FUNCTION(integer, long);
-
-FORMAT_FUNCTION(double, double);
-
+/** Format an integer.
+    @param format A printf-style format string.
+    @param value Integer value.
+    @return A new formatted string.
+ */
+doremir_string_t doremir_string_format_integer(char* format, long value)         
+{                                               
+    char buffer[100];                           
+    int  numChars;                              
+    numChars = snprintf(buffer, 100, format, value);     
+    if (numChars > 100)                         
+        fatal("To many characters", -1);        
+                                                
+    buffer[numChars] = 0;                       
+    return doremir_string_from_utf8(buffer);    
+}
 
 // --------------------------------------------------------------------------------
 // Conversion functions

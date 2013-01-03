@@ -12,9 +12,6 @@
     @{
     */
 
-typedef enum {
-            second, minute, hour, day
-        } doremir_time_unit_t;
 typedef struct _doremir_time_t * doremir_time_t;
 doremir_time_t doremir_time_create(int32_t,
                                    int32_t,

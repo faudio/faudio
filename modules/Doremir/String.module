@@ -2,11 +2,10 @@
 /** 
     @addtogroup DoremirString
     
-    String type and conversion functions.
+    Immutable string type.
     
-    The Audio Engine provide an immutable Unicode string type. Note that \ref doremir_string_t is not
-    a \ref Collections "collection", but can be converted to one using \ref doremir_string_list_convert and
-    \ref doremir_string_list_unconvert respectively.
+    Note that \ref doremir_string_t is not a \ref Collections "collection" as it is not polymorphic. It can be
+    converted to a list of char and vice versa using the \ref DoremirStringList "conversion functions".
 
     @par Implements 
         doremir_equal_t
@@ -53,9 +52,7 @@ module Doremir.String
     dappend : (String, String) -> String;
     destroy : String -> Void;
 
-    // sprintf wrappers
     formatInteger : (Char*, Long) -> String;
-    formatDouble  : (Char*, Double) -> String;
 
     length : String -> Int;
     charAt : (Int,String) -> Char16;
