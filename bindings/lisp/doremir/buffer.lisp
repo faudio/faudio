@@ -10,6 +10,8 @@
 
 (defcfun "Doremir.Buffer.size" :size (:Doremir.Buffer))
 
-(defcfun "Doremir.Buffer.peek" :uint8 (:Doremir.Buffer :int))
+(defcfun "Doremir.Buffer.peek" :uint8 (:Doremir.Buffer :size))
 
-(defcfun "Doremir.Buffer.poke" :void (:Doremir.Buffer :int :uint8))
+(defcfun "Doremir.Buffer.poke" :void (:Doremir.Buffer :size :uint8))
+
+(defcfun "Doremir.Buffer.unsafeAddress" (:pointer :void) (:Doremir.Buffer))

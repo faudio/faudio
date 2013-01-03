@@ -10,6 +10,8 @@
 
 (defcfun "Doremir.Ratio.denom" :Doremir.Ratio.Denom (:Doremir.Ratio))
 
+(defcfun "Doremir.Ratio.match" :void (:Doremir.Ratio (:pointer :Doremir.Ratio.Nom) (:pointer :Doremir.Ratio.Denom)))
+
 (defcfun "Doremir.Ratio.destroy" :void (:Doremir.Ratio))
 
 (defcfun "Doremir.Ratio.add" :Doremir.Ratio (:Doremir.Ratio :Doremir.Ratio))

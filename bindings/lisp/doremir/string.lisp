@@ -20,6 +20,8 @@
 
 (defcfun "Doremir.String.destroy" :void (:Doremir.String))
 
+(defcfun "Doremir.String.formatInteger" :Doremir.String ((:pointer :char) :long))
+
 (defcfun "Doremir.String.length" :int (:Doremir.String))
 
 (defcfun "Doremir.String.charAt" :Doremir.Char16 (:int :Doremir.String))
