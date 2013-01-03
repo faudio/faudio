@@ -557,15 +557,6 @@ list_t doremir_list_concat(doremir_list_t xss)
 }
 
 
-
-
-
-
-
-
-
-
-
 // --------------------------------------------------------------------------------
 
 bool list_equal(doremir_ptr_t a, doremir_ptr_t b)

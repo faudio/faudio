@@ -58,7 +58,7 @@ doremir_midi_t doremir_midi_create_simple(status_t status,
 }
 
 /**
-    Creates a sysex message from the given data buffer (not including F7 and FF).
+    Creates a sysex message from the given data buffer (not including F0 and F7).
     @param data     Raw data buffer (transfered).
     @return         A new sysex message.
  */
