@@ -8,12 +8,15 @@
 // This should be moved to a separate header...
 doremir_list_t doremir_list(int count, ...);
 
-#define ptr_t  doremir_ptr_t
-#define pair_t doremir_pair_t
-#define list_t doremir_list_t
-#define string_t doremir_string_t
-#define ratio_t doremir_ratio_t
-#define buffer_t doremir_buffer_t
+#define ptr_t               doremir_ptr_t
+#define pair_t              doremir_pair_t
+#define list_t              doremir_list_t
+#define set_t               doremir_set_t
+#define map_t               doremir_map_t
+#define priority_queue_t    doremir_priority_queue_t
+#define string_t            doremir_string_t
+#define ratio_t             doremir_ratio_t
+#define buffer_t            doremir_buffer_t
 
 #define tb      doremir_to_bool
 #define ti8     doremir_to_int8
