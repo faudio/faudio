@@ -10,6 +10,12 @@
 #include <doremir/pair.h>
 #include <doremir/util.h>
 
+/*  Naive set implementation based on lists.
+    
+    Can be optimized *a lot* by using a persistent vector/int-map as the underlying collection.
+ */
+
+
 struct _doremir_set_t {
         doremir_impl_t  impl;       /* Interface dispatcher */
         list_t          elems;
@@ -33,20 +39,20 @@ delete_set(set_t set)
     doremir_delete(set);
 }
 
-
-
+// --------------------------------------------------------------------------------
 
 doremir_set_t doremir_set_empty()
 {
-    return new_set(empty());
+    return new_set(doremir_list_empty());
 }
 
 doremir_set_t doremir_set_add(doremir_ptr_t x, doremir_set_t set)
 {
-    if(doremir_set_has(x, set))
+    int i = doremir_list_find_index(x, set->elems);
+    if (i >= 0)
         return doremir_set_copy(set);
     else
-        return new_set(doremir_list_cons(x, set->elems));
+        return new_set(doremir_list_insert(-i, x, set->elems));
 }
 
 doremir_set_t doremir_set_remove(doremir_ptr_t x, doremir_set_t set)
@@ -69,8 +75,7 @@ void doremir_set_destroy(doremir_set_t set)
     delete_set(set);
 }
 
-
-
+// --------------------------------------------------------------------------------
 
 bool doremir_set_has(doremir_ptr_t x, doremir_set_t set)
 {

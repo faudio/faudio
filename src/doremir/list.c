@@ -9,16 +9,16 @@
 #include <doremir/util.h>
 #include <doremir/string.h>
 
-/* Implementation notes:
+/*  This type implement classic immutable, singly-linked list.
 
-    * We use structural sharing with ref-counted nodes.
+    * For memory management we use structural sharing with one reference count per node.
         * Pros: Copying a list is O(1)
         * Cons: No destructive optimizations, all destrutive methods are wrappers
 
-    * We could add a type ("transient list" or similar) with efficient destructive 
-      modification but no copying.
+    * We could add a "transient list" efficient destructive modification but no sharing.
+        * Such a type should probably forbid copying, as there is no way to implement this efficiently.
 
-    * Use a wrapper structure for dispatcher
+    * The list type is a wrapper structure containing the dispatcher
         * This saves memory as not all nodes will be used as list roots
  */
 
@@ -378,6 +378,12 @@ bool doremir_list_has_elem(doremir_ptr_t x, doremir_list_t xs)
 
 
 // --------------------------------------------------------------------------------
+
+doremir_list_t doremir_list_insert(int index, doremir_ptr_t value, doremir_list_t list)
+{
+    assert(false && "Not implemented");
+}
+
 
 static inline list_t
 revap(list_t xs, list_t ys)

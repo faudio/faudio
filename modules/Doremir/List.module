@@ -26,10 +26,10 @@ module Doremir.List
     single      : Ptr -> List;
     cons        : (Ptr, List) -> List;
     // snoc        : (Ptr, List) -> List;
-    append      : (List, List) -> List;
-    dappend     : (List, List) -> List;
     // dcons       : (Ptr, List) -> List;
     // dsnoc       : (Ptr, List) -> List;
+    append      : (List, List) -> List;
+    dappend     : (List, List) -> List;
     copy        : List -> List;
     destroy     : List -> Void;
 
@@ -38,21 +38,26 @@ module Doremir.List
     length      : List -> Int;
     head        : List -> Ptr;
     tail        : List -> List;
+    taild       : List -> List;
     init        : List -> List;
+    initd       : List -> List;
     last        : List -> Ptr;
-    take        : (Int, List) -> List;
-    drop        : (Int, List) -> List;
-    range       : (Int, Int, List) -> List;
-    removeRange : (Int, Int, List) -> List;
     
     has         : (Ptr, List) -> Bool;
     find        : (Pred, List) -> Ptr;
     findIndex   : (Pred, List) -> Int;
-    filter      : (Pred, List) -> List;
-    reverse     : List -> List;
-    sort        : List -> List;
+
+    take        : (Int, List) -> List;
+    drop        : (Int, List) -> List;
+    range       : (Int, Int, List) -> List;
+    removeRange : (Int, Int, List) -> List;
+    remove      : (Int, List) -> List;
+    removed     : (Int, List) -> List;
+    insert      : (Int, Ptr, List) -> List;
+    
 
     map         : (Unary, List) -> List;
+    filter      : (Pred, List) -> List;
     foldLeft    : (Binary, Ptr, List) -> Ptr;
     
     // sum         : List -> Ptr;
@@ -61,8 +66,6 @@ module Doremir.List
     // minimum     : List -> Ptr;                                
     concat      : List -> List;
 
-    equal       : (List, List) -> Bool;
-    lessThan    : (List, List) -> Bool;
-    greaterThan : (List, List) -> Bool;
-    show        : List -> String;
+    reverse     : List -> List;
+    sort        : List -> List;
 }
