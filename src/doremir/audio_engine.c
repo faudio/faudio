@@ -38,3 +38,4 @@ void doremir_audio_engine_terminate()
     count--;
     doremir_device_audio_terminate();
 }
+

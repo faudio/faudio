@@ -151,3 +151,4 @@ doremir_ptr_t atomic_impl(doremir_id_t interface)
         return NULL;
     } 
 }
+

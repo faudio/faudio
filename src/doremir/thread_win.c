@@ -148,3 +148,4 @@ void doremir_thread_fatal(char* msg, int error)
     printf("Fatal error: Doremir: Thread: %s: %d\n", msg, error);
     exit(error);
 }
+

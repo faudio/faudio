@@ -424,3 +424,4 @@ static void fatal(char* msg, int error)
     printf("Fatal error: Doremir: String: %s: %d\n", msg, error);
     exit(error);
 }
+

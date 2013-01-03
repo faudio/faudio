@@ -11,7 +11,7 @@
 #include <doremir/util.h>
 
 /*  Naive set implementation based on lists.
-    
+
     Can be optimized *a lot* by using a persistent vector/int-map as the underlying collection.
  */
 
@@ -149,7 +149,7 @@ doremir_set_t doremir_set_power(doremir_set_t set)
 //     }
 //     return !(an || bn);
 // }
-// 
+//
 // bool set_less_than(doremir_ptr_t a, doremir_ptr_t b)
 // {
 //     node_t an = ((set_t) a)->node;
@@ -165,7 +165,7 @@ doremir_set_t doremir_set_power(doremir_set_t set)
 //     }
 //     return bn && !an;
 // }
-// 
+//
 // bool set_greater_than(doremir_ptr_t a, doremir_ptr_t b)
 // {
 //     node_t an = ((set_t) a)->node;
@@ -181,7 +181,7 @@ doremir_set_t doremir_set_power(doremir_set_t set)
 //     }
 //     return an && !bn;
 // }
-// 
+//
 // doremir_string_t set_show(doremir_ptr_t xs)
 // {
 //     string_t s  = string("[");
@@ -196,12 +196,12 @@ doremir_set_t doremir_set_power(doremir_set_t set)
 //     sap(s, string("]"));
 //     return s;
 // }
-// 
+//
 // doremir_ptr_t set_copy(doremir_ptr_t a)
 // {
 //     return doremir_set_copy(a);
 // }
-// 
+//
 // void set_destroy(doremir_ptr_t a)
 // {
 //     doremir_set_destroy(a);
@@ -213,22 +213,23 @@ doremir_ptr_t set_impl(doremir_id_t interface)
     // static doremir_string_show_t set_show_impl = { set_show };
     // static doremir_copy_t set_copy_impl = { set_copy };
     // static doremir_destroy_t set_destroy_impl = { set_destroy };
-    // 
+    //
     // switch (interface)
     // {
     // case doremir_equal_i:
     //     return &set_equal_impl;
-    // 
+    //
     // case doremir_string_show_i:
     //     return &set_show_impl;
-    // 
+    //
     // case doremir_copy_i:
     //     return &set_copy_impl;
-    // 
+    //
     // case doremir_destroy_i:
     //     return &set_destroy_impl;
-    // 
+    //
     // default:
     //     return NULL;
     // }
-}        
+}
+

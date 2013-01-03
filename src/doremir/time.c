@@ -132,7 +132,7 @@ doremir_string_t doremir_time_to_iso(doremir_time_t time)
     s = sdappend(s, doremir_string_format_integer(":%02i", doremir_time_minutes(t)));
     s = sdappend(s, doremir_string_format_integer(":%02i", doremir_time_seconds(t)));
     // TODO approximate ratio
-    s = sdappend(s, doremir_string_format_integer(".0000", NULL));
+    s = sdappend(s, string(".0000"));
 
     return s;  
 }
@@ -251,4 +251,5 @@ doremir_ptr_t time_impl(doremir_id_t interface)
     default:
         return NULL;
     } 
-} 
+}
+

@@ -127,7 +127,7 @@ doremir_string_t midi_show(doremir_ptr_t a)
     {
         // TODO dump without <Buffer > wrap
         s = sdappend(s, string(" SysEx "));
-        s = sdappend(s, doremir_show(midi->data.sysex));
+        s = sdappend(s, doremir_string_show(midi->data.sysex));
         s = sdappend(s, string(" "));
     }
 
@@ -175,3 +175,4 @@ doremir_ptr_t midi_impl(doremir_id_t interface)
         return NULL;
     }
 }
+

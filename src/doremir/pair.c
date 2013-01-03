@@ -58,7 +58,7 @@ doremir_ptr_t doremir_pair_snd(doremir_pair_t p)
 }
 
 doremir_pair_t doremir_pair_dup(doremir_ptr_t x)
-{                                              
+{
     return new_pair(x, x);
 }
 
@@ -69,13 +69,13 @@ doremir_pair_t doremir_pair_swap(doremir_pair_t p)
 
 // (a, (b, c)) -> ((a, b), c)
 doremir_pair_t doremir_pair_assoc(doremir_pair_t p)
-{                                     
+{
     return new_pair(new_pair(p->fst, ((pair_t) p->snd)->fst), ((pair_t) p->snd)->snd);
 }
 
 // ((a, b), c) -> (a, (b, c))
 doremir_pair_t doremir_pair_unassoc(doremir_pair_t p)
-{                                     
+{
     return new_pair(((pair_t) p->fst)->fst, new_pair(((pair_t) p->fst)->snd, p->snd));
 }
 
@@ -97,7 +97,7 @@ bool pair_less_than(doremir_ptr_t a, doremir_ptr_t b)
 }
 
 bool pair_greater_than(doremir_ptr_t a, doremir_ptr_t b)
-{          
+{
     pair_t c = (pair_t) a;
     pair_t d = (pair_t) b;
     return gt(c->fst, d->fst) || (eq(c->fst, d->fst) && gt(c->snd, d->snd));
@@ -152,4 +152,5 @@ doremir_ptr_t pair_impl(doremir_id_t interface)
     default:
         return NULL;
     }
-}         
+}
+

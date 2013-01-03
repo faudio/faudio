@@ -248,4 +248,3 @@ void doremir_thread_fatal(char* msg, int error)
     exit(error);
 }
 
-

@@ -27,7 +27,7 @@ doremir_ptr_t buffer_impl(doremir_id_t interface);
     @note
         O(n)
  */
-doremir_buffer_t 
+doremir_buffer_t
 doremir_buffer_create(size_t size)
 {
     buffer_t b = doremir_new(buffer);
@@ -41,7 +41,7 @@ doremir_buffer_create(size_t size)
     @note
         O(n)
  */
-doremir_buffer_t 
+doremir_buffer_t
 doremir_buffer_copy(doremir_buffer_t buffer)
 {
     return doremir_buffer_resize(buffer->size, buffer);
@@ -51,13 +51,13 @@ doremir_buffer_copy(doremir_buffer_t buffer)
     @note
         O(n)
  */
-doremir_buffer_t 
+doremir_buffer_t
 doremir_buffer_resize(size_t size,
                       doremir_buffer_t buffer)
 {
     buffer_t copy = doremir_new(buffer);
     copy->impl = &buffer_impl;
-    copy->size = size;  
+    copy->size = size;
     copy->data = malloc(size);
     copy->data = memcpy(copy->data, buffer->data, size);
     return copy;
@@ -67,7 +67,7 @@ doremir_buffer_resize(size_t size,
     @note
         O(n)
  */
-void 
+void
 doremir_buffer_destroy(doremir_buffer_t buffer)
 {
     free(buffer->data);
@@ -78,15 +78,15 @@ doremir_buffer_destroy(doremir_buffer_t buffer)
     @note
         O(1)
  */
-size_t 
+size_t
 doremir_buffer_size(doremir_buffer_t buffer)
 {
     return buffer->size;
-}          
+}
 
-/** Return the address of the buffer.                                    
+/** Return the address of the buffer.
 
-    This function is unsafe as it provides access to the buffer contents without 
+    This function is unsafe as it provides access to the buffer contents without
     ownership semantics.
     @note
         O(1)
@@ -101,7 +101,7 @@ void * doremir_buffer_unsafe_address(doremir_buffer_t buffer)
     @note
         O(1)
  */
-uint8_t 
+uint8_t
 doremir_buffer_peek(doremir_buffer_t buffer, size_t index)
 {
     return buffer->data[index];
@@ -111,7 +111,7 @@ doremir_buffer_peek(doremir_buffer_t buffer, size_t index)
     @note
         O(1)
  */
-void 
+void
 doremir_buffer_poke(doremir_buffer_t buffer, size_t index, uint8_t value)
 {
     buffer->data[index] = value;
@@ -132,20 +132,20 @@ void buffer_destroy(doremir_ptr_t a)
 
 doremir_string_t buffer_show(doremir_ptr_t a)
 {
-    buffer_t buffer = (buffer_t) a;   
+    buffer_t buffer = (buffer_t) a;
     bool     more   = doremir_buffer_size(buffer) > 80;
     size_t   length = more ? 80 : doremir_buffer_size(buffer);
-    string_t str    = string("<Buffer");                            
+    string_t str    = string("<Buffer");
 
     // str = sdappend(str, string("["));
     // str = sdappend(str, doremir_string_format_integer("%i", length));
     // str = sdappend(str, string("]"));
 
     for (size_t i = 0; i < length; ++i)
-    {                             
+    {
         str = sdappend(str, string(" "));
         str = sdappend(str, doremir_string_format_integer(
-            "%02x", 
+            "%02x",
             doremir_buffer_peek(buffer, i)));
     }
     if (more)
@@ -178,4 +178,5 @@ doremir_ptr_t buffer_impl(doremir_id_t interface)
     default:
         return NULL;
     }
-}        
+}
+
