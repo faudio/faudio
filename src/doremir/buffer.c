@@ -84,8 +84,10 @@ doremir_buffer_size(doremir_buffer_t buffer)
     return buffer->size;
 }          
 
-/** Return the address of the buffer.
-    This function is unsafe as it provides access to the buffer contents without ownership semantics.
+/** Return the address of the buffer.                                    
+
+    This function is unsafe as it provides access to the buffer contents without 
+    ownership semantics.
     @note
         O(1)
  */
@@ -135,11 +137,10 @@ doremir_string_t buffer_show(doremir_ptr_t a)
     size_t   length = more ? 80 : doremir_buffer_size(buffer);
     string_t str    = string("<Buffer");                            
 
-#ifndef DOREMIR_BUFFER_SHOW_HIDE_LENGTH
-    str = sdappend(str, string("["));
-    str = sdappend(str, doremir_string_format_integer("%i", length));
-    str = sdappend(str, string("]"));
-#endif // DOREMIR_BUFFER_SHOW_HIDE_LENGTH
+    // str = sdappend(str, string("["));
+    // str = sdappend(str, doremir_string_format_integer("%i", length));
+    // str = sdappend(str, string("]"));
+
     for (size_t i = 0; i < length; ++i)
     {                             
         str = sdappend(str, string(" "));
