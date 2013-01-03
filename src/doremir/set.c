@@ -49,39 +49,47 @@ doremir_set_t doremir_set_add(doremir_ptr_t x, doremir_set_t set)
         return new_set(doremir_list_cons(x, set->elems));
 }
 
-void doremir_set_remove(doremir_ptr_t x, doremir_set_t set)
+doremir_set_t doremir_set_remove(doremir_ptr_t x, doremir_set_t set)
 {
-    assert(false && "Not implemented");
+    int i = doremir_list_find_index(x, set->elems);
+    if (i < 0)
+        return doremir_set_copy(set);
+    else
+        return new_set(doremir_list_remove_range(i, 1, set->elems));
 }
 
 doremir_set_t doremir_set_copy(doremir_set_t set)
 {
-    assert(false && "Not implemented");
+    return new_set(doremir_list_copy(set->elems));
 }
 
 void doremir_set_destroy(doremir_set_t set)
 {
-    assert(false && "Not implemented");
+    doremir_list_destroy(set->elems);
+    delete_set(set);
 }
+
+
+
 
 bool doremir_set_has(doremir_ptr_t x, doremir_set_t set)
 {
-    assert(false && "Not implemented");
+    return doremir_list_find_index(x, set->elems) >= 0;
 }
 
 int doremir_set_size(doremir_set_t set)
 {
-    assert(false && "Not implemented");
+    return doremir_list_length(set->elems);
 }
 
 bool doremir_set_is_empty(doremir_set_t set)
 {
-    assert(false && "Not implemented");
+    return doremir_set_size(set) == 0;
 }
 
 bool doremir_set_is_single(doremir_set_t set)
 {
-    assert(false && "Not implemented");
+    return doremir_set_size(set) == 1;
 }
 
 bool doremir_set_is_subset_of(doremir_set_t a, doremir_set_t b)
@@ -115,26 +123,6 @@ doremir_set_t doremir_set_cartesian(doremir_set_t a, doremir_set_t b)
 }
 
 doremir_set_t doremir_set_power(doremir_set_t set)
-{
-    assert(false && "Not implemented");
-}
-
-bool doremir_set_equal(doremir_set_t a, doremir_set_t b)
-{
-    assert(false && "Not implemented");
-}
-
-bool doremir_set_less_than(doremir_set_t a, doremir_set_t b)
-{
-    assert(false && "Not implemented");
-}
-
-bool doremir_set_greater_than(doremir_set_t a, doremir_set_t b)
-{
-    assert(false && "Not implemented");
-}
-
-doremir_string_t doremir_set_show(doremir_set_t set)
 {
     assert(false && "Not implemented");
 }
@@ -217,7 +205,6 @@ doremir_string_t doremir_set_show(doremir_set_t set)
 doremir_ptr_t set_impl(doremir_id_t interface)
 {
     // static doremir_equal_t set_equal_impl = { set_equal };
-    // static doremir_order_t set_order_impl = { set_less_than, set_greater_than };
     // static doremir_string_show_t set_show_impl = { set_show };
     // static doremir_copy_t set_copy_impl = { set_copy };
     // static doremir_destroy_t set_destroy_impl = { set_destroy };
@@ -226,9 +213,6 @@ doremir_ptr_t set_impl(doremir_id_t interface)
     // {
     // case doremir_equal_i:
     //     return &set_equal_impl;
-    // 
-    // case doremir_order_i:
-    //     return &set_order_impl;
     // 
     // case doremir_string_show_i:
     //     return &set_show_impl;

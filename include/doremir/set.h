@@ -14,7 +14,7 @@
 typedef struct _doremir_set_t * doremir_set_t;
 doremir_set_t doremir_set_empty();
 doremir_set_t doremir_set_add(doremir_ptr_t, doremir_set_t);
-void doremir_set_remove(doremir_ptr_t, doremir_set_t);
+doremir_set_t doremir_set_remove(doremir_ptr_t, doremir_set_t);
 doremir_set_t doremir_set_copy(doremir_set_t);
 void doremir_set_destroy(doremir_set_t);
 bool doremir_set_has(doremir_ptr_t, doremir_set_t);
@@ -28,10 +28,6 @@ doremir_set_t doremir_set_product(doremir_set_t, doremir_set_t);
 doremir_set_t doremir_set_difference(doremir_set_t, doremir_set_t);
 doremir_set_t doremir_set_cartesian(doremir_set_t, doremir_set_t);
 doremir_set_t doremir_set_power(doremir_set_t);
-bool doremir_set_equal(doremir_set_t, doremir_set_t);
-bool doremir_set_less_than(doremir_set_t, doremir_set_t);
-bool doremir_set_greater_than(doremir_set_t, doremir_set_t);
-doremir_string_t doremir_set_show(doremir_set_t);
 
 /** @}
     @}

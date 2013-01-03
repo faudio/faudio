@@ -354,6 +354,19 @@ list_t doremir_list_ddrop(int n, doremir_list_t xs)
     return ys;
 }
 
+doremir_list_t doremir_list_range(int m, int n, doremir_list_t xs)
+{
+    return doremir_list_dtake(n, doremir_list_drop(m, xs));
+}
+
+doremir_list_t doremir_list_remove_range(int m, int n, doremir_list_t xsx)
+{
+    list_t xs = doremir_list_take(m,     xs);
+    list_t ys = doremir_list_drop(m + n, xs);
+    return doremir_list_dappend(xs, ys);
+}
+
+
 /** Returns whether the given list contains the given element.
     @note
         O(n)
@@ -426,12 +439,22 @@ list_t doremir_list_sort(doremir_list_t xs)
     return quicksort(xs);
 }
 
-/** Returns the index of the first element satisfying the given predicate in the
+/** Returns the first element satisfying the given predicate in the
     given list, or a negative value if no such element is found.
     @note
         O(log n)
  */
 doremir_ptr_t doremir_list_find(doremir_pred_t p, doremir_list_t xs)
+{
+    assert(false && "Not implemented");
+}
+
+/** Returns the index of the first element satisfying the given predicate in the
+    given list, or a negative value if no such element is found.
+    @note
+        O(log n)
+ */
+int doremir_list_find_index(doremir_pred_t p, doremir_list_t xs)
 {
     assert(false && "Not implemented");
 }

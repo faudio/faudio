@@ -8,10 +8,10 @@
         doremir_order_t
     @par Implements 
         doremir_equal_t
+        doremir_string_show_t
         doremir_copy_t
         doremir_destroy_t
         doremir_dynamic_t
-        doremir_string_show_t
     @see 
         \ref Collections
     
@@ -25,7 +25,7 @@ module Doremir.Set
     
     empty            : () -> Set;
     add              : (Ptr, Set) -> Set;
-    remove           : (Ptr, Set) -> Void;
+    remove           : (Ptr, Set) -> Set;
     copy             : Set -> Set;
     destroy          : Set -> Void;
 
@@ -42,10 +42,5 @@ module Doremir.Set
     difference       : (Set, Set) -> Set;
     cartesian        : (Set, Set) -> Set;
     power            : Set -> Set;
-
-    equal       : (Set, Set) -> Bool;
-    lessThan    : (Set, Set) -> Bool;
-    greaterThan : (Set, Set) -> Bool;
-    show        : Set -> String;
 
 }

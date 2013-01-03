@@ -43,10 +43,4 @@ module Doremir.Map
     isSingle         : Map -> Bool;
     isSubmapOf       : (Map, Map) -> Bool;
     isProperSubmapOf : (Map, Map) -> Bool;
-
-    equal       : (Map, Map) -> Bool;
-    lessThan    : (Map, Map) -> Bool;
-    greaterThan : (Map, Map) -> Bool;
-    show        : Map -> String;
-
 }
