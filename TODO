@@ -2,15 +2,10 @@
 ==========
 Additions
 
-* Specify Dynamic interface
-    * Fix Dispatcher interface
+* Add audio_type_t
+    * Changes to Processor interface?
 
-* Add audio_type_t (or just channel count?)
-    * Fix Processor interface
-
-* Implement buffer
-
-* Implement atomic structures
+* Implement ringbuffer
 
 * Implement realtime audio streams
 
@@ -18,7 +13,12 @@ Additions
 
 * Implement non-realtime
 
+* Implement priority queue
+
 * Implement schedulers
+
+* Specify Dynamic interface
+    * Fix Dispatcher interface
 
 * High-level Lisp bindings
 
