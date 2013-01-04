@@ -8,9 +8,12 @@
 #define set_t               doremir_set_t
 #define map_t               doremir_map_t
 #define pqueue_t            doremir_priority_queue_t
+#define aqueue_t            doremir_atomic_queue_t
 #define string_t            doremir_string_t
 #define ratio_t             doremir_ratio_t
 #define buffer_t            doremir_buffer_t
+#define thread_t            doremir_thread_t
+
 
 #define pair(a,b)           doremir_pair_create(a,b)
 #define string(a)           doremir_string_from_utf8(a)
@@ -29,13 +32,13 @@
 #define i32                 doremir_from_int32
 #define i64                 doremir_from_int64
 #define d                   doremir_from_double
-                            
+
 #define eq                  doremir_equal
 #define gt                  doremir_greater_than
 #define lt                  doremir_less_than
 #define gte                 doremir_greater_than_equal
 #define lte                 doremir_less_than_equal
-                            
+
 #define empty               doremir_list_empty
 #define cons                doremir_list_cons
 #define snoc                doremir_list_snoc
@@ -68,10 +71,13 @@
 #define sdappend            doremir_string_dappend
 #define char_at             doremir_string_char_at
 #define sshow               doremir_string_show
+#define format_int          doremir_string_format_integer
 
-
-
-
+#define aexchange           doremir_atomic_exchange
+#define aget                doremir_atomic_get
+#define aset                doremir_atomic_set
+#define aadd                doremir_atomic_add
+#define amodify             doremir_atomic_modify
 
 
 
@@ -86,7 +92,7 @@ doremir_list_t doremir_map(int count, ...);
 #define VA_NARGS_IMPL(_1, _2, _3, _4, _5, _6, N, ...) N
 #define VA_NARGS(...) VA_NARGS_IMPL(X,##__VA_ARGS__, 5, 4, 3, 2, 1, 0)
 #define VARARG_IMPL2(base, count, ...) base##count(__VA_ARGS__)
-#define VARARG_IMPL(base, count, ...) VARARG_IMPL2(base, count, __VA_ARGS__) 
+#define VARARG_IMPL(base, count, ...) VARARG_IMPL2(base, count, __VA_ARGS__)
 #define VARARG(base, ...) VARARG_IMPL(base, VA_NARGS(__VA_ARGS__), __VA_ARGS__)
 
 #define list0()             doremir_list(0)

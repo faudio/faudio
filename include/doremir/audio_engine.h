@@ -3,6 +3,8 @@
 #define _DOREMIR_AUDIOENGINE
 
 #include <doremir/atomic.h>
+#include <doremir/atomic/queue.h>
+#include <doremir/atomic/ring_buffer.h>
 #include <doremir/thread.h>
 #include <doremir/device/audio.h>
 #include <doremir/device/midi.h>

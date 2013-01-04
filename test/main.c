@@ -439,9 +439,40 @@ void test_atomic()
     }
 }
 
+doremir_ptr_t test_atomic_queue_reader(doremir_ptr_t x)
+{       
+    doremir_atomic_queue_t q = (doremir_atomic_queue_t) x;
+    
+    while(true)
+    {        
+        ptr_t v;
+        if ((v = doremir_atomic_queue_read(q)))
+            printf("         |- %5d    \n", ti32(v));
+    }
+}
 void test_atomic_queue()
 {
     test_section();
+    
+    {       
+        doremir_atomic_queue_t q = doremir_atomic_queue_create();
+
+        doremir_closure_t r = { test_atomic_queue_reader, (ptr_t) q };
+        thread_t t = doremir_thread_create(&r);
+        
+        doremir_print("q              => %s\n", q);
+        
+        for(int i = 0; i < 40; ++i)
+        {
+            doremir_thread_sleep(i % 10 * 3);
+            doremir_atomic_queue_write(q, i32(i));
+            printf("  %5d -|  \n", i);
+        }
+        
+        doremir_thread_sleep(500);
+        doremir_thread_detach(t);     
+        doremir_destroy(q);
+    }
 }
 
 void test_atomic_ring_buffer()
