@@ -1,0 +1,18 @@
+
+/**
+    @addtogroup DoremirSignal
+    
+    Provides signals.
+    
+ */
+module Doremir.Signal
+{
+    import Doremir;
+    import Doremir.SignalType;
+    import Doremir.Processor;
+    
+    type Signal = opaque;
+
+    apply : Processor -> Signal;
+    getType : Signal -> SignalType;
+}

@@ -34,6 +34,8 @@ c:
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/AudioUnit.module	>include/doremir/processor/audio_unit.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/VST.module		>include/doremir/processor/vst.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/FluidSynth.module	>include/doremir/processor/fluid_synth.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/Signal.module  		>include/doremir/signal.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/SignalType.module  		>include/doremir/signal_type.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Device/Buffer.module		>include/doremir/device/buffer.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Device/File.module    	>include/doremir/device/file.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Device/Audio.module    	>include/doremir/device/audio.h && \
@@ -74,6 +76,8 @@ lisp:
 	modulo -Mmodules --language=lisp <modules/Doremir/Processor/AudioUnit.module	>bindings/lisp/doremir/processor/audio-unit.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Processor/VST.module		>bindings/lisp/doremir/processor/vst.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Processor/FluidSynth.module	>bindings/lisp/doremir/processor/fluid-synth.lisp && \
+	modulo -Mmodules --language=lisp <modules/Doremir/Signal.module  		>bindings/lisp/doremir/signal.lisp && \
+	modulo -Mmodules --language=lisp <modules/Doremir/SignalType.module  		>bindings/lisp/doremir/signal-type.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Device/Buffer.module		>bindings/lisp/doremir/device/buffer.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Device/File.module    	>bindings/lisp/doremir/device/file.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Device/Audio.module    	>bindings/lisp/doremir/device/audio.lisp && \

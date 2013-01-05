@@ -11,10 +11,8 @@
 #include <doremir/util.h>
 
 struct node {
-
         doremir_atomic_t    next;
         doremir_ptr_t       value;
-
 };
 
 typedef struct node * node_t;
@@ -22,32 +20,23 @@ typedef struct node * node_t;
 struct _doremir_atomic_queue_t {
 
         doremir_impl_t      impl;       /* Interface dispatcher */
-        
+
         doremir_atomic_t    div;        /* (first,last) is entire queue queue */
         doremir_atomic_t    first;      /* (first,div)  is owned by writer */
         doremir_atomic_t    last;       /* (div,last)   is owned by reader */
-
 };
 
 doremir_ptr_t atomic_queue_impl(doremir_id_t interface);
 
-// doremir_atomic_queue_t new_queue()
-// {
-// }
-// 
-// void delete_queue(doremir_atomic_queue_t queue)
-// {
-//     doremir_delete(queue);
-// }
-
-// --------------------------------------------------------------------------------
-
 #define get_node(N) \
     ((node_t) doremir_atomic_get(N))
 
+// TODO does not need to be exchange?
 #define forward_node(N) \
-    aexchange(N, doremir_atomic_get(N), (get_node(N))->next);
+    doremir_atomic_exchange(N, doremir_atomic_get(N), (get_node(N))->next);
     
+
+// --------------------------------------------------------------------------------
 
 doremir_atomic_queue_t doremir_atomic_queue_create()
 {
