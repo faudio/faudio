@@ -1,58 +1,77 @@
 
+## Collections
+
 \anchor Collections
 
-The Audio Engine include a set of basic collections, including \ref DoremirPair, \ref DoremirList, \ref DoremirMap and \ref DoremirSet. These collections all obey the following rules:
+The Audio Engine include a set of container data structures, commonly known as collections.
+The primary use of these types it to be used as messages, to be sent and received from
+audio computations. For this purpose collections are *immutable* and *polymorphic*. In contrast
+to container types in managed languages, the collection types used in the Audio Engine are
+not shared, instead they have *single-ownership semantics*.
 
-* They are *immutable*
-* They are *polymorphic*
-* They have *single-ownership* semantics
+All collections implement the following \ref Interfaces "interfaces":
+
+* doremir_equal_t
+* doremir_order_t
+* doremir_copy_t
+* doremir_destroy_t
+* doremir_dynamic_t
+* doremir_string_show_t
+
 
 ### Immutable
 
 The collections used by the Audio Engine can not change. Functions that such as \ref doremir_list_map
 return new collections instead.
 
+Immutability allows collections to be passed between threads without synchronization issues.
+
 ### Polymorphic
 
-The collections can store reference types (as \ref doremir_ptr_t) and primitive types by using the
-\ref WrapFunctions "wrap functions".
+The collections store \ref doremir_ptr_t by default. Other reference types can be stored by casting.
 
-                                                                   
+Primitive types such as integers, floats and characters can be stored by using \ref BoxedTypes "boxed types".
+It is not recommended to store integral types by casting to pointers.
+
 
 ### Single-ownership
 
-The Audio Engine use single-ownership semantics for all of its reference types. Each collection provides a set of construct, copy and destruct function, and each collection must be destructed exactly once. The correct usage pattern is to call the destructor whenever the variable holding the collection goes out of scope. It is good practice to introduce an extra block to mark out the scope of the collection variable.
+The Audio Engine use single-ownership semantics for all of its reference types. Each collection
+provides a set of construct, copy and destruct function, and each collection must be destructed
+exactly once. The correct usage pattern is to call the destructor whenever the variable holding the
+collection goes out of scope. It is good practice to introduce an extra block to mark out the scope
+of the collection variable.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~
 {
     doremir_list_t xs = doremir_list(1, 2, 3);
-    
+
     ... // xs can be used here
-    
+
     doremir_destroy(xs);
 }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~
 
 The reference types can be shared as long as the original reference is in scope.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~
 {
     doremir_list_t xs = doremir_list(1, 2, 3);
-    
+
     int z = doremir_list_sum(xs); // xs passed "by reference"
 
     doremir_destroy(xs);
 }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~
 
 If a reference type is required to persist beyond the original scope it can be copied or moved.
 The \ref doremir_move function does nothing, it just serves as a mnemonic to mark out that
 ownership is being transfered.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~
 {
     doremir_list_t xs = doremir_list(1, 2, 3);
-    
+
     doremir_send(out1, doremir_copy(xs)); // xs passed "by copy"
     doremir_send(out1, doremir_copy(xs)); // xs passed "by copy"
     ...
@@ -62,13 +81,13 @@ ownership is being transfered.
 
 {
     doremir_list_t ys = doremir_list(1, 2, 3);
-    
+
     doremir_send(out1, doremir_copy(ys)); // ys passed "by copy"
     doremir_send(out1, doremir_move(ys)); // ys passed "by value"
 
     // no destroy needed
-}                                                   
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+}
+~~~~
 
 
 Functions operating on collections come in two variants: a non-destructive variant that simply construct a
@@ -84,33 +103,17 @@ Invalidating a collection does not affect copies.
     doremir_list_t ys;
     int i;
 
-    xs = doremir_list();
-    for (i = 0; i < 10; ++i)
-        xs = doremir_list_consd(i, xs);
-    
-    ys = doremir_copy(xs);
-    for (i = 10; i < 15; ++i)
-        ys = doremir_list_consd(3, ys);
-    
-    // xs is [1..9]
-    // ys is [1..14]
+    xs = doremir_list();                    // create list xs
+    for (i = 0; i < 3; ++i)
+        xs = doremir_list_consd(i, xs);     // modify xs
 
-    doremir_destroy(ys);
+    ys = doremir_copy(xs);                  // copy xs to ys
+    ys = doremir_list_consd(3, ys);         // modify ys
+
+    // xs is [1,2,3]
+    // ys is [1,2,3,4]
+
+    doremir_destroy(ys);                    // destroy both lists
     doremir_destroy(xs);
 }
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-<!--
-Functions that are unsymmetric in their construct/destruct calls becomes construct/destruct functions
-themselves.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-doremir_list_t doremir_list_single(doremir_ptr_t x)
-{                                
-    doremir_list_t xs = doremir_list();
-    xs = doremir_list_consd(1, xs);
-    return xs; 
-}
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
--->

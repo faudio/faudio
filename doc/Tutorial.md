@@ -3,66 +3,76 @@
 
 ## A basic session
 
-How to create a session, find a device and open a stream
-Hello audio
-Hello midi
+TODO How to create a session, find a device and open a stream
 
-## Schedulers and messages
+TODO Hello audio
 
-Sending
-Receiving
-Time values
-Future values
-Improving values
-Interruption
+TODO Hello midi
 
 
-## Processors and signal networks
+## Processors
 
 ### Two views on processors 
 
-Signals as value, processors as functions
-Processor application
-Processor composition
+
+TODO Signals as value, processors as functions
+
+TODO Processor application
+
+TODO Processor composition
 
 ### Signal and processor types
 
-Sample type
-Sample layout
-Upsampling and downsampling
-Channels
+TODO Sample type
+
+TODO Sample layout
+
+TODO Upsampling and downsampling
+
+TODO Channels
 
 ### Simple processors
 
-Unary and binary functions
-Delay and feedback
-Creating filters
-Split and parallel
-Mixing
+
+TODO Unary and binary functions
+
+TODO Delay and feedback
+
+TODO Creating filters
+
+TODO Split and parallel
+
+TODO Mixing
 
 ### Higher-order processors
 
-Processor application etc
+TODO Processor application etc
 
 ### Sending and receiving messages
 
-Samplers
-Switches
+TODO Samplers
+
+TODO Switches
 
 
 ## Devices
 
 ### Realtime devices
 
-Opening device streams
-Creating syncronized streams
+TODO Opening device streams
+
+TODO Creating syncronized streams
 
 ### Non-realtime devices
 
-Opening file streams
-Monitoring progress
+TODO Opening file streams
+
+TODO Monitoring progress
 
 ## Extending the system
 
-Adding processors
-Adding devices
+TODO Adding processors
+
+TODO Adding devices
+
+

@@ -5,7 +5,7 @@
     Immutable string type.
     
     Note that the string type is not a \ref Collections "collection" as it is not polymorphic. However, it can
-    be converted to a list of characters using the \ref DoremirStringList "conversion functions".
+    be converted to a list of characters using the \ref DoremirStringList "these functions".
 
     @par Implements 
         doremir_equal_t

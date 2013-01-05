@@ -1,15 +1,19 @@
 
-\anchor WrapFunctions
+## Boxed types
 
-The wrap functions can be used to convert primitive values to \ref doremir_ptr_t and vice versa. 
-They are the preferred way of storing primitive types in a collection. The wrap and unwrap functions
+\anchor BoxedTypes
+
+TODO intro
+
+The boxing functions can be used to convert primitive values to \ref doremir_ptr_t and vice versa. 
+They are the preferred way of storing primitive types in a collection. The box and unbox functions
 are implemented without heap allocation whenever possible, but types that are to large to fit into a 
 pointer are always heap-allocated.
 
-The wrapped values have the same life cycle as collections, that is: create, use, destroy (once).
-However, passing a wrapped value to a generic function does *not* result in the wrapped value being
+The boxed values have the same life cycle as collections, that is: create, use, destroy (once).
+However, passing a boxed value to a generic function does *not* result in the boxed value being
 destroyed. Wrapped values stored in collections are owned by the collection and will be destroyed
-when the collection is destroyed. This means that wrapped values can not be shared without explicit
+when the collection is destroyed. This means that boxed values can not be shared without explicit
 copying (the same holds for nested collections).
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -22,7 +26,7 @@ list_t xs = doremir_list_empty();
 doremir_list_destroy(xs);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The wrapped values implement \ref doremir_equal_t, \ref doremir_order_t, \ref doremir_number_t, \ref
+The boxed values implement \ref doremir_equal_t, \ref doremir_order_t, \ref doremir_number_t, \ref
 doremir_copy_t, \ref doremir_destroy_t and \ref doremir_dynamic_t.
 
 The standard version of the wrapper functions are declared in the \ref doremir.h header, but the shorter
