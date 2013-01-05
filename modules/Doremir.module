@@ -27,9 +27,14 @@ module Doremir
     type Unary   = (Ptr -> Ptr)*;
 
     /** @typedef doremir_binary_t
-    Generic binary function.
+        Generic binary function.
     */
     type Binary  = ((Ptr, Ptr) -> Ptr)*;
+
+    /** @typedef doremir_binary_t
+        Generic ternary function.
+    */
+    type Ternary  = ((Ptr, Ptr, Ptr) -> Ptr)*;
 
     /** @typedef doremir_pred_t
         Generic predicate.

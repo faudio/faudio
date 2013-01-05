@@ -8,6 +8,7 @@
 module Doremir.Processor
 {
     import Doremir;
+    import Doremir.Type;
     import Doremir.Buffer;
 
     type Samples = Buffer;
@@ -23,11 +24,29 @@ module Doremir.Processor
         before  : ((Ptr, Info*) -> Void)*,
         process : ((Ptr, Info*, Samples) -> Samples)*,
         after   : ((Ptr, Info*) -> Void)*
-    };   
+    };
     
-    lift  : (Int8 -> Int8)* -> Processor;
-    lift2 : ((Int8, Int8) -> Int8)* -> Processor;
-    seq   : (Processor, Processor) -> Processor;
-    par   : (Processor, Processor) -> Processor;
+    type Any = Ptr;   
+    
+    lift   : (Type, Unary*) -> Any;
+    lift2  : (Type, Binary*) -> Any;
+    lift3  : (Type, Ternary*) -> Any;
+    
+    id     : Type -> Any;
+    const  : (Type, Ptr) -> Any;
+    delay  : Any -> Any;
+    split  : Any -> Any;
+
+    seq    : (Any, Any) -> Any;
+    par    : (Any, Any) -> Any;    
+    loop   : Any -> Any;
+
+    
+    cos    : Type -> Any;
+    sin    : Type -> Any;
+    tan    : Type -> Any;
+    acos   : Type -> Any;
+    asin   : Type -> Any;
+    atan   : Type -> Any;
     
 }

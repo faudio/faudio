@@ -3,7 +3,6 @@
 #define _DOREMIR_SIGNALTYPE
 
 #include <doremir.h>
-#include <doremir/processor.h>
 
 /** @defgroup Doremir Doremir
     @{

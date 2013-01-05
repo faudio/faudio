@@ -15,6 +15,9 @@ typedef doremir_ptr_t (* doremir_nullary_t)();
 typedef doremir_ptr_t (* doremir_unary_t)(doremir_ptr_t);
 typedef doremir_ptr_t (* doremir_binary_t)(doremir_ptr_t,
                                            doremir_ptr_t);
+typedef doremir_ptr_t (* doremir_ternary_t)(doremir_ptr_t,
+                                            doremir_ptr_t,
+                                            doremir_ptr_t);
 typedef bool (* doremir_pred_t)(doremir_ptr_t);
 typedef struct {
             doremir_unary_t function; doremir_ptr_t value;

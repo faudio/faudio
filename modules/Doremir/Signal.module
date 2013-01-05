@@ -8,12 +8,12 @@
 module Doremir.Signal
 {
     import Doremir;
-    import Doremir.SignalType;
+    import Doremir.Type;
     import Doremir.Processor;
     
     type Signal = opaque;
 
-    getType : Signal -> SignalType;
+    getType : Signal -> Type;
 
     apply  : (Processor, Signal) -> Signal;
     apply2 : (Processor, Signal, Signal) -> Signal;

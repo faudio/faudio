@@ -5,10 +5,9 @@
     Provides signal types.
     
  */
-module Doremir.SignalType
+module Doremir.Type
 {
     import Doremir;
-    import Doremir.Processor;
 
-    type SignalType = opaque;
+    type Type = opaque;
 }
