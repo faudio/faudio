@@ -22,6 +22,12 @@ typedef struct {
                                                     doremir_processor_samples_t);
             void (* after)(doremir_ptr_t, doremir_processor_info_t *);
         } doremir_processor_t;
+doremir_processor_t doremir_processor_lift(int8_t (*)(int8_t));
+doremir_processor_t doremir_processor_lift2(int8_t (*)(int8_t)(int8_t));
+doremir_processor_t doremir_processor_seq(doremir_processor_t,
+                                          doremir_processor_t);
+doremir_processor_t doremir_processor_par(doremir_processor_t,
+                                          doremir_processor_t);
 
 /** @}
     @}

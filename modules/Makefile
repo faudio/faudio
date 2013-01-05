@@ -26,11 +26,11 @@ c:
 	modulo -Mmodules --language=c    <modules/Doremir/Processor.module  		>include/doremir/processor.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Unary.module  	>include/doremir/processor/unary.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Binary.module 	>include/doremir/processor/binary.h && \
-	modulo -Mmodules --language=c    <modules/Doremir/Processor/Delay.module  	>include/doremir/processor/split.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Split.module  	>include/doremir/processor/delay.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/Processor/Delay.module  	>include/doremir/processor/split.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/Processor/Loop.module		>include/doremir/processor/loop.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Sequence.module 	>include/doremir/processor/sequence.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Parallel.module 	>include/doremir/processor/parallel.h && \
-	modulo -Mmodules --language=c    <modules/Doremir/Processor/Loop.module		>include/doremir/processor/loop.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/AudioUnit.module	>include/doremir/processor/audio_unit.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/VST.module		>include/doremir/processor/vst.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/FluidSynth.module	>include/doremir/processor/fluid_synth.h && \
@@ -66,13 +66,6 @@ lisp:
 	modulo -Mmodules --language=lisp <modules/Doremir/Midi.module    		>bindings/lisp/doremir/midi.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Time.module    		>bindings/lisp/doremir/time.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Processor.module  		>bindings/lisp/doremir/processor.lisp && \
-	modulo -Mmodules --language=lisp <modules/Doremir/Processor/Unary.module  	>bindings/lisp/doremir/processor/unary.lisp && \
-	modulo -Mmodules --language=lisp <modules/Doremir/Processor/Binary.module 	>bindings/lisp/doremir/processor/binary.lisp && \
-	modulo -Mmodules --language=lisp <modules/Doremir/Processor/Delay.module  	>bindings/lisp/doremir/processor/split.lisp && \
-	modulo -Mmodules --language=lisp <modules/Doremir/Processor/Split.module  	>bindings/lisp/doremir/processor/delay.lisp && \
-	modulo -Mmodules --language=lisp <modules/Doremir/Processor/Sequence.module 	>bindings/lisp/doremir/processor/sequence.lisp && \
-	modulo -Mmodules --language=lisp <modules/Doremir/Processor/Parallel.module 	>bindings/lisp/doremir/processor/parallel.lisp && \
-	modulo -Mmodules --language=lisp <modules/Doremir/Processor/Loop.module		>bindings/lisp/doremir/processor/loop.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Processor/AudioUnit.module	>bindings/lisp/doremir/processor/audio-unit.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Processor/VST.module		>bindings/lisp/doremir/processor/vst.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Processor/FluidSynth.module	>bindings/lisp/doremir/processor/fluid-synth.lisp && \

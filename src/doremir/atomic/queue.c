@@ -18,12 +18,11 @@ struct node {
 typedef struct node * node_t;
 
 struct _doremir_atomic_queue_t {
+        impl_t      impl;       /* Interface dispatcher */
 
-        doremir_impl_t      impl;       /* Interface dispatcher */
-
-        doremir_atomic_t    div;        /* (first,last) is entire queue queue */
-        doremir_atomic_t    first;      /* (first,div)  is owned by writer */
-        doremir_atomic_t    last;       /* (div,last)   is owned by reader */
+        atomic_t    div;        /* (first,last) is entire queue queue */
+        atomic_t    first;      /* (first,div)  is owned by writer */
+        atomic_t    last;       /* (div,last)   is owned by reader */
 };
 
 doremir_ptr_t atomic_queue_impl(doremir_id_t interface);

@@ -7,12 +7,14 @@
     Note that while this structure is called a \ref DoremirBuffer, it does not support random access.
  */
 module Doremir.Atomic.RingBuffer
-{
+{            
+    import Doremir;
+    
     type RingBuffer = opaque;
 
     create : Size -> RingBuffer;
     copy : RingBuffer -> RingBuffer;
-    copySized : (Size, RingBuffer) -> RingBuffer;
+    resize : (Size, RingBuffer) -> RingBuffer;
     swap : (RingBuffer, RingBuffer) -> Void;
     destroy : RingBuffer -> Void;
 

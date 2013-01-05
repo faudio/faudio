@@ -23,5 +23,11 @@ module Doremir.Processor
         before  : ((Ptr, Info*) -> Void)*,
         process : ((Ptr, Info*, Samples) -> Samples)*,
         after   : ((Ptr, Info*) -> Void)*
-    };
+    };   
+    
+    lift  : (Int8 -> Int8)*         -> Processor;
+    lift2 : (Int8 -> Int8 -> Int8)* -> Processor;
+    seq   : (Processor, Processor) -> Processor;
+    par   : (Processor, Processor) -> Processor;
+    
 }
