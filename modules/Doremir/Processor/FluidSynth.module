@@ -12,6 +12,6 @@
  */
 module Doremir.Processor.FluidSynth
 {
-    
+    type FluidSynth = opaque;    
 }
 

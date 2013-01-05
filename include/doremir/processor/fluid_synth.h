@@ -12,7 +12,7 @@
     @{
     */
 
-
+typedef struct _doremir_processor_fluid_synth_t * doremir_processor_fluid_synth_t;
 
 /** @}
     @}

@@ -29,10 +29,10 @@ c:
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Split.module  	>include/doremir/processor/delay.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Delay.module  	>include/doremir/processor/split.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Loop.module		>include/doremir/processor/loop.h && \
-	modulo -Mmodules --language=c    <modules/Doremir/Processor/Sequence.module 	>include/doremir/processor/sequence.h && \
-	modulo -Mmodules --language=c    <modules/Doremir/Processor/Parallel.module 	>include/doremir/processor/parallel.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/Processor/Seq.module 		>include/doremir/processor/seq.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/Processor/Par.module 		>include/doremir/processor/par.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/AudioUnit.module	>include/doremir/processor/audio_unit.h && \
-	modulo -Mmodules --language=c    <modules/Doremir/Processor/VST.module		>include/doremir/processor/vst.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/Processor/Vst.module		>include/doremir/processor/vst.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/FluidSynth.module	>include/doremir/processor/fluid_synth.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Signal.module  		>include/doremir/signal.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/SignalType.module  		>include/doremir/signal_type.h && \
@@ -67,7 +67,7 @@ lisp:
 	modulo -Mmodules --language=lisp <modules/Doremir/Time.module    		>bindings/lisp/doremir/time.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Processor.module  		>bindings/lisp/doremir/processor.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Processor/AudioUnit.module	>bindings/lisp/doremir/processor/audio-unit.lisp && \
-	modulo -Mmodules --language=lisp <modules/Doremir/Processor/VST.module		>bindings/lisp/doremir/processor/vst.lisp && \
+	modulo -Mmodules --language=lisp <modules/Doremir/Processor/Vst.module		>bindings/lisp/doremir/processor/vst.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Processor/FluidSynth.module	>bindings/lisp/doremir/processor/fluid-synth.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Signal.module  		>bindings/lisp/doremir/signal.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/SignalType.module  		>bindings/lisp/doremir/signal-type.lisp && \

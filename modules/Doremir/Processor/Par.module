@@ -10,8 +10,8 @@
     @see 
         \ref Processors
  */
-module Doremir.Processor.Parallel
+module Doremir.Processor.Par
 {
-    
+    type Parallel = opaque;    
 }
 

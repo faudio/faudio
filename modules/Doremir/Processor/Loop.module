@@ -12,6 +12,6 @@
  */
 module Doremir.Processor.Loop
 {
-    
+    type Loop = opaque;    
 }
 

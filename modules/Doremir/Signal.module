@@ -13,6 +13,9 @@ module Doremir.Signal
     
     type Signal = opaque;
 
-    apply : Processor -> Signal;
     getType : Signal -> SignalType;
+
+    apply  : (Processor, Signal) -> Signal;
+    apply2 : (Processor, Signal, Signal) -> Signal;
+
 }

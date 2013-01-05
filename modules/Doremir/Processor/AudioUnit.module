@@ -12,6 +12,6 @@
  */
 module Doremir.Processor.AudioUnit
 {
-    
+    type AudioUnit = opaque;
 }
 

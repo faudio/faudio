@@ -12,7 +12,7 @@
     @{
     */
 
-
+typedef struct _doremir_processor_split_t * doremir_processor_split_t;
 
 /** @}
     @}

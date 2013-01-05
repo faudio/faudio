@@ -12,7 +12,7 @@
     @{
     */
 
-
+typedef struct _doremir_processor_unary_t * doremir_processor_unary_t;
 
 /** @}
     @}

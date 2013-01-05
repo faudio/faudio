@@ -12,6 +12,6 @@
  */
 module Doremir.Processor.Binary
 {
-    
+    type Binary = opaque;    
 }
 

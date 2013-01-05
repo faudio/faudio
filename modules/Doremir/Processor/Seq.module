@@ -10,8 +10,8 @@
     @see 
         \ref Processors
  */
-module Doremir.Processor.Sequence
+module Doremir.Processor.Seq
 {
-    
+    type Seq = opaque;    
 }
 
