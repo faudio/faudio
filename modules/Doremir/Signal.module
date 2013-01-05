@@ -7,16 +7,40 @@
  */
 module Doremir.Signal
 {
-    import Doremir;
+    import Doremir;    
+    import Doremir.Pair;
     import Doremir.Type;
     import Doremir.Processor;
     
     type Signal = opaque;
 
-    getType : Signal -> Type;
+    typeOf : Signal -> Type;
 
-    apply  : (Processor, Signal) -> Signal;
-    apply2 : (Processor, Signal, Signal) -> Signal;
-    apply3 : (Processor, Signal, Signal, Signal) -> Signal;
+    apply  : (Any, Signal) -> Signal;
+    apply2 : (Any, Signal, Signal) -> Signal;
+    apply3 : (Any, Signal, Signal, Signal) -> Signal;
 
+    const  : (Ptr, Signal) -> Signal;
+    delay  : (Size, Signal) -> Signal;
+    split  : Signal -> Pair; // a -> (a,a)
+
+    cos         : Signal -> Signal;
+    sin         : Signal -> Signal;
+    tan         : Signal -> Signal;
+    acos        : Signal -> Signal;
+    asin        : Signal -> Signal;
+    atan        : Signal -> Signal;
+    add         : Signal -> Signal;
+    subtract    : (Signal, Signal) -> Signal;
+    multiply    : (Signal, Signal) -> Signal;
+    divide      : (Signal, Signal) -> Signal;
+    modulo      : (Signal, Signal) -> Signal;
+    absolute    : (Signal, Signal) -> Signal;
+    and         : (Signal, Signal) -> Signal;
+    or          : (Signal, Signal) -> Signal;
+    not         : (Signal, Signal) -> Signal;
+    bitAnd      : (Signal, Signal) -> Signal;
+    bitOr       : (Signal, Signal) -> Signal;
+    bitNot      : (Signal, Signal) -> Signal;
+    bitXor      : (Signal, Signal) -> Signal;
 }

@@ -46,19 +46,31 @@ module Doremir.Processor
     
     id     : Type -> Any;
     const  : (Type, Ptr) -> Any;
-    delay  : Any -> Any;
-    split  : Any -> Any;
+    delay  : (Type,Size) -> Any;
+    split  : Type -> Any;
 
     seq    : (Any, Any) -> Any;
     par    : (Any, Any) -> Any;    
     loop   : Any -> Any;
-
     
-    cos    : Type -> Any;
-    sin    : Type -> Any;
-    tan    : Type -> Any;
-    acos   : Type -> Any;
-    asin   : Type -> Any;
-    atan   : Type -> Any;
+    cos         : Type -> Any;
+    sin         : Type -> Any;
+    tan         : Type -> Any;
+    acos        : Type -> Any;
+    asin        : Type -> Any;
+    atan        : Type -> Any;
+    add         : Type -> Any;
+    subtract    : Type -> Any;
+    multiply    : Type -> Any;
+    divide      : Type -> Any;
+    modulo      : Type -> Any;
+    absolute    : Type -> Any;
+    and         : Type -> Any;
+    or          : Type -> Any;
+    not         : Type -> Any;
+    bitAnd      : Type -> Any;
+    bitOr       : Type -> Any;
+    bitNot      : Type -> Any;
+    bitXor      : Type -> Any;
     
 }
