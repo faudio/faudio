@@ -3,6 +3,7 @@
 #define _DOREMIR_PROCESSOR
 
 #include <doremir.h>
+#include <doremir/time.h>
 #include <doremir/type.h>
 #include <doremir/buffer.h>
 
@@ -12,10 +13,13 @@
     @{
     */
 
-typedef doremir_buffer_t doremir_processor_samples_t;
 typedef struct {
-            double sample_rate; long sample_count; bool real_time;
+            double sample_rate;
+            size_t sample_count;
+            size_t vector_size;
+            doremir_time_t real_time;
         } doremir_processor_info_t;
+typedef doremir_buffer_t doremir_processor_samples_t;
 typedef struct {
             void (* before)(doremir_ptr_t, doremir_processor_info_t *);
             doremir_processor_samples_t (* process)(doremir_ptr_t,

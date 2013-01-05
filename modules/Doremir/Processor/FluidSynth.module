@@ -1,6 +1,6 @@
 
 /** 
-    @addtogroup DoremirProcessor
+    @addtogroup DoremirProcessorFluidSynth
     
     @par Implements 
         doremir_destroy_t

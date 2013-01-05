@@ -1,6 +1,6 @@
 
 /** 
-    @addtogroup DoremirProcessor
+    @addtogroup DoremirProcessorBinary
     
     @par Implements 
         doremir_destroy_t

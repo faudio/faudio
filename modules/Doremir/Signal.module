@@ -17,5 +17,6 @@ module Doremir.Signal
 
     apply  : (Processor, Signal) -> Signal;
     apply2 : (Processor, Signal, Signal) -> Signal;
+    apply3 : (Processor, Signal, Signal, Signal) -> Signal;
 
 }

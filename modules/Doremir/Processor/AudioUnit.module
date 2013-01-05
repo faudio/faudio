@@ -1,6 +1,6 @@
 
 /** 
-    @addtogroup DoremirProcessor
+    @addtogroup DoremirProcessorAudioUnit
     
     @par Implements 
         doremir_destroy_t

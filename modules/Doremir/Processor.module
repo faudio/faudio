@@ -8,24 +8,36 @@
 module Doremir.Processor
 {
     import Doremir;
+    import Doremir.Time;
     import Doremir.Type;
     import Doremir.Buffer;
 
-    type Samples = Buffer;
-
+    /** @struct doremir_processor_info_t 
+        Information available to a processor at processing time. 
+      */
     type Info = struct {
-        sampleRate : Double,
-        sampleCount : Long,
-        realTime : Bool
+        sampleRate  : Double,
+        sampleCount : Size,
+        vectorSize  : Size,
+        realTime    : Time
     };
 
-    /** @interface doremir_processor_t */
+    /** @typedef doremir_processor_samples_t
+        The samples manipulated by a processor.
+     */
+    type Samples = Buffer;
+
+    /** @interface doremir_processor_t 
+        The abstract processing interface. */
     type Processor = struct {
         before  : ((Ptr, Info*) -> Void)*,
         process : ((Ptr, Info*, Samples) -> Samples)*,
         after   : ((Ptr, Info*) -> Void)*
     };
-    
+
+    /** @typedef doremir_processor_any_t 
+        A processor of some unkown type.
+     */
     type Any = Ptr;   
     
     lift   : (Type, Unary*) -> Any;

@@ -19,6 +19,10 @@ doremir_signal_t doremir_signal_apply(doremir_processor_t,
 doremir_signal_t doremir_signal_apply2(doremir_processor_t,
                                        doremir_signal_t,
                                        doremir_signal_t);
+doremir_signal_t doremir_signal_apply3(doremir_processor_t,
+                                       doremir_signal_t,
+                                       doremir_signal_t,
+                                       doremir_signal_t);
 
 /** @}
     @}
