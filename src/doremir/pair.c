@@ -59,24 +59,72 @@ doremir_ptr_t doremir_pair_snd(doremir_pair_t p)
 
 doremir_pair_t doremir_pair_dup(doremir_ptr_t x)
 {
-    return new_pair(x, x);
+    return new_pair(doremir_copy(x), doremir_copy(x));
 }
 
 doremir_pair_t doremir_pair_swap(doremir_pair_t p)
 {
-    return new_pair(p->snd, p->fst);
+    return new_pair(doremir_copy(p->snd), doremir_copy(p->fst));
 }
 
 // (a, (b, c)) -> ((a, b), c)
 doremir_pair_t doremir_pair_assoc(doremir_pair_t p)
 {
-    return new_pair(new_pair(p->fst, ((pair_t) p->snd)->fst), ((pair_t) p->snd)->snd);
+    return new_pair(new_pair(doremir_copy(p->fst), 
+                             doremir_copy(((pair_t) p->snd)->fst)), 
+                    doremir_copy(((pair_t) p->snd)->snd));
 }
 
 // ((a, b), c) -> (a, (b, c))
 doremir_pair_t doremir_pair_unassoc(doremir_pair_t p)
 {
-    return new_pair(((pair_t) p->fst)->fst, new_pair(((pair_t) p->fst)->snd, p->snd));
+    return new_pair(doremir_copy(((pair_t) p->fst)->fst), 
+                    new_pair(doremir_copy(((pair_t) p->fst)->snd), 
+                             doremir_copy(p->snd)));
+}
+
+
+
+doremir_ptr_t doremir_pair_dfst(doremir_pair_t p)
+{
+    ptr_t v = p->fst;
+    doremir_destroy(p);
+    return v;
+}
+
+doremir_ptr_t doremir_pair_dsnd(doremir_pair_t p)
+{
+    ptr_t v = p->snd;
+    doremir_destroy(p);
+    return v;
+}
+
+doremir_pair_t doremir_pair_ddup(doremir_ptr_t x)
+{
+    return new_pair(x, doremir_copy(x));
+}
+
+doremir_pair_t doremir_pair_dswap(doremir_pair_t p)
+{
+    pair_t p2 = new_pair(p->snd, p->fst);
+    doremir_destroy(p);
+    return p2;
+}
+
+// (a, (b, c)) -> ((a, b), c)
+doremir_pair_t doremir_pair_dassoc(doremir_pair_t p)
+{
+    pair_t p2 = new_pair(new_pair(p->fst, ((pair_t) p->snd)->fst), ((pair_t) p->snd)->snd);
+    doremir_destroy(p);
+    return p2;
+}
+
+// ((a, b), c) -> (a, (b, c))
+doremir_pair_t doremir_pair_dunassoc(doremir_pair_t p)
+{
+    pair_t p2 = new_pair(((pair_t) p->fst)->fst, new_pair(((pair_t) p->fst)->snd, p->snd));
+    doremir_destroy(p);
+    return p2;
 }
 
 
