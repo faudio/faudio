@@ -137,10 +137,6 @@ doremir_string_t buffer_show(doremir_ptr_t a)
     size_t   length = more ? 80 : doremir_buffer_size(buffer);
     string_t str    = string("<Buffer");
 
-    // str = sdappend(str, string("["));
-    // str = sdappend(str, doremir_string_format_integer("%i", length));
-    // str = sdappend(str, string("]"));
-
     for (size_t i = 0; i < length; ++i)
     {
         str = sdappend(str, string(" "));

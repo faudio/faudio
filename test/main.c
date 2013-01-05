@@ -448,6 +448,7 @@ doremir_ptr_t test_atomic_queue_reader(doremir_ptr_t x)
         ptr_t v;
         if ((v = doremir_atomic_queue_read(q)))
             printf("         |- %5d    \n", ti32(v));
+        doremir_thread_sleep(10);
     }
 }
 void test_atomic_queue()
@@ -480,6 +481,7 @@ void test_atomic_ring_buffer()
     test_section();
 }
 
+void bp() {}
 
 int main (int argc, char const *argv[])
 {
@@ -521,6 +523,7 @@ int main (int argc, char const *argv[])
       // processors
       // dispatchers
       
+      bp();
       
       doremir_audio_engine_terminate();
   }
