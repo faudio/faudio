@@ -1,25 +1,7 @@
 
-DoReMIR Audio Engine
-=========================
+The DoReMIR Audio Engine
+========================
 
-For a basic build:
-    
-    $ ./bootstrap && make
+Copyright (c) DoReMIR Music Research 2012
 
-This may require a network connection, as the ./bootstrap script may need to download
-dependent libraries from the package server.
-
-To run unit tests:
-
-    $ make test
-  
-To test with ScoreCleaner (must be on the desktop, set $SCORECLEANER to override):
-
-    $ make run_scorecleaner
-
-To generate documentation:
-    
-    $ make doc
-
-For more detailed instructions, see the documentation page Build and install.
-
+For build and install instructions, see the documentation page Build and Install.
