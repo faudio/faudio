@@ -2,11 +2,11 @@
 Prerequisites {#Prerequisites}
 ------------
 
-@tableofcontents
+[TOC]
  
 Hopefully complete list of hardware, software and libraries required to build the Audio Engine.
 
-## Platform 
+# Platform {#Platform} 
 
 Supported platforms are:
 
@@ -15,7 +15,7 @@ Supported platforms are:
 
 Porting to Linux should be relatively easy but has not been done yet.
 
-## Compiler
+# Compiler {#Compiler}
 
 A compiler supporting the C99 standard is required. Currently tested are:
 
@@ -24,11 +24,7 @@ A compiler supporting the C99 standard is required. Currently tested are:
   
 The default Windows compiler (Visual Studio) is not supported, MinGW/MSYS is recommended.
 
-## Tools
-
-### A Unix shell
-
-Essential. On Windows the MinGW/MSYS shell is tested, but Cygwin might work as well.
+# Tools {#Tools}
 
 ### CMake
 
@@ -64,7 +60,7 @@ Required for building language bindings and documentation.
 
 
 
-## Libraries
+# Libraries {#Libraries}
 
 These are typically handled by the package mangager, see [build and install](@ref BuildAndInstall).
 

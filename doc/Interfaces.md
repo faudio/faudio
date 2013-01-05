@@ -1,6 +1,5 @@
 
-Interfaces {#Interfaces}
-----------------------------------------------------------------------------------------------------
+# Interfaces {#Interfaces}
 
 [TOC]
 
@@ -17,7 +16,7 @@ identifier and returns a pointer to a structure conforming to the interface spec
 an *implementation*.
 
 
-## Using an interface
+# Using an interface {#Using}
 
 Interface methods are called by invoking @ref doremir_interface, passing the interface identifier
 and the value on which the interface is going to be dispatched. This is usually one of the
@@ -29,9 +28,7 @@ particular it is not safe to cast a pointer of some type to the interface type a
 from that pointer.
 
 
-### Generic functions
-
-\anchor GenericFunctions
+## Generic functions {#Generic}
 
 Interfaces are commonly used to implement generic functions, which are functions using an interface
 method without knowledge of the exact type. Generic functions generally accept one or more
@@ -59,7 +56,7 @@ void * doremir_min(void * a, void * b)
 }
 ~~~~
 
-### Dynamic interface checks
+## Dynamic interface checks {#Dynamic}
 
 As @ref doremir_interface returns a pointer to the interface or `null`, it can be used for
 dynamically inspecting a whether an arbitrary pointer supports an interface or not. If a type is
@@ -73,7 +70,7 @@ bool has_equality(void * a)
 ~~~~
 
 
-## Defining an interface
+# Defining an interface {#Defining}
 
 To define a new interface, the following has to be provided:
 
@@ -110,11 +107,10 @@ inline bool doremir_greater_than (void *, void *)
 {
     return doremir_interface(doremir_order_i, a)->greater_than(a, b);
 }
-
 ~~~~
 
 
-## Implementing an interface
+# Implementing an interface {#Implementing}
 
 To implement an interface for a reference type, the following has to be provided:
 
@@ -129,7 +125,7 @@ interface identifiers, returning a pointer to the appropriate interface struct.
 As an example, let us write a custom reference type `foo`, implementing @ref doremir_equal_t
 and @ref doremir_order_t.
 
-### The methods
+## The methods {#Methods}
 
 The methods are written as ordinary functions, which have the same type as the functions
 declared in the interface struct. These functions does need not be exported.
@@ -151,7 +147,7 @@ bool foo_greater_than(void * a, void * b)
 }
 ~~~~
 
-### The dispatch function
+## The dispatch function {#Dispatch}
 
 The dispatch function should have the type @ref doremir_impl_t. For example:
 
@@ -175,7 +171,7 @@ doremir_ptr_t foo_impl(doremir_id_t interface)
 }
 ~~~~
 
-### The interface pointer
+## The interface pointer {#Pointer}
 
 The address of the dispatch function has to be the *first* element of the implementing type. The
 name of the fields is irrelevant, typically `impl` is used.

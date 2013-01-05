@@ -1,6 +1,7 @@
 
-Build and install {#BuildAndInstall}
-----------------------------------------------------------------------------------------------------
+# Build and install {#BuildAndInstall}
+
+[TOC]
 
 The source code is stored in the repository `audio-engine.git`. Its dependencies are stored in
 separate repositories which are submodules to the main repository. To fetch the source code for the
@@ -19,16 +20,16 @@ bootstrap command. After bootstrap has finished, you can always change build opt
 `ccmake` or `cmake-gui`.
 
 
-## Build commands
+# Commands {#BuildCommands}
 
-### Setting up the build environment
+## Setting up the build environment {#SettingUp}
 
     ./bootstrap
     
 This will perform sanity checks and set up the dependencies by downloading or building, depending
 on the value of the `BUILD_COMPONENTS` flag. You can always repeat those steps as per below.
 
-### Downloading dependencies
+## Downloading dependencies {#ComponentsDownload}
 
     make components_clean
     make edit_cache -DBUILD_COMPONENTS=0
@@ -36,7 +37,7 @@ on the value of the `BUILD_COMPONENTS` flag. You can always repeat those steps a
 
 Usually carried out by the bootstrap script. Downloads dependencies from the package server.
 
-### Building dependencies
+## Building dependencies {#ComponentsBuild}
 
     make components_clean
     make edit_cache -DBUILD_COMPONENTS=1
@@ -44,17 +45,17 @@ Usually carried out by the bootstrap script. Downloads dependencies from the pac
 
 Usually carried out by the bootstrap script. Builds dependencies locally.
 
-### Removing dependencies
+## Removing dependencies {#ComponentsClean}
 
     make components_clean
 
 Remoevs all dependencies.
 
-### Building the audio engine
+## Building the audio engine {#All}
 
     make
 
-### Testing the audio engine
+## Testing the audio engine {#Test}
 
     make test
 
@@ -63,19 +64,19 @@ Remoevs all dependencies.
 FIXME
 
 
-### Building the language bindings
+## Building the language bindings {#Bindings}
 
     make bindings
 
 FIXME
 
-### Building the documentation
+## Building the documentation {#Docs}
 
     make documentation
 
 FIXME
 
-### Distributing the audio engine
+## Distributing the audio engine
 
     make distribute
 

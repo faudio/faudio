@@ -1,6 +1,5 @@
 
-Collections {#Collections}
-----------------------------------------------------------------------------------------------------
+# Collections {#Collections}
 
 [TOC]
 
@@ -21,14 +20,14 @@ All collections implement the following [interfaces](@ref Interfaces):
 * doremir_string_show_t
 
 
-## Immutable
+# Immutable {#Immutable}
 
 The collections used by the Audio Engine can not change. Functions that such as @ref
 doremir_list_map return new collections instead.
 
 Immutability allows collections to be passed between threads without synchronization issues.
 
-## Polymorphic
+# Polymorphic {#Polymorphic}
 
 The collections store @ref doremir_ptr_t by default. Other reference types can be stored by casting.
 Primitive types such as integers, floats and characters can be stored by using 
@@ -37,7 +36,7 @@ Primitive types such as integers, floats and characters can be stored by using
 It is not recommended to store integral types by casting to pointers.
 
 
-## Single-ownership
+# Single-ownership {#si}
 
 The Audio Engine use single-ownership semantics for all of its reference types. Each collection
 provides a set of construct, copy and destruct function, and each collection must be destructed
@@ -103,7 +102,7 @@ variable is updated locally.
 Note that the destructive functions *invalidates* the original collection rather than *mutating*
 it. Invalidating a collection does not affect copies.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~
 {
     doremir_list_t xs;
     doremir_list_t ys;
@@ -122,4 +121,4 @@ it. Invalidating a collection does not affect copies.
     doremir_destroy(ys);                    // destroy both lists
     doremir_destroy(xs);
 }
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~
