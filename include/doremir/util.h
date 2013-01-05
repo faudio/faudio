@@ -3,19 +3,20 @@
 #define _DOREMIR_UTIL
 
 #define ptr_t               doremir_ptr_t
+#define impl_t              doremir_impl_t
 #define pair_t              doremir_pair_t
 #define list_t              doremir_list_t
 #define set_t               doremir_set_t
 #define map_t               doremir_map_t
-#define pqueue_t            doremir_priority_queue_t
-#define atomic_t            doremir_atomic_t
-#define aqueue_t            doremir_atomic_queue_t
+#define priority_queue_t    doremir_priority_queue_t
 #define string_t            doremir_string_t
 #define ratio_t             doremir_ratio_t
 #define buffer_t            doremir_buffer_t
 #define thread_t            doremir_thread_t
+#define atomic_t            doremir_atomic_t
+#define atomic_queue_t      doremir_atomic_queue_t
 #define ringbuffer_t        doremir_atomic_ring_buffer_t
-#define impl_t              doremir_impl_t
+#define processor_t         doremir_processor_any_t
 
 #define pair(a,b)           doremir_pair_create(a,b)
 #define string(a)           doremir_string_from_utf8(a)

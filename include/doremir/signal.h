@@ -15,15 +15,15 @@
 
 typedef struct _doremir_signal_t * doremir_signal_t;
 doremir_type_t doremir_signal_type_of(doremir_signal_t);
-doremir_signal_t doremir_signal_apply(doremir_processor_any_t,
-                                      doremir_signal_t);
-doremir_signal_t doremir_signal_apply2(doremir_processor_any_t,
-                                       doremir_signal_t,
-                                       doremir_signal_t);
-doremir_signal_t doremir_signal_apply3(doremir_processor_any_t,
-                                       doremir_signal_t,
-                                       doremir_signal_t,
-                                       doremir_signal_t);
+doremir_signal_t doremir_signal_apply_unary(doremir_processor_any_t,
+                                            doremir_signal_t);
+doremir_signal_t doremir_signal_apply_binary(doremir_processor_any_t,
+                                             doremir_signal_t,
+                                             doremir_signal_t);
+doremir_signal_t doremir_signal_apply_ternary(doremir_processor_any_t,
+                                              doremir_signal_t,
+                                              doremir_signal_t,
+                                              doremir_signal_t);
 doremir_signal_t doremir_signal_const(doremir_ptr_t,
                                       doremir_signal_t);
 doremir_signal_t doremir_signal_delay(size_t, doremir_signal_t);
