@@ -13,7 +13,8 @@
 # 		Build\ and\ install.md;
 
 doxygen :
-	doxygen doc/Doxyfile	
+	doxygen doc/Doxyfile; \
+	cp doc/include/styles.css doc/build/html/; 
 
 html : doxygen
 pdf: doxygen
