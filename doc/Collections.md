@@ -1,15 +1,17 @@
 
-## Collections
+Collections {#Collections}
+----------------------------------------------------------------------------------------------------
 
-\anchor Collections
+[TOC]
 
-The Audio Engine include a set of container data structures, commonly known as collections.
-The primary use of these types it to be used as messages, to be sent and received from
-audio computations. For this purpose collections are *immutable* and *polymorphic*. In contrast
-to container types in managed languages, the collection types used in the Audio Engine are
-not shared, instead they have *single-ownership semantics*.
+The Audio Engine include a set of container data structures, commonly known as collections. The
+primary use of these types it to be used as messages, to be sent and received from audio
+computations. For this reason the Audio Engine collections are *immutable* and *polymorphic*.
 
-All collections implement the following \ref Interfaces "interfaces":
+In contrast to container types in managed languages, the collection types used in the Audio Engine
+are not shared, instead they have *single-ownership semantics*.
+
+All collections implement the following [interfaces](@ref Interfaces):
 
 * doremir_equal_t
 * doremir_order_t
@@ -19,26 +21,29 @@ All collections implement the following \ref Interfaces "interfaces":
 * doremir_string_show_t
 
 
-### Immutable
+## Immutable
 
-The collections used by the Audio Engine can not change. Functions that such as \ref doremir_list_map
-return new collections instead.
+The collections used by the Audio Engine can not change. Functions that such as @ref
+doremir_list_map return new collections instead.
 
 Immutability allows collections to be passed between threads without synchronization issues.
 
-### Polymorphic
+## Polymorphic
 
-The collections store \ref doremir_ptr_t by default. Other reference types can be stored by casting.
+The collections store @ref doremir_ptr_t by default. Other reference types can be stored by casting.
+Primitive types such as integers, floats and characters can be stored by using 
+[boxed types](@ref BoxedTypes). 
 
-Primitive types such as integers, floats and characters can be stored by using \ref BoxedTypes "boxed types".
 It is not recommended to store integral types by casting to pointers.
 
 
-### Single-ownership
+## Single-ownership
 
 The Audio Engine use single-ownership semantics for all of its reference types. Each collection
 provides a set of construct, copy and destruct function, and each collection must be destructed
-exactly once. The correct usage pattern is to call the destructor whenever the variable holding the
+exactly once. 
+
+The correct usage pattern is to call the destructor whenever the variable holding the
 collection goes out of scope. It is good practice to introduce an extra block to mark out the scope
 of the collection variable.
 
@@ -64,9 +69,9 @@ The reference types can be shared as long as the original reference is in scope.
 }
 ~~~~
 
-If a reference type is required to persist beyond the original scope it can be copied or moved.
-The \ref doremir_move function does nothing, it just serves as a mnemonic to mark out that
-ownership is being transfered.
+If a reference type is required to persist beyond the original scope it can be copied or moved. The
+@ref doremir_move function does nothing, it just serves as a mnemonic to mark out that ownership is
+being transfered.
 
 ~~~~
 {
@@ -90,12 +95,13 @@ ownership is being transfered.
 ~~~~
 
 
-Functions operating on collections come in two variants: a non-destructive variant that simply construct a
-new collection (the default), and a destructive variant which destructs the old collections while
-constructing the new one. The destructive functions should be used whenever a variable is updated locally.
+Functions operating on collections come in two variants: a non-destructive variant that simply
+construct a new collection (the default), and a destructive variant which destructs the old
+collections while constructing the new one. The destructive functions should be used whenever a
+variable is updated locally.
 
-Note that the destructive functions *invalidates* the original collection rather than *mutating* it.
-Invalidating a collection does not affect copies.
+Note that the destructive functions *invalidates* the original collection rather than *mutating*
+it. Invalidating a collection does not affect copies.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 {

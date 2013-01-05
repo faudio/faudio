@@ -1,7 +1,6 @@
 
 # all : pdf html
 # 
-# html : doxygen
 # 
 # pdf:
 # 	mkdir -p build/book; \
@@ -15,3 +14,10 @@
 
 doxygen :
 	doxygen doc/Doxyfile	
+
+html : doxygen
+pdf: doxygen
+	pushd doc/build/latex; \
+	make; \
+	cp refman.pdf "../book/Audio Engine.pdf"; \
+	popd;

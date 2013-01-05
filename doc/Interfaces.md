@@ -1,40 +1,44 @@
 
-## Interfaces
+Interfaces {#Interfaces}
+----------------------------------------------------------------------------------------------------
 
-\anchor Interfaces
+[TOC]
 
-The Audio Engine provides [ad-hoc polymorphism](http://en.wikipedia.org/wiki/Ad-hoc_polymorphism) using interfaces.
-An interface is a collection of function types, identified by a unique value known as the *interface identifier*.
-Interfaces can be used to decorate a type with additional semantics such as \ref doremir_equal_t "equality" or \ref
-doremir_order_t "ordering". Another use is to overload common functionality, such as \ref doremir_number_t
-"arithmetic operations".
+The Audio Engine provides [ad-hoc polymorphism](http://en.wikipedia.org/wiki/Ad-hoc_polymorphism)
+using interfaces. An interface is a collection of function types, identified by a unique value
+known as the *interface identifier*. Interfaces can be used to decorate a type with additional
+semantics such as [equality](@ref doremir_equal_t) or [ordering](@ref doremir_order_t). 
+Another use is to overload common functionality, such as 
+[arithmetic operations](@ref doremir_number_t).
 
-Any [reference type](http://en.wikipedia.org/wiki/Reference_type) may provide an implementation for any number of
-interfaces by implementing a so-called *dispatch function*, which takes an interface identifier and returns a
-pointer to a structure conforming to the interface specification, known as an *implementation*.
+Any [reference type](http://en.wikipedia.org/wiki/Reference_type) may provide an implementation for
+any number of interfaces by implementing a so-called *dispatch function*, which takes an interface
+identifier and returns a pointer to a structure conforming to the interface specification, known as
+an *implementation*.
 
 
 ## Using an interface
 
-Interface methods are called by invoking \ref doremir_interface, passing the interface identifier and the 
-value on which the interface is going to be dispatched. This is usually one of the arguments to the invoked
-method, but it can be any value. If the given value does not implement the interface, \ref doremir_interface
-returns null.
+Interface methods are called by invoking @ref doremir_interface, passing the interface identifier
+and the value on which the interface is going to be dispatched. This is usually one of the
+arguments to the invoked method, but it can be any value. If the given value does not implement the
+interface, @ref doremir_interface returns null.
 
-Note that \ref doremir_interface is actually the *only* way to call am interface method: in particular 
-it is not safe to cast a pointer of some type to the interface type and call the methods from that pointer.
+Note that @ref doremir_interface is actually the *only* way to call am interface method: in
+particular it is not safe to cast a pointer of some type to the interface type and call the methods
+from that pointer.
 
 
 ### Generic functions
 
 \anchor GenericFunctions
 
-Interfaces are commonly used to implement generic functions, which are functions using an interface method without
-knowledge of the exact type. Generic functions generally accept one or more parameters of type `void *` or
-\ref doremir_ptr_t.
+Interfaces are commonly used to implement generic functions, which are functions using an interface
+method without knowledge of the exact type. Generic functions generally accept one or more
+parameters of type `void *` or @ref doremir_ptr_t.
 
-For example, this is a way to implement the *min* function for any type supporing the \ref doremir_order_t
-interface.
+For example, this is a way to implement the *min* function for any type supporing the @ref
+doremir_order_t interface.
 
 ~~~~
 void * doremir_min(void * a, void * b) 
@@ -43,9 +47,10 @@ void * doremir_min(void * a, void * b)
 }
 ~~~~
 
-Note that most interfaces define wrappers for the the \ref doremir_interface call. By convention, the
-wrapper should be a function of the same name as the interface method. Thus the above function could
-be defined more briefly as follows.
+Note that most interfaces define generic functions wrapping their methods, saving the user from
+having to write an explicit @ref doremir_interface call. By convention, the wrapper should be a
+function of the same name as the interface method. Thus the above function could be defined more
+briefly as follows.
 
 ~~~~
 void * doremir_min(void * a, void * b)
@@ -54,9 +59,11 @@ void * doremir_min(void * a, void * b)
 }
 ~~~~
 
-As \ref doremir_interface returns a pointer to the interface or `null`, it can be used for dynamically
-inspecting a whether an arbitrary pointer supports an interface or not. If a type is known to support an
-interface at compile-time, this check can be omitted.
+### Dynamic interface checks
+
+As @ref doremir_interface returns a pointer to the interface or `null`, it can be used for
+dynamically inspecting a whether an arbitrary pointer supports an interface or not. If a type is
+known to support an interface at compile-time, this check can be omitted.
 
 ~~~~
 bool has_equality(void * a)
@@ -66,7 +73,7 @@ bool has_equality(void * a)
 ~~~~
 
 
-### Defining an interface
+## Defining an interface
 
 To define a new interface, the following has to be provided:
 
@@ -91,7 +98,7 @@ The identifier should be defined as a macro or enum constant defining a unique n
 #define doremir_order_i 255;
 ~~~~
 
-As described above, it is good style to also provide a global wrapper for each method:
+As described above, it is good style to also provide a generic function wrapping each method:
 
 ~~~~
 inline bool doremir_less_than (void *, void *)
@@ -107,36 +114,49 @@ inline bool doremir_greater_than (void *, void *)
 ~~~~
 
 
-### Implementing an interface
+## Implementing an interface
 
 To implement an interface for a reference type, the following has to be provided:
 
 * Functions implementing the interface methods
-* A dispatch function of type \ref doremir_impl_t
+* A dispatch function of type @ref doremir_impl_t
 * A field in the type that points to the dispatch function
 * A construction routine that sets the pointer to the dispatch function
 
-The dispatch function is unique for each type, and performs a case matching on the
-incoming interface identifiers, returning a pointer to the appropriate interface
-struct. 
+The dispatch function is unique for each type, and performs a case matching on the incoming
+interface identifiers, returning a pointer to the appropriate interface struct.
+
+As an example, let us write a custom reference type `foo`, implementing @ref doremir_equal_t
+and @ref doremir_order_t.
+
+### The methods
+
+The methods are written as ordinary functions, which have the same type as the functions
+declared in the interface struct. These functions does need not be exported.
 
 ~~~~
 bool foo_equal(void * a, void * b)
 {
-    return false;
+    ...
 }
 
 bool foo_less_than(void * a, void * b)
 {
-    return false;
+    ...
 }
 
 bool foo_greater_than(void * a, void * b)
 {
-    return false;
+    ...
 }
+~~~~
 
-void * foo_impl(doremir_id_t interface)
+### The dispatch function
+
+The dispatch function should have the type @ref doremir_impl_t. For example:
+
+~~~~
+doremir_ptr_t foo_impl(doremir_id_t interface)
 {
     static doremir_equal_t foo_equal_impl = { foo_equal };
     static doremir_order_t foo_order_impl = { foo_less_than, foo_greater_than };
@@ -155,8 +175,10 @@ void * foo_impl(doremir_id_t interface)
 }
 ~~~~
 
-The address of the dispatch function has to be the *first* element of the implementing type. The typedef
-doremir_impl_t can be used for this purpose. The name of the fields is irrelevant, typically `impl` is used.
+### The interface pointer
+
+The address of the dispatch function has to be the *first* element of the implementing type. The
+name of the fields is irrelevant, typically `impl` is used.
 
 ~~~~
 struct foo
@@ -166,11 +188,11 @@ struct foo
 };
 ~~~~
 
-The creation routine for the type should include a line to set up the `impl` field to the address of the
-dispatch function. Note that a forward delcaration might be necessary here.
+The creation routine for the type should include a line to set up the `impl` field to the address
+of the dispatch function. Note that a forward delcaration might be necessary here.
 
 ~~~~
-void * foo_impl(doremir_id_t interface);
+doremir_ptr_t foo_impl(doremir_id_t interface);
 
 struct foo *create_foo()
 {
