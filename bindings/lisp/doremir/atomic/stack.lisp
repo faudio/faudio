@@ -6,4 +6,4 @@
 
 (defcfun "Doremir.Atomic.Stack.read" :Doremir.Ptr (:Doremir.Atomic.Stack))
 
-(defcfun "Doremir.Atomic.Stack.write" :Doremir.Ptr (:Doremir.Atomic.Stack :Doremir.Ptr))
+(defcfun "Doremir.Atomic.Stack.write" :boolean (:Doremir.Atomic.Stack :Doremir.Ptr))

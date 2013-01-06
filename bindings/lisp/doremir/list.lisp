@@ -34,7 +34,11 @@
 
 (defcfun "Doremir.List.take" :Doremir.List (:int :Doremir.List))
 
+(defcfun "Doremir.List.dtake" :Doremir.List (:int :Doremir.List))
+
 (defcfun "Doremir.List.drop" :Doremir.List (:int :Doremir.List))
+
+(defcfun "Doremir.List.ddrop" :Doremir.List (:int :Doremir.List))
 
 (defcfun "Doremir.List.range" :Doremir.List (:int :int :Doremir.List))
 

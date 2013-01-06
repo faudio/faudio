@@ -6,6 +6,8 @@
 
 (defctype Doremir.Binary (:pointer (:pointer :void)))
 
+(defctype Doremir.Ternary (:pointer (:pointer :void)))
+
 (defctype Doremir.Pred (:pointer (:pointer :void)))
 
 (defctype Doremir.Closure (:pointer :void))

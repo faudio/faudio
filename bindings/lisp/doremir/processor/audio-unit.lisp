@@ -1,0 +1,1 @@
+(defctype Doremir.Processor.AudioUnit :pointer)

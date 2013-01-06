@@ -6,4 +6,4 @@
 
 (defcfun "Doremir.Atomic.Queue.read" :Doremir.Ptr (:Doremir.Atomic.Queue))
 
-(defcfun "Doremir.Atomic.Queue.write" :Doremir.Ptr (:Doremir.Atomic.Queue :Doremir.Ptr))
+(defcfun "Doremir.Atomic.Queue.write" :boolean (:Doremir.Atomic.Queue :Doremir.Ptr))

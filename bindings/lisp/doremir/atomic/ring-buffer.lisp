@@ -4,7 +4,7 @@
 
 (defcfun "Doremir.Atomic.RingBuffer.copy" :Doremir.Atomic.RingBuffer (:Doremir.Atomic.RingBuffer))
 
-(defcfun "Doremir.Atomic.RingBuffer.copySized" :Doremir.Atomic.RingBuffer (:size :Doremir.Atomic.RingBuffer))
+(defcfun "Doremir.Atomic.RingBuffer.resize" :Doremir.Atomic.RingBuffer (:size :Doremir.Atomic.RingBuffer))
 
 (defcfun "Doremir.Atomic.RingBuffer.swap" :void (:Doremir.Atomic.RingBuffer :Doremir.Atomic.RingBuffer))
 
@@ -14,4 +14,4 @@
 
 (defcfun "Doremir.Atomic.RingBuffer.read" :uint8 (:Doremir.Atomic.RingBuffer))
 
-(defcfun "Doremir.Atomic.RingBuffer.write" :void (:Doremir.Atomic.RingBuffer :uint8))
+(defcfun "Doremir.Atomic.RingBuffer.write" :boolean (:Doremir.Atomic.RingBuffer :uint8))
