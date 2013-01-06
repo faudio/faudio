@@ -485,7 +485,13 @@ void test_audio_types()
     // FIXME
     
     doremir_print("type(uint8)    => %s\n", type(uint8));
+    doremir_print("size_of(1024,type(uint8))  => %s\n", i32(doremir_type_size_of(1024,type(uint8))));
+    doremir_print("align_of(1024,type(uint8)) => %s\n", i32(doremir_type_align_of(type(uint8))));
+    printf("\n");
+
     doremir_print("type(double)   => %s\n", type(double));
+    doremir_print("size_of(1024,type(double))  => %s\n", i32(doremir_type_size_of(1024,type(double))));
+    doremir_print("align_of(1024,type(double)) => %s\n", i32(doremir_type_align_of(type(double))));
     printf("\n");
 
     type_t t = type_pair(type(uint8), type(double));
@@ -509,7 +515,7 @@ void test_audio_types()
     type_t v = type_pair(type(uint8),type_pair(type(uint8),type_pair(type(uint8),
         type_pair(type(uint8),type_pair(type(uint8),type_pair(type(uint8),
             type_pair(type(uint8),type_pair(type(uint8),type_pair(type(uint8),
-            type_pair(type(uint8),type(uint8)))))))))));
+            type(uint8))))))))));
 
     doremir_print("v                => %s\n", v);
     doremir_print("size_of(1024,v)  => %s\n", i32(doremir_type_size_of(1024,v)));
