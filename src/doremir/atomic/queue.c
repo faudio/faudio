@@ -30,9 +30,8 @@ doremir_ptr_t atomic_queue_impl(doremir_id_t interface);
 #define get_node(N) \
     ((node_t) doremir_atomic_get(N))
 
-// TODO does not need to be exchange?
 #define forward_node(N) \
-    doremir_atomic_exchange(N, doremir_atomic_get(N), (get_node(N))->next);
+    doremir_atomic_exchange(N, get_node(N), (get_node(N))->next);
     
 
 // --------------------------------------------------------------------------------

@@ -134,13 +134,13 @@ size_t size_max(size_t a, size_t b)
 inline static 
 size_t pad(size_t x, size_t a)
 {
-  return (a - x) % a;
+    return (a - x) % a;
 }
 
 inline static 
 size_t next_aligned(size_t x, size_t a)
 {
-  return x + pad(x, a);
+    return x + pad(x, a);
 }
 
 inline static 
@@ -289,7 +289,7 @@ string_t type_show(doremir_ptr_t a)
     case frame_type:
         s = sdappend(s, string("["));
         s = sdappend(s, type_show(type->fields.vector.base));
-        s = sdappend(s, string(" x F]"));
+        s = sdappend(s, string(" x f]"));
         break;
     default:
         assert(false && "Missing label");
