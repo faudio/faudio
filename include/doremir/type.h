@@ -13,7 +13,13 @@
 
 typedef size_t doremir_type_frames_t;
 typedef enum {
-            uint8_type, double_type
+            uint8_type,
+            uint16_type,
+            uint32_type,
+            uint64_type,
+            float_type,
+            double_type,
+            pointer_type
         } doremir_type_simple_t;
 typedef struct {
             doremir_impl_t impl;

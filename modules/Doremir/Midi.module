@@ -4,6 +4,12 @@
     
     Midi messages.
 
+    @par Literals
+    - `midi(note_on, 60, 127)`
+    - `midi(note_off, 60, 127)`
+    - `midi(0x9, 60, 127)`
+    - `midi_sysex(buffer)`
+
     @par Implements 
     - doremir_equal_t
     - doremir_order_t

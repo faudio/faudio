@@ -7,6 +7,9 @@
     Note that the string type is not a \ref Collections "collection" as it is not polymorphic. However, it can
     be converted to a list of characters using the \ref DoremirStringList "these functions".
 
+    @par Literals
+    - `string("foo")`
+
     @par Implements 
     - doremir_equal_t
     - doremir_order_t

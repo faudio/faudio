@@ -4,6 +4,9 @@
     
     Pair data structure.
 
+    @par Literals
+    - `pair(1, 2)`
+
     @par Implements 
     - doremir_equal_t
     - doremir_order_t

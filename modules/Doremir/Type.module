@@ -17,6 +17,18 @@
     `[A x N]`                | vector of *A*
     `{A}`                    | frame of *A*
 
+    @par Literals
+    - `type(uint8)`
+    - `type(uint16)`
+    - `type(uint32)`
+    - `type(uint64)`
+    - `type(float)`
+    - `type(double)`
+    - `type(ptr)`
+    - `type_pair(type(double), type(double))`
+    - `type_vector(type(double), 200)`
+    - `type_frame(type(double))`
+
     @par Implements        
     - doremir_equal_t
     - doremir_copy_t
