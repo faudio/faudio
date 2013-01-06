@@ -9,8 +9,8 @@
     `uint8`                  | 8-bit integer
     `double`                 | 64-bit floating point
     `(A, B)`                 | pair of *A* and *B*
-    `[A x n]`                | vector of A
-    `[A x F]`                | frame vector of A
+    `[A x N]`                | vector of A
+    `[A x f]`                | frame vector of A
 
     @par Implements        
     - @ref doremir_equal_t
