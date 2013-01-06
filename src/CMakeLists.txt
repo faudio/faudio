@@ -17,10 +17,12 @@ list(APPEND SRCS
   doremir/midi.c
   doremir/pair.c
   doremir/priority_queue.c
+  doremir/processor.c
   doremir/ratio.c
   doremir/set.c
   doremir/string.c
   doremir/time.c
+  doremir/type.c
   doremir/thread/future.c
   doremir/thread/improving.c
   )

@@ -16,12 +16,19 @@
 #define atomic_t            doremir_atomic_t
 #define atomic_queue_t      doremir_atomic_queue_t
 #define ringbuffer_t        doremir_atomic_ring_buffer_t
+#define type_t              doremir_type_t
 #define processor_t         doremir_processor_any_t
 
 #define pair(a,b)           doremir_pair_create(a,b)
 #define string(a)           doremir_string_from_utf8(a)
 #define unstring(a)         doremir_string_to_utf8(a)
 #define ratio(a,b)          doremir_ratio_create(a,b)
+
+#define time(d,h,m,s)       doremir_time_create(d,h,m,ratio(s,1))
+#define days(d)             time(d,0,0,0)
+#define hours(h)            time(0,h,0,0)
+#define minutes(m)          time(0,0,m,0)
+#define seconds(s)          time(0,0,0,s)
 
 #define tb                  doremir_to_bool
 #define ti8                 doremir_to_int8
@@ -105,6 +112,10 @@ doremir_list_t doremir_map(int count, ...);
 #define list4(a,b,c,d)      doremir_list(4,a,b,c,d)
 #define list5(a,b,c,d,e)    doremir_list(5,a,b,c,d,e)
 #define list(...) VARARG(list, __VA_ARGS__)
+
+#ifndef alignof
+#define alignof(T) offsetof (struct { char c; T member; }, member)
+#endif
 
 
 #endif // _DOREMIR_UTIL

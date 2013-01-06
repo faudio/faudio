@@ -15,9 +15,9 @@
 
 typedef struct {
             double sample_rate;
-            size_t sample_count;
-            size_t vector_size;
-            doremir_time_t real_time;
+            size_t num_samples;
+            size_t sample_time;
+            doremir_time_t total_time;
         } doremir_processor_info_t;
 void doremir_processor_info_default(doremir_processor_info_t *);
 typedef doremir_buffer_t doremir_processor_samples_t;
@@ -30,11 +30,11 @@ typedef struct {
         } doremir_processor_t;
 typedef doremir_ptr_t doremir_processor_any_t;
 doremir_processor_any_t doremir_processor_unary(doremir_type_t,
-                                                doremir_unary_t *);
+                                                doremir_unary_t);
 doremir_processor_any_t doremir_processor_binary(doremir_type_t,
-                                                 doremir_binary_t *);
+                                                 doremir_binary_t);
 doremir_processor_any_t doremir_processor_ternary(doremir_type_t,
-                                                  doremir_ternary_t *);
+                                                  doremir_ternary_t);
 doremir_processor_any_t doremir_processor_identity(doremir_type_t);
 doremir_processor_any_t doremir_processor_constant(doremir_type_t,
                                                    doremir_ptr_t);

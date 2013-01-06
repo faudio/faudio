@@ -3,7 +3,10 @@
     @addtogroup DoremirProcessor
     
     Provides signal processors.
-    
+
+    @par Implements        
+    - @ref doremir_string_show_t
+    - @ref doremir_destroy_t
  */
 module Doremir.Processor
 {
@@ -17,9 +20,9 @@ module Doremir.Processor
       */
     type Info = struct {
         sampleRate  : Double,
-        sampleCount : Size,
-        vectorSize  : Size,
-        realTime    : Time
+        numSamples  : Size,
+        sampleTime  : Size,
+        totalTime   : Time
     };     
     
     infoDefault : Info* -> Void;  
@@ -42,9 +45,9 @@ module Doremir.Processor
      */
     type Any = Ptr;   
     
-    unary   : (Type, Unary*) -> Any;
-    binary : (Type, Binary*) -> Any;
-    ternary : (Type, Ternary*) -> Any;
+    unary   : (Type, Unary) -> Any;
+    binary : (Type, Binary) -> Any;
+    ternary : (Type, Ternary) -> Any;
     
     identity : Type -> Any;
     constant : (Type, Ptr) -> Any;

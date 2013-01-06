@@ -6,23 +6,65 @@
 
     Name                     | Description
     ------------------------ | ----------------------------
-    `int8`                   | 8-bit integer
-    `int16`                  | 16-bit integer
-    `int32`                  | 32-bit integer
-    `int64`                  | 64-bit integer
-    `float`                  | 32-bit floating point
+    `uint8`                  | 8-bit integer
     `double`                 | 64-bit floating point
     `(A, B)`                 | pair of *A* and *B*
     `[A x n]`                | vector of A
-    `A -> B`                 | function from *A* to *B*
-    `~A`                     | signal of *A*
-    `A ~> B`                 | processor from *A* to *B*
+    `[A x F]`                | frame vector of A
 
+    @par Implements 
+        doremir_equal_t
+        doremir_copy_t
+        doremir_destroy_t
+        doremir_string_show_t
+    
+ */                                             
+ 
+/*  
+    TODO
+    
+    `uint16`                 | 16-bit integer
+    `uint32`                 | 32-bit integer
+    `uint64`                 | 64-bit integer
+    `float`                  | 32-bit floating point
     
  */
 module Doremir.Type
 {
     import Doremir;
+    import Doremir.Pair;
 
-    type Type = opaque;
+    type Frames = Size;
+    type Simple = enum { Uint8Type, DoubleType };
+
+    type Struct = struct {            
+        impl : Impl,
+        tag : enum { SimpleType, PairType, VectorType, FrameType },
+        fields : union {
+            simple  : Simple,
+            pair    : struct { fst : Ptr, snd : Ptr },
+            vector  : struct { base : Ptr, size : Size },
+            frame   : struct { base : Ptr }
+        }
+    };    
+    type Type = Struct*;
+    
+    simple : Simple -> Type;    
+    pair : (Type, Type) -> Type;
+    vector : (Type, Size) -> Type;
+    frame : Type -> Type;
+    copy : Type -> Type;
+    destroy : Type -> Void;
+
+    isSimple : Type -> Bool;
+    isPair : Type -> Bool;
+    isVector : Type -> Bool;
+    isFrame : Type -> Bool;
+    //  getSimple : Type -> Simple;
+    //  getPair : Type -> Pair;
+    //  getVector : Type -> Pair;
+    //  getFrame : Type -> Type;
+ 
+    sizeOf : (Frames, Type) -> Size;
+    alignOf : Type -> Size;
 }
