@@ -12,11 +12,11 @@
     `[A x n]`                | vector of A
     `[A x F]`                | frame vector of A
 
-    @par Implements 
-        doremir_equal_t
-        doremir_copy_t
-        doremir_destroy_t
-        doremir_string_show_t
+    @par Implements        
+    - @ref doremir_equal_t
+    - @ref doremir_copy_t
+    - @ref doremir_string_show_t
+    - @ref doremir_destroy_t
     
  */                                             
  

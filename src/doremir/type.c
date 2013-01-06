@@ -8,11 +8,13 @@
 #include <doremir/type.h>
 #include <doremir/util.h>
 
+doremir_ptr_t type_impl(doremir_id_t interface);
+
 doremir_type_t new_type(int tag)
 {
     type_t t = malloc(sizeof(doremir_type_struct_t));
-    t->impl = 0;
-    t->tag = tag;
+    t->impl = &type_impl;
+    t->tag  = tag;
     return t;    
 }            
 void delete_type(doremir_type_t type)
@@ -21,6 +23,8 @@ void delete_type(doremir_type_t type)
 }
 
 // --------------------------------------------------------------------------------
+
+// TODO should really copy and delete components
 
 doremir_type_t doremir_type_simple(doremir_type_simple_t type)
 {
@@ -193,7 +197,10 @@ size_t size(doremir_type_frames_t frames, doremir_type_t type)
     case simple_type:
         return simple_size(type->fields.simple);
     case pair_type:
-        return next_aligned(size(frames, type->fields.pair.fst), align(type->fields.pair.snd));
+        {
+        size_t offset = next_aligned(size(frames, type->fields.pair.fst), align(type->fields.pair.snd));
+        return next_aligned(offset + size(frames, type->fields.pair.snd), align(type));
+        }
     case vector_type:
         return size(frames, type->fields.vector.base) * type->fields.vector.size;
     case frame_type:

@@ -268,49 +268,49 @@ void test_string()
 {
     test_section();
     {
-        // string_t s = doremir_string_single('v');
-        // doremir_print("str: %s\n", s);
-        // doremir_destroy(s);
+        string_t s = doremir_string_single('v');
+        doremir_print("str: %s\n", s);
+        doremir_destroy(s);
     }
 
-    // {
-    //     // char* cs = " 新隶体 "; // length 5
-    //     char* cs = "höglund";
-    // 
-    //     string_t s = string(cs);
-    //     printf("len: %i\n", slength(s));
-    //     doremir_print("str: %s\n", s);
-    // 
-    //     printf("charAt 0: %x\n", char_at(0,s));
-    //     printf("charAt 1: %x\n", char_at(1,s));
-    //     printf("charAt 2: %x\n", char_at(2,s));
-    //     doremir_destroy(s);
-    // }
-    // 
-    // {
-    //     string_t s = string("foo");
-    //     string_t t = string("bar");
-    //     string_t u = sappend(s, t);
-    //     doremir_print("str: %s\n", s);
-    //     doremir_print("str: %s\n", t);
-    //     doremir_print("str: %s\n", u);
-    //     doremir_destroy(s);
-    //     doremir_destroy(t);
-    //     doremir_destroy(u);
-    // }
-    // 
-    // {
-    //     string_t s = string("foo");
-    //     string_t t = string("bar");
-    //     doremir_print("str: %s\n", s);
-    //     doremir_print("str: %s\n", t);
-    //     {
-    //         string_t u = sdappend(s, t);
-    //         doremir_print("str: %s\n", u);
-    //         doremir_destroy(u);
-    //     }
-    // }
-    //    
+    {
+        // char* cs = " 新隶体 "; // length 5
+        char* cs = "höglund";
+    
+        string_t s = string(cs);
+        printf("len: %i\n", slength(s));
+        doremir_print("str: %s\n", s);
+    
+        printf("charAt 0: %x\n", char_at(0,s));
+        printf("charAt 1: %x\n", char_at(1,s));
+        printf("charAt 2: %x\n", char_at(2,s));
+        doremir_destroy(s);
+    }
+    
+    {
+        string_t s = string("foo");
+        string_t t = string("bar");
+        string_t u = sappend(s, t);
+        doremir_print("str: %s\n", s);
+        doremir_print("str: %s\n", t);
+        doremir_print("str: %s\n", u);
+        doremir_destroy(s);
+        doremir_destroy(t);
+        doremir_destroy(u);
+    }
+    
+    {
+        string_t s = string("foo");
+        string_t t = string("bar");
+        doremir_print("str: %s\n", s);
+        doremir_print("str: %s\n", t);
+        {
+            string_t u = sdappend(s, t);
+            doremir_print("str: %s\n", u);
+            doremir_destroy(u);
+        }
+    }
+       
 }
 
 void test_show()
@@ -454,7 +454,6 @@ doremir_ptr_t test_atomic_queue_reader(doremir_ptr_t x)
 void test_atomic_queue()
 {
     test_section();
-    
     {       
         doremir_atomic_queue_t q = doremir_atomic_queue_create();
 
@@ -463,14 +462,14 @@ void test_atomic_queue()
         
         doremir_print("q              => %s\n", q);
         
-        for(int i = 0; i < 40; ++i)
+        for(int i = 0; i < 5; ++i)
         {
             doremir_thread_sleep(i % 10 * 3);
             doremir_atomic_queue_write(q, i32(i));
             printf("  %5d -|  \n", i);
         }
         
-        doremir_thread_sleep(500);
+        doremir_thread_sleep(50);
         doremir_thread_detach(t);     
         doremir_destroy(q);
     }
@@ -481,7 +480,42 @@ void test_atomic_ring_buffer()
     test_section();
 }
 
-void bp() {}
+void test_audio_types()
+{   
+    // FIXME
+    
+    doremir_print("type(uint8)    => %s\n", type(uint8));
+    doremir_print("type(double)   => %s\n", type(double));
+    printf("\n");
+
+    type_t t = type_pair(type(uint8), type(double));
+    doremir_print("t              => %s\n", t);
+    doremir_print("size_of(1024,t)  => %s\n", i32(doremir_type_size_of(1024,t)));
+    doremir_print("align_of(1024,t) => %s\n", i32(doremir_type_align_of(t)));
+    printf("\n");
+
+    type_t u = type_pair(type_vector(type(uint8), 10), type(double));
+    doremir_print("u              => %s\n", u);
+    doremir_print("size_of(1024,u)  => %s\n", i32(doremir_type_size_of(1024,u)));
+    doremir_print("align_of(1024,u) => %s\n", i32(doremir_type_align_of(u)));
+    printf("\n");
+
+    type_t u2 = type_pair(type_frame(type(uint8)), type(double));
+    doremir_print("u2              => %s\n", u2);
+    doremir_print("size_of(1024,u2)  => %s\n", i32(doremir_type_size_of(1024,u2)));
+    doremir_print("align_of(1024,u2) => %s\n", i32(doremir_type_align_of(u2)));
+    printf("\n");
+
+    type_t v = type_pair(type(uint8),type_pair(type(uint8),type_pair(type(uint8),
+        type_pair(type(uint8),type_pair(type(uint8),type_pair(type(uint8),
+            type_pair(type(uint8),type_pair(type(uint8),type_pair(type(uint8),
+            type_pair(type(uint8),type(uint8)))))))))));
+
+    doremir_print("v                => %s\n", v);
+    doremir_print("size_of(1024,v)  => %s\n", i32(doremir_type_size_of(1024,v)));
+    doremir_print("align_of(1024,v) => %s\n", i32(doremir_type_align_of(v)));
+    printf("\n");
+}
 
 int main (int argc, char const *argv[])
 {
@@ -519,12 +553,10 @@ int main (int argc, char const *argv[])
       // improvings
 
       
-      // audio_types
+      test_audio_types();
       // processors
       // dispatchers
-      
-      bp();
-      
+            
       doremir_audio_engine_terminate();
   }
   return 0;

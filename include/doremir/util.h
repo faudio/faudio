@@ -24,6 +24,11 @@
 #define unstring(a)         doremir_string_to_utf8(a)
 #define ratio(a,b)          doremir_ratio_create(a,b)
 
+#define type(a)             doremir_type_simple(a##_type)
+#define type_pair(a,b)      doremir_type_pair(a,b)
+#define type_vector(a,n)    doremir_type_vector(a,n)
+#define type_frame(a)       doremir_type_frame(a)
+
 #define time(d,h,m,s)       doremir_time_create(d,h,m,ratio(s,1))
 #define days(d)             time(d,0,0,0)
 #define hours(h)            time(0,h,0,0)
