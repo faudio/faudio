@@ -216,3 +216,113 @@ size_t doremir_type_align_of(doremir_type_t type)
 
 
 // --------------------------------------------------------------------------------
+
+bool type_equal(doremir_ptr_t a, doremir_ptr_t b)
+{
+    type_t c = (type_t) a;
+    type_t d = (type_t) b;
+
+    if (c->tag != d->tag) return false;
+
+    switch(c->tag)
+    {
+    case simple_type:
+        return c->fields.simple == d->fields.simple;
+    case pair_type:     
+        return c->fields.pair.fst == d->fields.pair.fst 
+            && c->fields.pair.snd == d->fields.pair.snd;
+    case vector_type:
+        return c->fields.vector.base == d->fields.vector.base
+            && c->fields.vector.size == d->fields.vector.size;
+    case frame_type:
+        return c->fields.frame.base == d->fields.frame.base;
+    default:
+        assert(false && "Missing label");
+    }                  
+}
+
+inline static 
+string_t simple_show(doremir_type_simple_t simple)
+{
+    switch (simple)
+    {
+    case uint8_type:
+        return string("uint8");
+    case double_type:
+        return string("double");
+    default:
+        assert(false && "Missing label");
+    }
+}  
+
+string_t type_show(doremir_ptr_t a)
+{
+    type_t type = (type_t) a;
+    string_t s = string("");
+
+    switch(type->tag)
+    {
+    case simple_type:
+        s = sdappend(s, simple_show(type->fields.simple));
+        break;
+    case pair_type:                              
+        s = sdappend(s, string("("));
+        s = sdappend(s, type_show(type->fields.pair.fst));
+        s = sdappend(s, string(","));
+        s = sdappend(s, type_show(type->fields.pair.snd));
+        s = sdappend(s, string(")"));
+        break;
+    case vector_type:
+        s = sdappend(s, string("["));
+        s = sdappend(s, type_show(type->fields.vector.base));
+        s = sdappend(s, string(" x "));
+        s = sdappend(s, format_int("%i", type->fields.vector.size));
+        s = sdappend(s, string("]"));
+        break;
+    case frame_type:
+        s = sdappend(s, string("["));
+        s = sdappend(s, type_show(type->fields.vector.base));
+        s = sdappend(s, string(" x F]"));
+        break;
+    default:
+        assert(false && "Missing label");
+    }                  
+    return s;
+}
+
+doremir_ptr_t type_copy(doremir_ptr_t a)
+{
+    return doremir_type_copy(a);
+}
+
+void type_destroy(doremir_ptr_t a)
+{
+    doremir_type_destroy(a);
+}
+
+doremir_ptr_t type_impl(doremir_id_t interface)
+{
+    static doremir_equal_t type_equal_impl = { type_equal };
+    static doremir_string_show_t type_show_impl = { type_show };
+    static doremir_copy_t type_copy_impl = { type_copy };
+    static doremir_destroy_t type_destroy_impl = { type_destroy };
+
+    switch (interface)
+    {
+    case doremir_equal_i:
+        return &type_equal_impl;
+
+    case doremir_string_show_i:
+        return &type_show_impl;
+
+    case doremir_copy_i:
+        return &type_copy_impl;
+
+    case doremir_destroy_i:
+        return &type_destroy_impl;
+
+    default:
+        return NULL;
+    }
+}
+
