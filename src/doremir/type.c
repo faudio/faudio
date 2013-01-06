@@ -287,9 +287,9 @@ string_t type_show(doremir_ptr_t a)
         s = sdappend(s, string("]"));
         break;
     case frame_type:
-        s = sdappend(s, string("["));
+        s = sdappend(s, string("{"));
         s = sdappend(s, type_show(type->fields.vector.base));
-        s = sdappend(s, string(" x f]"));
+        s = sdappend(s, string("}"));
         break;
     default:
         assert(false && "Missing label");
