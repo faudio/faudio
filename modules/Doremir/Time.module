@@ -2,22 +2,33 @@
 /**
     @addtogroup DoremirTime
     
-    Immutable time representation.
+    Aribitrary precision time interval.
     
-    Represents a point in time from an arbitrary offset using standard units. This type uses
-    rational numbers to support arbitrary divisions of a second. Allthough day is the longest
-    unit, times longer than a day are supported by this type (they are simply expressed as
-    days instead of weeks, months etc).
+    This type uses standard time units, with arbitrary divisions of a second. 
+    Allthough day is the longest unit, times longer than a day are supported by 
+    this type; they are simply expressed as  days instead of years, weaks and months.
+    Thus no particular calendar has to be adopted.
     
+    The utility header provides several literals for time values.
+
+    ~~~~
+    time(0,0,1,30);                                     // 1 minute, 30 seconds
+    time(30,0,0,0);                                     // 30 days
+    hours(2);                                           // 2 hours
+    minutes(3);                                         // 3 minutes
+    seconds(4);                                         // 4 seconds
+    doremir_add(minutes(1), milliseconds(100));         // 1 minute, 0.1 seconds
+    doremir_subtract(hours(0), seconds(2));             // -2 seconds
+    ~~~~
     
     @par Implements 
-        doremir_equal_t
-        doremir_order_t
-        doremir_string_show_t
-        doremir_copy_t
-        doremir_destroy_t
-        doremir_dynamic_t
-        doremir_number_t
+    - doremir_equal_t
+    - doremir_order_t
+    - doremir_string_show_t
+    - doremir_copy_t
+    - doremir_destroy_t
+    - doremir_dynamic_t
+    - doremir_number_t
     
  */
 module Doremir.Time

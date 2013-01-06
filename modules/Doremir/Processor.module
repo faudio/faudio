@@ -5,8 +5,8 @@
     Provides signal processors.
 
     @par Implements        
-    - @ref doremir_string_show_t
-    - @ref doremir_destroy_t
+    - doremir_string_show_t
+    - doremir_destroy_t
  */
 module Doremir.Processor
 {

@@ -8,12 +8,12 @@
     be converted to a list of characters using the \ref DoremirStringList "these functions".
 
     @par Implements 
-        doremir_equal_t
-        doremir_order_t
-        doremir_copy_t
-        doremir_destroy_t
-        doremir_dynamic_t
-        doremir_string_show_t
+    - doremir_equal_t
+    - doremir_order_t
+    - doremir_copy_t
+    - doremir_destroy_t
+    - doremir_dynamic_t
+    - doremir_string_show_t
 
  */
 module Doremir.String

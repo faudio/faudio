@@ -7,11 +7,11 @@
     Note that priority queues are not collections as their contents are mutable.
 
     @par Requires 
-        doremir_order_t
+    - doremir_order_t
     @par Implements 
-        doremir_equal_t
+    - doremir_equal_t
     @see 
-        \ref Collections
+    - @ref Collections
 
  */
 module Doremir.PriorityQueue
