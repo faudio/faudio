@@ -10,7 +10,7 @@
     - `fst(p)`
     - `snd(p)`
     - `loop(p)`
-    - `delay(n,p)`
+    - `delay(n,T)`
     - `id(T)`
     - `const(T,v)`
     - `split(T)`
@@ -48,7 +48,7 @@ module Doremir.Processor
         The abstract processing interface. */
     type Processor = struct {
         before  : ((Ptr, Info*) -> Void)*,
-        process : ((Ptr, Info*, Samples) -> Samples)*,
+        process : ((Ptr, Info*, Samples) -> Void)*,
         after   : ((Ptr, Info*) -> Void)*,
         inputType : (Ptr -> Type)*,
         outputType : (Ptr -> Type)*

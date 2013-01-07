@@ -84,26 +84,14 @@ doremir_buffer_size(doremir_buffer_t buffer)
     return buffer->size;
 }
 
-/** Return the address of the buffer.
-
-    This function is unsafe as it provides access to the buffer contents without
-    ownership semantics.
-    @note
-        O(1)
- */
-void * doremir_buffer_unsafe_address(doremir_buffer_t buffer)
-{
-    return buffer->data;
-}
-
-
 /** Read a value from the buffer.
     @note
         O(1)
  */
 uint8_t
 doremir_buffer_peek(doremir_buffer_t buffer, size_t index)
-{
+{   
+    assert(index < buffer->size && "Buffer overflow");
     return buffer->data[index];
 }
 
@@ -114,7 +102,20 @@ doremir_buffer_peek(doremir_buffer_t buffer, size_t index)
 void
 doremir_buffer_poke(doremir_buffer_t buffer, size_t index, uint8_t value)
 {
+    assert(index < buffer->size && "Buffer overflow");
     buffer->data[index] = value;
+}
+
+/** Return the address of the buffer.
+
+    This function is unsafe as it provides access to the buffer contents without
+    ownership semantics.
+    @note
+        O(1)
+ */
+void * doremir_buffer_unsafe_address(doremir_buffer_t buffer)
+{
+    return buffer->data;
 }
 
 

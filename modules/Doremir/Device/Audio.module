@@ -15,6 +15,7 @@ module Doremir.Device.Audio
     type Stream = opaque;
     type Audio = opaque;
 
+    withSession : (() -> Session)* -> Void;
     beginSession : () -> Session;
     endSession : Session -> Void;
 
@@ -23,6 +24,8 @@ module Doremir.Device.Audio
     standardInput : Session -> Audio;
     standardOutput : Session -> Audio;
     
-    openStream : (Audio, Processor, Audio) -> Stream;
-    closeStream : Stream -> Void;
+    withStream : ((Audio, Processor, Audio) -> Stream)* -> Void;
+    startStream : (Audio, Processor, Audio) -> Stream;
+    stopStream : Stream -> Void;
+    
 }

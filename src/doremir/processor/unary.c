@@ -68,17 +68,14 @@ void unary_after(doremir_ptr_t a, doremir_processor_info_t *info)
 PROC(uint8_t,uint8_t);
 PROC(double,double);
 
-doremir_processor_samples_t unary_process(doremir_ptr_t proc,
-                                          doremir_processor_info_t *info,
-                                          doremir_processor_samples_t samples)
+void unary_process(doremir_ptr_t proc,
+                   doremir_processor_info_t *info,
+                   doremir_processor_samples_t samples)
 {
     this_proc_t proc2  = (this_proc_t) proc;
-    buffer_t    input  = samples;
-    buffer_t    output = samples;
     
     // TODO dispatch
-    unary_proc_uint8_t_uint8_t(proc2, input, output);
-    return output;
+    unary_proc_uint8_t_uint8_t(proc2, samples, samples);
 }
 
 doremir_type_t unary_input_type(doremir_ptr_t a)

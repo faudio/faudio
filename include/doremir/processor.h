@@ -22,9 +22,9 @@ typedef struct {
 typedef doremir_buffer_t doremir_processor_samples_t;
 typedef struct {
             void (* before)(doremir_ptr_t, doremir_processor_info_t *);
-            doremir_processor_samples_t (* process)(doremir_ptr_t,
-                                                    doremir_processor_info_t *,
-                                                    doremir_processor_samples_t);
+            void (* process)(doremir_ptr_t,
+                             doremir_processor_info_t *,
+                             doremir_processor_samples_t);
             void (* after)(doremir_ptr_t, doremir_processor_info_t *);
             doremir_type_t (* input_type)(doremir_ptr_t);
             doremir_type_t (* output_type)(doremir_ptr_t);
