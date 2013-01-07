@@ -11,7 +11,6 @@
     - `snd(p)`
     - `loop(p)`
     - `delay(n,p)`
-    - `time(T)`
     - `id(T)`
     - `const(T,v)`
     - `split(T)`

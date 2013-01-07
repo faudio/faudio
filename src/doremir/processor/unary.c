@@ -69,8 +69,8 @@ PROC(uint8_t,uint8_t);
 PROC(double,double);
 
 doremir_processor_samples_t unary_process(doremir_ptr_t proc,
-                                         doremir_processor_info_t * info,
-                                         doremir_processor_samples_t samples)
+                                          doremir_processor_info_t *info,
+                                          doremir_processor_samples_t samples)
 {
     this_proc_t proc2  = (this_proc_t) proc;
     buffer_t    input  = samples;

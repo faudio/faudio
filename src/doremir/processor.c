@@ -16,12 +16,13 @@ void doremir_processor_info_default(doremir_processor_info_t *info)
     // info->real_time    = seconds(0);
 }
 
+/** Creates a unary processor.
+ */
 doremir_processor_any_t doremir_processor_unary(doremir_type_t type1,
                                                 doremir_type_t type2,
                                                 doremir_unary_t function)
 {
-    // doremir_processor_unary_create(type, function);
-    assert(false && "Not implemented");
+    return doremir_processor_unary_create(type1, type2, function);
 }
 
 doremir_processor_any_t doremir_processor_binary(doremir_type_t type1,
