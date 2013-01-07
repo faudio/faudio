@@ -1,17 +1,27 @@
 
+We will use the "big buffer" approach
+    Everything is inline (or processors allocate intermediate themselves)
+
+    Seq requires the max size of its children
+    Par requires the sum size of its children
+    Split requires its output size (ie its input*2)
+    We implement frames as vectors (of max size) with padded 0
+        Ie no reallocation is necessary if the vector size changes
+
+    Problem: buffer_t is not dividable
+        Change processor to accept void* instead of buffer_t ?
+        Or fix SOS-acceptable way to divide a buffer_t       ?
+
 ==========
 Additions
 
-* Add audio_type_t
-    * Changes to Processor interface?
-
 * Implement ringbuffer
+
+* Implement non-realtime
 
 * Implement realtime audio streams
 
 * Implement realtime midi streams
-
-* Implement non-realtime
 
 * Implement priority queue
 
