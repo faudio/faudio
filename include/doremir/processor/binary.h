@@ -2,7 +2,8 @@
 #ifndef _DOREMIR_PROCESSOR_BINARY
 #define _DOREMIR_PROCESSOR_BINARY
 
-
+#include <doremir.h>
+#include <doremir/processor.h>
 
 /** @defgroup Doremir Doremir
     @{
@@ -12,7 +13,10 @@
     @{
     */
 
-typedef struct _doremir_processor_binary_t * doremir_processor_binary_t;
+typedef struct _doremir_processor_binary_proc_t * doremir_processor_binary_proc_t;
+doremir_processor_binary_proc_t doremir_processor_binary_create(doremir_type_t,
+                                                                doremir_binary_t);
+void doremir_processor_binary_destroy(doremir_processor_binary_proc_t);
 
 /** @}
     @}

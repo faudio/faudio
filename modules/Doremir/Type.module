@@ -4,18 +4,18 @@
     
     Provides signal types.
 
-    Type                     | Description
-    ------------------------ | ----------------------------
-    `uint8`                  | 8-bit integer
-    `uint16`                 | 16-bit integer
-    `uint32`                 | 32-bit integer
-    `uint64`                 | 64-bit integer
-    `float`                  | 32-bit floating point
-    `double`                 | 64-bit floating point
-    `ptr`                    | Pointer supporting copy and destroy
-    `(A, B)`                 | pair of *A* and *B*
-    `[A x N]`                | vector of *A*
-    `{A}`                    | frame of *A*
+    Type            | Description
+    ----------------| ----------------------------
+    `uint8`         | 8-bit integer
+    `uint16`        | 16-bit integer
+    `uint32`        | 32-bit integer
+    `uint64`        | 64-bit integer
+    `float`         | 32-bit floating point
+    `double`        | 64-bit floating point
+    `ptr`           | Pointer supporting copy and destroy
+    `(A, B)`        | pair of *A* and *B*
+    `[A x N]`       | vector of *A*
+    `{A}`           | frame of *A*
 
     @par Literals
     - `type(uint8)`

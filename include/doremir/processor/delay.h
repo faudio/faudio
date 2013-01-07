@@ -2,7 +2,8 @@
 #ifndef _DOREMIR_PROCESSOR_SPLIT
 #define _DOREMIR_PROCESSOR_SPLIT
 
-
+#include <doremir.h>
+#include <doremir/processor.h>
 
 /** @defgroup Doremir Doremir
     @{
@@ -12,7 +13,9 @@
     @{
     */
 
-typedef struct _doremir_processor_split_t * doremir_processor_split_t;
+typedef struct _doremir_processor_split_proc_t * doremir_processor_split_proc_t;
+doremir_processor_split_proc_t doremir_processor_split_create(doremir_type_t);
+void doremir_processor_split_destroy(doremir_processor_split_proc_t);
 
 /** @}
     @}

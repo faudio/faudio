@@ -40,7 +40,8 @@ doremir_processor_any_t doremir_processor_identity(doremir_type_t type)
     assert(false && "Not implemented");
 }
 
-doremir_processor_any_t doremir_processor_constant(doremir_type_t type,
+doremir_processor_any_t doremir_processor_constant(doremir_type_t type1,
+                                                   doremir_type_t type2,
                                                    doremir_ptr_t value)
 {
     assert(false && "Not implemented");

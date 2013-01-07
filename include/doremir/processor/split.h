@@ -2,7 +2,8 @@
 #ifndef _DOREMIR_PROCESSOR_DELAY
 #define _DOREMIR_PROCESSOR_DELAY
 
-
+#include <doremir.h>
+#include <doremir/processor.h>
 
 /** @defgroup Doremir Doremir
     @{
@@ -12,7 +13,10 @@
     @{
     */
 
-typedef struct _doremir_processor_delay_t * doremir_processor_delay_t;
+typedef struct _doremir_processor_delay_proc_t * doremir_processor_delay_proc_t;
+doremir_processor_delay_proc_t doremir_processor_delay_create(doremir_type_t,
+                                                              size_t);
+void doremir_processor_delay_destroy(doremir_processor_delay_proc_t);
 
 /** @}
     @}

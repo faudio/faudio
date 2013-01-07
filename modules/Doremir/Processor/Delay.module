@@ -12,6 +12,11 @@
  */
 module Doremir.Processor.Delay
 {
-    type Delay = opaque;    
+    import Doremir;
+    import Doremir.Processor;
+    
+    type Proc = opaque;    
+    create : (Type, Size) -> Proc;
+    destroy : Proc -> Void;
 }
 

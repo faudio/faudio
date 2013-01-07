@@ -4,7 +4,20 @@
     
     Provides signal processors.
 
-    @par Implements        
+    @par Literals
+    - `par(p,q)`
+    - `seq(p,q)`
+    - `fst(p)`
+    - `snd(p)`
+    - `loop(p)`
+    - `delay(n,p)`
+    - `time(T)`
+    - `id(T)`
+    - `const(T,v)`
+    - `split(T)`
+
+    @par Implements
+    - TODO receiver?        
     - doremir_string_show_t
     - doremir_destroy_t
  */
@@ -25,7 +38,7 @@ module Doremir.Processor
         totalTime   : Time
     };     
     
-    infoDefault : Info* -> Void;  
+    // infoDefault : Info* -> Void;  
 
     /** @typedef doremir_processor_samples_t
         The samples manipulated by a processor.
@@ -37,7 +50,9 @@ module Doremir.Processor
     type Processor = struct {
         before  : ((Ptr, Info*) -> Void)*,
         process : ((Ptr, Info*, Samples) -> Samples)*,
-        after   : ((Ptr, Info*) -> Void)*
+        after   : ((Ptr, Info*) -> Void)*,
+        inputType : (() -> Type)*,
+        outputType : (() -> Type)*
     };
 
     /** @typedef doremir_processor_any_t 
@@ -45,39 +60,44 @@ module Doremir.Processor
      */
     type Any = Ptr;   
     
-    unary   : (Type, Unary) -> Any;
-    binary : (Type, Binary) -> Any;
-    ternary : (Type, Ternary) -> Any;
+    unary   : (Type, Unary) -> Any;         // a ~> b
+    binary : (Type, Binary) -> Any;         // (a,b) ~> c
+    ternary : (Type, Ternary) -> Any;       // (a,b,c) ~> d
     
-    identity : Type -> Any;
-    constant : (Type, Ptr) -> Any;
-    delay    : (Type, Size) -> Any;
-    split    : Type -> Any;
+    identity : Type -> Any;                 // a ~> a
+    constant : (Type, Type, Ptr) -> Any;    // a ~> b
+    delay    : (Type, Size) -> Any;         // a ~> a
+    split    : Type -> Any;                 // a ~> (a,a)
 
-    sequence : (Any, Any) -> Any;
-    parallel : (Any, Any) -> Any;    
-    loop     : Any -> Any;
+    seq      : (Any, Any) -> Any;           // (a ~> b), (b ~> c) -> (a ~> c)
+    par      : (Any, Any) -> Any;           // (a ~> b), (c ~> d) -> (a,c ~> b,d)
+    loop     : Any -> Any;                  // (a,c ~> b,d) -> (a ~> b)
+
+    // first    : Any -> Any;                  // (a ~> b) -> (a,c ~> b,c)
+    // second   : Any -> Any;                  // (a ~> b) -> (c,a ~> c,b)
+    // fold     : Any -> Any;                  // (a,a ~> b) -> [a x n] ~> a ~> b
+    // unfold   : Any -> Any;                  // (a ~> b,b) -> a ~> Int ~> [a x n]
     
-    cos         : Type -> Any;
-    sin         : Type -> Any;
-    tan         : Type -> Any;
-    acos        : Type -> Any;
-    asin        : Type -> Any;
-    atan        : Type -> Any;
-
-    add         : Type -> Any;
-    subtract    : Type -> Any;
-    multiply    : Type -> Any;
-    divide      : Type -> Any;
-    modulo      : Type -> Any;
-    absolute    : Type -> Any;
-
-    and         : Type -> Any;
-    or          : Type -> Any;
-    not         : Type -> Any;
-    bitAnd      : Type -> Any;
-    bitOr       : Type -> Any;
-    bitNot      : Type -> Any;
-    bitXor      : Type -> Any;
+    // cos         : Type -> Any;
+    // sin         : Type -> Any;
+    // tan         : Type -> Any;
+    // acos        : Type -> Any;
+    // asin        : Type -> Any;
+    // atan        : Type -> Any;
+    // 
+    // add         : Type -> Any;
+    // subtract    : Type -> Any;
+    // multiply    : Type -> Any;
+    // divide      : Type -> Any;
+    // modulo      : Type -> Any;
+    // absolute    : Type -> Any;
+    // 
+    // and         : Type -> Any;
+    // or          : Type -> Any;
+    // not         : Type -> Any;
+    // bitAnd      : Type -> Any;
+    // bitOr       : Type -> Any;
+    // bitNot      : Type -> Any;
+    // bitXor      : Type -> Any;  
     
 }

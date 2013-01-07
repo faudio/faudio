@@ -2,7 +2,8 @@
 #ifndef _DOREMIR_PROCESSOR_PAR
 #define _DOREMIR_PROCESSOR_PAR
 
-
+#include <doremir.h>
+#include <doremir/processor.h>
 
 /** @defgroup Doremir Doremir
     @{
@@ -12,7 +13,10 @@
     @{
     */
 
-typedef struct _doremir_processor_par_parallel_t * doremir_processor_par_parallel_t;
+typedef struct _doremir_processor_par_proc_t * doremir_processor_par_proc_t;
+doremir_processor_par_proc_t doremir_processor_par_create(doremir_processor_any_t,
+                                                          doremir_processor_any_t);
+void doremir_processor_par_destroy(doremir_processor_par_proc_t);
 
 /** @}
     @}
