@@ -16,20 +16,26 @@ void doremir_processor_info_default(doremir_processor_info_t *info)
     // info->real_time    = seconds(0);
 }
 
-doremir_processor_any_t doremir_processor_unary(doremir_type_t type,
+doremir_processor_any_t doremir_processor_unary(doremir_type_t type1,
+                                                doremir_type_t type2,
                                                 doremir_unary_t function)
 {
     // doremir_processor_unary_create(type, function);
     assert(false && "Not implemented");
 }
 
-doremir_processor_any_t doremir_processor_binary(doremir_type_t type,
+doremir_processor_any_t doremir_processor_binary(doremir_type_t type1,
+                                                 doremir_type_t type2,
+                                                 doremir_type_t type3,
                                                  doremir_binary_t function)
 {
     assert(false && "Not implemented");
 }
 
-doremir_processor_any_t doremir_processor_ternary(doremir_type_t type,
+doremir_processor_any_t doremir_processor_ternary(doremir_type_t type1,
+                                                  doremir_type_t type2,
+                                                  doremir_type_t type3,
+                                                  doremir_type_t type4,
                                                   doremir_ternary_t function)
 {
     assert(false && "Not implemented");
@@ -76,9 +82,9 @@ doremir_processor_any_t doremir_processor_loop(doremir_processor_any_t proc)
 }
 
 #define WRAP_UNARY(F) \
-    doremir_processor_any_t doremir_processor_##F(doremir_type_t type) \
+    doremir_processor_any_t doremir_processor_##F(doremir_type_t type1, doremir_type_t type2) \
     {                                                                  \
-        return doremir_processor_unary(type, (doremir_unary_t) F);     \
+        return doremir_processor_unary(type1, type2, (doremir_unary_t) F);     \
     }
 
 WRAP_UNARY(cos);

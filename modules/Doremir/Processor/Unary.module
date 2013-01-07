@@ -15,7 +15,7 @@ module Doremir.Processor.Unary
     import Doremir.Processor;
 
     type Proc = opaque;
-    create : (Type, Unary) -> Proc;
+    create : (Type, Type, Unary) -> Proc;
     destroy : Proc -> Void;
 }
 

@@ -18,6 +18,13 @@ list(APPEND SRCS
   doremir/pair.c
   doremir/priority_queue.c
   doremir/processor.c
+  doremir/processor/unary.c
+  doremir/processor/binary.c
+  doremir/processor/split.c
+  doremir/processor/delay.c
+  doremir/processor/seq.c
+  doremir/processor/par.c
+  doremir/processor/loop.c
   doremir/ratio.c
   doremir/set.c
   doremir/string.c

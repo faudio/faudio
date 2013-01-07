@@ -60,9 +60,9 @@ module Doremir.Processor
      */
     type Any = Ptr;   
     
-    unary   : (Type, Unary) -> Any;         // a ~> b
-    binary : (Type, Binary) -> Any;         // (a,b) ~> c
-    ternary : (Type, Ternary) -> Any;       // (a,b,c) ~> d
+    unary   : (Type, Type, Unary) -> Any;                   // a ~> b
+    binary : (Type, Type, Type, Binary) -> Any;             // (a,b) ~> c
+    ternary : (Type, Type, Type, Type, Ternary) -> Any;     // (a,b,c) ~> d
     
     identity : Type -> Any;                 // a ~> a
     constant : (Type, Type, Ptr) -> Any;    // a ~> b

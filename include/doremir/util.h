@@ -4,6 +4,9 @@
 
 #define ptr_t               doremir_ptr_t
 #define impl_t              doremir_impl_t
+#define unary_t             doremir_unary_t
+#define binary_t            doremir_binary_t
+#define ternary_t           doremir_ternary_t
 #define pair_t              doremir_pair_t
 #define list_t              doremir_list_t
 #define set_t               doremir_set_t

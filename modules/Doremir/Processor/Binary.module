@@ -15,7 +15,7 @@ module Doremir.Processor.Binary
     import Doremir.Processor;
 
     type Proc = opaque;
-    create : (Type, Binary) -> Proc;
+    create : (Type, Type, Type, Binary) -> Proc;
     destroy : Proc -> Void;
 }
 
