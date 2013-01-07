@@ -51,8 +51,8 @@ module Doremir.Processor
         before  : ((Ptr, Info*) -> Void)*,
         process : ((Ptr, Info*, Samples) -> Samples)*,
         after   : ((Ptr, Info*) -> Void)*,
-        inputType : (() -> Type)*,
-        outputType : (() -> Type)*
+        inputType : (Ptr -> Type)*,
+        outputType : (Ptr -> Type)*
     };
 
     /** @typedef doremir_processor_any_t 

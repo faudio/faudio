@@ -26,8 +26,8 @@ typedef struct {
                                                     doremir_processor_info_t *,
                                                     doremir_processor_samples_t);
             void (* after)(doremir_ptr_t, doremir_processor_info_t *);
-            doremir_type_t (* input_type)();
-            doremir_type_t (* output_type)();
+            doremir_type_t (* input_type)(doremir_ptr_t);
+            doremir_type_t (* output_type)(doremir_ptr_t);
         } doremir_processor_t;
 typedef doremir_ptr_t doremir_processor_any_t;
 doremir_processor_any_t doremir_processor_unary(doremir_type_t,
