@@ -1,4 +1,7 @@
 
+Only one audio stream
+Multiple Midi streams OK
+
 We will use the "big buffer" approach
     Everything is inline (or processors allocate intermediate themselves)
 
