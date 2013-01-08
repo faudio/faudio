@@ -41,19 +41,19 @@ void delete_midi(doremir_midi_t midi)
 /**
     Creates a simple message from the given components.
     @param status   The status byte.
-    @param fst      The first data byte.
-    @param snd      The second data byte.
+    @param data1    The first data byte.
+    @param data2    The second data byte.
     @return         A new Midi message.
  */
 doremir_midi_t doremir_midi_create_simple(status_t status,
-                                          data_t fst,
-                                          data_t snd)
+                                          data_t data1,
+                                          data_t data2)
 {
     doremir_midi_t m = new_midi();
     m->is_sysex = false;
     m->data.simple[0] = status;
-    m->data.simple[1] = fst;
-    m->data.simple[2] = snd;
+    m->data.simple[1] = data1;
+    m->data.simple[2] = data2;
     return m;
 }
 
@@ -70,6 +70,9 @@ doremir_midi_t doremir_midi_create_sysex(doremir_buffer_t data)
     return m;
 }
 
+/**
+    Copy the given midi message.
+ */
 doremir_midi_t doremir_midi_copy(doremir_midi_t midi)
 {
     doremir_midi_t m = new_midi();
@@ -87,11 +90,62 @@ doremir_midi_t doremir_midi_copy(doremir_midi_t midi)
     return m;
 }
 
+/**
+    Destroy the given midi message.
+ */
 void doremir_midi_destroy(doremir_midi_t midi)
 {
     if (midi->is_sysex)
         doremir_destroy(midi->data.sysex);
     delete_midi(midi);
+}
+
+/**
+    Return the status byte of given midi message.
+ */
+doremir_midi_status_t doremir_midi_status(doremir_midi_t)
+{
+    assert(false && "Not implemented");
+}
+
+/**
+    Return the channel byte of given midi message.
+ */
+doremir_midi_channel_t doremir_midi_channel(doremir_midi_t)
+{
+    assert(false && "Not implemented");
+}
+
+/**
+    Return the status byte of given midi message.
+ */
+bool doremir_midi_is_simple(doremir_midi_t)
+{
+    assert(false && "Not implemented");
+}
+
+/**
+    Return whether the given midi message is a non-sysex message.
+ */
+doremir_pair_t doremir_midi_simple_data(doremir_midi_t)
+{
+    assert(false && "Not implemented");
+}
+
+/**
+    Return whether the given midi message is a sysex message.
+ */
+bool doremir_midi_is_sysex(doremir_midi_t)
+{
+    assert(false && "Not implemented");
+}
+
+/**
+    Return the data buffer of a sysex message, except for the wrapping `F0` and `F7` bytes.
+ */
+doremir_buffer_t doremir_midi_sysex_data(doremir_midi_t)
+{
+    assert(false && "Not implemented");
 }
 
 
