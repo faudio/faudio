@@ -1,7 +1,18 @@
 
 # Devices {#Devices}
 
+> *All for one, one for all, that is our device.*
+
 @tableofcontents
+
+Devices are the entities that allow the audio engine to communicate with the outside world. 
+
+While processors and dispatchers denote functions on time and communication networks respectively, devices denote
+external entities provided by the system. Typically, each *physical* audio or midi interface is represented by a
+single device in the audio engine. The operating system may also provide *non-physical* devices, which may represent
+network connections, software mixers and the like.
+
+TODO
 
 # Real time {#RealTime}
 
@@ -18,12 +29,26 @@ provides access to an external audio interface, a *session* provides access to t
 to a specific audio computation. These concepts are hierarchical, each stream is associated with a device and each
 device with a session.
 
-@image html  device_states.png "Cap"
-@image latex device_states.pdf "Cap" width=0.8\textwidth
+The Audio Engine places certain restrictions on the order or acquisition of sessions, devices and streams. Any
+client that wants to obtain a device must first initiate a session. The initialization of a session may fail, for
+example if the underlying audio system is already being used by an exclusive process. If it succeeds, a handle
+to the underlying session is provided. This handle allow the user to inspect the set of devices available in the
+sesssion. 
+
+Sessions are *immutable* and *transient*, meaning that the set of available devices in a session will not
+change, but represents a snapshot of the setup at the time it was initiated. If a change in the underlying 
+audio system is detected while a session is still active, or an error occurs because of an unexpected setup change,
+the current session is automatically terminated, and a new session has to be started.
+
+TODO
+
+@image html  device_states.png "State transactions of the audio system"
+@image latex device_states.pdf "State transactions of the audio system" width=0.8\textwidth
 
 @note
     The semantics of *streams* have been changed from earlier versions of the audio engine, in which a *stream* was
-    a could be stopped and restarted. In the new implementation, streams are one-time entities like sessions.
+    a could be stopped and restarted. In the new implementation, streams are immutable and transient just
+    like sessions.
 
 ## Acquire-release vs. callback {#DevicesStyles}
 
@@ -76,7 +101,7 @@ void test()
 
 ### Callback style {#RealTimeCallback}
 
-The callback style API use inversion of control to hide create–use-destroy pattern. You provide a
+The callback style API use inversion of control to hide acquire-release pattern. You provide a
 callback to be invoked when the session or stream is valid, and the destruction is handled automatically
 after this method has returned. Errors are handled by a special callback, to which you can pass
 doremir_print_error, or any user defined function.
@@ -118,9 +143,9 @@ void test()
 
 # Non-realtime {#NonRealTime}
 
-## File streams {#FileStream}
+## File streams {#File}
 
-### Acquire-release style {#AcquireReleaseFileStream}
+### Acquire-release style {#AcquireReleaseFile}
 
 ~~~~
 #include <doremir/time.h>
@@ -149,11 +174,13 @@ void test()
 }
 ~~~~
 
-### Callback style {#CallbackFileStream}
+### Callback style {#CallbackFile}
 
 
 
 ## Buffer streams {#BufferStream}
+
+### Acquire-release style {#AcquireReleaseBuffer}
 
 ~~~~
 #include <doremir/time.h>
@@ -181,3 +208,11 @@ void test()
     doremir_device_buffer_wait(stream);
 }
 ~~~~
+
+
+### Callback style {#CallbackBuffer}
+
+
+
+
+

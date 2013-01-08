@@ -4,8 +4,8 @@
 @anchor Collections
 
 @note
-    This is an advanced topic, not necessary to read for general usage.
-    You *should* probably read it if you want to modify or extend the Audio Engine.
+    This is an advanced topic, not necessary to read for general usage. On the other hand, you *should* probably read
+    it if you want to modify or extend the Audio Engine.
 
 @tableofcontents
 
