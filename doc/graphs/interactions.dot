@@ -1,18 +1,5 @@
 
-#define RELATE1(a, how) \
-  a -> a [label = how]
-#define RELATE2(a, how, b) \
-  a -> b [label = how]
-// #define RELATE3(a, b, how, c) \
-  // a -> c [label = how]; \
-  // b -> c [label = how]
-#define RELATE3(a, b, how, c) \
-  a; b; c; \
-  "abc"      [shape=point]; \
-  a -> "abc" [arrowhead=none]; \
-  b -> "abc" [arrowhead=none]; \
-  "abc" -> c [label = how]
-
+#include "doc/graph/header.dot"
 
 digraph graphname {
   graph [ranksep=0.5, nodesep=0.5];

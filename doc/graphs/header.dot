@@ -1,0 +1,26 @@
+
+#ifndef _HEADER
+#define _HEADER
+
+#define GRAPH_FORMAT \
+    graph [ranksep=0.5, nodesep=0.5, rankdir=LR]; \
+    graph [fontname = "Futura", fontsize=13];     \
+    node [fontname = "Futura", fontsize=13];      \
+    edge [fontname = "Futura", fontsize=13, color="dodgerblue4"]
+
+#define RELATE1(a, how) \
+  a -> a [label = how]
+#define RELATE2(a, how, b) \
+  a -> b [label = how]
+// #define RELATE3(a, b, how, c) \
+  // a -> c [label = how]; \
+  // b -> c [label = how]
+#define RELATE3(a, b, how, c) \
+  a; b; c; \
+  "abc"      [shape=point]; \
+  a -> "abc" [arrowhead=none]; \
+  b -> "abc" [arrowhead=none]; \
+  "abc" -> c [label = how]
+
+
+#endif // _HEADER

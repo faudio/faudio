@@ -1,4 +1,6 @@
 
+#include "doc/graph/header.dot"
+
 digraph graphname {
   graph [ranksep=0.5, nodesep=0.5];
 

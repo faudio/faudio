@@ -1,0 +1,9 @@
+
+#include "doc/graphs/header.dot"
+
+digraph
+{
+    Foo;
+    Bar;
+    Foo -> Bar;
+}

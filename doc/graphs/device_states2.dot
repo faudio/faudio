@@ -1,28 +1,26 @@
 
+#include "doc/graphs/header.dot"
+
 digraph graphname {
-  graph [ranksep=0.5, nodesep=0.5, rankdir=LR];
-  graph [fontname = "Futura", fontsize=13];
-  node [fontname = "Futura", fontsize=13];
-  edge [fontname = "Futura", fontsize=13];
-  
+    GRAPH_FORMAT;
 
-  Session  [shape="rect"];
-  "Built-in audio"  [shape="rect"];
-  "Built-in audio stream"  [shape="rect"];
-  "M-Audio"  [shape="rect"];
-  "M-Audio stream"  [shape="rect"];
-  "Motu mk192"  [shape="rect"];
-  "Motu mk192 stream"  [shape="rect"];
-  
-  Session -> "Built-in audio" [label = "select"];
-  "Built-in audio stream" -> "Built-in audio"  [label = "stop"];
-  "Built-in audio" -> "Built-in audio stream"  [label = "start"];
+    Session  [shape="rect"];
+    "Built-in audio"  [shape="rect"];
+    "Built-in audio stream"  [shape="rect"];
+    "M-Audio"  [shape="rect"];
+    "M-Audio stream"  [shape="rect"];
+    "Motu mk192"  [shape="rect"];
+    "Motu mk192 stream"  [shape="rect"];
 
-  Session -> "M-Audio" [label = "select"];
-  "M-Audio" -> "M-Audio stream"  [label = "start"];
-  "M-Audio stream" -> "M-Audio"  [label = "stop"];
+    Session -> "Built-in audio" [label = "select"];
+    "Built-in audio stream" -> "Built-in audio"  [label = "stop"];
+    "Built-in audio" -> "Built-in audio stream"  [label = "start"];
 
-  Session -> "Motu mk192" [label = "select"];
-  "Motu mk192" -> "Motu mk192 stream"  [label = "start"];
-  "Motu mk192 stream" -> "Motu mk192"  [label = "stop"];   
+    Session -> "M-Audio" [label = "select"];
+    "M-Audio" -> "M-Audio stream"  [label = "start"];
+    "M-Audio stream" -> "M-Audio"  [label = "stop"];
+
+    Session -> "Motu mk192" [label = "select"];
+    "Motu mk192" -> "Motu mk192 stream"  [label = "start"];
+    "Motu mk192 stream" -> "Motu mk192"  [label = "stop"];   
 }

@@ -1,26 +1,23 @@
 
+#include "doc/graphs/header.dot"
+
 digraph graphname {
-  graph [ranksep=0.5, nodesep=0.5, rankdir=LR];
-  graph [fontname = "Futura", fontsize=13];
-  node [fontname = "Futura", fontsize=13];
-  edge [fontname = "Futura", fontsize=13];
-  
-  Init    [];
-  Error   [];
-  Session [shape="rect"];
-  Device  [shape="rect"];
-  Stream  [shape="rect"];
-  
-  Init -> Session   [label = "begin"];
+    GRAPH_FORMAT;
 
-  Session -> Device [label = "select"];
-  Device -> Init    [label = "end"];
-  Device -> Stream  [label = "start"];
-  Stream -> Device  [label = "stop"];
+    Init    [];
+    Error   [];
+    Session [shape="rect"];
+    Device  [shape="rect"];
+    Stream  [shape="rect"];
 
-  
-  Init -> Error;
-  // Stream -> Error [style="invisible", arrowhead="none"];
-  Device -> Error;      
-     
+    Init -> Session   [label = "begin"];
+
+    Session -> Device [label = "select"];
+    Device -> Init    [label = "end"];
+    Device -> Stream  [label = "start"];
+    Stream -> Device  [label = "stop"];
+
+    Init -> Error;
+    // Stream -> Error [style="invisible", arrowhead="none"];
+    Device -> Error;      
 }
