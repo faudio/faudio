@@ -1,5 +1,6 @@
 
 all:	c
+bindings: lisp
 
 c:
 	modulo -Mmodules --language=c    <modules/Doremir.module    			>include/doremir.h && \
