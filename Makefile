@@ -28,6 +28,10 @@ depend:
 modules: 
 	make -f modules/Makefile;
 
+.PHONY: bindings
+bindings: 
+	make -f modules/Makefile bindings;
+
 .PHONY: edit_cache
 edit_cache: 
 	@pushd $(BUILD_DIRECTORY); $(MAKE) edit_cache; popd;
