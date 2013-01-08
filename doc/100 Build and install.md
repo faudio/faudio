@@ -1,7 +1,7 @@
 
 # Build and install {#BuildAndInstall}
 
-[TOC]
+@tableofcontents
 
 # Basic build {#Basic}
 

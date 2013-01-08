@@ -2,6 +2,8 @@
 Tutorial {#Tutorial}
 ----------------------------------------------------------------------------------------------------
 
+@tableofcontents
+
 ## A basic session
 
 TODO How to create a session, find a device and open a stream

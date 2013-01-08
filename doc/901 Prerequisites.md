@@ -2,7 +2,7 @@
 Prerequisites {#Prerequisites}
 ------------
 
-[TOC]
+@tableofcontents
  
 This is a hopefully complete list of tools and libraries required to build the Audio Engine.
 

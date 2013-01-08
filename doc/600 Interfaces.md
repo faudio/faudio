@@ -5,7 +5,7 @@
     This is an advanced topic, not necessary to read for general usage.
     You *should* probably read it if you want to modify or extend the Audio Engine.
 
-[TOC]
+@tableofcontents
 
 The Audio Engine provides [ad-hoc polymorphism](http://en.wikipedia.org/wiki/Ad-hoc_polymorphism)
 using interfaces. An *interface* is a collection of function types, identified by a unique value

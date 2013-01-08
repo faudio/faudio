@@ -7,7 +7,7 @@
     This is an advanced topic, not necessary to read for general usage.
     You *should* probably read it if you want to modify or extend the Audio Engine.
 
-[TOC]
+@tableofcontents
 
 The Audio Engine include a set of container data structures, commonly known as collections. The
 primary use of these types it to be used as messages, to be sent and received from audio

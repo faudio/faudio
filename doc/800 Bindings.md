@@ -7,8 +7,3 @@
 
 The Audio Engine is specified using the [Modulo](https://github.com/hanshoglund/modulo) description language
 and implemented in the [C99](http://en.wikipedia.org/wiki/C99) language.
-
-Bindings can be generated to any language supported by Modulo. At present only Lisp is supported.
-
-TODO
-

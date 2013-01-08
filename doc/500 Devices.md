@@ -1,7 +1,7 @@
 
 # Devices {#Devices}
 
-[TOC]
+@tableofcontents
 
 # Real time {#RealTime}
 

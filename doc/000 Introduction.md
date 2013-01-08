@@ -1,6 +1,5 @@
 
-Introduction {#mainpage}
-----------------------------------------------------------------------------------------------------
+# Introduction {#mainpage}
 
 The DoReMIR Audio Engine provides real-time and non-real-time audio processing.
 It can be used as a library, or as a framework for developing audio related tools.
