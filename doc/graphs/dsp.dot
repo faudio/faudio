@@ -1,0 +1,100 @@
+
+#include "doc/graphs/header.dot"
+
+digraph par
+{
+    GRAPH_FORMAT;
+
+    In1  [style=invisible];
+    Out1 [style=invisible];
+    In2  [style=invisible];
+    Out2 [style=invisible];
+
+    subgraph clusterpar { graph [style=dashed, label="par"]; A; B; }
+    In1 -> A -> Out1;
+    In2 -> B -> Out2;
+}
+
+// digraph seq
+// {
+//     GRAPH_FORMAT;
+// 
+//     In1  [style=invisible];
+//     Out1 [style=invisible];
+// 
+//     subgraph clusterseq { graph [style=dashed, label="seq"]; A; B; }
+//     In1 -> A -> B -> Out1;
+// }
+
+// digraph loop
+// {
+//     GRAPH_FORMAT;
+// 
+//     In1  [style=invisible];
+//     Out1 [style=invisible];
+// 
+//     subgraph clusterloop { graph [style=dashed, label="loop"]; A; }
+//     In1 -> A -> Out1;
+//     A -> A;
+// }
+
+// digraph split
+// {
+//     GRAPH_FORMAT;
+// 
+//     In1  [style=invisible];
+//     Out1 [style=invisible];
+//     Out2 [style=invisible];
+//     A [label=""];
+// 
+//     subgraph clustersplit { graph [style=dashed, label="split"]; A; }
+//     In1 -> A;
+//     A -> Out1;
+//     A -> Out2;         
+// }
+
+// digraph binary
+// {
+//     GRAPH_FORMAT;
+// 
+//     In1  [style=invisible];
+//     In2  [style=invisible];
+//     Out1 [style=invisible];
+//     A [label="+"];
+// 
+//     subgraph clusterbinary { graph [style=dashed, label="binary"]; A; }
+//     In1 -> A;
+//     In2 -> A;
+//     A -> Out1;
+// }
+
+// digraph unary
+// {
+//     GRAPH_FORMAT;
+// 
+//     In1  [style=invisible];
+//     Out1 [style=invisible];
+//     A [label="cos"];
+// 
+//     subgraph clusterunary { graph [style=dashed, label="unary"]; A; }
+//     In1 -> A;
+//     A -> Out1;
+// }
+
+
+// digraph ternary
+// {
+//     GRAPH_FORMAT;
+// 
+//     In1  [style=invisible];
+//     In2  [style=invisible];
+//     In3  [style=invisible];
+//     Out1 [style=invisible];
+//     A [label="if"];
+// 
+//     subgraph clusterternary { graph [style=dashed, label="ternary"]; A; }
+//     In1 -> A;
+//     In2 -> A;
+//     In3 -> A;
+//     A -> Out1;
+// }

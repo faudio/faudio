@@ -1,0 +1,18 @@
+
+#include "doc/graphs/header.dot"
+
+digraph split
+{
+    GRAPH_FORMAT;
+
+    In1  [style=invisible];
+    Out1 [style=invisible];
+    Out2 [style=invisible];
+    A [label=""];
+
+    subgraph clustersplit { graph [style=dashed, label="split"]; A; }
+    In1 -> A;
+    A -> Out1;
+    A -> Out2;         
+}
+

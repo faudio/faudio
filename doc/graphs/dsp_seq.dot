@@ -1,0 +1,12 @@
+
+#include "doc/graphs/header.dot"
+
+digraph seq {
+    GRAPH_FORMAT;
+
+    In1  [style=invisible];
+    Out1 [style=invisible];
+
+    subgraph clusterseq { graph [style=dashed, label="seq"]; A; B; }
+    In1 -> A -> B -> Out1;
+}

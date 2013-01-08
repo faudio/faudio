@@ -1,9 +1,9 @@
 
 #include "doc/graphs/header.dot"
 
-digraph
-{
-    Foo;
-    Bar;
-    Foo -> Bar;
+digraph dsp
+{               
+    GRAPH_FORMAT;
+    
+    A -> B -> C;
 }

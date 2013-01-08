@@ -16,16 +16,6 @@ computations. For this reason the Audio Engine collections are *immutable* and *
 In contrast to container types in managed languages, the collection types used in the Audio Engine
 are not shared, instead they have *single-ownership semantics*.
 
-All collections implement the following [interfaces](@ref Interfaces):
-
-* doremir_equal_t
-* doremir_order_t
-* doremir_copy_t
-* doremir_destroy_t
-* doremir_dynamic_t
-* doremir_string_show_t
-
-
 # Collection properties {#CollectionProperties}
 
 ## Immutable {#Immutable}

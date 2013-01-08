@@ -1,0 +1,16 @@
+
+#include "doc/graphs/header.dot"
+
+digraph loop
+{
+    GRAPH_FORMAT;
+
+    In1  [style=invisible];
+    Out1 [style=invisible];
+
+    subgraph clusterloop { graph [style=dashed, label="loop"]; A; }
+    In1 -> A -> Out1;
+    A -> A;
+}
+
+ 
