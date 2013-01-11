@@ -52,10 +52,11 @@ Additions
         
 
 * Vector/SIMD support
-    http://gcc.gnu.org/onlinedocs/gcc/Vector-Extensions.html
-    http://clang.llvm.org/docs/LanguageExtensions.html#vectors-and-extended-vectors
-    http://www.linuxjournal.com/content/introduction-gcc-compiler-intrinsics-vector-processing?page=0,4
-    http://en.wikipedia.org/wiki/Vectorization_%28parallel_computing%29
+    * Probably use GCC intrincics (implemented in clang too)
+    * Check alignment w.r.t. doremir_type_t.
+        http://stackoverflow.com/questions/5118158/using-sse-to-speed-up-computation-store-load-and-alignment
+        http://gcc.gnu.org/onlinedocs/gcc/Vector-Extensions.html
+        http://clang.llvm.org/docs/LanguageExtensions.html#vectors-and-extended-vectors
 
 ==========
 Misc issues
