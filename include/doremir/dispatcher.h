@@ -4,7 +4,7 @@
 
 #include <doremir.h>
 #include <doremir/std.h>
-#include <doremir/list.h>
+#include <doremir/pair.h>
 
 /** @defgroup Doremir Doremir
     @{
@@ -14,6 +14,8 @@
 
 typedef doremir_ptr_t doremir_dispatcher_address_t;
 typedef doremir_ptr_t doremir_dispatcher_message_t;
+typedef doremir_ptr_t doremir_dispatcher_disp_t;
+typedef doremir_ptr_t doremir_dispatcher_recv_t;
 typedef struct {
             void (* receive)(doremir_ptr_t,
                              doremir_dispatcher_address_t,
@@ -22,7 +24,23 @@ typedef struct {
 typedef struct {
             void (* add_receiver)(doremir_ptr_t, doremir_ptr_t);
             void (* remove_receiver)(doremir_ptr_t, doremir_ptr_t);
+            void (* dispatch)(doremir_ptr_t);
         } doremir_dispatcher_t;
+doremir_dispatcher_recv_t doremir_dispatcher_or(doremir_dispatcher_recv_t,
+                                                doremir_dispatcher_recv_t);
+doremir_dispatcher_recv_t doremir_dispatcher_and(doremir_dispatcher_recv_t,
+                                                 doremir_dispatcher_recv_t);
+doremir_dispatcher_recv_t doremir_dispatcher_first(doremir_dispatcher_recv_t,
+                                                   doremir_dispatcher_recv_t);
+doremir_dispatcher_recv_t doremir_dispatcher_sample(doremir_dispatcher_recv_t,
+                                                    doremir_dispatcher_recv_t);
+doremir_dispatcher_recv_t doremir_dispatcher_filter(doremir_pred_t,
+                                                    doremir_dispatcher_recv_t);
+doremir_dispatcher_recv_t doremir_dispatcher_filter_pair(doremir_pred_t,
+                                                         doremir_dispatcher_recv_t);
+doremir_ptr_t doremir_dispatcher_simple();
+doremir_pair_t doremir_dispatcher_buffered();
+doremir_pair_t doremir_dispatcher_non_blocking();
 
 /** @}
     @}

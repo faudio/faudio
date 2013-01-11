@@ -12,16 +12,12 @@ module Doremir.Scheduler
 
     type Time = Int; // TODO
     type Action = Nullary;
-
-    /** @interface doremir_scheduler_t 
-        Scheduler interface.
-    */
-    type Scheduler = struct {
-        schedule : ((Ptr, Time, Action) -> Void)*,
-        execute  : (Ptr -> Void)*
-    };
+    
+    type Scheduler = opaque;
 
     create  : Improving -> Scheduler;
     destroy : Scheduler -> Void;
     swap    : (Scheduler, Scheduler) -> Void;
+    schedule : (Scheduler, Time, Action) -> Void;
+    execute  : Scheduler -> Void;
 }

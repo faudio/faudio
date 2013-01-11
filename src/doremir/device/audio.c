@@ -24,6 +24,12 @@ struct _doremir_device_audio_stream_t
     
 };
 
+typedef doremir_device_audio_t         device_t;
+typedef doremir_device_audio_stream_t  stream_t;
+typedef doremir_device_audio_session_t session_t;
+
+
+
 static void fatal(char* msg, int error);
 
 static doremir_thread_mutex_t   pa_mutex    = NULL;
@@ -62,6 +68,8 @@ doremir_device_audio_begin_session()
         }
     }
     doremir_thread_unlock(pa_mutex);
+    // TODO return
+    return NULL;
 }
 
 /** Terminate the given session.
@@ -137,6 +145,69 @@ void doremir_device_audio_close_stream(doremir_device_audio_stream_t stream)
 }
 
 
+// --------------------------------------------------------------------------------
+
+void start()
+{                            
+    // call Pa_OpenStream
+    // call before_processing
+    // call Pa_StartStream
+}   
+
+void stop()
+{
+    // Call Pa_StopStream
+    // (after_processing is called from the finished callback)
+}
+
+
+
+void before_processing(stream_t stream)
+{
+    // extract top-level audio type
+    // allocate buffers
+    // create message allocator
+    // register all processors as receivers on the incoming message dispatcher
+    // call setup() on top processor (passing outgoing message receiver)
+}
+
+void after_processing(stream_t stream)
+{
+    // deallocate buffers
+    // delete message allocator
+    // call cleanup() on top processor
+}
+
+int during_processing(stream_t stream)
+{    
+    // update stream time
+    
+    // call dispatch() on the incoming message dispatcher
+    // shuffle inputs
+    // call process() on top processor
+    // shuffle outputs
+
+    // decide whether to continue
+    return 0; // TODO
+}
+
+
+/* The callbacks */
+
+int pa_main_callback(const void                      * input_ptr, 
+                     void                            * output_ptr, 
+                     unsigned long                     frame_count, 
+                     const PaStreamCallbackTimeInfo  * time_info, 
+                     PaStreamCallbackFlags             flags, 
+                     void *                            data)
+{
+    // call during_processing
+}                    
+
+void pa_finished_callback(void *userData)
+{
+    // call after_processing
+}
 
 
 // --------------------------------------------------------------------------------
