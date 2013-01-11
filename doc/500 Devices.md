@@ -5,20 +5,21 @@
 
 @tableofcontents
 
-Devices are the entities that allow the audio engine to communicate with the outside world. 
+Devices are the entities that allow the Audio Engine to communicate with the outside world. Any client will need
+to connect at least two devices to each other to form an *audio stream*. Usually, these connections will involve
+a processor or signal function.
 
-While processors and dispatchers denote functions on time and communication networks respectively, devices denote
-external entities provided by the system. Typically, each *physical* audio or midi interface is represented by a
-single device in the audio engine. The operating system may also provide *non-physical* devices, which may represent
-network connections, software mixers and the like.
+While signals and processors denote functions, devices denote external entities provided by the system.
+Typically, each *physical* audio or midi interface is represented by a single device in the Audio Engine. The
+operating system may also provide *non-physical* devices, which may represent network connections, software
+mixers and the like.
 
 TODO
 
 # Real time devices {#RealTime}
 
 The Audio Engine supports real-time audio and midi computations. The interface for these are similar but differs
-in that audio streams use both [processors](@ref Processors) and [dispatchers](@ref Dispatchers), while midi 
-streams use only dispatchers. 
+in that audio streams does not require a [processor](@ref Processors). 
 
 See the \ref DoremirDeviceAudio and \ref DoremirDeviceMidi modules for details.
 
@@ -37,17 +38,17 @@ sesssion.
 
 Sessions are *immutable* and *transient*, meaning that the set of available devices in a session will not
 change, but represents a snapshot of the setup at the time it was initiated. If a change in the underlying 
-audio system is detected while a session is still active, or an error occurs because of an unexpected setup change,
-the current session is automatically terminated, and a new session has to be started.
+audio system is detected while a session is still active, and a new session has to be started to observe the
+new setup.
 
-TODO
+TODO register notification callback
 
 @image html  device_states.png "State transactions of the audio system"
 @image latex device_states.pdf "State transactions of the audio system" width=0.8\textwidth
 
 @note
-    The semantics of *streams* have been changed from earlier versions of the audio engine, in which a *stream* was
-    a could be stopped and restarted. In the new implementation, streams are immutable and transient just
+    The semantics of *streams* have been changed from earlier versions of the Audio Engine, in which a *stream*
+    could be repeatedly stopped and started. In the new implementation, streams are immutable and transient just
     like sessions.
 
 ## Acquire-release vs. callback {#DevicesStyles}
