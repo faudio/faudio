@@ -45,7 +45,7 @@ module Doremir.Processor
     type Samples = Buffer;
 
     /** @interface doremir_processor_t 
-        The abstract processing interface. */
+        Processing interface. */
     type Processor = struct {
         before  : ((Ptr, Info*) -> Void)*,
         process : ((Ptr, Info*, Samples) -> Void)*,

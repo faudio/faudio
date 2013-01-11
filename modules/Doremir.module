@@ -89,14 +89,14 @@ module Doremir
     
 
     /** @interface doremir_equal_t
-        Equality comparison.
+        Equality comparison interface.
     */
     type Equal   = struct {
         equal : ((Ptr, Ptr) -> Bool)*
     };
 
     /** @interface doremir_order_t 
-        Less-than comparison.
+        Less-than comparison interface.
     */
     type Order  = struct {
         lessThan    : ((Ptr, Ptr) -> Bool)*,
@@ -104,14 +104,14 @@ module Doremir
     };
     
     /** @interface doremir_copy_t
-        Generic copying.
+        Generic copying interface.
     */
     type Copy   = struct {
         copy : (Ptr -> Ptr)*
     };
 
     /** @interface doremir_destroy_t
-        Generic destruction.
+        Generic destruction interface.
     */
     type Destroy   = struct {
         destroy : (Ptr -> Void)*
@@ -119,7 +119,7 @@ module Doremir
 
 
     /** @interface doremir_number_t 
-        Arithmetic operations.
+        Arithmetic operations interface.
     */
     type Number = struct {
         add      : ((Ptr, Ptr) -> Ptr)*,
@@ -141,7 +141,7 @@ module Doremir
     };
 
     /** @interface doremir_dynamic_t
-        Dynamic type introspection.
+        Dynamic type introspection interface.
     */
     type Dynamic = struct {
         getType : (Ptr -> TypeRepr)*

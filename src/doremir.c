@@ -504,8 +504,10 @@ IMPLEMENT_WRAPPER(float);
 IMPLEMENT_WRAPPER(double);
 
 
+// @cond internal
 // Dummy struct as clang (C99?) does not allow us to call the pointer directly
 struct doremir_impl_disp { doremir_impl_t impl; };
+// @endcond
 
 doremir_ptr_t doremir_interface(doremir_id_t type, doremir_ptr_t pointer)
 {

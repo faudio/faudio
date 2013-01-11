@@ -14,23 +14,17 @@ module Doremir.Dispatcher
     import Doremir.Std;
     import Doremir.List;
 
-    type Message = List;
     type Address = Ptr;
-
-
-    /** @interface doremir_dispatcher_sender_t */
-    type Sender = struct {
-        send : ((Ptr, Address, List) -> Void)*
-    };
+    type Message = Ptr;
 
     /** @interface doremir_dispatcher_receiver_t */
     type Receiver = struct {
-        receive : ((Ptr, Sender*) -> Void)*
+        receive : ((Ptr, Address, Message) -> Void)*
     };
 
     /** @interface doremir_dispatcher_t */
     type Dispatcher = struct {
-        send : ((Ptr, Address, List) -> Void)*,
-        receive : ((Ptr, Sender*) -> Void)*
+        addReceiver : ((Ptr, Ptr) -> Void)*,
+        removeReceiver : ((Ptr, Ptr) -> Void)*
     };
 }

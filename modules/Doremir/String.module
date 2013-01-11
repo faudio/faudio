@@ -74,7 +74,7 @@ module Doremir.String
     formatInteger : (Char*, Long) -> String;
 
     /** @interface doremir_string_show_t 
-        String conversion.
+        String conversion interface.
     */
     type Show  = struct {
         show : (Ptr -> String)*
