@@ -13,9 +13,9 @@ digraph graphname {
     Init -> Session   [label = "begin"];
 
     Session -> Device [label = "select"];
-    Device -> Init    [label = "end"];
-    Device -> Stream  [label = "start"];
-    Stream -> Device  [label = "stop"];
+    Device -> Stream   [label = "start"];
+    Stream -> Session  [label = "stop"];
+    Session -> Init    [label = "end"];
 
     Init -> Error;
     // Stream -> Error [style="invisible", arrowhead="none"];

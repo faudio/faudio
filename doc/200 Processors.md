@@ -4,9 +4,9 @@
 @tableofcontents
 
 
-# Process combinators {#comb1}
+# Process combinators {#Comb}
 
-## Process combinators {#comb2}
+## Basic combinators {#BasicComb}
 
 ### Sequential {#seq}
 
@@ -29,7 +29,7 @@ Recursive processors.
 @image html  dsp_loop.png "A processor"
 @image latex dsp_loop.pdf "A processor" width=0.6\textwidth
 
-### Fold and unfold {#fold}
+### Folds and unfolds {#fold}
 
 Folding and unfolding processors processors.
 
@@ -45,10 +45,47 @@ Mapping processors.
 @image html  dsp_unary.png "A processor"
 @image latex dsp_unary.pdf "A processor" width=0.6\textwidth
 
+## Basic folds {#Folds}
 
-<!-- @image html delay.png -->
-<!-- @image html const.png -->
-<!-- @image html id.png -->
+
+## Basic maps {#Maps}
+
+### Time {#Id}
+### Constant {#Const}
+### Delay {#Delay}
+
+## Handling messages to combinators {#CombMsg}
+
+TODO How?
+
+
+# Message to signal {#MsgToSig}
+
+## Switch {#Switch}
+## Interpolate {#Interpolate}
+## If/activate {#IfActivate}
+## Sample {#Sample}
+## Trigger {#Trigger}
+
+# Special processors {#SpecialProcessors}
+
+## FluidSynth {#FluidSynth}
+
+TODO
+
+## Audio Units {#AudioUnits}
+
+TODO
+
+## VST {#VST}
+
+TODO
+
+## LADSPA {#LADSPA}
+
+TODO
+
+
 
 
 

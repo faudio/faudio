@@ -14,7 +14,7 @@ network connections, software mixers and the like.
 
 TODO
 
-# Real time {#RealTime}
+# Real time devices {#RealTime}
 
 The Audio Engine supports real-time audio and midi computations. The interface for these are similar but differs
 in that audio streams use both [processors](@ref Processors) and [dispatchers](@ref Dispatchers), while midi 
@@ -141,9 +141,9 @@ void test()
 ~~~~
 
 
-# Non-realtime {#NonRealTime}
+# Non-realtime devices {#NonRealTime}
 
-## File streams {#File}
+## File devices {#File}
 
 ### Acquire-release style {#AcquireReleaseFile}
 
@@ -178,7 +178,7 @@ void test()
 
 
 
-## Buffer streams {#BufferStream}
+## Buffer devices {#BufferStream}
 
 ### Acquire-release style {#AcquireReleaseBuffer}
 
