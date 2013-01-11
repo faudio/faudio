@@ -11,21 +11,22 @@ module Doremir.Device.Audio
     import Doremir.Pair;
     import Doremir.Processor;
 
-    type Session = opaque;
-    type Stream = opaque;
     type Audio = opaque;
 
-    withSession : (() -> Session)* -> Void;
+    type Session = opaque;
+    type Stream = opaque;
+
+    type SessionCallback = (Session -> Session)*;
+    withSession : (SessionCallback) -> Void;
     beginSession : () -> Session;
     endSession : Session -> Void;
-
-    devices : Session -> List;
-    standard : Session -> Pair;
-    standardInput : Session -> Audio;
-    standardOutput : Session -> Audio;
-    
-    withStream : ((Audio, Processor, Audio) -> Stream)* -> Void;
+                                                           
+    type StreamCallback = (Stream -> Stream)*;
+    withStream : (Audio, Processor, Audio, StreamCallback) -> Void;
     startStream : (Audio, Processor, Audio) -> Stream;
     stopStream : Stream -> Void;
+    
+    all : Session -> List;
+    default : Session -> Pair;
     
 }
