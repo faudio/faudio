@@ -24,16 +24,18 @@ struct _doremir_device_audio_stream_t
     
 };
 
-typedef doremir_device_audio_t         device_t;
-typedef doremir_device_audio_stream_t  stream_t;
-typedef doremir_device_audio_session_t session_t;
-
-
-
-static void fatal(char* msg, int error);
+typedef doremir_processor_t                     processor_t;
+typedef doremir_device_audio_t                  device_t;
+typedef doremir_device_audio_stream_t           stream_t;
+typedef doremir_device_audio_session_t          session_t;
+typedef doremir_device_audio_stream_callback_t  stream_callback_t;
+typedef doremir_device_audio_session_callback_t session_callback_t;
 
 static doremir_thread_mutex_t   pa_mutex    = NULL;
 static bool                     pa_status   = false;
+
+static void fatal(char* msg, int error);
+
 
 void doremir_device_audio_initialize()
 {
@@ -47,10 +49,12 @@ void doremir_device_audio_terminate()
 
 // --------------------------------------------------------------------------------
 
-/** Begin a new session.
- */
-doremir_device_audio_session_t 
-doremir_device_audio_begin_session()
+void doremir_device_audio_with_session(session_callback_t callback)
+{
+    
+}
+
+session_t doremir_device_audio_begin_session()
 {
     if (!pa_mutex) assert(false && "Not initalized");
 
@@ -72,9 +76,7 @@ doremir_device_audio_begin_session()
     return NULL;
 }
 
-/** Terminate the given session.
- */
-void doremir_device_audio_end_session(doremir_device_audio_session_t session)
+void doremir_device_audio_end_session(session_t session)
 {
     if (!pa_mutex) assert(false && "Not initalized");
 
@@ -89,57 +91,12 @@ void doremir_device_audio_end_session(doremir_device_audio_session_t session)
     doremir_thread_unlock(pa_mutex);
 }
 
-/** Get all active audio devices of the given session.
-    @return
-        A list of \ref doremir_device_audio_t.
- */
-doremir_list_t doremir_device_audio_devices(doremir_device_audio_session_t session)
+doremir_list_t doremir_device_audio_all(session_t session)
 {
     assert(false && "Not implemented");
 }
 
-/** Get the standard devices of the given session.
-    @return
-        A pair of \ref doremir_device_audio_t.
- */
-doremir_pair_t doremir_device_audio_standard(doremir_device_audio_session_t session)
-{
-    assert(false && "Not implemented");
-}
-
-/** Get the standard input device of the given session.
- */
-doremir_device_audio_t doremir_device_audio_standard_input(doremir_device_audio_session_t session)
-{             
-    // doremir_pair_t std = doremir_device_audio_standard(session);
-    // return (doremir_device_audio_t) std.fst;
-    assert(false && "Not implemented");
-}
-
-/** Get the standard output device of the given session.
- */
-doremir_device_audio_t doremir_device_audio_standard_output(doremir_device_audio_session_t session)
-{
-    // doremir_pair_t std = doremir_device_audio_standard(session);
-    // return (doremir_device_audio_t) std.snd;
-    assert(false && "Not implemented");
-}
-
-// --------------------------------------------------------------------------------
-
-/** Open a stream on the given devices.
- */
-doremir_device_audio_stream_t 
-doremir_device_audio_open_stream(doremir_device_audio_t input,
-                                 doremir_processor_t processor,
-                                 doremir_device_audio_t output)
-{
-    assert(false && "Not implemented");
-}
-
-/** Close the given stream.
- */
-void doremir_device_audio_close_stream(doremir_device_audio_stream_t stream)
+doremir_pair_t doremir_device_audio_default(session_t session)
 {
     assert(false && "Not implemented");
 }
@@ -147,20 +104,32 @@ void doremir_device_audio_close_stream(doremir_device_audio_stream_t stream)
 
 // --------------------------------------------------------------------------------
 
-void start()
-{                            
+void doremir_device_audio_with_stream(device_t          input,
+                                      processor_t       processor,
+                                      device_t          output,
+                                      stream_callback_t callback)
+{
+}
+
+stream_t doremir_device_audio_start_stream(device_t    input,
+                                           processor_t processor,
+                                           device_t    output)
+{
+    assert(false && "Not implemented");
     // call Pa_OpenStream
     // call before_processing
     // call Pa_StartStream
-}   
+}
 
-void stop()
+void doremir_device_audio_stop_stream(stream_t stream)
 {
+    assert(false && "Not implemented");
     // Call Pa_StopStream
     // (after_processing is called from the finished callback)
 }
 
 
+// --------------------------------------------------------------------------------
 
 void before_processing(stream_t stream)
 {
@@ -202,6 +171,7 @@ int pa_main_callback(const void                      * input_ptr,
                      void *                            data)
 {
     // call during_processing
+    return 0;
 }                    
 
 void pa_finished_callback(void *userData)
