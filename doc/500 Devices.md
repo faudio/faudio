@@ -84,15 +84,17 @@ void test()
         stream_t    stream
         
         proc    = doremir_processor_identity();
-        input   = doremir_device_audio_standard(session)->first;
-        output  = doremir_device_audio_standard(session)->second;        
+        input   = doremir_device_audio_default(session)->first;
+        output  = doremir_device_audio_default(session)->second;        
         stream  = doremir_device_audio_start_stream(input, proc, output);
 
         if (doremir_check(stream))
             doremir_print_error(stream);
 
         doremir_thread_sleep(doremir_seconds(10));
+        
         doremir_device_audio_stop_stream(stream);
+        doremir_destroy(proc);
     }
 
     doremir_device_audio_end_session(session);
@@ -117,22 +119,26 @@ typedef doremir_device_audio_session_t session_t;
 typedef doremir_device_audio_stream_t  stream_t_;
 typedef doremir_processor_any_t        processor_t;
 
-void run_callback(stream_t data)
+stream_t run_callback(stream_t stream)
 {
     doremir_thread_sleep(doremir_seconds(10));
+    return stream;
 }
 
-void session_callback(session_t session, doremir_ptr_t data)
+session_t session_callback(session_t session, doremir_ptr_t data)
 {
     device_t    input, output;
     processor_t proc;
 
     proc    = doremir_processor_identity();
-    input   = doremir_device_audio_standard(session)->first;
-    output  = doremir_device_audio_standard(session)->second;        
+    input   = doremir_device_audio_default(session)->first;
+    output  = doremir_device_audio_default(session)->second;        
 
     doremir_device_audio_with_stream(devices.first, processor, devices.second,
         run_callback, doremir_print_error, NULL);
+
+    doremir_destroy(proc);
+    return session;
 }
 
 void test()
