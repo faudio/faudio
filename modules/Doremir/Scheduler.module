@@ -18,6 +18,7 @@ module Doremir.Scheduler
     create  : Improving -> Scheduler;
     destroy : Scheduler -> Void;
     swap    : (Scheduler, Scheduler) -> Void;
+    
     schedule : (Scheduler, Time, Action) -> Void;
     execute  : Scheduler -> Void;
 }

@@ -62,7 +62,7 @@ void doremir_time_destroy(doremir_time_t time)
 // --------------------------------------------------------------------------------
 
 /**
-    Returns the fractions of a second in this time interval.
+    Return the fractions of a second in this time interval.
  */
 doremir_ratio_t doremir_time_divisions(doremir_time_t time)
 {                
@@ -73,7 +73,7 @@ doremir_ratio_t doremir_time_divisions(doremir_time_t time)
 
 
 /**
-    Returns the number of whole seconds in this time interval.
+    Return the number of whole seconds in this time interval.
  */
 int32_t doremir_time_seconds(doremir_time_t time)
 {
@@ -84,7 +84,7 @@ int32_t doremir_time_seconds(doremir_time_t time)
 
 
 /**
-    Returns the number of whole minutes in this time interval.
+    Return the number of whole minutes in this time interval.
  */
 int32_t doremir_time_minutes(doremir_time_t time)
 {
@@ -94,7 +94,7 @@ int32_t doremir_time_minutes(doremir_time_t time)
 }
 
 /**
-    Returns the number of whole hours in this time interval.
+    Return the number of whole hours in this time interval.
  */
 int32_t doremir_time_hours(doremir_time_t time)
 {
@@ -105,7 +105,7 @@ int32_t doremir_time_hours(doremir_time_t time)
 
 
 /**
-    Returns the number of whole days in this time interval.
+    Return the number of whole days in this time interval.
  */
 int32_t doremir_time_days(doremir_time_t time)
 {
