@@ -103,7 +103,7 @@ void doremir_midi_destroy(doremir_midi_t midi)
 /**
     Return the status byte of given midi message.
  */
-doremir_midi_status_t doremir_midi_status(doremir_midi_t)
+doremir_midi_status_t doremir_midi_status(doremir_midi_t midi)
 {
     assert(false && "Not implemented");
 }
@@ -111,7 +111,7 @@ doremir_midi_status_t doremir_midi_status(doremir_midi_t)
 /**
     Return the channel byte of given midi message.
  */
-doremir_midi_channel_t doremir_midi_channel(doremir_midi_t)
+doremir_midi_channel_t doremir_midi_channel(doremir_midi_t midi)
 {
     assert(false && "Not implemented");
 }
@@ -119,7 +119,7 @@ doremir_midi_channel_t doremir_midi_channel(doremir_midi_t)
 /**
     Return the status byte of given midi message.
  */
-bool doremir_midi_is_simple(doremir_midi_t)
+bool doremir_midi_is_simple(doremir_midi_t midi)
 {
     assert(false && "Not implemented");
 }
@@ -127,7 +127,7 @@ bool doremir_midi_is_simple(doremir_midi_t)
 /**
     Return whether the given midi message is a non-sysex message.
  */
-doremir_pair_t doremir_midi_simple_data(doremir_midi_t)
+doremir_pair_t doremir_midi_simple_data(doremir_midi_t midi)
 {
     assert(false && "Not implemented");
 }
@@ -135,7 +135,7 @@ doremir_pair_t doremir_midi_simple_data(doremir_midi_t)
 /**
     Return whether the given midi message is a sysex message.
  */
-bool doremir_midi_is_sysex(doremir_midi_t)
+bool doremir_midi_is_sysex(doremir_midi_t midi)
 {
     assert(false && "Not implemented");
 }
@@ -143,7 +143,7 @@ bool doremir_midi_is_sysex(doremir_midi_t)
 /**
     Return the data buffer of a sysex message, except for the wrapping `F0` and `F7` bytes.
  */
-doremir_buffer_t doremir_midi_sysex_data(doremir_midi_t)
+doremir_buffer_t doremir_midi_sysex_data(doremir_midi_t midi)
 {
     assert(false && "Not implemented");
 }
