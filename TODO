@@ -61,6 +61,9 @@ Additions
 ==========
 Misc issues
 
+* Make Modulo support interfaces (i.e. generate numbers in interfaces.h)
+* Make Modulo support explicit one-level above names (doremir_device_audio_stream_callback_t etc)
+
 * Check if we can make Fluidsynth compile against checked in Glib
   binaries instead of /usr/local
   * Done? 
