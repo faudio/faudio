@@ -37,6 +37,7 @@ c:
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/FluidSynth.module	>include/doremir/processor/fluid_synth.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Signal.module  		>include/doremir/signal.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Type.module  			>include/doremir/type.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/Device.module			>include/doremir/device.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Device/Buffer.module		>include/doremir/device/buffer.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Device/File.module    	>include/doremir/device/file.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Device/Audio.module    	>include/doremir/device/audio.h && \

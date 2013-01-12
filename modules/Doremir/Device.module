@@ -11,4 +11,7 @@
 module Doremir.Device
 {
     import Doremir;
+
+    type Audio = opaque;
+    type Midi = opaque;
 }

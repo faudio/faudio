@@ -19,6 +19,7 @@
 #define ratio_t             doremir_ratio_t
 #define buffer_t            doremir_buffer_t
 #define thread_t            doremir_thread_t
+#define mutex_t             doremir_thread_mutex_t
 #define processor_t         doremir_processor_t
 #define dispatcher_t        doremir_message_dispatcher_t
 #define time_t              doremir_time_t
@@ -99,8 +100,6 @@
 #define aset                doremir_atomic_set
 #define aadd                doremir_atomic_add
 #define amodify             doremir_atomic_modify
-
-#define mutex_t             doremir_thread_mutex_t
 
 
 

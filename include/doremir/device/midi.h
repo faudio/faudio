@@ -4,7 +4,7 @@
 
 #include <doremir/list.h>
 #include <doremir/pair.h>
-#include <doremir/message.h>
+#include <doremir/device.h>
 #include <doremir/processor.h>
 
 /** @defgroup Doremir Doremir
@@ -15,7 +15,6 @@
     @{
     */
 
-typedef struct _doremir_device_midi_t * doremir_device_midi_t;
 typedef struct _doremir_device_midi_session_t * doremir_device_midi_session_t;
 typedef struct _doremir_device_midi_stream_t * doremir_device_midi_stream_t;
 doremir_list_t doremir_device_midi_all(doremir_device_midi_session_t);

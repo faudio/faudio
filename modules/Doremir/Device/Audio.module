@@ -22,34 +22,32 @@ module Doremir.Device.Audio
 {
     import Doremir.List;
     import Doremir.Pair;
-    import Doremir.Message;
+    import Doremir.Device;
     import Doremir.Processor;
 
-    type DeviceAudio = opaque;  // TODO call Device
     type Session = opaque;
     type Stream = opaque;
-
-    all : Session -> List;      // [DeviceAudio]
-    default : Session -> Pair;  // (DeviceAudio,DeviceAudio)
-
-    name : DeviceAudio -> String;
-    hostName : DeviceAudio -> String;
-    hasInput : DeviceAudio -> Bool;
-    hasOutput : DeviceAudio -> Bool;
-    channels : DeviceAudio -> Pair;
+    type SessionCallback = (Session -> Session)*;
+    type StreamCallback = (Stream -> Stream)*;
 
     beginSession : () -> Session;
     restartSession : Session -> Session;
     endSession : Session -> Void;
+    withSession : SessionCallback -> Void;
 
-    startStream : (DeviceAudio, Processor, DeviceAudio) -> Stream;
+    all : Session -> List;      // [Audio]
+    default : Session -> Pair;  // (Audio,Audio)
+
+    name : Audio -> String;
+    hostName : Audio -> String;
+    hasInput : Audio -> Bool;
+    hasOutput : Audio -> Bool;
+    channels : Audio -> Pair;
+
+    startStream : (Audio, Processor, Audio) -> Stream;
     restartStream : Stream -> Stream;
     stopStream : Stream -> Void;
+    withStream : (Audio, Processor, Audio, StreamCallback) -> Void;
 
-    type SessionCallback = (Session -> Session)*;
-    type StreamCallback = (Stream -> Stream)*;
-
-    withSession : SessionCallback -> Void;
-    withStream : (DeviceAudio, Processor, DeviceAudio, StreamCallback) -> Void;
 }
 

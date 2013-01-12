@@ -22,32 +22,31 @@ module Doremir.Device.Midi
 {
     import Doremir.List;
     import Doremir.Pair;
-    import Doremir.Message;
+    import Doremir.Device;
     import Doremir.Processor;
 
-    type DeviceMidi = opaque;  // TODO call Device
     type Session = opaque;
     type Stream = opaque;
 
-    all : Session -> List;      // [DeviceMidi]
-    default : Session -> Pair;  // (DeviceMidi,DeviceMidi)
+    all : Session -> List;      // [Midi]
+    default : Session -> Pair;  // (Midi,Midi)
 
-    name : DeviceMidi -> String;
-    hostName : DeviceMidi -> String;
-    hasInput : DeviceMidi -> Bool;
-    hasOutput : DeviceMidi -> Bool;
+    name : Midi -> String;
+    hostName : Midi -> String;
+    hasInput : Midi -> Bool;
+    hasOutput : Midi -> Bool;
 
     beginSession : () -> Session;
     restartSession : Session -> Session;
     endSession : Session -> Void;
 
-    startStream : DeviceMidi -> Stream;
+    startStream : Midi -> Stream;
     restartStream : Stream -> Stream;
     stopStream : Stream -> Void;
 
     type SessionCallback = (Session -> Session)*;
     type StreamCallback = (Stream -> Stream)*;
     withSession : SessionCallback -> Void;
-    withStream : (DeviceMidi, StreamCallback) -> Void;
+    withStream : (Midi, StreamCallback) -> Void;
 }
 

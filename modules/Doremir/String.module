@@ -63,12 +63,14 @@ module Doremir.String
     charAt : (Int,String) -> Char16;
 
     // Conversion
-    toUtf8  : String -> Utf8;
-    toUtf16 : String -> Utf16;
-    toUtf32 : String -> Utf32;
-    fromUtf8  : Utf8 -> String;
-    fromUtf16 : Utf16 -> String;
-    fromUtf32 : Utf32 -> String;
+    toUtf8     : String -> Utf8;
+    toUtf16    : String -> Utf16;
+    toUtf32    : String -> Utf32;
+    toCFString : Void* -> String;
+    fromUtf8     : Utf8 -> String;
+    fromUtf16    : Utf16 -> String;
+    fromUtf32    : Utf32 -> String;
+    fromCFString : Void* -> String;
 
     // Formatting
     formatInteger : (Char*, Long) -> String;
