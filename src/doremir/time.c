@@ -13,7 +13,7 @@ doremir_ptr_t time_impl(doremir_id_t interface);
 struct _doremir_time_t {         
         doremir_impl_t      impl;       /* Interface dispatcher */
         doremir_ratio_t     value; 
-};
+    };
      
 inline static doremir_time_t
 new_time(ratio_t value)
@@ -200,11 +200,12 @@ doremir_string_t time_show(doremir_ptr_t a)
     doremir_time_t t = (doremir_time_t) a;
     string_t s = string("<Time");
 
-    s = sdappend(s, doremir_string_format_integer(" %02i", doremir_time_days(t)));
-    s = sdappend(s, doremir_string_format_integer(":%02i", doremir_time_hours(t)));
-    s = sdappend(s, doremir_string_format_integer(":%02i", doremir_time_minutes(t)));
-    s = sdappend(s, doremir_string_format_integer(":%02i+", doremir_time_seconds(t)));
+    s = sdappend(s, doremir_string_format_integer(" %02id", doremir_time_days(t)));
+    s = sdappend(s, doremir_string_format_integer(" %02ih", doremir_time_hours(t)));
+    s = sdappend(s, doremir_string_format_integer(" %02im", doremir_time_minutes(t)));
+    s = sdappend(s, doremir_string_format_integer(" %02i+", doremir_time_seconds(t)));
     s = sdappend(s, doremir_string_show(doremir_time_divisions(t)));
+    s = sdappend(s, string("s"));
 
     s = sdappend(s, string(">"));
     return s;

@@ -12,7 +12,7 @@ struct _doremir_pair_t {
         doremir_impl_t  impl;       /* Interface dispatcher */
         doremir_ptr_t   fst;
         doremir_ptr_t   snd;
-};
+    };
 
 doremir_ptr_t pair_impl(doremir_id_t interface);
 

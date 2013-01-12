@@ -15,7 +15,7 @@ struct _doremir_ratio_t {
         doremir_impl_t  impl;       /* Interface dispatcher */
         nom_t           nom;
         denom_t         denom;
-};
+    };
 
 doremir_ptr_t ratio_impl(doremir_id_t interface);
 

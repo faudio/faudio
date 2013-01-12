@@ -19,7 +19,7 @@
 struct _doremir_set_t {
         doremir_impl_t  impl;       /* Interface dispatcher */
         list_t          elems;
-};
+    };
 
 doremir_ptr_t
 set_impl(doremir_id_t interface);

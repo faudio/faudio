@@ -17,7 +17,7 @@
         map
         concat
 
-    Implementation notes:
+    Notes:
         * The list type is a wrapper structure containing the dispatcher.
         * Below that is straightforward immutable, singly-linked node sequence
         * For memory management we use structural sharing with one reference count per node.
@@ -36,14 +36,14 @@ struct node {
         size_t          count;      /* Number of references */
         struct node *   next;       /* Next node or null */
         doremir_ptr_t   value;      /* The value */
-};
+    };
 
 typedef struct node *node_t;
 
 struct _doremir_list_t {
         doremir_impl_t  impl;       /* Interface dispatcher */
         node_t          node;       /* Top-level node */
-};
+    };
 
 inline static node_t
 new_node(doremir_ptr_t value, node_t next)

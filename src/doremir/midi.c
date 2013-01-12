@@ -20,7 +20,7 @@ struct _doremir_midi_t {
             uint8_t             simple[3];
             doremir_buffer_t    sysex;
         } data;
-};
+    };
 
 inline static doremir_midi_t
 new_midi()
@@ -48,12 +48,16 @@ void delete_midi(doremir_midi_t midi)
 doremir_midi_t doremir_midi_create_simple(status_t status,
                                           data_t data1,
                                           data_t data2)
-{
+{                                 
+    assert(status != 0xf0 && status != 0xf7);
+    
     doremir_midi_t m = new_midi();
+
     m->is_sysex = false;
     m->data.simple[0] = status;
     m->data.simple[1] = data1;
     m->data.simple[2] = data2;
+
     return m;
 }
 

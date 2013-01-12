@@ -23,6 +23,19 @@ doremir_string_t doremir_device_audio_host_name(doremir_device_audio_t device) {
  */
 doremir_pair_t doremir_device_audio_channels(doremir_device_audio_t device) {}
 
+/** 
+    Return whether the given device has input or not.
+    @param device 
+        The device.
+ */
+bool doremir_device_audio_has_input(doremir_device_audio_t) {}
+
+/** 
+    Return whether the given device has output or not.
+    @param device 
+        The device.
+ */
+bool doremir_device_audio_has_output(doremir_device_audio_t) {}
 
 // --------------------------------------------------------------------------------
 
@@ -48,6 +61,16 @@ void doremir_device_audio_with_session(doremir_device_audio_session_callback_t c
         A new session, or an error if no session could be started.
  */
 doremir_device_audio_session_t doremir_device_audio_begin_session() {}
+
+/** 
+    Restart the given audio session.
+    
+    @throw
+        TODO
+    @return 
+        A new session, or an error if no session could be started.
+ */
+doremir_device_audio_session_t doremir_device_audio_restart_session(doremir_device_audio_session_t session) {}
 
 /** 
     End the given session.
@@ -114,6 +137,16 @@ doremir_device_audio_stream_t
 doremir_device_audio_start_stream(doremir_device_audio_t    input,
                                   doremir_processor_t       processor,
                                   doremir_device_audio_t    output) {}
+
+/** 
+    Restart the given audio stream.
+    
+    @throw
+        TODO
+    @return 
+        A new session, or an error if no session could be started.
+ */
+doremir_device_audio_stream_t doremir_device_audio_restart_stream(doremir_device_audio_stream_t stream) {}
 
 /** 
     Close the given stream.

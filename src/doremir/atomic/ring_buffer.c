@@ -19,7 +19,7 @@ struct _doremir_atomic_ring_buffer_t {
 
         atomic_t            start;
         atomic_t            stop;
-};
+    };
 
 doremir_ptr_t atomic_ring_buffer_impl(doremir_id_t interface);
 

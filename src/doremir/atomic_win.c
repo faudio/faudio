@@ -14,7 +14,7 @@
 struct _doremir_atomic_t {
         doremir_impl_t  impl;       /* Interface dispatcher */
         intptr_t value;
-};
+    };
 
 doremir_atomic_t doremir_atomic_create()
 {
