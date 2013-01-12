@@ -13,8 +13,8 @@
 
 struct _doremir_atomic_ring_buffer_t {
 
-        impl_t              impl;       /* Interface dispatcher */
-        buffer_t            data;       /* Actual data */
+        impl_t              impl;       //  Interface dispatcher
+        buffer_t            data;       //  Data buffer
 
         atomic_t            start;
         atomic_t            stop;

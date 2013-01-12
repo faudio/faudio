@@ -9,8 +9,9 @@
 #include <doremir/util.h>
 
 struct _doremir_pair_t {
-        impl_t      impl;       /* Interface dispatcher */
-        ptr_t       fst;
+        impl_t      impl;       //  Interface dispatcher
+
+        ptr_t       fst;        //  Values
         ptr_t       snd;
     };
 

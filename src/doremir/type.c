@@ -11,15 +11,21 @@
 typedef doremir_type_simple_t simple_t;
 
 struct _doremir_type_t {
-        doremir_impl_t  impl;    
+        doremir_impl_t      impl;                           //  Interface dispatcher
 
-        enum { simple_type, pair_type, vector_type, frame_type } tag;    
+        enum { 
+            simple_type, 
+            pair_type, 
+            vector_type, 
+            frame_type    
+          }                 tag;    
+
         union {
-            doremir_type_simple_t simple;                   //  uint8, uint16 ... ptr
-            struct { ptr_t fst; ptr_t snd; } pair;          //  (a,b)
+            doremir_type_simple_t               simple;     //  uint8, uint16 ... ptr
+            struct { ptr_t fst; ptr_t snd; }    pair;       //  (a,b)
             struct { ptr_t base; size_t size; } vector;     //  [a x n]
             struct { ptr_t base; } frame;                   //  {a}        
-        } fields;
+          }                 fields;
     }; 
 
 #define simple_get(v)   v->fields.simple

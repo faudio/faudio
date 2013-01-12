@@ -33,36 +33,41 @@ void delete_time(doremir_time_t time)
 // --------------------------------------------------------------------------------
 
 /** Create a new time interval.
-    @param days     Number of days.
-    @param hours    Number of hours.
-    @param minutes  Number of minutes.
-    @param seconds  Number of seconds.
-    @return         A new time value.
+    @param days     
+        Number of days.
+    @param hours    
+        Number of hours.
+    @param minutes  
+        Number of minutes.
+    @param seconds  
+        Number of seconds.
+    @return         
+        A new time value.
  */
 doremir_time_t doremir_time_create(int32_t days, 
                                    int32_t hours, 
                                    int32_t minutes, 
                                    doremir_ratio_t seconds)
 {
-    ratio_t value = doremir_add(
-        ratio(days    * 60 * 60 * 24 
-            + hours   * 60 * 60 
-            + minutes * 60, 
-            1), 
-        seconds); 
+    ratio_t value = doremir_add(ratio(days    * 60 * 60 * 24 
+                                        + 
+                                      hours   * 60 * 60      
+                                        + 
+                                      minutes * 60              , 1), seconds); 
     
-    // TODO leaks ratio
     return new_time(value);
 }
 
-/** Copy the given time interval.
+/** 
+    Copy the given time interval.
  */
 doremir_time_t doremir_time_copy(doremir_time_t time)
 {
     return new_time(time->value);
 }
 
-/** Destroy the given time interval.
+/** 
+    Destroy the given time interval.
  */
 void doremir_time_destroy(doremir_time_t time)
 {
@@ -74,6 +79,12 @@ void doremir_time_destroy(doremir_time_t time)
 
 /**
     Return the fractions of a second in this time interval.
+
+    @param time
+        Time interval.
+    @return
+        Rational number, representing the amount of time in the interval
+        modulo one second, measured in seconds.
  */
 doremir_ratio_t doremir_time_divisions(doremir_time_t time)
 {
@@ -82,9 +93,14 @@ doremir_ratio_t doremir_time_divisions(doremir_time_t time)
     return ratio(a % b, b);
 }
 
-
 /**
     Return the number of whole seconds in this time interval.
+
+    @param time
+        Time interval.
+    @return
+        Number of seconds, representing the amount of time in the 
+        interval modulo one minute, rounded to seconds.
  */
 int32_t doremir_time_seconds(doremir_time_t time)
 {
@@ -93,9 +109,14 @@ int32_t doremir_time_seconds(doremir_time_t time)
     return (a/b) % 60;
 }
 
-
 /**
     Return the number of whole minutes in this time interval.
+
+    @param time
+        Time interval.
+    @return
+        Number of seconds, representing the amount of time in the 
+        interval modulo one hour, rounded to minutes.
  */
 int32_t doremir_time_minutes(doremir_time_t time)
 {
@@ -106,6 +127,12 @@ int32_t doremir_time_minutes(doremir_time_t time)
 
 /**
     Return the number of whole hours in this time interval.
+
+    @param time
+        Time interval.
+    @return
+        Number of seconds, representing the amount of time in the 
+        interval modulo one day, rounded to hours.
  */
 int32_t doremir_time_hours(doremir_time_t time)
 {
@@ -114,9 +141,14 @@ int32_t doremir_time_hours(doremir_time_t time)
     return (a/b) % (60*60*24) / (60*60);
 }
 
-
 /**
     Return the number of whole days in this time interval.
+
+    @param time
+        Time interval.
+    @return
+        Number of seconds, representing the amount of time in the 
+        interval, rounded to days.
  */
 int32_t doremir_time_days(doremir_time_t time)
 {
@@ -124,7 +156,6 @@ int32_t doremir_time_days(doremir_time_t time)
     doremir_ratio_match(time->value, &a, &b);
     return (a/b) / (60*60*24);
 }
-
 
 
 /**

@@ -12,7 +12,7 @@
     TODO these are strictly 32-bit for now
  */
 struct _doremir_atomic_t {
-        impl_t      impl;       /* Interface dispatcher */
+        impl_t      impl;       //  Interface dispatcher
         intptr_t    value;
     };
 

@@ -9,7 +9,7 @@
 #include <doremir/util.h>
 #include <doremir/string.h>
 
-/*  
+/*
     TODO
         insert
         sort
@@ -25,7 +25,7 @@
             * Cons: No destructive optimizations, all destrutive methods are wrappers
 
     Possibilities:
-        * Add a "transient list" type with no sharing. 
+        * Add a "transient list" type with no sharing.
           This gives us "as good as mutable" destrucive operations but slow copy.
         * For faster random access (important for use as backend to set map etc), add a hash
           trie implementation.
@@ -33,19 +33,19 @@
  */
 
 struct node {
-        size_t          count;      /* Number of references */
-        struct node     * next;     /* Next node or null */
-        ptr_t           value;      /* The value */
+        size_t          count;      //  Number of references
+        struct node     * next;     //  Next node or null
+        ptr_t           value;      //  The value
     };
 
 typedef struct node *node_t;
 
 struct _doremir_list_t {
-        impl_t          impl;       /* Interface dispatcher */
-        node_t          node;       /* Top-level node */
+        impl_t          impl;       //  Interface dispatcher
+        node_t          node;       //  Top-level node
     };
 
-inline static 
+inline static
 node_t new_node(doremir_ptr_t value, node_t next)
 {
     node_t node = doremir_new_struct(node);
@@ -55,7 +55,7 @@ node_t new_node(doremir_ptr_t value, node_t next)
     return node;
 }
 
-inline static 
+inline static
 node_t take_node(node_t node)
 {
     if (node)
@@ -63,7 +63,7 @@ node_t take_node(node_t node)
     return node;
 }
 
-inline static 
+inline static
 void release_node(node_t node)
 {
     if (!node) return;
@@ -78,7 +78,7 @@ void release_node(node_t node)
 
 doremir_ptr_t list_impl(doremir_id_t interface);
 
-inline static 
+inline static
 list_t new_list(node_t node)
 {
     list_t list = doremir_new(list);
@@ -87,25 +87,25 @@ list_t new_list(node_t node)
     return list;
 }
 
-inline static 
+inline static
 bool has_node(list_t list)
 {
     return list->node;
 }
 
-inline static 
+inline static
 bool has_head(list_t list)
 {
     return list->node && list->node->value;
 }
 
-inline static 
+inline static
 bool has_tail(list_t list)
 {
     return list->node && list->node->next;
 }
 
-inline static 
+inline static
 void delete_list(list_t list)
 {
     doremir_delete(list);

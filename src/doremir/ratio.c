@@ -12,8 +12,9 @@ typedef doremir_ratio_num_t num_t;
 typedef doremir_ratio_denom_t denom_t;
 
 struct _doremir_ratio_t {
-        impl_t          impl;       /* Interface dispatcher */
-        num_t           num;
+        impl_t          impl;       //  Interface dispatcher
+
+        num_t           num;        //  Components
         denom_t         denom;
     };
 

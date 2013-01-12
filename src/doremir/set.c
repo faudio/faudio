@@ -17,7 +17,7 @@
 
 
 struct _doremir_set_t {
-        impl_t          impl;       /* Interface dispatcher */
+        impl_t          impl;       //  Interface dispatcher
         list_t          elems;
     };
 

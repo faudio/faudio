@@ -10,17 +10,17 @@
 #include <unistd.h>
 
 struct _doremir_thread_t {
-        doremir_impl_t          impl;       /* Interface dispatcher */
+        doremir_impl_t          impl;       //  Interface dispatcher
         pthread_t               native;
     };
 
 struct _doremir_thread_mutex_t {
-        doremir_impl_t          impl;       /* Interface dispatcher */
+        doremir_impl_t          impl;       //  Interface dispatcher
         pthread_mutex_t         native;
     };
 
 struct _doremir_thread_condition_t {
-        doremir_impl_t          impl;       /* Interface dispatcher */
+        doremir_impl_t          impl;       //  Interface dispatcher
         pthread_cond_t          native;
         doremir_thread_mutex_t  mutex;
     };
