@@ -22,63 +22,88 @@ struct _doremir_atomic_queue_t {
         impl_t      impl;   //  Interface dispatcher
 
         atomic_t    first;  //  (first,div)  is owned by writer
-        atomic_t    div;        
+        atomic_t    div;
         atomic_t    last;   //  (div,last)   is owned by reader
                             //  last->next   is owned by writer
     };
-
-doremir_ptr_t atomic_queue_impl(doremir_id_t interface);
 
 #define get_node(N) \
     ((node_t) doremir_atomic_get(N))
 
 #define forward_node(N) \
     doremir_atomic_exchange(N, get_node(N), (get_node(N))->next);
-    
+
+doremir_ptr_t atomic_queue_impl(doremir_id_t interface);
+
+static inline
+atomic_queue_t new_queue()
+{
+    atomic_queue_t queue = doremir_new(atomic_queue);
+
+    queue->impl     = &atomic_queue_impl;
+    queue->first    = atomic();
+    queue->div      = atomic();
+    queue->last     = atomic();
+
+    return queue;
+}
+
+static inline 
+void delete_queue(atomic_queue_t queue)
+{
+    doremir_delete(queue);
+}
+
+static inline
+void delete_range(atomic_t begin, atomic_t end)
+{
+    while (get_node(begin) != get_node(end))
+    {
+        node_t node = get_node(begin);
+        forward_node(begin);
+        doremir_delete(node);
+    }
+}
+
+static inline
+void delete_range_end(atomic_t begin, atomic_t end)
+{
+    delete_range(begin, end);
+    doremir_delete(get_node(end));
+}
 
 // --------------------------------------------------------------------------------
 
 doremir_atomic_queue_t doremir_atomic_queue_create()
 {
-    doremir_atomic_queue_t queue = doremir_new(atomic_queue);
-    node_t                 node = doremir_new_struct(node);
+    atomic_queue_t queue = new_queue();
+    node_t         node  = doremir_new_struct(node);
 
-    queue->impl = &atomic_queue_impl;
-    
-    queue->first = doremir_atomic_create();
-    queue->div   = doremir_atomic_create();
-    queue->last  = doremir_atomic_create();          
-                                     
     doremir_atomic_set(queue->first, node);
     doremir_atomic_set(queue->div,   node);
     doremir_atomic_set(queue->last,  node);
+
     return queue;
 }
 
 void doremir_atomic_queue_destroy(doremir_atomic_queue_t queue)
-{                                                  
-    while (get_node(queue->first) != get_node(queue->last))
-    {
-        node_t node = get_node(queue->first);
-        forward_node(queue->first);
-        doremir_delete(node);
-    }              
-    doremir_delete(get_node(queue->last));
-    doremir_delete(queue);    
+{
+    delete_range_end(queue->first, queue->last);    
+    doremir_delete(queue->first);
+    doremir_delete(queue->div);
+    doremir_delete(queue->last);
+    doremir_delete(queue);
 }
+
+// --------------------------------------------------------------------------------
 
 bool doremir_atomic_queue_write(doremir_atomic_queue_t queue, doremir_ptr_t value)
 {
-    while (get_node(queue->first) != get_node(queue->div))
-    {
-        node_t node = get_node(queue->first);
-        forward_node(queue->first);
-        doremir_delete(node);
-    }
+    delete_range(queue->first, queue->div);
     
     get_node(queue->last)->value = value;
     get_node(queue->last)->next  = doremir_new_struct(node);
-    
+
     forward_node(queue->last);
     return true;
 }
