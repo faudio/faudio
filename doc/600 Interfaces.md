@@ -1,22 +1,21 @@
 
 # Interfaces {#Interfaces}
 
-> *Fools ignore complexity. Pragmatists suffer it. Some can avoid it. Geniuses remove it.*
-
 @note
     This is an advanced topic, not necessary to read for general usage. On the other hand, you *should* probably read
     it if you want to modify or extend the Audio Engine.
 
 @tableofcontents
 
-The Audio Engine provides [ad-hoc polymorphism](http://en.wikipedia.org/wiki/Ad-hoc_polymorphism)
+The Audio Engine implements [ad-hoc polymorphism](http://en.wikipedia.org/wiki/Ad-hoc_polymorphism)
 using interfaces. An *interface* is a collection of function types, identified by a unique value
-known as the *interface identifier*.
+known as the *interface identifier*. This notion of an interface is used in many languages including
+Java and Haskell (where they are known as type classes).
 
-Any [reference type](http://en.wikipedia.org/wiki/Reference_type) may provide an implementation for
-any number of interfaces by implementing a so-called *dispatch function*, which takes an interface
-identifier and returns a pointer to a structure conforming to the interface specification, known as
-an *implementation*.
+Any [reference type](http://en.wikipedia.org/wiki/Reference_type) may provide implementations for
+an arbitrary number of interfaces by implementing a so-called *dispatch function*, which takes a reference
+of the given type and an interface identifier and returns a pointer to a structure conforming to the interface 
+type. This structure is known as an *implementation*.
 
 Interfaces can be used to decorate a type with additional semantics such as 
 [equality](@ref doremir_equal_t) or
@@ -34,7 +33,8 @@ interface, @ref doremir_interface returns null.
 
 Note that @ref doremir_interface is actually the *only* way to call an interface method: in
 particular it is not safe to cast a pointer of some type to the interface type and call the methods
-from that pointer.
+from that pointer. It follows that you must not use a pointer to an interface type (such as 
+@ref doremir_equal_t) as an argument to @ref doremir_interface.
 
 
 ## Generic functions {#Generic}
@@ -64,6 +64,17 @@ void * doremir_min(void * a, void * b)
     return doremir_less_than(a, b) ? a : b;
 }
 ~~~~
+
+Note that generic functions correspond to bounded *universal* quantification (i.e. it says 
+*for any type* a *such that* a *implements the equal interface*).
+
+## Generic pointers
+
+TODO
+
+Note that generic functions correspond to bounded *existential* quantification (i.e. it says 
+*for some type* a *such that* a *implements the equal interface*).
+
 
 ## Dynamic interface checks {#Dynamic}
 
