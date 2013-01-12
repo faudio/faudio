@@ -20,7 +20,7 @@
 #define atomic_queue_t      doremir_atomic_queue_t
 #define ringbuffer_t        doremir_atomic_ring_buffer_t
 #define type_t              doremir_type_t
-#define processor_t         doremir_processor_any_t
+#define processor_t         doremir_processor_t
 
 #define pair(a,b)           doremir_pair_create(a,b)
 #define string(a)           doremir_string_from_utf8(a)

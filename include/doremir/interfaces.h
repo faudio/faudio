@@ -15,7 +15,7 @@ enum doremir_interfaces {
     doremir_equal_i,
     doremir_number_i,
     doremir_order_i,
-    doremir_processor_i,
+    doremir_processor_interface_i,
     doremir_string_show_i
 };
 

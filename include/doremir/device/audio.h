@@ -25,14 +25,14 @@ doremir_pair_t doremir_device_audio_default(doremir_device_audio_session_t);
 doremir_device_audio_session_t doremir_device_audio_begin_session();
 void doremir_device_audio_end_session(doremir_device_audio_session_t);
 doremir_device_audio_stream_t doremir_device_audio_start_stream(doremir_device_audio_t,
-                                                                doremir_processor_any_t,
+                                                                doremir_processor_t,
                                                                 doremir_device_audio_t);
 void doremir_device_audio_stop_stream(doremir_device_audio_stream_t);
 typedef doremir_device_audio_session_t (* doremir_device_audio_session_callback_t)(doremir_device_audio_session_t);
 void doremir_device_audio_with_session(doremir_device_audio_session_callback_t);
 typedef doremir_device_audio_stream_t (* doremir_device_audio_stream_callback_t)(doremir_device_audio_stream_t);
 void doremir_device_audio_with_stream(doremir_device_audio_t,
-                                      doremir_processor_any_t,
+                                      doremir_processor_t,
                                       doremir_device_audio_t,
                                       doremir_device_audio_stream_callback_t);
 

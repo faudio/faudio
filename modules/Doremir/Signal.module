@@ -16,9 +16,9 @@ module Doremir.Signal
 
     typeOf : Signal -> Type;
 
-    applyUnary  : (Any, Signal) -> Signal;
-    applyBinary : (Any, Signal, Signal) -> Signal;
-    applyTernary : (Any, Signal, Signal, Signal) -> Signal;
+    applyUnary  : (Processor, Signal) -> Signal;
+    applyBinary : (Processor, Signal, Signal) -> Signal;
+    applyTernary : (Processor, Signal, Signal, Signal) -> Signal;
 
     const  : (Ptr, Signal) -> Signal;
     delay  : (Size, Signal) -> Signal;

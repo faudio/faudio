@@ -15,7 +15,7 @@ module Doremir.Processor.Par
     import Doremir.Processor;
 
     type Proc = opaque;
-    create : (Any, Any) -> Proc;
+    create : (Processor, Processor) -> Proc;
     destroy : Proc -> Void;
 }
 

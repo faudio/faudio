@@ -111,7 +111,7 @@ doremir_ptr_t unary_impl(doremir_id_t interface)
 {
     static doremir_string_show_t unary_show_impl = { unary_show };
     static doremir_destroy_t unary_destroy_impl = { unary_destroy };
-    static doremir_processor_t unary_processor_impl = { 
+    static doremir_processor_interface_t unary_processor_interface_impl = { 
         unary_before, unary_process, unary_after, 
         unary_input_type, unary_output_type 
     };
@@ -124,8 +124,8 @@ doremir_ptr_t unary_impl(doremir_id_t interface)
     case doremir_destroy_i:
         return &unary_destroy_impl;
 
-    case doremir_processor_i:
-        return &unary_processor_impl;
+    case doremir_processor_interface_i:
+        return &unary_processor_interface_impl;
 
     default:
         return NULL;

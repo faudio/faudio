@@ -14,8 +14,8 @@
     */
 
 typedef struct _doremir_processor_seq_proc_t * doremir_processor_seq_proc_t;
-doremir_processor_seq_proc_t doremir_processor_seq_create(doremir_processor_any_t,
-                                                          doremir_processor_any_t);
+doremir_processor_seq_proc_t doremir_processor_seq_create(doremir_processor_t,
+                                                          doremir_processor_t);
 void doremir_processor_seq_destroy(doremir_processor_seq_proc_t);
 
 /** @}

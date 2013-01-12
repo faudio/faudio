@@ -46,9 +46,9 @@ module Doremir.Processor
      */
     type Samples = Buffer;
 
-    /** @interface doremir_processor_t 
+    /** @interface doremir_processor_interface_t 
         Processing interface. */
-    type Processor = struct {
+    type Interface = struct {
         before  : ((Ptr, Info*) -> Void)*,
         process : ((Ptr, Info*, Samples) -> Void)*,
         after   : ((Ptr, Info*) -> Void)*,
@@ -59,46 +59,46 @@ module Doremir.Processor
     /** @typedef doremir_processor_any_t 
         A processor of unkown type.
      */
-    type Any = Ptr;   
+    type Processor = opaque;   
     
-    unary   : (Type, Type, Unary) -> Any;                   // a ~> b
-    binary : (Type, Type, Type, Binary) -> Any;             // (a,b) ~> c
-    ternary : (Type, Type, Type, Type, Ternary) -> Any;     // (a,b,c) ~> d
+    unary   : (Type, Type, Unary) -> Processor;                   // a ~> b
+    binary : (Type, Type, Type, Binary) -> Processor;             // (a,b) ~> c
+    ternary : (Type, Type, Type, Type, Ternary) -> Processor;     // (a,b,c) ~> d
     
-    identity : Type -> Any;                 // a ~> a
-    constant : (Type, Type, Ptr) -> Any;    // a ~> b
-    delay    : (Type, Size) -> Any;         // a ~> a
-    split    : Type -> Any;                 // a ~> (a,a)
+    identity : Type -> Processor;                 // a ~> a
+    constant : (Type, Type, Ptr) -> Processor;    // a ~> b
+    delay    : (Type, Size) -> Processor;         // a ~> a
+    split    : Type -> Processor;                 // a ~> (a,a)
 
-    seq      : (Any, Any) -> Any;           // (a ~> b), (b ~> c) -> (a ~> c)
-    par      : (Any, Any) -> Any;           // (a ~> b), (c ~> d) -> (a,c ~> b,d)
-    loop     : Any -> Any;                  // (a,c ~> b,d) -> (a ~> b)
+    seq      : (Processor, Processor) -> Processor;           // (a ~> b), (b ~> c) -> (a ~> c)
+    par      : (Processor, Processor) -> Processor;           // (a ~> b), (c ~> d) -> (a,c ~> b,d)
+    loop     : Processor -> Processor;                  // (a,c ~> b,d) -> (a ~> b)
 
-    // first    : Any -> Any;                  // (a ~> b) -> (a,c ~> b,c)
-    // second   : Any -> Any;                  // (a ~> b) -> (c,a ~> c,b)
-    // fold     : Any -> Any;                  // (a,a ~> b) -> [a x n] ~> a ~> b
-    // unfold   : Any -> Any;                  // (a ~> b,b) -> a ~> Int ~> [a x n]
+    // first    : Processor -> Processor;                  // (a ~> b) -> (a,c ~> b,c)
+    // second   : Processor -> Processor;                  // (a ~> b) -> (c,a ~> c,b)
+    // fold     : Processor -> Processor;                  // (a,a ~> b) -> [a x n] ~> a ~> b
+    // unfold   : Processor -> Processor;                  // (a ~> b,b) -> a ~> Int ~> [a x n]
     
-    // cos         : Type -> Any;
-    // sin         : Type -> Any;
-    // tan         : Type -> Any;
-    // acos        : Type -> Any;
-    // asin        : Type -> Any;
-    // atan        : Type -> Any;
+    // cos         : Type -> Processor;
+    // sin         : Type -> Processor;
+    // tan         : Type -> Processor;
+    // acos        : Type -> Processor;
+    // asin        : Type -> Processor;
+    // atan        : Type -> Processor;
     // 
-    // add         : Type -> Any;
-    // subtract    : Type -> Any;
-    // multiply    : Type -> Any;
-    // divide      : Type -> Any;
-    // modulo      : Type -> Any;
-    // absolute    : Type -> Any;
+    // add         : Type -> Processor;
+    // subtract    : Type -> Processor;
+    // multiply    : Type -> Processor;
+    // divide      : Type -> Processor;
+    // modulo      : Type -> Processor;
+    // absolute    : Type -> Processor;
     // 
-    // and         : Type -> Any;
-    // or          : Type -> Any;
-    // not         : Type -> Any;
-    // bitAnd      : Type -> Any;
-    // bitOr       : Type -> Any;
-    // bitNot      : Type -> Any;
-    // bitXor      : Type -> Any;  
+    // and         : Type -> Processor;
+    // or          : Type -> Processor;
+    // not         : Type -> Processor;
+    // bitAnd      : Type -> Processor;
+    // bitOr       : Type -> Processor;
+    // bitNot      : Type -> Processor;
+    // bitXor      : Type -> Processor;  
     
 }

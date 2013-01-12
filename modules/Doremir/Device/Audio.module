@@ -11,14 +11,14 @@ module Doremir.Device.Audio
     import Doremir.Pair;
     import Doremir.Processor;
 
-    type Audio = opaque;
+    type DeviceAudio = opaque;
 
     type Session = opaque;
     type Stream = opaque;
 
-    name : Audio -> String;
-    hostName : Audio -> String;
-    channels : Audio -> Pair;
+    name : DeviceAudio -> String;
+    hostName : DeviceAudio -> String;
+    channels : DeviceAudio -> Pair;
 
     all : Session -> List;
     default : Session -> Pair;
@@ -26,12 +26,12 @@ module Doremir.Device.Audio
     beginSession : () -> Session;
     endSession : Session -> Void;
 
-    startStream : (Audio, Any, Audio) -> Stream;
+    startStream : (DeviceAudio, Processor, DeviceAudio) -> Stream;
     stopStream : Stream -> Void;
 
     type SessionCallback = (Session -> Session)*;
     withSession : (SessionCallback) -> Void;
 
     type StreamCallback = (Stream -> Stream)*;
-    withStream : (Audio, Any, Audio, StreamCallback) -> Void;
+    withStream : (DeviceAudio, Processor, DeviceAudio, StreamCallback) -> Void;
 }

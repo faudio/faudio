@@ -30,32 +30,32 @@ typedef struct {
             void (* after)(doremir_ptr_t, doremir_processor_info_t *);
             doremir_type_t (* input_type)(doremir_ptr_t);
             doremir_type_t (* output_type)(doremir_ptr_t);
-        } doremir_processor_t;
-typedef doremir_ptr_t doremir_processor_any_t;
-doremir_processor_any_t doremir_processor_unary(doremir_type_t,
-                                                doremir_type_t,
-                                                doremir_unary_t);
-doremir_processor_any_t doremir_processor_binary(doremir_type_t,
-                                                 doremir_type_t,
-                                                 doremir_type_t,
-                                                 doremir_binary_t);
-doremir_processor_any_t doremir_processor_ternary(doremir_type_t,
-                                                  doremir_type_t,
-                                                  doremir_type_t,
-                                                  doremir_type_t,
-                                                  doremir_ternary_t);
-doremir_processor_any_t doremir_processor_identity(doremir_type_t);
-doremir_processor_any_t doremir_processor_constant(doremir_type_t,
-                                                   doremir_type_t,
-                                                   doremir_ptr_t);
-doremir_processor_any_t doremir_processor_delay(doremir_type_t,
-                                                size_t);
-doremir_processor_any_t doremir_processor_split(doremir_type_t);
-doremir_processor_any_t doremir_processor_seq(doremir_processor_any_t,
-                                              doremir_processor_any_t);
-doremir_processor_any_t doremir_processor_par(doremir_processor_any_t,
-                                              doremir_processor_any_t);
-doremir_processor_any_t doremir_processor_loop(doremir_processor_any_t);
+        } doremir_processor_interface_t;
+typedef struct _doremir_processor_t * doremir_processor_t;
+doremir_processor_t doremir_processor_unary(doremir_type_t,
+                                            doremir_type_t,
+                                            doremir_unary_t);
+doremir_processor_t doremir_processor_binary(doremir_type_t,
+                                             doremir_type_t,
+                                             doremir_type_t,
+                                             doremir_binary_t);
+doremir_processor_t doremir_processor_ternary(doremir_type_t,
+                                              doremir_type_t,
+                                              doremir_type_t,
+                                              doremir_type_t,
+                                              doremir_ternary_t);
+doremir_processor_t doremir_processor_identity(doremir_type_t);
+doremir_processor_t doremir_processor_constant(doremir_type_t,
+                                               doremir_type_t,
+                                               doremir_ptr_t);
+doremir_processor_t doremir_processor_delay(doremir_type_t,
+                                            size_t);
+doremir_processor_t doremir_processor_split(doremir_type_t);
+doremir_processor_t doremir_processor_seq(doremir_processor_t,
+                                          doremir_processor_t);
+doremir_processor_t doremir_processor_par(doremir_processor_t,
+                                          doremir_processor_t);
+doremir_processor_t doremir_processor_loop(doremir_processor_t);
 
 /** @}
     @}
