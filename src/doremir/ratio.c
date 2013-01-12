@@ -253,12 +253,18 @@ void ratio_destroy(doremir_ptr_t a)
 
 doremir_ptr_t ratio_impl(doremir_id_t interface)
 {
-    static doremir_equal_t ratio_equal_impl = { ratio_equal };
-    static doremir_order_t ratio_order_impl = { ratio_less_than, ratio_greater_than };
-    static doremir_string_show_t ratio_show_impl = { ratio_show };
-    static doremir_number_t  ratio_number_impl = { ratio_add, ratio_subtract, ratio_multiply, ratio_divide, ratio_absolute };
-    static doremir_copy_t ratio_copy_impl = { ratio_copy };
-    static doremir_destroy_t ratio_destroy_impl = { ratio_destroy };
+    static doremir_equal_t ratio_equal_impl 
+        = { ratio_equal };
+    static doremir_order_t ratio_order_impl 
+        = { ratio_less_than, ratio_greater_than };
+    static doremir_string_show_t ratio_show_impl 
+        = { ratio_show };
+    static doremir_number_t  ratio_number_impl 
+        = { ratio_add, ratio_subtract, ratio_multiply, ratio_divide, ratio_absolute };
+    static doremir_copy_t ratio_copy_impl 
+        = { ratio_copy };
+    static doremir_destroy_t ratio_destroy_impl 
+        = { ratio_destroy };
 
     switch (interface)
     {

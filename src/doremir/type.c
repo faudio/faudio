@@ -10,41 +10,22 @@
 
 typedef doremir_type_simple_t simple_t;
 
-struct _doremir_type_t 
-{
-    doremir_impl_t  impl;
-    
-    enum {
-        simple_type, 
-        pair_type, 
-        vector_type, 
-        frame_type
-    } tag;
-    
-    union {
-        doremir_type_simple_t simple;
+struct _doremir_type_t {
+        doremir_impl_t  impl;    
 
-        struct {
-            doremir_ptr_t fst; 
-            doremir_ptr_t snd;
-        } pair;
+        enum { simple_type, pair_type, vector_type, frame_type } tag;    
+        union {
+            doremir_type_simple_t simple;                   // uint8, uint16 ...
+            struct { ptr_t fst; ptr_t snd; } pair;          // (a,b)
+            struct { ptr_t base; size_t size; } vector;     // [a x n]
+            struct { ptr_t base; } frame;                   // {a}        
+        } fields;
+    }; 
 
-        struct {
-            doremir_ptr_t base; 
-            size_t size;
-        } vector;
-
-        struct {
-            doremir_ptr_t base;
-        } frame;
-        
-    } fields;
-}; 
-
-#define simple_get(V) V->fields.simple
-#define pair_get(V,F) V->fields.pair.F
-#define vector_get(V,F) V->fields.vector.F
-#define frame_get(V,F) V->fields.frame.F
+#define simple_get(v)   v->fields.simple
+#define pair_get(v,f)   v->fields.pair.f
+#define vector_get(v,f) v->fields.vector.f
+#define frame_get(v,f)  v->fields.frame.f
 
 doremir_ptr_t type_impl(doremir_id_t interface);
 
@@ -116,14 +97,22 @@ doremir_type_t doremir_type_copy(doremir_type_t type)
     {
     case simple_type:
         simple_get(t) = simple_get(type);
+        break;
+
     case pair_type:     
         pair_get(t, fst) = pair_get(type, fst);
         pair_get(t, snd) = pair_get(type, snd);
+        break;
+
     case vector_type:
         vector_get(t, base) = vector_get(type, base);
         vector_get(t, size) = vector_get(type, size);
+        break;
+
     case frame_type:
         frame_get(t, base) = frame_get(type, base);
+        break;
+
     default:
         assert(false && "Missing label");
     }                  
@@ -336,8 +325,18 @@ string_t simple_show(doremir_type_simple_t simple)
     {
     case uint8_type:
         return string("uint8");
+    case uint16_type:
+        return string("uint16");
+    case uint32_type:
+        return string("uint32");
+    case uint64_type:
+        return string("uint64");
+    case float_type:
+        return string("float");
     case double_type:
         return string("double");
+    case ptr_type:
+        return string("ptr");
     default:
         assert(false && "Missing label");
     }

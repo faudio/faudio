@@ -45,8 +45,8 @@ struct _doremir_list_t {
         node_t          node;       /* Top-level node */
     };
 
-inline static node_t
-new_node(doremir_ptr_t value, node_t next)
+inline static 
+node_t new_node(doremir_ptr_t value, node_t next)
 {
     node_t node = doremir_new_struct(node);
     node->count = 1;
@@ -55,16 +55,16 @@ new_node(doremir_ptr_t value, node_t next)
     return node;
 }
 
-inline static node_t
-take_node(node_t node)
+inline static 
+node_t take_node(node_t node)
 {
     if (node)
         node->count++;      /* TODO make atomic? */
     return node;
 }
 
-inline static void
-release_node(node_t node)
+inline static 
+void release_node(node_t node)
 {
     if (!node) return;
 
@@ -78,8 +78,8 @@ release_node(node_t node)
 
 doremir_ptr_t list_impl(doremir_id_t interface);
 
-inline static list_t
-new_list(node_t node)
+inline static 
+list_t new_list(node_t node)
 {
     list_t list = doremir_new(list);
     list->impl = &list_impl;
@@ -87,26 +87,26 @@ new_list(node_t node)
     return list;
 }
 
-inline static bool
-has_node(list_t list)
+inline static 
+bool has_node(list_t list)
 {
     return list->node;
 }
 
-inline static bool
-has_head(list_t list)
+inline static 
+bool has_head(list_t list)
 {
     return list->node && list->node->value;
 }
 
-inline static bool
-has_tail(list_t list)
+inline static 
+bool has_tail(list_t list)
 {
     return list->node && list->node->next;
 }
 
-inline static void
-delete_list(list_t list)
+inline static 
+void delete_list(list_t list)
 {
     doremir_delete(list);
 }
