@@ -33,9 +33,9 @@
 #define kchar_size  sizeof(uint16_t)    /* Internal char size */
 
 struct _doremir_string_t {
-        doremir_impl_t  impl;
+        impl_t          impl;
         size_t          size;
-        uint16_t        *data;
+        uint16_t        * data;
     };
 
 doremir_ptr_t string_impl(doremir_id_t interface);

@@ -10,11 +10,11 @@
 
 doremir_ptr_t midi_impl(doremir_id_t interface);
 
-typedef doremir_midi_status_t status_t;
-typedef doremir_midi_data_t data_t;
+typedef doremir_midi_status_t   status_t;
+typedef doremir_midi_data_t     data_t;
 
 struct _doremir_midi_t {
-        doremir_impl_t          impl;           /* Interface dispatcher */
+        impl_t                  impl;           /* Interface dispatcher */
         bool                    is_sysex;       /* Whether it is a sysex message */
         union {                                 /* Data sink */
             uint8_t             simple[3];

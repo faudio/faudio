@@ -11,8 +11,8 @@
 #include <doremir/util.h>
 
 struct node {
-        doremir_atomic_t    next;
-        doremir_ptr_t       value;
+        atomic_t    next;
+        ptr_t       value;
     };
 
 typedef struct node * node_t;

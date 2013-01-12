@@ -15,8 +15,8 @@
     Strictly 32-bit for now
  */
 struct _doremir_atomic_t {
-        doremir_impl_t  impl;       /* Interface dispatcher */
-        doremir_ptr_t   value;      /* Memory block */
+        impl_t      impl;       /* Interface dispatcher */
+        ptr_t       value;      /* Memory block */
     };
 
 doremir_ptr_t atomic_impl(doremir_id_t interface);

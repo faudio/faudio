@@ -11,8 +11,8 @@
 doremir_ptr_t time_impl(doremir_id_t interface);
 
 struct _doremir_time_t {
-        doremir_impl_t      impl;       /* Interface dispatcher */
-        doremir_ratio_t     value;
+        impl_t          impl;       //  Interface dispatcher
+        ratio_t         value;      //  Value in seconds
     };
 
 inline static doremir_time_t
@@ -23,6 +23,7 @@ new_time(ratio_t value)
     t->value = doremir_copy(value);
     return t;
 }
+
 void delete_time(doremir_time_t time)
 {
     doremir_ratio_destroy(time->value);
@@ -38,9 +39,19 @@ void delete_time(doremir_time_t time)
     @param seconds  Number of seconds.
     @return         A new time value.
  */
-doremir_time_t doremir_time_create(int32_t days, int32_t hours, int32_t minutes, doremir_ratio_t seconds)
+doremir_time_t doremir_time_create(int32_t days, 
+                                   int32_t hours, 
+                                   int32_t minutes, 
+                                   doremir_ratio_t seconds)
 {
-    ratio_t value = doremir_add(ratio(days*60*60*24 + hours*60*60 + minutes*60, 1), seconds); // TODO leaks ratio
+    ratio_t value = doremir_add(
+        ratio(days    * 60 * 60 * 24 
+            + hours   * 60 * 60 
+            + minutes * 60, 
+            1), 
+        seconds); 
+    
+    // TODO leaks ratio
     return new_time(value);
 }
 

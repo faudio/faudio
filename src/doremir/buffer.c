@@ -10,9 +10,9 @@
 #include <doremir/buffer.h>
 
 struct _doremir_buffer_t {
-        doremir_impl_t  impl;       /* Interface dispatcher */
-        size_t size;
-        uint8_t * data;
+        impl_t      impl;       /* Interface dispatcher */
+        size_t      size;
+        uint8_t     * data;
     };
 
 /**
