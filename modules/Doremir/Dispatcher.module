@@ -31,18 +31,18 @@ module Doremir.Dispatcher
         dispatch : (Ptr -> Void)*
     };
     
-    // synchronizing on any receiver
-    or   : (Recv, Recv) -> Recv;
-    // synchronizing on both receivers
-    and  : (Recv, Recv) -> Recv;
-    // synchronizing on both receivers (blocking the second)
-    first  : (Recv, Recv) -> Recv;
-    // synchronizing on the first receiver (sampling the second)
-    sample : (Recv, Recv) -> Recv;
-    // dispatcher that forwards messages matching a predicate over addr
-    filter : (Pred, Recv) -> Recv;
-    // dispatcher that forwards messages matching a predicate over (addr,msg)
-    filterPair : (Pred, Recv) -> Recv;
+    // // synchronizing on any receiver
+    // or   : (Recv, Recv) -> Recv;
+    // // synchronizing on both receivers
+    // and  : (Recv, Recv) -> Recv;
+    // // synchronizing on both receivers (blocking the second)
+    // first  : (Recv, Recv) -> Recv;
+    // // synchronizing on the first receiver (sampling the second)
+    // sample : (Recv, Recv) -> Recv;
+    // // dispatcher that forwards messages matching a predicate over addr
+    // filter : (Pred, Recv) -> Recv;
+    // // dispatcher that forwards messages matching a predicate over (addr,msg)
+    // filterPair : (Pred, Recv) -> Recv;
 
     // dispatcher that forwards all received messages on the same thread
     simple : () -> Ptr;

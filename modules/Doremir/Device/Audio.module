@@ -1,9 +1,9 @@
 
 /**
     @addtogroup DoremirDeviceAudio
-    
+
     Real-time audio device.
-    
+
  */
 module Doremir.Device.Audio
 {
@@ -16,17 +16,22 @@ module Doremir.Device.Audio
     type Session = opaque;
     type Stream = opaque;
 
-    type SessionCallback = (Session -> Session)*;
-    withSession : (SessionCallback) -> Void;
-    beginSession : () -> Session;
-    endSession : Session -> Void;
-                                                           
-    type StreamCallback = (Stream -> Stream)*;
-    withStream : (Audio, Processor, Audio, StreamCallback) -> Void;
-    startStream : (Audio, Processor, Audio) -> Stream;
-    stopStream : Stream -> Void;
-    
+    name : Audio -> String;
+    hostName : Audio -> String;
+    channels : Audio -> Pair;
+
     all : Session -> List;
     default : Session -> Pair;
-    
+
+    beginSession : () -> Session;
+    endSession : Session -> Void;
+
+    startStream : (Audio, Any, Audio) -> Stream;
+    stopStream : Stream -> Void;
+
+    type SessionCallback = (Session -> Session)*;
+    withSession : (SessionCallback) -> Void;
+
+    type StreamCallback = (Stream -> Stream)*;
+    withStream : (Audio, Any, Audio, StreamCallback) -> Void;
 }

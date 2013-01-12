@@ -26,18 +26,6 @@ typedef struct {
             void (* remove_receiver)(doremir_ptr_t, doremir_ptr_t);
             void (* dispatch)(doremir_ptr_t);
         } doremir_dispatcher_t;
-doremir_dispatcher_recv_t doremir_dispatcher_or(doremir_dispatcher_recv_t,
-                                                doremir_dispatcher_recv_t);
-doremir_dispatcher_recv_t doremir_dispatcher_and(doremir_dispatcher_recv_t,
-                                                 doremir_dispatcher_recv_t);
-doremir_dispatcher_recv_t doremir_dispatcher_first(doremir_dispatcher_recv_t,
-                                                   doremir_dispatcher_recv_t);
-doremir_dispatcher_recv_t doremir_dispatcher_sample(doremir_dispatcher_recv_t,
-                                                    doremir_dispatcher_recv_t);
-doremir_dispatcher_recv_t doremir_dispatcher_filter(doremir_pred_t,
-                                                    doremir_dispatcher_recv_t);
-doremir_dispatcher_recv_t doremir_dispatcher_filter_pair(doremir_pred_t,
-                                                         doremir_dispatcher_recv_t);
 doremir_ptr_t doremir_dispatcher_simple();
 doremir_pair_t doremir_dispatcher_buffered();
 doremir_pair_t doremir_dispatcher_non_blocking();

@@ -26,6 +26,7 @@ module Doremir.Processor
     import Doremir.Time;
     import Doremir.Type;
     import Doremir.Buffer;
+    import Doremir.Dispatcher;
 
     /** @struct doremir_processor_info_t 
         Information available to a processor at processing time. 
@@ -34,7 +35,8 @@ module Doremir.Processor
         sampleRate  : Double,
         numSamples  : Size,
         sampleTime  : Size,
-        totalTime   : Time
+        totalTime   : Time,
+        dispatcher  : Disp
     };     
     
     // infoDefault : Info* -> Void;  

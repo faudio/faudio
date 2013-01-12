@@ -98,6 +98,9 @@
 #define aadd                doremir_atomic_add
 #define amodify             doremir_atomic_modify
 
+#define mutex_t             doremir_thread_mutex_t
+
+
 
 
 // TODO literals to be moved someplace else...
