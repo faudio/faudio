@@ -25,6 +25,7 @@
 #define time_t              doremir_time_t
 #define type_t              doremir_type_t
 
+#define atomic()            doremir_atomic_create()
 #define pair(a,b)           doremir_pair_create(a,b)
 #define string(a)           doremir_string_from_utf8(a)
 #define unstring(a)         doremir_string_to_utf8(a)
