@@ -611,12 +611,12 @@ doremir_string_t list_show(doremir_ptr_t xs)
     node_t   xn = ((list_t) xs)->node;
     while(xn)
     {
-        s = sdappend(s, sshow(xn->value));
+        s = string_dappend(s, sshow(xn->value));
         xn = xn->next;
         if (xn)
-            s = sdappend(s, string(","));
+            s = string_dappend(s, string(","));
     };
-    s = sdappend(s, string("]"));
+    s = string_dappend(s, string("]"));
     return s;
 }
 

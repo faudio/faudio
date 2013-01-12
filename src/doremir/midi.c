@@ -177,19 +177,19 @@ doremir_string_t midi_show(doremir_ptr_t a)
 
     if (!midi->is_sysex)
     {
-        s = sdappend(s, doremir_string_format_integer(" %02x", midi->data.simple[0]));
-        s = sdappend(s, doremir_string_format_integer(" %02x", midi->data.simple[1]));
-        s = sdappend(s, doremir_string_format_integer(" %02x", midi->data.simple[2]));
+        s = string_dappend(s, doremir_string_format_integer(" %02x", midi->data.simple[0]));
+        s = string_dappend(s, doremir_string_format_integer(" %02x", midi->data.simple[1]));
+        s = string_dappend(s, doremir_string_format_integer(" %02x", midi->data.simple[2]));
     }
     else
     {
         // TODO dump without <Buffer > wrap
-        s = sdappend(s, string(" SysEx "));
-        s = sdappend(s, doremir_string_show(midi->data.sysex));
-        s = sdappend(s, string(" "));
+        s = string_dappend(s, string(" SysEx "));
+        s = string_dappend(s, doremir_string_show(midi->data.sysex));
+        s = string_dappend(s, string(" "));
     }
 
-    s = sdappend(s, string(">"));
+    s = string_dappend(s, string(">"));
     return s;
 }
 

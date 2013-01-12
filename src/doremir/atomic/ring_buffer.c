@@ -128,8 +128,8 @@ bool doremir_atomic_ring_buffer_write(doremir_atomic_ring_buffer_t buffer,
 doremir_string_t atomic_ring_buffer_show(doremir_ptr_t v)
 {
     string_t s = string("<RingBuffer ");
-    s = sdappend(s, format_int("%p", (long) v));
-    s = sdappend(s, string(">"));
+    s = string_dappend(s, format_int("%p", (long) v));
+    s = string_dappend(s, string(">"));
     return s;
 }
 

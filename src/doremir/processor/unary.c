@@ -96,9 +96,9 @@ string_t unary_show(doremir_ptr_t a)
 {
     this_proc_t proc = (doremir_processor_unary_proc_t) a;
     string_t s = string("");
-    s = sdappend(s, doremir_string_show(proc->input_type));
-    s = sdappend(s, string(" ~> "));
-    s = sdappend(s, doremir_string_show(proc->output_type));
+    s = string_dappend(s, doremir_string_show(proc->input_type));
+    s = string_dappend(s, string(" ~> "));
+    s = string_dappend(s, doremir_string_show(proc->output_type));
     return s;
 }
 

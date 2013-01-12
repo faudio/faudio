@@ -155,10 +155,10 @@ doremir_string_t pair_show(doremir_ptr_t a)
 {
     pair_t b = (pair_t) a;
     string_t s = string("(");
-    s = sdappend(s, sshow(b->fst));
-    s = sdappend(s, string(","));
-    s = sdappend(s, sshow(b->snd));
-    s = sdappend(s, string(")"));
+    s = string_dappend(s, sshow(b->fst));
+    s = string_dappend(s, string(","));
+    s = string_dappend(s, sshow(b->snd));
+    s = string_dappend(s, string(")"));
     return s;
 }
 

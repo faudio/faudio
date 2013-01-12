@@ -140,18 +140,18 @@ doremir_string_t buffer_show(doremir_ptr_t a)
 
     for (size_t i = 0; i < length; ++i)
     {
-        str = sdappend(str, string(" "));
-        str = sdappend(str, doremir_string_format_integer(
+        str = string_dappend(str, string(" "));
+        str = string_dappend(str, doremir_string_format_integer(
             "%02x",
             doremir_buffer_peek(buffer, i)));
     }
     if (more)
     {
-        str = sdappend(str, string(" "));
-        str = sdappend(str, string("..."));
+        str = string_dappend(str, string(" "));
+        str = string_dappend(str, string("..."));
     }
 
-    str = sdappend(str, string(">"));
+    str = string_dappend(str, string(">"));
     return str;
 }
 

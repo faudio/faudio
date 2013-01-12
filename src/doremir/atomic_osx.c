@@ -160,8 +160,8 @@ doremir_string_t atomic_show(doremir_ptr_t v)
 {
     doremir_atomic_t a = (doremir_atomic_t) v;
     string_t s = string("<Atomic");
-    s = sdappend(s, doremir_string_format_integer(" %02x", (long) a->value));
-    s = sdappend(s, string(">"));
+    s = string_dappend(s, doremir_string_format_integer(" %02x", (long) a->value));
+    s = string_dappend(s, string(">"));
     return s;
 }
 
