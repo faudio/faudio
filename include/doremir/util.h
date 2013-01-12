@@ -95,6 +95,7 @@
 #define char_at             doremir_string_char_at
 #define sshow               doremir_string_show
 #define format_int          doremir_string_format_integer
+#define format_integer      doremir_string_format_integer
 
 #define aexchange           doremir_atomic_exchange
 #define aget                doremir_atomic_get
