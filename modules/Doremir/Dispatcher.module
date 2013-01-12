@@ -1,12 +1,12 @@
 
 /**
     @addtogroup DoremirDispatcher
-    
+
     Provides message dispatching.
-    
+
     Dispatching is the action of delivering a *message* to an *address*, where
     the message is a dynamic collection and adderss is a pointer-sized value.
-    
+
  */
 module Doremir.Dispatcher
 {
@@ -16,8 +16,6 @@ module Doremir.Dispatcher
 
     type Address = Ptr;
     type Message = Ptr;
-    type Disp     = Ptr;
-    type Recv     = Ptr;
 
     /** @interface doremir_dispatcher_receiver_t */
     type Receiver = struct {
@@ -25,12 +23,15 @@ module Doremir.Dispatcher
     };
 
     /** @interface doremir_dispatcher_t */
-    type Dispatcher = struct {
-        addReceiver : ((Ptr, Ptr) -> Void)*,
-        removeReceiver : ((Ptr, Ptr) -> Void)*,
+    type Sender = struct {
+        addReceiver : ((Ptr, Receiver) -> Void)*,
+        removeReceiver : ((Ptr, Receiver) -> Void)*,
         dispatch : (Ptr -> Void)*
     };
-    
+
+    type Dispatcher = opaque;
+
+
     // // synchronizing on any receiver
     // or   : (Recv, Recv) -> Recv;
     // // synchronizing on both receivers
@@ -50,5 +51,5 @@ module Doremir.Dispatcher
     buffered : () -> Pair;
     // non-blocking, buffered dispatcher
     nonBlocking : () -> Pair;
-    
+
 }

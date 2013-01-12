@@ -19,7 +19,7 @@ typedef struct {
             size_t num_samples;
             size_t sample_time;
             doremir_time_t total_time;
-            doremir_dispatcher_disp_t dispatcher;
+            doremir_dispatcher_t dispatcher;
         } doremir_processor_info_t;
 typedef doremir_buffer_t doremir_processor_samples_t;
 typedef struct {
