@@ -8,18 +8,50 @@
 #include <doremir/type.h>
 #include <doremir/util.h>
 
+typedef doremir_type_simple_t simple_t;
+
+struct _doremir_type_t {
+        doremir_impl_t  impl;
+        
+        enum {
+            simple_type, 
+            pair_type, 
+            vector_type, 
+            frame_type
+        } tag;
+        
+        union {
+            doremir_type_simple_t simple;
+
+            struct {
+                doremir_ptr_t fst; 
+                doremir_ptr_t snd;
+            } pair;
+
+            struct {
+                doremir_ptr_t base; 
+                size_t size;
+            } vector;
+
+            struct {
+                doremir_ptr_t base;
+            } frame;
+            
+        } fields;
+    };
+
 doremir_ptr_t type_impl(doremir_id_t interface);
 
 doremir_type_t new_type(int tag)
 {
-    type_t t = malloc(sizeof(doremir_type_struct_t));
+    type_t t = doremir_new(type);
     t->impl = &type_impl;
     t->tag  = tag;
     return t;    
 }            
 void delete_type(doremir_type_t type)
 {
-    free(type);
+    doremir_delete(type);
 }
 
 // --------------------------------------------------------------------------------

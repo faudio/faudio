@@ -21,25 +21,7 @@ typedef enum {
             double_type,
             pointer_type
         } doremir_type_simple_t;
-typedef struct {
-            doremir_impl_t impl;
-            enum {
-                simple_type, pair_type, vector_type, frame_type
-            } tag;
-            union {
-                doremir_type_simple_t simple;
-                struct {
-                    doremir_ptr_t fst; doremir_ptr_t snd;
-                } pair;
-                struct {
-                    doremir_ptr_t base; size_t size;
-                } vector;
-                struct {
-                    doremir_ptr_t base;
-                } frame;
-            } fields;
-        } doremir_type_struct_t;
-typedef doremir_type_struct_t * doremir_type_t;
+typedef struct _doremir_type_t * doremir_type_t;
 doremir_type_t doremir_type_simple(doremir_type_simple_t);
 doremir_type_t doremir_type_pair(doremir_type_t, doremir_type_t);
 doremir_type_t doremir_type_vector(doremir_type_t, size_t);

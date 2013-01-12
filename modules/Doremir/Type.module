@@ -58,17 +58,17 @@ module Doremir.Type
         PointerType 
     };
 
-    type Struct = struct {            
-        impl : Impl,
-        tag : enum { SimpleType, PairType, VectorType, FrameType },
-        fields : union {
-            simple  : Simple,
-            pair    : struct { fst : Ptr, snd : Ptr },
-            vector  : struct { base : Ptr, size : Size },
-            frame   : struct { base : Ptr }
-        }
-    };    
-    type Type = Struct*;
+    // type TypeImpl = struct {            
+    //     impl : Impl,
+    //     tag : enum { SimpleType, PairType, VectorType, FrameType },
+    //     fields : union {
+    //         simple  : Simple,
+    //         pair    : struct { fst : Ptr, snd : Ptr },
+    //         vector  : struct { base : Ptr, size : Size },
+    //         frame   : struct { base : Ptr }
+    //     }
+    // };
+    type Type = opaque;
     
     simple : Simple -> Type;    
     pair : (Type, Type) -> Type;
