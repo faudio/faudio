@@ -8,12 +8,12 @@
 #include <doremir/ratio.h>
 #include <doremir/util.h>
 
-typedef doremir_ratio_nom_t nom_t;
+typedef doremir_ratio_num_t num_t;
 typedef doremir_ratio_denom_t denom_t;
 
 struct _doremir_ratio_t {
         impl_t          impl;       /* Interface dispatcher */
-        nom_t           nom;
+        num_t           num;
         denom_t         denom;
     };
 
@@ -30,18 +30,18 @@ void delete_ratio(ratio_t p)
     doremir_delete(p);
 }
 
-doremir_ratio_t doremir_ratio_create(nom_t nom, denom_t denom)
+doremir_ratio_t doremir_ratio_create(num_t num, denom_t denom)
 {
     ratio_t p = new_ratio();
-    p->nom  = nom;
-    p->denom  = denom;
+    p->num   = num;
+    p->denom = denom;
     return p;
 }
 
 doremir_ratio_t doremir_ratio_copy(doremir_ratio_t p)
 {
     ratio_t q = new_ratio();
-    q->nom = p->nom;
+    q->num   = p->num;
     q->denom = p->denom;
     return q;
 }
@@ -54,9 +54,9 @@ void doremir_ratio_destroy(doremir_ratio_t p)
 
 // --------------------------------------------------------------------------------
 
-doremir_ratio_nom_t doremir_ratio_nom(doremir_ratio_t x)
+doremir_ratio_num_t doremir_ratio_num(doremir_ratio_t x)
 {
-    return x->nom;
+    return x->num;
 }
 
 doremir_ratio_denom_t doremir_ratio_denom(doremir_ratio_t x)
@@ -65,10 +65,10 @@ doremir_ratio_denom_t doremir_ratio_denom(doremir_ratio_t x)
 }
 
 void doremir_ratio_match(doremir_ratio_t x,
-                         doremir_ratio_nom_t *a,
+                         doremir_ratio_num_t *a,
                          doremir_ratio_denom_t *b)
 {
-    *a = x->nom;
+    *a = x->num;
     *b = x->denom;
 }
 
@@ -78,9 +78,9 @@ void doremir_ratio_match(doremir_ratio_t x,
 doremir_ratio_t doremir_ratio_add(doremir_ratio_t x,
                                   doremir_ratio_t y)
 {
-    nom_t   a = x->nom;
+    num_t   a = x->num;
     denom_t b = x->denom;
-    nom_t   c = y->nom;
+    num_t   c = y->num;
     denom_t d = y->denom;
 
     return ratio( a*d + b*c, b*d );
@@ -89,9 +89,9 @@ doremir_ratio_t doremir_ratio_add(doremir_ratio_t x,
 doremir_ratio_t doremir_ratio_subtract(doremir_ratio_t x,
                                        doremir_ratio_t y)
 {
-    nom_t   a = x->nom;
+    num_t   a = x->num;
     denom_t b = x->denom;
-    nom_t   c = y->nom;
+    num_t   c = y->num;
     denom_t d = y->denom;
 
     return ratio( a*d - b*c, b*d );
@@ -100,9 +100,9 @@ doremir_ratio_t doremir_ratio_subtract(doremir_ratio_t x,
 doremir_ratio_t doremir_ratio_multiply(doremir_ratio_t x,
                                        doremir_ratio_t y)
 {
-    nom_t   a = x->nom;
+    num_t   a = x->num;
     denom_t b = x->denom;
-    nom_t   c = y->nom;
+    num_t   c = y->num;
     denom_t d = y->denom;
 
     return ratio( a*c, b*d );
@@ -111,9 +111,9 @@ doremir_ratio_t doremir_ratio_multiply(doremir_ratio_t x,
 doremir_ratio_t doremir_ratio_divide(doremir_ratio_t x,
                                      doremir_ratio_t y)
 {
-    nom_t   a = x->nom;
+    num_t   a = x->num;
     denom_t b = x->denom;
-    nom_t   c = y->nom;
+    num_t   c = y->num;
     denom_t d = y->denom;
 
     return ratio( a*d, b*c );
@@ -141,7 +141,7 @@ doremir_ratio_t doremir_ratio_recip(doremir_ratio_t x)
 
 doremir_ratio_t doremir_ratio_normalize(doremir_ratio_t x)
 {
-    nom_t   a = x->nom;
+    num_t   a = x->num;
     denom_t b = x->denom;
     if (b < 0)
     {
@@ -153,7 +153,7 @@ doremir_ratio_t doremir_ratio_normalize(doremir_ratio_t x)
 
 doremir_ratio_t doremir_ratio_absolute(doremir_ratio_t x)
 {
-    nom_t   a = x->nom;
+    num_t   a = x->num;
     denom_t b = x->denom;
     a *= -1;
     if (b < 0)
@@ -172,9 +172,9 @@ bool ratio_equal(doremir_ptr_t m, doremir_ptr_t n)
     ratio_t x = (ratio_t) m;
     ratio_t y = (ratio_t) n;
 
-    nom_t   a = x->nom;
+    num_t   a = x->num;
     denom_t b = x->denom;
-    nom_t   c = y->nom;
+    num_t   c = y->num;
     denom_t d = y->denom;
 
     return a * d == b * c;
@@ -185,9 +185,9 @@ bool ratio_less_than(doremir_ptr_t m, doremir_ptr_t n)
     ratio_t x = (ratio_t) m;
     ratio_t y = (ratio_t) n;
 
-    nom_t   a = x->nom;
+    num_t   a = x->num;
     denom_t b = x->denom;
-    nom_t   c = y->nom;
+    num_t   c = y->num;
     denom_t d = y->denom;
 
     return a * d < b * c;
@@ -198,9 +198,9 @@ bool ratio_greater_than(doremir_ptr_t m, doremir_ptr_t n)
     ratio_t x = (ratio_t) m;
     ratio_t y = (ratio_t) n;
 
-    nom_t   a = x->nom;
+    num_t   a = x->num;
     denom_t b = x->denom;
-    nom_t   c = y->nom;
+    num_t   c = y->num;
     denom_t d = y->denom;
 
     return a * d > b * c;
@@ -235,7 +235,7 @@ doremir_string_t ratio_show(doremir_ptr_t a)
 {
     ratio_t b = (ratio_t) a;
     string_t s = string("");
-    s = sdappend(s, sshow(i32(b->nom)));
+    s = sdappend(s, sshow(i32(b->num)));
     s = sdappend(s, string("/"));
     s = sdappend(s, sshow(i32(b->denom)));
     return s;

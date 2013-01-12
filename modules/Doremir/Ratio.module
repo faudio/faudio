@@ -23,14 +23,14 @@ module Doremir.Ratio
 {
     import Doremir.Std;
 
-    type Nom    = Int32;
+    type Num    = Int32;
     type Denom  = Int32;
     type Ratio  = opaque;
 
-    create  : (Nom, Denom) -> Ratio;
-    nom     : Ratio -> Nom;
+    create  : (Num, Denom) -> Ratio;
+    nom     : Ratio -> Num;
     denom   : Ratio -> Denom;
-    match   : (Ratio, Nom*, Denom*) -> Void;
+    match   : (Ratio, Num*, Denom*) -> Void;
     destroy : Ratio -> Void;
             
     add         : (Ratio, Ratio) -> Ratio;
