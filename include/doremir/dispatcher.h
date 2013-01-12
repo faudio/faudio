@@ -27,7 +27,8 @@ typedef struct {
             void (* dispatch)(doremir_ptr_t);
         } doremir_dispatcher_sender_t;
 typedef struct _doremir_dispatcher_t * doremir_dispatcher_t;
-doremir_ptr_t doremir_dispatcher_simple();
+doremir_dispatcher_t doremir_dispatcher_simple();
+void doremir_dispatcher_destroy(doremir_dispatcher_t);
 doremir_pair_t doremir_dispatcher_buffered();
 doremir_pair_t doremir_dispatcher_non_blocking();
 

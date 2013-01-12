@@ -42,7 +42,7 @@ c:
 	modulo -Mmodules --language=c    <modules/Doremir/Device/Audio.module    	>include/doremir/device/audio.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Device/Midi.module    	>include/doremir/device/midi.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Scheduler.module  		>include/doremir/scheduler.h && \
-	modulo -Mmodules --language=c    <modules/Doremir/Dispatcher.module 		>include/doremir/dispatcher.h;
+	modulo -Mmodules --language=c    <modules/Doremir/Message.module 		>include/doremir/message.h;
 
 lisp:
 	modulo -Mmodules --language=lisp <modules/Doremir.module    			>bindings/lisp/doremir.lisp && \
@@ -77,7 +77,7 @@ lisp:
 	modulo -Mmodules --language=lisp <modules/Doremir/Device/Audio.module    	>bindings/lisp/doremir/device/audio.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Device/Midi.module    	>bindings/lisp/doremir/device/midi.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Scheduler.module  		>bindings/lisp/doremir/scheduler.lisp && \
-	modulo -Mmodules --language=lisp <modules/Doremir/Dispatcher.module 		>bindings/lisp/doremir/dispatcher.lisp;  
+	modulo -Mmodules --language=lisp <modules/Doremir/Message.module 		>bindings/lisp/doremir/message.lisp;  
 
 doc:    c
 	doxygen doc/Doxyfile

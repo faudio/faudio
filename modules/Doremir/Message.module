@@ -1,6 +1,6 @@
 
 /**
-    @addtogroup DoremirDispatcher
+    @addtogroup DoremirMessage
 
     Provides message dispatching.
 
@@ -8,7 +8,7 @@
     the message is a dynamic collection and adderss is a pointer-sized value.
 
  */
-module Doremir.Dispatcher
+module Doremir.Message
 {
     import Doremir;
     import Doremir.Std;
@@ -22,7 +22,7 @@ module Doremir.Dispatcher
         receive : ((Ptr, Address, Message) -> Void)*
     };
 
-    /** @interface doremir_dispatcher_t */
+    /** @interface doremir_dispatcher_sender_t */
     type Sender = struct {
         addReceiver : ((Ptr, Receiver) -> Void)*,
         removeReceiver : ((Ptr, Receiver) -> Void)*,
@@ -30,7 +30,6 @@ module Doremir.Dispatcher
     };
 
     type Dispatcher = opaque;
-
 
     // // synchronizing on any receiver
     // or   : (Recv, Recv) -> Recv;
@@ -46,10 +45,14 @@ module Doremir.Dispatcher
     // filterPair : (Pred, Recv) -> Recv;
 
     // dispatcher that forwards all received messages on the same thread
-    simple : () -> Ptr;
+    simple : () -> Dispatcher;
+
+    destroy : Dispatcher -> Void;
+
     // blocking, buffered dispatcher
     buffered : () -> Pair;
     // non-blocking, buffered dispatcher
     nonBlocking : () -> Pair;
+
 
 }

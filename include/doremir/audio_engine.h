@@ -10,7 +10,7 @@
 #include <doremir/device/midi.h>
 #include <doremir/device/file.h>
 #include <doremir/processor.h>
-#include <doremir/dispatcher.h>
+#include <doremir/message.h>
 #include <doremir/scheduler.h>
 #include <doremir/midi.h>
 #include <doremir/time.h>

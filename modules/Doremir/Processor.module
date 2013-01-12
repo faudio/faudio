@@ -26,7 +26,7 @@ module Doremir.Processor
     import Doremir.Time;
     import Doremir.Type;
     import Doremir.Buffer;
-    import Doremir.Dispatcher;
+    import Doremir.Message;
 
     /** @struct doremir_processor_info_t 
         Information available to a processor at processing time. 
