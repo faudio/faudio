@@ -28,9 +28,11 @@ doremir_ptr_t atomic_impl(doremir_id_t interface);
  */
 doremir_atomic_t doremir_atomic_create()
 {
-    doremir_atomic_t a = doremir_new(atomic);
+    atomic_t a = doremir_new(atomic);
+    
     a->impl  = &atomic_impl;
-    a->value = 0;
+    a->value = NULL;
+    
     return a;
 }
 
@@ -41,7 +43,7 @@ doremir_atomic_t doremir_atomic_create()
  */
 doremir_atomic_t doremir_atomic_copy(doremir_atomic_t a)
 {
-    doremir_atomic_t b = doremir_atomic_create();
+    atomic_t b = doremir_atomic_create();
     b->value = a->value;
     return b;
 }
@@ -53,9 +55,9 @@ doremir_atomic_t doremir_atomic_copy(doremir_atomic_t a)
  */
 void doremir_atomic_swap(doremir_atomic_t a, doremir_atomic_t b)
 {              
-    doremir_ptr_t c = a->value;
-    a->value        = b->value;   
-    b->value        = c;
+    ptr_t x  = a->value;
+    a->value = b->value;   
+    b->value = x;
 }
 
 /**
@@ -67,6 +69,9 @@ void doremir_atomic_destroy(doremir_atomic_t a)
 {
     doremir_delete(a);
 }
+
+
+// --------------------------------------------------------------------------------
 
 /** 
     Compares the given value with the current value of the given atomic variable, 
@@ -82,7 +87,7 @@ void doremir_atomic_destroy(doremir_atomic_t a)
  */
 bool doremir_atomic_exchange(doremir_atomic_t a, doremir_ptr_t old, doremir_ptr_t new)
 {
-    return OSAtomicCompareAndSwapPtrBarrier(old, new, (doremir_ptr_t) &a->value);
+    return OSAtomicCompareAndSwapPtrBarrier(old, new, (ptr_t) &a->value);
 }
 
 /**
@@ -93,7 +98,7 @@ bool doremir_atomic_exchange(doremir_atomic_t a, doremir_ptr_t old, doremir_ptr_
  */
 void doremir_atomic_add(doremir_atomic_t a, doremir_ptr_t v)
 {      
-    OSAtomicAdd32Barrier((int32_t) v, (doremir_ptr_t) &a->value);
+    OSAtomicAdd32Barrier((int32_t) v, (ptr_t) &a->value);
 }
 
 /**
@@ -103,12 +108,12 @@ void doremir_atomic_add(doremir_atomic_t a, doremir_ptr_t v)
  */
 doremir_ptr_t doremir_atomic_get(doremir_atomic_t a)
 {
-    return (doremir_ptr_t) OSAtomicAdd32Barrier(0, (doremir_ptr_t) &a->value);
+    return (ptr_t) OSAtomicAdd32Barrier(0, (ptr_t) &a->value);
 }
 
 /**
     Update the given atomic value by applying the given function, which must be
-    a pure.    
+    a pure function.    
     @note
         Atomic
  */
@@ -117,8 +122,8 @@ void doremir_atomic_modify(doremir_atomic_t a, doremir_atomic_updater_t f)
     bool success = false;
     while (!success)
     {                                        
-        doremir_ptr_t currentValue = doremir_atomic_get(a);             
-        doremir_ptr_t value = f(currentValue);
+        ptr_t currentValue = doremir_atomic_get(a);             
+        ptr_t value = f(currentValue);
         success = doremir_atomic_exchange(a, currentValue, value);
     }
 }
@@ -133,7 +138,7 @@ void doremir_atomic_set(doremir_atomic_t a, doremir_ptr_t value)
     bool success = false;
     while (!success)
     {                                        
-        doremir_ptr_t currentValue = doremir_atomic_get(a);
+        ptr_t currentValue = doremir_atomic_get(a);
         success = doremir_atomic_exchange(a, currentValue, value);
     }
 }

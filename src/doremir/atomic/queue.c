@@ -10,6 +10,17 @@
 #include <doremir/string.h>
 #include <doremir/util.h>
 
+/*
+    Notes:
+        * Simple unbounded FIFO
+        * Does not support multi-read or multi-write but is simple to understand
+        * All malloc/free is done in writer thread
+        
+    Possibilities:
+        * Real-time allocator
+        * Bounded pre-allocated version
+ */
+
 struct node {
         atomic_t    next;
         ptr_t       value;
@@ -29,19 +40,19 @@ node_t new_node()
 {
     return doremir_new_struct(node);
 }
-    
+
 static inline
 void delete_node(node_t node)
 {
     doremir_delete(node);
-}                        
+}
 
 static inline
 atomic_queue_t new_queue()
 {
     atomic_queue_t queue = doremir_new(atomic_queue);
 
-    queue->impl  = &atomic_queue_impl;    
+    queue->impl  = &atomic_queue_impl;
     queue->first = atomic();
     queue->div   = atomic();
     queue->last  = atomic();
@@ -49,13 +60,13 @@ atomic_queue_t new_queue()
     return queue;
 }
 
-static inline 
+static inline
 void delete_queue(atomic_queue_t queue)
 {
     doremir_delete(queue->first);
     doremir_delete(queue->div);
     doremir_delete(queue->last);
-    
+
     doremir_delete(queue);
 }
 
@@ -107,7 +118,7 @@ void delete_range_end(atomic_t begin, atomic_t end)
 doremir_atomic_queue_t doremir_atomic_queue_create()
 {
     atomic_queue_t queue = new_queue();
-    node_t         node  = new_node(node);
+    node_t         node  = new_node(NULL);
 
     set_node(queue->first, node);
     set_node(queue->div,   node);
@@ -122,28 +133,32 @@ void doremir_atomic_queue_destroy(doremir_atomic_queue_t queue)
     delete_queue(queue);
 }
 
+
 // --------------------------------------------------------------------------------
 
 bool doremir_atomic_queue_write(doremir_atomic_queue_t queue, doremir_ptr_t value)
 {
     delete_range(queue->first, queue->div);
-    
+
     get_node(queue->last)->value = value;
-    get_node(queue->last)->next  = doremir_new_struct(node);
+    get_node(queue->last)->next  = new_node(NULL);
 
     forward_node(queue->last);
+
     return true;
 }
 
 doremir_ptr_t doremir_atomic_queue_read(doremir_atomic_queue_t queue)
 {
+    ptr_t value;
+
     if (get_node(queue->div) == get_node(queue->last))
         return NULL;
     else
     {
-        doremir_ptr_t v = get_node(queue->div)->value;
+        value = get_node(queue->div)->value;
         forward_node(queue->div);
-        return v;
+        return value;
     }
 }
 

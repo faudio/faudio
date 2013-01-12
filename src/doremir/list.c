@@ -29,7 +29,6 @@
           This gives us "as good as mutable" destrucive operations but slow copy.
         * For faster random access (important for use as backend to set map etc), add a hash
           trie implementation.
-
  */
 
 struct node {

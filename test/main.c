@@ -454,7 +454,7 @@ doremir_ptr_t test_atomic_queue_reader(doremir_ptr_t x)
         if ((v = doremir_atomic_queue_read(q)))
             printf("         |- %5d    \n", ti32(v));
         
-        doremir_thread_sleep(10);
+        doremir_thread_sleep(5);
     }
 }
 void test_atomic_queue(int iter, long sleepTime)
