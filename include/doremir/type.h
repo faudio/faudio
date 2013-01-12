@@ -19,7 +19,7 @@ typedef enum {
             uint64_type,
             float_type,
             double_type,
-            pointer_type
+            ptr_type
         } doremir_type_simple_t;
 typedef struct _doremir_type_t * doremir_type_t;
 doremir_type_t doremir_type_simple(doremir_type_simple_t);

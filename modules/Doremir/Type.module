@@ -55,7 +55,7 @@ module Doremir.Type
         Uint64Type,
         FloatType,
         DoubleType,
-        PointerType 
+        PtrType 
     };
 
     // type TypeImpl = struct {            

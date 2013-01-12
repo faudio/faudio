@@ -91,6 +91,7 @@
 #define scopy               doremir_string_copy
 #define sappend             doremir_string_append
 #define sdappend            doremir_string_dappend
+#define string_dappend      doremir_string_dappend
 #define char_at             doremir_string_char_at
 #define sshow               doremir_string_show
 #define format_int          doremir_string_format_integer

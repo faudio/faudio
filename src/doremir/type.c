@@ -10,35 +10,41 @@
 
 typedef doremir_type_simple_t simple_t;
 
-struct _doremir_type_t {
-        doremir_impl_t  impl;
+struct _doremir_type_t 
+{
+    doremir_impl_t  impl;
+    
+    enum {
+        simple_type, 
+        pair_type, 
+        vector_type, 
+        frame_type
+    } tag;
+    
+    union {
+        doremir_type_simple_t simple;
+
+        struct {
+            doremir_ptr_t fst; 
+            doremir_ptr_t snd;
+        } pair;
+
+        struct {
+            doremir_ptr_t base; 
+            size_t size;
+        } vector;
+
+        struct {
+            doremir_ptr_t base;
+        } frame;
         
-        enum {
-            simple_type, 
-            pair_type, 
-            vector_type, 
-            frame_type
-        } tag;
-        
-        union {
-            doremir_type_simple_t simple;
+    } fields;
+}; 
 
-            struct {
-                doremir_ptr_t fst; 
-                doremir_ptr_t snd;
-            } pair;
-
-            struct {
-                doremir_ptr_t base; 
-                size_t size;
-            } vector;
-
-            struct {
-                doremir_ptr_t base;
-            } frame;
-            
-        } fields;
-    };
+#define simple_get(V) V->fields.simple
+#define pair_get(V,F) V->fields.pair.F
+#define vector_get(V,F) V->fields.vector.F
+#define frame_get(V,F) V->fields.frame.F
 
 doremir_ptr_t type_impl(doremir_id_t interface);
 
@@ -64,7 +70,7 @@ void delete_type(doremir_type_t type)
 doremir_type_t doremir_type_simple(doremir_type_simple_t type)
 {
     type_t t = new_type(simple_type);
-    t->fields.simple = type;
+    simple_get(t) = type;
     return t;
 }
 
@@ -74,8 +80,8 @@ doremir_type_t doremir_type_simple(doremir_type_simple_t type)
 doremir_type_t doremir_type_pair(doremir_type_t type1, doremir_type_t type2)
 {
     type_t t = new_type(pair_type);
-    t->fields.pair.fst = type1;
-    t->fields.pair.snd = type2;
+    pair_get(t, fst) = type1;
+    pair_get(t, snd) = type2;
     return t;
 }
 
@@ -85,8 +91,8 @@ doremir_type_t doremir_type_pair(doremir_type_t type1, doremir_type_t type2)
 doremir_type_t doremir_type_vector(doremir_type_t base, size_t size)
 {
     type_t t = new_type(vector_type);
-    t->fields.vector.base = base;
-    t->fields.vector.size = size;
+    vector_get(t, base) = base;
+    vector_get(t, size) = size;
     return t;
 }
 
@@ -96,7 +102,7 @@ doremir_type_t doremir_type_vector(doremir_type_t base, size_t size)
 doremir_type_t doremir_type_frame(doremir_type_t base)
 {
     type_t t = new_type(frame_type);
-    t->fields.frame.base = base;
+    frame_get(t, base) = base;
     return t;
 }
 
@@ -109,15 +115,15 @@ doremir_type_t doremir_type_copy(doremir_type_t type)
     switch(type->tag)
     {
     case simple_type:
-        t->fields.simple = type->fields.simple;
+        simple_get(t) = simple_get(type);
     case pair_type:     
-        t->fields.pair.fst = type->fields.pair.fst;
-        t->fields.pair.snd = type->fields.pair.snd;
+        pair_get(t, fst) = pair_get(type, fst);
+        pair_get(t, snd) = pair_get(type, snd);
     case vector_type:
-        t->fields.vector.base = type->fields.vector.base;
-        t->fields.vector.size = type->fields.vector.size;
+        vector_get(t, base) = vector_get(type, base);
+        vector_get(t, size) = vector_get(type, size);
     case frame_type:
-        t->fields.frame.base = type->fields.frame.base;
+        frame_get(t, base) = frame_get(type, base);
     default:
         assert(false && "Missing label");
     }                  
@@ -164,27 +170,6 @@ bool doremir_type_is_frame(doremir_type_t type)
     return type->tag == frame_type;
 }
 
-// doremir_type_simple_t doremir_type_get_simple(doremir_type_t type)
-// {
-//     return type->fields.simple;
-// }
-// 
-// doremir_pair_t doremir_type_get_pair(doremir_type_t type)
-// {
-//     return pair(type->fields.pair.fst, type->fields.pair.snd);
-// }
-// 
-// doremir_pair_t doremir_type_get_vector(doremir_type_t type)
-// {
-//     return pair(type->fields.vector.base, type->fields.vector.size);
-// }
-// 
-// doremir_type_t doremir_type_get_frame(doremir_type_t type)
-// {               
-//     return type->fields.vector.base;
-// }
-
-
 // --------------------------------------------------------------------------------
 
 inline static 
@@ -226,8 +211,25 @@ size_t simple_size(doremir_type_simple_t simple)
     {
     case uint8_type:
         return sizeof(uint8_t);
+    
+    case uint16_type:
+        return sizeof(uint16_t);
+    
+    case uint32_type:
+        return sizeof(uint32_t);
+    
+    case uint64_type:
+        return sizeof(uint64_t);
+    
+    case float_type:
+        return sizeof(float);
+    
     case double_type:
         return sizeof(double);
+    
+    case ptr_type:
+        return sizeof(ptr_t);
+    
     default:
         assert(false && "Missing label");
     }
@@ -239,13 +241,17 @@ size_t align(doremir_type_t type)
     switch(type->tag)
     {
     case simple_type:
-        return simple_align(type->fields.simple);
+        return simple_align(simple_get(type));
+    
     case pair_type:
-        return size_max(align(type->fields.pair.fst), align(type->fields.pair.snd));
+        return size_max(align(pair_get(type, fst)), align(pair_get(type, snd)));
+    
     case vector_type:
-        return align(type->fields.vector.base);
+        return align(vector_get(type, base));
+    
     case frame_type:
-        return align(type->fields.frame.base);
+        return align(frame_get(type, base));
+    
     default:
         assert(false && "Missing label");
     }                                   
@@ -254,19 +260,23 @@ size_t align(doremir_type_t type)
 inline static
 size_t size(doremir_type_frames_t frames, doremir_type_t type)
 {
+    size_t offset;
+    
     switch(type->tag)
     {
+    
     case simple_type:
-        return simple_size(type->fields.simple);
+        return simple_size(simple_get(type));
+    
     case pair_type:
-        {
-        size_t offset = next_aligned(size(frames, type->fields.pair.fst), align(type->fields.pair.snd));
-        return next_aligned(offset + size(frames, type->fields.pair.snd), align(type));
-        }
+        offset = next_aligned(size(frames, pair_get(type, fst)), align(pair_get(type, snd)));
+        return next_aligned(offset + size(frames, pair_get(type, snd)), align(type));
+    
     case vector_type:
-        return size(frames, type->fields.vector.base) * type->fields.vector.size;
+        return size(frames, vector_get(type, base)) * vector_get(type, size);
+    
     case frame_type:
-        return size(frames, type->fields.frame.base) * frames;
+        return size(frames, frame_get(type, base)) * frames;
 
     default:
         assert(false && "Missing label");
@@ -303,15 +313,17 @@ bool type_equal(doremir_ptr_t a, doremir_ptr_t b)
     switch(c->tag)
     {
     case simple_type:
-        return c->fields.simple == d->fields.simple;
+        return simple_get(c) == simple_get(d);
+    
     case pair_type:     
-        return c->fields.pair.fst == d->fields.pair.fst 
-            && c->fields.pair.snd == d->fields.pair.snd;
+        return pair_get(c, fst) == pair_get(d, fst) && pair_get(c, snd) == pair_get(d, snd);
+    
     case vector_type:
-        return c->fields.vector.base == d->fields.vector.base
-            && c->fields.vector.size == d->fields.vector.size;
+        return vector_get(c, base) == vector_get(d, base) && vector_get(c, size) == vector_get(d, size);
+    
     case frame_type:
-        return c->fields.frame.base == d->fields.frame.base;
+        return frame_get(c, base) == frame_get(d, base);
+    
     default:
         assert(false && "Missing label");
     }                  
@@ -339,31 +351,34 @@ string_t type_show(doremir_ptr_t a)
     switch(type->tag)
     {
     case simple_type:
-        s = sdappend(s, simple_show(type->fields.simple));
-        break;
+        s = string_dappend(s, simple_show(simple_get(type)));
+        return s;
+    
     case pair_type:                              
-        s = sdappend(s, string("("));
-        s = sdappend(s, type_show(type->fields.pair.fst));
-        s = sdappend(s, string(","));
-        s = sdappend(s, type_show(type->fields.pair.snd));
-        s = sdappend(s, string(")"));
-        break;
+        s = string_dappend(s, string("("));
+        s = string_dappend(s, type_show(pair_get(type, fst)));
+        s = string_dappend(s, string(","));
+        s = string_dappend(s, type_show(pair_get(type, snd)));
+        s = string_dappend(s, string(")"));
+        return s;
+    
     case vector_type:
-        s = sdappend(s, string("["));
-        s = sdappend(s, type_show(type->fields.vector.base));
-        s = sdappend(s, string(" x "));
-        s = sdappend(s, format_int("%i", type->fields.vector.size));
-        s = sdappend(s, string("]"));
-        break;
+        s = string_dappend(s, string("["));
+        s = string_dappend(s, type_show(vector_get(type, base)));
+        s = string_dappend(s, string(" x "));
+        s = string_dappend(s, format_int("%i", vector_get(type, size)));
+        s = string_dappend(s, string("]"));
+        return s;
+    
     case frame_type:
-        s = sdappend(s, string("{"));
-        s = sdappend(s, type_show(type->fields.vector.base));
-        s = sdappend(s, string("}"));
-        break;
+        s = string_dappend(s, string("{"));
+        s = string_dappend(s, type_show(vector_get(type, base)));
+        s = string_dappend(s, string("}"));
+        return s;
+    
     default:
         assert(false && "Missing label");
     }                  
-    return s;
 }
 
 doremir_ptr_t type_copy(doremir_ptr_t a)
