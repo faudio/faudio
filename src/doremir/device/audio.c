@@ -7,7 +7,6 @@
 
 #include <doremir/device/audio.h>
 
-#include <doremir/dispatcher.h>
 #include <doremir/atomic.h> // TODO improving
 #include <doremir/thread.h>
 #include <doremir/util.h>
@@ -19,7 +18,6 @@ typedef doremir_device_audio_stream_t           stream_t;
 typedef doremir_device_audio_session_t          session_t;
 typedef doremir_device_audio_stream_callback_t  stream_callback_t;
 typedef doremir_device_audio_session_callback_t session_callback_t;
-typedef doremir_dispatcher_t                    dispatcher_t;
 
 typedef PaStream*                               native_stream_t;
 typedef PaDeviceIndex                           native_device_t;

@@ -3,6 +3,16 @@
     @addtogroup DoremirAtomic
     
     Cross-platform atomic variables. Submodules contains lock-free data structures.
+
+    @par Literals
+    - `atomic()` 
+
+    @par Implements 
+    - doremir_equal_t
+    - doremir_order_t
+    - doremir_copy_t
+    - doremir_destroy_t
+    - doremir_string_show_t
  */
 module Doremir.Atomic
 {                   

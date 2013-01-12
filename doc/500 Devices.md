@@ -3,6 +3,7 @@
 
 > *All for one, one for all, that is our device.*
 
+@anchor Devices
 @tableofcontents
 
 Devices are the entities that allow the Audio Engine to communicate with the outside world. Any client will need

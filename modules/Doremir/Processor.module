@@ -56,8 +56,8 @@ module Doremir.Processor
         outputType : (Ptr -> Type)*
     };
 
-    /** @typedef doremir_processor_any_t 
-        A processor of unkown type.
+    /** @typedef doremir_processor_t 
+        A processor of unknown type.
      */
     type Processor = opaque;   
     

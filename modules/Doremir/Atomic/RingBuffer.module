@@ -5,6 +5,13 @@
     Circular buffer data structure.
     
     Note that while this structure is called a \ref DoremirBuffer, it does not support random access.
+
+    @par Literals
+    - `atomic_ring_buffer()` 
+
+    @par Implements 
+    - doremir_destroy_t
+    - doremir_string_show_t
  */
 module Doremir.Atomic.RingBuffer
 {            

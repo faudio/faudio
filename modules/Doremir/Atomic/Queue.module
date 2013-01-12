@@ -3,6 +3,13 @@
     @addtogroup DoremirAtomicQueue
     
     Lock-free queue (FIFO) data structure.
+
+    @par Literals
+    - `atomic_queue()` 
+
+    @par Implements 
+    - doremir_destroy_t
+    - doremir_string_show_t
  */
 module Doremir.Atomic.Queue
 {
