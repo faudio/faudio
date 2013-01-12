@@ -8,6 +8,7 @@
 #include <doremir/string.h>
 #include <doremir/util.h>
 #include <iconv.h>
+#include <CoreFoundation/CoreFoundation.h> // TODO OS X only
 
 /*  
     Notes:
@@ -289,6 +290,7 @@ doremir_string_utf32_t doremir_string_to_utf32(doremir_string_t str)
     assert(false && "Not implemented");
 }
 
+
 // --------------------------------------------------------------------------------
 
 /** Deencode a string from UTF-8.
@@ -345,6 +347,47 @@ doremir_string_t doremir_string_from_utf16(doremir_string_utf16_t cstr)
 doremir_string_t doremir_string_from_utf32(doremir_string_utf32_t cstr)
 {
     assert(false && "Not implemented");
+}
+
+
+// --------------------------------------------------------------------------------
+
+// TODO OS X only
+
+void * doremir_string_to_cf_string(doremir_string_t str)
+{
+    char* cstr;
+    CFStringRef cfstr;
+
+    cstr    = doremir_string_to_utf8(str);
+    cfstr   = CFStringCreateWithCString(kCFAllocatorDefault, cstr, kCFStringEncodingUTF8);
+
+    free(cstr);
+    return (void*) cfstr;
+}
+
+doremir_string_t doremir_string_from_cf_string(void * cfstr)
+{
+    CFIndex size;
+    char *cstr;
+    string_t str;
+    
+    if ((cstr = (char*) CFStringGetCStringPtr(cfstr, kCFStringEncodingUTF8)))
+    {
+        return doremir_string_from_utf8(cstr);
+    }
+    else
+    {
+        size        = CFStringGetLength(cfstr);
+        cstr        = malloc(size + 1);
+        cstr[size]  = 0;                     // necesary ?        
+
+        CFStringGetCString(cfstr, cstr, size + 1, kCFStringEncodingUTF8);
+        str = doremir_string_from_utf8(cstr);
+
+        free(cstr);
+        return str;    
+    }
 }
 
 
