@@ -139,7 +139,7 @@ void doremir_string_destroy(doremir_string_t str)
 
 
 // --------------------------------------------------------------------------------
-// Predicates and introspection
+// Access and predicates
 // --------------------------------------------------------------------------------
 
 /** Return the number of characters in the given string.
@@ -190,8 +190,8 @@ doremir_string_t doremir_string_format_integer(char* format, long value)
 // Conversion
 // --------------------------------------------------------------------------------
 
-/**
-    Fail with error message, interpreting errno as an iconv error.
+/** Fail with error message, interpreting errno as an iconv error.
+
     This function does not return.
  */
 static inline void iconv_fail()
@@ -228,8 +228,6 @@ static inline size_t raw_size_16(uint16_t *s)
        i++;
    return i;
 }
-
-// --------------------------------------------------------------------------------
 
 /** Encode the given string as UTF-8.
 
@@ -289,9 +287,6 @@ doremir_string_utf32_t doremir_string_to_utf32(doremir_string_t str)
 {
     assert(false && "Not implemented");
 }
-
-
-// --------------------------------------------------------------------------------
 
 /** Deencode a string from UTF-8.
 

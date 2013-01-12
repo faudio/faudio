@@ -439,38 +439,48 @@ void test_atomic()
     }
 }
 
+struct reader_args { doremir_atomic_queue_t queue; atomic_t active; };
 doremir_ptr_t test_atomic_queue_reader(doremir_ptr_t x)
-{       
-    doremir_atomic_queue_t q = (doremir_atomic_queue_t) x;
+{                       
+    struct reader_args* args = x;
+    doremir_atomic_queue_t q = args->queue;
+    atomic_t               a = args->active;
+    ptr_t                  v;
     
     while(true)
     {        
-        ptr_t v;
+        if (!tb(doremir_atomic_get(a)))
+            return v;
         if ((v = doremir_atomic_queue_read(q)))
             printf("         |- %5d    \n", ti32(v));
+        
         doremir_thread_sleep(10);
     }
 }
-void test_atomic_queue()
+void test_atomic_queue(int iter, long sleepTime)
 {
     test_section();
     {       
         doremir_atomic_queue_t q = doremir_atomic_queue_create();
 
-        doremir_closure_t r = { test_atomic_queue_reader, (ptr_t) q };
+        struct reader_args args = { q, atomic() };
+        doremir_atomic_set(args.active, b(true));
+
+        doremir_closure_t r = { test_atomic_queue_reader, &args };
         thread_t t = doremir_thread_create(&r);
         
         doremir_print("q              => %s\n", q);
         
-        for(int i = 0; i < 5; ++i)
+        for(int i = 0; i < iter; ++i)
         {
             doremir_thread_sleep(i % 10 * 3);
             doremir_atomic_queue_write(q, i32(i));
             printf("  %5d -|  \n", i);
         }
         
-        doremir_thread_sleep(50);
-        doremir_thread_detach(t);     
+        doremir_thread_sleep(sleepTime);
+        doremir_atomic_set(args.active, b(false));
+        doremir_thread_join(t); // TODO how to kill?     
         doremir_destroy(q);
     }
 }
@@ -549,7 +559,10 @@ int main (int argc, char const *argv[])
       // priority queue
 
       test_atomic();
-      test_atomic_queue();
+      test_atomic_queue(5, 50);
+      test_atomic_queue(100, 50);
+      test_atomic_queue(100, 50);
+      test_atomic_queue(100, 50);
       test_atomic_ring_buffer();
 
       // test_thread();

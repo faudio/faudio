@@ -26,10 +26,13 @@ ratio_t new_ratio()
     p->impl = &ratio_impl;
     return p;
 }
+
 void delete_ratio(ratio_t p)
 {
     doremir_delete(p);
 }
+
+// --------------------------------------------------------------------------------
 
 doremir_ratio_t doremir_ratio_create(num_t num, denom_t denom)
 {
@@ -144,6 +147,7 @@ doremir_ratio_t doremir_ratio_normalize(doremir_ratio_t x)
 {
     num_t   a = x->num;
     denom_t b = x->denom;
+    
     if (b < 0)
     {
         a *= -1;
@@ -236,9 +240,11 @@ doremir_string_t ratio_show(doremir_ptr_t a)
 {
     ratio_t b = (ratio_t) a;
     string_t s = string("");
+    
     s = sdappend(s, sshow(i32(b->num)));
     s = sdappend(s, string("/"));
     s = sdappend(s, sshow(i32(b->denom)));
+    
     return s;
 }
 

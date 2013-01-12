@@ -48,14 +48,11 @@ doremir_time_t doremir_time_create(int32_t days,
                                    int32_t hours, 
                                    int32_t minutes, 
                                    doremir_ratio_t seconds)
-{
-    ratio_t value = doremir_add(ratio(days    * 60 * 60 * 24 
-                                        + 
-                                      hours   * 60 * 60      
-                                        + 
-                                      minutes * 60              , 1), seconds); 
-    
-    return new_time(value);
+{                                            
+    int     whole = days*(60*60*24) + hours*(60*60) + minutes*60;
+    ratio_t secs = doremir_add(ratio(whole, 1), seconds); 
+
+    return new_time(secs);
 }
 
 /** 
@@ -249,6 +246,7 @@ doremir_string_t time_show(doremir_ptr_t a)
     s = string_dappend(s, doremir_string_show(doremir_time_divisions(t)));
     s = string_dappend(s, string("s"));
     s = string_dappend(s, string(">"));
+    
     return s;
 }
 
