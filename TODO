@@ -20,7 +20,7 @@ Additions
 
 * Implement ringbuffer
 
-* Implement non-realtime
+* Implement non-realtime streams
 
 * Implement realtime audio streams
 
@@ -30,10 +30,9 @@ Additions
 
 * Implement schedulers
 
-* Specify Dynamic interface
-    * Fix Dispatcher interface
-
 * High-level Lisp bindings
+
+
 
 * Device detection
     * See PortAudio tracker

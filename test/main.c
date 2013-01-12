@@ -335,10 +335,10 @@ void test_show()
 void test_compare()
 {
     test_section();
-    doremir_print("abc <  abd => %s\n", b(doremir_less_than(string("abc"), string("abd"))));
-    doremir_print("abc <= abd => %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
-    doremir_print("abc >  abd => %s\n", b(doremir_greater_than(string("abc"), string("abd"))));
-    doremir_print("abc >= abd => %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
+    doremir_print("\"abc\" <  \"abd\" => %s\n", b(doremir_less_than(string("abc"), string("abd"))));
+    doremir_print("\"abc\" <= \"abd\" => %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
+    doremir_print("\"abc\" >  \"abd\" => %s\n", b(doremir_greater_than(string("abc"), string("abd"))));
+    doremir_print("\"abc\" >= \"abd\" => %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
 }
 
 void test_rational()
