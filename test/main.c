@@ -136,32 +136,32 @@ void test_wrap()
     test_section();
     // FIXME leaks
 
-    printf("bool: %s\n", doremir_type_str(b(true)));
+    printf("bool:       %s\n", doremir_type_str(b(true)));
     assert(tb(b(true)) == true);
     assert(tb(b(false)) == false);
 
-    printf("int8: %s\n", doremir_type_str(i8(62)));
+    printf("int8:       %s\n", doremir_type_str(i8(62)));
     assert(ti8(i8('h')) == 'h');
     assert(ti8(i8(121)) == 121);
     assert(ti8(i8(-42)) == -42);
 
-    printf("int16: %s\n", doremir_type_str(i16(12372)));
-    printf("int16:%d\n", ti16(i16(1267)));
+    printf("int16:      %s\n", doremir_type_str(i16(12372)));
+    printf("int16:      %d\n", ti16(i16(1267)));
     assert(ti16(i16(1267)) == 1267);
     assert(ti16(i16(-8712)) == -8712);
 
-    printf("int32: %s\n", doremir_type_str(i32(12372)));
-    printf("int32:%d\n", ti32(i32(1267)));
+    printf("int32:      %s\n", doremir_type_str(i32(12372)));
+    printf("int32:      %d\n", ti32(i32(1267)));
     assert(ti32(i32(2147483646)) == 2147483646);
     assert(ti32(i32(-343646748)) == -343646748);
 
-    printf("int64: %s\n", doremir_type_str(i64(12372)));
-    printf("int64: %lli\n", ti64(i64(9223372036854775807ll)));
+    printf("int64:      %s\n", doremir_type_str(i64(12372)));
+    printf("int64:      %lli\n", ti64(i64(9223372036854775807ll)));
     assert(ti64(i64(4872837827878787871ll)) == 4872837827878787871ll);
     assert(ti64(i64(-6888881236767676711ll)) == -6888881236767676711ll);
 
-    printf("double: %s\n", doremir_type_str(d(12372)));
-    printf("double: %f\n", td(d(3.141592653589793)));
+    printf("double:     %s\n", doremir_type_str(d(12372)));
+    printf("double:     %f\n", td(d(3.141592653589793)));
     assert(td(d(3.141592653589793)) == 3.141592653589793);
     assert(td(d(-1.4142135623730951)) == -1.4142135623730951);
 }
@@ -171,136 +171,31 @@ void test_generic()
     test_section();
     // TODO leaks
 
-    printf("2    *  3.2   = %f\n", td(doremir_multiply(d(2), d(3.2))));
-    printf("1    /  3     = %f\n", td(doremir_divide(d(1), d(3))));
-    printf("1    +  1.5   = %f\n", td(doremir_add(d(1), d(1.5))));
-
-
-    printf("32                  + 1  = %i\n",   ti8(doremir_add(i8(32), i8(1))));
-    printf("5123                + 1  = %i\n",   ti16(doremir_add(i16(5123), i16(1))));
-    printf("2147483646          + 1  = %i\n",   ti32(doremir_add(i32(2147483646), i32(1))));
-    printf("4872837827878787871 + 1  = %lli\n", ti64(doremir_add(i64(4872837827878787871ll), i64(1))));
-    printf("32                  - 1  = %i\n",   ti8(doremir_subtract(i8(32), i8(1))));
-    printf("5123                - 1  = %i\n",   ti16(doremir_subtract(i16(5123), i16(1))));
-    printf("2147483646          - 1  = %i\n",   ti32(doremir_subtract(i32(2147483646), i32(1))));
-    printf("4872837827878787871 - 1  = %lli\n", ti64(doremir_subtract(i64(4872837827878787871ll), i64(1))));
-    printf("3                   / 2  = %i\n",   ti8(doremir_divide(i8(33), i8(2))));
-    printf("3333                / 2  = %i\n",   ti16(doremir_divide(i16(3333), i16(2))));
-    printf("3333333333          / 2  = %i\n",   ti32(doremir_divide(i32(3333333333l), i32(2))));
-    printf("3333333333333333333 / 2  = %lli\n", ti64(doremir_divide(i64(3333333333333333333ll), i64(2))));
-
-    printf("3                   / 1  = %i\n", ti8(doremir_divide(i8(32), i8(1))));
-
-    printf("true => false = %s\n", (doremir_equal(b(true), b(true))) ? "true" : false);
-    printf("32   => 32    = %s\n", (doremir_equal(i8(32), i8(32))) ? "true" : false);
-    printf("5123 => 5123  = %s\n", (doremir_equal(i16(5123), i16(5123))) ? "true" : false);
+    printf("2 * 3.2                     ==> %f\n",   td(doremir_multiply(d(2), d(3.2))));
+    printf("1 / 3                       ==> %f\n",   td(doremir_divide(d(1), d(3))));
+    printf("1 + 1.5                     ==> %f\n",   td(doremir_add(d(1), d(1.5))));
+                                        
+    printf("32                  + 1     ==> %i\n",   ti8(doremir_add(i8(32), i8(1))));
+    printf("5123                + 1     ==> %i\n",   ti16(doremir_add(i16(5123), i16(1))));
+    printf("2147483646          + 1     ==> %i\n",   ti32(doremir_add(i32(2147483646), i32(1))));
+    printf("4872837827878787871 + 1     ==> %lli\n", ti64(doremir_add(i64(4872837827878787871ll), i64(1))));
+    printf("32                  - 1     ==> %i\n",   ti8(doremir_subtract(i8(32), i8(1))));
+    printf("5123                - 1     ==> %i\n",   ti16(doremir_subtract(i16(5123), i16(1))));
+    printf("2147483646          - 1     ==> %i\n",   ti32(doremir_subtract(i32(2147483646), i32(1))));
+    printf("4872837827878787871 - 1     ==> %lli\n", ti64(doremir_subtract(i64(4872837827878787871ll), i64(1))));
+    printf("3                   / 2     ==> %i\n",   ti8(doremir_divide(i8(33), i8(2))));
+    printf("3333                / 2     ==> %i\n",   ti16(doremir_divide(i16(3333), i16(2))));
+    printf("3333333333          / 2     ==> %i\n",   ti32(doremir_divide(i32(3333333333l), i32(2))));
+    printf("3333333333333333333 / 2     ==> %lli\n", ti64(doremir_divide(i64(3333333333333333333ll), i64(2))));
+    printf("3                   / 1     ==> %i\n",   ti8(doremir_divide(i8(32), i8(1))));
+                                        
+    printf("true == false               ==> %s\n",   (doremir_equal(b(true), b(true))) ? "true" : false);
+    printf("32   == 32                  ==> %s\n",   (doremir_equal(i8(32), i8(32))) ? "true" : false);
+    printf("5123 == 5123                ==> %s\n",   (doremir_equal(i16(5123), i16(5123))) ? "true" : false);
 
 
 }
 
-bool is_even16(ptr_t p)
-{
-    return ti16(p) % 2 == 0;
-}
-bool is_odd16(ptr_t p)
-{
-    return ti16(p) % 2 != 0;
-}
-ptr_t times2(ptr_t p)
-{
-    return i16(2 * ti16(p));
-}
-ptr_t times10(ptr_t p)
-{
-    return i16(10 * ti16(p));
-}
-
-void test_list()
-{
-    test_section();
-    // TODO leaks
-    {
-        list_t xs = list(i16(1),i16(2),i16(3));
-        list_t ys = doremir_copy(xs);
-        printf("length: %d\n", doremir_list_length(xs));
-        printf("length: %d\n", doremir_list_length(ys));
-        printf("xs == ys: %d\n", doremir_equal(xs, ys));
-        // TODO destroy wrapped values
-        doremir_destroy(xs);
-        doremir_destroy(ys);
-    }
-
-    {
-        // list_t  xs = list(i32(1),i32(2),i32(3));
-        // int32_t z  = ti32(doremir_list_sum(xs));
-        // int32_t p  = ti32(doremir_list_product(xs));
-        // int32_t m  = ti32(doremir_list_minimum(xs));
-        // int32_t n  = ti32(doremir_list_maximum(xs));
-        // printf("sum:  %d\n", z);
-        // printf("prod: %d\n", p);
-        // printf("min:  %d\n", m);
-        // printf("max:  %d\n", n);
-        // // TODO destroy wrapped values
-        // doremir_destroy(xs);
-    }
-
-    {
-        list_t as = list(i16(1),i16(2),i16(3),i16(4),i16(5));
-        list_t xs = empty();
-        for (int i = 0; i < 20; ++i)
-            xs = doremir_list_append(xs,as);
-        list_t ys = reverse(xs);
-        doremir_print("%s\n", xs);
-        doremir_print("%s\n", ys);
-        doremir_destroy(xs);
-    }
-
-    {
-        list_t xs = list(i16(1),i16(2),i16(3),i16(4),i16(5));
-        list_t ys = doremir_list_filter(is_odd16,xs);
-        doremir_print("%s\n", xs);
-        doremir_print("%s\n", ys);
-        doremir_destroy(xs);
-    }
-
-    {
-        list_t xs = list(i16(1),i16(2),i16(3),i16(4),i16(5));
-        list_t ys = doremir_list_map(times10,xs);
-        doremir_print("%s\n", xs);
-        doremir_print("%s\n", ys);
-        doremir_destroy(xs);
-    }
-
-    {
-        list_t xs = doremir_list_enum_from(0,50);
-        xs = doremir_list_map((doremir_unary_t) i16,xs);
-        doremir_print("%s\n", xs);
-        xs = doremir_list_filter(is_odd16,xs);
-        doremir_print("%s\n", xs);
-        xs = doremir_list_dmap(times10,xs);
-        doremir_print("%s\n", xs);
-        doremir_destroy(xs);
-    }
-}
-
-void test_set()
-{
-    test_section();
-    {
-        set_t xs = set(i16(1),i16(2),i16(3));
-        set_t ys = doremir_copy(xs);
-
-        doremir_print("xs: %s\n", xs);
-        doremir_print("ys: %s\n", ys);
-        printf("length: %d\n", doremir_set_size(xs));
-        printf("length: %d\n", doremir_set_size(ys));
-        printf("xs == ys: %d\n", doremir_equal(xs, ys));
-        // TODO destroy wrapped values
-        doremir_destroy(xs);
-        doremir_destroy(ys);
-    }
-
-}
 
 static inline void memdump(void* s, size_t n)
 {
@@ -380,20 +275,20 @@ void test_show()
 void test_compare()
 {
     test_section();
-    doremir_print("\"abc\" <  \"abd\" => %s\n", b(doremir_less_than(string("abc"), string("abd"))));
-    doremir_print("\"abc\" <= \"abd\" => %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
-    doremir_print("\"abc\" >  \"abd\" => %s\n", b(doremir_greater_than(string("abc"), string("abd"))));
-    doremir_print("\"abc\" >= \"abd\" => %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
+    doremir_print("\"abc\" <  \"abd\"               ==> %s\n", b(doremir_less_than(string("abc"), string("abd"))));
+    doremir_print("\"abc\" <= \"abd\"               ==> %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
+    doremir_print("\"abc\" >  \"abd\"               ==> %s\n", b(doremir_greater_than(string("abc"), string("abd"))));
+    doremir_print("\"abc\" >= \"abd\"               ==> %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
 }
 
 void test_rational()
 {
     test_section();
-    doremir_print("1/3 <  1/2     => %s\n", b(lt(ratio(1,3), ratio(1,2))));
-    doremir_print("1/3 >  1/2     => %s\n", b(gt(ratio(1,3), ratio(1,2))));
-    doremir_print("1/3 == 2/6     => %s\n", b(eq(ratio(1,3), ratio(2,6))));
-    doremir_print("1/3 == 254/762 => %s\n", b(eq(ratio(1,3), ratio(254,762))));
-    doremir_print("1/3 <= 7/8     => %s\n", b(eq(ratio(1,3), ratio(254,762))));
+    doremir_print("1/3 <  1/2                   ==> %s\n", b(lt(ratio(1,3), ratio(1,2))));
+    doremir_print("1/3 >  1/2                   ==> %s\n", b(gt(ratio(1,3), ratio(1,2))));
+    doremir_print("1/3 == 2/6                   ==> %s\n", b(eq(ratio(1,3), ratio(2,6))));
+    doremir_print("1/3 == 254/762               ==> %s\n", b(eq(ratio(1,3), ratio(254,762))));
+    doremir_print("1/3 <= 7/8                   ==> %s\n", b(eq(ratio(1,3), ratio(254,762))));
 }
 
 void test_buffer()
@@ -403,25 +298,25 @@ void test_buffer()
     {
         doremir_buffer_t b = doremir_buffer_create(16);
 
-        doremir_print("b              => %s\n", b);
+        doremir_print("b                        ==> %s\n", b);
         for(int i = 0; i < 16; ++i) doremir_buffer_poke(b, i, i);
-        doremir_print("b              => %s\n", b);
+        doremir_print("b                        ==> %s\n", b);
         for(int i = 0; i < 16; ++i) doremir_buffer_poke(b, i, 0xff);
-        doremir_print("b              => %s\n", b);
+        doremir_print("b                        ==> %s\n", b);
 
-        doremir_print("size(b)        => %s\n", i32(doremir_buffer_size(b)));
+        doremir_print("size(b)                  ==> %s\n", i32(doremir_buffer_size(b)));
     }
 
     {
         doremir_buffer_t b = doremir_buffer_create(1024);
 
-        doremir_print("b              => %s\n", b);
+        doremir_print("b                        ==> %s\n", b);
         for(int i = 0; i < 1024; ++i) doremir_buffer_poke(b, i, i);
-        doremir_print("b              => %s\n", b);
+        doremir_print("b                        ==> %s\n", b);
         for(int i = 0; i < 1024; ++i) doremir_buffer_poke(b, i, 0xff);
-        doremir_print("b              => %s\n", b);
+        doremir_print("b                        ==> %s\n", b);
 
-        doremir_print("size(b)        => %s\n", i32(doremir_buffer_size(b)));
+        doremir_print("size(b)                  ==> %s\n", i32(doremir_buffer_size(b)));
     }
 }
 
@@ -431,12 +326,12 @@ void test_time()
 
     doremir_time_t t = doremir_time_create(1,0,0,ratio(25,8));
     doremir_time_t u = doremir_time_create(0,1,1,ratio(58,1));
-    doremir_print("t              => %s\n", t);
-    doremir_print("u              => %s\n", u);
-    doremir_print("t + u          => %s\n", doremir_add(t, u));
+    doremir_print("t                            ==> %s\n", t);
+    doremir_print("u                            ==> %s\n", u);
+    doremir_print("t + u                        ==> %s\n", doremir_add(t, u));
 
-    doremir_print("doremir_time_to_iso(t) => %s\n", doremir_time_to_iso(t));
-    doremir_print("doremir_time_to_iso(u) => %s\n", doremir_time_to_iso(u));
+    doremir_print("doremir_time_to_iso(t)       ==> %s\n", doremir_time_to_iso(t));
+    doremir_print("doremir_time_to_iso(u)       ==> %s\n", doremir_time_to_iso(u));
 }
 
 void test_midi()
@@ -445,7 +340,7 @@ void test_midi()
 
     {
         doremir_midi_t m = doremir_midi_create_simple(0xa, 60, 127);
-        doremir_print("m              => %s\n", m);
+        doremir_print("m                        ==> %s\n", m);
     }
 
     {
@@ -453,7 +348,7 @@ void test_midi()
         for(int i = 0; i < 32; ++i) doremir_buffer_poke(b, i, i);
 
         doremir_midi_t m = doremir_midi_create_sysex(b);
-        doremir_print("m              => %s\n", m);
+        doremir_print("m                        ==> %s\n", m);
     }
 }
 
@@ -465,22 +360,22 @@ void test_atomic()
     // treat as integer
     {
         doremir_atomic_t a = doremir_atomic_create();
-        doremir_print("a              => %s\n", a);
+        doremir_print("a                        ==> %s\n", a);
 
         doremir_atomic_set(a, (ptr_t) 0x5);
-        doremir_print("a              => %s\n", a);
+        doremir_print("a                        ==> %s\n", a);
 
         doremir_atomic_modify(a, add10);
-        doremir_print("a              => %s\n", a);
+        doremir_print("a                        ==> %s\n", a);
 
         doremir_atomic_add(a, (ptr_t) -0xf);
-        doremir_print("a              => %s\n", a);
+        doremir_print("a                        ==> %s\n", a);
 
         doremir_atomic_exchange(a, (ptr_t) 1, (ptr_t) 0xfe);
-        doremir_print("a              => %s\n", a); // fails, still 0
+        doremir_print("a                        ==> %s\n", a); // fails, still 0
 
         doremir_atomic_exchange(a, (ptr_t) 0, (ptr_t) 0xff);
-        doremir_print("a              => %s\n", a); // now ff
+        doremir_print("a                        ==> %s\n", a); // now ff
     }
 }
 
@@ -514,7 +409,7 @@ void test_atomic_queue(int iter, long sleepTime)
         doremir_closure_t r = { test_atomic_queue_reader, &args };
         thread_t t = doremir_thread_create(&r);
 
-        doremir_print("q              => %s\n", q);
+        doremir_print("q                        ==> %s\n", q);
 
         for(int i = 0; i < iter; ++i)
         {
@@ -538,33 +433,34 @@ void test_atomic_ring_buffer()
 void test_audio_types()
 {
     // FIXME
+    test_section();
 
-    doremir_print("type(uint8)    => %s\n", type(uint8));
-    doremir_print("size_of(1024,type(uint8))  => %s\n", i32(doremir_type_size_of(1024,type(uint8))));
-    doremir_print("align_of(1024,type(uint8)) => %s\n", i32(doremir_type_align_of(type(uint8))));
+    doremir_print("type(uint8)                  ==> %s\n", type(uint8));
+    doremir_print("size_of(1024,type(uint8))    ==> %s\n", i32(doremir_type_size_of(1024,type(uint8))));
+    doremir_print("align_of(1024,type(uint8))   ==> %s\n", i32(doremir_type_align_of(type(uint8))));
     printf("\n");
 
-    doremir_print("type(double)   => %s\n", type(double));
-    doremir_print("size_of(1024,type(double))  => %s\n", i32(doremir_type_size_of(1024,type(double))));
-    doremir_print("align_of(1024,type(double)) => %s\n", i32(doremir_type_align_of(type(double))));
+    doremir_print("type(double)                 ==> %s\n", type(double));
+    doremir_print("size_of(1024,type(double))   ==> %s\n", i32(doremir_type_size_of(1024,type(double))));
+    doremir_print("align_of(1024,type(double))  ==> %s\n", i32(doremir_type_align_of(type(double))));
     printf("\n");
 
     type_t t = type_pair(type(uint8), type(double));
-    doremir_print("t              => %s\n", t);
-    doremir_print("size_of(1024,t)  => %s\n", i32(doremir_type_size_of(1024,t)));
-    doremir_print("align_of(1024,t) => %s\n", i32(doremir_type_align_of(t)));
+    doremir_print("t                            ==> %s\n", t);
+    doremir_print("size_of(1024,t)              ==> %s\n", i32(doremir_type_size_of(1024,t)));
+    doremir_print("align_of(1024,t)             ==> %s\n", i32(doremir_type_align_of(t)));
     printf("\n");
 
     type_t u = type_pair(type_vector(type(uint8), 10), type(double));
-    doremir_print("u              => %s\n", u);
-    doremir_print("size_of(1024,u)  => %s\n", i32(doremir_type_size_of(1024,u)));
-    doremir_print("align_of(1024,u) => %s\n", i32(doremir_type_align_of(u)));
+    doremir_print("u                            ==> %s\n", u);
+    doremir_print("size_of(1024,u)              ==> %s\n", i32(doremir_type_size_of(1024,u)));
+    doremir_print("align_of(1024,u)             ==> %s\n", i32(doremir_type_align_of(u)));
     printf("\n");
 
     type_t u2 = type_pair(type_frame(type(uint8)), type(double));
-    doremir_print("u2              => %s\n", u2);
-    doremir_print("size_of(1024,u2)  => %s\n", i32(doremir_type_size_of(1024,u2)));
-    doremir_print("align_of(1024,u2) => %s\n", i32(doremir_type_align_of(u2)));
+    doremir_print("u2                           ==> %s\n", u2);
+    doremir_print("size_of(1024,u2)             ==> %s\n", i32(doremir_type_size_of(1024,u2)));
+    doremir_print("align_of(1024,u2)            ==> %s\n", i32(doremir_type_align_of(u2)));
     printf("\n");
 
     type_t v = type_pair(type(uint8),type_pair(type(uint8),type_pair(type(uint8),
@@ -572,9 +468,9 @@ void test_audio_types()
             type_pair(type(uint8),type_pair(type(uint8),type_pair(type(uint8),
             type(uint8))))))))));
 
-    doremir_print("v                => %s\n", v);
-    doremir_print("size_of(1024,v)  => %s\n", i32(doremir_type_size_of(1024,v)));
-    doremir_print("align_of(1024,v) => %s\n", i32(doremir_type_align_of(v)));
+    doremir_print("v                            ==> %s\n", v);
+    doremir_print("size_of(1024,v)              ==> %s\n", i32(doremir_type_size_of(1024,v)));
+    doremir_print("align_of(1024,v)             ==> %s\n", i32(doremir_type_align_of(v)));
     printf("\n");
 }
 
@@ -582,7 +478,7 @@ void test_audio_types()
 void test_foreach()
 {
     list_t list = list(i32(1),i32(2),i32(3),i32(4));
-    
+
     doremir_let (int, x = 33)
     {
         int y = 1;
@@ -591,16 +487,143 @@ void test_foreach()
             doremir_print("%s\n", i32(z));
         }
     }
-    
+
     doremir_list_for_each (list, x)
     {
         doremir_print(">    %s\n", x);
     }
 }
 
+bool is_even16(ptr_t p)
+{
+    return ti16(p) % 2 == 0;
+}
+bool is_odd16(ptr_t p)
+{
+    return ti16(p) % 2 != 0;
+}
+ptr_t times2(ptr_t p)
+{
+    return i16(2 * ti16(p));
+}
+ptr_t times10(ptr_t p)
+{
+    return i16(10 * ti16(p));
+}
+
+void test_list()
+{
+    test_section();
+    // TODO leaks
+    {
+        list_t xs = list(i16(1),i16(2),i16(3));
+        list_t ys = doremir_copy(xs);
+        printf("length: %d\n", doremir_list_length(xs));
+        printf("length: %d\n", doremir_list_length(ys));
+        printf("xs == ys: %d\n", doremir_equal(xs, ys));
+        // TODO destroy wrapped values
+        doremir_destroy(xs);
+        doremir_destroy(ys);
+    }
+
+    {
+        // list_t  xs = list(i32(1),i32(2),i32(3));
+        // int32_t z  = ti32(doremir_list_sum(xs));
+        // int32_t p  = ti32(doremir_list_product(xs));
+        // int32_t m  = ti32(doremir_list_minimum(xs));
+        // int32_t n  = ti32(doremir_list_maximum(xs));
+        // printf("sum:  %d\n", z);
+        // printf("prod: %d\n", p);
+        // printf("min:  %d\n", m);
+        // printf("max:  %d\n", n);
+        // // TODO destroy wrapped values
+        // doremir_destroy(xs);
+    }
+
+    {
+        list_t as = list(i16(1),i16(2),i16(3),i16(4),i16(5));
+        list_t xs = empty();
+        
+        for (int i = 0; i < 20; ++i)
+            xs = doremir_list_append(xs,as);
+        
+        list_t ys = reverse(xs);
+
+        doremir_print("xs                           ==> %s\n", xs);
+        doremir_print("ys                           ==> %s\n", ys);
+
+        doremir_destroy(xs);
+    }
+
+    {
+        list_t xs = list(i16(1),i16(2),i16(3),i16(4),i16(5));
+        list_t ys = doremir_list_filter(is_odd16,xs);
+        
+        doremir_print("xs                           ==> %s\n", xs);
+        doremir_print("ys                           ==> %s\n", ys);
+        
+        doremir_destroy(xs);
+    }
+
+    {
+        list_t xs = list(i16(1),i16(2),i16(3),i16(4),i16(5));
+        list_t ys = doremir_list_map(times10,xs);
+
+        doremir_print("xs                           ==> %s\n", xs);
+        doremir_print("ys                           ==> %s\n", ys);
+
+        doremir_destroy(xs);
+    }
+
+    {
+        list_t xs = doremir_list_enum_from(0,30);
+
+        xs = doremir_list_map((unary_t) i16,xs);
+        doremir_print("xs                           ==> %s\n", xs);
+
+        xs = doremir_list_filter(is_odd16,xs);
+        doremir_print("xs                           ==> %s\n", xs);
+
+        xs = doremir_list_dmap(times10,xs);
+        doremir_print("xs                           ==> %s\n", xs);
+
+        doremir_destroy(xs);
+    }
+
+    {
+        list_t xs = doremir_list_enum_from(0,200);
+        xs = doremir_list_map((unary_t)i8,xs);
+        doremir_print("xs                           ==> %s\n", xs);
+        ptr_t sum = doremir_list_fold_left(doremir_add, i8(0), xs);
+        doremir_print("sum(xs)                      ==> %s\n", sum);
+
+        doremir_destroy(xs);
+    }
+}
+
+void test_set()
+{
+    test_section();
+    {
+        set_t xs = set(i16(1),i16(2),i16(3));
+        set_t ys = doremir_copy(xs);
+
+        doremir_print("xs: %s\n", xs);
+        doremir_print("ys: %s\n", ys);
+        printf("length: %d\n", doremir_set_size(xs));
+        printf("length: %d\n", doremir_set_size(ys));
+        printf("xs == ys: %d\n", doremir_equal(xs, ys));
+        // TODO destroy wrapped values
+        doremir_destroy(xs);
+        doremir_destroy(ys);
+    }
+}
+
+
 int main (int argc, char const *argv[])
 {
   printf("DoReMIR Audio engine %s v%d.%d.%d\n", bits, version[0], version[1], version[2]);
+
   printf("sizeof(doremir_ptr_t) = %d\n", (unsigned int) sizeof(doremir_ptr_t));
   printf("sizeof(int32_t) = %d\n", (unsigned int) sizeof(int32_t));
   printf("sizeof(int64_t) = %d\n", (unsigned int) sizeof(int64_t));
@@ -613,21 +636,18 @@ int main (int argc, char const *argv[])
       test_wrap();
       test_generic();
       test_string();
-      test_show();
       test_compare();
-      // test_list();
-      test_rational();
+      test_show();
       test_buffer();
+      test_rational();
       test_time();
       test_midi();
+      test_audio_types();
 
       // priority queue
 
       test_atomic();
       test_atomic_queue(5, 50);
-      // test_atomic_queue(100, 50);
-      // test_atomic_queue(100, 50);
-      // test_atomic_queue(100, 50);
       test_atomic_ring_buffer();
 
       // test_thread();
@@ -636,14 +656,13 @@ int main (int argc, char const *argv[])
       // futures
       // improvings
 
-
-      test_audio_types();
       // processors
       // dispatchers
-      test_foreach();
 
+      test_foreach();
       test_list();
       test_set();
+
 
       doremir_audio_engine_terminate();
   }
