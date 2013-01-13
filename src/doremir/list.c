@@ -442,7 +442,7 @@ int doremir_list_index_of(ptr_t value, list_t list)
     return -(index + 1);
 }
 
-ptr_t doremir_list_find(pred_t pred, list_t list)
+ptr_t doremir_list_find(pred_t pred, ptr_t data, list_t list)
 {
     for_each (list, elem)
     {
@@ -452,7 +452,7 @@ ptr_t doremir_list_find(pred_t pred, list_t list)
     return NULL;
 }
 
-int doremir_list_find_index(pred_t pred, list_t list)
+int doremir_list_find_index(pred_t pred, ptr_t data, list_t list)
 {
     int index = 0;
     for_each (list, elem)

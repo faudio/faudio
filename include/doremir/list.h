@@ -61,9 +61,13 @@ doremir_list_t doremir_list_dremove_range(int,
                                           int,
                                           doremir_list_t);
 bool doremir_list_has(doremir_ptr_t, doremir_list_t);
-doremir_ptr_t doremir_list_find(doremir_pred_t, doremir_list_t);
+doremir_ptr_t doremir_list_find(doremir_pred_t,
+                                doremir_ptr_t,
+                                doremir_list_t);
 int doremir_list_index_of(doremir_ptr_t, doremir_list_t);
-int doremir_list_find_index(doremir_pred_t, doremir_list_t);
+int doremir_list_find_index(doremir_pred_t,
+                            doremir_ptr_t,
+                            doremir_list_t);
 doremir_list_t doremir_list_filter(doremir_pred_t,
                                    doremir_ptr_t,
                                    doremir_list_t);

@@ -82,9 +82,9 @@ module Doremir.List
 
     // Searching
     has         : (Ptr, List) -> Bool;
-    find        : (Pred, List) -> Ptr;
-    indexOf      : (Ptr, List) -> Int;
-    findIndex   : (Pred, List) -> Int;
+    find        : (Pred, Ptr, List) -> Ptr;
+    indexOf     : (Ptr, List) -> Int;
+    findIndex   : (Pred, Ptr, List) -> Int;
 
     // Maps and folds
     filter      : (Pred, Ptr, List) -> List;

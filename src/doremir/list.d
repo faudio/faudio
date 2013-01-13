@@ -241,14 +241,14 @@ bool doremir_list_has(doremir_ptr_t value, doremir_list_t list) {}
     @note
         O(log n)
  */
-doremir_ptr_t doremir_list_find(doremir_pred_t pred, doremir_list_t list) {}
+doremir_ptr_t doremir_list_find(doremir_pred_t pred, doremir_ptr_t data, doremir_list_t list) {}
 
 /** Returns the index of the first element satisfying the given predicate in the
     given list, or a negative value if no such element is found.
     @note
         O(log n)
  */
-int doremir_list_find_index(doremir_pred_t pred, doremir_list_t list) {}
+int doremir_list_find_index(doremir_pred_t pred, doremir_ptr_t data, doremir_list_t list) {}
 
 
 // --------------------------------------------------------------------------------
