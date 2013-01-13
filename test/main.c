@@ -557,7 +557,7 @@ void test_list()
 
     {
         list_t xs = list(i16(1),i16(2),i16(3),i16(4),i16(5));
-        list_t ys = doremir_list_filter(is_odd16,xs);
+        list_t ys = doremir_list_filter(is_odd16, 0, xs);
         
         doremir_print("xs                           ==> %s\n", xs);
         doremir_print("ys                           ==> %s\n", ys);
@@ -567,7 +567,7 @@ void test_list()
 
     {
         list_t xs = list(i16(1),i16(2),i16(3),i16(4),i16(5));
-        list_t ys = doremir_list_map(times10,xs);
+        list_t ys = doremir_list_map(times10, 0,xs);
 
         doremir_print("xs                           ==> %s\n", xs);
         doremir_print("ys                           ==> %s\n", ys);
@@ -578,13 +578,13 @@ void test_list()
     {
         list_t xs = doremir_list_enum_from(0,30);
 
-        xs = doremir_list_map((unary_t) i16,xs);
+        xs = doremir_list_map((unary_t) i16, 0,xs);
         doremir_print("xs                           ==> %s\n", xs);
 
-        xs = doremir_list_filter(is_odd16,xs);
+        xs = doremir_list_filter(is_odd16, 0,xs);
         doremir_print("xs                           ==> %s\n", xs);
 
-        xs = doremir_list_dmap(times10,xs);
+        xs = doremir_list_dmap(times10, 0,xs);
         doremir_print("xs                           ==> %s\n", xs);
 
         doremir_destroy(xs);
@@ -592,9 +592,9 @@ void test_list()
 
     {
         list_t xs = doremir_list_enum_from(0,200);
-        xs = doremir_list_map((unary_t)i8,xs);
+        xs = doremir_list_map((unary_t)i8, 0, xs);
         doremir_print("xs                           ==> %s\n", xs);
-        ptr_t sum = doremir_list_fold_left(doremir_add, i8(0), xs);
+        ptr_t sum = doremir_list_fold_left(doremir_add, 0, i8(0), xs);
         doremir_print("sum(xs)                      ==> %s\n", sum);
 
         doremir_destroy(xs);
