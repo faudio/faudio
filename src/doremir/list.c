@@ -101,6 +101,33 @@ void delete_list(list_t list)
     doremir_delete(list);
 }
 
+// --------------------------------------------------------------------------------
+// Literal
+// --------------------------------------------------------------------------------
+
+/** Create a list from the given elements.
+    @see
+        list in \ref doremir/util.h
+ */
+list_t doremir_list(int count, ...)
+{
+    node_t node = NULL, *next = &node;
+    {
+        va_list args;
+        va_start(args, count);
+
+        for (int i = 0; i < count; ++i)
+        {
+             // Append a node
+            *next = new_node(va_arg(args, ptr_t), NULL);
+
+             // Update next to point to the created node
+            next = &((*next)->next);
+        }
+        va_end(args);
+    }
+    return new_list(node);
+}
 
 
 // --------------------------------------------------------------------------------
@@ -187,30 +214,6 @@ void doremir_list_destroy(doremir_list_t xs)
     delete_list(xs);
 }
 
-/** Create a list from the given elements.
-    @see
-        list in \ref doremir/util.h
- */
-list_t doremir_list(int count, ...)
-{
-    node_t node = NULL, *next = &node;
-    {
-        va_list args;
-        va_start(args, count);
-
-        for (int i = 0; i < count; ++i)
-        {
-             // Append a node
-            *next = new_node(va_arg(args, ptr_t), NULL);
-
-             // Update next to point to the created node
-            next = &((*next)->next);
-        }
-        va_end(args);
-    }
-    return new_list(node);
-}
-
 // --------------------------------------------------------------------------------
 
 /** Returns whether the given list is empty.
@@ -247,6 +250,11 @@ int doremir_list_length(doremir_list_t xs)
     return count;
 }
 
+
+// --------------------------------------------------------------------------------
+// Sequential access
+// --------------------------------------------------------------------------------
+
 /** Returns the first element of the given list.
     @note
         O(1)
@@ -272,19 +280,6 @@ doremir_list_t doremir_list_tail(doremir_list_t xs)
         return new_list(take_node(xs->node->next));
 }
 
-/** Returns all elements but the first of the given list, which is destroyed.
-    @note
-        O(1)
- */
-doremir_list_t doremir_list_dtail(doremir_list_t xs)
-{
-    doremir_list_t ys = doremir_list_tail(xs);
-    doremir_list_destroy(xs);
-    return ys;
-}
-
-// --------------------------------------------------------------------------------
-
 /** Returns all elements but the last of the given list.
     @note
         O(n)
@@ -296,6 +291,28 @@ doremir_list_t doremir_list_init(doremir_list_t xs)
     if (is_single(xs))
         return empty();
     return cons(head(xs), init(xs));
+}
+
+/** Returns all elements but the first of the given list, which is destroyed.
+    @note
+        O(1)
+ */
+doremir_list_t doremir_list_dtail(doremir_list_t xs)
+{
+    doremir_list_t ys = doremir_list_tail(xs);
+    doremir_list_destroy(xs);
+    return ys;
+}
+
+/** Returns all elements but the last of the given list, which is destroyed.
+    @note
+        O(n)
+ */
+doremir_list_t doremir_list_dinit(doremir_list_t xs)
+{
+    doremir_list_t ys = doremir_list_init(xs);
+    doremir_list_destroy(xs);
+    return ys;
 }
 
 /** Returns the last element of the given list.
@@ -311,6 +328,104 @@ doremir_ptr_t doremir_list_last(doremir_list_t xs)
     return last(xs);
 }
 
+
+// --------------------------------------------------------------------------------
+// Misc operations
+// --------------------------------------------------------------------------------
+
+static inline 
+list_t base_append(list_t xs, list_t ys)
+{
+    if (is_empty(xs))
+        return ys;
+    else
+        return cons(head(xs), base_append(tail(xs), ys));
+}
+
+static inline
+list_t base_revappend(list_t xs, list_t ys)
+{
+    if (is_empty(xs))
+        return ys;
+    else
+        return base_revappend(tail(xs), cons(head(xs), ys));
+}
+
+/** Returns the result of appending the given lists.
+    @note
+        O(n)
+ */
+list_t doremir_list_append(doremir_list_t xs, doremir_list_t ys)
+{
+    return base_append(xs, ys);
+}
+
+/** Returns the result of appending the given lists, which are both destroyed.
+    @note
+        O(n)
+ */
+list_t doremir_list_dappend(doremir_list_t xs, doremir_list_t ys)
+{
+    list_t zs = base_append(xs, ys);
+    doremir_list_destroy(xs);
+    doremir_list_destroy(ys);
+    return zs;
+}
+
+/** Returns the reverse of the given list.
+    @note
+        O(n)
+ */
+list_t doremir_list_reverse(doremir_list_t xs)
+{
+    return base_revappend(xs, empty());
+}
+
+/** Returns the reverse of the given list.
+    @note
+        O(n)
+ */
+list_t doremir_list_dreverse(doremir_list_t xs)
+{
+    list_t ys = base_revappend(xs, empty());
+    doremir_list_destroy(xs);
+    return ys;
+}
+
+
+static inline list_t base_sort(list_t xs)
+{
+    // list_t small = doremir_list_filter();// TODO
+    // list_t large = doremir_list_filter();
+    // return append(base_sort(small), cons(head(xs), base_sort(large)));
+    assert(false && "Not implemented");
+}
+
+/** Returns the given list sorted.
+    @note
+        O(n log n)
+ */
+list_t doremir_listbase_sort(doremir_list_t xs)
+{
+    return base_sort(xs);
+}
+
+/** Returns the given list sorted.
+    @note
+        O(n log n)
+ */
+list_t doremir_list_dsort(doremir_list_t xs)
+{
+    list_t ys = base_sort(xs);
+    doremir_list_destroy(xs);
+    return ys;
+}
+
+
+// --------------------------------------------------------------------------------
+// Random access
+// --------------------------------------------------------------------------------
+
 /** Returns the *n* leading elements of the given list.
     @note
         O(n)
@@ -320,59 +435,6 @@ list_t doremir_list_take(int n, doremir_list_t xs)
     if (n <= 0 || is_empty(xs))
         return empty();
     return cons(head(xs), take(n - 1, xs));
-}
-
-/** Returns the all but the *n* leading elements of the given list.
-    @note
-        O(n)
- */
-list_t doremir_list_drop(int n, doremir_list_t xs)
-{
-    if (n <= 0 || is_empty(xs))
-        return empty();
-    return drop(n - 1, xs);
-}
-
-doremir_list_t doremir_list_range(int m, int n, doremir_list_t xs)
-{
-    return doremir_list_dtake(n, doremir_list_drop(m, xs));
-}
-
-doremir_list_t doremir_list_remove(int m, doremir_list_t xs)
-{
-    assert(false && "Not implemented");
-}
-
-doremir_list_t doremir_list_remove_range(int m, int n, doremir_list_t xsx)
-{
-    list_t xs = doremir_list_take(m,     xs);
-    list_t ys = doremir_list_drop(m + n, xs);
-    return doremir_list_dappend(xs, ys);
-}
-
-
-/** Returns whether the given list contains the given element.
-    @note
-        O(n)
- */
-bool doremir_list_has_elem(doremir_ptr_t x, doremir_list_t xs)
-{
-    return eq(x, head(xs)) || has_elem(x, xs);
-}
-
-
-
-
-
-/** Returns all elements but the last of the given list, which is destroyed.
-    @note
-        O(n)
- */
-doremir_list_t doremir_list_dinit(doremir_list_t xs)
-{
-    doremir_list_t ys = doremir_list_init(xs);
-    doremir_list_destroy(xs);
-    return ys;
 }
 
 /** Returns the *n* leading elements of the given list, which is destroyed.
@@ -386,6 +448,17 @@ list_t doremir_list_dtake(int n, doremir_list_t xs)
     return ys;
 }
 
+/** Returns the all but the *n* leading elements of the given list.
+    @note
+        O(n)
+ */
+list_t doremir_list_drop(int n, doremir_list_t xs)
+{
+    if (n <= 0 || is_empty(xs))
+        return empty();
+    return drop(n - 1, xs);
+}
+
 /** Returns the all but the *n* leading elements of the given list, which is destroyed.
     @note
         O(n)
@@ -397,7 +470,62 @@ list_t doremir_list_ddrop(int n, doremir_list_t xs)
     return ys;
 }
 
+doremir_ptr_t doremir_list_index(int m, doremir_list_t xs)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_list_t doremir_list_range(int m, int n, doremir_list_t xs)
+{
+    return doremir_list_dtake(n, doremir_list_drop(m, xs));
+}
+
 doremir_list_t doremir_list_insert(int index, doremir_ptr_t value, doremir_list_t list)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_list_t doremir_list_dinsert(int m,
+                                    doremir_ptr_t x,
+                                    doremir_list_t xs)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_list_t doremir_list_insert_range(int m,
+                                         doremir_list_t xs,
+                                         doremir_list_t ys)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_list_t doremir_list_dinsert_range(int m,
+                                          doremir_list_t xs,
+                                          doremir_list_t ys)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_list_t doremir_list_remove(int m, doremir_list_t xs)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_list_t doremir_list_dremove(int m, doremir_list_t xs)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_list_t doremir_list_remove_range(int m, int n, doremir_list_t xsx)
+{
+    list_t xs = doremir_list_take(m,     xs);
+    list_t ys = doremir_list_drop(m + n, xs);
+    return doremir_list_dappend(xs, ys);
+}
+
+doremir_list_t doremir_list_dremove_range(int m,
+                                          int n,
+                                          doremir_list_t xs)
 {
     assert(false && "Not implemented");
 }
@@ -405,70 +533,16 @@ doremir_list_t doremir_list_insert(int index, doremir_ptr_t value, doremir_list_
 
 
 // --------------------------------------------------------------------------------
+// Searching
+// --------------------------------------------------------------------------------
 
-static inline list_t _append(list_t xs, list_t ys)
-{
-    if (is_empty(xs))
-        return ys;
-    else
-        return cons(head(xs), _append(tail(xs), ys));
-}
-static inline list_t _revappend(list_t xs, list_t ys)
-{
-    if (is_empty(xs))
-        return ys;
-    else
-        return _revappend(tail(xs), cons(head(xs), ys));
-}
-
-
-
-/** Returns the reverse of the given list.
+/** Returns whether the given list contains the given element.
     @note
         O(n)
  */
-list_t doremir_list_reverse(doremir_list_t xs)
+bool doremir_list_has_elem(doremir_ptr_t x, doremir_list_t xs)
 {
-    return _revappend(xs, empty());
-}
-
-/** Returns the result of appending the given lists.
-    @note
-        O(n)
- */
-list_t doremir_list_append(doremir_list_t xs, doremir_list_t ys)
-{
-    return _append(xs, ys);
-}
-
-/** Returns the result of appending the given lists, which are both destroyed.
-    @note
-        O(n)
- */
-list_t doremir_list_dappend(doremir_list_t xs, doremir_list_t ys)
-{
-    list_t zs = _append(xs, ys);
-    doremir_list_destroy(xs);
-    doremir_list_destroy(ys);
-    return zs;
-}
-
-
-static inline list_t _sort(list_t xs)
-{
-    // list_t small = doremir_list_filter();// TODO
-    // list_t large = doremir_list_filter();
-    // return append(_sort(small), cons(head(xs), _sort(large)));
-    assert(false && "Not implemented");
-}
-
-/** Returns the given list sorted.
-    @note
-        O(n log n)
- */
-list_t doremir_list_sort(doremir_list_t xs)
-{
-    return _sort(xs);
+    return eq(x, head(xs)) || has_elem(x, xs);
 }
 
 /** Returns the first element satisfying the given predicate in the
@@ -490,6 +564,38 @@ int doremir_list_find_index(doremir_pred_t p, doremir_list_t xs)
 {
     assert(false && "Not implemented");
 }
+
+
+// --------------------------------------------------------------------------------
+// Maps and folds
+// --------------------------------------------------------------------------------
+
+/** Returns the result of applying the given function to all elements of the given list.
+    @note
+        O(n)
+ */
+list_t doremir_list_map(doremir_unary_t f, doremir_list_t xs)
+{
+    assert(false && "Not implemented");
+}
+
+list_t doremir_list_dmap(doremir_unary_t f, doremir_list_t xs)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_list_t doremir_list_concat_map(doremir_unary_t f,
+                                       doremir_list_t xs)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_list_t doremir_list_dconcat_map(doremir_unary_t f,
+                                        doremir_list_t xs)
+{
+    assert(false && "Not implemented");
+}
+
 
 /** Returns the given list with all elements not satisfying the given predicate removed.
     @note
@@ -513,14 +619,7 @@ list_t doremir_list_filter(doremir_pred_t p, doremir_list_t xs)
     return new_list(n);
 }
 
-
-// --------------------------------------------------------------------------------
-
-/** Returns the result of applying the given function to all elements of the given list.
-    @note
-        O(n)
- */
-list_t doremir_list_map(doremir_unary_t f, doremir_list_t xs)
+list_t doremir_list_dfilter(doremir_pred_t p, doremir_list_t xs)
 {
     assert(false && "Not implemented");
 }
@@ -546,12 +645,20 @@ doremir_ptr_t doremir_list_fold_left(doremir_binary_t f,
     return v;
 }
 
+doremir_ptr_t doremir_list_dfold_left(doremir_binary_t f,
+                                      doremir_ptr_t    z,
+                                      doremir_list_t   xs)
+{
+    assert(false && "Not implemented");
+}
+
 list_t doremir_list_concat(doremir_list_t xss)
 {
     assert(false && "Not implemented");
 }
 
 
+// --------------------------------------------------------------------------------
 // --------------------------------------------------------------------------------
 
 bool list_equal(doremir_ptr_t a, doremir_ptr_t b)

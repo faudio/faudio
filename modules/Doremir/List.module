@@ -30,9 +30,7 @@ module Doremir.List
     empty       : () -> List;
     single      : Ptr -> List;
     cons        : (Ptr, List) -> List;
-    append      : (List, List) -> List;
     dcons       : (Ptr, List) -> List;
-    dappend     : (List, List) -> List;
     copy        : List -> List;
     destroy     : List -> Void;
 
@@ -49,6 +47,14 @@ module Doremir.List
     dinit       : List -> List;
     last        : List -> Ptr;
     
+    // Misc operations
+    append      : (List, List) -> List;
+    dappend     : (List, List) -> List;
+    reverse     : List -> List;
+    dreverse    : List -> List;
+    sort        : List -> List;
+    dsort       : List -> List;
+
     // Random access
     take         : (Int, List) -> List;
     dtake        : (Int, List) -> List;
@@ -80,10 +86,5 @@ module Doremir.List
     foldLeft    : (Binary, Ptr, List) -> Ptr;
     dfoldLeft   : (Binary, Ptr, List) -> Ptr;
     concat      : List -> List;
-    
-    // Misc operations
-    sort        : List -> List;
-    dsort       : List -> List;
-    reverse     : List -> List;
-    dreverse    : List -> List;
 }
+

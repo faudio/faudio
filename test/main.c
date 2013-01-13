@@ -235,7 +235,7 @@ void test_list()
         // // TODO destroy wrapped values
         // doremir_destroy(xs);
     }
-    
+
     {
         list_t as = list(i16(1),i16(2),i16(3),i16(4),i16(5));
         list_t xs = empty();
@@ -276,17 +276,17 @@ void test_string()
     {
         // char* cs = " 新隶体 "; // length 5
         char* cs = "höglund";
-    
+
         string_t s = string(cs);
         printf("len: %i\n", slength(s));
         doremir_print("str: %s\n", s);
-    
+
         printf("charAt 0: %x\n", char_at(0,s));
         printf("charAt 1: %x\n", char_at(1,s));
         printf("charAt 2: %x\n", char_at(2,s));
         doremir_destroy(s);
     }
-    
+
     {
         string_t s = string("foo");
         string_t t = string("bar");
@@ -298,7 +298,7 @@ void test_string()
         doremir_destroy(t);
         doremir_destroy(u);
     }
-    
+
     {
         string_t s = string("foo");
         string_t t = string("bar");
@@ -310,7 +310,7 @@ void test_string()
             doremir_destroy(u);
         }
     }
-       
+
 }
 
 void test_show()
@@ -328,9 +328,9 @@ void test_show()
     doremir_print("%s\n", list(
         pair(string("hans"), string("höglund")),
         pair(string("lisa"), string("streich")),
-        pair(string("mats"), string("erlandsson"))    
+        pair(string("mats"), string("erlandsson"))
     ));
-}     
+}
 
 void test_compare()
 {
@@ -342,14 +342,14 @@ void test_compare()
 }
 
 void test_rational()
-{                
+{
     test_section();
-    doremir_print("1/3 <  1/2     => %s\n", b(lt(ratio(1,3), ratio(1,2))));    
-    doremir_print("1/3 >  1/2     => %s\n", b(gt(ratio(1,3), ratio(1,2))));    
-    doremir_print("1/3 == 2/6     => %s\n", b(eq(ratio(1,3), ratio(2,6))));    
-    doremir_print("1/3 == 254/762 => %s\n", b(eq(ratio(1,3), ratio(254,762))));    
-    doremir_print("1/3 <= 7/8     => %s\n", b(eq(ratio(1,3), ratio(254,762))));    
-}  
+    doremir_print("1/3 <  1/2     => %s\n", b(lt(ratio(1,3), ratio(1,2))));
+    doremir_print("1/3 >  1/2     => %s\n", b(gt(ratio(1,3), ratio(1,2))));
+    doremir_print("1/3 == 2/6     => %s\n", b(eq(ratio(1,3), ratio(2,6))));
+    doremir_print("1/3 == 254/762 => %s\n", b(eq(ratio(1,3), ratio(254,762))));
+    doremir_print("1/3 <= 7/8     => %s\n", b(eq(ratio(1,3), ratio(254,762))));
+}
 
 void test_buffer()
 {
@@ -366,7 +366,7 @@ void test_buffer()
 
         doremir_print("size(b)        => %s\n", i32(doremir_buffer_size(b)));
     }
-    
+
     {
         doremir_buffer_t b = doremir_buffer_create(1024);
 
@@ -392,12 +392,12 @@ void test_time()
 
     doremir_print("doremir_time_to_iso(t) => %s\n", doremir_time_to_iso(t));
     doremir_print("doremir_time_to_iso(u) => %s\n", doremir_time_to_iso(u));
-}   
+}
 
 void test_midi()
 {
     test_section();
-    
+
     {
         doremir_midi_t m = doremir_midi_create_simple(0xa, 60, 127);
         doremir_print("m              => %s\n", m);
@@ -406,7 +406,7 @@ void test_midi()
     {
         doremir_buffer_t b = doremir_buffer_create(32);
         for(int i = 0; i < 32; ++i) doremir_buffer_poke(b, i, i);
-        
+
         doremir_midi_t m = doremir_midi_create_sysex(b);
         doremir_print("m              => %s\n", m);
     }
@@ -430,7 +430,7 @@ void test_atomic()
 
         doremir_atomic_add(a, (ptr_t) -0xf);
         doremir_print("a              => %s\n", a);
-        
+
         doremir_atomic_exchange(a, (ptr_t) 1, (ptr_t) 0xfe);
         doremir_print("a              => %s\n", a); // fails, still 0
 
@@ -441,26 +441,26 @@ void test_atomic()
 
 struct reader_args { doremir_atomic_queue_t queue; atomic_t active; };
 doremir_ptr_t test_atomic_queue_reader(doremir_ptr_t x)
-{                       
+{
     struct reader_args* args = x;
     doremir_atomic_queue_t q = args->queue;
     atomic_t               a = args->active;
     ptr_t                  v;
-    
+
     while(true)
-    {        
+    {
         if (!tb(doremir_atomic_get(a)))
             return v;
         if ((v = doremir_atomic_queue_read(q)))
             printf("         |- %5d    \n", ti32(v));
-        
+
         doremir_thread_sleep(5);
     }
 }
 void test_atomic_queue(int iter, long sleepTime)
 {
     test_section();
-    {       
+    {
         doremir_atomic_queue_t q = doremir_atomic_queue_create();
 
         struct reader_args args = { q, atomic() };
@@ -468,19 +468,19 @@ void test_atomic_queue(int iter, long sleepTime)
 
         doremir_closure_t r = { test_atomic_queue_reader, &args };
         thread_t t = doremir_thread_create(&r);
-        
+
         doremir_print("q              => %s\n", q);
-        
+
         for(int i = 0; i < iter; ++i)
         {
             doremir_thread_sleep(i % 10 * 3);
             doremir_atomic_queue_write(q, i32(i));
             printf("  %5d -|  \n", i);
         }
-        
+
         doremir_thread_sleep(sleepTime);
         doremir_atomic_set(args.active, b(false));
-        doremir_thread_join(t); // TODO how to kill?     
+        doremir_thread_join(t); // TODO how to kill?
         doremir_destroy(q);
     }
 }
@@ -491,9 +491,9 @@ void test_atomic_ring_buffer()
 }
 
 void test_audio_types()
-{   
+{
     // FIXME
-    
+
     doremir_print("type(uint8)    => %s\n", type(uint8));
     doremir_print("size_of(1024,type(uint8))  => %s\n", i32(doremir_type_size_of(1024,type(uint8))));
     doremir_print("align_of(1024,type(uint8)) => %s\n", i32(doremir_type_align_of(type(uint8))));
@@ -533,6 +533,36 @@ void test_audio_types()
     printf("\n");
 }
 
+#define let(type, binding) \
+    for (type binding,_c=((type)1);_c;_c=((type)0))
+
+#define for_each(list, var) \
+    for(list_t xs = list;                             \
+        !doremir_list_is_empty(xs);                   \
+        xs = doremir_list_tail(xs)                    \
+        )                                             \
+            let(ptr_t, var = doremir_list_head(xs))
+
+
+void test_foreach()
+{
+    list_t list = list(i32(1),i32(2),i32(3),i32(4));
+    
+    let (int, x = 33)
+    {
+        int y = 1;
+        let (int, z = x + y)
+        {
+            doremir_print("%s\n", i32(z));
+        }
+    }
+    
+    for_each(list, x)
+    {
+        doremir_print(">    %s\n", x);
+    }
+}
+
 int main (int argc, char const *argv[])
 {
   printf("DoReMIR Audio engine %s v%d.%d.%d\n", bits, version[0], version[1], version[2]);
@@ -555,14 +585,14 @@ int main (int argc, char const *argv[])
       test_buffer();
       test_time();
       test_midi();
-      
+
       // priority queue
 
       test_atomic();
       test_atomic_queue(5, 50);
-      test_atomic_queue(100, 50);
-      test_atomic_queue(100, 50);
-      test_atomic_queue(100, 50);
+      // test_atomic_queue(100, 50);
+      // test_atomic_queue(100, 50);
+      // test_atomic_queue(100, 50);
       test_atomic_ring_buffer();
 
       // test_thread();
@@ -571,11 +601,12 @@ int main (int argc, char const *argv[])
       // futures
       // improvings
 
-      
+
       test_audio_types();
       // processors
       // dispatchers
-            
+      test_foreach();
+
       doremir_audio_engine_terminate();
   }
   return 0;
