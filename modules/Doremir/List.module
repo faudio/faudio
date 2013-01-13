@@ -1,23 +1,29 @@
 
-/** 
+/**
     @addtogroup DoremirList
-    
+
     Immutable list data structure.
 
-    @par Literals
-    - `list(1, 2, 3)` 
+    - Fast front access: ([empty](@ref doremir_list_empty), [single](@ref doremir_list_single), [cons](@ref doremir_list_cons), [head](@ref doremir_list_head), [tail](@ref doremir_list_tail), [dtail](@ref doremir_list_dtail)).
+    - Fast front copying: ([take](@ref doremir_list_take), [dtake](@ref doremir_list_dtake), [drop](@ref doremir_list_drop), [ddrop](@ref doremir_list_ddrop))
+    - Slow back access ([init](@ref doremir_list_init), [dinit](@ref doremir_list_dinit), [last](@ref doremir_list_last)).
+    - Slow random access ([index](@ref doremir_list_index), [range](@ref doremir_list_range), [insert](@ref doremir_list_insert), [dinsert](@ref doremir_list_dinsert),[insertRange](@ref doremir_list_insert_range), [dinsertRange](@ref doremir_list_dinsert_range), [remove](@ref doremir_list_remove), [dremove](@ref doremir_list_dremove), [removeRange](@ref doremir_list_remove_range), [dremoveRange](@ref doremir_list_dremove_range)).
+    - Linear [find](@ref doremir_list_find), [map](@ref doremir_list_map), [fold](@ref doremir_list_fold) and [filter](@ref doremir_list_filter). Logarithmic [sort](@ref doremir_list_sort).
 
-    @par Implements 
+    @par Literals
+    - `list(1, 2, 3)`
+
+    @par Implements
     - doremir_equal_t
     - doremir_order_t
     - doremir_copy_t
     - doremir_destroy_t
     - doremir_dynamic_t
     - doremir_string_show_t
-    
-    @see 
+
+    @see
     - @ref Collections
-    
+
  */
 module Doremir.List
 {
@@ -25,12 +31,14 @@ module Doremir.List
     import Doremir.String;
 
     type List   = opaque;
-            
+
     // Constructors
     empty       : () -> List;
     single      : Ptr -> List;
     cons        : (Ptr, List) -> List;
     dcons       : (Ptr, List) -> List;
+    repeat      : (Int, Ptr) -> List;
+    enumFrom    : (Int, Int) -> List;
     copy        : List -> List;
     destroy     : List -> Void;
 
@@ -42,11 +50,11 @@ module Doremir.List
     // Sequential access
     head        : List -> Ptr;
     tail        : List -> List;
-    init        : List -> List;
     dtail       : List -> List;
+    init        : List -> List;
     dinit       : List -> List;
     last        : List -> Ptr;
-    
+
     // Misc operations
     append      : (List, List) -> List;
     dappend     : (List, List) -> List;
@@ -70,12 +78,12 @@ module Doremir.List
     dremove      : (Int, List) -> List;
     removeRange  : (Int, Int, List) -> List;
     dremoveRange : (Int, Int, List) -> List;
-    
+
     // Searching
     has         : (Ptr, List) -> Bool;
     find        : (Pred, List) -> Ptr;
     findIndex   : (Pred, List) -> Int;
-    
+
     // Maps and folds
     map         : (Unary, List) -> List;
     dmap        : (Unary, List) -> List;
