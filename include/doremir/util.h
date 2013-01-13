@@ -5,6 +5,7 @@
 #define ptr_t               doremir_ptr_t
 #define impl_t              doremir_impl_t
 #define pred_t              doremir_pred_t
+#define nullary_t           doremir_nullary_t
 #define unary_t             doremir_unary_t
 #define binary_t            doremir_binary_t
 #define ternary_t           doremir_ternary_t
@@ -28,6 +29,7 @@
 
 #define atomic()            doremir_atomic_create()
 #define pair(a,b)           doremir_pair_create(a,b)
+#define range(a,b)          doremir_list_enum_from(a,b)
 #define string(a)           doremir_string_from_utf8(a)
 #define unstring(a)         doremir_string_to_utf8(a)
 #define ratio(a,b)          doremir_ratio_create(a,b)

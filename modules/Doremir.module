@@ -19,27 +19,27 @@ module Doremir
     /** @typedef doremir_nullary_t
         Generic nullary function.
     */
-    type Nullary = (() -> Ptr)*;
+    type Nullary = (Ptr -> Ptr)*;
 
     /** @typedef doremir_unary_t
         Generic unary function.
     */
-    type Unary   = (Ptr -> Ptr)*;
+    type Unary   = ((Ptr, Ptr) -> Ptr)*;
 
     /** @typedef doremir_binary_t
         Generic binary function.
     */
-    type Binary  = ((Ptr, Ptr) -> Ptr)*;
+    type Binary  = ((Ptr, Ptr, Ptr) -> Ptr)*;
 
     /** @typedef doremir_binary_t
         Generic ternary function.
     */
-    type Ternary  = ((Ptr, Ptr, Ptr) -> Ptr)*;
+    type Ternary  = ((Ptr, Ptr, Ptr, Ptr) -> Ptr)*;
 
     /** @typedef doremir_pred_t
         Generic predicate.
     */
-    type Pred   = (Ptr -> Bool)*;
+    type Pred   = ((Ptr, Ptr) -> Bool)*;
 
     /** @struct doremir_closure_t
         Generic closure.

@@ -20,7 +20,7 @@ module Doremir.Thread
     type Condition = opaque;
     type Millis = Int;
 
-    create  : Closure* -> Thread;
+    create  : (Nullary, Ptr) -> Thread;
     sleep   : Millis -> Void;
     join    : Thread -> Void;
     detach  : Thread -> Void;

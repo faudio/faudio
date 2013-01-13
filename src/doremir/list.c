@@ -178,7 +178,7 @@ int doremir_list_length(list_t xs)
     int count = 0;
     for_each (xs, value)
     {
-        value = NULL;   // kill warning
+        // value = NULL;   // kill warning
         count++;
     }
     return count;
@@ -446,7 +446,7 @@ ptr_t doremir_list_find(pred_t pred, ptr_t data, list_t list)
 {
     for_each (list, elem)
     {
-        if (pred(elem))
+        if (pred(data, elem))
             return elem;
     }
     return NULL;
@@ -457,7 +457,7 @@ int doremir_list_find_index(pred_t pred, ptr_t data, list_t list)
     int index = 0;
     for_each (list, elem)
     {
-        if (pred(elem))
+        if (pred(data, elem))
             return index;
         index++;
     }
@@ -473,9 +473,9 @@ list_t doremir_list_map(unary_t func, ptr_t data, list_t list)
 {
     node_t node = NULL, *next = &node;
 
-    for_each (list, x)
+    for_each (list, elem)
     {
-        append_node(next, func(x));
+        append_node(next, func(data, elem));
     }
     return new_list(node);
 }
@@ -492,7 +492,7 @@ list_t doremir_list_filter(pred_t pred, ptr_t data, list_t list)
 
     for_each (list, elem)
     {
-        if (pred(elem))
+        if (pred(data, elem))
             append_node(next, elem);
     }
     return new_list(node);
@@ -504,7 +504,7 @@ ptr_t doremir_list_fold_left(binary_t func, ptr_t data, ptr_t init, list_t list)
 
     for_each (list, elem)
     {
-        value = func(value, elem);
+        value = func(data, value, elem);
     }
     return value;
 }
@@ -558,16 +558,16 @@ list_t doremir_list_dconcat(list_t list)
  */
 list_t doremir_list(int count, ...)
 {
-    list_t l = doremir_list_empty();
+    node_t node = NULL, *next = &node;
     va_list args;
 
     va_start(args, count);
 
     for (int i = 0; i < count; ++i)
-        l = doremir_list_dcons(va_arg(args, ptr_t), l);
+        append_node(next, va_arg(args, ptr_t));
 
     va_end(args);
-    return l;
+    return new_list(node);
 }
 
 list_t doremir_list_repeat(int times, ptr_t value)

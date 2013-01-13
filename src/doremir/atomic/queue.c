@@ -66,7 +66,6 @@ void delete_queue(atomic_queue_t queue)
     doremir_delete(queue->first);
     doremir_delete(queue->div);
     doremir_delete(queue->last);
-
     doremir_delete(queue);
 }
 
@@ -88,8 +87,11 @@ void set_node(atomic_t place, node_t node)
 
 /** Atomically forward a place to point to the next node.
  */
-#define forward_node(place) \
+static inline
+void forward_node(atomic_t place)
+{
     doremir_atomic_exchange(place, get_node(place), (get_node(place))->next);
+}
 
 /** Non-atomically delete [begin,end)
  */

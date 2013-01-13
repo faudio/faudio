@@ -38,12 +38,11 @@ static void doremir_thread_fatal(char* msg, int error);
     to a destructive function.
  */
 doremir_thread_t
-doremir_thread_create(doremir_closure_t* closure)
+doremir_thread_create(doremir_nullary_t func, doremir_ptr_t data)
 {               
     doremir_thread_t thread = doremir_new(thread);
 
-    int result = pthread_create(&thread->native, NULL, 
-                                closure->function, closure->value);
+    int result = pthread_create(&thread->native, NULL, func, data);
 
     if (result != 0)
         doremir_thread_fatal("create", result);
