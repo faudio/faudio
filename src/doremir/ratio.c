@@ -18,7 +18,7 @@ struct _doremir_ratio_t {
         denom_t         denom;
     };
 
-doremir_ptr_t ratio_impl(doremir_id_t interface);
+ptr_t ratio_impl(doremir_id_t interface);
 
 ratio_t new_ratio()
 {
@@ -34,7 +34,7 @@ void delete_ratio(ratio_t p)
 
 // --------------------------------------------------------------------------------
 
-doremir_ratio_t doremir_ratio_create(num_t num, denom_t denom)
+ratio_t doremir_ratio_create(num_t num, denom_t denom)
 {
     ratio_t p = new_ratio();
     p->num   = num;
@@ -42,7 +42,7 @@ doremir_ratio_t doremir_ratio_create(num_t num, denom_t denom)
     return p;
 }
 
-doremir_ratio_t doremir_ratio_copy(doremir_ratio_t p)
+ratio_t doremir_ratio_copy(ratio_t p)
 {
     ratio_t q = new_ratio();
     q->num   = p->num;
@@ -50,7 +50,7 @@ doremir_ratio_t doremir_ratio_copy(doremir_ratio_t p)
     return q;
 }
 
-void doremir_ratio_destroy(doremir_ratio_t p)
+void doremir_ratio_destroy(ratio_t p)
 {
     delete_ratio(p);
 }
@@ -58,19 +58,17 @@ void doremir_ratio_destroy(doremir_ratio_t p)
 
 // --------------------------------------------------------------------------------
 
-doremir_ratio_num_t doremir_ratio_num(doremir_ratio_t x)
+num_t doremir_ratio_num(ratio_t x)
 {
     return x->num;
 }
 
-doremir_ratio_denom_t doremir_ratio_denom(doremir_ratio_t x)
+denom_t doremir_ratio_denom(ratio_t x)
 {
     return x->denom;
 }
 
-void doremir_ratio_match(doremir_ratio_t x,
-                         doremir_ratio_num_t *a,
-                         doremir_ratio_denom_t *b)
+void doremir_ratio_match(ratio_t x, num_t *a, denom_t *b)
 {
     *a = x->num;
     *b = x->denom;
@@ -79,8 +77,7 @@ void doremir_ratio_match(doremir_ratio_t x,
 
 // --------------------------------------------------------------------------------
 
-doremir_ratio_t doremir_ratio_add(doremir_ratio_t x,
-                                  doremir_ratio_t y)
+ratio_t doremir_ratio_add(ratio_t x, ratio_t y)
 {
     num_t   a = x->num;
     denom_t b = x->denom;
@@ -90,8 +87,7 @@ doremir_ratio_t doremir_ratio_add(doremir_ratio_t x,
     return ratio( a*d + b*c, b*d );
 }
 
-doremir_ratio_t doremir_ratio_subtract(doremir_ratio_t x,
-                                       doremir_ratio_t y)
+ratio_t doremir_ratio_subtract(ratio_t x, ratio_t y)
 {
     num_t   a = x->num;
     denom_t b = x->denom;
@@ -101,8 +97,7 @@ doremir_ratio_t doremir_ratio_subtract(doremir_ratio_t x,
     return ratio( a*d - b*c, b*d );
 }
 
-doremir_ratio_t doremir_ratio_multiply(doremir_ratio_t x,
-                                       doremir_ratio_t y)
+ratio_t doremir_ratio_multiply(ratio_t x, ratio_t y)
 {
     num_t   a = x->num;
     denom_t b = x->denom;
@@ -112,8 +107,7 @@ doremir_ratio_t doremir_ratio_multiply(doremir_ratio_t x,
     return ratio( a*c, b*d );
 }
 
-doremir_ratio_t doremir_ratio_divide(doremir_ratio_t x,
-                                     doremir_ratio_t y)
+ratio_t doremir_ratio_divide(ratio_t x, ratio_t y)
 {
     num_t   a = x->num;
     denom_t b = x->denom;
@@ -123,27 +117,27 @@ doremir_ratio_t doremir_ratio_divide(doremir_ratio_t x,
     return ratio( a*d, b*c );
 }
 
-doremir_ratio_t doremir_ratio_succ(doremir_ratio_t x)
+ratio_t doremir_ratio_succ(ratio_t x)
 {
     return doremir_ratio_add(x, ratio(1,1));
 }
 
-doremir_ratio_t doremir_ratio_pred(doremir_ratio_t x)
+ratio_t doremir_ratio_pred(ratio_t x)
 {
     return doremir_ratio_subtract(x, ratio(1,1));
 }
 
-doremir_ratio_t doremir_ratio_negate(doremir_ratio_t x)
+ratio_t doremir_ratio_negate(ratio_t x)
 {
     return doremir_ratio_multiply(x, ratio(-1,1));
 }
 
-doremir_ratio_t doremir_ratio_recip(doremir_ratio_t x)
+ratio_t doremir_ratio_recip(ratio_t x)
 {
     return doremir_ratio_divide(ratio(1,1), x);
 }
 
-doremir_ratio_t doremir_ratio_normalize(doremir_ratio_t x)
+ratio_t doremir_ratio_normalize(ratio_t x)
 {
     num_t   a = x->num;
     denom_t b = x->denom;
@@ -156,7 +150,7 @@ doremir_ratio_t doremir_ratio_normalize(doremir_ratio_t x)
     return ratio( a, b );
 }
 
-doremir_ratio_t doremir_ratio_absolute(doremir_ratio_t x)
+ratio_t doremir_ratio_absolute(ratio_t x)
 {
     num_t   a = x->num;
     denom_t b = x->denom;
@@ -172,7 +166,7 @@ doremir_ratio_t doremir_ratio_absolute(doremir_ratio_t x)
 
 // --------------------------------------------------------------------------------
 
-bool ratio_equal(doremir_ptr_t m, doremir_ptr_t n)
+bool ratio_equal(ptr_t m, ptr_t n)
 {
     ratio_t x = (ratio_t) m;
     ratio_t y = (ratio_t) n;
@@ -185,7 +179,7 @@ bool ratio_equal(doremir_ptr_t m, doremir_ptr_t n)
     return a * d == b * c;
 }
 
-bool ratio_less_than(doremir_ptr_t m, doremir_ptr_t n)
+bool ratio_less_than(ptr_t m, ptr_t n)
 {
     ratio_t x = (ratio_t) m;
     ratio_t y = (ratio_t) n;
@@ -198,7 +192,7 @@ bool ratio_less_than(doremir_ptr_t m, doremir_ptr_t n)
     return a * d < b * c;
 }
 
-bool ratio_greater_than(doremir_ptr_t m, doremir_ptr_t n)
+bool ratio_greater_than(ptr_t m, ptr_t n)
 {
     ratio_t x = (ratio_t) m;
     ratio_t y = (ratio_t) n;
@@ -211,54 +205,54 @@ bool ratio_greater_than(doremir_ptr_t m, doremir_ptr_t n)
     return a * d > b * c;
 }
 
-doremir_ptr_t ratio_add(doremir_ptr_t a, doremir_ptr_t b)
+ptr_t ratio_add(ptr_t a, ptr_t b)
 {
     return doremir_ratio_add(a, b);
 }
 
-doremir_ptr_t ratio_subtract(doremir_ptr_t a, doremir_ptr_t b)
+ptr_t ratio_subtract(ptr_t a, ptr_t b)
 {
     return doremir_ratio_subtract(a, b);
 }
 
-doremir_ptr_t ratio_multiply(doremir_ptr_t a, doremir_ptr_t b)
+ptr_t ratio_multiply(ptr_t a, ptr_t b)
 {
     return doremir_ratio_multiply(a, b);
 }
 
-doremir_ptr_t ratio_divide(doremir_ptr_t a, doremir_ptr_t b)
+ptr_t ratio_divide(ptr_t a, ptr_t b)
 {
     return doremir_ratio_divide(a, b);
 }
 
-doremir_ptr_t ratio_absolute(doremir_ptr_t a)
+ptr_t ratio_absolute(ptr_t a)
 {
     return doremir_ratio_absolute(a);
 }
 
-doremir_string_t ratio_show(doremir_ptr_t a)
+doremir_string_t ratio_show(ptr_t a)
 {
     ratio_t b = (ratio_t) a;
     string_t s = string("");
     
-    s = sdappend(s, sshow(i32(b->num)));
-    s = sdappend(s, string("/"));
-    s = sdappend(s, sshow(i32(b->denom)));
+    s = string_dappend(s, doremir_string_show(i32(b->num)));
+    s = string_dappend(s, string("/"));
+    s = string_dappend(s, doremir_string_show(i32(b->denom)));
     
     return s;
 }
 
-doremir_ptr_t ratio_copy(doremir_ptr_t a)
+ptr_t ratio_copy(ptr_t a)
 {
     return doremir_ratio_copy(a);
 }
 
-void ratio_destroy(doremir_ptr_t a)
+void ratio_destroy(ptr_t a)
 {
     doremir_ratio_destroy(a);
 }
 
-doremir_ptr_t ratio_impl(doremir_id_t interface)
+ptr_t ratio_impl(doremir_id_t interface)
 {
     static doremir_equal_t ratio_equal_impl 
         = { ratio_equal };

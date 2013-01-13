@@ -134,8 +134,8 @@ void buffer_destroy(doremir_ptr_t a)
 doremir_string_t buffer_show(doremir_ptr_t a)
 {
     buffer_t buffer = (buffer_t) a;
-    bool     more   = doremir_buffer_size(buffer) > 80;
-    size_t   length = more ? 80 : doremir_buffer_size(buffer);
+    bool     more   = doremir_buffer_size(buffer) > 40;
+    size_t   length = more ? 40 : doremir_buffer_size(buffer);
     string_t str    = string("<Buffer");
 
     for (size_t i = 0; i < length; ++i)

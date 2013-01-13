@@ -93,9 +93,10 @@
 #define scopy               doremir_string_copy
 #define sappend             doremir_string_append
 #define sdappend            doremir_string_dappend
-#define string_dappend      doremir_string_dappend
 #define char_at             doremir_string_char_at
 #define sshow               doremir_string_show
+
+#define string_dappend      doremir_string_dappend
 #define format_int          doremir_string_format_integer
 #define format_integer      doremir_string_format_integer
 
@@ -159,7 +160,7 @@ map_t doremir_map(int count, ...);
 // TODO should also be moved
 
 #define doremir_let(type, binding) \
-    for (type binding,_c=((type)1);_c;_c=((type)0))
+    for (type binding,*_c=((type*)1);_c;_c=((type*)0))
 
 #define doremir_list_for_each(list, var) \
     for(list_t xs = list;                             \

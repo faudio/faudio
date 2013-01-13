@@ -24,7 +24,7 @@
 #define base_destroy        doremir_list_destroy
 #define base_insert         doremir_list_insert
 #define base_remove         doremir_list_remove
-#define base_find_index     doremir_list_find_index
+#define base_index_of       doremir_list_index_of
 #define base_length         doremir_list_length
 #define base_equal          doremir_equal
 #define base_less_than      doremir_less_than
@@ -60,8 +60,9 @@ doremir_set_t doremir_set_empty()
 }
 
 doremir_set_t doremir_set_add(doremir_ptr_t x, doremir_set_t set)
-{
-    size_t i = base_find_index(x, set->elems);
+{                             
+    // TODO pred not value to find
+    size_t i = base_index_of(x, set->elems);
     if (i >= 0)
         return doremir_set_copy(set);
     else
@@ -70,7 +71,8 @@ doremir_set_t doremir_set_add(doremir_ptr_t x, doremir_set_t set)
 
 doremir_set_t doremir_set_remove(doremir_ptr_t x, doremir_set_t set)
 {
-    size_t i = base_find_index(x, set->elems);
+    // TODO pred not value to find
+    size_t i = base_index_of(x, set->elems);
     if (i < 0)
         return doremir_set_copy(set);
     else
@@ -92,7 +94,8 @@ void doremir_set_destroy(doremir_set_t set)
 
 bool doremir_set_has(doremir_ptr_t x, doremir_set_t set)
 {
-    return base_find_index(x, set->elems) >= 0;
+    // TODO pred not value to find
+    return base_index_of(x, set->elems) >= 0;
 }
 
 int doremir_set_size(doremir_set_t set)
