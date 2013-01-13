@@ -259,23 +259,25 @@ int doremir_list_find_index(doremir_pred_t pred, doremir_list_t list) {}
     @note
         O(n)
  */
-list_t doremir_list_map(doremir_unary_t f, doremir_list_t xs) {}
+list_t doremir_list_map(doremir_unary_t f, doremir_ptr_t fc, doremir_list_t xs) {}
 
-list_t doremir_list_dmap(doremir_unary_t f, doremir_list_t xs) {}
+list_t doremir_list_dmap(doremir_unary_t f, doremir_ptr_t fc, doremir_list_t xs) {}
 
-doremir_list_t doremir_list_concat_map(doremir_unary_t f,
+doremir_list_t doremir_list_concat_map(doremir_unary_t f, 
+                                       doremir_ptr_t fc,
                                        doremir_list_t xs) {}
 
 doremir_list_t doremir_list_dconcat_map(doremir_unary_t f,
+                                        doremir_ptr_t fc,
                                         doremir_list_t xs) {}
 
 /** Returns the given list with all elements not satisfying the given predicate removed.
     @note
         O(n)
  */
-list_t doremir_list_filter(doremir_pred_t p, doremir_list_t xs) {}
+list_t doremir_list_filter(doremir_pred_t p, doremir_ptr_t fc, doremir_list_t xs) {}
 
-list_t doremir_list_dfilter(doremir_pred_t p, doremir_list_t xs) {}
+list_t doremir_list_dfilter(doremir_pred_t p, doremir_ptr_t fc, doremir_list_t xs) {}
 
 /** Returns the result of applying the given function to all elements of the given list
     and the result of the previous such application, or the initial element for an empty
@@ -285,10 +287,12 @@ list_t doremir_list_dfilter(doremir_pred_t p, doremir_list_t xs) {}
         O(n)
  */
 doremir_ptr_t doremir_list_fold_left(doremir_binary_t f,
+                                     doremir_ptr_t    fc,
                                      doremir_ptr_t    z,
                                      doremir_list_t   xs) {}
 
 doremir_ptr_t doremir_list_dfold_left(doremir_binary_t f,
+                                      doremir_ptr_t    fc,
                                       doremir_ptr_t    z,
                                       doremir_list_t   xs) {}
 

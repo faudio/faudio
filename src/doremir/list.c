@@ -469,7 +469,7 @@ int doremir_list_find_index(pred_t pred, list_t list)
 // Maps and folds
 // --------------------------------------------------------------------------------
 
-list_t doremir_list_map(unary_t func, list_t list)
+list_t doremir_list_map(unary_t func, ptr_t data, list_t list)
 {
     node_t node = NULL, *next = &node;
 
@@ -480,13 +480,13 @@ list_t doremir_list_map(unary_t func, list_t list)
     return new_list(node);
 }
 
-list_t doremir_list_concat_map(unary_t func, list_t list)
+list_t doremir_list_concat_map(unary_t func, ptr_t data, list_t list)
 {
-    list_t ys = doremir_list_map(func, list);
+    list_t ys = doremir_list_map(func, data, list);
     return doremir_list_dconcat(ys);
 }
 
-list_t doremir_list_filter(pred_t pred, list_t list)
+list_t doremir_list_filter(pred_t pred, ptr_t data, list_t list)
 {
     node_t node = NULL, *next = &node;
 
@@ -498,7 +498,7 @@ list_t doremir_list_filter(pred_t pred, list_t list)
     return new_list(node);
 }
 
-ptr_t doremir_list_fold_left(binary_t func, ptr_t init, list_t list)
+ptr_t doremir_list_fold_left(binary_t func, ptr_t data, ptr_t init, list_t list)
 {
     ptr_t value = init;
 
@@ -514,30 +514,30 @@ list_t doremir_list_concat(list_t list)
     assert(false && "Not implemented");
 }
 
-list_t doremir_list_dmap(unary_t f, list_t xs)
+list_t doremir_list_dmap(unary_t f, ptr_t d, list_t xs)
 {
-    list_t ys = doremir_list_map(f, xs);
+    list_t ys = doremir_list_map(f, d, xs);
     doremir_list_destroy(xs);
     return ys;
 }
 
-list_t doremir_list_dconcat_map(unary_t f, list_t xs)
+list_t doremir_list_dconcat_map(unary_t f, ptr_t d, list_t xs)
 {
-    list_t ys = doremir_list_concat_map(f, xs);
+    list_t ys = doremir_list_concat_map(f, d, xs);
     doremir_list_destroy(xs);
     return ys;
 }
 
-list_t doremir_list_dfilter(pred_t p, list_t xs)
+list_t doremir_list_dfilter(pred_t p, ptr_t d, list_t xs)
 {
-    list_t ys = doremir_list_filter(p, xs);
+    list_t ys = doremir_list_filter(p, d, xs);
     doremir_list_destroy(xs);
     return ys;
 }
 
-ptr_t doremir_list_dfold_left(binary_t f, ptr_t  z, list_t   xs)
+ptr_t doremir_list_dfold_left(binary_t f, ptr_t d, ptr_t  z, list_t   xs)
 {
-    list_t ys = doremir_list_fold_left(f, z, xs);
+    list_t ys = doremir_list_fold_left(f, d, z, xs);
     doremir_list_destroy(xs);
     return ys;
 }

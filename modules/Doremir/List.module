@@ -87,14 +87,14 @@ module Doremir.List
     findIndex   : (Pred, List) -> Int;
 
     // Maps and folds
-    map         : (Unary, List) -> List;
-    dmap        : (Unary, List) -> List;
-    concatMap   : (Unary, List) -> List;
-    dconcatMap  : (Unary, List) -> List;
-    filter      : (Pred, List) -> List;
-    dfilter     : (Pred, List) -> List;
-    foldLeft    : (Binary, Ptr, List) -> Ptr;
-    dfoldLeft   : (Binary, Ptr, List) -> Ptr;
+    filter      : (Pred, Ptr, List) -> List;
+    dfilter     : (Pred, Ptr, List) -> List;
+    map         : (Unary, Ptr, List) -> List;
+    dmap        : (Unary, Ptr, List) -> List;
+    concatMap   : (Unary, Ptr, List) -> List;
+    dconcatMap  : (Unary, Ptr, List) -> List;
+    foldLeft    : (Binary, Ptr, Ptr, List) -> Ptr;
+    dfoldLeft   : (Binary, Ptr, Ptr, List) -> Ptr;
     concat      : List -> List;
     dconcat     : List -> List;
 }
