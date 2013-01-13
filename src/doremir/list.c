@@ -227,7 +227,7 @@ ptr_t doremir_list_last(list_t xs)
         if (!node->next)
             return node->value;
     }
-    assert(false && "No tail");
+    assert(false && "No last");
 }
 
 list_t doremir_list_dtail(list_t xs)
@@ -243,8 +243,6 @@ list_t doremir_list_dinit(list_t xs)
     doremir_list_destroy(xs);
     return ys;
 }
-
-
 
 
 // --------------------------------------------------------------------------------
@@ -276,7 +274,7 @@ list_t doremir_list_append(list_t xs, list_t ys)
 
 list_t doremir_list_reverse(list_t xs)
 {
-    return base_revappend(xs, empty());
+    return base_revappend(xs, doremir_list_empty());
 }
 
 static inline
@@ -292,8 +290,6 @@ list_t doremir_list_sort(list_t xs)
 {
     return base_sort(xs);
 }
-
-
 
 list_t doremir_list_dappend(list_t xs, list_t ys)
 {
@@ -366,36 +362,6 @@ list_t doremir_list_range(int m, int n, list_t xs)
     return doremir_list_dtake(n, doremir_list_drop(m, xs));
 }
 
-list_t doremir_list_insert(int index, ptr_t value, list_t list)
-{
-    assert(false && "Not implemented");
-}
-
-list_t doremir_list_dinsert(int m, ptr_t x, list_t xs)
-{
-    assert(false && "Not implemented");
-}
-
-list_t doremir_list_insert_range(int m, list_t xs, list_t ys)
-{
-    assert(false && "Not implemented");
-}
-
-list_t doremir_list_dinsert_range(int m, list_t xs, list_t ys)
-{
-    assert(false && "Not implemented");
-}
-
-list_t doremir_list_remove(int m, list_t xs)
-{
-    assert(false && "Not implemented");
-}
-
-list_t doremir_list_dremove(int m, list_t xs)
-{
-    assert(false && "Not implemented");
-}
-
 list_t doremir_list_remove_range(int m, int n, list_t xsx)
 {
     list_t xs = doremir_list_take(m,     xs);
@@ -403,9 +369,50 @@ list_t doremir_list_remove_range(int m, int n, list_t xsx)
     return doremir_list_dappend(xs, ys);
 }
 
-list_t doremir_list_dremove_range(int m, int n, list_t xs)
+list_t doremir_list_insert_range(int m, list_t xs, list_t ys)
 {
     assert(false && "Not implemented");
+}
+
+list_t doremir_list_insert(int index, ptr_t value, list_t list)
+{
+    return doremir_list_insert_range(index, doremir_list_single(value), list);
+}
+
+list_t doremir_list_remove(int m, list_t xs)
+{
+    return doremir_list_remove_range(m, 1, xs);
+}
+
+
+
+list_t doremir_list_dinsert(int m, ptr_t x, list_t xs)
+{
+    list_t ys = doremir_list_insert(m, x, xs);
+    doremir_list_destroy(xs);
+    return ys;
+}
+
+list_t doremir_list_dinsert_range(int m, list_t xs, list_t ys)
+{
+    list_t zs = doremir_list_insert_range(m, xs, ys);
+    doremir_list_destroy(xs);
+    doremir_list_destroy(ys);
+    return zs;
+}
+
+list_t doremir_list_dremove(int m, list_t xs)
+{
+    list_t ys = doremir_list_remove(m, xs);
+    doremir_list_destroy(xs);
+    return ys;
+}
+
+list_t doremir_list_dremove_range(int m, int n, list_t xs)
+{
+    list_t ys = doremir_list_remove_range(m, n, xs);
+    doremir_list_destroy(xs);
+    return ys;
 }
 
 
