@@ -29,6 +29,7 @@
 #define base_equal          doremir_equal
 #define base_less_than      doremir_less_than
 #define base_greater_than   doremir_greater_than
+#define base_for_each       doremir_list_for_each
 
 struct _doremir_set_t {
         impl_t          impl;       //  Interface dispatcher
@@ -115,7 +116,7 @@ bool doremir_set_is_single(doremir_set_t set)
 
 bool doremir_set_is_subset_of(doremir_set_t a, doremir_set_t b)
 {
-    doremir_list_for_each (a->elems, x)
+    base_for_each (a->elems, x)
     {
         if (!doremir_set_has(x, b))
             return false;
@@ -125,7 +126,7 @@ bool doremir_set_is_subset_of(doremir_set_t a, doremir_set_t b)
 
 bool doremir_set_is_proper_subset_of(doremir_set_t a, doremir_set_t b)
 {
-    doremir_list_for_each (a->elems, x)
+    base_for_each (a->elems, x)
     {
         if (!doremir_set_has(x, b))
             return false;
@@ -136,7 +137,7 @@ bool doremir_set_is_proper_subset_of(doremir_set_t a, doremir_set_t b)
 doremir_set_t doremir_set_sum(doremir_set_t a, doremir_set_t b)
 {
     set_t c = b;
-    doremir_list_for_each (a->elems, x)
+    base_for_each (a->elems, x)
     {
         c = doremir_set_add(x, c);
     }
@@ -146,9 +147,9 @@ doremir_set_t doremir_set_sum(doremir_set_t a, doremir_set_t b)
 doremir_set_t doremir_set_product(doremir_set_t a, doremir_set_t b)
 {
     set_t c = b;
-    doremir_list_for_each (a->elems, x)
+    base_for_each (a->elems, x)
     {
-        doremir_list_for_each (b->elems, y)
+        base_for_each (b->elems, y)
         {
             c = doremir_set_add(pair(x, y), c);
         }
@@ -159,7 +160,7 @@ doremir_set_t doremir_set_product(doremir_set_t a, doremir_set_t b)
 doremir_set_t doremir_set_difference(doremir_set_t a, doremir_set_t b)
 {
     set_t c = b;
-    doremir_list_for_each (a->elems, x)
+    base_for_each (a->elems, x)
     {
         c = doremir_set_remove(x, c);
     }
@@ -217,7 +218,7 @@ doremir_string_t set_show(doremir_ptr_t x)
     set_t set = (set_t) x;
     string_t s  = string("{");
 
-    doremir_list_for_each (set->elems, v)
+    base_for_each (set->elems, v)
     {
         s = string_dappend(s, doremir_string_show(v));
         s = string_dappend(s, string(","));

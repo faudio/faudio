@@ -114,10 +114,15 @@ void delete_list(list_t list)
         Value to add.
 
  */
-#define append_node(place,value) \
+#define append_node(place, value) \
     do {                                \
         *place = new_node(value, NULL); \
         place = &((*place)->next);      \
+    } while (0)
+
+#define prepend_node(place, value) \
+    do {                                  \
+        *place = new_node(value, *place); \
     } while (0)
 
 
@@ -178,7 +183,7 @@ int doremir_list_length(list_t xs)
     int count = 0;
     for_each (xs, value)
     {
-        // value = NULL;   // kill warning
+        value = value;   // kill warning
         count++;
     }
     return count;

@@ -44,10 +44,7 @@ void delete_time(doremir_time_t time)
     @return         
         A new time value.
  */
-doremir_time_t doremir_time_create(int32_t days, 
-                                   int32_t hours, 
-                                   int32_t minutes, 
-                                   doremir_ratio_t seconds)
+doremir_time_t doremir_time_create(int32_t days, int32_t hours, int32_t minutes, doremir_ratio_t seconds)
 {                                            
     int     whole = days*(60*60*24) + hours*(60*60) + minutes*60;
     ratio_t secs = doremir_add(ratio(whole, 1), seconds); 

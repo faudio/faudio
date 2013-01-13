@@ -117,14 +117,15 @@ doremir_ptr_t doremir_atomic_get(doremir_atomic_t a)
     @note
         Atomic
  */
-void doremir_atomic_modify(doremir_atomic_t a, doremir_atomic_updater_t f)
+void doremir_atomic_modify(doremir_atomic_t atomic, doremir_atomic_updater_t func)
 {                  
-    bool success = false;
-    while (!success)
+    bool result = false;
+    
+    while (!result)
     {                                        
-        ptr_t currentValue = doremir_atomic_get(a);             
-        ptr_t value = f(currentValue);
-        success = doremir_atomic_exchange(a, currentValue, value);
+        ptr_t state = doremir_atomic_get(atomic);
+        ptr_t value = func(state);
+        result = doremir_atomic_exchange(atomic, state, value);
     }
 }
 
@@ -133,13 +134,14 @@ void doremir_atomic_modify(doremir_atomic_t a, doremir_atomic_updater_t f)
     @note
         Atomic
  */
-void doremir_atomic_set(doremir_atomic_t a, doremir_ptr_t value)
+void doremir_atomic_set(doremir_atomic_t atomic, doremir_ptr_t value)
 {
-    bool success = false;
-    while (!success)
+    bool result = false;
+
+    while (!result)
     {                                        
-        ptr_t currentValue = doremir_atomic_get(a);
-        success = doremir_atomic_exchange(a, currentValue, value);
+        ptr_t currentValue = doremir_atomic_get(atomic);
+        result = doremir_atomic_exchange(atomic, currentValue, value);
     }
 }
 

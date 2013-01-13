@@ -744,6 +744,7 @@ int main (int argc, char const *argv[])
       // dispatchers
 
       test_foreach();
+      
       test_list();
       test_set();
 

@@ -14,6 +14,17 @@
     @par Literals
     - `list(1, 2, 3)`
 
+    @par Display
+    - `[1,2,3]`
+    
+    @par Iteration
+    ~~~
+    doremir_list_for_each (list(1,2,3), x)
+    {
+        doremir_print("%s\n", x);
+    }
+    ~~~
+
     @par Implements
     - doremir_equal_t
     - doremir_order_t

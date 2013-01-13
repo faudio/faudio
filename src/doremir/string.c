@@ -349,6 +349,12 @@ doremir_string_t doremir_string_from_utf32(doremir_string_utf32_t cstr)
 
 // TODO OS X only
 
+/** Encode a string as a CFString.
+    
+    @note   OS X only
+    @return 
+        A new CFStringRef.
+ */
 void * doremir_string_to_cf_string(doremir_string_t str)
 {
     char* cstr;
@@ -361,6 +367,14 @@ void * doremir_string_to_cf_string(doremir_string_t str)
     return (void*) cfstr;
 }
 
+/** Deencode a string from a CFString.
+    
+    @note   OS X only
+    @param cfstr
+        A CFStringRef.
+    @return 
+        A new string.
+ */
 doremir_string_t doremir_string_from_cf_string(void * cfstr)
 {
     CFIndex size;

@@ -120,8 +120,8 @@ void delete_range_end(atomic_t begin, atomic_t end)
 doremir_atomic_queue_t doremir_atomic_queue_create()
 {
     atomic_queue_t queue = new_queue();
-    node_t         node  = new_node(NULL);
-
+    
+    node_t node  = new_node(NULL);
     set_node(queue->first, node);
     set_node(queue->div,   node);
     set_node(queue->last,  node);
@@ -146,7 +146,6 @@ bool doremir_atomic_queue_write(doremir_atomic_queue_t queue, doremir_ptr_t valu
     get_node(queue->last)->next  = new_node(NULL);
 
     forward_node(queue->last);
-
     return true;
 }
 
