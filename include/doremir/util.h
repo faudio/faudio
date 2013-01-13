@@ -105,15 +105,23 @@
 #define amodify             doremir_atomic_modify
 
 
+// TODO should this be here...?
+
+#ifndef alignof
+#define alignof(T) offsetof (struct { char c; T member; }, member)
+#endif
+
 
 
 // TODO literals to be moved someplace else...
 
 #include <doremir/list.h> // for list forward decl
+#include <doremir/set.h> // for set forward decl
+#include <doremir/map.h> // for map forward decl
 
-doremir_list_t doremir_list(int count, ...);
-doremir_list_t doremir_set(int count, ...);
-doremir_list_t doremir_map(int count, ...);
+list_t doremir_list(int count, ...);
+set_t doremir_set(int count, ...);
+map_t doremir_map(int count, ...);
 
 #define VA_NARGS_IMPL(_1, _2, _3, _4, _5, _6, N, ...) N
 #define VA_NARGS(...) VA_NARGS_IMPL(X,##__VA_ARGS__, 5, 4, 3, 2, 1, 0)
@@ -121,17 +129,44 @@ doremir_list_t doremir_map(int count, ...);
 #define VARARG_IMPL(base, count, ...) VARARG_IMPL2(base, count, __VA_ARGS__)
 #define VARARG(base, ...) VARARG_IMPL(base, VA_NARGS(__VA_ARGS__), __VA_ARGS__)
 
-#define list0()             doremir_list(0)
-#define list1(a)            doremir_list(1,a)
-#define list2(a,b)          doremir_list(2,a,b)
-#define list3(a,b,c)        doremir_list(3,a,b,c)
-#define list4(a,b,c,d)      doremir_list(4,a,b,c,d)
-#define list5(a,b,c,d,e)    doremir_list(5,a,b,c,d,e)
+#define list0()                             doremir_list(0)
+#define list1(a)                            doremir_list(1,a)
+#define list2(a,b)                          doremir_list(2,a,b)
+#define list3(a,b,c)                        doremir_list(3,a,b,c)
+#define list4(a,b,c,d)                      doremir_list(4,a,b,c,d)
+#define list5(a,b,c,d,e)                    doremir_list(5,a,b,c,d,e)
 #define list(...) VARARG(list, __VA_ARGS__)
 
-#ifndef alignof
-#define alignof(T) offsetof (struct { char c; T member; }, member)
-#endif
+#define set0()                              doremir_set(0)
+#define set1(a)                             doremir_set(1,a)
+#define set2(a,b)                           doremir_set(2,a,b)
+#define set3(a,b,c)                         doremir_set(3,a,b,c)
+#define set4(a,b,c,d)                       doremir_set(4,a,b,c,d)
+#define set5(a,b,c,d,e)                     doremir_set(5,a,b,c,d,e)
+#define set(...) VARARG(set, __VA_ARGS__)
+
+#define map0()                              doremir_map(0)
+#define map1(a)                             doremir_map(1,a)
+#define map2(a,b)                           doremir_map(2,a,b)
+#define map3(a,b,c)                         doremir_map(3,a,b,c)
+#define map4(a,b,c,d)                       doremir_map(4,a,b,c,d)
+#define map5(a,b,c,d,e)                     doremir_map(5,a,b,c,d,e)
+#define map(...) VARARG(list, __VA_ARGS__)
+
+
+
+// TODO should also be moved
+
+#define doremir_let(type, binding) \
+    for (type binding,_c=((type)1);_c;_c=((type)0))
+
+#define doremir_list_for_each(list, var) \
+    for(list_t xs = list;                             \
+        !doremir_list_is_empty(xs);                   \
+        xs = doremir_list_tail(xs)                    \
+        )                                             \
+    doremir_let(ptr_t, var = doremir_list_head(xs))
+
 
 
 #endif // _DOREMIR_UTIL
