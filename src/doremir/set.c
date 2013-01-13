@@ -6,26 +6,36 @@
  */
 
 #include <doremir/set.h>
-#include <doremir/set.h>
-#include <doremir/pair.h>
+#include <doremir/list.h>
+#include <doremir/string.h>
 #include <doremir/util.h>
 
-/*  Naive set implementation based on lists.
-
-    Can be optimized *a lot* by using a persistent vector/int-map as the underlying collection.
+/*  Notes:
+        * Map is implemented in terms of Set
+        * Set is implemented in terms of a base type
+            * Requires the operations defined below
+            * We use lists until we have persistent vectors
  */
+
+#define base_t              list_t
+#define base_empty          doremir_list_empty
+#define base_copy           doremir_list_copy
+#define base_destroy        doremir_list_destroy
+#define base_insert         doremir_list_insert
+#define base_find_index     doremir_list_find_index
+#define base_remove         doremir_list_remove
+#define base_length         doremir_list_length
 
 
 struct _doremir_set_t {
         impl_t          impl;       //  Interface dispatcher
-        list_t          elems;
+        base_t          elems;
     };
 
-doremir_ptr_t
-set_impl(doremir_id_t interface);
+doremir_ptr_t set_impl(doremir_id_t interface);
 
 inline static set_t
-new_set(list_t elems)
+new_set(base_t elems)
 {
     set_t set   = doremir_new(set);
     set->impl   = &set_impl;
@@ -43,35 +53,35 @@ delete_set(set_t set)
 
 doremir_set_t doremir_set_empty()
 {
-    return new_set(doremir_list_empty());
+    return new_set(base_empty());
 }
 
 doremir_set_t doremir_set_add(doremir_ptr_t x, doremir_set_t set)
 {
-    int i = doremir_list_find_index(x, set->elems);
+    size_t i = base_find_index(x, set->elems);
     if (i >= 0)
         return doremir_set_copy(set);
     else
-        return new_set(doremir_list_insert(-i, x, set->elems));
+        return new_set(base_insert(-i, x, set->elems));
 }
 
 doremir_set_t doremir_set_remove(doremir_ptr_t x, doremir_set_t set)
 {
-    int i = doremir_list_find_index(x, set->elems);
+    size_t i = base_find_index(x, set->elems);
     if (i < 0)
         return doremir_set_copy(set);
     else
-        return new_set(doremir_list_remove_range(i, 1, set->elems));
+        return new_set(base_remove(i, set->elems));
 }
 
 doremir_set_t doremir_set_copy(doremir_set_t set)
 {
-    return new_set(doremir_list_copy(set->elems));
+    return new_set(base_copy(set->elems));
 }
 
 void doremir_set_destroy(doremir_set_t set)
 {
-    doremir_list_destroy(set->elems);
+    base_destroy(set->elems);
     delete_set(set);
 }
 
@@ -79,12 +89,12 @@ void doremir_set_destroy(doremir_set_t set)
 
 bool doremir_set_has(doremir_ptr_t x, doremir_set_t set)
 {
-    return doremir_list_find_index(x, set->elems) >= 0;
+    return base_find_index(x, set->elems) >= 0;
 }
 
 int doremir_set_size(doremir_set_t set)
 {
-    return doremir_list_length(set->elems);
+    return base_length(set->elems);
 }
 
 bool doremir_set_is_empty(doremir_set_t set)
@@ -100,31 +110,64 @@ bool doremir_set_is_single(doremir_set_t set)
 bool doremir_set_is_subset_of(doremir_set_t a, doremir_set_t b)
 {
     assert(false && "Not implemented");
+
+    // foreach(a, x)
+    // {
+    //     if (!doremir_set_has(x, b))
+    //         return false;
+    // }
+    // return true;
 }
 
 bool doremir_set_is_proper_subset_of(doremir_set_t a, doremir_set_t b)
 {
     assert(false && "Not implemented");
+
+    // foreach(a, x)
+    // {
+    //     if (!doremir_set_has(x, b))
+    //         return false;
+    // }
+    // return doremir_set_size(a) != doremir_set_size(b);
 }
 
 doremir_set_t doremir_set_sum(doremir_set_t a, doremir_set_t b)
 {
     assert(false && "Not implemented");
+
+    // set_t c = b;
+    // foreach(a, x)
+    // {
+    //     c = doremir_set_add(x, c);
+    // }
+    // return c;
 }
 
 doremir_set_t doremir_set_product(doremir_set_t a, doremir_set_t b)
 {
     assert(false && "Not implemented");
+
+    // set_t c = b;
+    // foreach(a, x)
+    // {
+    //     foreach(b, y)
+    //     {
+    //         c = doremir_set_add(pair(x, y), c);
+    //     }
+    // }
+    // return c;
 }
 
 doremir_set_t doremir_set_difference(doremir_set_t a, doremir_set_t b)
 {
     assert(false && "Not implemented");
-}
 
-doremir_set_t doremir_set_cartesian(doremir_set_t a, doremir_set_t b)
-{
-    assert(false && "Not implemented");
+    // set_t c = b;
+    // foreach(a, x)
+    // {
+    //     c = doremir_set_remove(x, c);
+    // }
+    // return c;
 }
 
 doremir_set_t doremir_set_power(doremir_set_t set)

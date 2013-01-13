@@ -31,6 +31,7 @@ module Doremir.List
     single      : Ptr -> List;
     cons        : (Ptr, List) -> List;
     append      : (List, List) -> List;
+    dcons       : (Ptr, List) -> List;
     dappend     : (List, List) -> List;
     copy        : List -> List;
     destroy     : List -> Void;
@@ -43,8 +44,8 @@ module Doremir.List
     // Sequential access
     head        : List -> Ptr;
     tail        : List -> List;
-    dtail       : List -> List;
     init        : List -> List;
+    dtail       : List -> List;
     dinit       : List -> List;
     last        : List -> Ptr;
     
@@ -53,12 +54,15 @@ module Doremir.List
     dtake        : (Int, List) -> List;
     drop         : (Int, List) -> List;
     ddrop        : (Int, List) -> List;
-    range        : (Int, Int, List) -> List;
     index        : (Int, List) -> Ptr;
+    range        : (Int, Int, List) -> List;
     insert       : (Int, Ptr, List) -> List;
+    dinsert      : (Int, Ptr, List) -> List;
+    insertRange  : (Int, List, List) -> List;
+    dinsertRange : (Int, List, List) -> List;
     remove       : (Int, List) -> List;
-    removeRange  : (Int, Int, List) -> List;
     dremove      : (Int, List) -> List;
+    removeRange  : (Int, Int, List) -> List;
     dremoveRange : (Int, Int, List) -> List;
     
     // Searching

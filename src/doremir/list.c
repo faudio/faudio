@@ -6,17 +6,10 @@
  */
 
 #include <doremir/list.h>
-#include <doremir/util.h>
 #include <doremir/string.h>
+#include <doremir/util.h>
 
 /*
-    TODO
-        insert
-        sort
-        find
-        map
-        concat
-
     Notes:
         * The list type is a wrapper structure containing the dispatcher.
         * Below that is straightforward immutable, singly-linked node sequence
@@ -27,8 +20,6 @@
     Possibilities:
         * Add a "transient list" type with no sharing.
           This gives us "as good as mutable" destrucive operations but slow copy.
-        * For faster random access (important for use as backend to set map etc), add a hash
-          trie implementation.
  */
 
 struct node {
@@ -345,6 +336,11 @@ list_t doremir_list_drop(int n, doremir_list_t xs)
 doremir_list_t doremir_list_range(int m, int n, doremir_list_t xs)
 {
     return doremir_list_dtake(n, doremir_list_drop(m, xs));
+}
+
+doremir_list_t doremir_list_remove(int m, doremir_list_t xs)
+{
+    assert(false && "Not implemented");
 }
 
 doremir_list_t doremir_list_remove_range(int m, int n, doremir_list_t xsx)

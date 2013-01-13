@@ -13,12 +13,12 @@
 /*
     Notes:
         * Simple unbounded FIFO
-        * Does not support multi-read or multi-write but is simple to understand
+        * Does not support multi-read or multi-write
         * All malloc/free is done in writer thread
         
     Possibilities:
+        * Multi read/write
         * Real-time allocator
-        * Bounded pre-allocated version
  */
 
 struct node {

@@ -11,22 +11,33 @@
 typedef doremir_type_simple_t simple_t;
 
 struct _doremir_type_t {
-        doremir_impl_t      impl;                           //  Interface dispatcher
 
-        enum { 
-            simple_type, 
-            pair_type, 
-            vector_type, 
-            frame_type    
-          }                 tag;    
+    doremir_impl_t                  impl;           //  Interface dispatcher
 
-        union {
-            doremir_type_simple_t               simple;     //  uint8, uint16 ... ptr
-            struct { ptr_t fst; ptr_t snd; }    pair;       //  (a,b)
-            struct { ptr_t base; size_t size; } vector;     //  [a x n]
-            struct { ptr_t base; } frame;                   //  {a}        
-          }                 fields;
-    }; 
+    enum { 
+        simple_type, 
+        pair_type, 
+        vector_type, 
+        frame_type    
+    }                               tag;    
+
+    union {
+        doremir_type_simple_t       simple;         //  uint8, uint16 ... ptr
+        
+        struct { 
+            ptr_t                   fst; 
+            ptr_t                   snd; 
+        }                           pair;           //  (a,b)
+        struct { 
+            ptr_t                   base; 
+            size_t                  size; 
+        }                           vector;         //  [a x n]
+        struct { 
+            ptr_t                   base; 
+        }                           frame;          //  {a}        
+    
+    }                               fields;
+}; 
 
 #define simple_get(v)   v->fields.simple
 #define pair_get(v,f)   v->fields.pair.f
@@ -38,10 +49,13 @@ doremir_ptr_t type_impl(doremir_id_t interface);
 doremir_type_t new_type(int tag)
 {
     type_t t = doremir_new(type);
+    
     t->impl = &type_impl;
     t->tag  = tag;
-    return t;    
+    
+    return t;
 }            
+
 void delete_type(doremir_type_t type)
 {
     doremir_delete(type);
@@ -57,7 +71,9 @@ void delete_type(doremir_type_t type)
 doremir_type_t doremir_type_simple(doremir_type_simple_t type)
 {
     type_t t = new_type(simple_type);
+    
     simple_get(t) = type;
+    
     return t;
 }
 
@@ -67,8 +83,10 @@ doremir_type_t doremir_type_simple(doremir_type_simple_t type)
 doremir_type_t doremir_type_pair(doremir_type_t type1, doremir_type_t type2)
 {
     type_t t = new_type(pair_type);
+    
     pair_get(t, fst) = type1;
     pair_get(t, snd) = type2;
+    
     return t;
 }
 
@@ -78,8 +96,10 @@ doremir_type_t doremir_type_pair(doremir_type_t type1, doremir_type_t type2)
 doremir_type_t doremir_type_vector(doremir_type_t base, size_t size)
 {
     type_t t = new_type(vector_type);
+    
     vector_get(t, base) = base;
     vector_get(t, size) = size;
+    
     return t;
 }
 
@@ -89,7 +109,9 @@ doremir_type_t doremir_type_vector(doremir_type_t base, size_t size)
 doremir_type_t doremir_type_frame(doremir_type_t base)
 {
     type_t t = new_type(frame_type);
+    
     frame_get(t, base) = base;
+    
     return t;
 }
 
@@ -99,6 +121,7 @@ doremir_type_t doremir_type_frame(doremir_type_t base)
 doremir_type_t doremir_type_copy(doremir_type_t type)
 {                    
     type_t t = new_type(type->tag);    
+    
     switch(type->tag)
     {
     case simple_type:

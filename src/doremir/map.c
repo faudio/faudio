@@ -6,6 +6,16 @@
  */
 
 #include <doremir/map.h>
+#include <doremir/set.h>
+#include <doremir/pair.h>
+#include <doremir/string.h>
+#include <doremir/util.h>
+
+/*
+    Notes:
+        * We implement Map as a Set of pairs
+        * Performance, memory etc depend entirely on Set implementation
+ */
 
 doremir_map_t doremir_map_empty()
 {
@@ -68,26 +78,6 @@ bool doremir_map_is_submap_of(doremir_map_t a, doremir_map_t b)
 }
 
 bool doremir_map_is_proper_submap_of(doremir_map_t a, doremir_map_t b)
-{
-    assert(false && "Not implemented");
-}
-
-bool doremir_map_equal(doremir_map_t a, doremir_map_t b)
-{
-    assert(false && "Not implemented");
-}
-
-bool doremir_map_less_than(doremir_map_t a, doremir_map_t b)
-{
-    assert(false && "Not implemented");
-}
-
-bool doremir_map_greater_than(doremir_map_t a, doremir_map_t b)
-{
-    assert(false && "Not implemented");
-}
-
-doremir_string_t doremir_map_show(doremir_map_t map)
 {
     assert(false && "Not implemented");
 }

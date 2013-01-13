@@ -11,6 +11,8 @@
 #include <doremir/string.h>
 #include <doremir/util.h>
 
+// http://www.cs.sunysb.edu/~skiena/392/programs/queue.c
+
 struct _doremir_atomic_ring_buffer_t {
 
         impl_t              impl;       //  Interface dispatcher

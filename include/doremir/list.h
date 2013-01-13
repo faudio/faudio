@@ -16,6 +16,7 @@ doremir_list_t doremir_list_empty();
 doremir_list_t doremir_list_single(doremir_ptr_t);
 doremir_list_t doremir_list_cons(doremir_ptr_t, doremir_list_t);
 doremir_list_t doremir_list_append(doremir_list_t, doremir_list_t);
+doremir_list_t doremir_list_dcons(doremir_ptr_t, doremir_list_t);
 doremir_list_t doremir_list_dappend(doremir_list_t,
                                     doremir_list_t);
 doremir_list_t doremir_list_copy(doremir_list_t);
@@ -25,22 +26,31 @@ bool doremir_list_is_single(doremir_list_t);
 int doremir_list_length(doremir_list_t);
 doremir_ptr_t doremir_list_head(doremir_list_t);
 doremir_list_t doremir_list_tail(doremir_list_t);
-doremir_list_t doremir_list_dtail(doremir_list_t);
 doremir_list_t doremir_list_init(doremir_list_t);
+doremir_list_t doremir_list_dtail(doremir_list_t);
 doremir_list_t doremir_list_dinit(doremir_list_t);
 doremir_ptr_t doremir_list_last(doremir_list_t);
 doremir_list_t doremir_list_take(int, doremir_list_t);
 doremir_list_t doremir_list_dtake(int, doremir_list_t);
 doremir_list_t doremir_list_drop(int, doremir_list_t);
 doremir_list_t doremir_list_ddrop(int, doremir_list_t);
-doremir_list_t doremir_list_range(int, int, doremir_list_t);
 doremir_ptr_t doremir_list_index(int, doremir_list_t);
+doremir_list_t doremir_list_range(int, int, doremir_list_t);
 doremir_list_t doremir_list_insert(int,
                                    doremir_ptr_t,
                                    doremir_list_t);
+doremir_list_t doremir_list_dinsert(int,
+                                    doremir_ptr_t,
+                                    doremir_list_t);
+doremir_list_t doremir_list_insert_range(int,
+                                         doremir_list_t,
+                                         doremir_list_t);
+doremir_list_t doremir_list_dinsert_range(int,
+                                          doremir_list_t,
+                                          doremir_list_t);
 doremir_list_t doremir_list_remove(int, doremir_list_t);
-doremir_list_t doremir_list_remove_range(int, int, doremir_list_t);
 doremir_list_t doremir_list_dremove(int, doremir_list_t);
+doremir_list_t doremir_list_remove_range(int, int, doremir_list_t);
 doremir_list_t doremir_list_dremove_range(int,
                                           int,
                                           doremir_list_t);
