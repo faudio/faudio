@@ -520,35 +520,118 @@ void test_list()
     test_section();
 
     {
-        list_t as = doremir_list(3,i16(1),i16(2),i16(3));
-        list_t bs = doremir_copy(as);
+        printf("\n");
 
+        list_t as = empty();
+        doremir_print("empty()                      ==> %s\n", as);
+        doremir_destroy(as);
+    }
+    {
+        printf("\n");
+
+        list_t as = list(i16(1),i16(2),i16(3));
+        list_t bs = doremir_list_cons(i16(0),as);
+        
         doremir_print("as                           ==> %s\n", as);
-        doremir_print("bs                           ==> %s\n", bs);
-        doremir_print("length(as)                   ==> %s\n", i32(doremir_list_length(as)));
-        doremir_print("length(bs)                   ==> %s\n", i32(doremir_list_length(bs)));
-
+        doremir_print("cons(0,as)                   ==> %s\n", bs);
+        
         doremir_destroy(as);
         doremir_destroy(bs);
     }
+    {
+        printf("\n");
 
+        list_t as = list(i16(1),i16(2),i16(3));
+        list_t bs = doremir_list_append(as,as);
+        
+        doremir_print("as                           ==> %s\n", as);
+        doremir_print("append(as,as)                ==> %s\n", bs);
+        
+        doremir_destroy(as);
+        doremir_destroy(bs);
+    }
+    {
+        printf("\n");
+
+        list_t as = list(i16(1),i16(2),i16(3));
+        list_t bs = doremir_list_copy(as);
+        doremir_print("as                           ==> %s\n", as);
+        doremir_print("copy(as)                     ==> %s\n", bs);
+        doremir_destroy(as);
+        doremir_destroy(bs);
+    }
+    {
+        printf("\n");
+
+        list_t as = list(i16(1),i16(2),i16(3));
+        list_t bs = doremir_list_init(as);
+        
+        doremir_print("as                           ==> %s\n", as);
+        doremir_print("init(as)                     ==> %s\n", bs);
+        
+        doremir_destroy(as);
+        doremir_destroy(bs);
+    }                      
+    {
+        printf("\n");
+
+        list_t as = list(i16(1),i16(2),i16(3));
+        ptr_t v = doremir_list_last(as);
+        
+        doremir_print("as                           ==> %s\n", as);
+        doremir_print("last(as)                     ==> %s\n", v);
+        
+        doremir_destroy(as);
+        doremir_destroy(v);
+    }
+    {
+        printf("\n");
+
+        list_t as = doremir_list(3,i16(1),i16(2),i16(3));
+
+        doremir_print("as                           ==> %s\n", as);
+        doremir_print("length(as)                   ==> %s\n", i32(doremir_list_length(as)));
+
+        doremir_destroy(as);
+    }
     {
         printf("\n");
 
         list_t as = list(i16(1),i16(2),i16(3),i16(4),i16(5));
-        list_t xs = empty();
+        list_t bs = doremir_list_reverse(as);
         
-        for (int i = 0; i < 2; ++i)
-            xs = doremir_list_append(xs,as);
-        
-        list_t ys = reverse(xs);
-        
-        doremir_print("xs                           ==> %s\n", xs);
-        doremir_print("reverse(ys)                  ==> %s\n", ys);
+        doremir_print("as                           ==> %s\n", as);
+        doremir_print("reverse(bs)                  ==> %s\n", bs);
 
-        doremir_destroy(xs);
+        doremir_destroy(as);
+        doremir_destroy(bs);
     }
+    // {
+    //     printf("\n");
+    // 
+    //     list_t as = list(i16(1),i16(2),i16(3),i16(4),i16(5));
+    //     list_t bs = doremir_list_sort(as);
+    //     
+    //     doremir_print("as                           ==> %s\n", as);
+    //     doremir_print("sort(bs)                     ==> %s\n", bs);
+    // 
+    //     doremir_destroy(as);
+    //     doremir_destroy(bs);
+    // }
 
+    // take
+    // drop
+    // index
+    // range
+    // insertRange
+    // removeRange
+    // insert
+    // remove
+    // has
+    // find
+    // findIndex
+    // indexOf
+    
     {
         printf("\n");
 
@@ -560,7 +643,6 @@ void test_list()
         
         doremir_destroy(xs);
     }
-
     {
         printf("\n");
 
@@ -571,8 +653,10 @@ void test_list()
         doremir_print("map(times10,ys)              ==> %s\n", ys);
 
         doremir_destroy(xs);
-    }
-
+    }    
+    
+    // concatMap
+    
     {
         printf("\n");
 
@@ -587,7 +671,6 @@ void test_list()
         xs = doremir_list_dmap(times10, 0, xs);
         doremir_print("map(times10, xs)             ==> %s\n", xs);
     }
-
     {
         printf("\n");
         
