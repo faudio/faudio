@@ -101,33 +101,38 @@ void delete_list(list_t list)
     doremir_delete(list);
 }
 
-// --------------------------------------------------------------------------------
-// Literal
-// --------------------------------------------------------------------------------
+#define let(type, binding) \
+    for (type binding,_c=((type)1);_c;_c=((type)0))
 
-/** Create a list from the given elements.
-    @see
-        list in \ref doremir/util.h
+#define for_each_node(list, var) \
+    for(node_t _n = list->node; _n; _n = _n->next) \
+        let(node_t, var = _n)
+
+#define for_each(list, var) \
+    for(node_t _n = list->node; _n; _n = _n->next) \
+        let(ptr_t, var = _n->value)
+
+/** Allocate a new node containing the given value, store it
+    in the given place, then update the place to reference
+    the created node.
+ 
+    This can be used to construct a list in place, like
+ 
+        node_t node = NULL, *next = &node;
+        while (...)
+            append_node(next, value);
+ 
+    @param place
+        A node_t pointer.
+    @param value
+        Value to add.
+ 
  */
-list_t doremir_list(int count, ...)
-{
-    node_t node = NULL, *next = &node;
-    {
-        va_list args;
-        va_start(args, count);
-
-        for (int i = 0; i < count; ++i)
-        {
-             // Append a node
-            *next = new_node(va_arg(args, ptr_t), NULL);
-
-             // Update next to point to the created node
-            next = &((*next)->next);
-        }
-        va_end(args);
-    }
-    return new_list(node);
-}
+#define append_node(place,value) \
+    do {                                \
+        *place = new_node(value, NULL); \
+        place = &((*place)->next);      \
+    } while (0)
 
 
 // --------------------------------------------------------------------------------
@@ -144,8 +149,7 @@ list_t doremir_list(int count, ...)
  */
 list_t doremir_list_empty()
 {
-    list_t xs = new_list(NULL);
-    return xs;
+    return new_list(NULL);
 }
 
 /** Create a new list containing the given element.
@@ -158,8 +162,7 @@ list_t doremir_list_empty()
  */
 list_t doremir_list_single(doremir_ptr_t x)
 {
-    list_t xs = new_list(new_node(x, NULL));
-    return xs;
+    return new_list(new_node(x, NULL));
 }
 
 /** Create a new list by inserting the given element at the beginning of the given list.
@@ -172,8 +175,7 @@ list_t doremir_list_single(doremir_ptr_t x)
  */
 list_t doremir_list_cons(doremir_ptr_t x, doremir_list_t xs)
 {
-    list_t ys = new_list(new_node(x, take_node(xs->node)));
-    return ys;
+    return new_list(new_node(x, take_node(xs->node)));
 }
 
 /** Create a new list by inserting the given element at the end of the given list.
@@ -195,12 +197,11 @@ list_t doremir_list_dcons(doremir_ptr_t x, doremir_list_t xs)
     to a destructive function.
 
     @note
-        O(n)
+        O(1)
  */
 list_t doremir_list_copy(doremir_list_t xs)
 {
-    list_t ys = new_list(take_node(xs->node));
-    return ys;
+    return new_list(take_node(xs->node));
 }
 
 /** Destroy the given list.
@@ -240,12 +241,11 @@ bool doremir_list_is_single(doremir_list_t xs)
  */
 int doremir_list_length(doremir_list_t xs)
 {
-    int    count = 0;
-    node_t node  = xs->node;
-    while (node)
+    int count = 0;
+    for_each (xs, value)
     {
+        value = NULL; // kill "not used" warning
         count++;
-        node = node->next;
     }
     return count;
 }
@@ -272,9 +272,9 @@ doremir_ptr_t doremir_list_head(doremir_list_t xs)
  */
 doremir_list_t doremir_list_tail(doremir_list_t xs)
 {
-    if (!has_node(xs))
-        assert(false && "No tail");
-    if(!xs->node->next)
+    if (!has_node(xs))                  //  []
+        assert(false && "No tail");     //  [x]
+    if(!has_tail(xs))
         return empty();
     else
         return new_list(take_node(xs->node->next));
@@ -317,15 +317,16 @@ doremir_list_t doremir_list_dinit(doremir_list_t xs)
 
 /** Returns the last element of the given list.
     @note
-        O(1)
+        O(n)
  */
 doremir_ptr_t doremir_list_last(doremir_list_t xs)
-{
-    if (is_empty(xs))
-        assert(false && "No last");
-    if (is_single(xs))
-        return head(xs);
-    return last(xs);
+{   
+    for_each_node (xs, n) 
+    {
+        if (!n->next)
+            return n->value;
+    }        
+    assert(false && "No tail");
 }
 
 
@@ -333,7 +334,7 @@ doremir_ptr_t doremir_list_last(doremir_list_t xs)
 // Misc operations
 // --------------------------------------------------------------------------------
 
-static inline 
+static inline
 list_t base_append(list_t xs, list_t ys)
 {
     if (is_empty(xs))
@@ -360,7 +361,9 @@ list_t doremir_list_append(doremir_list_t xs, doremir_list_t ys)
     return base_append(xs, ys);
 }
 
-/** Returns the result of appending the given lists, which are both destroyed.
+/** Returns the result of appending the given lists.
+
+    This function destroys both of the given lists.
     @note
         O(n)
  */
@@ -382,6 +385,8 @@ list_t doremir_list_reverse(doremir_list_t xs)
 }
 
 /** Returns the reverse of the given list.
+
+    This function destroys the given list.
     @note
         O(n)
  */
@@ -405,12 +410,14 @@ static inline list_t base_sort(list_t xs)
     @note
         O(n log n)
  */
-list_t doremir_listbase_sort(doremir_list_t xs)
+list_t doremir_list_sort(doremir_list_t xs)
 {
     return base_sort(xs);
 }
 
 /** Returns the given list sorted.
+
+    This function destroys the given list.
     @note
         O(n log n)
  */
@@ -470,9 +477,19 @@ list_t doremir_list_ddrop(int n, doremir_list_t xs)
     return ys;
 }
 
-doremir_ptr_t doremir_list_index(int m, doremir_list_t xs)
+/** Returns the *n*-th elements of the given list, or NULL.
+    @note
+        O(n)
+ */
+doremir_ptr_t doremir_list_index(int n, doremir_list_t xs)
 {
-    assert(false && "Not implemented");
+    int i = 0;
+    for_each (xs, x)
+    {
+        if (i++ == n)
+            return x;
+    }
+    return NULL;
 }
 
 doremir_list_t doremir_list_range(int m, int n, doremir_list_t xs)
@@ -540,9 +557,14 @@ doremir_list_t doremir_list_dremove_range(int m,
     @note
         O(n)
  */
-bool doremir_list_has_elem(doremir_ptr_t x, doremir_list_t xs)
+bool doremir_list_has(doremir_ptr_t value, doremir_list_t list)
 {
-    return eq(x, head(xs)) || has_elem(x, xs);
+    for_each (list, value2)
+    {
+        if (doremir_equal(value, value2))
+            return true;
+    }
+    return false;
 }
 
 /** Returns the first element satisfying the given predicate in the
@@ -550,9 +572,14 @@ bool doremir_list_has_elem(doremir_ptr_t x, doremir_list_t xs)
     @note
         O(log n)
  */
-doremir_ptr_t doremir_list_find(doremir_pred_t p, doremir_list_t xs)
+doremir_ptr_t doremir_list_find(doremir_pred_t pred, doremir_list_t list)
 {
-    assert(false && "Not implemented");
+    for_each (list, value)
+    {
+        if (pred(value))
+            return value;
+    }
+    return NULL;
 }
 
 /** Returns the index of the first element satisfying the given predicate in the
@@ -560,9 +587,16 @@ doremir_ptr_t doremir_list_find(doremir_pred_t p, doremir_list_t xs)
     @note
         O(log n)
  */
-int doremir_list_find_index(doremir_pred_t p, doremir_list_t xs)
+int doremir_list_find_index(doremir_pred_t pred, doremir_list_t list)
 {
-    assert(false && "Not implemented");
+    int index = 0;
+    for_each (list, value)
+    {
+        if (pred(value))
+            return index;
+        index++;
+    }
+    return -(index + 1);
 }
 
 
@@ -576,12 +610,19 @@ int doremir_list_find_index(doremir_pred_t p, doremir_list_t xs)
  */
 list_t doremir_list_map(doremir_unary_t f, doremir_list_t xs)
 {
-    assert(false && "Not implemented");
+    node_t node = NULL, *next = &node;
+    
+    for_each (xs, x)
+        append_node(next, f(x));
+
+    return new_list(node);
 }
 
 list_t doremir_list_dmap(doremir_unary_t f, doremir_list_t xs)
 {
-    assert(false && "Not implemented");
+    list_t ys = doremir_list_map(f, xs);
+    doremir_list_destroy(xs);
+    return ys;
 }
 
 doremir_list_t doremir_list_concat_map(doremir_unary_t f,
@@ -593,7 +634,9 @@ doremir_list_t doremir_list_concat_map(doremir_unary_t f,
 doremir_list_t doremir_list_dconcat_map(doremir_unary_t f,
                                         doremir_list_t xs)
 {
-    assert(false && "Not implemented");
+    list_t ys = doremir_list_concat_map(f, xs);
+    doremir_list_destroy(xs);
+    return ys;
 }
 
 
@@ -603,25 +646,20 @@ doremir_list_t doremir_list_dconcat_map(doremir_unary_t f,
  */
 list_t doremir_list_filter(doremir_pred_t p, doremir_list_t xs)
 {
-    node_t n, *np;
-    node_t xn = xs->node;
-    n  = NULL;
-    np = &n;
-    while(xn)
-    {
-        if (p(xn->value))
-        {
-            *np = new_node(xn->value,NULL);
-            np = &(*np)->next;
-        }
-        xn = xn->next;
-    }
-    return new_list(n);
+    node_t node = NULL, *next = &node;
+    
+    for_each (xs, x)
+        if (p(x))
+            append_node(next, x);
+
+    return new_list(node);
 }
 
 list_t doremir_list_dfilter(doremir_pred_t p, doremir_list_t xs)
 {
-    assert(false && "Not implemented");
+    list_t ys = doremir_list_filter(p, xs);
+    doremir_list_destroy(xs);
+    return ys;
 }
 
 /** Returns the result of applying the given function to all elements of the given list
@@ -637,6 +675,7 @@ doremir_ptr_t doremir_list_fold_left(doremir_binary_t f,
 {
     doremir_ptr_t v = z;
     node_t xn = xs->node;
+    
     while(xn)
     {
         v  = f(v, xn->value);
@@ -649,7 +688,9 @@ doremir_ptr_t doremir_list_dfold_left(doremir_binary_t f,
                                       doremir_ptr_t    z,
                                       doremir_list_t   xs)
 {
-    assert(false && "Not implemented");
+    list_t ys = doremir_list_fold_left(f, z, xs);
+    doremir_list_destroy(xs);
+    return ys;
 }
 
 list_t doremir_list_concat(doremir_list_t xss)
@@ -659,6 +700,53 @@ list_t doremir_list_concat(doremir_list_t xss)
 
 
 // --------------------------------------------------------------------------------
+
+/** Create a list from the given elements.
+    @see
+        list in \ref doremir/util.h
+ */
+list_t doremir_list(int count, ...)
+{
+    list_t l = doremir_list_empty();
+    va_list args;
+
+    va_start(args, count);
+
+    for (int i = 0; i < count; ++i)
+        l = doremir_list_dcons(va_arg(args, ptr_t), l);
+
+    va_end(args);
+    return l;
+}
+
+/** Create a list by repeating the given element.
+    @see
+        list in \ref doremir/util.h
+ */
+list_t doremir_list_repeat(int times, doremir_ptr_t value)
+{
+    node_t node = NULL, *next = &node;
+
+    for (int i = 0; i < times; ++i)
+        append_node(next, value);
+
+    return new_list(node);
+}
+
+/** Create a list from the given range.
+    @see
+        list in \ref doremir/util.h
+ */
+list_t doremir_list_enum_from(int m, int n)
+{
+    node_t node = NULL, *next = &node;
+
+    for (int i = 0; i < n; ++i)
+        append_node(next, (ptr_t) m + i);
+
+    return new_list(node);
+}
+
 // --------------------------------------------------------------------------------
 
 bool list_equal(doremir_ptr_t a, doremir_ptr_t b)

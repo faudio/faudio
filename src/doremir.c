@@ -528,6 +528,8 @@ doremir_ptr_t doremir_interface(doremir_id_t type, doremir_ptr_t pointer)
     case 1:
         return double_impl(type);
     default:
+        //  If you get a bus error here, you probably passed a
+        //  non-boxed primitive to a generic function.
         return ((struct doremir_impl_disp*) pointer)->impl(type);
     }
 }
