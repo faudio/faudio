@@ -281,6 +281,24 @@ void test_list()
         doremir_print("%s\n", xs);
         doremir_destroy(xs);
     }
+}
+
+void test_set()
+{
+    test_section();
+    {
+        set_t xs = set(i16(1),i16(2),i16(3));
+        set_t ys = doremir_copy(xs);
+
+        doremir_print("xs: %s\n", xs);
+        doremir_print("ys: %s\n", ys);
+        printf("length: %d\n", doremir_set_size(xs));
+        printf("length: %d\n", doremir_set_size(ys));
+        printf("xs == ys: %d\n", doremir_equal(xs, ys));
+        // TODO destroy wrapped values
+        doremir_destroy(xs);
+        doremir_destroy(ys);
+    }
 
 }
 
@@ -623,7 +641,9 @@ int main (int argc, char const *argv[])
       // processors
       // dispatchers
       test_foreach();
+
       test_list();
+      test_set();
 
       doremir_audio_engine_terminate();
   }

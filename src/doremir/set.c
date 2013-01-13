@@ -209,18 +209,17 @@ bool set_greater_than(doremir_ptr_t a, doremir_ptr_t b)
     return base_greater_than(c->elems, d->elems);
 }
 
-doremir_string_t set_show(doremir_ptr_t xs)
+doremir_string_t set_show(doremir_ptr_t x)
 {
+    set_t set = (set_t) x;
     string_t s  = string("{");
-    s = string_dappend(s, string("..."));
-    // node_t   xn = ((list_t) xs)->node;
-    // while(xn)
-    // {
-    //     s = string_dappend(s, sshow(xn->value));
-    //     xn = xn->next;
-    //     if (xn)
-    //         s = string_dappend(s, string(","));
-    // };
+
+    doremir_list_for_each (set->elems, v)
+    {
+        s = string_dappend(s, doremir_string_show(v));
+        s = string_dappend(s, string(","));
+        // TODO remove final comma
+    }
     s = string_dappend(s, string("}"));
     return s;
 }
