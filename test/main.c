@@ -206,6 +206,14 @@ bool is_odd16(ptr_t p)
 {
     return ti16(p) % 2 != 0;
 }
+ptr_t times2(ptr_t p)
+{
+    return i16(2 * ti16(p));
+}
+ptr_t times10(ptr_t p)
+{
+    return i16(10 * ti16(p));
+}
 
 void test_list()
 {
@@ -252,6 +260,25 @@ void test_list()
         list_t ys = doremir_list_filter(is_odd16,xs);
         doremir_print("%s\n", xs);
         doremir_print("%s\n", ys);
+        doremir_destroy(xs);
+    }
+
+    {
+        list_t xs = list(i16(1),i16(2),i16(3),i16(4),i16(5));
+        list_t ys = doremir_list_map(times10,xs);
+        doremir_print("%s\n", xs);
+        doremir_print("%s\n", ys);
+        doremir_destroy(xs);
+    }
+
+    {
+        list_t xs = doremir_list_enum_from(0,50);
+        xs = doremir_list_map((doremir_unary_t) i16,xs);
+        doremir_print("%s\n", xs);
+        xs = doremir_list_filter(is_odd16,xs);
+        doremir_print("%s\n", xs);
+        xs = doremir_list_dmap(times10,xs);
+        doremir_print("%s\n", xs);
         doremir_destroy(xs);
     }
 
@@ -533,31 +560,21 @@ void test_audio_types()
     printf("\n");
 }
 
-#define let(type, binding) \
-    for (type binding,_c=((type)1);_c;_c=((type)0))
-
-#define for_each(list, var) \
-    for(list_t xs = list;                             \
-        !doremir_list_is_empty(xs);                   \
-        xs = doremir_list_tail(xs)                    \
-        )                                             \
-            let(ptr_t, var = doremir_list_head(xs))
-
 
 void test_foreach()
 {
     list_t list = list(i32(1),i32(2),i32(3),i32(4));
     
-    let (int, x = 33)
+    doremir_let (int, x = 33)
     {
         int y = 1;
-        let (int, z = x + y)
+        doremir_let (int, z = x + y)
         {
             doremir_print("%s\n", i32(z));
         }
     }
     
-    for_each(list, x)
+    doremir_list_for_each (list, x)
     {
         doremir_print(">    %s\n", x);
     }
@@ -580,7 +597,7 @@ int main (int argc, char const *argv[])
       test_string();
       test_show();
       test_compare();
-      test_list();
+      // test_list();
       test_rational();
       test_buffer();
       test_time();
@@ -606,6 +623,7 @@ int main (int argc, char const *argv[])
       // processors
       // dispatchers
       test_foreach();
+      test_list();
 
       doremir_audio_engine_terminate();
   }
