@@ -815,6 +815,39 @@ void test_set()
         doremir_print("a                            ==> %s\n", a);
         doremir_print("size(a)                      ==> %s\n", i32(doremir_set_size(a)));
     }
+
+    {
+        printf("\n");
+        
+        set_t a = set(i16(1),i16(2),i16(3));
+        set_t b = set(i16(3),i16(4));
+
+        doremir_print("a                            ==> %s\n", a);
+        doremir_print("b                            ==> %s\n", b);
+        doremir_print("a + b                        ==> %s\n", doremir_set_sum(a, b));
+    }
+
+    {
+        printf("\n");
+        
+        set_t a = set(i16(1),i16(2),i16(3));
+        set_t b = set(i16(3),i16(4));
+
+        doremir_print("a                            ==> %s\n", a);
+        doremir_print("b                            ==> %s\n", b);
+        doremir_print("a - b                        ==> %s\n", doremir_set_difference(a, b));
+    }
+
+    {
+        printf("\n");
+        
+        set_t a = set(i16(1),i16(2),i16(3));
+        set_t b = set(i16(3),i16(4));
+
+        doremir_print("a                            ==> %s\n", a);
+        doremir_print("b                            ==> %s\n", b);
+        doremir_print("a x b                        ==> %s\n", doremir_set_product(a, b));
+    }
 }
 
 

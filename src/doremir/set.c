@@ -133,33 +133,33 @@ bool doremir_set_is_proper_subset_of(doremir_set_t a, doremir_set_t b)
 
 doremir_set_t doremir_set_sum(doremir_set_t a, doremir_set_t b)
 {
-    set_t c = b;
-    base_for_each (a->elems, is_last, x)
+    set_t c = a;
+    base_for_each (b->elems, _, x)
     {
         c = doremir_set_add(x, c);
     }
     return c;
 }
 
+doremir_set_t doremir_set_difference(doremir_set_t a, doremir_set_t b)
+{
+    set_t c = a;
+    base_for_each (b->elems, _, x)
+    {
+        c = doremir_set_remove(x, c);
+    }
+    return c;
+}
+
 doremir_set_t doremir_set_product(doremir_set_t a, doremir_set_t b)
 {
-    set_t c = b;
+    set_t c = doremir_set_empty();
     base_for_each (a->elems, is_last, x)
     {
         base_for_each (b->elems, is_last, y)
         {
             c = doremir_set_add(pair(x, y), c);
         }
-    }
-    return c;
-}
-
-doremir_set_t doremir_set_difference(doremir_set_t a, doremir_set_t b)
-{
-    set_t c = b;
-    base_for_each (a->elems, is_last, x)
-    {
-        c = doremir_set_remove(x, c);
     }
     return c;
 }
