@@ -372,15 +372,15 @@ doremir_ptr_t doremir_move(doremir_ptr_t a)
 #define UNBOXED_WRAPPER_IMPL(T) \
     bool T##_equal(doremir_ptr_t a, doremir_ptr_t b)                                        \
     {                                                                                       \
-        return doremir_from_##T(doremir_to_##T(a) == doremir_to_##T(b));                    \
+        return (doremir_to_##T(a) == doremir_to_##T(b));                                    \
     }                                                                                       \
     bool T##_less_than(doremir_ptr_t a, doremir_ptr_t b)                                    \
     {                                                                                       \
-        return doremir_from_##T(doremir_to_##T(a) < doremir_to_##T(b));                     \
+        return (doremir_to_##T(a) < doremir_to_##T(b));                                     \
     }                                                                                       \
     bool T##_greater_than(doremir_ptr_t a, doremir_ptr_t b)                                 \
     {                                                                                       \
-        return doremir_from_##T(doremir_to_##T(a) > doremir_to_##T(b));                     \
+        return (doremir_to_##T(a) > doremir_to_##T(b));                                     \
     }                                                                                       \
     doremir_ptr_t T##_add(doremir_ptr_t a, doremir_ptr_t b)                                 \
     {                                                                                       \
@@ -414,15 +414,15 @@ doremir_ptr_t doremir_move(doremir_ptr_t a)
 #define BOXED_WRAPPER_IMPL(T) \
     bool T##_equal(doremir_ptr_t a, doremir_ptr_t b)                                        \
     {                                                                                       \
-        return doremir_from_##T(doremir_peek_##T(a) == doremir_peek_##T(b));                \
+        return (doremir_peek_##T(a) == doremir_peek_##T(b));                                \
     }                                                                                       \
     bool T##_less_than(doremir_ptr_t a, doremir_ptr_t b)                                    \
     {                                                                                       \
-        return doremir_from_##T(doremir_peek_##T(a) < doremir_peek_##T(b));                 \
+        return (doremir_peek_##T(a) < doremir_peek_##T(b));                                 \
     }                                                                                       \
     bool T##_greater_than(doremir_ptr_t a, doremir_ptr_t b)                                 \
     {                                                                                       \
-        return doremir_from_##T(doremir_peek_##T(a) > doremir_peek_##T(b));                 \
+        return (doremir_peek_##T(a) > doremir_peek_##T(b));                                 \
     }                                                                                       \
     doremir_ptr_t T##_add(doremir_ptr_t a, doremir_ptr_t b)                                 \
     {                                                                                       \
