@@ -62,18 +62,16 @@ doremir_set_t doremir_set_empty()
 
 doremir_set_t doremir_set_add(doremir_ptr_t x, doremir_set_t set)
 {                             
-    // TODO pred not value to find
-    size_t i = base_index_of(x, set->elems);
+    int i = base_index_of(x, set->elems);
     if (i >= 0)
         return doremir_set_copy(set);
     else
-        return new_set(base_insert(-i, x, set->elems));
+        return new_set(base_insert((-i - 1), x, set->elems));
 }
 
 doremir_set_t doremir_set_remove(doremir_ptr_t x, doremir_set_t set)
 {
-    // TODO pred not value to find
-    size_t i = base_index_of(x, set->elems);
+    int i = base_index_of(x, set->elems);
     if (i < 0)
         return doremir_set_copy(set);
     else
@@ -95,7 +93,6 @@ void doremir_set_destroy(doremir_set_t set)
 
 bool doremir_set_has(doremir_ptr_t x, doremir_set_t set)
 {
-    // TODO pred not value to find
     return base_index_of(x, set->elems) >= 0;
 }
 
@@ -116,7 +113,7 @@ bool doremir_set_is_single(doremir_set_t set)
 
 bool doremir_set_is_subset_of(doremir_set_t a, doremir_set_t b)
 {
-    base_for_each (a->elems, x)
+    base_for_each (a->elems, is_last, x)
     {
         if (!doremir_set_has(x, b))
             return false;
@@ -126,7 +123,7 @@ bool doremir_set_is_subset_of(doremir_set_t a, doremir_set_t b)
 
 bool doremir_set_is_proper_subset_of(doremir_set_t a, doremir_set_t b)
 {
-    base_for_each (a->elems, x)
+    base_for_each (a->elems, is_last, x)
     {
         if (!doremir_set_has(x, b))
             return false;
@@ -137,7 +134,7 @@ bool doremir_set_is_proper_subset_of(doremir_set_t a, doremir_set_t b)
 doremir_set_t doremir_set_sum(doremir_set_t a, doremir_set_t b)
 {
     set_t c = b;
-    base_for_each (a->elems, x)
+    base_for_each (a->elems, is_last, x)
     {
         c = doremir_set_add(x, c);
     }
@@ -147,9 +144,9 @@ doremir_set_t doremir_set_sum(doremir_set_t a, doremir_set_t b)
 doremir_set_t doremir_set_product(doremir_set_t a, doremir_set_t b)
 {
     set_t c = b;
-    base_for_each (a->elems, x)
+    base_for_each (a->elems, is_last, x)
     {
-        base_for_each (b->elems, y)
+        base_for_each (b->elems, is_last, y)
         {
             c = doremir_set_add(pair(x, y), c);
         }
@@ -160,7 +157,7 @@ doremir_set_t doremir_set_product(doremir_set_t a, doremir_set_t b)
 doremir_set_t doremir_set_difference(doremir_set_t a, doremir_set_t b)
 {
     set_t c = b;
-    base_for_each (a->elems, x)
+    base_for_each (a->elems, is_last, x)
     {
         c = doremir_set_remove(x, c);
     }
@@ -218,11 +215,11 @@ doremir_string_t set_show(doremir_ptr_t x)
     set_t set = (set_t) x;
     string_t s  = string("{");
 
-    base_for_each (set->elems, v)
+    base_for_each (set->elems, is_last, v)
     {
         s = string_dappend(s, doremir_string_show(v));
-        s = string_dappend(s, string(","));
-        // TODO remove final comma
+        if (!is_last)
+            s = string_dappend(s, string(","));
     }
     s = string_dappend(s, string("}"));
     return s;

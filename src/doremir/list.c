@@ -254,11 +254,13 @@ list_t doremir_list_dinit(list_t xs)
 // Misc operations
 // --------------------------------------------------------------------------------
 
+// TODO rewrite in iterative style
+
 static inline
 list_t base_append(list_t xs, list_t ys)
 {
     if (is_empty(xs))
-        return ys;
+        return doremir_list_copy(ys);
     else
         return cons(head(xs), base_append(tail(xs), ys));
 }
@@ -267,7 +269,7 @@ static inline
 list_t base_revappend(list_t xs, list_t ys)
 {
     if (is_empty(xs))
-        return ys;
+        return doremir_list_copy(ys);
     else
         return base_revappend(tail(xs), cons(head(xs), ys));
 }
@@ -323,11 +325,13 @@ list_t doremir_list_dsort(list_t xs)
 // Random access
 // --------------------------------------------------------------------------------
 
+// TODO rewrite in iterative style
+
 list_t doremir_list_take(int n, list_t xs)
 {
     if (n <= 0 || is_empty(xs))
         return empty();
-    return cons(head(xs), take(n - 1, xs));
+    return cons(head(xs), take(n - 1, tail(xs)));
 }
 
 list_t doremir_list_dtake(int n, list_t xs)
@@ -339,9 +343,11 @@ list_t doremir_list_dtake(int n, list_t xs)
 
 list_t doremir_list_drop(int n, list_t xs)
 {
-    if (n <= 0 || is_empty(xs))
+    if (n < 0 || is_empty(xs))
         return empty();
-    return drop(n - 1, xs);
+    if (n == 0)
+        return doremir_list_copy(xs);
+    return drop(n - 1, tail(xs));
 }
 
 list_t doremir_list_ddrop(int n, list_t xs)
@@ -367,16 +373,19 @@ list_t doremir_list_range(int m, int n, list_t xs)
     return doremir_list_dtake(n, doremir_list_drop(m, xs));
 }
 
-list_t doremir_list_remove_range(int m, int n, list_t xsx)
+list_t doremir_list_remove_range(int m, int n, list_t xs)
 {
-    list_t xs = doremir_list_take(m,     xs);
-    list_t ys = doremir_list_drop(m + n, xs);
-    return doremir_list_dappend(xs, ys);
+    list_t as = doremir_list_take(m,     xs);
+    list_t bs = doremir_list_drop(m + n, xs);
+    return doremir_list_dappend(as, bs);
 }
 
 list_t doremir_list_insert_range(int m, list_t xs, list_t ys)
-{
-    assert(false && "Not implemented");
+{                                   
+    list_t as = doremir_list_take(m, ys);
+    list_t bs = doremir_list_copy(xs);
+    list_t cs = doremir_list_drop(m, ys);
+    return doremir_list_dappend(as, doremir_list_dappend(bs, cs));
 }
 
 list_t doremir_list_insert(int index, ptr_t value, list_t list)
@@ -435,13 +444,17 @@ bool doremir_list_has(ptr_t value, list_t list)
     return false;
 }
 
+// TODO this assumes sorted and returns tenative position for the set impl
+//  Should that really be this method?
 int doremir_list_index_of(ptr_t value, list_t list)
 {
-    int index = 0;
+    int index = 0;                   
     for_each (list, elem)
     {
-        if (doremir_equal(value, elem))
+        if (doremir_equal(elem, value))
             return index;
+        if (doremir_greater_than(elem, value))
+            break;
         index++;
     }
     return -(index + 1);

@@ -164,12 +164,13 @@ map_t doremir_map(int count, ...);
 #define doremir_let(type, binding) \
     for (type binding,*_c=((type*)1);_c;_c=((type*)0))
 
-#define doremir_list_for_each(list, var) \
+#define doremir_list_for_each(list, is_last, var) \
     for(list_t xs = list;                             \
         !doremir_list_is_empty(xs);                   \
         xs = doremir_list_tail(xs)                    \
         )                                             \
-    doremir_let(ptr_t, var = doremir_list_head(xs))
+    doremir_let(ptr_t, var = doremir_list_head(xs))   \
+        doremir_let(bool, is_last = doremir_list_is_single(xs))
 
 
 
