@@ -35,21 +35,15 @@ struct _doremir_atomic_queue_t {
 
 doremir_ptr_t atomic_queue_impl(doremir_id_t interface);
 
-static inline
-node_t new_node()
-{
+static inline node_t new_node() {
     return doremir_new_struct(node);
 }
 
-static inline
-void delete_node(node_t node)
-{
+static inline void delete_node(node_t node) {
     doremir_delete(node);
 }
 
-static inline
-atomic_queue_t new_queue()
-{
+static inline atomic_queue_t new_queue() {
     atomic_queue_t queue = doremir_new(atomic_queue);
 
     queue->impl  = &atomic_queue_impl;
@@ -60,9 +54,7 @@ atomic_queue_t new_queue()
     return queue;
 }
 
-static inline
-void delete_queue(atomic_queue_t queue)
-{
+static inline void delete_queue(atomic_queue_t queue) {
     doremir_delete(queue->first);
     doremir_delete(queue->div);
     doremir_delete(queue->last);
@@ -71,35 +63,26 @@ void delete_queue(atomic_queue_t queue)
 
 /** Atomically get the node from a place.
  */
-static inline
-node_t get_node(atomic_t place)
-{
+static inline node_t get_node(atomic_t place) {
     return (node_t) doremir_atomic_get(place);
 }
 
 /** Atomically set a place to a node.
  */
-static inline
-void set_node(atomic_t place, node_t node)
-{
+static inline void set_node(atomic_t place, node_t node)  {
     doremir_atomic_set(place, node);
 }
 
 /** Atomically forward a place to point to the next node.
  */
-static inline
-void forward_node(atomic_t place)
-{
+static inline void forward_node(atomic_t place) {
     doremir_atomic_exchange(place, get_node(place), (get_node(place))->next);
 }
 
 /** Non-atomically delete [begin,end)
  */
-static inline
-void delete_range(atomic_t begin, atomic_t end)
-{
-    while (get_node(begin) != get_node(end))
-    {
+static inline void delete_range(atomic_t begin, atomic_t end) {
+    while (get_node(begin) != get_node(end)) {
         node_t node = get_node(begin);
         forward_node(begin);
         delete_node(node);
@@ -108,8 +91,7 @@ void delete_range(atomic_t begin, atomic_t end)
 
 /** Non-atomically delete [begin,end]
  */
-static inline
-void delete_range_end(atomic_t begin, atomic_t end)
+static inline void delete_range_end(atomic_t begin, atomic_t end)
 {
     delete_range(begin, end);
     delete_node(get_node(end));

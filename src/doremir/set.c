@@ -26,10 +26,13 @@
 #define base_remove         doremir_list_remove
 #define base_index_of       doremir_list_index_of
 #define base_length         doremir_list_length
+
+// TODO these are wrong, redo in terms of subset etc
 #define base_equal          doremir_equal
 #define base_less_than      doremir_less_than
 #define base_greater_than   doremir_greater_than
 #define base_for_each       doremir_list_for_each
+// end TODO
 
 struct _doremir_set_t {
         impl_t          impl;       //  Interface dispatcher

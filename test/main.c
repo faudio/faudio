@@ -848,6 +848,19 @@ void test_set()
         doremir_print("b                            ==> %s\n", b);
         doremir_print("a x b                        ==> %s\n", doremir_set_product(a, b));
     }
+
+    {
+        printf("\n");
+        
+        set_t a = set(string("foo"), string("bar"));
+        set_t b = set(string("hi"), string("ho"));
+        set_t c = set(i32(0),i32(1));
+
+        doremir_print("a                            ==> %s\n", a);
+        doremir_print("b                            ==> %s\n", b);
+        doremir_print("a x b                        ==> %s\n", doremir_set_product(a, b));
+        doremir_print("a x b x c                    ==> %s\n", doremir_set_product(doremir_set_product(a, b), c));
+    }
 }
 
 
