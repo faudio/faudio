@@ -4,11 +4,31 @@
 
     Immutable list data structure.
 
-    - Fast front access: ([empty](@ref doremir_list_empty), [single](@ref doremir_list_single), [cons](@ref doremir_list_cons), [head](@ref doremir_list_head), [tail](@ref doremir_list_tail)).
-    - Slow back access ([init](@ref doremir_list_init), [last](@ref doremir_list_last)).
-    - Slow random access ([index](@ref doremir_list_index), [insert](@ref doremir_list_insert), [remove](@ref doremir_list_remove)).
-    - Slow range access: ([take](@ref doremir_list_take), [drop](@ref doremir_list_drop), [range](@ref doremir_list_range), [insertRange](@ref doremir_list_insert_range), [removeRange](@ref doremir_list_remove_range))
-    - Linear [find](@ref doremir_list_find), [map](@ref doremir_list_map), [fold](@ref doremir_list_fold), [reverse](@ref doremir_list_reverse) and [filter](@ref doremir_list_filter).
+    - Fast front access: ([empty](@ref doremir_list_empty), 
+                          [single](@ref doremir_list_single), 
+                          [cons](@ref doremir_list_cons), 
+                          [head](@ref doremir_list_head), 
+                          [tail](@ref doremir_list_tail)).
+
+    - Slow back access ([init](@ref doremir_list_init), 
+                        [last](@ref doremir_list_last)).
+
+    - Slow random access ([index](@ref doremir_list_index), 
+                          [insert](@ref doremir_list_insert), 
+                          [remove](@ref doremir_list_remove)).
+
+    - Slow range access: ([take](@ref doremir_list_take), 
+                          [drop](@ref doremir_list_drop), 
+                          [range](@ref doremir_list_range), 
+                          [insertRange](@ref doremir_list_insert_range), 
+                          [removeRange](@ref doremir_list_remove_range))
+
+    - Linear [find](@ref doremir_list_find), 
+             [map](@ref doremir_list_map), 
+             [fold](@ref doremir_list_fold), 
+             [reverse](@ref doremir_list_reverse) and 
+             [filter](@ref doremir_list_filter).
+
     - Logarithmic [sort](@ref doremir_list_sort).
 
     @par Literals
