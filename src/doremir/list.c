@@ -393,9 +393,9 @@ list_t doremir_list_insert(int index, ptr_t value, list_t list)
     return doremir_list_insert_range(index, doremir_list_single(value), list);
 }
 
-list_t doremir_list_remove(int m, list_t xs)
+list_t doremir_list_remove(int index, list_t list)
 {
-    return doremir_list_remove_range(m, 1, xs);
+    return doremir_list_remove_range(index, 1, list);
 }
 
 
@@ -630,9 +630,9 @@ bool list_less_than(ptr_t a, ptr_t b)
     node_t bn = ((list_t) b)->node;
     while (an && bn)
     {
-        if (lt(an->value, bn->value))
+        if (doremir_less_than(an->value, bn->value))
             return true;
-        if (gt(an->value, bn->value))
+        if (doremir_greater_than(an->value, bn->value))
             return false;
         an = an->next;
         bn = bn->next;
@@ -646,9 +646,9 @@ bool list_greater_than(ptr_t a, ptr_t b)
     node_t bn = ((list_t) b)->node;
     while (an && bn)
     {
-        if (gt(an->value, bn->value))
+        if (doremir_greater_than(an->value, bn->value))
             return true;
-        if (lt(an->value, bn->value))
+        if (doremir_less_than(an->value, bn->value))
             return false;
         an = an->next;
         bn = bn->next;

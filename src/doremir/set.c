@@ -34,6 +34,8 @@
 #define base_for_each       doremir_list_for_each
 // end TODO
 
+#define kill_warning(x) x = x
+
 struct _doremir_set_t {
         impl_t          impl;       //  Interface dispatcher
         base_t          elems;
@@ -66,10 +68,10 @@ doremir_set_t doremir_set_empty()
 doremir_set_t doremir_set_add(doremir_ptr_t x, doremir_set_t set)
 {                             
     int i = base_index_of(x, set->elems);
-    if (i >= 0)
-        return doremir_set_copy(set);
-    else
+    if (i < 0)
         return new_set(base_insert((-i - 1), x, set->elems));
+    else
+        return doremir_set_copy(set);
 }
 
 doremir_set_t doremir_set_remove(doremir_ptr_t x, doremir_set_t set)
@@ -116,8 +118,10 @@ bool doremir_set_is_single(doremir_set_t set)
 
 bool doremir_set_is_subset_of(doremir_set_t a, doremir_set_t b)
 {
-    base_for_each (a->elems, is_last, x)
-    {
+    base_for_each (a->elems, last, x)
+    {                               
+        kill_warning(last);
+        
         if (!doremir_set_has(x, b))
             return false;
     }
@@ -126,8 +130,10 @@ bool doremir_set_is_subset_of(doremir_set_t a, doremir_set_t b)
 
 bool doremir_set_is_proper_subset_of(doremir_set_t a, doremir_set_t b)
 {
-    base_for_each (a->elems, is_last, x)
+    base_for_each (a->elems, last, x)
     {
+        kill_warning(last);
+        
         if (!doremir_set_has(x, b))
             return false;
     }
@@ -137,8 +143,10 @@ bool doremir_set_is_proper_subset_of(doremir_set_t a, doremir_set_t b)
 doremir_set_t doremir_set_sum(doremir_set_t a, doremir_set_t b)
 {
     set_t c = a;
-    base_for_each (b->elems, _, x)
+    base_for_each (b->elems, last, x)
     {
+        kill_warning(last);
+
         c = doremir_set_add(x, c);
     }
     return c;
@@ -147,8 +155,10 @@ doremir_set_t doremir_set_sum(doremir_set_t a, doremir_set_t b)
 doremir_set_t doremir_set_difference(doremir_set_t a, doremir_set_t b)
 {
     set_t c = a;
-    base_for_each (b->elems, _, x)
+    base_for_each (b->elems, last, x)
     {
+        kill_warning(last);
+
         c = doremir_set_remove(x, c);
     }
     return c;
@@ -157,10 +167,14 @@ doremir_set_t doremir_set_difference(doremir_set_t a, doremir_set_t b)
 doremir_set_t doremir_set_product(doremir_set_t a, doremir_set_t b)
 {
     set_t c = doremir_set_empty();
-    base_for_each (a->elems, is_last, x)
+    base_for_each (a->elems, last, x)
     {
-        base_for_each (b->elems, is_last, y)
+        kill_warning(last);
+
+        base_for_each (b->elems, last, y)
         {
+            kill_warning(last);
+
             c = doremir_set_add(pair(x, y), c);
         }
     }
@@ -218,10 +232,10 @@ doremir_string_t set_show(doremir_ptr_t x)
     set_t set = (set_t) x;
     string_t s  = string("{");
 
-    base_for_each (set->elems, is_last, v)
+    base_for_each (set->elems, last, v)
     {
         s = string_dappend(s, doremir_string_show(v));
-        if (!is_last)
+        if (!last)
             s = string_dappend(s, string(","));
     }
     s = string_dappend(s, string("}"));

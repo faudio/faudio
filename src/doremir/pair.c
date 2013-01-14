@@ -19,11 +19,11 @@ doremir_ptr_t pair_impl(doremir_id_t interface);
 
 pair_t new_pair(doremir_ptr_t fst, doremir_ptr_t snd)
 {
-    pair_t p = doremir_new(pair);
-    p->impl = &pair_impl;
-    p->fst  = fst;
-    p->snd  = snd;
-    return p;
+    pair_t pair = doremir_new(pair);
+    pair->impl = &pair_impl;
+    pair->fst  = fst;
+    pair->snd  = snd;
+    return pair;
 }
 void delete_pair(pair_t p)
 {
@@ -32,100 +32,105 @@ void delete_pair(pair_t p)
 
 doremir_pair_t doremir_pair_create(doremir_ptr_t fst, doremir_ptr_t snd)
 {
-    pair_t p = new_pair(fst, snd);
-    return p;
+    return new_pair(fst, snd);
 }
 
-doremir_pair_t doremir_pair_copy(doremir_pair_t p)
+doremir_pair_t doremir_pair_copy(doremir_pair_t pair)
 {
-    return new_pair(p->fst, p->snd);
+    return new_pair(pair->fst, pair->snd);
 }
 
-void doremir_pair_destroy(doremir_pair_t p)
+void doremir_pair_destroy(doremir_pair_t pair)
 {
-    delete_pair(p);
+    delete_pair(pair);
 }
 
 // --------------------------------------------------------------------------------
 
-doremir_ptr_t doremir_pair_fst(doremir_pair_t p)
+doremir_ptr_t doremir_pair_fst(doremir_pair_t pair)
 {
-    return p->fst;
+    return pair->fst;
 }
 
-doremir_ptr_t doremir_pair_snd(doremir_pair_t p)
+doremir_ptr_t doremir_pair_snd(doremir_pair_t pair)
 {
-    return p->snd;
+    return pair->snd;
 }
 
-doremir_pair_t doremir_pair_dup(doremir_ptr_t x)
+doremir_pair_t doremir_pair_dup(doremir_ptr_t value)
 {
-    return new_pair(doremir_copy(x), doremir_copy(x));
+    return new_pair(doremir_copy(value), doremir_copy(value));
 }
 
-doremir_pair_t doremir_pair_swap(doremir_pair_t p)
+doremir_pair_t doremir_pair_swap(doremir_pair_t pair)
 {
-    return new_pair(doremir_copy(p->snd), doremir_copy(p->fst));
+    return new_pair(doremir_copy(pair->snd), doremir_copy(pair->fst));
 }
 
 // (a, (b, c)) -> ((a, b), c)
 doremir_pair_t doremir_pair_assoc(doremir_pair_t p)
-{
-    return new_pair(new_pair(doremir_copy(p->fst), 
-                             doremir_copy(((pair_t) p->snd)->fst)), 
-                    doremir_copy(((pair_t) p->snd)->snd));
+{                             
+    ptr_t a = doremir_copy(p->fst);
+    ptr_t b = doremir_copy(((pair_t) p->snd)->fst);
+    ptr_t c = doremir_copy(((pair_t) p->snd)->snd);
+    
+    return new_pair(new_pair(a, b), c);
 }
 
 // ((a, b), c) -> (a, (b, c))
 doremir_pair_t doremir_pair_unassoc(doremir_pair_t p)
-{
-    return new_pair(doremir_copy(((pair_t) p->fst)->fst), 
-                    new_pair(doremir_copy(((pair_t) p->fst)->snd), 
-                             doremir_copy(p->snd)));
+{                   
+    ptr_t a = doremir_copy(((pair_t) p->fst)->fst);
+    ptr_t b = doremir_copy(((pair_t) p->fst)->snd);
+    ptr_t c = doremir_copy(p->snd);
+    return new_pair(a, new_pair(b, c));
 }
 
 
+// --------------------------------------------------------------------------------
 
-doremir_ptr_t doremir_pair_dfst(doremir_pair_t p)
+doremir_ptr_t doremir_pair_dfst(doremir_pair_t pair)
 {
-    ptr_t v = p->fst;
-    doremir_destroy(p);
-    return v;
+    ptr_t value = pair->fst;
+    doremir_destroy(pair);
+    return value;
 }
 
-doremir_ptr_t doremir_pair_dsnd(doremir_pair_t p)
+doremir_ptr_t doremir_pair_dsnd(doremir_pair_t pair)
 {
-    ptr_t v = p->snd;
-    doremir_destroy(p);
-    return v;
+    ptr_t value = pair->snd;
+    doremir_destroy(pair);
+    return value;
 }
 
-doremir_pair_t doremir_pair_ddup(doremir_ptr_t x)
+doremir_pair_t doremir_pair_ddup(doremir_ptr_t value)
 {
-    return new_pair(x, doremir_copy(x));
+    return new_pair(value, doremir_copy(value));
 }
 
-doremir_pair_t doremir_pair_dswap(doremir_pair_t p)
+doremir_pair_t doremir_pair_dswap(doremir_pair_t pair)
 {
-    pair_t p2 = new_pair(p->snd, p->fst);
-    doremir_destroy(p);
-    return p2;
+    pair_t pair2 = new_pair(pair->snd, pair->fst);
+    doremir_destroy(pair);
+    return pair2;
 }
 
 // (a, (b, c)) -> ((a, b), c)
-doremir_pair_t doremir_pair_dassoc(doremir_pair_t p)
+doremir_pair_t doremir_pair_dassoc(doremir_pair_t pair)
 {
-    pair_t p2 = new_pair(new_pair(p->fst, ((pair_t) p->snd)->fst), ((pair_t) p->snd)->snd);
-    doremir_destroy(p);
-    return p2;
+    pair_t pair2 = doremir_pair_assoc(pair);
+    doremir_destroy(pair->snd);
+    doremir_destroy(pair);
+    return pair2;
 }
 
 // ((a, b), c) -> (a, (b, c))
-doremir_pair_t doremir_pair_dunassoc(doremir_pair_t p)
+doremir_pair_t doremir_pair_dunassoc(doremir_pair_t pair)
 {
-    pair_t p2 = new_pair(((pair_t) p->fst)->fst, new_pair(((pair_t) p->fst)->snd, p->snd));
-    doremir_destroy(p);
-    return p2;
+    pair_t pair2 = doremir_pair_unassoc(pair);
+    doremir_destroy(pair->fst);
+    doremir_destroy(pair);
+    return pair2;
 }
 
 

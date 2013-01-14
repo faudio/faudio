@@ -33,8 +33,6 @@ module Doremir.Map
 
     // Constructors
     empty            : () -> Map;
-    add              : (Pair, Map) -> Map;
-    remove           : (Pair, Map) -> Void;
     copy             : Map -> Map;
     destroy          : Map -> Void;
 
@@ -47,7 +45,11 @@ module Doremir.Map
     isSingle         : Map -> Bool;
 
     // Lookup function
+    add              : (Key, Ptr, Map) -> Map;
+    remove           : (Key, Map) -> Map;
     get              : (Key, Map) -> Ptr;
+    addEntry         : (Pair, Map) -> Map;
+    removeEntry      : (Pair, Map) -> Map;
 
     // Predicates
     hasKey           : (Key, Map) -> Bool;
