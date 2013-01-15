@@ -131,14 +131,9 @@ bool doremir_set_is_subset_of(doremir_set_t a, doremir_set_t b)
 
 bool doremir_set_is_proper_subset_of(doremir_set_t a, doremir_set_t b)
 {
-    base_for_each (a->elems, last, x)
-    {
-        kill_warning(last);
-        
-        if (!doremir_set_has(x, b))
-            return false;
-    }
-    return doremir_set_size(a) != doremir_set_size(b);
+    if (doremir_set_size(a) >= doremir_set_size(b))
+        return false;
+    return doremir_set_is_subset_of(a, b);
 }
 
 doremir_set_t doremir_set_sum(doremir_set_t a, doremir_set_t b)
