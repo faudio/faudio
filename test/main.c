@@ -470,24 +470,22 @@ void test_audio_types()
 }
 
 
-void test_foreach()
+void test_for_each()
 {
-    // list_t list = list(i32(1),i32(2),i32(3),i32(4));
+    doremir_let(int, x, 33)
+    {
+        doremir_let(int, y, 1)
+            doremir_let(int, z, x + y)
+                doremir_print("%s\n", i32(z));
+    }
 
-    // doremir_let (int, x = 33)
-    // {
-    //     int y = 1;
-    //     doremir_let (int, z = x + y)
-    //     {
-    //         doremir_print("%s\n", i32(z));
-    //     }
-    // }
-
-    // doremir_list_for_each (list, is_last, x)
-    // {
-    //     doremir_print(">    %s\n", x);
-    // }
-    // doremir_delete(list);
+    doremir_unlet(list_t, list, list(i32(1),i32(2),i32(3),i32(4)), doremir_destroy(list))
+    {
+        doremir_list_for_each(list, is_last, x)
+        {
+            doremir_print(">    %s\n", x);
+        }
+    }
 }
 
 bool is_even16(ptr_t data, ptr_t p)
@@ -922,15 +920,11 @@ int main (int argc, char const *argv[])
       // processors
       // dispatchers
 
-      test_foreach();
-      
       */           
-      while(1)
-      {
+      test_for_each();
+      
       test_list(); 
       test_set();
-      doremir_thread_sleep(200);
-      }
 
       doremir_audio_engine_terminate();
   }

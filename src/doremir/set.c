@@ -27,12 +27,12 @@
 #define base_remove         doremir_list_remove
 #define base_index_of       doremir_list_index_of
 #define base_size           doremir_list_length
+#define base_for_each       doremir_list_for_each // TODO use to_list instead?
 
 // TODO these are wrong, redo in terms of subset etc
 #define base_equal          doremir_equal
 #define base_less_than      doremir_less_than
 #define base_greater_than   doremir_greater_than
-#define base_for_each       doremir_list_for_each
 // end TODO
 
 #define kill_warning(x) x = x
@@ -89,7 +89,6 @@ doremir_set_t doremir_set_remove(doremir_ptr_t x, doremir_set_t set)
         return new_set(base_remove(i, set->elems));
 }
 
-// TODO leaks
 doremir_set_t doremir_set_dadd(doremir_ptr_t x, doremir_set_t set)
 {                             
     set_t set2 = doremir_set_add(x, set);
@@ -97,7 +96,6 @@ doremir_set_t doremir_set_dadd(doremir_ptr_t x, doremir_set_t set)
     return set2;
 }
 
-// TODO leaks
 doremir_set_t doremir_set_dremove(doremir_ptr_t x, doremir_set_t set)
 {
     set_t set2 = doremir_set_remove(x, set);

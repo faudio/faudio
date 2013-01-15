@@ -125,11 +125,11 @@ void delete_list(list_t list)
     var will be a node_t referencing the node in
     the following block.
     
-    for_each_node(my_list, node)
+    impl_for_each_node(my_list, node)
         doremir_print("%s\n", &node);
 
  */
-#define for_each_node(list, var) \
+#define impl_for_each_node(list, var) \
     for(node_t _n = list->node; _n; _n = _n->next) \
         doremir_let(node_t, var, _n)
 
@@ -137,11 +137,11 @@ void delete_list(list_t list)
     var will be a ptr_t referencing the value in
     the following block.
     
-    for_each_node(my_list, value)
+    impl_for_each_node(my_list, value)
         doremir_print("%s\n", value);
 
  */
-#define for_each(list, var) \
+#define impl_for_each(list, var) \
     for(node_t _n = list->node; _n; _n = _n->next) \
         doremir_let(ptr_t, var, _n->value)
 
@@ -227,7 +227,7 @@ bool doremir_list_is_single(list_t xs)
 int doremir_list_length(list_t xs)
 {
     int count = 0;
-    for_each(xs, value)
+    impl_for_each(xs, value)
     {
         value = value;   // kill warning
         count++;
@@ -262,7 +262,7 @@ list_t doremir_list_init(list_t xs)
         assert(false && "No init");
 
     node_t node = NULL, *next = &node;
-    for_each_node(xs, node)
+    impl_for_each_node(xs, node)
     {
         if (node->next)
             append_node(next, node->value);
@@ -272,7 +272,7 @@ list_t doremir_list_init(list_t xs)
 
 ptr_t doremir_list_last(list_t xs)
 {
-    for_each_node(xs, node)
+    impl_for_each_node(xs, node)
     {
         if (!node->next)
             return node->value;
@@ -407,7 +407,7 @@ list_t doremir_list_drop(int n, list_t xs)
 ptr_t doremir_list_index(int n, list_t xs)
 {
     int i = 0;
-    for_each(xs, x)
+    impl_for_each(xs, x)
     {
         if (i++ == n)
             return x;
@@ -500,7 +500,7 @@ list_t doremir_list_dremove_range(int m, int n, list_t xs)
 
 bool doremir_list_has(ptr_t value, list_t list)
 {
-    for_each(list, elem)
+    impl_for_each(list, elem)
     {
         if (doremir_equal(value, elem))
             return true;
@@ -513,7 +513,7 @@ bool doremir_list_has(ptr_t value, list_t list)
 int doremir_list_index_of(ptr_t value, list_t list)
 {
     int index = 0;
-    for_each(list, elem)
+    impl_for_each(list, elem)
     {
         if (doremir_equal(elem, value))
             return index;
@@ -528,7 +528,7 @@ int doremir_list_index_of(ptr_t value, list_t list)
 
 ptr_t doremir_list_find(pred_t pred, ptr_t data, list_t list)
 {
-    for_each(list, elem)
+    impl_for_each(list, elem)
     {
         if (pred(data, elem))
             return elem;
@@ -539,7 +539,7 @@ ptr_t doremir_list_find(pred_t pred, ptr_t data, list_t list)
 int doremir_list_find_index(pred_t pred, ptr_t data, list_t list)
 {
     int index = 0;
-    for_each(list, elem)
+    impl_for_each(list, elem)
     {
         if (pred(data, elem))
             return index;
@@ -557,7 +557,7 @@ int doremir_list_find_index(pred_t pred, ptr_t data, list_t list)
 list_t doremir_list_map(unary_t func, ptr_t data, list_t list)
 {
     node_t node = NULL, *next = &node;
-    for_each(list, elem)
+    impl_for_each(list, elem)
     {
         append_node(next, func(data, elem));
     }
@@ -567,7 +567,7 @@ list_t doremir_list_map(unary_t func, ptr_t data, list_t list)
 list_t doremir_list_filter(pred_t pred, ptr_t data, list_t list)
 {
     node_t node = NULL, *next = &node;
-    for_each(list, elem)
+    impl_for_each(list, elem)
     {
         if (pred(data, elem))
             append_node(next, elem);
@@ -578,7 +578,7 @@ list_t doremir_list_filter(pred_t pred, ptr_t data, list_t list)
 ptr_t doremir_list_fold_left(binary_t func, ptr_t data, ptr_t init, list_t list)
 {
     ptr_t value = init;
-    for_each(list, elem)
+    impl_for_each(list, elem)
     {
         value = func(data, value, elem);
     }
