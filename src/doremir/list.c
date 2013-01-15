@@ -40,13 +40,13 @@ struct _doremir_list_t
 static int dbNodes = 0;
 void db_node_alloc()
 {
-    dbNodes++;
-    printf("                                                            | Alloc node   (count: %d)\n", dbNodes);
+    // dbNodes++;
+    // printf("                                                            | Alloc node   (count: %d)\n", dbNodes);
 }   
 void db_node_free()
 {
-    dbNodes--;
-    printf("                                                            | Free node    (count: %d)\n", dbNodes);
+    // dbNodes--;
+    // printf("                                                            | Free node    (count: %d)\n", dbNodes);
 }
 void db_node_take(node_t node)
 {

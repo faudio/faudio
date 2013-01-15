@@ -190,9 +190,9 @@ doremir_string_t entry_show(doremir_ptr_t a)
 {
     entry_t b = (entry_t) a;
     string_t s = string("<Entry (");
-    s = string_dappend(s, sshow(b->key));
+    s = string_dappend(s, doremir_string_show(b->key));
     s = string_dappend(s, string(","));
-    s = string_dappend(s, sshow(b->value));
+    s = string_dappend(s, doremir_string_show(b->value));
     s = string_dappend(s, string(")>"));
     return s;
 }

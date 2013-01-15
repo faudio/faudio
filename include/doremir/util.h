@@ -2,6 +2,10 @@
 #ifndef _DOREMIR_UTIL
 #define _DOREMIR_UTIL
 
+#include <doremir/util/alignof.h>
+#include <doremir/util/literals.h>
+#include <doremir/util/macros.h>
+
 #define ptr_t               doremir_ptr_t
 #define impl_t              doremir_impl_t
 #define pred_t              doremir_pred_t
@@ -60,45 +64,13 @@
 #define i64                 doremir_from_int64
 #define d                   doremir_from_double
 
-#define eq                  doremir_equal
-#define gt                  doremir_greater_than
-#define lt                  doremir_less_than
-#define gte                 doremir_greater_than_equal
-#define lte                 doremir_less_than_equal
-
 #define empty               doremir_list_empty
 #define cons                doremir_list_cons
 #define snoc                doremir_list_snoc
 #define append              doremir_list_append
-#define destroy             doremir_list_destroy
-#define copy                doremir_list_copy
-#define swap                doremir_list_swap
 #define is_empty            doremir_list_is_empty
-#define is_single           doremir_list_is_single
-#define lenght              doremir_list_lenght
-#define head                doremir_list_head
-#define tail                doremir_list_tail
-#define init                doremir_list_init
-#define last                doremir_list_last
-#define take                doremir_list_take
-#define drop                doremir_list_drop
-#define has_elem            doremir_list_has_elem
-#define reverse             doremir_list_reverse
-#define sort                doremir_list_sort
-#define filter              doremir_list_filter
-#define consd               doremir_list_consd
-#define snocd               doremir_list_snocd
-#define reversed            doremir_list_reversed
-#define sortd               doremir_list_sortd
-#define mapd                doremir_list_mapd
-
-#define slength             doremir_string_length
-#define scopy               doremir_string_copy
-#define sappend             doremir_string_append
-#define sdappend            doremir_string_dappend
 #define char_at             doremir_string_char_at
-#define sshow               doremir_string_show
-
+#define string_append       doremir_string_append
 #define string_dappend      doremir_string_dappend
 #define format_int          doremir_string_format_integer
 #define format_integer      doremir_string_format_integer
@@ -108,142 +80,6 @@
 #define aset                doremir_atomic_set
 #define aadd                doremir_atomic_add
 #define amodify             doremir_atomic_modify
-
-
-// TODO move
-
-#ifndef alignof
-#define alignof(T) offsetof (struct { char c; T member; }, member)
-#endif
-
-
-// TODO move
-
-#include <doremir/list.h>   // for list forward decl
-#include <doremir/set.h>    // for set forward decl
-#include <doremir/map.h>    // for map forward decl
-
-list_t doremir_list(int count, ...);
-set_t doremir_set(int count, ...);
-map_t doremir_map(int count, ...);
-
-#define VA_NARGS_IMPL(_1, _2, _3, _4, _5, _6, N, ...) N
-#define VA_NARGS(...) VA_NARGS_IMPL(X,##__VA_ARGS__, 5, 4, 3, 2, 1, 0)
-#define VARARG_IMPL2(base, count, ...) base##count(__VA_ARGS__)
-#define VARARG_IMPL(base, count, ...) VARARG_IMPL2(base, count, __VA_ARGS__)
-#define VARARG(base, ...) VARARG_IMPL(base, VA_NARGS(__VA_ARGS__), __VA_ARGS__)
-
-#define list0()                             doremir_list(0)
-#define list1(a)                            doremir_list(1,a)
-#define list2(a,b)                          doremir_list(2,a,b)
-#define list3(a,b,c)                        doremir_list(3,a,b,c)
-#define list4(a,b,c,d)                      doremir_list(4,a,b,c,d)
-#define list5(a,b,c,d,e)                    doremir_list(5,a,b,c,d,e)
-#define list(...) VARARG(list, __VA_ARGS__)
-
-#define set0()                              doremir_set(0)
-#define set1(a)                             doremir_set(1,a)
-#define set2(a,b)                           doremir_set(2,a,b)
-#define set3(a,b,c)                         doremir_set(3,a,b,c)
-#define set4(a,b,c,d)                       doremir_set(4,a,b,c,d)
-#define set5(a,b,c,d,e)                     doremir_set(5,a,b,c,d,e)
-#define set(...) VARARG(set, __VA_ARGS__)
-
-#define map0()                              doremir_map(0)
-#define map1(a)                             doremir_map(1,a)
-#define map2(a,b)                           doremir_map(2,a,b)
-#define map3(a,b,c)                         doremir_map(3,a,b,c)
-#define map4(a,b,c,d)                       doremir_map(4,a,b,c,d)
-#define map5(a,b,c,d,e)                     doremir_map(5,a,b,c,d,e)
-#define map(...) VARARG(list, __VA_ARGS__)
-
-
-// TODO move
-
-/** Execute following statement with a binding in scope.
-
-    Syntax:
-        
-        doremir_with(type, var, initExpr, finalizeExpr) 
-            statement;
-    
-    Example:      
-    
-        doremir_let(
-            int, x, 23
-        )
-        {
-            printf("%d\n", 23)
-        }
- */
-#define doremir_let(type, var, bind) \
-    for (type var = bind, *__c=((type*) 1); \
-         __c; \
-         __c = ((type*) 0) \
-         )
-
-/** Execute the following statement with a binding in scope, then
-    evaluate the given finalizer expression.
-
-    Syntax:
-
-        doremir_with(type, var, initExpr, finalizeExpr) 
-            statement;
-    
-    Example:      
-    
-        doremir_with(
-            resource_t, x, get_resource(), 
-            release_resource(x)
-        )
-        {
-            use_resource(x);
-        }
-    
- */
-#define doremir_with(type, var, bind, unbind) \
-    for (type var = bind, *__c=((type*) 1); \
-        __c; \
-        __c = ((type*) 0), unbind \
-        )
-
-/** Execute the following statement once for each item in the
-    given list.
-    
-    Syntax:
-        
-        doremir_loop(listExpr, lastVar, elemVar)
-            statement;
-    
-    Example:      
-    
-        doremir_dloop(
-            ptr_t, x, list(1,2,3)
-        )
-        {
-            use_resource(x);
-        }
-    
- */
-#define doremir_list_for_each(list, last, var) \
-    doremir_list_dfor_each(doremir_list_copy(list), last, var)
-
-#define doremir_list_dfor_each(list, last, var) \
-    doremir_with ( \
-        doremir_list_t, __j, list, \
-        doremir_list_destroy(__j) \
-        ) \
-        for ( ; \
-            !doremir_list_is_empty(__j); \
-            __j = doremir_list_dtail(__j) \
-            ) \
-                doremir_let ( \
-                    ptr_t, var, doremir_list_head(__j) \
-                    ) \
-                    doremir_let ( \
-                        bool, last, doremir_list_is_single(__j) \
-                        )
-
 
 #endif // _DOREMIR_UTIL
 
