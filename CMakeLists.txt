@@ -59,12 +59,8 @@ option(BUILD_FRAMEWORK          "Build an OS X framework"                   ${AP
 option(BUILD_SHARED             "Build a shared library"                    ${NOT_APPLE})
 option(BUILD_TESTS              "Build unit tests"                          True)
 
-option(PREFER_NONBLOCKING       "Use non-blocking audio by default"         True)
-option(PREFER_EXCLUSIVE         "Use exclusive audio streams by default"    True)
-option(REDIRECT_LOG             "Redirect log messages to standard output"  False)
 option(PROFILING                "Compile with profiler flags -pg set"       False)
 
-option(RUN_TESTS                "Run unit tests after build"                True)
 option(BUILD_COMPONENTS         "Build dependent components locally"        False)
 option(SHOW_COMPONENT_OUTPUT    "Show output while building components"     False)
 
