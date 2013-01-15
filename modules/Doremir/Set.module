@@ -34,6 +34,8 @@ module Doremir.Set
     single           : Ptr -> Set;
     add              : (Ptr, Set) -> Set;
     remove           : (Ptr, Set) -> Set;
+    dadd             : (Ptr, Set) -> Set;
+    dremove          : (Ptr, Set) -> Set;
     copy             : Set -> Set;
     destroy          : Set -> Void;    
 
@@ -51,7 +53,6 @@ module Doremir.Set
     sum              : (Set, Set) -> Set;
     product          : (Set, Set) -> Set;
     difference       : (Set, Set) -> Set;
-    cartesian        : (Set, Set) -> Set;
     power            : Set -> Set;
 }
 

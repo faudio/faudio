@@ -166,12 +166,16 @@ map_t doremir_map(int count, ...);
     for (type binding,*_c=((type*)1);_c;_c=((type*)0))
 
 #define doremir_list_for_each(list, is_last, var) \
-    for(list_t xs = list;                             \
+    for(list_t xs = doremir_list_copy(list);          \
         !doremir_list_is_empty(xs);                   \
-        xs = doremir_list_tail(xs)                    \
+        xs = doremir_list_dtail(xs)                   \
         )                                             \
     doremir_let(ptr_t, var = doremir_list_head(xs))   \
         doremir_let(bool, is_last = doremir_list_is_single(xs))
+
+// TODO last is not freed
+// FIX by using the begin macro
+// This is not noticed by the node leak detector because it is empty
 
 
 
