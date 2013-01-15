@@ -60,7 +60,6 @@ module Doremir.Map
     sum              : (Map, Map) -> Map;
     product          : (Map, Map) -> Map;
     difference       : (Map, Map) -> Map;
-    cartesian        : (Map, Map) -> Map;
     power            : Map -> Map;
 
     // Conversions   
