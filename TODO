@@ -18,6 +18,8 @@ We will use the "big buffer" approach
 ==========
 Additions
 
+* Generic for_each (by toList method?)
+
 * Implement ringbuffer
 
 * Implement non-realtime streams
