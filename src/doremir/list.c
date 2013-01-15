@@ -37,11 +37,35 @@ struct _doremir_list_t
     node_t          node;       //  Top-level node
 };
 
+static int dbNodes = 0;
+void db_node_alloc()
+{
+    dbNodes++;
+    printf("                                                            | Alloc node   (count: %d)\n", dbNodes);
+}   
+void db_node_free()
+{
+    dbNodes--;
+    printf("                                                            | Free node    (count: %d)\n", dbNodes);
+}
+void db_node_take(node_t node)
+{
+    if (node)
+        printf("                                                            | Take node    (refs: %u)\n", node->count);
+}
+void db_node_release(node_t node)
+{
+    if (node)
+        printf("                                                            | Release node (refs: %u)\n", node->count);
+}
+
+
 /** Create a new node with a single reference.
  */
 inline static
 node_t new_node(ptr_t value, node_t next)
-{
+{         
+    db_node_alloc();
     node_t node = doremir_new_struct(node);
     node->count = 1;
     node->value = value;
@@ -53,9 +77,10 @@ node_t new_node(ptr_t value, node_t next)
  */
 inline static
 node_t take_node(node_t node)
-{
+{   
     if (node)
         node->count++;      /* TODO make atomic? */
+    db_node_take(node);
 
     return node;
 }
@@ -69,9 +94,11 @@ void release_node(node_t node)
     if (!node) return;
 
     node->count--;
+    db_node_release(node);
 
     if (node->count == 0)
-    {
+    {        
+        db_node_free();
         release_node(node->next);
         doremir_delete(node);
     }
@@ -94,17 +121,32 @@ void delete_list(list_t list)
     doremir_delete(list);
 }
 
+/** Iterate over the nodes of a list. The variable
+    var will be a node_t referencing the node in
+    the following block.
+    
+    for_each_node(my_list, node)
+        doremir_print("%s\n", &node);
+
+ */
 #define for_each_node(list, var) \
     for(node_t _n = list->node; _n; _n = _n->next) \
         doremir_let(node_t, var = _n)
 
+/** Iterate over the elements of a list. The variable
+    var will be a ptr_t referencing the value in
+    the following block.
+    
+    for_each_node(my_list, value)
+        doremir_print("%s\n", value);
+
+ */
 #define for_each(list, var) \
     for(node_t _n = list->node; _n; _n = _n->next) \
         doremir_let(ptr_t, var = _n->value)
 
-/** Allocate a new node containing the given value, store it
-    in the given place, then update the place to reference
-    the next field of the created node.
+/** Allocate a new node in the given place, then update 
+    the place to refer to the the its next pointer.
 
     This can be used to construct a list in place, like
 
@@ -119,14 +161,14 @@ void delete_list(list_t list)
 
  */
 #define append_node(place, value) \
-    do {                                \
-        *place = new_node(value, NULL); \
-        place = &((*place)->next);      \
+    do {                                    \
+        *place = new_node(value, NULL);     \
+        place = &(*place)->next;            \
     } while (0)
 
 #define prepend_node(place, value) \
-    do {                                  \
-        *place = new_node(value, *place); \
+    do {                                    \
+        *place = new_node(value, *place);   \
     } while (0)
 
 
@@ -136,35 +178,46 @@ void delete_list(list_t list)
 
 list_t doremir_list_empty()
 {
+    // make new list
+    // no nodes
     return new_list(NULL);
 }
 
 list_t doremir_list_single(ptr_t x)
-{
+{              
+    // make new list
+    // ref count is one
     return new_list(new_node(x, NULL));
-}
-
-list_t doremir_list_cons(ptr_t x, list_t xs)
-{
-    return new_list(new_node(x, take_node(xs->node)));
 }
 
 list_t doremir_list_copy(list_t xs)
 {
+    // make new list
+    // ref count is incr
     return new_list(take_node(xs->node));
 }
 
-void doremir_list_destroy(list_t xs)
+list_t doremir_list_cons(ptr_t x, list_t xs)
 {
-    release_node(xs->node);
-    delete_list(xs);
+    // make new list
+    // ref count is incr
+    return new_list(new_node(x, take_node(xs->node)));
 }
 
 list_t doremir_list_dcons(ptr_t x, list_t xs)
 {
+    // make new list
+    // ref count is not touched
     list_t ys = new_list(new_node(x, xs->node));
     delete_list(xs);
     return ys;
+}
+
+void doremir_list_destroy(list_t xs)
+{                              
+    // ref count is decr
+    release_node(xs->node);
+    delete_list(xs);
 }
 
 
@@ -265,16 +318,27 @@ list_t base_append(list_t xs, list_t ys)
     if (is_empty(xs))
         return doremir_list_copy(ys);
     else
-        return cons(head(xs), base_append(tail(xs), ys));
+    {                                                                  
+        list_t xst = doremir_list_tail(xs);
+        list_t r = doremir_list_dcons(doremir_list_head(xs), base_append(xst, ys));
+        doremir_destroy(xst);
+        return r;
+    }
 }
 
+// FIXME leaks
 static inline
 list_t base_revappend(list_t xs, list_t ys)
 {
     if (is_empty(xs))
         return doremir_list_copy(ys);
     else
-        return base_revappend(tail(xs), cons(head(xs), ys));
+    {
+        list_t xst = doremir_list_tail(xs);
+        list_t r = base_revappend(xst, doremir_list_cons(doremir_list_head(xs), ys));
+        doremir_destroy(xst);
+        return r;
+    }
 }
 
 list_t doremir_list_append(list_t xs, list_t ys)
@@ -311,7 +375,7 @@ list_t doremir_list_dappend(list_t xs, list_t ys)
 
 list_t doremir_list_dreverse(list_t xs)
 {
-    list_t ys = base_revappend(xs, empty());
+    list_t ys = base_revappend(xs, doremir_list_empty());
     doremir_list_destroy(xs);
     return ys;
 }
@@ -332,10 +396,10 @@ list_t doremir_list_dsort(list_t xs)
 
 list_t doremir_list_take(int n, list_t xs)
 {
-    if (n <= 0 || is_empty(xs))
-        return empty();
+    if (n <= 0 || doremir_list_is_empty(xs))
+        return doremir_list_empty();
 
-    return cons(head(xs), take(n - 1, tail(xs)));
+    return doremir_list_dcons(doremir_list_head(xs), doremir_list_dtake(n - 1, doremir_list_tail(xs)));
 }
 
 list_t doremir_list_dtake(int n, list_t xs)
@@ -347,13 +411,13 @@ list_t doremir_list_dtake(int n, list_t xs)
 
 list_t doremir_list_drop(int n, list_t xs)
 {
-    if (n < 0 || is_empty(xs))
-        return empty();
+    if (n < 0 || doremir_list_is_empty(xs))
+        return doremir_list_empty();
 
     if (n == 0)
         return doremir_list_copy(xs);
 
-    return drop(n - 1, tail(xs));
+    return doremir_list_ddrop(n - 1, doremir_list_tail(xs));
 }
 
 list_t doremir_list_ddrop(int n, list_t xs)
@@ -386,6 +450,7 @@ list_t doremir_list_remove_range(int m, int n, list_t xs)
     return doremir_list_dappend(as, bs);
 }
 
+// TODO leaks
 list_t doremir_list_insert_range(int m, list_t xs, list_t ys)
 {
     list_t as = doremir_list_take(m, ys);
@@ -506,12 +571,6 @@ list_t doremir_list_map(unary_t func, ptr_t data, list_t list)
     return new_list(node);
 }
 
-list_t doremir_list_concat_map(unary_t func, ptr_t data, list_t list)
-{
-    list_t ys = doremir_list_map(func, data, list);
-    return doremir_list_dconcat(ys);
-}
-
 list_t doremir_list_filter(pred_t pred, ptr_t data, list_t list)
 {
     node_t node = NULL, *next = &node;
@@ -538,16 +597,15 @@ list_t doremir_list_concat(list_t list)
     assert(false && "Not implemented");
 }
 
+list_t doremir_list_concat_map(unary_t func, ptr_t data, list_t list)
+{
+    list_t ys = doremir_list_map(func, data, list);
+    return doremir_list_dconcat(ys);
+}
+
 list_t doremir_list_dmap(unary_t f, ptr_t d, list_t xs)
 {
     list_t ys = doremir_list_map(f, d, xs);
-    doremir_list_destroy(xs);
-    return ys;
-}
-
-list_t doremir_list_dconcat_map(unary_t f, ptr_t d, list_t xs)
-{
-    list_t ys = doremir_list_concat_map(f, d, xs);
     doremir_list_destroy(xs);
     return ys;
 }
@@ -572,6 +630,14 @@ list_t doremir_list_dconcat(list_t list)
     doremir_list_destroy(list);
     return ys;
 }
+
+list_t doremir_list_dconcat_map(unary_t f, ptr_t d, list_t xs)
+{
+    list_t ys = doremir_list_concat_map(f, d, xs);
+    doremir_list_destroy(xs);
+    return ys;
+}
+
 
 
 // --------------------------------------------------------------------------------

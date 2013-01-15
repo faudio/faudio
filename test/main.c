@@ -259,9 +259,9 @@ void test_show()
     doremir_print("%s\n", i32(64000));
     doremir_print("%s\n", d(3.1415));
     doremir_print("%s\n", empty());
-    doremir_print("%s\n", list(i8(1)));
-    doremir_print("%s\n", list(i8(1), i8(2), list(i8(1), i8(2), b(true))));
-    doremir_print("%s\n", list(
+    doremir_dprint("%s\n", list(i8(1)));
+    doremir_dprint("%s\n", list(i8(1), i8(2), list(i8(1), i8(2), b(true))));
+    doremir_dprint("%s\n", list(
         pair(string("hans"), string("höglund")),
         pair(string("lisa"), string("streich")),
         pair(string("mats"), string("erlandsson"))
@@ -472,21 +472,22 @@ void test_audio_types()
 
 void test_foreach()
 {
-    list_t list = list(i32(1),i32(2),i32(3),i32(4));
+    // list_t list = list(i32(1),i32(2),i32(3),i32(4));
 
-    doremir_let (int, x = 33)
-    {
-        int y = 1;
-        doremir_let (int, z = x + y)
-        {
-            doremir_print("%s\n", i32(z));
-        }
-    }
+    // doremir_let (int, x = 33)
+    // {
+    //     int y = 1;
+    //     doremir_let (int, z = x + y)
+    //     {
+    //         doremir_print("%s\n", i32(z));
+    //     }
+    // }
 
-    doremir_list_for_each (list, is_last, x)
-    {
-        doremir_print(">    %s\n", x);
-    }
+    // doremir_list_for_each (list, is_last, x)
+    // {
+    //     doremir_print(">    %s\n", x);
+    // }
+    // doremir_delete(list);
 }
 
 bool is_even16(ptr_t data, ptr_t p)
@@ -758,6 +759,7 @@ void test_list()
         doremir_print("filter(is_odd,ys)            ==> %s\n", ys);
         
         doremir_destroy(xs);
+        doremir_destroy(ys);
     }
     {
         printf("\n");
@@ -769,6 +771,7 @@ void test_list()
         doremir_print("map(times10,ys)              ==> %s\n", ys);
 
         doremir_destroy(xs);
+        doremir_destroy(ys);
     }    
     
     // concatMap
@@ -786,6 +789,8 @@ void test_list()
 
         xs = doremir_list_dmap(times10, 0, xs);
         doremir_print("map(times10, xs)             ==> %s\n", xs);
+        
+        doremir_destroy(xs);
     }
     {
         printf("\n");
@@ -806,7 +811,8 @@ void test_set()
         printf("\n");
         
         set_t a = set(i16(1),i16(3),i16(2));
-
+        
+        // FIXME use dadd
         a = doremir_set_add(i16(1), a);
         a = doremir_set_add(i16(5), a);
         a = doremir_set_add(i16(3), a);
@@ -881,7 +887,7 @@ int main (int argc, char const *argv[])
       test_generic();
       test_string();
       test_compare();
-      test_show();
+      // test_show();
       test_buffer();
       test_rational();
       test_time();
