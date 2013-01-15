@@ -13,9 +13,10 @@
 
 /*  Notes:
         * Map is implemented in terms of Set
-        * Set is implemented in terms of a base type
+        * Set is implemented in terms of a (persistent) base type
             * Requires the operations defined below
-            * We use lists until we have persistent vectors
+            * We use lists until we have proper intmaps
+            * We really want fast size, insert, remove, indexOf
  */
 
 #define base_t              list_t
@@ -25,7 +26,7 @@
 #define base_insert         doremir_list_insert
 #define base_remove         doremir_list_remove
 #define base_index_of       doremir_list_index_of
-#define base_length         doremir_list_length
+#define base_size           doremir_list_length
 
 // TODO these are wrong, redo in terms of subset etc
 #define base_equal          doremir_equal
@@ -103,7 +104,7 @@ bool doremir_set_has(doremir_ptr_t x, doremir_set_t set)
 
 int doremir_set_size(doremir_set_t set)
 {
-    return base_length(set->elems);
+    return base_size(set->elems);
 }
 
 bool doremir_set_is_empty(doremir_set_t set)
@@ -232,9 +233,9 @@ doremir_string_t set_show(doremir_ptr_t x)
     set_t set = (set_t) x;
     string_t s  = string("{");
 
-    base_for_each (set->elems, last, v)
+    base_for_each (set->elems, last, value)
     {
-        s = string_dappend(s, doremir_string_show(v));
+        s = string_dappend(s, doremir_string_show(value));
         if (!last)
             s = string_dappend(s, string(","));
     }

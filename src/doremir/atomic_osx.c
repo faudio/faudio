@@ -140,8 +140,8 @@ void doremir_atomic_set(doremir_atomic_t atomic, doremir_ptr_t value)
 
     while (!result)
     {                                        
-        ptr_t currentValue = doremir_atomic_get(atomic);
-        result = doremir_atomic_exchange(atomic, currentValue, value);
+        ptr_t state = doremir_atomic_get(atomic);
+        result = doremir_atomic_exchange(atomic, state, value);
     }
 }
 

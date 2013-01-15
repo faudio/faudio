@@ -22,7 +22,7 @@ struct _doremir_type_t {
     }                       tag;    
                             
     union {                 
-        simple_t            simple;         //  uint8, uint16 ... ptr
+        simple_t            simple;         //  i8, i16 ... ptr
                             
         struct {            
             ptr_t           fst; 
@@ -353,17 +353,17 @@ string_t simple_show(doremir_type_simple_t simple)
     switch (simple)
     {
     case uint8_type:
-        return string("uint8");
+        return string("i8");
     case uint16_type:
-        return string("uint16");
+        return string("i16");
     case uint32_type:
-        return string("uint32");
+        return string("i32");
     case uint64_type:
-        return string("uint64");
+        return string("i64");
     case float_type:
-        return string("float");
+        return string("f32");
     case double_type:
-        return string("double");
+        return string("f64");
     case ptr_type:
         return string("ptr");
     default:
