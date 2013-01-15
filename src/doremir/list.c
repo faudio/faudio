@@ -22,18 +22,20 @@
           This gives us "as good as mutable" destrucive operations but slow copy.
  */
 
-struct node {
-        size_t          count;      //  Number of references
-        struct node     * next;     //  Next node or null
-        ptr_t           value;      //  The value
-    };
+struct node
+{
+    size_t          count;      //  Number of references
+    struct node*      next;     //  Next node or null
+    ptr_t           value;      //  The value
+};
 
-typedef struct node *node_t;
+typedef struct node* node_t;
 
-struct _doremir_list_t {
-        impl_t          impl;       //  Interface dispatcher
-        node_t          node;       //  Top-level node
-    };
+struct _doremir_list_t
+{
+    impl_t          impl;       //  Interface dispatcher
+    node_t          node;       //  Top-level node
+};
 
 /** Create a new node with a single reference.
  */
@@ -54,6 +56,7 @@ node_t take_node(node_t node)
 {
     if (node)
         node->count++;      /* TODO make atomic? */
+
     return node;
 }
 
@@ -66,6 +69,7 @@ void release_node(node_t node)
     if (!node) return;
 
     node->count--;
+
     if (node->count == 0)
     {
         release_node(node->next);
@@ -181,7 +185,7 @@ bool doremir_list_is_single(list_t xs)
 int doremir_list_length(list_t xs)
 {
     int count = 0;
-    for_each (xs, value)
+    for_each(xs, value)
     {
         value = value;   // kill warning
         count++;
@@ -198,7 +202,7 @@ ptr_t doremir_list_head(list_t xs)
 {
     if (!xs->node)
         assert(false && "No head");
-    
+
     return xs->node->value;
 }
 
@@ -206,7 +210,7 @@ list_t doremir_list_tail(list_t xs)
 {
     if (!xs->node)
         assert(false && "No tail");
-    
+
     return new_list(take_node(xs->node->next));
 }
 
@@ -216,8 +220,7 @@ list_t doremir_list_init(list_t xs)
         assert(false && "No init");
 
     node_t node = NULL, *next = &node;
-
-    for_each_node (xs, node)
+    for_each_node(xs, node)
     {
         if (node->next)
             append_node(next, node->value);
@@ -227,7 +230,7 @@ list_t doremir_list_init(list_t xs)
 
 ptr_t doremir_list_last(list_t xs)
 {
-    for_each_node (xs, node)
+    for_each_node(xs, node)
     {
         if (!node->next)
             return node->value;
@@ -331,6 +334,7 @@ list_t doremir_list_take(int n, list_t xs)
 {
     if (n <= 0 || is_empty(xs))
         return empty();
+
     return cons(head(xs), take(n - 1, tail(xs)));
 }
 
@@ -345,8 +349,10 @@ list_t doremir_list_drop(int n, list_t xs)
 {
     if (n < 0 || is_empty(xs))
         return empty();
+
     if (n == 0)
         return doremir_list_copy(xs);
+
     return drop(n - 1, tail(xs));
 }
 
@@ -360,7 +366,7 @@ list_t doremir_list_ddrop(int n, list_t xs)
 ptr_t doremir_list_index(int n, list_t xs)
 {
     int i = 0;
-    for_each (xs, x)
+    for_each(xs, x)
     {
         if (i++ == n)
             return x;
@@ -381,7 +387,7 @@ list_t doremir_list_remove_range(int m, int n, list_t xs)
 }
 
 list_t doremir_list_insert_range(int m, list_t xs, list_t ys)
-{                                   
+{
     list_t as = doremir_list_take(m, ys);
     list_t bs = doremir_list_copy(xs);
     list_t cs = doremir_list_drop(m, ys);
@@ -436,7 +442,7 @@ list_t doremir_list_dremove_range(int m, int n, list_t xs)
 
 bool doremir_list_has(ptr_t value, list_t list)
 {
-    for_each (list, elem)
+    for_each(list, elem)
     {
         if (doremir_equal(value, elem))
             return true;
@@ -448,13 +454,15 @@ bool doremir_list_has(ptr_t value, list_t list)
 //  Should that really be this method?
 int doremir_list_index_of(ptr_t value, list_t list)
 {
-    int index = 0;                   
-    for_each (list, elem)
+    int index = 0;
+    for_each(list, elem)
     {
         if (doremir_equal(elem, value))
             return index;
+
         if (doremir_greater_than(elem, value))
             break;
+
         index++;
     }
     return -(index + 1);
@@ -462,7 +470,7 @@ int doremir_list_index_of(ptr_t value, list_t list)
 
 ptr_t doremir_list_find(pred_t pred, ptr_t data, list_t list)
 {
-    for_each (list, elem)
+    for_each(list, elem)
     {
         if (pred(data, elem))
             return elem;
@@ -473,10 +481,11 @@ ptr_t doremir_list_find(pred_t pred, ptr_t data, list_t list)
 int doremir_list_find_index(pred_t pred, ptr_t data, list_t list)
 {
     int index = 0;
-    for_each (list, elem)
+    for_each(list, elem)
     {
         if (pred(data, elem))
             return index;
+
         index++;
     }
     return -(index + 1);
@@ -490,8 +499,7 @@ int doremir_list_find_index(pred_t pred, ptr_t data, list_t list)
 list_t doremir_list_map(unary_t func, ptr_t data, list_t list)
 {
     node_t node = NULL, *next = &node;
-
-    for_each (list, elem)
+    for_each(list, elem)
     {
         append_node(next, func(data, elem));
     }
@@ -507,8 +515,7 @@ list_t doremir_list_concat_map(unary_t func, ptr_t data, list_t list)
 list_t doremir_list_filter(pred_t pred, ptr_t data, list_t list)
 {
     node_t node = NULL, *next = &node;
-
-    for_each (list, elem)
+    for_each(list, elem)
     {
         if (pred(data, elem))
             append_node(next, elem);
@@ -519,8 +526,7 @@ list_t doremir_list_filter(pred_t pred, ptr_t data, list_t list)
 ptr_t doremir_list_fold_left(binary_t func, ptr_t data, ptr_t init, list_t list)
 {
     ptr_t value = init;
-
-    for_each (list, elem)
+    for_each(list, elem)
     {
         value = func(data, value, elem);
     }
@@ -578,7 +584,6 @@ list_t doremir_list(int count, ...)
 {
     node_t node = NULL, *next = &node;
     va_list args;
-
     va_start(args, count);
 
     for (int i = 0; i < count; ++i)
@@ -614,13 +619,16 @@ bool list_equal(ptr_t a, ptr_t b)
 {
     node_t an = ((list_t) a)->node;
     node_t bn = ((list_t) b)->node;
+
     while (an && bn)
     {
         if (!eq(an->value, bn->value))
             return false;
+
         an = an->next;
         bn = bn->next;
     }
+
     return !(an || bn);
 }
 
@@ -628,15 +636,19 @@ bool list_less_than(ptr_t a, ptr_t b)
 {
     node_t an = ((list_t) a)->node;
     node_t bn = ((list_t) b)->node;
+
     while (an && bn)
     {
         if (doremir_less_than(an->value, bn->value))
             return true;
+
         if (doremir_greater_than(an->value, bn->value))
             return false;
+
         an = an->next;
         bn = bn->next;
     }
+
     return bn && !an;
 }
 
@@ -644,15 +656,19 @@ bool list_greater_than(ptr_t a, ptr_t b)
 {
     node_t an = ((list_t) a)->node;
     node_t bn = ((list_t) b)->node;
+
     while (an && bn)
     {
         if (doremir_greater_than(an->value, bn->value))
             return true;
+
         if (doremir_less_than(an->value, bn->value))
             return false;
+
         an = an->next;
         bn = bn->next;
     }
+
     return an && !bn;
 }
 
@@ -660,14 +676,18 @@ doremir_string_t list_show(ptr_t xs)
 {
     string_t s  = string("[");
     node_t   xn = ((list_t) xs)->node;
-    while(xn)
+
+    while (xn)
     {
         s = string_dappend(s, sshow(xn->value));
         xn = xn->next;
+
         if (xn)
             s = string_dappend(s, string(","));
     };
+
     s = string_dappend(s, string("]"));
+
     return s;
 }
 
