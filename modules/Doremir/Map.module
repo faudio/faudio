@@ -26,6 +26,7 @@ module Doremir.Map
 {
     import Doremir;
     import Doremir.Pair;
+    import Doremir.List;
     import Doremir.String;
     
     type Map = opaque;
@@ -35,9 +36,6 @@ module Doremir.Map
     empty            : () -> Map;
     copy             : Map -> Map;
     destroy          : Map -> Void;
-
-    fromPair         : Pair -> Map;
-    fromList         : Pair -> Map;
 
     // Size
     size             : Map -> Int;
@@ -64,5 +62,10 @@ module Doremir.Map
     difference       : (Map, Map) -> Map;
     cartesian        : (Map, Map) -> Map;
     power            : Map -> Map;
+
+    // Conversions   
+    fromPair         : Pair -> Map;
+    fromList         : Pair -> Map;
+    toList           : Map -> List;
 
 }

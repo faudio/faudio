@@ -25,6 +25,7 @@
 module Doremir.Set
 {
     import Doremir;
+    import Doremir.List;
     import Doremir.String;
 
     type Set = opaque;
@@ -54,5 +55,9 @@ module Doremir.Set
     product          : (Set, Set) -> Set;
     difference       : (Set, Set) -> Set;
     power            : Set -> Set;
+
+    // Conversions   
+    fromList         : List -> Set;
+    toList           : Set -> List;
 }
 

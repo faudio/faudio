@@ -4,6 +4,7 @@
 
 #include <doremir.h>
 #include <doremir/pair.h>
+#include <doremir/list.h>
 #include <doremir/string.h>
 
 /** @defgroup Doremir Doremir
@@ -17,8 +18,6 @@ typedef doremir_ptr_t doremir_map_key_t;
 doremir_map_t doremir_map_empty();
 doremir_map_t doremir_map_copy(doremir_map_t);
 void doremir_map_destroy(doremir_map_t);
-doremir_map_t doremir_map_from_pair(doremir_pair_t);
-doremir_map_t doremir_map_from_list(doremir_pair_t);
 int doremir_map_size(doremir_map_t);
 bool doremir_map_is_empty(doremir_map_t);
 bool doremir_map_is_single(doremir_map_t);
@@ -40,6 +39,9 @@ doremir_map_t doremir_map_product(doremir_map_t, doremir_map_t);
 doremir_map_t doremir_map_difference(doremir_map_t, doremir_map_t);
 doremir_map_t doremir_map_cartesian(doremir_map_t, doremir_map_t);
 doremir_map_t doremir_map_power(doremir_map_t);
+doremir_map_t doremir_map_from_pair(doremir_pair_t);
+doremir_map_t doremir_map_from_list(doremir_pair_t);
+doremir_list_t doremir_map_to_list(doremir_map_t);
 
 /** @}
     @}
