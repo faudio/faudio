@@ -66,6 +66,11 @@ doremir_set_t doremir_set_empty()
     return new_set(base_empty());
 }
 
+doremir_set_t doremir_set_single(doremir_ptr_t x)
+{
+    return doremir_set_dadd(x, doremir_set_empty());
+}
+
 doremir_set_t doremir_set_add(doremir_ptr_t x, doremir_set_t set)
 {                             
     int i = base_index_of(x, set->elems);
@@ -82,6 +87,22 @@ doremir_set_t doremir_set_remove(doremir_ptr_t x, doremir_set_t set)
         return doremir_set_copy(set);
     else
         return new_set(base_remove(i, set->elems));
+}
+
+// TODO leaks
+doremir_set_t doremir_set_dadd(doremir_ptr_t x, doremir_set_t set)
+{                             
+    set_t set2 = doremir_set_add(x, set);
+    doremir_set_destroy(set);
+    return set2;
+}
+
+// TODO leaks
+doremir_set_t doremir_set_dremove(doremir_ptr_t x, doremir_set_t set)
+{
+    set_t set2 = doremir_set_remove(x, set);
+    doremir_set_destroy(set);
+    return set2;
 }
 
 doremir_set_t doremir_set_copy(doremir_set_t set)
@@ -138,24 +159,24 @@ bool doremir_set_is_proper_subset_of(doremir_set_t a, doremir_set_t b)
 
 doremir_set_t doremir_set_sum(doremir_set_t a, doremir_set_t b)
 {
-    set_t c = a;
+    set_t c = doremir_set_copy(a);
     base_for_each (b->elems, last, x)
     {
         kill_warning(last);
 
-        c = doremir_set_add(x, c);
+        c = doremir_set_dadd(x, c);
     }
     return c;
 }
 
 doremir_set_t doremir_set_difference(doremir_set_t a, doremir_set_t b)
 {
-    set_t c = a;
+    set_t c = doremir_set_copy(a);
     base_for_each (b->elems, last, x)
     {
         kill_warning(last);
 
-        c = doremir_set_remove(x, c);
+        c = doremir_set_dremove(x, c);
     }
     return c;
 }
@@ -171,7 +192,7 @@ doremir_set_t doremir_set_product(doremir_set_t a, doremir_set_t b)
         {
             kill_warning(last);
 
-            c = doremir_set_add(pair(x, y), c);
+            c = doremir_set_dadd(pair(x, y), c);
         }
     }
     return c;
@@ -194,7 +215,7 @@ set_t doremir_set(int count, ...)
 
     va_start(args, count);
     for (int i = 0; i < count; ++i)
-        s = doremir_set_add(va_arg(args, ptr_t), s);
+        s = doremir_set_dadd(va_arg(args, ptr_t), s);
 
     va_end(args);
     return s;
