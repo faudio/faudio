@@ -11,121 +11,6 @@ void test_section()
     printf("\n\n--------------------\n");
 }
 
-// doremir_closure_t* new_closure(doremir_unary_t function, doremir_ptr_t value)
-// {
-//     doremir_closure_t *r = malloc(sizeof(doremir_closure_t));
-//     r->function = function;
-//     r->value = value;
-//     return r;
-// }
-//
-
-
-ptr_t printer(ptr_t data)
-{
-    int n = 0;
-    while (n < 100)
-    {
-        printf("%d\n", n);
-        n = n + ((int) data);
-        doremir_thread_sleep(100);
-    }
-    return 0;
-}
-
-void test_thread()
-{
-    doremir_thread_t t, t2;
-    t  = doremir_thread_create(printer, (ptr_t) 10);
-    t2 = doremir_thread_create(printer, (ptr_t) 11);
-
-    doremir_thread_sleep(1000);
-    doremir_thread_join(t);
-    doremir_thread_join(t2);
-}
-
-
-typedef struct { doremir_thread_mutex_t mut; int val; } lock_index;
-ptr_t locker(ptr_t x)
-{
-    lock_index *i = (lock_index*) x;
-
-    doremir_thread_lock(i->mut);
-    printf("Acquired lock in thread %d\n", i->val);
-    doremir_thread_sleep(200);
-    doremir_thread_unlock(i->mut);
-    printf("Released lock in thread %d\n", i->val);
-
-    return 0;
-}
-void test_mutex()
-{
-    doremir_thread_mutex_t m = doremir_thread_create_mutex();
-
-    for (int j = 0; j < 10; ++j)
-    {
-        lock_index i = { m, j };
-        doremir_thread_t t = doremir_thread_create(locker, (ptr_t) &i);
-        doremir_thread_sleep(100);
-        doremir_thread_detach(t);
-    }
-
-    doremir_thread_sleep(1200);
-}
-
-
-
-typedef struct {
-        doremir_thread_mutex_t mut;
-        doremir_thread_condition_t cond;
-        char* msg;
-    } send_hub;
-doremir_ptr_t sender(doremir_ptr_t x)
-{
-    send_hub *h = (send_hub*) x;
-    static char * const msgs[10] = {
-        "Sur", "le", "pond", "d'Avignon", "on", "y", "danse", "tous", "en", "round"
-    };
-
-    for (int i = 0; i < 10; ++i)
-    {
-        doremir_thread_lock(h->mut);
-        h->msg = msgs[i];
-        printf("Sending: %s\n", h->msg);
-        doremir_thread_notify(h->cond);
-        doremir_thread_unlock(h->mut);
-
-        doremir_thread_sleep(100);
-    }
-
-    return 0;
-}
-ptr_t receiver(ptr_t x)
-{
-    send_hub *h = (send_hub*) x;
-
-    while (true)
-    {
-        doremir_thread_lock(h->mut);
-        doremir_thread_wait_for(h->cond);
-        printf("                        Received: %s\n", h->msg);
-        doremir_thread_unlock(h->mut);
-    }
-
-    return 0;
-}
-void test_cond()
-{
-    doremir_thread_mutex_t m = doremir_thread_create_mutex();
-    doremir_thread_condition_t c = doremir_thread_create_condition(m);
-    send_hub h = { m, c, 0 };
-
-    doremir_thread_t s = doremir_thread_create(sender, (doremir_ptr_t) &h);
-    doremir_thread_t r = doremir_thread_create(receiver, (doremir_ptr_t) &h);
-
-    doremir_thread_join(s);
-    doremir_thread_detach(r);
-}
 
 void test_wrap()
 {
@@ -348,84 +233,7 @@ void test_midi()
     }
 }
 
-ptr_t add10(ptr_t x) { return (ptr_t) ((int) x + 10); }
-void test_atomic()
-{
-    test_section();
-
-    // treat as integer
-    {
-        doremir_atomic_t a = doremir_atomic_create();
-        doremir_print("a                            ==> %s\n", a);
-
-        doremir_atomic_set(a, (ptr_t) 0x5);
-        doremir_print("a                            ==> %s\n", a);
-
-        doremir_atomic_modify(a, add10);
-        doremir_print("a                            ==> %s\n", a);
-
-        doremir_atomic_add(a, (ptr_t) -0xf);
-        doremir_print("a                            ==> %s\n", a);
-
-        doremir_atomic_exchange(a, (ptr_t) 1, (ptr_t) 0xfe);
-        doremir_print("a                            ==> %s\n", a); // fails, still 0
-
-        doremir_atomic_exchange(a, (ptr_t) 0, (ptr_t) 0xff);
-        doremir_print("a                            ==> %s\n", a); // now ff
-    }
-}
-
-struct reader_args { doremir_atomic_queue_t queue; atomic_t active; };
-doremir_ptr_t test_atomic_queue_reader(doremir_ptr_t x)
-{
-    struct reader_args* args = x;
-    doremir_atomic_queue_t q = args->queue;
-    atomic_t               a = args->active;
-    ptr_t                  v;
-
-    while(true)
-    {
-        if (!tb(doremir_atomic_get(a)))
-            return v;
-        if ((v = doremir_atomic_queue_read(q)))
-            printf("         |- %5d    \n", ti32(v));
-
-        doremir_thread_sleep(5);
-    }
-}
-void test_atomic_queue(int iter, long sleepTime)
-{
-    test_section();
-    {
-        doremir_atomic_queue_t q = doremir_atomic_queue_create();
-
-        struct reader_args args = { q, atomic() };
-        doremir_atomic_set(args.active, b(true));
-
-        thread_t t = doremir_thread_create(test_atomic_queue_reader, &args);
-
-        doremir_print("q                            ==> %s\n", q);
-
-        for(int i = 0; i < iter; ++i)
-        {
-            doremir_thread_sleep(i % 10 * sleepTime);
-            doremir_atomic_queue_write(q, i32(i));
-            printf("  %5d -|  \n", i);
-        }
-
-        doremir_thread_sleep(sleepTime);
-        doremir_atomic_set(args.active, b(false));
-        doremir_thread_join(t); // TODO how to kill?
-        doremir_destroy(q);
-    }
-}
-
-void test_atomic_ring_buffer()
-{
-    test_section();
-}
-
-void test_audio_types()
+void test_type()
 {
     // FIXME
     test_section();
@@ -468,6 +276,195 @@ void test_audio_types()
     doremir_print("align_of(1024,v)             ==> %s\n", i32(doremir_type_align_of(v)));
     printf("\n");
 }
+
+
+ptr_t add10(ptr_t x) { return (ptr_t) ((int) x + 10); }
+void test_atomic()
+{
+    test_section();
+
+    // treat as integer
+    {
+        doremir_atomic_t a = doremir_atomic_create();
+        doremir_print("a                            ==> %s\n", a);
+
+        doremir_atomic_set(a, (ptr_t) 0x5);
+        doremir_print("a                            ==> %s\n", a);
+
+        doremir_atomic_modify(a, add10);
+        doremir_print("a                            ==> %s\n", a);
+
+        doremir_atomic_add(a, (ptr_t) -0xf);
+        doremir_print("a                            ==> %s\n", a);
+
+        doremir_atomic_exchange(a, (ptr_t) 1, (ptr_t) 0xfe);
+        doremir_print("a                            ==> %s\n", a); // fails, still 0
+
+        doremir_atomic_exchange(a, (ptr_t) 0, (ptr_t) 0xff);
+        doremir_print("a                            ==> %s\n", a); // now ff
+    }
+}
+
+struct reader_args { doremir_atomic_queue_t queue; atomic_t active; };
+doremir_ptr_t queue_reader(doremir_ptr_t x)
+{
+    struct reader_args* args = x;
+    doremir_atomic_queue_t q = args->queue;
+    atomic_t               a = args->active;
+    ptr_t                  v;
+
+    while(true)
+    {
+        if (!tb(doremir_atomic_get(a)))
+            return v;
+        if ((v = doremir_atomic_queue_read(q)))
+            printf("         |- %5d    \n", ti32(v));
+
+        doremir_thread_sleep(5);
+    }
+}
+void test_atomic_queue(int iter, long sleepTime)
+{
+    test_section();
+    {
+        doremir_atomic_queue_t q = doremir_atomic_queue_create();
+
+        struct reader_args args = { q, atomic() };
+        doremir_atomic_set(args.active, b(true));
+
+        thread_t t = doremir_thread_create(queue_reader, &args);
+
+        doremir_print("q                            ==> %s\n", q);
+
+        for(int i = 0; i < iter; ++i)
+        {
+            doremir_thread_sleep(i % 10 * sleepTime);
+            doremir_atomic_queue_write(q, i32(i));
+            printf("  %5d -|  \n", i);
+        }
+
+        doremir_thread_sleep(sleepTime);
+        doremir_atomic_set(args.active, b(false));
+        doremir_thread_join(t); // TODO how to kill?
+        doremir_destroy(q);
+    }
+}
+
+void test_atomic_stack(int iter, long sleepTime)
+{
+    test_section();
+}
+
+void test_atomic_ring_buffer()
+{
+    test_section();
+}
+
+ptr_t printer(ptr_t data)
+{
+    int n = 0;
+    while (n < 100)
+    {
+        printf("%d\n", n);
+        n = n + ((int) data);
+        doremir_thread_sleep(100);
+    }
+    return 0;
+}
+void test_thread()
+{
+    doremir_thread_t t, t2;
+    t  = doremir_thread_create(printer, (ptr_t) 10);
+    t2 = doremir_thread_create(printer, (ptr_t) 11);
+
+    doremir_thread_sleep(1000);
+    doremir_thread_join(t);
+    doremir_thread_join(t2);
+}
+
+
+typedef struct { doremir_thread_mutex_t mut; int val; } lock_index;
+ptr_t locker(ptr_t x)
+{
+    lock_index *i = (lock_index*) x;
+
+    doremir_thread_lock(i->mut);
+    printf("Acquired lock in thread %d\n", i->val);
+    doremir_thread_sleep(200);
+    doremir_thread_unlock(i->mut);
+    printf("Released lock in thread %d\n", i->val);
+
+    return 0;
+}
+void test_mutex()
+{
+    doremir_thread_mutex_t m = doremir_thread_create_mutex();
+
+    for (int j = 0; j < 10; ++j)
+    {
+        lock_index i = { m, j };
+        doremir_thread_t t = doremir_thread_create(locker, (ptr_t) &i);
+        doremir_thread_sleep(100);
+        doremir_thread_detach(t);
+    }
+
+    doremir_thread_sleep(1200);
+}
+
+
+
+typedef struct {
+        doremir_thread_mutex_t mut;
+        doremir_thread_condition_t cond;
+        char* msg;
+    } send_hub;
+doremir_ptr_t sender(doremir_ptr_t x)
+{
+    send_hub *h = (send_hub*) x;
+    static char * const msgs[10] = {
+        "Sur", "le", "pond", "d'Avignon", "on", "y", "danse", "tous", "en", "round"
+    };
+
+    for (int i = 0; i < 10; ++i)
+    {
+        doremir_thread_lock(h->mut);
+        h->msg = msgs[i];
+        printf("Sending: %s\n", h->msg);
+        doremir_thread_notify(h->cond);
+        doremir_thread_unlock(h->mut);
+
+        doremir_thread_sleep(100);
+    }
+
+    return 0;
+}
+ptr_t receiver(ptr_t x)
+{
+    send_hub *h = (send_hub*) x;
+
+    while (true)
+    {
+        doremir_thread_lock(h->mut);
+        doremir_thread_wait_for(h->cond);
+        printf("                        Received: %s\n", h->msg);
+        doremir_thread_unlock(h->mut);
+    }
+
+    return 0;
+}
+void test_cond()
+{
+    doremir_thread_mutex_t m = doremir_thread_create_mutex();
+    doremir_thread_condition_t c = doremir_thread_create_condition(m);
+    send_hub h = { m, c, 0 };
+
+    doremir_thread_t s = doremir_thread_create(sender, (doremir_ptr_t) &h);
+    doremir_thread_t r = doremir_thread_create(receiver, (doremir_ptr_t) &h);
+
+    doremir_thread_join(s);
+    doremir_thread_detach(r);
+}
+     
 
 
 void test_for_each()
@@ -880,7 +877,6 @@ void test_set()
 
 }
 
-
 int main (int argc, char const *argv[])
 {
   printf("DoReMIR Audio engine %s v%d.%d.%d\n", bits, version[0], version[1], version[2]);
@@ -894,35 +890,30 @@ int main (int argc, char const *argv[])
   {
       doremir_audio_engine_initialize();
 
-
       test_wrap();
       test_generic();
-      test_string(); // FIXME
+      test_string();
+      test_show();
       test_compare();
-      // test_show();
-      test_buffer();
       test_rational();
+      test_buffer();
       test_time();
       test_midi();
-      test_audio_types();
+      test_type();
 
-      // priority queue
 
       test_atomic();
-      test_atomic_queue(5, 10);
-      test_atomic_queue(10, 200);
-      // test_atomic_queue(1000, 10);
+      test_atomic_queue(5, 2);
+      // test_atomic_queue(10, 10);
+      // test_atomic_queue(300, 2);
+      // test_atomic_stack(5, 2);
       test_atomic_ring_buffer();
 
-      // test_thread();
-      // test_mutex();
-      // test_cond();
+      test_thread();
+      test_mutex();
+      test_cond();
       // futures
       // improvings
-
-      // processors
-      // dispatchers
-
 
       test_for_each();
 
@@ -930,7 +921,16 @@ int main (int argc, char const *argv[])
       {
       test_list();
       test_set();
+      // map
+      // error
+      // json
       }
+
+      // processors
+
+      // dispatchers
+      // priority queue
+      // schedulers
 
       doremir_audio_engine_terminate();
   }
