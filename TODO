@@ -20,6 +20,8 @@ Additions
 
 * Generic for_each (by toList method?)
 
+* Deep doremir_destroy (exactly how?)
+
 * Implement ringbuffer
 
 * Implement non-realtime streams
