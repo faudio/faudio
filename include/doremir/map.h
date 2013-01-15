@@ -37,7 +37,6 @@ bool doremir_map_is_proper_submap_of(doremir_map_t, doremir_map_t);
 doremir_map_t doremir_map_sum(doremir_map_t, doremir_map_t);
 doremir_map_t doremir_map_product(doremir_map_t, doremir_map_t);
 doremir_map_t doremir_map_difference(doremir_map_t, doremir_map_t);
-doremir_map_t doremir_map_cartesian(doremir_map_t, doremir_map_t);
 doremir_map_t doremir_map_power(doremir_map_t);
 doremir_map_t doremir_map_from_pair(doremir_pair_t);
 doremir_map_t doremir_map_from_list(doremir_pair_t);

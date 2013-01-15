@@ -110,19 +110,18 @@
 #define amodify             doremir_atomic_modify
 
 
-// TODO should this be here...?
+// TODO move
 
 #ifndef alignof
 #define alignof(T) offsetof (struct { char c; T member; }, member)
 #endif
 
 
+// TODO move
 
-// TODO literals to be moved someplace else...
-
-#include <doremir/list.h> // for list forward decl
-#include <doremir/set.h> // for set forward decl
-#include <doremir/map.h> // for map forward decl
+#include <doremir/list.h>   // for list forward decl
+#include <doremir/set.h>    // for set forward decl
+#include <doremir/map.h>    // for map forward decl
 
 list_t doremir_list(int count, ...);
 set_t doremir_set(int count, ...);
@@ -159,35 +158,91 @@ map_t doremir_map(int count, ...);
 #define map(...) VARARG(list, __VA_ARGS__)
 
 
+// TODO move
 
-// TODO should also be moved
+/** Execute following statement with a binding in scope.
 
-
-#define doremir_let(T, VAR, BIND)                                                                       \
-    for (T VAR = BIND, *__doremir_let_cont__=((T*) 1);                                                  \
-         __doremir_let_cont__;                                                                          \
-         __doremir_let_cont__ = ((T*) 0)                                                                \
+    Syntax:
+        
+        doremir_with(type, var, initExpr, finalizeExpr) 
+            statement;
+    
+    Example:      
+    
+        doremir_let(
+            int, x, 23
+        )
+        {
+            printf("%d\n", 23)
+        }
+ */
+#define doremir_let(type, var, bind) \
+    for (type var = bind, *__c=((type*) 1); \
+         __c; \
+         __c = ((type*) 0) \
          )
 
-#define doremir_unlet(T, VAR, BIND, UNBIND)                                                             \
-    for (T VAR = BIND, *__doremir_unlet_cont__=((T*) 1);                                                \
-        __doremir_unlet_cont__;                                                                         \
-        __doremir_unlet_cont__ = ((T*) 0), UNBIND                                                       \
+/** Execute the following statement with a binding in scope, then
+    evaluate the given finalizer expression.
+
+    Syntax:
+
+        doremir_with(type, var, initExpr, finalizeExpr) 
+            statement;
+    
+    Example:      
+    
+        doremir_with(
+            resource_t, x, get_resource(), 
+            release_resource(x)
+        )
+        {
+            use_resource(x);
+        }
+    
+ */
+#define doremir_with(type, var, bind, unbind) \
+    for (type var = bind, *__c=((type*) 1); \
+        __c; \
+        __c = ((type*) 0), unbind \
         )
 
-#define doremir_list_for_each(LIST, LAST, VAR)                                                          \
-    doremir_unlet(                                                                                      \
-        doremir_list_t,                                                                                 \
-        __doremir_list_foreach_xs__,                                                                    \
-        doremir_list_copy(LIST),                                                                        \
-        doremir_list_destroy(__doremir_list_foreach_xs__))                                              \
-        for (;                                                                                          \
-            !doremir_list_is_empty(__doremir_list_foreach_xs__);                                        \
-            __doremir_list_foreach_xs__ = doremir_list_dtail(__doremir_list_foreach_xs__)               \
-            )                                                                                           \
-                doremir_let(ptr_t, VAR, doremir_list_head(__doremir_list_foreach_xs__))                 \
-                    doremir_let(bool, LAST, doremir_list_is_single(__doremir_list_foreach_xs__))
+/** Execute the following statement once for each item in the
+    given list.
+    
+    Syntax:
+        
+        doremir_loop(listExpr, lastVar, elemVar)
+            statement;
+    
+    Example:      
+    
+        doremir_dloop(
+            ptr_t, x, list(1,2,3)
+        )
+        {
+            use_resource(x);
+        }
+    
+ */
+#define doremir_list_for_each(list, last, var) \
+    doremir_list_dfor_each(doremir_list_copy(list), last, var)
 
+#define doremir_list_dfor_each(list, last, var) \
+    doremir_with ( \
+        doremir_list_t, __j, list, \
+        doremir_list_destroy(__j) \
+        ) \
+        for ( ; \
+            !doremir_list_is_empty(__j); \
+            __j = doremir_list_dtail(__j) \
+            ) \
+                doremir_let ( \
+                    ptr_t, var, doremir_list_head(__j) \
+                    ) \
+                    doremir_let ( \
+                        bool, last, doremir_list_is_single(__j) \
+                        )
 
 
 #endif // _DOREMIR_UTIL
