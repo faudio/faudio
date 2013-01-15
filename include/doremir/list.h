@@ -17,7 +17,7 @@ doremir_list_t doremir_list_single(doremir_ptr_t);
 doremir_list_t doremir_list_cons(doremir_ptr_t, doremir_list_t);
 doremir_list_t doremir_list_dcons(doremir_ptr_t, doremir_list_t);
 doremir_list_t doremir_list_repeat(int, doremir_ptr_t);
-doremir_list_t doremir_list_enum_from(int, int);
+doremir_list_t doremir_list_enumerate(int, int);
 doremir_list_t doremir_list_copy(doremir_list_t);
 void doremir_list_destroy(doremir_list_t);
 bool doremir_list_is_empty(doremir_list_t);

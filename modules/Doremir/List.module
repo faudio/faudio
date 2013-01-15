@@ -70,7 +70,7 @@ module Doremir.List
     cons        : (Ptr, List) -> List;
     dcons       : (Ptr, List) -> List;
     repeat      : (Int, Ptr) -> List;
-    enumFrom    : (Int, Int) -> List;
+    enumerate   : (Int, Int) -> List;
     copy        : List -> List;
     destroy     : List -> Void;
 

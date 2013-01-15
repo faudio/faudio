@@ -37,6 +37,21 @@ doremir_string_t doremir_string_format_integer(char *, long);
 typedef struct {
             doremir_string_t (* show)(doremir_ptr_t);
         } doremir_string_show_t;
+typedef struct {
+            doremir_string_t (* to_json)(doremir_ptr_t);
+        } doremir_string_to_json_t;
+typedef struct {
+            doremir_ptr_t (* from_json)(doremir_string_t);
+        } doremir_string_from_json_t;
+typedef enum {
+            warning, error
+        } doremir_string_severity_t;
+typedef struct {
+            doremir_string_severity_t (* severity)(doremir_ptr_t);
+            doremir_string_t (* message)(doremir_ptr_t);
+            doremir_string_t (* origin)(doremir_ptr_t);
+        } doremir_string_error_t;
+bool doremir_string_check(doremir_ptr_t);
 doremir_string_t doremir_string_show(doremir_ptr_t);
 
 /** @}

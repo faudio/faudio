@@ -36,5 +36,8 @@ module Doremir.AudioEngine
     import Doremir.Time;
     
     initialize : () -> Void;
-    terminate : () -> Void;    
+    terminate : () -> Void;
+    
+    setLogFile : FilePath -> Void;
+    setLogStd : () -> Void;
 }

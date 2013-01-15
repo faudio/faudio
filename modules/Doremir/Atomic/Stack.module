@@ -2,7 +2,7 @@
 /** 
     @addtogroup DoremirAtomicStack
     
-    Lock-free stack (FILO) data structure
+    Lock-free stack (LIFO) data structure
  */
 module Doremir.Atomic.Stack
 {

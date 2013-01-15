@@ -400,6 +400,6 @@ list_t doremir_list_repeat(int times, doremir_ptr_t value) {}
     @see
         list in \ref doremir/util.h
  */
-list_t doremir_list_enum_from(int begin, int end) {}
+list_t doremir_list_enumerate(int begin, int end) {}
 
 

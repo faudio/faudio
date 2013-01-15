@@ -22,9 +22,6 @@ typedef doremir_ptr_t (* doremir_ternary_t)(doremir_ptr_t,
                                             doremir_ptr_t,
                                             doremir_ptr_t);
 typedef bool (* doremir_pred_t)(doremir_ptr_t, doremir_ptr_t);
-typedef struct {
-            doremir_unary_t function; doremir_ptr_t value;
-        } doremir_closure_t;
 typedef char doremir_char8_t;
 typedef uint16_t doremir_char16_t;
 typedef uint32_t doremir_char32_t;
@@ -45,6 +42,7 @@ doremir_ptr_t doremir_copy(doremir_ptr_t);
 doremir_ptr_t doremir_move(doremir_ptr_t);
 void doremir_destroy(doremir_ptr_t);
 void doremir_print(char *, doremir_ptr_t);
+void doremir_dprint(char *, doremir_ptr_t);
 typedef struct {
             bool (* equal)(doremir_ptr_t, doremir_ptr_t);
         } doremir_equal_t;

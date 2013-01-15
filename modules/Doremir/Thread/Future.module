@@ -14,7 +14,7 @@ module Doremir.Thread.Future
     type Value  = Ptr;
 
     // TODO obtain result from what?
-    create  : Closure -> Future;
+    create  : (Nullary, Ptr) -> Future;
     destroy : Future -> Void;
     
     isDone : Future -> Bool;

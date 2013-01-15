@@ -16,8 +16,9 @@
 #define string_t            doremir_string_t
 #define atomic_t            doremir_atomic_t
 #define atomic_queue_t      doremir_atomic_queue_t
-#define priority_queue_t    doremir_priority_queue_t
+#define atomic_stack_t      doremir_atomic_stack_t
 #define ringbuffer_t        doremir_atomic_ring_buffer_t
+#define priority_queue_t    doremir_priority_queue_t
 #define ratio_t             doremir_ratio_t
 #define buffer_t            doremir_buffer_t
 #define thread_t            doremir_thread_t
@@ -29,7 +30,7 @@
 
 #define atomic()            doremir_atomic_create()
 #define pair(a,b)           doremir_pair_create(a,b)
-#define range(a,b)          doremir_list_enum_from(a,b)
+#define range(a,b)          doremir_list_enumerate(a,b)
 #define string(a)           doremir_string_from_utf8(a)
 #define unstring(a)         doremir_string_to_utf8(a)
 #define ratio(a,b)          doremir_ratio_create(a,b)

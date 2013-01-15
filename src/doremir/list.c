@@ -25,7 +25,7 @@
 struct node
 {
     size_t          count;      //  Number of references
-    struct node*      next;     //  Next node or null
+    struct node*    next;       //  Next node or null
     ptr_t           value;      //  The value
 };
 
@@ -50,13 +50,13 @@ void db_node_free()
 }
 void db_node_take(node_t node)
 {
-    if (node)
-        printf("                                                            | Take node    (refs: %u)\n", node->count);
+    // if (node)
+        // printf("                                                            | Take node    (refs: %u)\n", node->count);
 }
 void db_node_release(node_t node)
 {
-    if (node)
-        printf("                                                            | Release node (refs: %u)\n", node->count);
+    // if (node)
+        // printf("                                                            | Release node (refs: %u)\n", node->count);
 }
 
 
@@ -178,36 +178,26 @@ void delete_list(list_t list)
 
 list_t doremir_list_empty()
 {
-    // make new list
-    // no nodes
     return new_list(NULL);
 }
 
 list_t doremir_list_single(ptr_t x)
 {              
-    // make new list
-    // ref count is one
     return new_list(new_node(x, NULL));
 }
 
 list_t doremir_list_copy(list_t xs)
 {
-    // make new list
-    // ref count is incr
     return new_list(take_node(xs->node));
 }
 
 list_t doremir_list_cons(ptr_t x, list_t xs)
 {
-    // make new list
-    // ref count is incr
     return new_list(new_node(x, take_node(xs->node)));
 }
 
 list_t doremir_list_dcons(ptr_t x, list_t xs)
 {
-    // make new list
-    // ref count is not touched
     list_t ys = new_list(new_node(x, xs->node));
     delete_list(xs);
     return ys;
@@ -215,7 +205,6 @@ list_t doremir_list_dcons(ptr_t x, list_t xs)
 
 void doremir_list_destroy(list_t xs)
 {                              
-    // ref count is decr
     release_node(xs->node);
     delete_list(xs);
 }
@@ -310,8 +299,8 @@ list_t doremir_list_dinit(list_t xs)
 // Misc operations
 // --------------------------------------------------------------------------------
 
-// TODO rewrite in iterative style
 
+// TODO rewrite tail recursion as loop
 static inline
 list_t base_append(list_t xs, list_t ys)
 {
@@ -321,12 +310,12 @@ list_t base_append(list_t xs, list_t ys)
     {                                                                  
         list_t xst = doremir_list_tail(xs);
         list_t r = doremir_list_dcons(doremir_list_head(xs), base_append(xst, ys));
-        doremir_destroy(xst);
+        doremir_list_destroy(xst);
         return r;
     }
 }
 
-// FIXME leaks
+// TODO rewrite tail recursion as loop
 static inline
 list_t base_revappend(list_t xs, list_t ys)
 {
@@ -335,8 +324,10 @@ list_t base_revappend(list_t xs, list_t ys)
     else
     {
         list_t xst = doremir_list_tail(xs);
-        list_t r = base_revappend(xst, doremir_list_cons(doremir_list_head(xs), ys));
-        doremir_destroy(xst);
+        list_t con = doremir_list_cons(doremir_list_head(xs), ys);
+        list_t r = base_revappend(xst, con);
+        doremir_list_destroy(xst);
+        doremir_list_destroy(con);
         return r;
     }
 }
@@ -392,8 +383,7 @@ list_t doremir_list_dsort(list_t xs)
 // Random access
 // --------------------------------------------------------------------------------
 
-// TODO rewrite in iterative style
-
+// TODO rewrite tail recursion as loop
 list_t doremir_list_take(int n, list_t xs)
 {
     if (n <= 0 || doremir_list_is_empty(xs))
@@ -402,13 +392,7 @@ list_t doremir_list_take(int n, list_t xs)
     return doremir_list_dcons(doremir_list_head(xs), doremir_list_dtake(n - 1, doremir_list_tail(xs)));
 }
 
-list_t doremir_list_dtake(int n, list_t xs)
-{
-    list_t ys = doremir_list_take(n, xs);
-    doremir_list_destroy(xs);
-    return ys;
-}
-
+// TODO rewrite tail recursion as loop
 list_t doremir_list_drop(int n, list_t xs)
 {
     if (n < 0 || doremir_list_is_empty(xs))
@@ -418,13 +402,6 @@ list_t doremir_list_drop(int n, list_t xs)
         return doremir_list_copy(xs);
 
     return doremir_list_ddrop(n - 1, doremir_list_tail(xs));
-}
-
-list_t doremir_list_ddrop(int n, list_t xs)
-{
-    list_t ys = doremir_list_drop(n, xs);
-    doremir_list_destroy(xs);
-    return ys;
 }
 
 ptr_t doremir_list_index(int n, list_t xs)
@@ -450,7 +427,6 @@ list_t doremir_list_remove_range(int m, int n, list_t xs)
     return doremir_list_dappend(as, bs);
 }
 
-// TODO leaks
 list_t doremir_list_insert_range(int m, list_t xs, list_t ys)
 {
     list_t as = doremir_list_take(m, ys);
@@ -460,8 +436,11 @@ list_t doremir_list_insert_range(int m, list_t xs, list_t ys)
 }
 
 list_t doremir_list_insert(int index, ptr_t value, list_t list)
-{
-    return doremir_list_insert_range(index, doremir_list_single(value), list);
+{                                               
+    list_t elem = doremir_list_single(value);
+    list_t res  = doremir_list_insert_range(index, elem, list);
+    doremir_list_destroy(elem);
+    return res;
 }
 
 list_t doremir_list_remove(int index, list_t list)
@@ -470,6 +449,20 @@ list_t doremir_list_remove(int index, list_t list)
 }
 
 
+
+list_t doremir_list_dtake(int n, list_t xs)
+{
+    list_t ys = doremir_list_take(n, xs);
+    doremir_list_destroy(xs);
+    return ys;
+}
+
+list_t doremir_list_ddrop(int n, list_t xs)
+{
+    list_t ys = doremir_list_drop(n, xs);
+    doremir_list_destroy(xs);
+    return ys;
+}
 
 list_t doremir_list_dinsert(int m, ptr_t x, list_t xs)
 {
@@ -669,7 +662,7 @@ list_t doremir_list_repeat(int times, ptr_t value)
     return new_list(node);
 }
 
-list_t doremir_list_enum_from(int m, int n)
+list_t doremir_list_enumerate(int m, int n)
 {
     node_t node = NULL, *next = &node;
 
@@ -688,7 +681,7 @@ bool list_equal(ptr_t a, ptr_t b)
 
     while (an && bn)
     {
-        if (!eq(an->value, bn->value))
+        if (!doremir_equal(an->value, bn->value))
             return false;
 
         an = an->next;
@@ -745,7 +738,7 @@ doremir_string_t list_show(ptr_t xs)
 
     while (xn)
     {
-        s = string_dappend(s, sshow(xn->value));
+        s = string_dappend(s, doremir_string_show(xn->value));
         xn = xn->next;
 
         if (xn)
