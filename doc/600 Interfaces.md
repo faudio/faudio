@@ -1,16 +1,14 @@
 
 # Interfaces {#Interfaces}
 
-@note
-    This is an advanced topic, not necessary to read for general usage. On the other hand, you *should* probably read
-    it if you want to modify or extend the Audio Engine.
-
 @tableofcontents
+@note
+    Interfaces are used internally in the Audio Engine, but you may not need to know about them,
+    unless you want to extend the Audio Engine.
 
 The Audio Engine implements [ad-hoc polymorphism](http://en.wikipedia.org/wiki/Ad-hoc_polymorphism)
 using interfaces. An *interface* is a collection of function types, identified by a unique value
-known as the *interface identifier*. This notion of an interface is used in many languages including
-Java and Haskell (where they are known as type classes).
+known as the *interface identifier*.
 
 Any [reference type](http://en.wikipedia.org/wiki/Reference_type) may provide implementations for
 an arbitrary number of interfaces by implementing a so-called *dispatch function*, which takes a reference
@@ -37,7 +35,7 @@ from that pointer. It follows that you must not use a pointer to an interface ty
 @ref doremir_equal_t) as an argument to @ref doremir_interface.
 
 
-## Generic functions {#Generic}
+## Generic functions {#GenericFunctions}
 
 Interfaces are commonly used to implement generic functions, which are functions using an interface
 method without knowledge of the exact type. Generic functions generally accept one or more
@@ -47,7 +45,7 @@ For example, this is a way to implement the *min* function for any type supporin
 doremir_order_t interface.
 
 ~~~~
-void * doremir_min(void * a, void * b) 
+void * doremir_min(void *a, void *b) 
 {             
     return doremir_interface(doremir_order_i, a)->less_than(a, b) ? a : b;
 }
@@ -59,7 +57,7 @@ function of the same name as the interface method. Thus the above function could
 briefly as follows.
 
 ~~~~
-void * doremir_min(void * a, void * b)
+void * doremir_min(void *a, void *b)
 {
     return doremir_less_than(a, b) ? a : b;
 }
@@ -68,7 +66,7 @@ void * doremir_min(void * a, void * b)
 Note that generic functions correspond to bounded *universal* quantification (i.e. it says 
 *for any type* a *such that* a *implements the equal interface*).
 
-## Generic pointers
+## Generic pointers {#GenericPointers}
 
 TODO
 
@@ -82,10 +80,18 @@ As @ref doremir_interface returns a pointer to the interface or `null`, it can b
 dynamically inspecting a whether an arbitrary pointer supports an interface or not. If a type is
 known to support an interface at compile-time, this check can be omitted.
 
+This is a way to implement a safe equality check, which compares using the equal interface 
+if the given value implements it, and compares the pointers otherwise.
+
 ~~~~
-bool has_equality(void * a)
-{
-    return doremir_interface(doremir_equal_i, a);
+bool safe_equal(void *a, void *b)
+{       
+    doremir_equal_t *equal = doremir_interface(doremir_equal_i, a);
+
+    if (equal)
+        return equal->equal(a, b);
+    else
+        return a == b;
 }
 ~~~~
 
@@ -151,17 +157,17 @@ The methods are written as ordinary functions, which have the same type as the f
 declared in the interface struct. These functions does need not be exported.
 
 ~~~~
-bool foo_equal(void * a, void * b)
+bool foo_equal(void *a, void *b)
 {
     ...
 }
 
-bool foo_less_than(void * a, void * b)
+bool foo_less_than(void *a, void *b)
 {
     ...
 }
 
-bool foo_greater_than(void * a, void * b)
+bool foo_greater_than(void *a, void *b)
 {
     ...
 }

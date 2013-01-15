@@ -4,33 +4,38 @@
 @anchor Processors
 @tableofcontents
 
+Processors can be categorized by input and output type. Processors with no input is typically called *producers*
+or *unfolds*, processors with no output *consumers* or *folds*, and processors with both input and output
+*filters* or *maps*.
+
+Many classical DSP operations such fall into the map category: examples include band-pass filters, recursive
+filters, reverbs and compressors. Producers include constant values and oscillators, and consumers include all forms
+of audio analysis.
 
 # Process combinators {#Comb}
 
-## Basic combinators {#BasicComb}
-
-### Sequential {#seq}
+## Sequential {#seq}
 
 Sequential processors.
 
 @image html  dsp_seq.png "A processor"
 @image latex dsp_seq.pdf "A processor" width=0.8\textwidth
 
-### Parallel {#par}
+## Parallel {#par}
 
 Sequential processors.
 
 @image html  dsp_par.png "A processor"
 @image latex dsp_par.pdf "A processor" width=0.6\textwidth
 
-### Recursive {#loop}
+## Recursive {#loop}
 
 Recursive processors.
 
 @image html  dsp_loop.png "A processor"
 @image latex dsp_loop.pdf "A processor" width=0.6\textwidth
 
-### Folds and unfolds {#fold}
+## Folds and unfolds {#fold}
 
 Folding and unfolding processors processors.
 
@@ -39,21 +44,15 @@ Folding and unfolding processors processors.
 @image html  dsp_binary.png "A processor"
 @image latex dsp_binary.pdf "A processor" width=0.6\textwidth
 
-### Map {#lift}
+## Map {#lift}
 
 Mapping processors.
 
 @image html  dsp_unary.png "A processor"
 @image latex dsp_unary.pdf "A processor" width=0.6\textwidth
-
-## Basic folds {#Folds}
-
-
-## Basic maps {#Maps}
-
-### Time {#Id}
-### Constant {#Const}
-### Delay {#Delay}
+## Time {#Id}
+## Constant {#Const}
+## Delay {#Delay}
 
 ## Handling messages to combinators {#CombMsg}
 

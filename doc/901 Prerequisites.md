@@ -2,6 +2,7 @@
 Prerequisites {#Prerequisites}
 ------------
 
+@anchor Prerequisites
 @tableofcontents
  
 This is a hopefully complete list of tools and libraries required to build the Audio Engine.
@@ -82,6 +83,8 @@ Required for building language bindings and documentation.
 
 
 # Libraries {#Libraries}
+
+@anchor Libraries
 
 These are typically handled by the package mangager, see [build and install](@ref SourceCode).
 
