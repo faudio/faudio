@@ -675,7 +675,7 @@ void test_list()
         list_t bs = doremir_list_remove_range(1,3,as);
         
         doremir_print("as                           ==> %s\n", as);
-        doremir_print("remove_range(1,3,as)         ==> %s\n", bs);
+        doremir_print("removeRange(1,3,as)          ==> %s\n", bs);
 
         doremir_destroy(as);
         doremir_destroy(bs);
@@ -685,12 +685,14 @@ void test_list()
         printf("\n");
 
         list_t as = list(i16(1),i16(2),i16(3),i16(4),i16(5));
-        list_t bs = doremir_list_insert_range(2,list(i16(0),i16(0)),as);
+        list_t xs = list(i16(0),i16(0));
+        list_t bs = doremir_list_insert_range(2,xs,as);
         
         doremir_print("as                           ==> %s\n", as);
-        doremir_print("insert_range(2,list(0,0),as) ==> %s\n", bs);
+        doremir_print("insertRange(2,list(0,0),as)  ==> %s\n", bs);
 
         doremir_destroy(as);
+        doremir_destroy(xs);
         doremir_destroy(bs);
     }
     {
