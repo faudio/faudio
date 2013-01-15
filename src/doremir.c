@@ -326,7 +326,7 @@ void doremir_print(char* f, doremir_ptr_t a)
 void doremir_dprint(char* f, doremir_ptr_t a)
 {
     doremir_print(f, a);
-    doremir_delete(a);
+    doremir_destroy(a);
 }
 
 
