@@ -42,10 +42,12 @@ inline static void delete_node(node_t node)
     doremir_delete(node);
 }
 
+ptr_t priority_queue_impl(doremir_id_t interface);
+
 inline static queue_t new_queue(node_t node) 
 {
     queue_t queue = doremir_new(priority_queue);
-    queue->impl = 0;        //  TODO
+    queue->impl = &priority_queue_impl;
     queue->node = node;
     return queue;
 }
@@ -74,46 +76,46 @@ void doremir_priority_queue_destroy(queue_t queue)
     delete_queue(queue);
 }
 
+static inline node_t merge(node_t node1, node_t node2);
+static inline node_t into(node_t node1, node_t node2);
 
-static inline node_t merge(node_t node1, node_t node2, bool delete)
+static inline node_t into(node_t node1, node_t node2)
+{
+    node_t tmp   = node1->left;
+    node1->left  = merge(node2, node1->right);
+    node1->right = tmp;
+    return node1;
+}
+
+static inline node_t merge(node_t node1, node_t node2)
 {   
     if (!node1)
-    {
         return node2;
-    }
-    else
+    else 
     if (!node2)
-    {
         return node1;
-    }
     else
     {
         if (doremir_less_than_equal(node1->value, node2->value))
         {                     
-            node_t tmp   = node1->left;
-            node1->left  = merge(node2, node1->right, true);
-            node1->right = tmp;
-            return node1;
+            return into(node1, node2);
         }   
         else
         {
-            node_t tmp   = node2->left;
-            node2->left  = merge(node1, node2->right, true);                
-            node2->right = tmp;
-            return node2;
+            return into(node2, node1);
         }
     }
 }
 
 void doremir_priority_queue_merge(queue_t queue1, queue_t queue2)
 {
-    queue1->node = merge(queue1->node, queue2->node, false);
+    queue1->node = merge(queue1->node, queue2->node);
     delete_queue(queue2);
 }
 
 void doremir_priority_queue_insert(ptr_t value, queue_t queue)
 {
-    queue->node = merge(queue->node, new_node(value, NULL, NULL), false);
+    queue->node = merge(queue->node, new_node(value, NULL, NULL));
 }
 
 ptr_t doremir_priority_queue_peek(queue_t queue)
@@ -127,9 +129,54 @@ ptr_t doremir_priority_queue_pop(queue_t queue)
     node_t head = queue->node;
     ptr_t value = head ? head->value : NULL;
 
-    queue->node = merge(head->left, head->right, false);
+    queue->node = merge(head->left, head->right);
 
     delete_node(head);
     return value;
 }
+
+// --------------------------------------------------------------------------------
+
+bool priority_queue_equal(doremir_ptr_t a, doremir_ptr_t b)
+{
+    return a == b;
+}
+
+doremir_string_t priority_queue_show(doremir_ptr_t v)
+{
+    string_t s = string("<PriorityQueue");
+    s = string_dappend(s, doremir_string_format_integer(" %02x", (long) v));
+    s = string_dappend(s, string(">"));
+    return s;
+}
+
+void priority_queue_destroy(doremir_ptr_t a)
+{
+    doremir_priority_queue_destroy(a);
+} 
+
+
+doremir_ptr_t priority_queue_impl(doremir_id_t interface)
+{
+    static doremir_equal_t priority_queue_equal_impl = { priority_queue_equal };
+    static doremir_string_show_t priority_queue_show_impl = { priority_queue_show };
+    static doremir_destroy_t priority_queue_destroy_impl = { priority_queue_destroy };
+    
+    switch (interface)
+    {
+    case doremir_equal_i:
+        return &priority_queue_equal_impl;
+    
+    case doremir_string_show_i:
+        return &priority_queue_show_impl;
+    
+    case doremir_destroy_i:
+        return &priority_queue_destroy_impl;
+    
+    default:
+        return NULL;
+    } 
+}
+
+
 
