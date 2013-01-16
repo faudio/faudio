@@ -265,15 +265,16 @@ doremir_string_t map_show(doremir_ptr_t x)
 {
     map_t map = (map_t) x;
     string_t s  = string("{");
-    
-    // TODO set for each
-    
-    // doremir_set_for_each (map->entries, is_last, v)
-    // {
-        // s = string_dappend(s, doremir_string_show(v));
-        // if (!is_last)
-            // s = string_dappend(s, string(","));
-    // }
+        
+    doremir_for_each_last(x, doremir_set_to_list(map->entries), last)
+    {                      
+        entry_t entry = x;
+        s = string_dappend(s, doremir_string_show(entry->key));
+        s = string_dappend(s, string(":"));
+        s = string_dappend(s, doremir_string_show(entry->value));
+        if (!last)
+            s = string_dappend(s, string(","));
+    }
     s = string_dappend(s, string("}"));
     return s;
 }

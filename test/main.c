@@ -873,8 +873,28 @@ void test_set()
         doremir_destroy(b);
         doremir_destroy(c);
     }
+}    
 
+void test_map()
+{
+    test_section();
+    {
+        printf("\n");
 
+        map_t a = doremir_map_empty();
+        a = doremir_map_add(string("name"), string("Hans"), a);
+        a = doremir_map_add(string("age"), i16(25), a);
+        a = doremir_map_add(string("skills"), list(string("programming")), a);
+
+        // a = doremir_map_dadd(i16(1), a);
+        // a = doremir_map_dadd(i16(5), a);
+        // a = doremir_map_dadd(i16(3), a);
+        // a = doremir_map_dremove(i16(3), a);
+
+        doremir_print ("a                            ==> %s\n", a);
+        doremir_print ("size(a)                      ==> %s\n", i16(doremir_map_size(a)));
+        doremir_destroy(a);
+    }   
 }
 
 int main (int argc, char const *argv[])
@@ -921,7 +941,7 @@ int main (int argc, char const *argv[])
       {
       test_list();
       test_set();
-      // map
+      test_map();
       // error
       // json
       }
