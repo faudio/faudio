@@ -49,8 +49,9 @@
 #define hours(h)            doremir_time_create(0,h,0,ratio(0,1))
 #define minutes(m)          doremir_time_create(0,0,m,ratio(0,1))
 #define seconds(s)          doremir_time_create(0,0,0,ratio(s,1))
-#define divisions(x)        doremir_time_create(0,0,0,x)
+#define divisions(a,b)      doremir_time_create(0,0,0,ratio(a,b))
 #define milliseconds(s)     doremir_time_create(0,0,0,ratio(s,1000))
+#define microseconds(s)     doremir_time_create(0,0,0,ratio(s,1000000))
 
 #define tb                  doremir_to_bool
 #define ti8                 doremir_to_int8
