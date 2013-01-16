@@ -73,6 +73,7 @@ lisp:
 	modulo -Mmodules --language=lisp <modules/Doremir/Processor/FluidSynth.module	>bindings/lisp/doremir/processor/fluid-synth.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Signal.module  		>bindings/lisp/doremir/signal.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Type.module  			>bindings/lisp/doremir/type.lisp && \
+	modulo -Mmodules --language=lisp <modules/Doremir/Device.module			>bindings/lisp/doremir/device.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Device/Buffer.module		>bindings/lisp/doremir/device/buffer.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Device/File.module    	>bindings/lisp/doremir/device/file.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Device/Audio.module    	>bindings/lisp/doremir/device/audio.lisp && \
