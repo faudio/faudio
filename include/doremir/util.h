@@ -44,11 +44,12 @@
 #define type_vector(a,n)    doremir_type_vector(a,n)
 #define type_frame(a)       doremir_type_frame(a)
 
-// #define time(d,h,m,s)       doremir_time_create(d,h,m,ratio(s,1))
-#define days(d)             time(d,0,0,0)
-#define hours(h)            time(0,h,0,0)
-#define minutes(m)          time(0,0,m,0)
-#define seconds(s)          time(0,0,0,s)
+#define hms(h,m,s)          doremir_time_create(0,h,m,ratio(s,1))
+#define days(d)             doremir_time_create(d,0,0,ratio(0,1))
+#define hours(h)            doremir_time_create(0,h,0,ratio(0,1))
+#define minutes(m)          doremir_time_create(0,0,m,ratio(0,1))
+#define seconds(s)          doremir_time_create(0,0,0,ratio(s,1))
+#define divisions(x)        doremir_time_create(0,0,0,x)
 #define milliseconds(s)     doremir_time_create(0,0,0,ratio(s,1000))
 
 #define tb                  doremir_to_bool

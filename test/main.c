@@ -915,8 +915,8 @@ void test_priority_queue()
     priority_queue_t q = doremir_priority_queue_empty();
     srand(time(NULL));
 
-    for (int i = 0; i < 10000; ++i)
-        doremir_priority_queue_insert(i8(rand()), q);
+    for (int i = 0; i < 1000; ++i)
+        doremir_priority_queue_insert(doremir_add(hours(rand() % 24), seconds(rand() % 3600)), q);
 
     while(doremir_priority_queue_peek(q))
         doremir_dprint("     -> %s \n", doremir_priority_queue_pop(q));
@@ -935,7 +935,7 @@ int main (int argc, char const *argv[])
   // while(true)
   {
       doremir_audio_engine_initialize();
-
+      
       test_wrap();
       test_generic();
       test_string();
