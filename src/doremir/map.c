@@ -7,7 +7,6 @@
 
 #include <doremir/map.h>
 #include <doremir/set.h>
-#include <doremir/pair.h>
 #include <doremir/string.h>
 #include <doremir/util.h>
 
@@ -16,9 +15,6 @@
         * We implement Map as a Set of entries
         * An entry is exactly like a pair, but compares on the first element only
         * Performance, memory etc depend entirely on Set implementation
-        
-    TODO
-        Memory management of entries
  */
 
 struct entry {
@@ -93,8 +89,9 @@ doremir_map_t doremir_map_remove(doremir_map_key_t key, doremir_map_t map)
 doremir_ptr_t doremir_map_get(doremir_map_key_t key, doremir_map_t map)
 {
     // TODO find for set
-    entry_t entry = new_entry(key, NULL); // we compare on keys, so value does not matter
+    // entry_t entry = new_entry(key, NULL); // we compare on keys, so value does not matter
     // return new_map(doremir_set_find(EQUALS(entry), map->entries));
+    assert(false && "Not implemented");
 }
 
 doremir_map_t doremir_map_add_entry(doremir_pair_t x, doremir_map_t map)

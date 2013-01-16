@@ -887,7 +887,14 @@ void test_map()
         // a = doremir_map_remove(string("age"), a);
         // a = doremir_map_add(string("age"), i16(25), a);
         a = doremir_map_add(string("skills"), list(string("programming"), string("composition")), a);
-        a = doremir_map_add(string("qt"), doremir_buffer_create(2), a);
+
+        // a = doremir_map_add(string("notes"), doremir_midi_create_simple(note_on, 60, 127), a);
+        // a = doremir_map_add(string("types"), type_pair(type(uint8),type(uint8)), a);
+        a = doremir_map_add(string("happy"), b(true), a);
+        a = doremir_map_add(string("pair"), pair(b(true), d(3.1415)), a);
+
+        a = doremir_map_add(string("ratio"), ratio(1, 3), a);
+        a = doremir_map_add(string("ratio2"), doremir_multiply(ratio(4, 4444), ratio(1,2)), a);
 
         // a = doremir_map_dadd(i16(1), a);
         // a = doremir_map_dadd(i16(5), a);
@@ -940,14 +947,11 @@ int main (int argc, char const *argv[])
 
       test_for_each();
 
-      // while(doremir_thread_sleep(1000), 1)
-      {
       test_list();
       test_set();
       test_map();
       // error
       // json
-      }
 
       // processors
 
