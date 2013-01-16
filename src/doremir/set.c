@@ -212,21 +212,21 @@ bool set_equal(doremir_ptr_t a, doremir_ptr_t b)
 {
     set_t c = (set_t) a;
     set_t d = (set_t) b;
-    return false; // TODO
+    return doremir_set_is_subset_of(c, d) && (doremir_set_size(c) == doremir_set_size(d));
 }
 
 bool set_less_than(doremir_ptr_t a, doremir_ptr_t b)
 {
     set_t c = (set_t) a;
     set_t d = (set_t) b;
-    return false; // TODO
+    return doremir_set_is_subset_of(c, d);
 }
 
 bool set_greater_than(doremir_ptr_t a, doremir_ptr_t b)
 {
     set_t c = (set_t) a;
     set_t d = (set_t) b;
-    return false; // TODO
+    return !doremir_set_is_subset_of(c, d);
 }
 
 doremir_string_t set_show(doremir_ptr_t x)
