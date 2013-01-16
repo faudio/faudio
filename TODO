@@ -16,25 +16,35 @@ We will use the "big buffer" approach
         Or fix SOS-acceptable way to divide a buffer_t       ?
 
 ==========
+Issues
+
+* Normalize rationals before printing (but not otherwise)
+
+==========
 Additions
 
-* Generic for_each (by toList method?)
+* Error handling
+    doremir_check etc
+    Logging
 
-* Deep doremir_destroy (exactly how?)
-
-* Implement ringbuffer
-
-* Implement non-realtime streams
-
-* Implement realtime audio streams
-
-* Implement realtime midi streams
+* Processors
 
 * Implement priority queue
-
 * Implement schedulers
 
+* Buffer streams
+* File streams
+* RT audio
+* RT midi
+
+* Deep doremir_destroy (exactly how?)
+* Implement ringbuffer
+
 * High-level Lisp bindings
+* Better FIFO (multi-RW, see paper)
+* Better map/set backend (intmap or patricia tree)
+
+* JSON serialization
 
 
 
