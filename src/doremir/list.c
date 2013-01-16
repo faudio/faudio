@@ -131,7 +131,7 @@ void delete_list(list_t list)
  */
 #define impl_for_each_node(list, var) \
     for(node_t _n = list->node; _n; _n = _n->next) \
-        doremir_let(node_t, var, _n)
+        doremir_let(var, _n)
 
 /** Iterate over the elements of a list. The variable
     var will be a ptr_t referencing the value in
@@ -143,7 +143,7 @@ void delete_list(list_t list)
  */
 #define impl_for_each(list, var) \
     for(node_t _n = list->node; _n; _n = _n->next) \
-        doremir_let(ptr_t, var, _n->value)
+        doremir_let(var, _n->value)
 
 /** Allocate a new node in the given place, then update 
     the place to refer to the the its next pointer.

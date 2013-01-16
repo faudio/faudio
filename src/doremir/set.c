@@ -28,6 +28,7 @@
 #define base_index_of       doremir_list_index_of
 #define base_size           doremir_list_length
 #define base_for_each       doremir_list_for_each // TODO use to_list instead?
+#define base_for_each_last  doremir_list_for_each_last
 
 // TODO these are wrong, redo in terms of subset etc
 #define base_equal          doremir_equal
@@ -138,10 +139,8 @@ bool doremir_set_is_single(doremir_set_t set)
 
 bool doremir_set_is_subset_of(doremir_set_t a, doremir_set_t b)
 {
-    base_for_each (a->elems, last, x)
+    base_for_each(x, a->elems)
     {                               
-        kill_warning(last);
-        
         if (!doremir_set_has(x, b))
             return false;
     }
@@ -158,10 +157,8 @@ bool doremir_set_is_proper_subset_of(doremir_set_t a, doremir_set_t b)
 doremir_set_t doremir_set_sum(doremir_set_t a, doremir_set_t b)
 {
     set_t c = doremir_set_copy(a);
-    base_for_each (b->elems, last, x)
+    base_for_each (x, b->elems)
     {
-        kill_warning(last);
-
         c = doremir_set_dadd(x, c);
     }
     return c;
@@ -170,10 +167,8 @@ doremir_set_t doremir_set_sum(doremir_set_t a, doremir_set_t b)
 doremir_set_t doremir_set_difference(doremir_set_t a, doremir_set_t b)
 {
     set_t c = doremir_set_copy(a);
-    base_for_each (b->elems, last, x)
+    base_for_each (x, b->elems)
     {
-        kill_warning(last);
-
         c = doremir_set_dremove(x, c);
     }
     return c;
@@ -182,14 +177,10 @@ doremir_set_t doremir_set_difference(doremir_set_t a, doremir_set_t b)
 doremir_set_t doremir_set_product(doremir_set_t a, doremir_set_t b)
 {
     set_t c = doremir_set_empty();
-    base_for_each (a->elems, last, x)
+    base_for_each (x, a->elems)
     {
-        kill_warning(last);
-
-        base_for_each (b->elems, last, y)
+        base_for_each (y, b->elems)
         {
-            kill_warning(last);
-
             c = doremir_set_dadd(pair(x, y), c);
         }
     }
@@ -247,7 +238,7 @@ doremir_string_t set_show(doremir_ptr_t x)
     set_t set = (set_t) x;
     string_t s  = string("{");
 
-    base_for_each (set->elems, last, value)
+    base_for_each_last (value, set->elems, last)
     {
         s = string_dappend(s, doremir_string_show(value));
         if (!last)

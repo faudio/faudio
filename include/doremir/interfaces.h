@@ -2,11 +2,12 @@
 #ifndef _DOREMIR_INTERFACES
 #define _DOREMIR_INTERFACES
 
-/* 
+/*
     Ideally, Modulo would generate interface identifiers for us.
     Until that day we declare all in this enum to keep them unique.
  */
-enum doremir_interfaces {
+enum doremir_interfaces
+{
     doremir_copy_i,
     doremir_destroy_i,
     doremir_dynamic_i,

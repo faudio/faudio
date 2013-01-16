@@ -469,16 +469,16 @@ void test_cond()
 
 void test_for_each()
 {
-    doremir_let(int, x, 33)
+    doremir_let(x, 33)
     {
-        doremir_let(int, y, 1)
-            doremir_let(int, z, x + y)
+        doremir_let(y, 1)
+            doremir_let(z, x + y)
                 doremir_print("%s\n", i32(z));
     }
 
-    doremir_with(list_t, list, list(i32(1),i32(2),i32(3),i32(4)), doremir_destroy(list))
+    doremir_with(list, list(i32(1),i32(2),i32(3),i32(4)), doremir_destroy(list))
     {
-        doremir_list_for_each(list, is_last, x)
+        doremir_list_for_each(x, list)
         {
             doremir_print(">    %s\n", x);
         }
@@ -909,9 +909,9 @@ int main (int argc, char const *argv[])
       // test_atomic_stack(5, 2);
       test_atomic_ring_buffer();
 
-      test_thread();
-      test_mutex();
-      test_cond();
+      // test_thread();
+      // test_mutex();
+      // test_cond();
       // futures
       // improvings
 
