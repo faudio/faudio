@@ -39,3 +39,16 @@ void doremir_audio_engine_terminate()
     doremir_device_audio_terminate();
 }
 
+/** Instruct the Audio Engine to write log messages to the specific file.
+ */
+void doremir_audio_engine_set_log_file(doremir_string_file_path_t path)
+{
+    
+}
+ 
+/** Instruct the Audio Engine to write log messages to the standard output.
+ */
+void doremir_audio_engine_set_log_std()
+{
+    
+}
