@@ -16,8 +16,8 @@ module Doremir.Scheduler
     type Scheduler = opaque;
 
     create  : Improving -> Scheduler;
+    // swap    : (Scheduler, Scheduler) -> Void;
     destroy : Scheduler -> Void;
-    swap    : (Scheduler, Scheduler) -> Void;
     
     schedule : (Scheduler, Time, Action) -> Void;
     execute  : Scheduler -> Void;

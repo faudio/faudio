@@ -20,11 +20,12 @@ module Doremir.PriorityQueue
 
     type PriorityQueue = opaque;
     
-    create  : () -> PriorityQueue;
-    swap    : (PriorityQueue, PriorityQueue) -> Void;
+    empty  : () -> PriorityQueue;
+    single : Ptr -> PriorityQueue;
     destroy : PriorityQueue -> Void;
     
-    insert  : (PriorityQueue, Ptr) -> Void;
+    merge  : (PriorityQueue, PriorityQueue) -> Void;
+    insert  : (Ptr, PriorityQueue) -> Void;
     peek    : PriorityQueue -> Ptr;
     pop     : PriorityQueue -> Ptr;
 }

@@ -44,7 +44,7 @@
 #define type_vector(a,n)    doremir_type_vector(a,n)
 #define type_frame(a)       doremir_type_frame(a)
 
-#define time(d,h,m,s)       doremir_time_create(d,h,m,ratio(s,1))
+// #define time(d,h,m,s)       doremir_time_create(d,h,m,ratio(s,1))
 #define days(d)             time(d,0,0,0)
 #define hours(h)            time(0,h,0,0)
 #define minutes(m)          time(0,0,m,0)

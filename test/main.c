@@ -1,5 +1,6 @@
 
 #include <doremir/audio_engine.h>
+#include <doremir/priority_queue.h>
 #include <doremir/thread.h>
 #include <doremir/util.h>
 
@@ -907,6 +908,21 @@ void test_map()
     }   
 }
 
+void test_priority_queue()
+{
+    test_section();
+
+    priority_queue_t q = doremir_priority_queue_empty();
+    srand(time(NULL));
+
+    for (int i = 0; i < 10000; ++i)
+        doremir_priority_queue_insert(i8(rand()), q);
+
+    while(doremir_priority_queue_peek(q))
+        doremir_dprint("     -> %s \n", doremir_priority_queue_pop(q));
+    
+}
+
 int main (int argc, char const *argv[])
 {
   printf("DoReMIR Audio engine %s v%d.%d.%d\n", bits, version[0], version[1], version[2]);
@@ -956,7 +972,7 @@ int main (int argc, char const *argv[])
       // processors
 
       // dispatchers
-      // priority queue
+      test_priority_queue();
       // schedulers
 
       doremir_audio_engine_terminate();
