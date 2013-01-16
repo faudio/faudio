@@ -56,7 +56,8 @@ void doremir_scheduler_destroy(scheduler_t scheduler)
 
 void doremir_scheduler_schedule(scheduler_t scheduler,
                                 time_t      time,
-                                action_t    action)
+                                action_t    action,
+                                ptr_t       data)
 {
     // make entry
     // insert into queue
