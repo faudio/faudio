@@ -478,7 +478,7 @@ void test_for_each()
 
     doremir_with(list, list(i32(1),i32(2),i32(3),i32(4)), doremir_destroy(list))
     {
-        doremir_list_for_each(x, list)
+        doremir_for_each(x, list)
         {
             doremir_print(">    %s\n", x);
         }

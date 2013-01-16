@@ -128,5 +128,9 @@ module Doremir.List
     dfoldLeft   : (Binary, Ptr, Ptr, List) -> Ptr;
     concat      : List -> List;
     dconcat     : List -> List;
+
+    // Conversions
+    toList      : List -> List;
+
 }
 

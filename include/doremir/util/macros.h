@@ -49,7 +49,7 @@
 
     Syntax:
 
-        doremir_list_for_each(var, list)
+        doremir_for_each(var, list)
             statement;
 
     Example:
@@ -62,18 +62,18 @@
         }
 
  */
-#define doremir_list_for_each(var, list) \
-    doremir_list_dfor_each(var, doremir_list_copy(list))
+#define doremir_for_each(var, list) \
+    doremir_dfor_each(var, doremir_list_copy(list))
 
-#define doremir_list_dfor_each(var, list) \
+#define doremir_dfor_each(var, list) \
     doremir_with (__j, list, doremir_list_destroy(__j)) \
         for (; !doremir_list_is_empty(__j); __j = doremir_list_dtail(__j)) \
             doremir_let (var, doremir_list_head(__j))
 
-#define doremir_list_for_each_last(var, list, last) \
-    doremir_list_dfor_each_last(var, doremir_list_copy(list), last)
+#define doremir_for_each_last(var, list, last) \
+    doremir_dfor_each_last(var, doremir_list_copy(list), last)
 
-#define doremir_list_dfor_each_last(var, list, last) \
+#define doremir_dfor_each_last(var, list, last) \
     doremir_with (__j, list, doremir_list_destroy(__j)) \
         for (; !doremir_list_is_empty(__j); __j = doremir_list_dtail(__j)) \
             doremir_let (var, doremir_list_head(__j)) \

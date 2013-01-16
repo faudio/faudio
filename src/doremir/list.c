@@ -672,6 +672,12 @@ list_t doremir_list_enumerate(int m, int n)
     return new_list(node);
 }
 
+list_t doremir_list_to_list(list_t list)
+{
+    return doremir_list_copy(list);
+}
+
+
 // --------------------------------------------------------------------------------
 
 bool list_equal(ptr_t a, ptr_t b)

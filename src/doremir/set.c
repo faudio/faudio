@@ -27,16 +27,7 @@
 #define base_remove         doremir_list_remove
 #define base_index_of       doremir_list_index_of
 #define base_size           doremir_list_length
-#define base_for_each       doremir_list_for_each // TODO use to_list instead?
-#define base_for_each_last  doremir_list_for_each_last
-
-// TODO these are wrong, redo in terms of subset etc
-#define base_equal          doremir_equal
-#define base_less_than      doremir_less_than
-#define base_greater_than   doremir_greater_than
-// end TODO
-
-#define kill_warning(x) x = x
+#define base_to_list        doremir_list_to_list
 
 struct _doremir_set_t {
         impl_t          impl;       //  Interface dispatcher
@@ -139,7 +130,7 @@ bool doremir_set_is_single(doremir_set_t set)
 
 bool doremir_set_is_subset_of(doremir_set_t a, doremir_set_t b)
 {
-    base_for_each(x, a->elems)
+    doremir_for_each(x, base_to_list(a->elems))
     {                               
         if (!doremir_set_has(x, b))
             return false;
@@ -157,7 +148,7 @@ bool doremir_set_is_proper_subset_of(doremir_set_t a, doremir_set_t b)
 doremir_set_t doremir_set_sum(doremir_set_t a, doremir_set_t b)
 {
     set_t c = doremir_set_copy(a);
-    base_for_each (x, b->elems)
+    doremir_for_each(x, base_to_list(b->elems))
     {
         c = doremir_set_dadd(x, c);
     }
@@ -167,7 +158,7 @@ doremir_set_t doremir_set_sum(doremir_set_t a, doremir_set_t b)
 doremir_set_t doremir_set_difference(doremir_set_t a, doremir_set_t b)
 {
     set_t c = doremir_set_copy(a);
-    base_for_each (x, b->elems)
+    doremir_for_each(x, base_to_list(b->elems))
     {
         c = doremir_set_dremove(x, c);
     }
@@ -177,9 +168,9 @@ doremir_set_t doremir_set_difference(doremir_set_t a, doremir_set_t b)
 doremir_set_t doremir_set_product(doremir_set_t a, doremir_set_t b)
 {
     set_t c = doremir_set_empty();
-    base_for_each (x, a->elems)
+    doremir_for_each(x, base_to_list(a->elems))
     {
-        base_for_each (y, b->elems)
+        doremir_for_each(y, base_to_list(b->elems))
         {
             c = doremir_set_dadd(pair(x, y), c);
         }
@@ -210,27 +201,32 @@ set_t doremir_set(int count, ...)
     return s;
 }
 
+list_t doremir_set_to_list(set_t set)
+{
+    return set->elems;
+}
+
 // --------------------------------------------------------------------------------
 
 bool set_equal(doremir_ptr_t a, doremir_ptr_t b)
 {
     set_t c = (set_t) a;
     set_t d = (set_t) b;
-    return base_equal(c->elems, d->elems);
+    return false; // TODO
 }
 
 bool set_less_than(doremir_ptr_t a, doremir_ptr_t b)
 {
     set_t c = (set_t) a;
     set_t d = (set_t) b;
-    return base_less_than(c->elems, d->elems);
+    return false; // TODO
 }
 
 bool set_greater_than(doremir_ptr_t a, doremir_ptr_t b)
 {
     set_t c = (set_t) a;
     set_t d = (set_t) b;
-    return base_greater_than(c->elems, d->elems);
+    return false; // TODO
 }
 
 doremir_string_t set_show(doremir_ptr_t x)
@@ -238,7 +234,7 @@ doremir_string_t set_show(doremir_ptr_t x)
     set_t set = (set_t) x;
     string_t s  = string("{");
 
-    base_for_each_last (value, set->elems, last)
+    doremir_for_each_last(value, base_to_list(set->elems), last)
     {
         s = string_dappend(s, doremir_string_show(value));
         if (!last)

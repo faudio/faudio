@@ -96,6 +96,7 @@ doremir_ptr_t doremir_list_dfold_left(doremir_binary_t,
                                       doremir_list_t);
 doremir_list_t doremir_list_concat(doremir_list_t);
 doremir_list_t doremir_list_dconcat(doremir_list_t);
+doremir_list_t doremir_list_to_list(doremir_list_t);
 
 /** @}
     @}
