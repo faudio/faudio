@@ -883,8 +883,11 @@ void test_map()
 
         map_t a = doremir_map_empty();
         a = doremir_map_add(string("name"), string("Hans"), a);
-        a = doremir_map_add(string("age"), i16(25), a);
-        a = doremir_map_add(string("skills"), list(string("programming")), a);
+        a = doremir_map_add(string("age"), i16(22), a);
+        // a = doremir_map_remove(string("age"), a);
+        // a = doremir_map_add(string("age"), i16(25), a);
+        a = doremir_map_add(string("skills"), list(string("programming"), string("composition")), a);
+        a = doremir_map_add(string("qt"), doremir_buffer_create(2), a);
 
         // a = doremir_map_dadd(i16(1), a);
         // a = doremir_map_dadd(i16(5), a);
