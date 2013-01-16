@@ -3,20 +3,24 @@
     @addtogroup DoremirScheduler
     
     Provides task scheduling.
+
+    @par Implements 
+    - doremir_equal_t
+    - doremir_string_show_t
+    - doremir_destroy_t
     
  */
 module Doremir.Scheduler
 {
     import Doremir;
+    import Doremir.Time;
     import Doremir.Thread.Improving;
 
-    type Time = Int; // TODO
     type Action = Nullary;
-    
     type Scheduler = opaque;
+    
 
     create  : Improving -> Scheduler;
-    // swap    : (Scheduler, Scheduler) -> Void;
     destroy : Scheduler -> Void;
     
     schedule : (Scheduler, Time, Action) -> Void;

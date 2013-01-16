@@ -26,6 +26,7 @@ list(APPEND SRCS
   doremir/processor/par.c
   doremir/processor/loop.c
   doremir/ratio.c
+  doremir/scheduler.c
   doremir/set.c
   doremir/string.c
   doremir/time.c

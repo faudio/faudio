@@ -178,5 +178,3 @@ doremir_ptr_t priority_queue_impl(doremir_id_t interface)
     } 
 }
 
-
-
