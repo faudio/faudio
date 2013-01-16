@@ -23,14 +23,13 @@ Issues
 ==========
 Additions
 
+* Implement schedulers
+
 * Error handling
     doremir_check etc
     Logging
 
 * Processors
-
-* Implement priority queue
-* Implement schedulers
 
 * Buffer streams
 * File streams
