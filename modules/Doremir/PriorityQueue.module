@@ -10,6 +10,8 @@
     - doremir_order_t
     @par Implements 
     - doremir_equal_t
+    - doremir_string_show_t
+    - doremir_destroy_t
     @see 
     - @ref Collections
 
