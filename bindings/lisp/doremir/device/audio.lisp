@@ -1,25 +1,20 @@
-(defctype Doremir.Device.Audio.Session :pointer)
-
-(defctype Doremir.Device.Audio.Stream :pointer)
-
-(defctype Doremir.Device.Audio :pointer)
-
-(defcfun "Doremir.Device.Audio.withSession" :void ((:pointer (:pointer :void))))
-
-(defcfun "Doremir.Device.Audio.beginSession" :Doremir.Device.Audio.Session ())
-
-(defcfun "Doremir.Device.Audio.endSession" :void (:Doremir.Device.Audio.Session))
-
-(defcfun "Doremir.Device.Audio.devices" :Doremir.List (:Doremir.Device.Audio.Session))
-
-(defcfun "Doremir.Device.Audio.standard" :Doremir.Pair (:Doremir.Device.Audio.Session))
-
-(defcfun "Doremir.Device.Audio.standardInput" :Doremir.Device.Audio (:Doremir.Device.Audio.Session))
-
-(defcfun "Doremir.Device.Audio.standardOutput" :Doremir.Device.Audio (:Doremir.Device.Audio.Session))
-
-(defcfun "Doremir.Device.Audio.withStream" :void ((:pointer (:pointer :void))))
-
-(defcfun "Doremir.Device.Audio.startStream" :Doremir.Device.Audio.Stream (:Doremir.Device.Audio :Doremir.Processor :Doremir.Device.Audio))
-
-(defcfun "Doremir.Device.Audio.stopStream" :void (:Doremir.Device.Audio.Stream))
+(in-package :doremir)
+(defctype device-audio-session :pointer)
+(defctype device-audio-stream :pointer)
+(defctype device-audio-session-callback (:pointer (:pointer :void)))
+(defctype device-audio-stream-callback (:pointer (:pointer :void)))
+(defcfun (device-audio-begin-session "doremir_device_audio_begin_session") device-audio-session)
+(defcfun (device-audio-restart-session "doremir_device_audio_restart_session") device-audio-session (a device-audio-session))
+(defcfun (device-audio-end-session "doremir_device_audio_end_session") :void (a device-audio-session))
+(defcfun (device-audio-with-session "doremir_device_audio_with_session") :void (a device-audio-session-callback))
+(defcfun (device-audio-all "doremir_device_audio_all") list (a device-audio-session))
+(defcfun (device-audio-default "doremir_device_audio_default") pair (a device-audio-session))
+(defcfun (device-audio-name "doremir_device_audio_name") string (a device-audio))
+(defcfun (device-audio-host-name "doremir_device_audio_host_name") string (a device-audio))
+(defcfun (device-audio-has-input "doremir_device_audio_has_input") :boolean (a device-audio))
+(defcfun (device-audio-has-output "doremir_device_audio_has_output") :boolean (a device-audio))
+(defcfun (device-audio-channels "doremir_device_audio_channels") pair (a device-audio))
+(defcfun (device-audio-start-stream "doremir_device_audio_start_stream") device-audio-stream (a device-audio) (b processor) (c device-audio))
+(defcfun (device-audio-restart-stream "doremir_device_audio_restart_stream") device-audio-stream (a device-audio-stream))
+(defcfun (device-audio-stop-stream "doremir_device_audio_stop_stream") :void (a device-audio-stream))
+(defcfun (device-audio-with-stream "doremir_device_audio_with_stream") :void (a device-audio) (b processor) (c device-audio) (d device-audio-stream-callback))

@@ -1,3 +1,3 @@
-(defcfun "Doremir.String.List.convert" :Doremir.List (:Doremir.String))
-
-(defcfun "Doremir.String.List.unconvert" :Doremir.String (:Doremir.List))
+(in-package :doremir)
+(defcfun (string-list-convert "doremir_string_list_convert") list (a string))
+(defcfun (string-list-unconvert "doremir_string_list_unconvert") string (a list))

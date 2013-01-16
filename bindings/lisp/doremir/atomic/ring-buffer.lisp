@@ -1,17 +1,10 @@
-(defctype Doremir.Atomic.RingBuffer :pointer)
-
-(defcfun "Doremir.Atomic.RingBuffer.create" :Doremir.Atomic.RingBuffer (:size))
-
-(defcfun "Doremir.Atomic.RingBuffer.copy" :Doremir.Atomic.RingBuffer (:Doremir.Atomic.RingBuffer))
-
-(defcfun "Doremir.Atomic.RingBuffer.resize" :Doremir.Atomic.RingBuffer (:size :Doremir.Atomic.RingBuffer))
-
-(defcfun "Doremir.Atomic.RingBuffer.swap" :void (:Doremir.Atomic.RingBuffer :Doremir.Atomic.RingBuffer))
-
-(defcfun "Doremir.Atomic.RingBuffer.destroy" :void (:Doremir.Atomic.RingBuffer))
-
-(defcfun "Doremir.Atomic.RingBuffer.size" :size (:Doremir.Atomic.RingBuffer))
-
-(defcfun "Doremir.Atomic.RingBuffer.read" :uint8 (:Doremir.Atomic.RingBuffer))
-
-(defcfun "Doremir.Atomic.RingBuffer.write" :boolean (:Doremir.Atomic.RingBuffer :uint8))
+(in-package :doremir)
+(defctype atomic-ring-buffer :pointer)
+(defcfun (atomic-ringbuffer-create "doremir_atomic_ring_buffer_create") atomic-ring-buffer (a :int32))
+(defcfun (atomic-ringbuffer-copy "doremir_atomic_ring_buffer_copy") atomic-ring-buffer (a atomic-ring-buffer))
+(defcfun (atomic-ringbuffer-resize "doremir_atomic_ring_buffer_resize") atomic-ring-buffer (a :int32) (b atomic-ring-buffer))
+(defcfun (atomic-ringbuffer-swap "doremir_atomic_ring_buffer_swap") :void (a atomic-ring-buffer) (b atomic-ring-buffer))
+(defcfun (atomic-ringbuffer-destroy "doremir_atomic_ring_buffer_destroy") :void (a atomic-ring-buffer))
+(defcfun (atomic-ringbuffer-size "doremir_atomic_ring_buffer_size") :int32 (a atomic-ring-buffer))
+(defcfun (atomic-ringbuffer-read "doremir_atomic_ring_buffer_read") :uint8 (a atomic-ring-buffer))
+(defcfun (atomic-ringbuffer-write "doremir_atomic_ring_buffer_write") :boolean (a atomic-ring-buffer) (b :uint8))

@@ -1,35 +1,19 @@
-(defctype Doremir.Thread :pointer)
-
-(defctype Doremir.Thread.Mutex :pointer)
-
-(defctype Doremir.Thread.Condition :pointer)
-
-(defctype Doremir.Thread.Millis :int)
-
-(defcfun "Doremir.Thread.create" :Doremir.Thread ((:pointer :Doremir.Closure)))
-
-(defcfun "Doremir.Thread.sleep" :void (:Doremir.Thread.Millis))
-
-(defcfun "Doremir.Thread.join" :void (:Doremir.Thread))
-
-(defcfun "Doremir.Thread.detach" :void (:Doremir.Thread))
-
-(defcfun "Doremir.Thread.createMutex" :Doremir.Thread.Mutex ())
-
-(defcfun "Doremir.Thread.destroyMutex" :void (:Doremir.Thread.Mutex))
-
-(defcfun "Doremir.Thread.lock" :boolean (:Doremir.Thread.Mutex))
-
-(defcfun "Doremir.Thread.tryLock" :boolean (:Doremir.Thread.Mutex))
-
-(defcfun "Doremir.Thread.unlock" :boolean (:Doremir.Thread.Mutex))
-
-(defcfun "Doremir.Thread.createCondition" :Doremir.Thread.Condition (:Doremir.Thread.Mutex))
-
-(defcfun "Doremir.Thread.destroyCondition" :void (:Doremir.Thread.Condition))
-
-(defcfun "Doremir.Thread.waitFor" :void (:Doremir.Thread.Condition))
-
-(defcfun "Doremir.Thread.notify" :void (:Doremir.Thread.Condition))
-
-(defcfun "Doremir.Thread.notifyAll" :void (:Doremir.Thread.Condition))
+(in-package :doremir)
+(defctype thread :pointer)
+(defctype thread-mutex :pointer)
+(defctype thread-condition :pointer)
+(defctype thread-millis :int)
+(defcfun (thread-create "doremir_thread_create") thread (a nullary) (b ptr))
+(defcfun (thread-sleep "doremir_thread_sleep") :void (a thread-millis))
+(defcfun (thread-join "doremir_thread_join") :void (a thread))
+(defcfun (thread-detach "doremir_thread_detach") :void (a thread))
+(defcfun (thread-create-mutex "doremir_thread_create_mutex") thread-mutex)
+(defcfun (thread-destroy-mutex "doremir_thread_destroy_mutex") :void (a thread-mutex))
+(defcfun (thread-lock "doremir_thread_lock") :boolean (a thread-mutex))
+(defcfun (thread-try-lock "doremir_thread_try_lock") :boolean (a thread-mutex))
+(defcfun (thread-unlock "doremir_thread_unlock") :boolean (a thread-mutex))
+(defcfun (thread-create-condition "doremir_thread_create_condition") thread-condition (a thread-mutex))
+(defcfun (thread-destroy-condition "doremir_thread_destroy_condition") :void (a thread-condition))
+(defcfun (thread-wait-for "doremir_thread_wait_for") :void (a thread-condition))
+(defcfun (thread-notify "doremir_thread_notify") :void (a thread-condition))
+(defcfun (thread-notify-all "doremir_thread_notify_all") :void (a thread-condition))

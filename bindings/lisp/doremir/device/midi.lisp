@@ -1,21 +1,19 @@
-(defctype Doremir.Device.Midi.Session :pointer)
-
-(defctype Doremir.Device.Midi.Stream :pointer)
-
-(defctype Doremir.Device.Midi :pointer)
-
-(defcfun "Doremir.Device.Midi.beginSession" :Doremir.Device.Midi.Session ())
-
-(defcfun "Doremir.Device.Midi.endSession" :void (:Doremir.Device.Midi.Session))
-
-(defcfun "Doremir.Device.Midi.devices" :Doremir.List (:Doremir.Device.Midi.Session))
-
-(defcfun "Doremir.Device.Midi.standard" :Doremir.Pair (:Doremir.Device.Midi.Session))
-
-(defcfun "Doremir.Device.Midi.standardInput" :Doremir.Device.Midi (:Doremir.Device.Midi.Session))
-
-(defcfun "Doremir.Device.Midi.standardOutput" :Doremir.Device.Midi (:Doremir.Device.Midi.Session))
-
-(defcfun "Doremir.Device.Midi.openStream" :Doremir.Device.Midi.Stream (:Doremir.Device.Midi :Doremir.Processor :Doremir.Device.Midi))
-
-(defcfun "Doremir.Device.Midi.closeStream" :void (:Doremir.Device.Midi.Stream))
+(in-package :doremir)
+(defctype device-midi-session :pointer)
+(defctype device-midi-stream :pointer)
+(defcfun (device-midi-all "doremir_device_midi_all") list (a device-midi-session))
+(defcfun (device-midi-default "doremir_device_midi_default") pair (a device-midi-session))
+(defcfun (device-midi-name "doremir_device_midi_name") string (a device-midi))
+(defcfun (device-midi-host-name "doremir_device_midi_host_name") string (a device-midi))
+(defcfun (device-midi-has-input "doremir_device_midi_has_input") :boolean (a device-midi))
+(defcfun (device-midi-has-output "doremir_device_midi_has_output") :boolean (a device-midi))
+(defcfun (device-midi-begin-session "doremir_device_midi_begin_session") device-midi-session)
+(defcfun (device-midi-restart-session "doremir_device_midi_restart_session") device-midi-session (a device-midi-session))
+(defcfun (device-midi-end-session "doremir_device_midi_end_session") :void (a device-midi-session))
+(defcfun (device-midi-start-stream "doremir_device_midi_start_stream") device-midi-stream (a device-midi))
+(defcfun (device-midi-restart-stream "doremir_device_midi_restart_stream") device-midi-stream (a device-midi-stream))
+(defcfun (device-midi-stop-stream "doremir_device_midi_stop_stream") :void (a device-midi-stream))
+(defctype device-midi-session-callback (:pointer (:pointer :void)))
+(defctype device-midi-stream-callback (:pointer (:pointer :void)))
+(defcfun (device-midi-with-session "doremir_device_midi_with_session") :void (a device-midi-session-callback))
+(defcfun (device-midi-with-stream "doremir_device_midi_with_stream") :void (a device-midi) (b device-midi-stream-callback))

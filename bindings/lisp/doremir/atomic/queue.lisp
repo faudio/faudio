@@ -1,9 +1,6 @@
-(defctype Doremir.Atomic.Queue :pointer)
-
-(defcfun "Doremir.Atomic.Queue.create" :Doremir.Atomic.Queue ())
-
-(defcfun "Doremir.Atomic.Queue.destroy" :void (:Doremir.Atomic.Queue))
-
-(defcfun "Doremir.Atomic.Queue.read" :Doremir.Ptr (:Doremir.Atomic.Queue))
-
-(defcfun "Doremir.Atomic.Queue.write" :boolean (:Doremir.Atomic.Queue :Doremir.Ptr))
+(in-package :doremir)
+(defctype atomic-queue :pointer)
+(defcfun (atomic-queue-create "doremir_atomic_queue_create") atomic-queue)
+(defcfun (atomic-queue-destroy "doremir_atomic_queue_destroy") :void (a atomic-queue))
+(defcfun (atomic-queue-read "doremir_atomic_queue_read") ptr (a atomic-queue))
+(defcfun (atomic-queue-write "doremir_atomic_queue_write") :boolean (a atomic-queue) (b ptr))

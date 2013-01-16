@@ -1,31 +1,16 @@
-(defctype Doremir.Type.Frames :size)
-
-(defctype Doremir.Type.Simple (:pointer :void))
-
-(defctype Doremir.Type.Struct (:pointer :void))
-
-(defctype Doremir.Type (:pointer :Doremir.Type.Struct))
-
-(defcfun "Doremir.Type.simple" :Doremir.Type (:Doremir.Type.Simple))
-
-(defcfun "Doremir.Type.pair" :Doremir.Type (:Doremir.Type :Doremir.Type))
-
-(defcfun "Doremir.Type.vector" :Doremir.Type (:Doremir.Type :size))
-
-(defcfun "Doremir.Type.frame" :Doremir.Type (:Doremir.Type))
-
-(defcfun "Doremir.Type.copy" :Doremir.Type (:Doremir.Type))
-
-(defcfun "Doremir.Type.destroy" :void (:Doremir.Type))
-
-(defcfun "Doremir.Type.isSimple" :boolean (:Doremir.Type))
-
-(defcfun "Doremir.Type.isPair" :boolean (:Doremir.Type))
-
-(defcfun "Doremir.Type.isVector" :boolean (:Doremir.Type))
-
-(defcfun "Doremir.Type.isFrame" :boolean (:Doremir.Type))
-
-(defcfun "Doremir.Type.sizeOf" :size (:Doremir.Type.Frames :Doremir.Type))
-
-(defcfun "Doremir.Type.alignOf" :size (:Doremir.Type))
+(in-package :doremir)
+(defctype type-frames :int32)
+(defctype type-simple (:pointer :void))
+(defctype type :pointer)
+(defcfun (type-simple "doremir_type_simple") type (a type-simple))
+(defcfun (type-pair "doremir_type_pair") type (a type) (b type))
+(defcfun (type-vector "doremir_type_vector") type (a type) (b :int32))
+(defcfun (type-frame "doremir_type_frame") type (a type))
+(defcfun (type-copy "doremir_type_copy") type (a type))
+(defcfun (type-destroy "doremir_type_destroy") :void (a type))
+(defcfun (type-is-simple "doremir_type_is_simple") :boolean (a type))
+(defcfun (type-is-pair "doremir_type_is_pair") :boolean (a type))
+(defcfun (type-is-vector "doremir_type_is_vector") :boolean (a type))
+(defcfun (type-is-frame "doremir_type_is_frame") :boolean (a type))
+(defcfun (type-size-of "doremir_type_size_of") :int32 (a type-frames) (b type))
+(defcfun (type-align-of "doremir_type_align_of") :int32 (a type))

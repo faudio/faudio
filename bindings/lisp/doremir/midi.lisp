@@ -1,27 +1,15 @@
-(defctype Doremir.Midi.Status (:pointer :void))
-
-(defctype Doremir.Midi.Channel :int)
-
-(defctype Doremir.Midi.Data :int)
-
-(defctype Doremir.Midi :pointer)
-
-(defcfun "Doremir.Midi.createSimple" :Doremir.Midi (:Doremir.Midi.Status :int :int))
-
-(defcfun "Doremir.Midi.createSysex" :Doremir.Midi (:Doremir.Buffer))
-
-(defcfun "Doremir.Midi.copy" :Doremir.Midi (:Doremir.Midi))
-
-(defcfun "Doremir.Midi.destroy" :void (:Doremir.Midi))
-
-(defcfun "Doremir.Midi.status" :Doremir.Midi.Status (:Doremir.Midi))
-
-(defcfun "Doremir.Midi.channel" :Doremir.Midi.Channel (:Doremir.Midi))
-
-(defcfun "Doremir.Midi.isSimple" :boolean (:Doremir.Midi))
-
-(defcfun "Doremir.Midi.simpleData" :Doremir.Pair (:Doremir.Midi))
-
-(defcfun "Doremir.Midi.isSysex" :boolean (:Doremir.Midi))
-
-(defcfun "Doremir.Midi.sysexData" :Doremir.Buffer (:Doremir.Midi))
+(in-package :doremir)
+(defctype midi-status (:pointer :void))
+(defctype midi-channel :int)
+(defctype midi-data :int)
+(defctype midi :pointer)
+(defcfun (midi-create-simple "doremir_midi_create_simple") midi (a midi-status) (b :int) (c :int))
+(defcfun (midi-create-sysex "doremir_midi_create_sysex") midi (a buffer))
+(defcfun (midi-copy "doremir_midi_copy") midi (a midi))
+(defcfun (midi-destroy "doremir_midi_destroy") :void (a midi))
+(defcfun (midi-status "doremir_midi_status") midi-status (a midi))
+(defcfun (midi-channel "doremir_midi_channel") midi-channel (a midi))
+(defcfun (midi-is-simple "doremir_midi_is_simple") :boolean (a midi))
+(defcfun (midi-simple-data "doremir_midi_simple_data") pair (a midi))
+(defcfun (midi-is-sysex "doremir_midi_is_sysex") :boolean (a midi))
+(defcfun (midi-sysex-data "doremir_midi_sysex_data") buffer (a midi))

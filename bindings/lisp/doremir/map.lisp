@@ -1,45 +1,26 @@
-(defctype Doremir.Map :pointer)
-
-(defctype Doremir.Map.Key :Doremir.Ptr)
-
-(defcfun "Doremir.Map.empty" :Doremir.Map ())
-
-(defcfun "Doremir.Map.add" :Doremir.Map (:Doremir.Pair :Doremir.Map))
-
-(defcfun "Doremir.Map.remove" :void (:Doremir.Pair :Doremir.Map))
-
-(defcfun "Doremir.Map.copy" :Doremir.Map (:Doremir.Map))
-
-(defcfun "Doremir.Map.destroy" :void (:Doremir.Map))
-
-(defcfun "Doremir.Map.fromPair" :Doremir.Map (:Doremir.Pair))
-
-(defcfun "Doremir.Map.fromList" :Doremir.Map (:Doremir.Pair))
-
-(defcfun "Doremir.Map.size" :int (:Doremir.Map))
-
-(defcfun "Doremir.Map.isEmpty" :boolean (:Doremir.Map))
-
-(defcfun "Doremir.Map.isSingle" :boolean (:Doremir.Map))
-
-(defcfun "Doremir.Map.get" :Doremir.Ptr (:Doremir.Map.Key :Doremir.Map))
-
-(defcfun "Doremir.Map.hasKey" :boolean (:Doremir.Map.Key :Doremir.Map))
-
-(defcfun "Doremir.Map.hasElem" :boolean (:Doremir.Ptr :Doremir.Map))
-
-(defcfun "Doremir.Map.hasEntry" :boolean (:Doremir.Pair :Doremir.Map))
-
-(defcfun "Doremir.Map.isSubmapOf" :boolean (:Doremir.Map :Doremir.Map))
-
-(defcfun "Doremir.Map.isProperSubmapOf" :boolean (:Doremir.Map :Doremir.Map))
-
-(defcfun "Doremir.Map.sum" :Doremir.Map (:Doremir.Map :Doremir.Map))
-
-(defcfun "Doremir.Map.product" :Doremir.Map (:Doremir.Map :Doremir.Map))
-
-(defcfun "Doremir.Map.difference" :Doremir.Map (:Doremir.Map :Doremir.Map))
-
-(defcfun "Doremir.Map.cartesian" :Doremir.Map (:Doremir.Map :Doremir.Map))
-
-(defcfun "Doremir.Map.power" :Doremir.Map (:Doremir.Map))
+(in-package :doremir)
+(defctype map :pointer)
+(defctype map-key ptr)
+(defcfun (map-empty "doremir_map_empty") map)
+(defcfun (map-copy "doremir_map_copy") map (a map))
+(defcfun (map-destroy "doremir_map_destroy") :void (a map))
+(defcfun (map-size "doremir_map_size") :int (a map))
+(defcfun (map-is-empty "doremir_map_is_empty") :boolean (a map))
+(defcfun (map-is-single "doremir_map_is_single") :boolean (a map))
+(defcfun (map-add "doremir_map_add") map (a map-key) (b ptr) (c map))
+(defcfun (map-remove "doremir_map_remove") map (a map-key) (b map))
+(defcfun (map-get "doremir_map_get") ptr (a map-key) (b map))
+(defcfun (map-add-entry "doremir_map_add_entry") map (a pair) (b map))
+(defcfun (map-remove-entry "doremir_map_remove_entry") map (a pair) (b map))
+(defcfun (map-has-key "doremir_map_has_key") :boolean (a map-key) (b map))
+(defcfun (map-has-elem "doremir_map_has_elem") :boolean (a ptr) (b map))
+(defcfun (map-has-entry "doremir_map_has_entry") :boolean (a pair) (b map))
+(defcfun (map-is-submap-of "doremir_map_is_submap_of") :boolean (a map) (b map))
+(defcfun (map-is-proper-submap-of "doremir_map_is_proper_submap_of") :boolean (a map) (b map))
+(defcfun (map-sum "doremir_map_sum") map (a map) (b map))
+(defcfun (map-product "doremir_map_product") map (a map) (b map))
+(defcfun (map-difference "doremir_map_difference") map (a map) (b map))
+(defcfun (map-power "doremir_map_power") map (a map))
+(defcfun (map-from-pair "doremir_map_from_pair") map (a pair))
+(defcfun (map-from-list "doremir_map_from_list") map (a pair))
+(defcfun (map-to-list "doremir_map_to_list") list (a map))

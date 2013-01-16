@@ -1,17 +1,10 @@
-(defctype Doremir.Buffer :pointer)
-
-(defcfun "Doremir.Buffer.create" :Doremir.Buffer (:size))
-
-(defcfun "Doremir.Buffer.copy" :Doremir.Buffer (:Doremir.Buffer))
-
-(defcfun "Doremir.Buffer.resize" :Doremir.Buffer (:size :Doremir.Buffer))
-
-(defcfun "Doremir.Buffer.destroy" :void (:Doremir.Buffer))
-
-(defcfun "Doremir.Buffer.size" :size (:Doremir.Buffer))
-
-(defcfun "Doremir.Buffer.peek" :uint8 (:Doremir.Buffer :size))
-
-(defcfun "Doremir.Buffer.poke" :void (:Doremir.Buffer :size :uint8))
-
-(defcfun "Doremir.Buffer.unsafeAddress" (:pointer :void) (:Doremir.Buffer))
+(in-package :doremir)
+(defctype buffer :pointer)
+(defcfun (buffer-create "doremir_buffer_create") buffer (a :int32))
+(defcfun (buffer-copy "doremir_buffer_copy") buffer (a buffer))
+(defcfun (buffer-resize "doremir_buffer_resize") buffer (a :int32) (b buffer))
+(defcfun (buffer-destroy "doremir_buffer_destroy") :void (a buffer))
+(defcfun (buffer-size "doremir_buffer_size") :int32 (a buffer))
+(defcfun (buffer-peek "doremir_buffer_peek") :uint8 (a buffer) (b :int32))
+(defcfun (buffer-poke "doremir_buffer_poke") :void (a buffer) (b :int32) (c :uint8))
+(defcfun (buffer-unsafe-address "doremir_buffer_unsafe_address") (:pointer :void) (a buffer))

@@ -1,19 +1,11 @@
-(defctype Doremir.Time :pointer)
-
-(defcfun "Doremir.Time.create" :Doremir.Time (:int32 :int32 :int32 :Doremir.Ratio))
-
-(defcfun "Doremir.Time.copy" :Doremir.Time (:Doremir.Time))
-
-(defcfun "Doremir.Time.destroy" :void (:Doremir.Time))
-
-(defcfun "Doremir.Time.days" :int32 (:Doremir.Time))
-
-(defcfun "Doremir.Time.hours" :int32 (:Doremir.Time))
-
-(defcfun "Doremir.Time.minutes" :int32 (:Doremir.Time))
-
-(defcfun "Doremir.Time.seconds" :int32 (:Doremir.Time))
-
-(defcfun "Doremir.Time.divisions" :Doremir.Ratio (:Doremir.Time))
-
-(defcfun "Doremir.Time.toIso" :Doremir.String (:Doremir.Time))
+(in-package :doremir)
+(defctype time :pointer)
+(defcfun (time-create "doremir_time_create") time (a :int32) (b :int32) (c :int32) (d ratio))
+(defcfun (time-copy "doremir_time_copy") time (a time))
+(defcfun (time-destroy "doremir_time_destroy") :void (a time))
+(defcfun (time-days "doremir_time_days") :int32 (a time))
+(defcfun (time-hours "doremir_time_hours") :int32 (a time))
+(defcfun (time-minutes "doremir_time_minutes") :int32 (a time))
+(defcfun (time-seconds "doremir_time_seconds") :int32 (a time))
+(defcfun (time-divisions "doremir_time_divisions") ratio (a time))
+(defcfun (time-to-iso "doremir_time_to_iso") string (a time))

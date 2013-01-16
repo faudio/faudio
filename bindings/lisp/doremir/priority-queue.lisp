@@ -1,13 +1,9 @@
-(defctype Doremir.PriorityQueue :pointer)
-
-(defcfun "Doremir.PriorityQueue.create" :Doremir.PriorityQueue ())
-
-(defcfun "Doremir.PriorityQueue.swap" :void (:Doremir.PriorityQueue :Doremir.PriorityQueue))
-
-(defcfun "Doremir.PriorityQueue.destroy" :void (:Doremir.PriorityQueue))
-
-(defcfun "Doremir.PriorityQueue.insert" :void (:Doremir.PriorityQueue :Doremir.Ptr))
-
-(defcfun "Doremir.PriorityQueue.peek" :Doremir.Ptr (:Doremir.PriorityQueue))
-
-(defcfun "Doremir.PriorityQueue.pop" :Doremir.Ptr (:Doremir.PriorityQueue))
+(in-package :doremir)
+(defctype priority-queue :pointer)
+(defcfun (priorityqueue-empty "doremir_priority_queue_empty") priority-queue)
+(defcfun (priorityqueue-single "doremir_priority_queue_single") priority-queue (a ptr))
+(defcfun (priorityqueue-destroy "doremir_priority_queue_destroy") :void (a priority-queue))
+(defcfun (priorityqueue-merge "doremir_priority_queue_merge") :void (a priority-queue) (b priority-queue))
+(defcfun (priorityqueue-insert "doremir_priority_queue_insert") :void (a ptr) (b priority-queue))
+(defcfun (priorityqueue-peek "doremir_priority_queue_peek") ptr (a priority-queue))
+(defcfun (priorityqueue-pop "doremir_priority_queue_pop") ptr (a priority-queue))

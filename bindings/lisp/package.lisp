@@ -5,7 +5,16 @@
     :common-lisp
     :cffi)
 
-  (:shadow
+  (:shadow         
+    :string
+    :number
+    :list
+    :set
+    :map
+    :ratio
+    :time
+    :type
+    :signal
     :equal
     :min
     :max

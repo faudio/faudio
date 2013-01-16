@@ -1,11 +1,7 @@
-(defctype Doremir.Scheduler.Time :int)
-
-(defctype Doremir.Scheduler.Action :Doremir.Nullary)
-
-(defctype Doremir.Scheduler (:pointer :void))
-
-(defcfun "Doremir.Scheduler.create" :Doremir.Scheduler (:Doremir.Thread.Improving))
-
-(defcfun "Doremir.Scheduler.destroy" :void (:Doremir.Scheduler))
-
-(defcfun "Doremir.Scheduler.swap" :void (:Doremir.Scheduler :Doremir.Scheduler))
+(in-package :doremir)
+(defctype scheduler-action nullary)
+(defctype scheduler :pointer)
+(defcfun (scheduler-create "doremir_scheduler_create") scheduler (a thread-improving))
+(defcfun (scheduler-destroy "doremir_scheduler_destroy") :void (a scheduler))
+(defcfun (scheduler-schedule "doremir_scheduler_schedule") :void (a scheduler) (b time) (c scheduler-action) (d ptr))
+(defcfun (scheduler-execute "doremir_scheduler_execute") :void (a scheduler))

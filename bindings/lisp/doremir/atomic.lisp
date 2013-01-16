@@ -1,21 +1,12 @@
-(defctype Doremir.Atomic :pointer)
-
-(defctype Doremir.Atomic.Updater (:pointer (:pointer :void)))
-
-(defcfun "Doremir.Atomic.create" :Doremir.Atomic ())
-
-(defcfun "Doremir.Atomic.copy" :Doremir.Atomic (:Doremir.Atomic))
-
-(defcfun "Doremir.Atomic.swap" :void (:Doremir.Atomic :Doremir.Atomic))
-
-(defcfun "Doremir.Atomic.destroy" :void (:Doremir.Atomic))
-
-(defcfun "Doremir.Atomic.exchange" :boolean (:Doremir.Atomic :Doremir.Ptr :Doremir.Ptr))
-
-(defcfun "Doremir.Atomic.get" :Doremir.Ptr (:Doremir.Atomic))
-
-(defcfun "Doremir.Atomic.set" :void (:Doremir.Atomic :Doremir.Ptr))
-
-(defcfun "Doremir.Atomic.add" :void (:Doremir.Atomic :Doremir.Ptr))
-
-(defcfun "Doremir.Atomic.modify" :void (:Doremir.Atomic :Doremir.Atomic.Updater))
+(in-package :doremir)
+(defctype atomic :pointer)
+(defctype atomic-updater (:pointer (:pointer :void)))
+(defcfun (atomic-create "doremir_atomic_create") atomic)
+(defcfun (atomic-copy "doremir_atomic_copy") atomic (a atomic))
+(defcfun (atomic-swap "doremir_atomic_swap") :void (a atomic) (b atomic))
+(defcfun (atomic-destroy "doremir_atomic_destroy") :void (a atomic))
+(defcfun (atomic-exchange "doremir_atomic_exchange") :boolean (a atomic) (b ptr) (c ptr))
+(defcfun (atomic-get "doremir_atomic_get") ptr (a atomic))
+(defcfun (atomic-set "doremir_atomic_set") :void (a atomic) (b ptr))
+(defcfun (atomic-add "doremir_atomic_add") :void (a atomic) (b ptr))
+(defcfun (atomic-modify "doremir_atomic_modify") :void (a atomic) (b atomic-updater))

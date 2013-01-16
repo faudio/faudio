@@ -1,13 +1,8 @@
-(defctype Doremir.Thread.Future :pointer)
-
-(defctype Doremir.Thread.Future.Value :Doremir.Ptr)
-
-(defcfun "Doremir.Thread.Future.create" :Doremir.Thread.Future (:Doremir.Closure))
-
-(defcfun "Doremir.Thread.Future.destroy" :void (:Doremir.Thread.Future))
-
-(defcfun "Doremir.Thread.Future.isDone" :boolean (:Doremir.Thread.Future))
-
-(defcfun "Doremir.Thread.Future.wait" :void (:Doremir.Thread.Future))
-
-(defcfun "Doremir.Thread.Future.get" :Doremir.Thread.Future.Value (:Doremir.Thread.Future))
+(in-package :doremir)
+(defctype thread-future :pointer)
+(defctype thread-future-value ptr)
+(defcfun (thread-future-create "doremir_thread_future_create") thread-future (a nullary) (b ptr))
+(defcfun (thread-future-destroy "doremir_thread_future_destroy") :void (a thread-future))
+(defcfun (thread-future-is-done "doremir_thread_future_is_done") :boolean (a thread-future))
+(defcfun (thread-future-wait "doremir_thread_future_wait") :void (a thread-future))
+(defcfun (thread-future-get "doremir_thread_future_get") thread-future-value (a thread-future))

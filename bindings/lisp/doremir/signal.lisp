@@ -1,53 +1,28 @@
-(defctype Doremir.Signal :pointer)
-
-(defcfun "Doremir.Signal.typeOf" :Doremir.Type (:Doremir.Signal))
-
-(defcfun "Doremir.Signal.applyUnary" :Doremir.Signal (:Doremir.Processor.Any :Doremir.Signal))
-
-(defcfun "Doremir.Signal.applyBinary" :Doremir.Signal (:Doremir.Processor.Any :Doremir.Signal :Doremir.Signal))
-
-(defcfun "Doremir.Signal.applyTernary" :Doremir.Signal (:Doremir.Processor.Any :Doremir.Signal :Doremir.Signal :Doremir.Signal))
-
-(defcfun "Doremir.Signal.const" :Doremir.Signal (:Doremir.Ptr :Doremir.Signal))
-
-(defcfun "Doremir.Signal.delay" :Doremir.Signal (:size :Doremir.Signal))
-
-(defcfun "Doremir.Signal.split" :Doremir.Pair (:Doremir.Signal))
-
-(defcfun "Doremir.Signal.cos" :Doremir.Signal (:Doremir.Signal))
-
-(defcfun "Doremir.Signal.sin" :Doremir.Signal (:Doremir.Signal))
-
-(defcfun "Doremir.Signal.tan" :Doremir.Signal (:Doremir.Signal))
-
-(defcfun "Doremir.Signal.acos" :Doremir.Signal (:Doremir.Signal))
-
-(defcfun "Doremir.Signal.asin" :Doremir.Signal (:Doremir.Signal))
-
-(defcfun "Doremir.Signal.atan" :Doremir.Signal (:Doremir.Signal))
-
-(defcfun "Doremir.Signal.add" :Doremir.Signal (:Doremir.Signal))
-
-(defcfun "Doremir.Signal.subtract" :Doremir.Signal (:Doremir.Signal :Doremir.Signal))
-
-(defcfun "Doremir.Signal.multiply" :Doremir.Signal (:Doremir.Signal :Doremir.Signal))
-
-(defcfun "Doremir.Signal.divide" :Doremir.Signal (:Doremir.Signal :Doremir.Signal))
-
-(defcfun "Doremir.Signal.modulo" :Doremir.Signal (:Doremir.Signal :Doremir.Signal))
-
-(defcfun "Doremir.Signal.absolute" :Doremir.Signal (:Doremir.Signal :Doremir.Signal))
-
-(defcfun "Doremir.Signal.and" :Doremir.Signal (:Doremir.Signal :Doremir.Signal))
-
-(defcfun "Doremir.Signal.or" :Doremir.Signal (:Doremir.Signal :Doremir.Signal))
-
-(defcfun "Doremir.Signal.not" :Doremir.Signal (:Doremir.Signal :Doremir.Signal))
-
-(defcfun "Doremir.Signal.bitAnd" :Doremir.Signal (:Doremir.Signal :Doremir.Signal))
-
-(defcfun "Doremir.Signal.bitOr" :Doremir.Signal (:Doremir.Signal :Doremir.Signal))
-
-(defcfun "Doremir.Signal.bitNot" :Doremir.Signal (:Doremir.Signal :Doremir.Signal))
-
-(defcfun "Doremir.Signal.bitXor" :Doremir.Signal (:Doremir.Signal :Doremir.Signal))
+(in-package :doremir)
+(defctype signal :pointer)
+(defcfun (signal-type-of "doremir_signal_type_of") type (a signal))
+(defcfun (signal-apply-unary "doremir_signal_apply_unary") signal (a processor) (b signal))
+(defcfun (signal-apply-binary "doremir_signal_apply_binary") signal (a processor) (b signal) (c signal))
+(defcfun (signal-apply-ternary "doremir_signal_apply_ternary") signal (a processor) (b signal) (c signal) (d signal))
+(defcfun (signal-const "doremir_signal_const") signal (a ptr) (b signal))
+(defcfun (signal-delay "doremir_signal_delay") signal (a :int32) (b signal))
+(defcfun (signal-split "doremir_signal_split") pair (a signal))
+(defcfun (signal-cos "doremir_signal_cos") signal (a signal))
+(defcfun (signal-sin "doremir_signal_sin") signal (a signal))
+(defcfun (signal-tan "doremir_signal_tan") signal (a signal))
+(defcfun (signal-acos "doremir_signal_acos") signal (a signal))
+(defcfun (signal-asin "doremir_signal_asin") signal (a signal))
+(defcfun (signal-atan "doremir_signal_atan") signal (a signal))
+(defcfun (signal-add "doremir_signal_add") signal (a signal))
+(defcfun (signal-subtract "doremir_signal_subtract") signal (a signal) (b signal))
+(defcfun (signal-multiply "doremir_signal_multiply") signal (a signal) (b signal))
+(defcfun (signal-divide "doremir_signal_divide") signal (a signal) (b signal))
+(defcfun (signal-modulo "doremir_signal_modulo") signal (a signal) (b signal))
+(defcfun (signal-absolute "doremir_signal_absolute") signal (a signal) (b signal))
+(defcfun (signal-and "doremir_signal_and") signal (a signal) (b signal))
+(defcfun (signal-or "doremir_signal_or") signal (a signal) (b signal))
+(defcfun (signal-not "doremir_signal_not") signal (a signal) (b signal))
+(defcfun (signal-bit-and "doremir_signal_bit_and") signal (a signal) (b signal))
+(defcfun (signal-bit-or "doremir_signal_bit_or") signal (a signal) (b signal))
+(defcfun (signal-bit-not "doremir_signal_bit_not") signal (a signal) (b signal))
+(defcfun (signal-bit-xor "doremir_signal_bit_xor") signal (a signal) (b signal))

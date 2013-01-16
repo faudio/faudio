@@ -1,19 +1,11 @@
-(defctype Doremir.Pair :pointer)
-
-(defcfun "Doremir.Pair.create" :Doremir.Pair (:Doremir.Ptr :Doremir.Ptr))
-
-(defcfun "Doremir.Pair.copy" :Doremir.Pair (:Doremir.Pair))
-
-(defcfun "Doremir.Pair.destroy" :void (:Doremir.Pair))
-
-(defcfun "Doremir.Pair.fst" :Doremir.Ptr (:Doremir.Pair))
-
-(defcfun "Doremir.Pair.snd" :Doremir.Ptr (:Doremir.Pair))
-
-(defcfun "Doremir.Pair.dup" :Doremir.Pair (:Doremir.Ptr))
-
-(defcfun "Doremir.Pair.swap" :Doremir.Pair (:Doremir.Pair))
-
-(defcfun "Doremir.Pair.assoc" :Doremir.Pair (:Doremir.Pair))
-
-(defcfun "Doremir.Pair.unassoc" :Doremir.Pair (:Doremir.Pair))
+(in-package :doremir)
+(defctype pair :pointer)
+(defcfun (pair-create "doremir_pair_create") pair (a ptr) (b ptr))
+(defcfun (pair-copy "doremir_pair_copy") pair (a pair))
+(defcfun (pair-destroy "doremir_pair_destroy") :void (a pair))
+(defcfun (pair-fst "doremir_pair_fst") ptr (a pair))
+(defcfun (pair-snd "doremir_pair_snd") ptr (a pair))
+(defcfun (pair-dup "doremir_pair_dup") pair (a ptr))
+(defcfun (pair-swap "doremir_pair_swap") pair (a pair))
+(defcfun (pair-assoc "doremir_pair_assoc") pair (a pair))
+(defcfun (pair-unassoc "doremir_pair_unassoc") pair (a pair))

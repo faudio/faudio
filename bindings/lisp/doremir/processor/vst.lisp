@@ -1,1 +1,2 @@
-(defctype Doremir.Processor.Vst :pointer)
+(in-package :doremir)
+(defctype processor-vst :pointer)

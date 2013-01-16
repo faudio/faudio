@@ -1,9 +1,6 @@
-(defctype Doremir.Atomic.Stack :pointer)
-
-(defcfun "Doremir.Atomic.Stack.create" :Doremir.Atomic.Stack ())
-
-(defcfun "Doremir.Atomic.Stack.destroy" :void (:Doremir.Atomic.Stack))
-
-(defcfun "Doremir.Atomic.Stack.read" :Doremir.Ptr (:Doremir.Atomic.Stack))
-
-(defcfun "Doremir.Atomic.Stack.write" :boolean (:Doremir.Atomic.Stack :Doremir.Ptr))
+(in-package :doremir)
+(defctype atomic-stack :pointer)
+(defcfun (atomic-stack-create "doremir_atomic_stack_create") atomic-stack)
+(defcfun (atomic-stack-destroy "doremir_atomic_stack_destroy") :void (a atomic-stack))
+(defcfun (atomic-stack-read "doremir_atomic_stack_read") ptr (a atomic-stack))
+(defcfun (atomic-stack-write "doremir_atomic_stack_write") :boolean (a atomic-stack) (b ptr))

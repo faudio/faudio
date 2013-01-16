@@ -1,17 +1,10 @@
-(defctype Doremir.Message.Address :Doremir.Ptr)
-
-(defctype Doremir.Message :Doremir.Ptr)
-
-(defctype Doremir.Message.Receiver (:pointer :void))
-
-(defctype Doremir.Message.Sender (:pointer :void))
-
-(defctype Doremir.Message.Dispatcher :pointer)
-
-(defcfun "Doremir.Message.simple" :Doremir.Message.Dispatcher ())
-
-(defcfun "Doremir.Message.destroy" :void (:Doremir.Message.Dispatcher))
-
-(defcfun "Doremir.Message.buffered" :Doremir.Pair ())
-
-(defcfun "Doremir.Message.nonBlocking" :Doremir.Pair ())
+(in-package :doremir)
+(defctype message-address ptr)
+(defctype message ptr)
+(defctype message-receiver (:pointer :void))
+(defctype message-sender (:pointer :void))
+(defctype message-dispatcher :pointer)
+(defcfun (message-simple "doremir_message_simple") message-dispatcher)
+(defcfun (message-destroy "doremir_message_destroy") :void (a message-dispatcher))
+(defcfun (message-buffered "doremir_message_buffered") pair)
+(defcfun (message-non-blocking "doremir_message_non_blocking") pair)

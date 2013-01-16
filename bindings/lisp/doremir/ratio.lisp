@@ -1,33 +1,18 @@
-(defctype Doremir.Ratio.Nom :int32)
-
-(defctype Doremir.Ratio.Denom :int32)
-
-(defctype Doremir.Ratio :pointer)
-
-(defcfun "Doremir.Ratio.create" :Doremir.Ratio (:Doremir.Ratio.Nom :Doremir.Ratio.Denom))
-
-(defcfun "Doremir.Ratio.nom" :Doremir.Ratio.Nom (:Doremir.Ratio))
-
-(defcfun "Doremir.Ratio.denom" :Doremir.Ratio.Denom (:Doremir.Ratio))
-
-(defcfun "Doremir.Ratio.match" :void (:Doremir.Ratio (:pointer :Doremir.Ratio.Nom) (:pointer :Doremir.Ratio.Denom)))
-
-(defcfun "Doremir.Ratio.destroy" :void (:Doremir.Ratio))
-
-(defcfun "Doremir.Ratio.add" :Doremir.Ratio (:Doremir.Ratio :Doremir.Ratio))
-
-(defcfun "Doremir.Ratio.subtract" :Doremir.Ratio (:Doremir.Ratio :Doremir.Ratio))
-
-(defcfun "Doremir.Ratio.multiply" :Doremir.Ratio (:Doremir.Ratio :Doremir.Ratio))
-
-(defcfun "Doremir.Ratio.divide" :Doremir.Ratio (:Doremir.Ratio :Doremir.Ratio))
-
-(defcfun "Doremir.Ratio.remainder" :Doremir.Ratio (:Doremir.Ratio :Doremir.Ratio))
-
-(defcfun "Doremir.Ratio.succ" :Doremir.Ratio (:Doremir.Ratio))
-
-(defcfun "Doremir.Ratio.pred" :Doremir.Ratio (:Doremir.Ratio))
-
-(defcfun "Doremir.Ratio.negate" :Doremir.Ratio (:Doremir.Ratio))
-
-(defcfun "Doremir.Ratio.recip" :Doremir.Ratio (:Doremir.Ratio))
+(in-package :doremir)
+(defctype ratio-num :int32)
+(defctype ratio-denom :int32)
+(defctype ratio :pointer)
+(defcfun (ratio-create "doremir_ratio_create") ratio (a ratio-num) (b ratio-denom))
+(defcfun (ratio-nom "doremir_ratio_nom") ratio-num (a ratio))
+(defcfun (ratio-denom "doremir_ratio_denom") ratio-denom (a ratio))
+(defcfun (ratio-match "doremir_ratio_match") :void (a ratio) (b (:pointer ratio-num)) (c (:pointer ratio-denom)))
+(defcfun (ratio-destroy "doremir_ratio_destroy") :void (a ratio))
+(defcfun (ratio-add "doremir_ratio_add") ratio (a ratio) (b ratio))
+(defcfun (ratio-subtract "doremir_ratio_subtract") ratio (a ratio) (b ratio))
+(defcfun (ratio-multiply "doremir_ratio_multiply") ratio (a ratio) (b ratio))
+(defcfun (ratio-divide "doremir_ratio_divide") ratio (a ratio) (b ratio))
+(defcfun (ratio-remainder "doremir_ratio_remainder") ratio (a ratio) (b ratio))
+(defcfun (ratio-succ "doremir_ratio_succ") ratio (a ratio))
+(defcfun (ratio-pred "doremir_ratio_pred") ratio (a ratio))
+(defcfun (ratio-negate "doremir_ratio_negate") ratio (a ratio))
+(defcfun (ratio-recip "doremir_ratio_recip") ratio (a ratio))

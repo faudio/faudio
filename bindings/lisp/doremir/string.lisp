@@ -1,43 +1,30 @@
-(defctype Doremir.String.Utf8 (:pointer :Doremir.Char8))
-
-(defctype Doremir.String.Utf16 (:pointer :Doremir.Char16))
-
-(defctype Doremir.String.Utf32 (:pointer :Doremir.Char32))
-
-(defctype Doremir.String :pointer)
-
-(defctype Doremir.String.FilePath :Doremir.String)
-
-(defcfun "Doremir.String.empty" :Doremir.String ())
-
-(defcfun "Doremir.String.single" :Doremir.String (:Doremir.Char16))
-
-(defcfun "Doremir.String.copy" :Doremir.String (:Doremir.String))
-
-(defcfun "Doremir.String.append" :Doremir.String (:Doremir.String :Doremir.String))
-
-(defcfun "Doremir.String.dappend" :Doremir.String (:Doremir.String :Doremir.String))
-
-(defcfun "Doremir.String.destroy" :void (:Doremir.String))
-
-(defcfun "Doremir.String.length" :int (:Doremir.String))
-
-(defcfun "Doremir.String.charAt" :Doremir.Char16 (:int :Doremir.String))
-
-(defcfun "Doremir.String.toUtf8" :Doremir.String.Utf8 (:Doremir.String))
-
-(defcfun "Doremir.String.toUtf16" :Doremir.String.Utf16 (:Doremir.String))
-
-(defcfun "Doremir.String.toUtf32" :Doremir.String.Utf32 (:Doremir.String))
-
-(defcfun "Doremir.String.fromUtf8" :Doremir.String (:Doremir.String.Utf8))
-
-(defcfun "Doremir.String.fromUtf16" :Doremir.String (:Doremir.String.Utf16))
-
-(defcfun "Doremir.String.fromUtf32" :Doremir.String (:Doremir.String.Utf32))
-
-(defcfun "Doremir.String.formatInteger" :Doremir.String ((:pointer :char) :long))
-
-(defctype Doremir.String.Show (:pointer :void))
-
-(defcfun "Doremir.String.show" :Doremir.String (:Doremir.Ptr))
+(in-package :doremir)
+(defctype string-utf8 (:pointer char8))
+(defctype string-utf16 (:pointer char16))
+(defctype string-utf32 (:pointer char32))
+(defctype string :pointer)
+(defctype string-file-path string)
+(defcfun (string-empty "doremir_string_empty") string)
+(defcfun (string-single "doremir_string_single") string (a char16))
+(defcfun (string-copy "doremir_string_copy") string (a string))
+(defcfun (string-append "doremir_string_append") string (a string) (b string))
+(defcfun (string-dappend "doremir_string_dappend") string (a string) (b string))
+(defcfun (string-destroy "doremir_string_destroy") :void (a string))
+(defcfun (string-length "doremir_string_length") :int (a string))
+(defcfun (string-char-at "doremir_string_char_at") char16 (a :int) (b string))
+(defcfun (string-to-utf8 "doremir_string_to_utf8") string-utf8 (a string))
+(defcfun (string-to-utf16 "doremir_string_to_utf16") string-utf16 (a string))
+(defcfun (string-to-utf32 "doremir_string_to_utf32") string-utf32 (a string))
+(defcfun (string-to-cf-string "doremir_string_to_cf_string") (:pointer :void) (a string))
+(defcfun (string-from-utf8 "doremir_string_from_utf8") string (a string-utf8))
+(defcfun (string-from-utf16 "doremir_string_from_utf16") string (a string-utf16))
+(defcfun (string-from-utf32 "doremir_string_from_utf32") string (a string-utf32))
+(defcfun (string-from-cf-string "doremir_string_from_cf_string") string (a (:pointer :void)))
+(defcfun (string-format-integer "doremir_string_format_integer") string (a (:pointer :char)) (b :long))
+(defctype string-show (:pointer :void))
+(defctype string-to-json (:pointer :void))
+(defctype string-from-json (:pointer :void))
+(defctype string-severity (:pointer :void))
+(defctype string-error (:pointer :void))
+(defcfun (string-check "doremir_string_check") :boolean (a ptr))
+(defcfun (string-show "doremir_string_show") string (a ptr))

@@ -1,9 +1,6 @@
-(defctype Doremir.Device.File :pointer)
-
-(defctype Doremir.Device.File.Stream :pointer)
-
-(defcfun "Doremir.Device.File.create" :Doremir.Device.File (:Doremir.String.FilePath :Doremir.String.FilePath))
-
-(defcfun "Doremir.Device.File.destroy" :void (:Doremir.Device.File))
-
-(defcfun "Doremir.Device.File.closeStream" :void (:Doremir.Device.File.Stream))
+(in-package :doremir)
+(defctype device-file :pointer)
+(defctype device-file-stream :pointer)
+(defcfun (device-file-create "doremir_device_file_create") device-file (a string-file-path) (b string-file-path))
+(defcfun (device-file-destroy "doremir_device_file_destroy") :void (a device-file))
+(defcfun (device-file-close-stream "doremir_device_file_close_stream") :void (a device-file-stream))

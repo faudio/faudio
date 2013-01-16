@@ -1,1 +1,2 @@
-(defctype Doremir.Processor.FluidSynth :pointer)
+(in-package :doremir)
+(defctype processor-fluid-synth :pointer)

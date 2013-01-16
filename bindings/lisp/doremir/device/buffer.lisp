@@ -1,7 +1,5 @@
-(defctype Doremir.Device.Buffer :pointer)
-
-(defctype Doremir.Device.Buffer.Stream :pointer)
-
-(defcfun "Doremir.Device.Buffer.create" :Doremir.Device.Buffer (:size))
-
-(defcfun "Doremir.Device.Buffer.destroy" :void (:Doremir.Device.Buffer))
+(in-package :doremir)
+(defctype device-buffer :pointer)
+(defctype device-buffer-stream :pointer)
+(defcfun (device-buffer-create "doremir_device_buffer_create") device-buffer (a :int32))
+(defcfun (device-buffer-destroy "doremir_device_buffer_destroy") :void (a device-buffer))

@@ -1,13 +1,8 @@
-(defctype Doremir.Thread.Improving :pointer)
-
-(defctype Doremir.Thread.Improving.Value :Doremir.Ptr)
-
-(defcfun "Doremir.Thread.Improving.create" :Doremir.Thread.Improving ())
-
-(defcfun "Doremir.Thread.Improving.destroy" :void (:Doremir.Thread.Improving))
-
-(defcfun "Doremir.Thread.Improving.isDone" :boolean (:Doremir.Thread.Improving))
-
-(defcfun "Doremir.Thread.Improving.wait" :void (:Doremir.Thread.Improving))
-
-(defcfun "Doremir.Thread.Improving.get" :Doremir.Thread.Improving.Value (:Doremir.Thread.Improving))
+(in-package :doremir)
+(defctype thread-improving :pointer)
+(defctype thread-improving-value ptr)
+(defcfun (thread-improving-create "doremir_thread_improving_create") thread-improving)
+(defcfun (thread-improving-destroy "doremir_thread_improving_destroy") :void (a thread-improving))
+(defcfun (thread-improving-is-done "doremir_thread_improving_is_done") :boolean (a thread-improving))
+(defcfun (thread-improving-wait "doremir_thread_improving_wait") :void (a thread-improving))
+(defcfun (thread-improving-get "doremir_thread_improving_get") thread-improving-value (a thread-improving))
