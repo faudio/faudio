@@ -28,6 +28,16 @@
 (defmethod print-object ((x set) out) (format out "~a" (string-show (slot-value x 'set-ptr))))
 (defmethod print-object ((x map) out) (format out "~a" (string-show (slot-value x 'map-ptr))))
 (defmethod print-object ((x ratio) out) (format out "~a" (string-show (slot-value x 'ratio-ptr))))
+(defmethod print-object ((x atomic) out) (format out "~a" (string-show (slot-value x 'atomic-ptr))))
+(defmethod print-object ((x priority-queue) out) (format out "~a" (string-show (slot-value x 'priority-queue-ptr))))
+(defmethod print-object ((x processor) out) (format out "~a" (string-show (slot-value x 'processor-ptr))))
+(defmethod print-object ((x scheduler) out) (format out "~a" (string-show (slot-value x 'scheduler-ptr))))
+(defmethod print-object ((x signal) out) (format out "~a" (string-show (slot-value x 'signal-ptr))))
+(defmethod print-object ((x thread) out) (format out "~a" (string-show (slot-value x 'thread-ptr))))
+(defmethod print-object ((x time) out) (format out "~a" (string-show (slot-value x 'time-ptr))))
+(defmethod print-object ((x type) out) (format out "~a" (string-show (slot-value x 'type-ptr))))
+
+
 ; etc
 
 ; ---------------------------------------------------------------------------------------------------
