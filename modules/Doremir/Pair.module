@@ -35,5 +35,7 @@ module Doremir.Pair
     dup : Ptr -> Pair;
     swap : Pair -> Pair;
     assoc : Pair -> Pair;    
-    unassoc : Pair -> Pair;    
+    unassoc : Pair -> Pair;
+    
+    // Destructive versions?
 }

@@ -33,7 +33,7 @@
 
 ; Audio Engine pairs are not Lisp pairs
 (setf x (pair-create 1 2))
-(setf x (pair-copy x))
+(setf y (pair-copy x))
 (pair-fst x)
 (pair-snd x)
 (pair-dup 3)
@@ -106,7 +106,7 @@
 
 (setf x (map-empty))
 (setf x (map-add "name" "hans" x))
-(setf x (map-add "skills" (list-empty) x))
+(setf x (map-add "skills" (list-cons 1 (list-empty)) x))
 (setf x (map-remove "name" x))
 (setf x (map-remove "skills" x))
 ; (setf x (map-remove (random 20) x))
@@ -118,20 +118,20 @@
 ; (map-get "skills" x)
 (setf x (map-add-entry (pair-create "surname" "höglund") x))
 (setf x (map-remove-entry (pair-create "surname" "höglund") x))
-(map-has-key "name" x)
-(map-has-elem "hans" x)
-(map-has-entry (pair-create "surname" "höglund") x)
+; (map-has-key "name" x)
+; (map-has-elem "hans" x)
+; (map-has-entry (pair-create "surname" "höglund") x)
 (map-is-submap-of x y)
 (map-is-proper-submap-of x y)
-(map-sum x y)
-(map-product)
-(map-difference)
-(map-power)
-(map-from-pair)
-(map-from-list)
-(map-to-list)
+; (map-sum x y)
+; (map-product x y)
+; (map-difference x y)
+; (map-power x)
+; (map-from-pair (pair-create 1 2))
+; (map-from-list (list-single 1))
+; (map-to-list x)
 (cl:print x)
-(map-destroy)
+(map-destroy x)
 
 ; Audio Engine ratios are converted to Lisp ratios
 (setf x (ratio-create 1 2))
@@ -168,15 +168,33 @@
 
 (setf x (midi-create-simple #x9 60 127))
 (setf x (midi-create-sysex (buffer-create 1024)))
-(setf x (midi-copy x))
+(setf y (midi-copy x))
+(midi-is-simple x)
+(midi-is-sysex x)
 (midi-status x)
 (midi-channel x)
-(midi-is-simple x)
 (midi-simple-data x)
 (pair-fst (midi-simple-data x))
-(midi-is-sysex x)
 (midi-sysex-data x)
 (midi-destroy x)
+
+; Time
+
+; Type
+
+; Priority queue
+
+; Scheduler
+
+; Processor
+
+; Signal
+
+; Message stuff
+
+; Devices
+
+; Error
 
 (setf x (atomic-create))
 (setf y (atomic-copy x))
@@ -193,6 +211,28 @@
 (atomic-queue-write x (random 20))
 (atomic-queue-read x)
 (to-int8 (atomic-queue-read x))
+
+
+
+
+(equal              x y)
+(less-than          x y)
+(greater-than       x y)
+(less-than-equal    x y)
+(greater-than-equal x y)
+(min                x y)
+(max                x y)
+(add                x y)
+(multiply           x y)
+(subtract           x y)
+(divide             x y)
+(absolute           x)
+(copy               x)
+(destroy            x)
+(string-show        x)
+(string-to-json     x)
+(string-from-json   x)
+
 
 
 (equal              0 0)
