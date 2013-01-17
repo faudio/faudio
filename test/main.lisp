@@ -17,15 +17,30 @@
 (audioengine-set-log-file "/Users/hans/Librar/Logs/ScoreCleaner/AudioEngine.log")
 (audioengine-set-log-std)
 
-(setf x (buffer-create 1024))
+(setf x (buffer-create 2000000))
 (setf x (buffer-resize 2048 x))
 (buffer-size x)
 (buffer-peek x 1)
 (buffer-poke x 1 10)
-(dotimes (i 1024)
+(dotimes (i 2000000)
   (buffer-poke x i (mod i 256)))
+(dotimes (i 2000000)
+  (buffer-poke x i 0))
 (cl:print x)
 (buffer-destroy x)
+
+; Audio Engine pairs are not Lisp pairs
+; They print as (1,2)
+(setf x (pair-create (from-int8 1) (from-int8 2)))
+(setf x (pair-copy x))
+(pair-fst x)
+(pair-snd x)
+(pair-dup (from-int8 3))
+(pair-swap x)
+(pair-assoc (pair-create (pair-create (from-int8 1) (from-int8 2)) (from-int8 3)))
+(pair-unassoc (pair-create (from-int8 1) (pair-create (from-int8 2) (from-int8 1)))) 
+(cl:print x)
+(pair-destroy x)
 
 ; Audio Engine lists are not Lisp lists
 ; They print as [1,2,3..]
@@ -54,9 +69,9 @@
 (list-insert-range 2 (list-single (from-int8 56)) x)
 (list-remove-range 2 3 x)
 (list-has (from-int8 1) x)
-;(list-find (lambda (x) t) x)
+; (list-find (lambda (x) t) x)
 (list-index-of (from-int8 1) x)
-;(list-find-index (lambda (x) t) x)
+; (list-find-index (lambda (x) t) x)
 ; (list-filter (lambda (x) t) x)
 ; (list-map (lambda (x) (+ 1 x)) x)
 ; (list-fold-left (lambda (x y) (+ x y) nil (from-int8 0) x)
@@ -113,9 +128,7 @@
 (cl:print x)
 (map-destroy)
 
-; pairs
-
-; Audio Engine ratios are not Lisp ratios
+; Audio Engine ratios are converted to Lisp ratios
 (setf x (ratio-create 1 2))
 (setf y (ratio-create 278 12))
 (ratio-num x)
@@ -132,14 +145,20 @@
 (cl:print x)
 (ratio-destroy x)
 
-; AE strings are converted to Lisp strings
+(ratio-create 1 2)
+(ratio-succ (/ 1 2))
+(ratio-recip (/ 567 235))
+
+;(denominator (/ 1 2))
+
+; Audio Engine strings are converted to Lisp strings
 (setf x (string-empty))
 (setf x (string-single 104))
 (string-append (string-single 104) (string-dappend (string-single 97) (string-single 110)))
 (string-append "hans " "höglund")
 (string-length "högtalare")
 (cl:print x)
-(string-destroy x)
+;(string-destroy x)
 
 (setf x (midi-create-simple #x9 60 127))
 (setf x (midi-create-sysex (buffer-create 1024)))
@@ -166,6 +185,29 @@
 (atomic-queue-destroy x)
 (atomic-queue-write x (from-int8 (random 20)))
 (to-int8 (atomic-queue-read x))
+
+
+(equal              (from-int8 0) (from-int8 0))
+(equal              (from-int8 0) (from-int8 1))
+(less-than          (from-int8 0) (from-int8 1))
+(greater-than       (from-int8 0) (from-int8 1))
+(less-than-equal    (from-int8 0) (from-int8 1))
+(greater-than-equal (from-int8 0) (from-int8 1))
+(min                (from-int8 0) (from-int8 0))
+(max                (from-int8 0) (from-int8 1))
+(add                (from-int8 0) (from-int8 0))
+(multiply           (from-int8 0) (from-int8 1))
+(subtract           (from-int8 0) (from-int8 0))
+(divide             (from-int8 0) (from-int8 1))
+(absolute           (from-int8 -3))
+; copy
+; destroy
+
+
+
+
+
+
 
 
 
