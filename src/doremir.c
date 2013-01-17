@@ -329,6 +329,16 @@ void doremir_dprint(char* f, doremir_ptr_t a)
     doremir_destroy(a);
 }
 
+void doremir_print_ln(doremir_ptr_t a)
+{                      
+    doremir_print("%s\n", a);   
+}
+
+void doremir_dprint_ln(doremir_ptr_t a)
+{
+    doremir_dprint("%s\n", a);   
+}
+
 
 doremir_ptr_t doremir_move(doremir_ptr_t a)
 {

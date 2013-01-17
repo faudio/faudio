@@ -76,8 +76,11 @@ module Doremir
     copy    : Ptr -> Ptr;
     move    : Ptr -> Ptr;
     destroy : Ptr -> Void;
-    print   : (Char*,Ptr) -> Void;
-    dprint  : (Char*,Ptr) -> Void;
+
+    print    : (Char*,Ptr) -> Void;
+    dprint   : (Char*,Ptr) -> Void;
+    printLn  : Ptr -> Void;
+    dprintLn : Ptr -> Void;
 
     
 

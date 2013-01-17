@@ -43,6 +43,8 @@ doremir_ptr_t doremir_move(doremir_ptr_t);
 void doremir_destroy(doremir_ptr_t);
 void doremir_print(char *, doremir_ptr_t);
 void doremir_dprint(char *, doremir_ptr_t);
+void doremir_print_ln(doremir_ptr_t);
+void doremir_dprint_ln(doremir_ptr_t);
 typedef struct {
             bool (* equal)(doremir_ptr_t, doremir_ptr_t);
         } doremir_equal_t;
