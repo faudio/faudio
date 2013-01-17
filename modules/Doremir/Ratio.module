@@ -28,7 +28,7 @@ module Doremir.Ratio
     type Ratio  = opaque;
 
     create  : (Num, Denom) -> Ratio;
-    nom     : Ratio -> Num;
+    num     : Ratio -> Num;
     denom   : Ratio -> Denom;
     match   : (Ratio, Num*, Denom*) -> Void;
     destroy : Ratio -> Void;

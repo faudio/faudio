@@ -15,7 +15,7 @@ typedef int32_t doremir_ratio_denom_t;
 typedef struct _doremir_ratio_t * doremir_ratio_t;
 doremir_ratio_t doremir_ratio_create(doremir_ratio_num_t,
                                      doremir_ratio_denom_t);
-doremir_ratio_num_t doremir_ratio_nom(doremir_ratio_t);
+doremir_ratio_num_t doremir_ratio_num(doremir_ratio_t);
 doremir_ratio_denom_t doremir_ratio_denom(doremir_ratio_t);
 void doremir_ratio_match(doremir_ratio_t,
                          doremir_ratio_num_t *,
