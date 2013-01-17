@@ -26,6 +26,8 @@
 (defcfun (destroy "doremir_destroy") :void (a ptr))
 (defcfun (print "doremir_print") :void (a (:pointer :char)) (b ptr))
 (defcfun (dprint "doremir_dprint") :void (a (:pointer :char)) (b ptr))
+(defcfun (print-ln "doremir_print_ln") :void (a ptr))
+(defcfun (dprint-ln "doremir_dprint_ln") :void (a ptr))
 (defctype equal (:pointer :void))
 (defctype order (:pointer :void))
 (defctype copy (:pointer :void))
