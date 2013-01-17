@@ -19,11 +19,16 @@ We will use the "big buffer" approach
 Issues
 
 * Normalize rationals before printing (but not otherwise)
-* Lisp mangling
-    https://github.com/hanshoglund/modulo/issues/26
 
 ==========
 Additions
+
+* Lisp frontend
+    * Decide fate of the Ptr type (now you have to delete it manually from doremir.lisp)
+    * Dynamic translation of string, ratio, list and pair (also set, map?)
+    * Auto wrap of pairs and lists again?
+    * Mangling problems
+        https://github.com/hanshoglund/modulo/issues/26
 
 * Implement schedulers
 
@@ -41,10 +46,8 @@ Additions
 * Deep doremir_destroy (exactly how?)
 * Implement ringbuffer
 
-* High-level Lisp bindings
 * Better FIFO (multi-RW, see paper)
 * Better map/set backend (intmap or patricia tree)
-
 * JSON serialization
 
 

@@ -58,7 +58,7 @@
     ((is-int64# x)      (peek-int64# x))
     ((is-float# x)      (peek-float# x))
     ((is-double# x)     (peek-double# x))
-    (t                  x))) ; Client have to write from-pointer here
+    (t                  x)))                ; Client have to write explicit from-pointer here
 
 
 ; FIXME causes segmentation error with map-add
