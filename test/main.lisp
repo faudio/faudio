@@ -19,14 +19,14 @@
 ; For testing
 (defvar x nil)
 
-(setf x (buffer-create 2000000))
+(setf x (buffer-create 1024))
 (setf x (buffer-resize 2048 x))
 (buffer-size x)
 (buffer-peek x 1)
 (buffer-poke x 1 10)
-(dotimes (i 2000000)
+(dotimes (i 1024)
   (buffer-poke x i (mod i 256)))
-(dotimes (i 2000000)
+(dotimes (i 1024)
   (buffer-poke x i 0))
 (cl:print x)
 (buffer-destroy x)
@@ -43,6 +43,20 @@
 (pair-unassoc (pair-create (from-int8 1) (pair-create (from-int8 2) (from-int8 1)))) 
 (cl:print x)
 (pair-destroy x)
+
+; Auto-wrap version
+(setf x (pair-create 1 2))
+(setf x (pair-copy x))
+(pair-fst x)
+(pair-snd x)
+(pair-dup 3)
+(pair-swap x)
+(pair-assoc (pair-create (pair-create 1 2) 3))
+(pair-unassoc (pair-create 1 (pair-create 2 1))) 
+(cl:print x)
+(pair-destroy x)
+
+
 
 ; Audio Engine lists are not Lisp lists
 ; They print as [1,2,3..]
@@ -77,7 +91,38 @@
 ; (list-filter (lambda (x) t) x)
 ; (list-map (lambda (x) (+ 1 x)) x)
 ; (list-fold-left (lambda (x y) (+ x y) nil (from-int8 0) x)
-(list-concat x)
+; (list-concat x)
+(cl:print x)
+(list-destroy x)
+
+; Auto-wrap version
+(setf x (list-empty))
+(setf x (list-single 0))
+(setf x (list-cons 1 x))
+(setf x (list-cons (random 20) x))
+(setf x (list-tail x))
+(setf y (list-copy x))
+(list-is-empty x)
+(list-is-single x)
+(list-length x)
+(list-head x)
+(list-tail x)
+(list-init x)
+(list-last x)
+(list-append x x)
+(list-reverse x)
+;(list-sort x)
+(list-take 5 x)
+(list-drop 5 x)
+(list-index 2 x)
+(list-range 2 3 x)
+(list-insert 2 23 x)
+(list-remove 2 x)
+(list-insert-range 2 (list-single 56) x)
+(list-remove-range 2 3 x)
+(list-has 1 x)
+(list-index-of 1 x)
+; (list-concat x)
 (cl:print x)
 (list-destroy x)
 
@@ -104,15 +149,15 @@
 (setf x (map-empty))
 (setf x (map-add "name" "hans" x))
 (setf x (map-add "skills" (list-empty) x))
-(setf x (map-remove "name") x)
-(setf x (map-remove "skills") x)
-(setf x (map-remove (from-int8 (random 20)) x))
+(setf x (map-remove "name" x))
+(setf x (map-remove "skills" x))
+; (setf x (map-remove (from-int8 (random 20)) x))
 (setf y (map-copy x))
 (map-size x)
 (map-is-empty x)
 (map-is-single x)
-(map-get "name" x)
-(map-get "skills" x)
+; (map-get "name" x)
+; (map-get "skills" x)
 (map-add-entry)
 (map-remove-entry)
 (map-has-key)
@@ -147,9 +192,10 @@
 (cl:print x)
 (ratio-destroy x)
 
-(ratio-create 1 2)
-(ratio-succ (/ 1 2))
-(ratio-recip (/ 567 235))
+; test auto-convert
+(doremir::ratio-create 1 2)
+(doremir::ratio-succ (/ 1 2))
+(doremir::ratio-recip (/ 567 235))
 
 ;(denominator (/ 1 2))
 
@@ -169,6 +215,7 @@
 (midi-channel x)
 (midi-is-simple x)
 (midi-simple-data x)
+(pair-fst (midi-simple-data x))
 (midi-is-sysex x)
 (midi-sysex-data x)
 (midi-destroy x)
@@ -188,8 +235,9 @@
 (atomic-queue-write x (from-int8 (random 20)))
 (to-int8 (atomic-queue-read x))
 
-
-
+(eq
+ (type-of (fli:allocate-foreign-object :type :long))
+ (type-of (from-int8 0)))
 
 
 
