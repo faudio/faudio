@@ -32,19 +32,6 @@
 (buffer-destroy x)
 
 ; Audio Engine pairs are not Lisp pairs
-; They print as (1,2)
-(setf x (pair-create (from-int8 1) (from-int8 2)))
-(setf x (pair-copy x))
-(pair-fst x)
-(pair-snd x)
-(pair-dup (from-int8 3))
-(pair-swap x)
-(pair-assoc (pair-create (pair-create (from-int8 1) (from-int8 2)) (from-int8 3)))
-(pair-unassoc (pair-create (from-int8 1) (pair-create (from-int8 2) (from-int8 1)))) 
-(cl:print x)
-(pair-destroy x)
-
-; Auto-wrap version
 (setf x (pair-create 1 2))
 (setf x (pair-copy x))
 (pair-fst x)
@@ -52,50 +39,13 @@
 (pair-dup 3)
 (pair-swap x)
 (pair-assoc (pair-create (pair-create 1 2) 3))
-(pair-unassoc (pair-create 1 (pair-create 2 1))) 
+(pair-unassoc (pair-create 1 (pair-create 2 1)))
 (cl:print x)
 (pair-destroy x)
 
 
-
 ; Audio Engine lists are not Lisp lists
 ; They print as [1,2,3..]
-(setf x (list-empty))
-(setf x (list-single (from-int8 0)))
-(setf x (list-cons (from-int8 1) x))
-(setf x (list-cons (from-int8 (random 20)) x))
-(setf x (list-tail x))
-(setf y (list-copy x))
-(list-is-empty x)
-(list-is-single x)
-(list-length x)
-(list-head x)
-(list-tail x)
-(list-init x)
-(list-last x)
-(list-append x x)
-(list-reverse x)
-;(list-sort x)
-(list-take 5 x)
-(list-drop 5 x)
-(list-index 2 x)
-(list-range 2 3 x)
-(list-insert 2 (from-int8 23) x)
-(list-remove 2 x)
-(list-insert-range 2 (list-single (from-int8 56)) x)
-(list-remove-range 2 3 x)
-(list-has (from-int8 1) x)
-; (list-find (lambda (x) t) x)
-(list-index-of (from-int8 1) x)
-; (list-find-index (lambda (x) t) x)
-; (list-filter (lambda (x) t) x)
-; (list-map (lambda (x) (+ 1 x)) x)
-; (list-fold-left (lambda (x y) (+ x y) nil (from-int8 0) x)
-; (list-concat x)
-(cl:print x)
-(list-destroy x)
-
-; Auto-wrap version
 (setf x (list-empty))
 (setf x (list-single 0))
 (setf x (list-cons 1 x))
@@ -121,7 +71,12 @@
 (list-insert-range 2 (list-single 56) x)
 (list-remove-range 2 3 x)
 (list-has 1 x)
+; (list-find (lambda (x) t) x)
 (list-index-of 1 x)
+; (list-find-index (lambda (x) t) x)
+; (list-filter (lambda (x) t) x)
+; (list-map (lambda (x) (+ 1 x)) x)
+; (list-fold-left (lambda (x y) (+ x y) nil 0 x)
 ; (list-concat x)
 (cl:print x)
 (list-destroy x)
@@ -233,12 +188,15 @@
 (setf x (atomic-queue-create))
 (atomic-queue-destroy x)
 (atomic-queue-write x (from-int8 (random 20)))
+(atomic-queue-read x)
 (to-int8 (atomic-queue-read x))
 
 (eq
  (type-of (fli:allocate-foreign-object :type :long))
  (type-of (from-int8 0)))
 
+(less-than-equal 2 2)
+(is-bool nil)
 
 
 (equal              (from-int8 0) (from-int8 0))
