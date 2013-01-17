@@ -69,6 +69,15 @@ char *doremir_type_str(doremir_ptr_t a)
     }
 }
 
+bool doremir_is_bool(doremir_ptr_t x)   { return (((intptr_t) x) & 0x7) == 0x7; }
+bool doremir_is_int8(doremir_ptr_t x)   { return (((intptr_t) x) & 0x7) == 0x6; }
+bool doremir_is_int16(doremir_ptr_t x)  { return (((intptr_t) x) & 0x7) == 0x5; }
+bool doremir_is_int32(doremir_ptr_t x)  { return (((intptr_t) x) & 0x7) == 0x4; }
+bool doremir_is_int64(doremir_ptr_t x)  { return (((intptr_t) x) & 0x7) == 0x3; }
+bool doremir_is_float(doremir_ptr_t x)  { return (((intptr_t) x) & 0x7) == 0x2; }
+bool doremir_is_double(doremir_ptr_t x) { return (((intptr_t) x) & 0x7) == 0x1; }
+bool doremir_is_ref(doremir_ptr_t x)    { return (((intptr_t) x) & 0x7) == 0x0; }
+
 
 // --------------------------------------------------------------------------------
 // Wrapper functions

@@ -125,26 +125,36 @@ module Doremir
         absolute : (Ptr -> Ptr)*
     };
 
-    /** @struct doremir_type_repr_t
-        Represents a type at runtime.
-    */
-    type TypeRepr = struct {
-        tag : enum { TypeInt8, TypeInt16, TypeInt32, 
-                     TypeUInt8, TypeUInt16, TypeUInt32, 
-                     TypeFloat, TypeDouble, 
-                     TypePair, TypeList, TypeMap, TypeSet },
-        args : [Ptr x 2]
-    };
+    // /** @struct doremir_type_repr_t
+    //     Represents a type at runtime.
+    // */
+    // type TypeRepr = struct {
+    //     tag : enum { TypeInt8, TypeInt16, TypeInt32, 
+    //                  TypeUInt8, TypeUInt16, TypeUInt32, 
+    //                  TypeFloat, TypeDouble, 
+    //                  TypePair, TypeList, TypeMap, TypeSet },
+    //     args : [Ptr x 2]
+    // };  
 
-    /** @interface doremir_dynamic_t
-        Dynamic type introspection interface.
-    */
-    type Dynamic = struct {
-        getType : (Ptr -> TypeRepr)*
-    };
+    // /** @interface doremir_dynamic_t
+    //     Dynamic type introspection interface.
+    // */
+    // type Dynamic = struct {
+    //     getType : (Ptr -> TypeRepr)*
+    // };
 
-    // TODO relation to Dynamic?
+    // TODO remove this?
     typeStr : Ptr -> Char*;
+    
+    // Type predicates
+    isBool     : Ptr -> Bool;
+    isInt8     : Ptr -> Bool;
+    isInt16    : Ptr -> Bool;
+    isInt32    : Ptr -> Bool;
+    isInt64    : Ptr -> Bool;
+    isFloat    : Ptr -> Bool;
+    isDouble   : Ptr -> Bool;    
+    isRef      : Ptr -> Bool;    
 
     // Conversion functions
     toBool     : Ptr -> Bool;
