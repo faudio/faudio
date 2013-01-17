@@ -117,14 +117,14 @@ doremir_ptr_t doremir_atomic_get(doremir_atomic_t a)
     @note
         Atomic
  */
-void doremir_atomic_modify(doremir_atomic_t atomic, doremir_atomic_updater_t func)
+void doremir_atomic_modify(doremir_atomic_t atomic, doremir_unary_t func, doremir_ptr_t data)
 {                  
     bool result = false;
     
     while (!result)
     {                                        
         ptr_t state = doremir_atomic_get(atomic);
-        ptr_t value = func(state);
+        ptr_t value = func(state, data);
         result = doremir_atomic_exchange(atomic, state, value);
     }
 }

@@ -12,7 +12,6 @@
     */
 
 typedef struct _doremir_atomic_t * doremir_atomic_t;
-typedef doremir_ptr_t (* doremir_atomic_updater_t)(doremir_ptr_t);
 doremir_atomic_t doremir_atomic_create();
 doremir_atomic_t doremir_atomic_copy(doremir_atomic_t);
 void doremir_atomic_swap(doremir_atomic_t, doremir_atomic_t);
@@ -24,7 +23,8 @@ doremir_ptr_t doremir_atomic_get(doremir_atomic_t);
 void doremir_atomic_set(doremir_atomic_t, doremir_ptr_t);
 void doremir_atomic_add(doremir_atomic_t, doremir_ptr_t);
 void doremir_atomic_modify(doremir_atomic_t,
-                           doremir_atomic_updater_t);
+                           doremir_unary_t,
+                           doremir_ptr_t);
 
 /** @}
     @}

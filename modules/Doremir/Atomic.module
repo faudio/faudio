@@ -20,7 +20,6 @@ module Doremir.Atomic
     import Doremir.Std;
     
     type Atomic = opaque;
-    type Updater = (Ptr -> Ptr)*;
 
     create  : () -> Atomic;
     copy    : Atomic -> Atomic;
@@ -31,6 +30,6 @@ module Doremir.Atomic
     get     : Atomic -> Ptr;
     set     : (Atomic, Ptr) -> Void;
     add     : (Atomic, Ptr) -> Void;
-    modify  : (Atomic, Updater) -> Void;
+    modify  : (Atomic, Unary, Ptr) -> Void;
 }
 

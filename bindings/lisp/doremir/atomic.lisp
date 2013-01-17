@@ -4,7 +4,6 @@
 (defclass atomic () ((atomic-ptr :initarg :atomic-ptr)))
 (defmethod translate-to-foreign (x (type atomic-type)) (slot-value x 'atomic-ptr))
 (defmethod translate-from-foreign (x (type atomic-type)) (make-instance 'atomic :atomic-ptr x))
-(defctype atomic-updater (:pointer (:pointer :void)))
 (defcfun (atomic-create "doremir_atomic_create") atomic)
 (defcfun (atomic-copy "doremir_atomic_copy") atomic (a atomic))
 (defcfun (atomic-swap "doremir_atomic_swap") :void (a atomic) (b atomic))
@@ -13,4 +12,4 @@
 (defcfun (atomic-get "doremir_atomic_get") ptr (a atomic))
 (defcfun (atomic-set "doremir_atomic_set") :void (a atomic) (b ptr))
 (defcfun (atomic-add "doremir_atomic_add") :void (a atomic) (b ptr))
-(defcfun (atomic-modify "doremir_atomic_modify") :void (a atomic) (b atomic-updater))
+(defcfun (atomic-modify "doremir_atomic_modify") :void (a atomic) (b unary) (c ptr))

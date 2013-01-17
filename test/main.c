@@ -279,7 +279,7 @@ void test_type()
 }
 
 
-ptr_t add10(ptr_t x) { return (ptr_t) ((int) x + 10); }
+ptr_t add10(ptr_t x, ptr_t _) { return (ptr_t) ((int) x + 10); }
 void test_atomic()
 {
     test_section();
@@ -292,7 +292,7 @@ void test_atomic()
         doremir_atomic_set(a, (ptr_t) 0x5);
         doremir_print("a                            ==> %s\n", a);
 
-        doremir_atomic_modify(a, add10);
+        doremir_atomic_modify(a, add10, 0);
         doremir_print("a                            ==> %s\n", a);
 
         doremir_atomic_add(a, (ptr_t) -0xf);
