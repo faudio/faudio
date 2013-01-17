@@ -21,9 +21,13 @@
 
 ; Override print by Show interface
 
-(defmethod print-object ((x list) out) (format out "~a" (string-show (slot-value x 'list-ptr))))
-(defmethod print-object ((x ratio) out) (format out "~a" (string-show (slot-value x 'ratio-ptr))))
 (defmethod print-object ((x buffer) out) (format out "~a" (string-show (slot-value x 'buffer-ptr))))
+(defmethod print-object ((x midi) out) (format out "~a" (string-show (slot-value x 'midi-ptr))))
+(defmethod print-object ((x list) out) (format out "~a" (string-show (slot-value x 'list-ptr))))
+(defmethod print-object ((x pair) out) (format out "~a" (string-show (slot-value x 'pair-ptr))))
+(defmethod print-object ((x set) out) (format out "~a" (string-show (slot-value x 'set-ptr))))
+(defmethod print-object ((x map) out) (format out "~a" (string-show (slot-value x 'map-ptr))))
+(defmethod print-object ((x ratio) out) (format out "~a" (string-show (slot-value x 'ratio-ptr))))
 ; etc
 
 ; ---------------------------------------------------------------------------------------------------

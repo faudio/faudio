@@ -1,6 +1,6 @@
 (in-package :doremir)
 (defctype type-frames :int32)
-(defctype type-simple (:pointer :void))
+(defctype type-simple :int)
 (define-foreign-type type-type () () (:actual-type :pointer))
 (define-parse-method type () (make-instance 'type-type))
 (defclass type () ((type-ptr :initarg :type-ptr)))

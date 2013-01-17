@@ -28,7 +28,7 @@
 (defctype string-show (:pointer :void))
 (defctype string-to-json (:pointer :void))
 (defctype string-from-json (:pointer :void))
-(defctype string-severity (:pointer :void))
+(defctype string-severity :int)
 (defctype string-error (:pointer :void))
 (defcfun (string-check "doremir_string_check") :boolean (a ptr))
 (defcfun (string-show "doremir_string_show") string (a ptr))

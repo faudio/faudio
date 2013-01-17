@@ -1,5 +1,5 @@
 (in-package :doremir)
-(defctype midi-status (:pointer :void))
+(defctype midi-status :int)
 (defctype midi-channel :int)
 (defctype midi-data :int)
 (define-foreign-type midi-type () () (:actual-type :pointer))
