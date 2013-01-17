@@ -19,6 +19,7 @@
   :serial t
   :components (
     (:file "package")
+    (:file "ptr")
     (:file "doremir")
     (:module "doremir2"
       :pathname "doremir"
