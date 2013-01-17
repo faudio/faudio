@@ -146,3 +146,12 @@
 (midi-sysex-data x)
 (midi-destroy x)
 
+(setf x (atomic-create))
+(setf y (atomic-copy x))
+(atomic-exchange x (from-int8 0) (from-int8 1))
+(atomic-exchange x (from-int8 1) (from-int8 0))
+(to-int8 (atomic-get x))
+(atomic-set x (from-int8 0))
+(atomic-add x (from-int8 1))
+; (atomic-modify (lambda (x) x) x)
+(atomic-destroy x)
