@@ -18,6 +18,14 @@
 (defcfun (to-float#     "doremir_to_float") :float (a :pointer))
 (defcfun (to-double#    "doremir_to_double") :double (a :pointer))
 
+(defcfun (peek-bool#      "doremir_peek_bool") :boolean (a :pointer))
+(defcfun (peek-int8#      "doremir_peek_int8") :int8 (a :pointer))
+(defcfun (peek-int16#     "doremir_peek_int16") :int16 (a :pointer))
+(defcfun (peek-int32#     "doremir_peek_int32") :int32 (a :pointer))
+(defcfun (peek-int64#     "doremir_peek_int64") :int64 (a :pointer))
+(defcfun (peek-float#     "doremir_peek_float") :float (a :pointer))
+(defcfun (peek-double#    "doremir_peek_double") :double (a :pointer))
+
 (defcfun (from-bool#    "doremir_from_bool") :pointer (a :boolean))
 (defcfun (from-int8#    "doremir_from_int8") :pointer (a :int8))
 (defcfun (from-int16#   "doremir_from_int16") :pointer (a :int16))
