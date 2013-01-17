@@ -5,8 +5,7 @@
 
 (progn
   (push "/Users/hans/audio/build/Frameworks/" cffi:*darwin-framework-directories*)
-  (cffi:load-foreign-library '(:framework "DoReMIRAudio"))
-  )
+  (cffi:load-foreign-library '(:framework "DoReMIRAudio")))
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -16,6 +15,9 @@
 (audioengine-terminate)
 (audioengine-set-log-file "/Users/hans/Librar/Logs/ScoreCleaner/AudioEngine.log")
 (audioengine-set-log-std)
+
+; For testing
+(defvar x nil)
 
 (setf x (buffer-create 2000000))
 (setf x (buffer-resize 2048 x))
@@ -185,6 +187,10 @@
 (atomic-queue-destroy x)
 (atomic-queue-write x (from-int8 (random 20)))
 (to-int8 (atomic-queue-read x))
+
+
+
+
 
 
 (equal              (from-int8 0) (from-int8 0))
