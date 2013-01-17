@@ -40,27 +40,42 @@
       (cl:boolean      (from-bool# x))
       (cl:float        (from-float# x))
       (cl:double-float (from-double# x))
-      (cl:integer      (from-int16# x))
+      (cl:integer      (from-int32# x))
       (cl:string       (string-from-utf8# (foreign-string-alloc x :encoding :utf-8)))
-      ; TODO 32 and 64-bit ints
       ; TODO ratio/rational (?)
       ; TODO list
       ; TODO cons                   
-    (otherwise          x))) 
+      (t               (to-pointer x)))) 
 
+; TODO string, ratio, list, pair
+; TODO leaks with boxed types
 (defmethod translate-from-foreign (x (type ptr-type))   
   (cond
     ((is-bool# x)       (to-bool# x))
     ((is-int8# x)       (to-int8# x))
     ((is-int16# x)      (to-int16# x))
-    ((is-int32# x)      (to-int32# x))
-    ((is-int64# x)      (to-int64# x))
-    ((is-float# x)      (to-float# x))
-    ((is-double# x)     (to-double# x))
-    ; TODO string, ratio, list, pair
-    (otherwise          x)))
+    ((is-int32# x)      (peek-int32# x))
+    ((is-int64# x)      (peek-int64# x))
+    ((is-float# x)      (peek-float# x))
+    ((is-double# x)     (peek-double# x))
+    (t                  x))) ; Client have to write from-pointer here
+
 
 ; FIXME causes segmentation error with map-add
 ; (defmethod free-translated-object (x (type ptr-type) a) (declare (ignore a))
 ;   (destroy# x))
+
+
+; Utility
+
+(defun to-pointer (x)
+  "Convert an object to a pointer"
+  (convert-to-foreign x (type-of x)))
+
+(defun from-pointer (x type)
+  "Convert a pointer to an object"
+  (convert-from-foreign x type))
+
+
+
 

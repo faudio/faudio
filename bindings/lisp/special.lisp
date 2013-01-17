@@ -2,13 +2,12 @@
 (in-package :doremir)
 
 ; ---------------------------------------------------------------------------------------------------
-; String 
-; ---------------------------------------------------------------------------------------------------
 
-; Must reimport these as (Ptr -> Ptr)
-(defcfun (string-destroy# "doremir_string_destroy") :void (a :pointer))
+; Bootstrap imports using raw pointers (otherwise the translator will invoke itself forever)
+
 (defcfun (string-from-utf8# "doremir_string_from_utf8") :pointer (a :pointer))
 (defcfun (string-to-utf8#  "doremir_string_to_utf8") :pointer (a :pointer))
+(defcfun (string-destroy# "doremir_string_destroy") :void (a :pointer))
 
 (defmethod translate-to-foreign (x (type string-type))
   (string-from-utf8# (foreign-string-alloc x :encoding :utf-8))) ; TODO free temporary
