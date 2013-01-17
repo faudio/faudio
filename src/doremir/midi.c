@@ -109,7 +109,7 @@ void doremir_midi_destroy(doremir_midi_t midi)
  */
 doremir_midi_status_t doremir_midi_status(doremir_midi_t midi)
 {
-    assert(false && "Not implemented");
+    return midi->data.simple[0] & 0x0f;
 }
 
 /**
@@ -117,7 +117,7 @@ doremir_midi_status_t doremir_midi_status(doremir_midi_t midi)
  */
 doremir_midi_channel_t doremir_midi_channel(doremir_midi_t midi)
 {
-    assert(false && "Not implemented");
+    return midi->data.simple[0] & 0xf0;
 }
 
 /**
@@ -125,7 +125,7 @@ doremir_midi_channel_t doremir_midi_channel(doremir_midi_t midi)
  */
 bool doremir_midi_is_simple(doremir_midi_t midi)
 {
-    assert(false && "Not implemented");
+    return !midi->is_sysex;
 }
 
 /**
@@ -133,7 +133,7 @@ bool doremir_midi_is_simple(doremir_midi_t midi)
  */
 doremir_pair_t doremir_midi_simple_data(doremir_midi_t midi)
 {
-    assert(false && "Not implemented");
+    return doremir_pair_create(i8(midi->data.simple[1]), i8(midi->data.simple[2]));
 }
 
 /**
@@ -141,7 +141,7 @@ doremir_pair_t doremir_midi_simple_data(doremir_midi_t midi)
  */
 bool doremir_midi_is_sysex(doremir_midi_t midi)
 {
-    assert(false && "Not implemented");
+    return midi->is_sysex;
 }
 
 /**
@@ -149,7 +149,7 @@ bool doremir_midi_is_sysex(doremir_midi_t midi)
  */
 doremir_buffer_t doremir_midi_sysex_data(doremir_midi_t midi)
 {
-    assert(false && "Not implemented");
+    return midi->data.sysex;
 }
 
 
