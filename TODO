@@ -19,6 +19,8 @@ We will use the "big buffer" approach
 Issues
 
 * Normalize rationals before printing (but not otherwise)
+* Lisp mangling
+    https://github.com/hanshoglund/modulo/issues/26
 
 ==========
 Additions
