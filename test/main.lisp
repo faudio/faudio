@@ -5,11 +5,17 @@
 
 (progn
   (push "/Users/hans/audio/build/Frameworks/" cffi:*darwin-framework-directories*)
-  (load-foreign-library '(:framework "DoReMIRAudio")))
+  (cffi:load-foreign-library '(:framework "DoReMIRAudio"))
+  )
 
 ; ---------------------------------------------------------------------------------------------------
 
 (in-package :doremir)
+
+(audioengine-initialize)
+(audioengine-terminate)
+(audioengine-set-log-file "/Users/hans/Librar/Logs/ScoreCleaner/AudioEngine.log")
+(audioengine-set-log-std)
 
 (setf x (buffer-create 1024))
 (setf x (buffer-resize 2048 x))
@@ -155,3 +161,11 @@
 (atomic-add x (from-int8 1))
 ; (atomic-modify (lambda (x) x) x)
 (atomic-destroy x)
+
+(setf x (atomic-queue-create))
+(atomic-queue-destroy x)
+(atomic-queue-write x (from-int8 (random 20)))
+(to-int8 (atomic-queue-read x))
+
+
+

@@ -22,18 +22,25 @@
 ; Override print by Show interface
 
 (defmethod print-object ((x buffer) out) (format out "~a" (string-show (slot-value x 'buffer-ptr))))
+
 (defmethod print-object ((x midi) out) (format out "~a" (string-show (slot-value x 'midi-ptr))))
 (defmethod print-object ((x list) out) (format out "~a" (string-show (slot-value x 'list-ptr))))
 (defmethod print-object ((x pair) out) (format out "~a" (string-show (slot-value x 'pair-ptr))))
 (defmethod print-object ((x set) out) (format out "~a" (string-show (slot-value x 'set-ptr))))
 (defmethod print-object ((x map) out) (format out "~a" (string-show (slot-value x 'map-ptr))))
 (defmethod print-object ((x ratio) out) (format out "~a" (string-show (slot-value x 'ratio-ptr))))
+
 (defmethod print-object ((x atomic) out) (format out "~a" (string-show (slot-value x 'atomic-ptr))))
+(defmethod print-object ((x atomic-queue) out) (format out "~a" (string-show (slot-value x 'atomic-queue-ptr))))
+(defmethod print-object ((x atomic-stack) out) (format out "~a" (string-show (slot-value x 'atomic-stack-ptr))))
+(defmethod print-object ((x atomic-ring-buffer) out) (format out "~a" (string-show (slot-value x 'atomic-ring-buffer-ptr))))
+
 (defmethod print-object ((x priority-queue) out) (format out "~a" (string-show (slot-value x 'priority-queue-ptr))))
 (defmethod print-object ((x processor) out) (format out "~a" (string-show (slot-value x 'processor-ptr))))
 (defmethod print-object ((x scheduler) out) (format out "~a" (string-show (slot-value x 'scheduler-ptr))))
 (defmethod print-object ((x signal) out) (format out "~a" (string-show (slot-value x 'signal-ptr))))
 (defmethod print-object ((x thread) out) (format out "~a" (string-show (slot-value x 'thread-ptr))))
+
 (defmethod print-object ((x time) out) (format out "~a" (string-show (slot-value x 'time-ptr))))
 (defmethod print-object ((x type) out) (format out "~a" (string-show (slot-value x 'type-ptr))))
 
