@@ -13,9 +13,39 @@
 (defmethod translate-to-foreign (x (type string-type))
   (string-from-utf8# (foreign-string-alloc x :encoding :utf-8))) ; TODO free temporary
 (defmethod translate-from-foreign (x (type string-type))
-  (foreign-string-to-lisp (string-to-utf8# x) :encoding :utf-8))
+  (foreign-string-to-lisp (string-to-utf8# x) :encoding :utf-8)) ; TODO free temporary
 (defmethod free-translated-object (x (type string-type) a) (declare (ignore a))
   (string-destroy# x))
+
+; ---------------------------------------------------------------------------------------------------
+
+(defcfun (ratio-num# "doremir_ratio_num") ratio-num (a :pointer))
+(defcfun (ratio-denom# "doremir_ratio_denom") ratio-denom (a :pointer))
+(defcfun (ratio-create# "doremir_ratio_create") :pointer (a ratio-num) (b ratio-denom))
+(defcfun (ratio-destroy# "doremir_ratio_destroy") :void (a :pointer))
+
+(defmethod translate-to-foreign (x (type ratio-type))
+  (ratio-create# (numerator x) (denominator x))) 
+(defmethod translate-from-foreign (x (type ratio-type))
+  (/ (ratio-num# x) (ratio-denom# x))) 
+(defmethod free-translated-object (x (type ratio-type) a) (declare (ignore a))
+  (ratio-destroy# x))
+
+
+; ---------------------------------------------------------------------------------------------------
+
+; (defcfun (pair-fst# "doremir_pair_fst") :pointer (a :pointer))
+; (defcfun (pair-snd# "doremir_pair_snd") :pointer (a :pointer))
+; (defcfun (pair-create# "doremir_pair_create") :pointer (a :pointer) (b :pointer))
+; (defcfun (pair-destroy# "doremir_pair_destroy") :void (a :pointer))
+; 
+; (defmethod translate-to-foreign (x (type pair-type))
+;   (pair-create# (car x) (cdr x))) 
+; (defmethod translate-from-foreign (x (type pair-type))
+;   (cons (pair-fst# x) (pair-snd# x))) 
+; (defmethod free-translated-object (x (type pair-type) a) (declare (ignore a))
+;   (pair-destroy# x))
+
 
 ; ---------------------------------------------------------------------------------------------------
 
