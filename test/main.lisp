@@ -38,10 +38,13 @@
 (pair-snd x)
 (pair-dup 3)
 (pair-swap x)
-(pair-assoc (pair-create (pair-create 1 2) 3))
-(pair-unassoc (pair-create 1 (pair-create 2 1)))
+(pair-assoc (pair-create 1 (pair-create 2 3)))
+(pair-unassoc (pair-create (pair-create 1 2) 3))
 (cl:print x)
 (pair-destroy x)
+
+(pair-snd (from-pointer (to-pointer (pair-create 1 2)) 'pair))
+(pair-create (pair-create 1 2) (pair-create 3 4))
 
 
 ; Audio Engine lists are not Lisp lists
