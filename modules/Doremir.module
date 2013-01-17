@@ -165,6 +165,14 @@ module Doremir
     toFloat    : Ptr -> Float;
     toDouble   : Ptr -> Double;
 
+    peekBool   : Ptr -> Bool;
+    peekInt8   : Ptr -> Int8;
+    peekInt16  : Ptr -> Int16;
+    peekInt32  : Ptr -> Int32;
+    peekInt64  : Ptr -> Int64;
+    peekFloat  : Ptr -> Float;
+    peekDouble : Ptr -> Double;
+
     fromBool   : Bool -> Ptr;
     fromInt8   : Int8 -> Ptr;
     fromInt16  : Int16 -> Ptr;
