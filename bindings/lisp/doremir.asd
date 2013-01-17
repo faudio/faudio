@@ -60,5 +60,6 @@
             (:file "midi")
             (:file "file")
             (:file "buffer")))
-        (:file "audio-engine")))))
+        (:file "audio-engine")))
+    (:file "special")))
 
