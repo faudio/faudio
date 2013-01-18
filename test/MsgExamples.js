@@ -1,0 +1,42 @@
+["volume", 0.5]
+["reverb", 0.2]
+
+{ "volume": 0.5,
+  "reverb": 0.2 }
+
+
+
+
+==>
+  ["probable-note", 60, 127]
+  ["probable-note", 60, 127]
+  ["probable-note", 60, 127]
+  ["probable-note", 60, 127]
+  ["probable-note", 60, 127]
+  ["probable-note", 60, 127]
+  ["probable-note", 60, 127]
+  ["probable-note", 60, 127]
+  ["probable-note", 60, 127]
+  ["probable-note", 60, 127]
+  ["probable-note", 60, 127]
+  ["probable-note", 60, 127]
+  ["probable-note", 60, 127]
+  ["probable-note", 60, 127]
+
+  //... 
+  
+  { "title": "analys-report",
+    "type-of-analysis" : "cuex",
+    "total-notes", 345,
+    "note" : [
+        [60, 127],
+        [60, 127],
+        [60, 127],
+        [60, 127],
+        [60, 127],
+        [60, 127],
+        [60, 127],
+        [60, 127]
+        //...
+    ]  
+  }

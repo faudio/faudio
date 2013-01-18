@@ -9,26 +9,35 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
+; Caveats:
+;   - Calling a function on a destroyed object is undefined
+;   - Calling (from-pointer) with the wrong type is undefined
+;   - Calling a generic function on a type that does not implement a required interface is undefined
+
 (in-package :doremir)
 
 (audioengine-initialize)
 (audioengine-terminate)
-(audioengine-set-log-file "/Users/hans/Librar/Logs/ScoreCleaner/AudioEngine.log")
+(audioengine-set-log-file "/Users/hans/Library/Logs/ScoreCleaner/AudioEngine.log")
 (audioengine-set-log-std)
 
 ; For testing
 (defvar x nil)
 (defvar y nil)
 
-(from-pointer (min "hans" "hanna") 'string)
-(from-pointer (min x y) 'ratio)
+(from-pointer 'string (min "hans" "hanna"))
+(from-pointer 'ratio (min x y))
 (list-cons x (list-single x))
 (equal x y)
-(min x y)
+
+(from-pointer 'ratio (max x y))
 
 
 (type-of x)
+(type-of y)
 
+
+; Ratio
 ; Audio Engine ratios are converted to Lisp ratios and vice versa
 (setf x (ratio-create 1 2))
 (setf y (ratio-create 278 12))
@@ -49,6 +58,7 @@
 (ratio-succ (/ 1 2))
 (ratio-recip (/ 567 235))
 
+; String
 ; Audio Engine strings are converted to Lisp strings and vice versa
 (setf x (string-empty))
 (setf x (string-single 104))
@@ -58,6 +68,7 @@
 (cl:print x)
 ;(string-destroy x)
 
+; Pair
 ; Audio Engine pairs are NOT Lisp pairs
 ; They print as (1,2)
 (setf x (pair-create 1 2))
@@ -72,10 +83,12 @@
 (pair-destroy x)
 (destroy x)
 
-(pair-snd (from-pointer (to-pointer (pair-create 1 2)) 'pair))
+(pair-snd (from-pointer 'pair (to-pointer (pair-create 1 2))))
 (pair-create (pair-create 1 2) (pair-create 3 4))
 (pair-create (list-single 1) (set-single 2))
 
+
+; List
 ; Audio Engine lists are NOT Lisp lists
 ; They print as [1,2,3..]
 (setf x (list-empty))
@@ -113,6 +126,11 @@
 (cl:print x)
 (list-destroy x)
 
+(export-list# (cl:list 1 2 (export-list# (cl:list 1 3 4))))
+(import-list# (list-cons 1 (list-cons 2 (list-single 3))))
+
+
+; Set
 (setf x (set-empty))
 (setf x (set-single 1))
 (setf x (set-add (random 20) x))
@@ -133,6 +151,7 @@
 (cl:print x)
 (set-destroy)
 
+; Map
 (setf x (map-empty))
 (setf x (map-add "name" "hans" x))
 (setf x (map-add "skills" (list-cons 1 (list-empty)) x))
@@ -162,6 +181,7 @@
 (cl:print x)
 (map-destroy x)
 
+; Buffer
 (setf x (buffer-create 1024))
 (setf x (buffer-resize 2048 x))
 (buffer-size x)
@@ -174,6 +194,7 @@
 (cl:print x)
 (buffer-destroy x)
 
+; Midi
 (setf x (midi-create-simple #x9 60 127))
 (setf x (midi-create-sysex (buffer-create 1024)))
 (setf y (midi-copy x))
@@ -186,9 +207,42 @@
 (midi-sysex-data x)
 (midi-destroy x)
 
+
 ; Time
+; TODO macro like (time 2 :hours 3 :minutes)
+(setf x (time-create 0 0 4 (rational 33.5)))
+(setf y (time-copy x))
+(setf x (from-pointer 'time (add x y)))
+(time-days x)
+(time-hours x)
+(time-minutes x)
+(time-seconds x)
+(time-divisions x)
+(time-to-iso x)
+(equal x y)
+(destroy x)
+
 
 ; Type
+; TODO macro like (type (:vec (:i8 (:frame :i8)) 256))
+(setf x (type-simple 0))
+(setf x (type-simple 1))
+(setf x (type-simple 2))
+(setf x (type-simple 3))
+(setf x (type-simple 4))
+(setf x (type-simple 5))
+(setf x (type-simple 6))
+(setf x (type-pair x y))
+(setf x (type-vector x 16))
+(setf x (type-frame x))
+(setf y (type-copy x))
+(type-is-simple x)
+(type-is-pair x)
+(type-is-vector x)
+(type-is-frame x)
+(type-size-of 256 x)
+(type-align-of x)
+
 
 ; Scheduler
 
@@ -203,13 +257,18 @@
 ; Error
 
 ; Priority queue
+(setf x (priorityqueue-empty))
+(priorityqueue-insert (random 1000) x)
+(priorityqueue-peek x)
+(priorityqueue-pop x)
+
 
 (setf x (atomic-create))
 (setf y (atomic-copy x))
-(atomic-exchange x 0 1)
+(atomic-exchange x 0 1)      ; FIXME
 (atomic-exchange x 1 0)
-(to-int8 (atomic-get x))
-(atomic-set x 0)
+(atomic-get x)
+(atomic-set x 1)
 (atomic-add x 1)
 ; (atomic-modify (lambda (x) x) x)
 (atomic-destroy x)
@@ -217,10 +276,10 @@
 (setf x (atomic-queue-create))
 (atomic-queue-destroy x)
 (atomic-queue-write x (random 20))
-(atomic-queue-read x)
-(to-int8 (atomic-queue-read x))
+(atomic-queue-read x)               ; FIXME <ptr 0> should be nil
 
 
+; Doremir (generic functions)
 (equal              x y)
 (less-than          x y)
 (greater-than       x y)
