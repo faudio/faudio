@@ -16,26 +16,13 @@ We will use the "big buffer" approach
         Or fix SOS-acceptable way to divide a buffer_t       ?
 
 ==========
-Issues
-
-* Normalize rationals before printing (but not otherwise)
-
-==========
 Additions
-
-* Lisp frontend
-    * Decide fate of the Ptr type (now you have to delete it manually from doremir.lisp)
-    * Dynamic translation of string, ratio, list and pair (also set, map?)
-    * Auto wrap of pairs and lists again?
-    * Mangling problems
-        https://github.com/hanshoglund/modulo/issues/26
-
-* Implement schedulers
 
 * Error handling
     doremir_check etc
     Logging
 
+* Schedulers
 * Processors
 
 * Buffer streams
@@ -43,9 +30,7 @@ Additions
 * RT audio
 * RT midi
 
-* Deep doremir_destroy (exactly how?)
-* Implement ringbuffer
-
+* Ringbuffer
 * Better FIFO (multi-RW, see paper)
 * Better map/set backend (intmap or patricia tree)
 * JSON serialization
@@ -76,7 +61,20 @@ Additions
         http://clang.llvm.org/docs/LanguageExtensions.html#vectors-and-extended-vectors
 
 ==========
-Misc issues
+Issues
+
+* Normalize rationals before printing (but not otherwise)
+
+* Lisp frontend
+    * Rename top-level package (but not modules!)
+    * Decide fate of the Ptr type (now you have to delete it manually from doremir.lisp)
+    * Auto wrap of pairs and lists?
+    * Mangling problems
+        https://github.com/hanshoglund/modulo/issues/26
+
+
+==========
+Misc
 
 * Make Modulo support interfaces (i.e. generate numbers in interfaces.h)
 * Make Modulo support explicit one-level above names (doremir_device_audio_stream_callback_t etc)
@@ -86,17 +84,11 @@ Misc issues
   * Done? 
     Tis 28 Aug 2012 22:46:06 CEST
 
-* Come up with better way to include ASIOSDK in Portaudio (new
-  submodule? nested?)
-
 * Set visibility=hidden on OS X. See Apple documentation 'Dynamic
   Library Programming Topics'
 
 * Update ScoreCleanerAudio/Resources/Info.plist, see Apple
   documentation 'Framework Programming Guide'
-
-* Logging functions on OS X must create dir ~/Library/Logs/ScoreCleaner
-  if not present
 
 * DLL name and linkage on Windows
   * Still relevant?
