@@ -18,20 +18,48 @@
 
 ; For testing
 (defvar x nil)
+(defvar y nil)
 
-(setf x (buffer-create 1024))
-(setf x (buffer-resize 2048 x))
-(buffer-size x)
-(buffer-peek x 1)
-(buffer-poke x 1 10)
-(dotimes (i 1024)
-  (buffer-poke x i (mod i 256)))
-(dotimes (i 1024)
-  (buffer-poke x i 0))
+(from-pointer (min "hans" "hanna") 'string)
+(from-pointer (min x y) 'ratio)
+(list-cons x (list-single x))
+(equal x y)
+(min x y)
+
+
+(type-of x)
+
+; Audio Engine ratios are converted to Lisp ratios and vice versa
+(setf x (ratio-create 1 2))
+(setf y (ratio-create 278 12))
+(ratio-num x)
+(ratio-denom x)
+(ratio-add x y)
+(ratio-subtract x y)
+(ratio-multiply x y)
+(ratio-divide x y)
+;(ratio-remainder x y)
+(ratio-succ x)
+(ratio-pred x)
+(ratio-negate x)
+(ratio-recip x)
 (cl:print x)
-(buffer-destroy x)
+(ratio-destroy x)
+(ratio-create 1 2)
+(ratio-succ (/ 1 2))
+(ratio-recip (/ 567 235))
 
-; Audio Engine pairs are not Lisp pairs
+; Audio Engine strings are converted to Lisp strings and vice versa
+(setf x (string-empty))
+(setf x (string-single 104))
+(string-append (string-single 104) (string-dappend (string-single (char-int #\a)) (string-single 110)))
+(string-append "hans " "höglund")
+(string-length "högtalare")
+(cl:print x)
+;(string-destroy x)
+
+; Audio Engine pairs are NOT Lisp pairs
+; They print as (1,2)
 (setf x (pair-create 1 2))
 (setf y (pair-copy x))
 (pair-fst x)
@@ -42,12 +70,13 @@
 (pair-unassoc (pair-create (pair-create 1 2) 3))
 (cl:print x)
 (pair-destroy x)
+(destroy x)
 
 (pair-snd (from-pointer (to-pointer (pair-create 1 2)) 'pair))
 (pair-create (pair-create 1 2) (pair-create 3 4))
+(pair-create (list-single 1) (set-single 2))
 
-
-; Audio Engine lists are not Lisp lists
+; Audio Engine lists are NOT Lisp lists
 ; They print as [1,2,3..]
 (setf x (list-empty))
 (setf x (list-single 0))
@@ -133,38 +162,17 @@
 (cl:print x)
 (map-destroy x)
 
-; Audio Engine ratios are converted to Lisp ratios
-(setf x (ratio-create 1 2))
-(setf y (ratio-create 278 12))
-(ratio-num x)
-(ratio-denom x)
-(ratio-add x y)
-(ratio-subtract x y)
-(ratio-multiply x y)
-(ratio-divide x y)
-;(ratio-remainder x y)
-(ratio-succ x)
-(ratio-pred x)
-(ratio-negate x)
-(ratio-recip x)
+(setf x (buffer-create 1024))
+(setf x (buffer-resize 2048 x))
+(buffer-size x)
+(buffer-peek x 1)
+(buffer-poke x 1 10)
+(dotimes (i 1024)
+  (buffer-poke x i (mod i 256)))
+(dotimes (i 1024)
+  (buffer-poke x i 0))
 (cl:print x)
-(ratio-destroy x)
-
-; test auto-convert
-(doremir::ratio-create 1 2)
-(doremir::ratio-succ (/ 1 2))
-(doremir::ratio-recip (/ 567 235))
-
-;(denominator (/ 1 2))
-
-; Audio Engine strings are converted to Lisp strings
-(setf x (string-empty))
-(setf x (string-single 104))
-(string-append (string-single 104) (string-dappend (string-single 97) (string-single 110)))
-(string-append "hans " "höglund")
-(string-length "högtalare")
-(cl:print x)
-;(string-destroy x)
+(buffer-destroy x)
 
 (setf x (midi-create-simple #x9 60 127))
 (setf x (midi-create-sysex (buffer-create 1024)))
@@ -182,8 +190,6 @@
 
 ; Type
 
-; Priority queue
-
 ; Scheduler
 
 ; Processor
@@ -195,6 +201,8 @@
 ; Devices
 
 ; Error
+
+; Priority queue
 
 (setf x (atomic-create))
 (setf y (atomic-copy x))
@@ -211,8 +219,6 @@
 (atomic-queue-write x (random 20))
 (atomic-queue-read x)
 (to-int8 (atomic-queue-read x))
-
-
 
 
 (equal              x y)

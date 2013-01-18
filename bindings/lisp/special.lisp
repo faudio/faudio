@@ -23,6 +23,9 @@
 (defcfun (ratio-create# "doremir_ratio_create") :pointer (a :int32) (b :int32))
 (defcfun (ratio-destroy# "doremir_ratio_destroy") :void (a :pointer))
 
+(defun export-ratio# (x)
+  (convert-to-foreign x 'ratio))
+
 (defmethod translate-to-foreign (x (type ratio-type))
   (ratio-create# (numerator x) (denominator x))) 
 (defmethod translate-from-foreign (x (type ratio-type))
