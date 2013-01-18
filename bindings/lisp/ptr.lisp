@@ -80,7 +80,7 @@
   "Convert an object to a pointer"
   (convert-to-foreign x (type-of x)))
 
-(defun from-pointer (x type)
+(defun from-pointer (type x)
   "Convert a pointer to an object"
   (convert-from-foreign x type))
 

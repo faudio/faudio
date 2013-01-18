@@ -36,22 +36,29 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; (defcfun (pair-fst# "doremir_pair_fst") :pointer (a :pointer))
-; (defcfun (pair-snd# "doremir_pair_snd") :pointer (a :pointer))
-; (defcfun (pair-create# "doremir_pair_create") :pointer (a :pointer) (b :pointer))
-; (defcfun (pair-destroy# "doremir_pair_destroy") :void (a :pointer))
-; 
-; (defmethod translate-to-foreign (x (type pair-type))
-;   (pair-create# (car x) (cdr x))) 
-; (defmethod translate-from-foreign (x (type pair-type))
-;   (cons (pair-fst# x) (pair-snd# x))) 
-; (defmethod free-translated-object (x (type pair-type) a) (declare (ignore a))
-;   (pair-destroy# x))
+(defun export-pair# (x)
+  (create-pair (car x) (cdr x)))
 
+(defun import-pair# (x)
+  (cons (pair-fst x) (pair-snd x)))
+
+(defun export-list# (x)
+  ; nil -> []
+  ; (cons x xs) -> (list-cons x xs)
+  (cond
+    ((not x)  (list-empty))
+    (t        (list-cons (car x) (export-list# (cdr x))))))
+
+(defun import-list# (x)
+  ; [] -> nil
+  ; (list-cons x xs) -> (cons x xs)
+  (cond
+    ((list-is-empty x)  nil)
+    (t                  (cons (list-head x) (import-list# (list-tail x))))))
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Override print by Show interface
+; Override print by String.show
 (defcfun (string-show# "doremir_string_show") string (a :pointer))
 
 (defmethod print-object ((x buffer) out) (format out "~a" (string-show# (slot-value x 'buffer-ptr))))
