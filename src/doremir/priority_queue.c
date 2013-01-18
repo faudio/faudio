@@ -127,12 +127,18 @@ ptr_t doremir_priority_queue_peek(queue_t queue)
 ptr_t doremir_priority_queue_pop(queue_t queue)
 {
     node_t head = queue->node;
-    ptr_t value = head ? head->value : NULL;
-
-    queue->node = merge(head->left, head->right);
-
-    delete_node(head);
-    return value;
+    
+    if (!head)
+    {        
+        return NULL;
+    }
+    else
+    {
+        ptr_t value = head->value;
+        queue->node = merge(head->left, head->right);
+        delete_node(head);       
+        return value; 
+    }
 }
 
 // --------------------------------------------------------------------------------
