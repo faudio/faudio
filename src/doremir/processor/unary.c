@@ -3,35 +3,35 @@
 #import <doremir/string.h>
 #import <doremir/util.h>
 
-struct _doremir_processor_unary_proc_t {
-        impl_t impl;                /* Interface dispatcher. */
-
-        type_t input_type;
-        type_t output_type;
-
-        unary_t function;
+struct _doremir_processor_unary_proc_t
+{
+    impl_t          impl;                       // Dispatcher
+    type_t          input_type, output_type;    // Types
+    
+    unary_t         function;                   // Wrapped func
+    ptr_t           data;
 };
-            
+
 typedef doremir_processor_unary_proc_t this_proc_t;
 
 doremir_ptr_t unary_impl(doremir_id_t interface);
 
-doremir_processor_unary_proc_t 
-doremir_processor_unary_create(doremir_type_t type1, 
-                               doremir_type_t type2,
-                               doremir_unary_t function)
+doremir_processor_unary_proc_t
+doremir_processor_unary_create(doremir_type_t  type1,
+                               doremir_type_t  type2,
+                               doremir_unary_t function,
+                               doremir_ptr_t   data)
 {
     this_proc_t proc  = doremir_new(processor_unary_proc);
     proc->impl        = &unary_impl;
-
     proc->input_type  = type1;
     proc->output_type = type2;
-
     proc->function    = function;
+    proc->data        = data;
     return proc;
 }
 
-void 
+void
 doremir_processor_unary_destroy(doremir_processor_unary_proc_t proc)
 {
     doremir_destroy(proc->input_type);
@@ -51,31 +51,36 @@ void unary_after(doremir_ptr_t a, doremir_processor_info_t *info)
     // nothing
 }
 
-#define PROC(A,B) \
-    static inline                                                                                 \
-    void unary_proc_##A##_##B(this_proc_t proc, buffer_t input, buffer_t output)                  \
-    {                                                                                             \
-        typedef A this_input_t;                                                                   \
-        typedef B this_output_t;                                                                  \
-        typedef this_output_t(this_func_t)(this_input_t);                                         \
-                                                                                                  \
-        this_input_t*  raw_input     = (this_input_t*)  doremir_buffer_unsafe_address(input);     \
-        this_output_t* raw_output    = (this_output_t*) doremir_buffer_unsafe_address(output);    \
-        this_func_t*   proc_function = (this_func_t*)   proc->function;                           \
-        raw_output[0] = proc_function(raw_input[0]);                                              \
+#define UNARY_PROCESSOR(A,B) \
+    static inline \
+    void unary_proc_##A##_##B \
+    (int count, this_proc_t proc, buffer_t input, buffer_t output) \
+    { \
+        typedef A input_t; \
+        typedef B output_t; \
+        typedef output_t(func_t)(ptr_t, input_t); \
+        \
+        input_t*  raw_input     = (input_t*)  doremir_buffer_unsafe_address(input); \
+        output_t* raw_output    = (output_t*) doremir_buffer_unsafe_address(output); \
+        func_t*   raw_proc      = (func_t*)   proc->function; \
+        \
+        for(int i = 0; i < count; ++i) \
+            raw_output[i] = raw_proc(proc->data, raw_input[i]); \
     }
-    
-PROC(uint8_t,uint8_t);
-PROC(double,double);
+
+UNARY_PROCESSOR(uint8_t, uint8_t);
+UNARY_PROCESSOR(float,   float);
+UNARY_PROCESSOR(double,  double);
 
 void unary_process(doremir_ptr_t proc,
                    doremir_processor_info_t *info,
                    doremir_processor_samples_t samples)
 {
     this_proc_t proc2  = (this_proc_t) proc;
-    
+
     // TODO dispatch
-    unary_proc_uint8_t_uint8_t(proc2, samples, samples);
+    // TODO how to handle frame/vector types?
+    unary_proc_uint8_t_uint8_t(1, proc2, samples, samples);
 }
 
 doremir_type_t unary_input_type(doremir_ptr_t a)
@@ -107,27 +112,29 @@ void unary_destroy(doremir_ptr_t a)
     doremir_processor_unary_destroy(a);
 }
 
+// TODO make copyable?
 doremir_ptr_t unary_impl(doremir_id_t interface)
 {
     static doremir_string_show_t unary_show_impl = { unary_show };
     static doremir_destroy_t unary_destroy_impl = { unary_destroy };
-    static doremir_processor_interface_t unary_processor_interface_impl = { 
-        unary_before, unary_process, unary_after, 
-        unary_input_type, unary_output_type 
+    static doremir_processor_interface_t unary_processor_interface_impl =
+    {
+        unary_before, unary_process, unary_after,
+        unary_input_type, unary_output_type
     };
 
     switch (interface)
-    {
-    case doremir_string_show_i:
-        return &unary_show_impl;
+        {
+        case doremir_string_show_i:
+            return &unary_show_impl;
 
-    case doremir_destroy_i:
-        return &unary_destroy_impl;
+        case doremir_destroy_i:
+            return &unary_destroy_impl;
 
-    case doremir_processor_interface_i:
-        return &unary_processor_interface_impl;
+        case doremir_processor_interface_i:
+            return &unary_processor_interface_impl;
 
-    default:
-        return NULL;
-    }
-}       
+        default:
+            return NULL;
+        }
+}

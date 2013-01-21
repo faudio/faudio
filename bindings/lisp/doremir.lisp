@@ -1,5 +1,5 @@
 (in-package :doremir)
-; (defctype ptr (:pointer :void))
+;(defctype ptr (:pointer :void))
 (defctype nullary (:pointer (:pointer :void)))
 (defctype unary (:pointer (:pointer :void)))
 (defctype binary (:pointer (:pointer :void)))

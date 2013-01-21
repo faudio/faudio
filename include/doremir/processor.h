@@ -34,11 +34,13 @@ typedef struct {
 typedef struct _doremir_processor_t * doremir_processor_t;
 doremir_processor_t doremir_processor_unary(doremir_type_t,
                                             doremir_type_t,
-                                            doremir_unary_t);
+                                            doremir_unary_t,
+                                            doremir_ptr_t);
 doremir_processor_t doremir_processor_binary(doremir_type_t,
                                              doremir_type_t,
                                              doremir_type_t,
-                                             doremir_binary_t);
+                                             doremir_binary_t,
+                                             doremir_ptr_t);
 doremir_processor_t doremir_processor_ternary(doremir_type_t,
                                               doremir_type_t,
                                               doremir_type_t,

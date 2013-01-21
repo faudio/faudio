@@ -8,10 +8,11 @@ struct _doremir_processor_binary_proc_t {
 };
 
 doremir_processor_binary_proc_t 
-doremir_processor_binary_create(doremir_type_t type1,
-                                doremir_type_t type2,
-                                doremir_type_t type3,
-                                doremir_binary_t function)
+doremir_processor_binary_create(doremir_type_t   type1,
+                                doremir_type_t   type2,
+                                doremir_type_t   type3,
+                                doremir_binary_t function,
+                                doremir_ptr_t    data)
 {
     
 }
