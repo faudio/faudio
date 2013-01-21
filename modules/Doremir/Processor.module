@@ -1,7 +1,7 @@
 
 /**
     @addtogroup DoremirProcessor
-    
+
     Provides signal processors.
 
     @par Literals
@@ -28,8 +28,8 @@ module Doremir.Processor
     import Doremir.Buffer;
     import Doremir.Message;
 
-    /** @struct doremir_processor_info_t 
-        Information available to a processor at processing time. 
+    /** @struct doremir_processor_info_t
+        Information available to a processor at processing time.
       */
     type Info = struct {
         sampleRate  : Double,
@@ -37,16 +37,16 @@ module Doremir.Processor
         sampleTime  : Size,
         totalTime   : Time,
         dispatcher  : Dispatcher
-    };     
-    
-    // infoDefault : Info* -> Void;  
+    };
+
+    // infoDefault : Info* -> Void;
 
     /** @typedef doremir_processor_samples_t
         The samples manipulated by a processor.
      */
     type Samples = Ptr;
 
-    /** @interface doremir_processor_interface_t 
+    /** @interface doremir_processor_interface_t
         Processing interface. */
     type Interface = struct {
         before  : ((Ptr, Info*) -> Void)*,
@@ -56,47 +56,43 @@ module Doremir.Processor
         outputType  : (Ptr -> Type)*
     };
 
-    /** @typedef doremir_processor_t 
+    /** @typedef doremir_processor_t
         A processor of unknown type.
      */
-    type Processor = opaque;   
-    
-    
-    identity    : Type -> Processor;                          // a ~> a
-    constant    : (Type, Type, Ptr) -> Processor;             // a ~> b
-    split       : Type -> Processor;                          // a ~> (a,a)
-    left        : Type -> Processor;                          // (a,a) ~> a
-    right       : Type -> Processor;                          // (a,b) ~> b
-    
-    swap        : Type -> Processor;
-    assoc       : Type -> Processor;
-    unassoc     : Type -> Processor;
+    type Processor = opaque;
 
-    seq         : (Processor, Processor) -> Processor;        // (a ~> b), (b ~> c) -> (a ~> c)
-    par         : (Processor, Processor) -> Processor;        // (a ~> b), (c ~> d) -> (a,c ~> b,d)
-    loop        : Processor -> Processor;                     // (a,c ~> b,d) -> (a ~> b)
-    first       : Processor -> Processor;                     // (a ~> b) -> (a,c ~> b,c)
-    second      : Processor -> Processor;                     // (a ~> b) -> (c,a ~> c,b)
 
-    // Folds
-    fold        : Processor -> Processor;                     // ((a,a) ~> b) -> [a x n] ~> b
-    unfold      : Processor -> Processor;                     // (a ~> (b,b)) -> a       ~> [b x n]
-
-    unary       : (Type, Type, Unary, Ptr) -> Processor;        // a ~> b
-    binary      : (Type, Type, Type, Binary, Ptr) -> Processor; // (a,b) ~> c
-
-    
     // ------------------------------------------------------------------------
-    // Delay primitives    
+    // Delay primitives
 
-    delay       : (Type, Size) -> Processor;                  // a ~> a
+    identity    : Type -> Processor;                            // a ~> a
+    constant    : (Type, Type, Ptr) -> Processor;               // a ~> b
+    split       : Type -> Processor;                            // a ~> (a,a)
+    seq         : (Processor, Processor) -> Processor;          // (a~>b), (b~>c) -> (a~>c)
+    par         : (Processor, Processor) -> Processor;          // (a~>b), (c~>d) -> (a,c~>b,d)
+    loop        : Processor -> Processor;                       // (a,c~>b,d)     -> (a ~> b)
+    
+    unary       : (Type, Type, Unary, Ptr) -> Processor;        // a ~> b       {a}       ~> {b}
+    binary      : (Type, Type, Type, Binary, Ptr) -> Processor; // (a,b) ~> c   ({a},{b}) ~> c
+
+    // ------------------------------------------------------------------------
+    // Delay primitives
+
+    delay       : (Type, Size) -> Processor;                    // a ~> a
     // init
     // vdelay
     // videlay
 
+
+    // ------------------------------------------------------------------------
+    // Vector ops
+
+    foldVec     : Processor -> Processor;                     // ((a,a) ~> b) -> [a x n] ~> b
+    unfoldVec   : Processor -> Processor;                     // (a ~> (b,b)) -> a       ~> [b x n]
+
     // ------------------------------------------------------------------------
     // Math primitives
-    
+
     add                 : Type -> Processor;
     subtract            : Type -> Processor;
     multiply            : Type -> Processor;
@@ -104,7 +100,7 @@ module Doremir.Processor
     divide              : Type -> Processor;
     modulo              : Type -> Processor;
     absolute            : Type -> Processor;
-                        
+
     not                 : Type -> Processor;
     and                 : Type -> Processor;
     or                  : Type -> Processor;
@@ -112,15 +108,15 @@ module Doremir.Processor
     bitNot              : Type -> Processor;
     bitAnd              : Type -> Processor;
     bitOr               : Type -> Processor;
-    bitXor              : Type -> Processor; 
-    shiftLeft           : Type -> Processor; 
-    shiftRight          : Type -> Processor; 
+    bitXor              : Type -> Processor;
+    shiftLeft           : Type -> Processor;
+    shiftRight          : Type -> Processor;
 
-    equal               : Type -> Processor; 
-    lessThan            : Type -> Processor; 
-    greaterThan         : Type -> Processor; 
-    lessThanEqual       : Type -> Processor; 
-    greaterThanEqual    : Type -> Processor; 
+    equal               : Type -> Processor;
+    lessThan            : Type -> Processor;
+    greaterThan         : Type -> Processor;
+    lessThanEqual       : Type -> Processor;
+    greaterThanEqual    : Type -> Processor;
 
     acos                : Type -> Processor;
     asin                : Type -> Processor;
@@ -141,5 +137,13 @@ module Doremir.Processor
     floor               : Type -> Processor;
     ceil                : Type -> Processor;
     rint                : Type -> Processor;
-    
+
+    // left        : Type -> Processor;                          // (a,a) ~> a
+    // right       : Type -> Processor;                          // (a,b) ~> b
+    // swap        : Type -> Processor;                          // (a,b)     ~> (b,a)
+    // assoc       : Type -> Processor;                          // (a,(b,c)) ~> ((a,b),c)
+    // unassoc     : Type -> Processor;                          // ((a,b),c) ~> (a,(b,c))
+    // first       : Processor -> Processor;                     // (a~>b)         -> (a,c ~> b,c)
+    // second      : Processor -> Processor;                     // (a~>b)         -> (c,a ~> c,b)
+
 }
