@@ -28,6 +28,7 @@ this_proc_t doremir_processor_split_create(doremir_type_t type)
 {
     this_proc_t proc  = doremir_new(processor_split_proc);
     proc->impl = &split_impl;
+    
     proc->input_type = type;
 
     if (check_type(NULL, proc))

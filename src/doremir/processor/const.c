@@ -20,7 +20,7 @@ this_proc_t doremir_processor_const_create(type_t type1, type_t type2, ptr_t val
 {
     this_proc_t proc  = doremir_new(processor_const_proc);
     proc->impl        = &const_impl;
-    // 
+
     proc->input_type  = type1;
     proc->output_type = type2;
     proc->value       = value;

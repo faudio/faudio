@@ -90,9 +90,8 @@ void loop_before(doremir_ptr_t a, info_t *info)
     // Allocate buffers
     proc->bufSize[0]    = doremir_type_size_of(info->frame_size, proc->bufType[0]);
     proc->bufSize[1]    = doremir_type_size_of(info->frame_size, proc->bufType[1]);
-    
-    proc->buf[0]  = malloc(proc->bufSize[0]);
-    proc->buf[1]  = malloc(proc->bufSize[1]);
+    proc->buf[0]        = malloc(proc->bufSize[0]);
+    proc->buf[1]        = malloc(proc->bufSize[1]);
     
     assert(proc->buf[0] && proc->buf[1] && "malloc failed");
 }

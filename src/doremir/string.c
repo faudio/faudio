@@ -8,6 +8,7 @@
 #include <doremir/string.h>
 #include <doremir/util.h>
 #include <iconv.h>
+
 #include <CoreFoundation/CoreFoundation.h> // TODO OS X only
 
 /*  
