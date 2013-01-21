@@ -15,14 +15,6 @@
 #include <doremir/processor/delay.h>
 #include <doremir/util.h>
 
-// void doremir_processor_info_default(doremir_processor_info_t *info)
-// {
-    // info->sample_rate  = 44100;
-    // info->sample_count = 0;
-    // info->vector_size  = 1024;
-    // info->real_time    = seconds(0);
-// }
-
 /** Lift a unary function to a processor.
 
     @param input_type       Input type.
@@ -35,7 +27,8 @@ doremir_processor_t doremir_processor_unary(doremir_type_t  input_type,
                                             doremir_unary_t function,
                                             doremir_ptr_t   data)
 {
-    return (doremir_processor_t) doremir_processor_unary_create(input_type, output_type, function, data);
+    return (processor_t) 
+        doremir_processor_unary_create(input_type, output_type, function, data);
 }
 
 /** Lift a binary function to a processor.
@@ -48,21 +41,14 @@ doremir_processor_t doremir_processor_unary(doremir_type_t  input_type,
  */
 doremir_processor_t doremir_processor_binary(doremir_type_t   input_type1,
                                              doremir_type_t   input_type2,
-                                             doremir_type_t   output_type2,
+                                             doremir_type_t   output_type,
                                              doremir_binary_t function,
                                              doremir_ptr_t    data)
 {
-    assert(false && "Not implemented");
+    return (processor_t) 
+        doremir_processor_binary_create(input_type1, input_type2, output_type, function, data);
 }
-
-// doremir_processor_t doremir_processor_ternary(doremir_type_t type1,
-//                                               doremir_type_t type2,
-//                                               doremir_type_t type3,
-//                                               doremir_type_t type4,
-//                                               doremir_ternary_t function)
-// {
-//     assert(false && "Not implemented");
-// }
+                                                         
 
 /** Create an identity processor.
     @param type             Type of input.
@@ -109,7 +95,8 @@ doremir_processor_t doremir_processor_split(doremir_type_t type)
 doremir_processor_t doremir_processor_seq(doremir_processor_t proc1,
                                           doremir_processor_t proc2)
 {
-    assert(false && "Not implemented");
+    return (processor_t)
+        doremir_processor_seq_create(proc1, proc2);
 }
 
 /** Create a processor by combining the given processors in parallel.
@@ -119,7 +106,8 @@ doremir_processor_t doremir_processor_seq(doremir_processor_t proc1,
 doremir_processor_t doremir_processor_par(doremir_processor_t proc1,
                                           doremir_processor_t proc2)
 {
-    assert(false && "Not implemented");
+    return (processor_t)
+        doremir_processor_par_create(proc1, proc2);
 }
 
 /** Create a processor by feeding the given processor back into itself.
@@ -127,7 +115,8 @@ doremir_processor_t doremir_processor_par(doremir_processor_t proc1,
  */
 doremir_processor_t doremir_processor_loop(doremir_processor_t proc)
 {
-    assert(false && "Not implemented");
+    return (processor_t)
+        doremir_processor_loop_create(proc);
 }
 
 /*

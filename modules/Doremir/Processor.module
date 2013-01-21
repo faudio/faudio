@@ -63,7 +63,7 @@ module Doremir.Processor
     
     unary   : (Type, Type, Unary, Ptr) -> Processor;                   // a ~> b
     binary : (Type, Type, Type, Binary, Ptr) -> Processor;             // (a,b) ~> c
-    ternary : (Type, Type, Type, Type, Ternary) -> Processor;          // (a,b,c) ~> d
+    // ternary : (Type, Type, Type, Type, Ternary) -> Processor;          // (a,b,c) ~> d
     
     identity : Type -> Processor;                 // a ~> a
     constant : (Type, Type, Ptr) -> Processor;    // a ~> b
