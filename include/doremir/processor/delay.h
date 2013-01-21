@@ -1,6 +1,6 @@
 
-#ifndef _DOREMIR_PROCESSOR_SPLIT
-#define _DOREMIR_PROCESSOR_SPLIT
+#ifndef _DOREMIR_PROCESSOR_DELAY
+#define _DOREMIR_PROCESSOR_DELAY
 
 #include <doremir.h>
 #include <doremir/processor.h>
@@ -9,18 +9,19 @@
     @{
     @defgroup DoremirProcessor Processor
     @{
-    @defgroup DoremirProcessorSplit Split
+    @defgroup DoremirProcessorDelay Delay
     @{
     */
 
-typedef struct _doremir_processor_split_proc_t * doremir_processor_split_proc_t;
-doremir_processor_split_proc_t doremir_processor_split_create(doremir_type_t);
-void doremir_processor_split_destroy(doremir_processor_split_proc_t);
+typedef struct _doremir_processor_delay_proc_t * doremir_processor_delay_proc_t;
+doremir_processor_delay_proc_t doremir_processor_delay_create(doremir_type_t,
+                                                              size_t);
+void doremir_processor_delay_destroy(doremir_processor_delay_proc_t);
 
 /** @}
     @}
     @}
     */
 
-#endif // _DOREMIR_PROCESSOR_SPLIT
+#endif // _DOREMIR_PROCESSOR_DELAY
 

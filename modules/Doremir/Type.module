@@ -81,10 +81,13 @@ module Doremir.Type
     isPair : Type -> Bool;
     isVector : Type -> Bool;
     isFrame : Type -> Bool;
-    //  getSimple : Type -> Simple;
-    //  getPair : Type -> Pair;
-    //  getVector : Type -> Pair;
-    //  getFrame : Type -> Type;
+
+    // getSimple       : Type -> Simple;
+    getPairFst      : Type -> Type;
+    getPairSnd      : Type -> Type;
+    // getVectorBase   : Type -> Pair;
+    // getVectorSize   : Type -> Pair;
+    // getFrameBase    : Type -> Type;
  
     sizeOf : (Frames, Type) -> Size;
     alignOf : Type -> Size;

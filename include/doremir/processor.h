@@ -32,6 +32,8 @@ typedef struct {
             doremir_type_t (* output_type)(doremir_ptr_t);
         } doremir_processor_interface_t;
 typedef struct _doremir_processor_t * doremir_processor_t;
+doremir_type_t doremir_processor_input_type(doremir_processor_t);
+doremir_type_t doremir_processor_output_type(doremir_processor_t);
 doremir_processor_t doremir_processor_identity(doremir_type_t);
 doremir_processor_t doremir_processor_constant(doremir_type_t,
                                                doremir_type_t,

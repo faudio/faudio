@@ -5,20 +5,41 @@
 
 struct _doremir_processor_seq_proc_t
 {
-    impl_t              impl;       // Dispatcher
-    processor_t         elem[2];
+    impl_t              impl;           // Dispatcher
+    processor_t         elem[2];        // Elements
 };
 
 typedef doremir_processor_seq_proc_t this_proc_t;
 
 doremir_ptr_t seq_impl(doremir_id_t interface);
 
+inline static bool check_type(string_t* msg, this_proc_t proc)
+{   
+    if (msg)
+    {        
+        *msg = string("Input type must equal output type");
+    }
+    return doremir_equal(
+        doremir_processor_output_type(proc->elem[0]),
+        doremir_processor_input_type(proc->elem[1])
+        );
+}
+
 this_proc_t doremir_processor_seq_create(processor_t proc1, processor_t proc2)
 {
     this_proc_t proc  = doremir_new(processor_seq_proc);
     proc->elem[0] = proc1;
     proc->elem[1] = proc2;
-    return proc;
+    
+    if (check_type(NULL, proc))
+    {
+        return proc;
+    }
+    else
+    {   
+        assert(false && "Type error");     
+        // TODO
+    }
 }
 
 void
@@ -52,14 +73,14 @@ void seq_process(doremir_ptr_t proc, doremir_processor_info_t *info, doremir_pro
 
 doremir_type_t seq_input_type(doremir_ptr_t a)
 {
-    // TODO
-    assert(false && "Missing");
+    this_proc_t proc = (this_proc_t) a;
+    return doremir_processor_input_type(proc->elem[0]);
 }
 
 doremir_type_t seq_output_type(doremir_ptr_t a)
 {
-    // TODO
-    assert(false && "Missing");
+    this_proc_t proc = (this_proc_t) a;
+    return doremir_processor_output_type(proc->elem[1]);
 }
 
 // --------------------------------------------------------------------------------
@@ -79,7 +100,6 @@ void seq_destroy(doremir_ptr_t a)
     doremir_processor_seq_destroy(a);
 }
 
-// TODO make copyable?
 doremir_ptr_t seq_impl(doremir_id_t interface)
 {
     static doremir_string_show_t seq_show_impl = { seq_show };

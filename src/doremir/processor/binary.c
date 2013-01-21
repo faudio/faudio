@@ -80,10 +80,7 @@ void binary_process(doremir_ptr_t proc,
                     doremir_processor_info_t *info,
                     doremir_processor_samples_t samples)
 {
-    // this_proc_t proc2  = (this_proc_t) proc;
-
     // TODO
-    // binary_proc_uint8_t_uint8_t(1, proc2, samples, samples);
 }
 
 doremir_type_t binary_input_type(doremir_ptr_t a)
@@ -118,7 +115,6 @@ void binary_destroy(doremir_ptr_t a)
     doremir_processor_binary_destroy(a);
 }
 
-// TODO make copyable?
 doremir_ptr_t binary_impl(doremir_id_t interface)
 {
     static doremir_string_show_t binary_show_impl = { binary_show };

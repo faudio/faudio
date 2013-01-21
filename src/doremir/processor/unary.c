@@ -80,11 +80,8 @@ void unary_process(doremir_ptr_t proc,
                    doremir_processor_info_t *info,
                    doremir_processor_samples_t samples)
 {
-    this_proc_t proc2  = (this_proc_t) proc;
-
-    // TODO dispatch
-    // TODO how to handle frame/vector types?
-    unary_proc_uint8_t_uint8_t(1, proc2, samples, samples);
+    // unary_proc_uint8_t_uint8_t(1, proc2, samples, samples);
+    // TODO
 }
 
 doremir_type_t unary_input_type(doremir_ptr_t a)
@@ -116,7 +113,6 @@ void unary_destroy(doremir_ptr_t a)
     doremir_processor_unary_destroy(a);
 }
 
-// TODO make copyable?
 doremir_ptr_t unary_impl(doremir_id_t interface)
 {
     static doremir_string_show_t unary_show_impl = { unary_show };

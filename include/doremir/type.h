@@ -32,6 +32,8 @@ bool doremir_type_is_simple(doremir_type_t);
 bool doremir_type_is_pair(doremir_type_t);
 bool doremir_type_is_vector(doremir_type_t);
 bool doremir_type_is_frame(doremir_type_t);
+doremir_type_t doremir_type_get_pair_fst(doremir_type_t);
+doremir_type_t doremir_type_get_pair_snd(doremir_type_t);
 size_t doremir_type_size_of(doremir_type_frames_t, doremir_type_t);
 size_t doremir_type_align_of(doremir_type_t);
 

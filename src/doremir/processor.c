@@ -15,6 +15,19 @@
 #include <doremir/processor/delay.h>
 #include <doremir/util.h>
 
+doremir_type_t doremir_processor_input_type(doremir_processor_t a)
+{
+    return ((doremir_processor_interface_t*) 
+        doremir_interface(doremir_processor_interface_i, a))->input_type(a);
+}
+
+doremir_type_t doremir_processor_output_type(doremir_processor_t a)
+{
+    return ((doremir_processor_interface_t*) 
+        doremir_interface(doremir_processor_interface_i, a))->output_type(a);
+}
+
+
 /** Lift a unary function to a processor.
 
     @param input_type       Input type.

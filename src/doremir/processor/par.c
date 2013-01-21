@@ -5,20 +5,35 @@
 
 struct _doremir_processor_par_proc_t
 {
-    impl_t              impl;       // Dispatcher
-    processor_t         elem[2];
+    impl_t              impl;           // Dispatcher
+    processor_t         elem[2];        // Elements
 };
 
 typedef doremir_processor_par_proc_t this_proc_t;
 
 doremir_ptr_t par_impl(doremir_id_t interface);
 
+inline static bool check_type(string_t* msg, this_proc_t proc)
+{       
+    // Nothing to check
+    return true;
+}
+
 this_proc_t doremir_processor_par_create(processor_t proc1, processor_t proc2)
 {
     this_proc_t proc  = doremir_new(processor_par_proc);
     proc->elem[0] = proc1;
     proc->elem[1] = proc2;
-    return proc;
+
+    if (check_type(NULL, proc))
+    {
+        return proc;
+    }
+    else
+    {   
+        assert(false && "Type error");     
+        // TODO
+    }
 }
 
 void
@@ -45,21 +60,24 @@ void par_after(doremir_ptr_t a, doremir_processor_info_t *info)
 
 void par_process(doremir_ptr_t proc, doremir_processor_info_t *info, doremir_processor_samples_t samples)
 {
-    // this_proc_t proc2 = (this_proc_t) proc;
     // TODO
     assert(false && "Missing");
 }
 
 doremir_type_t par_input_type(doremir_ptr_t a)
 {
-    // TODO
-    assert(false && "Missing");
+    this_proc_t proc = (this_proc_t) a;
+    type_t t0 = doremir_processor_input_type(proc->elem[0]);
+    type_t t1 = doremir_processor_input_type(proc->elem[1]);
+    return doremir_type_pair(t0,t1);
 }
 
 doremir_type_t par_output_type(doremir_ptr_t a)
 {
-    // TODO
-    assert(false && "Missing");
+    this_proc_t proc = (this_proc_t) a;
+    type_t t0 = doremir_processor_output_type(proc->elem[0]);
+    type_t t1 = doremir_processor_output_type(proc->elem[1]);
+    return doremir_type_pair(t0,t1);
 }
 
 // --------------------------------------------------------------------------------
@@ -79,7 +97,6 @@ void par_destroy(doremir_ptr_t a)
     doremir_processor_par_destroy(a);
 }
 
-// TODO make copyable?
 doremir_ptr_t par_impl(doremir_id_t interface)
 {
     static doremir_string_show_t par_show_impl = { par_show };

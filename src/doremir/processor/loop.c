@@ -6,20 +6,38 @@
 struct _doremir_processor_loop_proc_t
 {
     impl_t              impl;       // Dispatcher
-    // doremir_type_t      type;       // Type of recursive binding
-    processor_t         elem;
+    processor_t         elem;       // Element
 };
 
 typedef doremir_processor_loop_proc_t this_proc_t;
 
 doremir_ptr_t loop_impl(doremir_id_t interface);
 
+inline static bool check_type(string_t* msg, this_proc_t proc)
+{   
+    if (msg)
+    {        
+        *msg = string("Both input and output must be pair types");
+    }
+    return doremir_type_is_pair(doremir_processor_input_type(proc->elem))
+        && doremir_type_is_pair(doremir_processor_output_type(proc->elem));
+}
+
 this_proc_t doremir_processor_loop_create(processor_t proc1)
 {
     this_proc_t proc  = doremir_new(processor_loop_proc);
     // proc->type = type;
     proc->elem = proc1;
-    return proc;
+
+    if (check_type(NULL, proc))
+    {
+        return proc;
+    }
+    else
+    {   
+        assert(false && "Type error");     
+        // TODO
+    }
 }
 
 void
@@ -46,21 +64,20 @@ void loop_after(doremir_ptr_t a, doremir_processor_info_t *info)
 
 void loop_process(doremir_ptr_t proc, doremir_processor_info_t *info, doremir_processor_samples_t samples)
 {
-    // this_proc_t proc2 = (this_proc_t) proc;
     // TODO
     assert(false && "Missing");
 }
 
 doremir_type_t loop_input_type(doremir_ptr_t a)
 {
-    // TODO
-    assert(false && "Missing");
+    this_proc_t proc = (this_proc_t) a;
+    return doremir_type_get_pair_fst(doremir_processor_input_type(proc->elem));
 }
 
 doremir_type_t loop_output_type(doremir_ptr_t a)
 {
-    // TODO
-    assert(false && "Missing");
+    this_proc_t proc = (this_proc_t) a;
+    return doremir_type_get_pair_fst(doremir_processor_output_type(proc->elem));
 }
 
 // --------------------------------------------------------------------------------
@@ -80,7 +97,6 @@ void loop_destroy(doremir_ptr_t a)
     doremir_processor_loop_destroy(a);
 }
 
-// TODO make copyable?
 doremir_ptr_t loop_impl(doremir_id_t interface)
 {
     static doremir_string_show_t loop_show_impl = { loop_show };

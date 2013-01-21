@@ -57,7 +57,8 @@ doremir_type_t new_type(int tag)
 }            
 
 void delete_type(doremir_type_t type)
-{
+{   
+    // TODO manage components
     doremir_delete(type);
 }
 
@@ -186,6 +187,16 @@ bool doremir_type_is_vector(doremir_type_t type)
 bool doremir_type_is_frame(doremir_type_t type)
 {
     return type->tag == frame_type;
+}
+
+doremir_type_t doremir_type_get_pair_fst(doremir_type_t t)
+{
+    return pair_get(t, fst);
+}
+
+doremir_type_t doremir_type_get_pair_snd(doremir_type_t t)
+{
+    return pair_get(t, snd);
 }
 
 // --------------------------------------------------------------------------------
