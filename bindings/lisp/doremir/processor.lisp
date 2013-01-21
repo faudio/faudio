@@ -1,6 +1,6 @@
 (in-package :doremir)
 (defctype processor-info (:pointer :void))
-(defctype processor-samples buffer)
+(defctype processor-samples ptr)
 (defctype processor-interface (:pointer :void))
 (define-foreign-type processor-type () () (:actual-type :pointer))
 (define-parse-method processor () (make-instance 'processor-type))
