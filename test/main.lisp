@@ -209,8 +209,8 @@
 
 
 ; Time
-; TODO macro like (time 2 :hours 3 :minutes)
-(setf x (time-create 0 0 4 (rational 33.5)))
+; TODO macro like (make-time 2 :hours 3 :minutes)
+(setf x (time-create 0 0 4 (rational 33.5))) ; days hours minutes seconds divs
 (setf y (time-copy x))
 (setf x (from-pointer 'time (add x y)))
 (time-days x)
@@ -222,6 +222,7 @@
 (equal x y)
 (destroy x)
 
+; Types
 (setf x (make-type :i8))
 (setf x (make-type :i16))
 (setf x (make-type :i32))
@@ -236,7 +237,6 @@
 (setf x (make-type '((:f32 . :f32) . (:f32 . :f32))))
 (setf x (make-type '(:f32 :f32 :f32 . :f32)))
 (setf x (make-type '(:vector (:pair :i8 :i32) 24)))
-
 ; (setf x (type-simple 0))
 ; (setf x (type-simple 1))
 ; (setf x (type-simple 2))
@@ -259,29 +259,27 @@
 ; Scheduler
 
 ; Processor
-(setf i (type-simple 0)) ; i8
-(setf o (type-simple 0)) ; i8
 (defcallback add-i8 :char ((c ptr) (x :char))
   (+ x 1))
-(setf f (callback add-i8))
-
+(defcallback add-f32 :float ((c ptr) (x :float))
+  (+ x 1))
+(setf x (processor-unary (make-type :i8) (make-type :i8) (callback add-i8) nil))
+(setf x (processor-unary (make-type :f32) (make-type :f32) (callback add-f32) nil))
 (setf y x)
 
+; (setf x (processor-identity i))
+; (setf x (processor-constant i o v))
 (setf x (processor-seq x y))
 (setf x (processor-par x y))
 (setf x (processor-loop x))
-
-(setf x (processor-identity i))
-(setf x (processor-constant i o v))
-(setf x (processor-unary i o f nil))
-(setf x (processor-delay i 44100))
-
 (setf x (processor-split i))
-(setf x (processor-binary i1 i2 o f nil))
-; (setf x (processor-ternary i1 i2 i3 o f nil))
+; (setf x (processor-binary i1 i2 o f nil))
 
-; (setf x (processor-fold))
-; (setf x (processor-unfold))
+; (setf x (processor-delay i 44100))
+
+
+
+
 (setf x (processor-add i))
 (setf x (processor-subtract i))
 (setf x (processor-multiply i))

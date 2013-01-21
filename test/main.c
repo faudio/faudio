@@ -908,19 +908,47 @@ void test_map()
     }   
 }
 
-void test_priority_queue()
+void test_priority_queue(int iter)
 {
     test_section();
 
     priority_queue_t q = doremir_priority_queue_empty();
     srand(time(NULL));
 
-    for (int i = 0; i < 1000; ++i)
+    for (int i = 0; i < iter; ++i)
         doremir_priority_queue_insert(doremir_add(hours(rand() % 24), seconds(rand() % 3600)), q);
 
     while(doremir_priority_queue_peek(q))
         doremir_dprint("     -> %s \n", doremir_priority_queue_pop(q));
     
+}
+
+ptr_t add1234(ptr_t c, ptr_t x) { return i8(ti8(x) + 1234); }
+void test_processors()
+{
+    {
+        processor_t p, q, r;
+        p = doremir_processor_unary(type(uint8), type(uint8), add1234, NULL);
+        doremir_print ("p                            ==> %s\n", p);
+        doremir_print ("q                            ==> %s\n", p);
+        doremir_print("seq(p,q)                     ==> %s\n", doremir_processor_seq(p, p));
+    }                                                                                       
+    
+    {
+        processor_t p, q, r;
+        p = doremir_processor_unary(type(uint8), type(uint8), add1234, NULL);
+        doremir_print ("p                            ==> %s\n", p);
+        doremir_print ("q                            ==> %s\n", p);
+        doremir_print("par(p,q)                     ==> %s\n", doremir_processor_par(p, p));
+    }                                                                               
+    
+    {
+        processor_t p, q, r;
+        p = doremir_processor_unary(type(uint8), type(uint8), add1234, NULL);
+        q = doremir_processor_par(p, p);
+        doremir_print ("p                            ==> %s\n", p);
+        doremir_print("loop(p,q)                     ==> %s\n", doremir_processor_loop(q));        
+    }
 }
 
 int main (int argc, char const *argv[])
@@ -969,10 +997,10 @@ int main (int argc, char const *argv[])
       // error
       // json
 
-      // processors
+      test_processors();
 
       // dispatchers
-      test_priority_queue();
+      test_priority_queue(10);
       // schedulers
 
       doremir_audio_engine_terminate();
