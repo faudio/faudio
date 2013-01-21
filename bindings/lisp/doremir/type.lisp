@@ -16,5 +16,8 @@
 (defcfun (type-is-pair "doremir_type_is_pair") :boolean (a type))
 (defcfun (type-is-vector "doremir_type_is_vector") :boolean (a type))
 (defcfun (type-is-frame "doremir_type_is_frame") :boolean (a type))
+(defcfun (type-get-pair-fst "doremir_type_get_pair_fst") type (a type))
+(defcfun (type-get-pair-snd "doremir_type_get_pair_snd") type (a type))
 (defcfun (type-size-of "doremir_type_size_of") :int32 (a type-frames) (b type))
+(defcfun (type-offset-of "doremir_type_offset_of") :int32 (a type-frames) (b type))
 (defcfun (type-align-of "doremir_type_align_of") :int32 (a type))

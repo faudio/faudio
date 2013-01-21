@@ -235,7 +235,7 @@
 (setf x (make-type :f64))
 (setf x (make-type :ptr))
 (setf x (make-type '(:f32 . :f32)))
-(setf x (make-type '(:pair :f32 :f32)))
+(setf x (make-type '(:pair :i8 :i32)))
 (setf x (make-type '(:frame :f32)))
 (setf x (make-type (make-type '(:vector :f32 1024))))
 (setf x (make-type '((:f32 . :f32) . (:f32 . :f32))))
@@ -257,6 +257,7 @@
 (type-is-vector x)
 (type-is-frame x)
 (type-size-of 256 x)
+(type-offset-of 256 x)
 (type-align-of x)
 
 
