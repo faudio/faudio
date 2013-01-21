@@ -28,6 +28,7 @@ inline static bool check_type(string_t* msg, this_proc_t proc)
 this_proc_t doremir_processor_seq_create(processor_t proc1, processor_t proc2)
 {
     this_proc_t proc  = doremir_new(processor_seq_proc);
+    proc->impl = &seq_impl;
     proc->elem[0] = proc1;
     proc->elem[1] = proc2;
     

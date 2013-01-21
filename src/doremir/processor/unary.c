@@ -24,10 +24,13 @@ doremir_processor_unary_create(doremir_type_t  type1,
 {
     this_proc_t proc  = doremir_new(processor_unary_proc);
     proc->impl        = &unary_impl;
+    
     proc->input_type  = type1;
     proc->output_type = type2;
+    
     proc->function    = function;
     proc->data        = data;
+    
     return proc;
 }
 

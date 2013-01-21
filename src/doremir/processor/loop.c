@@ -26,7 +26,8 @@ inline static bool check_type(string_t* msg, this_proc_t proc)
 this_proc_t doremir_processor_loop_create(processor_t proc1)
 {
     this_proc_t proc  = doremir_new(processor_loop_proc);
-    // proc->type = type;
+    proc->impl = &loop_impl;
+
     proc->elem = proc1;
 
     if (check_type(NULL, proc))
