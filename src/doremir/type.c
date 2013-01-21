@@ -329,6 +329,25 @@ size_t size(doremir_type_frames_t frames, doremir_type_t type)
     }                  
 }
 
+// TODO above assignment should use this
+inline static
+size_t offset(doremir_type_frames_t frames, doremir_type_t type)
+{    
+    switch(type->tag)
+    {
+    case pair_type:
+        return next_aligned(size(frames, pair_get(type, fst)), align(pair_get(type, snd)));
+    case simple_type:
+    case vector_type:
+    case frame_type:
+        return 0;
+    default:
+        assert(false && "Missing label");
+    }                  
+}
+
+
+
 
 /**
     Return the size of the represented type.
@@ -344,6 +363,14 @@ size_t doremir_type_size_of(doremir_type_frames_t frames, doremir_type_t type)
 size_t doremir_type_align_of(doremir_type_t type)
 {
     return align(type);
+}
+
+/**
+    Return the offset of the second element in the represented type, or 0.
+ */
+size_t doremir_type_offset_of(doremir_type_frames_t frames, doremir_type_t type)
+{
+    return offset(frames, type);
 }
 
 

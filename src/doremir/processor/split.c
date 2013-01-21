@@ -6,10 +6,12 @@
 struct _doremir_processor_split_proc_t
 {
     impl_t              impl;       // Dispatcher
-    type_t              type;       // Type of input
+    type_t              input_type;       // Type of input
 };
 
-typedef doremir_processor_split_proc_t this_proc_t;
+typedef doremir_processor_split_proc_t      this_proc_t;
+typedef doremir_processor_samples_t         samples_t;
+typedef doremir_processor_info_t            info_t;
 
 doremir_ptr_t split_impl(doremir_id_t interface);
 
@@ -24,7 +26,7 @@ this_proc_t doremir_processor_split_create(doremir_type_t type)
     this_proc_t proc  = doremir_new(processor_split_proc);
     proc->impl = &split_impl;
     
-    proc->type = type;
+    proc->input_type = type;
 
     if (check_type(NULL, proc))
     {
@@ -45,34 +47,35 @@ doremir_processor_split_destroy(this_proc_t proc)
 
 // --------------------------------------------------------------------------------
 
-void split_before(doremir_ptr_t a, doremir_processor_info_t *info)
+void split_before(doremir_ptr_t a, info_t *info)
 {
-    // TODO
-    assert(false && "Missing");
+    // nothing
 }
 
-void split_after(doremir_ptr_t a, doremir_processor_info_t *info)
+void split_after(doremir_ptr_t a, info_t *info)
 {
-    // TODO
-    assert(false && "Missing");
+    // nothing
 }
 
-void split_process(doremir_ptr_t proc, doremir_processor_info_t *info, doremir_processor_samples_t samples)
+void split_process(ptr_t a, info_t *info, samples_t input, samples_t output)
 {
-    // TODO
-    assert(false && "Missing");
+    this_proc_t proc = (this_proc_t) a;
+    size_t size = doremir_type_size_of(info->frame_size, proc->input_type);
+
+    memcpy(output, input, size);
+    memcpy(output + size, input, size);
 }
 
 doremir_type_t split_input_type(doremir_ptr_t a)
 {
     this_proc_t proc = (this_proc_t) a;
-    return doremir_type_copy(proc->type);
+    return doremir_type_copy(proc->input_type);
 }
 
 doremir_type_t split_output_type(doremir_ptr_t a)
 {
     this_proc_t proc = (this_proc_t) a;
-    return doremir_type_pair(proc->type, proc->type);
+    return doremir_type_pair(proc->input_type, proc->input_type);
 }
 
 // --------------------------------------------------------------------------------

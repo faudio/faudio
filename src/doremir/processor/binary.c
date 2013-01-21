@@ -8,11 +8,13 @@ struct _doremir_processor_binary_proc_t
     impl_t          impl;                           // Dispatcher
     type_t          input_type[2], output_type;     // Types
 
-    binary_t        function;                       // Wrapped func
+    binary_t        function;                       // Lifted function and closure
     ptr_t           data;
 };
 
-typedef doremir_processor_binary_proc_t this_proc_t;
+typedef doremir_processor_binary_proc_t     this_proc_t;
+typedef doremir_processor_samples_t         samples_t;
+typedef doremir_processor_info_t            info_t;
 
 doremir_ptr_t binary_impl(doremir_id_t interface);
 
@@ -29,8 +31,10 @@ doremir_processor_binary_create(doremir_type_t   type1,
     proc->input_type[0]     = type1;
     proc->input_type[1]     = type1;
     proc->output_type       = type2;
+    
     proc->function          = function;
     proc->data              = data;
+    
     return proc;
 }
 
@@ -44,42 +48,17 @@ doremir_processor_binary_destroy(doremir_processor_binary_proc_t proc)
 
 // --------------------------------------------------------------------------------
 
-void binary_before(doremir_ptr_t a, doremir_processor_info_t *info)
+void binary_before(doremir_ptr_t a, info_t *info)
 {
     // nothing
 }
 
-void binary_after(doremir_ptr_t a, doremir_processor_info_t *info)
+void binary_after(doremir_ptr_t a, info_t *info)
 {
     // nothing
 }
 
-/*
-#define BINARY_PROCESSOR(A,B) \
-    static inline \
-    void binary_proc_##A##_##B \
-    (int count, this_proc_t proc, buffer_t input, buffer_t output) \
-    { \
-        typedef A input_t; \
-        typedef B output_t; \
-        typedef output_t(func_t)(ptr_t, input_t); \
-        \
-        input_t*  raw_input     = (input_t*)  doremir_buffer_unsafe_address(input); \
-        output_t* raw_output    = (output_t*) doremir_buffer_unsafe_address(output); \
-        func_t*   raw_proc      = (func_t*)   proc->function; \
-        \
-        for(int i = 0; i < count; ++i) \
-            raw_output[i] = raw_proc(proc->data, raw_input[i]); \
-    }
-
-BINARY_PROCESSOR(uint8_t, uint8_t);
-BINARY_PROCESSOR(float,   float);
-BINARY_PROCESSOR(double,  double);
-*/
-
-void binary_process(doremir_ptr_t proc,
-                    doremir_processor_info_t *info,
-                    doremir_processor_samples_t samples)
+void binary_process(ptr_t a, info_t *info, samples_t input, samples_t output)
 {
     // TODO
 }

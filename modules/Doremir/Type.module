@@ -89,6 +89,7 @@ module Doremir.Type
     // getVectorSize   : Type -> Pair;
     // getFrameBase    : Type -> Type;
  
-    sizeOf : (Frames, Type) -> Size;
-    alignOf : Type -> Size;
+    sizeOf   : (Frames, Type) -> Size;
+    offsetOf : (Frames, Type) -> Size;
+    alignOf  : Type -> Size;
 }

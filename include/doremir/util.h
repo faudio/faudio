@@ -28,6 +28,8 @@
 #define thread_t            doremir_thread_t
 #define mutex_t             doremir_thread_mutex_t
 #define processor_t         doremir_processor_t
+#define proc_t              doremir_processor_t
+#define proc_interface_t    doremir_processor_interface_t
 #define dispatcher_t        doremir_message_dispatcher_t
 #define time_t              doremir_time_t
 #define type_t              doremir_type_t

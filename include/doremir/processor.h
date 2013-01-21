@@ -16,7 +16,7 @@
 
 typedef struct {
             double sample_rate;
-            size_t num_samples;
+            size_t frame_size;
             size_t sample_time;
             doremir_time_t total_time;
             doremir_message_dispatcher_t dispatcher;
@@ -26,10 +26,12 @@ typedef struct {
             void (* before)(doremir_ptr_t, doremir_processor_info_t *);
             void (* process)(doremir_ptr_t,
                              doremir_processor_info_t *,
+                             doremir_processor_samples_t,
                              doremir_processor_samples_t);
             void (* after)(doremir_ptr_t, doremir_processor_info_t *);
             doremir_type_t (* input_type)(doremir_ptr_t);
             doremir_type_t (* output_type)(doremir_ptr_t);
+            doremir_type_t (* buffer_type)(doremir_ptr_t);
         } doremir_processor_interface_t;
 typedef struct _doremir_processor_t * doremir_processor_t;
 doremir_type_t doremir_processor_input_type(doremir_processor_t);
@@ -55,8 +57,6 @@ doremir_processor_t doremir_processor_binary(doremir_type_t,
                                              doremir_ptr_t);
 doremir_processor_t doremir_processor_delay(doremir_type_t,
                                             size_t);
-doremir_processor_t doremir_processor_fold_vec(doremir_processor_t);
-doremir_processor_t doremir_processor_unfold_vec(doremir_processor_t);
 doremir_processor_t doremir_processor_add(doremir_type_t);
 doremir_processor_t doremir_processor_subtract(doremir_type_t);
 doremir_processor_t doremir_processor_multiply(doremir_type_t);

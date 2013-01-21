@@ -33,7 +33,7 @@ module Doremir.Processor
       */
     type Info = struct {
         sampleRate  : Double,
-        numSamples  : Size,
+        frameSize   : Size,
         sampleTime  : Size,
         totalTime   : Time,
         dispatcher  : Dispatcher
@@ -50,10 +50,12 @@ module Doremir.Processor
         Processing interface. */
     type Interface = struct {
         before  : ((Ptr, Info*) -> Void)*,
-        process : ((Ptr, Info*, Samples) -> Void)*,
+        process : ((Ptr, Info*, Samples, Samples) -> Void)*,
         after   : ((Ptr, Info*) -> Void)*,
+        
         inputType   : (Ptr -> Type)*,
-        outputType  : (Ptr -> Type)*
+        outputType  : (Ptr -> Type)*,
+        bufferType  : (Ptr -> Type)*
     };
     
     /** @typedef doremir_processor_t
@@ -90,8 +92,8 @@ module Doremir.Processor
     // ------------------------------------------------------------------------
     // Vector ops
 
-    foldVec     : Processor -> Processor;                     // ((a,a) ~> b) -> [a x n] ~> b
-    unfoldVec   : Processor -> Processor;                     // (a ~> (b,b)) -> a       ~> [b x n]
+    // foldVec     : Processor -> Processor;                     // ((a,a) ~> b) -> [a x n] ~> b
+    // unfoldVec   : Processor -> Processor;                     // (a ~> (b,b)) -> a       ~> [b x n]
 
     // ------------------------------------------------------------------------
     // Math primitives

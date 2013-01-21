@@ -6,10 +6,14 @@
 struct _doremir_processor_loop_proc_t
 {
     impl_t              impl;       // Dispatcher
-    processor_t         elem;       // Element
+
+    processor_t         elem;
+    proc_interface_t*   elemImpl;   // Fast pointer to the elements' processor implementation
 };
 
-typedef doremir_processor_loop_proc_t this_proc_t;
+typedef doremir_processor_loop_proc_t       this_proc_t;
+typedef doremir_processor_samples_t         samples_t;
+typedef doremir_processor_info_t            info_t;
 
 doremir_ptr_t loop_impl(doremir_id_t interface);
 
@@ -28,7 +32,8 @@ this_proc_t doremir_processor_loop_create(processor_t proc1)
     this_proc_t proc  = doremir_new(processor_loop_proc);
     proc->impl = &loop_impl;
 
-    proc->elem = proc1;
+    proc->elem      = proc1;
+    proc->elemImpl  = doremir_interface(doremir_processor_interface_i, proc->elem);
 
     if (check_type(NULL, proc))
     {
@@ -51,19 +56,19 @@ doremir_processor_loop_destroy(this_proc_t proc)
 
 // --------------------------------------------------------------------------------
 
-void loop_before(doremir_ptr_t a, doremir_processor_info_t *info)
+void loop_before(doremir_ptr_t a, info_t *info)
 {
     // TODO
     assert(false && "Missing");
 }
 
-void loop_after(doremir_ptr_t a, doremir_processor_info_t *info)
+void loop_after(doremir_ptr_t a, info_t *info)
 {
     // TODO
     assert(false && "Missing");
 }
 
-void loop_process(doremir_ptr_t proc, doremir_processor_info_t *info, doremir_processor_samples_t samples)
+void loop_process(ptr_t a, info_t *info, samples_t input, samples_t output)
 {
     // TODO
     assert(false && "Missing");

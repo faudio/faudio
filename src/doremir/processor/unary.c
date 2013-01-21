@@ -8,11 +8,13 @@ struct _doremir_processor_unary_proc_t
     impl_t          impl;                       // Dispatcher
     type_t          input_type, output_type;    // Types
     
-    unary_t         function;                   // Wrapped func
+    unary_t         function;                   // Lifted function and closure
     ptr_t           data;
 };
 
-typedef doremir_processor_unary_proc_t this_proc_t;
+typedef doremir_processor_unary_proc_t      this_proc_t;
+typedef doremir_processor_samples_t         samples_t;
+typedef doremir_processor_info_t            info_t;
 
 doremir_ptr_t unary_impl(doremir_id_t interface);
 
@@ -44,12 +46,12 @@ doremir_processor_unary_destroy(this_proc_t proc)
 
 // --------------------------------------------------------------------------------
 
-void unary_before(doremir_ptr_t a, doremir_processor_info_t *info)
+void unary_before(doremir_ptr_t a, info_t *info)
 {
     // nothing
 }
 
-void unary_after(doremir_ptr_t a, doremir_processor_info_t *info)
+void unary_after(doremir_ptr_t a, info_t *info)
 {
     // nothing
 }
@@ -79,9 +81,7 @@ UNARY_PROCESSOR(float,    float);
 UNARY_PROCESSOR(double,   double);
 UNARY_PROCESSOR(ptr_t,    ptr_t);
 
-void unary_process(doremir_ptr_t proc,
-                   doremir_processor_info_t *info,
-                   doremir_processor_samples_t samples)
+void unary_process(ptr_t a, info_t *info, samples_t input, samples_t output)
 {
     // unary_proc_uint8_t_uint8_t(1, proc2, samples, samples);
     // TODO

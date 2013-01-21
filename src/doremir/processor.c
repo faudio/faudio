@@ -15,12 +15,16 @@
 #include <doremir/processor/delay.h>
 #include <doremir/util.h>
 
+/** Return the input type of the given processor.
+ */
 doremir_type_t doremir_processor_input_type(doremir_processor_t a)
 {
     return ((doremir_processor_interface_t*) 
         doremir_interface(doremir_processor_interface_i, a))->input_type(a);
 }
 
+/** Return the output type of the given processor.
+ */
 doremir_type_t doremir_processor_output_type(doremir_processor_t a)
 {
     return ((doremir_processor_interface_t*) 
@@ -141,7 +145,7 @@ doremir_processor_t doremir_processor_seq(doremir_processor_t proc1,
     
         p : `a ~> b`        q : `c ~> d`
         --------------------------------
-            p || q : `(a,b) ~> (c,d)`.
+            p || q : `(a,c) ~> (b,d)`.
 
     @param proc 
         Left processor in hub.
@@ -175,25 +179,13 @@ doremir_processor_t doremir_processor_loop(doremir_processor_t proc)
     return (processor_t) doremir_processor_loop_create(proc);
 }
 
-/*
-#define WRAP_UNARY(F,P) \
-    doremir_processor_t doremir_processor_##F(doremir_type_t input_type, doremir_type_t output_type) \
-    {                                                                  \
-        return doremir_processor_unary(input_type, output_type, (doremir_unary_t) F);     \
-    }
 
-WRAP_UNARY(cos);
-WRAP_UNARY(sin);
-WRAP_UNARY(tan);
-WRAP_UNARY(acos);
-WRAP_UNARY(asin);
-WRAP_UNARY(atan);*/
-
-
+uint8_t prim_add_i8_i8   (ptr_t c, uint8_t a, uint8_t b) { return a + b; };
+float   prim_add_f32_f32 (ptr_t c, float a, float b)     { return a + b; };
 
 doremir_processor_t doremir_processor_add(doremir_type_t type)
 {
-    assert(false && "Not implemented");
+    return doremir_processor_unary(type(uint8), type(uint8), prim_add_i8_i8, NULL);
 }
 
 doremir_processor_t doremir_processor_subtract(doremir_type_t type)
