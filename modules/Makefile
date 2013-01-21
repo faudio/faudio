@@ -25,6 +25,8 @@ c:
 	modulo -Mmodules --language=c    <modules/Doremir/Midi.module    		>include/doremir/midi.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Time.module    		>include/doremir/time.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor.module  		>include/doremir/processor.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/Processor/Id.module  		>include/doremir/processor/id.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/Processor/Const.module  	>include/doremir/processor/const.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Unary.module  	>include/doremir/processor/unary.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Binary.module 	>include/doremir/processor/binary.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Split.module  	>include/doremir/processor/split.h && \

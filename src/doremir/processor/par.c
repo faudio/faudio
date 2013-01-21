@@ -9,6 +9,8 @@ struct _doremir_processor_par_proc_t
 
     proc_t              elem[2];        // Elements
     proc_interface_t   *elemImpl[2];    // Fast pointer to the elements' processor implementation
+
+    size_t inOffset, outOffset;
 };
 
 typedef doremir_processor_par_proc_t        this_proc_t;
@@ -31,6 +33,7 @@ this_proc_t doremir_processor_par_create(processor_t proc1, processor_t proc2)
 
     proc->elem[0]       = proc1;
     proc->elem[1]       = proc2;
+    
     proc->elemImpl[0]   = doremir_interface(doremir_processor_interface_i, proc->elem[0]);
     proc->elemImpl[1]   = doremir_interface(doremir_processor_interface_i, proc->elem[1]);
 
@@ -54,36 +57,6 @@ void doremir_processor_par_destroy(this_proc_t proc)
 
 // --------------------------------------------------------------------------------
 
-void par_before(doremir_ptr_t a, info_t *info)
-{
-    this_proc_t proc = (this_proc_t) a;
-
-    // Run subprocessors
-    proc->elemImpl[0]->before(proc->elem[0], info);
-    proc->elemImpl[1]->before(proc->elem[1], info);
-
-    // No allocation
-}
-
-void par_after(doremir_ptr_t a, info_t *info)
-{
-    this_proc_t proc = (this_proc_t) a;
-    proc->elemImpl[0]->after(proc->elem[0], info);
-    proc->elemImpl[1]->after(proc->elem[1], info);
-}
-
-void par_process(ptr_t a, info_t *info, samples_t input, samples_t output)
-{
-    size_t inOffset, outOffset;
-    void *in1, *in2, *out1, *out2;
-    this_proc_t proc;
-
-    proc = (this_proc_t) a;
-
-    proc->elemImpl[0]->process(proc->elem[0], info, in1, out1);
-    proc->elemImpl[1]->process(proc->elem[1], info, in2, out2);
-}
-
 doremir_type_t par_input_type(doremir_ptr_t a)
 {
     this_proc_t proc = (this_proc_t) a;
@@ -98,6 +71,36 @@ doremir_type_t par_output_type(doremir_ptr_t a)
     type_t t0 = doremir_processor_output_type(proc->elem[0]);
     type_t t1 = doremir_processor_output_type(proc->elem[1]);
     return doremir_type_pair(t0, t1);
+}
+
+void par_before(doremir_ptr_t a, info_t *info)
+{
+    this_proc_t proc = (this_proc_t) a;
+
+    // Run subprocessors
+    proc->elemImpl[0]->before(proc->elem[0], info);
+    proc->elemImpl[1]->before(proc->elem[1], info);
+
+    // Calculate offsets
+    proc->inOffset  = doremir_type_offset_of(info->frame_size, par_input_type(proc));
+    proc->outOffset = doremir_type_offset_of(info->frame_size, par_output_type(proc));
+}
+
+void par_after(doremir_ptr_t a, info_t *info)
+{
+    this_proc_t proc = (this_proc_t) a;
+
+    // Run subprocessors
+    proc->elemImpl[0]->after(proc->elem[0], info);
+    proc->elemImpl[1]->after(proc->elem[1], info);
+}
+
+void par_process(ptr_t a, info_t *info, samples_t input, samples_t output)
+{
+    this_proc_t proc = (this_proc_t) a;
+
+    proc->elemImpl[0]->process(proc->elem[0], info, input, output);
+    proc->elemImpl[1]->process(proc->elem[1], info, input + proc->inOffset, output + proc->outOffset);
 }
 
 // --------------------------------------------------------------------------------

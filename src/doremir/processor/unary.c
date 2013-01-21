@@ -45,6 +45,18 @@ void doremir_processor_unary_destroy(this_proc_t proc)
 
 // --------------------------------------------------------------------------------
 
+doremir_type_t unary_input_type(doremir_ptr_t a)
+{
+    this_proc_t proc = (this_proc_t) a;
+    return proc->input_type;
+}
+
+doremir_type_t unary_output_type(doremir_ptr_t a)
+{
+    this_proc_t proc = (this_proc_t) a;
+    return proc->output_type;
+}
+
 void unary_before(doremir_ptr_t a, info_t *info)
 {
     // nothing
@@ -84,18 +96,6 @@ void unary_process(ptr_t a, info_t *info, samples_t input, samples_t output)
 {
     // unary_proc_uint8_t_uint8_t(1, proc2, samples, samples);
     // TODO
-}
-
-doremir_type_t unary_input_type(doremir_ptr_t a)
-{
-    this_proc_t proc = (this_proc_t) a;
-    return proc->input_type;
-}
-
-doremir_type_t unary_output_type(doremir_ptr_t a)
-{
-    this_proc_t proc = (this_proc_t) a;
-    return proc->output_type;
 }
 
 // --------------------------------------------------------------------------------

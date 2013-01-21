@@ -8,6 +8,7 @@ struct _doremir_processor_split_proc_t
     impl_t              impl;               // Dispatcher
     
     type_t              input_type;
+    size_t              size;               // Number of bytes to copy
 };
 
 typedef doremir_processor_split_proc_t      this_proc_t;
@@ -27,7 +28,6 @@ this_proc_t doremir_processor_split_create(doremir_type_t type)
 {
     this_proc_t proc  = doremir_new(processor_split_proc);
     proc->impl = &split_impl;
-
     proc->input_type = type;
 
     if (check_type(NULL, proc))
@@ -48,25 +48,6 @@ void doremir_processor_split_destroy(this_proc_t proc)
 
 // --------------------------------------------------------------------------------
 
-void split_before(doremir_ptr_t a, info_t *info)
-{
-    // nothing
-}
-
-void split_after(doremir_ptr_t a, info_t *info)
-{
-    // nothing
-}
-
-void split_process(ptr_t a, info_t *info, samples_t input, samples_t output)
-{
-    this_proc_t proc = (this_proc_t) a;
-    size_t size = doremir_type_size_of(info->frame_size, proc->input_type);
-
-    memcpy(output, input, size);
-    memcpy(output + size, input, size);
-}
-
 doremir_type_t split_input_type(doremir_ptr_t a)
 {
     this_proc_t proc = (this_proc_t) a;
@@ -77,6 +58,26 @@ doremir_type_t split_output_type(doremir_ptr_t a)
 {
     this_proc_t proc = (this_proc_t) a;
     return doremir_type_pair(proc->input_type, proc->input_type);
+}
+
+void split_before(doremir_ptr_t a, info_t *info)
+{
+    this_proc_t proc = (this_proc_t) a;
+    proc->size = doremir_type_size_of(info->frame_size, proc->input_type);
+}
+
+void split_after(doremir_ptr_t a, info_t *info)
+{
+    // nothing
+}
+
+void split_process(ptr_t a, info_t *info, samples_t input, samples_t output)
+{
+    this_proc_t proc = (this_proc_t) a;
+    
+    size_t sz = proc->size;
+    memcpy(output, input, sz);
+    memcpy(output + sz, input, sz);
 }
 
 // --------------------------------------------------------------------------------

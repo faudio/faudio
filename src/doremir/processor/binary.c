@@ -47,6 +47,18 @@ void doremir_processor_binary_destroy(doremir_processor_binary_proc_t proc)
 
 // --------------------------------------------------------------------------------
 
+doremir_type_t binary_input_type(doremir_ptr_t a)
+{
+    this_proc_t proc = (doremir_processor_binary_proc_t) a;
+    return doremir_type_pair(proc->input_type[0], proc->input_type[1]);
+}
+
+doremir_type_t binary_output_type(doremir_ptr_t a)
+{
+    this_proc_t proc = (doremir_processor_binary_proc_t) a;
+    return proc->output_type;
+}
+
 void binary_before(doremir_ptr_t a, info_t *info)
 {
     // nothing
@@ -60,18 +72,6 @@ void binary_after(doremir_ptr_t a, info_t *info)
 void binary_process(ptr_t a, info_t *info, samples_t input, samples_t output)
 {
     // TODO
-}
-
-doremir_type_t binary_input_type(doremir_ptr_t a)
-{
-    this_proc_t proc = (doremir_processor_binary_proc_t) a;
-    return doremir_type_pair(proc->input_type[0], proc->input_type[1]);
-}
-
-doremir_type_t binary_output_type(doremir_ptr_t a)
-{
-    this_proc_t proc = (doremir_processor_binary_proc_t) a;
-    return proc->output_type;
 }
 
 // --------------------------------------------------------------------------------

@@ -6,6 +6,8 @@
  */
 
 #include <doremir/processor.h>
+#include <doremir/processor/id.h>
+#include <doremir/processor/const.h>
 #include <doremir/processor/unary.h>
 #include <doremir/processor/binary.h>
 #include <doremir/processor/split.h>
@@ -19,7 +21,7 @@
  */
 doremir_type_t doremir_processor_input_type(doremir_processor_t a)
 {
-    return ((doremir_processor_interface_t*) 
+    return ((proc_interface_t*) 
         doremir_interface(doremir_processor_interface_i, a))->input_type(a);
 }
 
@@ -27,7 +29,7 @@ doremir_type_t doremir_processor_input_type(doremir_processor_t a)
  */
 doremir_type_t doremir_processor_output_type(doremir_processor_t a)
 {
-    return ((doremir_processor_interface_t*) 
+    return ((proc_interface_t*) 
         doremir_interface(doremir_processor_interface_i, a))->output_type(a);
 }
 
@@ -75,7 +77,7 @@ doremir_processor_t doremir_processor_binary(doremir_type_t   input_type1,
  */
 doremir_processor_t doremir_processor_identity(doremir_type_t type)
 {
-    assert(false && "Not implemented");
+    return (processor_t) doremir_processor_id_create(type);
 }
 
 /** Create a constant processor.
@@ -91,7 +93,7 @@ doremir_processor_t doremir_processor_constant(doremir_type_t   input_type,
                                                doremir_type_t   output_type,
                                                doremir_ptr_t    value)
 {
-    assert(false && "Not implemented");
+    return (processor_t) doremir_processor_const_create(input_type, output_type, value);
 }
 
 /** Create a delay processor.
@@ -178,6 +180,10 @@ doremir_processor_t doremir_processor_loop(doremir_processor_t proc)
 {
     return (processor_t) doremir_processor_loop_create(proc);
 }
+
+
+
+
 
 
 uint8_t prim_add_i8_i8   (ptr_t c, uint8_t a, uint8_t b) { return a + b; };
