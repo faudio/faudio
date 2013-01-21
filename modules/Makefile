@@ -27,8 +27,8 @@ c:
 	modulo -Mmodules --language=c    <modules/Doremir/Processor.module  		>include/doremir/processor.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Unary.module  	>include/doremir/processor/unary.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Binary.module 	>include/doremir/processor/binary.h && \
-	modulo -Mmodules --language=c    <modules/Doremir/Processor/Split.module  	>include/doremir/processor/delay.h && \
-	modulo -Mmodules --language=c    <modules/Doremir/Processor/Delay.module  	>include/doremir/processor/split.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/Processor/Split.module  	>include/doremir/processor/split.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/Processor/Delay.module  	>include/doremir/processor/delay.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Loop.module		>include/doremir/processor/loop.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Seq.module 		>include/doremir/processor/seq.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Par.module 		>include/doremir/processor/par.h && \
