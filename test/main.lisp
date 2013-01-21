@@ -247,6 +247,27 @@
 ; Scheduler
 
 ; Processor
+(setf i (type-simple 0)) ; i8
+(setf o (type-simple 0)) ; i8
+(defcallback add-i8 :char ((c ptr) (x :char))
+  (+ x 1))
+(setf f (callback add-i8))
+
+(setf y x)
+
+(setf x (processor-seq x y))
+(setf x (processor-par x y))
+(setf x (processor-loop x))
+
+(setf x (processor-identity i))
+(setf x (processor-constant i o v))
+(setf x (processor-unary i o f nil))
+(setf x (processor-delay i 44100))
+
+(setf x (processor-split i))
+(setf x (processor-binary i1 i2 o f nil))
+; (setf x (processor-ternary i1 i2 i3 o f nil))
+
 
 ; Signal
 
@@ -255,6 +276,7 @@
 ; Devices
 
 ; Error
+
 
 ; Priority queue
 (setf x (priorityqueue-empty))
