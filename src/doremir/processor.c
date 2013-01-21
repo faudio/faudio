@@ -101,6 +101,7 @@ doremir_processor_t doremir_processor_delay(doremir_type_t  type,
                                             size_t          samples)
 {
     assert(false && "Not implemented");
+    // return (processor_t) doremir_processor_delay_create(type, samples);
 }
 
 /** Create a split processor.
@@ -108,7 +109,7 @@ doremir_processor_t doremir_processor_delay(doremir_type_t  type,
  */
 doremir_processor_t doremir_processor_split(doremir_type_t type)
 {
-    assert(false && "Not implemented");
+    return (processor_t) doremir_processor_split_create(type);
 }
 
 /** Create a processor by combining the given processors in sequence.

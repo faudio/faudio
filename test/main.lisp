@@ -3,9 +3,13 @@
 (progn
   (asdf:load-system :doremir))
 
+
+(defvar *foreign-lib*)
 (progn
   (push "/Users/hans/audio/build/Frameworks/" cffi:*darwin-framework-directories*)
-  (cffi:load-foreign-library '(:framework "DoReMIRAudio")))
+  (setf *foreign-lib* (cffi:load-foreign-library '(:framework "DoReMIRAudio"))))
+
+(close-foreign-library *foreign-lib*)
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -272,7 +276,7 @@
 (setf x (processor-seq x y))
 (setf x (processor-par x y))
 (setf x (processor-loop x))
-(setf x (processor-split i))
+(setf x (processor-split (make-type '(:f32 . :f32))))
 ; (setf x (processor-binary i1 i2 o f nil))
 
 ; (setf x (processor-delay i 44100))
