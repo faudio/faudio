@@ -16,7 +16,7 @@
     - `split(T)`
 
     @par Implements
-    - TODO receiver?        
+    - doremir_processor_interface_t
     - doremir_string_show_t
     - doremir_destroy_t
  */
@@ -52,8 +52,8 @@ module Doremir.Processor
         before  : ((Ptr, Info*) -> Void)*,
         process : ((Ptr, Info*, Samples) -> Void)*,
         after   : ((Ptr, Info*) -> Void)*,
-        inputType : (Ptr -> Type)*,
-        outputType : (Ptr -> Type)*
+        inputType   : (Ptr -> Type)*,
+        outputType  : (Ptr -> Type)*
     };
 
     /** @typedef doremir_processor_t 
@@ -62,30 +62,34 @@ module Doremir.Processor
     type Processor = opaque;   
     
     
-    identity : Type -> Processor;                             // a ~> a
-    constant : (Type, Type, Ptr) -> Processor;                // a ~> b
-    split    : Type -> Processor;                             // a ~> (a,a)
-    // fst, snd
-    // swap, assoc, juggle, shuffle, unshuffle (from CCA)
+    identity    : Type -> Processor;                          // a ~> a
+    constant    : (Type, Type, Ptr) -> Processor;             // a ~> b
+    split       : Type -> Processor;                          // a ~> (a,a)
+    left        : Type -> Processor;                          // (a,a) ~> a
+    right       : Type -> Processor;                          // (a,b) ~> b
+    
+    swap        : Type -> Processor;
+    assoc       : Type -> Processor;
+    unassoc     : Type -> Processor;
 
-    seq      : (Processor, Processor) -> Processor;           // (a ~> b), (b ~> c) -> (a ~> c)
-    par      : (Processor, Processor) -> Processor;           // (a ~> b), (c ~> d) -> (a,c ~> b,d)
-    loop     : Processor -> Processor;                        // (a,c ~> b,d) -> (a ~> b)
-    // first    : Processor -> Processor;                        // (a ~> b) -> (a,c ~> b,c)
-    // second   : Processor -> Processor;                        // (a ~> b) -> (c,a ~> c,b)
+    seq         : (Processor, Processor) -> Processor;        // (a ~> b), (b ~> c) -> (a ~> c)
+    par         : (Processor, Processor) -> Processor;        // (a ~> b), (c ~> d) -> (a,c ~> b,d)
+    loop        : Processor -> Processor;                     // (a,c ~> b,d) -> (a ~> b)
+    first       : Processor -> Processor;                     // (a ~> b) -> (a,c ~> b,c)
+    second      : Processor -> Processor;                     // (a ~> b) -> (c,a ~> c,b)
 
     // Folds
-    // fold     : Processor -> Processor;                        // (a,a ~> b) -> [a x n] ~> a ~> b
-    // unfold   : Processor -> Processor;                        // (a ~> b,b) -> a ~> Int ~> [a x n]
+    fold        : Processor -> Processor;                     // ((a,a) ~> b) -> [a x n] ~> b
+    unfold      : Processor -> Processor;                     // (a ~> (b,b)) -> a       ~> [b x n]
 
-    unary    : (Type, Type, Unary, Ptr) -> Processor;         // a ~> b
-    binary   : (Type, Type, Type, Binary, Ptr) -> Processor;  // (a,b) ~> c
+    unary       : (Type, Type, Unary, Ptr) -> Processor;        // a ~> b
+    binary      : (Type, Type, Type, Binary, Ptr) -> Processor; // (a,b) ~> c
 
     
     // ------------------------------------------------------------------------
     // Delay primitives    
 
-    delay    : (Type, Size) -> Processor;                     // a ~> a
+    delay       : (Type, Size) -> Processor;                  // a ~> a
     // init
     // vdelay
     // videlay
@@ -93,49 +97,49 @@ module Doremir.Processor
     // ------------------------------------------------------------------------
     // Math primitives
     
-    // add         : Type -> Processor;
-    // subtract    : Type -> Processor;
-    // multiply    : Type -> Processor;
-    // power       : Type -> Processor;
-    // divide      : Type -> Processor;
-    // modulo      : Type -> Processor;
-    // absolute    : Type -> Processor;
-    
-    // not         : Type -> Processor;
-    // and         : Type -> Processor;
-    // or          : Type -> Processor;
-    // xor         : Type -> Processor;
-    // bitNot      : Type -> Processor;
-    // bitAnd      : Type -> Processor;
-    // bitOr       : Type -> Processor;
-    // bitXor      : Type -> Processor; 
-    // shiftLeft   : Type -> Processor; 
-    // shiftRight  : Type -> Processor; 
+    add                 : Type -> Processor;
+    subtract            : Type -> Processor;
+    multiply            : Type -> Processor;
+    power               : Type -> Processor;
+    divide              : Type -> Processor;
+    modulo              : Type -> Processor;
+    absolute            : Type -> Processor;
+                        
+    not                 : Type -> Processor;
+    and                 : Type -> Processor;
+    or                  : Type -> Processor;
+    xor                 : Type -> Processor;
+    bitNot              : Type -> Processor;
+    bitAnd              : Type -> Processor;
+    bitOr               : Type -> Processor;
+    bitXor              : Type -> Processor; 
+    shiftLeft           : Type -> Processor; 
+    shiftRight          : Type -> Processor; 
 
-    // equal            : Type -> Processor; 
-    // lessThan         : Type -> Processor; 
-    // greaterThan      : Type -> Processor; 
-    // lessThanEqual    : Type -> Processor; 
-    // greaterThanEqual : Type -> Processor; 
+    equal               : Type -> Processor; 
+    lessThan            : Type -> Processor; 
+    greaterThan         : Type -> Processor; 
+    lessThanEqual       : Type -> Processor; 
+    greaterThanEqual    : Type -> Processor; 
 
-    // acos        : Type -> Processor;
-    // asin        : Type -> Processor;
-    // atan        : Type -> Processor;
-    // cos         : Type -> Processor;
-    // sin         : Type -> Processor;
-    // tan         : Type -> Processor;
-    // exp         : Type -> Processor;
-    // log         : Type -> Processor;
-    // log10       : Type -> Processor;
-    // pow         : Type -> Processor;
-    // sqrt        : Type -> Processor;
-    // abs         : Type -> Processor;
-    // min         : Type -> Processor;
-    // max         : Type -> Processor;
-    // fmod        : Type -> Processor;
-    // remainder   : Type -> Processor;
-    // floor       : Type -> Processor;
-    // ceil        : Type -> Processor;
-    // rint        : Type -> Processor;
+    acos                : Type -> Processor;
+    asin                : Type -> Processor;
+    atan                : Type -> Processor;
+    cos                 : Type -> Processor;
+    sin                 : Type -> Processor;
+    tan                 : Type -> Processor;
+    exp                 : Type -> Processor;
+    log                 : Type -> Processor;
+    log10               : Type -> Processor;
+    pow                 : Type -> Processor;
+    sqrt                : Type -> Processor;
+    abs                 : Type -> Processor;
+    min                 : Type -> Processor;
+    max                 : Type -> Processor;
+    fmod                : Type -> Processor;
+    remainder           : Type -> Processor;
+    floor               : Type -> Processor;
+    ceil                : Type -> Processor;
+    rint                : Type -> Processor;
     
 }
