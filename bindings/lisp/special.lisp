@@ -37,7 +37,7 @@
 ; ---------------------------------------------------------------------------------------------------
 
 (defun export-pair# (x)
-  (create-pair (car x) (cdr x)))
+  (pair-create (car x) (cdr x)))
 
 (defun import-pair# (x)
   (cons (pair-fst x) (pair-snd x)))
@@ -56,6 +56,29 @@
     ((list-is-empty x)  nil)
     (t                  (cons (list-head x) (import-list# (list-tail x))))))
 
+; ---------------------------------------------------------------------------------------------------
+
+(defun export-type# (x)
+  (cond
+    ((eq x :i8)        (type-simple 0))
+    ((eq x :i16)       (type-simple 1))
+    ((eq x :i32)       (type-simple 2))
+    ((eq x :i64)       (type-simple 3))
+    ((eq x :f32)       (type-simple 4))
+    ((eq x :f64)       (type-simple 5))
+    ((eq x :ptr)       (type-simple 6))
+    ((consp x)
+      (cond 
+        ((eq :frame  (car x))     (type-frame (make-type (cadr x))))
+        ((eq :vector (car x))     (type-vector (make-type (cadr x)) (caddr x)))
+        ((eq :pair   (car x))     (type-pair (make-type (cadr x)) (make-type (caddr x))))
+        (t                        (type-pair (make-type (car x)) (make-type (cdr x))))))
+    ((eq (type-of x) 'type) x)))
+
+; TODO add to translator (with inverse)
+(defun make-type (x)
+  (export-type# x))
+  
 ; ---------------------------------------------------------------------------------------------------
 
 ; Override print by String.show
