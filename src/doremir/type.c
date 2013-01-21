@@ -215,8 +215,25 @@ size_t simple_align(doremir_type_simple_t simple)
     {
     case uint8_type:
         return alignof(uint8_t);
+    
+    case uint16_type:
+        return alignof(uint16_t);
+    
+    case uint32_type:
+        return alignof(uint32_t);
+    
+    case uint64_type:
+        return alignof(uint64_t);
+    
+    case float_type:
+        return alignof(float);
+    
     case double_type:
         return alignof(double);
+    
+    case ptr_type:
+        return alignof(ptr_t);
+    
     default:
         assert(false && "Missing label");
     }
