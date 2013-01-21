@@ -5,10 +5,10 @@
 
 struct _doremir_processor_binary_proc_t
 {
-    impl_t          impl;                       // Dispatcher
-    type_t          input_type[2], output_type;    // Types
-    
-    binary_t         function;                   // Wrapped func
+    impl_t          impl;                           // Dispatcher
+    type_t          input_type[2], output_type;     // Types
+
+    binary_t        function;                       // Wrapped func
     ptr_t           data;
 };
 
@@ -23,13 +23,13 @@ doremir_processor_binary_create(doremir_type_t   type1,
                                 doremir_binary_t function,
                                 doremir_ptr_t    data)
 {
-    this_proc_t proc  = doremir_new(processor_binary_proc);
-    proc->impl        = &binary_impl;
-    proc->input_type[0]  = type1;
-    proc->input_type[1]  = type1;
-    proc->output_type = type2;
-    proc->function    = function;
-    proc->data        = data;
+    this_proc_t proc        = doremir_new(processor_binary_proc);
+    proc->impl              = &binary_impl;
+    proc->input_type[0]     = type1;
+    proc->input_type[1]     = type1;
+    proc->output_type       = type2;
+    proc->function          = function;
+    proc->data              = data;
     return proc;
 }
 
@@ -77,8 +77,8 @@ BINARY_PROCESSOR(double,  double);
 */
 
 void binary_process(doremir_ptr_t proc,
-                   doremir_processor_info_t *info,
-                   doremir_processor_samples_t samples)
+                    doremir_processor_info_t *info,
+                    doremir_processor_samples_t samples)
 {
     // this_proc_t proc2  = (this_proc_t) proc;
 
@@ -104,8 +104,11 @@ string_t binary_show(doremir_ptr_t a)
 {
     this_proc_t proc = (doremir_processor_binary_proc_t) a;
     string_t s = string("");
-    s = string_dappend(s, doremir_string_show(proc->input_type));
-    s = string_dappend(s, string(" ~> "));
+    s = string_dappend(s, string("("));
+    s = string_dappend(s, doremir_string_show(proc->input_type[0]));
+    s = string_dappend(s, string(","));
+    s = string_dappend(s, doremir_string_show(proc->input_type[1]));
+    s = string_dappend(s, string(") ~> "));
     s = string_dappend(s, doremir_string_show(proc->output_type));
     return s;
 }

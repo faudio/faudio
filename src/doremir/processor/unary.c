@@ -16,7 +16,7 @@ typedef doremir_processor_unary_proc_t this_proc_t;
 
 doremir_ptr_t unary_impl(doremir_id_t interface);
 
-doremir_processor_unary_proc_t
+this_proc_t
 doremir_processor_unary_create(doremir_type_t  type1,
                                doremir_type_t  type2,
                                doremir_unary_t function,
@@ -32,7 +32,7 @@ doremir_processor_unary_create(doremir_type_t  type1,
 }
 
 void
-doremir_processor_unary_destroy(doremir_processor_unary_proc_t proc)
+doremir_processor_unary_destroy(this_proc_t proc)
 {
     doremir_destroy(proc->input_type);
     doremir_destroy(proc->output_type);
@@ -54,23 +54,27 @@ void unary_after(doremir_ptr_t a, doremir_processor_info_t *info)
 #define UNARY_PROCESSOR(A,B) \
     static inline \
     void unary_proc_##A##_##B \
-    (int count, this_proc_t proc, buffer_t input, buffer_t output) \
+    (int count, this_proc_t proc, ptr_t input, ptr_t output) \
     { \
         typedef A input_t; \
         typedef B output_t; \
         typedef output_t(func_t)(ptr_t, input_t); \
         \
-        input_t*  raw_input     = (input_t*)  doremir_buffer_unsafe_address(input); \
-        output_t* raw_output    = (output_t*) doremir_buffer_unsafe_address(output); \
+        input_t*  raw_input     = (input_t*)  input; \
+        output_t* raw_output    = (output_t*) output; \
         func_t*   raw_proc      = (func_t*)   proc->function; \
         \
         for(int i = 0; i < count; ++i) \
             raw_output[i] = raw_proc(proc->data, raw_input[i]); \
     }
 
-UNARY_PROCESSOR(uint8_t, uint8_t);
-UNARY_PROCESSOR(float,   float);
-UNARY_PROCESSOR(double,  double);
+UNARY_PROCESSOR(uint8_t,  uint8_t);
+UNARY_PROCESSOR(uint16_t, uint16_t);
+UNARY_PROCESSOR(uint32_t, uint32_t);
+UNARY_PROCESSOR(uint64_t, uint64_t);
+UNARY_PROCESSOR(float,    float);
+UNARY_PROCESSOR(double,   double);
+UNARY_PROCESSOR(ptr_t,    ptr_t);
 
 void unary_process(doremir_ptr_t proc,
                    doremir_processor_info_t *info,
@@ -85,13 +89,13 @@ void unary_process(doremir_ptr_t proc,
 
 doremir_type_t unary_input_type(doremir_ptr_t a)
 {
-    this_proc_t proc = (doremir_processor_unary_proc_t) a;
+    this_proc_t proc = (this_proc_t) a;
     return proc->input_type;
 }
 
 doremir_type_t unary_output_type(doremir_ptr_t a)
 {
-    this_proc_t proc = (doremir_processor_unary_proc_t) a;
+    this_proc_t proc = (this_proc_t) a;
     return proc->output_type;
 }
 
@@ -99,7 +103,7 @@ doremir_type_t unary_output_type(doremir_ptr_t a)
 
 string_t unary_show(doremir_ptr_t a)
 {
-    this_proc_t proc = (doremir_processor_unary_proc_t) a;
+    this_proc_t proc = (this_proc_t) a;
     string_t s = string("");
     s = string_dappend(s, doremir_string_show(proc->input_type));
     s = string_dappend(s, string(" ~> "));

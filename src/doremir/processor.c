@@ -24,6 +24,7 @@
 // }
 
 /** Lift a unary function to a processor.
+
     @param input_type       Input type.
     @param output_type      Type of output.
     @param function         Function to be lifted.
@@ -37,7 +38,8 @@ doremir_processor_t doremir_processor_unary(doremir_type_t  input_type,
     return (doremir_processor_t) doremir_processor_unary_create(input_type, output_type, function, data);
 }
 
-/** Create a binary processor.
+/** Lift a binary function to a processor.
+
     @param input_type1      Type of first input.
     @param input_type2      Type of second input.
     @param output_type      Type of output.

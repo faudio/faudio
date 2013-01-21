@@ -21,7 +21,7 @@ typedef struct {
             doremir_time_t total_time;
             doremir_message_dispatcher_t dispatcher;
         } doremir_processor_info_t;
-typedef doremir_buffer_t doremir_processor_samples_t;
+typedef doremir_ptr_t doremir_processor_samples_t;
 typedef struct {
             void (* before)(doremir_ptr_t, doremir_processor_info_t *);
             void (* process)(doremir_ptr_t,

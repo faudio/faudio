@@ -44,7 +44,7 @@ module Doremir.Processor
     /** @typedef doremir_processor_samples_t
         The samples manipulated by a processor.
      */
-    type Samples = Buffer;
+    type Samples = Ptr;
 
     /** @interface doremir_processor_interface_t 
         Processing interface. */

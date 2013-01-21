@@ -2,7 +2,8 @@
 #ifndef _DOREMIR_PROCESSOR_LOOP
 #define _DOREMIR_PROCESSOR_LOOP
 
-
+#include <doremir.h>
+#include <doremir/processor.h>
 
 /** @defgroup Doremir Doremir
     @{
@@ -12,7 +13,7 @@
     @{
     */
 
-typedef struct _doremir_processor_loop_t * doremir_processor_loop_t;
+typedef struct _doremir_processor_loop_proc_t * doremir_processor_loop_proc_t;
 
 /** @}
     @}
