@@ -8,11 +8,11 @@ struct _doremir_processor_seq_proc_t
     impl_t              impl;           // Dispatcher
 
     proc_t              elem[2];        // Elements
-    proc_interface_t*   elemImpl[2];    // Fast pointer to the elements' processor implementation
-    
+    proc_interface_t   *elemImpl[2];    // Fast pointer to the elements' processor implementation
+
     type_t              midType;        // Buffer to transfer data between elements
     size_t              midSize;
-    void*               midBuffer;
+    void               *midBuffer;
 };
 
 typedef doremir_processor_seq_proc_t    this_proc_t;
@@ -21,46 +21,47 @@ typedef doremir_processor_info_t        info_t;
 
 doremir_ptr_t seq_impl(doremir_id_t interface);
 
-inline static bool check_type(string_t* msg, this_proc_t proc)
-{   
+inline static 
+bool check_type(string_t *msg, this_proc_t proc)
+{
     if (msg)
-    {        
-        *msg = string("Input type must equal output type");
-    }
+        {
+            *msg = string("Input type must equal output type");
+        }
+
     return doremir_equal(
-        doremir_processor_output_type(proc->elem[0]),
-        doremir_processor_input_type(proc->elem[1])
-        );
+               doremir_processor_output_type(proc->elem[0]),
+               doremir_processor_input_type(proc->elem[1])
+           );
 }
 
 this_proc_t doremir_processor_seq_create(processor_t proc1, processor_t proc2)
 {
     this_proc_t proc    = doremir_new(processor_seq_proc);
     proc->impl          = &seq_impl;
-    
+
     proc->elem[0]       = proc1;
     proc->elem[1]       = proc2;
     proc->elemImpl[0]   = doremir_interface(doremir_processor_interface_i, proc->elem[0]);
-    proc->elemImpl[1]   = doremir_interface(doremir_processor_interface_i, proc->elem[2]);
+    proc->elemImpl[1]   = doremir_interface(doremir_processor_interface_i, proc->elem[1]);
 
     proc->midType       = doremir_processor_output_type(proc->elem[0]);
-    
+
     if (check_type(NULL, proc))
-    {
-        return proc;
-    }
+        {
+            return proc;
+        }
     else
-    {   
-        assert(false && "Type error");     
-        // TODO
-    }
+        {
+            assert(false && "Type error");
+            // TODO
+        }
 }
 
-void
-doremir_processor_seq_destroy(this_proc_t proc)
+void doremir_processor_seq_destroy(this_proc_t proc)
 {
     doremir_destroy(proc->elem[0]);
-    doremir_destroy(proc->elem[0]);
+    doremir_destroy(proc->elem[1]);
     doremir_delete(proc);
 }
 
@@ -69,11 +70,11 @@ doremir_processor_seq_destroy(this_proc_t proc)
 void seq_before(doremir_ptr_t a, info_t *info)
 {
     this_proc_t proc = (this_proc_t) a;
-    
+
     // Run subprocessors
     proc->elemImpl[0]->before(proc->elem[0], info);
     proc->elemImpl[1]->before(proc->elem[1], info);
-    
+
     // Allocate mid buffer
     proc->midSize = doremir_type_size_of(info->frame_size, proc->midType);
     proc->midBuffer = malloc(proc->midSize);
@@ -85,7 +86,7 @@ void seq_after(doremir_ptr_t a, info_t *info)
     this_proc_t proc = (this_proc_t) a;
     proc->elemImpl[0]->after(proc->elem[0], info);
     proc->elemImpl[1]->after(proc->elem[1], info);
-    
+
     // Free mid buffer
     free(proc->midBuffer);
 }
@@ -115,9 +116,11 @@ string_t seq_show(doremir_ptr_t a)
 {
     this_proc_t proc = (this_proc_t) a;
     string_t s = string("");
+    
     s = string_dappend(s, doremir_string_show(seq_input_type(proc)));
     s = string_dappend(s, string(" ~> "));
     s = string_dappend(s, doremir_string_show(seq_output_type(proc)));
+    
     return s;
 }
 

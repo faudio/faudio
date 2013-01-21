@@ -5,8 +5,9 @@
 
 struct _doremir_processor_split_proc_t
 {
-    impl_t              impl;       // Dispatcher
-    type_t              input_type;       // Type of input
+    impl_t              impl;               // Dispatcher
+    
+    type_t              input_type;
 };
 
 typedef doremir_processor_split_proc_t      this_proc_t;
@@ -15,8 +16,9 @@ typedef doremir_processor_info_t            info_t;
 
 doremir_ptr_t split_impl(doremir_id_t interface);
 
-inline static bool check_type(string_t* msg, this_proc_t proc)
-{   
+inline static 
+bool check_type(string_t *msg, this_proc_t proc)
+{
     // Nothing to check
     return true;
 }
@@ -25,22 +27,21 @@ this_proc_t doremir_processor_split_create(doremir_type_t type)
 {
     this_proc_t proc  = doremir_new(processor_split_proc);
     proc->impl = &split_impl;
-    
+
     proc->input_type = type;
 
     if (check_type(NULL, proc))
-    {
-        return proc;
-    }
+        {
+            return proc;
+        }
     else
-    {   
-        assert(false && "Type error");     
-        // TODO
-    }
+        {
+            assert(false && "Type error");
+            // TODO
+        }
 }
 
-void
-doremir_processor_split_destroy(this_proc_t proc)
+void doremir_processor_split_destroy(this_proc_t proc)
 {
     doremir_delete(proc);
 }
@@ -84,9 +85,11 @@ string_t split_show(doremir_ptr_t a)
 {
     this_proc_t proc = (this_proc_t) a;
     string_t s = string("");
+    
     s = string_dappend(s, doremir_string_show(split_input_type(proc)));
     s = string_dappend(s, string(" ~> "));
     s = string_dappend(s, doremir_string_show(split_output_type(proc)));
+    
     return s;
 }
 

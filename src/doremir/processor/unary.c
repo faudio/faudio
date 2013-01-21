@@ -7,7 +7,7 @@ struct _doremir_processor_unary_proc_t
 {
     impl_t          impl;                       // Dispatcher
     type_t          input_type, output_type;    // Types
-    
+
     unary_t         function;                   // Lifted function and closure
     ptr_t           data;
 };
@@ -26,18 +26,17 @@ doremir_processor_unary_create(doremir_type_t  type1,
 {
     this_proc_t proc  = doremir_new(processor_unary_proc);
     proc->impl        = &unary_impl;
-    
+
     proc->input_type  = type1;
     proc->output_type = type2;
-    
+
     proc->function    = function;
     proc->data        = data;
-    
+
     return proc;
 }
 
-void
-doremir_processor_unary_destroy(this_proc_t proc)
+void doremir_processor_unary_destroy(this_proc_t proc)
 {
     doremir_destroy(proc->input_type);
     doremir_destroy(proc->output_type);
@@ -105,9 +104,11 @@ string_t unary_show(doremir_ptr_t a)
 {
     this_proc_t proc = (this_proc_t) a;
     string_t s = string("");
+    
     s = string_dappend(s, doremir_string_show(proc->input_type));
     s = string_dappend(s, string(" ~> "));
     s = string_dappend(s, doremir_string_show(proc->output_type));
+    
     return s;
 }
 

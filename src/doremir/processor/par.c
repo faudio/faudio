@@ -8,7 +8,7 @@ struct _doremir_processor_par_proc_t
     impl_t              impl;           // Dispatcher
 
     proc_t              elem[2];        // Elements
-    proc_interface_t*   elemImpl[2];    // Fast pointer to the elements' processor implementation
+    proc_interface_t   *elemImpl[2];    // Fast pointer to the elements' processor implementation
 };
 
 typedef doremir_processor_par_proc_t        this_proc_t;
@@ -17,8 +17,9 @@ typedef doremir_processor_info_t            info_t;
 
 doremir_ptr_t par_impl(doremir_id_t interface);
 
-inline static bool check_type(string_t* msg, this_proc_t proc)
-{       
+inline static 
+bool check_type(string_t *msg, this_proc_t proc)
+{
     // Nothing to check
     return true;
 }
@@ -27,28 +28,27 @@ this_proc_t doremir_processor_par_create(processor_t proc1, processor_t proc2)
 {
     this_proc_t proc  = doremir_new(processor_par_proc);
     proc->impl          = &par_impl;
-    
+
     proc->elem[0]       = proc1;
     proc->elem[1]       = proc2;
     proc->elemImpl[0]   = doremir_interface(doremir_processor_interface_i, proc->elem[0]);
-    proc->elemImpl[1]   = doremir_interface(doremir_processor_interface_i, proc->elem[2]);
+    proc->elemImpl[1]   = doremir_interface(doremir_processor_interface_i, proc->elem[1]);
 
     if (check_type(NULL, proc))
-    {
-        return proc;
-    }
+        {
+            return proc;
+        }
     else
-    {   
-        assert(false && "Type error");     
-        // TODO
-    }
+        {
+            assert(false && "Type error");
+            // TODO
+        }
 }
 
-void
-doremir_processor_par_destroy(this_proc_t proc)
+void doremir_processor_par_destroy(this_proc_t proc)
 {
     doremir_destroy(proc->elem[0]);
-    doremir_destroy(proc->elem[0]);
+    doremir_destroy(proc->elem[1]);
     doremir_delete(proc);
 }
 
@@ -57,7 +57,7 @@ doremir_processor_par_destroy(this_proc_t proc)
 void par_before(doremir_ptr_t a, info_t *info)
 {
     this_proc_t proc = (this_proc_t) a;
-    
+
     // Run subprocessors
     proc->elemImpl[0]->before(proc->elem[0], info);
     proc->elemImpl[1]->before(proc->elem[1], info);
@@ -78,8 +78,8 @@ void par_process(ptr_t a, info_t *info, samples_t input, samples_t output)
     void *in1, *in2, *out1, *out2;
     this_proc_t proc;
 
-    proc = (this_proc_t) a;                               
-    
+    proc = (this_proc_t) a;
+
     proc->elemImpl[0]->process(proc->elem[0], info, in1, out1);
     proc->elemImpl[1]->process(proc->elem[1], info, in2, out2);
 }
@@ -89,7 +89,7 @@ doremir_type_t par_input_type(doremir_ptr_t a)
     this_proc_t proc = (this_proc_t) a;
     type_t t0 = doremir_processor_input_type(proc->elem[0]);
     type_t t1 = doremir_processor_input_type(proc->elem[1]);
-    return doremir_type_pair(t0,t1);
+    return doremir_type_pair(t0, t1);
 }
 
 doremir_type_t par_output_type(doremir_ptr_t a)
@@ -97,7 +97,7 @@ doremir_type_t par_output_type(doremir_ptr_t a)
     this_proc_t proc = (this_proc_t) a;
     type_t t0 = doremir_processor_output_type(proc->elem[0]);
     type_t t1 = doremir_processor_output_type(proc->elem[1]);
-    return doremir_type_pair(t0,t1);
+    return doremir_type_pair(t0, t1);
 }
 
 // --------------------------------------------------------------------------------
@@ -106,9 +106,11 @@ string_t par_show(doremir_ptr_t a)
 {
     this_proc_t proc = (this_proc_t) a;
     string_t s = string("");
+    
     s = string_dappend(s, doremir_string_show(par_input_type(proc)));
     s = string_dappend(s, string(" ~> "));
     s = string_dappend(s, doremir_string_show(par_output_type(proc)));
+    
     return s;
 }
 
