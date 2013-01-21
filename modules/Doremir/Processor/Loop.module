@@ -16,5 +16,6 @@ module Doremir.Processor.Loop
     import Doremir.Processor;
 
     type Proc = opaque;
+    create : Processor -> Proc;
 }
 

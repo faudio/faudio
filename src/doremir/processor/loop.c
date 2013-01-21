@@ -6,6 +6,7 @@
 struct _doremir_processor_loop_proc_t
 {
     impl_t              impl;       // Dispatcher
+    // doremir_type_t      type;       // Type of recursive binding
     processor_t         elem;
 };
 
@@ -16,6 +17,7 @@ doremir_ptr_t loop_impl(doremir_id_t interface);
 this_proc_t doremir_processor_loop_create(processor_t proc1)
 {
     this_proc_t proc  = doremir_new(processor_loop_proc);
+    // proc->type = type;
     proc->elem = proc1;
     return proc;
 }

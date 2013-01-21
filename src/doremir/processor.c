@@ -51,6 +51,9 @@ doremir_processor_t doremir_processor_binary(doremir_type_t   input_type1,
                                                          
 
 /** Create an identity processor.
+
+    This processor returns input of the given type unmodified.
+    
     @param type             Type of input.
  */
 doremir_processor_t doremir_processor_identity(doremir_type_t type)
@@ -59,6 +62,10 @@ doremir_processor_t doremir_processor_identity(doremir_type_t type)
 }
 
 /** Create a constant processor.
+
+    This processor consumes input of the given type, and returns a constant value of
+    the given type.
+
     @param input_type       Type of input.
     @param output_type      Type of output.
     @param value
@@ -71,6 +78,9 @@ doremir_processor_t doremir_processor_constant(doremir_type_t   input_type,
 }
 
 /** Create a delay processor.
+    
+    This processor delays its input by the given value.
+
     @param input_type       Type of input.
     @param samples          Number of samples.
  */
@@ -89,6 +99,14 @@ doremir_processor_t doremir_processor_split(doremir_type_t type)
 }
 
 /** Create a processor by combining the given processors in sequence.
+
+    The output type of the first processor must match the input type of the
+    second processor, or an error is returned.
+    
+        p : `a ~> b`        q : `b ~> c`
+        --------------------------------
+               p >> q : `a ~> c`.
+
     @param proc1
     @param proc2
  */
@@ -100,6 +118,13 @@ doremir_processor_t doremir_processor_seq(doremir_processor_t proc1,
 }
 
 /** Create a processor by combining the given processors in parallel.
+
+    The input and output types are pairs of the input and output types of the given processors.
+    
+        p : `a ~> b`        q : `c ~> d`
+        --------------------------------
+            p || q : `(a,b) ~> (c,d)`.
+
     @param proc1
     @param proc2
  */
@@ -112,11 +137,17 @@ doremir_processor_t doremir_processor_par(doremir_processor_t proc1,
 
 /** Create a processor by feeding the given processor back into itself.
     @param proc
+
+    The input and output types are pairs of the input and output types of the given processors.
+    
+        p : `(a,c) ~> (b,c)`
+        ---------------------
+         loop p : `a ~> b`.
+
  */
 doremir_processor_t doremir_processor_loop(doremir_processor_t proc)
 {
-    return (processor_t)
-        doremir_processor_loop_create(proc);
+    return (processor_t) doremir_processor_loop_create(proc);
 }
 
 /*
