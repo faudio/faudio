@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (defctype midi-status :int)
 (defctype midi-channel :int)
 (defctype midi-data :int)

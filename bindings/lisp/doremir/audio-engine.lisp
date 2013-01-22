@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (defcfun (audioengine-initialize "doremir_audio_engine_initialize") :void)
 (defcfun (audioengine-terminate "doremir_audio_engine_terminate") :void)
 (defcfun (audioengine-set-log-file "doremir_audio_engine_set_log_file") :void (a string-file-path))

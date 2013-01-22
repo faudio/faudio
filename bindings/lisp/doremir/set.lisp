@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (define-foreign-type set-type () () (:actual-type :pointer))
 (define-parse-method set () (make-instance 'set-type))
 (defclass set () ((set-ptr :initarg :set-ptr)))

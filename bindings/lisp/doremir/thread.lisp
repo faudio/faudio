@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (define-foreign-type thread-type () () (:actual-type :pointer))
 (define-parse-method thread () (make-instance 'thread-type))
 (defclass thread () ((thread-ptr :initarg :thread-ptr)))

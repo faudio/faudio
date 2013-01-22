@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (define-foreign-type atomic-stack-type () () (:actual-type :pointer))
 (define-parse-method atomic-stack () (make-instance 'atomic-stack-type))
 (defclass atomic-stack () ((atomic-stack-ptr :initarg :atomic-stack-ptr)))

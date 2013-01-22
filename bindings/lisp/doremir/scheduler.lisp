@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (defctype scheduler-action nullary)
 (define-foreign-type scheduler-type () () (:actual-type :pointer))
 (define-parse-method scheduler () (make-instance 'scheduler-type))

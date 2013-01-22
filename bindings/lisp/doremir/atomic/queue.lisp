@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (define-foreign-type atomic-queue-type () () (:actual-type :pointer))
 (define-parse-method atomic-queue () (make-instance 'atomic-queue-type))
 (defclass atomic-queue () ((atomic-queue-ptr :initarg :atomic-queue-ptr)))

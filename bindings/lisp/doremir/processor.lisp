@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (defctype processor-info (:pointer :void))
 (defctype processor-samples ptr)
 (defctype processor-interface (:pointer :void))

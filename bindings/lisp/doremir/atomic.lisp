@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (define-foreign-type atomic-type () () (:actual-type :pointer))
 (define-parse-method atomic () (make-instance 'atomic-type))
 (defclass atomic () ((atomic-ptr :initarg :atomic-ptr)))

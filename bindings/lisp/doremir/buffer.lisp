@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (define-foreign-type buffer-type () () (:actual-type :pointer))
 (define-parse-method buffer () (make-instance 'buffer-type))
 (defclass buffer () ((buffer-ptr :initarg :buffer-ptr)))

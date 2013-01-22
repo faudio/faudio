@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (defctype type-frames :int32)
 (defctype type-simple :int)
 (define-foreign-type type-type () () (:actual-type :pointer))

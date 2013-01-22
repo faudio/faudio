@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (defctype string-utf8 (:pointer char8))
 (defctype string-utf16 (:pointer char16))
 (defctype string-utf32 (:pointer char32))

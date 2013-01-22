@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (define-foreign-type map-type () () (:actual-type :pointer))
 (define-parse-method map () (make-instance 'map-type))
 (defclass map () ((map-ptr :initarg :map-ptr)))

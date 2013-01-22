@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (define-foreign-type pair-type () () (:actual-type :pointer))
 (define-parse-method pair () (make-instance 'pair-type))
 (defclass pair () ((pair-ptr :initarg :pair-ptr)))

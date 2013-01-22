@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (define-foreign-type processor-vst-type () () (:actual-type :pointer))
 (define-parse-method processor-vst () (make-instance 'processor-vst-type))
 (defclass processor-vst () ((processor-vst-ptr :initarg :processor-vst-ptr)))

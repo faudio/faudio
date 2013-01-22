@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (define-foreign-type atomic-ring-buffer-type () () (:actual-type :pointer))
 (define-parse-method atomic-ring-buffer () (make-instance 'atomic-ring-buffer-type))
 (defclass atomic-ring-buffer () ((atomic-ring-buffer-ptr :initarg :atomic-ring-buffer-ptr)))

@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (define-foreign-type device-midi-session-type () () (:actual-type :pointer))
 (define-parse-method device-midi-session () (make-instance 'device-midi-session-type))
 (defclass device-midi-session () ((device-midi-session-ptr :initarg :device-midi-session-ptr)))

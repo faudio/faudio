@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (define-foreign-type processor-fluid-synth-type () () (:actual-type :pointer))
 (define-parse-method processor-fluid-synth () (make-instance 'processor-fluid-synth-type))
 (defclass processor-fluid-synth () ((processor-fluid-synth-ptr :initarg :processor-fluid-synth-ptr)))

@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (define-foreign-type device-buffer-type () () (:actual-type :pointer))
 (define-parse-method device-buffer () (make-instance 'device-buffer-type))
 (defclass device-buffer () ((device-buffer-ptr :initarg :device-buffer-ptr)))

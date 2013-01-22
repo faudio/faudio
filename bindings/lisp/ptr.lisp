@@ -1,5 +1,5 @@
 
-(in-package :doremir)
+(in-package :audio-engine)
 
 (defcfun (is-bool#      "doremir_is_bool") :boolean (a :pointer))
 (defcfun (is-int8#      "doremir_is_int8") :boolean (a :pointer))

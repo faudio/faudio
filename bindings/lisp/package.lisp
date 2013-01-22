@@ -1,5 +1,5 @@
 
-(defpackage doremir
+(defpackage audio-engine
 
   (:use
     :common-lisp

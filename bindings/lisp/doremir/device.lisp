@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (define-foreign-type device-audio-type () () (:actual-type :pointer))
 (define-parse-method device-audio () (make-instance 'device-audio-type))
 (defclass device-audio () ((device-audio-ptr :initarg :device-audio-ptr)))

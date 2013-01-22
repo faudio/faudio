@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (define-foreign-type priority-queue-type () () (:actual-type :pointer))
 (define-parse-method priority-queue () (make-instance 'priority-queue-type))
 (defclass priority-queue () ((priority-queue-ptr :initarg :priority-queue-ptr)))

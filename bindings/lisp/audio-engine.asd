@@ -6,12 +6,12 @@
 ;;  All rights reserved.
 ;;
 
-(defpackage #:doremir-asd
+(defpackage #:audio-engine-asd
   (:use :cl :asdf))
 
-(in-package :doremir-asd)
+(in-package :audio-engine-asd)
 
-(defsystem :doremir
+(defsystem :audio-engine
   :version "2.0.0"
   :description "The DoReMIR Audio Engine"
   :author "hans.hoglund@doremir.com"

@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (define-foreign-type signal-type () () (:actual-type :pointer))
 (define-parse-method signal () (make-instance 'signal-type))
 (defclass signal () ((signal-ptr :initarg :signal-ptr)))

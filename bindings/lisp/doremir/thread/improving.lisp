@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (define-foreign-type thread-improving-type () () (:actual-type :pointer))
 (define-parse-method thread-improving () (make-instance 'thread-improving-type))
 (defclass thread-improving () ((thread-improving-ptr :initarg :thread-improving-ptr)))

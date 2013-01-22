@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 ; (defctype ptr (:pointer :void))
 (defctype nullary (:pointer (:pointer :void)))
 (defctype unary (:pointer (:pointer :void)))

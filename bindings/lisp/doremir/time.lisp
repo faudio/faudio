@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (define-foreign-type time-type () () (:actual-type :pointer))
 (define-parse-method time () (make-instance 'time-type))
 (defclass time () ((time-ptr :initarg :time-ptr)))

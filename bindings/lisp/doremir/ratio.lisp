@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (defctype ratio-num :int32)
 (defctype ratio-denom :int32)
 (define-foreign-type ratio-type () () (:actual-type :pointer))

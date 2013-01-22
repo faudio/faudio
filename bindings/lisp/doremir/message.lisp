@@ -1,4 +1,4 @@
-(in-package :doremir)
+(in-package :audio-engine)
 (defctype message-address ptr)
 (defctype message ptr)
 (defctype message-receiver (:pointer :void))
