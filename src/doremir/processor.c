@@ -123,9 +123,11 @@ doremir_processor_t doremir_processor_split(doremir_type_t type)
     The output type of the first processor must match the input type of the
     second processor, or an error is returned.
 
-        p : `a ~> b`        q : `b ~> c`
-        --------------------------------
-               p >> q : `a ~> c`.
+        \f[
+            \frac
+                {p \in A \to B, q \in B \to C}
+                {seq(p,q) \in A \to C}
+        \f]
 
     @param proc
         First processor in chain.
@@ -145,9 +147,11 @@ doremir_processor_t doremir_processor_seq(doremir_processor_t proc1,
 
     The input and output types are pairs of the input and output types of the given processors.
 
-        p : `a ~> b`        q : `c ~> d`
-        --------------------------------
-            p || q : `(a,c) ~> (b,d)`.
+        \f[
+            \frac
+                {p \in A \to B, q \in C \to D}
+                {par(p,q) \in (A,C) \to (B,D)}
+        \f]
 
     @param proc
         Left processor in hub.
@@ -165,11 +169,11 @@ doremir_processor_t doremir_processor_par(doremir_processor_t proc1,
 
 /** Create a processor by feeding the given processor back into itself.
 
-    The given processor must have inputs and outputs on the form `(a,b)`.
-
-        p : `(a,c) ~> (b,c)`
-        ---------------------
-         loop p : `a ~> b`.
+        \f[
+            \frac
+                {p \in (C,A) \to (C,B) }
+                { loop(p) \in A \to B }
+        \f]
 
     @param proc
         Processor to close feedback loop over.
