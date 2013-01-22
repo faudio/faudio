@@ -36,6 +36,7 @@ Additions
 * JSON serialization
 
 
+* Option to ignore SIGFPE (to fix run-time divide by zero errors)
 
 * Device detection
     * See PortAudio tracker
