@@ -29,6 +29,11 @@ module Doremir.Message
         dispatch : (Ptr -> Void)*
     };
 
+    send            : (Ptr, Address, Message) -> Void;
+    addReceiver     : (Ptr, Receiver) -> Void;
+    removeReceiver  : (Ptr, Receiver) -> Void;
+    dispatch        : Ptr -> Void;
+
     type Dispatcher = opaque;
 
     // // synchronizing on any receiver

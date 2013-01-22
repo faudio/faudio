@@ -25,6 +25,14 @@ typedef struct {
                                      doremir_message_receiver_t);
             void (* dispatch)(doremir_ptr_t);
         } doremir_message_sender_t;
+void doremir_message_send(doremir_ptr_t,
+                          doremir_message_address_t,
+                          doremir_message_t);
+void doremir_message_add_receiver(doremir_ptr_t,
+                                  doremir_message_receiver_t);
+void doremir_message_remove_receiver(doremir_ptr_t,
+                                     doremir_message_receiver_t);
+void doremir_message_dispatch(doremir_ptr_t);
 typedef struct _doremir_message_dispatcher_t * doremir_message_dispatcher_t;
 doremir_message_dispatcher_t doremir_message_simple();
 void doremir_message_destroy(doremir_message_dispatcher_t);
