@@ -14,37 +14,39 @@
             * We may want to optimize by adding special mergeBy, insertBy etc.
  */
 
-typedef struct node*            node_t;
+typedef struct node            *node_t;
 typedef priority_queue_t        queue_t;
 
-struct node {
+struct node
+{
     ptr_t           value;          // Value
     node_t          left;           // Children
     node_t          right;
 };
 
-struct _doremir_priority_queue_t {
-    impl_t          impl;           // Dispatcher    
-    node_t          node;    
+struct _doremir_priority_queue_t
+{
+    impl_t          impl;           // Dispatcher
+    node_t          node;
 };
 
-inline static node_t new_node(ptr_t value, node_t left, node_t right) 
+inline static node_t new_node(ptr_t value, node_t left, node_t right)
 {
-    node_t node = doremir_new_struct(node);                         
+    node_t node = doremir_new_struct(node);
     node->value = value;
     node->left  = left;
     node->right = right;
     return node;
 }
 
-inline static void delete_node(node_t node) 
+inline static void delete_node(node_t node)
 {
     doremir_delete(node);
 }
 
 ptr_t priority_queue_impl(doremir_id_t interface);
 
-inline static queue_t new_queue(node_t node) 
+inline static queue_t new_queue(node_t node)
 {
     queue_t queue = doremir_new(priority_queue);
     queue->impl = &priority_queue_impl;
@@ -52,7 +54,7 @@ inline static queue_t new_queue(node_t node)
     return queue;
 }
 
-inline static void delete_queue(queue_t queue) 
+inline static void delete_queue(queue_t queue)
 {
     doremir_delete(queue);
 }
@@ -88,23 +90,22 @@ static inline node_t into(node_t node1, node_t node2)
 }
 
 static inline node_t merge(node_t node1, node_t node2)
-{   
+{
     if (!node1)
         return node2;
-    else 
-    if (!node2)
+    else if (!node2)
         return node1;
     else
-    {
-        if (doremir_less_than_equal(node1->value, node2->value))
-        {                     
-            return into(node1, node2);
-        }   
-        else
         {
-            return into(node2, node1);
+            if (doremir_less_than_equal(node1->value, node2->value))
+                {
+                    return into(node1, node2);
+                }
+            else
+                {
+                    return into(node2, node1);
+                }
         }
-    }
 }
 
 void doremir_priority_queue_merge(queue_t queue1, queue_t queue2)
@@ -127,18 +128,18 @@ ptr_t doremir_priority_queue_peek(queue_t queue)
 ptr_t doremir_priority_queue_pop(queue_t queue)
 {
     node_t head = queue->node;
-    
+
     if (!head)
-    {        
-        return NULL;
-    }
+        {
+            return NULL;
+        }
     else
-    {
-        ptr_t value = head->value;
-        queue->node = merge(head->left, head->right);
-        delete_node(head);       
-        return value; 
-    }
+        {
+            ptr_t value = head->value;
+            queue->node = merge(head->left, head->right);
+            delete_node(head);
+            return value;
+        }
 }
 
 // --------------------------------------------------------------------------------
@@ -159,7 +160,7 @@ doremir_string_t priority_queue_show(doremir_ptr_t v)
 void priority_queue_destroy(doremir_ptr_t a)
 {
     doremir_priority_queue_destroy(a);
-} 
+}
 
 
 doremir_ptr_t priority_queue_impl(doremir_id_t interface)
@@ -167,20 +168,20 @@ doremir_ptr_t priority_queue_impl(doremir_id_t interface)
     static doremir_equal_t priority_queue_equal_impl = { priority_queue_equal };
     static doremir_string_show_t priority_queue_show_impl = { priority_queue_show };
     static doremir_destroy_t priority_queue_destroy_impl = { priority_queue_destroy };
-    
+
     switch (interface)
-    {
-    case doremir_equal_i:
-        return &priority_queue_equal_impl;
-    
-    case doremir_string_show_i:
-        return &priority_queue_show_impl;
-    
-    case doremir_destroy_i:
-        return &priority_queue_destroy_impl;
-    
-    default:
-        return NULL;
-    } 
+        {
+        case doremir_equal_i:
+            return &priority_queue_equal_impl;
+
+        case doremir_string_show_i:
+            return &priority_queue_show_impl;
+
+        case doremir_destroy_i:
+            return &priority_queue_destroy_impl;
+
+        default:
+            return NULL;
+        }
 }
 

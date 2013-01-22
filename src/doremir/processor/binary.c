@@ -80,14 +80,14 @@ string_t binary_show(doremir_ptr_t a)
 {
     this_proc_t proc = (doremir_processor_binary_proc_t) a;
     string_t s = string("");
-    
+
     s = string_dappend(s, string("("));
     s = string_dappend(s, doremir_string_show(proc->input_type[0]));
     s = string_dappend(s, string(","));
     s = string_dappend(s, doremir_string_show(proc->input_type[1]));
     s = string_dappend(s, string(") ~> "));
     s = string_dappend(s, doremir_string_show(proc->output_type));
-    
+
     return s;
 }
 

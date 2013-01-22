@@ -10,34 +10,40 @@
 
 typedef doremir_type_simple_t simple_t;
 
-struct _doremir_type_t {
+struct _doremir_type_t
+{
 
     doremir_impl_t          impl;           //  Interface dispatcher
-                            
-    enum {                  
-        simple_type,        
-        pair_type,          
-        vector_type,        
-        frame_type          
-    }                       tag;    
-                            
-    union {                 
+
+    enum
+    {
+        simple_type,
+        pair_type,
+        vector_type,
+        frame_type
+    }                       tag;
+
+    union
+    {
         simple_t            simple;         //  i8, i16 ... ptr
-                            
-        struct {            
-            ptr_t           fst; 
-            ptr_t           snd; 
+
+        struct
+        {
+            ptr_t           fst;
+            ptr_t           snd;
         }                   pair;           //  (a,b)
-        struct {            
-            ptr_t           base; 
-            size_t          size; 
+        struct
+        {
+            ptr_t           base;
+            size_t          size;
         }                   vector;         //  [a x n]
-        struct {            
-            ptr_t           base; 
-        }                   frame;          //  {a}        
-                            
+        struct
+        {
+            ptr_t           base;
+        }                   frame;          //  {a}
+
     }                       fields;
-}; 
+};
 
 #define simple_get(v)   v->fields.simple
 #define pair_get(v,f)   v->fields.pair.f
@@ -49,15 +55,15 @@ doremir_ptr_t type_impl(doremir_id_t interface);
 doremir_type_t new_type(int tag)
 {
     type_t t = doremir_new(type);
-    
+
     t->impl = &type_impl;
     t->tag  = tag;
-    
+
     return t;
-}            
+}
 
 void delete_type(doremir_type_t type)
-{   
+{
     // TODO manage components
     doremir_delete(type);
 }
@@ -72,9 +78,9 @@ void delete_type(doremir_type_t type)
 doremir_type_t doremir_type_simple(doremir_type_simple_t type)
 {
     type_t t = new_type(simple_type);
-    
+
     simple_get(t) = type;
-    
+
     return t;
 }
 
@@ -84,10 +90,10 @@ doremir_type_t doremir_type_simple(doremir_type_simple_t type)
 doremir_type_t doremir_type_pair(doremir_type_t type1, doremir_type_t type2)
 {
     type_t t = new_type(pair_type);
-    
+
     pair_get(t, fst) = type1;
     pair_get(t, snd) = type2;
-    
+
     return t;
 }
 
@@ -97,10 +103,10 @@ doremir_type_t doremir_type_pair(doremir_type_t type1, doremir_type_t type2)
 doremir_type_t doremir_type_vector(doremir_type_t base, size_t size)
 {
     type_t t = new_type(vector_type);
-    
+
     vector_get(t, base) = base;
     vector_get(t, size) = size;
-    
+
     return t;
 }
 
@@ -110,9 +116,9 @@ doremir_type_t doremir_type_vector(doremir_type_t base, size_t size)
 doremir_type_t doremir_type_frame(doremir_type_t base)
 {
     type_t t = new_type(frame_type);
-    
+
     frame_get(t, base) = base;
-    
+
     return t;
 }
 
@@ -120,32 +126,33 @@ doremir_type_t doremir_type_frame(doremir_type_t base)
     Copy the given type representation.
  */
 doremir_type_t doremir_type_copy(doremir_type_t type)
-{                    
-    type_t t = new_type(type->tag);    
-    
-    switch(type->tag)
-    {
-    case simple_type:
-        simple_get(t) = simple_get(type);
-        break;
+{
+    type_t t = new_type(type->tag);
 
-    case pair_type:     
-        pair_get(t, fst) = pair_get(type, fst);
-        pair_get(t, snd) = pair_get(type, snd);
-        break;
+    switch (type->tag)
+        {
+        case simple_type:
+            simple_get(t) = simple_get(type);
+            break;
 
-    case vector_type:
-        vector_get(t, base) = vector_get(type, base);
-        vector_get(t, size) = vector_get(type, size);
-        break;
+        case pair_type:
+            pair_get(t, fst) = pair_get(type, fst);
+            pair_get(t, snd) = pair_get(type, snd);
+            break;
 
-    case frame_type:
-        frame_get(t, base) = frame_get(type, base);
-        break;
+        case vector_type:
+            vector_get(t, base) = vector_get(type, base);
+            vector_get(t, size) = vector_get(type, size);
+            break;
 
-    default:
-        assert(false && "Missing label");
-    }                  
+        case frame_type:
+            frame_get(t, base) = frame_get(type, base);
+            break;
+
+        default:
+            assert(false && "Missing label");
+        }
+
     return t;
 }
 
@@ -153,7 +160,7 @@ doremir_type_t doremir_type_copy(doremir_type_t type)
     Destroy the given type representation.
  */
 void doremir_type_destroy(doremir_type_t type)
-{                                                    
+{
     delete_type(type);
 }
 
@@ -163,7 +170,7 @@ void doremir_type_destroy(doremir_type_t type)
 bool doremir_type_is_simple(doremir_type_t type)
 {
     return type->tag == simple_type;
-}                                   
+}
 
 /**
     Whether the type represented by the given value is a pair type.
@@ -201,149 +208,151 @@ doremir_type_t doremir_type_get_pair_snd(doremir_type_t t)
 
 // --------------------------------------------------------------------------------
 
-inline static 
+inline static
 size_t size_max(size_t a, size_t b)
-{ 
-    return (a > b) ? a : b; 
-}       
+{
+    return (a > b) ? a : b;
+}
 
-inline static 
+inline static
 size_t pad(size_t x, size_t a)
 {
     return (a - x) % a;
 }
 
-inline static 
+inline static
 size_t next_aligned(size_t x, size_t a)
 {
     return x + pad(x, a);
 }
 
-inline static 
+inline static
 size_t simple_align(doremir_type_simple_t simple)
 {
     switch (simple)
-    {
-    case uint8_type:
-        return alignof(uint8_t);
-    
-    case uint16_type:
-        return alignof(uint16_t);
-    
-    case uint32_type:
-        return alignof(uint32_t);
-    
-    case uint64_type:
-        return alignof(uint64_t);
-    
-    case float_type:
-        return alignof(float);
-    
-    case double_type:
-        return alignof(double);
-    
-    case ptr_type:
-        return alignof(ptr_t);
-    
-    default:
-        assert(false && "Missing label");
-    }
+        {
+        case uint8_type:
+            return alignof(uint8_t);
+
+        case uint16_type:
+            return alignof(uint16_t);
+
+        case uint32_type:
+            return alignof(uint32_t);
+
+        case uint64_type:
+            return alignof(uint64_t);
+
+        case float_type:
+            return alignof(float);
+
+        case double_type:
+            return alignof(double);
+
+        case ptr_type:
+            return alignof(ptr_t);
+
+        default:
+            assert(false && "Missing label");
+        }
 }
 
-inline static 
+inline static
 size_t simple_size(doremir_type_simple_t simple)
 {
     switch (simple)
-    {
-    case uint8_type:
-        return sizeof(uint8_t);
-    
-    case uint16_type:
-        return sizeof(uint16_t);
-    
-    case uint32_type:
-        return sizeof(uint32_t);
-    
-    case uint64_type:
-        return sizeof(uint64_t);
-    
-    case float_type:
-        return sizeof(float);
-    
-    case double_type:
-        return sizeof(double);
-    
-    case ptr_type:
-        return sizeof(ptr_t);
-    
-    default:
-        assert(false && "Missing label");
-    }
-}  
+        {
+        case uint8_type:
+            return sizeof(uint8_t);
+
+        case uint16_type:
+            return sizeof(uint16_t);
+
+        case uint32_type:
+            return sizeof(uint32_t);
+
+        case uint64_type:
+            return sizeof(uint64_t);
+
+        case float_type:
+            return sizeof(float);
+
+        case double_type:
+            return sizeof(double);
+
+        case ptr_type:
+            return sizeof(ptr_t);
+
+        default:
+            assert(false && "Missing label");
+        }
+}
 
 inline static
 size_t align(doremir_type_t type)
 {
-    switch(type->tag)
-    {
-    case simple_type:
-        return simple_align(simple_get(type));
-    
-    case pair_type:
-        return size_max(align(pair_get(type, fst)), align(pair_get(type, snd)));
-    
-    case vector_type:
-        return align(vector_get(type, base));
-    
-    case frame_type:
-        return align(frame_get(type, base));
-    
-    default:
-        assert(false && "Missing label");
-    }                                   
+    switch (type->tag)
+        {
+        case simple_type:
+            return simple_align(simple_get(type));
+
+        case pair_type:
+            return size_max(align(pair_get(type, fst)), align(pair_get(type, snd)));
+
+        case vector_type:
+            return align(vector_get(type, base));
+
+        case frame_type:
+            return align(frame_get(type, base));
+
+        default:
+            assert(false && "Missing label");
+        }
 }
 
 inline static
 size_t size(doremir_type_frames_t frames, doremir_type_t type)
 {
     size_t offset;
-    
-    switch(type->tag)
-    {
-    
-    case simple_type:
-        return simple_size(simple_get(type));
-    
-    case pair_type:
-        offset = next_aligned(size(frames, pair_get(type, fst)), align(pair_get(type, snd)));
-        return next_aligned(offset + size(frames, pair_get(type, snd)), align(type));
-    
-    case vector_type:
-        return size(frames, vector_get(type, base)) * vector_get(type, size);
-    
-    case frame_type:
-        return size(frames, frame_get(type, base)) * frames;
 
-    default:
-        assert(false && "Missing label");
-    }                  
+    switch (type->tag)
+        {
+
+        case simple_type:
+            return simple_size(simple_get(type));
+
+        case pair_type:
+            offset = next_aligned(size(frames, pair_get(type, fst)), align(pair_get(type, snd)));
+            return next_aligned(offset + size(frames, pair_get(type, snd)), align(type));
+
+        case vector_type:
+            return size(frames, vector_get(type, base)) * vector_get(type, size);
+
+        case frame_type:
+            return size(frames, frame_get(type, base)) * frames;
+
+        default:
+            assert(false && "Missing label");
+        }
 }
 
 // TODO above assignment should use this
 inline static
 size_t offset(doremir_type_frames_t frames, doremir_type_t type)
-{    
-    switch(type->tag)
-    {
-    case pair_type:
-        return next_aligned(size(frames, pair_get(type, fst)), align(pair_get(type, snd)));
-    case simple_type:
-    case vector_type:
-    case frame_type:
-        return 0;
-    default:
-        assert(false && "Missing label");
-    }                  
+{
+    switch (type->tag)
+        {
+        case pair_type:
+            return next_aligned(size(frames, pair_get(type, fst)), align(pair_get(type, snd)));
+
+        case simple_type:
+        case vector_type:
+        case frame_type:
+            return 0;
+
+        default:
+            assert(false && "Missing label");
+        }
 }
 
 
@@ -383,85 +392,92 @@ bool type_equal(doremir_ptr_t a, doremir_ptr_t b)
 
     if (c->tag != d->tag) return false;
 
-    switch(c->tag)
-    {
-    case simple_type:
-        return simple_get(c) == simple_get(d);
-    
-    case pair_type:     
-        return pair_get(c, fst) == pair_get(d, fst) && pair_get(c, snd) == pair_get(d, snd);
-    
-    case vector_type:
-        return vector_get(c, base) == vector_get(d, base) && vector_get(c, size) == vector_get(d, size);
-    
-    case frame_type:
-        return frame_get(c, base) == frame_get(d, base);
-    
-    default:
-        assert(false && "Missing label");
-    }                  
+    switch (c->tag)
+        {
+        case simple_type:
+            return simple_get(c) == simple_get(d);
+
+        case pair_type:
+            return pair_get(c, fst) == pair_get(d, fst) && pair_get(c, snd) == pair_get(d, snd);
+
+        case vector_type:
+            return vector_get(c, base) == vector_get(d, base) && vector_get(c, size) == vector_get(d, size);
+
+        case frame_type:
+            return frame_get(c, base) == frame_get(d, base);
+
+        default:
+            assert(false && "Missing label");
+        }
 }
 
-inline static 
+inline static
 string_t simple_show(doremir_type_simple_t simple)
 {
     switch (simple)
-    {
-    case uint8_type:
-        return string("i8");
-    case uint16_type:
-        return string("i16");
-    case uint32_type:
-        return string("i32");
-    case uint64_type:
-        return string("i64");
-    case float_type:
-        return string("f32");
-    case double_type:
-        return string("f64");
-    case ptr_type:
-        return string("ptr");
-    default:
-        assert(false && "Missing label");
-    }
-}  
+        {
+        case uint8_type:
+            return string("i8");
+
+        case uint16_type:
+            return string("i16");
+
+        case uint32_type:
+            return string("i32");
+
+        case uint64_type:
+            return string("i64");
+
+        case float_type:
+            return string("f32");
+
+        case double_type:
+            return string("f64");
+
+        case ptr_type:
+            return string("ptr");
+
+        default:
+            assert(false && "Missing label");
+        }
+}
 
 string_t type_show(doremir_ptr_t a)
 {
     type_t type = (type_t) a;
     string_t s = string("");
 
-    switch(type->tag)
-    {
-    case simple_type:
-        s = string_dappend(s, simple_show(simple_get(type)));
-        return s;
-    
-    case pair_type:                              
-        s = string_dappend(s, string("("));
-        s = string_dappend(s, type_show(pair_get(type, fst)));
-        s = string_dappend(s, string(","));
-        s = string_dappend(s, type_show(pair_get(type, snd)));
-        s = string_dappend(s, string(")"));
-        return s;
-    
-    case vector_type:
-        s = string_dappend(s, string("["));
-        s = string_dappend(s, type_show(vector_get(type, base)));
-        s = string_dappend(s, string(" x "));
-        s = string_dappend(s, format_int("%i", vector_get(type, size)));
-        s = string_dappend(s, string("]"));
-        return s;
-    
-    case frame_type:
-        s = string_dappend(s, string("{"));
-        s = string_dappend(s, type_show(vector_get(type, base)));
-        s = string_dappend(s, string("}"));
-        return s;
-    
-    default:
-        assert(false && "Missing label");
-    }                  
+    switch (type->tag)
+        {
+        case simple_type:
+            s = string_dappend(s, simple_show(simple_get(type)));
+            return s;
+
+        case pair_type:
+            s = string_dappend(s, string("("));
+            s = string_dappend(s, type_show(pair_get(type, fst)));
+            s = string_dappend(s, string(","));
+            s = string_dappend(s, type_show(pair_get(type, snd)));
+            s = string_dappend(s, string(")"));
+            return s;
+
+        case vector_type:
+            s = string_dappend(s, string("["));
+            s = string_dappend(s, type_show(vector_get(type, base)));
+            s = string_dappend(s, string(" x "));
+            s = string_dappend(s, format_int("%i", vector_get(type, size)));
+            s = string_dappend(s, string("]"));
+            return s;
+
+        case frame_type:
+            s = string_dappend(s, string("{"));
+            s = string_dappend(s, type_show(vector_get(type, base)));
+            s = string_dappend(s, string("}"));
+            return s;
+
+        default:
+            assert(false && "Missing label");
+        }
 }
 
 doremir_ptr_t type_copy(doremir_ptr_t a)
@@ -482,21 +498,21 @@ doremir_ptr_t type_impl(doremir_id_t interface)
     static doremir_destroy_t type_destroy_impl = { type_destroy };
 
     switch (interface)
-    {
-    case doremir_equal_i:
-        return &type_equal_impl;
+        {
+        case doremir_equal_i:
+            return &type_equal_impl;
 
-    case doremir_string_show_i:
-        return &type_show_impl;
+        case doremir_string_show_i:
+            return &type_show_impl;
 
-    case doremir_copy_i:
-        return &type_copy_impl;
+        case doremir_copy_i:
+            return &type_copy_impl;
 
-    case doremir_destroy_i:
-        return &type_destroy_impl;
+        case doremir_destroy_i:
+            return &type_destroy_impl;
 
-    default:
-        return NULL;
-    }
+        default:
+            return NULL;
+        }
 }
 

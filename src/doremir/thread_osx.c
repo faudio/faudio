@@ -9,23 +9,26 @@
 #include <pthread.h>
 #include <unistd.h>
 
-struct _doremir_thread_t {
-        doremir_impl_t          impl;       //  Interface dispatcher
-        pthread_t               native;
-    };
+struct _doremir_thread_t
+{
+    doremir_impl_t          impl;       //  Interface dispatcher
+    pthread_t               native;
+};
 
-struct _doremir_thread_mutex_t {
-        doremir_impl_t          impl;       //  Interface dispatcher
-        pthread_mutex_t         native;
-    };
+struct _doremir_thread_mutex_t
+{
+    doremir_impl_t          impl;       //  Interface dispatcher
+    pthread_mutex_t         native;
+};
 
-struct _doremir_thread_condition_t {
-        doremir_impl_t          impl;       //  Interface dispatcher
-        pthread_cond_t          native;
-        doremir_thread_mutex_t  mutex;
-    };
+struct _doremir_thread_condition_t
+{
+    doremir_impl_t          impl;       //  Interface dispatcher
+    pthread_cond_t          native;
+    doremir_thread_mutex_t  mutex;
+};
 
-static void doremir_thread_fatal(char* msg, int error);
+static void doremir_thread_fatal(char *msg, int error);
 
 
 // --------------------------------------------------------------------------------
@@ -39,7 +42,7 @@ static void doremir_thread_fatal(char* msg, int error);
  */
 doremir_thread_t
 doremir_thread_create(doremir_nullary_t func, doremir_ptr_t data)
-{               
+{
     doremir_thread_t thread = doremir_new(thread);
 
     int result = pthread_create(&thread->native, NULL, func, data);
@@ -102,6 +105,7 @@ doremir_thread_create_mutex()
 
     if (result != 0)
         doremir_thread_fatal("create_mutex", result);
+
     return mutex;
 }
 
@@ -127,10 +131,10 @@ doremir_thread_lock(doremir_thread_mutex_t mutex)
     if (result == 0)
         return true;
     else
-    {
-        doremir_thread_fatal("unlock", result);
-        assert(false);
-    }
+        {
+            doremir_thread_fatal("unlock", result);
+            assert(false);
+        }
 }
 
 /** Try acquiring the lock of a mutex object.
@@ -141,15 +145,17 @@ doremir_thread_try_lock(doremir_thread_mutex_t mutex)
     int result = pthread_mutex_trylock(&mutex->native);
 
     switch (result)
-    {
-    case 0:
-        return true;
-    case EBUSY:
-        return false;
-    default:
-        doremir_thread_fatal("try_lock", result);
-        assert(false);
-    }
+        {
+        case 0:
+            return true;
+
+        case EBUSY:
+            return false;
+
+        default:
+            doremir_thread_fatal("try_lock", result);
+            assert(false);
+        }
 }
 
 /** Release the lock of a mutex object.
@@ -162,10 +168,10 @@ doremir_thread_unlock(doremir_thread_mutex_t mutex)
     if (result == 0)
         return true;
     else
-    {
-        doremir_thread_fatal("unlock", result);
-        assert(false);
-    }
+        {
+            doremir_thread_fatal("unlock", result);
+            assert(false);
+        }
 }
 
 
@@ -188,12 +194,13 @@ doremir_thread_create_condition(doremir_thread_mutex_t mutex)
 
     if (result != 0)
         doremir_thread_fatal("create_condition", result);
+
     return cond;
 }
 
 /** Destroy a condition object.
  */
-void 
+void
 doremir_thread_destroy_condition(doremir_thread_condition_t cond)
 {
     int result = pthread_cond_destroy(&cond->native);
@@ -205,7 +212,7 @@ doremir_thread_destroy_condition(doremir_thread_condition_t cond)
 
 /** Wait for a condition to be signaled.
  */
-void 
+void
 doremir_thread_wait_for(doremir_thread_condition_t cond)
 {
     int result = pthread_cond_wait(&cond->native, &cond->mutex->native);
@@ -216,7 +223,7 @@ doremir_thread_wait_for(doremir_thread_condition_t cond)
 
 /** Signal a condition to one listener.
  */
-void 
+void
 doremir_thread_notify(doremir_thread_condition_t cond)
 {
     int result = pthread_cond_signal(&cond->native);
@@ -227,7 +234,7 @@ doremir_thread_notify(doremir_thread_condition_t cond)
 
 /** Signal a condition to all listeners.
  */
-void 
+void
 doremir_thread_notify_all(doremir_thread_condition_t cond)
 {
     int result = pthread_cond_broadcast(&cond->native);
@@ -241,7 +248,7 @@ doremir_thread_notify_all(doremir_thread_condition_t cond)
 // Utility
 // --------------------------------------------------------------------------------
 
-void doremir_thread_fatal(char* msg, int error)
+void doremir_thread_fatal(char *msg, int error)
 {
     // TODO log
     printf("Fatal error: Doremir: Thread: %s: %d\n", msg, error);

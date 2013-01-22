@@ -11,7 +11,7 @@
 
 #include <CoreFoundation/CoreFoundation.h> // TODO OS X only
 
-/*  
+/*
     Notes:
         * Straightforward implementation using bounded buffer
         * Slow copying
@@ -21,7 +21,7 @@
                 * Can we pool iconv instances instead?
                 * Would require queue/mutex to syncronize access to the converters
                 * Is iconv reset reliable?
-        
+
     Possibilities:
         * More efficient append
             * Separate size from char count and pre-allocate (such as 2^n).
@@ -33,23 +33,24 @@
 #define kstd_code   "UTF-16LE"          /* Internal string code */
 #define kchar_size  sizeof(uint16_t)    /* Internal char size */
 
-struct _doremir_string_t {
-        impl_t          impl;
-        size_t          size;
-        uint16_t        * data;
-    };
+struct _doremir_string_t
+{
+    impl_t          impl;
+    size_t          size;
+    uint16_t         *data;
+};
 
 doremir_ptr_t string_impl(doremir_id_t interface);
-static void fatal(char* msg, int error);
+static void fatal(char *msg, int error);
 
 string_t new_string(size_t size, uint16_t *data)
 {
     string_t str = doremir_new(string);
-    
+
     str->impl = &string_impl;
     str->size = size;
     str->data = data;
-    
+
     return str;
 }
 
@@ -106,8 +107,8 @@ doremir_string_t doremir_string_append(doremir_string_t as,
     string_t cs = new_string(as->size + bs->size, NULL);
     cs->data = malloc(cs->size * kchar_size);
 
-    memcpy(cs->data, as->data, as->size*kchar_size);
-    memcpy(cs->data + as->size, bs->data, bs->size*kchar_size);
+    memcpy(cs->data, as->data, as->size * kchar_size);
+    memcpy(cs->data + as->size, bs->data, bs->size * kchar_size);
 
     return cs;
 }
@@ -124,7 +125,7 @@ doremir_string_t doremir_string_dappend(doremir_string_t as,
     as->size = as->size + bs->size;
     as->data = realloc(as->data, as->size * kchar_size);
 
-    memcpy(as->data + oldSize, bs->data, bs->size*kchar_size);
+    memcpy(as->data + oldSize, bs->data, bs->size * kchar_size);
 
     free(bs);
     return as;
@@ -166,25 +167,25 @@ uint16_t doremir_string_char_at(int n, doremir_string_t str)
 // --------------------------------------------------------------------------------
 
 /** Format an integer.
-    @param format 
+    @param format
         A printf-style format string.
-    @param value 
+    @param value
         Integer value.
-    @return 
+    @return
         A new formatted string.
  */
-doremir_string_t doremir_string_format_integer(char* format, long value)         
-{                                               
-    char buffer[100];                           
-    int  numChars;                              
+doremir_string_t doremir_string_format_integer(char *format, long value)
+{
+    char buffer[100];
+    int  numChars;
 
-    numChars = snprintf(buffer, 100, format, value);     
-    
-    if (numChars > 100)                         
-        fatal("Too many characters", -1);        
-                                                
-    buffer[numChars] = 0;                       
-    return doremir_string_from_utf8(buffer);    
+    numChars = snprintf(buffer, 100, format, value);
+
+    if (numChars > 100)
+        fatal("Too many characters", -1);
+
+    buffer[numChars] = 0;
+    return doremir_string_from_utf8(buffer);
 }
 
 // --------------------------------------------------------------------------------
@@ -198,52 +199,59 @@ doremir_string_t doremir_string_format_integer(char* format, long value)
 static inline void iconv_fail()
 {
     switch (errno)
-    {
-    case E2BIG:  
-        fatal("iconv: Output buffer too small", 
-              errno);
-    case EILSEQ: 
-        fatal("iconv: Input byte does not belong to the input codeset", 
-              errno);
-    case EINVAL: 
-        fatal("iconv: Incomplete character or shift sequence at the end of the input buffer", 
-              errno);
-    default:     
-        fatal("iconv: Unknown error", 
-              errno);
-    }
+        {
+        case E2BIG:
+            fatal("iconv: Output buffer too small",
+                  errno);
+
+        case EILSEQ:
+            fatal("iconv: Input byte does not belong to the input codeset",
+                  errno);
+
+        case EINVAL:
+            fatal("iconv: Incomplete character or shift sequence at the end of the input buffer",
+                  errno);
+
+        default:
+            fatal("iconv: Unknown error",
+                  errno);
+        }
 }
 
 static inline size_t raw_size(char *s)
 {
-   size_t i = 0;
-   while (s[i])
-       i++;
-   return i;
+    size_t i = 0;
+
+    while (s[i])
+        i++;
+
+    return i;
 }
 
 static inline size_t raw_size_16(uint16_t *s)
 {
-   size_t i = 0;
-   while (s[i])
-       i++;
-   return i;
+    size_t i = 0;
+
+    while (s[i])
+        i++;
+
+    return i;
 }
 
 /** Encode the given string as UTF-8.
 
     @param  str String to encode.
-    @return 
+    @return
         A heap-allocated encoded string.
  */
 doremir_string_utf8_t doremir_string_to_utf8(doremir_string_t str)
 {
     size_t inSize, outSize, cstrSize;
     char *in, *out, *cstr;
-    
+
     inSize  = str->size * kchar_size;   // exact char count
     outSize = str->size * 4;            // worst case, we shrink after iconv
-    in      = (char*) str->data;
+    in      = (char *) str->data;
     out     = malloc(outSize);
     cstr    = out;
 
@@ -251,13 +259,14 @@ doremir_string_utf8_t doremir_string_to_utf8(doremir_string_t str)
         iconv_t conv   = iconv_open("UTF-8", kstd_code);
         size_t  status = iconv(conv, &in, &inSize, &out, &outSize);
         iconv_close(conv);
+
         if (status < 0)
             iconv_fail();
     }
 
     cstrSize = out - cstr;
     cstr     = realloc(cstr, cstrSize + 1);
-    
+
     cstr[cstrSize] = 0;                 // add null-terminator
 
     return cstr;
@@ -266,14 +275,14 @@ doremir_string_utf8_t doremir_string_to_utf8(doremir_string_t str)
 /** Encode the given string as UTF-16.
 
     @param  str String to encode.
-    @return 
+    @return
         A heap-allocated encoded string.
  */
 doremir_string_utf16_t doremir_string_to_utf16(doremir_string_t as)
 {
     size_t size = as->size;
-    uint16_t* cstr = malloc((size + 1)*kchar_size);
-    memcpy(cstr, as->data, as->size*kchar_size);
+    uint16_t *cstr = malloc((size + 1) * kchar_size);
+    memcpy(cstr, as->data, as->size * kchar_size);
     cstr[size] = 0;
     return cstr;
 }
@@ -281,7 +290,7 @@ doremir_string_utf16_t doremir_string_to_utf16(doremir_string_t as)
 /** Encode the given string as UTF-32.
 
     @param  str String to encode.
-    @return 
+    @return
         A heap-allocated encoded string.
  */
 doremir_string_utf32_t doremir_string_to_utf32(doremir_string_t str)
@@ -292,14 +301,14 @@ doremir_string_utf32_t doremir_string_to_utf32(doremir_string_t str)
 /** Deencode a string from UTF-8.
 
     @param  str Encoded string.
-    @return 
+    @return
         A new string.
  */
 doremir_string_t doremir_string_from_utf8(doremir_string_utf8_t cstr)
 {
     size_t inSize, outSize, strSize;
     char *in, *out, *str;
-    
+
     inSize  = raw_size(cstr);    // char count is in [inSize/4,inSize]
     outSize = inSize * 2;        // worst case, we shrink after iconv
     in      = cstr;
@@ -310,6 +319,7 @@ doremir_string_t doremir_string_from_utf8(doremir_string_utf8_t cstr)
         iconv_t conv = iconv_open(kstd_code, "UTF-8");
         size_t status = iconv(conv, &in, &inSize, &out, &outSize);
         iconv_close(conv);
+
         if (status < 0)
             iconv_fail();
     }
@@ -317,13 +327,13 @@ doremir_string_t doremir_string_from_utf8(doremir_string_utf8_t cstr)
     strSize = out - str;
     str     = realloc(str, strSize);
 
-    return new_string(strSize / kchar_size, (uint16_t*) str);
+    return new_string(strSize / kchar_size, (uint16_t *) str);
 }
 
 /** Deencode a string from UTF-16.
 
     @param  str Encoded string.
-    @return 
+    @return
         A new string.
  */
 doremir_string_t doremir_string_from_utf16(doremir_string_utf16_t cstr)
@@ -337,7 +347,7 @@ doremir_string_t doremir_string_from_utf16(doremir_string_utf16_t cstr)
 /** Deencode a string from UTF-32.
 
     @param  str Encoded string.
-    @return 
+    @return
         A new string.
  */
 doremir_string_t doremir_string_from_utf32(doremir_string_utf32_t cstr)
@@ -351,53 +361,53 @@ doremir_string_t doremir_string_from_utf32(doremir_string_utf32_t cstr)
 // TODO OS X only
 
 /** Encode a string as a CFString.
-    
+
     @note   OS X only
-    @return 
+    @return
         A new CFStringRef.
  */
-void * doremir_string_to_cf_string(doremir_string_t str)
+void *doremir_string_to_cf_string(doremir_string_t str)
 {
-    char* cstr;
+    char *cstr;
     CFStringRef cfstr;
 
     cstr    = doremir_string_to_utf8(str);
     cfstr   = CFStringCreateWithCString(kCFAllocatorDefault, cstr, kCFStringEncodingUTF8);
 
     free(cstr);
-    return (void*) cfstr;
+    return (void *) cfstr;
 }
 
 /** Deencode a string from a CFString.
-    
+
     @note   OS X only
     @param cfstr
         A CFStringRef.
-    @return 
+    @return
         A new string.
  */
-doremir_string_t doremir_string_from_cf_string(void * cfstr)
+doremir_string_t doremir_string_from_cf_string(void *cfstr)
 {
     CFIndex size;
     char *cstr;
     string_t str;
-    
-    if ((cstr = (char*) CFStringGetCStringPtr(cfstr, kCFStringEncodingUTF8)))
-    {
-        return doremir_string_from_utf8(cstr);
-    }
+
+    if ((cstr = (char *) CFStringGetCStringPtr(cfstr, kCFStringEncodingUTF8)))
+        {
+            return doremir_string_from_utf8(cstr);
+        }
     else
-    {
-        size        = CFStringGetLength(cfstr);
-        cstr        = malloc(size + 1);
-        cstr[size]  = 0;                     // necesary ?        
+        {
+            size        = CFStringGetLength(cfstr);
+            cstr        = malloc(size + 1);
+            cstr[size]  = 0;                     // necesary ?
 
-        CFStringGetCString(cfstr, cstr, size + 1, kCFStringEncodingUTF8);
-        str = doremir_string_from_utf8(cstr);
+            CFStringGetCString(cfstr, cstr, size + 1, kCFStringEncodingUTF8);
+            str = doremir_string_from_utf8(cstr);
 
-        free(cstr);
-        return str;    
-    }
+            free(cstr);
+            return str;
+        }
 }
 
 
@@ -408,14 +418,14 @@ doremir_string_t doremir_string_from_cf_string(void * cfstr)
     Ideally, this should be in the @ref Doremir module, but this would create a recursive
     dependency.
 
-    @param a 
+    @param a
         Value to convert.
-    @return 
+    @return
         A new string created from the given value.
  */
 doremir_string_t doremir_string_show(doremir_ptr_t a)
 {
-    return ((doremir_string_show_t*) doremir_interface(doremir_string_show_i, a))->show(a);
+    return ((doremir_string_show_t *) doremir_interface(doremir_string_show_i, a))->show(a);
 }
 
 
@@ -424,23 +434,24 @@ doremir_string_t doremir_string_show(doremir_ptr_t a)
 
 static bool string_equal(doremir_ptr_t as, doremir_ptr_t bs)
 {
-    string_t cs, ds;    
+    string_t cs, ds;
     cs = (string_t) as;
     ds = (string_t) bs;
 
     if (cs->size != ds->size)
         return false;
     else
-    {
-        for (size_t i = 0; 
-             i < cs->size && i < ds->size; 
-             ++i)
         {
-            if (cs->data[i] != ds->data[i])
-                return false;
+            for (size_t i = 0;
+                    i < cs->size && i < ds->size;
+                    ++i)
+                {
+                    if (cs->data[i] != ds->data[i])
+                        return false;
+                }
+
+            return true;
         }
-        return true;
-    }
 }
 
 #define pred(a) (a - 1)
@@ -449,43 +460,47 @@ static bool string_equal(doremir_ptr_t as, doremir_ptr_t bs)
 
 static bool string_less_than(doremir_ptr_t as, doremir_ptr_t bs)
 {
-    string_t cs, ds;    
+    string_t cs, ds;
     cs = (string_t) as;
     ds = (string_t) bs;
 
     for (size_t i;
-        i < pred(min(cs->size, ds->size));
-        ++i)
-    {
-        if (cs->data[i] < ds->data[i])
-            return true;
-        if (cs->data[i] > ds->data[i])
-            return false;
-    }
+            i < pred(min(cs->size, ds->size));
+            ++i)
+        {
+            if (cs->data[i] < ds->data[i])
+                return true;
+
+            if (cs->data[i] > ds->data[i])
+                return false;
+        }
+
     if (cs->size == ds->size)
         return last_elem(cs) < last_elem(ds);
-    else 
+    else
         return (cs->size < ds->size);
 }
 
 static bool string_greater_than(doremir_ptr_t as, doremir_ptr_t bs)
 {
-    string_t cs, ds;    
+    string_t cs, ds;
     cs = (string_t) as;
     ds = (string_t) bs;
 
     for (size_t i;
-        i < pred(min(cs->size, ds->size));
-        ++i)
-    {
-        if (cs->data[i] > ds->data[i])
-            return true;
-        if (cs->data[i] < ds->data[i])
-            return false;
-    }
+            i < pred(min(cs->size, ds->size));
+            ++i)
+        {
+            if (cs->data[i] > ds->data[i])
+                return true;
+
+            if (cs->data[i] < ds->data[i])
+                return false;
+        }
+
     if (cs->size == ds->size)
         return last_elem(cs) > last_elem(ds);
-    else 
+    else
         return (cs->size > ds->size);
 }
 
@@ -520,31 +535,31 @@ doremir_ptr_t string_impl(doremir_id_t interface)
     static doremir_order_t string_order_impl = { string_less_than, string_greater_than };
 
     switch (interface)
-    {
-    case doremir_equal_i:
-        return &string_equal_impl;
+        {
+        case doremir_equal_i:
+            return &string_equal_impl;
 
-    case doremir_order_i:
-        return &string_order_impl;
+        case doremir_order_i:
+            return &string_order_impl;
 
-    case doremir_string_show_i:
-        return &string_show_impl;
+        case doremir_string_show_i:
+            return &string_show_impl;
 
-    case doremir_copy_i:
-        return &string_copy_impl;
+        case doremir_copy_i:
+            return &string_copy_impl;
 
-    case doremir_destroy_i:
-        return &string_destroy_impl;
+        case doremir_destroy_i:
+            return &string_destroy_impl;
 
-    default:
-        return NULL;
-    }
+        default:
+            return NULL;
+        }
 }
 
 
 // --------------------------------------------------------------------------------
 
-static void fatal(char* msg, int error)
+static void fatal(char *msg, int error)
 {
     printf("Fatal error: Doremir: String: %s: %d\n", msg, error);
     exit(error);

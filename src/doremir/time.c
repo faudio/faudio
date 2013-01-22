@@ -10,10 +10,11 @@
 
 doremir_ptr_t time_impl(doremir_id_t interface);
 
-struct _doremir_time_t {
-        impl_t          impl;       //  Interface dispatcher
-        ratio_t         value;      //  Value in seconds
-    };
+struct _doremir_time_t
+{
+    impl_t          impl;       //  Interface dispatcher
+    ratio_t         value;      //  Value in seconds
+};
 
 inline static doremir_time_t
 new_time(ratio_t value)
@@ -33,26 +34,26 @@ void delete_time(doremir_time_t time)
 // --------------------------------------------------------------------------------
 
 /** Create a new time interval.
-    @param days     
+    @param days
         Number of days.
-    @param hours    
+    @param hours
         Number of hours.
-    @param minutes  
+    @param minutes
         Number of minutes.
-    @param seconds  
+    @param seconds
         Number of seconds.
-    @return         
+    @return
         A new time value.
  */
 doremir_time_t doremir_time_create(int32_t days, int32_t hours, int32_t minutes, doremir_ratio_t seconds)
-{                                            
-    int     whole = days*(60*60*24) + hours*(60*60) + minutes*60;
-    ratio_t secs = doremir_add(ratio(whole, 1), seconds); 
+{
+    int     whole = days * (60 * 60 * 24) + hours * (60 * 60) + minutes * 60;
+    ratio_t secs = doremir_add(ratio(whole, 1), seconds);
 
     return new_time(secs);
 }
 
-/** 
+/**
     Copy the given time interval.
  */
 doremir_time_t doremir_time_copy(doremir_time_t time)
@@ -60,7 +61,7 @@ doremir_time_t doremir_time_copy(doremir_time_t time)
     return new_time(time->value);
 }
 
-/** 
+/**
     Destroy the given time interval.
  */
 void doremir_time_destroy(doremir_time_t time)
@@ -93,14 +94,14 @@ doremir_ratio_t doremir_time_divisions(doremir_time_t time)
     @param time
         Time interval.
     @return
-        Number of seconds, representing the amount of time in the 
+        Number of seconds, representing the amount of time in the
         interval modulo one minute, rounded to seconds.
  */
 int32_t doremir_time_seconds(doremir_time_t time)
 {
     int32_t a, b;
     doremir_ratio_match(time->value, &a, &b);
-    return (a/b) % 60;
+    return (a / b) % 60;
 }
 
 /**
@@ -109,14 +110,14 @@ int32_t doremir_time_seconds(doremir_time_t time)
     @param time
         Time interval.
     @return
-        Number of seconds, representing the amount of time in the 
+        Number of seconds, representing the amount of time in the
         interval modulo one hour, rounded to minutes.
  */
 int32_t doremir_time_minutes(doremir_time_t time)
 {
     int32_t a, b;
     doremir_ratio_match(time->value, &a, &b);
-    return (a/b) % (60*60) / 60;
+    return (a / b) % (60 * 60) / 60;
 }
 
 /**
@@ -125,14 +126,14 @@ int32_t doremir_time_minutes(doremir_time_t time)
     @param time
         Time interval.
     @return
-        Number of seconds, representing the amount of time in the 
+        Number of seconds, representing the amount of time in the
         interval modulo one day, rounded to hours.
  */
 int32_t doremir_time_hours(doremir_time_t time)
 {
     int32_t a, b;
     doremir_ratio_match(time->value, &a, &b);
-    return (a/b) % (60*60*24) / (60*60);
+    return (a / b) % (60 * 60 * 24) / (60 * 60);
 }
 
 /**
@@ -141,14 +142,14 @@ int32_t doremir_time_hours(doremir_time_t time)
     @param time
         Time interval.
     @return
-        Number of seconds, representing the amount of time in the 
+        Number of seconds, representing the amount of time in the
         interval, rounded to days.
  */
 int32_t doremir_time_days(doremir_time_t time)
 {
     int32_t a, b;
     doremir_ratio_match(time->value, &a, &b);
-    return (a/b) / (60*60*24);
+    return (a / b) / (60 * 60 * 24);
 }
 
 
@@ -243,7 +244,7 @@ doremir_string_t time_show(doremir_ptr_t a)
     s = string_dappend(s, doremir_string_show(doremir_time_divisions(t)));
     s = string_dappend(s, string("s"));
     s = string_dappend(s, string(">"));
-    
+
     return s;
 }
 
@@ -259,42 +260,42 @@ void time_destroy(doremir_ptr_t a)
 
 doremir_ptr_t time_impl(doremir_id_t interface)
 {
-    static doremir_equal_t time_equal_impl 
+    static doremir_equal_t time_equal_impl
         = { time_equal };
-    static doremir_order_t time_order_impl 
+    static doremir_order_t time_order_impl
         = { time_less_than, time_greater_than };
-    static doremir_string_show_t time_show_impl 
+    static doremir_string_show_t time_show_impl
         = { time_show };
-    static doremir_number_t  time_number_impl 
+    static doremir_number_t  time_number_impl
         = { time_add, time_subtract, time_multiply, time_divide, time_absolute };
-    static doremir_copy_t time_copy_impl 
+    static doremir_copy_t time_copy_impl
         = { time_copy };
-    static doremir_destroy_t time_destroy_impl 
+    static doremir_destroy_t time_destroy_impl
         = { time_destroy };
 
-    
+
     switch (interface)
-    {
-    case doremir_equal_i:
-        return &time_equal_impl;
+        {
+        case doremir_equal_i:
+            return &time_equal_impl;
 
-    case doremir_order_i:
-        return &time_order_impl;
+        case doremir_order_i:
+            return &time_order_impl;
 
-    case doremir_string_show_i:
-        return &time_show_impl;
+        case doremir_string_show_i:
+            return &time_show_impl;
 
-    case doremir_number_i:
-        return &time_number_impl;
+        case doremir_number_i:
+            return &time_number_impl;
 
-    case doremir_copy_i:
-        return &time_copy_impl;
+        case doremir_copy_i:
+            return &time_copy_impl;
 
-    case doremir_destroy_i:
-        return &time_destroy_impl;
+        case doremir_destroy_i:
+            return &time_destroy_impl;
 
-    default:
-        return NULL;
-    }
+        default:
+            return NULL;
+        }
 }
 

@@ -19,32 +19,35 @@ typedef doremir_device_audio_session_t          session_t;
 typedef doremir_device_audio_stream_callback_t  stream_callback_t;
 typedef doremir_device_audio_session_callback_t session_callback_t;
 
-typedef PaStream*     native_stream_t;
+typedef PaStream     *native_stream_t;
 typedef PaDeviceIndex native_device_t;
 
-struct _doremir_device_audio_session_t {
-        impl_t          impl;               // Dispatcher
-        long            acquired;        
-    };
+struct _doremir_device_audio_session_t
+{
+    impl_t          impl;               // Dispatcher
+    long            acquired;
+};
 
-struct _doremir_device_audio_t  {
-        impl_t          impl;               // Dispatcher
-        bool            muted;
-        double          volume;
-        native_device_t native;
-    };
+struct _doremir_device_audio_t
+{
+    impl_t          impl;               // Dispatcher
+    bool            muted;
+    double          volume;
+    native_device_t native;
+};
 
-struct _doremir_device_audio_stream_t {
-        impl_t          impl;               // Dispatcher
+struct _doremir_device_audio_stream_t
+{
+    impl_t          impl;               // Dispatcher
 
-        device_t        input, output;
-        processor_t     proc;
-        atomic_t        time;
-        dispatcher_t    in_disp;
-        dispatcher_t    out_disp;
+    device_t        input, output;
+    processor_t     proc;
+    atomic_t        time;
+    dispatcher_t    in_disp;
+    dispatcher_t    out_disp;
 
-        native_stream_t native;
-    };
+    native_stream_t native;
+};
 
 static mutex_t pa_mutex;
 static bool    pa_status;
@@ -62,7 +65,7 @@ void doremir_device_audio_terminate()
 
 // --------------------------------------------------------------------------------
 
-static void fatal(char* msg, int error);
+static void fatal(char *msg, int error);
 
 session_t doremir_device_audio_begin_session()
 {
@@ -71,15 +74,15 @@ session_t doremir_device_audio_begin_session()
     doremir_thread_lock(pa_mutex);
     {
         if (pa_status)
-        {
-            // TODO concurrent session error
-        }
+            {
+                // TODO concurrent session error
+            }
         else
-        {
-            Pa_Initialize();
-            pa_status = true;
-            // TODO create and return session object
-        }
+            {
+                Pa_Initialize();
+                pa_status = true;
+                // TODO create and return session object
+            }
     }
     doremir_thread_unlock(pa_mutex);
     // TODO return
@@ -98,10 +101,10 @@ void doremir_device_audio_end_session(session_t session)
     doremir_thread_lock(pa_mutex);
     {
         if (pa_status)
-        {
-            Pa_Terminate();
-            pa_status = false;
-        }
+            {
+                Pa_Terminate();
+                pa_status = false;
+            }
     }
     doremir_thread_unlock(pa_mutex);
 }
@@ -153,8 +156,8 @@ doremir_pair_t doremir_device_audio_channels(device_t device)
 // --------------------------------------------------------------------------------
 
 stream_t doremir_device_audio_start_stream(device_t    input,
-                                           processor_t processor,
-                                           device_t    output)
+        processor_t processor,
+        device_t    output)
 {
     assert(false && "Not implemented");
     // call Pa_OpenStream
@@ -206,10 +209,10 @@ void after_processing(stream_t stream)
 }
 
 int during_processing(stream_t stream)
-{    
+{
     // update stream time
     // call dispatch() on the innner dispatcher
-    
+
     // deliver inputs
     // call process() on top processor
     // deliver outputs
@@ -221,16 +224,16 @@ int during_processing(stream_t stream)
 
 /* The callbacks */
 
-int pa_main_callback(const void                      * input_ptr, 
-                     void                            * output_ptr, 
-                     unsigned long                     frame_count, 
-                     const PaStreamCallbackTimeInfo  * time_info, 
-                     PaStreamCallbackFlags             flags, 
-                     void *                            data)
+int pa_main_callback(const void                       *input_ptr,
+                     void                             *output_ptr,
+                     unsigned long                     frame_count,
+                     const PaStreamCallbackTimeInfo   *time_info,
+                     PaStreamCallbackFlags             flags,
+                     void                             *data)
 {
     // call during_processing
     return 0;
-}                    
+}
 
 void pa_finished_callback(void *userData)
 {
@@ -240,7 +243,7 @@ void pa_finished_callback(void *userData)
 
 // --------------------------------------------------------------------------------
 
-void fatal(char* msg, int error)
+void fatal(char *msg, int error)
 {
     // TODO log
     printf("Fatal error: Doremir: Device: Audio: %s: %d\n", msg, error);

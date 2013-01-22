@@ -9,11 +9,12 @@
 #include <doremir/util.h>
 #include <doremir/buffer.h>
 
-struct _doremir_buffer_t {
-        impl_t      impl;       //  Interface dispatcher
-        size_t      size;
-        uint8_t     * data;
-    };
+struct _doremir_buffer_t
+{
+    impl_t      impl;       //  Interface dispatcher
+    size_t      size;
+    uint8_t      *data;
+};
 
 /**
     @typedef doremir_buffer_t
@@ -90,7 +91,7 @@ doremir_buffer_size(doremir_buffer_t buffer)
  */
 uint8_t
 doremir_buffer_peek(doremir_buffer_t buffer, size_t index)
-{   
+{
     assert(index < buffer->size && "Buffer overflow");
     return buffer->data[index];
 }
@@ -113,7 +114,7 @@ doremir_buffer_poke(doremir_buffer_t buffer, size_t index, uint8_t value)
     @note
         O(1)
  */
-void * doremir_buffer_unsafe_address(doremir_buffer_t buffer)
+void *doremir_buffer_unsafe_address(doremir_buffer_t buffer)
 {
     return buffer->data;
 }
@@ -139,17 +140,18 @@ doremir_string_t buffer_show(doremir_ptr_t a)
     string_t str    = string("<Buffer");
 
     for (size_t i = 0; i < length; ++i)
-    {
-        str = string_dappend(str, string(" "));
-        str = string_dappend(str, doremir_string_format_integer(
-            "%02x",
-            doremir_buffer_peek(buffer, i)));
-    }
+        {
+            str = string_dappend(str, string(" "));
+            str = string_dappend(str, doremir_string_format_integer(
+                                     "%02x",
+                                     doremir_buffer_peek(buffer, i)));
+        }
+
     if (more)
-    {
-        str = string_dappend(str, string(" "));
-        str = string_dappend(str, string("..."));
-    }
+        {
+            str = string_dappend(str, string(" "));
+            str = string_dappend(str, string("..."));
+        }
 
     str = string_dappend(str, string(">"));
     return str;
@@ -162,18 +164,18 @@ doremir_ptr_t buffer_impl(doremir_id_t interface)
     static doremir_destroy_t buffer_destroy_impl = { buffer_destroy };
 
     switch (interface)
-    {
-    case doremir_copy_i:
-        return &buffer_copy_impl;
+        {
+        case doremir_copy_i:
+            return &buffer_copy_impl;
 
-    case doremir_destroy_i:
-        return &buffer_destroy_impl;
+        case doremir_destroy_i:
+            return &buffer_destroy_impl;
 
-    case doremir_string_show_i:
-        return &buffer_show_impl;
+        case doremir_string_show_i:
+            return &buffer_show_impl;
 
-    default:
-        return NULL;
-    }
+        default:
+            return NULL;
+        }
 }
 

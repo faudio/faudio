@@ -25,11 +25,11 @@
 struct node
 {
     size_t          count;      //  Number of references
-    struct node*    next;       //  Next node or null
+    struct node    *next;       //  Next node or null
     ptr_t           value;      //  The value
 };
 
-typedef struct node* node_t;
+typedef struct node *node_t;
 
 struct _doremir_list_t
 {
@@ -42,7 +42,7 @@ void db_node_alloc()
 {
     // dbNodes++;
     // printf("                                                            | Alloc node   (count: %d)\n", dbNodes);
-}   
+}
 void db_node_free()
 {
     // dbNodes--;
@@ -51,12 +51,12 @@ void db_node_free()
 void db_node_take(node_t node)
 {
     // if (node)
-        // printf("                                                            | Take node    (refs: %u)\n", node->count);
+    // printf("                                                            | Take node    (refs: %u)\n", node->count);
 }
 void db_node_release(node_t node)
 {
     // if (node)
-        // printf("                                                            | Release node (refs: %u)\n", node->count);
+    // printf("                                                            | Release node (refs: %u)\n", node->count);
 }
 
 
@@ -64,7 +64,7 @@ void db_node_release(node_t node)
  */
 inline static
 node_t new_node(ptr_t value, node_t next)
-{         
+{
     db_node_alloc();
     node_t node = doremir_new_struct(node);
     node->count = 1;
@@ -77,9 +77,10 @@ node_t new_node(ptr_t value, node_t next)
  */
 inline static
 node_t take_node(node_t node)
-{   
+{
     if (node)
         node->count++;      /* TODO make atomic? */
+
     db_node_take(node);
 
     return node;
@@ -97,11 +98,11 @@ void release_node(node_t node)
     db_node_release(node);
 
     if (node->count == 0)
-    {        
-        db_node_free();
-        release_node(node->next);
-        doremir_delete(node);
-    }
+        {
+            db_node_free();
+            release_node(node->next);
+            doremir_delete(node);
+        }
 }
 
 ptr_t list_impl(doremir_id_t interface);
@@ -124,7 +125,7 @@ void delete_list(list_t list)
 /** Iterate over the nodes of a list. The variable
     var will be a node_t referencing the node in
     the following block.
-    
+
     impl_for_each_node(my_list, node)
         doremir_print("%s\n", &node);
 
@@ -136,7 +137,7 @@ void delete_list(list_t list)
 /** Iterate over the elements of a list. The variable
     var will be a ptr_t referencing the value in
     the following block.
-    
+
     impl_for_each_node(my_list, value)
         doremir_print("%s\n", value);
 
@@ -145,7 +146,7 @@ void delete_list(list_t list)
     for(node_t _n = list->node; _n; _n = _n->next) \
         doremir_let(var, _n->value)
 
-/** Allocate a new node in the given place, then update 
+/** Allocate a new node in the given place, then update
     the place to refer to the the its next pointer.
 
     This can be used to construct a list in place, like
@@ -182,7 +183,7 @@ list_t doremir_list_empty()
 }
 
 list_t doremir_list_single(ptr_t x)
-{              
+{
     return new_list(new_node(x, NULL));
 }
 
@@ -204,7 +205,7 @@ list_t doremir_list_dcons(ptr_t x, list_t xs)
 }
 
 void doremir_list_destroy(list_t xs)
-{                              
+{
     release_node(xs->node);
     delete_list(xs);
 }
@@ -307,12 +308,12 @@ list_t base_append(list_t xs, list_t ys)
     if (is_empty(xs))
         return doremir_list_copy(ys);
     else
-    {                                                                  
-        list_t xst = doremir_list_tail(xs);
-        list_t r = doremir_list_dcons(doremir_list_head(xs), base_append(xst, ys));
-        doremir_list_destroy(xst);
-        return r;
-    }
+        {
+            list_t xst = doremir_list_tail(xs);
+            list_t r = doremir_list_dcons(doremir_list_head(xs), base_append(xst, ys));
+            doremir_list_destroy(xst);
+            return r;
+        }
 }
 
 // TODO rewrite tail recursion as loop
@@ -322,14 +323,14 @@ list_t base_revappend(list_t xs, list_t ys)
     if (is_empty(xs))
         return doremir_list_copy(ys);
     else
-    {
-        list_t xst = doremir_list_tail(xs);
-        list_t con = doremir_list_cons(doremir_list_head(xs), ys);
-        list_t r = base_revappend(xst, con);
-        doremir_list_destroy(xst);
-        doremir_list_destroy(con);
-        return r;
-    }
+        {
+            list_t xst = doremir_list_tail(xs);
+            list_t con = doremir_list_cons(doremir_list_head(xs), ys);
+            list_t r = base_revappend(xst, con);
+            doremir_list_destroy(xst);
+            doremir_list_destroy(con);
+            return r;
+        }
 }
 
 list_t doremir_list_append(list_t xs, list_t ys)
@@ -436,7 +437,7 @@ list_t doremir_list_insert_range(int m, list_t xs, list_t ys)
 }
 
 list_t doremir_list_insert(int index, ptr_t value, list_t list)
-{                                               
+{
     list_t elem = doremir_list_single(value);
     list_t res  = doremir_list_insert_range(index, elem, list);
     doremir_list_destroy(elem);
@@ -686,13 +687,13 @@ bool list_equal(ptr_t a, ptr_t b)
     node_t bn = ((list_t) b)->node;
 
     while (an && bn)
-    {
-        if (!doremir_equal(an->value, bn->value))
-            return false;
+        {
+            if (!doremir_equal(an->value, bn->value))
+                return false;
 
-        an = an->next;
-        bn = bn->next;
-    }
+            an = an->next;
+            bn = bn->next;
+        }
 
     return !(an || bn);
 }
@@ -703,16 +704,16 @@ bool list_less_than(ptr_t a, ptr_t b)
     node_t bn = ((list_t) b)->node;
 
     while (an && bn)
-    {
-        if (doremir_less_than(an->value, bn->value))
-            return true;
+        {
+            if (doremir_less_than(an->value, bn->value))
+                return true;
 
-        if (doremir_greater_than(an->value, bn->value))
-            return false;
+            if (doremir_greater_than(an->value, bn->value))
+                return false;
 
-        an = an->next;
-        bn = bn->next;
-    }
+            an = an->next;
+            bn = bn->next;
+        }
 
     return bn && !an;
 }
@@ -723,16 +724,16 @@ bool list_greater_than(ptr_t a, ptr_t b)
     node_t bn = ((list_t) b)->node;
 
     while (an && bn)
-    {
-        if (doremir_greater_than(an->value, bn->value))
-            return true;
+        {
+            if (doremir_greater_than(an->value, bn->value))
+                return true;
 
-        if (doremir_less_than(an->value, bn->value))
-            return false;
+            if (doremir_less_than(an->value, bn->value))
+                return false;
 
-        an = an->next;
-        bn = bn->next;
-    }
+            an = an->next;
+            bn = bn->next;
+        }
 
     return an && !bn;
 }
@@ -743,13 +744,13 @@ doremir_string_t list_show(ptr_t xs)
     node_t   xn = ((list_t) xs)->node;
 
     while (xn)
-    {
-        s = string_dappend(s, doremir_string_show(xn->value));
-        xn = xn->next;
+        {
+            s = string_dappend(s, doremir_string_show(xn->value));
+            xn = xn->next;
 
-        if (xn)
-            s = string_dappend(s, string(","));
-    };
+            if (xn)
+                s = string_dappend(s, string(","));
+        };
 
     s = string_dappend(s, string("]"));
 
@@ -775,24 +776,24 @@ ptr_t list_impl(doremir_id_t interface)
     static doremir_destroy_t list_destroy_impl = { list_destroy };
 
     switch (interface)
-    {
-    case doremir_equal_i:
-        return &list_equal_impl;
+        {
+        case doremir_equal_i:
+            return &list_equal_impl;
 
-    case doremir_order_i:
-        return &list_order_impl;
+        case doremir_order_i:
+            return &list_order_impl;
 
-    case doremir_string_show_i:
-        return &list_show_impl;
+        case doremir_string_show_i:
+            return &list_show_impl;
 
-    case doremir_copy_i:
-        return &list_copy_impl;
+        case doremir_copy_i:
+            return &list_copy_impl;
 
-    case doremir_destroy_i:
-        return &list_destroy_impl;
+        case doremir_destroy_i:
+            return &list_destroy_impl;
 
-    default:
-        return NULL;
-    }
+        default:
+            return NULL;
+        }
 }
 

@@ -24,7 +24,7 @@ this_proc_t doremir_processor_const_create(type_t type1, type_t type2, ptr_t val
     proc->input_type  = type1;
     proc->output_type = type2;
     proc->value       = value;
-    
+
     return proc;
 }
 
@@ -70,11 +70,11 @@ string_t const_show(doremir_ptr_t a)
 {
     this_proc_t proc = (this_proc_t) a;
     string_t s = string("");
-    
+
     s = string_dappend(s, doremir_string_show(proc->input_type));
     s = string_dappend(s, string(" ~> "));
     s = string_dappend(s, doremir_string_show(proc->output_type));
-    
+
     return s;
 }
 

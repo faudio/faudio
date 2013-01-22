@@ -21,7 +21,7 @@ typedef doremir_processor_info_t        info_t;
 
 doremir_ptr_t seq_impl(doremir_id_t interface);
 
-inline static 
+inline static
 bool check_type(string_t *msg, this_proc_t proc)
 {
     if (msg)
@@ -42,7 +42,7 @@ this_proc_t doremir_processor_seq_create(processor_t proc1, processor_t proc2)
 
     proc->elem[0]       = proc1;
     proc->elem[1]       = proc2;
-    
+
     proc->elemImpl[0]   = doremir_interface(doremir_processor_interface_i, proc->elem[0]);
     proc->elemImpl[1]   = doremir_interface(doremir_processor_interface_i, proc->elem[1]);
 
@@ -91,7 +91,7 @@ void seq_before(doremir_ptr_t a, info_t *info)
     // Allocate buffers
     proc->bufSize = doremir_type_size_of(info->frame_size, proc->bufType);
     proc->buf = malloc(proc->bufSize);
-    
+
     assert(proc->buf && "malloc failed");
 }
 
@@ -110,7 +110,7 @@ void seq_after(doremir_ptr_t a, info_t *info)
 void seq_process(ptr_t a, info_t *info, samples_t input, samples_t output)
 {
     this_proc_t proc = (this_proc_t) a;
-    
+
     proc->elemImpl[0]->process(proc->elem[0], info, input, proc->buf);
     proc->elemImpl[1]->process(proc->elem[1], info, proc->buf, output);
 }
@@ -121,11 +121,11 @@ string_t seq_show(doremir_ptr_t a)
 {
     this_proc_t proc = (this_proc_t) a;
     string_t s = string("");
-    
+
     s = string_dappend(s, doremir_string_show(seq_input_type(proc)));
     s = string_dappend(s, string(" ~> "));
     s = string_dappend(s, doremir_string_show(seq_output_type(proc)));
-    
+
     return s;
 }
 

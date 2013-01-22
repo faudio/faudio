@@ -15,23 +15,25 @@
         * Simple unbounded FIFO
         * Does not support multi-read or multi-write
         * All malloc/free is done in writer thread
-        
+
     Possibilities:
         * Multi read/write
         * Real-time allocator
  */
 
-struct node {
-        struct node *   next;
-        ptr_t           value;
-    };
+struct node
+{
+    struct node    *next;
+    ptr_t           value;
+};
 
-typedef struct node * node_t;
+typedef struct node *node_t;
 
-struct _doremir_atomic_queue_t {
-        impl_t      impl;               //  Interface dispatcher
-        atomic_t    first, div, last;   //  Node refs
-    };
+struct _doremir_atomic_queue_t
+{
+    impl_t      impl;               //  Interface dispatcher
+    atomic_t    first, div, last;   //  Node refs
+};
 
 doremir_ptr_t atomic_queue_impl(doremir_id_t interface);
 
@@ -74,7 +76,7 @@ static inline node_t get_node(atomic_t place)
 
 /** Atomically set a place to a node.
  */
-static inline void set_node(atomic_t place, node_t node) 
+static inline void set_node(atomic_t place, node_t node)
 {
     doremir_atomic_set(place, node);
 }
@@ -91,11 +93,11 @@ static inline void forward_node(atomic_t place)
 static inline void delete_range(atomic_t begin, atomic_t end)
 {
     while (get_node(begin) != get_node(end))
-{
-        node_t node = get_node(begin);
-        forward_node(begin);
-        delete_node(node);
-    }
+        {
+            node_t node = get_node(begin);
+            forward_node(begin);
+            delete_node(node);
+        }
 }
 
 /** Non-atomically delete [begin,end]
@@ -111,7 +113,7 @@ static inline void delete_range_end(atomic_t begin, atomic_t end)
 doremir_atomic_queue_t doremir_atomic_queue_create()
 {
     atomic_queue_t queue = new_queue();
-    
+
     node_t node  = new_node(NULL);
     set_node(queue->first, node);
     set_node(queue->div,   node);
@@ -147,11 +149,11 @@ doremir_ptr_t doremir_atomic_queue_read(doremir_atomic_queue_t queue)
     if (get_node(queue->div) == get_node(queue->last))
         return NULL;
     else
-    {
-        value = get_node(queue->div)->value;
-        forward_node(queue->div);
-        return value;
-    }
+        {
+            value = get_node(queue->div)->value;
+            forward_node(queue->div);
+            return value;
+        }
 }
 
 // --------------------------------------------------------------------------------
@@ -176,15 +178,15 @@ doremir_ptr_t atomic_queue_impl(doremir_id_t interface)
     static doremir_destroy_t atomic_queue_destroy_impl = { atomic_queue_destroy };
 
     switch (interface)
-    {
-    case doremir_string_show_i:
-        return &atomic_queue_show_impl;
+        {
+        case doremir_string_show_i:
+            return &atomic_queue_show_impl;
 
-    case doremir_destroy_i:
-        return &atomic_queue_destroy_impl;
+        case doremir_destroy_i:
+            return &atomic_queue_destroy_impl;
 
-    default:
-        return NULL;
-    }
+        default:
+            return NULL;
+        }
 }
 

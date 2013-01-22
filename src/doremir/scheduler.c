@@ -13,28 +13,29 @@
  */
 
 typedef doremir_scheduler_action_t  action_t;
-typedef doremir_scheduler_t         scheduler_t;        
+typedef doremir_scheduler_t         scheduler_t;
 typedef doremir_thread_improving_t  improving_t;
 
 
-struct _doremir_scheduler_t {
+struct _doremir_scheduler_t
+{
     impl_t                  impl;           // Dispatcher
 
     improving_t             time;           // Current time
     priority_queue_t        queue;          // Enqueued values
-    
+
 };
 
 ptr_t scheduler_impl(doremir_id_t interface);
 
-inline static scheduler_t new_scheduler() 
+inline static scheduler_t new_scheduler()
 {
     scheduler_t scheduler = doremir_new(scheduler);
     scheduler->impl = &scheduler_impl;
     return scheduler;
 }
 
-inline static void delete_scheduler(scheduler_t scheduler) 
+inline static void delete_scheduler(scheduler_t scheduler)
 {
     doremir_delete(scheduler);
 }
@@ -67,8 +68,8 @@ void doremir_scheduler_execute(scheduler_t scheduler)
 {
     // now = get_time()
     // while (peek(q)->time < now)
-        // if (!action interrupded or canceled)
-            // execute
+    // if (!action interrupded or canceled)
+    // execute
 }
 
 // --------------------------------------------------------------------------------
@@ -89,7 +90,7 @@ doremir_string_t scheduler_show(doremir_ptr_t v)
 void scheduler_destroy(doremir_ptr_t a)
 {
     doremir_scheduler_destroy(a);
-} 
+}
 
 
 doremir_ptr_t scheduler_impl(doremir_id_t interface)
@@ -97,21 +98,21 @@ doremir_ptr_t scheduler_impl(doremir_id_t interface)
     static doremir_equal_t scheduler_equal_impl = { scheduler_equal };
     static doremir_string_show_t scheduler_show_impl = { scheduler_show };
     static doremir_destroy_t scheduler_destroy_impl = { scheduler_destroy };
-    
+
     switch (interface)
-    {
-    case doremir_equal_i:
-        return &scheduler_equal_impl;
-    
-    case doremir_string_show_i:
-        return &scheduler_show_impl;
-    
-    case doremir_destroy_i:
-        return &scheduler_destroy_impl;
-    
-    default:
-        return NULL;
-    } 
+        {
+        case doremir_equal_i:
+            return &scheduler_equal_impl;
+
+        case doremir_string_show_i:
+            return &scheduler_show_impl;
+
+        case doremir_destroy_i:
+            return &scheduler_destroy_impl;
+
+        default:
+            return NULL;
+        }
 }
 
 

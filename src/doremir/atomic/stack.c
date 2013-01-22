@@ -15,22 +15,24 @@
         * Simple unbounded FIFO
         * Does not support multi-read or multi-write
         * All malloc/free is done in writer thread
-        
+
     Possibilities:
         * Multi read/write
         * Real-time allocator
  */
 
-struct node {
-        atomic_t    next;
-        ptr_t       value;
-    };
+struct node
+{
+    atomic_t    next;
+    ptr_t       value;
+};
 
-typedef struct node * node_t;
+typedef struct node *node_t;
 
-struct _doremir_atomic_stack_t {
-        impl_t      impl;               //  Interface dispatcher
-    };
+struct _doremir_atomic_stack_t
+{
+    impl_t      impl;               //  Interface dispatcher
+};
 
 doremir_ptr_t atomic_stack_impl(doremir_id_t interface);
 
@@ -112,15 +114,15 @@ doremir_ptr_t atomic_stack_impl(doremir_id_t interface)
     static doremir_destroy_t atomic_stack_destroy_impl = { atomic_stack_destroy };
 
     switch (interface)
-    {
-    case doremir_string_show_i:
-        return &atomic_stack_show_impl;
+        {
+        case doremir_string_show_i:
+            return &atomic_stack_show_impl;
 
-    case doremir_destroy_i:
-        return &atomic_stack_destroy_impl;
+        case doremir_destroy_i:
+            return &atomic_stack_destroy_impl;
 
-    default:
-        return NULL;
-    }
+        default:
+            return NULL;
+        }
 }
 

@@ -8,12 +8,13 @@
 #include <doremir/pair.h>
 #include <doremir/util.h>
 
-struct _doremir_pair_t {
-        impl_t      impl;       //  Interface dispatcher
+struct _doremir_pair_t
+{
+    impl_t      impl;       //  Interface dispatcher
 
-        ptr_t       fst;        //  Values
-        ptr_t       snd;
-    };
+    ptr_t       fst;        //  Values
+    ptr_t       snd;
+};
 
 doremir_ptr_t pair_impl(doremir_id_t interface);
 
@@ -69,17 +70,17 @@ doremir_pair_t doremir_pair_swap(doremir_pair_t pair)
 
 // (a, (b, c)) -> ((a, b), c)
 doremir_pair_t doremir_pair_assoc(doremir_pair_t p)
-{                             
+{
     ptr_t a = doremir_copy(p->fst);
     ptr_t b = doremir_copy(((pair_t) p->snd)->fst);
     ptr_t c = doremir_copy(((pair_t) p->snd)->snd);
-    
+
     return new_pair(new_pair(a, b), c);
 }
 
 // ((a, b), c) -> (a, (b, c))
 doremir_pair_t doremir_pair_unassoc(doremir_pair_t p)
-{                   
+{
     ptr_t a = doremir_copy(((pair_t) p->fst)->fst);
     ptr_t b = doremir_copy(((pair_t) p->fst)->snd);
     ptr_t c = doremir_copy(p->snd);
@@ -187,24 +188,24 @@ doremir_ptr_t pair_impl(doremir_id_t interface)
     static doremir_destroy_t pair_destroy_impl = { pair_destroy };
 
     switch (interface)
-    {
-    case doremir_equal_i:
-        return &pair_equal_impl;
+        {
+        case doremir_equal_i:
+            return &pair_equal_impl;
 
-    case doremir_order_i:
-        return &pair_order_impl;
+        case doremir_order_i:
+            return &pair_order_impl;
 
-    case doremir_string_show_i:
-        return &pair_show_impl;
+        case doremir_string_show_i:
+            return &pair_show_impl;
 
-    case doremir_copy_i:
-        return &pair_copy_impl;
+        case doremir_copy_i:
+            return &pair_copy_impl;
 
-    case doremir_destroy_i:
-        return &pair_destroy_impl;
+        case doremir_destroy_i:
+            return &pair_destroy_impl;
 
-    default:
-        return NULL;
-    }
+        default:
+            return NULL;
+        }
 }
 

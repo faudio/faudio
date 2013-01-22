@@ -21,16 +21,16 @@
  */
 doremir_type_t doremir_processor_input_type(doremir_processor_t a)
 {
-    return ((proc_interface_t*) 
-        doremir_interface(doremir_processor_interface_i, a))->input_type(a);
+    return ((proc_interface_t *)
+            doremir_interface(doremir_processor_interface_i, a))->input_type(a);
 }
 
 /** Return the output type of the given processor.
  */
 doremir_type_t doremir_processor_output_type(doremir_processor_t a)
 {
-    return ((proc_interface_t*) 
-        doremir_interface(doremir_processor_interface_i, a))->output_type(a);
+    return ((proc_interface_t *)
+            doremir_interface(doremir_processor_interface_i, a))->output_type(a);
 }
 
 
@@ -42,12 +42,12 @@ doremir_type_t doremir_processor_output_type(doremir_processor_t a)
     @param data             Value to be passed to function.
  */
 doremir_processor_t doremir_processor_unary(doremir_type_t  input_type,
-                                            doremir_type_t  output_type,
-                                            doremir_unary_t function,
-                                            doremir_ptr_t   data)
+        doremir_type_t  output_type,
+        doremir_unary_t function,
+        doremir_ptr_t   data)
 {
-    return (processor_t) 
-        doremir_processor_unary_create(input_type, output_type, function, data);
+    return (processor_t)
+           doremir_processor_unary_create(input_type, output_type, function, data);
 }
 
 /** Lift a binary function to a processor.
@@ -59,20 +59,20 @@ doremir_processor_t doremir_processor_unary(doremir_type_t  input_type,
     @param data             Value to be passed to function.
  */
 doremir_processor_t doremir_processor_binary(doremir_type_t   input_type1,
-                                             doremir_type_t   input_type2,
-                                             doremir_type_t   output_type,
-                                             doremir_binary_t function,
-                                             doremir_ptr_t    data)
+        doremir_type_t   input_type2,
+        doremir_type_t   output_type,
+        doremir_binary_t function,
+        doremir_ptr_t    data)
 {
-    return (processor_t) 
-        doremir_processor_binary_create(input_type1, input_type2, output_type, function, data);
+    return (processor_t)
+           doremir_processor_binary_create(input_type1, input_type2, output_type, function, data);
 }
-                                                         
+
 
 /** Create an identity processor.
 
     This processor returns input of the given type unmodified.
-    
+
     @param type             Type of input.
  */
 doremir_processor_t doremir_processor_identity(doremir_type_t type)
@@ -90,21 +90,21 @@ doremir_processor_t doremir_processor_identity(doremir_type_t type)
     @param value
  */
 doremir_processor_t doremir_processor_constant(doremir_type_t   input_type,
-                                               doremir_type_t   output_type,
-                                               doremir_ptr_t    value)
+        doremir_type_t   output_type,
+        doremir_ptr_t    value)
 {
     return (processor_t) doremir_processor_const_create(input_type, output_type, value);
 }
 
 /** Create a delay processor.
-    
+
     This processor delays its input by the given value.
 
     @param input_type       Type of input.
     @param samples          Number of samples.
  */
 doremir_processor_t doremir_processor_delay(doremir_type_t  type,
-                                            size_t          samples)
+        size_t          samples)
 {
     assert(false && "Not implemented");
     // return (processor_t) doremir_processor_delay_create(type, samples);
@@ -122,58 +122,58 @@ doremir_processor_t doremir_processor_split(doremir_type_t type)
 
     The output type of the first processor must match the input type of the
     second processor, or an error is returned.
-    
+
         p : `a ~> b`        q : `b ~> c`
         --------------------------------
                p >> q : `a ~> c`.
 
-    @param proc 
+    @param proc
         First processor in chain.
-    @param proc 
+    @param proc
         Second processor in chain.
-    @return     
+    @return
         A new processor, or an error.
  */
 doremir_processor_t doremir_processor_seq(doremir_processor_t proc1,
-                                          doremir_processor_t proc2)
+        doremir_processor_t proc2)
 {
     return (processor_t)
-        doremir_processor_seq_create(proc1, proc2);
+           doremir_processor_seq_create(proc1, proc2);
 }
 
 /** Create a processor by combining the given processors in parallel.
 
     The input and output types are pairs of the input and output types of the given processors.
-    
+
         p : `a ~> b`        q : `c ~> d`
         --------------------------------
             p || q : `(a,c) ~> (b,d)`.
 
-    @param proc 
+    @param proc
         Left processor in hub.
-    @param proc 
+    @param proc
         Right processor in hub.
-    @return     
+    @return
         A new processor, or an error.
  */
 doremir_processor_t doremir_processor_par(doremir_processor_t proc1,
-                                          doremir_processor_t proc2)
+        doremir_processor_t proc2)
 {
     return (processor_t)
-        doremir_processor_par_create(proc1, proc2);
+           doremir_processor_par_create(proc1, proc2);
 }
 
 /** Create a processor by feeding the given processor back into itself.
 
     The given processor must have inputs and outputs on the form `(a,b)`.
-    
+
         p : `(a,c) ~> (b,c)`
         ---------------------
          loop p : `a ~> b`.
 
-    @param proc 
+    @param proc
         Processor to close feedback loop over.
-    @return     
+    @return
         A new processor, or an error.
  */
 doremir_processor_t doremir_processor_loop(doremir_processor_t proc)
@@ -186,8 +186,14 @@ doremir_processor_t doremir_processor_loop(doremir_processor_t proc)
 
 
 
-uint8_t prim_add_i8_i8   (ptr_t c, uint8_t a, uint8_t b) { return a + b; };
-float   prim_add_f32_f32 (ptr_t c, float a, float b)     { return a + b; };
+uint8_t prim_add_i8_i8(ptr_t c, uint8_t a, uint8_t b)
+{
+    return a + b;
+};
+float   prim_add_f32_f32(ptr_t c, float a, float b)
+{
+    return a + b;
+};
 
 doremir_processor_t doremir_processor_add(doremir_type_t type)
 {

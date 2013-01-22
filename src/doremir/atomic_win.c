@@ -8,13 +8,14 @@
 #include <doremir/atomic.h>
 #include <Windows.h>
 
-/* 
+/*
     TODO these are strictly 32-bit for now
  */
-struct _doremir_atomic_t {
-        impl_t      impl;       //  Interface dispatcher
-        intptr_t    value;
-    };
+struct _doremir_atomic_t
+{
+    impl_t      impl;       //  Interface dispatcher
+    intptr_t    value;
+};
 
 doremir_atomic_t doremir_atomic_create()
 {

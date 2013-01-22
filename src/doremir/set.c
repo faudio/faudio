@@ -29,10 +29,11 @@
 #define base_size           doremir_list_length
 #define base_to_list        doremir_list_to_list
 
-struct _doremir_set_t {
-        impl_t          impl;       //  Interface dispatcher
-        base_t          elems;
-    };
+struct _doremir_set_t
+{
+    impl_t          impl;       //  Interface dispatcher
+    base_t          elems;
+};
 
 doremir_ptr_t set_impl(doremir_id_t interface);
 
@@ -64,8 +65,9 @@ doremir_set_t doremir_set_single(doremir_ptr_t x)
 }
 
 doremir_set_t doremir_set_add(doremir_ptr_t x, doremir_set_t set)
-{                             
+{
     int i = base_index_of(x, set->elems);
+
     if (i < 0)
         return new_set(base_insert((-i - 1), x, set->elems));
     else
@@ -75,6 +77,7 @@ doremir_set_t doremir_set_add(doremir_ptr_t x, doremir_set_t set)
 doremir_set_t doremir_set_remove(doremir_ptr_t x, doremir_set_t set)
 {
     int i = base_index_of(x, set->elems);
+
     if (i < 0)
         return doremir_set_copy(set);
     else
@@ -82,7 +85,7 @@ doremir_set_t doremir_set_remove(doremir_ptr_t x, doremir_set_t set)
 }
 
 doremir_set_t doremir_set_dadd(doremir_ptr_t x, doremir_set_t set)
-{                             
+{
     set_t set2 = doremir_set_add(x, set);
     doremir_set_destroy(set);
     return set2;
@@ -131,7 +134,7 @@ bool doremir_set_is_single(doremir_set_t set)
 bool doremir_set_is_subset_of(doremir_set_t a, doremir_set_t b)
 {
     doremir_for_each(x, base_to_list(a->elems))
-    {                               
+    {
         if (!doremir_set_has(x, b))
             return false;
     }
@@ -142,6 +145,7 @@ bool doremir_set_is_proper_subset_of(doremir_set_t a, doremir_set_t b)
 {
     if (doremir_set_size(a) >= doremir_set_size(b))
         return false;
+
     return doremir_set_is_subset_of(a, b);
 }
 
@@ -194,6 +198,7 @@ set_t doremir_set(int count, ...)
     va_list args;
 
     va_start(args, count);
+
     for (int i = 0; i < count; ++i)
         s = doremir_set_dadd(va_arg(args, ptr_t), s);
 
@@ -237,6 +242,7 @@ doremir_string_t set_show(doremir_ptr_t x)
     doremir_for_each_last(value, base_to_list(set->elems), last)
     {
         s = string_dappend(s, doremir_string_show(value));
+
         if (!last)
             s = string_dappend(s, string(","));
     }
@@ -262,21 +268,21 @@ doremir_ptr_t set_impl(doremir_id_t interface)
     static doremir_destroy_t set_destroy_impl = { set_destroy };
 
     switch (interface)
-    {
-    case doremir_equal_i:
-        return &set_equal_impl;
+        {
+        case doremir_equal_i:
+            return &set_equal_impl;
 
-    case doremir_string_show_i:
-        return &set_show_impl;
+        case doremir_string_show_i:
+            return &set_show_impl;
 
-    case doremir_copy_i:
-        return &set_copy_impl;
+        case doremir_copy_i:
+            return &set_copy_impl;
 
-    case doremir_destroy_i:
-        return &set_destroy_impl;
+        case doremir_destroy_i:
+            return &set_destroy_impl;
 
-    default:
-        return NULL;
-    }
+        default:
+            return NULL;
+        }
 }
 

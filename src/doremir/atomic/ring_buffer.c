@@ -13,14 +13,15 @@
 
 // http://www.cs.sunysb.edu/~skiena/392/programs/queue.c
 
-struct _doremir_atomic_ring_buffer_t {
+struct _doremir_atomic_ring_buffer_t
+{
 
-        impl_t              impl;       //  Interface dispatcher
-        buffer_t            data;       //  Data buffer
+    impl_t              impl;       //  Interface dispatcher
+    buffer_t            data;       //  Data buffer
 
-        atomic_t            start;
-        atomic_t            stop;
-    };
+    atomic_t            start;
+    atomic_t            stop;
+};
 
 doremir_ptr_t atomic_ring_buffer_impl(doremir_id_t interface);
 
@@ -48,7 +49,7 @@ doremir_atomic_ring_buffer_t doremir_atomic_ring_buffer_create(size_t size)
     @note
         O(n)
  */
-doremir_atomic_ring_buffer_t 
+doremir_atomic_ring_buffer_t
 doremir_atomic_ring_buffer_copy(doremir_atomic_ring_buffer_t buffer)
 {
     ringbuffer_t b = doremir_new(atomic_ring_buffer);
@@ -68,7 +69,7 @@ doremir_atomic_ring_buffer_copy(doremir_atomic_ring_buffer_t buffer)
     @note
         O(n)
  */
-doremir_atomic_ring_buffer_t 
+doremir_atomic_ring_buffer_t
 doremir_atomic_ring_buffer_resize(size_t  size,
                                   doremir_atomic_ring_buffer_t buffer)
 {
@@ -146,15 +147,15 @@ doremir_ptr_t atomic_ring_buffer_impl(doremir_id_t interface)
     static doremir_destroy_t atomic_ring_buffer_destroy_impl = { atomic_ring_buffer_destroy };
 
     switch (interface)
-    {
-    case doremir_string_show_i:
-        return &atomic_ring_buffer_show_impl;
+        {
+        case doremir_string_show_i:
+            return &atomic_ring_buffer_show_impl;
 
-    case doremir_destroy_i:
-        return &atomic_ring_buffer_destroy_impl;
+        case doremir_destroy_i:
+            return &atomic_ring_buffer_destroy_impl;
 
-    default:
-        return NULL;
-    }
+        default:
+            return NULL;
+        }
 }
 

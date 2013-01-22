@@ -19,7 +19,7 @@ this_proc_t doremir_processor_id_create(type_t type)
 {
     this_proc_t proc  = doremir_new(processor_id_proc);
     proc->impl        = &id_impl;
-    
+
     proc->type  = type;
     return proc;
 }
@@ -65,11 +65,11 @@ string_t id_show(doremir_ptr_t a)
 {
     this_proc_t proc = (this_proc_t) a;
     string_t s = string("");
-    
+
     s = string_dappend(s, doremir_string_show(proc->type));
     s = string_dappend(s, string(" ~> "));
     s = string_dappend(s, doremir_string_show(proc->type));
-    
+
     return s;
 }
 

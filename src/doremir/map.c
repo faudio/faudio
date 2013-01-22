@@ -17,18 +17,20 @@
         * Performance, memory etc depend entirely on Set implementation
  */
 
-struct entry {
-        impl_t      impl;       //  Interface dispatcher
-        ptr_t       key;        //  Values
-        ptr_t       value;
-    };      
+struct entry
+{
+    impl_t      impl;       //  Interface dispatcher
+    ptr_t       key;        //  Values
+    ptr_t       value;
+};
 
 typedef struct entry *entry_t;
 
-struct _doremir_map_t {
-        impl_t          impl;       //  Interface dispatcher
-        set_t           entries;    //  Set of entries
-    };
+struct _doremir_map_t
+{
+    impl_t          impl;       //  Interface dispatcher
+    set_t           entries;    //  Set of entries
+};
 
 doremir_ptr_t map_impl(doremir_id_t interface);
 doremir_ptr_t entry_impl(doremir_id_t interface);
@@ -70,7 +72,7 @@ delete_map(map_t map)
 // --------------------------------------------------------------------------------
 
 doremir_map_t doremir_map_empty()
-{        
+{
     return new_map(doremir_set_empty());
 }
 
@@ -95,7 +97,7 @@ doremir_ptr_t doremir_map_get(doremir_map_key_t key, doremir_map_t map)
 }
 
 doremir_map_t doremir_map_add_entry(doremir_pair_t x, doremir_map_t map)
-{                           
+{
     entry_t entry = new_entry(doremir_pair_fst(x), doremir_pair_snd(x));
     return new_map(doremir_set_add(entry, map->entries));
 }
@@ -118,7 +120,7 @@ void doremir_map_destroy(doremir_map_t map)
 }
 
 bool doremir_map_has_key(doremir_map_key_t key, doremir_map_t map)
-{                      
+{
     // TODO find for set
     assert(false && "Not implemented");
 }
@@ -213,25 +215,25 @@ doremir_ptr_t entry_impl(doremir_id_t interface)
     static doremir_destroy_t entry_destroy_impl = { entry_destroy };
 
     switch (interface)
-    {
-    case doremir_equal_i:
-        return &entry_equal_impl;
+        {
+        case doremir_equal_i:
+            return &entry_equal_impl;
 
-    case doremir_order_i:
-        return &entry_order_impl;
+        case doremir_order_i:
+            return &entry_order_impl;
 
-    case doremir_string_show_i:
-        return &entry_show_impl;
+        case doremir_string_show_i:
+            return &entry_show_impl;
 
-    case doremir_copy_i:
-        return &entry_copy_impl;
+        case doremir_copy_i:
+            return &entry_copy_impl;
 
-    case doremir_destroy_i:
-        return &entry_destroy_impl;
+        case doremir_destroy_i:
+            return &entry_destroy_impl;
 
-    default:
-        return NULL;
-    }
+        default:
+            return NULL;
+        }
 }
 
 
@@ -262,13 +264,14 @@ doremir_string_t map_show(doremir_ptr_t x)
 {
     map_t map = (map_t) x;
     string_t s  = string("{");
-        
+
     doremir_for_each_last(x, doremir_set_to_list(map->entries), last)
-    {                      
+    {
         entry_t entry = x;
         s = string_dappend(s, doremir_string_show(entry->key));
         s = string_dappend(s, string(": "));
         s = string_dappend(s, doremir_string_show(entry->value));
+
         if (!last)
             s = string_dappend(s, string(", "));
     }
@@ -294,22 +297,21 @@ doremir_ptr_t map_impl(doremir_id_t interface)
     static doremir_destroy_t map_destroy_impl = { map_destroy };
 
     switch (interface)
-    {
-    case doremir_equal_i:
-        return &map_equal_impl;
+        {
+        case doremir_equal_i:
+            return &map_equal_impl;
 
-    case doremir_string_show_i:
-        return &map_show_impl;
+        case doremir_string_show_i:
+            return &map_show_impl;
 
-    case doremir_copy_i:
-        return &map_copy_impl;
+        case doremir_copy_i:
+            return &map_copy_impl;
 
-    case doremir_destroy_i:
-        return &map_destroy_impl;
+        case doremir_destroy_i:
+            return &map_destroy_impl;
 
-    default:
-        return NULL;
-    }
+        default:
+            return NULL;
+        }
 }
 
-    

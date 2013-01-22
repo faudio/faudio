@@ -11,12 +11,13 @@
 typedef doremir_ratio_num_t num_t;
 typedef doremir_ratio_denom_t denom_t;
 
-struct _doremir_ratio_t {
-        impl_t          impl;       //  Interface dispatcher
+struct _doremir_ratio_t
+{
+    impl_t          impl;       //  Interface dispatcher
 
-        num_t           num;        //  Components
-        denom_t         denom;
-    };
+    num_t           num;        //  Components
+    denom_t         denom;
+};
 
 ptr_t ratio_impl(doremir_id_t interface);
 
@@ -84,7 +85,7 @@ ratio_t doremir_ratio_add(ratio_t x, ratio_t y)
     num_t   c = y->num;
     denom_t d = y->denom;
 
-    return ratio( a*d + b*c, b*d );
+    return ratio(a * d + b * c, b * d);
 }
 
 ratio_t doremir_ratio_subtract(ratio_t x, ratio_t y)
@@ -94,7 +95,7 @@ ratio_t doremir_ratio_subtract(ratio_t x, ratio_t y)
     num_t   c = y->num;
     denom_t d = y->denom;
 
-    return ratio( a*d - b*c, b*d );
+    return ratio(a * d - b * c, b * d);
 }
 
 ratio_t doremir_ratio_multiply(ratio_t x, ratio_t y)
@@ -104,7 +105,7 @@ ratio_t doremir_ratio_multiply(ratio_t x, ratio_t y)
     num_t   c = y->num;
     denom_t d = y->denom;
 
-    return ratio( a*c, b*d );
+    return ratio(a * c, b * d);
 }
 
 ratio_t doremir_ratio_divide(ratio_t x, ratio_t y)
@@ -114,40 +115,41 @@ ratio_t doremir_ratio_divide(ratio_t x, ratio_t y)
     num_t   c = y->num;
     denom_t d = y->denom;
 
-    return ratio( a*d, b*c );
+    return ratio(a * d, b * c);
 }
 
 ratio_t doremir_ratio_succ(ratio_t x)
 {
-    return doremir_ratio_add(x, ratio(1,1));
+    return doremir_ratio_add(x, ratio(1, 1));
 }
 
 ratio_t doremir_ratio_pred(ratio_t x)
 {
-    return doremir_ratio_subtract(x, ratio(1,1));
+    return doremir_ratio_subtract(x, ratio(1, 1));
 }
 
 ratio_t doremir_ratio_negate(ratio_t x)
 {
-    return doremir_ratio_multiply(x, ratio(-1,1));
+    return doremir_ratio_multiply(x, ratio(-1, 1));
 }
 
 ratio_t doremir_ratio_recip(ratio_t x)
 {
-    return doremir_ratio_divide(ratio(1,1), x);
+    return doremir_ratio_divide(ratio(1, 1), x);
 }
 
 ratio_t doremir_ratio_normalize(ratio_t x)
 {
     num_t   a = x->num;
     denom_t b = x->denom;
-    
+
     if (b < 0)
-    {
-        a *= -1;
-        b *= -1;
-    }
-    return ratio( a, b );
+        {
+            a *= -1;
+            b *= -1;
+        }
+
+    return ratio(a, b);
 }
 
 ratio_t doremir_ratio_absolute(ratio_t x)
@@ -155,12 +157,14 @@ ratio_t doremir_ratio_absolute(ratio_t x)
     num_t   a = x->num;
     denom_t b = x->denom;
     a *= -1;
+
     if (b < 0)
-    {
-        a *= -1;
-        b *= -1;
-    }
-    return ratio( a, b );
+        {
+            a *= -1;
+            b *= -1;
+        }
+
+    return ratio(a, b);
 }
 
 
@@ -234,11 +238,11 @@ doremir_string_t ratio_show(ptr_t a)
 {
     ratio_t b = (ratio_t) a;
     string_t s = string("");
-    
+
     s = string_dappend(s, doremir_string_show(i32(b->num)));
     s = string_dappend(s, string("/"));
     s = string_dappend(s, doremir_string_show(i32(b->denom)));
-    
+
     return s;
 }
 
@@ -254,41 +258,41 @@ void ratio_destroy(ptr_t a)
 
 ptr_t ratio_impl(doremir_id_t interface)
 {
-    static doremir_equal_t ratio_equal_impl 
+    static doremir_equal_t ratio_equal_impl
         = { ratio_equal };
-    static doremir_order_t ratio_order_impl 
+    static doremir_order_t ratio_order_impl
         = { ratio_less_than, ratio_greater_than };
-    static doremir_string_show_t ratio_show_impl 
+    static doremir_string_show_t ratio_show_impl
         = { ratio_show };
-    static doremir_number_t  ratio_number_impl 
+    static doremir_number_t  ratio_number_impl
         = { ratio_add, ratio_subtract, ratio_multiply, ratio_divide, ratio_absolute };
-    static doremir_copy_t ratio_copy_impl 
+    static doremir_copy_t ratio_copy_impl
         = { ratio_copy };
-    static doremir_destroy_t ratio_destroy_impl 
+    static doremir_destroy_t ratio_destroy_impl
         = { ratio_destroy };
 
     switch (interface)
-    {
-    case doremir_equal_i:
-        return &ratio_equal_impl;
+        {
+        case doremir_equal_i:
+            return &ratio_equal_impl;
 
-    case doremir_order_i:
-        return &ratio_order_impl;
+        case doremir_order_i:
+            return &ratio_order_impl;
 
-    case doremir_string_show_i:
-        return &ratio_show_impl;
+        case doremir_string_show_i:
+            return &ratio_show_impl;
 
-    case doremir_number_i:
-        return &ratio_number_impl;
+        case doremir_number_i:
+            return &ratio_number_impl;
 
-    case doremir_copy_i:
-        return &ratio_copy_impl;
+        case doremir_copy_i:
+            return &ratio_copy_impl;
 
-    case doremir_destroy_i:
-        return &ratio_destroy_impl;
+        case doremir_destroy_i:
+            return &ratio_destroy_impl;
 
-    default:
-        return NULL;
-    }
+        default:
+            return NULL;
+        }
 }
 

@@ -19,7 +19,7 @@ typedef doremir_processor_info_t            info_t;
 
 doremir_ptr_t par_impl(doremir_id_t interface);
 
-inline static 
+inline static
 bool check_type(string_t *msg, this_proc_t proc)
 {
     // Nothing to check
@@ -33,7 +33,7 @@ this_proc_t doremir_processor_par_create(processor_t proc1, processor_t proc2)
 
     proc->elem[0]       = proc1;
     proc->elem[1]       = proc2;
-    
+
     proc->elemImpl[0]   = doremir_interface(doremir_processor_interface_i, proc->elem[0]);
     proc->elemImpl[1]   = doremir_interface(doremir_processor_interface_i, proc->elem[1]);
 
@@ -109,11 +109,11 @@ string_t par_show(doremir_ptr_t a)
 {
     this_proc_t proc = (this_proc_t) a;
     string_t s = string("");
-    
+
     s = string_dappend(s, doremir_string_show(par_input_type(proc)));
     s = string_dappend(s, string(" ~> "));
     s = string_dappend(s, doremir_string_show(par_output_type(proc)));
-    
+
     return s;
 }
 

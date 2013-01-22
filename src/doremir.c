@@ -35,7 +35,7 @@
     vvvvvvvv vvvvvvvv vvvvvvvv vvvvv001     0x1
     ptr
     vvvvvvvv vvvvvvvv vvvvvvvv vvvvv000     0x0
-    
+
     Note: ptr includes 0 (NULL)
  */
 
@@ -47,36 +47,68 @@ int doremir_type(doremir_ptr_t a)
 char *doremir_type_str(doremir_ptr_t a)
 {
     switch (doremir_type(a))
-    {
-    case 7:
-        return "bool";
-    case 6:
-        return "int8";
-    case 5:
-        return "int16";
-    case 4:
-        return "int32";
-    case 3:
-        return "int64";
-    case 2:
-        return "float";
-    case 1:
-        return "double";
-    case 0:
-        return "ptr";
-    default:
-        return "unknown";
-    }
+        {
+        case 7:
+            return "bool";
+
+        case 6:
+            return "int8";
+
+        case 5:
+            return "int16";
+
+        case 4:
+            return "int32";
+
+        case 3:
+            return "int64";
+
+        case 2:
+            return "float";
+
+        case 1:
+            return "double";
+
+        case 0:
+            return "ptr";
+
+        default:
+            return "unknown";
+        }
 }
 
-bool doremir_is_bool(doremir_ptr_t x)   { return (((intptr_t) x) & 0x7) == 0x7; }
-bool doremir_is_int8(doremir_ptr_t x)   { return (((intptr_t) x) & 0x7) == 0x6; }
-bool doremir_is_int16(doremir_ptr_t x)  { return (((intptr_t) x) & 0x7) == 0x5; }
-bool doremir_is_int32(doremir_ptr_t x)  { return (((intptr_t) x) & 0x7) == 0x4; }
-bool doremir_is_int64(doremir_ptr_t x)  { return (((intptr_t) x) & 0x7) == 0x3; }
-bool doremir_is_float(doremir_ptr_t x)  { return (((intptr_t) x) & 0x7) == 0x2; }
-bool doremir_is_double(doremir_ptr_t x) { return (((intptr_t) x) & 0x7) == 0x1; }
-bool doremir_is_ref(doremir_ptr_t x)    { return (((intptr_t) x) & 0x7) == 0x0; }
+bool doremir_is_bool(doremir_ptr_t x)
+{
+    return (((intptr_t) x) & 0x7) == 0x7;
+}
+bool doremir_is_int8(doremir_ptr_t x)
+{
+    return (((intptr_t) x) & 0x7) == 0x6;
+}
+bool doremir_is_int16(doremir_ptr_t x)
+{
+    return (((intptr_t) x) & 0x7) == 0x5;
+}
+bool doremir_is_int32(doremir_ptr_t x)
+{
+    return (((intptr_t) x) & 0x7) == 0x4;
+}
+bool doremir_is_int64(doremir_ptr_t x)
+{
+    return (((intptr_t) x) & 0x7) == 0x3;
+}
+bool doremir_is_float(doremir_ptr_t x)
+{
+    return (((intptr_t) x) & 0x7) == 0x2;
+}
+bool doremir_is_double(doremir_ptr_t x)
+{
+    return (((intptr_t) x) & 0x7) == 0x1;
+}
+bool doremir_is_ref(doremir_ptr_t x)
+{
+    return (((intptr_t) x) & 0x7) == 0x0;
+}
 
 
 // --------------------------------------------------------------------------------
@@ -92,7 +124,7 @@ bool doremir_to_bool(doremir_ptr_t a)
 
 doremir_ptr_t doremir_from_bool(bool a)
 {
-    return (doremir_ptr_t) (a << 24 & ~0x7 | 0x7);
+    return (doremir_ptr_t)(a << 24 & ~0x7 | 0x7);
 }
 
 // --------------------------------------------------------------------------------
@@ -106,7 +138,7 @@ int8_t doremir_to_int8(doremir_ptr_t a)
 
 doremir_ptr_t doremir_from_int8(int8_t a)
 {
-    return (doremir_ptr_t) (a << 24 & ~0x7 | 0x6);
+    return (doremir_ptr_t)(a << 24 & ~0x7 | 0x6);
 }
 
 // --------------------------------------------------------------------------------
@@ -120,7 +152,7 @@ int16_t doremir_to_int16(doremir_ptr_t a)
 
 doremir_ptr_t doremir_from_int16(int16_t a)
 {
-    return (doremir_ptr_t) (a << 8 & ~0x7 | 0x5);
+    return (doremir_ptr_t)(a << 8 & ~0x7 | 0x5);
 }
 
 // --------------------------------------------------------------------------------
@@ -129,7 +161,7 @@ int32_t doremir_peek_int32(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x4 && "Wrong type, expected int32");
-    int32_t v = *((int32_t*) (p & ~0x7));
+    int32_t v = *((int32_t *)(p & ~0x7));
     return v;
 }
 
@@ -137,8 +169,8 @@ int32_t doremir_to_int32(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x4 && "Wrong type, expected int32");
-    int32_t v = *((int32_t*) (p & ~0x7));
-    free((int32_t*) (p & ~0x7));
+    int32_t v = *((int32_t *)(p & ~0x7));
+    free((int32_t *)(p & ~0x7));
     return v;
 }
 
@@ -146,15 +178,15 @@ doremir_ptr_t doremir_copy_int32(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     int32_t *q = malloc(sizeof(int32_t));
-    *q = *((int32_t*) (p & ~0x7));
-    return (doremir_ptr_t) (((intptr_t) q) | 0x4);
+    *q = *((int32_t *)(p & ~0x7));
+    return (doremir_ptr_t)(((intptr_t) q) | 0x4);
 }
 
 doremir_ptr_t doremir_from_int32(int32_t a)
 {
     int32_t *p = malloc(sizeof(int32_t));
     *p = a;
-    return (doremir_ptr_t) (((intptr_t) p) & ~0x7 | 0x4);
+    return (doremir_ptr_t)(((intptr_t) p) & ~0x7 | 0x4);
 }
 
 // --------------------------------------------------------------------------------
@@ -163,7 +195,7 @@ int64_t doremir_peek_int64(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x3 && "Wrong type, expected int64");
-    int64_t v = *((int64_t*) (p & ~0x7));
+    int64_t v = *((int64_t *)(p & ~0x7));
     return v;
 }
 
@@ -171,8 +203,8 @@ int64_t doremir_to_int64(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x3 && "Wrong type, expected int64");
-    int64_t v = *((int64_t*) (p & ~0x7));
-    free((int64_t*) (p & ~0x7));
+    int64_t v = *((int64_t *)(p & ~0x7));
+    free((int64_t *)(p & ~0x7));
     return v;
 }
 
@@ -180,15 +212,15 @@ doremir_ptr_t doremir_copy_int64(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     int64_t *q = malloc(sizeof(int64_t));
-    *q = *((int64_t*) (p & ~0x7));
-    return (doremir_ptr_t) (((intptr_t) q) & ~0x7 | 0x3);
+    *q = *((int64_t *)(p & ~0x7));
+    return (doremir_ptr_t)(((intptr_t) q) & ~0x7 | 0x3);
 }
 
 doremir_ptr_t doremir_from_int64(int64_t a)
 {
     int64_t *p = malloc(sizeof(int64_t));
     *p = a;
-    return (doremir_ptr_t) (((intptr_t) p) & ~0x7 | 0x3);
+    return (doremir_ptr_t)(((intptr_t) p) & ~0x7 | 0x3);
 }
 
 // --------------------------------------------------------------------------------
@@ -197,15 +229,15 @@ float doremir_peek_float(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x2 && "Wrong type, expected float");
-    float v = *((float*) (p & ~0x7));
+    float v = *((float *)(p & ~0x7));
     return v;
 }
 float doremir_to_float(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x2 && "Wrong type, expected float");
-    float v = *((float*) (p & ~0x7));
-    free((float*) (p & ~0x7));
+    float v = *((float *)(p & ~0x7));
+    free((float *)(p & ~0x7));
     return v;
 }
 
@@ -213,15 +245,15 @@ doremir_ptr_t doremir_copy_float(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     float *q = malloc(sizeof(float));
-    *q = *((float*) (p & ~0x7));
-    return (doremir_ptr_t) (((intptr_t) q) & ~0x7 | 0x2);
+    *q = *((float *)(p & ~0x7));
+    return (doremir_ptr_t)(((intptr_t) q) & ~0x7 | 0x2);
 }
 
 doremir_ptr_t doremir_from_float(float a)
 {
     float *p = malloc(sizeof(float));
     *p = a;
-    return (doremir_ptr_t) (((intptr_t) p) & ~0x7 | 0x2);
+    return (doremir_ptr_t)(((intptr_t) p) & ~0x7 | 0x2);
 }
 
 // --------------------------------------------------------------------------------
@@ -230,15 +262,15 @@ double doremir_peek_double(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x1 && "Wrong type, expected double");
-    double v = *((double*) (p & ~0x7));
+    double v = *((double *)(p & ~0x7));
     return v;
 }
 double doremir_to_double(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x1 && "Wrong type, expected double");
-    double v = *((double*) (p & ~0x7));
-    free((double*) (p & ~0x7));
+    double v = *((double *)(p & ~0x7));
+    free((double *)(p & ~0x7));
     return v;
 }
 
@@ -246,15 +278,15 @@ doremir_ptr_t doremir_copy_double(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     double *q = malloc(sizeof(double));
-    *q = *((double*) (p & ~0x7));
-    return (doremir_ptr_t) (((intptr_t) q) & ~0x7 | 0x1);
+    *q = *((double *)(p & ~0x7));
+    return (doremir_ptr_t)(((intptr_t) q) & ~0x7 | 0x1);
 }
 
 doremir_ptr_t doremir_from_double(double a)
 {
     double *p = malloc(sizeof(double));
     *p = a;
-    return (doremir_ptr_t) (((intptr_t) p) & ~0x7 | 0x1);
+    return (doremir_ptr_t)(((intptr_t) p) & ~0x7 | 0x1);
 }
 
 // --------------------------------------------------------------------------------
@@ -318,34 +350,34 @@ doremir_string_t doremir_show(doremir_ptr_t a)
     return doremir_string_show(a);
 }
 
-void doremir_print(char* f, doremir_ptr_t a)
-{                         
+void doremir_print(char *f, doremir_ptr_t a)
+{
     if (a)
-    {
-        doremir_string_t str = doremir_string_show(a);
-        char* cstr = doremir_string_to_utf8(str);
-        printf(f, cstr);                         
-        free(cstr);
-        doremir_destroy(str);        
-    }
+        {
+            doremir_string_t str = doremir_string_show(a);
+            char *cstr = doremir_string_to_utf8(str);
+            printf(f, cstr);
+            free(cstr);
+            doremir_destroy(str);
+        }
     else
         printf("%s", f);
 }
 
-void doremir_dprint(char* f, doremir_ptr_t a)
+void doremir_dprint(char *f, doremir_ptr_t a)
 {
     doremir_print(f, a);
     doremir_destroy(a);
 }
 
 void doremir_print_ln(doremir_ptr_t a)
-{                      
-    doremir_print("%s\n", a);   
+{
+    doremir_print("%s\n", a);
 }
 
 void doremir_dprint_ln(doremir_ptr_t a)
 {
-    doremir_dprint("%s\n", a);   
+    doremir_dprint("%s\n", a);
 }
 
 
@@ -510,7 +542,7 @@ BOXED_WRAPPER_IMPL(double);
 doremir_string_t bool_show(doremir_ptr_t a)
 {
     return doremir_to_bool(a) ? doremir_string_from_utf8("true")
-                              : doremir_string_from_utf8("false");
+           : doremir_string_from_utf8("false");
 }
 
 UNBOXED_SHOW_IMPL(int8, "%i");
@@ -532,30 +564,40 @@ IMPLEMENT_WRAPPER(double);
 
 // @cond internal
 // Dummy struct as clang (C99?) does not allow us to call the pointer directly
-struct doremir_impl_disp { doremir_impl_t impl; };
+struct doremir_impl_disp
+{
+    doremir_impl_t impl;
+};
 // @endcond
 
 doremir_ptr_t doremir_interface(doremir_id_t type, doremir_ptr_t pointer)
 {
     switch (doremir_type(pointer))
-    {
-    case 7:
-        return bool_impl(type);
-    case 6:
-        return int8_impl(type);
-    case 5:
-        return int16_impl(type);
-    case 4:
-        return int32_impl(type);
-    case 3:
-        return int64_impl(type);
-    case 2:
-        return float_impl(type);
-    case 1:
-        return double_impl(type);
-    default:
-        //  If you get a bus error here, you probably passed a
-        //  non-boxed primitive to a generic function.
-        return ((struct doremir_impl_disp*) pointer)->impl(type);
-    }
+        {
+        case 7:
+            return bool_impl(type);
+
+        case 6:
+            return int8_impl(type);
+
+        case 5:
+            return int16_impl(type);
+
+        case 4:
+            return int32_impl(type);
+
+        case 3:
+            return int64_impl(type);
+
+        case 2:
+            return float_impl(type);
+
+        case 1:
+            return double_impl(type);
+
+        default:
+            //  If you get a bus error here, you probably passed a
+            //  non-boxed primitive to a generic function.
+            return ((struct doremir_impl_disp *) pointer)->impl(type);
+        }
 }

@@ -21,7 +21,7 @@ typedef doremir_processor_info_t            info_t;
 
 doremir_ptr_t loop_impl(doremir_id_t interface);
 
-inline static 
+inline static
 bool check_type(string_t *msg, this_proc_t proc)
 {
     if (msg)
@@ -33,9 +33,9 @@ bool check_type(string_t *msg, this_proc_t proc)
     return doremir_type_is_pair(doremir_processor_input_type(proc->elem[0]))
            && doremir_type_is_pair(doremir_processor_output_type(proc->elem[0]))
            && doremir_equal(
-                doremir_type_get_pair_fst(doremir_processor_input_type(proc->elem[0])), 
-                doremir_type_get_pair_fst(doremir_processor_output_type(proc->elem[0]))
-              );
+               doremir_type_get_pair_fst(doremir_processor_input_type(proc->elem[0])),
+               doremir_type_get_pair_fst(doremir_processor_output_type(proc->elem[0]))
+           );
 }
 
 this_proc_t doremir_processor_loop_create(processor_t proc1)
@@ -92,7 +92,7 @@ void loop_before(doremir_ptr_t a, info_t *info)
     proc->bufSize[1]    = doremir_type_size_of(info->frame_size, proc->bufType[1]);
     proc->buf[0]        = malloc(proc->bufSize[0]);
     proc->buf[1]        = malloc(proc->bufSize[1]);
-    
+
     assert(proc->buf[0] && proc->buf[1] && "malloc failed");
 }
 
@@ -121,11 +121,11 @@ string_t loop_show(doremir_ptr_t a)
 {
     this_proc_t proc = (this_proc_t) a;
     string_t s = string("");
-    
+
     s = string_dappend(s, doremir_string_show(loop_input_type(proc)));
     s = string_dappend(s, string(" ~> "));
     s = string_dappend(s, doremir_string_show(loop_output_type(proc)));
-    
+
     return s;
 }
 

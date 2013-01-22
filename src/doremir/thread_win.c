@@ -8,39 +8,42 @@
 #include <doremir/thread.h>
 #include <Windows.h>
 
-struct _doremir_thread_t {
-        doremir_impl_t  impl;       //  Interface dispatcher
-        HANDLE native;
-    };
+struct _doremir_thread_t
+{
+    doremir_impl_t  impl;       //  Interface dispatcher
+    HANDLE native;
+};
 
-struct _doremir_thread_mutex_t {
-        doremir_impl_t  impl;       //  Interface dispatcher
-        HANDLE native;
-    };
+struct _doremir_thread_mutex_t
+{
+    doremir_impl_t  impl;       //  Interface dispatcher
+    HANDLE native;
+};
 
-struct _doremir_thread_condition_t {
-        doremir_impl_t  impl;       //  Interface dispatcher
-        HANDLE native;
-        doremir_thread_mutex_t  mutex;
-    };
+struct _doremir_thread_condition_t
+{
+    doremir_impl_t  impl;       //  Interface dispatcher
+    HANDLE native;
+    doremir_thread_mutex_t  mutex;
+};
 
-static void doremir_thread_fatal(char* msg, int error);
+static void doremir_thread_fatal(char *msg, int error);
 
 static const long kJoinInterval = 50;
 
 
 // --------------------------------------------------------------------------------
 
-static DWORD WINAPI start(LPVOID x) 
-{                
+static DWORD WINAPI start(LPVOID x)
+{
     doremir_closure_t *closure = x;
     return closure->function(closure->value);
 }
 
-doremir_thread_t doremir_thread_create(doremir_closure_t* closure)
+doremir_thread_t doremir_thread_create(doremir_closure_t *closure)
 {
     doremir_thread_t thread = malloc(sizeof(struct _doremir_thread_t));
-    
+
     HANDLE result = CreateThread(NULL, 0, start, closure, 0, NULL);
 
     if (!result)
@@ -56,19 +59,22 @@ void doremir_thread_sleep(doremir_thread_milli_seconds_t millis)
 }
 
 void doremir_thread_join(doremir_thread_t thread)
-{         
+{
     BOOL result;
     DWORD exitCode;
+
     do
-    {
-        Sleep(kJoinInterval);
-        result = GetExitCodeThread(thread->native, &exitCode);
+        {
+            Sleep(kJoinInterval);
+            result = GetExitCodeThread(thread->native, &exitCode);
 
-        if (!result)
-            doremir_thread_fatal("join", GetLastError());            
+            if (!result)
+                doremir_thread_fatal("join", GetLastError());
 
-    } while (exitCode == STILL_ACTIVE);
-    free(thread);                
+        }
+    while (exitCode == STILL_ACTIVE);
+
+    free(thread);
 }
 
 void doremir_thread_detach(doremir_thread_t thread)
@@ -96,7 +102,7 @@ doremir_thread_mutex_t doremir_thread_create_mutex()
 
     if (!result)
         doremir_thread_fatal("create_mutex", GetLastError());
-    
+
     mutex->native = result;
     return mutex;
 }
@@ -142,7 +148,7 @@ bool doremir_thread_unlock(doremir_thread_mutex_t mutex)
 
 // --------------------------------------------------------------------------------
 
-void doremir_thread_fatal(char* msg, int error)
+void doremir_thread_fatal(char *msg, int error)
 {
     // TODO log
     printf("Fatal error: Doremir: Thread: %s: %d\n", msg, error);
