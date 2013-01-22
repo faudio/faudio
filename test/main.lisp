@@ -1,6 +1,5 @@
 
 (defvar *foreign-lib*)
-(close-foreign-library *foreign-lib*)
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -11,6 +10,7 @@
   (push "/Users/hans/audio/build/Frameworks/" cffi:*darwin-framework-directories*)
   (setf *foreign-lib* (cffi:load-foreign-library '(:framework "DoReMIRAudio"))))
 
+; (close-foreign-library *foreign-lib*)
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -257,20 +257,24 @@
 
 ; Types
 
-(setf x (make-type :i8))
-(setf x (make-type :i16))
-(setf x (make-type :i32))
-(setf x (make-type :i64))
-(setf x (make-type :f32))
-(setf x (make-type :f64))
-(setf x (make-type :ptr))
-(setf x (make-type '(:f32 . :f32)))
-(setf x (make-type '(:pair :i8 :i32)))
-(setf x (make-type '(:frame :f32)))
-(setf x (make-type (make-type '(:vector :f32 1024))))
-(setf x (make-type '((:f32 . :f32) . (:f32 . :f32))))
-(setf x (make-type '(:f32 :f32 :f32 . :f32)))
-(setf x (make-type '(:vector (:pair :i8 :i32) 24)))
+; These expressions auto-convert to types
+(setf x :i8)
+(setf x :i16)
+(setf x :i32)
+(setf x :i64)
+(setf x :f32)
+(setf x :f64)
+(setf x :ptr)
+(setf x '(:pair :f32 :i32))
+(setf x '(:f32 . :f32))
+(setf x '((:f32 . :f32) . (:f32 . :f32)))
+(setf x '(:frame :f32))
+(setf x '(:vector (:pair :i8 :i32) 24))
+(setf x '(:vector :f32 1024))
+
+; Make an explicit type
+(setf x (make-type x))
+
 (type-is-simple x)
 (type-is-pair x)
 (type-is-vector x)
@@ -284,26 +288,50 @@
 
 ; Processor
 
+; TODO combine defcallback/unary/binary into single macro
+; i.e. define-processor
+
 (defcallback add-i8 :char ((c ptr) (x :char))
+  (declare (ignore c))
   (+ x 1))
 (defcallback add-f32 :float ((c ptr) (x :float))
+  (declare (ignore c))
   (+ x 1))
 (defcallback add-i8-i8 :char ((c ptr) (x :float) (y :float))
-  (+ x 1))
+  (declare (ignore c))
+  (+ x y))
 
-(setf x (processor-unary (make-type :i8) (make-type :i8) (callback add-i8) nil))
-(setf x (processor-unary (make-type :f32) (make-type :f32) (callback add-f32) nil))
-(setf x (processor-binary (make-type :i8) (make-type :i8) (make-type :i8) (callback add-i8-i8) nil))
+(setf x (unary :i8 :i8 (callback add-i8) nil))
+(setf x (unary :f32 :f32 (callback add-f32) nil))
+(setf x (binary :i8 :i8 :i8 (callback add-i8-i8) nil))
 (setf y x)
+(input-type x)
+(output-type x)
 
-(setf x (processor-identity (make-type :i8)))
-(setf x (processor-constant (make-type :i16) (make-type :i8) 0))
-(setf x (processor-seq x y))
-(setf x (processor-par x y))
-(setf x (processor-loop x))
-(setf x (processor-split (make-type '(:f32 . :f32))))
-; (setf x (processor-delay i 44100))
+(setf x (id :i8))
+(setf x (const :i16 :i8 0))
+(setf x (sequence x y))
+(setf x (parallel x y))
+(setf x (loop x))
+(setf x (split :f32))
+(setf x (delay :f32 44100))
 
+(equal 
+  (input-type (parallel (id :i8) (id :i8))) 
+  (output-type (split :i8)))
+
+(parallel 
+  (sequence (id :i8) (const :i8 :i16 nil) (id :i16)) 
+  (id '(:vector :f32 1024))
+  (id '(:frame :f32))) 
+
+(sequence 
+ (split :i8) 
+ (parallel (id :i8) (id :i8))
+ (id '(:i8 . :i8))
+ (binary :i8 :i8 :f32 (callback add-i8-i8) nil))
+
+; TODO short names
 (setf x (processor-add i))
 (setf x (processor-subtract i))
 (setf x (processor-multiply i))
@@ -346,12 +374,6 @@
 (setf x (processor-ceil i))
 (setf x (processor-rint i))
 
-
-; ---------------------------------------------------------------------------------------------------
-
-; Signal
-
-; TODO
 
 ; ---------------------------------------------------------------------------------------------------
 
