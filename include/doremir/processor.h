@@ -41,10 +41,12 @@ doremir_processor_t doremir_processor_constant(doremir_type_t,
                                                doremir_type_t,
                                                doremir_ptr_t);
 doremir_processor_t doremir_processor_split(doremir_type_t);
-doremir_processor_t doremir_processor_seq(doremir_processor_t,
-                                          doremir_processor_t);
 doremir_processor_t doremir_processor_par(doremir_processor_t,
                                           doremir_processor_t);
+doremir_processor_t doremir_processor_seq(doremir_processor_t,
+                                          doremir_processor_t);
+doremir_processor_t doremir_processor_compose(doremir_processor_t,
+                                              doremir_processor_t);
 doremir_processor_t doremir_processor_loop(doremir_processor_t);
 doremir_processor_t doremir_processor_unary(doremir_type_t,
                                             doremir_type_t,

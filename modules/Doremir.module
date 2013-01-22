@@ -10,6 +10,8 @@ module Doremir
     import Doremir.Std;
     import "C" Doremir.Alloc;
     import "C" Doremir.Interfaces;
+    
+    // Basic types
 
     /** @typedef doremir_ptr_t
         Generic pointer type.
@@ -17,31 +19,48 @@ module Doremir
     type Ptr = Void*;
 
     /** @typedef doremir_nullary_t
-        Generic nullary function.
+        A nullary function.                                             
+        
+        By convention, the first argument is a pointer to an environment that allow
+        clients to close over variables in the environment.
     */
     type Nullary = (Ptr -> Ptr)*;
 
     /** @typedef doremir_unary_t
-        Generic unary function.
+        A unary function.
+
+        By convention, the first argument is a pointer to an environment that allow
+        clients to close over variables in the environment.
     */
     type Unary   = ((Ptr, Ptr) -> Ptr)*;
 
     /** @typedef doremir_binary_t
-        Generic binary function.
+        A binary function.
+
+        By convention, the first argument is a pointer to an environment that allow
+        clients to close over variables in the environment.
     */
     type Binary  = ((Ptr, Ptr, Ptr) -> Ptr)*;
 
-    /** @typedef doremir_binary_t
-        Generic ternary function.
+    /** @typedef doremir_ternary_t
+        A ternary function.
+
+        By convention, the first argument is a pointer to an environment that allow
+        clients to close over variables in the environment.
     */
     type Ternary  = ((Ptr, Ptr, Ptr, Ptr) -> Ptr)*;
 
     /** @typedef doremir_pred_t
         Generic predicate.
+
+        By convention, the first argument is a pointer to an environment that allow
+        clients to close over variables in the environment.
     */
     type Pred   = ((Ptr, Ptr) -> Bool)*;
     
+
     // Character types
+
     /**
         @typedef doremir_char8_t
         An 8-bit character.
@@ -56,33 +75,23 @@ module Doremir
     type Char16 = UInt16;
     type Char32 = UInt32;    
 
+
     // Interfaces
-    equal            : (Ptr, Ptr) -> Bool;
-    notEqual         : (Ptr, Ptr) -> Bool;
-    lessThan         : (Ptr, Ptr) -> Bool;
-    greaterThan      : (Ptr, Ptr) -> Bool;
-    lessThanEqual    : (Ptr, Ptr) -> Bool;
-    greaterThanEqual : (Ptr, Ptr) -> Bool;
-    min              : (Ptr, Ptr) -> Ptr;
-    max              : (Ptr, Ptr) -> Ptr;
     
-    add         : (Ptr, Ptr) -> Ptr;
-    subtract    : (Ptr, Ptr) -> Ptr;
-    multiply    : (Ptr, Ptr) -> Ptr;
-    divide      : (Ptr, Ptr) -> Ptr;
-    // modulo      : (Ptr, Ptr) -> Ptr;
-    absolute    : Ptr -> Ptr;
+    /** @typedef doremir_id_t
+        Unique identifier. Only used for interface lookup at the moment.
+    */
+    type Id = Int64;
 
-    copy    : Ptr -> Ptr;
-    move    : Ptr -> Ptr;
-    destroy : Ptr -> Void;
+    /** @typedef doremir_impl_t
+        Callback to lookup an interface implementation.
+    */
+    type Impl = (Id -> Ptr)*;
 
-    print    : (Char*,Ptr) -> Void;
-    dprint   : (Char*,Ptr) -> Void;
-    printLn  : Ptr -> Void;
-    dprintLn : Ptr -> Void;
+    interface : (Id, Ptr) -> Ptr;
 
-    
+
+    // Interfaces
 
     /** @interface doremir_equal_t
         Equality comparison interface.
@@ -113,7 +122,6 @@ module Doremir
         destroy : (Ptr -> Void)*
     };
 
-
     /** @interface doremir_number_t 
         Arithmetic operations interface.
     */
@@ -124,29 +132,38 @@ module Doremir
         divide   : ((Ptr, Ptr) -> Ptr)*,
         absolute : (Ptr -> Ptr)*
     };
+    
+    equal            : (Ptr, Ptr) -> Bool;
+    notEqual         : (Ptr, Ptr) -> Bool;
+    lessThan         : (Ptr, Ptr) -> Bool;
+    greaterThan      : (Ptr, Ptr) -> Bool;
+    lessThanEqual    : (Ptr, Ptr) -> Bool;
+    greaterThanEqual : (Ptr, Ptr) -> Bool;
+    min              : (Ptr, Ptr) -> Ptr;
+    max              : (Ptr, Ptr) -> Ptr;
+    
+    add         : (Ptr, Ptr) -> Ptr;
+    subtract    : (Ptr, Ptr) -> Ptr;
+    multiply    : (Ptr, Ptr) -> Ptr;
+    divide      : (Ptr, Ptr) -> Ptr;
+    // modulo      : (Ptr, Ptr) -> Ptr;
+    absolute    : Ptr -> Ptr;
 
-    // /** @struct doremir_type_repr_t
-    //     Represents a type at runtime.
-    // */
-    // type TypeRepr = struct {
-    //     tag : enum { TypeInt8, TypeInt16, TypeInt32, 
-    //                  TypeUInt8, TypeUInt16, TypeUInt32, 
-    //                  TypeFloat, TypeDouble, 
-    //                  TypePair, TypeList, TypeMap, TypeSet },
-    //     args : [Ptr x 2]
-    // };  
+    copy    : Ptr -> Ptr;
+    move    : Ptr -> Ptr;
+    destroy : Ptr -> Void;
 
-    // /** @interface doremir_dynamic_t
-    //     Dynamic type introspection interface.
-    // */
-    // type Dynamic = struct {
-    //     getType : (Ptr -> TypeRepr)*
-    // };
+    print    : (Char*,Ptr) -> Void;
+    dprint   : (Char*,Ptr) -> Void;
+    printLn  : Ptr -> Void;
+    dprintLn : Ptr -> Void;
 
     // TODO remove this?
     typeStr : Ptr -> Char*;
     
-    // Type predicates
+    
+    // Type predicates and conversions
+    
     isBool     : Ptr -> Bool;
     isInt8     : Ptr -> Bool;
     isInt16    : Ptr -> Bool;
@@ -156,7 +173,6 @@ module Doremir
     isDouble   : Ptr -> Bool;    
     isRef      : Ptr -> Bool;    
 
-    // Conversion functions
     toBool     : Ptr -> Bool;
     toInt8     : Ptr -> Int8;
     toInt16    : Ptr -> Int16;
@@ -179,17 +195,5 @@ module Doremir
     fromInt32  : Int32 -> Ptr;
     fromInt64  : Int64 -> Ptr;
     fromFloat  : Float -> Ptr;
-    fromDouble : Double -> Ptr;
-    
-    /** @typedef doremir_id_t
-        Unique identifier. Only used for interface lookup at the moment.
-    */
-    type Id = Int64;
-
-    /** @typedef doremir_impl_t
-        Callback to lookup an interface implementation.
-    */
-    type Impl = (Id -> Ptr)*;
-
-    interface : (Id, Ptr) -> Ptr;
+    fromDouble : Double -> Ptr;    
 }

@@ -41,22 +41,22 @@ static int dbNodes = 0;
 void db_node_alloc()
 {
     // dbNodes++;
-    // printf("                                                            | Alloc node   (count: %d)\n", dbNodes);
+    // printf("Alloc node   (count: %d)\n", dbNodes);
 }
 void db_node_free()
 {
     // dbNodes--;
-    // printf("                                                            | Free node    (count: %d)\n", dbNodes);
+    // printf("Free node    (count: %d)\n", dbNodes);
 }
 void db_node_take(node_t node)
 {
     // if (node)
-    // printf("                                                            | Take node    (refs: %u)\n", node->count);
+    // printf("Take node    (refs: %u)\n", node->count);
 }
 void db_node_release(node_t node)
 {
     // if (node)
-    // printf("                                                            | Release node (refs: %u)\n", node->count);
+    // printf("Release node (refs: %u)\n", node->count);
 }
 
 
