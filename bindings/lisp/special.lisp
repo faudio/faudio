@@ -73,17 +73,18 @@
         ((eq :vector (car x))     (type-vector (make-type (cadr x)) (caddr x)))
         ((eq :pair   (car x))     (type-pair (make-type (cadr x)) (make-type (caddr x))))
         (t                        (type-pair (make-type (car x)) (make-type (cdr x))))))
-    ((eq (type-of x) 'type) (slot-value x 'type-ptr))))
+    ((eq (type-of x) 'type) (slot-value x 'type-ptr))
+    (t                      x)))
 
 (defmethod translate-to-foreign (x (type type-type))
-  (export-type# x)) 
+  (export-type# (export-type# x))) 
 ; (defmethod translate-from-foreign (x (type type-type))
   ; x) 
 
 ; TODO add to translator (with inverse)
 (defun make-type (x)
   (export-type# x))
-  
+
 ; ---------------------------------------------------------------------------------------------------
 
 ; Override print by String.show
@@ -117,8 +118,31 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Generate generic functions to wrap generic functions?
-
 ; ---------------------------------------------------------------------------------------------------
 
-; TODO Safe versions of the type converters?   
+; Aliases
+
+(defmacro input-type (&rest args) `(processor-input-type ,@args))
+(defmacro output-type (&rest args) `(processor-output-type ,@args))
+(defmacro unary (&rest args) `(processor-unary ,@args))
+(defmacro binary (&rest args) `(processor-binary ,@args))
+(defmacro id (&rest args) `(processor-identity ,@args))
+(defmacro const (&rest args) `(processor-constant ,@args))
+(defmacro seq (&rest args) `(processor-seq ,@args))
+(defmacro par (&rest args) `(processor-par ,@args))
+(defmacro loop (&rest args) `(processor-loop ,@args))
+(defmacro split (&rest args) `(processor-split ,@args))
+(defmacro delay (&rest args) `(processor-delay ,@args))
+
+; (defmacro ~> (&rest args) `(processor-seq ,@args))
+; (defmacro <> (&rest args) `(processor-par ,@args))
+
+(defun sequence (head &rest args)
+  (cond
+   (args (seq head (apply 'sequence args)))
+   (t    head)))
+   
+(defun parallel (head &rest args)
+  (cond
+   (args (par head (apply 'parallel args)))
+   (t    head))) 

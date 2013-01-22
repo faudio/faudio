@@ -9,11 +9,13 @@
     :string
     :number
     :list
+    :loop
     :set
     :map
     :ratio
     :time
     :type
+    :sequence
     :signal
     :equal
     :min
