@@ -52,14 +52,13 @@ components_resolve:
 components_clean: 
 	@pushd $(BUILD_DIRECTORY); $(MAKE) components_clean; popd;
 
-.PHONY: format                      
-DIRS=scl scl-c
-format: 
-	./cmake/scripts/astyle.sh $(DIRS)
+.PHONY: format
+format:
+	astyle -n -r "src/*.c"
 
 .PHONY: doc
 doc: 
-	./cmake/scripts/doc.sh
+	make -f doc/Makefile
 
 .PHONY: test
 test: all
