@@ -6,19 +6,18 @@
     Interfaces are used internally in the Audio Engine, but you may not need to know about them,
     unless you want to extend the Audio Engine.
 
-The Audio Engine implements [ad-hoc polymorphism](http://en.wikipedia.org/wiki/Ad-hoc_polymorphism)
+The Audio Engine implements [ad-hoc polymorphism][ad-hoc-poly]
 using interfaces. An *interface* is a collection of function types, identified by a unique value
 known as the *interface identifier*.
 
-Any [reference type](http://en.wikipedia.org/wiki/Reference_type) may provide implementations for
-an arbitrary number of interfaces by implementing a so-called *dispatch function*, which takes a reference
-of the given type and an interface identifier and returns a pointer to a structure conforming to the interface 
-type. This structure is known as an *implementation*.
+Any [reference type][reftype] may provide implementations for an arbitrary number of interfaces by implementing
+a so-called *dispatch function*, which takes a reference of the given type and an interface identifier and
+returns a pointer to a structure conforming to the interface type. This structure is known as an
+*implementation*.
 
-Interfaces can be used to decorate a type with additional semantics such as 
-[equality](@ref doremir_equal_t) or
-[ordering](@ref doremir_order_t). Another use is to overload common functionality, such as 
-[arithmetic operators](@ref doremir_number_t).
+Interfaces can be used to decorate a type with additional semantics such as [equality](@ref doremir_equal_t) or
+[ordering](@ref doremir_order_t). Another use is to overload common functionality, such as [arithmetic
+operators](@ref doremir_number_t).
 
 
 
@@ -225,3 +224,5 @@ struct foo *create_foo()
 }
 ~~~~
 
+[ad-hoc-poly]: http://en.wikipedia.org/wiki/Ad-hoc_polymorphism
+[reftype]:     http://en.wikipedia.org/wiki/Reference_type
