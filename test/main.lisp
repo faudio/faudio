@@ -20,26 +20,15 @@
 
 (in-package :doremir)
 
-(audioengine-initialize)
-(audioengine-terminate)
-(audioengine-set-log-file "/Users/hans/Library/Logs/ScoreCleaner/AudioEngine.log")
-(audioengine-set-log-std)
-
 ; For testing
 (defvar x nil)
 (defvar y nil)
 
-(from-pointer 'string (min "hans" "hanna"))
-(from-pointer 'ratio (min x y))
-(list-cons x (list-single x))
-(equal x y)
 
-(from-pointer 'ratio (max x y))
-
-
-(type-of x)
-(type-of y)
-
+(audioengine-initialize)
+(audioengine-terminate)
+(audioengine-set-log-file "/Users/hans/Library/Logs/ScoreCleaner/AudioEngine.log")
+(audioengine-set-log-std)
 
 ; Ratio
 ; Audio Engine ratios are converted to Lisp ratios and vice versa
@@ -91,7 +80,6 @@
 (pair-create (pair-create 1 2) (pair-create 3 4))
 (pair-create (list-single 1) (set-single 2))
 
-
 ; List
 ; Audio Engine lists are NOT Lisp lists
 ; They print as [1,2,3..]
@@ -130,9 +118,8 @@
 (cl:print x)
 (list-destroy x)
 
-(export-list# (cl:list 1 2 (export-list# (cl:list 1 3 4))))
-(import-list# (list-cons 1 (list-cons 2 (list-single 3))))
-
+; (export-list# (cl:list 1 2 (export-list# (cl:list 1 3 4))))
+; (import-list# (list-cons 1 (list-cons 2 (list-single 3))))
 
 ; Set
 (setf x (set-empty))
@@ -211,7 +198,6 @@
 (midi-sysex-data x)
 (midi-destroy x)
 
-
 ; Time
 ; TODO macro like (make-time 2 :hours 3 :minutes)
 (setf x (time-create 0 0 4 (rational 33.5))) ; days hours minutes seconds divs
@@ -241,17 +227,6 @@
 (setf x (make-type '((:f32 . :f32) . (:f32 . :f32))))
 (setf x (make-type '(:f32 :f32 :f32 . :f32)))
 (setf x (make-type '(:vector (:pair :i8 :i32) 24)))
-; (setf x (type-simple 0))
-; (setf x (type-simple 1))
-; (setf x (type-simple 2))
-; (setf x (type-simple 3))
-; (setf x (type-simple 4))
-; (setf x (type-simple 5))
-; (setf x (type-simple 6))
-; (setf x (type-pair x y))
-; (setf x (type-vector x 16))
-; (setf x (type-frame x))
-; (setf y (type-copy x))
 (type-is-simple x)
 (type-is-pair x)
 (type-is-vector x)
@@ -261,30 +236,26 @@
 (type-align-of x)
 
 
-; Scheduler
-
 ; Processor
 (defcallback add-i8 :char ((c ptr) (x :char))
   (+ x 1))
 (defcallback add-f32 :float ((c ptr) (x :float))
   (+ x 1))
+(defcallback add-i8-i8 :char ((c ptr) (x :float) (y :float))
+  (+ x 1))
 (setf x (processor-unary (make-type :i8) (make-type :i8) (callback add-i8) nil))
 (setf x (processor-unary (make-type :f32) (make-type :f32) (callback add-f32) nil))
+(setf x (processor-binary (make-type :i8) (make-type :i8) (make-type :i8) (callback add-i8-i8) nil))
 (setf y x)
 
-; (setf x (processor-identity i))
-; (setf x (processor-constant i o v))
+(setf x (processor-identity (make-type :i8)))
+(setf x (processor-constant (make-type :i16) (make-type :i8) 0))
 (setf x (processor-seq x y))
 (setf x (processor-par x y))
 (setf x (processor-loop x))
 (setf x (processor-split (make-type '(:f32 . :f32))))
-; (setf x (processor-binary i1 i2 o f nil))
 
 ; (setf x (processor-delay i 44100))
-
-
-
-
 (setf x (processor-add i))
 (setf x (processor-subtract i))
 (setf x (processor-multiply i))
@@ -328,17 +299,58 @@
 (setf x (processor-rint i))
 
 
-
-
-
-
 ; Signal
 
 ; Message stuff
 
+; Scheduler
+
+
 ; Devices
+(device-audio-begin-session)
+(device-audio-restart-session)
+(device-audio-end-session)
+(device-audio-with-session)
+(device-audio-all)
+(device-audio-default)
+(device-audio-name)
+(device-audio-host-name)
+(device-audio-has-input)
+(device-audio-has-output)
+(device-audio-channels)
+(device-audio-start-stream)
+(device-audio-restart-stream)
+(device-audio-stop-stream)
+(device-audio-with-stream)
+
+(device-midi-all)
+(device-midi-default)
+(device-midi-name)
+(device-midi-host-name)
+(device-midi-has-input)
+(device-midi-has-output)
+(device-midi-begin-session)
+(device-midi-restart-session)
+(device-midi-end-session)
+(device-midi-start-stream)
+(device-midi-restart-stream)
+(device-midi-stop-stream)
+(device-midi-with-session)
+(device-midi-with-stream)
+
+(device-file-create)
+(device-file-destroy)
+(device-file-run)
+
+(device-buffer-create)
+(device-buffer-destroy)
+(device-buffer-run)
+
 
 ; Error
+; check
+; error-message
+; error-module
 
 
 ; Priority queue
@@ -348,6 +360,7 @@
 (priorityqueue-pop x)
 
 
+; Atomic
 (setf x (atomic-create))
 (setf y (atomic-copy x))
 (atomic-exchange x 0 1)      ; FIXME
