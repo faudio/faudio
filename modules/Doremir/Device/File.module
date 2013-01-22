@@ -8,12 +8,14 @@
 module Doremir.Device.File
 {
     import Doremir.String;
+    import Doremir.Device;
+    import Doremir.Processor;
 
     type File = opaque;
     type Stream = opaque;
 
-    create : (FilePath, FilePath) -> File;
+    create : FilePath -> File;
     destroy : File -> Void;
-    // openStream : (File, Proc) -> Stream;
-    closeStream : Stream -> Void;
+
+    run : (File, Processor, File) -> Void;
 }

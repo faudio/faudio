@@ -7,9 +7,14 @@
  */
 module Doremir.Device.Buffer
 {
+    import Doremir.Device;
+    import Doremir.Processor;
+
     type Buffer = opaque;
     type Stream = opaque;
 
     create : (Size) -> Buffer;
     destroy : Buffer -> Void;
+
+    run : (Buffer, Processor, Buffer) -> Void;
 }
