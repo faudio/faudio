@@ -398,13 +398,15 @@ bool type_equal(doremir_ptr_t a, doremir_ptr_t b)
             return simple_get(c) == simple_get(d);
 
         case pair_type:
-            return pair_get(c, fst) == pair_get(d, fst) && pair_get(c, snd) == pair_get(d, snd);
+            return type_equal(pair_get(c, fst), pair_get(d, fst)) 
+                && type_equal(pair_get(c, snd), pair_get(d, snd));
 
         case vector_type:
-            return vector_get(c, base) == vector_get(d, base) && vector_get(c, size) == vector_get(d, size);
+            return type_equal(vector_get(c, base), vector_get(d, base)) 
+                && vector_get(c, size) == vector_get(d, size);
 
         case frame_type:
-            return frame_get(c, base) == frame_get(d, base);
+            return type_equal(frame_get(c, base), frame_get(d, base));
 
         default:
             assert(false && "Missing label");

@@ -29,8 +29,8 @@ doremir_processor_binary_create(doremir_type_t   type1,
     proc->impl              = &binary_impl;
 
     proc->input_type[0]     = type1;
-    proc->input_type[1]     = type1;
-    proc->output_type       = type2;
+    proc->input_type[1]     = type2;
+    proc->output_type       = type3;
 
     proc->function          = function;
     proc->data              = data;
