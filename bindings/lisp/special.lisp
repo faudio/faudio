@@ -73,7 +73,12 @@
         ((eq :vector (car x))     (type-vector (make-type (cadr x)) (caddr x)))
         ((eq :pair   (car x))     (type-pair (make-type (cadr x)) (make-type (caddr x))))
         (t                        (type-pair (make-type (car x)) (make-type (cdr x))))))
-    ((eq (type-of x) 'type) x)))
+    ((eq (type-of x) 'type) (slot-value x 'type-ptr))))
+
+(defmethod translate-to-foreign (x (type type-type))
+  (export-type# x)) 
+; (defmethod translate-from-foreign (x (type type-type))
+  ; x) 
 
 ; TODO add to translator (with inverse)
 (defun make-type (x)

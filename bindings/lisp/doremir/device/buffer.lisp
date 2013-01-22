@@ -11,3 +11,4 @@
 (defmethod translate-from-foreign (x (type device-buffer-stream-type)) (make-instance 'device-buffer-stream :device-buffer-stream-ptr x))
 (defcfun (device-buffer-create "doremir_device_buffer_create") device-buffer (a :int32))
 (defcfun (device-buffer-destroy "doremir_device_buffer_destroy") :void (a device-buffer))
+(defcfun (device-buffer-run "doremir_device_buffer_run") :void (a device-buffer) (b processor) (c device-buffer))

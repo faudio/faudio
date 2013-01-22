@@ -9,6 +9,6 @@
 (defclass device-file-stream () ((device-file-stream-ptr :initarg :device-file-stream-ptr)))
 (defmethod translate-to-foreign (x (type device-file-stream-type)) (slot-value x 'device-file-stream-ptr))
 (defmethod translate-from-foreign (x (type device-file-stream-type)) (make-instance 'device-file-stream :device-file-stream-ptr x))
-(defcfun (device-file-create "doremir_device_file_create") device-file (a string-file-path) (b string-file-path))
+(defcfun (device-file-create "doremir_device_file_create") device-file (a string-file-path))
 (defcfun (device-file-destroy "doremir_device_file_destroy") :void (a device-file))
-(defcfun (device-file-close-stream "doremir_device_file_close_stream") :void (a device-file-stream))
+(defcfun (device-file-run "doremir_device_file_run") :void (a device-file) (b processor) (c device-file))
