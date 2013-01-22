@@ -1,15 +1,16 @@
 
+(defvar *foreign-lib*)
+(close-foreign-library *foreign-lib*)
+
+; ---------------------------------------------------------------------------------------------------
 
 (progn
-  (asdf:load-system :doremir))
+  (asdf:load-system :audio-engine))
 
-
-(defvar *foreign-lib*)
 (progn
   (push "/Users/hans/audio/build/Frameworks/" cffi:*darwin-framework-directories*)
   (setf *foreign-lib* (cffi:load-foreign-library '(:framework "DoReMIRAudio"))))
 
-(close-foreign-library *foreign-lib*)
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -18,20 +19,33 @@
 ;   - Calling (from-pointer) with the wrong type is undefined
 ;   - Calling a generic function on a type that does not implement a required interface is undefined
 
-(in-package :doremir)
+(in-package :audio-engine)
+
 
 ; For testing
+
 (defvar x nil)
 (defvar y nil)
+(defvar s nil)
+(defvar d nil)
+(defvar p nil)
+
+
+; ---------------------------------------------------------------------------------------------------
 
 ; AudioEngine
+
 (audioengine-initialize)
 (audioengine-terminate)
 (audioengine-set-log-file "/Users/hans/Library/Logs/ScoreCleaner/AudioEngine.log")
 (audioengine-set-log-std)
 
+; ---------------------------------------------------------------------------------------------------
+
 ; Ratio
+
 ; Audio Engine ratios are converted to Lisp ratios and vice versa
+
 (setf x (ratio-create 1 2))
 (setf y (ratio-create 278 12))
 (ratio-num x)
@@ -51,8 +65,12 @@
 (ratio-succ (/ 1 2))
 (ratio-recip (/ 567 235))
 
+; ---------------------------------------------------------------------------------------------------
+
 ; String
+
 ; Audio Engine strings are converted to Lisp strings and vice versa
+
 (setf x (string-empty))
 (setf x (string-single 104))
 (string-append (string-single 104) (string-dappend (string-single (char-int #\a)) (string-single 110)))
@@ -61,9 +79,12 @@
 (cl:print x)
 ;(string-destroy x)
 
+; ---------------------------------------------------------------------------------------------------
 ; Pair
+
 ; Audio Engine pairs are NOT Lisp pairs
 ; They print as (1,2)
+
 (setf x (pair-create 1 2))
 (setf y (pair-copy x))
 (pair-fst x)
@@ -80,9 +101,13 @@
 (pair-create (pair-create 1 2) (pair-create 3 4))
 (pair-create (list-single 1) (set-single 2))
 
+; ---------------------------------------------------------------------------------------------------
+
 ; List
+
 ; Audio Engine lists are NOT Lisp lists
 ; They print as [1,2,3..]
+
 (setf x (list-empty))
 (setf x (list-single 0))
 (setf x (list-cons 1 x))
@@ -121,7 +146,10 @@
 ; (export-list# (cl:list 1 2 (export-list# (cl:list 1 3 4))))
 ; (import-list# (list-cons 1 (list-cons 2 (list-single 3))))
 
+; ---------------------------------------------------------------------------------------------------
+
 ; Set
+
 (setf x (set-empty))
 (setf x (set-single 1))
 (setf x (set-add (random 20) x))
@@ -142,7 +170,10 @@
 (cl:print x)
 (set-destroy)
 
+; ---------------------------------------------------------------------------------------------------
+
 ; Map
+
 (setf x (map-empty))
 (setf x (map-add "name" "hans" x))
 (setf x (map-add "skills" (list-cons 1 (list-empty)) x))
@@ -172,7 +203,10 @@
 (cl:print x)
 (map-destroy x)
 
+; ---------------------------------------------------------------------------------------------------
+
 ; Buffer
+
 (setf x (buffer-create 1024))
 (setf x (buffer-resize 2048 x))
 (buffer-size x)
@@ -185,7 +219,10 @@
 (cl:print x)
 (buffer-destroy x)
 
+; ---------------------------------------------------------------------------------------------------
+
 ; Midi
+
 (setf x (midi-create-simple #x9 60 127))
 (setf x (midi-create-sysex (buffer-create 1024)))
 (setf y (midi-copy x))
@@ -198,8 +235,12 @@
 (midi-sysex-data x)
 (midi-destroy x)
 
+; ---------------------------------------------------------------------------------------------------
+
 ; Time
-; TODO macro like (make-time 2 :hours 3 :minutes)
+
+; TODO macro such as (make-time 2 :hours 3 :minutes)
+
 (setf x (time-create 0 0 4 (rational 33.5))) ; days hours minutes seconds divs
 (setf y (time-copy x))
 (setf x (from-pointer 'time (add x y)))
@@ -212,7 +253,10 @@
 (equal x y)
 (destroy x)
 
+; ---------------------------------------------------------------------------------------------------
+
 ; Types
+
 (setf x (make-type :i8))
 (setf x (make-type :i16))
 (setf x (make-type :i32))
@@ -236,7 +280,10 @@
 (type-align-of x)
 
 
+; ---------------------------------------------------------------------------------------------------
+
 ; Processor
+
 (defcallback add-i8 :char ((c ptr) (x :char))
   (+ x 1))
 (defcallback add-f32 :float ((c ptr) (x :float))
@@ -300,25 +347,40 @@
 (setf x (processor-rint i))
 
 
+; ---------------------------------------------------------------------------------------------------
+
 ; Signal
 
+; TODO
+
+; ---------------------------------------------------------------------------------------------------
+
 ; Message stuff
-message-send
-message-add-receiver
-message-remove-receiver
-message-dispatch
-message-simple
-message-destroy
-message-buffered
-message-non-blocking
+
+(message-send)
+(message-add-receiver)
+(message-remove-receiver)
+(message-dispatch)
+
+; Move these to dispatcher module?
+
+(setf x (message-simple))
+(setf x (message-buffered))
+(setf x (message-non-blocking))
+
+; ---------------------------------------------------------------------------------------------------
 
 ; Scheduler
+
 (setf x (scheduler-create))
 (scheduler-destroy x)
 ; (scheduler-schedule x (lambda (x) ))
 (scheduler-execute x)
 
+; ---------------------------------------------------------------------------------------------------
+
 ; Devices
+
 (setf s (device-audio-begin-session))
 (setf s (device-audio-restart-session s))
 (device-audio-end-session s)
@@ -358,19 +420,28 @@ message-non-blocking
 (device-buffer-destroy)
 (device-buffer-run)
 
+
+; ---------------------------------------------------------------------------------------------------
+
 ; Error
+
 ; check
 ; error-message
 ; error-module
 
+; ---------------------------------------------------------------------------------------------------
 
 ; Priority queue
+
 (setf x (priorityqueue-empty))
 (priorityqueue-insert (random 1000) x)
 (priorityqueue-peek x)
 (priorityqueue-pop x)
 
+; ---------------------------------------------------------------------------------------------------
+
 ; Atomic
+
 (setf x (atomic-create))
 (setf y (atomic-copy x))
 (atomic-exchange x 0 1)      ; FIXME
@@ -387,7 +458,10 @@ message-non-blocking
 (atomic-queue-read x)               ; FIXME <ptr 0> should be nil
 
 
+; ---------------------------------------------------------------------------------------------------
+
 ; Top-level generic functions
+
 (equal              x y)
 (less-than          x y)
 (greater-than       x y)
