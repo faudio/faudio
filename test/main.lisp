@@ -24,7 +24,7 @@
 (defvar x nil)
 (defvar y nil)
 
-
+; AudioEngine
 (audioengine-initialize)
 (audioengine-terminate)
 (audioengine-set-log-file "/Users/hans/Library/Logs/ScoreCleaner/AudioEngine.log")
@@ -243,6 +243,7 @@
   (+ x 1))
 (defcallback add-i8-i8 :char ((c ptr) (x :float) (y :float))
   (+ x 1))
+
 (setf x (processor-unary (make-type :i8) (make-type :i8) (callback add-i8) nil))
 (setf x (processor-unary (make-type :f32) (make-type :f32) (callback add-f32) nil))
 (setf x (processor-binary (make-type :i8) (make-type :i8) (make-type :i8) (callback add-i8-i8) nil))
@@ -254,8 +255,8 @@
 (setf x (processor-par x y))
 (setf x (processor-loop x))
 (setf x (processor-split (make-type '(:f32 . :f32))))
-
 ; (setf x (processor-delay i 44100))
+
 (setf x (processor-add i))
 (setf x (processor-subtract i))
 (setf x (processor-multiply i))
@@ -302,25 +303,36 @@
 ; Signal
 
 ; Message stuff
+message-send
+message-add-receiver
+message-remove-receiver
+message-dispatch
+message-simple
+message-destroy
+message-buffered
+message-non-blocking
 
 ; Scheduler
-
+(setf x (scheduler-create))
+(scheduler-destroy x)
+; (scheduler-schedule x (lambda (x) ))
+(scheduler-execute x)
 
 ; Devices
-(device-audio-begin-session)
-(device-audio-restart-session)
-(device-audio-end-session)
+(setf s (device-audio-begin-session))
+(setf s (device-audio-restart-session s))
+(device-audio-end-session s)
 (device-audio-with-session)
-(device-audio-all)
-(device-audio-default)
-(device-audio-name)
-(device-audio-host-name)
-(device-audio-has-input)
-(device-audio-has-output)
-(device-audio-channels)
-(device-audio-start-stream)
-(device-audio-restart-stream)
-(device-audio-stop-stream)
+(device-audio-all s)
+(device-audio-default s)
+(device-audio-name d)
+(device-audio-host-name d)
+(device-audio-has-input d)
+(device-audio-has-output d)
+(device-audio-channels d)
+(device-audio-start-stream d p d)
+(device-audio-restart-stream s)
+(device-audio-stop-stream s)
 (device-audio-with-stream)
 
 (device-midi-all)
@@ -346,7 +358,6 @@
 (device-buffer-destroy)
 (device-buffer-run)
 
-
 ; Error
 ; check
 ; error-message
@@ -358,7 +369,6 @@
 (priorityqueue-insert (random 1000) x)
 (priorityqueue-peek x)
 (priorityqueue-pop x)
-
 
 ; Atomic
 (setf x (atomic-create))
@@ -377,7 +387,7 @@
 (atomic-queue-read x)               ; FIXME <ptr 0> should be nil
 
 
-; Doremir (generic functions)
+; Top-level generic functions
 (equal              x y)
 (less-than          x y)
 (greater-than       x y)
@@ -396,8 +406,6 @@
 (string-to-json     x)
 (string-from-json   x)
 
-
-
 (equal              0 0)
 (equal              0 1)
 (less-than          0 1)
@@ -411,9 +419,6 @@
 (subtract           0 0)
 (divide             0 1)
 (absolute           -3)
-; copy
-; destroy
-
 
 
 
