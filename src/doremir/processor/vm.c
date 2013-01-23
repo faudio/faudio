@@ -25,8 +25,10 @@ lmm_t lmm_create()
 
 void lmm_destroy(lmm_t lmm)
 {
-    lmm_for_each_register(reg, count, lmm) 
+    lmm_for_each_register(reg, count, lmm)
+    {
         lmm_free(reg.data);
+    }
 
     lmm_free(lmm->error);
     lmm_free(lmm);
