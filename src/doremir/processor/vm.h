@@ -61,20 +61,18 @@
 
 enum { kLmmRegs = 65536 };
 
-struct lmm
-{
-    struct
-    {
-        size_t size;
-        size_t maxSize;
-        void  *data;
-    } regs[kLmmRegs];
+struct lmm {
+  struct {
+    size_t size;
+    size_t maxSize;
+    void  *data;
+  } regs[kLmmRegs];
 
-    size_t off;
-    size_t step;
-    size_t loops;
+  size_t off;
+  size_t step;
+  size_t loops;
 
-    char *error;
+  char *error;
 };
 
 typedef struct lmm *lmm_t;

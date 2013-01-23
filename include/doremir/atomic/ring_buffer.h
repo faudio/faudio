@@ -12,11 +12,11 @@
     @{
     */
 
-typedef struct _doremir_atomic_ring_buffer_t * doremir_atomic_ring_buffer_t;
+typedef struct _doremir_atomic_ring_buffer_t *doremir_atomic_ring_buffer_t;
 doremir_atomic_ring_buffer_t doremir_atomic_ring_buffer_create(size_t);
 doremir_atomic_ring_buffer_t doremir_atomic_ring_buffer_copy(doremir_atomic_ring_buffer_t);
 doremir_atomic_ring_buffer_t doremir_atomic_ring_buffer_resize(size_t,
-                                                               doremir_atomic_ring_buffer_t);
+    doremir_atomic_ring_buffer_t);
 void doremir_atomic_ring_buffer_swap(doremir_atomic_ring_buffer_t,
                                      doremir_atomic_ring_buffer_t);
 void doremir_atomic_ring_buffer_destroy(doremir_atomic_ring_buffer_t);

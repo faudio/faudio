@@ -12,7 +12,7 @@
     @{
     */
 
-typedef struct _doremir_processor_audio_unit_t * doremir_processor_audio_unit_t;
+typedef struct _doremir_processor_audio_unit_t *doremir_processor_audio_unit_t;
 
 /** @}
     @}

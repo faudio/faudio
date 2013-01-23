@@ -11,7 +11,7 @@
     @{
     */
 
-typedef struct _doremir_pair_t * doremir_pair_t;
+typedef struct _doremir_pair_t *doremir_pair_t;
 doremir_pair_t doremir_pair_create(doremir_ptr_t, doremir_ptr_t);
 doremir_pair_t doremir_pair_copy(doremir_pair_t);
 void doremir_pair_destroy(doremir_pair_t);

@@ -20,61 +20,57 @@
 
 lmm_t lmm_create()
 {
-    return lmm_calloc(1, sizeof(struct lmm));
+  return lmm_calloc(1, sizeof(struct lmm));
 }
 
 void lmm_destroy(lmm_t lmm)
 {
-    lmm_for_each_register(reg, count, lmm)
-    {
-        lmm_free(reg.data);
-    }
+  lmm_for_each_register(reg, count, lmm) {
+    lmm_free(reg.data);
+  }
 
-    lmm_free(lmm->error);
-    lmm_free(lmm);
+  lmm_free(lmm->error);
+  lmm_free(lmm);
 }
 
 string_t lmm_show(lmm_t lmm)
 {
-    string_t str = string("\n");
+  string_t str = string("\n");
 
-    lmm_for_each_register(reg, regNum, lmm)
-    {
-        if (reg.size != 0)
-            {
-                str = string_dappend(str, format_int("\nr%d:\t", regNum));
-                uint8_t *data = reg.data;
+  lmm_for_each_register(reg, regNum, lmm) {
+    if (reg.size != 0) {
+      str = string_dappend(str, format_int("\nr%d:\t", regNum));
+      uint8_t *data = reg.data;
 
-                for (size_t i = 0; i < reg.size; ++i)
-                    {
-                        str = string_dappend(str, string(" "));
-                        str = string_dappend(str, doremir_string_format_integer("%02x", data[i]));
-                    }
+      for (size_t i = 0; i < reg.size; ++i) {
+        str = string_dappend(str, string(" "));
+        str = string_dappend(str, doremir_string_format_integer("%02x", data[i]));
+      }
 
-                str = string_dappend(str, string("\n"));
-            }
+      str = string_dappend(str, string("\n"));
     }
-    return str;
+  }
+  return str;
 }
 
 char *lmm_get_error(lmm_t lmm)
 {
-    return lmm->error;
+  return lmm->error;
 }
 
 size_t lmm_get_reg_size(lmm_t lmm, lmm_reg_t r)
 {
-    return lmm->regs[r].size;
+  return lmm->regs[r].size;
 }
 
 size_t lmm_get_reg_max_size(lmm_t lmm, lmm_reg_t r)
 {
-    return lmm->regs[r].maxSize;
+  return lmm->regs[r].maxSize;
 }
 
 void *lmm_get_reg_data(lmm_t lmm, lmm_reg_t r)
 {
-    return lmm->regs[r].data;
+  return lmm->regs[r].data;
 }
 
 
@@ -86,45 +82,45 @@ void *lmm_get_reg_data(lmm_t lmm, lmm_reg_t r)
 
 void lmm_alloc(lmm_t lmm, size_t size, lmm_reg_t r)
 {
-    rdata(r) = lmm_realloc(rdata(r), size);
-    rsize(r) = size;
-    rmax(r)  = size;
+  rdata(r) = lmm_realloc(rdata(r), size);
+  rsize(r) = size;
+  rmax(r)  = size;
 
-    memset(rdata(r), 0, size);
+  memset(rdata(r), 0, size);
 }
 
 void lmm_dup(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2)
 {
-    assert(rmax(r2) >= rsize(r1)            && "Can not dup: second operand is too small");
+  assert(rmax(r2) >= rsize(r1)            && "Can not dup: second operand is too small");
 
-    memcpy(rdata(r2), rdata(r1), rsize(r1));
-    rsize(r2) = rsize(r1);
+  memcpy(rdata(r2), rdata(r1), rsize(r1));
+  rsize(r2) = rsize(r1);
 }
 
 void lmm_split(lmm_t lmm, size_t split, lmm_reg_t r1, lmm_reg_t r2)
 {
-    assert(rsize(r1)        >= split        && "Can not split: too large size");
-    assert(rmax(r2) + split >= rsize(r1)    && "Can not split: second operand too small");
+  assert(rsize(r1)        >= split        && "Can not split: too large size");
+  assert(rmax(r2) + split >= rsize(r1)    && "Can not split: second operand too small");
 
-    int len = rsize(r1) - split;
-    memcpy(rdata(r2), rdata(r1) + split, len);
-    rsize(r1) = split;
-    rsize(r2) = len;
+  int len = rsize(r1) - split;
+  memcpy(rdata(r2), rdata(r1) + split, len);
+  rsize(r1) = split;
+  rsize(r2) = len;
 }
 
 void lmm_swap(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2)
 {
-    size_t ts = rsize(r2);
-    size_t tm = rmax(r2);
-    void  *td = rdata(r2);
+  size_t ts = rsize(r2);
+  size_t tm = rmax(r2);
+  void  *td = rdata(r2);
 
-    rsize(r2) = rsize(r1);
-    rmax(r2) = rmax(r1);
-    rdata(r2) = rdata(r1);
+  rsize(r2) = rsize(r1);
+  rmax(r2) = rmax(r1);
+  rdata(r2) = rdata(r1);
 
-    rsize(r1) = ts;
-    rmax(r1) = tm;
-    rdata(r1) = td;
+  rsize(r1) = ts;
+  rmax(r1) = tm;
+  rdata(r1) = td;
 }
 
 #define LLM_SET(N, T)                                   \
@@ -158,35 +154,33 @@ __attribute__((vector_size(256 * sizeof(uint8_t))));
 
 void lmm_ap1_i8_i8(lmm_t lmm, unary_t f, ptr_t ct, lmm_reg_t r1, lmm_reg_t r2)
 {
-    typedef uint8_t first_t;
-    typedef uint8_t second_t;
-    typedef second_t(*func_t)(ptr_t, first_t);
+  typedef uint8_t first_t;
+  typedef uint8_t second_t;
+  typedef second_t(*func_t)(ptr_t, first_t);
 
-    size_t  count = size_min(rsize(r1) / sizeof(first_t), rsize(r2) / sizeof(second_t));
-    first_t  *data1 = (first_t *) rdata(r1);
-    second_t *data2 = (second_t *) rdata(r2);
-    func_t func = (func_t) f;
+  size_t  count = size_min(rsize(r1) / sizeof(first_t), rsize(r2) / sizeof(second_t));
+  first_t  *data1 = (first_t *) rdata(r1);
+  second_t *data2 = (second_t *) rdata(r2);
+  func_t func = (func_t) f;
 
-    for (size_t i = 0; i < count; ++i)
-        {
-            data2[i] = func(ct, data1[i]);
-        }
+  for (size_t i = 0; i < count; ++i) {
+    data2[i] = func(ct, data1[i]);
+  }
 }
 void lmm_ap1_f32_f32(lmm_t lmm, unary_t f, ptr_t ct, lmm_reg_t r1, lmm_reg_t r2)
 {
-    typedef float first_t;
-    typedef float second_t;
-    typedef second_t(*func_t)(ptr_t, first_t);
+  typedef float first_t;
+  typedef float second_t;
+  typedef second_t(*func_t)(ptr_t, first_t);
 
-    size_t  count = size_min(rsize(r1) / sizeof(first_t), rsize(r2) / sizeof(second_t));
-    first_t  *data1 = (first_t *) rdata(r1);
-    second_t *data2 = (second_t *) rdata(r2);
-    func_t func = (func_t) f;
+  size_t  count = size_min(rsize(r1) / sizeof(first_t), rsize(r2) / sizeof(second_t));
+  first_t  *data1 = (first_t *) rdata(r1);
+  second_t *data2 = (second_t *) rdata(r2);
+  func_t func = (func_t) f;
 
-    for (size_t i = 0; i < count; ++i)
-        {
-            data2[i] = func(ct, data1[i]);
-        }
+  for (size_t i = 0; i < count; ++i) {
+    data2[i] = func(ct, data1[i]);
+  }
 }
 
 
@@ -227,33 +221,33 @@ void lmm_ap1_f32_f32(lmm_t lmm, unary_t f, ptr_t ct, lmm_reg_t r1, lmm_reg_t r2)
 
 void test_vm_loop()
 {
-    lmm_t vm = lmm_create();
+  lmm_t vm = lmm_create();
 
-    lmm_alloc(vm, 16, 0);
-    lmm_alloc(vm, 16, 1);
-    lmm_alloc(vm, 16, 2);
-    lmm_alloc(vm, 16, 10);
-    lmm_alloc(vm, 16, 20);
+  lmm_alloc(vm, 16, 0);
+  lmm_alloc(vm, 16, 1);
+  lmm_alloc(vm, 16, 2);
+  lmm_alloc(vm, 16, 10);
+  lmm_alloc(vm, 16, 20);
 
-    lmm_set_i8(vm, 10, 0);
-    lmm_set_i8(vm, 11, 1);
-    lmm_set_i8(vm, 12, 2);
-    lmm_set_i32(vm, 0x3412cdab, 20);
+  lmm_set_i8(vm, 10, 0);
+  lmm_set_i8(vm, 11, 1);
+  lmm_set_i8(vm, 12, 2);
+  lmm_set_i32(vm, 0x3412cdab, 20);
 
-    lmm_split(vm, 13, 0, 10);
+  lmm_split(vm, 13, 0, 10);
 
-    lmm_swap(vm, 0, 1);
-    // lmm_swap(vm, 3, 0);
-    // lmm_swap(vm, 3, 3);
+  lmm_swap(vm, 0, 1);
+  // lmm_swap(vm, 3, 0);
+  // lmm_swap(vm, 3, 3);
 
 
-    doremir_print_ln(lmm_show(vm));
+  doremir_print_ln(lmm_show(vm));
 
-    lmm_destroy(vm);
+  lmm_destroy(vm);
 }
 
 void test_vm()
 {
-    // while(1)
-    test_vm_loop();
+  // while(1)
+  test_vm_loop();
 }

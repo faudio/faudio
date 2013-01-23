@@ -11,7 +11,7 @@
     @{
     */
 
-typedef struct _doremir_list_t * doremir_list_t;
+typedef struct _doremir_list_t *doremir_list_t;
 doremir_list_t doremir_list_empty();
 doremir_list_t doremir_list_single(doremir_ptr_t);
 doremir_list_t doremir_list_cons(doremir_ptr_t, doremir_list_t);
@@ -49,17 +49,17 @@ doremir_list_t doremir_list_dinsert(int,
                                     doremir_ptr_t,
                                     doremir_list_t);
 doremir_list_t doremir_list_insert_range(int,
-                                         doremir_list_t,
-                                         doremir_list_t);
+    doremir_list_t,
+    doremir_list_t);
 doremir_list_t doremir_list_dinsert_range(int,
-                                          doremir_list_t,
-                                          doremir_list_t);
+    doremir_list_t,
+    doremir_list_t);
 doremir_list_t doremir_list_remove(int, doremir_list_t);
 doremir_list_t doremir_list_dremove(int, doremir_list_t);
 doremir_list_t doremir_list_remove_range(int, int, doremir_list_t);
 doremir_list_t doremir_list_dremove_range(int,
-                                          int,
-                                          doremir_list_t);
+    int,
+    doremir_list_t);
 bool doremir_list_has(doremir_ptr_t, doremir_list_t);
 doremir_ptr_t doremir_list_find(doremir_pred_t,
                                 doremir_ptr_t,

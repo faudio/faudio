@@ -13,21 +13,21 @@
     */
 
 typedef enum {
-            note_off,
-            note_on,
-            after_touch,
-            control_change,
-            program_change,
-            channel_pressure,
-            pitch_wheel,
-            sysex
-        } doremir_midi_status_t;
+  note_off,
+  note_on,
+  after_touch,
+  control_change,
+  program_change,
+  channel_pressure,
+  pitch_wheel,
+  sysex
+} doremir_midi_status_t;
 typedef int doremir_midi_channel_t;
 typedef int doremir_midi_data_t;
-typedef struct _doremir_midi_t * doremir_midi_t;
+typedef struct _doremir_midi_t *doremir_midi_t;
 doremir_midi_t doremir_midi_create_simple(doremir_midi_status_t,
-                                          int,
-                                          int);
+    int,
+    int);
 doremir_midi_t doremir_midi_create_sysex(doremir_buffer_t);
 doremir_midi_t doremir_midi_copy(doremir_midi_t);
 void doremir_midi_destroy(doremir_midi_t);

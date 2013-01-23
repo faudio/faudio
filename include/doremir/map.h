@@ -13,7 +13,7 @@
     @{
     */
 
-typedef struct _doremir_map_t * doremir_map_t;
+typedef struct _doremir_map_t *doremir_map_t;
 typedef doremir_ptr_t doremir_map_key_t;
 doremir_map_t doremir_map_empty();
 doremir_map_t doremir_map_copy(doremir_map_t);

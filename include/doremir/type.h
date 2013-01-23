@@ -13,15 +13,15 @@
 
 typedef size_t doremir_type_frames_t;
 typedef enum {
-            uint8_type,
-            uint16_type,
-            uint32_type,
-            uint64_type,
-            float_type,
-            double_type,
-            ptr_type
-        } doremir_type_simple_t;
-typedef struct _doremir_type_t * doremir_type_t;
+  uint8_type,
+  uint16_type,
+  uint32_type,
+  uint64_type,
+  float_type,
+  double_type,
+  ptr_type
+} doremir_type_simple_t;
+typedef struct _doremir_type_t *doremir_type_t;
 doremir_type_t doremir_type_simple(doremir_type_simple_t);
 doremir_type_t doremir_type_pair(doremir_type_t, doremir_type_t);
 doremir_type_t doremir_type_vector(doremir_type_t, size_t);

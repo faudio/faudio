@@ -13,7 +13,7 @@
     @{
     */
 
-typedef struct _doremir_processor_split_proc_t * doremir_processor_split_proc_t;
+typedef struct _doremir_processor_split_proc_t *doremir_processor_split_proc_t;
 doremir_processor_split_proc_t doremir_processor_split_create(doremir_type_t);
 void doremir_processor_split_destroy(doremir_processor_split_proc_t);
 

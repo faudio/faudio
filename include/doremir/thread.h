@@ -11,9 +11,9 @@
     @{
     */
 
-typedef struct _doremir_thread_t * doremir_thread_t;
-typedef struct _doremir_thread_mutex_t * doremir_thread_mutex_t;
-typedef struct _doremir_thread_condition_t * doremir_thread_condition_t;
+typedef struct _doremir_thread_t *doremir_thread_t;
+typedef struct _doremir_thread_mutex_t *doremir_thread_mutex_t;
+typedef struct _doremir_thread_condition_t *doremir_thread_condition_t;
 typedef int doremir_thread_millis_t;
 doremir_thread_t doremir_thread_create(doremir_nullary_t,
                                        doremir_ptr_t);

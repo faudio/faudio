@@ -25,8 +25,8 @@ static int count = 0;
  */
 void doremir_audio_engine_initialize()
 {
-    count++;
-    doremir_device_audio_initialize();
+  count++;
+  doremir_device_audio_initialize();
 }
 
 /** Performs global cleanup.
@@ -36,8 +36,8 @@ void doremir_audio_engine_initialize()
  */
 void doremir_audio_engine_terminate()
 {
-    count--;
-    doremir_device_audio_terminate();
+  count--;
+  doremir_device_audio_terminate();
 }
 
 /** Instruct the Audio Engine to write log messages to the specific file.

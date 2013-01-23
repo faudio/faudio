@@ -13,14 +13,13 @@
 
 // http://www.cs.sunysb.edu/~skiena/392/programs/queue.c
 
-struct _doremir_atomic_ring_buffer_t
-{
+struct _doremir_atomic_ring_buffer_t {
 
-    impl_t              impl;       //  Interface dispatcher
-    buffer_t            data;       //  Data buffer
+  impl_t              impl;       //  Interface dispatcher
+  buffer_t            data;       //  Data buffer
 
-    atomic_t            start;
-    atomic_t            stop;
+  atomic_t            start;
+  atomic_t            stop;
 };
 
 doremir_ptr_t atomic_ring_buffer_impl(doremir_id_t interface);
@@ -32,17 +31,17 @@ doremir_ptr_t atomic_ring_buffer_impl(doremir_id_t interface);
  */
 doremir_atomic_ring_buffer_t doremir_atomic_ring_buffer_create(size_t size)
 {
-    ringbuffer_t b = doremir_new(atomic_ring_buffer);
+  ringbuffer_t b = doremir_new(atomic_ring_buffer);
 
-    b->impl = &atomic_ring_buffer_impl;
-    b->data = doremir_buffer_create(size);
+  b->impl = &atomic_ring_buffer_impl;
+  b->data = doremir_buffer_create(size);
 
-    b->start = doremir_atomic_create();
-    b->stop  = doremir_atomic_create();
-    doremir_atomic_set(b->start, 0);
-    doremir_atomic_set(b->stop, 0);
+  b->start = doremir_atomic_create();
+  b->stop  = doremir_atomic_create();
+  doremir_atomic_set(b->start, 0);
+  doremir_atomic_set(b->stop, 0);
 
-    return b;
+  return b;
 }
 
 /** Copy the given buffer.
@@ -52,17 +51,17 @@ doremir_atomic_ring_buffer_t doremir_atomic_ring_buffer_create(size_t size)
 doremir_atomic_ring_buffer_t
 doremir_atomic_ring_buffer_copy(doremir_atomic_ring_buffer_t buffer)
 {
-    ringbuffer_t b = doremir_new(atomic_ring_buffer);
+  ringbuffer_t b = doremir_new(atomic_ring_buffer);
 
-    b->impl = &atomic_ring_buffer_impl;
-    b->data = doremir_buffer_copy(buffer->data);
+  b->impl = &atomic_ring_buffer_impl;
+  b->data = doremir_buffer_copy(buffer->data);
 
-    b->start = doremir_atomic_create();
-    b->stop  = doremir_atomic_create();
-    doremir_atomic_set(b->start, doremir_atomic_get(buffer->start));
-    doremir_atomic_set(b->stop, doremir_atomic_get(buffer->stop));
+  b->start = doremir_atomic_create();
+  b->stop  = doremir_atomic_create();
+  doremir_atomic_set(b->start, doremir_atomic_get(buffer->start));
+  doremir_atomic_set(b->stop, doremir_atomic_get(buffer->stop));
 
-    return b;
+  return b;
 }
 
 /** Copy the given buffer using the given size.
@@ -73,7 +72,7 @@ doremir_atomic_ring_buffer_t
 doremir_atomic_ring_buffer_resize(size_t  size,
                                   doremir_atomic_ring_buffer_t buffer)
 {
-    assert(false && "Not implemented");
+  assert(false && "Not implemented");
 }
 
 /** Swap the contents of the given ring buffers.
@@ -83,7 +82,7 @@ doremir_atomic_ring_buffer_resize(size_t  size,
 void doremir_atomic_ring_buffer_swap(doremir_atomic_ring_buffer_t buffer,
                                      doremir_atomic_ring_buffer_t buffer2)
 {
-    assert(false && "Not implemented");
+  assert(false && "Not implemented");
 }
 
 /** Destroy the given ring buffer.
@@ -92,7 +91,7 @@ void doremir_atomic_ring_buffer_swap(doremir_atomic_ring_buffer_t buffer,
  */
 void doremir_atomic_ring_buffer_destroy(doremir_atomic_ring_buffer_t buffer)
 {
-    assert(false && "Not implemented");
+  assert(false && "Not implemented");
 }
 
 /** Return the size of the given ring buffer.
@@ -101,7 +100,7 @@ void doremir_atomic_ring_buffer_destroy(doremir_atomic_ring_buffer_t buffer)
  */
 size_t doremir_atomic_ring_buffer_size(doremir_atomic_ring_buffer_t buffer)
 {
-    assert(false && "Not implemented");
+  assert(false && "Not implemented");
 }
 
 /** Read a value from the ring buffer.
@@ -110,7 +109,7 @@ size_t doremir_atomic_ring_buffer_size(doremir_atomic_ring_buffer_t buffer)
  */
 uint8_t doremir_atomic_ring_buffer_read(doremir_atomic_ring_buffer_t buffer)
 {
-    assert(false && "Not implemented");
+  assert(false && "Not implemented");
 }
 
 /** Write a value to the ring buffer.
@@ -120,7 +119,7 @@ uint8_t doremir_atomic_ring_buffer_read(doremir_atomic_ring_buffer_t buffer)
 bool doremir_atomic_ring_buffer_write(doremir_atomic_ring_buffer_t buffer,
                                       uint8_t value)
 {
-    assert(false && "Not implemented");
+  assert(false && "Not implemented");
 }
 
 
@@ -129,33 +128,32 @@ bool doremir_atomic_ring_buffer_write(doremir_atomic_ring_buffer_t buffer,
 
 doremir_string_t atomic_ring_buffer_show(doremir_ptr_t v)
 {
-    string_t s = string("<RingBuffer ");
-    s = string_dappend(s, format_int("%p", (long) v));
-    s = string_dappend(s, string(">"));
-    return s;
+  string_t s = string("<RingBuffer ");
+  s = string_dappend(s, format_int("%p", (long) v));
+  s = string_dappend(s, string(">"));
+  return s;
 }
 
 void atomic_ring_buffer_destroy(doremir_ptr_t a)
 {
-    doremir_atomic_ring_buffer_destroy(a);
+  doremir_atomic_ring_buffer_destroy(a);
 }
 
 
 doremir_ptr_t atomic_ring_buffer_impl(doremir_id_t interface)
 {
-    static doremir_string_show_t atomic_ring_buffer_show_impl = { atomic_ring_buffer_show };
-    static doremir_destroy_t atomic_ring_buffer_destroy_impl = { atomic_ring_buffer_destroy };
+  static doremir_string_show_t atomic_ring_buffer_show_impl = { atomic_ring_buffer_show };
+  static doremir_destroy_t atomic_ring_buffer_destroy_impl = { atomic_ring_buffer_destroy };
 
-    switch (interface)
-        {
-        case doremir_string_show_i:
-            return &atomic_ring_buffer_show_impl;
+  switch (interface) {
+  case doremir_string_show_i:
+    return &atomic_ring_buffer_show_impl;
 
-        case doremir_destroy_i:
-            return &atomic_ring_buffer_destroy_impl;
+  case doremir_destroy_i:
+    return &atomic_ring_buffer_destroy_impl;
 
-        default:
-            return NULL;
-        }
+  default:
+    return NULL;
+  }
 }
 

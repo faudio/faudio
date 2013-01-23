@@ -13,7 +13,7 @@
     @{
     */
 
-typedef struct _doremir_processor_id_proc_t * doremir_processor_id_proc_t;
+typedef struct _doremir_processor_id_proc_t *doremir_processor_id_proc_t;
 doremir_processor_id_proc_t doremir_processor_id_create(doremir_type_t);
 void doremir_processor_id_destroy(doremir_processor_id_proc_t);
 

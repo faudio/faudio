@@ -11,7 +11,7 @@
     @{
     */
 
-typedef struct _doremir_atomic_t * doremir_atomic_t;
+typedef struct _doremir_atomic_t *doremir_atomic_t;
 doremir_atomic_t doremir_atomic_create();
 doremir_atomic_t doremir_atomic_copy(doremir_atomic_t);
 void doremir_atomic_swap(doremir_atomic_t, doremir_atomic_t);
