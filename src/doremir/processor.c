@@ -176,13 +176,19 @@ doremir_processor_t doremir_processor_loop(doremir_processor_t proc)
     @param data             Value to be passed to function.
     @return                 A processor.
  */
-doremir_processor_t doremir_processor_unary(doremir_type_t  input_type,
-        doremir_type_t  output_type,
-        doremir_unary_t function,
-        doremir_ptr_t   data)
+doremir_processor_t doremir_processor_unary
+(
+    doremir_type_t  input_type,
+    doremir_type_t  output_type,
+    doremir_unary_t function,
+    doremir_ptr_t   data
+)
 {
     return (processor_t)
-           doremir_processor_unary_create(input_type, output_type, function, data);
+           doremir_processor_unary_create(
+               input_type, output_type,
+               function, data
+           );
 }
 
 /** Lift a binary function to a processor.
@@ -194,14 +200,20 @@ doremir_processor_t doremir_processor_unary(doremir_type_t  input_type,
     @param data             Value to be passed to function.
     @return                 A processor.
  */
-doremir_processor_t doremir_processor_binary(doremir_type_t   input_type1,
-        doremir_type_t   input_type2,
-        doremir_type_t   output_type,
-        doremir_binary_t function,
-        doremir_ptr_t    data)
+doremir_processor_t doremir_processor_binary
+(
+    doremir_type_t   input_type1,
+    doremir_type_t   input_type2,
+    doremir_type_t   output_type,
+    doremir_binary_t function,
+    doremir_ptr_t    data
+)
 {
     return (processor_t)
-           doremir_processor_binary_create(input_type1, input_type2, output_type, function, data);
+           doremir_processor_binary_create(
+               input_type1, input_type2, output_type,
+               function, data
+           );
 }
 
 
