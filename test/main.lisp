@@ -271,10 +271,6 @@
 (setf x '(:frame :f32))
 (setf x '(:vector (:pair :i8 :i32) 24))
 (setf x '(:vector :f32 1024))
-
-; Make an explicit type
-(setf x (make-type x))
-
 (type-is-simple x)
 (type-is-pair x)
 (type-is-vector x)
@@ -282,6 +278,13 @@
 (type-size-of 256 x)
 (type-offset-of 256 x)
 (type-align-of x)
+
+; We can also force conversion for nice printing
+(setf x (make-type '(:pair :i8 :i8)))
+(setf x (make-type (make-type '(:pair :i8 :i8))))
+
+; FIXME this should never return #<Pointer to VOID>
+; That works but is confusing
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -305,7 +308,8 @@
 (setf x (unary :f32 :f32 (callback add-f32) nil))
 (setf x (binary :i8 :i8 :i8 (callback add-i8-i8) nil))
 (setf y x)
-(input-type x)
+
+(type-offset-of 256 (input-type x))
 (output-type x)
 
 (setf x (id :i8))
@@ -321,7 +325,7 @@
   (output-type (split :i8)))
 
 (parallel 
-  (sequence (id :i8) (const :i8 :i16 nil) (id :i16)) 
+  (sequence (id '(:frame :i8)) (const '(:frame :i8) '(:frame :i16) nil) (id '(:frame :i16))) 
   (id '(:vector :f32 1024))
   (id '(:frame :f32))) 
 
@@ -482,7 +486,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Top-level generic functions
+; Misc generic functions
 
 (equal              x y)
 (less-than          x y)
@@ -491,11 +495,13 @@
 (greater-than-equal x y)
 (min                x y)
 (max                x y)
+
 (add                x y)
 (multiply           x y)
 (subtract           x y)
 (divide             x y)
 (absolute           x)
+
 (copy               x)
 (destroy            x)
 (string-show        x)
