@@ -61,6 +61,11 @@ doremir_type_t split_output_type(doremir_ptr_t a)
     return doremir_type_pair(proc->input_type, proc->input_type);
 }
 
+size_t split_buffer_size(doremir_ptr_t a)
+{
+    // TODO
+}
+
 void split_before(doremir_ptr_t a, info_t *info)
 {
     this_proc_t proc = (this_proc_t) a;

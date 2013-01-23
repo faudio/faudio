@@ -49,6 +49,11 @@ doremir_type_t const_output_type(doremir_ptr_t a)
     return proc->output_type;
 }
 
+size_t const_buffer_size(doremir_ptr_t a)
+{
+    // TODO
+}
+
 void const_before(doremir_ptr_t a, info_t *info)
 {
     // nothing

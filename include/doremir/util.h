@@ -3,6 +3,7 @@
 #define _DOREMIR_UTIL
 
 #include <doremir/util/alignof.h>
+#include <doremir/util/minmax.h>
 #include <doremir/util/literals.h>
 #include <doremir/util/macros.h>
 

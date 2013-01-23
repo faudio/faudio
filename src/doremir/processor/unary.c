@@ -57,6 +57,11 @@ doremir_type_t unary_output_type(doremir_ptr_t a)
     return proc->output_type;
 }
 
+size_t unary_buffer_size(doremir_ptr_t a)
+{
+    // TODO
+}
+
 void unary_before(doremir_ptr_t a, info_t *info)
 {
     // nothing

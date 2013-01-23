@@ -44,6 +44,11 @@ doremir_type_t id_output_type(doremir_ptr_t a)
     return proc->type;
 }
 
+size_t id_buffer_size(doremir_ptr_t a)
+{
+    // TODO
+}
+
 void id_before(doremir_ptr_t a, info_t *info)
 {
     // nothing

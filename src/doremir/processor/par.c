@@ -73,6 +73,11 @@ doremir_type_t par_output_type(doremir_ptr_t a)
     return doremir_type_pair(t0, t1);
 }
 
+size_t par_buffer_size(doremir_ptr_t a)
+{
+    // TODO
+}
+
 void par_before(doremir_ptr_t a, info_t *info)
 {
     this_proc_t proc = (this_proc_t) a;

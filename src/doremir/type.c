@@ -209,12 +209,6 @@ doremir_type_t doremir_type_get_pair_snd(doremir_type_t t)
 // --------------------------------------------------------------------------------
 
 inline static
-size_t size_max(size_t a, size_t b)
-{
-    return (a > b) ? a : b;
-}
-
-inline static
 size_t pad(size_t x, size_t a)
 {
     return (a - x) % a;

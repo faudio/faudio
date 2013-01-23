@@ -80,6 +80,11 @@ doremir_type_t loop_output_type(doremir_ptr_t a)
     return doremir_type_get_pair_fst(doremir_processor_output_type(proc->elem[0]));
 }
 
+size_t loop_buffer_size(doremir_ptr_t a)
+{
+    // TODO
+}
+
 void loop_before(doremir_ptr_t a, info_t *info)
 {
     this_proc_t proc = (this_proc_t) a;

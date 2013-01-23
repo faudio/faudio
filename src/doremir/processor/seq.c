@@ -80,6 +80,11 @@ doremir_type_t seq_output_type(doremir_ptr_t a)
     return doremir_processor_output_type(proc->elem[1]);
 }
 
+size_t seq_buffer_size(doremir_ptr_t a)
+{
+    // TODO
+}
+
 void seq_before(doremir_ptr_t a, info_t *info)
 {
     this_proc_t proc = (this_proc_t) a;
