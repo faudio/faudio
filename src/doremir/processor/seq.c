@@ -9,10 +9,6 @@ struct _doremir_processor_seq_proc_t
 
     proc_t              elem[2];        // Elements
     proc_interface_t   *elemImpl[2];    // Fast pointer to the elements' processor implementation
-
-    type_t              bufType;        // Buffer to transfer data between elements
-    size_t              bufSize;
-    void               *buf;
 };
 
 typedef doremir_processor_seq_proc_t    this_proc_t;
@@ -45,8 +41,6 @@ this_proc_t doremir_processor_seq_create(processor_t proc1, processor_t proc2)
 
     proc->elemImpl[0]   = doremir_interface(doremir_processor_interface_i, proc->elem[0]);
     proc->elemImpl[1]   = doremir_interface(doremir_processor_interface_i, proc->elem[1]);
-
-    proc->bufType       = doremir_processor_output_type(proc->elem[0]);
 
     if (check_type(NULL, proc))
         {
@@ -94,8 +88,6 @@ void seq_before(doremir_ptr_t a, info_t *info)
     // Run subprocessors
     proc->elemImpl[0]->before(proc->elem[0], info);
     proc->elemImpl[1]->before(proc->elem[1], info);
-
-    assert(proc->buf && "malloc failed");
 }
 
 void seq_after(doremir_ptr_t a, info_t *info)

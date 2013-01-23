@@ -6,8 +6,8 @@
 struct _doremir_processor_split_proc_t
 {
     impl_t              impl;               // Dispatcher
-
     type_t              input_type;
+    
     size_t              size;               // Number of bytes to copy
 };
 

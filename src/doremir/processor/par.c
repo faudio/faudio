@@ -5,12 +5,12 @@
 
 struct _doremir_processor_par_proc_t
 {
-    impl_t              impl;           // Dispatcher
+    impl_t              impl;                   // Dispatcher
 
-    proc_t              elem[2];        // Elements
-    proc_interface_t   *elemImpl[2];    // Fast pointer to the elements' processor implementation
+    proc_t              elem[2];                // Elements
+    proc_interface_t   *elemImpl[2];            // Fast pointer to the elements' processor implementation
 
-    size_t inOffset, outOffset;
+    size_t              inOffset, outOffset;
 };
 
 typedef doremir_processor_par_proc_t        this_proc_t;
@@ -95,7 +95,7 @@ void par_before(doremir_ptr_t a, info_t *info)
 void par_after(doremir_ptr_t a, info_t *info)
 {
     this_proc_t proc = (this_proc_t) a;
-    
+
     proc->elemImpl[0]->after(proc->elem[0], info);
     proc->elemImpl[1]->after(proc->elem[1], info);
 }

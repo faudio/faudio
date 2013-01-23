@@ -7,7 +7,8 @@ struct _doremir_processor_const_proc_t
 {
     impl_t          impl;                       // Dispatcher
     type_t          input_type, output_type;    // Type
-    ptr_t           value;
+    
+    ptr_t           value;                      // Constant value
 };
 
 typedef doremir_processor_const_proc_t      this_proc_t;

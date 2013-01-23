@@ -45,9 +45,8 @@ doremir_type_t id_output_type(doremir_ptr_t a)
 }
 
 size_t id_buffer_size(frames_t frameSize, doremir_ptr_t a)
-{                 
-    return 9999;
-    // return doremir_type_size_of(frameSize, id_input_type(a));
+{
+    return doremir_type_size_of(frameSize, id_input_type(a));
 }
 
 void id_before(doremir_ptr_t a, info_t *info)

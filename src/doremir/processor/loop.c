@@ -5,14 +5,12 @@
 
 struct _doremir_processor_loop_proc_t
 {
-    impl_t              impl;           // Dispatcher
+    impl_t               impl;           // Dispatcher
+    type_t               bufType;        // Type of loopback buffer
 
-    proc_t              elem[1];        // Elements
-    proc_interface_t   *elemImpl[1];    // Fast pointer to the elements' processor implementation
+    proc_t               elem;           // Elements
+    proc_interface_t    *elemImpl;       // Fast pointer to the elements' processor implementation
 
-    type_t              bufType;        // Buffer to hold wraparound data
-    size_t              bufSize[2];
-    void               *buf[2];
 };
 
 typedef doremir_processor_loop_proc_t       this_proc_t;
@@ -30,11 +28,11 @@ bool check_type(string_t *msg, this_proc_t proc)
                           "of input and output must be the same.");
         }
 
-    return doremir_type_is_pair(doremir_processor_input_type(proc->elem[0]))
-           && doremir_type_is_pair(doremir_processor_output_type(proc->elem[0]))
+    return doremir_type_is_pair(doremir_processor_input_type(proc->elem))
+           && doremir_type_is_pair(doremir_processor_output_type(proc->elem))
            && doremir_equal(
-               doremir_type_get_pair_fst(doremir_processor_input_type(proc->elem[0])),
-               doremir_type_get_pair_fst(doremir_processor_output_type(proc->elem[0]))
+               doremir_type_get_pair_fst(doremir_processor_input_type(proc->elem)),
+               doremir_type_get_pair_fst(doremir_processor_output_type(proc->elem))
            );
 }
 
@@ -43,10 +41,10 @@ this_proc_t doremir_processor_loop_create(processor_t proc1)
     this_proc_t proc  = doremir_new(processor_loop_proc);
     proc->impl = &loop_impl;
 
-    proc->elem[0]      = proc1;
-    proc->elemImpl[0]  = doremir_interface(doremir_processor_interface_i, proc->elem[0]);
+    proc->elem      = proc1;
+    proc->elemImpl  = doremir_interface(doremir_processor_interface_i, proc->elem);
 
-    proc->bufType      = doremir_type_get_pair_fst(doremir_processor_input_type(proc->elem[0])); // TODO get fst
+    proc->bufType      = doremir_type_get_pair_fst(doremir_processor_input_type(proc->elem)); // TODO get fst
 
     if (check_type(NULL, proc))
         {
@@ -61,7 +59,7 @@ this_proc_t doremir_processor_loop_create(processor_t proc1)
 
 void doremir_processor_loop_destroy(this_proc_t proc)
 {
-    doremir_destroy(proc->elem[0]);
+    doremir_destroy(proc->elem);
     doremir_delete(proc);
 }
 
@@ -70,13 +68,13 @@ void doremir_processor_loop_destroy(this_proc_t proc)
 doremir_type_t loop_input_type(doremir_ptr_t a)
 {
     this_proc_t proc = (this_proc_t) a;
-    return doremir_type_get_pair_fst(doremir_processor_input_type(proc->elem[0]));
+    return doremir_type_get_pair_fst(doremir_processor_input_type(proc->elem));
 }
 
 doremir_type_t loop_output_type(doremir_ptr_t a)
 {
     this_proc_t proc = (this_proc_t) a;
-    return doremir_type_get_pair_fst(doremir_processor_output_type(proc->elem[0]));
+    return doremir_type_get_pair_fst(doremir_processor_output_type(proc->elem));
 }
 
 size_t loop_buffer_size(frames_t frameSize, doremir_ptr_t a)
@@ -93,13 +91,13 @@ size_t loop_buffer_size(frames_t frameSize, doremir_ptr_t a)
 void loop_before(doremir_ptr_t a, info_t *info)
 {
     this_proc_t proc = (this_proc_t) a;
-    proc->elemImpl[0]->before(proc->elem[0], info);
+    proc->elemImpl->before(proc->elem, info);
 }
 
 void loop_after(doremir_ptr_t a, info_t *info)
 {
     this_proc_t proc = (this_proc_t) a;
-    proc->elemImpl[0]->after(proc->elem[0], info);
+    proc->elemImpl->after(proc->elem, info);
 }
 
 void loop_process(ptr_t a, info_t *info, samples_t samples)

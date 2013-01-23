@@ -57,7 +57,7 @@ doremir_type_t binary_output_type(doremir_ptr_t a)
 {
     this_proc_t proc = (doremir_processor_binary_proc_t) a;
     return proc->output_type;
-}   
+}
 
 size_t binary_buffer_size(frames_t frameSize, doremir_ptr_t a)
 {
