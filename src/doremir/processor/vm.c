@@ -208,6 +208,30 @@ LLM_AP2(i8,  i8,  i8,  uint8_t, uint8_t, uint8_t);
 // LLM_AP2(f32, f32, f32, float,   float,   float);
 
 
+#define LLM_NV_OP(NOP, OP, N1, N2, T1, T2)                                                  \
+  void lmm_##NOP##_##N1##_##N2(                                                             \
+    lmm_t lmm,                                                                              \
+    lmm_reg_t r1,                                                                           \
+    lmm_reg_t r2                                                                            \
+  )                                                                                         \
+  {                                                                                         \
+    typedef T1 arg1_t;                                                                      \
+    typedef T2 arg2_t;                                                                      \
+                                                                                            \
+    arg1_t *data1 = (arg1_t *) rdata(r1);                                                   \
+    arg2_t *data2 = (arg2_t *) rdata(r2);                                                   \
+                                                                                            \
+    size_t  count = size_min(rsize(r1) / sizeof(arg1_t), rsize(r2) / sizeof(arg2_t));       \
+                                                                                            \
+    for (size_t i = 0; i < count; ++i) {                                                    \
+      data1[i] = data1[i] OP data2[i];                                                      \
+    }                                                                                       \
+  }                                                                                         \
+
+LLM_NV_OP(add, +, i8, i8, uint8_t, uint8_t);
+
+
+
 // typedef float v256xf32
 // __attribute__((vector_size(256 * sizeof(float))));
 //
@@ -267,7 +291,7 @@ void test_vm_loop()
   // lmm_alloc(vm, 16, 20);
 
   lmm_set_i8(vm, 1, 0);
-  lmm_set_i8(vm, 1, 1);
+  lmm_set_i8(vm, 0, 1);
 
   doremir_print_ln(lmm_show(vm));
 
@@ -278,8 +302,8 @@ void test_vm_loop()
 
   // lmm_ap1_i8_i8(vm, (unary_t) my_succ_i8, NULL, 0);
   // lmm_ap1_i8_i8(vm, (unary_t) my_succ_i8, NULL, 1);
-  lmm_ap2_i8_i8_i8(vm, (binary_t) my_add_i8, NULL, 0, 1);
-
+  // lmm_ap2_i8_i8_i8(vm, (binary_t) my_add_i8, NULL, 0, 1);
+  lmm_add_i8_i8(vm, 0, 1);
 
 
   doremir_print_ln(lmm_show(vm));
