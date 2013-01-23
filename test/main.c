@@ -1008,6 +1008,13 @@ void test_processors()
     }
 }
 
+extern void test_vm(); // in vm.c
+void test_vm2()
+{
+    test_section();
+    test_vm();
+}
+
 int main(int argc, char const *argv[])
 {
     printf("DoReMIR Audio engine %s v%d.%d.%d\n", bits, version[0], version[1], version[2]);
@@ -1071,6 +1078,8 @@ int main(int argc, char const *argv[])
         // dispatchers
         test_priority_queue(10);
         // schedulers
+
+        test_vm2();
 
         doremir_audio_engine_terminate();
     }
