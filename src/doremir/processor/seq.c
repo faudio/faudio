@@ -1,24 +1,29 @@
 
+/*
+    DoReMIR Audio Engine
+    Copyright (c) DoReMIR Music Research 2012-2013
+    All rights reserved.
+ */
+
 #import <doremir/processor/seq.h>
 #import <doremir/string.h>
 #import <doremir/util.h>
 
 struct _doremir_processor_seq_proc_t
 {
-    impl_t              impl;           // Dispatcher
+    impl_t              impl;               // Dispatcher
 
-    proc_t              elem[2];        // Elements
-    proc_interface_t   *elemImpl[2];    // Fast pointer to the elements' processor implementation
+    proc_t              elem[2];            // Elements
+    proc_interface_t   *elemImpl[2];        // Fast impl pointer
 };
 
-typedef doremir_processor_seq_proc_t    this_proc_t;
+typedef doremir_processor_seq_proc_t    this_t;
 typedef doremir_processor_samples_t     samples_t;
 typedef doremir_processor_info_t        info_t;
 
-doremir_ptr_t seq_impl(doremir_id_t interface);
+ptr_t seq_impl(doremir_id_t interface);
 
-inline static
-bool check_type(string_t *msg, this_proc_t proc)
+inline static bool type_check(string_t *msg, this_t proc)
 {
     if (msg)
         {
@@ -31,9 +36,9 @@ bool check_type(string_t *msg, this_proc_t proc)
            );
 }
 
-this_proc_t doremir_processor_seq_create(processor_t proc1, processor_t proc2)
+this_t doremir_processor_seq_create(processor_t proc1, processor_t proc2)
 {
-    this_proc_t proc    = doremir_new(processor_seq_proc);
+    this_t proc         = doremir_new(processor_seq_proc);
     proc->impl          = &seq_impl;
 
     proc->elem[0]       = proc1;
@@ -42,7 +47,7 @@ this_proc_t doremir_processor_seq_create(processor_t proc1, processor_t proc2)
     proc->elemImpl[0]   = doremir_interface(doremir_processor_interface_i, proc->elem[0]);
     proc->elemImpl[1]   = doremir_interface(doremir_processor_interface_i, proc->elem[1]);
 
-    if (check_type(NULL, proc))
+    if (type_check(NULL, proc))
         {
             return proc;
         }
@@ -53,7 +58,7 @@ this_proc_t doremir_processor_seq_create(processor_t proc1, processor_t proc2)
         }
 }
 
-void doremir_processor_seq_destroy(this_proc_t proc)
+void doremir_processor_seq_destroy(this_t proc)
 {
     doremir_destroy(proc->elem[0]);
     doremir_destroy(proc->elem[1]);
@@ -62,56 +67,55 @@ void doremir_processor_seq_destroy(this_proc_t proc)
 
 // --------------------------------------------------------------------------------
 
-doremir_type_t seq_input_type(doremir_ptr_t a)
+type_t seq_input_type(ptr_t a)
 {
-    this_proc_t proc = (this_proc_t) a;
+    this_t proc = (this_t) a;
     return doremir_processor_input_type(proc->elem[0]);
 }
 
-doremir_type_t seq_output_type(doremir_ptr_t a)
+type_t seq_output_type(ptr_t a)
 {
-    this_proc_t proc = (this_proc_t) a;
+    this_t proc = (this_t) a;
     return doremir_processor_output_type(proc->elem[1]);
 }
 
-size_t seq_buffer_size(frames_t frameSize, doremir_ptr_t a)
+size_t seq_buffer_size(frames_t frameSize, ptr_t a)
 {
     size_t inSize  = doremir_type_size_of(frameSize, seq_input_type(a));
     size_t outSize = doremir_type_size_of(frameSize, seq_output_type(a));
     return size_max(inSize, outSize);
+    // FIXME should use buffer size of elements, not type size
 }
 
-void seq_before(doremir_ptr_t a, info_t *info)
+void seq_before(ptr_t a, info_t *info)
 {
-    this_proc_t proc = (this_proc_t) a;
+    this_t proc = (this_t) a;
 
-    // Run subprocessors
     proc->elemImpl[0]->before(proc->elem[0], info);
     proc->elemImpl[1]->before(proc->elem[1], info);
 }
 
-void seq_after(doremir_ptr_t a, info_t *info)
+void seq_after(ptr_t a, info_t *info)
 {
-    this_proc_t proc = (this_proc_t) a;
+    this_t proc = (this_t) a;
 
-    // Run subprocessors
     proc->elemImpl[0]->after(proc->elem[0], info);
     proc->elemImpl[1]->after(proc->elem[1], info);
 }
 
 void seq_process(ptr_t a, info_t *info, samples_t samples)
 {
-    this_proc_t proc = (this_proc_t) a;
+    this_t proc = (this_t) a;
 
-    // proc->elemImpl[0]->process(proc->elem[0], info, input, proc->buf);
-    // proc->elemImpl[1]->process(proc->elem[1], info, proc->buf, output);
+    proc->elemImpl[0]->process(proc->elem[0], info, samples);
+    proc->elemImpl[1]->process(proc->elem[1], info, samples);
 }
 
 // --------------------------------------------------------------------------------
 
-string_t seq_show(doremir_ptr_t a)
+string_t seq_show(ptr_t a)
 {
-    this_proc_t proc = (this_proc_t) a;
+    this_t proc = (this_t) a;
     string_t s = string("");
 
     s = string_dappend(s, doremir_string_show(seq_input_type(proc)));
@@ -121,12 +125,12 @@ string_t seq_show(doremir_ptr_t a)
     return s;
 }
 
-void seq_destroy(doremir_ptr_t a)
+void seq_destroy(ptr_t a)
 {
     doremir_processor_seq_destroy(a);
 }
 
-doremir_ptr_t seq_impl(doremir_id_t interface)
+ptr_t seq_impl(doremir_id_t interface)
 {
     static doremir_string_show_t seq_show_impl = { seq_show };
     static doremir_destroy_t seq_destroy_impl = { seq_destroy };

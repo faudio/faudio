@@ -1,4 +1,10 @@
 
+/*
+    DoReMIR Audio Engine
+    Copyright (c) DoReMIR Music Research 2012-2013
+    All rights reserved.
+ */
+
 #import <doremir/processor/id.h>
 #import <doremir/string.h>
 #import <doremir/util.h>
@@ -9,22 +15,21 @@ struct _doremir_processor_id_proc_t
     type_t          type;                       // Type
 };
 
-typedef doremir_processor_id_proc_t         this_proc_t;
+typedef doremir_processor_id_proc_t         this_t;
 typedef doremir_processor_samples_t         samples_t;
 typedef doremir_processor_info_t            info_t;
 
-doremir_ptr_t id_impl(doremir_id_t interface);
+ptr_t id_impl(doremir_id_t interface);
 
-this_proc_t doremir_processor_id_create(type_t type)
+this_t doremir_processor_id_create(type_t type)
 {
-    this_proc_t proc  = doremir_new(processor_id_proc);
-    proc->impl        = &id_impl;
-
-    proc->type  = type;
+    this_t proc  = doremir_new(processor_id_proc);
+    proc->impl   = &id_impl;
+    proc->type   = type;
     return proc;
 }
 
-void doremir_processor_id_destroy(this_proc_t proc)
+void doremir_processor_id_destroy(this_t proc)
 {
     doremir_destroy(proc->type);
     doremir_delete(proc);
@@ -32,43 +37,43 @@ void doremir_processor_id_destroy(this_proc_t proc)
 
 // --------------------------------------------------------------------------------
 
-doremir_type_t id_input_type(doremir_ptr_t a)
+type_t id_input_type(ptr_t a)
 {
-    this_proc_t proc = (this_proc_t) a;
+    this_t proc = (this_t) a;
     return proc->type;
 }
 
-doremir_type_t id_output_type(doremir_ptr_t a)
+type_t id_output_type(ptr_t a)
 {
-    this_proc_t proc = (this_proc_t) a;
+    this_t proc = (this_t) a;
     return proc->type;
 }
 
-size_t id_buffer_size(frames_t frameSize, doremir_ptr_t a)
+size_t id_buffer_size(frames_t frameSize, ptr_t a)
 {
     return doremir_type_size_of(frameSize, id_input_type(a));
 }
 
-void id_before(doremir_ptr_t a, info_t *info)
+void id_before(ptr_t a, info_t *info)
 {
     // nothing
 }
 
-void id_after(doremir_ptr_t a, info_t *info)
+void id_after(ptr_t a, info_t *info)
 {
     // nothing
 }
 
 void id_process(ptr_t a, info_t *info, samples_t samples)
 {
-    // TODO
+    // nothing
 }
 
 // --------------------------------------------------------------------------------
 
-string_t id_show(doremir_ptr_t a)
+string_t id_show(ptr_t a)
 {
-    this_proc_t proc = (this_proc_t) a;
+    this_t proc = (this_t) a;
     string_t s = string("");
 
     s = string_dappend(s, doremir_string_show(proc->type));
@@ -78,12 +83,12 @@ string_t id_show(doremir_ptr_t a)
     return s;
 }
 
-void id_destroy(doremir_ptr_t a)
+void id_destroy(ptr_t a)
 {
     doremir_processor_id_destroy(a);
 }
 
-doremir_ptr_t id_impl(doremir_id_t interface)
+ptr_t id_impl(doremir_id_t interface)
 {
     static doremir_string_show_t id_show_impl = { id_show };
     static doremir_destroy_t id_destroy_impl = { id_destroy };

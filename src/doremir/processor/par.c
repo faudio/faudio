@@ -1,4 +1,10 @@
 
+/*
+    DoReMIR Audio Engine
+    Copyright (c) DoReMIR Music Research 2012-2013
+    All rights reserved.
+ */
+
 #import <doremir/processor/par.h>
 #import <doremir/string.h>
 #import <doremir/util.h>
@@ -13,22 +19,21 @@ struct _doremir_processor_par_proc_t
     size_t              inOffset, outOffset;
 };
 
-typedef doremir_processor_par_proc_t        this_proc_t;
+typedef doremir_processor_par_proc_t        this_t;
 typedef doremir_processor_samples_t         samples_t;
 typedef doremir_processor_info_t            info_t;
 
-doremir_ptr_t par_impl(doremir_id_t interface);
+ptr_t par_impl(doremir_id_t interface);
 
-inline static
-bool check_type(string_t *msg, this_proc_t proc)
+inline static bool type_check(string_t *msg, this_t proc)
 {
     // Nothing to check
     return true;
 }
 
-this_proc_t doremir_processor_par_create(processor_t proc1, processor_t proc2)
+this_t doremir_processor_par_create(processor_t proc1, processor_t proc2)
 {
-    this_proc_t proc  = doremir_new(processor_par_proc);
+    this_t proc         = doremir_new(processor_par_proc);
     proc->impl          = &par_impl;
 
     proc->elem[0]       = proc1;
@@ -37,7 +42,7 @@ this_proc_t doremir_processor_par_create(processor_t proc1, processor_t proc2)
     proc->elemImpl[0]   = doremir_interface(doremir_processor_interface_i, proc->elem[0]);
     proc->elemImpl[1]   = doremir_interface(doremir_processor_interface_i, proc->elem[1]);
 
-    if (check_type(NULL, proc))
+    if (type_check(NULL, proc))
         {
             return proc;
         }
@@ -48,7 +53,7 @@ this_proc_t doremir_processor_par_create(processor_t proc1, processor_t proc2)
         }
 }
 
-void doremir_processor_par_destroy(this_proc_t proc)
+void doremir_processor_par_destroy(this_t proc)
 {
     doremir_destroy(proc->elem[0]);
     doremir_destroy(proc->elem[1]);
@@ -57,32 +62,33 @@ void doremir_processor_par_destroy(this_proc_t proc)
 
 // --------------------------------------------------------------------------------
 
-doremir_type_t par_input_type(doremir_ptr_t a)
+type_t par_input_type(ptr_t a)
 {
-    this_proc_t proc = (this_proc_t) a;
+    this_t proc = (this_t) a;
     type_t t0 = doremir_processor_input_type(proc->elem[0]);
     type_t t1 = doremir_processor_input_type(proc->elem[1]);
     return doremir_type_pair(t0, t1);
 }
 
-doremir_type_t par_output_type(doremir_ptr_t a)
+type_t par_output_type(ptr_t a)
 {
-    this_proc_t proc = (this_proc_t) a;
+    this_t proc = (this_t) a;
     type_t t0 = doremir_processor_output_type(proc->elem[0]);
     type_t t1 = doremir_processor_output_type(proc->elem[1]);
     return doremir_type_pair(t0, t1);
 }
 
-size_t par_buffer_size(frames_t frameSize, doremir_ptr_t a)
+size_t par_buffer_size(frames_t frameSize, ptr_t a)
 {
     size_t inSize  = doremir_type_size_of(frameSize, par_input_type(a));
     size_t outSize = doremir_type_size_of(frameSize, par_output_type(a));
     return size_max(inSize, outSize);
+    // FIXME should use buffer size of elements, not type size
 }
 
-void par_before(doremir_ptr_t a, info_t *info)
+void par_before(ptr_t a, info_t *info)
 {
-    this_proc_t proc = (this_proc_t) a;
+    this_t proc = (this_t) a;
 
     proc->elemImpl[0]->before(proc->elem[0], info);
     proc->elemImpl[1]->before(proc->elem[1], info);
@@ -92,9 +98,9 @@ void par_before(doremir_ptr_t a, info_t *info)
     proc->outOffset = doremir_type_offset_of(info->frame_size, par_output_type(proc));
 }
 
-void par_after(doremir_ptr_t a, info_t *info)
+void par_after(ptr_t a, info_t *info)
 {
-    this_proc_t proc = (this_proc_t) a;
+    this_t proc = (this_t) a;
 
     proc->elemImpl[0]->after(proc->elem[0], info);
     proc->elemImpl[1]->after(proc->elem[1], info);
@@ -102,17 +108,24 @@ void par_after(doremir_ptr_t a, info_t *info)
 
 void par_process(ptr_t a, info_t *info, samples_t samples)
 {
-    this_proc_t proc = (this_proc_t) a;
+    this_t proc = (this_t) a;
+
+    // TODO memcpy second entry to adjust for offset
+    // That is, input of snd proc should be copied to the buffer size of the first
+    // Then from that pointer, copy to output pos
 
     // proc->elemImpl[0]->process(proc->elem[0], info, input, output);
     // proc->elemImpl[1]->process(proc->elem[1], info, input + proc->inOffset, output + proc->outOffset);
+
+    // TODO memcpy second entry to adjust for offset
+
 }
 
 // --------------------------------------------------------------------------------
 
-string_t par_show(doremir_ptr_t a)
+string_t par_show(ptr_t a)
 {
-    this_proc_t proc = (this_proc_t) a;
+    this_t proc = (this_t) a;
     string_t s = string("");
 
     s = string_dappend(s, doremir_string_show(par_input_type(proc)));
@@ -122,12 +135,12 @@ string_t par_show(doremir_ptr_t a)
     return s;
 }
 
-void par_destroy(doremir_ptr_t a)
+void par_destroy(ptr_t a)
 {
     doremir_processor_par_destroy(a);
 }
 
-doremir_ptr_t par_impl(doremir_id_t interface)
+ptr_t par_impl(doremir_id_t interface)
 {
     static doremir_string_show_t par_show_impl = { par_show };
     static doremir_destroy_t par_destroy_impl = { par_destroy };
