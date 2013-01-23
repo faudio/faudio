@@ -54,7 +54,7 @@ components_clean:
 
 .PHONY: format
 format:
-	astyle -n -r "src/*.c"
+	astyle -n -r "src/*.c" "test/*.c"
 
 .PHONY: doc
 doc: 
