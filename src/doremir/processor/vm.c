@@ -15,8 +15,8 @@
 #define lmm_free    free
 
 #define lmm_for_each_register(var, num, lmm) \
-    for (size_t num = 0; num < kLmmRegs; ++num) \
-        doremir_let(var, lmm->regs[num])
+  for (size_t num = 0; num < kLmmRegs; ++num) \
+    doremir_let (var, lmm->regs[num])
 
 lmm_t lmm_create()
 {
@@ -33,29 +33,33 @@ void lmm_destroy(lmm_t lmm)
   lmm_free(lmm);
 }
 
+char *lmm_get_error(lmm_t lmm)
+{
+  return lmm->error;
+}
+
 string_t lmm_show(lmm_t lmm)
 {
   string_t str = string("\n");
 
-  lmm_for_each_register(reg, regNum, lmm) {
-    if (reg.size != 0) {
-      str = string_dappend(str, format_int("\nr%d:\t", regNum));
-      uint8_t *data = reg.data;
+  lmm_for_each_register(reg, id, lmm) {
+
+    // Print all non-empty registers
+    // Just plain byte output by now
+
+    if (reg.size) {
+      str = string_dappend(str, format_int("\nr%d:\t", id));
 
       for (size_t i = 0; i < reg.size; ++i) {
         str = string_dappend(str, string(" "));
-        str = string_dappend(str, doremir_string_format_integer("%02x", data[i]));
+        str = string_dappend(str, 
+          format_int("%02x", ((uint8_t*) reg.data)[i]));
       }
 
       str = string_dappend(str, string("\n"));
     }
   }
   return str;
-}
-
-char *lmm_get_error(lmm_t lmm)
-{
-  return lmm->error;
 }
 
 size_t lmm_get_reg_size(lmm_t lmm, lmm_reg_t r)
@@ -89,6 +93,23 @@ void lmm_alloc(lmm_t lmm, size_t size, lmm_reg_t r)
   memset(rdata(r), 0, size);
 }
 
+void lmm_swap(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2)
+{
+  size_t ts = rsize(r2);
+  size_t tm = rmax(r2);
+  void  *td = rdata(r2);
+
+  rsize(r2) = rsize(r1);
+  rmax(r2) = rmax(r1);
+  rdata(r2) = rdata(r1);
+
+  rsize(r1) = ts;
+  rmax(r1) = tm;
+  rdata(r1) = td;
+}
+
+
+
 void lmm_dup(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2)
 {
   assert(rmax(r2) >= rsize(r1)            && "Can not dup: second operand is too small");
@@ -108,20 +129,8 @@ void lmm_split(lmm_t lmm, size_t split, lmm_reg_t r1, lmm_reg_t r2)
   rsize(r2) = len;
 }
 
-void lmm_swap(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2)
-{
-  size_t ts = rsize(r2);
-  size_t tm = rmax(r2);
-  void  *td = rdata(r2);
 
-  rsize(r2) = rsize(r1);
-  rmax(r2) = rmax(r1);
-  rdata(r2) = rdata(r1);
-
-  rsize(r1) = ts;
-  rmax(r1) = tm;
-  rdata(r1) = td;
-}
+// Set
 
 #define LLM_SET(N, T)                                   \
     void lmm_set_##N(lmm_t lmm, T x, lmm_reg_t r1)          \
@@ -229,14 +238,13 @@ void test_vm_loop()
   lmm_alloc(vm, 16, 10);
   lmm_alloc(vm, 16, 20);
 
-  lmm_set_i8(vm, 10, 0);
-  lmm_set_i8(vm, 11, 1);
-  lmm_set_i8(vm, 12, 2);
-  lmm_set_i32(vm, 0x3412cdab, 20);
+  lmm_set_i8(vm, 1, 0);
+  lmm_set_i8(vm, 2, 1);
+  lmm_set_i8(vm, 3, 2);
+  // lmm_set_i32(vm, 0x3412cdab, 20);
 
-  lmm_split(vm, 13, 0, 10);
-
-  lmm_swap(vm, 0, 1);
+  // lmm_split(vm, 13, 0, 10);
+  // lmm_swap(vm, 0, 1);
   // lmm_swap(vm, 3, 0);
   // lmm_swap(vm, 3, 3);
 

@@ -40,6 +40,12 @@
             mul   T1      r1 r2              r1 := r1 * r2
             div   T1      r1 r2              r1 := r1 / r2
             rem   T1      r1 r2              r1 := r1 % r2
+            bool  T1      r1 r2              r1 := case r2 of 0 -> 0, _ -> 1
+            not   T1      r1 r2              r1 := case r2 of 0 -> 1, _ -> 0
+            and   T1      r1 r2              r1 := r1 & r2
+            or    T1      r1 r2              r1 := r1 | r2
+            xor   T1      r1 r2              r1 := r1 ^ r2
+
             eq    T1      r1 r2
             ne    T1      r1 r2
             gt    T1      r1 r2
@@ -51,11 +57,6 @@
 
             int   T1      r1 r2              cast to long int, then narrow
             float T1      r1 r2              cast to double, then narrow
-            bool  T1      r1 r2              0 -> 0, _ -> 1
-            not   T1      r1 r2              0 -> 1, _ -> 0
-            and   T1      r1 r2              bitwise
-            or    T1      r1 r2              bitwise
-            xor   T1      r1 r2              bitwise
 
  */
 
@@ -82,6 +83,7 @@ lmm_t   lmm_create();
 void    lmm_destroy(lmm_t lmm);
 char   *lmm_get_error(lmm_t lmm);
 size_t  lmm_get_reg_size(lmm_t lmm, lmm_reg_t r);
+size_t  lmm_get_reg_max_size(lmm_t lmm, lmm_reg_t r);
 void   *lmm_get_reg_data(lmm_t lmm, lmm_reg_t r);
 
 
