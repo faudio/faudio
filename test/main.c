@@ -994,14 +994,14 @@ void test_processors()
         doremir_print("p                            ==> %s\n", p);
         doremir_print("loop(p)                      ==> %s\n", q);
         doremir_print("bufferSize(loop(p))          ==> %s\n", i32(doremir_processor_buffer_size(1, q)));
-    }  
-    
+    }
+
     {
         type_t t = type_pair(type(uint8), type_pair(type(uint8), type_pair(type(uint8),
                              type_pair(type(uint8), type_pair(type(uint8), type_pair(type(uint8),
                                        type_pair(type(uint8), type_pair(type(uint8), type_pair(type(uint8),
                                                type(uint8))))))))));
-        
+
         processor_t p = doremir_processor_identity(t);
         doremir_print("p                            ==> %s\n", p);
 
