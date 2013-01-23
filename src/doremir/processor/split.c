@@ -72,13 +72,13 @@ void split_after(doremir_ptr_t a, info_t *info)
     // nothing
 }
 
-void split_process(ptr_t a, info_t *info, samples_t input, samples_t output)
+void split_process(ptr_t a, info_t *info, samples_t samples)
 {
     this_proc_t proc = (this_proc_t) a;
 
     size_t sz = proc->size;
-    memcpy(output, input, sz);
-    memcpy(output + sz, input, sz);
+    // memcpy(output, input, sz);
+    // memcpy(output + sz, input, sz);
 }
 
 // --------------------------------------------------------------------------------

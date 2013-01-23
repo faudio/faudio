@@ -59,7 +59,7 @@ void const_after(doremir_ptr_t a, info_t *info)
     // nothing
 }
 
-void const_process(ptr_t a, info_t *info, samples_t input, samples_t output)
+void const_process(ptr_t a, info_t *info, samples_t samples)
 {
     // TODO
 }

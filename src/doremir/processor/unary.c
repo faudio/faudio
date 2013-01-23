@@ -92,7 +92,7 @@ UNARY_PROCESSOR(float,    float);
 UNARY_PROCESSOR(double,   double);
 UNARY_PROCESSOR(ptr_t,    ptr_t);
 
-void unary_process(ptr_t a, info_t *info, samples_t input, samples_t output)
+void unary_process(ptr_t a, info_t *info, samples_t samples)
 {
     // unary_proc_uint8_t_uint8_t(1, proc2, samples, samples);
     // TODO

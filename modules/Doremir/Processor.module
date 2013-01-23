@@ -50,7 +50,7 @@ module Doremir.Processor
         Processing interface. */
     type Interface = struct {
         before  : ((Ptr, Info*) -> Void)*,
-        process : ((Ptr, Info*, Samples, Samples) -> Void)*,
+        process : ((Ptr, Info*, Samples) -> Void)*,
         after   : ((Ptr, Info*) -> Void)*,
         
         inputType   : (Ptr -> Type)*,

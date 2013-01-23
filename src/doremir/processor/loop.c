@@ -108,7 +108,7 @@ void loop_after(doremir_ptr_t a, info_t *info)
     free(proc->buf[1]);
 }
 
-void loop_process(ptr_t a, info_t *info, samples_t input, samples_t output)
+void loop_process(ptr_t a, info_t *info, samples_t samples)
 {
     // TODO
     assert(false && "Missing");

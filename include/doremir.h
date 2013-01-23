@@ -25,6 +25,9 @@ typedef bool (* doremir_pred_t)(doremir_ptr_t, doremir_ptr_t);
 typedef char doremir_char8_t;
 typedef uint16_t doremir_char16_t;
 typedef uint32_t doremir_char32_t;
+typedef int64_t doremir_id_t;
+typedef doremir_ptr_t (* doremir_impl_t)(doremir_id_t);
+doremir_ptr_t doremir_interface(doremir_id_t, doremir_ptr_t);
 typedef struct {
             bool (* equal)(doremir_ptr_t, doremir_ptr_t);
         } doremir_equal_t;
@@ -95,9 +98,6 @@ doremir_ptr_t doremir_from_int32(int32_t);
 doremir_ptr_t doremir_from_int64(int64_t);
 doremir_ptr_t doremir_from_float(float);
 doremir_ptr_t doremir_from_double(double);
-typedef int64_t doremir_id_t;
-typedef doremir_ptr_t (* doremir_impl_t)(doremir_id_t);
-doremir_ptr_t doremir_interface(doremir_id_t, doremir_ptr_t);
 
 /** @}
     */

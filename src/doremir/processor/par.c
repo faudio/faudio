@@ -95,12 +95,12 @@ void par_after(doremir_ptr_t a, info_t *info)
     proc->elemImpl[1]->after(proc->elem[1], info);
 }
 
-void par_process(ptr_t a, info_t *info, samples_t input, samples_t output)
+void par_process(ptr_t a, info_t *info, samples_t samples)
 {
     this_proc_t proc = (this_proc_t) a;
 
-    proc->elemImpl[0]->process(proc->elem[0], info, input, output);
-    proc->elemImpl[1]->process(proc->elem[1], info, input + proc->inOffset, output + proc->outOffset);
+    // proc->elemImpl[0]->process(proc->elem[0], info, input, output);
+    // proc->elemImpl[1]->process(proc->elem[1], info, input + proc->inOffset, output + proc->outOffset);
 }
 
 // --------------------------------------------------------------------------------

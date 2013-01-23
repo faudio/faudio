@@ -107,12 +107,12 @@ void seq_after(doremir_ptr_t a, info_t *info)
     free(proc->buf);
 }
 
-void seq_process(ptr_t a, info_t *info, samples_t input, samples_t output)
+void seq_process(ptr_t a, info_t *info, samples_t samples)
 {
     this_proc_t proc = (this_proc_t) a;
 
-    proc->elemImpl[0]->process(proc->elem[0], info, input, proc->buf);
-    proc->elemImpl[1]->process(proc->elem[1], info, proc->buf, output);
+    // proc->elemImpl[0]->process(proc->elem[0], info, input, proc->buf);
+    // proc->elemImpl[1]->process(proc->elem[1], info, proc->buf, output);
 }
 
 // --------------------------------------------------------------------------------
