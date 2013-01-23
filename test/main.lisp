@@ -279,6 +279,8 @@
 (type-offset-of 256 x)
 (type-align-of x)
 
+(type-size-of 256 '(:frame (:f32 :f32 :f32 :f32 :f32 :f32 :f32 :f32 :f32 . :f32)))
+
 ; We can also force conversion for nice printing
 (setf x (make-type '(:pair :i8 :i8)))
 (setf x (make-type (make-type '(:pair :i8 :i8))))

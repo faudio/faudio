@@ -3,9 +3,11 @@
 #include <doremir/priority_queue.h>
 #include <doremir/thread.h>
 #include <doremir/util.h>
+#include <unistd.h> // for sysconf(3)
+
 
 int  version[3] = { 2, 0, 0 };
-char *bits      = sizeof(void*) == 4 ? "32-bit" : "64-bit";
+char *bits      = sizeof(void *) == 4 ? "32-bit" : "64-bit";
 
 void test_section()
 {
@@ -71,18 +73,19 @@ void test_generic()
     printf("3333333333333333333 / 2      ==> %lli\n", ti64(doremir_divide(i64(3333333333333333333ll), i64(2))));
     printf("3                   / 1      ==> %i\n",   ti8(doremir_divide(i8(32), i8(1))));
 
-    printf("true == false                ==> %s\n",   (doremir_equal(b(true), b(true))) ? "true" : false);
-    printf("32   == 32                   ==> %s\n",   (doremir_equal(i8(32), i8(32))) ? "true" : false);
-    printf("5123 == 5123                 ==> %s\n",   (doremir_equal(i16(5123), i16(5123))) ? "true" : false);
+    printf("true == false                ==> %s\n", (doremir_equal(b(true), b(true))) ? "true" : false);
+    printf("32   == 32                   ==> %s\n", (doremir_equal(i8(32), i8(32))) ? "true" : false);
+    printf("5123 == 5123                 ==> %s\n", (doremir_equal(i16(5123), i16(5123))) ? "true" : false);
 
 
 }
 
 
-static inline void memdump(void* s, size_t n)
+static inline void memdump(void *s, size_t n)
 {
     for (size_t i = 0; i < n; ++i)
-        printf("%x ", *((unsigned char*) (s + i)) );
+        printf("%x ", *((unsigned char *)(s + i)));
+
     printf("\n");
 }
 
@@ -97,15 +100,15 @@ void test_string()
 
     {
         // char* cs = " 新隶体 "; // length 5
-        char* cs = "höglund";
+        char *cs = "höglund";
 
         string_t s = string(cs);
         printf("len: %i\n", doremir_string_length(s));
         doremir_print("str: %s\n", s);
 
-        printf("charAt 0: %x\n", char_at(0,s));
-        printf("charAt 1: %x\n", char_at(1,s));
-        printf("charAt 2: %x\n", char_at(2,s));
+        printf("charAt 0: %x\n", char_at(0, s));
+        printf("charAt 1: %x\n", char_at(1, s));
+        printf("charAt 2: %x\n", char_at(2, s));
         doremir_destroy(s);
     }
 
@@ -148,10 +151,10 @@ void test_show()
     doremir_dprint("%s\n", list(i8(1)));
     doremir_dprint("%s\n", list(i8(1), i8(2), list(i8(1), i8(2), b(true))));
     doremir_dprint("%s\n", list(
-        pair(string("hans"), string("höglund")),
-        pair(string("lisa"), string("streich")),
-        pair(string("mats"), string("erlandsson"))
-    ));
+                       pair(string("hans"), string("höglund")),
+                       pair(string("lisa"), string("streich")),
+                       pair(string("mats"), string("erlandsson"))
+                   ));
 }
 
 void test_compare()
@@ -166,11 +169,11 @@ void test_compare()
 void test_rational()
 {
     test_section();
-    doremir_print("1/3 <  1/2                   ==> %s\n", b(doremir_less_than(ratio(1,3), ratio(1,2))));
-    doremir_print("1/3 >  1/2                   ==> %s\n", b(doremir_greater_than(ratio(1,3), ratio(1,2))));
-    doremir_print("1/3 == 2/6                   ==> %s\n", b(doremir_equal(ratio(1,3), ratio(2,6))));
-    doremir_print("1/3 == 254/762               ==> %s\n", b(doremir_equal(ratio(1,3), ratio(254,762))));
-    doremir_print("1/3 <= 7/8                   ==> %s\n", b(doremir_equal(ratio(1,3), ratio(254,762))));
+    doremir_print("1/3 <  1/2                   ==> %s\n", b(doremir_less_than(ratio(1, 3), ratio(1, 2))));
+    doremir_print("1/3 >  1/2                   ==> %s\n", b(doremir_greater_than(ratio(1, 3), ratio(1, 2))));
+    doremir_print("1/3 == 2/6                   ==> %s\n", b(doremir_equal(ratio(1, 3), ratio(2, 6))));
+    doremir_print("1/3 == 254/762               ==> %s\n", b(doremir_equal(ratio(1, 3), ratio(254, 762))));
+    doremir_print("1/3 <= 7/8                   ==> %s\n", b(doremir_equal(ratio(1, 3), ratio(254, 762))));
 }
 
 void test_buffer()
@@ -181,9 +184,13 @@ void test_buffer()
         doremir_buffer_t b = doremir_buffer_create(16);
 
         doremir_print("b                            ==> %s\n", b);
-        for(int i = 0; i < 16; ++i) doremir_buffer_poke(b, i, i);
+
+        for (int i = 0; i < 16; ++i) doremir_buffer_poke(b, i, i);
+
         doremir_print("b                            ==> %s\n", b);
-        for(int i = 0; i < 16; ++i) doremir_buffer_poke(b, i, 0xff);
+
+        for (int i = 0; i < 16; ++i) doremir_buffer_poke(b, i, 0xff);
+
         doremir_print("b                            ==> %s\n", b);
 
         doremir_print("size(b)                      ==> %s\n", i32(doremir_buffer_size(b)));
@@ -193,9 +200,13 @@ void test_buffer()
         doremir_buffer_t b = doremir_buffer_create(1024);
 
         doremir_print("b                            ==> %s\n", b);
-        for(int i = 0; i < 1024; ++i) doremir_buffer_poke(b, i, i);
+
+        for (int i = 0; i < 1024; ++i) doremir_buffer_poke(b, i, i);
+
         doremir_print("b                            ==> %s\n", b);
-        for(int i = 0; i < 1024; ++i) doremir_buffer_poke(b, i, 0xff);
+
+        for (int i = 0; i < 1024; ++i) doremir_buffer_poke(b, i, 0xff);
+
         doremir_print("b                            ==> %s\n", b);
 
         doremir_print("size(b)                      ==> %s\n", i32(doremir_buffer_size(b)));
@@ -206,8 +217,8 @@ void test_time()
 {
     test_section();
 
-    doremir_time_t t = doremir_time_create(1,0,0,ratio(25,8));
-    doremir_time_t u = doremir_time_create(0,1,1,ratio(58,1));
+    doremir_time_t t = doremir_time_create(1, 0, 0, ratio(25, 8));
+    doremir_time_t u = doremir_time_create(0, 1, 1, ratio(58, 1));
     doremir_print("t                            ==> %s\n", t);
     doremir_print("u                            ==> %s\n", u);
     doremir_print("t + u                        ==> %s\n", doremir_add(t, u));
@@ -227,7 +238,8 @@ void test_midi()
 
     {
         doremir_buffer_t b = doremir_buffer_create(32);
-        for(int i = 0; i < 32; ++i) doremir_buffer_poke(b, i, i);
+
+        for (int i = 0; i < 32; ++i) doremir_buffer_poke(b, i, i);
 
         doremir_midi_t m = doremir_midi_create_sysex(b);
         doremir_print("m                            ==> %s\n", m);
@@ -240,46 +252,49 @@ void test_type()
     test_section();
 
     doremir_print("type(uint8)                  ==> %s\n", type(uint8));
-    doremir_print("size_of(1024,type(uint8))    ==> %s\n", i32(doremir_type_size_of(1024,type(uint8))));
+    doremir_print("size_of(1024,type(uint8))    ==> %s\n", i32(doremir_type_size_of(1024, type(uint8))));
     doremir_print("align_of(1024,type(uint8))   ==> %s\n", i32(doremir_type_align_of(type(uint8))));
     printf("\n");
 
     doremir_print("type(double)                 ==> %s\n", type(double));
-    doremir_print("size_of(1024,type(double))   ==> %s\n", i32(doremir_type_size_of(1024,type(double))));
+    doremir_print("size_of(1024,type(double))   ==> %s\n", i32(doremir_type_size_of(1024, type(double))));
     doremir_print("align_of(1024,type(double))  ==> %s\n", i32(doremir_type_align_of(type(double))));
     printf("\n");
 
     type_t t = type_pair(type(uint8), type(double));
     doremir_print("t                            ==> %s\n", t);
-    doremir_print("size_of(1024,t)              ==> %s\n", i32(doremir_type_size_of(1024,t)));
+    doremir_print("size_of(1024,t)              ==> %s\n", i32(doremir_type_size_of(1024, t)));
     doremir_print("align_of(1024,t)             ==> %s\n", i32(doremir_type_align_of(t)));
     printf("\n");
 
     type_t u = type_pair(type_vector(type(uint8), 10), type(double));
     doremir_print("u                            ==> %s\n", u);
-    doremir_print("size_of(1024,u)              ==> %s\n", i32(doremir_type_size_of(1024,u)));
+    doremir_print("size_of(1024,u)              ==> %s\n", i32(doremir_type_size_of(1024, u)));
     doremir_print("align_of(1024,u)             ==> %s\n", i32(doremir_type_align_of(u)));
     printf("\n");
 
     type_t u2 = type_pair(type_frame(type(uint8)), type(double));
     doremir_print("u2                           ==> %s\n", u2);
-    doremir_print("size_of(1024,u2)             ==> %s\n", i32(doremir_type_size_of(1024,u2)));
+    doremir_print("size_of(1024,u2)             ==> %s\n", i32(doremir_type_size_of(1024, u2)));
     doremir_print("align_of(1024,u2)            ==> %s\n", i32(doremir_type_align_of(u2)));
     printf("\n");
 
-    type_t v = type_pair(type(uint8),type_pair(type(uint8),type_pair(type(uint8),
-        type_pair(type(uint8),type_pair(type(uint8),type_pair(type(uint8),
-            type_pair(type(uint8),type_pair(type(uint8),type_pair(type(uint8),
-            type(uint8))))))))));
+    type_t v = type_pair(type(uint8), type_pair(type(uint8), type_pair(type(uint8),
+                         type_pair(type(uint8), type_pair(type(uint8), type_pair(type(uint8),
+                                   type_pair(type(uint8), type_pair(type(uint8), type_pair(type(uint8),
+                                           type(uint8))))))))));
 
     doremir_print("v                            ==> %s\n", v);
-    doremir_print("size_of(1024,v)              ==> %s\n", i32(doremir_type_size_of(1024,v)));
+    doremir_print("size_of(1024,v)              ==> %s\n", i32(doremir_type_size_of(1024, v)));
     doremir_print("align_of(1024,v)             ==> %s\n", i32(doremir_type_align_of(v)));
     printf("\n");
 }
 
 
-ptr_t add10(ptr_t x, ptr_t _) { return (ptr_t) ((int) x + 10); }
+ptr_t add10(ptr_t x, ptr_t _)
+{
+    return (ptr_t)((int) x + 10);
+}
 void test_atomic()
 {
     test_section();
@@ -295,7 +310,7 @@ void test_atomic()
         doremir_atomic_modify(a, add10, 0);
         doremir_print("a                            ==> %s\n", a);
 
-        doremir_atomic_add(a, (ptr_t) -0xf);
+        doremir_atomic_add(a, (ptr_t) - 0xf);
         doremir_print("a                            ==> %s\n", a);
 
         doremir_atomic_exchange(a, (ptr_t) 1, (ptr_t) 0xfe);
@@ -306,23 +321,28 @@ void test_atomic()
     }
 }
 
-struct reader_args { doremir_atomic_queue_t queue; atomic_t active; };
+struct reader_args
+{
+    doremir_atomic_queue_t queue;
+    atomic_t active;
+};
 doremir_ptr_t queue_reader(doremir_ptr_t x)
 {
-    struct reader_args* args = x;
+    struct reader_args *args = x;
     doremir_atomic_queue_t q = args->queue;
     atomic_t               a = args->active;
     ptr_t                  v;
 
-    while(true)
-    {
-        if (!tb(doremir_atomic_get(a)))
-            return v;
-        if ((v = doremir_atomic_queue_read(q)))
-            printf("         |- %5d    \n", ti32(v));
+    while (true)
+        {
+            if (!tb(doremir_atomic_get(a)))
+                return v;
 
-        doremir_thread_sleep(5);
-    }
+            if ((v = doremir_atomic_queue_read(q)))
+                printf("         |- %5d    \n", ti32(v));
+
+            doremir_thread_sleep(5);
+        }
 }
 void test_atomic_queue(int iter, long sleepTime)
 {
@@ -337,12 +357,12 @@ void test_atomic_queue(int iter, long sleepTime)
 
         doremir_print("q                            ==> %s\n", q);
 
-        for(int i = 0; i < iter; ++i)
-        {
-            doremir_thread_sleep(i % 10 * sleepTime);
-            doremir_atomic_queue_write(q, i32(i));
-            printf("  %5d -|  \n", i);
-        }
+        for (int i = 0; i < iter; ++i)
+            {
+                doremir_thread_sleep(i % 10 * sleepTime);
+                doremir_atomic_queue_write(q, i32(i));
+                printf("  %5d -|  \n", i);
+            }
 
         doremir_thread_sleep(sleepTime);
         doremir_atomic_set(args.active, b(false));
@@ -364,12 +384,14 @@ void test_atomic_ring_buffer()
 ptr_t printer(ptr_t data)
 {
     int n = 0;
+
     while (n < 100)
-    {
-        printf("%d\n", n);
-        n = n + ((int) data);
-        doremir_thread_sleep(100);
-    }
+        {
+            printf("%d\n", n);
+            n = n + ((int) data);
+            doremir_thread_sleep(100);
+        }
+
     return 0;
 }
 void test_thread()
@@ -384,10 +406,14 @@ void test_thread()
 }
 
 
-typedef struct { doremir_thread_mutex_t mut; int val; } lock_index;
+typedef struct
+{
+    doremir_thread_mutex_t mut;
+    int val;
+} lock_index;
 ptr_t locker(ptr_t x)
 {
-    lock_index *i = (lock_index*) x;
+    lock_index *i = (lock_index *) x;
 
     doremir_thread_lock(i->mut);
     printf("Acquired lock in thread %d\n", i->val);
@@ -402,54 +428,56 @@ void test_mutex()
     doremir_thread_mutex_t m = doremir_thread_create_mutex();
 
     for (int j = 0; j < 10; ++j)
-    {
-        lock_index i = { m, j };
-        doremir_thread_t t = doremir_thread_create(locker, (ptr_t) &i);
-        doremir_thread_sleep(100);
-        doremir_thread_detach(t);
-    }
+        {
+            lock_index i = { m, j };
+            doremir_thread_t t = doremir_thread_create(locker, (ptr_t) &i);
+            doremir_thread_sleep(100);
+            doremir_thread_detach(t);
+        }
 
     doremir_thread_sleep(1200);
 }
 
 
 
-typedef struct {
-        doremir_thread_mutex_t mut;
-        doremir_thread_condition_t cond;
-        char* msg;
-    } send_hub;
+typedef struct
+{
+    doremir_thread_mutex_t mut;
+    doremir_thread_condition_t cond;
+    char *msg;
+} send_hub;
 doremir_ptr_t sender(doremir_ptr_t x)
 {
-    send_hub *h = (send_hub*) x;
-    static char * const msgs[10] = {
+    send_hub *h = (send_hub *) x;
+    static char *const msgs[10] =
+    {
         "Sur", "le", "pond", "d'Avignon", "on", "y", "danse", "tous", "en", "round"
     };
 
     for (int i = 0; i < 10; ++i)
-    {
-        doremir_thread_lock(h->mut);
-        h->msg = msgs[i];
-        printf("Sending: %s\n", h->msg);
-        doremir_thread_notify(h->cond);
-        doremir_thread_unlock(h->mut);
+        {
+            doremir_thread_lock(h->mut);
+            h->msg = msgs[i];
+            printf("Sending: %s\n", h->msg);
+            doremir_thread_notify(h->cond);
+            doremir_thread_unlock(h->mut);
 
-        doremir_thread_sleep(100);
-    }
+            doremir_thread_sleep(100);
+        }
 
     return 0;
 }
 ptr_t receiver(ptr_t x)
 {
-    send_hub *h = (send_hub*) x;
+    send_hub *h = (send_hub *) x;
 
     while (true)
-    {
-        doremir_thread_lock(h->mut);
-        doremir_thread_wait_for(h->cond);
-        printf("                        Received: %s\n", h->msg);
-        doremir_thread_unlock(h->mut);
-    }
+        {
+            doremir_thread_lock(h->mut);
+            doremir_thread_wait_for(h->cond);
+            printf("                        Received: %s\n", h->msg);
+            doremir_thread_unlock(h->mut);
+        }
 
     return 0;
 }
@@ -465,7 +493,7 @@ void test_cond()
     doremir_thread_join(s);
     doremir_thread_detach(r);
 }
-     
+
 
 
 void test_for_each()
@@ -473,11 +501,11 @@ void test_for_each()
     doremir_let(x, 33)
     {
         doremir_let(y, 1)
-            doremir_let(z, x + y)
-                doremir_print("%s\n", i32(z));
+        doremir_let(z, x + y)
+        doremir_print("%s\n", i32(z));
     }
 
-    doremir_with(list, list(i32(1),i32(2),i32(3),i32(4)), doremir_destroy(list))
+    doremir_with(list, list(i32(1), i32(2), i32(3), i32(4)), doremir_destroy(list))
     {
         doremir_for_each(x, list)
         {
@@ -526,8 +554,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1),i16(2),i16(3));
-        list_t bs = doremir_list_cons(i16(0),as);
+        list_t as = list(i16(1), i16(2), i16(3));
+        list_t bs = doremir_list_cons(i16(0), as);
 
         doremir_print("as                           ==> %s\n", as);
         doremir_print("cons(0,as)                   ==> %s\n", bs);
@@ -538,8 +566,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1),i16(2),i16(3));
-        list_t bs = doremir_list_append(as,as);
+        list_t as = list(i16(1), i16(2), i16(3));
+        list_t bs = doremir_list_append(as, as);
 
         doremir_print("as                           ==> %s\n", as);
         doremir_print("append(as,as)                ==> %s\n", bs);
@@ -550,7 +578,7 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1),i16(2),i16(3));
+        list_t as = list(i16(1), i16(2), i16(3));
         list_t bs = doremir_list_copy(as);
         doremir_print("as                           ==> %s\n", as);
         doremir_print("copy(as)                     ==> %s\n", bs);
@@ -560,7 +588,7 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1),i16(2),i16(3));
+        list_t as = list(i16(1), i16(2), i16(3));
         list_t bs = doremir_list_init(as);
 
         doremir_print("as                           ==> %s\n", as);
@@ -572,7 +600,7 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1),i16(2),i16(3));
+        list_t as = list(i16(1), i16(2), i16(3));
         ptr_t v = doremir_list_last(as);
 
         doremir_print("as                           ==> %s\n", as);
@@ -584,7 +612,7 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1),i16(2),i16(3));
+        list_t as = list(i16(1), i16(2), i16(3));
 
         doremir_print("as                           ==> %s\n", as);
         doremir_print("length(as)                   ==> %s\n", i16(doremir_list_length(as)));
@@ -594,7 +622,7 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1),i16(2),i16(3),i16(4),i16(5));
+        list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
         list_t bs = doremir_list_reverse(as);
 
         doremir_print("as                           ==> %s\n", as);
@@ -609,8 +637,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1),i16(2),i16(3),i16(4),i16(5));
-        list_t bs = doremir_list_take(3,as);
+        list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        list_t bs = doremir_list_take(3, as);
 
         doremir_print("as                           ==> %s\n", as);
         doremir_print("take(3,as)                   ==> %s\n", bs);
@@ -621,8 +649,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1),i16(2),i16(3),i16(4),i16(5));
-        list_t bs = doremir_list_drop(3,as);
+        list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        list_t bs = doremir_list_drop(3, as);
 
         doremir_print("as                           ==> %s\n", as);
         doremir_print("drop(3,as)                   ==> %s\n", bs);
@@ -633,8 +661,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1),i16(2),i16(3),i16(4),i16(5));
-        ptr_t v = doremir_list_index(1,as);
+        list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        ptr_t v = doremir_list_index(1, as);
 
         doremir_print("as                           ==> %s\n", as);
         doremir_print("index(1,as)                  ==> %s\n", v);
@@ -645,8 +673,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1),i16(2),i16(3),i16(4),i16(5));
-        list_t bs = doremir_list_range(1,3,as);
+        list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        list_t bs = doremir_list_range(1, 3, as);
 
         doremir_print("as                           ==> %s\n", as);
         doremir_print("range(1,3,as)                ==> %s\n", bs);
@@ -657,8 +685,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1),i16(2),i16(3),i16(4),i16(5));
-        list_t bs = doremir_list_remove_range(1,3,as);
+        list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        list_t bs = doremir_list_remove_range(1, 3, as);
 
         doremir_print("as                           ==> %s\n", as);
         doremir_print("removeRange(1,3,as)          ==> %s\n", bs);
@@ -670,9 +698,9 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1),i16(2),i16(3),i16(4),i16(5));
-        list_t xs = list(i16(0),i16(0));
-        list_t bs = doremir_list_insert_range(2,xs,as);
+        list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        list_t xs = list(i16(0), i16(0));
+        list_t bs = doremir_list_insert_range(2, xs, as);
 
         doremir_print("as                           ==> %s\n", as);
         doremir_print("insertRange(2,list(0,0),as)  ==> %s\n", bs);
@@ -684,8 +712,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1),i16(2),i16(3),i16(4),i16(5));
-        list_t bs = doremir_list_insert(2,i16(0),as);
+        list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        list_t bs = doremir_list_insert(2, i16(0), as);
 
         doremir_print("as                           ==> %s\n", as);
         doremir_print("insert(2,0,as)               ==> %s\n", bs);
@@ -696,8 +724,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1),i16(2),i16(3),i16(4),i16(5));
-        list_t bs = doremir_list_insert(0,i16(0),as);
+        list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        list_t bs = doremir_list_insert(0, i16(0), as);
 
         doremir_print("as                           ==> %s\n", as);
         doremir_print("insert(0,1,as)               ==> %s\n", bs);
@@ -708,8 +736,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1),i16(2),i16(3),i16(4),i16(5));
-        list_t bs = doremir_list_remove(2,as);
+        list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        list_t bs = doremir_list_remove(2, as);
 
         doremir_print("as                           ==> %s\n", as);
         doremir_print("remove(2,as)                 ==> %s\n", bs);
@@ -725,22 +753,22 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1),i16(3),i16(5));
+        list_t as = list(i16(1), i16(3), i16(5));
 
         doremir_print("as                           ==> %s\n", as);
-        doremir_print("indexOf(0,as)                ==> %s\n", i16(doremir_list_index_of(i16(0),as)));
-        doremir_print("indexOf(1,as)                ==> %s\n", i16(doremir_list_index_of(i16(1),as)));
-        doremir_print("indexOf(2,as)                ==> %s\n", i16(doremir_list_index_of(i16(2),as)));
-        doremir_print("indexOf(3,as)                ==> %s\n", i16(doremir_list_index_of(i16(3),as)));
-        doremir_print("indexOf(4,as)                ==> %s\n", i16(doremir_list_index_of(i16(4),as)));
-        doremir_print("indexOf(5,as)                ==> %s\n", i16(doremir_list_index_of(i16(5),as)));
+        doremir_print("indexOf(0,as)                ==> %s\n", i16(doremir_list_index_of(i16(0), as)));
+        doremir_print("indexOf(1,as)                ==> %s\n", i16(doremir_list_index_of(i16(1), as)));
+        doremir_print("indexOf(2,as)                ==> %s\n", i16(doremir_list_index_of(i16(2), as)));
+        doremir_print("indexOf(3,as)                ==> %s\n", i16(doremir_list_index_of(i16(3), as)));
+        doremir_print("indexOf(4,as)                ==> %s\n", i16(doremir_list_index_of(i16(4), as)));
+        doremir_print("indexOf(5,as)                ==> %s\n", i16(doremir_list_index_of(i16(5), as)));
 
         doremir_destroy(as);
     }
     {
         printf("\n");
 
-        list_t xs = list(i16(1),i16(2),i16(3),i16(4),i16(5));
+        list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
         list_t ys = doremir_list_filter(is_odd16, 0, xs);
 
         doremir_print("xs                           ==> %s\n", xs);
@@ -752,8 +780,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t xs = list(i16(1),i16(2),i16(3),i16(4),i16(5));
-        list_t ys = doremir_list_map(times10, 0,xs);
+        list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        list_t ys = doremir_list_map(times10, 0, xs);
 
         doremir_print("xs                           ==> %s\n", xs);
         doremir_print("map(times10,ys)              ==> %s\n", ys);
@@ -767,7 +795,7 @@ void test_list()
     {
         printf("\n");
 
-        list_t xs = range(0,50000);
+        list_t xs = range(0, 50000);
 
         xs = doremir_list_dreverse(xs);
         // doremir_print("reverse(xs)                  ==> %s\n", xs);
@@ -786,7 +814,7 @@ void test_list()
     {
         printf("\n");
 
-        list_t xs = range(0,12);
+        list_t xs = range(0, 12);
         xs = doremir_list_dmap(call1, i8, xs);
 
         doremir_print("xs                           ==> %s\n", xs);
@@ -801,26 +829,26 @@ void test_set()
     {
         printf("\n");
 
-        set_t a = set(i16(1),i16(3),i16(2));
+        set_t a = set(i16(1), i16(3), i16(2));
 
         a = doremir_set_dadd(i16(1), a);
         a = doremir_set_dadd(i16(5), a);
         a = doremir_set_dadd(i16(3), a);
         a = doremir_set_dremove(i16(3), a);
 
-        doremir_print ("a                            ==> %s\n", a);
-        doremir_print ("size(a)                      ==> %s\n", i16(doremir_set_size(a)));
+        doremir_print("a                            ==> %s\n", a);
+        doremir_print("size(a)                      ==> %s\n", i16(doremir_set_size(a)));
         doremir_destroy(a);
     }
 
     {
         printf("\n");
 
-        set_t a = set(i16(1),i16(2),i16(3));
-        set_t b = set(i16(3),i16(4));
+        set_t a = set(i16(1), i16(2), i16(3));
+        set_t b = set(i16(3), i16(4));
 
-        doremir_print ("a                            ==> %s\n", a);
-        doremir_print ("b                            ==> %s\n", b);
+        doremir_print("a                            ==> %s\n", a);
+        doremir_print("b                            ==> %s\n", b);
         doremir_dprint("a + b                        ==> %s\n", doremir_set_sum(a, b));
 
         doremir_destroy(a);
@@ -830,11 +858,11 @@ void test_set()
     {
         printf("\n");
 
-        set_t a = set(i16(1),i16(2),i16(3));
-        set_t b = set(i16(3),i16(4));
+        set_t a = set(i16(1), i16(2), i16(3));
+        set_t b = set(i16(3), i16(4));
 
-        doremir_print ("a                            ==> %s\n", a);
-        doremir_print ("b                            ==> %s\n", b);
+        doremir_print("a                            ==> %s\n", a);
+        doremir_print("b                            ==> %s\n", b);
         doremir_dprint("a - b                        ==> %s\n", doremir_set_difference(a, b));
 
         doremir_destroy(a);
@@ -844,11 +872,11 @@ void test_set()
     {
         printf("\n");
 
-        set_t a = set(i16(1),i16(2),i16(3));
-        set_t b = set(i16(3),i16(4));
+        set_t a = set(i16(1), i16(2), i16(3));
+        set_t b = set(i16(3), i16(4));
 
-        doremir_print ("a                            ==> %s\n", a);
-        doremir_print ("b                            ==> %s\n", b);
+        doremir_print("a                            ==> %s\n", a);
+        doremir_print("b                            ==> %s\n", b);
         doremir_dprint("a x b                        ==> %s\n", doremir_set_product(a, b));
 
         doremir_destroy(a);
@@ -860,10 +888,10 @@ void test_set()
 
         set_t a = set(string("foo"), string("bar"));
         set_t b = set(string("hi"), string("ho"));
-        set_t c = set(i16(0),i16(1));
+        set_t c = set(i16(0), i16(1));
 
-        doremir_print ("a                            ==> %s\n", a);
-        doremir_print ("b                            ==> %s\n", b);
+        doremir_print("a                            ==> %s\n", a);
+        doremir_print("b                            ==> %s\n", b);
         doremir_dprint("a x b                        ==> %s\n", doremir_set_product(a, b));
 
         set_t ab = doremir_set_product(a, b);
@@ -874,7 +902,7 @@ void test_set()
         doremir_destroy(b);
         doremir_destroy(c);
     }
-}    
+}
 
 void test_map()
 {
@@ -895,17 +923,17 @@ void test_map()
         a = doremir_map_add(string("pair"), pair(b(true), d(3.1415)), a);
 
         a = doremir_map_add(string("ratio"), ratio(1, 3), a);
-        a = doremir_map_add(string("ratio2"), doremir_multiply(ratio(4, 4444), ratio(1,2)), a);
+        a = doremir_map_add(string("ratio2"), doremir_multiply(ratio(4, 4444), ratio(1, 2)), a);
 
         // a = doremir_map_dadd(i16(1), a);
         // a = doremir_map_dadd(i16(5), a);
         // a = doremir_map_dadd(i16(3), a);
         // a = doremir_map_dremove(i16(3), a);
 
-        doremir_print ("a                            ==> %s\n", a);
-        doremir_print ("size(a)                      ==> %s\n", i16(doremir_map_size(a)));
+        doremir_print("a                            ==> %s\n", a);
+        doremir_print("size(a)                      ==> %s\n", i16(doremir_map_size(a)));
         doremir_destroy(a);
-    }   
+    }
 }
 
 void test_priority_queue(int iter)
@@ -918,92 +946,108 @@ void test_priority_queue(int iter)
     for (int i = 0; i < iter; ++i)
         doremir_priority_queue_insert(doremir_add(hours(rand() % 24), seconds(rand() % 3600)), q);
 
-    while(doremir_priority_queue_peek(q))
+    while (doremir_priority_queue_peek(q))
         doremir_dprint("     -> %s \n", doremir_priority_queue_pop(q));
-    
+
 }
 
-ptr_t add1234(ptr_t c, ptr_t x) { return i8(ti8(x) + 1234); }
+ptr_t add1234(ptr_t c, ptr_t x)
+{
+    return i8(ti8(x) + 1234);
+}
 void test_processors()
 {
+    test_section();
     {
-        processor_t p, q, r;
+        processor_t p;
         p = doremir_processor_unary(type(uint8), type(uint8), add1234, NULL);
-        doremir_print ("p                            ==> %s\n", p);
-        doremir_print ("q                            ==> %s\n", p);
+        doremir_print("p                            ==> %s\n", p);
+        doremir_print("q                            ==> %s\n", p);
         doremir_print("seq(p,q)                     ==> %s\n", doremir_processor_seq(p, p));
-    }                                                                                       
-    
+    }
+
     {
-        processor_t p, q, r;
+        processor_t p;
         p = doremir_processor_unary(type(uint8), type(uint8), add1234, NULL);
-        doremir_print ("p                            ==> %s\n", p);
-        doremir_print ("q                            ==> %s\n", p);
+        doremir_print("p                            ==> %s\n", p);
+        doremir_print("q                            ==> %s\n", p);
         doremir_print("par(p,q)                     ==> %s\n", doremir_processor_par(p, p));
-    }                                                                               
-    
+    }
+
     {
-        processor_t p, q, r;
+        processor_t p, q;
         p = doremir_processor_unary(type(uint8), type(uint8), add1234, NULL);
         q = doremir_processor_par(p, p);
-        doremir_print ("p                            ==> %s\n", p);
-        doremir_print("loop(p,q)                     ==> %s\n", doremir_processor_loop(q));        
+        doremir_print("p                            ==> %s\n", p);
+        doremir_print("loop(p)                      ==> %s\n", doremir_processor_loop(q));
     }
 }
 
-int main (int argc, char const *argv[])
+int main(int argc, char const *argv[])
 {
-  printf("DoReMIR Audio engine %s v%d.%d.%d\n", bits, version[0], version[1], version[2]);
+    printf("DoReMIR Audio engine %s v%d.%d.%d\n", bits, version[0], version[1], version[2]);
 
-  printf("sizeof(doremir_ptr_t) = %d\n", (unsigned int) sizeof(doremir_ptr_t));
-  printf("sizeof(int32_t) = %d\n", (unsigned int) sizeof(int32_t));
-  printf("sizeof(int64_t) = %d\n", (unsigned int) sizeof(int64_t));
-  printf("sizeof(wchar_t) = %d\n", (unsigned int) sizeof(wchar_t));
+    printf("sizeof(doremir_ptr_t) = %d\n", (unsigned int) sizeof(doremir_ptr_t));
+    printf("sizeof(int32_t) = %d\n", (unsigned int) sizeof(int32_t));
+    printf("sizeof(int64_t) = %d\n", (unsigned int) sizeof(int64_t));
+    printf("sizeof(wchar_t) = %d\n", (unsigned int) sizeof(wchar_t));
 
-  // while(true)
-  {
-      doremir_audio_engine_initialize();
-      
-      test_wrap();
-      test_generic();
-      test_string();
-      test_show();
-      test_compare();
-      test_rational();
-      test_buffer();
-      test_time();
-      test_midi();
-      test_type();
+    printf("The page size for this system is %ld bytes.\n",
+           sysconf(_SC_PAGESIZE)); /* _SC_PAGE_SIZE is OK too. */
+
+    // {
+    //     size_t s = 500 * 1000000L;
+    //     char *b = calloc(1, s);
+    //     for (size_t i = 0; i < s; ++i)
+    //         b[i] = 0;
+    //     while(1)
+    //         ;
+    // }
+
+    // while(true)
+    {
+        doremir_audio_engine_initialize();
+
+        test_wrap();
+        test_generic();
+        test_string();
+        test_show();
+        test_compare();
+        test_rational();
+        test_buffer();
+        test_time();
+        test_midi();
+        test_type();
 
 
-      test_atomic();
-      test_atomic_queue(5, 2);
-      // test_atomic_queue(10, 10);
-      // test_atomic_queue(300, 2);
-      // test_atomic_stack(5, 2);
-      test_atomic_ring_buffer();
+        test_atomic();
+        test_atomic_queue(5, 2);
+        // test_atomic_queue(10, 10);
+        // test_atomic_queue(300, 2);
+        // test_atomic_stack(5, 2);
+        test_atomic_ring_buffer();
 
-      // test_thread();
-      // test_mutex();
-      // test_cond();
-      // futures
-      // improvings
+        // test_thread();
+        // test_mutex();
+        // test_cond();
+        // futures
+        // improvings
 
-      test_for_each();
+        test_for_each();
 
-      test_list();
-      test_set();
-      test_map();
-      // error
-      // json
+        test_list();
+        test_set();
+        test_map();
+        // error
+        // json
 
-      test_processors();
+        test_processors();
 
-      // dispatchers
-      test_priority_queue(10);
-      // schedulers
+        // dispatchers
+        test_priority_queue(10);
+        // schedulers
 
-      doremir_audio_engine_terminate();
-  }
-  return 0;
+        doremir_audio_engine_terminate();
+    }
+    return 0;
 }
