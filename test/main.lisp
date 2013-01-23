@@ -28,7 +28,10 @@
 (defvar y nil)
 (defvar s nil)
 (defvar d nil)
-(defvar p nil)
+(defvar p nil)   
+
+(setf p (id '(:frame (:f32 :f32 :f32 :f32 :f32 :f32 :f32 :f32 :f32 . :f32))))
+(processor-buffer-size p 256)
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -278,8 +281,6 @@
 (type-size-of 256 x)
 (type-offset-of 256 x)
 (type-align-of x)
-
-(type-size-of 256 '(:frame (:f32 :f32 :f32 :f32 :f32 :f32 :f32 :f32 :f32 . :f32)))
 
 ; We can also force conversion for nice printing
 (setf x (make-type '(:pair :i8 :i8)))
