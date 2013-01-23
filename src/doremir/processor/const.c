@@ -49,9 +49,11 @@ doremir_type_t const_output_type(doremir_ptr_t a)
     return proc->output_type;
 }
 
-size_t const_buffer_size(doremir_ptr_t a)
+size_t const_buffer_size(frames_t frameSize, doremir_ptr_t a)
 {
-    // TODO
+    size_t inSize  = doremir_type_size_of(frameSize, const_input_type(a));
+    size_t outSize = doremir_type_size_of(frameSize, const_output_type(a));
+    return size_max(inSize, outSize);
 }
 
 void const_before(doremir_ptr_t a, info_t *info)
@@ -95,7 +97,7 @@ doremir_ptr_t const_impl(doremir_id_t interface)
     static doremir_processor_interface_t const_processor_interface_impl =
     {
         const_before, const_process, const_after,
-        const_input_type, const_output_type
+        const_input_type, const_output_type, const_buffer_size
     };
 
     switch (interface)

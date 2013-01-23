@@ -57,9 +57,11 @@ doremir_type_t unary_output_type(doremir_ptr_t a)
     return proc->output_type;
 }
 
-size_t unary_buffer_size(doremir_ptr_t a)
+size_t unary_buffer_size(frames_t frameSize, doremir_ptr_t a)
 {
-    // TODO
+    size_t inSize  = doremir_type_size_of(frameSize, unary_input_type(a));
+    size_t outSize = doremir_type_size_of(frameSize, unary_output_type(a));
+    return size_max(inSize, outSize);
 }
 
 void unary_before(doremir_ptr_t a, info_t *info)
@@ -129,7 +131,7 @@ doremir_ptr_t unary_impl(doremir_id_t interface)
     static doremir_processor_interface_t unary_processor_interface_impl =
     {
         unary_before, unary_process, unary_after,
-        unary_input_type, unary_output_type
+        unary_input_type, unary_output_type, unary_buffer_size
     };
 
     switch (interface)

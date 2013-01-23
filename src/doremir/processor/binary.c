@@ -59,10 +59,11 @@ doremir_type_t binary_output_type(doremir_ptr_t a)
     return proc->output_type;
 }   
 
-size_t binary_buffer_size(doremir_ptr_t a)
-{       
-    return size_max(1, 2);
-    // TODO
+size_t binary_buffer_size(frames_t frameSize, doremir_ptr_t a)
+{
+    size_t inSize  = doremir_type_size_of(frameSize, binary_input_type(a));
+    size_t outSize = doremir_type_size_of(frameSize, binary_output_type(a));
+    return size_max(inSize, outSize);
 }
 
 void binary_before(doremir_ptr_t a, info_t *info)
@@ -109,7 +110,7 @@ doremir_ptr_t binary_impl(doremir_id_t interface)
     static doremir_processor_interface_t binary_processor_interface_impl =
     {
         binary_before, binary_process, binary_after,
-        binary_input_type, binary_output_type
+        binary_input_type, binary_output_type, binary_buffer_size
     };
 
     switch (interface)

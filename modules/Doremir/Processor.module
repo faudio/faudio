@@ -55,7 +55,7 @@ module Doremir.Processor
         
         inputType   : (Ptr -> Type)*,
         outputType  : (Ptr -> Type)*,
-        bufferSize  : (Ptr -> Size)*
+        bufferSize  : ((Frames, Ptr) -> Size)*
     };
     
     /** @typedef doremir_processor_t
@@ -65,6 +65,7 @@ module Doremir.Processor
 
     inputType : Processor -> Type;
     outputType : Processor -> Type;
+    bufferSize : (Frames, Processor) -> Size;
 
 
     // ------------------------------------------------------------------------

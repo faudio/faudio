@@ -34,6 +34,7 @@
 #define dispatcher_t        doremir_message_dispatcher_t
 #define time_t              doremir_time_t
 #define type_t              doremir_type_t
+#define frames_t            doremir_type_frames_t
 
 #define atomic()            doremir_atomic_create()
 #define pair(a,b)           doremir_pair_create(a,b)

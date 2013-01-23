@@ -44,9 +44,10 @@ doremir_type_t id_output_type(doremir_ptr_t a)
     return proc->type;
 }
 
-size_t id_buffer_size(doremir_ptr_t a)
-{
-    // TODO
+size_t id_buffer_size(frames_t frameSize, doremir_ptr_t a)
+{                 
+    return 9999;
+    // return doremir_type_size_of(frameSize, id_input_type(a));
 }
 
 void id_before(doremir_ptr_t a, info_t *info)
@@ -90,7 +91,7 @@ doremir_ptr_t id_impl(doremir_id_t interface)
     static doremir_processor_interface_t id_processor_interface_impl =
     {
         id_before, id_process, id_after,
-        id_input_type, id_output_type
+        id_input_type, id_output_type, id_buffer_size
     };
 
     switch (interface)

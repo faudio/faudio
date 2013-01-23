@@ -73,16 +73,17 @@ doremir_type_t par_output_type(doremir_ptr_t a)
     return doremir_type_pair(t0, t1);
 }
 
-size_t par_buffer_size(doremir_ptr_t a)
+size_t par_buffer_size(frames_t frameSize, doremir_ptr_t a)
 {
-    // TODO
+    size_t inSize  = doremir_type_size_of(frameSize, par_input_type(a));
+    size_t outSize = doremir_type_size_of(frameSize, par_output_type(a));
+    return size_max(inSize, outSize);
 }
 
 void par_before(doremir_ptr_t a, info_t *info)
 {
     this_proc_t proc = (this_proc_t) a;
 
-    // Run subprocessors
     proc->elemImpl[0]->before(proc->elem[0], info);
     proc->elemImpl[1]->before(proc->elem[1], info);
 
@@ -94,8 +95,7 @@ void par_before(doremir_ptr_t a, info_t *info)
 void par_after(doremir_ptr_t a, info_t *info)
 {
     this_proc_t proc = (this_proc_t) a;
-
-    // Run subprocessors
+    
     proc->elemImpl[0]->after(proc->elem[0], info);
     proc->elemImpl[1]->after(proc->elem[1], info);
 }
@@ -134,7 +134,7 @@ doremir_ptr_t par_impl(doremir_id_t interface)
     static doremir_processor_interface_t par_processor_interface_impl =
     {
         par_before, par_process, par_after,
-        par_input_type, par_output_type
+        par_input_type, par_output_type, par_buffer_size
     };
 
     switch (interface)

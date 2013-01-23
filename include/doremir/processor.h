@@ -30,11 +30,13 @@ typedef struct {
             void (* after)(doremir_ptr_t, doremir_processor_info_t *);
             doremir_type_t (* input_type)(doremir_ptr_t);
             doremir_type_t (* output_type)(doremir_ptr_t);
-            size_t (* buffer_size)(doremir_ptr_t);
+            size_t (* buffer_size)(doremir_type_frames_t, doremir_ptr_t);
         } doremir_processor_interface_t;
 typedef struct _doremir_processor_t * doremir_processor_t;
 doremir_type_t doremir_processor_input_type(doremir_processor_t);
 doremir_type_t doremir_processor_output_type(doremir_processor_t);
+size_t doremir_processor_buffer_size(doremir_type_frames_t,
+                                     doremir_processor_t);
 doremir_processor_t doremir_processor_identity(doremir_type_t);
 doremir_processor_t doremir_processor_constant(doremir_type_t,
                                                doremir_type_t,

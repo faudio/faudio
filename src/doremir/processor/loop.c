@@ -10,7 +10,7 @@ struct _doremir_processor_loop_proc_t
     proc_t              elem[1];        // Elements
     proc_interface_t   *elemImpl[1];    // Fast pointer to the elements' processor implementation
 
-    type_t              bufType[2];     // Buffers hold wraparound data
+    type_t              bufType;        // Buffer to hold wraparound data
     size_t              bufSize[2];
     void               *buf[2];
 };
@@ -46,8 +46,7 @@ this_proc_t doremir_processor_loop_create(processor_t proc1)
     proc->elem[0]      = proc1;
     proc->elemImpl[0]  = doremir_interface(doremir_processor_interface_i, proc->elem[0]);
 
-    proc->bufType[0]    = doremir_processor_input_type(proc->elem[0]);
-    proc->bufType[1]    = doremir_processor_output_type(proc->elem[0]);
+    proc->bufType      = doremir_type_get_pair_fst(doremir_processor_input_type(proc->elem[0])); // TODO get fst
 
     if (check_type(NULL, proc))
         {
@@ -80,37 +79,27 @@ doremir_type_t loop_output_type(doremir_ptr_t a)
     return doremir_type_get_pair_fst(doremir_processor_output_type(proc->elem[0]));
 }
 
-size_t loop_buffer_size(doremir_ptr_t a)
+size_t loop_buffer_size(frames_t frameSize, doremir_ptr_t a)
 {
-    // TODO
+    this_proc_t proc = (this_proc_t) a;
+
+    size_t inSize  = doremir_type_size_of(frameSize, loop_input_type(a));
+    size_t outSize = doremir_type_size_of(frameSize, loop_output_type(a));
+    size_t loopSize  = doremir_type_size_of(frameSize, proc->bufType);
+
+    return size_max(inSize + loopSize, outSize + loopSize);
 }
 
 void loop_before(doremir_ptr_t a, info_t *info)
 {
     this_proc_t proc = (this_proc_t) a;
-
-    // Run subprocessors
     proc->elemImpl[0]->before(proc->elem[0], info);
-
-    // Allocate buffers
-    proc->bufSize[0]    = doremir_type_size_of(info->frame_size, proc->bufType[0]);
-    proc->bufSize[1]    = doremir_type_size_of(info->frame_size, proc->bufType[1]);
-    proc->buf[0]        = malloc(proc->bufSize[0]);
-    proc->buf[1]        = malloc(proc->bufSize[1]);
-
-    assert(proc->buf[0] && proc->buf[1] && "malloc failed");
 }
 
 void loop_after(doremir_ptr_t a, info_t *info)
 {
     this_proc_t proc = (this_proc_t) a;
-
-    // Run subprocessors
     proc->elemImpl[0]->after(proc->elem[0], info);
-
-    // Free buffers
-    free(proc->buf[0]);
-    free(proc->buf[1]);
 }
 
 void loop_process(ptr_t a, info_t *info, samples_t samples)
@@ -146,7 +135,7 @@ doremir_ptr_t loop_impl(doremir_id_t interface)
     static doremir_processor_interface_t loop_processor_interface_impl =
     {
         loop_before, loop_process, loop_after,
-        loop_input_type, loop_output_type
+        loop_input_type, loop_output_type, loop_buffer_size
     };
 
     switch (interface)

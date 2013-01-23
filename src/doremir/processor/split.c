@@ -61,9 +61,9 @@ doremir_type_t split_output_type(doremir_ptr_t a)
     return doremir_type_pair(proc->input_type, proc->input_type);
 }
 
-size_t split_buffer_size(doremir_ptr_t a)
+size_t split_buffer_size(frames_t frameSize, doremir_ptr_t a)
 {
-    // TODO
+    return doremir_type_size_of(frameSize, split_output_type(a));
 }
 
 void split_before(doremir_ptr_t a, info_t *info)
@@ -112,7 +112,7 @@ doremir_ptr_t split_impl(doremir_id_t interface)
     static doremir_processor_interface_t split_processor_interface_impl =
     {
         split_before, split_process, split_after,
-        split_input_type, split_output_type
+        split_input_type, split_output_type, split_buffer_size
     };
 
     switch (interface)

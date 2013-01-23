@@ -23,8 +23,7 @@
  */
 doremir_type_t doremir_processor_input_type(doremir_processor_t proc)
 {
-    return ((proc_interface_t *)
-            doremir_interface(doremir_processor_interface_i, proc))->input_type(proc);
+    return ((proc_interface_t *) doremir_interface(doremir_processor_interface_i, proc))->input_type(proc);
 }
 
 /** Return the output type of the given processor.
@@ -33,8 +32,16 @@ doremir_type_t doremir_processor_input_type(doremir_processor_t proc)
  */
 doremir_type_t doremir_processor_output_type(doremir_processor_t proc)
 {
-    return ((proc_interface_t *)
-            doremir_interface(doremir_processor_interface_i, proc))->output_type(proc);
+    return ((proc_interface_t *) doremir_interface(doremir_processor_interface_i, proc))->output_type(proc);
+}
+
+/** Return the output type of the given processor.
+
+    @param proc             A processor.
+ */
+size_t doremir_processor_buffer_size(doremir_type_frames_t frames, doremir_processor_t proc)
+{
+    return ((proc_interface_t *) doremir_interface(doremir_processor_interface_i, proc))->buffer_size(frames, proc);
 }
 
 
