@@ -52,8 +52,8 @@ string_t lmm_show(lmm_t lmm)
 
       for (size_t i = 0; i < reg.size; ++i) {
         str = string_dappend(str, string(" "));
-        str = string_dappend(str, 
-          format_int("%02x", ((uint8_t*) reg.data)[i]));
+        str = string_dappend(str,
+                             format_int("%02x", ((uint8_t *) reg.data)[i]));
       }
 
       str = string_dappend(str, string("\n"));
@@ -130,21 +130,69 @@ void lmm_split(lmm_t lmm, size_t split, lmm_reg_t r1, lmm_reg_t r2)
 }
 
 
-// Set
+// Set and Ap
 
-#define LLM_SET(N, T)                                   \
-    void lmm_set_##N(lmm_t lmm, T x, lmm_reg_t r1)          \
-    {                                                   \
-        assert (rsize(r1) > 0 && "Can not set: empty register.");       \
-        typedef T data_t;                               \
-                                                        \
-        size_t  count = rsize(r1) / sizeof(data_t);     \
-        data_t  *data = (data_t *) rdata(r1);           \
-                                                        \
-        for (size_t i = 0; i < count; ++i)              \
-            data[i] = x;                                \
-    }                                                   \
- 
+#define LLM_SET(N, T)                                                                       \
+  void lmm_set_##N(lmm_t lmm, T x, lmm_reg_t r1)                                            \
+  {                                                                                         \
+    assert (rsize(r1) > 0 && "Can not set: empty register.");                               \
+    typedef T data_t;                                                                       \
+                                                                                            \
+    size_t  count = rsize(r1) / sizeof(data_t);                                             \
+    data_t  *data = (data_t *) rdata(r1);                                                   \
+                                                                                            \
+    for (size_t i = 0; i < count; ++i)                                                      \
+      data[i] = x;                                                                          \
+  }                                                                                         \
+
+#define LLM_AP1(N1, N2, T1, T2)                                                             \
+  void lmm_ap1_##N1##_##N2(                                                                 \
+    lmm_t lmm,                                                                              \
+    unary_t f,                                                                              \
+    ptr_t ct,                                                                               \
+    lmm_reg_t r1                                                                            \
+  )                                                                                         \
+  {                                                                                         \
+    typedef T1 arg_t;                                                                       \
+    typedef T2 res_t;                                                                       \
+    typedef res_t (*func_t) (ptr_t, arg_t);                                                 \
+                                                                                            \
+    arg_t  *data = (arg_t *) rdata(r1);                                                     \
+    func_t  func = (func_t) f;                                                              \
+                                                                                            \
+    size_t   count = rsize(r1) / sizeof(arg_t);                                             \
+                                                                                            \
+    for (size_t i = 0; i < count; ++i) {                                                    \
+      data[i] = func(ct, data[i]);                                                          \
+    }                                                                                       \
+  }                                                                                         \
+
+
+#define LLM_AP2(N1, N2, N3, T1, T2, T3)                                                     \
+  void lmm_ap2_##N1##_##N2##_##N3(                                                          \
+    lmm_t lmm,                                                                              \
+    binary_t f,                                                                             \
+    ptr_t ct,                                                                               \
+    lmm_reg_t r1,                                                                           \
+    lmm_reg_t r2                                                                            \
+  )                                                                                         \
+  {                                                                                         \
+    typedef T1 arg1_t;                                                                      \
+    typedef T2 arg2_t;                                                                      \
+    typedef T3 res_t;                                                                       \
+    typedef res_t (*func_t) (ptr_t, arg1_t, arg2_t);                                        \
+                                                                                            \
+    arg1_t *data1 = (arg1_t *) rdata(r1);                                                   \
+    arg2_t *data2 = (arg2_t *) rdata(r2);                                                   \
+    func_t func = (func_t) f;                                                               \
+                                                                                            \
+    size_t  count = size_min(rsize(r1) / sizeof(arg1_t), rsize(r2) / sizeof(arg2_t));       \
+                                                                                            \
+    for (size_t i = 0; i < count; ++i) {                                                    \
+      data1[i] = func(ct, data1[i], data2[i]);                                              \
+    }                                                                                       \
+  }                                                                                         \
+
 LLM_SET(i8,  uint8_t);
 LLM_SET(i16, uint16_t);
 LLM_SET(i32, uint32_t);
@@ -153,47 +201,19 @@ LLM_SET(f32, float);
 LLM_SET(f64, double);
 LLM_SET(ptr, ptr_t);
 
+LLM_AP1(i8,  i8,  uint8_t, uint8_t);
+LLM_AP1(f32, f32, float,   float);
+
+LLM_AP2(i8,  i8,  i8,  uint8_t, uint8_t, uint8_t);
+// LLM_AP2(f32, f32, f32, float,   float,   float);
 
 
-typedef float v256xf32
-__attribute__((vector_size(256 * sizeof(float))));
-
-typedef uint8_t v256xi8
-__attribute__((vector_size(256 * sizeof(uint8_t))));
-
-void lmm_ap1_i8_i8(lmm_t lmm, unary_t f, ptr_t ct, lmm_reg_t r1, lmm_reg_t r2)
-{
-  typedef uint8_t first_t;
-  typedef uint8_t second_t;
-  typedef second_t(*func_t)(ptr_t, first_t);
-
-  size_t  count = size_min(rsize(r1) / sizeof(first_t), rsize(r2) / sizeof(second_t));
-  first_t  *data1 = (first_t *) rdata(r1);
-  second_t *data2 = (second_t *) rdata(r2);
-  func_t func = (func_t) f;
-
-  for (size_t i = 0; i < count; ++i) {
-    data2[i] = func(ct, data1[i]);
-  }
-}
-void lmm_ap1_f32_f32(lmm_t lmm, unary_t f, ptr_t ct, lmm_reg_t r1, lmm_reg_t r2)
-{
-  typedef float first_t;
-  typedef float second_t;
-  typedef second_t(*func_t)(ptr_t, first_t);
-
-  size_t  count = size_min(rsize(r1) / sizeof(first_t), rsize(r2) / sizeof(second_t));
-  first_t  *data1 = (first_t *) rdata(r1);
-  second_t *data2 = (second_t *) rdata(r2);
-  func_t func = (func_t) f;
-
-  for (size_t i = 0; i < count; ++i) {
-    data2[i] = func(ct, data1[i]);
-  }
-}
-
-
-
+// typedef float v256xf32
+// __attribute__((vector_size(256 * sizeof(float))));
+//
+// typedef uint8_t v256xi8
+// __attribute__((vector_size(256 * sizeof(uint8_t))));
+//
 
 // void lmm_ap1(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
 // void lmm_zero(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
@@ -227,6 +247,14 @@ void lmm_ap1_f32_f32(lmm_t lmm, unary_t f, ptr_t ct, lmm_reg_t r1, lmm_reg_t r2)
 
 
 
+int8_t my_succ_i8(ptr_t c, int8_t x)
+{
+  return x + 1;
+}
+int8_t my_add_i8(ptr_t c, int8_t x, int8_t y)
+{
+  return x + 1;
+}
 
 void test_vm_loop()
 {
@@ -235,22 +263,26 @@ void test_vm_loop()
   lmm_alloc(vm, 16, 0);
   lmm_alloc(vm, 16, 1);
   lmm_alloc(vm, 16, 2);
-  lmm_alloc(vm, 16, 10);
-  lmm_alloc(vm, 16, 20);
+  // lmm_alloc(vm, 16, 10);
+  // lmm_alloc(vm, 16, 20);
 
   lmm_set_i8(vm, 1, 0);
-  lmm_set_i8(vm, 2, 1);
-  lmm_set_i8(vm, 3, 2);
-  // lmm_set_i32(vm, 0x3412cdab, 20);
+  lmm_set_i8(vm, 1, 1);
+
+  doremir_print_ln(lmm_show(vm));
 
   // lmm_split(vm, 13, 0, 10);
   // lmm_swap(vm, 0, 1);
   // lmm_swap(vm, 3, 0);
   // lmm_swap(vm, 3, 3);
 
+  // lmm_ap1_i8_i8(vm, (unary_t) my_succ_i8, NULL, 0);
+  // lmm_ap1_i8_i8(vm, (unary_t) my_succ_i8, NULL, 1);
+  lmm_ap2_i8_i8_i8(vm, (binary_t) my_add_i8, NULL, 0, 1);
+
+
 
   doremir_print_ln(lmm_show(vm));
-
   lmm_destroy(vm);
 }
 

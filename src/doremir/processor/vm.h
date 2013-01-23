@@ -99,8 +99,8 @@ void lmm_set_i64(lmm_t lmm, uint64_t x, lmm_reg_t r1);
 void lmm_set_f32(lmm_t lmm, float x, lmm_reg_t r1);
 void lmm_set_f64(lmm_t lmm, double x, lmm_reg_t r1);
 
-void lmm_ap1_i8_i8(lmm_t lmm, unary_t f, ptr_t ct, lmm_reg_t r1, lmm_reg_t r2);
-void lmm_ap1_f32_f32(lmm_t lmm, unary_t f, ptr_t ct, lmm_reg_t r1, lmm_reg_t r2);
+// void lmm_ap1_i8_i8(lmm_t lmm, unary_t f, ptr_t ct, lmm_reg_t r1, lmm_reg_t r2);
+// void lmm_ap1_f32_f32(lmm_t lmm, unary_t f, ptr_t ct, lmm_reg_t r1, lmm_reg_t r2);
 
 
 
