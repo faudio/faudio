@@ -32,7 +32,7 @@ this_t doremir_processor_unary_create
     ptr_t   data
 )
 {
-    this_t proc  = doremir_new(processor_unary_proc);
+    this_t proc       = doremir_new(processor_unary_proc);
     proc->impl        = &unary_impl;
 
     proc->input_type  = type1;

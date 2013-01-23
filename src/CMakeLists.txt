@@ -18,6 +18,7 @@ list(APPEND SRCS
   doremir/pair.c
   doremir/priority_queue.c
   doremir/processor.c
+  doremir/processor/vm.c
   doremir/processor/id.c
   doremir/processor/const.c
   doremir/processor/unary.c
