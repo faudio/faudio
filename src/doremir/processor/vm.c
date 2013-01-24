@@ -38,29 +38,38 @@ char *lmm_get_error(lmm_t lmm)
   return lmm->error;
 }
 
-string_t lmm_show(lmm_t lmm)
-{
-  string_t str = string("\n");
+#define LMM_SHOW(N,T,F,M)                                                         \
+  string_t lmm_show_##N(lmm_t lmm)                                                \
+  {                                                                               \
+    string_t str = string("\n");                                                  \
+                                                                                  \
+    lmm_for_each_register(reg, id, lmm) {                                         \
+                                                                                  \
+      /* Print all non-empty registers */                                         \
+                                                                                  \
+      if (reg.size) {                                                             \
+        str = string_dappend(str, format_int("\nr%d:\t", id));                    \
+                                                                                  \
+        for (size_t i = 0; i < (reg.size / sizeof(T)); ++i) {                     \
+          str = string_dappend(str, string(" "));                                 \
+          str = string_dappend(str,                                               \
+                               M(F, ((T*) reg.data)[i]));                         \
+        }                                                                         \
+                                                                                  \
+        str = string_dappend(str, string("\n"));                                  \
+      }                                                                           \
+    }                                                                             \
+    return str;                                                                   \
+  }                                                                               \
+                                 
+LMM_SHOW(i8,  uint8_t,   "%02x",  format_integer);
+LMM_SHOW(i16, uint16_t,  "%04x",  format_integer);
+LMM_SHOW(i32, uint32_t,  "%08x",  format_integer);
+LMM_SHOW(i64, uint64_t,  "%016x", format_integer);
+LMM_SHOW(f32, float,     "%0lf",  format_floating);
+LMM_SHOW(f64, double,    "%0lf",  format_floating);
+// LMM_SHOW(ptr, ptr_t,     "%02p");
 
-  lmm_for_each_register(reg, id, lmm) {
-
-    // Print all non-empty registers
-    // Just plain byte output by now
-
-    if (reg.size) {
-      str = string_dappend(str, format_int("\nr%d:\t", id));
-
-      for (size_t i = 0; i < reg.size; ++i) {
-        str = string_dappend(str, string(" "));
-        str = string_dappend(str,
-                             format_int("%02x", ((uint8_t *) reg.data)[i]));
-      }
-
-      str = string_dappend(str, string("\n"));
-    }
-  }
-  return str;
-}
 
 size_t lmm_get_reg_size(lmm_t lmm, lmm_reg_t r)
 {
@@ -93,6 +102,8 @@ void lmm_alloc(lmm_t lmm, size_t size, lmm_reg_t r)
   memset(rdata(r), 0, size);
 }
 
+// swap r1 r2
+// (r1,r2) <==> (r2,r1)
 void lmm_swap(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2)
 {
   size_t ts = rsize(r2);
@@ -108,11 +119,11 @@ void lmm_swap(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2)
   rdata(r1) = td;
 }
 
-
-
-void lmm_dup(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2)
+// copy r1 r2  
+// r1 ==> r2
+void lmm_copy(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2)
 {
-  assert(rmax(r2) >= rsize(r1)            && "Can not dup: second operand is too small");
+  assert(rmax(r2) >= rsize(r1)            && "Can not copy: second operand is too small");
 
   memcpy(rdata(r2), rdata(r1), rsize(r1));
   rsize(r2) = rsize(r1);
@@ -361,16 +372,14 @@ void test_vm_loop()
 {
   lmm_t vm = lmm_create();
 
-  lmm_alloc(vm, 8, 0);
-  lmm_alloc(vm, 8, 1);
-  lmm_alloc(vm, 8, 2);
-  // lmm_alloc(vm, 16, 10);
-  // lmm_alloc(vm, 16, 20);
+  lmm_alloc(vm, 8*5, 0);
+  lmm_alloc(vm, 8*5, 1);
+  lmm_alloc(vm, 8*5, 2);
 
-  lmm_set_i8(vm, 0x7, 0);
-  lmm_set_i8(vm, 0x8, 1);
+  lmm_set_f64(vm, 3.14f, 0);
+  lmm_set_f64(vm, 0.1f,  1);
 
-  doremir_print_ln(lmm_show(vm));
+  doremir_print_ln(lmm_show_f64(vm));
 
   // lmm_split(vm, 13, 0, 10);
   // lmm_swap(vm, 0, 1);
@@ -380,10 +389,10 @@ void test_vm_loop()
   // lmm_ap1_i8_i8(vm, (unary_t) my_succ_i8, NULL, 0);
   // lmm_ap1_i8_i8(vm, (unary_t) my_succ_i8, NULL, 1);
   // lmm_ap2_i8_i8_i8(vm, (binary_t) my_add_i8, NULL, 0, 1);
-  lmm_add_i8_i8(vm, 0, 1);
+  lmm_add_f64_f64(vm, 0, 1);
 
 
-  doremir_print_ln(lmm_show(vm));
+  doremir_print_ln(lmm_show_f64(vm));
   lmm_destroy(vm);
 }
 

@@ -17,7 +17,7 @@
         - Each matrix register contains a raw buffer
             - Buffers are allocated using the alloc opcode. Max size is fixed unless they are
               swapped, or alloc is called again.
-            - Using dup, split, ap1, ap2 or snd on a too small buffer will fail.
+            - Using copy, split, ap1, ap2 or snd on a too small buffer will fail.
             - All other opcodes use matrix arithmetic, truncating to the shortest argument size.
 
     - Convenience registers:
@@ -25,38 +25,36 @@
 
     - Instructions
 
-            alloc         s r                r1       := 0
-            swap          r1 r2              (r1,r2)  := (r2,         r1)
-            dup           r1 r2              (r1,r2)  := (r1,         r1)
-            split         s r1 r2            (r1,r2)  := (r1[0..s-1], r1[s..n])
-            fst           r1 r2              r1       := r1
-            snd           r1 r2              r1       := r2
+            alloc         s r                0       ==> r1
 
-            ap1   T1      f ct r1            r1[i]    := f(ct, r1[i])         i <- [0..n]
-            ap2   T1 T2   f ct r1 r2         r1[i]    := f(ct, r1[i], r2[i])  i <- [0..n]
+            swap          r1 r2              (r1,r2) <==> (r2,r1)
 
-            add   T1      r1 r2              r1       := r1 + r2
-            sub   T1      r1 r2              r1       := r1 - r2
-            mul   T1      r1 r2              r1       := r1 * r2
-            div   T1      r1 r2              r1       := r1 / r2
-            rem   T1      r1 r2              r1       := r1 % r2
-            bool  T1      r1 r2              r1       := case r2 of 0 -> 0, _ -> 1
-            not   T1      r1 r2              r1       := case r2 of 0 -> 1, _ -> 0
-            and   T1      r1 r2              r1       := r1 & r2
-            or    T1      r1 r2              r1       := r1 | r2
-            xor   T1      r1 r2              r1       := r1 ^ r2
+            copy          r1 r2              r1                      ==> r2
+            split         s r1 r2            (r1[0..s-1],r1[s..n-1]) ==> (r1,r2)
 
-            eq    T1      r1 r2              r1       := r1 == r2
-            ne    T1      r1 r2              r1       := r1 != r2
-            lt    T1      r1 r2              r1       := r1 < r2
-            gt    T1      r1 r2              r1       := r1 > r2
-            lte   T1      r1 r2              r1       := r1 <= r2
-            gte   T1      r1 r2              r1       := r1 >= r2
-            min   T1      r1 r2
-            max   T1      r1 r2
-
-            int   T1      r1 r2              cast to long int, then narrow
-            float T1      r1 r2              cast to double, then narrow
+            ap1   T1      f ct r1            r1[i] <== f(ct, r1[i])         where i <- [0..n]
+            ap2   T1 T2   f ct r1 r2         r1[i] <== f(ct, r1[i], r2[i])  where i <- [0..n]
+                                                   
+            add   T1      r1 r2              r1    <== r1 + r2
+            sub   T1      r1 r2              r1    <== r1 - r2
+            mul   T1      r1 r2              r1    <== r1 * r2
+            div   T1      r1 r2              r1    <== r1 / r2
+            rem   T1      r1 r2              r1    <== r1 % r2
+            bool  T1      r1 r2              r1    <== case r2 of 0 -> 0, _ -> 1
+            not   T1      r1 r2              r1    <== case r2 of 0 -> 1, _ -> 0
+            and   T1      r1 r2              r1    <== r1 & r2
+            or    T1      r1 r2              r1    <== r1 | r2
+            xor   T1      r1 r2              r1    <== r1 ^ r2
+                                                   
+            eq    T1      r1 r2              r1    <== r1 == r2
+            ne    T1      r1 r2              r1    <== r1 != r2
+            lt    T1      r1 r2              r1    <== r1 < r2
+            gt    T1      r1 r2              r1    <== r1 > r2
+            lte   T1      r1 r2              r1    <== r1 <= r2
+            gte   T1      r1 r2              r1    <== r1 >= r2
+                                                   
+            int   T1      r1                 r1    <== (T) (long int) r1
+            float T1      r12                r1    <== (T) (double)   r1
 
  */
 
@@ -88,7 +86,7 @@ void   *lmm_get_reg_data(lmm_t lmm, lmm_reg_t r);
 
 
 void lmm_alloc(lmm_t lmm, size_t size, lmm_reg_t r);
-void lmm_dup(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
+void lmm_copy(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
 void lmm_swap(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
 void lmm_split(lmm_t lmm, size_t size, lmm_reg_t r1, lmm_reg_t r2);
 

@@ -189,6 +189,29 @@ doremir_string_t doremir_string_format_integer(char *format, long value)
   return doremir_string_from_utf8(buffer);
 }
 
+/** Format a floating-point value.
+    @param format
+        A printf-style format string.
+    @param value
+        Numeric value.
+    @return
+        A new formatted string.
+ */
+doremir_string_t doremir_string_format_floating(char *format, double value)
+{
+  char buffer[100];
+  int  numChars;
+
+  numChars = snprintf(buffer, 100, format, value);
+
+  if (numChars > 100) {
+    fatal("Too many characters", -1);
+  }
+
+  buffer[numChars] = 0;
+  return doremir_string_from_utf8(buffer);
+}
+
 // --------------------------------------------------------------------------------
 // Conversion
 // --------------------------------------------------------------------------------
