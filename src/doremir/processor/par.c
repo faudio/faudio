@@ -106,15 +106,6 @@ void par_process(ptr_t a, info_t *info, samples_t samples)
 {
   this_t proc = (this_t) a;
 
-  // TODO memcpy second entry to adjust for offset
-  // That is, input of snd proc should be copied to the buffer size of the first
-  // Then from that pointer, copy to output pos
-
-  // proc->elemImpl[0]->process(proc->elem[0], info, input, output);
-  // proc->elemImpl[1]->process(proc->elem[1], info, input + proc->inOffset, output + proc->outOffset);
-
-  // TODO memcpy second entry to adjust for offset
-
 }
 
 // --------------------------------------------------------------------------------

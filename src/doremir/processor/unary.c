@@ -81,31 +81,6 @@ void unary_after(ptr_t a, info_t *info)
   // nothing
 }
 
-#define UNARY_PROCESSOR(A,B) \
-    static inline \
-    void unary_proc_##A##_##B \
-    (int count, this_t proc, ptr_t input, ptr_t output) \
-    { \
-        typedef A input_t; \
-        typedef B output_t; \
-        typedef output_t(func_t)(ptr_t, input_t); \
-        \
-        input_t*  raw_input     = (input_t*)  input; \
-        output_t* raw_output    = (output_t*) output; \
-        func_t*   raw_proc      = (func_t*)   proc->function; \
-        \
-        for(int i = 0; i < count; ++i) \
-            raw_output[i] = raw_proc(proc->data, raw_input[i]); \
-    }
-
-UNARY_PROCESSOR(uint8_t,  uint8_t);
-UNARY_PROCESSOR(uint16_t, uint16_t);
-UNARY_PROCESSOR(uint32_t, uint32_t);
-UNARY_PROCESSOR(uint64_t, uint64_t);
-UNARY_PROCESSOR(float,    float);
-UNARY_PROCESSOR(double,   double);
-UNARY_PROCESSOR(ptr_t,    ptr_t);
-
 void unary_process(ptr_t a, info_t *info, samples_t samples)
 {
   // unary_proc_uint8_t_uint8_t(1, proc2, samples, samples);
