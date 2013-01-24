@@ -368,30 +368,44 @@ int8_t my_add_i8(ptr_t c, int8_t x, int8_t y)
   return x + 1;
 }
 
+// FIXME lt, gt etc for floats
+
 void test_vm_loop()
 {
   lmm_t vm = lmm_create();
 
-  lmm_alloc(vm, 8*5, 0);
-  lmm_alloc(vm, 8*5, 1);
-  lmm_alloc(vm, 8*5, 2);
+  size_t n = 4;
+  lmm_alloc(vm, 8*n, 0);
+  lmm_alloc(vm, 8*n, 1);
+  lmm_alloc(vm, 8*n, 2);
+  lmm_alloc(vm, 8*n, 3);
+  lmm_alloc(vm, 8*n, 4);
 
   lmm_set_f64(vm, 3.14f, 0);
   lmm_set_f64(vm, 0.1f,  1);
+  ((double*)vm->regs[0].data)[0] = 0.23;
+  ((double*)vm->regs[0].data)[3] = 5.0;
 
   doremir_print_ln(lmm_show_f64(vm));
 
   // lmm_split(vm, 13, 0, 10);
   // lmm_swap(vm, 0, 1);
   // lmm_swap(vm, 3, 0);
-  // lmm_swap(vm, 3, 3);
+  // lmm_swap(vm, 3, 3);    
+  lmm_copy(vm, 0, 3);
+  lmm_copy(vm, 1, 4);
 
   // lmm_ap1_i8_i8(vm, (unary_t) my_succ_i8, NULL, 0);
   // lmm_ap1_i8_i8(vm, (unary_t) my_succ_i8, NULL, 1);
   // lmm_ap2_i8_i8_i8(vm, (binary_t) my_add_i8, NULL, 0, 1);
+
+  lmm_add_f64_f64(vm, 3, 4);
+  lmm_add_f64_f64(vm, 2, 3);
   lmm_add_f64_f64(vm, 0, 1);
+  lmm_lt_f64_f64(vm, 0, 2);
 
 
+  // printf("%f\n", ((double*)vm->regs[0].data)[n-1]);
   doremir_print_ln(lmm_show_f64(vm));
   lmm_destroy(vm);
 }
@@ -399,5 +413,8 @@ void test_vm_loop()
 void test_vm()
 {
   // while(1)
-  test_vm_loop();
+  {
+    test_vm_loop();
+    // doremir_thread_sleep(1000);
+  }
 }
