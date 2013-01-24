@@ -12,7 +12,7 @@
     @{
     */
 
-typedef struct _doremir_processor_vst_t *doremir_processor_vst_t;
+typedef struct _doremir_processor_vst_t * doremir_processor_vst_t;
 
 /** @}
     @}

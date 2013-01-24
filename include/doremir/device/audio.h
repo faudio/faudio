@@ -15,8 +15,8 @@
     @{
     */
 
-typedef struct _doremir_device_audio_session_t *doremir_device_audio_session_t;
-typedef struct _doremir_device_audio_stream_t *doremir_device_audio_stream_t;
+typedef struct _doremir_device_audio_session_t * doremir_device_audio_session_t;
+typedef struct _doremir_device_audio_stream_t * doremir_device_audio_stream_t;
 typedef doremir_device_audio_session_t (* doremir_device_audio_session_callback_t)(doremir_device_audio_session_t);
 typedef doremir_device_audio_stream_t (* doremir_device_audio_stream_callback_t)(doremir_device_audio_stream_t);
 doremir_device_audio_session_t doremir_device_audio_begin_session();
@@ -31,8 +31,8 @@ bool doremir_device_audio_has_input(doremir_device_audio_t);
 bool doremir_device_audio_has_output(doremir_device_audio_t);
 doremir_pair_t doremir_device_audio_channels(doremir_device_audio_t);
 doremir_device_audio_stream_t doremir_device_audio_start_stream(doremir_device_audio_t,
-    doremir_processor_t,
-    doremir_device_audio_t);
+                                                                doremir_processor_t,
+                                                                doremir_device_audio_t);
 doremir_device_audio_stream_t doremir_device_audio_restart_stream(doremir_device_audio_stream_t);
 void doremir_device_audio_stop_stream(doremir_device_audio_stream_t);
 void doremir_device_audio_with_stream(doremir_device_audio_t,

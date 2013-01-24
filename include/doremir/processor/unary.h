@@ -13,11 +13,11 @@
     @{
     */
 
-typedef struct _doremir_processor_unary_proc_t *doremir_processor_unary_proc_t;
+typedef struct _doremir_processor_unary_proc_t * doremir_processor_unary_proc_t;
 doremir_processor_unary_proc_t doremir_processor_unary_create(doremir_type_t,
-    doremir_type_t,
-    doremir_unary_t,
-    doremir_ptr_t);
+                                                              doremir_type_t,
+                                                              doremir_unary_t,
+                                                              doremir_ptr_t);
 void doremir_processor_unary_destroy(doremir_processor_unary_proc_t);
 
 /** @}

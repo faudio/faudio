@@ -74,6 +74,7 @@ module Doremir.String
 
     // Formatting
     formatInteger : (Char*, Long) -> String;
+    formatFloating : (Char*, Double) -> String;
 
     /** @interface doremir_string_show_t 
         String conversion interface.

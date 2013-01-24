@@ -10,7 +10,7 @@
     @{
     */
 
-typedef struct _doremir_priority_queue_t *doremir_priority_queue_t;
+typedef struct _doremir_priority_queue_t * doremir_priority_queue_t;
 doremir_priority_queue_t doremir_priority_queue_empty();
 doremir_priority_queue_t doremir_priority_queue_single(doremir_ptr_t);
 void doremir_priority_queue_destroy(doremir_priority_queue_t);

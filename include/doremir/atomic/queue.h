@@ -12,7 +12,7 @@
     @{
     */
 
-typedef struct _doremir_atomic_queue_t *doremir_atomic_queue_t;
+typedef struct _doremir_atomic_queue_t * doremir_atomic_queue_t;
 doremir_atomic_queue_t doremir_atomic_queue_create();
 void doremir_atomic_queue_destroy(doremir_atomic_queue_t);
 doremir_ptr_t doremir_atomic_queue_read(doremir_atomic_queue_t);

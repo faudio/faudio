@@ -80,6 +80,7 @@
 #define string_dappend      doremir_string_dappend
 #define format_int          doremir_string_format_integer
 #define format_integer      doremir_string_format_integer
+#define format_floating     doremir_string_format_floating
 
 #define aexchange           doremir_atomic_exchange
 #define aget                doremir_atomic_get

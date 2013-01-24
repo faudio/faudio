@@ -14,8 +14,8 @@
     @{
     */
 
-typedef struct _doremir_device_file_t *doremir_device_file_t;
-typedef struct _doremir_device_file_stream_t *doremir_device_file_stream_t;
+typedef struct _doremir_device_file_t * doremir_device_file_t;
+typedef struct _doremir_device_file_stream_t * doremir_device_file_stream_t;
 doremir_device_file_t doremir_device_file_create(doremir_string_file_path_t);
 void doremir_device_file_destroy(doremir_device_file_t);
 void doremir_device_file_run(doremir_device_file_t,

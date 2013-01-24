@@ -15,8 +15,8 @@
     @{
     */
 
-typedef struct _doremir_device_midi_session_t *doremir_device_midi_session_t;
-typedef struct _doremir_device_midi_stream_t *doremir_device_midi_stream_t;
+typedef struct _doremir_device_midi_session_t * doremir_device_midi_session_t;
+typedef struct _doremir_device_midi_stream_t * doremir_device_midi_stream_t;
 doremir_list_t doremir_device_midi_all(doremir_device_midi_session_t);
 doremir_pair_t doremir_device_midi_default(doremir_device_midi_session_t);
 doremir_string_t doremir_device_midi_name(doremir_device_midi_t);

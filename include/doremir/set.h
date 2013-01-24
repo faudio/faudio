@@ -12,7 +12,7 @@
     @{
     */
 
-typedef struct _doremir_set_t *doremir_set_t;
+typedef struct _doremir_set_t * doremir_set_t;
 doremir_set_t doremir_set_empty();
 doremir_set_t doremir_set_single(doremir_ptr_t);
 doremir_set_t doremir_set_add(doremir_ptr_t, doremir_set_t);

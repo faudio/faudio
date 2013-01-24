@@ -12,7 +12,7 @@
     @{
     */
 
-typedef struct _doremir_time_t *doremir_time_t;
+typedef struct _doremir_time_t * doremir_time_t;
 doremir_time_t doremir_time_create(int32_t,
                                    int32_t,
                                    int32_t,

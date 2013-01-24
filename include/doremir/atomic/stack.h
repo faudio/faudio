@@ -12,7 +12,7 @@
     @{
     */
 
-typedef struct _doremir_atomic_stack_t *doremir_atomic_stack_t;
+typedef struct _doremir_atomic_stack_t * doremir_atomic_stack_t;
 doremir_atomic_stack_t doremir_atomic_stack_create();
 void doremir_atomic_stack_destroy(doremir_atomic_stack_t);
 doremir_ptr_t doremir_atomic_stack_read(doremir_atomic_stack_t);
