@@ -388,12 +388,12 @@ void test_vm_loop()
 
   doremir_print_ln(lmm_show_f64(vm));
 
-  // lmm_split(vm, 13, 0, 10);
   // lmm_swap(vm, 0, 1);
   // lmm_swap(vm, 3, 0);
   // lmm_swap(vm, 3, 3);    
   lmm_copy(vm, 0, 3);
   lmm_copy(vm, 1, 4);
+  // lmm_split(vm, 13, 0, 10);
 
   // lmm_ap1_i8_i8(vm, (unary_t) my_succ_i8, NULL, 0);
   // lmm_ap1_i8_i8(vm, (unary_t) my_succ_i8, NULL, 1);
