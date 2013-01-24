@@ -8,6 +8,12 @@
     node [fontname = "Futura", fontsize=13];      \
     edge [fontname = "Futura", fontsize=13, color="dodgerblue4"]
 
+#define GRAPH_FORMAT_VERT \
+    graph [ranksep=0.5, nodesep=0.5]; \
+    graph [fontname = "Futura", fontsize=13];     \
+    node [fontname = "Futura", fontsize=13];      \
+    edge [fontname = "Futura", fontsize=13, color="dodgerblue4"]
+
 #define RELATE1(a, how) \
   a -> a [label = how]
 #define RELATE2(a, how, b) \
