@@ -35,23 +35,23 @@
             ap1   T1      f ct r1            r1[i]    := f(ct, r1[i])         i <- [0..n]
             ap2   T1 T2   f ct r1 r2         r1[i]    := f(ct, r1[i], r2[i])  i <- [0..n]
 
-            add   T1      r1 r2              r1 := r1 + r2
-            sub   T1      r1 r2              r1 := r1 - r2
-            mul   T1      r1 r2              r1 := r1 * r2
-            div   T1      r1 r2              r1 := r1 / r2
-            rem   T1      r1 r2              r1 := r1 % r2
-            bool  T1      r1 r2              r1 := case r2 of 0 -> 0, _ -> 1
-            not   T1      r1 r2              r1 := case r2 of 0 -> 1, _ -> 0
-            and   T1      r1 r2              r1 := r1 & r2
-            or    T1      r1 r2              r1 := r1 | r2
-            xor   T1      r1 r2              r1 := r1 ^ r2
+            add   T1      r1 r2              r1       := r1 + r2
+            sub   T1      r1 r2              r1       := r1 - r2
+            mul   T1      r1 r2              r1       := r1 * r2
+            div   T1      r1 r2              r1       := r1 / r2
+            rem   T1      r1 r2              r1       := r1 % r2
+            bool  T1      r1 r2              r1       := case r2 of 0 -> 0, _ -> 1
+            not   T1      r1 r2              r1       := case r2 of 0 -> 1, _ -> 0
+            and   T1      r1 r2              r1       := r1 & r2
+            or    T1      r1 r2              r1       := r1 | r2
+            xor   T1      r1 r2              r1       := r1 ^ r2
 
-            eq    T1      r1 r2
-            ne    T1      r1 r2
-            gt    T1      r1 r2
-            lt    T1      r1 r2
-            gte   T1      r1 r2
-            lte   T1      r1 r2
+            eq    T1      r1 r2              r1       := r1 == r2
+            ne    T1      r1 r2              r1       := r1 != r2
+            lt    T1      r1 r2              r1       := r1 < r2
+            gt    T1      r1 r2              r1       := r1 > r2
+            lte   T1      r1 r2              r1       := r1 <= r2
+            gte   T1      r1 r2              r1       := r1 >= r2
             min   T1      r1 r2
             max   T1      r1 r2
 

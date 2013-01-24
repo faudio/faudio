@@ -193,20 +193,6 @@ void lmm_split(lmm_t lmm, size_t split, lmm_reg_t r1, lmm_reg_t r2)
     }                                                                                       \
   }                                                                                         \
 
-LLM_SET(i8,  uint8_t);
-LLM_SET(i16, uint16_t);
-LLM_SET(i32, uint32_t);
-LLM_SET(i64, uint64_t);
-LLM_SET(f32, float);
-LLM_SET(f64, double);
-LLM_SET(ptr, ptr_t);
-
-LLM_AP1(i8,  i8,  uint8_t, uint8_t);
-LLM_AP1(f32, f32, float,   float);
-
-LLM_AP2(i8,  i8,  i8,  uint8_t, uint8_t, uint8_t);
-// LLM_AP2(f32, f32, f32, float,   float,   float);
-
 
 #define LLM_NV_OP(NOP, OP, N1, N2, T1, T2)                                                  \
   void lmm_##NOP##_##N1##_##N2(                                                             \
@@ -228,48 +214,139 @@ LLM_AP2(i8,  i8,  i8,  uint8_t, uint8_t, uint8_t);
     }                                                                                       \
   }                                                                                         \
 
-LLM_NV_OP(add, +, i8, i8, uint8_t, uint8_t);
+// typedef float v256xf32 __attribute__((vector_size(256 * sizeof(float))));
+// typedef uint8_t v256xi8 __attribute__((vector_size(256 * sizeof(uint8_t))));
+
+// TODO
+// We only know size at runtime
+// Implement by splitting into chunks of some fixed size and invoke vops on that
+void lmm_vadd_i8_i8(                                                             
+  lmm_t lmm,                                                                              
+  lmm_reg_t r1,                                                                           
+  lmm_reg_t r2                                                                            
+)                                                                                         
+{                                                                                         
+  typedef uint8_t arg1_t;                                                                      
+  typedef uint8_t arg2_t;                                                                      
+                                                                                          
+  arg1_t *data1 = (arg1_t *) rdata(r1);                                                   
+  arg2_t *data2 = (arg2_t *) rdata(r2);                                                   
+                                                                                          
+  size_t  count = size_min(rsize(r1) / sizeof(arg1_t), rsize(r2) / sizeof(arg2_t));       
+                                                                                          
+  for (size_t i = 0; i < count; ++i) {                                                    
+    data1[i] = data1[i] + data2[i];                                                      
+  }                                                                                       
+}                                                                                         
+
+
+LLM_SET(i8,  uint8_t);
+LLM_SET(i16, uint16_t);
+LLM_SET(i32, uint32_t);
+LLM_SET(i64, uint64_t);
+LLM_SET(f32, float);
+LLM_SET(f64, double);
+LLM_SET(ptr, ptr_t);
+
+LLM_AP1(i8,  i8,  uint8_t, uint8_t);
+LLM_AP1(f32, f32, float,   float);
+
+LLM_AP2(i8,  i8,  i8,  uint8_t, uint8_t, uint8_t);
+// LLM_AP2(f32, f32, f32, float,   float,   float);
 
 
 
-// typedef float v256xf32
-// __attribute__((vector_size(256 * sizeof(float))));
-//
-// typedef uint8_t v256xi8
-// __attribute__((vector_size(256 * sizeof(uint8_t))));
-//
+LLM_NV_OP(add , +  , i8, i8, uint8_t , uint8_t );
+LLM_NV_OP(sub , -  , i8, i8, uint8_t , uint8_t );
+LLM_NV_OP(mul , *  , i8, i8, uint8_t , uint8_t );
+LLM_NV_OP(div , /  , i8, i8, uint8_t , uint8_t );
+LLM_NV_OP(rem , %  , i8, i8, uint8_t , uint8_t );
+LLM_NV_OP(and , &  , i8, i8, uint8_t , uint8_t );
+LLM_NV_OP(or  , |  , i8, i8, uint8_t , uint8_t );
+LLM_NV_OP(xor , ^  , i8, i8, uint8_t , uint8_t );
+LLM_NV_OP(eq  , == , i8, i8, uint8_t , uint8_t );
+LLM_NV_OP(ne  , != , i8, i8, uint8_t , uint8_t );
+LLM_NV_OP(lt  , <  , i8, i8, uint8_t , uint8_t );
+LLM_NV_OP(gt  , >  , i8, i8, uint8_t , uint8_t );
+LLM_NV_OP(lte , <= , i8, i8, uint8_t , uint8_t );
+LLM_NV_OP(gte , >= , i8, i8, uint8_t , uint8_t );
+LLM_NV_OP(add , +  , i16, i16, uint16_t, uint16_t);
+LLM_NV_OP(sub , -  , i16, i16, uint16_t, uint16_t);
+LLM_NV_OP(mul , *  , i16, i16, uint16_t, uint16_t);
+LLM_NV_OP(div , /  , i16, i16, uint16_t, uint16_t);
+LLM_NV_OP(rem , %  , i16, i16, uint16_t, uint16_t);
+LLM_NV_OP(and , &  , i16, i16, uint16_t, uint16_t);
+LLM_NV_OP(or  , |  , i16, i16, uint16_t, uint16_t);
+LLM_NV_OP(xor , ^  , i16, i16, uint16_t, uint16_t);
+LLM_NV_OP(eq  , == , i16, i16, uint16_t, uint16_t);
+LLM_NV_OP(ne  , != , i16, i16, uint16_t, uint16_t);
+LLM_NV_OP(lt  , <  , i16, i16, uint16_t, uint16_t);
+LLM_NV_OP(gt  , >  , i16, i16, uint16_t, uint16_t);
+LLM_NV_OP(lte , <= , i16, i16, uint16_t, uint16_t);
+LLM_NV_OP(gte , >= , i16, i16, uint16_t, uint16_t);
+LLM_NV_OP(add , +  , i32, i32, uint32_t, uint32_t);
+LLM_NV_OP(sub , -  , i32, i32, uint32_t, uint32_t);
+LLM_NV_OP(mul , *  , i32, i32, uint32_t, uint32_t);
+LLM_NV_OP(div , /  , i32, i32, uint32_t, uint32_t);
+LLM_NV_OP(rem , %  , i32, i32, uint32_t, uint32_t);
+LLM_NV_OP(and , &  , i32, i32, uint32_t, uint32_t);
+LLM_NV_OP(or  , |  , i32, i32, uint32_t, uint32_t);
+LLM_NV_OP(xor , ^  , i32, i32, uint32_t, uint32_t);
+LLM_NV_OP(eq  , == , i32, i32, uint32_t, uint32_t);
+LLM_NV_OP(ne  , != , i32, i32, uint32_t, uint32_t);
+LLM_NV_OP(lt  , <  , i32, i32, uint32_t, uint32_t);
+LLM_NV_OP(gt  , >  , i32, i32, uint32_t, uint32_t);
+LLM_NV_OP(lte , <= , i32, i32, uint32_t, uint32_t);
+LLM_NV_OP(gte , >= , i32, i32, uint32_t, uint32_t);
+LLM_NV_OP(add , +  , i64, i64, uint64_t, uint64_t);
+LLM_NV_OP(sub , -  , i64, i64, uint64_t, uint64_t);
+LLM_NV_OP(mul , *  , i64, i64, uint64_t, uint64_t);
+LLM_NV_OP(div , /  , i64, i64, uint64_t, uint64_t);
+LLM_NV_OP(rem , %  , i64, i64, uint64_t, uint64_t);
+LLM_NV_OP(and , &  , i64, i64, uint64_t, uint64_t);
+LLM_NV_OP(or  , |  , i64, i64, uint64_t, uint64_t);
+LLM_NV_OP(xor , ^  , i64, i64, uint64_t, uint64_t);
+LLM_NV_OP(eq  , == , i64, i64, uint64_t, uint64_t);
+LLM_NV_OP(ne  , != , i64, i64, uint64_t, uint64_t);
+LLM_NV_OP(lt  , <  , i64, i64, uint64_t, uint64_t);
+LLM_NV_OP(gt  , >  , i64, i64, uint64_t, uint64_t);
+LLM_NV_OP(lte , <= , i64, i64, uint64_t, uint64_t);
+LLM_NV_OP(gte , >= , i64, i64, uint64_t, uint64_t);
+LLM_NV_OP(add , +  , f32, f32, float   , float   );
+LLM_NV_OP(sub , -  , f32, f32, float   , float   );
+LLM_NV_OP(mul , *  , f32, f32, float   , float   );
+LLM_NV_OP(div , /  , f32, f32, float   , float   );
+// LLM_NV_OP(rem , %  , f32, f32, float   , float   );
+// LLM_NV_OP(and , &  , f32, f32, float   , float   );
+// LLM_NV_OP(or  , |  , f32, f32, float   , float   );
+// LLM_NV_OP(xor , ^  , f32, f32, float   , float   );
+LLM_NV_OP(eq  , == , f32, f32, float   , float   );
+LLM_NV_OP(ne  , != , f32, f32, float   , float   );
+LLM_NV_OP(lt  , <  , f32, f32, float   , float   );
+LLM_NV_OP(gt  , >  , f32, f32, float   , float   );
+LLM_NV_OP(lte , <= , f32, f32, float   , float   );
+LLM_NV_OP(gte , >= , f32, f32, float   , float   );
+LLM_NV_OP(add , +  , f64, f64, double  , double  );
+LLM_NV_OP(sub , -  , f64, f64, double  , double  );
+LLM_NV_OP(mul , *  , f64, f64, double  , double  );
+LLM_NV_OP(div , /  , f64, f64, double  , double  );
+// LLM_NV_OP(rem , %  , f64, f64, double  , double  );
+// LLM_NV_OP(and , &  , f64, f64, double  , double  );
+// LLM_NV_OP(or  , |  , f64, f64, double  , double  );
+// LLM_NV_OP(xor , ^  , f64, f64, double  , double  );
+LLM_NV_OP(eq  , == , f64, f64, double  , double  );
+LLM_NV_OP(ne  , != , f64, f64, double  , double  );
+LLM_NV_OP(lt  , <  , f64, f64, double  , double  );
+LLM_NV_OP(gt  , >  , f64, f64, double  , double  );
+LLM_NV_OP(lte , <= , f64, f64, double  , double  );
+LLM_NV_OP(gte , >= , f64, f64, double  , double  );
 
-// void lmm_ap1(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_zero(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_inc(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-//
-// void lmm_ap2(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_add(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_sub(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_mul(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_div(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_rem(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_eq(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_ne(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_lt(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_gt(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_lte(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_gte(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_min(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_max(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-//
-// void lmm_int(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_float(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_bool(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_not(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_and(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_or(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_xor(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-//
-// void lmm_fst(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
-// void lmm_snd(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2);
 
 
+
+
+
+// Tests
 
 int8_t my_succ_i8(ptr_t c, int8_t x)
 {
@@ -284,14 +361,14 @@ void test_vm_loop()
 {
   lmm_t vm = lmm_create();
 
-  lmm_alloc(vm, 16, 0);
-  lmm_alloc(vm, 16, 1);
-  lmm_alloc(vm, 16, 2);
+  lmm_alloc(vm, 8, 0);
+  lmm_alloc(vm, 8, 1);
+  lmm_alloc(vm, 8, 2);
   // lmm_alloc(vm, 16, 10);
   // lmm_alloc(vm, 16, 20);
 
-  lmm_set_i8(vm, 1, 0);
-  lmm_set_i8(vm, 0, 1);
+  lmm_set_i8(vm, 0x7, 0);
+  lmm_set_i8(vm, 0x8, 1);
 
   doremir_print_ln(lmm_show(vm));
 
