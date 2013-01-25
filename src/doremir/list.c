@@ -356,6 +356,7 @@ list_t merge(list_t xs, list_t ys)
     
     x = doremir_list_head(xs);
     y = doremir_list_head(ys);
+    
     if (doremir_less_than(x, y))
     {
       append_node(next, x);
@@ -378,7 +379,17 @@ list_t merge(list_t xs, list_t ys)
 }
 
 static inline
-list_t merge_sort(list_t xs)
+list_t dmerge(list_t xs, list_t ys)
+{
+  list_t res = merge(xs, ys);
+  doremir_list_destroy(xs);
+  doremir_list_destroy(ys);
+  return res;
+}
+
+
+static inline
+list_t dmerge_sort(list_t xs)
 {
   int len, mid;
   list_t left, right;
@@ -387,24 +398,24 @@ list_t merge_sort(list_t xs)
   mid = len / 2;
 
   if (len <= 1)
-    return doremir_list_copy(xs);
+    return xs;
 
   left  = doremir_list_take(mid, xs);
-  right = doremir_list_drop(mid, xs);
+  right = doremir_list_ddrop(mid, xs); // xs destroyed here
 
-  left  = merge_sort(left);   // TODO destroy
-  right = merge_sort(right);  // TODO destroy
+  left  = dmerge_sort(left);
+  right = dmerge_sort(right);
 
   if (doremir_less_than(doremir_list_last(left),
                         doremir_list_head(right)))
     return doremir_list_dappend(left, right);
   else
-    return merge(left, right); // TODO destroy
+    return dmerge(left, right);
 }
 
 list_t doremir_list_sort(list_t xs)
 {
-  return merge_sort(xs);
+  return dmerge_sort(doremir_list_copy(xs));
 }
 
 list_t doremir_list_dappend(list_t xs, list_t ys)
@@ -424,8 +435,7 @@ list_t doremir_list_dreverse(list_t xs)
 
 list_t doremir_list_dsort(list_t xs)
 {
-  list_t ys = merge_sort(xs);
-  doremir_list_destroy(xs);
+  list_t ys = dmerge_sort(xs);
   return ys;
 }
 
