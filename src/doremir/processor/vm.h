@@ -11,20 +11,29 @@
 /*
     Little Matrix Machine (LMM)
 
-    - Matrix registers: [0..2^10]
-        - By convention, we use the upper half (>= 32768) for loops.
-        - Size arguments are in bytes.
-        - Each matrix register contains a raw buffer
-            - Buffers are allocated using the alloc opcode. Max size is fixed unless they are
-              swapped, or alloc is called again.
-            - Using copy, split, ap1 or ap2 with a too small buffer will fail.
-            - All other opcodes use matrix arithmetic, truncating to the shortest argument size.
+    - Matrix registers: [0..2^10-1]
+
+    - Each matrix register contains a raw buffer of known size.
+
+        - Buffers are allocated using the alloc opcode. 
+
+            - Initially, all buffers have *max size* and *size* 0.
+            - Buffer *max size* is constant until swap, or alloc is called.
+            - Buffer *size* is affected by data ops as follows:
+                - Using copy, split, ap1 or ap2 with a too small buffer will
+                  fail.
+                - All other opcodes use vector arithmetic, truncating to the
+                  shortest argument size.
 
     - Convenience registers:
-        off step loops
+        off, step, loop
 
     - Instructions
-        - Unfolding operations stores result in second operand while folding operations (most) store in the first.
+        - Unfolding operations stores result in second operand while folding
+          operations (most) store in the first.
+
+        - Size arguments are in bytes.
+
 
         - Full table
             alloc         s r

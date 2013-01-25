@@ -18,6 +18,7 @@
 #define list_t              doremir_list_t
 #define set_t               doremir_set_t
 #define map_t               doremir_map_t
+#define graph_t             doremir_graph_t
 #define string_t            doremir_string_t
 #define atomic_t            doremir_atomic_t
 #define atomic_queue_t      doremir_atomic_queue_t

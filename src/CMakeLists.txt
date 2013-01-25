@@ -14,6 +14,7 @@ list(APPEND SRCS
   doremir/buffer.c
   doremir/list.c
   doremir/map.c
+  doremir/graph.c
   doremir/midi.c
   doremir/pair.c
   doremir/priority_queue.c

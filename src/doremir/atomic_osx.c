@@ -11,9 +11,11 @@
 
 #include <libkern/OSAtomic.h>
 
-/*
-    Strictly 32-bit for now
+/*  
+    Notes:
+      - Atomic values and ops are strictly 32-bit for now
  */
+
 struct _doremir_atomic_t {
   impl_t      impl;       //  Interface dispatcher
   ptr_t       value;      //  Memory block
