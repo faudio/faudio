@@ -49,6 +49,9 @@ Additions
 ==========
 Issues
 
+* Type-safe range(m..n) literal
+    * Current one requires map(cast) !
+
 * Normalize rationals before printing (but not otherwise)
 
 * Lisp frontend
