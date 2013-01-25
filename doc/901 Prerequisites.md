@@ -27,7 +27,7 @@ A compiler supporting the C99 standard is required. Currently tested are:
   * clang 3.1   or later (Apple call this compiler "4.0.0 based of SVN 3.1")
   * GCC   4.6.2 or later
   
-The default Windows compiler (Visual C/C++) is not well supported, then MinGW version of GCC is recommended.
+The default Windows compiler (Visual C/C++) is not well supported, the MinGW version of GCC is recommended.
 
 
 

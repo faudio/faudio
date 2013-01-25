@@ -1,23 +1,22 @@
 
-# Building {#BuildAndInstall}
+# Build and Install {#BuildAndInstall}
 
 @tableofcontents
 
-First ensure that your system meets the [platform](@ref Platform) requirements, and that the necessary
-[compiler](@ref Compiler) and [tools](@ref Tools) are available.
+# Basic build {#SourceCode}
 
-# Source code {#SourceCode}
+First ensure that your system meets the [platform](@ref Platform) requirements, and
+that the necessary [compiler](@ref Compiler) and [tools](@ref Tools) are available.
 
 The source code for the Audio Engine can be obtained by.
 
     $ git clone git@git.doremir.com/repositories/audio-engine.git
     $ cd audio-engine
 
-# A basic build {#Basic}
-
-After changing into the `audio-engine` directory, the `bootstrap` script should be run. This will create a
-standard out-of-source build in the `build` subdirectory. After a successful bootstrap, you can run `make help`
-to view build commands or `make` to perform the build.
+After changing into the `audio-engine` directory, the `bootstrap` script should be
+run. This will create a standard out-of-source build in the `build` subdirectory.
+After a successful bootstrap, you can run `make help` to view build commands or
+`make` to perform the build.
 
 All in all, the simplest possible build session looks like this:
 
@@ -26,21 +25,19 @@ All in all, the simplest possible build session looks like this:
     $ make test
 
 
-# Advanced build options {#Advanced}
+# Advanced build {#Advanced}
 
-## Dependencies {#Dependencies}
+## Building local dependencies {#Dependencies}
 
-The build scripts for the Audio Engine include a simple component manager that automatically downloads or builds
-the [required libraries](@ref Libraries). The package manager is invoked automatically by the bootstrap script.
-If you want to run it again, see the build commands on the form `component ...` below.
+The bootstrap script automatically downloads the [required libraries](@ref
+Libraries). You can also build libraries locally, using the component commands
+described below.
 
-Unfortunately the package manager (and CMake in general) *always prefer preinstalled libraries* (that is,
-libraries in `/usr/local`) to the managed libraries. This means that if you have any required library installed
-on your build machine, that version will be used instead. Currently the only solution is to temporarily
-uninstall the libraries.
+<!-- A caveat is that CMake tend to prefer libraries in system paths to libraries
+in your build directory. Currently the only solution is to temporarily uninstall
+the libraries. -->
 
-
-## Options {#Options}
+## Setting and inspecting options {#AdvOptions}
 
 Build options can be changed using any CMake tool, such as `cmake-gui` or `ccmake`.
 
@@ -48,17 +45,30 @@ You can also change a build setting on the command line.
 
     $ cmake build -DMY_SETTING=0
 
-### Using a separate build directory {#BuildDir}
+## Using a separate build directory {#BuildDir}
 
-If you use `ccmake` or `cmake-gui` you should run them on the `build` directory, which is the default build
-directory created by the bootstrap script.
+If you use `ccmake` or `cmake-gui` you should run them on the `build` directory,
+which is the default build directory created by the bootstrap script.
 
-If you want to use another build directory, i.e. for maintaining multiple builds of the same source, you can
-rerun the bootstrap script passing the `BUILD_DIRECTORY` flag.
+If you want to use another build directory, i.e. for maintaining multiple builds of
+the same source, you can rerun the bootstrap script passing the `BUILD_DIRECTORY`
+flag.
 
     $ BUILD_DIRECTORY=my_build_dir ./boostrap
 
-### Overview of options {#Overview}
+
+# Running and testing {#Running}
+
+TODO
+
+# Distributing the build {#Distributing}
+
+TODO
+
+
+# Reference {#BuildRef}
+
+## Options {#BuildOptions}
 
 Name                      | Description
 --------------------------|-----------------------------------------
@@ -77,47 +87,40 @@ BUILD_COMPONENTS          | Build dependent components locally
 SHOW_COMPONENT_OUTPUT     | Show output while building components
 
 
-## Commands {#Commands}
+## Commands {#BuildCommands}
 
-The build commands should always be run from the top directory. They will delegate to the `build` directory by
-default. You can use the `BUILD_DIRECTORY` flag to override.
-
-### Running the test suite {#Test}
+The build commands should always be run from the top directory. They will delegate
+to the `build` directory by default. You can use the `BUILD_DIRECTORY` flag to
+override.
 
     make test
 
-This command builds and runs the standard test suite. This may take several minutes to complete.
-
-### Building the language bindings {#Bindings}
+This command builds and runs the standard test suite. This may take several minutes
+to complete.
 
     make bindings
 
 This command builds the external language bindings in the `bindings/` subdirectory.
 
-### Building the documentation {#Docs}
-
     make doc
 
-This command builds documentation in the `doc/build` subdirectory. By default both HTML and PDF files are produced.
-
-### Distributing the Audio Engine
+This command builds documentation in the `doc/build` subdirectory. By default both
+HTML and PDF files are produced.
 
     make dist
 
 This command uploads the current build to the DoReMIR package server.
 
-### Resolving dependencies {#ComponentsDownload}
-
     make components_resolve
 
-This command downloads all dependencies of the Audio Engine from the DoReMIR package server *or* builds them
-locally, depending on the current build options. Usually this command is carried out by the bootstrap script.
-Using `components_resolve` when the local dependencies are already in place has no effect.
-
-### Removing dependencies {#ComponentsClean}
+This command downloads all dependencies of the Audio Engine from the DoReMIR
+package server *or* builds them locally, depending on the current build options.
+Usually this command is carried out by the bootstrap script. Using
+`components_resolve` when the local dependencies are already in place has no
+effect.
 
     make components_clean
 
-This command removes all local dependencies. After this the `components_resolve` command can be used again.
-
+This command removes all local dependencies. After this the `components_resolve`
+command can be used again.
 
