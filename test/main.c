@@ -15,6 +15,7 @@ void test_section()
 }
 
 
+extern char *doremir_type_str(doremir_ptr_t a);
 void test_wrap()
 {
   test_section();
