@@ -124,7 +124,7 @@ void delete_list(list_t list)
 
 /** Iterate over the nodes of a list. The variable var will be a node_t referencing
     the node in the following block.
-    
+
     impl_for_each_node(my_list, node)
         doremir_print("%s\n", &node);
 
@@ -133,7 +133,7 @@ void delete_list(list_t list)
   for(node_t _n = list->node; _n; _n = _n->next) \
       doremir_let(var, _n)
 
-/** 
+/**
     Iterate over the elements of a list. The variable var will be a ptr_t
     referencing the value in the following block.
 
@@ -149,8 +149,8 @@ void delete_list(list_t list)
     doremir_let(var, _n->value)
 
 /** The begin_node, append_node and prepend_node macros can be used to construct
-    a list in place. 
-    
+    a list in place.
+
     For example:
 
         begin_node(node, next);
@@ -767,6 +767,7 @@ bool list_equal(ptr_t a, ptr_t b)
     if (!doremir_equal(an->value, bn->value)) {
       return false;
     }
+
     an = an->next;
     bn = bn->next;
   }
@@ -787,6 +788,7 @@ bool list_less_than(ptr_t a, ptr_t b)
     if (doremir_greater_than(an->value, bn->value)) {
       return false;
     }
+
     an = an->next;
     bn = bn->next;
   }
@@ -803,9 +805,11 @@ bool list_greater_than(ptr_t a, ptr_t b)
     if (doremir_greater_than(an->value, bn->value)) {
       return true;
     }
+
     if (doremir_less_than(an->value, bn->value)) {
       return false;
     }
+
     an = an->next;
     bn = bn->next;
   }
@@ -819,6 +823,7 @@ doremir_string_t list_show(ptr_t xs)
   node_t   xn = ((list_t) xs)->node;
 
   s = string_dappend(s, string("]"));
+
   while (xn) {
     s = string_dappend(s, doremir_string_show(xn->value));
     xn = xn->next;
@@ -827,6 +832,7 @@ doremir_string_t list_show(ptr_t xs)
       s = string_dappend(s, string(","));
     }
   };
+
   s = string_dappend(s, string("]"));
 
   return s;

@@ -17,8 +17,8 @@ struct _doremir_midi_t {
   impl_t                  impl;           //  Interface dispatcher
   bool                    is_sysex;       //  Whether it is a sysex message
   union {                                 //  Status and data
-    uint8_t             simple[3];
-    doremir_buffer_t    sysex;
+    uint8_t               simple[3];
+    doremir_buffer_t      sysex;
   } data;
 };
 
@@ -158,17 +158,49 @@ doremir_buffer_t doremir_midi_sysex_data(doremir_midi_t midi)
 
 bool midi_equal(doremir_ptr_t a, doremir_ptr_t b)
 {
-  assert(false && "Not implemented.");
+  midi_t midi1 = (midi_t) a;
+  midi_t midi2 = (midi_t) b;
+
+  if (midi1->is_sysex != midi2->is_sysex)
+    return false;
+
+  if (!midi1->is_sysex) {
+    return memcmp(&midi1->data.simple, &midi2->data.simple, 3) == 0;
+  } else {
+    return doremir_equal(midi1->data.sysex, midi2->data.sysex);
+  }
 }
+
+// Note: We assume simple < sysex
 
 bool midi_less_than(doremir_ptr_t a, doremir_ptr_t b)
 {
-  assert(false && "Not implemented.");
+  midi_t midi1 = (midi_t) a;
+  midi_t midi2 = (midi_t) b;
+
+  if (midi1->is_sysex != midi2->is_sysex)
+    return midi1->is_sysex; 
+
+  if (!midi1->is_sysex) {
+    return memcmp(&midi1->data.simple, &midi2->data.simple, 3) < 0;
+  } else {
+    return doremir_less_than(midi1->data.sysex, midi2->data.sysex);
+  }
 }
 
 bool midi_greater_than(doremir_ptr_t a, doremir_ptr_t b)
 {
-  assert(false && "Not implemented.");
+  midi_t midi1 = (midi_t) a;
+  midi_t midi2 = (midi_t) b;
+
+  if (midi1->is_sysex != midi2->is_sysex)
+    return midi2->is_sysex; 
+
+  if (!midi1->is_sysex) {
+    return memcmp(&midi1->data.simple, &midi2->data.simple, 3) > 0;
+  } else {
+    return doremir_greater_than(midi1->data.sysex, midi2->data.sysex);
+  }
 }
 
 doremir_string_t midi_show(doremir_ptr_t a)
