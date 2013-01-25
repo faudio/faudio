@@ -113,6 +113,7 @@ void doremir_priority_queue_insert(ptr_t value, queue_t queue)
   queue->node = merge(queue->node, new_node(value, NULL, NULL));
 }
 
+// FIXME return Optional?
 ptr_t doremir_priority_queue_peek(queue_t queue)
 {
   node_t head = queue->node;

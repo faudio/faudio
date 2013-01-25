@@ -64,6 +64,7 @@ void doremir_device_audio_terminate()
 
 static void fatal(char *msg, int error);
 
+// FIXME return Optional?
 session_t doremir_device_audio_begin_session()
 {
   if (!pa_mutex) {
@@ -118,6 +119,7 @@ doremir_list_t doremir_device_audio_all(session_t session)
   assert(false && "Not implemented");
 }
 
+// FIXME return Optional?
 doremir_pair_t doremir_device_audio_default(session_t session)
 {
   assert(false && "Not implemented");
@@ -152,6 +154,7 @@ doremir_pair_t doremir_device_audio_channels(device_t device)
 
 // --------------------------------------------------------------------------------
 
+// FIXME return Optional?
 stream_t doremir_device_audio_start_stream(device_t    input,
     processor_t processor,
     device_t    output)

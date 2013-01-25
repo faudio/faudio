@@ -84,6 +84,7 @@ bool doremir_atomic_stack_write(doremir_atomic_stack_t stack, doremir_ptr_t valu
   return true;
 }
 
+// FIXME return Optional?
 doremir_ptr_t doremir_atomic_stack_read(doremir_atomic_stack_t stack)
 {
   // TODO

@@ -139,6 +139,7 @@ bool doremir_atomic_queue_write(doremir_atomic_queue_t queue, doremir_ptr_t valu
   return true;
 }
 
+// FIXME return Optional?
 doremir_ptr_t doremir_atomic_queue_read(doremir_atomic_queue_t queue)
 {
   ptr_t value;

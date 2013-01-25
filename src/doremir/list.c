@@ -475,6 +475,7 @@ list_t doremir_list_drop(int n, list_t xs)
   return doremir_list_ddrop(n - 1, doremir_list_tail(xs));
 }
 
+// FIXME return Optional?
 ptr_t doremir_list_index(int n, list_t xs)
 {
   int i = 0;
@@ -597,6 +598,7 @@ int doremir_list_index_of(ptr_t value, list_t list)
   return -(index + 1);
 }
 
+// FIXME return Optional?
 ptr_t doremir_list_find(pred_t pred, ptr_t data, list_t list)
 {
   impl_for_each(list, elem) {

@@ -220,55 +220,55 @@ list_t doremir_list_ddrop(int end, doremir_list_t list) {}
  */
 doremir_ptr_t doremir_list_index(int end, doremir_list_t list) {}
 
-/** Return 
+/** Return the given range of the given list.
     @note
         O(n)
  */
 doremir_list_t doremir_list_range(int begin, int end, doremir_list_t list) {}
 
-/** Return 
+/** Insert the given element into the given list.
     @note
         O(n)
  */
 doremir_list_t doremir_list_insert(int index, doremir_ptr_t value, doremir_list_t list) {}
 
-/** Return 
+/** Insert the given element into the given list.
     @note
         O(n)
  */
 doremir_list_t doremir_list_dinsert(int begin, doremir_ptr_t x, doremir_list_t list) {}
 
-/** Return 
+/** Insert the given range into the given list.
     @note
         O(n)
  */
 doremir_list_t doremir_list_insert_range(int begin, doremir_list_t list, doremir_list_t list2) {}
                                          
-/** Return 
+/** Insert the given range into the given list.
     @note
         O(n)
  */
 doremir_list_t doremir_list_dinsert_range(int begin, doremir_list_t list, doremir_list_t list2) {}
 
-/** Return 
+/** Remove the given element from the given list.
     @note
         O(n)
  */
 doremir_list_t doremir_list_remove(int begin, doremir_list_t list) {}
 
-/** Return 
+/** Remove the given element from the given list.
     @note
         O(n)
  */
 doremir_list_t doremir_list_dremove(int begin, doremir_list_t list) {}
 
-/** Return 
+/** Remove the given range from the given list.
     @note
         O(n)
  */
 doremir_list_t doremir_list_remove_range(int begin, int end, doremir_list_t list) {}
 
-/** Return 
+/** Remove the given range from the given list.
     @note
         O(n)
  */
