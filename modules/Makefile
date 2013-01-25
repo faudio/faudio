@@ -21,6 +21,7 @@ c:
 	modulo -Mmodules --language=c    <modules/Doremir/Set.module    		>include/doremir/set.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Pair.module    		>include/doremir/pair.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Map.module    		>include/doremir/map.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/Graph.module    		>include/doremir/graph.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/PriorityQueue.module		>include/doremir/priority_queue.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Midi.module    		>include/doremir/midi.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Time.module    		>include/doremir/time.h && \
@@ -66,6 +67,7 @@ lisp:
 	modulo -Mmodules --language=lisp <modules/Doremir/Set.module    		>bindings/lisp/doremir/set.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Pair.module    		>bindings/lisp/doremir/pair.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Map.module    		>bindings/lisp/doremir/map.lisp && \
+	modulo -Mmodules --language=lisp <modules/Doremir/Graph.module    		>bindings/lisp/doremir/graph.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/PriorityQueue.module		>bindings/lisp/doremir/priority-queue.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Midi.module    		>bindings/lisp/doremir/midi.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Time.module    		>bindings/lisp/doremir/time.lisp && \
