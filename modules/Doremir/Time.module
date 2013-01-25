@@ -51,4 +51,13 @@ module Doremir.Time
     divisions   : Time -> Ratio;
 
     toIso : Time -> String;
+
+    // System time introspection
+    type SystemTime = opaque; 
+    type SystemClock = opaque; 
+    fromSystemTime : SystemTime -> Time;
+    fromSystemClock : SystemClock -> Time;
+    systemTime  : () -> SystemTime;
+    systemClock : () -> SystemClock;
+
 }

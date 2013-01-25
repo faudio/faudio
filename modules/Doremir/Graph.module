@@ -62,6 +62,6 @@ module Doremir.Graph
     // directPredOf     : (Node, Node, Graph) -> Bool;
 
     // Conversions   
-    fromList         : Pair -> Graph;   // [(e,(n,n))]
+    fromList         : List -> Graph;   // [(e,(n,n))]
     toList           : Graph -> List;   // [(e,(n,n))]
 }

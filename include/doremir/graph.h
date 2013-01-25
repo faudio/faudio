@@ -31,7 +31,7 @@ doremir_graph_t doremir_graph_connect(doremir_graph_edge_t,
 doremir_graph_t doremir_graph_disconnect(doremir_graph_node_t,
                                          doremir_graph_node_t,
                                          doremir_graph_t);
-doremir_graph_t doremir_graph_from_list(doremir_pair_t);
+doremir_graph_t doremir_graph_from_list(doremir_list_t);
 doremir_list_t doremir_graph_to_list(doremir_graph_t);
 
 /** @}

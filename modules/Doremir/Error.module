@@ -1,0 +1,34 @@
+
+/**
+    @addtogroup DoremirError
+    
+    Error handling types and functions.
+ */                                             
+ 
+ module Doremir.Error
+{
+    import Doremir;
+    import Doremir.String;
+
+    type Category = enum {
+        Info, Warning, Error, Misc
+    };
+
+    /** @interface doremir_error_t
+        Error interface.
+    */
+    type Error  = struct {
+        severity : (Ptr -> Category)*,
+        message : (Ptr -> String)*,
+        origin : (Ptr -> String)*
+    };    
+
+    severity : Ptr -> Category;
+    message : Ptr -> String;
+    origin : Ptr -> String;
+
+    check : Ptr -> Bool;
+
+    // First param is context (ignored), second is error
+    log : (Ptr,Ptr) -> Void; // Pass to global logger now
+}

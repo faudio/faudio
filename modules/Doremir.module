@@ -17,6 +17,8 @@ module Doremir
         Generic pointer type.
     */
     type Ptr = Void*;
+    
+    // Function types
 
     /** @typedef doremir_nullary_t
         A nullary function.                                             
@@ -76,92 +78,6 @@ module Doremir
     type Char32 = UInt32;    
 
 
-    // Interfaces
-    
-    /** @typedef doremir_id_t
-        Unique identifier. Only used for interface lookup at the moment.
-    */
-    type Id = Int64;
-
-    /** @typedef doremir_impl_t
-        Callback to lookup an interface implementation.
-    */
-    type Impl = (Id -> Ptr)*;
-
-    interface : (Id, Ptr) -> Ptr;
-
-
-    // Interfaces
-
-    /** @interface doremir_equal_t
-        Equality comparison interface.
-    */
-    type Equal   = struct {
-        equal : ((Ptr, Ptr) -> Bool)*
-    };
-
-    /** @interface doremir_order_t 
-        Less-than comparison interface.
-    */
-    type Order  = struct {
-        lessThan    : ((Ptr, Ptr) -> Bool)*,
-        greaterThan : ((Ptr, Ptr) -> Bool)*
-    };
-    
-    /** @interface doremir_copy_t
-        Generic copying interface.
-    */
-    type Copy   = struct {
-        copy : (Ptr -> Ptr)*
-    };
-
-    /** @interface doremir_destroy_t
-        Generic destruction interface.
-    */
-    type Destroy   = struct {
-        destroy : (Ptr -> Void)*
-    };
-
-    /** @interface doremir_number_t 
-        Arithmetic operations interface.
-    */
-    type Number = struct {
-        add      : ((Ptr, Ptr) -> Ptr)*,
-        subtract : ((Ptr, Ptr) -> Ptr)*,
-        multiply : ((Ptr, Ptr) -> Ptr)*,
-        divide   : ((Ptr, Ptr) -> Ptr)*,
-        absolute : (Ptr -> Ptr)*
-    };
-    
-    equal            : (Ptr, Ptr) -> Bool;
-    notEqual         : (Ptr, Ptr) -> Bool;
-    lessThan         : (Ptr, Ptr) -> Bool;
-    greaterThan      : (Ptr, Ptr) -> Bool;
-    lessThanEqual    : (Ptr, Ptr) -> Bool;
-    greaterThanEqual : (Ptr, Ptr) -> Bool;
-    min              : (Ptr, Ptr) -> Ptr;
-    max              : (Ptr, Ptr) -> Ptr;
-    
-    add         : (Ptr, Ptr) -> Ptr;
-    subtract    : (Ptr, Ptr) -> Ptr;
-    multiply    : (Ptr, Ptr) -> Ptr;
-    divide      : (Ptr, Ptr) -> Ptr;
-    // modulo      : (Ptr, Ptr) -> Ptr;
-    absolute    : Ptr -> Ptr;
-
-    copy    : Ptr -> Ptr;
-    move    : Ptr -> Ptr;
-    destroy : Ptr -> Void;
-
-    print    : (Char*,Ptr) -> Void;
-    dprint   : (Char*,Ptr) -> Void;
-    printLn  : Ptr -> Void;
-    dprintLn : Ptr -> Void;
-
-    // TODO remove this?
-    typeStr : Ptr -> Char*;
-    
-    
     // Type predicates and conversions
     
     isBool     : Ptr -> Bool;
@@ -195,5 +111,87 @@ module Doremir
     fromInt32  : Int32 -> Ptr;
     fromInt64  : Int64 -> Ptr;
     fromFloat  : Float -> Ptr;
-    fromDouble : Double -> Ptr;    
+    fromDouble : Double -> Ptr;
+    
+    // Interface dispatcher
+    
+    /** @typedef doremir_id_t
+        Unique identifier. Only used for interface lookup at the moment.
+    */
+    type Id = Int64;
+
+    /** @typedef doremir_impl_t
+        Callback to lookup an interface implementation.
+    */
+    type Impl = (Id -> Ptr)*;
+
+    interface : (Id, Ptr) -> Ptr;
+
+
+    // Interfaces
+
+    /** @interface doremir_equal_t
+        Equality comparison interface.
+    */
+    type Equal   = struct {
+        equal : ((Ptr, Ptr) -> Bool)*
+    };
+
+    equal            : (Ptr, Ptr) -> Bool;
+    notEqual         : (Ptr, Ptr) -> Bool;
+
+    /** @interface doremir_order_t 
+        Less-than comparison interface.
+    */
+    type Order  = struct {
+        lessThan    : ((Ptr, Ptr) -> Bool)*,
+        greaterThan : ((Ptr, Ptr) -> Bool)*
+    };
+    
+    lessThan         : (Ptr, Ptr) -> Bool;
+    greaterThan      : (Ptr, Ptr) -> Bool;
+    lessThanEqual    : (Ptr, Ptr) -> Bool;
+    greaterThanEqual : (Ptr, Ptr) -> Bool;
+    min              : (Ptr, Ptr) -> Ptr;
+    max              : (Ptr, Ptr) -> Ptr;
+    
+    /** @interface doremir_number_t 
+        Arithmetic operations interface.
+    */
+    type Number = struct {
+        add      : ((Ptr, Ptr) -> Ptr)*,
+        subtract : ((Ptr, Ptr) -> Ptr)*,
+        multiply : ((Ptr, Ptr) -> Ptr)*,
+        divide   : ((Ptr, Ptr) -> Ptr)*,
+        absolute : (Ptr -> Ptr)*
+    };
+
+    add         : (Ptr, Ptr) -> Ptr;
+    subtract    : (Ptr, Ptr) -> Ptr;
+    multiply    : (Ptr, Ptr) -> Ptr;
+    divide      : (Ptr, Ptr) -> Ptr;
+    absolute    : Ptr -> Ptr;
+
+    /** @interface doremir_copy_t
+        Generic copying interface.
+    */
+    type Copy   = struct {
+        copy : (Ptr -> Ptr)*
+    };
+
+    /** @interface doremir_destroy_t
+        Generic destruction interface.
+    */
+    type Destroy   = struct {
+        destroy : (Ptr -> Void)*
+    };
+
+    copy    : Ptr -> Ptr;
+    move    : Ptr -> Ptr;
+    destroy : Ptr -> Void;
+
+    check   : Ptr -> Bool;
+    
+    print    : (Char*,Ptr) -> Void;
+    dprint   : (Char*,Ptr) -> Void;    
 }

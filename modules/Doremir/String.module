@@ -96,28 +96,6 @@ module Doremir.String
         fromJson : (String -> Ptr)*
     };
 
-
-                                   
-    type Severity = enum {
-        Warning, Error
-    };
-
-    /** @interface doremir_string_error_t
-        Error interface.
-    */
-    type Error  = struct {
-        severity : (Ptr -> Severity)*,
-        message : (Ptr -> String)*,
-        origin : (Ptr -> String)*
-    };
-
-    // fail if it is a fatal error
-    // return true if it is a non-fatal error
-    check : Ptr -> Bool;
-
-
-
-
     show   : Ptr -> String;
 
 }

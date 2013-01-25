@@ -64,7 +64,7 @@ module Doremir.Map
 
     // Conversions   
     fromPair         : Pair -> Map;
-    fromList         : Pair -> Map;
+    fromList         : List -> Map;
     toList           : Map -> List;
 
 }
