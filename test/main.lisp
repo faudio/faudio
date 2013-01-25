@@ -142,7 +142,13 @@
 ; (list-filter (lambda (x) t) x)
 ; (list-map (lambda (x) (+ 1 x)) x)
 ; (list-fold-left (lambda (x y) (+ x y) nil 0 x)
-; (list-concat x)
+
+
+(list-concat (list-empty))
+(list-concat (list-single (list-single 1)))
+
+(list-single (list-single 1))
+
 (cl:print x)
 (list-destroy x)
 
