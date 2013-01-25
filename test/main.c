@@ -1120,18 +1120,18 @@ int main(int argc, char const *argv[])
     test_for_each();
 
     test_list();
-    // test_set();
-    // test_map();
+    test_set();
+    test_map();
     // error
     // json
 
     // test_processors();
 
     // dispatchers
-    // test_priority_queue(10);
+    test_priority_queue(10);
     // schedulers
 
-    // test_vm2();
+    test_vm2();
 
     doremir_audio_engine_terminate();
   }

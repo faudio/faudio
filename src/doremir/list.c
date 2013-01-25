@@ -122,41 +122,43 @@ void delete_list(list_t list)
   doremir_delete(list);
 }
 
-/** Iterate over the nodes of a list. The variable
-    var will be a node_t referencing the node in
-    the following block.
-
+/** Iterate over the nodes of a list. The variable var will be a node_t referencing
+    the node in the following block.
+    
     impl_for_each_node(my_list, node)
         doremir_print("%s\n", &node);
 
  */
 #define impl_for_each_node(list, var) \
-    for(node_t _n = list->node; _n; _n = _n->next) \
-        doremir_let(var, _n)
+  for(node_t _n = list->node; _n; _n = _n->next) \
+      doremir_let(var, _n)
 
-/** Iterate over the elements of a list. The variable
-    var will be a ptr_t referencing the value in
-    the following block.
+/** 
+    Iterate over the elements of a list. The variable var will be a ptr_t
+    referencing the value in the following block.
+
+    This macro is independent from the foreach in <doremir/utils.h>, which should
+    not be used in this file.
 
     impl_for_each_node(my_list, value)
         doremir_print("%s\n", value);
 
  */
 #define impl_for_each(list, var) \
-    for(node_t _n = list->node; _n; _n = _n->next) \
-        doremir_let(var, _n->value)
+  for(node_t _n = list->node; _n; _n = _n->next) \
+    doremir_let(var, _n->value)
 
-#define begin_node(var, next) \
-    node_t var = NULL, *next = &var
-
-/** Allocate a new node in the given place, then update
-    the place to refer to the the its next pointer.
-
-    This can be used to construct a list in place, like
+/** The begin_node, append_node and prepend_node macros can be used to construct
+    a list in place. 
+    
+    For example:
 
         begin_node(node, next);
         while (...)
+          if (...)
             append_node(next, value);
+          else
+            prepend_node(next, value);
 
     @param place
         A node_t pointer.
@@ -164,16 +166,20 @@ void delete_list(list_t list)
         Value to add.
 
  */
+
+#define begin_node(var, next) \
+  node_t var = NULL, *next = &var
+
 #define append_node(place, value) \
-    do {                                    \
-        *place = new_node(value, NULL);     \
-        place = &(*place)->next;            \
-    } while (0)
+  do {                                      \
+    *place = new_node(value, NULL);         \
+    place = &(*place)->next;                \
+  } while (0)
 
 #define prepend_node(place, value) \
-    do {                                    \
-        *place = new_node(value, *place);   \
-    } while (0)
+  do {                                      \
+    *place = new_node(value, *place);       \
+  } while (0)
 
 
 // --------------------------------------------------------------------------------
@@ -350,30 +356,29 @@ static inline
 list_t merge(list_t xs, list_t ys)
 {
   begin_node(node, next);
-  while (!doremir_list_is_empty(xs) && !doremir_list_is_empty(ys))
-  {
+
+  while (!doremir_list_is_empty(xs) && !doremir_list_is_empty(ys)) {
     ptr_t x, y;
-    
+
     x = doremir_list_head(xs);
     y = doremir_list_head(ys);
-    
-    if (doremir_less_than(x, y))
-    {
+
+    if (doremir_less_than(x, y)) {
       append_node(next, x);
       xs = doremir_list_tail(xs);
-    }
-    else
-    {
+    } else {
       append_node(next, y);
       ys = doremir_list_tail(ys);
     }
   }
 
-  if (!doremir_list_is_empty(xs))
+  if (!doremir_list_is_empty(xs)) {
     return doremir_list_append(new_list(node), xs);
+  }
 
-  if (!doremir_list_is_empty(ys))
+  if (!doremir_list_is_empty(ys)) {
     return doremir_list_append(new_list(node), ys);
+  }
 
   return new_list(node);
 }
@@ -397,8 +402,9 @@ list_t dmerge_sort(list_t xs)
   len = doremir_list_length(xs);
   mid = len / 2;
 
-  if (len <= 1)
+  if (len <= 1) {
     return xs;
+  }
 
   left  = doremir_list_take(mid, xs);
   right = doremir_list_ddrop(mid, xs); // xs destroyed here
@@ -407,10 +413,11 @@ list_t dmerge_sort(list_t xs)
   right = dmerge_sort(right);
 
   if (doremir_less_than(doremir_list_last(left),
-                        doremir_list_head(right)))
+                        doremir_list_head(right))) {
     return doremir_list_dappend(left, right);
-  else
+  } else {
     return dmerge(left, right);
+  }
 }
 
 list_t doremir_list_sort(list_t xs)
@@ -638,6 +645,8 @@ list_t doremir_list_filter(pred_t pred, ptr_t data, list_t list)
   return new_list(node);
 }
 
+// TODO should we rely on tilted folds?
+// Use foldMap etc instead?
 ptr_t doremir_list_fold_left(binary_t func, ptr_t data, ptr_t init, list_t list)
 {
   ptr_t value = init;
@@ -651,7 +660,7 @@ list_t doremir_list_concat(list_t list)
 {
   list_t result = empty();
   impl_for_each(list, elem) {
-    result    = doremir_list_dappend(result, doremir_list_copy(elem));
+    result = doremir_list_dappend(result, doremir_list_copy(elem));
   }
   return result;
 }
@@ -706,7 +715,7 @@ list_t doremir_list_dconcat_map(unary_t f, ptr_t d, list_t xs)
         list in \ref doremir/util.h
  */
 list_t doremir_list(int count, ...)
-{  
+{
   va_list args;
   va_start(args, count);
   begin_node(node, next);
@@ -758,7 +767,6 @@ bool list_equal(ptr_t a, ptr_t b)
     if (!doremir_equal(an->value, bn->value)) {
       return false;
     }
-
     an = an->next;
     bn = bn->next;
   }
@@ -779,7 +787,6 @@ bool list_less_than(ptr_t a, ptr_t b)
     if (doremir_greater_than(an->value, bn->value)) {
       return false;
     }
-
     an = an->next;
     bn = bn->next;
   }
@@ -796,11 +803,9 @@ bool list_greater_than(ptr_t a, ptr_t b)
     if (doremir_greater_than(an->value, bn->value)) {
       return true;
     }
-
     if (doremir_less_than(an->value, bn->value)) {
       return false;
     }
-
     an = an->next;
     bn = bn->next;
   }
@@ -810,9 +815,10 @@ bool list_greater_than(ptr_t a, ptr_t b)
 
 doremir_string_t list_show(ptr_t xs)
 {
-  string_t s  = string("[");
+  string_t s  = string("");
   node_t   xn = ((list_t) xs)->node;
 
+  s = string_dappend(s, string("]"));
   while (xn) {
     s = string_dappend(s, doremir_string_show(xn->value));
     xn = xn->next;
@@ -821,7 +827,6 @@ doremir_string_t list_show(ptr_t xs)
       s = string_dappend(s, string(","));
     }
   };
-
   s = string_dappend(s, string("]"));
 
   return s;
