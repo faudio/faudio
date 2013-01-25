@@ -292,11 +292,6 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Processor
-
-; TODO combine defcallback/unary/binary into single macro
-; i.e. define-processor
-
 (defcallback add-i8 :char ((c ptr) (x :char))
   (declare (ignore c))
   (+ x 1))
@@ -311,6 +306,13 @@
 (setf x (unary :f32 :f32 (callback add-f32) nil))
 (setf x (binary :i8 :i8 :i8 (callback add-i8-i8) nil))
 (setf y x)
+
+; ---------------------------------------------------------------------------------------------------
+
+; Processor
+
+; TODO combine defcallback/unary/binary into single macro
+; i.e. define-processor
 
 (type-offset-of 256 (input-type x))
 (output-type x)
@@ -380,6 +382,90 @@
 (setf x (processor-floor i))
 (setf x (processor-ceil i))
 (setf x (processor-rint i))
+
+
+; ---------------------------------------------------------------------------------------------------
+
+; Signals
+
+(type-offset-of 256 (signal-type x))
+(signal-type x)
+
+(setf x (constant :i8 1))
+(setf x (apply (id :i8) x))
+(setf x (apply (constant :i16 :i8 0)))
+
+(let* (
+  (input x)
+  (freq x)
+  (gain x)
+  )
+  output
+  )
+
+(let* 
+  ((input x))      
+  (feedback 
+    delay 
+    (+ input delay))
+  ) 
+
+; ==>  
+(let* 
+  ((input x))      
+  (let* (
+     (#fb# (signal-loop-create))
+     (delay (loop-input #fb#))
+    ) 
+     (loop-output #fb# (+ input delay))
+    )
+  ) 
+
+
+
+; TODO short names
+(setf x (add x y))
+(setf x (subtract x y))
+(setf x (multiply x y))
+(setf x (power x y))
+(setf x (divide x y))
+(setf x (modulo x y))
+(setf x (absolute x y))
+(setf x (not x y))
+(setf x (and x y))
+(setf x (or x y))
+(setf x (xor x y))
+(setf x (bit x y))
+(setf x (bit x y))
+(setf x (bit x y))
+(setf x (bit x y))
+(setf x (shift x y))
+(setf x (shift x y))
+(setf x (equal x y))
+(setf x (less-than x y))
+(setf x (greater-than x y))
+(setf x (less-than-equal x y))
+(setf x (greater-than-equal x y))
+(setf x (acos x y))
+(setf x (asin x y))
+(setf x (atan x y))
+(setf x (cos x y))
+(setf x (sin x y))
+(setf x (tan x y))
+(setf x (exp x y))
+(setf x (log x y))
+(setf x (log10 x y))
+(setf x (pow x y))
+(setf x (sqrt x y))
+(setf x (abs x y))
+(setf x (min x y))
+(setf x (max x y))
+(setf x (fmod x y))
+(setf x (remainder x y))
+(setf x (floor x y))
+(setf x (ceil x y))
+(setf x (rint x y))
+
 
 
 ; ---------------------------------------------------------------------------------------------------
