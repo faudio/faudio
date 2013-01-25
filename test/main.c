@@ -540,6 +540,13 @@ ptr_t call2(ptr_t f, ptr_t x, ptr_t y)
   unary_t g = f;
   return g(x, y);
 }
+
+// x = [x,x]
+ptr_t test_list_dup(ptr_t ct, ptr_t x)
+{
+  return list(x, x);
+}
+
 void test_list()
 {
   test_section();
@@ -777,6 +784,7 @@ void test_list()
     doremir_destroy(xs);
     doremir_destroy(ys);
   }
+
   {
     printf("\n");
 
@@ -790,7 +798,34 @@ void test_list()
     doremir_destroy(ys);
   }
 
-  // concatMap
+  {
+    printf("\n");
+
+    list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+    list_t ys = list(i16(66), i16(77));
+    list_t zss = list(xs, ys, xs);
+
+    doremir_print("[xs,ys]                      ==> %s\n", zss);
+    doremir_print("concat([xs,ys])              ==> %s\n", doremir_list_concat(zss));
+
+    doremir_destroy(xs);
+    doremir_destroy(ys);
+  }
+
+
+  {
+    printf("\n");
+
+    list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+    list_t ys = doremir_list_concat_map(test_list_dup, 0, xs);
+
+    doremir_print("xs                           ==> %s\n", xs);
+    doremir_print("concatMap(\\x -> [x,x])       ==> %s\n", ys);
+
+    doremir_destroy(xs);
+    doremir_destroy(ys);
+  }
+
 
   {
     printf("\n");
@@ -1070,18 +1105,18 @@ int main(int argc, char const *argv[])
     test_for_each();
 
     test_list();
-    test_set();
-    test_map();
+    // test_set();
+    // test_map();
     // error
     // json
 
-    test_processors();
+    // test_processors();
 
     // dispatchers
-    test_priority_queue(10);
+    // test_priority_queue(10);
     // schedulers
 
-    test_vm2();
+    // test_vm2();
 
     doremir_audio_engine_terminate();
   }

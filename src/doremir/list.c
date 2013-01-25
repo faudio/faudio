@@ -35,7 +35,7 @@ struct _doremir_list_t {
   node_t          node;       //  Top-level node
 };
 
-static int dbNodes = 0;
+// static int dbNodes = 0;
 void db_node_alloc()
 {
   // dbNodes++;
@@ -590,7 +590,11 @@ ptr_t doremir_list_fold_left(binary_t func, ptr_t data, ptr_t init, list_t list)
 
 list_t doremir_list_concat(list_t list)
 {
-  assert(false && "Not implemented");
+  list_t result = empty();
+  impl_for_each(list, elem) {
+    result    = doremir_list_dappend(result, doremir_list_copy(elem));
+  }
+  return result;
 }
 
 list_t doremir_list_concat_map(unary_t func, ptr_t data, list_t list)
