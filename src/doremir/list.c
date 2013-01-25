@@ -77,7 +77,7 @@ inline static
 node_t take_node(node_t node)
 {
   if (node) {
-    node->count++;  /* TODO make atomic? */
+    node->count++;  // TODO make atomic
   }
 
   db_node_take(node);

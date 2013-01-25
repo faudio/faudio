@@ -38,7 +38,7 @@
 
 #define atomic()            doremir_atomic_create()
 #define pair(a,b)           doremir_pair_create(a,b)
-#define range(a,b)          doremir_list_enumerate(a,b)
+// #define range(a,b)          doremir_list_enumerate(a,b)
 #define string(a)           doremir_string_from_utf8(a)
 #define unstring(a)         doremir_string_to_utf8(a)
 #define ratio(a,b)          doremir_ratio_create(a,b)
