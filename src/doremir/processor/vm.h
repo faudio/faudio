@@ -11,7 +11,7 @@
 /*
     Little Matrix Machine (LMM)
 
-    - Matrix registers: [0..2^16]
+    - Matrix registers: [0..2^10]
         - By convention, we use the upper half (>= 32768) for loops.
         - Size arguments are in bytes.
         - Each matrix register contains a raw buffer
@@ -63,7 +63,7 @@
 
  */
 
-enum { kLmmRegs = 65536 };
+enum { kLmmRegs = 1024 };
 
 struct lmm {
   struct {

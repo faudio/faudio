@@ -20,7 +20,9 @@
 
 lmm_t lmm_create()
 {
-  return lmm_calloc(1, sizeof(struct lmm));
+  lmm_t vm = lmm_malloc(sizeof(struct lmm));
+  memset(vm, 0, sizeof(struct lmm));
+  return vm;
 }
 
 void lmm_destroy(lmm_t lmm)
