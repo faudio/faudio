@@ -146,12 +146,15 @@ void delete_list(list_t list)
     for(node_t _n = list->node; _n; _n = _n->next) \
         doremir_let(var, _n->value)
 
+#define begin_node(var, next) \
+    node_t var = NULL, *next = &var
+
 /** Allocate a new node in the given place, then update
     the place to refer to the the its next pointer.
 
     This can be used to construct a list in place, like
 
-        node_t node = NULL, *next = &node;
+        begin_node(node, next);
         while (...)
             append_node(next, value);
 
@@ -264,7 +267,7 @@ list_t doremir_list_init(list_t xs)
     assert(false && "No init");
   }
 
-  node_t node = NULL, *next = &node;
+  begin_node(node, next);
   impl_for_each_node(xs, node) {
     if (node->next) {
       append_node(next, node->value);
@@ -344,17 +347,64 @@ list_t doremir_list_reverse(list_t xs)
 }
 
 static inline
-list_t base_sort(list_t xs)
+list_t merge(list_t xs, list_t ys)
 {
-  // list_t small = doremir_list_filter();// TODO
-  // list_t large = doremir_list_filter();
-  // return append(base_sort(small), cons(head(xs), base_sort(large)));
-  assert(false && "Not implemented");
+  begin_node(node, next);
+  while (!doremir_list_is_empty(xs) && !doremir_list_is_empty(ys))
+  {
+    ptr_t x, y;
+    
+    x = doremir_list_head(xs);
+    y = doremir_list_head(ys);
+    if (doremir_less_than(x, y))
+    {
+      append_node(next, x);
+      xs = doremir_list_tail(xs);
+    }
+    else
+    {
+      append_node(next, y);
+      ys = doremir_list_tail(ys);
+    }
+  }
+
+  if (!doremir_list_is_empty(xs))
+    return doremir_list_append(new_list(node), xs);
+
+  if (!doremir_list_is_empty(ys))
+    return doremir_list_append(new_list(node), ys);
+
+  return new_list(node);
+}
+
+static inline
+list_t merge_sort(list_t xs)
+{
+  int len, mid;
+  list_t left, right;
+
+  len = doremir_list_length(xs);
+  mid = len / 2;
+
+  if (len <= 1)
+    return doremir_list_copy(xs);
+
+  left  = doremir_list_take(mid, xs);
+  right = doremir_list_drop(mid, xs);
+
+  left  = merge_sort(left);   // TODO destroy
+  right = merge_sort(right);  // TODO destroy
+
+  if (doremir_less_than(doremir_list_last(left),
+                        doremir_list_head(right)))
+    return doremir_list_dappend(left, right);
+  else
+    return merge(left, right); // TODO destroy
 }
 
 list_t doremir_list_sort(list_t xs)
 {
-  return base_sort(xs);
+  return merge_sort(xs);
 }
 
 list_t doremir_list_dappend(list_t xs, list_t ys)
@@ -374,7 +424,7 @@ list_t doremir_list_dreverse(list_t xs)
 
 list_t doremir_list_dsort(list_t xs)
 {
-  list_t ys = base_sort(xs);
+  list_t ys = merge_sort(xs);
   doremir_list_destroy(xs);
   return ys;
 }
@@ -452,8 +502,6 @@ list_t doremir_list_remove(int index, list_t list)
   return doremir_list_remove_range(index, 1, list);
 }
 
-
-
 list_t doremir_list_dtake(int n, list_t xs)
 {
   list_t ys = doremir_list_take(n, xs);
@@ -513,7 +561,8 @@ bool doremir_list_has(ptr_t value, list_t list)
 }
 
 // TODO this assumes sorted and returns tenative position for the set impl
-//  Should that really be this method?
+// Should that really be this method?
+
 int doremir_list_index_of(ptr_t value, list_t list)
 {
   int index = 0;
@@ -561,7 +610,7 @@ int doremir_list_find_index(pred_t pred, ptr_t data, list_t list)
 
 list_t doremir_list_map(unary_t func, ptr_t data, list_t list)
 {
-  node_t node = NULL, *next = &node;
+  begin_node(node, next);
   impl_for_each(list, elem) {
     append_node(next, func(data, elem));
   }
@@ -570,7 +619,7 @@ list_t doremir_list_map(unary_t func, ptr_t data, list_t list)
 
 list_t doremir_list_filter(pred_t pred, ptr_t data, list_t list)
 {
-  node_t node = NULL, *next = &node;
+  begin_node(node, next);
   impl_for_each(list, elem) {
     if (pred(data, elem)) {
       append_node(next, elem);
@@ -647,10 +696,10 @@ list_t doremir_list_dconcat_map(unary_t f, ptr_t d, list_t xs)
         list in \ref doremir/util.h
  */
 list_t doremir_list(int count, ...)
-{
-  node_t node = NULL, *next = &node;
+{  
   va_list args;
   va_start(args, count);
+  begin_node(node, next);
 
   for (int i = 0; i < count; ++i) {
     append_node(next, va_arg(args, ptr_t));
@@ -662,7 +711,7 @@ list_t doremir_list(int count, ...)
 
 list_t doremir_list_repeat(int times, ptr_t value)
 {
-  node_t node = NULL, *next = &node;
+  begin_node(node, next);
 
   for (int i = 0; i < times; ++i) {
     append_node(next, value);
@@ -673,7 +722,7 @@ list_t doremir_list_repeat(int times, ptr_t value)
 
 list_t doremir_list_enumerate(int m, int n)
 {
-  node_t node = NULL, *next = &node;
+  begin_node(node, next);
 
   for (int i = 0; i < n; ++i) {
     append_node(next, (ptr_t) m + i);

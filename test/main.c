@@ -639,7 +639,22 @@ void test_list()
     doremir_destroy(bs);
   }
 
-  // TODO sort
+  {
+    printf("\n");
+
+    // list_t as = list(i16(1), i16(-2), i16(0), i16(4), i16(123));
+    list_t as = doremir_list_enumerate(0, 10);
+    as = doremir_list_reverse(as);
+    as = doremir_list_dmap(call1, i32, as);
+
+    list_t bs = doremir_list_sort(as);
+
+    doremir_print("as                           ==> %s\n", as);
+    doremir_print("sort(as)                     ==> %s\n", bs);
+
+    doremir_destroy(as);
+    doremir_destroy(bs);
+  }
 
   {
     printf("\n");
@@ -830,7 +845,7 @@ void test_list()
   {
     printf("\n");
 
-    list_t xs = range(0, 50000);
+    list_t xs = doremir_list_enumerate(0, 50000);
 
     xs = doremir_list_dreverse(xs);
     // doremir_print("reverse(xs)                  ==> %s\n", xs);
@@ -849,7 +864,7 @@ void test_list()
   {
     printf("\n");
 
-    list_t xs = range(0, 12);
+    list_t xs = doremir_list_enumerate(0, 12);
     xs = doremir_list_dmap(call1, i8, xs);
 
     doremir_print("xs                           ==> %s\n", xs);
