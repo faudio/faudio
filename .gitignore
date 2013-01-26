@@ -8,3 +8,5 @@ dist
 external/*/result/
 OSX
 *~
+test/plot/AudioEnginePlotTest/CorePlot.framework/
+
