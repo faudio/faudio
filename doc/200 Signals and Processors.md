@@ -1,12 +1,14 @@
 
-# Signals {#Signals}
+# Signals and processors {#Signals}
 
 @anchor Signals
+@anchor Processors
+@anchor SignalsAndProcessors
 @tableofcontents
 
 A *signal* is a time-varying value, or more formally, a function of time. Typically the value is a number
 representing audio amplitude, but this need not be the case: signals may represent any time-varying value,
-including audio, video, image or other forms of data. Signals can be transformed by 
+including audio, video, image or other forms of data. Signals can be transformed by
 [processors](@ref Processors), which are functions from signals to signals.
 
 # Types {#SignalTypes}
@@ -80,10 +82,98 @@ maximum length of a vector, and is typically a multiple of two, such as 256, 512
 
 # Continous vs. discrete {#Cont}
 
-While real-world signals are continous in nature, digital signal processing invariably involves some form of 
-sampling 
+While real-world signals are continous in nature, digital signal processing invariably involves some form of
+sampling
 
 # Application of processors to signals {#Procs}
 
 # Processors as functions of signals {#Procs}
+
+
+# Basic Processors {#BasicProcessors}
+
+Processors can be categorized by input and output type. Processors with no input is typically called *producers*
+or *unfolds*, processors with no output *consumers* or *folds*, and processors with both input and output
+*filters* or *maps*.
+
+Many classical DSP operations such fall into the map category: examples include band-pass filters, recursive
+filters, reverbs and compressors. Producers include constant values and oscillators, and consumers include all forms
+of audio analysis.
+
+# Process combinators {#Comb}
+
+## Sequential {#seq}
+
+Sequential processors.
+
+@image html  dsp_seq.png "A processor"
+@image latex dsp_seq.pdf "A processor" width=0.8\textwidth
+
+## Parallel {#par}
+
+Sequential processors.
+
+@image html  dsp_par.png "A processor"
+@image latex dsp_par.pdf "A processor" width=0.6\textwidth
+
+## Recursive {#loop}
+
+Recursive processors.
+
+@image html  dsp_loop.png "A processor"
+@image latex dsp_loop.pdf "A processor" width=0.6\textwidth
+
+## Folds and unfolds {#fold}
+
+Folding and unfolding processors processors.
+
+@image html  dsp_split.png "A processor"
+@image latex dsp_split.pdf "A processor" width=0.6\textwidth
+@image html  dsp_binary.png "A processor"
+@image latex dsp_binary.pdf "A processor" width=0.6\textwidth
+
+## Map {#lift}
+
+Mapping processors.
+
+@image html  dsp_unary.png "A processor"
+@image latex dsp_unary.pdf "A processor" width=0.6\textwidth
+## Time {#Id}
+## Constant {#Const}
+## Delay {#Delay}
+
+## Handling messages to combinators {#CombMsg}
+
+TODO How?
+
+
+# Message to signal {#MsgToSig}
+
+## Switch {#Switch}
+## Interpolate {#Interpolate}
+## If/activate {#IfActivate}
+## Sample {#Sample}
+## Trigger {#Trigger}
+
+# Special processors {#SpecialProcessors}
+
+## FluidSynth {#FluidSynth}
+
+TODO
+
+## Audio Units {#AudioUnits}
+
+TODO
+
+## VST {#VST}
+
+TODO
+
+## LADSPA {#LADSPA}
+
+TODO
+
+
+
+
 

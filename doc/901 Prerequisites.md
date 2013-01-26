@@ -5,7 +5,7 @@ Prerequisites {#Prerequisites}
 @anchor Prerequisites
 @tableofcontents
  
-This is a hopefully complete list of tools and libraries required to build the Audio Engine.
+The following tools and libraries are required to build the Audio Engine.
 
 # Platform {#Platform} 
 

@@ -8,24 +8,27 @@ Devices are the entities that allow the Audio Engine to communicate with the
 outside world. Any client will need to connect at least two devices to each other
 to form a audio stream. While signals and processors denote functions, devices
 denote sources and sinks of audio data, such as files, memory buffers or audio
-hardware. Typically, each physical audio or midi interface is represented by a
-single device in the Audio Engine. The operating system may also provide abstract
-devices, representing network connections, software mixers and the like.
+hardware. 
 
 Devices are grouped into *real-time devices*, *non-real-time devices*. Audio and
-midi information are handled by different devices. The Audio Engine does not
+midi information are handled by different devices. Note that the Audio Engine does not
 provide non-real-time midi at the moment: if you need to parse and process a midi
-file, use a different library.
+file you must use some other method.
+
 
 # Real time devices {#rt}
 
 ## Sessions and streams {#sessionsandstreams}
 
-The Audio Engine provides access to devices through the concepts of *sessions*, and
+The Audio Engine provides access to real-time devices through of *sessions*, and
 *streams*. While a *device* provides access to an external audio interface, a
 *session* provides access to the entire audio system, and a *stream* to a specific
 audio computation. These concepts are hierarchical, each stream is associated with
 a device and each device with a session.
+
+Typically, each physical audio or midi interface is represented by a
+single device in the Audio Engine. The operating system may also provide abstract
+devices, representing network connections, software mixers and the like.
 
 The Audio Engine places certain restrictions on the order or acquisition of
 sessions, devices and streams. Any client that wants to obtain a device must first
@@ -110,10 +113,11 @@ int main (int argc, char const *argv[])
 
 ### Callback style {#cbaudio}
 
-The callback style API use inversion of control to hide acquire-release pattern. You provide a
-callback to be invoked when the session or stream is valid, and the destruction is handled automatically
-after this method has returned. Errors are handled by a special callback, to which you can pass
-[Doremir.Error.log](@ref doremir_error_log), or any user defined function.
+The callback style API use inversion of control to hide acquire-release pattern.
+You provide a callback to be invoked when the session or stream is valid, and the
+destruction is handled automatically after this method has returned. Errors are
+handled by a special callback, to which you can pass [Doremir.Error.log](@ref
+doremir_error_log), or any user defined function.
 
 ~~~~
 #include <doremir/time.h>

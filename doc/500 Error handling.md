@@ -1,10 +1,10 @@
 
-# Errors {#Errors}
+# Error handling {#Errors}
 
 @anchor Errors
 @tableofcontents
 
-Error handling in the Audio Engine comes in three shapes:
+Error handling in the Audio Engine comes in three varieties:
 
 * Client errors
 * Irrecoverable errors

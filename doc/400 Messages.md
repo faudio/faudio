@@ -1,5 +1,5 @@
 
-# Messages {#Messages}
+# Message passing {#Messages}
 
 # Message types {#types}
 
