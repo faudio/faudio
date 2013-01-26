@@ -39,7 +39,7 @@ module Doremir.AudioEngine
     initialize : () -> Void;
     terminate : () -> Void;
 
-    type Logger = ((Ptr, SystemTime, Ptr) -> Void)*;
+    type Logger = ((SystemTime, Ptr) -> Void)*;
     
     setLogFile : FilePath -> Void;
     setLogStd : () -> Void;

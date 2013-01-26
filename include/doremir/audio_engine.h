@@ -24,8 +24,7 @@
 
 void doremir_audio_engine_initialize();
 void doremir_audio_engine_terminate();
-typedef void (* doremir_audio_engine_logger_t)(doremir_ptr_t,
-                                               doremir_time_system_time_t,
+typedef void (* doremir_audio_engine_logger_t)(doremir_time_system_time_t,
                                                doremir_ptr_t);
 void doremir_audio_engine_set_log_file(doremir_string_file_path_t);
 void doremir_audio_engine_set_log_std();
