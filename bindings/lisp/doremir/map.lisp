@@ -26,5 +26,5 @@
 (defcfun (map-difference "doremir_map_difference") map (a map) (b map))
 (defcfun (map-power "doremir_map_power") map (a map))
 (defcfun (map-from-pair "doremir_map_from_pair") map (a pair))
-(defcfun (map-from-list "doremir_map_from_list") map (a pair))
+(defcfun (map-from-list "doremir_map_from_list") map (a list))
 (defcfun (map-to-list "doremir_map_to_list") list (a map))

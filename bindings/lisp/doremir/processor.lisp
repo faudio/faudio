@@ -9,7 +9,7 @@
 (defmethod translate-from-foreign (x (type processor-type)) (make-instance 'processor :processor-ptr x))
 (defcfun (processor-input-type "doremir_processor_input_type") type (a processor))
 (defcfun (processor-output-type "doremir_processor_output_type") type (a processor))
-(defcfun (processor-buffer-size "doremir_processor_buffer_size") :int32 (a processor) (b type-frames))
+(defcfun (processor-buffer-size "doremir_processor_buffer_size") :int32 (a type-frames) (b processor))
 (defcfun (processor-identity "doremir_processor_identity") processor (a type))
 (defcfun (processor-constant "doremir_processor_constant") processor (a type) (b type) (c ptr))
 (defcfun (processor-split "doremir_processor_split") processor (a type))
