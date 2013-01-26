@@ -71,8 +71,6 @@
 		3A14481516B43A6B00E84D42 = {
 			isa = PBXGroup;
 			children = (
-				3A14488716B45B4A00E84D42 /* DoReMIRAudio.framework */,
-				3A14486916B43E0B00E84D42 /* QuartzCore.framework */,
 				3A14485A16B43CD600E84D42 /* CorePlot.xcodeproj */,
 				3A14482A16B43A6B00E84D42 /* AudioEnginePlotTest */,
 				3A14482316B43A6B00E84D42 /* Frameworks */,
@@ -91,6 +89,8 @@
 		3A14482316B43A6B00E84D42 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3A14488716B45B4A00E84D42 /* DoReMIRAudio.framework */,
+				3A14486916B43E0B00E84D42 /* QuartzCore.framework */,
 				3A14482416B43A6B00E84D42 /* Cocoa.framework */,
 				3A14482616B43A6B00E84D42 /* Other Frameworks */,
 			);
@@ -141,9 +141,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		3A14481F16B43A6B00E84D42 /* AudioEnginePlotTest */ = {
+		3A14481F16B43A6B00E84D42 /* Audio Engine Plotter */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3A14483E16B43A6C00E84D42 /* Build configuration list for PBXNativeTarget "AudioEnginePlotTest" */;
+			buildConfigurationList = 3A14483E16B43A6C00E84D42 /* Build configuration list for PBXNativeTarget "Audio Engine Plotter" */;
 			buildPhases = (
 				3A14481C16B43A6B00E84D42 /* Sources */,
 				3A14481D16B43A6B00E84D42 /* Frameworks */,
@@ -153,7 +153,7 @@
 			);
 			dependencies = (
 			);
-			name = AudioEnginePlotTest;
+			name = "Audio Engine Plotter";
 			productName = AudioEnginePlotTest;
 			productReference = 3A14482016B43A6B00E84D42 /* AudioEnginePlotTest.app */;
 			productType = "com.apple.product-type.application";
@@ -186,7 +186,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				3A14481F16B43A6B00E84D42 /* AudioEnginePlotTest */,
+				3A14481F16B43A6B00E84D42 /* Audio Engine Plotter */,
 			);
 		};
 /* End PBXProject section */
@@ -354,7 +354,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3A14483E16B43A6C00E84D42 /* Build configuration list for PBXNativeTarget "AudioEnginePlotTest" */ = {
+		3A14483E16B43A6C00E84D42 /* Build configuration list for PBXNativeTarget "Audio Engine Plotter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3A14483F16B43A6C00E84D42 /* Debug */,

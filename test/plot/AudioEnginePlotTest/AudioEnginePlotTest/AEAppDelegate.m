@@ -80,19 +80,17 @@
     plot2.dataLineStyle = style2;
     [graph addPlot: plot2];
 
-
-    NSTimer* reloadTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(reload:) userInfo:NULL repeats:3];
-
-    
+    [NSTimer
+        scheduledTimerWithTimeInterval:0.1
+        target:self
+        selector:@selector(reload:)
+        userInfo:NULL repeats:3];
 }
 
 - (void)reload:(NSTimer*)theTimer
 {
     [graph reloadData];
 }
-
-#pragma mark -
-#pragma mark Plot Data Source Methods
 
 #define kSamples 1000
 
