@@ -5,13 +5,13 @@
 @tableofcontents
 
 Error handling in the Audio Engine comes in three varieties:
+  
+  * User errors
+  * Recoverable errors
+  * Non-recoverable errors
+  
 
-* User errors
-* Recoverable errors
-* Non-recoverable errors
-
-
-# User errors {#User}
+# User errors {#UserErrors}
 
 Program errors are those that are caused directly by the library user, often by
 using a library function in the wrong way. Preferably all such errors should be
@@ -19,23 +19,14 @@ caught by the compiler, but this is not always possible.
 
 Some examples of user errors are:
 
-* Calling [peek](@ref doremir_buffer_poke) with an index outside the buffer range.
-  * Correct usage: call [size](@ref doremir_buffer_size) to determine the size of
-    the buffer.
-* Passing a value missing a required interface to a generic function or collection.
-  * Correct usage: Use a [dynamic check](@ref DynInterfaceCheck), an 
-    [generic value](@ref Existential) or some other technique to assure that the value 
-    implement all required interfaces.
-* Calling [destroy](@ref doremir_destroy) on a value after passing it
-  to a destructive function. 
-  * Correct usage: Destroy the value exactly once.
-
+  * Calling [peek](@ref doremir_buffer_peek) with an index outside the buffer range.
+  * Calling [destroy](@ref doremir_destroy) on a value after passing it
+    to a destructive function. 
+  * Passing a value missing a required interface to a generic function or collection.
+  
 User errors have undefined result, but in practice the process in which the Audio
 Engine is running will probably crash. If the library is built in debug mode, an
-file number and message is usually printed. Note that while user errors are
-ubiquitous in a C or C++ library, they can often be avoided when using another
-language. For example Lisp bindings could be written to always perform dynamic
-interface checks, always call destroy from a finalizer and so on.
+file number and message is usually printed. 
 
 
 # Recoverable errors {#Recoverable}
@@ -79,22 +70,23 @@ Non-recoverable errors are those that occur outside the control of the both libr
 user and the Audio Engine. They will usually log and terminate the process.
 
 
-<!-- ### Errors and callbacks {#ErrorCallback}
+<!-- 
+### Errors and callbacks {#ErrorCallback}
 
-TODO -->
+TODO 
+-->
 
 
 # Logging {#Logging}
 
 The Audio Engine provides a simple global logging system. All error values (not
 optional values) will be passed to a global log function before they are returned
-to the Program. By default, this function does nothing. The [audio engine](@ref DoremirAudioEngine) 
+to the user. The user can add messages to the log by calling [log](@ref doremir_error_log).
+
+The default log function does nothing. The [audio engine](@ref DoremirAudioEngine)
 module provides a function to replace this function, and some default
 implementations that writes to the standard output, or to a specific log file.
 
-The program can add messages to the log by calling [log](@ref doremir_error_log), 
-[logInfo](@ref doremir_error_log_info), [logWarning](@ref doremir_error_log_info) or
-[logError](@ref doremir_error_log_info).
 
 
 ----------

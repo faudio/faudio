@@ -2,8 +2,10 @@
 # Build and Install {#BuildAndInstall}
 
 @tableofcontents
+@note
+    This page is under construction.
 
-# Basic build {#SourceCode}
+# Basic build {#BasicBuild}
 
 First ensure that your system meets the [platform](@ref Platform) requirements, and
 that the necessary [compiler](@ref Compiler) and [tools](@ref Tools) are available.
@@ -25,7 +27,7 @@ All in all, the simplest possible build session looks like this:
     $ make test
 
 
-# Advanced build {#Advanced}
+# Advanced build {#AdvancedBuild}
 
 ## Building local dependencies {#Dependencies}
 
@@ -33,11 +35,13 @@ The bootstrap script automatically downloads the [required libraries](@ref
 Libraries). You can also build libraries locally, using the component commands
 described below.
 
-<!-- A caveat is that CMake tend to prefer libraries in system paths to libraries
+<!-- 
+A caveat is that CMake tend to prefer libraries in system paths to libraries
 in your build directory. Currently the only solution is to temporarily uninstall
-the libraries. -->
+the libraries. 
+-->
 
-## Setting and inspecting options {#AdvOptions}
+## Setting and inspecting options {#SettingOptions}
 
 Build options can be changed using any CMake tool, such as `cmake-gui` or `ccmake`.
 
@@ -45,7 +49,7 @@ You can also change a build setting on the command line.
 
     $ cmake build -DMY_SETTING=0
 
-## Using a separate build directory {#BuildDir}
+## Using a separate build directory {#SeparateBuildDir}
 
 If you use `ccmake` or `cmake-gui` you should run them on the `build` directory,
 which is the default build directory created by the bootstrap script.
@@ -66,9 +70,9 @@ TODO
 TODO
 
 
-# Reference {#BuildRef}
+# Reference {#Reference}
 
-## Options {#BuildOptions}
+## Options {#Options}
 
 Name                      | Description
 --------------------------|-----------------------------------------
@@ -87,7 +91,7 @@ BUILD_COMPONENTS          | Build dependent components locally
 SHOW_COMPONENT_OUTPUT     | Show output while building components
 
 
-## Commands {#BuildCommands}
+## Commands {#Commands}
 
 The build commands should always be run from the top directory. They will delegate
 to the `build` directory by default. You can use the `BUILD_DIRECTORY` flag to

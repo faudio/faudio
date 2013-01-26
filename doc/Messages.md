@@ -1,24 +1,30 @@
 
-# Message passing {#Messages}
+# Messages {#Messages}
 
-# Message types {#types}
+@note
+    This page is under construction.
 
-TODO list, map, set, pair
+TODO
 
-# The receiver interface {#recv}
+# Message types {#Types}
 
-# The sender interface {#send}
+TODO
 
-# Dispatchers {#disp}
+# Receiving messages {#Receiving}
 
+TODO
 
-# Serialization {#serial}
+# Sending messages {#Sending}
 
-TODO show
-TODO toJson
-TODO fromJson
+TODO
 
+## Creating dispatchers {#CreatingDispatchers}
 
+TODO
+
+# Serialization {#Serialization}
+
+TODO
 
 @tableofcontents
 

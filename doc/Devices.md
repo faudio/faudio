@@ -4,6 +4,9 @@
 @anchor Devices
 @tableofcontents
 
+@note
+    This page is under construction.
+
 Devices are the entities that allow the Audio Engine to communicate with the
 outside world. Any client will need to connect at least two devices to each other
 to form a audio stream. While signals and processors denote functions, devices
@@ -16,9 +19,9 @@ provide non-real-time midi at the moment: if you need to parse and process a mid
 file you must use some other method.
 
 
-# Real time devices {#rt}
+# Real time devices {#RealTime}
 
-## Sessions and streams {#sessionsandstreams}
+## Sessions and streams {#SessionsAndStreams}
 
 The Audio Engine provides access to real-time devices through of *sessions*, and
 *streams*. While a *device* provides access to an external audio interface, a
@@ -48,7 +51,7 @@ TODO
     could be repeatedly stopped and started.
 
 
-## Session notifications {#notifications}
+## Session notifications {#Notifications}
 
 Sessions represent a snapshot of the setup at the time it was initiated; the set of
 available devices in a specific session will never change. If a change in the
@@ -57,9 +60,9 @@ has to be started to observe the new setup.
 
 TODO
 
-## Audio streams {#audiostreams}
+## Audio streams {#AudioStreams}
 
-### Acquire-release style {#aqaudio}
+### Acquire-release style {#AudioAR}
 
 To use a real-time device in imperative fashion, the typical paired method pattern
 should be used. You call a creation method to get a session or stream, and a
@@ -90,17 +93,17 @@ int main (int argc, char const *argv[])
     processor_t proc;
     stream_t    stream
     
-    proc    = doremir_processor_identity();
-    input   = doremir_device_audio_default(session)->first;
-    output  = doremir_device_audio_default(session)->second;    
-    stream  = doremir_device_audio_start_stream(input, proc, output);
+    proc   = doremir_processor_identity();
+    input  = doremir_pair_fst(doremir_device_audio_default(session));
+    output = doremir_pair_snd(doremir_device_audio_default(session));
+    stream = doremir_device_audio_start_stream(input, proc, output);
 
     if (doremir_check(stream)) {
       doremir_error_log(stream);
       exit(-1);
     }
 
-    doremir_thread_sleep(doremir_seconds(10));
+    doremir_thread_sleep(5000);
     
     doremir_device_audio_stop_stream(stream);
     doremir_destroy(proc);
@@ -111,7 +114,7 @@ int main (int argc, char const *argv[])
 ~~~~
 
 
-### Callback style {#cbaudio}
+### Callback style {#AudioCB}
 
 The callback style API use inversion of control to hide acquire-release pattern.
 You provide a callback to be invoked when the session or stream is valid, and the
@@ -141,12 +144,14 @@ session_t session_callback(ptr_t data, session_t session)
   device_t  input, output;
   processor_t proc;
 
-  proc    = doremir_processor_identity();
-  input   = doremir_device_audio_default(session)->first;
-  output  = doremir_device_audio_default(session)->second;    
-
-  doremir_device_audio_with_stream(devices.first, processor, devices.second,
-    run_callback, doremir_error_log, NULL);
+  proc   = doremir_processor_identity();
+  input  = doremir_pair_fst(doremir_device_audio_default(session));
+  output = doremir_pair_snd(doremir_device_audio_default(session));
+  
+  doremir_device_audio_with_stream(
+    input, processor, output,
+    run_callback, doremir_error_log, NULL
+  );
 
   doremir_destroy(proc);
   return session;
@@ -154,19 +159,22 @@ session_t session_callback(ptr_t data, session_t session)
 
 int main (int argc, char const *argv[])
 {
-  doremir_device_audio_with_session(session_callback, NULL, doremir_error_log, NULL);
+  doremir_device_audio_with_session(
+    session_callback, NULL, 
+    doremir_error_log, NULL
+  );
 }
 ~~~~
 
 
-# Non-realtime devices {#nrt}
+# Non-realtime devices {#NonRealTime}
 
-## The run method {#run}
+## The run method {#RunMethod}
 
 
-## File devices {#file}
+## File devices {#File}
 
-### Acquire-release style {#aqfile}
+### Acquire-release style {#FileAR}
 
 ~~~~
 #include <doremir/time.h>
@@ -182,11 +190,11 @@ int main (int argc, char const *argv[])
   processor_t proc;
   future_t    result;
 
-  proc    = doremir_processor_identity();
-  input   = doremir_device_file_open(doremir_str("test/in.wav"));
-  output  = doremir_device_file_open(doremir_str("test/out.wav"));
+  proc   = doremir_processor_identity();
+  input  = doremir_device_file_open(doremir_str("test/in.wav"));
+  output = doremir_device_file_open(doremir_str("test/out.wav"));
 
-  result  = doremir_device_file_run(in, out);
+  result = doremir_device_file_run(in, out);
 
   if (doremir_check(stream)) {
     doremir_error_log(stream);
@@ -197,14 +205,14 @@ int main (int argc, char const *argv[])
 }
 ~~~~
 
-### Callback style {#cbfile}
+### Callback style {#FileCB}
 
 TODO
 
 
-## Buffer devices {#buffer}
+## Buffer devices {#Buffer}
 
-### Acquire-release style {#aqbuffer}
+### Acquire-release style {#BufferAR}
 
 ~~~~
 #include <doremir/time.h>
@@ -220,9 +228,9 @@ int main (int argc, char const *argv[])
   processor_t proc;
   future_t    result;
 
-  proc    = doremir_processor_identity();
-  input   = doremir_device_buffer_open(doremir_buffer_create(1024));
-  output  = doremir_device_buffer_open(doremir_buffer_create(1024));
+  proc   = doremir_processor_identity();
+  input  = doremir_device_buffer_open(doremir_buffer_create(1024));
+  output = doremir_device_buffer_open(doremir_buffer_create(1024));
 
   result = doremir_device_buffer_run(in, out);
 
@@ -236,7 +244,7 @@ int main (int argc, char const *argv[])
 ~~~~
 
 
-### Callback style {#cbbuffer}
+### Callback style {#BufferCB}
 
 TODO
 

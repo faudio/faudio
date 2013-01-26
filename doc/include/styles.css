@@ -759,24 +759,22 @@ address {
 }
 
 table.doxtable {
-	border-collapse:collapse;
+  border-collapse:collapse;
         margin-top: 4px;
         margin-bottom: 4px;
 }
 
 table.doxtable td, table.doxtable th {
-	border: 1px solid #2D4068;
-	padding: 3px 7px 2px;
+  border: 1px solid #bbb;
+  padding: 3px 7px 2px;
 }
 
 table.doxtable th {
-	background-color: #374F7F;
-	color: #FFFFFF;
-	font-size: 110%;
-	padding-bottom: 4px;
-	padding-top: 5px;
+  font-size: 110%;
+  padding-bottom: 4px;
+  padding-top: 5px;
 }
-
+*/
 table.fieldtable {
         /*width: 100%;*/
         margin-bottom: 10px;
