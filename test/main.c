@@ -1065,7 +1065,7 @@ extern void doremir_plot();
 
 void test_plot()
 {
-  doremir_plot();
+  doremir_plot_show();
 }
 
 extern void test_vm(); // in vm.c

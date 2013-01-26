@@ -21,6 +21,7 @@ c:
 	modulo -Mmodules --language=c    <modules/Doremir/List.module    		>include/doremir/list.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Set.module    		>include/doremir/set.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Pair.module    		>include/doremir/pair.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/Plot.module    		>include/doremir/plot.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Map.module    		>include/doremir/map.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Graph.module    		>include/doremir/graph.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/PriorityQueue.module		>include/doremir/priority_queue.h && \
@@ -68,6 +69,7 @@ lisp:
 	modulo -Mmodules --language=lisp <modules/Doremir/List.module    		>bindings/lisp/doremir/list.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Set.module    		>bindings/lisp/doremir/set.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Pair.module    		>bindings/lisp/doremir/pair.lisp && \
+	modulo -Mmodules --language=lisp <modules/Doremir/Plot.module    		>bindings/lisp/doremir/plot.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Map.module    		>bindings/lisp/doremir/map.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Graph.module    		>bindings/lisp/doremir/graph.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/PriorityQueue.module		>bindings/lisp/doremir/priority-queue.lisp && \

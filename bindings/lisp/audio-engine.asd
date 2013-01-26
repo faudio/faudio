@@ -35,6 +35,7 @@
             (:file "stack")
             (:file "ring-buffer")))
         (:file "pair")
+        (:file "plot")
         (:file "list")
         (:file "set")
         (:file "map")
