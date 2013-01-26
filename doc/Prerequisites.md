@@ -1,6 +1,5 @@
 
-Prerequisites {#Prerequisites}
-------------
+# Prerequisites {#Prerequisites}
 
 @anchor Prerequisites
 @tableofcontents
