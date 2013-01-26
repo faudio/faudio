@@ -8,7 +8,13 @@
 
 #import <Cocoa/Cocoa.h>
 
+void show_plots()
+{
+    NSApplicationMain(0, (const char **)0);
+}
+
 int main(int argc, char *argv[])
 {
-    return NSApplicationMain(argc, (const char **)argv);
+    show_plots();
+    return 0;
 }

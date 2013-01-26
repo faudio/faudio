@@ -10,12 +10,12 @@
 		3A14482516B43A6B00E84D42 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A14482416B43A6B00E84D42 /* Cocoa.framework */; };
 		3A14482F16B43A6B00E84D42 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3A14482D16B43A6B00E84D42 /* InfoPlist.strings */; };
 		3A14483116B43A6B00E84D42 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A14483016B43A6B00E84D42 /* main.m */; };
-		3A14483516B43A6B00E84D42 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 3A14483316B43A6B00E84D42 /* Credits.rtf */; };
 		3A14483816B43A6B00E84D42 /* AEAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A14483716B43A6B00E84D42 /* AEAppDelegate.m */; };
 		3A14483B16B43A6C00E84D42 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A14483916B43A6C00E84D42 /* MainMenu.xib */; };
 		3A14486716B43D6800E84D42 /* CorePlot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A14486416B43CD600E84D42 /* CorePlot.framework */; };
 		3A14486816B43DC100E84D42 /* CorePlot.framework in Resources */ = {isa = PBXBuildFile; fileRef = 3A14486416B43CD600E84D42 /* CorePlot.framework */; };
 		3A14486A16B43E0B00E84D42 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A14486916B43E0B00E84D42 /* QuartzCore.framework */; };
+		3A14488816B45B4A00E84D42 /* DoReMIRAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A14488716B45B4A00E84D42 /* DoReMIRAudio.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,12 +45,12 @@
 		3A14482E16B43A6B00E84D42 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3A14483016B43A6B00E84D42 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3A14483216B43A6B00E84D42 /* AudioEnginePlotTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AudioEnginePlotTest-Prefix.pch"; sourceTree = "<group>"; };
-		3A14483416B43A6B00E84D42 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		3A14483616B43A6B00E84D42 /* AEAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AEAppDelegate.h; sourceTree = "<group>"; };
 		3A14483716B43A6B00E84D42 /* AEAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AEAppDelegate.m; sourceTree = "<group>"; };
 		3A14483A16B43A6C00E84D42 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		3A14485A16B43CD600E84D42 /* CorePlot.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CorePlot.xcodeproj; path = ../../../../../../../../Users/hans/Downloads/CorePlot_1.1/Source/framework/CorePlot.xcodeproj; sourceTree = "<group>"; };
 		3A14486916B43E0B00E84D42 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		3A14488716B45B4A00E84D42 /* DoReMIRAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DoReMIRAudio.framework; path = ../../../build/Frameworks/DoReMIRAudio.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +61,7 @@
 				3A14486A16B43E0B00E84D42 /* QuartzCore.framework in Frameworks */,
 				3A14486716B43D6800E84D42 /* CorePlot.framework in Frameworks */,
 				3A14482516B43A6B00E84D42 /* Cocoa.framework in Frameworks */,
+				3A14488816B45B4A00E84D42 /* DoReMIRAudio.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,6 +71,7 @@
 		3A14481516B43A6B00E84D42 = {
 			isa = PBXGroup;
 			children = (
+				3A14488716B45B4A00E84D42 /* DoReMIRAudio.framework */,
 				3A14486916B43E0B00E84D42 /* QuartzCore.framework */,
 				3A14485A16B43CD600E84D42 /* CorePlot.xcodeproj */,
 				3A14482A16B43A6B00E84D42 /* AudioEnginePlotTest */,
@@ -108,6 +110,7 @@
 		3A14482A16B43A6B00E84D42 /* AudioEnginePlotTest */ = {
 			isa = PBXGroup;
 			children = (
+				3A14483016B43A6B00E84D42 /* main.m */,
 				3A14483616B43A6B00E84D42 /* AEAppDelegate.h */,
 				3A14483716B43A6B00E84D42 /* AEAppDelegate.m */,
 				3A14483916B43A6C00E84D42 /* MainMenu.xib */,
@@ -121,9 +124,7 @@
 			children = (
 				3A14482C16B43A6B00E84D42 /* AudioEnginePlotTest-Info.plist */,
 				3A14482D16B43A6B00E84D42 /* InfoPlist.strings */,
-				3A14483016B43A6B00E84D42 /* main.m */,
 				3A14483216B43A6B00E84D42 /* AudioEnginePlotTest-Prefix.pch */,
-				3A14483316B43A6B00E84D42 /* Credits.rtf */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -213,7 +214,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A14482F16B43A6B00E84D42 /* InfoPlist.strings in Resources */,
-				3A14483516B43A6B00E84D42 /* Credits.rtf in Resources */,
 				3A14486816B43DC100E84D42 /* CorePlot.framework in Resources */,
 				3A14483B16B43A6C00E84D42 /* MainMenu.xib in Resources */,
 			);
@@ -240,14 +240,6 @@
 				3A14482E16B43A6B00E84D42 /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		3A14483316B43A6B00E84D42 /* Credits.rtf */ = {
-			isa = PBXVariantGroup;
-			children = (
-				3A14483416B43A6B00E84D42 /* en */,
-			);
-			name = Credits.rtf;
 			sourceTree = "<group>";
 		};
 		3A14483916B43A6C00E84D42 /* MainMenu.xib */ = {
@@ -320,9 +312,11 @@
 					"$(inherited)",
 					/Users/hans/Downloads/CorePlot_1.1/Binaries/MacOS,
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/../../../build/Frameworks\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AudioEnginePlotTest/AudioEnginePlotTest-Prefix.pch";
+				HEADER_SEARCH_PATHS = /Users/hans/audio/include;
 				INFOPLIST_FILE = "AudioEnginePlotTest/AudioEnginePlotTest-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -337,9 +331,11 @@
 					"$(inherited)",
 					/Users/hans/Downloads/CorePlot_1.1/Binaries/MacOS,
 					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/../../../build/Frameworks\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AudioEnginePlotTest/AudioEnginePlotTest-Prefix.pch";
+				HEADER_SEARCH_PATHS = /Users/hans/audio/include;
 				INFOPLIST_FILE = "AudioEnginePlotTest/AudioEnginePlotTest-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
