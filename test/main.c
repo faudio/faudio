@@ -1059,6 +1059,13 @@ void test_processors()
     doremir_print("p                            ==> %s\n", p);
 
   }
+}     
+
+extern void doremir_plot();
+
+void test_plot()
+{
+  doremir_plot();
 }
 
 extern void test_vm(); // in vm.c
@@ -1133,6 +1140,7 @@ int main(int argc, char const *argv[])
     // schedulers
 
     test_vm2();
+    test_plot();
 
     doremir_audio_engine_terminate();
   }

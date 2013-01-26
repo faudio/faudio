@@ -214,7 +214,8 @@ if (COMPONENTS_RESOLVED)
 
   include_directories("include")
   include_directories("${CMAKE_BINARY_DIR}/include") # for the conf file
-  include_directories(${CMAKE_SOURCE_DIR})           # for scl and scl-c
+  include_directories("external/coreplot/include")
+  # include_directories(${CMAKE_SOURCE_DIR})           # for scl and scl-c
   include_directories(${PTHREADS_INCLUDE_DIRS})
   include_directories(${ICONV_INCLUDE_DIRS})
   include_directories(${PORTAUDIO_INCLUDE_DIRS})
@@ -271,11 +272,13 @@ if (COMPONENTS_RESOLVED)
     find_library(COREMIDI           CoreMidi)
     find_library(AUDIOUNIT          AudioUnit)
     find_library(AUDIOTOOLBOX       AudioToolbox)
+    find_library(COREPLOT           CorePlot)
     list(APPEND EXTS ${COCOA})
     list(APPEND EXTS ${COREAUDIO})
     list(APPEND EXTS ${COREMIDI})
     list(APPEND EXTS ${AUDIOUNIT})
     list(APPEND EXTS ${AUDIOTOOLBOX})
+    list(APPEND EXTS ${COREPLOT})
   endif ()
 
   if(MSYS)
