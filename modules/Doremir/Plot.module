@@ -2,16 +2,11 @@
 /** 
     @addtogroup DoremirPlot
     
-    @par Literals
-    - `Plot(size)` 
-
-    @par Implements 
-    - doremir_copy_t
-    - doremir_destroy_t
-    - doremir_string_show_t
  */
 module Doremir.Plot
 {
+    import Doremir;
     import Doremir.Std;
-    show : () -> Void;
+
+    show : (Nullary, Ptr) -> Void;
 }

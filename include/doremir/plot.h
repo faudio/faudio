@@ -2,6 +2,7 @@
 #ifndef _DOREMIR_PLOT
 #define _DOREMIR_PLOT
 
+#include <doremir.h>
 #include <doremir/std.h>
 
 /** @defgroup Doremir Doremir
@@ -10,7 +11,7 @@
     @{
     */
 
-void doremir_plot_show();
+void doremir_plot_show(doremir_nullary_t, doremir_ptr_t);
 
 /** @}
     @}

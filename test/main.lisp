@@ -618,7 +618,10 @@
 (absolute           -3)
 
 
-(plot-show)
+(cffi:defcallback plot-cb ptr ((c ptr))
+  (cl:print "Printing"))
+
+(plot-show (callback plot-cb) nil)
 
 
 

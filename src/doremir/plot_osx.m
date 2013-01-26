@@ -5,9 +5,61 @@
     All rights reserved.
  */
 
-#include <doremir/util.h>
+#include <doremir/thread.h>
+// #include <doremir/util.h>
 #include <Cocoa/Cocoa.h>
 #import  <CorePlot/CorePlot.h>
+
+#define kInterval 0.05
+#define kMax      10
+#define kSamples  500
+
+static bool               plot_alive;
+static doremir_nullary_t  plot_update;
+static doremir_ptr_t      plot_update_data;
+static double             plot_time;
+
+@interface MyApplication : NSApplication
+{
+}
+
+- (void)run;
+// - (void)terminate:(id)sender;
+
+@end
+
+@implementation MyApplication
+
+- (void)run
+{             
+  printf("Entering run\n");
+
+  [[NSNotificationCenter defaultCenter]
+   postNotificationName:NSApplicationWillFinishLaunchingNotification
+   object:NSApp];
+  [[NSNotificationCenter defaultCenter]
+   postNotificationName:NSApplicationDidFinishLaunchingNotification
+   object:NSApp];
+
+  while(true)
+  {
+   NSEvent *event =
+     [self
+       nextEventMatchingMask:NSAnyEventMask
+       untilDate:[NSDate distantFuture]
+       inMode:NSDefaultRunLoopMode
+       dequeue:YES];
+   
+    [self sendEvent:event];
+    [self updateWindows];
+    if (plot_time > kMax)
+      return;
+  };
+}
+
+@end
+
+
 
 
 @interface AEAppDelegate : NSObject<CPTPlotDataSource, CPTPlotSpaceDelegate>
@@ -18,10 +70,7 @@
   CPTFill *areaFill;
   CPTLineStyle *barLineStyle;
 }
-
 @end
-
-
 
 @implementation AEAppDelegate
 
@@ -84,18 +133,20 @@
   [graph addPlot: plot2];
 
   [NSTimer
-    scheduledTimerWithTimeInterval:0.1
+    scheduledTimerWithTimeInterval:kInterval
     target:self
     selector:@selector(reload:)
     userInfo:NULL repeats:3];
 }
 
 - (void)reload:(NSTimer*)theTimer
-{
+{                    
+  printf("Entering update\n");
+  plot_update(plot_update_data);
+
+  plot_time += kInterval;
   [graph reloadData];
 }
-
-#define kSamples 1000
 
 -(NSUInteger)numberOfRecordsForPlot:
 (CPTPlot *)plot {
@@ -107,7 +158,9 @@
   (NSUInteger)  fieldEnum recordIndex:
   (NSUInteger)  index 
 {
-  double t = (((double)clock())/(double)CLOCKS_PER_SEC);
+  double t = plot_time;
+
+  printf("%f\n", t);
   double x = ((float)index / kSamples) * 2 - 1;
   double tau = 2 * 3.1415;
   
@@ -116,13 +169,16 @@
   } else
   {
     if (plot.identifier == @"Signal 1") {
-      return [NSNumber numberWithDouble: 
-        0.1*sin(tau * x * 1 + (t*30))
+      return [NSNumber numberWithDouble:
+        // x -1    t-2
+        // x 0     t-1
+        // x 1     t
+        0.5*sin(tau*(t+x-1) + 0)
       ];
     }
     if (plot.identifier == @"Signal 2") {
       return [NSNumber numberWithDouble: 
-        x 
+        (t/60) * 10 
       ];
     }
   }
@@ -131,9 +187,9 @@
 
 @end
 
-void MyApplicationMain()
+void start_gui()
 {
-  Class           principalClass          = NSApplication.class;
+  Class           principalClass          = MyApplication.class;
   NSApplication   *applicationObject      = [principalClass sharedApplication];
   NSString        *mainNibName            = @"MainMenu";
   NSNib           *mainNib                = [[NSNib alloc] initWithNibNamed:mainNibName bundle:[NSBundle mainBundle]];
@@ -151,8 +207,11 @@ void MyApplicationMain()
   }
 }
 
-void doremir_plot_show()
+void doremir_plot_show(doremir_nullary_t update, doremir_ptr_t data)
 {         
-  // TODO setup plots
-  MyApplicationMain();
+  // TODO guard reentrance
+  plot_time         = 0;
+  plot_update       = update;
+  plot_update_data  = data;
+  start_gui();
 }

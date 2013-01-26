@@ -1063,10 +1063,16 @@ void test_processors()
 
 extern void doremir_plot();
 
+ptr_t cont(ptr_t x)
+{          
+  printf("Cont!\n");
+  return x;
+}
 void test_plot()
 {
-  doremir_plot_show();
+  doremir_plot_show(cont, NULL);
 }
+
 
 extern void test_vm(); // in vm.c
 void test_vm2()
@@ -1140,9 +1146,10 @@ int main(int argc, char const *argv[])
     // schedulers
 
     test_vm2();
-    test_plot();
+    test_plot(NULL, NULL);
 
     doremir_audio_engine_terminate();
   }
   return 0;
 }
+
