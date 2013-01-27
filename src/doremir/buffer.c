@@ -12,9 +12,9 @@
 #define print_max_size_k 10000
 
 struct _doremir_buffer_t {
-  impl_t      impl;       //  Interface dispatcher
-  size_t      size;
-  uint8_t      *data;
+  impl_t          impl;       //  Interface dispatcher
+  size_t          size;
+  uint8_t        *data;
 };
 
 // --------------------------------------------------------------------------------

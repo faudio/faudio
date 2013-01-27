@@ -94,6 +94,7 @@ inline static void release_node(node_t node)
   if (!node) {
     return;
   }
+
   node->count--;
   db_node_release(node);
 
@@ -214,9 +215,6 @@ void doremir_list_destroy(list_t xs)
   delete_list(xs);
 }
 
-
-// --------------------------------------------------------------------------------
-
 bool doremir_list_is_empty(list_t xs)
 {
   return !xs->node;
@@ -239,7 +237,6 @@ int doremir_list_length(list_t xs)
 
 
 // --------------------------------------------------------------------------------
-
 
 ptr_t doremir_list_head(list_t xs)
 {

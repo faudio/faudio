@@ -169,8 +169,7 @@ doremir_string_t simple_error_show(doremir_ptr_t a)
   if (doremir_string_length(simple->origin) > 0) {
     str = string_dappend(str, string("\x1b[36m"));
     str = string_dappend(str, doremir_copy(simple->origin));
-    str = string_dappend(str, string("\x1b[0m"));
-    str = string_dappend(str, string(": "));
+    str = string_dappend(str, string(":\x1b[0m "));
   }
 
   str = string_dappend(str, doremir_copy(simple->message));

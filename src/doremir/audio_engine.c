@@ -8,6 +8,8 @@
 #include <doremir/audio_engine.h>
 #include <doremir/util.h>
 
+#define iso8601_k "%Y-%m-%d %H:%M:%S%z  "
+
 typedef doremir_audio_engine_log_func_t log_func_t;
 
 static int            init_count_g  = 0;
@@ -66,19 +68,17 @@ void doremir_audio_engine_terminate()
   }
  */
 
-static inline
-void stdlog(ptr_t ct, doremir_time_system_t t, doremir_error_t e)
+static inline void stdlog(ptr_t ct, doremir_time_system_t t, doremir_error_t e)
 {
   FILE *file = ct;
   char csmsg[350];
 
   {
-    // use gmtime?
     struct tm *tm = localtime((long *) &t);
-    strftime(csmsg, 50, "%Y-%m-%d %H:%M:%S%z  ", tm);
+    strftime(csmsg, 50, iso8601_k, tm);
+    // tm is global
   }
   {
-    // set csmsg
     doremir_string_t str = doremir_string_show(e);
     char *cstr = doremir_string_to_utf8(str);
     strncat(csmsg, cstr, 298);

@@ -2,6 +2,7 @@
 #include <doremir/audio_engine.h>
 #include <doremir/priority_queue.h>
 #include <doremir/thread.h>
+#include <doremir/plot.h>
 #include <doremir/util.h>
 #include <sndfile.h>
 #include <unistd.h> // for sysconf(3)
@@ -1065,6 +1066,7 @@ double f1(void *ct, int i, double t, double x)
   double tau = 2 * pi;
   double t0  = x;
   double t2  = t + x;
+  t2 = t2;
 
 #define step(p) ((float)((int)fmod(t,p)%p))/p
 
@@ -1127,7 +1129,7 @@ void test_plot_file()
 
   printf("Format:       %x\n", info.format);
   printf("Channels:     %d\n", info.channels);
-  printf("Frames:       %d\n", info.frames);
+  printf("Frames:       %ld\n", (long) info.frames);
   printf("Sample rate:  %d\n", info.samplerate);
   printf("Sections:     %d\n", info.sections);
   printf("Seekable:     %d\n", info.seekable);
@@ -1166,7 +1168,7 @@ void test_log()
   doremir_audio_engine_set_log_std();
   // doremir_audio_engine_set_log_file(string("/Users/hans/Library/Logs/DoReMIRAudio.log"));
 
-  while (1) {
+  for (int i = 0; i < 3; ++i) {
     // doremir_audio_engine_log(NULL,
     //   doremir_error_create_simple(
     //     info,
@@ -1257,13 +1259,13 @@ int main(int argc, char const *argv[])
     // dispatchers
     test_priority_queue(10);
     // schedulers
+    test_log();
 
     test_vm2();
     // test_plot(NULL, NULL);
     test_plot_file();
     // test_sndfile();
 
-    test_log();
 
     doremir_audio_engine_terminate();
   }

@@ -36,7 +36,7 @@
 struct _doremir_string_t {
   impl_t          impl;
   size_t          size;
-  uint16_t         *data;
+  uint16_t       *data;
 };
 
 

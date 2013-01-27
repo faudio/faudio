@@ -15,10 +15,13 @@ module Doremir.Thread.Future
 
     // TODO obtain result from what?
     create  : (Nullary, Ptr) -> Future;
-    destroy : Future -> Void;
+              
+    // TODO should this be a separate type (timer?)?
+    pause  : Future -> Void; // destructive
+    resume : Future -> Void; // destructive    
     
     isDone : Future -> Bool;
-    wait   : Future -> Void;
-    get    : Future -> Value;    
+    get    : Future -> Value; // destructive
+    cancel : Future -> Void;  // destructive
 }
 

@@ -20,7 +20,7 @@ struct _doremir_pair_t {
 pair_t new_pair(doremir_ptr_t fst, doremir_ptr_t snd)
 {
   doremir_ptr_t pair_impl(doremir_id_t interface);
-  
+
   pair_t pair = doremir_new(pair);
   pair->impl = &pair_impl;
   pair->fst  = fst;
