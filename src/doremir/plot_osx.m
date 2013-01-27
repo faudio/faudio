@@ -11,7 +11,7 @@
 #import  <CorePlot/CorePlot.h>
 
 #define kInterval 0.05
-#define kMax      10
+#define kMax      10000
 #define kSamples  500
 
 static bool               plot_alive;
@@ -153,6 +153,17 @@ static double             plot_time;
   return kSamples;
 }
 
+// Int -> Time -> Double -> Double
+double f1(int i, double t, double x)
+{
+  double tau = 2 * 3.1415;
+  return 0.5*sin(tau*(t+x-1) + 0);
+}
+double f2(int i, double t, double x)
+{
+  return (t/60) * 10;
+}
+
 - (NSNumber *) numberForPlot:
   (CPTPlot *)   plot field:
   (NSUInteger)  fieldEnum recordIndex:
@@ -170,15 +181,12 @@ static double             plot_time;
   {
     if (plot.identifier == @"Signal 1") {
       return [NSNumber numberWithDouble:
-        // x -1    t-2
-        // x 0     t-1
-        // x 1     t
-        0.5*sin(tau*(t+x-1) + 0)
+        f1(0, t, x)
       ];
     }
     if (plot.identifier == @"Signal 2") {
       return [NSNumber numberWithDouble: 
-        (t/60) * 10 
+        f2(0, t, x) 
       ];
     }
   }

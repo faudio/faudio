@@ -8,5 +8,6 @@ module Doremir.Plot
     import Doremir;
     import Doremir.Std;
 
+    // TODO does not return at the moment
     show : (Nullary, Ptr) -> Void;
 }

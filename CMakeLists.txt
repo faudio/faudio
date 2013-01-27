@@ -200,9 +200,12 @@ if (COMPONENTS_RESOLVED)
     add_definitions("-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
     add_definitions("-isysroot ${CMAKE_OSX_SYSROOT}")
     add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=1)
+    # add_definitions("-v")
     set(STD_LINK_FLAGS "${STD_LINK_FLAGS} -mmin-macosx-version=${CMAKE_OSX_DEPLOYMENT_TARGET}")
     set(STD_LINK_FLAGS "${STD_LINK_FLAGS} -mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
     set(STD_LINK_FLAGS "${STD_LINK_FLAGS} -isysroot ${CMAKE_OSX_SYSROOT}")
+    # set(STD_LINK_FLAGS "${STD_LINK_FLAGS} -v")
+    set(STD_LINK_FLAGS "${STD_LINK_FLAGS} -ObjC -all_load")
   endif()
   if (MSYS)
     add_definitions(-std=c99)
@@ -240,6 +243,7 @@ if (COMPONENTS_RESOLVED)
     ${ICU_LIBRARIES}
     ${FLUIDSYNTH_LIBRARIES} # May be empty
     ${GLIB_LIBRARIES}       # May be empty
+    "external/coreplot/"
     "/mingw/lib"
     "/mingw"
     )
@@ -273,11 +277,13 @@ if (COMPONENTS_RESOLVED)
     find_library(AUDIOUNIT          AudioUnit)
     find_library(AUDIOTOOLBOX       AudioToolbox)
     find_library(COREPLOT           CorePlot)
+    find_library(QUARTZCORE         QuartzCore)
     list(APPEND EXTS ${COCOA})
     list(APPEND EXTS ${COREAUDIO})
     list(APPEND EXTS ${COREMIDI})
     list(APPEND EXTS ${AUDIOUNIT})
     list(APPEND EXTS ${AUDIOTOOLBOX})
+    list(APPEND EXTS ${QUARTZCORE})
     list(APPEND EXTS ${COREPLOT})
   endif ()
 
