@@ -12,18 +12,13 @@
 #import  <CorePlot/CorePlot.h>
 
 // TODO optimize constants etc, tune this
+
 #define interval_k  0.05
 #define max_k       10000
 #define samples_k   1000
 #define num_plots_k 5
 
-NSString* kPlotIds[num_plots_k] = {
-  @"1",
-  @"2",
-  @"3",
-  @"4",
-  @"5"
-};
+NSString* const plot_ids_k[num_plots_k] = { @"1", @"2", @"3", @"4", @"5" };
 
 typedef double (*plot_func_t)(void* ct, int i, double t, double x);
 static plot_func_t  plot_func_g;
@@ -123,7 +118,7 @@ static long         plot_count_g;
   for(int i = 0; i < num_plots_k; ++i)
   {
     CPTScatterPlot *plot = [[[CPTScatterPlot alloc] init] autorelease];
-    plot.identifier = kPlotIds[i];
+    plot.identifier = plot_ids_k[i];
     plot.dataSource = self;
 
     CPTMutableLineStyle *style = plot.dataLineStyle.mutableCopy;
@@ -163,7 +158,7 @@ static long         plot_count_g;
     return [NSNumber numberWithDouble: x];
   }
   for(int i = 0; i < num_plots_k; ++i)
-    if (plot.identifier == kPlotIds[i]) {
+    if (plot.identifier == plot_ids_k[i]) {
       return [NSNumber numberWithDouble:
         plot_func_g(plot_ct_g, i, t, x)
       ];
