@@ -412,12 +412,12 @@ list_t dmerge_sort(list_t xs)
   left  = dmerge_sort(left);
   right = dmerge_sort(right);
 
-  // if (doremir_less_than(doremir_list_last(left),
-                        // doremir_list_head(right))) {
-    // return doremir_list_dappend(left, right);
-  // } else {
+  if (doremir_less_than(doremir_list_last(left),
+                        doremir_list_head(right))) {
+    return doremir_list_dappend(left, right);
+  } else {
     return dmerge(left, right);
-  // }
+  }
 }
 
 list_t doremir_list_sort(list_t xs)
