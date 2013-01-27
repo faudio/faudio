@@ -1061,16 +1061,32 @@ void test_processors()
   }
 }     
 
-extern void doremir_plot();
-
 ptr_t cont(ptr_t x)
 {          
-  printf("Cont!\n");
+  printf("Continuing...\n");
   return x;
 }
+
+double f1(void* ct, int i, double t, double x)
+{
+  double tau = 2 * 3.1415;
+
+  switch (i)
+  {
+  case 0:
+    return 0.5*sin(tau*(t+x-1)*3 + 0);
+  case 1:
+    return 0.5*sin(tau*(t+x-1)*3.1 + 0.4);
+  case 2:
+    return (t/60) * 1;
+  default:
+    return 0;
+  }
+}
+
 void test_plot()
 {
-  doremir_plot_show(cont, NULL);
+  doremir_plot_show(f1, NULL, cont, NULL);
 }
 
 
