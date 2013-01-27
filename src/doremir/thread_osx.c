@@ -6,6 +6,7 @@
  */
 
 #include <doremir/thread.h>
+#include <doremir/util.h>
 #include <pthread.h>
 #include <unistd.h>
 
@@ -134,7 +135,7 @@ doremir_thread_lock(doremir_thread_mutex_t mutex)
     return true;
   } else {
     doremir_thread_fatal("unlock", result);
-    assert(false);
+    assert(false && "Not reached");
   }
 }
 
@@ -154,7 +155,7 @@ doremir_thread_try_lock(doremir_thread_mutex_t mutex)
 
   default:
     doremir_thread_fatal("try_lock", result);
-    assert(false);
+    assert(false && "Not reached");
   }
 }
 
@@ -169,7 +170,7 @@ doremir_thread_unlock(doremir_thread_mutex_t mutex)
     return true;
   } else {
     doremir_thread_fatal("unlock", result);
-    assert(false);
+    assert(false && "Not reached");
   }
 }
 
@@ -252,10 +253,11 @@ doremir_thread_notify_all(doremir_thread_condition_t cond)
 // Utility
 // --------------------------------------------------------------------------------
 
+void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t origin);
+
 void doremir_thread_fatal(char *msg, int error)
 {
-  // TODO log
-  printf("Fatal error: Doremir: Thread: %s: %d\n", msg, error);
+  doremir_audio_engine_log_error_from(string(msg), string("Doremir.Thread"));
   exit(error);
 }
 

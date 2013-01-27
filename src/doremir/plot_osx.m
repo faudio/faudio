@@ -168,7 +168,7 @@ static long   gPlotCount;
         gPlotFunc(gPlotData, i, t, x)
       ];
     }
-    assert(false && "Unreachable");
+    assert(false && "Not reached");
 }
 
 @end

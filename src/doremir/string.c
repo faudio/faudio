@@ -40,7 +40,7 @@ struct _doremir_string_t {
 };
 
 doremir_ptr_t string_impl(doremir_id_t interface);
-static void fatal(char *msg, int error);
+static void doremir_string_fatal(char *msg, int error);
 
 string_t new_string(size_t size, uint16_t *data)
 {
@@ -155,7 +155,7 @@ int doremir_string_length(doremir_string_t str)
 uint16_t doremir_string_char_at(int n, doremir_string_t str)
 {
   if (n < 0 || n >= str->size) {
-    assert(false && "Out of range");
+    assert(false && "Character out of range");
   }
 
   return str->data[n];
@@ -182,7 +182,7 @@ doremir_string_t doremir_string_format_integer(char *format, long value)
   numChars = snprintf(buffer, 100, format, value);
 
   if (numChars > 100) {
-    fatal("Too many characters", -1);
+    doremir_string_fatal("Too many characters", -1);
   }
 
   buffer[numChars] = 0;
@@ -205,7 +205,7 @@ doremir_string_t doremir_string_format_floating(char *format, double value)
   numChars = snprintf(buffer, 100, format, value);
 
   if (numChars > 100) {
-    fatal("Too many characters", -1);
+    doremir_string_fatal("Too many characters", -1);
   }
 
   buffer[numChars] = 0;
@@ -224,19 +224,19 @@ static inline void iconv_fail()
 {
   switch (errno) {
   case E2BIG:
-    fatal("iconv: Output buffer too small",
+    doremir_string_fatal("iconv: Output buffer too small",
           errno);
 
   case EILSEQ:
-    fatal("iconv: Input byte does not belong to the input codeset",
+    doremir_string_fatal("iconv: Input byte does not belong to the input codeset",
           errno);
 
   case EINVAL:
-    fatal("iconv: Incomplete character or shift sequence at the end of the input buffer",
+    doremir_string_fatal("iconv: Incomplete character or shift sequence at the end of the input buffer",
           errno);
 
   default:
-    fatal("iconv: Unknown error",
+    doremir_string_fatal("iconv: Unknown error",
           errno);
   }
 }
@@ -585,9 +585,11 @@ doremir_ptr_t string_impl(doremir_id_t interface)
 
 // --------------------------------------------------------------------------------
 
-static void fatal(char *msg, int error)
+void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t origin);
+
+void doremir_string_fatal(char *msg, int error)
 {
-  printf("Fatal error: Doremir: String: %s: %d\n", msg, error);
+  doremir_audio_engine_log_error_from(string(msg), string("Doremir.String"));
   exit(error);
 }
 

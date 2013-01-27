@@ -148,10 +148,11 @@ bool doremir_thread_unlock(doremir_thread_mutex_t mutex)
 
 // --------------------------------------------------------------------------------
 
+void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t origin);
+
 void doremir_thread_fatal(char *msg, int error)
 {
-  // TODO log
-  printf("Fatal error: Doremir: Thread: %s: %d\n", msg, error);
+  doremir_audio_engine_log_error_from(string(msg), string("Doremir.Thread"));
   exit(error);
 }
 

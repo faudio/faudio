@@ -117,24 +117,39 @@ void doremir_audio_engine_log(doremir_ptr_t ct, doremir_ptr_t e)
   if (log_func)
     log_func(log_data, time(NULL), e);
 }
-    
+
 void doremir_audio_engine_log_info(doremir_string_t msg)
 {                      
-  error_t err = doremir_error_create_simple(info, msg, string(""));
-  doremir_audio_engine_log(NULL, err);
-  doremir_destroy(err);
+  doremir_audio_engine_log_info_from(msg, string(""));
 }
 
 void doremir_audio_engine_log_warning(doremir_string_t msg)
 {
-  error_t err = doremir_error_create_simple(warning, msg, string(""));
-  doremir_audio_engine_log(NULL, err);
-  doremir_destroy(err);
+  doremir_audio_engine_log_warning_from(msg, string(""));
 }
 
 void doremir_audio_engine_log_error(doremir_string_t msg)
 {
-  error_t err = doremir_error_create_simple(error, msg, string(""));
+  doremir_audio_engine_log_error_from(msg, string(""));
+}         
+
+void doremir_audio_engine_log_info_from(doremir_string_t msg, doremir_string_t origin)
+{                      
+  error_t err = doremir_error_create_simple(info, msg, origin);
+  doremir_audio_engine_log(NULL, err);
+  doremir_destroy(err);
+}
+
+void doremir_audio_engine_log_warning_from(doremir_string_t msg, doremir_string_t origin)
+{
+  error_t err = doremir_error_create_simple(warning, msg, origin);
+  doremir_audio_engine_log(NULL, err);
+  doremir_destroy(err);
+}
+
+void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t origin)
+{
+  error_t err = doremir_error_create_simple(error, msg, origin);
   doremir_audio_engine_log(NULL, err);
   doremir_destroy(err);
 }

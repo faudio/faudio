@@ -125,7 +125,7 @@ doremir_string_t simple_error_show(doremir_ptr_t a)
       str = string_dappend(str, string("\x1b[35m[MISC]\x1b[0m    "));
       break;
     default:
-      assert(false && "Missing");
+      assert(false && "Missing label");
   }
 
   if (doremir_string_length(simple->origin) > 0)
