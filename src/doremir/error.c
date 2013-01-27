@@ -15,9 +15,9 @@ struct simple_error {
   severity_t    severity;
   string_t      message;
   string_t      origin;
-};   
+};
 
-typedef struct simple_error* simple_error_t;
+typedef struct simple_error *simple_error_t;
 
 doremir_ptr_t simple_error_impl(doremir_id_t interface);
 
@@ -57,15 +57,15 @@ void doremir_error_destroy_simple(simple_error_t simple)
 
 doremir_error_severity_t doremir_error_severity(doremir_error_t a)
 {
-  return ((doremir_error_interface_t*) doremir_interface(doremir_error_i, a))->severity(a);
+  return ((doremir_error_interface_t *) doremir_interface(doremir_error_i, a))->severity(a);
 }
 doremir_string_t doremir_error_message(doremir_error_t a)
 {
-  return ((doremir_error_interface_t*) doremir_interface(doremir_error_i, a))->message(a);  
+  return ((doremir_error_interface_t *) doremir_interface(doremir_error_i, a))->message(a);
 }
 doremir_string_t doremir_error_origin(doremir_error_t a)
 {
-  return ((doremir_error_interface_t*) doremir_interface(doremir_error_i, a))->origin(a);  
+  return ((doremir_error_interface_t *) doremir_interface(doremir_error_i, a))->origin(a);
 }
 
 bool doremir_error_check(doremir_ptr_t a)
@@ -109,34 +109,37 @@ doremir_string_t simple_error_show(doremir_ptr_t a)
 {
   simple_error_t simple = (simple_error_t) a;
   string_t str = string("");
-  
-  switch (simple->severity)
-  {
-    case info:
-      str = string_dappend(str, string("\x1b[32m[INFO]\x1b[0m    "));
-      break;
-    case warning:
-      str = string_dappend(str, string("\x1b[33m[WARNING]\x1b[0m "));
-      break;
-    case error:
-      str = string_dappend(str, string("\x1b[31m[ERROR]\x1b[0m   "));
-      break;
-    case misc:
-      str = string_dappend(str, string("\x1b[35m[MISC]\x1b[0m    "));
-      break;
-    default:
-      assert(false && "Missing label");
+
+  switch (simple->severity) {
+  case info:
+    str = string_dappend(str, string("\x1b[32m[INFO]\x1b[0m    "));
+    break;
+
+  case warning:
+    str = string_dappend(str, string("\x1b[33m[WARNING]\x1b[0m "));
+    break;
+
+  case error:
+    str = string_dappend(str, string("\x1b[31m[ERROR]\x1b[0m   "));
+    break;
+
+  case misc:
+    str = string_dappend(str, string("\x1b[35m[MISC]\x1b[0m    "));
+    break;
+
+  default:
+    assert(false && "Missing label");
   }
 
-  if (doremir_string_length(simple->origin) > 0)
-  {
+  if (doremir_string_length(simple->origin) > 0) {
     str = string_dappend(str, string("\x1b[36m"));
     str = string_dappend(str, doremir_copy(simple->origin));
     str = string_dappend(str, string("\x1b[0m"));
     str = string_dappend(str, string(": "));
   }
+
   str = string_dappend(str, doremir_copy(simple->message));
-  
+
   return str;
 }
 

@@ -15,7 +15,7 @@
 
     - Each matrix register contains a raw buffer of known size.
 
-        - Buffers are allocated using the alloc opcode. 
+        - Buffers are allocated using the alloc opcode.
 
             - Initially, all buffers have *max size* and *size* 0.
             - Buffer *max size* is constant until swap, or alloc is called.

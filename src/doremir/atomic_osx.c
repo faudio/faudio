@@ -11,7 +11,7 @@
 
 #include <libkern/OSAtomic.h>
 
-/*  
+/*
     Notes:
       - Atomic values and ops are strictly 32-bit for now
  */

@@ -45,11 +45,11 @@ void doremir_audio_engine_terminate()
 }
 
 
-/* 
+/*
   TODO remove coloring if redirected
-  
+
   Ex
-  
+
   int is_redirected(){
      if (!isatty(fileno(stdout))){
          fprintf(stdout, "argv, argc, someone is redirecting me elsewhere...\n");
@@ -62,15 +62,15 @@ void doremir_audio_engine_terminate()
 
 static inline
 void write_log(ptr_t ct, doremir_time_system_t t, doremir_error_t e)
-{                               
+{
   FILE *file = ct;
   char csmsg[350];
-  
-  {    
+
+  {
     // use gmtime?
-    struct tm *tm = localtime((long*) &t);
+    struct tm *tm = localtime((long *) &t);
     strftime(csmsg, 50, "%Y-%m-%d %H:%M:%S%z  ", tm);
-  }              
+  }
   {
     // set csmsg
     doremir_string_t str = doremir_string_show(e);
@@ -79,7 +79,7 @@ void write_log(ptr_t ct, doremir_time_system_t t, doremir_error_t e)
     strncat(csmsg, "\n", 1);
     free(cstr);
     doremir_destroy(str);
-  }        
+  }
   fputs(csmsg, file);
   fflush(file);
 }
@@ -87,8 +87,8 @@ void write_log(ptr_t ct, doremir_time_system_t t, doremir_error_t e)
 /** Instruct the Audio Engine to write log messages to the specific file.
  */
 void doremir_audio_engine_set_log_file(doremir_string_file_path_t path)
-{                        
-  char* cpath = doremir_string_to_utf8(path);
+{
+  char *cpath = doremir_string_to_utf8(path);
   log_data = fopen(cpath, "a");
   log_func = write_log;
   free(cpath);
@@ -113,13 +113,14 @@ void doremir_audio_engine_set_log(doremir_audio_engine_log_func_t f, doremir_ptr
 /** Write a log message.
  */
 void doremir_audio_engine_log(doremir_ptr_t ct, doremir_ptr_t e)
-{     
-  if (log_func)
+{
+  if (log_func) {
     log_func(log_data, time(NULL), e);
+  }
 }
 
 void doremir_audio_engine_log_info(doremir_string_t msg)
-{                      
+{
   doremir_audio_engine_log_info_from(msg, string(""));
 }
 
@@ -131,10 +132,10 @@ void doremir_audio_engine_log_warning(doremir_string_t msg)
 void doremir_audio_engine_log_error(doremir_string_t msg)
 {
   doremir_audio_engine_log_error_from(msg, string(""));
-}         
+}
 
 void doremir_audio_engine_log_info_from(doremir_string_t msg, doremir_string_t origin)
-{                      
+{
   error_t err = doremir_error_create_simple(info, msg, origin);
   doremir_audio_engine_log(NULL, err);
   doremir_destroy(err);

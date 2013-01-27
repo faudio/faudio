@@ -1050,37 +1050,40 @@ void test_processors()
     doremir_print("p                            ==> %s\n", p);
 
   }
-}     
+}
 
 ptr_t cont(ptr_t x)
-{          
+{
   printf("Continuing...\n");
   return x;
 }
 
-double f1(void* ct, int i, double t, double x)
+double f1(void *ct, int i, double t, double x)
 {
   double pi  = 3.141592653589793;
   double tau = 2 * pi;
   double t0  = x;
-  double t2  = t+x;
+  double t2  = t + x;
 
 #define step(p) ((float)((int)fmod(t,p)%p))/p
 
-  switch (i)
-  {                                
+  switch (i) {
   case 3:
     return step(5);
+
   case 2:
-    return -0.5*cos(tau*t0*0.5+pi);
+    return -0.5 * cos(tau * t0 * 0.5 + pi);
+
   case 1:
-    return  0.5*cos(tau*t0*0.5+pi);
+    return  0.5 * cos(tau * t0 * 0.5 + pi);
+
   case 0:
-    return  0.5*cos(tau*t0*0.5+pi)*sin(tau*t0*3);
-  //   return 0.5*sin(tau*t2*3 + 0);
-  // case 1:
+    return  0.5 * cos(tau * t0 * 0.5 + pi) * sin(tau * t0 * 3);
+
+    //   return 0.5*sin(tau*t2*3 + 0);
+    // case 1:
     // return 0.5*sin(tau*(t2)*3.1 + 0.4);
-  // case 2:
+    // case 2:
     // return (t2/60) * 1;
   default:
     return 0;
@@ -1091,31 +1094,32 @@ void test_plot()
 {
   doremir_plot_show(f1, NULL, cont, NULL);
 }
-     
-double f2(void* ct, int i, double t, double x)
+
+double f2(void *ct, int i, double t, double x)
 {
   buffer_t buf = ct;
   // doremir_print("Size: %s\n", i32(doremir_buffer_size(buf)));
   // doremir_print("Data: %s\n", buf);
 
   size_t  sz = doremir_buffer_size(buf) / sizeof(double);
-  double* ds = doremir_buffer_unsafe_address(buf);
-                                      
+  double *ds = doremir_buffer_unsafe_address(buf);
+
   // printf("%d %f\n", ((int)(sz * ((x+1)/2))), ds[((int)(sz * ((x+1)/2)))]*1000);
-                                                  
-  if (i == 0)
-    return ds[((int)(sz * ((x+1)/2)))];
-  else if (i == 1)
-    return ds[((int)(sz * ((x+1)/2)))] * -1;
-  else
+
+  if (i == 0) {
+    return ds[((int)(sz * ((x + 1) / 2)))];
+  } else if (i == 1) {
+    return ds[((int)(sz * ((x + 1) / 2)))] * -1;
+  } else {
     return -2;
+  }
 }
 void test_plot_file()
 {
   SF_INFO info;
-  info.format = 0;         
+  info.format = 0;
   char *file = "/Users/hans/Desktop/Passager.wav";
-  SNDFILE* f = sf_open(file, SFM_READ, &info);
+  SNDFILE *f = sf_open(file, SFM_READ, &info);
 
   printf("Format:       %x\n", info.format);
   printf("Channels:     %d\n", info.channels);
@@ -1124,22 +1128,23 @@ void test_plot_file()
   printf("Sections:     %d\n", info.sections);
   printf("Seekable:     %d\n", info.seekable);
 
-  if (sf_error(f))
+  if (sf_error(f)) {
     printf("Sound file error: %d\n", sf_error(f));
+  }
 
-  size_t bufSize = 100000000*sizeof(double);
+  size_t bufSize = 100000000 * sizeof(double);
   buffer_t buf = doremir_buffer_create(bufSize);
-  double* dbuf = doremir_buffer_unsafe_address(buf);
+  double *dbuf = doremir_buffer_unsafe_address(buf);
   // double* dbuf = malloc(bufSize);
 
-  sf_count_t sz = sf_read_double(f, dbuf, bufSize/sizeof(double));
-  buf = doremir_buffer_resize(sz*sizeof(double), buf);
-                                
-  doremir_plot_show(f2, buf, cont, NULL);  
+  sf_count_t sz = sf_read_double(f, dbuf, bufSize / sizeof(double));
+  buf = doremir_buffer_resize(sz * sizeof(double), buf);
+
+  doremir_plot_show(f2, buf, cont, NULL);
 }
 
 void test_sndfile()
-{                                                                    
+{
 }
 
 
@@ -1148,24 +1153,23 @@ void test_vm2()
 {
   test_section();
   test_vm();
-}     
+}
 
 void test_log()
-{                                                                     
+{
   doremir_audio_engine_set_log_std();
   // doremir_audio_engine_set_log_file(string("/Users/hans/Library/Logs/DoReMIRAudio.log"));
-  
-  while(1)
-  {
-    // doremir_audio_engine_log(NULL, 
+
+  while (1) {
+    // doremir_audio_engine_log(NULL,
     //   doremir_error_create_simple(
-    //     info, 
-    //     string("We have a problem"), 
+    //     info,
+    //     string("We have a problem"),
     //     string("")));
-    // doremir_audio_engine_log(NULL, 
+    // doremir_audio_engine_log(NULL,
     //   doremir_error_create_simple(
-    //     error, 
-    //     string("We have a problem"), 
+    //     error,
+    //     string("We have a problem"),
     //     string("Doremir.Buffer")));
     // doremir_thread_sleep(500);
 
@@ -1173,11 +1177,11 @@ void test_log()
     // doremir_audio_engine_log_warning(string("We have a problem"));
     doremir_audio_engine_log_error(string("We have a problem"));
 
-    doremir_audio_engine_log(NULL, 
-      doremir_error_create_simple(
-        error, 
-        string("We have a problem"), 
-        string("Doremir.Buffer")));
+    doremir_audio_engine_log(NULL,
+                             doremir_error_create_simple(
+                               error,
+                               string("We have a problem"),
+                               string("Doremir.Buffer")));
     doremir_thread_sleep(500);
 
   }

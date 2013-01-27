@@ -225,19 +225,19 @@ static inline void iconv_fail()
   switch (errno) {
   case E2BIG:
     doremir_string_fatal("iconv: Output buffer too small",
-          errno);
+                         errno);
 
   case EILSEQ:
     doremir_string_fatal("iconv: Input byte does not belong to the input codeset",
-          errno);
+                         errno);
 
   case EINVAL:
     doremir_string_fatal("iconv: Incomplete character or shift sequence at the end of the input buffer",
-          errno);
+                         errno);
 
   default:
     doremir_string_fatal("iconv: Unknown error",
-          errno);
+                         errno);
   }
 }
 

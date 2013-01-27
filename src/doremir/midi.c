@@ -161,8 +161,9 @@ bool midi_equal(doremir_ptr_t a, doremir_ptr_t b)
   midi_t midi1 = (midi_t) a;
   midi_t midi2 = (midi_t) b;
 
-  if (midi1->is_sysex != midi2->is_sysex)
+  if (midi1->is_sysex != midi2->is_sysex) {
     return false;
+  }
 
   if (!midi1->is_sysex) {
     return memcmp(&midi1->data.simple, &midi2->data.simple, 3) == 0;
@@ -178,8 +179,9 @@ bool midi_less_than(doremir_ptr_t a, doremir_ptr_t b)
   midi_t midi1 = (midi_t) a;
   midi_t midi2 = (midi_t) b;
 
-  if (midi1->is_sysex != midi2->is_sysex)
-    return midi1->is_sysex; 
+  if (midi1->is_sysex != midi2->is_sysex) {
+    return midi1->is_sysex;
+  }
 
   if (!midi1->is_sysex) {
     return memcmp(&midi1->data.simple, &midi2->data.simple, 3) < 0;
@@ -193,8 +195,9 @@ bool midi_greater_than(doremir_ptr_t a, doremir_ptr_t b)
   midi_t midi1 = (midi_t) a;
   midi_t midi2 = (midi_t) b;
 
-  if (midi1->is_sysex != midi2->is_sysex)
-    return midi2->is_sysex; 
+  if (midi1->is_sysex != midi2->is_sysex) {
+    return midi2->is_sysex;
+  }
 
   if (!midi1->is_sysex) {
     return memcmp(&midi1->data.simple, &midi2->data.simple, 3) > 0;
