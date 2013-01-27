@@ -532,16 +532,6 @@ ptr_t times10(ptr_t data, ptr_t p)
 {
   return i16(10 * ti16(p));
 }
-ptr_t call1(ptr_t f, ptr_t x)
-{
-  nullary_t g = f;
-  return g(x);
-}
-ptr_t call2(ptr_t f, ptr_t x, ptr_t y)
-{
-  unary_t g = f;
-  return g(x, y);
-}
 
 // x = [x,x]
 ptr_t test_list_dup(ptr_t ct, ptr_t x)
@@ -647,7 +637,7 @@ void test_list()
     // list_t as = list(i16(1), i16(-2), i16(0), i16(4), i16(123));
     list_t as = doremir_list_enumerate(0, 10);
     as = doremir_list_reverse(as);
-    as = doremir_list_dmap(call1, i32, as);
+    as = doremir_list_dmap(apply1, i32, as);
 
     list_t bs = doremir_list_sort(as);
 
@@ -852,7 +842,7 @@ void test_list()
     xs = doremir_list_dreverse(xs);
     // doremir_print("reverse(xs)                  ==> %s\n", xs);
 
-    xs = doremir_list_dmap(call1, i16, xs);
+    xs = doremir_list_dmap(apply1, i16, xs);
     // doremir_print("xs                           ==> %s\n", xs);
 
     xs = doremir_list_dfilter(is_odd16, 0, xs);
@@ -867,10 +857,10 @@ void test_list()
     printf("\n");
 
     list_t xs = doremir_list_enumerate(0, 12);
-    xs = doremir_list_dmap(call1, i8, xs);
+    xs = doremir_list_dmap(apply1, i8, xs);
 
     doremir_print("xs                           ==> %s\n", xs);
-    ptr_t sum = doremir_list_dfold_left(call2, doremir_add, i8(0), xs);
+    ptr_t sum = doremir_list_dfold_left(apply2, doremir_add, i8(0), xs);
     doremir_print("sum(xs)                      ==> %s\n", sum);
   }
 }

@@ -6,6 +6,7 @@
 #include <doremir/util/minmax.h>
 #include <doremir/util/literals.h>
 #include <doremir/util/macros.h>
+#include <doremir/util/apply.h>
 
 #define ptr_t               doremir_ptr_t
 #define impl_t              doremir_impl_t

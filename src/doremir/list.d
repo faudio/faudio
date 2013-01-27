@@ -336,9 +336,7 @@ list_t doremir_list_filter(doremir_pred_t pred, doremir_ptr_t data, doremir_list
  */
 list_t doremir_list_dfilter(doremir_pred_t pred, doremir_ptr_t data, doremir_list_t list) {}
 
-/** Return the result of applying the given function to all elements of the given list
-    and the result of the previous such application, or the initial element for an empty
-    list.
+/** Fold over the given list from left to right.
 
     @note
         O(n)
@@ -348,7 +346,7 @@ doremir_ptr_t doremir_list_fold_left(doremir_binary_t func,
                                      doremir_ptr_t    init,
                                      doremir_list_t   list) {}
 
-/** Fold over the given list.
+/** Fold over the given list from left to right.
 
     @note
         O(n)
@@ -358,20 +356,31 @@ doremir_ptr_t doremir_list_dfold_left(doremir_binary_t func,
                                       doremir_ptr_t    init,
                                       doremir_list_t   list) {}
 
-/** Return 
+/** Concatenate all elements of the given list. 
+    
+    The given list must contain lists only.
+
     @note
         O(n)
  */
 list_t doremir_list_concat(doremir_list_t lists) {}
 
-/** Return 
+/** Concatenate all elements of the given list. 
+    
+    The given list must contain lists only.
+    
     @note
         O(n)
  */
 list_t doremir_list_dconcat(doremir_list_t lists) {}
 
 
-/** Return 
+/** Map over the given list and concatenate the results.
+    
+    This function is useful to apply functions from singletons to lists.
+    
+    @par Laws
+        `concatMap(apply1, single, xs) == xs`
     @note
         O(n)
  */
@@ -379,7 +388,12 @@ doremir_list_t doremir_list_concat_map(doremir_unary_t func,
                                        doremir_ptr_t data,
                                        doremir_list_t list) {}
 
-/** Return 
+/** Map over the given list and concatenate the results.
+    
+    This function is useful to apply functions from singletons to lists.
+    
+    @par Laws
+      `concatMap(apply1, single, xs) == xs`
     @note
         O(n)
  */
