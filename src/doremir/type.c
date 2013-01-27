@@ -12,7 +12,7 @@ typedef doremir_type_simple_t simple_t;
 
 struct _doremir_type_t {
 
-  doremir_impl_t          impl;           //  Interface dispatcher
+  impl_t                  impl;           //  Interface dispatcher
 
   enum {
     simple_type,
@@ -39,17 +39,13 @@ struct _doremir_type_t {
   }                       fields;
 };
 
-#define simple_get(v)   v->fields.simple
-#define pair_get(v,f)   v->fields.pair.f
-#define vector_get(v,f) v->fields.vector.f
-#define frame_get(v,f)  v->fields.frame.f
-
-doremir_ptr_t type_impl(doremir_id_t interface);
+// --------------------------------------------------------------------------------
 
 doremir_type_t new_type(int tag)
 {
   type_t t = doremir_new(type);
 
+  doremir_ptr_t type_impl(doremir_id_t interface);
   t->impl = &type_impl;
   t->tag  = tag;
 
@@ -62,9 +58,15 @@ void delete_type(doremir_type_t type)
   doremir_delete(type);
 }
 
+#define simple_get(v)   v->fields.simple
+#define pair_get(v,f)   v->fields.pair.f
+#define vector_get(v,f) v->fields.vector.f
+#define frame_get(v,f)  v->fields.frame.f
+
+
 // --------------------------------------------------------------------------------
 
-// TODO should really copy and delete components
+// TODO manage component types
 
 /**
     Create a representation of a simple type.

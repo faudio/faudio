@@ -10,15 +10,20 @@
 
 typedef doremir_audio_engine_log_func_t log_func_t;
 
+static int            init_count_g  = 0;
+static log_func_t     log_func_g    = NULL;
+static ptr_t          log_ct_g      = NULL;
+
+// --------------------------------------------------------------------------------
+
 /*  Forward declare internal routines.
     One initializer and terminator for each module.
  */
 void doremir_device_audio_initialize();
 void doremir_device_audio_terminate();
 
-static int            init_count_g  = 0;
-static log_func_t     log_func_g    = NULL;
-static ptr_t          log_ct_g      = NULL;
+
+// --------------------------------------------------------------------------------
 
 /** Performs global initialization.
 
@@ -45,6 +50,7 @@ void doremir_audio_engine_terminate()
   doremir_audio_engine_log_info(string("Finished termination."));
 }
 
+// --------------------------------------------------------------------------------
 
 /*
   TODO remove coloring if redirected
@@ -61,7 +67,7 @@ void doremir_audio_engine_terminate()
  */
 
 static inline
-void write_log(ptr_t ct, doremir_time_system_t t, doremir_error_t e)
+void stdlog(ptr_t ct, doremir_time_system_t t, doremir_error_t e)
 {
   FILE *file = ct;
   char csmsg[350];
@@ -90,7 +96,7 @@ void doremir_audio_engine_set_log_file(doremir_string_file_path_t path)
 {
   char *cpath = doremir_string_to_utf8(path);
   log_ct_g = fopen(cpath, "a");
-  log_func_g = write_log;
+  log_func_g = stdlog;
   free(cpath);
 }
 
@@ -99,7 +105,7 @@ void doremir_audio_engine_set_log_file(doremir_string_file_path_t path)
 void doremir_audio_engine_set_log_std()
 {
   log_ct_g = stdout;
-  log_func_g = write_log;
+  log_func_g = stdlog;
 }
 
 /** Instruct the Audio Engine to pass log messages to the given handler.
@@ -109,6 +115,9 @@ void doremir_audio_engine_set_log(doremir_audio_engine_log_func_t f, doremir_ptr
   log_func_g = f;
   log_ct_g = ct;
 }
+
+
+// --------------------------------------------------------------------------------
 
 /** Write a log message.
     @param ct   Context reference (ignored).

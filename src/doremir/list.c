@@ -35,6 +35,9 @@ struct _doremir_list_t {
   node_t          node;       //  Top-level node
 };
 
+
+// --------------------------------------------------------------------------------
+
 // static int node_count_db_g = 0;
 void db_node_alloc()
 {
@@ -91,7 +94,6 @@ inline static void release_node(node_t node)
   if (!node) {
     return;
   }
-
   node->count--;
   db_node_release(node);
 
@@ -121,15 +123,14 @@ inline static void delete_list(list_t list)
     the node in the following block.
 
     impl_for_each_node(my_list, node)
-        doremir_print("%s\n", &node);
+        doremir_print("%s\n", node->value);
 
  */
 #define impl_for_each_node(list, var) \
   for(node_t _n = list->node; _n; _n = _n->next) \
       doremir_let(var, _n)
 
-/**
-    Iterate over the elements of a list. The variable var will be a ptr_t
+/** Iterate over the elements of a list. The variable var will be a ptr_t
     referencing the value in the following block.
 
     This macro is independent from the foreach in <doremir/utils.h>, which should
@@ -154,6 +155,7 @@ inline static void delete_list(list_t list)
             append_node(next, value);
           else
             prepend_node(next, value);
+        return new_list(node);
 
     @param place
         A node_t pointer.
@@ -177,8 +179,6 @@ inline static void delete_list(list_t list)
   } while (0)
 
 
-// --------------------------------------------------------------------------------
-// Constructors
 // --------------------------------------------------------------------------------
 
 list_t doremir_list_empty()
@@ -216,8 +216,6 @@ void doremir_list_destroy(list_t xs)
 
 
 // --------------------------------------------------------------------------------
-// Predicates
-// --------------------------------------------------------------------------------
 
 bool doremir_list_is_empty(list_t xs)
 {
@@ -241,8 +239,7 @@ int doremir_list_length(list_t xs)
 
 
 // --------------------------------------------------------------------------------
-// Sequential access
-// --------------------------------------------------------------------------------
+
 
 ptr_t doremir_list_head(list_t xs)
 {
@@ -303,34 +300,29 @@ list_t doremir_list_dinit(list_t xs)
 
 
 // --------------------------------------------------------------------------------
-// Misc operations
-// --------------------------------------------------------------------------------
-
 
 // TODO rewrite tail recursion as loop
-static inline
-list_t base_append(list_t xs, list_t ys)
+static inline list_t append(list_t xs, list_t ys)
 {
   if (is_empty(xs)) {
     return doremir_list_copy(ys);
   } else {
     list_t xst = doremir_list_tail(xs);
-    list_t r = doremir_list_dcons(doremir_list_head(xs), base_append(xst, ys));
+    list_t r = doremir_list_dcons(doremir_list_head(xs), append(xst, ys));
     doremir_list_destroy(xst);
     return r;
   }
 }
 
 // TODO rewrite tail recursion as loop
-static inline
-list_t base_revappend(list_t xs, list_t ys)
+static inline list_t revappend(list_t xs, list_t ys)
 {
   if (is_empty(xs)) {
     return doremir_list_copy(ys);
   } else {
     list_t xst = doremir_list_tail(xs);
     list_t con = doremir_list_cons(doremir_list_head(xs), ys);
-    list_t r = base_revappend(xst, con);
+    list_t r = revappend(xst, con);
     doremir_list_destroy(xst);
     doremir_list_destroy(con);
     return r;
@@ -339,16 +331,15 @@ list_t base_revappend(list_t xs, list_t ys)
 
 list_t doremir_list_append(list_t xs, list_t ys)
 {
-  return base_append(xs, ys);
+  return append(xs, ys);
 }
 
 list_t doremir_list_reverse(list_t xs)
 {
-  return base_revappend(xs, doremir_list_empty());
+  return revappend(xs, doremir_list_empty());
 }
 
-static inline
-list_t merge(list_t xs, list_t ys)
+static inline list_t merge(list_t xs, list_t ys)
 {
   begin_node(node, next);
 
@@ -378,8 +369,7 @@ list_t merge(list_t xs, list_t ys)
   return new_list(node);
 }
 
-static inline
-list_t dmerge(list_t xs, list_t ys)
+static inline list_t dmerge(list_t xs, list_t ys)
 {
   list_t res = merge(xs, ys);
   doremir_list_destroy(xs);
@@ -388,8 +378,7 @@ list_t dmerge(list_t xs, list_t ys)
 }
 
 
-static inline
-list_t dmerge_sort(list_t xs)
+static inline list_t dmerge_sort(list_t xs)
 {
   int len, mid;
   list_t left, right;
@@ -422,7 +411,7 @@ list_t doremir_list_sort(list_t xs)
 
 list_t doremir_list_dappend(list_t xs, list_t ys)
 {
-  list_t zs = base_append(xs, ys);
+  list_t zs = append(xs, ys);
   doremir_list_destroy(xs);
   doremir_list_destroy(ys);
   return zs;
@@ -430,7 +419,7 @@ list_t doremir_list_dappend(list_t xs, list_t ys)
 
 list_t doremir_list_dreverse(list_t xs)
 {
-  list_t ys = base_revappend(xs, doremir_list_empty());
+  list_t ys = revappend(xs, doremir_list_empty());
   doremir_list_destroy(xs);
   return ys;
 }
@@ -442,8 +431,6 @@ list_t doremir_list_dsort(list_t xs)
 }
 
 
-// --------------------------------------------------------------------------------
-// Random access
 // --------------------------------------------------------------------------------
 
 // TODO rewrite tail recursion as loop
@@ -560,8 +547,6 @@ list_t doremir_list_dremove_range(int m, int n, list_t xs)
 
 
 // --------------------------------------------------------------------------------
-// Searching
-// --------------------------------------------------------------------------------
 
 bool doremir_list_has(ptr_t value, list_t list)
 {
@@ -618,8 +603,6 @@ int doremir_list_find_index(pred_t pred, ptr_t data, list_t list)
 }
 
 
-// --------------------------------------------------------------------------------
-// Maps and folds
 // --------------------------------------------------------------------------------
 
 list_t doremir_list_map(unary_t func, ptr_t data, list_t list)
@@ -702,7 +685,6 @@ list_t doremir_list_dconcat_map(unary_t f, ptr_t d, list_t xs)
   doremir_list_destroy(xs);
   return ys;
 }
-
 
 
 // --------------------------------------------------------------------------------

@@ -8,15 +8,19 @@
 #include <doremir/time.h>
 #include <doremir/util.h>
 
-doremir_ptr_t time_impl(doremir_id_t interface);
 
 struct _doremir_time_t {
   impl_t          impl;       //  Interface dispatcher
   ratio_t         value;      //  Value in seconds
 };
 
+
+// --------------------------------------------------------------------------------
+
 inline static doremir_time_t new_time(ratio_t value)
 {
+  doremir_ptr_t time_impl(doremir_id_t interface);
+
   doremir_time_t t = doremir_new(time);
   t->impl  = &time_impl;
   t->value = doremir_copy(value);

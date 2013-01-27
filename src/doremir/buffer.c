@@ -17,13 +17,7 @@ struct _doremir_buffer_t {
   uint8_t      *data;
 };
 
-/**
-    @typedef doremir_buffer_t
-    The buffer.
- */
-
-doremir_ptr_t buffer_impl(doremir_id_t interface);
-
+// --------------------------------------------------------------------------------
 
 /** Create a new buffer.
     @note
@@ -31,6 +25,8 @@ doremir_ptr_t buffer_impl(doremir_id_t interface);
  */
 doremir_buffer_t doremir_buffer_create(size_t size)
 {
+  doremir_ptr_t buffer_impl(doremir_id_t interface);
+
   buffer_t b = doremir_new(buffer);
   b->impl = &buffer_impl;
   b->size = size;
@@ -53,6 +49,8 @@ doremir_buffer_t doremir_buffer_copy(doremir_buffer_t buffer)
  */
 doremir_buffer_t doremir_buffer_resize(size_t size, doremir_buffer_t buffer)
 {
+  doremir_ptr_t buffer_impl(doremir_id_t interface);
+
   buffer_t copy = doremir_new(buffer);
   copy->impl = &buffer_impl;
   copy->size = size;

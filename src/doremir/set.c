@@ -34,10 +34,12 @@ struct _doremir_set_t {
   base_t          elems;
 };
 
-doremir_ptr_t set_impl(doremir_id_t interface);
+// --------------------------------------------------------------------------------
 
 inline static set_t new_set(base_t elems)
 {
+  doremir_ptr_t set_impl(doremir_id_t interface);
+  
   set_t set   = doremir_new(set);
   set->impl   = &set_impl;
   set->elems  = elems;

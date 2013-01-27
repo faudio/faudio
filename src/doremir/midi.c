@@ -8,8 +8,6 @@
 #include <doremir/midi.h>
 #include <doremir/util.h>
 
-doremir_ptr_t midi_impl(doremir_id_t interface);
-
 typedef doremir_midi_status_t   status_t;
 typedef doremir_midi_data_t     data_t;
 
@@ -22,8 +20,12 @@ struct _doremir_midi_t {
   } data;
 };
 
+// --------------------------------------------------------------------------------
+
 inline static doremir_midi_t new_midi()
 {
+  doremir_ptr_t midi_impl(doremir_id_t interface);
+
   doremir_midi_t t = doremir_new(midi);
   t->impl  = &midi_impl;
   return t;

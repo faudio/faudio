@@ -28,6 +28,8 @@ struct _doremir_priority_queue_t {
   node_t          node;
 };
 
+// -----------------------------------------------------------------------------
+
 inline static node_t new_node(ptr_t value, node_t left, node_t right)
 {
   node_t node = doremir_new_struct(node);

@@ -39,11 +39,15 @@ struct _doremir_string_t {
   uint16_t         *data;
 };
 
-doremir_ptr_t string_impl(doremir_id_t interface);
-static void doremir_string_fatal(char *msg, int error);
+
+// --------------------------------------------------------------------------------
+
+static void          string_fatal(char *msg, int error);
+static doremir_ptr_t string_impl(doremir_id_t interface);
 
 string_t new_string(size_t size, uint16_t *data)
 {
+
   string_t str = doremir_new(string);
 
   str->impl = &string_impl;
@@ -182,7 +186,7 @@ doremir_string_t doremir_string_format_integer(char *format, long value)
   numChars = snprintf(buffer, 100, format, value);
 
   if (numChars > 100) {
-    doremir_string_fatal("Too many characters", -1);
+    string_fatal("Too many characters", -1);
   }
 
   buffer[numChars] = 0;
@@ -205,7 +209,7 @@ doremir_string_t doremir_string_format_floating(char *format, double value)
   numChars = snprintf(buffer, 100, format, value);
 
   if (numChars > 100) {
-    doremir_string_fatal("Too many characters", -1);
+    string_fatal("Too many characters", -1);
   }
 
   buffer[numChars] = 0;
@@ -224,20 +228,20 @@ static inline void iconv_fail()
 {
   switch (errno) {
   case E2BIG:
-    doremir_string_fatal("iconv: Output buffer too small",
-                         errno);
+    string_fatal("iconv: Output buffer too small",
+                 errno);
 
   case EILSEQ:
-    doremir_string_fatal("iconv: Input byte does not belong to the input codeset",
-                         errno);
+    string_fatal("iconv: Input byte does not belong to the input codeset",
+                 errno);
 
   case EINVAL:
-    doremir_string_fatal("iconv: Incomplete character or shift sequence at the end of the input buffer",
-                         errno);
+    string_fatal("iconv: Incomplete character or shift sequence at the end of the input buffer",
+                 errno);
 
   default:
-    doremir_string_fatal("iconv: Unknown error",
-                         errno);
+    string_fatal("iconv: Unknown error",
+                 errno);
   }
 }
 
@@ -582,13 +586,10 @@ doremir_ptr_t string_impl(doremir_id_t interface)
   }
 }
 
-
-// --------------------------------------------------------------------------------
-
-void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t origin);
-
-void doremir_string_fatal(char *msg, int error)
+void string_fatal(char *msg, int error)
 {
+  void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t origin);
+
   doremir_audio_engine_log_error_from(string(msg), string("Doremir.String"));
   exit(error);
 }

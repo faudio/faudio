@@ -9,17 +9,17 @@
 #include <Windows.h>
 
 struct _doremir_thread_t {
-  doremir_impl_t  impl;       //  Interface dispatcher
+  impl_t          impl;       //  Interface dispatcher
   HANDLE native;
 };
 
 struct _doremir_thread_mutex_t {
-  doremir_impl_t  impl;       //  Interface dispatcher
+  impl_t          impl;       //  Interface dispatcher
   HANDLE native;
 };
 
 struct _doremir_thread_condition_t {
-  doremir_impl_t  impl;       //  Interface dispatcher
+  impl_t          impl;       //  Interface dispatcher
   HANDLE native;
   doremir_thread_mutex_t  mutex;
 };

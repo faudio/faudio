@@ -30,11 +30,12 @@ struct _doremir_map_t {
   set_t           entries;    //  Set of entries
 };
 
-doremir_ptr_t map_impl(doremir_id_t interface);
-doremir_ptr_t entry_impl(doremir_id_t interface);
+
+// --------------------------------------------------------------------------------
 
 entry_t new_entry(doremir_ptr_t key, doremir_ptr_t value)
 {
+  doremir_ptr_t entry_impl(doremir_id_t interface);
   entry_t entry   = doremir_new_struct(entry);
   entry->impl     = &entry_impl;
   entry->key      = key;
@@ -54,6 +55,7 @@ void delete_entry(pair_t entry)
 
 inline static map_t new_map(set_t entries)
 {
+  doremir_ptr_t map_impl(doremir_id_t interface);
   map_t map       = doremir_new(map);
   map->impl       = &map_impl;
   map->entries    = entries;

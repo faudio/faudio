@@ -21,6 +21,9 @@ module Doremir.Buffer
 {
     import Doremir.Std;
 
+    /** @typedef doremir_buffer_t
+        The buffer. 
+     */
     type Buffer = opaque;
 
     create  : (Size) -> Buffer;

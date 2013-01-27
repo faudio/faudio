@@ -25,10 +25,13 @@ struct _doremir_scheduler_t {
 
 };
 
-ptr_t scheduler_impl(doremir_id_t interface);
+
+// -----------------------------------------------------------------------------
 
 inline static scheduler_t new_scheduler()
 {
+  ptr_t scheduler_impl(doremir_id_t interface);
+
   scheduler_t scheduler = doremir_new(scheduler);
   scheduler->impl = &scheduler_impl;
   return scheduler;

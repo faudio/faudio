@@ -78,8 +78,6 @@
 
 #define empty               doremir_list_empty
 #define cons                doremir_list_cons
-#define snoc                doremir_list_snoc
-#define append              doremir_list_append
 #define is_empty            doremir_list_is_empty
 #define char_at             doremir_string_char_at
 #define string_append       doremir_string_append

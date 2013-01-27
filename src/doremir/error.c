@@ -10,6 +10,8 @@
 #include <doremir/error.h>
 #include <doremir/util.h>
 
+typedef doremir_error_interface_t error_interface_t;
+
 struct simple_error {
   impl_t        impl;       //  Interface dispatcher
   severity_t    severity;
@@ -18,10 +20,9 @@ struct simple_error {
 };
 
 typedef struct simple_error       *simple_error_t;
-typedef doremir_error_interface_t error_interface_t;
 
-doremir_ptr_t simple_error_impl(doremir_id_t interface);
 
+// --------------------------------------------------------------------------------
 
 error_t doremir_error_create_simple(
   severity_t  severity,
@@ -29,6 +30,7 @@ error_t doremir_error_create_simple(
   string_t    origin
 )
 {
+  doremir_ptr_t simple_error_impl(doremir_id_t interface);
   simple_error_t e  = doremir_new_struct(simple_error);
   e->impl     = &simple_error_impl;
   e->severity = severity;
@@ -39,6 +41,7 @@ error_t doremir_error_create_simple(
 
 doremir_error_t doremir_error_copy_simple(simple_error_t simple)
 {
+  doremir_ptr_t simple_error_impl(doremir_id_t interface);
   simple_error_t e  = doremir_new_struct(simple_error);
   e->impl     = &simple_error_impl;
   e->severity = simple->severity;

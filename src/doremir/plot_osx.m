@@ -25,6 +25,7 @@ static plot_func_t  plot_func_g;
 static void*        plot_ct_g;
 static long         plot_count_g;
 
+// -----------------------------------------------------------------------------
 
 @interface MyApplication : NSApplication
 {
@@ -168,6 +169,8 @@ static long         plot_count_g;
 
 @end
 
+
+// -----------------------------------------------------------------------------
 
 void start_gui()
 {

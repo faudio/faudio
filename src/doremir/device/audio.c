@@ -49,6 +49,12 @@ struct _doremir_device_audio_stream_t {
 static mutex_t pa_mutex;
 static bool    pa_status;
 
+// --------------------------------------------------------------------------------
+
+// static void fatal(char *msg, int error);
+
+// --------------------------------------------------------------------------------
+
 void doremir_device_audio_initialize()
 {
   pa_mutex  = doremir_thread_create_mutex();
@@ -61,8 +67,6 @@ void doremir_device_audio_terminate()
 }
 
 // --------------------------------------------------------------------------------
-
-static void fatal(char *msg, int error);
 
 // FIXME return Optional?
 session_t doremir_device_audio_begin_session()

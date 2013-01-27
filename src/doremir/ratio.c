@@ -18,10 +18,12 @@ struct _doremir_ratio_t {
   denom_t         denom;
 };
 
-ptr_t ratio_impl(doremir_id_t interface);
+// --------------------------------------------------------------------------------
 
 ratio_t new_ratio()
 {
+  ptr_t ratio_impl(doremir_id_t interface);
+
   ratio_t p = doremir_new(ratio);
   p->impl = &ratio_impl;
   return p;
