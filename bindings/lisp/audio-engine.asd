@@ -27,6 +27,7 @@
         (:file "std")
         (:file "buffer")
         (:file "string")
+        (:file "error")
         (:file "atomic")
         (:module "atomic2"
           :pathname "atomic"

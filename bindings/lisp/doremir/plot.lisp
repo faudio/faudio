@@ -1,2 +1,3 @@
 (in-package :audio-engine)
-(defcfun (plot-show "doremir_plot_show") :void (a nullary) (b ptr))
+(defctype plot-func (:pointer (:pointer :void)))
+(defcfun (plot-show "doremir_plot_show") :void (a plot-func) (b ptr) (c nullary) (d ptr))

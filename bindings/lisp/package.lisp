@@ -16,6 +16,7 @@
     :time
     :type
     :sequence
+    :error
     :signal
     :equal
     :min
