@@ -68,8 +68,10 @@ doremir_string_t doremir_error_origin(doremir_error_t a)
   return ((doremir_error_interface_t*) doremir_interface(doremir_error_i, a))->origin(a);  
 }
 
-
-
+bool doremir_error_check(doremir_ptr_t a)
+{
+  return doremir_interface(doremir_error_i, a);
+}
 
 
 
@@ -120,7 +122,7 @@ doremir_string_t simple_error_show(doremir_ptr_t a)
       str = string_dappend(str, string("\x1b[31m[ERROR]\x1b[0m   "));
       break;
     case misc:
-      str = string_dappend(str, string("\x1b[36m[MISC]\x1b[0m    "));
+      str = string_dappend(str, string("\x1b[35m[MISC]\x1b[0m    "));
       break;
     default:
       assert(false && "Missing");
@@ -128,7 +130,7 @@ doremir_string_t simple_error_show(doremir_ptr_t a)
 
   if (doremir_string_length(simple->origin) > 0)
   {
-    str = string_dappend(str, string("\x1b[33m"));
+    str = string_dappend(str, string("\x1b[36m"));
     str = string_dappend(str, doremir_copy(simple->origin));
     str = string_dappend(str, string("\x1b[0m"));
     str = string_dappend(str, string(": "));

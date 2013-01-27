@@ -33,5 +33,5 @@
     check : Ptr -> Bool;
 
     // First param is context (ignored), second is error
-    log : (Ptr,Ptr) -> Void; // Pass to global logger now
+    // log : (Ptr,Ptr) -> Void; // Pass to global logger now
 }

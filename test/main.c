@@ -1167,17 +1167,29 @@ void test_log()
   
   while(1)
   {
-    doremir_audio_engine_log(NULL, 
-      doremir_error_create_simple(
-        info, 
-        string("We have a problem"), 
-        string("")));
+    // doremir_audio_engine_log(NULL, 
+    //   doremir_error_create_simple(
+    //     info, 
+    //     string("We have a problem"), 
+    //     string("")));
+    // doremir_audio_engine_log(NULL, 
+    //   doremir_error_create_simple(
+    //     error, 
+    //     string("We have a problem"), 
+    //     string("Doremir.Buffer")));
+    // doremir_thread_sleep(500);
+
+    doremir_audio_engine_log_info(string("We have a problem"));
+    // doremir_audio_engine_log_warning(string("We have a problem"));
+    doremir_audio_engine_log_error(string("We have a problem"));
+
     doremir_audio_engine_log(NULL, 
       doremir_error_create_simple(
         error, 
         string("We have a problem"), 
         string("Doremir.Buffer")));
     doremir_thread_sleep(500);
+
   }
 }
 

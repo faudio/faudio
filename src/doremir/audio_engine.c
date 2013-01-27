@@ -44,6 +44,22 @@ void doremir_audio_engine_terminate()
   doremir_device_audio_terminate();
 }
 
+
+/* 
+  TODO remove coloring if redirected
+  
+  Ex
+  
+  int is_redirected(){
+     if (!isatty(fileno(stdout))){
+         fprintf(stdout, "argv, argc, someone is redirecting me elsewhere...\n");
+         return 1;
+     }
+     return 0;
+  }
+ */
+
+
 static inline
 void write_log(ptr_t ct, doremir_time_system_t t, doremir_error_t e)
 {                               
@@ -101,4 +117,26 @@ void doremir_audio_engine_log(doremir_ptr_t ct, doremir_ptr_t e)
   if (log_func)
     log_func(log_data, time(NULL), e);
 }
+    
+void doremir_audio_engine_log_info(doremir_string_t msg)
+{                      
+  error_t err = doremir_error_create_simple(info, msg, string(""));
+  doremir_audio_engine_log(NULL, err);
+  doremir_destroy(err);
+}
+
+void doremir_audio_engine_log_warning(doremir_string_t msg)
+{
+  error_t err = doremir_error_create_simple(warning, msg, string(""));
+  doremir_audio_engine_log(NULL, err);
+  doremir_destroy(err);
+}
+
+void doremir_audio_engine_log_error(doremir_string_t msg)
+{
+  error_t err = doremir_error_create_simple(error, msg, string(""));
+  doremir_audio_engine_log(NULL, err);
+  doremir_destroy(err);
+}
+
 

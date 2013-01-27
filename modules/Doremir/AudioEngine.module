@@ -47,5 +47,8 @@ module Doremir.AudioEngine
     setLog : (LogFunc,Ptr) -> Void;
 
     log : (Ptr,Ptr) -> Void; // Pass to global logger now
+    logInfo : (String) -> Void;
+    logWarning : (String) -> Void;
+    logError : (String) -> Void;
 
 }

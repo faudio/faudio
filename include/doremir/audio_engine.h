@@ -32,6 +32,9 @@ void doremir_audio_engine_set_log_std();
 void doremir_audio_engine_set_log(doremir_audio_engine_log_func_t,
                                   doremir_ptr_t);
 void doremir_audio_engine_log(doremir_ptr_t, doremir_ptr_t);
+void doremir_audio_engine_log_info(doremir_string_t);
+void doremir_audio_engine_log_warning(doremir_string_t);
+void doremir_audio_engine_log_error(doremir_string_t);
 
 /** @}
     @}
