@@ -29,8 +29,7 @@ doremir_ptr_t buffer_impl(doremir_id_t interface);
     @note
         O(n)
  */
-doremir_buffer_t
-doremir_buffer_create(size_t size)
+doremir_buffer_t doremir_buffer_create(size_t size)
 {
   buffer_t b = doremir_new(buffer);
   b->impl = &buffer_impl;
@@ -43,8 +42,7 @@ doremir_buffer_create(size_t size)
     @note
         O(n)
  */
-doremir_buffer_t
-doremir_buffer_copy(doremir_buffer_t buffer)
+doremir_buffer_t doremir_buffer_copy(doremir_buffer_t buffer)
 {
   return doremir_buffer_resize(buffer->size, buffer);
 }
@@ -53,9 +51,7 @@ doremir_buffer_copy(doremir_buffer_t buffer)
     @note
         O(n)
  */
-doremir_buffer_t
-doremir_buffer_resize(size_t size,
-                      doremir_buffer_t buffer)
+doremir_buffer_t doremir_buffer_resize(size_t size, doremir_buffer_t buffer)
 {
   buffer_t copy = doremir_new(buffer);
   copy->impl = &buffer_impl;
@@ -69,8 +65,7 @@ doremir_buffer_resize(size_t size,
     @note
         O(n)
  */
-void
-doremir_buffer_destroy(doremir_buffer_t buffer)
+void doremir_buffer_destroy(doremir_buffer_t buffer)
 {
   free(buffer->data);
   doremir_delete(buffer);
@@ -80,8 +75,7 @@ doremir_buffer_destroy(doremir_buffer_t buffer)
     @note
         O(1)
  */
-size_t
-doremir_buffer_size(doremir_buffer_t buffer)
+size_t doremir_buffer_size(doremir_buffer_t buffer)
 {
   return buffer->size;
 }
@@ -90,8 +84,7 @@ doremir_buffer_size(doremir_buffer_t buffer)
     @note
         O(1)
  */
-uint8_t
-doremir_buffer_peek(doremir_buffer_t buffer, size_t index)
+uint8_t doremir_buffer_peek(doremir_buffer_t buffer, size_t index)
 {
   assert(index < buffer->size && "Buffer overflow");
   return buffer->data[index];
@@ -101,8 +94,7 @@ doremir_buffer_peek(doremir_buffer_t buffer, size_t index)
     @note
         O(1)
  */
-void
-doremir_buffer_poke(doremir_buffer_t buffer, size_t index, uint8_t value)
+void doremir_buffer_poke(doremir_buffer_t buffer, size_t index, uint8_t value)
 {
   assert(index < buffer->size && "Buffer overflow");
   buffer->data[index] = value;

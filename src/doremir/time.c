@@ -15,8 +15,7 @@ struct _doremir_time_t {
   ratio_t         value;      //  Value in seconds
 };
 
-inline static doremir_time_t
-new_time(ratio_t value)
+inline static doremir_time_t new_time(ratio_t value)
 {
   doremir_time_t t = doremir_new(time);
   t->impl  = &time_impl;
@@ -24,7 +23,7 @@ new_time(ratio_t value)
   return t;
 }
 
-void delete_time(doremir_time_t time)
+inline static void delete_time(doremir_time_t time)
 {
   doremir_ratio_destroy(time->value);
   doremir_delete(time);

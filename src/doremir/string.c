@@ -30,8 +30,8 @@
             * Regional string buffer/symbol table solution?
  */
 
-#define kstd_code   "UTF-16LE"          /* Internal string code */
-#define kchar_size  sizeof(uint16_t)    /* Internal char size */
+#define standard_code_k   "UTF-16LE"          // Internal string code
+#define char_size_k       sizeof(uint16_t)    // Internal char size
 
 struct _doremir_string_t {
   impl_t          impl;
@@ -76,7 +76,7 @@ doremir_string_t doremir_string_empty()
 doremir_string_t doremir_string_single(uint16_t chr)
 {
   string_t str = new_string(1, NULL);
-  str->data = malloc(kchar_size);
+  str->data = malloc(char_size_k);
   str->data[0] = chr;
 
   return str;
@@ -89,9 +89,9 @@ doremir_string_t doremir_string_single(uint16_t chr)
 doremir_string_t doremir_string_copy(doremir_string_t str)
 {
   string_t pst = new_string(str->size, NULL);
-  pst->data = malloc(str->size * kchar_size);
+  pst->data = malloc(str->size * char_size_k);
 
-  memcpy(pst->data, str->data, str->size * kchar_size);
+  memcpy(pst->data, str->data, str->size * char_size_k);
 
   return pst;
 }
@@ -104,10 +104,10 @@ doremir_string_t doremir_string_append(doremir_string_t as,
                                        doremir_string_t bs)
 {
   string_t cs = new_string(as->size + bs->size, NULL);
-  cs->data = malloc(cs->size * kchar_size);
+  cs->data = malloc(cs->size * char_size_k);
 
-  memcpy(cs->data, as->data, as->size * kchar_size);
-  memcpy(cs->data + as->size, bs->data, bs->size * kchar_size);
+  memcpy(cs->data, as->data, as->size * char_size_k);
+  memcpy(cs->data + as->size, bs->data, bs->size * char_size_k);
 
   return cs;
 }
@@ -122,9 +122,9 @@ doremir_string_t doremir_string_dappend(doremir_string_t as,
   size_t oldSize = as->size;
 
   as->size = as->size + bs->size;
-  as->data = realloc(as->data, as->size * kchar_size);
+  as->data = realloc(as->data, as->size * char_size_k);
 
-  memcpy(as->data + oldSize, bs->data, bs->size * kchar_size);
+  memcpy(as->data + oldSize, bs->data, bs->size * char_size_k);
 
   free(bs);
   return as;
@@ -274,14 +274,14 @@ doremir_string_utf8_t doremir_string_to_utf8(doremir_string_t str)
   size_t inSize, outSize, cstrSize;
   char *in, *out, *cstr;
 
-  inSize  = str->size * kchar_size;   // exact char count
+  inSize  = str->size * char_size_k;   // exact char count
   outSize = str->size * 4;            // worst case, we shrink after iconv
   in      = (char *) str->data;
   out     = malloc(outSize);
   cstr    = out;
 
   {
-    iconv_t conv   = iconv_open("UTF-8", kstd_code);
+    iconv_t conv   = iconv_open("UTF-8", standard_code_k);
     size_t  status = iconv(conv, &in, &inSize, &out, &outSize);
     iconv_close(conv);
 
@@ -307,8 +307,8 @@ doremir_string_utf8_t doremir_string_to_utf8(doremir_string_t str)
 doremir_string_utf16_t doremir_string_to_utf16(doremir_string_t as)
 {
   size_t size = as->size;
-  uint16_t *cstr = malloc((size + 1) * kchar_size);
-  memcpy(cstr, as->data, as->size * kchar_size);
+  uint16_t *cstr = malloc((size + 1) * char_size_k);
+  memcpy(cstr, as->data, as->size * char_size_k);
   cstr[size] = 0;
   return cstr;
 }
@@ -342,7 +342,7 @@ doremir_string_t doremir_string_from_utf8(doremir_string_utf8_t cstr)
   str     = out;
 
   {
-    iconv_t conv = iconv_open(kstd_code, "UTF-8");
+    iconv_t conv = iconv_open(standard_code_k, "UTF-8");
     size_t status = iconv(conv, &in, &inSize, &out, &outSize);
     iconv_close(conv);
 
@@ -354,7 +354,7 @@ doremir_string_t doremir_string_from_utf8(doremir_string_utf8_t cstr)
   strSize = out - str;
   str     = realloc(str, strSize);
 
-  return new_string(strSize / kchar_size, (uint16_t *) str);
+  return new_string(strSize / char_size_k, (uint16_t *) str);
 }
 
 /** Deencode a string from UTF-16.
@@ -366,8 +366,8 @@ doremir_string_t doremir_string_from_utf8(doremir_string_utf8_t cstr)
 doremir_string_t doremir_string_from_utf16(doremir_string_utf16_t cstr)
 {
   size_t size = raw_size_16(cstr);
-  string_t as = new_string(size, malloc(size * kchar_size));
-  memcpy(cstr, as->data, as->size * kchar_size);
+  string_t as = new_string(size, malloc(size * char_size_k));
+  memcpy(cstr, as->data, as->size * char_size_k);
   return as;
 }
 

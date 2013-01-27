@@ -22,8 +22,7 @@ struct _doremir_midi_t {
   } data;
 };
 
-inline static doremir_midi_t
-new_midi()
+inline static doremir_midi_t new_midi()
 {
   doremir_midi_t t = doremir_new(midi);
   t->impl  = &midi_impl;

@@ -60,8 +60,7 @@ inline static map_t new_map(set_t entries)
   return map;
 }
 
-inline static void
-delete_map(map_t map)
+inline static void delete_map(map_t map)
 {
   doremir_delete(map);
 }

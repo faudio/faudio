@@ -207,20 +207,17 @@ doremir_type_t doremir_type_get_pair_snd(doremir_type_t t)
 
 // --------------------------------------------------------------------------------
 
-inline static
-size_t pad(size_t x, size_t a)
+inline static size_t pad(size_t x, size_t a)
 {
   return (a - x) % a;
 }
 
-inline static
-size_t next_aligned(size_t x, size_t a)
+inline static size_t next_aligned(size_t x, size_t a)
 {
   return x + pad(x, a);
 }
 
-inline static
-size_t simple_align(doremir_type_simple_t simple)
+inline static size_t simple_align(doremir_type_simple_t simple)
 {
   switch (simple) {
   case uint8_type:
@@ -249,8 +246,7 @@ size_t simple_align(doremir_type_simple_t simple)
   }
 }
 
-inline static
-size_t simple_size(doremir_type_simple_t simple)
+inline static size_t simple_size(doremir_type_simple_t simple)
 {
   switch (simple) {
   case uint8_type:
@@ -279,8 +275,7 @@ size_t simple_size(doremir_type_simple_t simple)
   }
 }
 
-inline static
-size_t align(doremir_type_t type)
+inline static size_t align(doremir_type_t type)
 {
   switch (type->tag) {
   case simple_type:
@@ -300,8 +295,7 @@ size_t align(doremir_type_t type)
   }
 }
 
-inline static
-size_t size(doremir_type_frames_t frames, doremir_type_t type)
+inline static size_t size(doremir_type_frames_t frames, doremir_type_t type)
 {
   size_t offset;
 
@@ -326,8 +320,7 @@ size_t size(doremir_type_frames_t frames, doremir_type_t type)
 }
 
 // TODO above assignment should use this
-inline static
-size_t offset(doremir_type_frames_t frames, doremir_type_t type)
+inline static size_t offset(doremir_type_frames_t frames, doremir_type_t type)
 {
   switch (type->tag) {
   case pair_type:
@@ -403,8 +396,7 @@ bool type_equal(doremir_ptr_t a, doremir_ptr_t b)
   }
 }
 
-inline static
-string_t simple_show(doremir_type_simple_t simple)
+inline static string_t simple_show(doremir_type_simple_t simple)
 {
   switch (simple) {
   case uint8_type:

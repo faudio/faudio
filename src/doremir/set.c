@@ -36,8 +36,7 @@ struct _doremir_set_t {
 
 doremir_ptr_t set_impl(doremir_id_t interface);
 
-inline static set_t
-new_set(base_t elems)
+inline static set_t new_set(base_t elems)
 {
   set_t set   = doremir_new(set);
   set->impl   = &set_impl;
@@ -45,8 +44,7 @@ new_set(base_t elems)
   return set;
 }
 
-inline static void
-delete_set(set_t set)
+inline static void delete_set(set_t set)
 {
   doremir_delete(set);
 }

@@ -10,7 +10,7 @@
 int  version[3] = { 2, 0, 0 };
 char *bits      = sizeof(void *) == 4 ? "32-bit" : "64-bit";
 
-void test_section(char* str)
+void test_section(char *str)
 {
   printf("\n\n--------------------\n");
   doremir_audio_engine_log_info(string_dappend(string("Running test: "), string(str)));

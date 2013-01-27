@@ -60,7 +60,6 @@ void doremir_audio_engine_terminate()
   }
  */
 
-
 static inline
 void write_log(ptr_t ct, doremir_time_system_t t, doremir_error_t e)
 {

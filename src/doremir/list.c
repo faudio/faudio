@@ -60,8 +60,7 @@ void db_node_release(node_t node)
 
 /** Create a new node with a single reference.
  */
-inline static
-node_t new_node(ptr_t value, node_t next)
+inline static node_t new_node(ptr_t value, node_t next)
 {
   db_node_alloc();
   node_t node = doremir_new_struct(node);
@@ -73,8 +72,7 @@ node_t new_node(ptr_t value, node_t next)
 
 /** Add a reference to the given node.
  */
-inline static
-node_t take_node(node_t node)
+inline static node_t take_node(node_t node)
 {
   if (node) {
     node->count++;  // TODO make atomic
@@ -88,8 +86,7 @@ node_t take_node(node_t node)
 /** Remove a reference from the given node, deleting
     if there are no more references.
  */
-inline static
-void release_node(node_t node)
+inline static void release_node(node_t node)
 {
   if (!node) {
     return;
@@ -107,8 +104,7 @@ void release_node(node_t node)
 
 ptr_t list_impl(doremir_id_t interface);
 
-inline static
-list_t new_list(node_t node)
+inline static list_t new_list(node_t node)
 {
   list_t list = doremir_new(list);
   list->impl = &list_impl;
@@ -116,8 +112,7 @@ list_t new_list(node_t node)
   return list;
 }
 
-inline static
-void delete_list(list_t list)
+inline static void delete_list(list_t list)
 {
   doremir_delete(list);
 }
