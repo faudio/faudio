@@ -10,6 +10,7 @@ enum doremir_interfaces {
   doremir_copy_i,
   doremir_destroy_i,
   doremir_dynamic_i,
+  doremir_error_i,
   doremir_equal_i,
   doremir_message_sender_i,
   doremir_message_receiver_i,

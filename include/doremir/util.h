@@ -38,6 +38,8 @@
 #define type_t              doremir_type_t
 #define frames_t            doremir_type_frames_t
 #define midi_t              doremir_midi_t
+#define error_t             doremir_error_t
+#define severity_t          doremir_error_severity_t
 
 #define atomic()            doremir_atomic_create()
 #define pair(a,b)           doremir_pair_create(a,b)

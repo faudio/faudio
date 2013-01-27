@@ -17,11 +17,9 @@ void doremir_device_audio_initialize();
 void doremir_device_audio_terminate();
 
 
-
-static int         count = 0;
-static log_func_t  log_func = 0;
-static ptr_t       log_data = 0;
-
+static int         count    = 0;
+static log_func_t  log_func = NULL;
+static ptr_t       log_data = NULL;
 
 /** Performs global initialization.
 

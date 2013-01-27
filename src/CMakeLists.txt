@@ -12,6 +12,7 @@ list(APPEND SRCS
   doremir/atomic/stack.c
   doremir/device/audio.c
   doremir/buffer.c
+  doremir/error.c
   doremir/list.c
   doremir/map.c
   doremir/graph.c

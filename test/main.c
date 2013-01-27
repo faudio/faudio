@@ -1167,13 +1167,17 @@ void test_log()
   
   while(1)
   {
-    doremir_audio_engine_log(NULL, string("[INFO] This is something I want to log!"));
+    doremir_audio_engine_log(NULL, 
+      doremir_error_create_simple(
+        info, 
+        string("We have a problem"), 
+        string("")));
+    doremir_audio_engine_log(NULL, 
+      doremir_error_create_simple(
+        error, 
+        string("We have a problem"), 
+        string("Doremir.Buffer")));
     doremir_thread_sleep(500);
-    doremir_audio_engine_log(NULL, string("[INFO] This is something I want to log!"));
-    doremir_thread_sleep(10);
-    doremir_audio_engine_log(NULL, string("[INFO] This is something I want to log!"));
-    doremir_thread_sleep(10);
-    
   }
 }
 

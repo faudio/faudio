@@ -10,21 +10,23 @@
     import Doremir;
     import Doremir.String;
 
-    type Category = enum {
+    type Severity = enum {
         Info, Warning, Error, Misc
     };
 
     /** @interface doremir_error_t
         Error interface.
     */
-    type ErrorInterface  = struct {
-        severity : (Ptr -> Category)*,
+    type Interface  = struct {
+        severity : (Ptr -> Severity)*,
         message : (Ptr -> String)*,
         origin : (Ptr -> String)*
     };    
     type Error = opaque;
+    
+    createSimple : (Severity, String, String) -> Error;
 
-    severity : Error -> Category;
+    severity : Error -> Severity;
     message : Error -> String;
     origin : Error -> String;
 
