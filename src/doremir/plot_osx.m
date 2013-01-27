@@ -6,18 +6,27 @@
  */
 
 #include <doremir/thread.h>
-// #include <doremir/util.h>
+
 #include <Cocoa/Cocoa.h>
 #import  <CorePlot/CorePlot.h>
 
 #define kInterval 0.05
 #define kMax      10000
 #define kSamples  500
+#define kNumPlots 5
 
-static bool               plot_alive;
-static doremir_nullary_t  plot_update;
-static doremir_ptr_t      plot_update_data;
-static double             plot_time;
+NSString* kPlotIds[kNumPlots] = {
+  @"Signal 1",
+  @"Signal 2",
+  @"Signal 3",
+  @"Signal 4",
+  @"Signal 5"
+};
+
+static double (*gPlotFunc)(void* ct, int i, double t, double x);
+static void*              gPlotData;
+static long               gPlotCount;
+
 
 @interface MyApplication : NSApplication
 {
@@ -32,8 +41,6 @@ static double             plot_time;
 
 - (void)run
 {             
-  printf("Entering run\n");
-
   [[NSNotificationCenter defaultCenter]
    postNotificationName:NSApplicationWillFinishLaunchingNotification
    object:NSApp];
@@ -52,8 +59,8 @@ static double             plot_time;
    
     [self sendEvent:event];
     [self updateWindows];
-    if (plot_time > kMax)
-      return;
+    // if (plot_time > kMax)
+    //   return;
   };
 }
 
@@ -110,27 +117,19 @@ static double             plot_time;
   lineShadow.shadowOffset       = CGSizeMake(3.0, -3.0);
   lineShadow.shadowBlurRadius   = 4.0;
   lineShadow.shadowColor        = [CPTColor blueColor];
-  
-  // TODO more plots
-  CPTScatterPlot *plot1 = [[[CPTScatterPlot alloc] init] autorelease];
-  plot1.identifier = @"Signal 1";
-  plot1.dataSource = self;
-
-  CPTScatterPlot *plot2 = [[[CPTScatterPlot alloc] init] autorelease];
-  plot2.identifier = @"Signal 2";
-  plot2.dataSource = self;
-
-  CPTMutableLineStyle *style1 = plot1.dataLineStyle.mutableCopy;
-  style1.lineWidth = 1;
-  style1.lineColor = [CPTColor blueColor];
-  plot1.dataLineStyle = style1;
-  [graph addPlot: plot1];
-  
-  CPTMutableLineStyle *style2 = plot1.dataLineStyle.mutableCopy;
-  style2.lineWidth = 1;
-  style2.lineColor = [CPTColor darkGrayColor];
-  plot2.dataLineStyle = style2;
-  [graph addPlot: plot2];
+                     
+  for(int i = 0; i < kNumPlots; ++i)
+  {
+    CPTScatterPlot *plot = [[[CPTScatterPlot alloc] init] autorelease];
+    plot.identifier = kPlotIds[i];
+    plot.dataSource = self;
+    
+    CPTMutableLineStyle *style = plot.dataLineStyle.mutableCopy;
+    style.lineWidth = 1;
+    style.lineColor = [CPTColor blueColor];
+    plot.dataLineStyle = style;
+    [graph addPlot: plot];
+  }
 
   [NSTimer
     scheduledTimerWithTimeInterval:kInterval
@@ -141,11 +140,8 @@ static double             plot_time;
 
 - (void)reload:(NSTimer*)theTimer
 {                    
-  printf("Entering update\n");
-  plot_update(plot_update_data);
-
-  plot_time += kInterval;
   [graph reloadData];
+  gPlotCount++;
 }
 
 -(NSUInteger)numberOfRecordsForPlot:
@@ -153,47 +149,29 @@ static double             plot_time;
   return kSamples;
 }
 
-// Int -> Time -> Double -> Double
-double f1(int i, double t, double x)
-{
-  double tau = 2 * 3.1415;
-  return 0.5*sin(tau*(t+x-1) + 0);
-}
-double f2(int i, double t, double x)
-{
-  return (t/60) * 10;
-}
-
-- (NSNumber *) numberForPlot:
+- (NSNumber *)  numberForPlot:
   (CPTPlot *)   plot field:
   (NSUInteger)  fieldEnum recordIndex:
   (NSUInteger)  index 
 {
-  double t = plot_time;
-
-  printf("%f\n", t);
-  double x = ((float)index / kSamples) * 2 - 1;
-  double tau = 2 * 3.1415;
+  double t = ((float) gPlotCount) * kInterval;
+  double x = ((float) index / kSamples) * 2 - 1;
   
   if (fieldEnum == CPTScatterPlotFieldX) {
     return [NSNumber numberWithDouble: x];
-  } else
-  {
-    if (plot.identifier == @"Signal 1") {
-      return [NSNumber numberWithDouble:
-        f1(0, t, x)
-      ];
-    }
-    if (plot.identifier == @"Signal 2") {
-      return [NSNumber numberWithDouble: 
-        f2(0, t, x) 
-      ];
-    }
   }
-  assert(false);
+  for(int i = 0; i < kNumPlots; ++i)
+    if (plot.identifier == kPlotIds[i]) {
+      return [NSNumber numberWithDouble:
+        gPlotFunc(gPlotData, i, t, x)
+      ];
+    }
+
 }
 
 @end
+
+typedef void real_void;
 
 void start_gui()
 {
@@ -213,13 +191,21 @@ void start_gui()
       withObject:nil
       waitUntilDone:YES];
   }
-}
+}   
 
-void doremir_plot_show(doremir_nullary_t update, doremir_ptr_t data)
-{         
-  // TODO guard reentrance
-  plot_time         = 0;
-  plot_update       = update;
-  plot_update_data  = data;
+
+void doremir_plot_show
+(
+  doremir_ternary_t   func, 
+  void*               funcData, 
+  doremir_nullary_t   cont, 
+  doremir_ptr_t       contData
+)
+{
+  gPlotCount  = 0;
+  gPlotFunc   = func;
+  gPlotData   = funcData;
+
+  doremir_thread_create(cont, contData);
   start_gui();
 }

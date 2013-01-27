@@ -8,6 +8,14 @@ module Doremir.Plot
     import Doremir;
     import Doremir.Std;
 
-    // TODO does not return at the moment
-    show : (Nullary, Ptr) -> Void;
+    /**
+        @typedef doremir_plot_func_t
+        @param c    Context.
+        @param j    Plot index. 
+        @param t    Time in seconds. 
+        @param x    Value of x, from \f$-1\f$ to \f$1\f$. 
+     */
+    type Func = (Ptr, Int, Double, Double) -> Double;
+
+    show : (Func, Ptr, Nullary, Ptr) -> Void;
 }
