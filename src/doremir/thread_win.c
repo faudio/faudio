@@ -26,7 +26,7 @@ struct _doremir_thread_condition_t {
 
 static void doremir_thread_fatal(char *msg, int error);
 
-static const long kJoinInterval = 50;
+static const long join_interval_k = 50;
 
 
 // --------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ void doremir_thread_join(doremir_thread_t thread)
   DWORD exitCode;
 
   do {
-    Sleep(kJoinInterval);
+    Sleep(join_interval_k);
     result = GetExitCodeThread(thread->native, &exitCode);
 
     if (!result) {

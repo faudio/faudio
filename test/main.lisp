@@ -40,8 +40,13 @@
 
 (audioengine-initialize)
 (audioengine-terminate)
-(audioengine-set-log-file "/Users/hans/Library/Logs/ScoreCleaner/AudioEngine.log")
+(audioengine-set-log-file "/Users/hans/Library/Logs/DoReMIRAudio.log")
 (audioengine-set-log-std)
+(audioengine-log-info "What to say?")
+(audioengine-log-warning "Beware!")
+(audioengine-log-error "Rattlesnakes!")
+(audioengine-log-error-from "Rattlesnakes!" "main.lisp")
+
 
 ; ---------------------------------------------------------------------------------------------------
 

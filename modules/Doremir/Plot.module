@@ -2,11 +2,11 @@
 /** 
     @addtogroup DoremirPlot
     
-    Provides basic time-varying data plots. This is a bit of a hack, intended
-    for internal testing at the moment.
+    Provides data plotting.
     
     @warning
-        Not portable, only works on OS X.
+        This modules is intended for internal testing and works only on OS X at the
+        moment.
  */
 module Doremir.Plot
 {

@@ -12,12 +12,12 @@
 #import  <CorePlot/CorePlot.h>
 
 // TODO optimize constants etc, tune this
-#define kInterval 0.05
-#define kMax      10000
-#define kSamples  1000
-#define kNumPlots 5
+#define interval_k  0.05
+#define max_k       10000
+#define samples_k   1000
+#define num_plots_k 5
 
-NSString* kPlotIds[kNumPlots] = {
+NSString* kPlotIds[num_plots_k] = {
   @"1",
   @"2",
   @"3",
@@ -26,9 +26,9 @@ NSString* kPlotIds[kNumPlots] = {
 };
 
 typedef double (*plot_func_t)(void* ct, int i, double t, double x);
-static plot_func_t gPlotFunc;
-static void*  gPlotData;
-static long   gPlotCount;
+static plot_func_t  plot_func_g;
+static void*        plot_ct_g;
+static long         plot_count_g;
 
 
 @interface MyApplication : NSApplication
@@ -63,7 +63,7 @@ static long   gPlotCount;
 
     [self sendEvent:event];
     [self updateWindows];
-    // if (plot_time > kMax)
+    // if (plot_time > max_k)
     //   return;
   };
 }
@@ -120,7 +120,7 @@ static long   gPlotCount;
   lineShadow.shadowBlurRadius   = 4.0;
   lineShadow.shadowColor        = [CPTColor blueColor];
 
-  for(int i = 0; i < kNumPlots; ++i)
+  for(int i = 0; i < num_plots_k; ++i)
   {
     CPTScatterPlot *plot = [[[CPTScatterPlot alloc] init] autorelease];
     plot.identifier = kPlotIds[i];
@@ -134,7 +134,7 @@ static long   gPlotCount;
   }
 
   [NSTimer
-    scheduledTimerWithTimeInterval:kInterval
+    scheduledTimerWithTimeInterval:interval_k
     target:self
     selector:@selector(reload:)
     userInfo:NULL repeats:3];
@@ -143,12 +143,12 @@ static long   gPlotCount;
 - (void)reload:(NSTimer*)theTimer
 {
   [graph reloadData];
-  gPlotCount++;
+  plot_count_g++;
 }
 
 -(NSUInteger)numberOfRecordsForPlot:
 (CPTPlot *)plot {
-  return kSamples;
+  return samples_k;
 }
 
 - (NSNumber *)  numberForPlot:
@@ -156,16 +156,16 @@ static long   gPlotCount;
   (NSUInteger)  fieldEnum recordIndex:
   (NSUInteger)  index
 {
-  double t = ((float) gPlotCount) * kInterval;
-  double x = ((float) index / kSamples) * 2 - 1;
+  double t = ((float) plot_count_g) * interval_k;
+  double x = ((float) index / samples_k) * 2 - 1;
 
   if (fieldEnum == CPTScatterPlotFieldX) {
     return [NSNumber numberWithDouble: x];
   }
-  for(int i = 0; i < kNumPlots; ++i)
+  for(int i = 0; i < num_plots_k; ++i)
     if (plot.identifier == kPlotIds[i]) {
       return [NSNumber numberWithDouble:
-        gPlotFunc(gPlotData, i, t, x)
+        plot_func_g(plot_ct_g, i, t, x)
       ];
     }
     assert(false && "Not reached");
@@ -204,9 +204,9 @@ void doremir_plot_show
   doremir_ptr_t       contData
 )
 {
-  gPlotCount  = 0;
-  gPlotFunc   = (plot_func_t) func;
-  gPlotData   = funcData;
+  plot_count_g  = 0;
+  plot_func_g   = (plot_func_t) func;
+  plot_ct_g     = funcData;
 
   doremir_thread_create(cont, contData);
   start_gui();

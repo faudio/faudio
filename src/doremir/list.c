@@ -35,16 +35,16 @@ struct _doremir_list_t {
   node_t          node;       //  Top-level node
 };
 
-// static int dbNodes = 0;
+// static int node_count_db_g = 0;
 void db_node_alloc()
 {
-  // dbNodes++;
-  // printf("Alloc node   (count: %d)\n", dbNodes);
+  // node_count_db_g++;
+  // printf("Alloc node   (count: %d)\n", node_count_db_g);
 }
 void db_node_free()
 {
-  // dbNodes--;
-  // printf("Free node    (count: %d)\n", dbNodes);
+  // node_count_db_g--;
+  // printf("Free node    (count: %d)\n", node_count_db_g);
 }
 void db_node_take(node_t node)
 {

@@ -9,7 +9,7 @@
 #include <doremir/util.h>
 #include <doremir/buffer.h>
 
-#define kPrintMaxSz 10000
+#define print_max_size_k 10000
 
 struct _doremir_buffer_t {
   impl_t      impl;       //  Interface dispatcher
@@ -136,8 +136,8 @@ void buffer_destroy(doremir_ptr_t a)
 doremir_string_t buffer_show(doremir_ptr_t a)
 {
   buffer_t buffer = (buffer_t) a;
-  bool     more   = doremir_buffer_size(buffer) > kPrintMaxSz;
-  size_t   length = more ? kPrintMaxSz : doremir_buffer_size(buffer);
+  bool     more   = doremir_buffer_size(buffer) > print_max_size_k;
+  size_t   length = more ? print_max_size_k : doremir_buffer_size(buffer);
   string_t str    = string("<Buffer");
 
   for (size_t i = 0; i < length; ++i) {
