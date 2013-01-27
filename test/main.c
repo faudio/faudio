@@ -3,6 +3,7 @@
 #include <doremir/priority_queue.h>
 #include <doremir/thread.h>
 #include <doremir/util.h>
+#include <sndfile.h>
 #include <unistd.h> // for sysconf(3)
 
 
@@ -1069,16 +1070,28 @@ ptr_t cont(ptr_t x)
 
 double f1(void* ct, int i, double t, double x)
 {
-  double tau = 2 * 3.1415;
+  double pi  = 3.141592653589793;
+  double tau = 2 * pi;
+  double t0  = x;
+  double t2  = t+x;
+
+#define step(p) ((float)((int)fmod(t,p)%p))/p
 
   switch (i)
-  {
-  case 0:
-    return 0.5*sin(tau*(t+x-1)*3 + 0);
-  case 1:
-    return 0.5*sin(tau*(t+x-1)*3.1 + 0.4);
+  {                                
+  case 3:
+    return step(5);
   case 2:
-    return (t/60) * 1;
+    return -0.5*cos(tau*t0*0.5+pi);
+  case 1:
+    return  0.5*cos(tau*t0*0.5+pi);
+  case 0:
+    return  0.5*cos(tau*t0*0.5+pi)*sin(tau*t0*3);
+  //   return 0.5*sin(tau*t2*3 + 0);
+  // case 1:
+    // return 0.5*sin(tau*(t2)*3.1 + 0.4);
+  // case 2:
+    // return (t2/60) * 1;
   default:
     return 0;
   }
@@ -1087,6 +1100,56 @@ double f1(void* ct, int i, double t, double x)
 void test_plot()
 {
   doremir_plot_show(f1, NULL, cont, NULL);
+}
+     
+double f2(void* ct, int i, double t, double x)
+{
+  buffer_t buf = ct;
+  // doremir_print("Size: %s\n", i32(doremir_buffer_size(buf)));
+  // doremir_print("Data: %s\n", buf);
+
+  size_t  sz = doremir_buffer_size(buf) / sizeof(double);
+  double* ds = doremir_buffer_unsafe_address(buf);
+                                      
+  // printf("%d %f\n", ((int)(sz * ((x+1)/2))), ds[((int)(sz * ((x+1)/2)))]*1000);
+                                                  
+  if (i == 0)
+    return ds[((int)(sz * ((x+1)/2)))];
+  else if (i == 1)
+    return ds[((int)(sz * ((x+1)/2)))] * -1;
+  else
+    return -2;
+}
+void test_plot_file()
+{
+  SF_INFO info;
+  info.format = 0;         
+  char *file = "/Users/hans/Desktop/Passager.wav";
+  SNDFILE* f = sf_open(file, SFM_READ, &info);
+
+  printf("Format:       %x\n", info.format);
+  printf("Channels:     %d\n", info.channels);
+  printf("Frames:       %d\n", info.frames);
+  printf("Sample rate:  %d\n", info.samplerate);
+  printf("Sections:     %d\n", info.sections);
+  printf("Seekable:     %d\n", info.seekable);
+
+  if (sf_error(f))
+    printf("Sound file error: %d\n", sf_error(f));
+
+  size_t bufSize = 100000000*sizeof(double);
+  buffer_t buf = doremir_buffer_create(bufSize);
+  double* dbuf = doremir_buffer_unsafe_address(buf);
+  // double* dbuf = malloc(bufSize);
+
+  sf_count_t sz = sf_read_double(f, dbuf, bufSize/sizeof(double));
+  buf = doremir_buffer_resize(sz*sizeof(double), buf);
+                                
+  doremir_plot_show(f2, buf, cont, NULL);  
+}
+
+void test_sndfile()
+{                                                                    
 }
 
 
@@ -1162,7 +1225,9 @@ int main(int argc, char const *argv[])
     // schedulers
 
     test_vm2();
-    test_plot(NULL, NULL);
+    // test_plot(NULL, NULL);
+    test_plot_file();
+    // test_sndfile();
 
     doremir_audio_engine_terminate();
   }
