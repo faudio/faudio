@@ -5,11 +5,22 @@ Multiple Midi streams OK
 ==========
 Additions
 
-* Schedulers
+* Buffer views??
+
+* Future and scheduling semantics
+* Scheduler impl
+* Dispatcher impl
+
 * Buffer streams
 * File streams
 * RT audio
 * RT midi
+
+
+----------
+
+* Add assertions to discriminated types
+    * Replace assertions with fatal errors?
 
 * Ringbuffer
 * Better FIFO (multi-RW, see paper)
