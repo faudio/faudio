@@ -10,3 +10,4 @@ OSX
 *~
 test/plot/AudioEnginePlotTest/CorePlot.framework/
 
+test/#*

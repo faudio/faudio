@@ -1158,6 +1158,23 @@ void test_vm2()
 {
   test_section();
   test_vm();
+}     
+
+void test_log()
+{                                                                     
+  doremir_audio_engine_set_log_std();
+  // doremir_audio_engine_set_log_file(string("/Users/hans/Library/Logs/DoReMIRAudio.log"));
+  
+  while(1)
+  {
+    doremir_audio_engine_log(NULL, string("[INFO] This is something I want to log!"));
+    doremir_thread_sleep(500);
+    doremir_audio_engine_log(NULL, string("[INFO] This is something I want to log!"));
+    doremir_thread_sleep(10);
+    doremir_audio_engine_log(NULL, string("[INFO] This is something I want to log!"));
+    doremir_thread_sleep(10);
+    
+  }
 }
 
 int main(int argc, char const *argv[])
@@ -1226,8 +1243,10 @@ int main(int argc, char const *argv[])
 
     test_vm2();
     // test_plot(NULL, NULL);
-    test_plot_file();
+    // test_plot_file();
     // test_sndfile();
+
+    test_log();
 
     doremir_audio_engine_terminate();
   }
