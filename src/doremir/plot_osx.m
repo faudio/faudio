@@ -5,6 +5,7 @@
     All rights reserved.
  */
 
+#include <doremir/plot.h>
 #include <doremir/thread.h>
 
 #include <Cocoa/Cocoa.h>
@@ -197,8 +198,8 @@ void start_gui()
  */
 void doremir_plot_show
 (
-  doremir_ternary_t   func,
-  void*               funcData,
+  doremir_plot_func_t func,
+  doremir_ptr_t       funcData,
   doremir_nullary_t   cont,
   doremir_ptr_t       contData
 )

@@ -74,24 +74,26 @@ doremir_map_t doremir_map_empty()
   return new_map(doremir_set_empty());
 }
 
+// TODO check haskell varieties of add/replace
+// Also see CoreFoundation naming conv
 doremir_map_t doremir_map_add(doremir_map_key_t key, doremir_ptr_t value, doremir_map_t map)
 {
   entry_t entry = new_entry(key, value);
   return new_map(doremir_set_add(entry, map->entries));
+  // set_t entries = doremir_set_dremove(entry, map->entries);
+  // return new_map(doremir_set_dadd(entry, map->entries));
 }
 
 doremir_map_t doremir_map_remove(doremir_map_key_t key, doremir_map_t map)
 {
   entry_t entry = new_entry(key, NULL); // we compare on keys, so value does not matter
-  return new_map(doremir_set_remove(entry, map->entries));
+  return new_map(doremir_set_dremove(entry, map->entries));
 }
 
 doremir_ptr_t doremir_map_get(doremir_map_key_t key, doremir_map_t map)
 {
-  // TODO find for set
-  // entry_t entry = new_entry(key, NULL); // we compare on keys, so value does not matter
-  // return new_map(doremir_set_find(EQUALS(entry), map->entries));
-  assert(false && "Not implemented");
+  entry_t entry = new_entry(key, NULL); // we compare on keys, so value does not matter
+  // return new_map(doremir_set_get(entry, map->entries));
 }
 
 doremir_map_t doremir_map_add_entry(doremir_pair_t x, doremir_map_t map)
@@ -119,20 +121,19 @@ void doremir_map_destroy(doremir_map_t map)
 
 bool doremir_map_has_key(doremir_map_key_t key, doremir_map_t map)
 {
-  // TODO find for set
-  assert(false && "Not implemented");
+  entry_t entry = new_entry(key, NULL); // we compare on keys, so value does not matter
+  // return doremir_set_get(COMP_KEY(entry), map->entries);
 }
 
 bool doremir_map_has_elem(doremir_ptr_t x, doremir_map_t map)
 {
-  // TODO find for set
-  assert(false && "Not implemented");
+  entry_t entry = new_entry(NULL, x); // we compare on keys, so value does not matter
+  // return doremir_set_get(COMP_VALUE(entry), map->entries);
 }
 
 bool doremir_map_has_entry(doremir_pair_t entry, doremir_map_t map)
 {
-  // TODO find for set
-  assert(false && "Not implemented");
+  // return doremir_set_get(COMP_BOTH(entry), map->entries);
 }
 
 int doremir_map_size(doremir_map_t map)

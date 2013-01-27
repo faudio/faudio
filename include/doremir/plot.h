@@ -11,10 +11,10 @@
     @{
     */
 
-typedef double doremir_plot_func_t(doremir_ptr_t,
-                                   int,
-                                   double,
-                                   double);
+typedef double (* doremir_plot_func_t)(doremir_ptr_t,
+                                       int,
+                                       double,
+                                       double);
 void doremir_plot_show(doremir_plot_func_t,
                        doremir_ptr_t,
                        doremir_nullary_t,

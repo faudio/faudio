@@ -18,10 +18,11 @@ typedef struct {
             doremir_error_category_t (* severity)(doremir_ptr_t);
             doremir_string_t (* message)(doremir_ptr_t);
             doremir_string_t (* origin)(doremir_ptr_t);
-        } doremir_error_t;
-doremir_error_category_t doremir_error_severity(doremir_ptr_t);
-doremir_string_t doremir_error_message(doremir_ptr_t);
-doremir_string_t doremir_error_origin(doremir_ptr_t);
+        } doremir_error_error_interface_t;
+typedef struct _doremir_error_t * doremir_error_t;
+doremir_error_category_t doremir_error_severity(doremir_error_t);
+doremir_string_t doremir_error_message(doremir_error_t);
+doremir_string_t doremir_error_origin(doremir_error_t);
 bool doremir_error_check(doremir_ptr_t);
 void doremir_error_log(doremir_ptr_t, doremir_ptr_t);
 

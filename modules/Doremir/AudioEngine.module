@@ -38,10 +38,14 @@ module Doremir.AudioEngine
     
     initialize : () -> Void;
     terminate : () -> Void;
-
-    type Logger = ((SystemTime, Ptr) -> Void)*;
+                           
+    // Time.System, Error.Some
+    type LogFunc = ((Ptr, System, Error) -> Void)*;
     
     setLogFile : FilePath -> Void;
     setLogStd : () -> Void;
-    setLog : Logger -> Void;
+    setLog : (LogFunc,Ptr) -> Void;
+
+    log : (Ptr,Ptr) -> Void; // Pass to global logger now
+
 }

@@ -17,15 +17,16 @@
     /** @interface doremir_error_t
         Error interface.
     */
-    type Error  = struct {
+    type ErrorInterface  = struct {
         severity : (Ptr -> Category)*,
         message : (Ptr -> String)*,
         origin : (Ptr -> String)*
     };    
+    type Error = opaque;
 
-    severity : Ptr -> Category;
-    message : Ptr -> String;
-    origin : Ptr -> String;
+    severity : Error -> Category;
+    message : Error -> String;
+    origin : Error -> String;
 
     check : Ptr -> Bool;
 

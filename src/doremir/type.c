@@ -189,11 +189,17 @@ bool doremir_type_is_frame(doremir_type_t type)
   return type->tag == frame_type;
 }
 
+/**
+    Return the first component of a pair type.
+ */
 doremir_type_t doremir_type_get_pair_fst(doremir_type_t t)
 {
   return pair_get(t, fst);
 }
 
+/**
+    Return the second component of a pair type.
+ */
 doremir_type_t doremir_type_get_pair_snd(doremir_type_t t)
 {
   return pair_get(t, snd);
@@ -357,7 +363,8 @@ size_t doremir_type_align_of(doremir_type_t type)
 }
 
 /**
-    Return the offset of the second element in the represented type, or 0.
+    Return the offset of the second element in the represented type.
+    If the given type is not a pair type, return 0.
  */
 size_t doremir_type_offset_of(doremir_type_frames_t frames, doremir_type_t type)
 {

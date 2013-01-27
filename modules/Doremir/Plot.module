@@ -2,6 +2,11 @@
 /** 
     @addtogroup DoremirPlot
     
+    Provides basic time-varying data plots. This is a bit of a hack, intended
+    for internal testing at the moment.
+    
+    @warning
+        Not portable, only works on OS X.
  */
 module Doremir.Plot
 {
@@ -10,12 +15,15 @@ module Doremir.Plot
 
     /**
         @typedef doremir_plot_func_t
-        @param c    Context.
-        @param j    Plot index. 
-        @param t    Time in seconds. 
+        
+        Callback to be invoked by the plotter.
+        
+        @param ct   Context reference.
+        @param j    Plot index, from \f$0\f$ to \f$4\f$. 
+        @param t    Time in seconds, starting at \f$0\f$. 
         @param x    Value of x, from \f$-1\f$ to \f$1\f$. 
      */
-    type Func = (Ptr, Int, Double, Double) -> Double;
+    type Func = ((Ptr, Int, Double, Double) -> Double)*;
 
     show : (Func, Ptr, Nullary, Ptr) -> Void;
 }

@@ -6,8 +6,8 @@
 
     This type uses standard time units, with arbitrary divisions of a second.
     Allthough day is the longest unit, times longer than a day are supported by
-    this type; they are simply expressed as  days instead of years, weaks and months.
-    Thus no particular calendar has to be adopted.
+    this type; they are simply expressed as days instead of years, weaks and
+    months. Thus no particular calendar has to be adopted.
 
 
     @par Literals
@@ -53,11 +53,10 @@ module Doremir.Time
     toIso : Time -> String;
 
     // System time introspection
-    type SystemTime = opaque; 
-    type SystemClock = opaque; 
-    fromSystemTime : SystemTime -> Time;
-    fromSystemClock : SystemClock -> Time;
-    systemTime  : () -> SystemTime;
-    systemClock : () -> SystemClock;
-
+    type System = opaque; 
+    type Cpu = opaque; 
+    fromSystem : System -> Time;
+    fromCpu : Cpu -> Time;
+    system  : () -> System;
+    cpu : () -> Cpu;
 }
