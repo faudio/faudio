@@ -79,9 +79,9 @@ TODO
 
 # Logging {#Logging}
 
-The Audio Engine provides a simple global logging system. All error values (not
-optional values) will be passed to a global log function before they are returned
-to the user. The user can add messages to the log by calling [log](@ref doremir_error_log).
+The Audio Engine provides a simple global logging system. The user can add messages
+to the log by calling [log](@ref doremir_error_log). Non-recoverable errors are
+logger automatically.
 
 The default log function does nothing. The [audio engine](@ref DoremirAudioEngine)
 module provides a function to replace this function, and some default

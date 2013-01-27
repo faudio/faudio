@@ -10,16 +10,17 @@
 int  version[3] = { 2, 0, 0 };
 char *bits      = sizeof(void *) == 4 ? "32-bit" : "64-bit";
 
-void test_section()
+void test_section(char* str)
 {
   printf("\n\n--------------------\n");
+  doremir_audio_engine_log_info(string_dappend(string("Running test: "), string(str)));
 }
 
 
 extern char *doremir_type_str(doremir_ptr_t a);
 void test_wrap()
 {
-  test_section();
+  test_section("Value references");
   // FIXME leaks
 
   printf("bool:       %s\n", doremir_type_str(b(true)));
@@ -54,7 +55,7 @@ void test_wrap()
 
 void test_generic()
 {
-  test_section();
+  test_section("Generics");
   // TODO leaks
 
   printf("2 * 3.2                      ==> %f\n",   td(doremir_multiply(d(2), d(3.2))));
@@ -94,7 +95,7 @@ static inline void memdump(void *s, size_t n)
 
 void test_string()
 {
-  test_section();
+  test_section("Strings");
   {
     string_t s = doremir_string_single('v');
     doremir_print("str: %s\n", s);
@@ -143,7 +144,7 @@ void test_string()
 
 void test_show()
 {
-  test_section();
+  test_section("Show");
   doremir_print("\n", NULL);
   doremir_print("%s\n", b(0));
   doremir_print("%s\n", i8(129));
@@ -162,7 +163,7 @@ void test_show()
 
 void test_compare()
 {
-  test_section();
+  test_section("Comparison");
   doremir_print("\"abc\" <  \"abd\"               ==> %s\n", b(doremir_less_than(string("abc"), string("abd"))));
   doremir_print("\"abc\" <= \"abd\"               ==> %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
   doremir_print("\"abc\" >  \"abd\"               ==> %s\n", b(doremir_greater_than(string("abc"), string("abd"))));
@@ -171,7 +172,7 @@ void test_compare()
 
 void test_rational()
 {
-  test_section();
+  test_section("Rational numbers");
   doremir_print("1/3 <  1/2                   ==> %s\n", b(doremir_less_than(ratio(1, 3), ratio(1, 2))));
   doremir_print("1/3 >  1/2                   ==> %s\n", b(doremir_greater_than(ratio(1, 3), ratio(1, 2))));
   doremir_print("1/3 == 2/6                   ==> %s\n", b(doremir_equal(ratio(1, 3), ratio(2, 6))));
@@ -181,7 +182,7 @@ void test_rational()
 
 void test_buffer()
 {
-  test_section();
+  test_section("Buffers");
 
   {
     doremir_buffer_t b = doremir_buffer_create(16);
@@ -226,7 +227,7 @@ void test_buffer()
 
 void test_time()
 {
-  test_section();
+  test_section("Time");
 
   doremir_time_t t = doremir_time_create(1, 0, 0, ratio(25, 8));
   doremir_time_t u = doremir_time_create(0, 1, 1, ratio(58, 1));
@@ -240,7 +241,7 @@ void test_time()
 
 void test_midi()
 {
-  test_section();
+  test_section("Midi");
 
   {
     doremir_midi_t m = doremir_midi_create_simple(0xa, 60, 127);
@@ -262,7 +263,7 @@ void test_midi()
 void test_type()
 {
   // FIXME
-  test_section();
+  test_section("Types");
 
   doremir_print("type(uint8)                  ==> %s\n", type(uint8));
   doremir_print("size_of(1024,type(uint8))    ==> %s\n", i32(doremir_type_size_of(1024, type(uint8))));
@@ -310,7 +311,7 @@ ptr_t add10(ptr_t x, ptr_t _)
 }
 void test_atomic()
 {
-  test_section();
+  test_section("Atomic");
 
   // treat as integer
   {
@@ -359,7 +360,7 @@ doremir_ptr_t queue_reader(doremir_ptr_t x)
 }
 void test_atomic_queue(int iter, long sleepTime)
 {
-  test_section();
+  test_section("Atomic queues");
   {
     doremir_atomic_queue_t q = doremir_atomic_queue_create();
 
@@ -385,12 +386,12 @@ void test_atomic_queue(int iter, long sleepTime)
 
 void test_atomic_stack(int iter, long sleepTime)
 {
-  test_section();
+  test_section("Stack");
 }
 
 void test_atomic_ring_buffer()
 {
-  test_section();
+  test_section("Ring buffer");
 }
 
 ptr_t printer(ptr_t data)
@@ -541,7 +542,7 @@ ptr_t test_list_dup(ptr_t ct, ptr_t x)
 
 void test_list()
 {
-  test_section();
+  test_section("List");
 
   {
     printf("\n");
@@ -867,7 +868,7 @@ void test_list()
 
 void test_set()
 {
-  test_section();
+  test_section("Set");
   {
     printf("\n");
 
@@ -948,7 +949,7 @@ void test_set()
 
 void test_map()
 {
-  test_section();
+  test_section("Map");
   {
     printf("\n");
 
@@ -980,7 +981,7 @@ void test_map()
 
 void test_priority_queue(int iter)
 {
-  test_section();
+  test_section("Priority queue");
 
   priority_queue_t q = doremir_priority_queue_empty();
   srand(time(NULL));
@@ -1002,7 +1003,7 @@ ptr_t add1234(ptr_t c, ptr_t x)
 void test_processors()
 {
 
-  test_section();
+  test_section("Processors");
   {
     processor_t p, q;
     p = doremir_processor_unary(type(uint8), type(uint8), add1234, NULL);
@@ -1092,6 +1093,7 @@ double f1(void *ct, int i, double t, double x)
 
 void test_plot()
 {
+  test_section("Plot");
   doremir_plot_show(f1, NULL, cont, NULL);
 }
 
@@ -1116,6 +1118,8 @@ double f2(void *ct, int i, double t, double x)
 }
 void test_plot_file()
 {
+  test_section("Plot file");
+
   SF_INFO info;
   info.format = 0;
   char *file = "/Users/hans/Desktop/Passager.wav";
@@ -1151,12 +1155,14 @@ void test_sndfile()
 extern void test_vm(); // in vm.c
 void test_vm2()
 {
-  test_section();
+  test_section("Virtual machine");
   test_vm();
 }
 
 void test_log()
 {
+  test_section("Logging");
+
   doremir_audio_engine_set_log_std();
   // doremir_audio_engine_set_log_file(string("/Users/hans/Library/Logs/DoReMIRAudio.log"));
 
@@ -1210,6 +1216,7 @@ int main(int argc, char const *argv[])
 
   // while(true)
   {
+    doremir_audio_engine_set_log_std();
     doremir_audio_engine_initialize();
 
     test_wrap();
@@ -1253,7 +1260,7 @@ int main(int argc, char const *argv[])
 
     test_vm2();
     // test_plot(NULL, NULL);
-    // test_plot_file();
+    test_plot_file();
     // test_sndfile();
 
     test_log();

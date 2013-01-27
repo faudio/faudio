@@ -17,7 +17,8 @@ struct simple_error {
   string_t      origin;
 };
 
-typedef struct simple_error *simple_error_t;
+typedef struct simple_error       *simple_error_t;
+typedef doremir_error_interface_t error_interface_t;
 
 doremir_ptr_t simple_error_impl(doremir_id_t interface);
 
@@ -54,25 +55,56 @@ void doremir_error_destroy_simple(simple_error_t simple)
 }
 
 
-
+/** Return the severity of the given error.
+ */
 doremir_error_severity_t doremir_error_severity(doremir_error_t a)
 {
-  return ((doremir_error_interface_t *) doremir_interface(doremir_error_i, a))->severity(a);
-}
-doremir_string_t doremir_error_message(doremir_error_t a)
-{
-  return ((doremir_error_interface_t *) doremir_interface(doremir_error_i, a))->message(a);
-}
-doremir_string_t doremir_error_origin(doremir_error_t a)
-{
-  return ((doremir_error_interface_t *) doremir_interface(doremir_error_i, a))->origin(a);
+  return ((error_interface_t *) 
+    doremir_interface(doremir_error_i, a))->severity(a);
 }
 
+/** Return the message of the given error.
+ */
+doremir_string_t doremir_error_message(doremir_error_t a)
+{
+  return ((error_interface_t *) doremir_interface(doremir_error_i, a))->message(a);
+}
+
+/** Return the origin of the given error.
+ */
+doremir_string_t doremir_error_origin(doremir_error_t a)
+{
+  return ((error_interface_t *) doremir_interface(doremir_error_i, a))->origin(a);
+}
+
+/** Return whether the given value is an error or not.
+    
+    This function is often used with [log](@ref doremir_error_log) as in:
+    
+    ~~~
+    if (doremir_error_check(value)) {
+        doremir_error_log(NULL, value);
+        exit(-1);
+    }
+    ~~~
+
+    @param value Value to check (can be any type).
+    @return
+      A boolean.
+ */
 bool doremir_error_check(doremir_ptr_t a)
 {
   return doremir_interface(doremir_error_i, a);
 }
-
+                
+/** Write a log message.
+    @param ct   Context reference (ignored).
+    @param e    A value implementing [Error](@ref doremir_error_interface_t).
+ */
+void doremir_error_log(doremir_ptr_t ct, doremir_error_t e)
+{
+  doremir_audio_engine_log(ct, e);
+}
 
 
 // --------------------------------------------------------------------------------
@@ -148,7 +180,8 @@ doremir_ptr_t simple_error_impl(doremir_id_t interface)
   static doremir_string_show_t simple_error_show_impl = { simple_error_show };
   static doremir_copy_t simple_error_copy_impl = { simple_error_copy };
   static doremir_destroy_t simple_error_destroy_impl = { simple_error_destroy };
-  static doremir_error_interface_t simple_error_error_impl = { simple_error_severity, simple_error_message, simple_error_origin };
+  static doremir_error_interface_t simple_error_error_impl = 
+    { simple_error_severity, simple_error_message, simple_error_origin };
 
   switch (interface) {
   case doremir_copy_i:

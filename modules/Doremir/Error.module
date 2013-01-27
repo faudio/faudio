@@ -31,6 +31,7 @@
     origin : Error -> String;
 
     check : Ptr -> Bool;
+    log : (Ptr,Error) -> Void; // Pass to global logger now
 
     // First param is context (ignored), second is error
     // log : (Ptr,Ptr) -> Void; // Pass to global logger now

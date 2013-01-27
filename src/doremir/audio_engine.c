@@ -31,6 +31,7 @@ void doremir_audio_engine_initialize()
 {
   count++;
   doremir_device_audio_initialize();
+  doremir_audio_engine_log_info(string("Finished initialization."));
 }
 
 /** Performs global cleanup.
@@ -42,6 +43,7 @@ void doremir_audio_engine_terminate()
 {
   count--;
   doremir_device_audio_terminate();
+  doremir_audio_engine_log_info(string("Finished termination."));
 }
 
 
@@ -111,29 +113,39 @@ void doremir_audio_engine_set_log(doremir_audio_engine_log_func_t f, doremir_ptr
 }
 
 /** Write a log message.
+    @param ct   Context reference (ignored).
+    @param e    A value implementing [Error](@ref doremir_error_interface_t).
  */
-void doremir_audio_engine_log(doremir_ptr_t ct, doremir_ptr_t e)
+void doremir_audio_engine_log(doremir_ptr_t ct, doremir_error_t e)
 {
   if (log_func) {
     log_func(log_data, time(NULL), e);
   }
 }
 
+/** Write an informative message to the log.
+ */
 void doremir_audio_engine_log_info(doremir_string_t msg)
 {
   doremir_audio_engine_log_info_from(msg, string(""));
 }
 
+/** Write a warning to the log.
+ */
 void doremir_audio_engine_log_warning(doremir_string_t msg)
 {
   doremir_audio_engine_log_warning_from(msg, string(""));
 }
 
+/** Write an error to the log.
+ */
 void doremir_audio_engine_log_error(doremir_string_t msg)
 {
   doremir_audio_engine_log_error_from(msg, string(""));
 }
 
+/** Write an informative message to the log.
+ */
 void doremir_audio_engine_log_info_from(doremir_string_t msg, doremir_string_t origin)
 {
   error_t err = doremir_error_create_simple(info, msg, origin);
@@ -141,6 +153,8 @@ void doremir_audio_engine_log_info_from(doremir_string_t msg, doremir_string_t o
   doremir_destroy(err);
 }
 
+/** Write a warning to the log.
+ */
 void doremir_audio_engine_log_warning_from(doremir_string_t msg, doremir_string_t origin)
 {
   error_t err = doremir_error_create_simple(warning, msg, origin);
@@ -148,6 +162,8 @@ void doremir_audio_engine_log_warning_from(doremir_string_t msg, doremir_string_
   doremir_destroy(err);
 }
 
+/** Write an error to the log.
+ */
 void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t origin)
 {
   error_t err = doremir_error_create_simple(error, msg, origin);
