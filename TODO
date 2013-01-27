@@ -5,10 +5,6 @@ Multiple Midi streams OK
 ==========
 Additions
 
-* Error handling
-    doremir_check etc
-    Logging
-
 * Schedulers
 * Buffer streams
 * File streams
@@ -19,7 +15,6 @@ Additions
 * Better FIFO (multi-RW, see paper)
 * Better map/set backend (PersistentVector/IntMap or PatriciaTree)
 * JSON serialization
-
 
 * Option to ignore SIGFPE (to fix run-time divide by zero errors)
 
