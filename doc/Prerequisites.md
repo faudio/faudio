@@ -75,6 +75,12 @@ Optionally used for generating documentation graphs.
 
 Optionally used for generating documentation graphs.
 
+### gnuplot
+
+<http://gnuplot.sourceforge.net/>
+
+Optionally used for generating 2D plots.
+
 ### GNU Make
 
 Required for building language bindings and documentation.
