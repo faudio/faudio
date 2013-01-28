@@ -305,6 +305,7 @@ void test_type()
   printf("\n");
 }
 
+#pragma mark -
 
 ptr_t add10(ptr_t x, ptr_t _)
 {
@@ -503,6 +504,9 @@ void test_cond()
 
 
 
+
+#pragma mark -
+
 void test_for_each()
 {
   doremir_let(x, 33) {
@@ -517,6 +521,9 @@ void test_for_each()
     }
   }
 }
+
+
+
 
 bool is_even16(ptr_t data, ptr_t p)
 {
@@ -536,7 +543,7 @@ ptr_t times10(ptr_t data, ptr_t p)
 }
 
 // x = [x,x]
-ptr_t test_list_dup(ptr_t ct, ptr_t x)
+ptr_t dup_list(ptr_t ct, ptr_t x)
 {
   return list(x, x);
 }
@@ -826,7 +833,7 @@ void test_list()
     printf("\n");
 
     list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-    list_t ys = doremir_list_concat_map(test_list_dup, 0, xs);
+    list_t ys = doremir_list_concat_map(dup_list, 0, xs);
 
     doremir_print("xs                           ==> %s\n", xs);
     doremir_print("concatMap(\\x -> [x,x])       ==> %s\n", ys);
@@ -996,6 +1003,87 @@ void test_priority_queue(int iter)
   }
 
 }
+
+#pragma mark -
+
+// execute events at t
+// return next occurence
+time_t execute_events(priority_queue_t q, time_t t)
+{
+  event_t x;
+
+  while ((x = doremir_priority_queue_peek(q))) {
+    doremir_audio_engine_log_info(string_dappend(string("Peek at "), doremir_string_show(t)));
+
+    if (!doremir_event_live(x, t)) {
+      return doremir_event_delta(x);
+    } else {
+      doremir_priority_queue_pop(q);
+      ptr_t   h = doremir_event_head(x);
+      event_t t = doremir_event_tail(x);
+
+      doremir_audio_engine_log_error(string_dappend(string("Firing event: "), doremir_string_show(h)));
+
+      if (t) {
+        doremir_audio_engine_log_warning(string("Reinsert"));
+        doremir_priority_queue_insert(t, q);
+      }
+    }
+  }
+
+  // what to return?
+  return minutes(-1);
+}
+
+void test_event()
+{
+  test_section("Events");
+  // event_t a = now(string("ha"));
+  // event_t b = delay(seconds(3), now(string("ho")));
+
+  event_t a = delay(seconds(5), delay(seconds(5), now(string("fix"))));
+  event_t b = delay(seconds(0),
+                    either(
+                      delay(seconds(3),  now(string("foo"))),
+                      delay(seconds(12), now(string("bar"))))); // too early!
+
+  doremir_print("a                            ==> %s\n", a);
+  doremir_print("delta(a)                     ==> %s\n", doremir_event_delta(a));
+  doremir_print("b                            ==> %s\n", b);
+  doremir_print("delta(b)                     ==> %s\n", doremir_event_delta(b));
+
+  doremir_print("min(a,b)                     ==> %s\n", doremir_min(a, b));
+  // doremir_print("delta(min(a,b))              ==> %s\n", doremir_event_delta(doremir_min(a,b)));
+
+  priority_queue_t q = doremir_priority_queue_empty();
+  // doremir_priority_queue_insert(a,q);
+  // doremir_priority_queue_insert(b,q);
+  // doremir_audio_engine_log_warning(string("Inserted"));
+
+
+  for (int i = 0; true;) {
+    if (i % 30 == 0) {
+      doremir_priority_queue_insert(delay(seconds(i), a), q);
+      doremir_priority_queue_insert(delay(seconds(i), b), q);
+      doremir_audio_engine_log_warning(string("Inserted"));
+    }
+
+    time_t t = execute_events(q, seconds(i));
+    doremir_audio_engine_log_info(string_dappend(string("Next event due "), doremir_string_show(t)));
+
+    if (doremir_greater_than(t, seconds(0))) {
+      int secs = doremir_time_to_seconds(t) - i;
+      doremir_audio_engine_log_info(string_dappend(string("Sleeping secs "), format_int("%d", secs)));
+      doremir_thread_sleep(secs * 100); // time x10
+      i += secs;
+    } else {
+      doremir_thread_sleep(100);                           // time x10
+      i += 1;
+    }
+
+  }
+}
+         
 
 ptr_t add1234(ptr_t c, ptr_t x)
 {
@@ -1195,74 +1283,6 @@ void test_log()
   }
 }
 
-// execute events at t
-// return next occurence
-time_t execute_events(priority_queue_t q, time_t t)
-{
-  event_t x;
-
-  while ((x = doremir_priority_queue_peek(q))) {
-    doremir_audio_engine_log_info(string_dappend(string("Peek at "), doremir_string_show(t)));
-
-    if (!doremir_event_live(x, t))
-      return doremir_event_delta(x);
-    else
-    {                
-      doremir_priority_queue_pop(q);
-      ptr_t   h = doremir_event_head(x);
-      event_t t = doremir_event_tail(x);
-      
-      doremir_audio_engine_log_error(string_dappend(string("Firing event: "), doremir_string_show(h)));
-      
-      if (t)
-      {        
-        doremir_audio_engine_log_warning(string("Reinsert"));
-        doremir_priority_queue_insert(t,q);
-      }
-    }
-  }
-  // what to return?
-  return minutes(-1);
-}
-void test_event()
-{
-  test_section("Events");           
-  // event_t a = now(string("ha"));
-  // event_t b = delay(seconds(3), now(string("ho")));
-  
-  event_t a = delay(seconds(5), delay(seconds(5), now(string("fix"))));
-  event_t b = delay(seconds(0),
-                    either(
-                      delay(seconds(3),  now(string("foo"))), 
-                      delay(seconds(12), now(string("bar"))))); // too early!
-
-  doremir_print("a                            ==> %s\n", a);
-  doremir_print("delta(a)                     ==> %s\n", doremir_event_delta(a));
-  doremir_print("b                            ==> %s\n", b);
-  doremir_print("delta(b)                     ==> %s\n", doremir_event_delta(b));
-
-  doremir_print("min(a,b)                     ==> %s\n", doremir_min(a, b));
-  // doremir_print("delta(min(a,b))              ==> %s\n", doremir_event_delta(doremir_min(a,b)));
-
-  priority_queue_t q = doremir_priority_queue_empty();
-  // doremir_priority_queue_insert(a,q);
-  // doremir_priority_queue_insert(b,q);
-  // doremir_audio_engine_log_warning(string("Inserted"));
-
-
-  for(int i = 0; i < 10000; ++i)
-  {                    
-    if (i % 30 == 0)
-    {
-      doremir_priority_queue_insert(delay(seconds(i),a),q);
-      doremir_priority_queue_insert(delay(seconds(i),b),q);
-      doremir_audio_engine_log_warning(string("Inserted"));
-    }
-    time_t t = execute_events(q,seconds(i));    
-    doremir_audio_engine_log_info(string_dappend(string("Next event due "), doremir_string_show(t)));
-    doremir_thread_sleep(100);
-  }
-}
 
 
 int main(int argc, char const *argv[])
@@ -1292,7 +1312,6 @@ int main(int argc, char const *argv[])
     test_midi();
     test_type();
 
-
     test_atomic();
     test_atomic_queue(5, 2);
     // test_atomic_queue(10, 10);
@@ -1300,33 +1319,31 @@ int main(int argc, char const *argv[])
     // test_atomic_stack(5, 2);
     test_atomic_ring_buffer();
 
-    // test_thread();
-    // test_mutex();
-    // test_cond();
-    // futures
-    // improvings
+    /*
+        test_thread();
+        test_mutex();
+        test_cond();
+    */
 
     test_for_each();
-
     test_list();
     test_set();
     test_map();
     // error
     // json
-
-    // test_processors();
-
-    // dispatchers
     test_priority_queue(10);
-    // schedulers
-    test_log();
 
-    test_vm2();
+    test_log();
     // test_plot(NULL, NULL);
     // test_plot_file();
     // test_sndfile();
 
+    // test_processors();
+    // test_vm2();
+    // dispatchers
+
     test_event();
+    // schedulers
 
     doremir_audio_engine_terminate();
   }
