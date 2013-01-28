@@ -1190,9 +1190,66 @@ void test_log()
                                error,
                                string("We have a problem"),
                                string("Doremir.Buffer")));
-    doremir_thread_sleep(500);
+    doremir_thread_sleep(50);
 
   }
+}
+
+// execute events at t
+// return next occurence
+time_t execute_events(priority_queue_t q, time_t t)
+{
+  event_t x;
+
+  while ((x = doremir_priority_queue_peek(q))) {
+    doremir_audio_engine_log_warning(string_dappend(string("Peek at "), doremir_string_show(t)));
+
+    if (!doremir_event_live(x, t))
+      break;
+    else
+    {                
+      doremir_priority_queue_pop(q);
+      ptr_t   h = doremir_event_head(x);
+      event_t t = doremir_event_tail(x);
+      
+      doremir_audio_engine_log_warning(string_dappend(string("Firing event: "), doremir_string_show(h)));
+      
+      if (t)
+      {        
+        doremir_audio_engine_log_warning(string("Reinsert"));
+        doremir_priority_queue_insert(t,q);
+      }
+    }
+  }
+}
+void test_event()
+{
+  test_section("Events");           
+  // event_t a = now(string("ha"));
+  // event_t b = delay(seconds(3), now(string("ho")));
+  
+  event_t a = delay(seconds(5), delay(seconds(5), now(string("fix"))));
+  event_t b = delay(seconds(0),
+                    either(
+                      delay(seconds(3),  now(string("foo"))), 
+                      delay(seconds(12), now(string("bar")))));
+
+  doremir_print("a                            ==> %s\n", a);
+  doremir_print("delta(a)                     ==> %s\n", doremir_event_delta(a));
+  doremir_print("b                            ==> %s\n", b);
+  doremir_print("delta(b)                     ==> %s\n", doremir_event_delta(b));
+
+  doremir_print("min(a,b)                     ==> %s\n", doremir_min(a, b));
+  // doremir_print("delta(min(a,b))              ==> %s\n", doremir_event_delta(doremir_min(a,b)));
+
+  priority_queue_t q = doremir_priority_queue_empty();
+  doremir_priority_queue_insert(a,q);
+  doremir_priority_queue_insert(b,q);
+
+  doremir_audio_engine_log_warning(string("Inserted"));
+
+  for(int i = 0; i < 30; ++i)
+    execute_events(q,seconds(i));
 }
 
 
@@ -1254,9 +1311,10 @@ int main(int argc, char const *argv[])
 
     test_vm2();
     // test_plot(NULL, NULL);
-    test_plot_file();
+    // test_plot_file();
     // test_sndfile();
 
+    test_event();
 
     doremir_audio_engine_terminate();
   }

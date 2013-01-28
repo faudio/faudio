@@ -50,6 +50,13 @@
 #define unstring(a)         doremir_string_to_utf8(a)
 #define ratio(a,b)          doremir_ratio_create(a,b)
 
+
+#define never()             doremir_event_never()
+#define now(x)              doremir_event_now(x)
+#define delay(t,x)          doremir_event_delay(t,x)
+#define either(x,y)         doremir_event_either(x,y)
+#define switch_(p,x,y)      doremir_event_switch(p,x,y)
+
 #define type(a)             doremir_type_simple(a##_type)
 #define type_pair(a,b)      doremir_type_pair(a,b)
 #define type_vector(a,n)    doremir_type_vector(a,n)

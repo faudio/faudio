@@ -24,11 +24,12 @@ module Doremir.Event
     delay   : (Time,Event) -> Event;
     either  : (Event,Event) -> Event;
     switch  : (Event,Event,Event) -> Event;
-    // both    : (Event,Event) -> Event;    
     destroy : Event -> Void;
 
     delta : Event -> Time;
-    live  : (Event,Time) -> Time;
+    live  : (Event,Time) -> Bool;
+    head  : Event -> Ptr;
+    tail  : Event -> Event;
 
     external : () -> Event;
     trig : Event -> Void;
