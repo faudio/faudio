@@ -136,9 +136,9 @@ doremir_time_t doremir_event_delta(doremir_event_t event)
     return TIME_ZERO;
 
   case delay_event: {
-    time_t x  = doremir_event_delta(delay_get(event, event));
-    time_t dt = delay_get(event, time);
-    return doremir_add(x, dt);
+    time_t dx  = doremir_event_delta(delay_get(event, event));
+    time_t t = delay_get(event, time);
+    return doremir_add(dx, t);
   }
 
   case either_event: {
@@ -210,7 +210,14 @@ doremir_event_t doremir_event_tail(doremir_event_t event)
     return NULL;
 
   case delay_event:
-  return doremir_event_tail(delay_get(event,event));
+  {
+    event_t x = doremir_event_tail(delay_get(event,event));
+    time_t  t = delay_get(event,time);
+    if (!x) 
+      return NULL;
+    else
+      return doremir_event_delay(t,x);
+  }
 
   case either_event:
     return either_get(event,right); // FIXME
