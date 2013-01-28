@@ -25,6 +25,8 @@ int32_t doremir_time_minutes(doremir_time_t);
 int32_t doremir_time_seconds(doremir_time_t);
 doremir_ratio_t doremir_time_divisions(doremir_time_t);
 doremir_string_t doremir_time_to_iso(doremir_time_t);
+int32_t doremir_time_to_seconds(doremir_time_t);
+int32_t doremir_time_to_milliseconds(doremir_time_t);
 typedef struct _doremir_time_system_t * doremir_time_system_t;
 typedef struct _doremir_time_cpu_t * doremir_time_cpu_t;
 doremir_time_t doremir_time_from_system(doremir_time_system_t);

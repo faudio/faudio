@@ -50,7 +50,9 @@ module Doremir.Time
     seconds     : Time -> Int32;
     divisions   : Time -> Ratio;
 
-    toIso : Time -> String;
+    toIso     : Time -> String;
+    toSeconds      : Time -> Int32;
+    toMilliseconds : Time -> Int32;
 
     // System time introspection
     type System = opaque; 
