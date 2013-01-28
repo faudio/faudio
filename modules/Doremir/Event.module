@@ -1,0 +1,35 @@
+
+/** 
+    @addtogroup DoremirEvent
+
+    @par Literals
+
+    @par Implements 
+    - doremir_destroy_t
+    - doremir_string_show_t
+ */
+module Doremir.Event
+{
+    import Doremir;
+    import Doremir.Std;
+    import Doremir.Time;
+
+    /** @typedef doremir_buffer_t
+        The buffer. 
+     */
+    type Event = opaque;
+
+    never   : () -> Event;
+    now     : Ptr -> Event;
+    delay   : (Time,Event) -> Event;
+    either  : (Event,Event) -> Event;
+    switch  : (Event,Event,Event) -> Event;
+    // both    : (Event,Event) -> Event;    
+    destroy : Event -> Void;
+
+    delta : Event -> Time;
+    live  : (Event,Time) -> Time;
+
+    external : () -> Event;
+    trig : Event -> Void;
+}

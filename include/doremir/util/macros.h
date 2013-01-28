@@ -23,7 +23,7 @@
          )
 
 /** Execute the following statement with a binding in scope, then
-    evaluate the given destruct expression.
+    evaluate the given cleanup expression.
 
     Syntax:
 

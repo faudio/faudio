@@ -72,19 +72,14 @@ static inline void stdlog(ptr_t ct, doremir_time_system_t t, doremir_error_t e)
 {
   FILE *file = ct;
   char csmsg[350];
-
-  {
-    struct tm *tm = localtime((long *) &t);
+  doremir_let(tm, localtime((long *) &t)) {
     strftime(csmsg, 50, iso8601_k, tm);
-    // tm is global
   }
-  {
-    doremir_string_t str = doremir_string_show(e);
-    char *cstr = doremir_string_to_utf8(str);
-    strncat(csmsg, cstr, 298);
-    strncat(csmsg, "\n", 1);
-    free(cstr);
-    doremir_destroy(str);
+  doremir_with(str, doremir_string_show(e), doremir_destroy(str)) {
+    doremir_with(cstr, doremir_string_to_utf8(str), free(cstr)) {
+      strncat(csmsg, cstr, 298);
+      strncat(csmsg, "\n", 1);
+    }
   }
   fputs(csmsg, file);
   fflush(file);

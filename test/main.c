@@ -1195,6 +1195,7 @@ void test_log()
   }
 }
 
+
 int main(int argc, char const *argv[])
 {
   printf("DoReMIR Audio engine %s v%d.%d.%d\n", bits, version[0], version[1], version[2]);
@@ -1204,17 +1205,7 @@ int main(int argc, char const *argv[])
   printf("sizeof(int64_t) = %d\n", (unsigned int) sizeof(int64_t));
   printf("sizeof(wchar_t) = %d\n", (unsigned int) sizeof(wchar_t));
 
-  printf("The page size for this system is %ld bytes.\n",
-         sysconf(_SC_PAGESIZE)); /* _SC_PAGE_SIZE is OK too. */
-
-  // {
-  //     size_t s = 500 * 1000000L;
-  //     char *b = calloc(1, s);
-  //     for (size_t i = 0; i < s; ++i)
-  //         b[i] = 0;
-  //     while(1)
-  //         ;
-  // }
+  printf("The page size for this system is %ld bytes.\n", sysconf(_SC_PAGESIZE));
 
   // while(true)
   {

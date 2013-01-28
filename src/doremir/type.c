@@ -41,7 +41,7 @@ struct _doremir_type_t {
 
 // --------------------------------------------------------------------------------
 
-doremir_type_t new_type(int tag)
+type_t new_type(int tag)
 {
   type_t t = doremir_new(type);
 
