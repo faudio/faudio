@@ -156,10 +156,10 @@ int32_t doremir_time_days(doremir_time_t time)
 
 int32_t doremir_time_to_seconds(doremir_time_t time)
 {
-  return doremir_time_days(time)    * 24*60*60
-       + doremir_time_hours(time)   * 60*60
-       + doremir_time_minutes(time) * 60
-       + doremir_time_seconds(time);
+  return doremir_time_days(time)    * 24 * 60 * 60
+         + doremir_time_hours(time)   * 60 * 60
+         + doremir_time_minutes(time) * 60
+         + doremir_time_seconds(time);
 }
 
 int32_t doremir_time_to_milliseconds(doremir_time_t time)

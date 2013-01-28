@@ -24,7 +24,7 @@ struct _doremir_event_t {
     now_event,        // a -> E a
     delay_event,      // t -> E a -> E a
     either_event,     // E a -> E a -> E a
-    switch_event     // E a -> E b -> E b -> E b
+    switch_event      // E a -> E b -> E b -> E b
   }                       tag;
 
   union {
@@ -190,10 +190,10 @@ doremir_ptr_t doremir_event_head(doremir_event_t event)
     return now_get(event, value);
 
   case delay_event:
-    return doremir_event_head(delay_get(event,event));
+    return doremir_event_head(delay_get(event, event));
 
   case either_event:
-    return doremir_event_head(either_get(event,left)); // FIXME
+    return doremir_event_head(either_get(event, left)); // FIXME
 
   case switch_event:
     return NULL;
@@ -209,18 +209,19 @@ doremir_event_t doremir_event_tail(doremir_event_t event)
   case now_event:
     return NULL;
 
-  case delay_event:
-  {
-    event_t x = doremir_event_tail(delay_get(event,event));
-    time_t  t = delay_get(event,time);
-    if (!x) 
+  case delay_event: {
+    event_t x = doremir_event_tail(delay_get(event, event));
+    time_t  t = delay_get(event, time);
+
+    if (!x) {
       return NULL;
-    else
-      return doremir_event_delay(t,x);
+    } else {
+      return doremir_event_delay(t, x);
+    }
   }
 
   case either_event:
-    return either_get(event,right); // FIXME
+    return either_get(event, right); // FIXME
 
   case switch_event:
     return NULL;
