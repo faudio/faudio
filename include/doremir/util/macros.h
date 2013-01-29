@@ -79,6 +79,9 @@
             doremir_let (var, doremir_list_head(__j)) \
                 doremir_let (last, doremir_list_is_single(__j))
 
+#define write_to(s, t) \
+    s = doremir_string_append(s, t)
+
 
 #endif // _DOREMIR_UTIL_MACROS
 
