@@ -39,25 +39,18 @@ struct _doremir_list_t {
 // --------------------------------------------------------------------------------
 
 // static int node_count_db_g = 0;
+
 void db_node_alloc()
 {
-    // node_count_db_g++;
-    // printf("Alloc node   (count: %d)\n", node_count_db_g);
 }
 void db_node_free()
 {
-    // node_count_db_g--;
-    // printf("Free node    (count: %d)\n", node_count_db_g);
 }
 void db_node_take(node_t node)
 {
-    // if (node)
-    // printf("Take node    (refs: %u)\n", node->count);
 }
 void db_node_release(node_t node)
 {
-    // if (node)
-    // printf("Release node (refs: %u)\n", node->count);
 }
 
 

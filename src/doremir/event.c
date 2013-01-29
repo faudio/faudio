@@ -280,11 +280,13 @@ string_t event_show(doremir_ptr_t a)
             time_t  t = delay_get(event, time);
             event_t x  = delay_get(event, event);
 
+
             write_to(s, string("<Delay "));
             write_to(s, format_int("%d", doremir_time_seconds(t))); // FIXME
             write_to(s, string(" "));
             write_to(s, doremir_string_show(x));
             write_to(s, string(">"));
+
 
             return s;
         }
@@ -293,11 +295,13 @@ string_t event_show(doremir_ptr_t a)
             event_t x = either_get(event, left);
             event_t y = either_get(event, right);
 
+
             write_to(s, string("<Either "));
             write_to(s, doremir_string_show(x));
             write_to(s, string(" "));
             write_to(s, doremir_string_show(y));
             write_to(s, string(">"));
+
 
             return s;
         }
@@ -307,6 +311,7 @@ string_t event_show(doremir_ptr_t a)
             event_t x = doremir_event_delta(switch_get(event, before));
             event_t y = doremir_event_delta(switch_get(event, after));
 
+
             write_to(s, string("<Switch "));
             write_to(s, doremir_string_show(p));
             write_to(s, string(" "));
@@ -314,6 +319,7 @@ string_t event_show(doremir_ptr_t a)
             write_to(s, string(" "));
             write_to(s, doremir_string_show(y));
             write_to(s, string(">"));
+
 
             return s;
         }
