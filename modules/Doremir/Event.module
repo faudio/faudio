@@ -35,7 +35,8 @@ module Doremir.Event
     delay   : (Time,Event) -> Event;
 
     // head   : Event -> Event;
-    tail   : Event -> Event;
+    head    : Event -> Event;
+    tail    : Event -> Event;
     merge   : (Event,Event) -> Event;               // rename merge
     switch  : (Event,Event,Event) -> Event;
     destroy : Event -> Void;
@@ -49,9 +50,9 @@ module Doremir.Event
     
     
     // Backend methods
-    delta : Event -> Time;          // Offset to first occurance            rename minOffset
-    live  : (Event,Time) -> Bool;   // Is an occurance available            rename hasValue
-    head  : Event -> Ptr;           // Get the first occurance value        rename value?
+    offset : Event -> Time;          // Offset to first occurance            rename offset
+    hasValue : (Event,Time) -> Bool;   // Is an occurance available            rename hasValue
+    value  : Event -> Ptr;           // Get the first occurance value        rename value?
     
 
 

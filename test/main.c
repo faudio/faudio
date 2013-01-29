@@ -1015,11 +1015,11 @@ time_t execute_events(priority_queue_t q, time_t t)
     while ((x = doremir_priority_queue_peek(q))) {
         doremir_audio_engine_log_info(string_dappend(string("Peek at "), doremir_string_show(t)));
 
-        if (!doremir_event_live(x, t)) {
-            return doremir_event_delta(x);
+        if (!doremir_event_has_value(x, t)) {
+            return doremir_event_offset(x);
         } else {
             doremir_priority_queue_pop(q);
-            ptr_t   h = doremir_event_head(x);
+            ptr_t   h = doremir_event_value(x);
             event_t t = doremir_event_tail(x);
 
             doremir_audio_engine_log_error(string_dappend(string("Firing event: "), doremir_string_show(h)));
@@ -1048,12 +1048,12 @@ void test_event()
                           delay(seconds(12), now(string("bar"))))); // too early!
 
     doremir_print("a                            ==> %s\n", a);
-    doremir_print("delta(a)                     ==> %s\n", doremir_event_delta(a));
+    doremir_print("offset(a)                    ==> %s\n", doremir_event_offset(a));
     doremir_print("b                            ==> %s\n", b);
-    doremir_print("delta(b)                     ==> %s\n", doremir_event_delta(b));
+    doremir_print("offset(b)                    ==> %s\n", doremir_event_offset(b));
 
     doremir_print("min(a,b)                     ==> %s\n", doremir_min(a, b));
-    // doremir_print("delta(min(a,b))              ==> %s\n", doremir_event_delta(doremir_min(a,b)));
+    // doremir_print("offset(min(a,b))              ==> %s\n", doremir_event_offset(doremir_min(a,b)));
 
     priority_queue_t q = doremir_priority_queue_empty();
     // doremir_priority_queue_insert(a,q);
@@ -1282,7 +1282,6 @@ void test_log()
 
     }
 }
-
 
 
 int main(int argc, char const * argv[])

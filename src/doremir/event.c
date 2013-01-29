@@ -124,7 +124,7 @@ void doremir_event_destroy(doremir_event_t event)
 #define TIME_ZERO doremir_time_create(0,0,0,ratio(0,1))
 #define TIME_MAX  doremir_time_create(2000000,0,0,ratio(0,1)) // FIXME
 
-doremir_time_t doremir_event_delta(doremir_event_t event)
+doremir_time_t doremir_event_offset(doremir_event_t event)
 {
     switch (event->tag) {
 
@@ -135,20 +135,20 @@ doremir_time_t doremir_event_delta(doremir_event_t event)
             return TIME_ZERO;
 
         case delay_event: {
-            time_t dx  = doremir_event_delta(delay_get(event, event));
+            time_t dx  = doremir_event_offset(delay_get(event, event));
             time_t t = delay_get(event, time);
             return doremir_add(dx, t);
         }
 
         case merge_event: {
-            time_t x = doremir_event_delta(merge_get(event, left));
-            time_t y = doremir_event_delta(merge_get(event, right));
+            time_t x = doremir_event_offset(merge_get(event, left));
+            time_t y = doremir_event_offset(merge_get(event, right));
             return doremir_min(x, y);
         }
 
         case switch_event: {
-            time_t x = doremir_event_delta(switch_get(event, before));
-            time_t y = doremir_event_delta(switch_get(event, after));
+            time_t x = doremir_event_offset(switch_get(event, before));
+            time_t y = doremir_event_offset(switch_get(event, after));
             return doremir_min(x, y);
         }
 
@@ -157,7 +157,7 @@ doremir_time_t doremir_event_delta(doremir_event_t event)
     }
 }
 
-bool doremir_event_live(doremir_event_t event, doremir_time_t time)
+bool doremir_event_has_value(doremir_event_t event, doremir_time_t time)
 {
     switch (event->tag) {
         
@@ -168,25 +168,25 @@ bool doremir_event_live(doremir_event_t event, doremir_time_t time)
             return doremir_greater_than_equal(time, seconds(0));
 
         case delay_event:
-            return doremir_event_live(
+            return doremir_event_has_value(
                        delay_get(event, event),
                        doremir_subtract(time, delay_get(event, time)));
 
         case merge_event:
-            return doremir_event_live(merge_get(event, left), time)
-                   || doremir_event_live(merge_get(event, right), time);
+            return doremir_event_has_value(merge_get(event, left), time)
+                   || doremir_event_has_value(merge_get(event, right), time);
 
         case switch_event:
-            return doremir_event_live(switch_get(event, pred), time)
-                   ? doremir_event_live(switch_get(event, before), time)
-                   : doremir_event_live(switch_get(event, after), time);
+            return doremir_event_has_value(switch_get(event, pred), time)
+                   ? doremir_event_has_value(switch_get(event, before), time)
+                   : doremir_event_has_value(switch_get(event, after), time);
 
         default:
             assert(false && "Missing label");
     }
 }
 
-doremir_ptr_t doremir_event_head(doremir_event_t event)
+doremir_ptr_t doremir_event_value(doremir_event_t event)
 {
     switch (event->tag) {
         
@@ -197,10 +197,10 @@ doremir_ptr_t doremir_event_head(doremir_event_t event)
             return now_get(event, value);
 
         case delay_event:
-            return doremir_event_head(delay_get(event, event));
+            return doremir_event_value(delay_get(event, event));
 
         case merge_event:
-            return doremir_event_head(merge_get(event, left)); // FIXME
+            return doremir_event_value(merge_get(event, left)); // FIXME
 
         case switch_event:
             return NULL;
@@ -261,8 +261,8 @@ bool event_equal(doremir_ptr_t a, doremir_ptr_t b)
     event_t c = (event_t) a;
     event_t d = (event_t) b;
     return doremir_equal(
-               doremir_event_delta(c),
-               doremir_event_delta(d));
+               doremir_event_offset(c),
+               doremir_event_offset(d));
 }
 
 bool event_less_than(doremir_ptr_t a, doremir_ptr_t b)
@@ -270,8 +270,8 @@ bool event_less_than(doremir_ptr_t a, doremir_ptr_t b)
     event_t c = (event_t) a;
     event_t d = (event_t) b;
     return doremir_less_than(
-               doremir_event_delta(c),
-               doremir_event_delta(d));
+               doremir_event_offset(c),
+               doremir_event_offset(d));
 }
 
 bool event_greater_than(doremir_ptr_t a, doremir_ptr_t b)
