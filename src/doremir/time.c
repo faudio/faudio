@@ -175,8 +175,7 @@ int32_t doremir_time_to_milliseconds(doremir_time_t time)
 }
 
 
-/**
-    Print the time as an ISO 8601 duration.
+/** Print the time as an ISO 8601 duration.
 
     The ISO represenation use decimal fractions of a second, and may lose precision. For example
     the duration of 1 min 24 1/3 sec would be represented as `P0000-00-00T00:01:24.3333`.
@@ -195,6 +194,37 @@ doremir_string_t doremir_time_to_iso(doremir_time_t time)
 
     return s;
 }
+
+/** Convert system time to a time interval.
+    Generally, system time is seconds since the Unix epoch.
+ */
+doremir_time_t doremir_time_from_system(doremir_time_system_t time)
+{
+    assert(false && "Not implemented");
+}
+
+/** Convert system CPU time to a time interval.
+ */
+doremir_time_t doremir_time_from_cpu(doremir_time_cpu_t cpu_time)
+{
+    assert(false && "Not implemented");
+}
+
+/** Get the system time.
+ */
+doremir_time_system_t doremir_time_system()
+{
+    assert(false && "Not implemented");
+}
+
+/** Get the system CPU time.
+ */
+doremir_time_cpu_t doremir_time_cpu()
+{
+    assert(false && "Not implemented");
+}
+
+
 
 
 // --------------------------------------------------------------------------------

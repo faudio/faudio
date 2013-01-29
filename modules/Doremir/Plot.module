@@ -2,11 +2,23 @@
 /** 
     @addtogroup DoremirPlot
     
-    Provides data plotting.
+    Provides basic plotting.
+    
+    There are currently two backends:
+
+    - [CorePlot](http://code.google.com/p/core-plot/)
+      - Only works on OS X.
+      - Handles time-varying data (such as incoming audio signals etc).
+      - Requires the third-party library `CorePlot.framework` to be in the framework path.
+    - [gnuplot](http://gnuplot.sourceforge.net/)                        
+      - Only handles static input.
+      - Signals are rendered at time zero.
+      - Requires the `gnuplot` executable to be in the path.
     
     @warning
-        This modules is intended for internal testing and works only on OS X at the
-        moment.
+        The CorePlot backend starts a Cocoa event loop which will not work if
+        another GUI is already running. The functionality is intended for internal 
+        testing only.
  */
 module Doremir.Plot
 {

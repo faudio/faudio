@@ -36,6 +36,8 @@ void delete_ratio(ratio_t p)
 
 // --------------------------------------------------------------------------------
 
+/** Create a rational number.
+ */
 ratio_t doremir_ratio_create(num_t num, denom_t denom)
 {
     ratio_t p = new_ratio();
@@ -44,6 +46,8 @@ ratio_t doremir_ratio_create(num_t num, denom_t denom)
     return p;
 }
 
+/** Copy a rational number.
+ */
 ratio_t doremir_ratio_copy(ratio_t p)
 {
     ratio_t q = new_ratio();
@@ -52,24 +56,30 @@ ratio_t doremir_ratio_copy(ratio_t p)
     return q;
 }
 
+/** Destroy a rational number.
+ */
 void doremir_ratio_destroy(ratio_t p)
 {
     delete_ratio(p);
 }
 
-
-// --------------------------------------------------------------------------------
-
+/** Return the numerator of the given rational number.
+ */
 num_t doremir_ratio_num(ratio_t x)
 {
     return x->num;
 }
 
+/** Return the denominator of the given rational number.
+ */
 denom_t doremir_ratio_denom(ratio_t x)
 {
     return x->denom;
 }
 
+/** Destruct the given rational number, writing its numerator
+    and denominator to the given locations.
+ */
 void doremir_ratio_match(ratio_t x, num_t * a, denom_t * b)
 {
     *a = x->num;
@@ -79,6 +89,8 @@ void doremir_ratio_match(ratio_t x, num_t * a, denom_t * b)
 
 // --------------------------------------------------------------------------------
 
+/** Add the given rational numbers.
+ */
 ratio_t doremir_ratio_add(ratio_t x, ratio_t y)
 {
     num_t   a = x->num;
@@ -89,6 +101,8 @@ ratio_t doremir_ratio_add(ratio_t x, ratio_t y)
     return ratio(a * d + b * c, b * d);
 }
 
+/** Subtract the given rational numbers.
+ */
 ratio_t doremir_ratio_subtract(ratio_t x, ratio_t y)
 {
     num_t   a = x->num;
@@ -99,6 +113,8 @@ ratio_t doremir_ratio_subtract(ratio_t x, ratio_t y)
     return ratio(a * d - b * c, b * d);
 }
 
+/** Multiply the given rational numbers.
+ */
 ratio_t doremir_ratio_multiply(ratio_t x, ratio_t y)
 {
     num_t   a = x->num;
@@ -109,6 +125,8 @@ ratio_t doremir_ratio_multiply(ratio_t x, ratio_t y)
     return ratio(a * c, b * d);
 }
 
+/** Divide the given rational numbers.
+ */
 ratio_t doremir_ratio_divide(ratio_t x, ratio_t y)
 {
     num_t   a = x->num;
@@ -119,26 +137,36 @@ ratio_t doremir_ratio_divide(ratio_t x, ratio_t y)
     return ratio(a * d, b * c);
 }
 
+/** Return the successor of the given rational number.
+ */
 ratio_t doremir_ratio_succ(ratio_t x)
 {
     return doremir_ratio_add(x, ratio(1, 1));
 }
 
+/** Return the predecessor of the given rational number.
+ */
 ratio_t doremir_ratio_pred(ratio_t x)
 {
     return doremir_ratio_subtract(x, ratio(1, 1));
 }
 
+/** Negate the given rational number.
+ */
 ratio_t doremir_ratio_negate(ratio_t x)
 {
     return doremir_ratio_multiply(x, ratio(-1, 1));
 }
 
+/** Invert the given rational number.
+ */
 ratio_t doremir_ratio_recip(ratio_t x)
 {
     return doremir_ratio_divide(ratio(1, 1), x);
 }
 
+/** Normalize the given rational number.
+ */
 ratio_t doremir_ratio_normalize(ratio_t x)
 {
     num_t   a = x->num;
@@ -152,6 +180,8 @@ ratio_t doremir_ratio_normalize(ratio_t x)
     return ratio(a, b);
 }
 
+/** Return the absolute value of the given rational number.
+ */
 ratio_t doremir_ratio_absolute(ratio_t x)
 {
     num_t   a = x->num;

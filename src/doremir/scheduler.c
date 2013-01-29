@@ -57,6 +57,12 @@ void doremir_scheduler_destroy(scheduler_t scheduler)
     delete_scheduler(scheduler);
 }
 
+/** Schedule.
+    @param scheduler
+    @param time
+    @param action       Action to schedule.
+    @param data         Data closed over by the previous argument.
+ */
 void doremir_scheduler_schedule(scheduler_t scheduler,
                                 time_t      time,
                                 action_t    action,

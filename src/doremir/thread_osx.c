@@ -39,6 +39,10 @@ static void doremir_thread_fatal(char * msg, int error);
 
     Threads have single-ownership semantics and must be finalized by passing it
     to a destructive function.
+    
+    @param func Function to execute.
+    @param data Value to be passed to the function.
+    @return     A new thread executing concurrently with the current thread. 
  */
 doremir_thread_t doremir_thread_create(doremir_nullary_t func, doremir_ptr_t data)
 {
@@ -61,6 +65,7 @@ void doremir_thread_sleep(doremir_thread_millis_t s)
 }
 
 /** Destroy a thread, and return after its associated function has returned.
+    @param thread Thread to join (destroyed).
   */
 void doremir_thread_join(doremir_thread_t thread)
 {
@@ -74,6 +79,7 @@ void doremir_thread_join(doremir_thread_t thread)
 
 /** Destroy a thread and return directly. The associated function may continous executing
     in the background.
+    @param thread Thread to detach (destroyed).
   */
 void doremir_thread_detach(doremir_thread_t thread)
 {

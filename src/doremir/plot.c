@@ -40,6 +40,10 @@ void doremir_plot_use_core()
 }
 
 /** Run a plot of the given functions.
+    @param func         Function defining the plot.
+    @param data         Value to be passed to the plot function.
+    @param cont         Continuation function.
+    @param cont_data    Value to be passed to the continuation function.
  */
 void doremir_plot_functions
 (

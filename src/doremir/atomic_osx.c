@@ -114,8 +114,10 @@ doremir_ptr_t doremir_atomic_get(doremir_atomic_t a)
 }
 
 /**
-    Update the given atomic value by applying the given function, which must be
-    a pure function.
+    Update the given atomic value by applying the given pure function.                  
+    @param atomic   Atomic variable.
+    @param func     Function to be applied to the value.
+    @param data     Value to be passed to the function.
     @par Atomicity
         Atomic
  */
