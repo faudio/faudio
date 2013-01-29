@@ -63,23 +63,29 @@ management system.
 
 Required for generating the documentation.
 
-### ImageMagick
-
-<http://www.imagemagick.org/script/index.php>
-
-Optionally used for generating documentation graphs.
-
 ### GraphViz
 
 <http://www.graphviz.org/>
 
-Optionally used for generating documentation graphs.
+Optionally used for generating graphs.
 
 ### gnuplot
 
 <http://gnuplot.sourceforge.net/>
 
-Optionally used for generating 2D plots.
+Optionally used for generating plots.
+
+### ImageMagick
+
+<http://www.imagemagick.org/script/index.php>
+
+Optionally used for converting graphs.
+
+### GhostScript
+
+<http://pages.cs.wisc.edu/~ghost/>
+
+Optionally used for converting plots.
 
 ### GNU Make
 

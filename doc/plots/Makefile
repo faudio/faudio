@@ -5,17 +5,29 @@ show: all
 	open $(OUTPUT)/*.png;
 
 PROC 	     	= cpp -I"/Volumes/DoReMIR/development/osx/audio-engine"
-DOT_TO_PDF   	= dot -Tpdf
-PDF_TO_PNG   	= convert -density 300x300 -resize 25%
-INPUT 	     	= doc/graphs
+PLOT_TO_PS   	= gnuplot
+PS_TO_PDF	= ps2pdf
+PDF_TO_PNG   	= convert -density 150x150 -resize 50%
+INPUT 	     	= doc/plots
 OUTPUT	     	= doc/images
 
-CONVERT_GRAPH   = $(PROC) <$(INPUT)/$(1).dot | $(DOT_TO_PDF) >$(OUTPUT)/$(1).pdf \
-	          && \
+CLEAN_PLOT	= rm -f $(OUTPUT)/$(1).ps \
+			&& \
+		  rm -f $(OUTPUT)/$(1).pdf \
+			&& \
+		  rm -f $(OUTPUT)/$(1).png
+
+CONVERT_PLOT    = cat $(INPUT)/head.plot $(INPUT)/$(1).plot | $(PLOT_TO_PS) >$(OUTPUT)/$(1).ps \
+			&& \
+		  $(PS_TO_PDF) $(OUTPUT)/$(1).ps $(OUTPUT)/$(1).pdf \
+			&& \
 		  $(PDF_TO_PNG) $(OUTPUT)/$(1).pdf $(OUTPUT)/$(1).png;
 
-test_plot:
-	$(call CONVERT_GRAPH,test_plot)
+head:
+	echo $(HEAD)
+test_plot:  
+	$(call CLEAN_PLOT,test_data) && \
+	$(call CONVERT_PLOT,test_data)
 
 
 clean:
