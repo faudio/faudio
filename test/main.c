@@ -1183,7 +1183,7 @@ double f1(void * ct, int i, double t, double x)
 void test_plot()
 {
     test_section("Plot");
-    doremir_plot_func(f1, NULL, NULL, NULL);
+    doremir_plot_functions(f1, NULL, NULL, NULL);
 }
 
 void test_plot_file()

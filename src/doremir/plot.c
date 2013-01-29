@@ -9,7 +9,7 @@
 #include <doremir/thread.h>
 #include <doremir/util.h>
 
-typedef doremir_plot_func_t plot_func;
+typedef doremir_plot_function_t plot_func;
 
 void run_core_plot(plot_func func, ptr_t funcData, nullary_t cont, ptr_t contData);
 void run_gnu_plot(plot_func func, ptr_t funcData, nullary_t cont, ptr_t contData);
@@ -41,7 +41,7 @@ void doremir_plot_use_core()
 
 /** Run a plot of the given functions.
  */
-void doremir_plot_func
+void doremir_plot_functions
 (
     plot_func           func,
     doremir_ptr_t       data,
@@ -87,7 +87,7 @@ void doremir_plot_buffer_float(doremir_buffer_t  buffer,
                                doremir_nullary_t cont,
                                doremir_ptr_t     data)
 {
-    doremir_plot_func(plot_float, buffer, cont, data);
+    doremir_plot_functions(plot_float, buffer, cont, data);
 }
 
 /** Run a plot on the given buffer, treating its contents as
@@ -97,6 +97,6 @@ void doremir_plot_buffer_double(doremir_buffer_t      buffer,
                                 doremir_nullary_t     cont,
                                 doremir_ptr_t         data)
 {
-    doremir_plot_func(plot_double, buffer, cont, data);
+    doremir_plot_functions(plot_double, buffer, cont, data);
 }
 

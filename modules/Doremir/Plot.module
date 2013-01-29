@@ -24,9 +24,10 @@ module Doremir.Plot
         @param time     Time in seconds, starting at \f$0\f$. 
         @param x        Value of x, from \f$-1\f$ to \f$1\f$. 
      */
-    type Func = ((Ptr, Int, Double, Double) -> Double)*;
+    type Function = ((Ptr, Int, Double, Double) -> Double)*;
 
-    func : (Func, Ptr, Nullary, Ptr) -> Void;
+    functions : (Function, Ptr, Nullary, Ptr) -> Void;
+
     bufferFloat   : (Buffer, Nullary, Ptr) -> Void;
     bufferDouble  : (Buffer, Nullary, Ptr) -> Void; 
 

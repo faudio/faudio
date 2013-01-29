@@ -9,9 +9,9 @@
 #include <doremir/thread.h>
 #include <doremir/util.h>
 
-typedef doremir_plot_func_t plot_func;
+typedef doremir_plot_function_t plot_func_t;
 
-void run_gnu_plot(plot_func func, ptr_t funcData, nullary_t cont, ptr_t contData)
+void run_gnu_plot(plot_func_t func, ptr_t funcData, nullary_t cont, ptr_t contData)
 {
 
 }

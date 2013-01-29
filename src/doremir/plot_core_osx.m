@@ -192,7 +192,7 @@ void run_main_loop()
   }
 }
 
-void run_core_plot(doremir_plot_func_t func, doremir_ptr_t data, 
+void run_core_plot(doremir_plot_function_t func, doremir_ptr_t data, 
                    doremir_nullary_t cont, doremir_ptr_t cont_data)
 {
   plot_count_g  = 0;
