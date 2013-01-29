@@ -30,6 +30,9 @@
     message : Error -> String;
     origin : Error -> String;
 
+    // coloured, err
+    format : (Bool,Error) -> String;
+
     check : Ptr -> Bool;
     log : (Ptr,Error) -> Void; // Pass to global logger now
 

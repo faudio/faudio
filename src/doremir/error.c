@@ -109,6 +109,59 @@ void doremir_error_log(doremir_ptr_t ct, doremir_error_t e)
   doremir_audio_engine_log(ct, e);
 }
 
+doremir_string_t doremir_error_format(bool coloured, doremir_error_t a)
+{
+  simple_error_t simple = (simple_error_t) a;
+  string_t str = string("");
+
+  string_t strs[12] = {
+    string("[INFO]    "), 
+    string("[WARNING] "),
+    string("[ERROR]   "),
+    string("[MISC]    "),
+    string(""),
+    string(""),
+
+    string("\x1b[32m[INFO]\x1b[0m    "), 
+    string("\x1b[33m[WARNING]\x1b[0m "),
+    string("\x1b[31m[ERROR]\x1b[0m   "),
+    string("\x1b[35m[MISC]\x1b[0m    "),
+    string("\x1b[36m"),
+    string(":\x1b[0m ")
+  };
+
+  switch (simple->severity) {
+  case info:
+    str = string_dappend(str, strs[0 + coloured * 6]);
+    break;
+
+  case warning:
+    str = string_dappend(str, strs[1 + coloured * 6]);
+    break;
+
+  case error:
+    str = string_dappend(str, strs[2 + coloured * 6]);
+    break;
+
+  case misc:
+    str = string_dappend(str, strs[3 + coloured * 6]);
+    break;
+
+  default:
+    assert(false && "Missing label");
+  }
+
+  if (doremir_string_length(simple->origin) > 0) {
+    str = string_dappend(str, strs[4 + coloured * 6]);
+    str = string_dappend(str, doremir_copy(simple->origin));
+    str = string_dappend(str, strs[5 + coloured * 6]);
+  }
+
+  str = string_dappend(str, doremir_copy(simple->message));
+
+  return str;
+}
+
 
 // --------------------------------------------------------------------------------
 
@@ -142,39 +195,7 @@ doremir_string_t simple_error_origin(doremir_ptr_t a)
 
 doremir_string_t simple_error_show(doremir_ptr_t a)
 {
-  simple_error_t simple = (simple_error_t) a;
-  string_t str = string("");
-
-  switch (simple->severity) {
-  case info:
-    str = string_dappend(str, string("\x1b[32m[INFO]\x1b[0m    "));
-    break;
-
-  case warning:
-    str = string_dappend(str, string("\x1b[33m[WARNING]\x1b[0m "));
-    break;
-
-  case error:
-    str = string_dappend(str, string("\x1b[31m[ERROR]\x1b[0m   "));
-    break;
-
-  case misc:
-    str = string_dappend(str, string("\x1b[35m[MISC]\x1b[0m    "));
-    break;
-
-  default:
-    assert(false && "Missing label");
-  }
-
-  if (doremir_string_length(simple->origin) > 0) {
-    str = string_dappend(str, string("\x1b[36m"));
-    str = string_dappend(str, doremir_copy(simple->origin));
-    str = string_dappend(str, string(":\x1b[0m "));
-  }
-
-  str = string_dappend(str, doremir_copy(simple->message));
-
-  return str;
+  return doremir_error_format(true, a);
 }
 
 doremir_ptr_t simple_error_impl(doremir_id_t interface)

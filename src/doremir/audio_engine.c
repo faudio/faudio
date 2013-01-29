@@ -8,6 +8,8 @@
 #include <doremir/audio_engine.h>
 #include <doremir/util.h>
 
+#include <unistd.h> // isatty
+
 #define iso8601_k "%Y-%m-%d %H:%M:%S%z  "
 
 typedef doremir_audio_engine_log_func_t log_func_t;
@@ -72,10 +74,12 @@ static inline void stdlog(ptr_t ct, doremir_time_system_t t, doremir_error_t e)
 {
   FILE *file = ct;
   char csmsg[350];
+  bool color = (file == stdout);
+  
   doremir_let(tm, localtime((long *) &t)) {
     strftime(csmsg, 50, iso8601_k, tm);
   }
-  doremir_with(str, doremir_string_show(e), doremir_destroy(str)) {
+  doremir_with(str, doremir_error_format(color, e), doremir_destroy(str)) {
     doremir_with(cstr, doremir_string_to_utf8(str), free(cstr)) {
       strncat(csmsg, cstr, 298);
       strncat(csmsg, "\n", 1);
