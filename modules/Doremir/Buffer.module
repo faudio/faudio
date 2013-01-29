@@ -36,15 +36,7 @@ module Doremir.Buffer
     poke : (Buffer, Size, UInt8) -> Void;
     
     unsafeAddress : Buffer -> Void*;
-    
-    
+        
     // TODO views
-    
-    // type BufferView = opaque;
-    // createView : (Size,Size,Size,Buffer) -> BufferView;
-    // destroyView : BufferView -> Void;
-    // isValidView : BufferView -> Bool;
-    // size, peek, poke
-    
     // TODO simd, vector ops
 }

@@ -391,7 +391,7 @@ void test_atomic_stack(int iter, long sleepTime)
     test_section("Stack");
 }
 
-void test_atomic_ring_buffer()
+void test_atomic_ring_buffer(int inter, long sleepTime)
 {
     test_section("Ring buffer");
 }
@@ -1043,7 +1043,7 @@ void test_event()
 
     event_t a = delay(seconds(5), delay(seconds(5), now(string("fix"))));
     event_t b = delay(seconds(0),
-                      either(
+                      merge(
                           delay(seconds(3),  now(string("foo"))),
                           delay(seconds(12), now(string("bar"))))); // too early!
 
@@ -1318,13 +1318,11 @@ int main(int argc, char const * argv[])
         // test_atomic_queue(10, 10);
         // test_atomic_queue(300, 2);
         // test_atomic_stack(5, 2);
-        test_atomic_ring_buffer();
+        test_atomic_ring_buffer(5, 2);
 
-        /*
-            test_thread();
-            test_mutex();
-            test_cond();
-        */
+        // test_thread();
+        // test_mutex();
+        // test_cond();
 
         test_for_each();
         test_list();

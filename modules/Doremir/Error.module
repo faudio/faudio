@@ -14,7 +14,7 @@
         Info, Warning, Error, Misc
     };
 
-    /** @interface doremir_error_t
+    /** @interface doremir_error_interface_t
         Error interface.
     */
     type Interface  = struct {
@@ -22,20 +22,16 @@
         message : (Ptr -> String)*,
         origin : (Ptr -> String)*
     };    
+
     type Error = opaque;
     
     createSimple : (Severity, String, String) -> Error;
 
-    severity : Error -> Severity;
-    message : Error -> String;
-    origin : Error -> String;
-
-    // coloured, err
-    format : (Bool,Error) -> String;
+    severity  : Error -> Severity;
+    message   : Error -> String;
+    origin    : Error -> String;
+    log       : (Ptr,Error) -> Void;
+    format    : (Bool,Error) -> String;
 
     check : Ptr -> Bool;
-    log : (Ptr,Error) -> Void; // Pass to global logger now
-
-    // First param is context (ignored), second is error
-    // log : (Ptr,Ptr) -> Void; // Pass to global logger now
 }

@@ -80,8 +80,7 @@ void doremir_time_destroy(doremir_time_t time)
     @param time
         Time interval.
     @return
-        Rational number, representing the amount of time in the interval
-        modulo one second, measured in seconds.
+        Rational number, representing the remainder of time in seconds over one.
  */
 doremir_ratio_t doremir_time_divisions(doremir_time_t time)
 {
@@ -96,8 +95,7 @@ doremir_ratio_t doremir_time_divisions(doremir_time_t time)
     @param time
         Time interval.
     @return
-        Number of seconds, representing the amount of time in the
-        interval modulo one minute, rounded to seconds.
+        Integer representing this time in seconds modulo one.
  */
 int32_t doremir_time_seconds(doremir_time_t time)
 {
@@ -112,8 +110,7 @@ int32_t doremir_time_seconds(doremir_time_t time)
     @param time
         Time interval.
     @return
-        Number of seconds, representing the amount of time in the
-        interval modulo one hour, rounded to minutes.
+        Integer representing this time in minutes modulo one.
  */
 int32_t doremir_time_minutes(doremir_time_t time)
 {
@@ -128,8 +125,7 @@ int32_t doremir_time_minutes(doremir_time_t time)
     @param time
         Time interval.
     @return
-        Number of seconds, representing the amount of time in the
-        interval modulo one day, rounded to hours.
+        Integer representing this time in hours modulo one.
  */
 int32_t doremir_time_hours(doremir_time_t time)
 {
@@ -144,8 +140,7 @@ int32_t doremir_time_hours(doremir_time_t time)
     @param time
         Time interval.
     @return
-        Number of seconds, representing the amount of time in the
-        interval, rounded to days.
+        Integer representing this time in days modulo one.
  */
 int32_t doremir_time_days(doremir_time_t time)
 {
@@ -154,6 +149,12 @@ int32_t doremir_time_days(doremir_time_t time)
     return (a / b) / (60 * 60 * 24);
 }
 
+/** Convert the time to seconds.
+    This may lose precision.
+
+    @param time
+        Time interval.
+ */
 int32_t doremir_time_to_seconds(doremir_time_t time)
 {
     return doremir_time_days(time)    * 24 * 60 * 60
@@ -162,6 +163,12 @@ int32_t doremir_time_to_seconds(doremir_time_t time)
            + doremir_time_seconds(time);
 }
 
+/** Convert the time to milliseconds.
+    This may lose precision.
+
+    @param time
+        Time interval.
+ */
 int32_t doremir_time_to_milliseconds(doremir_time_t time)
 {
     assert(false && "Not implemented");

@@ -58,16 +58,6 @@ module Doremir.Type
         PtrType 
     };
 
-    // type TypeImpl = struct {            
-    //     impl : Impl,
-    //     tag : enum { SimpleType, PairType, VectorType, FrameType },
-    //     fields : union {
-    //         simple  : Simple,
-    //         pair    : struct { fst : Ptr, snd : Ptr },
-    //         vector  : struct { base : Ptr, size : Size },
-    //         frame   : struct { base : Ptr }
-    //     }
-    // };
     type Type = opaque;
     
     simple : Simple -> Type;    
@@ -82,12 +72,12 @@ module Doremir.Type
     isVector : Type -> Bool;
     isFrame : Type -> Bool;
 
-    // getSimple       : Type -> Simple;
+    getSimple       : Type -> Simple;
     getPairFst      : Type -> Type;
     getPairSnd      : Type -> Type;
-    // getVectorBase   : Type -> Pair;
-    // getVectorSize   : Type -> Pair;
-    // getFrameBase    : Type -> Type;
+    getVectorBase   : Type -> Pair;
+    getVectorSize   : Type -> Pair;
+    getFrameBase    : Type -> Type;
  
     sizeOf   : (Frames, Type) -> Size;
     offsetOf : (Frames, Type) -> Size;

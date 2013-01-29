@@ -21,7 +21,7 @@ struct _doremir_event_t {
         never_event,      // E a
         now_event,        // a -> E a
         delay_event,      // t -> E a -> E a
-        either_event,     // E a -> E a -> E a
+        merge_event,     // E a -> E a -> E a
         switch_event      // E a -> E b -> E b -> E b
     }                       tag;
 
@@ -38,7 +38,7 @@ struct _doremir_event_t {
         struct {
             ptr_t           left;
             ptr_t           right;
-        }                   either;
+        }                   merge ;
         struct {
             ptr_t           pred;
             ptr_t           before;
@@ -68,7 +68,7 @@ void delete_event(doremir_event_t event)
 
 #define now_get(v,f)      v->fields.now.f
 #define delay_get(v,f)    v->fields.delay.f
-#define either_get(v,f)   v->fields.either.f
+#define merge_get(v,f)   v->fields.merge.f
 #define switch_get(v,f)   v->fields.switch_.f
 
 // --------------------------------------------------------------------------------
@@ -95,12 +95,12 @@ doremir_event_t doremir_event_delay(doremir_time_t time,
     return e;
 }
 
-doremir_event_t doremir_event_either(doremir_event_t event1,
+doremir_event_t doremir_event_merge(doremir_event_t event1,
                                      doremir_event_t event2)
 {
-    event_t e = new_event(either_event);
-    either_get(e, left)   = event1;
-    either_get(e, right)  = event2;
+    event_t e = new_event(merge_event);
+    merge_get(e, left)   = event1;
+    merge_get(e, right)  = event2;
     return e;
 }
 
@@ -140,9 +140,9 @@ doremir_time_t doremir_event_delta(doremir_event_t event)
             return doremir_add(dx, t);
         }
 
-        case either_event: {
-            time_t x = doremir_event_delta(either_get(event, left));
-            time_t y = doremir_event_delta(either_get(event, right));
+        case merge_event: {
+            time_t x = doremir_event_delta(merge_get(event, left));
+            time_t y = doremir_event_delta(merge_get(event, right));
             return doremir_min(x, y);
         }
 
@@ -172,9 +172,9 @@ bool doremir_event_live(doremir_event_t event, doremir_time_t time)
                        delay_get(event, event),
                        doremir_subtract(time, delay_get(event, time)));
 
-        case either_event:
-            return doremir_event_live(either_get(event, left), time)
-                   || doremir_event_live(either_get(event, right), time);
+        case merge_event:
+            return doremir_event_live(merge_get(event, left), time)
+                   || doremir_event_live(merge_get(event, right), time);
 
         case switch_event:
             return doremir_event_live(switch_get(event, pred), time)
@@ -199,8 +199,8 @@ doremir_ptr_t doremir_event_head(doremir_event_t event)
         case delay_event:
             return doremir_event_head(delay_get(event, event));
 
-        case either_event:
-            return doremir_event_head(either_get(event, left)); // FIXME
+        case merge_event:
+            return doremir_event_head(merge_get(event, left)); // FIXME
 
         case switch_event:
             return NULL;
@@ -231,8 +231,8 @@ doremir_event_t doremir_event_tail(doremir_event_t event)
             }
         }
 
-        case either_event:
-            return either_get(event, right); // FIXME
+        case merge_event:
+            return merge_get(event, right); // FIXME
 
         case switch_event:
             return NULL;
@@ -305,9 +305,9 @@ string_t event_show(doremir_ptr_t a)
             return s;
         }
 
-        case either_event: {
-            event_t x = either_get(event, left);
-            event_t y = either_get(event, right);
+        case merge_event: {
+            event_t x = merge_get(event, left);
+            event_t y = merge_get(event, right);
 
             write_to(s, string("<Either "));
             write_to(s, doremir_string_show(x));

@@ -26,9 +26,9 @@ doremir_error_t doremir_error_create_simple(doremir_error_severity_t,
 doremir_error_severity_t doremir_error_severity(doremir_error_t);
 doremir_string_t doremir_error_message(doremir_error_t);
 doremir_string_t doremir_error_origin(doremir_error_t);
+void doremir_error_log(doremir_ptr_t, doremir_error_t);
 doremir_string_t doremir_error_format(bool, doremir_error_t);
 bool doremir_error_check(doremir_ptr_t);
-void doremir_error_log(doremir_ptr_t, doremir_error_t);
 
 /** @}
     @}

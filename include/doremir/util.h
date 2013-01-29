@@ -54,7 +54,7 @@
 #define never()             doremir_event_never()
 #define now(x)              doremir_event_now(x)
 #define delay(t,x)          doremir_event_delay(t,x)
-#define either(x,y)         doremir_event_either(x,y)
+#define merge(x,y)          doremir_event_merge(x,y)
 #define switch_(p,x,y)      doremir_event_switch(p,x,y)
 
 #define type(a)             doremir_type_simple(a##_type)

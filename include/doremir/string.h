@@ -15,6 +15,16 @@ typedef doremir_char16_t * doremir_string_utf16_t;
 typedef doremir_char32_t * doremir_string_utf32_t;
 typedef struct _doremir_string_t * doremir_string_t;
 typedef doremir_string_t doremir_string_file_path_t;
+typedef struct {
+            doremir_string_t (* show)(doremir_ptr_t);
+        } doremir_string_show_t;
+typedef struct {
+            doremir_string_t (* to_json)(doremir_ptr_t);
+        } doremir_string_to_json_t;
+typedef struct {
+            doremir_ptr_t (* from_json)(doremir_string_t);
+        } doremir_string_from_json_t;
+doremir_string_t doremir_string_show(doremir_ptr_t);
 doremir_string_t doremir_string_empty();
 doremir_string_t doremir_string_single(doremir_char16_t);
 doremir_string_t doremir_string_copy(doremir_string_t);
@@ -35,16 +45,6 @@ doremir_string_t doremir_string_from_utf32(doremir_string_utf32_t);
 doremir_string_t doremir_string_from_cf_string(void *);
 doremir_string_t doremir_string_format_integer(char *, long);
 doremir_string_t doremir_string_format_floating(char *, double);
-typedef struct {
-            doremir_string_t (* show)(doremir_ptr_t);
-        } doremir_string_show_t;
-typedef struct {
-            doremir_string_t (* to_json)(doremir_ptr_t);
-        } doremir_string_to_json_t;
-typedef struct {
-            doremir_ptr_t (* from_json)(doremir_string_t);
-        } doremir_string_from_json_t;
-doremir_string_t doremir_string_show(doremir_ptr_t);
 
 /** @}
     @}

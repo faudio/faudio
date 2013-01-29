@@ -4,8 +4,7 @@
     
     This modules exports the entire audio engine. Example usage:
     
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.c}
-
+    ~~~~
     #import <doremir/audio_engine.h>
     
     int main (int argc, char const *argv[])
@@ -17,7 +16,7 @@
         doremir_audio_engine_terminate();
         return 0;
     }
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~
     
  */
 module Doremir.AudioEngine
@@ -43,16 +42,16 @@ module Doremir.AudioEngine
     // Time.System, Error.Some
     type LogFunc = ((Ptr, System, Error) -> Void)*;
     
-    setLogFile : FilePath -> Void;
-    setLogStd : () -> Void;
-    setLog : (LogFunc,Ptr) -> Void;
+    setLogFile  : FilePath -> Void;
+    setLogStd   : () -> Void;
+    setLog      : (LogFunc,Ptr) -> Void;
 
-    log : (Ptr,Error) -> Void; // Pass to global logger now
-    logInfo : (String) -> Void;
-    logWarning : (String) -> Void;
-    logError : (String) -> Void;
-    logInfoFrom : (String,String) -> Void;
-    logWarningFrom : (String,String) -> Void;
-    logErrorFrom : (String,String) -> Void;
+    log         : (Ptr,Error) -> Void;
+    logInfo     : (String) -> Void;
+    logWarning  : (String) -> Void;
+    logError    : (String) -> Void;
+    logInfoFrom     : (String,String) -> Void;
+    logWarningFrom  : (String,String) -> Void;
+    logErrorFrom    : (String,String) -> Void;
 
 }

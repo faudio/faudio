@@ -26,10 +26,20 @@ void doremir_audio_engine_log(doremir_ptr_t ct, doremir_error_t e);
 
 // --------------------------------------------------------------------------------
 
-error_t doremir_error_create_simple(
-    severity_t  severity,
-    string_t    message,
-    string_t    origin
+/** Creates a simple error.
+    @param severity
+    @param message
+    @param origin
+    @return 
+        A value of some type implementing
+            [Error](@ref doremir_error_interface_t),
+            [Copy](@ref doremir_copy_t) and
+            [Destroy](@ref doremir_destroy_t)
+ */
+doremir_error_t doremir_error_create_simple(
+    doremir_error_severity_t    severity,
+    doremir_string_t            message,
+    doremir_string_t            origin
 )
 {
     doremir_ptr_t simple_error_impl(doremir_id_t interface);
