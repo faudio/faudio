@@ -128,8 +128,8 @@ inline static void delete_list(list_t list)
 
  */
 #define impl_for_each_node(list, var) \
-  for(node_t _n = list->node; _n; _n = _n->next) \
-      doremir_let(var, _n)
+    for(node_t _n = list->node; _n; _n = _n->next) \
+        doremir_let(var, _n)
 
 /** Iterate over the elements of a list. The variable var will be a ptr_t
     referencing the value in the following block.
@@ -142,8 +142,8 @@ inline static void delete_list(list_t list)
 
  */
 #define impl_for_each(list, var) \
-  for(node_t _n = list->node; _n; _n = _n->next) \
-    doremir_let(var, _n->value)
+    for(node_t _n = list->node; _n; _n = _n->next) \
+        doremir_let(var, _n->value)
 
 /** The begin_node, append_node and prepend_node macros can be used to construct
     a list in place.
@@ -166,18 +166,18 @@ inline static void delete_list(list_t list)
  */
 
 #define begin_node(var, next) \
-  node_t var = NULL, *next = &var
+    node_t var = NULL, *next = &var
 
 #define append_node(place, value) \
-  do {                                      \
-    *place = new_node(value, NULL);         \
-    place = &(*place)->next;                \
-  } while (0)
+    do {                                        \
+        *place = new_node(value, NULL);         \
+        place = &(*place)->next;                \
+    } while (0)
 
 #define prepend_node(place, value) \
-  do {                                      \
-    *place = new_node(value, *place);       \
-  } while (0)
+    do {                                        \
+        *place = new_node(value, *place);       \
+    } while (0)
 
 
 // --------------------------------------------------------------------------------

@@ -22,19 +22,19 @@ struct _doremir_type_t {
     }                       tag;
 
     union {
-        simple_t              simple;         //  i8, i16 ... ptr
+        simple_t            simple;         //  i8, i16 ... ptr
 
         struct {
-            ptr_t               fst;
-            ptr_t               snd;
-        }                     pair;           //  (a,b)
+            ptr_t           fst;
+            ptr_t           snd;
+        }                   pair;           //  (a,b)
         struct {
-            ptr_t               base;
-            size_t              size;
-        }                     vector;         //  [a x n]
+            ptr_t           base;
+            size_t          size;
+        }                   vector;         //  [a x n]
         struct {
-            ptr_t               base;
-        }                     frame;          //  {a}
+            ptr_t           base;
+        }                   frame;          //  {a}
 
     }                       fields;
 };

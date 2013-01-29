@@ -12,9 +12,6 @@
 
 /*
     Notes:
-        * We implement Map as a Set of entries
-        * An edge is exactly like a pair, but compares on the first element only
-        * Performance, memory etc depend entirely on Set implementation
  */
 struct _doremir_event_t {
     impl_t      impl;
@@ -29,23 +26,23 @@ struct _doremir_event_t {
 
     union {
         struct {
-        }                     never;
+        }                   never;
         struct {
-            ptr_t               value;
-        }                     now;
+            ptr_t           value;
+        }                   now;
         struct {
-            ptr_t               event;
-            time_t              time;
-        }                     delay;
+            ptr_t           event;
+            time_t          time;
+        }                   delay;
         struct {
-            ptr_t               left;
-            ptr_t               right;
-        }                     either;
+            ptr_t           left;
+            ptr_t           right;
+        }                   either;
         struct {
-            ptr_t               pred;
-            ptr_t               before;
-            ptr_t               after;
-        }                     switch_;
+            ptr_t           pred;
+            ptr_t           before;
+            ptr_t           after;
+        }                   switch_;
     }                       fields;
 };
 
@@ -129,6 +126,7 @@ void doremir_event_destroy(doremir_event_t event)
 doremir_time_t doremir_event_delta(doremir_event_t event)
 {
     switch (event->tag) {
+
         case never_event:
             return TIME_MAX;
 
@@ -158,6 +156,7 @@ doremir_time_t doremir_event_delta(doremir_event_t event)
 bool doremir_event_live(doremir_event_t event, doremir_time_t time)
 {
     switch (event->tag) {
+        
         case never_event:
             return false;
 
@@ -183,6 +182,7 @@ bool doremir_event_live(doremir_event_t event, doremir_time_t time)
 doremir_ptr_t doremir_event_head(doremir_event_t event)
 {
     switch (event->tag) {
+        
         case never_event:
             return NULL;
 
@@ -203,6 +203,7 @@ doremir_ptr_t doremir_event_head(doremir_event_t event)
 doremir_event_t doremir_event_tail(doremir_event_t event)
 {
     switch (event->tag) {
+        
         case never_event:
             return NULL;
 
@@ -278,22 +279,26 @@ string_t event_show(doremir_ptr_t a)
         case delay_event: {
             time_t  t = delay_get(event, time);
             event_t x  = delay_get(event, event);
-            s = string_dappend(s, string("<Delay "));
-            s = string_dappend(s, format_int("%d", doremir_time_seconds(t))); // FIXME
-            s = string_dappend(s, string(" "));
-            s = string_dappend(s, doremir_string_show(x));
-            s = string_dappend(s, string(">"));
+
+            write_to(s, string("<Delay "));
+            write_to(s, format_int("%d", doremir_time_seconds(t))); // FIXME
+            write_to(s, string(" "));
+            write_to(s, doremir_string_show(x));
+            write_to(s, string(">"));
+
             return s;
         }
 
         case either_event: {
             event_t x = either_get(event, left);
             event_t y = either_get(event, right);
-            s = string_dappend(s, string("<Either "));
-            s = string_dappend(s, doremir_string_show(x));
-            s = string_dappend(s, string(" "));
-            s = string_dappend(s, doremir_string_show(y));
-            s = string_dappend(s, string(">"));
+
+            write_to(s, string("<Either "));
+            write_to(s, doremir_string_show(x));
+            write_to(s, string(" "));
+            write_to(s, doremir_string_show(y));
+            write_to(s, string(">"));
+
             return s;
         }
 
@@ -301,13 +306,15 @@ string_t event_show(doremir_ptr_t a)
             event_t p = doremir_event_delta(switch_get(event, pred));
             event_t x = doremir_event_delta(switch_get(event, before));
             event_t y = doremir_event_delta(switch_get(event, after));
-            s = string_dappend(s, string("<Switch "));
-            s = string_dappend(s, doremir_string_show(p));
-            s = string_dappend(s, string(" "));
-            s = string_dappend(s, doremir_string_show(x));
-            s = string_dappend(s, string(" "));
-            s = string_dappend(s, doremir_string_show(y));
-            s = string_dappend(s, string(">"));
+
+            write_to(s, string("<Switch "));
+            write_to(s, doremir_string_show(p));
+            write_to(s, string(" "));
+            write_to(s, doremir_string_show(x));
+            write_to(s, string(" "));
+            write_to(s, doremir_string_show(y));
+            write_to(s, string(">"));
+
             return s;
         }
     }
