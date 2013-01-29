@@ -19,6 +19,7 @@ list(APPEND SRCS
   doremir/graph.c
   doremir/midi.c
   doremir/pair.c
+  doremir/plot_gnu.c
   doremir/plot_core_osx.m
   doremir/plot.c
   doremir/priority_queue.c

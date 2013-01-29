@@ -16,8 +16,8 @@ typedef double (* doremir_plot_func_t)(doremir_ptr_t,
                                        int,
                                        double,
                                        double);
-void doremir_plot_use_gnu_plot();
-void doremir_plot_use_core_plot();
+void doremir_plot_use_gnu();
+void doremir_plot_use_core();
 void doremir_plot_func(doremir_plot_func_t,
                        doremir_ptr_t,
                        doremir_nullary_t,

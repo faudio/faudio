@@ -30,7 +30,7 @@ void doremir_audio_engine_log(doremir_ptr_t ct, doremir_error_t e);
     @param severity     Severity of the error.
     @param message      Error message.
     @param origin       Error origin (typically module name).
-    @return 
+    @return
         A value of some type implementing
             [Error](@ref doremir_error_interface_t),
             [Copy](@ref doremir_copy_t) and

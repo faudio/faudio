@@ -11,34 +11,54 @@
 
 typedef doremir_plot_func_t plot_func;
 
-void run_core_plot (plot_func func, ptr_t funcData, nullary_t cont, ptr_t contData);
-void run_gnu_plot (plot_func func, ptr_t funcData, nullary_t cont, ptr_t contData);
+void run_core_plot(plot_func func, ptr_t funcData, nullary_t cont, ptr_t contData);
+void run_gnu_plot(plot_func func, ptr_t funcData, nullary_t cont, ptr_t contData);
 
 enum plot_backend {
     gnu_plot,
     core_plot
 };
 
+enum plot_backend   plot_backend_g  = core_plot;
+
+void doremir_audio_engine_log_info(doremir_string_t);
+
+/** Use gnuplot for plotting.
+ */
+void doremir_plot_use_gnu()
+{
+    plot_backend_g = gnu_plot;
+    doremir_audio_engine_log_info(string("Using gnuplot backend"));
+}
+
+/** Use CorePlot for plotting.
+ */
+void doremir_plot_use_core()
+{
+    plot_backend_g = core_plot;
+    doremir_audio_engine_log_info(string("Using CorePlot backend"));
+}
+
 /** Run a plot of the given functions.
  */
 void doremir_plot_func
 (
-  plot_func           func,
-  doremir_ptr_t       data,
-  doremir_nullary_t   cont,
-  doremir_ptr_t       cont_data
+    plot_func           func,
+    doremir_ptr_t       data,
+    doremir_nullary_t   cont,
+    doremir_ptr_t       cont_data
 )
 {
-    switch (core_plot)
-    {
+    switch (plot_backend_g) {
         case gnu_plot:
             run_gnu_plot(func, data, cont, cont_data);
             return;
+
         case core_plot:
             run_core_plot(func, data, cont, cont_data);
             return;
     }
-}  
+}
 
 #define PLOTTER(T) \
     double plot_##T(void * ct, int i, double t, double x)       \
@@ -56,7 +76,7 @@ void doremir_plot_func
             return -2;                                          \
         }                                                       \
     }                                                           \
-
+ 
 PLOTTER(float);
 PLOTTER(double);
 

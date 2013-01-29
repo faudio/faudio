@@ -14,7 +14,7 @@
     Notes:
  */
 struct _doremir_event_t {
-    
+
     impl_t      impl;
 
     enum {
@@ -96,7 +96,7 @@ doremir_event_t doremir_event_delay(doremir_time_t time,
 }
 
 doremir_event_t doremir_event_merge(doremir_event_t event1,
-                                     doremir_event_t event2)
+                                    doremir_event_t event2)
 {
     event_t e = new_event(merge_event);
     merge_get(e, left)   = event1;
@@ -160,7 +160,7 @@ doremir_time_t doremir_event_offset(doremir_event_t event)
 bool doremir_event_has_value(doremir_event_t event, doremir_time_t time)
 {
     switch (event->tag) {
-        
+
         case never_event:
             return false;
 
@@ -189,7 +189,7 @@ bool doremir_event_has_value(doremir_event_t event, doremir_time_t time)
 doremir_ptr_t doremir_event_value(doremir_event_t event)
 {
     switch (event->tag) {
-        
+
         case never_event:
             return NULL;
 
@@ -213,7 +213,7 @@ doremir_ptr_t doremir_event_value(doremir_event_t event)
 doremir_event_t doremir_event_tail(doremir_event_t event)
 {
     switch (event->tag) {
-        
+
         case never_event:
             return NULL;
 
@@ -285,7 +285,7 @@ string_t event_show(doremir_ptr_t a)
     string_t s = string("");
 
     switch (event->tag) {
-        
+
         case never_event:
             return string("<Never>");
 
@@ -333,9 +333,9 @@ string_t event_show(doremir_ptr_t a)
 
             return s;
 
-        default:
-            assert(false && "Missing label");
-        }
+            default:
+                assert(false && "Missing label");
+            }
     }
 
     return s;
