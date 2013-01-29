@@ -120,7 +120,7 @@ void doremir_audio_engine_set_log(doremir_audio_engine_log_func_t f, doremir_ptr
 void doremir_audio_engine_log(doremir_ptr_t ct, doremir_error_t e)
 {
     if (log_func_g) {
-        log_func_g(log_ct_g, time(NULL), e);
+        log_func_g(log_ct_g, (ptr_t) time(NULL), e);
     }
 }
 

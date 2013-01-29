@@ -14,6 +14,7 @@
     Notes:
  */
 struct _doremir_event_t {
+    
     impl_t      impl;
 
     enum {
@@ -150,6 +151,9 @@ doremir_time_t doremir_event_delta(doremir_event_t event)
             time_t y = doremir_event_delta(switch_get(event, after));
             return doremir_min(x, y);
         }
+
+        default:
+            assert(false && "Missing label");
     }
 }
 
@@ -176,6 +180,9 @@ bool doremir_event_live(doremir_event_t event, doremir_time_t time)
             return doremir_event_live(switch_get(event, pred), time)
                    ? doremir_event_live(switch_get(event, before), time)
                    : doremir_event_live(switch_get(event, after), time);
+
+        default:
+            assert(false && "Missing label");
     }
 }
 
@@ -197,6 +204,9 @@ doremir_ptr_t doremir_event_head(doremir_event_t event)
 
         case switch_event:
             return NULL;
+
+        default:
+            assert(false && "Missing label");
     }
 }
 
@@ -226,16 +236,21 @@ doremir_event_t doremir_event_tail(doremir_event_t event)
 
         case switch_event:
             return NULL;
+
+        default:
+            assert(false && "Missing label");
     }
 }
 
 
 doremir_event_t doremir_event_external()
 {
+    assert(false && "Not implemented");
 }
 
 void doremir_event_trig(doremir_event_t event)
 {
+    assert(false && "Not implemented");
 }
 
 
@@ -270,6 +285,7 @@ string_t event_show(doremir_ptr_t a)
     string_t s = string("");
 
     switch (event->tag) {
+        
         case never_event:
             return string("<Never>");
 
@@ -280,13 +296,11 @@ string_t event_show(doremir_ptr_t a)
             time_t  t = delay_get(event, time);
             event_t x  = delay_get(event, event);
 
-
             write_to(s, string("<Delay "));
             write_to(s, format_int("%d", doremir_time_seconds(t))); // FIXME
             write_to(s, string(" "));
             write_to(s, doremir_string_show(x));
             write_to(s, string(">"));
-
 
             return s;
         }
@@ -295,22 +309,19 @@ string_t event_show(doremir_ptr_t a)
             event_t x = either_get(event, left);
             event_t y = either_get(event, right);
 
-
             write_to(s, string("<Either "));
             write_to(s, doremir_string_show(x));
             write_to(s, string(" "));
             write_to(s, doremir_string_show(y));
             write_to(s, string(">"));
 
-
             return s;
         }
 
         case switch_event: {
-            event_t p = doremir_event_delta(switch_get(event, pred));
-            event_t x = doremir_event_delta(switch_get(event, before));
-            event_t y = doremir_event_delta(switch_get(event, after));
-
+            event_t p = switch_get(event, pred);
+            event_t x = switch_get(event, before);
+            event_t y = switch_get(event, after);
 
             write_to(s, string("<Switch "));
             write_to(s, doremir_string_show(p));
@@ -320,8 +331,10 @@ string_t event_show(doremir_ptr_t a)
             write_to(s, doremir_string_show(y));
             write_to(s, string(">"));
 
-
             return s;
+
+        default:
+            assert(false && "Missing label");
         }
     }
 
