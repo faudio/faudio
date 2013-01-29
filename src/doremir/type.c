@@ -338,9 +338,6 @@ inline static size_t offset(doremir_type_frames_t frames, doremir_type_t type)
   }
 }
 
-
-
-
 /**
     Return the size of the represented type.
  */

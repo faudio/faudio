@@ -19,18 +19,44 @@ module Doremir.Event
      */
     type Event = opaque;
 
+    // Prim
     never   : () -> Event;
     now     : Ptr -> Event;
     delay   : (Time,Event) -> Event;
-    either  : (Event,Event) -> Event;
+    // stretch : (Time,Event) -> Event;
+    either  : (Event,Event) -> Event;               // rename merge
     switch  : (Event,Event,Event) -> Event;
+    // route   : (Event,Event) -> Pair;                // Dual of switch, before route to first output, after to second
+    // route p x = (switch p x never, switch p never x)
     destroy : Event -> Void;
 
-    delta : Event -> Time;
-    live  : (Event,Time) -> Bool;
-    head  : Event -> Ptr;
-    tail  : Event -> Event;
-
+    // Non-pure
     external : () -> Event;
-    trig : Event -> Void;
+    send : (Ptr,Event) -> Void;
+    
+    
+    
+
+    
+    // Derived
+    repeat : (Time,Ptr) -> Event; // a a a a,...
+    // repeat t x = now x `either` delay t (repeat t x) 
+    
+    tap : (Event,Event) -> Event;        // p x => when p occurs, let one occ of x through
+    gate1 : (Event,Event) -> Event;      // p x => turn on/off
+    gate : (Event,Event,Event) -> Event; // p q x => p opens, q closes
+
+    
+    // Backend methods
+    delta : Event -> Time;          // Offset to first occurance            rename minOffset
+    live  : (Event,Time) -> Bool;   // Is an occurance available            rename hasValue
+    head  : Event -> Ptr;           // Get the first occurance value        rename value?
+    tail  : Event -> Event;         // Rest remaining occurances            rename future
+    
+
+
+    
+    // map
+    // concatMap, join
+    // 
 }

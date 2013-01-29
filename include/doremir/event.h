@@ -23,12 +23,21 @@ doremir_event_t doremir_event_switch(doremir_event_t,
                                      doremir_event_t,
                                      doremir_event_t);
 void doremir_event_destroy(doremir_event_t);
+doremir_event_t doremir_event_external();
+void doremir_event_send(doremir_ptr_t, doremir_event_t);
+doremir_event_t doremir_event_repeat(doremir_time_t,
+                                     doremir_ptr_t);
+doremir_event_t doremir_event_tap(doremir_event_t,
+                                  doremir_event_t);
+doremir_event_t doremir_event_gate1(doremir_event_t,
+                                    doremir_event_t);
+doremir_event_t doremir_event_gate(doremir_event_t,
+                                   doremir_event_t,
+                                   doremir_event_t);
 doremir_time_t doremir_event_delta(doremir_event_t);
 bool doremir_event_live(doremir_event_t, doremir_time_t);
 doremir_ptr_t doremir_event_head(doremir_event_t);
 doremir_event_t doremir_event_tail(doremir_event_t);
-doremir_event_t doremir_event_external();
-void doremir_event_trig(doremir_event_t);
 
 /** @}
     @}

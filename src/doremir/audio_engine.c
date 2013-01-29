@@ -56,25 +56,11 @@ void doremir_audio_engine_terminate()
 
 // --------------------------------------------------------------------------------
 
-/*
-  TODO remove coloring if redirected
-
-  Ex
-
-  int is_redirected(){
-     if (!isatty(fileno(stdout))){
-         fprintf(stdout, "argv, argc, someone is redirecting me elsewhere...\n");
-         return 1;
-     }
-     return 0;
-  }
- */
-
 static inline void stdlog(ptr_t ct, doremir_time_system_t t, doremir_error_t e)
 {
   FILE *file = ct;
   char csmsg[350];
-  bool color = (file == stdout);
+  bool color = file == stdout && isatty(fileno(stdout));
   
   doremir_let(tm, localtime((long *) &t)) {
     strftime(csmsg, 50, iso8601_k, tm);
