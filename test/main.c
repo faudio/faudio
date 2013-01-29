@@ -1083,7 +1083,7 @@ void test_event()
 
   }
 }
-         
+
 
 ptr_t add1234(ptr_t c, ptr_t x)
 {
@@ -1253,7 +1253,7 @@ void test_log()
 {
   test_section("Logging");
 
-  doremir_audio_engine_set_log_std();
+  // doremir_audio_engine_set_log_std();
   // doremir_audio_engine_set_log_file(string("/Users/hans/Library/Logs/DoReMIRAudio.log"));
 
   for (int i = 0; i < 3; ++i) {
@@ -1299,6 +1299,7 @@ int main(int argc, char const *argv[])
   // while(true)
   {
     doremir_audio_engine_set_log_std();
+    // doremir_audio_engine_set_log_file(string("/Users/hans/Library/Logs/DoReMIRAudio.log"));
     doremir_audio_engine_initialize();
 
     test_wrap();

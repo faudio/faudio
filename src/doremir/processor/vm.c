@@ -110,7 +110,7 @@ void lmm_swap(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2)
 {
   size_t ts = rsize(r2);
   size_t tm = rmax(r2);
-  void  *td = rdata(r2);
+  void *td = rdata(r2);
 
   rsize(r2) = rsize(r1);
   rmax(r2) = rmax(r1);

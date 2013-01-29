@@ -78,7 +78,7 @@ struct lmm {
   struct {
     size_t size;
     size_t maxSize;
-    void  *data;
+    void *data;
   } regs[kLmmRegs];
 
   size_t off;

@@ -14,7 +14,7 @@
 
 typedef doremir_audio_engine_log_func_t log_func_t;
 
-static int            init_count_g  = 0;
+static unsigned       init_count_g  = 0;
 static log_func_t     log_func_g    = NULL;
 static ptr_t          log_ct_g      = NULL;
 
@@ -37,9 +37,9 @@ void doremir_device_audio_terminate();
  */
 void doremir_audio_engine_initialize()
 {
-  init_count_g++;
   doremir_device_audio_initialize();
   doremir_audio_engine_log_info(string("Finished initialization."));
+  init_count_g++;
 }
 
 /** Performs global cleanup.
@@ -49,9 +49,13 @@ void doremir_audio_engine_initialize()
  */
 void doremir_audio_engine_terminate()
 {
-  init_count_g--;
-  doremir_device_audio_terminate();
-  doremir_audio_engine_log_info(string("Finished termination."));
+  if (init_count_g) {
+    --init_count_g;
+    doremir_device_audio_terminate();
+    doremir_audio_engine_log_info(string("Finished termination."));
+  } else {
+    doremir_audio_engine_log_warning(string("Initialization count inconsistent."));
+  }
 }
 
 // --------------------------------------------------------------------------------
@@ -59,19 +63,21 @@ void doremir_audio_engine_terminate()
 static inline void stdlog(ptr_t ct, doremir_time_system_t t, doremir_error_t e)
 {
   FILE *file = ct;
-  char csmsg[350];
-  bool color = file == stdout && isatty(fileno(stdout));
-  
+  char msg[350];
+  bool color = (file == stdout && isatty(fileno(stdout)));
+
   doremir_let(tm, localtime((long *) &t)) {
-    strftime(csmsg, 50, iso8601_k, tm);
+    strftime(msg, 50, iso8601_k, tm);
   }
-  doremir_with(str, doremir_error_format(color, e), doremir_destroy(str)) {
-    doremir_with(cstr, doremir_string_to_utf8(str), free(cstr)) {
-      strncat(csmsg, cstr, 298);
-      strncat(csmsg, "\n", 1);
+  doremir_with(str, doremir_error_format(color, e),
+               doremir_destroy(str)) {
+    doremir_with(cstr, doremir_string_to_utf8(str),
+                 free(cstr)) {
+      strncat(msg, cstr, 298);
+      strncat(msg, "\n", 1);
     }
   }
-  fputs(csmsg, file);
+  fputs(msg, file);
   fflush(file);
 }
 
@@ -80,8 +86,8 @@ static inline void stdlog(ptr_t ct, doremir_time_system_t t, doremir_error_t e)
 void doremir_audio_engine_set_log_file(doremir_string_file_path_t path)
 {
   char *cpath = doremir_string_to_utf8(path);
-  log_ct_g = fopen(cpath, "a");
-  log_func_g = stdlog;
+  log_ct_g     = fopen(cpath, "a");
+  log_func_g   = stdlog;
   free(cpath);
 }
 
@@ -89,24 +95,27 @@ void doremir_audio_engine_set_log_file(doremir_string_file_path_t path)
  */
 void doremir_audio_engine_set_log_std()
 {
-  log_ct_g = stdout;
-  log_func_g = stdlog;
+  log_ct_g    = stdout;
+  log_func_g  = stdlog;
 }
 
 /** Instruct the Audio Engine to pass log messages to the given handler.
  */
 void doremir_audio_engine_set_log(doremir_audio_engine_log_func_t f, doremir_ptr_t ct)
 {
-  log_func_g = f;
-  log_ct_g = ct;
+  log_func_g  = f;
+  log_ct_g    = ct;
 }
 
 
 // --------------------------------------------------------------------------------
 
 /** Write a log message.
-    @param ct   Context reference (ignored).
-    @param e    A value implementing [Error](@ref doremir_error_interface_t).
+
+    @param context
+        Ignored, for compability with user-defined callbacks.
+    @param error
+        Condition to log. Must implement [Error](@ref doremir_error_interface_t).
  */
 void doremir_audio_engine_log(doremir_ptr_t ct, doremir_error_t e)
 {
