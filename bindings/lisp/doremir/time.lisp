@@ -13,6 +13,8 @@
 (defcfun (time-seconds "doremir_time_seconds") :int32 (a time))
 (defcfun (time-divisions "doremir_time_divisions") ratio (a time))
 (defcfun (time-to-iso "doremir_time_to_iso") string (a time))
+(defcfun (time-to-seconds "doremir_time_to_seconds") :int32 (a time))
+(defcfun (time-to-milliseconds "doremir_time_to_milliseconds") :int32 (a time))
 (define-foreign-type time-system-type () () (:actual-type :pointer))
 (define-parse-method time-system () (make-instance 'time-system-type))
 (defclass time-system () ((time-system-ptr :initarg :time-system-ptr)))

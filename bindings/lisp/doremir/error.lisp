@@ -10,5 +10,6 @@
 (defcfun (error-severity "doremir_error_severity") error-severity (a error))
 (defcfun (error-message "doremir_error_message") string (a error))
 (defcfun (error-origin "doremir_error_origin") string (a error))
-(defcfun (error-check "doremir_error_check") :boolean (a ptr))
 (defcfun (error-log "doremir_error_log") :void (a ptr) (b error))
+(defcfun (error-format "doremir_error_format") string (a :boolean) (b error))
+(defcfun (error-check "doremir_error_check") :boolean (a ptr))
