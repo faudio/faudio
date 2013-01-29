@@ -27,9 +27,9 @@ void doremir_audio_engine_log(doremir_ptr_t ct, doremir_error_t e);
 // --------------------------------------------------------------------------------
 
 /** Creates a simple error.
-    @param severity
-    @param message
-    @param origin
+    @param severity     Severity of the error.
+    @param message      Error message.
+    @param origin       Error origin (typically module name).
     @return 
         A value of some type implementing
             [Error](@ref doremir_error_interface_t),
@@ -113,15 +113,21 @@ bool doremir_error_check(doremir_ptr_t a)
 }
 
 /** Write a log message.
-    @param ct   Context reference (ignored).
-    @param e    A value implementing [Error](@ref doremir_error_interface_t).
+
+    @param context
+        Ignored, declared for compability with user-defined callbacks.
+    @param error
+        Condition to log. Must implement [Error](@ref doremir_error_interface_t).
  */
-void doremir_error_log(doremir_ptr_t ct, doremir_error_t e)
+void doremir_error_log(doremir_ptr_t context, doremir_error_t error)
 {
-    doremir_audio_engine_log(ct, e);
+    doremir_audio_engine_log(context, error);
 }
 
-doremir_string_t doremir_error_format(bool coloured, doremir_error_t a)
+/** Convert the given error to a formated string.
+    @param colored Include color escapes for terminals.
+ */
+doremir_string_t doremir_error_format(bool colored, doremir_error_t a)
 {
     simple_error_t simple = (simple_error_t) a;
     string_t str = string("");
@@ -144,19 +150,19 @@ doremir_string_t doremir_error_format(bool coloured, doremir_error_t a)
 
     switch (simple->severity) {
         case info:
-            str = string_dappend(str, strs[0 + coloured * 6]);
+            str = string_dappend(str, strs[0 + colored * 6]);
             break;
 
         case warning:
-            str = string_dappend(str, strs[1 + coloured * 6]);
+            str = string_dappend(str, strs[1 + colored * 6]);
             break;
 
         case error:
-            str = string_dappend(str, strs[2 + coloured * 6]);
+            str = string_dappend(str, strs[2 + colored * 6]);
             break;
 
         case misc:
-            str = string_dappend(str, strs[3 + coloured * 6]);
+            str = string_dappend(str, strs[3 + colored * 6]);
             break;
 
         default:
@@ -164,9 +170,9 @@ doremir_string_t doremir_error_format(bool coloured, doremir_error_t a)
     }
 
     if (doremir_string_length(simple->origin) > 0) {
-        str = string_dappend(str, strs[4 + coloured * 6]);
+        str = string_dappend(str, strs[4 + colored * 6]);
         str = string_dappend(str, doremir_copy(simple->origin));
-        str = string_dappend(str, strs[5 + coloured * 6]);
+        str = string_dappend(str, strs[5 + colored * 6]);
     }
 
     str = string_dappend(str, doremir_copy(simple->message));

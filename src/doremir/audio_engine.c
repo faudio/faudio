@@ -113,7 +113,7 @@ void doremir_audio_engine_set_log(doremir_audio_engine_log_func_t f, doremir_ptr
 /** Write a log message.
 
     @param context
-        Ignored, for compability with user-defined callbacks.
+        Ignored, declared for compability with user-defined callbacks.
     @param error
         Condition to log. Must implement [Error](@ref doremir_error_interface_t).
  */

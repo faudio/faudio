@@ -194,7 +194,7 @@ void start_gui()
 
 /** Run a plot of the given functions.
  */
-void doremir_plot_show
+void doremir_plot_func
 (
   doremir_plot_func_t func,
   doremir_ptr_t       funcData,
@@ -208,4 +208,45 @@ void doremir_plot_show
 
   doremir_thread_create(cont, contData);
   start_gui();
+}  
+
+#define PLOTTER(T) \
+    double plot_##T(void * ct, int i, double t, double x)       \
+    {                                                           \
+        doremir_buffer_t buf = ct;                              \
+                                                                \
+        size_t  sz = doremir_buffer_size(buf) / sizeof(T);      \
+        T     * ds = doremir_buffer_unsafe_address(buf);        \
+                                                                \
+        if (i == 0) {                                           \
+            return ds[((size_t)(sz * ((x + 1) / 2)))];          \
+        } else if (i == 1) {                                    \
+            return ds[((size_t)(sz * ((x + 1) / 2)))] * -1;     \
+        } else {                                                \
+            return -2;                                          \
+        }                                                       \
+    }                                                           \
+
+PLOTTER(float);
+PLOTTER(double);
+
+/** Run a plot on the given buffer, treating its contents as
+    32-bit floating point data.
+ */
+void doremir_plot_buffer_float(doremir_buffer_t  buffer,
+                               doremir_nullary_t cont,
+                               doremir_ptr_t     data)
+{
+    doremir_plot_func(plot_float, buffer, cont, data);
 }
+
+/** Run a plot on the given buffer, treating its contents as
+    64-bit floating point data.
+ */
+void doremir_plot_buffer_double(doremir_buffer_t      buffer,
+                                doremir_nullary_t     cont,
+                                doremir_ptr_t         data)
+{
+    doremir_plot_func(plot_double, buffer, cont, data);
+}
+

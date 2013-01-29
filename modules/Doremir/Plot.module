@@ -10,8 +10,9 @@
  */
 module Doremir.Plot
 {
-    import Doremir;
+    import Doremir;     
     import Doremir.Std;
+    import Doremir.Buffer;
 
     /**
         @typedef doremir_plot_func_t
@@ -25,5 +26,8 @@ module Doremir.Plot
      */
     type Func = ((Ptr, Int, Double, Double) -> Double)*;
 
-    show : (Func, Ptr, Nullary, Ptr) -> Void;
+    func : (Func, Ptr, Nullary, Ptr) -> Void;
+
+    bufferFloat   : (Buffer, Nullary, Ptr) -> Void;
+    bufferDouble  : (Buffer, Nullary, Ptr) -> Void; 
 }

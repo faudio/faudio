@@ -68,8 +68,7 @@ void delete_type(doremir_type_t type)
 
 // TODO manage component types
 
-/**
-    Create a representation of a simple type.
+/** Create a representation of a simple type.
  */
 doremir_type_t doremir_type_simple(doremir_type_simple_t type)
 {
@@ -80,8 +79,7 @@ doremir_type_t doremir_type_simple(doremir_type_simple_t type)
     return t;
 }
 
-/**
-    Create a representation of a pair type.
+/** Create a representation of a pair type.
  */
 doremir_type_t doremir_type_pair(doremir_type_t type1, doremir_type_t type2)
 {
@@ -93,8 +91,7 @@ doremir_type_t doremir_type_pair(doremir_type_t type1, doremir_type_t type2)
     return t;
 }
 
-/**
-    Create a representation of a vector type.
+/** Create a representation of a vector type.
  */
 doremir_type_t doremir_type_vector(doremir_type_t base, size_t size)
 {
@@ -106,8 +103,7 @@ doremir_type_t doremir_type_vector(doremir_type_t base, size_t size)
     return t;
 }
 
-/**
-    Create a representation of a frame type.
+/** Create a representation of a frame type.
  */
 doremir_type_t doremir_type_frame(doremir_type_t base)
 {
@@ -118,8 +114,7 @@ doremir_type_t doremir_type_frame(doremir_type_t base)
     return t;
 }
 
-/**
-    Copy the given type representation.
+/** Copy the given type representation.
  */
 doremir_type_t doremir_type_copy(doremir_type_t type)
 {
@@ -151,61 +146,83 @@ doremir_type_t doremir_type_copy(doremir_type_t type)
     return t;
 }
 
-/**
-    Destroy the given type representation.
+/** Destroy the given type representation.
  */
 void doremir_type_destroy(doremir_type_t type)
 {
     delete_type(type);
 }
 
-/**
-    Whether the type represented by the given value is simple.
+/** Whether the type represented by the given value is simple.
  */
 bool doremir_type_is_simple(doremir_type_t type)
 {
     return type->tag == simple_type;
 }
 
-/**
-    Whether the type represented by the given value is a pair type.
+/** Whether the type represented by the given value is a pair type.
  */
 bool doremir_type_is_pair(doremir_type_t type)
 {
     return type->tag == pair_type;
 }
 
-/**
-    Whether the type represented by the given value is a vector type.
+/** Whether the type represented by the given value is a vector type.
  */
 bool doremir_type_is_vector(doremir_type_t type)
 {
     return type->tag == vector_type;
 }
 
-/**
-    Whether the type represented by the given value is a frame type.
+/** Whether the type represented by the given value is a frame type.
  */
 bool doremir_type_is_frame(doremir_type_t type)
 {
     return type->tag == frame_type;
 }
 
-/**
-    Return the first component of a pair type.
+/** Return the simple type.
+ */
+doremir_type_simple_t doremir_type_get_simple(doremir_type_t t)
+{
+    return simple_get(t);
+}
+
+/** Return the first component of a pair type.
  */
 doremir_type_t doremir_type_get_pair_fst(doremir_type_t t)
 {
     return pair_get(t, fst);
 }
 
-/**
-    Return the second component of a pair type.
+/** Return the second component of a pair type.
  */
 doremir_type_t doremir_type_get_pair_snd(doremir_type_t t)
 {
     return pair_get(t, snd);
 }
+
+/** Return the base of a vector type.
+ */
+doremir_pair_t doremir_type_get_vector_base(doremir_type_t t)
+{
+    return vector_get(t, base);
+}
+
+/** Return the size of a vector type.
+ */
+doremir_pair_t doremir_type_get_vector_size(doremir_type_t t)
+{
+    return vector_get(t, size);
+}
+
+/** Return the base of a frame type.
+ */
+doremir_type_t doremir_type_get_frame_base(doremir_type_t t)
+{
+    return frame_get(t, base);
+}
+
 
 // --------------------------------------------------------------------------------
 

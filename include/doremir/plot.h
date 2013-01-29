@@ -4,6 +4,7 @@
 
 #include <doremir.h>
 #include <doremir/std.h>
+#include <doremir/buffer.h>
 
 /** @defgroup Doremir Doremir
     @{
@@ -15,10 +16,16 @@ typedef double (* doremir_plot_func_t)(doremir_ptr_t,
                                        int,
                                        double,
                                        double);
-void doremir_plot_show(doremir_plot_func_t,
+void doremir_plot_func(doremir_plot_func_t,
                        doremir_ptr_t,
                        doremir_nullary_t,
                        doremir_ptr_t);
+void doremir_plot_buffer_float(doremir_buffer_t,
+                               doremir_nullary_t,
+                               doremir_ptr_t);
+void doremir_plot_buffer_double(doremir_buffer_t,
+                                doremir_nullary_t,
+                                doremir_ptr_t);
 
 /** @}
     @}

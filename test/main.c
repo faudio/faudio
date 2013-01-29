@@ -1184,28 +1184,9 @@ double f1(void * ct, int i, double t, double x)
 void test_plot()
 {
     test_section("Plot");
-    doremir_plot_show(f1, NULL, cont, NULL);
+    doremir_plot_func(f1, NULL, cont, NULL);
 }
 
-double f2(void * ct, int i, double t, double x)
-{
-    buffer_t buf = ct;
-    // doremir_print("Size: %s\n", i32(doremir_buffer_size(buf)));
-    // doremir_print("Data: %s\n", buf);
-
-    size_t  sz = doremir_buffer_size(buf) / sizeof(double);
-    double * ds = doremir_buffer_unsafe_address(buf);
-
-    // printf("%d %f\n", ((int)(sz * ((x+1)/2))), ds[((int)(sz * ((x+1)/2)))]*1000);
-
-    if (i == 0) {
-        return ds[((int)(sz * ((x + 1) / 2)))];
-    } else if (i == 1) {
-        return ds[((int)(sz * ((x + 1) / 2)))] * -1;
-    } else {
-        return -2;
-    }
-}
 void test_plot_file()
 {
     test_section("Plot file");
@@ -1229,12 +1210,11 @@ void test_plot_file()
     size_t bufSize = 100000000 * sizeof(double);
     buffer_t buf = doremir_buffer_create(bufSize);
     double * dbuf = doremir_buffer_unsafe_address(buf);
-    // double* dbuf = malloc(bufSize);
 
     sf_count_t sz = sf_read_double(f, dbuf, bufSize / sizeof(double));
     buf = doremir_buffer_resize(sz * sizeof(double), buf);
 
-    doremir_plot_show(f2, buf, cont, NULL);
+    doremir_plot_buffer_double(buf, cont, NULL);
 }
 
 void test_sndfile()
@@ -1333,7 +1313,7 @@ int main(int argc, char const * argv[])
 
         test_log();
         // test_plot(NULL, NULL);
-        // test_plot_file();
+        test_plot_file();
         // test_sndfile();
 
         // test_processors();
