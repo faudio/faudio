@@ -26,8 +26,10 @@ module Doremir.Plot
      */
     type Func = ((Ptr, Int, Double, Double) -> Double)*;
 
-    func : (Func, Ptr, Nullary, Ptr) -> Void;
+    useGnuPlot : () -> Void;
+    useCorePlot : () -> Void;
 
+    func : (Func, Ptr, Nullary, Ptr) -> Void;
     bufferFloat   : (Buffer, Nullary, Ptr) -> Void;
     bufferDouble  : (Buffer, Nullary, Ptr) -> Void; 
 }

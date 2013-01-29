@@ -192,9 +192,7 @@ void start_gui()
   }
 }
 
-/** Run a plot of the given functions.
- */
-void doremir_plot_func
+void run_core_plot
 (
   doremir_plot_func_t func,
   doremir_ptr_t       funcData,
@@ -208,6 +206,51 @@ void doremir_plot_func
 
   doremir_thread_create(cont, contData);
   start_gui();
+}
+
+// -----------------------------------------------------------------------------
+
+void run_gnu_plot
+(
+  doremir_plot_func_t func,
+  doremir_ptr_t       funcData,
+  doremir_nullary_t   cont,
+  doremir_ptr_t       contData
+)
+{
+    assert(false);
+}  
+
+// -----------------------------------------------------------------------------
+
+enum plot_backend {
+    gnu_plot,
+    core_plot
+};
+
+
+
+
+
+/** Run a plot of the given functions.
+ */
+void doremir_plot_func
+(
+  doremir_plot_func_t func,
+  doremir_ptr_t       funcData,
+  doremir_nullary_t   cont,
+  doremir_ptr_t       contData
+)
+{
+    switch (core_plot)
+    {
+        case gnu_plot:
+            run_gnu_plo(func, funcData, cont, contData);
+            return;
+        case core_plot:
+            run_core_plot(func, funcData, cont, contData);
+            return;
+    }
 }  
 
 #define PLOTTER(T) \
