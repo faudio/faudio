@@ -75,28 +75,28 @@
 enum { kLmmRegs = 1024 };
 
 struct lmm {
-  struct {
-    size_t size;
-    size_t maxSize;
-    void *data;
-  } regs[kLmmRegs];
+    struct {
+        size_t size;
+        size_t maxSize;
+        void * data;
+    } regs[kLmmRegs];
 
-  size_t off;
-  size_t step;
-  size_t loops;
+    size_t off;
+    size_t step;
+    size_t loops;
 
-  char *error;
+    char * error;
 };
 
-typedef struct lmm *lmm_t;
+typedef struct lmm * lmm_t;
 typedef uint16_t lmm_reg_t;
 
 lmm_t   lmm_create();
 void    lmm_destroy(lmm_t lmm);
-char   *lmm_get_error(lmm_t lmm);
+char  * lmm_get_error(lmm_t lmm);
 size_t  lmm_get_reg_size(lmm_t lmm, lmm_reg_t r);
 size_t  lmm_get_reg_max_size(lmm_t lmm, lmm_reg_t r);
-void   *lmm_get_reg_data(lmm_t lmm, lmm_reg_t r);
+void  * lmm_get_reg_data(lmm_t lmm, lmm_reg_t r);
 
 
 void lmm_alloc(lmm_t lmm, size_t size, lmm_reg_t r);

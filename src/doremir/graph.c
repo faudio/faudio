@@ -18,17 +18,17 @@
  */
 
 struct edge {
-  impl_t      impl;       //  Interface dispatcher
-  // label
-  // node1
-  // node2
+    impl_t      impl;       //  Interface dispatcher
+    // label
+    // node1
+    // node2
 };
 
-typedef struct edge *edge_t;
+typedef struct edge * edge_t;
 
 struct _doremir_graph_t {
-  impl_t          impl;       //  Interface dispatcher
-  set_t           entries;    //  Set of entries
+    impl_t          impl;       //  Interface dispatcher
+    set_t           entries;    //  Set of entries
 };
 
 doremir_ptr_t graph_impl(doremir_id_t interface);
@@ -74,7 +74,7 @@ doremir_ptr_t edge_impl(doremir_id_t interface);
  */
 doremir_graph_t doremir_graph_empty()
 {
-  assert(false && "Not implemented.");
+    assert(false && "Not implemented.");
 }
 
 /** Insert a node in the given graph.
@@ -82,7 +82,7 @@ doremir_graph_t doremir_graph_empty()
 doremir_graph_t doremir_graph_insert(doremir_graph_node_t node,
                                      doremir_graph_t graph)
 {
-  assert(false && "Not implemented.");
+    assert(false && "Not implemented.");
 }
 
 /** Remove a node from the given graph.
@@ -90,14 +90,14 @@ doremir_graph_t doremir_graph_insert(doremir_graph_node_t node,
 doremir_graph_t doremir_graph_remove(doremir_graph_node_t node,
                                      doremir_graph_t graph)
 {
-  assert(false && "Not implemented.");
+    assert(false && "Not implemented.");
 }
 
 /** Destroy the given graph.
  */
 void doremir_graph_destroy(doremir_graph_t graph)
 {
-  assert(false && "Not implemented.");
+    assert(false && "Not implemented.");
 }
 
 /** Connect the given nodes.
@@ -107,26 +107,26 @@ doremir_graph_t doremir_graph_connect(doremir_graph_edge_t edge,
                                       doremir_graph_node_t node2,
                                       doremir_graph_t graph)
 {
-  assert(false && "Not implemented.");
+    assert(false && "Not implemented.");
 }
 
 /** Remove all connections between the given nodes.
  */
 doremir_graph_t doremir_graph_disconnect(doremir_graph_node_t node1,
-    doremir_graph_node_t node2,
-    doremir_graph_t graph)
+        doremir_graph_node_t node2,
+        doremir_graph_t graph)
 {
-  assert(false && "Not implemented.");
+    assert(false && "Not implemented.");
 }
 
 doremir_graph_t doremir_graph_from_list(doremir_list_t list)
 {
-  assert(false && "Not implemented.");
+    assert(false && "Not implemented.");
 }
 
 doremir_list_t doremir_graph_to_list(doremir_graph_t graph)
 {
-  assert(false && "Not implemented.");
+    assert(false && "Not implemented.");
 }
 
 

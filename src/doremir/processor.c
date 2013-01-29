@@ -23,7 +23,7 @@
  */
 doremir_type_t doremir_processor_input_type(doremir_processor_t proc)
 {
-  return ((proc_interface_t *) doremir_interface(doremir_processor_interface_i, proc))->input_type(proc);
+    return ((proc_interface_t *) doremir_interface(doremir_processor_interface_i, proc))->input_type(proc);
 }
 
 /** Return the output type of the given processor.
@@ -32,7 +32,7 @@ doremir_type_t doremir_processor_input_type(doremir_processor_t proc)
  */
 doremir_type_t doremir_processor_output_type(doremir_processor_t proc)
 {
-  return ((proc_interface_t *) doremir_interface(doremir_processor_interface_i, proc))->output_type(proc);
+    return ((proc_interface_t *) doremir_interface(doremir_processor_interface_i, proc))->output_type(proc);
 }
 
 /** Return the output type of the given processor.
@@ -41,7 +41,7 @@ doremir_type_t doremir_processor_output_type(doremir_processor_t proc)
  */
 size_t doremir_processor_buffer_size(doremir_type_frames_t frames, doremir_processor_t proc)
 {
-  return ((proc_interface_t *) doremir_interface(doremir_processor_interface_i, proc))->buffer_size(frames, proc);
+    return ((proc_interface_t *) doremir_interface(doremir_processor_interface_i, proc))->buffer_size(frames, proc);
 }
 
 
@@ -54,7 +54,7 @@ size_t doremir_processor_buffer_size(doremir_type_frames_t frames, doremir_proce
  */
 doremir_processor_t doremir_processor_identity(doremir_type_t type)
 {
-  return (processor_t) doremir_processor_id_create(type);
+    return (processor_t) doremir_processor_id_create(type);
 }
 
 /** Create a constant processor.
@@ -67,10 +67,10 @@ doremir_processor_t doremir_processor_identity(doremir_type_t type)
     @param value
  */
 doremir_processor_t doremir_processor_constant(doremir_type_t   input_type,
-    doremir_type_t   output_type,
-    doremir_ptr_t    value)
+        doremir_type_t   output_type,
+        doremir_ptr_t    value)
 {
-  return (processor_t) doremir_processor_const_create(input_type, output_type, value);
+    return (processor_t) doremir_processor_const_create(input_type, output_type, value);
 }
 
 /** Create a delay processor.
@@ -81,10 +81,10 @@ doremir_processor_t doremir_processor_constant(doremir_type_t   input_type,
     @param samples          Number of samples.
  */
 doremir_processor_t doremir_processor_delay(doremir_type_t  type,
-    size_t          samples)
+        size_t          samples)
 {
-  assert(false && "Not implemented");
-  // return (processor_t) doremir_processor_delay_create(type, samples);
+    assert(false && "Not implemented");
+    // return (processor_t) doremir_processor_delay_create(type, samples);
 }
 
 /** Create a split processor.
@@ -92,7 +92,7 @@ doremir_processor_t doremir_processor_delay(doremir_type_t  type,
  */
 doremir_processor_t doremir_processor_split(doremir_type_t type)
 {
-  return (processor_t) doremir_processor_split_create(type);
+    return (processor_t) doremir_processor_split_create(type);
 }
 
 /** Create a processor by composing the given processors in parallel.
@@ -110,10 +110,10 @@ doremir_processor_t doremir_processor_split(doremir_type_t type)
     @return                 A new processor, or an error.
  */
 doremir_processor_t doremir_processor_par(doremir_processor_t proc1,
-    doremir_processor_t proc2)
+        doremir_processor_t proc2)
 {
-  return (processor_t)
-         doremir_processor_par_create(proc1, proc2);
+    return (processor_t)
+           doremir_processor_par_create(proc1, proc2);
 }
 
 /** Create a processor by composing the given processors in sequence.
@@ -132,9 +132,9 @@ doremir_processor_t doremir_processor_par(doremir_processor_t proc1,
     @return                 A new processor, or an error.
  */
 doremir_processor_t doremir_processor_seq(doremir_processor_t proc1,
-    doremir_processor_t proc2)
+        doremir_processor_t proc2)
 {
-  return (processor_t) doremir_processor_seq_create(proc1, proc2);
+    return (processor_t) doremir_processor_seq_create(proc1, proc2);
 }
 
 /** Create a processor by composing the given processors in reverse order.
@@ -155,7 +155,7 @@ doremir_processor_t doremir_processor_seq(doremir_processor_t proc1,
  */
 doremir_processor_t doremir_processor_compose(doremir_processor_t proc1, doremir_processor_t proc2)
 {
-  return (processor_t) doremir_processor_seq_create(proc2, proc1);
+    return (processor_t) doremir_processor_seq_create(proc2, proc1);
 }
 
 /** Create a processor by feeding the given processor back into itself.
@@ -171,7 +171,7 @@ doremir_processor_t doremir_processor_compose(doremir_processor_t proc1, doremir
  */
 doremir_processor_t doremir_processor_loop(doremir_processor_t proc)
 {
-  return (processor_t) doremir_processor_loop_create(proc);
+    return (processor_t) doremir_processor_loop_create(proc);
 }
 
 
@@ -185,17 +185,17 @@ doremir_processor_t doremir_processor_loop(doremir_processor_t proc)
  */
 doremir_processor_t doremir_processor_unary
 (
-  doremir_type_t  input_type,
-  doremir_type_t  output_type,
-  doremir_unary_t function,
-  doremir_ptr_t   data
+    doremir_type_t  input_type,
+    doremir_type_t  output_type,
+    doremir_unary_t function,
+    doremir_ptr_t   data
 )
 {
-  return (processor_t)
-         doremir_processor_unary_create(
-           input_type, output_type,
-           function, data
-         );
+    return (processor_t)
+           doremir_processor_unary_create(
+               input_type, output_type,
+               function, data
+           );
 }
 
 /** Lift a binary function to a processor.
@@ -209,18 +209,18 @@ doremir_processor_t doremir_processor_unary
  */
 doremir_processor_t doremir_processor_binary
 (
-  doremir_type_t   input_type1,
-  doremir_type_t   input_type2,
-  doremir_type_t   output_type,
-  doremir_binary_t function,
-  doremir_ptr_t    data
+    doremir_type_t   input_type1,
+    doremir_type_t   input_type2,
+    doremir_type_t   output_type,
+    doremir_binary_t function,
+    doremir_ptr_t    data
 )
 {
-  return (processor_t)
-         doremir_processor_binary_create(
-           input_type1, input_type2, output_type,
-           function, data
-         );
+    return (processor_t)
+           doremir_processor_binary_create(
+               input_type1, input_type2, output_type,
+               function, data
+           );
 }
 
 
@@ -229,76 +229,76 @@ doremir_processor_t doremir_processor_binary
 
 uint8_t prim_add_i8_i8(ptr_t c, uint8_t a, uint8_t b)
 {
-  return a + b;
+    return a + b;
 };
 float   prim_add_f32_f32(ptr_t c, float a, float b)
 {
-  return a + b;
+    return a + b;
 };
 
 doremir_processor_t doremir_processor_add(doremir_type_t type)
 {
-  return (processor_t) doremir_processor_unary(type(uint8), type(uint8), (unary_t) prim_add_i8_i8, NULL);
+    return (processor_t) doremir_processor_unary(type(uint8), type(uint8), (unary_t) prim_add_i8_i8, NULL);
 }
 
 doremir_processor_t doremir_processor_subtract(doremir_type_t type)
 {
-  assert(false && "Not implemented");
+    assert(false && "Not implemented");
 }
 
 doremir_processor_t doremir_processor_multiply(doremir_type_t type)
 {
-  assert(false && "Not implemented");
+    assert(false && "Not implemented");
 }
 
 doremir_processor_t doremir_processor_divide(doremir_type_t type)
 {
-  assert(false && "Not implemented");
+    assert(false && "Not implemented");
 }
 
 doremir_processor_t doremir_processor_modulo(doremir_type_t type)
 {
-  assert(false && "Not implemented");
+    assert(false && "Not implemented");
 }
 
 doremir_processor_t doremir_processor_absolute(doremir_type_t type)
 {
-  assert(false && "Not implemented");
+    assert(false && "Not implemented");
 }
 
 doremir_processor_t doremir_processor_and(doremir_type_t type)
 {
-  assert(false && "Not implemented");
+    assert(false && "Not implemented");
 }
 
 doremir_processor_t doremir_processor_or(doremir_type_t type)
 {
-  assert(false && "Not implemented");
+    assert(false && "Not implemented");
 }
 
 doremir_processor_t doremir_processor_not(doremir_type_t type)
 {
-  assert(false && "Not implemented");
+    assert(false && "Not implemented");
 }
 
 doremir_processor_t doremir_processor_bit_and(doremir_type_t type)
 {
-  assert(false && "Not implemented");
+    assert(false && "Not implemented");
 }
 
 doremir_processor_t doremir_processor_bit_or(doremir_type_t type)
 {
-  assert(false && "Not implemented");
+    assert(false && "Not implemented");
 }
 
 doremir_processor_t doremir_processor_bit_not(doremir_type_t type)
 {
-  assert(false && "Not implemented");
+    assert(false && "Not implemented");
 }
 
 doremir_processor_t doremir_processor_bit_xor(doremir_type_t type)
 {
-  assert(false && "Not implemented");
+    assert(false && "Not implemented");
 }
 
 

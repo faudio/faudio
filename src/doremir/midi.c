@@ -12,28 +12,28 @@ typedef doremir_midi_status_t   status_t;
 typedef doremir_midi_data_t     data_t;
 
 struct _doremir_midi_t {
-  impl_t                  impl;           //  Interface dispatcher
-  bool                    is_sysex;       //  Whether it is a sysex message
-  union {                                 //  Status and data
-    uint8_t               simple[3];
-    doremir_buffer_t      sysex;
-  } data;
+    impl_t                  impl;           //  Interface dispatcher
+    bool                    is_sysex;       //  Whether it is a sysex message
+    union {                                 //  Status and data
+        uint8_t               simple[3];
+        doremir_buffer_t      sysex;
+    } data;
 };
 
 // --------------------------------------------------------------------------------
 
 inline static doremir_midi_t new_midi()
 {
-  doremir_ptr_t midi_impl(doremir_id_t interface);
+    doremir_ptr_t midi_impl(doremir_id_t interface);
 
-  doremir_midi_t t = doremir_new(midi);
-  t->impl  = &midi_impl;
-  return t;
+    doremir_midi_t t = doremir_new(midi);
+    t->impl  = &midi_impl;
+    return t;
 }
 
 void delete_midi(doremir_midi_t midi)
 {
-  doremir_delete(midi);
+    doremir_delete(midi);
 }
 
 
@@ -47,19 +47,19 @@ void delete_midi(doremir_midi_t midi)
     @return         A new Midi message.
  */
 doremir_midi_t doremir_midi_create_simple(status_t status,
-    data_t data1,
-    data_t data2)
+        data_t data1,
+        data_t data2)
 {
-  assert(status != 0xf0 && status != 0xf7);
+    assert(status != 0xf0 && status != 0xf7);
 
-  doremir_midi_t m = new_midi();
+    doremir_midi_t m = new_midi();
 
-  m->is_sysex = false;
-  m->data.simple[0] = status;
-  m->data.simple[1] = data1;
-  m->data.simple[2] = data2;
+    m->is_sysex = false;
+    m->data.simple[0] = status;
+    m->data.simple[1] = data1;
+    m->data.simple[2] = data2;
 
-  return m;
+    return m;
 }
 
 /**
@@ -69,10 +69,10 @@ doremir_midi_t doremir_midi_create_simple(status_t status,
  */
 doremir_midi_t doremir_midi_create_sysex(doremir_buffer_t data)
 {
-  doremir_midi_t m = new_midi();
-  m->is_sysex = true;
-  m->data.sysex = data;
-  return m;
+    doremir_midi_t m = new_midi();
+    m->is_sysex = true;
+    m->data.sysex = data;
+    return m;
 }
 
 /**
@@ -80,18 +80,18 @@ doremir_midi_t doremir_midi_create_sysex(doremir_buffer_t data)
  */
 doremir_midi_t doremir_midi_copy(doremir_midi_t midi)
 {
-  doremir_midi_t m = new_midi();
-  m->is_sysex = midi->is_sysex;
+    doremir_midi_t m = new_midi();
+    m->is_sysex = midi->is_sysex;
 
-  if (!midi->is_sysex) {
-    m->data.simple[0] = midi->data.simple[0];
-    m->data.simple[1] = midi->data.simple[1];
-    m->data.simple[2] = midi->data.simple[2];
-  } else {
-    m->data.sysex = doremir_copy(midi->data.sysex);
-  }
+    if (!midi->is_sysex) {
+        m->data.simple[0] = midi->data.simple[0];
+        m->data.simple[1] = midi->data.simple[1];
+        m->data.simple[2] = midi->data.simple[2];
+    } else {
+        m->data.sysex = doremir_copy(midi->data.sysex);
+    }
 
-  return m;
+    return m;
 }
 
 /**
@@ -99,11 +99,11 @@ doremir_midi_t doremir_midi_copy(doremir_midi_t midi)
  */
 void doremir_midi_destroy(doremir_midi_t midi)
 {
-  if (midi->is_sysex) {
-    doremir_destroy(midi->data.sysex);
-  }
+    if (midi->is_sysex) {
+        doremir_destroy(midi->data.sysex);
+    }
 
-  delete_midi(midi);
+    delete_midi(midi);
 }
 
 /**
@@ -111,7 +111,7 @@ void doremir_midi_destroy(doremir_midi_t midi)
  */
 doremir_midi_status_t doremir_midi_status(doremir_midi_t midi)
 {
-  return midi->data.simple[0] & 0x0f;
+    return midi->data.simple[0] & 0x0f;
 }
 
 /**
@@ -119,7 +119,7 @@ doremir_midi_status_t doremir_midi_status(doremir_midi_t midi)
  */
 doremir_midi_channel_t doremir_midi_channel(doremir_midi_t midi)
 {
-  return midi->data.simple[0] & 0xf0;
+    return midi->data.simple[0] & 0xf0;
 }
 
 /**
@@ -127,7 +127,7 @@ doremir_midi_channel_t doremir_midi_channel(doremir_midi_t midi)
  */
 bool doremir_midi_is_simple(doremir_midi_t midi)
 {
-  return !midi->is_sysex;
+    return !midi->is_sysex;
 }
 
 /**
@@ -135,7 +135,7 @@ bool doremir_midi_is_simple(doremir_midi_t midi)
  */
 doremir_pair_t doremir_midi_simple_data(doremir_midi_t midi)
 {
-  return doremir_pair_create(i8(midi->data.simple[1]), i8(midi->data.simple[2]));
+    return doremir_pair_create(i8(midi->data.simple[1]), i8(midi->data.simple[2]));
 }
 
 /**
@@ -143,7 +143,7 @@ doremir_pair_t doremir_midi_simple_data(doremir_midi_t midi)
  */
 bool doremir_midi_is_sysex(doremir_midi_t midi)
 {
-  return midi->is_sysex;
+    return midi->is_sysex;
 }
 
 /**
@@ -151,7 +151,7 @@ bool doremir_midi_is_sysex(doremir_midi_t midi)
  */
 doremir_buffer_t doremir_midi_sysex_data(doremir_midi_t midi)
 {
-  return midi->data.sysex;
+    return midi->data.sysex;
 }
 
 
@@ -159,111 +159,111 @@ doremir_buffer_t doremir_midi_sysex_data(doremir_midi_t midi)
 
 bool midi_equal(doremir_ptr_t a, doremir_ptr_t b)
 {
-  midi_t midi1 = (midi_t) a;
-  midi_t midi2 = (midi_t) b;
+    midi_t midi1 = (midi_t) a;
+    midi_t midi2 = (midi_t) b;
 
-  if (midi1->is_sysex != midi2->is_sysex) {
-    return false;
-  }
+    if (midi1->is_sysex != midi2->is_sysex) {
+        return false;
+    }
 
-  if (!midi1->is_sysex) {
-    return memcmp(&midi1->data.simple, &midi2->data.simple, 3) == 0;
-  } else {
-    return doremir_equal(midi1->data.sysex, midi2->data.sysex);
-  }
+    if (!midi1->is_sysex) {
+        return memcmp(&midi1->data.simple, &midi2->data.simple, 3) == 0;
+    } else {
+        return doremir_equal(midi1->data.sysex, midi2->data.sysex);
+    }
 }
 
 // Note: We assume simple < sysex
 
 bool midi_less_than(doremir_ptr_t a, doremir_ptr_t b)
 {
-  midi_t midi1 = (midi_t) a;
-  midi_t midi2 = (midi_t) b;
+    midi_t midi1 = (midi_t) a;
+    midi_t midi2 = (midi_t) b;
 
-  if (midi1->is_sysex != midi2->is_sysex) {
-    return midi1->is_sysex;
-  }
+    if (midi1->is_sysex != midi2->is_sysex) {
+        return midi1->is_sysex;
+    }
 
-  if (!midi1->is_sysex) {
-    return memcmp(&midi1->data.simple, &midi2->data.simple, 3) < 0;
-  } else {
-    return doremir_less_than(midi1->data.sysex, midi2->data.sysex);
-  }
+    if (!midi1->is_sysex) {
+        return memcmp(&midi1->data.simple, &midi2->data.simple, 3) < 0;
+    } else {
+        return doremir_less_than(midi1->data.sysex, midi2->data.sysex);
+    }
 }
 
 bool midi_greater_than(doremir_ptr_t a, doremir_ptr_t b)
 {
-  midi_t midi1 = (midi_t) a;
-  midi_t midi2 = (midi_t) b;
+    midi_t midi1 = (midi_t) a;
+    midi_t midi2 = (midi_t) b;
 
-  if (midi1->is_sysex != midi2->is_sysex) {
-    return midi2->is_sysex;
-  }
+    if (midi1->is_sysex != midi2->is_sysex) {
+        return midi2->is_sysex;
+    }
 
-  if (!midi1->is_sysex) {
-    return memcmp(&midi1->data.simple, &midi2->data.simple, 3) > 0;
-  } else {
-    return doremir_greater_than(midi1->data.sysex, midi2->data.sysex);
-  }
+    if (!midi1->is_sysex) {
+        return memcmp(&midi1->data.simple, &midi2->data.simple, 3) > 0;
+    } else {
+        return doremir_greater_than(midi1->data.sysex, midi2->data.sysex);
+    }
 }
 
 doremir_string_t midi_show(doremir_ptr_t a)
 {
-  doremir_midi_t midi = (doremir_midi_t) a;
-  string_t s = string("<Midi");
+    doremir_midi_t midi = (doremir_midi_t) a;
+    string_t s = string("<Midi");
 
-  if (!midi->is_sysex) {
-    s = string_dappend(s, doremir_string_format_integer(" %02x", midi->data.simple[0]));
-    s = string_dappend(s, doremir_string_format_integer(" %02x", midi->data.simple[1]));
-    s = string_dappend(s, doremir_string_format_integer(" %02x", midi->data.simple[2]));
-  } else {
-    // TODO dump without <Buffer > wrap
-    s = string_dappend(s, string(" SysEx "));
-    s = string_dappend(s, doremir_string_show(midi->data.sysex));
-    s = string_dappend(s, string(" "));
-  }
+    if (!midi->is_sysex) {
+        s = string_dappend(s, doremir_string_format_integer(" %02x", midi->data.simple[0]));
+        s = string_dappend(s, doremir_string_format_integer(" %02x", midi->data.simple[1]));
+        s = string_dappend(s, doremir_string_format_integer(" %02x", midi->data.simple[2]));
+    } else {
+        // TODO dump without <Buffer > wrap
+        s = string_dappend(s, string(" SysEx "));
+        s = string_dappend(s, doremir_string_show(midi->data.sysex));
+        s = string_dappend(s, string(" "));
+    }
 
-  s = string_dappend(s, string(">"));
-  return s;
+    s = string_dappend(s, string(">"));
+    return s;
 }
 
 doremir_ptr_t midi_copy(doremir_ptr_t a)
 {
-  return doremir_midi_copy(a);
+    return doremir_midi_copy(a);
 }
 
 void midi_destroy(doremir_ptr_t a)
 {
-  doremir_midi_destroy(a);
+    doremir_midi_destroy(a);
 }
 
 
 doremir_ptr_t midi_impl(doremir_id_t interface)
 {
-  static doremir_equal_t midi_equal_impl = { midi_equal };
-  static doremir_order_t midi_order_impl = { midi_less_than, midi_greater_than };
-  static doremir_string_show_t midi_show_impl = { midi_show };
-  static doremir_copy_t midi_copy_impl = { midi_copy };
-  static doremir_destroy_t midi_destroy_impl = { midi_destroy };
+    static doremir_equal_t midi_equal_impl = { midi_equal };
+    static doremir_order_t midi_order_impl = { midi_less_than, midi_greater_than };
+    static doremir_string_show_t midi_show_impl = { midi_show };
+    static doremir_copy_t midi_copy_impl = { midi_copy };
+    static doremir_destroy_t midi_destroy_impl = { midi_destroy };
 
-  switch (interface) {
-  case doremir_equal_i:
-    return &midi_equal_impl;
+    switch (interface) {
+        case doremir_equal_i:
+            return &midi_equal_impl;
 
-  case doremir_order_i:
-    return &midi_order_impl;
+        case doremir_order_i:
+            return &midi_order_impl;
 
-  case doremir_string_show_i:
-    return &midi_show_impl;
+        case doremir_string_show_i:
+            return &midi_show_impl;
 
-  case doremir_copy_i:
-    return &midi_copy_impl;
+        case doremir_copy_i:
+            return &midi_copy_impl;
 
-  case doremir_destroy_i:
-    return &midi_destroy_impl;
+        case doremir_destroy_i:
+            return &midi_destroy_impl;
 
-  default:
-    return NULL;
-  }
+        default:
+            return NULL;
+    }
 }
 

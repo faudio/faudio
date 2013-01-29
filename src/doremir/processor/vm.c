@@ -20,24 +20,24 @@
 
 lmm_t lmm_create()
 {
-  lmm_t vm = lmm_malloc(sizeof(struct lmm));
-  memset(vm, 0, sizeof(struct lmm));
-  return vm;
+    lmm_t vm = lmm_malloc(sizeof(struct lmm));
+    memset(vm, 0, sizeof(struct lmm));
+    return vm;
 }
 
 void lmm_destroy(lmm_t lmm)
 {
-  lmm_for_each_register(reg, count, lmm) {
-    lmm_free(reg.data);
-  }
+    lmm_for_each_register(reg, count, lmm) {
+        lmm_free(reg.data);
+    }
 
-  lmm_free(lmm->error);
-  lmm_free(lmm);
+    lmm_free(lmm->error);
+    lmm_free(lmm);
 }
 
-char *lmm_get_error(lmm_t lmm)
+char * lmm_get_error(lmm_t lmm)
 {
-  return lmm->error;
+    return lmm->error;
 }
 
 #define LMM_SHOW(N,T,F,M)                                                         \
@@ -75,17 +75,17 @@ LMM_SHOW(f64, double,    "%0lf",  format_floating);
 
 size_t lmm_get_reg_size(lmm_t lmm, lmm_reg_t r)
 {
-  return lmm->regs[r].size;
+    return lmm->regs[r].size;
 }
 
 size_t lmm_get_reg_max_size(lmm_t lmm, lmm_reg_t r)
 {
-  return lmm->regs[r].maxSize;
+    return lmm->regs[r].maxSize;
 }
 
-void *lmm_get_reg_data(lmm_t lmm, lmm_reg_t r)
+void * lmm_get_reg_data(lmm_t lmm, lmm_reg_t r)
 {
-  return lmm->regs[r].data;
+    return lmm->regs[r].data;
 }
 
 
@@ -97,49 +97,49 @@ void *lmm_get_reg_data(lmm_t lmm, lmm_reg_t r)
 
 void lmm_alloc(lmm_t lmm, size_t size, lmm_reg_t r)
 {
-  rdata(r) = lmm_realloc(rdata(r), size);
-  rsize(r) = size;
-  rmax(r)  = size;
+    rdata(r) = lmm_realloc(rdata(r), size);
+    rsize(r) = size;
+    rmax(r)  = size;
 
-  memset(rdata(r), 0, size);
+    memset(rdata(r), 0, size);
 }
 
 // swap r1 r2
 // (r1,r2) <==> (r2,r1)
 void lmm_swap(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2)
 {
-  size_t ts = rsize(r2);
-  size_t tm = rmax(r2);
-  void *td = rdata(r2);
+    size_t ts = rsize(r2);
+    size_t tm = rmax(r2);
+    void * td = rdata(r2);
 
-  rsize(r2) = rsize(r1);
-  rmax(r2) = rmax(r1);
-  rdata(r2) = rdata(r1);
+    rsize(r2) = rsize(r1);
+    rmax(r2) = rmax(r1);
+    rdata(r2) = rdata(r1);
 
-  rsize(r1) = ts;
-  rmax(r1) = tm;
-  rdata(r1) = td;
+    rsize(r1) = ts;
+    rmax(r1) = tm;
+    rdata(r1) = td;
 }
 
 // copy r1 r2
 // r1 ==> r2
 void lmm_copy(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2)
 {
-  assert(rmax(r2) >= rsize(r1)            && "Can not copy: second operand is too small");
+    assert(rmax(r2) >= rsize(r1)            && "Can not copy: second operand is too small");
 
-  memcpy(rdata(r2), rdata(r1), rsize(r1));
-  rsize(r2) = rsize(r1);
+    memcpy(rdata(r2), rdata(r1), rsize(r1));
+    rsize(r2) = rsize(r1);
 }
 
 void lmm_split(lmm_t lmm, size_t split, lmm_reg_t r1, lmm_reg_t r2)
 {
-  assert(rsize(r1)        >= split        && "Can not split: too large size");
-  assert(rmax(r2) + split >= rsize(r1)    && "Can not split: second operand too small");
+    assert(rsize(r1)        >= split        && "Can not split: too large size");
+    assert(rmax(r2) + split >= rsize(r1)    && "Can not split: second operand too small");
 
-  int len = rsize(r1) - split;
-  memcpy(rdata(r2), rdata(r1) + split, len);
-  rsize(r1) = split;
-  rsize(r2) = len;
+    int len = rsize(r1) - split;
+    memcpy(rdata(r2), rdata(r1) + split, len);
+    rsize(r1) = split;
+    rsize(r2) = len;
 }
 
 
@@ -234,22 +234,22 @@ void lmm_split(lmm_t lmm, size_t split, lmm_reg_t r1, lmm_reg_t r2)
 // We only know size at runtime
 // Implement by splitting into chunks of some fixed size and invoke vops on that
 void lmm_vadd_i8_i8(
-  lmm_t lmm,
-  lmm_reg_t r1,
-  lmm_reg_t r2
+    lmm_t lmm,
+    lmm_reg_t r1,
+    lmm_reg_t r2
 )
 {
-  typedef uint8_t arg1_t;
-  typedef uint8_t arg2_t;
+    typedef uint8_t arg1_t;
+    typedef uint8_t arg2_t;
 
-  arg1_t *data1 = (arg1_t *) rdata(r1);
-  arg2_t *data2 = (arg2_t *) rdata(r2);
+    arg1_t * data1 = (arg1_t *) rdata(r1);
+    arg2_t * data2 = (arg2_t *) rdata(r2);
 
-  size_t  count = size_min(rsize(r1) / sizeof(arg1_t), rsize(r2) / sizeof(arg2_t));
+    size_t  count = size_min(rsize(r1) / sizeof(arg1_t), rsize(r2) / sizeof(arg2_t));
 
-  for (size_t i = 0; i < count; ++i) {
-    data1[i] = data1[i] + data2[i];
-  }
+    for (size_t i = 0; i < count; ++i) {
+        data1[i] = data1[i] + data2[i];
+    }
 }
 
 
@@ -363,60 +363,60 @@ LLM_NV_OP(gte , >= , f64, f64, double  , double);
 
 int8_t my_succ_i8(ptr_t c, int8_t x)
 {
-  return x + 1;
+    return x + 1;
 }
 int8_t my_add_i8(ptr_t c, int8_t x, int8_t y)
 {
-  return x + 1;
+    return x + 1;
 }
 
 // FIXME lt, gt etc for floats
 
 void test_vm_loop()
 {
-  lmm_t vm = lmm_create();
+    lmm_t vm = lmm_create();
 
-  size_t n = 4;
-  lmm_alloc(vm, 8 * n, 0);
-  lmm_alloc(vm, 8 * n, 1);
-  lmm_alloc(vm, 8 * n, 2);
-  lmm_alloc(vm, 8 * n, 3);
-  lmm_alloc(vm, 8 * n, 4);
+    size_t n = 4;
+    lmm_alloc(vm, 8 * n, 0);
+    lmm_alloc(vm, 8 * n, 1);
+    lmm_alloc(vm, 8 * n, 2);
+    lmm_alloc(vm, 8 * n, 3);
+    lmm_alloc(vm, 8 * n, 4);
 
-  lmm_set_f64(vm, 3.14f, 0);
-  lmm_set_f64(vm, 0.1f,  1);
-  ((double *)vm->regs[0].data)[0] = 0.23;
-  ((double *)vm->regs[0].data)[3] = 5.0;
+    lmm_set_f64(vm, 3.14f, 0);
+    lmm_set_f64(vm, 0.1f,  1);
+    ((double *)vm->regs[0].data)[0] = 0.23;
+    ((double *)vm->regs[0].data)[3] = 5.0;
 
-  doremir_print_ln(lmm_show_f64(vm));
+    doremir_print_ln(lmm_show_f64(vm));
 
-  // lmm_swap(vm, 0, 1);
-  // lmm_swap(vm, 3, 0);
-  // lmm_swap(vm, 3, 3);
-  lmm_copy(vm, 0, 3);
-  lmm_copy(vm, 1, 4);
-  // lmm_split(vm, 13, 0, 10);
+    // lmm_swap(vm, 0, 1);
+    // lmm_swap(vm, 3, 0);
+    // lmm_swap(vm, 3, 3);
+    lmm_copy(vm, 0, 3);
+    lmm_copy(vm, 1, 4);
+    // lmm_split(vm, 13, 0, 10);
 
-  // lmm_ap1_i8_i8(vm, (unary_t) my_succ_i8, NULL, 0);
-  // lmm_ap1_i8_i8(vm, (unary_t) my_succ_i8, NULL, 1);
-  // lmm_ap2_i8_i8_i8(vm, (binary_t) my_add_i8, NULL, 0, 1);
+    // lmm_ap1_i8_i8(vm, (unary_t) my_succ_i8, NULL, 0);
+    // lmm_ap1_i8_i8(vm, (unary_t) my_succ_i8, NULL, 1);
+    // lmm_ap2_i8_i8_i8(vm, (binary_t) my_add_i8, NULL, 0, 1);
 
-  lmm_add_f64_f64(vm, 3, 4);
-  lmm_add_f64_f64(vm, 2, 3);
-  lmm_add_f64_f64(vm, 0, 1);
-  lmm_lt_f64_f64(vm, 0, 2);
+    lmm_add_f64_f64(vm, 3, 4);
+    lmm_add_f64_f64(vm, 2, 3);
+    lmm_add_f64_f64(vm, 0, 1);
+    lmm_lt_f64_f64(vm, 0, 2);
 
 
-  // printf("%f\n", ((double*)vm->regs[0].data)[n-1]);
-  doremir_print_ln(lmm_show_f64(vm));
-  lmm_destroy(vm);
+    // printf("%f\n", ((double*)vm->regs[0].data)[n-1]);
+    doremir_print_ln(lmm_show_f64(vm));
+    lmm_destroy(vm);
 }
 
 void test_vm()
 {
-  // while(1)
-  {
-    test_vm_loop();
-    // doremir_thread_sleep(1000);
-  }
+    // while(1)
+    {
+        test_vm_loop();
+        // doremir_thread_sleep(1000);
+    }
 }

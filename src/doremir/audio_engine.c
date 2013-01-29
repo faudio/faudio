@@ -37,9 +37,9 @@ void doremir_device_audio_terminate();
  */
 void doremir_audio_engine_initialize()
 {
-  doremir_device_audio_initialize();
-  doremir_audio_engine_log_info(string("Finished initialization."));
-  init_count_g++;
+    doremir_device_audio_initialize();
+    doremir_audio_engine_log_info(string("Finished initialization."));
+    init_count_g++;
 }
 
 /** Performs global cleanup.
@@ -49,62 +49,62 @@ void doremir_audio_engine_initialize()
  */
 void doremir_audio_engine_terminate()
 {
-  if (init_count_g) {
-    --init_count_g;
-    doremir_device_audio_terminate();
-    doremir_audio_engine_log_info(string("Finished termination."));
-  } else {
-    doremir_audio_engine_log_warning(string("Initialization count inconsistent."));
-  }
+    if (init_count_g) {
+        --init_count_g;
+        doremir_device_audio_terminate();
+        doremir_audio_engine_log_info(string("Finished termination."));
+    } else {
+        doremir_audio_engine_log_warning(string("Initialization count inconsistent."));
+    }
 }
 
 // --------------------------------------------------------------------------------
 
 static inline void stdlog(ptr_t ct, doremir_time_system_t t, doremir_error_t e)
 {
-  FILE *file = ct;
-  char msg[350];
-  bool color = (file == stdout && isatty(fileno(stdout)));
+    FILE * file = ct;
+    char msg[350];
+    bool color = (file == stdout && isatty(fileno(stdout)));
 
-  doremir_let(tm, localtime((long *) &t)) {
-    strftime(msg, 50, iso8601_k, tm);
-  }
-  doremir_with(str, doremir_error_format(color, e),
-               doremir_destroy(str)) {
-    doremir_with(cstr, doremir_string_to_utf8(str),
-                 free(cstr)) {
-      strncat(msg, cstr, 298);
-      strncat(msg, "\n", 1);
+    doremir_let(tm, localtime((long *) &t)) {
+        strftime(msg, 50, iso8601_k, tm);
     }
-  }
-  fputs(msg, file);
-  fflush(file);
+    doremir_with(str, doremir_error_format(color, e),
+                 doremir_destroy(str)) {
+        doremir_with(cstr, doremir_string_to_utf8(str),
+                     free(cstr)) {
+            strncat(msg, cstr, 298);
+            strncat(msg, "\n", 1);
+        }
+    }
+    fputs(msg, file);
+    fflush(file);
 }
 
 /** Instruct the Audio Engine to write log messages to the specific file.
  */
 void doremir_audio_engine_set_log_file(doremir_string_file_path_t path)
 {
-  char *cpath = doremir_string_to_utf8(path);
-  log_ct_g     = fopen(cpath, "a");
-  log_func_g   = stdlog;
-  free(cpath);
+    char * cpath = doremir_string_to_utf8(path);
+    log_ct_g     = fopen(cpath, "a");
+    log_func_g   = stdlog;
+    free(cpath);
 }
 
 /** Instruct the Audio Engine to write log messages to the standard output.
  */
 void doremir_audio_engine_set_log_std()
 {
-  log_ct_g    = stdout;
-  log_func_g  = stdlog;
+    log_ct_g    = stdout;
+    log_func_g  = stdlog;
 }
 
 /** Instruct the Audio Engine to pass log messages to the given handler.
  */
 void doremir_audio_engine_set_log(doremir_audio_engine_log_func_t f, doremir_ptr_t ct)
 {
-  log_func_g  = f;
-  log_ct_g    = ct;
+    log_func_g  = f;
+    log_ct_g    = ct;
 }
 
 
@@ -119,57 +119,57 @@ void doremir_audio_engine_set_log(doremir_audio_engine_log_func_t f, doremir_ptr
  */
 void doremir_audio_engine_log(doremir_ptr_t ct, doremir_error_t e)
 {
-  if (log_func_g) {
-    log_func_g(log_ct_g, time(NULL), e);
-  }
+    if (log_func_g) {
+        log_func_g(log_ct_g, time(NULL), e);
+    }
 }
 
 /** Write an informative message to the log.
  */
 void doremir_audio_engine_log_info(doremir_string_t msg)
 {
-  doremir_audio_engine_log_info_from(msg, string(""));
+    doremir_audio_engine_log_info_from(msg, string(""));
 }
 
 /** Write a warning to the log.
  */
 void doremir_audio_engine_log_warning(doremir_string_t msg)
 {
-  doremir_audio_engine_log_warning_from(msg, string(""));
+    doremir_audio_engine_log_warning_from(msg, string(""));
 }
 
 /** Write an error to the log.
  */
 void doremir_audio_engine_log_error(doremir_string_t msg)
 {
-  doremir_audio_engine_log_error_from(msg, string(""));
+    doremir_audio_engine_log_error_from(msg, string(""));
 }
 
 /** Write an informative message to the log.
  */
 void doremir_audio_engine_log_info_from(doremir_string_t msg, doremir_string_t origin)
 {
-  error_t err = doremir_error_create_simple(info, msg, origin);
-  doremir_audio_engine_log(NULL, err);
-  doremir_destroy(err);
+    error_t err = doremir_error_create_simple(info, msg, origin);
+    doremir_audio_engine_log(NULL, err);
+    doremir_destroy(err);
 }
 
 /** Write a warning to the log.
  */
 void doremir_audio_engine_log_warning_from(doremir_string_t msg, doremir_string_t origin)
 {
-  error_t err = doremir_error_create_simple(warning, msg, origin);
-  doremir_audio_engine_log(NULL, err);
-  doremir_destroy(err);
+    error_t err = doremir_error_create_simple(warning, msg, origin);
+    doremir_audio_engine_log(NULL, err);
+    doremir_destroy(err);
 }
 
 /** Write an error to the log.
  */
 void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t origin)
 {
-  error_t err = doremir_error_create_simple(error, msg, origin);
-  doremir_audio_engine_log(NULL, err);
-  doremir_destroy(err);
+    error_t err = doremir_error_create_simple(error, msg, origin);
+    doremir_audio_engine_log(NULL, err);
+    doremir_destroy(err);
 }
 
 
