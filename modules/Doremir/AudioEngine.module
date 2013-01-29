@@ -32,6 +32,7 @@ module Doremir.AudioEngine
     import Doremir.Message;
     import Doremir.Midi;
     import Doremir.Processor;
+    import Doremir.Plot;
     import Doremir.Scheduler;
     import Doremir.Thread;
     import Doremir.Time;

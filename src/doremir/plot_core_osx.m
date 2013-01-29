@@ -22,7 +22,7 @@ NSString* const plot_ids_k[num_plots_k] = { @"1", @"2", @"3", @"4", @"5" };
 
 typedef double (*plot_func_t)(void* ct, int i, double t, double x);
 static plot_func_t  plot_func_g;
-static void*        plot_ct_g;
+static void*        plot_data_g;
 static long         plot_count_g;
 
 // -----------------------------------------------------------------------------
@@ -161,7 +161,7 @@ static long         plot_count_g;
   for(int i = 0; i < num_plots_k; ++i)
     if (plot.identifier == plot_ids_k[i]) {
       return [NSNumber numberWithDouble:
-        plot_func_g(plot_ct_g, i, t, x)
+        plot_func_g(plot_data_g, i, t, x)
       ];
     }
     assert(false && "Not reached");
@@ -172,7 +172,7 @@ static long         plot_count_g;
 
 // -----------------------------------------------------------------------------
 
-void start_gui()
+void run_main_loop()
 {
   Class           principalClass          = MyApplication.class;
   NSApplication   *applicationObject      = [principalClass sharedApplication];
@@ -192,104 +192,17 @@ void start_gui()
   }
 }
 
-void run_core_plot
-(
-  doremir_plot_func_t func,
-  doremir_ptr_t       funcData,
-  doremir_nullary_t   cont,
-  doremir_ptr_t       contData
-)
+void run_core_plot(doremir_plot_func_t func, doremir_ptr_t data, 
+                   doremir_nullary_t cont, doremir_ptr_t cont_data)
 {
   plot_count_g  = 0;
   plot_func_g   = (plot_func_t) func;
-  plot_ct_g     = funcData;
+  plot_data_g   = data;
 
-  doremir_thread_create(cont, contData);
-  start_gui();
-}
+  // We will not return, so continuation is called on a new thread
+  if (cont)
+      doremir_thread_create(cont, cont_data);
 
-// -----------------------------------------------------------------------------
-
-void run_gnu_plot
-(
-  doremir_plot_func_t func,
-  doremir_ptr_t       funcData,
-  doremir_nullary_t   cont,
-  doremir_ptr_t       contData
-)
-{
-    assert(false);
-}  
-
-// -----------------------------------------------------------------------------
-
-enum plot_backend {
-    gnu_plot,
-    core_plot
-};
-
-
-
-
-
-/** Run a plot of the given functions.
- */
-void doremir_plot_func
-(
-  doremir_plot_func_t func,
-  doremir_ptr_t       funcData,
-  doremir_nullary_t   cont,
-  doremir_ptr_t       contData
-)
-{
-    switch (core_plot)
-    {
-        case gnu_plot:
-            run_gnu_plo(func, funcData, cont, contData);
-            return;
-        case core_plot:
-            run_core_plot(func, funcData, cont, contData);
-            return;
-    }
-}  
-
-#define PLOTTER(T) \
-    double plot_##T(void * ct, int i, double t, double x)       \
-    {                                                           \
-        doremir_buffer_t buf = ct;                              \
-                                                                \
-        size_t  sz = doremir_buffer_size(buf) / sizeof(T);      \
-        T     * ds = doremir_buffer_unsafe_address(buf);        \
-                                                                \
-        if (i == 0) {                                           \
-            return ds[((size_t)(sz * ((x + 1) / 2)))];          \
-        } else if (i == 1) {                                    \
-            return ds[((size_t)(sz * ((x + 1) / 2)))] * -1;     \
-        } else {                                                \
-            return -2;                                          \
-        }                                                       \
-    }                                                           \
-
-PLOTTER(float);
-PLOTTER(double);
-
-/** Run a plot on the given buffer, treating its contents as
-    32-bit floating point data.
- */
-void doremir_plot_buffer_float(doremir_buffer_t  buffer,
-                               doremir_nullary_t cont,
-                               doremir_ptr_t     data)
-{
-    doremir_plot_func(plot_float, buffer, cont, data);
-}
-
-/** Run a plot on the given buffer, treating its contents as
-    64-bit floating point data.
- */
-void doremir_plot_buffer_double(doremir_buffer_t      buffer,
-                                doremir_nullary_t     cont,
-                                doremir_ptr_t         data)
-{
-    doremir_plot_func(plot_double, buffer, cont, data);
+  run_main_loop();
 }
 

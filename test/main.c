@@ -2,7 +2,6 @@
 #include <doremir/audio_engine.h>
 #include <doremir/priority_queue.h>
 #include <doremir/thread.h>
-#include <doremir/plot.h>
 #include <doremir/util.h>
 #include <sndfile.h>
 #include <unistd.h> // for sysconf(3)
@@ -1184,7 +1183,7 @@ double f1(void * ct, int i, double t, double x)
 void test_plot()
 {
     test_section("Plot");
-    doremir_plot_func(f1, NULL, cont, NULL);
+    doremir_plot_func(f1, NULL, NULL, NULL);
 }
 
 void test_plot_file()
@@ -1214,7 +1213,7 @@ void test_plot_file()
     sf_count_t sz = sf_read_double(f, dbuf, bufSize / sizeof(double));
     buf = doremir_buffer_resize(sz * sizeof(double), buf);
 
-    doremir_plot_buffer_double(buf, cont, NULL);
+    doremir_plot_buffer_double(buf, NULL, NULL);
 }
 
 void test_sndfile()

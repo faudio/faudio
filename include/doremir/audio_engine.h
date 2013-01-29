@@ -13,6 +13,7 @@
 #include <doremir/message.h>
 #include <doremir/midi.h>
 #include <doremir/processor.h>
+#include <doremir/plot.h>
 #include <doremir/scheduler.h>
 #include <doremir/thread.h>
 #include <doremir/time.h>
