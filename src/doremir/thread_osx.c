@@ -39,10 +39,10 @@ static void doremir_thread_fatal(char * msg, int error);
 
     Threads have single-ownership semantics and must be finalized by passing it
     to a destructive function.
-    
+
     @param func Function to execute.
     @param data Value to be passed to the function.
-    @return     A new thread executing concurrently with the current thread. 
+    @return     A new thread executing concurrently with the current thread.
  */
 doremir_thread_t doremir_thread_create(doremir_nullary_t func, doremir_ptr_t data)
 {

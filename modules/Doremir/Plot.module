@@ -27,7 +27,7 @@ module Doremir.Plot
     import Doremir.Buffer;
 
     /**
-        @typedef doremir_plot_func_t
+        @typedef doremir_plot_function_t
         
         Callback to be invoked by the plotter.
         

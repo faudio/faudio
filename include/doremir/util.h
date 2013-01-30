@@ -100,5 +100,13 @@
 #define aadd                doremir_atomic_add
 #define amodify             doremir_atomic_modify
 
+void doremir_audio_engine_log_info(doremir_string_t);
+void doremir_audio_engine_log_warning(doremir_string_t);
+void doremir_audio_engine_log_error(doremir_string_t);
+
+#define inform(s)           doremir_audio_engine_log_info(s)
+#define warn(s)             doremir_audio_engine_log_warning(s)
+#define fail(s)             doremir_audio_engine_log_error(s)
+
 #endif // _DOREMIR_UTIL
 
