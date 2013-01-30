@@ -36,12 +36,15 @@ doremir_buffer_t doremir_buffer_create(size_t size)
     b->size = size;
     b->data = malloc(size);
     memset(b->data, 0, b->size);
+
     if (!b->data) {
-        if (errno == ENOMEM)
+        if (errno == ENOMEM) {
             buffer_fatal("Out of memory", errno);
-        else
+        } else {
             buffer_fatal("Unknown", errno);
+        }
     }
+
     return b;
 }
 
@@ -66,12 +69,15 @@ doremir_buffer_t doremir_buffer_resize(size_t size, doremir_buffer_t buffer)
     copy->impl = &buffer_impl;
     copy->size = size;
     copy->data = malloc(size);
+
     if (!copy->data) {
-        if (errno == ENOMEM)
+        if (errno == ENOMEM) {
             buffer_fatal("Out of memory", errno);
-        else
+        } else {
             buffer_fatal("Unknown", errno);
+        }
     }
+
     copy->data = memcpy(copy->data, buffer->data, size);
     return copy;
 }

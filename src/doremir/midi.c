@@ -20,6 +20,9 @@ struct _doremir_midi_t {
     } data;
 };
 
+#define is_simple(x) (!x->is_sysex)
+#define is_sysex(x)  (x->is_sysex)
+
 // --------------------------------------------------------------------------------
 
 inline static doremir_midi_t new_midi()
@@ -39,8 +42,7 @@ void delete_midi(doremir_midi_t midi)
 
 // --------------------------------------------------------------------------------
 
-/**
-    Creates a simple message from the given components.
+/** Creates a simple message from the given components.
     @param status   The status byte.
     @param data1    The first data byte.
     @param data2    The second data byte.
@@ -62,8 +64,7 @@ doremir_midi_t doremir_midi_create_simple(status_t status,
     return m;
 }
 
-/**
-    Creates a sysex message from the given data buffer (not including F0 and F7).
+/** Creates a sysex message from the given data buffer (not including F0 and F7).
     @param data     Raw data buffer (transfered).
     @return         A new sysex message.
  */
@@ -75,8 +76,7 @@ doremir_midi_t doremir_midi_create_sysex(doremir_buffer_t data)
     return m;
 }
 
-/**
-    Copy the given midi message.
+/** Copy the given midi message.
  */
 doremir_midi_t doremir_midi_copy(doremir_midi_t midi)
 {
@@ -94,8 +94,7 @@ doremir_midi_t doremir_midi_copy(doremir_midi_t midi)
     return m;
 }
 
-/**
-    Destroy the given midi message.
+/** Destroy the given midi message.
  */
 void doremir_midi_destroy(doremir_midi_t midi)
 {
@@ -106,51 +105,49 @@ void doremir_midi_destroy(doremir_midi_t midi)
     delete_midi(midi);
 }
 
-/**
-    Return the status byte of given midi message.
- */
-doremir_midi_status_t doremir_midi_status(doremir_midi_t midi)
-{
-    return midi->data.simple[0] & 0x0f;
-}
-
-/**
-    Return the channel byte of given midi message.
- */
-doremir_midi_channel_t doremir_midi_channel(doremir_midi_t midi)
-{
-    return midi->data.simple[0] & 0xf0;
-}
-
-/**
-    Return the status byte of given midi message.
+/** Return the status byte of given midi message.
  */
 bool doremir_midi_is_simple(doremir_midi_t midi)
 {
     return !midi->is_sysex;
 }
 
-/**
-    Return whether the given midi message is a non-sysex message.
- */
-doremir_pair_t doremir_midi_simple_data(doremir_midi_t midi)
-{
-    return doremir_pair_create(i8(midi->data.simple[1]), i8(midi->data.simple[2]));
-}
-
-/**
-    Return whether the given midi message is a sysex message.
+/** Return whether the given midi message is a sysex message.
  */
 bool doremir_midi_is_sysex(doremir_midi_t midi)
 {
     return midi->is_sysex;
 }
 
-/**
-    Return the data buffer of a sysex message, except for the wrapping `F0` and `F7` bytes.
+/** Return the status byte of given midi message.
+ */
+doremir_midi_status_t doremir_midi_status(doremir_midi_t midi)
+{               
+    assert(is_simple(midi) && "Not a simple message");
+    return midi->data.simple[0] & 0x0f;
+}
+
+/** Return the channel byte of given midi message.
+ */
+doremir_midi_channel_t doremir_midi_channel(doremir_midi_t midi)
+{
+    assert(is_simple(midi) && "Not a simple message");
+    return midi->data.simple[0] & 0xf0;
+}
+
+/** Return whether the given midi message is a non-sysex message.
+ */
+doremir_pair_t doremir_midi_simple_data(doremir_midi_t midi)
+{
+    assert(is_simple(midi) && "Not a simple message");
+    return doremir_pair_create(i8(midi->data.simple[1]), i8(midi->data.simple[2]));
+}
+
+/** Return the data buffer of a sysex message, except for the wrapping `F0` and `F7` bytes.
  */
 doremir_buffer_t doremir_midi_sysex_data(doremir_midi_t midi)
 {
+    assert(is_sysex(midi) && "Not a sysex message");
     return midi->data.sysex;
 }
 
@@ -173,7 +170,7 @@ bool midi_equal(doremir_ptr_t a, doremir_ptr_t b)
     }
 }
 
-// Note: We assume simple < sysex
+// Note: We arbitrarily define simple < sysex
 
 bool midi_less_than(doremir_ptr_t a, doremir_ptr_t b)
 {

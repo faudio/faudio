@@ -66,9 +66,15 @@ void delete_event(doremir_event_t event)
     doremir_delete(event);
 }
 
+#define is_never(v)       (v->tag == never_event)
+#define is_now(v)         (v->tag == now_event)
+#define is_delay(v)       (v->tag == delay_event)
+#define is_merge(v)       (v->tag == merge_event)
+#define is_switch(v)      (v->tag == switch_event)
+
 #define now_get(v,f)      v->fields.now.f
 #define delay_get(v,f)    v->fields.delay.f
-#define merge_get(v,f)   v->fields.merge.f
+#define merge_get(v,f)    v->fields.merge.f
 #define switch_get(v,f)   v->fields.switch_.f
 
 // --------------------------------------------------------------------------------

@@ -58,6 +58,11 @@ void delete_type(doremir_type_t type)
     doremir_delete(type);
 }
 
+#define is_simple(v)    (v->tag == simple_type)
+#define is_pair(v)      (v->tag == pair_type)
+#define is_vector(v)    (v->tag == vector_type)
+#define is_frame(v)     (v->tag == frame_type)
+
 #define simple_get(v)   v->fields.simple
 #define pair_get(v,f)   v->fields.pair.f
 #define vector_get(v,f) v->fields.vector.f
@@ -184,7 +189,8 @@ bool doremir_type_is_frame(doremir_type_t type)
 /** Return the simple type.
  */
 doremir_type_simple_t doremir_type_get_simple(doremir_type_t t)
-{
+{            
+    assert(is_simple(t) && "Not a simple type");
     return simple_get(t);
 }
 
@@ -192,6 +198,7 @@ doremir_type_simple_t doremir_type_get_simple(doremir_type_t t)
  */
 doremir_type_t doremir_type_get_pair_fst(doremir_type_t t)
 {
+    assert(is_pair(t) && "Not a pair type");
     return pair_get(t, fst);
 }
 
@@ -199,6 +206,7 @@ doremir_type_t doremir_type_get_pair_fst(doremir_type_t t)
  */
 doremir_type_t doremir_type_get_pair_snd(doremir_type_t t)
 {
+    assert(is_pair(t) && "Not a pair type");
     return pair_get(t, snd);
 }
 
@@ -206,6 +214,7 @@ doremir_type_t doremir_type_get_pair_snd(doremir_type_t t)
  */
 doremir_pair_t doremir_type_get_vector_base(doremir_type_t t)
 {
+    assert(is_vector(t) && "Not a vector type");
     return vector_get(t, base);
 }
 
@@ -213,6 +222,7 @@ doremir_pair_t doremir_type_get_vector_base(doremir_type_t t)
  */
 doremir_pair_t doremir_type_get_vector_size(doremir_type_t t)
 {
+    assert(is_vector(t) && "Not a vector type");
     return vector_get(t, size);
 }
 
@@ -220,6 +230,7 @@ doremir_pair_t doremir_type_get_vector_size(doremir_type_t t)
  */
 doremir_type_t doremir_type_get_frame_base(doremir_type_t t)
 {
+    assert(is_frame(t) && "Not a frame type");
     return frame_get(t, base);
 }
 

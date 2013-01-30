@@ -19,7 +19,7 @@ void test_section(char * str)
 void test_wrap()
 {
     extern char * doremir_type_str(doremir_ptr_t a);
-    
+
     test_section("Value references");
     // FIXME leaks
 
@@ -520,7 +520,8 @@ void test_for_each()
         doremir_print("%s\n", i32(z));
     }
 
-    doremir_with(list, list(i32(1), i32(2), i32(3), i32(4)), doremir_destroy(list)) {
+    doremir_with(list,
+                 list(i32(1), i32(2), i32(3), i32(4)), doremir_destroy(list)) {
         doremir_for_each(x, list) {
             doremir_print(">    %s\n", x);
         }
@@ -995,7 +996,7 @@ void test_map()
 void test_graph()
 {
     test_section("Graph");
-}              
+}
 
 void test_priority_queue(int iter)
 {
@@ -1227,7 +1228,7 @@ void test_vm2()
 
 void test_error()
 {
-    
+
 }
 
 void test_log()
@@ -1293,9 +1294,9 @@ int main(int argc, char const * argv[])
         // test_atomic_stack(5, 2);
         test_atomic_ring_buffer(5, 2);
 
-        test_thread();
-        test_mutex();
-        test_cond();
+        // test_thread();
+        // test_mutex();
+        // test_cond();
 
         test_for_each();
         test_list();
