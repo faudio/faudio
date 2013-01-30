@@ -20,27 +20,21 @@ void run_gnu_plot(plot_func_t func, ptr_t func_data, nullary_t cont, ptr_t cont_
     struct passwd * passwdEnt = getpwuid(getuid());
     char * home = passwdEnt->pw_dir;
 
-    char dat[L_tmpnam];
-    char plot[L_tmpnam];
-    char out_dir[100];
-    char out[100];
+    char dat[L_tmpnam], plot[L_tmpnam], out_dir[100], out[100];
+    
     tmpnam(dat);
     tmpnam(plot);
-
     sprintf(out_dir, "%s/.doremiraudio", home);
-    sprintf(out, "%s/plot.ps", out_dir);
+    sprintf(out, "%s/plot", out_dir);
+
+    inform(string_dappend(string("Creating "), string_dappend(string(out), string(".ps"))));
 
     mkdir(out_dir, (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH));
-
-    warn(string(dat));
-    warn(string(plot));
-    warn(string(out_dir));
-    warn(string(out));
 
     FILE * datf = fopen(dat, "w+");
     FILE * plotf = fopen(plot, "w+");
 
-    int samples = 44100*50;
+    int samples = 1000*900;
     
     for (int sample = 0; sample < samples; ++sample) {
 
@@ -60,7 +54,7 @@ void run_gnu_plot(plot_func_t func, ptr_t func_data, nullary_t cont, ptr_t cont_
             "set yrange [-1:1]                                                          \n"
             "set size 1.0, 1.0                                                          \n"
             "set terminal postscript landscape enhanced mono lw 1 'Helvetica' 14        \n"
-            "set output '%2$s'                                                          \n"
+            "set output '%2$s.ps'                                                       \n"
             "set zeroaxis                                                               \n"
             "plot '%1$s' using 1:2 every 100 with lines lc rgbcolor '#a0a0b0' title 'Plot 1',   \\\n"
             "     '%1$s' using 1:3 every 100 with lines lc rgbcolor '#a0a0b0' title 'Plot 2',   \\\n"
@@ -79,20 +73,21 @@ void run_gnu_plot(plot_func_t func, ptr_t func_data, nullary_t cont, ptr_t cont_
     char cmd[80];
     int res;
 
-    sprintf(cmd, "rm -f %s", out);
-    inform(string(cmd));
+    sprintf(cmd, "rm -f %s.ps", out);
     res = system(cmd);
-    inform(format_int("%d\n", res));
 
     sprintf(cmd, "gnuplot %s", plot);
-    inform(string(cmd));
     res = system(cmd);
-    inform(format_int("%d\n", res));
 
-    sprintf(cmd, "open %s", out);
-    inform(string(cmd));
+    // inform(string_dappend(string("Opening "), string_dappend(string(out), string(".ps"))));
+    // sprintf(cmd, "open %s.ps", out);
+    // res = system(cmd);
+
+    inform(string_dappend(string("Converting "), string_dappend(string(out), string(".pdf"))));
+    sprintf(cmd, "ps2pdf %1$s.ps %1$s.pdf", out);
     res = system(cmd);
-    inform(format_int("%d\n", res));
 
-    exit(-1);
+    inform(string_dappend(string("Opening "), string_dappend(string(out), string(".pdf"))));
+    sprintf(cmd, "open %s.pdf", out);
+    res = system(cmd);
 }

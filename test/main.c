@@ -1192,7 +1192,7 @@ void test_plot_file()
 
     SF_INFO info;
     info.format = 0;
-    char * file = "/Users/hans/Desktop/Passager.wav";
+    char * file = "/Users/hans/Desktop/test.wav";
     SNDFILE * f = sf_open(file, SFM_READ, &info);
 
     printf("Format:       %x\n", info.format);
@@ -1209,6 +1209,8 @@ void test_plot_file()
     size_t bufSize = 100000000 * sizeof(double);
     buffer_t buf = doremir_buffer_create(bufSize);
     double * dbuf = doremir_buffer_unsafe_address(buf);
+    
+    inform(string_dappend(string("Reading "), string(file)));
 
     sf_count_t sz = sf_read_double(f, dbuf, bufSize / sizeof(double));
     buf = doremir_buffer_resize(sz * sizeof(double), buf);
@@ -1313,15 +1315,15 @@ int main(int argc, char const * argv[])
         test_priority_queue(10);
 
         test_log();
-        // test_plot(NULL, NULL);
-        test_plot_file();
+        test_plot(NULL, NULL);
+        // test_plot_file();
         // test_sndfile();
 
         // test_processors();
         // test_vm2();
         // dispatchers
 
-        test_event();
+        // test_event();
         // schedulers
 
         doremir_audio_engine_terminate();
