@@ -1316,7 +1316,7 @@ int main(int argc, char const * argv[])
 
         test_log();
         test_plot(NULL, NULL);
-        // test_plot_file();
+        test_plot_file();
         // test_sndfile();
 
         // test_processors();

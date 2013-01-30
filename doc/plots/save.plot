@@ -2,7 +2,7 @@
 # to save the current plot as a postscript file issue the commands:
 #  gnuplot>   load 'saveplot'
 #  gnuplot>   !mv my-plot.ps another-file.ps
-set size 1.0, 0.6
+set size 1.0, 1.0
 set terminal postscript portrait enhanced mono dashed lw 1 "Helvetica" 14 
 set output "my-plot.ps"
 replot

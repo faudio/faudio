@@ -3,13 +3,11 @@
 *.o
 *.lo
 build/
-doc/Lisp.md
 dist
 external/*/result/
 OSX
 *~
 test/plot/AudioEnginePlotTest/CorePlot.framework/
-
 test/#*
 ORDER
 CCA2LMM
