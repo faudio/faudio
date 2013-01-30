@@ -34,7 +34,10 @@ void run_gnu_plot(plot_func_t func, ptr_t func_data, nullary_t cont, ptr_t cont_
     FILE * datf = fopen(dat, "w+");
     FILE * plotf = fopen(plot, "w+");
 
-    int samples = 1000*900;
+    int samples     = 500000;
+    int down_sample = 10;
+    // int samples     = 10;
+    // int down_sample = 1;
     
     for (int sample = 0; sample < samples; ++sample) {
 
@@ -56,15 +59,16 @@ void run_gnu_plot(plot_func_t func, ptr_t func_data, nullary_t cont, ptr_t cont_
             "set terminal postscript landscape enhanced mono lw 1 'Helvetica' 14        \n"
             "set output '%2$s.ps'                                                       \n"
             "set zeroaxis                                                               \n"
-            "plot '%1$s' using 1:2 every 100 with lines lc rgbcolor '#a0a0b0' title 'Plot 1',   \\\n"
-            "     '%1$s' using 1:3 every 100 with lines lc rgbcolor '#a0a0b0' title 'Plot 2',   \\\n"
-            "     '%1$s' using 1:4 every 100 with lines lc rgbcolor '#a0a0b0' title 'Plot 3',   \\\n"
-            "     '%1$s' using 1:5 every 100 with lines lc rgbcolor '#a0a0b0' title 'Plot 4',   \\\n"
-            "     '%1$s' using 1:6 every 100 with lines lc rgbcolor '#a0a0b0' title 'Plot 5'      \n"          
+            "plot '%1$s' using 1:2 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 1',   \\\n"
+            "     '%1$s' using 1:3 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 2',   \\\n"
+            "     '%1$s' using 1:4 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 3',   \\\n"
+            "     '%1$s' using 1:5 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 4',   \\\n"
+            "     '%1$s' using 1:6 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 5'      \n"          
             ""
             ,
             dat,
-            out
+            out,
+            down_sample
            );
 
     fflush(datf);
