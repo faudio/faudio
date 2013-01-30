@@ -1190,32 +1190,38 @@ void test_plot_file()
 {
     test_section("Plot file");
 
-    SF_INFO info;
-    info.format = 0;
-    char * file = "/Users/hans/Desktop/test.wav";
-    SNDFILE * f = sf_open(file, SFM_READ, &info);
+    // SF_INFO info;
+    // info.format = 0;
+    // char * file = "/Users/hans/Desktop/test.wav";
+    // SNDFILE * f = sf_open(file, SFM_READ, &info);
+    // 
+    // printf("Format:       %x\n", info.format);
+    // printf("Channels:     %d\n", info.channels);
+    // printf("Frames:       %ld\n", (long) info.frames);
+    // printf("Sample rate:  %d\n", info.samplerate);
+    // printf("Sections:     %d\n", info.sections);
+    // printf("Seekable:     %d\n", info.seekable);
+    // 
+    // if (sf_error(f)) {
+    //     printf("Sound file error: %d\n", sf_error(f));
+    // }
+    // 
+    // size_t bufSize = 100000000 * sizeof(double);
+    // buffer_t buf = doremir_buffer_create(bufSize);
+    // double * dbuf = doremir_buffer_unsafe_address(buf);
+    // 
+    // inform(string_dappend(string("Reading "), string(file)));
+    // 
+    // sf_count_t sz = sf_read_double(f, dbuf, bufSize / sizeof(double));
+    // buf = doremir_buffer_resize(sz * sizeof(double), buf);  
+                           
+    pair_t res = doremir_buffer_read_audio(string("/Users/hans/Desktop/test.wav"));
+    doremir_print("%s\n", res);
 
-    printf("Format:       %x\n", info.format);
-    printf("Channels:     %d\n", info.channels);
-    printf("Frames:       %ld\n", (long) info.frames);
-    printf("Sample rate:  %d\n", info.samplerate);
-    printf("Sections:     %d\n", info.sections);
-    printf("Seekable:     %d\n", info.seekable);
-
-    if (sf_error(f)) {
-        printf("Sound file error: %d\n", sf_error(f));
-    }
-
-    size_t bufSize = 100000000 * sizeof(double);
-    buffer_t buf = doremir_buffer_create(bufSize);
-    double * dbuf = doremir_buffer_unsafe_address(buf);
-    
-    inform(string_dappend(string("Reading "), string(file)));
-
-    sf_count_t sz = sf_read_double(f, dbuf, bufSize / sizeof(double));
-    buf = doremir_buffer_resize(sz * sizeof(double), buf);
-
+    buffer_t buf = doremir_pair_snd(res);
     doremir_plot_buffer_double(buf, NULL, NULL);
+    doremir_destroy(buf);
+    doremir_destroy(res);
 }
 
 void test_sndfile()
@@ -1315,9 +1321,8 @@ int main(int argc, char const * argv[])
         test_priority_queue(10);
 
         test_log();
-        test_plot(NULL, NULL);
+        // test_plot(NULL, NULL);
         test_plot_file();
-        // test_sndfile();
 
         // test_processors();
         // test_vm2();

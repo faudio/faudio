@@ -19,7 +19,11 @@
  */
 module Doremir.Buffer
 {
+    import Doremir;
     import Doremir.Std;
+    import Doremir.Pair;
+    import Doremir.String;
+    import Doremir.Type;
 
     /** @typedef doremir_buffer_t
         The buffer. 
@@ -36,6 +40,11 @@ module Doremir.Buffer
     poke : (Buffer, Size, UInt8) -> Void;
     
     unsafeAddress : Buffer -> Void*;
+
+    // Basic I/O                                
+    // TODO separate class for buffer*type ?
+    readAudio : FilePath -> Pair; // (Type,Buffer)
+    writeAudio : (FilePath,Type,Buffer) -> Void;
         
     // TODO views
     // TODO simd, vector ops
