@@ -233,12 +233,23 @@
 (cl:print x)
 (buffer-destroy x)
 
+(defun err (x)
+  (from-pointer 'error (to-pointer x)))
+
+(setf x (buffer-read-audio "/Users/hans/Desktop/test.wav"))
 (setf x (buffer-read-audio "/Users/hans/Desktop/Passager.wav"))
+(error-check x)
+(error-message (err x))
+(error-severity (err x))
+(error-origin (err x))
+(error-log nil (err x))
+
 (setf tp (from-pointer 'type (pair-fst x)))
 (setf x (from-pointer 'buffer (pair-snd x)))
 
 (plot-use-gnu)
 (plot-buffer-double x nil nil)
+(plot-buffer-float x nil nil)
 
 ; ---------------------------------------------------------------------------------------------------
 

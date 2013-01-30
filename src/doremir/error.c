@@ -213,7 +213,39 @@ doremir_string_t simple_error_origin(doremir_ptr_t a)
 
 doremir_string_t simple_error_show(doremir_ptr_t a)
 {
-    return doremir_error_format(true, a);
+    simple_error_t simple = (simple_error_t) a;
+    string_t str = string("<");
+
+    switch (simple->severity) {
+        case info:
+            str = string_dappend(str, string("Info "));
+            break;
+
+        case warning:
+            str = string_dappend(str, string("Warning "));
+            break;
+
+        case error:
+            str = string_dappend(str, string("Error "));
+            break;
+
+        case misc:
+            str = string_dappend(str, string("Misc "));
+            break;
+
+        default:
+            assert(false && "Missing label");
+    }
+
+    if (doremir_string_length(simple->origin) > 0) {
+        str = string_dappend(str, doremir_copy(simple->origin));
+        str = string_dappend(str, string(": "));
+    }
+
+    str = string_dappend(str, doremir_copy(simple->message));
+    str = string_dappend(str, string(">"));
+
+    return str;
 }
 
 doremir_ptr_t simple_error_impl(doremir_id_t interface)

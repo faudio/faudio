@@ -5,9 +5,9 @@
     All rights reserved.
  */
 
-#include <doremir.h>
-#include <doremir/util.h>
 #include <doremir/buffer.h>
+#include <doremir/error.h>
+#include <doremir/util.h>
 
 #include <sndfile.h>
 
@@ -34,7 +34,14 @@ doremir_buffer_t doremir_buffer_create(size_t size)
     buffer_t b = doremir_new(buffer);
     b->impl = &buffer_impl;
     b->size = size;
-    b->data = calloc(1, size);
+    b->data = malloc(size);
+    memset(b->data, 0, b->size);
+    if (!b->data) {
+        if (errno == ENOMEM)
+            buffer_fatal("Out of memory", errno);
+        else
+            buffer_fatal("Unknown", errno);
+    }
     return b;
 }
 
@@ -59,6 +66,12 @@ doremir_buffer_t doremir_buffer_resize(size_t size, doremir_buffer_t buffer)
     copy->impl = &buffer_impl;
     copy->size = size;
     copy->data = malloc(size);
+    if (!copy->data) {
+        if (errno == ENOMEM)
+            buffer_fatal("Out of memory", errno);
+        else
+            buffer_fatal("Unknown", errno);
+    }
     copy->data = memcpy(copy->data, buffer->data, size);
     return copy;
 }
@@ -118,6 +131,7 @@ void * doremir_buffer_unsafe_address(doremir_buffer_t buffer)
 
 typedef doremir_string_file_path_t path_t;
 
+// TODO allocate memory in smaller blocks...
 doremir_pair_t doremir_buffer_read_audio(doremir_string_file_path_t path)
 {
     type_t type;
@@ -130,13 +144,13 @@ doremir_pair_t doremir_buffer_read_audio(doremir_string_file_path_t path)
 
     if (sf_error(f)) {
         char err[100];
-        snprintf(err, 100, "Could not read sound file '%s'", file);
-        buffer_fatal(err, sf_error(f));
+        snprintf(err, 100, "Could not read audio file '%s'", file);
+        return doremir_error_create_simple(error, string(err), string("Doremir.Buffer"));
     }
 
     inform(string_dappend(string("Reading "), string(file)));
 
-    size_t bufSize = 15 * 60 * info.samplerate * info.channels * sizeof(double);
+    size_t bufSize = info.frames * info.channels * sizeof(double);
     buffer = doremir_buffer_create(bufSize);
     double * raw = doremir_buffer_unsafe_address(buffer);
 
@@ -222,7 +236,8 @@ void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t 
 
 void buffer_fatal(char * msg, int error)
 {
-    doremir_audio_engine_log_error_from(string_dappend(string(msg), format_int(" (%d)", error)), string("Doremir.Buffer"));
+    doremir_audio_engine_log_error_from(string_dappend(string(msg), format_int(" (error code %d)", error)), string("Doremir.Buffer"));
+    doremir_audio_engine_log_error(string("Terminating Audio Engine"));
     exit(error);
 }
 

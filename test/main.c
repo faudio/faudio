@@ -3,7 +3,7 @@
 #include <doremir/priority_queue.h>
 #include <doremir/thread.h>
 #include <doremir/util.h>
-#include <sndfile.h>
+
 #include <unistd.h> // for sysconf(3)
 
 
@@ -16,10 +16,10 @@ void test_section(char * str)
     doremir_audio_engine_log_info(string_dappend(string("Running test: "), string(str)));
 }
 
-
-extern char * doremir_type_str(doremir_ptr_t a);
 void test_wrap()
 {
+    extern char * doremir_type_str(doremir_ptr_t a);
+    
     test_section("Value references");
     // FIXME leaks
 
@@ -55,7 +55,7 @@ void test_wrap()
 
 void test_generic()
 {
-    test_section("Generics");
+    test_section("Generic functions");
     // TODO leaks
 
     printf("2 * 3.2                      ==> %f\n",   td(doremir_multiply(d(2), d(3.2))));
@@ -409,6 +409,8 @@ ptr_t printer(ptr_t data)
 }
 void test_thread()
 {
+    test_section("Threads");
+
     doremir_thread_t t, t2;
     t  = doremir_thread_create(printer, (ptr_t) 10);
     t2 = doremir_thread_create(printer, (ptr_t) 11);
@@ -437,6 +439,8 @@ ptr_t locker(ptr_t x)
 }
 void test_mutex()
 {
+    test_section("Mutexes");
+
     doremir_thread_mutex_t m = doremir_thread_create_mutex();
 
     for (int j = 0; j < 10; ++j) {
@@ -490,6 +494,8 @@ ptr_t receiver(ptr_t x)
 }
 void test_cond()
 {
+    test_section("Condition variables");
+
     doremir_thread_mutex_t m = doremir_thread_create_mutex();
     doremir_thread_condition_t c = doremir_thread_create_condition(m);
     send_hub h = { m, c, 0 };
@@ -986,6 +992,11 @@ void test_map()
     }
 }
 
+void test_graph()
+{
+    test_section("Graph");
+}              
+
 void test_priority_queue(int iter)
 {
     test_section("Priority queue");
@@ -1002,6 +1013,12 @@ void test_priority_queue(int iter)
     }
 
 }
+
+void test_to_json()
+{
+    test_section("JSON conversion");
+}
+
 
 #pragma mark -
 
@@ -1170,11 +1187,6 @@ double f1(void * ct, int i, double t, double x)
         case 0:
             return  0.5 * cos(tau * t0 * 0.5 + pi) * sin(tau * t0 * 3);
 
-            //   return 0.5*sin(tau*t2*3 + 0);
-            // case 1:
-            // return 0.5*sin(tau*(t2)*3.1 + 0.4);
-            // case 2:
-            // return (t2/60) * 1;
         default:
             return 0;
     }
@@ -1190,7 +1202,13 @@ void test_plot_file()
 {
     test_section("Plot file");
 
-    pair_t res = doremir_buffer_read_audio(string("/Users/hans/Desktop/Passager.wav"));
+    pair_t res = doremir_buffer_read_audio(string("/Users/hans/Desktop/Lamento.aiff"));
+
+    if (doremir_error_check(res)) {
+        doremir_error_log(NULL, res);
+        return;
+    }
+
     doremir_print("%s\n", res);
 
     buffer_t buf = doremir_pair_snd(res);
@@ -1207,27 +1225,18 @@ void test_vm2()
     test_vm();
 }
 
+void test_error()
+{
+    
+}
+
 void test_log()
 {
     test_section("Logging");
     doremir_audio_engine_log_info(string("---------------"));
     doremir_audio_engine_log_info(string("Log test: Do not take these seriously"));
 
-    // doremir_audio_engine_set_log_std();
-    // doremir_audio_engine_set_log_file(string("/Users/hans/Library/Logs/DoReMIRAudio.log"));
-
     for (int i = 0; i < 3; ++i) {
-        // doremir_audio_engine_log(NULL,
-        //   doremir_error_create_simple(
-        //     info,
-        //     string("We have a problem"),
-        //     string("")));
-        // doremir_audio_engine_log(NULL,
-        //   doremir_error_create_simple(
-        //     error,
-        //     string("We have a problem"),
-        //     string("Doremir.Buffer")));
-        // doremir_thread_sleep(500);
 
         doremir_audio_engine_log_info(string("We have a problem"));
         // doremir_audio_engine_log_warning(string("We have a problem"));
@@ -1240,6 +1249,7 @@ void test_log()
                                      string("Doremir.FooBar")));
         doremir_thread_sleep(50);
     }
+
     doremir_audio_engine_log_info(string("---------------"));
 }
 
@@ -1260,7 +1270,8 @@ int main(int argc, char const * argv[])
     {
         doremir_audio_engine_set_log_std();
         // doremir_audio_engine_set_log_file(string("/Users/hans/Library/Logs/DoReMIRAudio.log"));
-        // doremir_plot_use_gnu();
+        doremir_plot_use_gnu();
+        // doremir_plot_use_core();
 
         doremir_audio_engine_initialize();
 
@@ -1277,24 +1288,25 @@ int main(int argc, char const * argv[])
 
         test_atomic();
         test_atomic_queue(5, 2);
-        // test_atomic_queue(10, 10);
+        test_atomic_queue(10, 10);
         // test_atomic_queue(300, 2);
         // test_atomic_stack(5, 2);
         test_atomic_ring_buffer(5, 2);
 
-        // test_thread();
-        // test_mutex();
-        // test_cond();
+        test_thread();
+        test_mutex();
+        test_cond();
 
         test_for_each();
         test_list();
         test_set();
         test_map();
-        // error
-        // json
+        test_graph();
+        test_to_json();
         test_priority_queue(10);
 
         test_log();
+        test_error();
         // test_plot(NULL, NULL);
         test_plot_file();
 
