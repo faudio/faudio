@@ -78,10 +78,10 @@ void doremir_plot_functions
             return -2;                                          \
         }                                                       \
     }                                                           \
-
-        // } else if (i == 1) {                                    \
-        //     return ds[((size_t)(sz * ((x + 1) / 2)))] * -1;     \
  
+// } else if (i == 1) {                                    \
+//     return ds[((size_t)(sz * ((x + 1) / 2)))] * -1;     \
+
 PLOTTER(float);
 PLOTTER(double);
 

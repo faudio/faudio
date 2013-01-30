@@ -21,7 +21,7 @@ void run_gnu_plot(plot_func_t func, ptr_t func_data, nullary_t cont, ptr_t cont_
     char * home = passwdEnt->pw_dir;
 
     char dat[L_tmpnam], plot[L_tmpnam], out_dir[100], out[100];
-    
+
     tmpnam(dat);
     tmpnam(plot);
     sprintf(out_dir, "%s/.doremiraudio", home);
@@ -38,12 +38,12 @@ void run_gnu_plot(plot_func_t func, ptr_t func_data, nullary_t cont, ptr_t cont_
     int down_sample = 10;
     // int samples     = 10;
     // int down_sample = 1;
-    
+
     for (int sample = 0; sample < samples; ++sample) {
 
         double x = ((double) sample) / ((double) samples) * 2 - 1;
         double ys[5];
-        
+
         for (int index = 0; index < 5; ++index) {
             ys[index] = func(func_data, index, 0, x);
         }
@@ -63,7 +63,7 @@ void run_gnu_plot(plot_func_t func, ptr_t func_data, nullary_t cont, ptr_t cont_
             "     '%1$s' using 1:3 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 2',   \\\n"
             "     '%1$s' using 1:4 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 3',   \\\n"
             "     '%1$s' using 1:5 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 4',   \\\n"
-            "     '%1$s' using 1:6 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 5'      \n"          
+            "     '%1$s' using 1:6 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 5'      \n"
             ""
             ,
             dat,

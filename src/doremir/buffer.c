@@ -121,22 +121,17 @@ typedef doremir_string_file_path_t path_t;
 doremir_pair_t doremir_buffer_read_audio(doremir_string_file_path_t path)
 {
     type_t type;
-    buffer_t buffer;          
-    
+    buffer_t buffer;
+
     SF_INFO info;
     info.format = 0;
     char * file = doremir_string_to_utf8(path);
     SNDFILE * f = sf_open(file, SFM_READ, &info);
-    
-    // printf("Format:       %x\n", info.format);
-    // printf("Channels:     %d\n", info.channels);
-    // printf("Frames:       %ld\n", (long) info.frames);
-    // printf("Sample rate:  %d\n", info.samplerate);
-    // printf("Sections:     %d\n", info.sections);
-    // printf("Seekable:     %d\n", info.seekable);
-    
+
     if (sf_error(f)) {
-        buffer_fatal("Could not read sound file", sf_error(f));
+        char err[100];
+        snprintf(err, 100, "Could not read sound file '%s'", file);
+        buffer_fatal(err, sf_error(f));
     }
 
     inform(string_dappend(string("Reading "), string(file)));
@@ -147,20 +142,15 @@ doremir_pair_t doremir_buffer_read_audio(doremir_string_file_path_t path)
 
     sf_count_t sz = sf_read_double(f, raw, bufSize / sizeof(double));
     buffer = doremir_buffer_resize(sz * sizeof(double), buffer);
-    
-    if (info.channels == 1)
-    {
+
+    if (info.channels == 1) {
         type = type_vector(type(double), info.frames);
-    }
-    else if (info.channels == 2)
-    {
+    } else if (info.channels == 2) {
         type = type_vector(type_pair(type(double), type(double)), info.frames);
-    }           
-    else
-    {
+    } else {
         buffer_fatal("Unknown buffer type", info.channels);
     }
-    
+
     return pair(type, buffer);
 }
 
