@@ -12,3 +12,5 @@
 (defcfun (buffer-peek "doremir_buffer_peek") :uint8 (a buffer) (b :int32))
 (defcfun (buffer-poke "doremir_buffer_poke") :void (a buffer) (b :int32) (c :uint8))
 (defcfun (buffer-unsafe-address "doremir_buffer_unsafe_address") (:pointer :void) (a buffer))
+(defcfun (buffer-read-audio "doremir_buffer_read_audio") pair (a string-file-path))
+(defcfun (buffer-write-audio "doremir_buffer_write_audio") :void (a string-file-path) (b type) (c buffer))

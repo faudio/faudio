@@ -45,7 +45,7 @@
 (audioengine-log-info "What to say?")
 (audioengine-log-warning "Beware!")
 (audioengine-log-error "Rattlesnakes!")
-(audioengine-log-error-from "Rattlesnakes!" "main.lisp")
+(audioengine-log-error-from "Rattlesnakes!" "Test.Lisp")
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -232,6 +232,13 @@
   (buffer-poke x i 0))
 (cl:print x)
 (buffer-destroy x)
+
+(setf x (buffer-read-audio "/Users/hans/Desktop/Passager.wav"))
+(setf tp (from-pointer 'type (pair-fst x)))
+(setf x (from-pointer 'buffer (pair-snd x)))
+
+(plot-use-gnu)
+(plot-buffer-double x nil nil)
 
 ; ---------------------------------------------------------------------------------------------------
 

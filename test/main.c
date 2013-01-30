@@ -1260,7 +1260,7 @@ int main(int argc, char const * argv[])
     {
         doremir_audio_engine_set_log_std();
         // doremir_audio_engine_set_log_file(string("/Users/hans/Library/Logs/DoReMIRAudio.log"));
-        doremir_plot_use_gnu();
+        // doremir_plot_use_gnu();
 
         doremir_audio_engine_initialize();
 
