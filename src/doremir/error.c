@@ -138,7 +138,7 @@ doremir_string_t doremir_error_format(bool colored, doremir_error_t a)
         string("[ERROR]   "),
         string("[MISC]    "),
         string(""),
-        string(""),
+        string(": "),
 
         string("\x1b[32m[INFO]\x1b[0m    "),
         string("\x1b[33m[WARNING]\x1b[0m "),

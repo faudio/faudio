@@ -1210,6 +1210,8 @@ void test_vm2()
 void test_log()
 {
     test_section("Logging");
+    doremir_audio_engine_log_info(string("---------------"));
+    doremir_audio_engine_log_info(string("Log test: Do not take these seriously"));
 
     // doremir_audio_engine_set_log_std();
     // doremir_audio_engine_set_log_file(string("/Users/hans/Library/Logs/DoReMIRAudio.log"));
@@ -1235,10 +1237,10 @@ void test_log()
                                  doremir_error_create_simple(
                                      error,
                                      string("We have a problem"),
-                                     string("Doremir.Buffer")));
+                                     string("Doremir.FooBar")));
         doremir_thread_sleep(50);
-
     }
+    doremir_audio_engine_log_info(string("---------------"));
 }
 
 
@@ -1254,11 +1256,12 @@ int main(int argc, char const * argv[])
     printf("The page size for this system is %ld bytes.\n", sysconf(_SC_PAGESIZE));
 
     // while(true)
+
     {
         doremir_audio_engine_set_log_std();
+        // doremir_audio_engine_set_log_file(string("/Users/hans/Library/Logs/DoReMIRAudio.log"));
         doremir_plot_use_gnu();
 
-        // doremir_audio_engine_set_log_file(string("/Users/hans/Library/Logs/DoReMIRAudio.log"));
         doremir_audio_engine_initialize();
 
         test_wrap();
