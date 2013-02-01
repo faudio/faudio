@@ -4,7 +4,11 @@
 @anchor Interfaces
 @tableofcontents
 
-An *interface* is a collection of function types, identified by a unique value
+@note
+    This page is under construction.
+
+In the context of the Audio Engine, an *interface* (not to be confuseed with and
+*audio interace*) is a collection of function types, identified by a unique value
 known as the *interface identifier*. They are used extensively inside the Audio
 Engine.
 
