@@ -38,6 +38,9 @@ module Doremir.Buffer
     size : Buffer -> Size;  
     peek : (Buffer, Size) -> UInt8;
     poke : (Buffer, Size, UInt8) -> Void;
+
+    peekDouble : (Buffer, Size) -> Double;
+    pokeDouble : (Buffer, Size, Double) -> Void;
     
     unsafeAddress : Buffer -> Void*;
 

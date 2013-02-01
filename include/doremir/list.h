@@ -3,7 +3,6 @@
 #define _DOREMIR_LIST
 
 #include <doremir.h>
-#include <doremir/string.h>
 
 /** @defgroup Doremir Doremir
     @{

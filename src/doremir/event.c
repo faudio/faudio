@@ -94,7 +94,10 @@ doremir_event_t doremir_event_now(doremir_ptr_t value)
 
 doremir_event_t doremir_event_delay(doremir_time_t time,
                                     doremir_event_t event)
-{
+{   
+    // delay t (merge x y) = delay t x `merge` delay t u
+    // delay t (delay u)   = delay (t + u)
+
     event_t e = new_event(delay_event);
     delay_get(e, time)  = time;
     delay_get(e, event) = event;
@@ -104,6 +107,12 @@ doremir_event_t doremir_event_delay(doremir_time_t time,
 doremir_event_t doremir_event_merge(doremir_event_t event1,
                                     doremir_event_t event2)
 {
+    // merge (switch p x y) (switch p y x) = merge x y
+    // merge (merge x y) z = merge x (merge y z)
+    // merge x never       = x
+    // merge x y           = merge y x
+    
+    // TODO invariant left <= right
     event_t e = new_event(merge_event);
     merge_get(e, left)   = event1;
     merge_get(e, right)  = event2;
@@ -114,6 +123,11 @@ doremir_event_t doremir_event_switch(doremir_event_t pred,
                                      doremir_event_t event1,
                                      doremir_event_t event2)
 {
+    // switch x never x    = x
+    // switch never x y    = x
+    // switch x x never    = never
+    // switch (one _) x y  = y
+
     event_t e = new_event(switch_event);
     switch_get(e, pred)     = pred;
     switch_get(e, before)   = event1;
@@ -218,30 +232,42 @@ doremir_ptr_t doremir_event_value(doremir_event_t event)
 
 doremir_event_t doremir_event_tail(doremir_event_t event)
 {
+    // tail never          = never
+    // tail now            = never
+    // tail delay t x      = delay t (tail x)
+    // tail merge x y      = if (x < y) then (tail x `merge` y) else (x `merge` tail y)
+    // tail switch p x y   = switch p (tail x) (tail y)
+
     switch (event->tag) {
 
         case never_event:
-            return NULL;
+            return doremir_event_never();
 
         case now_event:
-            return NULL;
+            return doremir_event_never();
 
         case delay_event: {
             event_t x = doremir_event_tail(delay_get(event, event));
             time_t  t = delay_get(event, time);
 
             if (!x) {
-                return NULL;
+                return NULL; // FIXME see sched comment
             } else {
                 return doremir_event_delay(t, x);
             }
         }
 
         case merge_event:
-            return merge_get(event, right); // FIXME
+            // OK because of invariant in merge impl
+            return merge_get(event, right);
 
         case switch_event:
-            return NULL;
+        {                                          
+            event_t p = switch_get(event, pred);
+            event_t tx = doremir_event_tail(switch_get(event, before));
+            event_t ty = doremir_event_tail(switch_get(event, after));
+            return doremir_event_switch(p, tx, ty);
+        }
 
         default:
             assert(false && "Missing label");

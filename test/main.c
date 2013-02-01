@@ -1040,7 +1040,8 @@ time_t execute_events(priority_queue_t q, time_t t)
             event_t t = doremir_event_tail(x);
 
             doremir_audio_engine_log_error(string_dappend(string("Firing event: "), doremir_string_show(h)));
-
+            
+            // TODO should compare against never?
             if (t) {
                 doremir_audio_engine_log_warning(string("Reinsert"));
                 doremir_priority_queue_insert(t, q);
@@ -1199,6 +1200,18 @@ void test_plot()
     doremir_plot_functions(f1, NULL, NULL, NULL);
 }
 
+void test_plot_buffer()
+{
+    buffer_t buf = doremir_buffer_create(44100 * sizeof(double));
+    for(int i = 0; i < 44100; ++i)
+    {
+        double r = (double) random() / RAND_MAX;
+        double x = (double) i / 44100;
+        doremir_buffer_poke_double(buf, i, (r*2-1) * sin(x*10));
+    }
+    doremir_plot_buffer_double(buf, NULL, NULL);
+}
+
 void test_plot_file()
 {
     test_section("Plot file");
@@ -1271,8 +1284,8 @@ int main(int argc, char const * argv[])
     {
         doremir_audio_engine_set_log_std();
         // doremir_audio_engine_set_log_file(string("/Users/hans/Library/Logs/DoReMIRAudio.log"));
-        doremir_plot_use_gnu();
-        // doremir_plot_use_core();
+        // doremir_plot_use_gnu();
+        doremir_plot_use_core();
 
         doremir_audio_engine_initialize();
 
@@ -1309,13 +1322,14 @@ int main(int argc, char const * argv[])
         test_log();
         test_error();
         // test_plot(NULL, NULL);
-        test_plot_file();
+        test_plot_buffer();
+        // test_plot_file();
 
         // test_processors();
         // test_vm2();
         // dispatchers
 
-        // test_event();
+        test_event();
         // schedulers
 
         doremir_audio_engine_terminate();

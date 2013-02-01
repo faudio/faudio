@@ -60,7 +60,6 @@
 module Doremir.List
 {
     import Doremir;
-    import Doremir.String;
 
     type List   = opaque;
 

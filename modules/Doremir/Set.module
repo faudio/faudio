@@ -8,6 +8,9 @@
     @par Literals
     - `set(1, 2, 3)`
 
+    @par Display
+    - `{1,2,3}`
+    
     @par Requires 
     - doremir_order_t
 

@@ -15,7 +15,7 @@
     - doremir_dynamic_t
     - doremir_string_show_t
     @see 
-    - @ref Collections
+    - @ref DataStructures
 
  */
 module Doremir.Pair

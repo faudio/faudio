@@ -1,0 +1,93 @@
+
+
+{-
+Event
+
+now/one  One occ
+delay    Offset occs in time
+never    No occs
+rest     Skip first occ    
+merge    Merge occs
+switch   Upon first tick, disallow X, allow Y (eventual occ at switch time taken from Y)
+
+read     Whenever a value can be read from the given queue
+
+
+// execute events at t
+// return next occurence
+time_t execute_events(priority_queue_t q, time_t t)
+{
+    event_t x;
+
+    while (min event offset < now)
+        pop event from queue
+        if it is active, execute it
+        insert its tail in queue
+    return min event offset
+}
+
+
+
+            
+
+Event           Type                        Offset                      Live
+=====           =====                       =====                       =====
+never           E a                         Infinite                    Never
+now x           a -> E a                    0                           Only if  time >= 0
+delay t x       t -> E a -> E a             delta x + t                 Only if  live x (time - t)
+merge x y       E a -> E a -> E a           min (delta x) (delta y)     Only if  live x time || live y time
+switch p x y    E a -> E b -> E b -> E b    min (delta x) (delta y)     Only if (live p t) and (live x t)  
+tail x          E a -> E a
+                                                                             or (!live p t) and (live y t)
+Laws:
+    tail never          = never
+    tail now            = never
+    tail delay t x      = delay t (tail x)
+    tail merge x y      = if (x < y) then (tail x `merge` y) else (x `merge` tail y)
+    tail switch p x y   = switch p (tail x) (tail y)
+
+    delay t (merge x y) = delay t x `merge` delay t u
+    delay t (delay u)   = delay (t + u)
+    
+    merge (head x) (tail x) = x
+    merge (merge x y) z = merge x (merge y z)
+    merge x y           = merge y x
+    merge x never       = x
+    switch x never x    = x
+    switch never x y    = x
+    switch x x never    = never
+    switch (one _) x y  = y
+    merge (switch p x y) (switch p y x) = merge x y
+
+-}
+
+
+later t x           = delay t (now x)
+head x              = before (tail x) x
+odds x              = head x `merge` (!!odds (tail2 x))
+evens x             = tail x `merge` (!!evens (tail2 x))
+after p x           = switch p never x
+before p x          = switch p x never
+repeat t x          = now x `merge` delay t (!!repeat t x)
+
+-- skip1 p x           = tail (after p)
+-- skip p x            = skip1 p x `merge` !!skip (tail p) x
+
+-- extract the first occ after p
+sample1 p x         = head (after p)
+sample p x          = sample1 p x `merge` !!sample (tail p) x
+
+
+toggle1 p x         = after p (before (tail p) x)
+toggle p x          = toggle1 p x `merge` !!toggle (tail2 p) x                    
+-- ==>
+toggle p x          = after p (before (tail p) x) `merge` !!toggle (tail2 p) x
+-- alt
+toggle p x          = after p (before (tail p) x `merge` !!toggle (tail2 p) x)
+
+
+
+
+   
+    
+

@@ -121,6 +121,20 @@ void doremir_buffer_poke(doremir_buffer_t buffer, size_t index, uint8_t value)
     buffer->data[index] = value;
 }
 
+
+double doremir_buffer_peek_double(doremir_buffer_t buffer, size_t index)
+{
+    assert(index * sizeof(double) < buffer->size && "Buffer overflow");
+    return ((double*) buffer->data)[index];
+}
+
+void doremir_buffer_poke_double(doremir_buffer_t buffer, size_t index, double value)
+{
+    assert(index * sizeof(double) < buffer->size && "Buffer overflow");
+    ((double*) buffer->data)[index] = value;
+}
+
+
 /** Return the address of the buffer.
 
     This function is unsafe as it provides access to the buffer contents without
