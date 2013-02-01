@@ -1,13 +1,11 @@
 
-Only one audio stream
-Multiple Midi streams OK
-
 ==========
 Additions
 
 * Dispatcher impl
 * Event/Scheduler impl
 
+* Map.get, Graph
 * Buffer streams
 * File streams
 * RT audio
@@ -59,10 +57,13 @@ Issues
 * Normalize rationals before printing (but not otherwise)
 
 * Lisp frontend
-    * Decide fate of the Ptr type (now you have to delete it manually from doremir.lisp)
-    * Auto wrap of pairs and lists?
+    * Ptr type
+        https://github.com/hanshoglund/modulo/issues/27
     * Mangling problems
         https://github.com/hanshoglund/modulo/issues/26
+    * Auto wrap of pairs and lists?
+    * Call destroy from finalizers for certain types (which?)
+    * Wrap functions returning errors with conditions
 
 
 ==========
