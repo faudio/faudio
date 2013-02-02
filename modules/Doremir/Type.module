@@ -6,12 +6,12 @@
 
     Type            | Description
     ----------------| ----------------------------
-    `uint8`         | 8-bit integer
-    `uint16`        | 16-bit integer
-    `uint32`        | 32-bit integer
-    `uint64`        | 64-bit integer
-    `float`         | 32-bit floating point
-    `double`        | 64-bit floating point
+    `i8`            | 8-bit integer
+    `i16`           | 16-bit integer
+    `i32`           | 32-bit integer
+    `i64`           | 64-bit integer
+    `f32`           | 32-bit floating point
+    `f64`           | 64-bit floating point
     `ptr`           | Pointer supporting copy and destroy
     `(A, B)`        | pair of *A* and *B*
     `[A x N]`       | vector of *A*
@@ -22,12 +22,12 @@
     - `type(uint16)`
     - `type(uint32)`
     - `type(uint64)`
-    - `type(float)`
-    - `type(double)`
+    - `type(f32)`
+    - `type(f64)`
     - `type(ptr)`
-    - `type_pair(type(double), type(double))`
-    - `type_vector(type(double), 200)`
-    - `type_frame(type(double))`
+    - `type_pair(type(f64), type(f64))`
+    - `type_vector(type(f64), 200)`
+    - `type_frame(type(f64))`
 
     @par Implements        
     - doremir_equal_t
