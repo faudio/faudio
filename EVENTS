@@ -33,18 +33,52 @@ time_t execute_events(priority_queue_t q, time_t t)
 Event           Type                        Offset                      Live
 =====           =====                       =====                       =====
 never           E a                         Infinite                    Never
-now x           a -> E a                    0                           Only if  time >= 0
-delay t x       t -> E a -> E a             delta x + t                 Only if  live x (time - t)
-merge x y       E a -> E a -> E a           min (delta x) (delta y)     Only if  live x time || live y time
-switch p x y    E a -> E b -> E b -> E b    min (delta x) (delta y)     Only if (live p t) and (live x t)  
-tail x          E a -> E a
-                                                                             or (!live p t) and (live y t)
+value           E a -> a
+now x           a -> E a                    0                           When  time >= 0
+delay t x       t -> E a -> E a             delta x + t                 When  live x (time - t)
+merge x y       E a -> E a -> E a           min (delta x) (delta y)     When  live x time || live y time
+switch p x y    E a -> E b -> E b -> E b    min (delta x) (delta y)     When  (live p t) and (live x t) 
+                                                                           or (not live p t) (live y t)
+tail x          E a -> E a                  Offset of (tail x)          When  live (tail x)
+
+recv q          Q a -> E a                  Unknown                     When  a message has arrived on q
+send q x        Q a -> E a -> E Action      Unknown                     When  live x
+
+
+upon x y = switch y x y
+
+join    : E (E a) -> E a
+join x = value x `upon` !!join (tail x)
+
+map1 f x = ?
+map f x  = now (f $ value x) `merge` !!map f (tail x)
+
+bind    : (a -> E b) -> E a -> E b
+bind f x = value (map f x) `upon` !!bind f (tail x)
+
+
+
+map     : (a -> b) -> E a -> E b
+collect : (a -> Maybe b) -> E a -> E b
+map    : (a -> b) -> E a -> E b
+filter : (a -> Bool) -> E a -> E a
+select : (a -> Bool) -> E a -> E ()
+
+schedule : Sched -> E Action -> Action
+execute  : Sched -> Action
+
 Laws:
-    tail never          = never
-    tail now            = never
-    tail delay t x      = delay t (tail x)
-    tail merge x y      = if (x < y) then (tail x `merge` y) else (x `merge` tail y)
-    tail switch p x y   = switch p (tail x) (tail y)
+    value now x            = x
+    value never            = undefined
+    value (delay t x)      = value x
+    value (merge x y)      = if (offset x < offset y) then (value x) else (value y)
+    value (x `switch p` y) = if (!live p) then (value x) else (value y)
+
+    tail never            = never
+    tail now              = never
+    tail (delay t x)      = delay t (tail x)
+    tail (merge x y)      = if (offset x < offset y) then (tail x `merge` y) else (x `merge` tail y)
+    tail (x `switch p` y) = if (!live p) then (tail x `switch p` y) else (tail y)
 
     delay t (merge x y) = delay t x `merge` delay t u
     delay t (delay u)   = delay (t + u)
@@ -77,14 +111,11 @@ repeat t x          = now x `merge` delay t (!!repeat t x)
 sample1 p x         = head (after p)
 sample p x          = sample1 p x `merge` !!sample (tail p) x
 
-
 toggle1 p x         = after p (before (tail p) x)
 toggle p x          = toggle1 p x `merge` !!toggle (tail2 p) x                    
--- ==>
-toggle p x          = after p (before (tail p) x) `merge` !!toggle (tail2 p) x
--- alt
-toggle p x          = after p (before (tail p) x `merge` !!toggle (tail2 p) x)
 
+select1 p x y       = toggle1 p x `merge` toggle1 (tail p) y 
+select p x y        = select1 p x `merge` !!select (tail2 p) x                    
 
 
 
