@@ -49,16 +49,20 @@ Type                                        | Semantics
 
 # Using data structures {#Conventions}
 
-## Literals, read and show {#Literals}
+## String representations {#Literals}
 
-All data structures have literals defined in the [utility&nbsp;headers][util].
-These always evaluate to a newly created instance of the data structure.
+All data structures have macro-based *literals* defined in the [utility&nbsp;headers][util].
+A literal expression always evaluate to a newly created instance of the data structure.
 
 - `pair(i32(1), i32(2))`
 - `list(i32(1), i32(2), i32(3))`
 - `set(i32(1), i32(2), i32(3))`
 - `map(string("foo"),i32(1),string("bar"),i32(2))`
 - `graph(i32(1),i32(2),edge(i32(1),i32(2),i32(3)))`
+
+When *printed* using the [Show](@ref doremir_show_t) implementation, the data
+structures generally have a more readable resentation, as shown below. (Do we want to
+optionally print the C literal instead?)
 
 - `(1,2)`
 - `[1,2,3]`
@@ -120,6 +124,7 @@ does not need to use its values.
 
 TODO destructive functions
 
+
 # Value references {#ValueReferences}
 
 Value types can be converted to reference types using a set of conversion
@@ -130,7 +135,10 @@ A value reference is a proper reference that can be safely stored in a data
 structure. Like other data structures, value references may be created and
 destroyed from any thread and have single ownership semantics. Value references are
 in fact tiny data structures containing a single element. They support all normal
-data structure operations including copying, destruction and
+data structure operations including [equality](@ref doremir_equal_t) or 
+[ordering](@ref doremir_order_t), [copying](@ref doremir_copy_t) and 
+[destruction](@ref doremir_destroy_t). 
+In addition, they also support [arithmetic](@ref doremir_number_t).
 
 It is not specified exactly how value references are implemented; however the
 reference representation of a value typically have a different bit pattern from the

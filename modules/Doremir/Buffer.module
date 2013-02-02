@@ -35,19 +35,29 @@ module Doremir.Buffer
     resize  : (Size, Buffer) -> Buffer;
     destroy : Buffer -> Void;
 
-    size : Buffer -> Size;  
-    peek : (Buffer, Size) -> UInt8;
-    poke : (Buffer, Size, UInt8) -> Void;
+    size    : Buffer -> Size;  
+    peek    : (Buffer, Size) -> UInt8;
+    poke    : (Buffer, Size, UInt8) -> Void;
 
+    peekInt16  : (Buffer, Size) -> Int16;
+    peekInt32  : (Buffer, Size) -> Int32;
+    peekInt64  : (Buffer, Size) -> Int64;
+    peekFloat  : (Buffer, Size) -> Float;
     peekDouble : (Buffer, Size) -> Double;
-    pokeDouble : (Buffer, Size, Double) -> Void;
-    
-    unsafeAddress : Buffer -> Void*;
 
-    // Basic I/O                                
-    // TODO separate class for buffer*type ?
+    pokeInt16  : (Buffer, Size, Int16) -> Void;
+    pokeInt32  : (Buffer, Size, Int32) -> Void;
+    pokeInt64  : (Buffer, Size, Int64) -> Void;    
+    pokeFloat  : (Buffer, Size, Float) -> Void;
+    pokeDouble : (Buffer, Size, Double) -> Void;    
+
+    readRaw : FilePath -> Buffer;
+    writeRaw : (FilePath,Buffer) -> Void;
+    
     readAudio : FilePath -> Pair; // (Type,Buffer)
     writeAudio : (FilePath,Type,Buffer) -> Void;
+
+    unsafeAddress : Buffer -> Void*;
         
     // TODO views
     // TODO simd, vector ops

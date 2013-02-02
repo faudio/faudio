@@ -293,7 +293,10 @@ bool doremir_list_has(doremir_ptr_t value, doremir_list_t list) {}
 int doremir_list_index_of(doremir_ptr_t value, doremir_list_t list) {}
 
 /** Return the first element satisfying the given predicate in the
-    list, or null if no such element is found.
+    list, if found.
+    @param list     List.
+    @param value    Value to search for.
+    @return         Index of the found value (optional).
     @par Performance
         O(log n)
  */

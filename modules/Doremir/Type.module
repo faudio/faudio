@@ -18,10 +18,10 @@
     `{A}`           | frame of *A*
 
     @par Literals
-    - `type(uint8)`
-    - `type(uint16)`
-    - `type(uint32)`
-    - `type(uint64)`
+    - `type(i8)`
+    - `type(i16)`
+    - `type(i32)`
+    - `type(i64)`
     - `type(f32)`
     - `type(f64)`
     - `type(ptr)`

@@ -107,6 +107,8 @@ static inline void delete_range_end(atomic_t begin, atomic_t end)
 
 // --------------------------------------------------------------------------------
 
+/** Create a new queue.
+ */
 doremir_atomic_queue_t doremir_atomic_queue_create()
 {
     atomic_queue_t queue = new_queue();
@@ -119,6 +121,8 @@ doremir_atomic_queue_t doremir_atomic_queue_create()
     return queue;
 }
 
+/** Destroy the given queue.
+ */
 void doremir_atomic_queue_destroy(doremir_atomic_queue_t queue)
 {
     delete_range_end(queue->first, queue->last);
@@ -128,8 +132,15 @@ void doremir_atomic_queue_destroy(doremir_atomic_queue_t queue)
 
 // --------------------------------------------------------------------------------
 
+/** Write the given value to the given queue.
+    @param queuer   Queue.
+    @param value    Value to write (optional).
+ */
 bool doremir_atomic_queue_write(doremir_atomic_queue_t queue, doremir_ptr_t value)
 {
+    if (!value)
+        return;
+
     delete_range(queue->first, queue->div);
 
     get_node(queue->last)->value = value;
@@ -139,7 +150,10 @@ bool doremir_atomic_queue_write(doremir_atomic_queue_t queue, doremir_ptr_t valu
     return true;
 }
 
-// FIXME return Optional?
+/** Read a value from the given queue.
+    @return 
+        A value (optional).
+ */
 doremir_ptr_t doremir_atomic_queue_read(doremir_atomic_queue_t queue)
 {
     ptr_t value;

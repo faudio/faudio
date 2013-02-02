@@ -88,9 +88,10 @@ int main (int argc, char const *argv[])
         return;
     }
 
+    // Session is active, now we can access devices    
     {
         device_t        input, output;
-        processor_t proc;
+        processor_t     proc;
         stream_t        stream
         
         proc   = doremir_processor_identity();
@@ -103,6 +104,7 @@ int main (int argc, char const *argv[])
             exit(-1);
         }
 
+        // Wait while stream is running    
         doremir_thread_sleep(5000);
         
         doremir_device_audio_stop_stream(stream);

@@ -73,18 +73,28 @@ user and the Audio Engine. They will usually log and terminate the process.
 
 # Logging {#Logging}
 
-The Audio Engine provides a simple global logging system. The user can add messages
-to the log by calling one of the following functions. Non-recoverable errors are
-added to the log automatically.
+The Audio Engine provides a simple global logging system. Non-recoverable
+errors are always logged. The user can add recoverable errors to the log using 
+@ref doremir_audio_engine_log. Typically, this function is used with @ref doremir_error_check,
+as in:
 
-* [log](@ref doremir_audio_engine_log)
-* [logInfo](@ref doremir_audio_engine_log_info)
-* [logWarning](@ref doremir_audio_engine_log_warning)
-* [logError](@ref doremir_audio_engine_log_error)
+~~~
+if (doremir_error_check(value)) {
+    doremir_error_log(NULL, value);
+    exit(-1);
+}
+~~~
 
-The default log function does nothing. The [Doremir.AudioEngine][dae] module
-provides a function to replace this function, and some default implementations that
-writes to the standard output, or to a specific log file.
 
+There are also some convenience functions to log an arbitrary message:
+
+* @ref doremir_audio_engine_log_info
+* @ref doremir_audio_engine_log_warning
+* @ref doremir_audio_engine_log_error
+
+Note that by default, all log messages are *ignored*. If you want to intercept the
+log, you must use one of the setup functions in [Doremir.AudioEngine][dae] to
+specify how they should be handled: typically you want to write them to standard
+output, to another file, or pass them to a user-defined handler function.
 
 [dae]: @ref DoremirAudioEngine
