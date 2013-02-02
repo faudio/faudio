@@ -244,6 +244,14 @@
 (error-origin (err x))
 (error-log nil (err x))
 
+(defun safe-buffer-read-audio (path)
+  (setf res (buffer-read-audio path))
+  (when (error-check x)
+    (error "error"))
+  res)
+
+
+
 (setf tp (from-pointer 'type (pair-fst x)))
 (setf x (from-pointer 'buffer (pair-snd x)))
 

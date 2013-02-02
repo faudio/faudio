@@ -97,7 +97,7 @@ doremir_string_t doremir_error_origin(doremir_error_t a)
     This function is often used with [log](@ref doremir_error_log) as in:
 
     ~~~
-    if (doremir_error_check(value)) {
+    if (doremir_check(value)) {
         doremir_error_log(NULL, value);
         exit(-1);
     }

@@ -39,26 +39,22 @@ of the Audio Engine.
 Generally such errors can be handled by the user by some special mechanism in the
 library interface such as exceptions or status codes. In the Audio Engine,
 recoverable errors always occur when a function is called, and must be detected by
-the Program by inspecting the return value of the function. They are grouped into
+the user by inspecting the return value of the function. They are grouped into
 *optional* values and *error* values.
 
-
-## Optional values {#ErrorOpt}
-
-Optional values simply means that a function returns null instead of an ordinary
+*Optional values* simply means that a function returns null instead of an ordinary
 value. They are used for simple cases where no additional information about the
 condition is needed. Examples of functions returning optional values are
 @ref doremir_list_index and @ref doremir_priority_queue_peek.
 
-
-## Error values {#ErrorValues}
-
-Error values are used in cases where the system has access to information about the
+*Error values* are used in cases where the system has access to information about the
 error. Error values depend on the interface mechanism: any value can be passed to
-@ref doremir_error_check, which returns true if and only the value is an error.
+@ref doremir_check, which returns true if and only if the value is an error. Null is
+considered to implement error as a special case in the interface mechanism. This means
+that the same procedure can be used to check for optional values and error values.
 
-Functions returning errors must have their return value passed to @ref
-doremir_error_check before the value is used by another function. If an error has
+Functions returning errors must have their return value passed to @ref doremir_check 
+before the value is used by another function. If an error has
 occurred, check will return true and the other methods of the @ref doremir_error_t
 interface can be used to obtain more information about the condition, otherwise the
 value can be used normally. Note that values returned from construction and copy
@@ -75,11 +71,11 @@ user and the Audio Engine. They will usually log and terminate the process.
 
 The Audio Engine provides a simple global logging system. Non-recoverable
 errors are always logged. The user can add recoverable errors to the log using 
-@ref doremir_audio_engine_log. Typically, this function is used with @ref doremir_error_check,
+@ref doremir_audio_engine_log. Typically, this function is used with @ref doremir_check,
 as in:
 
 ~~~
-if (doremir_error_check(value)) {
+if (doremir_check(value)) {
     doremir_error_log(NULL, value);
     exit(-1);
 }
