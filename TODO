@@ -65,6 +65,9 @@ Issues
     * Call destroy from finalizers for certain types (which?)
     * Wrap functions returning errors with conditions
 
+* Old "linker prefer system library" problem
+    * Good explanation here
+        http://www.cmake.org/Wiki/CMake_2.6_Notes#Linking_to_System_Libraries
 
 ==========
 Misc
