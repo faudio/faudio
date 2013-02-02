@@ -1,5 +1,5 @@
 
-all : html pdf
+all : html
 # 
 # 
 # pdf:

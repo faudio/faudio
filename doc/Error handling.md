@@ -71,34 +71,20 @@ Non-recoverable errors are those that occur outside the control of the both libr
 user and the Audio Engine. They will usually log and terminate the process.
 
 
-<!-- 
-### Errors and callbacks {#ErrorCallback}
-
-TODO 
--->
-
-
 # Logging {#Logging}
 
 The Audio Engine provides a simple global logging system. The user can add messages
-to the log by calling @ref doremir_audio_engine_log, @ref
-doremir_audio_engine_log_info, @ref doremir_audio_engine_log_warning or @ref
-doremir_audio_engine_log_error. Non-recoverable errors are logged automatically.
+to the log by calling one of the following functions. Non-recoverable errors are
+added to the log automatically.
 
-The default log function does nothing. The [Doremir.AudioEngine](@ref DoremirAudioEngine)
-module provides a function to replace this function, and some default
-implementations that writes to the standard output, or to a specific log file.
+* [log](@ref doremir_audio_engine_log)
+* [logInfo](@ref doremir_audio_engine_log_info)
+* [logWarning](@ref doremir_audio_engine_log_warning)
+* [logError](@ref doremir_audio_engine_log_error)
 
-TODO
+The default log function does nothing. The [Doremir.AudioEngine][dae] module
+provides a function to replace this function, and some default implementations that
+writes to the standard output, or to a specific log file.
 
 
-@anchor ErrorsNote1
-
-<!--
-
-----------
-
-1. There are no functions returning `null` for any other purpose in the Audio
-Engine. This implies that null can never be used in other contexts: in particular
-it can not be passed to a queue or stored in a collection.
--->
+[dae]: @ref DoremirAudioEngine

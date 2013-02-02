@@ -73,43 +73,43 @@ destruction method to release it after use.
 #include <doremir/thread.h>
 #include <doremir/device/audio.h>
 
-typedef doremir_device_audio_t         device_t;
+typedef doremir_device_audio_t                                 device_t;
 typedef doremir_device_audio_session_t session_t;
-typedef doremir_device_audio_stream_t  stream_t_;
-typedef doremir_processor_t            processor_t;
+typedef doremir_device_audio_stream_t        stream_t_;
+typedef doremir_processor_t                                                processor_t;
 
 int main (int argc, char const *argv[])
-{     
-  session_t session;
-  session = doremir_device_audio_begin_session();
+{                 
+        session_t session;
+        session = doremir_device_audio_begin_session();
 
-  if (doremir_check(session)) {
-    doremir_error_log(session);
-    return;
-  }
+        if (doremir_check(session)) {
+                doremir_error_log(session);
+                return;
+        }
 
-  {
-    device_t    input, output;
-    processor_t proc;
-    stream_t    stream
-    
-    proc   = doremir_processor_identity();
-    input  = doremir_pair_fst(doremir_device_audio_default(session));
-    output = doremir_pair_snd(doremir_device_audio_default(session));
-    stream = doremir_device_audio_start_stream(input, proc, output);
+        {
+                device_t                input, output;
+                processor_t proc;
+                stream_t                stream
+                
+                proc         = doremir_processor_identity();
+                input        = doremir_pair_fst(doremir_device_audio_default(session));
+                output = doremir_pair_snd(doremir_device_audio_default(session));
+                stream = doremir_device_audio_start_stream(input, proc, output);
 
-    if (doremir_check(stream)) {
-      doremir_error_log(stream);
-      exit(-1);
-    }
+                if (doremir_check(stream)) {
+                        doremir_error_log(stream);
+                        exit(-1);
+                }
 
-    doremir_thread_sleep(5000);
-    
-    doremir_device_audio_stop_stream(stream);
-    doremir_destroy(proc);
-  }
+                doremir_thread_sleep(5000);
+                
+                doremir_device_audio_stop_stream(stream);
+                doremir_destroy(proc);
+        }
 
-  doremir_device_audio_end_session(session);
+        doremir_device_audio_end_session(session);
 }
 ~~~~
 
@@ -127,42 +127,42 @@ doremir_error_log), or any user defined function.
 #include <doremir/thread.h>
 #include <doremir/device/audio.h>
 
-typedef doremir_ptr_t                   ptr_t;
-typedef doremir_device_audio_t          device_t;
-typedef doremir_device_audio_session_t  session_t;
-typedef doremir_device_audio_stream_t   stream_t_;
-typedef doremir_processor_t             processor_t;
+typedef doremir_ptr_t                  ptr_t;
+typedef doremir_device_audio_t         device_t;
+typedef doremir_device_audio_session_t session_t;
+typedef doremir_device_audio_stream_t  stream_t_;
+typedef doremir_processor_t            processor_t;
 
 stream_t run_callback(stream_t stream)
 {
-  doremir_thread_sleep(doremir_seconds(10));
-  return stream;
+        doremir_thread_sleep(doremir_seconds(10));
+        return stream;
 }
 
 session_t session_callback(ptr_t data, session_t session)
 {
-  device_t  input, output;
-  processor_t proc;
+        device_t        input, output;
+        processor_t     proc;
 
-  proc   = doremir_processor_identity();
-  input  = doremir_pair_fst(doremir_device_audio_default(session));
-  output = doremir_pair_snd(doremir_device_audio_default(session));
-  
-  doremir_device_audio_with_stream(
-    input, processor, output,
-    run_callback, doremir_error_log, NULL
-  );
+        proc    = doremir_processor_identity();
+        input   = doremir_pair_fst(doremir_device_audio_default(session));
+        output  = doremir_pair_snd(doremir_device_audio_default(session));
+        
+        doremir_device_audio_with_stream(
+                input, processor, output,
+                run_callback, doremir_error_log, NULL
+        );
 
-  doremir_destroy(proc);
-  return session;
+        doremir_destroy(proc);
+        return session;
 }
 
 int main (int argc, char const *argv[])
 {
-  doremir_device_audio_with_session(
-    session_callback, NULL, 
-    doremir_error_log, NULL
-  );
+        doremir_device_audio_with_session(
+                session_callback, NULL, 
+                doremir_error_log, NULL
+        );
 }
 ~~~~
 
@@ -181,27 +181,27 @@ int main (int argc, char const *argv[])
 #include <doremir/thread.h>
 #include <doremir/device/file.h>
 
-typedef doremir_device_file_t  device_t;
-typedef doremir_processor_t    processor_t;
+typedef doremir_device_file_t   device_t;
+typedef doremir_processor_t     processor_t;
 
 int main (int argc, char const *argv[])
 {
-  device_t    input, output;
-  processor_t proc;
-  future_t    result;
+        device_t        input, output;
+        processor_t     proc;
+        future_t        result;
 
-  proc   = doremir_processor_identity();
-  input  = doremir_device_file_open(doremir_str("test/in.wav"));
-  output = doremir_device_file_open(doremir_str("test/out.wav"));
+        proc    = doremir_processor_identity();
+        input   = doremir_device_file_open(doremir_str("test/in.wav"));
+        output  = doremir_device_file_open(doremir_str("test/out.wav"));
 
-  result = doremir_device_file_run(in, out);
+        result  = doremir_device_file_run(in, out);
 
-  if (doremir_check(stream)) {
-    doremir_error_log(stream);
-    exit(-1);
-  }
+        if (doremir_check(stream)) {
+                doremir_error_log(stream);
+                exit(-1);
+        }
 
-  doremir_device_file_wait(stream);
+        doremir_device_file_wait(stream);
 }
 ~~~~
 
@@ -219,27 +219,27 @@ TODO
 #include <doremir/thread.h>
 #include <doremir/device/file.h>
 
-typedef doremir_device_file_t  device_t;
-typedef doremir_processor_t    processor_t;
+typedef doremir_device_file_t   device_t;
+typedef doremir_processor_t     processor_t;
 
 int main (int argc, char const *argv[])
 {
-  device_t    input, output;
-  processor_t proc;
-  future_t    result;
+        device_t        input, output;
+        processor_t     proc;
+        future_t        result;
 
-  proc   = doremir_processor_identity();
-  input  = doremir_device_buffer_open(doremir_buffer_create(1024));
-  output = doremir_device_buffer_open(doremir_buffer_create(1024));
+        proc    = doremir_processor_identity();
+        input   = doremir_device_buffer_open(doremir_buffer_create(1024));
+        output  = doremir_device_buffer_open(doremir_buffer_create(1024));
 
-  result = doremir_device_buffer_run(in, out);
+        result  = doremir_device_buffer_run(in, out);
 
-  if (doremir_check(stream)) {
-    doremir_error_log(stream);
-    exit(-1);
-  }
+        if (doremir_check(stream)) {
+                doremir_error_log(stream);
+                exit(-1);
+        }
 
-  doremir_device_buffer_wait(stream);
+        doremir_device_buffer_wait(stream);
 }
 ~~~~
 
