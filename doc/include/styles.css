@@ -4,10 +4,10 @@ body, table, div, p, dl {
 /*  font: 400 12px/18px Helvetica, sans-serif;*/
   background-color: #1a1a1a;
   color: #ccc;
-  font: 12px Arial;
+  font: 13.5px Arial;
   margin-left:8px;
   margin-right:8px;
-	line-height: 1.5;
+	line-height: 1.8;
 }
 
 
@@ -398,15 +398,15 @@ img.footer {
 
 
 span.keyword {
-	color: #ff9e10;
+	color: #ccc;
 	font-weight: bold;
 }
 span.keywordtype {
-	color: #ff9e10;
+	color: #ccc;
 	font-weight: bold;
 }
 span.keywordflow {
-	color: #ff9e10;
+	color: #ccc;
 	font-weight: bold;
 }
 
@@ -420,7 +420,7 @@ span.preprocessor {
 }
 
 span.stringliteral {
-	color: #f7237e;
+	color: #666;
 }
 
 span.charliteral {
@@ -1059,7 +1059,8 @@ div.toc {
         float: right;
         height: auto;
         margin: 0 20px 10px 10px;
-        width: 200px;
+        min-width: 200px;
+        width: 30%;
 }
 
 div.toc li {

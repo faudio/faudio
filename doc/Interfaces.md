@@ -110,8 +110,6 @@ To define a new interface, the following has to be provided:
 * An interface struct
 * An interface identifier
 
-## The interface structure {#DefStruct}
-
 The struct is simply a typedef defining the types of the interface, for example
 
 ~~~~
@@ -124,16 +122,12 @@ typedef struct {
 } doremir_order_t;
 ~~~~
 
-## The interface identifier {#DefId}
-
 The identifier should be defined as a macro or enum constant defining a unique
 number.
 
 ~~~~
 enum { doremir_order_i = 255; };
 ~~~~
-
-## Global generic functions {#DefGen}
 
 As described above, it is good style to also provide a generic function wrapping
 each method:

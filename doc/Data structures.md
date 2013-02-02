@@ -9,15 +9,25 @@
 
 The Audio Engine include a set of general purpose
 [persistent&nbsp;data&nbsp;structures][persistent], which are primarily used for
-message passing between threads. The fact that the data structures are persistent
-eliminate many of the problems commonly associated with multi-threaded programming
-and promotes a functional style. The data structures in the Audio Engine are
-somewhat different from the structures found in most functional languages, in that
-they have *single-ownership semantics*. This eliminates the need for a garbage
-collector while still allowing a functional programming style.
+message passing between the audio thread and the main thread. The fact that the
+data structures are persistent eliminate many of the problems commonly associated
+with multi-threaded programming and promotes a functional style.
+
+The data structures in the Audio Engine are somewhat different from the structures
+found in most languages, in that they have single-ownership semantics. This
+eliminates the need for a garbage collector while still allowing a high-level 
+interface.
+
+Note that there is no interface capturing the notion of a data structure: they are
+simply reference types obeying the conventions described below. However, all data
+structures support generic [equality](@ref doremir_equal_t) or 
+[ordering](@ref doremir_order_t), [copying](@ref doremir_copy_t) and 
+[destruction](@ref doremir_destroy_t).
 
 
 # Overview {#Overview}
+
+The core data structures are:
 
 Type                           | Semantics
 -------------------------------|------------------------------------------------------
@@ -27,6 +37,16 @@ Type                           | Semantics
 [Map](@ref DoremirMap)         | A set of ordered pairs
 [Graph](@ref DoremirGraph)     | A labeled, directed graph
 
+There is also a set of *mutable* data structures not included in this table. These
+are used internally in the Audio Engine and need rarely be accessed by the user. For
+completeness, they are:
+
+Type                                        | Semantics
+--------------------------------------------|------------------------------------------------------
+[Priority queue](@ref DoremirPriorityQueue) | A first-in, ordered out priority queue
+
+
+
 # Using data structures {#Conventions}
 
 ## Literals, read and show {#Literals}
@@ -34,9 +54,9 @@ Type                           | Semantics
 All data structures have literals defined in the [utility&nbsp;headers][util].
 These always evaluate to a newly created instance of the data structure.
 
-- `pair(1,2)`
-- `list(1,2,3)`
-- `set(1,2,3)`
+- `pair(i32(1), i32(2))`
+- `list(i32(1), i32(2), i32(3))`
+- `set(i32(1), i32(2), i32(3))`
 - `map(string("foo"),i32(1),string("bar"),i32(2))`
 - `graph(i32(1),i32(2),edge(i32(1),i32(2),i32(3)))`
 
@@ -45,6 +65,11 @@ These always evaluate to a newly created instance of the data structure.
 - `{1,2,3}`
 - `{foo:1,bar:2}`
 - `({1,2,3},{((1,2),"foo"),((1,3):"bar")})`
+
+@warning
+    Beware not to use a structure literal on an integer, you must use 
+    [value references](@ref ValueReferences).
+    
 
 ## Thread safety {#ThreadSafety}
 
