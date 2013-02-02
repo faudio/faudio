@@ -25,7 +25,11 @@ static plot_func_t  plot_func_g;
 static void*        plot_data_g;
 static long         plot_count_g;
 
+
+
 // -----------------------------------------------------------------------------
+
+// @cond internal
 
 @interface MyApplication : NSApplication
 {
@@ -168,6 +172,8 @@ static long         plot_count_g;
 }
 
 @end
+
+// @endcond internal
 
 
 // -----------------------------------------------------------------------------

@@ -79,12 +79,20 @@ void delete_event(doremir_event_t event)
 
 // --------------------------------------------------------------------------------
 
+/** Create an empty event. 
+    This event never occur.
+    @return         A new event.
+ */
 doremir_event_t doremir_event_never()
 {
     event_t e = new_event(never_event);
     return e;
 }
 
+/** Create a single event. 
+    This event occurs exactly once at scheduling time.
+    @return         A new event.
+ */
 doremir_event_t doremir_event_now(doremir_ptr_t value)
 {
     event_t e = new_event(now_event);
@@ -92,6 +100,11 @@ doremir_event_t doremir_event_now(doremir_ptr_t value)
     return e;
 }
 
+/** Delay an event by the given amount of time.
+    @param time     Amount of time to delay.
+    @param event2   Event to delay.
+    @return         A new event.
+ */
 doremir_event_t doremir_event_delay(doremir_time_t time,
                                     doremir_event_t event)
 {   
@@ -104,6 +117,12 @@ doremir_event_t doremir_event_delay(doremir_time_t time,
     return e;
 }
 
+/** Merge to events.
+    The resulting event has all occurances of the given events.
+    @param event1   Event to merge.
+    @param event2   Event to merge.
+    @return         A new event.
+ */
 doremir_event_t doremir_event_merge(doremir_event_t event1,
                                     doremir_event_t event2)
 {
@@ -119,6 +138,12 @@ doremir_event_t doremir_event_merge(doremir_event_t event1,
     return e;
 }
 
+/** Create an event that switches from one event to another at a given time.
+    @param trigger  Triggering event.
+    @param event1   Behave as this event before the trigger occurs.
+    @param event2   Behave as this event after the trigger occurs.
+    @return         A new event.
+ */
 doremir_event_t doremir_event_switch(doremir_event_t pred,
                                      doremir_event_t event1,
                                      doremir_event_t event2)

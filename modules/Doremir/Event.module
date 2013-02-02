@@ -1,6 +1,8 @@
 
 /** 
     @addtogroup DoremirEvent
+    
+    Functional scheduler events.
 
     @par Literals
     - `never()`
@@ -34,15 +36,14 @@ module Doremir.Event
     now     : Ptr -> Event;
     delay   : (Time,Event) -> Event;
 
-    // head   : Event -> Event;
-    head    : Event -> Event;
-    tail    : Event -> Event;
     merge   : (Event,Event) -> Event;               // rename merge
     switch  : (Event,Event,Event) -> Event;
     destroy : Event -> Void;
 
     // Non-pure
     // TODO unify with Sender/Receiver paradigm
+    head    : Event -> Event;
+    tail    : Event -> Event;
     external : () -> Event;
     send : (Ptr,Event) -> Void; // Sets value
     
