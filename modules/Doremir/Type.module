@@ -2,7 +2,7 @@
 /**
     @addtogroup DoremirType
     
-    Provides signal types.
+    Provides audio types.
 
     Type            | Description
     ----------------| ----------------------------

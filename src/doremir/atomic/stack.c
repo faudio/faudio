@@ -62,6 +62,10 @@ static inline void delete_stack(atomic_stack_t stack)
 
 // --------------------------------------------------------------------------------
 
+/** Create a new stack.
+    @par Atomicity
+        Non-atomic
+ */
 doremir_atomic_stack_t doremir_atomic_stack_create()
 {
     atomic_stack_t stack = new_stack();
@@ -69,6 +73,10 @@ doremir_atomic_stack_t doremir_atomic_stack_create()
     return stack;
 }
 
+/** Destroy the given stack.
+    @par Atomicity
+        Non-atomic
+ */
 void doremir_atomic_stack_destroy(doremir_atomic_stack_t stack)
 {
     // TODO
@@ -78,13 +86,24 @@ void doremir_atomic_stack_destroy(doremir_atomic_stack_t stack)
 
 // --------------------------------------------------------------------------------
 
+/** Write the given value to the given stack.
+    @param stackr   Queue.
+    @param value    Value to write (optional).
+    @par Atomicity
+        Atomic
+ */
 bool doremir_atomic_stack_write(doremir_atomic_stack_t stack, doremir_ptr_t value)
 {
     // TODO
     return true;
 }
 
-// FIXME return Optional?
+/** Read a value from the given stack.
+    @return 
+        A value (optional).
+    @par Atomicity
+        Atomic
+ */
 doremir_ptr_t doremir_atomic_stack_read(doremir_atomic_stack_t stack)
 {
     // TODO

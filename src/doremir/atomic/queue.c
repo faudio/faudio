@@ -108,6 +108,8 @@ static inline void delete_range_end(atomic_t begin, atomic_t end)
 // --------------------------------------------------------------------------------
 
 /** Create a new queue.
+    @par Atomicity
+        Non-atomic
  */
 doremir_atomic_queue_t doremir_atomic_queue_create()
 {
@@ -122,6 +124,8 @@ doremir_atomic_queue_t doremir_atomic_queue_create()
 }
 
 /** Destroy the given queue.
+    @par Atomicity
+        Non-atomic
  */
 void doremir_atomic_queue_destroy(doremir_atomic_queue_t queue)
 {
@@ -135,6 +139,8 @@ void doremir_atomic_queue_destroy(doremir_atomic_queue_t queue)
 /** Write the given value to the given queue.
     @param queuer   Queue.
     @param value    Value to write (optional).
+    @par Atomicity
+        Atomic
  */
 bool doremir_atomic_queue_write(doremir_atomic_queue_t queue, doremir_ptr_t value)
 {
@@ -153,6 +159,8 @@ bool doremir_atomic_queue_write(doremir_atomic_queue_t queue, doremir_ptr_t valu
 /** Read a value from the given queue.
     @return 
         A value (optional).
+    @par Atomicity
+        Atomic
  */
 doremir_ptr_t doremir_atomic_queue_read(doremir_atomic_queue_t queue)
 {

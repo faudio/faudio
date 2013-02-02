@@ -8,90 +8,125 @@
 @note
     This page is under construction.
 
-TODO signals and processors
+The core abstrations in the Audio Engine are *signals* and *processors*, both of
+which have simple and precise definitions:
+
+* A *signal* is a function of time. An example is the sinusoid \f$ y(t)=sin(2\pi\,440) \f$.
+
+* A *processor* a function from a signal to a signal. An example is the attenuator
+\f$ y(t)=x(t)*0.5 \f$.
+
+Both signals and processors can be built by *composition* of simple values: signals
+can be composed to create multichannel signals, and processors can be composed to
+create more complex processing algorithms. Signals and processors interact by
+abstraction and application: a function from signals to signals can be *lifted*
+to a processor, and the application of a processor to a signal yields a signal.
+
+While many signals can be described by simple formulas such as the preceding, some
+signals are extremely complex and requires simplification to be represented in a
+computer system. The Audio Engine hides this complexity from you by representing
+all signals and processors by opaque types. Because signals are continuous, there
+is no notion of a sample rate in a signal value, these are handled by
+[devices](@ref Devices).
+
 
 # Audio types {#SignalTypes}
 
-TODO
+Each signal has an associated *audio type*, describing the range of the
+time function. Audio types are grouped into *simple*, *compound* and *special*.
+For the runtime representation of audio types, see [this module](@ref DoremirType).
 
 ## Simple types {#Simple}
 
-The *simple* types represent a single audio sample. They can be grouped into
-*integer* and *floating-point* types.
+The *simple* audio types represent the amplitude range of the signal. They can be
+grouped into *fixed-point* and *floating-point* types. As expected, the Audio
+Engine processes fixed point data use modulo arithmetic, and floating-point data
+types use floating-point arithmetic.
 
-### Integer types {#Int}
+Note that while many most modern signal processing applications usually rely mostly
+on floating-point arithmetic, there are some algorithms and processors that benefit
+from using fixed-point arithmetic. The Audio Engine allow the client to mix the
+types of audio signals freely in a single application.
+
+
+### Fixed-point types {#Int}
 
 Type  | Description
 ------|------------------------------------------------------------------------
-`i8`  | A 8-bit integer sample, range from \f$0\f$ to \f$2^{8}  - 1\f$
-`i16` | A 16-bit integer sample, range from \f$0\f$ to \f$2^{16} - 1\f$
-`i32` | A 32-bit integer sample, range from \f$0\f$ to \f$2^{32} - 1\f$
-`i64` | A 64-bit integer sample, range from \f$0\f$ to \f$2^{64} - 1\f$
+`i8`  | A 8-bit fixed-point sample, range from \f$0\f$ to \f$2^{8}  - 1\f$
+`i16` | A 16-bit fixed-point sample, range from \f$0\f$ to \f$2^{16} - 1\f$
+`i32` | A 32-bit fixed-point sample, range from \f$0\f$ to \f$2^{32} - 1\f$
+`i64` | A 64-bit fixed-point sample, range from \f$0\f$ to \f$2^{64} - 1\f$
 
 ### Floating-point types {#Float}
 
 Type  | Description
 ------|------------------------------------------------------------------------
-`f32` | A 32-bit floating point sample, usually ranging from \f$-1\f$ to \f$1\f$
-`f64` | A 64-bit floating point sample, usually ranging from \f$-1\f$ to \f$1\f$
-
-Note that while most signal processing libraries use 32-bit or 64-bit floating
-point there are some algorithms and processors that benefit from using integer
-arithmetic rather than floating point. The type system allow the client to mix the
-types of audio signals freely in a single application.
+`f32` | A 32-bit floating-point sample, usually ranging from \f$-1\f$ to \f$1\f$
+`f64` | A 64-bit floating-point sample, usually ranging from \f$-1\f$ to \f$1\f$
 
 
 ## Compound types {#Compound}
 
+The *compound* audio types are created by the combination of (simple or compound) audio 
+types, written as follows.
+
+Type            | Description
+----------------|-----------------------------
+`(a, a)`        | pair of \f$a\f$ and \f$b\f$
+`[a x N]`       | vector of \f$a\f$
+`{a}`           | frame of \f$a\f$
+
+
 ### Pairs {#Pairs}
 
-Pairs, written as `(a,b)`, represent multichannel audio. For example, given a
-single audio channel of type `f32`, a stereo version of the signal would have the
-type `(f32,f32)`. The components of a pair need not be the same, and can be any
-type.
+Pairs represent multichannel audio of possibly different types. For example, a
+signal of 2 channels of 32-bit floating point audio would have the type `(f32,f32)`.
 
 More complex channel configurations can be constructed by nested pairs. For example
 a a three-channel stream could be represented as `(a,(b,c))`. Note that by
-convention, nested pairs associate to the right. 
-
-<!--
-The multichannel functions can be
-used to quickly construct a multichannel type.
--->
+convention, nested pairs associate to the right.
 
 ### Vectors {#Vectors}
 
-Vectors, written as `[a x N]` where `N` is a whole number, represent resampled
-audio. For example, an upsampling processor might take a signal of type `{f32}` as
-input, and return a signal of type `[{f32} x 2]` as output, meaning that the output
-have twice the amount of samples as the input. A downsampling processor might in
-turn take an input of type `[{f32} x 2]` and output a signal of type `{f32}`.
+Vectors represent multichannel audio of a single type. The vector type `[a x 1]` is
+equivalent to `a`, and `[a x N]` is equivalent to `(a,[a x N-1])`. For example, a signal
+of 10 channels of 32-bit floating point audio would have the type `[f32 x 10]`.
 
-<!--
-A signal of type `[a x 1]` is equivalent to `a`, a signal of type `[a x 2]` to
-`(a,a)`, of `[a x 3]` to `(a,(a,a))` and so on. Because of this correspondence of
-vectors and pairs, vectors can be used to encode multichannel audio of a single
-type, i.e. instead of `(f32,(f32,f32))` one can use `[f32 x 3]`.
--->
+Vectors can also be used to represent resampled audio. For example, an upsampling
+processor might take a signal of type `{f32}` as input, and return a signal of type
+`[{f32} x 2]` as output, meaning that the output have twice the amount of samples
+as the input. A downsampling processor might in turn take an input of type `[{f32}
+x 2]` and output a signal of type `{f32}`.
 
 Vectors and pairs can be used together to represent different kinds of interleaved
 samples. For example `[(f32,f32) x 1024]` means a sequence of 1024 pairs of
 samples, while `([f32 x 1024],[f32 x 1024])` means a pair of sequences of 1024
 samples.
 
-
 ### Frames {#Frames}
 
-Frames, written as `{a}` are special vectors of an unspecified length. The actual
+Frames are special vectors of an unspecified length. The actual
 amount of samples in a frame is determined at runtime and may vary during a single
 audio session. The *buffer size* of an audio stream is the maximum length of a
-vector, and is typically a multiple of two.
+frame, and is typically a multiple of two.
 
 
 ## Special types {#Special}
 
-### Signal type {#SigType}
-### Processor type {#ProcType}
+The *special* types are the types of signals and processors, written as follows.
+
+Type            | Description
+----------------|-----------------------------
+`~a`            | signal of \f$a\f$
+`a ~> b`        | processor from \f$a\f$ to \f$b\f$
+
+
+
+
+
+
+
 
 # Using signals {#Comb}
 

@@ -10,10 +10,10 @@
     - `later(t,v)`
     - `delay(t,x)`
     - `merge(x,y)`
-    - `switch(p,x,y)`
+    - `switch_(p,x,y)`
 
     @par Display
-    - `<Now>`
+    - `<Event @1000ms 3.1415>`
     
 
     @par Implements 

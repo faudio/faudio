@@ -39,7 +39,7 @@ initiate a session. The initialization of a session may fail, for example if the
 underlying audio system is already being used by an exclusive process. If it
 succeeds, a handle to the underlying session is provided. This handle allow the
 user to inspect the set of devices available in the sesssion. The client may then
-open a stream ...
+open a stream.
 
 TODO
 
@@ -64,19 +64,14 @@ TODO
 
 ### Acquire-release style {#AudioAR}
 
-To use a real-time device in imperative fashion, the typical paired method pattern
-should be used. You call a creation method to get a session or stream, and a
-destruction method to release it after use.
+The acquire-release style use a paired method pattern. You call a creation method
+to get a value, and a destruction method to release. Note that devices, sessions and
+streams have single-ownership semantics.
 
 ~~~~
-#include <doremir/time.h>
-#include <doremir/thread.h>
 #include <doremir/device/audio.h>
-
-typedef doremir_device_audio_t          device_t;
-typedef doremir_device_audio_session_t  session_t;
-typedef doremir_device_audio_stream_t   stream_t_;
-typedef doremir_processor_t             processor_t;
+#include <doremir/thread.h>
+#include <doremir/util.h>
 
 int main (int argc, char const *argv[])
 {
@@ -84,58 +79,65 @@ int main (int argc, char const *argv[])
     device_t        input, output;
     processor_t     proc;
     stream_t        stream
+    
+    // Processor to use
+    proc =  sequence(
+                parallel(
+                    identity(f32), 
+                    constant(type(f32), type(f32), f32(0.5))), 
+                multiply(type(f32)));
+    
+    // Begin session
+    session = begin_audio_session();
 
-    session = doremir_device_audio_begin_session();
-
-    if (doremir_check(session)) {
-        doremir_error_log(session);
+    // Handle possible error
+    if (check(stream)) {
+        error_log(stream);
         goto cleanup;
     }
 
-    // Session is active, now we can access devices
-    proc   = doremir_processor_identity();
-    input  = doremir_pair_fst(doremir_device_audio_default(session));
-    output = doremir_pair_snd(doremir_device_audio_default(session));
-    stream = doremir_device_audio_start_stream(input, proc, output);
+    // Session obtained, we can now access devices
+    input  = default_audio_input(session);
+    output = default_audio_output(session);
+    
+    // Start stream
+    stream = start_stream(input, proc, output);
 
-    if (doremir_check(stream)) {
-        doremir_error_log(stream);
+    // Handle possible error
+    if (check(stream)) {
+        error_log(stream);
         goto cleanup;
     }
 
-    // Wait while stream is running
-    doremir_thread_sleep(5000);
+    // Stream active, let it run for 5 seconds
+    sleep(5000);
 
     // Cleanup
 cleanup:
-    doremir_device_audio_stop_stream(stream);
+    doremir_destroy(stream);
     doremir_destroy(proc);
-    doremir_device_audio_end_session(session);
+    doremir_destroy(session);
 }
 ~~~~
 
 
 ### Callback style {#AudioCB}
 
-The callback style API use inversion of control to hide acquire-release pattern.
-You provide a callback to be invoked when the session or stream is valid, and the
-destruction is handled automatically after this method has returned. Errors are
-handled by a special callback, to which you can pass [Doremir.Error.log](@ref
-doremir_error_log), or any user defined function.
+The callback style require that you provide a callback to be invoked when the
+session or stream is valid. Destruction is handled automatically after this method
+has returned. Errors are handled by a special callback, to which you can pass
+[doremir_error_log](@ref doremir_error_log), or a user defined function.
 
 ~~~~
 #include <doremir/time.h>
 #include <doremir/thread.h>
 #include <doremir/device/audio.h>
 
-typedef doremir_device_audio_t          device_t;
-typedef doremir_device_audio_session_t  session_t;
-typedef doremir_device_audio_stream_t   stream_t_;
-typedef doremir_processor_t             processor_t;
-
 stream_t run_callback(stream_t stream)
 {
-    doremir_thread_sleep(doremir_seconds(10));
+    // Stream active, let it run for 5 seconds
+    sleep(doremir_seconds(10));
+
     return stream;
 }
 
@@ -144,12 +146,14 @@ session_t session_callback(void* data, session_t session)
     device_t    input, output;
     processor_t proc;
 
-    proc    = doremir_processor_identity();
-    input   = doremir_pair_fst(doremir_device_audio_default(session));
-    output  = doremir_pair_snd(doremir_device_audio_default(session));
+    // Session obtained, we can now access devices
+    input  = default_audio_input(session);
+    output = default_audio_output(session);
+    proc    = (processor_t*) data;
 
-    doremir_device_audio_with_stream(
-        input, processor, output,
+    // Start stream
+    with_audio_stream(
+        input, proc, output,
         run_callback, doremir_error_log, NULL
     );
 
@@ -158,9 +162,17 @@ session_t session_callback(void* data, session_t session)
 }
 
 int main (int argc, char const *argv[])
-{
-    doremir_device_audio_with_session(
-        session_callback, NULL,
+{                  
+    // Processor to use
+    proc =  sequence(
+                parallel(
+                    identity(f32), 
+                    constant(type(f32), type(f32), f32(0.5))), 
+                multiply(type(f32)));
+    
+    // Begin session
+    with_audio_session(
+        session_callback, proc,
         doremir_error_log, NULL
     );
 }

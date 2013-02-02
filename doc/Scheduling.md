@@ -1,6 +1,7 @@
 
 # Events and scheduling {#Scheduling}
 
+@anchor Events
 @anchor Scheduling
 @tableofcontents
 
