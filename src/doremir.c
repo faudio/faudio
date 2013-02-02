@@ -384,6 +384,12 @@ doremir_ptr_t doremir_move(doremir_ptr_t a)
     return a;
 }
 
+bool doremir_check(doremir_ptr_t a)
+{
+    bool doremir_error_check(doremir_ptr_t a);
+    return doremir_error_check(a);
+}
+
 // --------------------------------------------------------------------------------
 // Wrapped implementations
 // --------------------------------------------------------------------------------
