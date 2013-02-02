@@ -122,7 +122,7 @@ bool doremir_midi_is_sysex(doremir_midi_t midi)
 /** Return the status byte of given midi message.
  */
 doremir_midi_status_t doremir_midi_status(doremir_midi_t midi)
-{               
+{
     assert(is_simple(midi) && "Not a simple message");
     return midi->data.simple[0] & 0x0f;
 }

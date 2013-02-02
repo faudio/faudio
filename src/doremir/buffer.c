@@ -125,13 +125,13 @@ void doremir_buffer_poke(doremir_buffer_t buffer, size_t index, uint8_t value)
 double doremir_buffer_peek_double(doremir_buffer_t buffer, size_t index)
 {
     assert(index * sizeof(double) < buffer->size && "Buffer overflow");
-    return ((double*) buffer->data)[index];
+    return ((double *) buffer->data)[index];
 }
 
 void doremir_buffer_poke_double(doremir_buffer_t buffer, size_t index, double value)
 {
     assert(index * sizeof(double) < buffer->size && "Buffer overflow");
-    ((double*) buffer->data)[index] = value;
+    ((double *) buffer->data)[index] = value;
 }
 
 
@@ -178,9 +178,9 @@ doremir_pair_t doremir_buffer_read_audio(doremir_string_file_path_t path)
     buffer = doremir_buffer_resize(sz * sizeof(double), buffer);
 
     if (info.channels == 1) {
-        type = type_vector(type(double), info.frames);
+        type = type_vector(type(f64), info.frames);
     } else if (info.channels == 2) {
-        type = type_vector(type_pair(type(double), type(double)), info.frames);
+        type = type_vector(type_pair(type(f64), type(f64)), info.frames);
     } else {
         buffer_fatal("Unknown buffer type", info.channels);
     }

@@ -49,12 +49,12 @@ module Doremir.Type
 
     type Frames = Size;
     type Simple = enum { 
-        Uint8Type, 
-        Uint16Type, 
-        Uint32Type, 
-        Uint64Type,
-        FloatType,
-        DoubleType,
+        I8Type, 
+        I16Type, 
+        I32Type, 
+        I64Type,
+        F32Type,
+        F64Type,
         PtrType 
     };
 

@@ -265,38 +265,38 @@ void test_type()
     // FIXME
     test_section("Types");
 
-    doremir_print("type(uint8)                  ==> %s\n", type(uint8));
-    doremir_print("size_of(1024,type(uint8))    ==> %s\n", i32(doremir_type_size_of(1024, type(uint8))));
-    doremir_print("align_of(1024,type(uint8))   ==> %s\n", i32(doremir_type_align_of(type(uint8))));
+    doremir_print("type(i8)                  ==> %s\n", type(i8));
+    doremir_print("size_of(1024,type(i8))    ==> %s\n", i32(doremir_type_size_of(1024, type(i8))));
+    doremir_print("align_of(1024,type(i8))   ==> %s\n", i32(doremir_type_align_of(type(i8))));
     printf("\n");
 
-    doremir_print("type(double)                 ==> %s\n", type(double));
-    doremir_print("size_of(1024,type(double))   ==> %s\n", i32(doremir_type_size_of(1024, type(double))));
-    doremir_print("align_of(1024,type(double))  ==> %s\n", i32(doremir_type_align_of(type(double))));
+    doremir_print("type(f64)                 ==> %s\n", type(f64));
+    doremir_print("size_of(1024,type(f64))   ==> %s\n", i32(doremir_type_size_of(1024, type(f64))));
+    doremir_print("align_of(1024,type(f64))  ==> %s\n", i32(doremir_type_align_of(type(f64))));
     printf("\n");
 
-    type_t t = type_pair(type(uint8), type(double));
+    type_t t = type_pair(type(i8), type(f64));
     doremir_print("t                            ==> %s\n", t);
     doremir_print("size_of(1024,t)              ==> %s\n", i32(doremir_type_size_of(1024, t)));
     doremir_print("align_of(1024,t)             ==> %s\n", i32(doremir_type_align_of(t)));
     printf("\n");
 
-    type_t u = type_pair(type_vector(type(uint8), 10), type(double));
+    type_t u = type_pair(type_vector(type(i8), 10), type(f64));
     doremir_print("u                            ==> %s\n", u);
     doremir_print("size_of(1024,u)              ==> %s\n", i32(doremir_type_size_of(1024, u)));
     doremir_print("align_of(1024,u)             ==> %s\n", i32(doremir_type_align_of(u)));
     printf("\n");
 
-    type_t u2 = type_pair(type_frame(type(uint8)), type(double));
+    type_t u2 = type_pair(type_frame(type(i8)), type(f64));
     doremir_print("u2                           ==> %s\n", u2);
     doremir_print("size_of(1024,u2)             ==> %s\n", i32(doremir_type_size_of(1024, u2)));
     doremir_print("align_of(1024,u2)            ==> %s\n", i32(doremir_type_align_of(u2)));
     printf("\n");
 
-    type_t v = type_pair(type(uint8), type_pair(type(uint8), type_pair(type(uint8),
-                         type_pair(type(uint8), type_pair(type(uint8), type_pair(type(uint8),
-                                   type_pair(type(uint8), type_pair(type(uint8), type_pair(type(uint8),
-                                           type(uint8))))))))));
+    type_t v = type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
+                         type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
+                                   type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
+                                           type(i8))))))))));
 
     doremir_print("v                            ==> %s\n", v);
     doremir_print("size_of(1024,v)              ==> %s\n", i32(doremir_type_size_of(1024, v)));
@@ -975,7 +975,7 @@ void test_map()
         a = doremir_map_add(string("skills"), list(string("programming"), string("composition")), a);
 
         // a = doremir_map_add(string("notes"), doremir_midi_create_simple(note_on, 60, 127), a);
-        // a = doremir_map_add(string("types"), type_pair(type(uint8),type(uint8)), a);
+        // a = doremir_map_add(string("types"), type_pair(type(i8),type(i8)), a);
         a = doremir_map_add(string("happy"), b(true), a);
         a = doremir_map_add(string("pair"), pair(b(true), d(3.1415)), a);
 
@@ -1040,7 +1040,7 @@ time_t execute_events(priority_queue_t q, time_t t)
             event_t t = doremir_event_tail(x);
 
             doremir_audio_engine_log_error(string_dappend(string("Firing event: "), doremir_string_show(h)));
-            
+
             // TODO should compare against never?
             if (t) {
                 doremir_audio_engine_log_warning(string("Reinsert"));
@@ -1113,7 +1113,7 @@ void test_processors()
     test_section("Processors");
     {
         processor_t p, q;
-        p = doremir_processor_unary(type(uint8), type(uint8), add1234, NULL);
+        p = doremir_processor_unary(type(i8), type(i8), add1234, NULL);
         q = doremir_processor_seq(p, p);
         doremir_print("p                            ==> %s\n", p);
         doremir_print("bufferSize(p)                ==> %s\n", i32(doremir_processor_buffer_size(1, p)));
@@ -1121,7 +1121,7 @@ void test_processors()
 
     {
         processor_t p, q;
-        p = doremir_processor_unary(type(uint8), type(uint8), add1234, NULL);
+        p = doremir_processor_unary(type(i8), type(i8), add1234, NULL);
         q = doremir_processor_seq(p, p);
         doremir_print("p                            ==> %s\n", p);
         doremir_print("seq(p,p)                     ==> %s\n", q);
@@ -1130,7 +1130,7 @@ void test_processors()
 
     {
         processor_t p, q;
-        p = doremir_processor_unary(type(uint8), type(uint8), add1234, NULL);
+        p = doremir_processor_unary(type(i8), type(i8), add1234, NULL);
         q = doremir_processor_par(p, p);
         doremir_print("p                            ==> %s\n", p);
         doremir_print("q                            ==> %s\n", p);
@@ -1140,7 +1140,7 @@ void test_processors()
 
     {
         processor_t p0, p, q;
-        p0 = doremir_processor_unary(type(uint8), type(uint8), add1234, NULL);
+        p0 = doremir_processor_unary(type(i8), type(i8), add1234, NULL);
         p = doremir_processor_par(p0, p0);
         q = doremir_processor_loop(p);
         doremir_print("p                            ==> %s\n", p);
@@ -1149,10 +1149,10 @@ void test_processors()
     }
 
     {
-        type_t t = type_pair(type(uint8), type_pair(type(uint8), type_pair(type(uint8),
-                             type_pair(type(uint8), type_pair(type(uint8), type_pair(type(uint8),
-                                       type_pair(type(uint8), type_pair(type(uint8), type_pair(type(uint8),
-                                               type(uint8))))))))));
+        type_t t = type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
+                             type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
+                                       type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
+                                               type(i8))))))))));
 
         processor_t p = doremir_processor_identity(t);
         doremir_print("p                            ==> %s\n", p);
@@ -1203,12 +1203,13 @@ void test_plot()
 void test_plot_buffer()
 {
     buffer_t buf = doremir_buffer_create(44100 * sizeof(double));
-    for(int i = 0; i < 44100; ++i)
-    {
+
+    for (int i = 0; i < 44100; ++i) {
         double r = (double) random() / RAND_MAX;
         double x = (double) i / 44100;
-        doremir_buffer_poke_double(buf, i, (r*2-1) * sin(x*10));
+        doremir_buffer_poke_double(buf, i, (r * 2 - 1) * sin(x * 10));
     }
+
     doremir_plot_buffer_double(buf, NULL, NULL);
 }
 

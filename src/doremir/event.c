@@ -79,7 +79,7 @@ void delete_event(doremir_event_t event)
 
 // --------------------------------------------------------------------------------
 
-/** Create an empty event. 
+/** Create an empty event.
     This event never occur.
     @return         A new event.
  */
@@ -89,7 +89,7 @@ doremir_event_t doremir_event_never()
     return e;
 }
 
-/** Create a single event. 
+/** Create a single event.
     This event occurs exactly once at scheduling time.
     @return         A new event.
  */
@@ -107,7 +107,7 @@ doremir_event_t doremir_event_now(doremir_ptr_t value)
  */
 doremir_event_t doremir_event_delay(doremir_time_t time,
                                     doremir_event_t event)
-{   
+{
     // delay t (merge x y) = delay t x `merge` delay t u
     // delay t (delay u)   = delay (t + u)
 
@@ -130,7 +130,7 @@ doremir_event_t doremir_event_merge(doremir_event_t event1,
     // merge (merge x y) z = merge x (merge y z)
     // merge x never       = x
     // merge x y           = merge y x
-    
+
     // TODO invariant left <= right
     event_t e = new_event(merge_event);
     merge_get(e, left)   = event1;
@@ -286,8 +286,7 @@ doremir_event_t doremir_event_tail(doremir_event_t event)
             // OK because of invariant in merge impl
             return merge_get(event, right);
 
-        case switch_event:
-        {                                          
+        case switch_event: {
             event_t p = switch_get(event, pred);
             event_t tx = doremir_event_tail(switch_get(event, before));
             event_t ty = doremir_event_tail(switch_get(event, after));

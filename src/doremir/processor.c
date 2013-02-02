@@ -238,7 +238,7 @@ float   prim_add_f32_f32(ptr_t c, float a, float b)
 
 doremir_processor_t doremir_processor_add(doremir_type_t type)
 {
-    return (processor_t) doremir_processor_unary(type(uint8), type(uint8), (unary_t) prim_add_i8_i8, NULL);
+    return (processor_t) doremir_processor_unary(type(i8), type(i8), (unary_t) prim_add_i8_i8, NULL);
 }
 
 doremir_processor_t doremir_processor_subtract(doremir_type_t type)

@@ -22,7 +22,7 @@ struct _doremir_type_t {
     }                       tag;
 
     union {
-        simple_t            simple;         //  i8, i16 ... ptr
+        simple_t            simple;         //  to, i16 ... ptr
 
         struct {
             ptr_t           fst;
@@ -189,7 +189,7 @@ bool doremir_type_is_frame(doremir_type_t type)
 /** Return the simple type.
  */
 doremir_type_simple_t doremir_type_get_simple(doremir_type_t t)
-{            
+{
     assert(is_simple(t) && "Not a simple type");
     return simple_get(t);
 }
@@ -250,22 +250,22 @@ inline static size_t next_aligned(size_t x, size_t a)
 inline static size_t simple_align(doremir_type_simple_t simple)
 {
     switch (simple) {
-        case uint8_type:
+        case i8_type:
             return alignof(uint8_t);
 
-        case uint16_type:
+        case i16_type:
             return alignof(uint16_t);
 
-        case uint32_type:
+        case i32_type:
             return alignof(uint32_t);
 
-        case uint64_type:
+        case i64_type:
             return alignof(uint64_t);
 
-        case float_type:
+        case f32_type:
             return alignof(float);
 
-        case double_type:
+        case f64_type:
             return alignof(double);
 
         case ptr_type:
@@ -279,22 +279,22 @@ inline static size_t simple_align(doremir_type_simple_t simple)
 inline static size_t simple_size(doremir_type_simple_t simple)
 {
     switch (simple) {
-        case uint8_type:
+        case i8_type:
             return sizeof(uint8_t);
 
-        case uint16_type:
+        case i16_type:
             return sizeof(uint16_t);
 
-        case uint32_type:
+        case i32_type:
             return sizeof(uint32_t);
 
-        case uint64_type:
+        case i64_type:
             return sizeof(uint64_t);
 
-        case float_type:
+        case f32_type:
             return sizeof(float);
 
-        case double_type:
+        case f64_type:
             return sizeof(double);
 
         case ptr_type:
@@ -426,22 +426,22 @@ bool type_equal(doremir_ptr_t a, doremir_ptr_t b)
 inline static string_t simple_show(doremir_type_simple_t simple)
 {
     switch (simple) {
-        case uint8_type:
-            return string("i8");
+        case i8_type:
+            return string("to");
 
-        case uint16_type:
+        case i16_type:
             return string("i16");
 
-        case uint32_type:
+        case i32_type:
             return string("i32");
 
-        case uint64_type:
+        case i64_type:
             return string("i64");
 
-        case float_type:
+        case f32_type:
             return string("f32");
 
-        case double_type:
+        case f64_type:
             return string("f64");
 
         case ptr_type:
