@@ -25,40 +25,41 @@ module Doremir.Event
     import Doremir;
     import Doremir.Std;
     import Doremir.Time;
+    import Doremir.Atomic.Queue;
 
     /** @typedef doremir_buffer_t
         The buffer. 
      */
     type Event = opaque;
 
-    // Prim
     never   : () -> Event;
     now     : Ptr -> Event;
     delay   : (Time,Event) -> Event;
-
     merge   : (Event,Event) -> Event;               // rename merge
     switch  : (Event,Event,Event) -> Event;
     destroy : Event -> Void;
 
-    // Non-pure
-    // TODO unify with Sender/Receiver paradigm
-    head    : Event -> Event;
-    tail    : Event -> Event;
-    external : () -> Event;
-    send : (Ptr,Event) -> Void; // Sets value
-    
-    // The canonical form reads from a queue
-    
-    
-    // Backend methods
-    offset : Event -> Time;          // Offset to first occurance            rename offset
+    // TODO generalize to dispatcher?
+    recv    : Queue -> Event;
+    send    : (Queue,Event) -> Event;
+
+
     hasValue : (Event,Time) -> Bool;   // Is an occurance available            rename hasValue
     value  : Event -> Ptr;           // Get the first occurance value        rename value?
-    
+    offset : Event -> Time;          // Offset to first occurance            rename offset
+    head    : Event -> Event;
+    tail    : Event -> Event;
 
-
+    filter      : (Pred, Ptr, Event) -> Event;
+    dfilter     : (Pred, Ptr, Event) -> Event;
+    map         : (Unary, Ptr, Event) -> Event;
+    dmap        : (Unary, Ptr, Event) -> Event;
+    joinMap   : (Unary, Ptr, Event) -> Event;
+    djoinMap  : (Unary, Ptr, Event) -> Event;
+    join      : Event -> Event;
+    djoin     : Event -> Event;
     
     // map
-    // concatMap, join
+    // joinMap, join
     // 
 }

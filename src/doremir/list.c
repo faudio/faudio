@@ -626,7 +626,7 @@ ptr_t doremir_list_fold_left(binary_t func, ptr_t data, ptr_t init, list_t list)
     return value;
 }
 
-list_t doremir_list_concat(list_t list)
+list_t doremir_list_join(list_t list)
 {
     list_t result = empty();
     impl_for_each(list, elem) {
@@ -635,10 +635,10 @@ list_t doremir_list_concat(list_t list)
     return result;
 }
 
-list_t doremir_list_concat_map(unary_t func, ptr_t data, list_t list)
+list_t doremir_list_join_map(unary_t func, ptr_t data, list_t list)
 {
     list_t ys = doremir_list_map(func, data, list);
-    return doremir_list_dconcat(ys);
+    return doremir_list_djoin(ys);
 }
 
 list_t doremir_list_dmap(unary_t f, ptr_t d, list_t xs)
@@ -662,16 +662,16 @@ ptr_t doremir_list_dfold_left(binary_t f, ptr_t d, ptr_t  z, list_t   xs)
     return ys;
 }
 
-list_t doremir_list_dconcat(list_t list)
+list_t doremir_list_djoin(list_t list)
 {
-    list_t ys = doremir_list_concat(list);
+    list_t ys = doremir_list_join(list);
     doremir_list_destroy(list);
     return ys;
 }
 
-list_t doremir_list_dconcat_map(unary_t f, ptr_t d, list_t xs)
+list_t doremir_list_djoin_map(unary_t f, ptr_t d, list_t xs)
 {
-    list_t ys = doremir_list_concat_map(f, d, xs);
+    list_t ys = doremir_list_join_map(f, d, xs);
     doremir_list_destroy(xs);
     return ys;
 }

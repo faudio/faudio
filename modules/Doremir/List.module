@@ -121,12 +121,13 @@ module Doremir.List
     dfilter     : (Pred, Ptr, List) -> List;
     map         : (Unary, Ptr, List) -> List;
     dmap        : (Unary, Ptr, List) -> List;
-    concatMap   : (Unary, Ptr, List) -> List;
-    dconcatMap  : (Unary, Ptr, List) -> List;
+    joinMap     : (Unary, Ptr, List) -> List;
+    djoinMap    : (Unary, Ptr, List) -> List;
+    join        : List -> List;
+    djoin       : List -> List;
+
     foldLeft    : (Binary, Ptr, Ptr, List) -> Ptr;
     dfoldLeft   : (Binary, Ptr, Ptr, List) -> Ptr;
-    concat      : List -> List;
-    dconcat     : List -> List;
 
     // Conversions
     toList      : List -> List;

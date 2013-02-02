@@ -378,7 +378,7 @@ doremir_ptr_t doremir_list_dfold_left(doremir_binary_t func,
     @par Performance
         O(n)
  */
-list_t doremir_list_concat(doremir_list_t lists) {}
+list_t doremir_list_join(doremir_list_t lists) {}
 
 /** Concatenate all elements of the given list. 
     
@@ -387,38 +387,38 @@ list_t doremir_list_concat(doremir_list_t lists) {}
     @par Performance
         O(n)
  */
-list_t doremir_list_dconcat(doremir_list_t lists) {}
+list_t doremir_list_djoin(doremir_list_t lists) {}
 
 
-/** Map over the given list and concatenate the results.
+/** Map over the given list and joinenate the results.
     
     This function is useful to apply functions from singletons to lists.
     
     @par Laws
         
-        concatMap(apply1, single, xs) == xs`
+        joinMap(apply1, single, xs) == xs`
 
     @par Performance
         O(n)
  */
-doremir_list_t doremir_list_concat_map(doremir_unary_t func, 
+doremir_list_t doremir_list_join_map(doremir_unary_t func, 
                                        doremir_ptr_t data,
                                        doremir_list_t list) {}
 
-/** Map over the given list and concatenate the results.
+/** Map over the given list and joinenate the results.
     
     This function is useful to apply functions from singletons to lists.
     
     @par Laws
         
-        concatMap(apply1, single, xs) == xs
+        joinMap(apply1, single, xs) == xs
 
     @par Performance
         O(n)
  */
-doremir_list_t doremir_list_dconcat_map(doremir_unary_t func,
-                                        doremir_ptr_t data,
-                                        doremir_list_t list) {}
+doremir_list_t doremir_list_djoin_map(doremir_unary_t func,
+                                      doremir_ptr_t data,
+                                      doremir_list_t list) {}
 
 
 // --------------------------------------------------------------------------------

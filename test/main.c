@@ -828,7 +828,7 @@ void test_list()
         list_t zss = list(xs, ys, xs);
 
         doremir_print("[xs,ys]                      ==> %s\n", zss);
-        doremir_print("concat([xs,ys])              ==> %s\n", doremir_list_concat(zss));
+        doremir_print("join([xs,ys])              ==> %s\n", doremir_list_join(zss));
 
         doremir_destroy(xs);
         doremir_destroy(ys);
@@ -839,10 +839,10 @@ void test_list()
         printf("\n");
 
         list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-        list_t ys = doremir_list_concat_map(dup_list, 0, xs);
+        list_t ys = doremir_list_join_map(dup_list, 0, xs);
 
         doremir_print("xs                           ==> %s\n", xs);
-        doremir_print("concatMap(\\x -> [x,x])       ==> %s\n", ys);
+        doremir_print("joinMap(\\x -> [x,x])       ==> %s\n", ys);
 
         doremir_destroy(xs);
         doremir_destroy(ys);
