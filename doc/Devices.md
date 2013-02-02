@@ -11,7 +11,7 @@ Devices are the entities that allow the Audio Engine to communicate with the
 outside world. Any client will need to connect at least two devices to each other
 to form a audio stream. While signals and processors denote functions, devices
 denote sources and sinks of audio data, such as files, memory buffers or audio
-hardware. 
+hardware.
 
 Devices are grouped into *real-time devices*, *non-real-time devices*. Audio and
 midi information are handled by different devices. Note that the Audio Engine does not
@@ -39,7 +39,7 @@ initiate a session. The initialization of a session may fail, for example if the
 underlying audio system is already being used by an exclusive process. If it
 succeeds, a handle to the underlying session is provided. This handle allow the
 user to inspect the set of devices available in the sesssion. The client may then
-open a stream ... 
+open a stream ...
 
 TODO
 
@@ -79,38 +79,37 @@ typedef doremir_device_audio_stream_t   stream_t_;
 typedef doremir_processor_t             processor_t;
 
 int main (int argc, char const *argv[])
-{         
-    session_t session;
+{
+    session_t       session;
+    device_t        input, output;
+    processor_t     proc;
+    stream_t        stream
+
     session = doremir_device_audio_begin_session();
 
     if (doremir_check(session)) {
         doremir_error_log(session);
-        return;
+        goto cleanup;
     }
 
-    // Session is active, now we can access devices    
-    {
-        device_t        input, output;
-        processor_t     proc;
-        stream_t        stream
-        
-        proc   = doremir_processor_identity();
-        input  = doremir_pair_fst(doremir_device_audio_default(session));
-        output = doremir_pair_snd(doremir_device_audio_default(session));
-        stream = doremir_device_audio_start_stream(input, proc, output);
+    // Session is active, now we can access devices
+    proc   = doremir_processor_identity();
+    input  = doremir_pair_fst(doremir_device_audio_default(session));
+    output = doremir_pair_snd(doremir_device_audio_default(session));
+    stream = doremir_device_audio_start_stream(input, proc, output);
 
-        if (doremir_check(stream)) {
-            doremir_error_log(stream);
-            exit(-1);
-        }
-
-        // Wait while stream is running    
-        doremir_thread_sleep(5000);
-        
-        doremir_device_audio_stop_stream(stream);
-        doremir_destroy(proc);
+    if (doremir_check(stream)) {
+        doremir_error_log(stream);
+        goto cleanup;
     }
 
+    // Wait while stream is running
+    doremir_thread_sleep(5000);
+
+    // Cleanup
+cleanup:
+    doremir_device_audio_stop_stream(stream);
+    doremir_destroy(proc);
     doremir_device_audio_end_session(session);
 }
 ~~~~
@@ -148,7 +147,7 @@ session_t session_callback(void* data, session_t session)
     proc    = doremir_processor_identity();
     input   = doremir_pair_fst(doremir_device_audio_default(session));
     output  = doremir_pair_snd(doremir_device_audio_default(session));
-    
+
     doremir_device_audio_with_stream(
         input, processor, output,
         run_callback, doremir_error_log, NULL
@@ -161,7 +160,7 @@ session_t session_callback(void* data, session_t session)
 int main (int argc, char const *argv[])
 {
     doremir_device_audio_with_session(
-        session_callback, NULL, 
+        session_callback, NULL,
         doremir_error_log, NULL
     );
 }
@@ -188,7 +187,7 @@ typedef doremir_processor_t     processor_t;
 int main (int argc, char const *argv[])
 {
     device_t    input, output;
-    processor_t     proc;
+    processor_t proc;
     future_t    result;
 
     proc    = doremir_processor_identity();
@@ -201,8 +200,6 @@ int main (int argc, char const *argv[])
         doremir_error_log(stream);
         exit(-1);
     }
-
-    doremir_device_file_wait(stream);
 }
 ~~~~
 
@@ -239,8 +236,6 @@ int main (int argc, char const *argv[])
         doremir_error_log(stream);
         exit(-1);
     }
-
-doremir_device_buffer_wait(stream);
 }
 ~~~~
 

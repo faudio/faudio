@@ -2,7 +2,7 @@
 /** 
     @addtogroup DoremirAtomic
     
-    Cross-platform atomic variables. Submodules contains lock-free data structures.
+    An atomic reference.
 
     @par Literals
     - `atomic()` 
@@ -13,6 +13,9 @@
     - doremir_copy_t
     - doremir_destroy_t
     - doremir_string_show_t
+
+    @see 
+    - [Data structures](@ref DataStructures)
  */
 module Doremir.Atomic
 {                   

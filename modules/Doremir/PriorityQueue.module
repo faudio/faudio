@@ -4,16 +4,15 @@
     
     Priority queue data structure.
     
-    Note that priority queues are not collections as their contents are mutable.
-
     @par Requires 
     - doremir_order_t
     @par Implements 
     - doremir_equal_t
     - doremir_string_show_t
     - doremir_destroy_t
+
     @see 
-    - @ref Collections
+    - [Data structures](@ref DataStructures)
 
  */
 module Doremir.PriorityQueue

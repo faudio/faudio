@@ -3,6 +3,10 @@
     @addtogroup DoremirAtomicStack
     
     Lock-free stack (LIFO) data structure
+
+    @see 
+    - [Data structures](@ref DataStructures)
+
  */
 module Doremir.Atomic.Stack
 {

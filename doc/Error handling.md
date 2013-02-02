@@ -1,5 +1,5 @@
 
-# Error handling {#Errors}
+# Error handling {#id10048}
 
 @anchor Errors
 @tableofcontents
@@ -7,14 +7,15 @@
 @note
     This page is under construction.
 
+# Errors {#id441}
+
 Error handling in the Audio Engine comes in three varieties:
   
   * User errors
   * Recoverable errors
   * Non-recoverable errors
   
-
-# User errors {#UserErrors}
+## User errors {#id1387}
 
 Program errors are those that are caused directly by the library user, often by
 using a library function in the wrong way. Preferably all such errors should be
@@ -31,7 +32,7 @@ Engine is running will probably crash. If the library is built in debug mode, an
 file number and message is usually printed. 
 
 
-# Recoverable errors {#Recoverable}
+## Recoverable errors {#id26713}
 
 Recoverable errors are those that occur outside the control of the user, but in control
 of the Audio Engine.
@@ -61,18 +62,18 @@ value can be used normally. Note that values returned from construction and copy
 functions must be destroyed whether an error has occured or not.
 
 
-## Non-recoverable errors {#Nonrecoverable}
+## Non-recoverable errors {#id16834}
 
 Non-recoverable errors are those that occur outside the control of the both library
 user and the Audio Engine. They will usually log and terminate the process.
 
 
-# Logging {#Logging}
+# Logging {#id24103}
 
-The Audio Engine provides a simple global logging system. Non-recoverable
-errors are always logged. The user can add recoverable errors to the log using 
-@ref doremir_audio_engine_log. Typically, this function is used with @ref doremir_check,
-as in:
+The Audio Engine provides a simple logging system. Non-recoverable errors are
+always logged. The user can add recoverable errors to the log using 
+@ref doremir_audio_engine_log. Typically, this function is used with 
+@ref doremir_check, as in:
 
 ~~~
 if (doremir_check(value)) {

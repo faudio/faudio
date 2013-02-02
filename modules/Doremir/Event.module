@@ -38,6 +38,14 @@ module Doremir.Event
     merge   : (Event,Event) -> Event;               // rename merge
     switch  : (Event,Event,Event) -> Event;
     destroy : Event -> Void;
+    
+    later  : (Time,Ptr) -> Event;
+    upon   : (Event,Event) -> Event;
+    after  : Event -> Event;
+    before : Event -> Event;
+    sample : Event -> Event;
+    toggle : Event -> Event;
+    select : (Event,Event) -> Event;
 
     // TODO generalize to dispatcher?
     recv    : Queue -> Event;

@@ -9,14 +9,17 @@
 
 The Audio Engine include a set of general purpose
 [persistent&nbsp;data&nbsp;structures][persistent], which are primarily used for
-message passing between the audio thread and the main thread. The fact that the
+message passing between the audio thread and other threads. The fact that the
 data structures are persistent eliminate many of the problems commonly associated
-with multi-threaded programming and promotes a functional style.
+with multi-threaded programming.
 
 The data structures in the Audio Engine are somewhat different from the structures
 found in most languages, in that they have single-ownership semantics. This
-eliminates the need for a garbage collector while still allowing a high-level 
-interface.
+eliminates the need for a garbage collector while still allowing a high-level
+programming style. To understand single-ownership semantics, you should read the
+section about [creation&nbsp;and&nbsp;destruction](@ref CreateCopyDestroy) below.
+All data structures are polymorphic over reference types, see the section on
+[type&nbsp;safety](@ref id19466) for more details. 
 
 Note that there is no interface capturing the notion of a data structure: they are
 simply reference types obeying the conventions described below. However, all data
@@ -36,33 +39,34 @@ Type                           | Semantics
 [Set](@ref DoremirSet)         | An ordered set
 [Map](@ref DoremirMap)         | A set of ordered pairs
 [Graph](@ref DoremirGraph)     | A labeled, directed graph
+[String](@ref DoremirString)   | A sequence of Unicode characters
 
 There is also a set of *mutable* data structures not included in this table. These
 are used internally in the Audio Engine and need rarely be accessed by the user. For
 completeness, they are:
 
-Type                                        | Semantics
---------------------------------------------|------------------------------------------------------
-[Priority queue](@ref DoremirPriorityQueue) | A first-in, ordered out priority queue
+Type                                              | Semantics
+--------------------------------------------------|------------------------------------------------------
+[Priority queue](@ref DoremirPriorityQueue)       | A first-in, ordered out priority queue
+[Atomic](@ref DoremirAtomic)                      | An atomic reference
+[Atomic queue](@ref DoremirAtomicQueue)           | A first-in, first-out atomic queue
+[Atomic stack](@ref DoremirAtomicStack)           | A last-in, first-out atomic queue
+[Atomic ringbuffer](@ref DoremirAtomicRingBuffer) | A byte-level, bounded, first-in, first-out atomic queue
+[Buffer](@ref DoremirAtomicRingBuffer)            | A byte-level mutable buffer
 
 
 
 # Using data structures {#Conventions}
 
-## String representations {#Literals}
+## Creation and destruction {#CreateCopyDestroy}
 
-All data structures have macro-based *literals* defined in the [utility&nbsp;headers][util].
-A literal expression always evaluate to a newly created instance of the data structure.
+TODO
 
-- `pair(i32(1), i32(2))`
-- `list(i32(1), i32(2), i32(3))`
-- `set(i32(1), i32(2), i32(3))`
-- `map(string("foo"),i32(1),string("bar"),i32(2))`
-- `graph(i32(1),i32(2),edge(i32(1),i32(2),i32(3)))`
+## Creating from strings {#Literals}
 
-When *printed* using the [Show](@ref doremir_show_t) implementation, the data
-structures generally have a more readable resentation, as shown below. (Do we want to
-optionally print the C literal instead?)
+### Show
+
+When [printed](@ref doremir_print), the data structures are rendered in a language-neutral form. 
 
 - `(1,2)`
 - `[1,2,3]`
@@ -70,10 +74,30 @@ optionally print the C literal instead?)
 - `{foo:1,bar:2}`
 - `({1,2,3},{((1,2),"foo"),((1,3):"bar")})`
 
-@warning
-    Beware not to use a structure literal on an integer, you must use 
-    [value references](@ref ValueReferences).
-    
+### Literals
+
+All data structures have *literals* defined in the [utility&nbsp;headers][util]. A
+literal expression always evaluate to a newly created instance of the data
+structure. Beware not to pass a number to the literals, you must use
+[value&nbsp;references](@ref ValueReferences).
+
+- `pair(i32(1),i32(2))`
+- `list(i32(1),i32(2),i32(3))`
+- `set(i32(1),i32(2),i32(3))`
+- `map(string("foo"),i32(1),string("bar"),i32(2))`
+- `graph(i32(1),i32(2),edge(i32(1),i32(2),i32(3)))`
+
+### JSON
+
+TODO
+
+## Accessing all elements {#ForEach}
+
+TODO
+
+## Mapping, folding and filtering {#MapFoldFilter}
+
+TODO
 
 ## Thread safety {#ThreadSafety}
 
@@ -82,47 +106,36 @@ destruction, which are subject to the following restrictions:
 
 * If a data structure *a* is created in thread *t* and used in thread *u*,
   an ordering must be established between the creation function returning
-  in *t* and subsequent use of *a* in *u*.
-
+  in *t* and subsequent use of *a* in *u*. 
+  
 * If a data structure *a* is used in thread *t* and destroyed in thread *u*,
   an ordering must be established between the last use of *a* in *t* and 
-  the destructive function being applied in *u*.
+  the destructive function being applied in *u*. 
 
-Note that copying is considered both *usage* (of the old value) and a *creation*
-(of the copy). Similarly, a function such as @ref doremir_list_dcons is both
-destructive function (of the old value) and a creation function (of the new value).
+To establish an ordering, you should either synchronize the threads *t* and *u*, or
+transfer the data structure in an atomic variable or queue. Note that copying is
+considered both *usage* of the copied value and a *creation* of the copy. Also some
+functions (such as @ref doremir_list_dcons) are both destructive on its input, and
+constructive on its output.
 
-
-## Polymorphic structures {#Polymorphic}
-
-The use of the polymorphic data structures such as lists are somewhat hampered by
-the lack of polymorphism in the C language. This means that there is no way to
-create types by type-level application, so all lists are of the same type,
-regardless of what type they contain. This is not a problem in a dynamic language
-such as Lisp, where the type of a value is always known at runtime; however it is a
-problem in languages such as C, as passing the wrong type to a function will likely
-result in memory corruption and a program crash.
+## Type safety {#id19466}
 
 All data structures can store all reference types, including
 [value&nbsp;references](@ref ValueReferences). The user must rely on guarantees
 outside the scope of the compiler to assure that the extracted elements are of the
 right type. There are several ways to do this:
 
-* Assure that the structure contains a specific type
+* Assure that the structure contains a specific type.
     * For example, many functions in the Audio Engine API return pairs and lists, their
       documentation clearly stating what type of elements the list will contain.
-* Assure that the structure contains a generic type
+* Assure that the structure contains a generic type.
     * For example, a function may require a set of values implementing [Show](@ref doremir_string_show_t).
 
 In some cases, it does not matter what type a data structure contains, as the
 elements are not going to be inspected. For example, @ref doremir_list_reverse can
 receive a list of any type, as it operates purely on the structure of the list and
-does not need to use its values.
+does not need to use its values. 
 
-
-## Creation, copying and destruction {#CreateCopyDestroy}
-
-TODO destructive functions
 
 
 # Value references {#ValueReferences}
@@ -152,27 +165,26 @@ never overlap with real references.
 
 Value references are created by the following functions:
 
-* [fromBool](@ref doremir_from_bool)
-* [fromInt8](@ref doremir_from_bool)
-* [fromInt16](@ref doremir_from_bool)
-* [fromInt32](@ref doremir_from_bool)
-* [fromInt64](@ref doremir_from_bool)
-* [fromFloat](@ref doremir_from_bool)
-* [fromDouble](@ref doremir_from_bool)
-
+* [doremir_from_bool](@ref doremir_from_bool) or [b](@ref doremir_from_bool)
+* [doremir_from_int8](@ref doremir_from_int8) or [i8](@ref doremir_from_int8)
+* [doremir_from_int16](@ref doremir_from_int16) or [i16](@ref doremir_from_int16)
+* [doremir_from_int32](@ref doremir_from_int32) or [i32](@ref doremir_from_int32)
+* [doremir_from_int64](@ref doremir_from_int64) or [i64](@ref doremir_from_int64)
+* [doremir_from_float](@ref doremir_from_float) or [f32](@ref doremir_from_float)
+* [doremir_from_double](@ref doremir_from_double) or [f64](@ref doremir_from_double)
 
 ## Checking the type of a value reference {#CheckingTypeValueReference}
 
-The [isRef](@ref doremir_from_bool) and [isValue](@ref doremir_from_bool) function
+The [doremir_is_ref](@ref doremir_is_ref) and [doremir_is_value](@ref doremir_is_value) function
 can be used to distinguish value references from real references.
 
-* [isBool](@ref doremir_from_bool)
-* [isInt8](@ref doremir_from_bool)
-* [isInt16](@ref doremir_from_bool)
-* [isInt32](@ref doremir_from_bool)
-* [isInt64](@ref doremir_from_bool)
-* [isFloat](@ref doremir_from_bool)
-* [isDouble](@ref doremir_from_bool)
+* [doremir_is_bool](@ref doremir_is_bool) or [qb](@ref doremir_is_bool)
+* [doremir_is_int8](@ref doremir_is_int8) or [qi8](@ref doremir_is_int8)
+* [doremir_is_int16](@ref doremir_is_int16) or [qi16](@ref doremir_is_int16)
+* [doremir_is_int32](@ref doremir_is_int32) or [qi32](@ref doremir_is_int32)
+* [doremir_is_int64](@ref doremir_is_int64) or [qi64](@ref doremir_is_int64)
+* [doremir_is_float](@ref doremir_is_float) or [qf32](@ref doremir_is_float)
+* [doremir_is_double](@ref doremir_is_double) or [qf64](@ref doremir_is_double)
 
 ## Extracting the value of a value reference {#ExtractingAValueReference}
 
@@ -180,22 +192,22 @@ The following functions extract the value of a value reference and destroy the a
 storage, if any. These functions can be applied directly, or by using 
 @ref doremir_deep_destroy.
 
-* [toBool](@ref doremir_from_bool)
-* [toInt8](@ref doremir_from_bool)
-* [toInt16](@ref doremir_from_bool)
-* [toInt32](@ref doremir_from_bool)
-* [toInt64](@ref doremir_from_bool)
-* [toFloat](@ref doremir_from_bool)
-* [toDouble](@ref doremir_from_bool)
+* [doremir_to_bool](@ref doremir_to_bool) or [tb](@ref doremir_to_bool)
+* [doremir_to_int8](@ref doremir_to_int8) or [ti8](@ref doremir_to_int8)
+* [doremir_to_int16](@ref doremir_to_int16) or [ti16](@ref doremir_to_int16)
+* [doremir_to_int32](@ref doremir_to_int32) or [ti32](@ref doremir_to_int32)
+* [doremir_to_int64](@ref doremir_to_int64) or [ti64](@ref doremir_to_int64)
+* [doremir_to_float](@ref doremir_to_float) or [tf32](@ref doremir_to_float)
+* [doremir_to_double](@ref doremir_to_double) or [tf64](@ref doremir_to_double)
 
 In some cases it is useful to inspect the value of a reference without destroying it.
 The *peek* functions can be used for that purpose. There are no peek functions for
 small types, as they have no associated storage, and the *to* function can be used instead.
 
-* [peekInt32](@ref doremir_from_bool)
-* [peekInt64](@ref doremir_from_bool)
-* [peekFloat](@ref doremir_from_bool)
-* [peekDouble](@ref doremir_from_bool)
+* [doremir_peek_int32](@ref doremir_peek_int32) or [pi32](@ref doremir_peek_int32)
+* [doremir_peek_int64](@ref doremir_peek_int64) or [pi64](@ref doremir_peek_int64)
+* [doremir_peek_float](@ref doremir_peek_float) or [pf32](@ref doremir_peek_float)
+* [doremir_peek_double](@ref doremir_peek_double) or [pf64](@ref doremir_peek_double)
 
 
 [persistent]: http://en.wikipedia.org/wiki/Persistent_data_structure

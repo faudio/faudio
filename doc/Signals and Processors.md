@@ -8,13 +8,9 @@
 @note
     This page is under construction.
 
-A *signal* is a time-varying value, or more formally, a function of time. Typically
-the value is a number representing audio amplitude, but this need not be the case:
-signals may represent any time-varying value, including audio, video, image or
-other forms of data. Signals can be transformed by [processors](@ref Processors),
-which are functions from signals to signals.
+TODO signals and processors
 
-# Types {#SignalTypes}
+# Audio types {#SignalTypes}
 
 TODO
 
@@ -55,10 +51,13 @@ type `(f32,f32)`. The components of a pair need not be the same, and can be any
 type.
 
 More complex channel configurations can be constructed by nested pairs. For example
-a a four-channel stream could be represented as `(a,(b,(c,d)))`. By convention,
-nested pairs associate to the right, that is as `(a,(b,c))`, rather than
-`((a,b),c)`. The multichannel functions can be used to quickly construct a
-multichannel type.
+a a three-channel stream could be represented as `(a,(b,c))`. Note that by
+convention, nested pairs associate to the right. 
+
+<!--
+The multichannel functions can be
+used to quickly construct a multichannel type.
+-->
 
 ### Vectors {#Vectors}
 
@@ -68,10 +67,12 @@ input, and return a signal of type `[{f32} x 2]` as output, meaning that the out
 have twice the amount of samples as the input. A downsampling processor might in
 turn take an input of type `[{f32} x 2]` and output a signal of type `{f32}`.
 
+<!--
 A signal of type `[a x 1]` is equivalent to `a`, a signal of type `[a x 2]` to
 `(a,a)`, of `[a x 3]` to `(a,(a,a))` and so on. Because of this correspondence of
 vectors and pairs, vectors can be used to encode multichannel audio of a single
 type, i.e. instead of `(f32,(f32,f32))` one can use `[f32 x 3]`.
+-->
 
 Vectors and pairs can be used together to represent different kinds of interleaved
 samples. For example `[(f32,f32) x 1024]` means a sequence of 1024 pairs of
@@ -84,52 +85,52 @@ samples.
 Frames, written as `{a}` are special vectors of an unspecified length. The actual
 amount of samples in a frame is determined at runtime and may vary during a single
 audio session. The *buffer size* of an audio stream is the maximum length of a
-vector, and is typically a multiple of two, such as 256, 512 or 1024.
-
-# Continous vs. discrete {#Cont}
-
-While real-world signals are continous in nature, digital signal processing
-invariably involves some form of sampling
-
-# Application of processors to signals {#Procs}
-
-# Processors as functions of signals {#Procs}
+vector, and is typically a multiple of two.
 
 
-# Basic Processors {#BasicProcessors}
+## Special types {#Special}
 
-Processors can be categorized by input and output type. Processors with no input is typically called *producers*
-or *unfolds*, processors with no output *consumers* or *folds*, and processors with both input and output
-*filters* or *maps*.
+### Signal type {#SigType}
+### Processor type {#ProcType}
 
-Many classical DSP operations such fall into the map category: examples include band-pass filters, recursive
-filters, reverbs and compressors. Producers include constant values and oscillators, and consumers include all forms
-of audio analysis.
+# Using signals {#Comb}
 
-# Process combinators {#Comb}
+## Application {#SApp}
+## Lifting to signal level {#Lift}
+## Signals as buffers {#SigBuf}
+## Buffers as signals {#BufSig}
+## Built-in signals {#BuiltInSig}
 
-## Sequential {#seq}
+
+# Using processors {#Proc}
+
+## Routing {#Routing}
+
+### Sequential {#seq}
 
 Sequential processors.
 
 @image html  dsp_seq.png "A processor"
 @image latex dsp_seq.pdf "A processor" width=0.8\textwidth
 
-## Parallel {#par}
+### Parallel {#par}
 
 Sequential processors.
 
 @image html  dsp_par.png "A processor"
 @image latex dsp_par.pdf "A processor" width=0.6\textwidth
 
-## Recursive {#loop}
+### Recursive {#loop}
 
 Recursive processors.
 
 @image html  dsp_loop.png "A processor"
 @image latex dsp_loop.pdf "A processor" width=0.6\textwidth
 
-## Folds and unfolds {#fold}
+### Time processors {#dekay}
+
+
+### Folds and unfolds {#fold}
 
 Folding and unfolding processors processors.
 
@@ -138,46 +139,43 @@ Folding and unfolding processors processors.
 @image html  dsp_binary.png "A processor"
 @image latex dsp_binary.pdf "A processor" width=0.6\textwidth
 
-## Map {#lift}
+### Map {#lift}
 
 Mapping processors.
 
 @image html  dsp_unary.png "A processor"
 @image latex dsp_unary.pdf "A processor" width=0.6\textwidth
-## Time {#Id}
-## Constant {#Const}
-## Delay {#Delay}
 
-## Handling messages to combinators {#CombMsg}
+## Built-in processors {#BuiltInProc}
 
-TODO How?
+### Time {#Id}
+### Constant {#Const}
+### Delay {#Delay}
 
 
-# Message to signal {#MsgToSig}
+## Buffering and recording {#BufRec}
 
-## Switch {#Switch}
-## Interpolate {#Interpolate}
-## If/activate {#IfActivate}
-## Sample {#Sample}
-## Trigger {#Trigger}
+### Record and play {#RecPlay}
 
-# Special processors {#SpecialProcessors}
+### Record and play to the file system {#FileRecPlay}
 
-## FluidSynth {#FluidSynth}
+### Routing to non-real time devices {#NRTRoute}
 
-TODO
 
-## Audio Units {#AudioUnits}
+## External processors {#ExternalProcessors}
+
+### FluidSynth {#FluidSynth}
 
 TODO
 
-## VST {#VST}
+### Audio Units {#AudioUnits}
 
 TODO
 
-## LADSPA {#LADSPA}
+### VST {#VST}
 
 TODO
+
 
 
 

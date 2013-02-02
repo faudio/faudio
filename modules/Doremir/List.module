@@ -54,7 +54,7 @@
     - doremir_string_show_t
 
     @see
-    - @ref Collections
+    - [Data structures](@ref DataStructures)
 
  */
 module Doremir.List

@@ -10,6 +10,10 @@
     @par Implements 
     - doremir_destroy_t
     - doremir_string_show_t
+
+    @see 
+    - [Data structures](@ref DataStructures)
+
  */
 module Doremir.Atomic.Queue
 {

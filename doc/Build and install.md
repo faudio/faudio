@@ -31,21 +31,17 @@ All in all, the simplest possible build session looks like this:
 
 ## Building local dependencies {#Dependencies}
 
-The bootstrap script automatically downloads the [required libraries](@ref
-Libraries). You can also build libraries locally, using the component commands
+The bootstrap script automatically downloads the [required libraries](@ref Libraries). 
+You can also build libraries locally, using the component commands
 described below.
 
-<!-- 
-A caveat is that CMake tend to prefer libraries in system paths to libraries
-in your build directory. Currently the only solution is to temporarily uninstall
-the libraries. 
--->
 
 ## Setting and inspecting options {#SettingOptions}
 
 Build options can be changed using any CMake tool, such as `cmake-gui` or `ccmake`.
 
-You can also change a build setting on the command line.
+You can also change a build setting on the command line. These changes will persist
+until you change them again, or regenerate the build directory.
 
     $ cmake build -DMY_SETTING=0
 
@@ -58,8 +54,11 @@ If you want to use another build directory, i.e. for maintaining multiple builds
 the same source, you can rerun the bootstrap script passing the `BUILD_DIRECTORY`
 flag.
 
-    $ BUILD_DIRECTORY=my_build_dir ./boostrap
+    $ BUILD_DIRECTORY=my_build_dir ./bootstrap
 
+# Rebuilding headers and bindings {#Rebuilding}
+
+TODO
 
 # Running and testing {#Running}
 
@@ -76,13 +75,13 @@ TODO
 
 Name                      | Description
 --------------------------|-----------------------------------------
+CMAKE_BUILD_TYPE          | Either `Debug`, `Release` or `RelWithDebInfo`
 ENABLE_REALTIME_AUDIO     | Enable real-time audio
 ENABLE_REALTIME_MIDI      | Enable real-time midi
 ENABLE_NONREALTIME_AUDIO  | Enable non-real-time audio
 ENABLE_FLUIDSYNTH         | Enable the FluidSynth processor
 ENABLE_AUDIO_UNIT         | Enable AudioUnit processors
 ENABLE_VST                | Enable VST processors
-ENABLE_LOGGING            | Enable standard logging
 BUILD_FRAMEWORK           | Build an OS X framework
 BUILD_SHARED              | Build a shared library
 BUILD_TESTS               | Build unit tests
@@ -101,6 +100,10 @@ override.
 
 This command builds and runs the standard test suite. This may take several minutes
 to complete.
+
+    make modules
+
+This command builds most of the headers in the `include/` subdirectory.
 
     make bindings
 

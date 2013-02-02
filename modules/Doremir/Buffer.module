@@ -16,6 +16,9 @@
     - doremir_copy_t
     - doremir_destroy_t
     - doremir_string_show_t
+
+    @see 
+    - [Data structures](@ref DataStructures)
  */
 module Doremir.Buffer
 {

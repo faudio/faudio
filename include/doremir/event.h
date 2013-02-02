@@ -24,6 +24,15 @@ doremir_event_t doremir_event_switch(doremir_event_t,
                                      doremir_event_t,
                                      doremir_event_t);
 void doremir_event_destroy(doremir_event_t);
+doremir_event_t doremir_event_later(doremir_time_t, doremir_ptr_t);
+doremir_event_t doremir_event_upon(doremir_event_t,
+                                   doremir_event_t);
+doremir_event_t doremir_event_after(doremir_event_t);
+doremir_event_t doremir_event_before(doremir_event_t);
+doremir_event_t doremir_event_sample(doremir_event_t);
+doremir_event_t doremir_event_toggle(doremir_event_t);
+doremir_event_t doremir_event_select(doremir_event_t,
+                                     doremir_event_t);
 doremir_event_t doremir_event_recv(doremir_atomic_queue_t);
 doremir_event_t doremir_event_send(doremir_atomic_queue_t,
                                    doremir_event_t);

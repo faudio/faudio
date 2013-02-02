@@ -22,7 +22,7 @@
     - doremir_dynamic_t
 
     @see 
-    - @ref Collections
+    - [Data structures](@ref DataStructures)
     
  */
 module Doremir.Set

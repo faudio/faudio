@@ -2,9 +2,10 @@
 /** 
     @addtogroup DoremirAtomicRingBuffer
     
-    Circular buffer data structure.
+    A byte-level, bounded atomic queue.
     
-    Note that while this structure is called a \ref DoremirBuffer, it does not support random access.
+    This structure is called a buffer for historical reasons, it is more accurately
+    a queue and does not support random accces.
 
     @par Literals
     - `atomic_ring_buffer()` 
@@ -12,6 +13,10 @@
     @par Implements 
     - doremir_destroy_t
     - doremir_string_show_t
+
+    @see 
+    - [Data structures](@ref DataStructures)
+
  */
 module Doremir.Atomic.RingBuffer
 {            

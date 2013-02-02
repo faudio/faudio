@@ -24,7 +24,7 @@ struct _doremir_atomic_t {
 doremir_ptr_t atomic_impl(doremir_id_t interface);
 
 /**
-    Create a new atomic variable.
+    Create a new atomic reference.
     @par Atomicity
         Non-atomic
  */
@@ -39,7 +39,7 @@ doremir_atomic_t doremir_atomic_create()
 }
 
 /**
-    Copy the given atomic variable.
+    Copy the given atomic reference.
     @par Atomicity
         Non-atomic
  */
@@ -51,7 +51,7 @@ doremir_atomic_t doremir_atomic_copy(doremir_atomic_t a)
 }
 
 /**
-    Swap contents of the given atomic variable.
+    Swap contents of the given atomic reference.
     @par Atomicity
         Non-atomic
  */
@@ -63,7 +63,7 @@ void doremir_atomic_swap(doremir_atomic_t a, doremir_atomic_t b)
 }
 
 /**
-    Destroy the given atomic variable.
+    Destroy the given atomic reference.
     @par Atomicity
         Non-atomic
  */
@@ -76,10 +76,10 @@ void doremir_atomic_destroy(doremir_atomic_t a)
 // --------------------------------------------------------------------------------
 
 /**
-    Compares the given value with the current value of the given atomic variable,
+    Compares the given value with the current value of the given atomic reference,
     replacing it if successful.
 
-    @param a   The atomic variable.
+    @param a   The atomic reference.
     @param old Old value.
     @param new New value.
     @return
@@ -93,7 +93,7 @@ bool doremir_atomic_exchange(doremir_atomic_t a, doremir_ptr_t old, doremir_ptr_
 }
 
 /**
-    Increment the given atomic variable by the given amount.
+    Increment the given atomic reference by the given amount.
 
     @par Atomicity
         Atomic
@@ -104,7 +104,7 @@ void doremir_atomic_add(doremir_atomic_t a, doremir_ptr_t v)
 }
 
 /**
-    Return the current value of the given atomic variable.
+    Return the current value of the given atomic reference.
     @par Atomicity
         Atomic
  */
@@ -115,7 +115,7 @@ doremir_ptr_t doremir_atomic_get(doremir_atomic_t a)
 
 /**
     Update the given atomic value by applying the given pure function.
-    @param atomic   Atomic variable.
+    @param atomic   Atomic reference.
     @param func     Function to be applied to the value.
     @param data     Value to be passed to the function.
     @par Atomicity
@@ -133,7 +133,7 @@ void doremir_atomic_modify(doremir_atomic_t atomic, doremir_unary_t func, doremi
 }
 
 /**
-    Set the given given atomic variable.
+    Set the given given atomic reference.
     @par Atomicity
         Atomic
  */
