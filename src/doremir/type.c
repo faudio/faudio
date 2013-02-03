@@ -427,7 +427,7 @@ inline static string_t simple_show(doremir_type_simple_t simple)
 {
     switch (simple) {
         case i8_type:
-            return string("to");
+            return string("i8");
 
         case i16_type:
             return string("i16");
