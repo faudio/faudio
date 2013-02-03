@@ -353,7 +353,7 @@ string_t event_show(doremir_ptr_t a)
             event_t x  = delay_get(event, event);
 
             write_to(s, string("<Delay "));
-            write_to(s, format_int("%d", doremir_time_seconds(t))); // FIXME
+            write_to(s, format_integer("%d", doremir_time_seconds(t))); // FIXME
             write_to(s, string(" "));
             write_to(s, doremir_string_show(x));
             write_to(s, string(">"));

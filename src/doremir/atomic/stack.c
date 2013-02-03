@@ -166,7 +166,7 @@ doremir_ptr_t doremir_atomic_stack_read(doremir_atomic_stack_t stack)
 doremir_string_t atomic_stack_show(doremir_ptr_t v)
 {
     string_t s = string("<AtomicStack ");
-    s = string_dappend(s, format_int("%p", (long) v));
+    s = string_dappend(s, format_integer("%p", (long) v));
     s = string_dappend(s, string(">"));
     return s;
 }

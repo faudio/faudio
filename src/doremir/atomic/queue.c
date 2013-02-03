@@ -181,7 +181,7 @@ doremir_ptr_t doremir_atomic_queue_read(doremir_atomic_queue_t queue)
 doremir_string_t atomic_queue_show(doremir_ptr_t v)
 {
     string_t s = string("<AtomicQueue ");
-    s = string_dappend(s, format_int("%p", (long) v));
+    s = string_dappend(s, format_integer("%p", (long) v));
     s = string_dappend(s, string(">"));
     return s;
 }

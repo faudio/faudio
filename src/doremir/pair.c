@@ -15,8 +15,6 @@ struct _doremir_pair_t {
     ptr_t       snd;
 };
 
-// -----------------------------------------------------------------------------
-
 pair_t new_pair(doremir_ptr_t fst, doremir_ptr_t snd)
 {
     doremir_ptr_t pair_impl(doremir_id_t interface);
@@ -27,21 +25,30 @@ pair_t new_pair(doremir_ptr_t fst, doremir_ptr_t snd)
     pair->snd  = snd;
     return pair;
 }
+
 void delete_pair(pair_t p)
 {
     doremir_delete(p);
 }
 
+// -----------------------------------------------------------------------------
+
+/** Create a new pair.
+ */
 doremir_pair_t doremir_pair_create(doremir_ptr_t fst, doremir_ptr_t snd)
 {
     return new_pair(fst, snd);
 }
 
+/** Copy the given pair.
+ */
 doremir_pair_t doremir_pair_copy(doremir_pair_t pair)
 {
     return new_pair(pair->fst, pair->snd);
 }
 
+/** Destroy the given pair.
+ */
 void doremir_pair_destroy(doremir_pair_t pair)
 {
     delete_pair(pair);
@@ -49,27 +56,37 @@ void doremir_pair_destroy(doremir_pair_t pair)
 
 // --------------------------------------------------------------------------------
 
+/** Get the first component of the given pair.
+ */
 doremir_ptr_t doremir_pair_fst(doremir_pair_t pair)
 {
     return pair->fst;
 }
 
+/** Get the second component of the given pair.
+ */
 doremir_ptr_t doremir_pair_snd(doremir_pair_t pair)
 {
     return pair->snd;
 }
 
+/** Return a pair containing the given value as both its left and right component.
+ */
 doremir_pair_t doremir_pair_dup(doremir_ptr_t value)
 {
     return new_pair(doremir_copy(value), doremir_copy(value));
 }
 
+/** Swap the components of the given pair.
+ */
 doremir_pair_t doremir_pair_swap(doremir_pair_t pair)
 {
     return new_pair(doremir_copy(pair->snd), doremir_copy(pair->fst));
 }
 
 // (a, (b, c)) -> ((a, b), c)
+/** Return the left-associated version of the given nested pair.
+ */
 doremir_pair_t doremir_pair_assoc(doremir_pair_t p)
 {
     ptr_t a = doremir_copy(p->fst);
@@ -80,6 +97,8 @@ doremir_pair_t doremir_pair_assoc(doremir_pair_t p)
 }
 
 // ((a, b), c) -> (a, (b, c))
+/** Return the right-associated version of the given nested pair.
+ */
 doremir_pair_t doremir_pair_unassoc(doremir_pair_t p)
 {
     ptr_t a = doremir_copy(((pair_t) p->fst)->fst);

@@ -50,7 +50,7 @@ char * lmm_get_error(lmm_t lmm)
       /* Print all non-empty registers */                                         \
                                                                                   \
       if (reg.size) {                                                             \
-        str = string_dappend(str, format_int("\nr%d:\t", id));                    \
+        str = string_dappend(str, format_integer("\nr%d:\t", id));                \
                                                                                   \
         for (size_t i = 0; i < (reg.size / sizeof(T)); ++i) {                     \
           str = string_dappend(str, string(" "));                                 \

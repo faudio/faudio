@@ -78,6 +78,8 @@ doremir_graph_t doremir_graph_empty()
 }
 
 /** Insert a node in the given graph.
+    @param node     Node to insert.
+    @param graph    The graph.
  */
 doremir_graph_t doremir_graph_insert(doremir_graph_node_t node,
                                      doremir_graph_t graph)
@@ -88,6 +90,8 @@ doremir_graph_t doremir_graph_insert(doremir_graph_node_t node,
 }
 
 /** Remove a node from the given graph.
+    @param node     Node to remove (comparing on equality).
+    @param graph    The graph.
  */
 doremir_graph_t doremir_graph_remove(doremir_graph_node_t node,
                                      doremir_graph_t graph)
@@ -100,6 +104,7 @@ doremir_graph_t doremir_graph_remove(doremir_graph_node_t node,
 }
 
 /** Copy the given graph.
+    @param graph    The graph.
  */
 doremir_graph_t doremir_graph_copy(doremir_graph_t graph)
 {
@@ -118,6 +123,10 @@ void doremir_graph_destroy(doremir_graph_t graph)
 }
 
 /** Connect the given nodes.
+    @param node1    First node in connection.
+    @param node2    Second node in connection.
+    @param label    Label to attach to connection. 
+    @param graph    The graph.
  */
 doremir_graph_t doremir_graph_connect(doremir_graph_node_t node1,
                                       doremir_graph_node_t node2,
@@ -136,6 +145,9 @@ doremir_graph_t doremir_graph_connect(doremir_graph_node_t node1,
 }
 
 /** Remove all connections between the given nodes.
+    @param node1    First node in connection.
+    @param node2    Second node in connection.
+    @param graph    The graph.
  */
 doremir_graph_t doremir_graph_disconnect(doremir_graph_node_t node1,
         doremir_graph_node_t node2,
@@ -165,6 +177,8 @@ doremir_list_t doremir_graph_to_list(doremir_graph_t graph)
     doremir_for_each(x,doremir_map_to_list(set))
 
 // params Node -> Label func, header, inline header
+/** Convert the given graph to a Dot language declaration.
+ */
 doremir_string_t doremir_graph_to_dot(
     doremir_string_t header,
     doremir_string_t inline_header,

@@ -1215,7 +1215,7 @@ void test_event()
 
         if (doremir_greater_than(t, seconds(0))) {
             int secs = doremir_time_to_seconds(t) - i;
-            doremir_audio_engine_log_info(string_dappend(string("Sleeping secs "), format_int("%d", secs)));
+            doremir_audio_engine_log_info(string_dappend(string("Sleeping secs "), format_integer("%d", secs)));
             doremir_thread_sleep(secs * 100); // time x10
             i += secs;
         } else {

@@ -390,7 +390,7 @@ list_t doremir_list_join(doremir_list_t lists) {}
 list_t doremir_list_djoin(doremir_list_t lists) {}
 
 
-/** Map over the given list and joinenate the results.
+/** Map over the given list and join the results.
     
     This function is useful to apply functions from singletons to lists.
     
@@ -405,7 +405,7 @@ doremir_list_t doremir_list_join_map(doremir_unary_t func,
                                        doremir_ptr_t data,
                                        doremir_list_t list) {}
 
-/** Map over the given list and joinenate the results.
+/** Map over the given list and join the results.
     
     This function is useful to apply functions from singletons to lists.
     

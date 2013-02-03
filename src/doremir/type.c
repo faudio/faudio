@@ -474,7 +474,7 @@ string_t type_show(doremir_ptr_t a)
             s = string_dappend(s, string("["));
             s = string_dappend(s, type_show(vector_get(type, base)));
             s = string_dappend(s, string(" x "));
-            s = string_dappend(s, format_int("%i", vector_get(type, size)));
+            s = string_dappend(s, format_integer("%i", vector_get(type, size)));
             s = string_dappend(s, string("]"));
             return s;
 

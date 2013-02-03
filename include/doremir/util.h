@@ -45,11 +45,11 @@
 
 #define atomic()            doremir_atomic_create()
 #define pair(a,b)           doremir_pair_create(a,b)
-// #define range(a,b)          doremir_list_enumerate(a,b)
 #define string(a)           doremir_string_from_utf8(a)
+#define string16(a)         doremir_string_from_utf16(u##a)
+#define string32(a)         doremir_string_from_utf32(U##a)
 #define unstring(a)         doremir_string_to_utf8(a)
 #define ratio(a,b)          doremir_ratio_create(a,b)
-
 
 #define never()             doremir_event_never()
 #define now(x)              doremir_event_now(x)
@@ -91,7 +91,6 @@
 #define char_at             doremir_string_char_at
 #define string_append       doremir_string_append
 #define string_dappend      doremir_string_dappend
-#define format_int          doremir_string_format_integer
 #define format_integer      doremir_string_format_integer
 #define format_floating     doremir_string_format_floating
 
