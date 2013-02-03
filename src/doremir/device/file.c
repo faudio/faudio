@@ -17,14 +17,14 @@ typedef doremir_device_file_result_t           result_t;
 struct _doremir_device_file_t {
     impl_t              impl;
     string_t            path;
-    SNDFILE      *      file;
+    SNDFILE            *file;
 };
 
 struct _doremir_device_file_result_t {
 
     device_t            input, output;
     processor_t         proc;
-    proc_interface_t  * proc_impl;
+    proc_interface_t   *proc_impl;
     int32_t             time;
     dispatcher_t        in_disp;
     dispatcher_t        out_disp;

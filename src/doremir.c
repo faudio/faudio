@@ -44,7 +44,7 @@ int doremir_type(doremir_ptr_t a)
     return ((intptr_t) a) & 0x7;
 }
 
-char * doremir_type_str(doremir_ptr_t a)
+char *doremir_type_str(doremir_ptr_t a)
 {
     switch (doremir_type(a)) {
         case 7:
@@ -176,14 +176,14 @@ int32_t doremir_to_int32(doremir_ptr_t a)
 doremir_ptr_t doremir_copy_int32(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
-    int32_t * q = malloc(sizeof(int32_t));
+    int32_t *q = malloc(sizeof(int32_t));
     *q = *((int32_t *)(p & ~0x7));
     return (doremir_ptr_t)(((intptr_t) q) | 0x4);
 }
 
 doremir_ptr_t doremir_from_int32(int32_t a)
 {
-    int32_t * p = malloc(sizeof(int32_t));
+    int32_t *p = malloc(sizeof(int32_t));
     *p = a;
     return (doremir_ptr_t)(((intptr_t) p) & ~0x7 | 0x4);
 }
@@ -210,14 +210,14 @@ int64_t doremir_to_int64(doremir_ptr_t a)
 doremir_ptr_t doremir_copy_int64(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
-    int64_t * q = malloc(sizeof(int64_t));
+    int64_t *q = malloc(sizeof(int64_t));
     *q = *((int64_t *)(p & ~0x7));
     return (doremir_ptr_t)(((intptr_t) q) & ~0x7 | 0x3);
 }
 
 doremir_ptr_t doremir_from_int64(int64_t a)
 {
-    int64_t * p = malloc(sizeof(int64_t));
+    int64_t *p = malloc(sizeof(int64_t));
     *p = a;
     return (doremir_ptr_t)(((intptr_t) p) & ~0x7 | 0x3);
 }
@@ -243,14 +243,14 @@ float doremir_to_float(doremir_ptr_t a)
 doremir_ptr_t doremir_copy_float(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
-    float * q = malloc(sizeof(float));
+    float *q = malloc(sizeof(float));
     *q = *((float *)(p & ~0x7));
     return (doremir_ptr_t)(((intptr_t) q) & ~0x7 | 0x2);
 }
 
 doremir_ptr_t doremir_from_float(float a)
 {
-    float * p = malloc(sizeof(float));
+    float *p = malloc(sizeof(float));
     *p = a;
     return (doremir_ptr_t)(((intptr_t) p) & ~0x7 | 0x2);
 }
@@ -276,14 +276,14 @@ double doremir_to_double(doremir_ptr_t a)
 doremir_ptr_t doremir_copy_double(doremir_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
-    double * q = malloc(sizeof(double));
+    double *q = malloc(sizeof(double));
     *q = *((double *)(p & ~0x7));
     return (doremir_ptr_t)(((intptr_t) q) & ~0x7 | 0x1);
 }
 
 doremir_ptr_t doremir_from_double(double a)
 {
-    double * p = malloc(sizeof(double));
+    double *p = malloc(sizeof(double));
     *p = a;
     return (doremir_ptr_t)(((intptr_t) p) & ~0x7 | 0x1);
 }
@@ -351,11 +351,11 @@ doremir_string_t doremir_show(doremir_ptr_t a)
     return doremir_string_show(a);
 }
 
-void doremir_print(char * f, doremir_ptr_t a)
+void doremir_print(char *f, doremir_ptr_t a)
 {
     if (a) {
         doremir_string_t str = doremir_string_show(a);
-        char * cstr = doremir_string_to_utf8(str);
+        char *cstr = doremir_string_to_utf8(str);
         printf(f, cstr);
         free(cstr);
         doremir_destroy(str);
@@ -364,7 +364,7 @@ void doremir_print(char * f, doremir_ptr_t a)
     }
 }
 
-void doremir_dprint(char * f, doremir_ptr_t a)
+void doremir_dprint(char *f, doremir_ptr_t a)
 {
     doremir_print(f, a);
     doremir_destroy(a);

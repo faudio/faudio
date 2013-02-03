@@ -13,7 +13,7 @@ struct _doremir_processor_loop_proc_t {
     impl_t              impl;               // Dispatcher
 
     proc_t              elem;               // Elements
-    proc_interface_t  * elemImpl;           // Fast pointer to the elements' processor implementation
+    proc_interface_t   *elemImpl;           // Fast pointer to the elements' processor implementation
 
     type_t              bufType;            // Type of loopback buffer
     // TODO add buffer
@@ -25,7 +25,7 @@ typedef doremir_processor_info_t            info_t;
 
 ptr_t loop_impl(doremir_id_t interface);
 
-inline static bool type_check(string_t * msg, this_t proc)
+inline static bool type_check(string_t *msg, this_t proc)
 {
     if (msg) {
         *msg = string("Both input and output must be pair types, and the first component"
@@ -91,19 +91,19 @@ size_t loop_buffer_size(frames_t frameSize, ptr_t a)
     return size_max(inSize + loopSize, outSize + loopSize);
 }
 
-void loop_before(ptr_t a, info_t * info)
+void loop_before(ptr_t a, info_t *info)
 {
     this_t proc = (this_t) a;
     proc->elemImpl->before(proc->elem, info);
 }
 
-void loop_after(ptr_t a, info_t * info)
+void loop_after(ptr_t a, info_t *info)
 {
     this_t proc = (this_t) a;
     proc->elemImpl->after(proc->elem, info);
 }
 
-void loop_process(ptr_t a, info_t * info, samples_t samples)
+void loop_process(ptr_t a, info_t *info, samples_t samples)
 {
     this_t proc = (this_t) a;
     proc->elemImpl->process(proc->elem, info, samples);

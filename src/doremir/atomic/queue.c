@@ -22,11 +22,11 @@
  */
 
 struct node {
-    struct node  *  next;
+    struct node    *next;
     ptr_t           value;
 };
 
-typedef struct node * node_t;
+typedef struct node *node_t;
 
 struct _doremir_atomic_queue_t {
     impl_t      impl;               //  Interface dispatcher

@@ -36,16 +36,16 @@
 struct _doremir_string_t {
     impl_t          impl;
     size_t          size;
-    uint16_t    *   data;
+    uint16_t       *data;
 };
 
 
 // --------------------------------------------------------------------------------
 
-static void          string_fatal(char * msg, int error);
+static void          string_fatal(char *msg, int error);
 static doremir_ptr_t string_impl(doremir_id_t interface);
 
-string_t new_string(size_t size, uint16_t * data)
+string_t new_string(size_t size, uint16_t *data)
 {
 
     string_t str = doremir_new(string);
@@ -178,7 +178,7 @@ uint16_t doremir_string_char_at(int n, doremir_string_t str)
     @return
         A new formatted string.
  */
-doremir_string_t doremir_string_format_integer(char * format, long value)
+doremir_string_t doremir_string_format_integer(char *format, long value)
 {
     char buffer[100];
     int  numChars;
@@ -201,7 +201,7 @@ doremir_string_t doremir_string_format_integer(char * format, long value)
     @return
         A new formatted string.
  */
-doremir_string_t doremir_string_format_floating(char * format, double value)
+doremir_string_t doremir_string_format_floating(char *format, double value)
 {
     char buffer[100];
     int  numChars;
@@ -245,7 +245,7 @@ static inline void iconv_fail()
     }
 }
 
-static inline size_t raw_size(char * s)
+static inline size_t raw_size(char *s)
 {
     size_t i = 0;
 
@@ -256,7 +256,7 @@ static inline size_t raw_size(char * s)
     return i;
 }
 
-static inline size_t raw_size_16(uint16_t * s)
+static inline size_t raw_size_16(uint16_t *s)
 {
     size_t i = 0;
 
@@ -276,7 +276,7 @@ static inline size_t raw_size_16(uint16_t * s)
 doremir_string_utf8_t doremir_string_to_utf8(doremir_string_t str)
 {
     size_t inSize, outSize, cstrSize;
-    char * in, *out, *cstr;
+    char *in, *out, *cstr;
 
     inSize  = str->size * char_size_k;   // exact char count
     outSize = str->size * 4;            // worst case, we shrink after iconv
@@ -311,7 +311,7 @@ doremir_string_utf8_t doremir_string_to_utf8(doremir_string_t str)
 doremir_string_utf16_t doremir_string_to_utf16(doremir_string_t as)
 {
     size_t size = as->size;
-    uint16_t * cstr = malloc((size + 1) * char_size_k);
+    uint16_t *cstr = malloc((size + 1) * char_size_k);
     memcpy(cstr, as->data, as->size * char_size_k);
     cstr[size] = 0;
     return cstr;
@@ -337,7 +337,7 @@ doremir_string_utf32_t doremir_string_to_utf32(doremir_string_t str)
 doremir_string_t doremir_string_from_utf8(doremir_string_utf8_t cstr)
 {
     size_t inSize, outSize, strSize;
-    char * in, *out, *str;
+    char *in, *out, *str;
 
     inSize  = raw_size(cstr);    // char count is in [inSize/4,inSize]
     outSize = inSize * 2;        // worst case, we shrink after iconv
@@ -397,9 +397,9 @@ doremir_string_t doremir_string_from_utf32(doremir_string_utf32_t cstr)
     @return
         A new CFStringRef.
  */
-void * doremir_string_to_cf_string(doremir_string_t str)
+void *doremir_string_to_cf_string(doremir_string_t str)
 {
-    char * cstr;
+    char *cstr;
     CFStringRef cfstr;
 
     cstr    = doremir_string_to_utf8(str);
@@ -417,10 +417,10 @@ void * doremir_string_to_cf_string(doremir_string_t str)
     @return
         A new string.
  */
-doremir_string_t doremir_string_from_cf_string(void * cfstr)
+doremir_string_t doremir_string_from_cf_string(void *cfstr)
 {
     CFIndex size;
-    char * cstr;
+    char *cstr;
     string_t str;
 
     if ((cstr = (char *) CFStringGetCStringPtr(cfstr, kCFStringEncodingUTF8))) {
@@ -587,7 +587,7 @@ doremir_ptr_t string_impl(doremir_id_t interface)
     }
 }
 
-void string_fatal(char * msg, int error)
+void string_fatal(char *msg, int error)
 {
     void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t origin);
 

@@ -19,7 +19,7 @@ typedef doremir_device_audio_session_t          session_t;
 typedef doremir_device_audio_stream_callback_t  stream_callback_t;
 typedef doremir_device_audio_session_callback_t session_callback_t;
 
-typedef PaStream   *  native_stream_t;
+typedef PaStream     *native_stream_t;
 typedef PaDeviceIndex native_device_t;
 
 struct _doremir_device_audio_session_t {
@@ -238,18 +238,18 @@ int during_processing(stream_t stream)
 
 /* The callbacks */
 
-int pa_main_callback(const void            *           input_ptr,
-                     void               *              output_ptr,
+int pa_main_callback(const void                       *input_ptr,
+                     void                             *output_ptr,
                      unsigned long                     frame_count,
-                     const PaStreamCallbackTimeInfo  * time_info,
+                     const PaStreamCallbackTimeInfo   *time_info,
                      PaStreamCallbackFlags             flags,
-                     void               *              data)
+                     void                             *data)
 {
     // call during_processing
     return 0;
 }
 
-void pa_finished_callback(void * userData)
+void pa_finished_callback(void *userData)
 {
     // call after_processing
 }
@@ -257,7 +257,7 @@ void pa_finished_callback(void * userData)
 
 // --------------------------------------------------------------------------------
 
-void fatal(char * msg, int error)
+void fatal(char *msg, int error)
 {
     // TODO log
     printf("Fatal error: Doremir: Device: Audio: %s: %d\n", msg, error);

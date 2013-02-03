@@ -22,7 +22,7 @@ struct edge {
 };
 
 typedef ptr_t         node_t;
-typedef struct edge * edge_t;
+typedef struct edge *edge_t;
 
 struct _doremir_graph_t {
     impl_t          impl;       //  Interface dispatcher
@@ -196,14 +196,14 @@ doremir_string_t doremir_graph_to_dot(
     str = string_dappend(str, string("\n\n"));
 
     doremir_set_for_each(x, graph->nodes) {
-        char * cs = doremir_string_to_utf8(doremir_string_show(x));
+        char *cs = doremir_string_to_utf8(doremir_string_show(x));
         snprintf(buf, 100, "    %s;\n", cs);
         str = string_dappend(str, string(buf));
     }
     doremir_map_for_each(x, graph->edges) {
-        char * n1 = doremir_string_to_utf8(doremir_string_show(doremir_pair_fst(doremir_pair_fst(x))));
-        char * n2 = doremir_string_to_utf8(doremir_string_show(doremir_pair_snd(doremir_pair_fst(x))));
-        char * l = doremir_string_to_utf8(doremir_string_show(doremir_pair_snd(x))); // FIXME want an unescaped show here
+        char *n1 = doremir_string_to_utf8(doremir_string_show(doremir_pair_fst(doremir_pair_fst(x))));
+        char *n2 = doremir_string_to_utf8(doremir_string_show(doremir_pair_snd(doremir_pair_fst(x))));
+        char *l = doremir_string_to_utf8(doremir_string_show(doremir_pair_snd(x)));  // FIXME want an unescaped show here
 
 
         snprintf(buf, 100, "    %s -> %s [label=%s];\n", n1, n2, l);

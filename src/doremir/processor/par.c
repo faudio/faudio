@@ -13,7 +13,7 @@ struct _doremir_processor_par_proc_t {
     impl_t              impl;                   // Dispatcher
 
     proc_t              elem[2];                // Elements
-    proc_interface_t  * elemImpl[2];            // Fast pointer to the elements' processor implementation
+    proc_interface_t   *elemImpl[2];            // Fast pointer to the elements' processor implementation
 
     size_t              inOffset, outOffset;
 };
@@ -24,7 +24,7 @@ typedef doremir_processor_info_t            info_t;
 
 ptr_t par_impl(doremir_id_t interface);
 
-inline static bool type_check(string_t * msg, this_t proc)
+inline static bool type_check(string_t *msg, this_t proc)
 {
     // Nothing to check
     return true;
@@ -84,7 +84,7 @@ size_t par_buffer_size(frames_t frameSize, ptr_t a)
     // FIXME should use buffer size of elements, not type size
 }
 
-void par_before(ptr_t a, info_t * info)
+void par_before(ptr_t a, info_t *info)
 {
     this_t proc = (this_t) a;
 
@@ -96,7 +96,7 @@ void par_before(ptr_t a, info_t * info)
     proc->outOffset = doremir_type_offset_of(info->frame_size, par_output_type(proc));
 }
 
-void par_after(ptr_t a, info_t * info)
+void par_after(ptr_t a, info_t *info)
 {
     this_t proc = (this_t) a;
 
@@ -104,7 +104,7 @@ void par_after(ptr_t a, info_t * info)
     proc->elemImpl[1]->after(proc->elem[1], info);
 }
 
-void par_process(ptr_t a, info_t * info, samples_t samples)
+void par_process(ptr_t a, info_t *info, samples_t samples)
 {
     this_t proc = (this_t) a;
 

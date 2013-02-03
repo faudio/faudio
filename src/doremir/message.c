@@ -30,7 +30,7 @@ struct _doremir_message_dispatcher_t {
 
 #define lockfree_get(v,f)   v->fields.lockfree.f
 
-void message_fatal(char * msg, int error);
+void message_fatal(char *msg, int error);
 
 // --------------------------------------------------------------------------------
 
@@ -203,7 +203,7 @@ ptr_t dispatcher_impl(doremir_id_t interface)
 
 void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t origin);
 
-void message_fatal(char * msg, int error)
+void message_fatal(char *msg, int error)
 {
     doremir_audio_engine_log_error_from(string_dappend(string(msg), format_integer(" (error code %d)", error)), string("Doremir.message"));
     doremir_audio_engine_log_error(string("Terminating Audio Engine"));

@@ -13,12 +13,12 @@
 
 #define print_max_size_k 80
 
-void buffer_fatal(char * msg, int error);
+void buffer_fatal(char *msg, int error);
 
 struct _doremir_buffer_t {
     impl_t          impl;       //  Interface dispatcher
     size_t          size;
-    uint8_t    *    data;
+    uint8_t        *data;
 };
 
 // --------------------------------------------------------------------------------
@@ -142,7 +142,7 @@ void doremir_buffer_poke_double(doremir_buffer_t buffer, size_t index, double va
     @note
         O(1)
  */
-void * doremir_buffer_unsafe_address(doremir_buffer_t buffer)
+void *doremir_buffer_unsafe_address(doremir_buffer_t buffer)
 {
     return buffer->data;
 }
@@ -159,8 +159,8 @@ doremir_pair_t doremir_buffer_read_audio(doremir_string_file_path_t path)
 
     SF_INFO info;
     info.format = 0;
-    char * file = doremir_string_to_utf8(path);
-    SNDFILE * f = sf_open(file, SFM_READ, &info);
+    char *file = doremir_string_to_utf8(path);
+    SNDFILE *f = sf_open(file, SFM_READ, &info);
 
     if (sf_error(f)) {
         char err[100];
@@ -172,7 +172,7 @@ doremir_pair_t doremir_buffer_read_audio(doremir_string_file_path_t path)
 
     size_t bufSize = info.frames * info.channels * sizeof(double);
     buffer = doremir_buffer_create(bufSize);
-    double * raw = doremir_buffer_unsafe_address(buffer);
+    double *raw = doremir_buffer_unsafe_address(buffer);
 
     sf_count_t sz = sf_read_double(f, raw, bufSize / sizeof(double));
     buffer = doremir_buffer_resize(sz * sizeof(double), buffer);
@@ -254,7 +254,7 @@ doremir_ptr_t buffer_impl(doremir_id_t interface)
 
 void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t origin);
 
-void buffer_fatal(char * msg, int error)
+void buffer_fatal(char *msg, int error)
 {
     doremir_audio_engine_log_error_from(string_dappend(string(msg), format_integer(" (error code %d)", error)), string("Doremir.Buffer"));
     doremir_audio_engine_log_error(string("Terminating Audio Engine"));

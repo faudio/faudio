@@ -80,7 +80,7 @@ denom_t doremir_ratio_denom(ratio_t x)
 /** Destruct the given rational number, writing its numerator
     and denominator to the given locations.
  */
-void doremir_ratio_match(ratio_t x, num_t * a, denom_t * b)
+void doremir_ratio_match(ratio_t x, num_t *a, denom_t *b)
 {
     *a = x->num;
     *b = x->denom;

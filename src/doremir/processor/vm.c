@@ -35,7 +35,7 @@ void lmm_destroy(lmm_t lmm)
     lmm_free(lmm);
 }
 
-char * lmm_get_error(lmm_t lmm)
+char *lmm_get_error(lmm_t lmm)
 {
     return lmm->error;
 }
@@ -83,7 +83,7 @@ size_t lmm_get_reg_max_size(lmm_t lmm, lmm_reg_t r)
     return lmm->regs[r].maxSize;
 }
 
-void * lmm_get_reg_data(lmm_t lmm, lmm_reg_t r)
+void *lmm_get_reg_data(lmm_t lmm, lmm_reg_t r)
 {
     return lmm->regs[r].data;
 }
@@ -110,7 +110,7 @@ void lmm_swap(lmm_t lmm, lmm_reg_t r1, lmm_reg_t r2)
 {
     size_t ts = rsize(r2);
     size_t tm = rmax(r2);
-    void * td = rdata(r2);
+    void *td = rdata(r2);
 
     rsize(r2) = rsize(r1);
     rmax(r2) = rmax(r1);
@@ -242,8 +242,8 @@ void lmm_vadd_i8_i8(
     typedef uint8_t arg1_t;
     typedef uint8_t arg2_t;
 
-    arg1_t * data1 = (arg1_t *) rdata(r1);
-    arg2_t * data2 = (arg2_t *) rdata(r2);
+    arg1_t *data1 = (arg1_t *) rdata(r1);
+    arg2_t *data2 = (arg2_t *) rdata(r2);
 
     size_t  count = size_min(rsize(r1) / sizeof(arg1_t), rsize(r2) / sizeof(arg2_t));
 

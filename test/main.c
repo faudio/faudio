@@ -8,9 +8,9 @@
 
 
 int  version[3] = { 2, 0, 0 };
-char * bits      = sizeof(void *) == 4 ? "32-bit" : "64-bit";
+char *bits      = sizeof(void *) == 4 ? "32-bit" : "64-bit";
 
-void test_section(char * str)
+void test_section(char *str)
 {
     printf("\n\n--------------------\n");
     doremir_audio_engine_log_info(string_dappend(string("Running test: "), string(str)));
@@ -18,7 +18,7 @@ void test_section(char * str)
 
 void test_wrap()
 {
-    extern char * doremir_type_str(doremir_ptr_t a);
+    extern char *doremir_type_str(doremir_ptr_t a);
 
     test_section("Value references");
     // FIXME leaks
@@ -84,7 +84,7 @@ void test_generic()
 }
 
 
-static inline void memdump(void * s, size_t n)
+static inline void memdump(void *s, size_t n)
 {
     for (size_t i = 0; i < n; ++i) {
         printf("%x ", *((unsigned char *)(s + i)));
@@ -104,7 +104,7 @@ void test_string()
 
     {
         // char* cs = " 新隶体 "; // length 5
-        char * cs = "höglund";
+        char *cs = "höglund";
 
         string_t s = string(cs);
         printf("len: %i\n", doremir_string_length(s));
@@ -350,7 +350,7 @@ struct reader_args {
 };
 doremir_ptr_t queue_reader(doremir_ptr_t x)
 {
-    struct reader_args * args = x;
+    struct reader_args *args = x;
     doremir_atomic_queue_t q = args->queue;
     atomic_t               a = args->active;
     ptr_t                  v;
@@ -399,7 +399,7 @@ struct stack_reader_args {
 };
 doremir_ptr_t stack_reader(doremir_ptr_t x)
 {
-    struct stack_reader_args * args = x;
+    struct stack_reader_args *args = x;
     doremir_atomic_stack_t q = args->stack;
     atomic_t               a = args->active;
     ptr_t                  v;
@@ -483,7 +483,7 @@ typedef struct {
 } lock_index;
 ptr_t locker(ptr_t x)
 {
-    lock_index * i = (lock_index *) x;
+    lock_index *i = (lock_index *) x;
 
     doremir_thread_lock(i->mut);
     printf("Acquired lock in thread %d\n", i->val);
@@ -514,12 +514,12 @@ void test_mutex()
 typedef struct {
     doremir_thread_mutex_t mut;
     doremir_thread_condition_t cond;
-    char * msg;
+    char *msg;
 } send_hub;
 doremir_ptr_t sender(doremir_ptr_t x)
 {
-    send_hub * h = (send_hub *) x;
-    static char * const msgs[10] = {
+    send_hub *h = (send_hub *) x;
+    static char *const msgs[10] = {
         "Sur", "le", "pond", "d'Avignon", "on", "y", "danse", "tous", "en", "round"
     };
 
@@ -537,7 +537,7 @@ doremir_ptr_t sender(doremir_ptr_t x)
 }
 ptr_t receiver(ptr_t x)
 {
-    send_hub * h = (send_hub *) x;
+    send_hub *h = (send_hub *) x;
 
     while (true) {
         doremir_thread_lock(h->mut);
@@ -1122,7 +1122,7 @@ void test_graph()
 
         doremir_print("a                            ==> %s\n", a);
 
-        FILE * f = fopen("/Users/hans/audio/doc/graphs/gen.dot", "w+");
+        FILE *f = fopen("/Users/hans/audio/doc/graphs/gen.dot", "w+");
         fprintf(f, "%s\n", doremir_string_to_utf8(doremir_graph_to_dot(
                     string("#include \"doc/graphs/header.dot\""),
                     string("GRAPH_FORMAT_VERT;"),
@@ -1331,7 +1331,7 @@ ptr_t cont(ptr_t x)
     return x;
 }
 
-double f1(void * ct, int i, double t, double x)
+double f1(void *ct, int i, double t, double x)
 {
     double pi  = 3.141592653589793;
     double tau = 2 * pi;
@@ -1493,7 +1493,7 @@ void midi_stream()
 
 
 
-int main(int argc, char const * argv[])
+int main(int argc, char const *argv[])
 {
     printf("DoReMIR Audio engine %s v%d.%d.%d\n", bits, version[0], version[1], version[2]);
 

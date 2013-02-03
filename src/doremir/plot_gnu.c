@@ -17,8 +17,8 @@ typedef doremir_plot_function_t plot_func_t;
 
 void run_gnu_plot(plot_func_t func, ptr_t func_data, nullary_t cont, ptr_t cont_data)
 {
-    struct passwd * passwdEnt = getpwuid(getuid());
-    char * home = passwdEnt->pw_dir;
+    struct passwd *passwdEnt = getpwuid(getuid());
+    char *home = passwdEnt->pw_dir;
 
     char dat[L_tmpnam], plot[L_tmpnam], out_dir[100], out[100];
 
@@ -31,8 +31,8 @@ void run_gnu_plot(plot_func_t func, ptr_t func_data, nullary_t cont, ptr_t cont_
 
     mkdir(out_dir, (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH));
 
-    FILE * datf = fopen(dat, "w+");
-    FILE * plotf = fopen(plot, "w+");
+    FILE *datf = fopen(dat, "w+");
+    FILE *plotf = fopen(plot, "w+");
 
     int samples     = 500000;
     int down_sample = 10;

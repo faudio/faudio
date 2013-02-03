@@ -22,7 +22,7 @@ typedef doremir_processor_info_t            info_t;
 
 ptr_t split_impl(doremir_id_t interface);
 
-inline static bool type_check(string_t * msg, this_t proc)
+inline static bool type_check(string_t *msg, this_t proc)
 {
     // Nothing to check
     return true;
@@ -67,18 +67,18 @@ size_t split_buffer_size(frames_t frameSize, ptr_t a)
     return doremir_type_size_of(frameSize, split_output_type(a));
 }
 
-void split_before(ptr_t a, info_t * info)
+void split_before(ptr_t a, info_t *info)
 {
     this_t proc = (this_t) a;
     proc->size = doremir_type_size_of(info->frame_size, proc->input_type);
 }
 
-void split_after(ptr_t a, info_t * info)
+void split_after(ptr_t a, info_t *info)
 {
     // nothing
 }
 
-void split_process(ptr_t a, info_t * info, samples_t samples)
+void split_process(ptr_t a, info_t *info, samples_t samples)
 {
     this_t proc = (this_t) a;
 

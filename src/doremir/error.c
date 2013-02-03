@@ -19,7 +19,7 @@ struct simple_error {
     string_t      origin;
 };
 
-typedef struct simple_error    *   simple_error_t;
+typedef struct simple_error       *simple_error_t;
 
 void doremir_audio_engine_log(doremir_ptr_t ct, doremir_error_t e);
 

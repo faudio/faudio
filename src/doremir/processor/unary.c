@@ -71,17 +71,17 @@ size_t unary_buffer_size(frames_t frameSize, ptr_t a)
     return size_max(inSize, outSize);
 }
 
-void unary_before(ptr_t a, info_t * info)
+void unary_before(ptr_t a, info_t *info)
 {
     // nothing
 }
 
-void unary_after(ptr_t a, info_t * info)
+void unary_after(ptr_t a, info_t *info)
 {
     // nothing
 }
 
-void unary_process(ptr_t a, info_t * info, samples_t samples)
+void unary_process(ptr_t a, info_t *info, samples_t samples)
 {
     // unary_proc_uint8_t_uint8_t(1, proc2, samples, samples);
     // TODO call

@@ -14,7 +14,7 @@
             * We may want to optimize by adding special mergeBy, insertBy etc.
  */
 
-typedef struct node      *      node_t;
+typedef struct node            *node_t;
 typedef priority_queue_t        queue_t;
 
 struct node {

@@ -73,17 +73,17 @@ size_t binary_buffer_size(frames_t frameSize, ptr_t a)
     return size_max(inSize, outSize);
 }
 
-void binary_before(ptr_t a, info_t * info)
+void binary_before(ptr_t a, info_t *info)
 {
     // nothing
 }
 
-void binary_after(ptr_t a, info_t * info)
+void binary_after(ptr_t a, info_t *info)
 {
     // nothing
 }
 
-void binary_process(ptr_t a, info_t * info, samples_t samples)
+void binary_process(ptr_t a, info_t *info, samples_t samples)
 {
     // TODO call func
 }

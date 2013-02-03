@@ -53,17 +53,17 @@ size_t id_buffer_size(frames_t frameSize, ptr_t a)
     return doremir_type_size_of(frameSize, id_input_type(a));
 }
 
-void id_before(ptr_t a, info_t * info)
+void id_before(ptr_t a, info_t *info)
 {
     // nothing
 }
 
-void id_after(ptr_t a, info_t * info)
+void id_after(ptr_t a, info_t *info)
 {
     // nothing
 }
 
-void id_process(ptr_t a, info_t * info, samples_t samples)
+void id_process(ptr_t a, info_t *info, samples_t samples)
 {
     // nothing
 }

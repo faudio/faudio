@@ -24,7 +24,7 @@ struct _doremir_thread_condition_t {
     doremir_thread_mutex_t  mutex;
 };
 
-static void doremir_thread_fatal(char * msg, int error);
+static void doremir_thread_fatal(char *msg, int error);
 
 static const long join_interval_k = 50;
 
@@ -33,11 +33,11 @@ static const long join_interval_k = 50;
 
 static DWORD WINAPI start(LPVOID x)
 {
-    doremir_closure_t * closure = x;
+    doremir_closure_t *closure = x;
     return closure->function(closure->value);
 }
 
-doremir_thread_t doremir_thread_create(doremir_closure_t * closure)
+doremir_thread_t doremir_thread_create(doremir_closure_t *closure)
 {
     doremir_thread_t thread = malloc(sizeof(struct _doremir_thread_t));
 
@@ -150,7 +150,7 @@ bool doremir_thread_unlock(doremir_thread_mutex_t mutex)
 
 void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t origin);
 
-void doremir_thread_fatal(char * msg, int error)
+void doremir_thread_fatal(char *msg, int error)
 {
     doremir_audio_engine_log_error_from(string(msg), string("Doremir.Thread"));
     exit(error);

@@ -24,11 +24,11 @@
 
 struct node {
     size_t          count;      //  Number of references
-    struct node  *  next;       //  Next node or null
+    struct node    *next;       //  Next node or null
     ptr_t           value;      //  The value
 };
 
-typedef struct node * node_t;
+typedef struct node *node_t;
 
 struct _doremir_list_t {
     impl_t          impl;       //  Interface dispatcher

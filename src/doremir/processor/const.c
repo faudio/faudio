@@ -62,17 +62,17 @@ size_t const_buffer_size(frames_t frameSize, ptr_t a)
     return size_max(inSize, outSize);
 }
 
-void const_before(ptr_t a, info_t * info)
+void const_before(ptr_t a, info_t *info)
 {
     // nothing
 }
 
-void const_after(ptr_t a, info_t * info)
+void const_after(ptr_t a, info_t *info)
 {
     // nothing
 }
 
-void const_process(ptr_t a, info_t * info, samples_t samples)
+void const_process(ptr_t a, info_t *info, samples_t samples)
 {
     // TODO copy value
 }

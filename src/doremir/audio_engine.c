@@ -62,7 +62,7 @@ void doremir_audio_engine_terminate()
 
 static inline void stdlog(ptr_t ct, doremir_time_system_t t, doremir_error_t e)
 {
-    FILE * file = ct;
+    FILE *file = ct;
     char msg[350];
     bool color = (file == stdout && isatty(fileno(stdout)));
 
@@ -85,7 +85,7 @@ static inline void stdlog(ptr_t ct, doremir_time_system_t t, doremir_error_t e)
  */
 void doremir_audio_engine_set_log_file(doremir_string_file_path_t path)
 {
-    char * cpath = doremir_string_to_utf8(path);
+    char *cpath = doremir_string_to_utf8(path);
     log_ct_g     = fopen(cpath, "a");
     log_func_g   = stdlog;
     free(cpath);

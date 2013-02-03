@@ -30,7 +30,7 @@ struct _doremir_thread_condition_t {
 
 // --------------------------------------------------------------------------------
 
-static void doremir_thread_fatal(char * msg, int error);
+static void doremir_thread_fatal(char *msg, int error);
 
 
 // --------------------------------------------------------------------------------
@@ -242,7 +242,7 @@ void doremir_thread_notify_all(doremir_thread_condition_t cond)
 
 void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t origin);
 
-void doremir_thread_fatal(char * msg, int error)
+void doremir_thread_fatal(char *msg, int error)
 {
     doremir_audio_engine_log_error_from(string(msg), string("Doremir.Thread"));
     exit(error);

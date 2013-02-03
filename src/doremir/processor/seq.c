@@ -13,7 +13,7 @@ struct _doremir_processor_seq_proc_t {
     impl_t              impl;               // Dispatcher
 
     proc_t              elem[2];            // Elements
-    proc_interface_t  * elemImpl[2];        // Fast impl pointer
+    proc_interface_t   *elemImpl[2];        // Fast impl pointer
 };
 
 typedef doremir_processor_seq_proc_t    this_t;
@@ -22,7 +22,7 @@ typedef doremir_processor_info_t        info_t;
 
 ptr_t seq_impl(doremir_id_t interface);
 
-inline static bool type_check(string_t * msg, this_t proc)
+inline static bool type_check(string_t *msg, this_t proc)
 {
     if (msg) {
         *msg = string("Input type must equal output type");
@@ -84,7 +84,7 @@ size_t seq_buffer_size(frames_t frameSize, ptr_t a)
     // FIXME should use buffer size of elements, not type size
 }
 
-void seq_before(ptr_t a, info_t * info)
+void seq_before(ptr_t a, info_t *info)
 {
     this_t proc = (this_t) a;
 
@@ -92,7 +92,7 @@ void seq_before(ptr_t a, info_t * info)
     proc->elemImpl[1]->before(proc->elem[1], info);
 }
 
-void seq_after(ptr_t a, info_t * info)
+void seq_after(ptr_t a, info_t *info)
 {
     this_t proc = (this_t) a;
 
@@ -100,7 +100,7 @@ void seq_after(ptr_t a, info_t * info)
     proc->elemImpl[1]->after(proc->elem[1], info);
 }
 
-void seq_process(ptr_t a, info_t * info, samples_t samples)
+void seq_process(ptr_t a, info_t *info, samples_t samples)
 {
     this_t proc = (this_t) a;
 

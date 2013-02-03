@@ -23,7 +23,7 @@ struct entry {
     ptr_t       value;
 };
 
-typedef struct entry * entry_t;
+typedef struct entry *entry_t;
 
 struct _doremir_map_t {
     impl_t          impl;       //  Interface dispatcher
