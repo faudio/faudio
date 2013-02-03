@@ -32,7 +32,8 @@ module Doremir.Atomic
     exchange : (Atomic, Ptr, Ptr) -> Bool;
     get     : Atomic -> Ptr;
     set     : (Atomic, Ptr) -> Void;
-    add     : (Atomic, Ptr) -> Void;
     modify  : (Atomic, Unary, Ptr) -> Void;
+
+    // increment : (Atomic, Ptr) -> Void;
 }
 

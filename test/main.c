@@ -325,8 +325,8 @@ void test_atomic()
         doremir_atomic_modify(a, add10, 0);
         doremir_print("a                            ==> %s\n", a);
 
-        doremir_atomic_add(a, (ptr_t) - 0xf);
-        doremir_print("a                            ==> %s\n", a);
+        // doremir_atomic_add(a, (ptr_t) - 0xf);
+        // doremir_print("a                            ==> %s\n", a);
 
         doremir_atomic_exchange(a, (ptr_t) 1, (ptr_t) 0xfe);
         doremir_print("a                            ==> %s\n", a); // fails, still 0

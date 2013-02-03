@@ -92,16 +92,16 @@ bool doremir_atomic_exchange(doremir_atomic_t a, doremir_ptr_t old, doremir_ptr_
     return OSAtomicCompareAndSwapPtrBarrier(old, new, (ptr_t) &a->value);
 }
 
-/**
-    Increment the given atomic reference by the given amount.
-
-    @par Atomicity
-        Atomic
- */
-void doremir_atomic_add(doremir_atomic_t a, doremir_ptr_t v)
-{
-    OSAtomicAdd32Barrier((int32_t) v, (ptr_t) &a->value);
-}
+// /**
+//     Increment the given atomic reference by the given amount.
+// 
+//     @par Atomicity
+//         Atomic
+//  */
+// void doremir_atomic_add(doremir_atomic_t a, doremir_ptr_t v)
+// {
+//     OSAtomicAdd32Barrier((int32_t) v, (ptr_t) &a->value);
+// }
 
 /**
     Return the current value of the given atomic reference.
