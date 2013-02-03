@@ -95,6 +95,16 @@ doremir_list_t doremir_device_audio_all(doremir_device_audio_session_t session) 
  */
 doremir_pair_t doremir_device_audio_default(doremir_device_audio_session_t session) {}
 
+/** 
+    Get the standard input device of the given session.
+ */
+doremir_device_audio_t doremir_device_audio_default_input(doremir_device_audio_session_t session) {}
+
+/** 
+    Get the standard output device of the given session.
+ */
+doremir_device_audio_t doremir_device_audio_default_output(doremir_device_audio_session_t session) {}
+
 
 
 // --------------------------------------------------------------------------------
@@ -131,26 +141,16 @@ void doremir_device_audio_with_stream(doremir_device_audio_t                 inp
     @throw
         TODO
     @return
-        A new stream or an error if no stream could be started.
+        A new stream or an error if no stream could be opened.
  */
 doremir_device_audio_stream_t 
-doremir_device_audio_start_stream(doremir_device_audio_t    input,
-                                  doremir_processor_t       processor,
-                                  doremir_device_audio_t    output) {}
-
-/** 
-    Restart the given audio stream.
-    
-    @throw
-        TODO
-    @return 
-        A new session, or an error if no session could be started.
- */
-doremir_device_audio_stream_t doremir_device_audio_restart_stream(doremir_device_audio_stream_t stream) {}
+doremir_device_audio_open_stream(doremir_device_audio_t    input,
+                                doremir_processor_t       processor,
+                                doremir_device_audio_t    output) {}
 
 /** 
     Close the given stream.
     @param session 
         Stream to close.
  */
-void doremir_device_audio_stop_stream(doremir_device_audio_stream_t stream) {}
+void doremir_device_audio_close_stream(doremir_device_audio_stream_t stream) {}

@@ -159,7 +159,7 @@ doremir_pair_t doremir_device_audio_channels(device_t device)
 // --------------------------------------------------------------------------------
 
 // FIXME return Optional?
-stream_t doremir_device_audio_start_stream(device_t    input,
+stream_t doremir_device_audio_open_stream(device_t    input,
         processor_t processor,
         device_t    output)
 {
@@ -174,7 +174,7 @@ stream_t doremir_device_audio_restart_stream(stream_t stream)
     assert(false && "Not implemented");
 }
 
-void doremir_device_audio_stop_stream(stream_t stream)
+void doremir_device_audio_close_stream(stream_t stream)
 {
     assert(false && "Not implemented");
     // call Pa_StopStream
@@ -187,9 +187,9 @@ void doremir_device_audio_with_stream(device_t          input,
                                       device_t          output,
                                       stream_callback_t callback)
 {
-    stream_t stream = doremir_device_audio_start_stream(input, processor, output);
+    stream_t stream = doremir_device_audio_open_stream(input, processor, output);
     // doremir_check(stream) ? callback(stream) : error_callback(stream);
-    doremir_device_audio_stop_stream(stream);
+    doremir_device_audio_close_stream(stream);
 }
 
 
