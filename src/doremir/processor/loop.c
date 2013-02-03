@@ -47,6 +47,7 @@ this_t doremir_processor_loop_create(processor_t proc1)
 
     proc->elem      = proc1;
     proc->elemImpl  = doremir_interface(doremir_processor_interface_i, proc->elem);
+    assert(proc->elemImpl && "Must implement Processor");
 
     proc->bufType   = doremir_type_get_pair_fst(doremir_processor_input_type(proc->elem)); // TODO get fst
 

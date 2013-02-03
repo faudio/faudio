@@ -295,12 +295,14 @@ doremir_ptr_t doremir_from_double(double a)
 #define GENERIC1(I,F,A,B) \
     B doremir_##F(A a)                                                                      \
     {                                                                                       \
+        assert(doremir_interface(doremir_##I##_i, a) && "Must implement " #I);              \
         return ((doremir_##I##_t*) doremir_interface(doremir_##I##_i, a))->F(a);            \
     }
 
 #define GENERIC2(I,F,A,B,C) \
     C doremir_##F(A a, B b)                                                                 \
     {                                                                                       \
+        assert(doremir_interface(doremir_##I##_i, a) && "Must implement " #I);              \
         return ((doremir_##I##_t*) doremir_interface(doremir_##I##_i, a))->F(a, b);         \
     }
 

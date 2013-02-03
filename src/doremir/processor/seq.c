@@ -44,6 +44,8 @@ this_t doremir_processor_seq_create(processor_t proc1, processor_t proc2)
 
     proc->elemImpl[0]   = doremir_interface(doremir_processor_interface_i, proc->elem[0]);
     proc->elemImpl[1]   = doremir_interface(doremir_processor_interface_i, proc->elem[1]);
+    assert(proc->elemImpl[0] && "Must implement Processor");
+    assert(proc->elemImpl[1] && "Must implement Processor");
 
     if (type_check(NULL, proc)) {
         return proc;
