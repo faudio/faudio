@@ -5,7 +5,6 @@ Additions
 * Dispatcher impl
 * Event/Scheduler impl
 
-* Graph
 * Buffer streams
 * File streams
 * RT audio
@@ -18,8 +17,7 @@ Additions
     * Group buffer with audio type
     * Include sample rate in this?
 
-* Ringbuffer
-* Better FIFO (multi-RW, see paper)
+* Ringbuffer/better FIFO (multi-RW, see paper)
 * Better map/set backend (PersistentVector/IntMap or PatriciaTree)
 * JSON serialization
 
