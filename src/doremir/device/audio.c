@@ -50,43 +50,47 @@ static mutex_t pa_mutex;
 static bool    pa_status;
 
 error_t audio_device_error(string_t msg);
+ptr_t audio_session_impl(doremir_id_t interface);
+ptr_t audio_device_impl(doremir_id_t interface);
+ptr_t audio_stream_impl(doremir_id_t interface);
+
 
 // --------------------------------------------------------------------------------
 
 inline static session_t new_session()
-{    
+{
     session_t session = doremir_new(device_audio_session);
-    // session->impl = &session_impl;
+    session->impl = &audio_session_impl;
     // TODO
     return session;
 }
 inline static void delete_session(session_t session)
 {
-    doremir_delete(session);    
+    doremir_delete(session);
 }
 
 inline static device_t new_device()
-{    
+{
     device_t device = doremir_new(device_audio);
-    // device->impl = &device_impl;
+    device->impl = &audio_device_impl;
     // TODO
     return device;
 }
 inline static void delete_device(device_t device)
-{    
-    doremir_delete(device);    
+{
+    doremir_delete(device);
 }
 
 inline static stream_t new_stream()
-{    
+{
     stream_t stream = doremir_new(device_audio_stream);
-    // stream->impl = &stream_impl;
+    stream->impl = &audio_stream_impl;
     // TODO
     return stream;
 }
 inline static void delete_stream(stream_t stream)
-{    
-    doremir_delete(stream);    
+{
+    doremir_delete(stream);
 }
 
 
@@ -117,16 +121,15 @@ session_t doremir_device_audio_begin_session()
     doremir_thread_lock(pa_mutex);
     {
         if (pa_status) {
-            audio_device_error(string("Concurrent audio sessions"));
+            doremir_thread_unlock(pa_mutex);
+            return audio_device_error(string("Overlapping audio sessions"));
         } else {
             Pa_Initialize();
             pa_status = true;
-            // TODO create and return session object
+            doremir_thread_unlock(pa_mutex);
+            return new_session();
         }
     }
-    doremir_thread_unlock(pa_mutex);
-    // TODO return
-    return NULL;
 }
 
 void doremir_device_audio_end_session(session_t session)
@@ -134,6 +137,8 @@ void doremir_device_audio_end_session(session_t session)
     if (!pa_mutex) {
         assert(false && "Not initalized");
     }
+
+    inform(string("Ending audio session"));
 
     doremir_thread_lock(pa_mutex);
     {
@@ -143,6 +148,7 @@ void doremir_device_audio_end_session(session_t session)
         }
     }
     doremir_thread_unlock(pa_mutex);
+    delete_session(session);
 }
 
 void doremir_device_audio_with_session(
@@ -289,6 +295,107 @@ void pa_finished_callback(void *userData)
 }
 
 
+
+
+// --------------------------------------------------------------------------------
+
+doremir_string_t audio_session_show(ptr_t a)
+{
+    string_t str = string("<AudioSession ");
+    str = string_dappend(str, doremir_string_format_integer(" %p", (long) a));
+    str = string_dappend(str, string(">"));
+    return str;
+}
+
+void audio_session_destroy(ptr_t a)
+{
+    doremir_device_audio_end_session(a);
+}
+
+ptr_t audio_session_impl(doremir_id_t interface)
+{
+    static doremir_string_show_t audio_session_show_impl
+        = { audio_session_show };
+    static doremir_destroy_t audio_session_destroy_impl
+        = { audio_session_destroy };
+
+    switch (interface) {
+        case doremir_string_show_i:
+            return &audio_session_show_impl;
+
+        case doremir_destroy_i:
+            return &audio_session_destroy_impl;
+
+        default:
+            return NULL;
+    }
+}
+
+
+// --------------------------------------------------------------------------------
+
+doremir_string_t audio_stream_show(ptr_t a)
+{
+    string_t str = string("<AudioStream ");
+    str = string_dappend(str, doremir_string_format_integer(" %p", (long) a));
+    str = string_dappend(str, string(">"));
+    return str;
+}
+
+void audio_stream_destroy(ptr_t a)
+{
+    doremir_device_audio_close_stream(a);
+}
+
+ptr_t audio_stream_impl(doremir_id_t interface)
+{
+    static doremir_string_show_t audio_stream_show_impl
+        = { audio_stream_show };
+    static doremir_destroy_t audio_stream_destroy_impl
+        = { audio_stream_destroy };
+
+    switch (interface) {
+        case doremir_string_show_i:
+            return &audio_stream_show_impl;
+
+        case doremir_destroy_i:
+            return &audio_stream_destroy_impl;
+
+        default:
+            return NULL;
+    }
+}
+
+// --------------------------------------------------------------------------------
+
+doremir_string_t audio_device_show(ptr_t a)
+{
+    string_t str = string("<AudioDevice ");
+    str = string_dappend(str, doremir_string_format_integer(" %p", (long) a));
+    str = string_dappend(str, string(">"));
+    return str;
+}
+
+ptr_t audio_device_impl(doremir_id_t interface)
+{
+    static doremir_string_show_t audio_device_show_impl
+        = { audio_device_show };
+
+    switch (interface) {
+        case doremir_string_show_i:
+            return &audio_device_show_impl;
+
+        default:
+            return NULL;
+    }
+}
+
+
+
+
+
+
+
 // --------------------------------------------------------------------------------
 
 void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t origin);
@@ -301,7 +408,7 @@ error_t audio_device_error(string_t msg)
 void audio_device_fatal(char *msg, int error)
 {
     doremir_audio_engine_log_error_from(
-        string_dappend(string(msg), format_integer(" (error code %d)", error)), 
+        string_dappend(string(msg), format_integer(" (error code %d)", error)),
         string("Doremir.Device.Audio"));
     doremir_audio_engine_log_error(string("Terminating Audio Engine"));
     exit(error);

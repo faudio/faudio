@@ -1479,11 +1479,37 @@ void buffer_stream()
     test_section("Buffer streams");
 
 }
+
 void audio_stream()
 {
     test_section("Audio streams");
 
+    audio_session_t session;
+    audio_device_t  input, output;
+    audio_stream_t  stream;
+    processor_t     proc;
+
+    // Processor to use
+    proc = doremir_processor_identity(type_pair(type(f32), type(f32)));
+
+    // Begin session
+    session = doremir_device_audio_begin_session();
+    session = doremir_device_audio_begin_session();
+
+    // Handle possible error
+    if (doremir_check(session)) {
+        log_error((error_t) session);
+        warn(string("Aborting test due to error"));
+        goto cleanup;
+    }
+        
+cleanup:
+    // doremir_device_audio_close_stream(stream);
+    doremir_device_audio_end_session(session);
+    doremir_destroy(proc);
 }
+
+
 void midi_stream()
 {
     test_section("Midi streams");
