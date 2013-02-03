@@ -20,6 +20,8 @@ typedef struct {
             doremir_string_t (* origin)(doremir_ptr_t);
         } doremir_error_interface_t;
 typedef struct _doremir_error_t * doremir_error_t;
+typedef void (* doremir_error_callback_t)(doremir_ptr_t,
+                                          doremir_error_t);
 doremir_error_t doremir_error_create_simple(doremir_error_severity_t,
                                             doremir_string_t,
                                             doremir_string_t);

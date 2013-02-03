@@ -48,6 +48,14 @@
 #define address_t           doremir_message_address_t
 #define message_t           doremir_message_t
 
+#define audio_device_t      doremir_device_audio_t
+#define midi_device_t       doremir_device_midi_t
+#define file_device_t       doremir_device_file_t
+#define buffer_device_t     doremir_device_buffer_t
+#define audio_stream_t      doremir_device_audio_stream_t
+#define midi_stream_t       doremir_device_midi_stream_t
+#define audio_session_t     doremir_device_audio_session_t
+#define midi_session_t      doremir_device_midi_session_t
 
 #define pair(a,b)           doremir_pair_create(a,b)
 #define string(a)           doremir_string_from_utf8(a)

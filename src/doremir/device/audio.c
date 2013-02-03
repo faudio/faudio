@@ -111,11 +111,16 @@ void doremir_device_audio_end_session(session_t session)
     doremir_thread_unlock(pa_mutex);
 }
 
-void doremir_device_audio_with_session(session_callback_t callback)
+void doremir_device_audio_with_session(
+    doremir_device_audio_session_callback_t session_callback,
+    doremir_ptr_t                           session_data,
+    doremir_error_callback_t          error_callback,
+    doremir_ptr_t                           error_data
+)
 {
-    session_t session = doremir_device_audio_begin_session();
-    callback(session);
-    doremir_device_audio_end_session(session);
+    // session_t session = doremir_device_audio_begin_session();
+    // callback(session);
+    // doremir_device_audio_end_session(session);
 }
 
 doremir_list_t doremir_device_audio_all(session_t session)
@@ -182,10 +187,15 @@ void doremir_device_audio_close_stream(stream_t stream)
     // call Pa_CloseStream
 }
 
-void doremir_device_audio_with_stream(device_t          input,
-                                      processor_t       processor,
-                                      device_t          output,
-                                      stream_callback_t callback)
+void doremir_device_audio_with_stream(
+    doremir_device_audio_t                 input,
+    doremir_processor_t                    processor,
+    doremir_device_audio_t                 output,
+    doremir_device_audio_stream_callback_t stream_callback,
+    doremir_ptr_t                          stream_data,
+    doremir_error_callback_t         error_callback,
+    doremir_ptr_t                          error_data
+)
 {
     stream_t stream = doremir_device_audio_open_stream(input, processor, output);
     // doremir_check(stream) ? callback(stream) : error_callback(stream);

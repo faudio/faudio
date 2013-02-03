@@ -1370,11 +1370,11 @@ void test_plot_buffer()
     doremir_plot_buffer_double(buf, NULL, NULL);
 }
 
-void test_plot_file()
+void test_plot_file(string_t path)
 {
     test_section("Plot file");
 
-    pair_t res = doremir_buffer_read_audio(string("/Users/hans/Desktop/Lamento.aiff"));
+    pair_t res = doremir_buffer_read_audio(path);
 
     if (doremir_error_check(res)) {
         doremir_error_log(NULL, (error_t) res);
@@ -1387,14 +1387,6 @@ void test_plot_file()
     doremir_plot_buffer_double(buf, NULL, NULL);
     doremir_destroy(buf);
     doremir_destroy(res);
-}
-
-
-extern void test_vm(); // in vm.c
-void test_vm2()
-{
-    test_section("Virtual machine");
-    test_vm();
 }
 
 void test_error()
@@ -1424,6 +1416,37 @@ void test_log()
 
     doremir_audio_engine_log_info(string("---------------"));
 }
+
+
+extern void test_vm(); // in vm.c
+void test_vm2()
+{
+    test_section("Virtual machine");
+    test_vm();
+}
+
+void test_file_stream()
+{
+    test_section("File streams");
+
+}
+void buffer_stream()
+{
+    test_section("Buffer streams");
+
+}
+void audio_stream()
+{
+    test_section("Audio streams");
+
+}
+void midi_stream()
+{
+    test_section("Midi streams");
+
+}
+
+
 
 
 int main(int argc, char const * argv[])
@@ -1479,21 +1502,23 @@ int main(int argc, char const * argv[])
         test_priority_queue(10);
         test_to_json();
 
-
         test_dispatcher();
-        goto end;
-        test_event();
-
+        // test_event();
+        // scheduler
 
         test_log();
         test_error();
         // test_plot(NULL, NULL);
-        test_plot_buffer();
-        // test_plot_file();
+        // test_plot_buffer();
+        // test_plot_file(string("/Users/hans/Desktop/Passager.wav"));
 
-        // test_processors();
-        // test_vm2();
-        // schedulers
+        test_processors();
+        test_vm2();
+
+        test_file_stream();
+        buffer_stream();
+        audio_stream();
+        midi_stream();
 end:
         doremir_audio_engine_terminate();
     }

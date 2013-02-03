@@ -23,17 +23,19 @@ module Doremir.Device.Audio
     import Doremir.List;
     import Doremir.Pair;
     import Doremir.Device;
+    import Doremir.Error;
     import Doremir.Processor;
 
     type Session = opaque;
     type Stream = opaque;
-    type SessionCallback = (Session -> Session)*;
-    type StreamCallback = (Stream -> Stream)*;
+    type SessionCallback = ((Ptr,Session) -> Session)*;
+    type StreamCallback = ((Ptr,Stream) -> Stream)*;
 
     beginSession : () -> Session;
-    // restartSession : Session -> Session;
     endSession : Session -> Void;
-    withSession : SessionCallback -> Void;
+    withSession : (
+        SessionCallback, Ptr, 
+        Callback, Ptr) -> Void;
 
     all : Session -> List;      // [Audio]
     default : Session -> Pair;  // (Audio,Audio)
@@ -47,9 +49,12 @@ module Doremir.Device.Audio
     channels : Audio -> Pair;
 
     openStream : (Audio, Processor, Audio) -> Stream;
-    // restartStream : Stream -> Stream;
     closeStream : Stream -> Void;
-    withStream : (Audio, Processor, Audio, StreamCallback) -> Void;
+    withStream : (
+        Audio, Processor, Audio, 
+        StreamCallback, Ptr, 
+        Callback, Ptr
+        ) -> Void;
 
 }
 

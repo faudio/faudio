@@ -1,145 +1,145 @@
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 bool doremir_is_bool(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 bool doremir_is_int8(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 bool doremir_is_int16(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 bool doremir_is_int32(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 bool doremir_is_int64(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 bool doremir_is_float(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 bool doremir_is_double(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 bool doremir_is_ref(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 bool doremir_to_bool(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 int8_t doremir_to_int8(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 int16_t doremir_to_int16(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 int32_t doremir_to_int32(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 int64_t doremir_to_int64(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 float doremir_to_float(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 double doremir_to_double(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 bool doremir_peek_bool(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 int8_t doremir_peek_int8(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 int16_t doremir_peek_int16(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 int32_t doremir_peek_int32(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 int64_t doremir_peek_int64(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 float doremir_peek_float(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 double doremir_peek_double(doremir_ptr_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 doremir_ptr_t doremir_from_bool(bool) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 doremir_ptr_t doremir_from_int8(int8_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 doremir_ptr_t doremir_from_int16(int16_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 doremir_ptr_t doremir_from_int32(int32_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 doremir_ptr_t doremir_from_int64(int64_t) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 doremir_ptr_t doremir_from_float(float) {}
 
-/** 
+/**
     @see [Value references](@ref ValueReferences)
   */
 doremir_ptr_t doremir_from_double(double) {}

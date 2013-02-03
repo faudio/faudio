@@ -22,8 +22,8 @@
         message : (Ptr -> String)*,
         origin : (Ptr -> String)*
     };    
-
     type Error = opaque;
+    type Callback = ((Ptr,Error) -> Void)*;
     
     createSimple : (Severity, String, String) -> Error;
 

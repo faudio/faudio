@@ -243,7 +243,7 @@ doremir_list_t doremir_list_dinsert(int begin, doremir_ptr_t x, doremir_list_t l
         O(n)
  */
 doremir_list_t doremir_list_insert_range(int begin, doremir_list_t list, doremir_list_t list2) {}
-                                         
+
 /** Insert the given range into the given list.
     @par Performance
         O(n)
@@ -371,8 +371,8 @@ doremir_ptr_t doremir_list_dfold_left(doremir_binary_t func,
                                       doremir_ptr_t    init,
                                       doremir_list_t   list) {}
 
-/** Concatenate all elements of the given list. 
-    
+/** Concatenate all elements of the given list.
+
     The given list must contain lists only.
 
     @par Performance
@@ -380,10 +380,10 @@ doremir_ptr_t doremir_list_dfold_left(doremir_binary_t func,
  */
 list_t doremir_list_join(doremir_list_t lists) {}
 
-/** Concatenate all elements of the given list. 
-    
+/** Concatenate all elements of the given list.
+
     The given list must contain lists only.
-    
+
     @par Performance
         O(n)
  */
@@ -391,26 +391,26 @@ list_t doremir_list_djoin(doremir_list_t lists) {}
 
 
 /** Map over the given list and join the results.
-    
+
     This function is useful to apply functions from singletons to lists.
-    
+
     @par Laws
-        
+
         joinMap(apply1, single, xs) == xs`
 
     @par Performance
         O(n)
  */
-doremir_list_t doremir_list_join_map(doremir_unary_t func, 
-                                       doremir_ptr_t data,
-                                       doremir_list_t list) {}
+doremir_list_t doremir_list_join_map(doremir_unary_t func,
+                                     doremir_ptr_t data,
+                                     doremir_list_t list) {}
 
 /** Map over the given list and join the results.
-    
+
     This function is useful to apply functions from singletons to lists.
-    
+
     @par Laws
-        
+
         joinMap(apply1, single, xs) == xs
 
     @par Performance
