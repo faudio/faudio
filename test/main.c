@@ -1147,6 +1147,51 @@ void test_to_json()
 
 #pragma mark -
 
+void test_dispatcher()
+{
+    test_section("Dispatcher");
+
+    dispatcher_t disp = doremir_message_create_lockfree_dispatcher();
+
+    ptr_t val = map(
+                    string("lyrics"), list(string("Help"), string("me"), string("if"), string("you"), string("can")),
+                    string("pitches"), list(ratio(60, 1), ratio(62, 1))
+                );
+
+    doremir_message_send(i16(1), val, disp);
+    doremir_message_send(i16(2), string("World!"), disp);
+    doremir_message_send(i16(2), string("World!"), disp);
+    doremir_message_send(i16(2), string("World!"), disp);
+    doremir_message_send(i16(2), string("World!"), disp);
+
+    list_t msgs;
+
+    while (true) {
+        doremir_message_sync(disp);
+        msgs = doremir_message_query(i16(1), disp);
+
+        if (doremir_list_is_empty(msgs)) {
+            break;
+        }
+
+        doremir_print("             | 1: %s\n", msgs);
+    }
+
+    while (true) {
+        doremir_message_sync(disp);
+        msgs = doremir_message_query(i16(2), disp);
+
+        if (doremir_list_is_empty(msgs)) {
+            break;
+        }
+
+        doremir_print("             | 2: %s\n", msgs);
+    }
+
+
+    doremir_destroy(disp);
+}
+
 // execute events at t
 // return next occurence
 time_t execute_events(priority_queue_t q, time_t t)
@@ -1443,9 +1488,14 @@ int main(int argc, char const * argv[])
         test_set();
         test_map();
         test_graph();
-        goto end;
-        test_to_json();
         test_priority_queue(10);
+        test_to_json();
+
+
+        test_dispatcher();
+        goto end;
+        test_event();
+
 
         test_log();
         test_error();
@@ -1455,9 +1505,6 @@ int main(int argc, char const * argv[])
 
         // test_processors();
         // test_vm2();
-        // dispatchers
-
-        test_event();
         // schedulers
 end:
         doremir_audio_engine_terminate();

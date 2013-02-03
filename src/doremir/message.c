@@ -61,6 +61,7 @@ dispatcher_t doremir_message_create_lockfree_dispatcher()
 {
     dispatcher_t dispatcher = new_dispatcher();
 
+    dispatcher->is_lockfree           = true;
     lockfree_get(dispatcher, queue)   = atomic_queue();
     lockfree_get(dispatcher, mailbox) = doremir_map_empty();
 
@@ -115,6 +116,7 @@ void doremir_message_sync(dispatcher_t dispatcher)
     } else {
 
         // Clear mailbox
+        // FIXME
         doremir_destroy(lockfree_get(dispatcher, mailbox)); // TODO should be deep destroy
         lockfree_get(dispatcher, mailbox) = doremir_map_empty();
 
@@ -135,7 +137,8 @@ void doremir_message_sync(dispatcher_t dispatcher)
                                                      lockfree_get(dispatcher, mailbox))
                                  );
                 current = doremir_list_dcons(message, current);
-                doremir_map_dset(address, current, lockfree_get(dispatcher, mailbox));
+                lockfree_get(dispatcher, mailbox) =
+                    doremir_map_dset(address, current, lockfree_get(dispatcher, mailbox));
             }
         }
     }
