@@ -24,11 +24,15 @@ bool doremir_map_is_single(doremir_map_t);
 doremir_map_t doremir_map_add(doremir_map_key_t,
                               doremir_ptr_t,
                               doremir_map_t);
+doremir_map_t doremir_map_set(doremir_map_key_t,
+                              doremir_ptr_t,
+                              doremir_map_t);
 doremir_map_t doremir_map_remove(doremir_map_key_t, doremir_map_t);
-doremir_ptr_t doremir_map_get(doremir_map_key_t, doremir_map_t);
 doremir_map_t doremir_map_add_entry(doremir_pair_t, doremir_map_t);
+doremir_map_t doremir_map_set_entry(doremir_pair_t, doremir_map_t);
 doremir_map_t doremir_map_remove_entry(doremir_pair_t,
                                        doremir_map_t);
+doremir_ptr_t doremir_map_get(doremir_map_key_t, doremir_map_t);
 bool doremir_map_has_key(doremir_map_key_t, doremir_map_t);
 bool doremir_map_has_elem(doremir_ptr_t, doremir_map_t);
 bool doremir_map_has_entry(doremir_pair_t, doremir_map_t);

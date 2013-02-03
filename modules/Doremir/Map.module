@@ -44,12 +44,14 @@ module Doremir.Map
 
     // Lookup function
     add              : (Key, Ptr, Map) -> Map;
+    set              : (Key, Ptr, Map) -> Map;
     remove           : (Key, Map) -> Map;
-    get              : (Key, Map) -> Ptr;
     addEntry         : (Pair, Map) -> Map;
+    setEntry         : (Pair, Map) -> Map;
     removeEntry      : (Pair, Map) -> Map;
 
     // Predicates
+    get              : (Key, Map) -> Ptr;
     hasKey           : (Key, Map) -> Bool;
     hasElem          : (Ptr, Map) -> Bool;
     hasEntry         : (Pair, Map) -> Bool;

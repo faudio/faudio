@@ -145,7 +145,7 @@ void doremir_atomic_queue_destroy(doremir_atomic_queue_t queue)
 bool doremir_atomic_queue_write(doremir_atomic_queue_t queue, doremir_ptr_t value)
 {
     if (!value) {
-        return;
+        return true;
     }
 
     delete_range(queue->first, queue->div);

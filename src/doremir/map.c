@@ -75,14 +75,16 @@ doremir_map_t doremir_map_empty()
     return new_map(doremir_set_empty());
 }
 
-// TODO check haskell varieties of add/replace
-// Also see CoreFoundation naming conv
 doremir_map_t doremir_map_add(doremir_map_key_t key, doremir_ptr_t value, doremir_map_t map)
 {
     entry_t entry = new_entry(key, value);
     return new_map(doremir_set_add(entry, map->entries));
-    // set_t entries = doremir_set_dremove(entry, map->entries);
-    // return new_map(doremir_set_dadd(entry, map->entries));
+}
+
+doremir_map_t doremir_map_set(doremir_map_key_t key, doremir_ptr_t value, doremir_map_t map)
+{
+    entry_t entry = new_entry(key, value);
+    return new_map(doremir_set_set(entry, map->entries));
 }
 
 doremir_map_t doremir_map_remove(doremir_map_key_t key, doremir_map_t map)
@@ -91,10 +93,25 @@ doremir_map_t doremir_map_remove(doremir_map_key_t key, doremir_map_t map)
     return new_map(doremir_set_dremove(entry, map->entries));
 }
 
-doremir_ptr_t doremir_map_get(doremir_map_key_t key, doremir_map_t map)
+doremir_map_t doremir_map_dadd(doremir_map_key_t key, doremir_ptr_t value, doremir_map_t map)
 {
-    entry_t entry = new_entry(key, NULL); // we compare on keys, so value does not matter
-    // return new_map(doremir_set_get(entry, map->entries));
+    map_t map2 = doremir_map_add(key, value, map);
+    doremir_map_destroy(map);
+    return map2;
+}
+
+doremir_map_t doremir_map_dset(doremir_map_key_t key, doremir_ptr_t value, doremir_map_t map)
+{
+    map_t map2 = doremir_map_set(key, value, map);
+    doremir_map_destroy(map);
+    return map2;
+}
+
+doremir_map_t doremir_map_dremove(doremir_map_key_t key, doremir_map_t map)
+{
+    map_t map2 = doremir_map_remove(key, map);
+    doremir_map_destroy(map);
+    return map2;
 }
 
 doremir_map_t doremir_map_add_entry(doremir_pair_t x, doremir_map_t map)
@@ -120,22 +137,32 @@ void doremir_map_destroy(doremir_map_t map)
     doremir_delete(map);
 }
 
+doremir_ptr_t doremir_map_get(doremir_map_key_t key, doremir_map_t map)
+{
+    entry_t entry  = new_entry(key, NULL); // we compare on keys, so value does not matter
+    entry_t entry2 = doremir_set_get(entry, map->entries);
+    if (!entry2)
+        return NULL;
+    else
+        return entry2->value;
+}
+
 bool doremir_map_has_key(doremir_map_key_t key, doremir_map_t map)
 {
-    entry_t entry = new_entry(key, NULL); // we compare on keys, so value does not matter
-    // return doremir_set_get(COMP_KEY(entry), map->entries);
+    entry_t entry  = new_entry(key, NULL); // we compare on keys, so value does not matter
+    return doremir_set_get(entry, map->entries);
 }
 
-bool doremir_map_has_elem(doremir_ptr_t x, doremir_map_t map)
-{
-    entry_t entry = new_entry(NULL, x); // we compare on keys, so value does not matter
-    // return doremir_set_get(COMP_VALUE(entry), map->entries);
-}
-
-bool doremir_map_has_entry(doremir_pair_t entry, doremir_map_t map)
-{
-    // return doremir_set_get(COMP_BOTH(entry), map->entries);
-}
+// bool doremir_map_has_elem(doremir_ptr_t x, doremir_map_t map)
+// {
+//     entry_t entry = new_entry(NULL, x); // we compare on keys, so value does not matter
+//     // return doremir_set_get(COMP_VALUE(entry), map->entries);
+// }
+// 
+// bool doremir_map_has_entry(doremir_pair_t entry, doremir_map_t map)
+// {
+//     // return doremir_set_get(COMP_BOTH(entry), map->entries);
+// }
 
 int doremir_map_size(doremir_map_t map)
 {
@@ -190,8 +217,11 @@ doremir_string_t entry_show(doremir_ptr_t a)
     entry_t b = (entry_t) a;
     string_t s = string("<Entry (");
     s = string_dappend(s, doremir_string_show(b->key));
-    s = string_dappend(s, string(","));
-    s = string_dappend(s, doremir_string_show(b->value));
+    s = string_dappend(s, string(","));       
+    if (b->value)
+        s = string_dappend(s, doremir_string_show(b->value));
+    else
+        s = string_dappend(s, string("null"));    
     s = string_dappend(s, string(")>"));
     return s;
 }

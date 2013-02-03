@@ -1016,27 +1016,28 @@ void test_map()
         printf("\n");
 
         map_t a = doremir_map_empty();
-        a = doremir_map_add(string("name"), string("Hans"), a);
-        a = doremir_map_add(string("age"), i16(22), a);
-        // a = doremir_map_remove(string("age"), a);
-        // a = doremir_map_add(string("age"), i16(25), a);
-        a = doremir_map_add(string("skills"), list(string("programming"), string("composition")), a);
+        a = doremir_map_dadd(string("name"), string("Hans"), a);
+        a = doremir_map_dadd(string("name"), string("Sven"), a);
+        a = doremir_map_dadd(string("age"), i16(22), a);
+        // a = doremir_map_dremove(string("age"), a);
+        // a = doremir_map_dadd(string("age"), i16(25), a);
+        a = doremir_map_dadd(string("skills"), list(string("programming"), string("composition")), a);
 
-        // a = doremir_map_add(string("notes"), doremir_midi_create_simple(note_on, 60, 127), a);
-        // a = doremir_map_add(string("types"), type_pair(type(i8),type(i8)), a);
-        a = doremir_map_add(string("happy"), b(true), a);
-        a = doremir_map_add(string("pair"), pair(b(true), d(3.1415)), a);
+        a = doremir_map_dadd(string("happy"), b(true), a);
+        a = doremir_map_dadd(string("pair"), pair(b(true), d(3.1415)), a);
 
-        a = doremir_map_add(string("ratio"), ratio(1, 3), a);
-        a = doremir_map_add(string("ratio2"), doremir_multiply(ratio(4, 4444), ratio(1, 2)), a);
-
-        // a = doremir_map_dadd(i16(1), a);
-        // a = doremir_map_dadd(i16(5), a);
-        // a = doremir_map_dadd(i16(3), a);
-        // a = doremir_map_dremove(i16(3), a);
+        a = doremir_map_dadd(string("ratio"), ratio(1, 3), a);
+        a = doremir_map_dadd(string("ratio2"), doremir_multiply(ratio(4, 4444), ratio(1, 2)), a);
 
         doremir_print("a                            ==> %s\n", a);
         doremir_print("size(a)                      ==> %s\n", i16(doremir_map_size(a)));
+        
+        doremir_print("a.name                       ==> %s\n", doremir_map_get(string("name"), a));
+        doremir_print("a.age                        ==> %s\n", doremir_map_get(string("age"), a));
+        doremir_print("a.skills                     ==> %s\n", doremir_map_get(string("skills"), a));
+        doremir_print("a.happy                      ==> %s\n", doremir_map_get(string("happy"), a));
+        doremir_print("a.pair                       ==> %s\n", doremir_map_get(string("pair"), a));
+        
         doremir_destroy(a);
     }
 }
@@ -1352,10 +1353,10 @@ int main(int argc, char const * argv[])
 
         test_atomic();
         test_atomic_queue(5, 2);
-        test_atomic_queue(10, 10);
+        // test_atomic_queue(10, 10);
         // test_atomic_queue(300, 2);
         test_atomic_stack(5, 2);
-        test_atomic_stack(10, 10);
+        // test_atomic_stack(10, 10);
         // test_atomic_stack(300, 2);
         test_atomic_ring_buffer(5, 2);
 
@@ -1367,6 +1368,7 @@ int main(int argc, char const * argv[])
         test_list();
         test_set();
         test_map();
+        goto end;
         test_graph();
         test_to_json();
         test_priority_queue(10);
@@ -1383,7 +1385,7 @@ int main(int argc, char const * argv[])
 
         test_event();
         // schedulers
-
+end:
         doremir_audio_engine_terminate();
     }
     return 0;

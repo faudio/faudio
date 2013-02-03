@@ -22,8 +22,8 @@
  */
 
 struct node {
-    atomic_t    next;
-    ptr_t       value;
+    struct node  *  next;
+    ptr_t           value;
 };
 
 typedef struct node * node_t;
