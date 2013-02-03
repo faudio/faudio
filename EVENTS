@@ -33,13 +33,13 @@ time_t execute_events(priority_queue_t q, time_t t)
 Event           Type                        Offset                      Live
 =====           =====                       =====                       =====
 never           E a                         Infinite                    Never
-value           E a -> a
 now x           a -> E a                    0                           When  time >= 0
 delay t x       t -> E a -> E a             delta x + t                 When  live x (time - t)
 merge x y       E a -> E a -> E a           min (delta x) (delta y)     When  live x time || live y time
 switch p x y    E a -> E b -> E b -> E b    min (delta x) (delta y)     When  (live p t) and (live x t) 
                                                                            or (not live p t) (live y t)
-tail x          E a -> E a                  Offset of (tail x)          When  live (tail x)
+tail x          E a -> E a
+value           E a -> a
 
 recv q          Q a -> E a                  Unknown                     When  a message has arrived on q
 send q x        Q a -> E a -> E Action      Unknown                     When  live x
@@ -48,13 +48,13 @@ send q x        Q a -> E a -> E Action      Unknown                     When  li
 upon x y = switch y x y
 
 join    : E (E a) -> E a
-join x = value x `upon` !!join (tail x)
+join x = value x `switch (tail x)` !!join (tail x)
 
 map1 f x = ?
 map f x  = now (f $ value x) `merge` !!map f (tail x)
 
 bind    : (a -> E b) -> E a -> E b
-bind f x = value (map f x) `upon` !!bind f (tail x)
+bind f x = value (map f x) `switch (tail x)` !!bind f (tail x)
 
 
 
