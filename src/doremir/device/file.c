@@ -11,6 +11,8 @@
 #include <doremir/util.h>
 #include <sndfile.h>
 
+#include "../processor/vm.h"
+
 typedef doremir_device_file_t                  device_t;
 typedef doremir_device_file_result_t           result_t;
 
@@ -52,5 +54,20 @@ doremir_device_file_result_t doremir_device_file_run(
     processor_t   processor,
     file_device_t output)
 {
+    // create result_t
+    // set input, output, proc, proc_impl
+
+    // check types
+
+    // Allocate VM
+    lmm_t vm = lmm_create();
+    lmm_alloc(vm, 1024, 0);
+
+    // call before
+    // run processing loop
+    // call after
+
+    // Free VM
+    lmm_destroy(vm);
 }
 

@@ -5,9 +5,9 @@
     All rights reserved.
  */
 
-#import <doremir/string.h>
-#import <doremir/util.h>
-#import "vm.h"
+#include <doremir/string.h>
+#include <doremir/util.h>
+#include "vm.h"
 
 #define lmm_malloc  malloc
 #define lmm_calloc  calloc

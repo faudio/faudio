@@ -49,9 +49,46 @@ struct _doremir_device_audio_stream_t {
 static mutex_t pa_mutex;
 static bool    pa_status;
 
+error_t audio_device_error(string_t msg);
+
 // --------------------------------------------------------------------------------
 
-// static void fatal(char *msg, int error);
+inline static session_t new_session()
+{    
+    session_t session = doremir_new(device_audio_session);
+    // session->impl = &session_impl;
+    // TODO
+    return session;
+}
+inline static void delete_session(session_t session)
+{
+    doremir_delete(session);    
+}
+
+inline static device_t new_device()
+{    
+    device_t device = doremir_new(device_audio);
+    // device->impl = &device_impl;
+    // TODO
+    return device;
+}
+inline static void delete_device(device_t device)
+{    
+    doremir_delete(device);    
+}
+
+inline static stream_t new_stream()
+{    
+    stream_t stream = doremir_new(device_audio_stream);
+    // stream->impl = &stream_impl;
+    // TODO
+    return stream;
+}
+inline static void delete_stream(stream_t stream)
+{    
+    doremir_delete(stream);    
+}
+
 
 // --------------------------------------------------------------------------------
 
@@ -75,10 +112,12 @@ session_t doremir_device_audio_begin_session()
         assert(false && "Not initalized");
     }
 
+    inform(string("Beginning audio session"));
+
     doremir_thread_lock(pa_mutex);
     {
         if (pa_status) {
-            // TODO concurrent session error
+            audio_device_error(string("Concurrent audio sessions"));
         } else {
             Pa_Initialize();
             pa_status = true;
@@ -88,11 +127,6 @@ session_t doremir_device_audio_begin_session()
     doremir_thread_unlock(pa_mutex);
     // TODO return
     return NULL;
-}
-
-session_t doremir_device_audio_restart_session(session_t session)
-{
-    assert(false && "Not implemented");
 }
 
 void doremir_device_audio_end_session(session_t session)
@@ -257,9 +291,19 @@ void pa_finished_callback(void *userData)
 
 // --------------------------------------------------------------------------------
 
-void fatal(char *msg, int error)
+void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t origin);
+
+error_t audio_device_error(string_t msg)
 {
-    // TODO log
-    printf("Fatal error: Doremir: Device: Audio: %s: %d\n", msg, error);
+    return doremir_error_create_simple(error, msg, string("Doremir.Device.Audio"));
+}
+
+void audio_device_fatal(char *msg, int error)
+{
+    doremir_audio_engine_log_error_from(
+        string_dappend(string(msg), format_integer(" (error code %d)", error)), 
+        string("Doremir.Device.Audio"));
+    doremir_audio_engine_log_error(string("Terminating Audio Engine"));
     exit(error);
 }
+

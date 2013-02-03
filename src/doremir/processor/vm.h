@@ -11,7 +11,7 @@
 /*
     Little Matrix Machine (LMM)
 
-    - Matrix registers: [0..2^10-1]
+    - Matrix registers: [0..kLmmRegs]
 
     - Each matrix register contains a raw buffer of known size.
 
