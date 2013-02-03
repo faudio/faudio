@@ -37,12 +37,12 @@ module Doremir.Device.Midi
     hasOutput : Midi -> Bool;
 
     beginSession : () -> Session;
-    restartSession : Session -> Session;
+    // reopenSession : Session -> Session;
     endSession : Session -> Void;
 
-    startStream : Midi -> Stream;
-    restartStream : Stream -> Stream;
-    stopStream : Stream -> Void;
+    openStream : Midi -> Stream;
+    // restartStream : Stream -> Stream;
+    closeStream : Stream -> Void;
 
     type SessionCallback = (Session -> Session)*;
     type StreamCallback = (Stream -> Stream)*;

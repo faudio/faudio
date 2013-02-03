@@ -81,42 +81,38 @@ int main (int argc, char const *argv[])
     stream_t        stream
     
     // Processor to use
-    proc =  sequence(
-                parallel(
-                    identity(f32), 
-                    constant(type(f32), type(f32), f32(0.5))), 
-                multiply(type(f32)));
+    proc = doremir_processor_identity(type_pair(type(f32), type(f32)));
     
     // Begin session
-    session = begin_audio_session();
+    session = doremir_device_audio_begin_session();
 
     // Handle possible error
-    if (check(stream)) {
-        error_log(stream);
+    if (doremir_check(stream)) {
+        doremir_error_log(stream);
         goto cleanup;
     }
 
     // Session obtained, we can now access devices
-    input  = default_audio_input(session);
-    output = default_audio_output(session);
+    input  = doremir_device_audio_default_input(session);
+    input  = doremir_device_audio_default_output(session);
     
     // Start stream
-    stream = start_stream(input, proc, output);
+    stream = doremir_device_audio_open_stream(input, proc, output);
 
     // Handle possible error
-    if (check(stream)) {
-        error_log(stream);
+    if (doremir_check(stream)) {
+        doremir_error_log(stream);
         goto cleanup;
     }
 
     // Stream active, let it run for 5 seconds
-    sleep(5000);
+    doremir_thread_sleep(5000);
 
     // Cleanup
 cleanup:
-    doremir_destroy(stream);
+    doremir_device_audio_close_stream(stream);
+    doremir_device_audio_end_session(session);
     doremir_destroy(proc);
-    doremir_destroy(session);
 }
 ~~~~
 
@@ -136,8 +132,7 @@ has returned. Errors are handled by a special callback, to which you can pass
 stream_t run_callback(stream_t stream)
 {
     // Stream active, let it run for 5 seconds
-    sleep(doremir_seconds(10));
-
+    doremir_thread_sleep(doremir_seconds(10));
     return stream;
 }
 
@@ -147,12 +142,12 @@ session_t session_callback(void* data, session_t session)
     processor_t proc;
 
     // Session obtained, we can now access devices
-    input  = default_audio_input(session);
-    output = default_audio_output(session);
+    input  = doremir_device_audio_default_input(session);
+    output = doremir_device_audio_default_input(session);
     proc    = (processor_t*) data;
 
     // Start stream
-    with_audio_stream(
+    doremir_device_audio_with_stream(
         input, proc, output,
         run_callback, doremir_error_log, NULL
     );
@@ -164,14 +159,10 @@ session_t session_callback(void* data, session_t session)
 int main (int argc, char const *argv[])
 {                  
     // Processor to use
-    proc =  sequence(
-                parallel(
-                    identity(f32), 
-                    constant(type(f32), type(f32), f32(0.5))), 
-                multiply(type(f32)));
+    processor_t proc = doremir_processor_identity(type_pair(type(f32), type(f32)));
     
     // Begin session
-    with_audio_session(
+    doremir_device_audio_with_session(
         session_callback, proc,
         doremir_error_log, NULL
     );
@@ -179,50 +170,13 @@ int main (int argc, char const *argv[])
 ~~~~
 
 
-# Non-realtime devices {#NonRealTime}
+# Non-realtime devices {#id8127832}
 
-## The run method {#RunMethod}
-
-
-## File devices {#File}
-
-### Acquire-release style {#FileAR}
-
-~~~~
-#include <doremir/time.h>
-#include <doremir/thread.h>
-#include <doremir/device/file.h>
-
-typedef doremir_device_file_t   device_t;
-typedef doremir_processor_t     processor_t;
-
-int main (int argc, char const *argv[])
-{
-    device_t    input, output;
-    processor_t proc;
-    future_t    result;
-
-    proc    = doremir_processor_identity();
-    input   = doremir_device_file_open(doremir_str("test/in.wav"));
-    output  = doremir_device_file_open(doremir_str("test/out.wav"));
-
-    result  = doremir_device_file_run(in, out);
-
-    if (doremir_check(stream)) {
-        doremir_error_log(stream);
-        exit(-1);
-    }
-}
-~~~~
-
-### Callback style {#FileCB}
+## The run method {#id98281723}
 
 TODO
 
-
-## Buffer devices {#Buffer}
-
-### Acquire-release style {#BufferAR}
+## File devices {#id9192746}
 
 ~~~~
 #include <doremir/time.h>
@@ -236,23 +190,83 @@ int main (int argc, char const *argv[])
 {
     device_t    input, output;
     processor_t proc;
-    future_t    result;
+    result_t    result;
 
-    proc    = doremir_processor_identity();
-    input   = doremir_device_buffer_open(doremir_buffer_create(1024));
-    output  = doremir_device_buffer_open(doremir_buffer_create(1024));
+    // Processor to use
+    proc    = doremir_processor_identity(type_pair(type(f32), type(f32)));
 
-    result  = doremir_device_buffer_run(in, out);
+    // Open streams
+    input   = doremir_device_file_open(doremir_str("test/in.wav"));
+    output  = doremir_device_file_open(doremir_str("test/out.wav"));
 
-    if (doremir_check(stream)) {
-        doremir_error_log(stream);
-        exit(-1);
-    }
+    // Handle possible errors
+    if (doremir_check(input)) {
+        doremir_error_log(result);
+    }                                    
+    
+    if (doremir_check(output)) {
+        doremir_error_log(result);
+    }                                    
+
+    result  = doremir_device_file_run(in, proc, out);
+
+    // Handle possible error
+    if (doremir_check(result)) {
+        doremir_error_log(result);
+    }                                    
+    
+    doremir_device_buffer_destroy(input);
+    doremir_device_buffer_destroy(output);;
 }
 ~~~~
 
 
-### Callback style {#BufferCB}
+## Buffer devices {#id11127283}
+
+~~~~
+#include <doremir/time.h>
+#include <doremir/thread.h>
+#include <doremir/device/file.h>
+
+typedef doremir_device_file_t   device_t;
+typedef doremir_processor_t     processor_t;
+
+int main (int argc, char const *argv[])
+{
+    device_t    input, output;
+    processor_t proc;
+    result_t    result;
+
+    // Processor to use
+    proc    = doremir_processor_identity(type_pair(type(f32), type(f32)));
+
+    // Open streams
+    input   = doremir_device_buffer_open(doremir_buffer_create(1024));
+    output  = doremir_device_buffer_open(doremir_buffer_create(1024));
+
+    // Handle possible errors
+    if (doremir_check(input)) {
+        doremir_error_log(result);
+    }                                    
+    
+    if (doremir_check(output)) {
+        doremir_error_log(result);
+    }                                    
+
+    result  = doremir_device_buffer_run(in, proc, out);
+
+    // Handle possible error
+    if (doremir_check(result)) {
+        doremir_error_log(result);
+    }                                    
+    
+    doremir_device_buffer_close(input);
+    doremir_device_buffer_close(output);
+}
+~~~~
+
+
+### Callback style {#id991826367}
 
 TODO
 

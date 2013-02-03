@@ -31,12 +31,14 @@ module Doremir.Device.Audio
     type StreamCallback = (Stream -> Stream)*;
 
     beginSession : () -> Session;
-    restartSession : Session -> Session;
+    // restartSession : Session -> Session;
     endSession : Session -> Void;
     withSession : SessionCallback -> Void;
 
     all : Session -> List;      // [Audio]
     default : Session -> Pair;  // (Audio,Audio)
+    defaultInput : Session -> Audio;
+    defaultOutput : Session -> Audio;
 
     name : Audio -> String;
     hostName : Audio -> String;
@@ -44,9 +46,9 @@ module Doremir.Device.Audio
     hasOutput : Audio -> Bool;
     channels : Audio -> Pair;
 
-    startStream : (Audio, Processor, Audio) -> Stream;
-    restartStream : Stream -> Stream;
-    stopStream : Stream -> Void;
+    openStream : (Audio, Processor, Audio) -> Stream;
+    // restartStream : Stream -> Stream;
+    closeStream : Stream -> Void;
     withStream : (Audio, Processor, Audio, StreamCallback) -> Void;
 
 }

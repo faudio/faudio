@@ -11,10 +11,10 @@ module Doremir.Device.Buffer
     import Doremir.Processor;
 
     type Buffer = opaque;
-    type Stream = opaque;
+    type Result = opaque;
 
-    create : (Size) -> Buffer;
-    destroy : Buffer -> Void;
+    open : (Size) -> Buffer;
+    close : Buffer -> Void;
 
-    run : (Buffer, Processor, Buffer) -> Void;
+    run : (Buffer, Processor, Buffer) -> Result;
 }

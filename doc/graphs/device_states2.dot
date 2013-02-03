@@ -13,14 +13,14 @@ digraph graphname {
     "Motu mk192 stream"  [shape="rect"];
 
     Session -> "Built-in audio" [label = "select"];
-    "Built-in audio stream" -> "Built-in audio"  [label = "stop"];
-    "Built-in audio" -> "Built-in audio stream"  [label = "start"];
+    "Built-in audio stream" -> "Built-in audio"  [label = "close"];
+    "Built-in audio" -> "Built-in audio stream"  [label = "open"];
 
     Session -> "M-Audio" [label = "select"];
-    "M-Audio" -> "M-Audio stream"  [label = "start"];
-    "M-Audio stream" -> "M-Audio"  [label = "stop"];
+    "M-Audio" -> "M-Audio stream"  [label = "open"];
+    "M-Audio stream" -> "M-Audio"  [label = "close"];
 
     Session -> "Motu mk192" [label = "select"];
-    "Motu mk192" -> "Motu mk192 stream"  [label = "start"];
-    "Motu mk192 stream" -> "Motu mk192"  [label = "stop"];   
+    "Motu mk192" -> "Motu mk192 stream"  [label = "open"];
+    "Motu mk192 stream" -> "Motu mk192"  [label = "close"];   
 }

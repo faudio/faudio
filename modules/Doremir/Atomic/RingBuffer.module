@@ -8,7 +8,7 @@
     a queue and does not support random accces.
 
     @par Literals
-    - `atomic_ring_buffer()` 
+    - `atomic_ring_buffer(size)` 
 
     @par Implements 
     - doremir_destroy_t

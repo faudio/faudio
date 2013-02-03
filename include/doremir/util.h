@@ -8,6 +8,8 @@
 #include <doremir/util/macros.h>
 #include <doremir/util/apply.h>
 
+#define system_time_t       time_t
+
 #define ptr_t               doremir_ptr_t
 #define impl_t              doremir_impl_t
 #define pred_t              doremir_pred_t
@@ -15,48 +17,47 @@
 #define unary_t             doremir_unary_t
 #define binary_t            doremir_binary_t
 #define ternary_t           doremir_ternary_t
+#define error_t             doremir_error_t
+#define severity_t          doremir_error_severity_t
+
 #define pair_t              doremir_pair_t
 #define list_t              doremir_list_t
 #define set_t               doremir_set_t
 #define map_t               doremir_map_t
 #define graph_t             doremir_graph_t
 #define string_t            doremir_string_t
+#define priority_queue_t    doremir_priority_queue_t
 #define atomic_t            doremir_atomic_t
 #define atomic_queue_t      doremir_atomic_queue_t
 #define atomic_stack_t      doremir_atomic_stack_t
 #define ringbuffer_t        doremir_atomic_ring_buffer_t
-#define priority_queue_t    doremir_priority_queue_t
-#define ratio_t             doremir_ratio_t
-#define buffer_t            doremir_buffer_t
 #define thread_t            doremir_thread_t
 #define mutex_t             doremir_thread_mutex_t
+
+#define ratio_t             doremir_ratio_t
+#define buffer_t            doremir_buffer_t
+#define frames_t            doremir_type_frames_t
+#define type_t              doremir_type_t
+#define midi_t              doremir_midi_t
+#define time_t              doremir_time_t
+#define event_t             doremir_event_t
 #define processor_t         doremir_processor_t
 #define proc_t              doremir_processor_t
 #define proc_interface_t    doremir_processor_interface_t
 #define dispatcher_t        doremir_message_dispatcher_t
-#define system_time_t       time_t
-#define time_t              doremir_time_t
-#define type_t              doremir_type_t
-#define frames_t            doremir_type_frames_t
-#define midi_t              doremir_midi_t
-#define error_t             doremir_error_t
-#define severity_t          doremir_error_severity_t
-#define event_t             doremir_event_t
 
-#define atomic()            doremir_atomic_create()
 #define pair(a,b)           doremir_pair_create(a,b)
 #define string(a)           doremir_string_from_utf8(a)
 #define string16(a)         doremir_string_from_utf16(u##a)
 #define string32(a)         doremir_string_from_utf32(U##a)
 #define unstring(a)         doremir_string_to_utf8(a)
 #define ratio(a,b)          doremir_ratio_create(a,b)
-
-#define never()             doremir_event_never()
-#define now(x)              doremir_event_now(x)
-#define delay(t,x)          doremir_event_delay(t,x)
-#define later(t,x)          doremir_event_later(t,x)
-#define merge(x,y)          doremir_event_merge(x,y)
-#define switch_(p,x,y)      doremir_event_switch(p,x,y)
+#define priority_queue()    doremir_priority_queue_empty()
+#define atomic()            doremir_atomic_create()
+#define atomic_queue()      doremir_atomic_queue_create()
+#define atomic_stack()      doremir_atomic_stack_create()
+#define atomic_ring_buffer(s) doremir_atomic_ring_buffer_create(s)
+#define buffer(s)           doremir_buffer_create(s)
 
 #define type(a)             doremir_type_simple(a##_type)
 #define type_pair(a,b)      doremir_type_pair(a,b)
@@ -72,6 +73,30 @@
 #define milliseconds(s)     doremir_time_create(0,0,0,ratio(s,1000))
 #define microseconds(s)     doremir_time_create(0,0,0,ratio(s,1000000))
 
+#define never()             doremir_event_never()
+#define now(x)              doremir_event_now(x)
+#define delay(t,x)          doremir_event_delay(t,x)
+#define later(t,x)          doremir_event_later(t,x)
+#define merge(x,y)          doremir_event_merge(x,y)
+#define switch_(p,x,y)      doremir_event_switch(p,x,y)
+
+#define empty               doremir_list_empty
+#define cons                doremir_list_cons
+#define is_empty            doremir_list_is_empty
+#define char_at             doremir_string_char_at
+#define string_append       doremir_string_append
+#define string_dappend      doremir_string_dappend
+#define format_integer      doremir_string_format_integer
+#define format_floating     doremir_string_format_floating
+
+void doremir_audio_engine_log_info(doremir_string_t);
+void doremir_audio_engine_log_warning(doremir_string_t);
+void doremir_audio_engine_log_error(doremir_string_t);
+
+#define inform(s)           doremir_audio_engine_log_info(s)
+#define warn(s)             doremir_audio_engine_log_warning(s)
+#define fail(s)             doremir_audio_engine_log_error(s)
+
 #define tb                  doremir_to_bool
 #define ti8                 doremir_to_int8
 #define ti16                doremir_to_int16
@@ -85,28 +110,6 @@
 #define i64                 doremir_from_int64
 #define d                   doremir_from_double
 
-#define empty               doremir_list_empty
-#define cons                doremir_list_cons
-#define is_empty            doremir_list_is_empty
-#define char_at             doremir_string_char_at
-#define string_append       doremir_string_append
-#define string_dappend      doremir_string_dappend
-#define format_integer      doremir_string_format_integer
-#define format_floating     doremir_string_format_floating
-
-#define aexchange           doremir_atomic_exchange
-#define aget                doremir_atomic_get
-#define aset                doremir_atomic_set
-#define aadd                doremir_atomic_add
-#define amodify             doremir_atomic_modify
-
-void doremir_audio_engine_log_info(doremir_string_t);
-void doremir_audio_engine_log_warning(doremir_string_t);
-void doremir_audio_engine_log_error(doremir_string_t);
-
-#define inform(s)           doremir_audio_engine_log_info(s)
-#define warn(s)             doremir_audio_engine_log_warning(s)
-#define fail(s)             doremir_audio_engine_log_error(s)
 
 #endif // _DOREMIR_UTIL
 

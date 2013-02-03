@@ -13,8 +13,8 @@ digraph graphname {
     Init -> Session   [label = "begin"];
 
     Session -> Device [label = "select"];
-    Device -> Stream   [label = "start"];
-    Stream -> Session  [label = "stop"];
+    Device -> Stream   [label = "open"];
+    Stream -> Session  [label = "close"];
     Session -> Init    [label = "end"];
 
     Init -> Error;

@@ -52,7 +52,7 @@ Type                                              | Semantics
 [Atomic queue](@ref DoremirAtomicQueue)           | A first-in, first-out atomic queue
 [Atomic stack](@ref DoremirAtomicStack)           | A last-in, first-out atomic queue
 [Atomic ringbuffer](@ref DoremirAtomicRingBuffer) | A byte-level, bounded, first-in, first-out atomic queue
-[Buffer](@ref DoremirAtomicRingBuffer)            | A byte-level mutable buffer
+[Buffer](@ref DoremirBuffer)                      | A byte-level mutable buffer
 
 
 
