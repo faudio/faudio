@@ -386,21 +386,6 @@ doremir_ptr_t doremir_move(doremir_ptr_t a)
     return a;
 }
 
-/** Return whether the given value is an error or not.
-
-    This function is often used with [log](@ref doremir_error_log) as in:
-
-    ~~~
-    if (doremir_check(value)) {
-        doremir_error_log(NULL, value);
-        exit(-1);
-    }
-    ~~~
-
-    @param value Value to check (can be any type).
-    @return
-      A boolean.
- */
 bool doremir_check(doremir_ptr_t a)
 {
     bool doremir_error_check(doremir_ptr_t a);

@@ -139,6 +139,7 @@ does not need to use its values.
 
 
 # Value references {#ValueReferences}
+@anchor ValueReferences
 
 Value types can be converted to reference types using a set of conversion
 functions. These functions take a non reference type and return a so called *value

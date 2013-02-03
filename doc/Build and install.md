@@ -1,5 +1,5 @@
 
-# Build and Install {#BuildAndInstall}
+# Build and install {#BuildAndInstall}
 
 @tableofcontents
 @note

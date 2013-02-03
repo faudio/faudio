@@ -266,11 +266,6 @@ int main (int argc, char const *argv[])
 ~~~~
 
 
-### Callback style {#id991826367}
-
-TODO
-
-
 
 
 
