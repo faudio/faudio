@@ -2,7 +2,6 @@
 ==========
 Additions
 
-* Dispatcher impl
 * Event/Scheduler impl
 
 * Buffer streams
