@@ -6,6 +6,9 @@
     
     This structure is called a buffer for historical reasons, it is more accurately
     a queue and does not support random accces.
+    
+    @warning
+        Not fully implemented.
 
     @par Literals
     - `atomic_ring_buffer(size)` 

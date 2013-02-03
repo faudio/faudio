@@ -34,6 +34,6 @@ module Doremir.Atomic
     set     : (Atomic, Ptr) -> Void;
     modify  : (Atomic, Unary, Ptr) -> Void;
 
-    // increment : (Atomic, Ptr) -> Void;
+    // increment : (Atomic, Int32) -> Void;
 }
 
