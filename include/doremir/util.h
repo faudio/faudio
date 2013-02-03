@@ -58,6 +58,8 @@
 #define atomic_stack()      doremir_atomic_stack_create()
 #define atomic_ring_buffer(s) doremir_atomic_ring_buffer_create(s)
 #define buffer(s)           doremir_buffer_create(s)
+#define midi(s,a,b)         doremir_midi_create_simple(s,a,b)
+#define midi_sysex(b)       doremir_midi_create_sysex(b)
 
 #define type(a)             doremir_type_simple(a##_type)
 #define type_pair(a,b)      doremir_type_pair(a,b)
