@@ -10,6 +10,7 @@ module Doremir.Signal
     import Doremir;    
     import Doremir.Pair;
     import Doremir.Type;
+    import Doremir.Event;
     import Doremir.Processor;
     
     type Signal = opaque;
@@ -20,27 +21,52 @@ module Doremir.Signal
     applyBinary : (Processor, Signal, Signal) -> Signal;
     applyTernary : (Processor, Signal, Signal, Signal) -> Signal;
 
-    const  : (Ptr, Signal) -> Signal;
-    delay  : (Size, Signal) -> Signal;
-    split  : Signal -> Pair; // a -> (a,a)
+    constant  : Ptr -> Signal;
+    value     : Event -> Signal;
+    delay     : (Size, Signal) -> Signal;
 
-    cos         : Signal -> Signal;
-    sin         : Signal -> Signal;
-    tan         : Signal -> Signal;
-    acos        : Signal -> Signal;
-    asin        : Signal -> Signal;
-    atan        : Signal -> Signal;
-    add         : Signal -> Signal;
-    subtract    : (Signal, Signal) -> Signal;
-    multiply    : (Signal, Signal) -> Signal;
-    divide      : (Signal, Signal) -> Signal;
-    modulo      : (Signal, Signal) -> Signal;
-    absolute    : (Signal, Signal) -> Signal;
-    and         : (Signal, Signal) -> Signal;
-    or          : (Signal, Signal) -> Signal;
-    not         : (Signal, Signal) -> Signal;
-    bitAnd      : (Signal, Signal) -> Signal;
-    bitOr       : (Signal, Signal) -> Signal;
-    bitNot      : (Signal, Signal) -> Signal;
-    bitXor      : (Signal, Signal) -> Signal;
+    add                 : (Signal,Signal) -> Signal;
+    subtract            : (Signal,Signal) -> Signal;
+    multiply            : (Signal,Signal) -> Signal;
+    power               : (Signal,Signal) -> Signal;
+    divide              : (Signal,Signal) -> Signal;
+    modulo              : (Signal,Signal) -> Signal;
+    absolute            : Signal -> Signal;
+
+    not                 : Signal -> Signal;
+    and                 : (Signal,Signal) -> Signal;
+    or                  : (Signal,Signal) -> Signal;
+    xor                 : (Signal,Signal) -> Signal;
+    bitNot              : (Signal,Signal) -> Signal;
+    bitAnd              : (Signal,Signal) -> Signal;
+    bitOr               : (Signal,Signal) -> Signal;
+    bitXor              : (Signal,Signal) -> Signal;
+    shiftLeft           : (Signal,Signal) -> Signal;
+    shiftRight          : (Signal,Signal) -> Signal;
+
+    equal               : (Signal,Signal) -> Signal;
+    lessThan            : (Signal,Signal) -> Signal;
+    greaterThan         : (Signal,Signal) -> Signal;
+    lessThanEqual       : (Signal,Signal) -> Signal;
+    greaterThanEqual    : (Signal,Signal) -> Signal;
+
+    acos                : Signal -> Signal;
+    asin                : Signal -> Signal;
+    atan                : Signal -> Signal;
+    cos                 : Signal -> Signal;
+    sin                 : Signal -> Signal;
+    tan                 : Signal -> Signal;
+    exp                 : Signal -> Signal;
+    log                 : Signal -> Signal;
+    log10               : Signal -> Signal;
+    pow                 : Signal -> Signal;
+    sqrt                : Signal -> Signal;
+    abs                 : Signal -> Signal;
+    min                 : Signal -> Signal;
+    max                 : Signal -> Signal;
+    fmod                : Signal -> Signal;
+    remainder           : Signal -> Signal;
+    floor               : Signal -> Signal;
+    ceil                : Signal -> Signal;
+    rint                : Signal -> Signal;
 }

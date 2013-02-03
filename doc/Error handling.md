@@ -53,11 +53,12 @@ The Audio Engine provides a simple logging system.
 
 ## Setting up the log handler {#id30965}
 
-By default, the Audio Engine ignores all incoming log messages. To change this, use
-one of the setup functions in [Doremir.AudioEngine][dae]. Typically you want to set
-the log handler to write to a file, or pass them to a custom handler function.
+By default, the Audio Engine discards all incoming log messages. To set a different
+behaviour, use one of the setup functions in [Doremir.AudioEngine][dae]. Typically
+you want to set the log handler to write to a file, or pass them to a custom
+handler function.
 
-## Adding log messages {#id10103}
+## Adding log entries {#id10103}
 
 Non-recoverable errors are always logged. The user can add recoverable errors to
 the log using @ref doremir_audio_engine_log. Typically, this function is used with
@@ -70,18 +71,11 @@ if (doremir_check(value)) {
 }
 ~~~
 
-There are also some convenience functions to log an arbitrary message:
-
-* @ref doremir_audio_engine_log_info or [inform](@ref doremir_audio_engine_log_info)
-* @ref doremir_audio_engine_log_warning or [warn](@ref doremir_audio_engine_log_warning)
-* @ref doremir_audio_engine_log_error or [error](@ref doremir_audio_engine_log_error)
-
-For example:
+There are also some convenience functions to log an arbitrary entry, for example:
 
 ~~~
 doremir_audio_engine_log_info("Are you aware of this?");
 doremir_audio_engine_log_error("That is an error!");
-exit(-1);
 ~~~
 
 

@@ -15,9 +15,12 @@ div.levels {
   display: none;
 }               
 td.entry {
- position:relative;
- top:200px;
-}
+  padding-right: 2em;
+} 
+td.desc {
+  position:relative;
+  top:3px;
+}      
 
 /* tabs */
 
@@ -252,18 +255,21 @@ pre.fragment {
         margin: 4px 8px 4px 2px;
         overflow: auto;
         word-wrap: break-word;
-/*        font-size:  9pt;*/
         line-height: 125%;
         font-size: 105%;
-  border-radius: 6px 6px 6px 6px;
-  background-color: #222;
+        border-radius: 6px 6px 6px 6px;
+        background-color: #222;
 }
 
 div.fragment {
         padding: 4px;
         margin: 4px;
-/*  background-color: #FBFCFD;*/
-/*  border: 1px solid #C4CFE5;*/
+        overflow: auto;
+        word-wrap: break-word;
+        line-height: 125%;
+        font-size: 105%;
+        border-radius: 6px 6px 6px 6px;
+        background-color: #222;
 }
 
 .line {
