@@ -11,5 +11,4 @@
 (defcfun (atomic-exchange "doremir_atomic_exchange") :boolean (a atomic) (b ptr) (c ptr))
 (defcfun (atomic-get "doremir_atomic_get") ptr (a atomic))
 (defcfun (atomic-set "doremir_atomic_set") :void (a atomic) (b ptr))
-(defcfun (atomic-add "doremir_atomic_add") :void (a atomic) (b ptr))
 (defcfun (atomic-modify "doremir_atomic_modify") :void (a atomic) (b unary) (c ptr))
