@@ -75,8 +75,8 @@ module Doremir.Type
     getSimple       : Type -> Simple;
     getPairFst      : Type -> Type;
     getPairSnd      : Type -> Type;
-    getVectorBase   : Type -> Pair;
-    getVectorSize   : Type -> Pair;
+    getVectorBase   : Type -> Type;
+    getVectorSize   : Type -> Size;
     getFrameBase    : Type -> Type;
  
     sizeOf   : (Frames, Type) -> Size;

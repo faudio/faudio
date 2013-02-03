@@ -92,9 +92,11 @@ doremir_graph_t doremir_graph_insert(doremir_graph_node_t node,
 doremir_graph_t doremir_graph_remove(doremir_graph_node_t node,
                                      doremir_graph_t graph)
 {
-    set_t nodes = graph->nodes;
-    map_t edges = graph->edges;
-    return new_graph(doremir_set_remove(node, nodes), doremir_copy(edges));
+    assert(false && "Not implemented");
+    // set_t nodes = graph->nodes;
+    // map_t edges = graph->edges;
+    // TODO filter out entries not in node set
+    // return new_graph(doremir_set_remove(node, nodes), doremir_copy(edges));
 }
 
 /** Copy the given graph.
@@ -166,6 +168,24 @@ bool edge_equal(doremir_ptr_t a, doremir_ptr_t b)
         && doremir_equal(c->node2, d->node2);
 }
 
+bool edge_less_than(doremir_ptr_t a, doremir_ptr_t b)
+{
+    edge_t c = (edge_t) a;
+    edge_t d = (edge_t) b;
+    return doremir_less_than(c->node1, d->node1) 
+        || (doremir_equal(c->node1, d->node1) 
+        && doremir_less_than(c->node2, d->node2));
+}
+
+bool edge_greater_than(doremir_ptr_t a, doremir_ptr_t b)
+{
+    edge_t c = (edge_t) a;
+    edge_t d = (edge_t) b;
+    return doremir_greater_than(c->node1, d->node1) 
+        || (doremir_equal(c->node1, d->node1) 
+        && doremir_greater_than(c->node2, d->node2));
+}
+
 doremir_string_t edge_show(doremir_ptr_t a)
 {
     edge_t b = (edge_t) a;
@@ -190,6 +210,7 @@ void edge_destroy(doremir_ptr_t a)
 doremir_ptr_t edge_impl(doremir_id_t interface)
 {
     static doremir_equal_t edge_equal_impl = { edge_equal };
+    static doremir_order_t edge_order_impl = { edge_less_than, edge_greater_than };
     static doremir_string_show_t edge_show_impl = { edge_show };
     static doremir_copy_t edge_copy_impl = { edge_copy };
     static doremir_destroy_t edge_destroy_impl = { edge_destroy };
@@ -197,6 +218,9 @@ doremir_ptr_t edge_impl(doremir_id_t interface)
     switch (interface) {
         case doremir_equal_i:
             return &edge_equal_impl;
+
+        case doremir_order_i:
+            return &edge_order_impl;
 
         case doremir_string_show_i:
             return &edge_show_impl;

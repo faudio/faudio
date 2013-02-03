@@ -1039,18 +1039,20 @@ void test_map()
         printf("\n");
 
         map_t a = doremir_map_empty();
+
         a = doremir_map_dadd(string("name"), string("Hans"), a);
-        a = doremir_map_dadd(string("name"), string("Sven"), a);
-        a = doremir_map_dadd(string("age"), i16(22), a);
+        a = doremir_map_dset(string("name"), string("Sven"), a);
+        a = doremir_map_dset(string("age"), i16(22), a);
+        a = doremir_map_dset(string("age"), i16(22), a);
+
         // a = doremir_map_dremove(string("age"), a);
         // a = doremir_map_dadd(string("age"), i16(25), a);
-        a = doremir_map_dadd(string("skills"), list(string("programming"), string("composition")), a);
+        a = doremir_map_dset(string("skills"), list(string("programming"), string("composition")), a);
 
-        a = doremir_map_dadd(string("happy"), b(true), a);
-        a = doremir_map_dadd(string("pair"), pair(b(true), d(3.1415)), a);
-
-        a = doremir_map_dadd(string("ratio"), ratio(1, 3), a);
-        a = doremir_map_dadd(string("ratio2"), doremir_multiply(ratio(4, 4444), ratio(1, 2)), a);
+        // a = doremir_map_dadd(string("happy"), b(true), a);
+        // a = doremir_map_dadd(string("pair"), pair(b(true), d(3.1415)), a);
+        // a = doremir_map_dadd(string("ratio"), ratio(1, 3), a);
+        // a = doremir_map_dadd(string("ratio2"), doremir_multiply(ratio(4, 4444), ratio(1, 2)), a);
 
         doremir_print("a                            ==> %s\n", a);
         doremir_print("size(a)                      ==> %s\n", i16(doremir_map_size(a)));
@@ -1068,17 +1070,47 @@ void test_map()
 void test_graph()
 {
     test_section("Graph");
-    graph_t a = doremir_graph_empty();
-    
-    // TODO destr
-    a = doremir_graph_insert(i32(1), a);
-    a = doremir_graph_insert(i32(2), a);
-    a = doremir_graph_insert(i32(3), a);
+    {
+        graph_t a = doremir_graph_empty();
 
-    a = doremir_graph_connect(i32(1), i32(2), string("foo"), a);
-    a = doremir_graph_connect(i32(1), i32(2), string("bar"), a);
-    
-    doremir_print("a                            ==> %s\n", a);
+        // TODO destr
+        a = doremir_graph_insert(i32(1), a);
+        a = doremir_graph_insert(i32(2), a);
+        a = doremir_graph_insert(i32(3), a);
+        // a = doremir_graph_remove(i32(3), a);
+
+        a = doremir_graph_connect(i32(1), i32(1), string("one one"), a);
+        a = doremir_graph_connect(i32(3), i32(3), string("thr thr"), a);
+        a = doremir_graph_connect(i32(2), i32(2), string("two two"), a);
+        a = doremir_graph_connect(i32(1), i32(3), string("one thr"), a);
+        a = doremir_graph_disconnect(i32(1), i32(1), a);
+        a = doremir_graph_disconnect(i32(1), i32(3), a);
+
+        a = doremir_graph_connect(i32(1), i32(4), string("bar"), a);
+
+        doremir_print("a                            ==> %s\n", a);
+    }                                                             
+    {
+        graph_t a = doremir_graph_empty();
+
+        // TODO destr
+        a = doremir_graph_insert(string("_1"), a);
+        a = doremir_graph_insert(string("_2"), a);
+        a = doremir_graph_insert(string("_3"), a);
+        // a = doremir_graph_remove(string("_3"), a);
+
+        a = doremir_graph_connect(string("_1"), string("_1"), string("one one"), a);
+        a = doremir_graph_connect(string("_3"), string("_3"), string("thr thr"), a);
+        a = doremir_graph_connect(string("_2"), string("_2"), string("two two"), a);
+        a = doremir_graph_connect(string("_1"), string("_3"), string("one thr"), a);
+        a = doremir_graph_disconnect(string("_1"), string("_1"), a);
+        a = doremir_graph_disconnect(string("_1"), string("_3"), a);
+
+        a = doremir_graph_connect(string("_1"), string("_4"), string("bar"), a);
+
+        doremir_print("a                            ==> %s\n", a);
+        
+    }
 }
 
 void test_priority_queue(int iter)

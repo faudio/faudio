@@ -212,7 +212,7 @@ doremir_type_t doremir_type_get_pair_snd(doremir_type_t t)
 
 /** Return the base of a vector type.
  */
-doremir_pair_t doremir_type_get_vector_base(doremir_type_t t)
+doremir_type_t doremir_type_get_vector_base(doremir_type_t t)
 {
     assert(is_vector(t) && "Not a vector type");
     return vector_get(t, base);
@@ -220,7 +220,7 @@ doremir_pair_t doremir_type_get_vector_base(doremir_type_t t)
 
 /** Return the size of a vector type.
  */
-doremir_pair_t doremir_type_get_vector_size(doremir_type_t t)
+size_t doremir_type_get_vector_size(doremir_type_t t)
 {
     assert(is_vector(t) && "Not a vector type");
     return vector_get(t, size);
