@@ -153,16 +153,18 @@ bool doremir_map_has_key(doremir_map_key_t key, doremir_map_t map)
     return doremir_set_get(entry, map->entries);
 }
 
-// bool doremir_map_has_elem(doremir_ptr_t x, doremir_map_t map)
-// {
-//     entry_t entry = new_entry(NULL, x); // we compare on keys, so value does not matter
-//     // return doremir_set_get(COMP_VALUE(entry), map->entries);
-// }
-// 
-// bool doremir_map_has_entry(doremir_pair_t entry, doremir_map_t map)
-// {
-//     // return doremir_set_get(COMP_BOTH(entry), map->entries);
-// }
+bool doremir_map_has_elem(doremir_ptr_t x, doremir_map_t map)
+{
+    // entry_t entry = new_entry(NULL, x);
+    // return doremir_set_get(COMP_VALUE(entry), map->entries);
+    assert(false && "Not implemented");
+}
+
+bool doremir_map_has_entry(doremir_pair_t entry, doremir_map_t map)
+{
+    // return doremir_set_get(COMP_BOTH(entry), map->entries);
+    assert(false && "Not implemented");
+}
 
 int doremir_map_size(doremir_map_t map)
 {
