@@ -5,7 +5,7 @@ Additions
 * Dispatcher impl
 * Event/Scheduler impl
 
-* Map.get, Graph
+* Graph
 * Buffer streams
 * File streams
 * RT audio
