@@ -11,6 +11,9 @@ list(APPEND SRCS
   doremir/atomic/ring_buffer.c
   doremir/atomic/stack.c
   doremir/device/audio.c
+  doremir/device/midi.c
+  doremir/device/file.c
+  doremir/device/buffer.c
   doremir/buffer.c
   doremir/error.c
   doremir/event.c

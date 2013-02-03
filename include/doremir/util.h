@@ -56,6 +56,8 @@
 #define midi_stream_t       doremir_device_midi_stream_t
 #define audio_session_t     doremir_device_audio_session_t
 #define midi_session_t      doremir_device_midi_session_t
+#define file_result_t       doremir_device_file_result_t
+#define buffer_result_t     doremir_device_buffer_result_t
 
 #define pair(a,b)           doremir_pair_create(a,b)
 #define string(a)           doremir_string_from_utf8(a)
@@ -109,6 +111,7 @@ void doremir_audio_engine_log_error(doremir_string_t);
 #define inform(s)           doremir_audio_engine_log_info(s)
 #define warn(s)             doremir_audio_engine_log_warning(s)
 #define fail(s)             doremir_audio_engine_log_error(s)
+#define log_error(e)        doremir_error_log(NULL,e)
 
 #define tb                  doremir_to_bool
 #define ti8                 doremir_to_int8

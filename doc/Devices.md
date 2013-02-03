@@ -196,8 +196,8 @@ int main (int argc, char const *argv[])
     proc    = doremir_processor_identity(type_pair(type(f32), type(f32)));
 
     // Open streams
-    input   = doremir_device_file_open(doremir_str("test/in.wav"));
-    output  = doremir_device_file_open(doremir_str("test/out.wav"));
+    input   = doremir_device_file_open(string("test/in.wav"));
+    output  = doremir_device_file_open(string("test/out.wav"));
 
     // Handle possible errors
     if (doremir_check(input)) {

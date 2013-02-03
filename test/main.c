@@ -139,6 +139,14 @@ void test_string()
             doremir_destroy(u);
         }
     }
+    {
+        string_t s = string("Foo, Bar, Baz");
+        string_t t = doremir_string_copy(s);
+        doremir_print("str: %s\n", s);
+        doremir_print("str: %s\n", t);
+        doremir_destroy(s);
+        doremir_destroy(t);
+    }
 
 }
 
@@ -1425,11 +1433,47 @@ void test_vm2()
     test_vm();
 }
 
-void test_file_stream()
+void test_file_stream(string_t in_path, string_t out_path)
 {
     test_section("File streams");
 
+    file_device_t    input, output;
+    file_result_t    result;
+    processor_t proc;
+
+    // Processor to use
+    proc    = doremir_processor_identity(type_pair(type(f32), type(f32)));
+
+    // Open streams
+    input   = doremir_device_file_open(in_path);
+    output  = doremir_device_file_open(out_path);
+
+    // Handle possible errors
+    if (doremir_check(input)) {
+        log_error((error_t) input);
+        warn(string("Aborting test due to error"));
+        return;
+    }
+
+    if (doremir_check(output)) {
+        log_error((error_t) output);
+        warn(string("Aborting test due to error"));
+        return;
+    }
+
+    result = doremir_device_file_run(input, proc, output);
+
+    // Handle possible error
+    if (doremir_check(result)) {
+        log_error((error_t) result);
+        warn(string("Aborting test due to error"));
+        return;
+    }
+
+    doremir_device_file_close(input);
+    doremir_device_file_close(output);
 }
+
 void buffer_stream()
 {
     test_section("Buffer streams");
@@ -1515,7 +1559,7 @@ int main(int argc, char const * argv[])
         test_processors();
         test_vm2();
 
-        test_file_stream();
+        test_file_stream(string("/Users/hans/audio/test/in.wav"), string("/Users/hans/audio/test/out.wav"));
         buffer_stream();
         audio_stream();
         midi_stream();

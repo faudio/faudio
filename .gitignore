@@ -11,3 +11,4 @@ test/plot/AudioEnginePlotTest/CorePlot.framework/
 test/#*
 ORDER
 CCA2LMM
+test/*.wav
