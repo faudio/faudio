@@ -2,17 +2,20 @@
 #ifndef _HEADER
 #define _HEADER
 
+#define NODE_COLOR "#000000"
+// #define NODE_COLOR "#c0c0c0"
+
 #define GRAPH_FORMAT \
     graph [ranksep=0.5, nodesep=0.5, rankdir=LR]; \
-    graph [fontname = "Futura", fontsize=13, color="#c0c0c0", fontcolor="#c0c0c0"];     \
-    node [fontname = "Futura", fontsize=13, color="#c0c0c0", fontcolor="#c0c0c0"];      \
-    edge [fontname = "Futura", fontsize=13, color="dodgerblue4", fontcolor="#c0c0c0"]
+    graph [fontname = "Futura", fontsize=13, color=NODE_COLOR, fontcolor=NODE_COLOR];     \
+    node [fontname = "Futura", fontsize=13, color=NODE_COLOR, fontcolor=NODE_COLOR];      \
+    edge [fontname = "Futura", fontsize=13, color="dodgerblue4", fontcolor=NODE_COLOR]
 
 #define GRAPH_FORMAT_VERT \
     graph [ranksep=0.5, nodesep=0.5]; \
-    graph [fontname = "Futura", fontsize=13, color="#c0c0c0", fontcolor="#c0c0c0"];     \
-    node [fontname = "Futura", fontsize=13, color="#c0c0c0", fontcolor="#c0c0c0"];      \
-    edge [fontname = "Futura", fontsize=13, color="dodgerblue4", fontcolor="#c0c0c0"]
+    graph [fontname = "Futura", fontsize=13, color=NODE_COLOR, fontcolor=NODE_COLOR];     \
+    node [fontname = "Futura", fontsize=13, color=NODE_COLOR, fontcolor=NODE_COLOR];      \
+    edge [fontname = "Futura", fontsize=13, color="dodgerblue4", fontcolor=NODE_COLOR]
 
 #define RELATE1(a, how) \
   a -> a [label = how]

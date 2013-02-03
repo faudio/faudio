@@ -1,5 +1,5 @@
 
-all: device_states device_states2 test_graph dsp seq par loop split unary binary ternary test_gen
+all: device_states device_states2 test_graph dsp seq par loop split unary binary ternary test_gen gen
 
 show: all
 	open $(OUTPUT)/*.png;
@@ -45,6 +45,9 @@ device_states2:
 
 test_gen:
 	$(call CONVERT_GRAPH,test_gen)
+
+gen:
+	$(call CONVERT_GRAPH,gen)
 
 
 clean:

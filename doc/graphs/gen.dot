@@ -1,0 +1,23 @@
+
+
+#include "doc/graphs/header.dot"
+
+digraph {
+GRAPH_FORMAT_VERT;
+
+    "a";
+    "b";
+    "c";
+    "d";
+    "e";
+    "f";
+    "g";
+    "h";
+    "i";
+    "j";
+    "copy";
+    "copy" -> "f" [label="(1)"];
+    "copy" -> "h" [label="(2)"];
+}
+
+
