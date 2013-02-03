@@ -30,13 +30,17 @@ typedef struct node * node_t;
 
 struct _doremir_atomic_stack_t {
     impl_t      impl;               //  Interface dispatcher
+    atomic_t    top;
 };
 
 doremir_ptr_t atomic_stack_impl(doremir_id_t interface);
 
-static inline node_t new_node()
+static inline node_t new_node(ptr_t value, node_t next)
 {
-    return doremir_new_struct(node);
+    node_t node = doremir_new_struct(node);
+    node->value = value;
+    node->next  = next;
+    return node;
 }
 
 static inline void delete_node(node_t node)
@@ -49,16 +53,37 @@ static inline doremir_atomic_stack_t new_stack()
     atomic_stack_t stack = doremir_new(atomic_stack);
 
     stack->impl  = &atomic_stack_impl;
-    // TODO
+    stack->top   = atomic();
+
     return stack;
 }
 
 static inline void delete_stack(atomic_stack_t stack)
 {
-    // TODO
+    doremir_delete(stack->top);
     doremir_delete(stack);
 }
 
+/** Atomically get the node from a place.
+ */
+static inline node_t get_node(atomic_t place)
+{
+    return (node_t) doremir_atomic_get(place);
+}
+
+/** Atomically set a place to a node.
+ */
+static inline void set_node(atomic_t place, node_t node)
+{
+    doremir_atomic_set(place, node);
+}
+
+/** Atomically forward a place to point to the next node.
+ */
+static inline void forward_node(atomic_t place)
+{
+    doremir_atomic_exchange(place, get_node(place), (get_node(place))->next);
+}
 
 // --------------------------------------------------------------------------------
 
@@ -69,7 +94,6 @@ static inline void delete_stack(atomic_stack_t stack)
 doremir_atomic_stack_t doremir_atomic_stack_create()
 {
     atomic_stack_t stack = new_stack();
-    // TODO
     return stack;
 }
 
@@ -79,7 +103,17 @@ doremir_atomic_stack_t doremir_atomic_stack_create()
  */
 void doremir_atomic_stack_destroy(doremir_atomic_stack_t stack)
 {
-    // TODO
+    while (true) {
+        node_t node = get_node(stack->top);
+
+        if (!node) {
+            break;
+        }
+
+        forward_node(stack->top);
+        delete_node(node);
+    }
+
     delete_stack(stack);
 }
 
@@ -94,20 +128,37 @@ void doremir_atomic_stack_destroy(doremir_atomic_stack_t stack)
  */
 bool doremir_atomic_stack_write(doremir_atomic_stack_t stack, doremir_ptr_t value)
 {
-    // TODO
+    node_t node, node2;
+
+    do {
+        node = get_node(stack->top);
+        node2 = new_node(value, node);
+    } while (!doremir_atomic_exchange(stack->top, node, node2));
+
     return true;
 }
 
 /** Read a value from the given stack.
-    @return 
+    @return
         A value (optional).
     @par Atomicity
         Atomic
  */
 doremir_ptr_t doremir_atomic_stack_read(doremir_atomic_stack_t stack)
 {
-    // TODO
-    return NULL;
+    node_t node;
+
+    do {
+        node = get_node(stack->top);
+
+        if (!node) {
+            return false;
+        }
+    } while (!doremir_atomic_exchange(stack->top, node, node->next));
+
+    ptr_t value = node->value;
+    delete_node(node);
+    return value;
 }
 
 // --------------------------------------------------------------------------------

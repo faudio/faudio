@@ -356,7 +356,7 @@ doremir_ptr_t queue_reader(doremir_ptr_t x)
             printf("         |- %5d    \n", ti32(v));
         }
 
-        doremir_thread_sleep(5);
+        doremir_thread_sleep(random() % 100);
     }
 }
 void test_atomic_queue(int iter, long sleepTime)
@@ -373,7 +373,7 @@ void test_atomic_queue(int iter, long sleepTime)
         doremir_print("q                            ==> %s\n", q);
 
         for (int i = 0; i < iter; ++i) {
-            doremir_thread_sleep(i % 10 * sleepTime);
+            doremir_thread_sleep(random() % 100);
             doremir_atomic_queue_write(q, i32(i));
             printf("  %5d -|  \n", i);
         }
@@ -385,9 +385,57 @@ void test_atomic_queue(int iter, long sleepTime)
     }
 }
 
+struct stack_reader_args {
+    doremir_atomic_stack_t stack;
+    atomic_t active;
+};
+doremir_ptr_t stack_reader(doremir_ptr_t x)
+{
+    struct stack_reader_args * args = x;
+    doremir_atomic_stack_t q = args->stack;
+    atomic_t               a = args->active;
+    ptr_t                  v;
+
+    while (true) {
+        if (!tb(doremir_atomic_get(a))) {
+            return v;
+        }
+
+        if ((v = doremir_atomic_stack_read(q))) {
+            printf("         |- %5d    \n", ti32(v));
+        }
+
+        srand(time(NULL));
+        doremir_thread_sleep(random() % 100);
+    }
+}
 void test_atomic_stack(int iter, long sleepTime)
 {
-    test_section("Stack");
+    test_section("Atomic stacks");
+    {
+        doremir_atomic_stack_t q = doremir_atomic_stack_create();
+
+        struct stack_reader_args args = { q, atomic() };
+        doremir_atomic_set(args.active, b(true));
+
+        thread_t t = doremir_thread_create(stack_reader, &args);
+
+        doremir_print("q                            ==> %s\n", q);
+
+        for (int i = 0; i < iter; ++i) {
+            if (i % 10) {
+                doremir_thread_sleep(random() % 100);
+            }
+
+            doremir_atomic_stack_write(q, i32(i));
+            printf("  %5d -|  \n", i);
+        }
+
+        doremir_thread_sleep(sleepTime);
+        doremir_atomic_set(args.active, b(false));
+        doremir_thread_join(t);
+        doremir_destroy(q);
+    }
 }
 
 void test_atomic_ring_buffer(int inter, long sleepTime)
@@ -1220,6 +1268,7 @@ void test_plot_file()
     pair_t res = doremir_buffer_read_audio(string("/Users/hans/Desktop/Lamento.aiff"));
 
     if (doremir_error_check(res)) {
+
         doremir_error_log(NULL, res);
         return;
     }
@@ -1305,7 +1354,9 @@ int main(int argc, char const * argv[])
         test_atomic_queue(5, 2);
         test_atomic_queue(10, 10);
         // test_atomic_queue(300, 2);
-        // test_atomic_stack(5, 2);
+        test_atomic_stack(5, 2);
+        test_atomic_stack(10, 10);
+        // test_atomic_stack(300, 2);
         test_atomic_ring_buffer(5, 2);
 
         // test_thread();

@@ -23,6 +23,7 @@ module Doremir.AudioEngine
 {                       
     import Doremir.Atomic;
     import Doremir.Atomic.Queue;
+    import Doremir.Atomic.Stack;
     import Doremir.Atomic.RingBuffer;
     import Doremir.Error;
     import Doremir.Event;
