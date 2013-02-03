@@ -73,7 +73,7 @@ void doremir_error_destroy_simple(simple_error_t simple)
 /** Return the severity of the given error.
  */
 doremir_error_severity_t doremir_error_severity(doremir_error_t a)
-{                                                                      
+{
     assert(doremir_interface(doremir_error_i, a) && "Must implement Error");
     return ((error_interface_t *) doremir_interface(doremir_error_i, a))->severity(a);
 }

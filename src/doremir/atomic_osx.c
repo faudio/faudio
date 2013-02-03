@@ -94,7 +94,7 @@ bool doremir_atomic_exchange(doremir_atomic_t a, doremir_ptr_t old, doremir_ptr_
 
 // /**
 //     Increment the given atomic reference by the given amount.
-// 
+//
 //     @par Atomicity
 //         Atomic
 //  */

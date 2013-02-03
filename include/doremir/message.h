@@ -5,6 +5,7 @@
 #include <doremir.h>
 #include <doremir/std.h>
 #include <doremir/pair.h>
+#include <doremir/list.h>
 
 /** @defgroup Doremir Doremir
     @{
@@ -14,30 +15,18 @@
 
 typedef doremir_ptr_t doremir_message_address_t;
 typedef doremir_ptr_t doremir_message_t;
-typedef struct {
-            void (* receive)(doremir_ptr_t,
-                             doremir_message_address_t,
-                             doremir_message_t);
-        } doremir_message_receiver_t;
-typedef struct {
-            void (* add_receiver)(doremir_ptr_t, doremir_message_receiver_t);
-            void (* remove_receiver)(doremir_ptr_t,
-                                     doremir_message_receiver_t);
-            void (* dispatch)(doremir_ptr_t);
-        } doremir_message_sender_t;
-void doremir_message_send(doremir_ptr_t,
-                          doremir_message_address_t,
-                          doremir_message_t);
-void doremir_message_add_receiver(doremir_ptr_t,
-                                  doremir_message_receiver_t);
-void doremir_message_remove_receiver(doremir_ptr_t,
-                                     doremir_message_receiver_t);
-void doremir_message_dispatch(doremir_ptr_t);
 typedef struct _doremir_message_dispatcher_t * doremir_message_dispatcher_t;
-doremir_message_dispatcher_t doremir_message_simple();
-void doremir_message_destroy(doremir_message_dispatcher_t);
-doremir_pair_t doremir_message_buffered();
-doremir_pair_t doremir_message_non_blocking();
+doremir_message_dispatcher_t doremir_message_create_dispatcher();
+doremir_message_dispatcher_t doremir_message_create_lockfree_dispatcher();
+void doremir_message_destroy_dispatcher(doremir_message_dispatcher_t);
+void doremir_message_send(doremir_message_address_t,
+                          doremir_message_t,
+                          doremir_message_dispatcher_t);
+void doremir_message_sync(doremir_message_dispatcher_t);
+doremir_list_t doremir_message_query(doremir_message_address_t,
+                                     doremir_message_dispatcher_t);
+doremir_list_t doremir_message_fetch(doremir_message_address_t,
+                                     doremir_message_dispatcher_t);
 
 /** @}
     @}

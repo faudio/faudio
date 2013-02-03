@@ -125,7 +125,7 @@ void doremir_graph_destroy(doremir_graph_t graph)
 /** Connect the given nodes.
     @param node1    First node in connection.
     @param node2    Second node in connection.
-    @param label    Label to attach to connection. 
+    @param label    Label to attach to connection.
     @param graph    The graph.
  */
 doremir_graph_t doremir_graph_connect(doremir_graph_node_t node1,

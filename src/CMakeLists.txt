@@ -15,7 +15,8 @@ list(APPEND SRCS
   doremir/error.c
   doremir/event.c
   doremir/list.c
-  doremir/map.c
+  doremir/map.c 
+  doremir/message.c
   doremir/graph.c
   doremir/midi.c
   doremir/pair.c

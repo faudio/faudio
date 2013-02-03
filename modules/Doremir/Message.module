@@ -5,7 +5,7 @@
     Provides message dispatching.
 
     Dispatching is the action of delivering a *message* to an *address*, where
-    the message is a dynamic collection and adderss is a pointer-sized value.
+    the message is a dynamic collection and address is a pointer-sized value.
 
  */
 module Doremir.Message
@@ -13,51 +13,24 @@ module Doremir.Message
     import Doremir;
     import Doremir.Std;
     import Doremir.Pair;
+    import Doremir.List;
 
-    type Address = Ptr;
+    type Address = Ptr; // Must be ordered
     type Message = Ptr;
 
-    /** @interface doremir_dispatcher_receiver_t */
-    type Receiver = struct {
-        receive : ((Ptr, Address, Message) -> Void)*
-    };
-
-    /** @interface doremir_dispatcher_sender_t */
-    type Sender = struct {
-        addReceiver : ((Ptr, Receiver) -> Void)*,
-        removeReceiver : ((Ptr, Receiver) -> Void)*,
-        dispatch : (Ptr -> Void)*
-    };
-
-    send            : (Ptr, Address, Message) -> Void;
-    addReceiver     : (Ptr, Receiver) -> Void;
-    removeReceiver  : (Ptr, Receiver) -> Void;
-    dispatch        : Ptr -> Void;
-
     type Dispatcher = opaque;
+    
+    createDispatcher : () -> Dispatcher;
+    createLockfreeDispatcher : () -> Dispatcher;
+    destroyDispatcher : Dispatcher -> Void;
+    
+    // request message to be sent on address
+    send : (Address,Message,Dispatcher) -> Void;
 
-    // // synchronizing on any receiver
-    // or   : (Recv, Recv) -> Recv;
-    // // synchronizing on both receivers
-    // and  : (Recv, Recv) -> Recv;
-    // // synchronizing on both receivers (blocking the second)
-    // first  : (Recv, Recv) -> Recv;
-    // // synchronizing on the first receiver (sampling the second)
-    // sample : (Recv, Recv) -> Recv;
-    // // dispatcher that forwards messages matching a predicate over addr
-    // filter : (Pred, Recv) -> Recv;
-    // // dispatcher that forwards messages matching a predicate over (addr,msg)
-    // filterPair : (Pred, Recv) -> Recv;
-
-    // dispatcher that forwards all received messages on the same thread
-    simple : () -> Dispatcher;
-
-    destroy : Dispatcher -> Void;
-
-    // blocking, buffered dispatcher
-    buffered : () -> Pair;
-    // non-blocking, buffered dispatcher
-    nonBlocking : () -> Pair;
+    // query messages on address
+    sync : Dispatcher -> Void;
+    query : (Address,Dispatcher) -> List; // [Message]
+    fetch : (Address,Dispatcher) -> List; // [Message]
 
 
 }

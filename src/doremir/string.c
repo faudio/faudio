@@ -452,7 +452,7 @@ doremir_string_t doremir_string_from_cf_string(void * cfstr)
         A new string created from the given value.
  */
 doremir_string_t doremir_string_show(doremir_ptr_t a)
-{                                     
+{
     assert(doremir_interface(doremir_string_show_i, a) && "Must implement Show");
     return ((doremir_string_show_t *) doremir_interface(doremir_string_show_i, a))->show(a);
 }

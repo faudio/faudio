@@ -45,6 +45,9 @@
 #define proc_t              doremir_processor_t
 #define proc_interface_t    doremir_processor_interface_t
 #define dispatcher_t        doremir_message_dispatcher_t
+#define address_t           doremir_message_address_t
+#define message_t           doremir_message_t
+
 
 #define pair(a,b)           doremir_pair_create(a,b)
 #define string(a)           doremir_string_from_utf8(a)
