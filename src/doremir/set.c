@@ -190,7 +190,8 @@ doremir_set_t doremir_set_intersection(doremir_set_t a, doremir_set_t b)
     set_t c = doremir_set_empty();
     doremir_for_each(x, base_to_list(a->elems)) {
         if (doremir_set_has(x, b));
-            c = doremir_set_dadd(x, c);
+
+        c = doremir_set_dadd(x, c);
     }
     return c;
 }

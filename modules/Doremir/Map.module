@@ -46,6 +46,9 @@ module Doremir.Map
     add              : (Key, Ptr, Map) -> Map;
     set              : (Key, Ptr, Map) -> Map;
     remove           : (Key, Map) -> Map;
+    dadd             : (Key, Ptr, Map) -> Map;
+    dset             : (Key, Ptr, Map) -> Map;
+    dremove          : (Key, Map) -> Map;
     addEntry         : (Pair, Map) -> Map;
     setEntry         : (Pair, Map) -> Map;
     removeEntry      : (Pair, Map) -> Map;

@@ -40,7 +40,7 @@ module Doremir.Graph
     destroy          : Graph -> Void;
 
     // Edges
-    connect          : (Edge,Node,Node,Graph) -> Graph;
+    connect          : (Node,Node,Edge,Graph) -> Graph;
     disconnect       : (Node,Node,Graph) -> Graph;
 
     // Introspection

@@ -28,6 +28,14 @@ doremir_map_t doremir_map_set(doremir_map_key_t,
                               doremir_ptr_t,
                               doremir_map_t);
 doremir_map_t doremir_map_remove(doremir_map_key_t, doremir_map_t);
+doremir_map_t doremir_map_dadd(doremir_map_key_t,
+                               doremir_ptr_t,
+                               doremir_map_t);
+doremir_map_t doremir_map_dset(doremir_map_key_t,
+                               doremir_ptr_t,
+                               doremir_map_t);
+doremir_map_t doremir_map_dremove(doremir_map_key_t,
+                                  doremir_map_t);
 doremir_map_t doremir_map_add_entry(doremir_pair_t, doremir_map_t);
 doremir_map_t doremir_map_set_entry(doremir_pair_t, doremir_map_t);
 doremir_map_t doremir_map_remove_entry(doremir_pair_t,

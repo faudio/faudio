@@ -24,9 +24,9 @@ doremir_graph_t doremir_graph_insert(doremir_graph_node_t,
 doremir_graph_t doremir_graph_remove(doremir_graph_node_t,
                                      doremir_graph_t);
 void doremir_graph_destroy(doremir_graph_t);
-doremir_graph_t doremir_graph_connect(doremir_graph_edge_t,
+doremir_graph_t doremir_graph_connect(doremir_graph_node_t,
                                       doremir_graph_node_t,
-                                      doremir_graph_node_t,
+                                      doremir_graph_edge_t,
                                       doremir_graph_t);
 doremir_graph_t doremir_graph_disconnect(doremir_graph_node_t,
                                          doremir_graph_node_t,

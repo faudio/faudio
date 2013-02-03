@@ -568,12 +568,35 @@ void test_for_each()
         doremir_print("%s\n", i32(z));
     }
 
+    printf("\n");
     doremir_with(list,
                  list(i32(1), i32(2), i32(3), i32(4)), doremir_destroy(list)) {
         doremir_for_each(x, list) {
             doremir_print(">    %s\n", x);
         }
     }
+
+    printf("\n");
+    doremir_with(set,
+                 set(i32(1), i32(1), i32(2), i32(1)), doremir_destroy(set)) {
+        doremir_for_each(x, doremir_set_to_list(set)) {
+            doremir_print(">    %s\n", x);
+        }
+    }
+    
+    printf("\n");  
+
+    doremir_with(map, 
+            map(
+                string("foo"), i16(1),
+                string("bar"), list(i16(1),i16(2),i16(3))
+                )
+            , 
+        doremir_destroy(map)) {
+        doremir_for_each(x, doremir_map_to_list(map)) {
+            doremir_print(">    %s\n", x);
+        }                
+    } 
 }
 
 
@@ -1031,13 +1054,13 @@ void test_map()
 
         doremir_print("a                            ==> %s\n", a);
         doremir_print("size(a)                      ==> %s\n", i16(doremir_map_size(a)));
-        
+
         doremir_print("a.name                       ==> %s\n", doremir_map_get(string("name"), a));
         doremir_print("a.age                        ==> %s\n", doremir_map_get(string("age"), a));
         doremir_print("a.skills                     ==> %s\n", doremir_map_get(string("skills"), a));
         doremir_print("a.happy                      ==> %s\n", doremir_map_get(string("happy"), a));
         doremir_print("a.pair                       ==> %s\n", doremir_map_get(string("pair"), a));
-        
+
         doremir_destroy(a);
     }
 }
@@ -1045,6 +1068,17 @@ void test_map()
 void test_graph()
 {
     test_section("Graph");
+    graph_t a = doremir_graph_empty();
+    
+    // TODO destr
+    a = doremir_graph_insert(i32(1), a);
+    a = doremir_graph_insert(i32(2), a);
+    a = doremir_graph_insert(i32(3), a);
+
+    a = doremir_graph_connect(i32(1), i32(2), string("foo"), a);
+    a = doremir_graph_connect(i32(1), i32(2), string("bar"), a);
+    
+    doremir_print("a                            ==> %s\n", a);
 }
 
 void test_priority_queue(int iter)
@@ -1269,8 +1303,7 @@ void test_plot_file()
     pair_t res = doremir_buffer_read_audio(string("/Users/hans/Desktop/Lamento.aiff"));
 
     if (doremir_error_check(res)) {
-
-        doremir_error_log(NULL, res);
+        doremir_error_log(NULL, (error_t) res);
         return;
     }
 
@@ -1368,8 +1401,8 @@ int main(int argc, char const * argv[])
         test_list();
         test_set();
         test_map();
-        goto end;
         test_graph();
+        goto end;
         test_to_json();
         test_priority_queue(10);
 

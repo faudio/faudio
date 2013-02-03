@@ -8,6 +8,7 @@
 #include <doremir/atomic/ring_buffer.h>
 #include <doremir/error.h>
 #include <doremir/event.h>
+#include <doremir/graph.h>
 #include <doremir/device/audio.h>
 #include <doremir/device/midi.h>
 #include <doremir/device/file.h>

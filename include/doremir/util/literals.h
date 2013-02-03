@@ -33,8 +33,8 @@ doremir_map_t doremir_map(int count, ...);
 #define map3(a,b,c)                         doremir_map(3,a,b,c)
 #define map4(a,b,c,d)                       doremir_map(4,a,b,c,d)
 #define map5(a,b,c,d,e)                     doremir_map(5,a,b,c,d,e)
-#define map(...) VARARG(list, __VA_ARGS__)
-
+// #define map6(a,b,c,d,e,f)                   doremir_map(6,a,b,c,d,e,f)
+#define map(...) VARARG(map, __VA_ARGS__)
 
 #endif // _DOREMIR_UTIL_LITERALS
 

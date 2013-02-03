@@ -64,6 +64,7 @@ inline static map_t new_map(set_t entries)
 
 inline static void delete_map(map_t map)
 {
+    doremir_delete(map->entries);
     doremir_delete(map);
 }
 
@@ -141,10 +142,12 @@ doremir_ptr_t doremir_map_get(doremir_map_key_t key, doremir_map_t map)
 {
     entry_t entry  = new_entry(key, NULL); // we compare on keys, so value does not matter
     entry_t entry2 = doremir_set_get(entry, map->entries);
-    if (!entry2)
+
+    if (!entry2) {
         return NULL;
-    else
+    } else {
         return entry2->value;
+    }
 }
 
 bool doremir_map_has_key(doremir_map_key_t key, doremir_map_t map)
@@ -191,6 +194,41 @@ bool doremir_map_is_proper_submap_of(doremir_map_t a, doremir_map_t b)
     return doremir_set_is_proper_subset_of(a->entries, b->entries);
 }
 
+
+// --------------------------------------------------------------------------------
+
+/** Create a set from the given elements.
+ */
+map_t doremir_map(int count, ...)
+{  
+    assert((count % 2 == 0) 
+        && "Map literal must have an even number of elements");
+
+    map_t s = doremir_map_empty();
+    va_list args;
+
+    va_start(args, count);
+
+    for (int i = 0; i < count; i += 2) { 
+        ptr_t key = va_arg(args, ptr_t);
+        ptr_t value = va_arg(args, ptr_t);
+        s = doremir_map_dadd(key, value, s);
+    }
+
+    va_end(args);
+    return s;
+}
+
+pair_t entry_to_pair(ptr_t ct, entry_t entry)
+{
+    return pair(entry->key, entry->value);
+}
+doremir_list_t doremir_map_to_list(doremir_map_t map)
+{
+    return doremir_list_map((doremir_unary_t) entry_to_pair, NULL, doremir_set_to_list(map->entries));
+}
+
+
 // --------------------------------------------------------------------------------
 
 bool entry_equal(doremir_ptr_t a, doremir_ptr_t b)
@@ -219,11 +257,14 @@ doremir_string_t entry_show(doremir_ptr_t a)
     entry_t b = (entry_t) a;
     string_t s = string("<Entry (");
     s = string_dappend(s, doremir_string_show(b->key));
-    s = string_dappend(s, string(","));       
-    if (b->value)
+    s = string_dappend(s, string(","));
+
+    if (b->value) {
         s = string_dappend(s, doremir_string_show(b->value));
-    else
-        s = string_dappend(s, string("null"));    
+    } else {
+        s = string_dappend(s, string("null"));
+    }
+
     s = string_dappend(s, string(")>"));
     return s;
 }
