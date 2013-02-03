@@ -61,6 +61,8 @@ module Doremir.Graph
     // directSuccOf     : (Node, Node, Graph) -> Bool;
     // directPredOf     : (Node, Node, Graph) -> Bool;
 
+    toDot            : (String,String,Graph) -> String;
+
     // Conversions   
     fromList         : List -> Graph;   // [(e,(n,n))]
     toList           : Graph -> List;   // [(e,(n,n))]

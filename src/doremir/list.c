@@ -558,9 +558,11 @@ int doremir_list_index_of(ptr_t value, list_t list)
         if (doremir_equal(elem, value)) {
             return index;
         }
+
         if (doremir_greater_than(elem, value)) {
             break;
         }
+
         index++;
     }
     return -(index + 1);

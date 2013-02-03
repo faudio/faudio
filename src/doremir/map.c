@@ -200,16 +200,16 @@ bool doremir_map_is_proper_submap_of(doremir_map_t a, doremir_map_t b)
 /** Create a set from the given elements.
  */
 map_t doremir_map(int count, ...)
-{  
-    assert((count % 2 == 0) 
-        && "Map literal must have an even number of elements");
+{
+    assert((count % 2 == 0)
+           && "Map literal must have an even number of elements");
 
     map_t s = doremir_map_empty();
     va_list args;
 
     va_start(args, count);
 
-    for (int i = 0; i < count; i += 2) { 
+    for (int i = 0; i < count; i += 2) {
         ptr_t key = va_arg(args, ptr_t);
         ptr_t value = va_arg(args, ptr_t);
         s = doremir_map_dadd(key, value, s);

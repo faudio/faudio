@@ -125,23 +125,24 @@ doremir_graph_t doremir_graph_connect(doremir_graph_node_t node1,
                                       doremir_graph_t graph)
 {
     set_t nodes = graph->nodes;
-    map_t edges = graph->edges;                                 
+    map_t edges = graph->edges;
     edge_t edge = new_edge(node1, node2);
 
-    if (doremir_set_has(node1, nodes) && doremir_set_has(node2, nodes))
+    if (doremir_set_has(node1, nodes) && doremir_set_has(node2, nodes)) {
         return new_graph(doremir_copy(nodes), doremir_map_set(edge, label, edges));
-    else
+    } else {
         return doremir_graph_copy(graph);
+    }
 }
 
 /** Remove all connections between the given nodes.
  */
-doremir_graph_t doremir_graph_disconnect(doremir_graph_node_t node1, 
-                                         doremir_graph_node_t node2,
-                                         doremir_graph_t graph)
+doremir_graph_t doremir_graph_disconnect(doremir_graph_node_t node1,
+        doremir_graph_node_t node2,
+        doremir_graph_t graph)
 {
     set_t nodes = graph->nodes;
-    map_t edges = graph->edges;                                 
+    map_t edges = graph->edges;
     edge_t edge = new_edge(node1, node2);
     return new_graph(doremir_copy(nodes), doremir_map_remove(edge, edges));
 }
@@ -156,7 +157,47 @@ doremir_list_t doremir_graph_to_list(doremir_graph_t graph)
     assert(false && "Not implemented.");
 }
 
+// --------------------------------------------------------------------------------
 
+#define doremir_set_for_each(x,set) \
+    doremir_for_each(x,doremir_set_to_list(set))
+#define doremir_map_for_each(x,set) \
+    doremir_for_each(x,doremir_map_to_list(set))
+
+// params Node -> Label func, header, inline header
+doremir_string_t doremir_graph_to_dot(
+    doremir_string_t header,
+    doremir_string_t inline_header,
+    doremir_graph_t graph)
+{
+    string_t str = string("\n\n");
+    char buf[100];
+
+    str = string_dappend(str, header);
+    str = string_dappend(str, string("\n\n"));
+
+    str = string_dappend(str, string("digraph {\n"));
+
+    str = string_dappend(str, inline_header);
+    str = string_dappend(str, string("\n\n"));
+
+    doremir_set_for_each(x, graph->nodes) {
+        char * cs = doremir_string_to_utf8(doremir_string_show(x));
+        snprintf(buf, 100, "    %s;\n", cs);
+        str = string_dappend(str, string(buf));
+    }
+    doremir_map_for_each(x, graph->edges) {
+        char * n1 = doremir_string_to_utf8(doremir_string_show(doremir_pair_fst(doremir_pair_fst(x))));
+        char * n2 = doremir_string_to_utf8(doremir_string_show(doremir_pair_snd(doremir_pair_fst(x))));
+        char * l = doremir_string_to_utf8(doremir_string_show(doremir_pair_snd(x))); // FIXME want an unescaped show here
+
+
+        snprintf(buf, 100, "    %s -> %s [label=%s];\n", n1, n2, l);
+        str = string_dappend(str, string(buf));
+    }
+    str = string_dappend(str, string("}\n\n"));
+    return str;
+}
 
 // --------------------------------------------------------------------------------
 
@@ -165,25 +206,25 @@ bool edge_equal(doremir_ptr_t a, doremir_ptr_t b)
     edge_t c = (edge_t) a;
     edge_t d = (edge_t) b;
     return doremir_equal(c->node1, d->node1)
-        && doremir_equal(c->node2, d->node2);
+           && doremir_equal(c->node2, d->node2);
 }
 
 bool edge_less_than(doremir_ptr_t a, doremir_ptr_t b)
 {
     edge_t c = (edge_t) a;
     edge_t d = (edge_t) b;
-    return doremir_less_than(c->node1, d->node1) 
-        || (doremir_equal(c->node1, d->node1) 
-        && doremir_less_than(c->node2, d->node2));
+    return doremir_less_than(c->node1, d->node1)
+           || (doremir_equal(c->node1, d->node1)
+               && doremir_less_than(c->node2, d->node2));
 }
 
 bool edge_greater_than(doremir_ptr_t a, doremir_ptr_t b)
 {
     edge_t c = (edge_t) a;
     edge_t d = (edge_t) b;
-    return doremir_greater_than(c->node1, d->node1) 
-        || (doremir_equal(c->node1, d->node1) 
-        && doremir_greater_than(c->node2, d->node2));
+    return doremir_greater_than(c->node1, d->node1)
+           || (doremir_equal(c->node1, d->node1)
+               && doremir_greater_than(c->node2, d->node2));
 }
 
 doremir_string_t edge_show(doremir_ptr_t a)
@@ -244,7 +285,7 @@ bool graph_equal(doremir_ptr_t a, doremir_ptr_t b)
     graph_t c = (graph_t) a;
     graph_t d = (graph_t) b;
     return doremir_equal(c->nodes, d->nodes)
-        && doremir_equal(c->edges, d->edges);
+           && doremir_equal(c->edges, d->edges);
 }
 
 doremir_string_t graph_show(doremir_ptr_t x)
