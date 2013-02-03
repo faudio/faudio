@@ -4,8 +4,9 @@
 
     Provides message dispatching.
 
-    Dispatching is the action of delivering a *message* to an *address*, where
-    the message is a dynamic collection and address is a pointer-sized value.
+    Dispatching is the action of delivering a *message* to an *address*.
+    
+    TODO elaborate
 
  */
 module Doremir.Message
@@ -27,10 +28,11 @@ module Doremir.Message
     // request message to be sent on address
     send : (Address,Message,Dispatcher) -> Void;
 
-    // query messages on address
+    // fetch messages on address
+    fetch : (Address,Dispatcher) -> List; // [Message]
+
     sync : Dispatcher -> Void;
     query : (Address,Dispatcher) -> List; // [Message]
-    fetch : (Address,Dispatcher) -> List; // [Message]
 
 
 }

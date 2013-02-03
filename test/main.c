@@ -1177,18 +1177,6 @@ void test_dispatcher()
         doremir_print("             | 1: %s\n", msgs);
     }
 
-    while (true) {
-        doremir_message_sync(disp);
-        msgs = doremir_message_query(i16(2), disp);
-
-        if (doremir_list_is_empty(msgs)) {
-            break;
-        }
-
-        doremir_print("             | 2: %s\n", msgs);
-    }
-
-
     doremir_destroy(disp);
 }
 
