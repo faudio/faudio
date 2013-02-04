@@ -53,8 +53,9 @@ struct _doremir_device_audio_stream_t {
     device_t            input, output;
     processor_t         proc;
     proc_interface_t   *proc_impl;
-
-    long                time;               // Monotonically increasing sample count
+    
+    unsigned            input_channels, output_channels;
+    int32_t             time;               // Monotonically increasing sample count
 
 };
 
@@ -78,6 +79,9 @@ void before_processing(stream_t stream);
 void after_processing(stream_t stream);
 int during_processing(stream_t stream, unsigned count, float **input, float **output);
 
+static inline int num_input_channels(device_t device);
+static inline int num_output_channels(device_t device);
+
 static int native_audio_callback(const void *input_ptr,
                                  void *output_ptr,
                                  unsigned long frame_count,
@@ -93,9 +97,9 @@ inline static session_t new_session()
 {
     session_t session = doremir_new(device_audio_session);
     session->impl = &audio_session_impl;
-    // TODO
     return session;
 }
+
 inline static void session_init_devices(session_t session)
 {
     native_index_t count;
@@ -151,13 +155,17 @@ inline static void delete_device(device_t device)
 
 inline static stream_t new_stream(device_t input, device_t output, processor_t proc)
 {
-    stream_t stream     = doremir_new(device_audio_stream);
+    stream_t stream         = doremir_new(device_audio_stream);
 
-    stream->impl        = &audio_stream_impl;
-    stream->input       = input;
-    stream->output      = output;
-    stream->proc        = proc;
-    stream->proc_impl   = doremir_interface(doremir_processor_interface_i, stream->proc);
+    stream->impl            = &audio_stream_impl;
+    stream->input           = input;
+    stream->output          = output;                           
+    stream->input_channels  = num_input_channels(input);
+    stream->output_channels = num_output_channels(output);
+    
+    stream->proc            = proc;
+    stream->proc_impl       = doremir_interface(doremir_processor_interface_i, stream->proc);
+
     assert(stream->proc_impl && "Must implement Processor");
 
     return stream;
@@ -303,6 +311,7 @@ static inline int num_output_channels(device_t device)
 // TODO change sample rate
 stream_t doremir_device_audio_open_stream(device_t input, processor_t proc, device_t output)
 {
+    PaError status;
     stream_t stream = new_stream(input, output, proc);
 
     inform(string("Opening real-time audio stream"));
@@ -310,11 +319,9 @@ stream_t doremir_device_audio_open_stream(device_t input, processor_t proc, devi
     inform(string_dappend(string("    Output: "), output ? doremir_string_show(output) : string("-")));
 
     {
-        PaError status;
-
         PaStreamParameters inp = {
             .device                     = input ? input->index : 0,
-            .channelCount               = num_input_channels(input),
+            .channelCount               = stream->input_channels,
             .sampleFormat               = (paFloat32 | paNonInterleaved),
             .suggestedLatency           = 0,
             .hostApiSpecificStreamInfo  = 0
@@ -322,7 +329,7 @@ stream_t doremir_device_audio_open_stream(device_t input, processor_t proc, devi
 
         PaStreamParameters outp = {
             .device                     = output ? output->index : 0,
-            .channelCount               = num_output_channels(output),
+            .channelCount               = stream->output_channels,
             .sampleFormat               = (paFloat32 | paNonInterleaved),
             .suggestedLatency           = 0,
             .hostApiSpecificStreamInfo  = 0
@@ -352,7 +359,10 @@ stream_t doremir_device_audio_open_stream(device_t input, processor_t proc, devi
     }
     before_processing(stream);
 
-    Pa_StartStream(stream->native);
+    status = Pa_StartStream(stream->native);
+    if (status != paNoError) {
+        return (stream_t) audio_device_error_with(string("Could not start stream"), status);
+    }
     return stream;
 }
 
@@ -389,9 +399,8 @@ void doremir_device_audio_with_stream(device_t            input,
 void before_processing(stream_t stream)
 {
     // extract top-level audio type
+    
     // allocate buffers
-    // create message allocator
-    // register all processors as receivers on the incoming message dispatcher
     // call setup() on top processor (passing outgoing message receiver)
     doremir_processor_info_t info = {
         .sample_rate = 44100,
@@ -417,7 +426,6 @@ void after_processing(stream_t stream)
     stream->proc_impl->after(stream->proc, &info);
 
     // unregister processors from incoming message dispatcher
-    // destroy message allocator
     // free buffers
 }
 
@@ -434,8 +442,18 @@ int during_processing(stream_t stream, unsigned count, float **input, float **ou
     // call dispatch() on the innner dispatcher
 
     // deliver inputs
-    stream->proc_impl->process(stream->proc, &info, NULL);
+    // stream->proc_impl->process(stream->proc, &info, NULL);
     // deliver outputs
+    for (unsigned channel = 0; channel < stream->input_channels; ++channel)
+    {
+        float* in  = input[channel];
+        float* out = output[channel];
+        for (int i = 0; i < count; ++i)
+        {              
+            // TODO
+            out[i] = in[i];
+        }
+    }
 
     stream->time += count; // TODO atomic incr
 
