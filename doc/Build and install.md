@@ -12,7 +12,7 @@ that the necessary [compiler](@ref Compiler) and [tools](@ref Tools) are availab
 
 The source code for the Audio Engine can be obtained by.
 
-    $ git clone git@git.doremir.com/repositories/audio-engine.git
+    $ git clone git@git.doremir.com:repositories/audio-engine.git
     $ cd audio-engine
 
 After changing into the `audio-engine` directory, the `bootstrap` script should be
