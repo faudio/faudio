@@ -50,9 +50,7 @@ struct _doremir_device_audio_stream_t {
     processor_t         proc;
     proc_interface_t   *proc_impl;
 
-    atomic_t            time;
-    dispatcher_t        in_disp;
-    dispatcher_t        out_disp;
+    long                time;
 
     native_stream_t     native;
 };
@@ -156,6 +154,8 @@ inline static stream_t new_stream(device_t input, device_t output, processor_t p
     stream->input       = input;
     stream->output      = output;
     stream->proc        = proc;
+    stream->proc_impl   = doremir_interface(doremir_processor_interface_i, stream->proc);
+    assert(stream->proc_impl && "Must implement Processor");
 
     return stream;
 }
@@ -303,14 +303,14 @@ stream_t doremir_device_audio_open_stream(device_t input, processor_t proc, devi
     stream_t stream = new_stream(input, output, proc);
 
     inform(string("Opening real-time audio stream"));
-    inform(string_dappend(string("    Input:  "), doremir_string_show(input)));
-    inform(string_dappend(string("    Output: "), doremir_string_show(output)));
+    inform(string_dappend(string("    Input:  "), input ? doremir_string_show(input) : string("-")));
+    inform(string_dappend(string("    Output: "), output ? doremir_string_show(output) : string("-")));
 
     {
         PaError status;
 
         PaStreamParameters inp = {
-            .device                     = input->index,
+            .device                     = input ? input->index : 0,
             .channelCount               = num_input_channels(input),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
             .suggestedLatency           = 0,
@@ -318,7 +318,7 @@ stream_t doremir_device_audio_open_stream(device_t input, processor_t proc, devi
         };
 
         PaStreamParameters outp = {
-            .device                     = output->index,
+            .device                     = output ? output->index : 0,
             .channelCount               = num_output_channels(output),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
             .suggestedLatency           = 0,
@@ -400,7 +400,7 @@ void after_processing(stream_t stream)
 
 int during_processing(stream_t stream, unsigned count, float** input, float** output)
 {
-    // update stream time
+     // update stream time
     // call dispatch() on the innner dispatcher
 
     // deliver inputs
@@ -422,7 +422,7 @@ int native_audio_callback(const void                       *input,
                           void                             *data)
 {   
     // TODO handle status flags?
-    return during_processing(data, count, input, output);
+    return during_processing(data, count, (float**) input, (float**) output);
 }
 
 void native_finished_callback(void *data)
