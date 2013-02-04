@@ -18,6 +18,7 @@
 #define binary_t            doremir_binary_t
 #define ternary_t           doremir_ternary_t
 #define error_t             doremir_error_t
+#define error_callback_t    doremir_error_callback_t
 #define severity_t          doremir_error_severity_t
 
 #define pair_t              doremir_pair_t

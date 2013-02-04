@@ -30,13 +30,13 @@ struct _doremir_device_audio_session_t {
 
     device_t            def_input;          // Default devices
     device_t            def_output;         //      Both possibly null
-                                            //      If present, these are also in the above list
+    //      If present, these are also in the above list
 };
 
 struct _doremir_device_audio_t {
     impl_t              impl;               // Dispatcher
     native_index_t      index;              // Index
-    
+
     string_t            name;               // Cached names
     string_t            host_name;
 
@@ -90,11 +90,12 @@ inline static void session_init_devices(session_t session)
     count   = Pa_GetDeviceCount();
     devices = doremir_list_empty();
 
-    for(size_t i = 0; i < count; ++i)
-    {
+    for (size_t i = 0; i < count; ++i) {
         device_t device = new_device(i);
-        if (device)
+
+        if (device) {
             devices = doremir_list_dcons(device, devices);
+        }
     }
 
     session->devices      = devices;
@@ -110,8 +111,9 @@ inline static void delete_session(session_t session)
 
 inline static device_t new_device(native_index_t index)
 {
-    if (index == paNoDevice)
+    if (index == paNoDevice) {
         return NULL;
+    }
 
     device_t device = doremir_new(device_audio);
     device->impl    = &audio_device_impl;
@@ -120,8 +122,8 @@ inline static device_t new_device(native_index_t index)
     const PaHostApiInfo *host_info = Pa_GetHostApiInfo(info->hostApi);
 
     device->index       = index;
-    device->name        = string((char*) info->name);       // const cast
-    device->host_name   = string((char*) host_info->name);
+    device->name        = string((char *) info->name);      // const cast
+    device->host_name   = string((char *) host_info->name);
     device->muted       = false;
     device->volume      = 1.0;
 
@@ -274,20 +276,14 @@ type_t doremir_device_audio_output_type(device_t device)
 
 // --------------------------------------------------------------------------------
 
-// FIXME return Optional?
 stream_t doremir_device_audio_open_stream(device_t    input,
-        processor_t processor,
-        device_t    output)
+                                          processor_t processor,
+                                          device_t    output)
 {
     assert(false && "Not implemented");
     // call Pa_OpenStream
     // call before_processing
     // call Pa_StartStream
-}
-
-stream_t doremir_device_audio_restart_stream(stream_t stream)
-{
-    assert(false && "Not implemented");
 }
 
 void doremir_device_audio_close_stream(stream_t stream)
@@ -298,18 +294,22 @@ void doremir_device_audio_close_stream(stream_t stream)
     // call Pa_CloseStream
 }
 
-void doremir_device_audio_with_stream(
-    doremir_device_audio_t                 input,
-    doremir_processor_t                    processor,
-    doremir_device_audio_t                 output,
-    doremir_device_audio_stream_callback_t stream_callback,
-    doremir_ptr_t                          stream_data,
-    doremir_error_callback_t         error_callback,
-    doremir_ptr_t                          error_data
-)
+void doremir_device_audio_with_stream(device_t            input,
+                                      processor_t         processor,
+                                      device_t            output,
+                                      stream_callback_t   stream_callback,
+                                      ptr_t               stream_data,
+                                      error_callback_t    error_callback,
+                                      ptr_t               error_data)
 {
     stream_t stream = doremir_device_audio_open_stream(input, processor, output);
-    // doremir_check(stream) ? callback(stream) : error_callback(stream);
+    
+    if (doremir_check(stream)) {
+        error_callback(error_data, (error_t) stream);
+    } else {
+        stream_callback(stream_data, stream);
+    }
+    
     doremir_device_audio_close_stream(stream);
 }
 
@@ -406,9 +406,9 @@ ptr_t audio_session_impl(doremir_id_t interface)
 // --------------------------------------------------------------------------------
 
 doremir_string_t audio_device_show(ptr_t a)
-{                                                       
+{
     device_t device = (device_t) a;
-    
+
     string_t str = string("<AudioDevice ");
     str = string_dappend(str, doremir_device_audio_host_name(device));
     str = string_dappend(str, string(" "));
