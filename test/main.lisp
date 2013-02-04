@@ -313,6 +313,7 @@
 (type-is-pair x)
 (type-is-vector x)
 (type-is-frame x)
+(type-channels x)
 (type-size-of 256 x)
 (type-offset-of 256 x)
 (type-align-of x)
@@ -547,6 +548,12 @@
 (device-audio-host-name d)
 (device-audio-input-type d)
 (device-audio-output-type d)
+(type-channels (device-audio-input-type d))
+(type-channels (device-audio-output-type d))
+
+(type-channels 
+ (device-audio-output-type 
+  (from-pointer 'device-audio (list-head (device-audio-all s)))))
 
 (setf p (processor-identity '(:pair :f32 :f32)))
 (device-audio-open-stream d p d)

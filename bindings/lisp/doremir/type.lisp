@@ -13,6 +13,7 @@
 (defcfun (type-copy "doremir_type_copy") type (a type))
 (defcfun (type-destroy "doremir_type_destroy") :void (a type))
 (defcfun (type-repeat "doremir_type_repeat") type (a :int) (b type))
+(defcfun (type-channels "doremir_type_channels") :int (a type))
 (defcfun (type-is-simple "doremir_type_is_simple") :boolean (a type))
 (defcfun (type-is-pair "doremir_type_is_pair") :boolean (a type))
 (defcfun (type-is-vector "doremir_type_is_vector") :boolean (a type))
