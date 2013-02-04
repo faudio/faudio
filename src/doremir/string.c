@@ -441,16 +441,9 @@ doremir_string_t doremir_string_from_cf_string(void *cfstr)
 
 // --------------------------------------------------------------------------------
 
-/** Generic version of the @ref doremir_string_show_t interface.
-
-    Ideally, this should be in the @ref Doremir module, but this would create a recursive
-    dependency.
-
-    @param a
-        Value to convert.
-    @return
-        A new string created from the given value.
- */
+/** Convert the given value to a string.
+    @see [Show](@ref doremir_string_show_t)
+  */
 doremir_string_t doremir_string_show(doremir_ptr_t a)
 {
     assert(doremir_interface(doremir_string_show_i, a) && "Must implement Show");

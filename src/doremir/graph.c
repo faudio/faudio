@@ -176,12 +176,20 @@ doremir_list_t doremir_graph_to_list(doremir_graph_t graph)
 #define doremir_map_for_each(x,set) \
     doremir_for_each(x,doremir_map_to_list(set))
 
-// params Node -> Label func, header, inline header
-/** Convert the given graph to a Dot language declaration.
+/** Convert the given graph to a [Dot](http://en.wikipedia.org/wiki/DOT_language) 
+    declaration.
+    
+    @param header           Text to include before graph declaration.
+    @param inner_header     Text to include at the top of the graph declaration.
+    @param graph            Graph to convert. Its node and edge values will be converted to
+                            strings using [show](@ref doremir_string_show). It the nodes
+                            are pairs, their first component will be used as the node identifier
+                            and the second as a label.
+                            
  */
 doremir_string_t doremir_graph_to_dot(
     doremir_string_t header,
-    doremir_string_t inline_header,
+    doremir_string_t inner_header,
     doremir_graph_t graph)
 {
     string_t str = string("\n\n");
@@ -192,7 +200,7 @@ doremir_string_t doremir_graph_to_dot(
 
     str = string_dappend(str, string("digraph {\n"));
 
-    str = string_dappend(str, inline_header);
+    str = string_dappend(str, inner_header);
     str = string_dappend(str, string("\n\n"));
 
     doremir_set_for_each(x, graph->nodes) {
