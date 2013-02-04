@@ -79,6 +79,16 @@
             doremir_let (var, doremir_list_head(__j)) \
                 doremir_let (last, doremir_list_is_single(__j))
 
+#define doremir_set_for_each(x,set) \
+    doremir_for_each(x,doremir_set_to_list(set))
+
+#define doremir_map_for_each(x,set) \
+    doremir_for_each(x,doremir_map_to_list(set))
+
+
+
+
+
 #define write_to(s, t) \
     s = doremir_string_append(s, t)
 

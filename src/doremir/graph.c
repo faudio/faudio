@@ -171,11 +171,6 @@ doremir_list_t doremir_graph_to_list(doremir_graph_t graph)
 
 // --------------------------------------------------------------------------------
 
-#define doremir_set_for_each(x,set) \
-    doremir_for_each(x,doremir_set_to_list(set))
-#define doremir_map_for_each(x,set) \
-    doremir_for_each(x,doremir_map_to_list(set))
-
 /** Convert the given graph to a [Dot](http://en.wikipedia.org/wiki/DOT_language) 
     declaration.
     
