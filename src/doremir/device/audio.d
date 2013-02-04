@@ -95,16 +95,16 @@ doremir_type_t doremir_device_audio_output_type(doremir_device_audio_t) {}
 
 /** Set a callback to be invoked when a status check is detected on the given session.
     This is mainly useful for detecting a change in hardware setup.
-    
+
     Note that this function will not modify the devices in a session, you have to
     restart the session to get a fresh snapshot.
-    
+
     @param device   The device.
  */
 void doremir_device_audio_set_status_callback(
-        doremir_device_audio_status_callback_t callback,
-        doremir_ptr_t                          function,
-        doremir_device_audio_session_t         session) {}
+    doremir_device_audio_status_callback_t callback,
+    doremir_ptr_t                          function,
+    doremir_device_audio_session_t         session) {}
 
 // --------------------------------------------------------------------------------
 
