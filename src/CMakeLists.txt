@@ -24,7 +24,6 @@ list(APPEND SRCS
   doremir/midi.c
   doremir/pair.c
   doremir/plot_gnu.c
-  doremir/plot_core_osx.m
   doremir/plot.c
   doremir/priority_queue.c
   doremir/processor.c
@@ -51,6 +50,12 @@ list(APPEND SRCS_OSX
   doremir/atomic_osx.c
   doremir/thread_osx.c
   )
+if(${ENABLE_COREPLOT})
+  list(APPEND SRCS_OSX
+    doremir/plot_core_osx.m
+  )
+endif()
+
 list(APPEND SRCS_MSYS
   doremir/atomic_win.c
   doremir/thread_win.c

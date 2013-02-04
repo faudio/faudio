@@ -53,7 +53,7 @@ option(ENABLE_NONREALTIME_AUDIO "Enable non-real-time audio"                True
 option(ENABLE_FLUIDSYNTH        "Enable the Fluidsynth processor"           ${NOT_APPLE})
 option(ENABLE_AUDIO_UNIT        "Enable AudioUnit processors"               ${APPLE})
 option(ENABLE_VST               "Enable VST processors"                     True)
-option(ENABLE_LOGGING           "Enable standard logging"                   False)
+option(ENABLE_COREPLOT          "Enable CorePlot plot backend"              True)
 
 option(BUILD_FRAMEWORK          "Build an OS X framework"                   ${APPLE})
 option(BUILD_SHARED             "Build a shared library"                    ${NOT_APPLE})

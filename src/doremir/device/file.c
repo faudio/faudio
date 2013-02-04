@@ -68,6 +68,6 @@ doremir_device_file_result_t doremir_device_file_run(
     // call after
 
     // Free VM
-    lmm_destroy(vm);
+    // lmm_destroy(vm);
 }
 
