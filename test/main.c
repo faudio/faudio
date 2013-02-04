@@ -1075,7 +1075,7 @@ void test_map()
     }
 }
 
-void test_graph()
+void test_graph(string_t path)
 {
     test_section("Graph");
     {
@@ -1122,7 +1122,7 @@ void test_graph()
 
         doremir_print("a                            ==> %s\n", a);
 
-        FILE *f = fopen("/Users/hans/audio/doc/graphs/gen.dot", "w+");
+        FILE *f = fopen(unstring(path), "w+");
         fprintf(f, "%s\n", doremir_string_to_utf8(doremir_graph_to_dot(
                     string("#include \"doc/graphs/header.dot\""),
                     string("GRAPH_FORMAT_VERT;"),
@@ -1550,6 +1550,7 @@ void midi_stream()
 
 
 
+#define source_root_k "/Users/hans/audio"
 
 int main(int argc, char const *argv[])
 {
@@ -1600,7 +1601,7 @@ int main(int argc, char const *argv[])
         test_list();
         test_set();
         test_map();
-        test_graph();
+        test_graph(string(source_root_k "/doc/graphs/gen.dot"));
         test_priority_queue(10);
         test_to_json();
 
@@ -1617,7 +1618,7 @@ int main(int argc, char const *argv[])
         test_processors();
         test_vm2();
 
-        test_file_stream(string("/Users/hans/audio/test/in.wav"), string("/Users/hans/audio/test/out.wav"));
+        test_file_stream(string(source_root_k "/test/in.wav"), string(source_root_k "/test/out.wav"));
         buffer_stream();
         audio_stream();
         midi_stream();
