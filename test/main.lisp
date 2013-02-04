@@ -8,7 +8,10 @@
 
 (progn
   (push "/Users/hans/audio/build/Frameworks/" cffi:*darwin-framework-directories*)
-  (setf *foreign-lib* (cffi:load-foreign-library '(:framework "DoReMIRAudio"))))
+  (setf *foreign-lib* (cffi:load-foreign-library '(:framework "DoReMIRAudio")))  
+    (audioengine-set-log-file "/Users/hans/Library/Logs/DoReMIRAudio.log")
+    (audioengine-initialize)
+    (plot-use-gnu))
 
 ; (close-foreign-library *foreign-lib*)
 
@@ -257,7 +260,6 @@
 (setf tp (from-pointer 'type (pair-fst x)))
 (setf x (from-pointer 'buffer (pair-snd x)))
 
-(plot-use-gnu)
 (plot-buffer-double x nil nil)
 (plot-buffer-float x nil nil)
 
