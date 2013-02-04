@@ -1502,6 +1502,26 @@ void audio_stream()
         goto cleanup;
     }
 
+     // Session obtained, we can now access devices
+    input = doremir_device_audio_default_input(session);
+    output = doremir_device_audio_default_output(session);
+    
+    doremir_print("Device: %s\n", input);
+    doremir_print("Device: %s\n", output);
+    
+    // Start stream
+    // stream = doremir_device_audio_open_stream(input, proc, output);
+    // 
+    // // Handle possible error
+    // if (doremir_check(stream)) {
+    //     log_error((error_t) stream);
+    //     warn(string("Aborting test due to error"));
+    //     goto cleanup;
+    // }
+
+    // Stream active, let it run for 5 seconds
+    doremir_thread_sleep(500);
+
 cleanup:
     // doremir_device_audio_close_stream(stream);
     doremir_device_audio_end_session(session);
