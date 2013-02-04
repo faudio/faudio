@@ -45,7 +45,9 @@ file_device_t doremir_device_file_open(string_t path)
 }
 
 void doremir_device_file_close(file_device_t device)
-{
+{   
+    if (doremir_check(device))
+        return;
     inform(string_dappend(string("Closing file stream "), doremir_string_copy(device->path)));
 }
 

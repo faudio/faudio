@@ -1452,13 +1452,13 @@ void test_file_stream(string_t in_path, string_t out_path)
     if (doremir_check(input)) {
         log_error((error_t) input);
         warn(string("Aborting test due to error"));
-        return;
+        goto cleanup;
     }
 
     if (doremir_check(output)) {
         log_error((error_t) output);
         warn(string("Aborting test due to error"));
-        return;
+        goto cleanup;
     }
 
     result = doremir_device_file_run(input, proc, output);
@@ -1467,9 +1467,10 @@ void test_file_stream(string_t in_path, string_t out_path)
     if (doremir_check(result)) {
         log_error((error_t) result);
         warn(string("Aborting test due to error"));
-        return;
+        goto cleanup;
     }
 
+cleanup:
     doremir_device_file_close(input);
     doremir_device_file_close(output);
 }
@@ -1480,6 +1481,19 @@ void buffer_stream()
 
 }
 
+void print_audio_devices(audio_session_t session)
+{
+    doremir_print("\n", NULL);
+    doremir_print("    Listing audio devices: \n", NULL);
+    doremir_for_each(x, doremir_device_audio_all(session)) {
+        doremir_print("        Device: %s\n", x);
+        doremir_print("            Input:  %s\n", doremir_device_audio_input_type(x));
+        doremir_print("            Output: %s\n", doremir_device_audio_output_type(x));
+    }
+    doremir_print("    Default input is : %s\n", doremir_device_audio_default_input(session));
+    doremir_print("    Default output is : %s\n", doremir_device_audio_default_output(session));
+    doremir_print("\n", NULL);
+}
 void audio_stream()
 {
     test_section("Audio streams");
@@ -1502,39 +1516,27 @@ void audio_stream()
         goto cleanup;
     }
 
-    // Session obtained, we can now access devices
+    // Session obtained, we can now access devices        
+    print_audio_devices(session);
+
     input = doremir_device_audio_default_input(session);
     output = doremir_device_audio_default_output(session);
 
-    // doremir_print("Device: %s\n", input);
-    // doremir_print("Device: %s\n", output);
-    // doremir_print("Device: %s\n", doremir_device_audio_input_type(input));
-    // // doremir_print("Device: %s\n", doremir_device_audio_input_type(output));
-    // // doremir_print("Device: %s\n", doremir_device_audio_output_type(input));
-    // doremir_print("Device: %s\n", doremir_device_audio_output_type(output));
-
-    doremir_for_each(x, doremir_device_audio_all(session)) {
-        doremir_print("    Device: %s\n", x);
-        doremir_print("      Input:  %s\n", doremir_device_audio_input_type(x));
-        doremir_print("      Output: %s\n", doremir_device_audio_output_type(x));
-    }
-
-
     // Start stream
-    // stream = doremir_device_audio_open_stream(input, proc, output);
+    stream = doremir_device_audio_open_stream(input, proc, output);
     //
-    // // Handle possible error
-    // if (doremir_check(stream)) {
-    //     log_error((error_t) stream);
-    //     warn(string("Aborting test due to error"));
-    //     goto cleanup;
-    // }
+    // Handle possible error
+    if (doremir_check(stream)) {
+        log_error((error_t) stream);
+        warn(string("Aborting test due to error"));
+        goto cleanup;
+    }
 
     // Stream active, let it run for 5 seconds
     doremir_thread_sleep(500);
 
 cleanup:
-    // doremir_device_audio_close_stream(stream);
+    doremir_device_audio_close_stream(stream);
     doremir_device_audio_end_session(session);
     doremir_destroy(proc);
 }

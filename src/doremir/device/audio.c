@@ -72,6 +72,19 @@ inline static void delete_device(device_t device);
 inline static stream_t new_stream(device_t input, device_t output, processor_t proc);
 inline static void delete_stream(stream_t stream);
 
+void before_processing(stream_t stream);
+void after_processing(stream_t stream);
+int during_processing(stream_t stream);
+
+static int native_audio_callback(const void *input_ptr,
+                                 void *output_ptr,
+                                 unsigned long frame_count,
+                                 const PaStreamCallbackTimeInfo *time_info,
+                                 PaStreamCallbackFlags flags,
+                                 void *data);
+
+static void native_finished_callback(void *data);
+
 // --------------------------------------------------------------------------------
 
 inline static session_t new_session()
@@ -173,13 +186,13 @@ session_t doremir_device_audio_begin_session()
         assert(false && "Not initalized");
     }
 
-    inform(string("Beginning audio session"));
+    inform(string("Initializing real-time audio session"));
 
     doremir_thread_lock(pa_mutex);
     {
         if (pa_status) {
             doremir_thread_unlock(pa_mutex);
-            return (session_t) audio_device_error(string("Overlapping audio sessions"));
+            return (session_t) audio_device_error(string("Overlapping real-time audio sessions"));
         } else {
             Pa_Initialize();
             pa_status = true;
@@ -199,7 +212,7 @@ void doremir_device_audio_end_session(session_t session)
         assert(false && "Not initalized");
     }
 
-    inform(string("Ending audio session"));
+    inform(string("Terminating real-time audio session"));
 
     doremir_thread_lock(pa_mutex);
     {
@@ -275,22 +288,37 @@ type_t doremir_device_audio_output_type(device_t device)
 
 // --------------------------------------------------------------------------------
 
-stream_t doremir_device_audio_open_stream(device_t    input,
-        processor_t processor,
-        device_t    output)
+stream_t doremir_device_audio_open_stream(device_t input, processor_t proc, device_t output)
 {
-    assert(false && "Not implemented");
-    // call Pa_OpenStream
-    // call before_processing
-    // call Pa_StartStream
+    stream_t stream = new_stream(input, output, proc);
+
+    {
+        const PaStreamParameters       *in = NULL;
+        const PaStreamParameters       *out = NULL;
+        double                          sr = 44100;
+        unsigned long                   vs = paFramesPerBufferUnspecified;
+        PaStreamFlags                   flags = 0;
+        PaStreamCallback               *cb = native_audio_callback;
+        ptr_t                           data = NULL;
+
+        Pa_OpenStream(&stream->native, in, out, sr, vs, flags, cb, data);
+    }
+    before_processing(stream);
+
+    inform(string("Opening real-time audio stream"));
+    inform(string_dappend(string("    Input:  "), doremir_string_show(input)));
+    inform(string_dappend(string("    Output: "), doremir_string_show(output)));
+
+    Pa_StartStream(stream->native);
+    return stream;
 }
 
 void doremir_device_audio_close_stream(stream_t stream)
 {
-    assert(false && "Not implemented");
-    // call Pa_StopStream
-    // (after_processing is called from the finished callback)
-    // call Pa_CloseStream
+    inform(string("Closing real-time audio stream"));
+
+    Pa_CloseStream(stream->native);
+    // after_processing will be called from native_finished_callback
 }
 
 void doremir_device_audio_with_stream(device_t            input,
@@ -348,18 +376,18 @@ int during_processing(stream_t stream)
 
 /* The callbacks */
 
-int pa_main_callback(const void                       *input_ptr,
-                     void                             *output_ptr,
-                     unsigned long                     frame_count,
-                     const PaStreamCallbackTimeInfo   *time_info,
-                     PaStreamCallbackFlags             flags,
-                     void                             *data)
+int native_audio_callback(const void                       *input_ptr,
+                          void                             *output_ptr,
+                          unsigned long                     frame_count,
+                          const PaStreamCallbackTimeInfo   *time_info,
+                          PaStreamCallbackFlags             flags,
+                          void                             *data)
 {
     // call during_processing
     return 0;
 }
 
-void pa_finished_callback(void *userData)
+void native_finished_callback(void *userData)
 {
     // call after_processing
 }
