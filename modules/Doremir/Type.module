@@ -68,6 +68,7 @@ module Doremir.Type
     destroy : Type -> Void;
     
     repeat : (Int,Type) -> Type;
+    channels : Type -> Int;
 
     isSimple : Type -> Bool;
     isPair : Type -> Bool;

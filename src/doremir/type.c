@@ -167,7 +167,6 @@ doremir_type_t doremir_type_repeat(int times, doremir_type_t type)
         return type_pair(type, doremir_type_repeat(times - 1, type));
 }
 
-
 /** Whether the type represented by the given value is simple.
  */
 bool doremir_type_is_simple(doremir_type_t type)
@@ -374,6 +373,24 @@ inline static size_t offset(doremir_type_frames_t frames, doremir_type_t type)
         default:
             assert(false && "Missing label");
     }
+}
+
+inline static int channels(doremir_type_t type)
+{
+    switch (type->tag) {
+        case simple_type: return 1;
+        case frame_type:  return 1;
+        case pair_type:   return channels(pair_get(type, fst)) + channels(pair_get(type, snd));
+        case vector_type: return channels(vector_get(type, base)) * vector_get(type, size);
+        default:
+            assert(false && "Missing label");
+    }
+}
+
+
+int doremir_type_channels(doremir_type_t type)
+{
+    return channels(type);
 }
 
 /**
