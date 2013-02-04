@@ -48,6 +48,9 @@ Additions
 ==========
 Issues
 
+* Do not download ICU och Gtest
+* Add CorePlot in script
+
 * Type-safe range(m..n) literal
     * Current one requires map(cast) !
 
