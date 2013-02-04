@@ -12,12 +12,13 @@
     `i64`           | 64-bit integer
     `f32`           | 32-bit floating point
     `f64`           | 64-bit floating point
-    `ptr`           | Pointer supporting copy and destroy
-    `(A, B)`        | pair of *A* and *B*
-    `[A x N]`       | vector of *A*
-    `{A}`           | frame of *A*
+    `()`            | Unit type
+    `(A, B)`        | Pair of *A* and *B*
+    `[A x N]`       | Vector of *A*
+    `{A}`           | Frame of *A*
 
     @par Literals
+    - `type(unit)`
     - `type(i8)`
     - `type(i16)`
     - `type(i32)`

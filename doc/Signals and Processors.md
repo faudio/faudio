@@ -68,9 +68,10 @@ types, written as follows.
 
 Type            | Description
 ----------------|-----------------------------
-`(a, a)`        | pair of \f$a\f$ and \f$b\f$
-`[a x N]`       | vector of \f$a\f$
-`{a}`           | frame of \f$a\f$
+`()`            | Unit type
+`(a, a)`        | Pair of \f$a\f$ and \f$b\f$
+`[a x N]`       | Vector of \f$a\f$
+`{a}`           | Frame of \f$a\f$
 
 
 ### Pairs {#Pairs}
