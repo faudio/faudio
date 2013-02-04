@@ -12,6 +12,8 @@
 
 typedef struct _doremir_device_audio_t * doremir_device_audio_t;
 typedef struct _doremir_device_midi_t * doremir_device_midi_t;
+typedef struct _doremir_device_file_t * doremir_device_file_t;
+typedef struct _doremir_device_buffer_t * doremir_device_buffer_t;
 
 /** @}
     @}

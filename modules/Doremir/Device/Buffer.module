@@ -10,7 +10,6 @@ module Doremir.Device.Buffer
     import Doremir.Device;
     import Doremir.Processor;
 
-    type Buffer = opaque;
     type Result = opaque;
 
     open : (Size) -> Buffer;

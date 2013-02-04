@@ -13,7 +13,6 @@
     @{
     */
 
-typedef struct _doremir_device_buffer_t * doremir_device_buffer_t;
 typedef struct _doremir_device_buffer_result_t * doremir_device_buffer_result_t;
 doremir_device_buffer_t doremir_device_buffer_open(size_t);
 void doremir_device_buffer_close(doremir_device_buffer_t);
