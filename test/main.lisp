@@ -173,9 +173,11 @@
 (set-is-empty x)
 (set-is-single x)
 (set-has 1 x)
+(set-get 1 x)
 (set-is-subset-of y x)
 (set-is-proper-subset-of y x)
 (set-sum x y)
+(set-intersection x y)
 (set-product x y)
 (set-difference x y)
 ; (set-power x)
@@ -190,6 +192,8 @@
 
 (setf x (map-empty))
 (setf x (map-add "name" "hans" x))
+(setf x (map-add "name" "sven" x))
+(setf x (map-set "name" "sven" x))
 (setf x (map-add "skills" (list-cons 1 (list-empty)) x))
 (setf x (map-remove "name" x))
 (setf x (map-remove "skills" x))
@@ -198,8 +202,8 @@
 (map-size x)
 (map-is-empty x)
 (map-is-single x)
-; (map-get "name" x)
-; (map-get "skills" x)
+(from-pointer 'string (map-get "name" x))
+(from-pointer 'list (map-get "skills" x))
 (setf x (map-add-entry (pair-create "surname" "höglund") x))
 (setf x (map-remove-entry (pair-create "surname" "höglund") x))
 ; (map-has-key "name" x)
@@ -207,13 +211,13 @@
 ; (map-has-entry (pair-create "surname" "höglund") x)
 (map-is-submap-of x y)
 (map-is-proper-submap-of x y)
-; (map-sum x y)
-; (map-product x y)
-; (map-difference x y)
-; (map-power x)
+(map-sum x y)
+(map-product x y)
+(map-difference x y)
+(map-power x)
 ; (map-from-pair (pair-create 1 2))
 ; (map-from-list (list-single 1))
-; (map-to-list x)
+(map-to-list x)
 (cl:print x)
 (map-destroy x)
 
@@ -249,7 +253,7 @@
   res)
 
 
-
+; TODO move below
 (setf tp (from-pointer 'type (pair-fst x)))
 (setf x (from-pointer 'buffer (pair-snd x)))
 
@@ -296,6 +300,8 @@
 ; Types
 
 ; These expressions auto-convert to types
+(setf x nil)
+(setf x :unit)
 (setf x :i8)
 (setf x :i16)
 (setf x :i32)
@@ -318,7 +324,11 @@
 (type-offset-of 256 x)
 (type-align-of x)
 
+; Multichannel
+(setf x (type-repeat 4 x))
+
 ; We can also force conversion for nice printing
+(setf x (make-type :unit))
 (setf x (make-type '(:pair :i8 :i8)))
 (setf x (make-type (make-type '(:pair :i8 :i8))))
 
@@ -550,6 +560,7 @@
 (device-audio-output-type d)
 (type-channels (device-audio-input-type d))
 (type-channels (device-audio-output-type d))
+(type-size-of 1024 (device-audio-input-type d))
 
 (type-channels 
  (device-audio-output-type 

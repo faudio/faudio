@@ -60,13 +60,15 @@
 
 (defun export-type# (x)
   (cond
-    ((eq x :i8)        (type-simple 0))
-    ((eq x :i16)       (type-simple 1))
-    ((eq x :i32)       (type-simple 2))
-    ((eq x :i64)       (type-simple 3))
-    ((eq x :f32)       (type-simple 4))
-    ((eq x :f64)       (type-simple 5))
-    ((eq x :ptr)       (type-simple 6))
+    ((eq x :unit)      (type-simple 0))
+    ((eq x :i8)        (type-simple 1))
+    ((eq x :i16)       (type-simple 2))
+    ((eq x :i32)       (type-simple 3))
+    ((eq x :i64)       (type-simple 4))
+    ((eq x :f32)       (type-simple 5))
+    ((eq x :f64)       (type-simple 6))
+    ((eq x :ptr)       (type-simple 7))
+    ((eq x nil)        (type-simple 0))
     ((consp x)
       (cond 
         ((eq :frame  (car x))     (type-frame (make-type (cadr x))))

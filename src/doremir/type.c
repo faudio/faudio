@@ -160,9 +160,11 @@ void doremir_type_destroy(doremir_type_t type)
 
 doremir_type_t doremir_type_repeat(int times, doremir_type_t type)
 {
-    assert(times > 0 && "Times must be > 0");
+    if (times == 0) {
+        return type(unit);
+    }
 
-    if (times == 1) {
+    else if (times == 1) {
         return doremir_copy(type);
     } else {
         return type_pair(type, doremir_type_repeat(times - 1, type));
@@ -261,6 +263,9 @@ inline static size_t next_aligned(size_t x, size_t a)
 inline static size_t simple_align(doremir_type_simple_t simple)
 {
     switch (simple) {
+        case unit_type:
+            return 0;
+
         case i8_type:
             return alignof(uint8_t);
 
@@ -290,6 +295,9 @@ inline static size_t simple_align(doremir_type_simple_t simple)
 inline static size_t simple_size(doremir_type_simple_t simple)
 {
     switch (simple) {
+        case unit_type:
+            return 0;
+
         case i8_type:
             return sizeof(uint8_t);
 
@@ -381,7 +389,7 @@ inline static int channels(doremir_type_t type)
 {
     switch (type->tag) {
         case simple_type:
-            return 1;
+            return simple_get(type) == unit_type ? 0 : 1;
 
         case frame_type:
             return 1;
@@ -463,6 +471,9 @@ bool type_equal(doremir_ptr_t a, doremir_ptr_t b)
 inline static string_t simple_show(doremir_type_simple_t simple)
 {
     switch (simple) {
+        case unit_type:
+            return string("()");
+
         case i8_type:
             return string("i8");
 

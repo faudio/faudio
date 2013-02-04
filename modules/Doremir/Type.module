@@ -48,7 +48,8 @@ module Doremir.Type
     import Doremir.Pair;
 
     type Frames = Size;
-    type Simple = enum { 
+    type Simple = enum {
+        UnitType, 
         I8Type, 
         I16Type, 
         I32Type, 

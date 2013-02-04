@@ -1514,9 +1514,9 @@ void audio_stream()
     // doremir_print("Device: %s\n", doremir_device_audio_output_type(output));
 
     doremir_for_each(x, doremir_device_audio_all(session)) {
-        doremir_print("Device: %s\n", x);
-        doremir_print("  Input:  %s\n", doremir_device_audio_input_type(x));
-        doremir_print("  Output: %s\n", doremir_device_audio_output_type(x));
+        doremir_print("    Device: %s\n", x);
+        doremir_print("      Input:  %s\n", doremir_device_audio_input_type(x));
+        doremir_print("      Output: %s\n", doremir_device_audio_output_type(x));
     }
 
 

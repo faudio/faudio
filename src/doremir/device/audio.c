@@ -28,7 +28,7 @@ struct _doremir_device_audio_session_t {
 
     list_t              devices;            // Cached device list
 
-    device_t            def_input;          // Default devices, both possibly null 
+    device_t            def_input;          // Default devices, both possibly null
     device_t            def_output;         // If present, these are also in the above list
 };
 
@@ -276,8 +276,8 @@ type_t doremir_device_audio_output_type(device_t device)
 // --------------------------------------------------------------------------------
 
 stream_t doremir_device_audio_open_stream(device_t    input,
-                                          processor_t processor,
-                                          device_t    output)
+        processor_t processor,
+        device_t    output)
 {
     assert(false && "Not implemented");
     // call Pa_OpenStream
@@ -302,13 +302,13 @@ void doremir_device_audio_with_stream(device_t            input,
                                       ptr_t               error_data)
 {
     stream_t stream = doremir_device_audio_open_stream(input, processor, output);
-    
+
     if (doremir_check(stream)) {
         error_callback(error_data, (error_t) stream);
     } else {
         stream_callback(stream_data, stream);
     }
-    
+
     doremir_device_audio_close_stream(stream);
 }
 
