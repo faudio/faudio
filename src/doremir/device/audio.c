@@ -28,9 +28,8 @@ struct _doremir_device_audio_session_t {
 
     list_t              devices;            // Cached device list
 
-    device_t            def_input;          // Default devices
-    device_t            def_output;         //      Both possibly null
-    //      If present, these are also in the above list
+    device_t            def_input;          // Default devices, both possibly null 
+    device_t            def_output;         // If present, these are also in the above list
 };
 
 struct _doremir_device_audio_t {
@@ -188,7 +187,7 @@ session_t doremir_device_audio_begin_session()
 
             session_t session = new_session();
             session_init_devices(session);
-            // session->acquired = time(NULL);
+            // session->acquired = time(NULL);      // TODO
             return session;
         }
     }
