@@ -75,7 +75,7 @@ inline static void delete_stream(stream_t stream);
 
 void before_processing(stream_t stream);
 void after_processing(stream_t stream);
-int during_processing(stream_t stream);
+int during_processing(stream_t stream, unsigned count, float** input, float** output);
 
 static int native_audio_callback(const void *input_ptr,
                                  void *output_ptr,
@@ -333,10 +333,14 @@ stream_t doremir_device_audio_open_stream(device_t input, processor_t proc, devi
         unsigned long                   vs      = paFramesPerBufferUnspecified;
         PaStreamFlags                   flags   = paNoFlag;
         PaStreamCallback               *cb      = native_audio_callback;
-        ptr_t                           data    = NULL;
+        ptr_t                           data    = stream;
 
         status = Pa_OpenStream(&stream->native, in, out, sr, vs, flags, cb, data);
+        if (status != paNoError) {
+            return (stream_t) audio_device_error_with(string("Could not start stream"), status);
+        }
 
+        status = Pa_SetStreamFinishedCallback(stream->native, native_finished_callback);
         if (status != paNoError) {
             return (stream_t) audio_device_error_with(string("Could not start stream"), status);
         }
@@ -352,7 +356,7 @@ void doremir_device_audio_close_stream(stream_t stream)
     inform(string("Closing real-time audio stream"));
 
     Pa_CloseStream(stream->native);
-    // after_processing will be called from native_finished_callback
+    // after_processing() will be called from native_finished_callback
 }
 
 void doremir_device_audio_with_stream(device_t            input,
@@ -394,7 +398,7 @@ void after_processing(stream_t stream)
     // free buffers
 }
 
-int during_processing(stream_t stream)
+int during_processing(stream_t stream, unsigned count, float** input, float** output)
 {
     // update stream time
     // call dispatch() on the innner dispatcher
@@ -410,23 +414,21 @@ int during_processing(stream_t stream)
 
 /* The callbacks */
 
-int native_audio_callback(const void                       *input_ptr,
-                          void                             *output_ptr,
-                          unsigned long                     frame_count,
+int native_audio_callback(const void                       *input,
+                          void                             *output,
+                          unsigned long                     count,
                           const PaStreamCallbackTimeInfo   *time_info,
                           PaStreamCallbackFlags             flags,
                           void                             *data)
-{
-    // call during_processing
-    return 0;
+{   
+    // TODO handle status flags?
+    return during_processing(data, count, input, output);
 }
 
-void native_finished_callback(void *userData)
+void native_finished_callback(void *data)
 {
-    // call after_processing
+    after_processing(data);
 }
-
-
 
 
 // --------------------------------------------------------------------------------
