@@ -1504,8 +1504,7 @@ void print_audio_devices(audio_session_t session)
 }  
 ptr_t status_changed(ptr_t ct)
 {
-    printf("Status changed!!!\n");
-    // printf("Status changed: %s!\n", unstring(ct));
+    printf("Status changed: %s!\n", unstring(ct));
     return 0;
 }
 void audio_stream()

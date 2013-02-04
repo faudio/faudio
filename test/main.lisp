@@ -552,6 +552,14 @@
 (device-audio-end-session s)
 ;(device-audio-with-session)
 
+; Check for new devices
+(defvar *status* 0)
+(cl:print *status*)
+(defcallback status-changed ptr ((x ptr))
+  (declare (ignore x))
+  (incf *status* 1))
+(device-audio-set-status-callback (callback status-changed) nil s)
+
 
 (device-audio-all s)
 (setf x (device-audio-default-input s))
