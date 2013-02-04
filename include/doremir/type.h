@@ -22,6 +22,7 @@ doremir_type_t doremir_type_vector(doremir_type_t, size_t);
 doremir_type_t doremir_type_frame(doremir_type_t);
 doremir_type_t doremir_type_copy(doremir_type_t);
 void doremir_type_destroy(doremir_type_t);
+doremir_type_t doremir_type_repeat(int, doremir_type_t);
 bool doremir_type_is_simple(doremir_type_t);
 bool doremir_type_is_pair(doremir_type_t);
 bool doremir_type_is_vector(doremir_type_t);

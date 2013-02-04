@@ -1506,8 +1506,20 @@ void audio_stream()
     input = doremir_device_audio_default_input(session);
     output = doremir_device_audio_default_output(session);
     
-    doremir_print("Device: %s\n", input);
-    doremir_print("Device: %s\n", output);
+    // doremir_print("Device: %s\n", input);
+    // doremir_print("Device: %s\n", output);
+    // doremir_print("Device: %s\n", doremir_device_audio_input_type(input));
+    // // doremir_print("Device: %s\n", doremir_device_audio_input_type(output));
+    // // doremir_print("Device: %s\n", doremir_device_audio_output_type(input));
+    // doremir_print("Device: %s\n", doremir_device_audio_output_type(output));
+
+    doremir_for_each(x, doremir_device_audio_all(session))
+    {
+        doremir_print("Device: %s\n", x);
+        doremir_print("  Input:  %s\n", doremir_device_audio_input_type(x));
+        doremir_print("  Output: %s\n", doremir_device_audio_output_type(x));
+    }
+
     
     // Start stream
     // stream = doremir_device_audio_open_stream(input, proc, output);

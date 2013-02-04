@@ -86,7 +86,6 @@ inline static void session_init_devices(session_t session)
 {
     native_index_t count;
     list_t         devices;
-    pair_t         def_devices;
 
     count   = Pa_GetDeviceCount();
     devices = doremir_list_empty();
@@ -117,12 +116,12 @@ inline static device_t new_device(native_index_t index)
     device_t device = doremir_new(device_audio);
     device->impl    = &audio_device_impl;
 
-    PaDeviceInfo  *info      = Pa_GetDeviceInfo(index);
-    PaHostApiInfo *host_info = Pa_GetHostApiInfo(info->hostApi);
+    const PaDeviceInfo  *info      = Pa_GetDeviceInfo(index);
+    const PaHostApiInfo *host_info = Pa_GetHostApiInfo(info->hostApi);
 
     device->index       = index;
-    device->name        = string(info->name);
-    device->host_name   = string(host_info->name);
+    device->name        = string((char*) info->name);       // const cast
+    device->host_name   = string((char*) host_info->name);
     device->muted       = false;
     device->volume      = 1.0;
 
@@ -260,19 +259,16 @@ doremir_string_t doremir_device_audio_host_name(device_t device)
     return doremir_copy(device->host_name);
 }
 
-bool doremir_device_audio_has_input(device_t device)
+type_t doremir_device_audio_input_type(device_t device)
 {
-    assert(false && "Not implemented");
+    const PaDeviceInfo *info = Pa_GetDeviceInfo(device->index);
+    return doremir_type_repeat(info->maxInputChannels, type(f32));
 }
 
-bool doremir_device_audio_has_output(device_t device)
+type_t doremir_device_audio_output_type(device_t device)
 {
-    assert(false && "Not implemented");
-}
-
-doremir_pair_t doremir_device_audio_channels(device_t device)
-{
-    assert(false && "Not implemented");
+    const PaDeviceInfo  *info = Pa_GetDeviceInfo(device->index);
+    return doremir_type_repeat(info->maxOutputChannels, type(f32));
 }
 
 
@@ -411,7 +407,7 @@ ptr_t audio_session_impl(doremir_id_t interface)
 
 doremir_string_t audio_device_show(ptr_t a)
 {                                                       
-    device_t device = (device_t*) a;
+    device_t device = (device_t) a;
     
     string_t str = string("<AudioDevice ");
     str = string_dappend(str, doremir_device_audio_host_name(device));

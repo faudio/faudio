@@ -66,6 +66,8 @@ module Doremir.Type
     frame : Type -> Type;
     copy : Type -> Type;
     destroy : Type -> Void;
+    
+    repeat : (Int,Type) -> Type;
 
     isSimple : Type -> Bool;
     isPair : Type -> Bool;

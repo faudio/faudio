@@ -44,9 +44,8 @@ module Doremir.Device.Audio
 
     name : Audio -> String;
     hostName : Audio -> String;
-    hasInput : Audio -> Bool;
-    hasOutput : Audio -> Bool;
-    channels : Audio -> Pair;
+    inputType : Audio -> Type;
+    outputType : Audio -> Type;
 
     openStream : (Audio, Processor, Audio) -> Stream;
     closeStream : Stream -> Void;

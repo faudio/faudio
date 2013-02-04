@@ -85,31 +85,8 @@ doremir_string_t doremir_device_audio_name(
 doremir_string_t doremir_device_audio_host_name(
     doremir_device_audio_t device) {}
 
-/**
-    Return the number of channels of the given device.
-    @param device
-        The device.
-    @return
-        A pair of int32_t, denoting number of inputs and outputs, respectively.
- */
-doremir_pair_t doremir_device_audio_channels(
-    doremir_device_audio_t device) {}
-
-/**
-    Return whether the given device has input or not.
-    @param device
-        The device.
- */
-bool doremir_device_audio_has_input(
-    doremir_device_audio_t) {}
-
-/**
-    Return whether the given device has output or not.
-    @param device
-        The device.
- */
-bool doremir_device_audio_has_output(
-    doremir_device_audio_t) {}
+doremir_type_t doremir_device_audio_input_type(doremir_device_audio_t) {}
+doremir_type_t doremir_device_audio_output_type(doremir_device_audio_t) {}
 
 
 // --------------------------------------------------------------------------------

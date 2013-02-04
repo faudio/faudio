@@ -158,6 +158,16 @@ void doremir_type_destroy(doremir_type_t type)
     delete_type(type);
 }
 
+doremir_type_t doremir_type_repeat(int times, doremir_type_t type)
+{
+    assert(times > 0 && "Times must be > 0");
+    if (times == 1)
+        return doremir_copy(type);
+    else
+        return type_pair(type, doremir_type_repeat(times - 1, type));
+}
+
+
 /** Whether the type represented by the given value is simple.
  */
 bool doremir_type_is_simple(doremir_type_t type)
