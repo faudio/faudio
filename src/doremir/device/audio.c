@@ -323,9 +323,9 @@ stream_t doremir_device_audio_open_stream(device_t input, processor_t proc, devi
             .sampleFormat               = (paFloat32 | paNonInterleaved),
             .suggestedLatency           = 0,
             .hostApiSpecificStreamInfo  = 0
-        };                  
-        printf("> %d\n", inp.channelCount);
-        printf("> %d\n", outp.channelCount);
+        };
+        // printf("> %d\n", inp.channelCount);
+        // printf("> %d\n", outp.channelCount);
 
         const PaStreamParameters       *in      = input ? &inp : NULL;
         const PaStreamParameters       *out     = output ? &outp : NULL;
@@ -336,8 +336,8 @@ stream_t doremir_device_audio_open_stream(device_t input, processor_t proc, devi
         ptr_t                           data    = NULL;
 
         status = Pa_OpenStream(&stream->native, in, out, sr, vs, flags, cb, data);
-        if (status != paNoError)
-        {
+
+        if (status != paNoError) {
             return (stream_t) audio_device_error_with(string("Could not start stream"), status);
         }
     }
@@ -535,15 +535,15 @@ void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t 
 error_t audio_device_error(string_t msg)
 {
     return doremir_error_create_simple(error,
-        msg,
-        string("Doremir.Device.Audio"));
+                                       msg,
+                                       string("Doremir.Device.Audio"));
 }
 
 error_t audio_device_error_with(string_t msg, int code)
 {
     return doremir_error_create_simple(error,
-        string_dappend(msg, format_integer(" (error code %d)", code)),
-        string("Doremir.Device.Audio"));
+                                       string_dappend(msg, format_integer(" (error code %d)", code)),
+                                       string("Doremir.Device.Audio"));
 }
 
 void audio_device_fatal(string_t msg, int code)
