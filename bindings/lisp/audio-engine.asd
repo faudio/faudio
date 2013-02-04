@@ -45,6 +45,7 @@
             (:file "stack")
             (:file "ring-buffer")))
         (:file "plot")
+        (:file "event")
         (:file "message")
         (:file "processor")
         (:file "signal")

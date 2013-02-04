@@ -87,6 +87,11 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
+(defun to-error (x)
+  (from-pointer 'error (to-pointer x)))
+
+; ---------------------------------------------------------------------------------------------------
+
 ; Override print by String.show
 (defcfun (string-show# "doremir_string_show") string (a :pointer))
 
@@ -112,6 +117,15 @@
 
 (defmethod print-object ((x time) out) (format out "~a" (string-show# (slot-value x 'time-ptr))))
 (defmethod print-object ((x type) out) (format out "~a" (string-show# (slot-value x 'type-ptr))))
+
+(defmethod print-object ((x device-audio-session) out) (format out "~a" (string-show# (slot-value x 'device-audio-session-ptr))))
+(defmethod print-object ((x device-audio-stream) out) (format out "~a" (string-show# (slot-value x 'device-audio-stream-ptr))))
+(defmethod print-object ((x device-audio) out) (format out "~a" (string-show# (slot-value x 'device-audio-ptr))))
+(defmethod print-object ((x device-midi-session) out) (format out "~a" (string-show# (slot-value x 'device-midi-session-ptr))))
+(defmethod print-object ((x device-midi-stream) out) (format out "~a" (string-show# (slot-value x 'device-midi-stream-ptr))))
+(defmethod print-object ((x device-midi) out) (format out "~a" (string-show# (slot-value x 'device-midi-ptr))))
+(defmethod print-object ((x device-file) out) (format out "~a" (string-show# (slot-value x 'device-file-ptr))))
+(defmethod print-object ((x device-buffer) out) (format out "~a" (string-show# (slot-value x 'device-buffer-ptr))))
 
 
 ; etc

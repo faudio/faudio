@@ -233,16 +233,14 @@
 (cl:print x)
 (buffer-destroy x)
 
-(defun err (x)
-  (from-pointer 'error (to-pointer x)))
 
 (setf x (buffer-read-audio "/Users/hans/Desktop/test.wav"))
 (setf x (buffer-read-audio "/Users/hans/Desktop/Passager.wav"))
 (error-check x)
-(error-message (err x))
-(error-severity (err x))
-(error-origin (err x))
-(error-log nil (err x))
+(error-message (to-error x))
+(error-severity (to-error x))
+(error-origin (to-error x))
+(error-log nil (to-error x))
 
 (defun safe-buffer-read-audio (path)
   (setf res (buffer-read-audio path))
@@ -531,45 +529,63 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Devices
+; Audio devices
 
 (setf s (device-audio-begin-session))
-(setf s (device-audio-restart-session s))
+(error-check s)
+(error-message (to-error s))
 (device-audio-end-session s)
-(device-audio-with-session)
+;(device-audio-with-session)
 (device-audio-all s)
-(device-audio-default s)
+(setf d (device-audio-default-input s))
+(setf d (device-audio-default-output s))
+(setf x d)
+(setf y d)
+(equal x y) ; FIXME
+
 (device-audio-name d)
 (device-audio-host-name d)
-(device-audio-has-input d)
-(device-audio-has-output d)
-(device-audio-channels d)
-(device-audio-start-stream d p d)
-(device-audio-restart-stream s)
-(device-audio-stop-stream s)
-(device-audio-with-stream)
+(device-audio-input-type d)
+(device-audio-output-type d)
 
-(device-midi-all)
-(device-midi-default)
-(device-midi-name)
-(device-midi-host-name)
-(device-midi-has-input)
-(device-midi-has-output)
-(device-midi-begin-session)
-(device-midi-restart-session)
-(device-midi-end-session)
-(device-midi-start-stream)
-(device-midi-restart-stream)
-(device-midi-stop-stream)
-(device-midi-with-session)
-(device-midi-with-stream)
+(setf p (processor-identity '(:pair :f32 :f32)))
+(device-audio-open-stream d p d)
+(device-audio-close-stream s)
+;(device-audio-with-stream)
 
-(device-file-create)
-(device-file-destroy)
+; ---------------------------------------------------------------------------------------------------
+
+; Midi devices
+
+; (device-midi-all)
+; (device-midi-default)
+; (device-midi-name)
+; (device-midi-host-name)
+; (device-midi-has-input)
+; (device-midi-has-output)
+; (device-midi-begin-session)
+; (device-midi-restart-session)
+; (device-midi-end-session)
+; (device-midi-start-stream)
+; (device-midi-restart-stream)
+; (device-midi-stop-stream)
+; (device-midi-with-session)
+; (device-midi-with-stream)
+
+; ---------------------------------------------------------------------------------------------------
+
+; File devices
+
+(device-file-open)
+(device-file-close)
 (device-file-run)
 
-(device-buffer-create)
-(device-buffer-destroy)
+; ---------------------------------------------------------------------------------------------------
+
+; Buffer devices
+
+(device-buffer-open)
+(device-buffer-close)
 (device-buffer-run)
 
 
@@ -612,6 +628,16 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
+; Plotting
+
+(cffi:defcallback plot-cb ptr ((c ptr))
+  (cl:print "Printing"))
+
+(plot-show (callback plot-cb) nil)
+
+
+; ---------------------------------------------------------------------------------------------------
+
 ; Misc generic functions
 
 (equal              x y)
@@ -647,13 +673,6 @@
 (subtract           0 0)
 (divide             0 1)
 (absolute           -3)
-
-
-(cffi:defcallback plot-cb ptr ((c ptr))
-  (cl:print "Printing"))
-
-(plot-show (callback plot-cb) nil)
-
 
 
 
