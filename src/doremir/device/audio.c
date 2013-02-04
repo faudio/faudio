@@ -23,7 +23,7 @@ typedef PaDeviceIndex native_index_t;
 typedef PaStream     *native_stream_t;
 
 struct _doremir_device_audio_session_t {
-    
+
     impl_t              impl;               // Dispatcher
     system_time_t       acquired;           // Time of acquisition (not used at the moment)
 
@@ -34,7 +34,7 @@ struct _doremir_device_audio_session_t {
 };
 
 struct _doremir_device_audio_t {
-    
+
     impl_t              impl;               // Dispatcher
     native_index_t      index;              // Native device index
 
@@ -46,7 +46,7 @@ struct _doremir_device_audio_t {
 };
 
 struct _doremir_device_audio_stream_t {
-    
+
     impl_t              impl;               // Dispatcher
     native_stream_t     native;             // Native stream
 
@@ -76,7 +76,7 @@ inline static void delete_stream(stream_t stream);
 
 void before_processing(stream_t stream);
 void after_processing(stream_t stream);
-int during_processing(stream_t stream, unsigned count, float** input, float** output);
+int during_processing(stream_t stream, unsigned count, float **input, float **output);
 
 static int native_audio_callback(const void *input_ptr,
                                  void *output_ptr,
@@ -112,7 +112,7 @@ inline static void session_init_devices(session_t session)
         }
     }
 
-    session->devices      = devices;
+    session->devices      = doremir_list_dreverse(devices);
     session->def_input    = new_device(Pa_GetDefaultInputDevice());
     session->def_output   = new_device(Pa_GetDefaultOutputDevice());
 }
@@ -230,10 +230,10 @@ void doremir_device_audio_end_session(session_t session)
 }
 
 void doremir_device_audio_with_session(
-    doremir_device_audio_session_callback_t session_callback,
-    doremir_ptr_t                           session_data,
-    doremir_error_callback_t                error_callback,
-    doremir_ptr_t                           error_data
+    session_callback_t session_callback,
+    ptr_t                           session_data,
+    error_callback_t                error_callback,
+    ptr_t                           error_data
 )
 {
     session_t session = doremir_device_audio_begin_session();
@@ -339,11 +339,13 @@ stream_t doremir_device_audio_open_stream(device_t input, processor_t proc, devi
         ptr_t                           data    = stream;
 
         status = Pa_OpenStream(&stream->native, in, out, sr, vs, flags, cb, data);
+
         if (status != paNoError) {
             return (stream_t) audio_device_error_with(string("Could not start stream"), status);
         }
 
         status = Pa_SetStreamFinishedCallback(stream->native, native_finished_callback);
+
         if (status != paNoError) {
             return (stream_t) audio_device_error_with(string("Could not start stream"), status);
         }
@@ -398,7 +400,7 @@ void before_processing(stream_t stream)
         .total_time  = 0,
         .dispatcher  = NULL
     };
-    
+
     stream->proc_impl->before(stream->proc, &info);
 }
 
@@ -419,7 +421,7 @@ void after_processing(stream_t stream)
     // free buffers
 }
 
-int during_processing(stream_t stream, unsigned count, float** input, float** output)
+int during_processing(stream_t stream, unsigned count, float **input, float **output)
 {
     doremir_processor_info_t info = {
         .sample_rate = 44100,
@@ -449,9 +451,9 @@ int native_audio_callback(const void                       *input,
                           const PaStreamCallbackTimeInfo   *time_info,
                           PaStreamCallbackFlags             flags,
                           void                             *data)
-{   
+{
     // TODO handle status flags?
-    return during_processing(data, count, (float**) input, (float**) output);
+    return during_processing(data, count, (float **) input, (float **) output);
 }
 
 void native_finished_callback(void *data)
