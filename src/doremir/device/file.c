@@ -61,7 +61,7 @@ doremir_device_file_result_t doremir_device_file_run(
     // create result_t
     // set input, output, proc, proc_impl
     // check types
-    // Allocate 
+    // Allocate
 
     // call before
     // run processing loop

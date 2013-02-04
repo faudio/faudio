@@ -18,6 +18,7 @@ typedef doremir_device_audio_stream_t           stream_t;
 typedef doremir_device_audio_session_t          session_t;
 typedef doremir_device_audio_stream_callback_t  stream_callback_t;
 typedef doremir_device_audio_session_callback_t session_callback_t;
+typedef doremir_device_audio_status_callback_t  status_callback_t;
 
 typedef PaDeviceIndex native_index_t;
 typedef PaStream     *native_stream_t;
@@ -53,7 +54,7 @@ struct _doremir_device_audio_stream_t {
     device_t            input, output;
     processor_t         proc;
     proc_interface_t   *proc_impl;
-    
+
     unsigned            input_channels, output_channels;
     int32_t             time;               // Monotonically increasing sample count
 
@@ -159,10 +160,10 @@ inline static stream_t new_stream(device_t input, device_t output, processor_t p
 
     stream->impl            = &audio_stream_impl;
     stream->input           = input;
-    stream->output          = output;                           
+    stream->output          = output;
     stream->input_channels  = num_input_channels(input);
     stream->output_channels = num_output_channels(output);
-    
+
     stream->proc            = proc;
     stream->proc_impl       = doremir_interface(doremir_processor_interface_i, stream->proc);
 
@@ -297,6 +298,20 @@ type_t doremir_device_audio_output_type(device_t device)
     return doremir_type_repeat(info->maxOutputChannels, type(f32));
 }
 
+
+void set_device_status_impl(status_callback_t function, ptr_t data);
+
+void doremir_device_audio_set_status_callback(
+    status_callback_t function,
+    ptr_t             data,
+    session_t         session)
+{
+    assert(session && "Not a real session");
+
+    // See device_osx.c and device_win.c
+    set_device_status_impl(function, data);
+}
+
 // --------------------------------------------------------------------------------
 
 static inline int num_input_channels(device_t device)
@@ -360,9 +375,11 @@ stream_t doremir_device_audio_open_stream(device_t input, processor_t proc, devi
     before_processing(stream);
 
     status = Pa_StartStream(stream->native);
+
     if (status != paNoError) {
         return (stream_t) audio_device_error_with(string("Could not start stream"), status);
     }
+
     return stream;
 }
 
@@ -399,7 +416,7 @@ void doremir_device_audio_with_stream(device_t            input,
 void before_processing(stream_t stream)
 {
     // extract top-level audio type
-    
+
     // allocate buffers
     // call setup() on top processor (passing outgoing message receiver)
     doremir_processor_info_t info = {
@@ -444,12 +461,11 @@ int during_processing(stream_t stream, unsigned count, float **input, float **ou
     // deliver inputs
     // stream->proc_impl->process(stream->proc, &info, NULL);
     // deliver outputs
-    for (unsigned channel = 0; channel < stream->input_channels; ++channel)
-    {
-        float* in  = input[channel];
-        float* out = output[channel];
-        for (int i = 0; i < count; ++i)
-        {              
+    for (unsigned channel = 0; channel < stream->input_channels; ++channel) {
+        float *in  = input[channel];
+        float *out = output[channel];
+
+        for (int i = 0; i < count; ++i) {
             // TODO
             out[i] = in[i];
         }

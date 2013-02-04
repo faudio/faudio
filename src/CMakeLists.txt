@@ -48,6 +48,7 @@ list(APPEND SRCS
   )
 list(APPEND SRCS_OSX
   doremir/atomic_osx.c
+  doremir/device_osx.c
   doremir/directory_osx.c
   doremir/thread_osx.c
   )
@@ -59,6 +60,7 @@ endif()
 
 list(APPEND SRCS_MSYS
   doremir/atomic_win.c
+  doremir/device_win.c
   doremir/directory_win.c
   doremir/thread_win.c
   )

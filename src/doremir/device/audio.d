@@ -85,9 +85,19 @@ doremir_string_t doremir_device_audio_name(
 doremir_string_t doremir_device_audio_host_name(
     doremir_device_audio_t device) {}
 
+/** Return.
+ */
 doremir_type_t doremir_device_audio_input_type(doremir_device_audio_t) {}
+
+/** Return.
+ */
 doremir_type_t doremir_device_audio_output_type(doremir_device_audio_t) {}
 
+/** Set.
+ */
+void doremir_device_audio_set_status_callback(doremir_device_audio_status_callback_t,
+        doremir_ptr_t,
+        doremir_device_audio_session_t);
 
 // --------------------------------------------------------------------------------
 

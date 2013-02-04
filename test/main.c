@@ -1126,7 +1126,7 @@ void test_graph(string_t path)
         // fprintf(f, "%s\n", doremir_string_to_utf8(doremir_graph_to_dot(
         //             string("#include \"doc/graphs/header.dot\""),
         //             string("GRAPH_FORMAT_VERT;"),
-        //             a))); 
+        //             a)));
     }
 }
 
@@ -1423,14 +1423,14 @@ void test_log()
     }
 
     doremir_audio_engine_log_info(string("---------------"));
-} 
+}
 
 void test_directory()
 {
     test_section("Directory");
 
     doremir_print("home()                       ==> %s\n", doremir_directory_home());
-    doremir_print("current()                    ==> %s\n", doremir_directory_current());    
+    doremir_print("current()                    ==> %s\n", doremir_directory_current());
 }
 
 
@@ -1501,6 +1501,12 @@ void print_audio_devices(audio_session_t session)
     doremir_print("    Default input is : %s\n", doremir_device_audio_default_input(session));
     doremir_print("    Default output is : %s\n", doremir_device_audio_default_output(session));
     doremir_print("\n", NULL);
+}  
+ptr_t status_changed(ptr_t ct)
+{
+    printf("Status changed!!!\n");
+    // printf("Status changed: %s!\n", unstring(ct));
+    return 0;
 }
 void audio_stream()
 {
@@ -1540,6 +1546,8 @@ void audio_stream()
         goto cleanup;
     }
 
+    doremir_device_audio_set_status_callback(status_changed, string("foobar"), session);
+
     // Stream active, let it run for 5 seconds
     doremir_thread_sleep(10000);
 
@@ -1559,86 +1567,92 @@ void midi_stream()
 
 
 
-#include <CoreAudio/AudioHardware.h>
-
-void test_audio_refresh()
-{
-    printf("Press <enter> to refresh device list> \n");
-    while (1) {
-        getchar();
-
-        OSStatus result;
-        UInt32 dataSize;
-
-        AudioObjectPropertyAddress propertyAddress;
-        propertyAddress.mSelector = kAudioHardwarePropertyDevices;
-        propertyAddress.mScope    = kAudioObjectPropertyScopeGlobal;
-        propertyAddress.mElement  = kAudioObjectPropertyElementMaster;
-
-        dataSize = 0;
-
-        result = AudioObjectGetPropertyDataSize(
-            kAudioObjectSystemObject, &propertyAddress, 
-            0, NULL, &dataSize);
-
-        int count = -1;
-        if (result == noErr) {
-            count = dataSize / sizeof(AudioDeviceID);
-        }
-        printf("num devices %d \n", count);
-    }
-}       
-
-OSStatus refresh_listener(AudioObjectID     object_id, 
-                          UInt32            num_addresses, 
-                          const AudioObjectPropertyAddress addresses[],
-                          void* data)
-{                                    
-    printf("got listener %d \n", (int) num_addresses);
-
-    OSStatus result;
-    UInt32 dataSize;
-    
-    result = AudioObjectGetPropertyDataSize(
-        kAudioObjectSystemObject, addresses,  
-        0, NULL, &dataSize);
-
-    int count = -1;
-    if (result == noErr) {
-        count = dataSize / sizeof(AudioDeviceID);
-    }
-    printf("num devices %d \n", count);
-
-
-    return noErr;
-}
-void test_audio_refresh2()
-{
-    test_section("Audio device refresh 2");
-    OSStatus result;
-
-    CFRunLoopRef theRunLoop =  NULL;
-    AudioObjectPropertyAddress theAddress = 
-        { kAudioHardwarePropertyRunLoop, 
-          kAudioObjectPropertyScopeGlobal, 
-          kAudioObjectPropertyElementMaster };
-    AudioObjectSetPropertyData(kAudioObjectSystemObject, &theAddress, 0, NULL, sizeof(CFRunLoopRef), &theRunLoop);
-
-    AudioObjectPropertyAddress propertyAddress;
-    propertyAddress.mSelector = kAudioHardwarePropertyDevices;
-    propertyAddress.mScope    = kAudioObjectPropertyScopeGlobal;
-    propertyAddress.mElement  = kAudioObjectPropertyElementMaster;
-    
-    void* listener  = refresh_listener;
-    void* data      = NULL;
-
-    result = AudioObjectAddPropertyListener(
-        kAudioObjectSystemObject, &propertyAddress, 
-        listener, data);
-    assert(result == noErr);
-    
-    doremir_thread_sleep(1000000);
-}
+// #include <CoreAudio/AudioHardware.h>
+// 
+// void test_audio_refresh()
+// {
+//     printf("Press <enter> to refresh device list> \n");
+// 
+//     while (1) {
+//         getchar();
+// 
+//         OSStatus result;
+//         UInt32 dataSize;
+// 
+//         AudioObjectPropertyAddress propertyAddress;
+//         propertyAddress.mSelector = kAudioHardwarePropertyDevices;
+//         propertyAddress.mScope    = kAudioObjectPropertyScopeGlobal;
+//         propertyAddress.mElement  = kAudioObjectPropertyElementMaster;
+// 
+//         dataSize = 0;
+// 
+//         result = AudioObjectGetPropertyDataSize(
+//                      kAudioObjectSystemObject, &propertyAddress,
+//                      0, NULL, &dataSize);
+// 
+//         int count = -1;
+// 
+//         if (result == noErr) {
+//             count = dataSize / sizeof(AudioDeviceID);
+//         }
+// 
+//         printf("num devices %d \n", count);
+//     }
+// }
+// 
+// OSStatus refresh_listener(AudioObjectID     object_id,
+//                           UInt32            num_addresses,
+//                           const AudioObjectPropertyAddress addresses[],
+//                           void *data)
+// {
+//     printf("got listener %d \n", (int) num_addresses);
+// 
+//     OSStatus result;
+//     UInt32 dataSize;
+// 
+//     result = AudioObjectGetPropertyDataSize(
+//                  kAudioObjectSystemObject, addresses,
+//                  0, NULL, &dataSize);
+// 
+//     int count = -1;
+// 
+//     if (result == noErr) {
+//         count = dataSize / sizeof(AudioDeviceID);
+//     }
+// 
+//     printf("num devices %d \n", count);
+// 
+// 
+//     return noErr;
+// }
+// void test_audio_refresh2()
+// {
+//     test_section("Audio device refresh 2");
+//     OSStatus result;
+// 
+//     CFRunLoopRef theRunLoop =  NULL;
+//     AudioObjectPropertyAddress theAddress = {
+//         kAudioHardwarePropertyRunLoop,
+//         kAudioObjectPropertyScopeGlobal,
+//         kAudioObjectPropertyElementMaster
+//     };
+//     AudioObjectSetPropertyData(kAudioObjectSystemObject, &theAddress, 0, NULL, sizeof(CFRunLoopRef), &theRunLoop);
+// 
+//     AudioObjectPropertyAddress propertyAddress;
+//     propertyAddress.mSelector = kAudioHardwarePropertyDevices;
+//     propertyAddress.mScope    = kAudioObjectPropertyScopeGlobal;
+//     propertyAddress.mElement  = kAudioObjectPropertyElementMaster;
+// 
+//     void *listener  = refresh_listener;
+//     void *data      = NULL;
+// 
+//     result = AudioObjectAddPropertyListener(
+//                  kAudioObjectSystemObject, &propertyAddress,
+//                  listener, data);
+//     assert(result == noErr);
+// 
+//     doremir_thread_sleep(1000000);
+// }
 
 
 int main(int argc, char const *argv[])
@@ -1709,14 +1723,12 @@ int main(int argc, char const *argv[])
         test_vm2();
 
         test_file_stream(
-            string_dappend(doremir_directory_current(), string("/test/in.wav")), 
+            string_dappend(doremir_directory_current(), string("/test/in.wav")),
             string_dappend(doremir_directory_current(), string("/test/out.wav")));
         buffer_stream();
-        // audio_stream();
+        audio_stream();
         midi_stream();
-        
-        // test_audio_refresh();
-        test_audio_refresh2();
+
         goto end;
 end:
         doremir_audio_engine_terminate();

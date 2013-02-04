@@ -58,7 +58,13 @@ available devices in a specific session will never change. If a change in the
 underlying audio system is detected while a session is still active, a new session
 has to be started to observe the new setup.
 
-TODO
+You can register a callback to be invoked when the a possible change in hardware
+setup is detected, see @ref doremir_device_audio_set_status_callback. Note that
+this callback may be invoked in an interrupt handler thread and that the task of
+ending a session should generally be handled in the same thread that created the
+session. Use an atomic reference or a condition variable to communicate the
+notification to the appropriate thread.
+
 
 ## Audio streams {#AudioStreams}
 

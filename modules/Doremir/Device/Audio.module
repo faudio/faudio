@@ -28,8 +28,9 @@ module Doremir.Device.Audio
 
     type Session = opaque;
     type Stream = opaque;
-    type SessionCallback = ((Ptr,Session) -> Session)*;
-    type StreamCallback = ((Ptr,Stream) -> Stream)*;
+    type SessionCallback = ((Ptr, Session) -> Session)*;
+    type StreamCallback = ((Ptr, Stream) -> Stream)*;
+    type StatusCallback = Nullary;
 
     beginSession : () -> Session;
     endSession : Session -> Void;
@@ -41,6 +42,7 @@ module Doremir.Device.Audio
     default : Session -> Pair;  // (Audio,Audio)
     defaultInput : Session -> Audio;
     defaultOutput : Session -> Audio;
+    setStatusCallback : (StatusCallback, Ptr, Session) -> Void;
 
     name : Audio -> String;
     hostName : Audio -> String;
