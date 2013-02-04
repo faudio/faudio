@@ -83,6 +83,13 @@
     path    = include, lib
     mode    = get/put
 
+[package "coreplot-osx"]
+    site    = doremir
+    version = 1.1
+    subpath = external/coreplot
+    path    = include, result
+    mode    = get/put
+
 
 
 # Windows/MinGW dependencies
