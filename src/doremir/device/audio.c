@@ -23,6 +23,7 @@ typedef PaDeviceIndex native_index_t;
 typedef PaStream     *native_stream_t;
 
 struct _doremir_device_audio_session_t {
+    
     impl_t              impl;               // Dispatcher
     system_time_t       acquired;           // Time of acquisition (not used at the moment)
 
@@ -33,26 +34,28 @@ struct _doremir_device_audio_session_t {
 };
 
 struct _doremir_device_audio_t {
+    
     impl_t              impl;               // Dispatcher
-    native_index_t      index;              // Index
+    native_index_t      index;              // Native device index
 
     string_t            name;               // Cached names
     string_t            host_name;
 
-    bool                muted;
+    bool                muted;              // Not used at the moment
     double              volume;
 };
 
 struct _doremir_device_audio_stream_t {
+    
     impl_t              impl;               // Dispatcher
+    native_stream_t     native;             // Native stream
 
     device_t            input, output;
     processor_t         proc;
     proc_interface_t   *proc_impl;
 
-    long                time;
+    long                time;               // Monotonically increasing sample count
 
-    native_stream_t     native;
 };
 
 static mutex_t pa_mutex;
@@ -388,11 +391,29 @@ void before_processing(stream_t stream)
     // create message allocator
     // register all processors as receivers on the incoming message dispatcher
     // call setup() on top processor (passing outgoing message receiver)
+    doremir_processor_info_t info = {
+        .sample_rate = 44100,
+        .frame_size  = 0,
+        .sample_time = 0,
+        .total_time  = 0,
+        .dispatcher  = NULL
+    };
+    
+    stream->proc_impl->before(stream->proc, &info);
 }
 
 void after_processing(stream_t stream)
 {
-    // call cleanup() on top processor
+    doremir_processor_info_t info = {
+        .sample_rate = 44100,
+        .frame_size  = 0,
+        .sample_time = 0,
+        .total_time  = 0,
+        .dispatcher  = NULL
+    };
+
+    stream->proc_impl->after(stream->proc, &info);
+
     // unregister processors from incoming message dispatcher
     // destroy message allocator
     // free buffers
@@ -400,15 +421,23 @@ void after_processing(stream_t stream)
 
 int during_processing(stream_t stream, unsigned count, float** input, float** output)
 {
-     // update stream time
+    doremir_processor_info_t info = {
+        .sample_rate = 44100,
+        .frame_size  = 0,
+        .sample_time = 0,
+        .total_time  = 0,
+        .dispatcher  = NULL
+    };
+
     // call dispatch() on the innner dispatcher
 
     // deliver inputs
-    // call process() on top processor
+    stream->proc_impl->process(stream->proc, &info, NULL);
     // deliver outputs
 
-    // decide whether to continue
-    return 0; // TODO
+    stream->time += count; // TODO atomic incr
+
+    return paContinue;
 }
 
 
