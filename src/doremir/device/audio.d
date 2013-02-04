@@ -71,33 +71,40 @@ doremir_device_audio_t doremir_device_audio_default_output(
 
 /**
     Return the name of the given device.
-    @param device
-        The device.
+    @param device   The device.
  */
 doremir_string_t doremir_device_audio_name(
     doremir_device_audio_t device) {}
 
 /**
     Return the host name of the given device.
-    @param device
-        The device.
+    @param device   The device.
  */
 doremir_string_t doremir_device_audio_host_name(
     doremir_device_audio_t device) {}
 
-/** Return.
+/** Return the input type of the given device.
+    @param device   The device.
  */
 doremir_type_t doremir_device_audio_input_type(doremir_device_audio_t) {}
 
-/** Return.
+/** Return the output type of the given device.
+    @param device   The device.
  */
 doremir_type_t doremir_device_audio_output_type(doremir_device_audio_t) {}
 
-/** Set.
+/** Set a callback to be invoked when a status check is detected on the given session.
+    This is mainly useful for detecting a change in hardware setup.
+    
+    Note that this function will not modify the devices in a session, you have to
+    restart the session to get a fresh snapshot.
+    
+    @param device   The device.
  */
-void doremir_device_audio_set_status_callback(doremir_device_audio_status_callback_t,
-        doremir_ptr_t,
-        doremir_device_audio_session_t);
+void doremir_device_audio_set_status_callback(
+        doremir_device_audio_status_callback_t callback,
+        doremir_ptr_t                          function,
+        doremir_device_audio_session_t         session) {}
 
 // --------------------------------------------------------------------------------
 
