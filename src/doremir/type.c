@@ -161,10 +161,12 @@ void doremir_type_destroy(doremir_type_t type)
 doremir_type_t doremir_type_repeat(int times, doremir_type_t type)
 {
     assert(times > 0 && "Times must be > 0");
-    if (times == 1)
+
+    if (times == 1) {
         return doremir_copy(type);
-    else
+    } else {
         return type_pair(type, doremir_type_repeat(times - 1, type));
+    }
 }
 
 /** Whether the type represented by the given value is simple.
@@ -378,10 +380,18 @@ inline static size_t offset(doremir_type_frames_t frames, doremir_type_t type)
 inline static int channels(doremir_type_t type)
 {
     switch (type->tag) {
-        case simple_type: return 1;
-        case frame_type:  return 1;
-        case pair_type:   return channels(pair_get(type, fst)) + channels(pair_get(type, snd));
-        case vector_type: return channels(vector_get(type, base)) * vector_get(type, size);
+        case simple_type:
+            return 1;
+
+        case frame_type:
+            return 1;
+
+        case pair_type:
+            return channels(pair_get(type, fst)) + channels(pair_get(type, snd));
+
+        case vector_type:
+            return channels(vector_get(type, base)) * vector_get(type, size);
+
         default:
             assert(false && "Missing label");
     }
