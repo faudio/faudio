@@ -25,6 +25,7 @@ module Doremir.AudioEngine
     import Doremir.Atomic.Queue;
     import Doremir.Atomic.Stack;
     import Doremir.Atomic.RingBuffer;
+    import Doremir.Directory;
     import Doremir.Error;
     import Doremir.Event;
     import Doremir.Graph;

@@ -547,6 +547,7 @@
 
 (setf s (device-audio-begin-session))
 (error-check s)
+; (error-log nil s)
 (error-message (to-error s))
 (device-audio-end-session s)
 ;(device-audio-with-session)

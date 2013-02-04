@@ -1122,11 +1122,11 @@ void test_graph(string_t path)
 
         doremir_print("a                            ==> %s\n", a);
 
-        FILE *f = fopen(unstring(path), "w+");
-        fprintf(f, "%s\n", doremir_string_to_utf8(doremir_graph_to_dot(
-                    string("#include \"doc/graphs/header.dot\""),
-                    string("GRAPH_FORMAT_VERT;"),
-                    a)));
+        // FILE *f = fopen(unstring(path), "w+");
+        // fprintf(f, "%s\n", doremir_string_to_utf8(doremir_graph_to_dot(
+        //             string("#include \"doc/graphs/header.dot\""),
+        //             string("GRAPH_FORMAT_VERT;"),
+        //             a))); 
     }
 }
 
@@ -1423,6 +1423,14 @@ void test_log()
     }
 
     doremir_audio_engine_log_info(string("---------------"));
+} 
+
+void test_directory()
+{
+    test_section("Directory");
+
+    doremir_print("home()                       ==> %s\n", doremir_directory_home());
+    doremir_print("current()                    ==> %s\n", doremir_directory_current());    
 }
 
 
@@ -1550,8 +1558,6 @@ void midi_stream()
 
 
 
-#define source_root_k "/Users/hans/audio"
-
 int main(int argc, char const *argv[])
 {
     printf("DoReMIR Audio engine %s v%d.%d.%d\n", bits, version[0], version[1], version[2]);
@@ -1601,7 +1607,7 @@ int main(int argc, char const *argv[])
         test_list();
         test_set();
         test_map();
-        test_graph(string(source_root_k "/doc/graphs/gen.dot"));
+        test_graph(string_dappend(doremir_directory_current(), string("/doc/graphs/gen.dot")));
         test_priority_queue(10);
         test_to_json();
 
@@ -1611,6 +1617,7 @@ int main(int argc, char const *argv[])
 
         test_log();
         test_error();
+        test_directory();
         // test_plot(NULL, NULL);
         // test_plot_buffer();
         // test_plot_file(string("/Users/hans/Desktop/Passager.wav"));
@@ -1618,10 +1625,13 @@ int main(int argc, char const *argv[])
         test_processors();
         test_vm2();
 
-        test_file_stream(string(source_root_k "/test/in.wav"), string(source_root_k "/test/out.wav"));
+        test_file_stream(
+            string_dappend(doremir_directory_current(), string("/test/in.wav")), 
+            string_dappend(doremir_directory_current(), string("/test/out.wav")));
         buffer_stream();
         audio_stream();
         midi_stream();
+        // goto end;
 end:
         doremir_audio_engine_terminate();
     }

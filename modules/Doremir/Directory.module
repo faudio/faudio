@@ -1,0 +1,15 @@
+
+/**
+    @addtogroup DoremirDirectory
+    
+    Cross-platform directory utilities.    
+ */
+
+module Doremir.Directory
+{
+    import Doremir;
+    import Doremir.String;
+
+    home : () -> FilePath;
+    current : () -> FilePath;
+}
