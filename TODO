@@ -12,6 +12,8 @@ Additions
 
 ----------
 
+* Missing Windows features
+
 * Buffer views?
     * Group buffer with audio type
     * Include sample rate in this?
@@ -26,7 +28,7 @@ Additions
     * See PortAudio tracker
          https://www.assembla.com/spaces/portaudio/tickets/11-add-callback-api-for-detecting-connection-removal-of-devices#/activity/ticket:
 
-    * OS X
+    * OS X (done!)
         http://stackoverflow.com/questions/3611644/coreaudio-getting-device-count-breaks-when-linking-to-foundation-on-10-6
 
     * Windows          
