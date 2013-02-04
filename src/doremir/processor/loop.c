@@ -16,7 +16,6 @@ struct _doremir_processor_loop_proc_t {
     proc_interface_t   *elemImpl;           // Fast pointer to the elements' processor implementation
 
     type_t              bufType;            // Type of loopback buffer
-    // TODO add buffer
 };
 
 typedef doremir_processor_loop_proc_t       this_t;

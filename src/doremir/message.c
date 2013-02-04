@@ -10,6 +10,22 @@
 #include <doremir/map.h>
 #include <doremir/util.h>
 
+/**
+    Notes:
+        * TODO pluggable allocation here?
+            * For sender: 
+                doremir_pair_create
+            * For receiver: 
+                doremir_pair_destroy
+                doremir_list_empty
+                doremir_list_dcons
+                doremir_list_destroy
+                doremir_map_empty
+                doremir_map_dset
+                doremir_map_destroy
+        
+ */
+
 #define max_recv_k  1000
 
 struct _doremir_message_dispatcher_t {
@@ -116,7 +132,6 @@ void doremir_message_sync(dispatcher_t dispatcher)
     } else {
 
         // Clear mailbox
-        // FIXME
         doremir_destroy(lockfree_get(dispatcher, mailbox)); // TODO should be deep destroy
         lockfree_get(dispatcher, mailbox) = doremir_map_empty();
 
@@ -130,6 +145,8 @@ void doremir_message_sync(dispatcher_t dispatcher)
             } else {
                 address_t address = doremir_pair_fst(bucket);
                 message_t message = doremir_pair_snd(bucket);
+                
+                // TODO reclaim bucket
 
                 list_t current = with_dest_default(
                                      doremir_list_empty(),

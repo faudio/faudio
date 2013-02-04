@@ -99,7 +99,7 @@ doremir_graph_t doremir_graph_remove(doremir_graph_node_t node,
     assert(false && "Not implemented");
     // set_t nodes = graph->nodes;
     // map_t edges = graph->edges;
-    // TODO filter out entries not in node set
+    // filter out entries not in node set
     // return new_graph(doremir_set_remove(node, nodes), doremir_copy(edges));
 }
 
@@ -203,8 +203,8 @@ doremir_string_t doremir_graph_to_dot(
     doremir_map_for_each(x, graph->edges) {
         char *n1 = doremir_string_to_utf8(doremir_string_show(doremir_pair_fst(doremir_pair_fst(x))));
         char *n2 = doremir_string_to_utf8(doremir_string_show(doremir_pair_snd(doremir_pair_fst(x))));
-        char *l = doremir_string_to_utf8(doremir_string_show(doremir_pair_snd(x)));  // FIXME want an unescaped show here
-
+        char *l = doremir_string_to_utf8(doremir_string_show(doremir_pair_snd(x)));  
+        // FIXME want an unescaped show here
 
         snprintf(buf, 100, "    %s -> %s [label=%s];\n", n1, n2, l);
         str = string_dappend(str, string(buf));

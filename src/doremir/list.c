@@ -39,26 +39,26 @@ struct _doremir_list_t {
 // --------------------------------------------------------------------------------
 
 // static int node_count_db_g = 0;
-
-void db_node_alloc()
-{
-}
-void db_node_free()
-{
-}
-void db_node_take(node_t node)
-{
-}
-void db_node_release(node_t node)
-{
-}
+// 
+// void db_node_alloc()
+// {
+// }
+// void db_node_free()
+// {
+// }
+// void db_node_take(node_t node)
+// {
+// }
+// void db_node_release(node_t node)
+// {
+// }
 
 
 /** Create a new node with a single reference.
  */
 inline static node_t new_node(ptr_t value, node_t next)
 {
-    db_node_alloc();
+    // db_node_alloc();
     node_t node = doremir_new_struct(node);
     node->count = 1;
     node->value = value;
@@ -74,7 +74,7 @@ inline static node_t take_node(node_t node)
         node->count++;  // TODO make atomic
     }
 
-    db_node_take(node);
+    // db_node_take(node);
 
     return node;
 }
@@ -89,10 +89,10 @@ inline static void release_node(node_t node)
     }
 
     node->count--;
-    db_node_release(node);
+    // db_node_release(node);
 
     if (node->count == 0) {
-        db_node_free();
+        // db_node_free();
         release_node(node->next);
         doremir_delete(node);
     }
@@ -291,7 +291,6 @@ list_t doremir_list_dinit(list_t xs)
 
 // --------------------------------------------------------------------------------
 
-// TODO rewrite tail recursion as loop
 static inline list_t append(list_t xs, list_t ys)
 {
     if (is_empty(xs)) {
@@ -304,7 +303,6 @@ static inline list_t append(list_t xs, list_t ys)
     }
 }
 
-// TODO rewrite tail recursion as loop
 static inline list_t revappend(list_t xs, list_t ys)
 {
     if (is_empty(xs)) {
@@ -423,7 +421,6 @@ list_t doremir_list_dsort(list_t xs)
 
 // --------------------------------------------------------------------------------
 
-// TODO rewrite tail recursion as loop
 list_t doremir_list_take(int n, list_t xs)
 {
     if (n <= 0 || doremir_list_is_empty(xs)) {
@@ -433,7 +430,6 @@ list_t doremir_list_take(int n, list_t xs)
     return doremir_list_dcons(doremir_list_head(xs), doremir_list_dtake(n - 1, doremir_list_tail(xs)));
 }
 
-// TODO rewrite tail recursion as loop
 list_t doremir_list_drop(int n, list_t xs)
 {
     if (n < 0 || doremir_list_is_empty(xs)) {
@@ -447,7 +443,6 @@ list_t doremir_list_drop(int n, list_t xs)
     return doremir_list_ddrop(n - 1, doremir_list_tail(xs));
 }
 
-// FIXME return Optional?
 ptr_t doremir_list_index(int n, list_t xs)
 {
     int i = 0;
@@ -548,9 +543,6 @@ bool doremir_list_has(ptr_t value, list_t list)
     return false;
 }
 
-// TODO this assumes sorted and returns tenative position for the set impl
-// Should that really be this method?
-
 int doremir_list_index_of(ptr_t value, list_t list)
 {
     int index = 0;
@@ -568,7 +560,6 @@ int doremir_list_index_of(ptr_t value, list_t list)
     return -(index + 1);
 }
 
-// FIXME return Optional?
 ptr_t doremir_list_find(pred_t pred, ptr_t data, list_t list)
 {
     impl_for_each(list, elem) {
@@ -615,8 +606,6 @@ list_t doremir_list_filter(pred_t pred, ptr_t data, list_t list)
     return new_list(node);
 }
 
-// TODO should we rely on tilted folds?
-// Use foldMap etc instead?
 ptr_t doremir_list_fold_left(binary_t func, ptr_t data, ptr_t init, list_t list)
 {
     ptr_t value = init;

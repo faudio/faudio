@@ -151,7 +151,6 @@ void *doremir_buffer_unsafe_address(doremir_buffer_t buffer)
 
 typedef doremir_string_file_path_t path_t;
 
-// TODO allocate memory in smaller blocks...
 doremir_pair_t doremir_buffer_read_audio(doremir_string_file_path_t path)
 {
     type_t type;

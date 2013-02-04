@@ -24,6 +24,7 @@
 #define base_copy           doremir_list_copy
 #define base_destroy        doremir_list_destroy
 #define base_insert         doremir_list_insert
+#define base_dinsert        doremir_list_dinsert
 #define base_remove         doremir_list_remove
 #define base_find           doremir_list_find
 #define base_index_of       doremir_list_index_of
@@ -82,7 +83,8 @@ doremir_set_t doremir_set_set(doremir_ptr_t x, doremir_set_t set)
     if (i < 0) {
         return new_set(base_insert((-i - 1), x, set->elems));
     } else {
-        return new_set(base_insert(i, x, base_remove(i, set->elems))); // TODO base_dinsert
+        return new_set(base_insert(i, x, base_remove(i, set->elems))); 
+        // TODO should be base_dinsert?
     }
 }
 
