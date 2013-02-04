@@ -19,31 +19,41 @@ typedef doremir_device_audio_session_t          session_t;
 typedef doremir_device_audio_stream_callback_t  stream_callback_t;
 typedef doremir_device_audio_session_callback_t session_callback_t;
 
+typedef PaDeviceIndex native_index_t;
 typedef PaStream     *native_stream_t;
-typedef PaDeviceIndex native_device_t;
 
 struct _doremir_device_audio_session_t {
-    impl_t          impl;               // Dispatcher
-    long            acquired;
+    impl_t              impl;               // Dispatcher
+    system_time_t       acquired;           // Time of acquisition (not used at the moment)
+
+    list_t              devices;            // Cached device list
+
+    device_t            def_input;          // Default devices
+    device_t            def_output;         //      Both possibly null
+                                        //      If present, these are also in the above list
 };
 
 struct _doremir_device_audio_t {
-    impl_t          impl;               // Dispatcher
-    bool            muted;
-    double          volume;
-    native_device_t native;
+    impl_t              impl;               // Dispatcher
+    native_index_t      index;              // Index
+    string_t            name;               // Cached name
+
+    bool                muted;
+    double              volume;
 };
 
 struct _doremir_device_audio_stream_t {
-    impl_t          impl;               // Dispatcher
+    impl_t              impl;               // Dispatcher
 
-    device_t        input, output;
-    processor_t     proc;
-    atomic_t        time;
-    dispatcher_t    in_disp;
-    dispatcher_t    out_disp;
+    device_t            input, output;
+    processor_t         proc;
+    proc_interface_t   *proc_impl;
 
-    native_stream_t native;
+    atomic_t            time;
+    dispatcher_t        in_disp;
+    dispatcher_t        out_disp;
+
+    native_stream_t     native;
 };
 
 static mutex_t pa_mutex;
@@ -53,7 +63,13 @@ error_t audio_device_error(string_t msg);
 ptr_t audio_session_impl(doremir_id_t interface);
 ptr_t audio_device_impl(doremir_id_t interface);
 ptr_t audio_stream_impl(doremir_id_t interface);
-
+inline static session_t new_session();
+inline static void session_init_devices(session_t session);
+inline static void delete_session(session_t session);
+inline static device_t new_device(native_index_t index);
+inline static void delete_device(device_t device);
+inline static stream_t new_stream(device_t input, device_t output, processor_t proc);
+inline static void delete_stream(stream_t stream);
 
 // --------------------------------------------------------------------------------
 
@@ -64,30 +80,66 @@ inline static session_t new_session()
     // TODO
     return session;
 }
+inline static void session_init_devices(session_t session)
+{
+    native_index_t count;
+    list_t         devices;
+    pair_t         def_devices;
+
+    count   = Pa_GetDeviceCount();
+    devices = doremir_list_empty();
+
+    for(size_t i = 0; i < count; ++i)
+    {
+        device_t device = new_device(i);
+        if (device)
+            devices = doremir_list_dcons(device, devices);
+    }
+
+    session->devices      = devices;
+    session->def_input    = new_device(Pa_GetDefaultInputDevice());
+    session->def_output   = new_device(Pa_GetDefaultOutputDevice());
+}
+
 inline static void delete_session(session_t session)
 {
+    // TODO free device list
     doremir_delete(session);
 }
 
-inline static device_t new_device()
+inline static device_t new_device(native_index_t index)
 {
+    if (index == paNoDevice)
+        return NULL;
+
     device_t device = doremir_new(device_audio);
-    device->impl = &audio_device_impl;
-    // TODO
+    device->impl    = &audio_device_impl;
+
+    device->index   = index;
+    device->name    = string("XXX");
+    device->muted   = false;
+    device->volume  = 1.0;
+
     return device;
 }
+
 inline static void delete_device(device_t device)
 {
     doremir_delete(device);
 }
-
-inline static stream_t new_stream()
+ 
+inline static stream_t new_stream(device_t input, device_t output, processor_t proc)
 {
-    stream_t stream = doremir_new(device_audio_stream);
-    stream->impl = &audio_stream_impl;
-    // TODO
+    stream_t stream     = doremir_new(device_audio_stream);
+
+    stream->impl        = &audio_stream_impl;
+    stream->input       = input;
+    stream->output      = output;
+    stream->proc        = proc;
+
     return stream;
 }
+
 inline static void delete_stream(stream_t stream)
 {
     doremir_delete(stream);
@@ -109,7 +161,6 @@ void doremir_device_audio_terminate()
 
 // --------------------------------------------------------------------------------
 
-// FIXME return Optional?
 session_t doremir_device_audio_begin_session()
 {
     if (!pa_mutex) {
@@ -122,12 +173,16 @@ session_t doremir_device_audio_begin_session()
     {
         if (pa_status) {
             doremir_thread_unlock(pa_mutex);
-            return audio_device_error(string("Overlapping audio sessions"));
+            return (session_t) audio_device_error(string("Overlapping audio sessions"));
         } else {
             Pa_Initialize();
             pa_status = true;
             doremir_thread_unlock(pa_mutex);
-            return new_session();
+
+            session_t session = new_session();
+            session_init_devices(session);
+            // session->acquired = time(NULL);
+            return session;
         }
     }
 }
@@ -154,29 +209,44 @@ void doremir_device_audio_end_session(session_t session)
 void doremir_device_audio_with_session(
     doremir_device_audio_session_callback_t session_callback,
     doremir_ptr_t                           session_data,
-    doremir_error_callback_t          error_callback,
+    doremir_error_callback_t                error_callback,
     doremir_ptr_t                           error_data
 )
 {
-    // session_t session = doremir_device_audio_begin_session();
-    // callback(session);
-    // doremir_device_audio_end_session(session);
+    session_t session = doremir_device_audio_begin_session();
+
+    if (doremir_check(session)) {
+        error_callback(error_data, (error_t) session);
+    } else {
+        session_callback(session_data, session);
+    }
+
+    doremir_device_audio_end_session(session);
 }
 
 doremir_list_t doremir_device_audio_all(session_t session)
 {
-    assert(false && "Not implemented");
+    return doremir_copy(session->devices);
 }
 
-// FIXME return Optional?
 doremir_pair_t doremir_device_audio_default(session_t session)
 {
-    assert(false && "Not implemented");
+    return pair(session->def_input, session->def_output);
+}
+
+device_t doremir_device_audio_default_input(session_t session)
+{
+    return session->def_input;
+}
+
+device_t doremir_device_audio_default_output(session_t session)
+{
+    return session->def_output;
 }
 
 doremir_string_t doremir_device_audio_name(device_t device)
 {
-    assert(false && "Not implemented");
+    return doremir_copy(device->name);
 }
 
 doremir_string_t doremir_device_audio_host_name(device_t device)
@@ -198,7 +268,6 @@ doremir_pair_t doremir_device_audio_channels(device_t device)
 {
     assert(false && "Not implemented");
 }
-
 
 
 // --------------------------------------------------------------------------------

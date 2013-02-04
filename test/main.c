@@ -1494,7 +1494,6 @@ void audio_stream()
 
     // Begin session
     session = doremir_device_audio_begin_session();
-    session = doremir_device_audio_begin_session();
 
     // Handle possible error
     if (doremir_check(session)) {
@@ -1502,7 +1501,7 @@ void audio_stream()
         warn(string("Aborting test due to error"));
         goto cleanup;
     }
-        
+
 cleanup:
     // doremir_device_audio_close_stream(stream);
     doremir_device_audio_end_session(session);
