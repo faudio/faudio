@@ -1516,7 +1516,7 @@ void audio_stream()
         goto cleanup;
     }
 
-    // Session obtained, we can now access devices        
+    // Session obtained, we can now access devices
     print_audio_devices(session);
 
     input = doremir_device_audio_default_input(session);
@@ -1524,7 +1524,7 @@ void audio_stream()
 
     // Start stream
     stream = doremir_device_audio_open_stream(input, proc, output);
-    //
+
     // Handle possible error
     if (doremir_check(stream)) {
         log_error((error_t) stream);
@@ -1533,7 +1533,7 @@ void audio_stream()
     }
 
     // Stream active, let it run for 5 seconds
-    doremir_thread_sleep(500);
+    doremir_thread_sleep(5000);
 
 cleanup:
     doremir_device_audio_close_stream(stream);

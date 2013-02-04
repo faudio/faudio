@@ -61,6 +61,7 @@ static mutex_t pa_mutex;
 static bool    pa_status;
 
 error_t audio_device_error(string_t msg);
+error_t audio_device_error_with(string_t msg, int error);
 ptr_t audio_session_impl(doremir_id_t interface);
 ptr_t audio_device_impl(doremir_id_t interface);
 ptr_t audio_stream_impl(doremir_id_t interface);
@@ -285,29 +286,62 @@ type_t doremir_device_audio_output_type(device_t device)
     return doremir_type_repeat(info->maxOutputChannels, type(f32));
 }
 
-
 // --------------------------------------------------------------------------------
 
+static inline int num_input_channels(device_t device)
+{
+    return device ? doremir_type_channels(doremir_device_audio_input_type(device)) : 0;
+}
+static inline int num_output_channels(device_t device)
+{
+    return device ? doremir_type_channels(doremir_device_audio_output_type(device)) : 0;
+}
+
+// TODO change sample rate
 stream_t doremir_device_audio_open_stream(device_t input, processor_t proc, device_t output)
 {
     stream_t stream = new_stream(input, output, proc);
 
-    {
-        const PaStreamParameters       *in = NULL;
-        const PaStreamParameters       *out = NULL;
-        double                          sr = 44100;
-        unsigned long                   vs = paFramesPerBufferUnspecified;
-        PaStreamFlags                   flags = 0;
-        PaStreamCallback               *cb = native_audio_callback;
-        ptr_t                           data = NULL;
-
-        Pa_OpenStream(&stream->native, in, out, sr, vs, flags, cb, data);
-    }
-    before_processing(stream);
-
     inform(string("Opening real-time audio stream"));
     inform(string_dappend(string("    Input:  "), doremir_string_show(input)));
     inform(string_dappend(string("    Output: "), doremir_string_show(output)));
+
+    {
+        PaError status;
+
+        PaStreamParameters inp = {
+            .device                     = input->index,
+            .channelCount               = num_input_channels(input),
+            .sampleFormat               = (paFloat32 | paNonInterleaved),
+            .suggestedLatency           = 0,
+            .hostApiSpecificStreamInfo  = 0
+        };
+
+        PaStreamParameters outp = {
+            .device                     = output->index,
+            .channelCount               = num_output_channels(output),
+            .sampleFormat               = (paFloat32 | paNonInterleaved),
+            .suggestedLatency           = 0,
+            .hostApiSpecificStreamInfo  = 0
+        };                  
+        printf("> %d\n", inp.channelCount);
+        printf("> %d\n", outp.channelCount);
+
+        const PaStreamParameters       *in      = input ? &inp : NULL;
+        const PaStreamParameters       *out     = output ? &outp : NULL;
+        double                          sr      = 44100;
+        unsigned long                   vs      = paFramesPerBufferUnspecified;
+        PaStreamFlags                   flags   = paNoFlag;
+        PaStreamCallback               *cb      = native_audio_callback;
+        ptr_t                           data    = NULL;
+
+        status = Pa_OpenStream(&stream->native, in, out, sr, vs, flags, cb, data);
+        if (status != paNoError)
+        {
+            return (stream_t) audio_device_error_with(string("Could not start stream"), status);
+        }
+    }
+    before_processing(stream);
 
     Pa_StartStream(stream->native);
     return stream;
@@ -500,14 +534,24 @@ void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t 
 
 error_t audio_device_error(string_t msg)
 {
-    return doremir_error_create_simple(error, msg, string("Doremir.Device.Audio"));
+    return doremir_error_create_simple(error,
+        msg,
+        string("Doremir.Device.Audio"));
 }
 
-void audio_device_fatal(char *msg, int error)
+error_t audio_device_error_with(string_t msg, int code)
+{
+    return doremir_error_create_simple(error,
+        string_dappend(msg, format_integer(" (error code %d)", code)),
+        string("Doremir.Device.Audio"));
+}
+
+void audio_device_fatal(string_t msg, int code)
 {
     doremir_audio_engine_log_error_from(
-        string_dappend(string(msg), format_integer(" (error code %d)", error)),
+        string_dappend(msg, format_integer(" (error code %d)", code)),
         string("Doremir.Device.Audio"));
+
     doremir_audio_engine_log_error(string("Terminating Audio Engine"));
     exit(error);
 }
