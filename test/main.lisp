@@ -29,6 +29,7 @@
 
 (defvar x nil)
 (defvar y nil)
+(defvar z nil)
 (defvar s nil)
 (defvar d nil)
 (defvar p nil)   
@@ -365,13 +366,13 @@
 (type-offset-of 256 (input-type x))
 (output-type x)
 
-(setf x (id :i8))
+(setf y (id :i8))
 (setf x (const :i16 :i8 0))
 (setf x (sequence x y))
 (setf x (parallel x y))
 (setf x (loop x))
 (setf x (split :f32))
-(setf x (delay :f32 44100))
+; (setf x (delay :f32 44100))
 
 (equal 
   (input-type (parallel (id :i8) (id :i8))) 
@@ -549,28 +550,30 @@
 (error-message (to-error s))
 (device-audio-end-session s)
 ;(device-audio-with-session)
-(device-audio-all s)
-(setf d (device-audio-default-input s))
-(setf d (device-audio-default-output s))
-(setf x d)
-(setf y d)
-(equal x y) ; FIXME
 
-(device-audio-name d)
-(device-audio-host-name d)
-(device-audio-input-type d)
-(device-audio-output-type d)
-(type-channels (device-audio-input-type d))
-(type-channels (device-audio-output-type d))
-(type-size-of 1024 (device-audio-input-type d))
+
+(device-audio-all s)
+(setf x (device-audio-default-input s))
+(setf y (device-audio-default-output s))
+; (equal x y) ; FIXME
+
+(device-audio-name x)
+(device-audio-host-name x)
+(device-audio-input-type x)
+(device-audio-output-type x)
+(device-audio-input-type y)
+(device-audio-output-type y)
+(type-channels (device-audio-input-type x))
+(type-channels (device-audio-output-type x))
+(type-size-of 1024 (device-audio-input-type x))
 
 (type-channels 
  (device-audio-output-type 
   (from-pointer 'device-audio (list-head (device-audio-all s)))))
 
 (setf p (processor-identity '(:pair :f32 :f32)))
-(device-audio-open-stream d p d)
-(device-audio-close-stream s)
+(setf z (device-audio-open-stream x p y))
+(device-audio-close-stream z)
 ;(device-audio-with-stream)
 
 ; ---------------------------------------------------------------------------------------------------

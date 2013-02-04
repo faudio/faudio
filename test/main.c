@@ -1533,7 +1533,7 @@ void audio_stream()
     }
 
     // Stream active, let it run for 5 seconds
-    doremir_thread_sleep(5000);
+    doremir_thread_sleep(10000);
 
 cleanup:
     doremir_device_audio_close_stream(stream);
