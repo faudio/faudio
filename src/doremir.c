@@ -6,6 +6,7 @@
  */
 
 #include <doremir.h>
+#include <doremir/dynamic.h>
 #include <doremir/string.h>
 
 #pragma GCC diagnostic ignored "-Wparentheses"
@@ -108,6 +109,37 @@ bool doremir_is_ref(doremir_ptr_t x)
 {
     return (((intptr_t) x) & 0x7) == 0x0;
 }
+
+// doremir_dynamic_type_repr_t bool_get_type(doremir_ptr_t a)
+// {
+//     bool_type_repr;
+// }
+// doremir_dynamic_type_repr_t int8_get_type(doremir_ptr_t a)
+// {
+//     return i8_type_repr;
+// }
+// doremir_dynamic_type_repr_t int16_get_type(doremir_ptr_t a)
+// {
+//     return i16_type_repr;
+// }
+// doremir_dynamic_type_repr_t int32_get_type(doremir_ptr_t a)
+// {
+//     return i32_type_repr;
+// }
+// doremir_dynamic_type_repr_t int64_get_type(doremir_ptr_t a)
+// {
+//     return i64_type_repr;
+// }
+// doremir_dynamic_type_repr_t float_get_type(doremir_ptr_t a)
+// {
+//     return f32_type_repr;
+// }
+// doremir_dynamic_type_repr_t double_get_type(doremir_ptr_t a)
+// {
+//     return f64_type_repr;
+// } 
+
+
 
 
 // --------------------------------------------------------------------------------
@@ -336,7 +368,6 @@ doremir_ptr_t doremir_max(doremir_ptr_t a, doremir_ptr_t b)
     return doremir_greater_than(a, b) ? a : b;
 }
 
-
 GENERIC2(number,    add,            doremir_ptr_t, doremir_ptr_t, doremir_ptr_t);
 GENERIC2(number,    subtract,       doremir_ptr_t, doremir_ptr_t, doremir_ptr_t);
 GENERIC2(number,    multiply,       doremir_ptr_t, doremir_ptr_t, doremir_ptr_t);
@@ -380,7 +411,6 @@ void doremir_dprint_ln(doremir_ptr_t a)
     doremir_dprint("%s\n", a);
 }
 
-
 doremir_ptr_t doremir_move(doremir_ptr_t a)
 {
     return a;
@@ -393,45 +423,17 @@ bool doremir_check(doremir_ptr_t a)
 }
 
 // --------------------------------------------------------------------------------
-// Wrapped implementations
+// Value reference ("wrapper") implementations
 // --------------------------------------------------------------------------------
 
-/* Generates T_impl
- */
-#define IMPLEMENT_WRAPPER(T) \
-    doremir_ptr_t T##_impl(doremir_id_t interface)                                          \
-    {                                                                                       \
-        static doremir_equal_t   T##_equal_impl   =                                         \
-            { T##_equal };                                                                  \
-        static doremir_order_t   T##_order_impl   =                                         \
-            { T##_less_than, T##_greater_than };                                            \
-        static doremir_number_t  T##_number_impl  =                                         \
-            { T##_add, T##_subtract, T##_multiply, T##_divide, T##_absolute };              \
-        static doremir_string_show_t    T##_show_impl    =                                  \
-            { T##_show };                                                                   \
-        static doremir_copy_t    T##_copy_impl    =                                         \
-            { T##_copy };                                                                   \
-        static doremir_destroy_t T##_destroy_impl =                                         \
-            { T##_destroy };                                                                \
-                                                                                            \
-        switch (interface)                                                                  \
-        {                                                                                   \
-        case doremir_equal_i:                                                               \
-            return &T##_equal_impl;                                                         \
-        case doremir_order_i:                                                               \
-            return &T##_order_impl;                                                         \
-        case doremir_number_i:                                                              \
-            return &T##_number_impl;                                                        \
-        case doremir_string_show_i:                                                         \
-            return &T##_show_impl;                                                          \
-        case doremir_copy_i:                                                                \
-            return &T##_copy_impl;                                                          \
-        case doremir_destroy_i:                                                             \
-            return &T##_destroy_impl;                                                       \
-        default:                                                                            \
-            return NULL;                                                                    \
-        }                                                                                   \
-    }
+#define bool_type_repr_impl bool_type_repr
+#define int8_type_repr_impl i8_type_repr
+#define int16_type_repr_impl i16_type_repr
+#define int32_type_repr_impl i32_type_repr
+#define int64_type_repr_impl i64_type_repr
+#define float_type_repr_impl f32_type_repr
+#define double_type_repr_impl f64_type_repr
+
 
 #define UNBOXED_WRAPPER_IMPL(T) \
     bool T##_equal(doremir_ptr_t a, doremir_ptr_t b)                                        \
@@ -469,6 +471,10 @@ bool doremir_check(doremir_ptr_t a)
     doremir_ptr_t T##_copy(doremir_ptr_t a)                                                 \
     {                                                                                       \
         return a;                                                                           \
+    }                                                                                       \
+    doremir_dynamic_type_repr_t T##_get_type(doremir_ptr_t a)                               \
+    {                                                                                       \
+        return T##_type_repr_impl;                                                          \
     }                                                                                       \
     void T##_destroy(doremir_ptr_t a)                                                       \
     {                                                                                       \
@@ -512,6 +518,10 @@ bool doremir_check(doremir_ptr_t a)
     {                                                                                       \
         return doremir_copy_##T(a);                                                         \
     }                                                                                       \
+    doremir_dynamic_type_repr_t T##_get_type(doremir_ptr_t a)                               \
+    {                                                                                       \
+        return T##_type_repr_impl;                                                          \
+    }                                                                                       \
     void T##_destroy(doremir_ptr_t a)                                                       \
     {                                                                                       \
         doremir_to_##T(a);                                                                  \
@@ -536,6 +546,48 @@ bool doremir_check(doremir_ptr_t a)
         cs[n] = 0; /* terminate */                                                          \
         return doremir_string_from_utf8(cs);                                                \
     }
+
+/* Generates T_impl
+ */
+#define IMPLEMENT_WRAPPER(T) \
+    doremir_ptr_t T##_impl(doremir_id_t interface)                                          \
+    {                                                                                       \
+        static doremir_equal_t   T##_equal_impl   =                                         \
+            { T##_equal };                                                                  \
+        static doremir_order_t   T##_order_impl   =                                         \
+            { T##_less_than, T##_greater_than };                                            \
+        static doremir_number_t  T##_number_impl  =                                         \
+            { T##_add, T##_subtract, T##_multiply, T##_divide, T##_absolute };              \
+        static doremir_string_show_t    T##_show_impl    =                                  \
+            { T##_show };                                                                   \
+        static doremir_copy_t    T##_copy_impl    =                                         \
+            { T##_copy };                                                                   \
+        static doremir_dynamic_t T##_dynamic_impl =                                         \
+            { T##_get_type };                                                               \
+        static doremir_destroy_t T##_destroy_impl =                                         \
+            { T##_destroy };                                                                \
+                                                                                            \
+        switch (interface)                                                                  \
+        {                                                                                   \
+        case doremir_equal_i:                                                               \
+            return &T##_equal_impl;                                                         \
+        case doremir_order_i:                                                               \
+            return &T##_order_impl;                                                         \
+        case doremir_number_i:                                                              \
+            return &T##_number_impl;                                                        \
+        case doremir_string_show_i:                                                         \
+            return &T##_show_impl;                                                          \
+        case doremir_copy_i:                                                                \
+            return &T##_copy_impl;                                                          \
+        case doremir_dynamic_i:                                                             \
+            return &T##_dynamic_impl;                                                       \
+        case doremir_destroy_i:                                                             \
+            return &T##_destroy_impl;                                                       \
+        default:                                                                            \
+            return NULL;                                                                    \
+        }                                                                                   \
+    }
+
 
 UNBOXED_WRAPPER_IMPL(bool);
 UNBOXED_WRAPPER_IMPL(int8);
@@ -576,7 +628,9 @@ struct doremir_impl_disp {
 // @endcond
 
 doremir_ptr_t doremir_interface(doremir_id_t type, doremir_ptr_t pointer)
-{
+{                        
+    assert(pointer && "Pointers have no interfaces");
+    
     switch (doremir_type(pointer)) {
         case 7:
             return bool_impl(type);

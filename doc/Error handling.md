@@ -42,9 +42,13 @@ interface can be used to obtain more information about the condition, otherwise 
 value can be used normally. Note that values returned from construction and copy
 functions must be destroyed whether an error has occured or not.
 
+<!--
+TODO not sure about this...
+
 As sa a special case in the interface mechanism, `null` is considered to implement
 [Error](@ref doremir_error_t). This means that the same procedure can be used to
 check for optional values and error values.
+-->
 
 
 # Logging {#id24103}
