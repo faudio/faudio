@@ -289,13 +289,13 @@ doremir_string_t doremir_device_audio_host_name(device_t device)
 type_t doremir_device_audio_input_type(device_t device)
 {
     const PaDeviceInfo *info = Pa_GetDeviceInfo(device->index);
-    return doremir_type_repeat(info->maxInputChannels, type(f32));
+    return doremir_type_repeat(info->maxInputChannels, type_frame(type(f32)));
 }
 
 type_t doremir_device_audio_output_type(device_t device)
 {
     const PaDeviceInfo  *info = Pa_GetDeviceInfo(device->index);
-    return doremir_type_repeat(info->maxOutputChannels, type(f32));
+    return doremir_type_repeat(info->maxOutputChannels, type_frame(type(f32)));
 }
 
 
