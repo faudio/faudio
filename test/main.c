@@ -1137,24 +1137,28 @@ void test_priority_queue(int iter)
 void test_json(string_t path)
 {
     test_section("JSON conversion");
-    
+
     size_t sz = 1000000;
     char source[sz + 1];
-        
+
     FILE *f = fopen(unstring(path), "r");
+
     if (f != NULL) {
         size_t sz2 = fread(source, sizeof(char), sz, f);
+
         if (sz2 == 0) {
             fail("Error reading file");
             return;
         } else {
             source[++sz2] = '\0';
         }
+
         fclose(f);
-    }    
+    }
+
     string_t json = string(source);
     // printf("%s\n", unstring(json));
-    
+
     ptr_t data = doremir_string_from_json(json);
     doremir_print("data                         ==> %s\n", data);
 
@@ -1162,23 +1166,23 @@ void test_json(string_t path)
     doremir_puts(json2);
 
     doremir_puts(doremir_string_to_json(
-        pair(i32(1),i32(2)))
-        );
+                     pair(i32(1), i32(2)))
+                );
 
     doremir_puts(doremir_string_to_json(
-        list(   pair(i32(1),i32(2))   , pair(i32(3),i32(4))  )
-        ));
+                     list(pair(i32(1), i32(2))   , pair(i32(3), i32(4)))
+                 ));
 
     doremir_puts(doremir_string_to_json(
-        set(   pair(i32(1),i32(2))   , pair(i32(1),i32(2))  )
-        ));
+                     set(pair(i32(1), i32(2))   , pair(i32(1), i32(2)))
+                 ));
 
     doremir_puts(doremir_string_to_json(
-        map(
-            string("foo"), i32(1),
-            string("bar"), list(i32(1),i32(2),i32(3))
-            )
-        ));
+                     map(
+                         string("foo"), i32(1),
+                         string("bar"), list(i32(1), i32(2), i32(3))
+                     )
+                 ));
 
 }
 

@@ -515,7 +515,7 @@ ptr_t unjsonify(JSON_Value *a, bool *ok)
             return doremir_list_empty();
 
         case JSONString:
-            return string((char*) json_value_get_string(a));
+            return string((char *) json_value_get_string(a));
 
         case JSONNumber:
             return i32(json_value_get_number(a));
@@ -523,34 +523,43 @@ ptr_t unjsonify(JSON_Value *a, bool *ok)
         case JSONBoolean:
             return b(json_value_get_boolean(a));
 
-        case JSONArray:
-        {
-            JSON_Array* ar = json_value_get_array(a);
+        case JSONArray: {
+            JSON_Array *ar = json_value_get_array(a);
             size_t sz = json_array_get_count(ar);
             list_t list = doremir_list_empty();
-            for (size_t i = sz; i > 0; --i)
-            {
-                ptr_t v = unjsonify(json_array_get_value(ar, i-1), ok);
-                if (!ok) return NULL;
+
+            for (size_t i = sz; i > 0; --i) {
+                ptr_t v = unjsonify(json_array_get_value(ar, i - 1), ok);
+
+                if (!ok) {
+                    return NULL;
+                }
+
                 list = doremir_list_dcons(v, list);
             }
+
             return list;
         }
 
-        case JSONObject:
-        {
-            JSON_Object* obj = json_value_get_object(a);
+        case JSONObject: {
+            JSON_Object *obj = json_value_get_object(a);
             size_t sz = json_object_get_count(obj);
             map_t map = doremir_map_empty();
-            for (size_t i = 0; i < sz; ++i)
-            {
-                char* name = (char*) json_object_get_name(obj, i);
+
+            for (size_t i = 0; i < sz; ++i) {
+                char *name = (char *) json_object_get_name(obj, i);
                 ptr_t value = unjsonify(json_object_get_value(obj, name), ok);
-                if (!ok) return NULL;
+
+                if (!ok) {
+                    return NULL;
+                }
+
                 map = doremir_map_dset(string(name), value, map);
-            } 
+            }
+
             return map;
         }
+
         default:
             assert(false && "Missing case");
     }
@@ -560,10 +569,12 @@ doremir_ptr_t doremir_string_from_json(doremir_string_t string)
 {
     bool ok = true;
     ptr_t result = unjsonify(json_parse_string(unstring(string)), &ok);
-    if (!ok)
-        assert(false && "Malformed JSON"); // TODO
-    else
-        return result;  
+
+    if (!ok) {
+        assert(false && "Malformed JSON");    // TODO
+    } else {
+        return result;
+    }
 }
 
 
