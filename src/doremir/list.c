@@ -822,26 +822,26 @@ ptr_t list_impl(doremir_id_t interface)
     static doremir_dynamic_t list_dynamic_impl = { list_get_type };
 
     switch (interface) {
-        case doremir_equal_i:
-            return &list_equal_impl;
+    case doremir_equal_i:
+        return &list_equal_impl;
 
-        case doremir_order_i:
-            return &list_order_impl;
+    case doremir_order_i:
+        return &list_order_impl;
 
-        case doremir_string_show_i:
-            return &list_show_impl;
+    case doremir_string_show_i:
+        return &list_show_impl;
 
-        case doremir_copy_i:
-            return &list_copy_impl;
+    case doremir_copy_i:
+        return &list_copy_impl;
 
-        case doremir_destroy_i:
-            return &list_destroy_impl;
+    case doremir_destroy_i:
+        return &list_destroy_impl;
 
-        case doremir_dynamic_i:
-            return &list_dynamic_impl;
+    case doremir_dynamic_i:
+        return &list_dynamic_impl;
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 

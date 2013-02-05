@@ -301,26 +301,26 @@ ptr_t ratio_impl(doremir_id_t interface)
         = { ratio_destroy };
 
     switch (interface) {
-        case doremir_equal_i:
-            return &ratio_equal_impl;
+    case doremir_equal_i:
+        return &ratio_equal_impl;
 
-        case doremir_order_i:
-            return &ratio_order_impl;
+    case doremir_order_i:
+        return &ratio_order_impl;
 
-        case doremir_string_show_i:
-            return &ratio_show_impl;
+    case doremir_string_show_i:
+        return &ratio_show_impl;
 
-        case doremir_number_i:
-            return &ratio_number_impl;
+    case doremir_number_i:
+        return &ratio_number_impl;
 
-        case doremir_copy_i:
-            return &ratio_copy_impl;
+    case doremir_copy_i:
+        return &ratio_copy_impl;
 
-        case doremir_destroy_i:
-            return &ratio_destroy_impl;
+    case doremir_destroy_i:
+        return &ratio_destroy_impl;
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 

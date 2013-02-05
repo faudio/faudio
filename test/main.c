@@ -317,9 +317,9 @@ void test_type()
     printf("\n");
 
     type_t v = type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
-                         type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
-                                   type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
-                                           type(i8))))))))));
+                                             type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
+                                                       type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
+                                                               type(i8))))))))));
 
     doremir_print("v                            ==> %s\n", v);
     doremir_print("size_of(1024,v)              ==> %s\n", i32(doremir_type_size_of(1024, v)));
@@ -1110,9 +1110,9 @@ void test_graph(string_t path)
 
         FILE *f = fopen(unstring(path), "w+");
         fprintf(f, "%s\n", doremir_string_to_utf8(doremir_graph_to_dot(
-                    string("#include \"doc/graphs/header.dot\""),
-                    string(""),
-                    a)));
+                                                      string("#include \"doc/graphs/header.dot\""),
+                                                      string(""),
+                                                      a)));
         fclose(f);
     }
 }
@@ -1349,9 +1349,9 @@ void test_processors()
 
     {
         type_t t = type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
-                             type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
-                                       type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
-                                               type(i8))))))))));
+                                                 type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
+                                                           type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
+                                                                   type(i8))))))))));
 
         processor_t p = doremir_processor_identity(t);
         doremir_print("p                            ==> %s\n", p);
@@ -1376,20 +1376,20 @@ double f1(void *ct, int i, double t, double x)
 #define step(p) ((float)((int)fmod(t,p)%p))/p
 
     switch (i) {
-        case 3:
-            return step(5);
+    case 3:
+        return step(5);
 
-        case 2:
-            return -0.5 * cos(tau * t0 * 0.5 + pi);
+    case 2:
+        return -0.5 * cos(tau * t0 * 0.5 + pi);
 
-        case 1:
-            return  0.5 * cos(tau * t0 * 0.5 + pi);
+    case 1:
+        return  0.5 * cos(tau * t0 * 0.5 + pi);
 
-        case 0:
-            return  0.5 * cos(tau * t0 * 0.5 + pi) * sin(tau * t0 * 3);
+    case 0:
+        return  0.5 * cos(tau * t0 * 0.5 + pi) * sin(tau * t0 * 3);
 
-        default:
-            return 0;
+    default:
+        return 0;
     }
 }
 

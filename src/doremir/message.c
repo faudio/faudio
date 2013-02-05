@@ -206,14 +206,14 @@ ptr_t dispatcher_impl(doremir_id_t interface)
         = { dispatcher_destroy };
 
     switch (interface) {
-        case doremir_string_show_i:
-            return &dispatcher_show_impl;
+    case doremir_string_show_i:
+        return &dispatcher_show_impl;
 
-        case doremir_destroy_i:
-            return &dispatcher_destroy_impl;
+    case doremir_destroy_i:
+        return &dispatcher_destroy_impl;
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 

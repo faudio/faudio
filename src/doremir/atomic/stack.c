@@ -183,14 +183,14 @@ doremir_ptr_t atomic_stack_impl(doremir_id_t interface)
     static doremir_destroy_t atomic_stack_destroy_impl = { atomic_stack_destroy };
 
     switch (interface) {
-        case doremir_string_show_i:
-            return &atomic_stack_show_impl;
+    case doremir_string_show_i:
+        return &atomic_stack_show_impl;
 
-        case doremir_destroy_i:
-            return &atomic_stack_destroy_impl;
+    case doremir_destroy_i:
+        return &atomic_stack_destroy_impl;
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 

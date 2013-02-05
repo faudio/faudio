@@ -70,8 +70,8 @@ doremir_processor_t doremir_processor_identity(doremir_type_t type)
     @param value
  */
 doremir_processor_t doremir_processor_constant(doremir_type_t   input_type,
-        doremir_type_t   output_type,
-        doremir_ptr_t    value)
+                                               doremir_type_t   output_type,
+                                               doremir_ptr_t    value)
 {
     return (processor_t) doremir_processor_const_create(input_type, output_type, value);
 }
@@ -84,7 +84,7 @@ doremir_processor_t doremir_processor_constant(doremir_type_t   input_type,
     @param samples          Number of samples.
  */
 doremir_processor_t doremir_processor_delay(doremir_type_t  type,
-        size_t          samples)
+                                            size_t          samples)
 {
     assert(false && "Not implemented");
     // return (processor_t) doremir_processor_delay_create(type, samples);
@@ -113,7 +113,7 @@ doremir_processor_t doremir_processor_split(doremir_type_t type)
     @return                 A new processor, or an error.
  */
 doremir_processor_t doremir_processor_par(doremir_processor_t proc1,
-        doremir_processor_t proc2)
+                                          doremir_processor_t proc2)
 {
     return (processor_t)
            doremir_processor_par_create(proc1, proc2);
@@ -135,7 +135,7 @@ doremir_processor_t doremir_processor_par(doremir_processor_t proc1,
     @return                 A new processor, or an error.
  */
 doremir_processor_t doremir_processor_seq(doremir_processor_t proc1,
-        doremir_processor_t proc2)
+                                          doremir_processor_t proc2)
 {
     return (processor_t) doremir_processor_seq_create(proc1, proc2);
 }

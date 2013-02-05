@@ -173,32 +173,32 @@ doremir_time_t doremir_event_offset(doremir_event_t event)
 {
     switch (event->tag) {
 
-        case never_event:
-            return TIME_MAX;
+    case never_event:
+        return TIME_MAX;
 
-        case now_event:
-            return TIME_ZERO;
+    case now_event:
+        return TIME_ZERO;
 
-        case delay_event: {
-            time_t dx  = doremir_event_offset(delay_get(event, event));
-            time_t t = delay_get(event, time);
-            return doremir_add(dx, t);
-        }
+    case delay_event: {
+        time_t dx  = doremir_event_offset(delay_get(event, event));
+        time_t t = delay_get(event, time);
+        return doremir_add(dx, t);
+    }
 
-        case merge_event: {
-            time_t x = doremir_event_offset(merge_get(event, left));
-            time_t y = doremir_event_offset(merge_get(event, right));
-            return doremir_min(x, y);
-        }
+    case merge_event: {
+        time_t x = doremir_event_offset(merge_get(event, left));
+        time_t y = doremir_event_offset(merge_get(event, right));
+        return doremir_min(x, y);
+    }
 
-        case switch_event: {
-            time_t x = doremir_event_offset(switch_get(event, before));
-            time_t y = doremir_event_offset(switch_get(event, after));
-            return doremir_min(x, y);
-        }
+    case switch_event: {
+        time_t x = doremir_event_offset(switch_get(event, before));
+        time_t y = doremir_event_offset(switch_get(event, after));
+        return doremir_min(x, y);
+    }
 
-        default:
-            assert(false && "Missing label");
+    default:
+        assert(false && "Missing label");
     }
 }
 
@@ -206,28 +206,28 @@ bool doremir_event_has_value(doremir_event_t event, doremir_time_t time)
 {
     switch (event->tag) {
 
-        case never_event:
-            return false;
+    case never_event:
+        return false;
 
-        case now_event:
-            return doremir_greater_than_equal(time, seconds(0));
+    case now_event:
+        return doremir_greater_than_equal(time, seconds(0));
 
-        case delay_event:
-            return doremir_event_has_value(
-                       delay_get(event, event),
-                       doremir_subtract(time, delay_get(event, time)));
+    case delay_event:
+        return doremir_event_has_value(
+                   delay_get(event, event),
+                   doremir_subtract(time, delay_get(event, time)));
 
-        case merge_event:
-            return doremir_event_has_value(merge_get(event, left), time)
-                   || doremir_event_has_value(merge_get(event, right), time);
+    case merge_event:
+        return doremir_event_has_value(merge_get(event, left), time)
+               || doremir_event_has_value(merge_get(event, right), time);
 
-        case switch_event:
-            return doremir_event_has_value(switch_get(event, pred), time)
-                   ? doremir_event_has_value(switch_get(event, before), time)
-                   : doremir_event_has_value(switch_get(event, after), time);
+    case switch_event:
+        return doremir_event_has_value(switch_get(event, pred), time)
+               ? doremir_event_has_value(switch_get(event, before), time)
+               : doremir_event_has_value(switch_get(event, after), time);
 
-        default:
-            assert(false && "Missing label");
+    default:
+        assert(false && "Missing label");
     }
 }
 
@@ -235,23 +235,23 @@ doremir_ptr_t doremir_event_value(doremir_event_t event)
 {
     switch (event->tag) {
 
-        case never_event:
-            return NULL;
+    case never_event:
+        return NULL;
 
-        case now_event:
-            return now_get(event, value);
+    case now_event:
+        return now_get(event, value);
 
-        case delay_event:
-            return doremir_event_value(delay_get(event, event));
+    case delay_event:
+        return doremir_event_value(delay_get(event, event));
 
-        case merge_event:
-            return doremir_event_value(merge_get(event, left)); // FIXME
+    case merge_event:
+        return doremir_event_value(merge_get(event, left)); // FIXME
 
-        case switch_event:
-            return NULL;
+    case switch_event:
+        return NULL;
 
-        default:
-            assert(false && "Missing label");
+    default:
+        assert(false && "Missing label");
     }
 }
 
@@ -265,36 +265,36 @@ doremir_event_t doremir_event_tail(doremir_event_t event)
 
     switch (event->tag) {
 
-        case never_event:
-            return doremir_event_never();
+    case never_event:
+        return doremir_event_never();
 
-        case now_event:
-            return doremir_event_never();
+    case now_event:
+        return doremir_event_never();
 
-        case delay_event: {
-            event_t x = doremir_event_tail(delay_get(event, event));
-            time_t  t = delay_get(event, time);
+    case delay_event: {
+        event_t x = doremir_event_tail(delay_get(event, event));
+        time_t  t = delay_get(event, time);
 
-            if (!x) {
-                return NULL; // FIXME see sched comment
-            } else {
-                return doremir_event_delay(t, x);
-            }
+        if (!x) {
+            return NULL; // FIXME see sched comment
+        } else {
+            return doremir_event_delay(t, x);
         }
+    }
 
-        case merge_event:
-            // OK because of invariant in merge impl
-            return merge_get(event, right);
+    case merge_event:
+        // OK because of invariant in merge impl
+        return merge_get(event, right);
 
-        case switch_event: {
-            event_t p = switch_get(event, pred);
-            event_t tx = doremir_event_tail(switch_get(event, before));
-            event_t ty = doremir_event_tail(switch_get(event, after));
-            return doremir_event_switch(p, tx, ty);
-        }
+    case switch_event: {
+        event_t p = switch_get(event, pred);
+        event_t tx = doremir_event_tail(switch_get(event, before));
+        event_t ty = doremir_event_tail(switch_get(event, after));
+        return doremir_event_switch(p, tx, ty);
+    }
 
-        default:
-            assert(false && "Missing label");
+    default:
+        assert(false && "Missing label");
     }
 }
 
@@ -342,56 +342,56 @@ string_t event_show(doremir_ptr_t a)
 
     switch (event->tag) {
 
-        case never_event:
-            return string("<Never>");
+    case never_event:
+        return string("<Never>");
 
-        case now_event:
-            return string("<Now>");
+    case now_event:
+        return string("<Now>");
 
-        case delay_event: {
-            time_t  t = delay_get(event, time);
-            event_t x  = delay_get(event, event);
+    case delay_event: {
+        time_t  t = delay_get(event, time);
+        event_t x  = delay_get(event, event);
 
-            write_to(s, string("<Delay "));
-            write_to(s, format_integer("%d", doremir_time_seconds(t))); // FIXME
-            write_to(s, string(" "));
-            write_to(s, doremir_string_show(x));
-            write_to(s, string(">"));
+        write_to(s, string("<Delay "));
+        write_to(s, format_integer("%d", doremir_time_seconds(t))); // FIXME
+        write_to(s, string(" "));
+        write_to(s, doremir_string_show(x));
+        write_to(s, string(">"));
 
-            return s;
+        return s;
+    }
+
+    case merge_event: {
+        event_t x = merge_get(event, left);
+        event_t y = merge_get(event, right);
+
+        write_to(s, string("<Either "));
+        write_to(s, doremir_string_show(x));
+        write_to(s, string(" "));
+        write_to(s, doremir_string_show(y));
+        write_to(s, string(">"));
+
+        return s;
+    }
+
+    case switch_event: {
+        event_t p = switch_get(event, pred);
+        event_t x = switch_get(event, before);
+        event_t y = switch_get(event, after);
+
+        write_to(s, string("<Switch "));
+        write_to(s, doremir_string_show(p));
+        write_to(s, string(" "));
+        write_to(s, doremir_string_show(x));
+        write_to(s, string(" "));
+        write_to(s, doremir_string_show(y));
+        write_to(s, string(">"));
+
+        return s;
+
+        default:
+            assert(false && "Missing label");
         }
-
-        case merge_event: {
-            event_t x = merge_get(event, left);
-            event_t y = merge_get(event, right);
-
-            write_to(s, string("<Either "));
-            write_to(s, doremir_string_show(x));
-            write_to(s, string(" "));
-            write_to(s, doremir_string_show(y));
-            write_to(s, string(">"));
-
-            return s;
-        }
-
-        case switch_event: {
-            event_t p = switch_get(event, pred);
-            event_t x = switch_get(event, before);
-            event_t y = switch_get(event, after);
-
-            write_to(s, string("<Switch "));
-            write_to(s, doremir_string_show(p));
-            write_to(s, string(" "));
-            write_to(s, doremir_string_show(x));
-            write_to(s, string(" "));
-            write_to(s, doremir_string_show(y));
-            write_to(s, string(">"));
-
-            return s;
-
-            default:
-                assert(false && "Missing label");
-            }
     }
 
     return s;
@@ -410,20 +410,20 @@ doremir_ptr_t event_impl(doremir_id_t interface)
     static doremir_destroy_t event_destroy_impl = { event_destroy };
 
     switch (interface) {
-        case doremir_equal_i:
-            return &event_equal_impl;
+    case doremir_equal_i:
+        return &event_equal_impl;
 
-        case doremir_order_i:
-            return &event_order_impl;
+    case doremir_order_i:
+        return &event_order_impl;
 
-        case doremir_string_show_i:
-            return &event_show_impl;
+    case doremir_string_show_i:
+        return &event_show_impl;
 
-        case doremir_destroy_i:
-            return &event_destroy_impl;
+    case doremir_destroy_i:
+        return &event_destroy_impl;
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 

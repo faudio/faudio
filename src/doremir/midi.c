@@ -49,8 +49,8 @@ void delete_midi(doremir_midi_t midi)
     @return         A new Midi message.
  */
 doremir_midi_t doremir_midi_create_simple(status_t status,
-        data_t data1,
-        data_t data2)
+                                          data_t data1,
+                                          data_t data2)
 {
     assert(status != 0xf0 && status != 0xf7);
 
@@ -244,23 +244,23 @@ doremir_ptr_t midi_impl(doremir_id_t interface)
     static doremir_destroy_t midi_destroy_impl = { midi_destroy };
 
     switch (interface) {
-        case doremir_equal_i:
-            return &midi_equal_impl;
+    case doremir_equal_i:
+        return &midi_equal_impl;
 
-        case doremir_order_i:
-            return &midi_order_impl;
+    case doremir_order_i:
+        return &midi_order_impl;
 
-        case doremir_string_show_i:
-            return &midi_show_impl;
+    case doremir_string_show_i:
+        return &midi_show_impl;
 
-        case doremir_copy_i:
-            return &midi_copy_impl;
+    case doremir_copy_i:
+        return &midi_copy_impl;
 
-        case doremir_destroy_i:
-            return &midi_destroy_impl;
+    case doremir_destroy_i:
+        return &midi_destroy_impl;
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 

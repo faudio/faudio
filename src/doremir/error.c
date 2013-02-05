@@ -151,24 +151,24 @@ doremir_string_t doremir_error_format(bool colored, doremir_error_t a)
     };
 
     switch (simple->severity) {
-        case info:
-            str = string_dappend(str, strs[0 + colored * 6]);
-            break;
+    case info:
+        str = string_dappend(str, strs[0 + colored * 6]);
+        break;
 
-        case warning:
-            str = string_dappend(str, strs[1 + colored * 6]);
-            break;
+    case warning:
+        str = string_dappend(str, strs[1 + colored * 6]);
+        break;
 
-        case error:
-            str = string_dappend(str, strs[2 + colored * 6]);
-            break;
+    case error:
+        str = string_dappend(str, strs[2 + colored * 6]);
+        break;
 
-        case misc:
-            str = string_dappend(str, strs[3 + colored * 6]);
-            break;
+    case misc:
+        str = string_dappend(str, strs[3 + colored * 6]);
+        break;
 
-        default:
-            assert(false && "Missing label");
+    default:
+        assert(false && "Missing label");
     }
 
     if (doremir_string_length(simple->origin) > 0) {
@@ -219,24 +219,24 @@ doremir_string_t simple_error_show(doremir_ptr_t a)
     string_t str = string("<");
 
     switch (simple->severity) {
-        case info:
-            str = string_dappend(str, string("Info "));
-            break;
+    case info:
+        str = string_dappend(str, string("Info "));
+        break;
 
-        case warning:
-            str = string_dappend(str, string("Warning "));
-            break;
+    case warning:
+        str = string_dappend(str, string("Warning "));
+        break;
 
-        case error:
-            str = string_dappend(str, string("Error "));
-            break;
+    case error:
+        str = string_dappend(str, string("Error "));
+        break;
 
-        case misc:
-            str = string_dappend(str, string("Misc "));
-            break;
+    case misc:
+        str = string_dappend(str, string("Misc "));
+        break;
 
-        default:
-            assert(false && "Missing label");
+    default:
+        assert(false && "Missing label");
     }
 
     if (doremir_string_length(simple->origin) > 0) {
@@ -259,20 +259,20 @@ doremir_ptr_t simple_error_impl(doremir_id_t interface)
     { simple_error_severity, simple_error_message, simple_error_origin };
 
     switch (interface) {
-        case doremir_copy_i:
-            return &simple_error_copy_impl;
+    case doremir_copy_i:
+        return &simple_error_copy_impl;
 
-        case doremir_destroy_i:
-            return &simple_error_destroy_impl;
+    case doremir_destroy_i:
+        return &simple_error_destroy_impl;
 
-        case doremir_error_i:
-            return &simple_error_error_impl;
+    case doremir_error_i:
+        return &simple_error_error_impl;
 
-        case doremir_string_show_i:
-            return &simple_error_show_impl;
+    case doremir_string_show_i:
+        return &simple_error_show_impl;
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 

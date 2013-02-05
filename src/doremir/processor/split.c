@@ -116,16 +116,16 @@ ptr_t split_impl(doremir_id_t interface)
     };
 
     switch (interface) {
-        case doremir_string_show_i:
-            return &split_show_impl;
+    case doremir_string_show_i:
+        return &split_show_impl;
 
-        case doremir_destroy_i:
-            return &split_destroy_impl;
+    case doremir_destroy_i:
+        return &split_destroy_impl;
 
-        case doremir_processor_interface_i:
-            return &split_processor_interface_impl;
+    case doremir_processor_interface_i:
+        return &split_processor_interface_impl;
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }

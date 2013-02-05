@@ -450,58 +450,58 @@ static const char *get_processed_string(const char **string)
             current_char = *unprocessed_ptr;
 
             switch (current_char) {
-                case '\"':
-                case '\\':
-                case '/':
-                    break;
+            case '\"':
+            case '\\':
+            case '/':
+                break;
 
-                case 'b':
-                    current_char = '\b';
-                    break;
+            case 'b':
+                current_char = '\b';
+                break;
 
-                case 'f':
-                    current_char = '\f';
-                    break;
+            case 'f':
+                current_char = '\f';
+                break;
 
-                case 'n':
-                    current_char = '\n';
-                    break;
+            case 'n':
+                current_char = '\n';
+                break;
 
-                case 'r':
-                    current_char = '\r';
-                    break;
+            case 'r':
+                current_char = '\r';
+                break;
 
-                case 't':
-                    current_char = '\t';
-                    break;
+            case 't':
+                current_char = '\t';
+                break;
 
-                case 'u':
-                    unprocessed_ptr++;
+            case 'u':
+                unprocessed_ptr++;
 
-                    if (!is_utf((const unsigned char *)unprocessed_ptr) ||
-                            sscanf(unprocessed_ptr, "%4x", &utf_val) == EOF) {
-                        parson_free(output);
-                        return NULL;
-                    }
-
-                    if (utf_val < 0x80) {
-                        current_char = utf_val;
-                    } else if (utf_val < 0x800) {
-                        *processed_ptr++ = (utf_val >> 6) | 0xC0;
-                        current_char = ((utf_val | 0x80) & 0xBF);
-                    } else {
-                        *processed_ptr++ = (utf_val >> 12) | 0xE0;
-                        *processed_ptr++ = (((utf_val >> 6) | 0x80) & 0xBF);
-                        current_char = ((utf_val | 0x80) & 0xBF);
-                    }
-
-                    unprocessed_ptr += 3;
-                    break;
-
-                default:
+                if (!is_utf((const unsigned char *)unprocessed_ptr) ||
+                        sscanf(unprocessed_ptr, "%4x", &utf_val) == EOF) {
                     parson_free(output);
                     return NULL;
-                    break;
+                }
+
+                if (utf_val < 0x80) {
+                    current_char = utf_val;
+                } else if (utf_val < 0x800) {
+                    *processed_ptr++ = (utf_val >> 6) | 0xC0;
+                    current_char = ((utf_val | 0x80) & 0xBF);
+                } else {
+                    *processed_ptr++ = (utf_val >> 12) | 0xE0;
+                    *processed_ptr++ = (((utf_val >> 6) | 0x80) & 0xBF);
+                    current_char = ((utf_val | 0x80) & 0xBF);
+                }
+
+                unprocessed_ptr += 3;
+                break;
+
+            default:
+                parson_free(output);
+                return NULL;
+                break;
             }
         } else if (iscntrl((unsigned char)current_char) &&
                    ((unsigned char)current_char != 0x7F)) { /* no control characters allowed (except DEL)*/
@@ -532,37 +532,37 @@ static JSON_Value *parse_value(const char **string, size_t nesting)
     skip_whitespaces(string);
 
     switch (**string) {
-        case '{':
-            return parse_object_value(string, nesting + 1);
+    case '{':
+        return parse_object_value(string, nesting + 1);
 
-        case '[':
-            return parse_array_value(string, nesting + 1);
+    case '[':
+        return parse_array_value(string, nesting + 1);
 
-        case '\"':
-            return parse_string_value(string);
+    case '\"':
+        return parse_string_value(string);
 
-        case 'f':
-        case 't':
-            return parse_boolean_value(string);
+    case 'f':
+    case 't':
+        return parse_boolean_value(string);
 
-        case '-':
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-            return parse_number_value(string);
+    case '-':
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+        return parse_number_value(string);
 
-        case 'n':
-            return parse_null_value(string);
+    case 'n':
+        return parse_null_value(string);
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 
@@ -935,23 +935,23 @@ int json_value_get_boolean(const JSON_Value *value)
 void json_value_free(JSON_Value *value)
 {
     switch (json_value_get_type(value)) {
-        case JSONObject:
-            json_object_free(value->value.object);
-            break;
+    case JSONObject:
+        json_object_free(value->value.object);
+        break;
 
-        case JSONString:
-            if (value->value.string) {
-                parson_free(value->value.string);
-            }
+    case JSONString:
+        if (value->value.string) {
+            parson_free(value->value.string);
+        }
 
-            break;
+        break;
 
-        case JSONArray:
-            json_array_free(value->value.array);
-            break;
+    case JSONArray:
+        json_array_free(value->value.array);
+        break;
 
-        default:
-            break;
+    default:
+        break;
     }
 
     parson_free(value);

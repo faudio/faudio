@@ -230,21 +230,21 @@ doremir_string_t doremir_string_format_floating(char *format, double value)
 static inline void iconv_fail()
 {
     switch (errno) {
-        case E2BIG:
-            string_fatal("iconv: Output buffer too small",
-                         errno);
+    case E2BIG:
+        string_fatal("iconv: Output buffer too small",
+                     errno);
 
-        case EILSEQ:
-            string_fatal("iconv: Input byte does not belong to the input codeset",
-                         errno);
+    case EILSEQ:
+        string_fatal("iconv: Input byte does not belong to the input codeset",
+                     errno);
 
-        case EINVAL:
-            string_fatal("iconv: Incomplete character or shift sequence at the end of the input buffer",
-                         errno);
+    case EINVAL:
+        string_fatal("iconv: Incomplete character or shift sequence at the end of the input buffer",
+                     errno);
 
-        default:
-            string_fatal("iconv: Unknown error",
-                         errno);
+    default:
+        string_fatal("iconv: Unknown error",
+                     errno);
     }
 }
 
@@ -475,20 +475,20 @@ doremir_string_t doremir_string_to_string(doremir_ptr_t a)
 inline static ptr_t jsonify(ptr_t a)
 {
     switch (doremir_dynamic_get_type(a)) {
-        case pair_type_repr:
-            return jsonify(doremir_pair_to_list(a));
+    case pair_type_repr:
+        return jsonify(doremir_pair_to_list(a));
 
-        case set_type_repr:
-            return jsonify(doremir_set_to_list(a));
+    case set_type_repr:
+        return jsonify(doremir_set_to_list(a));
 
-        case list_type_repr:
-            return doremir_list_map(apply1, jsonify, a);
+    case list_type_repr:
+        return doremir_list_map(apply1, jsonify, a);
 
-        case map_type_repr:
-            return doremir_map_map(apply1, jsonify, a);
+    case map_type_repr:
+        return doremir_map_map(apply1, jsonify, a);
 
-        default:
-            return a;
+    default:
+        return a;
     }
 }
 
@@ -507,61 +507,61 @@ doremir_string_t doremir_string_to_json(doremir_ptr_t a)
 ptr_t unjsonify(JSON_Value *a, bool *ok)
 {
     switch (json_value_get_type(a)) {
-        case JSONError:
-            *ok = false;
-            return NULL;
+    case JSONError:
+        *ok = false;
+        return NULL;
 
-        case JSONNull:
-            return doremir_list_empty();
+    case JSONNull:
+        return doremir_list_empty();
 
-        case JSONString:
-            return string((char *) json_value_get_string(a));
+    case JSONString:
+        return string((char *) json_value_get_string(a));
 
-        case JSONNumber:
-            return i32(json_value_get_number(a));
+    case JSONNumber:
+        return i32(json_value_get_number(a));
 
-        case JSONBoolean:
-            return b(json_value_get_boolean(a));
+    case JSONBoolean:
+        return b(json_value_get_boolean(a));
 
-        case JSONArray: {
-            JSON_Array *ar = json_value_get_array(a);
-            size_t sz = json_array_get_count(ar);
-            list_t list = doremir_list_empty();
+    case JSONArray: {
+        JSON_Array *ar = json_value_get_array(a);
+        size_t sz = json_array_get_count(ar);
+        list_t list = doremir_list_empty();
 
-            for (size_t i = sz; i > 0; --i) {
-                ptr_t v = unjsonify(json_array_get_value(ar, i - 1), ok);
+        for (size_t i = sz; i > 0; --i) {
+            ptr_t v = unjsonify(json_array_get_value(ar, i - 1), ok);
 
-                if (!ok) {
-                    return NULL;
-                }
-
-                list = doremir_list_dcons(v, list);
+            if (!ok) {
+                return NULL;
             }
 
-            return list;
+            list = doremir_list_dcons(v, list);
         }
 
-        case JSONObject: {
-            JSON_Object *obj = json_value_get_object(a);
-            size_t sz = json_object_get_count(obj);
-            map_t map = doremir_map_empty();
+        return list;
+    }
 
-            for (size_t i = 0; i < sz; ++i) {
-                char *name = (char *) json_object_get_name(obj, i);
-                ptr_t value = unjsonify(json_object_get_value(obj, name), ok);
+    case JSONObject: {
+        JSON_Object *obj = json_value_get_object(a);
+        size_t sz = json_object_get_count(obj);
+        map_t map = doremir_map_empty();
 
-                if (!ok) {
-                    return NULL;
-                }
+        for (size_t i = 0; i < sz; ++i) {
+            char *name = (char *) json_object_get_name(obj, i);
+            ptr_t value = unjsonify(json_object_get_value(obj, name), ok);
 
-                map = doremir_map_dset(string(name), value, map);
+            if (!ok) {
+                return NULL;
             }
 
-            return map;
+            map = doremir_map_dset(string(name), value, map);
         }
 
-        default:
-            assert(false && "Missing case");
+        return map;
+    }
+
+    default:
+        assert(false && "Missing case");
     }
 }
 
@@ -611,14 +611,14 @@ string_t doremir_string_join_map(unary_t func, ptr_t data, string_t string)
 inline static string_t escape_char(uint16_t c)
 {
     switch (c) {
-        case '"':
-            return string("\\\"");
+    case '"':
+        return string("\\\"");
 
-        case '\\':
-            return string("\\\\");
+    case '\\':
+        return string("\\\\");
 
-        default:
-            return doremir_string_single(c);
+    default:
+        return doremir_string_single(c);
     }
 }
 
@@ -741,26 +741,26 @@ doremir_ptr_t string_impl(doremir_id_t interface)
     static doremir_dynamic_t string_dynamic_impl = { string_get_type };
 
     switch (interface) {
-        case doremir_equal_i:
-            return &string_equal_impl;
+    case doremir_equal_i:
+        return &string_equal_impl;
 
-        case doremir_order_i:
-            return &string_order_impl;
+    case doremir_order_i:
+        return &string_order_impl;
 
-        case doremir_string_show_i:
-            return &string_show_impl;
+    case doremir_string_show_i:
+        return &string_show_impl;
 
-        case doremir_copy_i:
-            return &string_copy_impl;
+    case doremir_copy_i:
+        return &string_copy_impl;
 
-        case doremir_destroy_i:
-            return &string_destroy_impl;
+    case doremir_destroy_i:
+        return &string_destroy_impl;
 
-        case doremir_dynamic_i:
-            return &string_dynamic_impl;
+    case doremir_dynamic_i:
+        return &string_dynamic_impl;
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 

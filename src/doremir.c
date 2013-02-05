@@ -48,32 +48,32 @@ int doremir_type(doremir_ptr_t a)
 char *doremir_type_str(doremir_ptr_t a)
 {
     switch (doremir_type(a)) {
-        case 7:
-            return "bool";
+    case 7:
+        return "bool";
 
-        case 6:
-            return "int8";
+    case 6:
+        return "int8";
 
-        case 5:
-            return "int16";
+    case 5:
+        return "int16";
 
-        case 4:
-            return "int32";
+    case 4:
+        return "int32";
 
-        case 3:
-            return "int64";
+    case 3:
+        return "int64";
 
-        case 2:
-            return "float";
+    case 2:
+        return "float";
 
-        case 1:
-            return "double";
+    case 1:
+        return "double";
 
-        case 0:
-            return "ptr";
+    case 0:
+        return "ptr";
 
-        default:
-            return "unknown";
+    default:
+        return "unknown";
     }
 }
 
@@ -639,30 +639,30 @@ doremir_ptr_t doremir_interface(doremir_id_t type, doremir_ptr_t pointer)
     assert(pointer && "Pointers have no interfaces");
 
     switch (doremir_type(pointer)) {
-        case 7:
-            return bool_impl(type);
+    case 7:
+        return bool_impl(type);
 
-        case 6:
-            return int8_impl(type);
+    case 6:
+        return int8_impl(type);
 
-        case 5:
-            return int16_impl(type);
+    case 5:
+        return int16_impl(type);
 
-        case 4:
-            return int32_impl(type);
+    case 4:
+        return int32_impl(type);
 
-        case 3:
-            return int64_impl(type);
+    case 3:
+        return int64_impl(type);
 
-        case 2:
-            return float_impl(type);
+    case 2:
+        return float_impl(type);
 
-        case 1:
-            return double_impl(type);
+    case 1:
+        return double_impl(type);
 
-        default:
-            //  If you get a bus error here, you probably passed a
-            //  non-boxed primitive to a generic function.
-            return ((struct doremir_impl_disp *) pointer)->impl(type);
+    default:
+        //  If you get a bus error here, you probably passed a
+        //  non-boxed primitive to a generic function.
+        return ((struct doremir_impl_disp *) pointer)->impl(type);
     }
 }

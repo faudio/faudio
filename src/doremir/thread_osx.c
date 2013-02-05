@@ -145,15 +145,15 @@ bool doremir_thread_try_lock(doremir_thread_mutex_t mutex)
     int result = pthread_mutex_trylock(&mutex->native);
 
     switch (result) {
-        case 0:
-            return true;
+    case 0:
+        return true;
 
-        case EBUSY:
-            return false;
+    case EBUSY:
+        return false;
 
-        default:
-            doremir_thread_fatal("try_lock", result);
-            assert(false && "Not reached");
+    default:
+        doremir_thread_fatal("try_lock", result);
+        assert(false && "Not reached");
     }
 }
 

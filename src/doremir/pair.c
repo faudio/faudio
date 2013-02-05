@@ -220,26 +220,26 @@ doremir_ptr_t pair_impl(doremir_id_t interface)
     static doremir_dynamic_t pair_dynamic_impl = { pair_get_type };
 
     switch (interface) {
-        case doremir_equal_i:
-            return &pair_equal_impl;
+    case doremir_equal_i:
+        return &pair_equal_impl;
 
-        case doremir_order_i:
-            return &pair_order_impl;
+    case doremir_order_i:
+        return &pair_order_impl;
 
-        case doremir_string_show_i:
-            return &pair_show_impl;
+    case doremir_string_show_i:
+        return &pair_show_impl;
 
-        case doremir_copy_i:
-            return &pair_copy_impl;
+    case doremir_copy_i:
+        return &pair_copy_impl;
 
-        case doremir_destroy_i:
-            return &pair_destroy_impl;
+    case doremir_destroy_i:
+        return &pair_destroy_impl;
 
-        case doremir_dynamic_i:
-            return &pair_dynamic_impl;
+    case doremir_dynamic_i:
+        return &pair_dynamic_impl;
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 

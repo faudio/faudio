@@ -54,13 +54,13 @@ void doremir_plot_functions
 )
 {
     switch (plot_backend_g) {
-        case gnu_plot:
-            run_gnu_plot(func, data, cont, cont_data);
-            return;
+    case gnu_plot:
+        run_gnu_plot(func, data, cont, cont_data);
+        return;
 
-        case core_plot:
-            run_core_plot(func, data, cont, cont_data);
-            return;
+    case core_plot:
+        run_core_plot(func, data, cont, cont_data);
+        return;
     }
 }
 

@@ -163,17 +163,17 @@ doremir_ptr_t priority_queue_impl(doremir_id_t interface)
     static doremir_destroy_t priority_queue_destroy_impl = { priority_queue_destroy };
 
     switch (interface) {
-        case doremir_equal_i:
-            return &priority_queue_equal_impl;
+    case doremir_equal_i:
+        return &priority_queue_equal_impl;
 
-        case doremir_string_show_i:
-            return &priority_queue_show_impl;
+    case doremir_string_show_i:
+        return &priority_queue_show_impl;
 
-        case doremir_destroy_i:
-            return &priority_queue_destroy_impl;
+    case doremir_destroy_i:
+        return &priority_queue_destroy_impl;
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 

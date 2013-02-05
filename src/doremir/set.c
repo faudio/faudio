@@ -312,23 +312,23 @@ doremir_ptr_t set_impl(doremir_id_t interface)
     static doremir_dynamic_t set_dynamic_impl = { set_get_type };
 
     switch (interface) {
-        case doremir_equal_i:
-            return &set_equal_impl;
+    case doremir_equal_i:
+        return &set_equal_impl;
 
-        case doremir_string_show_i:
-            return &set_show_impl;
+    case doremir_string_show_i:
+        return &set_show_impl;
 
-        case doremir_copy_i:
-            return &set_copy_impl;
+    case doremir_copy_i:
+        return &set_copy_impl;
 
-        case doremir_destroy_i:
-            return &set_destroy_impl;
+    case doremir_destroy_i:
+        return &set_destroy_impl;
 
-        case doremir_dynamic_i:
-            return &set_dynamic_impl;
+    case doremir_dynamic_i:
+        return &set_dynamic_impl;
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 

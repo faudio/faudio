@@ -519,14 +519,14 @@ ptr_t audio_session_impl(doremir_id_t interface)
         = { audio_session_destroy };
 
     switch (interface) {
-        case doremir_string_show_i:
-            return &audio_session_show_impl;
+    case doremir_string_show_i:
+        return &audio_session_show_impl;
 
-        case doremir_destroy_i:
-            return &audio_session_destroy_impl;
+    case doremir_destroy_i:
+        return &audio_session_destroy_impl;
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 
@@ -551,11 +551,11 @@ ptr_t audio_device_impl(doremir_id_t interface)
         = { audio_device_show };
 
     switch (interface) {
-        case doremir_string_show_i:
-            return &audio_device_show_impl;
+    case doremir_string_show_i:
+        return &audio_device_show_impl;
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 
@@ -583,14 +583,14 @@ ptr_t audio_stream_impl(doremir_id_t interface)
         = { audio_stream_destroy };
 
     switch (interface) {
-        case doremir_string_show_i:
-            return &audio_stream_show_impl;
+    case doremir_string_show_i:
+        return &audio_stream_show_impl;
 
-        case doremir_destroy_i:
-            return &audio_stream_destroy_impl;
+    case doremir_destroy_i:
+        return &audio_stream_destroy_impl;
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 

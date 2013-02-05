@@ -327,26 +327,26 @@ doremir_ptr_t time_impl(doremir_id_t interface)
 
 
     switch (interface) {
-        case doremir_equal_i:
-            return &time_equal_impl;
+    case doremir_equal_i:
+        return &time_equal_impl;
 
-        case doremir_order_i:
-            return &time_order_impl;
+    case doremir_order_i:
+        return &time_order_impl;
 
-        case doremir_string_show_i:
-            return &time_show_impl;
+    case doremir_string_show_i:
+        return &time_show_impl;
 
-        case doremir_number_i:
-            return &time_number_impl;
+    case doremir_number_i:
+        return &time_number_impl;
 
-        case doremir_copy_i:
-            return &time_copy_impl;
+    case doremir_copy_i:
+        return &time_copy_impl;
 
-        case doremir_destroy_i:
-            return &time_destroy_impl;
+    case doremir_destroy_i:
+        return &time_destroy_impl;
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 

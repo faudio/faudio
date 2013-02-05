@@ -139,16 +139,16 @@ ptr_t par_impl(doremir_id_t interface)
     };
 
     switch (interface) {
-        case doremir_string_show_i:
-            return &par_show_impl;
+    case doremir_string_show_i:
+        return &par_show_impl;
 
-        case doremir_destroy_i:
-            return &par_destroy_impl;
+    case doremir_destroy_i:
+        return &par_destroy_impl;
 
-        case doremir_processor_interface_i:
-            return &par_processor_interface_impl;
+    case doremir_processor_interface_i:
+        return &par_processor_interface_impl;
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }

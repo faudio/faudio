@@ -151,8 +151,8 @@ doremir_graph_t doremir_graph_connect(doremir_graph_node_t node1,
     @param graph    The graph.
  */
 doremir_graph_t doremir_graph_disconnect(doremir_graph_node_t node1,
-        doremir_graph_node_t node2,
-        doremir_graph_t graph)
+                                         doremir_graph_node_t node2,
+                                         doremir_graph_t graph)
 {
     set_t nodes = graph->nodes;
     map_t edges = graph->edges;
@@ -293,23 +293,23 @@ doremir_ptr_t edge_impl(doremir_id_t interface)
     static doremir_destroy_t edge_destroy_impl = { edge_destroy };
 
     switch (interface) {
-        case doremir_equal_i:
-            return &edge_equal_impl;
+    case doremir_equal_i:
+        return &edge_equal_impl;
 
-        case doremir_order_i:
-            return &edge_order_impl;
+    case doremir_order_i:
+        return &edge_order_impl;
 
-        case doremir_string_show_i:
-            return &edge_show_impl;
+    case doremir_string_show_i:
+        return &edge_show_impl;
 
-        case doremir_copy_i:
-            return &edge_copy_impl;
+    case doremir_copy_i:
+        return &edge_copy_impl;
 
-        case doremir_destroy_i:
-            return &edge_destroy_impl;
+    case doremir_destroy_i:
+        return &edge_destroy_impl;
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 
@@ -348,20 +348,20 @@ doremir_ptr_t graph_impl(doremir_id_t interface)
     static doremir_destroy_t graph_destroy_impl = { graph_destroy };
 
     switch (interface) {
-        case doremir_equal_i:
-            return &graph_equal_impl;
+    case doremir_equal_i:
+        return &graph_equal_impl;
 
-        case doremir_string_show_i:
-            return &graph_show_impl;
+    case doremir_string_show_i:
+        return &graph_show_impl;
 
-        case doremir_copy_i:
-            return &graph_copy_impl;
+    case doremir_copy_i:
+        return &graph_copy_impl;
 
-        case doremir_destroy_i:
-            return &graph_destroy_impl;
+    case doremir_destroy_i:
+        return &graph_destroy_impl;
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 

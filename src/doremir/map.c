@@ -301,23 +301,23 @@ doremir_ptr_t entry_impl(doremir_id_t interface)
     static doremir_destroy_t entry_destroy_impl = { entry_destroy };
 
     switch (interface) {
-        case doremir_equal_i:
-            return &entry_equal_impl;
+    case doremir_equal_i:
+        return &entry_equal_impl;
 
-        case doremir_order_i:
-            return &entry_order_impl;
+    case doremir_order_i:
+        return &entry_order_impl;
 
-        case doremir_string_show_i:
-            return &entry_show_impl;
+    case doremir_string_show_i:
+        return &entry_show_impl;
 
-        case doremir_copy_i:
-            return &entry_copy_impl;
+    case doremir_copy_i:
+        return &entry_copy_impl;
 
-        case doremir_destroy_i:
-            return &entry_destroy_impl;
+    case doremir_destroy_i:
+        return &entry_destroy_impl;
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 
@@ -388,23 +388,23 @@ doremir_ptr_t map_impl(doremir_id_t interface)
     static doremir_dynamic_t map_dynamic_impl = { map_get_type };
 
     switch (interface) {
-        case doremir_equal_i:
-            return &map_equal_impl;
+    case doremir_equal_i:
+        return &map_equal_impl;
 
-        case doremir_string_show_i:
-            return &map_show_impl;
+    case doremir_string_show_i:
+        return &map_show_impl;
 
-        case doremir_copy_i:
-            return &map_copy_impl;
+    case doremir_copy_i:
+        return &map_copy_impl;
 
-        case doremir_destroy_i:
-            return &map_destroy_impl;
+    case doremir_destroy_i:
+        return &map_destroy_impl;
 
-        case doremir_dynamic_i:
-            return &map_dynamic_impl;
+    case doremir_dynamic_i:
+        return &map_dynamic_impl;
 
-        default:
-            return NULL;
+    default:
+        return NULL;
     }
 }
 
