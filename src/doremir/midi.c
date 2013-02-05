@@ -15,8 +15,8 @@ struct _doremir_midi_t {
     impl_t                  impl;           //  Interface dispatcher
     bool                    is_sysex;       //  Whether it is a sysex message
     union {                                 //  Status and data
-        uint8_t               simple[3];
-        doremir_buffer_t      sysex;
+        uint8_t             simple[3];
+        doremir_buffer_t    sysex;
     } data;
 };
 

@@ -23,7 +23,7 @@ struct edge {
 };
 
 typedef ptr_t         node_t;
-typedef struct edge * edge_t;
+typedef struct edge *edge_t;
 
 struct _doremir_graph_t {
     impl_t          impl;       //  Interface dispatcher
@@ -204,10 +204,12 @@ doremir_string_t doremir_graph_to_dot(
         if (doremir_dynamic_get_type(node) == pair_type_repr) {
             char *cs = unstring(doremir_string_to_string(doremir_pair_fst(node)));
             char *ds = unstring(doremir_string_to_string(doremir_pair_snd(node)));
+
             snprintf(buf, 100, "    \"%s\" [label = \"%s\"];\n", cs, ds);
             str = string_dappend(str, string(buf));
         } else {
             char *cs = unstring(doremir_string_to_string(node));
+
             snprintf(buf, 100, "    \"%s\";\n", cs);
             str = string_dappend(str, string(buf));
         }
@@ -220,14 +222,13 @@ doremir_string_t doremir_graph_to_dot(
         label = doremir_pair_snd(node_edge_pair);
 
         if (doremir_dynamic_get_type(node1) == pair_type_repr) {
-            node1 = doremir_pair_fst(node1);
-            node2 = doremir_pair_fst(node2);
+            node1   = doremir_pair_fst(node1);
+            node2   = doremir_pair_fst(node2);
         }
 
-        char *n1 = unstring(doremir_string_to_string(node1));
-        char *n2 = unstring(doremir_string_to_string(node2));
-        char *l = unstring(doremir_string_to_string(label));
-        // FIXME want an unescaped show here
+        char *n1    = unstring(doremir_string_to_string(node1));
+        char *n2    = unstring(doremir_string_to_string(node2));
+        char *l     = unstring(doremir_string_to_string(label));
 
         snprintf(buf, 100, "    \"%s\" -> \"%s\" [label=\"%s\"];\n", n1, n2, l);
         str = string_dappend(str, string(buf));
