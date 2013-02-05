@@ -1160,7 +1160,26 @@ void test_json(string_t path)
 
     string_t json2 = doremir_string_to_json(data);
     doremir_puts(json2);
-    
+
+    doremir_puts(doremir_string_to_json(
+        pair(i32(1),i32(2)))
+        );
+
+    doremir_puts(doremir_string_to_json(
+        list(   pair(i32(1),i32(2))   , pair(i32(3),i32(4))  )
+        ));
+
+    doremir_puts(doremir_string_to_json(
+        set(   pair(i32(1),i32(2))   , pair(i32(1),i32(2))  )
+        ));
+
+    doremir_puts(doremir_string_to_json(
+        map(
+            string("foo"), i32(1),
+            string("bar"), list(i32(1),i32(2),i32(3))
+            )
+        ));
+
 }
 
 

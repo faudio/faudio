@@ -204,6 +204,7 @@ doremir_map_t doremir_map_map(unary_t func, ptr_t data, doremir_map_t map)
         ptr_t val = doremir_pair_snd(key_val);
         result = doremir_map_add(key, func(data, val), result);
     }
+    return result;
 }
 
 

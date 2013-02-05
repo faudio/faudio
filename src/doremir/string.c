@@ -500,7 +500,7 @@ doremir_string_t doremir_string_to_json(doremir_ptr_t a)
     if (!doremir_interface(doremir_dynamic_i, a)) {
         return doremir_string_show(a);
     } else {
-        return doremir_string_show(a); //jsonify(a)
+        return doremir_string_show(jsonify(a));
     }
 }
 
