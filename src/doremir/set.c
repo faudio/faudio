@@ -9,6 +9,7 @@
 #include <doremir/pair.h>
 #include <doremir/list.h>
 #include <doremir/string.h>
+#include <doremir/dynamic.h>
 #include <doremir/util.h>
 
 /*  Notes:
@@ -297,12 +298,18 @@ void set_destroy(doremir_ptr_t a)
     doremir_set_destroy(a);
 }
 
+type_repr_t set_get_type(doremir_ptr_t a)
+{
+    return set_type_repr;
+}
+
 doremir_ptr_t set_impl(doremir_id_t interface)
 {
     static doremir_equal_t set_equal_impl = { set_equal };
     static doremir_string_show_t set_show_impl = { set_show };
     static doremir_copy_t set_copy_impl = { set_copy };
     static doremir_destroy_t set_destroy_impl = { set_destroy };
+    static doremir_dynamic_t set_dynamic_impl = { set_get_type };
 
     switch (interface) {
         case doremir_equal_i:
@@ -316,6 +323,9 @@ doremir_ptr_t set_impl(doremir_id_t interface)
 
         case doremir_destroy_i:
             return &set_destroy_impl;
+
+        case doremir_dynamic_i:
+            return &set_dynamic_impl;
 
         default:
             return NULL;

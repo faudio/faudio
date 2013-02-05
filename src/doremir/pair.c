@@ -6,6 +6,7 @@
  */
 
 #include <doremir/pair.h>
+#include <doremir/dynamic.h>
 #include <doremir/util.h>
 
 struct _doremir_pair_t {
@@ -199,6 +200,11 @@ void pair_destroy(doremir_ptr_t a)
     doremir_pair_destroy(a);
 }
 
+type_repr_t pair_get_type(doremir_ptr_t a)
+{
+    return pair_type_repr;
+}
+
 doremir_ptr_t pair_impl(doremir_id_t interface)
 {
     static doremir_equal_t pair_equal_impl = { pair_equal };
@@ -206,6 +212,7 @@ doremir_ptr_t pair_impl(doremir_id_t interface)
     static doremir_string_show_t pair_show_impl = { pair_show };
     static doremir_copy_t pair_copy_impl = { pair_copy };
     static doremir_destroy_t pair_destroy_impl = { pair_destroy };
+    static doremir_dynamic_t pair_dynamic_impl = { pair_get_type };
 
     switch (interface) {
         case doremir_equal_i:
@@ -222,6 +229,9 @@ doremir_ptr_t pair_impl(doremir_id_t interface)
 
         case doremir_destroy_i:
             return &pair_destroy_impl;
+
+        case doremir_dynamic_i:
+            return &pair_dynamic_impl;
 
         default:
             return NULL;

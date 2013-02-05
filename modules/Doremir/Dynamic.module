@@ -1,0 +1,33 @@
+
+/**
+    @addtogroup DoremirDirectory
+    
+    Types with dynamic type introspection.     
+ */
+
+module Doremir.Dynamic
+{
+    import Doremir;
+    import Doremir.String;
+
+    type TypeRepr = enum {                   
+        BoolTypeRepr, 
+        I8TypeRepr, 
+        I16TypeRepr, 
+        I32TypeRepr, 
+        I64TypeRepr,
+        F32TypeRepr,
+        F64TypeRepr,
+        PairTypeRepr, 
+        ListTypeRepr, 
+        SetTypeRepr, 
+        MapTypeRepr, 
+        StringTypeRepr
+    };
+
+    type Dynamic = struct {
+        getType : (Ptr -> TypeRepr)*
+    };
+
+    getType : Ptr -> TypeRepr;
+}

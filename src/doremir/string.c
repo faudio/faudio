@@ -7,6 +7,7 @@
 
 #include <doremir/string.h>
 #include <doremir/util.h>
+#include <doremir/dynamic.h>
 #include <iconv.h>
 
 #include <CoreFoundation/CoreFoundation.h> // TODO OS X only
@@ -551,6 +552,11 @@ void string_destroy(doremir_ptr_t a)
     doremir_string_destroy(a);
 }
 
+type_repr_t string_get_type(doremir_ptr_t a)
+{
+    return string_type_repr;
+}
+
 doremir_ptr_t string_impl(doremir_id_t interface)
 {
     static doremir_equal_t string_equal_impl = { string_equal };
@@ -558,6 +564,7 @@ doremir_ptr_t string_impl(doremir_id_t interface)
     static doremir_string_show_t string_show_impl = { string_show };
     static doremir_destroy_t string_destroy_impl = { string_destroy };
     static doremir_order_t string_order_impl = { string_less_than, string_greater_than };
+    static doremir_dynamic_t string_dynamic_impl = { string_get_type };
 
     switch (interface) {
         case doremir_equal_i:
@@ -574,6 +581,9 @@ doremir_ptr_t string_impl(doremir_id_t interface)
 
         case doremir_destroy_i:
             return &string_destroy_impl;
+
+        case doremir_dynamic_i:
+            return &string_dynamic_impl;
 
         default:
             return NULL;

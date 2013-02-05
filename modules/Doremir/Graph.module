@@ -3,6 +3,9 @@
     @addtogroup DoremirGraph
     
     Immutable directed graph data structure.
+    
+    @warning
+        Not fully implemented.
 
     @par Literals
 
@@ -13,7 +16,6 @@
     - doremir_equal_t
     - doremir_copy_t
     - doremir_destroy_t
-    - doremir_dynamic_t
     - doremir_string_show_t
 
     @see 

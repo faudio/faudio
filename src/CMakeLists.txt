@@ -14,6 +14,7 @@ list(APPEND SRCS
   doremir/device/midi.c
   doremir/device/file.c
   doremir/device/buffer.c
+  doremir/dynamic.c
   doremir/buffer.c
   doremir/error.c
   doremir/event.c

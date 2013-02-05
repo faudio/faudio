@@ -10,6 +10,7 @@ c:
 	modulo -Mmodules --language=c    <modules/Doremir/Atomic/Stack.module       	>include/doremir/atomic/stack.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Atomic/RingBuffer.module  	>include/doremir/atomic/ring_buffer.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Directory.module    		>include/doremir/directory.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/Dynamic.module    		>include/doremir/dynamic.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Event.module    		>include/doremir/event.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Thread.module    		>include/doremir/thread.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Thread/Future.module    	>include/doremir/thread/future.h && \
@@ -63,6 +64,7 @@ lisp:
 	modulo -Mmodules --language=lisp <modules/Doremir/Thread/Future.module    	>bindings/lisp/doremir/thread/future.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Thread/Improving.module    	>bindings/lisp/doremir/thread/improving.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Directory.module    		>bindings/lisp/doremir/directory.lisp && \
+	modulo -Mmodules --language=lisp <modules/Doremir/Dynamic.module    		>bindings/lisp/doremir/dynamic.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Event.module    		>bindings/lisp/doremir/event.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Std.module    		>bindings/lisp/doremir/std.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/String.module    		>bindings/lisp/doremir/string.lisp && \

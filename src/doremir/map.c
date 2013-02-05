@@ -8,6 +8,7 @@
 #include <doremir/map.h>
 #include <doremir/set.h>
 #include <doremir/string.h>
+#include <doremir/dynamic.h>
 #include <doremir/util.h>
 
 /*
@@ -361,12 +362,18 @@ void map_destroy(doremir_ptr_t a)
     doremir_map_destroy(a);
 }
 
+type_repr_t map_get_type(doremir_ptr_t a)
+{
+    return map_type_repr;
+}
+
 doremir_ptr_t map_impl(doremir_id_t interface)
 {
     static doremir_equal_t map_equal_impl = { map_equal };
     static doremir_string_show_t map_show_impl = { map_show };
     static doremir_copy_t map_copy_impl = { map_copy };
     static doremir_destroy_t map_destroy_impl = { map_destroy };
+    static doremir_dynamic_t map_dynamic_impl = { map_get_type };
 
     switch (interface) {
         case doremir_equal_i:
@@ -380,6 +387,9 @@ doremir_ptr_t map_impl(doremir_id_t interface)
 
         case doremir_destroy_i:
             return &map_destroy_impl;
+
+        case doremir_dynamic_i:
+            return &map_dynamic_impl;
 
         default:
             return NULL;

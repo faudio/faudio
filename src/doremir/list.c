@@ -7,6 +7,7 @@
 
 #include <doremir/list.h>
 #include <doremir/string.h>
+#include <doremir/dynamic.h>
 #include <doremir/util.h>
 
 /*
@@ -806,6 +807,11 @@ void list_destroy(ptr_t a)
     doremir_list_destroy(a);
 }
 
+type_repr_t list_get_type(doremir_ptr_t a)
+{
+    return list_type_repr;
+}
+
 ptr_t list_impl(doremir_id_t interface)
 {
     static doremir_equal_t list_equal_impl = { list_equal };
@@ -813,6 +819,7 @@ ptr_t list_impl(doremir_id_t interface)
     static doremir_string_show_t list_show_impl = { list_show };
     static doremir_copy_t list_copy_impl = { list_copy };
     static doremir_destroy_t list_destroy_impl = { list_destroy };
+    static doremir_dynamic_t list_dynamic_impl = { list_get_type };
 
     switch (interface) {
         case doremir_equal_i:
@@ -829,6 +836,9 @@ ptr_t list_impl(doremir_id_t interface)
 
         case doremir_destroy_i:
             return &list_destroy_impl;
+
+        case doremir_dynamic_i:
+            return &list_dynamic_impl;
 
         default:
             return NULL;

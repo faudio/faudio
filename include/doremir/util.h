@@ -27,6 +27,7 @@
 #define map_t               doremir_map_t
 #define graph_t             doremir_graph_t
 #define string_t            doremir_string_t
+#define type_repr_t         doremir_dynamic_type_repr_t
 #define priority_queue_t    doremir_priority_queue_t
 #define atomic_t            doremir_atomic_t
 #define atomic_queue_t      doremir_atomic_queue_t

@@ -93,7 +93,6 @@ typedef struct {
 doremir_ptr_t doremir_copy(doremir_ptr_t);
 doremir_ptr_t doremir_move(doremir_ptr_t);
 void doremir_destroy(doremir_ptr_t);
-void doremir_deep_destroy(doremir_ptr_t);
 bool doremir_check(doremir_ptr_t);
 void doremir_print(char *, doremir_ptr_t);
 void doremir_dprint(char *, doremir_ptr_t);

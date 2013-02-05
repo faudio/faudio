@@ -189,7 +189,7 @@ module Doremir
     copy    : Ptr -> Ptr;
     move    : Ptr -> Ptr;
     destroy : Ptr -> Void;
-    deepDestroy : Ptr -> Void;
+    // deepDestroy : Ptr -> Void;
 
     check   : Ptr -> Bool;
     
