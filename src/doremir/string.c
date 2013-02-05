@@ -472,18 +472,21 @@ doremir_string_t doremir_string_to_string(doremir_ptr_t a)
 
 inline static ptr_t jsonify(ptr_t a)
 {
-    switch (doremir_dynamic_get_type(a))
-    {
+    switch (doremir_dynamic_get_type(a)) {
         case pair_type_repr:
             return jsonify(doremir_pair_to_list(a));
+
         case set_type_repr:
             return jsonify(doremir_set_to_list(a));
+
         case list_type_repr:
             return doremir_list_map(apply1, jsonify, a);
+
         case map_type_repr:
-            // TODO 
+            // TODO
             // return doremir_set_map_elems(apply1, jsonify, a);
             break;
+
         default:
             return a;
     }
@@ -503,24 +506,29 @@ doremir_string_t doremir_string_to_json(doremir_ptr_t a)
     }
 }
 
-ptr_t unjsonify(JSON_Value* a)
+ptr_t unjsonify(JSON_Value *a)
 {
-    switch (json_value_get_type(a))
-    {
+    switch (json_value_get_type(a)) {
         case JSONError:
-        break;
+            break;
+
         case JSONNull:
-        break;
+            break;
+
         case JSONString:
-        break;
+            break;
+
         case JSONNumber:
-        break;
+            break;
+
         case JSONObject:
-        break;
+            break;
+
         case JSONArray:
-        break;
+            break;
+
         case JSONBoolean:
-        break;
+            break;
     }
 }
 

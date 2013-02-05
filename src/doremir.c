@@ -137,7 +137,7 @@ bool doremir_is_ref(doremir_ptr_t x)
 // doremir_dynamic_type_repr_t double_get_type(doremir_ptr_t a)
 // {
 //     return f64_type_repr;
-// } 
+// }
 
 
 
@@ -628,9 +628,9 @@ struct doremir_impl_disp {
 // @endcond
 
 doremir_ptr_t doremir_interface(doremir_id_t type, doremir_ptr_t pointer)
-{                        
+{
     assert(pointer && "Pointers have no interfaces");
-    
+
     switch (doremir_type(pointer)) {
         case 7:
             return bool_impl(type);
