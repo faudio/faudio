@@ -72,6 +72,8 @@ module Doremir.String
 
     show     : Ptr -> String;
     toString : Ptr -> String;
+    toJson   : Ptr -> String;
+    fromJson : String -> Ptr;
     
     // Constructors
     empty   : () -> String;

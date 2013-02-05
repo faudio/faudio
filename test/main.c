@@ -1093,31 +1093,6 @@ void test_map()
 void test_graph(string_t path)
 {
     test_section("Graph");
-    // {
-    //     graph_t a = doremir_graph_empty();
-    //
-    //     // TODO destr
-    //     // a = doremir_graph_insert(i32(1), a);
-    //     // a = doremir_graph_insert(i32(2), a);
-    //     // a = doremir_graph_insert(i32(3), a);
-    //     // a = doremir_graph_remove(i32(3), a);
-    //
-    //     // a = doremir_graph_connect(i32(1), i32(1), string("one one"), a);
-    //     // a = doremir_graph_connect(i32(1), i32(3), string("thr thr"), a);
-    //     // a = doremir_graph_connect(i32(2), i32(2), string("two two"), a);
-    //     // a = doremir_graph_connect(i32(1), i32(3), string("one thr"), a);
-    //     // a = doremir_graph_disconnect(i32(1), i32(1), a);
-    //     // a = doremir_graph_disconnect(i32(1), i32(3), a);
-    //
-    //     // a = doremir_graph_connect(i32(1), i32(4), string("bar"), a);
-    //
-    //     doremir_print("a                            ==> %s\n", a);
-    //     doremir_print("a                            ==> %s\n",
-    //         doremir_graph_to_dot(
-    //             string(""),
-    //             string(""),
-    //             a));
-    // }
     {
         graph_t a = doremir_graph_empty();
 
@@ -1138,6 +1113,7 @@ void test_graph(string_t path)
                     string("#include \"doc/graphs/header.dot\""),
                     string(""),
                     a)));
+        fclose(f);
     }
 }
 
@@ -1715,7 +1691,6 @@ int main(int argc, char const *argv[])
         test_set();
         test_map();
         test_graph(string_dappend(doremir_directory_current(), string("/doc/graphs/gen.dot")));
-        goto end;
         test_priority_queue(10);
         test_to_json();
 
@@ -1733,6 +1708,7 @@ int main(int argc, char const *argv[])
         test_processors();
         test_vm2();
 
+
         test_file_stream(
             string_dappend(doremir_directory_current(), string("/test/in.wav")),
             string_dappend(doremir_directory_current(), string("/test/out.wav")));
@@ -1740,6 +1716,7 @@ int main(int argc, char const *argv[])
         audio_stream();
         midi_stream();
 
+        goto end;
 end:
         doremir_audio_engine_terminate();
     }

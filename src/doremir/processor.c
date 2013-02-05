@@ -269,6 +269,11 @@ doremir_processor_t doremir_processor_absolute(doremir_type_t type)
     assert(false && "Not implemented");
 }
 
+doremir_processor_t doremir_processor_not(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
 doremir_processor_t doremir_processor_and(doremir_type_t type)
 {
     assert(false && "Not implemented");
@@ -279,7 +284,12 @@ doremir_processor_t doremir_processor_or(doremir_type_t type)
     assert(false && "Not implemented");
 }
 
-doremir_processor_t doremir_processor_not(doremir_type_t type)
+doremir_processor_t doremir_processor_xor(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_processor_t doremir_processor_bit_not(doremir_type_t type)
 {
     assert(false && "Not implemented");
 }
@@ -294,15 +304,142 @@ doremir_processor_t doremir_processor_bit_or(doremir_type_t type)
     assert(false && "Not implemented");
 }
 
-doremir_processor_t doremir_processor_bit_not(doremir_type_t type)
-{
-    assert(false && "Not implemented");
-}
-
 doremir_processor_t doremir_processor_bit_xor(doremir_type_t type)
 {
     assert(false && "Not implemented");
 }
+
+doremir_processor_t doremir_processor_shift_left(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_processor_t doremir_processor_shift_right(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_processor_t doremir_processor_equal(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_processor_t doremir_processor_less_than(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_processor_t doremir_processor_greater_than(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_processor_t doremir_processor_less_than_equal(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_processor_t doremir_processor_greater_than_equal(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_processor_t doremir_processor_acos(doremir_type_t type)
+{
+    // assert float, double or long double
+    return doremir_processor_unary(type(f32), type(f32), apply1, acos);
+}
+
+doremir_processor_t doremir_processor_asin(doremir_type_t type)
+{
+    return doremir_processor_unary(type(f32), type(f32), apply1, asin);
+}
+
+doremir_processor_t doremir_processor_atan(doremir_type_t type)
+{
+    return doremir_processor_unary(type(f32), type(f32), apply1, atan);
+}
+
+doremir_processor_t doremir_processor_cos(doremir_type_t type)
+{
+    return doremir_processor_unary(type(f32), type(f32), apply1, cos);
+}
+
+doremir_processor_t doremir_processor_sin(doremir_type_t type)
+{
+    return doremir_processor_unary(type(f32), type(f32), apply1, sin);
+}
+
+doremir_processor_t doremir_processor_tan(doremir_type_t type)
+{
+    return doremir_processor_unary(type(f32), type(f32), apply1, tan);
+}
+
+doremir_processor_t doremir_processor_exp(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_processor_t doremir_processor_log(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_processor_t doremir_processor_log10(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_processor_t doremir_processor_pow(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_processor_t doremir_processor_sqrt(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_processor_t doremir_processor_abs(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_processor_t doremir_processor_min(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_processor_t doremir_processor_max(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_processor_t doremir_processor_fmod(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_processor_t doremir_processor_remainder(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_processor_t doremir_processor_floor(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_processor_t doremir_processor_ceil(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
+doremir_processor_t doremir_processor_rint(doremir_type_t type)
+{
+    assert(false && "Not implemented");
+}
+
 
 
 

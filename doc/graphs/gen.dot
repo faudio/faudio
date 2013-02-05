@@ -1,89 +1,12 @@
 
+
 #include "doc/graphs/header.dot"
 
-digraph seq {
-    GRAPH_FORMAT_VERT;
-
-    In0  [style=invisible];
-    Out0 [style=invisible];
-                                                
-// #define SUBGRAPH_FORMAT graph [style=dashed]
-// 
-//     subgraph cluster_seq01 { SUBGRAPH FORMAT;
-//         subgraph cluster_par01 { SUBGRAPH_FORMAT; 
-//             Copy_01;
-//             subgraph cluster_seq02 { SUBGRAPH_FORMAT; 
-//                 Copy_02;
-//                 subgraph cluster_par04 { SUBGRAPH_FORMAT; 
-//                     subgraph cluster_seq04 { SUBGRAPH_FORMAT;
-//                         Copy_04;
-//                         subgraph cluster_par08 { SUBGRAPH_FORMAT;
-//                             Ap_08;
-//                             Ap_48;
-//                         }
-//                         Plus_04;
-//                     }
-//                     subgraph cluster_seq24 { SUBGRAPH_FORMAT;            
-//                         Ap_24;
-//                         Ap_24x;                                                    
-//                         }
-//                     }
-//                 Plus_02;
-//                 }
-//     
-//             subgraph cluster_loop_12 { SUBGRAPH_FORMAT; 
-//                 Plus_12;
-//                 Ap_14;
-//                 Copy_12; 
-//                 }
-//             Plus_01;
-//         }
-//     }
+digraph {
 
 
-    Copy_01     [label="copy"];
-    Copy_02     [label="copy"];
-    Copy_04     [label="copy"];
-    Copy_04     [label="copy"];
-    Ap_08       [label="f"];
-    Ap_48       [label="g"];
-
-    Ap_24       [label="h"];
-    Plus_04     [label="+"];
-    Ap_24x      [label="i"];
-    Plus_02     [label="+"];
-
-    Copy_12     [label="copy"];
-    Plus_12     [label="+"];
-    Ap_14       [label="j"];
-    Copy_12     [label="copy"];
-    Plus_01     [label="+"];
-
-    
-
-
-    In0 -> Copy_01 
-
-    Copy_01 -> Copy_02  [label="(0)"];
-    Copy_02 -> Copy_04  [label="(0)"];
-    Copy_04 -> Ap_08    [label="(0)"];
-    Copy_04 -> Ap_48    [label="(4)"];
-    Ap_08   -> Plus_04  [label="(0)"];
-    Ap_48   -> Plus_04  [label="(4)"];
-
-    Copy_02 -> Ap_24    [label="(2)"];
-    Ap_24   -> Ap_24x   [label="(2)"];
-    Plus_04 -> Plus_02  [label="(0)"];
-    Ap_24x  -> Plus_02  [label="(2)"];
-    Plus_02 -> Plus_01  [label="(0)"];
-
-    Copy_01 -> Plus_12  [label="(1)"];
-    Copy_12 -> Plus_12  [label="(3)"];
-    Plus_12 -> Ap_14    [label="(1)"];
-    Ap_14 -> Copy_12    [label="(1)"];
-    Copy_12 -> Plus_01 [label="(1)"];
-
-    Plus_01 -> Out0;
+    "foo";
+    "foo" -> "foo" [label="(1)"];
 }
 
 

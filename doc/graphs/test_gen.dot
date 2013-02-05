@@ -7,38 +7,38 @@ digraph seq {
     In0  [style=invisible];
     Out0 [style=invisible];
                                                 
-// #define SUBGRAPH_FORMAT graph [style=dashed]
-// 
-//     subgraph cluster_seq01 { SUBGRAPH FORMAT;
-//         subgraph cluster_par01 { SUBGRAPH_FORMAT; 
-//             Copy_01;
-//             subgraph cluster_seq02 { SUBGRAPH_FORMAT; 
-//                 Copy_02;
-//                 subgraph cluster_par04 { SUBGRAPH_FORMAT; 
-//                     subgraph cluster_seq04 { SUBGRAPH_FORMAT;
-//                         Copy_04;
-//                         subgraph cluster_par08 { SUBGRAPH_FORMAT;
-//                             Ap_08;
-//                             Ap_48;
-//                         }
-//                         Plus_04;
-//                     }
-//                     subgraph cluster_seq24 { SUBGRAPH_FORMAT;            
-//                         Ap_24;
-//                         Ap_24x;                                                    
-//                         }
-//                     }
-//                 Plus_02;
-//                 }
-//     
-//             subgraph cluster_loop_12 { SUBGRAPH_FORMAT; 
-//                 Plus_12;
-//                 Ap_14;
-//                 Copy_12; 
-//                 }
-//             Plus_01;
-//         }
-//     }
+#define SUBGRAPH_FORMAT graph [style=dashed]
+
+    subgraph cluster_seq01 { SUBGRAPH FORMAT;
+        subgraph cluster_par01 { SUBGRAPH_FORMAT; 
+            Copy_01;
+            subgraph cluster_seq02 { SUBGRAPH_FORMAT; 
+                Copy_02;
+                subgraph cluster_par04 { SUBGRAPH_FORMAT; 
+                    subgraph cluster_seq04 { SUBGRAPH_FORMAT;
+                        Copy_04;
+                        subgraph cluster_par08 { SUBGRAPH_FORMAT;
+                            Ap_08;
+                            Ap_48;
+                        }
+                        Plus_04;
+                    }
+                    subgraph cluster_seq24 { SUBGRAPH_FORMAT;            
+                        Ap_24;
+                        Ap_24x;                                                    
+                        }
+                    }
+                Plus_02;
+                }
+    
+            subgraph cluster_loop_12 { SUBGRAPH_FORMAT; 
+                Plus_12;
+                Ap_14;
+                Copy_12; 
+                }
+            Plus_01;
+        }
+    }
 
 
     Copy_01     [label="copy"];
