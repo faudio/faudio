@@ -120,14 +120,15 @@ void doremir_audio_engine_log_error(doremir_string_t);
 #define ti16                doremir_to_int16
 #define ti32                doremir_to_int32
 #define ti64                doremir_to_int64
-#define td                  doremir_to_double
+#define tf32                doremir_to_double
+#define tf64                doremir_to_double
 #define b                   doremir_from_bool
 #define i8                  doremir_from_int8
 #define i16                 doremir_from_int16
 #define i32                 doremir_from_int32
 #define i64                 doremir_from_int64
-#define d                   doremir_from_double
-
+#define f32                 doremir_from_double
+#define f64                 doremir_from_double
 
 #endif // _DOREMIR_UTIL
 

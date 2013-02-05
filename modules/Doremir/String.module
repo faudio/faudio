@@ -57,18 +57,18 @@ module Doremir.String
         show : (Ptr -> String)*
     };
 
-    /** @interface doremir_string_to_json_t 
-        JSON conversion interface.
-    */
-    type ToJson  = struct {
-        toJson : (Ptr -> String)*
-    };
-    /** @interface doremir_string_from_json_t 
-        JSON conversion interface.
-    */
-    type FromJson  = struct {
-        fromJson : (String -> Ptr)*
-    };
+    // /** @interface doremir_string_to_json_t 
+    //     JSON conversion interface.
+    // */
+    // type ToJson  = struct {
+    //     toJson : (Ptr -> String)*
+    // };
+    // /** @interface doremir_string_from_json_t 
+    //     JSON conversion interface.
+    // */
+    // type FromJson  = struct {
+    //     fromJson : (String -> Ptr)*
+    // };
 
     show     : Ptr -> String;
     toString : Ptr -> String;

@@ -47,10 +47,10 @@ void test_wrap()
     assert(ti64(i64(4872837827878787871ll)) == 4872837827878787871ll);
     assert(ti64(i64(-6888881236767676711ll)) == -6888881236767676711ll);
 
-    printf("double:     %s\n", doremir_type_str(d(12372)));
-    printf("double:     %f\n", td(d(3.141592653589793)));
-    assert(td(d(3.141592653589793)) == 3.141592653589793);
-    assert(td(d(-1.4142135623730951)) == -1.4142135623730951);
+    printf("double:     %s\n", doremir_type_str(f64(12372)));
+    printf("double:     %f\n", tf64(f64(3.141592653589793)));
+    assert(tf64(f64(3.141592653589793)) == 3.141592653589793);
+    assert(tf64(f64(-1.4142135623730951)) == -1.4142135623730951);
 }
 
 void test_generic()
@@ -58,9 +58,9 @@ void test_generic()
     test_section("Generic functions");
     // TODO leaks
 
-    printf("2 * 3.2                      ==> %f\n",   td(doremir_multiply(d(2), d(3.2))));
-    printf("1 / 3                        ==> %f\n",   td(doremir_divide(d(1), d(3))));
-    printf("1 + 1.5                      ==> %f\n",   td(doremir_add(d(1), d(1.5))));
+    printf("2 * 3.2                      ==> %f\n",   tf64(doremir_multiply(f64(2), f64(3.2))));
+    printf("1 / 3                        ==> %f\n",   tf64(doremir_divide(f64(1), f64(3))));
+    printf("1 + 1.5                      ==> %f\n",   tf64(doremir_add(f64(1), f64(1.5))));
 
     printf("32                  + 1      ==> %i\n",   ti8(doremir_add(i8(32), i8(1))));
     printf("5123                + 1      ==> %i\n",   ti16(doremir_add(i16(5123), i16(1))));
@@ -173,7 +173,7 @@ void test_show()
     doremir_print("%s\n", i8(129));
     doremir_print("%s\n", i16(129));
     doremir_print("%s\n", i32(64000));
-    doremir_print("%s\n", d(3.1415));
+    doremir_print("%s\n", f64(3.1415));
     doremir_print("%s\n", empty());
     doremir_dprint("%s\n", list(i8(1)));
     doremir_dprint("%s\n", list(i8(1), i8(2), list(i8(1), i8(2), b(true))));
@@ -1073,7 +1073,7 @@ void test_map()
         a = doremir_map_dset(string("skills"), list(string("programming"), string("composition")), a);
 
         // a = doremir_map_dadd(string("happy"), b(true), a);
-        // a = doremir_map_dadd(string("pair"), pair(b(true), d(3.1415)), a);
+        // a = doremir_map_dadd(string("pair"), pair(b(true), f64(3.1415)), a);
         // a = doremir_map_dadd(string("ratio"), ratio(1, 3), a);
         // a = doremir_map_dadd(string("ratio2"), doremir_multiply(ratio(4, 4444), ratio(1, 2)), a);
 
