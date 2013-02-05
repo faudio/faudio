@@ -15,6 +15,7 @@
 #include <doremir/processor/delay.h>
 #include <doremir/util.h>
 
+
 /** Return the input type of the given processor.
 
     @param proc             A processor.
@@ -46,6 +47,15 @@ size_t doremir_processor_buffer_size(doremir_type_frames_t frames, doremir_proce
 }
 
 
+inline static void *identity(void *x, void *a)
+{
+    return a;
+}
+inline static void *constant(void *x, void *a)
+{
+    return x;
+}
+
 /** Create an identity processor.
 
     This processor returns input of the given type unmodified.
@@ -55,7 +65,7 @@ size_t doremir_processor_buffer_size(doremir_type_frames_t frames, doremir_proce
  */
 doremir_processor_t doremir_processor_identity(doremir_type_t type)
 {
-    assert(false && "Not implemented");
+    return (processor_t) doremir_processor_unary_create(type, type, identity, NULL);
 }
 
 /** Create a constant processor.
@@ -65,13 +75,13 @@ doremir_processor_t doremir_processor_identity(doremir_type_t type)
 
     @param input_type       Type of input.
     @param output_type      Type of output.
-    @param value
+    @param value            Value to return.
  */
 doremir_processor_t doremir_processor_constant(doremir_type_t   input_type,
                                                doremir_type_t   output_type,
                                                doremir_ptr_t    value)
 {
-    assert(false && "Not implemented");
+    return (processor_t) doremir_processor_unary_create(input_type, output_type, constant, NULL);
 }
 
 /** Create a delay processor.
