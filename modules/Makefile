@@ -31,8 +31,6 @@ c:
 	modulo -Mmodules --language=c    <modules/Doremir/Midi.module    		>include/doremir/midi.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Time.module    		>include/doremir/time.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor.module  		>include/doremir/processor.h && \
-	modulo -Mmodules --language=c    <modules/Doremir/Processor/Id.module  		>include/doremir/processor/id.h && \
-	modulo -Mmodules --language=c    <modules/Doremir/Processor/Const.module  	>include/doremir/processor/const.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Unary.module  	>include/doremir/processor/unary.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Binary.module 	>include/doremir/processor/binary.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Split.module  	>include/doremir/processor/split.h && \
@@ -40,9 +38,9 @@ c:
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Loop.module		>include/doremir/processor/loop.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Seq.module 		>include/doremir/processor/seq.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Processor/Par.module 		>include/doremir/processor/par.h && \
-	modulo -Mmodules --language=c    <modules/Doremir/Processor/AudioUnit.module	>include/doremir/processor/audio_unit.h && \
-	modulo -Mmodules --language=c    <modules/Doremir/Processor/Vst.module		>include/doremir/processor/vst.h && \
-	modulo -Mmodules --language=c    <modules/Doremir/Processor/FluidSynth.module	>include/doremir/processor/fluid_synth.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/Processor/External/Vst.module		>include/doremir/processor/external/vst.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/Processor/External/AudioUnit.module	>include/doremir/processor/external/audio_unit.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/Processor/External/FluidSynth.module	>include/doremir/processor/external/fluid_synth.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Signal.module  		>include/doremir/signal.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Type.module  			>include/doremir/type.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Device.module			>include/doremir/device.h && \
