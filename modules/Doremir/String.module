@@ -70,7 +70,8 @@ module Doremir.String
         fromJson : (String -> Ptr)*
     };
 
-    show   : Ptr -> String;
+    show     : Ptr -> String;
+    toString : Ptr -> String;
     
     // Constructors
     empty   : () -> String;
@@ -97,4 +98,8 @@ module Doremir.String
     // Formatting
     formatInteger : (Char*, Long) -> String;
     formatFloating : (Char*, Double) -> String;
+    
+    map         : (Unary, Ptr, String) -> String; // (Char16 -> Char16) -> String -> String
+    joinMap     : (Unary, Ptr, String) -> String; // (Char16 -> String) -> String -> String
+
 }

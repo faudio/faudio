@@ -8,6 +8,7 @@
 #include <doremir/graph.h>
 #include <doremir/set.h>
 #include <doremir/string.h>
+#include <doremir/dynamic.h>
 #include <doremir/util.h>
 
 /*
@@ -198,18 +199,38 @@ doremir_string_t doremir_graph_to_dot(
     str = string_dappend(str, inner_header);
     str = string_dappend(str, string("\n\n"));
 
-    doremir_set_for_each(x, graph->nodes) {
-        char *cs = doremir_string_to_utf8(doremir_string_show(x));
-        snprintf(buf, 100, "    %s;\n", cs);
-        str = string_dappend(str, string(buf));
+    doremir_set_for_each(node, graph->nodes) {
+        if (doremir_dynamic_get_type(node) == pair_type_repr)
+        {
+            char *cs = unstring(doremir_string_to_string(doremir_pair_fst(node)));
+            char *ds = unstring(doremir_string_to_string(doremir_pair_snd(node)));
+            snprintf(buf, 100, "    \"%s\" [label = \"%s\"];\n", cs, ds);
+            str = string_dappend(str, string(buf));
+        } else {
+            char *cs = unstring(doremir_string_to_string(node));
+            snprintf(buf, 100, "    \"%s\";\n", cs);
+            str = string_dappend(str, string(buf));
+        }
     }
-    doremir_map_for_each(x, graph->edges) {
-        char *n1 = doremir_string_to_utf8(doremir_string_show(doremir_pair_fst(doremir_pair_fst(x))));
-        char *n2 = doremir_string_to_utf8(doremir_string_show(doremir_pair_snd(doremir_pair_fst(x))));
-        char *l = doremir_string_to_utf8(doremir_string_show(doremir_pair_snd(x)));  
+    doremir_map_for_each(node_edge_pair, graph->edges) {              
+        ptr_t node1, node2, label;
+
+        node1 = ((edge_t) doremir_pair_fst(node_edge_pair))->node1;
+        node2 = ((edge_t) doremir_pair_fst(node_edge_pair))->node2;
+        label = doremir_pair_snd(node_edge_pair);                  
+
+        if (doremir_dynamic_get_type(node1) == pair_type_repr)
+        {
+            node1 = doremir_pair_fst(node1);
+            node2 = doremir_pair_fst(node2);
+        }
+        
+        char *n1 = unstring(doremir_string_to_string(node1));
+        char *n2 = unstring(doremir_string_to_string(node2));
+        char *l = unstring(doremir_string_to_string(label));  
         // FIXME want an unescaped show here
 
-        snprintf(buf, 100, "    %s -> %s [label=%s];\n", n1, n2, l);
+        snprintf(buf, 100, "    \"%s\" -> \"%s\" [label=\"%s\"];\n", n1, n2, l);
         str = string_dappend(str, string(buf));
     }
     str = string_dappend(str, string("}\n\n"));

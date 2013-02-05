@@ -1,8 +1,8 @@
 
 /**
-    @addtogroup DoremirDirectory
+    @addtogroup DoremirDynamic
     
-    Types with dynamic type introspection.     
+    Basic dynamic types.     
  */
 
 module Doremir.Dynamic

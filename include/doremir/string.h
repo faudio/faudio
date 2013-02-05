@@ -25,6 +25,7 @@ typedef struct {
             doremir_ptr_t (* from_json)(doremir_string_t);
         } doremir_string_from_json_t;
 doremir_string_t doremir_string_show(doremir_ptr_t);
+doremir_string_t doremir_string_to_string(doremir_ptr_t);
 doremir_string_t doremir_string_empty();
 doremir_string_t doremir_string_single(doremir_char16_t);
 doremir_string_t doremir_string_copy(doremir_string_t);
@@ -45,6 +46,12 @@ doremir_string_t doremir_string_from_utf32(doremir_string_utf32_t);
 doremir_string_t doremir_string_from_cf_string(void *);
 doremir_string_t doremir_string_format_integer(char *, long);
 doremir_string_t doremir_string_format_floating(char *, double);
+doremir_string_t doremir_string_map(doremir_unary_t,
+                                    doremir_ptr_t,
+                                    doremir_string_t);
+doremir_string_t doremir_string_join_map(doremir_unary_t,
+                                         doremir_ptr_t,
+                                         doremir_string_t);
 
 /** @}
     @}

@@ -35,9 +35,9 @@
 #define char_size_k       sizeof(uint16_t)    // Internal char size
 
 struct _doremir_string_t {
-    impl_t          impl;
-    size_t          size;
-    uint16_t       *data;
+    impl_t          impl;           // Dispatcher
+    size_t          size;           // Character count
+    uint16_t       *data;           // Payload
 };
 
 
@@ -451,7 +451,60 @@ doremir_string_t doremir_string_show(doremir_ptr_t a)
     return ((doremir_string_show_t *) doremir_interface(doremir_string_show_i, a))->show(a);
 }
 
+/** Behaves like the identity function on strings and as [show](@ref doremir_string_show)
+    on all other value.
+    @see [Show](@ref doremir_string_show_t)
+  */
+doremir_string_t doremir_string_to_string(doremir_ptr_t a)
+{
+    assert(doremir_interface(doremir_string_show_i, a) && "Must implement Show");
 
+    bool is_string = doremir_interface(doremir_dynamic_i, a) 
+        && (doremir_dynamic_get_type(a) == string_type_repr);
+
+    if (is_string)
+        return a;
+    else
+        return doremir_string_show(a);
+}
+
+// --------------------------------------------------------------------------------
+
+// string_t doremir_string_map(unary_t func, ptr_t data, string_t string)
+// {
+//     string_t result = doremir_string_copy(string);
+//     for (int i = 0; i < string->size; ++i)
+//     {
+//         result->data[i] = (uint16_t) (int32_t) func(data, (ptr_t) (int32_t) string->data[i]);
+//     }
+//     return result;
+// }
+
+string_t doremir_string_join_map(unary_t func, ptr_t data, string_t string)
+{
+    string_t result = string("");
+    for (int i = 0; i < string->size; ++i)
+    {
+        result = string_dappend(result, func(data, (ptr_t) (int32_t) string->data[i]));
+    }
+    return result;
+}
+
+
+inline static string_t escape_char(uint16_t c)
+{
+    switch (c)
+    {
+        case '"':    return string("\\\"");
+        case '\\':   return string("\\\\");
+        default:   return doremir_string_single(c);
+    }
+}
+
+inline static string_t escape(string_t string)
+{
+    return doremir_string_join_map(apply1, escape_char, string);
+}
 
 // --------------------------------------------------------------------------------
 
@@ -536,7 +589,7 @@ static doremir_string_t string_show(doremir_ptr_t a)
     // TODO proper escaping
     string_t s = string("");
     s = doremir_string_dappend(s, string("\""));
-    s = doremir_string_dappend(s, doremir_string_copy(a));
+    s = doremir_string_dappend(s, escape(a));
     s = doremir_string_dappend(s, string("\""));
     return s;
 }

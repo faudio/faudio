@@ -148,6 +148,21 @@ void test_string()
         doremir_destroy(t);
     }
 
+    {
+        string_t s = string("FooBarBaz");
+        string_t t = doremir_string_join_map(apply1, doremir_string_single, s);
+        doremir_print("str: %s\n", s);
+        doremir_print("str: %s\n", t);
+        doremir_destroy(s);
+        doremir_destroy(t);
+    }
+
+    {
+        string_t s = string("A double quote: \", A backslash: \\");
+        doremir_print("str: %s\n", s);
+        doremir_destroy(s);
+    }
+
 }
 
 void test_show()
@@ -1078,55 +1093,51 @@ void test_map()
 void test_graph(string_t path)
 {
     test_section("Graph");
+    // {
+    //     graph_t a = doremir_graph_empty();
+    // 
+    //     // TODO destr
+    //     // a = doremir_graph_insert(i32(1), a);
+    //     // a = doremir_graph_insert(i32(2), a);
+    //     // a = doremir_graph_insert(i32(3), a);
+    //     // a = doremir_graph_remove(i32(3), a);
+    // 
+    //     // a = doremir_graph_connect(i32(1), i32(1), string("one one"), a);
+    //     // a = doremir_graph_connect(i32(1), i32(3), string("thr thr"), a);
+    //     // a = doremir_graph_connect(i32(2), i32(2), string("two two"), a);
+    //     // a = doremir_graph_connect(i32(1), i32(3), string("one thr"), a);
+    //     // a = doremir_graph_disconnect(i32(1), i32(1), a);
+    //     // a = doremir_graph_disconnect(i32(1), i32(3), a);
+    // 
+    //     // a = doremir_graph_connect(i32(1), i32(4), string("bar"), a);
+    // 
+    //     doremir_print("a                            ==> %s\n", a);
+    //     doremir_print("a                            ==> %s\n", 
+    //         doremir_graph_to_dot(
+    //             string(""),
+    //             string(""),
+    //             a));
+    // }
     {
         graph_t a = doremir_graph_empty();
 
-        // TODO destr
-        a = doremir_graph_insert(i32(1), a);
-        a = doremir_graph_insert(i32(2), a);
-        a = doremir_graph_insert(i32(3), a);
-        // a = doremir_graph_remove(i32(3), a);
 
-        a = doremir_graph_connect(i32(1), i32(1), string("one one"), a);
-        a = doremir_graph_connect(i32(1), i32(3), string("thr thr"), a);
-        a = doremir_graph_connect(i32(2), i32(2), string("two two"), a);
-        a = doremir_graph_connect(i32(1), i32(3), string("one thr"), a);
-        // a = doremir_graph_disconnect(i32(1), i32(1), a);
-        // a = doremir_graph_disconnect(i32(1), i32(3), a);
+        a = doremir_graph_insert(string("foo"), a);
+        a = doremir_graph_connect(string("foo"), string("foo"), string("(1)"), a);
 
-        a = doremir_graph_connect(i32(1), i32(4), string("bar"), a);
-
-        doremir_print("a                            ==> %s\n", a);
-        doremir_print("a                            ==> %s\n", doremir_graph_to_dot(
-                          string(""),
-                          string(""),
-                          a));
-    }
-    {
-        graph_t a = doremir_graph_empty();
-
-        // TODO destr
-        a = doremir_graph_insert(string("copy"), a);
-
-        for (int i = 0; i < 10; ++i) {
-            char cs[2];
-            snprintf(cs, 2, "%1c", i + 97);
-            a = doremir_graph_insert(string(cs), a);
-        }
-
-        a = doremir_graph_insert(string("f"), a);
-        a = doremir_graph_insert(string("h"), a);
-
-        a = doremir_graph_connect(string("copy"), string("f"), string("(1)"), a);
-        a = doremir_graph_connect(string("copy"), string("h"), string("(2)"), a);
+        // a = doremir_graph_insert(pair(string("a"), string("b")), a);
+        // a = doremir_graph_connect(
+        //     pair(string("a"), string("b")), 
+        //     pair(string("a"), string("b")),
+        //     string("(1)"), a);
 
         doremir_print("a                            ==> %s\n", a);
 
-        // FILE *f = fopen(unstring(path), "w+");
-        // fprintf(f, "%s\n", doremir_string_to_utf8(doremir_graph_to_dot(
-        //             string("#include \"doc/graphs/header.dot\""),
-        //             string("GRAPH_FORMAT_VERT;"),
-        //             a)));
+        FILE *f = fopen(unstring(path), "w+");
+        fprintf(f, "%s\n", doremir_string_to_utf8(doremir_graph_to_dot(
+                    string("#include \"doc/graphs/header.dot\""),
+                    string(""),
+                    a)));
     }
 }
 
@@ -1704,6 +1715,7 @@ int main(int argc, char const *argv[])
         test_set();
         test_map();
         test_graph(string_dappend(doremir_directory_current(), string("/doc/graphs/gen.dot")));
+        goto end;
         test_priority_queue(10);
         test_to_json();
 
@@ -1728,7 +1740,6 @@ int main(int argc, char const *argv[])
         audio_stream();
         midi_stream();
 
-        goto end;
 end:
         doremir_audio_engine_terminate();
     }
