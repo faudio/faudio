@@ -1704,8 +1704,8 @@ int main(int argc, char const *argv[])
     {
         doremir_audio_engine_set_log_std();
         // doremir_audio_engine_set_log_file(string("/Users/hans/Library/Logs/DoReMIRAudio.log"));
-        // doremir_plot_use_gnu();
-        doremir_plot_use_core();
+        doremir_plot_use_gnu();
+        // doremir_plot_use_core();
 
         doremir_audio_engine_initialize();
 
@@ -1741,7 +1741,6 @@ int main(int argc, char const *argv[])
         test_priority_queue(10);
         test_json(
             string_dappend(doremir_directory_current(), string("/test/example.json")));
-        goto end;
 
         test_dispatcher();
         // test_event();
@@ -1752,7 +1751,7 @@ int main(int argc, char const *argv[])
         test_directory();
         // test_plot(NULL, NULL);
         // test_plot_buffer();
-        // test_plot_file(string("/Users/hans/Desktop/Passager.wav"));
+        test_plot_file(string("/Users/hans/Desktop/Passager.wav"));
 
         test_processors();
         test_vm2();
@@ -1765,6 +1764,7 @@ int main(int argc, char const *argv[])
         audio_stream();
         midi_stream();
 
+        goto end;
 end:
         doremir_audio_engine_terminate();
     }

@@ -565,6 +565,9 @@ ptr_t unjsonify(JSON_Value *a, bool *ok)
     }
 }
 
+/** Generic JSON conversion.
+    @param string   A JSON string.
+  */
 doremir_ptr_t doremir_string_from_json(doremir_string_t string)
 {
     bool ok = true;

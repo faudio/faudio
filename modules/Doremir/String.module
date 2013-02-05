@@ -50,31 +50,6 @@ module Doremir.String
     type String = opaque;
     type FilePath = String;
 
-    /** @interface doremir_string_show_t 
-        String conversion interface.
-    */
-    type Show  = struct {
-        show : (Ptr -> String)*
-    };
-
-    // /** @interface doremir_string_to_json_t 
-    //     JSON conversion interface.
-    // */
-    // type ToJson  = struct {
-    //     toJson : (Ptr -> String)*
-    // };
-    // /** @interface doremir_string_from_json_t 
-    //     JSON conversion interface.
-    // */
-    // type FromJson  = struct {
-    //     fromJson : (String -> Ptr)*
-    // };
-
-    show     : Ptr -> String;
-    toString : Ptr -> String;
-    toJson   : Ptr -> String;
-    fromJson : String -> Ptr;
-    
     // Constructors
     empty   : () -> String;
     single  : Char16 -> String;
@@ -87,6 +62,21 @@ module Doremir.String
     length : String -> Int;
     charAt : (Int,String) -> Char16;
 
+    map         : (Unary, Ptr, String) -> String; // (Char16 -> Char16) -> String -> String
+    joinMap     : (Unary, Ptr, String) -> String; // (Char16 -> String) -> String -> String
+
+    /** @interface doremir_string_show_t 
+        String conversion interface.
+    */
+    type Show  = struct {
+        show : (Ptr -> String)*
+    };
+
+    show     : Ptr -> String;
+    toString : Ptr -> String;
+    toJson   : Ptr -> String;
+    fromJson : String -> Ptr;
+    
     // Conversion
     toUtf8     : String -> Utf8;
     toUtf16    : String -> Utf16;
@@ -100,8 +90,5 @@ module Doremir.String
     // Formatting
     formatInteger : (Char*, Long) -> String;
     formatFloating : (Char*, Double) -> String;
-    
-    map         : (Unary, Ptr, String) -> String; // (Char16 -> Char16) -> String -> String
-    joinMap     : (Unary, Ptr, String) -> String; // (Char16 -> String) -> String -> String
 
 }

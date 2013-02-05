@@ -9,6 +9,7 @@
 #include <doremir/thread.h>
 #include <doremir/error.h>
 #include <doremir/util.h>
+
 #include <sndfile.h>
 
 #include "../processor/vm.h"
