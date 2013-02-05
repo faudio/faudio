@@ -6,8 +6,6 @@
  */
 
 #include <doremir/processor.h>
-#include <doremir/processor/id.h>
-#include <doremir/processor/const.h>
 #include <doremir/processor/unary.h>
 #include <doremir/processor/binary.h>
 #include <doremir/processor/split.h>
@@ -57,7 +55,7 @@ size_t doremir_processor_buffer_size(doremir_type_frames_t frames, doremir_proce
  */
 doremir_processor_t doremir_processor_identity(doremir_type_t type)
 {
-    return (processor_t) doremir_processor_id_create(type);
+    assert(false && "Not implemented");
 }
 
 /** Create a constant processor.
@@ -73,7 +71,7 @@ doremir_processor_t doremir_processor_constant(doremir_type_t   input_type,
                                                doremir_type_t   output_type,
                                                doremir_ptr_t    value)
 {
-    return (processor_t) doremir_processor_const_create(input_type, output_type, value);
+    assert(false && "Not implemented");
 }
 
 /** Create a delay processor.
@@ -87,7 +85,6 @@ doremir_processor_t doremir_processor_delay(doremir_type_t  type,
                                             size_t          samples)
 {
     assert(false && "Not implemented");
-    // return (processor_t) doremir_processor_delay_create(type, samples);
 }
 
 /** Create a split processor.

@@ -30,11 +30,9 @@ list(APPEND SRCS
   doremir/priority_queue.c
   doremir/processor.c
   doremir/processor/vm.c
-  doremir/processor/id.c
-  doremir/processor/const.c
+  doremir/processor/split.c
   doremir/processor/unary.c
   doremir/processor/binary.c
-  doremir/processor/split.c
   doremir/processor/delay.c
   doremir/processor/seq.c
   doremir/processor/par.c
