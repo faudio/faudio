@@ -2,7 +2,7 @@
 
 /** Begin a new session, and retain it for the duration of a call to the given function.
 
-    The given function will be called once after the session has created. The session 
+    The given function will be called once after the session has created. The session
     will be ended after the callback function has returned. If an error occurs while
     starting the session, the error callback is invoked in place of the session callback.
 
@@ -93,7 +93,7 @@ doremir_type_t doremir_device_audio_input_type(doremir_device_audio_t) {}
  */
 doremir_type_t doremir_device_audio_output_type(doremir_device_audio_t) {}
 
-/** Set a callback to be invoked when a status change is detected on the 
+/** Set a callback to be invoked when a status change is detected on the
     given session. This is mainly useful for detecting a change in hardware setup.
 
     Note that this function will not modify the devices in a session, you have to

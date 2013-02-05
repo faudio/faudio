@@ -13,5 +13,5 @@ doremir_dynamic_type_repr_t doremir_dynamic_get_type(doremir_ptr_t a)
 {
     assert(doremir_interface(doremir_dynamic_i, a) && "Must implement Show");
     return ((doremir_dynamic_t *) doremir_interface(doremir_dynamic_i, a))->get_type(a);
-    
+
 }

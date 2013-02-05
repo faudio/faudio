@@ -459,13 +459,14 @@ doremir_string_t doremir_string_to_string(doremir_ptr_t a)
 {
     assert(doremir_interface(doremir_string_show_i, a) && "Must implement Show");
 
-    bool is_string = doremir_interface(doremir_dynamic_i, a) 
-        && (doremir_dynamic_get_type(a) == string_type_repr);
+    bool is_string = doremir_interface(doremir_dynamic_i, a)
+                     && (doremir_dynamic_get_type(a) == string_type_repr);
 
-    if (is_string)
+    if (is_string) {
         return a;
-    else
+    } else {
         return doremir_string_show(a);
+    }
 }
 
 // --------------------------------------------------------------------------------
@@ -483,21 +484,26 @@ doremir_string_t doremir_string_to_string(doremir_ptr_t a)
 string_t doremir_string_join_map(unary_t func, ptr_t data, string_t string)
 {
     string_t result = string("");
-    for (int i = 0; i < string->size; ++i)
-    {
-        result = string_dappend(result, func(data, (ptr_t) (int32_t) string->data[i]));
+
+    for (int i = 0; i < string->size; ++i) {
+        result = string_dappend(result, func(data, (ptr_t)(int32_t) string->data[i]));
     }
+
     return result;
 }
 
 
 inline static string_t escape_char(uint16_t c)
 {
-    switch (c)
-    {
-        case '"':    return string("\\\"");
-        case '\\':   return string("\\\\");
-        default:   return doremir_string_single(c);
+    switch (c) {
+        case '"':
+            return string("\\\"");
+
+        case '\\':
+            return string("\\\\");
+
+        default:
+            return doremir_string_single(c);
     }
 }
 

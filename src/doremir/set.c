@@ -84,7 +84,7 @@ doremir_set_t doremir_set_set(doremir_ptr_t x, doremir_set_t set)
     if (i < 0) {
         return new_set(base_insert((-i - 1), x, set->elems));
     } else {
-        return new_set(base_insert(i, x, base_remove(i, set->elems))); 
+        return new_set(base_insert(i, x, base_remove(i, set->elems)));
         // TODO should be base_dinsert?
     }
 }

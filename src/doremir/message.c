@@ -13,9 +13,9 @@
 /**
     Notes:
         * TODO pluggable allocation here?
-            * For sender: 
+            * For sender:
                 doremir_pair_create
-            * For receiver: 
+            * For receiver:
                 doremir_pair_destroy
                 doremir_list_empty
                 doremir_list_dcons
@@ -23,7 +23,7 @@
                 doremir_map_empty
                 doremir_map_dset
                 doremir_map_destroy
-        
+
  */
 
 #define max_recv_k  1000
@@ -145,7 +145,7 @@ void doremir_message_sync(dispatcher_t dispatcher)
             } else {
                 address_t address = doremir_pair_fst(bucket);
                 message_t message = doremir_pair_snd(bucket);
-                
+
                 // TODO reclaim bucket
 
                 list_t current = with_dest_default(

@@ -1095,24 +1095,24 @@ void test_graph(string_t path)
     test_section("Graph");
     // {
     //     graph_t a = doremir_graph_empty();
-    // 
+    //
     //     // TODO destr
     //     // a = doremir_graph_insert(i32(1), a);
     //     // a = doremir_graph_insert(i32(2), a);
     //     // a = doremir_graph_insert(i32(3), a);
     //     // a = doremir_graph_remove(i32(3), a);
-    // 
+    //
     //     // a = doremir_graph_connect(i32(1), i32(1), string("one one"), a);
     //     // a = doremir_graph_connect(i32(1), i32(3), string("thr thr"), a);
     //     // a = doremir_graph_connect(i32(2), i32(2), string("two two"), a);
     //     // a = doremir_graph_connect(i32(1), i32(3), string("one thr"), a);
     //     // a = doremir_graph_disconnect(i32(1), i32(1), a);
     //     // a = doremir_graph_disconnect(i32(1), i32(3), a);
-    // 
+    //
     //     // a = doremir_graph_connect(i32(1), i32(4), string("bar"), a);
-    // 
+    //
     //     doremir_print("a                            ==> %s\n", a);
-    //     doremir_print("a                            ==> %s\n", 
+    //     doremir_print("a                            ==> %s\n",
     //         doremir_graph_to_dot(
     //             string(""),
     //             string(""),
@@ -1127,7 +1127,7 @@ void test_graph(string_t path)
 
         // a = doremir_graph_insert(pair(string("a"), string("b")), a);
         // a = doremir_graph_connect(
-        //     pair(string("a"), string("b")), 
+        //     pair(string("a"), string("b")),
         //     pair(string("a"), string("b")),
         //     string("(1)"), a);
 

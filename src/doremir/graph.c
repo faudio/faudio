@@ -172,16 +172,16 @@ doremir_list_t doremir_graph_to_list(doremir_graph_t graph)
 
 // --------------------------------------------------------------------------------
 
-/** Convert the given graph to a [Dot](http://en.wikipedia.org/wiki/DOT_language) 
+/** Convert the given graph to a [Dot](http://en.wikipedia.org/wiki/DOT_language)
     declaration.
-    
+
     @param header           Text to include before graph declaration.
     @param inner_header     Text to include at the top of the graph declaration.
     @param graph            Graph to convert. Its node and edge values will be converted to
                             strings using [show](@ref doremir_string_show). It the nodes
                             are pairs, their first component will be used as the node identifier
                             and the second as a label.
-                            
+
  */
 doremir_string_t doremir_graph_to_dot(
     doremir_string_t header,
@@ -200,8 +200,7 @@ doremir_string_t doremir_graph_to_dot(
     str = string_dappend(str, string("\n\n"));
 
     doremir_set_for_each(node, graph->nodes) {
-        if (doremir_dynamic_get_type(node) == pair_type_repr)
-        {
+        if (doremir_dynamic_get_type(node) == pair_type_repr) {
             char *cs = unstring(doremir_string_to_string(doremir_pair_fst(node)));
             char *ds = unstring(doremir_string_to_string(doremir_pair_snd(node)));
             snprintf(buf, 100, "    \"%s\" [label = \"%s\"];\n", cs, ds);
@@ -212,22 +211,21 @@ doremir_string_t doremir_graph_to_dot(
             str = string_dappend(str, string(buf));
         }
     }
-    doremir_map_for_each(node_edge_pair, graph->edges) {              
+    doremir_map_for_each(node_edge_pair, graph->edges) {
         ptr_t node1, node2, label;
 
         node1 = ((edge_t) doremir_pair_fst(node_edge_pair))->node1;
         node2 = ((edge_t) doremir_pair_fst(node_edge_pair))->node2;
-        label = doremir_pair_snd(node_edge_pair);                  
+        label = doremir_pair_snd(node_edge_pair);
 
-        if (doremir_dynamic_get_type(node1) == pair_type_repr)
-        {
+        if (doremir_dynamic_get_type(node1) == pair_type_repr) {
             node1 = doremir_pair_fst(node1);
             node2 = doremir_pair_fst(node2);
         }
-        
+
         char *n1 = unstring(doremir_string_to_string(node1));
         char *n2 = unstring(doremir_string_to_string(node2));
-        char *l = unstring(doremir_string_to_string(label));  
+        char *l = unstring(doremir_string_to_string(label));
         // FIXME want an unescaped show here
 
         snprintf(buf, 100, "    \"%s\" -> \"%s\" [label=\"%s\"];\n", n1, n2, l);
