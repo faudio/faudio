@@ -349,7 +349,7 @@ inline static void *apply_1f21f(void *f, void *a)
 {
     typedef float(*f2f)(float);
     f2f     g = (f2f) f;
-    float*  b = a;
+    float  *b = a;
     b[0] = g(b[0]);
     return a;
 }
