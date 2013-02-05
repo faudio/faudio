@@ -67,6 +67,10 @@ module Doremir.Map
     difference       : (Map, Map) -> Map;
     power            : Map -> Map;
 
+    // Functor
+    map              : (Unary, Ptr, Map) -> Map;
+
+
     // Conversions   
     fromPair         : Pair -> Map;
     fromList         : List -> Map;

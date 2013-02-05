@@ -395,6 +395,13 @@ void doremir_print(char *f, doremir_ptr_t a)
     }
 }
 
+void doremir_puts(doremir_string_t string)
+{
+    char *cstr = doremir_string_to_utf8(string);
+    puts(cstr);
+    free(cstr);
+}
+
 void doremir_dprint(char *f, doremir_ptr_t a)
 {
     doremir_print(f, a);

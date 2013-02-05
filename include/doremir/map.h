@@ -50,6 +50,9 @@ doremir_map_t doremir_map_sum(doremir_map_t, doremir_map_t);
 doremir_map_t doremir_map_product(doremir_map_t, doremir_map_t);
 doremir_map_t doremir_map_difference(doremir_map_t, doremir_map_t);
 doremir_map_t doremir_map_power(doremir_map_t);
+doremir_map_t doremir_map_map(doremir_unary_t,
+                              doremir_ptr_t,
+                              doremir_map_t);
 doremir_map_t doremir_map_from_pair(doremir_pair_t);
 doremir_map_t doremir_map_from_list(doremir_list_t);
 doremir_list_t doremir_map_to_list(doremir_map_t);

@@ -1134,9 +1134,33 @@ void test_priority_queue(int iter)
 
 }
 
-void test_to_json()
+void test_json(string_t path)
 {
     test_section("JSON conversion");
+    
+    size_t sz = 1000000;
+    char source[sz + 1];
+        
+    FILE *f = fopen(unstring(path), "r");
+    if (f != NULL) {
+        size_t sz2 = fread(source, sizeof(char), sz, f);
+        if (sz2 == 0) {
+            fail("Error reading file");
+            return;
+        } else {
+            source[++sz2] = '\0';
+        }
+        fclose(f);
+    }    
+    string_t json = string(source);
+    // printf("%s\n", unstring(json));
+    
+    ptr_t data = doremir_string_from_json(json);
+    doremir_print("data                         ==> %s\n", data);
+
+    string_t json2 = doremir_string_to_json(data);
+    doremir_puts(json2);
+    
 }
 
 
@@ -1692,7 +1716,9 @@ int main(int argc, char const *argv[])
         test_map();
         test_graph(string_dappend(doremir_directory_current(), string("/doc/graphs/gen.dot")));
         test_priority_queue(10);
-        test_to_json();
+        test_json(
+            string_dappend(doremir_directory_current(), string("/test/example.json")));
+        goto end;
 
         test_dispatcher();
         // test_event();
@@ -1716,7 +1742,6 @@ int main(int argc, char const *argv[])
         audio_stream();
         midi_stream();
 
-        goto end;
 end:
         doremir_audio_engine_terminate();
     }

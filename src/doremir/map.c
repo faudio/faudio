@@ -195,6 +195,18 @@ bool doremir_map_is_proper_submap_of(doremir_map_t a, doremir_map_t b)
     return doremir_set_is_proper_subset_of(a->entries, b->entries);
 }
 
+doremir_map_t doremir_map_map(unary_t func, ptr_t data, doremir_map_t map)
+{       
+    map_t result = doremir_map_empty();
+    doremir_map_for_each(key_val, map)
+    {
+        ptr_t key = doremir_pair_fst(key_val);
+        ptr_t val = doremir_pair_snd(key_val);
+        result = doremir_map_add(key, func(data, val), result);
+    }
+}
+
+
 
 // --------------------------------------------------------------------------------
 
