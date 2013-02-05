@@ -3,7 +3,7 @@
 #define _DOREMIR_PAIR
 
 #include <doremir.h>
-#include <doremir/string.h>
+#include <doremir/list.h>
 
 /** @defgroup Doremir Doremir
     @{
@@ -21,6 +21,7 @@ doremir_pair_t doremir_pair_dup(doremir_ptr_t);
 doremir_pair_t doremir_pair_swap(doremir_pair_t);
 doremir_pair_t doremir_pair_assoc(doremir_pair_t);
 doremir_pair_t doremir_pair_unassoc(doremir_pair_t);
+doremir_list_t doremir_pair_to_list(doremir_pair_t);
 
 /** @}
     @}

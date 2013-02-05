@@ -469,6 +469,70 @@ doremir_string_t doremir_string_to_string(doremir_ptr_t a)
     }
 }
 
+
+inline static ptr_t jsonify(ptr_t a)
+{
+    switch (doremir_dynamic_get_type(a))
+    {
+        case pair_type_repr:
+            return jsonify(doremir_pair_to_list(a));
+        case set_type_repr:
+            return jsonify(doremir_set_to_list(a));
+        case list_type_repr:
+            return doremir_list_map(apply1, jsonify, a);
+        case map_type_repr:
+            // TODO 
+            // return doremir_set_map_elems(apply1, jsonify, a);
+            break;
+        default:
+            return a;
+    }
+}
+
+#include "../parson.h"
+
+/** Generic JSON conversion.
+    @param a    Value implementing [Show](@ref doremir_string_show_t) or [Dynamic](@ref doremir_string_dynamic_t).
+  */
+doremir_string_t doremir_string_to_json(doremir_ptr_t a)
+{
+    if (!doremir_interface(doremir_dynamic_i, a)) {
+        return doremir_string_show(a);
+    } else {
+        return doremir_string_show(jsonify(a));
+    }
+}
+
+ptr_t unjsonify(JSON_Value* a)
+{
+    switch (json_value_get_type(a))
+    {
+        case JSONError:
+        break;
+        case JSONNull:
+        break;
+        case JSONString:
+        break;
+        case JSONNumber:
+        break;
+        case JSONObject:
+        break;
+        case JSONArray:
+        break;
+        case JSONBoolean:
+        break;
+    }
+}
+
+doremir_ptr_t doremir_string_from_json(doremir_string_t string)
+{
+    return unjsonify(json_parse_string(unstring(string)));
+}
+
+
+
+
+
 // --------------------------------------------------------------------------------
 
 // string_t doremir_string_map(unary_t func, ptr_t data, string_t string)

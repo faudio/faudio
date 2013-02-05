@@ -5,6 +5,7 @@
 # To update, use 
 #  find src -name '*'
 list(APPEND SRCS
+  parson.c
   doremir.c
   doremir/audio_engine.c
   doremir/atomic/queue.c

@@ -155,6 +155,11 @@ doremir_pair_t doremir_pair_dunassoc(doremir_pair_t pair)
     return pair2;
 }
 
+doremir_list_t doremir_pair_to_list(doremir_pair_t pair)
+{
+    return list(pair->fst, pair->snd);
+}
+
 
 // --------------------------------------------------------------------------------
 

@@ -22,7 +22,7 @@
 module Doremir.Pair
 {
     import Doremir;
-    import Doremir.String;
+    import Doremir.List;
 
     type Pair = opaque;
 
@@ -37,6 +37,8 @@ module Doremir.Pair
     swap : Pair -> Pair;
     assoc : Pair -> Pair;    
     unassoc : Pair -> Pair;
+    
+    toList : Pair -> List;
     
     // Destructive versions?
 }
