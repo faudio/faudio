@@ -12,6 +12,8 @@
 
 #include <CoreFoundation/CoreFoundation.h> // TODO OS X only
 
+#include "../parson.h"
+
 /*
     Notes:
         * Straightforward implementation using bounded buffer
@@ -490,8 +492,6 @@ inline static ptr_t jsonify(ptr_t a)
     }
 }
 
-#include "../parson.h"
-
 /** Generic JSON conversion.
     @param a    Value implementing [Show](@ref doremir_string_show_t) or [Dynamic](@ref doremir_string_dynamic_t).
   */
@@ -651,7 +651,7 @@ static bool string_equal(doremir_ptr_t as, doremir_ptr_t bs)
 }
 
 #define pred(a) (a - 1)
-#define min(a,b) ((a < b) ? a : b)
+// #define min(a,b) ((a < b) ? a : b)
 #define last_elem(v) v->data[pred(v->size)]
 
 static bool string_less_than(doremir_ptr_t as, doremir_ptr_t bs)
@@ -661,7 +661,7 @@ static bool string_less_than(doremir_ptr_t as, doremir_ptr_t bs)
     ds = (string_t) bs;
 
     for (size_t i;
-            i < pred(min(cs->size, ds->size));
+            i < pred(size_min(cs->size, ds->size));
             ++i) {
         if (cs->data[i] < ds->data[i]) {
             return true;
@@ -686,7 +686,7 @@ static bool string_greater_than(doremir_ptr_t as, doremir_ptr_t bs)
     ds = (string_t) bs;
 
     for (size_t i;
-            i < pred(min(cs->size, ds->size));
+            i < pred(size_min(cs->size, ds->size));
             ++i) {
         if (cs->data[i] > ds->data[i]) {
             return true;

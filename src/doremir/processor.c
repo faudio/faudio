@@ -180,8 +180,8 @@ doremir_processor_t doremir_processor_loop(doremir_processor_t proc)
 
 /** Lift a unary function to a processor.
 
-    @param input_type       Input type.
-    @param output_type      Type of output.
+    @param input_type       Input type. Must be unit, a simple type or a frame type containing a simple type.
+    @param output_type      Type of output. Must be unit, a simple type or a frame type containing a simple type.
     @param function         Function to be lifted.
     @param data             Value to be passed to function.
     @return                 A processor.
@@ -203,9 +203,9 @@ doremir_processor_t doremir_processor_unary
 
 /** Lift a binary function to a processor.
 
-    @param input_type1      Type of first input.
-    @param input_type2      Type of second input.
-    @param output_type      Type of output.
+    @param input_type1      Type of first input. Must be unit, a simple type or a frame type containing a simple type.
+    @param input_type2      Type of second input. Must be unit, a simple type or a frame type containing a simple type.
+    @param output_type      Type of output. Must be unit, a simple type or a frame type containing a simple type.
     @param function         Function to be lifted.
     @param data             Value to be passed to function.
     @return                 A processor.
@@ -344,10 +344,20 @@ doremir_processor_t doremir_processor_greater_than_equal(doremir_type_t type)
     assert(false && "Not implemented");
 }
 
+
+inline static void *apply_1f21f(void *f, void *a)
+{
+    typedef float(*f2f)(float);
+    f2f     g = (f2f) f;
+    float*  b = a;
+    b[0] = g(b[0]);
+    return a;
+}
+
 doremir_processor_t doremir_processor_acos(doremir_type_t type)
 {
     // assert float, double or long double
-    return doremir_processor_unary(type(f32), type(f32), apply1, acos);
+    return doremir_processor_unary(type(f32), type(f32), apply_1f21f, acos);
 }
 
 doremir_processor_t doremir_processor_asin(doremir_type_t type)
