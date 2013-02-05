@@ -23,6 +23,7 @@ struct _doremir_midi_t {
 #define is_simple(x) (!x->is_sysex)
 #define is_sysex(x)  (x->is_sysex)
 
+
 // --------------------------------------------------------------------------------
 
 inline static doremir_midi_t new_midi()

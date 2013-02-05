@@ -29,8 +29,6 @@ doremir_ratio_t doremir_ratio_multiply(doremir_ratio_t,
                                        doremir_ratio_t);
 doremir_ratio_t doremir_ratio_divide(doremir_ratio_t,
                                      doremir_ratio_t);
-doremir_ratio_t doremir_ratio_remainder(doremir_ratio_t,
-                                        doremir_ratio_t);
 doremir_ratio_t doremir_ratio_succ(doremir_ratio_t);
 doremir_ratio_t doremir_ratio_pred(doremir_ratio_t);
 doremir_ratio_t doremir_ratio_negate(doremir_ratio_t);

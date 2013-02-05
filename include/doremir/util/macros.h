@@ -85,6 +85,10 @@
 #define doremir_map_for_each(x,set) \
     doremir_for_each(x,doremir_map_to_list(set))
 
+#define match switch
+#define against(label) case label: return
+#define default(x) default: return (x)
+#define no_default() default: assert(false && "Missing label")
 
 
 

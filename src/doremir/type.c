@@ -162,9 +162,7 @@ doremir_type_t doremir_type_repeat(int times, doremir_type_t type)
 {
     if (times == 0) {
         return type(unit);
-    }
-
-    else if (times == 1) {
+    } else if (times == 1) {
         return doremir_copy(type);
     } else {
         return type_pair(type, doremir_type_repeat(times - 1, type));
@@ -262,113 +260,68 @@ inline static size_t next_aligned(size_t x, size_t a)
 
 inline static size_t simple_align(doremir_type_simple_t simple)
 {
-    switch (simple) {
-    case unit_type:
-        return 0;
-
-    case i8_type:
-        return alignof(uint8_t);
-
-    case i16_type:
-        return alignof(uint16_t);
-
-    case i32_type:
-        return alignof(uint32_t);
-
-    case i64_type:
-        return alignof(uint64_t);
-
-    case f32_type:
-        return alignof(float);
-
-    case f64_type:
-        return alignof(double);
-
-    case ptr_type:
-        return alignof(ptr_t);
-
-    default:
-        assert(false && "Missing label");
+    match(simple) {
+        against(unit_type) 0;
+        against(i8_type)   alignof(uint8_t);
+        against(i16_type)  alignof(uint16_t);
+        against(i32_type)  alignof(uint32_t);
+        against(i64_type)  alignof(uint64_t);
+        against(f32_type)  alignof(float);
+        against(f64_type)  alignof(double);
+        against(ptr_type)  alignof(ptr_t);
+        no_default();
     }
 }
 
 inline static size_t simple_size(doremir_type_simple_t simple)
 {
-    switch (simple) {
-    case unit_type:
-        return 0;
-
-    case i8_type:
-        return sizeof(uint8_t);
-
-    case i16_type:
-        return sizeof(uint16_t);
-
-    case i32_type:
-        return sizeof(uint32_t);
-
-    case i64_type:
-        return sizeof(uint64_t);
-
-    case f32_type:
-        return sizeof(float);
-
-    case f64_type:
-        return sizeof(double);
-
-    case ptr_type:
-        return sizeof(ptr_t);
-
-    default:
-        assert(false && "Missing label");
+    match(simple) {
+        against(unit_type) 0;
+        against(i8_type)   sizeof(uint8_t);
+        against(i16_type)  sizeof(uint16_t);
+        against(i32_type)  sizeof(uint32_t);
+        against(i64_type)  sizeof(uint64_t);
+        against(f32_type)  sizeof(float);
+        against(f64_type)  sizeof(double);
+        against(ptr_type)  sizeof(ptr_t);
+        no_default();
     }
 }
 
 inline static size_t align(doremir_type_t type)
 {
-    switch (type->tag) {
-    case simple_type:
-        return simple_align(simple_get(type));
-
-    case pair_type:
-        return size_max(align(pair_get(type, fst)), align(pair_get(type, snd)));
-
-    case vector_type:
-        return align(vector_get(type, base));
-
-    case frame_type:
-        return align(frame_get(type, base));
-
-    default:
-        assert(false && "Missing label");
+    match(type->tag) {
+        against(simple_type)  simple_align(simple_get(type));
+        against(pair_type)    size_max(align(pair_get(type, fst)), align(pair_get(type, snd)));
+        against(vector_type)  align(vector_get(type, base));
+        against(frame_type)   align(frame_get(type, base));
+        no_default();
     }
 }
+
+inline static size_t pair_size(size_t frames, doremir_type_t type);
+inline static size_t size(doremir_type_frames_t frames, doremir_type_t type);
+
+
+inline static size_t pair_size(size_t frames, doremir_type_t type)
+{
+    size_t offset = next_aligned(size(frames, pair_get(type, fst)), align(pair_get(type, snd)));
+    return next_aligned(offset + size(frames, pair_get(type, snd)), align(type));
+}
+
 
 inline static size_t size(doremir_type_frames_t frames, doremir_type_t type)
 {
-    size_t offset;
-
-    switch (type->tag) {
-
-    case simple_type:
-        return simple_size(simple_get(type));
-
-    case pair_type:
-        offset = next_aligned(size(frames, pair_get(type, fst)), align(pair_get(type, snd)));
-        return next_aligned(offset + size(frames, pair_get(type, snd)), align(type));
-
-    case vector_type:
-        return size(frames, vector_get(type, base)) * vector_get(type, size);
-
-    case frame_type:
-        return size(frames, frame_get(type, base)) * frames;
-
-    default:
-        assert(false && "Missing label");
+    match(type->tag) {
+        against(simple_type)    simple_size(simple_get(type));
+        against(pair_type)      pair_size(frames, type);
+        against(vector_type)    size(frames, vector_get(type, base)) * vector_get(type, size);
+        against(frame_type)     size(frames, frame_get(type, base)) * frames;
+        no_default();
     }
 }
 
-// TODO above assignment should use this
+// TODO pair_size should use this
 inline static size_t offset(doremir_type_frames_t frames, doremir_type_t type)
 {
     switch (type->tag) {

@@ -145,11 +145,6 @@ void doremir_string_destroy(doremir_string_t str)
     delete_string(str);
 }
 
-
-// --------------------------------------------------------------------------------
-// Access and predicates
-// --------------------------------------------------------------------------------
-
 /** Return the number of characters in the given string.
  */
 int doremir_string_length(doremir_string_t str)
@@ -169,8 +164,6 @@ uint16_t doremir_string_char_at(int n, doremir_string_t str)
 }
 
 
-// --------------------------------------------------------------------------------
-// Formatting
 // --------------------------------------------------------------------------------
 
 /** Format an integer.
@@ -219,8 +212,6 @@ doremir_string_t doremir_string_format_floating(char *format, double value)
     return doremir_string_from_utf8(buffer);
 }
 
-// --------------------------------------------------------------------------------
-// Conversion
 // --------------------------------------------------------------------------------
 
 /** Fail with error message, interpreting errno as an iconv error.
@@ -389,8 +380,6 @@ doremir_string_t doremir_string_from_utf32(doremir_string_utf32_t cstr)
     assert(false && "Not implemented");
 }
 
-
-// --------------------------------------------------------------------------------
 
 // TODO OS X only
 
@@ -581,9 +570,6 @@ doremir_ptr_t doremir_string_from_json(doremir_string_t string)
 }
 
 
-
-
-
 // --------------------------------------------------------------------------------
 
 // string_t doremir_string_map(unary_t func, ptr_t data, string_t string)
@@ -651,7 +637,6 @@ static bool string_equal(doremir_ptr_t as, doremir_ptr_t bs)
 }
 
 #define pred(a) (a - 1)
-// #define min(a,b) ((a < b) ? a : b)
 #define last_elem(v) v->data[pred(v->size)]
 
 static bool string_less_than(doremir_ptr_t as, doremir_ptr_t bs)
@@ -707,11 +692,10 @@ static bool string_greater_than(doremir_ptr_t as, doremir_ptr_t bs)
 
 static doremir_string_t string_show(doremir_ptr_t a)
 {
-    // TODO proper escaping
     string_t s = string("");
-    s = doremir_string_dappend(s, string("\""));
-    s = doremir_string_dappend(s, escape(a));
-    s = doremir_string_dappend(s, string("\""));
+    s = string_dappend(s, string("\""));
+    s = string_dappend(s, escape(a));
+    s = string_dappend(s, string("\""));
     return s;
 }
 

@@ -18,11 +18,11 @@ typedef doremir_device_audio_stream_callback_t  stream_callback_t;
 typedef doremir_device_audio_session_callback_t session_callback_t;
 typedef doremir_device_audio_status_callback_t  status_callback_t;
 
-
 struct callback_closure {
     nullary_t   func;
     ptr_t       data;
 };
+
 
 OSStatus listener(
     AudioObjectID     object_id,

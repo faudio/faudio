@@ -10,6 +10,7 @@
 
 #include <unistd.h> // isatty
 
+
 #define iso8601_k "%Y-%m-%d %H:%M:%S%z  "
 
 typedef doremir_audio_engine_log_func_t log_func_t;
@@ -18,16 +19,10 @@ static unsigned       init_count_g  = 0;
 static log_func_t     log_func_g    = NULL;
 static ptr_t          log_ct_g      = NULL;
 
-// --------------------------------------------------------------------------------
 
-/*  Forward declare internal routines.
-    One initializer and terminator for each module.
- */
+
 void doremir_device_audio_initialize();
 void doremir_device_audio_terminate();
-
-
-// --------------------------------------------------------------------------------
 
 /** Performs global initialization.
 

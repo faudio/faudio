@@ -11,6 +11,7 @@
 #include <pthread.h>
 #include <unistd.h>
 
+
 struct _doremir_thread_t {
     impl_t                  impl;       //  Interface dispatcher
     pthread_t               native;
@@ -31,9 +32,6 @@ struct _doremir_thread_condition_t {
 // --------------------------------------------------------------------------------
 
 static void doremir_thread_fatal(char *msg, int error);
-
-
-// --------------------------------------------------------------------------------
 
 /** Create a new thread executing the given function asynhronously.
 

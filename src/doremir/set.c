@@ -37,6 +37,7 @@ struct _doremir_set_t {
     base_t          elems;
 };
 
+
 // --------------------------------------------------------------------------------
 
 inline static set_t new_set(base_t elems)

@@ -11,9 +11,6 @@
 
 typedef doremir_plot_function_t plot_func;
 
-void run_core_plot(plot_func func, ptr_t funcData, nullary_t cont, ptr_t contData);
-void run_gnu_plot(plot_func func, ptr_t funcData, nullary_t cont, ptr_t contData);
-
 enum plot_backend {
     gnu_plot,
     core_plot
@@ -22,6 +19,9 @@ enum plot_backend {
 enum plot_backend   plot_backend_g  = core_plot;
 
 void doremir_audio_engine_log_info(doremir_string_t);
+void run_core_plot(plot_func func, ptr_t funcData, nullary_t cont, ptr_t contData);
+void run_gnu_plot(plot_func func, ptr_t funcData, nullary_t cont, ptr_t contData);
+
 
 /** Use gnuplot for plotting.
  */

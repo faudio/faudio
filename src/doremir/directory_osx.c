@@ -24,3 +24,4 @@ doremir_string_file_path_t doremir_directory_current()
     getcwd(cwd, sizeof(cwd));
     return string(cwd);
 }
+

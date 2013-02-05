@@ -11,9 +11,11 @@
 
 #include <sndfile.h>
 
-#define print_max_size_k 80
+/*
+    Notes:
+ */
 
-void buffer_fatal(char *msg, int error);
+#define print_max_size_k 80
 
 struct _doremir_buffer_t {
     impl_t          impl;       //  Interface dispatcher
@@ -21,7 +23,8 @@ struct _doremir_buffer_t {
     uint8_t        *data;
 };
 
-// --------------------------------------------------------------------------------
+
+void buffer_fatal(char *msg, int error);
 
 /** Create a new buffer.
     @note

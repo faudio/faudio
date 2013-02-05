@@ -21,6 +21,7 @@ struct _doremir_atomic_t {
     ptr_t       value;      //  Memory block
 };
 
+
 doremir_ptr_t atomic_impl(doremir_id_t interface);
 
 /**

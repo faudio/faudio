@@ -17,19 +17,20 @@
  */
 
 struct edge {
-    impl_t      impl;       //  Interface dispatcher
+    impl_t      impl;           //  Interface dispatcher
     ptr_t       node1;
     ptr_t       node2;
 };
 
 typedef ptr_t         node_t;
-typedef struct edge *edge_t;
+typedef struct edge * edge_t;
 
 struct _doremir_graph_t {
     impl_t          impl;       //  Interface dispatcher
     set_t           nodes;      //  Set n
     map_t           edges;      //  Map (n,n) e
 };
+
 
 doremir_ptr_t graph_impl(doremir_id_t interface);
 doremir_ptr_t edge_impl(doremir_id_t interface);

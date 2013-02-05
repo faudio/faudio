@@ -21,10 +21,8 @@ struct simple_error {
 
 typedef struct simple_error       *simple_error_t;
 
+
 void doremir_audio_engine_log(doremir_ptr_t ct, doremir_error_t e);
-
-
-// --------------------------------------------------------------------------------
 
 /** Creates a simple error.
     @param severity     Severity of the error.

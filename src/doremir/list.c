@@ -39,22 +39,6 @@ struct _doremir_list_t {
 
 // --------------------------------------------------------------------------------
 
-// static int node_count_db_g = 0;
-//
-// void db_node_alloc()
-// {
-// }
-// void db_node_free()
-// {
-// }
-// void db_node_take(node_t node)
-// {
-// }
-// void db_node_release(node_t node)
-// {
-// }
-
-
 /** Create a new node with a single reference.
  */
 inline static node_t new_node(ptr_t value, node_t next)

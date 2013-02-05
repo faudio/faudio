@@ -46,9 +46,10 @@ struct _doremir_message_dispatcher_t {
 
 #define lockfree_get(v,f)   v->fields.lockfree.f
 
-void message_fatal(char *msg, int error);
 
 // --------------------------------------------------------------------------------
+
+void message_fatal(char *msg, int error);
 
 dispatcher_t new_dispatcher()
 {

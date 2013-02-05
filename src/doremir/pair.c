@@ -16,6 +16,8 @@ struct _doremir_pair_t {
     ptr_t       snd;
 };
 
+// -----------------------------------------------------------------------------
+
 pair_t new_pair(doremir_ptr_t fst, doremir_ptr_t snd)
 {
     doremir_ptr_t pair_impl(doremir_id_t interface);
@@ -31,6 +33,7 @@ void delete_pair(pair_t p)
 {
     doremir_delete(p);
 }
+
 
 // -----------------------------------------------------------------------------
 
@@ -54,8 +57,6 @@ void doremir_pair_destroy(doremir_pair_t pair)
 {
     delete_pair(pair);
 }
-
-// --------------------------------------------------------------------------------
 
 /** Get the first component of the given pair.
  */
@@ -159,9 +160,6 @@ doremir_list_t doremir_pair_to_list(doremir_pair_t pair)
 {
     return list(pair->fst, pair->snd);
 }
-
-
-// --------------------------------------------------------------------------------
 
 bool pair_equal(doremir_ptr_t a, doremir_ptr_t b)
 {

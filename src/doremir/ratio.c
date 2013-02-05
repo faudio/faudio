@@ -18,9 +18,10 @@ struct _doremir_ratio_t {
     denom_t         denom;
 };
 
+
 // --------------------------------------------------------------------------------
 
-ratio_t new_ratio()
+doremir_ratio_t new_ratio()
 {
     ptr_t ratio_impl(doremir_id_t interface);
 
@@ -29,7 +30,7 @@ ratio_t new_ratio()
     return p;
 }
 
-void delete_ratio(ratio_t p)
+void delete_ratio(doremir_ratio_t p)
 {
     doremir_delete(p);
 }
@@ -38,7 +39,7 @@ void delete_ratio(ratio_t p)
 
 /** Create a rational number.
  */
-ratio_t doremir_ratio_create(num_t num, denom_t denom)
+doremir_ratio_t doremir_ratio_create(num_t num, denom_t denom)
 {
     ratio_t p = new_ratio();
     p->num   = num;
@@ -48,7 +49,7 @@ ratio_t doremir_ratio_create(num_t num, denom_t denom)
 
 /** Copy a rational number.
  */
-ratio_t doremir_ratio_copy(ratio_t p)
+doremir_ratio_t doremir_ratio_copy(doremir_ratio_t p)
 {
     ratio_t q = new_ratio();
     q->num   = p->num;
@@ -58,21 +59,21 @@ ratio_t doremir_ratio_copy(ratio_t p)
 
 /** Destroy a rational number.
  */
-void doremir_ratio_destroy(ratio_t p)
+void doremir_ratio_destroy(doremir_ratio_t p)
 {
     delete_ratio(p);
 }
 
 /** Return the numerator of the given rational number.
  */
-num_t doremir_ratio_num(ratio_t x)
+num_t doremir_ratio_num(doremir_ratio_t x)
 {
     return x->num;
 }
 
 /** Return the denominator of the given rational number.
  */
-denom_t doremir_ratio_denom(ratio_t x)
+denom_t doremir_ratio_denom(doremir_ratio_t x)
 {
     return x->denom;
 }
@@ -80,7 +81,7 @@ denom_t doremir_ratio_denom(ratio_t x)
 /** Destruct the given rational number, writing its numerator
     and denominator to the given locations.
  */
-void doremir_ratio_match(ratio_t x, num_t *a, denom_t *b)
+void doremir_ratio_match(doremir_ratio_t x, num_t *a, denom_t *b)
 {
     *a = x->num;
     *b = x->denom;
@@ -91,7 +92,7 @@ void doremir_ratio_match(ratio_t x, num_t *a, denom_t *b)
 
 /** Add the given rational numbers.
  */
-ratio_t doremir_ratio_add(ratio_t x, ratio_t y)
+doremir_ratio_t doremir_ratio_add(doremir_ratio_t x, doremir_ratio_t y)
 {
     num_t   a = x->num;
     denom_t b = x->denom;
@@ -103,7 +104,7 @@ ratio_t doremir_ratio_add(ratio_t x, ratio_t y)
 
 /** Subtract the given rational numbers.
  */
-ratio_t doremir_ratio_subtract(ratio_t x, ratio_t y)
+doremir_ratio_t doremir_ratio_subtract(doremir_ratio_t x, doremir_ratio_t y)
 {
     num_t   a = x->num;
     denom_t b = x->denom;
@@ -115,7 +116,7 @@ ratio_t doremir_ratio_subtract(ratio_t x, ratio_t y)
 
 /** Multiply the given rational numbers.
  */
-ratio_t doremir_ratio_multiply(ratio_t x, ratio_t y)
+doremir_ratio_t doremir_ratio_multiply(doremir_ratio_t x, doremir_ratio_t y)
 {
     num_t   a = x->num;
     denom_t b = x->denom;
@@ -127,7 +128,7 @@ ratio_t doremir_ratio_multiply(ratio_t x, ratio_t y)
 
 /** Divide the given rational numbers.
  */
-ratio_t doremir_ratio_divide(ratio_t x, ratio_t y)
+doremir_ratio_t doremir_ratio_divide(doremir_ratio_t x, doremir_ratio_t y)
 {
     num_t   a = x->num;
     denom_t b = x->denom;
@@ -139,35 +140,35 @@ ratio_t doremir_ratio_divide(ratio_t x, ratio_t y)
 
 /** Return the successor of the given rational number.
  */
-ratio_t doremir_ratio_succ(ratio_t x)
+doremir_ratio_t doremir_ratio_succ(doremir_ratio_t x)
 {
     return doremir_ratio_add(x, ratio(1, 1));
 }
 
 /** Return the predecessor of the given rational number.
  */
-ratio_t doremir_ratio_pred(ratio_t x)
+doremir_ratio_t doremir_ratio_pred(doremir_ratio_t x)
 {
     return doremir_ratio_subtract(x, ratio(1, 1));
 }
 
 /** Negate the given rational number.
  */
-ratio_t doremir_ratio_negate(ratio_t x)
+doremir_ratio_t doremir_ratio_negate(doremir_ratio_t x)
 {
     return doremir_ratio_multiply(x, ratio(-1, 1));
 }
 
 /** Invert the given rational number.
  */
-ratio_t doremir_ratio_recip(ratio_t x)
+doremir_ratio_t doremir_ratio_recip(doremir_ratio_t x)
 {
     return doremir_ratio_divide(ratio(1, 1), x);
 }
 
 /** Normalize the given rational number.
  */
-ratio_t doremir_ratio_normalize(ratio_t x)
+doremir_ratio_t doremir_ratio_normalize(doremir_ratio_t x)
 {
     num_t   a = x->num;
     denom_t b = x->denom;
@@ -182,7 +183,7 @@ ratio_t doremir_ratio_normalize(ratio_t x)
 
 /** Return the absolute value of the given rational number.
  */
-ratio_t doremir_ratio_absolute(ratio_t x)
+doremir_ratio_t doremir_ratio_absolute(doremir_ratio_t x)
 {
     num_t   a = x->num;
     denom_t b = x->denom;
