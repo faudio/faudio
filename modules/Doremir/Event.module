@@ -39,16 +39,17 @@ module Doremir.Event
     switch  : (Event,Event,Event) -> Event;
     destroy : Event -> Void;
     
-    later  : (Time,Ptr) -> Event;
-    upon   : (Event,Event) -> Event;
+    // later  : (Time,Ptr) -> Event;
+    // upon   : (Event,Event) -> Event;
     after  : Event -> Event;
     before : Event -> Event;
-    sample : Event -> Event;
+    // sample : Event -> Event;
     toggle : Event -> Event;
-    select : (Event,Event) -> Event;
+    // select : (Event,Event) -> Event;
 
     receive : (Ptr,Address) -> Event;       // Sender
     send : (Ptr,Address,Event) -> Event;    // Receiver
+
 
     hasValue : (Event,Time) -> Bool;   // Is an occurance available            rename hasValue
     value  : Event -> Ptr;           // Get the first occurance value        rename value?

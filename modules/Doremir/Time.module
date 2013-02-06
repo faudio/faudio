@@ -40,6 +40,13 @@ module Doremir.Time
 
     type Time = opaque;
 
+    /** @interface doremir_time_clock_t */
+    type Clock = struct {
+        time : (Ptr -> Time)*,
+        tickRate : (Ptr -> Time)*,
+        ticks : (Ptr -> Time)*
+    };
+
     create      : (Int32, Int32, Int32, Ratio) -> Time;
     copy        : Time -> Time;
     destroy     : Time -> Void;

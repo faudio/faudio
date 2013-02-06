@@ -18,7 +18,7 @@ typedef doremir_scheduler_t         scheduler_t;
 struct _doremir_scheduler_t {
     impl_t                  impl;           // Dispatcher
 
-    atomic_t                time;           // Current time
+    // atomic_t                time;           // Current time
     priority_queue_t        queue;          // Enqueued values
 
 };
@@ -43,40 +43,39 @@ inline static void delete_scheduler(scheduler_t scheduler)
 
 // -----------------------------------------------------------------------------
 
-// doremir_scheduler_t doremir_scheduler_create(improving_t improving)
-// {
-//     return new_scheduler(); // TODO
-// }
-// 
+/** Schedule.
+    @param clock            Must implement [Clock](@ref doremir_time_clock_t).
+ */
+doremir_scheduler_t doremir_scheduler_create(doremir_ptr_t clock)
+{
+    return new_scheduler(); // TODO
+}
+
+
 void doremir_scheduler_destroy(scheduler_t scheduler)
 {
     // destroy improving
     // destroy queue
     delete_scheduler(scheduler);
 }
-// 
-// /** Schedule.
-//     @param scheduler
-//     @param time
-//     @param action       Action to schedule.
-//     @param data         Data closed over by the previous argument.
-//  */
-// void doremir_scheduler_schedule(scheduler_t scheduler,
-//                                 time_t      time,
-//                                 action_t    action,
-//                                 ptr_t       data)
-// {
-//     // make entry
-//     // insert into queue
-// }
-// 
-// void doremir_scheduler_execute(scheduler_t scheduler)
-// {
-//     // now = get_time()
-//     // while (peek(q)->time < now)
-//     // if (!action interrupded or canceled)
-//     // execute
-// }
+
+/** Schedule.
+    @param event            Event to schedule.
+    @param scheduler        The scheduler.
+ */
+void doremir_scheduler_schedule(doremir_event_t event, doremir_scheduler_t scheduler)
+{
+    // make entry
+    // insert into queue
+}
+
+void doremir_scheduler_execute(doremir_scheduler_t scheduler)
+{
+    // now = get_time()
+    // while (peek(q)->time < now)
+    // if (!action interrupded or canceled)
+    // execute
+}
 
 bool scheduler_equal(doremir_ptr_t a, doremir_ptr_t b)
 {
