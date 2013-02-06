@@ -13,3 +13,4 @@
 (defcfun (pair-swap "doremir_pair_swap") pair (a pair))
 (defcfun (pair-assoc "doremir_pair_assoc") pair (a pair))
 (defcfun (pair-unassoc "doremir_pair_unassoc") pair (a pair))
+(defcfun (pair-to-list "doremir_pair_to_list") list (a pair))

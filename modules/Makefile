@@ -80,9 +80,9 @@ lisp:
 	modulo -Mmodules --language=lisp <modules/Doremir/Midi.module    		>bindings/lisp/doremir/midi.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Time.module    		>bindings/lisp/doremir/time.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Processor.module  		>bindings/lisp/doremir/processor.lisp && \
-	modulo -Mmodules --language=lisp <modules/Doremir/Processor/AudioUnit.module	>bindings/lisp/doremir/processor/audio-unit.lisp && \
-	modulo -Mmodules --language=lisp <modules/Doremir/Processor/Vst.module		>bindings/lisp/doremir/processor/vst.lisp && \
-	modulo -Mmodules --language=lisp <modules/Doremir/Processor/FluidSynth.module	>bindings/lisp/doremir/processor/fluid-synth.lisp && \
+	modulo -Mmodules --language=lisp <modules/Doremir/Processor/External/AudioUnit.module	>bindings/lisp/doremir/processor/external/audio-unit.lisp && \
+	modulo -Mmodules --language=lisp <modules/Doremir/Processor/External/Vst.module		>bindings/lisp/doremir/processor/external/vst.lisp && \
+	modulo -Mmodules --language=lisp <modules/Doremir/Processor/External/FluidSynth.module	>bindings/lisp/doremir/processor/external/fluid-synth.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Signal.module  		>bindings/lisp/doremir/signal.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Type.module  			>bindings/lisp/doremir/type.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Device.module			>bindings/lisp/doremir/device.lisp && \

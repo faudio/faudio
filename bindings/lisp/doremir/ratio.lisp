@@ -15,7 +15,6 @@
 (defcfun (ratio-subtract "doremir_ratio_subtract") ratio (a ratio) (b ratio))
 (defcfun (ratio-multiply "doremir_ratio_multiply") ratio (a ratio) (b ratio))
 (defcfun (ratio-divide "doremir_ratio_divide") ratio (a ratio) (b ratio))
-(defcfun (ratio-remainder "doremir_ratio_remainder") ratio (a ratio) (b ratio))
 (defcfun (ratio-succ "doremir_ratio_succ") ratio (a ratio))
 (defcfun (ratio-pred "doremir_ratio_pred") ratio (a ratio))
 (defcfun (ratio-negate "doremir_ratio_negate") ratio (a ratio))

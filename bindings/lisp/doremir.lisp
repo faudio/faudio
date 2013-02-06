@@ -61,7 +61,6 @@
 (defcfun (copy "doremir_copy") ptr (a ptr))
 (defcfun (move "doremir_move") ptr (a ptr))
 (defcfun (destroy "doremir_destroy") :void (a ptr))
-(defcfun (deep-destroy "doremir_deep_destroy") :void (a ptr))
 (defcfun (check "doremir_check") :boolean (a ptr))
 (defcfun (print "doremir_print") :void (a (:pointer :char)) (b ptr))
 (defcfun (dprint "doremir_dprint") :void (a (:pointer :char)) (b ptr))
