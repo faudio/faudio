@@ -39,7 +39,9 @@ module Doremir.Processor
         totalTime   : Time,
         dispatcher  : Dispatcher,
         bufOffset : Int,
-        bufStep   : Int
+        bufStep   : Int,
+        bufLoop   : Int,
+        bufSeq    : Int  // merge these?
     };
 
     // infoDefault : Info* -> Void;

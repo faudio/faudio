@@ -1295,12 +1295,9 @@ void test_processors(string_t path)
     p = unary(type(i8), type(i8), add1234, NULL);
     q = 
         seq(
-            seq(
-                split(type(i8)),
-                id(type_pair(type(i8), type(i8)))
-            ),
+            split(type(i8)),
             par(seq(split(type(i8)), par(p,p)),
-                seq(split(type(i8)), par(p,p)))
+                seq(split(type(i8)), par(p,seq(p,p))))
         )
     
     ;

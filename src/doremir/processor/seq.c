@@ -91,7 +91,9 @@ graph_t seq_graph(ptr_t a, info_t *info, graph_t graph)
     // TODO connections
 
     graph = proc->elemImpl[0]->graph(proc->elem[0], info, graph);
+    info->buf_seq++;
     graph = proc->elemImpl[1]->graph(proc->elem[1], info, graph);
+    info->buf_seq--;
 
     return graph;
 }

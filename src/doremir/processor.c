@@ -61,7 +61,9 @@ void doremir_processor_write_graph(doremir_processor_t proc,
     graph_t graph = doremir_graph_empty();
     doremir_processor_info_t info = {
         .buf_offset = 0,
-        .buf_step   = 1
+        .buf_step   = 1,
+        .buf_loop   = 1,
+        .buf_seq    = 1
     };
     graph = doremir_processor_graph(proc, &info, graph);
     doremir_directory_write_file(path, doremir_graph_to_dot(string(""), string(""), graph));

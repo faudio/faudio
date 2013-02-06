@@ -67,13 +67,13 @@ size_t split_buffer_size(frames_t frameSize, ptr_t a)
     return doremir_type_size_of(frameSize, split_output_type(a));
 }
 
-string_t node_name(int off, int step)
+static inline string_t node_name(int off, int step, int seq)
 {
     char name[50];
-    snprintf(name, 50, "node_%d_%d", off, step);
+    snprintf(name, 50, "node_%d_%d_%d", off, step, seq);
     return string(name);
 }
-string_t edge_name(int off)
+static inline string_t edge_name(int off)
 {
     return format_integer("(%d)", off);
 }
@@ -82,17 +82,16 @@ graph_t split_graph(ptr_t a, info_t *info, graph_t graph)
 {
     this_t proc = (this_t) a;
 
-    {
-        pair_t self  = node_name(info->buf_offset, info->buf_step);
-        pair_t left  = node_name(info->buf_offset,                  info->buf_step * 2);
-        pair_t right = node_name(info->buf_offset + info->buf_step, info->buf_step * 2);
-        graph = doremir_graph_insert(self, graph);
-        graph = doremir_graph_insert(left, graph);
-        graph = doremir_graph_insert(right, graph);
+    pair_t self  = node_name(info->buf_offset, info->buf_step, info->buf_seq);
+    pair_t left  = node_name(info->buf_offset,                  info->buf_step * 2, info->buf_seq + 1);
+    pair_t right = node_name(info->buf_offset + info->buf_step, info->buf_step * 2, info->buf_seq + 1);
 
-        graph = doremir_graph_connect(self, left, edge_name(info->buf_offset), graph);
-        graph = doremir_graph_connect(self, right, edge_name(info->buf_offset + info->buf_step), graph);
-    }
+    graph = doremir_graph_insert(self, graph);
+    graph = doremir_graph_insert(left, graph);
+    graph = doremir_graph_insert(right, graph);
+
+    graph = doremir_graph_connect(self, left, edge_name(info->buf_offset), graph);
+    graph = doremir_graph_connect(self, right, edge_name(info->buf_offset + info->buf_step), graph);
  
     return graph;
 }

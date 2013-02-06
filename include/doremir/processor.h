@@ -23,6 +23,8 @@ typedef struct {
             doremir_message_dispatcher_t dispatcher;
             int buf_offset;
             int buf_step;
+            int buf_loop;
+            int buf_seq;
         } doremir_processor_info_t;
 typedef doremir_ptr_t * doremir_processor_samples_t;
 typedef struct {
