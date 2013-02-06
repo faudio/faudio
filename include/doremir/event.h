@@ -5,7 +5,7 @@
 #include <doremir.h>
 #include <doremir/std.h>
 #include <doremir/time.h>
-#include <doremir/atomic/queue.h>
+#include <doremir/message.h>
 
 /** @defgroup Doremir Doremir
     @{
@@ -33,8 +33,10 @@ doremir_event_t doremir_event_sample(doremir_event_t);
 doremir_event_t doremir_event_toggle(doremir_event_t);
 doremir_event_t doremir_event_select(doremir_event_t,
                                      doremir_event_t);
-doremir_event_t doremir_event_recv(doremir_atomic_queue_t);
-doremir_event_t doremir_event_send(doremir_atomic_queue_t,
+doremir_event_t doremir_event_receive(doremir_ptr_t,
+                                      doremir_message_address_t);
+doremir_event_t doremir_event_send(doremir_ptr_t,
+                                   doremir_message_address_t,
                                    doremir_event_t);
 bool doremir_event_has_value(doremir_event_t, doremir_time_t);
 doremir_ptr_t doremir_event_value(doremir_event_t);

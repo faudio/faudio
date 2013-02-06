@@ -14,7 +14,6 @@ enum doremir_interfaces {
   doremir_equal_i,
   doremir_message_sender_i,
   doremir_message_receiver_i,
-  doremir_message_dispatcher_i,
   doremir_number_i,
   doremir_order_i,
   doremir_processor_interface_i,
