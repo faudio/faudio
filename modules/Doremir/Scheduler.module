@@ -14,15 +14,18 @@ module Doremir.Scheduler
 {
     import Doremir;
     import Doremir.Time;
-    import Doremir.Thread.Improving;
+    import Doremir.Event;
+    import Doremir.Atomic;
 
     type Action = Nullary;
     type Scheduler = opaque;
     
 
-    create  : Improving -> Scheduler;
+    create  : (Atomic) -> Scheduler;
     destroy : Scheduler -> Void;
     
-    schedule : (Scheduler, Time, Action, Ptr) -> Void;
+    schedule : (Scheduler, Event) -> Void;
     execute  : Scheduler -> Void;
+    // Loop until finished
+    run      : Scheduler -> Void;
 }

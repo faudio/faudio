@@ -60,10 +60,5 @@ module Doremir.Device.Midi
     // openAll : Session -> List;  // [Stream]
     // closeAll : Session -> List;  // [Stream]
     // withAll : (Session, StreamsCallback, Ptr, Callback, Ptr) -> Void;  // [Stream]
-
-    // send : (List,Stream) -> Void; // [Midi]
-    // fetch : (Stream) -> List; // [Midi]
-    // sync : Dispatcher -> Void;
-    // query : (Address,Stream) -> List; // [Midi]
 }
 
