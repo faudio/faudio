@@ -1291,14 +1291,26 @@ void test_processors(string_t path)
 
     inform(string_append(string("Writing "), path));
 
-    processor_t p, q;
+    processor_t p, q, chain, rchain;
     p = unary(type(i8), type(i8), add1234, NULL);
-    q = 
+    chain = seq(p,seq(p,seq(p,seq(p,seq(p,p)))));
+    rchain = seq(seq(seq(seq(p,p),p),p),p);
+    q =  
+    seq(split(type(i8)),
+    
+        par(
+            seq(seq(seq(p,p),p),p),
+        
         seq(
             split(type(i8)),
-            par(seq(split(type(i8)), par(p,p)),
+            par(seq(split(type(i8)), par(chain,seq(split(type(i8)), par(chain,chain)))),
                 seq(split(type(i8)), par(p,seq(p,p))))
         )
+        
+        )
+        
+    
+    )
     
     ;
     

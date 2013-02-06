@@ -111,7 +111,7 @@ graph_t seq_graph(ptr_t a, info_t *info, graph_t graph)
     (*seq)--;
 
     pair_t first   = node_name(*offset, *step, *seq);
-    pair_t second  = node_name(*offset, *step, *seq + 1);
+    pair_t second  = node_name(*offset, *step, (*seq) + 1);
     graph = doremir_graph_insert(first, graph);
     graph = doremir_graph_insert(second, graph);
     graph = doremir_graph_connect(first, second, edge_name(*offset), graph);

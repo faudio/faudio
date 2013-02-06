@@ -90,10 +90,7 @@ graph_t unary_graph(ptr_t a, info_t *info, graph_t graph)
     int *seq    = &info->buf_seq;
 
     pair_t self  = node_name(*offset, *step, *seq);
-    // pair_t next  = node_name(*offset, *step, *seq + 1);
     graph = doremir_graph_insert(self, graph);
-    // graph = doremir_graph_insert(next, graph);
-    // graph = doremir_graph_connect(self, next, edge_name(*offset), graph);
  
     return graph;
 }
