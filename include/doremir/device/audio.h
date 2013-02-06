@@ -38,6 +38,8 @@ void doremir_device_audio_set_status_callback(doremir_device_audio_status_callba
                                               doremir_device_audio_session_t);
 doremir_string_t doremir_device_audio_name(doremir_device_audio_t);
 doremir_string_t doremir_device_audio_host_name(doremir_device_audio_t);
+bool doremir_device_audio_has_input(doremir_device_audio_t);
+bool doremir_device_audio_has_output(doremir_device_audio_t);
 doremir_type_t doremir_device_audio_input_type(doremir_device_audio_t);
 doremir_type_t doremir_device_audio_output_type(doremir_device_audio_t);
 doremir_device_audio_stream_t doremir_device_audio_open_stream(doremir_device_audio_t,

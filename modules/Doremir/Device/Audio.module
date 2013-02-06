@@ -46,6 +46,8 @@ module Doremir.Device.Audio
 
     name : Audio -> String;
     hostName : Audio -> String;
+    hasInput : Audio -> Bool;
+    hasOutput : Audio -> Bool;
     inputType : Audio -> Type;
     outputType : Audio -> Type;
 

@@ -298,6 +298,15 @@ type_t doremir_device_audio_output_type(device_t device)
     return doremir_type_repeat(info->maxOutputChannels, type_frame(type(f32)));
 }
 
+bool doremir_device_audio_has_input(device_t device)
+{
+    return doremir_equal(doremir_device_audio_input_type(device), type(unit));
+}
+bool doremir_device_audio_has_output(device_t device)
+{
+    return doremir_equal(doremir_device_audio_output_type(device), type(unit));
+}
+
 
 void set_device_status_impl(status_callback_t function, ptr_t data);
 

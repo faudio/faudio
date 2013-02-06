@@ -83,6 +83,16 @@ doremir_string_t doremir_device_audio_name(
 doremir_string_t doremir_device_audio_host_name(
     doremir_device_audio_t device) {}
 
+/** Return whether the given device has input or not.
+    @param device   The device.
+ */
+bool doremir_device_audio_has_input(doremir_device_audio_t) {}
+
+/** Return whether the given device has output or not.
+    @param device   The device.
+ */
+bool doremir_device_audio_has_output(doremir_device_audio_t) {}
+
 /** Return the input type of the given device.
     @param device   The device.
  */

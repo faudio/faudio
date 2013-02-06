@@ -23,30 +23,42 @@ module Doremir.Device.Midi
     import Doremir.List;
     import Doremir.Pair;
     import Doremir.Device;
-    import Doremir.Processor;
+    import Doremir.Error;
+    import Doremir.Event;
 
     type Session = opaque;
     type Stream = opaque;
+    type SessionCallback = ((Ptr, Session) -> Session)*;
+    type StreamCallback = ((Ptr, Stream) -> Stream)*;
+    type StatusCallback = Nullary;
+
+    beginSession : () -> Session;
+    endSession : Session -> Void;
+    withSession : (
+        SessionCallback, Ptr, 
+        Callback, Ptr) -> Void;
 
     all : Session -> List;      // [Midi]
     default : Session -> Pair;  // (Midi,Midi)
+    defaultInput : Session -> Midi;
+    defaultOutput : Session -> Midi;
+//    setStatusCallback : (StatusCallback, Ptr, Session) -> Void;
 
     name : Midi -> String;
     hostName : Midi -> String;
     hasInput : Midi -> Bool;
     hasOutput : Midi -> Bool;
 
-    beginSession : () -> Session;
-    // reopenSession : Session -> Session;
-    endSession : Session -> Void;
-
     openStream : Midi -> Stream;
-    // restartStream : Stream -> Stream;
     closeStream : Stream -> Void;
+    withStream : (
+        Midi, 
+        StreamCallback, Ptr, 
+        Callback, Ptr
+        ) -> Void;
 
-    type SessionCallback = (Session -> Session)*;
-    type StreamCallback = (Stream -> Stream)*;
-    withSession : SessionCallback -> Void;
-    withStream : (Midi, StreamCallback) -> Void;
+    // openAll : Session -> List;  // [Stream]
+    // closeAll : Session -> List;  // [Stream]
+    // withAll : (Session, StreamsCallback, Ptr, Callback, Ptr) -> Void;  // [Stream]
 }
 
