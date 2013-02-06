@@ -107,6 +107,61 @@ doremir_processor_t doremir_processor_split(doremir_type_t type)
     return (processor_t) doremir_processor_split_create(type);
 }
 
+/** Lift a unary function to a processor.
+
+    @param input_type       Input type. Must be unit, a simple type or a frame type containing a simple type.
+    @param output_type      Type of output. Must be unit, a simple type or a frame type containing a simple type.
+    @param function         Function to be lifted.
+    @param data             Value to be passed to function.
+    @return                 A processor.
+ */
+doremir_processor_t doremir_processor_unary
+(
+    doremir_type_t  input_type,
+    doremir_type_t  output_type,
+    doremir_unary_t function,
+    doremir_ptr_t   data
+)
+{
+    return (processor_t)
+           doremir_processor_unary_create(
+               input_type, output_type,
+               function, data
+           );
+}
+
+/** Lift a binary function to a processor.
+
+    The given types must be simple types or frames types.
+    
+    The given function will receive pointers to single values of the given input
+    types and is expected to return a pointer to a value of the proper output type.
+    The pointers received as parameters may be used as return values.
+
+    @param input_type1      Type of first input.
+    @param input_type2      Type of second input.
+    @param output_type      Type of output.
+    @param function         Function to be lifted.
+    @param data             Value to be passed to function.
+    @return                 A processor.
+ */
+doremir_processor_t doremir_processor_binary
+(
+    doremir_type_t   input_type1,
+    doremir_type_t   input_type2,
+    doremir_type_t   output_type,
+    doremir_binary_t function,
+    doremir_ptr_t    data
+)
+{
+    return (processor_t)
+           doremir_processor_binary_create(
+               input_type1, input_type2, output_type,
+               function, data
+           );
+}
+
+
 /** Create a processor by composing the given processors in parallel.
 
     The input and output types are pairs of the input and output types of the given processors.
@@ -187,53 +242,6 @@ doremir_processor_t doremir_processor_loop(doremir_processor_t proc)
 }
 
 
-/** Lift a unary function to a processor.
-
-    @param input_type       Input type. Must be unit, a simple type or a frame type containing a simple type.
-    @param output_type      Type of output. Must be unit, a simple type or a frame type containing a simple type.
-    @param function         Function to be lifted.
-    @param data             Value to be passed to function.
-    @return                 A processor.
- */
-doremir_processor_t doremir_processor_unary
-(
-    doremir_type_t  input_type,
-    doremir_type_t  output_type,
-    doremir_unary_t function,
-    doremir_ptr_t   data
-)
-{
-    return (processor_t)
-           doremir_processor_unary_create(
-               input_type, output_type,
-               function, data
-           );
-}
-
-/** Lift a binary function to a processor.
-
-    @param input_type1      Type of first input. Must be unit, a simple type or a frame type containing a simple type.
-    @param input_type2      Type of second input. Must be unit, a simple type or a frame type containing a simple type.
-    @param output_type      Type of output. Must be unit, a simple type or a frame type containing a simple type.
-    @param function         Function to be lifted.
-    @param data             Value to be passed to function.
-    @return                 A processor.
- */
-doremir_processor_t doremir_processor_binary
-(
-    doremir_type_t   input_type1,
-    doremir_type_t   input_type2,
-    doremir_type_t   output_type,
-    doremir_binary_t function,
-    doremir_ptr_t    data
-)
-{
-    return (processor_t)
-           doremir_processor_binary_create(
-               input_type1, input_type2, output_type,
-               function, data
-           );
-}
 
 
 

@@ -82,9 +82,23 @@ void unary_after(ptr_t a, info_t *info)
 }
 
 void unary_process(ptr_t a, info_t *info, samples_t samples)
-{
-    // unary_proc_uint8_t_uint8_t(1, proc2, samples, samples);
-    // TODO call
+{                  
+    this_t proc = (this_t) a;
+    
+    int offset = 0; // TODO
+    void* input  = ((void**) samples)[offset];
+    void* output = ((void**) samples)[offset];
+    void* result;
+    
+    size_t size = info->frame_size; // or 1
+    for (int samp = 0; samp < size; ++samp)
+    {
+        result = proc->function(proc->data, input);
+        if (result != output)
+        {
+            // copy from res to output
+        }
+    }
 }
 
 // --------------------------------------------------------------------------------

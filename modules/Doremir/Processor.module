@@ -73,14 +73,15 @@ module Doremir.Processor
 
     identity    : Type -> Processor;                            // a ~> a
     constant    : (Type, Type, Ptr) -> Processor;               // a ~> b
+    unary       : (Type, Type, Unary, Ptr) -> Processor;        // a ~> b
+    binary      : (Type, Type, Type, Binary, Ptr) -> Processor; // (a,b) ~> c
     split       : Type -> Processor;                            // a ~> (a,a)
+
     parallel    : (Processor, Processor) -> Processor;          // (a~>b), (c~>d) -> (a,c~>b,d)
     sequence    : (Processor, Processor) -> Processor;          // (a~>b), (b~>c) -> (a~>c)
     compose     : (Processor, Processor) -> Processor;          // (a~>b), (b~>c) -> (a~>c)
     loop        : Processor -> Processor;                       // (a,c~>b,d)     -> (a ~> b)
     
-    unary       : (Type, Type, Unary, Ptr) -> Processor;        // a ~> b       {a}       ~> {b}
-    binary      : (Type, Type, Type, Binary, Ptr) -> Processor; // (a,b) ~> c   ({a},{b}) ~> c
 
     // ------------------------------------------------------------------------
     // Delay primitives
