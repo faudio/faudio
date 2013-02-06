@@ -213,13 +213,13 @@ void test_buffer()
         doremir_print("b                            ==> %s\n", b);
 
         for (int i = 0; i < 16; ++i) {
-            doremir_buffer_poke(b, i, i);
+            doremir_buffer_set(b, i, i);
         }
 
         doremir_print("b                            ==> %s\n", b);
 
         for (int i = 0; i < 16; ++i) {
-            doremir_buffer_poke(b, i, 0xff);
+            doremir_buffer_set(b, i, 0xff);
         }
 
         doremir_print("b                            ==> %s\n", b);
@@ -233,13 +233,13 @@ void test_buffer()
         doremir_print("b                            ==> %s\n", b);
 
         for (int i = 0; i < 1024; ++i) {
-            doremir_buffer_poke(b, i, i);
+            doremir_buffer_set(b, i, i);
         }
 
         doremir_print("b                            ==> %s\n", b);
 
         for (int i = 0; i < 1024; ++i) {
-            doremir_buffer_poke(b, i, 0xff);
+            doremir_buffer_set(b, i, 0xff);
         }
 
         doremir_print("b                            ==> %s\n", b);
@@ -275,7 +275,7 @@ void test_midi()
         doremir_buffer_t b = doremir_buffer_create(32);
 
         for (int i = 0; i < 32; ++i) {
-            doremir_buffer_poke(b, i, i);
+            doremir_buffer_set(b, i, i);
         }
 
         doremir_midi_t m = doremir_midi_create_sysex(b);
@@ -1416,7 +1416,7 @@ void test_plot_buffer()
     for (int i = 0; i < 44100; ++i) {
         double r = (double) random() / RAND_MAX;
         double x = (double) i / 44100;
-        doremir_buffer_poke_double(buf, i, (r * 2 - 1) * sin(x * 10));
+        doremir_buffer_set_double(buf, i, (r * 2 - 1) * sin(x * 10));
     }
 
     doremir_plot_buffer_double(buf, NULL, NULL);

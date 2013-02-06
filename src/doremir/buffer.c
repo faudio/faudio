@@ -108,7 +108,7 @@ size_t doremir_buffer_size(doremir_buffer_t buffer)
     @note
         O(1)
  */
-uint8_t doremir_buffer_peek(doremir_buffer_t buffer, size_t index)
+uint8_t doremir_buffer_get(doremir_buffer_t buffer, size_t index)
 {
     assert(index < buffer->size && "Buffer overflow");
     return buffer->data[index];
@@ -118,20 +118,20 @@ uint8_t doremir_buffer_peek(doremir_buffer_t buffer, size_t index)
     @note
         O(1)
  */
-void doremir_buffer_poke(doremir_buffer_t buffer, size_t index, uint8_t value)
+void doremir_buffer_set(doremir_buffer_t buffer, size_t index, uint8_t value)
 {
     assert(index < buffer->size && "Buffer overflow");
     buffer->data[index] = value;
 }
 
 
-double doremir_buffer_peek_double(doremir_buffer_t buffer, size_t index)
+double doremir_buffer_get_double(doremir_buffer_t buffer, size_t index)
 {
     assert(index * sizeof(double) < buffer->size && "Buffer overflow");
     return ((double *) buffer->data)[index];
 }
 
-void doremir_buffer_poke_double(doremir_buffer_t buffer, size_t index, double value)
+void doremir_buffer_set_double(doremir_buffer_t buffer, size_t index, double value)
 {
     assert(index * sizeof(double) < buffer->size && "Buffer overflow");
     ((double *) buffer->data)[index] = value;
@@ -167,7 +167,7 @@ doremir_pair_t doremir_buffer_read_audio(doremir_string_file_path_t path)
     if (sf_error(f)) {
         char err[100];
         snprintf(err, 100, "Could not read audio file '%s'", file);
-        return doremir_error_create_simple(error, string(err), string("Doremir.Buffer"));
+        return (pair_t) doremir_error_create_simple(error, string(err), string("Doremir.Buffer"));
     }
 
     inform(string_dappend(string("Reading "), string(file)));
@@ -220,7 +220,7 @@ doremir_string_t buffer_show(doremir_ptr_t a)
         str = string_dappend(str, string(" "));
         str = string_dappend(str, format_integer(
                                  "%02x",
-                                 doremir_buffer_peek(buffer, i)));
+                                 doremir_buffer_get(buffer, i)));
     }
 
     if (more) {
