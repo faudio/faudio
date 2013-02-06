@@ -74,8 +74,8 @@ module Doremir.Processor
     identity    : Type -> Processor;                            // a ~> a
     constant    : (Type, Type, Ptr) -> Processor;               // a ~> b
     split       : Type -> Processor;                            // a ~> (a,a)
-    par         : (Processor, Processor) -> Processor;          // (a~>b), (c~>d) -> (a,c~>b,d)
-    seq         : (Processor, Processor) -> Processor;          // (a~>b), (b~>c) -> (a~>c)
+    parallel    : (Processor, Processor) -> Processor;          // (a~>b), (c~>d) -> (a,c~>b,d)
+    sequence    : (Processor, Processor) -> Processor;          // (a~>b), (b~>c) -> (a~>c)
     compose     : (Processor, Processor) -> Processor;          // (a~>b), (b~>c) -> (a~>c)
     loop        : Processor -> Processor;                       // (a,c~>b,d)     -> (a ~> b)
     

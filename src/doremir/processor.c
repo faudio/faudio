@@ -75,12 +75,14 @@ doremir_processor_t doremir_processor_identity(doremir_type_t type)
 
     @param input_type       Type of input.
     @param output_type      Type of output.
-    @param value            Value to return.
+    @param value            Pointer to a buffer containing the value.
  */
 doremir_processor_t doremir_processor_constant(doremir_type_t   input_type,
                                                doremir_type_t   output_type,
                                                doremir_ptr_t    value)
-{
+{                                                                    
+    // TODO defensively copy, or trust the user?
+    // TODO if we are closing over a frame, should we multiply here instead of trusting the user to?
     return (processor_t) doremir_processor_unary_create(input_type, output_type, constant, NULL);
 }
 
@@ -119,8 +121,8 @@ doremir_processor_t doremir_processor_split(doremir_type_t type)
     @param proc             Right processor.
     @return                 A new processor, or an error.
  */
-doremir_processor_t doremir_processor_par(doremir_processor_t proc1,
-                                          doremir_processor_t proc2)
+doremir_processor_t doremir_processor_parallel(doremir_processor_t proc1,
+                                               doremir_processor_t proc2)
 {
     return (processor_t)
            doremir_processor_par_create(proc1, proc2);
@@ -141,8 +143,8 @@ doremir_processor_t doremir_processor_par(doremir_processor_t proc1,
     @param proc             Second processor.
     @return                 A new processor, or an error.
  */
-doremir_processor_t doremir_processor_seq(doremir_processor_t proc1,
-                                          doremir_processor_t proc2)
+doremir_processor_t doremir_processor_sequence(doremir_processor_t proc1,
+                                               doremir_processor_t proc2)
 {
     return (processor_t) doremir_processor_seq_create(proc1, proc2);
 }

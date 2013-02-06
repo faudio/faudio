@@ -1313,7 +1313,7 @@ void test_processors()
     {
         processor_t p, q;
         p = doremir_processor_unary(type(i8), type(i8), add1234, NULL);
-        q = doremir_processor_seq(p, p);
+        q = doremir_processor_sequence(p, p);
         doremir_print("p                            ==> %s\n", p);
         doremir_print("bufferSize(p)                ==> %s\n", i32(doremir_processor_buffer_size(1, p)));
     }
@@ -1321,7 +1321,7 @@ void test_processors()
     {
         processor_t p, q;
         p = doremir_processor_unary(type(i8), type(i8), add1234, NULL);
-        q = doremir_processor_seq(p, p);
+        q = doremir_processor_sequence(p, p);
         doremir_print("p                            ==> %s\n", p);
         doremir_print("seq(p,p)                     ==> %s\n", q);
         doremir_print("bufferSize(seq(p,p))         ==> %s\n", i32(doremir_processor_buffer_size(1, q)));
@@ -1330,7 +1330,7 @@ void test_processors()
     {
         processor_t p, q;
         p = doremir_processor_unary(type(i8), type(i8), add1234, NULL);
-        q = doremir_processor_par(p, p);
+        q = doremir_processor_parallel(p, p);
         doremir_print("p                            ==> %s\n", p);
         doremir_print("q                            ==> %s\n", p);
         doremir_print("par(p,p)                     ==> %s\n", q);
@@ -1340,7 +1340,7 @@ void test_processors()
     {
         processor_t p0, p, q;
         p0 = doremir_processor_unary(type(i8), type(i8), add1234, NULL);
-        p = doremir_processor_par(p0, p0);
+        p = doremir_processor_parallel(p0, p0);
         q = doremir_processor_loop(p);
         doremir_print("p                            ==> %s\n", p);
         doremir_print("loop(p)                      ==> %s\n", q);

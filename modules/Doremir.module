@@ -192,7 +192,7 @@ module Doremir
     // deepDestroy : Ptr -> Void;
 
     check   : Ptr -> Bool;
-    
+
     print    : (Char*,Ptr) -> Void;
     dprint   : (Char*,Ptr) -> Void;    
 }
