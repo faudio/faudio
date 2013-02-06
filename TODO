@@ -3,6 +3,9 @@
 Additions
 
 * Event/Scheduler impl
+    * Extract send/recv to be generic
+    * Add Send/Recv impl for streams and dispatcher
+
 
 * Buffer streams
 * File streams
@@ -13,6 +16,9 @@ Additions
     * FluidSynth
     * QuickTime
     * VST2
+
+
+
 
 ----------
 
