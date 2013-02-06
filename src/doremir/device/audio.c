@@ -308,7 +308,7 @@ bool doremir_device_audio_has_output(device_t device)
 }
 
 
-void set_device_status_impl(status_callback_t function, ptr_t data);
+void add_audio_status_listener(status_callback_t function, ptr_t data);
 
 void doremir_device_audio_set_status_callback(
     status_callback_t function,
@@ -318,7 +318,7 @@ void doremir_device_audio_set_status_callback(
     assert(session && "Not a real session");
 
     // See device_osx.c and device_win.c
-    set_device_status_impl(function, data);
+    add_audio_status_listener(function, data);
 }
 
 // --------------------------------------------------------------------------------

@@ -25,13 +25,16 @@ module Doremir.Message
     createLockfreeDispatcher : () -> Dispatcher;
     destroyDispatcher : Dispatcher -> Void;
     
-    // request message to be sent on address
+    // Request message to be sent on address
     send : (Address,Message,Dispatcher) -> Void;
 
-    // fetch messages on address
+    // Fetch messages on address
+    // Other addresses discarded
     fetch : (Address,Dispatcher) -> List; // [Message]
 
+    // Fetch all new messages
     sync : Dispatcher -> Void;
+    // Get fetched messages on addresses
     query : (Address,Dispatcher) -> List; // [Message]
 
 

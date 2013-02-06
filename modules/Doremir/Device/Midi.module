@@ -56,9 +56,12 @@ module Doremir.Device.Midi
         StreamCallback, Ptr, 
         Callback, Ptr
         ) -> Void;
-
+    
     // openAll : Session -> List;  // [Stream]
     // closeAll : Session -> List;  // [Stream]
     // withAll : (Session, StreamsCallback, Ptr, Callback, Ptr) -> Void;  // [Stream]
+
+
+
 }
 
