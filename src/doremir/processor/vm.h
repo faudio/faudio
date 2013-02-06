@@ -75,7 +75,6 @@
 enum { kLmmRegs = 1024 };
 
 // Make regs and data first fields
-// Thus we can pass it around as T**
 struct lmm {
     struct {
         void *data;

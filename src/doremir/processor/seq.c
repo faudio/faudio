@@ -84,6 +84,13 @@ size_t seq_buffer_size(frames_t frameSize, ptr_t a)
     // FIXME should use buffer size of elements, not type size
 }
 
+graph_t seq_graph(ptr_t a, info_t *info, graph_t graph)
+{
+    this_t proc = (this_t) a;
+    // TODO
+}
+
+
 void seq_before(ptr_t a, info_t *info)
 {
     this_t proc = (this_t) a;
@@ -133,7 +140,7 @@ ptr_t seq_impl(doremir_id_t interface)
     static doremir_destroy_t seq_destroy_impl = { seq_destroy };
     static doremir_processor_interface_t seq_processor_interface_impl = {
         seq_before, seq_process, seq_after,
-        seq_input_type, seq_output_type, seq_buffer_size
+        seq_input_type, seq_output_type, seq_buffer_size, seq_graph
     };
 
     switch (interface) {

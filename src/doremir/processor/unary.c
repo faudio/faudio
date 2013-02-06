@@ -71,6 +71,21 @@ size_t unary_buffer_size(frames_t frameSize, ptr_t a)
     return size_max(inSize, outSize);
 }
 
+graph_t unary_graph(ptr_t a, info_t *info, graph_t graph)
+{
+    this_t proc = (this_t) a;
+    
+    char name[10];
+    snprintf(name, 10, "node_%d_%d", info->buf_offset, info->buf_step);
+    graph = doremir_graph_insert(string(name), graph);
+    
+    // TODO label
+    // TODO connections
+    
+    return graph;
+}
+
+
 void unary_before(ptr_t a, info_t *info)
 {
     // nothing
@@ -126,7 +141,7 @@ ptr_t unary_impl(doremir_id_t interface)
     static doremir_destroy_t unary_destroy_impl = { unary_destroy };
     static doremir_processor_interface_t unary_processor_interface_impl = {
         unary_before, unary_process, unary_after,
-        unary_input_type, unary_output_type, unary_buffer_size
+        unary_input_type, unary_output_type, unary_buffer_size, unary_graph
     };
 
     switch (interface) {

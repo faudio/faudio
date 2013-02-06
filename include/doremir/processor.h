@@ -5,6 +5,7 @@
 #include <doremir.h>
 #include <doremir/time.h>
 #include <doremir/type.h>
+#include <doremir/graph.h>
 #include <doremir/buffer.h>
 #include <doremir/message.h>
 
@@ -20,8 +21,10 @@ typedef struct {
             size_t sample_time;
             doremir_time_t total_time;
             doremir_message_dispatcher_t dispatcher;
+            int buf_offset;
+            int buf_step;
         } doremir_processor_info_t;
-typedef doremir_ptr_t doremir_processor_samples_t;
+typedef doremir_ptr_t * doremir_processor_samples_t;
 typedef struct {
             void (* before)(doremir_ptr_t, doremir_processor_info_t *);
             void (* process)(doremir_ptr_t,
@@ -31,12 +34,20 @@ typedef struct {
             doremir_type_t (* input_type)(doremir_ptr_t);
             doremir_type_t (* output_type)(doremir_ptr_t);
             size_t (* buffer_size)(doremir_type_frames_t, doremir_ptr_t);
+            doremir_graph_t (* graph)(doremir_ptr_t,
+                                      doremir_processor_info_t *,
+                                      doremir_graph_t);
         } doremir_processor_interface_t;
 typedef struct _doremir_processor_t * doremir_processor_t;
 doremir_type_t doremir_processor_input_type(doremir_processor_t);
 doremir_type_t doremir_processor_output_type(doremir_processor_t);
 size_t doremir_processor_buffer_size(doremir_type_frames_t,
                                      doremir_processor_t);
+doremir_graph_t doremir_processor_graph(doremir_processor_t,
+                                        doremir_processor_info_t *,
+                                        doremir_graph_t);
+void doremir_processor_write_graph(doremir_processor_t,
+                                   doremir_string_file_path_t);
 doremir_processor_t doremir_processor_identity(doremir_type_t);
 doremir_processor_t doremir_processor_constant(doremir_type_t,
                                                doremir_type_t,

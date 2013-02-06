@@ -25,6 +25,7 @@ module Doremir.Processor
     import Doremir;
     import Doremir.Time;
     import Doremir.Type;
+    import Doremir.Graph;
     import Doremir.Buffer;
     import Doremir.Message;
 
@@ -36,15 +37,17 @@ module Doremir.Processor
         frameSize   : Size,
         sampleTime  : Size,
         totalTime   : Time,
-        dispatcher  : Dispatcher
+        dispatcher  : Dispatcher,
+        bufOffset : Int,
+        bufStep   : Int
     };
 
     // infoDefault : Info* -> Void;
 
     /** @typedef doremir_processor_samples_t
-        The samples manipulated by a processor.
+        The samples manipulated by a processor (a vector of pointers to buffers).
      */
-    type Samples = Ptr;
+    type Samples = Ptr*;
 
     /** @interface doremir_processor_interface_t
         Processing interface. */
@@ -55,7 +58,9 @@ module Doremir.Processor
         
         inputType   : (Ptr -> Type)*,
         outputType  : (Ptr -> Type)*,
-        bufferSize  : ((Frames, Ptr) -> Size)*
+        bufferSize  : ((Frames, Ptr) -> Size)*,
+
+        graph : ((Ptr, Info*, Graph) -> Graph)*        
     };
     
     /** @typedef doremir_processor_t
@@ -66,7 +71,9 @@ module Doremir.Processor
     inputType : Processor -> Type;
     outputType : Processor -> Type;
     bufferSize : (Frames, Processor) -> Size;
-
+    graph : (Processor, Info*, Graph) -> Graph;
+    
+    writeGraph : (Processor,FilePath) -> Void;
 
     // ------------------------------------------------------------------------
     // Delay primitives

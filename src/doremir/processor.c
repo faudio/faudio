@@ -13,6 +13,7 @@
 #include <doremir/processor/par.h>
 #include <doremir/processor/loop.h>
 #include <doremir/processor/delay.h>
+#include <doremir/directory.h>
 #include <doremir/util.h>
 
 
@@ -44,6 +45,26 @@ size_t doremir_processor_buffer_size(doremir_type_frames_t frames, doremir_proce
 {
     assert(doremir_interface(doremir_processor_interface_i, proc) && "Must implement Processor");
     return ((proc_interface_t *) doremir_interface(doremir_processor_interface_i, proc))->buffer_size(frames, proc);
+}
+
+doremir_graph_t doremir_processor_graph(doremir_processor_t proc, 
+                                        doremir_processor_info_t *info, 
+                                        doremir_graph_t graph)
+{
+    assert(doremir_interface(doremir_processor_interface_i, proc) && "Must implement Processor");
+    return ((proc_interface_t *) doremir_interface(doremir_processor_interface_i, proc))->graph(proc, info, graph);
+}               
+
+void doremir_processor_write_graph(doremir_processor_t proc, 
+                                   doremir_string_file_path_t path)
+{
+    graph_t graph = doremir_graph_empty();
+    doremir_processor_info_t info = {
+        .buf_offset = 0,
+        .buf_step   = 1
+    };
+    graph = doremir_processor_graph(proc, &info, graph);
+    doremir_directory_write_file(path, doremir_graph_to_dot(string(""), string(""), graph));
 }
 
 

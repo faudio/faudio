@@ -90,6 +90,13 @@ size_t loop_buffer_size(frames_t frameSize, ptr_t a)
     return size_max(inSize + loopSize, outSize + loopSize);
 }
 
+graph_t loop_graph(ptr_t a, info_t *info, graph_t graph)
+{
+    this_t proc = (this_t) a;
+    // TODO
+}
+
+
 void loop_before(ptr_t a, info_t *info)
 {
     this_t proc = (this_t) a;
@@ -137,7 +144,7 @@ ptr_t loop_impl(doremir_id_t interface)
     static doremir_destroy_t loop_destroy_impl = { loop_destroy };
     static doremir_processor_interface_t loop_processor_interface_impl = {
         loop_before, loop_process, loop_after,
-        loop_input_type, loop_output_type, loop_buffer_size
+        loop_input_type, loop_output_type, loop_buffer_size, loop_graph
     };
 
     switch (interface) {

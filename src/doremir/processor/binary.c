@@ -73,6 +73,13 @@ size_t binary_buffer_size(frames_t frameSize, ptr_t a)
     return size_max(inSize, outSize);
 }
 
+graph_t binary_graph(ptr_t a, info_t *info, graph_t graph)
+{
+    this_t proc = (this_t) a;
+    // TODO
+}
+
+
 void binary_before(ptr_t a, info_t *info)
 {
     // nothing
@@ -116,7 +123,7 @@ ptr_t binary_impl(doremir_id_t interface)
     static doremir_destroy_t binary_destroy_impl = { binary_destroy };
     static doremir_processor_interface_t binary_processor_interface_impl = {
         binary_before, binary_process, binary_after,
-        binary_input_type, binary_output_type, binary_buffer_size
+        binary_input_type, binary_output_type, binary_buffer_size, binary_graph
     };
 
     switch (interface) {

@@ -84,6 +84,13 @@ size_t par_buffer_size(frames_t frameSize, ptr_t a)
     // FIXME should use buffer size of elements, not type size
 }
 
+graph_t par_graph(ptr_t a, info_t *info, graph_t graph)
+{
+    this_t proc = (this_t) a;
+    // TODO
+}
+
+
 void par_before(ptr_t a, info_t *info)
 {
     this_t proc = (this_t) a;
@@ -135,7 +142,7 @@ ptr_t par_impl(doremir_id_t interface)
     static doremir_destroy_t par_destroy_impl = { par_destroy };
     static doremir_processor_interface_t par_processor_interface_impl = {
         par_before, par_process, par_after,
-        par_input_type, par_output_type, par_buffer_size
+        par_input_type, par_output_type, par_buffer_size, par_graph
     };
 
     switch (interface) {

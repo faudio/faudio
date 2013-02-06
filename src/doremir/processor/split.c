@@ -67,6 +67,13 @@ size_t split_buffer_size(frames_t frameSize, ptr_t a)
     return doremir_type_size_of(frameSize, split_output_type(a));
 }
 
+graph_t split_graph(ptr_t a, info_t *info, graph_t graph)
+{
+    this_t proc = (this_t) a;
+    // TODO
+}
+
+
 void split_before(ptr_t a, info_t *info)
 {
     this_t proc = (this_t) a;
@@ -112,7 +119,7 @@ ptr_t split_impl(doremir_id_t interface)
     static doremir_destroy_t split_destroy_impl = { split_destroy };
     static doremir_processor_interface_t split_processor_interface_impl = {
         split_before, split_process, split_after,
-        split_input_type, split_output_type, split_buffer_size
+        split_input_type, split_output_type, split_buffer_size, split_graph
     };
 
     switch (interface) {
