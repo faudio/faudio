@@ -109,6 +109,12 @@ doremir_processor_t doremir_processor_split(doremir_type_t type)
 
 /** Lift a unary function to a processor.
 
+    The given types must be simple types or frames types.
+    
+    The given function will receive a pointer to a single value of the given input
+    types and is expected to return a pointer to a value of the proper output type.
+    The received pointer may be used as return value.
+    
     @param input_type       Input type. Must be unit, a simple type or a frame type containing a simple type.
     @param output_type      Type of output. Must be unit, a simple type or a frame type containing a simple type.
     @param function         Function to be lifted.
@@ -136,7 +142,7 @@ doremir_processor_t doremir_processor_unary
     
     The given function will receive pointers to single values of the given input
     types and is expected to return a pointer to a value of the proper output type.
-    The pointers received as parameters may be used as return values.
+    The first received pointer may be used as return value.
 
     @param input_type1      Type of first input.
     @param input_type2      Type of second input.
