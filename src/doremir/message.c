@@ -97,9 +97,9 @@ void doremir_message_destroy_dispatcher(dispatcher_t dispatcher)
     delete_dispatcher(dispatcher);
 }
 
-void doremir_message_send(address_t address,
-                          doremir_message_t message,
-                          dispatcher_t dispatcher)
+void doremir_message_send(dispatcher_t dispatcher,
+                          address_t address,
+                          doremir_message_t message)
 {
     if (!dispatcher->is_lockfree) {
         assert(false && "Unreachable");
@@ -162,8 +162,8 @@ void doremir_message_sync(dispatcher_t dispatcher)
     }
 }
 
-list_t doremir_message_query(address_t address,
-                             dispatcher_t dispatcher)
+list_t doremir_message_receive(dispatcher_t dispatcher,
+                               address_t address)
 {
     if (!dispatcher->is_lockfree) {
         assert(false && "Unreachable");
@@ -177,12 +177,6 @@ list_t doremir_message_query(address_t address,
     }
 }
 
-list_t doremir_message_fetch(address_t address,
-                             dispatcher_t dispatcher)
-{
-    doremir_message_sync(dispatcher);
-    return doremir_message_query(address, dispatcher);
-}
 
 // --------------------------------------------------------------------------------
 

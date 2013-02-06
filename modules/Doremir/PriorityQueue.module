@@ -26,7 +26,7 @@ module Doremir.PriorityQueue
     destroy : PriorityQueue -> Void;
     
     merge   : (PriorityQueue, PriorityQueue) -> Void;
-    insert  : (Ptr, PriorityQueue) -> Void;
+    insert  : (Ptr, PriorityQueue) -> Void; // should arguably swap args
     peek    : PriorityQueue -> Ptr;
     pop     : PriorityQueue -> Ptr;
 }

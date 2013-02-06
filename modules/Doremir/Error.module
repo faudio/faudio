@@ -30,7 +30,7 @@
     severity  : Error -> Severity;
     message   : Error -> String;
     origin    : Error -> String;
-    log       : (Ptr,Error) -> Void;
+    log       : (Ptr,Error) -> Void; // Ptr ignored
     format    : (Bool,Error) -> String;
 
     check : Ptr -> Bool;

@@ -32,7 +32,7 @@ doremir_event_t doremir_event_receive(doremir_ptr_t,
 doremir_event_t doremir_event_send(doremir_ptr_t,
                                    doremir_message_address_t,
                                    doremir_event_t);
-bool doremir_event_has_value(doremir_event_t, doremir_time_t);
+bool doremir_event_has_value(doremir_time_t, doremir_event_t);
 doremir_ptr_t doremir_event_value(doremir_event_t);
 doremir_time_t doremir_event_offset(doremir_event_t);
 doremir_event_t doremir_event_head(doremir_event_t);

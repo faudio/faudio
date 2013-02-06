@@ -23,7 +23,7 @@ module Doremir.Scheduler
     create  : (Ptr) -> Scheduler; // Requires Clock
     destroy : Scheduler -> Void;
     
-    schedule : (Event, Scheduler) -> Void;
+    schedule : (Scheduler, Event) -> Void;
     execute  : Scheduler -> Void;
     // Loop until finished
     run      : Scheduler -> Void;

@@ -1179,17 +1179,17 @@ void test_dispatcher()
                     string("pitches"), list(ratio(60, 1), ratio(62, 1))
                 );
 
-    doremir_message_send(i16(1), val, disp);
-    doremir_message_send(i16(2), string("World!"), disp);
-    doremir_message_send(i16(2), string("World!"), disp);
-    doremir_message_send(i16(2), string("World!"), disp);
-    doremir_message_send(i16(2), string("World!"), disp);
+    doremir_message_send(disp, i16(1), val);
+    doremir_message_send(disp, i16(2), string("World!"));
+    doremir_message_send(disp, i16(2), string("World!"));
+    doremir_message_send(disp, i16(2), string("World!"));
+    doremir_message_send(disp, i16(2), string("World!"));
 
     list_t msgs;
 
     while (true) {
         doremir_message_sync(disp);
-        msgs = doremir_message_query(i16(1), disp);
+        msgs = doremir_message_receive(disp, i16(1));
 
         if (doremir_list_is_empty(msgs)) {
             break;
@@ -1210,7 +1210,7 @@ time_t execute_events(priority_queue_t q, time_t t)
     while ((x = doremir_priority_queue_peek(q))) {
         doremir_audio_engine_log_info(string_dappend(string("Peek at "), doremir_string_show(t)));
 
-        if (!doremir_event_has_value(x, t)) {
+        if (!doremir_event_has_value(t, x)) {
             return doremir_event_offset(x);
         } else {
             doremir_priority_queue_pop(q);

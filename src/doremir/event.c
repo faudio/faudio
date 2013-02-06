@@ -202,7 +202,7 @@ doremir_time_t doremir_event_offset(doremir_event_t event)
     }
 }
 
-bool doremir_event_has_value(doremir_event_t event, doremir_time_t time)
+bool doremir_event_has_value(doremir_time_t time, doremir_event_t event)
 {
     switch (event->tag) {
 

@@ -51,7 +51,7 @@ module Doremir.Event
     send : (Ptr,Address,Event) -> Event;    // Receiver
 
 
-    hasValue : (Event,Time) -> Bool;   // Is an occurance available            rename hasValue
+    hasValue : (Time,Event) -> Bool;   // Is an occurance available            rename hasValue
     value  : Event -> Ptr;           // Get the first occurance value        rename value?
     offset : Event -> Time;          // Offset to first occurance            rename offset
     head    : Event -> Event;

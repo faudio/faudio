@@ -63,7 +63,7 @@ void doremir_scheduler_destroy(scheduler_t scheduler)
     @param event            Event to schedule.
     @param scheduler        The scheduler.
  */
-void doremir_scheduler_schedule(doremir_event_t event, doremir_scheduler_t scheduler)
+void doremir_scheduler_schedule(doremir_scheduler_t scheduler, doremir_event_t event)
 {
     // make entry
     // insert into queue
