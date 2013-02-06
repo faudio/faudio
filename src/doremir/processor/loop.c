@@ -93,7 +93,11 @@ size_t loop_buffer_size(frames_t frameSize, ptr_t a)
 graph_t loop_graph(ptr_t a, info_t *info, graph_t graph)
 {
     this_t proc = (this_t) a;
-    // TODO
+
+    // TODO connections
+    // TODO elements
+
+    return graph;
 }
 
 

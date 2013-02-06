@@ -1107,13 +1107,10 @@ void test_graph(string_t path)
         //     string("(1)"), a);
 
         doremir_print("a                            ==> %s\n", a);
-
-        FILE *f = fopen(unstring(path), "w+");
-        fprintf(f, "%s\n", doremir_string_to_utf8(doremir_graph_to_dot(
-                                                      string("#include \"doc/graphs/header.dot\""),
-                                                      string(""),
-                                                      a)));
-        fclose(f);
+        doremir_directory_write_file(path, doremir_graph_to_dot(
+                                         string("#include \"doc/graphs/header.dot\""),
+                                         string(""),
+                                         a));
     }
 }
 
@@ -1138,25 +1135,7 @@ void test_json(string_t path)
 {
     test_section("JSON conversion");
 
-    size_t sz = 1000000;
-    char source[sz + 1];
-
-    FILE *f = fopen(unstring(path), "r");
-
-    if (f != NULL) {
-        size_t sz2 = fread(source, sizeof(char), sz, f);
-
-        if (sz2 == 0) {
-            fail("Error reading file");
-            return;
-        } else {
-            source[++sz2] = '\0';
-        }
-
-        fclose(f);
-    }
-
-    string_t json = string(source);
+    string_t json = doremir_directory_read_file(path);
     // printf("%s\n", unstring(json));
 
     ptr_t data = doremir_string_from_json(json);
@@ -1306,10 +1285,20 @@ ptr_t add1234(ptr_t c, ptr_t x)
 {
     return i8(ti8(x) + 1234);
 }
-void test_processors()
+void test_processors(string_t path)
 {
-
     test_section("Processors");
+
+    inform(string_append(string("Writing "), path));
+
+    processor_t p, q;
+    p = unary(type(i8), type(i8), add1234, NULL);
+    q = par(par(p,p),par(p,p));
+    doremir_processor_write_graph(q, path);
+
+
+/*
+
     {
         processor_t p, q;
         p = doremir_processor_unary(type(i8), type(i8), add1234, NULL);
@@ -1356,7 +1345,8 @@ void test_processors()
         processor_t p = doremir_processor_identity(t);
         doremir_print("p                            ==> %s\n", p);
 
-    }
+    }  */
+
 }
 
 ptr_t cont(ptr_t x)
@@ -1753,7 +1743,8 @@ int main(int argc, char const *argv[])
         // test_plot_buffer();
         // test_plot_file(string("/Users/hans/Desktop/Passager.wav"));
 
-        test_processors();
+        test_processors(string_dappend(doremir_directory_current(), string("/test/proc.dot")));
+        goto end;
         test_vm2();
 
 
@@ -1764,7 +1755,6 @@ int main(int argc, char const *argv[])
         audio_stream();
         midi_stream();
 
-        goto end;
 end:
         doremir_audio_engine_terminate();
     }

@@ -97,6 +97,16 @@
 #define merge(x,y)          doremir_event_merge(x,y)
 #define switch_(p,x,y)      doremir_event_switch(p,x,y)
 
+#define unary(a,b,f,x)      doremir_processor_unary(a,b,f,x)
+#define binary(a,b,c,f,x)   doremir_processor_binary(a,b,c,f,x)
+#define split(a)            doremir_processor_split(a)
+#define id(a)               doremir_processor_identity(a)
+#define const(a,b)          doremir_processor_constant(a,b)
+#define par(x,y)            doremir_processor_parallel(x,y)
+#define comp(x,y)           doremir_processor_compose(x,y)
+#define seq(x,y)            doremir_processor_sequence(x,y)
+#define loop(x)             doremir_processor_loop(x)
+
 #define empty               doremir_list_empty
 #define cons                doremir_list_cons
 #define is_empty            doremir_list_is_empty
