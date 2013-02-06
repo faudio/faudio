@@ -79,7 +79,7 @@ graph_t binary_graph(ptr_t a, info_t *info, graph_t graph)
 
     char name[10];
     snprintf(name, 10, "node_%d_%d", info->buf_offset, info->buf_step);
-    graph = doremir_graph_insert(pair(string(name), string(name)), graph);
+    graph = doremir_graph_insert(string(name), graph);
 
     // TODO label
     // TODO connections

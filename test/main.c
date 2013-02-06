@@ -1293,7 +1293,18 @@ void test_processors(string_t path)
 
     processor_t p, q;
     p = unary(type(i8), type(i8), add1234, NULL);
-    q = par(par(p,p),par(p,p));
+    q = 
+        seq(
+            seq(
+                split(type(i8)),
+                id(type_pair(type(i8), type(i8)))
+            ),
+            par(seq(split(type(i8)), par(p,p)),
+                seq(split(type(i8)), par(p,p)))
+        )
+    
+    ;
+    
     doremir_processor_write_graph(q, path);
 
 
