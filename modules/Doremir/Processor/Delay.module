@@ -17,6 +17,6 @@ module Doremir.Processor.Delay
     
     type Proc = opaque;    
     create : (Type, Size) -> Proc;
-    destroy : Proc -> Void;
+    // destroy : Proc -> Void;
 }
 

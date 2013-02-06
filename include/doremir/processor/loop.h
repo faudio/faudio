@@ -14,7 +14,6 @@
     */
 
 typedef struct _doremir_processor_loop_proc_t * doremir_processor_loop_proc_t;
-doremir_processor_loop_proc_t doremir_processor_loop_create(doremir_processor_t);
 
 /** @}
     @}

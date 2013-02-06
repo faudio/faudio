@@ -16,6 +16,6 @@ module Doremir.Processor.Split
 
     type Proc = opaque;
     create : Type -> Proc;
-    destroy : Proc -> Void;
+    // destroy : Proc -> Void;
 }
 

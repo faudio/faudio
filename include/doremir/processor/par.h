@@ -16,7 +16,6 @@
 typedef struct _doremir_processor_par_proc_t * doremir_processor_par_proc_t;
 doremir_processor_par_proc_t doremir_processor_par_create(doremir_processor_t,
                                                           doremir_processor_t);
-void doremir_processor_par_destroy(doremir_processor_par_proc_t);
 
 /** @}
     @}
