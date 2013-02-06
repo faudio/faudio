@@ -6,25 +6,28 @@
 
     @note 
         This module is fairly low-level, you typically want to use the the
-        [Event](@ref doremir_event_t) wrappers @ref doremir_event_send and @ref
+        [Event](@ref DoremirEvent) wrappers @ref doremir_event_send and @ref
         doremir_event_receive instead.
 
     Message passing is the process of delivering a *message* to an *address*. Any
     ordered type can be used as an addreses, but typically it is an objet with fast
     equality comparison such as an integer. Message passing is captured by two 
-    interfaces: [Sender](@ref doremir_sender_t) which provides messages, and 
-    [Receiver](@ref doremir_receiver_t) which accepts them. Note that the method
+    interfaces: [Sender](@ref doremir_message_sender_t) which provides messages, and 
+    [Receiver](@ref doremir_message_receiver_t) which accepts them. Note that the method
     names are contrary to the interfaces: you *send* to a *receiver* and *receive*
     from a *sender*.
     
-    @par Literals
+    The *dispatcher* type provides message passing accross thread boundaries:
+    it implements both [Sender](@ref doremir_message_sender_t) and [Receiver](@ref doremir_message_receiver_t).
+    
+    @par Dispatcher literals
     - `dispatcher()`
     - `lockfree_dispatcher()`
     
-    @par Implements
-    - doremir_sender_t
-    - doremir_receiver_t
+    @par Dispatcher implements
     - doremir_destroy_t
+    - doremir_message_sender_t
+    - doremir_message_receiver_t
     - doremir_string_show_t
 
     @see

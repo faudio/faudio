@@ -29,9 +29,6 @@ void doremir_message_send(doremir_message_address_t     address,
     messages may be lost.
     
     Behaves exactly like a call to sync() followed by a call to query().
-
-    @param
-    @return
  */
 doremir_list_t doremir_message_fetch(doremir_message_address_t address,
                                      doremir_message_dispatcher_t dispatcher) {}
