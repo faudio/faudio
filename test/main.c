@@ -1727,7 +1727,7 @@ int main(int argc, char const *argv[])
         test_list();
         test_set();
         test_map();
-        test_graph(string_dappend(doremir_directory_current(), string("/doc/graphs/gen.dot")));
+        test_graph(string_dappend(doremir_directory_current(), string("/test/gen.dot")));
         test_priority_queue(10);
         test_json(
             string_dappend(doremir_directory_current(), string("/test/example.json")));
