@@ -93,6 +93,18 @@ size_t loop_buffer_size(frames_t frameSize, ptr_t a)
 graph_t loop_graph(ptr_t a, info_t *info, graph_t graph)
 {
     this_t proc = (this_t) a;
+    int offset = info->buf_offset;
+    int step   = info->buf_step;
+    int seq    = info->buf_seq;
+
+
+    info->buf_loop++;
+
+    // copy %loop (%off+%step) 
+    // graph = proc->elemImpl->graph(proc->elem, info, graph);
+    // copy (%off+%step) %loop 
+
+    info->buf_loop--;
 
     // TODO connections
     // TODO elements

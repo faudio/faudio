@@ -84,16 +84,37 @@ size_t seq_buffer_size(frames_t frameSize, ptr_t a)
     // FIXME should use buffer size of elements, not type size
 }
 
+static inline string_t node_name(int off, int step, int seq)
+{
+    char name[50];
+    snprintf(name, 50, "node_%d_%d_%d", off, step, seq);
+    return string(name);
+}
+static inline string_t edge_name(int off)
+{
+    return format_integer("(%d)", off);
+}
 graph_t seq_graph(ptr_t a, info_t *info, graph_t graph)
 {
     this_t proc = (this_t) a;
+    int *offset = &info->buf_offset;
+    int *step   = &info->buf_step;
+    int *seq    = &info->buf_seq;
 
     // TODO connections
 
     graph = proc->elemImpl[0]->graph(proc->elem[0], info, graph);
-    info->buf_seq++;
+    (*seq)++;
+    // *step *= 2;
     graph = proc->elemImpl[1]->graph(proc->elem[1], info, graph);
-    info->buf_seq--;
+    // *step /= 2;
+    (*seq)--;
+
+    pair_t first   = node_name(*offset, *step, *seq);
+    pair_t second  = node_name(*offset, *step, *seq + 1);
+    graph = doremir_graph_insert(first, graph);
+    graph = doremir_graph_insert(second, graph);
+    graph = doremir_graph_connect(first, second, edge_name(*offset), graph);
 
     return graph;
 }

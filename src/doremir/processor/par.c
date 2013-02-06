@@ -87,15 +87,18 @@ size_t par_buffer_size(frames_t frameSize, ptr_t a)
 graph_t par_graph(ptr_t a, info_t *info, graph_t graph)
 {
     this_t proc = (this_t) a;
+    int *offset = &info->buf_offset;
+    int *step   = &info->buf_step;
+    int *seq    = &info->buf_seq;
 
     // TODO connections
 
-    info->buf_step *= 2;
+    *step *= 2;
     graph = proc->elemImpl[0]->graph(proc->elem[0], info, graph);
-    info->buf_offset += (info->buf_step/2);
+    *offset += (*step/2);
     graph = proc->elemImpl[1]->graph(proc->elem[1], info, graph);
-    info->buf_offset -= (info->buf_step/2);
-    info->buf_step /= 2;
+    *offset -= (*step/2);
+    *step /= 2;
 
     return graph;
 }

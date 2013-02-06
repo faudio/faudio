@@ -85,12 +85,15 @@ static inline string_t edge_name(int off)
 graph_t unary_graph(ptr_t a, info_t *info, graph_t graph)
 {
     this_t proc = (this_t) a;
+    int *offset = &info->buf_offset;
+    int *step   = &info->buf_step;
+    int *seq    = &info->buf_seq;
 
-    pair_t self  = node_name(info->buf_offset, info->buf_step, info->buf_seq);
-    pair_t next  = node_name(info->buf_offset, info->buf_step, info->buf_seq + 1);
+    pair_t self  = node_name(*offset, *step, *seq);
+    // pair_t next  = node_name(*offset, *step, *seq + 1);
     graph = doremir_graph_insert(self, graph);
-    graph = doremir_graph_insert(next, graph);
-    graph = doremir_graph_connect(self, next, edge_name(info->buf_offset), graph);
+    // graph = doremir_graph_insert(next, graph);
+    // graph = doremir_graph_connect(self, next, edge_name(*offset), graph);
  
     return graph;
 }
