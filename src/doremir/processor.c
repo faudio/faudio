@@ -47,15 +47,15 @@ size_t doremir_processor_buffer_size(doremir_type_frames_t frames, doremir_proce
     return ((proc_interface_t *) doremir_interface(doremir_processor_interface_i, proc))->buffer_size(frames, proc);
 }
 
-doremir_graph_t doremir_processor_graph(doremir_processor_t proc, 
-                                        doremir_processor_info_t *info, 
+doremir_graph_t doremir_processor_graph(doremir_processor_t proc,
+                                        doremir_processor_info_t *info,
                                         doremir_graph_t graph)
 {
     assert(doremir_interface(doremir_processor_interface_i, proc) && "Must implement Processor");
     return ((proc_interface_t *) doremir_interface(doremir_processor_interface_i, proc))->graph(proc, info, graph);
-}               
+}
 
-void doremir_processor_write_graph(doremir_processor_t proc, 
+void doremir_processor_write_graph(doremir_processor_t proc,
                                    doremir_string_file_path_t path)
 {
     graph_t graph = doremir_graph_empty();
@@ -101,7 +101,7 @@ doremir_processor_t doremir_processor_identity(doremir_type_t type)
 doremir_processor_t doremir_processor_constant(doremir_type_t   input_type,
                                                doremir_type_t   output_type,
                                                doremir_ptr_t    value)
-{                                                                    
+{
     // TODO defensively copy, or trust the user?
     // TODO if we are closing over a frame, should we multiply here instead of trusting the user to?
     return (processor_t) doremir_processor_unary_create(input_type, output_type, constant, NULL);
@@ -131,11 +131,11 @@ doremir_processor_t doremir_processor_split(doremir_type_t type)
 /** Lift a unary function to a processor.
 
     The given types must be simple types or frames types.
-    
+
     The given function will receive a pointer to a single value of the given input
     types and is expected to return a pointer to a value of the proper output type.
     The received pointer may be used as return value.
-    
+
     @param input_type       Input type. Must be unit, a simple type or a frame type containing a simple type.
     @param output_type      Type of output. Must be unit, a simple type or a frame type containing a simple type.
     @param function         Function to be lifted.
@@ -160,7 +160,7 @@ doremir_processor_t doremir_processor_unary
 /** Lift a binary function to a processor.
 
     The given types must be simple types or frames types.
-    
+
     The given function will receive pointers to single values of the given input
     types and is expected to return a pointer to a value of the proper output type.
     The first received pointer may be used as return value.

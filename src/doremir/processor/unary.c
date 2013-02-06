@@ -74,14 +74,14 @@ size_t unary_buffer_size(frames_t frameSize, ptr_t a)
 graph_t unary_graph(ptr_t a, info_t *info, graph_t graph)
 {
     this_t proc = (this_t) a;
-    
+
     char name[10];
     snprintf(name, 10, "node_%d_%d", info->buf_offset, info->buf_step);
     graph = doremir_graph_insert(string(name), graph);
-    
+
     // TODO label
     // TODO connections
-    
+
     return graph;
 }
 
@@ -97,20 +97,20 @@ void unary_after(ptr_t a, info_t *info)
 }
 
 void unary_process(ptr_t a, info_t *info, samples_t samples)
-{                  
+{
     this_t proc = (this_t) a;
-    
+
     int offset = 0; // TODO
-    void* input  = ((void**) samples)[offset];
-    void* output = ((void**) samples)[offset];
-    void* result;
-    
+    void *input  = ((void **) samples)[offset];
+    void *output = ((void **) samples)[offset];
+    void *result;
+
     size_t size = info->frame_size; // or 1
-    for (int samp = 0; samp < size; ++samp)
-    {
+
+    for (int samp = 0; samp < size; ++samp) {
         result = proc->function(proc->data, input);
-        if (result != output)
-        {
+
+        if (result != output) {
             // copy from res to output
         }
     }
