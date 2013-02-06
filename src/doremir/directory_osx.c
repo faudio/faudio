@@ -25,6 +25,27 @@ doremir_string_file_path_t doremir_directory_current()
     return string(cwd);
 }
 
+doremir_string_t doremir_directory_read_file(doremir_string_file_path_t path)
+{
+    size_t buf_size = 1000000;
+    char buf[buf_size + 1];
+
+    FILE *file = fopen(unstring(path), "r");
+    if (!file) {
+        assert(false && "Error reading file");
+    }
+    size_t read_size = fread(buf, sizeof(char), buf_size, file);
+    fclose(file);
+
+    if (read_size == 0) {
+        assert(false && "Error reading file");
+    } else {
+        buf[read_size + 1] = '\0';
+    }
+    return string(buf);
+}
+
+
 void doremir_directory_write_file(doremir_string_file_path_t path,
                                   doremir_string_t string)
 {

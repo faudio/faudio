@@ -12,8 +12,8 @@ module Doremir.Directory
 
     home : () -> FilePath;
     current : () -> FilePath;
-    
+
+    readFile : FilePath -> String;
     writeFile : (FilePath,String) -> Void;
     appendFile : (FilePath,String) -> Void;
-    
 }
