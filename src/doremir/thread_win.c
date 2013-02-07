@@ -122,22 +122,27 @@ void doremir_thread_destroy_mutex(doremir_thread_mutex_t mutex)
  */
 bool doremir_thread_lock(doremir_thread_mutex_t mutex)
 {
-    // TODO
-    // need to do DuplicateHandle or similar
+    DWORD result = WaitForSingleObject(mutex->native, INFINITE);
+    assert(result != WAIT_FAILED);
+    return result == WAIT_OBJECT_0;
 }
 
 /** Try acquiring the lock of a mutex object.
  */
 bool doremir_thread_try_lock(doremir_thread_mutex_t mutex)
 {
-    // TODO
+    DWORD result = WaitForSingleObject(mutex->native, 0);
+    assert(result != WAIT_FAILED);
+    return result == WAIT_OBJECT_0;
 }
 
 /** Release the lock of a mutex object.
  */
 bool doremir_thread_unlock(doremir_thread_mutex_t mutex)
 {
-    // TODO
+    BOOL result = ReleaseMutex(mutex->native);
+    assert(result != 0);
+    return true;
 }
 
 
