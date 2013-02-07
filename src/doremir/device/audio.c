@@ -568,7 +568,7 @@ int native_audio_callback(const void                       *input,
                           void                             *data)
 {
     // if (flags)
-    // {                  
+    // {
     //     if (flags & paInputUnderflow)  warn(string("Input underflow"));
     //     if (flags & paInputOverflow)   warn(string("Input overflow"));
     //     if (flags & paOutputUnderflow) warn(string("Output underflow"));
@@ -624,7 +624,7 @@ ptr_t audio_session_impl(doremir_id_t interface)
 bool audio_device_equal(ptr_t a, ptr_t b)
 {
     device_t device1 = (device_t) a;
-    device_t device2 = (device_t) b;        
+    device_t device2 = (device_t) b;
     // TODO check that session is valid
     return device1->index == device2->index;
 }
@@ -651,6 +651,7 @@ ptr_t audio_device_impl(doremir_id_t interface)
     switch (interface) {
     case doremir_equal_i:
         return &audio_device_equal_impl;
+
     case doremir_string_show_i:
         return &audio_device_show_impl;
 
@@ -688,7 +689,7 @@ double audio_stream_tick_rate(ptr_t a)
     stream_t stream = (stream_t) a;
     return stream->sample_rate;
 }
- 
+
 int64_t audio_stream_ticks(ptr_t a)
 {
     stream_t stream = (stream_t) a;
@@ -700,7 +701,7 @@ void audio_stream_sync(ptr_t a)
     stream_t stream = (stream_t) a;
     assert(false && "Not implemented");
 }
- 
+
 doremir_list_t audio_stream_receive(ptr_t a, address_t addr)
 {
     stream_t stream = (stream_t) a;
@@ -727,8 +728,8 @@ ptr_t audio_stream_impl(doremir_id_t interface)
         = { audio_stream_sync, audio_stream_receive };
 
     switch (interface) {
-        
-        
+
+
     case doremir_string_show_i:
         return &audio_stream_show_impl;
 
@@ -737,8 +738,10 @@ ptr_t audio_stream_impl(doremir_id_t interface)
 
     case doremir_time_clock_i:
         return &audio_stream_time_clock_impl;
+
     case doremir_message_sender_i:
         return &audio_stream_message_sender_impl;
+
     case doremir_message_receiver_i:
         return &audio_stream_message_receiver_impl;
 
