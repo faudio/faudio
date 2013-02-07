@@ -75,6 +75,8 @@
 #define buffer(s)           doremir_buffer_create(s)
 #define midi(s,a,b)         doremir_midi_create_simple(s,a,b)
 #define midi_sysex(b)       doremir_midi_create_sysex(b)
+#define dispatcher()        doremir_message_create_dispatcher()
+#define lockfree_dispatcher() doremir_message_create_lockfree_dispatcher()
 
 #define type(a)             doremir_type_simple(a##_type)
 #define type_pair(a,b)      doremir_type_pair(a,b)

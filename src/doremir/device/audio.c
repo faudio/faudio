@@ -58,8 +58,10 @@ struct _doremir_device_audio_stream_t {
     unsigned            input_channels, output_channels;
     double              sample_rate;
     long                max_buffer_size;
-    int32_t             time;               // Monotonically increasing sample count
+    int32_t             sample_count;       // Monotonically increasing sample count
 
+    dispatcher_t        incoming;
+    dispatcher_t        outgoing;
 };
 
 static mutex_t pa_mutex;
@@ -153,6 +155,8 @@ inline static device_t new_device(native_index_t index)
 
 inline static void delete_device(device_t device)
 {
+    doremir_destroy(device->name);
+    doremir_destroy(device->host_name);
     doremir_delete(device);
 }
 
@@ -172,14 +176,20 @@ inline static stream_t new_stream(device_t input, device_t output, processor_t p
 
     stream->proc            = proc;
     stream->proc_impl       = doremir_interface(doremir_processor_interface_i, stream->proc);
-
     assert(stream->proc_impl && "Must implement Processor");
+
+    stream->sample_count    = 0;
+
+    stream->incoming        = lockfree_dispatcher();
+    stream->outgoing        = lockfree_dispatcher();
 
     return stream;
 }
 
 inline static void delete_stream(stream_t stream)
 {
+    doremir_destroy(stream->incoming);
+    doremir_destroy(stream->outgoing);
     doremir_delete(stream);
 }
 
@@ -487,6 +497,7 @@ void doremir_device_audio_with_stream(device_t            input,
 
 // --------------------------------------------------------------------------------
 
+
 void before_processing(stream_t stream)
 {
     // extract top-level audio type
@@ -494,11 +505,11 @@ void before_processing(stream_t stream)
     // allocate buffers
     // call setup() on top processor (passing outgoing message receiver)
     doremir_processor_info_t info = {
-        .sample_rate = 44100,
-        .frame_size  = 0,
-        .sample_time = 0,
-        .total_time  = 0,
-        .dispatcher  = NULL
+        .sample_rate = stream->sample_rate,
+        .frame_size  = stream->max_buffer_size,
+        .sample_time = stream->sample_count,
+        .total_time  = NULL, // TODO
+        .dispatcher  = stream->incoming
     };
 
     stream->proc_impl->before(stream->proc, &info);
@@ -507,11 +518,11 @@ void before_processing(stream_t stream)
 void after_processing(stream_t stream)
 {
     doremir_processor_info_t info = {
-        .sample_rate = 44100,
-        .frame_size  = 0,
-        .sample_time = 0,
-        .total_time  = 0,
-        .dispatcher  = NULL
+        .sample_rate = stream->sample_rate,
+        .frame_size  = stream->max_buffer_size,
+        .sample_time = stream->sample_count,
+        .total_time  = NULL, // TODO
+        .dispatcher  = stream->incoming
     };
 
     stream->proc_impl->after(stream->proc, &info);
@@ -523,18 +534,20 @@ void after_processing(stream_t stream)
 int during_processing(stream_t stream, unsigned count, float **input, float **output)
 {
     doremir_processor_info_t info = {
-        .sample_rate = 44100,
-        .frame_size  = 0,
-        .sample_time = 0,
-        .total_time  = 0,
-        .dispatcher  = NULL
+        .sample_rate = stream->sample_rate,
+        .frame_size  = stream->max_buffer_size,
+        .sample_time = stream->sample_count,
+        .total_time  = NULL, // TODO
+        .dispatcher  = stream->incoming
     };
 
-    // call dispatch() on the innner dispatcher
+    // Syncronize messages
+//    doremir_message_sync(stream->incoming);
 
     // deliver inputs
     // stream->proc_impl->process(stream->proc, &info, NULL);
     // deliver outputs
+
     for (unsigned channel = 0; channel < stream->input_channels; ++channel) {
         float *in  = input[channel];
         float *out = output[channel];
@@ -545,8 +558,7 @@ int during_processing(stream_t stream, unsigned count, float **input, float **ou
         }
     }
 
-    stream->time += count; // TODO atomic incr
-
+    stream->sample_count += count; // TODO atomic incr
     return paContinue;
 }
 
