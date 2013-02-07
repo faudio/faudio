@@ -500,10 +500,6 @@ void doremir_device_audio_with_stream(device_t            input,
 
 void before_processing(stream_t stream)
 {
-    // extract top-level audio type
-
-    // allocate buffers
-    // call setup() on top processor (passing outgoing message receiver)
     doremir_processor_info_t info = {
         .sample_rate = stream->sample_rate,
         .frame_size  = stream->max_buffer_size,
@@ -512,6 +508,7 @@ void before_processing(stream_t stream)
         .dispatcher  = stream->incoming
     };
 
+    // allocate buffers
     stream->proc_impl->before(stream->proc, &info);
 }
 
@@ -526,8 +523,6 @@ void after_processing(stream_t stream)
     };
 
     stream->proc_impl->after(stream->proc, &info);
-
-    // unregister processors from incoming message dispatcher
     // free buffers
 }
 
@@ -542,7 +537,7 @@ int during_processing(stream_t stream, unsigned count, float **input, float **ou
     };
 
     // Syncronize messages
-//    doremir_message_sync(stream->incoming);
+    doremir_message_sync(stream->incoming);
 
     // deliver inputs
     // stream->proc_impl->process(stream->proc, &info, NULL);
@@ -572,7 +567,14 @@ int native_audio_callback(const void                       *input,
                           PaStreamCallbackFlags             flags,
                           void                             *data)
 {
-    // TODO handle status flags?
+    // if (flags)
+    // {                  
+    //     if (flags & paInputUnderflow)  warn(string("Input underflow"));
+    //     if (flags & paInputOverflow)   warn(string("Input overflow"));
+    //     if (flags & paOutputUnderflow) warn(string("Output underflow"));
+    //     if (flags & paOutputOverflow)  warn(string("Output overflow"));
+    //     if (flags & paPrimingOutput)   warn(string("Priming output"));
+    // }
     return during_processing(data, count, (float **) input, (float **) output);
 }
 

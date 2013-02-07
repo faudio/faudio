@@ -1593,7 +1593,7 @@ void test_audio_stream()
     doremir_device_audio_set_status_callback(status_changed, string("foobar"), session);
 
     // Stream active, let it run for 5 seconds
-    doremir_thread_sleep(1000);
+    doremir_thread_sleep(20000);
 
 cleanup:
     doremir_device_audio_close_stream(stream);
