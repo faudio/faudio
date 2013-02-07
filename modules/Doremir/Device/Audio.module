@@ -4,16 +4,20 @@
 
     Real-time audio device.
 
-    @par Sessions, devices and streams implement 
+    @par Sessions implement 
     - doremir_destroy_t
     - doremir_string_show_t
 
-    @par Devices also implement 
+    @par Devices implement 
     - doremir_equal_t
+    - doremir_string_show_t
 
-    @par Streams also implement 
+    @par Streams implement 
+    - doremir_time_clock_t
     - doremir_message_sender_t
     - doremir_message_receiver_t
+    - doremir_destroy_t
+    - doremir_string_show_t
     
     @see 
     - @ref Devices
