@@ -22,6 +22,8 @@
 (defcfun (device-audio-set-status-callback "doremir_device_audio_set_status_callback") :void (a device-audio-status-callback) (b ptr) (c device-audio-session))
 (defcfun (device-audio-name "doremir_device_audio_name") string (a device-audio))
 (defcfun (device-audio-host-name "doremir_device_audio_host_name") string (a device-audio))
+(defcfun (device-audio-has-input "doremir_device_audio_has_input") :boolean (a device-audio))
+(defcfun (device-audio-has-output "doremir_device_audio_has_output") :boolean (a device-audio))
 (defcfun (device-audio-input-type "doremir_device_audio_input_type") type (a device-audio))
 (defcfun (device-audio-output-type "doremir_device_audio_output_type") type (a device-audio))
 (defcfun (device-audio-open-stream "doremir_device_audio_open_stream") device-audio-stream (a device-audio) (b processor) (c device-audio))

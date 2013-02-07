@@ -297,6 +297,8 @@
 (time-to-iso x)
 (equal x y)
 (destroy x)
+(from-pointer 'time (add x y))
+
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -560,7 +562,6 @@
   (incf *status* 1))
 (device-audio-set-status-callback (callback status-changed) nil s)
 
-
 (device-audio-all s)
 (setf x (device-audio-default-input s))
 (setf y (device-audio-default-output s))
@@ -580,7 +581,7 @@
  (device-audio-output-type 
   (from-pointer 'device-audio (list-head (device-audio-all s)))))
 
-(setf p (processor-identity '(:pair :f32 :f32)))
+(setf p (processor-identity '(:pair (:frame :f32) (:frame :f32))))
 (setf z (device-audio-open-stream x p y))
 (device-audio-close-stream z)
 ;(device-audio-with-stream)

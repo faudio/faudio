@@ -4,6 +4,7 @@
 (defclass time () ((time-ptr :initarg :time-ptr)))
 (defmethod translate-to-foreign (x (type time-type)) (slot-value x 'time-ptr))
 (defmethod translate-from-foreign (x (type time-type)) (make-instance 'time :time-ptr x))
+(defctype time-clock (:pointer :void))
 (defcfun (time-create "doremir_time_create") time (a :int32) (b :int32) (c :int32) (d ratio))
 (defcfun (time-copy "doremir_time_copy") time (a time))
 (defcfun (time-destroy "doremir_time_destroy") :void (a time))

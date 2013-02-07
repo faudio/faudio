@@ -25,15 +25,16 @@
       :pathname "doremir"
       :components (
         (:file "std")
-        (:file "pair")
         (:file "list")
+        (:file "pair")
         (:file "set")
         (:file "map")
+        (:file "graph")
         (:file "priority-queue")
         (:file "ratio")
         (:file "string")
-        (:file "type")
         (:file "buffer")
+        (:file "type")
         (:file "time")
         (:file "midi")
         (:file "error")
@@ -45,8 +46,9 @@
             (:file "stack")
             (:file "ring-buffer")))
         (:file "plot")
-        (:file "event")
         (:file "message")
+        (:file "event")
+        (:file "scheduler")
         (:file "processor")
         (:file "signal")
         (:file "thread")
@@ -55,7 +57,6 @@
           :components (
             (:file "future")
             (:file "improving")))
-        (:file "scheduler")
         (:file "device")
         (:module "device2"
           :pathname "device"
@@ -63,7 +64,7 @@
             (:file "audio")
             (:file "midi")
             (:file "file")
-            (:file "buffer")))
+            (:file "buffer")))  
         (:file "audio-engine")))
     (:file "special")))
 
