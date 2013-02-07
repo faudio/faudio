@@ -1494,7 +1494,7 @@ void test_file_stream(string_t in_path, string_t out_path)
     processor_t proc;
 
     // Processor to use
-    proc    = doremir_processor_identity(type_pair(type(f32), type(f32)));
+    proc    = doremir_processor_identity(type_pair(type_frame(type(f32)), type_frame(type(f32))));
 
     // Open streams
     input   = doremir_device_file_open(in_path);
@@ -1558,10 +1558,11 @@ void audio_stream()
     audio_session_t session;
     audio_device_t  input, output;
     audio_stream_t  stream;
-    processor_t     proc;
+    processor_t     proc1, proc2;
 
     // Processor to use
-    proc = doremir_processor_identity(type_pair(type(f32), type(f32)));
+    proc1    = id(type_pair(type_frame(type(f32)), type_frame(type(f32))));
+    proc2    = par(proc1, proc1);
 
     // Begin session
     session = doremir_device_audio_begin_session();
@@ -1580,7 +1581,7 @@ void audio_stream()
     output = doremir_device_audio_default_output(session);
 
     // Start stream
-    stream = doremir_device_audio_open_stream(input, proc, output);
+    stream = doremir_device_audio_open_stream(input, proc2, output);
 
     // Handle possible error
     if (doremir_check(stream)) {
@@ -1597,7 +1598,8 @@ void audio_stream()
 cleanup:
     doremir_device_audio_close_stream(stream);
     doremir_device_audio_end_session(session);
-    doremir_destroy(proc);
+    doremir_destroy(proc1);
+    doremir_destroy(proc2);
 }
 
 
@@ -1764,7 +1766,6 @@ int main(int argc, char const *argv[])
         // test_plot_file(string("/Users/hans/Desktop/Passager.wav"));
 
         test_processors(string_dappend(doremir_directory_current(), string("/test/proc.dot")));
-        goto end;
         test_vm2();
 
 
@@ -1774,6 +1775,7 @@ int main(int argc, char const *argv[])
         buffer_stream();
         audio_stream();
         midi_stream();
+        goto end;
 
 end:
         doremir_audio_engine_terminate();

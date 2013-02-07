@@ -56,6 +56,8 @@ struct _doremir_device_audio_stream_t {
     proc_interface_t   *proc_impl;
 
     unsigned            input_channels, output_channels;
+    double              sample_rate;
+    long                max_buffer_size;
     int32_t             time;               // Monotonically increasing sample count
 
 };
@@ -73,7 +75,7 @@ inline static void session_init_devices(session_t session);
 inline static void delete_session(session_t session);
 inline static device_t new_device(native_index_t index);
 inline static void delete_device(device_t device);
-inline static stream_t new_stream(device_t input, device_t output, processor_t proc);
+inline static stream_t new_stream(device_t input, device_t output, processor_t proc, double sample_rate, long max_buffer_size);
 inline static void delete_stream(stream_t stream);
 
 void before_processing(stream_t stream);
@@ -154,15 +156,19 @@ inline static void delete_device(device_t device)
     doremir_delete(device);
 }
 
-inline static stream_t new_stream(device_t input, device_t output, processor_t proc)
+inline static stream_t new_stream(device_t input, device_t output, processor_t proc, double sample_rate, long max_buffer_size)
 {
     stream_t stream         = doremir_new(device_audio_stream);
 
     stream->impl            = &audio_stream_impl;
+
     stream->input           = input;
     stream->output          = output;
     stream->input_channels  = num_input_channels(input);
     stream->output_channels = num_output_channels(output);
+
+    stream->sample_rate     = sample_rate;
+    stream->max_buffer_size = max_buffer_size;
 
     stream->proc            = proc;
     stream->proc_impl       = doremir_interface(doremir_processor_interface_i, stream->proc);
@@ -330,46 +336,107 @@ static inline int num_input_channels(device_t device)
 static inline int num_output_channels(device_t device)
 {
     return device ? doremir_type_channels(doremir_device_audio_output_type(device)) : 0;
+}   
+
+// static inline size_t get_max_buffer_size(device_t device)
+// {
+//     const PaDeviceInfo  *info      = Pa_GetDeviceInfo(device->index);
+//     const PaHostApiInfo *host_info = Pa_GetHostApiInfo(info->hostApi);
+//     long min, max, prefered, granularity;
+//     PaError err = paNoError;
+// 
+//     switch(host_info->type)
+//     {             
+//     case paCoreAudio: {
+//         // error
+//         err = PaMacCore_GetBufferSizeRange(device->index, min, max);
+//         assert(err == paNoError);
+//         return max;
+//     }
+//     case paASIO: {
+//         err = PaAsio_GetAvailableBufferSizes(device->index, min, max, prefered, granularity);
+//         assert(err == paNoError);
+//         return max;
+//     }
+//     default:
+//         return 0;
+//     }
+// }
+
+void inform_opening(device_t input, processor_t proc, device_t output)
+{
+    inform(string("Opening real-time audio stream"));
+    inform(string_dappend(string("    Input:  "), input ? doremir_string_show(input) : string("-")));
+    inform(string_dappend(string("    Output: "), output ? doremir_string_show(output) : string("-")));    
+    inform(string_dappend(string("    Processor: "), proc ? doremir_string_show(proc) : string("-")));    
 }
 
 // TODO change sample rate
+// TODO use unspec vector size if we can determine max
 stream_t doremir_device_audio_open_stream(device_t input, processor_t proc, device_t output)
 {
-    PaError status;
-    stream_t stream = new_stream(input, output, proc);
+    PaError         status;                                    
+    unsigned long   buffer_size = 256;
+    double          sample_rate = 44100;
+    stream_t        stream      = new_stream(input, output, proc, sample_rate, buffer_size);
 
-    inform(string("Opening real-time audio stream"));
-    inform(string_dappend(string("    Input:  "), input ? doremir_string_show(input) : string("-")));
-    inform(string_dappend(string("    Output: "), output ? doremir_string_show(output) : string("-")));
-
+    inform_opening(input, proc, output);
+    {
+        if (doremir_not_equal(
+            doremir_processor_input_type(proc),
+            doremir_device_audio_input_type(input)))
+        {                 
+            char msg[100];
+            snprintf(msg, 100, "Could not connect device %s to processor %s", 
+                unstring(doremir_string_show(doremir_device_audio_input_type(input))),
+                unstring(doremir_string_show(proc)));
+            error_t err = doremir_error_create_simple(error, 
+                string(msg), 
+                string("Doremir.Device.Audio"));
+            return (stream_t) err;
+        }
+    }
+    {
+        if (doremir_not_equal(
+                doremir_processor_output_type(proc),
+                doremir_device_audio_output_type(output)))
+        {                 
+            char msg[100];
+            snprintf(msg, 100, "Could not connect processor %s to device %s", 
+                unstring(doremir_string_show(proc)),
+                unstring(doremir_string_show(doremir_device_audio_output_type(output))));   
+            error_t err = doremir_error_create_simple(error, 
+                string(msg), 
+                string("Doremir.Device.Audio"));
+            return (stream_t) err;
+        }
+    }
     {
         PaStreamParameters inp = {
-            .device                     = input ? input->index : 0,
-            .channelCount               = stream->input_channels,
-            .sampleFormat               = (paFloat32 | paNonInterleaved),
             .suggestedLatency           = 0,
-            .hostApiSpecificStreamInfo  = 0
+            .hostApiSpecificStreamInfo  = NULL,
+            .device                     = (input ? input->index : 0),
+            .sampleFormat               = (paFloat32 | paNonInterleaved),
+            .channelCount               = stream->input_channels
         };
 
         PaStreamParameters outp = {
-            .device                     = output ? output->index : 0,
+            .suggestedLatency           = 0,
+            .hostApiSpecificStreamInfo  = NULL,
             .channelCount               = stream->output_channels,
             .sampleFormat               = (paFloat32 | paNonInterleaved),
-            .suggestedLatency           = 0,
-            .hostApiSpecificStreamInfo  = 0
+            .device                     = (output ? output->index : 0)
         };
         // printf("> %d\n", inp.channelCount);
         // printf("> %d\n", outp.channelCount);
 
         const PaStreamParameters       *in      = input ? &inp : NULL;
         const PaStreamParameters       *out     = output ? &outp : NULL;
-        double                          sr      = 44100;
-        unsigned long                   vs      = paFramesPerBufferUnspecified;
         PaStreamFlags                   flags   = paNoFlag;
         PaStreamCallback               *cb      = native_audio_callback;
         ptr_t                           data    = stream;
 
-        status = Pa_OpenStream(&stream->native, in, out, sr, vs, flags, cb, data);
+        status = Pa_OpenStream(&stream->native, in, out, sample_rate, buffer_size, flags, cb, data);
 
         if (status != paNoError) {
             return (stream_t) audio_device_error_with(string("Could not start stream"), status);
@@ -381,12 +448,14 @@ stream_t doremir_device_audio_open_stream(device_t input, processor_t proc, devi
             return (stream_t) audio_device_error_with(string("Could not start stream"), status);
         }
     }
-    before_processing(stream);
+    {
+        before_processing(stream);
 
-    status = Pa_StartStream(stream->native);
+        status = Pa_StartStream(stream->native);
 
-    if (status != paNoError) {
-        return (stream_t) audio_device_error_with(string("Could not start stream"), status);
+        if (status != paNoError) {
+            return (stream_t) audio_device_error_with(string("Could not start stream"), status);
+        }
     }
 
     return stream;
