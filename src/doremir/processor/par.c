@@ -97,9 +97,9 @@ graph_t par_graph(ptr_t a, info_t *info, graph_t graph)
 
     graph = proc->elemImpl[0]->graph(proc->elem[0], info, graph);
 
-    *offset += (*step/2);
+    *offset += (*step / 2);
     graph = proc->elemImpl[1]->graph(proc->elem[1], info, graph);
-    *offset -= (*step/2);
+    *offset -= (*step / 2);
 
     *step /= 2;
 

@@ -11,7 +11,7 @@
 
 #include <portmidi.h>
 
-/* 
+/*
     Notes:
         * Device detection handled by excplicit CoreMIDI/?? calls
         * Call MIDIRestart() ?

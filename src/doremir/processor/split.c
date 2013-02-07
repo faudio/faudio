@@ -86,7 +86,7 @@ graph_t split_graph(ptr_t a, info_t *info, graph_t graph)
     int *seq    = &info->buf_seq;
 
     pair_t self  = node_name(*offset,         *step,     *seq);
-    pair_t left  = node_name(*offset,         (*step) * 2, (*seq) + 1);
+    pair_t left  = node_name(*offset, (*step) * 2, (*seq) + 1);
     pair_t right = node_name(*offset + *step, (*step) * 2, (*seq) + 1);
 
     graph = doremir_graph_insert(self, graph);
@@ -95,7 +95,7 @@ graph_t split_graph(ptr_t a, info_t *info, graph_t graph)
 
     graph = doremir_graph_connect(self, left, edge_name(*offset), graph);
     graph = doremir_graph_connect(self, right, edge_name(*offset + *step), graph);
- 
+
     return graph;
 }
 

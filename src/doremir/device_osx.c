@@ -13,10 +13,10 @@
 #include <CoreAudio/AudioHardware.h>
 #include <CoreMidi/MIDIServices.h>
 
-/* 
+/*
     Device detection for OS X
     Used by implementation of the Device.Audio and Device.Midi modules.
-    
+
     TODO remove added listeners?
  */
 typedef doremir_device_audio_status_callback_t  audio_status_callback_t;
@@ -36,9 +36,9 @@ inline static closure_t new_closure(nullary_t function, ptr_t data)
     return closure;
 }
 
-OSStatus audio_listener(AudioObjectID                       id, 
-                        UInt32                              size, 
-                        const AudioObjectPropertyAddress    addresses[], 
+OSStatus audio_listener(AudioObjectID                       id,
+                        UInt32                              size,
+                        const AudioObjectPropertyAddress    addresses[],
                         void                                *data)
 {
     OSStatus result;
@@ -75,7 +75,7 @@ void add_audio_status_listener(audio_status_callback_t function, ptr_t data)
         .mElement  = kAudioObjectPropertyElementMaster
     };
 
-    theRunLoop = NULL; // necessary?    
+    theRunLoop = NULL; // necessary?
     result = AudioObjectSetPropertyData(kAudioObjectSystemObject, &runLoop, 0, NULL, sizeof(CFRunLoopRef), &theRunLoop);
     assert(result == noErr);
 
@@ -91,26 +91,26 @@ void midi_listener(const MIDINotification *message, void *data)
     // UInt32                    sz = message->messageSize;
 
     /*
-    enum { // MIDINotificationMessageID 
-        kMIDIMsgSetupChanged = 1, 
-        kMIDIMsgObjectAdded = 2, 
-        kMIDIMsgObjectRemoved = 3, 
-        kMIDIMsgPropertyChanged = 4, 
-        kMIDIMsgThruConnectionsChanged = 5, 
-        kMIDIMsgSerialPortOwnerChanged = 6, 
-        kMIDIMsgIOError = 7 
+    enum { // MIDINotificationMessageID
+        kMIDIMsgSetupChanged = 1,
+        kMIDIMsgObjectAdded = 2,
+        kMIDIMsgObjectRemoved = 3,
+        kMIDIMsgPropertyChanged = 4,
+        kMIDIMsgThruConnectionsChanged = 5,
+        kMIDIMsgSerialPortOwnerChanged = 6,
+        kMIDIMsgIOError = 7
     };
     */
     closure_t closure = data;
     closure->function(closure->data);
 }
-    
+
 void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
 {
     OSStatus result;
     MIDIClientRef client;
     CFStringRef name = doremir_string_to_cf_string(string("DoReMIRAudio"));
-    
+
     result = MIDIClientCreate(name, midi_listener, data, &client);
     assert(result == noErr);
 }

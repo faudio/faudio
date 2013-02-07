@@ -93,7 +93,7 @@ graph_t binary_graph(ptr_t a, info_t *info, graph_t graph)
 
     pair_t self  = node_name(*offset, *step, *seq);
     graph = doremir_graph_insert(self, graph);
- 
+
     return graph;
 }
 

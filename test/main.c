@@ -1293,79 +1293,79 @@ void test_processors(string_t path)
 
     processor_t p, q, chain, rchain;
     p = unary(type(i8), type(i8), add1234, NULL);
-    chain = seq(p,seq(p,seq(p,seq(p,seq(p,p)))));
-    rchain = seq(seq(seq(seq(p,p),p),p),p);
-    q =  
-    seq(split(type(i8)),
-    
-        par(
-            seq(seq(seq(p,p),p),p),
-        
-        seq(
-            split(type(i8)),
-            par(seq(split(type(i8)), par(chain,seq(split(type(i8)), par(chain,chain)))),
-                seq(split(type(i8)), par(p,seq(p,p))))
-        )
-        
-        )
-        
-    
-    )
-    
-    ;
-    
+    chain = seq(p, seq(p, seq(p, seq(p, seq(p, p)))));
+    rchain = seq(seq(seq(seq(p, p), p), p), p);
+    q =
+        seq(split(type(i8)),
+
+            par(
+                seq(seq(seq(p, p), p), p),
+
+                seq(
+                    split(type(i8)),
+                    par(seq(split(type(i8)), par(chain, seq(split(type(i8)), par(chain, chain)))),
+                        seq(split(type(i8)), par(p, seq(p, p))))
+                )
+
+            )
+
+
+           )
+
+        ;
+
     doremir_processor_write_graph(q, path);
 
 
-/*
+    /*
 
-    {
-        processor_t p, q;
-        p = doremir_processor_unary(type(i8), type(i8), add1234, NULL);
-        q = doremir_processor_sequence(p, p);
-        doremir_print("p                            ==> %s\n", p);
-        doremir_print("bufferSize(p)                ==> %s\n", i32(doremir_processor_buffer_size(1, p)));
-    }
+        {
+            processor_t p, q;
+            p = doremir_processor_unary(type(i8), type(i8), add1234, NULL);
+            q = doremir_processor_sequence(p, p);
+            doremir_print("p                            ==> %s\n", p);
+            doremir_print("bufferSize(p)                ==> %s\n", i32(doremir_processor_buffer_size(1, p)));
+        }
 
-    {
-        processor_t p, q;
-        p = doremir_processor_unary(type(i8), type(i8), add1234, NULL);
-        q = doremir_processor_sequence(p, p);
-        doremir_print("p                            ==> %s\n", p);
-        doremir_print("seq(p,p)                     ==> %s\n", q);
-        doremir_print("bufferSize(seq(p,p))         ==> %s\n", i32(doremir_processor_buffer_size(1, q)));
-    }
+        {
+            processor_t p, q;
+            p = doremir_processor_unary(type(i8), type(i8), add1234, NULL);
+            q = doremir_processor_sequence(p, p);
+            doremir_print("p                            ==> %s\n", p);
+            doremir_print("seq(p,p)                     ==> %s\n", q);
+            doremir_print("bufferSize(seq(p,p))         ==> %s\n", i32(doremir_processor_buffer_size(1, q)));
+        }
 
-    {
-        processor_t p, q;
-        p = doremir_processor_unary(type(i8), type(i8), add1234, NULL);
-        q = doremir_processor_parallel(p, p);
-        doremir_print("p                            ==> %s\n", p);
-        doremir_print("q                            ==> %s\n", p);
-        doremir_print("par(p,p)                     ==> %s\n", q);
-        doremir_print("bufferSize(par(p,q))         ==> %s\n", i32(doremir_processor_buffer_size(1, q)));
-    }
+        {
+            processor_t p, q;
+            p = doremir_processor_unary(type(i8), type(i8), add1234, NULL);
+            q = doremir_processor_parallel(p, p);
+            doremir_print("p                            ==> %s\n", p);
+            doremir_print("q                            ==> %s\n", p);
+            doremir_print("par(p,p)                     ==> %s\n", q);
+            doremir_print("bufferSize(par(p,q))         ==> %s\n", i32(doremir_processor_buffer_size(1, q)));
+        }
 
-    {
-        processor_t p0, p, q;
-        p0 = doremir_processor_unary(type(i8), type(i8), add1234, NULL);
-        p = doremir_processor_parallel(p0, p0);
-        q = doremir_processor_loop(p);
-        doremir_print("p                            ==> %s\n", p);
-        doremir_print("loop(p)                      ==> %s\n", q);
-        doremir_print("bufferSize(loop(p))          ==> %s\n", i32(doremir_processor_buffer_size(1, q)));
-    }
+        {
+            processor_t p0, p, q;
+            p0 = doremir_processor_unary(type(i8), type(i8), add1234, NULL);
+            p = doremir_processor_parallel(p0, p0);
+            q = doremir_processor_loop(p);
+            doremir_print("p                            ==> %s\n", p);
+            doremir_print("loop(p)                      ==> %s\n", q);
+            doremir_print("bufferSize(loop(p))          ==> %s\n", i32(doremir_processor_buffer_size(1, q)));
+        }
 
-    {
-        type_t t = type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
-                                                 type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
-                                                           type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
-                                                                   type(i8))))))))));
+        {
+            type_t t = type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
+                                                     type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
+                                                               type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
+                                                                       type(i8))))))))));
 
-        processor_t p = doremir_processor_identity(t);
-        doremir_print("p                            ==> %s\n", p);
+            processor_t p = doremir_processor_identity(t);
+            doremir_print("p                            ==> %s\n", p);
 
-    }  */
+        }  */
 
 }
 
@@ -1562,7 +1562,7 @@ void audio_stream()
 
     // Processor to use
     proc1    = id(type_pair(type_frame(type(f32)), type_frame(type(f32))));
-    proc2    = par(proc1, proc1);
+    proc2    = seq(proc1, proc1);
 
     // Begin session
     session = doremir_device_audio_begin_session();

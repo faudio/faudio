@@ -100,9 +100,9 @@ graph_t loop_graph(ptr_t a, info_t *info, graph_t graph)
 
     info->buf_loop++;
 
-    // copy %loop (%off+%step) 
+    // copy %loop (%off+%step)
     // graph = proc->elemImpl->graph(proc->elem, info, graph);
-    // copy (%off+%step) %loop 
+    // copy (%off+%step) %loop
 
     info->buf_loop--;
 

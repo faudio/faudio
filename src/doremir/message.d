@@ -36,5 +36,5 @@ void doremir_message_sync(doremir_message_dispatcher_t dispatcher) {}
     @return A possibly empty list of messages.
  */
 doremir_list_t doremir_message_receive(doremir_message_address_t address,
-                                      doremir_message_dispatcher_t dispatcher) {}
+                                       doremir_message_dispatcher_t dispatcher) {}
 
