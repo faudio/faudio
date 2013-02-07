@@ -1527,7 +1527,7 @@ cleanup:
     doremir_device_file_close(output);
 }
 
-void buffer_stream()
+void test_buffer_stream()
 {
     test_section("Buffer streams");
 
@@ -1551,7 +1551,7 @@ ptr_t status_changed(ptr_t ct)
     printf("Status changed: %s!\n", unstring(ct));
     return 0;
 }
-void audio_stream()
+void test_audio_stream()
 {
     test_section("Audio streams");
 
@@ -1593,7 +1593,7 @@ void audio_stream()
     doremir_device_audio_set_status_callback(status_changed, string("foobar"), session);
 
     // Stream active, let it run for 5 seconds
-    doremir_thread_sleep(10000);
+    doremir_thread_sleep(1000);
 
 cleanup:
     doremir_device_audio_close_stream(stream);
@@ -1603,7 +1603,7 @@ cleanup:
 }
 
 
-void midi_stream()
+void test_midi_stream()
 {
     test_section("Midi streams");
 
@@ -1772,9 +1772,9 @@ int main(int argc, char const *argv[])
         test_file_stream(
             string_dappend(doremir_directory_current(), string("/test/in.wav")),
             string_dappend(doremir_directory_current(), string("/test/out.wav")));
-        buffer_stream();
-        audio_stream();
-        midi_stream();
+        test_buffer_stream();
+        test_audio_stream();
+        test_midi_stream();
         goto end;
 
 end:

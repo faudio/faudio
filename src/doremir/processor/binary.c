@@ -47,8 +47,8 @@ this_t doremir_processor_binary_create
 
 void doremir_processor_binary_destroy(this_t proc)
 {
-    doremir_destroy(proc->input_type);
-    doremir_destroy(proc->output_type);
+    // doremir_destroy(proc->input_type);
+    // doremir_destroy(proc->output_type);
     doremir_delete(proc);
 }
 

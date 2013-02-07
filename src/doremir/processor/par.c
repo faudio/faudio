@@ -53,8 +53,8 @@ this_t doremir_processor_par_create(processor_t proc1, processor_t proc2)
 
 void doremir_processor_par_destroy(this_t proc)
 {
-    doremir_destroy(proc->elem[0]);
-    doremir_destroy(proc->elem[1]);
+    // doremir_destroy(proc->elem[0]);
+    // doremir_destroy(proc->elem[1]);
     doremir_delete(proc);
 }
 

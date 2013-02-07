@@ -45,8 +45,8 @@ this_t doremir_processor_unary_create
 
 void doremir_processor_unary_destroy(this_t proc)
 {
-    doremir_destroy(proc->input_type);
-    doremir_destroy(proc->output_type);
+    // doremir_destroy(proc->input_type);
+    // doremir_destroy(proc->output_type);
     doremir_delete(proc);
 }
 

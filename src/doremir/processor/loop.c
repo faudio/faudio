@@ -60,7 +60,7 @@ this_t doremir_processor_loop_create(processor_t proc1)
 
 void doremir_processor_loop_destroy(this_t proc)
 {
-    doremir_destroy(proc->elem);
+    // doremir_destroy(proc->elem);
     doremir_delete(proc);
 }
 
