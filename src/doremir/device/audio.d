@@ -6,12 +6,9 @@
     will be ended after the callback function has returned. If an error occurs while
     starting the session, the error callback is invoked in place of the session callback.
 
-    @param callback
-        Function to receive the sesssion.
-    @param error_callback
-        Function to receive eventual errors.
-    @param error_data, session_data
-        Data closed over by the callbacks.
+    @param callback                     Function to receive the sesssion.
+    @param error_callback               Function to receive eventual errors.
+    @param error_data, session_data     Data closed over by the callbacks.
  */
 void doremir_device_audio_with_session(
     doremir_device_audio_session_callback_t session_callback,
@@ -23,9 +20,9 @@ void doremir_device_audio_with_session(
 /** Begin a new audio session.
 
     @return
-        A new session.
+        A new session (errable).
     @par Errors
-        Fails if the session could not be started.
+        Returns an error if the session could not be started.
  */
 doremir_device_audio_session_t doremir_device_audio_begin_session() {}
 
@@ -121,14 +118,11 @@ void doremir_device_audio_set_status_callback(
 /**
     Open a stream on the given devices.
 
-    @param input, output
-        Devices to provide data source and sinks.
-    @param processor
-        Processor to run over the devices.
-    @throw
-        TODO
-    @return
-        A new stream or an error if no stream could be opened.
+    @param input, output    Devices to provide data source and sink.
+    @param processor        Processor to run over the devices.
+    @return                 A new stream (errable).
+    @par Errors
+        Returns an error if the session could not be started.
  */
 doremir_device_audio_stream_t
 doremir_device_audio_open_stream(
@@ -138,8 +132,7 @@ doremir_device_audio_open_stream(
 
 /**
     Close the given stream.
-    @param session
-        Stream to close.
+    @param session          Stream to close.
  */
 void doremir_device_audio_close_stream(
     doremir_device_audio_stream_t stream) {}
@@ -149,14 +142,10 @@ void doremir_device_audio_close_stream(
 
     @param input
         Input device.
-    @param processor
-        Processor to run over the devices.
-    @param input
-        Output device.
-    @param callback
-        Function to receive the stream.
-    @param error_callback
-        Function to receive eventual errors.
+    @param processor        Processor to run over the devices.
+    @param input            Output device.
+    @param callback         Function to receive the stream.
+    @param error_callback   Function to receive eventual errors.
  */
 void doremir_device_audio_with_stream(
     doremir_device_audio_t                 input,

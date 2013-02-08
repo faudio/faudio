@@ -194,6 +194,7 @@ void doremir_buffer_write_audio(doremir_string_file_path_t path,
                                 doremir_type_t             type,
                                 doremir_buffer_t           buffer)
 {
+    assert(false && "Not implemented");
 }
 
 
