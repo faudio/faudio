@@ -33,6 +33,7 @@ void doremir_device_audio_terminate();
 void doremir_audio_engine_initialize()
 {
     doremir_device_audio_initialize();
+    doremir_device_midi_initialize();
     doremir_audio_engine_log_info(string("Initialized Audio Engine."));
     init_count_g++;
 }
@@ -47,6 +48,7 @@ void doremir_audio_engine_terminate()
     if (init_count_g) {
         --init_count_g;
         doremir_device_audio_terminate();
+        doremir_device_midi_terminate();
         doremir_audio_engine_log_info(string("Terminated Audio Engine."));
     } else {
         doremir_audio_engine_log_warning(string("Audio Engine could not terminate: inconsistent state."));
