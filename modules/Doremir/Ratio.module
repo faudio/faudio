@@ -37,7 +37,6 @@ module Doremir.Ratio
     subtract    : (Ratio, Ratio) -> Ratio;
     multiply    : (Ratio, Ratio) -> Ratio;
     divide      : (Ratio, Ratio) -> Ratio;
-    // remainder   : (Ratio, Ratio) -> Ratio;
     succ        : Ratio -> Ratio;
     pred        : Ratio -> Ratio;
     negate      : Ratio -> Ratio;

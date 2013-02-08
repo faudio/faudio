@@ -61,7 +61,4 @@ module Doremir.Buffer
     writeAudio : (FilePath,Type,Buffer) -> Void;
 
     unsafeAddress : Buffer -> Void*;
-        
-    // TODO views
-    // TODO simd, vector ops
 }

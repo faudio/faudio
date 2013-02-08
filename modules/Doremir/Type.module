@@ -37,12 +37,6 @@
     - doremir_destroy_t
     
  */                                             
- 
-/*  
-    TODO
-    
-    
- */
 module Doremir.Type
 {
     import Doremir;

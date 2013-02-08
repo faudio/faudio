@@ -47,6 +47,7 @@ module Doremir.Time
         ticks : (Ptr -> Int64)*
     };
 
+    // Standard time
     create      : (Int32, Int32, Int32, Ratio) -> Time;
     copy        : Time -> Time;
     destroy     : Time -> Void;
@@ -61,7 +62,7 @@ module Doremir.Time
     toSeconds      : Time -> Int32;
     toMilliseconds : Time -> Int32;
 
-    // System time introspection
+    // System and CPU time
     type System = opaque; 
     type Cpu = opaque; 
     fromSystem : System -> Time;

@@ -54,6 +54,9 @@ doremir_processor_t doremir_processor_identity(doremir_type_t);
 doremir_processor_t doremir_processor_constant(doremir_type_t,
                                                doremir_type_t,
                                                doremir_ptr_t);
+doremir_processor_t doremir_processor_delay(doremir_type_t,
+                                            size_t);
+doremir_processor_t doremir_processor_split(doremir_type_t);
 doremir_processor_t doremir_processor_unary(doremir_type_t,
                                             doremir_type_t,
                                             doremir_unary_t,
@@ -63,7 +66,6 @@ doremir_processor_t doremir_processor_binary(doremir_type_t,
                                              doremir_type_t,
                                              doremir_binary_t,
                                              doremir_ptr_t);
-doremir_processor_t doremir_processor_split(doremir_type_t);
 doremir_processor_t doremir_processor_parallel(doremir_processor_t,
                                                doremir_processor_t);
 doremir_processor_t doremir_processor_sequence(doremir_processor_t,
@@ -71,8 +73,6 @@ doremir_processor_t doremir_processor_sequence(doremir_processor_t,
 doremir_processor_t doremir_processor_compose(doremir_processor_t,
                                               doremir_processor_t);
 doremir_processor_t doremir_processor_loop(doremir_processor_t);
-doremir_processor_t doremir_processor_delay(doremir_type_t,
-                                            size_t);
 doremir_processor_t doremir_processor_add(doremir_type_t);
 doremir_processor_t doremir_processor_subtract(doremir_type_t);
 doremir_processor_t doremir_processor_multiply(doremir_type_t);

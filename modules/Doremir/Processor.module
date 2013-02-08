@@ -57,59 +57,42 @@ module Doremir.Processor
         before  : ((Ptr, Info*) -> Void)*,
         process : ((Ptr, Info*, Samples) -> Void)*,
         after   : ((Ptr, Info*) -> Void)*,
-        
+
         inputType   : (Ptr -> Type)*,
         outputType  : (Ptr -> Type)*,
         bufferSize  : ((Frames, Ptr) -> Size)*,
 
-        graph : ((Ptr, Info*, Graph) -> Graph)*        
+        graph : ((Ptr, Info*, Graph) -> Graph)*
     };
-    
+
     /** @typedef doremir_processor_t
         A processor of unknown type.
      */
     type Processor = opaque;
 
-    inputType : Processor -> Type;
-    outputType : Processor -> Type;
-    bufferSize : (Frames, Processor) -> Size;
-    graph : (Processor, Info*, Graph) -> Graph;
-    
-    writeGraph : (Processor,FilePath) -> Void;
+    inputType   : Processor -> Type;
+    outputType  : Processor -> Type;
+    bufferSize  : (Frames, Processor) -> Size;
 
-    // ------------------------------------------------------------------------
-    // Delay primitives
+    graph       : (Processor, Info*, Graph) -> Graph;
+    writeGraph  : (Processor,FilePath) -> Void;
 
+
+    // Primitives
     identity    : Type -> Processor;                            // a ~> a
     constant    : (Type, Type, Ptr) -> Processor;               // a ~> b
+    delay       : (Type, Size) -> Processor;                    // a ~> a
+    split       : Type -> Processor;                            // a ~> (a,a)
     unary       : (Type, Type, Unary, Ptr) -> Processor;        // a ~> b
     binary      : (Type, Type, Type, Binary, Ptr) -> Processor; // (a,b) ~> c
-    split       : Type -> Processor;                            // a ~> (a,a)
 
     parallel    : (Processor, Processor) -> Processor;          // (a~>b), (c~>d) -> (a,c~>b,d)
     sequence    : (Processor, Processor) -> Processor;          // (a~>b), (b~>c) -> (a~>c)
     compose     : (Processor, Processor) -> Processor;          // (a~>b), (b~>c) -> (a~>c)
     loop        : Processor -> Processor;                       // (a,c~>b,d)     -> (a ~> b)
-    
-
-    // ------------------------------------------------------------------------
-    // Delay primitives
-
-    delay       : (Type, Size) -> Processor;                    // a ~> a
-    // init
-    // vdelay
-    // videlay
 
 
-    // ------------------------------------------------------------------------
-    // Vector ops
-
-    // foldVec     : Processor -> Processor;                     // ((a,a) ~> b) -> [a x n] ~> b
-    // unfoldVec   : Processor -> Processor;                     // (a ~> (b,b)) -> a       ~> [b x n]
-
-    // ------------------------------------------------------------------------
-    // Math primitives
-
+    // Math and logic
     add                 : Type -> Processor;
     subtract            : Type -> Processor;
     multiply            : Type -> Processor;
