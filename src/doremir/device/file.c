@@ -34,14 +34,14 @@ struct _doremir_device_file_result_t {
 
 };
 
-file_device_t doremir_device_file_open(string_t path)
+device_t doremir_device_file_open(string_t path)
 {
     inform(string_dappend(string("Opening file stream "), doremir_string_copy(path)));
 
     {
         char err[100];
         snprintf(err, 100, "Could not read audio file '%s'", unstring(path));
-        return doremir_error_create_simple(error, string(err), string("Doremir.Buffer"));
+        return (device_t) doremir_error_create_simple(error, string(err), string("Doremir.Buffer"));
     }
 }
 
@@ -58,8 +58,8 @@ doremir_device_file_result_t doremir_device_file_run(
     file_device_t input,
     processor_t   processor,
     file_device_t output)
-{
-    // create result_t
+{    
+    result_t result = NULL; // TODO
     // set input, output, proc, proc_impl
     // check types
     // Allocate
@@ -70,5 +70,7 @@ doremir_device_file_result_t doremir_device_file_run(
 
     // Free VM
     // lmm_destroy(vm);
+
+    return result;
 }
 

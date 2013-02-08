@@ -214,17 +214,18 @@ bool doremir_event_has_value(doremir_time_t time, doremir_event_t event)
 
     case delay_event:
         return doremir_event_has_value(
-                   delay_get(event, event),
-                   doremir_subtract(time, delay_get(event, time)));
+                   doremir_subtract(time, delay_get(event, time)),
+                   delay_get(event, event)
+                   );
 
     case merge_event:
-        return doremir_event_has_value(merge_get(event, left), time)
-               || doremir_event_has_value(merge_get(event, right), time);
+        return doremir_event_has_value(time, merge_get(event, left))
+               || doremir_event_has_value(time, merge_get(event, right));
 
     case switch_event:
-        return doremir_event_has_value(switch_get(event, pred), time)
-               ? doremir_event_has_value(switch_get(event, before), time)
-               : doremir_event_has_value(switch_get(event, after), time);
+        return doremir_event_has_value(time, switch_get(event, pred))
+               ? doremir_event_has_value(time, switch_get(event, before))
+               : doremir_event_has_value(time, switch_get(event, after));
 
     default:
         assert(false && "Missing label");

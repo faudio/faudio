@@ -1133,6 +1133,8 @@ void test_priority_queue(int iter)
 
 void test_json(string_t path)
 {
+    extern void doremir_puts(doremir_string_t string);
+    
     test_section("JSON conversion");
 
     string_t json = doremir_directory_read_file(path);

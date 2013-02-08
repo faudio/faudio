@@ -543,13 +543,13 @@ void after_processing(stream_t stream)
 
 int during_processing(stream_t stream, unsigned count, float **input, float **output)
 {
-    doremir_processor_info_t info = {
-        .sample_rate = stream->sample_rate,
-        .frame_size  = stream->max_buffer_size,
-        .sample_time = stream->sample_count,
-        .total_time  = NULL, // TODO
-        .dispatcher  = stream->incoming
-    };
+    // doremir_processor_info_t info = {
+    //     .sample_rate = stream->sample_rate,
+    //     .frame_size  = stream->max_buffer_size,
+    //     .sample_time = stream->sample_count,
+    //     .total_time  = NULL, // TODO
+    //     .dispatcher  = stream->incoming
+    // };
 
     // Syncronize messages
     doremir_message_sync(stream->incoming);
@@ -572,7 +572,7 @@ int during_processing(stream_t stream, unsigned count, float **input, float **ou
 
 
     for (unsigned channel = 0; channel < stream->input_channels; ++channel) {
-        float *in  = input[channel];
+        // float *in  = input[channel];
         float *out = output[channel];
 
         for (int i = 0; i < count; ++i) {
@@ -729,13 +729,13 @@ int64_t audio_stream_ticks(ptr_t a)
 
 void audio_stream_sync(ptr_t a)
 {
-    stream_t stream = (stream_t) a;
+    // stream_t stream = (stream_t) a;
     assert(false && "Not implemented");
 }
 
 doremir_list_t audio_stream_receive(ptr_t a, address_t addr)
 {
-    stream_t stream = (stream_t) a;
+    // stream_t stream = (stream_t) a;
     assert(false && "Not implemented");
 }
 

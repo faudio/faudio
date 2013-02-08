@@ -89,40 +89,21 @@ void add_audio_status_listener(audio_status_callback_t function, ptr_t data)
 void midi_listener(const MIDINotification *message, void *data)
 {
     MIDINotificationMessageID id = message->messageID;
-    UInt32                    sz = message->messageSize;
-    printf("id: %d, size: %d\n", id, sz);
-
-    /*
-    enum { // MIDINotificationMessageID
-        kMIDIMsgSetupChanged = 1,
-        kMIDIMsgObjectAdded = 2,
-        kMIDIMsgObjectRemoved = 3,
-        kMIDIMsgPropertyChanged = 4,
-        kMIDIMsgThruConnectionsChanged = 5,
-        kMIDIMsgSerialPortOwnerChanged = 6,
-        kMIDIMsgIOError = 7
-    };
-    */
+    // UInt32                    sz = message->messageSize;
     if (id == kMIDIMsgSetupChanged) {
         closure_t closure = data;
         closure->function(closure->data);
     }
 }
 
-// From https://ccrma.stanford.edu/~craig/articles/linuxmidi/osxmidi/testout.c
+//  From https://ccrma.stanford.edu/~craig/articles/linuxmidi/osxmidi/testout.c
 //
-//      "Note that notifyProc will always be called on the run loop
-//      which was current when MIDIClientCreate was first called."
+//              "Note that notifyProc will always be called on the run loop
+//              which was current when MIDIClientCreate was first called."
 
-// See http://lists.apple.com/archives/coreaudio-api/2002/Feb/msg00180.html
-// http://comelearncocoawithme.blogspot.se/2011/08/reading-from-external-controllers-with.html
-// void
-// MyTimerCallback(CFRunLoopTimerRef timer, void *info)
-// {
-//     printf("Called! Devs: %d\n",  MIDIGetNumberOfSources());
-// }
+// See also     http://lists.apple.com/archives/coreaudio-api/2002/Feb/msg00180.html
+//              http://comelearncocoawithme.blogspot.se/2011/08/reading-from-external-controllers-with.html
 
-static CFRunLoopSourceRef source = NULL;
 void midi_listener_loop(closure_t closure)
 {
     OSStatus result;
