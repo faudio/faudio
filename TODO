@@ -3,14 +3,9 @@
 Additions
 
 * Event/Scheduler impl
-    * Extract send/recv to be generic
-    * Add Send/Recv impl for streams and dispatcher
-
 
 * Buffer streams
 * File streams
-* RT audio
-* RT midi
 
 * External devices:
     * FluidSynth
@@ -18,11 +13,7 @@ Additions
     * VST2
 
 
-
-
 ----------
-
-* Missing Windows features
 
 * Buffer views?
     * Group buffer with audio type
@@ -30,17 +21,8 @@ Additions
 
 * Ringbuffer/better FIFO (multi-RW, see paper)
 * Better map/set backend (PersistentVector/IntMap or PatriciaTree)
-* JSON serialization
-
-* Option to ignore SIGFPE (to fix run-time divide by zero errors)
 
 * Device detection
-    * See PortAudio tracker
-         https://www.assembla.com/spaces/portaudio/tickets/11-add-callback-api-for-detecting-connection-removal-of-devices#/activity/ticket:
-
-    * OS X (done!)
-        http://stackoverflow.com/questions/3611644/coreaudio-getting-device-count-breaks-when-linking-to-foundation-on-10-6
-
     * Windows          
         http://msdn.microsoft.com/en-us/library/windows/desktop/dd371417%28v=vs.85%29.aspx
         * See that CoInitializeEx (or Windows::Foundation::Initialize) is called
@@ -48,6 +30,10 @@ Additions
         * Create instance of IMMDeviceEnumerator by CoCreate()
         * Pass to IMMDeviceEnumerator::RegisterEndpointNotificationCallback(cb)
         * Pass to IMMDeviceEnumerator::UnregisterEndpointNotificationCallback(cb)
+
+    * See PortAudio tracker
+         https://www.assembla.com/spaces/portaudio/tickets/11-add-callback-api-for-detecting-connection-removal-of-devices#/activity/ticket:
+
         
 
 * Vector/SIMD support
@@ -64,7 +50,7 @@ Issues
 * Add CorePlot in script
 
 * Type-safe range(m..n) literal
-    * Current one requires map(cast) !
+    * Current one requires map(i8) etc
 
 * Normalize rationals before printing (but not otherwise)
 
@@ -83,9 +69,6 @@ Issues
 
 ==========
 Misc
-
-* Make Modulo support interfaces (i.e. generate numbers in interfaces.h)
-* Make Modulo support explicit one-level above names (doremir_device_audio_stream_callback_t etc)
 
 * Check if we can make Fluidsynth compile against checked in Glib
   binaries instead of /usr/local
