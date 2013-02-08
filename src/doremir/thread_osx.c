@@ -117,6 +117,8 @@ void doremir_thread_detach(doremir_thread_t thread)
     }
 }
 
+/** Return the main thread.
+  */
 doremir_thread_t doremir_thread_main()
 {
     assert(main_thread_g && "Module not initialized");
@@ -126,6 +128,8 @@ doremir_thread_t doremir_thread_main()
     return thread;
 }
 
+/** Return the current thread.
+  */
 doremir_thread_t doremir_thread_current()
 {
     doremir_thread_t thread = new_thread(); 
