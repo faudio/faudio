@@ -76,9 +76,9 @@ if(APPLE)
   if(BUILD_SHARED)
     add_library(doremir_audio SHARED ${SRCS_ALL})
     set_target_properties(doremir_audio PROPERTIES 
-      OUTPUT_NAME                 "doremir_audio-${VERSION}"
+      OUTPUT_NAME                 "libdoremiraudio"
       LIBRARY_OUTPUT_DIRECTORY    "../lib"
-      INSTALL_NAME_DIR            "@executable_path/../lib/doremir_audio-${VERSION}.dylib"
+      INSTALL_NAME_DIR            "/usr/local/lib"
       )
     target_link_libraries(doremir_audio ${EXTS})
     set(MAIN_LIBRARY doremir_audio PARENT_SCOPE)
