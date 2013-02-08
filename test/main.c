@@ -1622,8 +1622,8 @@ void test_midi_stream()
 
     midi_session_t session;
     midi_device_t  input, output;
-    midi_stream_t  stream;
-    processor_t     proc1, proc2;
+    midi_stream_t  in_stream, out_stream;
+    processor_t    proc1, proc2;
 
     // Processor to use
     proc1    = id(type_pair(type_frame(type(f32)), type_frame(type(f32))));
@@ -1642,24 +1642,40 @@ void test_midi_stream()
     // Session obtained, we can now access devices
     print_midi_devices(session);
 
-    // input = doremir_device_midi_default_input(session);
+    input = doremir_device_midi_default_input(session);
     // output = doremir_device_midi_default_output(session);
-    // 
-    // // Start stream
-    // stream = doremir_device_midi_open_stream(input, proc2, output);
-    // 
-    // // Handle possible error
-    // if (doremir_check(stream)) {
-    //     log_error((error_t) stream);
-    //     warn(string("Aborting test due to error"));
-    //     goto cleanup;
-    // }
-    // 
-    doremir_device_midi_set_status_callback(status_changed, string("foobar"), session);
+    output = doremir_list_index(7, doremir_device_midi_all(session));
+    
+    // Start streams
+    in_stream = doremir_device_midi_open_stream(input);
+    out_stream = doremir_device_midi_open_stream(output);
 
+    // Handle possible errors
+    if (doremir_check(in_stream)) {
+        log_error((error_t) in_stream);
+        warn(string("Aborting test due to error"));
+        goto cleanup;
+    }
+    if (doremir_check(out_stream)) {
+        log_error((error_t) out_stream);
+        warn(string("Aborting test due to error"));
+        goto cleanup;
+    }
+
+    // TODO
+    // doremir_device_midi_set_status_callback(status_changed, string("foobar"), session);
+
+
+    for(int i = 0; i < 30; ++i)
+    {
+        ((doremir_message_receiver_t*) 
+            doremir_interface(doremir_message_receiver_i, out_stream))->
+                send(out_stream, 0, midi(0x90, 48+i*2, 100));
+        doremir_thread_sleep(190);
+    }
     //
     // // Stream active, let it run for 5 seconds
-    doremir_thread_sleep(30000);
+    // doremir_thread_sleep(5000);
 
 cleanup:
     // doremir_device_midi_close_stream(stream);
