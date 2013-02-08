@@ -294,10 +294,14 @@ bool doremir_device_midi_has_output(device_t device)
 void midi_inform_opening(device_t device)
 {
     inform(string("Opening real-time midi stream"));
-    if (device->input)
+
+    if (device->input) {
         inform(string_dappend(string("    Input:  "), doremir_string_show(device)));
-    if (device->output)
+    }
+
+    if (device->output) {
         inform(string_dappend(string("    Output:  "), doremir_string_show(device)));
+    }
 }
 
 PmTimestamp midi_time_callback(void *data)
@@ -315,14 +319,14 @@ doremir_device_midi_stream_t doremir_device_midi_open_stream(device_t device)
 
     if (device->input) {
         // result = Pm_OpenInput(&stream->native_input, device->index, NULL, 0,
-                     // midi_time_callback, NULL);
+        // midi_time_callback, NULL);
         // assert(result == pmNoError);
     }
 
     if (device->output) {
         printf("Opening output\n");
         result = Pm_OpenOutput(&stream->native_output, device->index, NULL, 0,
-                      midi_time_callback, NULL, -1);
+                               midi_time_callback, NULL, -1);
         assert(result == pmNoError);
     }
 
@@ -483,8 +487,8 @@ void midi_stream_send(ptr_t a, address_t addr, message_t msg)
         printf("Sending: %s %08x\n", unstring(doremir_string_show(midi)), (int) midi_msg);
 
         result = Pm_WriteShort(stream->native_output, 0, midi_msg);
-        if (result != pmNoError)
-        {
+
+        if (result != pmNoError) {
             midi_device_fatal(string("Could not send midi"), result);
         }
     } else {

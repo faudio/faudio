@@ -72,7 +72,7 @@ inline static void delete_thread(thread_t thread)
  */
 doremir_thread_t doremir_thread_create(doremir_nullary_t func, doremir_ptr_t data)
 {
-    doremir_thread_t thread = new_thread(); 
+    doremir_thread_t thread = new_thread();
 
     int result = pthread_create(&thread->native, NULL, func, data);
 
@@ -123,7 +123,7 @@ doremir_thread_t doremir_thread_main()
 {
     assert(main_thread_g && "Module not initialized");
 
-    doremir_thread_t thread = new_thread(); 
+    doremir_thread_t thread = new_thread();
     thread->native = main_thread_g;
     return thread;
 }
@@ -132,7 +132,7 @@ doremir_thread_t doremir_thread_main()
   */
 doremir_thread_t doremir_thread_current()
 {
-    doremir_thread_t thread = new_thread(); 
+    doremir_thread_t thread = new_thread();
     thread->native = pthread_self();
     return thread;
 }
@@ -148,7 +148,7 @@ doremir_thread_t doremir_thread_current()
 doremir_thread_mutex_t doremir_thread_create_mutex()
 {
     doremir_thread_mutex_t mutex = doremir_new(thread_mutex);
-    mutex->impl = &mutex_impl; 
+    mutex->impl = &mutex_impl;
 
     int result = pthread_mutex_init(&mutex->native, NULL);
 
@@ -228,7 +228,7 @@ bool doremir_thread_unlock(doremir_thread_mutex_t mutex)
  */ doremir_thread_condition_t doremir_thread_create_condition(doremir_thread_mutex_t mutex)
 {
     doremir_thread_condition_t cond = doremir_new(thread_condition);
-    cond->impl = &condition_impl; 
+    cond->impl = &condition_impl;
     cond->mutex = mutex;
 
     int result = pthread_cond_init(&cond->native, NULL);

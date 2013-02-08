@@ -559,8 +559,10 @@ int during_processing(stream_t stream, unsigned count, float **input, float **ou
     // deliver outputs
 
 
-    if ((stream->sample_count % 4096) == 0)
-    printf("%d\n", stream->sample_count);
+    if ((stream->sample_count % 4096) == 0) {
+        printf("%d\n", stream->sample_count);
+    }
+
     float tab[256];
     float tau = 3.1415 * 2;
 

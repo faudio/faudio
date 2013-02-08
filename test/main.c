@@ -1190,11 +1190,11 @@ void test_dispatcher()
     while (true) {
         doremir_message_sync(disp);
         msgs = doremir_message_receive(disp, i16(1));
-    
+
         if (doremir_list_is_empty(msgs)) {
             break;
         }
-    
+
         doremir_print("             | 1: %s\n", msgs);
     }
 
@@ -1645,7 +1645,7 @@ void test_midi_stream()
     input = doremir_device_midi_default_input(session);
     // output = doremir_device_midi_default_output(session);
     output = doremir_list_index(7, doremir_device_midi_all(session));
-    
+
     // Start streams
     in_stream = doremir_device_midi_open_stream(input);
     out_stream = doremir_device_midi_open_stream(output);
@@ -1656,6 +1656,7 @@ void test_midi_stream()
         warn(string("Aborting test due to error"));
         goto cleanup;
     }
+
     if (doremir_check(out_stream)) {
         log_error((error_t) out_stream);
         warn(string("Aborting test due to error"));
@@ -1666,11 +1667,11 @@ void test_midi_stream()
     // doremir_device_midi_set_status_callback(status_changed, string("foobar"), session);
 
 
-    for(int i = 0; i < 30; ++i)
-    {
-        doremir_message_send(out_stream, 0, midi(0x90, 48+i*2, 100));
+    for (int i = 0; i < 30; ++i) {
+        doremir_message_send(out_stream, 0, midi(0x90, 48 + i * 2, 100));
         doremir_thread_sleep(190);
     }
+
     //
     // // Stream active, let it run for 5 seconds
     // doremir_thread_sleep(5000);

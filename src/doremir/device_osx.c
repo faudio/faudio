@@ -103,8 +103,7 @@ void midi_listener(const MIDINotification *message, void *data)
         kMIDIMsgIOError = 7
     };
     */
-    if (id == kMIDIMsgSetupChanged)
-    {
+    if (id == kMIDIMsgSetupChanged) {
         closure_t closure = data;
         closure->function(closure->data);
     }
@@ -112,7 +111,7 @@ void midi_listener(const MIDINotification *message, void *data)
 
 // From https://ccrma.stanford.edu/~craig/articles/linuxmidi/osxmidi/testout.c
 //
-//      "Note that notifyProc will always be called on the run loop 
+//      "Note that notifyProc will always be called on the run loop
 //      which was current when MIDIClientCreate was first called."
 
 // See http://lists.apple.com/archives/coreaudio-api/2002/Feb/msg00180.html
@@ -133,7 +132,7 @@ void midi_listener_loop(closure_t closure)
     name = doremir_string_to_cf_string(string("DoReMIRAudioxx"));
     result = MIDIClientCreate(name, midi_listener, closure, &client);
     assert(result == noErr);
-    
+
     CFRunLoopRun();
 }
 
@@ -141,9 +140,9 @@ void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
 {
     closure_t closure;
     closure = new_closure(function, data);
-    
+
     assert(doremir_equal(doremir_thread_main(), doremir_thread_current())
-        && "Must be run from main thread");
+           && "Must be run from main thread");
 
     midi_listener_loop(closure);
     printf("Exited add\n");
