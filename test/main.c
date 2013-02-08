@@ -1194,8 +1194,8 @@ void test_dispatcher()
         if (doremir_list_is_empty(msgs)) {
             break;
         }
-    // 
-    //     doremir_print("             | 1: %s\n", msgs);
+    
+        doremir_print("             | 1: %s\n", msgs);
     }
 
     doremir_destroy(disp);
