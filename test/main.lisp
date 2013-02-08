@@ -549,7 +549,7 @@
 
 (setf s (device-audio-begin-session))
 (error-check s)
-(error-log nil (to-error x))
+(error-log nil (to-error s))
 (error-message (to-error s))
 (device-audio-end-session s)
 ; (device-audio-with-session)
@@ -578,7 +578,8 @@
 (cl:print *status*)
 (defcallback audio-status-changed ptr ((x ptr))
   (declare (ignore x))
-  (incf *status* 1))
+  (incf *status* 1)
+  (audioengine-log-info "Audio setup changed"))
 (device-audio-set-status-callback (callback audio-status-changed) nil s)
 
 (setf p (processor-identity '(:pair (:frame :f32) (:frame :f32))))
@@ -609,11 +610,12 @@
 (device-midi-has-output x)
 
 ; Check for new devices
-(defvar *status* 0)
-(cl:print *status*)
+(defvar *midi-status* 0)
+(cl:print *midi-status*)
 (defcallback midi-status-changed ptr ((x ptr))
   (declare (ignore x))
-  (incf *status* 1))
+  (incf *midi-status* 1)
+  (audioengine-log-info "Midi setup changed"))
 (device-midi-set-status-callback (callback midi-status-changed) nil s)
 
 (setf z (device-midi-open-stream x))
@@ -657,7 +659,17 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Atomic
+; Plotting
+
+(cffi:defcallback plot-cb ptr ((c ptr))
+  (cl:print "Printing"))
+
+(plot-show (callback plot-cb) nil)
+
+
+; ---------------------------------------------------------------------------------------------------
+
+; Atomic structures
 
 (setf x (atomic-create))
 (setf y (atomic-copy x))
@@ -674,15 +686,42 @@
 (atomic-queue-write x (random 20))
 (atomic-queue-read x)               ; FIXME <ptr 0> should be nil
 
+(setf x (atomic-stack-create))
+(atomic-stack-destroy x)
+(atomic-stack-write x (random 20))
+(atomic-stack-read x)
+
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Plotting
+; Threads
 
-(cffi:defcallback plot-cb ptr ((c ptr))
-  (cl:print "Printing"))
+(defcallback thread-action ptr ((data ptr))
+  (declare (ignore data))
+  (audioengine-log-info "Started another thread:")
+  (audioengine-log-info (string-show (equal (thread-current) (thread-main))))
+  (audioengine-log-info (string-show (thread-current)))
+  )
+(equal (thread-current) (thread-main))
+(audioengine-initialize)
 
-(plot-show (callback plot-cb) nil)
+(setf x (thread-create (callback thread-action) nil))
+(thread-sleep 3000)
+(thread-join x)
+(thread-detach x)
+(thread-main)
+(thread-current)
+; thread-create-mutex
+; thread-destroy-mutex
+; thread-lock
+; thread-try-lock
+; thread-unlock
+; thread-create-condition
+; thread-destroy-condition
+; thread-wait-for
+; thread-notify
+; thread-notify-all
+
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -706,8 +745,8 @@
 (copy               x)
 (destroy            x)
 (string-show        x)
-(string-to-json     x)
-(string-from-json   x)
+(string-to-json     (export-list# '(1 2 3)))
+(string-from-json   "({foo:1, bar:2})")
 
 (equal              0 0)
 (equal              0 1)
