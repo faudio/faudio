@@ -51,6 +51,7 @@ list(APPEND SRCS_OSX
   doremir/device_osx.c
   doremir/directory_osx.c
   doremir/thread_osx.c
+  doremir/string_osx.c
   )
 if(${ENABLE_COREPLOT})
   list(APPEND SRCS_OSX
