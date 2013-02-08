@@ -327,6 +327,6 @@ if (COMPONENTS_RESOLVED)
 
   add_subdirectory(src)
   add_subdirectory(test)
-  # add_subdirectory(tools)
+  add_subdirectory(tools)
 
 endif(COMPONENTS_RESOLVED)
