@@ -1591,9 +1591,7 @@ void test_audio_stream()
     }
 
     doremir_device_audio_set_status_callback(status_changed, string("foobar"), session);
-
-    // Stream active, let it run for 5 seconds
-    doremir_thread_sleep(5000);
+    doremir_thread_sleep(3000);
 
 cleanup:
     doremir_device_audio_close_stream(stream);
@@ -1666,15 +1664,10 @@ void test_midi_stream()
     // TODO
     // doremir_device_midi_set_status_callback(status_changed, string("foobar"), session);
 
-
     for (int i = 0; i < 30; ++i) {
         doremir_message_send(out_stream, 0, midi(0x90, 48 + i * 2, 100));
-        doremir_thread_sleep(190);
+        doremir_thread_sleep(100);
     }
-
-    //
-    // // Stream active, let it run for 5 seconds
-    // doremir_thread_sleep(5000);
 
 cleanup:
     // doremir_device_midi_close_stream(stream);
@@ -1847,7 +1840,7 @@ int main(int argc, char const *argv[])
             string_dappend(doremir_directory_current(), string("/test/in.wav")),
             string_dappend(doremir_directory_current(), string("/test/out.wav")));
         test_buffer_stream();
-        // test_audio_stream();
+        test_audio_stream();
         test_midi_stream();
         goto end;
 
