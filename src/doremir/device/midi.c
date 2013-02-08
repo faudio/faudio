@@ -53,7 +53,7 @@ struct _doremir_device_midi_t {
 struct _doremir_device_midi_stream_t {
 
     impl_t              impl;               // Dispatcher
-    native_stream_t     native_input, 
+    native_stream_t     native_input,
                         native_output;      // Native stream
     device_t            device;
     list_t              incoming;
@@ -231,6 +231,7 @@ void doremir_device_midi_with_session(session_callback_t    session_callback,
     } else {
         session_callback(session_data, session);
     }
+
     doremir_device_midi_end_session(session);
 }
 
@@ -307,24 +308,14 @@ doremir_device_midi_stream_t doremir_device_midi_open_stream(device_t device)
 
     stream_t stream = new_stream(device);
 
-    if(device->input)
-    {
-        Pm_OpenInput(&stream->native_input, 
-            device->index, 
-            NULL, 
-            0, 
-            midi_time_callback, 
-            NULL);
+    if (device->input) {
+        Pm_OpenInput(&stream->native_input, device->index, NULL, 0, 
+                     midi_time_callback, NULL);
     }
-    if(device->output)
-    {
-        Pm_OpenOutput(&stream->native_output,
-            device->index,
-            NULL,
-            0,
-            midi_time_callback,
-            NULL,
-            0);
+
+    if (device->output) {
+        Pm_OpenOutput(&stream->native_output, device->index, NULL, 0,
+                      midi_time_callback, NULL, 0);
     }
 
 
@@ -460,8 +451,7 @@ void midi_stream_sync(ptr_t a)
 {
     stream_t stream = (stream_t) a;
 
-    while(Pm_Poll(stream->native_input) == TRUE)
-    {
+    while (Pm_Poll(stream->native_input) == TRUE) {
         // copy messages into stream->incoming
         assert(false && "Not implemented");
     }
@@ -477,14 +467,11 @@ void midi_stream_send(ptr_t a, address_t addr, message_t msg)
 {
     stream_t stream = (stream_t) a;
     midi_t   midi   = (midi_t) msg;
-    
-    if (doremir_midi_is_simple(midi))
-    {
+
+    if (doremir_midi_is_simple(midi)) {
         // timestamp ignored
         Pm_WriteShort(stream->native_output, 0, doremir_midi_simple_to_long(midi));
-    }
-    else
-    {
+    } else {
         assert(false && "Not implemented");
 
         unsigned char buf[2048];
@@ -492,13 +479,13 @@ void midi_stream_send(ptr_t a, address_t addr, message_t msg)
         buf[0]    = '0';
         buf[2046] = 'f';
         buf[2047] = '7';
-        
+
         // check buffer size <= (2048-2)
         // copy sysex buffer to buf+1
-        
-        Pm_WriteSysEx(stream->native_output, 0, &buf);
+
+        Pm_WriteSysEx(stream->native_output, 0, buf);
     }
-    
+
 }
 
 ptr_t midi_stream_impl(doremir_id_t interface)

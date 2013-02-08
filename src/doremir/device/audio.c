@@ -17,6 +17,8 @@
     Notes:
         * Name mixup. What to call incoming/outcoming to make it unambigous.
             * to_audio, from_audio or something?
+        * FIXME endSession must check for running streams, or we get consistency errors
+            * Either abort streams or refuse to close session
  */
 
 
@@ -275,6 +277,7 @@ void doremir_device_audio_with_session(
     } else {
         session_callback(session_data, session);
     }
+
     doremir_device_audio_end_session(session);
 }
 
@@ -514,12 +517,12 @@ void before_processing(stream_t stream)
         .total_time  = NULL, // TODO
         .dispatcher  = stream->incoming
     };
-             
-    
-    size_t sz = 1204*1204*sizeof(double);
-    void* b = malloc(sz);                          
+
+
+    size_t sz = 1204 * 1204 * sizeof(double);
+    void *b = malloc(sz);
     memset(b, 0, sz);
-    
+
     // allocate buffers
     stream->proc_impl->before(stream->proc, &info);
 }
@@ -556,11 +559,14 @@ int during_processing(stream_t stream, unsigned count, float **input, float **ou
     // deliver outputs
 
 
+    if ((stream->sample_count % 4096) == 0)
     printf("%d\n", stream->sample_count);
-    float tab[256];                     
-    float tau = 3.1415*2;
-    for(int i = 0; i < 256; ++i)
-        tab[i] = sin( ((float)i)/256*tau*5  ) * 0.5;
+    float tab[256];
+    float tau = 3.1415 * 2;
+
+    for (int i = 0; i < 256; ++i) {
+        tab[i] = sin(((float)i) / 256 * tau * 5) * 0.5;
+    }
 
 
     for (unsigned channel = 0; channel < stream->input_channels; ++channel) {
@@ -568,12 +574,9 @@ int during_processing(stream_t stream, unsigned count, float **input, float **ou
         float *out = output[channel];
 
         for (int i = 0; i < count; ++i) {
-            if (channel == 1)
-            {
+            if (channel == 1) {
                 out[i] = tab[i % 256];
-            }                         
-            else
-            {
+            } else {
                 out[i] = 0;
             }
         }

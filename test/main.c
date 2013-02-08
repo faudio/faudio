@@ -1593,7 +1593,7 @@ void test_audio_stream()
     doremir_device_audio_set_status_callback(status_changed, string("foobar"), session);
 
     // Stream active, let it run for 5 seconds
-    doremir_thread_sleep(20000);
+    doremir_thread_sleep(5000);
 
 cleanup:
     doremir_device_audio_close_stream(stream);
@@ -1603,10 +1603,69 @@ cleanup:
 }
 
 
+void print_midi_devices(midi_session_t session)
+{
+    doremir_print("\n", NULL);
+    doremir_print("    Listing midi devices: \n", NULL);
+    doremir_for_each(x, doremir_device_midi_all(session)) {
+        doremir_print("        Device: %s\n", x);
+        doremir_print("            Input:  %s\n", b(doremir_device_midi_has_input(x)));
+        doremir_print("            Output: %s\n", b(doremir_device_midi_has_output(x)));
+    }
+    doremir_print("    Default input is : %s\n", doremir_device_midi_default_input(session));
+    doremir_print("    Default output is : %s\n", doremir_device_midi_default_output(session));
+    doremir_print("\n", NULL);
+}
 void test_midi_stream()
 {
     test_section("Midi streams");
 
+    midi_session_t session;
+    midi_device_t  input, output;
+    midi_stream_t  stream;
+    processor_t     proc1, proc2;
+
+    // Processor to use
+    proc1    = id(type_pair(type_frame(type(f32)), type_frame(type(f32))));
+    proc2    = seq(proc1, proc1);
+
+    // Begin session
+    session = doremir_device_midi_begin_session();
+
+    // Handle possible error
+    if (doremir_check(session)) {
+        log_error((error_t) session);
+        warn(string("Aborting test due to error"));
+        goto cleanup;
+    }
+
+    // Session obtained, we can now access devices
+    print_midi_devices(session);
+
+    // input = doremir_device_midi_default_input(session);
+    // output = doremir_device_midi_default_output(session);
+    // 
+    // // Start stream
+    // stream = doremir_device_midi_open_stream(input, proc2, output);
+    // 
+    // // Handle possible error
+    // if (doremir_check(stream)) {
+    //     log_error((error_t) stream);
+    //     warn(string("Aborting test due to error"));
+    //     goto cleanup;
+    // }
+    // 
+    doremir_device_midi_set_status_callback(status_changed, string("foobar"), session);
+
+    //
+    // // Stream active, let it run for 5 seconds
+    doremir_thread_sleep(30000);
+
+cleanup:
+    // doremir_device_midi_close_stream(stream);
+    doremir_device_midi_end_session(session);
+    doremir_destroy(proc1);
+    doremir_destroy(proc2);
 }
 
 
@@ -1773,7 +1832,7 @@ int main(int argc, char const *argv[])
             string_dappend(doremir_directory_current(), string("/test/in.wav")),
             string_dappend(doremir_directory_current(), string("/test/out.wav")));
         test_buffer_stream();
-        test_audio_stream();
+        // test_audio_stream();
         test_midi_stream();
         goto end;
 

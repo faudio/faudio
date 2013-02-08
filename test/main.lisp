@@ -549,18 +549,10 @@
 
 (setf s (device-audio-begin-session))
 (error-check s)
-; (error-log nil s)
+(error-log nil (to-error x))
 (error-message (to-error s))
 (device-audio-end-session s)
-;(device-audio-with-session)
-
-; Check for new devices
-(defvar *status* 0)
-(cl:print *status*)
-(defcallback status-changed ptr ((x ptr))
-  (declare (ignore x))
-  (incf *status* 1))
-(device-audio-set-status-callback (callback status-changed) nil s)
+; (device-audio-with-session)
 
 (device-audio-all s)
 (setf x (device-audio-default-input s))
@@ -569,10 +561,10 @@
 
 (device-audio-name x)
 (device-audio-host-name x)
+(device-audio-has-input x)
+(device-audio-has-output x)
 (device-audio-input-type x)
 (device-audio-output-type x)
-(device-audio-input-type y)
-(device-audio-output-type y)
 (type-channels (device-audio-input-type x))
 (type-channels (device-audio-output-type x))
 (type-size-of 1024 (device-audio-input-type x))
@@ -581,29 +573,53 @@
  (device-audio-output-type 
   (from-pointer 'device-audio (list-head (device-audio-all s)))))
 
+; Check for new devices
+(defvar *status* 0)
+(cl:print *status*)
+(defcallback audio-status-changed ptr ((x ptr))
+  (declare (ignore x))
+  (incf *status* 1))
+(device-audio-set-status-callback (callback audio-status-changed) nil s)
+
 (setf p (processor-identity '(:pair (:frame :f32) (:frame :f32))))
 (setf z (device-audio-open-stream x p y))
 (device-audio-close-stream z)
-;(device-audio-with-stream)
+; (device-audio-with-stream)
+
 
 ; ---------------------------------------------------------------------------------------------------
 
 ; Midi devices
 
-; (device-midi-all)
-; (device-midi-default)
-; (device-midi-name)
-; (device-midi-host-name)
-; (device-midi-has-input)
-; (device-midi-has-output)
-; (device-midi-begin-session)
-; (device-midi-restart-session)
-; (device-midi-end-session)
-; (device-midi-start-stream)
-; (device-midi-restart-stream)
-; (device-midi-stop-stream)
+(setf s (device-midi-begin-session))
+(error-check s)
+(error-log nil (to-error x))
+(error-message (to-error s))
+(device-midi-end-session s)
 ; (device-midi-with-session)
+
+(device-midi-all s)
+(setf x (device-midi-default-input s))
+(setf y (device-midi-default-output s))
+; (equal x y) ; FIXME
+
+(device-midi-name x)
+(device-midi-host-name x)
+(device-midi-has-input x)
+(device-midi-has-output x)
+
+; Check for new devices
+(defvar *status* 0)
+(cl:print *status*)
+(defcallback midi-status-changed ptr ((x ptr))
+  (declare (ignore x))
+  (incf *status* 1))
+(device-midi-set-status-callback (callback midi-status-changed) nil s)
+
+(setf z (device-midi-open-stream x))
+(device-midi-close-stream z)
 ; (device-midi-with-stream)
+
 
 ; ---------------------------------------------------------------------------------------------------
 

@@ -8,6 +8,7 @@
 #include <doremir/device/audio.h>
 #include <doremir/device/midi.h>
 #include <doremir/string.h>
+#include <doremir/thread.h>
 #include <doremir/util.h>
 
 #include <CoreAudio/AudioHardware.h>
@@ -61,7 +62,7 @@ void add_audio_status_listener(audio_status_callback_t function, ptr_t data)
 {
     OSStatus result;
     CFRunLoopRef theRunLoop;
-    struct nullary_closure *closure;
+    closure_t closure;
 
     AudioObjectPropertyAddress runLoop = {
         .mSelector = kAudioHardwarePropertyRunLoop,
@@ -87,8 +88,9 @@ void add_audio_status_listener(audio_status_callback_t function, ptr_t data)
 
 void midi_listener(const MIDINotification *message, void *data)
 {
-    // MIDINotificationMessageID id = message->messageID;
-    // UInt32                    sz = message->messageSize;
+    MIDINotificationMessageID id = message->messageID;
+    UInt32                    sz = message->messageSize;
+    printf("id: %d, size: %d\n", id, sz);
 
     /*
     enum { // MIDINotificationMessageID
@@ -101,17 +103,71 @@ void midi_listener(const MIDINotification *message, void *data)
         kMIDIMsgIOError = 7
     };
     */
-    closure_t closure = data;
-    closure->function(closure->data);
+    if (id == kMIDIMsgSetupChanged)
+    {
+        closure_t closure = data;
+        closure->function(closure->data);
+    }
+}
+
+// From https://ccrma.stanford.edu/~craig/articles/linuxmidi/osxmidi/testout.c
+//
+//      "Note that notifyProc will always be called on the run loop 
+//      which was current when MIDIClientCreate was first called."
+
+// See http://lists.apple.com/archives/coreaudio-api/2002/Feb/msg00180.html
+// http://comelearncocoawithme.blogspot.se/2011/08/reading-from-external-controllers-with.html
+// void
+// MyTimerCallback(CFRunLoopTimerRef timer, void *info)
+// {
+//     printf("Called! Devs: %d\n",  MIDIGetNumberOfSources());
+// }
+
+static CFRunLoopSourceRef source = NULL;
+void midi_listener_loop(closure_t closure)
+{
+    OSStatus result;
+    CFStringRef name;
+    MIDIClientRef client;
+
+    name = doremir_string_to_cf_string(string("DoReMIRAudioxx"));
+    result = MIDIClientCreate(name, midi_listener, closure, &client);
+    assert(result == noErr);
+
+    
+
+    // printf("Entering loop\n");
+    // CFRunLoopRun();
+    // printf("Exiting loop\n");
 }
 
 void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
 {
-    OSStatus result;
-    MIDIClientRef client;
-    CFStringRef name = doremir_string_to_cf_string(string("DoReMIRAudio"));
+    closure_t closure;
+    closure = new_closure(function, data);
 
-    result = MIDIClientCreate(name, midi_listener, data, &client);
-    assert(result == noErr);
+    // pid_t pid;
+    // if ((pid = fork()) < 0)
+    //         {
+    //             assert(false && "No fork");
+    //         }
+    //         else if (pid == 0)
+    //         {
+    //             // return
+    //         }
+    //         else
+    //         {
+    //             midi_listener_loop(closure);
+    //         }
+    
+    midi_listener_loop(closure);
+    
+    
+    // thread_t thread = doremir_thread_create(midi_listener_loop, closure);
+    // doremir_thread_detach(thread); // TODO safe?
+    
+    printf("Exited add\n");
 }
+
+
 
