@@ -13,6 +13,13 @@
 
 #include <portaudio.h>
 
+/*
+    Notes:
+        * Name mixup. What to call incoming/outcoming to make it unambigous.
+            * to_audio, from_audio or something?
+ */
+
+
 typedef doremir_device_audio_t                  device_t;
 typedef doremir_device_audio_stream_t           stream_t;
 typedef doremir_device_audio_session_t          session_t;
@@ -212,7 +219,7 @@ void doremir_device_audio_terminate()
 session_t doremir_device_audio_begin_session()
 {
     if (!pa_mutex) {
-        assert(false && "Not initalized");
+        assert(false && "Module not initalized");
     }
 
     inform(string("Initializing real-time audio session"));
@@ -238,7 +245,7 @@ session_t doremir_device_audio_begin_session()
 void doremir_device_audio_end_session(session_t session)
 {
     if (!pa_mutex) {
-        assert(false && "Not initalized");
+        assert(false && "Module not initalized");
     }
 
     inform(string("Terminating real-time audio session"));
@@ -268,7 +275,6 @@ void doremir_device_audio_with_session(
     } else {
         session_callback(session_data, session);
     }
-
     doremir_device_audio_end_session(session);
 }
 
@@ -373,7 +379,7 @@ static inline int num_output_channels(device_t device)
 //     }
 // }
 
-void inform_opening(device_t input, processor_t proc, device_t output)
+void audio_inform_opening(device_t input, processor_t proc, device_t output)
 {
     inform(string("Opening real-time audio stream"));
     inform(string_dappend(string("    Input:  "), input ? doremir_string_show(input) : string("-")));
@@ -390,7 +396,7 @@ stream_t doremir_device_audio_open_stream(device_t input, processor_t proc, devi
     double          sample_rate = 44100;
     stream_t        stream      = new_stream(input, output, proc, sample_rate, buffer_size);
 
-    inform_opening(input, proc, output);
+    audio_inform_opening(input, proc, output);
     {
         if (doremir_not_equal(
                     doremir_processor_input_type(proc),
@@ -471,8 +477,9 @@ void doremir_device_audio_close_stream(stream_t stream)
 {
     inform(string("Closing real-time audio stream"));
 
+    // Note that after_processing will be called from native_finished_callback
     Pa_CloseStream(stream->native);
-    // after_processing() will be called from native_finished_callback
+    delete_stream(stream);
 }
 
 void doremir_device_audio_with_stream(device_t            input,
@@ -507,7 +514,12 @@ void before_processing(stream_t stream)
         .total_time  = NULL, // TODO
         .dispatcher  = stream->incoming
     };
-
+             
+    
+    size_t sz = 1204*1204*sizeof(double);
+    void* b = malloc(sz);                          
+    memset(b, 0, sz);
+    
     // allocate buffers
     stream->proc_impl->before(stream->proc, &info);
 }
@@ -543,13 +555,27 @@ int during_processing(stream_t stream, unsigned count, float **input, float **ou
     // stream->proc_impl->process(stream->proc, &info, NULL);
     // deliver outputs
 
+
+    printf("%d\n", stream->sample_count);
+    float tab[256];                     
+    float tau = 3.1415*2;
+    for(int i = 0; i < 256; ++i)
+        tab[i] = sin( ((float)i)/256*tau*5  ) * 0.5;
+
+
     for (unsigned channel = 0; channel < stream->input_channels; ++channel) {
         float *in  = input[channel];
         float *out = output[channel];
 
         for (int i = 0; i < count; ++i) {
-            // TODO
-            out[i] = in[i];
+            if (channel == 1)
+            {
+                out[i] = tab[i % 256];
+            }                         
+            else
+            {
+                out[i] = 0;
+            }
         }
     }
 

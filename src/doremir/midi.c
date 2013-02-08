@@ -152,6 +152,17 @@ doremir_buffer_t doremir_midi_sysex_data(doremir_midi_t midi)
     return midi->data.sysex;
 }
 
+#define midi_wrap(status, data1, data2)  \
+         ((((data2) << 16) & 0xFF0000) |  \
+          (((data1) << 8) & 0xFF00) |     \
+          ((status) & 0xFF))
+
+long doremir_midi_simple_to_long(doremir_midi_t midi)
+{
+    assert(is_simple(midi) && "Not a simple message");
+    return midi_wrap(midi->data.simple[0], midi->data.simple[1], midi->data.simple[2]);
+}
+
 
 // --------------------------------------------------------------------------------
 

@@ -6,6 +6,8 @@
  */
 
 #include <doremir/device/midi.h>
+#include <doremir/midi.h>
+#include <doremir/list.h>
 #include <doremir/thread.h>
 #include <doremir/util.h>
 
@@ -51,9 +53,10 @@ struct _doremir_device_midi_t {
 struct _doremir_device_midi_stream_t {
 
     impl_t              impl;               // Dispatcher
-    native_stream_t     native;             // Native stream
-
+    native_stream_t     native_input, 
+                        native_output;      // Native stream
     device_t            device;
+    list_t              incoming;
 };
 
 static mutex_t pm_mutex;
@@ -71,6 +74,8 @@ inline static device_t new_device(native_index_t index);
 inline static void delete_device(device_t device);
 inline static stream_t new_stream(device_t device);
 inline static void delete_stream(stream_t stream);
+
+long doremir_midi_simple_to_long(doremir_midi_t midi);
 
 
 // --------------------------------------------------------------------------------
@@ -139,9 +144,10 @@ inline static void delete_device(device_t device)
 inline static stream_t new_stream(device_t device)
 {
     stream_t stream         = doremir_new(device_midi_stream);
-    
+
     stream->impl            = &midi_stream_impl;
     stream->device          = device;
+    stream->incoming        = doremir_list_empty();
 
     return stream;
 }
@@ -168,13 +174,49 @@ void doremir_device_midi_terminate()
 // --------------------------------------------------------------------------------
 
 
-
 session_t doremir_device_midi_begin_session()
 {
+    if (!pm_mutex) {
+        assert(false && "Module not initalized");
+    }
+
+    inform(string("Initializing real-time midi session"));
+
+    doremir_thread_lock(pm_mutex);
+    {
+        if (pm_status) {
+            doremir_thread_unlock(pm_mutex);
+            return (session_t) midi_device_error(string("Overlapping real-time midi sessions"));
+        } else {
+            Pm_Initialize();
+            pm_status = true;
+            doremir_thread_unlock(pm_mutex);
+
+            session_t session = new_session();
+            session_init_devices(session);
+            // session->acquired = time(NULL);      // TODO
+            return session;
+        }
+    }
 }
 
 void doremir_device_midi_end_session(session_t session)
 {
+    if (!pm_mutex) {
+        assert(false && "Not initalized");
+    }
+
+    inform(string("Terminating real-time midi session"));
+
+    doremir_thread_lock(pm_mutex);
+    {
+        if (pm_status) {
+            Pm_Terminate();
+            pm_status = false;
+        }
+    }
+    doremir_thread_unlock(pm_mutex);
+    delete_session(session);
 }
 
 void doremir_device_midi_with_session(session_callback_t    session_callback,
@@ -182,22 +224,34 @@ void doremir_device_midi_with_session(session_callback_t    session_callback,
                                       error_callback_t      error_callback,
                                       doremir_ptr_t         error_data)
 {
+    session_t session = doremir_device_midi_begin_session();
+
+    if (doremir_check(session)) {
+        error_callback(error_data, (error_t) session);
+    } else {
+        session_callback(session_data, session);
+    }
+    doremir_device_midi_end_session(session);
 }
 
 doremir_list_t doremir_device_midi_all(session_t session)
 {
+    return doremir_copy(session->devices);
 }
 
 doremir_pair_t doremir_device_midi_default(session_t session)
 {
+    return pair(session->def_input, session->def_output);
 }
 
 device_t doremir_device_midi_default_input(session_t session)
 {
+    return session->def_input;
 }
 
 device_t doremir_device_midi_default_output(session_t session)
 {
+    return session->def_output;
 }
 
 void add_midi_status_listener(status_callback_t function, ptr_t data);
@@ -215,27 +269,75 @@ void doremir_device_midi_set_status_callback(
 
 doremir_string_t doremir_device_midi_name(device_t device)
 {
+    return doremir_copy(device->name);
 }
 
 doremir_string_t doremir_device_midi_host_name(device_t device)
 {
+    return doremir_copy(device->host_name);
 }
 
 bool doremir_device_midi_has_input(device_t device)
 {
+    return device->input;
 }
 
 bool doremir_device_midi_has_output(device_t device)
 {
+    return device->output;
+}
+
+
+
+void midi_inform_opening(device_t device)
+{
+    inform(string("Opening real-time midi stream"));
+    inform(string_dappend(string("    Input:  "), doremir_string_show(device)));
+}
+
+PmTimestamp midi_time_callback(void *data)
+{
+    return 0; // FIXME
 }
 
 doremir_device_midi_stream_t doremir_device_midi_open_stream(device_t device)
 {
+    assert(device && "Not a device");
+    midi_inform_opening(device);
+
+    stream_t stream = new_stream(device);
+
+    if(device->input)
+    {
+        Pm_OpenInput(&stream->native_input, 
+            device->index, 
+            NULL, 
+            0, 
+            midi_time_callback, 
+            NULL);
+    }
+    if(device->output)
+    {
+        Pm_OpenOutput(&stream->native_output,
+            device->index,
+            NULL,
+            0,
+            midi_time_callback,
+            NULL,
+            0);
+    }
+
+
+    // TODO Pm_open
+    return stream;
 }
 
 
 void doremir_device_midi_close_stream(stream_t stream)
 {
+    inform(string("Closing real-time midi stream"));
+    Pm_Close(stream->native_input);
+    Pm_Close(stream->native_output);
 }
 
 
@@ -245,6 +347,15 @@ void doremir_device_midi_with_stream(device_t           device,
                                      error_callback_t   error_callback,
                                      doremir_ptr_t      error_data)
 {
+    stream_t stream = doremir_device_midi_open_stream(device);
+
+    if (doremir_check(stream)) {
+        error_callback(error_data, (error_t) stream);
+    } else {
+        stream_callback(stream_data, stream);
+    }
+
+    doremir_device_midi_close_stream(stream);
 }
 
 
@@ -257,15 +368,15 @@ void doremir_device_midi_with_stream(device_t           device,
 
 doremir_string_t midi_session_show(ptr_t a)
 {
-    // string_t str = string("<AudioSession ");
-    // str = string_dappend(str, doremir_string_format_integer(" %p", (long) a));
-    // str = string_dappend(str, string(">"));
-    // return str;
+    string_t str = string("<MidiSession ");
+    str = string_dappend(str, doremir_string_format_integer(" %p", (long) a));
+    str = string_dappend(str, string(">"));
+    return str;
 }
 
 void midi_session_destroy(ptr_t a)
 {
-    // doremir_device_midi_end_session(a);
+    doremir_device_midi_end_session(a);
 }
 
 ptr_t midi_session_impl(doremir_id_t interface)
@@ -292,22 +403,22 @@ ptr_t midi_session_impl(doremir_id_t interface)
 
 bool midi_device_equal(ptr_t a, ptr_t b)
 {
-    // device_t device1 = (device_t) a;
-    // device_t device2 = (device_t) b;
+    device_t device1 = (device_t) a;
+    device_t device2 = (device_t) b;
     // // TODO check that session is valid
-    // return device1->index == device2->index;
+    return device1->index == device2->index;
 }
 
 doremir_string_t midi_device_show(ptr_t a)
 {
     device_t device = (device_t) a;
 
-    // string_t str = string("<AudioDevice ");
-    // str = string_dappend(str, doremir_device_midi_host_name(device));
-    // str = string_dappend(str, string(" "));
-    // str = string_dappend(str, doremir_device_midi_name(device));
-    // str = string_dappend(str, string(">"));
-    // return str;
+    string_t str = string("<MidiDevice ");
+    str = string_dappend(str, doremir_device_midi_host_name(device));
+    str = string_dappend(str, string(" "));
+    str = string_dappend(str, doremir_device_midi_name(device));
+    str = string_dappend(str, string(">"));
+    return str;
 }
 
 ptr_t midi_device_impl(doremir_id_t interface)
@@ -334,9 +445,9 @@ ptr_t midi_device_impl(doremir_id_t interface)
 
 doremir_string_t midi_stream_show(ptr_t a)
 {
-    string_t str = string("<AudioStream ");
-    // str = string_dappend(str, doremir_string_format_integer(" %p", (long) a));
-    // str = string_dappend(str, string(">"));
+    string_t str = string("<MidiStream ");
+    str = string_dappend(str, doremir_string_format_integer(" %p", (long) a));
+    str = string_dappend(str, string(">"));
     return str;
 }
 
@@ -348,19 +459,45 @@ void midi_stream_destroy(ptr_t a)
 void midi_stream_sync(ptr_t a)
 {
     stream_t stream = (stream_t) a;
-    assert(false && "Not implemented");
+
+    while(Pm_Poll(stream->native_input) == TRUE)
+    {
+        // copy messages into stream->incoming
+    }
 }
 
 doremir_list_t midi_stream_receive(ptr_t a, address_t addr)
 {
-    // stream_t stream = (stream_t) a;
-    // assert(false && "Not implemented");
+    stream_t stream = (stream_t) a;
+    return doremir_list_copy(stream->incoming);
 }
 
 void midi_stream_send(ptr_t a, address_t addr, message_t msg)
 {
-    // stream_t stream = (stream_t) a;
-    // doremir_message_send(stream->incoming, addr, msg);
+    stream_t stream = (stream_t) a;
+    midi_t   midi   = (midi_t) msg;
+    
+    if (doremir_midi_is_simple(midi))
+    {
+        // timestamp ignored
+        Pm_WriteShort(stream->native_output, 0, doremir_midi_simple_to_long(midi));
+    }
+    else
+    {
+        assert(false && "Not implemented");
+
+        unsigned char buf[2048];
+        buf[0]    = 'f';
+        buf[0]    = '0';
+        buf[2046] = 'f';
+        buf[2047] = '7';
+        
+        // check buffer size <= (2048-2)
+        // copy sysex buffer to buf+1
+        
+        Pm_WriteSysEx(stream->native_output, 0, &buf);
+    }
+    
 }
 
 ptr_t midi_stream_impl(doremir_id_t interface)
