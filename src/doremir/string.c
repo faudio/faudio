@@ -205,6 +205,7 @@ doremir_string_t doremir_string_format_floating(char *format, double value)
     return doremir_string_from_utf8(buffer);
 }
 
+
 // --------------------------------------------------------------------------------
 
 /** Fail with error message, interpreting errno as an iconv error.
@@ -373,6 +374,7 @@ doremir_string_t doremir_string_from_utf32(doremir_string_utf32_t cstr)
     assert(false && "Not implemented");
 }
 
+
 // --------------------------------------------------------------------------------
 
 /** Convert the given value to a string.
@@ -514,6 +516,17 @@ doremir_ptr_t doremir_string_from_json(doremir_string_t string)
 
 // --------------------------------------------------------------------------------
 
+/** Return the result of applying the given function to all characters of the 
+    given string.
+
+    @par Laws
+
+        map(apply1, id, xs)                == xs
+        map(apply1, f, map(apply1, g, xs)) == map(apply1, comp(f, g), xs)
+
+    @par Performance
+        O(n)
+ */
 // string_t doremir_string_map(unary_t func, ptr_t data, string_t string)
 // {
 //     string_t result = doremir_string_copy(string);
@@ -524,6 +537,17 @@ doremir_ptr_t doremir_string_from_json(doremir_string_t string)
 //     return result;
 // }
 
+/** Map over the given string and join the results.
+
+    This function is useful to apply functions from single characters to strings.
+
+    @par Laws
+
+        joinMap(apply1, single, xs) == xs`
+
+    @par Performance
+        O(n)
+ */
 string_t doremir_string_join_map(unary_t func, ptr_t data, string_t string)
 {
     string_t result = string("");
@@ -535,6 +559,8 @@ string_t doremir_string_join_map(unary_t func, ptr_t data, string_t string)
     return result;
 }
 
+
+// --------------------------------------------------------------------------------
 
 inline static string_t escape_char(uint16_t c)
 {
@@ -554,8 +580,6 @@ inline static string_t escape(string_t string)
 {
     return doremir_string_join_map(apply1, escape_char, string);
 }
-
-// --------------------------------------------------------------------------------
 
 static bool string_equal(doremir_ptr_t as, doremir_ptr_t bs)
 {
