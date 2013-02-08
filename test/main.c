@@ -16,7 +16,7 @@ void test_section(char *str)
     doremir_audio_engine_log_info(string_dappend(string("Running test: "), string(str)));
 }
 
-void test_wrap()
+void test_value_references()
 {
     extern char *doremir_type_str(doremir_ptr_t a);
 
@@ -53,7 +53,7 @@ void test_wrap()
     assert(tf64(f64(-1.4142135623730951)) == -1.4142135623730951);
 }
 
-void test_generic()
+void test_generic_functions()
 {
     test_section("Generic functions");
     // TODO leaks
@@ -584,7 +584,9 @@ void test_cond()
 #pragma mark -
 
 void test_for_each()
-{
+{     
+    test_section("For each loops");
+    
     doremir_let(x, 33) {
         doremir_let(y, 1)
         doremir_let(z, x + y)
@@ -1282,12 +1284,18 @@ void test_event()
     }
 }
 
+void test_scheduler()
+{
+    test_section("Scheduler");
+}
+
+
 
 ptr_t add1234(ptr_t c, ptr_t x)
 {
     return i8(ti8(x) + 1234);
 }
-void test_processors(string_t path)
+void test_processor_graphs(string_t path)
 {
     test_section("Processors");
 
@@ -1689,26 +1697,28 @@ int main(int argc, char const *argv[])
 
     printf("The page size for this system is %ld bytes.\n", sysconf(_SC_PAGESIZE));
 
-    // while(true)
-
     {
         doremir_audio_engine_set_log_std();
-        // doremir_audio_engine_set_log_file(string("/Users/hans/Library/Logs/DoReMIRAudio.log"));
         doremir_plot_use_gnu();
+        // doremir_audio_engine_set_log_file(string("/Users/hans/Library/Logs/DoReMIRAudio.log"));
         // doremir_plot_use_core();
 
         doremir_audio_engine_initialize();
 
-        test_wrap();
-        test_generic();
+        test_value_references();
+        test_generic_functions();
         test_string();
         test_show();
         test_compare();
         test_rational();
         test_buffer();
         test_time();
-        test_midi();
         test_type();
+        test_midi();
+
+        // test_thread();
+        // test_mutex();
+        // test_cond();
 
         test_atomic();
         test_atomic_queue(5, 2);
@@ -1719,10 +1729,6 @@ int main(int argc, char const *argv[])
         // test_atomic_stack(300, 2);
         test_atomic_ring_buffer(5, 2);
 
-        // test_thread();
-        // test_mutex();
-        // test_cond();
-
         test_for_each();
         test_list();
         test_set();
@@ -1732,10 +1738,6 @@ int main(int argc, char const *argv[])
         test_json(
             string_dappend(doremir_directory_current(), string("/test/example.json")));
 
-        test_dispatcher();
-        // test_event();
-        // scheduler
-
         test_log();
         test_error();
         test_directory();
@@ -1743,9 +1745,12 @@ int main(int argc, char const *argv[])
         // test_plot_buffer();
         // test_plot_file(string("/Users/hans/Desktop/Passager.wav"));
 
-        test_processors(string_dappend(doremir_directory_current(), string("/test/proc.dot")));
-        test_vm2();
+        test_processor_graphs(string_dappend(doremir_directory_current(), string("/test/proc.dot")));
 
+        test_dispatcher();
+        // test_event();
+        // test_scheduler();
+        // test_processor();
 
         test_file_stream(
             string_dappend(doremir_directory_current(), string("/test/in.wav")),
