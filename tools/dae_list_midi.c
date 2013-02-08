@@ -21,17 +21,13 @@ int main (int argc, char const *argv[])
     
     doremir_audio_engine_initialize();
     
-    // Begin session
     session = doremir_device_midi_begin_session();
 
-    // Handle possible error
     if (doremir_check(session)) {
         log_error((error_t) session);
-        warn(string("Aborting test due to error"));
         goto error;
     }
 
-    // Session obtained, we can now access devices
     print_midi_devices(session);
 
     doremir_device_midi_end_session(session);

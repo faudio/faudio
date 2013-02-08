@@ -17,28 +17,26 @@ void print_audio_devices(audio_session_t session)
 
 int main (int argc, char const *argv[])
 {
-    audio_session_t session;
+    audio_session_t session;    
     
     doremir_audio_engine_initialize();
-    
-    // Begin session
     session = doremir_device_audio_begin_session();
 
-    // Handle possible error
     if (doremir_check(session)) {
         log_error((error_t) session);
-        warn(string("Aborting test due to error"));
         goto error;
     }
 
-    // Session obtained, we can now access devices
     print_audio_devices(session);
 
     doremir_device_audio_end_session(session);
     doremir_audio_engine_terminate();
+
     return 0;
+
 error:
     doremir_device_audio_end_session(session);
     doremir_audio_engine_terminate();
+
     return -1;
 }
