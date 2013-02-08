@@ -25,6 +25,7 @@
       :pathname "doremir"
       :components (
         (:file "std")
+        (:file "string")
         (:file "list")
         (:file "pair")
         (:file "set")
@@ -32,9 +33,8 @@
         (:file "graph")
         (:file "priority-queue")
         (:file "ratio")
-        (:file "string")
-        (:file "buffer")
         (:file "type")
+        (:file "buffer")
         (:file "time")
         (:file "midi")
         (:file "error")
