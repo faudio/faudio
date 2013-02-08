@@ -463,6 +463,7 @@ void midi_stream_sync(ptr_t a)
     while(Pm_Poll(stream->native_input) == TRUE)
     {
         // copy messages into stream->incoming
+        assert(false && "Not implemented");
     }
 }
 
@@ -540,21 +541,21 @@ error_t midi_device_error(string_t msg)
 {
     return doremir_error_create_simple(error,
                                        msg,
-                                       string("Doremir.Device.Audio"));
+                                       string("Doremir.Device.Midi"));
 }
 
 error_t midi_device_error_with(string_t msg, int code)
 {
     return doremir_error_create_simple(error,
                                        string_dappend(msg, format_integer(" (error code %d)", code)),
-                                       string("Doremir.Device.Audio"));
+                                       string("Doremir.Device.Midi"));
 }
 
 void midi_device_fatal(string_t msg, int code)
 {
     doremir_audio_engine_log_error_from(
         string_dappend(msg, format_integer(" (error code %d)", code)),
-        string("Doremir.Device.Audio"));
+        string("Doremir.Device.Midi"));
 
     doremir_audio_engine_log_error(string("Terminating Audio Engine"));
     exit(error);
