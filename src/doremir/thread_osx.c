@@ -28,10 +28,23 @@ struct _doremir_thread_condition_t {
     doremir_thread_mutex_t  mutex;
 };
 
+static pthread_t main_thread_k = NULL;
+
+static void doremir_thread_fatal(char *msg, int error);
 
 // --------------------------------------------------------------------------------
 
-static void doremir_thread_fatal(char *msg, int error);
+void doremir_thread_initialize()
+{
+    main_thread_k = pthread_self();
+}
+
+void doremir_thread_terminate()
+{
+    main_thread_k = NULL;
+}
+
+// --------------------------------------------------------------------------------
 
 /** Create a new thread executing the given function asynhronously.
 
@@ -232,6 +245,127 @@ void doremir_thread_notify_all(doremir_thread_condition_t cond)
 
     if (result != 0) {
         doremir_thread_fatal("notify_all", result);
+    }
+}
+
+
+// --------------------------------------------------------------------------------
+
+bool thread_equal(ptr_t m, ptr_t n)
+{
+    thread_t x = (thread_t) m;
+    thread_t y = (thread_t) n;
+
+    return pthread_equal(x->native, y->native);
+}
+
+bool thread_less_than(ptr_t m, ptr_t n)
+{
+    thread_t x = (thread_t) m;
+    thread_t y = (thread_t) n;
+    return x->native < y->native;
+}
+
+bool thread_greater_than(ptr_t m, ptr_t n)
+{
+    thread_t x = (thread_t) m;
+    thread_t y = (thread_t) n;
+    return x->native > y->native;
+}
+
+doremir_string_t thread_show(ptr_t a)
+{
+    string_t str = string("<Thread ");
+    str = string_dappend(str, doremir_string_format_integer(" %p", (long) a));
+    str = string_dappend(str, string(">"));
+    return str;
+}
+
+ptr_t thread_impl(doremir_id_t interface)
+{
+    static doremir_equal_t thread_equal_impl
+        = { thread_equal };
+    static doremir_order_t thread_order_impl
+        = { thread_less_than, thread_greater_than };
+    static doremir_string_show_t thread_show_impl
+        = { thread_show };
+
+    switch (interface) {
+    case doremir_equal_i:
+        return &thread_equal_impl;
+
+    case doremir_order_i:
+        return &thread_order_impl;
+
+    case doremir_string_show_i:
+        return &thread_show_impl;
+
+    default:
+        return NULL;
+    }
+}
+
+doremir_string_t mutex_show(ptr_t a)
+{
+    string_t str = string("<Mutex ");
+    str = string_dappend(str, doremir_string_format_integer(" %p", (long) a));
+    str = string_dappend(str, string(">"));
+    return str;
+}
+
+void mutex_destroy(ptr_t a)
+{
+    doremir_thread_unlock(a);
+}
+
+ptr_t mutex_impl(doremir_id_t interface)
+{
+    static doremir_string_show_t mutex_show_impl
+        = { mutex_show };
+    static doremir_destroy_t mutex_destroy_impl
+        = { mutex_destroy };
+
+    switch (interface) {
+    case doremir_string_show_i:
+        return &mutex_show_impl;
+
+    case doremir_destroy_i:
+        return &mutex_destroy_impl;
+
+    default:
+        return NULL;
+    }
+}
+
+doremir_string_t condition_show(ptr_t a)
+{
+    string_t str = string("<Condition ");
+    str = string_dappend(str, doremir_string_format_integer(" %p", (long) a));
+    str = string_dappend(str, string(">"));
+    return str;
+}
+
+void condition_destroy(ptr_t a)
+{
+    doremir_thread_destroy_condition(a);
+}
+
+ptr_t condition_impl(doremir_id_t interface)
+{
+    static doremir_string_show_t condition_show_impl
+        = { condition_show };
+    static doremir_destroy_t condition_destroy_impl
+        = { condition_destroy };
+
+    switch (interface) {
+    case doremir_string_show_i:
+        return &condition_show_impl;
+
+    case doremir_destroy_i:
+        return &condition_destroy_impl;
+
+    default:
+        return NULL;
     }
 }
 

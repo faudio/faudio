@@ -29,7 +29,20 @@ static void doremir_thread_fatal(char *msg, int error);
 static const long join_interval_k = 50;
 
 
+static void doremir_thread_fatal(char *msg, int error);
+
 // --------------------------------------------------------------------------------
+
+void doremir_thread_initialize()
+{
+}
+
+void doremir_thread_terminate()
+{
+}
+
+// --------------------------------------------------------------------------------
+
 
 static DWORD WINAPI start(LPVOID x)
 {
