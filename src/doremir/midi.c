@@ -152,7 +152,7 @@ doremir_buffer_t doremir_midi_sysex_data(doremir_midi_t midi)
     return midi->data.sysex;
 }
 
-#define midi_wrap(status, data1, data2)  \
+#define midi_wrap(status, data1, data2)   \
          ((((data2) << 16) & 0xFF0000) |  \
           (((data1) << 8) & 0xFF00) |     \
           ((status) & 0xFF))
