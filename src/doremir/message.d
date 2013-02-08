@@ -15,26 +15,25 @@ doremir_message_dispatcher_t doremir_message_create_lockfree_dispatcher() {}
  */
 void doremir_message_destroy_dispatcher(doremir_message_dispatcher_t dispatcher) {}
 
-/** Send a message to the given address.
-    @param address
-    @param message
-    @param dispatcher
+/** Send a message to the given address using the given sender.
+    @param receiver     Receiver of the message.
+    @param address      Address of the message.
+    @param message      Message to send.
  */
-void doremir_message_send(doremir_message_address_t     address,
-                          doremir_message_t             message,
-                          doremir_message_dispatcher_t  dispatcher) {}
+void doremir_message_send(doremir_ptr_t                 receiver,
+                          doremir_message_address_t     address,
+                          doremir_message_t             message) {}
 
-/** Syncronize the dispatcher, possibly acquiring incoming messages.
-    @param
-    @return
+/** Syncronize the given sender.
+    @param sender       Sender of the message.
  */
-void doremir_message_sync(doremir_message_dispatcher_t dispatcher) {}
+void doremir_message_sync(doremir_ptr_t sender) {}
 
-/** Query for incoming messages in the given address.
+/** Query the given sender for incoming messages in the given address.
     The return value of this method will not change until sync is called again.
-    @param  Address to receive.
-    @return A possibly empty list of messages.
+    @param sender       Sender of the message.
+    @param  address     Address of the message.
+    @return             A possibly empty list of messages.
  */
-doremir_list_t doremir_message_receive(doremir_message_address_t address,
-                                       doremir_message_dispatcher_t dispatcher) {}
-
+doremir_list_t doremir_message_receive(doremir_ptr_t                sender,
+                                       doremir_message_address_t    address) {}
