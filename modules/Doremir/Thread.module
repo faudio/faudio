@@ -45,6 +45,8 @@ module Doremir.Thread
     sleep   : Millis -> Void;
     join    : Thread -> Void;
     detach  : Thread -> Void;
+    main    : () -> Thread;
+    current : () -> Thread;
 
     createMutex     : () -> Mutex;
     destroyMutex    : Mutex -> Void;

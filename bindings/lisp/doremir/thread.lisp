@@ -19,6 +19,8 @@
 (defcfun (thread-sleep "doremir_thread_sleep") :void (a thread-millis))
 (defcfun (thread-join "doremir_thread_join") :void (a thread))
 (defcfun (thread-detach "doremir_thread_detach") :void (a thread))
+(defcfun (thread-main "doremir_thread_main") thread)
+(defcfun (thread-current "doremir_thread_current") thread)
 (defcfun (thread-create-mutex "doremir_thread_create_mutex") thread-mutex)
 (defcfun (thread-destroy-mutex "doremir_thread_destroy_mutex") :void (a thread-mutex))
 (defcfun (thread-lock "doremir_thread_lock") :boolean (a thread-mutex))
