@@ -24,8 +24,150 @@ typedef doremir_device_midi_stream_callback_t  stream_callback_t;
 typedef doremir_device_midi_session_callback_t session_callback_t;
 typedef doremir_device_midi_status_callback_t  status_callback_t;
 
-// typedef PaDeviceIndex native_index_t;
-// typedef PaStream     *native_stream_t;
+typedef PmDeviceID    native_index_t;
+typedef PmStream     *native_stream_t;
+
+struct _doremir_device_midi_session_t {
+
+    impl_t              impl;               // Dispatcher
+    system_time_t       acquired;           // Time of acquisition (not used at the moment)
+
+    list_t              devices;            // Cached device list
+
+    device_t            def_input;          // Default devices, both possibly null
+    device_t            def_output;         // If present, these are also in the above list
+};
+
+struct _doremir_device_midi_t {
+
+    impl_t              impl;               // Dispatcher
+    native_index_t      index;              // Native device index
+
+    bool                input, output;      // Cached capabilities
+    string_t            name;               // Cached names
+    string_t            host_name;
+};
+
+struct _doremir_device_midi_stream_t {
+
+    impl_t              impl;               // Dispatcher
+    native_stream_t     native;             // Native stream
+
+    device_t            device;
+};
+
+static mutex_t pm_mutex;
+static bool    pm_status;
+
+error_t midi_device_error(string_t msg);
+error_t midi_device_error_with(string_t msg, int error);
+ptr_t midi_session_impl(doremir_id_t interface);
+ptr_t midi_device_impl(doremir_id_t interface);
+ptr_t midi_stream_impl(doremir_id_t interface);
+inline static session_t new_session();
+inline static void session_init_devices(session_t session);
+inline static void delete_session(session_t session);
+inline static device_t new_device(native_index_t index);
+inline static void delete_device(device_t device);
+inline static stream_t new_stream(device_t device);
+inline static void delete_stream(stream_t stream);
+
+
+// --------------------------------------------------------------------------------
+
+inline static session_t new_session()
+{
+    session_t session = doremir_new(device_midi_session);
+    session->impl = &midi_session_impl;
+    return session;
+}
+
+inline static void session_init_devices(session_t session)
+{
+    native_index_t count;
+    list_t         devices;
+
+    count   = Pm_CountDevices();
+    devices = doremir_list_empty();
+
+    for (size_t i = 0; i < count; ++i) {
+        device_t device = new_device(i);
+
+        if (device) {
+            devices = doremir_list_dcons(device, devices);
+        }
+    }
+
+    session->devices      = doremir_list_dreverse(devices);
+    session->def_input    = new_device(Pm_GetDefaultInputDeviceID());
+    session->def_output   = new_device(Pm_GetDefaultOutputDeviceID());
+}
+
+inline static void delete_session(session_t session)
+{
+    // TODO free device list
+    doremir_delete(session);
+}
+
+inline static device_t new_device(native_index_t index)
+{
+    if (index == pmNoDevice) {
+        return NULL;
+    }
+
+    device_t device = doremir_new(device_midi);
+    device->impl    = &midi_device_impl;
+
+    const PmDeviceInfo  *info      = Pm_GetDeviceInfo(index);
+
+    device->index       = index;
+    device->input       = info->input;
+    device->output      = info->output;
+    device->name        = string((char *) info->name);      // const cast
+    device->host_name   = string((char *) info->interf);
+
+    return device;
+}
+
+inline static void delete_device(device_t device)
+{
+    doremir_destroy(device->name);
+    doremir_destroy(device->host_name);
+    doremir_delete(device);
+}
+
+inline static stream_t new_stream(device_t device)
+{
+    stream_t stream         = doremir_new(device_midi_stream);
+    
+    stream->impl            = &midi_stream_impl;
+    stream->device          = device;
+
+    return stream;
+}
+
+inline static void delete_stream(stream_t stream)
+{
+    doremir_delete(stream);
+}
+
+
+// --------------------------------------------------------------------------------
+
+void doremir_device_midi_initialize()
+{
+    pm_mutex  = doremir_thread_create_mutex();
+    pm_status = false;
+}
+
+void doremir_device_midi_terminate()
+{
+    doremir_thread_destroy_mutex(pm_mutex);
+}
+
+// --------------------------------------------------------------------------------
+
+
 
 session_t doremir_device_midi_begin_session()
 {
