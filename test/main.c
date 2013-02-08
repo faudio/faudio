@@ -1172,7 +1172,7 @@ void test_dispatcher()
 {
     test_section("Dispatcher");
 
-    dispatcher_t disp = doremir_message_create_lockfree_dispatcher();
+    dispatcher_t disp = lockfree_dispatcher();
 
     ptr_t val = map(
                     string("lyrics"), list(string("Help"), string("me"), string("if"), string("you"), string("can")),
@@ -1185,17 +1185,17 @@ void test_dispatcher()
     doremir_message_send(disp, i16(2), string("World!"));
     doremir_message_send(disp, i16(2), string("World!"));
 
-    list_t msgs;
+    list_t msgs = doremir_list_empty();
 
     while (true) {
         doremir_message_sync(disp);
         msgs = doremir_message_receive(disp, i16(1));
-
+    
         if (doremir_list_is_empty(msgs)) {
             break;
         }
-
-        doremir_print("             | 1: %s\n", msgs);
+    // 
+    //     doremir_print("             | 1: %s\n", msgs);
     }
 
     doremir_destroy(disp);
@@ -1668,9 +1668,7 @@ void test_midi_stream()
 
     for(int i = 0; i < 30; ++i)
     {
-        ((doremir_message_receiver_t*) 
-            doremir_interface(doremir_message_receiver_i, out_stream))->
-                send(out_stream, 0, midi(0x90, 48+i*2, 100));
+        doremir_message_send(out_stream, 0, midi(0x90, 48+i*2, 100));
         doremir_thread_sleep(190);
     }
     //
