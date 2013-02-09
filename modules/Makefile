@@ -51,7 +51,8 @@ c:
 	modulo -Mmodules --language=c    <modules/Doremir/Scheduler.module  		>include/doremir/scheduler.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Message.module 		>include/doremir/message.h;
 
-lisp:
+lisp: fix-lisp
+gen-lisp:
 	modulo -Mmodules --language=lisp <modules/Doremir.module    			>bindings/lisp/doremir.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/AudioEngine.module    	>bindings/lisp/doremir/audio-engine.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Atomic.module    		>bindings/lisp/doremir/atomic.lisp && \
@@ -93,8 +94,8 @@ lisp:
 	modulo -Mmodules --language=lisp <modules/Doremir/Scheduler.module  		>bindings/lisp/doremir/scheduler.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Message.module 		>bindings/lisp/doremir/message.lisp;  
 
-doc:    c
-	doxygen doc/Doxyfile
+fix-lisp: gen-lisp
+	perl -i -pe 's/\(defctype ptr/; (defctype ptr/g' bindings/lisp/doremir.lisp
 
 clean-lisp:
 	find bindings -name '*.lisp' | xargs rm -v;
