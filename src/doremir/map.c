@@ -232,13 +232,15 @@ map_t doremir_map(int count, ...)
     return s;
 }
 
-pair_t entry_to_pair(ptr_t ct, entry_t entry)
+pair_t entry_to_pair(ptr_t data, entry_t entry)
 {
     return pair(entry->key, entry->value);
 }
 doremir_list_t doremir_map_to_list(doremir_map_t map)
 {
-    return doremir_list_map((doremir_unary_t) entry_to_pair, NULL, doremir_set_to_list(map->entries));
+    return doremir_list_map(
+               (doremir_unary_t) entry_to_pair, NULL,
+               doremir_set_to_list(map->entries));
 }
 
 

@@ -216,7 +216,7 @@ bool doremir_event_has_value(doremir_time_t time, doremir_event_t event)
         return doremir_event_has_value(
                    doremir_subtract(time, delay_get(event, time)),
                    delay_get(event, event)
-                   );
+               );
 
     case merge_event:
         return doremir_event_has_value(time, merge_get(event, left))

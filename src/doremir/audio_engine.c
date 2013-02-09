@@ -17,7 +17,7 @@ typedef doremir_audio_engine_log_func_t log_func_t;
 
 static unsigned       init_count_g  = 0;
 static log_func_t     log_func_g    = NULL;
-static ptr_t          log_ct_g      = NULL;
+static ptr_t          log_data_g      = NULL;
 
 
 
@@ -63,9 +63,9 @@ void doremir_audio_engine_terminate()
 
 // --------------------------------------------------------------------------------
 
-static inline void stdlog(ptr_t ct, doremir_time_system_t t, doremir_error_t e)
+static inline void stdlog(ptr_t data, doremir_time_system_t t, doremir_error_t e)
 {
-    FILE *file = ct;
+    FILE *file = data;
     char msg[350];
     bool color = (file == stdout && isatty(fileno(stdout)));
 
@@ -89,7 +89,7 @@ static inline void stdlog(ptr_t ct, doremir_time_system_t t, doremir_error_t e)
 void doremir_audio_engine_set_log_file(doremir_string_file_path_t path)
 {
     char *cpath = doremir_string_to_utf8(path);
-    log_ct_g     = fopen(cpath, "a");
+    log_data_g     = fopen(cpath, "a");
     log_func_g   = stdlog;
     free(cpath);
 }
@@ -98,16 +98,16 @@ void doremir_audio_engine_set_log_file(doremir_string_file_path_t path)
  */
 void doremir_audio_engine_set_log_std()
 {
-    log_ct_g    = stdout;
+    log_data_g    = stdout;
     log_func_g  = stdlog;
 }
 
 /** Instruct the Audio Engine to pass log messages to the given handler.
  */
-void doremir_audio_engine_set_log(doremir_audio_engine_log_func_t f, doremir_ptr_t ct)
+void doremir_audio_engine_set_log(doremir_audio_engine_log_func_t f, doremir_ptr_t data)
 {
     log_func_g  = f;
-    log_ct_g    = ct;
+    log_data_g    = data;
 }
 
 
@@ -120,10 +120,10 @@ void doremir_audio_engine_set_log(doremir_audio_engine_log_func_t f, doremir_ptr
     @param error
         Condition to log. Must implement [Error](@ref doremir_error_interface_t).
  */
-void doremir_audio_engine_log(doremir_ptr_t ct, doremir_error_t e)
+void doremir_audio_engine_log(doremir_ptr_t data, doremir_error_t e)
 {
     if (log_func_g) {
-        log_func_g(log_ct_g, (ptr_t) time(NULL), e);
+        log_func_g(log_data_g, (ptr_t) time(NULL), e);
     }
 }
 

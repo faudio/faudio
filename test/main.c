@@ -584,9 +584,9 @@ void test_cond()
 #pragma mark -
 
 void test_for_each()
-{     
+{
     test_section("For each loops");
-    
+
     doremir_let(x, 33) {
         doremir_let(y, 1)
         doremir_let(z, x + y)
@@ -1136,7 +1136,7 @@ void test_priority_queue(int iter)
 void test_json(string_t path)
 {
     extern void doremir_puts(doremir_string_t string);
-    
+
     test_section("JSON conversion");
 
     string_t json = doremir_directory_read_file(path);

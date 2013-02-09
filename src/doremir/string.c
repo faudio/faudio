@@ -516,7 +516,7 @@ doremir_ptr_t doremir_string_from_json(doremir_string_t string)
 
 // --------------------------------------------------------------------------------
 
-/** Return the result of applying the given function to all characters of the 
+/** Return the result of applying the given function to all characters of the
     given string.
 
     @par Laws

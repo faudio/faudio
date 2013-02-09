@@ -65,9 +65,9 @@ void doremir_plot_functions
 }
 
 #define PLOTTER(T) \
-    double plot_##T(void * ct, int i, double t, double x)       \
+    double plot_##T(void *data, int i, double t, double x)      \
     {                                                           \
-        doremir_buffer_t buf = ct;                              \
+        doremir_buffer_t buf = data;                            \
                                                                 \
         size_t  sz = doremir_buffer_size(buf) / sizeof(T);      \
         T     * ds = doremir_buffer_unsafe_address(buf);        \
@@ -78,7 +78,7 @@ void doremir_plot_functions
             return -2;                                          \
         }                                                       \
     }                                                           \
-
+ 
 PLOTTER(float);
 PLOTTER(double);
 

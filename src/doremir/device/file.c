@@ -58,7 +58,7 @@ doremir_device_file_result_t doremir_device_file_run(
     file_device_t input,
     processor_t   processor,
     file_device_t output)
-{    
+{
     result_t result = NULL; // TODO
     // set input, output, proc, proc_impl
     // check types

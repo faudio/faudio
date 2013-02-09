@@ -89,6 +89,7 @@ void add_audio_status_listener(audio_status_callback_t function, ptr_t data)
 void midi_listener(const MIDINotification *message, void *data)
 {
     MIDINotificationMessageID id = message->messageID;
+
     // UInt32                    sz = message->messageSize;
     if (id == kMIDIMsgSetupChanged) {
         closure_t closure = data;

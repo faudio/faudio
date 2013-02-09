@@ -58,9 +58,8 @@ doremir_midi_t doremir_midi_create_simple(status_t status,
     doremir_midi_t m = new_midi();
 
     m->is_sysex = false;
-    m->data.simple[0] = status;
-    m->data.simple[1] = data1;
-    m->data.simple[2] = data2;
+    char simp[3] = { status, data1, data2 };
+    memcpy(&m->data.simple, simp, 3);
 
     return m;
 }
@@ -85,9 +84,7 @@ doremir_midi_t doremir_midi_copy(doremir_midi_t midi)
     m->is_sysex = midi->is_sysex;
 
     if (!midi->is_sysex) {
-        m->data.simple[0] = midi->data.simple[0];
-        m->data.simple[1] = midi->data.simple[1];
-        m->data.simple[2] = midi->data.simple[2];
+        memcpy(m->data.simple, midi->data.simple, 3);
     } else {
         m->data.sysex = doremir_copy(midi->data.sysex);
     }

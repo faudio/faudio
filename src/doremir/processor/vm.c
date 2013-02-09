@@ -162,7 +162,7 @@ void lmm_split(lmm_t lmm, size_t split, lmm_reg_t r1, lmm_reg_t r2)
   void lmm_ap1_##N1##_##N2(                                                                 \
     lmm_t lmm,                                                                              \
     unary_t f,                                                                              \
-    ptr_t ct,                                                                               \
+    ptr_t ctxt,                                                                             \
     lmm_reg_t r1                                                                            \
   )                                                                                         \
   {                                                                                         \
@@ -176,7 +176,7 @@ void lmm_split(lmm_t lmm, size_t split, lmm_reg_t r1, lmm_reg_t r2)
     size_t   count = rsize(r1) / sizeof(arg_t);                                             \
                                                                                             \
     for (size_t i = 0; i < count; ++i) {                                                    \
-      data[i] = func(ct, data[i]);                                                          \
+      data[i] = func(ctxt, data[i]);                                                        \
     }                                                                                       \
   }                                                                                         \
  
@@ -185,7 +185,7 @@ void lmm_split(lmm_t lmm, size_t split, lmm_reg_t r1, lmm_reg_t r2)
   void lmm_ap2_##N1##_##N2##_##N3(                                                          \
     lmm_t lmm,                                                                              \
     binary_t f,                                                                             \
-    ptr_t ct,                                                                               \
+    ptr_t ctxt,                                                                             \
     lmm_reg_t r1,                                                                           \
     lmm_reg_t r2                                                                            \
   )                                                                                         \
@@ -202,7 +202,7 @@ void lmm_split(lmm_t lmm, size_t split, lmm_reg_t r1, lmm_reg_t r2)
     size_t  count = size_min(rsize(r1) / sizeof(arg1_t), rsize(r2) / sizeof(arg2_t));       \
                                                                                             \
     for (size_t i = 0; i < count; ++i) {                                                    \
-      data1[i] = func(ct, data1[i], data2[i]);                                              \
+      data1[i] = func(ctxt, data1[i], data2[i]);                                            \
     }                                                                                       \
   }                                                                                         \
  
