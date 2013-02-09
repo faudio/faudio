@@ -1743,7 +1743,7 @@ int main(int argc, char const *argv[])
         test_directory();
         // test_plot(NULL, NULL);
         // test_plot_buffer();
-        // test_plot_file(string("/Users/hans/Desktop/Passager.wav"));
+        test_plot_file(string_dappend(doremir_directory_current(), string("/test/in.wav")));
 
         test_processor_graphs(string_dappend(doremir_directory_current(), string("/test/proc.dot")));
 

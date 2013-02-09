@@ -16,7 +16,21 @@
 
 typedef doremir_plot_function_t plot_func_t;
 
-void run_gnu_plot(plot_func_t func, ptr_t func_data, nullary_t cont, ptr_t cont_data)
+#define plot_format_k \
+    "set title 'Audio Engine Plot'                                                          \n" \
+    "set xrange [-1:1]                                                                      \n" \
+    "set yrange [-1:1]                                                                      \n" \
+    "set size 1.0, 1.0                                                                      \n" \
+    "set terminal postscript landscape enhanced mono lw 1 'Helvetica' 14                    \n" \
+    "set output '%2$s.ps'                                                                   \n" \
+    "set zeroaxis                                                                           \n" \
+    "plot '%1$s' using 1:2 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 1',    \\\n" \
+    "     '%1$s' using 1:3 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 2',    \\\n" \
+    "     '%1$s' using 1:4 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 3',    \\\n" \
+    "     '%1$s' using 1:5 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 4',    \\\n" \
+    "     '%1$s' using 1:6 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 5'       \n"
+
+void generate_plot_file(plot_func_t func, ptr_t func_data, nullary_t cont, ptr_t cont_data, char* out_res, char* plot_res)
 {
     struct passwd *passwdEnt = getpwuid(getuid());
     char *home = passwdEnt->pw_dir;
@@ -37,8 +51,6 @@ void run_gnu_plot(plot_func_t func, ptr_t func_data, nullary_t cont, ptr_t cont_
 
     int samples     = 500000;
     int down_sample = 10;
-    // int samples     = 10;
-    // int down_sample = 1;
 
     for (int sample = 0; sample < samples; ++sample) {
 
@@ -53,19 +65,7 @@ void run_gnu_plot(plot_func_t func, ptr_t func_data, nullary_t cont, ptr_t cont_
     }
 
     fprintf(plotf,
-            "set title 'Audio Engine Plot'                                              \n"
-            "set xrange [-1:1]                                                          \n"
-            "set yrange [-1:1]                                                          \n"
-            "set size 1.0, 1.0                                                          \n"
-            "set terminal postscript landscape enhanced mono lw 1 'Helvetica' 14        \n"
-            "set output '%2$s.ps'                                                       \n"
-            "set zeroaxis                                                               \n"
-            "plot '%1$s' using 1:2 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 1',   \\\n"
-            "     '%1$s' using 1:3 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 2',   \\\n"
-            "     '%1$s' using 1:4 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 3',   \\\n"
-            "     '%1$s' using 1:5 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 4',   \\\n"
-            "     '%1$s' using 1:6 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 5'      \n"
-            ""
+            plot_format_k
             ,
             dat,
             out,
@@ -74,19 +74,24 @@ void run_gnu_plot(plot_func_t func, ptr_t func_data, nullary_t cont, ptr_t cont_
 
     fflush(datf);
     fflush(plotf);
+    strncpy(out_res, out, 100);
+    strncpy(plot_res, plot, L_tmpnam);
+}
 
+
+void run_gnu_plot(plot_func_t func, ptr_t func_data, nullary_t cont, ptr_t cont_data)
+{
+    char out[100], plot[L_tmpnam];
     char cmd[80];
     int res;
+
+    generate_plot_file(func, func_data, cont, cont_data, out, plot);
 
     sprintf(cmd, "rm -f %s.ps", out);
     res = system(cmd);
 
     sprintf(cmd, "gnuplot %s", plot);
     res = system(cmd);
-
-    // inform(string_dappend(string("Opening "), string_dappend(string(out), string(".ps"))));
-    // sprintf(cmd, "open %s.ps", out);
-    // res = system(cmd);
 
     inform(string_dappend(string("Converting "), string_dappend(string(out), string(".pdf"))));
     sprintf(cmd, "ps2pdf %1$s.ps %1$s.pdf", out);
