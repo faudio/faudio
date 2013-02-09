@@ -13,6 +13,8 @@
 
 doremir_string_file_path_t doremir_directory_home();
 doremir_string_file_path_t doremir_directory_current();
+void doremir_directory_create(doremir_string_file_path_t);
+void doremir_directory_remove(doremir_string_file_path_t);
 doremir_string_t doremir_directory_read_file(doremir_string_file_path_t);
 void doremir_directory_write_file(doremir_string_file_path_t,
                                   doremir_string_t);

@@ -10,6 +10,7 @@
 
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <pwd.h>
 
 doremir_string_file_path_t doremir_directory_home()
@@ -23,6 +24,12 @@ doremir_string_file_path_t doremir_directory_current()
     char cwd[1024];
     getcwd(cwd, sizeof(cwd));
     return string(cwd);
+}
+
+void doremir_directory_create(string_t path)
+{
+    // Assure directory
+    mkdir(unstring(path), (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH));
 }
 
 doremir_string_t doremir_directory_read_file(doremir_string_file_path_t path)
