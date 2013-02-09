@@ -26,8 +26,3 @@
 (defcfun (thread-lock "doremir_thread_lock") :boolean (a thread-mutex))
 (defcfun (thread-try-lock "doremir_thread_try_lock") :boolean (a thread-mutex))
 (defcfun (thread-unlock "doremir_thread_unlock") :boolean (a thread-mutex))
-(defcfun (thread-create-condition "doremir_thread_create_condition") thread-condition (a thread-mutex))
-(defcfun (thread-destroy-condition "doremir_thread_destroy_condition") :void (a thread-condition))
-(defcfun (thread-wait-for "doremir_thread_wait_for") :void (a thread-condition))
-(defcfun (thread-notify "doremir_thread_notify") :void (a thread-condition))
-(defcfun (thread-notify-all "doremir_thread_notify_all") :void (a thread-condition))

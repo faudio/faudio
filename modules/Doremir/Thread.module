@@ -54,10 +54,10 @@ module Doremir.Thread
     tryLock         : Mutex -> Bool;
     unlock          : Mutex -> Bool;
 
-    createCondition     : Mutex -> Condition;
-    destroyCondition    : Condition -> Void;
-    waitFor             : Condition -> Void;
-    notify              : Condition -> Void;
-    notifyAll           : Condition -> Void;
+    // createCondition     : Mutex -> Condition;
+    // destroyCondition    : Condition -> Void;
+    // waitFor             : Condition -> Void;
+    // notify              : Condition -> Void;
+    // notifyAll           : Condition -> Void;
 }
 
