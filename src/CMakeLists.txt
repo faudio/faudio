@@ -55,7 +55,7 @@ list(APPEND SRCS_OSX
   )
 if(${ENABLE_COREPLOT})
   list(APPEND SRCS_OSX
-    platform/macosx/doremir/plot_core.m
+    platform/macosx/doremir/plot/coreplot.m
   )
 endif()
 
