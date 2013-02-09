@@ -424,14 +424,10 @@ doremir_list_t doremir_list_djoin_map(doremir_unary_t func,
 // --------------------------------------------------------------------------------
 
 /** Create a list by repeating the given element.
-    @see
-        list in \ref doremir/util.h
  */
 list_t doremir_list_repeat(int times, doremir_ptr_t value) {}
 
 /** Create a list from the given range.
-    @see
-        list in \ref doremir/util.h
  */
 list_t doremir_list_enumerate(int begin, int end) {}
 

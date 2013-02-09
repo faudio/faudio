@@ -2,10 +2,10 @@
 /**
     @addtogroup DoremirStringList
 
-    Provides conversions between \ref String and \ref List.
+    Provides conversions between @ref String and @ref List.
     
     This functionality should to be in the String module, but unfortunately that would create a recursive
-    dependency between \ref DoremirString and \ref DoremirList.
+    dependency between @ref DoremirString and @ref DoremirList.
 
  */
 module Doremir.String.List

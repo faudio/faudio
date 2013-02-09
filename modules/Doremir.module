@@ -2,7 +2,7 @@
 /** 
     @addtogroup Doremir
     
-    Core definitions. Import \ref DoremirAudioEngine instead of this module.
+    Core definitions. Import @ref DoremirAudioEngine instead of this module.
     
  */
 module Doremir

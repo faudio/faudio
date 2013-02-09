@@ -653,10 +653,6 @@ list_t doremir_list_djoin_map(unary_t f, ptr_t d, list_t xs)
 
 // --------------------------------------------------------------------------------
 
-/** Create a list from the given elements.
-    @see
-        list in \ref doremir/util.h
- */
 list_t doremir_list(int count, ...)
 {
     va_list args;

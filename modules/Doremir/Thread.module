@@ -6,8 +6,8 @@
 
     Standard low-level constructs such as threads, mutexes and conditions are
     provided by this module. For more high-level blocking constructs, see
-    the \ref DoremirThreadFuture and \ref DoremirThreadImproving modules. For non-blocking communication
-    see the \ref DoremirAtomic modules.
+    the @ref DoremirThreadFuture and @ref DoremirThreadImproving modules. For non-blocking communication
+    see the @ref DoremirAtomic modules.
 
     @par Literals
     - `thread(function, data)`
