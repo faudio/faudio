@@ -27,9 +27,9 @@
   (convert-to-foreign x 'ratio))
 
 (defmethod translate-to-foreign (x (type ratio-type))
-  (ratio-create# (numerator x) (denominator x))) 
+  (ratio-create# (numerator x) (denominator x)))
 (defmethod translate-from-foreign (x (type ratio-type))
-  (/ (ratio-num# x) (ratio-denom# x))) 
+  (/ (ratio-num# x) (ratio-denom# x)))
 (defmethod free-translated-object (x (type ratio-type) a) (declare (ignore a))
   (ratio-destroy# x))
 
@@ -70,7 +70,7 @@
     ((eq x :ptr)       (type-simple 7))
     ((eq x nil)        (type-simple 0))
     ((consp x)
-      (cond 
+      (cond
         ((eq :frame  (car x))     (type-frame (make-type (cadr x))))
         ((eq :vector (car x))     (type-vector (make-type (cadr x)) (caddr x)))
         ((eq :pair   (car x))     (type-pair (make-type (cadr x)) (make-type (caddr x))))
@@ -79,9 +79,9 @@
     (t                      x)))
 
 (defmethod translate-to-foreign (x (type type-type))
-  (export-type# (export-type# x))) 
+  (export-type# (export-type# x)))
 ; (defmethod translate-from-foreign (x (type type-type))
-  ; x) 
+  ; x)
 
 ; TODO add to translator (with inverse)
 (defun make-type (x)
@@ -157,8 +157,9 @@
   (cond
    (args (seq head (apply 'sequence args)))
    (t    head)))
-   
+
 (defun parallel (head &rest args)
   (cond
    (args (par head (apply 'parallel args)))
-   (t    head))) 
+   (t    head)))
+

@@ -43,7 +43,7 @@
 (define-foreign-type ptr-type () () (:actual-type :pointer))
 (define-parse-method ptr () (make-instance 'ptr-type))
 
-(defmethod translate-to-foreign (x (type ptr-type))  
+(defmethod translate-to-foreign (x (type ptr-type))
   (etypecase x
     (cl:boolean         (from-bool# x))
     (cl:integer         (from-int32# x))
@@ -51,13 +51,13 @@
     (cl:float           (from-float# x))    ; single float?
     (cl:double-float    (from-double# x))
     (cl:string          (string-from-utf8# (foreign-string-alloc x :encoding :utf-8)))
-    ; TODO list, cons ?                   
-    (t                  (to-pointer x)))) 
+    ; TODO list, cons ?
+    (t                  (to-pointer x))))
 
 ; TODO string, ratio
 ; TODO list, pair?
 ; TODO leaks with boxed types
-(defmethod translate-from-foreign (x (type ptr-type))   
+(defmethod translate-from-foreign (x (type ptr-type))
   (cond
     ((is-bool# x)       (to-bool# x))
     ((is-int8# x)       (to-int8# x))

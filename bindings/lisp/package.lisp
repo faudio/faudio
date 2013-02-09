@@ -5,7 +5,7 @@
     :common-lisp
     :cffi)
 
-  (:shadow         
+  (:shadow
     :string
     :number
     :list
@@ -23,10 +23,5 @@
     :max
     :print
     :list-length
-    :set-difference
-    )
+    :set-difference))
 
-  ; (:export
-    ; )
-
-  )
