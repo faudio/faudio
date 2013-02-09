@@ -11,7 +11,7 @@
 #include <unistd.h> // isatty
 
 
-#define iso8601_k "%Y-%m-%d %H:%M:%S%z  "
+#define iso8601_k "%Y-%m-%d %H:%M:%S%z"
 
 typedef doremir_audio_engine_log_func_t log_func_t;
 
@@ -40,6 +40,7 @@ void doremir_audio_engine_initialize()
     doremir_device_midi_initialize();
     doremir_thread_initialize();
     doremir_audio_engine_log_info(string("Initialized Audio Engine."));
+
     init_count_g++;
 }
 
@@ -50,8 +51,7 @@ void doremir_audio_engine_initialize()
  */
 void doremir_audio_engine_terminate()
 {
-    if (init_count_g) {
-        --init_count_g;
+    if ((init_count_g--)) {
         doremir_device_audio_terminate();
         doremir_device_midi_terminate();
         doremir_thread_terminate();
@@ -70,7 +70,7 @@ static inline void stdlog(ptr_t data, doremir_time_system_t t, doremir_error_t e
     bool color = (file == stdout && isatty(fileno(stdout)));
 
     doremir_let(tm, localtime((long *) &t)) {
-        strftime(msg, 50, iso8601_k, tm);
+        strftime(msg, 50, iso8601_k "  ", tm);
     }
     doremir_with(str, doremir_error_format(color, e),
                  doremir_destroy(str)) {
