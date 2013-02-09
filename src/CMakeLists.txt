@@ -47,15 +47,15 @@ list(APPEND SRCS
   doremir/thread/improving.c
   )
 list(APPEND SRCS_OSX
-  doremir/atomic_osx.c
-  doremir/device_osx.c
-  doremir/directory_osx.c
-  doremir/thread_osx.c
-  doremir/string_osx.c
+  platform/macosx/doremir/atomic.c
+  platform/macosx/doremir/device.c
+  platform/macosx/doremir/directory.c
+  platform/macosx/doremir/thread.c
+  platform/macosx/doremir/string.c
   )
 if(${ENABLE_COREPLOT})
   list(APPEND SRCS_OSX
-    doremir/plot_core_osx.m
+    platform/macosx/doremir/plot_core.m
   )
 endif()
 

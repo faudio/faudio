@@ -12,7 +12,6 @@ test/#*
 ORDER
 CCA2LMM
 test/*.wav
-src/platform
 test/*.dot
 test/*.png
 pres
