@@ -33,7 +33,9 @@
 #define atomic_queue_t      doremir_atomic_queue_t
 #define atomic_stack_t      doremir_atomic_stack_t
 #define ringbuffer_t        doremir_atomic_ring_buffer_t
+#ifndef NO_THREAD_T
 #define thread_t            doremir_thread_t
+#endif // NO_THREAD_T
 #define mutex_t             doremir_thread_mutex_t
 
 #define ratio_t             doremir_ratio_t

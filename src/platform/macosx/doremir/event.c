@@ -6,22 +6,73 @@
  */
 
 #include <doremir/string.h>
-// #include <doremir/thread.h>
-#include <doremir/util.h>
+#include <doremir/thread.h>
 
-// #include <IOKit/IOTypes.h>
-// #include <IOKit/IOReturn.h>
-// #include <IOKit/hid/IOHIDLib.h>
-// #include <CoreFoundation/CoreFoundation.h>
+#define NO_THREAD_T
+#include <doremir/util.h>
 
 #include <ApplicationServices/ApplicationServices.h>
 
 
-static int count_g = 0;
 static CGEventRef eventTapFunction(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon)
 {
-    count_g++;   
     printf("Event of type %d\n", type);
+
+    switch(type)
+    {
+        case kCGEventKeyUp: {
+            int keyCode = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
+            printf("    Key code: %d\n", keyCode);
+            
+            UniCharCount sz;
+            UniChar      cs[11];
+            CGEventKeyboardGetUnicodeString(event, 10, &sz, cs);
+            cs[sz] = 0;
+            printf("    Unicode size: %d\n", sz);
+            string_t str = doremir_string_from_utf16(cs);
+            printf("    Unicode string: %s\n", unstring(str));
+
+            break;
+        }
+        case kCGEventKeyDown: {
+            int keyCode = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
+            printf("    Key code: %d\n", keyCode);
+
+            UniCharCount sz;
+            UniChar      cs[11];
+            CGEventKeyboardGetUnicodeString(event, 10, &sz, cs);
+            cs[sz] = 0;
+            printf("    Unicode size: %d\n", sz);
+            printf("    Unicode char: %d\n", cs[0]);
+            string_t str = doremir_string_from_utf16(cs);
+            printf("    Unicode string: %s\n", unstring(str));
+
+            break;
+        } 
+
+        case kCGEventMouseMoved: {
+            CGPoint point = CGEventGetLocation(event);
+            printf("    Location: (%f, %f)\n", point.x, point.y);
+            break;
+        }
+        case kCGEventLeftMouseUp: {
+            CGPoint point = CGEventGetLocation(event);
+            printf("    Location: (%f, %f)\n", point.x, point.y);
+            break;
+        }
+        case kCGEventLeftMouseDown: {
+            CGPoint point = CGEventGetLocation(event);
+            printf("    Location: (%f, %f)\n", point.x, point.y);
+            break;
+        }
+        case kCGEventLeftMouseDragged: {
+            CGPoint point = CGEventGetLocation(event);
+            printf("    Location: (%f, %f)\n", point.x, point.y);
+            break;
+        }
+    }
+
+
     return event;
 }
 
@@ -58,14 +109,13 @@ ptr_t test_hid2(ptr_t _)
     CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, kCFRunLoopCommonModes);
     CGEventTapEnable(eventTap, true);
     CFRunLoopRun();
-
-    printf("Number of events: %d\n", count_g);
 }
 
 void test_hid()
 {
     doremir_thread_create(test_hid2, NULL);
     printf("Launching monitor thread\n");
-    doremir_thread_sleep(10000);
+    while(1)
+        doremir_thread_sleep(1000);
     printf("Returning\n");
-}
+}    
