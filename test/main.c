@@ -1686,6 +1686,9 @@ cleanup:
 }
 
 
+int iterations_k = 1;
+bool stop_k = false;
+
 int main(int argc, char const *argv[])
 {
     printf("DoReMIR Audio engine %s v%d.%d.%d\n", bits, version[0], version[1], version[2]);
@@ -1697,7 +1700,11 @@ int main(int argc, char const *argv[])
 
     printf("The page size for this system is %ld bytes.\n", sysconf(_SC_PAGESIZE));
 
-    {
+    for (int i = 0; i < iterations_k; ++i)
+    {             
+        if (stop_k)
+            getchar();
+        
         doremir_audio_engine_set_log_std();
         doremir_plot_use_gnu();
         // doremir_audio_engine_set_log_file(string("/Users/hans/Library/Logs/DoReMIRAudio.log"));
@@ -1757,7 +1764,7 @@ int main(int argc, char const *argv[])
             string_dappend(doremir_directory_current(), string("/test/out.wav")));
         test_buffer_stream();
         // test_audio_stream();
-        test_midi_stream();
+        // test_midi_stream();
         goto end;
 
 end:
