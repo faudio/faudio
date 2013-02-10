@@ -38,7 +38,6 @@ doremir_type_t doremir_processor_output_type(doremir_processor_t proc)
 }
 
 /** Return the output type of the given processor.
-
     @param proc             A processor.
  */
 size_t doremir_processor_buffer_size(doremir_type_frames_t frames, doremir_processor_t proc)
@@ -55,6 +54,17 @@ doremir_graph_t doremir_processor_graph(doremir_processor_t proc,
     return ((proc_interface_t *) doremir_interface(doremir_processor_interface_i, proc))->graph(proc, info, graph);
 }
 
+/** Returns the address of the given processor.
+    @param proc             A processor.
+ */
+doremir_ptr_t doremir_processor_address(doremir_processor_t proc)
+{
+    return proc;
+}               
+
+/** Write a graph representation of the given processor 
+    (in the dot language) to the given file.
+ */
 void doremir_processor_write_graph(doremir_processor_t proc,
                                    doremir_string_file_path_t path)
 {

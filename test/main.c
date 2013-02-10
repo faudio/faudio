@@ -1756,7 +1756,7 @@ int main(int argc, char const *argv[])
             string_dappend(doremir_directory_current(), string("/test/in.wav")),
             string_dappend(doremir_directory_current(), string("/test/out.wav")));
         test_buffer_stream();
-        test_audio_stream();
+        // test_audio_stream();
         test_midi_stream();
         goto end;
 

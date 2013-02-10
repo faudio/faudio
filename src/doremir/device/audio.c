@@ -617,6 +617,11 @@ void native_finished_callback(void *data)
 
 // --------------------------------------------------------------------------------
 
+bool audio_session_equal(ptr_t a, ptr_t b)
+{
+    return a == b;
+}
+
 doremir_string_t audio_session_show(ptr_t a)
 {
     string_t str = string("<AudioSession ");
@@ -632,12 +637,17 @@ void audio_session_destroy(ptr_t a)
 
 ptr_t audio_session_impl(doremir_id_t interface)
 {
+    static doremir_equal_t audio_session_equal_impl
+        = { audio_session_equal };
     static doremir_string_show_t audio_session_show_impl
         = { audio_session_show };
     static doremir_destroy_t audio_session_destroy_impl
         = { audio_session_destroy };
 
     switch (interface) {
+    case doremir_equal_i:
+        return &audio_session_equal_impl;
+
     case doremir_string_show_i:
         return &audio_session_show_impl;
 

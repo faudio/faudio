@@ -73,6 +73,7 @@ module Doremir.Processor
     inputType   : Processor -> Type;
     outputType  : Processor -> Type;
     bufferSize  : (Frames, Processor) -> Size;
+    address     : Processor -> Ptr;
 
     graph       : (Processor, Info*, Graph) -> Graph;
     writeGraph  : (Processor,FilePath) -> Void;

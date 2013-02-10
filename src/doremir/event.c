@@ -117,8 +117,10 @@ doremir_event_t doremir_event_delay(doremir_time_t time,
     return e;
 }
 
-/** Merge to events.
-    The resulting event has all occurances of the given events.
+/** Merge two events.
+    
+    The resulting event has all occurances of the given events interleaved.
+    
     @param event1   Event to merge.
     @param event2   Event to merge.
     @return         A new event.
@@ -159,6 +161,24 @@ doremir_event_t doremir_event_switch(doremir_event_t pred,
     switch_get(e, after)    = event2;
     return e;
 }
+
+/** Create an event that receives values from the given sender.
+ */
+doremir_event_t doremir_event_receive(doremir_ptr_t sender, 
+                                      doremir_message_address_t address)
+{
+    assert(false && "Not implemented");
+}
+ 
+/** Create an event that sends values to the given receiver.
+ */
+doremir_event_t doremir_event_send(doremir_ptr_t receiver, 
+                                   doremir_message_address_t address, 
+                                   doremir_event_t event)
+{
+    assert(false && "Not implemented");
+}
+ 
 
 void doremir_event_destroy(doremir_event_t event)
 {

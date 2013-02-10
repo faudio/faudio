@@ -45,6 +45,7 @@ doremir_type_t doremir_processor_input_type(doremir_processor_t);
 doremir_type_t doremir_processor_output_type(doremir_processor_t);
 size_t doremir_processor_buffer_size(doremir_type_frames_t,
                                      doremir_processor_t);
+doremir_ptr_t doremir_processor_address(doremir_processor_t);
 doremir_graph_t doremir_processor_graph(doremir_processor_t,
                                         doremir_processor_info_t *,
                                         doremir_graph_t);
