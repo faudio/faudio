@@ -31,17 +31,20 @@ ptr_t test_hid2(ptr_t _)
     ProcessSerialNumber currentProcess;
     GetCurrentProcess(&currentProcess);
     CFMachPortRef      eventTap;
-    CGEventMask        eventMask;
     CFRunLoopSourceRef runLoopSource;
  
-    CGEventMask mask = 0 | CGEventMaskBit(kCGEventLeftMouseDown);
+    CGEventMask eventMask = 0 
+        | CGEventMaskBit(kCGEventLeftMouseDown) 
+        | CGEventMaskBit(kCGEventKeyDown)
+        | CGEventMaskBit(kCGEventLeftMouseDragged)
+        ;
     
-    // // Only works if we are root, OR if 'Access for assistive devices' is enabled in System Preferences
+    // Can not get keyboard events unless 'Access for assistive devices' is enabled
     eventTap = CGEventTapCreate(
         kCGSessionEventTap,
         kCGTailAppendEventTap,          // kCGHeadInsertEventTap
         kCGEventTapOptionListenOnly,    // kCGEventTapOptionDefault
-        mask,
+        eventMask,
         (CGEventTapCallBack)eventTapFunction,
         NULL
         );
