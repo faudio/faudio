@@ -1,0 +1,8 @@
+(in-package :audio-engine)
+(defcfun (system-directory-home "doremir_system_directory_home") string-file-path)
+(defcfun (system-directory-current "doremir_system_directory_current") string-file-path)
+(defcfun (system-directory-create "doremir_system_directory_create") :void (a string-file-path))
+(defcfun (system-directory-remove "doremir_system_directory_remove") :void (a string-file-path))
+(defcfun (system-directory-read-file "doremir_system_directory_read_file") string (a string-file-path))
+(defcfun (system-directory-write-file "doremir_system_directory_write_file") :void (a string-file-path) (b string))
+(defcfun (system-directory-append-file "doremir_system_directory_append_file") :void (a string-file-path) (b string))

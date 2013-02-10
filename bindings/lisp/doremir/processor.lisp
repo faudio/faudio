@@ -10,6 +10,7 @@
 (defcfun (processor-input-type "doremir_processor_input_type") type (a processor))
 (defcfun (processor-output-type "doremir_processor_output_type") type (a processor))
 (defcfun (processor-buffer-size "doremir_processor_buffer_size") :int32 (a type-frames) (b processor))
+(defcfun (processor-address "doremir_processor_address") ptr (a processor))
 (defcfun (processor-graph "doremir_processor_graph") graph (a processor) (b (:pointer processor-info)) (c graph))
 (defcfun (processor-write-graph "doremir_processor_write_graph") :void (a processor) (b string-file-path))
 (defcfun (processor-identity "doremir_processor_identity") processor (a type))
