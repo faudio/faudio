@@ -21,8 +21,10 @@ struct _doremir_event_t {
         never_event,      // E a
         now_event,        // a -> E a
         delay_event,      // t -> E a -> E a
-        merge_event,     // E a -> E a -> E a
-        switch_event      // E a -> E b -> E b -> E b
+        merge_event,      // E a -> E a -> E a
+        switch_event,     // E a -> E b -> E b -> E b
+        send_event,       // D x a -> x -> E a -> E ()
+        recv_event        // D x a -> x -> E a
     }                       tag;
 
     union {
@@ -44,6 +46,16 @@ struct _doremir_event_t {
             ptr_t           before;
             ptr_t           after;
         }                   switch_;
+        struct {
+            ptr_t           dispatcher;
+            ptr_t           address;
+            ptr_t           event;
+        }                   send;
+        struct {
+            ptr_t           dispatcher;
+            ptr_t           address;
+        }                   recv;
+        
     }                       fields;
 };
 
@@ -71,11 +83,15 @@ void delete_event(doremir_event_t event)
 #define is_delay(v)       (v->tag == delay_event)
 #define is_merge(v)       (v->tag == merge_event)
 #define is_switch(v)      (v->tag == switch_event)
+#define is_send(v)        (v->tag == send_event)
+#define is_recv(v)        (v->tag == recv_event)
 
 #define now_get(v,f)      v->fields.now.f
 #define delay_get(v,f)    v->fields.delay.f
 #define merge_get(v,f)    v->fields.merge.f
 #define switch_get(v,f)   v->fields.switch_.f
+#define send_get(v,f)     v->fields.send.f
+#define recv_get(v,f)     v->fields.recv.f
 
 // --------------------------------------------------------------------------------
 
@@ -163,18 +179,28 @@ doremir_event_t doremir_event_switch(doremir_event_t pred,
 }
 
 /** Create an event that receives values from the given sender.
+    @param sender   Sender to receive from.
+    @param address  Address to receive on.
+    @return         An event occuring whenever a message has been received.
  */
-doremir_event_t doremir_event_receive(doremir_ptr_t sender,
+doremir_event_t doremir_event_receive(doremir_ptr_t             sender,
                                       doremir_message_address_t address)
 {
     assert(false && "Not implemented");
 }
 
-/** Create an event that sends values to the given receiver.
+/** Create an event that sends values to the given receiver. Each occurence
+    of the given event results in its value being sent to the given receiver,
+    and the returned event occuring with value null.
+
+    @param sender   Sender to receive from.
+    @param address  Address to receive on.
+    @param event    Event from which to obtain values.
+    @return         An event occuring whenever a message is being sent.
  */
-doremir_event_t doremir_event_send(doremir_ptr_t receiver,
+doremir_event_t doremir_event_send(doremir_ptr_t             receiver,
                                    doremir_message_address_t address,
-                                   doremir_event_t event)
+                                   doremir_event_t           event)
 {
     assert(false && "Not implemented");
 }

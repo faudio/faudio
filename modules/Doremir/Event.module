@@ -8,9 +8,11 @@
     - `never()`
     - `now(v)`
     - `later(t,v)`
-    - `delay(t,x)`
-    - `merge(x,y)`
-    - `switch_(p,x,y)`
+    - `delay_event(t,x)`
+    - `merge_event(x,y)`
+    - `switch_event(p,x,y)`
+    - `receive_event(s,a)`
+    - `send_event(s,a,x)`
 
     @par Display
     - `<Event @1000ms 3.1415>`
@@ -34,22 +36,20 @@ module Doremir.Event
 
     never   : () -> Event;
     now     : Ptr -> Event;
+    later   : (Time,Ptr) -> Event;
     delay   : (Time,Event) -> Event;
     merge   : (Event,Event) -> Event;               // rename merge
     switch  : (Event,Event,Event) -> Event;
+    receive : (Ptr,Address) -> Event;
+    send    : (Ptr,Address,Event) -> Event;
     destroy : Event -> Void;
     
-    // later  : (Time,Ptr) -> Event;
-    // upon   : (Event,Event) -> Event;
     after  : Event -> Event;
     before : Event -> Event;
-    // sample : Event -> Event;
+    upon   : (Event,Event) -> Event;
+    select : (Event,Event) -> Event;
+    sample : Event -> Event;
     toggle : Event -> Event;
-    // select : (Event,Event) -> Event;
-
-    receive : (Ptr,Address) -> Event;       // Sender
-    send : (Ptr,Address,Event) -> Event;    // Receiver
-
 
     hasValue : (Time,Event) -> Bool;   // Is an occurance available            rename hasValue
     value  : Event -> Ptr;           // Get the first occurance value        rename value?

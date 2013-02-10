@@ -1239,13 +1239,13 @@ void test_event()
 {
     test_section("Events");
     // event_t a = now(string("ha"));
-    // event_t b = delay(seconds(3), now(string("ho")));
+    // event_t b = delay_event(seconds(3), now(string("ho")));
 
-    event_t a = delay(seconds(5), delay(seconds(5), now(string("fix"))));
-    event_t b = delay(seconds(0),
-                      merge(
-                          delay(seconds(3),  now(string("foo"))),
-                          delay(seconds(12), now(string("bar"))))); // too early!
+    event_t a = delay_event(seconds(5), delay_event(seconds(5), now(string("fix"))));
+    event_t b = delay_event(seconds(0),
+                    merge_event(
+                        delay_event(seconds(3),  now(string("foo"))),
+                        delay_event(seconds(12), now(string("bar"))))); // too early!
 
     doremir_print("a                            ==> %s\n", a);
     doremir_print("offset(a)                    ==> %s\n", doremir_event_offset(a));
@@ -1263,8 +1263,8 @@ void test_event()
 
     for (int i = 0; true;) {
         if (i % 30 == 0) {
-            doremir_priority_queue_insert(delay(seconds(i), a), q);
-            doremir_priority_queue_insert(delay(seconds(i), b), q);
+            doremir_priority_queue_insert(delay_event(seconds(i), a), q);
+            doremir_priority_queue_insert(delay_event(seconds(i), b), q);
             doremir_audio_engine_log_warning(string("Inserted"));
         }
 
@@ -1755,7 +1755,7 @@ int main(int argc, char const *argv[])
         test_processor_graphs(string_dappend(doremir_directory_current(), string("/test/proc.dot")));
 
         test_dispatcher();
-        // test_event();
+        test_event();
         // test_scheduler();
         // test_processor();
 

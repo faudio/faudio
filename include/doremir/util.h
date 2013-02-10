@@ -94,10 +94,12 @@
 
 #define never()             doremir_event_never()
 #define now(x)              doremir_event_now(x)
-#define delay(t,x)          doremir_event_delay(t,x)
 #define later(t,x)          doremir_event_later(t,x)
-#define merge(x,y)          doremir_event_merge(x,y)
-#define switch_(p,x,y)      doremir_event_switch(p,x,y)
+#define delay_event(t,x)    doremir_event_delay(t,x)
+#define merge_event(x,y)    doremir_event_merge(x,y)
+#define switch_event(p,x,y) doremir_event_switch(p,x,y)
+#define receive_event(s,a)  doremir_event_receive(s,a)
+#define send_event(s,a)     doremir_event_send(s,a,x)
 
 #define unary(a,b,f,x)      doremir_processor_unary(a,b,f,x)
 #define binary(a,b,c,f,x)   doremir_processor_binary(a,b,c,f,x)
