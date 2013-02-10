@@ -12,6 +12,7 @@ Additions
     * QuickTime
     * VST2
 
+* Memory profiling (leaks related to graphs, messages etc)
 
 ----------
 
