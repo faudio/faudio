@@ -1754,8 +1754,10 @@ int main(int argc, char const *argv[])
 
         test_processor_graphs(string_dappend(doremir_directory_current(), string("/test/proc.dot")));
 
+        test_hid(); // TEMPORARY
+        goto end;
         test_dispatcher();
-        test_event();
+        // test_event();
         // test_scheduler();
         // test_processor();
 
@@ -1765,7 +1767,6 @@ int main(int argc, char const *argv[])
         test_buffer_stream();
         // test_audio_stream();
         // test_midi_stream();
-        goto end;
 
 end:
         doremir_audio_engine_terminate();
