@@ -1,0 +1,12 @@
+
+/**
+    @addtogroup Doremir.System
+    
+    Various system facilities.    
+ */
+
+module Doremir.System
+{
+    import Doremir.System.Event;
+    import Doremir.System.Directory;
+}

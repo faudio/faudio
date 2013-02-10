@@ -1109,7 +1109,7 @@ void test_graph(string_t path)
         //     string("(1)"), a);
 
         doremir_print("a                            ==> %s\n", a);
-        doremir_directory_write_file(path, doremir_graph_to_dot(
+        doremir_system_directory_write_file(path, doremir_graph_to_dot(
                                          string("#include \"doc/graphs/header.dot\""),
                                          string(""),
                                          a));
@@ -1139,7 +1139,7 @@ void test_json(string_t path)
 
     test_section("JSON conversion");
 
-    string_t json = doremir_directory_read_file(path);
+    string_t json = doremir_system_directory_read_file(path);
     // printf("%s\n", unstring(json));
 
     ptr_t data = doremir_string_from_json(json);
@@ -1479,12 +1479,12 @@ void test_log()
     doremir_audio_engine_log_info(string("---------------"));
 }
 
-void test_directory()
+void test_system_directory()
 {
     test_section("Directory");
 
-    doremir_print("home()                       ==> %s\n", doremir_directory_home());
-    doremir_print("current()                    ==> %s\n", doremir_directory_current());
+    doremir_print("home()                       ==> %s\n", doremir_system_directory_home());
+    doremir_print("current()                    ==> %s\n", doremir_system_directory_current());
 }
 
 
@@ -1740,19 +1740,19 @@ int main(int argc, char const *argv[])
         test_list();
         test_set();
         test_map();
-        test_graph(string_dappend(doremir_directory_current(), string("/test/gen.dot")));
+        test_graph(string_dappend(doremir_system_directory_current(), string("/test/gen.dot")));
         test_priority_queue(10);
         test_json(
-            string_dappend(doremir_directory_current(), string("/test/example.json")));
+            string_dappend(doremir_system_directory_current(), string("/test/example.json")));
 
         test_log();
         test_error();
-        test_directory();
+        test_system_directory();
         // test_plot(NULL, NULL);
         // test_plot_buffer();
-        // test_plot_file(string_dappend(doremir_directory_current(), string("/test/in.wav")));
+        // test_plot_file(string_dappend(doremir_system_directory_current(), string("/test/in.wav")));
 
-        test_processor_graphs(string_dappend(doremir_directory_current(), string("/test/proc.dot")));
+        test_processor_graphs(string_dappend(doremir_system_directory_current(), string("/test/proc.dot")));
 
         // test_hid(); // TEMPORARY
         // goto end;
@@ -1762,8 +1762,8 @@ int main(int argc, char const *argv[])
         // test_processor();
 
         test_file_stream(
-            string_dappend(doremir_directory_current(), string("/test/in.wav")),
-            string_dappend(doremir_directory_current(), string("/test/out.wav")));
+            string_dappend(doremir_system_directory_current(), string("/test/in.wav")),
+            string_dappend(doremir_system_directory_current(), string("/test/out.wav")));
         test_buffer_stream();
         // test_audio_stream();
         // test_midi_stream();

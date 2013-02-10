@@ -13,7 +13,7 @@
 #include <doremir/processor/par.h>
 #include <doremir/processor/loop.h>
 #include <doremir/processor/delay.h>
-#include <doremir/directory.h>
+#include <doremir/system/directory.h>
 #include <doremir/util.h>
 
 
@@ -76,7 +76,7 @@ void doremir_processor_write_graph(doremir_processor_t proc,
         .buf_seq    = 1
     };
     graph = doremir_processor_graph(proc, &info, graph);
-    doremir_directory_write_file(path, doremir_graph_to_dot(string(""), string(""), graph));
+    doremir_system_directory_write_file(path, doremir_graph_to_dot(string(""), string(""), graph));
 }
 
 

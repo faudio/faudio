@@ -6,7 +6,7 @@
 #include <doremir/atomic/queue.h>
 #include <doremir/atomic/stack.h>
 #include <doremir/atomic/ring_buffer.h>
-#include <doremir/directory.h>
+#include <doremir/system.h>
 #include <doremir/error.h>
 #include <doremir/event.h>
 #include <doremir/graph.h>

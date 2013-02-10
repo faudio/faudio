@@ -13,26 +13,26 @@
 #include <sys/stat.h>
 #include <pwd.h>
 
-doremir_string_file_path_t doremir_directory_home()
+doremir_string_file_path_t doremir_system_directory_home()
 {
     struct passwd *pw = getpwuid(getuid());
     return string(pw->pw_dir);
 }
 
-doremir_string_file_path_t doremir_directory_current()
+doremir_string_file_path_t doremir_system_directory_current()
 {
     char cwd[1024];
     getcwd(cwd, sizeof(cwd));
     return string(cwd);
 }
 
-void doremir_directory_create(string_t path)
+void doremir_system_directory_create(string_t path)
 {
-    // Assure directory
+    // Assure system_directory
     mkdir(unstring(path), (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH));
 }
 
-doremir_string_t doremir_directory_read_file(doremir_string_file_path_t path)
+doremir_string_t doremir_system_directory_read_file(doremir_string_file_path_t path)
 {
     size_t buf_size = 1000000;
     char buf[buf_size + 1];
@@ -56,7 +56,7 @@ doremir_string_t doremir_directory_read_file(doremir_string_file_path_t path)
 }
 
 
-void doremir_directory_write_file(doremir_string_file_path_t path,
+void doremir_system_directory_write_file(doremir_string_file_path_t path,
                                   doremir_string_t string)
 {
     FILE *f = fopen(unstring(path), "w+");
@@ -64,7 +64,7 @@ void doremir_directory_write_file(doremir_string_file_path_t path,
     fclose(f);
 }
 
-void doremir_directory_append_file(doremir_string_file_path_t path,
+void doremir_system_directory_append_file(doremir_string_file_path_t path,
                                    doremir_string_t string)
 {
     FILE *f = fopen(unstring(path), "a+");

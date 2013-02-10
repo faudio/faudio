@@ -7,7 +7,7 @@
 
 #include <doremir/plot.h>
 #include <doremir/thread.h>
-#include <doremir/directory.h>
+#include <doremir/system/directory.h>
 #include <doremir/util.h>
 
 typedef doremir_plot_function_t plot_func_t;
@@ -34,7 +34,7 @@ void generate_plot_file(plot_func_t func, ptr_t func_data,
     char dat[L_tmpnam], plot[L_tmpnam], out_dir[100], out[100];
     char *home;
 
-    home = unstring(doremir_directory_home());
+    home = unstring(doremir_system_directory_home());
     tmpnam(dat);
     tmpnam(plot);
     sprintf(out_dir, "%s/.doremiraudio", home);
@@ -42,7 +42,7 @@ void generate_plot_file(plot_func_t func, ptr_t func_data,
 
     inform(string_dappend(string("Creating "), string_dappend(string(out), string(".ps"))));
 
-    doremir_directory_create(string(out_dir));
+    doremir_system_directory_create(string(out_dir));
 
     // Write data and plot file
     FILE *datf = fopen(dat, "w+");

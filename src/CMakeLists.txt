@@ -48,11 +48,11 @@ list(APPEND SRCS
   )
 list(APPEND SRCS_OSX
   platform/macosx/doremir/atomic.c
-  platform/macosx/doremir/device.c
-  platform/macosx/doremir/directory.c
   platform/macosx/doremir/thread.c
   platform/macosx/doremir/string.c
-  platform/macosx/doremir/event.c
+  platform/macosx/doremir/device.c
+  platform/macosx/doremir/system/directory.c
+  platform/macosx/doremir/system/event.c
   )
 if(${ENABLE_COREPLOT})
   list(APPEND SRCS_OSX

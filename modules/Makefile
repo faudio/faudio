@@ -9,7 +9,9 @@ c:
 	modulo -Mmodules --language=c    <modules/Doremir/Atomic/Queue.module       	>include/doremir/atomic/queue.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Atomic/Stack.module       	>include/doremir/atomic/stack.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Atomic/RingBuffer.module  	>include/doremir/atomic/ring_buffer.h && \
-	modulo -Mmodules --language=c    <modules/Doremir/Directory.module    		>include/doremir/directory.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/System.module    		>include/doremir/system.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/System/Directory.module    	>include/doremir/system/directory.h && \
+	modulo -Mmodules --language=c    <modules/Doremir/System/Event.module    	>include/doremir/system/event.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Dynamic.module    		>include/doremir/dynamic.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Event.module    		>include/doremir/event.h && \
 	modulo -Mmodules --language=c    <modules/Doremir/Thread.module    		>include/doremir/thread.h && \
@@ -62,7 +64,9 @@ gen-lisp:
 	modulo -Mmodules --language=lisp <modules/Doremir/Thread.module    		>bindings/lisp/doremir/thread.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Thread/Future.module    	>bindings/lisp/doremir/thread/future.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Thread/Improving.module    	>bindings/lisp/doremir/thread/improving.lisp && \
-	modulo -Mmodules --language=lisp <modules/Doremir/Directory.module    		>bindings/lisp/doremir/directory.lisp && \
+	modulo -Mmodules --language=lisp <modules/Doremir/System.module    		>bindings/lisp/doremir/system.lisp && \
+	modulo -Mmodules --language=lisp <modules/Doremir/System/Directory.module    	>bindings/lisp/doremir/system/directory.lisp && \
+	modulo -Mmodules --language=lisp <modules/Doremir/System/Event.module    	>bindings/lisp/doremir/system/event.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Dynamic.module    		>bindings/lisp/doremir/dynamic.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Event.module    		>bindings/lisp/doremir/event.lisp && \
 	modulo -Mmodules --language=lisp <modules/Doremir/Std.module    		>bindings/lisp/doremir/std.lisp && \

@@ -1,0 +1,15 @@
+
+/**
+    @addtogroup Doremir.System.Event
+    
+    Mouse and keyboard events.    
+ */
+
+module Doremir.System.Event
+{
+    import Doremir;
+    import Doremir.String;
+
+
+
+}

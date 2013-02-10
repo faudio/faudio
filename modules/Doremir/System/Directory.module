@@ -5,7 +5,7 @@
     Cross-platform directory utilities.    
  */
 
-module Doremir.Directory
+module Doremir.System.Directory
 {
     import Doremir;
     import Doremir.String;
