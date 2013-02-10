@@ -537,46 +537,46 @@ void test_mutex()
 //     static char *const msgs[10] = {
 //         "Sur", "le", "pond", "d'Avignon", "on", "y", "danse", "tous", "en", "round"
 //     };
-// 
+//
 //     for (int i = 0; i < 10; ++i) {
 //         doremir_thread_lock(h->mut);
 //         h->msg = msgs[i];
 //         printf("Sending: %s\n", h->msg);
 //         doremir_thread_notify(h->cond);
 //         doremir_thread_unlock(h->mut);
-// 
+//
 //         doremir_thread_sleep(100);
 //     }
-// 
+//
 //     return 0;
 // }
 // ptr_t receiver(ptr_t x)
 // {
 //     send_hub *h = (send_hub *) x;
-// 
+//
 //     while (true) {
 //         doremir_thread_lock(h->mut);
 //         doremir_thread_wait_for(h->cond);
 //         printf("                        Received: %s\n", h->msg);
 //         doremir_thread_unlock(h->mut);
 //     }
-// 
+//
 //     return 0;
 // }
 // void test_cond()
 // {
 //     test_section("Condition variables");
-// 
+//
 //     doremir_thread_mutex_t m = doremir_thread_create_mutex();
 //     doremir_thread_condition_t c = doremir_thread_create_condition(m);
 //     send_hub h = { m, c, 0 };
-// 
+//
 //     doremir_thread_t s = doremir_thread_create(sender, (doremir_ptr_t) &h);
 //     doremir_thread_t r = doremir_thread_create(receiver, (doremir_ptr_t) &h);
-// 
+//
 //     doremir_thread_join(s);
 //     doremir_thread_detach(r);
-// } 
+// }
 
 
 
@@ -1700,11 +1700,11 @@ int main(int argc, char const *argv[])
 
     printf("The page size for this system is %ld bytes.\n", sysconf(_SC_PAGESIZE));
 
-    for (int i = 0; i < iterations_k; ++i)
-    {             
-        if (stop_k)
+    for (int i = 0; i < iterations_k; ++i) {
+        if (stop_k) {
             getchar();
-        
+        }
+
         doremir_audio_engine_set_log_std();
         doremir_plot_use_gnu();
         // doremir_audio_engine_set_log_file(string("/Users/hans/Library/Logs/DoReMIRAudio.log"));
@@ -1770,6 +1770,7 @@ int main(int argc, char const *argv[])
 end:
         doremir_audio_engine_terminate();
     }
+
     return 0;
 }
 

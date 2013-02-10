@@ -28,12 +28,12 @@ typedef doremir_plot_function_t plot_func_t;
     "     '%1$s' using 1:5 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 4',    \\\n" \
     "     '%1$s' using 1:6 every %3$d with lines lc rgbcolor '#a0a0ff' title 'Plot 5'       \n"
 
-void generate_plot_file(plot_func_t func, ptr_t func_data, 
-                        char* out_res, char* plot_res)
+void generate_plot_file(plot_func_t func, ptr_t func_data,
+                        char *out_res, char *plot_res)
 {
     char dat[L_tmpnam], plot[L_tmpnam], out_dir[100], out[100];
     char *home;
-    
+
     home = unstring(doremir_directory_home());
     tmpnam(dat);
     tmpnam(plot);
@@ -41,7 +41,7 @@ void generate_plot_file(plot_func_t func, ptr_t func_data,
     sprintf(out,     "%s/plot", out_dir);
 
     inform(string_dappend(string("Creating "), string_dappend(string(out), string(".ps"))));
-    
+
     doremir_directory_create(string(out_dir));
 
     // Write data and plot file
@@ -51,12 +51,15 @@ void generate_plot_file(plot_func_t func, ptr_t func_data,
     for (int sample = 0; sample < samples_k; ++sample) {
         double x = ((double) sample) / ((double) samples_k) * 2 - 1;
         double ys[5];
+
         for (int index = 0; index < 5; ++index) {
             ys[index] = func(func_data, index, 0, x);
         }
-        fprintf(datf, "%f %f %f %f %f %f \n", 
-            x, ys[0], ys[1], ys[2], ys[3], ys[4]);
+
+        fprintf(datf, "%f %f %f %f %f %f \n",
+                x, ys[0], ys[1], ys[2], ys[3], ys[4]);
     }
+
     fprintf(plotf, plot_format_k, dat, out, down_sample_k);
     fflush(datf);
     fflush(plotf);

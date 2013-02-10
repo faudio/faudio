@@ -60,9 +60,9 @@ doremir_graph_t doremir_processor_graph(doremir_processor_t proc,
 doremir_ptr_t doremir_processor_address(doremir_processor_t proc)
 {
     return proc;
-}               
+}
 
-/** Write a graph representation of the given processor 
+/** Write a graph representation of the given processor
     (in the dot language) to the given file.
  */
 void doremir_processor_write_graph(doremir_processor_t proc,

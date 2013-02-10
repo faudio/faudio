@@ -12,11 +12,13 @@ enum doremir_interfaces {
   doremir_dynamic_i,
   doremir_error_i,
   doremir_equal_i,
+
   doremir_time_clock_i,
   doremir_message_sender_i,
   doremir_message_receiver_i,
   doremir_number_i,
   doremir_order_i,
+
   doremir_processor_interface_i,
   doremir_string_show_i
 };

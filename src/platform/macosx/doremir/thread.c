@@ -222,7 +222,7 @@ bool doremir_thread_unlock(doremir_thread_mutex_t mutex)
 // --------------------------------------------------------------------------------
 
 // /** Create a condition object.
-// 
+//
 //     Conditions have single-ownership semantics and must be finalized by passing it
 //     to a destructive function.
 //  */ doremir_thread_condition_t doremir_thread_create_condition(doremir_thread_mutex_t mutex)
@@ -230,61 +230,61 @@ bool doremir_thread_unlock(doremir_thread_mutex_t mutex)
 //     doremir_thread_condition_t cond = doremir_new(thread_condition);
 //     cond->impl = &condition_impl;
 //     cond->mutex = mutex;
-// 
+//
 //     int result = pthread_cond_init(&cond->native, NULL);
-// 
+//
 //     if (result != 0) {
 //         doremir_thread_fatal("create_condition", result);
 //     }
-// 
+//
 //     return cond;
 // }
-// 
+//
 // /** Destroy a condition object.
 //  */
 // void doremir_thread_destroy_condition(doremir_thread_condition_t cond)
 // {
 //     int result = pthread_cond_destroy(&cond->native);
 //     doremir_delete(cond);
-// 
+//
 //     if (result != 0) {
 //         doremir_thread_fatal("destroy_condition", result);
 //     }
 // }
-// 
+//
 // /** Wait for a condition to be signaled.
 //  */
 // void doremir_thread_wait_for(doremir_thread_condition_t cond)
 // {
 //     int result = pthread_cond_wait(&cond->native, &cond->mutex->native);
-// 
+//
 //     if (result != 0) {
 //         doremir_thread_fatal("wait_for", result);
 //     }
 // }
-// 
+//
 // /** Signal a condition to one listener.
 //  */
 // void doremir_thread_notify(doremir_thread_condition_t cond)
 // {
 //     int result = pthread_cond_signal(&cond->native);
-// 
+//
 //     if (result != 0) {
 //         doremir_thread_fatal("notify", result);
 //     }
 // }
-// 
+//
 // /** Signal a condition to all listeners.
 //  */
 // void doremir_thread_notify_all(doremir_thread_condition_t cond)
 // {
 //     int result = pthread_cond_broadcast(&cond->native);
-// 
+//
 //     if (result != 0) {
 //         doremir_thread_fatal("notify_all", result);
 //     }
 // }
-//    
+//
 
 // --------------------------------------------------------------------------------
 
@@ -383,26 +383,26 @@ ptr_t mutex_impl(doremir_id_t interface)
 //     str = string_dappend(str, string(">"));
 //     return str;
 // }
-// 
+//
 // void condition_destroy(ptr_t a)
 // {
 //     doremir_thread_destroy_condition(a);
 // }
-// 
+//
 // ptr_t condition_impl(doremir_id_t interface)
 // {
 //     static doremir_string_show_t condition_show_impl
 //         = { condition_show };
 //     static doremir_destroy_t condition_destroy_impl
 //         = { condition_destroy };
-// 
+//
 //     switch (interface) {
 //     case doremir_string_show_i:
 //         return &condition_show_impl;
-// 
+//
 //     case doremir_destroy_i:
 //         return &condition_destroy_impl;
-// 
+//
 //     default:
 //         return NULL;
 //     }
