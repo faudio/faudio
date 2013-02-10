@@ -188,6 +188,7 @@ if (COMPONENTS_RESOLVED)
     # message("Sysroot is " ${CMAKE_OSX_SYSROOT})
     # message("Target is "${CMAKE_OSX_DEPLOYMENT_TARGET})
     add_definitions(-std=c99)
+    # add_definitions(-std=gnu99)
     add_definitions(
         -Wall
         # -Wmissing-noreturn

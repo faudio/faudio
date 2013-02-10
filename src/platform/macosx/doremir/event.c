@@ -43,9 +43,19 @@ static CGEventRef eventTapFunction(CGEventTapProxy proxy, CGEventType type, CGEv
             CGEventKeyboardGetUnicodeString(event, 10, &sz, cs);
             cs[sz] = 0;
             printf("    Unicode size: %d\n", sz);
-            printf("    Unicode char: %d\n", cs[0]);
-            string_t str = doremir_string_from_utf16(cs);
-            printf("    Unicode string: %s\n", unstring(str));
+            
+            if (sz >= 1)
+            {
+                string_t str = doremir_string_single(cs[0]);
+                printf("    Unicode char:   %d\n", cs[0]);
+                printf("    Unicode string: %s\n", unstring(str));
+                doremir_destroy(str);
+            }
+            else
+            {
+                printf("    Unicode char:   n/a\n");
+                printf("    Unicode string: n/a\n");
+            }
 
             break;
         } 
@@ -109,6 +119,8 @@ ptr_t test_hid2(ptr_t _)
     CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, kCFRunLoopCommonModes);
     CGEventTapEnable(eventTap, true);
     CFRunLoopRun();
+    
+    return 0;
 }
 
 void test_hid()
