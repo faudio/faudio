@@ -10,6 +10,7 @@
 
 #define NO_THREAD_T
 #include <doremir/util.h>
+#undef NO_THREAD_T
 
 #include <ApplicationServices/ApplicationServices.h>
 
@@ -88,16 +89,16 @@ static CGEventRef eventTapFunction(CGEventTapProxy proxy, CGEventType type, CGEv
 
 ptr_t test_hid2(ptr_t _)
 {
-
     ProcessSerialNumber currentProcess;
     GetCurrentProcess(&currentProcess);
     CFMachPortRef      eventTap;
     CFRunLoopSourceRef runLoopSource;
  
     CGEventMask eventMask = 0 
+        | CGEventMaskBit(kCGEventMouseMoved)
         | CGEventMaskBit(kCGEventLeftMouseDown) 
-        | CGEventMaskBit(kCGEventKeyDown)
-        | CGEventMaskBit(kCGEventLeftMouseDragged)
+        // | CGEventMaskBit(kCGEventKeyDown)
+        // | CGEventMaskBit(kCGEventLeftMouseDragged)
         ;
     
     // Can not get keyboard events unless 'Access for assistive devices' is enabled
@@ -130,4 +131,35 @@ void test_hid()
     while(1)
         doremir_thread_sleep(1000);
     printf("Returning\n");
-}    
+}      
+
+
+
+
+
+
+
+
+
+
+
+// typedef enum {
+//     mouse_event,
+//     keyboard_event
+// } event_type_t;
+// 
+// sender_t track_events(event_type_t types)
+// {                                               
+    // create dispatcher, close over
+    // translate to mask
+        // callback:
+            // translate event
+            // put in dispatcher
+        // spawn:
+            // create tap
+            // attach to run loop etc
+            // close over dispatcher in callback
+            // send run loop back to creator, notify in some way
+   // save run loop to stop when destroying
+   // return
+// }

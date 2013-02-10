@@ -1754,8 +1754,8 @@ int main(int argc, char const *argv[])
 
         test_processor_graphs(string_dappend(doremir_directory_current(), string("/test/proc.dot")));
 
-        test_hid(); // TEMPORARY
-        goto end;
+        // test_hid(); // TEMPORARY
+        // goto end;
         test_dispatcher();
         // test_event();
         // test_scheduler();
