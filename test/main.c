@@ -1219,7 +1219,7 @@ void test_system_event()
 
             ));
 
-    while (1) {
+    for (int i = 0; i < 1000; ++i) {
         doremir_message_sync(s);
         doremir_for_each(x, doremir_message_receive(s, i16(0))) {
             doremir_print("    Received: %s\n", x);
@@ -1712,8 +1712,8 @@ cleanup:
 }
 
 
-int iterations_k = 1;
-bool stop_k = false;
+static const int  iterations_k = 1;
+static const bool stop_k       = false;
 
 int main(int argc, char const *argv[])
 {
