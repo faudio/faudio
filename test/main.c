@@ -1216,10 +1216,11 @@ void test_system_event()
     while(1)
     {
         doremir_message_sync(s);
-        doremir_for_each(x, doremir_message_receive(s, 0))
+        doremir_for_each(x, doremir_message_receive(s, i16(0)))
         {
             doremir_print("    Received: %s\n", x);
         }
+        doremir_thread_sleep(20);
     }
 }
 

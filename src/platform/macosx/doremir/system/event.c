@@ -21,6 +21,7 @@
     // Note: Can not get keyboard events unless 'Access for assistive devices' is enabled
 
 
+/*
 static CGEventRef eventTapFunction(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon)
 {
     printf("Event of type %d\n", type);
@@ -139,6 +140,7 @@ void test_hid()
     printf("Returning\n");
 }
 
+            */
 
 
 
@@ -156,14 +158,14 @@ void test_hid()
 
 
 struct event_source {
-    impl_t          impl;           // Implementations
+    impl_t              impl;           // Implementations
 
-    CGEventMask     mask;
-    dispatcher_t    disp;           // Outgoing event dispatcher
+    CGEventMask         mask;
+    dispatcher_t        disp;           // Outgoing event dispatcher
 
-    thread_t        thread;         // Thread
-    CFRunLoopRef    loop;           // Run loop
-    atomic_t        loop_set;
+    doremir_thread_t    thread;         // Thread
+    CFRunLoopRef        loop;           // Run loop
+    atomic_t            loop_set;
 };
 
 typedef struct event_source* event_source_t;
@@ -171,37 +173,105 @@ typedef doremir_system_event_type_t event_type_t;
 
 ptr_t event_source_impl(doremir_id_t interface);
 
-static CGEventRef event_listener(CGEventTapProxy proxy,
-                                 CGEventType type, 
-                                 CGEventRef event, 
-                                 void *data)
+
+inline static ptr_t convert_event(CGEventType type, CGEventRef event)
 {
-    printf("Event of type %d\n", type);
+    switch(type)
+    {
+        case kCGEventKeyUp: {
+            int keyCode = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
+
+            UniCharCount sz;
+            UniChar      cs[11];
+            CGEventKeyboardGetUnicodeString(event, 10, &sz, cs);
+            cs[sz] = 0;
+
+            if (sz >= 1) {
+                string_t str = doremir_string_single(cs[0]);
+                return list(i16(keyCode), i16(cs[0]), str);
+            } else {
+                return list(i16(keyCode), i16(0), string(""));
+            }
+            break;
+        }
+        case kCGEventKeyDown: {
+            int keyCode = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
+
+            UniCharCount sz;
+            UniChar      cs[11];
+            CGEventKeyboardGetUnicodeString(event, 10, &sz, cs);
+            cs[sz] = 0;
+
+            if (sz >= 1) {
+                string_t str = doremir_string_single(cs[0]);
+                return list(i16(keyCode), i16(cs[0]), str);
+            } else {
+                return list(i16(keyCode), i16(0), string(""));
+            }
+            break;
+        }
+        case kCGEventMouseMoved: {
+            CGPoint point = CGEventGetLocation(event);
+            return pair(f32(point.x), f32(point.y));
+        }
+        case kCGEventLeftMouseUp: {
+            CGPoint point = CGEventGetLocation(event);
+            return pair(f32(point.x), f32(point.y));
+        }
+        case kCGEventLeftMouseDown: {
+            CGPoint point = CGEventGetLocation(event);
+            return pair(f32(point.x), f32(point.y));
+        }
+        case kCGEventLeftMouseDragged: {
+            CGPoint point = CGEventGetLocation(event);
+            return pair(f32(point.x), f32(point.y));
+        }
+    }
+
+    assert(false && "Unreachable");
+}
+
+static CGEventRef event_listener(CGEventTapProxy proxy,
+                                 CGEventType     type,
+                                 CGEventRef      event,
+                                 void           *data)
+{
+    event_source_t  source    = data;
+
+    // printf("Event of type %d\n", type);
+    ptr_t value = convert_event(type, event);
+
+    doremir_message_send(source->disp, i16(0), value);
+
+    return event;
 }
 
 
 static ptr_t add_event_listener(ptr_t a)
 {
-    event_source_t  source    = a;           
-    CFMachPortRef   eventTap  = CGEventTapCreate(kCGSessionEventTap, 
-                                                 kCGTailAppendEventTap, 
-                                                 kCGEventTapOptionListenOnly, 
-                                                 source->mask, 
+    event_source_t  source    = a;
+    CFMachPortRef   eventTap  = CGEventTapCreate(kCGSessionEventTap,
+                                                 kCGTailAppendEventTap,
+                                                 kCGEventTapOptionListenOnly,
+                                                 source->mask,
                                                  (CGEventTapCallBack) event_listener, source);
 
     assert(eventTap && "No eventTap");
 
-    CFRunLoopSourceRef runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, 
+    CFRunLoopSourceRef runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault,
                                                                      eventTap, 0);
     assert(runLoopSource && "No runLoopSource");
-
 
     CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, kCFRunLoopCommonModes);
     CGEventTapEnable(eventTap, true);
 
     source->loop = CFRunLoopGetCurrent();
+    doremir_atomic_set(source->loop_set, 1);
 
+    printf("Entering loop");
     CFRunLoopRun();
+    
+    return 0;
 }
 
 inline static CGEventMask convert_type(event_type_t type)
@@ -250,7 +320,7 @@ doremir_message_some_sender_t doremir_system_event_get_sender(doremir_list_t sou
     while (!doremir_atomic_get(source->loop_set))
         doremir_thread_sleep(1);
 
-    return source;
+    return (doremir_message_some_sender_t) source;
 }
 
 
@@ -260,7 +330,7 @@ void event_source_destroy(ptr_t a)
 
     doremir_destroy(source->disp);
     doremir_destroy(source->loop_set);
-    
+
     CFRunLoopStop(source->loop);
     doremir_thread_join(source->thread);
 
@@ -268,15 +338,16 @@ void event_source_destroy(ptr_t a)
 }
 
 
-
 void event_source_sync(ptr_t a)
 {
     event_source_t source = a;
+    doremir_message_sync(source->disp);
 }
 
 doremir_list_t event_source_receive(ptr_t a, address_t addr)
 {
     event_source_t source = a;
+    return doremir_message_receive(source->disp, addr);
 }
 
 
@@ -313,6 +384,6 @@ ptr_t event_source_impl(doremir_id_t interface)
  */
 doremir_event_t doremir_system_event_get_event(doremir_list_t sources)
 {
-
+    assert(false && "Not implemented");
 }
 
