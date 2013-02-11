@@ -43,8 +43,6 @@ list(APPEND SRCS
   doremir/string.c
   doremir/time.c
   doremir/type.c
-  doremir/thread/future.c
-  doremir/thread/improving.c
   )
 list(APPEND SRCS_OSX
   platform/macosx/doremir/atomic.c
