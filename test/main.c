@@ -181,8 +181,7 @@ void test_show()
     doremir_dprint("%s\n", list(
                        pair(string("hans"), string("höglund")),
                        pair(string("lisa"), string("streich")),
-                       pair(string("mats"), string("erlandsson"))
-                   ));
+                       pair(string("mats"), string("erlandsson"))));
 }
 
 
@@ -646,16 +645,14 @@ void test_for_each()
     }
 
     printf("\n");
-    doremir_with(list,
-                 list(i32(1), i32(2), i32(3), i32(4)), doremir_destroy(list)) {
+    doremir_with(list, list(i32(1), i32(2), i32(3), i32(4)), doremir_destroy(list)) {
         doremir_for_each(x, list) {
             doremir_print(">    %s\n", x);
         }
     }
 
     printf("\n");
-    doremir_with(set,
-                 set(i32(1), i32(1), i32(2), i32(1)), doremir_destroy(set)) {
+    doremir_with(set, set(i32(1), i32(1), i32(2), i32(1)), doremir_destroy(set)) {
         doremir_for_each(x, doremir_set_to_list(set)) {
             doremir_print(">    %s\n", x);
         }
@@ -663,12 +660,9 @@ void test_for_each()
 
     printf("\n");
 
-    doremir_with(map,
-                 map(
+    doremir_with(map, map(
                      string("foo"), i16(1),
-                     string("bar"), list(i16(1), i16(2), i16(3))
-                 )
-                 ,
+                     string("bar"), list(i16(1), i16(2), i16(3))),
                  doremir_destroy(map)) {
         doremir_for_each(x, doremir_map_to_list(map)) {
             doremir_print(">    %s\n", x);
