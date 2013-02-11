@@ -12,14 +12,15 @@ module Doremir.System.Event
     import Doremir.Event;
     import Doremir.String;
 
-    type EventType = enum {
+    type Type = enum {
         MouseMoveEvent,
         MouseDragEvent,
-        MouseClickEvent,
+        MouseUpEvent,
+        MouseDownEvent,
         KeyUpEvent,
         KeyDownEvent
     };              
     
-    getSender : List -> SomeSender; // [EventType] -> Dispatcher
-    getEvent : List -> Event; // [EventType] -> Event
+    getSender : List -> SomeSender; // [Int16/EventType] -> Dispatcher
+    getEvent : List -> Event; // [Int16/EventType] -> Event
 }

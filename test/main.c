@@ -1205,6 +1205,27 @@ void test_dispatcher()
     doremir_destroy(disp);
 }
 
+void test_system_event()
+{
+    test_section("System events");
+
+    doremir_message_some_sender_t s = 
+        doremir_system_event_get_sender(
+            list(i16(mouse_down_event)));
+            
+    while(1)
+    {
+        doremir_message_sync(s);
+        doremir_for_each(x, doremir_message_receive(s, 0))
+        {
+            doremir_print("    Received: %s\n", x);
+        }
+    }
+}
+
+
+
+
 // execute events at t
 // return next occurence
 time_t execute_events(priority_queue_t q, time_t t)
@@ -1757,6 +1778,7 @@ int main(int argc, char const *argv[])
         // test_hid(); // TEMPORARY
         // goto end;
         test_dispatcher();
+        test_system_event();
         // test_event();
         // test_scheduler();
         // test_processor();
