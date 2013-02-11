@@ -1278,10 +1278,10 @@ void test_system_event()
     doremir_message_some_sender_t s =
         doremir_system_event_select_sender(
             list(
-                // i16(mouse_move_event),
+                i16(mouse_move_event)
                 // i16(mouse_down_event)
-                i16(key_down_event),
-                i16(key_up_event)
+                // i16(key_down_event),
+                // i16(key_up_event)
 
             ));
 

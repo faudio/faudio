@@ -619,6 +619,10 @@
 (device-midi-set-status-callback (callback midi-status-changed) nil s)
 
 (setf z (device-midi-open-stream x))
+(cl:print z)
+
+(message-send z 0 (midi-create-simple #x9 60 127))
+
 (device-midi-close-stream z)
 ; (device-midi-with-stream)
 

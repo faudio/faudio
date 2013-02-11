@@ -193,18 +193,12 @@ static ptr_t add_event_listener(ptr_t a)
 inline static CGEventMask convert_type(event_type_t type)
 {
     match(type) {
-        against(mouse_move_event)
-        CGEventMaskBit(kCGEventMouseMoved);
-        against(mouse_drag_event)
-        CGEventMaskBit(kCGEventLeftMouseDragged);
-        against(mouse_up_event)
-        CGEventMaskBit(kCGEventLeftMouseUp);
-        against(mouse_down_event)
-        CGEventMaskBit(kCGEventLeftMouseDown);
-        against(key_up_event)
-        CGEventMaskBit(kCGEventKeyUp);
-        against(key_down_event)
-        CGEventMaskBit(kCGEventKeyDown);
+        against(mouse_move_event)   CGEventMaskBit(kCGEventMouseMoved);
+        against(mouse_drag_event)   CGEventMaskBit(kCGEventLeftMouseDragged);
+        against(mouse_up_event)     CGEventMaskBit(kCGEventLeftMouseUp);
+        against(mouse_down_event)   CGEventMaskBit(kCGEventLeftMouseDown);
+        against(key_up_event)       CGEventMaskBit(kCGEventKeyUp);
+        against(key_down_event)     CGEventMaskBit(kCGEventKeyDown);
         no_default();
     }
 }

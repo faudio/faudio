@@ -111,7 +111,7 @@ void midi_listener_loop(closure_t closure)
     CFStringRef name;
     MIDIClientRef client;
 
-    name = doremir_string_to_cf_string(string("DoReMIRAudioxx"));
+    name = doremir_string_to_cf_string(string("DoReMIRAudiox"));
     result = MIDIClientCreate(name, midi_listener, closure, &client);
     assert(result == noErr);
 
