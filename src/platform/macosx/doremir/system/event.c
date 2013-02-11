@@ -379,18 +379,12 @@ ptr_t event_source_impl(doremir_id_t interface)
 }
 
 
-
-
-
-
-
-
-
 /** Returns a sender for mouse and keyboard events.
 
  */
 doremir_event_t doremir_system_event_get_event(doremir_list_t sources)
 {
-    assert(false && "Not implemented");
+    doremir_message_some_sender_t source = doremir_system_event_get_sender(sources);
+    return doremir_event_receive(source, i16(0));
 }
 
