@@ -1278,10 +1278,10 @@ void test_system_event()
     doremir_message_some_sender_t s =
         doremir_system_event_select_sender(
             list(
-                i16(mouse_move_event),
-                i16(mouse_down_event)
-                // i16(key_down_event),
-                // i16(key_up_event)
+                // i16(mouse_move_event),
+                // i16(mouse_down_event)
+                i16(key_down_event),
+                i16(key_up_event)
 
             ));
 
@@ -1830,10 +1830,10 @@ int main(int argc, char const *argv[])
 {
     printf("DoReMIR Audio engine %s v%d.%d.%d\n", bits, version[0], version[1], version[2]);
 
-    printf("sizeof(doremir_ptr_t) = %d\n", (unsigned int) sizeof(doremir_ptr_t));
-    printf("sizeof(int32_t) = %d\n", (unsigned int) sizeof(int32_t));
-    printf("sizeof(int64_t) = %d\n", (unsigned int) sizeof(int64_t));
-    printf("sizeof(wchar_t) = %d\n", (unsigned int) sizeof(wchar_t));
+    printf("sizeof(doremir_ptr_t) = %d\n",  (unsigned int) sizeof(doremir_ptr_t));
+    printf("sizeof(int32_t) = %d\n",        (unsigned int) sizeof(int32_t));
+    printf("sizeof(int64_t) = %d\n",        (unsigned int) sizeof(int64_t));
+    printf("sizeof(wchar_t) = %d\n",        (unsigned int) sizeof(wchar_t));
 
     printf("The page size for this system is %ld bytes.\n", sysconf(_SC_PAGESIZE));
 
