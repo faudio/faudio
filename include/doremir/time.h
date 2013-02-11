@@ -18,6 +18,9 @@ typedef struct {
             double (* tick_rate)(doremir_ptr_t);
             int64_t (* ticks)(doremir_ptr_t);
         } doremir_time_clock_t;
+doremir_time_t doremir_time_time(doremir_ptr_t);
+double doremir_time_tick_rate(doremir_ptr_t);
+int64_t doremir_time_ticks(doremir_ptr_t);
 doremir_time_t doremir_time_create(int32_t,
                                    int32_t,
                                    int32_t,

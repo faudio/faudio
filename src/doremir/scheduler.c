@@ -9,29 +9,30 @@
 #include <doremir/priority_queue.h>
 #include <doremir/util.h>
 
-/*  Notes:
+/*  
+    Notes:
  */
 
-typedef doremir_scheduler_t         scheduler_t;
+typedef doremir_scheduler_t scheduler_t;
 
 
 struct _doremir_scheduler_t {
     impl_t                  impl;           // Dispatcher
-
-    // atomic_t                time;           // Current time
-    priority_queue_t        queue;          // Enqueued values
-
+    ptr_t                   clock;
+    priority_queue_t        queue;
 };
 
 
 // -----------------------------------------------------------------------------
 
-inline static scheduler_t new_scheduler()
+inline static scheduler_t new_scheduler(ptr_t clock)
 {
     ptr_t scheduler_impl(doremir_id_t interface);
 
     scheduler_t scheduler = doremir_new(scheduler);
-    scheduler->impl = &scheduler_impl;
+    scheduler->impl     = &scheduler_impl;             
+    scheduler->clock    = clock;
+    scheduler->queue    = priority_queue();
     return scheduler;
 }
 
@@ -48,14 +49,13 @@ inline static void delete_scheduler(scheduler_t scheduler)
  */
 doremir_scheduler_t doremir_scheduler_create(doremir_ptr_t clock)
 {
-    return new_scheduler(); // TODO
+    return new_scheduler(clock);
 }
 
 
 void doremir_scheduler_destroy(scheduler_t scheduler)
 {
-    // destroy improving
-    // destroy queue
+    doremir_destroy(scheduler->queue);
     delete_scheduler(scheduler);
 }
 
@@ -65,17 +65,47 @@ void doremir_scheduler_destroy(scheduler_t scheduler)
  */
 void doremir_scheduler_schedule(doremir_scheduler_t scheduler, doremir_event_t event)
 {
-    // make entry
-    // insert into queue
+    // TODO locking?
+    // TODO check if already due?
+    doremir_priority_queue_insert(event, scheduler->queue);
 }
 
 void doremir_scheduler_execute(doremir_scheduler_t scheduler)
 {
-    // now = get_time()
-    // while (peek(q)->time < now)
-    // if (!action interrupded or canceled)
-    // execute
+    time_t now = doremir_time_time(scheduler->clock);
+    event_t event;
+
+    while ((event = doremir_priority_queue_peek(scheduler->queue))) {
+
+        doremir_audio_engine_log_info(
+            string_dappend(string("Peek at "), 
+                           doremir_string_show(now)));
+
+        if (!doremir_event_has_value(now, event)) {
+            // return doremir_event_offset(event);
+
+        } else {
+            doremir_priority_queue_pop(scheduler->queue);
+            
+            ptr_t   head_event = doremir_event_value(event);
+            event_t tail_event = doremir_event_tail(event);
+
+            // doremir_audio_engine_log_error(string_dappend(string("Firing event: "), doremir_string_show(h)));
+
+            // TODO should compare against never?
+            if (tail_event) {
+                // doremir_audio_engine_log_warning(string("Reinsert"));
+                doremir_priority_queue_insert(tail_event, scheduler->queue);
+            }
+        }
+    }
+
+    // what to return?
+    // return minutes(-1);
 }
+
+
+// --------------------------------------------------------------------------------
 
 bool scheduler_equal(doremir_ptr_t a, doremir_ptr_t b)
 {
@@ -94,7 +124,6 @@ void scheduler_destroy(doremir_ptr_t a)
 {
     doremir_scheduler_destroy(a);
 }
-
 
 doremir_ptr_t scheduler_impl(doremir_id_t interface)
 {
@@ -116,6 +145,4 @@ doremir_ptr_t scheduler_impl(doremir_id_t interface)
         return NULL;
     }
 }
-
-
 

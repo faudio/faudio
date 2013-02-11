@@ -42,10 +42,13 @@ module Doremir.Time
 
     /** @interface doremir_time_clock_t */
     type Clock = struct {
-        time : (Ptr -> Time)*,
+        time     : (Ptr -> Time)*,
         tickRate : (Ptr -> Double)*,
-        ticks : (Ptr -> Int64)*
+        ticks    : (Ptr -> Int64)*
     };
+    time     : Ptr -> Time;
+    tickRate : Ptr -> Double;
+    ticks    : Ptr -> Int64;
 
     // Standard time
     create      : (Int32, Int32, Int32, Ratio) -> Time;

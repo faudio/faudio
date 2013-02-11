@@ -17,6 +17,27 @@ struct _doremir_time_t {
 
 // --------------------------------------------------------------------------------
 
+doremir_time_t doremir_time_time(doremir_ptr_t clock)
+{                           
+    return ((doremir_time_clock_t*) 
+        doremir_interface(doremir_time_clock_i, clock))->time(clock);
+}
+
+double doremir_time_tick_rate(doremir_ptr_t clock)
+{
+    return ((doremir_time_clock_t*) 
+        doremir_interface(doremir_time_clock_i, clock))->tick_rate(clock);
+}
+
+int64_t doremir_time_ticks(doremir_ptr_t clock)
+{
+    return ((doremir_time_clock_t*) 
+        doremir_interface(doremir_time_clock_i, clock))->ticks(clock);
+}
+
+
+// --------------------------------------------------------------------------------
+
 inline static doremir_time_t new_time(ratio_t value)
 {
     doremir_ptr_t time_impl(doremir_id_t interface);
