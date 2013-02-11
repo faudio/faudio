@@ -18,7 +18,7 @@
 
 #include <ApplicationServices/ApplicationServices.h>
 
-    // Note: Can not get keyboard events unless 'Access for assistive devices' is enabled
+// Note: Can not get keyboard events unless 'Access for assistive devices' is enabled
 
 
 /*
@@ -168,7 +168,7 @@ struct event_source {
     atomic_t            loop_set;
 };
 
-typedef struct event_source* event_source_t;
+typedef struct event_source *event_source_t;
 typedef doremir_system_event_type_t event_type_t;
 
 ptr_t event_source_impl(doremir_id_t interface);
@@ -176,56 +176,62 @@ ptr_t event_source_impl(doremir_id_t interface);
 
 inline static ptr_t convert_event(CGEventType type, CGEventRef event)
 {
-    switch(type)
-    {
-        case kCGEventKeyUp: {
-            int keyCode = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
+    switch (type) {
+    case kCGEventKeyUp: {
+        int keyCode = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
 
-            UniCharCount sz;
-            UniChar      cs[11];
-            CGEventKeyboardGetUnicodeString(event, 10, &sz, cs);
-            cs[sz] = 0;
+        UniCharCount sz;
+        UniChar      cs[11];
+        CGEventKeyboardGetUnicodeString(event, 10, &sz, cs);
+        cs[sz] = 0;
 
-            if (sz >= 1) {
-                string_t str = doremir_string_single(cs[0]);
-                return list(i16(keyCode), i16(cs[0]), str);
-            } else {
-                return list(i16(keyCode), i16(0), string(""));
-            }
-            break;
+        if (sz >= 1) {
+            string_t str = doremir_string_single(cs[0]);
+            return list(i16(keyCode), i16(cs[0]), str);
+        } else {
+            return list(i16(keyCode), i16(0), string(""));
         }
-        case kCGEventKeyDown: {
-            int keyCode = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
 
-            UniCharCount sz;
-            UniChar      cs[11];
-            CGEventKeyboardGetUnicodeString(event, 10, &sz, cs);
-            cs[sz] = 0;
+        break;
+    }
 
-            if (sz >= 1) {
-                string_t str = doremir_string_single(cs[0]);
-                return list(i16(keyCode), i16(cs[0]), str);
-            } else {
-                return list(i16(keyCode), i16(0), string(""));
-            }
-            break;
+    case kCGEventKeyDown: {
+        int keyCode = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
+
+        UniCharCount sz;
+        UniChar      cs[11];
+        CGEventKeyboardGetUnicodeString(event, 10, &sz, cs);
+        cs[sz] = 0;
+
+        if (sz >= 1) {
+            string_t str = doremir_string_single(cs[0]);
+            return list(i16(keyCode), i16(cs[0]), str);
+        } else {
+            return list(i16(keyCode), i16(0), string(""));
         }
-        case kCGEventMouseMoved: {
-            CGPoint point = CGEventGetLocation(event);
-            return pair(f32(point.x), f32(point.y));
-        }
-        case kCGEventLeftMouseUp: {
-            CGPoint point = CGEventGetLocation(event);
-            return pair(f32(point.x), f32(point.y));
-        }
-        case kCGEventLeftMouseDown: {
-            CGPoint point = CGEventGetLocation(event);
-            return pair(f32(point.x), f32(point.y));
-        }
-        case kCGEventLeftMouseDragged: {
-            CGPoint point = CGEventGetLocation(event);
-            return pair(f32(point.x), f32(point.y));
-        }
+
+        break;
+    }
+
+    case kCGEventMouseMoved: {
+        CGPoint point = CGEventGetLocation(event);
+        return pair(f32(point.x), f32(point.y));
+    }
+
+    case kCGEventLeftMouseUp: {
+        CGPoint point = CGEventGetLocation(event);
+        return pair(f32(point.x), f32(point.y));
+    }
+
+    case kCGEventLeftMouseDown: {
+        CGPoint point = CGEventGetLocation(event);
+        return pair(f32(point.x), f32(point.y));
+    }
+
+    case kCGEventLeftMouseDragged: {
+        CGPoint point = CGEventGetLocation(event);
+        return pair(f32(point.x), f32(point.y));
+    }
     }
 
     assert(false && "Unreachable");
@@ -259,7 +265,7 @@ static ptr_t add_event_listener(ptr_t a)
     assert(eventTap && "No eventTap");
 
     CFRunLoopSourceRef runLoopSource = CFMachPortCreateRunLoopSource(kCFAllocatorDefault,
-                                                                     eventTap, 0);
+                                       eventTap, 0);
     assert(runLoopSource && "No runLoopSource");
 
     CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, kCFRunLoopCommonModes);
@@ -270,25 +276,25 @@ static ptr_t add_event_listener(ptr_t a)
 
     printf("Entering loop");
     CFRunLoopRun();
-    
+
     return 0;
 }
 
 inline static CGEventMask convert_type(event_type_t type)
 {
-    match (type) {
+    match(type) {
         against(mouse_move_event)
-            CGEventMaskBit(kCGEventMouseMoved);
+        CGEventMaskBit(kCGEventMouseMoved);
         against(mouse_drag_event)
-            CGEventMaskBit(kCGEventLeftMouseDragged);
+        CGEventMaskBit(kCGEventLeftMouseDragged);
         against(mouse_up_event)
-            CGEventMaskBit(kCGEventLeftMouseUp);
+        CGEventMaskBit(kCGEventLeftMouseUp);
         against(mouse_down_event)
-            CGEventMaskBit(kCGEventLeftMouseDown);
+        CGEventMaskBit(kCGEventLeftMouseDown);
         against(key_up_event)
-            CGEventMaskBit(kCGEventKeyUp);
+        CGEventMaskBit(kCGEventKeyUp);
         against(key_down_event)
-            CGEventMaskBit(kCGEventKeyDown);
+        CGEventMaskBit(kCGEventKeyDown);
         no_default();
     }
 }
@@ -317,8 +323,9 @@ doremir_message_some_sender_t doremir_system_event_get_sender(doremir_list_t sou
     source->thread      = doremir_thread_create(add_event_listener, source);
 
     // Wait until run loop has been set
-    while (!doremir_atomic_get(source->loop_set))
+    while (!doremir_atomic_get(source->loop_set)) {
         doremir_thread_sleep(1);
+    }
 
     return (doremir_message_some_sender_t) source;
 }

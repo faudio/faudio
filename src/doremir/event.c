@@ -55,7 +55,7 @@ struct _doremir_event_t {
             ptr_t           dispatcher;
             ptr_t           address;
         }                   recv;
-        
+
     }                       fields;
 };
 

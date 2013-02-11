@@ -57,7 +57,7 @@ doremir_string_t doremir_system_directory_read_file(doremir_string_file_path_t p
 
 
 void doremir_system_directory_write_file(doremir_string_file_path_t path,
-                                  doremir_string_t string)
+                                         doremir_string_t string)
 {
     FILE *f = fopen(unstring(path), "w+");
     fprintf(f, "%s", unstring(string));
@@ -65,7 +65,7 @@ void doremir_system_directory_write_file(doremir_string_file_path_t path,
 }
 
 void doremir_system_directory_append_file(doremir_string_file_path_t path,
-                                   doremir_string_t string)
+                                          doremir_string_t string)
 {
     FILE *f = fopen(unstring(path), "a+");
     fprintf(f, "%s", unstring(string));

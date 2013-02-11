@@ -1110,9 +1110,9 @@ void test_graph(string_t path)
 
         doremir_print("a                            ==> %s\n", a);
         doremir_system_directory_write_file(path, doremir_graph_to_dot(
-                                         string("#include \"doc/graphs/header.dot\""),
-                                         string(""),
-                                         a));
+                                                string("#include \"doc/graphs/header.dot\""),
+                                                string(""),
+                                                a));
     }
 }
 
@@ -1209,18 +1209,22 @@ void test_system_event()
 {
     test_section("System events");
 
-    doremir_message_some_sender_t s = 
+    doremir_message_some_sender_t s =
         doremir_system_event_get_sender(
-            list(i16(mouse_down_event)));
-            
-    while(1)
-    {
+            list(
+                i16(mouse_move_event),
+                i16(mouse_down_event)
+                // i16(key_down_event),
+                // i16(key_up_event)
+
+            ));
+
+    while (1) {
         doremir_message_sync(s);
-        doremir_for_each(x, doremir_message_receive(s, i16(0)))
-        {
+        doremir_for_each(x, doremir_message_receive(s, i16(0))) {
             doremir_print("    Received: %s\n", x);
         }
-        doremir_thread_sleep(20);
+        doremir_thread_sleep(5);
     }
 }
 
@@ -1265,9 +1269,9 @@ void test_event()
 
     event_t a = delay_event(seconds(5), delay_event(seconds(5), now(string("fix"))));
     event_t b = delay_event(seconds(0),
-                    merge_event(
-                        delay_event(seconds(3),  now(string("foo"))),
-                        delay_event(seconds(12), now(string("bar"))))); // too early!
+                            merge_event(
+                                delay_event(seconds(3),  now(string("foo"))),
+                                delay_event(seconds(12), now(string("bar"))))); // too early!
 
     doremir_print("a                            ==> %s\n", a);
     doremir_print("offset(a)                    ==> %s\n", doremir_event_offset(a));
