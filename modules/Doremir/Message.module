@@ -57,6 +57,10 @@ module Doremir.Message
         send : ((Ptr,Address,Message) -> Void)*
     };
 
+    type SomeSender = opaque;
+    type SomeReceiver = opaque;
+
+
     type Dispatcher = opaque;
 
     createDispatcher : () -> Dispatcher;

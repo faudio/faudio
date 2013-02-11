@@ -1,15 +1,25 @@
 
 /**
-    @addtogroup Doremir.System.Event
+    @addtogroup DoremirSystemEvent
     
-    Mouse and keyboard events.    
+    Provides mouse and keyboard events.    
  */
 
 module Doremir.System.Event
 {
     import Doremir;
+    import Doremir.Message;
+    import Doremir.Event;
     import Doremir.String;
 
-
-
+    type EventType = enum {
+        MouseMoveEvent,
+        MouseDragEvent,
+        MouseClickEvent,
+        KeyUpEvent,
+        KeyDownEvent
+    };              
+    
+    getSender : List -> SomeSender; // [EventType] -> Dispatcher
+    getEvent : List -> Event; // [EventType] -> Event
 }

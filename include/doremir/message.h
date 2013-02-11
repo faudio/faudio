@@ -25,6 +25,8 @@ typedef struct {
                           doremir_message_address_t,
                           doremir_message_t);
         } doremir_message_receiver_t;
+typedef struct _doremir_message_some_sender_t * doremir_message_some_sender_t;
+typedef struct _doremir_message_some_receiver_t * doremir_message_some_receiver_t;
 typedef struct _doremir_message_dispatcher_t * doremir_message_dispatcher_t;
 doremir_message_dispatcher_t doremir_message_create_dispatcher();
 doremir_message_dispatcher_t doremir_message_create_lockfree_dispatcher();

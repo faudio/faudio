@@ -1,8 +1,8 @@
 
 /**
-    @addtogroup Doremir.System
+    @addtogroup DoremirSystem
     
-    Various system facilities.    
+    Provides low-level system facilities.    
  */
 
 module Doremir.System
