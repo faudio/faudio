@@ -20,7 +20,16 @@ module Doremir.System.Event
         KeyUpEvent,
         KeyDownEvent
     };              
+
     
-    getSender : List -> SomeSender; // [Int16/EventType] -> Dispatcher
-    getEvent : List -> Event; // [Int16/EventType] -> Event
+    mouseMove    : () -> Event; // (Float, Float)
+    mouseDrag    : () -> Event;
+    mouseUp      : () -> Event;
+    mouseDown    : () -> Event;
+    keyUp        : () -> Event; // [KeyCode, Char, String]
+    keyDown      : () -> Event;
+    
+    select       : List -> Event;       // [Int16/EventType]
+    selectSender : List -> SomeSender;  // [Int16/EventType]
 }
+

@@ -299,13 +299,13 @@ inline static CGEventMask convert_type(event_type_t type)
     }
 }
 
-/** Returns a sender for mouse and keyboard events.
+/** Returns a sender selected from the given sources.
 
     The returned value implements [Sender](@ref doremir_message_sender_t) and
-    [Destroy](@ref doermir_destroy_t), and should be destroyed after use.
+    [Destroy](@ref doremir_destroy_t), and should be destroyed after use.
 
  */
-doremir_message_some_sender_t doremir_system_event_get_sender(doremir_list_t sources)
+doremir_message_some_sender_t doremir_system_event_select_sender(doremir_list_t sources)
 {
     CGEventMask mask = 0;
     doremir_for_each(source, sources) {
@@ -379,12 +379,11 @@ ptr_t event_source_impl(doremir_id_t interface)
 }
 
 
-/** Returns a sender for mouse and keyboard events.
-
+/** Returns an event selected from the given sources.
  */
-doremir_event_t doremir_system_event_get_event(doremir_list_t sources)
+doremir_event_t doremir_system_event_select(doremir_list_t sources)
 {
-    doremir_message_some_sender_t source = doremir_system_event_get_sender(sources);
+    doremir_message_some_sender_t source = doremir_system_event_select_sender(sources);
     return doremir_event_receive(source, i16(0));
 }
 

@@ -23,8 +23,14 @@ typedef enum {
             key_up_event,
             key_down_event
         } doremir_system_event_type_t;
-doremir_message_some_sender_t doremir_system_event_get_sender(doremir_list_t);
-doremir_event_t doremir_system_event_get_event(doremir_list_t);
+doremir_event_t doremir_system_event_mouse_move();
+doremir_event_t doremir_system_event_mouse_drag();
+doremir_event_t doremir_system_event_mouse_up();
+doremir_event_t doremir_system_event_mouse_down();
+doremir_event_t doremir_system_event_key_up();
+doremir_event_t doremir_system_event_key_down();
+doremir_event_t doremir_system_event_select(doremir_list_t);
+doremir_message_some_sender_t doremir_system_event_select_sender(doremir_list_t);
 
 /** @}
     @}
