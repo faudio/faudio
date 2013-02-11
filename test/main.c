@@ -16,6 +16,9 @@ void test_section(char *str)
     doremir_audio_engine_log_info(string_dappend(string("Running test: "), string(str)));
 }
 
+
+// --------------------------------------------------------------------------------
+
 void test_value_references()
 {
     extern char *doremir_type_str(doremir_ptr_t a);
@@ -53,6 +56,9 @@ void test_value_references()
     assert(tf64(f64(-1.4142135623730951)) == -1.4142135623730951);
 }
 
+
+// --------------------------------------------------------------------------------
+
 void test_generic_functions()
 {
     test_section("Generic functions");
@@ -84,6 +90,9 @@ void test_generic_functions()
 }
 
 
+
+// --------------------------------------------------------------------------------
+
 static inline void memdump(void *s, size_t n)
 {
     for (size_t i = 0; i < n; ++i) {
@@ -98,8 +107,7 @@ void test_string()
     test_section("Strings");
     {
         string_t s = doremir_string_single('v');
-        doremir_print("str: %s\n", s);
-        doremir_destroy(s);
+        doremir_dprint("str: %s\n", s);
     }
 
     {
@@ -120,12 +128,9 @@ void test_string()
         string_t s = string("foo");
         string_t t = string("bar");
         string_t u = string_append(s, t);
-        doremir_print("str: %s\n", s);
-        doremir_print("str: %s\n", t);
-        doremir_print("str: %s\n", u);
-        doremir_destroy(s);
-        doremir_destroy(t);
-        doremir_destroy(u);
+        doremir_dprint("str: %s\n", s);
+        doremir_dprint("str: %s\n", t);
+        doremir_dprint("str: %s\n", u);
     }
 
     {
@@ -135,46 +140,42 @@ void test_string()
         doremir_print("str: %s\n", t);
         {
             string_t u = string_dappend(s, t);
-            doremir_print("str: %s\n", u);
-            doremir_destroy(u);
+            doremir_dprint("str: %s\n", u);
         }
     }
     {
         string_t s = string("Foo, Bar, Baz");
         string_t t = doremir_string_copy(s);
-        doremir_print("str: %s\n", s);
-        doremir_print("str: %s\n", t);
-        doremir_destroy(s);
-        doremir_destroy(t);
+        doremir_dprint("str: %s\n", s);
+        doremir_dprint("str: %s\n", t);
     }
 
     {
         string_t s = string("FooBarBaz");
         string_t t = doremir_string_join_map(apply1, doremir_string_single, s);
-        doremir_print("str: %s\n", s);
-        doremir_print("str: %s\n", t);
-        doremir_destroy(s);
-        doremir_destroy(t);
+        doremir_dprint("str: %s\n", s);
+        doremir_dprint("str: %s\n", t);
     }
 
     {
         string_t s = string("A double quote: \", A backslash: \\");
-        doremir_print("str: %s\n", s);
-        doremir_destroy(s);
+        doremir_dprint("str: %s\n", s);
     }
-
 }
+
+
+// --------------------------------------------------------------------------------
 
 void test_show()
 {
     test_section("Show");
     doremir_print("\n", NULL);
-    doremir_print("%s\n", b(0));
-    doremir_print("%s\n", i8(129));
-    doremir_print("%s\n", i16(129));
-    doremir_print("%s\n", i32(64000));
-    doremir_print("%s\n", f64(3.1415));
-    doremir_print("%s\n", empty());
+    doremir_dprint("%s\n", b(0));
+    doremir_dprint("%s\n", i8(129));
+    doremir_dprint("%s\n", i16(129));
+    doremir_dprint("%s\n", i32(64000));
+    doremir_dprint("%s\n", f64(3.1415));
+    doremir_dprint("%s\n", empty());
     doremir_dprint("%s\n", list(i8(1)));
     doremir_dprint("%s\n", list(i8(1), i8(2), list(i8(1), i8(2), b(true))));
     doremir_dprint("%s\n", list(
@@ -184,24 +185,33 @@ void test_show()
                    ));
 }
 
+
+// --------------------------------------------------------------------------------
+
 void test_compare()
 {
     test_section("Comparison");
-    doremir_print("\"abc\" <  \"abd\"               ==> %s\n", b(doremir_less_than(string("abc"), string("abd"))));
-    doremir_print("\"abc\" <= \"abd\"               ==> %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
-    doremir_print("\"abc\" >  \"abd\"               ==> %s\n", b(doremir_greater_than(string("abc"), string("abd"))));
-    doremir_print("\"abc\" >= \"abd\"               ==> %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
+    doremir_dprint("\"abc\" <  \"abd\"               ==> %s\n", b(doremir_less_than(string("abc"), string("abd"))));
+    doremir_dprint("\"abc\" <= \"abd\"               ==> %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
+    doremir_dprint("\"abc\" >  \"abd\"               ==> %s\n", b(doremir_greater_than(string("abc"), string("abd"))));
+    doremir_dprint("\"abc\" >= \"abd\"               ==> %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
 }
+
+
+// --------------------------------------------------------------------------------
 
 void test_rational()
 {
     test_section("Rational numbers");
-    doremir_print("1/3 <  1/2                   ==> %s\n", b(doremir_less_than(ratio(1, 3), ratio(1, 2))));
-    doremir_print("1/3 >  1/2                   ==> %s\n", b(doremir_greater_than(ratio(1, 3), ratio(1, 2))));
-    doremir_print("1/3 == 2/6                   ==> %s\n", b(doremir_equal(ratio(1, 3), ratio(2, 6))));
-    doremir_print("1/3 == 254/762               ==> %s\n", b(doremir_equal(ratio(1, 3), ratio(254, 762))));
-    doremir_print("1/3 <= 7/8                   ==> %s\n", b(doremir_equal(ratio(1, 3), ratio(254, 762))));
+    doremir_dprint("1/3 <  1/2                   ==> %s\n", b(doremir_less_than(ratio(1, 3), ratio(1, 2))));
+    doremir_dprint("1/3 >  1/2                   ==> %s\n", b(doremir_greater_than(ratio(1, 3), ratio(1, 2))));
+    doremir_dprint("1/3 == 2/6                   ==> %s\n", b(doremir_equal(ratio(1, 3), ratio(2, 6))));
+    doremir_dprint("1/3 == 254/762               ==> %s\n", b(doremir_equal(ratio(1, 3), ratio(254, 762))));
+    doremir_dprint("1/3 <= 7/8                   ==> %s\n", b(doremir_equal(ratio(1, 3), ratio(254, 762))));
 }
+
+
+// --------------------------------------------------------------------------------
 
 void test_buffer()
 {
@@ -223,8 +233,8 @@ void test_buffer()
         }
 
         doremir_print("b                            ==> %s\n", b);
-
         doremir_print("size(b)                      ==> %s\n", i32(doremir_buffer_size(b)));
+        doremir_destroy(b);
     }
 
     {
@@ -243,10 +253,13 @@ void test_buffer()
         }
 
         doremir_print("b                            ==> %s\n", b);
-
         doremir_print("size(b)                      ==> %s\n", i32(doremir_buffer_size(b)));
+        doremir_destroy(b);
     }
 }
+
+
+// --------------------------------------------------------------------------------
 
 void test_time()
 {
@@ -254,13 +267,20 @@ void test_time()
 
     doremir_time_t t = doremir_time_create(1, 0, 0, ratio(25, 8));
     doremir_time_t u = doremir_time_create(0, 1, 1, ratio(58, 1));
+
     doremir_print("t                            ==> %s\n", t);
     doremir_print("u                            ==> %s\n", u);
     doremir_print("t + u                        ==> %s\n", doremir_add(t, u));
 
     doremir_print("doremir_time_to_iso(t)       ==> %s\n", doremir_time_to_iso(t));
     doremir_print("doremir_time_to_iso(u)       ==> %s\n", doremir_time_to_iso(u));
+
+    doremir_destroy(t);
+    doremir_destroy(u);
 }
+
+
+// --------------------------------------------------------------------------------
 
 void test_midi()
 {
@@ -268,7 +288,7 @@ void test_midi()
 
     {
         doremir_midi_t m = doremir_midi_create_simple(0xa, 60, 127);
-        doremir_print("m                            ==> %s\n", m);
+        doremir_dprint("m                            ==> %s\n", m);
     }
 
     {
@@ -279,41 +299,43 @@ void test_midi()
         }
 
         doremir_midi_t m = doremir_midi_create_sysex(b);
-        doremir_print("m                            ==> %s\n", m);
+        doremir_dprint("m                            ==> %s\n", m);
     }
 }
 
+
+// --------------------------------------------------------------------------------
+
 void test_type()
 {
-    // FIXME
     test_section("Types");
 
-    doremir_print("type(i8)                  ==> %s\n", type(i8));
-    doremir_print("size_of(1024,type(i8))    ==> %s\n", i32(doremir_type_size_of(1024, type(i8))));
-    doremir_print("align_of(1024,type(i8))   ==> %s\n", i32(doremir_type_align_of(type(i8))));
+    doremir_dprint("type(i8)                  ==> %s\n", type(i8));
+    doremir_dprint("size_of(1024,type(i8))    ==> %s\n", i32(doremir_type_size_of(1024, type(i8))));
+    doremir_dprint("align_of(1024,type(i8))   ==> %s\n", i32(doremir_type_align_of(type(i8))));
     printf("\n");
 
-    doremir_print("type(f64)                 ==> %s\n", type(f64));
-    doremir_print("size_of(1024,type(f64))   ==> %s\n", i32(doremir_type_size_of(1024, type(f64))));
-    doremir_print("align_of(1024,type(f64))  ==> %s\n", i32(doremir_type_align_of(type(f64))));
+    doremir_dprint("type(f64)                 ==> %s\n", type(f64));
+    doremir_dprint("size_of(1024,type(f64))   ==> %s\n", i32(doremir_type_size_of(1024, type(f64))));
+    doremir_dprint("align_of(1024,type(f64))  ==> %s\n", i32(doremir_type_align_of(type(f64))));
     printf("\n");
 
     type_t t = type_pair(type(i8), type(f64));
-    doremir_print("t                            ==> %s\n", t);
-    doremir_print("size_of(1024,t)              ==> %s\n", i32(doremir_type_size_of(1024, t)));
-    doremir_print("align_of(1024,t)             ==> %s\n", i32(doremir_type_align_of(t)));
+    doremir_dprint("t                            ==> %s\n", t);
+    doremir_dprint("size_of(1024,t)              ==> %s\n", i32(doremir_type_size_of(1024, t)));
+    doremir_dprint("align_of(1024,t)             ==> %s\n", i32(doremir_type_align_of(t)));
     printf("\n");
 
     type_t u = type_pair(type_vector(type(i8), 10), type(f64));
-    doremir_print("u                            ==> %s\n", u);
-    doremir_print("size_of(1024,u)              ==> %s\n", i32(doremir_type_size_of(1024, u)));
-    doremir_print("align_of(1024,u)             ==> %s\n", i32(doremir_type_align_of(u)));
+    doremir_dprint("u                            ==> %s\n", u);
+    doremir_dprint("size_of(1024,u)              ==> %s\n", i32(doremir_type_size_of(1024, u)));
+    doremir_dprint("align_of(1024,u)             ==> %s\n", i32(doremir_type_align_of(u)));
     printf("\n");
 
     type_t u2 = type_pair(type_frame(type(i8)), type(f64));
-    doremir_print("u2                           ==> %s\n", u2);
-    doremir_print("size_of(1024,u2)             ==> %s\n", i32(doremir_type_size_of(1024, u2)));
-    doremir_print("align_of(1024,u2)            ==> %s\n", i32(doremir_type_align_of(u2)));
+    doremir_dprint("u2                           ==> %s\n", u2);
+    doremir_dprint("size_of(1024,u2)             ==> %s\n", i32(doremir_type_size_of(1024, u2)));
+    doremir_dprint("align_of(1024,u2)            ==> %s\n", i32(doremir_type_align_of(u2)));
     printf("\n");
 
     type_t v = type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
@@ -322,10 +344,15 @@ void test_type()
                                                                type(i8))))))))));
 
     doremir_print("v                            ==> %s\n", v);
-    doremir_print("size_of(1024,v)              ==> %s\n", i32(doremir_type_size_of(1024, v)));
-    doremir_print("align_of(1024,v)             ==> %s\n", i32(doremir_type_align_of(v)));
+    doremir_dprint("size_of(1024,v)              ==> %s\n", i32(doremir_type_size_of(1024, v)));
+    doremir_dprint("align_of(1024,v)             ==> %s\n", i32(doremir_type_align_of(v)));
+    doremir_destroy(v);
     printf("\n");
 }
+
+
+
+// --------------------------------------------------------------------------------
 
 #pragma mark -
 
@@ -333,6 +360,7 @@ ptr_t add10(ptr_t x, ptr_t _)
 {
     return (ptr_t)((int) x + 10);
 }
+
 void test_atomic()
 {
     test_section("Atomic");
@@ -359,10 +387,14 @@ void test_atomic()
     }
 }
 
+
+// --------------------------------------------------------------------------------
+
 struct reader_args {
     doremir_atomic_queue_t queue;
     atomic_t active;
 };
+
 doremir_ptr_t queue_reader(doremir_ptr_t x)
 {
     struct reader_args *args = x;
@@ -382,6 +414,7 @@ doremir_ptr_t queue_reader(doremir_ptr_t x)
         doremir_thread_sleep(random() % 100);
     }
 }
+
 void test_atomic_queue(int iter, long sleepTime)
 {
     test_section("Atomic queues");
@@ -408,10 +441,14 @@ void test_atomic_queue(int iter, long sleepTime)
     }
 }
 
+
+// --------------------------------------------------------------------------------
+
 struct stack_reader_args {
     doremir_atomic_stack_t stack;
     atomic_t active;
 };
+
 doremir_ptr_t stack_reader(doremir_ptr_t x)
 {
     struct stack_reader_args *args = x;
@@ -432,6 +469,7 @@ doremir_ptr_t stack_reader(doremir_ptr_t x)
         doremir_thread_sleep(random() % 100);
     }
 }
+
 void test_atomic_stack(int iter, long sleepTime)
 {
     test_section("Atomic stacks");
@@ -461,10 +499,16 @@ void test_atomic_stack(int iter, long sleepTime)
     }
 }
 
+
+// --------------------------------------------------------------------------------
+
 void test_atomic_ring_buffer(int inter, long sleepTime)
 {
     test_section("Ring buffer");
 }
+
+
+// --------------------------------------------------------------------------------
 
 ptr_t printer(ptr_t data)
 {
@@ -478,6 +522,7 @@ ptr_t printer(ptr_t data)
 
     return 0;
 }
+
 void test_thread()
 {
     test_section("Threads");
@@ -492,10 +537,13 @@ void test_thread()
 }
 
 
+// --------------------------------------------------------------------------------
+
 typedef struct {
     doremir_thread_mutex_t mut;
     int val;
 } lock_index;
+
 ptr_t locker(ptr_t x)
 {
     lock_index *i = (lock_index *) x;
@@ -508,6 +556,7 @@ ptr_t locker(ptr_t x)
 
     return 0;
 }
+
 void test_mutex()
 {
     test_section("Mutexes");
@@ -581,6 +630,9 @@ void test_mutex()
 
 
 
+
+// --------------------------------------------------------------------------------
+
 #pragma mark -
 
 void test_for_each()
@@ -626,19 +678,23 @@ void test_for_each()
 
 
 
+// --------------------------------------------------------------------------------
 
 bool is_even16(ptr_t data, ptr_t p)
 {
     return ti16(p) % 2 == 0;
 }
+
 bool is_odd16(ptr_t data, ptr_t p)
 {
     return ti16(p) % 2 != 0;
 }
+
 ptr_t times2(ptr_t data, ptr_t p)
 {
     return i16(2 * ti16(p));
 }
+
 ptr_t times10(ptr_t data, ptr_t p)
 {
     return i16(10 * ti16(p));
@@ -976,6 +1032,9 @@ void test_list()
     }
 }
 
+
+// --------------------------------------------------------------------------------
+
 void test_set()
 {
     test_section("Set");
@@ -1057,6 +1116,9 @@ void test_set()
     }
 }
 
+
+// --------------------------------------------------------------------------------
+
 void test_map()
 {
     test_section("Map");
@@ -1092,6 +1154,9 @@ void test_map()
     }
 }
 
+
+// --------------------------------------------------------------------------------
+
 void test_graph(string_t path)
 {
     test_section("Graph");
@@ -1116,6 +1181,9 @@ void test_graph(string_t path)
     }
 }
 
+
+// --------------------------------------------------------------------------------
+
 void test_priority_queue(int iter)
 {
     test_section("Priority queue");
@@ -1133,6 +1201,9 @@ void test_priority_queue(int iter)
 
 }
 
+
+// --------------------------------------------------------------------------------
+
 void test_json(string_t path)
 {
     extern void doremir_puts(doremir_string_t string);
@@ -1149,26 +1220,24 @@ void test_json(string_t path)
     doremir_puts(json2);
 
     doremir_puts(doremir_string_to_json(
-                     pair(i32(1), i32(2)))
-                );
+                     pair(i32(1), i32(2))));
 
     doremir_puts(doremir_string_to_json(
-                     list(pair(i32(1), i32(2))   , pair(i32(3), i32(4)))
-                 ));
+                     list(pair(i32(1), i32(2)), pair(i32(3), i32(4)))));
 
     doremir_puts(doremir_string_to_json(
-                     set(pair(i32(1), i32(2))   , pair(i32(1), i32(2)))
-                 ));
+                     set(pair(i32(1), i32(2)), pair(i32(1), i32(2)))));
 
     doremir_puts(doremir_string_to_json(
                      map(
                          string("foo"), i32(1),
-                         string("bar"), list(i32(1), i32(2), i32(3))
-                     )
-                 ));
+                         string("bar"), list(i32(1), i32(2), i32(3)))));
 
 }
 
+
+
+// --------------------------------------------------------------------------------
 
 #pragma mark -
 
@@ -1205,6 +1274,9 @@ void test_dispatcher()
     doremir_destroy(disp);
 }
 
+
+// --------------------------------------------------------------------------------
+
 void test_system_event()
 {
     test_section("System events");
@@ -1229,7 +1301,7 @@ void test_system_event()
 }
 
 
-
+// --------------------------------------------------------------------------------
 
 // execute events at t
 // return next occurence
@@ -1310,17 +1382,22 @@ void test_event()
     }
 }
 
+
+// --------------------------------------------------------------------------------
+
 void test_scheduler()
 {
     test_section("Scheduler");
 }
 
 
+// --------------------------------------------------------------------------------
 
 ptr_t add1234(ptr_t c, ptr_t x)
 {
     return i8(ti8(x) + 1234);
 }
+
 void test_processor_graphs(string_t path)
 {
     test_section("Processors");
@@ -1405,6 +1482,9 @@ void test_processor_graphs(string_t path)
 
 }
 
+
+// --------------------------------------------------------------------------------
+
 ptr_t cont(ptr_t x)
 {
     printf("Continuing...\n");
@@ -1445,6 +1525,9 @@ void test_plot()
     doremir_plot_functions(f1, NULL, NULL, NULL);
 }
 
+
+// --------------------------------------------------------------------------------
+
 void test_plot_buffer()
 {
     buffer_t buf = doremir_buffer_create(44100 * sizeof(double));
@@ -1457,6 +1540,9 @@ void test_plot_buffer()
 
     doremir_plot_buffer_double(buf, NULL, NULL);
 }
+
+
+// --------------------------------------------------------------------------------
 
 void test_plot_file(string_t path)
 {
@@ -1477,10 +1563,16 @@ void test_plot_file(string_t path)
     doremir_destroy(res);
 }
 
+
+// --------------------------------------------------------------------------------
+
 void test_error()
 {
 
 }
+
+
+// --------------------------------------------------------------------------------
 
 void test_log()
 {
@@ -1505,6 +1597,9 @@ void test_log()
     doremir_audio_engine_log_info(string("---------------"));
 }
 
+
+// --------------------------------------------------------------------------------
+
 void test_system_directory()
 {
     test_section("Directory");
@@ -1514,12 +1609,15 @@ void test_system_directory()
 }
 
 
-extern void test_vm(); // in vm.c
-void test_vm2()
-{
-    test_section("Virtual machine");
-    test_vm();
-}
+// extern void test_vm(); // in vm.c
+// void test_vm2()
+// {
+//     test_section("Virtual machine");
+//     test_vm();
+// }
+
+
+// --------------------------------------------------------------------------------
 
 void test_file_stream(string_t in_path, string_t out_path)
 {
@@ -1563,10 +1661,16 @@ cleanup:
     doremir_device_file_close(output);
 }
 
+
+// --------------------------------------------------------------------------------
+
 void test_buffer_stream()
 {
     test_section("Buffer streams");
 }
+
+
+// --------------------------------------------------------------------------------
 
 void print_audio_devices(audio_session_t session)
 {
@@ -1581,11 +1685,16 @@ void print_audio_devices(audio_session_t session)
     doremir_print("    Default output is : %s\n", doremir_device_audio_default_output(session));
     doremir_print("\n", NULL);
 }
+
+
+// --------------------------------------------------------------------------------
+
 ptr_t status_changed(ptr_t ct)
 {
     printf("Status changed: %s!\n", unstring(ct));
     return 0;
 }
+
 void test_audio_stream()
 {
     test_section("Audio streams");
@@ -1636,6 +1745,9 @@ cleanup:
 }
 
 
+
+// --------------------------------------------------------------------------------
+
 void print_midi_devices(midi_session_t session)
 {
     doremir_print("\n", NULL);
@@ -1649,6 +1761,7 @@ void print_midi_devices(midi_session_t session)
     doremir_print("    Default output is : %s\n", doremir_device_midi_default_output(session));
     doremir_print("\n", NULL);
 }
+
 void test_midi_stream()
 {
     test_section("Midi streams");
@@ -1712,8 +1825,12 @@ cleanup:
 }
 
 
+// --------------------------------------------------------------------------------
+
 static const int  iterations_k = 1;
 static const bool stop_k       = false;
+
+// --------------------------------------------------------------------------------
 
 int main(int argc, char const *argv[])
 {
@@ -1734,7 +1851,7 @@ int main(int argc, char const *argv[])
         doremir_audio_engine_set_log_std();
         doremir_plot_use_gnu();
         // doremir_audio_engine_set_log_file(string("/Users/hans/Library/Logs/DoReMIRAudio.log"));
-        doremir_plot_use_core();
+        // doremir_plot_use_core();
 
         doremir_audio_engine_initialize();
 
@@ -1780,8 +1897,6 @@ int main(int argc, char const *argv[])
 
         test_processor_graphs(string_dappend(doremir_system_directory_current(), string("/test/proc.dot")));
 
-        // test_hid(); // TEMPORARY
-        // goto end;
         test_dispatcher();
         test_system_event();
         // test_event();
@@ -1795,7 +1910,7 @@ int main(int argc, char const *argv[])
         // test_audio_stream();
         // test_midi_stream();
 
-end:
+// end:
         doremir_audio_engine_terminate();
     }
 

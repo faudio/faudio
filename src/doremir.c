@@ -636,7 +636,7 @@ struct doremir_impl_disp {
 
 doremir_ptr_t doremir_interface(doremir_id_t type, doremir_ptr_t pointer)
 {
-    assert(pointer && "Pointers have no interfaces");
+    assert(pointer && "The null pointer have no interfaces");
 
     switch (doremir_type(pointer)) {
     case 7:
