@@ -18,21 +18,21 @@ struct _doremir_time_t {
 // --------------------------------------------------------------------------------
 
 doremir_time_t doremir_time_time(doremir_time_clock_t clock)
-{                           
-    return ((doremir_time_clock_interface_t*) 
-        doremir_interface(doremir_time_clock_interface_i, clock))->time(clock);
+{
+    return ((doremir_time_clock_interface_t *)
+            doremir_interface(doremir_time_clock_interface_i, clock))->time(clock);
 }
 
 double doremir_time_tick_rate(doremir_time_clock_t clock)
 {
-    return ((doremir_time_clock_interface_t*) 
-        doremir_interface(doremir_time_clock_interface_i, clock))->tick_rate(clock);
+    return ((doremir_time_clock_interface_t *)
+            doremir_interface(doremir_time_clock_interface_i, clock))->tick_rate(clock);
 }
 
 int64_t doremir_time_ticks(doremir_time_clock_t clock)
 {
-    return ((doremir_time_clock_interface_t*) 
-        doremir_interface(doremir_time_clock_interface_i, clock))->ticks(clock);
+    return ((doremir_time_clock_interface_t *)
+            doremir_interface(doremir_time_clock_interface_i, clock))->ticks(clock);
 }
 
 

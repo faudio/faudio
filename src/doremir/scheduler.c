@@ -9,7 +9,7 @@
 #include <doremir/priority_queue.h>
 #include <doremir/util.h>
 
-/*  
+/*
     Notes:
  */
 
@@ -30,7 +30,7 @@ inline static scheduler_t new_scheduler(ptr_t clock)
     ptr_t scheduler_impl(doremir_id_t interface);
 
     scheduler_t scheduler = doremir_new(scheduler);
-    scheduler->impl     = &scheduler_impl;             
+    scheduler->impl     = &scheduler_impl;
     scheduler->clock    = clock;
     scheduler->queue    = priority_queue();
     return scheduler;
@@ -78,7 +78,7 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
     while ((event = doremir_priority_queue_peek(scheduler->queue))) {
 
         doremir_audio_engine_log_info(
-            string_dappend(string("Peek at "), 
+            string_dappend(string("Peek at "),
                            doremir_string_show(now)));
 
         if (!doremir_event_has_value(now, event)) {
@@ -86,7 +86,7 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
 
         } else {
             doremir_priority_queue_pop(scheduler->queue);
-            
+
             ptr_t   head_event = doremir_event_value(event);
             event_t tail_event = doremir_event_tail(event);
 
