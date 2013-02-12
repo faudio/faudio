@@ -21,3 +21,7 @@ Functional structures (lists, events, processors) have param order
         cons : (V,L) -> L
         
 Interfaces usually dispatch on their first argument
+
+
+Interfaces with existential wrappers have the Interface suffix
+I.e. Processor vs ProcessorInterface.
