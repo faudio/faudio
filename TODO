@@ -2,6 +2,26 @@
 ==========
 Additions
 
+* Clock implementations:
+    * Audio (ok)
+    * Porttime?
+    * System (using cpu time, or system time?)
+    * OS specific solution?
+
+* Possibility to replace interface implementations
+    * For example a type could have a set of callbacks attached after
+      impl pointer and let the dispatch function return those pointers.
+      By default set to default implementations: then add special copy
+      function such as:
+            orderedBy : (Binary,Ptr) -> Ptr;
+
+      In Haskell, you say
+        sortBy (comparing name) dict
+      Here it would be
+        sort (orderedBy $ \x y -> name x < name y) 
+        dict
+
+
 * Event/Scheduler impl
 
 * Buffer streams
@@ -12,9 +32,8 @@ Additions
     * QuickTime
     * VST2
 
-* Memory profiling (leaks related to graphs, messages etc)
-
 ----------
+
 
 * Buffer views?
     * Group buffer with audio type
@@ -22,6 +41,8 @@ Additions
 
 * Ringbuffer/better FIFO (multi-RW, see paper)
 * Better map/set backend (PersistentVector/IntMap or PatriciaTree)
+
+* Memory profiling (leaks related to graphs, messages etc)
 
 * Device detection
     * Windows          
@@ -35,8 +56,6 @@ Additions
     * See PortAudio tracker
          https://www.assembla.com/spaces/portaudio/tickets/11-add-callback-api-for-detecting-connection-removal-of-devices#/activity/ticket:
 
-        
-
 * Vector/SIMD support
     * Probably use GCC intrincics (implemented in clang too)
     * Check alignment w.r.t. doremir_type_t.
@@ -47,7 +66,6 @@ Additions
 ==========
 Issues
 
-* Do not download ICU och Gtest
 * Add CorePlot in script
 
 * Type-safe range(m..n) literal

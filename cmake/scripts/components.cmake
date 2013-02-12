@@ -11,7 +11,6 @@ add_standard_component(COMPONENTS Portaudio
   ${AUDIO_ENGINE_SYSTEM_NAME}
   )
 
-
 predicate_file_exists(portmidi_exists
   "external/portmidi/result/include/portmidi.h"
   )
@@ -19,7 +18,6 @@ add_standard_component(COMPONENTS Portmidi
   portmidi_exists
   ${AUDIO_ENGINE_SYSTEM_NAME}
   )
-
 
 predicate_file_exists(sndfile_exists
   "external/sndfile/result/include/sndfile.h"
@@ -37,18 +35,18 @@ add_standard_component(COMPONENTS Fluidsynth
   ${AUDIO_ENGINE_SYSTEM_NAME}
   )
 
-predicate_file_exists(gtest_exists
-  "external/gtest/result/include/gtest/gtest.h"
-  )
-add_standard_component(COMPONENTS Gtest
-  gtest_exists
-  ${AUDIO_ENGINE_SYSTEM_NAME}
-  )
-
-predicate_file_exists(icu_exists
-  "external/icu2/result/include/unicode/uchar.h"
-  )
-add_standard_component(COMPONENTS ICU
-  icu_exists
-  ${AUDIO_ENGINE_SYSTEM_NAME}
-  )
+# predicate_file_exists(gtest_exists
+#   "external/gtest/result/include/gtest/gtest.h"
+#   )
+# add_standard_component(COMPONENTS Gtest
+#   gtest_exists
+#   ${AUDIO_ENGINE_SYSTEM_NAME}
+#   )
+# 
+# predicate_file_exists(icu_exists
+#   "external/icu2/result/include/unicode/uchar.h"
+#   )
+# add_standard_component(COMPONENTS ICU
+#   icu_exists
+#   ${AUDIO_ENGINE_SYSTEM_NAME}
+#   )
