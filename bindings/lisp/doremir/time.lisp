@@ -39,4 +39,4 @@
 (defcfun (time-tick-rate "doremir_time_tick_rate") :double (a time-clock))
 (defcfun (time-ticks "doremir_time_ticks") :int64 (a time-clock))
 (defcfun (time-get-system-clock "doremir_time_get_system_clock") time-clock)
-(defcfun (time-get-c-p-u-clock "doremir_time_get_c_p_u_clock") time-clock)
+(defcfun (time-get-cpu-clock "doremir_time_get_cpu_clock") time-clock)
