@@ -100,7 +100,7 @@ void doremir_thread_detach(doremir_thread_t thread)
 
 // --------------------------------------------------------------------------------
 
-/** Create a mutex object.
+/** Create a mutex.
 
     Mutexes have single-ownership semantics and must be finalized by passing it
     to a destroy function.
@@ -119,7 +119,7 @@ doremir_thread_mutex_t doremir_thread_create_mutex()
     return mutex;
 }
 
-/** Destroy a mutex object.
+/** Destroy a mutex.
  */
 void doremir_thread_destroy_mutex(doremir_thread_mutex_t mutex)
 {
@@ -131,7 +131,7 @@ void doremir_thread_destroy_mutex(doremir_thread_mutex_t mutex)
     }
 }
 
-/** Acquire the lock of a mutex object.
+/** Acquire the lock of a mutex.
  */
 bool doremir_thread_lock(doremir_thread_mutex_t mutex)
 {
@@ -140,7 +140,7 @@ bool doremir_thread_lock(doremir_thread_mutex_t mutex)
     return result == WAIT_OBJECT_0;
 }
 
-/** Try acquiring the lock of a mutex object.
+/** Try acquiring the lock of a mutex.
  */
 bool doremir_thread_try_lock(doremir_thread_mutex_t mutex)
 {
@@ -149,7 +149,7 @@ bool doremir_thread_try_lock(doremir_thread_mutex_t mutex)
     return result == WAIT_OBJECT_0;
 }
 
-/** Release the lock of a mutex object.
+/** Release the lock of a mutex.
  */
 bool doremir_thread_unlock(doremir_thread_mutex_t mutex)
 {

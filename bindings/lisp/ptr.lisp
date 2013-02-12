@@ -77,11 +77,11 @@
 ; Utility
 
 (defun to-pointer (x)
-  "Convert an object to a pointer"
+  "Convert a value to a pointer"
   (convert-to-foreign x (type-of x)))
 
 (defun from-pointer (type x)
-  "Convert a pointer to an object"
+  "Convert a pointer to a value"
   (convert-from-foreign x type))
 
 

@@ -140,7 +140,7 @@ doremir_thread_t doremir_thread_current()
 
 // --------------------------------------------------------------------------------
 
-/** Create a mutex object.
+/** Create a mutex.
 
     Mutexes have single-ownership semantics and must be finalized by passing it
     to a destructive function.
@@ -159,7 +159,7 @@ doremir_thread_mutex_t doremir_thread_create_mutex()
     return mutex;
 }
 
-/** Destroy a mutex object.
+/** Destroy a mutex.
  */
 void doremir_thread_destroy_mutex(doremir_thread_mutex_t mutex)
 {
@@ -171,7 +171,7 @@ void doremir_thread_destroy_mutex(doremir_thread_mutex_t mutex)
     }
 }
 
-/** Acquire the lock of a mutex object.
+/** Acquire the lock of a mutex.
  */
 bool doremir_thread_lock(doremir_thread_mutex_t mutex)
 {
@@ -185,7 +185,7 @@ bool doremir_thread_lock(doremir_thread_mutex_t mutex)
     }
 }
 
-/** Try acquiring the lock of a mutex object.
+/** Try acquiring the lock of a mutex.
  */
 bool doremir_thread_try_lock(doremir_thread_mutex_t mutex)
 {
@@ -204,7 +204,7 @@ bool doremir_thread_try_lock(doremir_thread_mutex_t mutex)
     }
 }
 
-/** Release the lock of a mutex object.
+/** Release the lock of a mutex.
  */
 bool doremir_thread_unlock(doremir_thread_mutex_t mutex)
 {
@@ -221,7 +221,7 @@ bool doremir_thread_unlock(doremir_thread_mutex_t mutex)
 
 // --------------------------------------------------------------------------------
 
-// /** Create a condition object.
+// /** Create a condition.
 //
 //     Conditions have single-ownership semantics and must be finalized by passing it
 //     to a destructive function.
@@ -240,7 +240,7 @@ bool doremir_thread_unlock(doremir_thread_mutex_t mutex)
 //     return cond;
 // }
 //
-// /** Destroy a condition object.
+// /** Destroy a condition.
 //  */
 // void doremir_thread_destroy_condition(doremir_thread_condition_t cond)
 // {
