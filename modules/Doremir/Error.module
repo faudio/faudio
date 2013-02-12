@@ -15,14 +15,33 @@
     };
 
     /** @interface doremir_error_interface_t
+        
         Error interface.
+
+        Generally there is no need to implement this interface directly, the
+        @ref doremir_error_create_simple function returns an implementation
+        suitable for most purposes.        
     */
     type Interface  = struct {
         severity : (Ptr -> Severity)*,
         message : (Ptr -> String)*,
         origin : (Ptr -> String)*
     };    
+
+    /** @typedef doremir_error_t
+
+        A type implementing the error interface.
+
+        If you cast a value to this type, you must assure that it implements
+        @ref doremir_error_interface_t, conversely if you cast a value from
+        this type you can assume that it implements @ref doremir_error_t.
+     */
     type Error = opaque;
+
+    /** @typedef doremir_error_callback_t
+        
+        An error handler routine.
+     */
     type Callback = ((Ptr,Error) -> Void)*;
     
     createSimple : (Severity, String, String) -> Error;

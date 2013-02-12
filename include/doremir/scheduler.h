@@ -12,7 +12,6 @@
     @{
     */
 
-typedef doremir_nullary_t doremir_scheduler_action_t;
 typedef struct _doremir_scheduler_t * doremir_scheduler_t;
 doremir_scheduler_t doremir_scheduler_create(doremir_ptr_t);
 void doremir_scheduler_destroy(doremir_scheduler_t);

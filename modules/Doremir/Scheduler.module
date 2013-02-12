@@ -16,9 +16,7 @@ module Doremir.Scheduler
     import Doremir.Time;
     import Doremir.Event;
 
-    type Action = Nullary;
     type Scheduler = opaque;
-    
 
     create  : (Ptr) -> Scheduler; // Requires Clock
     destroy : Scheduler -> Void;

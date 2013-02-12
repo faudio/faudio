@@ -3,6 +3,11 @@
     @addtogroup DoremirSystemEvent
     
     Provides mouse and keyboard events.    
+    
+    @note
+        On OS X we can not get keyboard events unless 'Access for assistive devices' 
+        is enabled in System Preferences. Mouse events should work either way.
+
  */
 
 module Doremir.System.Event

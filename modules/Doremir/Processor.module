@@ -44,15 +44,21 @@ module Doremir.Processor
         bufSeq    : Int  // merge these?
     };
 
-    // infoDefault : Info* -> Void;
-
     /** @typedef doremir_processor_samples_t
-        The samples manipulated by a processor (a vector of pointers to buffers).
+        
+        The samples manipulated by a processor.
+        TODO a vector of raw buffer pointers.
      */
     type Samples = Ptr*;
 
     /** @interface doremir_processor_interface_t
-        Processing interface. */
+        
+        Processing interface.
+        
+        Generally there is no need to implement this directly, the primitive
+        wrappers or combinator functions in @ref DoremirProcessor can be used to 
+        create instances.                                             
+      */
     type Interface = struct {
         before  : ((Ptr, Info*) -> Void)*,
         process : ((Ptr, Info*, Samples) -> Void)*,
@@ -66,7 +72,12 @@ module Doremir.Processor
     };
 
     /** @typedef doremir_processor_t
-        A processor of unknown type.
+
+        A type implementing the processor interface.
+
+        If you cast a value to this type, you must assure that it implements
+        @ref doremir_processor_interface_t, conversely if you cast a value from
+        this type you can assume that it implements @ref doremir_processor_t.
      */
     type Processor = opaque;
 

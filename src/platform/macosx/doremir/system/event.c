@@ -18,7 +18,7 @@
 
 #include <ApplicationServices/ApplicationServices.h>
 
-/**
+/*
     Notes:
         - Using the CoreGraphics Event API
         - Might also use IOKit

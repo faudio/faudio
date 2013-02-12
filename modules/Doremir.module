@@ -53,7 +53,7 @@ module Doremir
     type Ternary  = ((Ptr, Ptr, Ptr, Ptr) -> Ptr)*;
 
     /** @typedef doremir_pred_t
-        Generic predicate.
+        A predicate function.
 
         By convention, the first argument is a pointer to an environment that allow
         clients to close over variables in the environment.
