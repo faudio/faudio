@@ -184,30 +184,30 @@ void doremir_message_send(ptr_t         receiver,
                           address_t     address,
                           message_t     message)
 {
-    assert(doremir_interface(doremir_message_receiver_i, receiver)
+    assert(doremir_interface(doremir_message_receiver_interface_i, receiver)
            && "Must implement Receiver");
 
-    ((doremir_message_receiver_t *)
-     doremir_interface(doremir_message_receiver_i, receiver))
+    ((doremir_message_receiver_interface_t *)
+     doremir_interface(doremir_message_receiver_interface_i, receiver))
     ->send(receiver, address, message);
 }
 void doremir_message_sync(ptr_t sender)
 {
-    assert(doremir_interface(doremir_message_sender_i, sender)
+    assert(doremir_interface(doremir_message_sender_interface_i, sender)
            && "Must implement Sender");
 
-    ((doremir_message_sender_t *)
-     doremir_interface(doremir_message_sender_i, sender))
+    ((doremir_message_sender_interface_t *)
+     doremir_interface(doremir_message_sender_interface_i, sender))
     ->sync(sender);
 }
 doremir_list_t doremir_message_receive(ptr_t        sender,
                                        address_t    address)
 {
-    assert(doremir_interface(doremir_message_sender_i, sender)
+    assert(doremir_interface(doremir_message_sender_interface_i, sender)
            && "Must implement Sender");
 
-    return ((doremir_message_sender_t *)
-            doremir_interface(doremir_message_sender_i, sender))->receive(sender, address);
+    return ((doremir_message_sender_interface_t *)
+            doremir_interface(doremir_message_sender_interface_i, sender))->receive(sender, address);
 }
 
 
@@ -251,9 +251,9 @@ ptr_t dispatcher_impl(doremir_id_t interface)
         = { dispatcher_show };
     static doremir_destroy_t dispatcher_destroy_impl
         = { dispatcher_destroy };
-    static doremir_message_receiver_t dispatcher_message_receiver_impl
+    static doremir_message_receiver_interface_t dispatcher_message_receiver_interface_impl
         = { dispatcher_send };
-    static doremir_message_sender_t dispatcher_message_sender_impl
+    static doremir_message_sender_interface_t dispatcher_message_sender_interface_impl
         = { dispatcher_sync, dispatcher_receive };
 
     switch (interface) {
@@ -263,11 +263,11 @@ ptr_t dispatcher_impl(doremir_id_t interface)
     case doremir_destroy_i:
         return &dispatcher_destroy_impl;
 
-    case doremir_message_sender_i:
-        return &dispatcher_message_sender_impl;
+    case doremir_message_sender_interface_i:
+        return &dispatcher_message_sender_interface_impl;
 
-    case doremir_message_receiver_i:
-        return &dispatcher_message_receiver_impl;
+    case doremir_message_receiver_interface_i:
+        return &dispatcher_message_receiver_interface_impl;
 
     default:
         return NULL;

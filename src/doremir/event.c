@@ -183,7 +183,7 @@ doremir_event_t doremir_event_switch(doremir_event_t pred,
     @param address  Address to receive on.
     @return         An event occuring whenever a message has been received.
  */
-doremir_event_t doremir_event_receive(doremir_ptr_t             sender,
+doremir_event_t doremir_event_receive(doremir_message_sender_t  sender,
                                       doremir_message_address_t address)
 {
     assert(false && "Not implemented");
@@ -198,9 +198,9 @@ doremir_event_t doremir_event_receive(doremir_ptr_t             sender,
     @param event    Event from which to obtain values.
     @return         An event occuring whenever a message is being sent.
  */
-doremir_event_t doremir_event_send(doremir_ptr_t             receiver,
-                                   doremir_message_address_t address,
-                                   doremir_event_t           event)
+doremir_event_t doremir_event_send(doremir_message_receiver_t   receiver,
+                                   doremir_message_address_t    address,
+                                   doremir_event_t              event)
 {
     assert(false && "Not implemented");
 }

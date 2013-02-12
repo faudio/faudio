@@ -7,4 +7,4 @@
 (defcfun (system-event-key-up "doremir_system_event_key_up") event)
 (defcfun (system-event-key-down "doremir_system_event_key_down") event)
 (defcfun (system-event-select "doremir_system_event_select") event (a list))
-(defcfun (system-event-select-sender "doremir_system_event_select_sender") message-some-sender (a list))
+(defcfun (system-event-select-sender "doremir_system_event_select_sender") message-sender (a list))

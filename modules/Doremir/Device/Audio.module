@@ -29,8 +29,8 @@
     Stream implements [Clock](@ref doremir_time_clock_t) by counting the number
     of processed samples. Precision is usually limited to the current frame size.
     
-    Stream also implements [Sender](@ref doremir_message_sender_t) and 
-    [Receiver](@ref doremir_message_sender_t), dispatching messages to the underlying
+    Stream also implements [SenderInterface](@ref doremir_message_sender_t) and 
+    [ReceiverInterface](@ref doremir_message_sender_t), dispatching messages to the underlying
     processor network. The address of a processor can be obtained by @ref doremir_processor_address.
     
     

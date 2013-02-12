@@ -763,9 +763,9 @@ ptr_t audio_stream_impl(doremir_id_t interface)
         = { audio_stream_destroy };
     static doremir_time_clock_t audio_stream_time_clock_interface_impl
         = { audio_stream_time, audio_stream_tick_rate, audio_stream_ticks };
-    static doremir_message_receiver_t audio_stream_message_receiver_impl
+    static doremir_message_receiver_interface_t audio_stream_message_receiver_interface_impl
         = { audio_stream_send };
-    static doremir_message_sender_t audio_stream_message_sender_impl
+    static doremir_message_sender_interface_t audio_stream_message_sender_interface_impl
         = { audio_stream_sync, audio_stream_receive };
 
     switch (interface) {
@@ -780,11 +780,11 @@ ptr_t audio_stream_impl(doremir_id_t interface)
     case doremir_time_clock_interface_i:
         return &audio_stream_time_clock_interface_impl;
 
-    case doremir_message_sender_i:
-        return &audio_stream_message_sender_impl;
+    case doremir_message_sender_interface_i:
+        return &audio_stream_message_sender_interface_impl;
 
-    case doremir_message_receiver_i:
-        return &audio_stream_message_receiver_impl;
+    case doremir_message_receiver_interface_i:
+        return &audio_stream_message_receiver_interface_impl;
 
     default:
         return NULL;

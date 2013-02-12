@@ -24,9 +24,9 @@ doremir_event_t doremir_event_merge(doremir_event_t,
 doremir_event_t doremir_event_switch(doremir_event_t,
                                      doremir_event_t,
                                      doremir_event_t);
-doremir_event_t doremir_event_receive(doremir_ptr_t,
+doremir_event_t doremir_event_receive(doremir_message_sender_t,
                                       doremir_message_address_t);
-doremir_event_t doremir_event_send(doremir_ptr_t,
+doremir_event_t doremir_event_send(doremir_message_receiver_t,
                                    doremir_message_address_t,
                                    doremir_event_t);
 void doremir_event_destroy(doremir_event_t);

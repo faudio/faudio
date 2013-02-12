@@ -12,13 +12,14 @@
     Message passing is the process of delivering a *message* to an *address*. Any
     ordered type can be used as an addreses, but typically it is an objet with fast
     equality comparison such as an integer. Message passing is captured by two 
-    interfaces: [Sender](@ref doremir_message_sender_t) which provides messages, and 
-    [Receiver](@ref doremir_message_receiver_t) which accepts them. Note that the method
+    interfaces: [SenderInterface](@ref doremir_message_sender_t) which provides messages, and 
+    [ReceiverInterface](@ref doremir_message_receiver_t) which accepts them. Note that the method
     names are contrary to the interfaces: you *send* to a *receiver* and *receive*
     from a *sender*.
     
     The *dispatcher* type provides message passing accross thread boundaries:
-    it implements both [Sender](@ref doremir_message_sender_t) and [Receiver](@ref doremir_message_receiver_t).
+    it implements both [SenderInterface](@ref doremir_message_sender_t) and 
+    [ReceiverInterface](@ref doremir_message_receiver_t).
     
     @par Dispatcher literals
     - `dispatcher()`
@@ -47,18 +48,18 @@ module Doremir.Message
 
     /** @interface doremir_message_sender_t
     */
-    type Sender = struct {
+    type SenderInterface = struct {
         sync : (Ptr -> Void)*,
         receive : ((Ptr,Address) -> List)* // [Message]
     };
     /** @interface doremir_message_receiver_t
     */
-    type Receiver = struct {
+    type ReceiverInterface = struct {
         send : ((Ptr,Address,Message) -> Void)*
     };
 
-    type SomeSender = opaque;
-    type SomeReceiver = opaque;
+    type Sender = opaque;
+    type Receiver = opaque;
 
 
     type Dispatcher = opaque;

@@ -514,9 +514,9 @@ ptr_t midi_stream_impl(doremir_id_t interface)
         = { midi_stream_show };
     static doremir_destroy_t midi_stream_destroy_impl
         = { midi_stream_destroy };
-    static doremir_message_receiver_t midi_stream_message_receiver_impl
+    static doremir_message_receiver_interface_t midi_stream_message_receiver_interface_impl
         = { midi_stream_send };
-    static doremir_message_sender_t midi_stream_message_sender_impl
+    static doremir_message_sender_interface_t midi_stream_message_sender_interface_impl
         = { midi_stream_sync, midi_stream_receive };
 
     switch (interface) {
@@ -528,11 +528,11 @@ ptr_t midi_stream_impl(doremir_id_t interface)
     case doremir_destroy_i:
         return &midi_stream_destroy_impl;
 
-    case doremir_message_sender_i:
-        return &midi_stream_message_sender_impl;
+    case doremir_message_sender_interface_i:
+        return &midi_stream_message_sender_interface_impl;
 
-    case doremir_message_receiver_i:
-        return &midi_stream_message_receiver_impl;
+    case doremir_message_receiver_interface_i:
+        return &midi_stream_message_receiver_interface_impl;
 
     default:
         return NULL;

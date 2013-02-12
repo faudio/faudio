@@ -19,14 +19,14 @@ typedef struct {
             void (* sync)(doremir_ptr_t);
             doremir_list_t (* receive)(doremir_ptr_t,
                                        doremir_message_address_t);
-        } doremir_message_sender_t;
+        } doremir_message_sender_interface_t;
 typedef struct {
             void (* send)(doremir_ptr_t,
                           doremir_message_address_t,
                           doremir_message_t);
-        } doremir_message_receiver_t;
-typedef struct _doremir_message_some_sender_t * doremir_message_some_sender_t;
-typedef struct _doremir_message_some_receiver_t * doremir_message_some_receiver_t;
+        } doremir_message_receiver_interface_t;
+typedef struct _doremir_message_sender_t * doremir_message_sender_t;
+typedef struct _doremir_message_receiver_t * doremir_message_receiver_t;
 typedef struct _doremir_message_dispatcher_t * doremir_message_dispatcher_t;
 doremir_message_dispatcher_t doremir_message_create_dispatcher();
 doremir_message_dispatcher_t doremir_message_create_lockfree_dispatcher();

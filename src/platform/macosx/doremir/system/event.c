@@ -61,7 +61,7 @@ doremir_event_t doremir_system_event_key_down()
  */
 doremir_event_t doremir_system_event_select(doremir_list_t sources)
 {
-    doremir_message_some_sender_t source = doremir_system_event_select_sender(sources);
+    doremir_message_sender_t source = doremir_system_event_select_sender(sources);
     doremir_destroy(sources);
     return doremir_event_receive(source, i16(0));
 }
@@ -209,7 +209,7 @@ inline static CGEventMask convert_type(event_type_t type)
     [Destroy](@ref doremir_destroy_t), and should be destroyed after use.
 
  */
-doremir_message_some_sender_t doremir_system_event_select_sender(doremir_list_t sources)
+doremir_message_sender_t doremir_system_event_select_sender(doremir_list_t sources)
 {
     CGEventMask mask = 0;
     doremir_for_each(source, sources) {
@@ -231,7 +231,7 @@ doremir_message_some_sender_t doremir_system_event_select_sender(doremir_list_t 
         doremir_thread_sleep(1);
     }
 
-    return (doremir_message_some_sender_t) source;
+    return (doremir_message_sender_t) source;
 }
 
 
@@ -266,7 +266,7 @@ ptr_t event_source_impl(doremir_id_t interface)
 {
     static doremir_destroy_t event_source_destroy_impl
         = { event_source_destroy };
-    static doremir_message_sender_t event_source_message_sender_impl
+    static doremir_message_sender_interface_t event_source_message_sender_interface_impl
         = { event_source_sync, event_source_receive };
 
     switch (interface) {
@@ -274,8 +274,8 @@ ptr_t event_source_impl(doremir_id_t interface)
     case doremir_destroy_i:
         return &event_source_destroy_impl;
 
-    case doremir_message_sender_i:
-        return &event_source_message_sender_impl;
+    case doremir_message_sender_interface_i:
+        return &event_source_message_sender_interface_impl;
 
     default:
         return NULL;

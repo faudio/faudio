@@ -36,18 +36,18 @@ module Doremir.Event
 
     never   : () -> Event;
     now     : Ptr -> Event;
-    later   : (Time,Ptr) -> Event;
-    delay   : (Time,Event) -> Event;
-    merge   : (Event,Event) -> Event;               // rename merge
-    switch  : (Event,Event,Event) -> Event;
-    receive : (Ptr,Address) -> Event;
-    send    : (Ptr,Address,Event) -> Event;
+    later   : (Time, Ptr) -> Event;
+    delay   : (Time, Event) -> Event;
+    merge   : (Event, Event) -> Event;               // rename merge
+    switch  : (Event, Event, Event) -> Event;
+    receive : (Sender, Address) -> Event;
+    send    : (Receiver, Address, Event) -> Event;
     destroy : Event -> Void;
     
     after  : Event -> Event;
     before : Event -> Event;
-    upon   : (Event,Event) -> Event;
-    select : (Event,Event) -> Event;
+    upon   : (Event, Event) -> Event;
+    select : (Event, Event) -> Event;
     sample : Event -> Event;
     toggle : Event -> Event;
 

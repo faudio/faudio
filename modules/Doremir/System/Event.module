@@ -30,6 +30,6 @@ module Doremir.System.Event
     keyDown      : () -> Event;
     
     select       : List -> Event;       // [Int16/EventType]
-    selectSender : List -> SomeSender;  // [Int16/EventType]
+    selectSender : List -> Sender;  // [Int16/EventType]
 }
 
