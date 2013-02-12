@@ -40,16 +40,6 @@ module Doremir.Time
 
     type Time = opaque;
 
-    /** @interface doremir_time_clock_t */
-    type Clock = struct {
-        time     : (Ptr -> Time)*,
-        tickRate : (Ptr -> Double)*,
-        ticks    : (Ptr -> Int64)*
-    };
-    time     : Ptr -> Time;
-    tickRate : Ptr -> Double;
-    ticks    : Ptr -> Int64;
-
     // Standard time
     create      : (Int32, Int32, Int32, Ratio) -> Time;
     copy        : Time -> Time;
@@ -72,4 +62,21 @@ module Doremir.Time
     fromCpu : Cpu -> Time;
     system  : () -> System;
     cpu : () -> Cpu;
+
+    /** @interface doremir_time_clock_interface_t */
+    type ClockInterface = struct {
+        time     : (Ptr -> Time)*,
+        tickRate : (Ptr -> Double)*,
+        ticks    : (Ptr -> Int64)*
+    };                 
+    
+    type Clock = opaque;
+    
+    time     : Clock -> Time;
+    tickRate : Clock -> Double;
+    ticks    : Clock -> Int64;
+    getSystemClock : () -> Clock;
+    getCPUClock : () -> Clock;
+
+
 }

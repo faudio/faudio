@@ -13,7 +13,7 @@ enum doremir_interfaces {
   doremir_error_i,
   doremir_equal_i,
 
-  doremir_time_clock_i,
+  doremir_time_clock_interface_i,
   doremir_message_sender_i,
   doremir_message_receiver_i,
   doremir_number_i,
