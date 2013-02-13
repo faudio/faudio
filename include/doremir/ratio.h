@@ -10,8 +10,8 @@
     @{
     */
 
-typedef int16_t doremir_ratio_num_t;
-typedef int16_t doremir_ratio_denom_t;
+typedef int32_t doremir_ratio_num_t;
+typedef int32_t doremir_ratio_denom_t;
 typedef struct _doremir_ratio_t * doremir_ratio_t;
 doremir_ratio_t doremir_ratio_create(doremir_ratio_num_t,
                                      doremir_ratio_denom_t);
@@ -33,6 +33,10 @@ doremir_ratio_t doremir_ratio_succ(doremir_ratio_t);
 doremir_ratio_t doremir_ratio_pred(doremir_ratio_t);
 doremir_ratio_t doremir_ratio_negate(doremir_ratio_t);
 doremir_ratio_t doremir_ratio_recip(doremir_ratio_t);
+doremir_ratio_t doremir_ratio_normalize(doremir_ratio_t);
+void doremir_ratio_to_mixed(doremir_ratio_t,
+                            doremir_ratio_num_t *,
+                            doremir_ratio_t *);
 
 /** @}
     @}

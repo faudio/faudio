@@ -23,8 +23,8 @@ module Doremir.Ratio
 {
     import Doremir.Std;
 
-    type Num    = Int16;
-    type Denom  = Int16;
+    type Num    = Int32;
+    type Denom  = Int32;
     type Ratio  = opaque;
 
     create  : (Num, Denom) -> Ratio;
@@ -41,4 +41,8 @@ module Doremir.Ratio
     pred        : Ratio -> Ratio;
     negate      : Ratio -> Ratio;
     recip       : Ratio -> Ratio;
+
+    normalize : Ratio -> Ratio;
+    toMixed : (Ratio, Num*, Ratio*) -> Void;
+
 }

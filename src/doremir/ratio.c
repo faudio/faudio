@@ -41,6 +41,8 @@ void delete_ratio(doremir_ratio_t p)
  */
 doremir_ratio_t doremir_ratio_create(num_t num, denom_t denom)
 {
+    assert(denom != 0 && "Divide by zero.");
+
     ratio_t p = new_ratio();
     p->num   = num;
     p->denom = denom;
@@ -166,6 +168,19 @@ doremir_ratio_t doremir_ratio_recip(doremir_ratio_t x)
     return doremir_ratio_divide(ratio(1, 1), x);
 }
 
+inline static int gcd(int x, int y)
+{
+	x = abs(x);
+	y = abs(y);
+	while (y) {
+		int t = y;
+		y = x % y;
+		x = t;
+	}
+	return x;
+}
+
+
 /** Normalize the given rational number.
  */
 doremir_ratio_t doremir_ratio_normalize(doremir_ratio_t x)
@@ -173,11 +188,17 @@ doremir_ratio_t doremir_ratio_normalize(doremir_ratio_t x)
     num_t   a = x->num;
     denom_t b = x->denom;
 
-    if (b < 0) {
-        a *= -1;
-        b *= -1;
+    if (b < 0) { 
+        a = -a; 
+        b = -b; 
     }
 
+    int n = gcd(a ,b);
+
+    if (n > 1) { 
+        a /= n; 
+        b /= n; 
+    }    
     return ratio(a, b);
 }
 
@@ -196,6 +217,22 @@ doremir_ratio_t doremir_ratio_absolute(doremir_ratio_t x)
 
     return ratio(a, b);
 }
+
+/** Convert the given rational number to mixed form.
+    
+    For example \f$11/3\f$ becomes \f$3+2/3\f$.
+ */
+void doremir_ratio_to_mixed(doremir_ratio_t x,
+                            doremir_ratio_num_t *n,
+                            doremir_ratio_t     *y)
+{
+    num_t   a = x->num;
+    denom_t b = x->denom;
+    
+    *n = a / b;
+    *y = ratio(a % b, b);
+}
+
 
 
 // --------------------------------------------------------------------------------
@@ -267,6 +304,7 @@ ptr_t ratio_absolute(ptr_t a)
 doremir_string_t ratio_show(ptr_t a)
 {
     ratio_t b = (ratio_t) a;
+    b = doremir_ratio_normalize(b);
     string_t s = string("");
 
     s = string_dappend(s, doremir_string_show(i32(b->num)));

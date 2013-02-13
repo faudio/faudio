@@ -16,6 +16,9 @@
 #include <mach/mach.h>
 #endif
 
+typedef doremir_ratio_num_t num_t;
+typedef doremir_ratio_denom_t denom_t;
+
 
 struct _doremir_time_t {
     impl_t          impl;       //  Interface dispatcher
@@ -104,7 +107,8 @@ void doremir_time_destroy(doremir_time_t time)
  */
 doremir_ratio_t doremir_time_divisions(doremir_time_t time)
 {
-    int32_t a, b;
+    num_t   a; 
+    denom_t b;         
     doremir_ratio_match(time->value, &a, &b);
     return ratio(a % b, b);
 }
@@ -119,7 +123,8 @@ doremir_ratio_t doremir_time_divisions(doremir_time_t time)
  */
 int32_t doremir_time_seconds(doremir_time_t time)
 {
-    int32_t a, b;
+    num_t   a; 
+    denom_t b;
     doremir_ratio_match(time->value, &a, &b);
     return (a / b) % 60;
 }
@@ -134,7 +139,8 @@ int32_t doremir_time_seconds(doremir_time_t time)
  */
 int32_t doremir_time_minutes(doremir_time_t time)
 {
-    int32_t a, b;
+    num_t   a; 
+    denom_t b;
     doremir_ratio_match(time->value, &a, &b);
     return (a / b) % (60 * 60) / 60;
 }
@@ -149,7 +155,8 @@ int32_t doremir_time_minutes(doremir_time_t time)
  */
 int32_t doremir_time_hours(doremir_time_t time)
 {
-    int32_t a, b;
+    num_t   a; 
+    denom_t b;
     doremir_ratio_match(time->value, &a, &b);
     return (a / b) % (60 * 60 * 24) / (60 * 60);
 }
@@ -164,7 +171,8 @@ int32_t doremir_time_hours(doremir_time_t time)
  */
 int32_t doremir_time_days(doremir_time_t time)
 {
-    int32_t a, b;
+    num_t   a; 
+    denom_t b;
     doremir_ratio_match(time->value, &a, &b);
     return (a / b) / (60 * 60 * 24);
 }
@@ -376,7 +384,11 @@ doremir_time_t system_prec_time(ptr_t a)
 
     // clock_gettime(CLOCK_REALTIME, &ts);
 
-    return seconds(ts.tv_sec); // TODO with tv_nsec
+    time_t s  = seconds(ts.tv_sec); // TODO with tv_nsec
+    time_t ds = divisions(ts.tv_nsec/1000000, 1000);
+    return doremir_dadd(s, ds);
+    
+    
 }
 
 ptr_t system_prec_clock_impl(doremir_id_t interface)
@@ -465,6 +477,8 @@ doremir_string_t time_show(doremir_ptr_t a)
     s = string_dappend(s, doremir_string_show(doremir_time_divisions(t)));
     s = string_dappend(s, string("s"));
     s = string_dappend(s, string(">"));
+// doremir_print("ratio: %s\n", t->value);
+// doremir_print("ratio: %s\n", s);
 
     return s;
 }
