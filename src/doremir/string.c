@@ -398,7 +398,7 @@ doremir_string_t doremir_string_to_string(doremir_ptr_t a)
                      && (doremir_dynamic_get_type(a) == string_type_repr);
 
     if (is_string) {
-        return a;
+        return doremir_string_copy(a);
     } else {
         return doremir_string_show(a);
     }
