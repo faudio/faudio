@@ -30,19 +30,19 @@ time_t execute_events(priority_queue_t q, time_t t)
 
             
 
-Event           Type                        Offset                      Live
+Event           Type                        Offset                      Has value
 =====           =====                       =====                       =====
 never           E a                         Infinite                    Never
 now x           a -> E a                    0                           When  time >= 0
-delay t x       t -> E a -> E a             delta x + t                 When  live x (time - t)
-merge x y       E a -> E a -> E a           min (delta x) (delta y)     When  live x time || live y time
-switch p x y    E a -> E b -> E b -> E b    min (delta x) (delta y)     When  (live p t) and (live x t) 
-                                                                           or (not live p t) (live y t)
+delay t x       t -> E a -> E a             delta x + t                 When  hasValue x (time - t)
+merge x y       E a -> E a -> E a           min (delta x) (delta y)     When  hasValue x time || hasValue y time
+switch p x y    E a -> E b -> E b -> E b    min (delta x) (delta y)     When  (hasValue p t) and (hasValue x t) 
+                                                                           or (not hasValue p t) (hasValue y t)
 tail x          E a -> E a
 value           E a -> a
 
 recv q          Q a -> E a                  Unknown                     When  a message has arrived on q
-send q x        Q a -> E a -> E Action      Unknown                     When  live x
+send q x        Q a -> E a -> E Action      Unknown                     When  hasValue x
 
 
 upon x y = switch y x y
@@ -68,17 +68,17 @@ schedule : Sched -> E Action -> Action
 execute  : Sched -> Action
 
 Laws:
-    value now x            = x
     value never            = undefined
+    value (now x)          = x
     value (delay t x)      = value x
     value (merge x y)      = if (offset x < offset y) then (value x) else (value y)
-    value (x `switch p` y) = if (!live p) then (value x) else (value y)
+    value (x `switch p` y) = if (!hasValue p st) then (value x) else (value y)
 
-    tail never            = never
+    tail never            = undefined
     tail now              = never
     tail (delay t x)      = delay t (tail x)
     tail (merge x y)      = if (offset x < offset y) then (tail x `merge` y) else (x `merge` tail y)
-    tail (x `switch p` y) = if (!live p) then (tail x `switch p` y) else (tail y)
+    tail (x `switch p` y) = if (!hasValue p) then (tail x `switch p` y) else (tail y)
 
     delay t (merge x y) = delay t x `merge` delay t u
     delay t (delay u)   = delay (t + u)
