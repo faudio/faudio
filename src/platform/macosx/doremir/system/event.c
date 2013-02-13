@@ -324,12 +324,12 @@ void io_event_sink_destroy(ptr_t a)
 }
 
 void io_event_sink_send(doremir_ptr_t a, doremir_message_address_t addr,
-    doremir_message_t msg)
+                        doremir_message_t msg)
 {
     // io_event_sink_t sink = a;
-    // sink and addr ignored   
+    // sink and addr ignored
     string_t str = doremir_string_to_string(msg);
-    printf("%s\n", unstring(str));               
+    printf("%s\n", unstring(str));
     doremir_destroy(str);
 }
 
