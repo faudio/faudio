@@ -80,8 +80,8 @@ struct event_disp {
     atomic_t            loop_set;
 };
 
-typedef struct event_disp *event_disp_t;
-typedef doremir_system_event_type_t event_type_t;
+typedef struct event_disp           *event_disp_t;
+typedef doremir_system_event_source_t  event_source_t;
 
 ptr_t event_disp_impl(doremir_id_t interface);
 
@@ -154,12 +154,12 @@ static CGEventRef event_listener(CGEventTapProxy proxy,
                                  CGEventRef      event,
                                  void           *data)
 {
-    event_disp_t  source    = data;
+    event_disp_t  disp    = data;
 
     // printf("Event of type %d\n", type);
     ptr_t value = convert_event(type, event);
 
-    doremir_message_send(source->disp, i16(0), value);
+    doremir_message_send(disp->disp, i16(0), value);
 
     return event;
 }
@@ -167,12 +167,12 @@ static CGEventRef event_listener(CGEventTapProxy proxy,
 
 static ptr_t add_event_listener(ptr_t a)
 {
-    event_disp_t  source    = a;
+    event_disp_t  disp    = a;
     CFMachPortRef   eventTap  = CGEventTapCreate(kCGSessionEventTap,
                                                  kCGTailAppendEventTap,
                                                  kCGEventTapOptionListenOnly,
-                                                 source->mask,
-                                                 (CGEventTapCallBack) event_listener, source);
+                                                 disp->mask,
+                                                 (CGEventTapCallBack) event_listener, disp);
 
     assert(eventTap && "No eventTap");
 
@@ -183,8 +183,8 @@ static ptr_t add_event_listener(ptr_t a)
     CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, kCFRunLoopCommonModes);
     CGEventTapEnable(eventTap, true);
 
-    source->loop = CFRunLoopGetCurrent();
-    doremir_atomic_set(source->loop_set, (ptr_t) 1);
+    disp->loop = CFRunLoopGetCurrent();
+    doremir_atomic_set(disp->loop_set, (ptr_t) 1);
 
     printf("Entering loop");
     CFRunLoopRun();
@@ -192,7 +192,7 @@ static ptr_t add_event_listener(ptr_t a)
     return 0;
 }
 
-inline static CGEventMask convert_type(event_type_t type)
+inline static CGEventMask convert_source(event_source_t type)
 {
     match(type) {
         against(mouse_move_event)   CGEventMaskBit(kCGEventMouseMoved);
@@ -217,52 +217,52 @@ doremir_message_sender_t doremir_system_event_send(doremir_list_t sources)
 {
     CGEventMask mask = 0;
     doremir_for_each(source, sources) {
-        mask |= convert_type(ti16(source));
+        mask |= convert_source(ti16(source));
     }
 
-    event_disp_t source = doremir_new_struct(event_disp);
-    source->impl        = &event_disp_impl;
+    event_disp_t disp = doremir_new_struct(event_disp);
+    disp->impl        = &event_disp_impl;
 
-    source->mask        = mask;
-    source->disp        = lockfree_dispatcher();
-    source->loop        = NULL;                     // Set by new thread
-    source->loop_set    = atomic();
+    disp->mask        = mask;
+    disp->disp        = lockfree_dispatcher();
+    disp->loop        = NULL;                     // Set by new thread
+    disp->loop_set    = atomic();
 
-    source->thread      = doremir_thread_create(add_event_listener, source);
+    disp->thread      = doremir_thread_create(add_event_listener, disp);
 
     // Wait until run loop has been set
-    while (!doremir_atomic_get(source->loop_set)) {
+    while (!doremir_atomic_get(disp->loop_set)) {
         doremir_thread_sleep(1);
     }
 
-    return (doremir_message_sender_t) source;
+    return (doremir_message_sender_t) disp;
 }
 
 
 void event_disp_destroy(ptr_t a)
 {
-    event_disp_t source = a;
+    event_disp_t disp = a;
 
-    doremir_destroy(source->disp);
-    doremir_destroy(source->loop_set);
+    doremir_destroy(disp->disp);
+    doremir_destroy(disp->loop_set);
 
-    CFRunLoopStop(source->loop);
-    doremir_thread_join(source->thread);
+    CFRunLoopStop(disp->loop);
+    doremir_thread_join(disp->thread);
 
-    doremir_delete(source);
+    doremir_delete(disp);
 }
 
 
 void event_disp_sync(ptr_t a)
 {
-    event_disp_t source = a;
-    doremir_message_sync(source->disp);
+    event_disp_t disp = a;
+    doremir_message_sync(disp->disp);
 }
 
 doremir_list_t event_disp_receive(ptr_t a, address_t addr)
 {
-    event_disp_t source = a;
-    return doremir_message_receive(source->disp, addr);
+    event_disp_t disp = a;
+    return doremir_message_receive(disp->disp, addr);
 }
 
 

@@ -17,7 +17,7 @@ module Doremir.System.Event
     import Doremir.Event;
     import Doremir.String;
 
-    type Type = enum {
+    type Source = enum {
         MouseMoveEvent,
         MouseDragEvent,
         MouseUpEvent,
