@@ -17,7 +17,7 @@ module Doremir.System.Event
     import Doremir.Event;
     import Doremir.String;
 
-    type Source = enum {
+    type Type = enum {
         MouseMoveEvent,
         MouseDragEvent,
         MouseUpEvent,
@@ -32,8 +32,8 @@ module Doremir.System.Event
     mouseDown    : () -> Event;
     keyUp        : () -> Event;         // [KeyCode, Char, String]
     keyDown      : () -> Event;
-    select       : List -> Event;       // Event [Int16/Source]
-    receive      : List -> Sender;      // Sender [Int16/Source]
+    select       : List -> Event;       // Event [Int16/Type]
+    receive      : List -> Sender;      // Sender [Int16/Type]
 
     // readStd      : Event;                               // Event String
     // receiveStd   : Sender;                              // Sender String

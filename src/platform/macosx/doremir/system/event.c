@@ -56,18 +56,29 @@ doremir_event_t doremir_system_event_key_down()
 }
 
 
-/** Returns a system event from the given selectors.
+/** Returns an event selected from the given types.
 
-    @param sources  A list of @ref doremir_system_event_source_t (destroyed).
-    @return         A new system event.
+    @param types      A list of @ref doremir_system_event_type_t (destroyed).
+    @return             A new system event.
  */
-doremir_event_t doremir_system_event_select(doremir_list_t sources)
+doremir_event_t doremir_system_event_select(doremir_list_t types)
 {
-    doremir_message_sender_t source = doremir_system_event_receive(sources);
-    doremir_destroy(sources);
-    return doremir_event_receive(source, i16(0));
+    doremir_message_sender_t type = doremir_system_event_receive(types);
+    doremir_destroy(types);
+    return doremir_event_receive(type, i16(0));
 }
 
+/** Transforms the given event to write its values to the standard output.
+    @param event        An event of strings.
+    @return             An event of null values.
+ */
+doremir_event_t doremir_system_event_write_std(doremir_event_t event)
+{
+    return doremir_event_send(doremir_system_event_send_std(), i16(0), event);
+}
+
+
+// --------------------------------------------------------------------------------
 
 struct event_disp {
     impl_t              impl;           // Implementations
@@ -80,8 +91,8 @@ struct event_disp {
     atomic_t            loop_set;
 };
 
-typedef struct event_disp           *event_disp_t;
-typedef doremir_system_event_source_t  event_source_t;
+typedef doremir_system_event_type_t  event_type_t;
+typedef struct event_disp              *event_disp_t;
 
 ptr_t event_disp_impl(doremir_id_t interface);
 
@@ -192,7 +203,7 @@ static ptr_t add_event_listener(ptr_t a)
     return 0;
 }
 
-inline static CGEventMask convert_source(event_source_t type)
+inline static CGEventMask convert_type(event_type_t type)
 {
     match(type) {
         against(mouse_move_event)   CGEventMaskBit(kCGEventMouseMoved);
@@ -205,19 +216,19 @@ inline static CGEventMask convert_source(event_source_t type)
     }
 }
 
-/** Returns a sender that sends a message whenever the given system event occurs.
+/** Returns a sender of values selected from the given types.
 
     The returned value implements [Sender](@ref doremir_message_sender_t) and
     [Destroy](@ref doremir_destroy_t), and should be destroyed after use.
 
-    @param sources  A list of @ref doremir_system_event_source_t (destroyed).
+    @param types    A list of @ref doremir_system_event_type_t (destroyed).
     @return         A new sender.
  */
-doremir_message_sender_t doremir_system_event_receive(doremir_list_t sources)
+doremir_message_sender_t doremir_system_event_receive(doremir_list_t types)
 {
     CGEventMask mask = 0;
-    doremir_for_each(source, sources) {
-        mask |= convert_source(ti16(source));
+    doremir_for_each(type, types) {
+        mask |= convert_type(ti16(type));
     }
 
     event_disp_t disp = doremir_new_struct(event_disp);
@@ -265,7 +276,6 @@ doremir_list_t event_disp_receive(ptr_t a, address_t addr)
     return doremir_message_receive(disp->disp, addr);
 }
 
-
 ptr_t event_disp_impl(doremir_id_t interface)
 {
     static doremir_destroy_t event_disp_destroy_impl
@@ -286,4 +296,23 @@ ptr_t event_disp_impl(doremir_id_t interface)
     }
 }
 
+// --------------------------------------------------------------------------------
 
+
+
+
+
+
+// struct io_event_sink {
+//     impl_t              impl;           // Implementations
+// };
+// 
+// typedef struct io_event_sink             *io_event_sink_t;
+// 
+// ptr_t event_disp_impl(doremir_id_t interface);
+
+
+doremir_message_receiver_t doremir_system_event_send_std()
+{
+    
+}

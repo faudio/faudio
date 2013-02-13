@@ -22,7 +22,7 @@ typedef enum {
             mouse_down_event,
             key_up_event,
             key_down_event
-        } doremir_system_event_source_t;
+        } doremir_system_event_type_t;
 doremir_event_t doremir_system_event_mouse_move();
 doremir_event_t doremir_system_event_mouse_drag();
 doremir_event_t doremir_system_event_mouse_up();
