@@ -80,7 +80,7 @@ doremir_event_t doremir_system_event_write_std(doremir_event_t event)
 
 // --------------------------------------------------------------------------------
 
-struct event_disp {
+struct event_source {
     impl_t              impl;           // Implementations
 
     CGEventMask         mask;
@@ -92,9 +92,9 @@ struct event_disp {
 };
 
 typedef doremir_system_event_type_t  event_type_t;
-typedef struct event_disp              *event_disp_t;
+typedef struct event_source              *event_source_t;
 
-ptr_t event_disp_impl(doremir_id_t interface);
+ptr_t event_source_impl(doremir_id_t interface);
 
 
 inline static ptr_t convert_event(CGEventType type, CGEventRef event)
@@ -165,12 +165,12 @@ static CGEventRef event_listener(CGEventTapProxy proxy,
                                  CGEventRef      event,
                                  void           *data)
 {
-    event_disp_t  disp    = data;
+    event_source_t  source    = data;
 
     // printf("Event of type %d\n", type);
     ptr_t value = convert_event(type, event);
 
-    doremir_message_send(disp->disp, i16(0), value);
+    doremir_message_send(source->disp, i16(0), value);
 
     return event;
 }
@@ -178,12 +178,12 @@ static CGEventRef event_listener(CGEventTapProxy proxy,
 
 static ptr_t add_event_listener(ptr_t a)
 {
-    event_disp_t  disp    = a;
+    event_source_t  source    = a;
     CFMachPortRef   eventTap  = CGEventTapCreate(kCGSessionEventTap,
                                                  kCGTailAppendEventTap,
                                                  kCGEventTapOptionListenOnly,
-                                                 disp->mask,
-                                                 (CGEventTapCallBack) event_listener, disp);
+                                                 source->mask,
+                                                 (CGEventTapCallBack) event_listener, source);
 
     assert(eventTap && "No eventTap");
 
@@ -194,8 +194,8 @@ static ptr_t add_event_listener(ptr_t a)
     CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, kCFRunLoopCommonModes);
     CGEventTapEnable(eventTap, true);
 
-    disp->loop = CFRunLoopGetCurrent();
-    doremir_atomic_set(disp->loop_set, (ptr_t) 1);
+    source->loop = CFRunLoopGetCurrent();
+    doremir_atomic_set(source->loop_set, (ptr_t) 1);
 
     printf("Entering loop");
     CFRunLoopRun();
@@ -231,65 +231,64 @@ doremir_message_sender_t doremir_system_event_receive(doremir_list_t types)
         mask |= convert_type(ti16(type));
     }
 
-    event_disp_t disp = doremir_new_struct(event_disp);
-    disp->impl        = &event_disp_impl;
+    event_source_t source = doremir_new_struct(event_source);
+    source->impl        = &event_source_impl;
 
-    disp->mask        = mask;
-    disp->disp        = lockfree_dispatcher();
-    disp->loop        = NULL;                     // Set by new thread
-    disp->loop_set    = atomic();
+    source->mask        = mask;
+    source->disp        = lockfree_dispatcher();
+    source->loop        = NULL;                     // Set by new thread
+    source->loop_set    = atomic();
 
-    disp->thread      = doremir_thread_create(add_event_listener, disp);
+    source->thread      = doremir_thread_create(add_event_listener, source);
 
     // Wait until run loop has been set
-    while (!doremir_atomic_get(disp->loop_set)) {
+    while (!doremir_atomic_get(source->loop_set)) {
         doremir_thread_sleep(1);
     }
 
-    return (doremir_message_sender_t) disp;
+    return (doremir_message_sender_t) source;
 }
 
 
-void event_disp_destroy(ptr_t a)
+void event_source_destroy(ptr_t a)
 {
-    event_disp_t disp = a;
+    event_source_t source = a;
 
-    doremir_destroy(disp->disp);
-    doremir_destroy(disp->loop_set);
+    doremir_destroy(source->disp);
+    doremir_destroy(source->loop_set);
 
-    CFRunLoopStop(disp->loop);
-    doremir_thread_join(disp->thread);
+    CFRunLoopStop(source->loop);
+    doremir_thread_join(source->thread);
 
-    doremir_delete(disp);
+    doremir_delete(source);
 }
 
-
-void event_disp_sync(ptr_t a)
+void event_source_sync(ptr_t a)
 {
-    event_disp_t disp = a;
-    doremir_message_sync(disp->disp);
+    event_source_t source = a;
+    doremir_message_sync(source->disp);
 }
 
-doremir_list_t event_disp_receive(ptr_t a, address_t addr)
+doremir_list_t event_source_receive(ptr_t a, address_t addr)
 {
-    event_disp_t disp = a;
-    return doremir_message_receive(disp->disp, addr);
+    event_source_t source = a;
+    return doremir_message_receive(source->disp, addr);
 }
 
-ptr_t event_disp_impl(doremir_id_t interface)
+ptr_t event_source_impl(doremir_id_t interface)
 {
-    static doremir_destroy_t event_disp_destroy_impl
-        = { event_disp_destroy };
-    static doremir_message_sender_interface_t event_disp_message_sender_interface_impl
-        = { event_disp_sync, event_disp_receive };
+    static doremir_destroy_t event_source_destroy_impl
+        = { event_source_destroy };
+    static doremir_message_sender_interface_t event_source_message_sender_interface_impl
+        = { event_source_sync, event_source_receive };
 
     switch (interface) {
 
     case doremir_destroy_i:
-        return &event_disp_destroy_impl;
+        return &event_source_destroy_impl;
 
     case doremir_message_sender_interface_i:
-        return &event_disp_message_sender_interface_impl;
+        return &event_source_message_sender_interface_impl;
 
     default:
         return NULL;
@@ -299,20 +298,57 @@ ptr_t event_disp_impl(doremir_id_t interface)
 // --------------------------------------------------------------------------------
 
 
+// TODO we probably want this to contain file handle or libuv equivalent
 
+struct io_event_sink {
+    impl_t              impl;           // Implementations
+};
 
+typedef struct io_event_sink             *io_event_sink_t;
 
-
-// struct io_event_sink {
-//     impl_t              impl;           // Implementations
-// };
-// 
-// typedef struct io_event_sink             *io_event_sink_t;
-// 
-// ptr_t event_disp_impl(doremir_id_t interface);
-
+ptr_t io_event_sink_impl(doremir_id_t interface);
 
 doremir_message_receiver_t doremir_system_event_send_std()
 {
-    
+    io_event_sink_t sink = doremir_new_struct(io_event_sink);
+    sink->impl  = &io_event_sink_impl;
+    // TODO
+
+    return (doremir_message_receiver_t) sink;
+}
+
+void io_event_sink_destroy(ptr_t a)
+{
+    io_event_sink_t sink = a;
+    doremir_delete(sink);
+}
+
+void io_event_sink_send(doremir_ptr_t a, doremir_message_address_t addr,
+    doremir_message_t msg)
+{
+    // io_event_sink_t sink = a;
+    // sink and addr ignored   
+    string_t str = doremir_string_to_string(msg);
+    printf("%s\n", unstring(str));               
+    doremir_destroy(str);
+}
+
+ptr_t io_event_sink_impl(doremir_id_t interface)
+{
+    static doremir_destroy_t io_event_sink_destroy_impl
+        = { io_event_sink_destroy };
+    static doremir_message_receiver_interface_t io_event_sink_message_receiver_interface_impl
+        = { io_event_sink_send };
+
+    switch (interface) {
+
+    case doremir_destroy_i:
+        return &io_event_sink_destroy_impl;
+
+    case doremir_message_sender_interface_i:
+        return &io_event_sink_message_receiver_interface_impl;
+
+    default:
+        return NULL;
+    }
 }
