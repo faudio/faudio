@@ -11,7 +11,6 @@
 #include <time.h>
 
 #define system_time_t       time_t
-#define system_clock_t      clock_t
 
 #define ptr_t               doremir_ptr_t
 #define impl_t              doremir_impl_t

@@ -43,6 +43,7 @@ doremir_time_t doremir_time_time(doremir_time_clock_t);
 double doremir_time_tick_rate(doremir_time_clock_t);
 int64_t doremir_time_ticks(doremir_time_clock_t);
 doremir_time_clock_t doremir_time_get_system_clock();
+doremir_time_clock_t doremir_time_get_system_prec_clock();
 doremir_time_clock_t doremir_time_get_cpu_clock();
 
 /** @}

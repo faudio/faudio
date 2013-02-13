@@ -1359,14 +1359,15 @@ void test_event()
 
         event_t ha = now(string("höglund"));
 
-        event_t a = merge_event(ha, delay_event(seconds(1),
-                                                merge_event(ha, delay_event(seconds(1),
-                                                            merge_event(ha, delay_event(seconds(1),
-                                                                    never()))))));
-                                         
+        // event_t a = merge_event(ha, delay_event(seconds(1),
+            // merge_event(ha, delay_event(seconds(1), 
+                // merge_event(ha, delay_event(seconds(1), 
+                    // never()))))));
+
         // dispatcher_t disp = lockfree_dispatcher();
         // event_t a = doremir_event_receive(disp, i16(0));
-        // event_t a = doremir_system_event_mouse_down();
+        // event_t a = doremir_system_event_mouse_move();
+        event_t a = doremir_system_event_key_down();
         // event_t a = delay_event(seconds(10), ha);
 
         event_t b = doremir_system_event_write_std(a);
@@ -1385,12 +1386,12 @@ void test_event()
         // doremir_print("value(b)                     ==> %s\n", doremir_event_value(b));
 
 
-        doremir_scheduler_schedule(s, b);
+        // doremir_scheduler_schedule(s, b);
 
-        while (1) {                   
+        while (1) {
             // doremir_message_send(disp, i16(0), string("foo"));
             doremir_scheduler_execute(s);
-            doremir_thread_sleep(50);
+            doremir_thread_sleep(5);
         }
     }
 

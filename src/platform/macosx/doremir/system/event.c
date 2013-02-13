@@ -197,7 +197,7 @@ static ptr_t add_event_listener(ptr_t a)
     source->loop = CFRunLoopGetCurrent();
     doremir_atomic_set(source->loop_set, (ptr_t) 1);
 
-    printf("Entering loop");
+    // printf("Entering loop");
     CFRunLoopRun();
 
     return 0;

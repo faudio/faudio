@@ -126,13 +126,19 @@ doremir_event_t doremir_event_now(doremir_ptr_t value)
     @param event2   Event to delay.
     @return         A new event.
  */
-doremir_event_t doremir_event_delay(doremir_time_t time,
+doremir_event_t doremir_event_delay(doremir_time_t  time,
                                     doremir_event_t event)
 {
-    // delay t (merge x y) = delay t x `merge` delay t u
     // delay t (delay u)   = delay (t + u)
+    // delay t (merge x y) = delay t x `merge` delay t u
 
     assert(event && "Can not delay null");
+    if (is_delay(event))
+    {
+        event_t x = delay_get(event,event);
+        event_t t = delay_get(event,time);
+        return doremir_event_delay(doremir_add(time, t), x);
+    }
 
     event_t e = new_event(delay_event);
     delay_get(e, time)  = time;
@@ -311,8 +317,32 @@ doremir_time_t doremir_event_offset(doremir_event_t event)
 
 bool doremir_event_is_never(doremir_event_t event)
 {
-    // TODO distribute
-    return is_never(event);
+    switch (event->tag) {
+    case never_event:
+        return true;
+
+    case now_event:
+        return false;
+
+    case delay_event:
+        return doremir_event_is_never(delay_get(event, event));
+
+    case merge_event:
+        return doremir_event_is_never(merge_get(event, left))
+               && doremir_event_is_never(merge_get(event, right));
+
+    case switch_event:
+        assert(false && "Not implemented.");
+
+    case send_event:
+        return doremir_event_is_never(send_get(event, event));
+
+    case recv_event:
+        return false;
+
+    default:
+        assert(false && "Missing label");
+    }
 }
 
 void doremir_event_sync(doremir_event_t event)
@@ -390,8 +420,8 @@ bool doremir_event_has_value(doremir_time_t time, doremir_event_t event)
 
     case recv_event: {
         return doremir_list_length(doremir_message_receive(
-                                      recv_get(event, dispatcher),
-                                      recv_get(event, address))) > recv_get(event, index);
+                                       recv_get(event, dispatcher),
+                                       recv_get(event, address))) > recv_get(event, index);
     }
 
     default:
