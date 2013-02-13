@@ -303,14 +303,14 @@ ptr_t ratio_absolute(ptr_t a)
 
 doremir_string_t ratio_show(ptr_t a)
 {
-    ratio_t b = (ratio_t) a;
-    b = doremir_ratio_normalize(b);
+    ratio_t b = doremir_ratio_normalize(a);    
     string_t s = string("");
 
     s = string_dappend(s, doremir_string_show(i32(b->num)));
     s = string_dappend(s, string("/"));
     s = string_dappend(s, doremir_string_show(i32(b->denom)));
 
+    doremir_destroy(b);
     return s;
 }
 
