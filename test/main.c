@@ -285,7 +285,7 @@ void test_system_time()
 {
     test_section("System time");
 
-    clock_t system_clock = doremir_time_get_system_clock();
+    clock_t system_clock = doremir_time_get_system_prec_clock();
 
     for (int i = 0; i < 10; ++i) {
         // doremir_print("system()                     ==> %s\n", doremir_time_system());
@@ -1873,7 +1873,7 @@ int main(int argc, char const *argv[])
 
         doremir_audio_engine_initialize();
 
-        goto begin;
+goto begin;
         test_value_references();
         test_generic_functions();
         test_string();
@@ -1917,11 +1917,11 @@ int main(int argc, char const *argv[])
 begin:
 
         // test_processor_graphs(string_dappend(doremir_system_directory_current(), string("/test/proc.dot")));
-
         // test_dispatcher();
         // test_system_event();
+
         test_event();
-        goto end;
+goto end;
         // test_scheduler();
         // test_processor();
 
@@ -1930,7 +1930,7 @@ begin:
             string_dappend(doremir_system_directory_current(), string("/test/out.wav")));
         test_buffer_stream();
         // test_audio_stream();
-        // test_midi_stream();
+        test_midi_stream();
 
 end:
         doremir_audio_engine_terminate();

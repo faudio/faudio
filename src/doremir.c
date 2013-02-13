@@ -374,6 +374,15 @@ GENERIC2(number,    multiply,       doremir_ptr_t, doremir_ptr_t, doremir_ptr_t)
 GENERIC2(number,    divide,         doremir_ptr_t, doremir_ptr_t, doremir_ptr_t);
 GENERIC1(number,    absolute,       doremir_ptr_t, doremir_ptr_t);
 
+doremir_ptr_t doremir_dadd(doremir_ptr_t a, doremir_ptr_t b)
+{
+    doremir_ptr_t res = doremir_add(a, b);
+    doremir_destroy(a);
+    doremir_destroy(b);
+    return res;
+}
+
+
 GENERIC1(copy,      copy,           doremir_ptr_t, doremir_ptr_t);
 GENERIC1(destroy,   destroy,        doremir_ptr_t, void);
 

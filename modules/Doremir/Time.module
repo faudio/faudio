@@ -75,6 +75,7 @@ module Doremir.Time
     time     : Clock -> Time;
     tickRate : Clock -> Double;
     ticks    : Clock -> Int64;
+
     getSystemClock : () -> Clock;
     getSystemPrecClock : () -> Clock;
     getCpuClock : () -> Clock;

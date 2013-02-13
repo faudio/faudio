@@ -84,6 +84,11 @@ doremir_ptr_t doremir_subtract(doremir_ptr_t, doremir_ptr_t);
 doremir_ptr_t doremir_multiply(doremir_ptr_t, doremir_ptr_t);
 doremir_ptr_t doremir_divide(doremir_ptr_t, doremir_ptr_t);
 doremir_ptr_t doremir_absolute(doremir_ptr_t);
+doremir_ptr_t doremir_dadd(doremir_ptr_t, doremir_ptr_t);
+doremir_ptr_t doremir_dsubtract(doremir_ptr_t, doremir_ptr_t);
+doremir_ptr_t doremir_dmultiply(doremir_ptr_t, doremir_ptr_t);
+doremir_ptr_t doremir_ddivide(doremir_ptr_t, doremir_ptr_t);
+doremir_ptr_t doremir_dabsolute(doremir_ptr_t);
 typedef struct {
             doremir_ptr_t (* copy)(doremir_ptr_t);
         } doremir_copy_t;

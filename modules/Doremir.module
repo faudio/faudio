@@ -171,6 +171,11 @@ module Doremir
     multiply    : (Ptr, Ptr) -> Ptr;
     divide      : (Ptr, Ptr) -> Ptr;
     absolute    : Ptr -> Ptr;
+    dadd         : (Ptr, Ptr) -> Ptr;
+    dsubtract    : (Ptr, Ptr) -> Ptr;
+    dmultiply    : (Ptr, Ptr) -> Ptr;
+    ddivide      : (Ptr, Ptr) -> Ptr;
+    dabsolute    : Ptr -> Ptr;
 
     /** @interface doremir_copy_t
         Generic copying interface.

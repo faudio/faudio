@@ -27,6 +27,8 @@ void doremir_device_midi_initialize();
 void doremir_device_midi_terminate();
 void doremir_thread_initialize();
 void doremir_thread_terminate();
+void doremir_time_initialize();
+void doremir_time_terminate();
 
 /** Performs global initialization.
 
@@ -39,6 +41,7 @@ void doremir_audio_engine_initialize()
     doremir_device_audio_initialize();
     doremir_device_midi_initialize();
     doremir_thread_initialize();
+    doremir_time_initialize();
     doremir_audio_engine_log_info(string("Initialized Audio Engine."));
 
     init_count_g++;
@@ -55,6 +58,7 @@ void doremir_audio_engine_terminate()
         doremir_device_audio_terminate();
         doremir_device_midi_terminate();
         doremir_thread_terminate();
+        doremir_time_terminate();
         doremir_audio_engine_log_info(string("Terminated Audio Engine."));
     } else {
         doremir_audio_engine_log_warning(string("Audio Engine could not terminate: inconsistent state."));
@@ -89,8 +93,8 @@ static inline void stdlog(ptr_t data, doremir_time_system_t t, doremir_error_t e
 void doremir_audio_engine_set_log_file(doremir_string_file_path_t path)
 {
     char *cpath = doremir_string_to_utf8(path);
-    log_data_g     = fopen(cpath, "a");
-    log_func_g   = stdlog;
+    log_data_g  = fopen(cpath, "a");
+    log_func_g  = stdlog;
     free(cpath);
 }
 
@@ -98,7 +102,7 @@ void doremir_audio_engine_set_log_file(doremir_string_file_path_t path)
  */
 void doremir_audio_engine_set_log_std()
 {
-    log_data_g    = stdout;
+    log_data_g  = stdout;
     log_func_g  = stdlog;
 }
 
@@ -107,7 +111,7 @@ void doremir_audio_engine_set_log_std()
 void doremir_audio_engine_set_log(doremir_audio_engine_log_func_t f, doremir_ptr_t data)
 {
     log_func_g  = f;
-    log_data_g    = data;
+    log_data_g  = data;
 }
 
 

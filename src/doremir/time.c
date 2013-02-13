@@ -22,33 +22,19 @@ struct _doremir_time_t {
     ratio_t         value;      //  Value in seconds
 };
 
+static clock_serv_t mach_clock_g;
 
 // --------------------------------------------------------------------------------
 
-doremir_time_t doremir_time_time(doremir_time_clock_t clock)
-{
-    assert(doremir_interface(doremir_time_clock_interface_i, clock)
-           && "Must implement Clock");
-    return ((doremir_time_clock_interface_t *)
-            doremir_interface(doremir_time_clock_interface_i, clock))->time(clock);
+void doremir_time_initialize()
+{                
+    host_get_clock_service(mach_host_self(), REALTIME_CLOCK, &mach_clock_g);
 }
 
-double doremir_time_tick_rate(doremir_time_clock_t clock)
+void doremir_time_terminate()
 {
-    assert(doremir_interface(doremir_time_clock_interface_i, clock)
-           && "Must implement Clock");
-    return ((doremir_time_clock_interface_t *)
-            doremir_interface(doremir_time_clock_interface_i, clock))->tick_rate(clock);
+    mach_port_deallocate(mach_task_self(), mach_clock_g);
 }
-
-int64_t doremir_time_ticks(doremir_time_clock_t clock)
-{
-    assert(doremir_interface(doremir_time_clock_interface_i, clock)
-           && "Must implement Clock");
-    return ((doremir_time_clock_interface_t *)
-            doremir_interface(doremir_time_clock_interface_i, clock))->ticks(clock);
-}
-
 
 // --------------------------------------------------------------------------------
 
@@ -58,7 +44,8 @@ inline static doremir_time_t new_time(ratio_t value)
 
     doremir_time_t t = doremir_new(time);
     t->impl  = &time_impl;
-    t->value = doremir_copy(value);
+    // t->value = doremir_copy(value);
+    t->value = value;
     return t;
 }
 
@@ -78,16 +65,14 @@ inline static void delete_time(doremir_time_t time)
     @param minutes
         Number of minutes.
     @param seconds
-        Number of seconds.
+        Number of seconds (destroyed).
     @return
         A new time value.
  */
 doremir_time_t doremir_time_create(int32_t days, int32_t hours, int32_t minutes, doremir_ratio_t seconds)
 {
-    int     whole = days * (60 * 60 * 24) + hours * (60 * 60) + minutes * 60;
-    ratio_t secs = doremir_add(ratio(whole, 1), seconds);
-
-    return new_time(secs);
+    int  whole = days * (60 * 60 * 24) + hours * (60 * 60) + minutes * 60;
+    return new_time(doremir_dadd(ratio(whole, 1), seconds));
 }
 
 /**
@@ -95,7 +80,7 @@ doremir_time_t doremir_time_create(int32_t days, int32_t hours, int32_t minutes,
  */
 doremir_time_t doremir_time_copy(doremir_time_t time)
 {
-    return new_time(time->value);
+    return new_time(doremir_ratio_copy(time->value));
 }
 
 /**
@@ -235,18 +220,20 @@ doremir_string_t doremir_time_to_iso(doremir_time_t time)
  */
 doremir_time_t doremir_time_from_system(doremir_time_system_t time)
 {
-    return seconds(ti64(time));
+    // return seconds(ti64(time));
+    assert(false && "Not implemented");
 }
 
 /** Convert system CPU time to a time interval.
  */
 doremir_time_t doremir_time_from_cpu(doremir_time_cpu_t cpu_time)
 {
-    int64_t t = doremir_peek_int64(cpu_time);
-    int64_t q = t / CLOCKS_PER_SEC;
-    int64_t r = t % CLOCKS_PER_SEC;
-
-    return doremir_add(seconds(q), divisions(r, CLOCKS_PER_SEC));
+    // int64_t t = doremir_peek_int64(cpu_time);
+    // int64_t q = t / CLOCKS_PER_SEC;
+    // int64_t r = t % CLOCKS_PER_SEC;
+    // 
+    // return doremir_add(seconds(q), divisions(r, CLOCKS_PER_SEC));
+    assert(false && "Not implemented");
 }
 
 /** Get the system time.
@@ -275,9 +262,45 @@ doremir_time_cpu_t doremir_time_cpu()
 
 // --------------------------------------------------------------------------------
 
-doremir_time_t system_time(ptr_t a)
+doremir_time_t doremir_time_time(doremir_time_clock_t clock)
 {
-    return doremir_time_from_system(doremir_time_system());
+    assert(doremir_interface(doremir_time_clock_interface_i, clock)
+           && "Must implement Clock");
+    return ((doremir_time_clock_interface_t *)
+            doremir_interface(doremir_time_clock_interface_i, clock))->time(clock);
+}
+
+double doremir_time_tick_rate(doremir_time_clock_t clock)
+{
+    assert(doremir_interface(doremir_time_clock_interface_i, clock)
+           && "Must implement Clock");
+    return ((doremir_time_clock_interface_t *)
+            doremir_interface(doremir_time_clock_interface_i, clock))->tick_rate(clock);
+}
+
+int64_t doremir_time_ticks(doremir_time_clock_t clock)
+{
+    assert(doremir_interface(doremir_time_clock_interface_i, clock)
+           && "Must implement Clock");
+    return ((doremir_time_clock_interface_t *)
+            doremir_interface(doremir_time_clock_interface_i, clock))->ticks(clock);
+}
+
+
+// --------------------------------------------------------------------------------
+
+struct system_clock {
+    impl_t impl;
+};
+typedef struct system_clock *system_clock_t;
+
+ptr_t system_clock_impl(doremir_id_t interface);
+
+clock_t doremir_time_get_system_clock()
+{
+    system_clock_t clock = doremir_new_struct(system_clock);
+    clock->impl = &system_clock_impl;
+    return (clock_t) clock;
 }
 
 double system_tick_rate(ptr_t a)
@@ -294,18 +317,9 @@ int64_t system_ticks(ptr_t a)
     assert(false && "Not implemented");
 }
 
-struct system_clock {
-    impl_t impl;
-};
-typedef struct system_clock *system_clock_t;
-
-ptr_t system_clock_impl(doremir_id_t interface);
-
-clock_t doremir_time_get_system_clock()
+doremir_time_t system_time(ptr_t a)
 {
-    system_clock_t clock = doremir_new_struct(system_clock);
-    clock->impl = &system_clock_impl;
-    return (clock_t) clock;
+    return doremir_time_from_system(doremir_time_system());
 }
 
 ptr_t system_clock_impl(doremir_id_t interface)
@@ -327,53 +341,6 @@ ptr_t system_clock_impl(doremir_id_t interface)
 
 // --------------------------------------------------------------------------------
 
-double system_prec_tick_rate(ptr_t a)
-{
-    return 1000000000;
-}
-
-// TODO separate init/term
-int64_t system_prec_ticks(ptr_t a)
-{
-    struct timespec ts;
-
-#ifdef __MACH__ // OS X does not have clock_gettime, use clock_get_time
-    clock_serv_t cclock;
-    mach_timespec_t mts;
-    host_get_clock_service(mach_host_self(), CALENDAR_CLOCK, &cclock);
-    clock_get_time(cclock, &mts);
-    mach_port_deallocate(mach_task_self(), cclock);
-    ts.tv_sec = mts.tv_sec;
-    ts.tv_nsec = mts.tv_nsec;
-
-#else
-    clock_gettime(CLOCK_REALTIME, &ts);
-#endif
-
-    return ts.tv_sec * 1000000000 + ts.tv_nsec;
-}
-
-doremir_time_t system_prec_time(ptr_t a)
-{
-    struct timespec ts;
-
-#ifdef __MACH__ // OS X does not have clock_gettime, use clock_get_time
-    clock_serv_t cclock;
-    mach_timespec_t mts;
-    host_get_clock_service(mach_host_self(), CALENDAR_CLOCK, &cclock);
-    clock_get_time(cclock, &mts);
-    mach_port_deallocate(mach_task_self(), cclock);
-    ts.tv_sec = mts.tv_sec;
-    ts.tv_nsec = mts.tv_nsec;
-
-#else
-    clock_gettime(CLOCK_REALTIME, &ts);
-#endif                                                  
-    // FIXME
-    return doremir_add(seconds(ts.tv_sec), divisions(0,1));
-}
-
-
 struct system_prec_clock {
     impl_t impl;
 };
@@ -386,6 +353,30 @@ clock_t doremir_time_get_system_prec_clock()
     system_prec_clock_t clock = doremir_new_struct(system_prec_clock);
     clock->impl = &system_prec_clock_impl;
     return (clock_t) clock;
+}
+
+double system_prec_tick_rate(ptr_t a)
+{
+    return 1000000000;
+}
+
+// TODO separate init/term
+int64_t system_prec_ticks(ptr_t a)
+{
+    mach_timespec_t ts;
+    clock_get_time(mach_clock_g, &ts);
+
+    return ts.tv_sec * 1000000000 + ts.tv_nsec;
+}
+
+doremir_time_t system_prec_time(ptr_t a)
+{
+    mach_timespec_t ts;
+    clock_get_time(mach_clock_g, &ts);
+
+    // clock_gettime(CLOCK_REALTIME, &ts);
+
+    return seconds(ts.tv_sec); // TODO with tv_nsec
 }
 
 ptr_t system_prec_clock_impl(doremir_id_t interface)

@@ -55,6 +55,7 @@ doremir_scheduler_t doremir_scheduler_create(doremir_time_clock_t clock)
 void doremir_scheduler_destroy(scheduler_t scheduler)
 {
     doremir_destroy(scheduler->queue);
+    doremir_destroy(scheduler->start);
     delete_scheduler(scheduler);
 }
 
@@ -74,54 +75,56 @@ void sched_infom(string_t str)
 }
 
 void doremir_scheduler_execute(doremir_scheduler_t scheduler)
-{
-    time_t now = doremir_subtract(doremir_time_time(scheduler->clock),
-                                  scheduler->start);
+{                                    
+    time_t abs_now = doremir_time_time(scheduler->clock);
+    time_t now = doremir_subtract(abs_now, scheduler->start);
 
-    while (true) {
-        sched_infom(string_append(string("Time is "), doremir_string_show(now)));
-
-        event_t event = doremir_priority_queue_peek(scheduler->queue);
-
-        if (event) {
-            doremir_event_sync(event);
-        }
-
-        if (!event) {
-            sched_infom(string("No events"));
-            break;
-
-        } else if (!doremir_less_than(doremir_event_offset(event), now)) {
-
-            sched_infom(string_append(string("    Offset is "), doremir_string_show(doremir_event_offset(event))));
-            sched_infom(string("No due events"));
-            break;
-
-        } else {
-            sched_infom(string_dappend(string("    Offset is "), doremir_string_show(doremir_event_offset(event))));
-            sched_infom(string_dappend(string("Due event: "), doremir_string_show(event)));
-
-            // We now the event is due, extract it
-            doremir_priority_queue_pop(scheduler->queue);
-
-            if (!doremir_event_has_value(now, event)) {
-                // Did not happen
-                sched_infom(string("   No value"));
-
-            } else {
-                ptr_t   value = doremir_event_value(event);
-                sched_infom(string_dappend(string(    "Value is: "), doremir_string_show(value)));
-            }
-
-            event_t tail  = doremir_event_tail(event);
-
-            if (/*tail && */!doremir_event_is_never(tail)) {
-                sched_infom(string_append(string("Reinsert: "), doremir_string_show(tail)));
-                doremir_priority_queue_insert(doremir_event_delay(seconds(0), tail), scheduler->queue);
-            }
-
-        }
-    }
+    // while (true) {
+    //     sched_infom(string_append(string("Time is "), doremir_string_show(now)));
+    // 
+    //     event_t event = doremir_priority_queue_peek(scheduler->queue);
+    // 
+    //     if (event) {
+    //         doremir_event_sync(event);
+    //     }
+    // 
+    //     if (!event) {
+    //         sched_infom(string("No events"));
+    //         break;
+    // 
+    //     } else if (!doremir_less_than(doremir_event_offset(event), now)) {
+    // 
+    //         sched_infom(string_append(string("    Offset is "), doremir_string_show(doremir_event_offset(event))));
+    //         sched_infom(string("No due events"));
+    //         break;
+    // 
+    //     } else {
+    //         sched_infom(string_dappend(string("    Offset is "), doremir_string_show(doremir_event_offset(event))));
+    //         sched_infom(string_dappend(string("Due event: "), doremir_string_show(event)));
+    // 
+    //         // We now the event is due, extract it
+    //         doremir_priority_queue_pop(scheduler->queue);
+    // 
+    //         if (!doremir_event_has_value(now, event)) {
+    //             // Did not happen
+    //             sched_infom(string("   No value"));
+    // 
+    //         } else {
+    //             ptr_t   value = doremir_event_value(event);
+    //             sched_infom(string_dappend(string(    "Value is: "), doremir_string_show(value)));
+    //         }
+    // 
+    //         event_t tail  = doremir_event_tail(event);
+    // 
+    //         if (/*tail && */!doremir_event_is_never(tail)) {
+    //             sched_infom(string_append(string("Reinsert: "), doremir_string_show(tail)));
+    //             doremir_priority_queue_insert(doremir_event_delay(seconds(0), tail), scheduler->queue);
+    //         }
+    // 
+    //     }
+    // }
+    doremir_destroy(abs_now);
+    doremir_destroy(now);    
 }
 
 
