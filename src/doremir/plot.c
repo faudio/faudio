@@ -45,7 +45,7 @@ void doremir_plot_use_core()
     @param cont         Continuation function.
     @param cont_data    Value to be passed to the continuation function.
  */
-void doremir_plot_functions
+void doremir_plot_continous
 (
     plot_func           func,
     doremir_ptr_t       data,
@@ -89,7 +89,7 @@ void doremir_plot_buffer_float(doremir_buffer_t  buffer,
                                doremir_nullary_t cont,
                                doremir_ptr_t     data)
 {
-    doremir_plot_functions(plot_float, buffer, cont, data);
+    doremir_plot_continous(plot_float, buffer, cont, data);
 }
 
 /** Run a plot on the given buffer, treating its contents as
@@ -99,6 +99,6 @@ void doremir_plot_buffer_double(doremir_buffer_t      buffer,
                                 doremir_nullary_t     cont,
                                 doremir_ptr_t         data)
 {
-    doremir_plot_functions(plot_double, buffer, cont, data);
+    doremir_plot_continous(plot_double, buffer, cont, data);
 }
 

@@ -16,7 +16,8 @@ typedef double (* doremir_plot_function_t)(doremir_ptr_t,
                                            int,
                                            double,
                                            double);
-void doremir_plot_functions(doremir_plot_function_t,
+void doremir_plot_discrete(doremir_list_t);
+void doremir_plot_continous(doremir_plot_function_t,
                             doremir_ptr_t,
                             doremir_nullary_t,
                             doremir_ptr_t);

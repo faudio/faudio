@@ -38,7 +38,8 @@ module Doremir.Plot
      */
     type Function = ((Ptr, Int, Double, Double) -> Double)*;
 
-    functions : (Function, Ptr, Nullary, Ptr) -> Void;
+    discrete  : List -> Void;                           // Int -> [(Double, Double)]
+    continous : (Function, Ptr, Nullary, Ptr) -> Void;  // Int -> Double -> Double -> Double
 
     bufferFloat   : (Buffer, Nullary, Ptr) -> Void;
     bufferDouble  : (Buffer, Nullary, Ptr) -> Void; 

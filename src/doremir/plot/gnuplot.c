@@ -15,9 +15,9 @@ typedef doremir_plot_function_t plot_func_t;
 #define kSamples        500000
 #define kDownSapling    10
 
-#define kMaxPathSize    100
-#define kMaxCmdSize     100
-#define kMaxTmpSize     L_tmpnam
+#define kPathSize    100
+#define kCmdSize     100
+#define kTmpSize     L_tmpnam
 
 #define kPlots          5
 #define kPlotFormat \
@@ -41,18 +41,18 @@ void generate_plot_file(plot_func_t func,
                         char *plot_res
                        )
 {
-    char plot_path[kMaxTmpSize];   // Plot file (returned)
+    char plot_path[kTmpSize];   // Plot file (returned)
 
-    char out_dir[kMaxPathSize];    // Output directory
-    char data_path[kMaxTmpSize];   // Data file (coded into plot file)
-    char out_path[kMaxPathSize];   // Output file (coded into plot file and returned)
+    char out_dir[kPathSize];    // Output directory
+    char data_path[kTmpSize];   // Data file (coded into plot file)
+    char out_path[kPathSize];   // Output file (coded into plot file and returned)
 
     tmpnam(data_path);
     tmpnam(plot_path);
 
     doremir_with_temp(home, doremir_system_directory_home()) {
-        snprintf(out_dir,   kMaxPathSize, "%s/.doremiraudio", unstring(home));
-        snprintf(out_path,  kMaxPathSize, "%s/plot", out_dir);
+        snprintf(out_dir,   kPathSize, "%s/.doremiraudio", unstring(home));
+        snprintf(out_path,  kPathSize, "%s/plot", out_dir);
     }
 
     // Write data and plot file
@@ -83,15 +83,18 @@ void generate_plot_file(plot_func_t func,
     }
 
     // Return out_path file and plotfile
-    strncpy(out_dir_res, out_dir,   kMaxPathSize);
-    strncpy(out_res,     out_path,  kMaxPathSize);
-    strncpy(plot_res,    plot_path, kMaxTmpSize);
+    strncpy(out_dir_res, out_dir,   kPathSize);
+    strncpy(out_res,     out_path,  kPathSize);
+    strncpy(plot_res,    plot_path, kTmpSize);
 }
 
 
 void run_gnu_plot(plot_func_t func, ptr_t func_data, nullary_t cont, ptr_t cont_data)
 {
-    char out_path[kMaxPathSize], out_dir[kMaxPathSize], plot_path[kMaxTmpSize], cmd[kMaxCmdSize];
+    char out_path[kPathSize];
+    char out_dir[kPathSize];
+    char plot_path[kTmpSize];
+    char cmd[kCmdSize];
     int res;
 
 
