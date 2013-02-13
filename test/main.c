@@ -1355,7 +1355,7 @@ void test_event()
 
     {
         doremir_time_t t = seconds(0);
-        clock_t c = doremir_time_get_system_clock();
+        clock_t c = doremir_time_get_system_prec_clock();
 
         event_t ha = now(string("höglund"));
 
@@ -1363,8 +1363,10 @@ void test_event()
                                                 merge_event(ha, delay_event(seconds(1),
                                                             merge_event(ha, delay_event(seconds(1),
                                                                     never()))))));
-
-
+                                         
+        // dispatcher_t disp = lockfree_dispatcher();
+        // event_t a = doremir_event_receive(disp, i16(0));
+        // event_t a = doremir_system_event_mouse_down();
         // event_t a = delay_event(seconds(10), ha);
 
         event_t b = doremir_system_event_write_std(a);
@@ -1385,9 +1387,10 @@ void test_event()
 
         doremir_scheduler_schedule(s, b);
 
-        while (1) {
+        while (1) {                   
+            // doremir_message_send(disp, i16(0), string("foo"));
             doremir_scheduler_execute(s);
-            doremir_thread_sleep(100);
+            doremir_thread_sleep(50);
         }
     }
 
@@ -1536,7 +1539,7 @@ double f1(void *ct, int i, double t, double x)
 void test_plot()
 {
     test_section("Plot");
-    doremir_plot_functions(f1, NULL, NULL, NULL);
+    doremir_plot_continous(f1, NULL, NULL, NULL);
 }
 
 
@@ -1909,8 +1912,8 @@ int main(int argc, char const *argv[])
         test_system_directory();
         // test_plot(NULL, NULL);
         // test_plot_buffer();
-begin:
         test_plot_file(string_dappend(doremir_system_directory_current(), string("/test/in.wav")));
+begin:
 
         // test_processor_graphs(string_dappend(doremir_system_directory_current(), string("/test/proc.dot")));
 

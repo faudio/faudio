@@ -78,7 +78,8 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
         // inform(string_append(string("Time is "), doremir_string_show(now)));
 
         event_t event = doremir_priority_queue_peek(scheduler->queue);
-        // doremir_event_sync(event);
+        if (event)
+            doremir_event_sync(event);
 
         if (!event) {
             // fail(string("No events"));
@@ -103,15 +104,15 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
 
             } else {
                 ptr_t   value = doremir_event_value(event);
-                event_t tail  = doremir_event_tail(event);
-
                 // inform(string_dappend(string(    "Value is: "), doremir_string_show(value)));
-
-                if (/*tail && */!doremir_event_is_never(tail)) {
-                    // inform(string_append(string("Reinsert: "), doremir_string_show(tail)));
-                    doremir_priority_queue_insert(tail, scheduler->queue);
-                }
             }
+            
+            event_t tail  = doremir_event_tail(event);
+            if (/*tail && */!doremir_event_is_never(tail)) {
+                inform(string_append(string("Reinsert: "), doremir_string_show(tail)));
+                doremir_priority_queue_insert(doremir_event_delay(seconds(1), tail), scheduler->queue);
+            }
+
         }
     }
 }

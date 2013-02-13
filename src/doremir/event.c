@@ -389,11 +389,9 @@ bool doremir_event_has_value(doremir_time_t time, doremir_event_t event)
     }
 
     case recv_event: {
-        return !doremir_list_is_empty(
-                   doremir_list_drop(recv_get(event, index),
-                                     doremir_message_receive(
-                                         recv_get(event, dispatcher),
-                                         recv_get(event, address))));
+        return doremir_list_length(doremir_message_receive(
+                                      recv_get(event, dispatcher),
+                                      recv_get(event, address))) > recv_get(event, index);
     }
 
     default:
@@ -512,7 +510,7 @@ doremir_event_t doremir_event_tail(doremir_event_t event)
         return receive2(
                    recv_get(event, dispatcher),
                    recv_get(event, address),
-                   recv_get(event, index) + 1);
+                   recv_get(event, index));
     }
 
     default:
