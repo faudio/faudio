@@ -8,7 +8,10 @@
 #include <doremir/util/macros.h>
 #include <doremir/util/apply.h>
 
+#include <time.h>
+
 #define system_time_t       time_t
+#define system_clock_t      clock_t
 
 #define ptr_t               doremir_ptr_t
 #define impl_t              doremir_impl_t
@@ -29,6 +32,7 @@
 #define string_t            doremir_string_t
 #define type_repr_t         doremir_dynamic_type_repr_t
 #define priority_queue_t    doremir_priority_queue_t
+#define scheduler_t         doremir_scheduler_t
 #define atomic_t            doremir_atomic_t
 #define atomic_queue_t      doremir_atomic_queue_t
 #define atomic_stack_t      doremir_atomic_stack_t
@@ -44,6 +48,7 @@
 #define type_t              doremir_type_t
 #define midi_t              doremir_midi_t
 #define time_t              doremir_time_t
+#define clock_t             doremir_time_clock_t
 #define event_t             doremir_event_t
 #define processor_t         doremir_processor_t
 #define proc_t              doremir_processor_t
@@ -138,7 +143,8 @@ void doremir_audio_engine_log_error(doremir_string_t);
 #define ti64                doremir_to_int64
 #define tf32                doremir_to_double
 #define tf64                doremir_to_double
-#define b                   doremir_from_bool
+#define fb                  doremir_from_bool
+// #define b                   doremir_from_bool
 #define i8                  doremir_from_int8
 #define i16                 doremir_from_int16
 #define i32                 doremir_from_int32

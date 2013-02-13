@@ -13,12 +13,11 @@
     */
 
 typedef struct _doremir_scheduler_t * doremir_scheduler_t;
-doremir_scheduler_t doremir_scheduler_create(doremir_ptr_t);
+doremir_scheduler_t doremir_scheduler_create(doremir_time_clock_t);
 void doremir_scheduler_destroy(doremir_scheduler_t);
 void doremir_scheduler_schedule(doremir_scheduler_t,
                                 doremir_event_t);
 void doremir_scheduler_execute(doremir_scheduler_t);
-void doremir_scheduler_run(doremir_scheduler_t);
 
 /** @}
     @}

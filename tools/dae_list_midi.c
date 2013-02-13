@@ -7,8 +7,8 @@ void print_midi_devices(midi_session_t session)
     doremir_print("Listing midi devices: \n", NULL);
     doremir_for_each(x, doremir_device_midi_all(session)) {
         doremir_print("    Device: %s\n", x);
-        doremir_print("        Input:  %s\n", b(doremir_device_midi_has_input(x)));
-        doremir_print("        Output: %s\n", b(doremir_device_midi_has_output(x)));
+        doremir_print("        Input:  %s\n", fb(doremir_device_midi_has_input(x)));
+        doremir_print("        Output: %s\n", fb(doremir_device_midi_has_output(x)));
     }
     doremir_print("Default input is : %s\n", doremir_device_midi_default_input(session));
     doremir_print("Default output is : %s\n", doremir_device_midi_default_output(session));

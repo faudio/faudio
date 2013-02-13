@@ -27,32 +27,32 @@
 
 doremir_event_t doremir_system_event_mouse_move()
 {
-    return doremir_system_event_select(list(i32(mouse_move_event)));
+    return doremir_system_event_select(list(i16(mouse_move_event)));
 }
 
 doremir_event_t doremir_system_event_mouse_drag()
 {
-    return doremir_system_event_select(list(i32(mouse_drag_event)));
+    return doremir_system_event_select(list(i16(mouse_drag_event)));
 }
 
 doremir_event_t doremir_system_event_mouse_up()
 {
-    return doremir_system_event_select(list(i32(mouse_up_event)));
+    return doremir_system_event_select(list(i16(mouse_up_event)));
 }
 
 doremir_event_t doremir_system_event_mouse_down()
 {
-    return doremir_system_event_select(list(i32(mouse_down_event)));
+    return doremir_system_event_select(list(i16(mouse_down_event)));
 }
 
 doremir_event_t doremir_system_event_key_up()
 {
-    return doremir_system_event_select(list(i32(key_up_event)));
+    return doremir_system_event_select(list(i16(key_up_event)));
 }
 
 doremir_event_t doremir_system_event_key_down()
 {
-    return doremir_system_event_select(list(i32(key_down_event)));
+    return doremir_system_event_select(list(i16(key_down_event)));
 }
 
 

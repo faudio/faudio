@@ -18,19 +18,25 @@ struct _doremir_time_t {
 // --------------------------------------------------------------------------------
 
 doremir_time_t doremir_time_time(doremir_time_clock_t clock)
-{
+{                                                     
+    assert(doremir_interface(doremir_time_clock_interface_i, clock)
+        && "Must implement Clock");
     return ((doremir_time_clock_interface_t *)
             doremir_interface(doremir_time_clock_interface_i, clock))->time(clock);
 }
 
 double doremir_time_tick_rate(doremir_time_clock_t clock)
 {
+    assert(doremir_interface(doremir_time_clock_interface_i, clock)
+        && "Must implement Clock");
     return ((doremir_time_clock_interface_t *)
             doremir_interface(doremir_time_clock_interface_i, clock))->tick_rate(clock);
 }
 
 int64_t doremir_time_ticks(doremir_time_clock_t clock)
 {
+    assert(doremir_interface(doremir_time_clock_interface_i, clock)
+        && "Must implement Clock");
     return ((doremir_time_clock_interface_t *)
             doremir_interface(doremir_time_clock_interface_i, clock))->ticks(clock);
 }
@@ -221,30 +227,88 @@ doremir_string_t doremir_time_to_iso(doremir_time_t time)
  */
 doremir_time_t doremir_time_from_system(doremir_time_system_t time)
 {
-    assert(false && "Not implemented");
+    return seconds(ti64(time));
 }
 
 /** Convert system CPU time to a time interval.
  */
 doremir_time_t doremir_time_from_cpu(doremir_time_cpu_t cpu_time)
 {
-    assert(false && "Not implemented");
+    int64_t t = doremir_peek_int64(cpu_time);
+    int64_t q = t / CLOCKS_PER_SEC;
+    int64_t r = t % CLOCKS_PER_SEC;
+
+    return doremir_add(seconds(q), divisions(r, CLOCKS_PER_SEC));
 }
 
 /** Get the system time.
  */
 doremir_time_system_t doremir_time_system()
 {
-    assert(false && "Not implemented");
+    // TODO warning OK
+    system_time_t t;
+    time(&t);
+    int64_t lt = t;
+    return i64(lt);
 }
 
 /** Get the system CPU time.
  */
 doremir_time_cpu_t doremir_time_cpu()
 {
-    assert(false && "Not implemented");
+    // TODO warning OK
+    system_clock_t t = clock();
+    int64_t lt = t;
+    return i64(lt);
 }
 
+
+doremir_time_t system_time(ptr_t a)
+{
+    return doremir_time_from_system(doremir_time_system());
+}
+
+double system_tick_rate(ptr_t a)
+{
+    return 1;
+}
+
+int64_t system_ticks(ptr_t a)
+{              
+    system_time_t t;
+    time(&t);
+    int64_t lt = t;
+    return lt;
+}
+
+struct system_clock_whitness {
+    impl_t impl;
+};    
+typedef struct system_clock_whitness* system_clock_whitness_t;
+
+ptr_t system_clock_whitness_impl(doremir_id_t interface);
+
+clock_t doremir_time_get_system_clock()
+{
+    system_clock_whitness_t clock = doremir_new_struct(system_clock_whitness);
+    clock->impl = &system_clock_whitness_impl;
+    return clock;
+}
+
+ptr_t system_clock_whitness_impl(doremir_id_t interface)
+{
+    static doremir_time_clock_interface_t system_clock_whitness_clock
+        = { system_time, system_tick_rate, system_ticks };
+
+    switch (interface) {
+
+    case doremir_time_clock_interface_i:
+        return &system_clock_whitness_clock;
+
+    default:
+        return NULL;
+    }
+}
 
 
 

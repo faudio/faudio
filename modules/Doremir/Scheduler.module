@@ -18,11 +18,12 @@ module Doremir.Scheduler
 
     type Scheduler = opaque;
 
-    create  : (Ptr) -> Scheduler; // Requires Clock
+    create  : Clock -> Scheduler; // Requires Clock
     destroy : Scheduler -> Void;
     
     schedule : (Scheduler, Event) -> Void;
     execute  : Scheduler -> Void;
+    
     // Loop until finished
-    run      : Scheduler -> Void;
+    // run      : Scheduler -> Void;
 }

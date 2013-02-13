@@ -16,7 +16,7 @@ void print_audio_devices(audio_session_t session)
 }
 
 int main (int argc, char const *argv[])
-{
+{    
     audio_session_t session;    
     
     doremir_audio_engine_initialize();

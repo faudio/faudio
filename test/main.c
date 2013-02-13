@@ -26,9 +26,9 @@ void test_value_references()
     test_section("Value references");
     // FIXME leaks
 
-    printf("bool:       %s\n", doremir_type_str(b(true)));
-    assert(tb(b(true)) == true);
-    assert(tb(b(false)) == false);
+    printf("bool:       %s\n", doremir_type_str(fb(true)));
+    assert(tb(fb(true)) == true);
+    assert(tb(fb(false)) == false);
 
     printf("int8:       %s\n", doremir_type_str(i8(62)));
     assert(ti8(i8('h')) == 'h');
@@ -82,7 +82,7 @@ void test_generic_functions()
     printf("3333333333333333333 / 2      ==> %lli\n", ti64(doremir_divide(i64(3333333333333333333ll), i64(2))));
     printf("3                   / 1      ==> %i\n",   ti8(doremir_divide(i8(32), i8(1))));
 
-    printf("true == false                ==> %s\n", (doremir_equal(b(true), b(true))) ? "true" : false);
+    printf("true == false                ==> %s\n", (doremir_equal(fb(true), fb(true))) ? "true" : false);
     printf("32   == 32                   ==> %s\n", (doremir_equal(i8(32), i8(32))) ? "true" : false);
     printf("5123 == 5123                 ==> %s\n", (doremir_equal(i16(5123), i16(5123))) ? "true" : false);
 
@@ -170,14 +170,14 @@ void test_show()
 {
     test_section("Show");
     doremir_print("\n", NULL);
-    doremir_dprint("%s\n", b(0));
+    doremir_dprint("%s\n", fb(0));
     doremir_dprint("%s\n", i8(129));
     doremir_dprint("%s\n", i16(129));
     doremir_dprint("%s\n", i32(64000));
     doremir_dprint("%s\n", f64(3.1415));
     doremir_dprint("%s\n", empty());
     doremir_dprint("%s\n", list(i8(1)));
-    doremir_dprint("%s\n", list(i8(1), i8(2), list(i8(1), i8(2), b(true))));
+    doremir_dprint("%s\n", list(i8(1), i8(2), list(i8(1), i8(2), fb(true))));
     doremir_dprint("%s\n", list(
                        pair(string("hans"), string("höglund")),
                        pair(string("lisa"), string("streich")),
@@ -190,10 +190,10 @@ void test_show()
 void test_compare()
 {
     test_section("Comparison");
-    doremir_dprint("\"abc\" <  \"abd\"               ==> %s\n", b(doremir_less_than(string("abc"), string("abd"))));
-    doremir_dprint("\"abc\" <= \"abd\"               ==> %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
-    doremir_dprint("\"abc\" >  \"abd\"               ==> %s\n", b(doremir_greater_than(string("abc"), string("abd"))));
-    doremir_dprint("\"abc\" >= \"abd\"               ==> %s\n", b(doremir_less_than_equal(string("abc"), string("abd"))));
+    doremir_dprint("\"abc\" <  \"abd\"               ==> %s\n", fb(doremir_less_than(string("abc"), string("abd"))));
+    doremir_dprint("\"abc\" <= \"abd\"               ==> %s\n", fb(doremir_less_than_equal(string("abc"), string("abd"))));
+    doremir_dprint("\"abc\" >  \"abd\"               ==> %s\n", fb(doremir_greater_than(string("abc"), string("abd"))));
+    doremir_dprint("\"abc\" >= \"abd\"               ==> %s\n", fb(doremir_less_than_equal(string("abc"), string("abd"))));
 }
 
 
@@ -202,11 +202,11 @@ void test_compare()
 void test_rational()
 {
     test_section("Rational numbers");
-    doremir_dprint("1/3 <  1/2                   ==> %s\n", b(doremir_less_than(ratio(1, 3), ratio(1, 2))));
-    doremir_dprint("1/3 >  1/2                   ==> %s\n", b(doremir_greater_than(ratio(1, 3), ratio(1, 2))));
-    doremir_dprint("1/3 == 2/6                   ==> %s\n", b(doremir_equal(ratio(1, 3), ratio(2, 6))));
-    doremir_dprint("1/3 == 254/762               ==> %s\n", b(doremir_equal(ratio(1, 3), ratio(254, 762))));
-    doremir_dprint("1/3 <= 7/8                   ==> %s\n", b(doremir_equal(ratio(1, 3), ratio(254, 762))));
+    doremir_dprint("1/3 <  1/2                   ==> %s\n", fb(doremir_less_than(ratio(1, 3), ratio(1, 2))));
+    doremir_dprint("1/3 >  1/2                   ==> %s\n", fb(doremir_greater_than(ratio(1, 3), ratio(1, 2))));
+    doremir_dprint("1/3 == 2/6                   ==> %s\n", fb(doremir_equal(ratio(1, 3), ratio(2, 6))));
+    doremir_dprint("1/3 == 254/762               ==> %s\n", fb(doremir_equal(ratio(1, 3), ratio(254, 762))));
+    doremir_dprint("1/3 <= 7/8                   ==> %s\n", fb(doremir_equal(ratio(1, 3), ratio(254, 762))));
 }
 
 
@@ -278,6 +278,28 @@ void test_time()
     doremir_destroy(u);
 }
 
+
+// --------------------------------------------------------------------------------
+
+void test_system_time()
+{
+    test_section("System time");
+
+    clock_t system_clock = doremir_time_get_system_clock();
+
+    for(int i = 0; i < 10; ++i)
+    {
+        // doremir_print("system()                     ==> %s\n", doremir_time_system());
+        // doremir_print("cpu()                        ==> %s\n", doremir_time_cpu());
+        // doremir_print("system()                     ==> %s\n", doremir_time_from_system(doremir_time_system()));
+        // doremir_print("cpu()                        ==> %s\n", doremir_time_from_cpu(doremir_time_cpu()));
+
+        doremir_print("time(systemClock)            ==> %s\n", doremir_time_time(system_clock));
+        doremir_print("ticks(systemClock)           ==> %s\n", i64(doremir_time_ticks(system_clock)));
+
+        doremir_thread_sleep(50);
+    }
+}
 
 // --------------------------------------------------------------------------------
 
@@ -421,7 +443,7 @@ void test_atomic_queue(int iter, long sleepTime)
         doremir_atomic_queue_t q = doremir_atomic_queue_create();
 
         struct reader_args args = { q, atomic() };
-        doremir_atomic_set(args.active, b(true));
+        doremir_atomic_set(args.active, fb(true));
 
         thread_t t = doremir_thread_create(queue_reader, &args);
 
@@ -434,7 +456,7 @@ void test_atomic_queue(int iter, long sleepTime)
         }
 
         doremir_thread_sleep(sleepTime);
-        doremir_atomic_set(args.active, b(false));
+        doremir_atomic_set(args.active, fb(false));
         doremir_thread_join(t); // TODO how to kill?
         doremir_destroy(q);
     }
@@ -476,7 +498,7 @@ void test_atomic_stack(int iter, long sleepTime)
         doremir_atomic_stack_t q = doremir_atomic_stack_create();
 
         struct stack_reader_args args = { q, atomic() };
-        doremir_atomic_set(args.active, b(true));
+        doremir_atomic_set(args.active, fb(true));
 
         thread_t t = doremir_thread_create(stack_reader, &args);
 
@@ -492,7 +514,7 @@ void test_atomic_stack(int iter, long sleepTime)
         }
 
         doremir_thread_sleep(sleepTime);
-        doremir_atomic_set(args.active, b(false));
+        doremir_atomic_set(args.active, fb(false));
         doremir_thread_join(t);
         doremir_destroy(q);
     }
@@ -1130,8 +1152,8 @@ void test_map()
         // a = doremir_map_dadd(string("age"), i16(25), a);
         a = doremir_map_dset(string("skills"), list(string("programming"), string("composition")), a);
 
-        // a = doremir_map_dadd(string("happy"), b(true), a);
-        // a = doremir_map_dadd(string("pair"), pair(b(true), f64(3.1415)), a);
+        // a = doremir_map_dadd(string("happy"), fb(true), a);
+        // a = doremir_map_dadd(string("pair"), pair(fb(true), f64(3.1415)), a);
         // a = doremir_map_dadd(string("ratio"), ratio(1, 3), a);
         // a = doremir_map_dadd(string("ratio2"), doremir_multiply(ratio(4, 4444), ratio(1, 2)), a);
 
@@ -1278,16 +1300,16 @@ void test_system_event()
     doremir_message_sender_t s =
         doremir_system_event_receive(
             list(
-                i16(mouse_move_event)
+                // i16(mouse_move_event)
                 // i16(mouse_down_event)
-                // i16(key_down_event),
-                // i16(key_up_event)
+                i16(key_down_event),
+                i16(key_up_event)
 
             ));
     doremir_message_receiver_t r =
         doremir_system_event_send_std();
 
-    for (int i = 0; i < 1000; ++i) {
+    for (int i = 0; i < 100000; ++i) {
         doremir_message_sync(s);
         doremir_for_each(x, doremir_message_receive(s, i16(0))) {
             // doremir_print("    Received: %s\n", x);
@@ -1300,83 +1322,72 @@ void test_system_event()
 
 // --------------------------------------------------------------------------------
 
-// execute events at t
-// return next occurence
-time_t execute_events(priority_queue_t q, time_t t)
-{
-    event_t x;
-
-    while ((x = doremir_priority_queue_peek(q))) {
-        doremir_audio_engine_log_info(string_dappend(string("Peek at "), doremir_string_show(t)));
-
-        if (!doremir_event_has_value(t, x)) {
-            return doremir_event_offset(x);
-        } else {
-            doremir_priority_queue_pop(q);
-            ptr_t   h = doremir_event_value(x);
-            event_t t = doremir_event_tail(x);
-
-            doremir_audio_engine_log_error(string_dappend(string("Firing event: "), doremir_string_show(h)));
-
-            // TODO should compare against never?
-            if (t) {
-                doremir_audio_engine_log_warning(string("Reinsert"));
-                doremir_priority_queue_insert(t, q);
-            }
-        }
-    }
-
-    // what to return?
-    return minutes(-1);
-}
-
 void test_event()
 {
-    test_section("Events");
-    // event_t a = now(string("ha"));
-    // event_t b = delay_event(seconds(3), now(string("ho")));
+    {
+        test_section("Events");
 
-    event_t a = delay_event(seconds(5), delay_event(seconds(5), now(string("fix"))));
-    event_t b = delay_event(seconds(0),
-                            merge_event(
-                                delay_event(seconds(3),  now(string("foo"))),
-                                delay_event(seconds(12), now(string("bar"))))); // too early!
+        doremir_time_t t = seconds(0);
+        event_t a = delay_event(seconds(5), delay_event(seconds(5), now(string("fix"))));
+        event_t b = delay_event(seconds(0),
+                                merge_event(
+                                    delay_event(seconds(3),  now(string("foo"))),
+                                    delay_event(seconds(12), now(string("bar"))))); // too early!
 
-    doremir_print("a                            ==> %s\n", a);
-    doremir_print("offset(a)                    ==> %s\n", doremir_event_offset(a));
-    doremir_print("b                            ==> %s\n", b);
-    doremir_print("offset(b)                    ==> %s\n", doremir_event_offset(b));
+        doremir_print("\n", NULL);
+        doremir_print("t                            ==> %s\n", t);
 
-    doremir_print("min(a,b)                     ==> %s\n", doremir_min(a, b));
-    // doremir_print("offset(min(a,b))              ==> %s\n", doremir_event_offset(doremir_min(a,b)));
+        doremir_print("\n", NULL);
+        doremir_print("a                            ==> %s\n", a);
+        doremir_print("offset(a)                    ==> %s\n", doremir_event_offset(a));
+        doremir_print("hasValue(a)                  ==> %s\n", fb(doremir_event_has_value(t, a)));
+        doremir_print("value(a)                     ==> %s\n", doremir_event_value(a));
 
-    priority_queue_t q = doremir_priority_queue_empty();
-    // doremir_priority_queue_insert(a,q);
-    // doremir_priority_queue_insert(b,q);
-    // doremir_audio_engine_log_warning(string("Inserted"));
+        doremir_print("\n", NULL);
+        doremir_print("b                            ==> %s\n", b);
+        doremir_print("offset(b)                    ==> %s\n", doremir_event_offset(b));
+        doremir_print("hasValue(b)                  ==> %s\n", fb(doremir_event_has_value(t, b)));
+        doremir_print("value(b)                     ==> %s\n", doremir_event_value(b));
 
-
-    for (int i = 0; true;) {
-        if (i % 30 == 0) {
-            doremir_priority_queue_insert(delay_event(seconds(i), a), q);
-            doremir_priority_queue_insert(delay_event(seconds(i), b), q);
-            doremir_audio_engine_log_warning(string("Inserted"));
-        }
-
-        time_t t = execute_events(q, seconds(i));
-        doremir_audio_engine_log_info(string_dappend(string("Next event due "), doremir_string_show(t)));
-
-        if (doremir_greater_than(t, seconds(0))) {
-            int secs = doremir_time_to_seconds(t) - i;
-            doremir_audio_engine_log_info(string_dappend(string("Sleeping secs "), format_integer("%d", secs)));
-            doremir_thread_sleep(secs * 100); // time x10
-            i += secs;
-        } else {
-            doremir_thread_sleep(100);                           // time x10
-            i += 1;
-        }
-
+        doremir_print("\n", NULL);
+        doremir_print("min(a,b)                     ==> %s\n", doremir_min(a, b));
+        doremir_print("offset(min(a,b))             ==> %s\n", doremir_event_offset(doremir_min(a, b)));
     }
+
+    {
+        doremir_time_t t = seconds(0);            
+        clock_t c = doremir_time_get_system_clock();
+
+        event_t a = delay_event(seconds(0),
+                                merge_event(
+                                    delay_event(seconds(3),  now(string("foo"))),
+                                    delay_event(seconds(12), now(string("bar")))));
+
+
+        event_t b = doremir_system_event_write_std(a);
+        scheduler_t s = doremir_scheduler_create(c);
+
+        doremir_print("\n", NULL);
+        doremir_print("a                            ==> %s\n", a);
+        doremir_print("offset(a)                    ==> %s\n", doremir_event_offset(a));
+        doremir_print("hasValue(a)                  ==> %s\n", fb(doremir_event_has_value(t, a)));
+        doremir_print("value(a)                     ==> %s\n", doremir_event_value(a));
+
+        doremir_print("\n", NULL);
+        doremir_print("b                            ==> %s\n", b);
+        doremir_print("offset(b)                    ==> %s\n", doremir_event_offset(b));
+        doremir_print("hasValue(b)                  ==> %s\n", fb(doremir_event_has_value(t, b)));
+        doremir_print("value(b)                     ==> %s\n", doremir_event_value(b));
+
+
+        doremir_scheduler_schedule(s, a);
+        while(1)
+        {
+            doremir_scheduler_execute(s);
+            doremir_thread_sleep(1000);
+        }
+    }
+
 }
 
 
@@ -1385,6 +1396,9 @@ void test_event()
 void test_scheduler()
 {
     test_section("Scheduler");
+    
+    
+    
 }
 
 
@@ -1751,8 +1765,8 @@ void print_midi_devices(midi_session_t session)
     doremir_print("    Listing midi devices: \n", NULL);
     doremir_for_each(x, doremir_device_midi_all(session)) {
         doremir_print("        Device: %s\n", x);
-        doremir_print("            Input:  %s\n", b(doremir_device_midi_has_input(x)));
-        doremir_print("            Output: %s\n", b(doremir_device_midi_has_output(x)));
+        doremir_print("            Input:  %s\n", fb(doremir_device_midi_has_input(x)));
+        doremir_print("            Output: %s\n", fb(doremir_device_midi_has_output(x)));
     }
     doremir_print("    Default input is : %s\n", doremir_device_midi_default_input(session));
     doremir_print("    Default output is : %s\n", doremir_device_midi_default_output(session));
@@ -1852,6 +1866,7 @@ int main(int argc, char const *argv[])
 
         doremir_audio_engine_initialize();
 
+        goto begin;
         test_value_references();
         test_generic_functions();
         test_string();
@@ -1860,6 +1875,7 @@ int main(int argc, char const *argv[])
         test_rational();
         test_buffer();
         test_time();
+        test_system_time();
         test_type();
         test_midi();
 
@@ -1895,8 +1911,10 @@ int main(int argc, char const *argv[])
         test_processor_graphs(string_dappend(doremir_system_directory_current(), string("/test/proc.dot")));
 
         test_dispatcher();
-        test_system_event();
-        // test_event();
+        // test_system_event();
+begin:
+        test_event();
+        goto end;
         // test_scheduler();
         // test_processor();
 
@@ -1907,7 +1925,7 @@ int main(int argc, char const *argv[])
         // test_audio_stream();
         // test_midi_stream();
 
-// end:
+end:
         doremir_audio_engine_terminate();
     }
 

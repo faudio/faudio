@@ -454,7 +454,7 @@ ptr_t unjsonify(JSON_Value *a, bool *ok)
         return i32(json_value_get_number(a));
 
     case JSONBoolean:
-        return b(json_value_get_boolean(a));
+        return fb(json_value_get_boolean(a));
 
     case JSONArray: {
         JSON_Array *ar = json_value_get_array(a);

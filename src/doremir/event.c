@@ -127,6 +127,8 @@ doremir_event_t doremir_event_delay(doremir_time_t time,
     // delay t (merge x y) = delay t x `merge` delay t u
     // delay t (delay u)   = delay (t + u)
 
+    assert(event && "Can not delay null");
+
     event_t e = new_event(delay_event);
     delay_get(e, time)  = time;
     delay_get(e, event) = event;
@@ -148,11 +150,20 @@ doremir_event_t doremir_event_merge(doremir_event_t event1,
     // merge (merge x y) z = merge x (merge y z)
     // merge x never       = x
     // merge x y           = merge y x
+    assert(event1 && "Can not merge null");
+    assert(event2 && "Can not merge null");
 
-    // TODO invariant left <= right
+    // invariant left <= right
     event_t e = new_event(merge_event);
-    merge_get(e, left)   = event1;
-    merge_get(e, right)  = event2;
+
+    if (doremir_less_than(event1, event2)) {
+        merge_get(e, left)   = event1;
+        merge_get(e, right)  = event2;
+    } else {
+        merge_get(e, right)  = event1;
+        merge_get(e, left)   = event2;
+    }
+
     return e;
 }
 
@@ -171,6 +182,10 @@ doremir_event_t doremir_event_switch(doremir_event_t pred,
     // switch x x never    = never
     // switch (one _) x y  = y
 
+    assert(pred   && "Can not switch null");
+    assert(event2 && "Can not switch null");
+    assert(event2 && "Can not switch null");
+
     event_t e = new_event(switch_event);
     switch_get(e, pred)     = pred;
     switch_get(e, before)   = event1;
@@ -186,7 +201,12 @@ doremir_event_t doremir_event_switch(doremir_event_t pred,
 doremir_event_t doremir_event_receive(doremir_message_sender_t  sender,
                                       doremir_message_address_t address)
 {
-    assert(false && "Not implemented");
+    assert(sender  && "Need a sender");
+
+    event_t e = new_event(recv_event);
+    recv_get(e, dispatcher) = sender;
+    recv_get(e, address)    = address;
+    return e;
 }
 
 /** Create an event that sends values to the given receiver. Each occurence
@@ -202,7 +222,14 @@ doremir_event_t doremir_event_send(doremir_message_receiver_t   receiver,
                                    doremir_message_address_t    address,
                                    doremir_event_t              event)
 {
-    assert(false && "Not implemented");
+    assert(receiver  && "Need a receiver");
+    assert(event     && "Need an event");
+
+    event_t e = new_event(send_event);
+    send_get(e, dispatcher) = receiver;
+    send_get(e, address)    = address;
+    send_get(e, event)      = event;
+    return e;
 }
 
 
@@ -243,6 +270,12 @@ doremir_time_t doremir_event_offset(doremir_event_t event)
         return doremir_min(x, y);
     }
 
+    case send_event:
+        doremir_event_offset(send_get(event, event));
+
+    case recv_event:
+        return minutes(0);
+
     default:
         assert(false && "Missing label");
     }
@@ -273,6 +306,16 @@ bool doremir_event_has_value(doremir_time_t time, doremir_event_t event)
                ? doremir_event_has_value(time, switch_get(event, before))
                : doremir_event_has_value(time, switch_get(event, after));
 
+    case send_event: {
+        return doremir_event_has_value(time, send_get(event, event));
+    }
+
+    case recv_event: {
+        return doremir_list_is_empty(doremir_message_receive(
+                                         recv_get(event, dispatcher),
+                                         recv_get(event, address)));
+    }
+
     default:
         assert(false && "Missing label");
     }
@@ -292,10 +335,21 @@ doremir_ptr_t doremir_event_value(doremir_event_t event)
         return doremir_event_value(delay_get(event, event));
 
     case merge_event:
-        return doremir_event_value(merge_get(event, left)); // FIXME
+        // See above invariant in merge impl
+        return doremir_event_value(merge_get(event, left));
 
     case switch_event:
         return NULL;
+
+    case send_event:
+        return NULL;
+
+    case recv_event: {                                      
+        // doremir_message_sync(recv_get(event, dispatcher)); // FIXME
+        return doremir_list_index(0, doremir_message_receive(
+                                recv_get(event, dispatcher),
+                                recv_get(event, address)));
+    }
 
     default:
         assert(false && "Missing label");
@@ -304,7 +358,7 @@ doremir_ptr_t doremir_event_value(doremir_event_t event)
 
 doremir_event_t doremir_event_tail(doremir_event_t event)
 {
-    // tail never          = never
+    // tail never          = undefined
     // tail now            = never
     // tail delay t x      = delay t (tail x)
     // tail merge x y      = if (x < y) then (tail x `merge` y) else (x `merge` tail y)
@@ -313,7 +367,7 @@ doremir_event_t doremir_event_tail(doremir_event_t event)
     switch (event->tag) {
 
     case never_event:
-        return doremir_event_never();
+        return NULL;
 
     case now_event:
         return doremir_event_never();
@@ -323,14 +377,14 @@ doremir_event_t doremir_event_tail(doremir_event_t event)
         time_t  t = delay_get(event, time);
 
         if (!x) {
-            return NULL; // FIXME see sched comment
+            return NULL;
         } else {
             return doremir_event_delay(t, x);
         }
     }
 
     case merge_event:
-        // OK because of invariant in merge impl
+        // See above invariant in merge impl
         return merge_get(event, right);
 
     case switch_event: {
@@ -340,21 +394,24 @@ doremir_event_t doremir_event_tail(doremir_event_t event)
         return doremir_event_switch(p, tx, ty);
     }
 
+    case send_event: {
+        return doremir_event_send(
+            send_get(event,dispatcher),
+            send_get(event,address),
+            send_get(event,event));
+    }
+
+    case recv_event: {
+        assert(false && "Not implemented"); // FIXME
+    }
+
     default:
         assert(false && "Missing label");
     }
 }
 
 
-doremir_event_t doremir_event_external()
-{
-    assert(false && "Not implemented");
-}
 
-void doremir_event_trig(doremir_event_t event)
-{
-    assert(false && "Not implemented");
-}
 
 
 // --------------------------------------------------------------------------------
@@ -366,6 +423,7 @@ bool event_equal(doremir_ptr_t a, doremir_ptr_t b)
     return doremir_equal(
                doremir_event_offset(c),
                doremir_event_offset(d));
+    // assert(false && "No event equality");
 }
 
 bool event_less_than(doremir_ptr_t a, doremir_ptr_t b)
@@ -394,6 +452,19 @@ string_t event_show(doremir_ptr_t a)
 
     case now_event:
         return string("<Now>");
+
+    case send_event: {
+        event_t x  = send_get(event, event);
+
+        write_to(s, string("<Send "));
+        write_to(s, doremir_string_show(x));
+        write_to(s, string(">"));
+
+        return s;
+    }
+
+    case recv_event:
+        return string("<Receive>");
 
     case delay_event: {
         time_t  t = delay_get(event, time);

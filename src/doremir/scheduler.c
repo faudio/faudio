@@ -13,19 +13,16 @@
     Notes:
  */
 
-typedef doremir_scheduler_t scheduler_t;
-
-
 struct _doremir_scheduler_t {
     impl_t                  impl;           // Dispatcher
-    ptr_t                   clock;
+    clock_t                 clock;
     priority_queue_t        queue;
 };
 
 
 // -----------------------------------------------------------------------------
 
-inline static scheduler_t new_scheduler(ptr_t clock)
+inline static scheduler_t new_scheduler(clock_t clock)
 {
     ptr_t scheduler_impl(doremir_id_t interface);
 
@@ -47,7 +44,7 @@ inline static void delete_scheduler(scheduler_t scheduler)
 /** Schedule.
     @param clock            Must implement [Clock](@ref doremir_time_clock_t).
  */
-doremir_scheduler_t doremir_scheduler_create(doremir_ptr_t clock)
+doremir_scheduler_t doremir_scheduler_create(doremir_time_clock_t clock)
 {
     return new_scheduler(clock);
 }
@@ -66,42 +63,54 @@ void doremir_scheduler_destroy(scheduler_t scheduler)
 void doremir_scheduler_schedule(doremir_scheduler_t scheduler, doremir_event_t event)
 {
     // TODO locking?
-    // TODO check if already due?
-    doremir_priority_queue_insert(event, scheduler->queue);
+    warn(string_dappend(string("Inserting "), doremir_string_show(event)));
+
+    time_t now = doremir_time_time(scheduler->clock);
+    doremir_priority_queue_insert(delay_event(now, event), scheduler->queue);
 }
 
 void doremir_scheduler_execute(doremir_scheduler_t scheduler)
 {
     time_t now = doremir_time_time(scheduler->clock);
-    event_t event;
 
-    while ((event = doremir_priority_queue_peek(scheduler->queue))) {
+    while (true) {
+        printf("\n");
+        doremir_audio_engine_log_info(string_dappend(string("Peek at "), doremir_string_show(now)));
 
-        doremir_audio_engine_log_info(
-            string_dappend(string("Peek at "),
-                           doremir_string_show(now)));
+        event_t event = doremir_priority_queue_peek(scheduler->queue);
 
-        if (!doremir_event_has_value(now, event)) {
-            // return doremir_event_offset(event);
+        if (!event) {
+            fail(string("No events"));
+            break;
+
+        } else if (!doremir_less_than(doremir_event_offset(event), now)) {
+
+            fail(string("No due events"));
+            warn(string_dappend(string("Offset is "), doremir_string_show(doremir_event_offset(event))));
+            break;
 
         } else {
+            warn(string_dappend(string("Due event: "), doremir_string_show(event)));
+
+            // We now the event is due, extract it
             doremir_priority_queue_pop(scheduler->queue);
 
-            ptr_t   head_event = doremir_event_value(event);
-            event_t tail_event = doremir_event_tail(event);
+            if (!doremir_event_has_value(now, event)) {
+                // Did not happen
 
-            // doremir_audio_engine_log_error(string_dappend(string("Firing event: "), doremir_string_show(h)));
+            } else {
+                ptr_t   value = doremir_event_value(event);
+                event_t tail  = doremir_event_tail(event);
 
-            // TODO should compare against never?
-            if (tail_event) {
-                // doremir_audio_engine_log_warning(string("Reinsert"));
-                doremir_priority_queue_insert(tail_event, scheduler->queue);
+                value = value; // Not used, called for side effect
+
+                if (tail) {
+                    // doremir_audio_engine_log_warning(string("Reinsert"));
+                    doremir_priority_queue_insert(tail, scheduler->queue);
+                }
             }
         }
     }
-
-    // what to return?
-    // return minutes(-1);
 }
 
 
