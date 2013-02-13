@@ -63,7 +63,7 @@ doremir_event_t doremir_system_event_key_down()
  */
 doremir_event_t doremir_system_event_select(doremir_list_t sources)
 {
-    doremir_message_sender_t source = doremir_system_event_send(sources);
+    doremir_message_sender_t source = doremir_system_event_receive(sources);
     doremir_destroy(sources);
     return doremir_event_receive(source, i16(0));
 }
@@ -213,7 +213,7 @@ inline static CGEventMask convert_source(event_source_t type)
     @param sources  A list of @ref doremir_system_event_source_t (destroyed).
     @return         A new sender.
  */
-doremir_message_sender_t doremir_system_event_send(doremir_list_t sources)
+doremir_message_sender_t doremir_system_event_receive(doremir_list_t sources)
 {
     CGEventMask mask = 0;
     doremir_for_each(source, sources) {

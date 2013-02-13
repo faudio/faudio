@@ -1276,7 +1276,7 @@ void test_system_event()
     test_section("System events");
 
     doremir_message_sender_t s =
-        doremir_system_event_send(
+        doremir_system_event_receive(
             list(
                 i16(mouse_move_event)
                 // i16(mouse_down_event)
