@@ -64,7 +64,6 @@ void doremir_scheduler_destroy(scheduler_t scheduler)
  */
 void doremir_scheduler_schedule(doremir_scheduler_t scheduler, doremir_event_t event)
 {
-    // TODO locking?
     // warn(string_dappend(string("Inserting "), doremir_string_show(event)));    
     doremir_priority_queue_insert(event, scheduler->queue);
 }
@@ -75,7 +74,7 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
                                   scheduler->start);
 
     while (true) {
-        printf("\n");
+        // printf("\n");
         // inform(string_append(string("Time is "), doremir_string_show(now)));
 
         event_t event = doremir_priority_queue_peek(scheduler->queue);

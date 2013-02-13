@@ -1359,10 +1359,12 @@ void test_event()
                                   
         event_t ha = now(string("höglund"));
         
-        event_t a = merge_event(ha, delay_event(seconds(2), 
-            merge_event(ha, delay_event(seconds(2), 
-                merge_event(ha, delay_event(seconds(2), 
+        event_t a = merge_event(ha, delay_event(seconds(1), 
+            merge_event(ha, delay_event(seconds(1), 
+                merge_event(ha, delay_event(seconds(1), 
                     never()))))));
+                
+
         // event_t a = delay_event(seconds(10), ha);
 
         event_t b = doremir_system_event_write_std(a);
@@ -1385,7 +1387,7 @@ void test_event()
 
         while (1) {
             doremir_scheduler_execute(s);
-            doremir_thread_sleep(1000);
+            doremir_thread_sleep(100);
         }
     }
 
