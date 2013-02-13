@@ -1284,11 +1284,14 @@ void test_system_event()
                 // i16(key_up_event)
 
             ));
+    doremir_message_receiver_t r =
+        doremir_system_event_send_std();
 
     for (int i = 0; i < 1000; ++i) {
         doremir_message_sync(s);
         doremir_for_each(x, doremir_message_receive(s, i16(0))) {
-            doremir_print("    Received: %s\n", x);
+            // doremir_print("    Received: %s\n", x);
+            doremir_message_send(r, i16(0), x);
         }
         doremir_thread_sleep(5);
     }

@@ -345,7 +345,7 @@ ptr_t io_event_sink_impl(doremir_id_t interface)
     case doremir_destroy_i:
         return &io_event_sink_destroy_impl;
 
-    case doremir_message_sender_interface_i:
+    case doremir_message_receiver_interface_i:
         return &io_event_sink_message_receiver_interface_impl;
 
     default:
