@@ -56,18 +56,20 @@ doremir_event_t doremir_system_event_key_down()
 }
 
 
-/** Returns an event selected from the given sources.
-    @param sources  List of sources (destroyed).
+/** Returns a system event from the given selectors.
+
+    @param sources  A list of @ref doremir_system_event_source_t (destroyed).
+    @return         A new system event.
  */
 doremir_event_t doremir_system_event_select(doremir_list_t sources)
 {
-    doremir_message_sender_t source = doremir_system_event_select_send(sources);
+    doremir_message_sender_t source = doremir_system_event_send(sources);
     doremir_destroy(sources);
     return doremir_event_receive(source, i16(0));
 }
 
 
-struct event_source {
+struct event_disp {
     impl_t              impl;           // Implementations
 
     CGEventMask         mask;
@@ -78,10 +80,10 @@ struct event_source {
     atomic_t            loop_set;
 };
 
-typedef struct event_source *event_source_t;
+typedef struct event_disp *event_disp_t;
 typedef doremir_system_event_type_t event_type_t;
 
-ptr_t event_source_impl(doremir_id_t interface);
+ptr_t event_disp_impl(doremir_id_t interface);
 
 
 inline static ptr_t convert_event(CGEventType type, CGEventRef event)
@@ -152,7 +154,7 @@ static CGEventRef event_listener(CGEventTapProxy proxy,
                                  CGEventRef      event,
                                  void           *data)
 {
-    event_source_t  source    = data;
+    event_disp_t  source    = data;
 
     // printf("Event of type %d\n", type);
     ptr_t value = convert_event(type, event);
@@ -165,7 +167,7 @@ static CGEventRef event_listener(CGEventTapProxy proxy,
 
 static ptr_t add_event_listener(ptr_t a)
 {
-    event_source_t  source    = a;
+    event_disp_t  source    = a;
     CFMachPortRef   eventTap  = CGEventTapCreate(kCGSessionEventTap,
                                                  kCGTailAppendEventTap,
                                                  kCGEventTapOptionListenOnly,
@@ -182,7 +184,7 @@ static ptr_t add_event_listener(ptr_t a)
     CGEventTapEnable(eventTap, true);
 
     source->loop = CFRunLoopGetCurrent();
-    doremir_atomic_set(source->loop_set, 1);
+    doremir_atomic_set(source->loop_set, (ptr_t) 1);
 
     printf("Entering loop");
     CFRunLoopRun();
@@ -203,21 +205,23 @@ inline static CGEventMask convert_type(event_type_t type)
     }
 }
 
-/** Returns a sender selected from the given sources.
+/** Returns a sender that sends a message whenever the given system event occurs.
 
     The returned value implements [Sender](@ref doremir_message_sender_t) and
     [Destroy](@ref doremir_destroy_t), and should be destroyed after use.
 
+    @param sources  A list of @ref doremir_system_event_source_t (destroyed).
+    @return         A new sender.
  */
-doremir_message_sender_t doremir_system_event_select_send(doremir_list_t sources)
+doremir_message_sender_t doremir_system_event_send(doremir_list_t sources)
 {
     CGEventMask mask = 0;
     doremir_for_each(source, sources) {
         mask |= convert_type(ti16(source));
     }
 
-    event_source_t source = doremir_new_struct(event_source);
-    source->impl        = &event_source_impl;
+    event_disp_t source = doremir_new_struct(event_disp);
+    source->impl        = &event_disp_impl;
 
     source->mask        = mask;
     source->disp        = lockfree_dispatcher();
@@ -235,9 +239,9 @@ doremir_message_sender_t doremir_system_event_select_send(doremir_list_t sources
 }
 
 
-void event_source_destroy(ptr_t a)
+void event_disp_destroy(ptr_t a)
 {
-    event_source_t source = a;
+    event_disp_t source = a;
 
     doremir_destroy(source->disp);
     doremir_destroy(source->loop_set);
@@ -249,33 +253,33 @@ void event_source_destroy(ptr_t a)
 }
 
 
-void event_source_sync(ptr_t a)
+void event_disp_sync(ptr_t a)
 {
-    event_source_t source = a;
+    event_disp_t source = a;
     doremir_message_sync(source->disp);
 }
 
-doremir_list_t event_source_receive(ptr_t a, address_t addr)
+doremir_list_t event_disp_receive(ptr_t a, address_t addr)
 {
-    event_source_t source = a;
+    event_disp_t source = a;
     return doremir_message_receive(source->disp, addr);
 }
 
 
-ptr_t event_source_impl(doremir_id_t interface)
+ptr_t event_disp_impl(doremir_id_t interface)
 {
-    static doremir_destroy_t event_source_destroy_impl
-        = { event_source_destroy };
-    static doremir_message_sender_interface_t event_source_message_sender_interface_impl
-        = { event_source_sync, event_source_receive };
+    static doremir_destroy_t event_disp_destroy_impl
+        = { event_disp_destroy };
+    static doremir_message_sender_interface_t event_disp_message_sender_interface_impl
+        = { event_disp_sync, event_disp_receive };
 
     switch (interface) {
 
     case doremir_destroy_i:
-        return &event_source_destroy_impl;
+        return &event_disp_destroy_impl;
 
     case doremir_message_sender_interface_i:
-        return &event_source_message_sender_interface_impl;
+        return &event_disp_message_sender_interface_impl;
 
     default:
         return NULL;

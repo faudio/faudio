@@ -13,7 +13,10 @@ module Doremir.System.Directory
     home : () -> FilePath;
     current : () -> FilePath;
     create : FilePath -> Void;
-    remove : FilePath -> Void;
+    remove : FilePath -> Void;          
+    // isFile : FilePath -> Bool
+    // isDirectory : FilePath -> Bool
+    // enumerate : FilePath -> [FilePath]
 
     readFile : FilePath -> String;
     writeFile : (FilePath,String) -> Void;

@@ -26,21 +26,29 @@ module Doremir.System.Event
         KeyDownEvent
     };
 
-
-    mouseMove    : () -> Event;     // (Float, Float)
+    mouseMove    : () -> Event;                     // (Float, Float)
     mouseDrag    : () -> Event;
     mouseUp      : () -> Event;
     mouseDown    : () -> Event;
-    keyUp        : () -> Event;     // [KeyCode, Char, String]
+    keyUp        : () -> Event;                     // [KeyCode, Char, String]
     keyDown      : () -> Event;
-    select       : List -> Event;   // Event [Int16/EventType]
-    selectSend   : List -> Sender;  // Sender [Int16/EventType]
+    select       : List -> Event;                   // Event [Int16/Source]
+    send         : List -> Sender;                  // Sender [Int16/Source]
 
-    // readFile     : FilePath -> Event;              // Event String
-    // writeFile    : (FilePath, Event)  -> Event;    // Event String -> Event ()
-    // sendFileSend : FilePath -> Sender;              // Sender String
-    // readFileRecv : FilePath -> Receiver;            // Receiver String
-    
+    // readStd      : Event;                           // Event String
+    // readStdSend  : Sender;                          // Sender String
+    writeStd     : Event -> Event;                  // Event String -> Event ()
+    recvStd      : () -> Receiver;                  // Receiver String
+
+    // readHandle  : Handle -> Event;                    // Event String
+    // writeHandle : (Handle, Event)  -> Event;          // Event String -> Event ()
+    // sendHandle  : Handle -> Sender;                   // Sender String
+    // recvHandle  : Handle -> Receiver;                 // Receiver String
+    // 
+    // readFile   : FilePath -> Event;               // Event String
+    // writeFile  : (FilePath, Event)  -> Event;     // Event String -> Event ()
+    // sendFile   : FilePath -> Sender;              // Sender String
+    // recvFile   : FilePath -> Receiver;            // Receiver String
 
 }
 
