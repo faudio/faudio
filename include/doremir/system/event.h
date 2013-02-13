@@ -30,7 +30,7 @@ doremir_event_t doremir_system_event_mouse_down();
 doremir_event_t doremir_system_event_key_up();
 doremir_event_t doremir_system_event_key_down();
 doremir_event_t doremir_system_event_select(doremir_list_t);
-doremir_message_sender_t doremir_system_event_select_sender(doremir_list_t);
+doremir_message_sender_t doremir_system_event_select_send(doremir_list_t);
 
 /** @}
     @}

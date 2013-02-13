@@ -61,7 +61,7 @@ doremir_event_t doremir_system_event_key_down()
  */
 doremir_event_t doremir_system_event_select(doremir_list_t sources)
 {
-    doremir_message_sender_t source = doremir_system_event_select_sender(sources);
+    doremir_message_sender_t source = doremir_system_event_select_send(sources);
     doremir_destroy(sources);
     return doremir_event_receive(source, i16(0));
 }
@@ -209,7 +209,7 @@ inline static CGEventMask convert_type(event_type_t type)
     [Destroy](@ref doremir_destroy_t), and should be destroyed after use.
 
  */
-doremir_message_sender_t doremir_system_event_select_sender(doremir_list_t sources)
+doremir_message_sender_t doremir_system_event_select_send(doremir_list_t sources)
 {
     CGEventMask mask = 0;
     doremir_for_each(source, sources) {

@@ -1,11 +1,11 @@
 
 /**
     @addtogroup DoremirSystemEvent
-    
-    Provides mouse and keyboard events.    
-    
+
+    Provides mouse and keyboard events.
+
     @note
-        On OS X we can not get keyboard events unless 'Access for assistive devices' 
+        On OS X we can not get keyboard events unless 'Access for assistive devices'
         is enabled in System Preferences. Mouse events should work either way.
 
  */
@@ -24,17 +24,23 @@ module Doremir.System.Event
         MouseDownEvent,
         KeyUpEvent,
         KeyDownEvent
-    };              
+    };
 
-    
-    mouseMove    : () -> Event; // (Float, Float)
+
+    mouseMove    : () -> Event;     // (Float, Float)
     mouseDrag    : () -> Event;
     mouseUp      : () -> Event;
     mouseDown    : () -> Event;
-    keyUp        : () -> Event; // [KeyCode, Char, String]
+    keyUp        : () -> Event;     // [KeyCode, Char, String]
     keyDown      : () -> Event;
+    select       : List -> Event;   // Event [Int16/EventType]
+    selectSend   : List -> Sender;  // Sender [Int16/EventType]
+
+    // readFile     : FilePath -> Event;              // Event String
+    // writeFile    : (FilePath, Event)  -> Event;    // Event String -> Event ()
+    // sendFileSend : FilePath -> Sender;              // Sender String
+    // readFileRecv : FilePath -> Receiver;            // Receiver String
     
-    select       : List -> Event;       // [Int16/EventType]
-    selectSender : List -> Sender;  // [Int16/EventType]
+
 }
 
