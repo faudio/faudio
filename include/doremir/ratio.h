@@ -10,8 +10,8 @@
     @{
     */
 
-typedef int32_t doremir_ratio_num_t;
-typedef int32_t doremir_ratio_denom_t;
+typedef int16_t doremir_ratio_num_t;
+typedef int16_t doremir_ratio_denom_t;
 typedef struct _doremir_ratio_t * doremir_ratio_t;
 doremir_ratio_t doremir_ratio_create(doremir_ratio_num_t,
                                      doremir_ratio_denom_t);

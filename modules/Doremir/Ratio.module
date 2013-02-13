@@ -23,8 +23,8 @@ module Doremir.Ratio
 {
     import Doremir.Std;
 
-    type Num    = Int32;
-    type Denom  = Int32;
+    type Num    = Int16;
+    type Denom  = Int16;
     type Ratio  = opaque;
 
     create  : (Num, Denom) -> Ratio;
