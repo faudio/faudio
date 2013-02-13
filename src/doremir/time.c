@@ -8,6 +8,14 @@
 #include <doremir/time.h>
 #include <doremir/util.h>
 
+#include <time.h>
+#include <sys/time.h>
+
+#ifdef __MACH__
+#include <mach/clock.h>
+#include <mach/mach.h>
+#endif
+
 
 struct _doremir_time_t {
     impl_t          impl;       //  Interface dispatcher
@@ -263,6 +271,8 @@ doremir_time_cpu_t doremir_time_cpu()
 }
 
 
+// --------------------------------------------------------------------------------
+
 doremir_time_t system_time(ptr_t a)
 {
     return doremir_time_from_system(doremir_time_system());
@@ -304,6 +314,70 @@ ptr_t system_clock_whitness_impl(doremir_id_t interface)
 
     case doremir_time_clock_interface_i:
         return &system_clock_whitness_clock;
+
+    default:
+        return NULL;
+    }
+}
+
+
+
+// --------------------------------------------------------------------------------
+
+double system_prec_tick_rate(ptr_t a)
+{
+    return 1000000000;
+}
+
+int64_t system_prec_ticks(ptr_t a)
+{            
+    struct timespec ts;
+
+    #ifdef __MACH__ // OS X does not have clock_gettime, use clock_get_time
+    clock_serv_t cclock;
+    mach_timespec_t mts;
+    host_get_clock_service(mach_host_self(), CALENDAR_CLOCK, &cclock);
+    clock_get_time(cclock, &mts);
+    mach_port_deallocate(mach_task_self(), cclock);
+    ts.tv_sec = mts.tv_sec;
+    ts.tv_nsec = mts.tv_nsec;
+
+    #else
+    clock_gettime(CLOCK_REALTIME, &ts);
+    #endif
+
+    return ts.tv_sec * 1000000000 + ts.tv_nsec;
+}
+
+doremir_time_t system_prec_time(ptr_t a)
+{
+    return divisions(system_prec_ticks(a), 1000000000);
+}
+
+
+struct system_prec_clock_whitness {
+    impl_t impl;
+};
+typedef struct system_prec_clock_whitness *system_prec_clock_whitness_t;
+
+ptr_t system_prec_clock_whitness_impl(doremir_id_t interface);
+
+clock_t doremir_time_get_system_prec_clock()
+{
+    system_prec_clock_whitness_t clock = doremir_new_struct(system_prec_clock_whitness);
+    clock->impl = &system_prec_clock_whitness_impl;
+    return clock;
+}
+
+ptr_t system_prec_clock_whitness_impl(doremir_id_t interface)
+{
+    static doremir_time_clock_interface_t system_prec_clock_whitness_clock
+        = { system_prec_time, system_prec_tick_rate, system_prec_ticks };
+
+    switch (interface) {
+
+    case doremir_time_clock_interface_i:
+        return &system_prec_clock_whitness_clock;
 
     default:
         return NULL;
