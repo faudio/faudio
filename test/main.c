@@ -1325,29 +1325,29 @@ void test_event()
 {
     // {
     //     test_section("Events");
-    // 
+    //
     //     doremir_time_t t = seconds(0);
     //     event_t a = delay_event(seconds(5), delay_event(seconds(5), now(string("fix"))));
     //     event_t b = delay_event(seconds(0),
     //                             merge_event(
     //                                 delay_event(seconds(3),  now(string("foo"))),
     //                                 delay_event(seconds(12), now(string("bar"))))); // too early!
-    // 
+    //
     //     doremir_print("\n", NULL);
     //     doremir_print("t                            ==> %s\n", t);
-    // 
+    //
     //     doremir_print("\n", NULL);
     //     doremir_print("a                            ==> %s\n", a);
     //     doremir_print("offset(a)                    ==> %s\n", doremir_event_offset(a));
     //     doremir_print("hasValue(a)                  ==> %s\n", fb(doremir_event_has_value(t, a)));
     //     doremir_print("value(a)                     ==> %s\n", doremir_event_value(a));
-    // 
+    //
     //     doremir_print("\n", NULL);
     //     doremir_print("b                            ==> %s\n", b);
     //     doremir_print("offset(b)                    ==> %s\n", doremir_event_offset(b));
     //     doremir_print("hasValue(b)                  ==> %s\n", fb(doremir_event_has_value(t, b)));
     //     doremir_print("value(b)                     ==> %s\n", doremir_event_value(b));
-    // 
+    //
     //     doremir_print("\n", NULL);
     //     doremir_print("min(a,b)                     ==> %s\n", doremir_min(a, b));
     //     doremir_print("offset(min(a,b))             ==> %s\n", doremir_event_offset(doremir_min(a, b)));
@@ -1356,14 +1356,14 @@ void test_event()
     {
         doremir_time_t t = seconds(0);
         clock_t c = doremir_time_get_system_clock();
-                                  
+
         event_t ha = now(string("höglund"));
-        
-        event_t a = merge_event(ha, delay_event(seconds(1), 
-            merge_event(ha, delay_event(seconds(1), 
-                merge_event(ha, delay_event(seconds(1), 
-                    never()))))));
-                
+
+        event_t a = merge_event(ha, delay_event(seconds(1),
+                                                merge_event(ha, delay_event(seconds(1),
+                                                            merge_event(ha, delay_event(seconds(1),
+                                                                    never()))))));
+
 
         // event_t a = delay_event(seconds(10), ha);
 
@@ -1375,7 +1375,7 @@ void test_event()
         // doremir_print("offset(a)                    ==> %s\n", doremir_event_offset(a));
         // doremir_print("hasValue(a)                  ==> %s\n", fb(doremir_event_has_value(t, a)));
         // doremir_print("value(a)                     ==> %s\n", doremir_event_value(a));
-        // 
+        //
         // doremir_print("\n", NULL);
         // doremir_print("b                            ==> %s\n", b);
         // doremir_print("offset(b)                    ==> %s\n", doremir_event_offset(b));
@@ -1909,13 +1909,13 @@ int main(int argc, char const *argv[])
         test_system_directory();
         // test_plot(NULL, NULL);
         // test_plot_buffer();
-        // test_plot_file(string_dappend(doremir_system_directory_current(), string("/test/in.wav")));
-
-        test_processor_graphs(string_dappend(doremir_system_directory_current(), string("/test/proc.dot")));
-
-        test_dispatcher();
-        // test_system_event();
 begin:
+        test_plot_file(string_dappend(doremir_system_directory_current(), string("/test/in.wav")));
+
+        // test_processor_graphs(string_dappend(doremir_system_directory_current(), string("/test/proc.dot")));
+
+        // test_dispatcher();
+        // test_system_event();
         test_event();
         goto end;
         // test_scheduler();

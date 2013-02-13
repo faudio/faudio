@@ -44,6 +44,25 @@
         __c = ((__typeof__(expr)*) 0), destr \
         )
 
+/** Execute the following statement with a binding in scope, then destroy
+    the value using doremir_destroy.
+
+    Syntax:
+
+        doremir_with(var, expr, final)
+            statement;
+
+    Example:
+
+        doremir_with(x, get_resource(), release_resource(x))
+        {
+            use_resource(x);
+        }
+
+ */
+#define doremir_with_temp(var, expr) \
+    doremir_with(var, expr, doremir_destroy(var))
+    
 /** Execute the following statement once for each item in the
     given list.
 

@@ -64,13 +64,13 @@ void doremir_scheduler_destroy(scheduler_t scheduler)
  */
 void doremir_scheduler_schedule(doremir_scheduler_t scheduler, doremir_event_t event)
 {
-    // warn(string_dappend(string("Inserting "), doremir_string_show(event)));    
+    // warn(string_dappend(string("Inserting "), doremir_string_show(event)));
     doremir_priority_queue_insert(event, scheduler->queue);
 }
 
 void doremir_scheduler_execute(doremir_scheduler_t scheduler)
 {
-    time_t now = doremir_subtract(doremir_time_time(scheduler->clock), 
+    time_t now = doremir_subtract(doremir_time_time(scheduler->clock),
                                   scheduler->start);
 
     while (true) {
