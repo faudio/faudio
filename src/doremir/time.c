@@ -18,9 +18,9 @@ struct _doremir_time_t {
 // --------------------------------------------------------------------------------
 
 doremir_time_t doremir_time_time(doremir_time_clock_t clock)
-{                                                     
+{
     assert(doremir_interface(doremir_time_clock_interface_i, clock)
-        && "Must implement Clock");
+           && "Must implement Clock");
     return ((doremir_time_clock_interface_t *)
             doremir_interface(doremir_time_clock_interface_i, clock))->time(clock);
 }
@@ -28,7 +28,7 @@ doremir_time_t doremir_time_time(doremir_time_clock_t clock)
 double doremir_time_tick_rate(doremir_time_clock_t clock)
 {
     assert(doremir_interface(doremir_time_clock_interface_i, clock)
-        && "Must implement Clock");
+           && "Must implement Clock");
     return ((doremir_time_clock_interface_t *)
             doremir_interface(doremir_time_clock_interface_i, clock))->tick_rate(clock);
 }
@@ -36,7 +36,7 @@ double doremir_time_tick_rate(doremir_time_clock_t clock)
 int64_t doremir_time_ticks(doremir_time_clock_t clock)
 {
     assert(doremir_interface(doremir_time_clock_interface_i, clock)
-        && "Must implement Clock");
+           && "Must implement Clock");
     return ((doremir_time_clock_interface_t *)
             doremir_interface(doremir_time_clock_interface_i, clock))->ticks(clock);
 }
@@ -274,7 +274,7 @@ double system_tick_rate(ptr_t a)
 }
 
 int64_t system_ticks(ptr_t a)
-{              
+{
     system_time_t t;
     time(&t);
     int64_t lt = t;
@@ -283,8 +283,8 @@ int64_t system_ticks(ptr_t a)
 
 struct system_clock_whitness {
     impl_t impl;
-};    
-typedef struct system_clock_whitness* system_clock_whitness_t;
+};
+typedef struct system_clock_whitness *system_clock_whitness_t;
 
 ptr_t system_clock_whitness_impl(doremir_id_t interface);
 

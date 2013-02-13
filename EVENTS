@@ -38,6 +38,9 @@ delay t x       t -> E a -> E a             delta x + t                 When  ha
 merge x y       E a -> E a -> E a           min (delta x) (delta y)     When  hasValue x time || hasValue y time
 switch p x y    E a -> E b -> E b -> E b    min (delta x) (delta y)     When  (hasValue p t) and (hasValue x t) 
                                                                            or (not hasValue p t) (hasValue y t)
+
+
+
 tail x          E a -> E a
 value           E a -> a
 
@@ -68,17 +71,30 @@ schedule : Sched -> E Action -> Action
 execute  : Sched -> Action
 
 Laws:
+    hasValue u never          = undefined
+    hasValue u (now x)        = True
+    hasValue u (delay t x)    = hasValue (u - t) x
+    hasValue u (merge x y)    = hasValue u x || hasValue u y
+    hasValue u (switch p x y) = (hasValue u p && hasValue u x) || (not (hasValue u p) && hasValue u y)
+    hasValue u (recv d a n)   = !isEmpty $ drop n (receive d a)
+    hasValue u (send d a x)   = hasValue u x
+    
     value never            = undefined
     value (now x)          = x
     value (delay t x)      = value x
     value (merge x y)      = if (offset x < offset y) then (value x) else (value y)
     value (x `switch p` y) = if (!hasValue p st) then (value x) else (value y)
+    value (recv d a n)     = index n (receive d a)
+    value (send d a x)     = ()
 
     tail never            = undefined
     tail now              = never
     tail (delay t x)      = delay t (tail x)
     tail (merge x y)      = if (offset x < offset y) then (tail x `merge` y) else (x `merge` tail y)
     tail (x `switch p` y) = if (!hasValue p) then (tail x `switch p` y) else (tail y)
+    tail (recv d a n)     = recv d a (n + 1)
+    tail (send d a x)     = send d a (tail x)
+
 
     delay t (merge x y) = delay t x `merge` delay t u
     delay t (delay u)   = delay (t + u)

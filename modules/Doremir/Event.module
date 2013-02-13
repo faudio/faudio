@@ -50,10 +50,14 @@ module Doremir.Event
     // select : (Event, Event) -> Event;
     // sample : Event -> Event;
     // toggle : Event -> Event;
+    
+    isNever  : Event -> Bool;           
 
     hasValue : (Time,Event) -> Bool;   // Is an occurance available            rename hasValue
-    value    : Event -> Ptr;           // Get the first occurance value        rename value?
     offset   : Event -> Time;          // Offset to first occurance            rename offset
+    sync     : Event -> Void;
+    value    : Event -> Ptr;           // Get the first occurance value        rename value?
+
     head     : Event -> Event;
     tail     : Event -> Event;
 

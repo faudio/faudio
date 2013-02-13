@@ -16,6 +16,7 @@
 struct _doremir_scheduler_t {
     impl_t                  impl;           // Dispatcher
     clock_t                 clock;
+    time_t                  start;
     priority_queue_t        queue;
 };
 
@@ -30,6 +31,7 @@ inline static scheduler_t new_scheduler(clock_t clock)
     scheduler->impl     = &scheduler_impl;
     scheduler->clock    = clock;
     scheduler->queue    = priority_queue();
+    scheduler->start    = doremir_time_time(scheduler->clock);
     return scheduler;
 }
 
@@ -63,49 +65,51 @@ void doremir_scheduler_destroy(scheduler_t scheduler)
 void doremir_scheduler_schedule(doremir_scheduler_t scheduler, doremir_event_t event)
 {
     // TODO locking?
-    warn(string_dappend(string("Inserting "), doremir_string_show(event)));
-
-    time_t now = doremir_time_time(scheduler->clock);
-    doremir_priority_queue_insert(delay_event(now, event), scheduler->queue);
+    // warn(string_dappend(string("Inserting "), doremir_string_show(event)));    
+    doremir_priority_queue_insert(event, scheduler->queue);
 }
 
 void doremir_scheduler_execute(doremir_scheduler_t scheduler)
 {
-    time_t now = doremir_time_time(scheduler->clock);
+    time_t now = doremir_subtract(doremir_time_time(scheduler->clock), 
+                                  scheduler->start);
 
     while (true) {
         printf("\n");
-        doremir_audio_engine_log_info(string_dappend(string("Peek at "), doremir_string_show(now)));
+        // inform(string_append(string("Time is "), doremir_string_show(now)));
 
         event_t event = doremir_priority_queue_peek(scheduler->queue);
+        // doremir_event_sync(event);
 
         if (!event) {
-            fail(string("No events"));
+            // fail(string("No events"));
             break;
 
         } else if (!doremir_less_than(doremir_event_offset(event), now)) {
 
-            fail(string("No due events"));
-            warn(string_dappend(string("Offset is "), doremir_string_show(doremir_event_offset(event))));
+            // inform(string_append(string("    Offset is "), doremir_string_show(doremir_event_offset(event))));
+            // fail(string("No due events"));
             break;
 
         } else {
-            warn(string_dappend(string("Due event: "), doremir_string_show(event)));
+            // inform(string_dappend(string("    Offset is "), doremir_string_show(doremir_event_offset(event))));
+            // inform(string_dappend(string("Due event: "), doremir_string_show(event)));
 
             // We now the event is due, extract it
             doremir_priority_queue_pop(scheduler->queue);
 
             if (!doremir_event_has_value(now, event)) {
                 // Did not happen
+                // inform(string("   No value"));
 
             } else {
                 ptr_t   value = doremir_event_value(event);
                 event_t tail  = doremir_event_tail(event);
 
-                value = value; // Not used, called for side effect
+                // inform(string_dappend(string(    "Value is: "), doremir_string_show(value)));
 
-                if (tail) {
-                    // doremir_audio_engine_log_warning(string("Reinsert"));
+                if (/*tail && */!doremir_event_is_never(tail)) {
+                    // inform(string_append(string("Reinsert: "), doremir_string_show(tail)));
                     doremir_priority_queue_insert(tail, scheduler->queue);
                 }
             }
