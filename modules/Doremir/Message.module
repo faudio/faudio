@@ -118,12 +118,12 @@ module Doremir.Message
 
 
     // Request message to be sent on address
-    send : (Ptr,Address,Message) -> Void;
+    send : (Receiver, Address, Message) -> Void;
 
     // Fetch all new messages
-    sync : Ptr -> Void;
+    sync : Sender -> Void;
     // Get fetched messages on addresses
-    receive : (Ptr,Address) -> List; // [Message]
+    receive : (Sender, Address) -> List; // [Message]
 
 
 }

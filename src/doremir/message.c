@@ -180,9 +180,9 @@ list_t doremir_message_dispatcher_receive(dispatcher_t dispatcher,
 
 // Generic versions
 
-void doremir_message_send(ptr_t         receiver,
-                          address_t     address,
-                          message_t     message)
+void doremir_message_send(doremir_message_receiver_t    receiver,
+                          address_t                     address,
+                          message_t                     message)
 {
     assert(doremir_interface(doremir_message_receiver_interface_i, receiver)
            && "Must implement Receiver");
@@ -191,7 +191,8 @@ void doremir_message_send(ptr_t         receiver,
      doremir_interface(doremir_message_receiver_interface_i, receiver))
     ->send(receiver, address, message);
 }
-void doremir_message_sync(ptr_t sender)
+
+void doremir_message_sync(doremir_message_sender_t sender)
 {
     assert(doremir_interface(doremir_message_sender_interface_i, sender)
            && "Must implement Sender");
@@ -200,8 +201,9 @@ void doremir_message_sync(ptr_t sender)
      doremir_interface(doremir_message_sender_interface_i, sender))
     ->sync(sender);
 }
-doremir_list_t doremir_message_receive(ptr_t        sender,
-                                       address_t    address)
+
+doremir_list_t doremir_message_receive(doremir_message_sender_t sender,
+                                       address_t                address)
 {
     assert(doremir_interface(doremir_message_sender_interface_i, sender)
            && "Must implement Sender");

@@ -31,11 +31,11 @@ typedef struct _doremir_message_dispatcher_t * doremir_message_dispatcher_t;
 doremir_message_dispatcher_t doremir_message_create_dispatcher();
 doremir_message_dispatcher_t doremir_message_create_lockfree_dispatcher();
 void doremir_message_destroy_dispatcher(doremir_message_dispatcher_t);
-void doremir_message_send(doremir_ptr_t,
+void doremir_message_send(doremir_message_receiver_t,
                           doremir_message_address_t,
                           doremir_message_t);
-void doremir_message_sync(doremir_ptr_t);
-doremir_list_t doremir_message_receive(doremir_ptr_t,
+void doremir_message_sync(doremir_message_sender_t);
+doremir_list_t doremir_message_receive(doremir_message_sender_t,
                                        doremir_message_address_t);
 
 /** @}
