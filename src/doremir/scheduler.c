@@ -133,7 +133,7 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
 
             if (doremir_event_has_tail(now, event)) {
                 event_t tail = doremir_event_tail(now, event);
-                recur[recurring++] = tail;
+                recur[recurring++] = tail;                
                 sched_inform(string_dappend(string("  Tail:  "), doremir_string_show(tail)));
             } else {
                 sched_inform(string("  No tail"));

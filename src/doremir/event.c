@@ -514,7 +514,7 @@ event_t delay_tail(doremir_time_t current, doremir_event_t event)
 {
     time_t  t = delay_get(event, time);
     event_t x = delay_get(event, event);
-    return doremir_event_delay(t, doremir_event_tail(current, x));
+    return doremir_event_delay(t, doremir_event_tail(doremir_subtract(current, t), x));
 }
 
 bool merge_has_value(doremir_time_t current, doremir_event_t event)
@@ -528,6 +528,7 @@ bool merge_has_tail(doremir_time_t current, doremir_event_t event)
 {
     event_t x = merge_get(event, left);
     event_t y = merge_get(event, right);
+// doremir_print("Checking merge tail at: %s\n", current);
     
     return doremir_event_has_tail(current, x) || doremir_event_has_tail(current, y);
 }
@@ -548,6 +549,7 @@ event_t merge_tail(doremir_time_t current, doremir_event_t event)
 {
     event_t x = merge_get(event, left);
     event_t y = merge_get(event, right);
+// doremir_print("Getting merge tail at: %s\n", current);
 
     if (doremir_event_has_value(current, x)) {
         if (doremir_event_has_tail(current, x)) {
@@ -668,7 +670,8 @@ ptr_t recv_value(doremir_time_t current, doremir_event_t event)
     return doremir_message_receive(s, a);
 }
 event_t recv_tail(doremir_time_t current, doremir_event_t event)
-{
+{        
+    // Add infinitesimal offset
     return event;
 }
 
