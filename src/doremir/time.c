@@ -30,7 +30,7 @@ static clock_serv_t mach_clock_g;
 // --------------------------------------------------------------------------------
 
 void doremir_time_initialize()
-{                
+{
     host_get_clock_service(mach_host_self(), REALTIME_CLOCK, &mach_clock_g);
 }
 
@@ -107,8 +107,8 @@ void doremir_time_destroy(doremir_time_t time)
  */
 doremir_ratio_t doremir_time_divisions(doremir_time_t time)
 {
-    num_t   a; 
-    denom_t b;         
+    num_t   a;
+    denom_t b;
     doremir_ratio_match(time->value, &a, &b);
     return ratio(a % b, b);
 }
@@ -123,7 +123,7 @@ doremir_ratio_t doremir_time_divisions(doremir_time_t time)
  */
 int32_t doremir_time_seconds(doremir_time_t time)
 {
-    num_t   a; 
+    num_t   a;
     denom_t b;
     doremir_ratio_match(time->value, &a, &b);
     return (a / b) % 60;
@@ -139,7 +139,7 @@ int32_t doremir_time_seconds(doremir_time_t time)
  */
 int32_t doremir_time_minutes(doremir_time_t time)
 {
-    num_t   a; 
+    num_t   a;
     denom_t b;
     doremir_ratio_match(time->value, &a, &b);
     return (a / b) % (60 * 60) / 60;
@@ -155,7 +155,7 @@ int32_t doremir_time_minutes(doremir_time_t time)
  */
 int32_t doremir_time_hours(doremir_time_t time)
 {
-    num_t   a; 
+    num_t   a;
     denom_t b;
     doremir_ratio_match(time->value, &a, &b);
     return (a / b) % (60 * 60 * 24) / (60 * 60);
@@ -171,7 +171,7 @@ int32_t doremir_time_hours(doremir_time_t time)
  */
 int32_t doremir_time_days(doremir_time_t time)
 {
-    num_t   a; 
+    num_t   a;
     denom_t b;
     doremir_ratio_match(time->value, &a, &b);
     return (a / b) / (60 * 60 * 24);
@@ -186,9 +186,9 @@ int32_t doremir_time_days(doremir_time_t time)
 int32_t doremir_time_to_seconds(doremir_time_t time)
 {
     return doremir_time_days(time)    * 24 * 60 * 60
-         + doremir_time_hours(time)   * 60 * 60
-         + doremir_time_minutes(time) * 60
-         + doremir_time_seconds(time);
+           + doremir_time_hours(time)   * 60 * 60
+           + doremir_time_minutes(time) * 60
+           + doremir_time_seconds(time);
 }
 
 /** Convert the time to milliseconds.
@@ -239,7 +239,7 @@ doremir_time_t doremir_time_from_cpu(doremir_time_cpu_t cpu_time)
     // int64_t t = doremir_peek_int64(cpu_time);
     // int64_t q = t / CLOCKS_PER_SEC;
     // int64_t r = t % CLOCKS_PER_SEC;
-    // 
+    //
     // return doremir_add(seconds(q), divisions(r, CLOCKS_PER_SEC));
     assert(false && "Not implemented");
 }
@@ -385,10 +385,10 @@ doremir_time_t system_prec_time(ptr_t a)
     // clock_gettime(CLOCK_REALTIME, &ts);
 
     time_t s  = seconds(ts.tv_sec); // TODO with tv_nsec
-    time_t ds = divisions(ts.tv_nsec/1000000, 1000);
+    time_t ds = divisions(ts.tv_nsec / 1000000, 1000);
     return doremir_dadd(s, ds);
-    
-    
+
+
 }
 
 ptr_t system_prec_clock_impl(doremir_id_t interface)
