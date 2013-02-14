@@ -16,7 +16,10 @@
 #define TIME_MAX  doremir_time_create(2000000,0,0,ratio(0,1)) // FIXME
 
 /*
-    Notes:
+    TODO
+        - Recursive merge (with public fixpoint?)
+        - Switch
+        - Map/filter/join
  */
 struct _doremir_event_t {
 

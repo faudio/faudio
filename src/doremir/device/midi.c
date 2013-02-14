@@ -478,6 +478,7 @@ void midi_stream_send(ptr_t a, address_t addr, message_t msg)
     PmError result;
     stream_t stream = (stream_t) a;
     midi_t   midi   = (midi_t) msg;
+    // TODO use dynamic introspection to detect lists
 
     if (doremir_midi_is_simple(midi)) {
         // timestamp ignored

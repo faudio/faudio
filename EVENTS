@@ -103,10 +103,12 @@ Laws:
     merge (merge x y) z = merge x (merge y z)
     merge x y           = merge y x
     merge x never       = x
+    
     switch x never x    = x
     switch never x y    = x
     switch x x never    = never
     switch (one _) x y  = y
+    
     merge (switch p x y) (switch p y x) = merge x y
 
 -}

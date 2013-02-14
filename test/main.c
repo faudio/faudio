@@ -1372,10 +1372,10 @@ void test_event()
         // dispatcher_t disp = lockfree_dispatcher();
         // event_t a = doremir_event_receive(disp, i16(0));
         event_t c = doremir_system_event_mouse_move();
-        // event_t c = doremir_system_event_key_down();
+        event_t d = doremir_system_event_key_down();
         // event_t a = delay_event(seconds(10), ha);
 
-        event_t z = doremir_system_event_write_std(merge_event(merge_event(a,b),c));
+        event_t z = doremir_system_event_write_std(merge_event(merge_event(a,b),merge_event(c,d)));
 
         // doremir_print("\n", NULL);
         // doremir_print("a                            ==> %s\n", a);

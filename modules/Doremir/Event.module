@@ -36,7 +36,7 @@ module Doremir.Event
 
     never   : () -> Event;
     now     : Ptr -> Event;
-    fix     : (Event -> Event)* -> Event;
+    // fix     : (Event -> Event)* -> Event;
     later   : (Time, Ptr) -> Event;
     delay   : (Time, Event) -> Event;
     merge   : (Event, Event) -> Event;               // rename merge
