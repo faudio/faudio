@@ -62,14 +62,11 @@ module Doremir.Event
     // djoin     : Event -> Event;
 
     // Low-level
-    offset   : Event -> Time;          // Offset to first occurance            rename offset
-    sync     : Event -> Void;
+    offset   : Event -> Time;
     addSync  : (((Ptr,Sender) -> Void)*, Ptr, Event) -> Void;
-
-    // isNever  : Event -> Bool;          // Definately no occurances
-    hasValue : (Time,Event) -> Bool;   // Is an occurance available            rename hasValue
-    hasTail  : (Time,Event) -> Bool;   // Is an occurance available            rename hasValue
-    value    : (Time,Event) -> Ptr;    // Get the first occurance value        rename value?
+    hasValue : (Time,Event) -> Bool;
+    hasTail  : (Time,Event) -> Bool;
+    value    : (Time,Event) -> Ptr;
     tail     : (Time,Event) -> Event;    
 }
 
