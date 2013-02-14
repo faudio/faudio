@@ -115,12 +115,11 @@ Laws:
 
 
 later t x           = delay t (now x)
-head x              = before (tail x) x
-odds x              = head x `merge` (!!odds (tail2 x))
-evens x             = tail x `merge` (!!evens (tail2 x))
 after p x           = switch p never x
 before p x          = switch p x never
 repeat t x          = now x `merge` delay t (!!repeat t x)
+odds x              = head x `merge` (!!odds (tail2 x))
+evens x             = tail x `merge` (!!evens (tail2 x))
 
 -- skip1 p x           = tail (after p)
 -- skip p x            = skip1 p x `merge` !!skip (tail p) x
