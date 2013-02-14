@@ -59,7 +59,6 @@ struct _doremir_event_t {
         struct {
             ptr_t           dispatcher;
             ptr_t           address;
-            int             index;          // Offset in incoming elements
         }                   recv;
 
     }                       fields;
@@ -249,20 +248,6 @@ doremir_event_t doremir_event_send(doremir_message_receiver_t   receiver,
     return e;
 }
 
-static inline event_t receive2(
-    doremir_message_sender_t  sender,
-    doremir_message_address_t address,
-    int index)
-{
-    assert(sender  && "Need a sender");
-
-    event_t e = new_event(recv_event);
-    recv_get(e, dispatcher) = sender;
-    recv_get(e, address)    = address;
-    recv_get(e, index)      = index;
-    return e;
-}
-
 /** Create an event that receives values from the given sender.
     @param sender   Sender to receive from.
     @param address  Address to receive on.
@@ -271,7 +256,12 @@ static inline event_t receive2(
 doremir_event_t doremir_event_receive(doremir_message_sender_t  sender,
                                       doremir_message_address_t address)
 {
-    return receive2(sender, address, 0);
+    assert(sender  && "Need a sender");
+
+    event_t e = new_event(recv_event);
+    recv_get(e, dispatcher) = sender;
+    recv_get(e, address)    = address;
+    return e;
 }
 
 /** Destroy the given event.
@@ -431,9 +421,7 @@ void doremir_event_sync(doremir_event_t event)
 
     case recv_event: {
         sender_t s = recv_get(event, dispatcher);
-        // int      n = recv_get(event, index);
         doremir_message_sync(s);              
-        recv_get(event, index) = 0; // TODO do we want to *return* event instead?
         return;
     }
     
@@ -491,8 +479,7 @@ bool doremir_event_has_value(doremir_time_t u, doremir_event_t event)
         sender_t s  = recv_get(event, dispatcher);
         sender_t a  = recv_get(event, address);
         list_t   xs = doremir_message_receive(s, a);
-        int      n  = recv_get(event, index);           
-        return doremir_list_length(xs) > n;
+        return doremir_list_length(xs) > 0;
     }
 
     default:
@@ -543,19 +530,17 @@ doremir_ptr_t doremir_event_value(doremir_time_t u, doremir_event_t event)
         receiver_t r = recv_get(event, dispatcher);
         sender_t   a = recv_get(event, address);
         event_t    x = send_get(event, event);
-        ptr_t      v = doremir_event_value(u, x);
-        doremir_message_send(r, a, v);
+        ptr_t      vs = doremir_event_value(u, x);
+        doremir_for_each(v, vs) {
+            doremir_message_send(r, a, v);
+        }
         return fb(false); // TODO something else for unit?
     }
 
     case recv_event: {
         sender_t s  = recv_get(event, dispatcher);
         sender_t a  = recv_get(event, address);
-        int      n  = recv_get(event, index);
-        list_t   xs = doremir_message_receive(s, a);
-doremir_print("List is: %s\n", xs);
-printf("Index: %d\n", n);
-        return doremir_list_index(n, xs);
+        return doremir_message_receive(s, a);
     }
 
     default:
@@ -622,9 +607,7 @@ doremir_event_t doremir_event_tail(doremir_event_t event)
     case recv_event: {
         sender_t s  = recv_get(event, dispatcher);
         sender_t a  = recv_get(event, address);
-        int      n  = recv_get(event, index);
-        // list_t   xs = doremir_message_receive(s, a);
-        return receive2(s, a, n + 1);
+        return doremir_event_receive(s, a);
     }
 
     default:

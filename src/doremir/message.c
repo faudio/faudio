@@ -173,7 +173,7 @@ list_t doremir_message_dispatcher_receive(dispatcher_t dispatcher,
                              doremir_map_get(address,
                                              lockfree_get(dispatcher, mailbox))
                          );
-        return current;
+        return doremir_list_reverse(current);
     }
 }
 
