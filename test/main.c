@@ -1360,14 +1360,17 @@ void test_event()
         event_t ho = now(list(string("holmgren")));
 
         event_t a = merge_event(ha,
-                                delay_event(milliseconds(2000), merge_event(ha,
-                                            delay_event(milliseconds(2000), merge_event(ha,
-                                                        never())))));
+            delay_event(milliseconds(2000), merge_event(ha,
+            delay_event(milliseconds(2000), merge_event(ha,
+            delay_event(milliseconds(2000), merge_event(ha,
+            delay_event(milliseconds(2000), merge_event(ha,
+            delay_event(milliseconds(2000), merge_event(ha,
+            never())))))))))));
 
         event_t b = merge_event(ho,
-                                delay_event(milliseconds(2400), merge_event(ho,
-                                            delay_event(milliseconds(2400), merge_event(ho,
-                                                        never())))));
+            delay_event(milliseconds(2400), merge_event(ho,
+            delay_event(milliseconds(2400), merge_event(ho,
+            never())))));
         
         event_t s1 = doremir_event_later(seconds(1),NULL);
         event_t s3 = doremir_event_later(seconds(3),NULL);
@@ -1377,7 +1380,8 @@ void test_event()
         event_t kd = doremir_system_event_key_down();
         event_t ku = doremir_system_event_key_up();
 
-        event_t y = switch_event(kd,mm,never());
+        // delay_event(milliseconds(2000), merge_event(ha,
+        event_t y = a;
         event_t z = doremir_system_event_write_std(y);
 
         {
@@ -1388,7 +1392,7 @@ void test_event()
             while (1) {
                 // doremir_message_send(disp, i16(0), string("foo"));
                 doremir_scheduler_execute(s);
-                doremir_thread_sleep(50);
+                doremir_thread_sleep(500);
             }
         }
     }

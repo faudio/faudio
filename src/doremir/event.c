@@ -185,10 +185,10 @@ doremir_event_t doremir_event_merge(doremir_event_t event1,
     assert(event1 && "Can not merge null");
     assert(event2 && "Can not merge null");
 
-    // if (is_never(event1))
-    //     return event2;
-    // if (is_never(event2))
-    //     return event1;
+    if (is_never(event1))
+        return event2;
+    if (is_never(event2))
+        return event1;
 
     // invariant left <= right
     event_t e = new_event(merge_event);
@@ -514,8 +514,7 @@ event_t delay_tail(doremir_time_t current, doremir_event_t event)
 {
     time_t  t = delay_get(event, time);
     event_t x = delay_get(event, event);
-    
-    return doremir_event_tail(doremir_subtract(current, t), x);
+    return doremir_event_delay(t, doremir_event_tail(current, x));
 }
 
 bool merge_has_value(doremir_time_t current, doremir_event_t event)
