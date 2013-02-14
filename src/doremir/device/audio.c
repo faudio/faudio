@@ -69,8 +69,8 @@ struct _doremir_device_audio_stream_t {
     long                max_buffer_size;
     int32_t             sample_count;       // Monotonically increasing sample count
 
-    dispatcher_t        incoming;
-    dispatcher_t        outgoing;
+    sender_t            incoming;
+    receiver_t          outgoing;
 };
 
 static mutex_t pa_mutex;
@@ -189,8 +189,8 @@ inline static stream_t new_stream(device_t input, device_t output, processor_t p
 
     stream->sample_count    = 0;
 
-    stream->incoming        = lockfree_dispatcher();
-    stream->outgoing        = lockfree_dispatcher();
+    stream->incoming        = (sender_t)   lockfree_dispatcher();
+    stream->outgoing        = (receiver_t) lockfree_dispatcher();
 
     return stream;
 }
@@ -515,7 +515,7 @@ void before_processing(stream_t stream)
         .frame_size  = stream->max_buffer_size,
         .sample_time = stream->sample_count,
         .total_time  = NULL, // TODO
-        .dispatcher  = stream->incoming
+        .dispatcher  = (dispatcher_t) stream->incoming
     };
 
 
@@ -534,7 +534,7 @@ void after_processing(stream_t stream)
         .frame_size  = stream->max_buffer_size,
         .sample_time = stream->sample_count,
         .total_time  = NULL, // TODO
-        .dispatcher  = stream->incoming
+        .dispatcher  = (dispatcher_t) stream->incoming
     };
 
     stream->proc_impl->after(stream->proc, &info);
@@ -548,7 +548,7 @@ int during_processing(stream_t stream, unsigned count, float **input, float **ou
     //     .frame_size  = stream->max_buffer_size,
     //     .sample_time = stream->sample_count,
     //     .total_time  = NULL, // TODO
-    //     .dispatcher  = stream->incoming
+    //     .dispatcher  = (dispatcher_t) stream->incoming
     // };
 
     // Syncronize messages
@@ -739,20 +739,20 @@ int64_t audio_stream_ticks(ptr_t a)
 
 void audio_stream_sync(ptr_t a)
 {
-    // stream_t stream = (stream_t) a;
-    assert(false && "Not implemented");
+    stream_t stream = (stream_t) a;
+    doremir_message_sync(((sender_t) stream->incoming));
 }
 
 doremir_list_t audio_stream_receive(ptr_t a, address_t addr)
 {
-    // stream_t stream = (stream_t) a;
-    assert(false && "Not implemented");
+    stream_t stream = (stream_t) a;
+    return doremir_message_receive(((sender_t) stream->incoming), addr);
 }
 
 void audio_stream_send(ptr_t a, address_t addr, message_t msg)
 {
     stream_t stream = (stream_t) a;
-    doremir_message_send(stream->incoming, addr, msg);
+    doremir_message_send(((receiver_t) stream->incoming), addr, msg);
 }
 
 ptr_t audio_stream_impl(doremir_id_t interface)

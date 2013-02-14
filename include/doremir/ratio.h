@@ -20,6 +20,7 @@ doremir_ratio_denom_t doremir_ratio_denom(doremir_ratio_t);
 void doremir_ratio_match(doremir_ratio_t,
                          doremir_ratio_num_t *,
                          doremir_ratio_denom_t *);
+doremir_ratio_t doremir_ratio_copy(doremir_ratio_t);
 void doremir_ratio_destroy(doremir_ratio_t);
 doremir_ratio_t doremir_ratio_add(doremir_ratio_t,
                                   doremir_ratio_t);

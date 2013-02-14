@@ -45,6 +45,7 @@ module Doremir.Event
     send    : (Receiver, Address, Event) -> Event;
     destroy : Event -> Void;
     
+    // head     : Event -> Event;
     // after  : Event -> Event;
     // before : Event -> Event;
     // upon   : (Event, Event) -> Event;
@@ -52,18 +53,6 @@ module Doremir.Event
     // sample : Event -> Event;
     // toggle : Event -> Event;
     
-    isNever  : Event -> Bool;          // Definately no occurances
-    // hasTail
-    
-    // Low-level
-    hasValue : (Time,Event) -> Bool;   // Is an occurance available            rename hasValue
-    value    : (Time,Event) -> Ptr;    // Get the first occurance value        rename value?
-    offset   : Event -> Time;          // Offset to first occurance            rename offset
-
-    sync     : Event -> Void;
-    // head     : Event -> Event;
-    tail     : (Time,Event) -> Event;
-
     // filter      : (Pred, Ptr, Event) -> Event;
     // dfilter     : (Pred, Ptr, Event) -> Event;
     // map         : (Unary, Ptr, Event) -> Event;
@@ -72,5 +61,13 @@ module Doremir.Event
     // djoinMap  : (Unary, Ptr, Event) -> Event;
     // join      : Event -> Event;
     // djoin     : Event -> Event;
-    
+
+    // Low-level
+    offset   : Event -> Time;          // Offset to first occurance            rename offset
+    sync     : Event -> Void;
+
+    hasValue : (Time,Event) -> Bool;   // Is an occurance available            rename hasValue
+    isNever  : Event -> Bool;          // Definately no occurances
+    value    : (Time,Event) -> Ptr;    // Get the first occurance value        rename value?
+    tail     : (Time,Event) -> Event;    
 }

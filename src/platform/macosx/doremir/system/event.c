@@ -170,7 +170,7 @@ static CGEventRef event_listener(CGEventTapProxy proxy,
     // printf("Event of type %d\n", type);
     ptr_t value = convert_event(type, event);
 
-    doremir_message_send(source->disp, i16(0), value);
+    doremir_message_send((receiver_t) source->disp, i16(0), value);
 
     return event;
 }
@@ -266,13 +266,13 @@ void event_source_destroy(ptr_t a)
 void event_source_sync(ptr_t a)
 {
     event_source_t source = a;
-    doremir_message_sync(source->disp);
+    doremir_message_sync((sender_t) source->disp);
 }
 
 doremir_list_t event_source_receive(ptr_t a, address_t addr)
 {
     event_source_t source = a;
-    return doremir_message_receive(source->disp, addr);
+    return doremir_message_receive((sender_t) source->disp, addr);
 }
 
 ptr_t event_source_impl(doremir_id_t interface)
