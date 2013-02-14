@@ -751,13 +751,11 @@ string_t event_show(doremir_ptr_t a)
         write_to(s, string(">"));
 
         return s;
-
-        default:
-            assert(false && "Missing label");
-        }
     }
 
-    return s;
+    default:
+        assert(false && "Missing label");
+    }
 }
 
 void event_destroy(doremir_ptr_t a)
