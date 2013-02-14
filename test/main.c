@@ -1368,9 +1368,6 @@ void test_event()
                                 delay_event(milliseconds(2400), merge_event(ho,
                                             delay_event(milliseconds(2400), merge_event(ho,
                                                         never())))));
-
-        // dispatcher_t disp = lockfree_dispatcher();
-        // event_t a = doremir_event_receive(disp, i16(0));
         
         event_t s1 = doremir_event_later(seconds(1),NULL);
         event_t s3 = doremir_event_later(seconds(3),NULL);
@@ -1380,34 +1377,19 @@ void test_event()
         event_t kd = doremir_system_event_key_down();
         event_t ku = doremir_system_event_key_up();
 
-        event_t y = before_event(s3, after_event(s1,mm));
+        event_t y = switch_event(kd,mm,never());
         event_t z = doremir_system_event_write_std(y);
 
-        // doremir_print("\n", NULL);
-        // doremir_print("a                            ==> %s\n", a);
-        // doremir_print("offset(a)                    ==> %s\n", doremir_event_offset(a));
-        // doremir_print("hasValue(a)                  ==> %s\n", fb(doremir_event_has_value(t, a)));
-        // doremir_print("value(a)                     ==> %s\n", doremir_event_value(a));
-        //
-        // doremir_print("\n", NULL);
-        // doremir_print("b                            ==> %s\n", b);
-        // doremir_print("offset(b)                    ==> %s\n", doremir_event_offset(b));
-        // doremir_print("hasValue(b)                  ==> %s\n", fb(doremir_event_has_value(t, b)));
-        // doremir_print("value(b)                     ==> %s\n", doremir_event_value(b));
+        {
+            clock_t cl = doremir_time_get_system_prec_clock();
+            scheduler_t s = doremir_scheduler_create(cl);
+            doremir_scheduler_schedule(s, z);
 
-
-
-
-        clock_t cl = doremir_time_get_system_prec_clock();
-        scheduler_t s = doremir_scheduler_create(cl);
-        doremir_scheduler_schedule(s, z);
-
-        while (1) {
-            // doremir_message_send(disp, i16(0), string("foo"));
-            doremir_scheduler_execute(s);
-            doremir_thread_sleep(50);
-
-
+            while (1) {
+                // doremir_message_send(disp, i16(0), string("foo"));
+                doremir_scheduler_execute(s);
+                doremir_thread_sleep(50);
+            }
         }
     }
 

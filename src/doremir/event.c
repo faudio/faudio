@@ -396,6 +396,61 @@ void doremir_event_sync(doremir_event_t event)
     }
 }
 
+void doremir_event_add_sync(void (*func)(doremir_ptr_t,
+                                     doremir_message_sender_t),
+                            doremir_ptr_t data,
+                            doremir_event_t event)
+{
+    switch (event->tag) {
+    case never_event:
+        break;
+
+    case now_event:
+        break;
+
+    case delay_event: {
+        event_t x = delay_get(event, event);
+        doremir_event_add_sync(func, data, x);
+        return;
+    }
+
+    case merge_event: {
+        event_t x = merge_get(event, left);
+        event_t y = merge_get(event, right);
+        doremir_event_add_sync(func, data, x);
+        doremir_event_add_sync(func, data, y);
+        return;
+    }
+
+    case switch_event: {
+        event_t p = switch_get(event, pred);
+        event_t x = switch_get(event, before);
+        event_t y = switch_get(event, after);
+        doremir_event_add_sync(func, data, p);
+        doremir_event_add_sync(func, data, x);
+        doremir_event_add_sync(func, data, y);
+        return;
+    }
+
+    case send_event: {
+        event_t x = send_get(event, event);
+        doremir_event_add_sync(func, data, x);
+        return;
+    }
+
+    case recv_event: {
+        sender_t s = recv_get(event, dispatcher);
+        func(data, s);
+        return;
+    }
+
+    default:
+        assert(false && "Missing label");
+    }
+    
+}
+
+
 
 #define has_occured doremir_event_has_value
 

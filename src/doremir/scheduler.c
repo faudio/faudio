@@ -17,6 +17,7 @@ struct _doremir_scheduler_t {
     impl_t                  impl;           // Dispatcher
     clock_t                 clock;
     time_t                  start;
+    list_t                  senders;        // Senders to syncronize on each pass
     priority_queue_t        queue;
 };
 
@@ -30,8 +31,9 @@ inline static scheduler_t new_scheduler(clock_t clock)
     scheduler_t scheduler = doremir_new(scheduler);
     scheduler->impl     = &scheduler_impl;
     scheduler->clock    = clock;
-    scheduler->queue    = priority_queue();
     scheduler->start    = doremir_time_time(scheduler->clock);
+    scheduler->senders  = doremir_list_empty();
+    scheduler->queue    = priority_queue();
     return scheduler;
 }
 
@@ -59,6 +61,17 @@ void doremir_scheduler_destroy(scheduler_t scheduler)
     delete_scheduler(scheduler);
 }
 
+
+void collect_sync(doremir_ptr_t senders, doremir_message_sender_t sender)
+{                       
+    // Add hoc set to user pointer equality
+    list_t *list = senders;
+    doremir_for_each(s, *list) {
+        if (s == sender) return;
+    }
+    *list = doremir_list_dcons(sender, *list);
+}
+
 /** Schedule.
     @param event            Event to schedule.
     @param scheduler        The scheduler.
@@ -67,6 +80,9 @@ void doremir_scheduler_schedule(doremir_scheduler_t scheduler, doremir_event_t e
 {
     // warn(string_dappend(string("Inserting "), doremir_string_show(event)));
     doremir_priority_queue_insert(event, scheduler->queue);
+
+    // list_t senders = doremir_list_empty();
+    doremir_event_add_sync(collect_sync, &scheduler->senders, event);
 }
 
 #define sched_inform(str)
@@ -84,13 +100,16 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
 
     sched_inform(string_dappend(string("@ "), doremir_string_show(now)));
 
+    doremir_for_each(s, scheduler->senders) {
+        doremir_message_sync(s);
+    }
 
     for (int i = 0; i < max_events_k; ++i) {
 
         event_t event = doremir_priority_queue_peek(scheduler->queue);
 
         if (event) {
-            doremir_event_sync(event);
+            // doremir_event_sync(event);
         } else {
             sched_inform(string("- No events"));
             break;
