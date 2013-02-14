@@ -103,7 +103,7 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
             doremir_priority_queue_pop(scheduler->queue);
 
             if (doremir_event_has_value(now, event)) {
-                ptr_t   value = doremir_event_value(event);
+                ptr_t   value = doremir_event_value(now, event);
                 sched_inform(string_dappend(string("Value is: "), doremir_string_show(value)));
             }
 

@@ -101,7 +101,7 @@ void delete_event(doremir_event_t event)
 // --------------------------------------------------------------------------------
 
 /** Create an empty event.
-    This event never occur.
+    This event never occurs.
     @return         A new event.
  */
 doremir_event_t doremir_event_never()
@@ -110,8 +110,7 @@ doremir_event_t doremir_event_never()
     return e;
 }
 
-/** Create a single event.
-    This event occurs exactly once at scheduling time.
+/** Create a single event, occuring directly.
     @return         A new event.
  */
 doremir_event_t doremir_event_now(doremir_ptr_t value)
@@ -121,16 +120,29 @@ doremir_event_t doremir_event_now(doremir_ptr_t value)
     return e;
 }
 
-/** Delay an event by the given amount of time.
-    @param time     Amount of time to delay.
-    @param event2   Event to delay.
+/** Create a single event, occuring after the given time has passed.
     @return         A new event.
+ */
+doremir_event_t doremir_event_later(doremir_time_t time, doremir_ptr_t value)
+{
+    return doremir_event_delay(time, doremir_event_now(value));
+}   
+
+/** Delay an event by the given amount of time.
+
+    @param time     Amount of time to delay.
+    @param event    Event to delay.
+    @return         A new event.               
+
+    @par Laws
+
+        delay t (delay u)   = delay (t + u)
+        delay t (merge x y) = delay t x `merge` delay t u
+    
  */
 doremir_event_t doremir_event_delay(doremir_time_t  time,
                                     doremir_event_t event)
 {
-    // delay t (delay u)   = delay (t + u)
-    // delay t (merge x y) = delay t x `merge` delay t u
 
     assert(event && "Can not delay null");
 
@@ -153,14 +165,18 @@ doremir_event_t doremir_event_delay(doremir_time_t  time,
     @param event1   Event to merge.
     @param event2   Event to merge.
     @return         A new event.
+
+    @par Laws
+        
+        merge (switch p x y) (switch p y x) = merge x y
+        merge (merge x y) z = merge x (merge y z)
+        merge x never       = x
+        merge x y           = merge y x
+        
  */
 doremir_event_t doremir_event_merge(doremir_event_t event1,
                                     doremir_event_t event2)
 {
-    // merge (switch p x y) (switch p y x) = merge x y
-    // merge (merge x y) z = merge x (merge y z)
-    // merge x never       = x
-    // merge x y           = merge y x
     assert(event1 && "Can not merge null");
     assert(event2 && "Can not merge null");
 
@@ -178,21 +194,25 @@ doremir_event_t doremir_event_merge(doremir_event_t event1,
     return e;
 }
 
-/** Create an event that switches from one event to another at a given time.
+/** Create an event that switches from one event to another at a the first
+    occurance of a trigger event.
+
     @param trigger  Triggering event.
     @param event1   Behave as this event before the trigger occurs.
     @param event2   Behave as this event after the trigger occurs.
     @return         A new event.
+
+    @par Laws
+        
+        switch x never x    = x
+        switch (now _) x y  = y
+        switch x x never    = never
+        switch never x y    = x
  */
 doremir_event_t doremir_event_switch(doremir_event_t pred,
                                      doremir_event_t event1,
                                      doremir_event_t event2)
 {
-    // switch x never x    = x
-    // switch never x y    = x
-    // switch x x never    = never
-    // switch (one _) x y  = y
-
     assert(pred   && "Can not switch null");
     assert(event2 && "Can not switch null");
     assert(event2 && "Can not switch null");
@@ -252,10 +272,10 @@ doremir_event_t doremir_event_receive(doremir_message_sender_t  sender,
     return receive2(sender, address, 0);
 }
 
-
+/** Destroy the given event.
+ */
 void doremir_event_destroy(doremir_event_t event)
 {
-    // TODO manage components
     delete_event(event);
 }
 
@@ -429,11 +449,11 @@ bool doremir_event_has_value(doremir_time_t time, doremir_event_t event)
     }
 }
 
-doremir_ptr_t doremir_event_value(doremir_event_t event)
+doremir_ptr_t doremir_event_value(doremir_time_t time, doremir_event_t event)
 {
     // value u never            = undefined
     // value u (now x)          = x
-    // value u (delay t x)      = value x
+    // value u (delay t x)      = value (u - t) x
     // value u (merge x y)      = if (x < y) then (value x) else (value y)
     // value u (x `switch p` y) = if (!hasValue u p) then (value x) else (value y)
     // value u (recv d a n)     = index n (receive d a)
@@ -448,16 +468,18 @@ doremir_ptr_t doremir_event_value(doremir_event_t event)
         return now_get(event, value);
 
     case delay_event:
-        return doremir_event_value(delay_get(event, event));
+        return doremir_event_value(
+            doremir_subtract(time, delay_get(event, time)), 
+            delay_get(event, event));
 
     case merge_event:
-        return doremir_event_value(merge_get(event, left));
+        return doremir_event_value(time, merge_get(event, left));
 
     case switch_event:
         assert(false && "Not implemented");
 
     case send_event: {
-        ptr_t value = doremir_event_value(send_get(event, event));
+        ptr_t value = doremir_event_value(time, send_get(event, event));
         doremir_message_send(
             send_get(event, dispatcher),
             send_get(event, address),

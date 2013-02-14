@@ -36,6 +36,7 @@ module Doremir.Event
 
     never   : () -> Event;
     now     : Ptr -> Event;
+    fix     : (Event -> Event)* -> Event;
     later   : (Time, Ptr) -> Event;
     delay   : (Time, Event) -> Event;
     merge   : (Event, Event) -> Event;               // rename merge
@@ -51,13 +52,15 @@ module Doremir.Event
     // sample : Event -> Event;
     // toggle : Event -> Event;
     
-    isNever  : Event -> Bool;           
+    isNever  : Event -> Bool;          // Definately no occurances
+    isRecurring : Event -> Bool;       // Possibly infinite occurances
 
+    // Low-level
     hasValue : (Time,Event) -> Bool;   // Is an occurance available            rename hasValue
+    value    : (Time,Event) -> Ptr;    // Get the first occurance value        rename value?
     offset   : Event -> Time;          // Offset to first occurance            rename offset
-    sync     : Event -> Void;
-    value    : Event -> Ptr;           // Get the first occurance value        rename value?
 
+    sync     : Event -> Void;
     head     : Event -> Event;
     tail     : Event -> Event;
 
