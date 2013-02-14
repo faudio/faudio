@@ -698,19 +698,6 @@ string_t event_show(doremir_ptr_t a)
         return s;
     }
 
-    case send_event: {
-        event_t x  = send_get(event, event);
-
-        write_to(s, string("<Send "));
-        write_to(s, doremir_string_show(x));
-        write_to(s, string(">"));
-
-        return s;
-    }
-
-    case recv_event:
-        return string("<Receive>");
-
     case delay_event: {
         time_t  t = delay_get(event, time);
         event_t x  = delay_get(event, event);
@@ -752,6 +739,19 @@ string_t event_show(doremir_ptr_t a)
 
         return s;
     }
+
+    case send_event: {
+        event_t x  = send_get(event, event);
+
+        write_to(s, string("<Send "));
+        write_to(s, doremir_string_show(x));
+        write_to(s, string(">"));
+
+        return s;
+    }
+
+    case recv_event:
+        return string("<Receive>");
 
     default:
         assert(false && "Missing label");
