@@ -117,8 +117,7 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
         }
     }
 
-    for (int i = 0; i < num_reschedule; ++i)
-    {
+    for (int i = 0; i < num_reschedule; ++i) {
         doremir_priority_queue_insert(reschedule[i], scheduler->queue);
     }
 

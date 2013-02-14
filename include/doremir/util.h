@@ -52,6 +52,8 @@
 #define processor_t         doremir_processor_t
 #define proc_t              doremir_processor_t
 #define proc_interface_t    doremir_processor_interface_t
+#define sender_t            doremir_message_sender_t
+#define receiver_t          doremir_message_receiver_t
 #define dispatcher_t        doremir_message_dispatcher_t
 #define address_t           doremir_message_address_t
 #define message_t           doremir_message_t
