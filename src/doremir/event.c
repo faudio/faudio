@@ -123,9 +123,9 @@ doremir_event_t doremir_event_now(doremir_ptr_t value)
 /** Create a single event, occuring after the given time has passed.
     @return         A new event.
  */
-doremir_event_t doremir_event_later(doremir_time_t time, doremir_ptr_t value)
+doremir_event_t doremir_event_later(doremir_time_t u, doremir_ptr_t x)
 {
-    return doremir_event_delay(time, doremir_event_now(value));
+    return doremir_event_delay(u, doremir_event_now(x));
 }
 
 /** Delay an event by the given amount of time.
@@ -179,6 +179,11 @@ doremir_event_t doremir_event_merge(doremir_event_t event1,
 {
     assert(event1 && "Can not merge null");
     assert(event2 && "Can not merge null");
+
+    if (doremir_event_is_never(event1))
+        return event2;
+    if (doremir_event_is_never(event2))
+        return event1;
 
     // invariant left <= right
     event_t e = new_event(merge_event);
@@ -445,7 +450,7 @@ bool doremir_event_has_value(doremir_time_t u, doremir_event_t event)
         return false;
 
     case now_event: {        
-        return doremir_greater_than_equal(time, TIME_ZERO);
+        return doremir_greater_than_equal(u, TIME_ZERO);
     }
 
     case delay_event: {
@@ -492,7 +497,7 @@ doremir_ptr_t doremir_event_value(doremir_time_t u, doremir_event_t event)
     // value u never            = undefined
     // value u (now x)          = x
     // value u (delay t x)      = value (u - t) x
-    // value u (merge x y)      = if (x < y) then (value x) else (value y)
+    // value u (merge x y)      = if (x < y && hasValue x) then (value x) else (value y)
     // value u (x `switch p` y) = if (!hasValue u p) then (value x) else (value y)
     // value u (send d a x)     = ()
     // value u (recv d a n)     = index n (receive d a)
@@ -516,7 +521,10 @@ doremir_ptr_t doremir_event_value(doremir_time_t u, doremir_event_t event)
     case merge_event: {
         event_t x = merge_get(event, left);
         event_t y = merge_get(event, right);
-        return doremir_event_value(u, merge_get(event, left));
+        if (doremir_event_has_value(u, x))
+            return doremir_event_value(u, x);
+        else
+            return doremir_event_value(u, y);
     }
 
     case switch_event: {
@@ -558,12 +566,12 @@ doremir_event_t doremir_event_head(doremir_event_t event)
 
 /** Returns an event containing all remaning occurances.
  */
-doremir_event_t doremir_event_tail(doremir_event_t event)
+doremir_event_t doremir_event_tail(doremir_time_t u, doremir_event_t event)
 {
     // tail never            = undefined
     // tail now              = never
     // tail (delay t x)      = delay t (tail x)
-    // tail (merge x y)      = if (x < y) then (tail x `merge` y) else (x `merge` tail y)
+    // tail (merge x y)      = if (x < y && hasValue x) then (tail x `merge` y) else (x `merge` tail y)
     // tail (x `switch p` y) = if (!hasValue p) then (tail x `switch p` y) else (tail y)
     // tail (send d a x)     = send d a (tail x)
     // tail (recv d a n)     = recv d a (n + 1)
@@ -581,13 +589,18 @@ doremir_event_t doremir_event_tail(doremir_event_t event)
     case delay_event: {
         time_t  t = delay_get(event, time);
         event_t x = delay_get(event, event);
-        return doremir_event_delay(t, doremir_event_tail(x));
+        return doremir_event_delay(t, doremir_event_tail(u, x));
     }
 
     case merge_event: {
         event_t x = merge_get(event, left);
         event_t y = merge_get(event, right);
-        return doremir_event_merge(doremir_event_tail(x), y);
+        if (doremir_event_has_value(u, x))
+            return doremir_event_merge(doremir_event_tail(u, x), y);
+        else if (doremir_event_has_value(u, y))
+            return doremir_event_merge(x, doremir_event_tail(u, y));
+        else
+            return event;
     }
 
     case switch_event: {
@@ -601,7 +614,7 @@ doremir_event_t doremir_event_tail(doremir_event_t event)
         receiver_t r = recv_get(event, dispatcher);
         sender_t   a = recv_get(event, address);
         event_t    x = send_get(event, event);
-        return doremir_event_send(r, a, doremir_event_tail(x));
+        return doremir_event_send(r, a, doremir_event_tail(u, x));
     }
 
     case recv_event: {

@@ -72,7 +72,7 @@ void doremir_scheduler_schedule(doremir_scheduler_t scheduler, doremir_event_t e
 #define sched_inform(str)
 // #define sched_inform(str) dinform(str)
 
-#define max_events_k 5000
+#define max_events_k 500
 
 void doremir_scheduler_execute(doremir_scheduler_t scheduler)
 {
@@ -107,12 +107,10 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
                 sched_inform(string_dappend(string("Value is: "), doremir_string_show(value)));
             }
 
-            event_t tail  = doremir_event_tail(event);
-
-            if (!doremir_event_is_never(tail)) {
-                event_t event2 = tail;
-                sched_inform(string_dappend(string("Reinsert: "), doremir_string_show(event2)));
-                reschedule[num_reschedule++] = event2;
+            if (!doremir_event_is_never(event)) {
+                event_t tail  = doremir_event_tail(now, event);
+                reschedule[num_reschedule++] = tail;
+                sched_inform(string_dappend(string("Reinsert: "), doremir_string_show(tail)));
             }
         }
     }

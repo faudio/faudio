@@ -1357,30 +1357,25 @@ void test_event()
         doremir_time_t t = seconds(0);
 
         event_t ha = now(list(string("höglund")));
+        event_t ho = now(list(string("holmgren")));
 
-        event_t a = merge_event(ha, delay_event(seconds(1), merge_event(ha,
-        delay_event(seconds(1), merge_event(ha, delay_event(seconds(1),
-        merge_event(ha, delay_event(seconds(1), merge_event(ha,
-        delay_event(seconds(1), merge_event(ha, delay_event(seconds(1),
-        merge_event(ha, delay_event(seconds(1), merge_event(ha,
-        delay_event(seconds(1), merge_event(ha, delay_event(seconds(1),
-        merge_event(ha, delay_event(seconds(1), merge_event(ha,
-        delay_event(seconds(1), merge_event(ha, delay_event(seconds(1),
-        merge_event(ha, delay_event(seconds(1), merge_event(ha,
-        delay_event(seconds(1), merge_event(ha, delay_event(seconds(1),
-        merge_event(ha, delay_event(seconds(1), merge_event(ha,
-        delay_event(seconds(1), merge_event(ha, delay_event(seconds(1),
-        merge_event(ha, delay_event(seconds(1), merge_event(ha,
-        delay_event(seconds(1), merge_event(ha, delay_event(seconds(1),
-        merge_event(ha, delay_event(seconds(1),never()))))))))))))))))))))))))))))))))))))))))))));
+        event_t a = merge_event(ha, 
+            delay_event(milliseconds(2000), merge_event(ha,
+            delay_event(milliseconds(2000), merge_event(ha, 
+            never())))));
+
+        event_t b = merge_event(ho, 
+            delay_event(milliseconds(2400), merge_event(ho,
+            delay_event(milliseconds(2400), merge_event(ho, 
+            never())))));
 
         // dispatcher_t disp = lockfree_dispatcher();
         // event_t a = doremir_event_receive(disp, i16(0));
-        event_t b = doremir_system_event_mouse_move();
-        // event_t b = doremir_system_event_key_down();
+        event_t c = doremir_system_event_mouse_move();
+        // event_t c = doremir_system_event_key_down();
         // event_t a = delay_event(seconds(10), ha);
 
-        event_t z = doremir_system_event_write_std(delay_event(seconds(0), a));
+        event_t z = doremir_system_event_write_std(merge_event(merge_event(a,b),c));
 
         // doremir_print("\n", NULL);
         // doremir_print("a                            ==> %s\n", a);
@@ -1395,14 +1390,14 @@ void test_event()
         // doremir_print("value(b)                     ==> %s\n", doremir_event_value(b));
 
 
-        clock_t c = doremir_time_get_system_prec_clock();
-        scheduler_t s = doremir_scheduler_create(c);
+        clock_t cl = doremir_time_get_system_prec_clock();
+        scheduler_t s = doremir_scheduler_create(cl);
         doremir_scheduler_schedule(s, z);
 
         while (1) {
             // doremir_message_send(disp, i16(0), string("foo"));
             doremir_scheduler_execute(s);
-            doremir_thread_sleep(20);
+            doremir_thread_sleep(5);
         }
     }
 
