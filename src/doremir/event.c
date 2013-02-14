@@ -698,7 +698,7 @@ bool doremir_event_has_value(doremir_time_t current, doremir_event_t event)
     }
 }
 
-bool doremir_event_has_tail2(doremir_time_t current, doremir_event_t event)
+bool doremir_event_has_tail(doremir_time_t current, doremir_event_t event)
 {
     switch (event->tag) {
     case never_event:   
@@ -719,13 +719,13 @@ bool doremir_event_has_tail2(doremir_time_t current, doremir_event_t event)
         assert(false && "Missing label");
     }
 }   
-bool doremir_event_has_tail(doremir_time_t u, doremir_event_t event)
-{
-    bool res = doremir_event_has_tail2(u, event);
-    // doremir_print("tail(%s)", event);
-    // doremir_print(" ==> %s\n", fb(res));
-    return res;
-}
+// bool doremir_event_has_tail(doremir_time_t u, doremir_event_t event)
+// {
+//     bool res = doremir_event_has_tail2(u, event);
+//     // doremir_print("tail(%s)", event);
+//     // doremir_print(" ==> %s\n", fb(res));
+//     return res;
+// }
 
 doremir_ptr_t doremir_event_value(doremir_time_t current, doremir_event_t event)
 {              
