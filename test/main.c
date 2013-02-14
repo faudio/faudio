@@ -1375,7 +1375,8 @@ void test_event()
         event_t d = doremir_system_event_key_down();
         // event_t a = delay_event(seconds(10), ha);
 
-        event_t z = doremir_system_event_write_std(merge_event(merge_event(a,b),merge_event(c,d)));
+        // event_t z = doremir_system_event_write_std(merge_event(merge_event(a,b),merge_event(c,d)));
+        event_t z = doremir_system_event_write_std(switch_event(d, c, now(list(string("Finished!")))));
 
         // doremir_print("\n", NULL);
         // doremir_print("a                            ==> %s\n", a);

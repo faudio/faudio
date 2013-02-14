@@ -76,11 +76,11 @@ void doremir_scheduler_schedule(doremir_scheduler_t scheduler, doremir_event_t e
 
 void doremir_scheduler_execute(doremir_scheduler_t scheduler)
 {
-    time_t abs_now = doremir_time_time(scheduler->clock);
-    time_t now = doremir_subtract(abs_now, scheduler->start);
-
-    event_t reschedule[max_events_k];
-    size_t  num_reschedule = 0;
+    time_t   abs_now = doremir_time_time(scheduler->clock);
+    time_t   now = doremir_subtract(abs_now, scheduler->start);
+    
+    event_t recur[max_events_k];
+    size_t  recurring = 0;
 
     for (int i = 0; i < max_events_k; ++i) {
         sched_inform(string_dappend(string("@ "), doremir_string_show(now)));
@@ -99,24 +99,24 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
             break;
 
         } else {
-            sched_inform(string_dappend(string("X Due "), doremir_string_show(event)));
             doremir_priority_queue_pop(scheduler->queue);
+            sched_inform(string_dappend(string("X Due "), doremir_string_show(event)));
 
             if (doremir_event_has_value(now, event)) {
-                ptr_t   value = doremir_event_value(now, event);
-                sched_inform(string_dappend(string("Value is: "), doremir_string_show(value)));
+                ptr_t value = doremir_event_value(now, event);
+                sched_inform(string_dappend(string("  Value is: "), doremir_string_show(value)));
             }
 
             if (!doremir_event_is_never(event)) {
-                event_t tail  = doremir_event_tail(now, event);
-                reschedule[num_reschedule++] = tail;
-                sched_inform(string_dappend(string("Reinsert: "), doremir_string_show(tail)));
+                event_t tail = doremir_event_tail(now, event);
+                recur[recurring++] = tail;
+                sched_inform(string_dappend(string("  Reinsert: "), doremir_string_show(tail)));
             }
         }
     }
 
-    for (int i = 0; i < num_reschedule; ++i) {
-        doremir_priority_queue_insert(reschedule[i], scheduler->queue);
+    for (int i = 0; i < recurring; ++i) {
+        doremir_priority_queue_insert(recur[i], scheduler->queue);
     }
 
     doremir_destroy(abs_now);
