@@ -111,8 +111,8 @@
 
 #define before_event(p,x)   doremir_event_before(p,x)
 #define after_event(p,x)    doremir_event_after(p,x)
-#define head_event(p,x)     doremir_event_head(x)
-#define tail_event(p,x)     doremir_event_tail(x)
+#define head_event(x)       doremir_event_head(x)
+#define tail_event(x)       doremir_event_tail(doremir_event_offset(x),x)
 
 #define unary(a,b,f,x)      doremir_processor_unary(a,b,f,x)
 #define binary(a,b,c,f,x)   doremir_processor_binary(a,b,c,f,x)

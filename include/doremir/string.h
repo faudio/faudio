@@ -17,6 +17,7 @@ typedef struct _doremir_string_t * doremir_string_t;
 typedef doremir_string_t doremir_string_file_path_t;
 doremir_string_t doremir_string_empty();
 doremir_string_t doremir_string_single(doremir_char16_t);
+doremir_string_t doremir_string_repeat(int, doremir_char16_t);
 doremir_string_t doremir_string_copy(doremir_string_t);
 doremir_string_t doremir_string_append(doremir_string_t,
                                        doremir_string_t);

@@ -67,10 +67,12 @@ void doremir_audio_engine_terminate()
 
 // --------------------------------------------------------------------------------
 
+#define max_log_length_k 3000
+
 static inline void stdlog(ptr_t data, doremir_time_system_t t, doremir_error_t e)
 {
     FILE *file = data;
-    char msg[350];
+    char msg[max_log_length_k+50];
     bool color = (file == stdout && isatty(fileno(stdout)));
 
     doremir_let(tm, localtime((long *) &t)) {
@@ -80,7 +82,7 @@ static inline void stdlog(ptr_t data, doremir_time_system_t t, doremir_error_t e
                  doremir_destroy(str)) {
         doremir_with(cstr, doremir_string_to_utf8(str),
                      free(cstr)) {
-            strncat(msg, cstr, 298);
+            strncat(msg, cstr, max_log_length_k-2);
             strncat(msg, "\n", 1);
         }
     }

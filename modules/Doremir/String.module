@@ -53,6 +53,7 @@ module Doremir.String
     // Constructors
     empty   : () -> String;
     single  : Char16 -> String;
+    repeat  : (Int, Char16) -> String;
     copy    : String -> String;
     append  : (String, String) -> String;
     dappend : (String, String) -> String;

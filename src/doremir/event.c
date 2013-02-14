@@ -193,7 +193,7 @@ doremir_event_t doremir_event_merge(doremir_event_t event1,
     // invariant left <= right
     event_t e = new_event(merge_event);
 
-    if (doremir_less_than(event1, event2)) {
+    if (doremir_less_than_equal(event1, event2)) {
         merge_get(e, left)   = event1;
         merge_get(e, right)  = event2;
     } else {
@@ -396,66 +396,275 @@ void doremir_event_sync(doremir_event_t event)
     }
 }
 
-bool doremir_event_has_value(doremir_time_t u, doremir_event_t event)
+
+#define has_occured doremir_event_has_value
+
+
+bool never_has_value(doremir_time_t current, doremir_event_t event)
 {
-    // hasValue u never          = False
-    // hasValue u (now x)        = True
-    // hasValue u (delay t x)    = hasValue (u - t) x
-    // hasValue u (merge x y)    = hasValue u x || hasValue u y
-    // hasValue u (switch p x y) = if (hasValue u p) then (hasValue u y) else (hasValue u x)
-    // hasValue u (send d a x)   = hasValue u x
-    // hasValue u (recv d a n)   = !isEmpty $ drop n (receive d a)
+    return false;
+}
+bool never_has_tail(doremir_time_t current, doremir_event_t event)
+{
+    return false;
+}
+ptr_t never_value(doremir_time_t current, doremir_event_t event)
+{
+    assert(false && "Impossible");
+}
+event_t never_tail(doremir_time_t current, doremir_event_t event)
+{
+    assert(false && "Impossible");
+}
 
-    switch (event->tag) {
+bool now_has_value(doremir_time_t current, doremir_event_t event)
+{
+    return doremir_greater_than_equal(current, TIME_ZERO);
+}
+bool now_has_tail(doremir_time_t current, doremir_event_t event)
+{
+    return true;
+}
+ptr_t now_value(doremir_time_t current, doremir_event_t event)
+{                 
+    return now_get(event, value);
+}
+event_t now_tail(doremir_time_t current, doremir_event_t event)
+{
+    return never();
+}
 
-    case never_event:
-        return false;
+bool delay_has_value(doremir_time_t current, doremir_event_t event)
+{
+    time_t  t = delay_get(event, time);
+    event_t x = delay_get(event, event);
+    
+    return doremir_event_has_value(doremir_subtract(current, t), x);
+}
+bool delay_has_tail(doremir_time_t current, doremir_event_t event)
+{
+    time_t  t = delay_get(event, time);
+    event_t x = delay_get(event, event);
+    
+    return doremir_event_has_tail(doremir_subtract(current, t), x);
+}
+ptr_t delay_value(doremir_time_t current, doremir_event_t event)
+{
+    time_t  t = delay_get(event, time);
+    event_t x = delay_get(event, event);
+    
+    return doremir_event_value(doremir_subtract(current, t), x);
+}
+event_t delay_tail(doremir_time_t current, doremir_event_t event)
+{
+    time_t  t = delay_get(event, time);
+    event_t x = delay_get(event, event);
+    
+    return doremir_event_tail(doremir_subtract(current, t), x);
+}
 
-    case now_event:
-        return doremir_greater_than_equal(u, TIME_ZERO);
+bool merge_has_value(doremir_time_t current, doremir_event_t event)
+{
+    event_t x = merge_get(event, left);
+    event_t y = merge_get(event, right);
+    
+    return doremir_event_has_value(current, x) || doremir_event_has_value(current, y);
+}
+bool merge_has_tail(doremir_time_t current, doremir_event_t event)
+{
+    event_t x = merge_get(event, left);
+    event_t y = merge_get(event, right);
+    
+    return doremir_event_has_tail(current, x) || doremir_event_has_tail(current, y);
+}
+ptr_t merge_value(doremir_time_t current, doremir_event_t event)
+{
+    event_t x = merge_get(event, left);
+    event_t y = merge_get(event, right);
 
-    case delay_event: {
-        time_t  t = delay_get(event, time);
-        event_t x = delay_get(event, event);
-        return doremir_event_has_value(doremir_subtract(u, t), x);
+    if (doremir_event_has_value(current, x)) {
+        return doremir_event_value(current, x);
     }
-
-    case merge_event: {
-        event_t x = merge_get(event, left);
-        event_t y = merge_get(event, right);
-        return doremir_event_has_value(u, x) || doremir_event_has_value(u, y);
+    if (doremir_event_has_value(current, y)) {        
+        return doremir_event_value(current, y);
     }
+    assert(false && "Impossible, merge(never,never) has no values");
+}
+event_t merge_tail(doremir_time_t current, doremir_event_t event)
+{
+    event_t x = merge_get(event, left);
+    event_t y = merge_get(event, right);
 
-    case switch_event: {
-        event_t p = switch_get(event, pred);
-        event_t x = switch_get(event, before);
-        event_t y = switch_get(event, after);
-
-        if (!doremir_event_has_value(u, p)) {
-            return doremir_event_has_value(u, x);
+    if (doremir_event_has_value(current, x)) {
+        if (doremir_event_has_tail(current, x)) {
+            return doremir_event_merge(doremir_event_tail(current, x), y);
         } else {
-            return doremir_event_has_value(u, y);
+            return y;
         }
     }
-
-    case send_event: {
-        event_t x = send_get(event, event);
-        return doremir_event_has_value(u, x);
+    if (doremir_event_has_value(current, y)) {                        
+        if (doremir_event_has_tail(current, y)) {
+            return doremir_event_merge(x, doremir_event_tail(current, y));
+        } else {
+            return x;
+        }
     }
+    return event;
+}
 
-    case recv_event: {
-        sender_t s  = recv_get(event, dispatcher);
-        sender_t a  = recv_get(event, address);
-        list_t   xs = doremir_message_receive(s, a);
-        return doremir_list_length(xs) > 0;
+bool switch_has_value(doremir_time_t current, doremir_event_t event)
+{
+    event_t p = switch_get(event, pred);
+    event_t x = switch_get(event, before);
+    event_t y = switch_get(event, after);
+
+    if (!has_occured(current, p)) {
+        return doremir_event_has_value(current, x);
+    } else {
+        return doremir_event_has_value(current, y);
     }
+}
+bool switch_has_tail(doremir_time_t current, doremir_event_t event)
+{
+    event_t p = switch_get(event, pred);
+    event_t x = switch_get(event, before);
+    event_t y = switch_get(event, after);
 
+    if (!has_occured(current, p)) {
+        return (doremir_event_has_tail(current, x) || doremir_event_has_tail(current, y));
+    } else {
+        return doremir_event_has_tail(current, y);
+    }
+}
+ptr_t switch_value(doremir_time_t current, doremir_event_t event)
+{
+    event_t p = switch_get(event, pred);
+    event_t x = switch_get(event, before);
+    event_t y = switch_get(event, after);
+
+    if (!has_occured(current, p)) {
+        return doremir_event_value(current, x);
+    } else {
+        return doremir_event_value(current, y);
+    }
+}
+event_t switch_tail(doremir_time_t current, doremir_event_t event)
+{
+    event_t p = switch_get(event, pred);
+    event_t x = switch_get(event, before);
+    event_t y = switch_get(event, after);
+
+    if (!has_occured(current, p)) {
+        if (doremir_event_has_tail(current, x)) {
+            return doremir_event_switch(p, doremir_event_tail(current, x), y);
+        } else {
+            return doremir_event_switch(p, never(), y);
+        }
+    } else {
+        return doremir_event_tail(current, y);
+    }
+}  
+
+bool send_has_value(doremir_time_t current, doremir_event_t event)
+{
+    event_t x = send_get(event, event);
+    return doremir_event_has_value(current, x);
+}
+bool send_has_tail(doremir_time_t current, doremir_event_t event)
+{
+    event_t x = send_get(event, event);
+    return doremir_event_has_tail(current, x);
+}
+ptr_t send_value(doremir_time_t current, doremir_event_t event)
+{
+    receiver_t r = recv_get(event, dispatcher);
+    sender_t   a = recv_get(event, address);
+    event_t    x = send_get(event, event);
+    ptr_t      vs = doremir_event_value(current, x);
+
+    doremir_for_each(v, vs) {
+        doremir_message_send(r, a, v);
+    }
+    return fb(false); // TODO something else for unit?
+}
+event_t send_tail(doremir_time_t current, doremir_event_t event)
+{
+    receiver_t r = recv_get(event, dispatcher);
+    sender_t   a = recv_get(event, address);
+    event_t    x = send_get(event, event);
+
+    return doremir_event_send(r, a, doremir_event_tail(current, x));
+}
+
+bool recv_has_value(doremir_time_t current, doremir_event_t event)
+{
+    sender_t s  = recv_get(event, dispatcher);
+    sender_t a  = recv_get(event, address);
+    list_t   xs = doremir_message_receive(s, a);
+    return doremir_list_length(xs) > 0;
+}
+bool recv_has_tail(doremir_time_t current, doremir_event_t event)
+{
+    return true;
+}
+ptr_t recv_value(doremir_time_t current, doremir_event_t event)
+{
+    sender_t s  = recv_get(event, dispatcher);
+    sender_t a  = recv_get(event, address);
+    return doremir_message_receive(s, a);
+}
+event_t recv_tail(doremir_time_t current, doremir_event_t event)
+{
+    return event;
+}
+
+
+
+
+bool doremir_event_has_value(doremir_time_t current, doremir_event_t event)
+{
+    switch (event->tag) {
+
+    case never_event:   
+        return never_has_value(current, event);
+    case now_event:
+        return now_has_value(current, event);
+    case delay_event:
+        return delay_has_value(current, event);
+    case merge_event:
+        return merge_has_value(current, event);
+    case switch_event:
+        return switch_has_value(current, event);
+    case send_event:
+        return send_has_value(current, event);
+    case recv_event:
+        return recv_has_value(current, event);
     default:
         assert(false && "Missing label");
     }
 }
 
-bool doremir_event_has_tail2(doremir_time_t u, doremir_event_t event);
+bool doremir_event_has_tail2(doremir_time_t current, doremir_event_t event)
+{
+    switch (event->tag) {
+    case never_event:   
+        return never_has_tail(current, event);
+    case now_event:
+        return now_has_tail(current, event);
+    case delay_event:
+        return delay_has_tail(current, event);
+    case merge_event:
+        return merge_has_tail(current, event);
+    case switch_event:
+        return switch_has_tail(current, event);
+    case send_event:
+        return send_has_tail(current, event);
+    case recv_event:
+        return recv_has_tail(current, event);
+    default:
+        assert(false && "Missing label");
+    }
+}   
 bool doremir_event_has_tail(doremir_time_t u, doremir_event_t event)
 {
     bool res = doremir_event_has_tail2(u, event);
@@ -464,215 +673,57 @@ bool doremir_event_has_tail(doremir_time_t u, doremir_event_t event)
     return res;
 }
 
-bool doremir_event_has_tail2(doremir_time_t u, doremir_event_t event)
-{
-    // hasTail u never             = True
-    // hasTail u now               = False
-    // hasTail u (delay x t)       = hasTail u x
-    // hasTail u (merge x y)       = hasTail u x || hasTail u y
-    // hasTail u (switch p x y)    = if (hasValue u p) then (hasTail u y) else (hasTail u x || hasTail u y)
-    // hasTail u (send x)          = hasTail u x
-    // hasTail u (recv x)          = False
-
-
+doremir_ptr_t doremir_event_value(doremir_time_t current, doremir_event_t event)
+{              
+    assert(doremir_event_has_value(current, event) && "No value");
+    
     switch (event->tag) {
-
-    case never_event:
-        return false;
-
+    case never_event:   
+        return never_value(current, event);
     case now_event:
-        return true;
-
-    case delay_event: {
-        event_t x = delay_get(event, event);
-        return doremir_event_has_tail(u, x);
-    }
-
-    case merge_event: {
-        event_t x = merge_get(event, left);
-        event_t y = merge_get(event, right);
-        return doremir_event_has_tail(u, x) || doremir_event_has_tail(u, y);
-    }
-
-    case switch_event: {
-        event_t p = switch_get(event, pred);
-        event_t x = switch_get(event, before);
-        event_t y = switch_get(event, after);
-
-        if (!doremir_event_has_value(u, p)) {
-            return (doremir_event_has_tail(u, x) || doremir_event_has_tail(u, y));
-        } else {
-            return doremir_event_has_tail(u, y);
-        }
-    }
-
-    case send_event: {
-        event_t x = send_get(event, event);
-        return doremir_event_has_tail(u, x);
-    }
-
+        return now_value(current, event);
+    case delay_event:
+        return delay_value(current, event);
+    case merge_event:
+        return merge_value(current, event);
+    case switch_event:
+        return switch_value(current, event);
+    case send_event:
+        return send_value(current, event);
     case recv_event:
-        return true;
-
+        return recv_value(current, event);
     default:
         assert(false && "Missing label");
     }
-}
-
-doremir_ptr_t doremir_event_value(doremir_time_t u, doremir_event_t event)
-{
-    // value u never            = undefined
-    // value u (now x)          = x
-    // value u (delay t x)      = value (u - t) x
-    // value u (merge x y)      = if (x < y && hasValue x) then (value x) else (value y)
-    // value u (x `switch p` y) = if (!hasValue u p) then (value x) else (value y)
-    // value u (send d a x)     = ()
-    // value u (recv d a n)     = index n (receive d a)
-
-    switch (event->tag) {
-
-    case never_event:
-        assert(false && "Never has no value");
-
-    case now_event:
-        return now_get(event, value);
-
-    case delay_event: {
-        time_t  t = delay_get(event, time);
-        event_t x = delay_get(event, event);
-
-        return doremir_event_value(doremir_subtract(u, t), x);
-    }
-
-    case merge_event: {
-        event_t x = merge_get(event, left);
-        event_t y = merge_get(event, right);
-
-        if (doremir_event_has_value(u, x)) {
-            return doremir_event_value(u, x);
-        } else {
-            return doremir_event_value(u, y);
-        }
-    }
-
-    case switch_event: {
-        event_t p = switch_get(event, pred);
-        event_t x = switch_get(event, before);
-        event_t y = switch_get(event, after);
-
-        if (!doremir_event_has_value(u, p)) {
-            return doremir_event_value(u, x);
-        } else {
-            return doremir_event_value(u, y);
-        }
-    }
-
-    case send_event: {
-        receiver_t r = recv_get(event, dispatcher);
-        sender_t   a = recv_get(event, address);
-        event_t    x = send_get(event, event);
-        ptr_t      vs = doremir_event_value(u, x);
-
-        doremir_for_each(v, vs) {
-            doremir_message_send(r, a, v);
-        }
-        return fb(false); // TODO something else for unit?
-    }
-
-    case recv_event: {
-        sender_t s  = recv_get(event, dispatcher);
-        sender_t a  = recv_get(event, address);
-
-        return doremir_message_receive(s, a);
-    }
-
-    default:
-        assert(false && "Missing label");
-    }
-
 }
 
 /** Returns an event containing all remaning occurences.
  */
-doremir_event_t doremir_event_tail(doremir_time_t u, doremir_event_t event)
+doremir_event_t doremir_event_tail(doremir_time_t current, doremir_event_t event)
 {
-    // tail never            = undefined
-    // tail now              = never
-    // tail (delay t x)      = delay t (tail x)
-    // tail (merge x y)      = if (x < y) then
-    //                                if (hasValue x) then (tail x `merge` y) else (x `merge` y)
-    //                                if (hasValue y) then (x `merge` tail y) else (x `merge` y)
-    // tail (x `switch p` y) = if (!hasValue p) then (tail x `switch p` y) else (tail y)
-    // tail (send d a x)     = send d a (tail x)
-    // tail (recv d a n)     = recv d a (n + 1)
+    assert(doremir_event_has_tail(current, event) && "No tail");
 
     switch (event->tag) {
-
-    case never_event:
-        assert(false && "Never has no tail");
-
+    case never_event:   
+        return never_tail(current, event);
     case now_event:
-        return doremir_event_never();
-
-    case delay_event: {
-        time_t  t = delay_get(event, time);
-        event_t x = delay_get(event, event);
-
-        return doremir_event_delay(t, doremir_event_tail(u, x));
-    }
-
-    case merge_event: {
-        event_t x = merge_get(event, left);
-        event_t y = merge_get(event, right);
-
-        if (doremir_event_has_value(u, x)) {
-            return doremir_event_merge(doremir_event_tail(u, x), y);
-        } else if (doremir_event_has_value(u, y)) {
-            return doremir_event_merge(x, doremir_event_tail(u, y));
-        } else {
-            return event;
-        }
-    }
-
-    case switch_event: {
-        event_t p = switch_get(event, pred);
-        event_t x = switch_get(event, before);
-        event_t y = switch_get(event, after);
-
-        if (!doremir_event_has_value(u, p)) {
-            if (doremir_event_has_tail(u, x)) {
-                return doremir_event_switch(p, doremir_event_tail(u, x), y);
-            } else {
-                return doremir_event_switch(p, x, y);
-            }
-        } else {
-            if (doremir_event_has_tail(u, y)) {
-                return doremir_event_tail(u, y);
-            } else {
-                return y;
-            }
-        }
-    }
-
-    case send_event: {
-        receiver_t r = recv_get(event, dispatcher);
-        sender_t   a = recv_get(event, address);
-        event_t    x = send_get(event, event);
-
-        return doremir_event_send(r, a, doremir_event_tail(u, x));
-    }
-
-    case recv_event: {
-        sender_t s  = recv_get(event, dispatcher);
-        sender_t a  = recv_get(event, address);
-
-        return doremir_event_receive(s, a);
-    }
-
+        return now_tail(current, event);
+    case delay_event:
+        return delay_tail(current, event);
+    case merge_event:
+        return merge_tail(current, event);
+    case switch_event:
+        return switch_tail(current, event);
+    case send_event:
+        return send_tail(current, event);
+    case recv_event:
+        return recv_tail(current, event);
     default:
         assert(false && "Missing label");
     }
 }
+
+
 
 // --------------------------------------------------------------------------------
 
@@ -684,8 +735,9 @@ doremir_event_t doremir_event_tail(doremir_time_t u, doremir_event_t event)
 
 doremir_event_t doremir_event_head(doremir_event_t x)
 {
-    assert(false && "Not implemented");
-    // return doremir_event_before(doremir_event_tail(now(NULL), x), x);
+    // assert(false && "Not implemented");          
+    // time_t t = doremir_event_offset(x);
+    return doremir_event_before(doremir_event_tail(TIME_MAX, x), x);
 }
 
 // FIXME
@@ -731,22 +783,23 @@ bool event_greater_than(doremir_ptr_t a, doremir_ptr_t b)
     return event_less_than(b, a);
 }
 
-string_t event_show(doremir_ptr_t a)
+inline static string_t print_event(int n, event_t a)
 {
     event_t event = (event_t) a;
     string_t s = string("");
+    string_t ident = doremir_string_repeat(n * 2, ' ');
 
     switch (event->tag) {
 
     case never_event:
-        return string("<Never>");
+        return string("(Never)");
 
     case now_event: {
         ptr_t value  = now_get(event, value);
 
-        write_to(s, string("<Now "));
+        write_to(s, string("(Now "));
         write_to(s, doremir_string_show(value));
-        write_to(s, string(">"));
+        write_to(s, string(")"));
 
         return s;
     }
@@ -755,11 +808,12 @@ string_t event_show(doremir_ptr_t a)
         time_t  t = delay_get(event, time);
         event_t x  = delay_get(event, event);
 
-        write_to(s, string("<Delay "));
+        write_to(s, string("(Delay "));
         write_to(s, doremir_string_show(t)); // FIXME
-        write_to(s, string(" "));
-        write_to(s, doremir_string_show(x));
-        write_to(s, string(">"));
+        write_to(s, string(" \n"));
+        write_to(s, doremir_string_copy(ident));
+        write_to(s, print_event(n + 1, x));
+        write_to(s, string(")"));
 
         return s;
     }
@@ -768,11 +822,13 @@ string_t event_show(doremir_ptr_t a)
         event_t x = merge_get(event, left);
         event_t y = merge_get(event, right);
 
-        write_to(s, string("<Merge "));
-        write_to(s, doremir_string_show(x));
-        write_to(s, string(" "));
-        write_to(s, doremir_string_show(y));
-        write_to(s, string(">"));
+        write_to(s, string("(Merge \n"));
+        write_to(s, doremir_string_copy(ident));
+        write_to(s, print_event(n + 1, x));
+        write_to(s, string(" \n"));
+        write_to(s, doremir_string_copy(ident));
+        write_to(s, print_event(n + 1, y));
+        write_to(s, string(")"));
 
         return s;
     }
@@ -782,13 +838,16 @@ string_t event_show(doremir_ptr_t a)
         event_t x = switch_get(event, before);
         event_t y = switch_get(event, after);
 
-        write_to(s, string("<Switch "));
-        write_to(s, doremir_string_show(p));
-        write_to(s, string(" "));
-        write_to(s, doremir_string_show(x));
-        write_to(s, string(" "));
-        write_to(s, doremir_string_show(y));
-        write_to(s, string(">"));
+        write_to(s, string("(Switch \n"));
+        write_to(s, doremir_string_copy(ident));
+        write_to(s, print_event(n + 1, p));
+        write_to(s, string(" \n"));
+        write_to(s, doremir_string_copy(ident));
+        write_to(s, print_event(n + 1, x));
+        write_to(s, string(" \n"));
+        write_to(s, doremir_string_copy(ident));
+        write_to(s, print_event(n + 1, y));
+        write_to(s, string(")"));
 
         return s;
     }
@@ -796,19 +855,25 @@ string_t event_show(doremir_ptr_t a)
     case send_event: {
         event_t x  = send_get(event, event);
 
-        write_to(s, string("<Send "));
-        write_to(s, doremir_string_show(x));
-        write_to(s, string(">"));
+        write_to(s, string("(Send \n"));
+        write_to(s, doremir_string_copy(ident));
+        write_to(s, print_event(n + 1, x));
+        write_to(s, string(")"));
 
         return s;
     }
 
     case recv_event:
-        return string("<Receive>");
+        return string("(Receive)");
 
     default:
         assert(false && "Missing label");
     }
+}     
+
+string_t event_show(doremir_ptr_t a)
+{
+    return print_event(1, a);
 }
 
 void event_destroy(doremir_ptr_t a)

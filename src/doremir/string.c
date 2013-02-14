@@ -73,7 +73,7 @@ doremir_string_t doremir_string_empty()
 
     The returned string should be destroyed by the caller.
  */
-doremir_string_t doremir_string_single(uint16_t chr)
+doremir_string_t doremir_string_single(doremir_char16_t chr)
 {
     string_t str = new_string(1, NULL);
     str->data = malloc(char_size_k);
@@ -81,6 +81,15 @@ doremir_string_t doremir_string_single(uint16_t chr)
 
     return str;
 }
+
+doremir_string_t doremir_string_repeat(int n, doremir_char16_t c)
+{
+    string_t s = string("");
+    for (int i = 0; i < n; ++i)
+        write_to(s, doremir_string_single(c));
+    return s;
+}
+
 
 /** Copy the given string.
 
