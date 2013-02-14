@@ -1267,17 +1267,17 @@ void test_dispatcher()
                     string("pitches"), list(ratio(60, 1), ratio(62, 1))
                 );
 
-    doremir_message_send(disp, i16(1), val);
-    doremir_message_send(disp, i16(2), string("World!"));
-    doremir_message_send(disp, i16(2), string("World!"));
-    doremir_message_send(disp, i16(2), string("World!"));
-    doremir_message_send(disp, i16(2), string("World!"));
+    doremir_message_send((receiver_t) disp, i16(1), val);
+    doremir_message_send((receiver_t) disp, i16(2), string("World!"));
+    doremir_message_send((receiver_t) disp, i16(2), string("World!"));
+    doremir_message_send((receiver_t) disp, i16(2), string("World!"));
+    doremir_message_send((receiver_t) disp, i16(2), string("World!"));
 
     list_t msgs = doremir_list_empty();
 
     while (true) {
-        doremir_message_sync(disp);
-        msgs = doremir_message_receive(disp, i16(1));
+        doremir_message_sync((sender_t) disp);
+        msgs = doremir_message_receive((sender_t) disp, i16(1));
 
         if (doremir_list_is_empty(msgs)) {
             break;
@@ -1359,15 +1359,15 @@ void test_event()
         event_t ha = now(list(string("höglund")));
         event_t ho = now(list(string("holmgren")));
 
-        event_t a = merge_event(ha, 
-            delay_event(milliseconds(2000), merge_event(ha,
-            delay_event(milliseconds(2000), merge_event(ha, 
-            never())))));
+        event_t a = merge_event(ha,
+                                delay_event(milliseconds(2000), merge_event(ha,
+                                            delay_event(milliseconds(2000), merge_event(ha,
+                                                        never())))));
 
-        event_t b = merge_event(ho, 
-            delay_event(milliseconds(2400), merge_event(ho,
-            delay_event(milliseconds(2400), merge_event(ho, 
-            never())))));
+        event_t b = merge_event(ho,
+                                delay_event(milliseconds(2400), merge_event(ho,
+                                            delay_event(milliseconds(2400), merge_event(ho,
+                                                        never())))));
 
         // dispatcher_t disp = lockfree_dispatcher();
         // event_t a = doremir_event_receive(disp, i16(0));
@@ -1376,7 +1376,8 @@ void test_event()
         // event_t a = delay_event(seconds(10), ha);
 
         // event_t z = doremir_system_event_write_std(merge_event(merge_event(a,b),merge_event(c,d)));
-        event_t z = doremir_system_event_write_std(switch_event(d, c, never()));
+        event_t z = doremir_system_event_write_std(
+            before_event(d, c));
 
         // doremir_print("\n", NULL);
         // doremir_print("a                            ==> %s\n", a);
@@ -1398,7 +1399,7 @@ void test_event()
         while (1) {
             // doremir_message_send(disp, i16(0), string("foo"));
             doremir_scheduler_execute(s);
-            doremir_thread_sleep(5);
+            doremir_thread_sleep(50);
         }
     }
 
@@ -1838,7 +1839,7 @@ void test_midi_stream()
     // doremir_device_midi_set_status_callback(status_changed, string("foobar"), session);
 
     for (int i = 0; i < 30; ++i) {
-        doremir_message_send(out_stream, 0, midi(0x90, 48 + i * 2, 100));
+        doremir_message_send((receiver_t) out_stream, 0, midi(0x90, 48 + i * 2, 100));
         doremir_thread_sleep(100);
     }
 

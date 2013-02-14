@@ -78,12 +78,14 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
 {
     time_t   abs_now = doremir_time_time(scheduler->clock);
     time_t   now = doremir_subtract(abs_now, scheduler->start);
-    
+
     event_t recur[max_events_k];
     size_t  recurring = 0;
 
+    sched_inform(string_dappend(string("@ "), doremir_string_show(now)));
+
+
     for (int i = 0; i < max_events_k; ++i) {
-        sched_inform(string_dappend(string("@ "), doremir_string_show(now)));
 
         event_t event = doremir_priority_queue_peek(scheduler->queue);
 
@@ -100,17 +102,21 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
 
         } else {
             doremir_priority_queue_pop(scheduler->queue);
-            sched_inform(string_dappend(string("X Due "), doremir_string_show(event)));
+            sched_inform(string_dappend(string("* Due:   "), doremir_string_show(event)));
 
             if (doremir_event_has_value(now, event)) {
                 ptr_t value = doremir_event_value(now, event);
-                sched_inform(string_dappend(string("  Value is: "), doremir_string_show(value)));
+                sched_inform(string_dappend(string("  Value: "), doremir_string_show(value)));
+            } else {
+                sched_inform(string("  No value"));
             }
 
-            if (!doremir_event_has_tail(now, event)) {
+            if (doremir_event_has_tail(now, event)) {
                 event_t tail = doremir_event_tail(now, event);
                 recur[recurring++] = tail;
-                sched_inform(string_dappend(string("  Reinsert: "), doremir_string_show(tail)));
+                sched_inform(string_dappend(string("  Tail:  "), doremir_string_show(tail)));
+            } else {
+                sched_inform(string("  No tail"));
             }
         }
     }

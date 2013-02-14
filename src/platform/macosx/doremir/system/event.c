@@ -329,7 +329,7 @@ void io_event_sink_send(doremir_ptr_t a, doremir_message_address_t addr,
     // io_event_sink_t sink = a;
     // sink and addr ignored
     string_t str = doremir_string_to_string(msg);
-    printf("%s\n", unstring(str));
+    printf("        %s\n", unstring(str));
     fflush(stdout);
     doremir_destroy(str);
 }

@@ -109,6 +109,11 @@
 #define receive_event(s,a)  doremir_event_receive(s,a)
 #define send_event(s,a)     doremir_event_send(s,a,x)
 
+#define before_event(p,x)   doremir_event_before(p,x)
+#define after_event(p,x)    doremir_event_after(p,x)
+#define head_event(p,x)     doremir_event_head(x)
+#define tail_event(p,x)     doremir_event_tail(x)
+
 #define unary(a,b,f,x)      doremir_processor_unary(a,b,f,x)
 #define binary(a,b,c,f,x)   doremir_processor_binary(a,b,c,f,x)
 #define split(a)            doremir_processor_split(a)

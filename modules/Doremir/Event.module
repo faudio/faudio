@@ -45,10 +45,9 @@ module Doremir.Event
     send    : (Receiver, Address, Event) -> Event;
     destroy : Event -> Void;
     
-    // head     : Event -> Event;
-    // after  : Event -> Event;
-    // before : Event -> Event;
-    // upon   : (Event, Event) -> Event;
+    head    : Event -> Event;
+    after   : (Event, Event) -> Event;
+    before  : (Event, Event) -> Event;
     // select : (Event, Event) -> Event;
     // sample : Event -> Event;
     // toggle : Event -> Event;
