@@ -133,10 +133,10 @@ doremir_event_t doremir_event_delay(doremir_time_t  time,
     // delay t (merge x y) = delay t x `merge` delay t u
 
     assert(event && "Can not delay null");
-    if (is_delay(event))
-    {
-        event_t x = delay_get(event,event);
-        event_t t = delay_get(event,time);
+
+    if (is_delay(event)) {
+        event_t x = delay_get(event, event);
+        event_t t = delay_get(event, time);
         return doremir_event_delay(doremir_add(time, t), x);
     }
 
@@ -616,7 +616,7 @@ string_t event_show(doremir_ptr_t a)
         event_t x  = delay_get(event, event);
 
         write_to(s, string("<Delay "));
-        write_to(s, format_integer("%d", doremir_time_seconds(t))); // FIXME
+        write_to(s, doremir_string_show(t)); // FIXME
         write_to(s, string(" "));
         write_to(s, doremir_string_show(x));
         write_to(s, string(">"));

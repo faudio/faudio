@@ -129,6 +129,7 @@
 void doremir_audio_engine_log_info(doremir_string_t);
 void doremir_audio_engine_log_warning(doremir_string_t);
 void doremir_audio_engine_log_error(doremir_string_t);
+void doremir_audio_engine_dlog_info(doremir_string_t);
 
 #define inform(s)           doremir_audio_engine_log_info(s)
 #define dinform(s)          doremir_audio_engine_dlog_info(s)
