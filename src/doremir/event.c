@@ -183,10 +183,10 @@ doremir_event_t doremir_event_merge(doremir_event_t event1,
     assert(event1 && "Can not merge null");
     assert(event2 && "Can not merge null");
 
-    if (doremir_event_is_never(event1))
-        return event2;
-    if (doremir_event_is_never(event2))
-        return event1;
+    // if (is_never(event1))
+    //     return event2;
+    // if (is_never(event2))
+    //     return event1;
 
     // invariant left <= right
     event_t e = new_event(merge_event);
@@ -392,67 +392,67 @@ void doremir_event_sync(doremir_event_t event)
     }
 }  
 
-/** Return true if and only if the given event has no occurences.
-
-    Note that for receive events this function always returns false, as there
-    may always be occurences arriving in the future.
- */
-bool doremir_event_is_never(doremir_event_t event)
-{
-    // isNever never             = True
-    // isNever now               = False
-    // isNever (delay x t)       = isNever x
-    // isNever (merge x y)       = isNever x && isNever y
-    // isNever (switch p x y)    = if (isNever p) then (isNever x) else (isNever x && isNever y)
-    // isNever (send x)          = isNever x
-    // isNever (recv x)          = False
-
-    switch (event->tag) {
-    
-    case never_event:
-        return true;
-
-    case now_event:
-        return false;
-
-    case delay_event: {
-        event_t x = delay_get(event, event);
-        return doremir_event_is_never(x);
-    }
-
-    case merge_event: {
-        event_t x = merge_get(event, left);
-        event_t y = merge_get(event, right);
-        return doremir_event_is_never(x) && doremir_event_is_never(y);
-    }
-
-    case switch_event: {
-        event_t p = switch_get(event, pred);
-        event_t x = switch_get(event, before);
-        event_t y = switch_get(event, after);
-        
-        // TODO this feels ad-hoc
-        // Is it necessary?
-        if (doremir_event_is_never(p)) {
-            return doremir_event_is_never(x);
-        } else {
-            return doremir_event_is_never(x) && doremir_event_is_never(y);
-        }
-    }
-
-    case send_event: {
-        event_t x = send_get(event, event);
-        return doremir_event_is_never(x);
-    }
-
-    case recv_event:
-        return false;
-
-    default:
-        assert(false && "Missing label");
-    }
-}
-
+// /** Return true if and only if the given event has no occurences.
+// 
+//     Note that for receive events this function always returns false, as there
+//     may always be occurences arriving in the future.
+//  */
+// bool doremir_event_is_never(doremir_event_t event)
+// {
+//     // isNever never             = True
+//     // isNever now               = False
+//     // isNever (delay x t)       = isNever x
+//     // isNever (merge x y)       = isNever x && isNever y
+//     // isNever (switch p x y)    = if (isNever p) then (isNever x) else (isNever x && isNever y)
+//     // isNever (send x)          = isNever x
+//     // isNever (recv x)          = False
+// 
+//     switch (event->tag) {
+//     
+//     case never_event:
+//         return true;
+// 
+//     case now_event:
+//         return false;
+// 
+//     case delay_event: {
+//         event_t x = delay_get(event, event);
+//         return doremir_event_is_never(x);
+//     }
+// 
+//     case merge_event: {
+//         event_t x = merge_get(event, left);
+//         event_t y = merge_get(event, right);
+//         return doremir_event_is_never(x) && doremir_event_is_never(y);
+//     }
+// 
+//     case switch_event: {
+//         event_t p = switch_get(event, pred);
+//         event_t x = switch_get(event, before);
+//         event_t y = switch_get(event, after);
+//         
+//         // TODO this feels ad-hoc
+//         // Is it necessary?
+//         if (doremir_event_is_never(p)) {
+//             return doremir_event_is_never(x);
+//         } else {
+//             return doremir_event_is_never(x) && doremir_event_is_never(y);
+//         }
+//     }
+// 
+//     case send_event: {
+//         event_t x = send_get(event, event);
+//         return doremir_event_is_never(x);
+//     }
+// 
+//     case recv_event:
+//         return false;
+// 
+//     default:
+//         assert(false && "Missing label");
+//     }
+// }
+//     
 bool doremir_event_has_value(doremir_time_t u, doremir_event_t event)
 {
     // hasValue u never          = False
@@ -510,6 +510,57 @@ bool doremir_event_has_value(doremir_time_t u, doremir_event_t event)
     }
 }
 
+bool doremir_event_has_tail(doremir_time_t u, doremir_event_t event)
+{
+    // isNever never             = True
+    // isNever now               = False
+    // isNever (delay x t)       = isNever x
+    // isNever (merge x y)       = isNever x && isNever y
+    // isNever (switch p x y)    = if (isNever p) then (isNever x) else (isNever x && isNever y)
+    // isNever (send x)          = isNever x
+    // isNever (recv x)          = False
+
+    switch (event->tag) {
+    
+    case never_event:
+        return true;
+
+    case now_event:
+        return false;
+
+    case delay_event: {
+        event_t x = delay_get(event, event);
+        return doremir_event_has_tail(u, x);
+    }
+
+    case merge_event: {
+        event_t x = merge_get(event, left);
+        event_t y = merge_get(event, right);
+        return doremir_event_has_tail(u, x) && doremir_event_has_tail(u, y);
+    }
+
+    case switch_event: {
+        event_t p = switch_get(event, pred);
+        event_t x = switch_get(event, before);
+        event_t y = switch_get(event, after);
+        return (!doremir_event_has_value(u, p)) 
+            ? doremir_event_has_tail(u, x) 
+            : doremir_event_has_tail(u, y);
+    }
+
+    case send_event: {
+        event_t x = send_get(event, event);
+        return doremir_event_has_tail(u, x);
+    }
+
+    case recv_event:
+        return false;
+
+    default:
+        assert(false && "Missing label");
+    }
+}
+    
 doremir_ptr_t doremir_event_value(doremir_time_t u, doremir_event_t event)
 {
     // value u never            = undefined
@@ -578,13 +629,6 @@ doremir_ptr_t doremir_event_value(doremir_time_t u, doremir_event_t event)
         assert(false && "Missing label");
     }
 
-}
-
-/** Returns an event containing the first occurence.
- */
-doremir_event_t doremir_event_head(doremir_event_t event)
-{
-    assert(false && "Not implemented.");
 }
 
 /** Returns an event containing all remaning occurences.
@@ -656,6 +700,20 @@ doremir_event_t doremir_event_tail(doremir_time_t u, doremir_event_t event)
     default:
         assert(false && "Missing label");
     }
+}
+
+
+
+
+
+
+
+
+/** Returns an event containing the first occurence.
+ */
+doremir_event_t doremir_event_head(doremir_event_t event)
+{
+    assert(false && "Not implemented.");
 }
 
 

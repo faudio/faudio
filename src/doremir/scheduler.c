@@ -107,7 +107,7 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
                 sched_inform(string_dappend(string("  Value is: "), doremir_string_show(value)));
             }
 
-            if (!doremir_event_is_never(event)) {
+            if (!doremir_event_has_tail(now, event)) {
                 event_t tail = doremir_event_tail(now, event);
                 recur[recurring++] = tail;
                 sched_inform(string_dappend(string("  Reinsert: "), doremir_string_show(tail)));
