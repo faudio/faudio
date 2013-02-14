@@ -131,12 +131,26 @@ void doremir_audio_engine_log(doremir_ptr_t data, doremir_error_t e)
     }
 }
 
+void doremir_audio_engine_dlog(doremir_ptr_t data, doremir_error_t e)
+{
+    doremir_audio_engine_log(data, e);
+    doremir_destroy(e);
+}
+
+
 /** Write an informative message to the log.
  */
 void doremir_audio_engine_log_info(doremir_string_t msg)
 {
     doremir_audio_engine_log_info_from(msg, string(""));
 }
+
+void doremir_audio_engine_dlog_info(doremir_string_t msg)
+{
+    doremir_audio_engine_log_info(msg);
+    doremir_destroy(msg);
+}
+
 
 /** Write a warning to the log.
  */

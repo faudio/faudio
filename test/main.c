@@ -1355,7 +1355,6 @@ void test_event()
 
     {
         doremir_time_t t = seconds(0);
-        clock_t c = doremir_time_get_system_prec_clock();
 
         event_t ha = now(string("höglund"));
 
@@ -1371,7 +1370,6 @@ void test_event()
         // event_t a = delay_event(seconds(10), ha);
 
         event_t b = doremir_system_event_write_std(a);
-        scheduler_t s = doremir_scheduler_create(c);
 
         // doremir_print("\n", NULL);
         // doremir_print("a                            ==> %s\n", a);
@@ -1386,12 +1384,14 @@ void test_event()
         // doremir_print("value(b)                     ==> %s\n", doremir_event_value(b));
 
 
+        clock_t c = doremir_time_get_system_prec_clock();
+        scheduler_t s = doremir_scheduler_create(c);
         // doremir_scheduler_schedule(s, b);
 
         while (1) {
             // doremir_message_send(disp, i16(0), string("foo"));
             doremir_scheduler_execute(s);
-            doremir_thread_sleep(5);
+            doremir_thread_sleep(50);
         }
     }
 

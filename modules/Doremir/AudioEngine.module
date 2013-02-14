@@ -58,4 +58,7 @@ module Doremir.AudioEngine
     logWarningFrom  : (String,String) -> Void;
     logErrorFrom    : (String,String) -> Void;
 
+    dlog         : (Ptr,Error) -> Void;
+    dlogInfo     : (String) -> Void;
+
 }

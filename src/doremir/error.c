@@ -44,7 +44,7 @@ doremir_error_t doremir_error_create_simple(
     simple_error_t e  = doremir_new_struct(simple_error);
     e->impl     = &simple_error_impl;
     e->severity = severity;
-    e->message  = message;
+    e->message  = doremir_string_copy(message);
     e->origin   = origin;
     return (error_t) e;
 }

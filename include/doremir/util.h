@@ -131,6 +131,7 @@ void doremir_audio_engine_log_warning(doremir_string_t);
 void doremir_audio_engine_log_error(doremir_string_t);
 
 #define inform(s)           doremir_audio_engine_log_info(s)
+#define dinform(s)          doremir_audio_engine_dlog_info(s)
 #define warn(s)             doremir_audio_engine_log_warning(s)
 #define fail(s)             doremir_audio_engine_log_error(s)
 #define log_error(e)        doremir_error_log(NULL,e)

@@ -46,6 +46,8 @@ void doremir_audio_engine_log_warning_from(doremir_string_t,
                                            doremir_string_t);
 void doremir_audio_engine_log_error_from(doremir_string_t,
                                          doremir_string_t);
+void doremir_audio_engine_dlog(doremir_ptr_t, doremir_error_t);
+void doremir_audio_engine_dlog_info(doremir_string_t);
 
 /** @}
     @}
