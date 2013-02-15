@@ -94,11 +94,10 @@ void doremir_scheduler_schedule(doremir_scheduler_t scheduler, doremir_event_t e
 
 void doremir_scheduler_execute(doremir_scheduler_t scheduler)
 {
-    time_t   abs_now = doremir_time_time(scheduler->clock);
-    time_t   now = doremir_subtract(abs_now, scheduler->start);
-
-    event_t recur[max_events_k];
-    size_t  recurring = 0;
+    time_t      abs_now = doremir_time_time(scheduler->clock);
+    time_t      now     = doremir_subtract(abs_now, scheduler->start);
+    event_t     recur[max_events_k];
+    size_t      recurring = 0;
 
     sched_inform(string_dappend(string("@ "), doremir_string_show(now)));
 
@@ -110,9 +109,7 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
 
         event_t event = doremir_priority_queue_peek(scheduler->queue);
 
-        if (event) {
-            // doremir_event_sync(event);
-        } else {
+        if (!event) {
             sched_inform(string("- No events"));
             break;
         }
@@ -120,27 +117,28 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
         if (!doremir_less_than(doremir_event_offset(event), now)) {
             sched_inform(string("- Waiting"));
             break;
+        } 
+        
+        doremir_priority_queue_pop(scheduler->queue);
+        
+        sched_inform(string_dappend(string("* Due:   "), doremir_string_show(event)));
+        sched_inform(string_dappend(string("    Off: "), doremir_string_show(doremir_event_offset(event))));
 
+        if (doremir_event_has_value(now, event)) {
+            ptr_t value = doremir_event_value(now, event);
+            value = value; // kill warning
+            sched_inform(string_dappend(string("  Value: "), doremir_string_show(value)));
         } else {
-            doremir_priority_queue_pop(scheduler->queue);
-            sched_inform(string_dappend(string("* Due:   "), doremir_string_show(event)));
-            sched_inform(string_dappend(string("    Off: "), doremir_string_show(doremir_event_offset(event))));
-
-            if (doremir_event_has_value(now, event)) {
-                ptr_t value = doremir_event_value(now, event);
-                sched_inform(string_dappend(string("  Value: "), doremir_string_show(value)));
-            } else {
-                sched_inform(string("  No value"));
-            }
-
-            if (doremir_event_has_tail(now, event)) {
-                event_t tail = doremir_event_tail(now, event);
-                recur[recurring++] = tail;
-                sched_inform(string_dappend(string("  Tail:  "), doremir_string_show(tail)));
-            } else {
-                sched_inform(string("  No tail"));
-            }
+            sched_inform(string("  No value"));
         }
+
+        if (doremir_event_has_tail(now, event)) {
+            event_t tail = doremir_event_tail(now, event);
+            recur[recurring++] = tail;
+            sched_inform(string_dappend(string("  Tail:  "), doremir_string_show(tail)));
+        } else {
+            sched_inform(string("  No tail"));
+        } 
     }
 
     for (int i = 0; i < recurring; ++i) {
