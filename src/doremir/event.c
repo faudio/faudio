@@ -641,8 +641,9 @@ event_t switch_tail(doremir_time_t current, doremir_event_t event)
     if (!has_occured(current, p)) {
         event_inform("\x1b[34mChoosing left switch tail\n\x1b[0m", current);
 
-        if (!doremir_event_has_value(current, x))
+        if (!doremir_event_has_value(current, x)) {
             return event;
+        }
 
         if (doremir_event_has_tail(current, x)) {
             return doremir_event_switch(p, doremir_event_tail(current, x), y);
