@@ -65,6 +65,7 @@ struct _doremir_event_t {
         struct {
             ptr_t           dispatcher;
             ptr_t           address;
+            list_t          result;
         }                   recv;
 
     }                       fields;
@@ -153,6 +154,10 @@ doremir_event_t doremir_event_delay(doremir_time_t  time,
 {
 
     assert(event && "Can not delay null");
+
+    if (is_never(event)) {
+        return never();
+    }
 
     if (is_delay(event)) {
         time_t  t = delay_get(event, time);
@@ -327,9 +332,11 @@ doremir_time_t doremir_event_offset(doremir_event_t event)
     }
 
     case switch_event: {
+        event_t p = switch_get(event, pred);
         event_t x = switch_get(event, before);
         event_t y = switch_get(event, after);
-        return doremir_min(doremir_event_offset(x), doremir_event_offset(y));
+        return doremir_min(doremir_event_offset(p), 
+            doremir_min(doremir_event_offset(x), doremir_event_offset(y)));
     }
 
     case send_event: {
@@ -651,8 +658,9 @@ event_t switch_tail(doremir_time_t at, doremir_event_t event)
 
     if (!has_occured(at, p)) {
         event_inform("\x1b[34mChoosing left switch tail\n\x1b[0m", at);
+
         if (doremir_event_has_tail(at, x)) {
-            return doremir_event_switch(p, doremir_event_tail(at, x), y);
+            return doremir_event_switch(p, doremir_event_tail(at, x),  doremir_event_tail(at, y));
         } else {
             return doremir_event_switch(p, never(), y);
         }
@@ -699,11 +707,15 @@ event_t send_tail(doremir_time_t at, doremir_event_t event)
 
 
 bool recv_has_value(doremir_time_t at, doremir_event_t event)
-{
+{   
+    if (!doremir_less_than(TIME_ZERO, at))
+        return false;
+
     sender_t s  = recv_get(event, dispatcher);
     sender_t a  = recv_get(event, address);
-    list_t   xs = doremir_message_receive(s, a);
-    return doremir_list_length(xs) > 0;
+    recv_get(event, result) = doremir_message_receive(s, a);
+    
+    return doremir_list_length(recv_get(event, result)) > 0;
 }
 
 bool recv_has_tail(doremir_time_t at, doremir_event_t event)
@@ -713,15 +725,15 @@ bool recv_has_tail(doremir_time_t at, doremir_event_t event)
 
 ptr_t recv_value(doremir_time_t at, doremir_event_t event)
 {
-    sender_t s  = recv_get(event, dispatcher);
-    sender_t a  = recv_get(event, address);
-    return doremir_message_receive(s, a);
+    assert(recv_get(event, result) && "Not received");
+    return recv_get(event, result);
 }
 
 event_t recv_tail(doremir_time_t at, doremir_event_t event)
 {
-    // Add infinitesimal offset
-    return event;
+    sender_t s  = recv_get(event, dispatcher);
+    sender_t a  = recv_get(event, address);
+    return doremir_event_receive(s,a);
 }
 
 
