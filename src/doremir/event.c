@@ -16,6 +16,8 @@
 #define TIME_MAX  doremir_time_create(2000000,0,0,ratio(0,1)) // FIXME
 
 #define event_inform(f,x)
+// #define event_inform(f,x) doremir_print(f,x)
+
 /*
     TODO
         - Recursive merge (with public fixpoint?)
@@ -639,6 +641,9 @@ event_t switch_tail(doremir_time_t current, doremir_event_t event)
     if (!has_occured(current, p)) {
         event_inform("\x1b[34mChoosing left switch tail\n\x1b[0m", current);
 
+        if (!doremir_event_has_value(current, x))
+            return event;
+
         if (doremir_event_has_tail(current, x)) {
             return doremir_event_switch(p, doremir_event_tail(current, x), y);
         } else {
@@ -670,7 +675,7 @@ ptr_t send_value(doremir_time_t current, doremir_event_t event)
     doremir_for_each(v, vs) {
         doremir_message_send(r, a, v);
     }
-    return fb(false); // TODO something else for unit?
+    return fb(true); // TODO something else for unit?
 }
 event_t send_tail(doremir_time_t current, doremir_event_t event)
 {
