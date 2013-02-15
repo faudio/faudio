@@ -85,8 +85,11 @@ doremir_string_t doremir_string_single(doremir_char16_t chr)
 doremir_string_t doremir_string_repeat(int n, doremir_char16_t c)
 {
     string_t s = string("");
-    for (int i = 0; i < n; ++i)
+
+    for (int i = 0; i < n; ++i) {
         write_to(s, doremir_string_single(c));
+    }
+
     return s;
 }
 

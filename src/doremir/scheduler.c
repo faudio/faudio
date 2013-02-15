@@ -63,11 +63,13 @@ void doremir_scheduler_destroy(scheduler_t scheduler)
 
 
 void collect_sync(doremir_ptr_t senders, doremir_message_sender_t sender)
-{                       
+{
     // Add hoc set to user pointer equality
     list_t *list = senders;
     doremir_for_each(s, *list) {
-        if (s == sender) return;
+        if (s == sender) {
+            return;
+        }
     }
     *list = doremir_list_dcons(sender, *list);
 }
@@ -133,7 +135,7 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
 
             if (doremir_event_has_tail(now, event)) {
                 event_t tail = doremir_event_tail(now, event);
-                recur[recurring++] = tail;                
+                recur[recurring++] = tail;
                 sched_inform(string_dappend(string("  Tail:  "), doremir_string_show(tail)));
             } else {
                 sched_inform(string("  No tail"));
