@@ -117,10 +117,10 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
         if (!doremir_less_than(doremir_event_offset(event), now)) {
             sched_inform(string("- Waiting"));
             break;
-        } 
-        
+        }
+
         doremir_priority_queue_pop(scheduler->queue);
-        
+
         sched_inform(string_dappend(string("* Due:   "), doremir_string_show(event)));
         sched_inform(string_dappend(string("    Off: "), doremir_string_show(doremir_event_offset(event))));
 
@@ -138,7 +138,7 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
             sched_inform(string_dappend(string("  Tail:  "), doremir_string_show(tail)));
         } else {
             sched_inform(string("  No tail"));
-        } 
+        }
     }
 
     for (int i = 0; i < recurring; ++i) {
