@@ -30,7 +30,6 @@ doremir_event_t doremir_event_send(doremir_message_receiver_t,
                                    doremir_message_address_t,
                                    doremir_event_t);
 void doremir_event_destroy(doremir_event_t);
-doremir_event_t doremir_event_head(doremir_event_t);
 doremir_event_t doremir_event_after(doremir_event_t,
                                     doremir_event_t);
 doremir_event_t doremir_event_before(doremir_event_t,

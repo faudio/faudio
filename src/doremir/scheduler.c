@@ -13,6 +13,8 @@
     Notes:
  */
 
+#define loop_interval_k 1
+
 struct _doremir_scheduler_t {
     impl_t                  impl;           // Dispatcher
     clock_t                 clock;
@@ -147,6 +149,14 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
 
     doremir_destroy(abs_now);
     doremir_destroy(now);
+}
+
+void doremir_scheduler_loop(doremir_scheduler_t scheduler)
+{
+    while (true) {
+        doremir_scheduler_execute(scheduler);
+        doremir_thread_sleep(loop_interval_k);
+    }
 }
 
 

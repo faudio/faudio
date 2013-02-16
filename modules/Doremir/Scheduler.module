@@ -23,6 +23,7 @@ module Doremir.Scheduler
     
     schedule : (Scheduler, Event) -> Void;
     execute  : Scheduler -> Void;
+    loop     : Scheduler -> Void;
     
     // Loop until finished
     // run      : Scheduler -> Void;

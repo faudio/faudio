@@ -65,7 +65,8 @@ struct _doremir_event_t {
         struct {
             ptr_t           dispatcher;
             ptr_t           address;
-            list_t          result;
+            list_t          result; 
+            time_t          received;
         }                   recv;
 
     }                       fields;
@@ -282,6 +283,8 @@ doremir_event_t doremir_event_receive(doremir_message_sender_t  sender,
     event_t e = new_event(recv_event);
     recv_get(e, dispatcher) = sender;
     recv_get(e, address)    = address;
+    recv_get(e, received)   = TIME_ZERO;
+    recv_get(e, result)     = NULL;
     return e;
 }
 
@@ -491,13 +494,12 @@ event_t never_tail(doremir_time_t at, doremir_event_t event)
 
 bool now_has_value(doremir_time_t at, doremir_event_t self)
 {
-    // 0 < t
-    return doremir_less_than(TIME_ZERO, at);
+    // 0 <= t
+    return doremir_less_than_equal(TIME_ZERO, at);
 }
 
 bool now_has_tail(doremir_time_t at, doremir_event_t self)
 {
-    // 0 < t
     return true;
 }
 
@@ -508,8 +510,8 @@ ptr_t now_value(doremir_time_t at, doremir_event_t self)
 
 event_t now_tail(doremir_time_t at, doremir_event_t self)
 {
-    // 0 < t
-    if (!doremir_less_than(TIME_ZERO, at)) {
+    // 0 <= t
+    if (!doremir_less_than_equal(TIME_ZERO, at)) {
         return self;
     } else {
         return never();
@@ -588,21 +590,15 @@ event_t merge_tail(doremir_time_t at, doremir_event_t event)
 {
     event_t x = merge_get(event, left);
     event_t y = merge_get(event, right);
-
-    if (doremir_event_has_value(at, x)) {
-        return doremir_event_merge(doremir_event_tail(at, x), y);
-    }
-
-    if (doremir_event_has_value(at, y)) {
-        return doremir_event_merge(x, doremir_event_tail(at, y));
-    }
+    
+    // FIXME if *both* happened, tail only x (?)
 
     if (doremir_event_has_tail(at, x) && doremir_event_has_tail(at, y)) {
         return doremir_event_merge(doremir_event_tail(at, x), doremir_event_tail(at, y));
     } else if (doremir_event_has_tail(at, x)) {
-        doremir_event_tail(at, x);
+        return doremir_event_tail(at, x);
     } else {
-        doremir_event_tail(at, y);
+        return doremir_event_tail(at, y);
     }
 }
 
@@ -613,7 +609,6 @@ bool switch_has_value(doremir_time_t at, doremir_event_t event)
     event_t x = switch_get(event, before);
     event_t y = switch_get(event, after);
     event_inform("\x1b[31mChecking switch value at %s\n\x1b[0m", at);
-// printf("    Occured: %d\n", has_occured(at, p));
 
     if (!has_occured(at, p)) {
         return doremir_event_has_value(at, x);
@@ -660,9 +655,9 @@ event_t switch_tail(doremir_time_t at, doremir_event_t event)
         event_inform("\x1b[34mChoosing left switch tail\n\x1b[0m", at);
 
         if (doremir_event_has_tail(at, x)) {
-            return doremir_event_switch(p, doremir_event_tail(at, x),  doremir_event_tail(at, y));
+            return doremir_event_switch(doremir_event_tail(at, p), doremir_event_tail(at, x),  doremir_event_tail(at, y));
         } else {
-            return doremir_event_switch(p, never(), y);
+            return doremir_event_switch(doremir_event_tail(at, p), never(), y);
         }
     } else {
         event_inform("\x1b[34mChoosing right switch tail\n\x1b[0m", at);
@@ -685,8 +680,8 @@ bool send_has_tail(doremir_time_t at, doremir_event_t event)
 
 ptr_t send_value(doremir_time_t at, doremir_event_t event)
 {
-    receiver_t r = recv_get(event, dispatcher);
-    sender_t   a = recv_get(event, address);
+    receiver_t r = send_get(event, dispatcher);
+    sender_t   a = send_get(event, address);
     event_t    x = send_get(event, event);
     ptr_t      vs = doremir_event_value(at, x);
 
@@ -698,8 +693,8 @@ ptr_t send_value(doremir_time_t at, doremir_event_t event)
 
 event_t send_tail(doremir_time_t at, doremir_event_t event)
 {
-    receiver_t r = recv_get(event, dispatcher);
-    sender_t   a = recv_get(event, address);
+    receiver_t r = send_get(event, dispatcher);
+    sender_t   a = send_get(event, address);
     event_t    x = send_get(event, event);
 
     return doremir_event_send(r, a, doremir_event_tail(at, x));
@@ -708,13 +703,23 @@ event_t send_tail(doremir_time_t at, doremir_event_t event)
 
 bool recv_has_value(doremir_time_t at, doremir_event_t event)
 {   
-    if (!doremir_less_than(TIME_ZERO, at))
-        return false;
+    // if (!doremir_less_than(TIME_ZERO, at))
+        // return false;
 
     sender_t s  = recv_get(event, dispatcher);
-    sender_t a  = recv_get(event, address);
-    recv_get(event, result) = doremir_message_receive(s, a);
+    sender_t a  = recv_get(event, address);           
+
+    if (!recv_get(event, result))
+    {
+        recv_get(event, received) = doremir_copy(at);
+        recv_get(event, result)   = doremir_message_receive(s, a);
+    }
+    if (!doremir_equal(at, recv_get(event, received)))
+    {
+        assert(false && "Too late!");
+    }
     
+    assert(recv_get(event, result) && "Not received");
     return doremir_list_length(recv_get(event, result)) > 0;
 }
 
@@ -724,7 +729,7 @@ bool recv_has_tail(doremir_time_t at, doremir_event_t event)
 }
 
 ptr_t recv_value(doremir_time_t at, doremir_event_t event)
-{
+{                     
     assert(recv_get(event, result) && "Not received");
     return recv_get(event, result);
 }
@@ -733,7 +738,7 @@ event_t recv_tail(doremir_time_t at, doremir_event_t event)
 {
     sender_t s  = recv_get(event, dispatcher);
     sender_t a  = recv_get(event, address);
-    return doremir_event_receive(s,a);
+    return doremir_event_receive(s, a);
 }
 
 
@@ -875,16 +880,9 @@ doremir_event_t doremir_event_tail(doremir_time_t at, doremir_event_t event)
 
 #pragma mark -
 
-// head x              = before (tail x) x
+// first x              = before (tail x) x
 // after p x           = switch p never x
 // before p x          = switch p x never
-
-doremir_event_t doremir_event_head(doremir_event_t x)
-{
-    // assert(false && "Not implemented");
-    // time_t t = doremir_event_offset(x);
-    return doremir_event_before(doremir_event_tail(TIME_MAX, x), x);
-}
 
 // FIXME
 doremir_event_t doremir_event_after(doremir_event_t p, doremir_event_t x)
