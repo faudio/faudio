@@ -16,11 +16,11 @@
 #define loop_interval_k 1
 
 struct _doremir_scheduler_t {
-    impl_t                  impl;           // Dispatcher
-    clock_t                 clock;
-    time_t                  start;
-    list_t                  senders;        // Senders to syncronize on each pass
-    priority_queue_t        queue;
+    impl_t                  impl;           //  Dispatcher
+    clock_t                 clock;          //  Provides time
+    time_t                  start;          //  Start time, as per clock
+    list_t                  senders;        //  Senders from which inputs are obtained
+    priority_queue_t        queue;          //  Events to be evaluated
 };
 
 
@@ -64,7 +64,7 @@ void doremir_scheduler_destroy(scheduler_t scheduler)
 }
 
 
-void collect_sync(doremir_ptr_t senders, doremir_message_sender_t sender)
+static void collect_sync(doremir_ptr_t senders, doremir_message_sender_t sender)
 {
     // Add hoc set to user pointer equality
     list_t *list = senders;
@@ -82,10 +82,7 @@ void collect_sync(doremir_ptr_t senders, doremir_message_sender_t sender)
  */
 void doremir_scheduler_schedule(doremir_scheduler_t scheduler, doremir_event_t event)
 {
-    // warn(string_dappend(string("Inserting "), doremir_string_show(event)));
     doremir_priority_queue_insert(event, scheduler->queue);
-
-    // list_t senders = doremir_list_empty();
     doremir_event_add_sync(collect_sync, &scheduler->senders, event);
 }
 
@@ -108,7 +105,6 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
     }
 
     for (int i = 0; i < max_events_k; ++i) {
-
         event_t event = doremir_priority_queue_peek(scheduler->queue);
 
         if (!event) {

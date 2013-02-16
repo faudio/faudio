@@ -12,12 +12,15 @@
 
 typedef doremir_plot_function_t plot_func_t;
 
-#define kSamples        500000
-#define kDownSapling    10
+#define doremir_iter(var, begin, end) \
+    for (int var = begin; var < end; ++var)
 
-#define kPathSize    100
-#define kCmdSize     100
-#define kTmpSize     L_tmpnam
+#define kSamples        500000
+
+#define kDownSapling    10
+#define kPathSize       100
+#define kCmdSize        100
+#define kTmpSize        L_tmpnam
 
 #define kPlots          5
 #define kPlotFormat \
@@ -59,7 +62,8 @@ void generate_plot_file(plot_func_t func,
 
     doremir_with(data_file, fopen(data_path, "w+"), fclose(data_file)) {
 
-        for (int sample = 0; sample < kSamples; ++sample) {
+        doremir_iter(sample, 0, kSamples) {
+        // for (int sample = 0; sample < kSamples; ++sample) {
 
             double x = ((double) sample) / ((double) kSamples) * 2 - 1;
             double ys[kPlots];
@@ -69,11 +73,9 @@ void generate_plot_file(plot_func_t func,
             }
 
             fprintf(data_file, "%f ", x);
-
             for (int i = 0; i < kPlots; ++i) {
                 fprintf(data_file, "%f ", ys[i]);
             }
-
             fprintf(data_file, "\n");
         }
 

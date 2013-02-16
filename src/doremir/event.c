@@ -19,9 +19,33 @@
 // #define event_inform(f,x) doremir_print(f,x)
 
 /*
+    Functional events built on primitives:
+        never                    = []
+        now x                    = [(0,x)]
+        delay t as               = fmap (\(u,x) -> (t+u,x))
+        merge as bs              = as `mergeBy fst` bs
+        switch [] as bs          = as
+        switch [(t:_),...] as bs =  filter ((u,x) -> (u < t,x)) as 
+                                    ++ 
+                                    filter ((u,x) -> (u >= t,x)) as 
+        recv d a                 = ...
+        send d a as              = ...
+
+    Internal:
+        hasValue []              = False
+        hasTail  []              = False
+        hasValue [(t,x):as]      = True
+        hasTail  [(t,x):as]      = True
+
+        offset   []              = Infinite
+        offset   [(t,x):as]      = t
+        value    [(t,x):as]      = x
+        tail     [(t,x):as]      = as
+
     TODO
         - Recursive merge (with public fixpoint?)
-        - Switch
+        - Negative delay?
+        - Proper delay of recv events
         - Map/filter/join
  */
 struct _doremir_event_t {
@@ -356,61 +380,6 @@ doremir_time_t doremir_event_offset(doremir_event_t event)
     }
 }
 
-/** Syncronize this event with the external world. In particular, this function
-    makes all receive events syncronize with their sender.
-
-    When used in a scheduler context, this function should be called once per
-    scheduler iteration.
- */
-void doremir_event_sync(doremir_event_t event)
-{
-    switch (event->tag) {
-    case never_event:
-        break;
-
-    case now_event:
-        break;
-
-    case delay_event: {
-        event_t x = delay_get(event, event);
-        doremir_event_sync(x);
-        return;
-    }
-
-    case merge_event: {
-        event_t x = merge_get(event, left);
-        event_t y = merge_get(event, right);
-        doremir_event_sync(x);
-        doremir_event_sync(y);
-        return;
-    }
-
-    case switch_event: {
-        event_t p = switch_get(event, pred);
-        event_t x = switch_get(event, before);
-        event_t y = switch_get(event, after);
-        doremir_event_sync(p);
-        doremir_event_sync(x);
-        doremir_event_sync(y);
-        return;
-    }
-
-    case send_event: {
-        event_t x = send_get(event, event);
-        doremir_event_sync(x);
-        return;
-    }
-
-    case recv_event: {
-        sender_t s = recv_get(event, dispatcher);
-        doremir_message_sync(s);
-        return;
-    }
-
-    default:
-        assert(false && "Missing label");
-    }
-}
 
 void doremir_event_add_sync(void (*func)(doremir_ptr_t,
                                          doremir_message_sender_t),
