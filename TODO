@@ -5,24 +5,11 @@ Additions
 * Clock implementations:
     * Audio (ok)
     * Porttime?
-    * System (using cpu time, or system time?)
-    * OS specific solution?
 
-* Possibility to replace interface implementations
-    * For example a type could have a set of callbacks attached after
-      impl pointer and let the dispatch function return those pointers.
-      By default set to default implementations: then add special copy
-      function such as:
-            orderedBy : (Binary,Ptr) -> Ptr;
-
-      In Haskell, you say
-        sortBy (comparing name) dict
-      Here it would be
-        sort (orderedBy $ \x y -> name x < name y) 
-        dict
-
-
-* Event/Scheduler impl
+* Event
+    * First, rest
+    * Switch, toggle
+    * Fixpoints
 
 * Buffer streams
 * File streams
@@ -62,6 +49,21 @@ Additions
         http://stackoverflow.com/questions/5118158/using-sse-to-speed-up-computation-store-load-and-alignment
         http://gcc.gnu.org/onlinedocs/gcc/Vector-Extensions.html
         http://clang.llvm.org/docs/LanguageExtensions.html#vectors-and-extended-vectors
+
+* Possibility to replace interface implementations
+    * For example a type could have a set of callbacks attached after
+      impl pointer and let the dispatch function return those pointers.
+      By default set to default implementations: then add special copy
+      function such as:
+            orderedBy : (Binary,Ptr) -> Ptr;
+
+      In Haskell, you say
+        sortBy (comparing name) dict
+      Here it would be
+        sort (orderedBy $ \x y -> name x < name y) 
+        dict
+
+
 
 ==========
 Issues
