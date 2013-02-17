@@ -1375,15 +1375,16 @@ void test_event()
         event_t s3 = doremir_event_later(seconds(3), NULL);
 
         event_t mm = doremir_system_event_mouse_move();
-        event_t mu = doremir_system_event_mouse_down();
-        event_t md = doremir_system_event_mouse_up();
+        event_t md = doremir_system_event_mouse_down();
+        event_t mu = doremir_system_event_mouse_up();
         event_t kd = doremir_system_event_key_down();
         event_t ku = doremir_system_event_key_up();
 
-        // event_t y2 = merge_event(switch_event(kd, merge_event(a,mm), merge_event(b,kd)), later(seconds(5), list(string("flux"))));
+        event_t y2 = merge_event(switch_event(kd, merge_event(a,mm), merge_event(b,md)), later(seconds(5), list(string("flux"))));
         // event_t y2 = switch_event(ku, switch_event(kd,never(),mm), merge_event(delay_event(seconds(3),b),md));
-        event_t y2 = merge_event(md,mu);
-        // event_t y2 = switch_event(kd,a,b);
+        // event_t y2 = switch_event(kd,mm,merge_event(md,mu));
+        // event_t y2 = switch_event(kd,a,b);           
+        // event_t y2 = switch_event(later(seconds(1),now(0)),mm,kd);
         event_t z  = doremir_system_event_write_std(y2);
 
         {

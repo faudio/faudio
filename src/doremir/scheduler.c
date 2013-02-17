@@ -7,18 +7,18 @@
 
 #include <doremir/scheduler.h>
 #include <doremir/priority_queue.h>
+#include <doremir/thread.h>
 #include <doremir/util.h>
 
 /*
     Notes:
  */
 
-#define loop_interval_k 1
-
 struct _doremir_scheduler_t {
     impl_t                  impl;           //  Dispatcher
     clock_t                 clock;          //  Provides time
-    time_t                  start;          //  Start time, as per clock
+    time_t                  start;          //  Absolute time of create()
+    time_t                  last;           //  Relative time of last exec()
     list_t                  senders;        //  Senders from which inputs are obtained
     priority_queue_t        queue;          //  Events to be evaluated
 };
@@ -34,6 +34,7 @@ inline static scheduler_t new_scheduler(clock_t clock)
     scheduler->impl     = &scheduler_impl;
     scheduler->clock    = clock;
     scheduler->start    = doremir_time_time(scheduler->clock);
+    scheduler->last     = seconds(0);
     scheduler->senders  = doremir_list_empty();
     scheduler->queue    = priority_queue();
     return scheduler;
@@ -58,15 +59,17 @@ doremir_scheduler_t doremir_scheduler_create(doremir_time_clock_t clock)
 
 void doremir_scheduler_destroy(scheduler_t scheduler)
 {
-    doremir_destroy(scheduler->queue);
     doremir_destroy(scheduler->start);
+    doremir_destroy(scheduler->last);
+    doremir_destroy(scheduler->senders);
+    doremir_destroy(scheduler->queue);
     delete_scheduler(scheduler);
 }
 
 
 static void collect_sync(doremir_ptr_t senders, doremir_message_sender_t sender)
 {
-    // Add hoc set to user pointer equality
+    // Add hoc set, to user pointer equality
     list_t *list = senders;
     doremir_for_each(s, *list) {
         if (s == sender) {
@@ -88,23 +91,24 @@ void doremir_scheduler_schedule(doremir_scheduler_t scheduler, doremir_event_t e
 
 #define sched_inform(str)
 // #define sched_inform(str) dinform(str)
-
-#define max_events_k 500
+#define loop_interval_k 1
 
 void doremir_scheduler_execute(doremir_scheduler_t scheduler)
 {
-    time_t      abs_now = doremir_time_time(scheduler->clock);
-    time_t      now     = doremir_subtract(abs_now, scheduler->start);
-    event_t     recur[max_events_k];
-    size_t      recurring = 0;
+    time_t      absolute  = doremir_time_time(scheduler->clock);
+    time_t      now       = doremir_subtract(absolute, scheduler->start);
+    time_t      last      = doremir_move(scheduler->last);
+    list_t      resched   = doremir_list_empty();
 
+    sched_inform(string_dappend(string("~ "), doremir_string_show(last)));
     sched_inform(string_dappend(string("@ "), doremir_string_show(now)));
 
     doremir_for_each(s, scheduler->senders) {
         doremir_message_sync(s);
-    }
+    }              
+    
 
-    for (int i = 0; i < max_events_k; ++i) {
+    while(true) {
         event_t event = doremir_priority_queue_peek(scheduler->queue);
 
         if (!event) {
@@ -117,34 +121,27 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
             break;
         }
 
-        doremir_priority_queue_pop(scheduler->queue);
-
         sched_inform(string_dappend(string("* Due:   "), doremir_string_show(event)));
         sched_inform(string_dappend(string("    Off: "), doremir_string_show(doremir_event_offset(event))));
 
-        if (doremir_event_has_value(now, event)) {
-            ptr_t value = doremir_event_value(now, event);
-            value = value; // kill warning
-            sched_inform(string_dappend(string("  Value: "), doremir_string_show(value)));
-        } else {
-            sched_inform(string("  No value"));
+        doremir_priority_queue_pop(scheduler->queue);
+        doremir_event_values(last, now, event);
+        
+        // try to get rest(), reinsert 
+        if (doremir_event_has_more(now, event))
+        {
+            resched = doremir_list_dcons(event, resched);
         }
-
-        if (doremir_event_has_tail(now, event)) {
-            event_t tail = doremir_event_tail(now, event);
-            recur[recurring++] = tail;
-            sched_inform(string_dappend(string("  Tail:  "), doremir_string_show(tail)));
-        } else {
-            sched_inform(string("  No tail"));
-        }
+    }                      
+    
+    doremir_for_each(resc, resched) {
+        doremir_priority_queue_insert(resc, scheduler->queue);
     }
 
-    for (int i = 0; i < recurring; ++i) {
-        doremir_priority_queue_insert(recur[i], scheduler->queue);
-    }
-
-    doremir_destroy(abs_now);
-    doremir_destroy(now);
+    doremir_destroy(resched);
+    doremir_destroy(last);
+    scheduler->last = doremir_move(now);
+    doremir_destroy(absolute);
 }
 
 void doremir_scheduler_loop(doremir_scheduler_t scheduler)
