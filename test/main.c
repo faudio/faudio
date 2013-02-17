@@ -594,63 +594,6 @@ void test_mutex()
 }
 
 
-
-// typedef struct {
-//     doremir_thread_mutex_t mut;
-//     doremir_thread_condition_t cond;
-//     char *msg;
-// } send_hub;
-// doremir_ptr_t sender(doremir_ptr_t x)
-// {
-//     send_hub *h = (send_hub *) x;
-//     static char *const msgs[10] = {
-//         "Sur", "le", "pond", "d'Avignon", "on", "y", "danse", "tous", "en", "round"
-//     };
-//
-//     for (int i = 0; i < 10; ++i) {
-//         doremir_thread_lock(h->mut);
-//         h->msg = msgs[i];
-//         printf("Sending: %s\n", h->msg);
-//         doremir_thread_notify(h->cond);
-//         doremir_thread_unlock(h->mut);
-//
-//         doremir_thread_sleep(100);
-//     }
-//
-//     return 0;
-// }
-// ptr_t receiver(ptr_t x)
-// {
-//     send_hub *h = (send_hub *) x;
-//
-//     while (true) {
-//         doremir_thread_lock(h->mut);
-//         doremir_thread_wait_for(h->cond);
-//         printf("                        Received: %s\n", h->msg);
-//         doremir_thread_unlock(h->mut);
-//     }
-//
-//     return 0;
-// }
-// void test_cond()
-// {
-//     test_section("Condition variables");
-//
-//     doremir_thread_mutex_t m = doremir_thread_create_mutex();
-//     doremir_thread_condition_t c = doremir_thread_create_condition(m);
-//     send_hub h = { m, c, 0 };
-//
-//     doremir_thread_t s = doremir_thread_create(sender, (doremir_ptr_t) &h);
-//     doremir_thread_t r = doremir_thread_create(receiver, (doremir_ptr_t) &h);
-//
-//     doremir_thread_join(s);
-//     doremir_thread_detach(r);
-// }
-
-
-
-
-
 // --------------------------------------------------------------------------------
 
 #pragma mark -
@@ -1359,15 +1302,15 @@ void test_event()
         event_t ha = now(string("höglund"));
         event_t ho = now(string("holmgren"));
 
-        event_t a = merge_event(ha, 
+        event_t a = merge_event(ha,
             delay_event(milliseconds(200*2), merge_event(ha,
             delay_event(milliseconds(200*2), merge_event(ha,
             delay_event(milliseconds(200*2), merge_event(ha,
             delay_event(milliseconds(200*2), merge_event(ha,
             delay_event(milliseconds(200*2), merge_event(ha, never())))))))))));
 
-        event_t b = merge_event(ho, 
-            delay_event(milliseconds(240*2), merge_event(ho, 
+        event_t b = merge_event(ho,
+            delay_event(milliseconds(240*2), merge_event(ho,
             delay_event(milliseconds(240*2), merge_event(ho,
             delay_event(milliseconds(240*2), merge_event(ho,
             delay_event(milliseconds(240*2), merge_event(ho,
@@ -1387,7 +1330,7 @@ void test_event()
         // event_t y2 = merge_event(switch_event(kd, merge_event(a, mm), merge_event(b, md)), later(seconds(5), list(string("flux"))));
         // event_t y2 = switch_event(ku, switch_event(kd,never(),mm), merge_event(delay_event(seconds(3),b),md));
         // event_t y2 = switch_event(kd,mm,merge_event(md,mu));
-        // event_t y2 = a;               
+        // event_t y2 = a;
         event_t y2 = doremir_event_filter(doremir_less_than, f64(500), mouseX);
         event_t z  = doremir_system_event_write_std(y2);
 
@@ -1791,24 +1734,24 @@ void print_midi_devices(midi_session_t session)
     doremir_print("\n", NULL);
 }
 
-ptr_t to_note_on(ptr_t occ) {  
+ptr_t to_note_on(ptr_t occ) {
     // doremir_print("%s\n", occ);
     int16_t kc = ti16(doremir_list_head(occ));
     return midi(0x90, 48 + kc, 120);
 }
 
-ptr_t to_note_off(ptr_t occ) {  
+ptr_t to_note_off(ptr_t occ) {
     // doremir_print("%s\n", occ);
     int16_t kc = ti16(doremir_list_head(occ));
     return midi(0x80, 48 + kc, 120);
 }
 
-ptr_t to_control(ptr_t occ) {  
+ptr_t to_control(ptr_t occ) {
     // doremir_print("%s\n", occ);
     double x = tf64(doremir_pair_fst(occ));
     return midi(0xb0, 7, x/1900 * 127);
 }
-ptr_t to_control2(ptr_t occ) {  
+ptr_t to_control2(ptr_t occ) {
     // doremir_print("%s\n", occ);
     double y = tf64(doremir_pair_snd(occ));
     return midi(0xb0, 1, y/1200 * 127);
@@ -1860,7 +1803,7 @@ void test_midi_stream()
     // TODO
     // doremir_device_midi_set_status_callback(status_changed, string("foobar"), session);
 
-    // event_t notes  = 
+    // event_t notes  =
     //     merge_event(later(divisions(1,10), midi(0x90, 48, 10)),
     //     merge_event(later(divisions(2,10), midi(0x90, 50, 20)),
     //     merge_event(later(divisions(3,10), midi(0x90, 52, 30)),
@@ -1869,9 +1812,9 @@ void test_midi_stream()
     //     merge_event(later(divisions(6,10), midi(0x90, 57, 60)),
     //     merge_event(later(divisions(7,10), midi(0x90, 59, 70)),
     //     merge_event(later(divisions(8,10), midi(0x90, 60, 80)),
-    //     never()))))))));  
-    
-    event_t notes = 
+    //     never()))))))));
+
+    event_t notes =
         merge_event(doremir_event_map(apply1, to_note_on,  doremir_system_event_key_down()),
         merge_event(doremir_event_map(apply1, to_note_off, doremir_system_event_key_up()),
         merge_event(doremir_event_map(apply1, to_control,  doremir_system_event_mouse_move()),
@@ -1940,7 +1883,6 @@ int main(int argc, char const *argv[])
 
         // test_thread();
         // test_mutex();
-        // test_cond();
 
         test_atomic();
         test_atomic_queue(5, 2);
