@@ -88,6 +88,9 @@ module Doremir.String
     fromUtf32    : Utf32 -> String;
     fromCfString : Void* -> String;
 
+    // Matching
+    matches : (String,String) -> Bool;  // regex, input
+
     // Formatting
     formatInteger : (Char*, Long) -> String;
     formatFloating : (Char*, Double) -> String;

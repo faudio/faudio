@@ -10,6 +10,7 @@
 #include <doremir/dynamic.h>
 #include <iconv.h>
 
+#include "string/trex.h"
 #include "../parson.h"
 
 /*
@@ -523,6 +524,24 @@ doremir_ptr_t doremir_string_from_json(doremir_string_t string)
     } else {
         return result;
     }
+}
+
+
+// --------------------------------------------------------------------------------
+
+bool doremir_string_matches(doremir_string_t expr, doremir_string_t string)
+{
+    char* cexpr    = doremir_string_to_utf8(expr);
+    char* cinput   = doremir_string_to_utf8(string);
+
+    TRex *exp = trex_compile(cexpr, NULL);
+    bool res = trex_match(exp, cinput);
+
+    trex_free(exp);
+    free(cexpr);
+    free(cinput);
+
+    return res;
 }
 
 

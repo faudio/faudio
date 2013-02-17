@@ -41,6 +41,7 @@ list(APPEND SRCS
   doremir/scheduler.c
   doremir/set.c
   doremir/string.c
+  doremir/string/trex.c
   doremir/time.c
   doremir/type.c
   )

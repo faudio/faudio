@@ -1631,13 +1631,20 @@ void test_system_directory()
 }
 
 
-// extern void test_vm(); // in vm.c
-// void test_vm2()
-// {
-//     test_section("Virtual machine");
-//     test_vm();
-// }
 
+// --------------------------------------------------------------------------------
+
+void test_regex()
+{
+    test_section("Regular expressions");
+
+    char exp[] = ".* Network Session.*";
+    char str[] = "CoreMIDI AudioBox USB";
+
+    doremir_print("exp                          ==> %s\n", string(exp));
+    doremir_print("str                          ==> %s\n", string(str));
+    doremir_print("matches(exp,str)             ==> %s\n", fb(doremir_string_matches(string(exp), string(str))));
+}
 
 // --------------------------------------------------------------------------------
 
@@ -1956,6 +1963,7 @@ int main(int argc, char const *argv[])
         test_log();
         test_error();
         test_system_directory();
+        test_regex();
         // test_plot(NULL, NULL);
         // test_plot_buffer();
         // test_plot_file(string_dappend(doremir_system_directory_current(), string("/test/in.wav")));
