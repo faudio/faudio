@@ -37,9 +37,10 @@ module Doremir.Event
     never   : () -> Event;
     now     : Ptr -> Event;
     delay   : (Time, Event) -> Event;
-    // fix     : (Event -> Event)* -> Event;
-    merge   : (Event, Event) -> Event;               // rename merge
+    merge   : (Event, Event) -> Event;
     switch  : (Event, Event, Event) -> Event;
+    // fix     : (Event -> Event)* -> Event;
+
     receive : (Sender, Address) -> Event;
     send    : (Receiver, Address, Event) -> Event;
     destroy : Event -> Void;
@@ -50,21 +51,20 @@ module Doremir.Event
     repeat  : (Time, Ptr) -> Event;
     after   : (Event, Event) -> Event;
     before  : (Event, Event) -> Event;
-    sample : (Event, Event) -> Event;
-    toggle : (Event, Event) -> Event;
+    sample  : (Event, Event) -> Event;
+    toggle  : (Event, Event) -> Event;
     
-    // filter      : (Pred, Ptr, Event) -> Event;
-    // dfilter     : (Pred, Ptr, Event) -> Event;
-    // map         : (Unary, Ptr, Event) -> Event;
-    // dmap        : (Unary, Ptr, Event) -> Event;
-    // joinMap   : (Unary, Ptr, Event) -> Event;
-    // djoinMap  : (Unary, Ptr, Event) -> Event;
-    // join      : Event -> Event;
-    // djoin     : Event -> Event;
+    // Maps and folds
+    filter  : (Pred, Ptr, Event) -> Event;
+    dfilter : (Pred, Ptr, Event) -> Event;
+    map     : (Unary, Ptr, Event) -> Event;
+    dmap    : (Unary, Ptr, Event) -> Event;
+    map2    : (Binary, Ptr, Event, Event) -> Event;
+    dmap2   : (Binary, Ptr, Event, Event) -> Event;
 
     // Low-level
-    offset   : Event -> Time;
-    addSync  : (((Ptr,Sender) -> Void)*, Ptr, Event) -> Void;
+    offset    : Event -> Time;
+    addSync   : (((Ptr,Sender) -> Void)*, Ptr, Event) -> Void;
     values    : (Time,Time,Event) -> List; // [Ptr]
     hasValues : (Time,Time,Event) -> Bool; // may be optimized
     hasMore   : (Time,Event) -> Bool;

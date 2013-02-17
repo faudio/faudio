@@ -42,6 +42,26 @@ doremir_event_t doremir_event_sample(doremir_event_t,
                                      doremir_event_t);
 doremir_event_t doremir_event_toggle(doremir_event_t,
                                      doremir_event_t);
+doremir_event_t doremir_event_filter(doremir_pred_t,
+                                     doremir_ptr_t,
+                                     doremir_event_t);
+doremir_event_t doremir_event_dfilter(doremir_pred_t,
+                                      doremir_ptr_t,
+                                      doremir_event_t);
+doremir_event_t doremir_event_map(doremir_unary_t,
+                                  doremir_ptr_t,
+                                  doremir_event_t);
+doremir_event_t doremir_event_dmap(doremir_unary_t,
+                                   doremir_ptr_t,
+                                   doremir_event_t);
+doremir_event_t doremir_event_map2(doremir_binary_t,
+                                   doremir_ptr_t,
+                                   doremir_event_t,
+                                   doremir_event_t);
+doremir_event_t doremir_event_dmap2(doremir_binary_t,
+                                    doremir_ptr_t,
+                                    doremir_event_t,
+                                    doremir_event_t);
 doremir_time_t doremir_event_offset(doremir_event_t);
 void doremir_event_add_sync(void (*)(doremir_ptr_t,
                                      doremir_message_sender_t),

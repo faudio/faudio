@@ -16,15 +16,27 @@
 
 typedef struct _doremir_signal_t * doremir_signal_t;
 doremir_type_t doremir_signal_type_of(doremir_signal_t);
-doremir_signal_t doremir_signal_apply_unary(doremir_processor_t,
-                                            doremir_signal_t);
-doremir_signal_t doremir_signal_apply_binary(doremir_processor_t,
-                                             doremir_signal_t,
-                                             doremir_signal_t);
-doremir_signal_t doremir_signal_apply_ternary(doremir_processor_t,
-                                              doremir_signal_t,
-                                              doremir_signal_t,
-                                              doremir_signal_t);
+doremir_signal_t doremir_signal_lift(doremir_unary_t,
+                                     doremir_ptr_t,
+                                     doremir_signal_t);
+doremir_signal_t doremir_signal_lift2(doremir_binary_t,
+                                      doremir_ptr_t,
+                                      doremir_signal_t,
+                                      doremir_signal_t);
+doremir_signal_t doremir_signal_lift3(doremir_ternary_t,
+                                      doremir_ptr_t,
+                                      doremir_signal_t,
+                                      doremir_signal_t,
+                                      doremir_signal_t);
+doremir_signal_t doremir_signal_apply(doremir_processor_t,
+                                      doremir_signal_t);
+doremir_signal_t doremir_signal_apply2(doremir_processor_t,
+                                       doremir_signal_t,
+                                       doremir_signal_t);
+doremir_signal_t doremir_signal_apply3(doremir_processor_t,
+                                       doremir_signal_t,
+                                       doremir_signal_t,
+                                       doremir_signal_t);
 doremir_signal_t doremir_signal_constant(doremir_ptr_t);
 doremir_signal_t doremir_signal_value(doremir_event_t);
 doremir_signal_t doremir_signal_delay(size_t, doremir_signal_t);

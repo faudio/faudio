@@ -17,13 +17,16 @@ module Doremir.Signal
 
     typeOf : Signal -> Type;
 
-    applyUnary  : (Processor, Signal) -> Signal;
-    applyBinary : (Processor, Signal, Signal) -> Signal;
-    applyTernary : (Processor, Signal, Signal, Signal) -> Signal;
+    lift   : (Unary, Ptr, Signal)                   -> Signal;
+    lift2  : (Binary, Ptr, Signal, Signal)          -> Signal;
+    lift3  : (Ternary, Ptr, Signal, Signal, Signal) -> Signal;
+    apply  : (Processor, Signal)                    -> Signal;
+    apply2 : (Processor, Signal, Signal)            -> Signal;
+    apply3 : (Processor, Signal, Signal, Signal)    -> Signal;
 
-    constant  : Ptr -> Signal;
-    value     : Event -> Signal;
-    delay     : (Size, Signal) -> Signal;
+    constant  : Ptr             -> Signal;
+    value     : Event           -> Signal;
+    delay     : (Size, Signal)  -> Signal;
 
     add                 : (Signal,Signal) -> Signal;
     subtract            : (Signal,Signal) -> Signal;

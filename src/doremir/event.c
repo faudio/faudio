@@ -60,7 +60,9 @@ struct _doremir_event_t {
         merge_event,      // E a -> E a -> E a
         switch_event,     // E a -> E b -> E b -> E b
         send_event,       // D x a -> x -> E a -> E ()
-        recv_event        // D x a -> x -> E a
+        recv_event,       // D x a -> x -> E a
+        filter_event,
+        map_event
     }                       tag;
 
     union {
@@ -92,6 +94,16 @@ struct _doremir_event_t {
             ptr_t           address;
             list_t          history;
         }                   recv;
+        struct {
+            pred_t          pred;
+            ptr_t           data;
+            ptr_t           event;
+        }                   filter;
+        struct {
+            unary_t         func;
+            ptr_t           data;
+            ptr_t           event;
+        }                   map;
 
     }                       fields;
 };
@@ -122,6 +134,8 @@ void delete_event(doremir_event_t event)
 #define is_switch(v)      (v->tag == switch_event)
 #define is_send(v)        (v->tag == send_event)
 #define is_recv(v)        (v->tag == recv_event)
+#define is_filter(v)      (v->tag == filter_event)
+#define is_map(v)         (v->tag == map_event)
 
 #define now_get(v,f)      (v->fields.now.f)
 #define delay_get(v,f)    (v->fields.delay.f)
@@ -129,6 +143,8 @@ void delete_event(doremir_event_t event)
 #define switch_get(v,f)   (v->fields.switch_.f)
 #define send_get(v,f)     (v->fields.send.f)
 #define recv_get(v,f)     (v->fields.recv.f)
+#define filter_get(v,f)   (v->fields.filter.f)
+#define map_get(v,f)      (v->fields.map.f)
 
 // --------------------------------------------------------------------------------
 
@@ -318,6 +334,41 @@ void doremir_event_destroy(doremir_event_t event)
     delete_event(event);
 }
 
+doremir_event_t doremir_event_filter(doremir_pred_t  pred,
+                                     doremir_ptr_t   data,
+                                     doremir_event_t event)
+{
+    assert(event     && "Need an event");
+
+    event_t e = new_event(filter_event);
+    filter_get(e, pred)   = pred;
+    filter_get(e, data)   = data;
+    filter_get(e, event)  = event;
+    return e;
+    
+}
+
+doremir_event_t doremir_event_map(doremir_unary_t    func,
+                                  doremir_ptr_t      data,
+                                  doremir_event_t    event)
+{
+    assert(event     && "Need an event");
+
+    event_t e = new_event(map_event);
+    map_get(e, func)   = func;
+    map_get(e, data)   = data;
+    map_get(e, event)  = event;
+    return e;
+}
+
+doremir_event_t doremir_event_map2(doremir_binary_t func,
+                                   doremir_ptr_t    data,
+                                   doremir_event_t  event1,
+                                   doremir_event_t  event2)
+{
+    assert(false && "Not implemented");
+}
+
 
 // --------------------------------------------------------------------------------
 
@@ -364,6 +415,16 @@ doremir_time_t doremir_event_offset(doremir_event_t event)
 
     case recv_event: {
         return TIME_ZERO;
+    }
+
+    case filter_event: {
+        event_t x = filter_get(event, event);
+        return doremir_event_offset(x);
+    }
+
+    case map_event: {
+        event_t x = map_get(event, event);
+        return doremir_event_offset(x);
     }
 
     default:
@@ -420,17 +481,29 @@ void doremir_event_add_sync(
         return;
     }
 
+    case filter_event: {
+        event_t x = filter_get(event, event);
+        doremir_event_add_sync(func, data, x);
+        return;
+    }
+
+    case map_event: {
+        event_t x = map_get(event, event);
+        doremir_event_add_sync(func, data, x);
+        return;
+    }
+
     default:
         assert(false && "Missing label");
     }
 }
 
-list_t never_values(time_t begin, time_t end, event_t event)
+inline static list_t never_values(time_t begin, time_t end, event_t event)
 {
     return doremir_list_empty();
 }
 
-list_t now_values(time_t begin, time_t end, event_t event)
+inline static list_t now_values(time_t begin, time_t end, event_t event)
 {
     // begin <= t < end
     if (doremir_less_than_equal(begin, TIME_ZERO) && doremir_less_than(TIME_ZERO, end)) {
@@ -440,14 +513,14 @@ list_t now_values(time_t begin, time_t end, event_t event)
     }
 }
 
-list_t delay_values(time_t begin, time_t end, event_t event)
+inline static list_t delay_values(time_t begin, time_t end, event_t event)
 {
     time_t  t = delay_get(event, time);
     event_t x = delay_get(event, event);
     return doremir_event_values(doremir_subtract(begin, t), doremir_subtract(end, t), x);
 }
 
-list_t merge_values(time_t begin, time_t end, event_t event)
+inline static list_t merge_values(time_t begin, time_t end, event_t event)
 {
     event_t x = merge_get(event, left);
     event_t y = merge_get(event, right);
@@ -456,7 +529,7 @@ list_t merge_values(time_t begin, time_t end, event_t event)
                                 doremir_event_values(begin, end, y));
 }
 
-list_t switch_values(time_t begin, time_t end, event_t event)
+inline static list_t switch_values(time_t begin, time_t end, event_t event)
 {
     event_t p = switch_get(event, pred);
     event_t x = switch_get(event, before);
@@ -471,7 +544,7 @@ list_t switch_values(time_t begin, time_t end, event_t event)
     }
 }
 
-list_t send_values(time_t begin, time_t end, event_t event)
+inline static list_t send_values(time_t begin, time_t end, event_t event)
 {
     receiver_t r  = send_get(event, dispatcher);
     sender_t   a  = send_get(event, address);
@@ -484,7 +557,7 @@ list_t send_values(time_t begin, time_t end, event_t event)
     return fb(true); // TODO something else for unit?
 }
 
-list_t recv_values(time_t begin, time_t end, event_t event)
+inline static list_t recv_values(time_t begin, time_t end, event_t event)
 {
     /*  TODO 
             
@@ -516,6 +589,23 @@ list_t recv_values(time_t begin, time_t end, event_t event)
     }
 }
 
+inline static list_t filter_values(time_t begin, time_t end, event_t event)
+{
+    pred_t     pred  = filter_get(event, pred);
+    ptr_t      data  = filter_get(event, data);
+    event_t    x     = filter_get(event, event);
+    return doremir_list_filter(pred, data, doremir_event_values(begin, end, x));
+}
+
+inline static list_t map_values(time_t begin, time_t end, event_t event)
+{
+    unary_t    func  = map_get(event, func);
+    ptr_t      data  = map_get(event, data);
+    event_t    x     = map_get(event, event);
+    return doremir_list_map(func, data, doremir_event_values(begin, end, x));
+}
+
+
 doremir_list_t doremir_event_values(doremir_time_t  begin,
                                     doremir_time_t  end,
                                     doremir_event_t event)
@@ -541,6 +631,12 @@ doremir_list_t doremir_event_values(doremir_time_t  begin,
 
     case recv_event:
         return recv_values(begin, end, event);
+
+    case filter_event:
+        return filter_values(begin, end, event);
+
+    case map_event:
+        return map_values(begin, end, event);
 
     default:
         assert(false && "Missing label");
@@ -581,7 +677,7 @@ bool doremir_event_has_more(doremir_time_t      at,
         // event_t p = switch_get(event, pred);
         event_t x = switch_get(event, before);
         event_t y = switch_get(event, after);
-        // TODO use p
+        // TODO use p to optimize?
         return doremir_event_has_more(at, x) || doremir_event_has_more(at, y);
     }
 
@@ -592,6 +688,16 @@ bool doremir_event_has_more(doremir_time_t      at,
 
     case recv_event: {
         return true;
+    }
+
+    case filter_event: {
+        event_t x = filter_get(event, event);
+        return doremir_event_has_more(at, x);
+    }
+
+    case map_event: {
+        event_t x = map_get(event, event);
+        return doremir_event_has_more(at, x);
     }
 
     default:
@@ -636,7 +742,6 @@ bool event_equal(doremir_ptr_t a, doremir_ptr_t b)
     return doremir_equal(
                doremir_event_offset(c),
                doremir_event_offset(d));
-    // assert(false && "No event equality");
 }
 
 bool event_less_than(doremir_ptr_t a, doremir_ptr_t b)
