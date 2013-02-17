@@ -478,14 +478,13 @@ void midi_stream_send(ptr_t a, address_t addr, message_t msg)
     PmError result;
     stream_t stream = (stream_t) a;
     midi_t   midi   = (midi_t) msg;
-    // TODO use dynamic introspection to detect lists
+    // TODO use dynamic introspection to detect lists (?)
 
     if (doremir_midi_is_simple(midi)) {
         // timestamp ignored
         long midi_msg = doremir_midi_simple_to_long(midi);
-        // long midi_msg = Pm_Message(0x90, 60, 127);
 
-        printf("Sending: %s %08x\n", unstring(doremir_string_show(midi)), (int) midi_msg);
+        // printf("Sending: %s %08x\n", unstring(doremir_string_show(midi)), (int) midi_msg);
 
         result = Pm_WriteShort(stream->native_output, 0, midi_msg);
 
