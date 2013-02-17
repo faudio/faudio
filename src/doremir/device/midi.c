@@ -17,6 +17,7 @@
     Notes:
         * Device detection handled by excplicit CoreMIDI/?? calls
         * Call MIDIRestart() ?
+        * TODO proper error checking
  */
 
 typedef doremir_device_midi_t                  device_t;
@@ -318,9 +319,9 @@ doremir_device_midi_stream_t doremir_device_midi_open_stream(device_t device)
     stream_t stream = new_stream(device);
 
     if (device->input) {
-        // result = Pm_OpenInput(&stream->native_input, device->index, NULL, 0,
-        // midi_time_callback, NULL);
-        // assert(result == pmNoError);
+        result = Pm_OpenInput(&stream->native_input, device->index, NULL, 0,
+                              midi_time_callback, NULL);
+        assert(result == pmNoError);
     }
 
     if (device->output) {
@@ -461,14 +462,33 @@ void midi_stream_sync(ptr_t a)
 {
     stream_t stream = (stream_t) a;
 
+    doremir_destroy(stream->incoming);
+    stream->incoming = doremir_list_empty();
+
     while (Pm_Poll(stream->native_input) == TRUE) {
-        // copy messages into stream->incoming
-        assert(false && "Not implemented");
+
+        PmEvent buffer[1024];
+        int sz = Pm_Read(stream->native_input, buffer, 1024);
+        assert(sz >= 0 && "Error reading Midi");
+
+        for (int i = 0; i < sz; ++i)
+        {
+            PmEvent   event = buffer[i];
+            PmMessage msg   = event.message;
+
+            // FIXME detect sysex
+            midi_t midi = midi(Pm_MessageStatus(msg), Pm_MessageData1(msg), Pm_MessageData2(msg));
+            stream->incoming = doremir_list_dcons(midi, stream->incoming);
+            
+            // TODO midi thru
+        }
     }
+    
 }
 
 doremir_list_t midi_stream_receive(ptr_t a, address_t addr)
 {
+    // Ignore address
     stream_t stream = (stream_t) a;
     return doremir_list_copy(stream->incoming);
 }
