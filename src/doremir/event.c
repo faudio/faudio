@@ -25,9 +25,9 @@
         delay t as               = fmap (\(u,x) -> (t+u,x))
         merge as bs              = as `mergeBy fst` bs
         switch [] as bs          = as
-        switch [(t:_),...] as bs =  filter ((u,x) -> (u < t,x)) as 
-                                    ++ 
-                                    filter ((u,x) -> (u >= t,x)) as 
+        switch [(t:_),...] as bs =  filter ((u,x) -> (u < t,x)) as
+                                    ++
+                                    filter ((u,x) -> (u >= t,x)) as
         recv d a                 = ...
         send d a as              = ...
 
@@ -89,7 +89,7 @@ struct _doremir_event_t {
         struct {
             ptr_t           dispatcher;
             ptr_t           address;
-            list_t          history; 
+            list_t          history;
         }                   recv;
 
     }                       fields;
@@ -182,7 +182,7 @@ doremir_event_t doremir_event_delay(doremir_time_t  time,
     // if (is_never(event)) {
     //     return never();
     // }
-    // 
+    //
     // if (is_delay(event)) {
     //     time_t  t = delay_get(event, time);
     //     event_t x = delay_get(event, event);
@@ -220,7 +220,7 @@ doremir_event_t doremir_event_merge(doremir_event_t event1,
     // if (is_never(event1)) {
     //     return event2;
     // }
-    // 
+    //
     // if (is_never(event2)) {
     //     return event1;
     // }
@@ -352,8 +352,8 @@ doremir_time_t doremir_event_offset(doremir_event_t event)
         event_t p = switch_get(event, pred);
         event_t x = switch_get(event, before);
         event_t y = switch_get(event, after);
-        return doremir_min(doremir_event_offset(p), 
-            doremir_min(doremir_event_offset(x), doremir_event_offset(y)));
+        return doremir_min(doremir_event_offset(p),
+                           doremir_min(doremir_event_offset(x), doremir_event_offset(y)));
     }
 
     case send_event: {
@@ -370,8 +370,8 @@ doremir_time_t doremir_event_offset(doremir_event_t event)
     }
 }
 
-void doremir_event_add_sync (
-    void            (*func) (doremir_ptr_t, doremir_message_sender_t),
+void doremir_event_add_sync(
+    void (*func)(doremir_ptr_t, doremir_message_sender_t),
     doremir_ptr_t     data,
     doremir_event_t   event
 )
@@ -379,13 +379,16 @@ void doremir_event_add_sync (
     switch (event->tag) {
     case never_event:
         break;
+
     case now_event:
         break;
+
     case delay_event: {
         event_t x = delay_get(event, event);
         doremir_event_add_sync(func, data, x);
         return;
     }
+
     case merge_event: {
         event_t x = merge_get(event, left);
         event_t y = merge_get(event, right);
@@ -393,6 +396,7 @@ void doremir_event_add_sync (
         doremir_event_add_sync(func, data, y);
         return;
     }
+
     case switch_event: {
         event_t p = switch_get(event, pred);
         event_t x = switch_get(event, before);
@@ -402,23 +406,26 @@ void doremir_event_add_sync (
         doremir_event_add_sync(func, data, y);
         return;
     }
+
     case send_event: {
         event_t x = send_get(event, event);
         doremir_event_add_sync(func, data, x);
         return;
     }
+
     case recv_event: {
         sender_t s = recv_get(event, dispatcher);
         func(data, s);
         return;
     }
+
     default:
         assert(false && "Missing label");
     }
 }
 
 list_t never_values(time_t begin, time_t end, event_t event)
-{          
+{
     return doremir_list_empty();
 }
 
@@ -426,7 +433,7 @@ list_t now_values(time_t begin, time_t end, event_t event)
 {
     // begin <= t < end
     if (doremir_less_than_equal(begin, TIME_ZERO) && doremir_less_than(TIME_ZERO, end)) {
-        return doremir_list_single(now_get(event,value));
+        return doremir_list_single(now_get(event, value));
     } else {
         return doremir_list_empty();
     }
@@ -483,17 +490,17 @@ list_t recv_values(time_t begin, time_t end, event_t event)
     sender_t s  = recv_get(event, dispatcher);
     sender_t a  = recv_get(event, address);
     list_t   history  = recv_get(event, history);
-    list_t   current  = doremir_message_receive(s, a);                
-    
+    list_t   current  = doremir_message_receive(s, a);
+
     history = doremir_list_dappend(history, doremir_list_copy(current));
     recv_get(event, history) = history;
-    
+
     if (doremir_equal(begin, TIME_ZERO)) {
         return history;
-    } else {        
+    } else {
         return current;
     }
-}     
+}
 
 doremir_list_t doremir_event_values(doremir_time_t  begin,
                                     doremir_time_t  end,
@@ -508,16 +515,16 @@ doremir_list_t doremir_event_values(doremir_time_t  begin,
 
     case delay_event:
         return delay_values(begin, end, event);
-    
+
     case merge_event:
         return merge_values(begin, end, event);
-    
+
     case switch_event:
         return switch_values(begin, end, event);
-    
+
     case send_event:
         return send_values(begin, end, event);
-    
+
     case recv_event:
         return recv_values(begin, end, event);
 
@@ -533,7 +540,7 @@ bool doremir_event_has_values(doremir_time_t    begin,
     return !doremir_list_is_empty(doremir_event_values(begin, end, event));
 }
 
-bool doremir_event_has_more(doremir_time_t      at, 
+bool doremir_event_has_more(doremir_time_t      at,
                             doremir_event_t     event)
 {
     switch (event->tag) {
@@ -559,7 +566,7 @@ bool doremir_event_has_more(doremir_time_t      at,
     case switch_event: {
         // event_t p = switch_get(event, pred);
         event_t x = switch_get(event, before);
-        event_t y = switch_get(event, after);                                 
+        event_t y = switch_get(event, after);
         // TODO use p
         return doremir_event_has_more(at, x) || doremir_event_has_more(at, y);
     }

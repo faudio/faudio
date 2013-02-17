@@ -105,10 +105,10 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
 
     doremir_for_each(s, scheduler->senders) {
         doremir_message_sync(s);
-    }              
-    
+    }
 
-    while(true) {
+
+    while (true) {
         event_t event = doremir_priority_queue_peek(scheduler->queue);
 
         if (!event) {
@@ -126,14 +126,13 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
 
         doremir_priority_queue_pop(scheduler->queue);
         doremir_event_values(last, now, event);
-        
-        // try to get rest(), reinsert 
-        if (doremir_event_has_more(now, event))
-        {
+
+        // try to get rest(), reinsert
+        if (doremir_event_has_more(now, event)) {
             resched = doremir_list_dcons(event, resched);
         }
-    }                      
-    
+    }
+
     doremir_for_each(resc, resched) {
         doremir_priority_queue_insert(resc, scheduler->queue);
     }
