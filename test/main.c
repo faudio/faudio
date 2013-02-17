@@ -1359,21 +1359,17 @@ void test_event()
         event_t ha = now(list(string("höglund")));
         event_t ho = now(list(string("holmgren")));
 
-        event_t a = merge_event(ha,
-                                delay_event(milliseconds(2000), merge_event(ha,
-                                            delay_event(milliseconds(2000), merge_event(ha,
-                                                        delay_event(milliseconds(2000), merge_event(ha,
-                                                                    delay_event(milliseconds(2000), merge_event(ha,
-                                                                            delay_event(milliseconds(2000), merge_event(ha,
-                                                                                    never())))))))))));
-
-        event_t b = merge_event(ho,
-                                delay_event(milliseconds(2400), merge_event(ho,
-                                            delay_event(milliseconds(2400), merge_event(ho,
-                                                        delay_event(milliseconds(2400), merge_event(ho,
-                                                                    delay_event(milliseconds(2400), merge_event(ho,
-                                                                            delay_event(milliseconds(2400), merge_event(ho,
-                                                                                    never())))))))))));
+        event_t a = merge_event(ha, delay_event(milliseconds(2000), merge_event(ha,
+            delay_event(milliseconds(2000), merge_event(ha,
+            delay_event(milliseconds(2000), merge_event(ha,
+            delay_event(milliseconds(2000), merge_event(ha,
+            delay_event(milliseconds(2000), merge_event(ha, never())))))))))));
+        
+        event_t b = merge_event(ho, delay_event(milliseconds(2400),
+            merge_event(ho, delay_event(milliseconds(2400), merge_event(ho,
+            delay_event(milliseconds(2400), merge_event(ho,
+            delay_event(milliseconds(2400), merge_event(ho,
+            delay_event(milliseconds(2400), merge_event(ho, never())))))))))));
 
         event_t s1 = doremir_event_later(seconds(1), NULL);
         event_t s3 = doremir_event_later(seconds(3), NULL);
