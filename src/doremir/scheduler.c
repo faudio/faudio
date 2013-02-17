@@ -90,8 +90,9 @@ void doremir_scheduler_schedule(doremir_scheduler_t scheduler, doremir_event_t e
 }
 
 #define sched_inform(str)
-// #define sched_inform(str) dinform(str)
 #define loop_interval_k 1
+// #define sched_inform(str) dinform(str)
+// #define loop_interval_k 100
 
 void doremir_scheduler_execute(doremir_scheduler_t scheduler)
 {
@@ -116,10 +117,10 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
             break;
         }
 
-        if (!doremir_less_than(doremir_event_offset(event), now)) {
-            sched_inform(string("- Waiting"));
-            break;
-        }
+        // if (!doremir_less_than_equal(doremir_event_offset(event), now)) {
+            // sched_inform(string("- Waiting"));
+            // break;
+        // }
 
         sched_inform(string_dappend(string("* Due:   "), doremir_string_show(event)));
         sched_inform(string_dappend(string("    Off: "), doremir_string_show(doremir_event_offset(event))));

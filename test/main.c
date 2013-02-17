@@ -1359,17 +1359,19 @@ void test_event()
         event_t ha = now(list(string("höglund")));
         event_t ho = now(list(string("holmgren")));
 
-        event_t a = merge_event(ha, delay_event(milliseconds(2000), merge_event(ha,
-                                                delay_event(milliseconds(2000), merge_event(ha,
-                                                            delay_event(milliseconds(2000), merge_event(ha,
-                                                                    delay_event(milliseconds(2000), merge_event(ha,
-                                                                            delay_event(milliseconds(2000), merge_event(ha, never())))))))))));
+        event_t a = merge_event(ha, 
+            delay_event(milliseconds(200*2), merge_event(ha,
+            delay_event(milliseconds(200*2), merge_event(ha,
+            delay_event(milliseconds(200*2), merge_event(ha,
+            delay_event(milliseconds(200*2), merge_event(ha,
+            delay_event(milliseconds(200*2), merge_event(ha, never())))))))))));
 
-        event_t b = merge_event(ho, delay_event(milliseconds(2400),
-                                                merge_event(ho, delay_event(milliseconds(2400), merge_event(ho,
-                                                            delay_event(milliseconds(2400), merge_event(ho,
-                                                                    delay_event(milliseconds(2400), merge_event(ho,
-                                                                            delay_event(milliseconds(2400), merge_event(ho, never())))))))))));
+        event_t b = merge_event(ho, 
+            delay_event(milliseconds(240*2), merge_event(ho, 
+            delay_event(milliseconds(240*2), merge_event(ho,
+            delay_event(milliseconds(240*2), merge_event(ho,
+            delay_event(milliseconds(240*2), merge_event(ho,
+            delay_event(milliseconds(240*2), merge_event(ho, never())))))))))));
 
         event_t s1 = doremir_event_later(seconds(1), NULL);
         event_t s3 = doremir_event_later(seconds(3), NULL);
@@ -1380,10 +1382,10 @@ void test_event()
         event_t kd = doremir_system_event_key_down();
         event_t ku = doremir_system_event_key_up();
 
-        event_t y2 = merge_event(switch_event(kd, merge_event(a, mm), merge_event(b, md)), later(seconds(5), list(string("flux"))));
+        // event_t y2 = merge_event(switch_event(kd, merge_event(a, mm), merge_event(b, md)), later(seconds(5), list(string("flux"))));
         // event_t y2 = switch_event(ku, switch_event(kd,never(),mm), merge_event(delay_event(seconds(3),b),md));
         // event_t y2 = switch_event(kd,mm,merge_event(md,mu));
-        // event_t y2 = switch_event(kd,a,b);
+        event_t y2 = a;
         // event_t y2 = switch_event(later(seconds(1),now(0)),mm,kd);
         event_t z  = doremir_system_event_write_std(y2);
 
