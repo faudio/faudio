@@ -1784,6 +1784,30 @@ void print_midi_devices(midi_session_t session)
     doremir_print("\n", NULL);
 }
 
+ptr_t to_note_on(ptr_t occ) {  
+    // doremir_print("%s\n", occ);
+    int16_t kc = ti16(doremir_list_head(occ));
+    return midi(0x90, 48 + kc, 120);
+}
+
+ptr_t to_note_off(ptr_t occ) {  
+    // doremir_print("%s\n", occ);
+    int16_t kc = ti16(doremir_list_head(occ));
+    return midi(0x80, 48 + kc, 120);
+}
+
+ptr_t to_control(ptr_t occ) {  
+    // doremir_print("%s\n", occ);
+    double x = tf64(doremir_pair_fst(occ));
+    return midi(0xb0, 7, x/1900 * 127);
+}
+ptr_t to_control2(ptr_t occ) {  
+    // doremir_print("%s\n", occ);
+    double y = tf64(doremir_pair_snd(occ));
+    return midi(0xb0, 1, y/1200 * 127);
+}
+
+
 void test_midi_stream()
 {
     test_section("Midi streams");
@@ -1791,11 +1815,6 @@ void test_midi_stream()
     midi_session_t session;
     midi_device_t  input, output;
     midi_stream_t  in_stream, out_stream;
-    processor_t    proc1, proc2;
-
-    // Processor to use
-    proc1    = id(type_pair(type_frame(type(f32)), type_frame(type(f32))));
-    proc2    = seq(proc1, proc1);
 
     // Begin session
     session = doremir_device_midi_begin_session();
@@ -1812,7 +1831,7 @@ void test_midi_stream()
 
     input = doremir_device_midi_default_input(session);
     // output = doremir_device_midi_default_output(session);
-    output = doremir_list_index(7, doremir_device_midi_all(session));
+    output = doremir_list_index(6, doremir_device_midi_all(session));
 
     // Start streams
     in_stream = doremir_device_midi_open_stream(input);
@@ -1834,16 +1853,38 @@ void test_midi_stream()
     // TODO
     // doremir_device_midi_set_status_callback(status_changed, string("foobar"), session);
 
-    for (int i = 0; i < 30; ++i) {
-        doremir_message_send((receiver_t) out_stream, 0, midi(0x90, 48 + i * 2, 100));
-        doremir_thread_sleep(100);
-    }
+    // event_t notes  = 
+    //     merge_event(later(divisions(1,10), midi(0x90, 48, 10)),
+    //     merge_event(later(divisions(2,10), midi(0x90, 50, 20)),
+    //     merge_event(later(divisions(3,10), midi(0x90, 52, 30)),
+    //     merge_event(later(divisions(4,10), midi(0x90, 53, 40)),
+    //     merge_event(later(divisions(5,10), midi(0x90, 55, 50)),
+    //     merge_event(later(divisions(6,10), midi(0x90, 57, 60)),
+    //     merge_event(later(divisions(7,10), midi(0x90, 59, 70)),
+    //     merge_event(later(divisions(8,10), midi(0x90, 60, 80)),
+    //     never()))))))));  
+    
+    event_t notes = 
+        merge_event(doremir_event_map(apply1, to_note_on,  doremir_system_event_key_down()),
+        merge_event(doremir_event_map(apply1, to_note_off, doremir_system_event_key_up()),
+        merge_event(doremir_event_map(apply1, to_control,  doremir_system_event_mouse_move()),
+                    doremir_event_map(apply1, to_control2, doremir_system_event_mouse_move()))));
+
+    // event_t notes2 = doremir_event_before(later(seconds(3),0), notes);
+
+    event_t sender = doremir_event_send(out_stream, i32(0), notes);
+    scheduler_t sched = doremir_scheduler_create(doremir_time_get_system_prec_clock());
+    doremir_scheduler_schedule(sched, sender);
+    doremir_scheduler_loop(sched);
+
+    // for (int i = 0; i < 30; ++i) {
+    //     doremir_message_send((receiver_t) out_stream, 0, midi(0x90, 48 + i * 2, 100));
+    //     doremir_thread_sleep(100);
+    // }
 
 cleanup:
     // doremir_device_midi_close_stream(stream);
     doremir_device_midi_end_session(session);
-    doremir_destroy(proc1);
-    doremir_destroy(proc2);
 }
 
 
@@ -1877,7 +1918,7 @@ int main(int argc, char const *argv[])
 
         doremir_audio_engine_initialize();
 
-        goto begin;
+        // goto begin;
         test_value_references();
         test_generic_functions();
         test_string();
@@ -1917,15 +1958,15 @@ int main(int argc, char const *argv[])
         test_system_directory();
         // test_plot(NULL, NULL);
         // test_plot_buffer();
-        test_plot_file(string_dappend(doremir_system_directory_current(), string("/test/in.wav")));
-begin:
+        // test_plot_file(string_dappend(doremir_system_directory_current(), string("/test/in.wav")));
+// begin:
 
         // test_processor_graphs(string_dappend(doremir_system_directory_current(), string("/test/proc.dot")));
         // test_dispatcher();
         // test_system_event();
 
-        test_event();
-        goto end;
+        // test_event();
+        // goto end;
         // test_scheduler();
         // test_processor();
 
