@@ -1638,8 +1638,8 @@ void test_regex()
 {
     test_section("Regular expressions");
 
-    char exp[] = ".* Network Session.*";
-    char str[] = "CoreMIDI AudioBox USB";
+    char exp[] = ".* Hans H.*";
+    char str[] = "A Hans Höglund";
 
     doremir_print("exp                          ==> %s\n", string(exp));
     doremir_print("str                          ==> %s\n", string(str));
