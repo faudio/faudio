@@ -65,12 +65,6 @@ module Doremir.Event
     // Low-level
     offset   : Event -> Time;
     addSync  : (((Ptr,Sender) -> Void)*, Ptr, Event) -> Void;
-
-    // hasValue : (Time,Event) -> Bool;
-    // hasTail  : (Time,Event) -> Bool;
-    // value    : (Time,Event) -> Ptr;
-    // tail     : (Time,Event) -> Event;    
-    
     values    : (Time,Time,Event) -> List; // [Ptr]
     hasValues : (Time,Time,Event) -> Bool; // may be optimized
     hasMore   : (Time,Event) -> Bool;

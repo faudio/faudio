@@ -12,8 +12,9 @@
 #include <doremir/util.h>
 
 // TODO rename, make public
+// TODO max is arbitrary
 #define TIME_ZERO doremir_time_create(0,0,0,ratio(0,1))
-#define TIME_MAX  doremir_time_create(2000000,0,0,ratio(0,1)) // FIXME
+#define TIME_MAX  doremir_time_create(2000000,0,0,ratio(0,1))
 
 #define event_inform(f,x)
 // #define event_inform(f,x) doremir_print(f,x)
@@ -452,8 +453,8 @@ list_t merge_values(time_t begin, time_t end, event_t event)
     event_t y = merge_get(event, right);
 
     // TODO dappend?
-    return doremir_list_append(doremir_event_values(begin, end, x),
-                               doremir_event_values(begin, end, y));
+    return doremir_list_dappend(doremir_event_values(begin, end, x),
+                                doremir_event_values(begin, end, y));
 }
 
 list_t switch_values(time_t begin, time_t end, event_t event)
