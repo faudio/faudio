@@ -128,7 +128,6 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
         doremir_priority_queue_pop(scheduler->queue);
         doremir_event_values(last, now, event);
 
-        // try to get rest(), reinsert
         if (doremir_event_has_more(now, event)) {
             resched = doremir_list_dcons(event, resched);
         }
