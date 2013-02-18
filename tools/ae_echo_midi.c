@@ -69,8 +69,6 @@ cleanup:
     doremir_device_midi_end_session(session);
 }
 
-
-
 int main (int argc, char const *argv[])
 {
     doremir_audio_engine_initialize();
@@ -78,6 +76,4 @@ int main (int argc, char const *argv[])
     doremir_audio_engine_terminate();
     return 0;
 }
-
-
 
