@@ -37,6 +37,5 @@ int main (int argc, char const *argv[])
 error:
     doremir_device_audio_end_session(session);
     doremir_audio_engine_terminate();
-
     return -1;
 }

@@ -17,5 +17,5 @@ endfunction()
 
 add_tool(ae_list_audio)
 add_tool(ae_list_midi)
-
+add_tool(ae_echo_midi)
 
