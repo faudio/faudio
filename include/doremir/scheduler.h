@@ -19,6 +19,8 @@ void doremir_scheduler_schedule(doremir_scheduler_t,
                                 doremir_event_t);
 void doremir_scheduler_execute(doremir_scheduler_t);
 void doremir_scheduler_loop(doremir_scheduler_t);
+void doremir_scheduler_loop_for(doremir_time_t,
+                                doremir_scheduler_t);
 
 /** @}
     @}

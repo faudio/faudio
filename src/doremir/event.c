@@ -841,6 +841,28 @@ inline static string_t print_event(int n, event_t a)
     case recv_event:
         return string("(Receive)");
 
+    case map_event: {
+        event_t x  = map_get(event, event);
+
+        write_to(s, string("(Map \n"));
+        write_to(s, doremir_string_copy(ident));
+        write_to(s, print_event(n + 1, x));
+        write_to(s, string(")"));
+
+        return s;
+    }
+
+    case filter_event: {
+        event_t x  = filter_get(event, event);
+
+        write_to(s, string("(Filter \n"));
+        write_to(s, doremir_string_copy(ident));
+        write_to(s, print_event(n + 1, x));
+        write_to(s, string(")"));
+
+        return s;
+    }
+
     default:
         assert(false && "Missing label");
     }

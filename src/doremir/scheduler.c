@@ -85,8 +85,14 @@ static void collect_sync(doremir_ptr_t senders, doremir_message_sender_t sender)
  */
 void doremir_scheduler_schedule(doremir_scheduler_t scheduler, doremir_event_t event)
 {
-    doremir_priority_queue_insert(event, scheduler->queue);
+    // time_t      absolute  = doremir_time_time(scheduler->clock);
+    // time_t      now       = doremir_subtract(absolute, scheduler->start);
+
+    doremir_priority_queue_insert(delay_event(scheduler->start, event), scheduler->queue);
     doremir_event_add_sync(collect_sync, &scheduler->senders, event);
+
+    // doremir_destroy(now);
+    // doremir_destroy(absolute);
 }
 
 #define sched_inform(str)
@@ -146,6 +152,19 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
 void doremir_scheduler_loop(doremir_scheduler_t scheduler)
 {
     while (true) {
+        doremir_scheduler_execute(scheduler);
+        doremir_thread_sleep(loop_interval_k);
+    }
+}
+
+void doremir_scheduler_loop_for(time_t time, doremir_scheduler_t scheduler)
+{
+    time_t begin = doremir_time_time(scheduler->clock);
+    time_t end   = doremir_add(begin, time);
+    
+    while (true) {
+        if (doremir_greater_than(doremir_time_time(scheduler->clock), end))
+            return;
         doremir_scheduler_execute(scheduler);
         doremir_thread_sleep(loop_interval_k);
     }
