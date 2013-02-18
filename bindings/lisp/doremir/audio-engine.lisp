@@ -12,3 +12,5 @@
 (defcfun (audioengine-log-info-from "doremir_audio_engine_log_info_from") :void (a string) (b string))
 (defcfun (audioengine-log-warning-from "doremir_audio_engine_log_warning_from") :void (a string) (b string))
 (defcfun (audioengine-log-error-from "doremir_audio_engine_log_error_from") :void (a string) (b string))
+(defcfun (audioengine-dlog "doremir_audio_engine_dlog") :void (a ptr) (b error))
+(defcfun (audioengine-dlog-info "doremir_audio_engine_dlog_info") :void (a string))

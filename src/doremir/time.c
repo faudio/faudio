@@ -47,9 +47,10 @@ inline static doremir_time_t new_time(ratio_t value)
 
     doremir_time_t t = doremir_new(time);
     t->impl  = &time_impl;
-    // t->value = doremir_copy(value);
-    t->value = value;
-    return t;
+    t->value = doremir_copy(value);
+    // t->value = value;
+    return t;           
+    // TODO should not copy, but Lisp wants it (see also below)
 }
 
 inline static void delete_time(doremir_time_t time)
@@ -75,7 +76,8 @@ inline static void delete_time(doremir_time_t time)
 doremir_time_t doremir_time_create(int32_t days, int32_t hours, int32_t minutes, doremir_ratio_t seconds)
 {
     int  whole = days * (60 * 60 * 24) + hours * (60 * 60) + minutes * 60;
-    return new_time(doremir_dadd(ratio(whole, 1), seconds));
+    return new_time(doremir_add(ratio(whole, 1), seconds));
+    // TODO should dadd, but Lisp doesn't like it
 }
 
 /**

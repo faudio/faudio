@@ -57,6 +57,12 @@
           :components (
             (:file "future")
             (:file "improving")))
+        (:file "system")
+        (:module "system2"
+          :pathname "system"
+          :components (
+            (:file "directory")
+            (:file "event")))
         (:file "device")
         (:module "device2"
           :pathname "device"

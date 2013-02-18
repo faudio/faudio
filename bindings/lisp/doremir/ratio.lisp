@@ -10,6 +10,7 @@
 (defcfun (ratio-num "doremir_ratio_num") ratio-num (a ratio))
 (defcfun (ratio-denom "doremir_ratio_denom") ratio-denom (a ratio))
 (defcfun (ratio-match "doremir_ratio_match") :void (a ratio) (b (:pointer ratio-num)) (c (:pointer ratio-denom)))
+(defcfun (ratio-copy "doremir_ratio_copy") ratio (a ratio))
 (defcfun (ratio-destroy "doremir_ratio_destroy") :void (a ratio))
 (defcfun (ratio-add "doremir_ratio_add") ratio (a ratio) (b ratio))
 (defcfun (ratio-subtract "doremir_ratio_subtract") ratio (a ratio) (b ratio))
@@ -19,3 +20,5 @@
 (defcfun (ratio-pred "doremir_ratio_pred") ratio (a ratio))
 (defcfun (ratio-negate "doremir_ratio_negate") ratio (a ratio))
 (defcfun (ratio-recip "doremir_ratio_recip") ratio (a ratio))
+(defcfun (ratio-normalize "doremir_ratio_normalize") ratio (a ratio))
+(defcfun (ratio-to-mixed "doremir_ratio_to_mixed") :void (a ratio) (b (:pointer ratio-num)) (c (:pointer ratio)))

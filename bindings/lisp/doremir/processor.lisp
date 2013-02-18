@@ -60,7 +60,6 @@
 (defcfun (processor-min "doremir_processor_min") processor (a type))
 (defcfun (processor-max "doremir_processor_max") processor (a type))
 (defcfun (processor-fmod "doremir_processor_fmod") processor (a type))
-(defcfun (processor-remainder "doremir_processor_remainder") processor (a type))
 (defcfun (processor-floor "doremir_processor_floor") processor (a type))
 (defcfun (processor-ceil "doremir_processor_ceil") processor (a type))
 (defcfun (processor-rint "doremir_processor_rint") processor (a type))
