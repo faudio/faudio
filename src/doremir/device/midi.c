@@ -65,6 +65,7 @@ static bool    pm_status;
 
 error_t midi_device_error(string_t msg);
 error_t midi_device_error_with(string_t msg, int error);
+error_t native_error(string_t msg, int code);
 void midi_device_fatal(string_t msg, int code);
 ptr_t midi_session_impl(doremir_id_t interface);
 ptr_t midi_device_impl(doremir_id_t interface);
@@ -125,7 +126,7 @@ inline static device_t new_device(native_index_t index)
     device_t device = doremir_new(device_midi);
     device->impl    = &midi_device_impl;
 
-    const PmDeviceInfo  *info      = Pm_GetDeviceInfo(index);
+    const PmDeviceInfo  *info = Pm_GetDeviceInfo(index);
 
     device->index       = index;
     device->input       = info->input;
@@ -178,6 +179,8 @@ void doremir_device_midi_terminate()
 
 session_t doremir_device_midi_begin_session()
 {
+    PmError result;
+    
     if (!pm_mutex) {
         assert(false && "Module not initalized");
     }
@@ -190,7 +193,11 @@ session_t doremir_device_midi_begin_session()
             doremir_thread_unlock(pm_mutex);
             return (session_t) midi_device_error(string("Overlapping real-time midi sessions"));
         } else {
-            Pm_Initialize();
+            result = Pm_Initialize();
+            if (result < 0) {
+                return (session_t) native_error(string("Could not start midi"), result);
+            }
+
             pm_status = true;
             doremir_thread_unlock(pm_mutex);
 
@@ -203,7 +210,9 @@ session_t doremir_device_midi_begin_session()
 }
 
 void doremir_device_midi_end_session(session_t session)
-{
+{ 
+    PmError result;
+    
     if (!pm_mutex) {
         assert(false && "Not initalized");
     }
@@ -213,7 +222,10 @@ void doremir_device_midi_end_session(session_t session)
     doremir_thread_lock(pm_mutex);
     {
         if (pm_status) {
-            Pm_Terminate();
+            result = Pm_Terminate();
+            if (result < 0) {
+                return (session_t) native_error(string("Could not stop midi"), result);
+            }
             pm_status = false;
         }
     }
@@ -322,14 +334,18 @@ doremir_device_midi_stream_t doremir_device_midi_open_stream(device_t device)
         inform(string("Opening input\n"));
         result = Pm_OpenInput(&stream->native_input, device->index, NULL, 0,
                               midi_time_callback, NULL);
-        assert(result == pmNoError);
+        if (result < 0) {
+            native_error(string("Could not open midi input"), result);
+        }
     }
 
     if (device->output) {
         inform(string("Opening output\n"));
         result = Pm_OpenOutput(&stream->native_output, device->index, NULL, 0,
                                midi_time_callback, NULL, -1);
-        assert(result == pmNoError);
+        if (result < 0) {
+            native_error(string("Could not open midi output"), result);
+        }
     }
 
     return stream;
@@ -466,13 +482,17 @@ void midi_stream_sync(ptr_t a)
     doremir_destroy(stream->incoming);
     stream->incoming = doremir_list_empty();
 
+    // TODO need to get error?
     while (Pm_Poll(stream->native_input) == TRUE) {
 
         PmEvent buffer[1024];
-        int sz = Pm_Read(stream->native_input, buffer, 1024);
-        assert(sz >= 0 && "Error reading Midi");
-
-        for (int i = 0; i < sz; ++i) {
+        PmError result = Pm_Read(stream->native_input, buffer, 1024);
+        
+        if (result < 0) {
+            native_error(string("Could not receive midi"), result);
+        }
+        
+        for (int i = 0; i < result; ++i) {
             PmEvent   event = buffer[i];
             PmMessage msg   = event.message;
 
@@ -509,7 +529,7 @@ void midi_stream_send(ptr_t a, address_t addr, message_t msg)
         result = Pm_WriteShort(stream->native_output, 0, midi_msg);
 
         if (result != pmNoError) {
-            midi_device_fatal(string("Could not send midi"), result);
+            native_error(string("Could not send midi"), result);
         }
     } else {
         assert(false && "Not implemented");
@@ -523,7 +543,10 @@ void midi_stream_send(ptr_t a, address_t addr, message_t msg)
         // check buffer size <= (2048-2)
         // copy sysex buffer to buf+1
 
-        Pm_WriteSysEx(stream->native_output, 0, buf);
+        result = Pm_WriteSysEx(stream->native_output, 0, buf);
+        if (result != pmNoError) {
+            native_error(string("Could not send midi"), result);
+        }
     }
 
 }
@@ -576,7 +599,14 @@ error_t midi_device_error_with(string_t msg, int code)
     return doremir_error_create_simple(error,
                                        string_dappend(msg, format_integer(" (error code %d)", code)),
                                        string("Doremir.Device.Midi"));
-}
+}     
+error_t native_error(string_t msg, int code)
+{
+    return doremir_error_create_simple(error,
+                                       string_dappend(msg, string((char*) Pm_GetErrorText(code))),
+                                       string("Doremir.Device.Midi"));
+}     
+
 
 void midi_device_fatal(string_t msg, int code)
 {
