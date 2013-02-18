@@ -319,13 +319,14 @@ doremir_device_midi_stream_t doremir_device_midi_open_stream(device_t device)
     stream_t stream = new_stream(device);
 
     if (device->input) {
+        inform(string("Opening input\n"));
         result = Pm_OpenInput(&stream->native_input, device->index, NULL, 0,
                               midi_time_callback, NULL);
         assert(result == pmNoError);
     }
 
     if (device->output) {
-        printf("Opening output\n");
+        inform(string("Opening output\n"));
         result = Pm_OpenOutput(&stream->native_output, device->index, NULL, 0,
                                midi_time_callback, NULL, -1);
         assert(result == pmNoError);
