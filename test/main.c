@@ -1330,8 +1330,9 @@ void test_event()
         // event_t y2 = merge_event(switch_event(kd, merge_event(a, mm), merge_event(b, md)), later(seconds(5), list(string("flux"))));
         // event_t y2 = switch_event(ku, switch_event(kd,never(),mm), merge_event(delay_event(seconds(3),b),md));
         // event_t y2 = switch_event(kd,mm,merge_event(md,mu));
-        // event_t y2 = a;
-        event_t y2 = doremir_event_filter(doremir_less_than, f64(500), mouseX);
+        // event_t y2 = doremir_event_filter(doremir_less_than, f64(500), mouseX);
+        event_t y2 = mm;
+        // doremir_print("The event: %s\n", mouseX);
         event_t z  = doremir_system_event_write_std(y2);
 
         {
@@ -1859,7 +1860,7 @@ int main(int argc, char const *argv[])
     printf("sizeof(wchar_t) = %d\n", (unsigned int) sizeof(wchar_t));
 
     printf("The page size for this system is %ld bytes.\n", sysconf(_SC_PAGESIZE));
-
+    
     for (int i = 0; i < iterations_k; ++i) {
         if (stop_k) {
             getchar();
@@ -1919,7 +1920,7 @@ int main(int argc, char const *argv[])
         // test_dispatcher();
         // test_system_event();
 
-        // test_event();
+        test_event();
         // goto end;
         // test_scheduler();
         // test_processor();
