@@ -5,12 +5,8 @@
   (asdf:load-system :audio-engine))
 
 (let ((framework-name "DoReMIRAudio")
-      (framework-path (format nil
-                              "~a/audio/build/Frameworks/"
-                              (user-homedir-pathname)))
-      (log-path       (format nil
-                              "~a/Library/Logs/DoReMIRAudio.log"
-                              (user-homedir-pathname))))
+      (framework-path (format nil "~a/audio/build/Frameworks/" (user-homedir-pathname)))
+      (log-path       (format nil "~a/Library/Logs/DoReMIRAudio.log" (user-homedir-pathname))))
   (push framework-path cffi:*darwin-framework-directories*)
   (setf *foreign-lib* (cffi:load-foreign-library `(:framework ,framework-name)))
   (audioengine-set-log-file log-path)
@@ -57,11 +53,12 @@
 
 ; Error
 
-(setf x (error-create-simple 1 "An error" "From.Here"))
+(setf x (error-create-simple 2 "An error" "From.Here"))
 (destroy x)
 
-(error-check x)
-(error-log nil (to-error x)) ; FIXME segfault
+(error-check nil) ; nil
+(error-check x)   ; t
+(error-log nil (to-error x))
 
 (error-message (to-error x))
 (error-severity (to-error x))
