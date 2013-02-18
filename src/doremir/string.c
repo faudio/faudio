@@ -530,19 +530,20 @@ doremir_ptr_t doremir_string_from_json(doremir_string_t string)
 // --------------------------------------------------------------------------------
 
 bool doremir_string_matches(doremir_string_t expr, doremir_string_t string)
-{               
-    if (doremir_string_length(expr) <= 0)
+{
+    if (doremir_string_length(expr) <= 0) {
         return false;
-    
-    for(int i = 0; i < expr->size; ++i)
-    {
-        if (expr->data[i] > 127)
-            assert(false && "Can not handle Unicode chars in expression.");
     }
 
-    char* cexpr    = doremir_string_to_utf8(expr);
-    char* cinput   = doremir_string_to_utf8(string);
-    
+    for (int i = 0; i < expr->size; ++i) {
+        if (expr->data[i] > 127) {
+            assert(false && "Can not handle Unicode chars in expression.");
+        }
+    }
+
+    char *cexpr    = doremir_string_to_utf8(expr);
+    char *cinput   = doremir_string_to_utf8(string);
+
     TRex *exp = trex_compile(cexpr, NULL);
     bool res = trex_match(exp, cinput);
 

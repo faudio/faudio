@@ -345,7 +345,7 @@ doremir_event_t doremir_event_filter(doremir_pred_t  pred,
     filter_get(e, data)   = data;
     filter_get(e, event)  = event;
     return e;
-    
+
 }
 
 doremir_event_t doremir_event_map(doremir_unary_t    func,
@@ -559,20 +559,20 @@ inline static list_t send_values(time_t begin, time_t end, event_t event)
 
 inline static list_t recv_values(time_t begin, time_t end, event_t event)
 {
-    /*  TODO 
-            
+    /*  TODO
+
         This is a bit of a hack. If begin == 0, return entire history,
         otherwise return the current input. We ought to return a slice of history.
-        
+
         Semantically, recv can look at an arbitrary time into the past. In reality
         we do not want to cache all inputs in memory. The problem is that while
         both delay and switch depend on history, delay should depend on bounded
         history, and switch on full history (and only whether it is empty or not).
-        
+
         We should probably change the switch primitive to use some specialized
         version of has_values referencing a bool field in the recv event rather
         than comparing against history. Then we could store history in a dynamic
-        array instead of a list.            
+        array instead of a list.
      */
     sender_t s  = recv_get(event, dispatcher);
     sender_t a  = recv_get(event, address);

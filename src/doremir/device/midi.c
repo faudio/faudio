@@ -472,19 +472,18 @@ void midi_stream_sync(ptr_t a)
         int sz = Pm_Read(stream->native_input, buffer, 1024);
         assert(sz >= 0 && "Error reading Midi");
 
-        for (int i = 0; i < sz; ++i)
-        {
+        for (int i = 0; i < sz; ++i) {
             PmEvent   event = buffer[i];
             PmMessage msg   = event.message;
 
             // FIXME detect sysex
             midi_t midi = midi(Pm_MessageStatus(msg), Pm_MessageData1(msg), Pm_MessageData2(msg));
             stream->incoming = doremir_list_dcons(midi, stream->incoming);
-            
+
             // TODO midi thru
         }
     }
-    
+
 }
 
 doremir_list_t midi_stream_receive(ptr_t a, address_t addr)

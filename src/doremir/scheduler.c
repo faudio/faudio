@@ -118,8 +118,8 @@ void doremir_scheduler_execute(doremir_scheduler_t scheduler)
         }
 
         // if (!doremir_less_than_equal(doremir_event_offset(event), now)) {
-            // sched_inform(string("- Waiting"));
-            // break;
+        // sched_inform(string("- Waiting"));
+        // break;
         // }
 
         sched_inform(string_dappend(string("* Due:   "), doremir_string_show(event)));
