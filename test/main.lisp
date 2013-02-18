@@ -147,6 +147,7 @@
 (list-is-empty x)
 (list-is-single x)
 
+;(list-length '(1 2 3))
 (list-length x)
 (list-head x)
 (list-tail x)
@@ -173,28 +174,23 @@
 ; list-find, list-map etc are the raw CFFI functions and take callbacks
 ; list-find*, list-map* etc accept Lisp functions and lambdas
 
-(list-find*
-  #'oddp
-  (export-list# '(0 2 11 4 5)))
+(list-find* 'oddp 
+            '(0 2 11 4 5))
 
-(list-find-index*
-  #'oddp
-  (export-list# '(0 2 11 4 5)))
+(list-find-index* 'oddp 
+                  '(0 2 11 4 5))
 
-(list-filter*
- (lambda (x)
-   (or (evenp x) (< 4 x)))
-  (export-list# '(1 2 3 4 5)))
+(list-filter* (lambda (x) (or (evenp x) (< 4 x))) 
+              '(1 2 3 4 5))
 
-(list-map*
-  (lambda (x) (* 10 x))
-  (export-list# '(1 2 3 4 5)))
+(list-map* (lambda (x) (* 10 x))
+           '(1 2 3 4 5))
 
-(list-join-map*
- (lambda (x) (cond
-              ((oddp x) (export-list# `(,x)))
-              (t        (export-list# `(,x ,x)))))
-  (export-list# '(1 2 3 4 5)))
+; FIXME auto-wrapping does not work...
+(list-join-map* (lambda (x) (cond
+                             ((oddp x) (to-list `(,x)))
+                             (t        (to-list `(,x ,x)))))
+                '(1 2 3 4 5))
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -431,16 +427,18 @@
 ; TODO combine defcallback/unary/binary into single macro
 ; i.e. define-processor
 
-(type-offset-of 256 (input-type x))
+;(type-offset-of 256 (input-type x))
+
+(input-type x)
 (output-type x)
 
 (setf y (identity :i8))
-(setf x (constant :i16 :i8 0))
+(setf x (constant :i8 :i8 0))
 (setf x (sequence x y))
 (setf x (parallel x y))
 (setf x (loop x))
 (setf x (split :f32))
-; (setf x (delay :f32 44100))
+; TODO (setf x (delay :f32 44100))
 
 (equal
   (input-type (parallel (identity :i8) (identity :i8)))
@@ -590,12 +588,12 @@
 ; Message stuff
 (setf x (message-create-dispatcher))
 (setf s (to-sender x))
-(setf r (to-reveiver x))
+(setf r (to-receiver x))
 
 
 (message-send r 0 (random 20))
 (message-send r 0 123/456)
-(message-send r 0 (export-list# '(1 2 3)))
+(message-send r 0 (list-copy '(1 2 3)))
 
 ; TODO dynamic import here
 (progn

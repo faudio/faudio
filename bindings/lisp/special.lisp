@@ -23,8 +23,8 @@
 (defcfun (ratio-create# "doremir_ratio_create") :pointer (a :int32) (b :int32))
 (defcfun (ratio-destroy# "doremir_ratio_destroy") :void (a :pointer))
 
-(defun export-ratio# (x)
-  (convert-to-foreign x 'ratio))
+; (defun export-ratio# (x)
+  ; (convert-to-foreign x 'ratio))
 
 (defmethod translate-to-foreign (x (type ratio-type))
   (ratio-create# (numerator x) (denominator x)))
@@ -42,15 +42,30 @@
 (defun import-pair# (x)
   (cons (pair-fst x) (pair-snd x)))
 
+(defcfun (list-empty# "doremir_list_empty") :pointer)
+(defcfun (list-cons#  "doremir_list_cons")  :pointer (a ptr) (b :pointer))
+(defcfun (list-dcons# "doremir_list_dcons") :pointer (a ptr) (b :pointer))
+
+
 (defun export-list# (x)
-  (cond
-    ((not x)  (list-empty))
-    (t        (list-cons (car x) (export-list# (cdr x))))))
+  (cond                
+    ((eq (type-of x) 'list) (slot-value x 'list-ptr))
+    ((not x)  (list-empty#)) 
+    (t        (list-cons# (car x) (export-list# (cdr x))))
+    ))
 
 (defun import-list# (x)
   (cond
     ((list-is-empty x)  nil)
     (t                  (cons (list-head x) (import-list# (list-tail x))))))
+
+(defmethod translate-to-foreign (x (type list-type))
+  (export-list# x))
+; (defmethod translate-from-foreign (x (type list-type))
+  ; (import-list# x)) 
+
+(defun to-list (x)
+  (export-list# x))
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -217,8 +232,8 @@
 (defmacro delay (&rest args) `(processor-delay ,@args))
 
 ; seq and par are binary, sequence and parallel are the reduced version
-(defmacro seq (&rest args) `(processor-seq ,@args))
-(defmacro par (&rest args) `(processor-par ,@args))
+(defmacro seq (&rest args) `(processor-sequence ,@args))
+(defmacro par (&rest args) `(processor-parallel ,@args))
 
 (defun sequence (head &rest args)
   (cond
