@@ -1,19 +1,21 @@
 
-(defvar *foreign-lib*)
 
-; ---------------------------------------------------------------------------------------------------
+
+(defvar *foreign-lib*)
 
 (progn
   (asdf:load-system :audio-engine))
 
-(progn
-  (push "/Users/hans/audio/build/Frameworks/" cffi:*darwin-framework-directories*)
-  (setf *foreign-lib* (cffi:load-foreign-library '(:framework "DoReMIRAudio")))  
-    (audioengine-set-log-file "/Users/hans/Library/Logs/DoReMIRAudio.log")
-    (audioengine-initialize)
-    (plot-use-gnu))
+(let ((framework-name "DoReMIRAudio")
+      (framework-path (format nil "~a/audio/build/Frameworks/" (user-homedir-pathname)))
+      (log-path       (format nil "~a/Library/Logs/DoReMIRAudio.log" (user-homedir-pathname))))
+  (push framework-path cffi:*darwin-framework-directories*)
+  (setf *foreign-lib* (cffi:load-foreign-library `(:framework ,framework-name)))
+  (audioengine-set-log-file log-path)
+  (plot-use-gnu)
+  (audioengine-initialize))
 
-; (close-foreign-library *foreign-lib*)
+(close-foreign-library *foreign-lib*)
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -22,8 +24,8 @@
 ;   - Calling (from-pointer) with the wrong type is undefined
 ;   - Calling a generic function on a type that does not implement a required interface is undefined
 
-(in-package :audio-engine)
 
+(in-package :audio-engine)
 
 ; For testing
 
@@ -32,10 +34,7 @@
 (defvar z nil)
 (defvar s nil)
 (defvar d nil)
-(defvar p nil)   
-
-(setf p (id '(:frame (:f32 :f32 :f32 :f32 :f32 :f32 :f32 :f32 :f32 . :f32))))
-(processor-buffer-size 256 p)
+(defvar p nil)
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -60,20 +59,18 @@
 
 (setf x (ratio-create 1 2))
 (setf y (ratio-create 278 12))
+(ratio-destroy x)
+(cl:print x)
 (ratio-num x)
-
 (ratio-denom x)
 (ratio-add x y)
 (ratio-subtract x y)
 (ratio-multiply x y)
 (ratio-divide x y)
-;(ratio-remainder x y)
 (ratio-succ x)
 (ratio-pred x)
 (ratio-negate x)
 (ratio-recip x)
-(cl:print x)
-(ratio-destroy x)
 (ratio-create 1 2)
 (ratio-succ (/ 1 2))
 (ratio-recip (/ 567 235))
@@ -86,11 +83,11 @@
 
 (setf x (string-empty))
 (setf x (string-single 104))
+(string-destroy x)
+(cl:print x)
 (string-append (string-single 104) (string-dappend (string-single (char-int #\a)) (string-single 110)))
 (string-append "hans " "höglund")
 (string-length "högtalare")
-(cl:print x)
-;(string-destroy x)
 
 ; ---------------------------------------------------------------------------------------------------
 ; Pair
@@ -100,19 +97,21 @@
 
 (setf x (pair-create 1 2))
 (setf y (pair-copy x))
+(pair-destroy x)
+(cl:print x)
+
 (pair-fst x)
 (pair-snd x)
 (pair-dup 3)
 (pair-swap x)
+
 (pair-assoc (pair-create 1 (pair-create 2 3)))
 (pair-unassoc (pair-create (pair-create 1 2) 3))
-(cl:print x)
-(pair-destroy x)
-(destroy x)
-
 (pair-snd (from-pointer 'pair (to-pointer (pair-create 1 2))))
-(pair-create (pair-create 1 2) (pair-create 3 4))
-(pair-create (list-single 1) (set-single 2))
+
+(pair-create (pair-create 1 2) (pair-create 3 4)) ; Nested pairs are possible
+(pair-create (list-single 1) (set-single 2))      ; Pairs containing other structures too
+
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -127,14 +126,19 @@
 (setf x (list-dcons (random 20) x))
 (setf x (list-dtail x))
 (setf y (list-copy x))
+(list-destroy x)
+(cl:print x)
+
 (list-is-empty x)
 (list-is-single x)
+
 (list-length x)
 (list-head x)
 (list-tail x)
 (list-init x)
 (list-last x)
 (list-append x x)
+
 (list-reverse x)
 (list-sort x)
 (list-take 5 x)
@@ -145,58 +149,38 @@
 (list-remove 2 x)
 (list-insert-range 2 (list-single 56) x)
 (list-remove-range 2 3 x)
+
 (list-has 1 x)
-; (list-find (lambda (x) t) x)
 (list-index-of 1 x)
-; (list-find-index (lambda (x) t) x)
-; (list-filter (lambda (x) t) x)
-; (list-map (lambda (x) (+ 1 x)) x)
-; (list-fold-left (lambda (x y) (+ x y) nil 0 x)
 (list-join (list-empty))
 (list-join (list-single (list-single 1)))
-(list-single (list-single 1))
 
-(cl:print x)
-(list-destroy x)
+; list-find, list-map etc are the raw CFFI functions and take callbacks
+; list-find*, list-map* etc accept Lisp functions and lambdas
 
-(setf x (export-list# '(1 2 3)))
+(list-find* 
+  #'oddp
+  (export-list# '(0 2 11 4 5)))
 
-(defcallback ap1 ptr ((f ptr) (x ptr))
-  (funcall (int-to-func# f) x))
-(defcallback app1 :boolean ((f ptr) (x ptr))
-  (funcall (int-to-func# f) x))
+(list-find-index* 
+  #'oddp 
+  (export-list# '(0 2 11 4 5)))
 
-(list-map (callback ap1) (func-to-int# (lambda (x) (+ 100 x))) x)
-(list-filter (callback app1) (func-to-int# (lambda (x) (oddp x))) x)
+(list-filter* 
+ (lambda (x) 
+   (or (evenp x) (< 4 x))) 
+  (export-list# '(1 2 3 4 5)))
 
+(list-map* 
+  (lambda (x) (* 10 x)) 
+  (export-list# '(1 2 3 4 5)))
 
-(defvar *funcs#* (make-hash-table))
-;(hash-table-count *funcs*)
+(list-join-map* 
+ (lambda (x) (cond
+              ((oddp x) (export-list# `(,x)))
+              (t        (export-list# `(,x ,x))))) 
+  (export-list# '(1 2 3 4 5)))
 
-(defun func-to-int# (f)
-   (let ((n (hash-table-count *funcs#*)))
-     (setf (gethash n *funcs#*) f)
-     n))
-
-(defun int-to-func# (n)
-  (let ((f (gethash n *funcs#*)))
-    (if f f (cl:error "Uknown func in INT-TO-FUNC"))))
-
-(func-to-int# (lambda (x) x))
-(funcall (int-to-func# 0) 123)
-
-
-(defcallback odd :boolean ((c ptr) (x ptr))
-  (declare (ignore c))
-  (oddp x))
-(list-filter (callback odd) 0 (export-list# '(1 2 3 4 5 7 8 9)))
-
-(funcall (function (lambda (x) x)) 11)
-
-(oddp 2)
-
-; (export-list# (cl:list 1 2 (export-list# (cl:list 1 3 4))))
-; (import-list# (list-cons 1 (list-cons 2 (list-single 3))))
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -204,25 +188,29 @@
 
 (setf x (set-empty))
 (setf x (set-single 1))
+(setf x (set-dadd 1 x))             ; add does not overwrite equals
+(setf x (set-dremove 1 x))          ; set does (for numbers, it doesn't matter)
 (setf x (set-dadd (random 20) x))
 (setf x (set-dremove (random 20) x))
-(setf y (set-dcopy x))
+(setf y (set-copy x))
+(set-destroy)
+(cl:print x)
+
 (set-size x)
 (set-is-empty x)
 (set-is-single x)
 (set-has 1 x)
-(set-get 1 x)
+(set-get 1 x)                       ; FIXME null should not be raw pointer
+
 (set-is-subset-of y x)
 (set-is-proper-subset-of y x)
+
 (set-sum x y)
 (set-intersection x y)
 (set-product x y)
 (set-difference x y)
-; (set-power x)
-; (set-from-list (list-empty))
+
 (set-to-list x)
-(cl:print x)
-(set-destroy)
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -230,14 +218,16 @@
 
 (setf x (map-empty))
 (setf x (map-dadd "name" "hans" x))
-(setf x (map-dadd "name" "sven" x))
-(setf x (map-dset "name" "sven" x))
-(setf x (map-dadd "skills" (list-cons 1 (list-empty)) x))
-; FIXME dremove?
-(setf x (map-remove "name" x))
+(setf x (map-dadd "name" "sven" x))   ; add does not overwrite equals
+(setf x (map-dset "name" "sven" x))   ; set does
+(setf x (map-dadd "skills" 
+                  (list-cons 1 (list-empty)) x))
+(setf x (map-remove "name" x))        ; remove removes if present, otherwise does nothing
 (setf x (map-remove "skills" x))
-; (setf x (map-remove (random 20) x))
 (setf y (map-copy x))
+(map-destroy x)
+(cl:print x)
+
 (map-size x)
 (map-is-empty x)
 (map-is-single x)
@@ -245,20 +235,19 @@
 (from-pointer 'list (map-get "skills" x))
 (setf x (map-add-entry (pair-create "surname" "höglund") x))
 (setf x (map-remove-entry (pair-create "surname" "höglund") x))
-; (map-has-key "name" x)
-; (map-has-elem "hans" x)
-; (map-has-entry (pair-create "surname" "höglund") x)
+
+(map-has-key "name" x)
+; TODO (map-has-elem "hans" x)
+; TODO (map-has-entry (pair-create "surname" "höglund") x)
+
 (map-is-submap-of x y)
 (map-is-proper-submap-of x y)
 (map-sum x y)
 (map-product x y)
 (map-difference x y)
 (map-power x)
-; (map-from-pair (pair-create 1 2))
-; (map-from-list (list-single 1))
+
 (map-to-list x)
-(cl:print x)
-(map-destroy x)
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -325,21 +314,6 @@
 
 ; Time
 
-(defun time (&key days hours minutes seconds milliseconds nanoseconds)
-  (let* (
-        (zt              (time-create 0 0 0 0))
-        (dt  (if days    (time-create days 0 0 0) nil))
-        (ht  (if hours   (time-create 0 hours 0 0) nil))
-        (mt  (if minutes (time-create 0 0 minutes 0) nil))
-        (st  (if seconds (time-create 0 0 0 (rational seconds)) nil))
-        (mst (if milliseconds (time-create 0 0 0 (/ (rational milliseconds) 1000)) nil))
-        (nst (if nanoseconds (time-create 0 0 0 (/ (rational nanoseconds) 1000000)) nil))
-        (exprs  (remove nil (cl:list dt ht mt st mst nst)))
-        )
-   (reduce (lambda (x y) (from-pointer 'time (add x y))) exprs :initial-value zt)))
-(defun sec (x) (time :seconds x))
-(defun millis  (x) (time :milliseconds x))
-
 (time :minutes 1 :seconds 1/2)
 (greater-than (time :minutes 1) (time :seconds 59))
 (greater-than (time :minutes 1) (time :seconds 61))
@@ -397,8 +371,8 @@
 (type-channels x)
 
 ; We can also force conversion for nice printing
-(setf x (make-type :unit))
-(setf x (make-type '(:pair :i8 :i8)))
+(setf x (to-type :unit))
+(setf x (to-type '(:pair :i8 :i8)))
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -430,27 +404,27 @@
 (type-offset-of 256 (input-type x))
 (output-type x)
 
-(setf y (id :i8))
-(setf x (const :i16 :i8 0))
+(setf y (identity :i8))
+(setf x (constant :i16 :i8 0))
 (setf x (sequence x y))
 (setf x (parallel x y))
 (setf x (loop x))
 (setf x (split :f32))
 ; (setf x (delay :f32 44100))
 
-(equal 
-  (input-type (parallel (id :i8) (id :i8))) 
+(equal
+  (input-type (parallel (identity :i8) (identity :i8)))
   (output-type (split :i8)))
 
-(parallel 
-  (sequence (id '(:frame :i8)) (const '(:frame :i8) '(:frame :i16) nil) (id '(:frame :i16))) 
-  (id '(:vector :f32 1024))
-  (id '(:frame :f32))) 
+(parallel
+  (sequence (identity '(:frame :i8)) (constant '(:frame :i8) '(:frame :i16) nil) (identity '(:frame :i16)))
+  (identity '(:vector :f32 1024))
+  (identity '(:frame :f32)))
 
-(sequence 
- (split :i8) 
- (parallel (id :i8) (id :i8))
- (id '(:i8 . :i8))
+(sequence
+ (split :i8)
+ (parallel (identity :i8) (identity :i8))
+ (identity '(:i8 . :i8))
  (binary :i8 :i8 :f32 (callback add-i8-i8) nil))
 
 ; TODO short names
@@ -505,7 +479,7 @@
 (signal-type x)
 
 (setf x (constant :i8 1))
-(setf x (apply (id :i8) x))
+(setf x (apply (identity :i8) x))
 (setf x (apply (constant :i16 :i8 0)))
 
 (let* (
@@ -516,23 +490,23 @@
   output
   )
 
-(let* 
-  ((input x))      
-  (feedback 
-    delay 
+(let*
+  ((input x))
+  (feedback
+    delay
     (+ input delay))
-  ) 
+  )
 
-; ==>  
-(let* 
-  ((input x))      
+; ==>
+(let*
+  ((input x))
   (let* (
      (#fb# (signal-loop-create))
      (delay (loop-input #fb#))
-    ) 
+    )
      (loop-output #fb# (+ input delay))
     )
-  ) 
+  )
 
 
 
@@ -633,8 +607,14 @@
 (scheduler-loop-for (time :seconds 10) sc)
 
 
+(capi:define-interface demo ()
+  ()
+  (:panes
+    (slider capi:slider
+      :callback (lambda (i p x) (cl:print (cl:list i p x))))))
 
-
+(setf i (capi:display (make-instance 'demo)))
+(setf (capi:range-slug-start (slot-value i 'slider)) (random 100))
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -660,18 +640,17 @@
 (type-channels (device-audio-output-type x))
 (type-size-of 1024 (device-audio-input-type x))
 
-; Check for new devices
-(defvar *status* 0)
-(cl:print *status*)
 (defcallback audio-status-changed ptr ((x ptr))
   (declare (ignore x))
-  (incf *status* 1)
+  (capi:display-message "Audio setup changed")
   (audioengine-log-info "Audio setup changed"))
 (device-audio-set-status-callback (callback audio-status-changed) nil s)
 
 (setf p (processor-identity '(:pair (:frame :f32) (:frame :f32))))
 (setf z (device-audio-open-stream x p y))
 (device-audio-close-stream z)
+
+
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -711,6 +690,8 @@
 (device-midi-close-stream z) ; FIXME segfault
 
 (message-send (to-receiver z) 0 (midi-create-simple #x90 (+ 48 (random 12)) 120))
+
+
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -810,14 +791,14 @@
 (thread-do
   ; actions
   )
-(thread-with-lock :blocking nil  
+(thread-with-lock :blocking nil
   )
 
 
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Misc generic functions
+; Generic functions
 
 (equal              x y)
 (less-than          x y)

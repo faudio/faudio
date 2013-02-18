@@ -16,6 +16,9 @@
     :time
     :type
     :sequence
+    :parallel
+    :identity
+    :constant
     :error
     :signal
     :equal

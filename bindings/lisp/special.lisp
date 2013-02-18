@@ -43,15 +43,11 @@
   (cons (pair-fst x) (pair-snd x)))
 
 (defun export-list# (x)
-  ; nil -> []
-  ; (cons x xs) -> (list-cons x xs)
   (cond
     ((not x)  (list-empty))
     (t        (list-cons (car x) (export-list# (cdr x))))))
 
 (defun import-list# (x)
-  ; [] -> nil
-  ; (list-cons x xs) -> (cons x xs)
   (cond
     ((list-is-empty x)  nil)
     (t                  (cons (list-head x) (import-list# (list-tail x))))))
@@ -71,10 +67,10 @@
     ((eq x nil)        (type-simple 0))
     ((consp x)
       (cond
-        ((eq :frame  (car x))     (type-frame (make-type (cadr x))))
-        ((eq :vector (car x))     (type-vector (make-type (cadr x)) (caddr x)))
-        ((eq :pair   (car x))     (type-pair (make-type (cadr x)) (make-type (caddr x))))
-        (t                        (type-pair (make-type (car x)) (make-type (cdr x))))))
+        ((eq :frame  (car x))     (type-frame (to-type (cadr x))))
+        ((eq :vector (car x))     (type-vector (to-type (cadr x)) (caddr x)))
+        ((eq :pair   (car x))     (type-pair (to-type (cadr x)) (to-type (caddr x))))
+        (t                        (type-pair (to-type (car x)) (to-type (cdr x))))))
     ((eq (type-of x) 'type) (slot-value x 'type-ptr))
     (t                      x)))
 
@@ -83,8 +79,7 @@
 ; (defmethod translate-from-foreign (x (type type-type))
   ; x)
 
-; TODO add to translator (with inverse)
-(defun make-type (x)
+(defun to-type (x)
   (export-type# x))
 
 ; ---------------------------------------------------------------------------------------------------
@@ -96,6 +91,65 @@
 
 (defun to-sender (x) (setf s (from-pointer 'message-sender (to-pointer x))))
 (defun to-receiver (x) (setf r (from-pointer 'message-receiver (to-pointer x))))
+
+; ---------------------------------------------------------------------------------------------------
+
+(defun to-processor (x) (setf s (from-pointer 'processor (to-pointer x))))
+
+; ---------------------------------------------------------------------------------------------------
+
+(defun time (&key days hours minutes seconds milliseconds nanoseconds)
+  (let* ((zero-time         (time-create 0 0 0 0))
+         (days-time         (if days    (time-create days 0 0 0) nil))
+         (hours-time        (if hours   (time-create 0 hours 0 0) nil))
+         (minutes-time      (if minutes (time-create 0 0 minutes 0) nil))
+         (seconds-time      (if seconds (time-create 0 0 0 (rational seconds)) nil))
+         (milliseconds-time (if milliseconds (time-create 0 0 0 (/ (rational milliseconds) 1000)) nil))
+         (nanoseconds-time  (if nanoseconds (time-create 0 0 0 (/ (rational nanoseconds) 1000000)) nil))
+         (time-exprs  (remove nil (cl:list days-time hours-time minutes-time 
+                                           seconds-time milliseconds-time nanoseconds-time))))
+    (reduce (lambda (x y) (from-pointer 'time (add x y))) time-exprs :initial-value zero-time)))
+
+(defun hours (x) (time :hours x))
+(defun minutes (x) (time :minutes x))
+(defun seconds (x) (time :seconds x))
+(defun milliseconds (x) (time :milliseconds x))
+
+; ---------------------------------------------------------------------------------------------------
+
+(defvar *funcs#* (make-hash-table))
+
+(defun func-to-int# (f)
+   (let ((n (hash-table-count *funcs#*)))
+     (setf (gethash n *funcs#*) f)
+     n))
+
+(defun int-to-func# (n)
+  (let ((f (gethash n *funcs#*)))
+    (if f f (cl:error "Uknown func in INT-TO-FUNC"))))
+
+(defcallback funcall1# ptr ((f ptr) (x ptr))
+  (funcall (int-to-func# f) x))
+
+(defcallback predcall1# :boolean ((f ptr) (x ptr))
+  (funcall (int-to-func# f) x))
+
+
+(defun list-map* (f xs)   
+  (list-map (callback funcall1#) (func-to-int# f) xs)) 
+
+(defun list-join-map* (f xs)   
+  (list-join-map (callback funcall1#) (func-to-int# f) xs)) 
+
+(defun list-filter* (f xs)
+  (list-filter (callback predcall1#) (func-to-int# f) xs))
+
+(defun list-find* (f xs)
+  (list-find (callback predcall1#) (func-to-int# f) xs))
+
+(defun list-find-index* (f xs)
+  (list-find-index (callback predcall1#) (func-to-int# f) xs))
+
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -142,24 +196,21 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; ---------------------------------------------------------------------------------------------------
-
 ; Aliases
 
 (defmacro input-type (&rest args) `(processor-input-type ,@args))
 (defmacro output-type (&rest args) `(processor-output-type ,@args))
 (defmacro unary (&rest args) `(processor-unary ,@args))
 (defmacro binary (&rest args) `(processor-binary ,@args))
-(defmacro id (&rest args) `(processor-identity ,@args))
-(defmacro const (&rest args) `(processor-constant ,@args))
-(defmacro seq (&rest args) `(processor-seq ,@args))
-(defmacro par (&rest args) `(processor-par ,@args))
+(defmacro identity (&rest args) `(processor-identity ,@args))
+(defmacro constant (&rest args) `(processor-constant ,@args))
 (defmacro loop (&rest args) `(processor-loop ,@args))
 (defmacro split (&rest args) `(processor-split ,@args))
 (defmacro delay (&rest args) `(processor-delay ,@args))
 
-; (defmacro ~> (&rest args) `(processor-seq ,@args))
-; (defmacro <> (&rest args) `(processor-par ,@args))
+; seq and par are binary, sequence and parallel are the reduced version
+(defmacro seq (&rest args) `(processor-seq ,@args))
+(defmacro par (&rest args) `(processor-par ,@args))
 
 (defun sequence (head &rest args)
   (cond
