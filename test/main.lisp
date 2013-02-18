@@ -1,17 +1,15 @@
 
-
-
 (defvar *foreign-lib*)
 
 (progn
   (asdf:load-system :audio-engine))
 
 (let ((framework-name "DoReMIRAudio")
-      (framework-path (format nil 
-                              "~a/audio/build/Frameworks/" 
+      (framework-path (format nil
+                              "~a/audio/build/Frameworks/"
                               (user-homedir-pathname)))
-      (log-path       (format nil 
-                              "~a/Library/Logs/DoReMIRAudio.log" 
+      (log-path       (format nil
+                              "~a/Library/Logs/DoReMIRAudio.log"
                               (user-homedir-pathname))))
   (push framework-path cffi:*darwin-framework-directories*)
   (setf *foreign-lib* (cffi:load-foreign-library `(:framework ,framework-name)))
@@ -57,16 +55,27 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
+; Error
+
+(error-message (to-error x))
+(error-severity (to-error x))
+(error-origin (to-error x))
+(error-log nil (to-error x))
+
+
+; ---------------------------------------------------------------------------------------------------
+
 ; Ratio
 
 ; Audio Engine ratios are converted to Lisp ratios and vice versa
 
 (setf x (ratio-create 1 2))
 (setf y (ratio-create 278 12))
-(ratio-destroy x)
-(cl:print x)
+(destroy x)
+
 (ratio-num x)
 (ratio-denom x)
+
 (ratio-add x y)
 (ratio-subtract x y)
 (ratio-multiply x y)
@@ -75,6 +84,7 @@
 (ratio-pred x)
 (ratio-negate x)
 (ratio-recip x)
+
 (ratio-create 1 2)
 (ratio-succ (/ 1 2))
 (ratio-recip (/ 567 235))
@@ -87,11 +97,14 @@
 
 (setf x (string-empty))
 (setf x (string-single 104))
-(string-destroy x)
-(cl:print x)
-(string-append (string-single 104) (string-dappend (string-single (char-int #\a)) (string-single 110)))
+(destroy x)
+
+(string-append (string-single 104)
+               (string-dappend (string-single (char-int #\a))
+                               (string-single 110)))
 (string-append "hans " "höglund")
 (string-length "högtalare")
+
 
 ; ---------------------------------------------------------------------------------------------------
 ; Pair
@@ -101,8 +114,7 @@
 
 (setf x (pair-create 1 2))
 (setf y (pair-copy x))
-(pair-destroy x)
-(cl:print x)
+(destroy x)
 
 (pair-fst x)
 (pair-snd x)
@@ -130,8 +142,7 @@
 (setf x (list-dcons (random 20) x))
 (setf x (list-dtail x))
 (setf y (list-copy x))
-(list-destroy x)
-(cl:print x)
+(destroy x)
 
 (list-is-empty x)
 (list-is-single x)
@@ -162,27 +173,27 @@
 ; list-find, list-map etc are the raw CFFI functions and take callbacks
 ; list-find*, list-map* etc accept Lisp functions and lambdas
 
-(list-find* 
+(list-find*
   #'oddp
   (export-list# '(0 2 11 4 5)))
 
-(list-find-index* 
-  #'oddp 
+(list-find-index*
+  #'oddp
   (export-list# '(0 2 11 4 5)))
 
-(list-filter* 
- (lambda (x) 
-   (or (evenp x) (< 4 x))) 
+(list-filter*
+ (lambda (x)
+   (or (evenp x) (< 4 x)))
   (export-list# '(1 2 3 4 5)))
 
-(list-map* 
-  (lambda (x) (* 10 x)) 
+(list-map*
+  (lambda (x) (* 10 x))
   (export-list# '(1 2 3 4 5)))
 
-(list-join-map* 
+(list-join-map*
  (lambda (x) (cond
               ((oddp x) (export-list# `(,x)))
-              (t        (export-list# `(,x ,x))))) 
+              (t        (export-list# `(,x ,x)))))
   (export-list# '(1 2 3 4 5)))
 
 
@@ -197,8 +208,7 @@
 (setf x (set-dadd (random 20) x))
 (setf x (set-dremove (random 20) x))
 (setf y (set-copy x))
-(set-destroy)
-(cl:print x)
+(destroy x)
 
 (set-size x)
 (set-is-empty x)
@@ -224,25 +234,23 @@
 (setf x (map-dadd "name" "hans" x))
 (setf x (map-dadd "name" "sven" x))   ; add does not overwrite equals
 (setf x (map-dset "name" "sven" x))   ; set does
-(setf x (map-dadd "skills" 
-                  (list-cons 1 (list-empty)) x))
+(setf x (map-dadd "skills"
+                  (list-single 1) x))
+(setf x (map-add-entry 
+         (pair-create "surname" 
+                      "höglund") x))
 (setf x (map-remove "name" x))        ; remove removes if present, otherwise does nothing
 (setf x (map-remove "skills" x))
 (setf y (map-copy x))
-(map-destroy x)
-(cl:print x)
+(destroy x)
 
 (map-size x)
 (map-is-empty x)
 (map-is-single x)
 (from-pointer 'string (map-get "name" x))
 (from-pointer 'list (map-get "skills" x))
-(setf x (map-add-entry (pair-create "surname" "höglund") x))
-(setf x (map-remove-entry (pair-create "surname" "höglund") x))
 
 (map-has-key "name" x)
-; TODO (map-has-elem "hans" x)
-; TODO (map-has-entry (pair-create "surname" "höglund") x)
 
 (map-is-submap-of x y)
 (map-is-proper-submap-of x y)
@@ -259,25 +267,24 @@
 
 (setf x (buffer-create 1024))
 (setf x (buffer-resize 2048 x))
+(destroy x)
+
 (buffer-size x)
+
 (buffer-get x 1)
 (buffer-set x 1 10)
+
 (dotimes (i 1024)
   (buffer-set x i (mod i 256)))
 (dotimes (i 1024)
   (buffer-set x i 0))
-(cl:print x)
-(buffer-destroy x)
 
 
+
+; TODO
 (setf x (buffer-read-audio "/Users/hans/Desktop/test.wav"))
 (setf x (buffer-read-audio "/Users/hans/Desktop/Passager.wav"))
 (error-check x)
-
-(error-message (to-error x))
-(error-severity (to-error x))
-(error-origin (to-error x))
-(error-log nil (to-error x))
 
 (defun safe-buffer-read-audio (path)
   (setf res (buffer-read-audio path))
@@ -300,6 +307,8 @@
 (setf x (midi-create-simple #x9 60 127))
 (setf x (midi-create-sysex (buffer-create 1024)))
 (setf y (midi-copy x))
+(destroy x)
+
 (midi-is-simple x)
 (midi-is-sysex x)
 (midi-status x)
@@ -307,7 +316,6 @@
 (midi-simple-data x)
 (pair-fst (midi-simple-data x))
 (midi-sysex-data x)
-(midi-destroy x)
 
 ; TODO auto-convert expressions like this
 (:note-on 60 127)
@@ -322,21 +330,35 @@
 (greater-than (time :minutes 1) (time :seconds 59))
 (greater-than (time :minutes 1) (time :seconds 61))
 
+(setf x (time :days 7))
+(setf x (time :hours 1 :minutes 1 :seconds 2))
+(setf x (time :seconds 3662))
 (setf x (time :minutes 4 :seconds 1/5))
 (setf x (time :minutes 4 :seconds 33.5))
+(setf x (time :milliseconds 5512))
+(setf x (time :nanoseconds 1341405))
 (setf y (time-copy x))
 (setf x (from-pointer 'time (add x y)))
+(destroy x)
+
 (time-days x)
 (time-hours x)
 (time-minutes x)
 (time-seconds x)
 (time-divisions x)
+
 (time-to-iso x)
-(equal x y)
-(destroy x)
 (from-pointer 'time (add x y))
 
-(setf x (time-time (time-get-system-prec-clock)))
+
+; ---------------------------------------------------------------------------------------------------
+
+; Clocks
+
+(setf z (time-get-system-prec-clock))
+(setf x (time-time z))
+(setf x (time-ticks z))
+(setf x (time-tick-rate z))
 
 
 
@@ -344,7 +366,7 @@
 
 ; Types
 
-; Type expressions
+; Type expressions, auto-converted to type
 (setf x nil)
 (setf x :unit)
 (setf x :i8)
@@ -360,10 +382,17 @@
 (setf x '(:frame :f32))
 (setf x '(:vector (:pair :i8 :i32) 24))
 (setf x '(:vector :f32 1024))
+
+; We can force conversion for nicer printing
+(setf x (to-type :unit))
+(setf x (to-type '(:pair :i8 :i8)))
+(setf x (to-type '(:vector (:pair :i8 :i32) 24)))
+
 (type-is-simple x)
 (type-is-pair x)
 (type-is-vector x)
 (type-is-frame x)
+
 (type-size-of 256 x)
 (type-offset-of 256 x)
 (type-align-of x)
@@ -374,9 +403,6 @@
 (setf x (type-repeat 0 :f32)) ; ()
 (type-channels x)
 
-; We can also force conversion for nice printing
-(setf x (to-type :unit))
-(setf x (to-type '(:pair :i8 :i8)))
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -578,37 +604,21 @@
     (cl:print x)))
 
 
+; ---------------------------------------------------------------------------------------------------
 
-(setf sc (scheduler-create 
-  (time-get-system-prec-clock)))
-(scheduler-schedule sc send-mouse-down-x)
-(scheduler-schedule sc write-mouse-down-x)
-(scheduler-execute sc)
-(scheduler-loop-for (time :seconds 10) sc)
 
-(defun run-event (event)
-  (let* ((scheduler 
-          (scheduler-create 
-           (time-get-system-prec-clock))))
-    (audioengine-log-info "Running event")
-    (scheduler-schedule scheduler 
-                        (system-event-write-log event))
-    (scheduler-loop-for (time :seconds 10) scheduler)
-    ; later...
-    (destroy scheduler)
-    (audioengine-log-info "Stopped running event")))
 
 ; ---------------------------------------------------------------------------------------------------
 
 ; Events and schedulers
 
 (setf x (event-never))
-(setf x (event-later 
-         (time :seconds (+ 1 1/3)) 
+(setf x (event-later
+         (time :seconds (+ 1 1/3))
          48))
 
-(setf x (event-merge 
-         (event-now 48) 
+(setf x (event-merge
+         (event-now 48)
          (event-now 60)))
 
 (run-event x)
@@ -624,27 +634,38 @@
 (setf mouse-down-x (event-map* 'get-mouse-x-int mouse-down))
 (setf mouse-move (system-event-mouse-move))
 (setf mouse-move-x (event-map* 'get-mouse-x-int mouse-move))
+(setf key-down
+ (event-map*
+  (lambda (xs)
+    (+ (- (list-index 1 (from-pointer 'list xs)) 97) 48))
+  (system-event-key-down)))
 
-(setf send-mouse-down-x 
-  (event-send r 0 
-    (event-map* 'to-midi mouse-down-x)))
-
-(setf write-mouse-down-x 
-  (system-event-write-log 
-    (event-map* 'to-midi mouse-down-x)))
+(run-event key-down)
 
 (run-event
  (event-merge
-  (event-send (to-receiver z) 0 
-              (event-map* 'to-midi mouse-down-x))
   (event-send (to-receiver z) 0
-              (event-map* (lambda (x) 
-                            (midi-create-simple #xb0 7 x)) 
-                          (input-slider :title "Volume"))))) 
+              (event-map* (lambda (x)
+                            (midi-create-simple
+                             #x90 x 100))
+                          key-down))
+  (event-send (to-receiver z) 0
+              (event-map* (lambda (x)
+                            (midi-create-simple #xb0 7 (round (/ 100 (* 127 x)))))
+                          (input-slider :title "Volume")))))
 
 
-
-
+(defun run-event (event)
+  (let* ((scheduler
+          (scheduler-create
+           (time-get-system-prec-clock))))
+    (audioengine-log-info "Running event")
+    (scheduler-schedule scheduler
+                        (system-event-write-log event))
+    (scheduler-loop-for (time :seconds 10) scheduler)
+    ; later...
+    (destroy scheduler)
+    (audioengine-log-info "Stopped running event")))
 
 
 ; Event receiving values from an input slider
@@ -655,8 +676,8 @@
 (defun input-slider (&key (title "Input"))
   (let* ((chan 0)
          (disp (message-create-dispatcher))               ; Shared dispatcher
-         (handler (lambda (interface value gesture) 
-                    (message-send 
+         (handler (lambda (interface value gesture)
+                    (message-send
                         (to-receiver disp) chan value)))  ; The interface sends to disp/chan
          (class (capi:define-interface simple-slider ()
                   ()
@@ -664,39 +685,14 @@
                    (slider capi:slider
                            :tick-frequency 10
                            :callback handler))))
-         (interface (capi:display 
+         (interface (capi:display
                      (make-instance 'simple-slider
                                     :title title
                                     :best-width 500))))
     (event-receive (to-sender disp) chan)))               ; The event receives from disp/chan
 
-
 (run-event (input-slider :title "Foo"))
 
-
-
-
-
-
-
-
-
-
-
-(capi:define-interface simple-slider ()
-  ()
-  (:panes
-   (slider capi:slider
-           :tick-frequency 10
-           :callback (lambda (i p x) (cl:print (cl:list i p x)))))
-;  (:best-wid
-
-)
-
-(setf i (capi:display 
-         (make-instance 'simple-slider
-                        :title "Input"
-                        :best-width 500)))
 (setf (capi:range-slug-start (slot-value i 'slider)) (random 100))
 
 ; ---------------------------------------------------------------------------------------------------
@@ -746,7 +742,6 @@
 (error-log nil (to-error x))
 (error-message (to-error s))
 (device-midi-end-session s)
-(cl:print s)
 
 (device-midi-all s)
 (setf x (from-pointer 'device-midi (nth 6 (import-list# (device-midi-all s)))))
@@ -758,7 +753,6 @@
 (device-midi-has-input x)
 (device-midi-has-output x)
 
-; TODO never returns if calling capi in callback
 (defcallback midi-status-changed ptr ((x ptr))
   (declare (ignore x))
 ;  (capi:display-message "Midi setup changed")
@@ -769,7 +763,6 @@
 (device-midi-close-stream z) ; FIXME segfault
 
 (message-send (to-receiver z) 0 (midi-create-simple #x90 (+ 48 (random 12)) 120))
-
 
 
 
@@ -792,30 +785,8 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Error
-
-; check
-; error-message
-; error-module
-
-; ---------------------------------------------------------------------------------------------------
-
-; Priority queue
-
-(setf x (priorityqueue-empty))
-(priorityqueue-insert (random 1000) x)
-(priorityqueue-peek x)
-(priorityqueue-pop x)
-
-; ---------------------------------------------------------------------------------------------------
-
 ; Plotting
-
-(cffi:defcallback plot-cb ptr ((c ptr))
-  (cl:print "Printing"))
-
-(plot-show (callback plot-cb) nil)
-
+; TODO
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -823,21 +794,22 @@
 
 (setf x (atomic-create))
 (setf y (atomic-copy x))
+(destroy x)
+
 (atomic-exchange x 0 1)      ; FIXME
 (atomic-exchange x 1 0)
 (atomic-get x)
 (atomic-set x 1)
 (atomic-add x 1)
 ; (atomic-modify (lambda (x) x) x)
-(atomic-destroy x)
 
 (setf x (atomic-queue-create))
-(atomic-queue-destroy x)
+(destroy x)
 (atomic-queue-write x (random 20))
 (atomic-queue-read x)               ; FIXME <ptr 0> should be nil
 
 (setf x (atomic-stack-create))
-(atomic-stack-destroy x)
+(destroy x)
 (atomic-stack-write x (random 20))
 (atomic-stack-read x)
 
@@ -852,24 +824,22 @@
   (audioengine-log-info (string-show (equal (thread-current) (thread-main))))
   (audioengine-log-info (string-show (thread-current)))
   )
-(equal (thread-current) (thread-main))
-(audioengine-initialize)
 
 (setf x (thread-create (callback thread-action) nil))
+(thread-main)
+(thread-current)
+(equal (thread-current) (thread-main))
 (thread-sleep 3000)
 (thread-join x)
 (thread-detach x)
-(thread-main)
-(thread-current)
-; thread-create-mutex
-; thread-destroy-mutex
-; thread-lock
-; thread-try-lock
-; thread-unlock
 
-(thread-do
-  ; actions
-  )
+(setf x (thread-create-mutex))
+(destroy x)
+(thread-lock x)
+(thread-try-lock x)
+(thread-unlock x)
+
+; TODO
 (thread-with-lock :blocking nil
   )
 
@@ -897,8 +867,10 @@
 (destroy            x)
 (string-show        x)
 (string-to-string   x)
-(string-to-json     (export-list# '(1 2 3)))
-(string-from-json   "({foo:1, bar:2})")
+(string-to-json     x)
+(from-pointer 
+ 'map 
+ (string-from-json "{\"foo\":null, \"bar\":[1,2,3]}"))
 
 (equal              0 0)
 (equal              0 1)
