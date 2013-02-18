@@ -61,6 +61,7 @@
 (setf x (ratio-create 1 2))
 (setf y (ratio-create 278 12))
 (ratio-num x)
+
 (ratio-denom x)
 (ratio-add x y)
 (ratio-subtract x y)
@@ -122,9 +123,9 @@
 
 (setf x (list-empty))
 (setf x (list-single 0))
-(setf x (list-cons 1 x))
-(setf x (list-cons (random 20) x))
-(setf x (list-tail x))
+(setf x (list-dcons 1 x))
+(setf x (list-dcons (random 20) x))
+(setf x (list-dtail x))
 (setf y (list-copy x))
 (list-is-empty x)
 (list-is-single x)
@@ -151,15 +152,48 @@
 ; (list-filter (lambda (x) t) x)
 ; (list-map (lambda (x) (+ 1 x)) x)
 ; (list-fold-left (lambda (x y) (+ x y) nil 0 x)
-
-
-(list-concat (list-empty))
-(list-concat (list-single (list-single 1)))
-
+(list-join (list-empty))
+(list-join (list-single (list-single 1)))
 (list-single (list-single 1))
 
 (cl:print x)
 (list-destroy x)
+
+(setf x (export-list# '(1 2 3)))
+
+(defcallback ap1 ptr ((f ptr) (x ptr))
+  (funcall (int-to-func# f) x))
+(defcallback app1 :boolean ((f ptr) (x ptr))
+  (funcall (int-to-func# f) x))
+
+(list-map (callback ap1) (func-to-int# (lambda (x) (+ 100 x))) x)
+(list-filter (callback app1) (func-to-int# (lambda (x) (oddp x))) x)
+
+
+(defvar *funcs#* (make-hash-table))
+;(hash-table-count *funcs*)
+
+(defun func-to-int# (f)
+   (let ((n (hash-table-count *funcs#*)))
+     (setf (gethash n *funcs#*) f)
+     n))
+
+(defun int-to-func# (n)
+  (let ((f (gethash n *funcs#*)))
+    (if f f (cl:error "Uknown func in INT-TO-FUNC"))))
+
+(func-to-int# (lambda (x) x))
+(funcall (int-to-func# 0) 123)
+
+
+(defcallback odd :boolean ((c ptr) (x ptr))
+  (declare (ignore c))
+  (oddp x))
+(list-filter (callback odd) 0 (export-list# '(1 2 3 4 5 7 8 9)))
+
+(funcall (function (lambda (x) x)) 11)
+
+(oddp 2)
 
 ; (export-list# (cl:list 1 2 (export-list# (cl:list 1 3 4))))
 ; (import-list# (list-cons 1 (list-cons 2 (list-single 3))))
@@ -170,9 +204,9 @@
 
 (setf x (set-empty))
 (setf x (set-single 1))
-(setf x (set-add (random 20) x))
-(setf x (set-remove (random 20) x))
-(setf y (set-copy x))
+(setf x (set-dadd (random 20) x))
+(setf x (set-dremove (random 20) x))
+(setf y (set-dcopy x))
 (set-size x)
 (set-is-empty x)
 (set-is-single x)
@@ -195,10 +229,11 @@
 ; Map
 
 (setf x (map-empty))
-(setf x (map-add "name" "hans" x))
-(setf x (map-add "name" "sven" x))
-(setf x (map-set "name" "sven" x))
-(setf x (map-add "skills" (list-cons 1 (list-empty)) x))
+(setf x (map-dadd "name" "hans" x))
+(setf x (map-dadd "name" "sven" x))
+(setf x (map-dset "name" "sven" x))
+(setf x (map-dadd "skills" (list-cons 1 (list-empty)) x))
+; FIXME dremove?
 (setf x (map-remove "name" x))
 (setf x (map-remove "skills" x))
 ; (setf x (map-remove (random 20) x))
@@ -245,6 +280,7 @@
 (setf x (buffer-read-audio "/Users/hans/Desktop/test.wav"))
 (setf x (buffer-read-audio "/Users/hans/Desktop/Passager.wav"))
 (error-check x)
+
 (error-message (to-error x))
 (error-severity (to-error x))
 (error-origin (to-error x))
@@ -280,13 +316,36 @@
 (midi-sysex-data x)
 (midi-destroy x)
 
+; TODO auto-convert expressions like this
+(:note-on 60 127)
+(:note-off 60 127)
+(:control :volume 128)
+
 ; ---------------------------------------------------------------------------------------------------
 
 ; Time
 
-; TODO macro such as (make-time 2 :hours 3 :minutes)
+(defun time (&key days hours minutes seconds milliseconds nanoseconds)
+  (let* (
+        (zt              (time-create 0 0 0 0))
+        (dt  (if days    (time-create days 0 0 0) nil))
+        (ht  (if hours   (time-create 0 hours 0 0) nil))
+        (mt  (if minutes (time-create 0 0 minutes 0) nil))
+        (st  (if seconds (time-create 0 0 0 (rational seconds)) nil))
+        (mst (if milliseconds (time-create 0 0 0 (/ (rational milliseconds) 1000)) nil))
+        (nst (if nanoseconds (time-create 0 0 0 (/ (rational nanoseconds) 1000000)) nil))
+        (exprs  (remove nil (cl:list dt ht mt st mst nst)))
+        )
+   (reduce (lambda (x y) (from-pointer 'time (add x y))) exprs :initial-value zt)))
+(defun sec (x) (time :seconds x))
+(defun millis  (x) (time :milliseconds x))
 
-(setf x (time-create 0 0 4 (rational 33.5))) ; days hours minutes seconds divs
+(time :minutes 1 :seconds 1/2)
+(greater-than (time :minutes 1) (time :seconds 59))
+(greater-than (time :minutes 1) (time :seconds 61))
+
+(setf x (time :minutes 4 :seconds 1/5))
+(setf x (time :minutes 4 :seconds 33.5))
 (setf y (time-copy x))
 (setf x (from-pointer 'time (add x y)))
 (time-days x)
@@ -299,12 +358,15 @@
 (destroy x)
 (from-pointer 'time (add x y))
 
+(setf x (time-time (time-get-system-prec-clock)))
+
+
 
 ; ---------------------------------------------------------------------------------------------------
 
 ; Types
 
-; These expressions auto-convert to types
+; Type expressions
 (setf x nil)
 (setf x :unit)
 (setf x :i8)
@@ -324,21 +386,19 @@
 (type-is-pair x)
 (type-is-vector x)
 (type-is-frame x)
-(type-channels x)
 (type-size-of 256 x)
 (type-offset-of 256 x)
 (type-align-of x)
 
 ; Multichannel
-(setf x (type-repeat 4 x))
+(setf x (type-repeat 8 :f32)) ; (f32,...)
+(setf x (type-repeat 1 :f32)) ; f32
+(setf x (type-repeat 0 :f32)) ; ()
+(type-channels x)
 
 ; We can also force conversion for nice printing
 (setf x (make-type :unit))
 (setf x (make-type '(:pair :i8 :i8)))
-(setf x (make-type (make-type '(:pair :i8 :i8))))
-
-; FIXME this should never return #<Pointer to VOID>
-; That works but is confusing
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -346,9 +406,11 @@
 (defcallback add-i8 :char ((c ptr) (x :char))
   (declare (ignore c))
   (+ x 1))
+
 (defcallback add-f32 :float ((c ptr) (x :float))
   (declare (ignore c))
   (+ x 1))
+
 (defcallback add-i8-i8 :char ((c ptr) (x :float) (y :float))
   (declare (ignore c))
   (+ x y))
@@ -522,26 +584,57 @@
 ; ---------------------------------------------------------------------------------------------------
 
 ; Message stuff
+(setf x (message-create-dispatcher))
+(setf s (to-sender x))
+(setf r (to-reveiver x))
 
-(message-send)
-(message-add-receiver)
-(message-remove-receiver)
-(message-dispatch)
 
-; Move these to dispatcher module?
+(message-send r 0 (random 20))
+(message-send r 0 123/456)
+(message-send r 0 (export-list# '(1 2 3)))
 
-(setf x (message-simple))
-(setf x (message-buffered))
-(setf x (message-non-blocking))
+; TODO dynamic import here
+(progn
+  (message-sync s)
+  (dolist (x (import-list# (message-receive s 0)))
+    (cl:print x)))
+
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Scheduler
+; Events and schedulers
 
-(setf x (scheduler-create))
-(scheduler-destroy x)
-; (scheduler-schedule x (lambda (x) ))
-(scheduler-execute x)
+(setf x (event-never))
+(setf x (event-merge (event-now 48) (event-now 60)))
+(setf x (event-later (millis 5000) 48))
+
+(defcallback to-midi midi ((c ptr) (v ptr))
+  (declare (ignore c))
+  (midi-create-simple #x90 (mod v 128) 120))
+
+(mod 7 4)
+; (setf x (event-map (callback to-midi) 0 x))
+
+(defcallback get-mouse-x-int ptr ((c ptr) (v ptr))
+  (declare (ignore c))
+  (round (pair-fst (from-pointer 'pair v))))
+
+(setf x (system-event-mouse-move))
+(setf x (event-map (callback get-mouse-x-int) 0 x))
+
+(setf y (event-send r 0 (event-map (callback to-midi) 0 x)))
+(setf z (system-event-write-log x))
+
+(setf sc (scheduler-create (time-get-system-prec-clock)))
+(scheduler-schedule sc y)
+(scheduler-schedule sc z)
+(scheduler-execute sc)
+; (scheduler-loop sc) ; careful!
+(scheduler-loop-for (time :seconds 10) sc)
+
+
+
+
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -552,12 +645,10 @@
 (error-log nil (to-error s))
 (error-message (to-error s))
 (device-audio-end-session s)
-; (device-audio-with-session)
 
 (device-audio-all s)
 (setf x (device-audio-default-input s))
 (setf y (device-audio-default-output s))
-; (equal x y) ; FIXME
 
 (device-audio-name x)
 (device-audio-host-name x)
@@ -568,10 +659,6 @@
 (type-channels (device-audio-input-type x))
 (type-channels (device-audio-output-type x))
 (type-size-of 1024 (device-audio-input-type x))
-
-(type-channels 
- (device-audio-output-type 
-  (from-pointer 'device-audio (list-head (device-audio-all s)))))
 
 ; Check for new devices
 (defvar *status* 0)
@@ -585,8 +672,6 @@
 (setf p (processor-identity '(:pair (:frame :f32) (:frame :f32))))
 (setf z (device-audio-open-stream x p y))
 (device-audio-close-stream z)
-; (device-audio-with-stream)
-
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -597,12 +682,11 @@
 (error-log nil (to-error x))
 (error-message (to-error s))
 (device-midi-end-session s)
-; (device-midi-with-session)
 
 (device-midi-all s)
+(setf x (from-pointer 'device-midi (nth 6 (import-list# (device-midi-all s)))))
 (setf x (device-midi-default-input s))
 (setf y (device-midi-default-output s))
-; (equal x y) ; FIXME
 
 (device-midi-name x)
 (device-midi-host-name x)
@@ -618,13 +702,15 @@
   (audioengine-log-info "Midi setup changed"))
 (device-midi-set-status-callback (callback midi-status-changed) nil s)
 
+; TODO
+(device-midi-watch-session s ()
+  (incf *midi-status* 1)
+  (audioengine-log-info "Midi setup changed"))
+
 (setf z (device-midi-open-stream x))
-(cl:print z)
+(device-midi-close-stream z) ; FIXME segfault
 
-(message-send z 0 (midi-create-simple #x9 60 127))
-
-(device-midi-close-stream z)
-; (device-midi-with-stream)
+(message-send (to-receiver z) 0 (midi-create-simple #x90 (+ 48 (random 12)) 120))
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -720,11 +806,12 @@
 ; thread-lock
 ; thread-try-lock
 ; thread-unlock
-; thread-create-condition
-; thread-destroy-condition
-; thread-wait-for
-; thread-notify
-; thread-notify-all
+
+(thread-do
+  ; actions
+  )
+(thread-with-lock :blocking nil  
+  )
 
 
 
@@ -749,6 +836,7 @@
 (copy               x)
 (destroy            x)
 (string-show        x)
+(string-to-string   x)
 (string-to-json     (export-list# '(1 2 3)))
 (string-from-json   "({foo:1, bar:2})")
 
