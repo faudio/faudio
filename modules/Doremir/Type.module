@@ -43,6 +43,7 @@ module Doremir.Type
     import Doremir.Pair;
 
     type Frames = Size;
+    
     type Simple = enum {
         UnitType, 
         I8Type, 
@@ -56,20 +57,23 @@ module Doremir.Type
 
     type Type = opaque;
     
-    simple : Simple -> Type;    
-    pair : (Type, Type) -> Type;
-    vector : (Type, Size) -> Type;
-    frame : Type -> Type;
-    copy : Type -> Type;
-    destroy : Type -> Void;
-    
-    repeat : (Int,Type) -> Type;
-    channels : Type -> Int;
+    // Constructors
+    simple    : Simple -> Type;    
+    pair      : (Type, Type) -> Type;
+    vector    : (Type, Size) -> Type;
+    frame     : Type -> Type;
+    copy      : Type -> Type;
+    destroy   : Type -> Void;
 
-    isSimple : Type -> Bool;
-    isPair : Type -> Bool;
-    isVector : Type -> Bool;
-    isFrame : Type -> Bool;
+    // Special constructors
+    repeat    : (Int,Type) -> Type;
+
+    // Predicates and introspection
+    isSimple  : Type -> Bool;
+    isPair    : Type -> Bool;
+    isVector  : Type -> Bool;
+    isFrame   : Type -> Bool;
+    channels  : Type -> Int;
 
     getSimple       : Type -> Simple;
     getPairFst      : Type -> Type;
@@ -82,3 +86,4 @@ module Doremir.Type
     offsetOf : (Frames, Type) -> Size;
     alignOf  : Type -> Size;
 }
+

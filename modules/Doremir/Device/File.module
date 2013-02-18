@@ -18,3 +18,4 @@ module Doremir.Device.File
 
     run : (File, Processor, File) -> Result;
 }
+

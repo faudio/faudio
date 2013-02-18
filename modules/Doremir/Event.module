@@ -68,7 +68,5 @@ module Doremir.Event
     values    : (Time,Time,Event) -> List; // [Ptr]
     hasValues : (Time,Time,Event) -> Bool; // may be optimized
     hasMore   : (Time,Event) -> Bool;
-
 }
-
 

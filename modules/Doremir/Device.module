@@ -17,3 +17,4 @@ module Doremir.Device
     type File = opaque;
     type Buffer = opaque;
 }
+

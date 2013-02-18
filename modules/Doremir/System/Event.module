@@ -49,6 +49,5 @@ module Doremir.System.Event
     // writeFile     : (FilePath, Event)  -> Event;        // Event String -> Event ()
     // receiveFile   : FilePath -> Sender;                 // Sender String
     // sendFile      : FilePath -> Receiver;               // Receiver String
-
 }
 

@@ -9,6 +9,7 @@
     
     @warning
         Not fully implemented.
+        
 
     @par Literals
     - `atomic_ring_buffer(size)` 

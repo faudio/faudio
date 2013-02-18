@@ -69,3 +69,4 @@ module Doremir.Graph
     fromList         : List -> Graph;   // [(e,(n,n))]
     toList           : Graph -> List;   // [(e,(n,n))]
 }
+

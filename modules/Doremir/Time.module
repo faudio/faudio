@@ -40,29 +40,34 @@ module Doremir.Time
 
     type Time = opaque;
 
-    // Standard time
+    // Constructors
     create      : (Int32, Int32, Int32, Ratio) -> Time;
     copy        : Time -> Time;
     destroy     : Time -> Void;
 
+    // Introspection
     days        : Time -> Int32;
     hours       : Time -> Int32;
     minutes     : Time -> Int32;
     seconds     : Time -> Int32;
     divisions   : Time -> Ratio;
 
-    toIso     : Time -> String;
-    toSeconds      : Time -> Int32;
-    toMilliseconds : Time -> Int32;
+    toIso           : Time -> String;
+    toSeconds       : Time -> Int32;
+    toMilliseconds  : Time -> Int32;
 
     // System and CPU time
     type System = opaque; 
-    type Cpu = opaque; 
-    fromSystem : System -> Time;
-    fromCpu : Cpu -> Time;
-    system  : () -> System;
-    cpu : () -> Cpu;
+    type Cpu    = opaque; 
 
+    fromSystem  : System -> Time;
+    fromCpu     : Cpu -> Time;
+    system      : () -> System;
+    cpu         : () -> Cpu;
+
+    
+    // Clocks
+    
     /** @interface doremir_time_clock_interface_t */
     type ClockInterface = struct {
         time     : (Ptr -> Time)*,
@@ -76,9 +81,8 @@ module Doremir.Time
     tickRate : Clock -> Double;
     ticks    : Clock -> Int64;
 
-    getSystemClock : () -> Clock;
-    getSystemPrecClock : () -> Clock;
-    getCpuClock : () -> Clock;
-
-
+    getSystemClock      : () -> Clock;
+    getSystemPrecClock  : () -> Clock;
+    getCpuClock         : () -> Clock;
 }
+

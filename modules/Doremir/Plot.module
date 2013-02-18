@@ -38,12 +38,18 @@ module Doremir.Plot
      */
     type Function = ((Ptr, Int, Double, Double) -> Double)*;
 
-    discrete  : List -> Void;                           // Int -> [(Double, Double)]
-    continous : (Function, Ptr, Nullary, Ptr) -> Void;  // Int -> Double -> Double -> Double
+    // Backend selection
+    
+    useGnu  : () -> Void;
+    useCore : () -> Void;
+
+    
+    // Plotting
+    
+    discrete      : List -> Void;                           // Int -> [(Double, Double)]
+    continous     : (Function, Ptr, Nullary, Ptr) -> Void;  // Int -> Double -> Double -> Double
 
     bufferFloat   : (Buffer, Nullary, Ptr) -> Void;
     bufferDouble  : (Buffer, Nullary, Ptr) -> Void; 
-
-    useGnu : () -> Void;
-    useCore : () -> Void;
 }
+

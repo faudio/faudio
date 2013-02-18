@@ -39,6 +39,5 @@ module Doremir.Pair
     unassoc : Pair -> Pair;
     
     toList : Pair -> List;
-    
-    // Destructive versions?
 }
+

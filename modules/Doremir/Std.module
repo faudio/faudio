@@ -30,3 +30,4 @@ module Doremir.Std
     import "C" wchar;
     import "C" wctype;
 }
+

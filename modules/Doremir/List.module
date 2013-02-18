@@ -131,6 +131,5 @@ module Doremir.List
 
     // Conversions
     toList      : List -> List;
-
 }
 

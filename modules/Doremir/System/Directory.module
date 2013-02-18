@@ -14,11 +14,12 @@ module Doremir.System.Directory
     current : () -> FilePath;
     create : FilePath -> Void;
     remove : FilePath -> Void;          
-    // isFile : FilePath -> Bool
-    // isDirectory : FilePath -> Bool
-    // enumerate : FilePath -> [FilePath]
+    // TODO isFile : FilePath -> Bool
+    // TODO isDirectory : FilePath -> Bool
+    // TODO enumerate : FilePath -> [FilePath]
 
     readFile : FilePath -> String;
     writeFile : (FilePath,String) -> Void;
     appendFile : (FilePath,String) -> Void;
 }
+

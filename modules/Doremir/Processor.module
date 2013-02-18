@@ -97,59 +97,56 @@ module Doremir.Processor
     split       : Type -> Processor;                            // a ~> (a,a)
     unary       : (Type, Type, Unary, Ptr) -> Processor;        // a ~> b
     binary      : (Type, Type, Type, Binary, Ptr) -> Processor; // (a,b) ~> c
-
     parallel    : (Processor, Processor) -> Processor;          // (a~>b), (c~>d) -> (a,c~>b,d)
     sequence    : (Processor, Processor) -> Processor;          // (a~>b), (b~>c) -> (a~>c)
     compose     : (Processor, Processor) -> Processor;          // (a~>b), (b~>c) -> (a~>c)
     loop        : Processor -> Processor;                       // (a,c~>b,d)     -> (a ~> b)
 
-
     // Math and logic
-    add                 : Type -> Processor;
-    subtract            : Type -> Processor;
-    multiply            : Type -> Processor;
-    power               : Type -> Processor;
-    divide              : Type -> Processor;
-    modulo              : Type -> Processor;
-    absolute            : Type -> Processor;
+    add         : Type -> Processor;
+    subtract    : Type -> Processor;
+    multiply    : Type -> Processor;
+    power       : Type -> Processor;
+    divide      : Type -> Processor;
+    modulo      : Type -> Processor;
+    absolute    : Type -> Processor;
+                
+    not         : Type -> Processor;
+    and         : Type -> Processor;
+    or          : Type -> Processor;
+    xor         : Type -> Processor;
+    bitNot      : Type -> Processor;
+    bitAnd      : Type -> Processor;
+    bitOr       : Type -> Processor;
+    bitXor      : Type -> Processor;
+    shiftLeft   : Type -> Processor;
+    shiftRight  : Type -> Processor;
 
-    not                 : Type -> Processor;
-    and                 : Type -> Processor;
-    or                  : Type -> Processor;
-    xor                 : Type -> Processor;
-    bitNot              : Type -> Processor;
-    bitAnd              : Type -> Processor;
-    bitOr               : Type -> Processor;
-    bitXor              : Type -> Processor;
-    shiftLeft           : Type -> Processor;
-    shiftRight          : Type -> Processor;
+    equal             : Type -> Processor;
+    lessThan          : Type -> Processor;
+    greaterThan       : Type -> Processor;
+    lessThanEqual     : Type -> Processor;
+    greaterThanEqual  : Type -> Processor;
 
-    equal               : Type -> Processor;
-    lessThan            : Type -> Processor;
-    greaterThan         : Type -> Processor;
-    lessThanEqual       : Type -> Processor;
-    greaterThanEqual    : Type -> Processor;
-
-    acos                : Type -> Processor;
-    asin                : Type -> Processor;
-    atan                : Type -> Processor;
-    cos                 : Type -> Processor;
-    sin                 : Type -> Processor;
-    tan                 : Type -> Processor;
-    exp                 : Type -> Processor;
-    log                 : Type -> Processor;
-    log10               : Type -> Processor;
-    pow                 : Type -> Processor;
-    sqrt                : Type -> Processor;
-    abs                 : Type -> Processor;
-    min                 : Type -> Processor;
-    max                 : Type -> Processor;
-    fmod                : Type -> Processor;
-    remainder           : Type -> Processor;
-    floor               : Type -> Processor;
-    ceil                : Type -> Processor;
-    rint                : Type -> Processor;
-
+    acos    : Type -> Processor;
+    asin    : Type -> Processor;
+    atan    : Type -> Processor;
+    cos     : Type -> Processor;
+    sin     : Type -> Processor;
+    tan     : Type -> Processor;
+    exp     : Type -> Processor;
+    log     : Type -> Processor;
+    log10   : Type -> Processor;
+    pow     : Type -> Processor;
+    sqrt    : Type -> Processor;
+    abs     : Type -> Processor;
+    min     : Type -> Processor;
+    max     : Type -> Processor;
+    fmod    : Type -> Processor;
+    floor   : Type -> Processor;
+    ceil    : Type -> Processor;
+    rint    : Type -> Processor;
+                
     // left        : Type -> Processor;                          // (a,a) ~> a
     // right       : Type -> Processor;                          // (a,b) ~> b
     // swap        : Type -> Processor;                          // (a,b)     ~> (b,a)
@@ -157,5 +154,5 @@ module Doremir.Processor
     // unassoc     : Type -> Processor;                          // ((a,b),c) ~> (a,(b,c))
     // first       : Processor -> Processor;                     // (a~>b)         -> (a,c ~> b,c)
     // second      : Processor -> Processor;                     // (a~>b)         -> (c,a ~> c,b)
-
 }
+

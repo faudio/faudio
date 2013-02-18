@@ -54,11 +54,13 @@ module Doremir.Buffer
     setFloat  : (Buffer, Size, Float) -> Void;
     setDouble : (Buffer, Size, Double) -> Void;    
 
-    readRaw : FilePath -> Buffer;
-    writeRaw : (FilePath,Buffer) -> Void;
-    
-    readAudio : FilePath -> Pair; // (Type,Buffer)
-    writeAudio : (FilePath,Type,Buffer) -> Void;
+
+    // Input / Output
+    readRaw     : FilePath -> Buffer;
+    writeRaw    : (FilePath,Buffer) -> Void;    
+    readAudio   : FilePath -> Pair; // (Type,Buffer)
+    writeAudio  : (FilePath,Type,Buffer) -> Void;
 
     unsafeAddress : Buffer -> Void*;
 }
+

@@ -17,3 +17,4 @@ module Doremir.Device.Buffer
 
     run : (Buffer, Processor, Buffer) -> Result;
 }
+

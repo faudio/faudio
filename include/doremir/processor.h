@@ -111,7 +111,6 @@ doremir_processor_t doremir_processor_abs(doremir_type_t);
 doremir_processor_t doremir_processor_min(doremir_type_t);
 doremir_processor_t doremir_processor_max(doremir_type_t);
 doremir_processor_t doremir_processor_fmod(doremir_type_t);
-doremir_processor_t doremir_processor_remainder(doremir_type_t);
 doremir_processor_t doremir_processor_floor(doremir_type_t);
 doremir_processor_t doremir_processor_ceil(doremir_type_t);
 doremir_processor_t doremir_processor_rint(doremir_type_t);

@@ -7,34 +7,34 @@
     computation is represented by a *stream*. Access to the current device setups
     is provided by *sessions*.
 
-    @par Sessions implement 
+    @par Sessions implement
     - doremir_equal_t
     - doremir_destroy_t
     - doremir_string_show_t
 
-    @par Devices implement 
+    @par Devices implement
     - doremir_equal_t
     - doremir_string_show_t
-    
-    Devices implement [Equal](@ref doremir_equal_t) and [Show](@ref doremir_string_show_t), 
+
+    Devices implement [Equal](@ref doremir_equal_t) and [Show](@ref doremir_string_show_t),
     but now destroy, as they are always managed by the underlying session.
-               
-    @par Streams implement 
+
+    @par Streams implement
     - doremir_time_clock_t
     - doremir_message_sender_t
     - doremir_message_receiver_t
     - doremir_destroy_t
-    - doremir_string_show_t   
-    
+    - doremir_string_show_t
+
     Stream implements [Clock](@ref doremir_time_clock_t) by counting the number
     of processed samples. Precision is usually limited to the current frame size.
-    
-    Stream also implements [SenderInterface](@ref doremir_message_sender_t) and 
+
+    Stream also implements [SenderInterface](@ref doremir_message_sender_t) and
     [ReceiverInterface](@ref doremir_message_sender_t), dispatching messages to the underlying
     processor network. The address of a processor can be obtained by @ref doremir_processor_address.
-    
-    
-    @see 
+
+
+    @see
     - @ref Devices
  */
 module Doremir.Device.Audio
@@ -54,7 +54,7 @@ module Doremir.Device.Audio
     beginSession : () -> Session;
     endSession : Session -> Void;
     withSession : (
-        SessionCallback, Ptr, 
+        SessionCallback, Ptr,
         Callback, Ptr) -> Void;
 
     all : Session -> List;      // [Audio]
@@ -73,8 +73,8 @@ module Doremir.Device.Audio
     openStream : (Audio, Processor, Audio) -> Stream;
     closeStream : Stream -> Void;
     withStream : (
-        Audio, Processor, Audio, 
-        StreamCallback, Ptr, 
+        Audio, Processor, Audio,
+        StreamCallback, Ptr,
         Callback, Ptr
         ) -> Void;
 

@@ -70,10 +70,9 @@ module Doremir.Map
     // Functor
     map              : (Unary, Ptr, Map) -> Map;
 
-
     // Conversions   
     fromPair         : Pair -> Map;
     fromList         : List -> Map;
     toList           : Map -> List;
-
 }
+

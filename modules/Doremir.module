@@ -1,28 +1,30 @@
 
-/** 
+/**
     @addtogroup Doremir
-    
+
     Core definitions. Import @ref DoremirAudioEngine instead of this module.
-    
+
  */
 module Doremir
 {
     import Doremir.Std;
+
     import "C" Doremir.Alloc;
     import "C" Doremir.Interfaces;
-    
+
+
     // Basic types
 
     /** @typedef doremir_ptr_t
         Generic pointer type.
     */
     type Ptr = Void*;
-    
+
     // Function types
 
     /** @typedef doremir_nullary_t
-        A nullary function.                                             
-        
+        A nullary function.
+
         By convention, the first argument is a pointer to an environment that allow
         clients to close over variables in the environment.
     */
@@ -59,7 +61,7 @@ module Doremir
         clients to close over variables in the environment.
     */
     type Pred   = ((Ptr, Ptr) -> Bool)*;
-    
+
 
     // Character types
 
@@ -69,25 +71,25 @@ module Doremir
 
         @typedef doremir_char16_t
         A 16-bit character.
-        
+
         @typedef doremir_char32_t
         A 32-bit character.
      */
     type Char8  = Char;
     type Char16 = UInt16;
-    type Char32 = UInt32;    
+    type Char32 = UInt32;
 
 
     // Type predicates and conversions
-    
+
     isBool     : Ptr -> Bool;
     isInt8     : Ptr -> Bool;
     isInt16    : Ptr -> Bool;
     isInt32    : Ptr -> Bool;
     isInt64    : Ptr -> Bool;
     isFloat    : Ptr -> Bool;
-    isDouble   : Ptr -> Bool;    
-    isRef      : Ptr -> Bool;    
+    isDouble   : Ptr -> Bool;
+    isRef      : Ptr -> Bool;
 
     toBool     : Ptr -> Bool;
     toInt8     : Ptr -> Int8;
@@ -112,9 +114,10 @@ module Doremir
     fromInt64  : Int64 -> Ptr;
     fromFloat  : Float -> Ptr;
     fromDouble : Double -> Ptr;
-    
-    // Interface dispatcher
-    
+
+
+    // Interface dispatch
+
     /** @typedef doremir_id_t
         Unique identifier. Only used for interface lookup at the moment.
     */
@@ -140,22 +143,22 @@ module Doremir
     equal            : (Ptr, Ptr) -> Bool;
     notEqual         : (Ptr, Ptr) -> Bool;
 
-    /** @interface doremir_order_t 
+    /** @interface doremir_order_t
         Less-than comparison interface.
     */
     type Order  = struct {
         lessThan    : ((Ptr, Ptr) -> Bool)*,
         greaterThan : ((Ptr, Ptr) -> Bool)*
     };
-    
+
     lessThan         : (Ptr, Ptr) -> Bool;
     greaterThan      : (Ptr, Ptr) -> Bool;
     lessThanEqual    : (Ptr, Ptr) -> Bool;
     greaterThanEqual : (Ptr, Ptr) -> Bool;
     min              : (Ptr, Ptr) -> Ptr;
     max              : (Ptr, Ptr) -> Ptr;
-    
-    /** @interface doremir_number_t 
+
+    /** @interface doremir_number_t
         Arithmetic operations interface.
     */
     type Number = struct {
@@ -194,10 +197,11 @@ module Doremir
     copy    : Ptr -> Ptr;
     move    : Ptr -> Ptr;
     destroy : Ptr -> Void;
-    // deepDestroy : Ptr -> Void;
+    // TODO deepDestroy : Ptr -> Void;
 
     check   : Ptr -> Bool;
 
     print    : (Char*,Ptr) -> Void;
-    dprint   : (Char*,Ptr) -> Void;    
+    dprint   : (Char*,Ptr) -> Void;
 }
+

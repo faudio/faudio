@@ -40,16 +40,17 @@ module Doremir.Midi
     type Data    = Int;    
     type Midi    = opaque;
 
-    createSimple : (Status, Int, Int) -> Midi;
-    createSysex  : Buffer -> Midi;
-    copy         : Midi -> Midi;
-    destroy      : Midi -> Void;
+    createSimple  : (Status, Int, Int) -> Midi;
+    createSysex   : Buffer -> Midi;
+    copy          : Midi -> Midi;
+    destroy       : Midi -> Void;
 
-    status  : Midi -> Status;
-    channel : Midi -> Channel;
+    status        : Midi -> Status;
+    channel       : Midi -> Channel;
 
     isSimple      : Midi -> Bool;
     simpleData    : Midi -> Pair;
     isSysex       : Midi -> Bool;
     sysexData     : Midi -> Buffer;    
 }
+

@@ -45,5 +45,5 @@ module Doremir.Ratio
 
     normalize : Ratio -> Ratio;
     toMixed : (Ratio, Num*, Ratio*) -> Void;
-
 }
+

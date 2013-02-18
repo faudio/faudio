@@ -18,8 +18,8 @@ module Doremir.Scheduler
 
     type Scheduler = opaque;
 
-    create  : Clock -> Scheduler; // Requires Clock
-    destroy : Scheduler -> Void;
+    create   : Clock -> Scheduler; // Requires Clock
+    destroy  : Scheduler -> Void;
     
     schedule : (Scheduler, Event) -> Void;
     execute  : Scheduler -> Void;
@@ -28,3 +28,4 @@ module Doremir.Scheduler
     // Loop until finished
     // run      : Scheduler -> Void;
 }
+

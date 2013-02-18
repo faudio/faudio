@@ -31,3 +31,4 @@ module Doremir.Dynamic
 
     getType : Ptr -> TypeRepr;
 }
+

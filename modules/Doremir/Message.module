@@ -11,15 +11,15 @@
 
     Message passing is the process of delivering a *message* to an *address*. Any
     ordered type can be used as an addreses, but typically it is an objet with fast
-    equality comparison such as an integer. Message passing is captured by two 
-    interfaces: [SenderInterface](@ref doremir_message_sender_t) which provides messages, and 
-    [ReceiverInterface](@ref doremir_message_receiver_t) which accepts them. Note that the method
-    names are contrary to the interfaces: you *send* to a *receiver* and *receive*
-    from a *sender*.
+    equality comparison such as an integer. Message passing is captured by two
+    interfaces: [Sender](@ref doremir_message_sender_interface_t) which provides
+    messages, and [Receiver](@ref doremir_message_receiver_interface_t) which
+    accepts them. Note that the method names are contrary to the interfaces: you
+    *send* to a *receiver* and *receive* from a *sender*.
     
     The *dispatcher* type provides message passing accross thread boundaries:
-    it implements both [SenderInterface](@ref doremir_message_sender_t) and 
-    [ReceiverInterface](@ref doremir_message_receiver_t).
+    it implements both [Sender](@ref doremir_message_sender_interface_t) and 
+    [Receiver](@ref doremir_message_receiver_interface_t).
     
     @par Dispatcher literals
     - `dispatcher()`
@@ -107,23 +107,19 @@ module Doremir.Message
      */
     type Receiver = opaque;
 
+    send    : (Receiver, Address, Message) -> Void;
+    receive : (Sender, Address) -> List;            // [Message]
+    sync    : Sender -> Void;
+
+
+
     /** @typedef doremir_message_dispatcher_t
         A message dispatcher.
      */
     type Dispatcher = opaque;
 
-    createDispatcher : () -> Dispatcher;
+    createDispatcher         : () -> Dispatcher;
     createLockfreeDispatcher : () -> Dispatcher;
-    destroyDispatcher : Dispatcher -> Void;
-
-
-    // Request message to be sent on address
-    send : (Receiver, Address, Message) -> Void;
-
-    // Fetch all new messages
-    sync : Sender -> Void;
-    // Get fetched messages on addresses
-    receive : (Sender, Address) -> List; // [Message]
-
-
+    destroyDispatcher        : Dispatcher -> Void;
 }
+

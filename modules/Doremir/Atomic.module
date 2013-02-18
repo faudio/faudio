@@ -1,27 +1,27 @@
 
-/** 
+/**
     @addtogroup DoremirAtomic
-    
+
     An atomic reference.
 
     @par Literals
-    - `atomic()` 
+    - `atomic()`
 
-    @par Implements 
+    @par Implements
     - doremir_equal_t
     - doremir_order_t
     - doremir_copy_t
     - doremir_destroy_t
     - doremir_string_show_t
 
-    @see 
+    @see
     - [Data structures](@ref DataStructures)
  */
 module Doremir.Atomic
-{                   
+{
     import Doremir;
     import Doremir.Std;
-    
+
     type Atomic = opaque;
 
     create  : () -> Atomic;
@@ -34,6 +34,6 @@ module Doremir.Atomic
     set     : (Atomic, Ptr) -> Void;
     modify  : (Atomic, Unary, Ptr) -> Void;
 
-    // increment : (Atomic, Int32) -> Void;
+    // TODO increment : (Atomic, Int32) -> Void;
 }
 
