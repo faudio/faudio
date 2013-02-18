@@ -5,7 +5,6 @@
 # To update, use 
 #  find src -name '*'
 list(APPEND SRCS
-  parson.c
   doremir.c
   doremir/audio_engine.c
   doremir/atomic/queue.c
@@ -42,6 +41,7 @@ list(APPEND SRCS
   doremir/set.c
   doremir/string.c
   doremir/string/trex.c
+  doremir/string/parson.c
   doremir/time.c
   doremir/type.c
   )

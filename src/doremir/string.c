@@ -11,7 +11,7 @@
 #include <iconv.h>
 
 #include "string/trex.h"
-#include "../parson.h"
+#include "string/parson.h"
 
 /*
     Notes:
