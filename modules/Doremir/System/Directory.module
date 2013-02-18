@@ -9,6 +9,7 @@ module Doremir.System.Directory
 {
     import Doremir;
     import Doremir.String;
+    type FilePath = String;
 
     home : () -> FilePath;
     current : () -> FilePath;

@@ -77,6 +77,15 @@ doremir_event_t doremir_system_event_write_std(doremir_event_t event)
     return doremir_event_send(doremir_system_event_send_std(), i16(0), event);
 }
 
+/** Transforms the given event to write its values to the log.
+    @param event        An event of strings.
+    @return             An event of null values.
+ */
+doremir_event_t doremir_system_event_write_log(doremir_event_t event)
+{
+    return doremir_event_send(doremir_system_event_send_log(), i16(0), event);
+}
+
 
 // --------------------------------------------------------------------------------
 
@@ -351,3 +360,53 @@ ptr_t io_event_sink_impl(doremir_id_t interface)
         return NULL;
     }
 }
+
+// --------------------------------------------------------------------------------
+
+
+struct log_event_sink {
+    impl_t              impl;           // Implementations
+};
+
+typedef struct log_event_sink             *log_event_sink_t;
+
+ptr_t log_event_sink_impl(doremir_id_t interface);
+
+doremir_message_receiver_t doremir_system_event_send_log()
+{
+    log_event_sink_t sink = doremir_new_struct(log_event_sink);
+    sink->impl  = &log_event_sink_impl;
+    return (doremir_message_receiver_t) sink;
+}
+
+void log_event_sink_destroy(ptr_t a)
+{
+    log_event_sink_t sink = a;
+    doremir_delete(sink);
+}
+
+void log_event_sink_send(doremir_ptr_t a, doremir_message_address_t addr, doremir_message_t msg)
+{
+    // sink and addr ignored
+    inform(doremir_string_show(msg));
+}
+
+ptr_t log_event_sink_impl(doremir_id_t interface)
+{
+    static doremir_destroy_t log_event_sink_destroy_impl
+        = { log_event_sink_destroy };
+    static doremir_message_receiver_interface_t log_event_sink_message_receiver_interface_impl
+        = { log_event_sink_send };
+
+    switch (interface) {
+
+    case doremir_destroy_i:
+        return &log_event_sink_destroy_impl;
+
+    case doremir_message_receiver_interface_i:
+        return &log_event_sink_message_receiver_interface_impl;
+
+    default:
+        return NULL;
+    }
+}     

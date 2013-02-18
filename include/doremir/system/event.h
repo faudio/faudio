@@ -33,6 +33,8 @@ doremir_event_t doremir_system_event_select(doremir_list_t);
 doremir_message_sender_t doremir_system_event_receive(doremir_list_t);
 doremir_event_t doremir_system_event_write_std(doremir_event_t);
 doremir_message_receiver_t doremir_system_event_send_std();
+doremir_event_t doremir_system_event_write_log(doremir_event_t);
+doremir_message_receiver_t doremir_system_event_send_log();
 
 /** @}
     @}

@@ -39,6 +39,8 @@ module Doremir.System.Event
     // receiveStd   : Sender;                              // Sender String
     writeStd     : Event -> Event;                      // Event String -> Event ()
     sendStd      : () -> Receiver;                      // Receiver String
+    writeLog     : Event -> Event;                      // Event String -> Event ()
+    sendLog      : () -> Receiver;                      // Receiver String
 
     // readHandle    : Handle -> Event;                    // Event String
     // writeHandle   : (Handle, Event)  -> Event;          // Event String -> Event ()
