@@ -7,8 +7,12 @@
   (asdf:load-system :audio-engine))
 
 (let ((framework-name "DoReMIRAudio")
-      (framework-path (format nil "~a/audio/build/Frameworks/" (user-homedir-pathname)))
-      (log-path       (format nil "~a/Library/Logs/DoReMIRAudio.log" (user-homedir-pathname))))
+      (framework-path (format nil 
+                              "~a/audio/build/Frameworks/" 
+                              (user-homedir-pathname)))
+      (log-path       (format nil 
+                              "~a/Library/Logs/DoReMIRAudio.log" 
+                              (user-homedir-pathname))))
   (push framework-path cffi:*darwin-framework-directories*)
   (setf *foreign-lib* (cffi:load-foreign-library `(:framework ,framework-name)))
   (audioengine-set-log-file log-path)
@@ -574,45 +578,125 @@
     (cl:print x)))
 
 
+
+(setf sc (scheduler-create 
+  (time-get-system-prec-clock)))
+(scheduler-schedule sc send-mouse-down-x)
+(scheduler-schedule sc write-mouse-down-x)
+(scheduler-execute sc)
+(scheduler-loop-for (time :seconds 10) sc)
+
+(defun run-event (event)
+  (let* ((scheduler 
+          (scheduler-create 
+           (time-get-system-prec-clock))))
+    (audioengine-log-info "Running event")
+    (scheduler-schedule scheduler 
+                        (system-event-write-log event))
+    (scheduler-loop-for (time :seconds 10) scheduler)
+    ; later...
+    (destroy scheduler)
+    (audioengine-log-info "Stopped running event")))
+
 ; ---------------------------------------------------------------------------------------------------
 
 ; Events and schedulers
 
 (setf x (event-never))
-(setf x (event-merge (event-now 48) (event-now 60)))
-(setf x (event-later (millis 5000) 48))
+(setf x (event-later 
+         (time :seconds (+ 1 1/3)) 
+         48))
+
+(setf x (event-merge 
+         (event-now 48) 
+         (event-now 60)))
+
+(run-event x)
 
 (defun to-midi (x)
-;  (declare (ignore c))
   (midi-create-simple #x90 (round (* 128 (/ x 1800))) 120))
 
-(to-midi 1800.1)
-
 (defun get-mouse-x-int (v)
-;  (declare (ignore c))
   (round (pair-fst (from-pointer 'pair v))))
+
 
 (setf mouse-down (system-event-mouse-down))
 (setf mouse-down-x (event-map* 'get-mouse-x-int mouse-down))
+(setf mouse-move (system-event-mouse-move))
+(setf mouse-move-x (event-map* 'get-mouse-x-int mouse-move))
 
-(setf send-mouse-down-x (event-send r 0 (event-map* 'to-midi mouse-down-x)))
-(setf write-mouse-down-x (system-event-write-log (event-map* 'to-midi mouse-down-x)))
+(setf send-mouse-down-x 
+  (event-send r 0 
+    (event-map* 'to-midi mouse-down-x)))
 
-(setf sc (scheduler-create (time-get-system-prec-clock)))
-(scheduler-schedule sc send-mouse-down-x)
-(scheduler-schedule sc write-mouse-down-x)
-(scheduler-execute sc)
-; (scheduler-loop sc) ; careful!
-(scheduler-loop-for (time :seconds 10) sc)
+(setf write-mouse-down-x 
+  (system-event-write-log 
+    (event-map* 'to-midi mouse-down-x)))
+
+(run-event
+ (event-merge
+  (event-send (to-receiver z) 0 
+              (event-map* 'to-midi mouse-down-x))
+  (event-send (to-receiver z) 0
+              (event-map* (lambda (x) 
+                            (midi-create-simple #xb0 7 x)) 
+                          (input-slider :title "Volume"))))) 
 
 
-(capi:define-interface demo ()
+
+
+
+
+; Event receiving values from an input slider
+;
+; This is the simplest way to create an event from an interface. Usually we want to
+; use a single dispatcher and send values on separate channels.
+
+(defun input-slider (&key (title "Input"))
+  (let* ((chan 0)
+         (disp (message-create-dispatcher))               ; Shared dispatcher
+         (handler (lambda (interface value gesture) 
+                    (message-send 
+                        (to-receiver disp) chan value)))  ; The interface sends to disp/chan
+         (class (capi:define-interface simple-slider ()
+                  ()
+                  (:panes
+                   (slider capi:slider
+                           :tick-frequency 10
+                           :callback handler))))
+         (interface (capi:display 
+                     (make-instance 'simple-slider
+                                    :title title
+                                    :best-width 500))))
+    (event-receive (to-sender disp) chan)))               ; The event receives from disp/chan
+
+
+(run-event (input-slider :title "Foo"))
+
+
+
+
+
+
+
+
+
+
+
+(capi:define-interface simple-slider ()
   ()
   (:panes
-    (slider capi:slider
-      :callback (lambda (i p x) (cl:print (cl:list i p x))))))
+   (slider capi:slider
+           :tick-frequency 10
+           :callback (lambda (i p x) (cl:print (cl:list i p x)))))
+;  (:best-wid
 
-(setf i (capi:display (make-instance 'demo)))
+)
+
+(setf i (capi:display 
+         (make-instance 'simple-slider
+                        :title "Input"
+                        :best-width 500)))
 (setf (capi:range-slug-start (slot-value i 'slider)) (random 100))
 
 ; ---------------------------------------------------------------------------------------------------
