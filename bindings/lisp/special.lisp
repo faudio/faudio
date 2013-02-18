@@ -150,6 +150,14 @@
 (defun list-find-index* (f xs)
   (list-find-index (callback predcall1#) (func-to-int# f) xs))
 
+; ---------------------------------------------------------------------------------------------------
+
+(defun event-map* (f xs)   
+  (event-map (callback funcall1#) (func-to-int# f) xs)) 
+
+(defun event-filter* (f xs)
+  (event-filter (callback predcall1#) (func-to-int# f) xs))
+  
 
 ; ---------------------------------------------------------------------------------------------------
 

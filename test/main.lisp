@@ -582,26 +582,25 @@
 (setf x (event-merge (event-now 48) (event-now 60)))
 (setf x (event-later (millis 5000) 48))
 
-(defcallback to-midi midi ((c ptr) (v ptr))
-  (declare (ignore c))
-  (midi-create-simple #x90 (mod v 128) 120))
+(defun to-midi (x)
+;  (declare (ignore c))
+  (midi-create-simple #x90 (round (* 128 (/ x 1800))) 120))
 
-(mod 7 4)
-; (setf x (event-map (callback to-midi) 0 x))
+(to-midi 1800.1)
 
-(defcallback get-mouse-x-int ptr ((c ptr) (v ptr))
-  (declare (ignore c))
+(defun get-mouse-x-int (v)
+;  (declare (ignore c))
   (round (pair-fst (from-pointer 'pair v))))
 
-(setf x (system-event-mouse-move))
-(setf x (event-map (callback get-mouse-x-int) 0 x))
+(setf mouse-down (system-event-mouse-down))
+(setf mouse-down-x (event-map* 'get-mouse-x-int mouse-down))
 
-(setf y (event-send r 0 (event-map (callback to-midi) 0 x)))
-(setf z (system-event-write-log x))
+(setf send-mouse-down-x (event-send r 0 (event-map* 'to-midi mouse-down-x)))
+(setf write-mouse-down-x (system-event-write-log (event-map* 'to-midi mouse-down-x)))
 
 (setf sc (scheduler-create (time-get-system-prec-clock)))
-(scheduler-schedule sc y)
-(scheduler-schedule sc z)
+(scheduler-schedule sc send-mouse-down-x)
+(scheduler-schedule sc write-mouse-down-x)
 (scheduler-execute sc)
 ; (scheduler-loop sc) ; careful!
 (scheduler-loop-for (time :seconds 10) sc)
@@ -650,6 +649,8 @@
 (setf z (device-audio-open-stream x p y))
 (device-audio-close-stream z)
 
+; TODO unregister status callback?
+; TODO status callback does not care about sessions (work even after session becomes inactive)
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -661,6 +662,7 @@
 (error-log nil (to-error x))
 (error-message (to-error s))
 (device-midi-end-session s)
+(cl:print s)
 
 (device-midi-all s)
 (setf x (from-pointer 'device-midi (nth 6 (import-list# (device-midi-all s)))))
@@ -672,19 +674,12 @@
 (device-midi-has-input x)
 (device-midi-has-output x)
 
-; Check for new devices
-(defvar *midi-status* 0)
-(cl:print *midi-status*)
+; TODO never returns if calling capi in callback
 (defcallback midi-status-changed ptr ((x ptr))
   (declare (ignore x))
-  (incf *midi-status* 1)
+;  (capi:display-message "Midi setup changed")
   (audioengine-log-info "Midi setup changed"))
 (device-midi-set-status-callback (callback midi-status-changed) nil s)
-
-; TODO
-(device-midi-watch-session s ()
-  (incf *midi-status* 1)
-  (audioengine-log-info "Midi setup changed"))
 
 (setf z (device-midi-open-stream x))
 (device-midi-close-stream z) ; FIXME segfault
