@@ -1779,12 +1779,12 @@ void test_midi_stream()
     // Session obtained, we can now access devices
     print_midi_devices(session);
 
-    input = doremir_device_midi_default_input(session);
+    input = doremir_list_index(2, doremir_device_midi_all(session));
     // output = doremir_device_midi_default_output(session);
     output = doremir_list_index(6, doremir_device_midi_all(session));
 
     // Start streams
-    in_stream = doremir_device_midi_open_stream(input);
+    in_stream  = doremir_device_midi_open_stream(input);
     out_stream = doremir_device_midi_open_stream(output);
 
     // Handle possible errors
@@ -1814,17 +1814,21 @@ void test_midi_stream()
     //     merge_event(later(divisions(8,10), midi(0x90, 60, 80)),
     //     never()))))))));
 
-    event_t notes =
-        merge_event(doremir_event_map(apply1, to_note_on,  doremir_system_event_key_down()),
-        merge_event(doremir_event_map(apply1, to_note_off, doremir_system_event_key_up()),
-        merge_event(doremir_event_map(apply1, to_control,  doremir_system_event_mouse_move()),
-                    doremir_event_map(apply1, to_control2, doremir_system_event_mouse_move()))));
+    // event_t notes =
+    //     merge_event(doremir_event_map(apply1, to_note_on,  doremir_system_event_key_down()),
+    //     merge_event(doremir_event_map(apply1, to_note_off, doremir_system_event_key_up()),
+    //     merge_event(doremir_event_map(apply1, to_control,  doremir_system_event_mouse_move()),
+    //                 doremir_event_map(apply1, to_control2, doremir_system_event_mouse_move()))));
 
     // event_t notes2 = doremir_event_before(later(seconds(3),0), notes);
 
-    event_t sender = doremir_event_send(out_stream, i32(0), notes);
+    event_t notes   = doremir_event_receive((sender_t) in_stream, i32(0));
+    event_t sender  = doremir_event_send((receiver_t) out_stream, i32(0), notes);
+    event_t sender2 = doremir_system_event_write_std(notes);
+
     scheduler_t sched = doremir_scheduler_create(doremir_time_get_system_prec_clock());
     doremir_scheduler_schedule(sched, sender);
+    doremir_scheduler_schedule(sched, sender2);
     doremir_scheduler_loop(sched);
 
     // for (int i = 0; i < 30; ++i) {
