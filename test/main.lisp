@@ -57,11 +57,15 @@
 
 ; Error
 
+(setf x (error-create-simple 1 "An error" "From.Here"))
+(destroy x)
+
+(error-check x)
+(error-log nil (to-error x)) ; FIXME segfault
+
 (error-message (to-error x))
 (error-severity (to-error x))
 (error-origin (to-error x))
-(error-log nil (to-error x))
-
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -247,13 +251,14 @@
 (from-pointer 'list (map-get "skills" x))
 
 (map-has-key "name" x)
+(map-has-key "skills" x)
 
 (map-is-submap-of x y)
 (map-is-proper-submap-of x y)
-(map-sum x y)
-(map-product x y)
-(map-difference x y)
-(map-power x)
+;(map-union x y)
+;(map-product x y)
+;(map-difference x y)
+;(map-power x)
 
 (map-to-list x)
 
@@ -276,7 +281,6 @@
   (buffer-set x i 0))
 
 
-
 ; TODO
 (setf x (buffer-read-audio "/Users/hans/Desktop/test.wav"))
 (setf x (buffer-read-audio "/Users/hans/Desktop/Passager.wav"))
@@ -285,8 +289,10 @@
 (defun safe-buffer-read-audio (path)
   (setf res (buffer-read-audio path))
   (when (error-check x)
-    (error "error"))
+    (cl:error (error-message x)))
   res)
+
+(safe-buffer-read-audio "/Users/hans/Desktop/test.wavXX")
 
 
 ; TODO move below
@@ -306,11 +312,13 @@
 (destroy x)
 
 (midi-is-simple x)
-(midi-is-sysex x)
 (midi-status x)
 (midi-channel x)
 (midi-simple-data x)
 (pair-fst (midi-simple-data x))
+(pair-snd (midi-simple-data x))
+
+(midi-is-sysex x)
 (midi-sysex-data x)
 
 ; TODO auto-convert expressions like this
@@ -679,6 +687,10 @@
 
 ; TODO tests
 
+
+
+; ---------------------------------------------------------------------------------------------------
+; Low-level stuff
 ; ---------------------------------------------------------------------------------------------------
 
 ; Message passing
