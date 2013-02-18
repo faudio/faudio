@@ -530,7 +530,10 @@ doremir_ptr_t doremir_string_from_json(doremir_string_t string)
 // --------------------------------------------------------------------------------
 
 bool doremir_string_matches(doremir_string_t expr, doremir_string_t string)
-{
+{               
+    if (doremir_string_length(expr) <= 0)
+        return false;
+    
     for(int i = 0; i < expr->size; ++i)
     {
         if (expr->data[i] > 127)
