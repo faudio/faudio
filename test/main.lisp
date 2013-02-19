@@ -1,9 +1,33 @@
 
+#|
+    DoReMIR Audio Engine
+    Copyright (c) DoReMIR Music Research 2012-2013
+    All rights reserved.
+|#
+
+
+#|
+    Caveats:
+      - Calling a function on a destroyed object is undefined
+      - Calling (from-pointer) with the wrong type is undefined
+      - Calling a generic function on a type that does not implement a required interface is undefined
+|#
+
+(in-package :audio-engine)
+
+(defvar x nil)
+(defvar y nil)
+(defvar z nil)
+(defvar s nil)
+(defvar d nil)
+(defvar p nil)
+
 (defvar *foreign-lib*)
 
-(progn
-  (asdf:load-system :audio-engine))
+; Load Lisp bindings
+(asdf:load-system :audio-engine)
 
+; Load library and setup tests
 (let ((framework-name "DoReMIRAudio")
       (framework-path (format nil "~a/audio/build/Frameworks/" (user-homedir-pathname)))
       (log-path       (format nil "~a/Library/Logs/DoReMIRAudio.log" (user-homedir-pathname))))
@@ -13,36 +37,63 @@
   (plot-use-gnu)
   (audioengine-initialize))
 
+
+; Unload library
 (close-foreign-library *foreign-lib*)
 
-; ---------------------------------------------------------------------------------------------------
-
-; Caveats:
-;   - Calling a function on a destroyed object is undefined
-;   - Calling (from-pointer) with the wrong type is undefined
-;   - Calling a generic function on a type that does not implement a required interface is undefined
-
-
-(in-package :audio-engine)
-
-; For testing
-
-(defvar x nil)
-(defvar y nil)
-(defvar z nil)
-(defvar s nil)
-(defvar d nil)
-(defvar p nil)
 
 
 ; ---------------------------------------------------------------------------------------------------
 
-; AudioEngine
+; Doremir
+
+(equal              x y)
+(less-than          x y)
+(greater-than       x y)
+(less-than-equal    x y)
+(greater-than-equal x y)
+(min                x y)
+(max                x y)
+
+(add                x y)
+(multiply           x y)
+(subtract           x y)
+(divide             x y)
+(absolute           x)
+
+(copy               x)
+(destroy            x)
+(string-show        x)
+(string-to-string   x)
+(string-to-json     x)
+(from-pointer 
+ 'map 
+ (string-from-json "{\"foo\":null, \"bar\":[1,2,3]}"))
+
+(equal              0 0)
+(equal              0 1)
+(less-than          0 1)
+(greater-than       0 1)
+(less-than-equal    0 1)
+(greater-than-equal 0 1)
+(min                0 0)
+(max                0 1)
+(add                0 0)
+(multiply           0 1)
+(subtract           0 0)
+(divide             0 1)
+(absolute           -3)
+
+
+; ---------------------------------------------------------------------------------------------------
+
+; Doremir.AudioEngine
 
 (audioengine-initialize)
 (audioengine-terminate)
 (audioengine-set-log-file "/Users/hans/Library/Logs/DoReMIRAudio.log")
 (audioengine-set-log-std)
+
 (audioengine-log-info "What to say?")
 (audioengine-log-warning "Beware!")
 (audioengine-log-error "Rattlesnakes!")
@@ -51,7 +102,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Error
+; Doremir.Error
 
 (setf x (error-create-simple 2 "An error" "From.Here"))
 (destroy x)
@@ -66,13 +117,13 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Ratio
+; Doremir.Ratio
 
 ; Audio Engine ratios are converted to Lisp ratios and vice versa
 
 (setf x (ratio-create 1 2))
 (setf y (ratio-create 278 12))
-(destroy x)
+(ratio-destroy x)
 
 (ratio-num x)
 (ratio-denom x)
@@ -92,12 +143,13 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; String
+; Doremir.String
 
 ; Audio Engine strings are converted to Lisp strings and vice versa
 
 (setf x (string-empty))
 (setf x (string-single 104))
+(setf x (string-repeat 30 (char-int #\a)))
 (destroy x)
 
 (string-append (string-single 104)
@@ -105,10 +157,16 @@
                                (string-single 110)))
 (string-append "hans " "höglund")
 (string-length "högtalare")
+(code-char (string-char-at 0 "foo"))
+(string-matches "a*b*c+" "aaacc")
+
+; (string-map* (lambda (c) c) "abcd")
+; (string-join-map* (lambda (c) "a") "abcd")
 
 
 ; ---------------------------------------------------------------------------------------------------
-; Pair
+
+; Doremir.Pair
 
 ; Audio Engine pairs are NOT Lisp pairs
 ; They print as (1,2)
@@ -132,7 +190,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; List
+; Doremir.List
 
 ; Audio Engine lists are NOT Lisp lists
 ; They print as [1,2,3..]
@@ -196,7 +254,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Set
+; Doremir.Set
 
 (setf x (set-empty))
 (setf x (set-single 1))
@@ -225,7 +283,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Map
+; Doremir.Map
 
 (setf x (map-empty))
 (setf x (map-dadd "name" "hans" x))
@@ -261,7 +319,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Buffer
+; Doremir.Buffer
 
 (setf x (buffer-create 1024))
 (setf x (buffer-resize 2048 x))
@@ -301,7 +359,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Midi
+; Doremir.Midi
 
 (setf x (midi-create-simple #x9 60 127))
 (setf x (midi-create-sysex (buffer-create 1024)))
@@ -325,7 +383,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Time
+; Doremir.Time
 
 (time :minutes 1 :seconds 1/2)
 (greater-than (time :minutes 1) (time :seconds 59))
@@ -352,10 +410,7 @@
 (from-pointer 'time (add x y))
 
 
-; ---------------------------------------------------------------------------------------------------
-
 ; Clocks
-
 (setf z (time-get-system-prec-clock))
 (setf x (time-time z))
 (setf x (time-ticks z))
@@ -365,7 +420,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Types
+; Doremir.Type
 
 ; Type expressions, auto-converted to type
 (setf x nil)
@@ -384,7 +439,7 @@
 (setf x '(:vector (:pair :i8 :i32) 24))
 (setf x '(:vector :f32 1024))
 
-; We can force conversion for nicer printing
+; We can also force conversion
 (setf x (to-type :unit))
 (setf x (to-type '(:pair :i8 :i8)))
 (setf x (to-type '(:vector (:pair :i8 :i32) 24)))
@@ -427,7 +482,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Processor
+; Doremir.Processor
 
 ; TODO combine defcallback/unary/binary into single macro
 ; i.e. define-processor
@@ -505,7 +560,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Events and schedulers
+; Doremir.Event
 
 (setf x (event-never))
 (setf x (event-later
@@ -592,7 +647,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Audio devices
+; Doremir.Device.Audio
 
 (setf s (device-audio-begin-session))
 (error-check s)
@@ -630,7 +685,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Midi devices
+; Doremir.Device.Midi
 
 (setf s (device-midi-begin-session))
 (error-check s)
@@ -663,7 +718,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; File devices
+; Doremir.Device.File
 
 (device-file-open)
 (device-file-close)
@@ -671,7 +726,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Buffer devices
+; Doremir.Device.Buffer
 
 (device-buffer-open)
 (device-buffer-close)
@@ -680,7 +735,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Plotting
+; Doremir.Plot
 
 ; TODO tests
 
@@ -690,27 +745,25 @@
 ; Low-level stuff
 ; ---------------------------------------------------------------------------------------------------
 
-; Message passing
+; Doremir.Message
 
 (setf x (message-create-dispatcher))
+(setf x (message-create-lockfree-dispatcher))
 (setf s (to-sender x))
 (setf r (to-receiver x))
-
 
 (message-send r 0 (random 20))
 (message-send r 0 123/456)
 (message-send r 0 (list-copy '(1 2 3)))
 
-; TODO dynamic import here
 (progn
   (message-sync s)
   (dolist (x (import-list# (message-receive s 0)))
     (cl:print x)))
 
-
 ; ---------------------------------------------------------------------------------------------------
 
-; Atomic structures
+; Doremir.Atomic
 
 (setf x (atomic-create))
 (setf y (atomic-copy x))
@@ -723,10 +776,18 @@
 (atomic-add x 1)
 ; (atomic-modify (lambda (x) x) x)
 
+; ---------------------------------------------------------------------------------------------------
+
+; Doremir.Atomic.Queue
+
 (setf x (atomic-queue-create))
 (destroy x)
 (atomic-queue-write x (random 20))
 (atomic-queue-read x)               ; FIXME null should not be raw pointer
+
+; ---------------------------------------------------------------------------------------------------
+
+; Doremir.Atomic.Stack
 
 (setf x (atomic-stack-create))
 (destroy x)
@@ -736,7 +797,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Threads
+; Doremir.Thread
 
 (defcallback thread-action ptr ((data ptr))
   (declare (ignore data))
@@ -762,50 +823,6 @@
 ; TODO
 (thread-with-lock :blocking nil
   )
-
-
-
-; ---------------------------------------------------------------------------------------------------
-
-; Generic functions
-
-(equal              x y)
-(less-than          x y)
-(greater-than       x y)
-(less-than-equal    x y)
-(greater-than-equal x y)
-(min                x y)
-(max                x y)
-
-(add                x y)
-(multiply           x y)
-(subtract           x y)
-(divide             x y)
-(absolute           x)
-
-(copy               x)
-(destroy            x)
-(string-show        x)
-(string-to-string   x)
-(string-to-json     x)
-(from-pointer 
- 'map 
- (string-from-json "{\"foo\":null, \"bar\":[1,2,3]}"))
-
-(equal              0 0)
-(equal              0 1)
-(less-than          0 1)
-(greater-than       0 1)
-(less-than-equal    0 1)
-(greater-than-equal 0 1)
-(min                0 0)
-(max                0 1)
-(add                0 0)
-(multiply           0 1)
-(subtract           0 0)
-(divide             0 1)
-(absolute           -3)
-
 
 
 

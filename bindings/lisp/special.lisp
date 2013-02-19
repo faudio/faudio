@@ -176,6 +176,14 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
+(defun string-map* (f xs)   
+  (string-map (callback funcall1#) (func-to-int# f) xs)) 
+
+(defun string-join-map* (f xs)   
+  (string-join-map (callback funcall1#) (func-to-int# f) xs)) 
+
+; ---------------------------------------------------------------------------------------------------
+
 ; Override print by String.show
 (defcfun (string-show# "doremir_string_show") string (a :pointer))
 
