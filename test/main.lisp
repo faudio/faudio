@@ -7,7 +7,24 @@
 
 
 #|
+    Conventions:
+
+        All Modulo/C functions are exposed directly. Name is the same as in C except that:
+
+            - There is no global 'doremir' prefix, instead all symbols are in the 'audio-engine' package.
+            - Names are separated by dashes instead of underscores.
+
+        For example 'doremir_device_audio_name' becomes (audio-engine:device-audio-name x).
+        
+        Sometimes a Lisp wrapper is added to adapt error checking, wrapping of closures etc. The name
+        is the same as the wrapped function with an underscore suffix. For example, (list-find) is
+        available in two forms:
+    
+          list-find     accepts CFFI callbacks only
+          list-find*    accepts functions
+
     Caveats:
+
       - Calling a function on a destroyed object is undefined
       - Calling (from-pointer) with the wrong type is undefined
       - Calling a generic function on a type that does not implement a required interface is undefined
@@ -133,7 +150,6 @@
 (ratio-num x)
 (ratio-denom x)
 
-; Faster than the generic versions in the Doremir module
 (ratio-add x y)
 (ratio-subtract x y)
 (ratio-multiply x y)
@@ -143,7 +159,6 @@
 (ratio-negate x)
 (ratio-recip x)
 
-; Mixing AE ratios and Lisp rationals
 (ratio-create 1 2)
 (ratio-succ (/ 1 2))
 (ratio-recip (/ 567 235))
@@ -247,19 +262,10 @@
 (list-join (list-empty))
 (list-join (list-single (list-single 1)))
 
-; Mixing AE lists and Lisp lists
-(list-append '(1 2 3) (list-single 4))
-(list-dcons 1 '())
-(list-is-empty '())
-(list-is-single '(1))
-
-; Conversion
-(export-list '(1 2 3))
-(import-list (list-cons 1 (list-cons 2 (list-cons 3 (list-empty)))))
-
-; Note:
-;   list-find, list-map etc are C functions and take callbacks
-;   find, map etc are wrappers and accept Lisp functions
+(list-find* 'evenp '(1 2 3 4))
+(list-find-index* 'evenp '(1 2 3 4))
+(list-filter* 'evenp '(1 2 3 4))
+(list-map* (lambda (x) (+ 100 x)) '(1 2 3 4))
 
 (find 'evenp '(1 2 3 4))
 (find-index 'evenp '(1 2 3 4))
@@ -269,6 +275,18 @@
  (list-cons
   (list-single 0)
   (list-single (list-cons 1 (list-single 2)))))
+
+
+; Mixing AE and Lisp lists
+
+(list-append '(1 2 3) (list-single 4))
+(list-dcons 1 '())
+(list-is-empty '())
+(list-is-single '(1))
+
+(export-list '(1 2 3))
+(import-list (list-cons 1 (list-cons 2 (list-cons 3 (list-empty)))))
+
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -873,9 +891,6 @@
 (thread-holding
  (y)
  (audioengine-log-info "I have the mutex"))
-
-; ---------------------------------------------------------------------------------------------------
-
 
 
 
