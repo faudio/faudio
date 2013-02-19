@@ -866,10 +866,7 @@
 
 ; Doremir.Thread
 ;
-; You can use these or the thread system of your Lisp implementation (i.e. MP in LispWorks,
-; native threads in SBCL).
-;
-; You can use AE mutex to syncronize threads created by Lisp and vice versa.
+; You can use an AE mutex to syncronize threads created by Lisp and vice versa.
 
 (setf x (thread-create* (lambda () 
                           (audioengine-log-info 
@@ -882,6 +879,7 @@
 (equal (thread-current) (thread-main))
 
 (thread-sleep 3000)
+
 
 ; Mutexes
 
