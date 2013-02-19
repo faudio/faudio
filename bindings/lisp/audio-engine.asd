@@ -33,6 +33,7 @@
         (:file "graph")
         (:file "priority-queue")
         (:file "ratio")
+        (:file "dynamic")
         (:file "type")
         (:file "buffer")
         (:file "time")

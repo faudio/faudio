@@ -90,6 +90,23 @@
 
 ; ---------------------------------------------------------------------------------------------------
 ;
+; Doremir.Dynamic
+
+(dynamic-get-type nil)
+(dynamic-get-type t)
+(dynamic-get-type 123)
+(dynamic-get-type 3.14159265)
+; (dynamic-get-type 6.02214129d23)
+(dynamic-get-type (pair-create 1 2))
+(dynamic-get-type (list-empty))
+(dynamic-get-type (set-empty))
+(dynamic-get-type (map-empty))
+(dynamic-get-type "foo")
+
+
+
+; ---------------------------------------------------------------------------------------------------
+;
 ; Doremir.Ratio
 ;
 ; AE ratios are interchangable with Lisp rationals in all contexts.
