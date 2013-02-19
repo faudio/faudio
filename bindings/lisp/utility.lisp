@@ -18,6 +18,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
+(defgeneric size (b)) 
 (defgeneric get (b i)) 
 (defgeneric (setf get) (v b i)) 
 
@@ -55,6 +56,9 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
+(defmethod size ((b buffer))
+  (buffer-size b))
+
 (defmethod get ((b buffer) i)
   (buffer-get b i))
 
@@ -62,6 +66,20 @@
   (buffer-set b i v))
 
 ; ---------------------------------------------------------------------------------------------------
+
+(defun buffer-to-array (x)
+  (setf sz (buffer-size x))
+  (setf a (make-array sz :element-type 'unsigned-byte))
+  (dotimes (i sz)
+    (setf (aref a i) (get x i)))
+  a)
+
+(defun array-to-buffer (a)
+  (setf sz (array-total-size a))
+  (setf x (buffer-create sz))
+  (dotimes (i sz)
+    (setf (get x i) (aref a i)))
+  x)
 
 (defun buffer-read-audio* (path)
   (let ((res (buffer-read-audio path)))

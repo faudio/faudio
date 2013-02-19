@@ -56,9 +56,14 @@
 ;   We could add runtime checks to fix this, but that would slow down certain operations.
 ;   Let me know if this is a problem. /Hans
 
-
 (setf x 1)
 (setf y 2)
+(setf x "hello")
+(setf y "holla")
+(setf x 77/88)
+(setf y 33/44)
+(setf x (export-list '()))
+(setf y (export-list '(1 2 3)))
 
 (equal              x y)
 (less-than          x y)
@@ -79,10 +84,8 @@
 (string-show        x)
 (string-to-string   x)
 (string-to-json     x)
-(from-pointer
- 'map
- (string-from-json "{\"foo\":null, \"bar\":[1,2,3]}"))
-
+(string-from-json "[1,2,3]")
+(string-from-json "{\"foo\":null, \"bar\":[1,2,3]}")
 
 ; ---------------------------------------------------------------------------------------------------
 ;
@@ -132,7 +135,6 @@
 (dynamic-get-type (set-empty))
 (dynamic-get-type (map-empty))
 (dynamic-get-type "foo")
-
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -285,8 +287,7 @@
 (list-is-single '(1))
 
 (export-list '(1 2 3))
-(import-list (list-cons 1 (list-cons 2 (list-cons 3 (list-empty)))))
-
+(import-list (export-list '(1 2 3)))
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -316,8 +317,8 @@
 (set-product x y)
 (set-difference x y)
 
-(set-to-list x)
-(import-list (set-to-list x))
+(set-to-list x)                   ; Convert to AE list
+(import-list (set-to-list x))     ; Convert to Lisp list
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -350,35 +351,35 @@
 (map-is-proper-submap-of x y)
 
 (map-to-list x)
-(mapcar (lambda (x) (from-pointer 'pair x))
-        (import-list (map-to-list x)))
+(mapcar #'import-pair 
+        (import-list 
+         (map-to-list x)))
 
 
 ; ---------------------------------------------------------------------------------------------------
 
 ; Doremir.Buffer
 ;
-; The AE buffers are tiny wrappers around pointers.
+; The AE buffers are tiny wrappers around pointers. 
+
+; All memory is allocated outside the control of Lisp and must be freed by destroying 
+; the buffer. You can acces individual elements using the get functions, or copy the buffer 
+; to the Lisp heap using (buffer-to-array), and vice versa using (array-to-buffer).
+;
 ; Reading or writing outside the range is undefined, but fail-fast in a debug build.
 
-(setf x (buffer-create 10))      ; Always initialized to 0
-(setf x (buffer-resize 20 x))    ; Will not lose data when increasing size
-(setf x (buffer-create 1024))    ; Size and offset is given in size_t, i.e. bytes
+(setf x (buffer-create 10))
+(setf x (buffer-resize 20 x))
+(setf x (buffer-create 1024))
 (setf x (buffer-resize 2048 x))
 (destroy x)
 
 (cl:print x)
 
-; Size and access in bytes
-(buffer-size x)
-(buffer-get x 0)
-(buffer-set x 1 10)
-
-; Generic versions
+(size x)
 (get x 0)
 (setf (get x 0) #xff)
 
-; Other types
 (buffer-get-int16 x 1)
 (buffer-set-int16 x 1 10)
 (buffer-get-int32 x 1)
@@ -390,11 +391,15 @@
 (buffer-get-double x 1)
 (buffer-set-double x 1 0.5d0)
 
-; For example
 (dotimes (i (buffer-size x))
   (buffer-set x i (mod i 256)))
 (dotimes (i (buffer-size x))
   (buffer-set x i 0))
+
+; Conversion
+(setf a (buffer-to-array x))
+
+(setf x (array-to-buffer a))
 
 
 ; I/O
@@ -815,14 +820,13 @@
 (setf s (to-sender x))
 (setf r (to-receiver x))
 
-(message-send r 0 (random 20))
-(message-send r 0 (123/456))
-(message-send r 0 (to-list '(1 2 3)))
+(message-send r 0 123)
+(message-send r 0 (export-list '(1 2 3)))
 
 (progn
   (message-sync s)
-  (dolist (x (from-list (message-receive s 0)))
-    (cl:print (from-pointer 'list x))))
+  (dolist (x (import-list (message-receive s 0)))
+    (cl:print (from-dynamic x))))
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -867,32 +871,36 @@
 ;
 ; You can use AE mutex to syncronize threads created by Lisp and vice versa.
 
-(defcallback thread-action ptr ((data ptr))
-  (declare (ignore data))
-  (audioengine-log-info "Started thread.")
-  (thread-holding (y)
-                  (thread-sleep 3000))
-  (audioengine-log-info "Done."))
-
-
-(setf x (thread-create (callback thread-action) nil))
-(thread-main)
-(thread-current)
-(equal (thread-current) (thread-main))
-(thread-sleep 3000)
+(setf x (thread-create* (lambda () 
+                          (audioengine-log-info 
+                           "And there's someone in a thread."))))
 (thread-join x)
 (thread-detach x)
 
+(thread-main)
+(thread-current)
+(equal (thread-current) (thread-main))
+
+(thread-sleep 3000)
+
+; Mutexes
+
 (setf y (thread-create-mutex))
 (destroy y)
+
 (thread-lock y)
 (thread-try-lock y)
 (thread-unlock y)
+
 (thread-holding
  (y)
  (audioengine-log-info "I have the mutex"))
 
-
+(thread-create* (lambda ()
+  (declare (ignore data))
+  (audioengine-log-info "I am waiting.")
+  (thread-holding (y) 
+                  (audioengine-log-info "Finally, got it!"))))
 
 
 

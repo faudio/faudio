@@ -70,7 +70,8 @@
     ((is-int64# x)      (peek-int64# x))
     ((is-float# x)      (peek-float# x))
     ((is-double# x)     (peek-double# x))
-    (t                  x)))
+    ((is-ref# x)        (import-dynamic# x))))
+
 
 
 ; FIXME causes segmentation error with map-add

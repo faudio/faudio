@@ -32,6 +32,13 @@
 (defcfun (ratio-num# "doremir_ratio_num") :int32 (a :pointer))
 (defcfun (ratio-denom# "doremir_ratio_denom") :int32 (a :pointer))
 
+(defun export-ratio# (x)
+  (ratio-create# (numerator x) (denominator x)))
+
+(defun import-ratio# (x)
+  (/ (ratio-num# x) (ratio-denom# x)))
+
+
 (defmethod translate-to-foreign (x (type ratio-type))
   (ratio-create# (numerator x) (denominator x)))
 
@@ -131,6 +138,19 @@
 (defun to-type (x)
   (export-type# x)) ; FIXME should not do slot-value??
 
+
+; ---------------------------------------------------------------------------------------------------
+
+(defcfun (dynamic-get-type# "doremir_dynamic_get_type") dynamic-type-repr (a :pointer))
+
+(defun import-dynamic# (x)
+  (ecase (dynamic-get-type# x)
+    (7 (from-pointer 'pair x))
+    (8 (from-pointer 'list x))
+    (9 (from-pointer 'set x))
+    (10 (from-pointer 'map x))
+    (11 (from-pointer 'string x))))
+
 ; ---------------------------------------------------------------------------------------------------
 
 (defun to-error (x)
@@ -184,6 +204,9 @@
   (let ((f (gethash n *exported-closures#*)))
     (if f f (cl:error "Uknown func in INT-TO-FUNC"))))
 
+(defcallback funcall0# ptr ((f ptr))
+  (funcall (int-to-func# f)))
+
 (defcallback funcall1# ptr ((f ptr) (x ptr))
   (funcall (int-to-func# f) x))
 
@@ -225,7 +248,12 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Override print by String.show
+(defun thread-create* (f)
+  (thread-create (callback funcall0#) (func-to-int# f)))
+
+
+; ---------------------------------------------------------------------------------------------------
+
 (defcfun (string-show# "doremir_string_show") string (a :pointer))
 
 (defmethod print-object ((x buffer) out) (format out "~a" (string-show# (slot-value x 'buffer-ptr))))
