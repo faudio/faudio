@@ -5,7 +5,9 @@
     All rights reserved.
 |#
 
-(in-package :audio-engine)
+(defpackage :audio-engine
+  (:use :common-lisp))
+;(in-package :audio-engine)
 
 (defvar x nil)
 (defvar y nil)
@@ -25,9 +27,9 @@
       (log-path       (format nil "~a/Library/Logs/DoReMIRAudio.log" (user-homedir-pathname))))
   (push framework-path cffi:*darwin-framework-directories*)
   (setf *foreign-lib* (cffi:load-foreign-library `(:framework ,framework-name)))
-  (audioengine-set-log-file log-path)
-  (plot-use-gnu)
-  (audioengine-initialize))
+  (audio-engine::audioengine-set-log-file log-path)
+  (audio-engine::plot-use-gnu)
+  (audio-engine::audioengine-initialize))
 
 
 #|

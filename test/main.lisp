@@ -77,10 +77,10 @@
 (error-origin (to-error x))
 
 ; ---------------------------------------------------------------------------------------------------
-
+;
 ; Doremir.Ratio
-
-; Audio Engine ratios are converted to Lisp ratios and vice versa
+;
+; Audio Engine ratios are interchangable with Lisp rationals
 
 (setf x (ratio-create 1 2))
 (setf y (ratio-create 278 12))
@@ -89,6 +89,7 @@
 (ratio-num x)
 (ratio-denom x)
 
+; Faster than the generic versions
 (ratio-add x y)
 (ratio-subtract x y)
 (ratio-multiply x y)
@@ -103,10 +104,10 @@
 (ratio-recip (/ 567 235))
 
 ; ---------------------------------------------------------------------------------------------------
-
+;
 ; Doremir.String
-
-; Audio Engine strings are converted to Lisp strings and vice versa
+;
+; Audio Engine strings are interchangable with Lisp strings
 
 (setf x (string-empty))
 (setf x (string-single 104))
@@ -126,10 +127,10 @@
 
 
 ; ---------------------------------------------------------------------------------------------------
-
+;
 ; Doremir.Pair
-
-; Audio Engine pairs are NOT Lisp pairs
+;
+; Audio Engine pairs are not Lisp pairs
 ; They print as (1,2)
 
 (setf x (pair-create 1 2))
@@ -153,21 +154,24 @@
 
 ; Doremir.List
 
-; Audio Engine lists are NOT Lisp lists
-; They print as [1,2,3..]
+; Audio Engine lists are not Lisp lists
+; Generally, you can pass a Lisp list whenever an AE list is expected,
+; otherwise use (to-list) and (from-list)
+;
+; AE lists prints as [1,2,3..]
 
 (setf x (list-empty))
 (setf x (list-single 0))
 (setf x (list-dcons 1 x))
 (setf x (list-dcons (random 20) x))
 (setf x (list-dtail x))
+(setf x (to-list '(1 2 3 4)))
 (setf y (list-copy x))
 (destroy x)
 
 (list-is-empty x)
 (list-is-single x)
 
-;(list-length '(1 2 3))
 (list-length x)
 (list-head x)
 (list-tail x)
@@ -195,7 +199,7 @@
 ; list-find*, list-map* etc accept Lisp functions and lambdas
 
 (list-find* 'oddp 
-            '(0 2 11 4 5))
+            '(0 2 11 5 7))
 
 (list-find-index* 'oddp 
                   '(0 2 11 4 5))
@@ -208,8 +212,8 @@
 
 ; FIXME auto-wrapping does not work...
 (list-join-map* (lambda (x) (cond
-                             ((oddp x) (to-list `(,x)))
-                             (t        (to-list `(,x ,x)))))
+                             ((oddp x) (copy-list '()))
+                             (t        (copy-list '()))))
                 '(1 2 3 4 5))
 
 
@@ -219,8 +223,8 @@
 
 (setf x (set-empty))
 (setf x (set-single 1))
-(setf x (set-dadd 1 x))             ; add does not overwrite equals
-(setf x (set-dremove 1 x))          ; set does (for numbers, it doesn't matter)
+(setf x (set-dadd 1 x))             ; Set.add does not overwrite equals
+(setf x (set-dremove 1 x))          ; Set.set does (for numbers, it doesn't matter)
 (setf x (set-dadd (random 20) x))
 (setf x (set-dremove (random 20) x))
 (setf y (set-copy x))
@@ -230,7 +234,7 @@
 (set-is-empty x)
 (set-is-single x)
 (set-has 1 x)
-(set-get 1 x)                       ; FIXME null should not be raw pointer
+(set-get 1 x)                     
 
 (set-is-subset-of y x)
 (set-is-proper-subset-of y x)
@@ -248,14 +252,14 @@
 
 (setf x (map-empty))
 (setf x (map-dadd "name" "hans" x))
-(setf x (map-dadd "name" "sven" x))   ; add does not overwrite equals
-(setf x (map-dset "name" "sven" x))   ; set does
+(setf x (map-dadd "name" "sven" x))   ; Map.add does not overwrite equals (right-biased)
+(setf x (map-dset "name" "sven" x))   ; Map.set does (left-biased)
 (setf x (map-dadd "skills"
                   (list-single 1) x))
 (setf x (map-add-entry 
          (pair-create "surname" 
                       "höglund") x))
-(setf x (map-remove "name" x))        ; remove removes if present, otherwise does nothing
+(setf x (map-remove "name" x))        ; Map.remove removes if present, otherwise does nothing
 (setf x (map-remove "skills" x))
 (setf y (map-copy x))
 (destroy x)
@@ -263,11 +267,11 @@
 (map-size x)
 (map-is-empty x)
 (map-is-single x)
-(from-pointer 'string (map-get "name" x))
-(from-pointer 'list (map-get "skills" x))
 
 (map-has-key "name" x)
 (map-has-key "skills" x)
+(from-pointer 'string (map-get "name" x))
+(from-pointer 'list (map-get "skills" x))
 
 (map-is-submap-of x y)
 (map-is-proper-submap-of x y)
@@ -282,7 +286,9 @@
 
 ; Doremir.Buffer
 
-(setf x (buffer-create 1024))
+(setf x (buffer-create 10))      ; Always initialized to 0
+(setf x (buffer-resize 20 x))    ; Will not lose data when increasing size
+(setf x (buffer-create 1024))    ; Size and offset is given in size_t, i.e. bytes
 (setf x (buffer-resize 2048 x))
 (destroy x)
 
@@ -290,33 +296,31 @@
 
 (buffer-get x 1)
 (buffer-set x 1 10)
+(buffer-get-float x 1)
+(buffer-set-float x 1 0.5)
+(buffer-get-double x 1)
+(buffer-set-double x 1 0.5d0)
 
-(dotimes (i 1024)
+(dotimes (i (buffer-size x))
   (buffer-set x i (mod i 256)))
-(dotimes (i 1024)
+(dotimes (i (buffer-size x))
   (buffer-set x i 0))
 
+(cl:print x)
 
-; TODO
 (setf x (buffer-read-audio "/Users/hans/Desktop/test.wav"))
 (setf x (buffer-read-audio "/Users/hans/Desktop/Passager.wav"))
 (error-check x)
+(setf x (from-pointer 'buffer (pair-snd x)))
 
 (defun safe-buffer-read-audio (path)
   (setf res (buffer-read-audio path))
   (when (error-check x)
+    (error-log nil x)
     (cl:error (error-message x)))
   res)
 
-(safe-buffer-read-audio "/Users/hans/Desktop/test.wavXX")
-
-
-; TODO move below
-(setf tp (from-pointer 'type (pair-fst x)))
-(setf x (from-pointer 'buffer (pair-snd x)))
-
-(plot-buffer-double x nil nil)
-(plot-buffer-float x nil nil)
+(safe-buffer-read-audio "does-not-exist.wav")
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -328,14 +332,14 @@
 (destroy x)
 
 (midi-is-simple x)
-(midi-status x)
-(midi-channel x)
-(midi-simple-data x)
-(pair-fst (midi-simple-data x))
-(pair-snd (midi-simple-data x))
+(midi-status x)                   ; unsafe, assure is-simple
+(midi-channel x)                  ; unsafe, assure is-simple
+(midi-simple-data x)              ; unsafe, assure is-simple
+(pair-fst (midi-simple-data x))   ; unsafe, assure is-simple
+(pair-snd (midi-simple-data x))   ; unsafe, assure is-simple
 
 (midi-is-sysex x)
-(midi-sysex-data x)
+(midi-sysex-data x)               ; unsafe, assure is-sysex
 
 ; TODO auto-convert expressions like this
 (:note-on 60 127)
@@ -698,8 +702,14 @@
 
 ; Doremir.Plot
 
-; TODO tests
+(setf b (buffer-create 1024))
+(dotimes (i (/ (buffer-size b) 8))
+  (let* ((i x)
+         (y 0.0))
+    (buffer-set-double b 0 0.5d1)))
 
+(plot-buffer-double x nil nil)
+(plot-buffer-float x nil nil)
 
 
 ; ---------------------------------------------------------------------------------------------------
