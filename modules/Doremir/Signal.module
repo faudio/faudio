@@ -4,12 +4,17 @@
     
     Provides signals.
     
+    @warning
+        Signals provide a more high-level interface to describe processor graphs.
+        They are implemented in terms of processors, but still *largely unsupported*.
+    
  */
 module Doremir.Signal
 {
     import Doremir;    
     import Doremir.Pair;
     import Doremir.Type;
+    import Doremir.Time;
     import Doremir.Event;
     import Doremir.Processor;
     
@@ -26,7 +31,7 @@ module Doremir.Signal
 
     constant  : Ptr             -> Signal;
     value     : Event           -> Signal;
-    delay     : (Size, Signal)  -> Signal;
+    delay     : (Time, Signal)  -> Signal;
 
     add                 : (Signal,Signal) -> Signal;
     subtract            : (Signal,Signal) -> Signal;

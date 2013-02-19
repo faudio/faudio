@@ -5,6 +5,7 @@
 #include <doremir.h>
 #include <doremir/pair.h>
 #include <doremir/type.h>
+#include <doremir/time.h>
 #include <doremir/event.h>
 #include <doremir/processor.h>
 
@@ -39,7 +40,8 @@ doremir_signal_t doremir_signal_apply3(doremir_processor_t,
                                        doremir_signal_t);
 doremir_signal_t doremir_signal_constant(doremir_ptr_t);
 doremir_signal_t doremir_signal_value(doremir_event_t);
-doremir_signal_t doremir_signal_delay(size_t, doremir_signal_t);
+doremir_signal_t doremir_signal_delay(doremir_time_t,
+                                      doremir_signal_t);
 doremir_signal_t doremir_signal_add(doremir_signal_t,
                                     doremir_signal_t);
 doremir_signal_t doremir_signal_subtract(doremir_signal_t,

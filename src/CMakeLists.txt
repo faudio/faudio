@@ -39,6 +39,7 @@ list(APPEND SRCS
   doremir/ratio.c
   doremir/scheduler.c
   doremir/set.c
+  doremir/signal.c
   doremir/string.c
   doremir/string/trex.c
   doremir/string/parson.c

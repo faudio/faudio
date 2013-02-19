@@ -21,7 +21,6 @@
 (defgeneric get (b i)) 
 (defgeneric (setf get) (v b i)) 
 
-
 ; ---------------------------------------------------------------------------------------------------
 
 (defmethod find (p (xs list))
@@ -88,8 +87,6 @@
                   (t nil)))))
 
 ; ---------------------------------------------------------------------------------------------------
-
-; Aliases
 
 (defmacro input-type (&rest args) `(processor-input-type ,@args))
 (defmacro output-type (&rest args) `(processor-output-type ,@args))
