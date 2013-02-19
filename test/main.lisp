@@ -27,7 +27,7 @@
 ; ---------------------------------------------------------------------------------------------------
 ;
 ; Doremir
-; 
+;
 ; These generic functions work for most types, see the "Implements" section in each
 ; relevant module documentation entry.
 ;
@@ -35,7 +35,7 @@
 ; that the given arguments are of the same type and dispatches on the leftmost
 ; argument. If you try to compare, say an integer and a list you will crash.
 ;
-; Note: 
+; Note:
 ;   We could add runtime checks to fix this, but that would slow down certain operations.
 ;   Let me know if this is a problem. /Hans
 
@@ -62,8 +62,8 @@
 (string-show        x)
 (string-to-string   x)
 (string-to-json     x)
-(from-pointer 
- 'map 
+(from-pointer
+ 'map
  (string-from-json "{\"foo\":null, \"bar\":[1,2,3]}"))
 
 
@@ -100,6 +100,10 @@
 ; ---------------------------------------------------------------------------------------------------
 ;
 ; Doremir.Dynamic
+;
+; Note:
+;   Modulo is not smart enough to translate enums to Lisp yet
+;   See the module file for the definition
 
 (dynamic-get-type nil)
 (dynamic-get-type t)
@@ -180,11 +184,13 @@
 (setf y (pair-copy x))
 (destroy x)
 
+; Access
 (pair-fst x)
 (pair-snd x)
+
+; Manipulation
 (pair-dup 3)
 (pair-swap x)
-
 (pair-assoc (pair-create 1 (pair-create 2 3)))
 (pair-unassoc (pair-create (pair-create 1 2) 3))
 (pair-snd (from-pointer 'pair (to-pointer (pair-create 1 2))))
@@ -241,32 +247,27 @@
 (list-join (list-empty))
 (list-join (list-single (list-single 1)))
 
-
 ; Mixing AE lists and Lisp lists
-
 (list-append '(1 2 3) (list-single 4))
 (list-dcons 1 '())
 (list-is-empty '())
 (list-is-single '(1))
 
 ; Conversion
-
 (export-list '(1 2 3))
 (import-list (list-cons 1 (list-cons 2 (list-cons 3 (list-empty)))))
 
-
-; Higher-order functions
-;
-;   list-find, list-map etc are unwrapped C functions and take callbacks
-;   find, map etc are wrappers accepting Lisp functions and lambdas (see utility.lisp)
+; Note:
+;   list-find, list-map etc are C functions and take callbacks
+;   find, map etc are wrappers and accept Lisp functions
 
 (find 'evenp '(1 2 3 4))
 (find-index 'evenp '(1 2 3 4))
 (filter 'evenp '(1 2 3 4))
 (map (lambda (x) (+ 100 x)) '(1 2 3 4))
-(join 
- (list-cons 
-  (list-single 0) 
+(join
+ (list-cons
+  (list-single 0)
   (list-single (list-cons 1 (list-single 2)))))
 
 
@@ -287,7 +288,7 @@
 (set-is-empty x)
 (set-is-single x)
 (set-has 1 x)
-(set-get 1 x)                     
+(set-get 1 x)
 
 (set-is-subset-of y x)
 (set-is-proper-subset-of y x)
@@ -310,8 +311,8 @@
 (setf x (map-dset "name" "sven" x))   ; Map.set does
 (setf x (map-dadd "skills"
                   (list-single 1) x))
-(setf x (map-add-entry 
-         (pair-create "surname" 
+(setf x (map-add-entry
+         (pair-create "surname"
                       "höglund") x))
 (setf x (map-remove "name" x))        ; Map.remove removes if present, otherwise does nothing
 (setf x (map-remove "skills" x))
@@ -331,14 +332,14 @@
 (map-is-proper-submap-of x y)
 
 (map-to-list x)
-(mapcar (lambda (x) (from-pointer 'pair x)) 
+(mapcar (lambda (x) (from-pointer 'pair x))
         (import-list (map-to-list x)))
 
 
 ; ---------------------------------------------------------------------------------------------------
 
 ; Doremir.Buffer
-; 
+;
 ; The AE buffers are tiny wrappers around pointers.
 ; Reading or writing outside the range is undefined, but fail-fast in a debug build.
 
@@ -399,19 +400,15 @@
 (destroy x)
 
 (midi-is-simple x)
-(midi-status x)                   ; unsafe, assure is-simple
-(midi-channel x)                  ; unsafe, assure is-simple
-(midi-simple-data x)              ; unsafe, assure is-simple
-(pair-fst (midi-simple-data x))   ; unsafe, assure is-simple
-(pair-snd (midi-simple-data x))   ; unsafe, assure is-simple
+(midi-status x)
+(midi-channel x)
+(midi-simple-data x)
+(pair-fst (midi-simple-data x))
+(pair-snd (midi-simple-data x))
 
 (midi-is-sysex x)
-(midi-sysex-data x)               ; unsafe, assure is-sysex
+(midi-sysex-data x)
 
-; TODO auto-convert expressions like this
-(:note-on 60 127)
-(:note-off 60 127)
-(:control :volume 128)
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -432,15 +429,15 @@
 (setf x (from-pointer 'time (add x y)))
 (destroy x)
 
+; Extract
 (time-days x)
 (time-hours x)
 (time-minutes x)
 (time-seconds x)
 (time-divisions x)
 
+; Conversions
 (time-to-iso x)
-(from-pointer 'time (add x y))
-
 
 ; Clocks
 (setf z (time-get-system-prec-clock))
@@ -743,10 +740,10 @@
 ; FIXME (device-midi-set-status-callback (callback midi-status-changed) nil s)
 
 (setf z (device-midi-open-stream x))
-(device-midi-close-stream z) 
+(device-midi-close-stream z)
 
-(message-send 
- (to-receiver z) 0 
+(message-send
+ (to-receiver z) 0
  (midi-create-simple #x90 (+ 48 (random 12)) 120))
 
 
@@ -841,15 +838,15 @@
 
 ; Doremir.Thread
 ;
-; You can use these or the thread system of your Lisp implementation (i.e. MP in LispWorks, 
-; native threads in SBCL). 
+; You can use these or the thread system of your Lisp implementation (i.e. MP in LispWorks,
+; native threads in SBCL).
 ;
 ; You can use AE mutex to syncronize threads created by Lisp and vice versa.
 
 (defcallback thread-action ptr ((data ptr))
   (declare (ignore data))
   (audioengine-log-info "Started thread.")
-  (thread-holding (y) 
+  (thread-holding (y)
                   (thread-sleep 3000))
   (audioengine-log-info "Done."))
 
@@ -867,11 +864,11 @@
 (thread-lock y)
 (thread-try-lock y)
 (thread-unlock y)
-(thread-holding 
+(thread-holding
  (y)
  (audioengine-log-info "I have the mutex"))
 
-
+; ---------------------------------------------------------------------------------------------------
 
 
 
