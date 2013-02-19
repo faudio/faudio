@@ -16,7 +16,9 @@
 (in-package :audio-engine)
 
 ; ---------------------------------------------------------------------------------------------------
-
+; Top-level functions
+; ---------------------------------------------------------------------------------------------------
+;
 ; Doremir
 ; 
 ; These generic functions work for most types, see the "Implements" section in each
@@ -105,6 +107,8 @@
 
 
 
+; ---------------------------------------------------------------------------------------------------
+; Data structures
 ; ---------------------------------------------------------------------------------------------------
 ;
 ; Doremir.Ratio
@@ -362,19 +366,23 @@
 
 (cl:print x)
 
+
+; Reading and writing audio files
+
 (setf x (buffer-read-audio "/Users/hans/Desktop/test.wav"))
 (setf x (buffer-read-audio "/Users/hans/Desktop/Passager.wav"))
-(error-check x)
 (setf x (from-pointer 'buffer (pair-snd x)))
 
-(defun safe-buffer-read-audio (path)
-  (setf res (buffer-read-audio path))
-  (when (error-check x)
-    (error-log nil x)
-    (cl:error (error-message x)))
-  res)
+(defun buffer-read-audio* (path)
+  (let ((res (buffer-read-audio path)))
+    (when (error-check res)
+      (error-log nil (to-error res))
+      (cl:error (error-message (to-error res))))
+    res))
 
-(safe-buffer-read-audio "does-not-exist.wav")
+; Safe versions
+(buffer-read-audio* "/Users/hans/Desktop/test.wav")
+(buffer-read-audio* "does-not-exist.wav")
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -438,6 +446,8 @@
 
 
 ; ---------------------------------------------------------------------------------------------------
+; Audio processing
+; ---------------------------------------------------------------------------------------------------
 
 ; Doremir.Type
 
@@ -477,7 +487,6 @@
 (setf x (type-repeat 1 :f32)) ; f32
 (setf x (type-repeat 0 :f32)) ; ()
 (type-channels x)
-
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -577,13 +586,17 @@
 (setf x (processor-ceil i))
 (setf x (processor-rint i))
 
+
+
+; ---------------------------------------------------------------------------------------------------
+; Event scheduling
 ; ---------------------------------------------------------------------------------------------------
 
 ; Doremir.Event
 
 (setf x (event-never))
 (setf x (event-later
-         (time :seconds (+ 1 1/3))
+         (time :seconds (+ 5 1/3))
          48))
 
 (setf x (event-merge
@@ -631,7 +644,7 @@
     (audioengine-log-info "Running event")
     (scheduler-schedule scheduler
                         (system-event-write-log event))
-    (scheduler-loop-for (time :seconds 10) scheduler)
+    (scheduler-loop-for (time :seconds 30) scheduler)
     ; later...
     (destroy scheduler)
     (audioengine-log-info "Stopped running event")))
@@ -664,6 +677,10 @@
 
 (setf (capi:range-slug-start (slot-value i 'slider)) (random 100))
 
+
+
+; ---------------------------------------------------------------------------------------------------
+; Devices
 ; ---------------------------------------------------------------------------------------------------
 
 ; Doremir.Device.Audio
@@ -752,6 +769,10 @@
 (device-buffer-run)
 
 
+
+
+; ---------------------------------------------------------------------------------------------------
+; Utility
 ; ---------------------------------------------------------------------------------------------------
 
 ; Doremir.Plot
@@ -765,9 +786,6 @@
 (plot-buffer-double x nil nil)
 (plot-buffer-float x nil nil)
 
-
-; ---------------------------------------------------------------------------------------------------
-; Low-level stuff
 ; ---------------------------------------------------------------------------------------------------
 
 ; Doremir.Message
@@ -823,6 +841,12 @@
 ; ---------------------------------------------------------------------------------------------------
 
 ; Doremir.Thread
+;
+; You can use these or the thread system of your Lisp implementation (i.e. MP in LispWorks, 
+; native threads in SBCL). 
+;
+; You can use AE mutex to syncronize threads created by Lisp and vice versa.
+
 
 (defcallback thread-action ptr ((data ptr))
   (declare (ignore data))
