@@ -9,6 +9,11 @@
 #include <doremir/dynamic.h>
 #include <doremir/util.h>
 
+bool doremir_dynamic_check(doremir_ptr_t a)
+{
+    return doremir_interface(doremir_dynamic_i, a);
+}
+
 doremir_dynamic_type_repr_t doremir_dynamic_get_type(doremir_ptr_t a)
 {
     assert(doremir_interface(doremir_dynamic_i, a) && "Must implement Dynamic");

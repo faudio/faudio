@@ -23,11 +23,13 @@ typedef enum {
             list_type_repr,
             set_type_repr,
             map_type_repr,
-            string_type_repr
+            string_type_repr,
+            ratio_type_repr
         } doremir_dynamic_type_repr_t;
 typedef struct {
             doremir_dynamic_type_repr_t (* get_type)(doremir_ptr_t);
         } doremir_dynamic_t;
+bool doremir_dynamic_check(doremir_ptr_t);
 doremir_dynamic_type_repr_t doremir_dynamic_get_type(doremir_ptr_t);
 
 /** @}

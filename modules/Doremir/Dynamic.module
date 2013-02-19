@@ -22,13 +22,15 @@ module Doremir.Dynamic
         ListTypeRepr, 
         SetTypeRepr, 
         MapTypeRepr, 
-        StringTypeRepr
+        StringTypeRepr,
+        RatioTypeRepr
     };
 
     type Dynamic = struct {
         getType : (Ptr -> TypeRepr)*
     };
-
+        
+    check : Ptr -> Bool;
     getType : Ptr -> TypeRepr;
 }
 

@@ -6,6 +6,7 @@
  */
 
 #include <doremir/ratio.h>
+#include <doremir/dynamic.h>
 #include <doremir/util.h>
 
 typedef doremir_ratio_num_t num_t;
@@ -332,6 +333,11 @@ void ratio_destroy(ptr_t a)
     doremir_ratio_destroy(a);
 }
 
+type_repr_t ratio_get_type(doremir_ptr_t a)
+{
+    return ratio_type_repr;
+}
+
 ptr_t ratio_impl(doremir_id_t interface)
 {
     static doremir_equal_t ratio_equal_impl
@@ -346,6 +352,7 @@ ptr_t ratio_impl(doremir_id_t interface)
         = { ratio_copy };
     static doremir_destroy_t ratio_destroy_impl
         = { ratio_destroy };
+    static doremir_dynamic_t ratio_dynamic_impl = { ratio_get_type };
 
     switch (interface) {
     case doremir_equal_i:
@@ -365,6 +372,9 @@ ptr_t ratio_impl(doremir_id_t interface)
 
     case doremir_destroy_i:
         return &ratio_destroy_impl;
+
+    case doremir_dynamic_i:
+        return &ratio_dynamic_impl;
 
     default:
         return NULL;
