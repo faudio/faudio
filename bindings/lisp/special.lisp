@@ -3,56 +3,75 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Bootstrap imports using raw pointers (otherwise the translator will invoke itself forever)
-
 (defcfun (string-from-utf8# "doremir_string_from_utf8") :pointer (a :pointer))
 (defcfun (string-to-utf8#  "doremir_string_to_utf8") :pointer (a :pointer))
 (defcfun (string-destroy# "doremir_string_destroy") :void (a :pointer))
 
 (defmethod translate-to-foreign (x (type string-type))
-  (string-from-utf8# (foreign-string-alloc x :encoding :utf-8))) ; TODO free temporary
+  (string-from-utf8# 
+    (foreign-string-alloc x :encoding :utf-8)))
+
 (defmethod translate-from-foreign (x (type string-type))
-  (foreign-string-to-lisp (string-to-utf8# x) :encoding :utf-8)) ; TODO free temporary
-(defmethod free-translated-object (x (type string-type) a) (declare (ignore a))
+  (foreign-string-to-lisp 
+    (string-to-utf8# x) :encoding :utf-8))
+
+(defmethod free-translated-object (x (type string-type) a) 
+  (declare (ignore a))
   (string-destroy# x))
 
 ; ---------------------------------------------------------------------------------------------------
 
-(defcfun (ratio-num# "doremir_ratio_num") :int32 (a :pointer))
-(defcfun (ratio-denom# "doremir_ratio_denom") :int32 (a :pointer))
 (defcfun (ratio-create# "doremir_ratio_create") :pointer (a :int32) (b :int32))
 (defcfun (ratio-destroy# "doremir_ratio_destroy") :void (a :pointer))
-
-; (defun export-ratio# (x)
-  ; (convert-to-foreign x 'ratio))
+(defcfun (ratio-num# "doremir_ratio_num") :int32 (a :pointer))
+(defcfun (ratio-denom# "doremir_ratio_denom") :int32 (a :pointer))
 
 (defmethod translate-to-foreign (x (type ratio-type))
   (ratio-create# (numerator x) (denominator x)))
+
 (defmethod translate-from-foreign (x (type ratio-type))
   (/ (ratio-num# x) (ratio-denom# x)))
-(defmethod free-translated-object (x (type ratio-type) a) (declare (ignore a))
+
+(defmethod free-translated-object (x (type ratio-type) a) 
+  (declare (ignore a))
   (ratio-destroy# x))
 
 
 ; ---------------------------------------------------------------------------------------------------
 
+(defcfun (pair-create# "doremir_pair_create") :pointer (a ptr) (b ptr))
+(defcfun (pair-destroy# "doremir_pair_destroy") :void (a :pointer))
+(defcfun (pair-fst# "doremir_pair_fst") ptr (a :pointer))
+(defcfun (pair-snd# "doremir_pair_snd") ptr (a :pointer))
+
 (defun export-pair# (x)
-  (pair-create (car x) (cdr x)))
+  (pair-create# (car x) (cdr x)))
 
 (defun import-pair# (x)
+  (cons (pair-fst# x) (pair-snd# x)))
+
+; TODO auto-import?
+
+(defun export-pair (x)
+  (pair-create (car x) (cdr x)))
+
+(defun import-pair (x)
   (cons (pair-fst x) (pair-snd x)))
+
+
+; ---------------------------------------------------------------------------------------------------
 
 (defcfun (list-empty# "doremir_list_empty") :pointer)
 (defcfun (list-cons#  "doremir_list_cons")  :pointer (a ptr) (b :pointer))
 (defcfun (list-dcons# "doremir_list_dcons") :pointer (a ptr) (b :pointer))
-
+(defcfun (list-head#  "doremir_list_head") ptr (a :pointer))
+(defcfun (list-tail#  "doremir_list_tail") :pointer (a :pointer))
 
 (defun export-list# (x)
   (cond                
-    ((eq (type-of x) 'list) (slot-value x 'list-ptr))
-    ((not x)  (list-empty#)) 
-    (t        (list-cons# (car x) (export-list# (cdr x))))
-    ))
+    ((null x)               (list-empty#)) 
+    ((consp x)              (list-cons# (car x) (export-list# (cdr x))))
+    ((eq (type-of x) 'list) (slot-value x 'list-ptr))))
 
 (defun import-list# (x)
   (cond
@@ -61,11 +80,20 @@
 
 (defmethod translate-to-foreign (x (type list-type))
   (export-list# x))
-; (defmethod translate-from-foreign (x (type list-type))
-  ; (import-list# x)) 
+(defmethod translate-from-foreign (x (type list-type)) 
+    (make-instance 'list :list-ptr x))
 
-(defun to-list (x)
-  (export-list# x))
+(defun export-list (x)
+  (cond                
+    ((null x)               (list-empty)) 
+    ((consp x)              (list-cons (car x) (export-list (cdr x))))
+    ((eq (type-of x) 'list) (slot-value x 'list-ptr))))
+
+(defun import-list (x)
+  (cond
+    ((list-is-empty x)  nil)
+    (t                  (cons (list-head x) (import-list (list-tail x))))))
+
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -91,11 +119,11 @@
 
 (defmethod translate-to-foreign (x (type type-type))
   (export-type# (export-type# x)))
-; (defmethod translate-from-foreign (x (type type-type))
-  ; x)
+(defmethod translate-from-foreign (x (type type-type)) 
+    (make-instance 'type :type-ptr x))
 
 (defun to-type (x)
-  (export-type# x))
+  (export-type# x)) ; FIXME should not do slot-value??
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -113,7 +141,12 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-(defun time (&key days hours minutes seconds milliseconds nanoseconds)
+(defun time (&key days 
+                  hours 
+                  minutes 
+                  seconds 
+                  milliseconds 
+                  nanoseconds)
   (let* ((zero-time         (time-create 0 0 0 0))
          (days-time         (if days    (time-create days 0 0 0) nil))
          (hours-time        (if hours   (time-create 0 hours 0 0) nil))
@@ -123,7 +156,9 @@
          (nanoseconds-time  (if nanoseconds (time-create 0 0 0 (/ (rational nanoseconds) 1000000)) nil))
          (time-exprs  (remove nil (cl:list days-time hours-time minutes-time 
                                            seconds-time milliseconds-time nanoseconds-time))))
-    (reduce (lambda (x y) (from-pointer 'time (add x y))) time-exprs :initial-value zero-time)))
+    (reduce (lambda (x y) 
+      (from-pointer 'time (add x y))) time-exprs 
+      :initial-value zero-time)))
 
 (defun hours (x) (time :hours x))
 (defun minutes (x) (time :minutes x))
@@ -225,6 +260,20 @@
 
 ; etc
 
+; ---------------------------------------------------------------------------------------------------
+
+(defmacro thread-holding ((mutex &key (blocking t)) &rest form)
+  (let* ((lock (gensym))
+         (result (gensym))
+         (lock-func (if blocking #'thread-lock #'thread-try-lock)))
+    `(let* ((,lock ,mutex)
+            (,result (funcall ,lock-func ,lock)))
+            (cond (,result 
+                   (progn
+                     ,@form
+                     (thread-unlock ,lock))) 
+                  (t nil)))))
+                                
 ; ---------------------------------------------------------------------------------------------------
 
 ; Aliases

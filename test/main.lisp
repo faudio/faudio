@@ -18,6 +18,18 @@
 ; ---------------------------------------------------------------------------------------------------
 
 ; Doremir
+; 
+; These generic functions work for most types, see the "Implements" section in each
+; relevant module documentation entry.
+;
+; Note that there is no multiple dispatch in this system: implementations assume
+; that the given arguments are of the same type and dispatches on the leftmost
+; argument. If you try to compare, say an integer and a list you will crash.
+;
+; Note: 
+;   We could add runtime checks to fix this, but that would slow down certain operations.
+;   Let me know if this is a problem. /Hans
+
 
 (setf x 1)
 (setf y 2)
@@ -47,7 +59,7 @@
 
 
 ; ---------------------------------------------------------------------------------------------------
-
+;
 ; Doremir.AudioEngine
 
 (audioengine-initialize)
@@ -62,7 +74,7 @@
 
 
 ; ---------------------------------------------------------------------------------------------------
-
+;
 ; Doremir.Error
 
 (setf x (error-create-simple 2 "An error" "From.Here"))
@@ -80,7 +92,7 @@
 ;
 ; Doremir.Ratio
 ;
-; Audio Engine ratios are interchangable with Lisp rationals
+; AE ratios are interchangable with Lisp rationals in all contexts.
 
 (setf x (ratio-create 1 2))
 (setf y (ratio-create 278 12))
@@ -89,7 +101,7 @@
 (ratio-num x)
 (ratio-denom x)
 
-; Faster than the generic versions
+; Faster than the generic versions in the Doremir module
 (ratio-add x y)
 (ratio-subtract x y)
 (ratio-multiply x y)
@@ -99,6 +111,7 @@
 (ratio-negate x)
 (ratio-recip x)
 
+; Mixing AE ratios and Lisp rationals
 (ratio-create 1 2)
 (ratio-succ (/ 1 2))
 (ratio-recip (/ 567 235))
@@ -107,7 +120,9 @@
 ;
 ; Doremir.String
 ;
-; Audio Engine strings are interchangable with Lisp strings
+; AE strings are interchangable with Lisp strings in all contexts.
+;
+; Note that LispWorks does not support surrogate pairs, so the full Unicode range is not available.
 
 (setf x (string-empty))
 (setf x (string-single 104))
@@ -130,8 +145,11 @@
 ;
 ; Doremir.Pair
 ;
-; Audio Engine pairs are not Lisp pairs
-; They print as (1,2)
+; AE pairs are distinct from Lisp conses:
+;
+;   * AE pairs print as (1,2), not as '(1 . 2).
+;   * You can pass Lisp conses to functions expecting AE pairs, but not the other way around.
+;   * You can use (import-pair) and (export-pair) to convert, see example below.
 
 (setf x (pair-create 1 2))
 (setf y (pair-copy x))
@@ -149,16 +167,19 @@
 (pair-create (pair-create 1 2) (pair-create 3 4)) ; Nested pairs are possible
 (pair-create (list-single 1) (set-single 2))      ; Pairs containing other structures too
 
+; Conversion
+(import-pair (pair-create 1 2)))
+(export-pair '(1 . 2))
 
 ; ---------------------------------------------------------------------------------------------------
 
 ; Doremir.List
 
-; Audio Engine lists are not Lisp lists
-; Generally, you can pass a Lisp list whenever an AE list is expected,
-; otherwise use (to-list) and (from-list)
+; AE lists are distinct from Lisp lists:
 ;
-; AE lists prints as [1,2,3..]
+;   * AE lists print as [1,2,3] or [] for the empty list, not as '(1 2 3) or '().
+;   * You can pass Lisp lists to functions expecting AE lists, but not the other way around.
+;   * You can use (import-list) and (export-list) to convert, see example below.
 
 (setf x (list-empty))
 (setf x (list-single 0))
@@ -195,8 +216,24 @@
 (list-join (list-empty))
 (list-join (list-single (list-single 1)))
 
-; list-find, list-map etc are the raw CFFI functions and take callbacks
-; list-find*, list-map* etc accept Lisp functions and lambdas
+
+; Mixing AE lists and Lisp lists
+
+(list-append '(1 2 3) (list-single 4))
+(list-dcons 1 '())
+(list-is-empty '())
+(list-is-single '(1))
+
+; Conversion
+
+(export-list '(1 2 3))
+(import-list (list-cons 1 (list-cons 2 (list-cons 3 (list-empty)))))
+
+
+; Higher-order functions
+;
+;   list-find, list-map etc are unwrapped C functions and take callbacks
+;   list-find*, list-map* etc are wrappers accepting Lisp functions and lambdas
 
 (list-find* 'oddp 
             '(0 2 11 5 7))
@@ -210,7 +247,7 @@
 (list-map* (lambda (x) (* 10 x))
            '(1 2 3 4 5))
 
-; FIXME auto-wrapping does not work...
+; FIXME auto-wrapping does not work here...
 (list-join-map* (lambda (x) (cond
                              ((oddp x) (copy-list '()))
                              (t        (copy-list '()))))
@@ -245,6 +282,7 @@
 (set-difference x y)
 
 (set-to-list x)
+(import-list (set-to-list x))
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -275,12 +313,11 @@
 
 (map-is-submap-of x y)
 (map-is-proper-submap-of x y)
-;(map-union x y)
-;(map-product x y)
-;(map-difference x y)
-;(map-power x)
 
 (map-to-list x)
+(mapcar (lambda (x) (from-pointer 'pair x)) 
+        (import-list (map-to-list x)))
+
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -658,7 +695,7 @@
 (error-message (to-error s))
 (device-midi-end-session s)
 
-(device-midi-all s)
+(list-length (device-midi-all s))
 (setf x (from-pointer 'device-midi (nth 6 (import-list# (device-midi-all s)))))
 (setf x (device-midi-default-input s))
 (setf y (device-midi-default-output s))
@@ -668,16 +705,16 @@
 (device-midi-has-input x)
 (device-midi-has-output x)
 
-(defcallback midi-status-changed ptr ((x ptr))
-  (declare (ignore x))
-;  (capi:display-message "Midi setup changed")
-  (audioengine-log-info "Midi setup changed"))
-(device-midi-set-status-callback (callback midi-status-changed) nil s)
+(thread-main)
+(thread-current)
+; FIXME (device-midi-set-status-callback (callback midi-status-changed) nil s)
 
 (setf z (device-midi-open-stream x))
-(device-midi-close-stream z) ; FIXME segfault
+(device-midi-close-stream z) 
 
-(message-send (to-receiver z) 0 (midi-create-simple #x90 (+ 48 (random 12)) 120))
+(message-send 
+ (to-receiver z) 0 
+ (midi-create-simple #x90 (+ 48 (random 12)) 120))
 
 
 
@@ -724,13 +761,13 @@
 (setf r (to-receiver x))
 
 (message-send r 0 (random 20))
-(message-send r 0 123/456)
-(message-send r 0 (list-copy '(1 2 3)))
+(message-send r 0 (123/456))
+(message-send r 0 (to-list '(1 2 3)))
 
 (progn
   (message-sync s)
-  (dolist (x (import-list# (message-receive s 0)))
-    (cl:print x)))
+  (dolist (x (from-list (message-receive s 0)))
+    (cl:print (from-pointer 'list x))))
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -740,10 +777,10 @@
 (setf y (atomic-copy x))
 (destroy x)
 
-(atomic-exchange x 0 1)             ; FIXME
+(atomic-exchange x 0 1)             ; FIXME does not work from Lisp
 (atomic-exchange x 1 0)
 (atomic-get x)
-(atomic-set x 1)
+(atomic-set x 0)
 (atomic-add x 1)
 ; (atomic-modify (lambda (x) x) x)
 
@@ -754,7 +791,7 @@
 (setf x (atomic-queue-create))
 (destroy x)
 (atomic-queue-write x (random 20))
-(atomic-queue-read x)               ; FIXME null should not be raw pointer
+(atomic-queue-read x)
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -772,10 +809,11 @@
 
 (defcallback thread-action ptr ((data ptr))
   (declare (ignore data))
-  (audioengine-log-info "Started another thread:")
-  (audioengine-log-info (string-show (equal (thread-current) (thread-main))))
-  (audioengine-log-info (string-show (thread-current)))
-  )
+  (audioengine-log-info "Started thread.")
+  (thread-holding (y) 
+                  (thread-sleep 3000))
+  (audioengine-log-info "Done."))
+
 
 (setf x (thread-create (callback thread-action) nil))
 (thread-main)
@@ -785,15 +823,19 @@
 (thread-join x)
 (thread-detach x)
 
-(setf x (thread-create-mutex))
-(destroy x)
-(thread-lock x)
-(thread-try-lock x)
-(thread-unlock x)
+(setf y (thread-create-mutex))
+(destroy y)
+(thread-lock y)
+(thread-try-lock y)
+(thread-unlock y)
+(thread-holding 
+ (y)
+ (audioengine-log-info "I have the mutex"))
 
-; TODO
-(thread-with-lock :blocking nil
-  )
+
+
+
+
 
 
 
