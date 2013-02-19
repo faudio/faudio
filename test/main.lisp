@@ -15,37 +15,12 @@
 
 (in-package :audio-engine)
 
-(defvar x nil)
-(defvar y nil)
-(defvar z nil)
-(defvar s nil)
-(defvar d nil)
-(defvar p nil)
-
-(defvar *foreign-lib*)
-
-; Load Lisp bindings
-(asdf:load-system :audio-engine)
-
-; Load library and setup tests
-(let ((framework-name "DoReMIRAudio")
-      (framework-path (format nil "~a/audio/build/Frameworks/" (user-homedir-pathname)))
-      (log-path       (format nil "~a/Library/Logs/DoReMIRAudio.log" (user-homedir-pathname))))
-  (push framework-path cffi:*darwin-framework-directories*)
-  (setf *foreign-lib* (cffi:load-foreign-library `(:framework ,framework-name)))
-  (audioengine-set-log-file log-path)
-  (plot-use-gnu)
-  (audioengine-initialize))
-
-
-; Unload library
-(close-foreign-library *foreign-lib*)
-
-
-
 ; ---------------------------------------------------------------------------------------------------
 
 ; Doremir
+
+(setf x 1)
+(setf y 2)
 
 (equal              x y)
 (less-than          x y)
@@ -69,20 +44,6 @@
 (from-pointer 
  'map 
  (string-from-json "{\"foo\":null, \"bar\":[1,2,3]}"))
-
-(equal              0 0)
-(equal              0 1)
-(less-than          0 1)
-(greater-than       0 1)
-(less-than-equal    0 1)
-(greater-than-equal 0 1)
-(min                0 0)
-(max                0 1)
-(add                0 0)
-(multiply           0 1)
-(subtract           0 0)
-(divide             0 1)
-(absolute           -3)
 
 
 ; ---------------------------------------------------------------------------------------------------
