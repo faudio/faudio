@@ -7,6 +7,10 @@
 
 (in-package :audio-engine)
 
+#|
+    Miscellaneous primitives.
+|#
+
 ; ---------------------------------------------------------------------------------------------------
 
 (defcfun (string-from-utf8# "doremir_string_from_utf8") :pointer (a :pointer))

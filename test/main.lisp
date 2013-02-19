@@ -373,9 +373,9 @@
 (get x 0)
 (setf (get x 0) #xff)
 
-(dotimes (i (buffer-size x))
+(dotimes (i (size x))
   (setf (get x i) (mod i 256)))
-(dotimes (i (buffer-size x))
+(dotimes (i (size x))
   (setf (get x i) 0))
 
 ; Typed get
@@ -860,11 +860,12 @@
 (thread-join x)
 (thread-detach x)
 
+(thread-sleep 3000)
+
 (thread-main)
 (thread-current)
-(equal (thread-current) (thread-main))
-
-(thread-sleep 3000)
+(equal 
+  (thread-current) (thread-main))
 
 
 ; Mutexes
@@ -881,7 +882,6 @@
  (audioengine-log-info "I have the mutex"))
 
 (thread-create* (lambda ()
-  (declare (ignore data))
   (audioengine-log-info "I am waiting.")
   (thread-holding (y) 
                   (audioengine-log-info "Finally, got it!"))))

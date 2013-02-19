@@ -7,6 +7,11 @@
 
 (in-package :audio-engine)
 
+#|
+    Pointer specific primitives. This file needs to be loaded before the
+    generated files, special.lisp is loaded afterwards.
+|#
+
 (defcfun (is-bool#      "doremir_is_bool") :boolean (a :pointer))
 (defcfun (is-int8#      "doremir_is_int8") :boolean (a :pointer))
 (defcfun (is-int16#     "doremir_is_int16") :boolean (a :pointer))
@@ -74,11 +79,11 @@
     ((is-dynamic# x)    (import-dynamic# x))
     ((is-ref# x)        x)))
 
-
-
 ; FIXME causes segmentation error with map-add
+
 ; (defmethod free-translated-object (x (type ptr-type) a) (declare (ignore a))
 ;   (destroy# x))
+
 
 (defun to-pointer (x)
   "Convert a value to a pointer"
@@ -89,7 +94,4 @@
   (cond
     ((null x) nil)
     (t (convert-from-foreign x type))))
-
-
-
 

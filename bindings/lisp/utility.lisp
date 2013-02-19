@@ -7,6 +7,12 @@
 
 (in-package :audio-engine)
 
+#|
+    High-level functions.
+    
+    The API define here should be considered experimental.
+|#
+
 ; ---------------------------------------------------------------------------------------------------
 
 (defgeneric find (predicate structure))
