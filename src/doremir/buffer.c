@@ -124,6 +124,17 @@ void doremir_buffer_set(doremir_buffer_t buffer, size_t index, uint8_t value)
     buffer->data[index] = value;
 }
 
+float doremir_buffer_get_float(doremir_buffer_t buffer, size_t index)
+{
+    assert(index * sizeof(float) < buffer->size && "Buffer overflow");
+    return ((float *) buffer->data)[index];
+}
+
+void doremir_buffer_set_float(doremir_buffer_t buffer, size_t index, float value)
+{
+    assert(index * sizeof(float) < buffer->size && "Buffer overflow");
+    ((float *) buffer->data)[index] = value;
+}
 
 double doremir_buffer_get_double(doremir_buffer_t buffer, size_t index)
 {
