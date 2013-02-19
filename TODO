@@ -2,10 +2,6 @@
 ==========
 Additions
 
-* Clock implementations:
-    * Audio (ok)
-    * Porttime?
-
 * Event
     * First, rest
     * Switch, toggle
