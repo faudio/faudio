@@ -268,6 +268,45 @@
 (list-map* (lambda (x) (* 10 x))
            '(1 2 3 4 5))
 
+(defgeneric find (predicate structure))
+(defgeneric find-index (predicate structure))
+(defgeneric filter (predicate structure))
+(defgeneric map (function structure))
+(defgeneric join (structure))
+(defgeneric join-map (function structure))
+
+(defmethod find (p (xs list))
+  (list-find* p xs))
+(defmethod find-index (p (xs list))
+  (list-find-index* p xs))
+(defmethod filter (p (xs list))
+  (list-filter* p xs))
+(defmethod map (p (xs list))
+  (list-map* p xs))
+(defmethod join ((xs list))
+  (list-join xs))
+
+(defmethod find (p (xs cl:list))
+  (find p (export-list xs)))
+(defmethod find-index (p (xs cl:list))
+  (find-index p (export-list xs)))
+(defmethod filter (p (xs cl:list))
+  (filter p (export-list xs)))
+(defmethod map (p (xs cl:list))
+  (map p (export-list xs)))
+(defmethod join ((xs cl:list))
+  (join (export-list xs)))
+
+
+(find 'evenp '(1 2 3 4))
+(find-index 'evenp '(1 2 3 4))
+(filter 'evenp '(1 2 3 4))
+(map (lambda (x) (+ 100 x)) '(1 2 3 4))
+(join 
+ (list-cons 
+  (list-single 0) 
+  (list-single (list-cons 1 (list-single 2)))))
+
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -344,10 +383,30 @@
 (setf x (buffer-resize 2048 x))
 (destroy x)
 
-(buffer-size x)
 
+(defmethod get ((b buffer) i)
+  (buffer-get x i))
+(defmethod (setf get) (v (b buffer) i)
+  (buffer-set x i v))
+
+
+(cl:print x)
+(get x 0)
+(setf (get x 0) #xff)
+
+
+; Size and access in bytes
+(buffer-size x)
 (buffer-get x 1)
 (buffer-set x 1 10)
+
+; Other types
+(buffer-get-int16 x 1)
+(buffer-set-int16 x 1 10)
+(buffer-get-int32 x 1)
+(buffer-set-int32 x 1 10)
+(buffer-get-int64 x 1)
+(buffer-set-int64 x 1 10)
 (buffer-get-float x 1)
 (buffer-set-float x 1 0.5)
 (buffer-get-double x 1)
@@ -359,6 +418,8 @@
   (buffer-set x i 0))
 
 (cl:print x)
+
+; Reading and writing raw buffers
 
 
 ; Reading and writing audio files

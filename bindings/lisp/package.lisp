@@ -19,9 +19,11 @@
     :parallel
     :identity
     :constant
+    :get
     :error
     :signal
-    :equal
+    :equal       
+    :find
     :min
     :max
     :print
