@@ -105,13 +105,23 @@ void midi_listener(const MIDINotification *message, void *data)
 // See also     http://lists.apple.com/archives/coreaudio-api/2002/Feb/msg00180.html
 //              http://comelearncocoawithme.blogspot.se/2011/08/reading-from-external-controllers-with.html
 
+// http://lists.apple.com/archives/coreaudio-api/2001/Nov/msg00087.
+
+/*
+    https://groups.google.com/forum/?fromgroups=#!topic/overtone/Rts-8g_rlR0
+
+    In coremidi, this will work if & only if the device has previously been plugged
+    in to that machine - ie not if it's a device the computer's never spoken to
+    before.
+ */
+
 void midi_listener_loop(closure_t closure)
 {
     OSStatus result;
     CFStringRef name;
     MIDIClientRef client;
 
-    name = doremir_string_to_cf_string(string("DoReMIRAudiox"));
+    name = doremir_string_to_cf_string(string("DoReMIRAudio"));
     result = MIDIClientCreate(name, midi_listener, closure, &client);
     assert(result == noErr);
 
