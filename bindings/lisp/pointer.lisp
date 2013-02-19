@@ -1,4 +1,10 @@
 
+#|
+    DoReMIR Audio Engine
+    Copyright (c) DoReMIR Music Research 2012-2013
+    All rights reserved.
+|#
+
 (in-package :audio-engine)
 
 (defcfun (is-bool#      "doremir_is_bool") :boolean (a :pointer))
@@ -48,14 +54,11 @@
     (cl:boolean         (from-bool# x))
     (cl:integer         (from-int32# x))
     (cl:ratio           (export-ratio# x))
-    (cl:float           (from-float# x))    ; single float?
+    (cl:float           (from-float# x))
     (cl:double-float    (from-double# x))
     (cl:string          (string-from-utf8# (foreign-string-alloc x :encoding :utf-8)))
-    ; TODO list, cons ?
     (t                  (to-pointer x))))
 
-; TODO string, ratio
-; TODO list, pair?
 ; TODO leaks with boxed types
 (defmethod translate-from-foreign (x (type ptr-type))
   (cond
@@ -67,15 +70,12 @@
     ((is-int64# x)      (peek-int64# x))
     ((is-float# x)      (peek-float# x))
     ((is-double# x)     (peek-double# x))
-    (t                  x)))                ; Client have to write explicit from-pointer here
+    (t                  x)))
 
 
 ; FIXME causes segmentation error with map-add
 ; (defmethod free-translated-object (x (type ptr-type) a) (declare (ignore a))
 ;   (destroy# x))
-
-
-; Utility
 
 (defun to-pointer (x)
   "Convert a value to a pointer"

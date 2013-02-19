@@ -1,10 +1,9 @@
-;;;-*- Mode: lisp -*-
 
-;;
-;;  DoReMIR Audio Engine
-;;  Copyright (c) DoReMIR Music Research 2012-2013
-;;  All rights reserved.
-;;
+#|
+    DoReMIR Audio Engine
+    Copyright (c) DoReMIR Music Research 2012-2013
+    All rights reserved.
+|#
 
 (defpackage #:audio-engine-asd
   (:use :cl :asdf))
@@ -19,7 +18,7 @@
   :serial t
   :components (
     (:file "package")
-    (:file "ptr")
+    (:file "pointer")
     (:file "doremir")
     (:module "doremir2"
       :pathname "doremir"
@@ -73,5 +72,6 @@
             (:file "file")
             (:file "buffer")))  
         (:file "audio-engine")))
-    (:file "special")))
+    (:file "special")
+    (:file "utility")))
 

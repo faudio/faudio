@@ -15,6 +15,13 @@
 
 (in-package :audio-engine)
 
+(defvar x nil)
+(defvar y nil)
+(defvar z nil)
+(defvar s nil)
+(defvar d nil)
+(defvar p nil)
+
 ; ---------------------------------------------------------------------------------------------------
 ; Top-level functions
 ; ---------------------------------------------------------------------------------------------------
@@ -158,9 +165,6 @@
 (code-char (string-char-at 0 "foo"))
 (string-matches "a*b*c+" "aaacc")
 
-; (string-map* (lambda (c) c) "abcd")
-; (string-join-map* (lambda (c) "a") "abcd")
-
 
 ; ---------------------------------------------------------------------------------------------------
 ;
@@ -254,49 +258,7 @@
 ; Higher-order functions
 ;
 ;   list-find, list-map etc are unwrapped C functions and take callbacks
-;   list-find*, list-map* etc are wrappers accepting Lisp functions and lambdas
-
-(list-find* 'oddp 
-            '(0 2 11 5 7))
-
-(list-find-index* 'oddp 
-                  '(0 2 11 4 5))
-
-(list-filter* (lambda (x) (or (evenp x) (< 4 x))) 
-              '(1 2 3 4 5))
-
-(list-map* (lambda (x) (* 10 x))
-           '(1 2 3 4 5))
-
-(defgeneric find (predicate structure))
-(defgeneric find-index (predicate structure))
-(defgeneric filter (predicate structure))
-(defgeneric map (function structure))
-(defgeneric join (structure))
-(defgeneric join-map (function structure))
-
-(defmethod find (p (xs list))
-  (list-find* p xs))
-(defmethod find-index (p (xs list))
-  (list-find-index* p xs))
-(defmethod filter (p (xs list))
-  (list-filter* p xs))
-(defmethod map (p (xs list))
-  (list-map* p xs))
-(defmethod join ((xs list))
-  (list-join xs))
-
-(defmethod find (p (xs cl:list))
-  (find p (export-list xs)))
-(defmethod find-index (p (xs cl:list))
-  (find-index p (export-list xs)))
-(defmethod filter (p (xs cl:list))
-  (filter p (export-list xs)))
-(defmethod map (p (xs cl:list))
-  (map p (export-list xs)))
-(defmethod join ((xs cl:list))
-  (join (export-list xs)))
-
+;   find, map etc are wrappers accepting Lisp functions and lambdas (see utility.lisp)
 
 (find 'evenp '(1 2 3 4))
 (find-index 'evenp '(1 2 3 4))
@@ -376,6 +338,9 @@
 ; ---------------------------------------------------------------------------------------------------
 
 ; Doremir.Buffer
+; 
+; The AE buffers are tiny wrappers around pointers.
+; Reading or writing outside the range is undefined, but fail-fast in a debug build.
 
 (setf x (buffer-create 10))      ; Always initialized to 0
 (setf x (buffer-resize 20 x))    ; Will not lose data when increasing size
@@ -383,22 +348,14 @@
 (setf x (buffer-resize 2048 x))
 (destroy x)
 
-
-(defmethod get ((b buffer) i)
-  (buffer-get x i))
-(defmethod (setf get) (v (b buffer) i)
-  (buffer-set x i v))
-
-
 (cl:print x)
-(get x 0)
-(setf (get x 0) #xff)
-
 
 ; Size and access in bytes
 (buffer-size x)
-(buffer-get x 1)
+(buffer-get x 0)
 (buffer-set x 1 10)
+(get x 0)
+(setf (get x 0) #xff)
 
 ; Other types
 (buffer-get-int16 x 1)
@@ -412,30 +369,23 @@
 (buffer-get-double x 1)
 (buffer-set-double x 1 0.5d0)
 
+; For example
 (dotimes (i (buffer-size x))
   (buffer-set x i (mod i 256)))
 (dotimes (i (buffer-size x))
   (buffer-set x i 0))
-
-(cl:print x)
 
 ; Reading and writing raw buffers
 
 
 ; Reading and writing audio files
 
+; Low-level errors
 (setf x (buffer-read-audio "/Users/hans/Desktop/test.wav"))
 (setf x (buffer-read-audio "/Users/hans/Desktop/Passager.wav"))
 (setf x (from-pointer 'buffer (pair-snd x)))
 
-(defun buffer-read-audio* (path)
-  (let ((res (buffer-read-audio path)))
-    (when (error-check res)
-      (error-log nil (to-error res))
-      (cl:error (error-message (to-error res))))
-    res))
-
-; Safe versions
+; Lisp errors
 (buffer-read-audio* "/Users/hans/Desktop/test.wav")
 (buffer-read-audio* "does-not-exist.wav")
 
@@ -546,6 +496,13 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
+; Doremir.Processor
+
+; TODO combine defcallback/unary/binary into single macro
+; i.e. define-processor
+
+;(type-offset-of 256 (input-type x))
+
 (defcallback add-i8 :char ((c ptr) (x :char))
   (declare (ignore c))
   (+ x 1))
@@ -562,15 +519,6 @@
 (setf x (unary :f32 :f32 (callback add-f32) nil))
 (setf x (binary :i8 :i8 :i8 (callback add-i8-i8) nil))
 (setf y x)
-
-; ---------------------------------------------------------------------------------------------------
-
-; Doremir.Processor
-
-; TODO combine defcallback/unary/binary into single macro
-; i.e. define-processor
-
-;(type-offset-of 256 (input-type x))
 
 (input-type x)
 (output-type x)
@@ -897,7 +845,6 @@
 ; native threads in SBCL). 
 ;
 ; You can use AE mutex to syncronize threads created by Lisp and vice versa.
-
 
 (defcallback thread-action ptr ((data ptr))
   (declare (ignore data))

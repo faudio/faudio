@@ -5,16 +5,7 @@
     All rights reserved.
 |#
 
-(defpackage :audio-engine
-  (:use :common-lisp))
-;(in-package :audio-engine)
-
-(defvar x nil)
-(defvar y nil)
-(defvar z nil)
-(defvar s nil)
-(defvar d nil)
-(defvar p nil)
+(in-package :audio-engine)
 
 (defvar *foreign-lib*)
 
@@ -31,9 +22,9 @@
   (audio-engine::plot-use-gnu)
   (audio-engine::audioengine-initialize))
 
+; To unload, evaluate this
+; (close-foreign-library *foreign-lib*)
 
-#|
-  ; Unload library
-  (close-foreign-library *foreign-lib*)
-|#
+
+
 
