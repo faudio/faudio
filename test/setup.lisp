@@ -5,7 +5,7 @@
     All rights reserved.
 |#
 
-(in-package :audio-engine)
+#-sbcl (in-package :audio-engine)
 
 (defvar *foreign-lib*)
 
