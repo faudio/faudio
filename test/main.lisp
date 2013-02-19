@@ -355,6 +355,8 @@
 (buffer-size x)
 (buffer-get x 0)
 (buffer-set x 1 10)
+
+; Generic versions
 (get x 0)
 (setf (get x 0) #xff)
 
@@ -376,19 +378,18 @@
 (dotimes (i (buffer-size x))
   (buffer-set x i 0))
 
-; Reading and writing raw buffers
 
-
-; Reading and writing audio files
-
-; Low-level errors
-(setf x (buffer-read-audio "/Users/hans/Desktop/test.wav"))
-(setf x (buffer-read-audio "/Users/hans/Desktop/Passager.wav"))
-(setf x (from-pointer 'buffer (pair-snd x)))
+; I/O
 
 ; Lisp errors
-(buffer-read-audio* "/Users/hans/Desktop/test.wav")
-(buffer-read-audio* "does-not-exist.wav")
+(setf x (buffer-read-audio* "/Users/hans/Desktop/test.wav"))
+(setf x (buffer-read-audio* "does-not-exist.wav"))
+
+; C errors
+(setf x (buffer-read-audio "/Users/hans/Desktop/test.wav"))
+(setf x (buffer-read-audio "does-not-exist.wav"))
+(setf x (from-pointer 'buffer (pair-snd x)))
+
 
 ; ---------------------------------------------------------------------------------------------------
 
