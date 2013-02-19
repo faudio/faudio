@@ -14,6 +14,7 @@
 (defcfun (is-int64#     "doremir_is_int64") :boolean (a :pointer))
 (defcfun (is-float#     "doremir_is_float") :boolean (a :pointer))
 (defcfun (is-double#    "doremir_is_double") :boolean (a :pointer))
+(defcfun (is-dynamic#   "doremir_dynamic_check") :boolean (a :pointer))
 (defcfun (is-ref#       "doremir_is_ref") :boolean (a :pointer))
 
 (defcfun (to-bool#      "doremir_to_bool") :boolean (a :pointer))
@@ -70,7 +71,8 @@
     ((is-int64# x)      (peek-int64# x))
     ((is-float# x)      (peek-float# x))
     ((is-double# x)     (peek-double# x))
-    ((is-ref# x)        (import-dynamic# x))))
+    ((is-dynamic# x)    (import-dynamic# x))
+    ((is-ref# x)        x)))
 
 
 

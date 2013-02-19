@@ -13,7 +13,7 @@
 (defcfun (signal-apply3 "doremir_signal_apply3") signal (a processor) (b signal) (c signal) (d signal))
 (defcfun (signal-constant "doremir_signal_constant") signal (a ptr))
 (defcfun (signal-value "doremir_signal_value") signal (a event))
-(defcfun (signal-delay "doremir_signal_delay") signal (a :int32) (b signal))
+(defcfun (signal-delay "doremir_signal_delay") signal (a time) (b signal))
 (defcfun (signal-add "doremir_signal_add") signal (a signal) (b signal))
 (defcfun (signal-subtract "doremir_signal_subtract") signal (a signal) (b signal))
 (defcfun (signal-multiply "doremir_signal_multiply") signal (a signal) (b signal))

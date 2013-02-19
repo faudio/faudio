@@ -135,6 +135,7 @@
 (dynamic-get-type (set-empty))
 (dynamic-get-type (map-empty))
 (dynamic-get-type "foo")
+(dynamic-get-type 1/2)
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -143,7 +144,7 @@
 ;
 ; Doremir.Ratio
 ;
-; AE ratios are interchangable with Lisp rationals in all contexts.
+; AE ratios are interchangable with Lisp rationals.
 
 (setf x (ratio-create 1 2))
 (setf y (ratio-create 278 12))
@@ -169,21 +170,19 @@
 ;
 ; Doremir.String
 ;
-; AE strings are interchangable with Lisp strings in all contexts.
+; AE strings are interchangable with Lisp strings.
 ;
-; Note that LispWorks does not support surrogate pairs, so the full Unicode range is not available.
+; Note that LispWorks does not support the full Unicode range (only UCS-2).
 
 (setf x (string-empty))
 (setf x (string-single 104))
 (setf x (string-repeat 30 (char-int #\a)))
+(setf x (string-append "hans " "höglund"))
 (destroy x)
 
-(string-append (string-single 104)
-               (string-dappend (string-single (char-int #\a))
-                               (string-single 110)))
-(string-append "hans " "höglund")
 (string-length "högtalare")
 (code-char (string-char-at 0 "foo"))
+
 (string-matches "a*b*c+" "aaacc")
 
 
@@ -201,19 +200,13 @@
 (setf y (pair-copy x))
 (destroy x)
 
-; Access
 (pair-fst x)
 (pair-snd x)
-
-; Manipulation
 (pair-dup 3)
 (pair-swap x)
 (pair-assoc (pair-create 1 (pair-create 2 3)))
 (pair-unassoc (pair-create (pair-create 1 2) 3))
 (pair-snd (from-pointer 'pair (to-pointer (pair-create 1 2))))
-
-(pair-create (pair-create 1 2) (pair-create 3 4)) ; Nested pairs are possible
-(pair-create (list-single 1) (set-single 2))      ; Pairs containing other structures too
 
 ; Conversion
 (import-pair (pair-create 1 2)))
@@ -225,7 +218,7 @@
 
 ; AE lists are distinct from Lisp lists:
 ;
-;   * AE lists print as [1,2,3] or [] for the empty list, not as '(1 2 3) or '().
+;   * AE lists print as [1,2,3], not as '(1 2 3).
 ;   * You can pass Lisp lists to functions expecting AE lists, but not the other way around.
 ;   * You can use (import-list) and (export-list) to convert, see example below.
 
@@ -380,39 +373,32 @@
 (get x 0)
 (setf (get x 0) #xff)
 
-(buffer-get-int16 x 1)
-(buffer-set-int16 x 1 10)
-(buffer-get-int32 x 1)
-(buffer-set-int32 x 1 10)
-(buffer-get-int64 x 1)
-(buffer-set-int64 x 1 10)
+(dotimes (i (buffer-size x))
+  (setf (get x i) (mod i 256)))
+(dotimes (i (buffer-size x))
+  (setf (get x i) 0))
+
+; Typed get
+; (buffer-get-int16 x 1)
+; (buffer-set-int16 x 1 10)
+; (buffer-get-int32 x 1)
+; (buffer-set-int32 x 1 10)
+; (buffer-get-int64 x 1)
+; (buffer-set-int64 x 1 10)
 (buffer-get-float x 1)
 (buffer-set-float x 1 0.5)
 (buffer-get-double x 1)
 (buffer-set-double x 1 0.5d0)
 
-(dotimes (i (buffer-size x))
-  (buffer-set x i (mod i 256)))
-(dotimes (i (buffer-size x))
-  (buffer-set x i 0))
-
 ; Conversion
 (setf a (buffer-to-array x))
-
 (setf x (array-to-buffer a))
 
-
 ; I/O
-
-; Lisp errors
-(setf x (buffer-read-audio* "/Users/hans/Desktop/test.wav"))
-(setf x (buffer-read-audio* "does-not-exist.wav"))
-
-; C errors
 (setf x (buffer-read-audio "/Users/hans/Desktop/test.wav"))
 (setf x (buffer-read-audio "does-not-exist.wav"))
-(setf x (from-pointer 'buffer (pair-snd x)))
-
+(setf x 
+      (from-pointer 'buffer (pair-snd x)))
 
 ; ---------------------------------------------------------------------------------------------------
 

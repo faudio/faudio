@@ -149,7 +149,8 @@
     (8 (from-pointer 'list x))
     (9 (from-pointer 'set x))
     (10 (from-pointer 'map x))
-    (11 (from-pointer 'string x))))
+    (11 (from-pointer 'string x))
+    (12 (from-pointer 'ratio x))))
 
 ; ---------------------------------------------------------------------------------------------------
 
