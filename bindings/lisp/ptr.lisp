@@ -59,6 +59,7 @@
 ; TODO leaks with boxed types
 (defmethod translate-from-foreign (x (type ptr-type))
   (cond
+    ((null-pointer-p x)  nil)
     ((is-bool# x)       (to-bool# x))
     ((is-int8# x)       (to-int8# x))
     ((is-int16# x)      (to-int16# x))
@@ -82,7 +83,9 @@
 
 (defun from-pointer (type x)
   "Convert a pointer to a value"
-  (convert-from-foreign x type))
+  (cond
+    ((null x) nil)
+    (t (convert-from-foreign x type))))
 
 
 
