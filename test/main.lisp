@@ -207,7 +207,7 @@
 (setf x (list-dcons 1 x))
 (setf x (list-dcons (random 20) x))
 (setf x (list-dtail x))
-(setf x (to-list '(1 2 3 4)))
+(setf x (export-list '(1 2 3 4)))
 (setf y (list-copy x))
 (destroy x)
 
@@ -268,12 +268,6 @@
 (list-map* (lambda (x) (* 10 x))
            '(1 2 3 4 5))
 
-; FIXME auto-wrapping does not work here...
-(list-join-map* (lambda (x) (cond
-                             ((oddp x) (copy-list '()))
-                             (t        (copy-list '()))))
-                '(1 2 3 4 5))
-
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -311,8 +305,8 @@
 
 (setf x (map-empty))
 (setf x (map-dadd "name" "hans" x))
-(setf x (map-dadd "name" "sven" x))   ; Map.add does not overwrite equals (right-biased)
-(setf x (map-dset "name" "sven" x))   ; Map.set does (left-biased)
+(setf x (map-dadd "name" "sven" x))   ; Map.add does not overwrite equals
+(setf x (map-dset "name" "sven" x))   ; Map.set does
 (setf x (map-dadd "skills"
                   (list-single 1) x))
 (setf x (map-add-entry 
@@ -595,13 +589,10 @@
 ; Doremir.Event
 
 (setf x (event-never))
-(setf x (event-later
-         (time :seconds (+ 5 1/3))
-         48))
-
-(setf x (event-merge
-         (event-now 48)
-         (event-now 60)))
+(setf x (event-now 12))
+(setf x (event-delay (seconds 30) (event-now 13)))
+(setf x (event-later (seconds 1/3) 48))
+(setf x (event-merge (event-now 48) (event-later (seconds 1) 60)))
 
 (run-event x)
 
@@ -623,6 +614,7 @@
   (system-event-key-down)))
 
 (run-event key-down)
+(run-event (input-slider))
 
 (run-event
  (event-merge
@@ -730,7 +722,7 @@
 (device-midi-end-session s)
 
 (list-length (device-midi-all s))
-(setf x (from-pointer 'device-midi (nth 6 (import-list# (device-midi-all s)))))
+(setf x (from-pointer 'device-midi (nth 6 (import-list (device-midi-all s)))))
 (setf x (device-midi-default-input s))
 (setf y (device-midi-default-output s))
 
@@ -739,8 +731,6 @@
 (device-midi-has-input x)
 (device-midi-has-output x)
 
-(thread-main)
-(thread-current)
 ; FIXME (device-midi-set-status-callback (callback midi-status-changed) nil s)
 
 (setf z (device-midi-open-stream x))
