@@ -176,24 +176,29 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-(defun time (&key days
-                  hours
-                  minutes
-                  seconds
-                  milliseconds
-                  nanoseconds)
+(defun time (&key days hours minutes
+                  seconds milliseconds nanoseconds
+                  min sec ms ns)
+
   (let* ((zero-time         (time-create 0 0 0 0))
+
          (days-time         (if days    (time-create days 0 0 0) nil))
          (hours-time        (if hours   (time-create 0 hours 0 0) nil))
          (minutes-time      (if minutes (time-create 0 0 minutes 0) nil))
          (seconds-time      (if seconds (time-create 0 0 0 (rational seconds)) nil))
          (milliseconds-time (if milliseconds (time-create 0 0 0 (/ (rational milliseconds) 1000)) nil))
          (nanoseconds-time  (if nanoseconds (time-create 0 0 0 (/ (rational nanoseconds) 1000000)) nil))
+
+         (min-time          (if min     (time-create 0 0 min 0) nil))
+         (sec-time          (if min     (time-create 0 0 0 sec) nil))
+         (ms-time           (if milliseconds (time-create 0 0 0 (/ (rational milliseconds) 1000)) nil))
+         (ns-time           (if nanoseconds (time-create 0 0 0 (/ (rational nanoseconds) 1000000)) nil))
+
          (time-exprs  (remove nil (cl:list days-time hours-time minutes-time
-                                           seconds-time milliseconds-time nanoseconds-time))))
+                                           seconds-time milliseconds-time nanoseconds-time
+                                           min-time sec-time ms-time ns-time))))
     (reduce (lambda (x y)
-      (from-pointer 'time (add x y))) time-exprs
-      :initial-value zero-time)))
+      (from-pointer 'time (add x y))) time-exprs :initial-value zero-time)))
 
 (defun hours (x) (time :hours x))
 (defun minutes (x) (time :minutes x))
@@ -246,7 +251,6 @@
 (defun event-filter* (f xs)
   (event-filter (callback predcall1#) (func-to-int# f) xs))
 
-
 ; ---------------------------------------------------------------------------------------------------
 
 (defun string-map* (f xs)
@@ -254,6 +258,14 @@
 
 (defun string-join-map* (f xs)
   (string-join-map (callback funcall1#) (func-to-int# f) xs))
+
+; ---------------------------------------------------------------------------------------------------
+
+(defun device-audio-set-status-callback* (f session)
+  (device-audio-set-status-callback 
+    (callback funcall0#) 
+    (func-to-int# f)
+    session))
 
 ; ---------------------------------------------------------------------------------------------------
 

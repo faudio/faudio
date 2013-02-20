@@ -7,23 +7,41 @@
 
 
 #|
-    Conventions:
+    ## Conventions
 
         All Modulo/C functions are exposed directly. Name is the same as in C except that:
 
-            - There is no global 'doremir' prefix, instead all symbols are in the 'audio-engine' package.
+            - There is no global 'ae' prefix, instead all symbols are in the 'ae' package.
             - Names are separated by dashes instead of underscores.
 
-        For example 'doremir_device_audio_name' becomes (audio-engine:device-audio-name x).
+        For example 'ae_device_audio_name' becomes (ae:device-audio-name x).
         
         Sometimes a Lisp wrapper is added to adapt error checking, wrapping of closures etc. The name
-        is the same as the wrapped function with an underscore suffix. For example, (list-find) is
+        is the same as the wrapped function with a star suffix. For example, (list-find) is
         available in two forms:
     
           list-find     accepts CFFI callbacks only
           list-find*    accepts functions
 
-    Caveats:
+        Note that the Lisp wrappers are a work in progress. See utility.lisp for more information.
+        
+    ## Types
+
+        Opaque types (most of them) are represented by a Lisp class of the same name. For example
+        the type String in module Doremir.String is represented by a type (defclass string).
+
+    ## Resource management
+        
+        This is manual. Each created value object must be destroyed by passing it to (destroy), or
+        another destructive function such as (list-dcons). See the reference page 'Data Structures'
+        for more information.
+
+        We might want to hook into the Lisp GC using something like the trivial garbage; however
+        in many cases this might not necessarilty be practical. Things like sessions, devices and 
+        buffers often needs to be managed manually in any case (the same problem applies to streams
+        and sockets).
+                                                                  
+    ## Undefined behaviour
 
       - Calling a function on a destroyed object is undefined
       - Calling (from-pointer) with the wrong type is undefined
@@ -273,7 +291,6 @@
 
 
 ; Mixing AE and Lisp lists
-
 (list-append '(1 2 3) (list-single 4))
 (list-dcons 1 '())
 (list-is-empty '())
@@ -321,7 +338,7 @@
 (setf x (map-dadd "name" "hans" x))
 (setf x (map-dadd "name" "sven" x))   ; Map.add does not overwrite equals
 (setf x (map-dset "name" "sven" x))   ; Map.set does
-(setf x (map-dadd "skills"
+(setf x (map-dset "skills"
                   (list-single 1) x))
 (setf x (map-add-entry
          (pair-create "surname"
@@ -337,8 +354,8 @@
 
 (map-has-key "name" x)
 (map-has-key "skills" x)
-(from-pointer 'string (map-get "name" x))
-(from-pointer 'list (map-get "skills" x))
+(map-get "name" x)
+(map-get "skills" x)
 
 (map-is-submap-of x y)
 (map-is-proper-submap-of x y)
@@ -353,13 +370,14 @@
 
 ; Doremir.Buffer
 ;
-; The AE buffers are tiny wrappers around pointers. 
+; The AE buffers are simply raw blocks of memory with a known size.
 
 ; All memory is allocated outside the control of Lisp and must be freed by destroying 
-; the buffer. You can acces individual elements using the get functions, or copy the buffer 
-; to the Lisp heap using (buffer-to-array), and vice versa using (array-to-buffer).
+; the buffer. You can acces individual elements using the (get) function, copy the buffer 
+; to the Lisp heap using (buffer-to-array) and copy it back using (array-to-buffer).
 ;
-; Reading or writing outside the range is undefined, but fail-fast in a debug build.
+; Reading or writing outside the range is undefined, but fails with an error message in
+; a debug build of the AE.
 
 (setf x (buffer-create 10))
 (setf x (buffer-resize 20 x))
@@ -395,8 +413,8 @@
 (setf x (array-to-buffer a))
 
 ; I/O
-(setf x (buffer-read-audio "/Users/hans/Desktop/test.wav"))
-(setf x (buffer-read-audio "does-not-exist.wav"))
+(setf x (buffer-read-audio* "/Users/hans/Desktop/test.wav"))
+(setf x (buffer-read-audio* "does-not-exist.wav"))
 (setf x 
       (from-pointer 'buffer (pair-snd x)))
 
@@ -424,12 +442,11 @@
 
 ; Doremir.Time
 ;
-; Use the (time) function to create a time value. All the given components are added, so
-; (time :minutes 1 :seconds 2) is equivalent to (time :seconds 62).
+; Use the (time) function to create a time value. All the given components are added, 
+; together so (time :minutes 1 :seconds 2) is equivalent to (time :seconds 62).
 ;
-; Longer units must be integral. Seconds may be fractional and are implicitly 
-; coerced using (cl:rational). The :millisecond and :nanosecond forms are equivalent to
-; a fractional second divided by 10^3 or 10^6 respectively.
+; All components except seconds must be integers. Seconds may be rational or 
+; real and are implicitly coerced to rationals. 
 
 (time :minutes 1 :seconds 1/2)
 (greater-than (time :minutes 1) (time :seconds 59))
@@ -445,15 +462,15 @@
 (setf x (from-pointer 'time (add x y)))
 (destroy x)
 
-; Extract
 (time-days x)
 (time-hours x)
 (time-minutes x)
 (time-seconds x)
 (time-divisions x)
 
-; Conversions
 (time-to-iso x)
+;(time-to-milliseconds x)
+(time-to-seconds x)
 
 ; Clocks
 (setf z (time-get-system-prec-clock))
@@ -726,14 +743,13 @@
 (type-channels (device-audio-output-type x))
 (type-size-of 1024 (device-audio-input-type x))
 
-(defcallback audio-status-changed ptr ((x ptr))
-  (declare (ignore x))
+(device-audio-set-status-callback* (lambda ()
   (capi:display-message "Audio setup changed")
-  (audioengine-log-info "Audio setup changed"))
-(device-audio-set-status-callback (callback audio-status-changed) nil s)
+  (audioengine-log-info "Audio setup changed")) s)
 
 (setf p (processor-identity '(:pair (:frame :f32) (:frame :f32))))
 (setf z (device-audio-open-stream x p y))
+; close-all!
 (device-audio-close-stream z)
 
 ; TODO unregister status callback?
