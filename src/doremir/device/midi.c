@@ -151,6 +151,8 @@ inline static stream_t new_stream(device_t device)
     stream->impl            = &midi_stream_impl;
     stream->device          = device;
     stream->incoming        = doremir_list_empty();
+    stream->native_input    = NULL;
+    stream->native_output   = NULL;
 
     return stream;
 }
@@ -224,7 +226,8 @@ void doremir_device_midi_end_session(session_t session)
         if (pm_status) {
             result = Pm_Terminate();
             if (result < 0) {
-                return (session_t) native_error(string("Could not stop midi"), result);
+                doremir_error_log(NULL, native_error(string("Could not stop midi"), result));
+                return;
             }
             pm_status = false;
         }
@@ -355,8 +358,10 @@ doremir_device_midi_stream_t doremir_device_midi_open_stream(device_t device)
 void doremir_device_midi_close_stream(stream_t stream)
 {
     inform(string("Closing real-time midi stream"));
-    Pm_Close(stream->native_input);
-    Pm_Close(stream->native_output);
+    if (stream->native_input)
+        Pm_Close(stream->native_input);
+    if (stream->native_output)
+        Pm_Close(stream->native_output);
 }
 
 
