@@ -635,54 +635,56 @@
 
 ; Doremir.Event
 
-(setf x (event-never))
-(setf x (event-now 12))
-(setf x (event-delay (seconds 30) (event-now 13)))
-(setf x (event-later (seconds 1/3) 48))
-(setf x (event-merge (event-now 48) (event-later (seconds 1) 60)))
+(run-event (never))
+(run-event (now 1234))
+(run-event (later (seconds 1) 3456))
+(run-event (delay (seconds 2) (now 5678)))
+(run-event (merge (now 1) (later (seconds 1) 2)))
 
-(run-event x)
-
-(defun to-midi (x)
-  (midi #x90 (round (* 128 (/ x 1800))) 120))
-
-(defun get-mouse-x-int (v)
-  (round (pair-fst (from-pointer 'pair v))))
-
+(run-event (after key-down mouse-move-x))
+(run-event (before key-down mouse-move-x))
 
 (setf mouse-down (system-event-mouse-down))
-(setf mouse-down-x (event-map* 'get-mouse-x-int mouse-down))
-(setf mouse-move (system-event-mouse-move))
-(setf mouse-move-x (event-map* 'get-mouse-x-int mouse-move))
-(setf key-down
- (event-map*
-  (lambda (xs)
-    (+ (- (list-index 1 xs) 97) 48))
-  (system-event-key-down)))
+(setf mouse-down-x (map (lambda (x) (round (pair-fst x)))  mouse-down))
 
+(setf mouse-move (system-event-mouse-move))
+(setf mouse-move-x (map (lambda (x) (round (pair-fst x))) mouse-move))
+(setf mouse-move-y (map (lambda (x) (round (pair-snd x))) mouse-move))
+
+(setf key-down
+      (map (lambda (xs) (+ (- (list-index 1 xs) 97) 48))
+           (system-event-key-down)))
+
+(run-event (system-event-key-down))
 (run-event key-down)
-(run-event (input-slider))
+(run-event mouse-move-x)
+(run-event mouse-move-y)
+
+
 
 (run-event
- (event-merge
-  (event-send (to-receiver z) 0
-              (event-map* (lambda (x)
-                            (midi
-                             #x90 x 100))
-                          key-down))
-  (event-send (to-receiver z) 0
-              (event-map* (lambda (x)
-                            (midi #xb0 7 (round (* 127 (/ x 100)))))
-                          (input-slider :title "Volume")))))
+ (let* ((scale         (lambda (from to) (lambda (x) (round (* to (/ x from))))))
+        (make-note     (lambda (x) (midi #x90 x 100)))
+        (make-volume   (lambda (x) (midi #xb0 7 (funcall (funcall scale 100 127) x))))
+        (volume-slider (input-slider :title "Volume")))
+   (merge
+    (send (to-receiver z) 0 (map make-note key-down))
+    (send (to-receiver z) 0 (map make-volume volume-slider))
+    (never))) :duration (seconds 30))
 
-(defun run-event (event)
+
+
+(setf z (system-event-send-log))
+
+; Run the given event for some duration, writing its values to the log.
+; TODO infinate duration and 'stop' event (i.e. hitting escape)
+(defun run-event (event &key (duration (time :seconds 5)))
   (let* ((scheduler
           (scheduler-create
            (time-get-system-prec-clock))))
     (audioengine-log-info "Running event")
-    (scheduler-schedule scheduler
-                        (system-event-write-log event))
-    (scheduler-loop-for (time :seconds 10) scheduler)
+    (scheduler-schedule scheduler (system-event-write-log event))
+    (scheduler-loop-for duration scheduler)
     ; later...
     (destroy scheduler)
     (audioengine-log-info "Stopped running event")))
@@ -694,11 +696,11 @@
 ; use a single dispatcher and send values on separate channels.
 
 (defun input-slider (&key (title "Input"))
-  (let* ((chan 0)
-         (disp (message-create-dispatcher))               ; Shared dispatcher
+  (let* ((slider-chan 0)
+         (disp (message-create-dispatcher))               
          (handler (lambda (interface value gesture)
                     (message-send
-                        (to-receiver disp) chan value)))  ; The interface sends to disp/chan
+                        (to-receiver disp) slider-chan value))) 
          (class (capi:define-interface simple-slider ()
                   ()
                   (:panes
@@ -709,10 +711,12 @@
                      (make-instance 'simple-slider
                                     :title title
                                     :best-width 500))))
-    (event-receive (to-sender disp) chan)))               ; The event receives from disp/chan
+    (event-receive (to-sender disp) slider-chan)))
 
 (run-event (input-slider :title "Foo"))
 
+
+; TODO update GUI from event
 (setf (capi:range-slug-start (slot-value i 'slider)) (random 100))
 
 
@@ -781,6 +785,7 @@
 (setf z (device-midi-open-stream x))
 (device-midi-close-stream z)
 
+;(setf z (system-event-send-log))
 (message-send
  (to-receiver z) 0
  (midi #x90 (+ 48 (random 12)) 120))

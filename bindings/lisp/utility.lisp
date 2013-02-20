@@ -62,6 +62,15 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
+(defmethod filter (p (xs event))
+  (event-filter* p xs))
+
+(defmethod map (p (xs event))
+  (event-map* p xs))
+
+
+; ---------------------------------------------------------------------------------------------------
+
 (defmethod size ((b buffer))
   (buffer-size b))
 
@@ -112,15 +121,16 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-(defmacro input-type (&rest args) `(processor-input-type ,@args))
-(defmacro output-type (&rest args) `(processor-output-type ,@args))
-(defmacro unary (&rest args) `(processor-unary ,@args))
-(defmacro binary (&rest args) `(processor-binary ,@args))
-(defmacro identity (&rest args) `(processor-identity ,@args))
-(defmacro constant (&rest args) `(processor-constant ,@args))
-(defmacro loop (&rest args) `(processor-loop ,@args))
-(defmacro split (&rest args) `(processor-split ,@args))
-(defmacro delay (&rest args) `(processor-delay ,@args))
+(defmacro input-type    (&rest args)  `(processor-input-type ,@args))
+(defmacro output-type   (&rest args)  `(processor-output-type ,@args))
+(defmacro unary         (&rest args)  `(processor-unary ,@args))
+(defmacro binary        (&rest args)  `(processor-binary ,@args))
+(defmacro identity      (&rest args)  `(processor-identity ,@args))
+(defmacro constant      (&rest args)  `(processor-constant ,@args))
+(defmacro loop          (&rest args)  `(processor-loop ,@args))
+(defmacro split         (&rest args)  `(processor-split ,@args))
+(defmacro delay         (&rest args)  `(processor-delay ,@args))
+
 
 ; seq and par are binary, sequence and parallel are the reduced version
 (defmacro seq (&rest args) `(processor-sequence ,@args))
@@ -135,6 +145,31 @@
   (cond
    (args (par head (apply 'parallel args)))
    (t    head)))
+
+; ---------------------------------------------------------------------------------------------------
+
+(defmacro never         (&rest args)  `(event-never ,@args))
+(defmacro now           (&rest args)  `(event-now ,@args))
+(defmacro later         (&rest args)  `(event-later ,@args))
+(defmacro delay         (&rest args)  `(event-delay ,@args))
+(defmacro switch        (&rest args)  `(event-switch ,@args))
+(defmacro loop          (&rest args)  `(event-loop ,@args))
+(defmacro receive       (&rest args)  `(event-receive ,@args))
+(defmacro send          (&rest args)  `(event-send ,@args))
+
+(defmacro before        (&rest args)  `(event-before ,@args))
+(defmacro after         (&rest args)  `(event-after ,@args))
+
+
+; seq and par are binary, sequence and parallel are the reduced version
+(defmacro merge2 (&rest args) `(event-merge ,@args))
+
+(defun merge (head &rest args)
+  (cond
+   (args        (merge2 head (apply 'merge args)))
+   ((null head) (event-never))
+   (t           head)
+   ))
 
 
 ; (defmacro < (&rest args) `(greater-than ,@args))

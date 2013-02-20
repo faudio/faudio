@@ -25,7 +25,8 @@
                 :parallel
                 :identity
                 :constant
-                :get
+                :get 
+                :merge
                 :error
                 :signal
                 :equal
