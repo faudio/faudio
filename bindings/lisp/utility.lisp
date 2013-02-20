@@ -135,3 +135,22 @@
   (cond
    (args (par head (apply 'parallel args)))
    (t    head)))
+
+
+; (defmacro < (&rest args) `(greater-than ,@args))
+; (defmacro > (&rest args) `(less-than ,@args))
+; (defmacro <= (&rest args) `(less-than-equal ,@args))
+; (defmacro >= (&rest args) `(less-than-equal ,@args))
+; (defmacro + (&rest args) `(add ,@args))
+; (defmacro - (&rest args) `(subtract ,@args))
+; (defmacro * (&rest args) `(multiply ,@args))
+; (defmacro / (&rest args) `(divide ,@args))
+; (defmacro abs (&rest args) `(absolute ,@args))
+
+
+
+
+
+
+
+

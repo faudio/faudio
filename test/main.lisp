@@ -404,7 +404,7 @@
 
 ; Doremir.Midi
 
-(setf x (midi-create-simple #x9 60 127))
+(setf x (midi #x91 60 127))
 (setf x (midi-create-sysex (buffer-create 1024)))
 (setf y (midi-copy x))
 (destroy x)
@@ -423,11 +423,17 @@
 ; ---------------------------------------------------------------------------------------------------
 
 ; Doremir.Time
+;
+; Use the (time) function to create a time value. All the given components are added, so
+; (time :minutes 1 :seconds 2) is equivalent to (time :seconds 62).
+;
+; Longer units must be integral. Seconds may be fractional and are implicitly 
+; coerced using (cl:rational). The :millisecond and :nanosecond forms are equivalent to
+; a fractional second divided by 10^3 or 10^6 respectively.
 
 (time :minutes 1 :seconds 1/2)
 (greater-than (time :minutes 1) (time :seconds 59))
 (greater-than (time :minutes 1) (time :seconds 61))
-
 (setf x (time :days 7))
 (setf x (time :hours 1 :minutes 1 :seconds 2))
 (setf x (time :seconds 3662))
@@ -462,8 +468,10 @@
 ; ---------------------------------------------------------------------------------------------------
 
 ; Doremir.Type
+;
+; You can always give a function expecting a type a *type expression* (see below). 
+; Use (type *expr*) to force conversion.
 
-; Type expressions, auto-converted to type
 (setf x nil)
 (setf x :unit)
 (setf x :i8)
@@ -480,10 +488,12 @@
 (setf x '(:vector (:pair :i8 :i32) 24))
 (setf x '(:vector :f32 1024))
 
-; We can also force conversion
-(setf x (to-type :unit))
-(setf x (to-type '(:pair :i8 :i8)))
-(setf x (to-type '(:vector (:pair :i8 :i32) 24)))
+(setf x (type nil))
+(setf x (type :i32))
+(setf x (type :unit))
+(setf x (type '(:pair :i8 :i8)))
+(setf x (type '(:vector (:pair :i8 :i32) 24)))
+; etc
 
 (type-is-simple x)
 (type-is-pair x)
@@ -494,7 +504,6 @@
 (type-offset-of 256 x)
 (type-align-of x)
 
-; Multichannel
 (setf x (type-repeat 8 :f32)) ; (f32,...)
 (setf x (type-repeat 1 :f32)) ; f32
 (setf x (type-repeat 0 :f32)) ; ()
@@ -618,7 +627,7 @@
 (run-event x)
 
 (defun to-midi (x)
-  (midi-create-simple #x90 (round (* 128 (/ x 1800))) 120))
+  (midi #x90 (round (* 128 (/ x 1800))) 120))
 
 (defun get-mouse-x-int (v)
   (round (pair-fst (from-pointer 'pair v))))
@@ -631,7 +640,7 @@
 (setf key-down
  (event-map*
   (lambda (xs)
-    (+ (- (list-index 1 (from-pointer 'list xs)) 97) 48))
+    (+ (- (list-index 1 xs) 97) 48))
   (system-event-key-down)))
 
 (run-event key-down)
@@ -641,14 +650,13 @@
  (event-merge
   (event-send (to-receiver z) 0
               (event-map* (lambda (x)
-                            (midi-create-simple
+                            (midi
                              #x90 x 100))
                           key-down))
   (event-send (to-receiver z) 0
               (event-map* (lambda (x)
-                            (midi-create-simple #xb0 7 (round (/ 100 (* 127 x)))))
+                            (midi #xb0 7 (round (* 127 (/ x 100)))))
                           (input-slider :title "Volume")))))
-
 
 (defun run-event (event)
   (let* ((scheduler
@@ -657,7 +665,7 @@
     (audioengine-log-info "Running event")
     (scheduler-schedule scheduler
                         (system-event-write-log event))
-    (scheduler-loop-for (time :seconds 30) scheduler)
+    (scheduler-loop-for (time :seconds 10) scheduler)
     ; later...
     (destroy scheduler)
     (audioengine-log-info "Stopped running event")))
@@ -742,7 +750,7 @@
 (error-message (to-error s))
 (device-midi-end-session s)
 
-(list-length (device-midi-all s))
+(device-midi-all s)
 (setf x (from-pointer 'device-midi (nth 6 (import-list (device-midi-all s)))))
 (setf x (device-midi-default-input s))
 (setf y (device-midi-default-output s))
@@ -759,7 +767,7 @@
 
 (message-send
  (to-receiver z) 0
- (midi-create-simple #x90 (+ 48 (random 12)) 120))
+ (midi #x90 (+ 48 (random 12)) 120))
 
 
 

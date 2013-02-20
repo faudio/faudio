@@ -127,10 +127,10 @@
     ((eq x nil)        (type-simple 0))
     ((consp x)
       (cond
-        ((eq :frame  (car x))     (type-frame (to-type (cadr x))))
-        ((eq :vector (car x))     (type-vector (to-type (cadr x)) (caddr x)))
-        ((eq :pair   (car x))     (type-pair (to-type (cadr x)) (to-type (caddr x))))
-        (t                        (type-pair (to-type (car x)) (to-type (cdr x))))))
+        ((eq :frame  (car x))     (type-frame (export-type# (cadr x))))
+        ((eq :vector (car x))     (type-vector (export-type# (cadr x)) (caddr x)))
+        ((eq :pair   (car x))     (type-pair (export-type# (cadr x)) (export-type# (caddr x))))
+        (t                        (type-pair (export-type# (car x)) (export-type# (cdr x))))))
     ((eq (type-of x) 'type) (slot-value x 'type-ptr))
     (t                      x)))
 
@@ -139,7 +139,7 @@
 (defmethod translate-from-foreign (x (type type-type))
     (make-instance 'type :type-ptr x))
 
-(defun to-type (x)
+(defun type (x)
   (export-type# x)) ; FIXME should not do slot-value??
 
 
@@ -155,6 +155,10 @@
     (10 (from-pointer 'map x))
     (11 (from-pointer 'string x))
     (12 (from-pointer 'ratio x))))
+
+; ---------------------------------------------------------------------------------------------------
+
+(defmacro midi (&rest args) `(midi-create-simple ,@args))
 
 ; ---------------------------------------------------------------------------------------------------
 
