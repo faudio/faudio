@@ -4,7 +4,8 @@ all: test_plot
 show: all
 	open $(OUTPUT)/*.png;
 
-PROC 	     	= cpp -I"/Volumes/DoReMIR/development/osx/audio-engine"
+ROOT 	        = $(shell pwd)
+PROC 	     	= cpp -I"$(ROOT)"
 PLOT_TO_PS   	= gnuplot
 PS_TO_PDF	= ps2pdf
 PDF_TO_PNG   	= convert -density 150x150 -resize 50%

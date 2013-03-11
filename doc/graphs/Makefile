@@ -4,7 +4,8 @@ all: device_states device_states2 test_graph dsp seq par loop split unary binary
 show: all
 	open $(OUTPUT)/*.png;
 
-PROC 	     	= cpp -I"/Volumes/DoReMIR/development/osx/audio-engine"
+ROOT 	        = $(shell pwd)
+PROC 	     	= cpp -I"$(ROOT)"
 DOT_TO_PDF   	= dot -Tpdf
 PDF_TO_PNG   	= convert -density 150x150 -resize 50%
 INPUT 	     	= doc/graphs

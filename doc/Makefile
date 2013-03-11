@@ -12,9 +12,9 @@ all : html
 # 		Scheduling.md \
 # 		Build\ and\ install.md;
 
-html: graphs doxygen dirs
+html: graphs plots doxygen dirs
 
-pdf: graphs doxygen dirs
+pdf: graphs plots doxygen dirs
 	pushd doc/build/latex; \
 	make; \
 	cp refman.pdf "../book/Audio Engine.pdf"; \
@@ -22,6 +22,9 @@ pdf: graphs doxygen dirs
 
 graphs:
 	make -f doc/graphs/Makefile;
+
+plots:
+	make -f doc/plots/Makefile;
 
 doxygen:
 	doxygen doc/Doxyfile \
