@@ -325,11 +325,11 @@ type_t doremir_device_audio_output_type(device_t device)
 
 bool doremir_device_audio_has_input(device_t device)
 {
-    return doremir_equal(doremir_device_audio_input_type(device), type(unit));
+    return doremir_not_equal(doremir_device_audio_input_type(device), type(unit));
 }
 bool doremir_device_audio_has_output(device_t device)
 {
-    return doremir_equal(doremir_device_audio_output_type(device), type(unit));
+    return doremir_not_equal(doremir_device_audio_output_type(device), type(unit));
 }
 
 
