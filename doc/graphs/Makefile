@@ -1,5 +1,5 @@
 
-all: device_states device_states2 test_graph dsp seq par loop split unary binary ternary test_gen gen
+all: images device_states device_states2 test_graph dsp seq par loop split unary binary ternary gen
 
 show: all
 	open $(OUTPUT)/*.png;
@@ -15,6 +15,8 @@ CONVERT_GRAPH   = $(PROC) <$(INPUT)/$(1).dot | $(DOT_TO_PDF) >$(OUTPUT)/$(1).pdf
 	          	&& \
 		  $(PDF_TO_PNG) $(OUTPUT)/$(1).pdf $(OUTPUT)/$(1).png;
 
+images:
+	mkdir -p doc/images
 dsp:
 	$(call CONVERT_GRAPH,dsp)
 seq:

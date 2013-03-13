@@ -1,5 +1,5 @@
 
-all: test_plot
+all: images test_plot
 
 show: all
 	open $(OUTPUT)/*.png;
@@ -26,6 +26,11 @@ CONVERT_PLOT    = cat $(INPUT)/head.plot $(INPUT)/$(1).plot | $(PLOT_TO_PS) >$(O
 
 head:
 	echo $(HEAD)
+
+images:
+	mkdir -p doc/images
+
+
 test_plot:  
 	$(call CLEAN_PLOT,test_data) && \
 	$(call CONVERT_PLOT,test_data)

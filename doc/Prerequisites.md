@@ -81,6 +81,12 @@ Optionally used for generating plots.
 
 Optionally used for converting graphs.
 
+### libpng
+
+TODO URL
+
+libpng
+
 ### GhostScript
 
 <http://pages.cs.wisc.edu/~ghost/>
