@@ -1920,7 +1920,7 @@ int main(int argc, char const *argv[])
         // test_dispatcher();
         // test_system_event();
 
-        test_event();
+        // test_event();
         // goto end;
         // test_scheduler();
         // test_processor();
@@ -1930,7 +1930,7 @@ int main(int argc, char const *argv[])
             string_dappend(doremir_system_directory_current(), string("/test/out.wav")));
         test_buffer_stream();
         // test_audio_stream();
-        test_midi_stream();
+        // test_midi_stream();
 
 end:
         doremir_audio_engine_terminate();
