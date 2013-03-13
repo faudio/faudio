@@ -86,8 +86,8 @@
 [package "coreplot-osx"]
     site    = doremir
     version = 1.1
-    subpath = external/coreplot
-    path    = include, result
+    subpath = external/coreplot/result
+    path    = include, Frameworks
     mode    = get/put
 
 
