@@ -1840,6 +1840,33 @@ void test_midi_stream()
 cleanup:
     // doremir_device_midi_close_stream(stream);
     doremir_device_midi_end_session(session);
+}           
+
+
+
+void test_midi_hotplug()
+{
+    test_section("Midi hot-plugging");
+
+    midi_session_t session;
+
+    // Begin session
+    session = doremir_device_midi_begin_session();
+
+    // Handle possible error
+    if (doremir_check(session)) {
+        log_error((error_t) session);
+        warn(string("Aborting test due to error"));
+        goto cleanup;
+    }
+
+    doremir_device_midi_set_status_callback(status_changed, string("hello"), session);
+    
+    // CFRunLoopRun();
+    // doremir_thread_sleep(20000);
+cleanup:
+    // doremir_device_midi_close_stream(stream);
+    doremir_device_midi_end_session(session);
 }
 
 
@@ -1914,7 +1941,6 @@ int main(int argc, char const *argv[])
         // test_plot(NULL, NULL);
         // test_plot_buffer();
         // test_plot_file(string_dappend(doremir_system_directory_current(), string("/test/in.wav")));
-// begin:
 
         // test_processor_graphs(string_dappend(doremir_system_directory_current(), string("/test/proc.dot")));
         // test_dispatcher();
@@ -1931,8 +1957,12 @@ int main(int argc, char const *argv[])
         test_buffer_stream();
         // test_audio_stream();
         // test_midi_stream();
+        
+        
+// begin:
+        // test_midi_hotplug();
 
-end:
+// end:
         doremir_audio_engine_terminate();
     }
 

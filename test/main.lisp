@@ -781,6 +781,19 @@
 (device-midi-has-output x)
 
 ; FIXME (device-midi-set-status-callback (callback midi-status-changed) nil s)
+(device-midi-set-status-callback* (lambda ()
+  (capi:display-message "Audio setup changed")
+  (audioengine-log-info "Audio setup changed")) s)
+
+(defun register-midi-listener ()
+  (device-midi-set-status-callback* (lambda ()
+                                      (capi:display-message "Audio setup changed")
+                                      (audioengine-log-info "Audio setup changed")) s)
+  )
+(mp:process-send mp:*main-process* #'register-midi-listener)
+
+
+
 
 (setf z (device-midi-open-stream x))
 (device-midi-close-stream z)
@@ -893,6 +906,13 @@
 
 (thread-main)
 (thread-current)
+
+(defvar *my-thread* nil)
+(cl:print *my-thread*)
+(mp:process-send mp:*main-process*
+  (setf *my-thread* (thread-current))
+ )
+
 (equal 
   (thread-current) (thread-main))
 
