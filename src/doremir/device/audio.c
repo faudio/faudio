@@ -625,7 +625,7 @@ bool audio_session_equal(ptr_t a, ptr_t b)
 doremir_string_t audio_session_show(ptr_t a)
 {
     string_t str = string("<AudioSession ");
-    str = string_dappend(str, doremir_string_format_integral(" %p", (long) a));
+    str = string_dappend(str, doremir_string_format_integral("%p", (long) a));
     str = string_dappend(str, string(">"));
     return str;
 }
