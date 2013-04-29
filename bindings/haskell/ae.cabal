@@ -1,0 +1,33 @@
+
+name:               ae
+version:            0.5
+cabal-version:      >= 1.2
+author:             Hans Hoglund
+maintainer:         Hans Hoglund
+license:            BSD3
+license-file:       COPYING
+synopsis:           Haskell bindings to the ae engine.
+category:           Music
+tested-with:        GHC
+build-type:         Simple
+
+description: 
+    To be written.
+
+library                    
+    build-depends: 
+        base >= 4 && < 5
+    hs-source-dirs: src
+    exposed-modules:
+        Sound.Ae
+    frameworks:
+        DoReMIRAudio
+
+executable "ae"
+    build-depends: 
+        base >= 4 && < 5
+    hs-source-dirs: src
+    frameworks:
+        DoReMIRAudio
+    main-is:
+        Main.hs
