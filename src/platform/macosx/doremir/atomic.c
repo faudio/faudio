@@ -11,11 +11,6 @@
 
 #include <libkern/OSAtomic.h>
 
-/*
-    Notes:
-      - Atomic values and ops are strictly 32-bit for now
- */
-
 struct _doremir_atomic_t {
     impl_t      impl;       //  Interface dispatcher
     ptr_t       value;      //  Memory block
@@ -24,8 +19,7 @@ struct _doremir_atomic_t {
 
 doremir_ptr_t atomic_impl(doremir_id_t interface);
 
-/**
-    Create a new atomic reference.
+/** Create a new atomic reference.
     @par Atomicity
         Non-atomic
  */
@@ -39,8 +33,7 @@ doremir_atomic_t doremir_atomic_create()
     return a;
 }
 
-/**
-    Copy the given atomic reference.
+/** Copy the given atomic reference.
     @par Atomicity
         Non-atomic
  */
@@ -51,8 +44,7 @@ doremir_atomic_t doremir_atomic_copy(doremir_atomic_t a)
     return b;
 }
 
-/**
-    Swap contents of the given atomic reference.
+/** Swap contents of the given atomic reference.
     @par Atomicity
         Non-atomic
  */
@@ -63,8 +55,7 @@ void doremir_atomic_swap(doremir_atomic_t a, doremir_atomic_t b)
     b->value = x;
 }
 
-/**
-    Destroy the given atomic reference.
+/** Destroy the given atomic reference.
     @par Atomicity
         Non-atomic
  */
@@ -76,8 +67,7 @@ void doremir_atomic_destroy(doremir_atomic_t a)
 
 // --------------------------------------------------------------------------------
 
-/**
-    Compares the given value with the current value of the given atomic reference,
+/** Compares the given value with the current value of the given atomic reference,
     replacing it if successful.
 
     @param a   The atomic reference.
@@ -93,19 +83,7 @@ bool doremir_atomic_exchange(doremir_atomic_t a, doremir_ptr_t old, doremir_ptr_
     return OSAtomicCompareAndSwapPtrBarrier(old, new, (ptr_t) &a->value);
 }
 
-// /**
-//     Increment the given atomic reference by the given amount.
-//
-//     @par Atomicity
-//         Atomic
-//  */
-// void doremir_atomic_add(doremir_atomic_t a, doremir_ptr_t v)
-// {
-//     OSAtomicAdd32Barrier((int32_t) v, (ptr_t) &a->value);
-// }
-
-/**
-    Return the current value of the given atomic reference.
+/** Return the current value of the given atomic reference.
     @par Atomicity
         Atomic
  */
@@ -118,13 +96,13 @@ doremir_ptr_t doremir_atomic_get(doremir_atomic_t a)
 #endif
 }
 
-/**
-    Update the given atomic value by applying the given pure function.
+/** Update the given atomic value by applying the given pure function.
+    
     @param atomic   Atomic reference.
     @param func     Function to be applied to the value.
     @param data     Value to be passed to the function.
-    @par Atomicity
-        Atomic
+    
+    @par Atomicity Atomic
  */
 void doremir_atomic_modify(doremir_atomic_t atomic, doremir_unary_t func, doremir_ptr_t data)
 {
@@ -137,10 +115,9 @@ void doremir_atomic_modify(doremir_atomic_t atomic, doremir_unary_t func, doremi
     }
 }
 
-/**
-    Set the given given atomic reference.
-    @par Atomicity
-        Atomic
+/** Set the given given atomic reference.
+    
+    @par Atomicity Atomic
  */
 void doremir_atomic_set(doremir_atomic_t atomic, doremir_ptr_t value)
 {
