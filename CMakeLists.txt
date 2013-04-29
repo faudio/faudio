@@ -77,12 +77,12 @@ find_package(Dist)
 ## Sanity checks
 
 if(APPLE)
-  string(COMPARE NOTEQUAL "${CMAKE_OSX_ARCHITECTURES}" "i386" ARCH_NOT_32_BIT)
-  if(ARCH_NOT_32_BIT)
-    message(FATAL_ERROR
-      "\nThe Audio Engine does not support 64-bit mode yet."
-      "\nTry -DCMAKE_OSX_ARCHITECTURES=i386.")
-  endif()
+  # string(COMPARE NOTEQUAL "${CMAKE_OSX_ARCHITECTURES}" "i386" ARCH_NOT_32_BIT)
+  # if(ARCH_NOT_32_BIT)
+  #   message(FATAL_ERROR
+  #     "\nThe Audio Engine does not support 64-bit mode yet."
+  #     "\nTry -DCMAKE_OSX_ARCHITECTURES=i386.")
+  # endif()
 
   string(COMPARE EQUAL "${CMAKE_OSX_DEPLOYMENT_TARGET}" "" NO_DEP_TARGET)
   if(NO_DEP_TARGET)

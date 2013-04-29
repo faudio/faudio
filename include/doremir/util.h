@@ -2,6 +2,7 @@
 #ifndef _DOREMIR_UTIL
 #define _DOREMIR_UTIL
 
+#include <doremir/util/arch.h>
 #include <doremir/util/alignof.h>
 #include <doremir/util/minmax.h>
 #include <doremir/util/literals.h>
