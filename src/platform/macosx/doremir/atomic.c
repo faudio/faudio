@@ -111,7 +111,11 @@ bool doremir_atomic_exchange(doremir_atomic_t a, doremir_ptr_t old, doremir_ptr_
  */
 doremir_ptr_t doremir_atomic_get(doremir_atomic_t a)
 {
+#if (DOREMIR_ARCH_BITS == 32)
     return (ptr_t) OSAtomicAdd32Barrier(0, (ptr_t) &a->value);
+#else
+    return (ptr_t) OSAtomicAdd64Barrier(0, (ptr_t) &a->value);
+#endif
 }
 
 /**
