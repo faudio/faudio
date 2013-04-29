@@ -1870,6 +1870,13 @@ cleanup:
 }
 
 
+void test_version()
+{
+    test_section("Versioning");
+    doremir_print("%s\n", doremir_audio_engine_version());
+    doremir_print("%s\n", doremir_audio_engine_version_string());
+}
+
 // --------------------------------------------------------------------------------
 
 static const int  iterations_k = 1;
@@ -1955,9 +1962,10 @@ int main(int argc, char const *argv[])
         //     string_dappend(doremir_system_directory_current(), string("/test/in.wav")),
         //     string_dappend(doremir_system_directory_current(), string("/test/out.wav")));
         test_buffer_stream();
-        test_audio_stream();
-        test_midi_stream();
+        // test_audio_stream();
+        // test_midi_stream();
         
+        test_version();
         
 // begin:
         // test_midi_hotplug();

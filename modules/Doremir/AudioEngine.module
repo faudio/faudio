@@ -40,6 +40,9 @@ module Doremir.AudioEngine
     import Doremir.Thread;
     import Doremir.Time;
 
+    version : () -> List;
+    versionString : () -> String;
+
     initialize : () -> Void;
     terminate : () -> Void;
 

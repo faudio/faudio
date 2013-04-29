@@ -9,7 +9,7 @@
 #include <doremir/util.h>
 
 #include <unistd.h> // isatty
-
+#include "config.h"
 
 #define iso8601_k "%Y-%m-%d %H:%M:%S%z"
 
@@ -17,9 +17,9 @@ typedef doremir_audio_engine_log_func_t log_func_t;
 
 static unsigned       init_count_g  = 0;
 static log_func_t     log_func_g    = NULL;
-static ptr_t          log_data_g      = NULL;
+static ptr_t          log_data_g    = NULL;
 
-
+static struct { char* pre; int x; int y; int z; char* suff } version_g = AE_VERSION;
 
 void doremir_device_audio_initialize();
 void doremir_device_audio_terminate();
@@ -29,6 +29,23 @@ void doremir_thread_initialize();
 void doremir_thread_terminate();
 void doremir_time_initialize();
 void doremir_time_terminate();
+
+doremir_list_t doremir_audio_engine_version()
+{
+    return list(
+        string(version_g.pre), 
+        i16(version_g.x),
+        i16(version_g.y),
+        i16(version_g.z),
+        string(version_g.suff));
+}
+
+doremir_string_t doremir_audio_engine_version_string()
+{
+    char version[100];
+    sprintf(&version, "%s%d.%d.%d%s", version_g.pre, version_g.x, version_g.y, version_g.z, version_g.suff);
+    return string(&version);
+}
 
 /** Performs global initialization.
 

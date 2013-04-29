@@ -1,0 +1,15 @@
+
+#ifndef _CONFIG_H
+#define _CONFIG_H
+
+#cmakedefine AE_VERSION @AE_VERSION@
+#cmakedefine AE_REALTIME_MIDI
+#cmakedefine AE_REALTIME_AUDIO
+#cmakedefine AE_NONREALTIME_AUDIO
+#cmakedefine AE_HAS_FLUIDSYNTH
+#cmakedefine AE_HAS_AUDIO_UNIT
+#cmakedefine AE_HAS_VST
+#cmakedefine AE_HAS_COREPLOT
+
+#endif // _CONFIG_H
+

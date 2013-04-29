@@ -17,7 +17,7 @@ set(VERSION_PRE "")
 set(VERSION_X 2)
 set(VERSION_Y 0)
 set(VERSION_Z 0)
-set(VERSION_SUFF "")
+set(VERSION_SUFF "alpha4")
 set(VERSION "${VERSION_PRE}${VERSION_X}.${VERSION_Y}.${VERSION_Z}${VERSION_SUFF}")
 
 if(APPLE)
@@ -300,27 +300,19 @@ if (COMPONENTS_RESOLVED)
   ## ----------------------------------------------------------------------
   ## Config file
 
-  set(VERSION_STRING "\"${VERSION}\"")
-  if(PREFER_NONBLOCKING)
-    set(DOREMIR_PREFER_NONBLOCKING True)
-  endif ()
-  if(PREFER_EXCLUSIVE)
-    set(DOREMIR_PREFER_EXCLUSIVE True)
-  endif ()
-  if(ENABLE_LOGGING)
-    set(DOREMIR_ENABLE_LOGGING True)
-  endif ()
-  if(REDIRECT_LOG)
-    set(DOREMIR_REDIRECT_LOG True)
-  endif()
-  if(ENABLE_FLUIDSYNTH)
-    set(DOREMIR_ENABLE_FLUIDSYNTH True)
-  endif()
+  set(AE_VERSION "{ \"${VERSION_PRE}\", ${VERSION_X}, ${VERSION_Y}, ${VERSION_Z}, \"${VERSION_SUFF}\" }")
+  set(AE_REALTIME_MIDI      ENABLE_REALTIME_MIDI)
+  set(AE_REALTIME_AUDIO     ENABLE_REALTIME_AUDIO)
+  set(AE_NONREALTIME_AUDIO  ENABLE_NONREALTIME_AUDIO)
+  set(AE_HAS_FLUIDSYNTH     ENABLE_FLUIDSYNTH)
+  set(AE_HAS_AUDIO_UNIT     ENABLE_AUDIO_UNIT)
+  set(AE_HAS_VST            ENABLE_VST)
+  set(AE_HAS_COREPLOT       ENABLE_COREPLOT)
 
-  # configure_file(
-  #   ${CMAKE_SOURCE_DIR}/include/doremir/audio/config.h.in
-  #   ${CMAKE_BINARY_DIR}/include/doremir/audio/config.h
-  #  )
+  configure_file(
+    ${CMAKE_SOURCE_DIR}/include/config.h.in
+    ${CMAKE_BINARY_DIR}/include/config.h
+   )
 
 
   ## ----------------------------------------------------------------------

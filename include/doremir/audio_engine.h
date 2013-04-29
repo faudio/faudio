@@ -27,6 +27,8 @@
     @{
     */
 
+doremir_list_t doremir_audio_engine_version();
+doremir_string_t doremir_audio_engine_version_string();
 void doremir_audio_engine_initialize();
 void doremir_audio_engine_terminate();
 typedef void (* doremir_audio_engine_log_func_t)(doremir_ptr_t,
