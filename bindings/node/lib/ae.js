@@ -28,6 +28,10 @@ var ae_ = ffi.Library('libae', {
     'doremir_to_bool':                          ['bool',    ['pointer']],
     'doremir_to_int8':                          ['int',     ['pointer']],
     'doremir_to_int16':                         ['int',     ['pointer']],
+    'doremir_peek_int32':                       ['int',     ['pointer']], 
+    'doremir_peek_int64':                       ['int',     ['pointer']], 
+    'doremir_peek_float':                       ['double',  ['pointer']], 
+    'doremir_peek_double':                      ['double',  ['pointer']], 
                                                 
     'doremir_device_audio_begin_session':       ['pointer', []],
     'doremir_device_audio_end_session':         ['void',    ['pointer']],
@@ -44,24 +48,19 @@ var ae_ = ffi.Library('libae', {
     'doremir_device_audio_open_stream':         ['pointer', ['pointer','pointer','pointer']],
     'doremir_device_audio_close_stream':        ['void',    ['pointer']],
     'doremir_device_audio_with_stream':         ['void',    ['pointer','pointer','pointer','pointer','pointer','pointer','pointer']],
-
+    
+    'doremir_error_check':                      ['bool', ['pointer']],
+    'doremir_error_message':                    ['pointer', ['pointer']],
+    'doremir_string_show':                      ['pointer', ['pointer']],
 })
 
 var bool_ = ae_.doremir_to_bool;
 var i8_   = ae_.doremir_to_int8;
 var i16_  = ae_.doremir_to_int16;
-var i32_ = function (a) {
-    return a;
-}
-var i64_ = function (a) {
-    return a;
-}
-var f32_ = function (a) {
-    return a;
-}
-var f64_ = function (a) {
-    return a;
-}
+var i32_  = ae_.doremir_peek_int32;
+var i64_  = ae_.doremir_peek_int64;
+var f32_  = ae_.doremir_peek_float;
+var f64_  = ae_.doremir_peek_double;
 
 var pair_ = function (a) {
     var x = ae_.doremir_pair_fst(as); 
@@ -79,7 +78,10 @@ var list_   = function(as) {
     }
 }
 
-var string_ = ae_.doremir_string_to_utf8;
+var string_     = ae_.doremir_string_to_utf8;
+var check_      = ae_.doremir_error_check;
+var message_    = ae_.doremir_error_message;
+var show_       = ae_.doremir_string_show;
 
 var dyn_ = function(a) {
     var t = ae_.doremir_dynamic_get_type(a);
@@ -99,6 +101,15 @@ var dyn_ = function(a) {
         // case 12:    return ratio_(a);
         default:    throw "dyn_: Missing case";
     }
+}         
+
+var thowIfErr = function (a) {
+    if (check_(a)) {
+        var m = string_(message_(a));
+        throw "Error: " + m;
+    } else {
+        return a;
+    }
 }
 
 var ae = {
@@ -113,7 +124,8 @@ var ae = {
 
     device : {
         audio : {
-            beginSession        : ae_.doremir_device_audio_begin_session,
+            beginSession        : function () { return thowIfErr(
+                                    ae_.doremir_device_audio_begin_session() )},
             endSession          : ae_.doremir_device_audio_end_session,
             withSession         : ae_.doremir_device_audio_with_session,
             all                 : ae_.doremir_device_audio_all,
