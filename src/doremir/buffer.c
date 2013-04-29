@@ -230,7 +230,7 @@ doremir_string_t buffer_show(doremir_ptr_t a)
 
     for (size_t i = 0; i < length; ++i) {
         str = string_dappend(str, string(" "));
-        str = string_dappend(str, format_integer(
+        str = string_dappend(str, format_integral(
                                  "%02x",
                                  doremir_buffer_get(buffer, i)));
     }
@@ -270,7 +270,7 @@ void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t 
 
 void buffer_fatal(char *msg, int error)
 {
-    doremir_audio_engine_log_error_from(string_dappend(string(msg), format_integer(" (error code %d)", error)), string("Doremir.Buffer"));
+    doremir_audio_engine_log_error_from(string_dappend(string(msg), format_integral(" (error code %d)", error)), string("Doremir.Buffer"));
     doremir_audio_engine_log_error(string("Terminating Audio Engine"));
     exit(error);
 }

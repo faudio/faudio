@@ -315,7 +315,7 @@ doremir_string_t thread_show(ptr_t a)
     thread_t x = (thread_t) a;
 
     string_t str = string("<Thread ");
-    str = string_dappend(str, doremir_string_format_integer(" %p", (long) x->native));
+    str = string_dappend(str, doremir_string_format_integral(" %p", (long) x->native));
     str = string_dappend(str, string(">"));
     return str;
 }
@@ -347,7 +347,7 @@ ptr_t thread_impl(doremir_id_t interface)
 doremir_string_t mutex_show(ptr_t a)
 {
     string_t str = string("<Mutex ");
-    str = string_dappend(str, doremir_string_format_integer(" %p", (long) a));
+    str = string_dappend(str, doremir_string_format_integral(" %p", (long) a));
     str = string_dappend(str, string(">"));
     return str;
 }
@@ -379,7 +379,7 @@ ptr_t mutex_impl(doremir_id_t interface)
 // doremir_string_t condition_show(ptr_t a)
 // {
 //     string_t str = string("<Condition ");
-//     str = string_dappend(str, doremir_string_format_integer(" %p", (long) a));
+//     str = string_dappend(str, doremir_string_format_integral(" %p", (long) a));
 //     str = string_dappend(str, string(">"));
 //     return str;
 // }

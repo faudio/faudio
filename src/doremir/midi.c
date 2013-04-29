@@ -219,9 +219,9 @@ doremir_string_t midi_show(doremir_ptr_t a)
     string_t s = string("<Midi");
 
     if (!midi->is_sysex) {
-        s = string_dappend(s, doremir_string_format_integer(" %02x", midi->data.simple[0]));
-        s = string_dappend(s, doremir_string_format_integer(" %02x", midi->data.simple[1]));
-        s = string_dappend(s, doremir_string_format_integer(" %02x", midi->data.simple[2]));
+        s = string_dappend(s, doremir_string_format_integral(" %02x", midi->data.simple[0]));
+        s = string_dappend(s, doremir_string_format_integral(" %02x", midi->data.simple[1]));
+        s = string_dappend(s, doremir_string_format_integral(" %02x", midi->data.simple[2]));
     } else {
         // TODO dump without <Buffer > wrap
         s = string_dappend(s, string(" SysEx "));

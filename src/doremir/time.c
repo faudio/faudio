@@ -215,10 +215,10 @@ doremir_string_t doremir_time_to_iso(doremir_time_t time)
     doremir_time_t t = (doremir_time_t) time;
     string_t s = string("P0000-00");
 
-    s = string_dappend(s, format_integer("-%02i", doremir_time_days(t)));
-    s = string_dappend(s, format_integer("T%02i", doremir_time_hours(t)));
-    s = string_dappend(s, format_integer(":%02i", doremir_time_minutes(t)));
-    s = string_dappend(s, format_integer(":%02i", doremir_time_seconds(t)));
+    s = string_dappend(s, format_integral("-%02i", doremir_time_days(t)));
+    s = string_dappend(s, format_integral("T%02i", doremir_time_hours(t)));
+    s = string_dappend(s, format_integral(":%02i", doremir_time_minutes(t)));
+    s = string_dappend(s, format_integral(":%02i", doremir_time_seconds(t)));
     // TODO approximate ratio
     s = string_dappend(s, string(".0000"));
 
@@ -472,10 +472,10 @@ doremir_string_t time_show(doremir_ptr_t a)
     doremir_time_t t = (doremir_time_t) a;
     string_t s = string("<Time");
 
-    s = string_dappend(s, format_integer(" %02id", doremir_time_days(t)));
-    s = string_dappend(s, format_integer(" %02ih", doremir_time_hours(t)));
-    s = string_dappend(s, format_integer(" %02im", doremir_time_minutes(t)));
-    s = string_dappend(s, format_integer(" %02i+", doremir_time_seconds(t)));
+    s = string_dappend(s, format_integral(" %02id", doremir_time_days(t)));
+    s = string_dappend(s, format_integral(" %02ih", doremir_time_hours(t)));
+    s = string_dappend(s, format_integral(" %02im", doremir_time_minutes(t)));
+    s = string_dappend(s, format_integral(" %02i+", doremir_time_seconds(t)));
     s = string_dappend(s, doremir_string_show(doremir_time_divisions(t)));
     s = string_dappend(s, string("s"));
     s = string_dappend(s, string(">"));

@@ -92,7 +92,7 @@ module Doremir.String
     matches : (String,String) -> Bool;  // regex, input
 
     // Formatting
-    formatInteger  : (Char*, Long) -> String;
+    formatIntegral  : (Char*, Long) -> String;
     formatFloating : (Char*, Double) -> String;
 }
 

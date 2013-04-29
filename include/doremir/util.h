@@ -130,7 +130,7 @@
 #define char_at             doremir_string_char_at
 #define string_append       doremir_string_append
 #define string_dappend      doremir_string_dappend
-#define format_integer      doremir_string_format_integer
+#define format_integral     doremir_string_format_integral
 #define format_floating     doremir_string_format_floating
 
 void doremir_audio_engine_log_info(doremir_string_t);

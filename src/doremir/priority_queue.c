@@ -145,7 +145,7 @@ bool priority_queue_equal(doremir_ptr_t a, doremir_ptr_t b)
 doremir_string_t priority_queue_show(doremir_ptr_t v)
 {
     string_t s = string("<PriorityQueue");
-    s = string_dappend(s, doremir_string_format_integer(" %02x", (long) v));
+    s = string_dappend(s, doremir_string_format_integral(" %02x", (long) v));
     s = string_dappend(s, string(">"));
     return s;
 }

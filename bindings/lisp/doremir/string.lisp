@@ -33,5 +33,5 @@
 (defcfun (string-from-utf32 "doremir_string_from_utf32") string (a string-utf32))
 (defcfun (string-from-cf-string "doremir_string_from_cf_string") string (a (:pointer :void)))
 (defcfun (string-matches "doremir_string_matches") :boolean (a string) (b string))
-(defcfun (string-format-integer "doremir_string_format_integer") string (a (:pointer :char)) (b :long))
+(defcfun (string-format-integral "doremir_string_format_integral") string (a (:pointer :char)) (b :long))
 (defcfun (string-format-floating "doremir_string_format_floating") string (a (:pointer :char)) (b :double))

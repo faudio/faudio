@@ -83,12 +83,16 @@ doremir_string_t doremir_string_single(doremir_char16_t chr)
     return str;
 }
 
-doremir_string_t doremir_string_repeat(int n, doremir_char16_t c)
+/** Create a string by repeating the given character.
+
+    The returned string should be destroyed by the caller.
+ */
+doremir_string_t doremir_string_repeat(int times, doremir_char16_t chr)
 {
     string_t s = string("");
 
-    for (int i = 0; i < n; ++i) {
-        write_to(s, doremir_string_single(c));
+    for (int i = 0; i < times; ++i) {
+        write_to(s, doremir_string_single(chr));
     }
 
     return s;
@@ -113,14 +117,14 @@ doremir_string_t doremir_string_copy(doremir_string_t str)
 
     The returned string should be destroyed by the caller.
  */
-doremir_string_t doremir_string_append(doremir_string_t as,
-                                       doremir_string_t bs)
+doremir_string_t doremir_string_append(doremir_string_t str1,
+                                       doremir_string_t str2)
 {
-    string_t cs = new_string(as->size + bs->size, NULL);
+    string_t cs = new_string(str1->size + str2->size, NULL);
     cs->data = malloc(cs->size * char_size_k);
 
-    memcpy(cs->data, as->data, as->size * char_size_k);
-    memcpy(cs->data + as->size, bs->data, bs->size * char_size_k);
+    memcpy(cs->data, str1->data, str1->size * char_size_k);
+    memcpy(cs->data + str1->size, str2->data, str2->size * char_size_k);
 
     return cs;
 }
@@ -129,18 +133,18 @@ doremir_string_t doremir_string_append(doremir_string_t as,
 
     The returned string should be destroyed by the caller.
  */
-doremir_string_t doremir_string_dappend(doremir_string_t as,
-                                        doremir_string_t bs)
+doremir_string_t doremir_string_dappend(doremir_string_t str1,
+                                        doremir_string_t str2)
 {
-    size_t oldSize = as->size;
+    size_t oldSize = str1->size;
 
-    as->size = as->size + bs->size;
-    as->data = realloc(as->data, as->size * char_size_k);
+    str1->size = str1->size + str2->size;
+    str1->data = realloc(str1->data, str1->size * char_size_k);
 
-    memcpy(as->data + oldSize, bs->data, bs->size * char_size_k);
+    memcpy(str1->data + oldSize, str2->data, str2->size * char_size_k);
 
-    free(bs);
-    return as;
+    free(str2);
+    return str1;
 }
 
 /** Destroy the given string.
@@ -159,14 +163,16 @@ int doremir_string_length(doremir_string_t str)
 }
 
 /** Return the character at the given position in the string.
+    @param pos
+    @param str
  */
-uint16_t doremir_string_char_at(int n, doremir_string_t str)
+uint16_t doremir_string_char_at(int pos, doremir_string_t str)
 {
-    if (n < 0 || n >= str->size) {
+    if (pos < 0 || pos >= str->size) {
         assert(false && "Character out of range");
     }
 
-    return str->data[n];
+    return str->data[pos];
 }
 
 
@@ -180,7 +186,7 @@ uint16_t doremir_string_char_at(int n, doremir_string_t str)
     @return
         A new formatted string.
  */
-doremir_string_t doremir_string_format_integer(char *format, long value)
+doremir_string_t doremir_string_format_integral(char *format, long value)
 {
     char buffer[100];
     int  numChars;

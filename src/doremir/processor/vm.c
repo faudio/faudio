@@ -50,7 +50,7 @@ char *lmm_get_error(lmm_t lmm)
       /* Print all non-empty registers */                                         \
                                                                                   \
       if (reg.size) {                                                             \
-        str = string_dappend(str, format_integer("\nr%d:\t", id));                \
+        str = string_dappend(str, format_integral("\nr%d:\t", id));                \
                                                                                   \
         for (size_t i = 0; i < (reg.size / sizeof(T)); ++i) {                     \
           str = string_dappend(str, string(" "));                                 \
@@ -64,10 +64,10 @@ char *lmm_get_error(lmm_t lmm)
     return str;                                                                   \
   }                                                                               \
  
-LMM_SHOW(i8,  uint8_t,   "%02x",  format_integer);
-LMM_SHOW(i16, uint16_t,  "%04x",  format_integer);
-LMM_SHOW(i32, uint32_t,  "%08x",  format_integer);
-LMM_SHOW(i64, uint64_t,  "%016x", format_integer);
+LMM_SHOW(i8,  uint8_t,   "%02x",  format_integral);
+LMM_SHOW(i16, uint16_t,  "%04x",  format_integral);
+LMM_SHOW(i32, uint32_t,  "%08x",  format_integral);
+LMM_SHOW(i64, uint64_t,  "%016x", format_integral);
 LMM_SHOW(f32, float,     "%0lf",  format_floating);
 LMM_SHOW(f64, double,    "%0lf",  format_floating);
 // LMM_SHOW(ptr, ptr_t,     "%02p");

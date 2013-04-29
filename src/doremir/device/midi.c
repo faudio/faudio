@@ -393,7 +393,7 @@ void doremir_device_midi_with_stream(device_t           device,
 doremir_string_t midi_session_show(ptr_t a)
 {
     string_t str = string("<MidiSession ");
-    str = string_dappend(str, doremir_string_format_integer(" %p", (long) a));
+    str = string_dappend(str, doremir_string_format_integral(" %p", (long) a));
     str = string_dappend(str, string(">"));
     return str;
 }
@@ -470,7 +470,7 @@ ptr_t midi_device_impl(doremir_id_t interface)
 doremir_string_t midi_stream_show(ptr_t a)
 {
     string_t str = string("<MidiStream ");
-    str = string_dappend(str, doremir_string_format_integer(" %p", (long) a));
+    str = string_dappend(str, doremir_string_format_integral(" %p", (long) a));
     str = string_dappend(str, string(">"));
     return str;
 }
@@ -602,7 +602,7 @@ error_t midi_device_error(string_t msg)
 error_t midi_device_error_with(string_t msg, int code)
 {
     return doremir_error_create_simple(error,
-                                       string_dappend(msg, format_integer(" (error code %d)", code)),
+                                       string_dappend(msg, format_integral(" (error code %d)", code)),
                                        string("Doremir.Device.Midi"));
 }     
 error_t native_error(string_t msg, int code)
@@ -616,7 +616,7 @@ error_t native_error(string_t msg, int code)
 void midi_device_fatal(string_t msg, int code)
 {
     doremir_audio_engine_log_error_from(
-        string_dappend(msg, format_integer(" (error code %d)", code)),
+        string_dappend(msg, format_integral(" (error code %d)", code)),
         string("Doremir.Device.Midi"));
 
     doremir_audio_engine_log_error(string("Terminating Audio Engine"));

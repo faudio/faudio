@@ -48,7 +48,7 @@ doremir_string_t doremir_string_from_utf16(doremir_string_utf16_t);
 doremir_string_t doremir_string_from_utf32(doremir_string_utf32_t);
 doremir_string_t doremir_string_from_cf_string(void *);
 bool doremir_string_matches(doremir_string_t, doremir_string_t);
-doremir_string_t doremir_string_format_integer(char *, long);
+doremir_string_t doremir_string_format_integral(char *, long);
 doremir_string_t doremir_string_format_floating(char *, double);
 
 /** @}

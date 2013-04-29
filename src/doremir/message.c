@@ -237,7 +237,7 @@ doremir_list_t dispatcher_receive(ptr_t a, address_t addr)
 doremir_string_t dispatcher_show(ptr_t a)
 {
     string_t str = string("<Dispatcher");
-    str = string_dappend(str, doremir_string_format_integer(" %p", (long) a));
+    str = string_dappend(str, doremir_string_format_integral(" %p", (long) a));
     str = string_dappend(str, string(">"));
     return str;
 }
@@ -281,7 +281,7 @@ void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t 
 
 void message_fatal(char *msg, int error)
 {
-    doremir_audio_engine_log_error_from(string_dappend(string(msg), format_integer(" (error code %d)", error)), string("Doremir.message"));
+    doremir_audio_engine_log_error_from(string_dappend(string(msg), format_integral(" (error code %d)", error)), string("Doremir.message"));
     doremir_audio_engine_log_error(string("Terminating Audio Engine"));
     exit(error);
 }

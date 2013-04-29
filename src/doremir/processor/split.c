@@ -75,7 +75,7 @@ static inline string_t node_name(int off, int step, int seq)
 }
 static inline string_t edge_name(int off)
 {
-    return format_integer("(%d)", off);
+    return format_integral("(%d)", off);
 }
 
 graph_t split_graph(ptr_t a, info_t *info, graph_t graph)
