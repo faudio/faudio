@@ -78,7 +78,7 @@ if(APPLE)
   if(BUILD_SHARED)
     add_library(doremir_audio SHARED ${SRCS_ALL})
     set_target_properties(doremir_audio PROPERTIES 
-      OUTPUT_NAME                 "libdoremiraudio"
+      OUTPUT_NAME                 "ae"
       LIBRARY_OUTPUT_DIRECTORY    "../lib"
       INSTALL_NAME_DIR            "/usr/local/lib"
       )
@@ -104,7 +104,7 @@ if(MSYS)
   if(BUILD_SHARED)
     add_library(doremir_audio SHARED ${SRCS_ALL})
     set_target_properties(doremir_audio PROPERTIES 
-      OUTPUT_NAME                 "doremir_audio"
+      OUTPUT_NAME                 "ae"
       RUNTIME_OUTPUT_DIRECTORY    "../bin"
       )
     target_link_libraries(doremir_audio ${EXTS})
@@ -113,7 +113,7 @@ if(MSYS)
   if(True)
     add_library(doremir_audio_static ${SRCS_ALL})
     set_target_properties(doremir_audio_static PROPERTIES 
-      OUTPUT_NAME                 "doremir_audio"
+      OUTPUT_NAME                 "ae"
       RUNTIME_OUTPUT_DIRECTORY    "../lib"
       )
     target_link_libraries(doremir_audio_static ${EXTS})
