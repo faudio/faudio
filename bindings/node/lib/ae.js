@@ -68,13 +68,14 @@ var pair_ = function (a) {
     return [x,y];
 }
 
-var list_   = function(as) {
+var list_   = function(as, importFun) {
+    var imp = importFun || dyn_;
     if (ae_.doremir_list_is_empty(as)) {
         return [];
     } else {
         var b  = ae_.doremir_list_head(as);
         var bs = ae_.doremir_list_tail(as);
-        return [dyn_(b)].concat(list_(bs));
+        return [imp(b)].concat(list_(bs, importFun));
     }
 }
 
@@ -112,6 +113,15 @@ var thowIfErr = function (a) {
     }
 }
 
+var showable = function(a) {
+    var b = { value: a };
+    b.inspect  = function() { return string_(show_(this.value)) };
+    b.toString = b.inspect;
+    return b;
+}         
+
+var id = function(x){return x};
+
 var ae = {
     version                     : function() { return dyn_(
                                     ae_.doremir_audio_engine_version() )},
@@ -124,12 +134,15 @@ var ae = {
 
     device : {
         audio : {
-            beginSession        : function () { return thowIfErr(
-                                    ae_.doremir_device_audio_begin_session() )},
-            endSession          : ae_.doremir_device_audio_end_session,
+            beginSession        : function () { return showable(thowIfErr(
+                                    ae_.doremir_device_audio_begin_session() ))},
+            endSession          : function(s) { 
+                                    ae_.doremir_device_audio_end_session(s.value) },
             withSession         : ae_.doremir_device_audio_with_session,
-            all                 : ae_.doremir_device_audio_all,
-            defaults            : ae_.doremir_device_audio_default,
+            all                 : function (s) { return list_(
+                                    ae_.doremir_device_audio_all(s.value), showable)},
+            defaults            : function (s) { return list_(
+                                    ae_.doremir_device_audio_default() )},
             setStatusCallback   : ae_.doremir_device_audio_set_status_callback,
             name                : ae_.doremir_device_audio_name,
             hostName            : ae_.doremir_device_audio_host_name,

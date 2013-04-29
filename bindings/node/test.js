@@ -8,10 +8,14 @@ ae.setLogStd();
 ae.initialize();
 
 var s = ae.device.audio.beginSession();
+var devs = ae.device.audio.all(s);
+
+console.log(devs);
+console.log(devs[0]);
+console.log(devs[0].toString());
+
 ae.device.audio.endSession(s);
 
-var s2 = ae.device.audio.beginSession();
-ae.device.audio.endSession(s2);
 
 
 
