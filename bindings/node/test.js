@@ -13,7 +13,8 @@ ae.withEngine(function() {
         console.log(audioSession);
 
         var devices = audioSession.devices();
-        // console.log(devices);
+        console.log(devices);
+        
         devices.forEach(function (d) {
             console.log("    " + d);
             console.log("    " + d.toString());
@@ -21,6 +22,8 @@ ae.withEngine(function() {
             console.log("    " + d.hostName());
             console.log("    " + d.hasInput());
             console.log("    " + d.hasOutput());
+            console.log("    " + d.inputType().channels());
+            console.log("    " + d.outputType().channels());
         });
     })
 })

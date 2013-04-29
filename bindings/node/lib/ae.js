@@ -50,9 +50,11 @@ var ae_ = ffi.Library('libae', {
     'doremir_device_audio_close_stream':        ['void',    ['pointer']],
     'doremir_device_audio_with_stream':         ['void',    ['pointer','pointer','pointer','pointer','pointer','pointer','pointer']],
     
-    'doremir_error_check':                      ['bool', ['pointer']],
+    'doremir_error_check':                      ['bool',    ['pointer']],
     'doremir_error_message':                    ['pointer', ['pointer']],
     'doremir_string_show':                      ['pointer', ['pointer']],
+
+    'doremir_type_channels':                    ['int',     ['pointer']],
 })
 
 var bool_ = ae_.doremir_to_bool;
@@ -105,7 +107,10 @@ var dyn_ = function(a) {
     }
 }         
 
+var id = function(a) { return a };
+
 var errorStyle = cliColor.red.bold;
+
 var thowIfErr = function (a) {
     if (check_(a)) {
         var m = string_(message_(a));
@@ -121,14 +126,24 @@ var showable = function(a) {
     return a;
 }         
 
-var AudioSession = function (a) { this.value = a; showable(this) }
-var AudioDevice  = function (a) { this.value = a; showable(this) }
-
-
 var make = function(c) {
     return function (a) { return new c(a) }
 }
-var id = function(a) { return a };
+
+var AudioSession = function (a) { this.value = a; showable(this) }
+var AudioDevice  = function (a) { this.value = a; showable(this) }
+var AudioType    = function (a) { this.value = a; showable(this) }
+
+AudioSession.prototype.end = function () { return ae.device.audio.endSession(this) }
+AudioSession.prototype.devices = function () { return ae.device.audio.all(this) }
+AudioDevice.prototype.name = function () { return ae.device.audio.name(this) }
+AudioDevice.prototype.hostName = function () { return ae.device.audio.hostName(this) }
+AudioDevice.prototype.hasInput = function () { return ae.device.audio.hasInput(this) }
+AudioDevice.prototype.hasOutput = function () { return ae.device.audio.hasOutput(this) }
+AudioDevice.prototype.inputType = function () { return ae.device.audio.inputType(this) }
+AudioDevice.prototype.outputType = function () { return ae.device.audio.outputType(this) }
+AudioType.prototype.channels = function () { return ae.type.channels(this) }
+
 
 
 var ae = {
@@ -170,13 +185,17 @@ var ae = {
             hostName            : function(s) { return string_(ae_.doremir_device_audio_host_name(s.value)) },
             hasInput            : function(s) { return ae_.doremir_device_audio_has_input(s.value) },
             hasOutput           : function(s) { return ae_.doremir_device_audio_has_output(s.value) },
+            inputType           : function(s) { return make(AudioType)(ae_.doremir_device_audio_input_type(s.value)) },
+            outputType          : function(s) { return make(AudioType)(ae_.doremir_device_audio_output_type(s.value)) },
 
-            inputType           : ae_.doremir_device_audio_input_type,
-            outputType          : ae_.doremir_device_audio_output_type,
             openStream          : ae_.doremir_device_audio_open_stream,
             closeStream         : ae_.doremir_device_audio_close_stream,
             withStream          : ae_.doremir_device_audio_with_stream,
         }
+    },
+    
+    type : {
+        channels    : function(s) { return ae_.doremir_type_channels(s.value) },
     },
 
     string : {
@@ -185,15 +204,7 @@ var ae = {
     
     AudioSession : AudioSession,
     AudioDevice  : AudioDevice,
+    AudioType : AudioType,
 }
-
-AudioSession.prototype.end = function () { return ae.device.audio.endSession(this) }
-AudioSession.prototype.devices = function () { return ae.device.audio.all(this) }
-AudioDevice.prototype.name = function () { return ae.device.audio.name(this) }
-AudioDevice.prototype.hostName = function () { return ae.device.audio.hostName(this) }
-AudioDevice.prototype.hasInput = function () { return ae.device.audio.hasInput(this) }
-AudioDevice.prototype.hasOutput = function () { return ae.device.audio.hasOutput(this) }
-AudioDevice.prototype.inputType = function () { return ae.device.audio.inputType(this) }
-AudioDevice.prototype.outputType = function () { return ae.device.audio.outputType(this) }
 
 module.exports = ae;
