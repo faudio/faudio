@@ -1,0 +1,15 @@
+{
+  "name": "ae",
+  "version": "2.0.0",
+  "authors": [
+    "Hans Höglund <hans@hanshoglund.se>"
+  ],
+  "description": "Bindings to ae.",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "main": "./lib/ae",
+  "dependencies": {
+    "ffi": "*"
+  }
+}

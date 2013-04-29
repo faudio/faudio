@@ -1,5 +1,4 @@
 
-
 var ffi = require('ffi')
 
 var ae_ = ffi.Library('libae', {
@@ -14,10 +13,4 @@ var ae = {
         toUtf8      : ae_.doremir_string_to_utf8,
     }
 }
-
-
-var v  = ae.versionString();
-var v2 = ae.string.toUtf8(v);
-
-console.log(v2);
-
+module.exports = ae;
