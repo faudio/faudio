@@ -222,7 +222,7 @@ struct foo
 ~~~~
 
 The creation routine for the type should include a line to set up the `impl` field
-to the address of the dispatch function. Note that a forward delcaration might be
+to the address of the dispatch function. Note that a forward declaration might be
 necessary here.
 
 ~~~~
