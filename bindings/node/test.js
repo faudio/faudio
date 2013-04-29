@@ -1,24 +1,27 @@
 
-var ae = require('./');
+var ae      = require('./');
+var dev     = ae.device;
+var audio   = ae.device.audio;
 
 console.log(ae.version());
 console.log(ae.versionString());
-
 ae.setLogStd();
-ae.initialize();
 
-var sess = ae.device.audio.beginSession();
-console.log(sess);
-var devs = ae.device.audio.all(sess);
+ae.withEngine(function() {
+    audio.withSession(function(audioSession) {
 
-console.log(devs);
-console.log(devs[0]);
-console.log(devs[0].toString());
+        console.log(audioSession);
 
-ae.device.audio.endSession(sess);
-
-
-
-
-ae.terminate();
+        var devices = audioSession.devices();
+        // console.log(devices);
+        devices.forEach(function (d) {
+            console.log("    " + d);
+            console.log("    " + d.toString());
+            console.log("    " + d.name());
+            console.log("    " + d.hostName());
+            console.log("    " + d.hasInput());
+            console.log("    " + d.hasOutput());
+        });
+    })
+})
 
