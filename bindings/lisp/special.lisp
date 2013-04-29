@@ -269,6 +269,14 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
+(defun device-midi-set-status-callback* (f session)
+  (device-midi-set-status-callback 
+    (callback funcall0#) 
+    (func-to-int# f)
+    session))
+    
+; ---------------------------------------------------------------------------------------------------
+
 (defun thread-create* (f)
   (thread-create (callback funcall0#) (func-to-int# f)))
 
