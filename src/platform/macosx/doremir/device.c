@@ -123,9 +123,8 @@ void midi_listener_loop(closure_t closure)
 
     name = doremir_string_to_cf_string(string("DoReMIRAudio"));
     result = MIDIClientCreate(name, midi_listener, closure, &client);
+    // client is ignored
     assert(result == noErr);
-
-    CFRunLoopRun();
 }
 
 void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
@@ -133,11 +132,20 @@ void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
     closure_t closure;
     closure = new_closure(function, data);
 
-    assert(doremir_equal(doremir_thread_main(), doremir_thread_current())
-           && "Must be run from main thread");
+    // assert(doremir_equal(doremir_thread_main(), doremir_thread_current())
+    //        && "Must be run from main thread");
+    if(doremir_not_equal(doremir_thread_main(), doremir_thread_current()))
+    {
+        inform(string("Can not register midi status listerner for non-main thread."));
+    }
+    else
+    {
+        inform(string("Exited midi_listener_loop\n"));
+        midi_listener_loop(closure);
+        inform(string("Exited midi_listener_loop\n"));        
+    }
+    
 
-    midi_listener_loop(closure);
-    printf("Exited add\n");
 }
 
 
