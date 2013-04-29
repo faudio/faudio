@@ -7,14 +7,15 @@ console.log(ae.versionString());
 ae.setLogStd();
 ae.initialize();
 
-var s = ae.device.audio.beginSession();
-var devs = ae.device.audio.all(s);
+var sess = ae.device.audio.beginSession();
+console.log(sess);
+var devs = ae.device.audio.all(sess);
 
 console.log(devs);
 console.log(devs[0]);
 console.log(devs[0].toString());
 
-ae.device.audio.endSession(s);
+ae.device.audio.endSession(sess);
 
 
 
