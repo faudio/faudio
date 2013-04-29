@@ -10,6 +10,7 @@
   },
   "main": "./lib/ae",
   "dependencies": {
+    "cli-color": "*",
     "ffi": "*"
   }
 }

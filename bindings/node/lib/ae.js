@@ -1,5 +1,6 @@
 
-var ffi = require('ffi')
+var ffi      = require('ffi');
+var cliColor = require('cli-color');
 
 var ae_ = ffi.Library('libae', {
     'doremir_audio_engine_version':             ['pointer', [] ],
@@ -104,10 +105,11 @@ var dyn_ = function(a) {
     }
 }         
 
+var errorStyle = cliColor.red.bold;
 var thowIfErr = function (a) {
     if (check_(a)) {
         var m = string_(message_(a));
-        throw "Error: " + m;
+        throw errorStyle("Error: ") + m;
     } else {
         return a;
     }
