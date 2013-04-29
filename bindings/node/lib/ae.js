@@ -2,32 +2,49 @@
 var ffi = require('ffi')
 
 var ae_ = ffi.Library('libae', {
-    'doremir_audio_engine_version':         ['pointer', [] ],
-    'doremir_audio_engine_version_string':  ['pointer', [] ],
-    'doremir_string_to_utf8':               ['string', ['pointer'] ],
+    'doremir_audio_engine_version':             ['pointer', [] ],
+    'doremir_audio_engine_version_string':      ['pointer', [] ],
+    'doremir_string_to_utf8':                   ['string',  ['pointer'] ],
+                                                
+    'doremir_audio_engine_initialize':          ['void',    [] ],
+    'doremir_audio_engine_terminate':           ['void',    [] ],
+                                                
+    'doremir_audio_engine_set_log':             ['void',    ['pointer','pointer']],
+    'doremir_audio_engine_set_log_std':         ['void',    []],
+                                                
+                                                
+    'doremir_list_empty':                       ['pointer', []],
+    'doremir_list_cons':                        ['pointer', ['pointer','pointer']],
+    'doremir_list_is_empty':                    ['bool',    ['pointer']],
+    'doremir_list_head':                        ['pointer', ['pointer']],
+    'doremir_list_tail':                        ['pointer', ['pointer']],
+                                                
+    'doremir_dynamic_get_type':                 ['int',     ['pointer']],
+                                                
+    'doremir_pair_create':                      ['pointer', ['pointer', 'pointer']],
+    'doremir_pair_fst':                         ['pointer', ['pointer']],
+    'doremir_pair_snd':                         ['pointer', ['pointer']],    
+                                                
+    'doremir_to_bool':                          ['bool',    ['pointer']],
+    'doremir_to_int8':                          ['int',     ['pointer']],
+    'doremir_to_int16':                         ['int',     ['pointer']],
+                                                
+    'doremir_device_audio_begin_session':       ['pointer', []],
+    'doremir_device_audio_end_session':         ['void',    ['pointer']],
+    'doremir_device_audio_with_session':        ['void',    ['pointer','pointer','pointer','pointer']],
+    'doremir_device_audio_all':                 ['pointer', ['pointer']],
+    'doremir_device_audio_default':             ['pointer', ['pointer']],
+    'doremir_device_audio_set_status_callback': ['pointer', ['pointer']],
+    'doremir_device_audio_name':                ['pointer', ['pointer']],
+    'doremir_device_audio_host_name':           ['pointer', ['pointer']],
+    'doremir_device_audio_has_input':           ['pointer', ['pointer']],
+    'doremir_device_audio_has_output':          ['pointer', ['pointer']],
+    'doremir_device_audio_input_type':          ['pointer', ['pointer']],
+    'doremir_device_audio_output_type':         ['pointer', ['pointer']],
+    'doremir_device_audio_open_stream':         ['pointer', ['pointer','pointer','pointer']],
+    'doremir_device_audio_close_stream':        ['void',    ['pointer']],
+    'doremir_device_audio_with_stream':         ['void',    ['pointer','pointer','pointer','pointer','pointer','pointer','pointer']],
 
-    'doremir_audio_engine_initialize':      ['void', [] ],
-    'doremir_audio_engine_terminate':       ['void', [] ],
-
-    'doremir_audio_engine_set_log':         ['void', ['pointer','pointer']],
-    'doremir_audio_engine_set_log_std':     ['void', []],
-
-
-    'doremir_list_empty':           ['pointer', []],
-    'doremir_list_cons':            ['pointer', ['pointer','pointer']],
-    'doremir_list_is_empty':        ['bool',    ['pointer']],
-    'doremir_list_head':            ['pointer', ['pointer']],
-    'doremir_list_tail':            ['pointer', ['pointer']],
-
-    'doremir_dynamic_get_type':     ['int', ['pointer']],
-
-    'doremir_pair_create':          ['pointer', ['pointer', 'pointer']],
-    'doremir_pair_fst':             ['pointer', ['pointer']],
-    'doremir_pair_snd':             ['pointer', ['pointer']],    
-
-    'doremir_to_bool':            ['bool', ['pointer']],
-    'doremir_to_int8':            ['int',  ['pointer']],
-    'doremir_to_int16':           ['int',  ['pointer']],
 })
 
 var bool_ = ae_.doremir_to_bool;
@@ -85,14 +102,34 @@ var dyn_ = function(a) {
 }
 
 var ae = {
-    version         : function() { return dyn_(
-                        ae_.doremir_audio_engine_version() )},
-    versionString   : function() { return string_(
-                        ae_.doremir_audio_engine_version_string() )} ,
-    initialize      : ae_.doremir_audio_engine_initialize,
-    terminate       : ae_.doremir_audio_engine_terminate,
-    setLog          : ae_.doremir_audio_engine_set_log,
-    setLogStd       : ae_.doremir_audio_engine_set_log_std,
+    version                     : function() { return dyn_(
+                                    ae_.doremir_audio_engine_version() )},
+    versionString               : function() { return string_(
+                                    ae_.doremir_audio_engine_version_string() )} ,
+    initialize                  : ae_.doremir_audio_engine_initialize,
+    terminate                   : ae_.doremir_audio_engine_terminate,
+    setLog                      : ae_.doremir_audio_engine_set_log,
+    setLogStd                   : ae_.doremir_audio_engine_set_log_std,
+
+    device : {
+        audio : {
+            beginSession        : ae_.doremir_device_audio_begin_session,
+            endSession          : ae_.doremir_device_audio_end_session,
+            withSession         : ae_.doremir_device_audio_with_session,
+            all                 : ae_.doremir_device_audio_all,
+            defaults            : ae_.doremir_device_audio_default,
+            setStatusCallback   : ae_.doremir_device_audio_set_status_callback,
+            name                : ae_.doremir_device_audio_name,
+            hostName            : ae_.doremir_device_audio_host_name,
+            hasInput            : ae_.doremir_device_audio_has_input,
+            hasOutput           : ae_.doremir_device_audio_has_output,
+            inputType           : ae_.doremir_device_audio_input_type,
+            outputType          : ae_.doremir_device_audio_output_type,
+            openStream          : ae_.doremir_device_audio_open_stream,
+            closeStream         : ae_.doremir_device_audio_close_stream,
+            withStream          : ae_.doremir_device_audio_with_stream,
+        }
+    },
 
     string : {
         toUtf8      : ae_.doremir_string_to_utf8,
