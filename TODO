@@ -2,6 +2,9 @@
 ==========
 Additions
 
+* Audio.endAllSession
+* Midi.endAllSessions
+
 * Event
     * First, rest
     * Switch, toggle
