@@ -138,17 +138,15 @@ AudioSession.prototype.devices          = function () { return ae.device.audio.d
 AudioSession.prototype.defaultDevices   = function () { return ae.device.audio.defaultDevices(this) }
 
 var AudioDevice  = function (a) { this.value = a; showable(this) }
-AudioDevice.prototype.name       = function () { return ae.device.audio.name(this) }
-AudioDevice.prototype.hostName   = function () { return ae.device.audio.hostName(this) }
-AudioDevice.prototype.hasInput   = function () { return ae.device.audio.hasInput(this) }
-AudioDevice.prototype.hasOutput  = function () { return ae.device.audio.hasOutput(this) }
-AudioDevice.prototype.inputType  = function () { return ae.device.audio.inputType(this) }
-AudioDevice.prototype.outputType = function () { return ae.device.audio.outputType(this) }
+AudioDevice.prototype.name              = function () { return ae.device.audio.name(this) }
+AudioDevice.prototype.hostName          = function () { return ae.device.audio.hostName(this) }
+AudioDevice.prototype.hasInput          = function () { return ae.device.audio.hasInput(this) }
+AudioDevice.prototype.hasOutput         = function () { return ae.device.audio.hasOutput(this) }
+AudioDevice.prototype.inputType         = function () { return ae.device.audio.inputType(this) }
+AudioDevice.prototype.outputType        = function () { return ae.device.audio.outputType(this) }
 
 var AudioType    = function (a) { this.value = a; showable(this) }
-AudioType.prototype.channels     = function () { return ae.type.channels(this) }
-
-
+AudioType.prototype.channels            = function () { return ae.type.channels(this) }
 
 var ae = {
     version                     : function() { return dyn_(ae_.doremir_audio_engine_version() )},
