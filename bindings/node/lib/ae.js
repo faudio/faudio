@@ -65,10 +65,11 @@ var i64_  = ae_.doremir_peek_int64;
 var f32_  = ae_.doremir_peek_float;
 var f64_  = ae_.doremir_peek_double;
 
-var pair_ = function (a) {
-    var x = ae_.doremir_pair_fst(as); 
-    var y = ae_.doremir_pair_snd(as);
-    return [x,y];
+var pair_ = function (a, importFun) {
+    var imp = importFun || dyn_;
+    var x = ae_.doremir_pair_fst(a); 
+    var y = ae_.doremir_pair_snd(a);
+    return [imp(x),imp(y)];
 }
 
 var list_   = function(as, importFun) {
@@ -107,7 +108,12 @@ var dyn_ = function(a) {
     }
 }         
 
-var id = function(a) { return a };
+var id   = function(a)       { return a };
+var o    = function(g, f)    { return function (a) { return g(f(a))     } }
+var o3   = function(g, f, h) { return function (a) { return g(f(h(a)))  } }
+var get  = function(n)       { return function (a) { return a[n]        } }
+var make = function(c)       { return function (a) { return new c(a)    } }
+
 
 var errorStyle = cliColor.red.bold;
 
@@ -126,74 +132,33 @@ var showable = function(a) {
     return a;
 }         
 
-var make = function(c) {
-    return function (a) { return new c(a) }
-}
-
 var AudioSession = function (a) { this.value = a; showable(this) }
-var AudioDevice  = function (a) { this.value = a; showable(this) }
-var AudioType    = function (a) { this.value = a; showable(this) }
+AudioSession.prototype.end              = function () { return ae.device.audio.endSession(this) }
+AudioSession.prototype.devices          = function () { return ae.device.audio.devices(this) }
+AudioSession.prototype.defaultDevices   = function () { return ae.device.audio.defaultDevices(this) }
 
-AudioSession.prototype.end = function () { return ae.device.audio.endSession(this) }
-AudioSession.prototype.devices = function () { return ae.device.audio.all(this) }
-AudioDevice.prototype.name = function () { return ae.device.audio.name(this) }
-AudioDevice.prototype.hostName = function () { return ae.device.audio.hostName(this) }
-AudioDevice.prototype.hasInput = function () { return ae.device.audio.hasInput(this) }
-AudioDevice.prototype.hasOutput = function () { return ae.device.audio.hasOutput(this) }
-AudioDevice.prototype.inputType = function () { return ae.device.audio.inputType(this) }
+var AudioDevice  = function (a) { this.value = a; showable(this) }
+AudioDevice.prototype.name       = function () { return ae.device.audio.name(this) }
+AudioDevice.prototype.hostName   = function () { return ae.device.audio.hostName(this) }
+AudioDevice.prototype.hasInput   = function () { return ae.device.audio.hasInput(this) }
+AudioDevice.prototype.hasOutput  = function () { return ae.device.audio.hasOutput(this) }
+AudioDevice.prototype.inputType  = function () { return ae.device.audio.inputType(this) }
 AudioDevice.prototype.outputType = function () { return ae.device.audio.outputType(this) }
-AudioType.prototype.channels = function () { return ae.type.channels(this) }
+
+var AudioType    = function (a) { this.value = a; showable(this) }
+AudioType.prototype.channels     = function () { return ae.type.channels(this) }
 
 
 
 var ae = {
-    version                     : function() { return dyn_(
-                                    ae_.doremir_audio_engine_version() )},
-    versionString               : function() { return string_(
-                                    ae_.doremir_audio_engine_version_string() )} ,
-    initialize                  : ae_.doremir_audio_engine_initialize,
-    terminate                   : ae_.doremir_audio_engine_terminate,
-    withEngine                  : function(f) {
-        ae.initialize();
-        f();
-        ae.terminate();
-    },
-    
+    version                     : function() { return dyn_(ae_.doremir_audio_engine_version() )},
+    versionString               : function() { return string_(ae_.doremir_audio_engine_version_string() )} ,
     setLog                      : ae_.doremir_audio_engine_set_log,
     setLogStd                   : ae_.doremir_audio_engine_set_log_std,
+    initialize                  : ae_.doremir_audio_engine_initialize,
+    terminate                   : ae_.doremir_audio_engine_terminate,
+    withEngine                  : function(f) { ae.initialize(); f(); ae.terminate(); },
 
-    device : {
-        audio : {
-            beginSession        : function () { return make(AudioSession)((thowIfErr(
-                                    ae_.doremir_device_audio_begin_session() )))},
-            endSession          : function(s) { 
-                                    ae_.doremir_device_audio_end_session(s.value) },
-            withSession         : function(f) {
-                                    var s = ae.device.audio.beginSession();
-                                    f(s);
-                                    ae.device.audio.endSession(s);
-                                },
-
-
-            all                 : function (s) { return list_(
-                                    ae_.doremir_device_audio_all(s.value), make(AudioDevice))},
-            defaults            : function (s) { return list_(
-                                    ae_.doremir_device_audio_default() )},
-            setStatusCallback   : ae_.doremir_device_audio_set_status_callback,
-
-            name                : function(s) { return string_(ae_.doremir_device_audio_name(s.value)) },
-            hostName            : function(s) { return string_(ae_.doremir_device_audio_host_name(s.value)) },
-            hasInput            : function(s) { return ae_.doremir_device_audio_has_input(s.value) },
-            hasOutput           : function(s) { return ae_.doremir_device_audio_has_output(s.value) },
-            inputType           : function(s) { return make(AudioType)(ae_.doremir_device_audio_input_type(s.value)) },
-            outputType          : function(s) { return make(AudioType)(ae_.doremir_device_audio_output_type(s.value)) },
-
-            openStream          : ae_.doremir_device_audio_open_stream,
-            closeStream         : ae_.doremir_device_audio_close_stream,
-            withStream          : ae_.doremir_device_audio_with_stream,
-        }
-    },
-    
     type : {
         channels    : function(s) { return ae_.doremir_type_channels(s.value) },
     },
@@ -202,9 +167,29 @@ var ae = {
         toUtf8      : ae_.doremir_string_to_utf8,
     },
     
-    AudioSession : AudioSession,
-    AudioDevice  : AudioDevice,
-    AudioType : AudioType,
+    device : {
+        audio : {
+            beginSession        : function () { return o(make(AudioSession), thowIfErr)(ae_.doremir_device_audio_begin_session()) },
+            endSession          : o(ae_.doremir_device_audio_end_session, get("value")),
+            withSession         : function(f) { var s = ae.device.audio.beginSession(); f(s); ae.device.audio.endSession(s); },
+            devices             : function (s) { return list_(ae_.doremir_device_audio_all(s.value), make(AudioDevice))},
+            defaultDevices      : function (s) { return pair_(ae_.doremir_device_audio_default(s.value), make(AudioDevice))},
+            setStatusCallback   : ae_.doremir_device_audio_set_status_callback,
+            name                : o3(string_,         ae_.doremir_device_audio_name,        get("value")),
+            hostName            : o3(string_,         ae_.doremir_device_audio_host_name,   get("value")),
+            hasInput            : o3(id,              ae_.doremir_device_audio_has_input,   get("value")),
+            hasOutput           : o3(id,              ae_.doremir_device_audio_has_output,  get("value")),
+            inputType           : o3(make(AudioType), ae_.doremir_device_audio_input_type,  get("value")),
+            outputType          : o3(make(AudioType), ae_.doremir_device_audio_output_type, get("value")),
+            openStream          : ae_.doremir_device_audio_open_stream,
+            closeStream         : ae_.doremir_device_audio_close_stream,
+            withStream          : ae_.doremir_device_audio_with_stream,
+        }
+    },
+    
+    AudioSession    : AudioSession,
+    AudioDevice     : AudioDevice,
+    AudioType       : AudioType,
 }
 
 module.exports = ae;

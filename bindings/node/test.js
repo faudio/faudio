@@ -13,6 +13,7 @@ ae.withEngine(function() {
         console.log(audioSession);
 
         var devices = audioSession.devices();
+        console.log(audioSession.defaultDevices());
         console.log(devices);
         
         devices.forEach(function (d) {
