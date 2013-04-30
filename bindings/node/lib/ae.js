@@ -67,8 +67,8 @@ var f64_  = ae_.doremir_peek_double;
 
 var pair_ = function (a, importFun) {
     var imp = importFun || dyn_;
-    var x = ae_.doremir_pair_fst(a); 
-    var y = ae_.doremir_pair_snd(a);
+    var x   = ae_.doremir_pair_fst(a); 
+    var y   = ae_.doremir_pair_snd(a);
     return [imp(x),imp(y)];
 }
 
@@ -158,13 +158,9 @@ var ae = {
     withEngine                  : function(f) { ae.initialize(); f(); ae.terminate(); },
 
     type : {
-        channels    : function(s) { return ae_.doremir_type_channels(s.value) },
+        channels                : function(s) { return ae_.doremir_type_channels(s.value) },
     },
 
-    string : {
-        toUtf8      : ae_.doremir_string_to_utf8,
-    },
-    
     device : {
         audio : {
             beginSession        : function () { return o(make(AudioSession), thowIfErr)(ae_.doremir_device_audio_begin_session()) },
