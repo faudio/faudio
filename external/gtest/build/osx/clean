@@ -1,6 +1,0 @@
-#!/bin/bash
-
-pushd external/gtest;
-rm -rf result;
-rm -rf source/build;
-popd;
