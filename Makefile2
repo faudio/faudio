@@ -40,9 +40,23 @@ LIB_DIRS = \
 	# -L external/fluidsynth/result/lib
 	# -L external/sndfile/result/lib \
 
-MISC_OPTS      = -mmin-macosx-version=10.5 -mmacosx-version-min=10.5 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -ObjC -all_load 
-FRAMEWORK_OPTS = -shared -o ../Frameworks/FAE.framework/Versions/2.0.0alpha4/FAE -install_name /Users/hans/audio/build/Frameworks/FAE.framework/Versions/2.0.0alpha4/FAE
-SHARED_OPTS    = -shared -o lib/libfae.dylib -install_name /usr/local/lib/libfae.dylib
+MISC_OPTS      = \
+	-mmin-macosx-version=10.5 -mmacosx-version-min=10.5 \
+	-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk \
+	-ObjC -all_load 
+FRAMEWORK_OPTS = \
+	-shared \
+	-o ../Frameworks/FAE.framework/Versions/2.0.0alpha4/FAE \
+	-install_name /Users/hans/audio/build/Frameworks/FAE.framework/Versions/2.0.0alpha4/FAE
+SHARED_OPTS    = \
+	-shared \
+	-o lib/libfae.dylib \
+	-install_name /usr/local/lib/libfae.dylib
+STATIC_OPTS    = \
+	-static \
+	-o lib/libfae.a
+TEST_OPTS      = \
+	-o bin/fae_tests
 
 lib/libfae.dylib: bin/config.h
 	cc -arch x86_64 \
@@ -53,7 +67,14 @@ lib/libfae.dylib: bin/config.h
 		$(LIBS) \
 		$(FILES)
 
-TEST_OPTS      = -o bin/fae_tests
+lib/libfae.a: bin/config.h
+	cc -arch x86_64 \
+		$(STATIC_OPTS) \
+		-I include \
+		-I bin \
+		$(LIB_DIRS) \
+		$(LIBS) \
+		$(FILES)
 
 
 bin/fae_tests: bin/config.h
