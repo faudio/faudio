@@ -61,6 +61,14 @@ c:
 
 lisp: fix-lisp
 gen-lisp:
+	mkdir -p bindings/lisp/fae
+	mkdir -p bindings/lisp/fae/atomic
+	mkdir -p bindings/lisp/fae/device
+	mkdir -p bindings/lisp/fae/processor
+	mkdir -p bindings/lisp/fae/processor/external
+	mkdir -p bindings/lisp/fae/string
+	mkdir -p bindings/lisp/fae/system
+	mkdir -p bindings/lisp/fae/thread
 	modulo -Mmodules --language=lisp <modules/Fae.module    		>bindings/lisp/fae.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/Fae.module    		>bindings/lisp/fae/fae.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/Atomic.module    		>bindings/lisp/fae/atomic.lisp && \
