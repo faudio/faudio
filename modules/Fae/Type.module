@@ -1,4 +1,4 @@
-
+a
 /**
     @addtogroup FaeType
     
@@ -31,10 +31,10 @@
     - `type_frame(type(f64))`
 
     @par Implements        
-    - doremir_equal_t
-    - doremir_copy_t
-    - doremir_string_show_t
-    - doremir_destroy_t
+    - fae_equal_t
+    - fae_copy_t
+    - fae_string_show_t
+    - fae_destroy_t
     
  */                                             
 module Fae.Type

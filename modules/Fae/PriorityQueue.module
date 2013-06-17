@@ -5,11 +5,11 @@
     Priority queue data structure.
 
     @par Requires
-    - doremir_order_t
+    - fae_order_t
     @par Implements
-    - doremir_equal_t
-    - doremir_string_show_t
-    - doremir_destroy_t
+    - fae_equal_t
+    - fae_string_show_t
+    - fae_destroy_t
 
     @see
     - [Data structures](@ref DataStructures)

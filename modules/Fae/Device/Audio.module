@@ -8,30 +8,30 @@
     is provided by *sessions*.
 
     @par Sessions implement
-    - doremir_equal_t
-    - doremir_destroy_t
-    - doremir_string_show_t
+    - fae_equal_t
+    - fae_destroy_t
+    - fae_string_show_t
 
     @par Devices implement
-    - doremir_equal_t
-    - doremir_string_show_t
+    - fae_equal_t
+    - fae_string_show_t
 
-    Devices implement [Equal](@ref doremir_equal_t) and [Show](@ref doremir_string_show_t),
+    Devices implement [Equal](@ref fae_equal_t) and [Show](@ref fae_string_show_t),
     but now destroy, as they are always managed by the underlying session.
 
     @par Streams implement
-    - doremir_time_clock_t
-    - doremir_message_sender_t
-    - doremir_message_receiver_t
-    - doremir_destroy_t
-    - doremir_string_show_t
+    - fae_time_clock_t
+    - fae_message_sender_t
+    - fae_message_receiver_t
+    - fae_destroy_t
+    - fae_string_show_t
 
-    Stream implements [Clock](@ref doremir_time_clock_t) by counting the number
+    Stream implements [Clock](@ref fae_time_clock_t) by counting the number
     of processed samples. Precision is usually limited to the current frame size.
 
-    Stream also implements [SenderInterface](@ref doremir_message_sender_t) and
-    [ReceiverInterface](@ref doremir_message_sender_t), dispatching messages to the underlying
-    processor network. The address of a processor can be obtained by @ref doremir_processor_address.
+    Stream also implements [SenderInterface](@ref fae_message_sender_t) and
+    [ReceiverInterface](@ref fae_message_sender_t), dispatching messages to the underlying
+    processor network. The address of a processor can be obtained by @ref fae_processor_address.
 
 
     @see

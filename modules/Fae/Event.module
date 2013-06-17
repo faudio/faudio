@@ -19,8 +19,8 @@
     
 
     @par Implements 
-    - doremir_destroy_t
-    - doremir_string_show_t
+    - fae_destroy_t
+    - fae_string_show_t
  */
 module Fae.Event
 {
@@ -29,7 +29,7 @@ module Fae.Event
     import Fae.Time;
     import Fae.Message;
 
-    /** @typedef doremir_buffer_t
+    /** @typedef fae_buffer_t
         The buffer. 
      */
     type Event = opaque;

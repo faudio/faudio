@@ -4,32 +4,32 @@
 
     Immutable list data structure.
 
-    - Fast front access: ([empty](@ref doremir_list_empty), 
-                          [single](@ref doremir_list_single), 
-                          [cons](@ref doremir_list_cons), 
-                          [head](@ref doremir_list_head), 
-                          [tail](@ref doremir_list_tail)).
+    - Fast front access: ([empty](@ref fae_list_empty), 
+                          [single](@ref fae_list_single), 
+                          [cons](@ref fae_list_cons), 
+                          [head](@ref fae_list_head), 
+                          [tail](@ref fae_list_tail)).
 
-    - Slow back access ([init](@ref doremir_list_init), 
-                        [last](@ref doremir_list_last)).
+    - Slow back access ([init](@ref fae_list_init), 
+                        [last](@ref fae_list_last)).
 
-    - Slow random access ([index](@ref doremir_list_index), 
-                          [insert](@ref doremir_list_insert), 
-                          [remove](@ref doremir_list_remove)).
+    - Slow random access ([index](@ref fae_list_index), 
+                          [insert](@ref fae_list_insert), 
+                          [remove](@ref fae_list_remove)).
 
-    - Slow range access: ([take](@ref doremir_list_take), 
-                          [drop](@ref doremir_list_drop), 
-                          [range](@ref doremir_list_range), 
-                          [insertRange](@ref doremir_list_insert_range), 
-                          [removeRange](@ref doremir_list_remove_range))
+    - Slow range access: ([take](@ref fae_list_take), 
+                          [drop](@ref fae_list_drop), 
+                          [range](@ref fae_list_range), 
+                          [insertRange](@ref fae_list_insert_range), 
+                          [removeRange](@ref fae_list_remove_range))
 
-    - Linear [find](@ref doremir_list_find), 
-             [map](@ref doremir_list_map), 
-             [fold](@ref doremir_list_fold), 
-             [reverse](@ref doremir_list_reverse) and 
-             [filter](@ref doremir_list_filter).
+    - Linear [find](@ref fae_list_find), 
+             [map](@ref fae_list_map), 
+             [fold](@ref fae_list_fold), 
+             [reverse](@ref fae_list_reverse) and 
+             [filter](@ref fae_list_filter).
 
-    - Logarithmic [sort](@ref doremir_list_sort).
+    - Logarithmic [sort](@ref fae_list_sort).
 
     @par Literals
     - `list(1, 2, 3)`
@@ -39,19 +39,19 @@
     
     @par Iteration
     ~~~
-    doremir_list_for_each (list(1,2,3), x)
+    fae_list_for_each (list(1,2,3), x)
     {
-        doremir_print("%s\n", x);
+        fae_print("%s\n", x);
     }
     ~~~
 
     @par Implements
-    - doremir_equal_t
-    - doremir_order_t
-    - doremir_copy_t
-    - doremir_destroy_t
-    - doremir_dynamic_t
-    - doremir_string_show_t
+    - fae_equal_t
+    - fae_order_t
+    - fae_copy_t
+    - fae_destroy_t
+    - fae_dynamic_t
+    - fae_string_show_t
 
     @see
     - [Data structures](@ref DataStructures)

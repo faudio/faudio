@@ -27,7 +27,7 @@ module Fae.Plot
     import Fae.Buffer;
 
     /**
-        @typedef doremir_plot_function_t
+        @typedef fae_plot_function_t
         
         Callback to be invoked by the plotter.
         

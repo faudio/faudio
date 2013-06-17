@@ -8,12 +8,12 @@
     - `string("foo")`
 
     @par Implements 
-    - doremir_equal_t
-    - doremir_order_t
-    - doremir_copy_t
-    - doremir_destroy_t
-    - doremir_dynamic_t
-    - doremir_string_show_t
+    - fae_equal_t
+    - fae_order_t
+    - fae_copy_t
+    - fae_destroy_t
+    - fae_dynamic_t
+    - fae_string_show_t
     
     @see
     - [Data structures](@ref DataStructures)
@@ -24,15 +24,15 @@ module Fae.String
     import Fae;
     
     /**
-        @typedef doremir_string_utf8_t
+        @typedef fae_string_utf8_t
         A UTF-8 encoded raw string.
         This type use the endianness of the system, and is terminated by a null character.
 
-        @typedef doremir_string_utf16_t
+        @typedef fae_string_utf16_t
         A UTF-16 encoded raw string.
         This type use the endianness of the system, and is terminated by a null character.
 
-        @typedef doremir_string_utf32_t
+        @typedef fae_string_utf32_t
         A UTF-32 encoded raw string.
         This type use the endianness of the system, and is terminated by a null character.
      */
@@ -41,10 +41,10 @@ module Fae.String
     type Utf32 = Char32*;
 
     /**
-        @typedef doremir_string_t
+        @typedef fae_string_t
         An immutable Unicode string.
 
-        @typedef doremir_string_file_path_t
+        @typedef fae_string_file_path_t
         A file path.
      */
     type String = opaque;
@@ -66,7 +66,7 @@ module Fae.String
     map         : (Unary, Ptr, String) -> String; // (Char16 -> Char16) -> String -> String
     joinMap     : (Unary, Ptr, String) -> String; // (Char16 -> String) -> String -> String
 
-    /** @interface doremir_string_show_t 
+    /** @interface fae_string_show_t 
         String conversion interface.
     */
     type Show  = struct {

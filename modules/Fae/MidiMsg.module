@@ -11,12 +11,12 @@
     - `midi_sysex(buffer)`
 
     @par Implements 
-    - doremir_equal_t
-    - doremir_order_t
-    - doremir_string_show_t
-    - doremir_copy_t
-    - doremir_destroy_t
-    - doremir_dynamic_t
+    - fae_equal_t
+    - fae_order_t
+    - fae_string_show_t
+    - fae_copy_t
+    - fae_destroy_t
+    - fae_dynamic_t
     
  */
 module Fae.MidiMsg
