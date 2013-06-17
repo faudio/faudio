@@ -178,12 +178,12 @@ var ae = {
             openStream          : ae_.doremir_device_audio_open_stream,
             closeStream         : ae_.doremir_device_audio_close_stream,
             withStream          : ae_.doremir_device_audio_with_stream,
+            Session             : AudioSession,
+            Device              : AudioDevice,
+            Type                : AudioType,
         }
     },
     
-    AudioSession    : AudioSession,
-    AudioDevice     : AudioDevice,
-    AudioType       : AudioType,
 }
 
 module.exports = ae;

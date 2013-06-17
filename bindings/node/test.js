@@ -8,12 +8,13 @@ console.log(ae.versionString());
 ae.setLogStd();
 
 ae.withEngine(function() {
-    audio.withSession(function(audioSession) {
+    audio.withSession(function(session) {
 
-        console.log(audioSession);
+        console.log("Instance: " + String(session instanceof audio.Session))
+        console.log(session);
 
-        var devices = audioSession.devices();
-        console.log(audioSession.defaultDevices());
+        var devices = session.devices();
+        console.log(session.defaultDevices());
         console.log(devices);
         
         devices.forEach(function (d) {

@@ -476,9 +476,9 @@ ptr_t unjsonify(JSON_Value *a, bool *ok)
         return fb(json_value_get_boolean(a));
 
     case JSONArray: {
-        JSON_Array *ar = json_value_get_array(a);
-        size_t sz = json_array_get_count(ar);
-        list_t list = doremir_list_empty();
+        JSON_Array *ar  = json_value_get_array(a);
+        size_t sz       = json_array_get_count(ar);
+        list_t list     = doremir_list_empty();
 
         for (size_t i = sz; i > 0; --i) {
             ptr_t v = unjsonify(json_array_get_value(ar, i - 1), ok);
