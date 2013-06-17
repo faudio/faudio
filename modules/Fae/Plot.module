@@ -46,7 +46,7 @@ module Fae.Plot
     
     // Plotting
     
-    discrete      : List -> Void;                           // Int -> [(Double, Double)]
+    // discrete      : List -> Void;                           // Int -> [(Double, Double)]
     continous     : (Function, Ptr, Nullary, Ptr) -> Void;  // Int -> Double -> Double -> Double
 
     bufferFloat   : (Buffer, Nullary, Ptr) -> Void;

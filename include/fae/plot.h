@@ -18,7 +18,6 @@ typedef double (* fae_plot_function_t)(fae_ptr_t,
                                        double);
 void fae_plot_use_gnu();
 void fae_plot_use_core();
-void fae_plot_discrete(fae_list_t);
 void fae_plot_continous(fae_plot_function_t,
                         fae_ptr_t,
                         fae_nullary_t,

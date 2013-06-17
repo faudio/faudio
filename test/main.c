@@ -1855,7 +1855,7 @@ int main(int argc, char const *argv[])
         test_regex();
         // test_plot(NULL, NULL);
         // test_plot_buffer();
-        test_plot_file(string_dappend(fae_system_directory_current(), string("/test/in.wav")));
+        // test_plot_file(string_dappend(fae_system_directory_current(), string("/test/in.wav")));
 
         // test_processor_graphs(string_dappend(fae_system_directory_current(), string("/test/proc.dot")));
         // test_dispatcher();
