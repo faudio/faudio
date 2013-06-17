@@ -1,14 +1,14 @@
 {
-  "name": "ae",
+  "name": "fae",
   "version": "2.0.0",
   "authors": [
     "Hans Höglund <hans@hanshoglund.se>"
   ],
-  "description": "Bindings to ae.",
+  "description": "Bindings to fae.",
   "engines": {
     "node": ">=0.10.0"
   },
-  "main": "./lib/ae",
+  "main": "./lib/fae",
   "dependencies": {
     "cli-color": "*",
     "ffi": "*"

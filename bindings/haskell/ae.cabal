@@ -21,7 +21,7 @@ library
     exposed-modules:
         Sound.Ae
     frameworks:
-        DoReMIRAudio
+        FAE
 
 executable "ae"
     build-depends: 
