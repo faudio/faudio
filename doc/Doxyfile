@@ -702,7 +702,13 @@ EXCLUDE_SYMLINKS       = NO
 # for example use the pattern */test/*
 
 EXCLUDE_PATTERNS       = */include/fae/processor \
-                         */modules/Fae/Processor/*
+                         */modules/Fae/Processor/* \
+                         */include/fae/scheduler* \
+                         */modules/Fae/Scheduler* \
+                         */include/fae/priority_queue* \
+                         */modules/Fae/PriorityQueue* \
+                         */include/fae/event* \
+                         */modules/Fae/Event* 
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the
