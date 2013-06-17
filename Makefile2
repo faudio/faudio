@@ -1,0 +1,70 @@
+
+.PHONY: test
+.PHONY: clean
+
+test: bin/fae_tests
+	bin/fae_tests
+
+
+FILES= \
+	src/*.c \
+	src/fae/*.c \
+	src/fae/atomic/*.c \
+	src/fae/device/*.c \
+	src/fae/plot/*.c \
+	src/fae/processor/*.c \
+	src/fae/string/*.c \
+	src/platform/macosx/fae/*.c \
+	src/platform/macosx/fae/plot/*.m \
+	src/platform/macosx/fae/system/*.c
+
+LIBS= \
+	-lportmidi \
+	-lsndfile \
+	-lportaudio \
+	-liconv \
+	-framework Cocoa \
+	-framework CoreAudio \
+	-framework CoreMidi \
+	-framework AudioUnit \
+	-framework AudioToolbox \
+	-framework CorePlot \
+	-framework QuartzCore
+
+	# -lfluidsynth \
+
+LIB_DIRS = \
+	-L external/portaudio/result/lib \
+	-L external/portmidi/result/lib
+
+	# -L external/fluidsynth/result/lib
+	# -L external/sndfile/result/lib \
+
+MISC_OPTS      = -mmin-macosx-version=10.5 -mmacosx-version-min=10.5 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -ObjC -all_load 
+FRAMEWORK_OPTS = -shared -o ../Frameworks/FAE.framework/Versions/2.0.0alpha4/FAE -install_name /Users/hans/audio/build/Frameworks/FAE.framework/Versions/2.0.0alpha4/FAE
+SHARED_OPTS    = -shared -o lib/libfae.dylib -install_name /usr/local/lib/libfae.dylib
+
+lib/libfae.dylib:
+	cc -arch x86_64 \
+		$(SHARED_OPTS) \
+		-I include \
+		$(LIB_DIRS) \
+		$(LIBS) \
+		$(FILES)
+
+TEST_OPTS      = -o bin/fae_tests
+
+
+bin/fae_tests:
+	cc -arch x86_64 \
+		$(TEST_OPTS) \
+		-I include \
+		$(LIB_DIRS) \
+		$(LIBS) \
+		$(FILES) \
+		test/main.c
+
+
+clean:
+	rm -f bin/*
+	rm -f lib/*
