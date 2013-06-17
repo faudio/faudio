@@ -86,8 +86,8 @@ if(APPLE)
     set(MAIN_LIBRARY fae PARENT_SCOPE)
   endif(BUILD_SHARED)
   if(BUILD_FRAMEWORK)
-    add_library(DoReMIRAudio SHARED ${SRCS_ALL})
-    set_target_properties(DoReMIRAudio PROPERTIES
+    add_library(FAE_framework SHARED ${SRCS_ALL})
+    set_target_properties(FAE_framework PROPERTIES
       FRAMEWORK                   TRUE
       OUTPUT_NAME                 "FAE"
       FRAMEWORK_VERSION           ${VERSION}
@@ -95,8 +95,8 @@ if(APPLE)
       INSTALL_NAME_DIR            "@executable_path/../Frameworks/FAE.framework/FAE"
       LINK_FLAGS                  "${STD_LINK_FLAGS}"
      )
-    target_link_libraries(DoReMIRAudio ${EXTS})
-    set(MAIN_LIBRARY DoReMIRAudio PARENT_SCOPE)
+    target_link_libraries(FAE_framework ${EXTS})
+    set(MAIN_LIBRARY FAE_framework PARENT_SCOPE)
   endif(BUILD_FRAMEWORK)
 endif(APPLE)
 

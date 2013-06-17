@@ -1,6 +1,6 @@
 
 ##
-##  CMake build for the DoReMIR Audio Engine
+##  CMake build for FAE
 ##
 ##  This script is slighly unusual, in that it requires components_resolve to be called once before
 ##  building anything. Follow the instructions in README and all we be well.
@@ -12,7 +12,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 ## ----------------------------------------------------------------------
 ## Basic definitions
 
-project(DoReMIRAudioEngine C CXX)
+project(FAE C CXX)
 set(VERSION_PRE "")
 set(VERSION_X 2)
 set(VERSION_Y 0)
