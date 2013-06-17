@@ -18,13 +18,23 @@
 #define print_max_size_k 80
 
 struct _fae_buffer_t {
-    impl_t          impl;       //  Interface dispatcher
+    impl_t          impl;               //  Interface dispatcher
+
     size_t          size;
     uint8_t        *data;
+
+    fae_unary_t     destroy_function;
+    fae_ptr_t       destroy_data;
 };
 
 
 void buffer_fatal(char *msg, int error);
+
+fae_ptr_t default_destroy(fae_ptr_t b, fae_ptr_t _)
+{
+    free(b);
+    return NULL;
+}
 
 /** Create a new buffer.
     @note
@@ -38,6 +48,8 @@ fae_buffer_t fae_buffer_create(size_t size)
     b->impl = &buffer_impl;
     b->size = size;
     b->data = malloc(size);
+    b->destroy_function = default_destroy;
+    b->destroy_data     = NULL;
     memset(b->data, 0, b->size);
 
     if (!b->data) {
@@ -48,6 +60,30 @@ fae_buffer_t fae_buffer_create(size_t size)
         }
     }
 
+    return b;
+}
+
+/** Create a buffer wrapping the given memory region.
+    @param ptr  Pointer to wrap.
+    @param size Number of bytes to wrap.
+    @param destroy_function Function to call upon destruction (nullable).
+    @param destroy_data Data closed over by the destroy function.
+    @note
+        O(1)
+ */
+fae_buffer_t fae_buffer_wrap(fae_ptr_t   ptr,
+                             size_t      size,
+                             fae_unary_t destroy_function,
+                             fae_ptr_t   destroy_data)
+{
+    fae_ptr_t buffer_impl(fae_id_t interface);
+
+    buffer_t b = fae_new(buffer);
+    b->impl = &buffer_impl;
+    b->size = size;
+    b->data = ptr;
+    b->destroy_function = destroy_function;
+    b->destroy_data     = destroy_data;
     return b;
 }
 
@@ -72,6 +108,8 @@ fae_buffer_t fae_buffer_resize(size_t size, fae_buffer_t buffer)
     copy->impl = &buffer_impl;
     copy->size = size;
     copy->data = malloc(size);
+    copy->destroy_function = buffer->destroy_function;
+    copy->destroy_data     = buffer->destroy_data;
 
     if (!copy->data) {
         if (errno == ENOMEM) {
@@ -91,7 +129,9 @@ fae_buffer_t fae_buffer_resize(size_t size, fae_buffer_t buffer)
  */
 void fae_buffer_destroy(fae_buffer_t buffer)
 {
-    free(buffer->data);
+    if (buffer->destroy_function) {
+        buffer->destroy_function(buffer->data, buffer->destroy_data);
+    }
     fae_delete(buffer);
 }
 

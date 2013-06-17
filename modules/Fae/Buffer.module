@@ -34,6 +34,7 @@ module Fae.Buffer
     type Buffer = opaque;
 
     create  : (Size) -> Buffer;
+    wrap    : (Ptr, Size, Unary, Ptr) -> Buffer;
     copy    : Buffer -> Buffer;
     resize  : (Size, Buffer) -> Buffer;
     destroy : Buffer -> Void;

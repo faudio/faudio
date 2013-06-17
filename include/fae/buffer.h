@@ -16,6 +16,10 @@
 
 typedef struct _fae_buffer_t * fae_buffer_t;
 fae_buffer_t fae_buffer_create(size_t);
+fae_buffer_t fae_buffer_wrap(fae_ptr_t,
+                             size_t,
+                             fae_unary_t,
+                             fae_ptr_t);
 fae_buffer_t fae_buffer_copy(fae_buffer_t);
 fae_buffer_t fae_buffer_resize(size_t, fae_buffer_t);
 void fae_buffer_destroy(fae_buffer_t);
