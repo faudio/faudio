@@ -9,11 +9,11 @@
 
     int main (int argc, char const *argv[])
     {
-        Fae_audio_engine_initialize();
+        fae_audio_engine_initialize();
 
         ...
 
-        Fae_audio_engine_terminate();
+        fae_audio_engine_terminate();
         return 0;
     }
     ~~~~

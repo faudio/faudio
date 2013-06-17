@@ -8,11 +8,11 @@
     - `atomic()`
 
     @par Implements
-    - Fae_equal_t
-    - Fae_order_t
-    - Fae_copy_t
-    - Fae_destroy_t
-    - Fae_string_show_t
+    - fae_equal_t
+    - fae_order_t
+    - fae_copy_t
+    - fae_destroy_t
+    - fae_string_show_t
 
     @see
     - [Data structures](@ref DataStructures)

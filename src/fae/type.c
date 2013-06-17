@@ -158,6 +158,8 @@ void fae_type_destroy(fae_type_t type)
     delete_type(type);
 }
 
+/** Create a vector type by repeating the given value.
+ */
 fae_type_t fae_type_repeat(int times, fae_type_t type)
 {
     if (times == 0) {
@@ -358,7 +360,8 @@ inline static int channels(fae_type_t type)
     }
 }
 
-
+/** Return the number of channels in the given type.
+ */
 int fae_type_channels(fae_type_t type)
 {
     return channels(type);

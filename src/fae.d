@@ -215,6 +215,31 @@ fae_ptr_t fae_divide(fae_ptr_t, fae_ptr_t) {}
   */
 fae_ptr_t fae_absolute(fae_ptr_t) {}
 
+/** Add the given values. Destroys both arguments.
+    @see [Number](@ref fae_number_t)
+  */
+fae_ptr_t fae_dadd(fae_ptr_t, fae_ptr_t) {}
+
+/** Subtract the given values. Destroys both arguments.
+    @see [Number](@ref fae_number_t)
+  */
+fae_ptr_t fae_dsubtract(fae_ptr_t, fae_ptr_t) {}
+
+/** Multiply the given values. Destroys both arguments.
+    @see [Number](@ref fae_number_t)
+  */
+fae_ptr_t fae_dmultiply(fae_ptr_t, fae_ptr_t) {}
+
+/** Divide the given values. Destroys both arguments.
+    @see [Number](@ref fae_number_t)
+  */
+fae_ptr_t fae_ddivide(fae_ptr_t, fae_ptr_t) {}
+
+/** Return the absolute of the given values. Destroys both arguments.
+    @see [Number](@ref fae_number_t)
+  */
+fae_ptr_t fae_dabsolute(fae_ptr_t) {}
+
 /** Copy the given value.
     @see [Copy](@ref fae_copy_t)
   */

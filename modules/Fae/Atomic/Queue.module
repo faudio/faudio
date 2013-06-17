@@ -8,8 +8,8 @@
     - `atomic_queue()` 
 
     @par Implements 
-    - Fae_destroy_t
-    - Fae_string_show_t
+    - fae_destroy_t
+    - fae_string_show_t
 
     @see 
     - [Data structures](@ref DataStructures)
