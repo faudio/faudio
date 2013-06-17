@@ -1,7 +1,7 @@
 
-#include <doremir/audio_engine.h>
-#include <doremir/util.h>
-#include <doremir/thread.h>
+#include <fae/audio_engine.h>
+#include <fae/util.h>
+#include <fae/thread.h>
 #include <CoreMidi/MIDIServices.h>
 
 ptr_t status_callback(ptr_t c, ptr_t v)
@@ -16,7 +16,7 @@ ptr_t status_callback(ptr_t c, ptr_t v)
 
 ptr_t listen(ptr_t c)
 {
-    doremir_device_midi_set_status_callback(
+    fae_device_midi_set_status_callback(
         status_callback, 
         NULL, 
         (midi_session_t) c
@@ -29,22 +29,22 @@ int main (int argc, char const *argv[])
 {
     midi_session_t session;
 
-    doremir_audio_engine_initialize();
-    session = doremir_device_midi_begin_session();
+    fae_audio_engine_initialize();
+    session = fae_device_midi_begin_session();
 
-    if (doremir_check(session)) {
+    if (fae_check(session)) {
         log_error((error_t) session);
         warn(string("Aborting test due to error"));
         goto cleanup;
     }
 
     // This should fail (and does!)
-    // thread_t listen_thread = doremir_thread_create(listen, (ptr_t) session);
-    // doremir_thread_join(listen_thread);
+    // thread_t listen_thread = fae_thread_create(listen, (ptr_t) session);
+    // fae_thread_join(listen_thread);
 
     listen(session);
 
 cleanup:
-    doremir_device_midi_end_session(session);
+    fae_device_midi_end_session(session);
     return 0; 
 }

@@ -5,27 +5,27 @@
     All rights reserved.
  */
 
-#include <doremir/atomic.h>
-#include <doremir/string.h>
-#include <doremir/util.h>
+#include <fae/atomic.h>
+#include <fae/string.h>
+#include <fae/util.h>
 
 #include <libkern/OSAtomic.h>
 
-struct _doremir_atomic_t {
+struct _fae_atomic_t {
     impl_t      impl;       //  Interface dispatcher
     ptr_t       value;      //  Memory block
 };
 
 
-doremir_ptr_t atomic_impl(doremir_id_t interface);
+fae_ptr_t atomic_impl(fae_id_t interface);
 
 /** Create a new atomic reference.
     @par Atomicity
         Non-atomic
  */
-doremir_atomic_t doremir_atomic_create()
+fae_atomic_t fae_atomic_create()
 {
-    atomic_t a = doremir_new(atomic);
+    atomic_t a = fae_new(atomic);
 
     a->impl  = &atomic_impl;
     a->value = NULL;
@@ -37,9 +37,9 @@ doremir_atomic_t doremir_atomic_create()
     @par Atomicity
         Non-atomic
  */
-doremir_atomic_t doremir_atomic_copy(doremir_atomic_t a)
+fae_atomic_t fae_atomic_copy(fae_atomic_t a)
 {
-    atomic_t b = doremir_atomic_create();
+    atomic_t b = fae_atomic_create();
     b->value = a->value;
     return b;
 }
@@ -48,7 +48,7 @@ doremir_atomic_t doremir_atomic_copy(doremir_atomic_t a)
     @par Atomicity
         Non-atomic
  */
-void doremir_atomic_swap(doremir_atomic_t a, doremir_atomic_t b)
+void fae_atomic_swap(fae_atomic_t a, fae_atomic_t b)
 {
     ptr_t x  = a->value;
     a->value = b->value;
@@ -59,9 +59,9 @@ void doremir_atomic_swap(doremir_atomic_t a, doremir_atomic_t b)
     @par Atomicity
         Non-atomic
  */
-void doremir_atomic_destroy(doremir_atomic_t a)
+void fae_atomic_destroy(fae_atomic_t a)
 {
-    doremir_delete(a);
+    fae_delete(a);
 }
 
 
@@ -78,7 +78,7 @@ void doremir_atomic_destroy(doremir_atomic_t a)
     @par Atomicity
         Atomic
  */
-bool doremir_atomic_exchange(doremir_atomic_t a, doremir_ptr_t old, doremir_ptr_t new)
+bool fae_atomic_exchange(fae_atomic_t a, fae_ptr_t old, fae_ptr_t new)
 {
     return OSAtomicCompareAndSwapPtrBarrier(old, new, (ptr_t) &a->value);
 }
@@ -87,7 +87,7 @@ bool doremir_atomic_exchange(doremir_atomic_t a, doremir_ptr_t old, doremir_ptr_
     @par Atomicity
         Atomic
  */
-doremir_ptr_t doremir_atomic_get(doremir_atomic_t a)
+fae_ptr_t fae_atomic_get(fae_atomic_t a)
 {
 #if (DOREMIR_ARCH_BITS == 32)
     return (ptr_t) OSAtomicAdd32Barrier(0, (ptr_t) &a->value);
@@ -104,14 +104,14 @@ doremir_ptr_t doremir_atomic_get(doremir_atomic_t a)
     
     @par Atomicity Atomic
  */
-void doremir_atomic_modify(doremir_atomic_t atomic, doremir_unary_t func, doremir_ptr_t data)
+void fae_atomic_modify(fae_atomic_t atomic, fae_unary_t func, fae_ptr_t data)
 {
     bool result = false;
 
     while (!result) {
-        ptr_t state = doremir_atomic_get(atomic);
+        ptr_t state = fae_atomic_get(atomic);
         ptr_t value = func(state, data);
-        result = doremir_atomic_exchange(atomic, state, value);
+        result = fae_atomic_exchange(atomic, state, value);
     }
 }
 
@@ -119,76 +119,76 @@ void doremir_atomic_modify(doremir_atomic_t atomic, doremir_unary_t func, doremi
     
     @par Atomicity Atomic
  */
-void doremir_atomic_set(doremir_atomic_t atomic, doremir_ptr_t value)
+void fae_atomic_set(fae_atomic_t atomic, fae_ptr_t value)
 {
     bool result = false;
 
     while (!result) {
-        ptr_t state = doremir_atomic_get(atomic);
-        result = doremir_atomic_exchange(atomic, state, value);
+        ptr_t state = fae_atomic_get(atomic);
+        result = fae_atomic_exchange(atomic, state, value);
     }
 }
 
 
 // --------------------------------------------------------------------------------
 
-bool atomic_equal(doremir_ptr_t a, doremir_ptr_t b)
+bool atomic_equal(fae_ptr_t a, fae_ptr_t b)
 {
-    return doremir_equal(doremir_atomic_get(a), doremir_atomic_get(b));
+    return fae_equal(fae_atomic_get(a), fae_atomic_get(b));
 }
 
-bool atomic_less_than(doremir_ptr_t a, doremir_ptr_t b)
+bool atomic_less_than(fae_ptr_t a, fae_ptr_t b)
 {
-    return doremir_less_than(doremir_atomic_get(a), doremir_atomic_get(b));
+    return fae_less_than(fae_atomic_get(a), fae_atomic_get(b));
 }
 
-bool atomic_greater_than(doremir_ptr_t a, doremir_ptr_t b)
+bool atomic_greater_than(fae_ptr_t a, fae_ptr_t b)
 {
-    return doremir_greater_than(doremir_atomic_get(a), doremir_atomic_get(b));
+    return fae_greater_than(fae_atomic_get(a), fae_atomic_get(b));
 }
 
-doremir_string_t atomic_show(doremir_ptr_t v)
+fae_string_t atomic_show(fae_ptr_t v)
 {
-    doremir_atomic_t a = (doremir_atomic_t) v;
+    fae_atomic_t a = (fae_atomic_t) v;
     string_t s = string("<Atomic");
-    s = string_dappend(s, doremir_string_format_integral(" %02x", (long) a->value));
+    s = string_dappend(s, fae_string_format_integral(" %02x", (long) a->value));
     s = string_dappend(s, string(">"));
     return s;
 }
 
-doremir_ptr_t atomic_copy(doremir_ptr_t a)
+fae_ptr_t atomic_copy(fae_ptr_t a)
 {
-    return doremir_atomic_copy(a);
+    return fae_atomic_copy(a);
 }
 
-void atomic_destroy(doremir_ptr_t a)
+void atomic_destroy(fae_ptr_t a)
 {
-    doremir_atomic_destroy(a);
+    fae_atomic_destroy(a);
 }
 
 
-doremir_ptr_t atomic_impl(doremir_id_t interface)
+fae_ptr_t atomic_impl(fae_id_t interface)
 {
-    static doremir_equal_t atomic_equal_impl = { atomic_equal };
-    static doremir_order_t atomic_order_impl = { atomic_less_than, atomic_greater_than };
-    static doremir_string_show_t atomic_show_impl = { atomic_show };
-    static doremir_copy_t atomic_copy_impl = { atomic_copy };
-    static doremir_destroy_t atomic_destroy_impl = { atomic_destroy };
+    static fae_equal_t atomic_equal_impl = { atomic_equal };
+    static fae_order_t atomic_order_impl = { atomic_less_than, atomic_greater_than };
+    static fae_string_show_t atomic_show_impl = { atomic_show };
+    static fae_copy_t atomic_copy_impl = { atomic_copy };
+    static fae_destroy_t atomic_destroy_impl = { atomic_destroy };
 
     switch (interface) {
-    case doremir_equal_i:
+    case fae_equal_i:
         return &atomic_equal_impl;
 
-    case doremir_order_i:
+    case fae_order_i:
         return &atomic_order_impl;
 
-    case doremir_string_show_i:
+    case fae_string_show_i:
         return &atomic_show_impl;
 
-    case doremir_copy_i:
+    case fae_copy_i:
         return &atomic_copy_impl;
 
-    case doremir_destroy_i:
+    case fae_destroy_i:
         return &atomic_destroy_impl;
 
     default:

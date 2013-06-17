@@ -5,11 +5,11 @@
     All rights reserved.
  */
 
-#include <doremir/device/audio.h>
-#include <doremir/device/midi.h>
-#include <doremir/string.h>
-#include <doremir/thread.h>
-#include <doremir/util.h>
+#include <fae/device/audio.h>
+#include <fae/device/midi.h>
+#include <fae/string.h>
+#include <fae/thread.h>
+#include <fae/util.h>
 
 #include <CoreAudio/AudioHardware.h>
 #include <CoreMidi/MIDIServices.h>
@@ -20,8 +20,8 @@
 
     TODO remove added listeners?
  */
-typedef doremir_device_audio_status_callback_t  audio_status_callback_t;
-typedef doremir_device_midi_status_callback_t   midi_status_callback_t;
+typedef fae_device_audio_status_callback_t  audio_status_callback_t;
+typedef fae_device_midi_status_callback_t   midi_status_callback_t;
 
 struct nullary_closure {
     nullary_t   function;
@@ -121,7 +121,7 @@ void midi_listener_loop(closure_t closure)
     CFStringRef name;
     MIDIClientRef client;
 
-    name = doremir_string_to_cf_string(string("DoReMIRAudio"));
+    name = fae_string_to_cf_string(string("DoReMIRAudio"));
     result = MIDIClientCreate(name, midi_listener, closure, &client);
     // client is ignored
     assert(result == noErr);
@@ -132,9 +132,9 @@ void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
     closure_t closure;
     closure = new_closure(function, data);
 
-    // assert(doremir_equal(doremir_thread_main(), doremir_thread_current())
+    // assert(fae_equal(fae_thread_main(), fae_thread_current())
     //        && "Must be run from main thread");
-    if(doremir_not_equal(doremir_thread_main(), doremir_thread_current()))
+    if(fae_not_equal(fae_thread_main(), fae_thread_current()))
     {
         inform(string("Can not register midi status listerner for non-main thread."));
     }

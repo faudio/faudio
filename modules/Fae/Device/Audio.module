@@ -1,0 +1,82 @@
+
+/**
+    @addtogroup FaeDeviceAudio
+
+    Real-time audio devices. These device run processors on the input and output
+    the underlying system, typically physical audio interfaces. A running audio
+    computation is represented by a *stream*. Access to the current device setups
+    is provided by *sessions*.
+
+    @par Sessions implement
+    - doremir_equal_t
+    - doremir_destroy_t
+    - doremir_string_show_t
+
+    @par Devices implement
+    - doremir_equal_t
+    - doremir_string_show_t
+
+    Devices implement [Equal](@ref doremir_equal_t) and [Show](@ref doremir_string_show_t),
+    but now destroy, as they are always managed by the underlying session.
+
+    @par Streams implement
+    - doremir_time_clock_t
+    - doremir_message_sender_t
+    - doremir_message_receiver_t
+    - doremir_destroy_t
+    - doremir_string_show_t
+
+    Stream implements [Clock](@ref doremir_time_clock_t) by counting the number
+    of processed samples. Precision is usually limited to the current frame size.
+
+    Stream also implements [SenderInterface](@ref doremir_message_sender_t) and
+    [ReceiverInterface](@ref doremir_message_sender_t), dispatching messages to the underlying
+    processor network. The address of a processor can be obtained by @ref doremir_processor_address.
+
+
+    @see
+    - @ref Devices
+ */
+module Fae.Device.Audio
+{
+    import Fae.List;
+    import Fae.Pair;
+    import Fae.Device;
+    import Fae.Error;
+    import Fae.Processor;
+
+    type Session = opaque;
+    type Stream = opaque;
+    type SessionCallback = ((Ptr, Session) -> Session)*;
+    type StreamCallback = ((Ptr, Stream) -> Stream)*;
+    type StatusCallback = Nullary;
+
+    beginSession : () -> Session;
+    endSession : Session -> Void;
+    withSession : (
+        SessionCallback, Ptr,
+        Callback, Ptr) -> Void;
+
+    all : Session -> List;      // [Audio]
+    default : Session -> Pair;  // (Audio,Audio)
+    defaultInput : Session -> Audio;
+    defaultOutput : Session -> Audio;
+    setStatusCallback : (StatusCallback, Ptr, Session) -> Void;
+
+    name : Audio -> String;
+    hostName : Audio -> String;
+    hasInput : Audio -> Bool;
+    hasOutput : Audio -> Bool;
+    inputType : Audio -> Type;
+    outputType : Audio -> Type;
+
+    openStream : (Audio, Processor, Audio) -> Stream;
+    closeStream : Stream -> Void;
+    withStream : (
+        Audio, Processor, Audio,
+        StreamCallback, Ptr,
+        Callback, Ptr
+        ) -> Void;
+
+}
+

@@ -1,0 +1,32 @@
+
+/**
+    @addtogroup FaeScheduler
+    
+    Provides task scheduling.
+
+    @par Implements 
+    - doremir_equal_t
+    - doremir_string_show_t
+    - doremir_destroy_t
+    
+ */
+module Fae.Scheduler
+{
+    import Fae;
+    import Fae.Time;
+    import Fae.Event;
+
+    type Scheduler = opaque;
+
+    create   : Clock -> Scheduler; // Requires Clock
+    destroy  : Scheduler -> Void;
+    
+    schedule : (Scheduler, Event) -> Void;
+    execute  : Scheduler -> Void;
+    loop     : Scheduler -> Void;
+    loopFor  : (Time, Scheduler) -> Void;
+    
+    // Loop until finished
+    // run      : Scheduler -> Void;
+}
+

@@ -5,10 +5,10 @@
     All rights reserved.
  */
 
-#include <doremir/list.h>
-#include <doremir/string.h>
-#include <doremir/dynamic.h>
-#include <doremir/util.h>
+#include <fae/list.h>
+#include <fae/string.h>
+#include <fae/dynamic.h>
+#include <fae/util.h>
 
 /*
     Notes:
@@ -31,7 +31,7 @@ struct node {
 
 typedef struct node *node_t;
 
-struct _doremir_list_t {
+struct _fae_list_t {
     impl_t          impl;       //  Interface dispatcher
     node_t          node;       //  Top-level node
 };
@@ -44,7 +44,7 @@ struct _doremir_list_t {
 inline static node_t new_node(ptr_t value, node_t next)
 {
     // db_node_alloc();
-    node_t node = doremir_new_struct(node);
+    node_t node = fae_new_struct(node);
     node->count = 1;
     node->value = value;
     node->next  = next;
@@ -79,15 +79,15 @@ inline static void release_node(node_t node)
     if (node->count == 0) {
         // db_node_free();
         release_node(node->next);
-        doremir_delete(node);
+        fae_delete(node);
     }
 }
 
-ptr_t list_impl(doremir_id_t interface);
+ptr_t list_impl(fae_id_t interface);
 
 inline static list_t new_list(node_t node)
 {
-    list_t list = doremir_new(list);
+    list_t list = fae_new(list);
     list->impl = &list_impl;
     list->node = node;
     return list;
@@ -95,33 +95,33 @@ inline static list_t new_list(node_t node)
 
 inline static void delete_list(list_t list)
 {
-    doremir_delete(list);
+    fae_delete(list);
 }
 
 /** Iterate over the nodes of a list. The variable var will be a node_t referencing
     the node in the following block.
 
     impl_for_each_node(my_list, node)
-        doremir_print("%s\n", node->value);
+        fae_print("%s\n", node->value);
 
  */
 #define impl_for_each_node(list, var) \
     for(node_t _n = list->node; _n; _n = _n->next) \
-        doremir_let(var, _n)
+        fae_let(var, _n)
 
 /** Iterate over the elements of a list. The variable var will be a ptr_t
     referencing the value in the following block.
 
-    This macro is independent from the foreach in <doremir/utils.h>, which should
+    This macro is independent from the foreach in <fae/utils.h>, which should
     not be used in this file.
 
     impl_for_each_node(my_list, value)
-        doremir_print("%s\n", value);
+        fae_print("%s\n", value);
 
  */
 #define impl_for_each(list, var) \
     for(node_t _n = list->node; _n; _n = _n->next) \
-        doremir_let(var, _n->value)
+        fae_let(var, _n->value)
 
 /** The begin_node, append_node and prepend_node macros can be used to construct
     a list in place.
@@ -160,50 +160,50 @@ inline static void delete_list(list_t list)
 
 // --------------------------------------------------------------------------------
 
-list_t doremir_list_empty()
+list_t fae_list_empty()
 {
     return new_list(NULL);
 }
 
-list_t doremir_list_single(ptr_t x)
+list_t fae_list_single(ptr_t x)
 {
     return new_list(new_node(x, NULL));
 }
 
-list_t doremir_list_copy(list_t xs)
+list_t fae_list_copy(list_t xs)
 {
     return new_list(take_node(xs->node));
 }
 
-list_t doremir_list_cons(ptr_t x, list_t xs)
+list_t fae_list_cons(ptr_t x, list_t xs)
 {
     return new_list(new_node(x, take_node(xs->node)));
 }
 
-list_t doremir_list_dcons(ptr_t x, list_t xs)
+list_t fae_list_dcons(ptr_t x, list_t xs)
 {
     list_t ys = new_list(new_node(x, xs->node));
     delete_list(xs);
     return ys;
 }
 
-void doremir_list_destroy(list_t xs)
+void fae_list_destroy(list_t xs)
 {
     release_node(xs->node);
     delete_list(xs);
 }
 
-bool doremir_list_is_empty(list_t xs)
+bool fae_list_is_empty(list_t xs)
 {
     return !xs->node;
 }
 
-bool doremir_list_is_single(list_t xs)
+bool fae_list_is_single(list_t xs)
 {
     return xs->node && !xs->node->next;
 }
 
-int doremir_list_length(list_t xs)
+int fae_list_length(list_t xs)
 {
     int count = 0;
     impl_for_each(xs, value) {
@@ -216,7 +216,7 @@ int doremir_list_length(list_t xs)
 
 // --------------------------------------------------------------------------------
 
-ptr_t doremir_list_head(list_t xs)
+ptr_t fae_list_head(list_t xs)
 {
     if (!xs->node) {
         assert(false && "No head");
@@ -225,7 +225,7 @@ ptr_t doremir_list_head(list_t xs)
     return xs->node->value;
 }
 
-list_t doremir_list_tail(list_t xs)
+list_t fae_list_tail(list_t xs)
 {
     if (!xs->node) {
         assert(false && "No tail");
@@ -234,7 +234,7 @@ list_t doremir_list_tail(list_t xs)
     return new_list(take_node(xs->node->next));
 }
 
-list_t doremir_list_init(list_t xs)
+list_t fae_list_init(list_t xs)
 {
     if (!xs->node) {
         assert(false && "No init");
@@ -249,7 +249,7 @@ list_t doremir_list_init(list_t xs)
     return new_list(node);
 }
 
-ptr_t doremir_list_last(list_t xs)
+ptr_t fae_list_last(list_t xs)
 {
     impl_for_each_node(xs, node) {
         if (!node->next) {
@@ -259,17 +259,17 @@ ptr_t doremir_list_last(list_t xs)
     assert(false && "No last");
 }
 
-list_t doremir_list_dtail(list_t xs)
+list_t fae_list_dtail(list_t xs)
 {
-    list_t ys = doremir_list_tail(xs);
-    doremir_list_destroy(xs);
+    list_t ys = fae_list_tail(xs);
+    fae_list_destroy(xs);
     return ys;
 }
 
-list_t doremir_list_dinit(list_t xs)
+list_t fae_list_dinit(list_t xs)
 {
-    list_t ys = doremir_list_init(xs);
-    doremir_list_destroy(xs);
+    list_t ys = fae_list_init(xs);
+    fae_list_destroy(xs);
     return ys;
 }
 
@@ -279,11 +279,11 @@ list_t doremir_list_dinit(list_t xs)
 static inline list_t append(list_t xs, list_t ys)
 {
     if (is_empty(xs)) {
-        return doremir_list_copy(ys);
+        return fae_list_copy(ys);
     } else {
-        list_t xst = doremir_list_tail(xs);
-        list_t r = doremir_list_dcons(doremir_list_head(xs), append(xst, ys));
-        doremir_list_destroy(xst);
+        list_t xst = fae_list_tail(xs);
+        list_t r = fae_list_dcons(fae_list_head(xs), append(xst, ys));
+        fae_list_destroy(xst);
         return r;
     }
 }
@@ -291,52 +291,52 @@ static inline list_t append(list_t xs, list_t ys)
 static inline list_t revappend(list_t xs, list_t ys)
 {
     if (is_empty(xs)) {
-        return doremir_list_copy(ys);
+        return fae_list_copy(ys);
     } else {
-        list_t xst = doremir_list_tail(xs);
-        list_t con = doremir_list_cons(doremir_list_head(xs), ys);
+        list_t xst = fae_list_tail(xs);
+        list_t con = fae_list_cons(fae_list_head(xs), ys);
         list_t r = revappend(xst, con);
-        doremir_list_destroy(xst);
-        doremir_list_destroy(con);
+        fae_list_destroy(xst);
+        fae_list_destroy(con);
         return r;
     }
 }
 
-list_t doremir_list_append(list_t xs, list_t ys)
+list_t fae_list_append(list_t xs, list_t ys)
 {
     return append(xs, ys);
 }
 
-list_t doremir_list_reverse(list_t xs)
+list_t fae_list_reverse(list_t xs)
 {
-    return revappend(xs, doremir_list_empty());
+    return revappend(xs, fae_list_empty());
 }
 
 static inline list_t merge(list_t xs, list_t ys)
 {
     begin_node(node, next);
 
-    while (!doremir_list_is_empty(xs) && !doremir_list_is_empty(ys)) {
+    while (!fae_list_is_empty(xs) && !fae_list_is_empty(ys)) {
         ptr_t x, y;
 
-        x = doremir_list_head(xs);
-        y = doremir_list_head(ys);
+        x = fae_list_head(xs);
+        y = fae_list_head(ys);
 
-        if (doremir_less_than(x, y)) {
+        if (fae_less_than(x, y)) {
             append_node(next, x);
-            xs = doremir_list_tail(xs);
+            xs = fae_list_tail(xs);
         } else {
             append_node(next, y);
-            ys = doremir_list_tail(ys);
+            ys = fae_list_tail(ys);
         }
     }
 
-    if (!doremir_list_is_empty(xs)) {
-        return doremir_list_append(new_list(node), xs);
+    if (!fae_list_is_empty(xs)) {
+        return fae_list_append(new_list(node), xs);
     }
 
-    if (!doremir_list_is_empty(ys)) {
-        return doremir_list_append(new_list(node), ys);
+    if (!fae_list_is_empty(ys)) {
+        return fae_list_append(new_list(node), ys);
     }
 
     return new_list(node);
@@ -345,8 +345,8 @@ static inline list_t merge(list_t xs, list_t ys)
 static inline list_t dmerge(list_t xs, list_t ys)
 {
     list_t res = merge(xs, ys);
-    doremir_list_destroy(xs);
-    doremir_list_destroy(ys);
+    fae_list_destroy(xs);
+    fae_list_destroy(ys);
     return res;
 }
 
@@ -356,48 +356,48 @@ static inline list_t dmerge_sort(list_t xs)
     int len, mid;
     list_t left, right;
 
-    len = doremir_list_length(xs);
+    len = fae_list_length(xs);
     mid = len / 2;
 
     if (len <= 1) {
         return xs;
     }
 
-    left  = doremir_list_take(mid, xs);
-    right = doremir_list_ddrop(mid, xs); // xs destroyed here
+    left  = fae_list_take(mid, xs);
+    right = fae_list_ddrop(mid, xs); // xs destroyed here
 
     left  = dmerge_sort(left);
     right = dmerge_sort(right);
 
-    if (doremir_less_than(doremir_list_last(left),
-                          doremir_list_head(right))) {
-        return doremir_list_dappend(left, right);
+    if (fae_less_than(fae_list_last(left),
+                          fae_list_head(right))) {
+        return fae_list_dappend(left, right);
     } else {
         return dmerge(left, right);
     }
 }
 
-list_t doremir_list_sort(list_t xs)
+list_t fae_list_sort(list_t xs)
 {
-    return dmerge_sort(doremir_list_copy(xs));
+    return dmerge_sort(fae_list_copy(xs));
 }
 
-list_t doremir_list_dappend(list_t xs, list_t ys)
+list_t fae_list_dappend(list_t xs, list_t ys)
 {
     list_t zs = append(xs, ys);
-    doremir_list_destroy(xs);
-    doremir_list_destroy(ys);
+    fae_list_destroy(xs);
+    fae_list_destroy(ys);
     return zs;
 }
 
-list_t doremir_list_dreverse(list_t xs)
+list_t fae_list_dreverse(list_t xs)
 {
-    list_t ys = revappend(xs, doremir_list_empty());
-    doremir_list_destroy(xs);
+    list_t ys = revappend(xs, fae_list_empty());
+    fae_list_destroy(xs);
     return ys;
 }
 
-list_t doremir_list_dsort(list_t xs)
+list_t fae_list_dsort(list_t xs)
 {
     list_t ys = dmerge_sort(xs);
     return ys;
@@ -406,29 +406,29 @@ list_t doremir_list_dsort(list_t xs)
 
 // --------------------------------------------------------------------------------
 
-list_t doremir_list_take(int n, list_t xs)
+list_t fae_list_take(int n, list_t xs)
 {
-    if (n <= 0 || doremir_list_is_empty(xs)) {
-        return doremir_list_empty();
+    if (n <= 0 || fae_list_is_empty(xs)) {
+        return fae_list_empty();
     }
 
-    return doremir_list_dcons(doremir_list_head(xs), doremir_list_dtake(n - 1, doremir_list_tail(xs)));
+    return fae_list_dcons(fae_list_head(xs), fae_list_dtake(n - 1, fae_list_tail(xs)));
 }
 
-list_t doremir_list_drop(int n, list_t xs)
+list_t fae_list_drop(int n, list_t xs)
 {
-    if (n < 0 || doremir_list_is_empty(xs)) {
-        return doremir_list_empty();
+    if (n < 0 || fae_list_is_empty(xs)) {
+        return fae_list_empty();
     }
 
     if (n == 0) {
-        return doremir_list_copy(xs);
+        return fae_list_copy(xs);
     }
 
-    return doremir_list_ddrop(n - 1, doremir_list_tail(xs));
+    return fae_list_ddrop(n - 1, fae_list_tail(xs));
 }
 
-ptr_t doremir_list_index(int n, list_t xs)
+ptr_t fae_list_index(int n, list_t xs)
 {
     int i = 0;
     impl_for_each(xs, x) {
@@ -439,104 +439,104 @@ ptr_t doremir_list_index(int n, list_t xs)
     return NULL;
 }
 
-list_t doremir_list_range(int m, int n, list_t xs)
+list_t fae_list_range(int m, int n, list_t xs)
 {
-    return doremir_list_dtake(n, doremir_list_drop(m, xs));
+    return fae_list_dtake(n, fae_list_drop(m, xs));
 }
 
-list_t doremir_list_remove_range(int m, int n, list_t xs)
+list_t fae_list_remove_range(int m, int n, list_t xs)
 {
-    list_t as = doremir_list_take(m,     xs);
-    list_t bs = doremir_list_drop(m + n, xs);
-    return doremir_list_dappend(as, bs);
+    list_t as = fae_list_take(m,     xs);
+    list_t bs = fae_list_drop(m + n, xs);
+    return fae_list_dappend(as, bs);
 }
 
-list_t doremir_list_insert_range(int m, list_t xs, list_t ys)
+list_t fae_list_insert_range(int m, list_t xs, list_t ys)
 {
-    list_t as = doremir_list_take(m, ys);
-    list_t bs = doremir_list_copy(xs);
-    list_t cs = doremir_list_drop(m, ys);
-    return doremir_list_dappend(as, doremir_list_dappend(bs, cs));
+    list_t as = fae_list_take(m, ys);
+    list_t bs = fae_list_copy(xs);
+    list_t cs = fae_list_drop(m, ys);
+    return fae_list_dappend(as, fae_list_dappend(bs, cs));
 }
 
-list_t doremir_list_insert(int index, ptr_t value, list_t list)
+list_t fae_list_insert(int index, ptr_t value, list_t list)
 {
-    list_t elem = doremir_list_single(value);
-    list_t res  = doremir_list_insert_range(index, elem, list);
-    doremir_list_destroy(elem);
+    list_t elem = fae_list_single(value);
+    list_t res  = fae_list_insert_range(index, elem, list);
+    fae_list_destroy(elem);
     return res;
 }
 
-list_t doremir_list_remove(int index, list_t list)
+list_t fae_list_remove(int index, list_t list)
 {
-    return doremir_list_remove_range(index, 1, list);
+    return fae_list_remove_range(index, 1, list);
 }
 
-list_t doremir_list_dtake(int n, list_t xs)
+list_t fae_list_dtake(int n, list_t xs)
 {
-    list_t ys = doremir_list_take(n, xs);
-    doremir_list_destroy(xs);
+    list_t ys = fae_list_take(n, xs);
+    fae_list_destroy(xs);
     return ys;
 }
 
-list_t doremir_list_ddrop(int n, list_t xs)
+list_t fae_list_ddrop(int n, list_t xs)
 {
-    list_t ys = doremir_list_drop(n, xs);
-    doremir_list_destroy(xs);
+    list_t ys = fae_list_drop(n, xs);
+    fae_list_destroy(xs);
     return ys;
 }
 
-list_t doremir_list_dinsert(int m, ptr_t x, list_t xs)
+list_t fae_list_dinsert(int m, ptr_t x, list_t xs)
 {
-    list_t ys = doremir_list_insert(m, x, xs);
-    doremir_list_destroy(xs);
+    list_t ys = fae_list_insert(m, x, xs);
+    fae_list_destroy(xs);
     return ys;
 }
 
-list_t doremir_list_dinsert_range(int m, list_t xs, list_t ys)
+list_t fae_list_dinsert_range(int m, list_t xs, list_t ys)
 {
-    list_t zs = doremir_list_insert_range(m, xs, ys);
-    doremir_list_destroy(xs);
-    doremir_list_destroy(ys);
+    list_t zs = fae_list_insert_range(m, xs, ys);
+    fae_list_destroy(xs);
+    fae_list_destroy(ys);
     return zs;
 }
 
-list_t doremir_list_dremove(int m, list_t xs)
+list_t fae_list_dremove(int m, list_t xs)
 {
-    list_t ys = doremir_list_remove(m, xs);
-    doremir_list_destroy(xs);
+    list_t ys = fae_list_remove(m, xs);
+    fae_list_destroy(xs);
     return ys;
 }
 
-list_t doremir_list_dremove_range(int m, int n, list_t xs)
+list_t fae_list_dremove_range(int m, int n, list_t xs)
 {
-    list_t ys = doremir_list_remove_range(m, n, xs);
-    doremir_list_destroy(xs);
+    list_t ys = fae_list_remove_range(m, n, xs);
+    fae_list_destroy(xs);
     return ys;
 }
 
 
 // --------------------------------------------------------------------------------
 
-bool doremir_list_has(ptr_t value, list_t list)
+bool fae_list_has(ptr_t value, list_t list)
 {
     impl_for_each(list, elem) {
-        if (doremir_equal(value, elem)) {
+        if (fae_equal(value, elem)) {
             return true;
         }
     }
     return false;
 }
 
-int doremir_list_index_of(ptr_t value, list_t list)
+int fae_list_index_of(ptr_t value, list_t list)
 {
     int index = 0;
     impl_for_each(list, elem) {
-        if (doremir_equal(elem, value)) {
+        if (fae_equal(elem, value)) {
             return index;
         }
 
-        if (doremir_greater_than(elem, value)) {
+        if (fae_greater_than(elem, value)) {
             break;
         }
 
@@ -545,7 +545,7 @@ int doremir_list_index_of(ptr_t value, list_t list)
     return -(index + 1);
 }
 
-ptr_t doremir_list_find(pred_t pred, ptr_t data, list_t list)
+ptr_t fae_list_find(pred_t pred, ptr_t data, list_t list)
 {
     impl_for_each(list, elem) {
         if (pred(data, elem)) {
@@ -555,7 +555,7 @@ ptr_t doremir_list_find(pred_t pred, ptr_t data, list_t list)
     return NULL;
 }
 
-int doremir_list_find_index(pred_t pred, ptr_t data, list_t list)
+int fae_list_find_index(pred_t pred, ptr_t data, list_t list)
 {
     int index = 0;
     impl_for_each(list, elem) {
@@ -571,7 +571,7 @@ int doremir_list_find_index(pred_t pred, ptr_t data, list_t list)
 
 // --------------------------------------------------------------------------------
 
-list_t doremir_list_map(unary_t func, ptr_t data, list_t list)
+list_t fae_list_map(unary_t func, ptr_t data, list_t list)
 {
     begin_node(node, next);
     impl_for_each(list, elem) {
@@ -580,7 +580,7 @@ list_t doremir_list_map(unary_t func, ptr_t data, list_t list)
     return new_list(node);
 }
 
-list_t doremir_list_filter(pred_t pred, ptr_t data, list_t list)
+list_t fae_list_filter(pred_t pred, ptr_t data, list_t list)
 {
     begin_node(node, next);
     impl_for_each(list, elem) {
@@ -591,7 +591,7 @@ list_t doremir_list_filter(pred_t pred, ptr_t data, list_t list)
     return new_list(node);
 }
 
-ptr_t doremir_list_fold_left(binary_t func, ptr_t data, ptr_t init, list_t list)
+ptr_t fae_list_fold_left(binary_t func, ptr_t data, ptr_t init, list_t list)
 {
     ptr_t value = init;
     impl_for_each(list, elem) {
@@ -600,60 +600,60 @@ ptr_t doremir_list_fold_left(binary_t func, ptr_t data, ptr_t init, list_t list)
     return value;
 }
 
-list_t doremir_list_join(list_t list)
+list_t fae_list_join(list_t list)
 {
     list_t result = empty();
     impl_for_each(list, elem) {
-        result = doremir_list_dappend(result, doremir_list_copy(elem));
+        result = fae_list_dappend(result, fae_list_copy(elem));
     }
     return result;
 }
 
-list_t doremir_list_join_map(unary_t func, ptr_t data, list_t list)
+list_t fae_list_join_map(unary_t func, ptr_t data, list_t list)
 {
-    list_t ys = doremir_list_map(func, data, list);
-    return doremir_list_djoin(ys);
+    list_t ys = fae_list_map(func, data, list);
+    return fae_list_djoin(ys);
 }
 
-list_t doremir_list_dmap(unary_t f, ptr_t d, list_t xs)
+list_t fae_list_dmap(unary_t f, ptr_t d, list_t xs)
 {
-    list_t ys = doremir_list_map(f, d, xs);
-    doremir_list_destroy(xs);
+    list_t ys = fae_list_map(f, d, xs);
+    fae_list_destroy(xs);
     return ys;
 }
 
-list_t doremir_list_dfilter(pred_t p, ptr_t d, list_t xs)
+list_t fae_list_dfilter(pred_t p, ptr_t d, list_t xs)
 {
-    list_t ys = doremir_list_filter(p, d, xs);
-    doremir_list_destroy(xs);
+    list_t ys = fae_list_filter(p, d, xs);
+    fae_list_destroy(xs);
     return ys;
 }
 
-ptr_t doremir_list_dfold_left(binary_t f, ptr_t d, ptr_t  z, list_t   xs)
+ptr_t fae_list_dfold_left(binary_t f, ptr_t d, ptr_t  z, list_t   xs)
 {
-    list_t ys = doremir_list_fold_left(f, d, z, xs);
-    doremir_list_destroy(xs);
+    list_t ys = fae_list_fold_left(f, d, z, xs);
+    fae_list_destroy(xs);
     return ys;
 }
 
-list_t doremir_list_djoin(list_t list)
+list_t fae_list_djoin(list_t list)
 {
-    list_t ys = doremir_list_join(list);
-    doremir_list_destroy(list);
+    list_t ys = fae_list_join(list);
+    fae_list_destroy(list);
     return ys;
 }
 
-list_t doremir_list_djoin_map(unary_t f, ptr_t d, list_t xs)
+list_t fae_list_djoin_map(unary_t f, ptr_t d, list_t xs)
 {
-    list_t ys = doremir_list_join_map(f, d, xs);
-    doremir_list_destroy(xs);
+    list_t ys = fae_list_join_map(f, d, xs);
+    fae_list_destroy(xs);
     return ys;
 }
 
 
 // --------------------------------------------------------------------------------
 
-list_t doremir_list(int count, ...)
+list_t fae_list(int count, ...)
 {
     va_list args;
     va_start(args, count);
@@ -667,7 +667,7 @@ list_t doremir_list(int count, ...)
     return new_list(node);
 }
 
-list_t doremir_list_repeat(int times, ptr_t value)
+list_t fae_list_repeat(int times, ptr_t value)
 {
     begin_node(node, next);
 
@@ -678,7 +678,7 @@ list_t doremir_list_repeat(int times, ptr_t value)
     return new_list(node);
 }
 
-list_t doremir_list_enumerate(int m, int n)
+list_t fae_list_enumerate(int m, int n)
 {
     begin_node(node, next);
 
@@ -689,9 +689,9 @@ list_t doremir_list_enumerate(int m, int n)
     return new_list(node);
 }
 
-list_t doremir_list_to_list(list_t list)
+list_t fae_list_to_list(list_t list)
 {
-    return doremir_list_copy(list);
+    return fae_list_copy(list);
 }
 
 
@@ -703,7 +703,7 @@ bool list_equal(ptr_t a, ptr_t b)
     node_t bn = ((list_t) b)->node;
 
     while (an && bn) {
-        if (!doremir_equal(an->value, bn->value)) {
+        if (!fae_equal(an->value, bn->value)) {
             return false;
         }
 
@@ -720,11 +720,11 @@ bool list_less_than(ptr_t a, ptr_t b)
     node_t bn = ((list_t) b)->node;
 
     while (an && bn) {
-        if (doremir_less_than(an->value, bn->value)) {
+        if (fae_less_than(an->value, bn->value)) {
             return true;
         }
 
-        if (doremir_greater_than(an->value, bn->value)) {
+        if (fae_greater_than(an->value, bn->value)) {
             return false;
         }
 
@@ -741,11 +741,11 @@ bool list_greater_than(ptr_t a, ptr_t b)
     node_t bn = ((list_t) b)->node;
 
     while (an && bn) {
-        if (doremir_greater_than(an->value, bn->value)) {
+        if (fae_greater_than(an->value, bn->value)) {
             return true;
         }
 
-        if (doremir_less_than(an->value, bn->value)) {
+        if (fae_less_than(an->value, bn->value)) {
             return false;
         }
 
@@ -756,7 +756,7 @@ bool list_greater_than(ptr_t a, ptr_t b)
     return an && !bn;
 }
 
-doremir_string_t list_show(ptr_t xs)
+fae_string_t list_show(ptr_t xs)
 {
     string_t s  = string("");
     node_t   xn = ((list_t) xs)->node;
@@ -764,7 +764,7 @@ doremir_string_t list_show(ptr_t xs)
     s = string_dappend(s, string("["));
 
     while (xn) {
-        s = string_dappend(s, doremir_string_show(xn->value));
+        s = string_dappend(s, fae_string_show(xn->value));
         xn = xn->next;
 
         if (xn) {
@@ -779,45 +779,45 @@ doremir_string_t list_show(ptr_t xs)
 
 ptr_t list_copy(ptr_t a)
 {
-    return doremir_list_copy(a);
+    return fae_list_copy(a);
 }
 
 void list_destroy(ptr_t a)
 {
-    doremir_list_destroy(a);
+    fae_list_destroy(a);
 }
 
-type_repr_t list_get_type(doremir_ptr_t a)
+type_repr_t list_get_type(fae_ptr_t a)
 {
     return list_type_repr;
 }
 
-ptr_t list_impl(doremir_id_t interface)
+ptr_t list_impl(fae_id_t interface)
 {
-    static doremir_equal_t list_equal_impl = { list_equal };
-    static doremir_order_t list_order_impl = { list_less_than, list_greater_than };
-    static doremir_string_show_t list_show_impl = { list_show };
-    static doremir_copy_t list_copy_impl = { list_copy };
-    static doremir_destroy_t list_destroy_impl = { list_destroy };
-    static doremir_dynamic_t list_dynamic_impl = { list_get_type };
+    static fae_equal_t list_equal_impl = { list_equal };
+    static fae_order_t list_order_impl = { list_less_than, list_greater_than };
+    static fae_string_show_t list_show_impl = { list_show };
+    static fae_copy_t list_copy_impl = { list_copy };
+    static fae_destroy_t list_destroy_impl = { list_destroy };
+    static fae_dynamic_t list_dynamic_impl = { list_get_type };
 
     switch (interface) {
-    case doremir_equal_i:
+    case fae_equal_i:
         return &list_equal_impl;
 
-    case doremir_order_i:
+    case fae_order_i:
         return &list_order_impl;
 
-    case doremir_string_show_i:
+    case fae_string_show_i:
         return &list_show_impl;
 
-    case doremir_copy_i:
+    case fae_copy_i:
         return &list_copy_impl;
 
-    case doremir_destroy_i:
+    case fae_destroy_i:
         return &list_destroy_impl;
 
-    case doremir_dynamic_i:
+    case fae_dynamic_i:
         return &list_dynamic_impl;
 
     default:

@@ -5,14 +5,14 @@
     All rights reserved.
  */
 
-#include <doremir/ratio.h>
-#include <doremir/dynamic.h>
-#include <doremir/util.h>
+#include <fae/ratio.h>
+#include <fae/dynamic.h>
+#include <fae/util.h>
 
-typedef doremir_ratio_num_t num_t;
-typedef doremir_ratio_denom_t denom_t;
+typedef fae_ratio_num_t num_t;
+typedef fae_ratio_denom_t denom_t;
 
-struct _doremir_ratio_t {
+struct _fae_ratio_t {
     impl_t          impl;       //  Interface dispatcher
 
     num_t           num;        //  Components
@@ -22,27 +22,27 @@ struct _doremir_ratio_t {
 
 // --------------------------------------------------------------------------------
 
-doremir_ratio_t new_ratio()
+fae_ratio_t new_ratio()
 {
-    ptr_t ratio_impl(doremir_id_t interface);
+    ptr_t ratio_impl(fae_id_t interface);
 
-    ratio_t p = doremir_new(ratio);
+    ratio_t p = fae_new(ratio);
     p->impl = &ratio_impl;
     return p;
 }
 
-void delete_ratio(doremir_ratio_t p)
+void delete_ratio(fae_ratio_t p)
 {
-    doremir_delete(p);
+    fae_delete(p);
 }
 
 // --------------------------------------------------------------------------------
 
-void normalize_mutable(doremir_ratio_t x);
+void normalize_mutable(fae_ratio_t x);
 
 /** Create a rational number.
  */
-doremir_ratio_t doremir_ratio_create(num_t num, denom_t denom)
+fae_ratio_t fae_ratio_create(num_t num, denom_t denom)
 {
     assert(denom != 0 && "Divide by zero.");
 
@@ -55,7 +55,7 @@ doremir_ratio_t doremir_ratio_create(num_t num, denom_t denom)
 
 /** Copy a rational number.
  */
-doremir_ratio_t doremir_ratio_copy(doremir_ratio_t p)
+fae_ratio_t fae_ratio_copy(fae_ratio_t p)
 {
     ratio_t q = new_ratio();
     q->num   = p->num;
@@ -65,21 +65,21 @@ doremir_ratio_t doremir_ratio_copy(doremir_ratio_t p)
 
 /** Destroy a rational number.
  */
-void doremir_ratio_destroy(doremir_ratio_t p)
+void fae_ratio_destroy(fae_ratio_t p)
 {
     delete_ratio(p);
 }
 
 /** Return the numerator of the given rational number.
  */
-num_t doremir_ratio_num(doremir_ratio_t x)
+num_t fae_ratio_num(fae_ratio_t x)
 {
     return x->num;
 }
 
 /** Return the denominator of the given rational number.
  */
-denom_t doremir_ratio_denom(doremir_ratio_t x)
+denom_t fae_ratio_denom(fae_ratio_t x)
 {
     return x->denom;
 }
@@ -87,7 +87,7 @@ denom_t doremir_ratio_denom(doremir_ratio_t x)
 /** Destruct the given rational number, writing its numerator
     and denominator to the given locations.
  */
-void doremir_ratio_match(doremir_ratio_t x, num_t *a, denom_t *b)
+void fae_ratio_match(fae_ratio_t x, num_t *a, denom_t *b)
 {
     *a = x->num;
     *b = x->denom;
@@ -98,7 +98,7 @@ void doremir_ratio_match(doremir_ratio_t x, num_t *a, denom_t *b)
 
 /** Add the given rational numbers.
  */
-doremir_ratio_t doremir_ratio_add(doremir_ratio_t x, doremir_ratio_t y)
+fae_ratio_t fae_ratio_add(fae_ratio_t x, fae_ratio_t y)
 {
     num_t   a = x->num;
     denom_t b = x->denom;
@@ -110,7 +110,7 @@ doremir_ratio_t doremir_ratio_add(doremir_ratio_t x, doremir_ratio_t y)
 
 /** Subtract the given rational numbers.
  */
-doremir_ratio_t doremir_ratio_subtract(doremir_ratio_t x, doremir_ratio_t y)
+fae_ratio_t fae_ratio_subtract(fae_ratio_t x, fae_ratio_t y)
 {
     num_t   a = x->num;
     denom_t b = x->denom;
@@ -122,7 +122,7 @@ doremir_ratio_t doremir_ratio_subtract(doremir_ratio_t x, doremir_ratio_t y)
 
 /** Multiply the given rational numbers.
  */
-doremir_ratio_t doremir_ratio_multiply(doremir_ratio_t x, doremir_ratio_t y)
+fae_ratio_t fae_ratio_multiply(fae_ratio_t x, fae_ratio_t y)
 {
     num_t   a = x->num;
     denom_t b = x->denom;
@@ -134,7 +134,7 @@ doremir_ratio_t doremir_ratio_multiply(doremir_ratio_t x, doremir_ratio_t y)
 
 /** Divide the given rational numbers.
  */
-doremir_ratio_t doremir_ratio_divide(doremir_ratio_t x, doremir_ratio_t y)
+fae_ratio_t fae_ratio_divide(fae_ratio_t x, fae_ratio_t y)
 {
     num_t   a = x->num;
     denom_t b = x->denom;
@@ -146,30 +146,30 @@ doremir_ratio_t doremir_ratio_divide(doremir_ratio_t x, doremir_ratio_t y)
 
 /** Return the successor of the given rational number.
  */
-doremir_ratio_t doremir_ratio_succ(doremir_ratio_t x)
+fae_ratio_t fae_ratio_succ(fae_ratio_t x)
 {
-    return doremir_ratio_add(x, ratio(1, 1));
+    return fae_ratio_add(x, ratio(1, 1));
 }
 
 /** Return the predecessor of the given rational number.
  */
-doremir_ratio_t doremir_ratio_pred(doremir_ratio_t x)
+fae_ratio_t fae_ratio_pred(fae_ratio_t x)
 {
-    return doremir_ratio_subtract(x, ratio(1, 1));
+    return fae_ratio_subtract(x, ratio(1, 1));
 }
 
 /** Negate the given rational number.
  */
-doremir_ratio_t doremir_ratio_negate(doremir_ratio_t x)
+fae_ratio_t fae_ratio_negate(fae_ratio_t x)
 {
-    return doremir_ratio_multiply(x, ratio(-1, 1));
+    return fae_ratio_multiply(x, ratio(-1, 1));
 }
 
 /** Invert the given rational number.
  */
-doremir_ratio_t doremir_ratio_recip(doremir_ratio_t x)
+fae_ratio_t fae_ratio_recip(fae_ratio_t x)
 {
-    return doremir_ratio_divide(ratio(1, 1), x);
+    return fae_ratio_divide(ratio(1, 1), x);
 }
 
 inline static int gcd(int x, int y)
@@ -186,7 +186,7 @@ inline static int gcd(int x, int y)
     return x;
 }
 
-void normalize_mutable(doremir_ratio_t x)
+void normalize_mutable(fae_ratio_t x)
 {
     if (x->denom < 0) {
         x->num   = -x->num;
@@ -203,16 +203,16 @@ void normalize_mutable(doremir_ratio_t x)
 
 /** Normalize the given rational number.
  */
-doremir_ratio_t doremir_ratio_normalize(doremir_ratio_t x)
+fae_ratio_t fae_ratio_normalize(fae_ratio_t x)
 {
-    ratio_t y = doremir_ratio_copy(x);
+    ratio_t y = fae_ratio_copy(x);
     normalize_mutable(y);
     return y;
 }
 
 /** Return the absolute value of the given rational number.
  */
-doremir_ratio_t doremir_ratio_absolute(doremir_ratio_t x)
+fae_ratio_t fae_ratio_absolute(fae_ratio_t x)
 {
     num_t   a = x->num;
     denom_t b = x->denom;
@@ -230,9 +230,9 @@ doremir_ratio_t doremir_ratio_absolute(doremir_ratio_t x)
 
     For example \f$11/3\f$ becomes \f$3+2/3\f$.
  */
-void doremir_ratio_to_mixed(doremir_ratio_t x,
-                            doremir_ratio_num_t *n,
-                            doremir_ratio_t     *y)
+void fae_ratio_to_mixed(fae_ratio_t x,
+                            fae_ratio_num_t *n,
+                            fae_ratio_t     *y)
 {
     num_t   a = x->num;
     denom_t b = x->denom;
@@ -286,94 +286,94 @@ bool ratio_greater_than(ptr_t m, ptr_t n)
 
 ptr_t ratio_add(ptr_t a, ptr_t b)
 {
-    return doremir_ratio_add(a, b);
+    return fae_ratio_add(a, b);
 }
 
 ptr_t ratio_subtract(ptr_t a, ptr_t b)
 {
-    return doremir_ratio_subtract(a, b);
+    return fae_ratio_subtract(a, b);
 }
 
 ptr_t ratio_multiply(ptr_t a, ptr_t b)
 {
-    return doremir_ratio_multiply(a, b);
+    return fae_ratio_multiply(a, b);
 }
 
 ptr_t ratio_divide(ptr_t a, ptr_t b)
 {
-    return doremir_ratio_divide(a, b);
+    return fae_ratio_divide(a, b);
 }
 
 ptr_t ratio_absolute(ptr_t a)
 {
-    return doremir_ratio_absolute(a);
+    return fae_ratio_absolute(a);
 }
 
-doremir_string_t ratio_show(ptr_t a)
+fae_string_t ratio_show(ptr_t a)
 {
-    // ratio_t b = doremir_ratio_normalize(a);
+    // ratio_t b = fae_ratio_normalize(a);
     ratio_t b = a;
     string_t s = string("");
 
-    s = string_dappend(s, doremir_string_show(i32(b->num)));
+    s = string_dappend(s, fae_string_show(i32(b->num)));
     s = string_dappend(s, string("/"));
-    s = string_dappend(s, doremir_string_show(i32(b->denom)));
+    s = string_dappend(s, fae_string_show(i32(b->denom)));
 
-    doremir_destroy(b);
+    fae_destroy(b);
     return s;
 }
 
 ptr_t ratio_copy(ptr_t a)
 {
-    return doremir_ratio_copy(a);
+    return fae_ratio_copy(a);
 }
 
 void ratio_destroy(ptr_t a)
 {
-    doremir_ratio_destroy(a);
+    fae_ratio_destroy(a);
 }
 
-type_repr_t ratio_get_type(doremir_ptr_t a)
+type_repr_t ratio_get_type(fae_ptr_t a)
 {
     return ratio_type_repr;
 }
 
-ptr_t ratio_impl(doremir_id_t interface)
+ptr_t ratio_impl(fae_id_t interface)
 {
-    static doremir_equal_t ratio_equal_impl
+    static fae_equal_t ratio_equal_impl
         = { ratio_equal };
-    static doremir_order_t ratio_order_impl
+    static fae_order_t ratio_order_impl
         = { ratio_less_than, ratio_greater_than };
-    static doremir_string_show_t ratio_show_impl
+    static fae_string_show_t ratio_show_impl
         = { ratio_show };
-    static doremir_number_t  ratio_number_impl
+    static fae_number_t  ratio_number_impl
         = { ratio_add, ratio_subtract, ratio_multiply, ratio_divide, ratio_absolute };
-    static doremir_copy_t ratio_copy_impl
+    static fae_copy_t ratio_copy_impl
         = { ratio_copy };
-    static doremir_destroy_t ratio_destroy_impl
+    static fae_destroy_t ratio_destroy_impl
         = { ratio_destroy };
-    static doremir_dynamic_t ratio_dynamic_impl = { ratio_get_type };
+    static fae_dynamic_t ratio_dynamic_impl = { ratio_get_type };
 
     switch (interface) {
-    case doremir_equal_i:
+    case fae_equal_i:
         return &ratio_equal_impl;
 
-    case doremir_order_i:
+    case fae_order_i:
         return &ratio_order_impl;
 
-    case doremir_string_show_i:
+    case fae_string_show_i:
         return &ratio_show_impl;
 
-    case doremir_number_i:
+    case fae_number_i:
         return &ratio_number_impl;
 
-    case doremir_copy_i:
+    case fae_copy_i:
         return &ratio_copy_impl;
 
-    case doremir_destroy_i:
+    case fae_destroy_i:
         return &ratio_destroy_impl;
 
-    case doremir_dynamic_i:
+    case fae_dynamic_i:
         return &ratio_dynamic_impl;
 
     default:

@@ -1,0 +1,23 @@
+
+/** 
+    @addtogroup FaeAtomicStack
+    
+    Lock-free stack (LIFO) data structure
+
+    @see 
+    - [Data structures](@ref DataStructures)
+
+ */
+module Fae.Atomic.Stack
+{
+    import Fae;
+
+    type Stack = opaque;
+    
+    create : () -> Stack;
+    destroy : Stack -> Void;
+    
+    read : Stack -> Ptr;
+    write : (Stack, Ptr) -> Bool;
+}
+

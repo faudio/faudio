@@ -1,0 +1,70 @@
+
+/** 
+    @addtogroup FaeSet
+    
+    Immutable ordered set data structure.
+
+
+    @par Literals
+    - `set(1, 2, 3)`
+
+    @par Display
+    - `{1,2,3}`
+    
+    @par Requires 
+    - doremir_order_t
+
+    @par Implements 
+    - doremir_equal_t
+    - doremir_string_show_t
+    - doremir_copy_t
+    - doremir_destroy_t
+    - doremir_dynamic_t
+
+    @see 
+    - [Data structures](@ref DataStructures)
+    
+ */
+module Fae.Set
+{
+    import Fae;
+    import Fae.List;
+    import Fae.String;
+
+    type Set = opaque;
+    
+    // Constructors
+    empty            : () -> Set;
+    single           : Ptr -> Set;
+    add              : (Ptr, Set) -> Set; // add x a = a `union` single x
+    set              : (Ptr, Set) -> Set; // set x a = single x `union` a
+    remove           : (Ptr, Set) -> Set;
+    dadd             : (Ptr, Set) -> Set;
+    dset             : (Ptr, Set) -> Set;
+    dremove          : (Ptr, Set) -> Set;
+    copy             : Set -> Set;
+    destroy          : Set -> Void;    
+
+    // Size
+    size             : Set -> Int;
+    isEmpty          : Set -> Bool;
+    isSingle         : Set -> Bool;
+
+    // Predicates
+    has              : (Ptr, Set) -> Bool;
+    get              : (Ptr, Set) -> Ptr;
+    isSubsetOf       : (Set, Set) -> Bool;
+    isProperSubsetOf : (Set, Set) -> Bool;
+
+    // Set operations
+    sum              : (Set, Set) -> Set; // left biased
+    intersection     : (Set, Set) -> Set; // left biased
+    difference       : (Set, Set) -> Set;
+    product          : (Set, Set) -> Set;
+    power            : Set -> Set;
+
+    // Conversions   
+    fromList         : List -> Set;
+    toList           : Set -> List;
+}
+

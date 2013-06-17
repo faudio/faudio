@@ -5,6 +5,6 @@
     All rights reserved.
  */
 
-#include <doremir/device/file.h>
-#include <doremir/atomic/ring_buffer.h>
+#include <fae/device/file.h>
+#include <fae/atomic/ring_buffer.h>
 

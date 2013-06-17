@@ -1,0 +1,36 @@
+
+/**
+    @addtogroup FaeDynamic
+    
+    Basic dynamic types.     
+ */
+
+module Fae.Dynamic
+{
+    import Fae;
+    import Fae.String;
+
+    type TypeRepr = enum {                   
+        BoolTypeRepr, 
+        I8TypeRepr, 
+        I16TypeRepr, 
+        I32TypeRepr, 
+        I64TypeRepr,
+        F32TypeRepr,
+        F64TypeRepr,
+        PairTypeRepr, 
+        ListTypeRepr, 
+        SetTypeRepr, 
+        MapTypeRepr, 
+        StringTypeRepr,
+        RatioTypeRepr
+    };
+
+    type Dynamic = struct {
+        getType : (Ptr -> TypeRepr)*
+    };
+        
+    check : Ptr -> Bool;
+    getType : Ptr -> TypeRepr;
+}
+

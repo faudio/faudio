@@ -1,0 +1,21 @@
+
+/**
+    @addtogroup FaeDeviceFile
+    
+    Non-real-time file device.
+    
+ */
+module Fae.Device.File
+{
+    import Fae.String;
+    import Fae.Device;
+    import Fae.Processor;
+
+    type Result = opaque;
+
+    open : FilePath -> File;
+    close : File -> Void;
+
+    run : (File, Processor, File) -> Result;
+}
+

@@ -1,0 +1,67 @@
+
+/**
+    @addtogroup FaeAudioEngine
+
+    This modules exports the entire audio engine. Example usage:
+
+    ~~~~
+    #import <fae/audio_engine.h>
+
+    int main (int argc, char const *argv[])
+    {
+        Fae_audio_engine_initialize();
+
+        ...
+
+        Fae_audio_engine_terminate();
+        return 0;
+    }
+    ~~~~
+
+ */
+module Fae.AudioEngine
+{
+    import Fae.Atomic;
+    import Fae.Atomic.Queue;
+    import Fae.Atomic.Stack;
+    import Fae.Atomic.RingBuffer;
+    import Fae.System;
+    import Fae.Error;
+    import Fae.Event;
+    import Fae.Graph;
+    import Fae.Device.Audio;
+    import Fae.Device.Midi;
+    import Fae.Device.File;
+    import Fae.Message;
+    import Fae.Midi;
+    import Fae.Processor;
+    import Fae.Plot;
+    import Fae.Scheduler;
+    import Fae.Thread;
+    import Fae.Time;
+    import Fae.PriorityQueue;
+
+    version : () -> List;
+    versionString : () -> String;
+
+    initialize : () -> Void;
+    terminate : () -> Void;
+
+    // Time.System, Error.Some
+    type LogFunc = ((Ptr, System, Error) -> Void)*;
+
+    setLogFile  : FilePath -> Void;
+    setLogStd   : () -> Void;
+    setLog      : (LogFunc,Ptr) -> Void;
+
+    log             : (Ptr,Error) -> Void;
+    logInfo         : (String) -> Void;
+    logWarning      : (String) -> Void;
+    logError        : (String) -> Void;
+    logInfoFrom     : (String,String) -> Void;
+    logWarningFrom  : (String,String) -> Void;
+    logErrorFrom    : (String,String) -> Void;
+    dlog            : (Ptr,Error) -> Void;
+    dlogInfo        : (String) -> Void;
+}
+

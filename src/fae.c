@@ -5,14 +5,14 @@
     All rights reserved.
  */
 
-#include <doremir.h>
-#include <doremir/dynamic.h>
-#include <doremir/string.h>
+#include <fae.h>
+#include <fae/dynamic.h>
+#include <fae/string.h>
 
 #pragma GCC diagnostic ignored "-Wparentheses"
 
 /*
-    doremir_ptr_t
+    fae_ptr_t
 
     v = value
     _ = anything
@@ -40,14 +40,14 @@
     Note: ptr includes 0 (NULL)
  */
 
-int doremir_type(doremir_ptr_t a)
+int fae_type(fae_ptr_t a)
 {
     return ((intptr_t) a) & 0x7;
 }
 
-char *doremir_type_str(doremir_ptr_t a)
+char *fae_type_str(fae_ptr_t a)
 {
-    switch (doremir_type(a)) {
+    switch (fae_type(a)) {
     case 7:
         return "bool";
 
@@ -77,64 +77,64 @@ char *doremir_type_str(doremir_ptr_t a)
     }
 }
 
-bool doremir_is_bool(doremir_ptr_t x)
+bool fae_is_bool(fae_ptr_t x)
 {
     return (((intptr_t) x) & 0x7) == 0x7;
 }
-bool doremir_is_int8(doremir_ptr_t x)
+bool fae_is_int8(fae_ptr_t x)
 {
     return (((intptr_t) x) & 0x7) == 0x6;
 }
-bool doremir_is_int16(doremir_ptr_t x)
+bool fae_is_int16(fae_ptr_t x)
 {
     return (((intptr_t) x) & 0x7) == 0x5;
 }
-bool doremir_is_int32(doremir_ptr_t x)
+bool fae_is_int32(fae_ptr_t x)
 {
     return (((intptr_t) x) & 0x7) == 0x4;
 }
-bool doremir_is_int64(doremir_ptr_t x)
+bool fae_is_int64(fae_ptr_t x)
 {
     return (((intptr_t) x) & 0x7) == 0x3;
 }
-bool doremir_is_float(doremir_ptr_t x)
+bool fae_is_float(fae_ptr_t x)
 {
     return (((intptr_t) x) & 0x7) == 0x2;
 }
-bool doremir_is_double(doremir_ptr_t x)
+bool fae_is_double(fae_ptr_t x)
 {
     return (((intptr_t) x) & 0x7) == 0x1;
 }
-bool doremir_is_ref(doremir_ptr_t x)
+bool fae_is_ref(fae_ptr_t x)
 {
     return (((intptr_t) x) & 0x7) == 0x0;
 }
 
-// doremir_dynamic_type_repr_t bool_get_type(doremir_ptr_t a)
+// fae_dynamic_type_repr_t bool_get_type(fae_ptr_t a)
 // {
 //     bool_type_repr;
 // }
-// doremir_dynamic_type_repr_t int8_get_type(doremir_ptr_t a)
+// fae_dynamic_type_repr_t int8_get_type(fae_ptr_t a)
 // {
 //     return i8_type_repr;
 // }
-// doremir_dynamic_type_repr_t int16_get_type(doremir_ptr_t a)
+// fae_dynamic_type_repr_t int16_get_type(fae_ptr_t a)
 // {
 //     return i16_type_repr;
 // }
-// doremir_dynamic_type_repr_t int32_get_type(doremir_ptr_t a)
+// fae_dynamic_type_repr_t int32_get_type(fae_ptr_t a)
 // {
 //     return i32_type_repr;
 // }
-// doremir_dynamic_type_repr_t int64_get_type(doremir_ptr_t a)
+// fae_dynamic_type_repr_t int64_get_type(fae_ptr_t a)
 // {
 //     return i64_type_repr;
 // }
-// doremir_dynamic_type_repr_t float_get_type(doremir_ptr_t a)
+// fae_dynamic_type_repr_t float_get_type(fae_ptr_t a)
 // {
 //     return f32_type_repr;
 // }
-// doremir_dynamic_type_repr_t double_get_type(doremir_ptr_t a)
+// fae_dynamic_type_repr_t double_get_type(fae_ptr_t a)
 // {
 //     return f64_type_repr;
 // }
@@ -146,49 +146,49 @@ bool doremir_is_ref(doremir_ptr_t x)
 // Wrapper functions
 // --------------------------------------------------------------------------------
 
-bool doremir_to_bool(doremir_ptr_t a)
+bool fae_to_bool(fae_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x7 && "Wrong type, expected bool");
     return (p & ~0x7) >> 24;
 }
 
-doremir_ptr_t doremir_from_bool(bool a)
+fae_ptr_t fae_from_bool(bool a)
 {
-    return (doremir_ptr_t)(a << 24 & ~0x7 | 0x7);
+    return (fae_ptr_t)(a << 24 & ~0x7 | 0x7);
 }
 
 // --------------------------------------------------------------------------------
 
-int8_t doremir_to_int8(doremir_ptr_t a)
+int8_t fae_to_int8(fae_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x6 && "Wrong type, expected int8");
     return (p & ~0x7) >> 24;
 }
 
-doremir_ptr_t doremir_from_int8(int8_t a)
+fae_ptr_t fae_from_int8(int8_t a)
 {
-    return (doremir_ptr_t)(a << 24 & ~0x7 | 0x6);
+    return (fae_ptr_t)(a << 24 & ~0x7 | 0x6);
 }
 
 // --------------------------------------------------------------------------------
 
-int16_t doremir_to_int16(doremir_ptr_t a)
+int16_t fae_to_int16(fae_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x5 && "Wrong type, expected int16");
     return (p & ~0x7) >> 8;
 }
 
-doremir_ptr_t doremir_from_int16(int16_t a)
+fae_ptr_t fae_from_int16(int16_t a)
 {
-    return (doremir_ptr_t)(a << 8 & ~0x7 | 0x5);
+    return (fae_ptr_t)(a << 8 & ~0x7 | 0x5);
 }
 
 // --------------------------------------------------------------------------------
 
-int32_t doremir_peek_int32(doremir_ptr_t a)
+int32_t fae_peek_int32(fae_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x4 && "Wrong type, expected int32");
@@ -196,7 +196,7 @@ int32_t doremir_peek_int32(doremir_ptr_t a)
     return v;
 }
 
-int32_t doremir_to_int32(doremir_ptr_t a)
+int32_t fae_to_int32(fae_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x4 && "Wrong type, expected int32");
@@ -205,24 +205,24 @@ int32_t doremir_to_int32(doremir_ptr_t a)
     return v;
 }
 
-doremir_ptr_t doremir_copy_int32(doremir_ptr_t a)
+fae_ptr_t fae_copy_int32(fae_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     int32_t *q = malloc(sizeof(int32_t));
     *q = *((int32_t *)(p & ~0x7));
-    return (doremir_ptr_t)(((intptr_t) q) | 0x4);
+    return (fae_ptr_t)(((intptr_t) q) | 0x4);
 }
 
-doremir_ptr_t doremir_from_int32(int32_t a)
+fae_ptr_t fae_from_int32(int32_t a)
 {
     int32_t *p = malloc(sizeof(int32_t));
     *p = a;
-    return (doremir_ptr_t)(((intptr_t) p) & ~0x7 | 0x4);
+    return (fae_ptr_t)(((intptr_t) p) & ~0x7 | 0x4);
 }
 
 // --------------------------------------------------------------------------------
 
-int64_t doremir_peek_int64(doremir_ptr_t a)
+int64_t fae_peek_int64(fae_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x3 && "Wrong type, expected int64");
@@ -230,7 +230,7 @@ int64_t doremir_peek_int64(doremir_ptr_t a)
     return v;
 }
 
-int64_t doremir_to_int64(doremir_ptr_t a)
+int64_t fae_to_int64(fae_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x3 && "Wrong type, expected int64");
@@ -239,31 +239,31 @@ int64_t doremir_to_int64(doremir_ptr_t a)
     return v;
 }
 
-doremir_ptr_t doremir_copy_int64(doremir_ptr_t a)
+fae_ptr_t fae_copy_int64(fae_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     int64_t *q = malloc(sizeof(int64_t));
     *q = *((int64_t *)(p & ~0x7));
-    return (doremir_ptr_t)(((intptr_t) q) & ~0x7 | 0x3);
+    return (fae_ptr_t)(((intptr_t) q) & ~0x7 | 0x3);
 }
 
-doremir_ptr_t doremir_from_int64(int64_t a)
+fae_ptr_t fae_from_int64(int64_t a)
 {
     int64_t *p = malloc(sizeof(int64_t));
     *p = a;
-    return (doremir_ptr_t)(((intptr_t) p) & ~0x7 | 0x3);
+    return (fae_ptr_t)(((intptr_t) p) & ~0x7 | 0x3);
 }
 
 // --------------------------------------------------------------------------------
 
-float doremir_peek_float(doremir_ptr_t a)
+float fae_peek_float(fae_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x2 && "Wrong type, expected float");
     float v = *((float *)(p & ~0x7));
     return v;
 }
-float doremir_to_float(doremir_ptr_t a)
+float fae_to_float(fae_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x2 && "Wrong type, expected float");
@@ -272,31 +272,31 @@ float doremir_to_float(doremir_ptr_t a)
     return v;
 }
 
-doremir_ptr_t doremir_copy_float(doremir_ptr_t a)
+fae_ptr_t fae_copy_float(fae_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     float *q = malloc(sizeof(float));
     *q = *((float *)(p & ~0x7));
-    return (doremir_ptr_t)(((intptr_t) q) & ~0x7 | 0x2);
+    return (fae_ptr_t)(((intptr_t) q) & ~0x7 | 0x2);
 }
 
-doremir_ptr_t doremir_from_float(float a)
+fae_ptr_t fae_from_float(float a)
 {
     float *p = malloc(sizeof(float));
     *p = a;
-    return (doremir_ptr_t)(((intptr_t) p) & ~0x7 | 0x2);
+    return (fae_ptr_t)(((intptr_t) p) & ~0x7 | 0x2);
 }
 
 // --------------------------------------------------------------------------------
 
-double doremir_peek_double(doremir_ptr_t a)
+double fae_peek_double(fae_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x1 && "Wrong type, expected double");
     double v = *((double *)(p & ~0x7));
     return v;
 }
-double doremir_to_double(doremir_ptr_t a)
+double fae_to_double(fae_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x1 && "Wrong type, expected double");
@@ -305,19 +305,19 @@ double doremir_to_double(doremir_ptr_t a)
     return v;
 }
 
-doremir_ptr_t doremir_copy_double(doremir_ptr_t a)
+fae_ptr_t fae_copy_double(fae_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
     double *q = malloc(sizeof(double));
     *q = *((double *)(p & ~0x7));
-    return (doremir_ptr_t)(((intptr_t) q) & ~0x7 | 0x1);
+    return (fae_ptr_t)(((intptr_t) q) & ~0x7 | 0x1);
 }
 
-doremir_ptr_t doremir_from_double(double a)
+fae_ptr_t fae_from_double(double a)
 {
     double *p = malloc(sizeof(double));
     *p = a;
-    return (doremir_ptr_t)(((intptr_t) p) & ~0x7 | 0x1);
+    return (fae_ptr_t)(((intptr_t) p) & ~0x7 | 0x1);
 }
 
 // --------------------------------------------------------------------------------
@@ -325,117 +325,117 @@ doremir_ptr_t doremir_from_double(double a)
 // --------------------------------------------------------------------------------
 
 #define GENERIC1(I,F,A,B) \
-    B doremir_##F(A a)                                                                      \
+    B fae_##F(A a)                                                                      \
     {                                                                                       \
-        assert(doremir_interface(doremir_##I##_i, a) && "Must implement " #I);              \
-        return ((doremir_##I##_t*) doremir_interface(doremir_##I##_i, a))->F(a);            \
+        assert(fae_interface(fae_##I##_i, a) && "Must implement " #I);              \
+        return ((fae_##I##_t*) fae_interface(fae_##I##_i, a))->F(a);            \
     }
 
 #define GENERIC2(I,F,A,B,C) \
-    C doremir_##F(A a, B b)                                                                 \
+    C fae_##F(A a, B b)                                                                 \
     {                                                                                       \
-        assert(doremir_interface(doremir_##I##_i, a) && "Must implement " #I);              \
-        return ((doremir_##I##_t*) doremir_interface(doremir_##I##_i, a))->F(a, b);         \
+        assert(fae_interface(fae_##I##_i, a) && "Must implement " #I);              \
+        return ((fae_##I##_t*) fae_interface(fae_##I##_i, a))->F(a, b);         \
     }
 
 
-GENERIC2(equal,     equal,          doremir_ptr_t, doremir_ptr_t, bool);
-GENERIC2(order,     less_than,      doremir_ptr_t, doremir_ptr_t, bool);
-GENERIC2(order,     greater_than,   doremir_ptr_t, doremir_ptr_t, bool);
+GENERIC2(equal,     equal,          fae_ptr_t, fae_ptr_t, bool);
+GENERIC2(order,     less_than,      fae_ptr_t, fae_ptr_t, bool);
+GENERIC2(order,     greater_than,   fae_ptr_t, fae_ptr_t, bool);
 
-bool doremir_not_equal(doremir_ptr_t a, doremir_ptr_t b)
+bool fae_not_equal(fae_ptr_t a, fae_ptr_t b)
 {
-    return !doremir_equal(a, b);
+    return !fae_equal(a, b);
 }
 
-bool doremir_less_than_equal(doremir_ptr_t a, doremir_ptr_t b)
+bool fae_less_than_equal(fae_ptr_t a, fae_ptr_t b)
 {
-    return doremir_less_than(a, b) || doremir_equal(a, b);
+    return fae_less_than(a, b) || fae_equal(a, b);
 }
 
-bool doremir_greater_than_equal(doremir_ptr_t a, doremir_ptr_t b)
+bool fae_greater_than_equal(fae_ptr_t a, fae_ptr_t b)
 {
-    return doremir_greater_than(a, b) || doremir_equal(a, b);
+    return fae_greater_than(a, b) || fae_equal(a, b);
 }
 
-doremir_ptr_t doremir_min(doremir_ptr_t a, doremir_ptr_t b)
+fae_ptr_t fae_min(fae_ptr_t a, fae_ptr_t b)
 {
-    return doremir_less_than(a, b) ? a : b;
+    return fae_less_than(a, b) ? a : b;
 }
 
-doremir_ptr_t doremir_max(doremir_ptr_t a, doremir_ptr_t b)
+fae_ptr_t fae_max(fae_ptr_t a, fae_ptr_t b)
 {
-    return doremir_greater_than(a, b) ? a : b;
+    return fae_greater_than(a, b) ? a : b;
 }
 
-GENERIC2(number,    add,            doremir_ptr_t, doremir_ptr_t, doremir_ptr_t);
-GENERIC2(number,    subtract,       doremir_ptr_t, doremir_ptr_t, doremir_ptr_t);
-GENERIC2(number,    multiply,       doremir_ptr_t, doremir_ptr_t, doremir_ptr_t);
-GENERIC2(number,    divide,         doremir_ptr_t, doremir_ptr_t, doremir_ptr_t);
-GENERIC1(number,    absolute,       doremir_ptr_t, doremir_ptr_t);
+GENERIC2(number,    add,            fae_ptr_t, fae_ptr_t, fae_ptr_t);
+GENERIC2(number,    subtract,       fae_ptr_t, fae_ptr_t, fae_ptr_t);
+GENERIC2(number,    multiply,       fae_ptr_t, fae_ptr_t, fae_ptr_t);
+GENERIC2(number,    divide,         fae_ptr_t, fae_ptr_t, fae_ptr_t);
+GENERIC1(number,    absolute,       fae_ptr_t, fae_ptr_t);
 
-doremir_ptr_t doremir_dadd(doremir_ptr_t a, doremir_ptr_t b)
+fae_ptr_t fae_dadd(fae_ptr_t a, fae_ptr_t b)
 {
-    doremir_ptr_t res = doremir_add(a, b);
-    doremir_destroy(a);
-    doremir_destroy(b);
+    fae_ptr_t res = fae_add(a, b);
+    fae_destroy(a);
+    fae_destroy(b);
     return res;
 }
 
 
-GENERIC1(copy,      copy,           doremir_ptr_t, doremir_ptr_t);
-GENERIC1(destroy,   destroy,        doremir_ptr_t, void);
+GENERIC1(copy,      copy,           fae_ptr_t, fae_ptr_t);
+GENERIC1(destroy,   destroy,        fae_ptr_t, void);
 
-doremir_string_t doremir_show(doremir_ptr_t a)
+fae_string_t fae_show(fae_ptr_t a)
 {
-    return doremir_string_show(a);
+    return fae_string_show(a);
 }
 
-void doremir_print(char *f, doremir_ptr_t a)
+void fae_print(char *f, fae_ptr_t a)
 {
     if (a) {
-        doremir_string_t str = doremir_string_show(a);
-        char *cstr = doremir_string_to_utf8(str);
+        fae_string_t str = fae_string_show(a);
+        char *cstr = fae_string_to_utf8(str);
         printf(f, cstr);
         free(cstr);
-        doremir_destroy(str);
+        fae_destroy(str);
     } else {
         printf("%s", f);
     }
 }
 
-void doremir_puts(doremir_string_t string)
+void fae_puts(fae_string_t string)
 {
-    char *cstr = doremir_string_to_utf8(string);
+    char *cstr = fae_string_to_utf8(string);
     puts(cstr);
     free(cstr);
 }
 
-void doremir_dprint(char *f, doremir_ptr_t a)
+void fae_dprint(char *f, fae_ptr_t a)
 {
-    doremir_print(f, a);
-    doremir_destroy(a);
+    fae_print(f, a);
+    fae_destroy(a);
 }
 
-void doremir_print_ln(doremir_ptr_t a)
+void fae_print_ln(fae_ptr_t a)
 {
-    doremir_print("%s\n", a);
+    fae_print("%s\n", a);
 }
 
-void doremir_dprint_ln(doremir_ptr_t a)
+void fae_dprint_ln(fae_ptr_t a)
 {
-    doremir_dprint("%s\n", a);
+    fae_dprint("%s\n", a);
 }
 
-doremir_ptr_t doremir_move(doremir_ptr_t a)
+fae_ptr_t fae_move(fae_ptr_t a)
 {
     return a;
 }
 
-bool doremir_check(doremir_ptr_t a)
+bool fae_check(fae_ptr_t a)
 {
-    bool doremir_error_check(doremir_ptr_t a);
-    return doremir_error_check(a);
+    bool fae_error_check(fae_ptr_t a);
+    return fae_error_check(a);
 }
 
 // --------------------------------------------------------------------------------
@@ -452,152 +452,152 @@ bool doremir_check(doremir_ptr_t a)
 
 
 #define UNBOXED_WRAPPER_IMPL(T) \
-    bool T##_equal(doremir_ptr_t a, doremir_ptr_t b)                                        \
+    bool T##_equal(fae_ptr_t a, fae_ptr_t b)                                        \
     {                                                                                       \
-        return (doremir_to_##T(a) == doremir_to_##T(b));                                    \
+        return (fae_to_##T(a) == fae_to_##T(b));                                    \
     }                                                                                       \
-    bool T##_less_than(doremir_ptr_t a, doremir_ptr_t b)                                    \
+    bool T##_less_than(fae_ptr_t a, fae_ptr_t b)                                    \
     {                                                                                       \
-        return (doremir_to_##T(a) < doremir_to_##T(b));                                     \
+        return (fae_to_##T(a) < fae_to_##T(b));                                     \
     }                                                                                       \
-    bool T##_greater_than(doremir_ptr_t a, doremir_ptr_t b)                                 \
+    bool T##_greater_than(fae_ptr_t a, fae_ptr_t b)                                 \
     {                                                                                       \
-        return (doremir_to_##T(a) > doremir_to_##T(b));                                     \
+        return (fae_to_##T(a) > fae_to_##T(b));                                     \
     }                                                                                       \
-    doremir_ptr_t T##_add(doremir_ptr_t a, doremir_ptr_t b)                                 \
+    fae_ptr_t T##_add(fae_ptr_t a, fae_ptr_t b)                                 \
     {                                                                                       \
-        return doremir_from_##T(doremir_to_##T(a) + doremir_to_##T(b));                     \
+        return fae_from_##T(fae_to_##T(a) + fae_to_##T(b));                     \
     }                                                                                       \
-    doremir_ptr_t T##_subtract(doremir_ptr_t a, doremir_ptr_t b)                            \
+    fae_ptr_t T##_subtract(fae_ptr_t a, fae_ptr_t b)                            \
     {                                                                                       \
-        return doremir_from_##T(doremir_to_##T(a) - doremir_to_##T(b));                     \
+        return fae_from_##T(fae_to_##T(a) - fae_to_##T(b));                     \
     }                                                                                       \
-    doremir_ptr_t T##_multiply(doremir_ptr_t a, doremir_ptr_t b)                            \
+    fae_ptr_t T##_multiply(fae_ptr_t a, fae_ptr_t b)                            \
     {                                                                                       \
-        return doremir_from_##T(doremir_to_##T(a) * doremir_to_##T(b));                     \
+        return fae_from_##T(fae_to_##T(a) * fae_to_##T(b));                     \
     }                                                                                       \
-    doremir_ptr_t T##_divide(doremir_ptr_t a, doremir_ptr_t b)                              \
+    fae_ptr_t T##_divide(fae_ptr_t a, fae_ptr_t b)                              \
     {                                                                                       \
-        return doremir_from_##T(doremir_to_##T(a) / doremir_to_##T(b));                     \
+        return fae_from_##T(fae_to_##T(a) / fae_to_##T(b));                     \
     }                                                                                       \
-    doremir_ptr_t T##_absolute(doremir_ptr_t a)                                             \
+    fae_ptr_t T##_absolute(fae_ptr_t a)                                             \
     {                                                                                       \
-        return doremir_from_##T(abs(doremir_to_##T(a)));                                    \
+        return fae_from_##T(abs(fae_to_##T(a)));                                    \
     }                                                                                       \
-    doremir_ptr_t T##_copy(doremir_ptr_t a)                                                 \
+    fae_ptr_t T##_copy(fae_ptr_t a)                                                 \
     {                                                                                       \
         return a;                                                                           \
     }                                                                                       \
-    doremir_dynamic_type_repr_t T##_get_type(doremir_ptr_t a)                               \
+    fae_dynamic_type_repr_t T##_get_type(fae_ptr_t a)                               \
     {                                                                                       \
         return T##_type_repr_impl;                                                          \
     }                                                                                       \
-    void T##_destroy(doremir_ptr_t a)                                                       \
+    void T##_destroy(fae_ptr_t a)                                                       \
     {                                                                                       \
         /* nothing to do */                                                                 \
     }
 
 #define BOXED_WRAPPER_IMPL(T) \
-    bool T##_equal(doremir_ptr_t a, doremir_ptr_t b)                                        \
+    bool T##_equal(fae_ptr_t a, fae_ptr_t b)                                        \
     {                                                                                       \
-        return (doremir_peek_##T(a) == doremir_peek_##T(b));                                \
+        return (fae_peek_##T(a) == fae_peek_##T(b));                                \
     }                                                                                       \
-    bool T##_less_than(doremir_ptr_t a, doremir_ptr_t b)                                    \
+    bool T##_less_than(fae_ptr_t a, fae_ptr_t b)                                    \
     {                                                                                       \
-        return (doremir_peek_##T(a) < doremir_peek_##T(b));                                 \
+        return (fae_peek_##T(a) < fae_peek_##T(b));                                 \
     }                                                                                       \
-    bool T##_greater_than(doremir_ptr_t a, doremir_ptr_t b)                                 \
+    bool T##_greater_than(fae_ptr_t a, fae_ptr_t b)                                 \
     {                                                                                       \
-        return (doremir_peek_##T(a) > doremir_peek_##T(b));                                 \
+        return (fae_peek_##T(a) > fae_peek_##T(b));                                 \
     }                                                                                       \
-    doremir_ptr_t T##_add(doremir_ptr_t a, doremir_ptr_t b)                                 \
+    fae_ptr_t T##_add(fae_ptr_t a, fae_ptr_t b)                                 \
     {                                                                                       \
-        return doremir_from_##T(doremir_peek_##T(a) + doremir_peek_##T(b));                 \
+        return fae_from_##T(fae_peek_##T(a) + fae_peek_##T(b));                 \
     }                                                                                       \
-    doremir_ptr_t T##_subtract(doremir_ptr_t a, doremir_ptr_t b)                            \
+    fae_ptr_t T##_subtract(fae_ptr_t a, fae_ptr_t b)                            \
     {                                                                                       \
-        return doremir_from_##T(doremir_peek_##T(a) - doremir_peek_##T(b));                 \
+        return fae_from_##T(fae_peek_##T(a) - fae_peek_##T(b));                 \
     }                                                                                       \
-    doremir_ptr_t T##_multiply(doremir_ptr_t a, doremir_ptr_t b)                            \
+    fae_ptr_t T##_multiply(fae_ptr_t a, fae_ptr_t b)                            \
     {                                                                                       \
-        return doremir_from_##T(doremir_peek_##T(a) * doremir_peek_##T(b));                 \
+        return fae_from_##T(fae_peek_##T(a) * fae_peek_##T(b));                 \
     }                                                                                       \
-    doremir_ptr_t T##_divide(doremir_ptr_t a, doremir_ptr_t b)                              \
+    fae_ptr_t T##_divide(fae_ptr_t a, fae_ptr_t b)                              \
     {                                                                                       \
-        return doremir_from_##T(doremir_peek_##T(a) / doremir_peek_##T(b));                 \
+        return fae_from_##T(fae_peek_##T(a) / fae_peek_##T(b));                 \
     }                                                                                       \
-    doremir_ptr_t T##_absolute(doremir_ptr_t a)                                             \
+    fae_ptr_t T##_absolute(fae_ptr_t a)                                             \
     {                                                                                       \
-        return doremir_from_##T(abs(doremir_peek_##T(a))); /* TODO use tg? */               \
+        return fae_from_##T(abs(fae_peek_##T(a))); /* TODO use tg? */               \
     }                                                                                       \
-    doremir_ptr_t T##_copy(doremir_ptr_t a)                                                 \
+    fae_ptr_t T##_copy(fae_ptr_t a)                                                 \
     {                                                                                       \
-        return doremir_copy_##T(a);                                                         \
+        return fae_copy_##T(a);                                                         \
     }                                                                                       \
-    doremir_dynamic_type_repr_t T##_get_type(doremir_ptr_t a)                               \
+    fae_dynamic_type_repr_t T##_get_type(fae_ptr_t a)                               \
     {                                                                                       \
         return T##_type_repr_impl;                                                          \
     }                                                                                       \
-    void T##_destroy(doremir_ptr_t a)                                                       \
+    void T##_destroy(fae_ptr_t a)                                                       \
     {                                                                                       \
-        doremir_to_##T(a);                                                                  \
+        fae_to_##T(a);                                                                  \
     }
 
 #define UNBOXED_SHOW_IMPL(T,F) \
-    doremir_string_t T##_show(doremir_ptr_t a)                                              \
+    fae_string_t T##_show(fae_ptr_t a)                                              \
     {                                                                                       \
         int  n;                                                                             \
         char cs[16];                                                                        \
-        n = snprintf(cs, 16, F, doremir_to_##T(a));                                         \
+        n = snprintf(cs, 16, F, fae_to_##T(a));                                         \
         cs[n] = 0; /* terminate */                                                          \
-        return doremir_string_from_utf8(cs);                                                \
+        return fae_string_from_utf8(cs);                                                \
     }
 
 #define BOXED_SHOW_IMPL(T,F) \
-    doremir_string_t T##_show(doremir_ptr_t a)                                              \
+    fae_string_t T##_show(fae_ptr_t a)                                              \
     {                                                                                       \
         int  n;                                                                             \
         char cs[16];                                                                        \
-        n = snprintf(cs, 16, F, doremir_peek_##T(a));                                       \
+        n = snprintf(cs, 16, F, fae_peek_##T(a));                                       \
         cs[n] = 0; /* terminate */                                                          \
-        return doremir_string_from_utf8(cs);                                                \
+        return fae_string_from_utf8(cs);                                                \
     }
 
 /* Generates T_impl
  */
 #define IMPLEMENT_WRAPPER(T) \
-    doremir_ptr_t T##_impl(doremir_id_t interface)                                          \
+    fae_ptr_t T##_impl(fae_id_t interface)                                          \
     {                                                                                       \
-        static doremir_equal_t   T##_equal_impl   =                                         \
+        static fae_equal_t   T##_equal_impl   =                                         \
             { T##_equal };                                                                  \
-        static doremir_order_t   T##_order_impl   =                                         \
+        static fae_order_t   T##_order_impl   =                                         \
             { T##_less_than, T##_greater_than };                                            \
-        static doremir_number_t  T##_number_impl  =                                         \
+        static fae_number_t  T##_number_impl  =                                         \
             { T##_add, T##_subtract, T##_multiply, T##_divide, T##_absolute };              \
-        static doremir_string_show_t    T##_show_impl    =                                  \
+        static fae_string_show_t    T##_show_impl    =                                  \
             { T##_show };                                                                   \
-        static doremir_copy_t    T##_copy_impl    =                                         \
+        static fae_copy_t    T##_copy_impl    =                                         \
             { T##_copy };                                                                   \
-        static doremir_dynamic_t T##_dynamic_impl =                                         \
+        static fae_dynamic_t T##_dynamic_impl =                                         \
             { T##_get_type };                                                               \
-        static doremir_destroy_t T##_destroy_impl =                                         \
+        static fae_destroy_t T##_destroy_impl =                                         \
             { T##_destroy };                                                                \
                                                                                             \
         switch (interface)                                                                  \
         {                                                                                   \
-        case doremir_equal_i:                                                               \
+        case fae_equal_i:                                                               \
             return &T##_equal_impl;                                                         \
-        case doremir_order_i:                                                               \
+        case fae_order_i:                                                               \
             return &T##_order_impl;                                                         \
-        case doremir_number_i:                                                              \
+        case fae_number_i:                                                              \
             return &T##_number_impl;                                                        \
-        case doremir_string_show_i:                                                         \
+        case fae_string_show_i:                                                         \
             return &T##_show_impl;                                                          \
-        case doremir_copy_i:                                                                \
+        case fae_copy_i:                                                                \
             return &T##_copy_impl;                                                          \
-        case doremir_dynamic_i:                                                             \
+        case fae_dynamic_i:                                                             \
             return &T##_dynamic_impl;                                                       \
-        case doremir_destroy_i:                                                             \
+        case fae_destroy_i:                                                             \
             return &T##_destroy_impl;                                                       \
         default:                                                                            \
             return NULL;                                                                    \
@@ -613,10 +613,10 @@ BOXED_WRAPPER_IMPL(int64);
 BOXED_WRAPPER_IMPL(float);
 BOXED_WRAPPER_IMPL(double);
 
-doremir_string_t bool_show(doremir_ptr_t a)
+fae_string_t bool_show(fae_ptr_t a)
 {
-    return doremir_to_bool(a) ? doremir_string_from_utf8("true")
-           : doremir_string_from_utf8("false");
+    return fae_to_bool(a) ? fae_string_from_utf8("true")
+           : fae_string_from_utf8("false");
 }
 
 UNBOXED_SHOW_IMPL(int8, "%i");
@@ -638,16 +638,16 @@ IMPLEMENT_WRAPPER(double);
 
 // @cond internal
 // Dummy struct as clang (C99?) does not allow us to call the pointer directly
-struct doremir_impl_disp {
-    doremir_impl_t impl;
+struct fae_impl_disp {
+    fae_impl_t impl;
 };
 // @endcond
 
-doremir_ptr_t doremir_interface(doremir_id_t type, doremir_ptr_t pointer)
+fae_ptr_t fae_interface(fae_id_t type, fae_ptr_t pointer)
 {
     assert(pointer && "The null pointer have no interfaces");
 
-    switch (doremir_type(pointer)) {
+    switch (fae_type(pointer)) {
     case 7:
         return bool_impl(type);
 
@@ -672,6 +672,6 @@ doremir_ptr_t doremir_interface(doremir_id_t type, doremir_ptr_t pointer)
     default:
         //  If you get a bus error here, you probably passed a
         //  non-boxed primitive to a generic function.
-        return ((struct doremir_impl_disp *) pointer)->impl(type);
+        return ((struct fae_impl_disp *) pointer)->impl(type);
     }
 }

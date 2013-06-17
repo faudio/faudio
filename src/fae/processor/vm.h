@@ -5,8 +5,8 @@
     All rights reserved.
  */
 
-#import <doremir/string.h>
-#import <doremir/util.h>
+#import <fae/string.h>
+#import <fae/util.h>
 
 /*
     Little Matrix Machine (LMM)

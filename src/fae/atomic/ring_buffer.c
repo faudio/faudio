@@ -5,15 +5,15 @@
     All rights reserved.
  */
 
-#include <doremir/atomic/ring_buffer.h>
-#include <doremir/atomic.h>
-#include <doremir/buffer.h>
-#include <doremir/string.h>
-#include <doremir/util.h>
+#include <fae/atomic/ring_buffer.h>
+#include <fae/atomic.h>
+#include <fae/buffer.h>
+#include <fae/string.h>
+#include <fae/util.h>
 
 // http://www.cs.sunysb.edu/~skiena/392/programs/queue.c
 
-struct _doremir_atomic_ring_buffer_t {
+struct _fae_atomic_ring_buffer_t {
 
     impl_t              impl;       //  Interface dispatcher
     buffer_t            data;       //  Data buffer
@@ -22,24 +22,24 @@ struct _doremir_atomic_ring_buffer_t {
     atomic_t            stop;
 };
 
-doremir_ptr_t atomic_ring_buffer_impl(doremir_id_t interface);
+fae_ptr_t atomic_ring_buffer_impl(fae_id_t interface);
 
 
 /** Create a new ring buffer.
     @note
         O(n)
  */
-doremir_atomic_ring_buffer_t doremir_atomic_ring_buffer_create(size_t size)
+fae_atomic_ring_buffer_t fae_atomic_ring_buffer_create(size_t size)
 {
-    ringbuffer_t b = doremir_new(atomic_ring_buffer);
+    ringbuffer_t b = fae_new(atomic_ring_buffer);
 
     b->impl = &atomic_ring_buffer_impl;
-    b->data = doremir_buffer_create(size);
+    b->data = fae_buffer_create(size);
 
-    b->start = doremir_atomic_create();
-    b->stop  = doremir_atomic_create();
-    doremir_atomic_set(b->start, 0);
-    doremir_atomic_set(b->stop, 0);
+    b->start = fae_atomic_create();
+    b->stop  = fae_atomic_create();
+    fae_atomic_set(b->start, 0);
+    fae_atomic_set(b->stop, 0);
 
     return b;
 }
@@ -48,18 +48,18 @@ doremir_atomic_ring_buffer_t doremir_atomic_ring_buffer_create(size_t size)
     @note
         O(n)
  */
-doremir_atomic_ring_buffer_t
-doremir_atomic_ring_buffer_copy(doremir_atomic_ring_buffer_t buffer)
+fae_atomic_ring_buffer_t
+fae_atomic_ring_buffer_copy(fae_atomic_ring_buffer_t buffer)
 {
-    ringbuffer_t b = doremir_new(atomic_ring_buffer);
+    ringbuffer_t b = fae_new(atomic_ring_buffer);
 
     b->impl = &atomic_ring_buffer_impl;
-    b->data = doremir_buffer_copy(buffer->data);
+    b->data = fae_buffer_copy(buffer->data);
 
-    b->start = doremir_atomic_create();
-    b->stop  = doremir_atomic_create();
-    doremir_atomic_set(b->start, doremir_atomic_get(buffer->start));
-    doremir_atomic_set(b->stop, doremir_atomic_get(buffer->stop));
+    b->start = fae_atomic_create();
+    b->stop  = fae_atomic_create();
+    fae_atomic_set(b->start, fae_atomic_get(buffer->start));
+    fae_atomic_set(b->stop, fae_atomic_get(buffer->stop));
 
     return b;
 }
@@ -68,9 +68,9 @@ doremir_atomic_ring_buffer_copy(doremir_atomic_ring_buffer_t buffer)
     @note
         O(n)
  */
-doremir_atomic_ring_buffer_t
-doremir_atomic_ring_buffer_resize(size_t  size,
-                                  doremir_atomic_ring_buffer_t buffer)
+fae_atomic_ring_buffer_t
+fae_atomic_ring_buffer_resize(size_t  size,
+                                  fae_atomic_ring_buffer_t buffer)
 {
     assert(false && "Not implemented");
 }
@@ -79,8 +79,8 @@ doremir_atomic_ring_buffer_resize(size_t  size,
     @note
         O(n)
  */
-void doremir_atomic_ring_buffer_swap(doremir_atomic_ring_buffer_t buffer,
-                                     doremir_atomic_ring_buffer_t buffer2)
+void fae_atomic_ring_buffer_swap(fae_atomic_ring_buffer_t buffer,
+                                     fae_atomic_ring_buffer_t buffer2)
 {
     assert(false && "Not implemented");
 }
@@ -89,7 +89,7 @@ void doremir_atomic_ring_buffer_swap(doremir_atomic_ring_buffer_t buffer,
     @note
         O(n)
  */
-void doremir_atomic_ring_buffer_destroy(doremir_atomic_ring_buffer_t buffer)
+void fae_atomic_ring_buffer_destroy(fae_atomic_ring_buffer_t buffer)
 {
     assert(false && "Not implemented");
 }
@@ -98,7 +98,7 @@ void doremir_atomic_ring_buffer_destroy(doremir_atomic_ring_buffer_t buffer)
     @note
         O(n)
  */
-size_t doremir_atomic_ring_buffer_size(doremir_atomic_ring_buffer_t buffer)
+size_t fae_atomic_ring_buffer_size(fae_atomic_ring_buffer_t buffer)
 {
     assert(false && "Not implemented");
 }
@@ -107,7 +107,7 @@ size_t doremir_atomic_ring_buffer_size(doremir_atomic_ring_buffer_t buffer)
     @note
         O(n)
  */
-uint8_t doremir_atomic_ring_buffer_read(doremir_atomic_ring_buffer_t buffer)
+uint8_t fae_atomic_ring_buffer_read(fae_atomic_ring_buffer_t buffer)
 {
     assert(false && "Not implemented");
 }
@@ -116,7 +116,7 @@ uint8_t doremir_atomic_ring_buffer_read(doremir_atomic_ring_buffer_t buffer)
     @note
         O(n)
  */
-bool doremir_atomic_ring_buffer_write(doremir_atomic_ring_buffer_t buffer,
+bool fae_atomic_ring_buffer_write(fae_atomic_ring_buffer_t buffer,
                                       uint8_t value)
 {
     assert(false && "Not implemented");
@@ -126,7 +126,7 @@ bool doremir_atomic_ring_buffer_write(doremir_atomic_ring_buffer_t buffer,
 
 // --------------------------------------------------------------------------------
 
-doremir_string_t atomic_ring_buffer_show(doremir_ptr_t v)
+fae_string_t atomic_ring_buffer_show(fae_ptr_t v)
 {
     string_t s = string("<RingBuffer ");
     s = string_dappend(s, format_integral("%p", (long) v));
@@ -134,22 +134,22 @@ doremir_string_t atomic_ring_buffer_show(doremir_ptr_t v)
     return s;
 }
 
-void atomic_ring_buffer_destroy(doremir_ptr_t a)
+void atomic_ring_buffer_destroy(fae_ptr_t a)
 {
-    doremir_atomic_ring_buffer_destroy(a);
+    fae_atomic_ring_buffer_destroy(a);
 }
 
 
-doremir_ptr_t atomic_ring_buffer_impl(doremir_id_t interface)
+fae_ptr_t atomic_ring_buffer_impl(fae_id_t interface)
 {
-    static doremir_string_show_t atomic_ring_buffer_show_impl = { atomic_ring_buffer_show };
-    static doremir_destroy_t atomic_ring_buffer_destroy_impl = { atomic_ring_buffer_destroy };
+    static fae_string_show_t atomic_ring_buffer_show_impl = { atomic_ring_buffer_show };
+    static fae_destroy_t atomic_ring_buffer_destroy_impl = { atomic_ring_buffer_destroy };
 
     switch (interface) {
-    case doremir_string_show_i:
+    case fae_string_show_i:
         return &atomic_ring_buffer_show_impl;
 
-    case doremir_destroy_i:
+    case fae_destroy_i:
         return &atomic_ring_buffer_destroy_impl;
 
     default:

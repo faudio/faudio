@@ -1,13 +1,13 @@
-
+    
 /*
     DoReMIR Audio Engine
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
  */
 
-#include <doremir/buffer.h>
-#include <doremir/error.h>
-#include <doremir/util.h>
+#include <fae/buffer.h>
+#include <fae/error.h>
+#include <fae/util.h>
 
 #include <sndfile.h>
 
@@ -17,7 +17,7 @@
 
 #define print_max_size_k 80
 
-struct _doremir_buffer_t {
+struct _fae_buffer_t {
     impl_t          impl;       //  Interface dispatcher
     size_t          size;
     uint8_t        *data;
@@ -30,11 +30,11 @@ void buffer_fatal(char *msg, int error);
     @note
         O(n)
  */
-doremir_buffer_t doremir_buffer_create(size_t size)
+fae_buffer_t fae_buffer_create(size_t size)
 {
-    doremir_ptr_t buffer_impl(doremir_id_t interface);
+    fae_ptr_t buffer_impl(fae_id_t interface);
 
-    buffer_t b = doremir_new(buffer);
+    buffer_t b = fae_new(buffer);
     b->impl = &buffer_impl;
     b->size = size;
     b->data = malloc(size);
@@ -55,20 +55,20 @@ doremir_buffer_t doremir_buffer_create(size_t size)
     @note
         O(n)
  */
-doremir_buffer_t doremir_buffer_copy(doremir_buffer_t buffer)
+fae_buffer_t fae_buffer_copy(fae_buffer_t buffer)
 {
-    return doremir_buffer_resize(buffer->size, buffer);
+    return fae_buffer_resize(buffer->size, buffer);
 }
 
 /** Copy the given buffer using the given size.
     @note
         O(n)
  */
-doremir_buffer_t doremir_buffer_resize(size_t size, doremir_buffer_t buffer)
+fae_buffer_t fae_buffer_resize(size_t size, fae_buffer_t buffer)
 {
-    doremir_ptr_t buffer_impl(doremir_id_t interface);
+    fae_ptr_t buffer_impl(fae_id_t interface);
 
-    buffer_t copy = doremir_new(buffer);
+    buffer_t copy = fae_new(buffer);
     copy->impl = &buffer_impl;
     copy->size = size;
     copy->data = malloc(size);
@@ -89,17 +89,17 @@ doremir_buffer_t doremir_buffer_resize(size_t size, doremir_buffer_t buffer)
     @note
         O(n)
  */
-void doremir_buffer_destroy(doremir_buffer_t buffer)
+void fae_buffer_destroy(fae_buffer_t buffer)
 {
     free(buffer->data);
-    doremir_delete(buffer);
+    fae_delete(buffer);
 }
 
 /** Return the size of the buffer.
     @note
         O(1)
  */
-size_t doremir_buffer_size(doremir_buffer_t buffer)
+size_t fae_buffer_size(fae_buffer_t buffer)
 {
     return buffer->size;
 }
@@ -108,7 +108,7 @@ size_t doremir_buffer_size(doremir_buffer_t buffer)
     @note
         O(1)
  */
-uint8_t doremir_buffer_get(doremir_buffer_t buffer, size_t index)
+uint8_t fae_buffer_get(fae_buffer_t buffer, size_t index)
 {
     assert(index < buffer->size && "Buffer overflow");
     return buffer->data[index];
@@ -118,31 +118,31 @@ uint8_t doremir_buffer_get(doremir_buffer_t buffer, size_t index)
     @note
         O(1)
  */
-void doremir_buffer_set(doremir_buffer_t buffer, size_t index, uint8_t value)
+void fae_buffer_set(fae_buffer_t buffer, size_t index, uint8_t value)
 {
     assert(index < buffer->size && "Buffer overflow");
     buffer->data[index] = value;
 }
 
-float doremir_buffer_get_float(doremir_buffer_t buffer, size_t index)
+float fae_buffer_get_float(fae_buffer_t buffer, size_t index)
 {
     assert(index * sizeof(float) < buffer->size && "Buffer overflow");
     return ((float *) buffer->data)[index];
 }
 
-void doremir_buffer_set_float(doremir_buffer_t buffer, size_t index, float value)
+void fae_buffer_set_float(fae_buffer_t buffer, size_t index, float value)
 {
     assert(index * sizeof(float) < buffer->size && "Buffer overflow");
     ((float *) buffer->data)[index] = value;
 }
 
-double doremir_buffer_get_double(doremir_buffer_t buffer, size_t index)
+double fae_buffer_get_double(fae_buffer_t buffer, size_t index)
 {
     assert(index * sizeof(double) < buffer->size && "Buffer overflow");
     return ((double *) buffer->data)[index];
 }
 
-void doremir_buffer_set_double(doremir_buffer_t buffer, size_t index, double value)
+void fae_buffer_set_double(fae_buffer_t buffer, size_t index, double value)
 {
     assert(index * sizeof(double) < buffer->size && "Buffer overflow");
     ((double *) buffer->data)[index] = value;
@@ -156,39 +156,39 @@ void doremir_buffer_set_double(doremir_buffer_t buffer, size_t index, double val
     @note
         O(1)
  */
-void *doremir_buffer_unsafe_address(doremir_buffer_t buffer)
+void *fae_buffer_unsafe_address(fae_buffer_t buffer)
 {
     return buffer->data;
 }
 
 // --------------------------------------------------------------------------------
 
-typedef doremir_string_file_path_t path_t;
+typedef fae_string_file_path_t path_t;
 
-doremir_pair_t doremir_buffer_read_audio(doremir_string_file_path_t path)
+fae_pair_t fae_buffer_read_audio(fae_string_file_path_t path)
 {
     type_t type;
     buffer_t buffer;
 
     SF_INFO info;
     info.format = 0;
-    char *file = doremir_string_to_utf8(path);
+    char *file = fae_string_to_utf8(path);
     SNDFILE *f = sf_open(file, SFM_READ, &info);
 
     if (sf_error(f)) {
         char err[100];
         snprintf(err, 100, "Could not read audio file '%s'", file);
-        return (pair_t) doremir_error_create_simple(error, string(err), string("Doremir.Buffer"));
+        return (pair_t) fae_error_create_simple(error, string(err), string("Doremir.Buffer"));
     }
 
     inform(string_dappend(string("Reading "), string(file)));
 
     size_t bufSize = info.frames * info.channels * sizeof(double);
-    buffer = doremir_buffer_create(bufSize);
-    double *raw = doremir_buffer_unsafe_address(buffer);
+    buffer = fae_buffer_create(bufSize);
+    double *raw = fae_buffer_unsafe_address(buffer);
 
     sf_count_t sz = sf_read_double(f, raw, bufSize / sizeof(double));
-    buffer = doremir_buffer_resize(sz * sizeof(double), buffer);
+    buffer = fae_buffer_resize(sz * sizeof(double), buffer);
 
     if (info.channels == 1) {
         type = type_vector(type(f64), info.frames);
@@ -201,9 +201,9 @@ doremir_pair_t doremir_buffer_read_audio(doremir_string_file_path_t path)
     return pair(type, buffer);
 }
 
-void doremir_buffer_write_audio(doremir_string_file_path_t path,
-                                doremir_type_t             type,
-                                doremir_buffer_t           buffer)
+void fae_buffer_write_audio(fae_string_file_path_t path,
+                                fae_type_t             type,
+                                fae_buffer_t           buffer)
 {
     assert(false && "Not implemented");
 }
@@ -211,28 +211,28 @@ void doremir_buffer_write_audio(doremir_string_file_path_t path,
 
 // --------------------------------------------------------------------------------
 
-doremir_ptr_t buffer_copy(doremir_ptr_t a)
+fae_ptr_t buffer_copy(fae_ptr_t a)
 {
-    return doremir_buffer_copy(a);
+    return fae_buffer_copy(a);
 }
 
-void buffer_destroy(doremir_ptr_t a)
+void buffer_destroy(fae_ptr_t a)
 {
-    doremir_buffer_destroy(a);
+    fae_buffer_destroy(a);
 }
 
-doremir_string_t buffer_show(doremir_ptr_t a)
+fae_string_t buffer_show(fae_ptr_t a)
 {
     buffer_t buffer = (buffer_t) a;
-    bool     more   = doremir_buffer_size(buffer) > print_max_size_k;
-    size_t   length = more ? print_max_size_k : doremir_buffer_size(buffer);
+    bool     more   = fae_buffer_size(buffer) > print_max_size_k;
+    size_t   length = more ? print_max_size_k : fae_buffer_size(buffer);
     string_t str    = string("<Buffer");
 
     for (size_t i = 0; i < length; ++i) {
         str = string_dappend(str, string(" "));
         str = string_dappend(str, format_integral(
                                  "%02x",
-                                 doremir_buffer_get(buffer, i)));
+                                 fae_buffer_get(buffer, i)));
     }
 
     if (more) {
@@ -244,20 +244,20 @@ doremir_string_t buffer_show(doremir_ptr_t a)
     return str;
 }
 
-doremir_ptr_t buffer_impl(doremir_id_t interface)
+fae_ptr_t buffer_impl(fae_id_t interface)
 {
-    static doremir_string_show_t buffer_show_impl = { buffer_show };
-    static doremir_copy_t buffer_copy_impl = { buffer_copy };
-    static doremir_destroy_t buffer_destroy_impl = { buffer_destroy };
+    static fae_string_show_t buffer_show_impl = { buffer_show };
+    static fae_copy_t buffer_copy_impl = { buffer_copy };
+    static fae_destroy_t buffer_destroy_impl = { buffer_destroy };
 
     switch (interface) {
-    case doremir_copy_i:
+    case fae_copy_i:
         return &buffer_copy_impl;
 
-    case doremir_destroy_i:
+    case fae_destroy_i:
         return &buffer_destroy_impl;
 
-    case doremir_string_show_i:
+    case fae_string_show_i:
         return &buffer_show_impl;
 
     default:
@@ -266,12 +266,12 @@ doremir_ptr_t buffer_impl(doremir_id_t interface)
 }
 
 
-void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t origin);
+void fae_audio_engine_log_error_from(fae_string_t msg, fae_string_t origin);
 
 void buffer_fatal(char *msg, int error)
 {
-    doremir_audio_engine_log_error_from(string_dappend(string(msg), format_integral(" (error code %d)", error)), string("Doremir.Buffer"));
-    doremir_audio_engine_log_error(string("Terminating Audio Engine"));
+    fae_audio_engine_log_error_from(string_dappend(string(msg), format_integral(" (error code %d)", error)), string("Doremir.Buffer"));
+    fae_audio_engine_log_error(string("Terminating Audio Engine"));
     exit(error);
 }
 

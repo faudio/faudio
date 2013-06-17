@@ -5,8 +5,8 @@
     All rights reserved.
  */
 
-#include <doremir/plot.h>
-#include <doremir/thread.h>
+#include <fae/plot.h>
+#include <fae/thread.h>
 
 #include <Cocoa/Cocoa.h>
 #import  <CorePlot/CorePlot.h>
@@ -193,8 +193,8 @@ void run_main_loop()
     }
 }
 
-void run_core_plot(doremir_plot_function_t func, doremir_ptr_t data,
-                   doremir_nullary_t cont, doremir_ptr_t cont_data)
+void run_core_plot(fae_plot_function_t func, fae_ptr_t data,
+                   fae_nullary_t cont, fae_ptr_t cont_data)
 {
     plot_count_g    = 0;
     plot_func_g     = (plot_func_t) func;
@@ -202,7 +202,7 @@ void run_core_plot(doremir_plot_function_t func, doremir_ptr_t data,
 
     // We will not return, so continuation is called on a new thread
     if (cont)
-        doremir_thread_create(cont, cont_data);
+        fae_thread_create(cont, cont_data);
 
     run_main_loop();
 }

@@ -5,11 +5,11 @@
     All rights reserved.
  */
 
-#import <doremir/processor/loop.h>
-#import <doremir/string.h>
-#import <doremir/util.h>
+#import <fae/processor/loop.h>
+#import <fae/string.h>
+#import <fae/util.h>
 
-struct _doremir_processor_loop_proc_t {
+struct _fae_processor_loop_proc_t {
     impl_t              impl;               // Dispatcher
 
     proc_t              elem;               // Elements
@@ -18,11 +18,11 @@ struct _doremir_processor_loop_proc_t {
     type_t              bufType;            // Type of loopback buffer
 };
 
-typedef doremir_processor_loop_proc_t       this_t;
-typedef doremir_processor_samples_t         samples_t;
-typedef doremir_processor_info_t            info_t;
+typedef fae_processor_loop_proc_t       this_t;
+typedef fae_processor_samples_t         samples_t;
+typedef fae_processor_info_t            info_t;
 
-ptr_t loop_impl(doremir_id_t interface);
+ptr_t loop_impl(fae_id_t interface);
 
 inline static bool type_check(string_t *msg, this_t proc)
 {
@@ -31,24 +31,24 @@ inline static bool type_check(string_t *msg, this_t proc)
                       "of input and output must be the same.");
     }
 
-    return doremir_type_is_pair(doremir_processor_input_type(proc->elem))
-           && doremir_type_is_pair(doremir_processor_output_type(proc->elem))
-           && doremir_equal(
-               doremir_type_get_pair_fst(doremir_processor_input_type(proc->elem)),
-               doremir_type_get_pair_fst(doremir_processor_output_type(proc->elem))
+    return fae_type_is_pair(fae_processor_input_type(proc->elem))
+           && fae_type_is_pair(fae_processor_output_type(proc->elem))
+           && fae_equal(
+               fae_type_get_pair_fst(fae_processor_input_type(proc->elem)),
+               fae_type_get_pair_fst(fae_processor_output_type(proc->elem))
            );
 }
 
-this_t doremir_processor_loop_create(processor_t proc1)
+this_t fae_processor_loop_create(processor_t proc1)
 {
-    this_t proc     = doremir_new(processor_loop_proc);
+    this_t proc     = fae_new(processor_loop_proc);
     proc->impl      = &loop_impl;
 
     proc->elem      = proc1;
-    proc->elemImpl  = doremir_interface(doremir_processor_interface_i, proc->elem);
+    proc->elemImpl  = fae_interface(fae_processor_interface_i, proc->elem);
     assert(proc->elemImpl && "Must implement Processor");
 
-    proc->bufType   = doremir_type_get_pair_fst(doremir_processor_input_type(proc->elem)); // TODO get fst
+    proc->bufType   = fae_type_get_pair_fst(fae_processor_input_type(proc->elem)); // TODO get fst
 
     if (type_check(NULL, proc)) {
         return proc;
@@ -58,10 +58,10 @@ this_t doremir_processor_loop_create(processor_t proc1)
     }
 }
 
-void doremir_processor_loop_destroy(this_t proc)
+void fae_processor_loop_destroy(this_t proc)
 {
-    // doremir_destroy(proc->elem);
-    doremir_delete(proc);
+    // fae_destroy(proc->elem);
+    fae_delete(proc);
 }
 
 // --------------------------------------------------------------------------------
@@ -69,22 +69,22 @@ void doremir_processor_loop_destroy(this_t proc)
 type_t loop_input_type(ptr_t a)
 {
     this_t proc = (this_t) a;
-    return doremir_type_get_pair_fst(doremir_processor_input_type(proc->elem));
+    return fae_type_get_pair_fst(fae_processor_input_type(proc->elem));
 }
 
 type_t loop_output_type(ptr_t a)
 {
     this_t proc = (this_t) a;
-    return doremir_type_get_pair_fst(doremir_processor_output_type(proc->elem));
+    return fae_type_get_pair_fst(fae_processor_output_type(proc->elem));
 }
 
 size_t loop_buffer_size(frames_t frameSize, ptr_t a)
 {
     this_t proc = (this_t) a;
 
-    size_t inSize  = doremir_type_size_of(frameSize, loop_input_type(a));
-    size_t outSize = doremir_type_size_of(frameSize, loop_output_type(a));
-    size_t loopSize  = doremir_type_size_of(frameSize, proc->bufType);
+    size_t inSize  = fae_type_size_of(frameSize, loop_input_type(a));
+    size_t outSize = fae_type_size_of(frameSize, loop_output_type(a));
+    size_t loopSize  = fae_type_size_of(frameSize, proc->bufType);
 
     // FIXME should use buffer size of elements, not type size
     return size_max(inSize + loopSize, outSize + loopSize);
@@ -142,35 +142,35 @@ string_t loop_show(ptr_t a)
     this_t proc = (this_t) a;
     string_t s = string("");
 
-    s = string_dappend(s, doremir_string_show(loop_input_type(proc)));
+    s = string_dappend(s, fae_string_show(loop_input_type(proc)));
     s = string_dappend(s, string(" ~> "));
-    s = string_dappend(s, doremir_string_show(loop_output_type(proc)));
+    s = string_dappend(s, fae_string_show(loop_output_type(proc)));
 
     return s;
 }
 
 void loop_destroy(ptr_t a)
 {
-    doremir_processor_loop_destroy(a);
+    fae_processor_loop_destroy(a);
 }
 
-ptr_t loop_impl(doremir_id_t interface)
+ptr_t loop_impl(fae_id_t interface)
 {
-    static doremir_string_show_t loop_show_impl = { loop_show };
-    static doremir_destroy_t loop_destroy_impl = { loop_destroy };
-    static doremir_processor_interface_t loop_processor_interface_impl = {
+    static fae_string_show_t loop_show_impl = { loop_show };
+    static fae_destroy_t loop_destroy_impl = { loop_destroy };
+    static fae_processor_interface_t loop_processor_interface_impl = {
         loop_before, loop_process, loop_after,
         loop_input_type, loop_output_type, loop_buffer_size, loop_graph
     };
 
     switch (interface) {
-    case doremir_string_show_i:
+    case fae_string_show_i:
         return &loop_show_impl;
 
-    case doremir_destroy_i:
+    case fae_destroy_i:
         return &loop_destroy_impl;
 
-    case doremir_processor_interface_i:
+    case fae_processor_interface_i:
         return &loop_processor_interface_impl;
 
     default:

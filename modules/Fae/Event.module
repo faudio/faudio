@@ -1,0 +1,72 @@
+
+/** 
+    @addtogroup FaeEvent
+    
+    Functional scheduler events.
+
+    @par Literals
+    - `never()`
+    - `now(v)`
+    - `later(t,v)`
+    - `delay_event(t,x)`
+    - `merge_event(x,y)`
+    - `switch_event(p,x,y)`
+    - `receive_event(s,a)`
+    - `send_event(s,a,x)`
+
+    @par Display
+    - `<Event @1000ms 3.1415>`
+    
+
+    @par Implements 
+    - doremir_destroy_t
+    - doremir_string_show_t
+ */
+module Fae.Event
+{
+    import Fae;
+    import Fae.Std;
+    import Fae.Time;
+    import Fae.Message;
+
+    /** @typedef doremir_buffer_t
+        The buffer. 
+     */
+    type Event = opaque;
+
+    never   : () -> Event;
+    now     : Ptr -> Event;
+    delay   : (Time, Event) -> Event;
+    merge   : (Event, Event) -> Event;
+    switch  : (Event, Event, Event) -> Event;
+    // fix     : (Event -> Event)* -> Event;
+
+    receive : (Sender, Address) -> Event;
+    send    : (Receiver, Address, Event) -> Event;
+    destroy : Event -> Void;
+    
+    first   : Event -> Event;
+    rest    : Event -> Event;
+    later   : (Time, Ptr) -> Event;
+    repeat  : (Time, Ptr) -> Event;
+    after   : (Event, Event) -> Event;
+    before  : (Event, Event) -> Event;
+    sample  : (Event, Event) -> Event;
+    toggle  : (Event, Event) -> Event;
+    
+    // Maps and folds
+    filter  : (Pred, Ptr, Event) -> Event;
+    dfilter : (Pred, Ptr, Event) -> Event;
+    map     : (Unary, Ptr, Event) -> Event;
+    dmap    : (Unary, Ptr, Event) -> Event;
+    map2    : (Binary, Ptr, Event, Event) -> Event;
+    dmap2   : (Binary, Ptr, Event, Event) -> Event;
+
+    // Low-level
+    offset    : Event -> Time;
+    addSync   : (((Ptr,Sender) -> Void)*, Ptr, Event) -> Void;
+    values    : (Time,Time,Event) -> List; // [Ptr]
+    hasValues : (Time,Time,Event) -> Bool; // may be optimized
+    hasMore   : (Time,Event) -> Bool;
+}
+

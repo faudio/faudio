@@ -5,25 +5,25 @@
     All rights reserved.
  */
 
-#include <doremir/device/file.h>
-#include <doremir/thread.h>
-#include <doremir/error.h>
-#include <doremir/util.h>
+#include <fae/device/file.h>
+#include <fae/thread.h>
+#include <fae/error.h>
+#include <fae/util.h>
 
 #include <sndfile.h>
 
 #include "../processor/vm.h"
 
-typedef doremir_device_file_t                  device_t;
-typedef doremir_device_file_result_t           result_t;
+typedef fae_device_file_t                  device_t;
+typedef fae_device_file_result_t           result_t;
 
-struct _doremir_device_file_t {
+struct _fae_device_file_t {
     impl_t              impl;
     string_t            path;
     SNDFILE            *file;
 };
 
-struct _doremir_device_file_result_t {
+struct _fae_device_file_result_t {
 
     device_t            input, output;
     processor_t         proc;
@@ -34,27 +34,27 @@ struct _doremir_device_file_result_t {
 
 };
 
-device_t doremir_device_file_open(string_t path)
+device_t fae_device_file_open(string_t path)
 {
-    inform(string_dappend(string("Opening file stream "), doremir_string_copy(path)));
+    inform(string_dappend(string("Opening file stream "), fae_string_copy(path)));
 
     {
         char err[100];
         snprintf(err, 100, "Could not read audio file '%s'", unstring(path));
-        return (device_t) doremir_error_create_simple(error, string(err), string("Doremir.Buffer"));
+        return (device_t) fae_error_create_simple(error, string(err), string("Doremir.Buffer"));
     }
 }
 
-void doremir_device_file_close(file_device_t device)
+void fae_device_file_close(file_device_t device)
 {
-    if (doremir_check(device)) {
+    if (fae_check(device)) {
         return;
     }
 
-    inform(string_dappend(string("Closing file stream "), doremir_string_copy(device->path)));
+    inform(string_dappend(string("Closing file stream "), fae_string_copy(device->path)));
 }
 
-doremir_device_file_result_t doremir_device_file_run(
+fae_device_file_result_t fae_device_file_run(
     file_device_t input,
     processor_t   processor,
     file_device_t output)

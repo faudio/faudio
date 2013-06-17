@@ -1,0 +1,26 @@
+
+/**
+    @addtogroup FaeSystemDirectory
+    
+    Cross-platform directory utilities.    
+ */
+
+module Fae.System.Directory
+{
+    import Fae;
+    import Fae.String;
+    type FilePath = String;
+
+    home : () -> FilePath;
+    current : () -> FilePath;
+    create : FilePath -> Void;
+    remove : FilePath -> Void;          
+    // TODO isFile : FilePath -> Bool
+    // TODO isDirectory : FilePath -> Bool
+    // TODO enumerate : FilePath -> [FilePath]
+
+    readFile : FilePath -> String;
+    writeFile : (FilePath,String) -> Void;
+    appendFile : (FilePath,String) -> Void;
+}
+

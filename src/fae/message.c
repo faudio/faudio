@@ -5,30 +5,30 @@
     All rights reserved.
  */
 
-#include <doremir/message.h>
-#include <doremir/atomic/queue.h>
-#include <doremir/map.h>
-#include <doremir/util.h>
+#include <fae/message.h>
+#include <fae/atomic/queue.h>
+#include <fae/map.h>
+#include <fae/util.h>
 
 /**
     Notes:
         * TODO pluggable allocation here?
             * For sender:
-                doremir_pair_create
+                fae_pair_create
             * For receiver:
-                doremir_pair_destroy
-                doremir_list_empty
-                doremir_list_dcons
-                doremir_list_destroy
-                doremir_map_empty
-                doremir_map_dset
-                doremir_map_destroy
+                fae_pair_destroy
+                fae_list_empty
+                fae_list_dcons
+                fae_list_destroy
+                fae_map_empty
+                fae_map_dset
+                fae_map_destroy
 
  */
 
 #define max_recv_k  1000
 
-struct _doremir_message_dispatcher_t {
+struct _fae_message_dispatcher_t {
     impl_t                      impl;               //  Interface dispatcher
 
     bool                        is_lockfree;
@@ -53,9 +53,9 @@ void message_fatal(char *msg, int error);
 
 dispatcher_t new_dispatcher()
 {
-    ptr_t dispatcher_impl(doremir_id_t interface);
+    ptr_t dispatcher_impl(fae_id_t interface);
 
-    dispatcher_t p = doremir_new(message_dispatcher);
+    dispatcher_t p = fae_new(message_dispatcher);
     p->impl = &dispatcher_impl;
 
     return p;
@@ -63,50 +63,50 @@ dispatcher_t new_dispatcher()
 
 void delete_dispatcher(dispatcher_t p)
 {
-    doremir_delete(p);
+    fae_delete(p);
 }
 
 // --------------------------------------------------------------------------------
 
-dispatcher_t doremir_message_create_dispatcher()
+dispatcher_t fae_message_create_dispatcher()
 {
     // TODO use lockfree for now
-    return doremir_message_create_lockfree_dispatcher();
+    return fae_message_create_lockfree_dispatcher();
 }
 
-dispatcher_t doremir_message_create_lockfree_dispatcher()
+dispatcher_t fae_message_create_lockfree_dispatcher()
 {
     dispatcher_t dispatcher = new_dispatcher();
 
     dispatcher->is_lockfree           = true;
     lockfree_get(dispatcher, queue)   = atomic_queue();
-    lockfree_get(dispatcher, mailbox) = doremir_map_empty();
+    lockfree_get(dispatcher, mailbox) = fae_map_empty();
 
     return dispatcher;
 }
 
-void doremir_message_destroy_dispatcher(dispatcher_t dispatcher)
+void fae_message_destroy_dispatcher(dispatcher_t dispatcher)
 {
     if (!dispatcher->is_lockfree) {
         assert(false && "Unreachable");
     } else {
-        doremir_destroy(lockfree_get(dispatcher, queue));
-        doremir_destroy(lockfree_get(dispatcher, mailbox));
+        fae_destroy(lockfree_get(dispatcher, queue));
+        fae_destroy(lockfree_get(dispatcher, mailbox));
     }
 
     delete_dispatcher(dispatcher);
 }
 
-void doremir_message_dispatcher_send(dispatcher_t dispatcher,
+void fae_message_dispatcher_send(dispatcher_t dispatcher,
                                      address_t address,
-                                     doremir_message_t message)
+                                     fae_message_t message)
 {
     if (!dispatcher->is_lockfree) {
         assert(false && "Unreachable");
     } else {
         pair_t bucket = pair(address, message);
 
-        if (!doremir_atomic_queue_write(lockfree_get(dispatcher, queue), bucket)) {
+        if (!fae_atomic_queue_write(lockfree_get(dispatcher, queue), bucket)) {
             message_fatal("Could not write to queue", -1);
         }
     }
@@ -119,97 +119,97 @@ inline static ptr_t with_default(ptr_t def, ptr_t value)
 inline static ptr_t with_dest_default(ptr_t def, ptr_t value)
 {
     if (value) {
-        doremir_destroy(def);
+        fae_destroy(def);
         return value;
     } else {
         return def;
     }
 }
 
-void doremir_message_dispatcher_sync(dispatcher_t dispatcher)
+void fae_message_dispatcher_sync(dispatcher_t dispatcher)
 {
     if (!dispatcher->is_lockfree) {
         assert(false && "Unreachable");
     } else {
 
         // Clear mailbox
-        doremir_destroy(lockfree_get(dispatcher, mailbox)); // TODO should be deep destroy
-        lockfree_get(dispatcher, mailbox) = doremir_map_empty();
+        fae_destroy(lockfree_get(dispatcher, mailbox)); // TODO should be deep destroy
+        lockfree_get(dispatcher, mailbox) = fae_map_empty();
 
         // Fetch up to max_recv_k buckets into mailbox
         for (int i = 0; i < max_recv_k; ++i) {
-            pair_t bucket = doremir_atomic_queue_read(lockfree_get(dispatcher, queue));
+            pair_t bucket = fae_atomic_queue_read(lockfree_get(dispatcher, queue));
 
             if (!bucket) {
                 break;
 
             } else {
-                address_t address = doremir_pair_fst(bucket);
-                message_t message = doremir_pair_snd(bucket);
+                address_t address = fae_pair_fst(bucket);
+                message_t message = fae_pair_snd(bucket);
 
                 // TODO reclaim bucket
 
                 list_t current = with_dest_default(
-                                     doremir_list_empty(),
-                                     doremir_map_get(address,
+                                     fae_list_empty(),
+                                     fae_map_get(address,
                                                      lockfree_get(dispatcher, mailbox))
                                  );
-                current = doremir_list_dcons(message, current);
+                current = fae_list_dcons(message, current);
                 lockfree_get(dispatcher, mailbox) =
-                    doremir_map_dset(address, current, lockfree_get(dispatcher, mailbox));
+                    fae_map_dset(address, current, lockfree_get(dispatcher, mailbox));
             }
         }
     }
 }
 
-list_t doremir_message_dispatcher_receive(dispatcher_t dispatcher,
+list_t fae_message_dispatcher_receive(dispatcher_t dispatcher,
                                           address_t address)
 {
     if (!dispatcher->is_lockfree) {
         assert(false && "Unreachable");
     } else {
         list_t current = with_dest_default(
-                             doremir_list_empty(),
-                             doremir_map_get(address,
+                             fae_list_empty(),
+                             fae_map_get(address,
                                              lockfree_get(dispatcher, mailbox))
                          );
-        return doremir_list_reverse(current);
+        return fae_list_reverse(current);
     }
 }
 
 
 // Generic versions
 
-void doremir_message_send(doremir_message_receiver_t    receiver,
+void fae_message_send(fae_message_receiver_t    receiver,
                           address_t                     address,
                           message_t                     message)
 {
-    assert(doremir_interface(doremir_message_receiver_interface_i, receiver)
+    assert(fae_interface(fae_message_receiver_interface_i, receiver)
            && "Must implement Receiver");
 
-    ((doremir_message_receiver_interface_t *)
-     doremir_interface(doremir_message_receiver_interface_i, receiver))
+    ((fae_message_receiver_interface_t *)
+     fae_interface(fae_message_receiver_interface_i, receiver))
     ->send(receiver, address, message);
 }
 
-void doremir_message_sync(doremir_message_sender_t sender)
+void fae_message_sync(fae_message_sender_t sender)
 {
-    assert(doremir_interface(doremir_message_sender_interface_i, sender)
+    assert(fae_interface(fae_message_sender_interface_i, sender)
            && "Must implement Sender");
 
-    ((doremir_message_sender_interface_t *)
-     doremir_interface(doremir_message_sender_interface_i, sender))
+    ((fae_message_sender_interface_t *)
+     fae_interface(fae_message_sender_interface_i, sender))
     ->sync(sender);
 }
 
-doremir_list_t doremir_message_receive(doremir_message_sender_t sender,
+fae_list_t fae_message_receive(fae_message_sender_t sender,
                                        address_t                address)
 {
-    assert(doremir_interface(doremir_message_sender_interface_i, sender)
+    assert(fae_interface(fae_message_sender_interface_i, sender)
            && "Must implement Sender");
 
-    return ((doremir_message_sender_interface_t *)
-            doremir_interface(doremir_message_sender_interface_i, sender))->receive(sender, address);
+    return ((fae_message_sender_interface_t *)
+            fae_interface(fae_message_sender_interface_i, sender))->receive(sender, address);
 }
 
 
@@ -219,56 +219,56 @@ doremir_list_t doremir_message_receive(doremir_message_sender_t sender,
 void dispatcher_send(ptr_t a, address_t addr, message_t msg)
 {
     dispatcher_t dispatcher = (dispatcher_t) a;
-    doremir_message_dispatcher_send(dispatcher, addr, msg);
+    fae_message_dispatcher_send(dispatcher, addr, msg);
 }
 
 void dispatcher_sync(ptr_t a)
 {
     dispatcher_t dispatcher = (dispatcher_t) a;
-    doremir_message_dispatcher_sync(dispatcher);
+    fae_message_dispatcher_sync(dispatcher);
 }
 
-doremir_list_t dispatcher_receive(ptr_t a, address_t addr)
+fae_list_t dispatcher_receive(ptr_t a, address_t addr)
 {
     dispatcher_t dispatcher = (dispatcher_t) a;
-    return doremir_message_dispatcher_receive(dispatcher, addr);
+    return fae_message_dispatcher_receive(dispatcher, addr);
 }
 
-doremir_string_t dispatcher_show(ptr_t a)
+fae_string_t dispatcher_show(ptr_t a)
 {
     string_t str = string("<Dispatcher");
-    str = string_dappend(str, doremir_string_format_integral(" %p", (long) a));
+    str = string_dappend(str, fae_string_format_integral(" %p", (long) a));
     str = string_dappend(str, string(">"));
     return str;
 }
 
 void dispatcher_destroy(ptr_t a)
 {
-    doremir_message_destroy_dispatcher(a);
+    fae_message_destroy_dispatcher(a);
 }
 
-ptr_t dispatcher_impl(doremir_id_t interface)
+ptr_t dispatcher_impl(fae_id_t interface)
 {
-    static doremir_string_show_t dispatcher_show_impl
+    static fae_string_show_t dispatcher_show_impl
         = { dispatcher_show };
-    static doremir_destroy_t dispatcher_destroy_impl
+    static fae_destroy_t dispatcher_destroy_impl
         = { dispatcher_destroy };
-    static doremir_message_receiver_interface_t dispatcher_message_receiver_interface_impl
+    static fae_message_receiver_interface_t dispatcher_message_receiver_interface_impl
         = { dispatcher_send };
-    static doremir_message_sender_interface_t dispatcher_message_sender_interface_impl
+    static fae_message_sender_interface_t dispatcher_message_sender_interface_impl
         = { dispatcher_sync, dispatcher_receive };
 
     switch (interface) {
-    case doremir_string_show_i:
+    case fae_string_show_i:
         return &dispatcher_show_impl;
 
-    case doremir_destroy_i:
+    case fae_destroy_i:
         return &dispatcher_destroy_impl;
 
-    case doremir_message_sender_interface_i:
+    case fae_message_sender_interface_i:
         return &dispatcher_message_sender_interface_impl;
 
-    case doremir_message_receiver_interface_i:
+    case fae_message_receiver_interface_i:
         return &dispatcher_message_receiver_interface_impl;
 
     default:
@@ -277,11 +277,11 @@ ptr_t dispatcher_impl(doremir_id_t interface)
 }
 
 
-void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t origin);
+void fae_audio_engine_log_error_from(fae_string_t msg, fae_string_t origin);
 
 void message_fatal(char *msg, int error)
 {
-    doremir_audio_engine_log_error_from(string_dappend(string(msg), format_integral(" (error code %d)", error)), string("Doremir.message"));
-    doremir_audio_engine_log_error(string("Terminating Audio Engine"));
+    fae_audio_engine_log_error_from(string_dappend(string(msg), format_integral(" (error code %d)", error)), string("Doremir.message"));
+    fae_audio_engine_log_error(string("Terminating Audio Engine"));
     exit(error);
 }

@@ -5,19 +5,19 @@
     All rights reserved.
  */
 
-#include <doremir/event.h>
-#include <doremir/set.h>
-#include <doremir/string.h>
-#include <doremir/message.h>
-#include <doremir/util.h>
+#include <fae/event.h>
+#include <fae/set.h>
+#include <fae/string.h>
+#include <fae/message.h>
+#include <fae/util.h>
 
 // TODO rename, make public
 // TODO max is arbitrary
-#define TIME_ZERO doremir_time_create(0,0,0,ratio(0,1))
-#define TIME_MAX  doremir_time_create(2000000,0,0,ratio(0,1))
+#define TIME_ZERO fae_time_create(0,0,0,ratio(0,1))
+#define TIME_MAX  fae_time_create(2000000,0,0,ratio(0,1))
 
 #define event_inform(f,x)
-// #define event_inform(f,x) doremir_print(f,x)
+// #define event_inform(f,x) fae_print(f,x)
 
 /*
     Functional events built on primitives:
@@ -49,7 +49,7 @@
         - Proper delay of recv events
         - Map/filter/join
  */
-struct _doremir_event_t {
+struct _fae_event_t {
 
     impl_t      impl;
 
@@ -111,10 +111,10 @@ struct _doremir_event_t {
 
 // --------------------------------------------------------------------------------
 
-doremir_event_t new_event(int tag)
+fae_event_t new_event(int tag)
 {
-    event_t e = doremir_new(event);
-    doremir_ptr_t event_impl(doremir_id_t interface);
+    event_t e = fae_new(event);
+    fae_ptr_t event_impl(fae_id_t interface);
 
     e->impl = &event_impl;
     e->tag  = tag;
@@ -122,9 +122,9 @@ doremir_event_t new_event(int tag)
     return e;
 }
 
-void delete_event(doremir_event_t event)
+void delete_event(fae_event_t event)
 {
-    doremir_delete(event);
+    fae_delete(event);
 }
 
 #define is_never(v)       (v->tag == never_event)
@@ -154,7 +154,7 @@ void delete_event(doremir_event_t event)
     This event never occurs.
     @return         A new event.
  */
-doremir_event_t doremir_event_never()
+fae_event_t fae_event_never()
 {
     event_t e = new_event(never_event);
     return e;
@@ -163,7 +163,7 @@ doremir_event_t doremir_event_never()
 /** Create a single event, occuring directly.
     @return         A new event.
  */
-doremir_event_t doremir_event_now(doremir_ptr_t value)
+fae_event_t fae_event_now(fae_ptr_t value)
 {
     event_t e = new_event(now_event);
     now_get(e, value) = value;
@@ -173,9 +173,9 @@ doremir_event_t doremir_event_now(doremir_ptr_t value)
 /** Create a single event, occuring after the given time has passed.
     @return         A new event.
  */
-doremir_event_t doremir_event_later(doremir_time_t u, doremir_ptr_t x)
+fae_event_t fae_event_later(fae_time_t u, fae_ptr_t x)
 {
-    return doremir_event_delay(u, doremir_event_now(x));
+    return fae_event_delay(u, fae_event_now(x));
 }
 
 /** Delay an event by the given amount of time.
@@ -190,8 +190,8 @@ doremir_event_t doremir_event_later(doremir_time_t u, doremir_ptr_t x)
         delay t (merge x y) = delay t x `merge` delay t u
 
  */
-doremir_event_t doremir_event_delay(doremir_time_t  time,
-                                    doremir_event_t event)
+fae_event_t fae_event_delay(fae_time_t  time,
+                                    fae_event_t event)
 {
 
     assert(event && "Can not delay null");
@@ -203,7 +203,7 @@ doremir_event_t doremir_event_delay(doremir_time_t  time,
     // if (is_delay(event)) {
     //     time_t  t = delay_get(event, time);
     //     event_t x = delay_get(event, event);
-    //     return doremir_event_delay(doremir_add(time, t), x);
+    //     return fae_event_delay(fae_add(time, t), x);
     // }
 
     event_t e = new_event(delay_event);
@@ -228,8 +228,8 @@ doremir_event_t doremir_event_delay(doremir_time_t  time,
         merge x y           = merge y x
 
  */
-doremir_event_t doremir_event_merge(doremir_event_t event1,
-                                    doremir_event_t event2)
+fae_event_t fae_event_merge(fae_event_t event1,
+                                    fae_event_t event2)
 {
     assert(event1 && "Can not merge null");
     assert(event2 && "Can not merge null");
@@ -245,7 +245,7 @@ doremir_event_t doremir_event_merge(doremir_event_t event1,
     // invariant left <= right
     event_t e = new_event(merge_event);
 
-    if (doremir_less_than_equal(event1, event2)) {
+    if (fae_less_than_equal(event1, event2)) {
         merge_get(e, left)   = event1;
         merge_get(e, right)  = event2;
     } else {
@@ -271,9 +271,9 @@ doremir_event_t doremir_event_merge(doremir_event_t event1,
         switch x x never    = never
         switch never x y    = x
  */
-doremir_event_t doremir_event_switch(doremir_event_t pred,
-                                     doremir_event_t event1,
-                                     doremir_event_t event2)
+fae_event_t fae_event_switch(fae_event_t pred,
+                                     fae_event_t event1,
+                                     fae_event_t event2)
 {
     assert(pred   && "Can not switch null");
     assert(event2 && "Can not switch null");
@@ -295,9 +295,9 @@ doremir_event_t doremir_event_switch(doremir_event_t pred,
     @param event    Event from which to obtain values.
     @return         An event occuring whenever a message is being sent.
  */
-doremir_event_t doremir_event_send(doremir_message_receiver_t   receiver,
-                                   doremir_message_address_t    address,
-                                   doremir_event_t              event)
+fae_event_t fae_event_send(fae_message_receiver_t   receiver,
+                                   fae_message_address_t    address,
+                                   fae_event_t              event)
 {
     assert(receiver  && "Need a receiver");
     assert(address   && "Need an address");
@@ -315,28 +315,28 @@ doremir_event_t doremir_event_send(doremir_message_receiver_t   receiver,
     @param address  Address to receive on.
     @return         An event occuring whenever a message has been received.
  */
-doremir_event_t doremir_event_receive(doremir_message_sender_t  sender,
-                                      doremir_message_address_t address)
+fae_event_t fae_event_receive(fae_message_sender_t  sender,
+                                      fae_message_address_t address)
 {
     assert(sender  && "Need a sender");
 
     event_t e = new_event(recv_event);
     recv_get(e, dispatcher) = sender;
     recv_get(e, address)    = address;
-    recv_get(e, history)    = doremir_list_empty();
+    recv_get(e, history)    = fae_list_empty();
     return e;
 }
 
 /** Destroy the given event.
  */
-void doremir_event_destroy(doremir_event_t event)
+void fae_event_destroy(fae_event_t event)
 {
     delete_event(event);
 }
 
-doremir_event_t doremir_event_filter(doremir_pred_t  pred,
-                                     doremir_ptr_t   data,
-                                     doremir_event_t event)
+fae_event_t fae_event_filter(fae_pred_t  pred,
+                                     fae_ptr_t   data,
+                                     fae_event_t event)
 {
     assert(event     && "Need an event");
 
@@ -348,9 +348,9 @@ doremir_event_t doremir_event_filter(doremir_pred_t  pred,
 
 }
 
-doremir_event_t doremir_event_map(doremir_unary_t    func,
-                                  doremir_ptr_t      data,
-                                  doremir_event_t    event)
+fae_event_t fae_event_map(fae_unary_t    func,
+                                  fae_ptr_t      data,
+                                  fae_event_t    event)
 {
     assert(event     && "Need an event");
 
@@ -361,10 +361,10 @@ doremir_event_t doremir_event_map(doremir_unary_t    func,
     return e;
 }
 
-doremir_event_t doremir_event_map2(doremir_binary_t func,
-                                   doremir_ptr_t    data,
-                                   doremir_event_t  event1,
-                                   doremir_event_t  event2)
+fae_event_t fae_event_map2(fae_binary_t func,
+                                   fae_ptr_t    data,
+                                   fae_event_t  event1,
+                                   fae_event_t  event2)
 {
     assert(false && "Not implemented");
 }
@@ -378,7 +378,7 @@ doremir_event_t doremir_event_map2(doremir_binary_t func,
 
     Note that the event may or may not have an actual occurence at this time.
  */
-doremir_time_t doremir_event_offset(doremir_event_t event)
+fae_time_t fae_event_offset(fae_event_t event)
 {
     switch (event->tag) {
 
@@ -391,26 +391,26 @@ doremir_time_t doremir_event_offset(doremir_event_t event)
     case delay_event: {
         time_t  t = delay_get(event, time);
         event_t x = delay_get(event, event);
-        return doremir_add(doremir_event_offset(x), t);
+        return fae_add(fae_event_offset(x), t);
     }
 
     case merge_event: {
         event_t x = merge_get(event, left);
         event_t y = merge_get(event, right);
-        return doremir_min(doremir_event_offset(x), doremir_event_offset(y));
+        return fae_min(fae_event_offset(x), fae_event_offset(y));
     }
 
     case switch_event: {
         event_t p = switch_get(event, pred);
         event_t x = switch_get(event, before);
         event_t y = switch_get(event, after);
-        return doremir_min(doremir_event_offset(p),
-                           doremir_min(doremir_event_offset(x), doremir_event_offset(y)));
+        return fae_min(fae_event_offset(p),
+                           fae_min(fae_event_offset(x), fae_event_offset(y)));
     }
 
     case send_event: {
         event_t x = send_get(event, event);
-        return doremir_event_offset(x);
+        return fae_event_offset(x);
     }
 
     case recv_event: {
@@ -419,12 +419,12 @@ doremir_time_t doremir_event_offset(doremir_event_t event)
 
     case filter_event: {
         event_t x = filter_get(event, event);
-        return doremir_event_offset(x);
+        return fae_event_offset(x);
     }
 
     case map_event: {
         event_t x = map_get(event, event);
-        return doremir_event_offset(x);
+        return fae_event_offset(x);
     }
 
     default:
@@ -432,10 +432,10 @@ doremir_time_t doremir_event_offset(doremir_event_t event)
     }
 }
 
-void doremir_event_add_sync(
-    void (*func)(doremir_ptr_t, doremir_message_sender_t),
-    doremir_ptr_t     data,
-    doremir_event_t   event
+void fae_event_add_sync(
+    void (*func)(fae_ptr_t, fae_message_sender_t),
+    fae_ptr_t     data,
+    fae_event_t   event
 )
 {
     switch (event->tag) {
@@ -447,15 +447,15 @@ void doremir_event_add_sync(
 
     case delay_event: {
         event_t x = delay_get(event, event);
-        doremir_event_add_sync(func, data, x);
+        fae_event_add_sync(func, data, x);
         return;
     }
 
     case merge_event: {
         event_t x = merge_get(event, left);
         event_t y = merge_get(event, right);
-        doremir_event_add_sync(func, data, x);
-        doremir_event_add_sync(func, data, y);
+        fae_event_add_sync(func, data, x);
+        fae_event_add_sync(func, data, y);
         return;
     }
 
@@ -463,15 +463,15 @@ void doremir_event_add_sync(
         event_t p = switch_get(event, pred);
         event_t x = switch_get(event, before);
         event_t y = switch_get(event, after);
-        doremir_event_add_sync(func, data, p);
-        doremir_event_add_sync(func, data, x);
-        doremir_event_add_sync(func, data, y);
+        fae_event_add_sync(func, data, p);
+        fae_event_add_sync(func, data, x);
+        fae_event_add_sync(func, data, y);
         return;
     }
 
     case send_event: {
         event_t x = send_get(event, event);
-        doremir_event_add_sync(func, data, x);
+        fae_event_add_sync(func, data, x);
         return;
     }
 
@@ -483,13 +483,13 @@ void doremir_event_add_sync(
 
     case filter_event: {
         event_t x = filter_get(event, event);
-        doremir_event_add_sync(func, data, x);
+        fae_event_add_sync(func, data, x);
         return;
     }
 
     case map_event: {
         event_t x = map_get(event, event);
-        doremir_event_add_sync(func, data, x);
+        fae_event_add_sync(func, data, x);
         return;
     }
 
@@ -500,16 +500,16 @@ void doremir_event_add_sync(
 
 inline static list_t never_values(time_t begin, time_t end, event_t event)
 {
-    return doremir_list_empty();
+    return fae_list_empty();
 }
 
 inline static list_t now_values(time_t begin, time_t end, event_t event)
 {
     // begin <= t < end
-    if (doremir_less_than_equal(begin, TIME_ZERO) && doremir_less_than(TIME_ZERO, end)) {
-        return doremir_list_single(now_get(event, value));
+    if (fae_less_than_equal(begin, TIME_ZERO) && fae_less_than(TIME_ZERO, end)) {
+        return fae_list_single(now_get(event, value));
     } else {
-        return doremir_list_empty();
+        return fae_list_empty();
     }
 }
 
@@ -517,7 +517,7 @@ inline static list_t delay_values(time_t begin, time_t end, event_t event)
 {
     time_t  t = delay_get(event, time);
     event_t x = delay_get(event, event);
-    return doremir_event_values(doremir_subtract(begin, t), doremir_subtract(end, t), x);
+    return fae_event_values(fae_subtract(begin, t), fae_subtract(end, t), x);
 }
 
 inline static list_t merge_values(time_t begin, time_t end, event_t event)
@@ -525,8 +525,8 @@ inline static list_t merge_values(time_t begin, time_t end, event_t event)
     event_t x = merge_get(event, left);
     event_t y = merge_get(event, right);
 
-    return doremir_list_dappend(doremir_event_values(begin, end, x),
-                                doremir_event_values(begin, end, y));
+    return fae_list_dappend(fae_event_values(begin, end, x),
+                                fae_event_values(begin, end, y));
 }
 
 inline static list_t switch_values(time_t begin, time_t end, event_t event)
@@ -535,12 +535,12 @@ inline static list_t switch_values(time_t begin, time_t end, event_t event)
     event_t x = switch_get(event, before);
     event_t y = switch_get(event, after);
 
-    if (!doremir_event_has_values(TIME_ZERO, end, p)) {
+    if (!fae_event_has_values(TIME_ZERO, end, p)) {
         // event_inform("\x1b[34mChoosing left switch tail\n\x1b[0m", begin);
-        return doremir_event_values(begin, end, x);
+        return fae_event_values(begin, end, x);
     } else {
         // event_inform("\x1b[34mChoosing right switch tail\n\x1b[0m", begin);
-        return doremir_event_values(begin, end, y);
+        return fae_event_values(begin, end, y);
     }
 }
 
@@ -549,10 +549,10 @@ inline static list_t send_values(time_t begin, time_t end, event_t event)
     receiver_t r  = send_get(event, dispatcher);
     sender_t   a  = send_get(event, address);
     event_t    x  = send_get(event, event);
-    ptr_t      vs = doremir_event_values(begin, end, x);
+    ptr_t      vs = fae_event_values(begin, end, x);
 
-    doremir_for_each(v, vs) {
-        doremir_message_send(r, a, v);
+    fae_for_each(v, vs) {
+        fae_message_send(r, a, v);
     }
     return fb(true); // TODO something else for unit?
 }
@@ -577,12 +577,12 @@ inline static list_t recv_values(time_t begin, time_t end, event_t event)
     sender_t s  = recv_get(event, dispatcher);
     sender_t a  = recv_get(event, address);
     list_t   history  = recv_get(event, history);
-    list_t   current  = doremir_message_receive(s, a);
+    list_t   current  = fae_message_receive(s, a);
 
-    history = doremir_list_dappend(history, doremir_list_copy(current));
+    history = fae_list_dappend(history, fae_list_copy(current));
     recv_get(event, history) = history;
 
-    if (doremir_equal(begin, TIME_ZERO)) {
+    if (fae_equal(begin, TIME_ZERO)) {
         return history;
     } else {
         return current;
@@ -594,7 +594,7 @@ inline static list_t filter_values(time_t begin, time_t end, event_t event)
     pred_t     pred  = filter_get(event, pred);
     ptr_t      data  = filter_get(event, data);
     event_t    x     = filter_get(event, event);
-    return doremir_list_filter(pred, data, doremir_event_values(begin, end, x));
+    return fae_list_filter(pred, data, fae_event_values(begin, end, x));
 }
 
 inline static list_t map_values(time_t begin, time_t end, event_t event)
@@ -602,13 +602,13 @@ inline static list_t map_values(time_t begin, time_t end, event_t event)
     unary_t    func  = map_get(event, func);
     ptr_t      data  = map_get(event, data);
     event_t    x     = map_get(event, event);
-    return doremir_list_map(func, data, doremir_event_values(begin, end, x));
+    return fae_list_map(func, data, fae_event_values(begin, end, x));
 }
 
 
-doremir_list_t doremir_event_values(doremir_time_t  begin,
-                                    doremir_time_t  end,
-                                    doremir_event_t event)
+fae_list_t fae_event_values(fae_time_t  begin,
+                                    fae_time_t  end,
+                                    fae_event_t event)
 {
     switch (event->tag) {
     case never_event:
@@ -643,15 +643,15 @@ doremir_list_t doremir_event_values(doremir_time_t  begin,
     }
 }
 
-bool doremir_event_has_values(doremir_time_t    begin,
-                              doremir_time_t    end,
-                              doremir_event_t   event)
+bool fae_event_has_values(fae_time_t    begin,
+                              fae_time_t    end,
+                              fae_event_t   event)
 {
-    return !doremir_list_is_empty(doremir_event_values(begin, end, event));
+    return !fae_list_is_empty(fae_event_values(begin, end, event));
 }
 
-bool doremir_event_has_more(doremir_time_t      at,
-                            doremir_event_t     event)
+bool fae_event_has_more(fae_time_t      at,
+                            fae_event_t     event)
 {
     switch (event->tag) {
 
@@ -659,18 +659,18 @@ bool doremir_event_has_more(doremir_time_t      at,
         return false;
 
     case now_event:
-        return doremir_less_than_equal(at, TIME_ZERO);
+        return fae_less_than_equal(at, TIME_ZERO);
 
     case delay_event: {
         time_t  t = delay_get(event, time);
         event_t x = delay_get(event, event);
-        return doremir_event_has_more(doremir_subtract(at, t), x);
+        return fae_event_has_more(fae_subtract(at, t), x);
     }
 
     case merge_event: {
         event_t x = merge_get(event, left);
         event_t y = merge_get(event, right);
-        return doremir_event_has_more(at, x) || doremir_event_has_more(at, y);
+        return fae_event_has_more(at, x) || fae_event_has_more(at, y);
     }
 
     case switch_event: {
@@ -678,12 +678,12 @@ bool doremir_event_has_more(doremir_time_t      at,
         event_t x = switch_get(event, before);
         event_t y = switch_get(event, after);
         // TODO use p to optimize?
-        return doremir_event_has_more(at, x) || doremir_event_has_more(at, y);
+        return fae_event_has_more(at, x) || fae_event_has_more(at, y);
     }
 
     case send_event: {
         event_t x = send_get(event, event);
-        return doremir_event_has_more(at, x);
+        return fae_event_has_more(at, x);
     }
 
     case recv_event: {
@@ -692,12 +692,12 @@ bool doremir_event_has_more(doremir_time_t      at,
 
     case filter_event: {
         event_t x = filter_get(event, event);
-        return doremir_event_has_more(at, x);
+        return fae_event_has_more(at, x);
     }
 
     case map_event: {
         event_t x = map_get(event, event);
-        return doremir_event_has_more(at, x);
+        return fae_event_has_more(at, x);
     }
 
     default:
@@ -717,14 +717,14 @@ bool doremir_event_has_more(doremir_time_t      at,
 // before p x          = switch p x never
 
 // FIXME
-doremir_event_t doremir_event_after(doremir_event_t p, doremir_event_t x)
+fae_event_t fae_event_after(fae_event_t p, fae_event_t x)
 {
-    return doremir_event_switch(p, never(), x);
+    return fae_event_switch(p, never(), x);
 }
 
-doremir_event_t doremir_event_before(doremir_event_t p, doremir_event_t x)
+fae_event_t fae_event_before(fae_event_t p, fae_event_t x)
 {
-    return doremir_event_switch(p, x, never());
+    return fae_event_switch(p, x, never());
 }
 
 
@@ -735,25 +735,25 @@ doremir_event_t doremir_event_before(doremir_event_t p, doremir_event_t x)
 
 #pragma mark -
 
-bool event_equal(doremir_ptr_t a, doremir_ptr_t b)
+bool event_equal(fae_ptr_t a, fae_ptr_t b)
 {
     event_t c = (event_t) a;
     event_t d = (event_t) b;
-    return doremir_equal(
-               doremir_event_offset(c),
-               doremir_event_offset(d));
+    return fae_equal(
+               fae_event_offset(c),
+               fae_event_offset(d));
 }
 
-bool event_less_than(doremir_ptr_t a, doremir_ptr_t b)
+bool event_less_than(fae_ptr_t a, fae_ptr_t b)
 {
     event_t c = (event_t) a;
     event_t d = (event_t) b;
-    return doremir_less_than(
-               doremir_event_offset(c),
-               doremir_event_offset(d));
+    return fae_less_than(
+               fae_event_offset(c),
+               fae_event_offset(d));
 }
 
-bool event_greater_than(doremir_ptr_t a, doremir_ptr_t b)
+bool event_greater_than(fae_ptr_t a, fae_ptr_t b)
 {
     return event_less_than(b, a);
 }
@@ -762,7 +762,7 @@ inline static string_t print_event(int n, event_t a)
 {
     event_t event = (event_t) a;
     string_t s = string("");
-    string_t ident = doremir_string_repeat(n * 2, ' ');
+    string_t ident = fae_string_repeat(n * 2, ' ');
 
     switch (event->tag) {
 
@@ -773,7 +773,7 @@ inline static string_t print_event(int n, event_t a)
         ptr_t value  = now_get(event, value);
 
         write_to(s, string("(Now "));
-        write_to(s, doremir_string_show(value));
+        write_to(s, fae_string_show(value));
         write_to(s, string(")"));
 
         return s;
@@ -784,9 +784,9 @@ inline static string_t print_event(int n, event_t a)
         event_t x  = delay_get(event, event);
 
         write_to(s, string("(Delay "));
-        write_to(s, doremir_string_show(t)); // FIXME
+        write_to(s, fae_string_show(t)); // FIXME
         write_to(s, string(" \n"));
-        write_to(s, doremir_string_copy(ident));
+        write_to(s, fae_string_copy(ident));
         write_to(s, print_event(n + 1, x));
         write_to(s, string(")"));
 
@@ -798,10 +798,10 @@ inline static string_t print_event(int n, event_t a)
         event_t y = merge_get(event, right);
 
         write_to(s, string("(Merge \n"));
-        write_to(s, doremir_string_copy(ident));
+        write_to(s, fae_string_copy(ident));
         write_to(s, print_event(n + 1, x));
         write_to(s, string(" \n"));
-        write_to(s, doremir_string_copy(ident));
+        write_to(s, fae_string_copy(ident));
         write_to(s, print_event(n + 1, y));
         write_to(s, string(")"));
 
@@ -814,13 +814,13 @@ inline static string_t print_event(int n, event_t a)
         event_t y = switch_get(event, after);
 
         write_to(s, string("(Switch \n"));
-        write_to(s, doremir_string_copy(ident));
+        write_to(s, fae_string_copy(ident));
         write_to(s, print_event(n + 1, p));
         write_to(s, string(" \n"));
-        write_to(s, doremir_string_copy(ident));
+        write_to(s, fae_string_copy(ident));
         write_to(s, print_event(n + 1, x));
         write_to(s, string(" \n"));
-        write_to(s, doremir_string_copy(ident));
+        write_to(s, fae_string_copy(ident));
         write_to(s, print_event(n + 1, y));
         write_to(s, string(")"));
 
@@ -831,7 +831,7 @@ inline static string_t print_event(int n, event_t a)
         event_t x  = send_get(event, event);
 
         write_to(s, string("(Send \n"));
-        write_to(s, doremir_string_copy(ident));
+        write_to(s, fae_string_copy(ident));
         write_to(s, print_event(n + 1, x));
         write_to(s, string(")"));
 
@@ -845,7 +845,7 @@ inline static string_t print_event(int n, event_t a)
         event_t x  = map_get(event, event);
 
         write_to(s, string("(Map \n"));
-        write_to(s, doremir_string_copy(ident));
+        write_to(s, fae_string_copy(ident));
         write_to(s, print_event(n + 1, x));
         write_to(s, string(")"));
 
@@ -856,7 +856,7 @@ inline static string_t print_event(int n, event_t a)
         event_t x  = filter_get(event, event);
 
         write_to(s, string("(Filter \n"));
-        write_to(s, doremir_string_copy(ident));
+        write_to(s, fae_string_copy(ident));
         write_to(s, print_event(n + 1, x));
         write_to(s, string(")"));
 
@@ -868,34 +868,34 @@ inline static string_t print_event(int n, event_t a)
     }
 }
 
-string_t event_show(doremir_ptr_t a)
+string_t event_show(fae_ptr_t a)
 {
     return print_event(1, a);
 }
 
-void event_destroy(doremir_ptr_t a)
+void event_destroy(fae_ptr_t a)
 {
-    doremir_event_destroy(a);
+    fae_event_destroy(a);
 }
 
-doremir_ptr_t event_impl(doremir_id_t interface)
+fae_ptr_t event_impl(fae_id_t interface)
 {
-    static doremir_equal_t event_equal_impl = { event_equal };
-    static doremir_order_t event_order_impl = { event_less_than, event_greater_than };
-    static doremir_string_show_t event_show_impl = { event_show };
-    static doremir_destroy_t event_destroy_impl = { event_destroy };
+    static fae_equal_t event_equal_impl = { event_equal };
+    static fae_order_t event_order_impl = { event_less_than, event_greater_than };
+    static fae_string_show_t event_show_impl = { event_show };
+    static fae_destroy_t event_destroy_impl = { event_destroy };
 
     switch (interface) {
-    case doremir_equal_i:
+    case fae_equal_i:
         return &event_equal_impl;
 
-    case doremir_order_i:
+    case fae_order_i:
         return &event_order_impl;
 
-    case doremir_string_show_i:
+    case fae_string_show_i:
         return &event_show_impl;
 
-    case doremir_destroy_i:
+    case fae_destroy_i:
         return &event_destroy_impl;
 
     default:

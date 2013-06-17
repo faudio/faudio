@@ -1,0 +1,20 @@
+
+/**
+    @addtogroup FaeDeviceBuffer
+    
+    Non-real-time memory device.
+    
+ */
+module Fae.Device.Buffer
+{
+    import Fae.Device;
+    import Fae.Processor;
+
+    type Result = opaque;
+
+    open : (Size) -> Buffer;
+    close : Buffer -> Void;
+
+    run : (Buffer, Processor, Buffer) -> Result;
+}
+

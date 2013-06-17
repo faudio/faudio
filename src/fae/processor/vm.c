@@ -5,8 +5,8 @@
     All rights reserved.
  */
 
-#include <doremir/string.h>
-#include <doremir/util.h>
+#include <fae/string.h>
+#include <fae/util.h>
 #include "vm.h"
 
 #define lmm_malloc  malloc
@@ -16,7 +16,7 @@
 
 #define lmm_for_each_register(var, num, lmm) \
   for (size_t num = 0; num < kLmmRegs; ++num) \
-    doremir_let (var, lmm->regs[num])
+    fae_let (var, lmm->regs[num])
 
 lmm_t lmm_create()
 {
@@ -388,7 +388,7 @@ void test_vm_loop()
     ((double *)vm->regs[0].data)[0] = 0.23;
     ((double *)vm->regs[0].data)[3] = 5.0;
 
-    doremir_print_ln(lmm_show_f64(vm));
+    fae_print_ln(lmm_show_f64(vm));
 
     // lmm_swap(vm, 0, 1);
     // lmm_swap(vm, 3, 0);
@@ -408,7 +408,7 @@ void test_vm_loop()
 
 
     // printf("%f\n", ((double*)vm->regs[0].data)[n-1]);
-    doremir_print_ln(lmm_show_f64(vm));
+    fae_print_ln(lmm_show_f64(vm));
     lmm_destroy(vm);
 }
 
@@ -417,6 +417,6 @@ void test_vm()
     // while(1)
     {
         test_vm_loop();
-        // doremir_thread_sleep(1000);
+        // fae_thread_sleep(1000);
     }
 }

@@ -1,0 +1,81 @@
+
+/**
+    @addtogroup FaeSignal
+    
+    Provides signals.
+    
+    @warning
+        Signals provide a more high-level interface to describe processor graphs.
+        They are implemented in terms of processors, but still *largely unsupported*.
+    
+ */
+module Fae.Signal
+{
+    import Fae;    
+    import Fae.Pair;
+    import Fae.Type;
+    import Fae.Time;
+    import Fae.Event;
+    import Fae.Processor;
+    
+    type Signal = opaque;
+
+    typeOf : Signal -> Type;
+
+    lift   : (Unary, Ptr, Signal)                   -> Signal;
+    lift2  : (Binary, Ptr, Signal, Signal)          -> Signal;
+    lift3  : (Ternary, Ptr, Signal, Signal, Signal) -> Signal;
+    apply  : (Processor, Signal)                    -> Signal;
+    apply2 : (Processor, Signal, Signal)            -> Signal;
+    apply3 : (Processor, Signal, Signal, Signal)    -> Signal;
+
+    constant  : Ptr             -> Signal;
+    value     : Event           -> Signal;
+    delay     : (Time, Signal)  -> Signal;
+
+    add                 : (Signal,Signal) -> Signal;
+    subtract            : (Signal,Signal) -> Signal;
+    multiply            : (Signal,Signal) -> Signal;
+    power               : (Signal,Signal) -> Signal;
+    divide              : (Signal,Signal) -> Signal;
+    modulo              : (Signal,Signal) -> Signal;
+    absolute            : Signal -> Signal;
+
+    not                 : Signal -> Signal;
+    and                 : (Signal,Signal) -> Signal;
+    or                  : (Signal,Signal) -> Signal;
+    xor                 : (Signal,Signal) -> Signal;
+    bitNot              : (Signal,Signal) -> Signal;
+    bitAnd              : (Signal,Signal) -> Signal;
+    bitOr               : (Signal,Signal) -> Signal;
+    bitXor              : (Signal,Signal) -> Signal;
+    shiftLeft           : (Signal,Signal) -> Signal;
+    shiftRight          : (Signal,Signal) -> Signal;
+
+    equal               : (Signal,Signal) -> Signal;
+    lessThan            : (Signal,Signal) -> Signal;
+    greaterThan         : (Signal,Signal) -> Signal;
+    lessThanEqual       : (Signal,Signal) -> Signal;
+    greaterThanEqual    : (Signal,Signal) -> Signal;
+
+    acos                : Signal -> Signal;
+    asin                : Signal -> Signal;
+    atan                : Signal -> Signal;
+    cos                 : Signal -> Signal;
+    sin                 : Signal -> Signal;
+    tan                 : Signal -> Signal;
+    exp                 : Signal -> Signal;
+    log                 : Signal -> Signal;
+    log10               : Signal -> Signal;
+    pow                 : Signal -> Signal;
+    sqrt                : Signal -> Signal;
+    abs                 : Signal -> Signal;
+    min                 : Signal -> Signal;
+    max                 : Signal -> Signal;
+    fmod                : Signal -> Signal;
+    remainder           : Signal -> Signal;
+    floor               : Signal -> Signal;
+    ceil                : Signal -> Signal;
+    rint                : Signal -> Signal;
+}
+

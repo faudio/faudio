@@ -5,54 +5,54 @@
     All rights reserved.
  */
 
-#include <doremir/atomic.h>
+#include <fae/atomic.h>
 #include <Windows.h>
 
 /*
     TODO these are strictly 32-bit for now
  */
-struct _doremir_atomic_t {
+struct _fae_atomic_t {
     impl_t      impl;       //  Interface dispatcher
     intptr_t    value;
 };
 
-doremir_atomic_t doremir_atomic_create()
+fae_atomic_t fae_atomic_create()
 {
-    doremir_atomic_t a = malloc(sizeof(struct _doremir_atomic_t));
+    fae_atomic_t a = malloc(sizeof(struct _fae_atomic_t));
     return a;
 }
 
-doremir_atomic_t doremir_atomic_copy(doremir_atomic_t a)
+fae_atomic_t fae_atomic_copy(fae_atomic_t a)
 {
     free(a);
 }
 
-void doremir_atomic_swap(doremir_atomic_t a, doremir_atomic_t b)
+void fae_atomic_swap(fae_atomic_t a, fae_atomic_t b)
 {
 }
 
-void doremir_atomic_destroy(doremir_atomic_t a)
+void fae_atomic_destroy(fae_atomic_t a)
 {
 }
 
-bool doremir_atomic_exchange(doremir_atomic_t a, intptr_t v)
+bool fae_atomic_exchange(fae_atomic_t a, intptr_t v)
 {
 }
 
-void doremir_atomic_add(doremir_atomic_t a, intptr_t v)
+void fae_atomic_add(fae_atomic_t a, intptr_t v)
 {
 }
 
-intptr_t doremir_atomic_get(doremir_atomic_t a)
+intptr_t fae_atomic_get(fae_atomic_t a)
 {
 }
 
-void doremir_atomic_modify(doremir_atomic_t a,
-                           doremir_atomic_updater_t f)
+void fae_atomic_modify(fae_atomic_t a,
+                           fae_atomic_updater_t f)
 {
 }
 
-void doremir_atomic_set(doremir_atomic_t a, intptr_t v)
+void fae_atomic_set(fae_atomic_t a, intptr_t v)
 {
 }
 

@@ -5,15 +5,15 @@
     All rights reserved.
  */
 
-#include <doremir/atomic.h>
-#include <doremir/string.h>
-#include <doremir/message.h>
-#include <doremir/event.h>
-#include <doremir/thread.h>
-#include <doremir/system/event.h>
+#include <fae/atomic.h>
+#include <fae/string.h>
+#include <fae/message.h>
+#include <fae/event.h>
+#include <fae/thread.h>
+#include <fae/system/event.h>
 
 #define NO_THREAD_T
-#include <doremir/util.h>
+#include <fae/util.h>
 #undef NO_THREAD_T
 
 #include <ApplicationServices/ApplicationServices.h>
@@ -25,65 +25,65 @@
         - Can not get keyboard events unless 'Access for assistive devices' is enabled
  */
 
-doremir_event_t doremir_system_event_mouse_move()
+fae_event_t fae_system_event_mouse_move()
 {
-    return doremir_system_event_select(list(i16(mouse_move_event)));
+    return fae_system_event_select(list(i16(mouse_move_event)));
 }
 
-doremir_event_t doremir_system_event_mouse_drag()
+fae_event_t fae_system_event_mouse_drag()
 {
-    return doremir_system_event_select(list(i16(mouse_drag_event)));
+    return fae_system_event_select(list(i16(mouse_drag_event)));
 }
 
-doremir_event_t doremir_system_event_mouse_up()
+fae_event_t fae_system_event_mouse_up()
 {
-    return doremir_system_event_select(list(i16(mouse_up_event)));
+    return fae_system_event_select(list(i16(mouse_up_event)));
 }
 
-doremir_event_t doremir_system_event_mouse_down()
+fae_event_t fae_system_event_mouse_down()
 {
-    return doremir_system_event_select(list(i16(mouse_down_event)));
+    return fae_system_event_select(list(i16(mouse_down_event)));
 }
 
-doremir_event_t doremir_system_event_key_up()
+fae_event_t fae_system_event_key_up()
 {
-    return doremir_system_event_select(list(i16(key_up_event)));
+    return fae_system_event_select(list(i16(key_up_event)));
 }
 
-doremir_event_t doremir_system_event_key_down()
+fae_event_t fae_system_event_key_down()
 {
-    return doremir_system_event_select(list(i16(key_down_event)));
+    return fae_system_event_select(list(i16(key_down_event)));
 }
 
 
 /** Returns an event selected from the given types.
 
-    @param types      A list of @ref doremir_system_event_type_t (destroyed).
+    @param types      A list of @ref fae_system_event_type_t (destroyed).
     @return             A new system event.
  */
-doremir_event_t doremir_system_event_select(doremir_list_t types)
+fae_event_t fae_system_event_select(fae_list_t types)
 {
-    doremir_message_sender_t type = doremir_system_event_receive(types);
-    doremir_destroy(types);
-    return doremir_event_receive(type, i16(0));
+    fae_message_sender_t type = fae_system_event_receive(types);
+    fae_destroy(types);
+    return fae_event_receive(type, i16(0));
 }
 
 /** Transforms the given event to write its values to the standard output.
     @param event        An event of strings.
     @return             An event of null values.
  */
-doremir_event_t doremir_system_event_write_std(doremir_event_t event)
+fae_event_t fae_system_event_write_std(fae_event_t event)
 {
-    return doremir_event_send(doremir_system_event_send_std(), i16(0), event);
+    return fae_event_send(fae_system_event_send_std(), i16(0), event);
 }
 
 /** Transforms the given event to write its values to the log.
     @param event        An event of strings.
     @return             An event of null values.
  */
-doremir_event_t doremir_system_event_write_log(doremir_event_t event)
+fae_event_t fae_system_event_write_log(fae_event_t event)
 {
-    return doremir_event_send(doremir_system_event_send_log(), i16(0), event);
+    return fae_event_send(fae_system_event_send_log(), i16(0), event);
 }
 
 
@@ -95,15 +95,15 @@ struct event_source {
     CGEventMask         mask;
     dispatcher_t        disp;           // Outgoing event dispatcher
 
-    doremir_thread_t    thread;         // Thread
+    fae_thread_t    thread;         // Thread
     CFRunLoopRef        loop;           // Run loop
     atomic_t            loop_set;
 };
 
-typedef doremir_system_event_type_t  event_type_t;
+typedef fae_system_event_type_t  event_type_t;
 typedef struct event_source              *event_source_t;
 
-ptr_t event_source_impl(doremir_id_t interface);
+ptr_t event_source_impl(fae_id_t interface);
 
 
 inline static ptr_t convert_event(CGEventType type, CGEventRef event)
@@ -118,7 +118,7 @@ inline static ptr_t convert_event(CGEventType type, CGEventRef event)
         cs[sz] = 0;
 
         if (sz >= 1) {
-            string_t str = doremir_string_single(cs[0]);
+            string_t str = fae_string_single(cs[0]);
             return list(i16(keyCode), i16(cs[0]), str);
         } else {
             return list(i16(keyCode), i16(0), string(""));
@@ -136,7 +136,7 @@ inline static ptr_t convert_event(CGEventType type, CGEventRef event)
         cs[sz] = 0;
 
         if (sz >= 1) {
-            string_t str = doremir_string_single(cs[0]);
+            string_t str = fae_string_single(cs[0]);
             return list(i16(keyCode), i16(cs[0]), str);
         } else {
             return list(i16(keyCode), i16(0), string(""));
@@ -179,7 +179,7 @@ static CGEventRef event_listener(CGEventTapProxy proxy,
     // printf("Event of type %d\n", type);
     ptr_t value = convert_event(type, event);
 
-    doremir_message_send((receiver_t) source->disp, i16(0), value);
+    fae_message_send((receiver_t) source->disp, i16(0), value);
 
     return event;
 }
@@ -204,7 +204,7 @@ static ptr_t add_event_listener(ptr_t a)
     CGEventTapEnable(eventTap, true);
 
     source->loop = CFRunLoopGetCurrent();
-    doremir_atomic_set(source->loop_set, (ptr_t) 1);
+    fae_atomic_set(source->loop_set, (ptr_t) 1);
 
     // printf("Entering loop");
     CFRunLoopRun();
@@ -227,20 +227,20 @@ inline static CGEventMask convert_type(event_type_t type)
 
 /** Returns a sender of values selected from the given types.
 
-    The returned value implements [Sender](@ref doremir_message_sender_t) and
-    [Destroy](@ref doremir_destroy_t), and should be destroyed after use.
+    The returned value implements [Sender](@ref fae_message_sender_t) and
+    [Destroy](@ref fae_destroy_t), and should be destroyed after use.
 
-    @param types    A list of @ref doremir_system_event_type_t (destroyed).
+    @param types    A list of @ref fae_system_event_type_t (destroyed).
     @return         A new sender.
  */
-doremir_message_sender_t doremir_system_event_receive(doremir_list_t types)
+fae_message_sender_t fae_system_event_receive(fae_list_t types)
 {
     CGEventMask mask = 0;
-    doremir_for_each(type, types) {
+    fae_for_each(type, types) {
         mask |= convert_type(ti16(type));
     }
 
-    event_source_t source = doremir_new_struct(event_source);
+    event_source_t source = fae_new_struct(event_source);
     source->impl        = &event_source_impl;
 
     source->mask        = mask;
@@ -248,14 +248,14 @@ doremir_message_sender_t doremir_system_event_receive(doremir_list_t types)
     source->loop        = NULL;                     // Set by new thread
     source->loop_set    = atomic();
 
-    source->thread      = doremir_thread_create(add_event_listener, source);
+    source->thread      = fae_thread_create(add_event_listener, source);
 
     // Wait until run loop has been set
-    while (!doremir_atomic_get(source->loop_set)) {
-        doremir_thread_sleep(1);
+    while (!fae_atomic_get(source->loop_set)) {
+        fae_thread_sleep(1);
     }
 
-    return (doremir_message_sender_t) source;
+    return (fae_message_sender_t) source;
 }
 
 
@@ -263,40 +263,40 @@ void event_source_destroy(ptr_t a)
 {
     event_source_t source = a;
 
-    doremir_destroy(source->disp);
-    doremir_destroy(source->loop_set);
+    fae_destroy(source->disp);
+    fae_destroy(source->loop_set);
 
     CFRunLoopStop(source->loop);
-    doremir_thread_join(source->thread);
+    fae_thread_join(source->thread);
 
-    doremir_delete(source);
+    fae_delete(source);
 }
 
 void event_source_sync(ptr_t a)
 {
     event_source_t source = a;
-    doremir_message_sync((sender_t) source->disp);
+    fae_message_sync((sender_t) source->disp);
 }
 
-doremir_list_t event_source_receive(ptr_t a, address_t addr)
+fae_list_t event_source_receive(ptr_t a, address_t addr)
 {
     event_source_t source = a;
-    return doremir_message_receive((sender_t) source->disp, addr);
+    return fae_message_receive((sender_t) source->disp, addr);
 }
 
-ptr_t event_source_impl(doremir_id_t interface)
+ptr_t event_source_impl(fae_id_t interface)
 {
-    static doremir_destroy_t event_source_destroy_impl
+    static fae_destroy_t event_source_destroy_impl
         = { event_source_destroy };
-    static doremir_message_sender_interface_t event_source_message_sender_interface_impl
+    static fae_message_sender_interface_t event_source_message_sender_interface_impl
         = { event_source_sync, event_source_receive };
 
     switch (interface) {
 
-    case doremir_destroy_i:
+    case fae_destroy_i:
         return &event_source_destroy_impl;
 
-    case doremir_message_sender_interface_i:
+    case fae_message_sender_interface_i:
         return &event_source_message_sender_interface_impl;
 
     default:
@@ -315,45 +315,45 @@ struct io_event_sink {
 
 typedef struct io_event_sink             *io_event_sink_t;
 
-ptr_t io_event_sink_impl(doremir_id_t interface);
+ptr_t io_event_sink_impl(fae_id_t interface);
 
-doremir_message_receiver_t doremir_system_event_send_std()
+fae_message_receiver_t fae_system_event_send_std()
 {
-    io_event_sink_t sink = doremir_new_struct(io_event_sink);
+    io_event_sink_t sink = fae_new_struct(io_event_sink);
     sink->impl  = &io_event_sink_impl;
     // TODO
 
-    return (doremir_message_receiver_t) sink;
+    return (fae_message_receiver_t) sink;
 }
 
 void io_event_sink_destroy(ptr_t a)
 {
     io_event_sink_t sink = a;
-    doremir_delete(sink);
+    fae_delete(sink);
 }
 
-void io_event_sink_send(doremir_ptr_t a, doremir_message_address_t addr, doremir_message_t msg)
+void io_event_sink_send(fae_ptr_t a, fae_message_address_t addr, fae_message_t msg)
 {
     // sink and addr ignored
-    string_t str = doremir_string_to_string(msg);
+    string_t str = fae_string_to_string(msg);
     printf("--------------------------------------------------------------------------------> %s\n", unstring(str));
     fflush(stdout);
-    doremir_destroy(str);
+    fae_destroy(str);
 }
 
-ptr_t io_event_sink_impl(doremir_id_t interface)
+ptr_t io_event_sink_impl(fae_id_t interface)
 {
-    static doremir_destroy_t io_event_sink_destroy_impl
+    static fae_destroy_t io_event_sink_destroy_impl
         = { io_event_sink_destroy };
-    static doremir_message_receiver_interface_t io_event_sink_message_receiver_interface_impl
+    static fae_message_receiver_interface_t io_event_sink_message_receiver_interface_impl
         = { io_event_sink_send };
 
     switch (interface) {
 
-    case doremir_destroy_i:
+    case fae_destroy_i:
         return &io_event_sink_destroy_impl;
 
-    case doremir_message_receiver_interface_i:
+    case fae_message_receiver_interface_i:
         return &io_event_sink_message_receiver_interface_impl;
 
     default:
@@ -370,40 +370,40 @@ struct log_event_sink {
 
 typedef struct log_event_sink             *log_event_sink_t;
 
-ptr_t log_event_sink_impl(doremir_id_t interface);
+ptr_t log_event_sink_impl(fae_id_t interface);
 
-doremir_message_receiver_t doremir_system_event_send_log()
+fae_message_receiver_t fae_system_event_send_log()
 {
-    log_event_sink_t sink = doremir_new_struct(log_event_sink);
+    log_event_sink_t sink = fae_new_struct(log_event_sink);
     sink->impl  = &log_event_sink_impl;
-    return (doremir_message_receiver_t) sink;
+    return (fae_message_receiver_t) sink;
 }
 
 void log_event_sink_destroy(ptr_t a)
 {
     log_event_sink_t sink = a;
-    doremir_delete(sink);
+    fae_delete(sink);
 }
 
-void log_event_sink_send(doremir_ptr_t a, doremir_message_address_t addr, doremir_message_t msg)
+void log_event_sink_send(fae_ptr_t a, fae_message_address_t addr, fae_message_t msg)
 {
     // sink and addr ignored
-    inform(doremir_string_show(msg));
+    inform(fae_string_show(msg));
 }
 
-ptr_t log_event_sink_impl(doremir_id_t interface)
+ptr_t log_event_sink_impl(fae_id_t interface)
 {
-    static doremir_destroy_t log_event_sink_destroy_impl
+    static fae_destroy_t log_event_sink_destroy_impl
         = { log_event_sink_destroy };
-    static doremir_message_receiver_interface_t log_event_sink_message_receiver_interface_impl
+    static fae_message_receiver_interface_t log_event_sink_message_receiver_interface_impl
         = { log_event_sink_send };
 
     switch (interface) {
 
-    case doremir_destroy_i:
+    case fae_destroy_i:
         return &log_event_sink_destroy_impl;
 
-    case doremir_message_receiver_interface_i:
+    case fae_message_receiver_interface_i:
         return &log_event_sink_message_receiver_interface_impl;
 
     default:

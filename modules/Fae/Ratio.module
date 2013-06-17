@@ -1,0 +1,49 @@
+
+/** 
+    @addtogroup FaeRatio
+    
+    Fixed-precision rational numbers.
+
+    @par Literals
+    - `ratio(1, 2)`
+    - `ratio(0, 1)`
+    - `ratio(-1, 2)`
+
+    @par Implements 
+    - doremir_equal_t
+    - doremir_order_t
+    - doremir_string_show_t
+    - doremir_copy_t
+    - doremir_destroy_t
+    - doremir_dynamic_t
+    - doremir_number_t
+
+ */
+module Fae.Ratio 
+{
+    import Fae.Std;
+
+    type Num    = Int32;
+    type Denom  = Int32;
+    type Ratio  = opaque;
+
+    create  : (Num, Denom) -> Ratio;
+    num     : Ratio -> Num;
+    denom   : Ratio -> Denom;
+    match   : (Ratio, Num*, Denom*) -> Void;
+    copy    : Ratio -> Ratio;
+    destroy : Ratio -> Void;
+            
+    add         : (Ratio, Ratio) -> Ratio;
+    subtract    : (Ratio, Ratio) -> Ratio;
+    multiply    : (Ratio, Ratio) -> Ratio;
+    divide      : (Ratio, Ratio) -> Ratio;
+    succ        : Ratio -> Ratio;
+    pred        : Ratio -> Ratio;
+    negate      : Ratio -> Ratio;
+    recip       : Ratio -> Ratio;
+
+    normalize : Ratio -> Ratio;
+    toMixed : (Ratio, Num*, Ratio*) -> Void;
+}
+

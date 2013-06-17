@@ -5,39 +5,39 @@
     All rights reserved.
  */
 
-#include <doremir/thread.h>
+#include <fae/thread.h>
 #include <Windows.h>
 
-struct _doremir_thread_t {
+struct _fae_thread_t {
     impl_t          impl;       //  Interface dispatcher
     HANDLE native;
 };
 
-struct _doremir_thread_mutex_t {
+struct _fae_thread_mutex_t {
     impl_t          impl;       //  Interface dispatcher
     HANDLE native;
 };
 
-struct _doremir_thread_condition_t {
+struct _fae_thread_condition_t {
     impl_t          impl;       //  Interface dispatcher
     HANDLE native;
-    doremir_thread_mutex_t  mutex;
+    fae_thread_mutex_t  mutex;
 };
 
-static void doremir_thread_fatal(char *msg, int error);
+static void fae_thread_fatal(char *msg, int error);
 
 static const long join_interval_k = 50;
 
 
-static void doremir_thread_fatal(char *msg, int error);
+static void fae_thread_fatal(char *msg, int error);
 
 // --------------------------------------------------------------------------------
 
-void doremir_thread_initialize()
+void fae_thread_initialize()
 {
 }
 
-void doremir_thread_terminate()
+void fae_thread_terminate()
 {
 }
 
@@ -46,30 +46,30 @@ void doremir_thread_terminate()
 
 static DWORD WINAPI start(LPVOID x)
 {
-    doremir_closure_t *closure = x;
+    fae_closure_t *closure = x;
     return closure->function(closure->value);
 }
 
-doremir_thread_t doremir_thread_create(doremir_closure_t *closure)
+fae_thread_t fae_thread_create(fae_closure_t *closure)
 {
-    doremir_thread_t thread = malloc(sizeof(struct _doremir_thread_t));
+    fae_thread_t thread = malloc(sizeof(struct _fae_thread_t));
 
     HANDLE result = CreateThread(NULL, 0, start, closure, 0, NULL);
 
     if (!result) {
-        doremir_thread_fatal("create", GetLastError());
+        fae_thread_fatal("create", GetLastError());
     }
 
     thread->native = result;
     return thread;
 }
 
-void doremir_thread_sleep(doremir_thread_milli_seconds_t millis)
+void fae_thread_sleep(fae_thread_milli_seconds_t millis)
 {
     Sleep(millis);
 }
 
-void doremir_thread_join(doremir_thread_t thread)
+void fae_thread_join(fae_thread_t thread)
 {
     BOOL result;
     DWORD exitCode;
@@ -79,7 +79,7 @@ void doremir_thread_join(doremir_thread_t thread)
         result = GetExitCodeThread(thread->native, &exitCode);
 
         if (!result) {
-            doremir_thread_fatal("join", GetLastError());
+            fae_thread_fatal("join", GetLastError());
         }
 
     } while (exitCode == STILL_ACTIVE);
@@ -87,13 +87,13 @@ void doremir_thread_join(doremir_thread_t thread)
     free(thread);
 }
 
-void doremir_thread_detach(doremir_thread_t thread)
+void fae_thread_detach(fae_thread_t thread)
 {
     BOOL result = CloseHandle(thread->native);
     free(thread);
 
     if (!result) {
-        doremir_thread_fatal("detach", GetLastError());
+        fae_thread_fatal("detach", GetLastError());
     }
 }
 
@@ -105,14 +105,14 @@ void doremir_thread_detach(doremir_thread_t thread)
     Mutexes have single-ownership semantics and must be finalized by passing it
     to a destroy function.
  */
-doremir_thread_mutex_t doremir_thread_create_mutex()
+fae_thread_mutex_t fae_thread_create_mutex()
 {
-    doremir_thread_mutex_t mutex = malloc(sizeof(struct _doremir_thread_mutex_t));
+    fae_thread_mutex_t mutex = malloc(sizeof(struct _fae_thread_mutex_t));
 
     HANDLE result = CreateMutex(NULL, false, NULL);
 
     if (!result) {
-        doremir_thread_fatal("create_mutex", GetLastError());
+        fae_thread_fatal("create_mutex", GetLastError());
     }
 
     mutex->native = result;
@@ -121,19 +121,19 @@ doremir_thread_mutex_t doremir_thread_create_mutex()
 
 /** Destroy a mutex.
  */
-void doremir_thread_destroy_mutex(doremir_thread_mutex_t mutex)
+void fae_thread_destroy_mutex(fae_thread_mutex_t mutex)
 {
     BOOL result = CloseHandle(mutex->native); // FIXME
     free(mutex);
 
     if (!result) {
-        doremir_thread_fatal("destroy_mutex", GetLastError());
+        fae_thread_fatal("destroy_mutex", GetLastError());
     }
 }
 
 /** Acquire the lock of a mutex.
  */
-bool doremir_thread_lock(doremir_thread_mutex_t mutex)
+bool fae_thread_lock(fae_thread_mutex_t mutex)
 {
     DWORD result = WaitForSingleObject(mutex->native, INFINITE);
     assert(result != WAIT_FAILED);
@@ -142,7 +142,7 @@ bool doremir_thread_lock(doremir_thread_mutex_t mutex)
 
 /** Try acquiring the lock of a mutex.
  */
-bool doremir_thread_try_lock(doremir_thread_mutex_t mutex)
+bool fae_thread_try_lock(fae_thread_mutex_t mutex)
 {
     DWORD result = WaitForSingleObject(mutex->native, 0);
     assert(result != WAIT_FAILED);
@@ -151,7 +151,7 @@ bool doremir_thread_try_lock(doremir_thread_mutex_t mutex)
 
 /** Release the lock of a mutex.
  */
-bool doremir_thread_unlock(doremir_thread_mutex_t mutex)
+bool fae_thread_unlock(fae_thread_mutex_t mutex)
 {
     BOOL result = ReleaseMutex(mutex->native);
     assert(result != 0);
@@ -166,11 +166,11 @@ bool doremir_thread_unlock(doremir_thread_mutex_t mutex)
 
 // --------------------------------------------------------------------------------
 
-void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t origin);
+void fae_audio_engine_log_error_from(fae_string_t msg, fae_string_t origin);
 
-void doremir_thread_fatal(char *msg, int error)
+void fae_thread_fatal(char *msg, int error)
 {
-    doremir_audio_engine_log_error_from(string(msg), string("Doremir.Thread"));
+    fae_audio_engine_log_error_from(string(msg), string("Doremir.Thread"));
     exit(error);
 }
 

@@ -5,11 +5,11 @@
     All rights reserved.
  */
 
-#include <doremir/plot.h>
-#include <doremir/thread.h>
-#include <doremir/util.h>
+#include <fae/plot.h>
+#include <fae/thread.h>
+#include <fae/util.h>
 
-typedef doremir_plot_function_t plot_func;
+typedef fae_plot_function_t plot_func;
 
 enum plot_backend {
     gnu_plot,
@@ -18,25 +18,25 @@ enum plot_backend {
 
 enum plot_backend   plot_backend_g  = core_plot;
 
-void doremir_audio_engine_log_info(doremir_string_t);
+void fae_audio_engine_log_info(fae_string_t);
 void run_core_plot(plot_func func, ptr_t funcData, nullary_t cont, ptr_t contData);
 void run_gnu_plot(plot_func func, ptr_t funcData, nullary_t cont, ptr_t contData);
 
 
 /** Use gnuplot for plotting.
  */
-void doremir_plot_use_gnu()
+void fae_plot_use_gnu()
 {
     plot_backend_g = gnu_plot;
-    doremir_audio_engine_log_info(string("Using gnuplot backend"));
+    fae_audio_engine_log_info(string("Using gnuplot backend"));
 }
 
 /** Use CorePlot for plotting.
  */
-void doremir_plot_use_core()
+void fae_plot_use_core()
 {
     plot_backend_g = core_plot;
-    doremir_audio_engine_log_info(string("Using CorePlot backend"));
+    fae_audio_engine_log_info(string("Using CorePlot backend"));
 }
 
 /** Run a plot of the given functions.
@@ -45,12 +45,12 @@ void doremir_plot_use_core()
     @param cont         Continuation function.
     @param cont_data    Value to be passed to the continuation function.
  */
-void doremir_plot_continous
+void fae_plot_continous
 (
     plot_func           func,
-    doremir_ptr_t       data,
-    doremir_nullary_t   cont,
-    doremir_ptr_t       cont_data
+    fae_ptr_t       data,
+    fae_nullary_t   cont,
+    fae_ptr_t       cont_data
 )
 {
     switch (plot_backend_g) {
@@ -67,10 +67,10 @@ void doremir_plot_continous
 #define PLOTTER(T) \
     double plot_##T(void *data, int i, double t, double x)      \
     {                                                           \
-        doremir_buffer_t buf = data;                            \
+        fae_buffer_t buf = data;                            \
                                                                 \
-        size_t  sz = doremir_buffer_size(buf) / sizeof(T);      \
-        T     * ds = doremir_buffer_unsafe_address(buf);        \
+        size_t  sz = fae_buffer_size(buf) / sizeof(T);      \
+        T     * ds = fae_buffer_unsafe_address(buf);        \
                                                                 \
         if (i == 0) {                                           \
             return ds[((size_t)(sz * ((x + 1) / 2)))];          \
@@ -85,20 +85,20 @@ PLOTTER(double);
 /** Run a plot on the given buffer, treating its contents as
     32-bit floating point data.
  */
-void doremir_plot_buffer_float(doremir_buffer_t  buffer,
-                               doremir_nullary_t cont,
-                               doremir_ptr_t     data)
+void fae_plot_buffer_float(fae_buffer_t  buffer,
+                               fae_nullary_t cont,
+                               fae_ptr_t     data)
 {
-    doremir_plot_continous(plot_float, buffer, cont, data);
+    fae_plot_continous(plot_float, buffer, cont, data);
 }
 
 /** Run a plot on the given buffer, treating its contents as
     64-bit floating point data.
  */
-void doremir_plot_buffer_double(doremir_buffer_t      buffer,
-                                doremir_nullary_t     cont,
-                                doremir_ptr_t         data)
+void fae_plot_buffer_double(fae_buffer_t      buffer,
+                                fae_nullary_t     cont,
+                                fae_ptr_t         data)
 {
-    doremir_plot_continous(plot_double, buffer, cont, data);
+    fae_plot_continous(plot_double, buffer, cont, data);
 }
 

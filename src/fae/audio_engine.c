@@ -5,15 +5,15 @@
     All rights reserved.
  */
 
-#include <doremir/audio_engine.h>
-#include <doremir/util.h>
+#include <fae/audio_engine.h>
+#include <fae/util.h>
 
 #include <unistd.h> // isatty
 #include "config.h"
 
 #define iso8601_k "%Y-%m-%d %H:%M:%S%z"
 
-typedef doremir_audio_engine_log_func_t log_func_t;
+typedef fae_audio_engine_log_func_t log_func_t;
 
 static unsigned       init_count_g  = 0;
 static log_func_t     log_func_g    = NULL;
@@ -21,16 +21,16 @@ static ptr_t          log_data_g    = NULL;
 
 static struct { char* pre; int x; int y; int z; char* suff } version_g = AE_VERSION;
 
-void doremir_device_audio_initialize();
-void doremir_device_audio_terminate();
-void doremir_device_midi_initialize();
-void doremir_device_midi_terminate();
-void doremir_thread_initialize();
-void doremir_thread_terminate();
-void doremir_time_initialize();
-void doremir_time_terminate();
+void fae_device_audio_initialize();
+void fae_device_audio_terminate();
+void fae_device_midi_initialize();
+void fae_device_midi_terminate();
+void fae_thread_initialize();
+void fae_thread_terminate();
+void fae_time_initialize();
+void fae_time_terminate();
 
-doremir_list_t doremir_audio_engine_version()
+fae_list_t fae_audio_engine_version()
 {
     return list(
         string(version_g.pre), 
@@ -40,7 +40,7 @@ doremir_list_t doremir_audio_engine_version()
         string(version_g.suff));
 }
 
-doremir_string_t doremir_audio_engine_version_string()
+fae_string_t fae_audio_engine_version_string()
 {
     char version[100];
     sprintf(&version, "%s%d.%d.%d%s", version_g.pre, version_g.x, version_g.y, version_g.z, version_g.suff);
@@ -50,16 +50,16 @@ doremir_string_t doremir_audio_engine_version_string()
 /** Performs global initialization.
 
     This function must be called exactly once before any other function in the library.
-    A call to doremir_audio_engine_terminate() will reset the global state so that
-    doremir_audio_engine_initialize() may be called again and so on.
+    A call to fae_audio_engine_terminate() will reset the global state so that
+    fae_audio_engine_initialize() may be called again and so on.
  */
-void doremir_audio_engine_initialize()
+void fae_audio_engine_initialize()
 {
-    doremir_device_audio_initialize();
-    doremir_device_midi_initialize();
-    doremir_thread_initialize();
-    doremir_time_initialize();
-    doremir_audio_engine_log_info(string("Initialized Audio Engine."));
+    fae_device_audio_initialize();
+    fae_device_midi_initialize();
+    fae_thread_initialize();
+    fae_time_initialize();
+    fae_audio_engine_log_info(string("Initialized Audio Engine."));
 
     init_count_g++;
 }
@@ -69,16 +69,16 @@ void doremir_audio_engine_initialize()
     This function may be used to reset the global state as per above. It is not necessary to
     call this function before the program finishes.
  */
-void doremir_audio_engine_terminate()
+void fae_audio_engine_terminate()
 {
     if ((init_count_g--)) {
-        doremir_device_audio_terminate();
-        doremir_device_midi_terminate();
-        doremir_thread_terminate();
-        doremir_time_terminate();
-        doremir_audio_engine_log_info(string("Terminated Audio Engine."));
+        fae_device_audio_terminate();
+        fae_device_midi_terminate();
+        fae_thread_terminate();
+        fae_time_terminate();
+        fae_audio_engine_log_info(string("Terminated Audio Engine."));
     } else {
-        doremir_audio_engine_log_warning(string("Audio Engine could not terminate: inconsistent state."));
+        fae_audio_engine_log_warning(string("Audio Engine could not terminate: inconsistent state."));
     }
 }
 
@@ -86,18 +86,18 @@ void doremir_audio_engine_terminate()
 
 #define max_log_length_k 3000
 
-static inline void stdlog(ptr_t data, doremir_time_system_t t, doremir_error_t e)
+static inline void stdlog(ptr_t data, fae_time_system_t t, fae_error_t e)
 {
     FILE *file = data;
     char msg[max_log_length_k + 50];
     bool color = (file == stdout && isatty(fileno(stdout)));
 
-    doremir_let(tm, localtime((long *) &t)) {
+    fae_let(tm, localtime((long *) &t)) {
         strftime(msg, 50, iso8601_k "  ", tm);
     }
-    doremir_with(str, doremir_error_format(color, e),
-                 doremir_destroy(str)) {
-        doremir_with(cstr, doremir_string_to_utf8(str),
+    fae_with(str, fae_error_format(color, e),
+                 fae_destroy(str)) {
+        fae_with(cstr, fae_string_to_utf8(str),
                      free(cstr)) {
             strncat(msg, cstr, max_log_length_k - 2);
             strncat(msg, "\n", 1);
@@ -109,9 +109,9 @@ static inline void stdlog(ptr_t data, doremir_time_system_t t, doremir_error_t e
 
 /** Instruct the Audio Engine to write log messages to the specific file.
  */
-void doremir_audio_engine_set_log_file(doremir_string_file_path_t path)
+void fae_audio_engine_set_log_file(fae_string_file_path_t path)
 {
-    char *cpath = doremir_string_to_utf8(path);
+    char *cpath = fae_string_to_utf8(path);
     log_data_g  = fopen(cpath, "a");
     log_func_g  = stdlog;
     free(cpath);
@@ -119,7 +119,7 @@ void doremir_audio_engine_set_log_file(doremir_string_file_path_t path)
 
 /** Instruct the Audio Engine to write log messages to the standard output.
  */
-void doremir_audio_engine_set_log_std()
+void fae_audio_engine_set_log_std()
 {
     log_data_g  = stdout;
     log_func_g  = stdlog;
@@ -127,7 +127,7 @@ void doremir_audio_engine_set_log_std()
 
 /** Instruct the Audio Engine to pass log messages to the given handler.
  */
-void doremir_audio_engine_set_log(doremir_audio_engine_log_func_t f, doremir_ptr_t data)
+void fae_audio_engine_set_log(fae_audio_engine_log_func_t f, fae_ptr_t data)
 {
     log_func_g  = f;
     log_data_g  = data;
@@ -141,75 +141,75 @@ void doremir_audio_engine_set_log(doremir_audio_engine_log_func_t f, doremir_ptr
     @param context
         Ignored, declared for compability with user-defined callbacks.
     @param error
-        Condition to log. Must implement [Error](@ref doremir_error_interface_t).
+        Condition to log. Must implement [Error](@ref fae_error_interface_t).
  */
-void doremir_audio_engine_log(doremir_ptr_t data, doremir_error_t e)
+void fae_audio_engine_log(fae_ptr_t data, fae_error_t e)
 {
     if (log_func_g) {
         log_func_g(log_data_g, (ptr_t) time(NULL), e);
     }
 }
 
-void doremir_audio_engine_dlog(doremir_ptr_t data, doremir_error_t e)
+void fae_audio_engine_dlog(fae_ptr_t data, fae_error_t e)
 {
-    doremir_audio_engine_log(data, e);
-    doremir_destroy(e);
+    fae_audio_engine_log(data, e);
+    fae_destroy(e);
 }
 
 
 /** Write an informative message to the log.
  */
-void doremir_audio_engine_log_info(doremir_string_t msg)
+void fae_audio_engine_log_info(fae_string_t msg)
 {
-    doremir_audio_engine_log_info_from(msg, string(""));
+    fae_audio_engine_log_info_from(msg, string(""));
 }
 
-void doremir_audio_engine_dlog_info(doremir_string_t msg)
+void fae_audio_engine_dlog_info(fae_string_t msg)
 {
-    doremir_audio_engine_log_info(msg);
-    doremir_destroy(msg);
+    fae_audio_engine_log_info(msg);
+    fae_destroy(msg);
 }
 
 
 /** Write a warning to the log.
  */
-void doremir_audio_engine_log_warning(doremir_string_t msg)
+void fae_audio_engine_log_warning(fae_string_t msg)
 {
-    doremir_audio_engine_log_warning_from(msg, string(""));
+    fae_audio_engine_log_warning_from(msg, string(""));
 }
 
 /** Write an error to the log.
  */
-void doremir_audio_engine_log_error(doremir_string_t msg)
+void fae_audio_engine_log_error(fae_string_t msg)
 {
-    doremir_audio_engine_log_error_from(msg, string(""));
+    fae_audio_engine_log_error_from(msg, string(""));
 }
 
 /** Write an informative message to the log.
  */
-void doremir_audio_engine_log_info_from(doremir_string_t msg, doremir_string_t origin)
+void fae_audio_engine_log_info_from(fae_string_t msg, fae_string_t origin)
 {
-    error_t err = doremir_error_create_simple(info, msg, origin);
-    doremir_audio_engine_log(NULL, err);
-    doremir_destroy(err);
+    error_t err = fae_error_create_simple(info, msg, origin);
+    fae_audio_engine_log(NULL, err);
+    fae_destroy(err);
 }
 
 /** Write a warning to the log.
  */
-void doremir_audio_engine_log_warning_from(doremir_string_t msg, doremir_string_t origin)
+void fae_audio_engine_log_warning_from(fae_string_t msg, fae_string_t origin)
 {
-    error_t err = doremir_error_create_simple(warning, msg, origin);
-    doremir_audio_engine_log(NULL, err);
-    doremir_destroy(err);
+    error_t err = fae_error_create_simple(warning, msg, origin);
+    fae_audio_engine_log(NULL, err);
+    fae_destroy(err);
 }
 
 /** Write an error to the log.
  */
-void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t origin)
+void fae_audio_engine_log_error_from(fae_string_t msg, fae_string_t origin)
 {
-    error_t err = doremir_error_create_simple(error, msg, origin);
-    doremir_audio_engine_log(NULL, err);
-    doremir_destroy(err);
+    error_t err = fae_error_create_simple(error, msg, origin);
+    fae_audio_engine_log(NULL, err);
+    fae_destroy(err);
 }
 
 

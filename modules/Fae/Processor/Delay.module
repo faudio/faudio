@@ -1,0 +1,22 @@
+
+/** 
+    @addtogroup FaeProcessorDelay
+    
+    @par Implements 
+        doremir_destroy_t
+        doremir_dispatcher_t
+        doremir_processor_t
+        doremir_string_show_t
+    @see 
+        @ref Processors
+ */
+module Fae.Processor.Delay
+{
+    import Fae;
+    import Fae.Processor;
+    
+    type Proc = opaque;    
+    create : (Type, Size) -> Proc;
+    // destroy : Proc -> Void;
+}
+

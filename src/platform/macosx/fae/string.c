@@ -5,9 +5,9 @@
     All rights reserved.
  */
 
-#include <doremir/string.h>
-#include <doremir/util.h>
-#include <doremir/dynamic.h>
+#include <fae/string.h>
+#include <fae/util.h>
+#include <fae/dynamic.h>
 #include <iconv.h>
 
 #include <CoreFoundation/CoreFoundation.h> // TODO OS X only
@@ -18,12 +18,12 @@
     @return
         A new CFStringRef.
  */
-void *doremir_string_to_cf_string(doremir_string_t str)
+void *fae_string_to_cf_string(fae_string_t str)
 {
     char *cstr;
     CFStringRef cfstr;
 
-    cstr    = doremir_string_to_utf8(str);
+    cstr    = fae_string_to_utf8(str);
     cfstr   = CFStringCreateWithCString(kCFAllocatorDefault, cstr, kCFStringEncodingUTF8);
 
     free(cstr);
@@ -38,21 +38,21 @@ void *doremir_string_to_cf_string(doremir_string_t str)
     @return
         A new string.
  */
-doremir_string_t doremir_string_from_cf_string(void *cfstr)
+fae_string_t fae_string_from_cf_string(void *cfstr)
 {
     CFIndex size;
     char *cstr;
     string_t str;
 
     if ((cstr = (char *) CFStringGetCStringPtr(cfstr, kCFStringEncodingUTF8))) {
-        return doremir_string_from_utf8(cstr);
+        return fae_string_from_utf8(cstr);
     } else {
         size        = CFStringGetLength(cfstr);
         cstr        = malloc(size + 1);
         cstr[size]  = 0;                     // necesary ?
 
         CFStringGetCString(cfstr, cstr, size + 1, kCFStringEncodingUTF8);
-        str = doremir_string_from_utf8(cstr);
+        str = fae_string_from_utf8(cstr);
 
         free(cstr);
         return str;

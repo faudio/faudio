@@ -5,18 +5,18 @@
     All rights reserved.
  */
 
-#include <doremir.h>
-#include <doremir/dynamic.h>
-#include <doremir/util.h>
+#include <fae.h>
+#include <fae/dynamic.h>
+#include <fae/util.h>
 
-bool doremir_dynamic_check(doremir_ptr_t a)
+bool fae_dynamic_check(fae_ptr_t a)
 {
-    return doremir_interface(doremir_dynamic_i, a);
+    return fae_interface(fae_dynamic_i, a);
 }
 
-doremir_dynamic_type_repr_t doremir_dynamic_get_type(doremir_ptr_t a)
+fae_dynamic_type_repr_t fae_dynamic_get_type(fae_ptr_t a)
 {
-    assert(doremir_interface(doremir_dynamic_i, a) && "Must implement Dynamic");
-    return ((doremir_dynamic_t *) doremir_interface(doremir_dynamic_i, a))->get_type(a);
+    assert(fae_interface(fae_dynamic_i, a) && "Must implement Dynamic");
+    return ((fae_dynamic_t *) fae_interface(fae_dynamic_i, a))->get_type(a);
 }
 

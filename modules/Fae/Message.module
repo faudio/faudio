@@ -1,0 +1,125 @@
+
+/**
+    @addtogroup FaeMessage
+
+    Provides message dispatching.
+
+    @note 
+        This module is fairly low-level, you typically want to use the the
+        [Event](@ref FaeEvent) wrappers @ref doremir_event_send and @ref
+        doremir_event_receive instead.
+
+    Message passing is the process of delivering a *message* to an *address*. Any
+    ordered type can be used as an addreses, but typically it is an objet with fast
+    equality comparison such as an integer. Message passing is captured by two
+    interfaces: [Sender](@ref doremir_message_sender_interface_t) which provides
+    messages, and [Receiver](@ref doremir_message_receiver_interface_t) which
+    accepts them. Note that the method names are contrary to the interfaces: you
+    *send* to a *receiver* and *receive* from a *sender*.
+    
+    The *dispatcher* type provides message passing accross thread boundaries:
+    it implements both [Sender](@ref doremir_message_sender_interface_t) and 
+    [Receiver](@ref doremir_message_receiver_interface_t).
+    
+    @par Dispatcher literals
+    - `dispatcher()`
+    - `lockfree_dispatcher()`
+    
+    @par Dispatcher implements
+    - doremir_destroy_t
+    - doremir_message_sender_t
+    - doremir_message_receiver_t
+    - doremir_string_show_t
+
+    @see
+    - [Data structures](@ref DataStructures)
+
+    
+ */
+module Fae.Message
+{
+    import Fae;
+    import Fae.Std;
+    import Fae.Pair;
+    import Fae.List;
+
+    /** @typedef doremir_message_address_t
+        
+        A message address. 
+    
+        The actual value should typically implement [Equal](@ref doremir_equal_t)
+        and [Order](@ref doremir_order_t), allthough this is not enforced at the
+        moment.
+     */
+    type Address = Ptr; // Must implement Equal, Order
+    
+    /** @typedef doremir_message_t
+        
+        A single message.
+
+        The actual value should typically implement [Dynamic](@ref doremir_dynamic_t), 
+        allthough this is not enforced at the moment.
+     */
+    type Message = Ptr;
+
+    /** @interface doremir_message_sender_interface_t
+        
+        Message sender interface.
+        
+        Generally there is no need to implement this directly, the primitive
+        wrappers or combinator functions in @ref FaeProcessor can be used to 
+        create instances.                                             
+      */
+    type SenderInterface = struct {
+        sync : (Ptr -> Void)*,
+        receive : ((Ptr,Address) -> List)* // [Message]
+    };
+
+    /** @interface doremir_message_receiver_interface_t
+        
+        Message sender interface.
+        
+        Generally there is no need to implement this directly, the primitive
+        wrappers or combinator functions in @ref FaeProcessor can be used to 
+        create instances.                                             
+      */
+    type ReceiverInterface = struct {
+        send : ((Ptr,Address,Message) -> Void)*
+    };
+
+    /** @typedef doremir_message_sender_t
+
+        A type implementing the sender interface.
+
+        If you cast a value to this type, you must assure that it implements
+        @ref doremir_sender_interface_t, conversely if you cast a value from
+        this type you can assume that it implements @ref doremir_sender_t.
+     */
+    type Sender = opaque;
+    
+    /** @typedef doremir_message_receiver_t
+
+        A type implementing the receiver interface.
+
+        If you cast a value to this type, you must assure that it implements
+        @ref doremir_receiver_interface_t, conversely if you cast a value from
+        this type you can assume that it implements @ref doremir_receiver_t.
+     */
+    type Receiver = opaque;
+
+    send    : (Receiver, Address, Message) -> Void;
+    receive : (Sender, Address) -> List;            // [Message]
+    sync    : Sender -> Void;
+
+
+
+    /** @typedef doremir_message_dispatcher_t
+        A message dispatcher.
+     */
+    type Dispatcher = opaque;
+
+    createDispatcher         : () -> Dispatcher;
+    createLockfreeDispatcher : () -> Dispatcher;
+    destroyDispatcher        : Dispatcher -> Void;
+}
+

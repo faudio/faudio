@@ -5,12 +5,12 @@
     All rights reserved.
  */
 
-#include <doremir/type.h>
-#include <doremir/util.h>
+#include <fae/type.h>
+#include <fae/util.h>
 
-typedef doremir_type_simple_t simple_t;
+typedef fae_type_simple_t simple_t;
 
-struct _doremir_type_t {
+struct _fae_type_t {
 
     impl_t                  impl;           //  Interface dispatcher
 
@@ -43,19 +43,19 @@ struct _doremir_type_t {
 
 type_t new_type(int tag)
 {
-    type_t t = doremir_new(type);
+    type_t t = fae_new(type);
 
-    doremir_ptr_t type_impl(doremir_id_t interface);
+    fae_ptr_t type_impl(fae_id_t interface);
     t->impl = &type_impl;
     t->tag  = tag;
 
     return t;
 }
 
-void delete_type(doremir_type_t type)
+void delete_type(fae_type_t type)
 {
     // TODO manage components
-    doremir_delete(type);
+    fae_delete(type);
 }
 
 #define is_simple(v)    (v->tag == simple_type)
@@ -75,7 +75,7 @@ void delete_type(doremir_type_t type)
 
 /** Create a representation of a simple type.
  */
-doremir_type_t doremir_type_simple(doremir_type_simple_t type)
+fae_type_t fae_type_simple(fae_type_simple_t type)
 {
     type_t t = new_type(simple_type);
 
@@ -86,7 +86,7 @@ doremir_type_t doremir_type_simple(doremir_type_simple_t type)
 
 /** Create a representation of a pair type.
  */
-doremir_type_t doremir_type_pair(doremir_type_t type1, doremir_type_t type2)
+fae_type_t fae_type_pair(fae_type_t type1, fae_type_t type2)
 {
     type_t t = new_type(pair_type);
 
@@ -98,7 +98,7 @@ doremir_type_t doremir_type_pair(doremir_type_t type1, doremir_type_t type2)
 
 /** Create a representation of a vector type.
  */
-doremir_type_t doremir_type_vector(doremir_type_t base, size_t size)
+fae_type_t fae_type_vector(fae_type_t base, size_t size)
 {
     type_t t = new_type(vector_type);
 
@@ -110,7 +110,7 @@ doremir_type_t doremir_type_vector(doremir_type_t base, size_t size)
 
 /** Create a representation of a frame type.
  */
-doremir_type_t doremir_type_frame(doremir_type_t base)
+fae_type_t fae_type_frame(fae_type_t base)
 {
     type_t t = new_type(frame_type);
 
@@ -121,7 +121,7 @@ doremir_type_t doremir_type_frame(doremir_type_t base)
 
 /** Copy the given type representation.
  */
-doremir_type_t doremir_type_copy(doremir_type_t type)
+fae_type_t fae_type_copy(fae_type_t type)
 {
     type_t t = new_type(type->tag);
 
@@ -153,53 +153,53 @@ doremir_type_t doremir_type_copy(doremir_type_t type)
 
 /** Destroy the given type representation.
  */
-void doremir_type_destroy(doremir_type_t type)
+void fae_type_destroy(fae_type_t type)
 {
     delete_type(type);
 }
 
-doremir_type_t doremir_type_repeat(int times, doremir_type_t type)
+fae_type_t fae_type_repeat(int times, fae_type_t type)
 {
     if (times == 0) {
         return type(unit);
     } else if (times == 1) {
-        return doremir_copy(type);
+        return fae_copy(type);
     } else {
-        return type_pair(type, doremir_type_repeat(times - 1, type));
+        return type_pair(type, fae_type_repeat(times - 1, type));
     }
 }
 
 /** Whether the type represented by the given value is simple.
  */
-bool doremir_type_is_simple(doremir_type_t type)
+bool fae_type_is_simple(fae_type_t type)
 {
     return type->tag == simple_type;
 }
 
 /** Whether the type represented by the given value is a pair type.
  */
-bool doremir_type_is_pair(doremir_type_t type)
+bool fae_type_is_pair(fae_type_t type)
 {
     return type->tag == pair_type;
 }
 
 /** Whether the type represented by the given value is a vector type.
  */
-bool doremir_type_is_vector(doremir_type_t type)
+bool fae_type_is_vector(fae_type_t type)
 {
     return type->tag == vector_type;
 }
 
 /** Whether the type represented by the given value is a frame type.
  */
-bool doremir_type_is_frame(doremir_type_t type)
+bool fae_type_is_frame(fae_type_t type)
 {
     return type->tag == frame_type;
 }
 
 /** Return the simple type.
  */
-doremir_type_simple_t doremir_type_get_simple(doremir_type_t t)
+fae_type_simple_t fae_type_get_simple(fae_type_t t)
 {
     assert(is_simple(t) && "Not a simple type");
     return simple_get(t);
@@ -207,7 +207,7 @@ doremir_type_simple_t doremir_type_get_simple(doremir_type_t t)
 
 /** Return the first component of a pair type.
  */
-doremir_type_t doremir_type_get_pair_fst(doremir_type_t t)
+fae_type_t fae_type_get_pair_fst(fae_type_t t)
 {
     assert(is_pair(t) && "Not a pair type");
     return pair_get(t, fst);
@@ -215,7 +215,7 @@ doremir_type_t doremir_type_get_pair_fst(doremir_type_t t)
 
 /** Return the second component of a pair type.
  */
-doremir_type_t doremir_type_get_pair_snd(doremir_type_t t)
+fae_type_t fae_type_get_pair_snd(fae_type_t t)
 {
     assert(is_pair(t) && "Not a pair type");
     return pair_get(t, snd);
@@ -223,7 +223,7 @@ doremir_type_t doremir_type_get_pair_snd(doremir_type_t t)
 
 /** Return the base of a vector type.
  */
-doremir_type_t doremir_type_get_vector_base(doremir_type_t t)
+fae_type_t fae_type_get_vector_base(fae_type_t t)
 {
     assert(is_vector(t) && "Not a vector type");
     return vector_get(t, base);
@@ -231,7 +231,7 @@ doremir_type_t doremir_type_get_vector_base(doremir_type_t t)
 
 /** Return the size of a vector type.
  */
-size_t doremir_type_get_vector_size(doremir_type_t t)
+size_t fae_type_get_vector_size(fae_type_t t)
 {
     assert(is_vector(t) && "Not a vector type");
     return vector_get(t, size);
@@ -239,7 +239,7 @@ size_t doremir_type_get_vector_size(doremir_type_t t)
 
 /** Return the base of a frame type.
  */
-doremir_type_t doremir_type_get_frame_base(doremir_type_t t)
+fae_type_t fae_type_get_frame_base(fae_type_t t)
 {
     assert(is_frame(t) && "Not a frame type");
     return frame_get(t, base);
@@ -258,7 +258,7 @@ inline static size_t next_aligned(size_t x, size_t a)
     return x + pad(x, a);
 }
 
-inline static size_t simple_align(doremir_type_simple_t simple)
+inline static size_t simple_align(fae_type_simple_t simple)
 {
     match(simple) {
         against(unit_type) 0;
@@ -273,7 +273,7 @@ inline static size_t simple_align(doremir_type_simple_t simple)
     }
 }
 
-inline static size_t simple_size(doremir_type_simple_t simple)
+inline static size_t simple_size(fae_type_simple_t simple)
 {
     match(simple) {
         against(unit_type) 0;
@@ -288,7 +288,7 @@ inline static size_t simple_size(doremir_type_simple_t simple)
     }
 }
 
-inline static size_t align(doremir_type_t type)
+inline static size_t align(fae_type_t type)
 {
     match(type->tag) {
         against(simple_type)  simple_align(simple_get(type));
@@ -299,18 +299,18 @@ inline static size_t align(doremir_type_t type)
     }
 }
 
-inline static size_t pair_size(size_t frames, doremir_type_t type);
-inline static size_t size(doremir_type_frames_t frames, doremir_type_t type);
+inline static size_t pair_size(size_t frames, fae_type_t type);
+inline static size_t size(fae_type_frames_t frames, fae_type_t type);
 
 
-inline static size_t pair_size(size_t frames, doremir_type_t type)
+inline static size_t pair_size(size_t frames, fae_type_t type)
 {
     size_t offset = next_aligned(size(frames, pair_get(type, fst)), align(pair_get(type, snd)));
     return next_aligned(offset + size(frames, pair_get(type, snd)), align(type));
 }
 
 
-inline static size_t size(doremir_type_frames_t frames, doremir_type_t type)
+inline static size_t size(fae_type_frames_t frames, fae_type_t type)
 {
     match(type->tag) {
         against(simple_type)    simple_size(simple_get(type));
@@ -322,7 +322,7 @@ inline static size_t size(doremir_type_frames_t frames, doremir_type_t type)
 }
 
 // TODO pair_size should use this
-inline static size_t offset(doremir_type_frames_t frames, doremir_type_t type)
+inline static size_t offset(fae_type_frames_t frames, fae_type_t type)
 {
     switch (type->tag) {
     case pair_type:
@@ -338,7 +338,7 @@ inline static size_t offset(doremir_type_frames_t frames, doremir_type_t type)
     }
 }
 
-inline static int channels(doremir_type_t type)
+inline static int channels(fae_type_t type)
 {
     switch (type->tag) {
     case simple_type:
@@ -359,7 +359,7 @@ inline static int channels(doremir_type_t type)
 }
 
 
-int doremir_type_channels(doremir_type_t type)
+int fae_type_channels(fae_type_t type)
 {
     return channels(type);
 }
@@ -367,7 +367,7 @@ int doremir_type_channels(doremir_type_t type)
 /**
     Return the size of the represented type.
  */
-size_t doremir_type_size_of(doremir_type_frames_t frames, doremir_type_t type)
+size_t fae_type_size_of(fae_type_frames_t frames, fae_type_t type)
 {
     return size(frames, type);
 }
@@ -375,7 +375,7 @@ size_t doremir_type_size_of(doremir_type_frames_t frames, doremir_type_t type)
 /**
     Return the alignment of the represented type.
  */
-size_t doremir_type_align_of(doremir_type_t type)
+size_t fae_type_align_of(fae_type_t type)
 {
     return align(type);
 }
@@ -384,7 +384,7 @@ size_t doremir_type_align_of(doremir_type_t type)
     Return the offset of the second element in the represented type.
     If the given type is not a pair type, return 0.
  */
-size_t doremir_type_offset_of(doremir_type_frames_t frames, doremir_type_t type)
+size_t fae_type_offset_of(fae_type_frames_t frames, fae_type_t type)
 {
     return offset(frames, type);
 }
@@ -392,7 +392,7 @@ size_t doremir_type_offset_of(doremir_type_frames_t frames, doremir_type_t type)
 
 // --------------------------------------------------------------------------------
 
-bool type_equal(doremir_ptr_t a, doremir_ptr_t b)
+bool type_equal(fae_ptr_t a, fae_ptr_t b)
 {
     type_t c = (type_t) a;
     type_t d = (type_t) b;
@@ -421,7 +421,7 @@ bool type_equal(doremir_ptr_t a, doremir_ptr_t b)
     }
 }
 
-inline static string_t simple_show(doremir_type_simple_t simple)
+inline static string_t simple_show(fae_type_simple_t simple)
 {
     switch (simple) {
     case unit_type:
@@ -453,7 +453,7 @@ inline static string_t simple_show(doremir_type_simple_t simple)
     }
 }
 
-string_t type_show(doremir_ptr_t a)
+string_t type_show(fae_ptr_t a)
 {
     type_t type = (type_t) a;
     string_t s = string("");
@@ -490,34 +490,34 @@ string_t type_show(doremir_ptr_t a)
     }
 }
 
-doremir_ptr_t type_copy(doremir_ptr_t a)
+fae_ptr_t type_copy(fae_ptr_t a)
 {
-    return doremir_type_copy(a);
+    return fae_type_copy(a);
 }
 
-void type_destroy(doremir_ptr_t a)
+void type_destroy(fae_ptr_t a)
 {
-    doremir_type_destroy(a);
+    fae_type_destroy(a);
 }
 
-doremir_ptr_t type_impl(doremir_id_t interface)
+fae_ptr_t type_impl(fae_id_t interface)
 {
-    static doremir_equal_t type_equal_impl = { type_equal };
-    static doremir_string_show_t type_show_impl = { type_show };
-    static doremir_copy_t type_copy_impl = { type_copy };
-    static doremir_destroy_t type_destroy_impl = { type_destroy };
+    static fae_equal_t type_equal_impl = { type_equal };
+    static fae_string_show_t type_show_impl = { type_show };
+    static fae_copy_t type_copy_impl = { type_copy };
+    static fae_destroy_t type_destroy_impl = { type_destroy };
 
     switch (interface) {
-    case doremir_equal_i:
+    case fae_equal_i:
         return &type_equal_impl;
 
-    case doremir_string_show_i:
+    case fae_string_show_i:
         return &type_show_impl;
 
-    case doremir_copy_i:
+    case fae_copy_i:
         return &type_copy_impl;
 
-    case doremir_destroy_i:
+    case fae_destroy_i:
         return &type_destroy_impl;
 
     default:

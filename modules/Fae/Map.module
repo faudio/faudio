@@ -1,0 +1,78 @@
+
+/** 
+    @addtogroup FaeMap
+    
+    Immutable ordered map data structure.
+
+    @par Literals
+    - `map(string("name"),           string("hans"), 
+           string("favouriteColor"), string("blue"))`
+
+    @par Requires 
+    - doremir_order_t
+
+    @par Implements 
+    - doremir_equal_t
+    - doremir_copy_t
+    - doremir_destroy_t
+    - doremir_dynamic_t
+    - doremir_string_show_t
+
+    @see 
+    - [Data structures](@ref DataStructures)
+    
+ */
+module Fae.Map 
+{
+    import Fae;
+    import Fae.Pair;
+    import Fae.List;
+    import Fae.String;
+    
+    type Map = opaque;
+    type Key = Ptr;
+
+    // Constructors
+    empty            : () -> Map;
+    copy             : Map -> Map;
+    destroy          : Map -> Void;
+
+    // Size
+    size             : Map -> Int;
+    isEmpty          : Map -> Bool;
+    isSingle         : Map -> Bool;
+
+    // Lookup function
+    add              : (Key, Ptr, Map) -> Map;
+    set              : (Key, Ptr, Map) -> Map;
+    remove           : (Key, Map) -> Map;
+    dadd             : (Key, Ptr, Map) -> Map;
+    dset             : (Key, Ptr, Map) -> Map;
+    dremove          : (Key, Map) -> Map;
+    addEntry         : (Pair, Map) -> Map;
+    setEntry         : (Pair, Map) -> Map;
+    removeEntry      : (Pair, Map) -> Map;
+
+    // Predicates
+    get              : (Key, Map) -> Ptr;
+    hasKey           : (Key, Map) -> Bool;
+    hasElem          : (Ptr, Map) -> Bool;
+    hasEntry         : (Pair, Map) -> Bool;
+    isSubmapOf       : (Map, Map) -> Bool;
+    isProperSubmapOf : (Map, Map) -> Bool;
+
+    // Set operations
+    sum              : (Map, Map) -> Map;
+    product          : (Map, Map) -> Map;
+    difference       : (Map, Map) -> Map;
+    power            : Map -> Map;
+
+    // Functor
+    map              : (Unary, Ptr, Map) -> Map;
+
+    // Conversions   
+    fromPair         : Pair -> Map;
+    fromList         : List -> Map;
+    toList           : Map -> List;
+}
+

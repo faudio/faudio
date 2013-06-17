@@ -5,9 +5,9 @@
     All rights reserved.
  */
 
-#include <doremir/string.h>
-#include <doremir/util.h>
-#include <doremir/dynamic.h>
+#include <fae/string.h>
+#include <fae/util.h>
+#include <fae/dynamic.h>
 #include <iconv.h>
 
 #include "string/trex.h"
@@ -30,7 +30,7 @@
 #define standard_code_k   "UTF-16LE"          // Internal string code
 #define char_size_k       sizeof(uint16_t)    // Internal char size
 
-struct _doremir_string_t {
+struct _fae_string_t {
     impl_t          impl;           // Dispatcher
     size_t          size;           // Character count
     uint16_t       *data;           // Payload
@@ -40,12 +40,12 @@ struct _doremir_string_t {
 // --------------------------------------------------------------------------------
 
 static void          string_fatal(char *msg, int error);
-static doremir_ptr_t string_impl(doremir_id_t interface);
+static fae_ptr_t string_impl(fae_id_t interface);
 
 string_t new_string(size_t size, uint16_t *data)
 {
 
-    string_t str = doremir_new(string);
+    string_t str = fae_new(string);
 
     str->impl = &string_impl;
     str->size = size;
@@ -56,7 +56,7 @@ string_t new_string(size_t size, uint16_t *data)
 
 void delete_string(string_t str)
 {
-    doremir_delete(str);
+    fae_delete(str);
 }
 
 // --------------------------------------------------------------------------------
@@ -65,7 +65,7 @@ void delete_string(string_t str)
 
     The returned string should be destroyed by the caller.
  */
-doremir_string_t doremir_string_empty()
+fae_string_t fae_string_empty()
 {
     return new_string(0, NULL);
 }
@@ -74,7 +74,7 @@ doremir_string_t doremir_string_empty()
 
     The returned string should be destroyed by the caller.
  */
-doremir_string_t doremir_string_single(doremir_char16_t chr)
+fae_string_t fae_string_single(fae_char16_t chr)
 {
     string_t str = new_string(1, NULL);
     str->data = malloc(char_size_k);
@@ -87,12 +87,12 @@ doremir_string_t doremir_string_single(doremir_char16_t chr)
 
     The returned string should be destroyed by the caller.
  */
-doremir_string_t doremir_string_repeat(int times, doremir_char16_t chr)
+fae_string_t fae_string_repeat(int times, fae_char16_t chr)
 {
     string_t s = string("");
 
     for (int i = 0; i < times; ++i) {
-        write_to(s, doremir_string_single(chr));
+        write_to(s, fae_string_single(chr));
     }
 
     return s;
@@ -103,7 +103,7 @@ doremir_string_t doremir_string_repeat(int times, doremir_char16_t chr)
 
     The returned string should be destroyed by the caller.
  */
-doremir_string_t doremir_string_copy(doremir_string_t str)
+fae_string_t fae_string_copy(fae_string_t str)
 {
     string_t pst = new_string(str->size, NULL);
     pst->data = malloc(str->size * char_size_k);
@@ -117,8 +117,8 @@ doremir_string_t doremir_string_copy(doremir_string_t str)
 
     The returned string should be destroyed by the caller.
  */
-doremir_string_t doremir_string_append(doremir_string_t str1,
-                                       doremir_string_t str2)
+fae_string_t fae_string_append(fae_string_t str1,
+                                       fae_string_t str2)
 {
     string_t cs = new_string(str1->size + str2->size, NULL);
     cs->data = malloc(cs->size * char_size_k);
@@ -133,8 +133,8 @@ doremir_string_t doremir_string_append(doremir_string_t str1,
 
     The returned string should be destroyed by the caller.
  */
-doremir_string_t doremir_string_dappend(doremir_string_t str1,
-                                        doremir_string_t str2)
+fae_string_t fae_string_dappend(fae_string_t str1,
+                                        fae_string_t str2)
 {
     size_t oldSize = str1->size;
 
@@ -149,7 +149,7 @@ doremir_string_t doremir_string_dappend(doremir_string_t str1,
 
 /** Destroy the given string.
  */
-void doremir_string_destroy(doremir_string_t str)
+void fae_string_destroy(fae_string_t str)
 {
     free(str->data);
     delete_string(str);
@@ -157,7 +157,7 @@ void doremir_string_destroy(doremir_string_t str)
 
 /** Return the number of characters in the given string.
  */
-int doremir_string_length(doremir_string_t str)
+int fae_string_length(fae_string_t str)
 {
     return str->size;
 }
@@ -166,7 +166,7 @@ int doremir_string_length(doremir_string_t str)
     @param pos
     @param str
  */
-uint16_t doremir_string_char_at(int pos, doremir_string_t str)
+uint16_t fae_string_char_at(int pos, fae_string_t str)
 {
     if (pos < 0 || pos >= str->size) {
         assert(false && "Character out of range");
@@ -186,7 +186,7 @@ uint16_t doremir_string_char_at(int pos, doremir_string_t str)
     @return
         A new formatted string.
  */
-doremir_string_t doremir_string_format_integral(char *format, long value)
+fae_string_t fae_string_format_integral(char *format, long value)
 {
     char buffer[100];
     int  numChars;
@@ -198,7 +198,7 @@ doremir_string_t doremir_string_format_integral(char *format, long value)
     }
 
     buffer[numChars] = 0;
-    return doremir_string_from_utf8(buffer);
+    return fae_string_from_utf8(buffer);
 }
 
 /** Format a floating-point value.
@@ -209,7 +209,7 @@ doremir_string_t doremir_string_format_integral(char *format, long value)
     @return
         A new formatted string.
  */
-doremir_string_t doremir_string_format_floating(char *format, double value)
+fae_string_t fae_string_format_floating(char *format, double value)
 {
     char buffer[100];
     int  numChars;
@@ -221,7 +221,7 @@ doremir_string_t doremir_string_format_floating(char *format, double value)
     }
 
     buffer[numChars] = 0;
-    return doremir_string_from_utf8(buffer);
+    return fae_string_from_utf8(buffer);
 }
 
 
@@ -280,7 +280,7 @@ static inline size_t raw_size_16(uint16_t *s)
     @return
         A heap-allocated encoded string.
  */
-doremir_string_utf8_t doremir_string_to_utf8(doremir_string_t str)
+fae_string_utf8_t fae_string_to_utf8(fae_string_t str)
 {
     size_t inSize, outSize, cstrSize;
     char *in, *out, *cstr;
@@ -315,7 +315,7 @@ doremir_string_utf8_t doremir_string_to_utf8(doremir_string_t str)
     @return
         A heap-allocated encoded string.
  */
-doremir_string_utf16_t doremir_string_to_utf16(doremir_string_t as)
+fae_string_utf16_t fae_string_to_utf16(fae_string_t as)
 {
     size_t size = as->size;
     uint16_t *cstr = malloc((size + 1) * char_size_k);
@@ -330,7 +330,7 @@ doremir_string_utf16_t doremir_string_to_utf16(doremir_string_t as)
     @return
         A heap-allocated encoded string.
  */
-doremir_string_utf32_t doremir_string_to_utf32(doremir_string_t str)
+fae_string_utf32_t fae_string_to_utf32(fae_string_t str)
 {
     assert(false && "Not implemented");
 }
@@ -341,7 +341,7 @@ doremir_string_utf32_t doremir_string_to_utf32(doremir_string_t str)
     @return
         A new string.
  */
-doremir_string_t doremir_string_from_utf8(doremir_string_utf8_t cstr)
+fae_string_t fae_string_from_utf8(fae_string_utf8_t cstr)
 {
     size_t inSize, outSize, strSize;
     char *in, *out, *str;
@@ -374,7 +374,7 @@ doremir_string_t doremir_string_from_utf8(doremir_string_utf8_t cstr)
     @return
         A new string.
  */
-doremir_string_t doremir_string_from_utf16(doremir_string_utf16_t cstr)
+fae_string_t fae_string_from_utf16(fae_string_utf16_t cstr)
 {
     size_t size = raw_size_16(cstr);
     string_t as = new_string(size, malloc(size * char_size_k));
@@ -388,7 +388,7 @@ doremir_string_t doremir_string_from_utf16(doremir_string_utf16_t cstr)
     @return
         A new string.
  */
-doremir_string_t doremir_string_from_utf32(doremir_string_utf32_t cstr)
+fae_string_t fae_string_from_utf32(fae_string_utf32_t cstr)
 {
     assert(false && "Not implemented");
 }
@@ -397,47 +397,47 @@ doremir_string_t doremir_string_from_utf32(doremir_string_utf32_t cstr)
 // --------------------------------------------------------------------------------
 
 /** Convert the given value to a string.
-    @see [Show](@ref doremir_string_show_t)
+    @see [Show](@ref fae_string_show_t)
   */
-doremir_string_t doremir_string_show(doremir_ptr_t a)
+fae_string_t fae_string_show(fae_ptr_t a)
 {
-    assert(doremir_interface(doremir_string_show_i, a) && "Must implement Show");
-    return ((doremir_string_show_t *) doremir_interface(doremir_string_show_i, a))->show(a);
+    assert(fae_interface(fae_string_show_i, a) && "Must implement Show");
+    return ((fae_string_show_t *) fae_interface(fae_string_show_i, a))->show(a);
 }
 
-/** Behaves like the identity function on strings and as [show](@ref doremir_string_show)
+/** Behaves like the identity function on strings and as [show](@ref fae_string_show)
     on all other value.
-    @see [Show](@ref doremir_string_show_t)
+    @see [Show](@ref fae_string_show_t)
   */
-doremir_string_t doremir_string_to_string(doremir_ptr_t a)
+fae_string_t fae_string_to_string(fae_ptr_t a)
 {
-    assert(doremir_interface(doremir_string_show_i, a) && "Must implement Show");
+    assert(fae_interface(fae_string_show_i, a) && "Must implement Show");
 
-    bool is_string = doremir_interface(doremir_dynamic_i, a)
-                     && (doremir_dynamic_get_type(a) == string_type_repr);
+    bool is_string = fae_interface(fae_dynamic_i, a)
+                     && (fae_dynamic_get_type(a) == string_type_repr);
 
     if (is_string) {
-        return doremir_string_copy(a);
+        return fae_string_copy(a);
     } else {
-        return doremir_string_show(a);
+        return fae_string_show(a);
     }
 }
 
 
 inline static ptr_t jsonify(ptr_t a)
 {
-    switch (doremir_dynamic_get_type(a)) {
+    switch (fae_dynamic_get_type(a)) {
     case pair_type_repr:
-        return jsonify(doremir_pair_to_list(a));
+        return jsonify(fae_pair_to_list(a));
 
     case set_type_repr:
-        return jsonify(doremir_set_to_list(a));
+        return jsonify(fae_set_to_list(a));
 
     case list_type_repr:
-        return doremir_list_map(apply1, jsonify, a);
+        return fae_list_map(apply1, jsonify, a);
 
     case map_type_repr:
-        return doremir_map_map(apply1, jsonify, a);
+        return fae_map_map(apply1, jsonify, a);
 
     default:
         return a;
@@ -445,14 +445,14 @@ inline static ptr_t jsonify(ptr_t a)
 }
 
 /** Generic JSON conversion.
-    @param a    Value implementing [Show](@ref doremir_string_show_t) or [Dynamic](@ref doremir_string_dynamic_t).
+    @param a    Value implementing [Show](@ref fae_string_show_t) or [Dynamic](@ref fae_string_dynamic_t).
   */
-doremir_string_t doremir_string_to_json(doremir_ptr_t a)
+fae_string_t fae_string_to_json(fae_ptr_t a)
 {
-    if (!doremir_interface(doremir_dynamic_i, a)) {
-        return doremir_string_show(a);
+    if (!fae_interface(fae_dynamic_i, a)) {
+        return fae_string_show(a);
     } else {
-        return doremir_string_show(jsonify(a));
+        return fae_string_show(jsonify(a));
     }
 }
 
@@ -464,7 +464,7 @@ ptr_t unjsonify(JSON_Value *a, bool *ok)
         return NULL;
 
     case JSONNull:
-        return doremir_list_empty();
+        return fae_list_empty();
 
     case JSONString:
         return string((char *) json_value_get_string(a));
@@ -478,7 +478,7 @@ ptr_t unjsonify(JSON_Value *a, bool *ok)
     case JSONArray: {
         JSON_Array *ar  = json_value_get_array(a);
         size_t sz       = json_array_get_count(ar);
-        list_t list     = doremir_list_empty();
+        list_t list     = fae_list_empty();
 
         for (size_t i = sz; i > 0; --i) {
             ptr_t v = unjsonify(json_array_get_value(ar, i - 1), ok);
@@ -487,7 +487,7 @@ ptr_t unjsonify(JSON_Value *a, bool *ok)
                 return NULL;
             }
 
-            list = doremir_list_dcons(v, list);
+            list = fae_list_dcons(v, list);
         }
 
         return list;
@@ -496,7 +496,7 @@ ptr_t unjsonify(JSON_Value *a, bool *ok)
     case JSONObject: {
         JSON_Object *obj = json_value_get_object(a);
         size_t sz = json_object_get_count(obj);
-        map_t map = doremir_map_empty();
+        map_t map = fae_map_empty();
 
         for (size_t i = 0; i < sz; ++i) {
             char *name = (char *) json_object_get_name(obj, i);
@@ -506,7 +506,7 @@ ptr_t unjsonify(JSON_Value *a, bool *ok)
                 return NULL;
             }
 
-            map = doremir_map_dset(string(name), value, map);
+            map = fae_map_dset(string(name), value, map);
         }
 
         return map;
@@ -520,7 +520,7 @@ ptr_t unjsonify(JSON_Value *a, bool *ok)
 /** Generic JSON conversion.
     @param string   A JSON string.
   */
-doremir_ptr_t doremir_string_from_json(doremir_string_t string)
+fae_ptr_t fae_string_from_json(fae_string_t string)
 {
     bool ok = true;
     ptr_t result = unjsonify(json_parse_string(unstring(string)), &ok);
@@ -535,9 +535,9 @@ doremir_ptr_t doremir_string_from_json(doremir_string_t string)
 
 // --------------------------------------------------------------------------------
 
-bool doremir_string_matches(doremir_string_t expr, doremir_string_t string)
+bool fae_string_matches(fae_string_t expr, fae_string_t string)
 {
-    if (doremir_string_length(expr) <= 0) {
+    if (fae_string_length(expr) <= 0) {
         return false;
     }
 
@@ -547,8 +547,8 @@ bool doremir_string_matches(doremir_string_t expr, doremir_string_t string)
         }
     }
 
-    char *cexpr    = doremir_string_to_utf8(expr);
-    char *cinput   = doremir_string_to_utf8(string);
+    char *cexpr    = fae_string_to_utf8(expr);
+    char *cinput   = fae_string_to_utf8(string);
 
     TRex *exp = trex_compile(cexpr, NULL);
     bool res = trex_match(exp, cinput);
@@ -574,9 +574,9 @@ bool doremir_string_matches(doremir_string_t expr, doremir_string_t string)
     @par Performance
         O(n)
  */
-// string_t doremir_string_map(unary_t func, ptr_t data, string_t string)
+// string_t fae_string_map(unary_t func, ptr_t data, string_t string)
 // {
-//     string_t result = doremir_string_copy(string);
+//     string_t result = fae_string_copy(string);
 //     for (int i = 0; i < string->size; ++i)
 //     {
 //         result->data[i] = (uint16_t) (int32_t) func(data, (ptr_t) (int32_t) string->data[i]);
@@ -595,7 +595,7 @@ bool doremir_string_matches(doremir_string_t expr, doremir_string_t string)
     @par Performance
         O(n)
  */
-string_t doremir_string_join_map(unary_t func, ptr_t data, string_t string)
+string_t fae_string_join_map(unary_t func, ptr_t data, string_t string)
 {
     string_t result = string("");
 
@@ -619,16 +619,16 @@ inline static string_t escape_char(uint16_t c)
         return string("\\\\");
 
     default:
-        return doremir_string_single(c);
+        return fae_string_single(c);
     }
 }
 
 inline static string_t escape(string_t string)
 {
-    return doremir_string_join_map(apply1, escape_char, string);
+    return fae_string_join_map(apply1, escape_char, string);
 }
 
-static bool string_equal(doremir_ptr_t as, doremir_ptr_t bs)
+static bool string_equal(fae_ptr_t as, fae_ptr_t bs)
 {
     string_t cs, ds;
     cs = (string_t) as;
@@ -652,7 +652,7 @@ static bool string_equal(doremir_ptr_t as, doremir_ptr_t bs)
 #define pred(a) (a - 1)
 #define last_elem(v) v->data[pred(v->size)]
 
-static bool string_less_than(doremir_ptr_t as, doremir_ptr_t bs)
+static bool string_less_than(fae_ptr_t as, fae_ptr_t bs)
 {
     string_t cs, ds;
     cs = (string_t) as;
@@ -677,7 +677,7 @@ static bool string_less_than(doremir_ptr_t as, doremir_ptr_t bs)
     }
 }
 
-static bool string_greater_than(doremir_ptr_t as, doremir_ptr_t bs)
+static bool string_greater_than(fae_ptr_t as, fae_ptr_t bs)
 {
     string_t cs, ds;
     cs = (string_t) as;
@@ -703,7 +703,7 @@ static bool string_greater_than(doremir_ptr_t as, doremir_ptr_t bs)
 }
 
 
-static doremir_string_t string_show(doremir_ptr_t a)
+static fae_string_t string_show(fae_ptr_t a)
 {
     string_t s = string("");
     s = string_dappend(s, string("\""));
@@ -713,47 +713,47 @@ static doremir_string_t string_show(doremir_ptr_t a)
 }
 
 
-doremir_ptr_t string_copy(doremir_ptr_t a)
+fae_ptr_t string_copy(fae_ptr_t a)
 {
-    return doremir_string_copy(a);
+    return fae_string_copy(a);
 }
 
-void string_destroy(doremir_ptr_t a)
+void string_destroy(fae_ptr_t a)
 {
-    doremir_string_destroy(a);
+    fae_string_destroy(a);
 }
 
-type_repr_t string_get_type(doremir_ptr_t a)
+type_repr_t string_get_type(fae_ptr_t a)
 {
     return string_type_repr;
 }
 
-doremir_ptr_t string_impl(doremir_id_t interface)
+fae_ptr_t string_impl(fae_id_t interface)
 {
-    static doremir_equal_t string_equal_impl = { string_equal };
-    static doremir_copy_t string_copy_impl = { string_copy };
-    static doremir_string_show_t string_show_impl = { string_show };
-    static doremir_destroy_t string_destroy_impl = { string_destroy };
-    static doremir_order_t string_order_impl = { string_less_than, string_greater_than };
-    static doremir_dynamic_t string_dynamic_impl = { string_get_type };
+    static fae_equal_t string_equal_impl = { string_equal };
+    static fae_copy_t string_copy_impl = { string_copy };
+    static fae_string_show_t string_show_impl = { string_show };
+    static fae_destroy_t string_destroy_impl = { string_destroy };
+    static fae_order_t string_order_impl = { string_less_than, string_greater_than };
+    static fae_dynamic_t string_dynamic_impl = { string_get_type };
 
     switch (interface) {
-    case doremir_equal_i:
+    case fae_equal_i:
         return &string_equal_impl;
 
-    case doremir_order_i:
+    case fae_order_i:
         return &string_order_impl;
 
-    case doremir_string_show_i:
+    case fae_string_show_i:
         return &string_show_impl;
 
-    case doremir_copy_i:
+    case fae_copy_i:
         return &string_copy_impl;
 
-    case doremir_destroy_i:
+    case fae_destroy_i:
         return &string_destroy_impl;
 
-    case doremir_dynamic_i:
+    case fae_dynamic_i:
         return &string_dynamic_impl;
 
     default:
@@ -763,9 +763,9 @@ doremir_ptr_t string_impl(doremir_id_t interface)
 
 void string_fatal(char *msg, int error)
 {
-    void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t origin);
+    void fae_audio_engine_log_error_from(fae_string_t msg, fae_string_t origin);
 
-    doremir_audio_engine_log_error_from(string(msg), string("Doremir.String"));
+    fae_audio_engine_log_error_from(string(msg), string("Doremir.String"));
     exit(error);
 }
 

@@ -1,0 +1,18 @@
+
+/**
+    @addtogroup FaeStringList
+
+    Provides conversions between @ref String and @ref List.
+    
+    This functionality should to be in the String module, but unfortunately that would create a recursive
+    dependency between @ref FaeString and @ref FaeList.
+
+ */
+module Fae.String.List
+{                          
+    import Fae.String;
+    import Fae.List;
+    
+    convert : String -> List;
+    unconvert : List -> String;
+}

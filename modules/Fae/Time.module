@@ -1,0 +1,88 @@
+
+/**
+    @addtogroup FaeTime
+
+    Aribitrary precision time interval.
+
+    This type uses standard time units, with arbitrary divisions of a second.
+    Allthough day is the longest unit, times longer than a day are supported by
+    this type; they are simply expressed as days instead of years, weaks and
+    months. Thus no particular calendar has to be adopted.
+
+
+    @par Literals
+    - `hms(0,1,30)`
+    - `days(2)`
+    - `hours(2)`
+    - `minutes(3)`
+    - `seconds(4)`
+    - `milliseconds(3501)`
+    - `microseconds(3500421)`
+    - `divisions(1, 3)`
+    - `doremir_add(minutes(1), milliseconds(100))`
+    - `doremir_subtract(hours(0), seconds(2))`
+
+    @par Implements
+    - doremir_equal_t
+    - doremir_order_t
+    - doremir_string_show_t
+    - doremir_copy_t
+    - doremir_destroy_t
+    - doremir_dynamic_t
+    - doremir_number_t
+
+ */
+module Fae.Time
+{
+    import Fae;
+    import Fae.Ratio;
+    import Fae.String;
+
+    type Time = opaque;
+
+    // Constructors
+    create      : (Int32, Int32, Int32, Ratio) -> Time;
+    copy        : Time -> Time;
+    destroy     : Time -> Void;
+
+    // Introspection
+    days        : Time -> Int32;
+    hours       : Time -> Int32;
+    minutes     : Time -> Int32;
+    seconds     : Time -> Int32;
+    divisions   : Time -> Ratio;
+
+    toIso           : Time -> String;
+    toSeconds       : Time -> Int32;
+    toMilliseconds  : Time -> Int32;
+
+    // System and CPU time
+    type System = opaque; 
+    type Cpu    = opaque; 
+
+    fromSystem  : System -> Time;
+    fromCpu     : Cpu -> Time;
+    system      : () -> System;
+    cpu         : () -> Cpu;
+
+    
+    // Clocks
+    
+    /** @interface doremir_time_clock_interface_t */
+    type ClockInterface = struct {
+        time     : (Ptr -> Time)*,
+        tickRate : (Ptr -> Double)*,
+        ticks    : (Ptr -> Int64)*
+    };                 
+    
+    type Clock = opaque;
+    
+    time     : Clock -> Time;
+    tickRate : Clock -> Double;
+    ticks    : Clock -> Int64;
+
+    getSystemClock      : () -> Clock;
+    getSystemPrecClock  : () -> Clock;
+    getCpuClock         : () -> Clock;
+}
+

@@ -1,0 +1,57 @@
+
+/**
+    @addtogroup FaeThread
+
+    Cross-platform threads.
+
+    Standard low-level constructs such as threads, mutexes and conditions are
+    provided by this module. For more high-level blocking constructs, see
+    the @ref FaeThreadFuture and @ref FaeThreadImproving modules. For non-blocking communication
+    see the @ref FaeAtomic modules.
+
+    @par Literals
+    - `thread(function, data)`
+
+    @par Thread implements 
+    - doremir_equal_t
+    - doremir_order_t
+    - doremir_dynamic_t
+    - doremir_string_show_t
+    
+    Threads do not implement destroy, as there is no way of knowing whether
+    the destroyed thread should be joined or detached.
+
+    @par Mutex implements
+    - doremir_string_show_t
+    - doremir_destroy_t
+
+    @par Condition implements
+    - doremir_string_show_t
+    - doremir_destroy_t
+    
+    
+ */
+module Fae.Thread
+{
+    import Fae;
+    import Fae.Std;
+
+    type Thread = opaque;
+    type Mutex = opaque;
+    type Condition = opaque;
+    type Millis = Int;
+
+    create  : (Nullary, Ptr) -> Thread;
+    sleep   : Millis -> Void;
+    join    : Thread -> Void;
+    detach  : Thread -> Void;
+    main    : () -> Thread;
+    current : () -> Thread;
+
+    createMutex     : () -> Mutex;
+    destroyMutex    : Mutex -> Void;
+    lock            : Mutex -> Bool;
+    tryLock         : Mutex -> Bool;
+    unlock          : Mutex -> Bool;
+}
+

@@ -1,0 +1,33 @@
+
+/**
+    @addtogroup FaePriorityQueue
+
+    Priority queue data structure.
+
+    @par Requires
+    - doremir_order_t
+    @par Implements
+    - doremir_equal_t
+    - doremir_string_show_t
+    - doremir_destroy_t
+
+    @see
+    - [Data structures](@ref DataStructures)
+
+ */
+module Fae.PriorityQueue
+{
+    import Fae;
+
+    type PriorityQueue = opaque;
+
+    empty   : () -> PriorityQueue;
+    single  : Ptr -> PriorityQueue;
+    destroy : PriorityQueue -> Void;
+
+    merge   : (PriorityQueue, PriorityQueue) -> Void;
+    insert  : (Ptr, PriorityQueue) -> Void; 
+    peek    : PriorityQueue -> Ptr;
+    pop     : PriorityQueue -> Ptr;
+}
+

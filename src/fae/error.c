@@ -5,12 +5,12 @@
     All rights reserved.
  */
 
-#include <doremir.h>
-#include <doremir/string.h>
-#include <doremir/error.h>
-#include <doremir/util.h>
+#include <fae.h>
+#include <fae/string.h>
+#include <fae/error.h>
+#include <fae/util.h>
 
-typedef doremir_error_interface_t error_interface_t;
+typedef fae_error_interface_t error_interface_t;
 
 struct simple_error {
     impl_t        impl;       //  Interface dispatcher
@@ -22,7 +22,7 @@ struct simple_error {
 typedef struct simple_error       *simple_error_t;
 
 
-void doremir_audio_engine_log(doremir_ptr_t data, doremir_error_t error);
+void fae_audio_engine_log(fae_ptr_t data, fae_error_t error);
 
 /** Creates a simple error.
     @param severity     Severity of the error.
@@ -30,75 +30,75 @@ void doremir_audio_engine_log(doremir_ptr_t data, doremir_error_t error);
     @param origin       Error origin (typically module name).
     @return
         A value of some type implementing
-            [Error](@ref doremir_error_interface_t),
-            [Copy](@ref doremir_copy_t) and
-            [Destroy](@ref doremir_destroy_t)
+            [Error](@ref fae_error_interface_t),
+            [Copy](@ref fae_copy_t) and
+            [Destroy](@ref fae_destroy_t)
  */
-doremir_error_t doremir_error_create_simple(
-    doremir_error_severity_t    severity,
-    doremir_string_t            message,
-    doremir_string_t            origin
+fae_error_t fae_error_create_simple(
+    fae_error_severity_t    severity,
+    fae_string_t            message,
+    fae_string_t            origin
 )
 {
-    doremir_ptr_t simple_error_impl(doremir_id_t interface);
-    simple_error_t e  = doremir_new_struct(simple_error);
+    fae_ptr_t simple_error_impl(fae_id_t interface);
+    simple_error_t e  = fae_new_struct(simple_error);
     e->impl     = &simple_error_impl;
     e->severity = severity;
-    e->message  = doremir_copy(message);
-    e->origin   = doremir_copy(origin);
+    e->message  = fae_copy(message);
+    e->origin   = fae_copy(origin);
     return (error_t) e;
 }
 
-doremir_error_t doremir_error_copy_simple(simple_error_t simple)
+fae_error_t fae_error_copy_simple(simple_error_t simple)
 {
-    doremir_ptr_t simple_error_impl(doremir_id_t interface);
-    simple_error_t e  = doremir_new_struct(simple_error);
+    fae_ptr_t simple_error_impl(fae_id_t interface);
+    simple_error_t e  = fae_new_struct(simple_error);
     e->impl     = &simple_error_impl;
     e->severity = simple->severity;
-    e->message  = doremir_copy(simple->message);
-    e->origin   = doremir_copy(simple->origin);
+    e->message  = fae_copy(simple->message);
+    e->origin   = fae_copy(simple->origin);
     return (error_t) e;
 }
 
-void doremir_error_destroy_simple(simple_error_t simple)
+void fae_error_destroy_simple(simple_error_t simple)
 {
-    doremir_destroy(simple->message);
-    doremir_destroy(simple->origin);
-    doremir_delete(simple);
+    fae_destroy(simple->message);
+    fae_destroy(simple->origin);
+    fae_delete(simple);
 }
 
 
 /** Return the severity of the given error.
  */
-doremir_error_severity_t doremir_error_severity(doremir_error_t a)
+fae_error_severity_t fae_error_severity(fae_error_t a)
 {
-    assert(doremir_interface(doremir_error_i, a) && "Must implement Error");
-    return ((error_interface_t *) doremir_interface(doremir_error_i, a))->severity(a);
+    assert(fae_interface(fae_error_i, a) && "Must implement Error");
+    return ((error_interface_t *) fae_interface(fae_error_i, a))->severity(a);
 }
 
 /** Return the message of the given error.
  */
-doremir_string_t doremir_error_message(doremir_error_t a)
+fae_string_t fae_error_message(fae_error_t a)
 {
-    assert(doremir_interface(doremir_error_i, a) && "Must implement Error");
-    return ((error_interface_t *) doremir_interface(doremir_error_i, a))->message(a);
+    assert(fae_interface(fae_error_i, a) && "Must implement Error");
+    return ((error_interface_t *) fae_interface(fae_error_i, a))->message(a);
 }
 
 /** Return the origin of the given error.
  */
-doremir_string_t doremir_error_origin(doremir_error_t a)
+fae_string_t fae_error_origin(fae_error_t a)
 {
-    assert(doremir_interface(doremir_error_i, a) && "Must implement Error");
-    return ((error_interface_t *) doremir_interface(doremir_error_i, a))->origin(a);
+    assert(fae_interface(fae_error_i, a) && "Must implement Error");
+    return ((error_interface_t *) fae_interface(fae_error_i, a))->origin(a);
 }
 
 /** Return whether the given value is an error or not.
 
-    This function is often used with [log](@ref doremir_error_log) as in:
+    This function is often used with [log](@ref fae_error_log) as in:
 
     ~~~
-    if (doremir_check(value)) {
-        doremir_error_log(NULL, value);
+    if (fae_check(value)) {
+        fae_error_log(NULL, value);
         exit(-1);
     }
     ~~~
@@ -107,9 +107,9 @@ doremir_string_t doremir_error_origin(doremir_error_t a)
     @return
       A boolean.
  */
-bool doremir_error_check(doremir_ptr_t a)
+bool fae_error_check(fae_ptr_t a)
 {
-    return doremir_interface(doremir_error_i, a);
+    return fae_interface(fae_error_i, a);
 }
 
 /** Write a log message.
@@ -117,17 +117,17 @@ bool doremir_error_check(doremir_ptr_t a)
     @param context
         Ignored, declared for compability with user-defined callbacks.
     @param error
-        Condition to log. Must implement [Error](@ref doremir_error_interface_t).
+        Condition to log. Must implement [Error](@ref fae_error_interface_t).
  */
-void doremir_error_log(doremir_ptr_t context, doremir_error_t error)
+void fae_error_log(fae_ptr_t context, fae_error_t error)
 {
-    doremir_audio_engine_log(context, error);
+    fae_audio_engine_log(context, error);
 }
 
 /** Convert the given error to a formated string.
     @param colored Include color escapes for terminals.
  */
-doremir_string_t doremir_error_format(bool colored, doremir_error_t a)
+fae_string_t fae_error_format(bool colored, fae_error_t a)
 {
     simple_error_t simple = (simple_error_t) a;
     string_t str = string("");
@@ -169,13 +169,13 @@ doremir_string_t doremir_error_format(bool colored, doremir_error_t a)
         assert(false && "Missing label");
     }
 
-    if (doremir_string_length(simple->origin) > 0) {
+    if (fae_string_length(simple->origin) > 0) {
         str = string_dappend(str, strs[4 + colored * 6]);
-        str = string_dappend(str, doremir_copy(simple->origin));
+        str = string_dappend(str, fae_copy(simple->origin));
         str = string_dappend(str, strs[5 + colored * 6]);
     }
 
-    str = string_dappend(str, doremir_copy(simple->message));
+    str = string_dappend(str, fae_copy(simple->message));
 
     return str;
 }
@@ -183,35 +183,35 @@ doremir_string_t doremir_error_format(bool colored, doremir_error_t a)
 
 // --------------------------------------------------------------------------------
 
-doremir_ptr_t simple_error_copy(doremir_ptr_t a)
+fae_ptr_t simple_error_copy(fae_ptr_t a)
 {
-    return doremir_error_copy_simple(a);
+    return fae_error_copy_simple(a);
 }
 
-void simple_error_destroy(doremir_ptr_t a)
+void simple_error_destroy(fae_ptr_t a)
 {
-    doremir_error_destroy_simple(a);
+    fae_error_destroy_simple(a);
 }
 
-doremir_error_severity_t simple_error_severity(doremir_ptr_t a)
+fae_error_severity_t simple_error_severity(fae_ptr_t a)
 {
     simple_error_t simple = (simple_error_t) a;
     return simple->severity;
 }
 
-doremir_string_t simple_error_message(doremir_ptr_t a)
+fae_string_t simple_error_message(fae_ptr_t a)
 {
     simple_error_t simple = (simple_error_t) a;
     return simple->message;
 }
 
-doremir_string_t simple_error_origin(doremir_ptr_t a)
+fae_string_t simple_error_origin(fae_ptr_t a)
 {
     simple_error_t simple = (simple_error_t) a;
     return simple->origin;
 }
 
-doremir_string_t simple_error_show(doremir_ptr_t a)
+fae_string_t simple_error_show(fae_ptr_t a)
 {
     simple_error_t simple = (simple_error_t) a;
     string_t str = string("<");
@@ -237,36 +237,36 @@ doremir_string_t simple_error_show(doremir_ptr_t a)
         assert(false && "Missing label");
     }
 
-    if (doremir_string_length(simple->origin) > 0) {
-        str = string_dappend(str, doremir_copy(simple->origin));
+    if (fae_string_length(simple->origin) > 0) {
+        str = string_dappend(str, fae_copy(simple->origin));
         str = string_dappend(str, string(": "));
     }
 
-    str = string_dappend(str, doremir_copy(simple->message));
+    str = string_dappend(str, fae_copy(simple->message));
     str = string_dappend(str, string(">"));
 
     return str;
 }
 
-doremir_ptr_t simple_error_impl(doremir_id_t interface)
+fae_ptr_t simple_error_impl(fae_id_t interface)
 {
-    static doremir_string_show_t simple_error_show_impl = { simple_error_show };
-    static doremir_copy_t simple_error_copy_impl = { simple_error_copy };
-    static doremir_destroy_t simple_error_destroy_impl = { simple_error_destroy };
-    static doremir_error_interface_t simple_error_error_impl =
+    static fae_string_show_t simple_error_show_impl = { simple_error_show };
+    static fae_copy_t simple_error_copy_impl = { simple_error_copy };
+    static fae_destroy_t simple_error_destroy_impl = { simple_error_destroy };
+    static fae_error_interface_t simple_error_error_impl =
     { simple_error_severity, simple_error_message, simple_error_origin };
 
     switch (interface) {
-    case doremir_copy_i:
+    case fae_copy_i:
         return &simple_error_copy_impl;
 
-    case doremir_destroy_i:
+    case fae_destroy_i:
         return &simple_error_destroy_impl;
 
-    case doremir_error_i:
+    case fae_error_i:
         return &simple_error_error_impl;
 
-    case doremir_string_show_i:
+    case fae_string_show_i:
         return &simple_error_show_impl;
 
     default:

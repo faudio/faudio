@@ -1,0 +1,27 @@
+
+/**
+    @addtogroup FaeThreadFuture
+    
+    Future values.
+    
+ */
+module Fae.Thread.Future
+{
+    import Fae.Std;
+    import Fae.Thread;
+
+    type Future = opaque;
+    type Value  = Ptr;
+
+    // TODO obtain result from what?
+    create  : (Nullary, Ptr) -> Future;
+              
+    // TODO should this be a separate type (timer?)?
+    pause  : Future -> Void; // destructive
+    resume : Future -> Void; // destructive    
+    
+    isDone : Future -> Bool;
+    get    : Future -> Value; // destructive
+    cancel : Future -> Void;  // destructive
+}
+

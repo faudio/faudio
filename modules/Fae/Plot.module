@@ -1,0 +1,55 @@
+
+/** 
+    @addtogroup FaePlot
+    
+    Provides basic plotting.
+    
+    There are currently two backends:
+
+    - [CorePlot](http://code.google.com/p/core-plot/)
+      - Only works on OS X.
+      - Handles time-varying data (such as incoming audio signals etc).
+      - Requires the third-party library `CorePlot.framework` to be in the framework path.
+    - [gnuplot](http://gnuplot.sourceforge.net/)                        
+      - Only handles static input.
+      - Signals are rendered at time zero.
+      - Requires the `gnuplot` executable to be in the path.
+    
+    @warning
+        The CorePlot backend starts a Cocoa event loop which will not work if
+        another GUI is already running. The functionality is intended for internal 
+        testing only.
+ */
+module Fae.Plot
+{
+    import Fae;     
+    import Fae.Std;
+    import Fae.Buffer;
+
+    /**
+        @typedef doremir_plot_function_t
+        
+        Callback to be invoked by the plotter.
+        
+        @param context  Context reference.
+        @param index    Plot index, from \f$0\f$ to \f$4\f$. 
+        @param time     Time in seconds, starting at \f$0\f$. 
+        @param x        Value of x, from \f$-1\f$ to \f$1\f$. 
+     */
+    type Function = ((Ptr, Int, Double, Double) -> Double)*;
+
+    // Backend selection
+    
+    useGnu  : () -> Void;
+    useCore : () -> Void;
+
+    
+    // Plotting
+    
+    discrete      : List -> Void;                           // Int -> [(Double, Double)]
+    continous     : (Function, Ptr, Nullary, Ptr) -> Void;  // Int -> Double -> Double -> Double
+
+    bufferFloat   : (Buffer, Nullary, Ptr) -> Void;
+    bufferDouble  : (Buffer, Nullary, Ptr) -> Void; 
+}
+

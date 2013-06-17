@@ -1,0 +1,30 @@
+
+/** 
+    @addtogroup FaeAtomicQueue
+    
+    Lock-free queue (FIFO) data structure.
+
+    @par Literals
+    - `atomic_queue()` 
+
+    @par Implements 
+    - Fae_destroy_t
+    - Fae_string_show_t
+
+    @see 
+    - [Data structures](@ref DataStructures)
+
+ */
+module Fae.Atomic.Queue
+{
+    import Fae;
+    
+    type Queue = opaque;
+    
+    create : () -> Queue;
+    destroy : Queue -> Void;
+    
+    read : Queue -> Ptr;
+    write : (Queue, Ptr) -> Bool;
+}
+

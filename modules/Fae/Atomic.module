@@ -1,0 +1,39 @@
+
+/**
+    @addtogroup FaeAtomic
+
+    An atomic reference.
+
+    @par Literals
+    - `atomic()`
+
+    @par Implements
+    - Fae_equal_t
+    - Fae_order_t
+    - Fae_copy_t
+    - Fae_destroy_t
+    - Fae_string_show_t
+
+    @see
+    - [Data structures](@ref DataStructures)
+ */
+module Fae.Atomic
+{
+    import Fae;
+    import Fae.Std;
+
+    type Atomic = opaque;
+
+    create  : () -> Atomic;
+    copy    : Atomic -> Atomic;
+    swap    : (Atomic, Atomic) -> Void;
+    destroy : Atomic -> Void;
+
+    exchange : (Atomic, Ptr, Ptr) -> Bool;
+    get     : Atomic -> Ptr;
+    set     : (Atomic, Ptr) -> Void;
+    modify  : (Atomic, Unary, Ptr) -> Void;
+
+    // TODO increment : (Atomic, Int32) -> Void;
+}
+

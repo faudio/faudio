@@ -5,11 +5,11 @@
     All rights reserved.
  */
 
-#include <doremir/device/midi.h>
-#include <doremir/midi.h>
-#include <doremir/list.h>
-#include <doremir/thread.h>
-#include <doremir/util.h>
+#include <fae/device/midi.h>
+#include <fae/midi.h>
+#include <fae/list.h>
+#include <fae/thread.h>
+#include <fae/util.h>
 
 #include <portmidi.h>
 
@@ -20,17 +20,17 @@
         * TODO proper error checking
  */
 
-typedef doremir_device_midi_t                  device_t;
-typedef doremir_device_midi_stream_t           stream_t;
-typedef doremir_device_midi_session_t          session_t;
-typedef doremir_device_midi_stream_callback_t  stream_callback_t;
-typedef doremir_device_midi_session_callback_t session_callback_t;
-typedef doremir_device_midi_status_callback_t  status_callback_t;
+typedef fae_device_midi_t                  device_t;
+typedef fae_device_midi_stream_t           stream_t;
+typedef fae_device_midi_session_t          session_t;
+typedef fae_device_midi_stream_callback_t  stream_callback_t;
+typedef fae_device_midi_session_callback_t session_callback_t;
+typedef fae_device_midi_status_callback_t  status_callback_t;
 
 typedef PmDeviceID    native_index_t;
 typedef PmStream     *native_stream_t;
 
-struct _doremir_device_midi_session_t {
+struct _fae_device_midi_session_t {
 
     impl_t              impl;               // Dispatcher
     system_time_t       acquired;           // Time of acquisition (not used at the moment)
@@ -41,7 +41,7 @@ struct _doremir_device_midi_session_t {
     device_t            def_output;         // If present, these are also in the above list
 };
 
-struct _doremir_device_midi_t {
+struct _fae_device_midi_t {
 
     impl_t              impl;               // Dispatcher
     native_index_t      index;              // Native device index
@@ -51,7 +51,7 @@ struct _doremir_device_midi_t {
     string_t            host_name;
 };
 
-struct _doremir_device_midi_stream_t {
+struct _fae_device_midi_stream_t {
 
     impl_t              impl;               // Dispatcher
     native_stream_t     native_input,
@@ -67,9 +67,9 @@ error_t midi_device_error(string_t msg);
 error_t midi_device_error_with(string_t msg, int error);
 error_t native_error(string_t msg, int code);
 void midi_device_fatal(string_t msg, int code);
-ptr_t midi_session_impl(doremir_id_t interface);
-ptr_t midi_device_impl(doremir_id_t interface);
-ptr_t midi_stream_impl(doremir_id_t interface);
+ptr_t midi_session_impl(fae_id_t interface);
+ptr_t midi_device_impl(fae_id_t interface);
+ptr_t midi_stream_impl(fae_id_t interface);
 inline static session_t new_session();
 inline static void session_init_devices(session_t session);
 inline static void delete_session(session_t session);
@@ -78,14 +78,14 @@ inline static void delete_device(device_t device);
 inline static stream_t new_stream(device_t device);
 inline static void delete_stream(stream_t stream);
 
-long doremir_midi_simple_to_long(doremir_midi_t midi);
+long fae_midi_simple_to_long(fae_midi_t midi);
 
 
 // --------------------------------------------------------------------------------
 
 inline static session_t new_session()
 {
-    session_t session = doremir_new(device_midi_session);
+    session_t session = fae_new(device_midi_session);
     session->impl = &midi_session_impl;
     return session;
 }
@@ -96,17 +96,17 @@ inline static void session_init_devices(session_t session)
     list_t         devices;
 
     count   = Pm_CountDevices();
-    devices = doremir_list_empty();
+    devices = fae_list_empty();
 
     for (size_t i = 0; i < count; ++i) {
         device_t device = new_device(i);
 
         if (device) {
-            devices = doremir_list_dcons(device, devices);
+            devices = fae_list_dcons(device, devices);
         }
     }
 
-    session->devices      = doremir_list_dreverse(devices);
+    session->devices      = fae_list_dreverse(devices);
     session->def_input    = new_device(Pm_GetDefaultInputDeviceID());
     session->def_output   = new_device(Pm_GetDefaultOutputDeviceID());
 }
@@ -114,7 +114,7 @@ inline static void session_init_devices(session_t session)
 inline static void delete_session(session_t session)
 {
     // TODO free device list
-    doremir_delete(session);
+    fae_delete(session);
 }
 
 inline static device_t new_device(native_index_t index)
@@ -123,7 +123,7 @@ inline static device_t new_device(native_index_t index)
         return NULL;
     }
 
-    device_t device = doremir_new(device_midi);
+    device_t device = fae_new(device_midi);
     device->impl    = &midi_device_impl;
 
     const PmDeviceInfo  *info = Pm_GetDeviceInfo(index);
@@ -139,18 +139,18 @@ inline static device_t new_device(native_index_t index)
 
 inline static void delete_device(device_t device)
 {
-    doremir_destroy(device->name);
-    doremir_destroy(device->host_name);
-    doremir_delete(device);
+    fae_destroy(device->name);
+    fae_destroy(device->host_name);
+    fae_delete(device);
 }
 
 inline static stream_t new_stream(device_t device)
 {
-    stream_t stream         = doremir_new(device_midi_stream);
+    stream_t stream         = fae_new(device_midi_stream);
 
     stream->impl            = &midi_stream_impl;
     stream->device          = device;
-    stream->incoming        = doremir_list_empty();
+    stream->incoming        = fae_list_empty();
     stream->native_input    = NULL;
     stream->native_output   = NULL;
 
@@ -159,27 +159,27 @@ inline static stream_t new_stream(device_t device)
 
 inline static void delete_stream(stream_t stream)
 {
-    doremir_delete(stream);
+    fae_delete(stream);
 }
 
 
 // --------------------------------------------------------------------------------
 
-void doremir_device_midi_initialize()
+void fae_device_midi_initialize()
 {
-    pm_mutex  = doremir_thread_create_mutex();
+    pm_mutex  = fae_thread_create_mutex();
     pm_status = false;
 }
 
-void doremir_device_midi_terminate()
+void fae_device_midi_terminate()
 {
-    doremir_thread_destroy_mutex(pm_mutex);
+    fae_thread_destroy_mutex(pm_mutex);
 }
 
 // --------------------------------------------------------------------------------
 
 
-session_t doremir_device_midi_begin_session()
+session_t fae_device_midi_begin_session()
 {
     PmError result;
     
@@ -189,10 +189,10 @@ session_t doremir_device_midi_begin_session()
 
     inform(string("Initializing real-time midi session"));
 
-    doremir_thread_lock(pm_mutex);
+    fae_thread_lock(pm_mutex);
     {
         if (pm_status) {
-            doremir_thread_unlock(pm_mutex);
+            fae_thread_unlock(pm_mutex);
             return (session_t) midi_device_error(string("Overlapping real-time midi sessions"));
         } else {
             result = Pm_Initialize();
@@ -201,7 +201,7 @@ session_t doremir_device_midi_begin_session()
             }
 
             pm_status = true;
-            doremir_thread_unlock(pm_mutex);
+            fae_thread_unlock(pm_mutex);
 
             session_t session = new_session();
             session_init_devices(session);
@@ -211,7 +211,7 @@ session_t doremir_device_midi_begin_session()
     }
 }
 
-void doremir_device_midi_end_session(session_t session)
+void fae_device_midi_end_session(session_t session)
 { 
     PmError result;
     
@@ -221,60 +221,60 @@ void doremir_device_midi_end_session(session_t session)
 
     inform(string("Terminating real-time midi session"));
 
-    doremir_thread_lock(pm_mutex);
+    fae_thread_lock(pm_mutex);
     {
         if (pm_status) {
             result = Pm_Terminate();
             if (result < 0) {
-                doremir_error_log(NULL, native_error(string("Could not stop midi"), result));
+                fae_error_log(NULL, native_error(string("Could not stop midi"), result));
                 return;
             }
             pm_status = false;
         }
     }
-    doremir_thread_unlock(pm_mutex);
+    fae_thread_unlock(pm_mutex);
     delete_session(session);
 }
 
-void doremir_device_midi_with_session(session_callback_t    session_callback,
-                                      doremir_ptr_t         session_data,
+void fae_device_midi_with_session(session_callback_t    session_callback,
+                                      fae_ptr_t         session_data,
                                       error_callback_t      error_callback,
-                                      doremir_ptr_t         error_data)
+                                      fae_ptr_t         error_data)
 {
-    session_t session = doremir_device_midi_begin_session();
+    session_t session = fae_device_midi_begin_session();
 
-    if (doremir_check(session)) {
+    if (fae_check(session)) {
         error_callback(error_data, (error_t) session);
     } else {
         session_callback(session_data, session);
     }
 
-    doremir_device_midi_end_session(session);
+    fae_device_midi_end_session(session);
 }
 
-doremir_list_t doremir_device_midi_all(session_t session)
+fae_list_t fae_device_midi_all(session_t session)
 {
-    return doremir_copy(session->devices);
+    return fae_copy(session->devices);
 }
 
-doremir_pair_t doremir_device_midi_default(session_t session)
+fae_pair_t fae_device_midi_default(session_t session)
 {
     return pair(session->def_input, session->def_output);
 }
 
-device_t doremir_device_midi_default_input(session_t session)
+device_t fae_device_midi_default_input(session_t session)
 {
     return session->def_input;
 }
 
-device_t doremir_device_midi_default_output(session_t session)
+device_t fae_device_midi_default_output(session_t session)
 {
     return session->def_output;
 }
 
 void add_midi_status_listener(status_callback_t function, ptr_t data);
 
-void doremir_device_midi_set_status_callback(
+void fae_device_midi_set_status_callback(
     status_callback_t function,
     ptr_t             data,
     session_t         session)
@@ -285,22 +285,22 @@ void doremir_device_midi_set_status_callback(
     add_midi_status_listener(function, data);
 }
 
-doremir_string_t doremir_device_midi_name(device_t device)
+fae_string_t fae_device_midi_name(device_t device)
 {
-    return doremir_copy(device->name);
+    return fae_copy(device->name);
 }
 
-doremir_string_t doremir_device_midi_host_name(device_t device)
+fae_string_t fae_device_midi_host_name(device_t device)
 {
-    return doremir_copy(device->host_name);
+    return fae_copy(device->host_name);
 }
 
-bool doremir_device_midi_has_input(device_t device)
+bool fae_device_midi_has_input(device_t device)
 {
     return device->input;
 }
 
-bool doremir_device_midi_has_output(device_t device)
+bool fae_device_midi_has_output(device_t device)
 {
     return device->output;
 }
@@ -312,11 +312,11 @@ void midi_inform_opening(device_t device)
     inform(string("Opening real-time midi stream"));
 
     if (device->input) {
-        inform(string_dappend(string("    Input:  "), doremir_string_show(device)));
+        inform(string_dappend(string("    Input:  "), fae_string_show(device)));
     }
 
     if (device->output) {
-        inform(string_dappend(string("    Output:  "), doremir_string_show(device)));
+        inform(string_dappend(string("    Output:  "), fae_string_show(device)));
     }
 }
 
@@ -325,7 +325,7 @@ PmTimestamp midi_time_callback(void *data)
     return 0; // FIXME
 }
 
-doremir_device_midi_stream_t doremir_device_midi_open_stream(device_t device)
+fae_device_midi_stream_t fae_device_midi_open_stream(device_t device)
 {
     assert(device && "Not a device");
     midi_inform_opening(device);
@@ -355,7 +355,7 @@ doremir_device_midi_stream_t doremir_device_midi_open_stream(device_t device)
 }
 
 
-void doremir_device_midi_close_stream(stream_t stream)
+void fae_device_midi_close_stream(stream_t stream)
 {
     inform(string("Closing real-time midi stream"));
     if (stream->native_input)
@@ -365,21 +365,21 @@ void doremir_device_midi_close_stream(stream_t stream)
 }
 
 
-void doremir_device_midi_with_stream(device_t           device,
+void fae_device_midi_with_stream(device_t           device,
                                      stream_callback_t  stream_callback,
-                                     doremir_ptr_t      stream_data,
+                                     fae_ptr_t      stream_data,
                                      error_callback_t   error_callback,
-                                     doremir_ptr_t      error_data)
+                                     fae_ptr_t      error_data)
 {
-    stream_t stream = doremir_device_midi_open_stream(device);
+    stream_t stream = fae_device_midi_open_stream(device);
 
-    if (doremir_check(stream)) {
+    if (fae_check(stream)) {
         error_callback(error_data, (error_t) stream);
     } else {
         stream_callback(stream_data, stream);
     }
 
-    doremir_device_midi_close_stream(stream);
+    fae_device_midi_close_stream(stream);
 }
 
 
@@ -390,31 +390,31 @@ void doremir_device_midi_with_stream(device_t           device,
 
 // --------------------------------------------------------------------------------
 
-doremir_string_t midi_session_show(ptr_t a)
+fae_string_t midi_session_show(ptr_t a)
 {
     string_t str = string("<MidiSession ");
-    str = string_dappend(str, doremir_string_format_integral(" %p", (long) a));
+    str = string_dappend(str, fae_string_format_integral(" %p", (long) a));
     str = string_dappend(str, string(">"));
     return str;
 }
 
 void midi_session_destroy(ptr_t a)
 {
-    doremir_device_midi_end_session(a);
+    fae_device_midi_end_session(a);
 }
 
-ptr_t midi_session_impl(doremir_id_t interface)
+ptr_t midi_session_impl(fae_id_t interface)
 {
-    static doremir_string_show_t midi_session_show_impl
+    static fae_string_show_t midi_session_show_impl
         = { midi_session_show };
-    static doremir_destroy_t midi_session_destroy_impl
+    static fae_destroy_t midi_session_destroy_impl
         = { midi_session_destroy };
 
     switch (interface) {
-    case doremir_string_show_i:
+    case fae_string_show_i:
         return &midi_session_show_impl;
 
-    case doremir_destroy_i:
+    case fae_destroy_i:
         return &midi_session_destroy_impl;
 
     default:
@@ -433,30 +433,30 @@ bool midi_device_equal(ptr_t a, ptr_t b)
     return device1->index == device2->index;
 }
 
-doremir_string_t midi_device_show(ptr_t a)
+fae_string_t midi_device_show(ptr_t a)
 {
     device_t device = (device_t) a;
 
     string_t str = string("<MidiDevice ");
-    str = string_dappend(str, doremir_device_midi_host_name(device));
+    str = string_dappend(str, fae_device_midi_host_name(device));
     str = string_dappend(str, string(" "));
-    str = string_dappend(str, doremir_device_midi_name(device));
+    str = string_dappend(str, fae_device_midi_name(device));
     str = string_dappend(str, string(">"));
     return str;
 }
 
-ptr_t midi_device_impl(doremir_id_t interface)
+ptr_t midi_device_impl(fae_id_t interface)
 {
-    static doremir_equal_t midi_device_equal_impl
+    static fae_equal_t midi_device_equal_impl
         = { midi_device_equal };
-    static doremir_string_show_t midi_device_show_impl
+    static fae_string_show_t midi_device_show_impl
         = { midi_device_show };
 
     switch (interface) {
-    case doremir_equal_i:
+    case fae_equal_i:
         return &midi_device_equal_impl;
 
-    case doremir_string_show_i:
+    case fae_string_show_i:
         return &midi_device_show_impl;
 
     default:
@@ -467,25 +467,25 @@ ptr_t midi_device_impl(doremir_id_t interface)
 
 // --------------------------------------------------------------------------------
 
-doremir_string_t midi_stream_show(ptr_t a)
+fae_string_t midi_stream_show(ptr_t a)
 {
     string_t str = string("<MidiStream ");
-    str = string_dappend(str, doremir_string_format_integral(" %p", (long) a));
+    str = string_dappend(str, fae_string_format_integral(" %p", (long) a));
     str = string_dappend(str, string(">"));
     return str;
 }
 
 void midi_stream_destroy(ptr_t a)
 {
-    doremir_device_midi_close_stream(a);
+    fae_device_midi_close_stream(a);
 }
 
 void midi_stream_sync(ptr_t a)
 {
     stream_t stream = (stream_t) a;
 
-    doremir_destroy(stream->incoming);
-    stream->incoming = doremir_list_empty();
+    fae_destroy(stream->incoming);
+    stream->incoming = fae_list_empty();
 
     // TODO need to get error?
     while (Pm_Poll(stream->native_input) == TRUE) {
@@ -503,7 +503,7 @@ void midi_stream_sync(ptr_t a)
 
             // FIXME detect sysex
             midi_t midi = midi(Pm_MessageStatus(msg), Pm_MessageData1(msg), Pm_MessageData2(msg));
-            stream->incoming = doremir_list_dcons(midi, stream->incoming);
+            stream->incoming = fae_list_dcons(midi, stream->incoming);
 
             // TODO midi thru
         }
@@ -511,11 +511,11 @@ void midi_stream_sync(ptr_t a)
 
 }
 
-doremir_list_t midi_stream_receive(ptr_t a, address_t addr)
+fae_list_t midi_stream_receive(ptr_t a, address_t addr)
 {
     // Ignore address
     stream_t stream = (stream_t) a;
-    return doremir_list_copy(stream->incoming);
+    return fae_list_copy(stream->incoming);
 }
 
 void midi_stream_send(ptr_t a, address_t addr, message_t msg)
@@ -525,11 +525,11 @@ void midi_stream_send(ptr_t a, address_t addr, message_t msg)
     midi_t   midi   = (midi_t) msg;
     // TODO use dynamic introspection to detect lists (?)
 
-    if (doremir_midi_is_simple(midi)) {
+    if (fae_midi_is_simple(midi)) {
         // timestamp ignored
-        long midi_msg = doremir_midi_simple_to_long(midi);
+        long midi_msg = fae_midi_simple_to_long(midi);
 
-        // printf("Sending: %s %08x\n", unstring(doremir_string_show(midi)), (int) midi_msg);
+        // printf("Sending: %s %08x\n", unstring(fae_string_show(midi)), (int) midi_msg);
 
         result = Pm_WriteShort(stream->native_output, 0, midi_msg);
 
@@ -556,30 +556,30 @@ void midi_stream_send(ptr_t a, address_t addr, message_t msg)
 
 }
 
-ptr_t midi_stream_impl(doremir_id_t interface)
+ptr_t midi_stream_impl(fae_id_t interface)
 {
-    static doremir_string_show_t midi_stream_show_impl
+    static fae_string_show_t midi_stream_show_impl
         = { midi_stream_show };
-    static doremir_destroy_t midi_stream_destroy_impl
+    static fae_destroy_t midi_stream_destroy_impl
         = { midi_stream_destroy };
-    static doremir_message_receiver_interface_t midi_stream_message_receiver_interface_impl
+    static fae_message_receiver_interface_t midi_stream_message_receiver_interface_impl
         = { midi_stream_send };
-    static doremir_message_sender_interface_t midi_stream_message_sender_interface_impl
+    static fae_message_sender_interface_t midi_stream_message_sender_interface_impl
         = { midi_stream_sync, midi_stream_receive };
 
     switch (interface) {
 
 
-    case doremir_string_show_i:
+    case fae_string_show_i:
         return &midi_stream_show_impl;
 
-    case doremir_destroy_i:
+    case fae_destroy_i:
         return &midi_stream_destroy_impl;
 
-    case doremir_message_sender_interface_i:
+    case fae_message_sender_interface_i:
         return &midi_stream_message_sender_interface_impl;
 
-    case doremir_message_receiver_interface_i:
+    case fae_message_receiver_interface_i:
         return &midi_stream_message_receiver_interface_impl;
 
     default:
@@ -590,24 +590,24 @@ ptr_t midi_stream_impl(doremir_id_t interface)
 
 // --------------------------------------------------------------------------------
 
-void doremir_audio_engine_log_error_from(doremir_string_t msg, doremir_string_t origin);
+void fae_audio_engine_log_error_from(fae_string_t msg, fae_string_t origin);
 
 error_t midi_device_error(string_t msg)
 {
-    return doremir_error_create_simple(error,
+    return fae_error_create_simple(error,
                                        msg,
                                        string("Doremir.Device.Midi"));
 }
 
 error_t midi_device_error_with(string_t msg, int code)
 {
-    return doremir_error_create_simple(error,
+    return fae_error_create_simple(error,
                                        string_dappend(msg, format_integral(" (error code %d)", code)),
                                        string("Doremir.Device.Midi"));
 }     
 error_t native_error(string_t msg, int code)
 {
-    return doremir_error_create_simple(error,
+    return fae_error_create_simple(error,
                                        string_dappend(msg, string((char*) Pm_GetErrorText(code))),
                                        string("Doremir.Device.Midi"));
 }     
@@ -615,11 +615,11 @@ error_t native_error(string_t msg, int code)
 
 void midi_device_fatal(string_t msg, int code)
 {
-    doremir_audio_engine_log_error_from(
+    fae_audio_engine_log_error_from(
         string_dappend(msg, format_integral(" (error code %d)", code)),
         string("Doremir.Device.Midi"));
 
-    doremir_audio_engine_log_error(string("Terminating Audio Engine"));
+    fae_audio_engine_log_error(string("Terminating Audio Engine"));
     exit(error);
 }
 

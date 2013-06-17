@@ -1,0 +1,20 @@
+
+/**
+    @addtogroup FaeDevice
+    
+    Provides input and output devices.
+    
+    @see
+    - @ref Devices
+ */
+
+module Fae.Device
+{
+    import Fae;
+
+    type Audio = opaque;
+    type Midi = opaque;
+    type File = opaque;
+    type Buffer = opaque;
+}
+

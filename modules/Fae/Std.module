@@ -1,0 +1,33 @@
+
+/** 
+    @addtogroup FaeStd
+    
+    This module just exports the C standard library.
+
+ */
+module Fae.Std
+{
+    import "C" assert;
+    import "C" complex;
+    import "C" ctype;
+    import "C" errno;
+    import "C" fenv;
+    import "C" float;
+    import "C" inttypes;
+    import "C" limits;
+    import "C" locale;
+    import "C" math;
+    import "C" setjmp;
+    import "C" signal;
+    import "C" stdarg;
+    import "C" stdbool;
+    import "C" stddef;
+    import "C" stdio;
+    import "C" stdlib;
+    import "C" string;
+    import "C" tgmath;
+    import "C" time;
+    import "C" wchar;
+    import "C" wctype;
+}
+
