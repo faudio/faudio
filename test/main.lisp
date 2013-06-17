@@ -1,6 +1,6 @@
 
 #|
-    DoReMIR Audio Engine
+    FAE
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
 |#
@@ -111,7 +111,7 @@
 
 (audioengine-initialize)
 (audioengine-terminate)
-(audioengine-set-log-file "/Users/hans/Library/Logs/DoReMIRAudio.log")
+(audioengine-set-log-file "/Users/hans/Library/Logs/FAE.log")
 (audioengine-set-log-std)
 
 (audioengine-log-info "What to say?")

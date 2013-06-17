@@ -1884,7 +1884,7 @@ static const bool stop_k       = false;
 
 int main(int argc, char const *argv[])
 {
-    printf("DoReMIR Audio engine %s v%d.%d.%d\n", bits, version[0], version[1], version[2]);
+    printf("FAE %s v%d.%d.%d\n", bits, version[0], version[1], version[2]);
 
     printf("sizeof(fae_ptr_t) = %d\n", (unsigned int) sizeof(fae_ptr_t));
     printf("sizeof(int32_t) = %d\n", (unsigned int) sizeof(int32_t));
@@ -1900,7 +1900,7 @@ int main(int argc, char const *argv[])
 
         fae_audio_engine_set_log_std();
         fae_plot_use_gnu();
-        // fae_audio_engine_set_log_file(string("/Users/hans/Library/Logs/DoReMIRAudio.log"));
+        // fae_audio_engine_set_log_file(string("/Users/hans/Library/Logs/FAEAudio.log"));
         // fae_plot_use_core();
 
         fae_audio_engine_initialize();
