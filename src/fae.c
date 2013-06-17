@@ -155,7 +155,7 @@ bool fae_to_bool(fae_ptr_t a)
 
 fae_ptr_t fae_from_bool(bool a)
 {
-    return (fae_ptr_t)(a << 24 & ~0x7 | 0x7);
+    return (fae_ptr_t)((intptr_t) a << 24 & ~0x7 | 0x7);
 }
 
 // --------------------------------------------------------------------------------
@@ -169,7 +169,7 @@ int8_t fae_to_int8(fae_ptr_t a)
 
 fae_ptr_t fae_from_int8(int8_t a)
 {
-    return (fae_ptr_t)(a << 24 & ~0x7 | 0x6);
+    return (fae_ptr_t)((intptr_t) a << 24 & ~0x7 | 0x6);
 }
 
 // --------------------------------------------------------------------------------
@@ -183,7 +183,7 @@ int16_t fae_to_int16(fae_ptr_t a)
 
 fae_ptr_t fae_from_int16(int16_t a)
 {
-    return (fae_ptr_t)(a << 8 & ~0x7 | 0x5);
+    return (fae_ptr_t)((intptr_t) a << 8 & ~0x7 | 0x5);
 }
 
 // --------------------------------------------------------------------------------

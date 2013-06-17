@@ -17,10 +17,9 @@ ptr_t status_callback(ptr_t c, ptr_t v)
 ptr_t listen(ptr_t c)
 {
     fae_device_midi_set_status_callback(
-        status_callback, 
+        (fae_device_midi_status_callback_t) status_callback, 
         NULL, 
-        (midi_session_t) c
-        );
+        (midi_session_t) c);
                           
     assert(false && "Does not return...");
 }

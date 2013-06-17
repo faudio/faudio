@@ -19,7 +19,7 @@ static unsigned       init_count_g  = 0;
 static log_func_t     log_func_g    = NULL;
 static ptr_t          log_data_g    = NULL;
 
-static struct { char* pre; int x; int y; int z; char* suff } version_g = AE_VERSION;
+static struct { char* pre; int x; int y; int z; char* suff; } version_g = AE_VERSION;
 
 void fae_device_audio_initialize();
 void fae_device_audio_terminate();
@@ -43,8 +43,14 @@ fae_list_t fae_audio_engine_version()
 fae_string_t fae_audio_engine_version_string()
 {
     char version[100];
-    sprintf(&version, "%s%d.%d.%d%s", version_g.pre, version_g.x, version_g.y, version_g.z, version_g.suff);
-    return string(&version);
+    sprintf(version, 
+        "%s%d.%d.%d%s", 
+        version_g.pre, 
+        version_g.x, 
+        version_g.y, 
+        version_g.z, 
+        version_g.suff);
+    return string(version);
 }
 
 /** Performs global initialization.

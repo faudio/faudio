@@ -600,7 +600,9 @@ string_t fae_string_join_map(unary_t func, ptr_t data, string_t string)
     string_t result = string("");
 
     for (int i = 0; i < string->size; ++i) {
-        result = string_dappend(result, func(data, (ptr_t)(int32_t) string->data[i]));
+        result = string_dappend(result, 
+        
+            func(data, (ptr_t) (long) string->data[i]));
     }
 
     return result;
