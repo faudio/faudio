@@ -2,9 +2,6 @@
 #include <fae/audio_engine.h>
 #include <fae/util.h>
 
-#include <unistd.h> // for sysconf(3)
-
-
 int  version[3] = { 2, 0, 0 };
 char *bits      = sizeof(void *) == 4 ? "32-bit" : "64-bit";
 
@@ -376,7 +373,7 @@ void test_type()
 
 ptr_t add10(ptr_t x, ptr_t _)
 {
-    return (ptr_t)((int) x + 10);
+    return (ptr_t)((intptr_t) x + 10);
 }
 
 void test_atomic()
@@ -534,7 +531,7 @@ ptr_t printer(ptr_t data)
 
     while (n < 100) {
         printf("%d\n", n);
-        n = n + ((int) data);
+        n = n + ((intptr_t) data);
         fae_thread_sleep(100);
     }
 
@@ -1264,66 +1261,36 @@ void test_system_event()
 
 void test_event()
 {
-    // {
-    //     test_section("Events");
-    //
-    //     fae_time_t t = seconds(0);
-    //     event_t a = delay_event(seconds(5), delay_event(seconds(5), now(string("fix"))));
-    //     event_t b = delay_event(seconds(0),
-    //                             merge_event(
-    //                                 delay_event(seconds(3),  now(string("foo"))),
-    //                                 delay_event(seconds(12), now(string("bar"))))); // too early!
-    //
-    //     fae_print("\n", NULL);
-    //     fae_print("t                            ==> %s\n", t);
-    //
-    //     fae_print("\n", NULL);
-    //     fae_print("a                            ==> %s\n", a);
-    //     fae_print("offset(a)                    ==> %s\n", fae_event_offset(a));
-    //     fae_print("hasValue(a)                  ==> %s\n", fb(fae_event_has_value(t, a)));
-    //     fae_print("value(a)                     ==> %s\n", fae_event_value(a));
-    //
-    //     fae_print("\n", NULL);
-    //     fae_print("b                            ==> %s\n", b);
-    //     fae_print("offset(b)                    ==> %s\n", fae_event_offset(b));
-    //     fae_print("hasValue(b)                  ==> %s\n", fb(fae_event_has_value(t, b)));
-    //     fae_print("value(b)                     ==> %s\n", fae_event_value(b));
-    //
-    //     fae_print("\n", NULL);
-    //     fae_print("min(a,b)                     ==> %s\n", fae_min(a, b));
-    //     fae_print("offset(min(a,b))             ==> %s\n", fae_event_offset(fae_min(a, b)));
-    // }
-
     {
-        fae_time_t t = seconds(0);
+        // fae_time_t t = seconds(0);
 
-        event_t ha = now(string("höglund"));
-        event_t ho = now(string("holmgren"));
+        // event_t ha = now(string("höglund"));
+        // event_t ho = now(string("holmgren"));
 
-        event_t a = merge_event(ha,
-            delay_event(milliseconds(200*2), merge_event(ha,
-            delay_event(milliseconds(200*2), merge_event(ha,
-            delay_event(milliseconds(200*2), merge_event(ha,
-            delay_event(milliseconds(200*2), merge_event(ha,
-            delay_event(milliseconds(200*2), merge_event(ha, never())))))))))));
+        // event_t a = merge_event(ha,
+            // delay_event(milliseconds(200*2), merge_event(ha,
+            // delay_event(milliseconds(200*2), merge_event(ha,
+            // delay_event(milliseconds(200*2), merge_event(ha,
+            // delay_event(milliseconds(200*2), merge_event(ha,
+            // delay_event(milliseconds(200*2), merge_event(ha, never())))))))))));
 
-        event_t b = merge_event(ho,
-            delay_event(milliseconds(240*2), merge_event(ho,
-            delay_event(milliseconds(240*2), merge_event(ho,
-            delay_event(milliseconds(240*2), merge_event(ho,
-            delay_event(milliseconds(240*2), merge_event(ho,
-            delay_event(milliseconds(240*2), merge_event(ho, never())))))))))));
+        // event_t b = merge_event(ho,
+        //     delay_event(milliseconds(240*2), merge_event(ho,
+        //     delay_event(milliseconds(240*2), merge_event(ho,
+        //     delay_event(milliseconds(240*2), merge_event(ho,
+        //     delay_event(milliseconds(240*2), merge_event(ho,
+        //     delay_event(milliseconds(240*2), merge_event(ho, never())))))))))));
 
-        event_t s1 = fae_event_later(seconds(1), NULL);
-        event_t s3 = fae_event_later(seconds(3), NULL);
+        // event_t s1 = fae_event_later(seconds(1), NULL);
+        // event_t s3 = fae_event_later(seconds(3), NULL);
 
         event_t mm = fae_system_event_mouse_move();
-        event_t md = fae_system_event_mouse_down();
-        event_t mu = fae_system_event_mouse_up();
-        event_t kd = fae_system_event_key_down();
-        event_t ku = fae_system_event_key_up();
-        event_t mouseX = fae_event_map(apply1, fae_pair_fst, mm);
-        event_t mouseY = fae_event_map(apply1, fae_pair_snd, mm);
+        // event_t md = fae_system_event_mouse_down();
+        // event_t mu = fae_system_event_mouse_up();
+        // event_t kd = fae_system_event_key_down();
+        // event_t ku = fae_system_event_key_up();
+        // event_t mouseX = fae_event_map(apply1, fae_pair_fst, mm);
+        // event_t mouseY = fae_event_map(apply1, fae_pair_snd, mm);
 
         // event_t y2 = merge_event(switch_event(kd, merge_event(a, mm), merge_event(b, md)), later(seconds(5), list(string("flux"))));
         // event_t y2 = switch_event(ku, switch_event(kd,never(),mm), merge_event(delay_event(seconds(3),b),md));
@@ -1349,9 +1316,7 @@ void test_event()
 void test_scheduler()
 {
     test_section("Scheduler");
-
-
-
+    // TODO
 }
 
 
@@ -1392,58 +1357,6 @@ void test_processor_graphs(string_t path)
         ;
 
     fae_processor_write_graph(q, path);
-
-
-    /*
-
-        {
-            processor_t p, q;
-            p = fae_processor_unary(type(i8), type(i8), add1234, NULL);
-            q = fae_processor_sequence(p, p);
-            fae_print("p                            ==> %s\n", p);
-            fae_print("bufferSize(p)                ==> %s\n", i32(fae_processor_buffer_size(1, p)));
-        }
-
-        {
-            processor_t p, q;
-            p = fae_processor_unary(type(i8), type(i8), add1234, NULL);
-            q = fae_processor_sequence(p, p);
-            fae_print("p                            ==> %s\n", p);
-            fae_print("seq(p,p)                     ==> %s\n", q);
-            fae_print("bufferSize(seq(p,p))         ==> %s\n", i32(fae_processor_buffer_size(1, q)));
-        }
-
-        {
-            processor_t p, q;
-            p = fae_processor_unary(type(i8), type(i8), add1234, NULL);
-            q = fae_processor_parallel(p, p);
-            fae_print("p                            ==> %s\n", p);
-            fae_print("q                            ==> %s\n", p);
-            fae_print("par(p,p)                     ==> %s\n", q);
-            fae_print("bufferSize(par(p,q))         ==> %s\n", i32(fae_processor_buffer_size(1, q)));
-        }
-
-        {
-            processor_t p0, p, q;
-            p0 = fae_processor_unary(type(i8), type(i8), add1234, NULL);
-            p = fae_processor_parallel(p0, p0);
-            q = fae_processor_loop(p);
-            fae_print("p                            ==> %s\n", p);
-            fae_print("loop(p)                      ==> %s\n", q);
-            fae_print("bufferSize(loop(p))          ==> %s\n", i32(fae_processor_buffer_size(1, q)));
-        }
-
-        {
-            type_t t = type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
-                                                     type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
-                                                               type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
-                                                                       type(i8))))))))));
-
-            processor_t p = fae_processor_identity(t);
-            fae_print("p                            ==> %s\n", p);
-
-        }  */
-
 }
 
 
@@ -1891,8 +1804,6 @@ int main(int argc, char const *argv[])
     printf("sizeof(int64_t) = %d\n", (unsigned int) sizeof(int64_t));
     printf("sizeof(wchar_t) = %d\n", (unsigned int) sizeof(wchar_t));
 
-    printf("The page size for this system is %ld bytes.\n", sysconf(_SC_PAGESIZE));
-    
     for (int i = 0; i < iterations_k; ++i) {
         if (stop_k) {
             getchar();
