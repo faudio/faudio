@@ -1,6 +1,6 @@
 
 /** 
-    @addtogroup FaeMidi
+    @addtogroup FaeMidiMsg
     
     Midi messages.
 
