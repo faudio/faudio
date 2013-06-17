@@ -59,7 +59,7 @@ underlying audio system is detected while a session is still active, a new sessi
 has to be started to observe the new setup.
 
 You can register a callback to be invoked when the a possible change in hardware
-setup is detected, see @ref doremir_device_audio_set_status_callback. Note that
+setup is detected, see @ref fae_device_audio_set_status_callback. Note that
 this callback may be invoked in an interrupt handler thread and that the task of
 ending a session should generally be handled in the same thread that created the
 session. Use an atomic reference or a condition variable to communicate the
@@ -75,9 +75,9 @@ to get a value, and a destruction method to release. Note that devices, sessions
 streams have single-ownership semantics.
 
 ~~~~
-#include <doremir/device/audio.h>
-#include <doremir/thread.h>
-#include <doremir/util.h>
+#include <fae/device/audio.h>
+#include <fae/thread.h>
+#include <fae/util.h>
 
 int main (int argc, char const *argv[])
 {
@@ -87,38 +87,38 @@ int main (int argc, char const *argv[])
     stream_t        stream
     
     // Processor to use
-    proc = doremir_processor_identity(type_pair(type(f32), type(f32)));
+    proc = fae_processor_identity(type_pair(type(f32), type(f32)));
     
     // Begin session
-    session = doremir_device_audio_begin_session();
+    session = fae_device_audio_begin_session();
 
     // Handle possible error
-    if (doremir_check(stream)) {
-        doremir_error_log(stream);
+    if (fae_check(stream)) {
+        fae_error_log(stream);
         goto cleanup;
     }
 
     // Session obtained, we can now access devices
-    input  = doremir_device_audio_default_input(session);
-    input  = doremir_device_audio_default_output(session);
+    input  = fae_device_audio_default_input(session);
+    input  = fae_device_audio_default_output(session);
     
     // Start stream
-    stream = doremir_device_audio_open_stream(input, proc, output);
+    stream = fae_device_audio_open_stream(input, proc, output);
 
     // Handle possible error
-    if (doremir_check(stream)) {
-        doremir_error_log(stream);
+    if (fae_check(stream)) {
+        fae_error_log(stream);
         goto cleanup;
     }
 
     // Stream active, let it run for 5 seconds
-    doremir_thread_sleep(5000);
+    fae_thread_sleep(5000);
 
     // Cleanup
 cleanup:
-    doremir_device_audio_close_stream(stream);
-    doremir_device_audio_end_session(session);
-    doremir_destroy(proc);
+    fae_device_audio_close_stream(stream);
+    fae_device_audio_end_session(session);
+    fae_destroy(proc);
 }
 ~~~~
 
@@ -128,17 +128,17 @@ cleanup:
 The callback style require that you provide a callback to be invoked when the
 session or stream is valid. Destruction is handled automatically after this method
 has returned. Errors are handled by a special callback, to which you can pass
-[doremir_error_log](@ref doremir_error_log), or a user defined function.
+[fae_error_log](@ref fae_error_log), or a user defined function.
 
 ~~~~
-#include <doremir/time.h>
-#include <doremir/thread.h>
-#include <doremir/device/audio.h>
+#include <fae/time.h>
+#include <fae/thread.h>
+#include <fae/device/audio.h>
 
 stream_t run_callback(stream_t stream)
 {
     // Stream active, let it run for 5 seconds
-    doremir_thread_sleep(doremir_seconds(10));
+    fae_thread_sleep(fae_seconds(10));
     return stream;
 }
 
@@ -148,29 +148,29 @@ session_t session_callback(void* data, session_t session)
     processor_t proc;
 
     // Session obtained, we can now access devices
-    input  = doremir_device_audio_default_input(session);
-    output = doremir_device_audio_default_input(session);
+    input  = fae_device_audio_default_input(session);
+    output = fae_device_audio_default_input(session);
     proc    = (processor_t*) data;
 
     // Start stream
-    doremir_device_audio_with_stream(
+    fae_device_audio_with_stream(
         input, proc, output,
-        run_callback, doremir_error_log, NULL
+        run_callback, fae_error_log, NULL
     );
 
-    doremir_destroy(proc);
+    fae_destroy(proc);
     return session;
 }
 
 int main (int argc, char const *argv[])
 {                  
     // Processor to use
-    processor_t proc = doremir_processor_identity(type_pair(type(f32), type(f32)));
+    processor_t proc = fae_processor_identity(type_pair(type(f32), type(f32)));
     
     // Begin session
-    doremir_device_audio_with_session(
+    fae_device_audio_with_session(
         session_callback, proc,
-        doremir_error_log, NULL
+        fae_error_log, NULL
     );
 }
 ~~~~
@@ -185,12 +185,12 @@ TODO
 ## File devices {#id9192746}
 
 ~~~~
-#include <doremir/time.h>
-#include <doremir/thread.h>
-#include <doremir/device/file.h>
+#include <fae/time.h>
+#include <fae/thread.h>
+#include <fae/device/file.h>
 
-typedef doremir_device_file_t   device_t;
-typedef doremir_processor_t     processor_t;
+typedef fae_device_file_t   device_t;
+typedef fae_processor_t     processor_t;
 
 int main (int argc, char const *argv[])
 {
@@ -199,30 +199,30 @@ int main (int argc, char const *argv[])
     result_t    result;
 
     // Processor to use
-    proc    = doremir_processor_identity(type_pair(type(f32), type(f32)));
+    proc    = fae_processor_identity(type_pair(type(f32), type(f32)));
 
     // Open streams
-    input   = doremir_device_file_open(string("test/in.wav"));
-    output  = doremir_device_file_open(string("test/out.wav"));
+    input   = fae_device_file_open(string("test/in.wav"));
+    output  = fae_device_file_open(string("test/out.wav"));
 
     // Handle possible errors
-    if (doremir_check(input)) {
-        doremir_error_log(result);
+    if (fae_check(input)) {
+        fae_error_log(result);
     }                                    
     
-    if (doremir_check(output)) {
-        doremir_error_log(result);
+    if (fae_check(output)) {
+        fae_error_log(result);
     }                                    
 
-    result  = doremir_device_file_run(in, proc, out);
+    result  = fae_device_file_run(in, proc, out);
 
     // Handle possible error
-    if (doremir_check(result)) {
-        doremir_error_log(result);
+    if (fae_check(result)) {
+        fae_error_log(result);
     }                                    
     
-    doremir_device_buffer_destroy(input);
-    doremir_device_buffer_destroy(output);;
+    fae_device_buffer_destroy(input);
+    fae_device_buffer_destroy(output);;
 }
 ~~~~
 
@@ -230,12 +230,12 @@ int main (int argc, char const *argv[])
 ## Buffer devices {#id11127283}
 
 ~~~~
-#include <doremir/time.h>
-#include <doremir/thread.h>
-#include <doremir/device/file.h>
+#include <fae/time.h>
+#include <fae/thread.h>
+#include <fae/device/file.h>
 
-typedef doremir_device_file_t   device_t;
-typedef doremir_processor_t     processor_t;
+typedef fae_device_file_t   device_t;
+typedef fae_processor_t     processor_t;
 
 int main (int argc, char const *argv[])
 {
@@ -244,30 +244,30 @@ int main (int argc, char const *argv[])
     result_t    result;
 
     // Processor to use
-    proc    = doremir_processor_identity(type_pair(type(f32), type(f32)));
+    proc    = fae_processor_identity(type_pair(type(f32), type(f32)));
 
     // Open streams
-    input   = doremir_device_buffer_open(doremir_buffer_create(1024));
-    output  = doremir_device_buffer_open(doremir_buffer_create(1024));
+    input   = fae_device_buffer_open(fae_buffer_create(1024));
+    output  = fae_device_buffer_open(fae_buffer_create(1024));
 
     // Handle possible errors
-    if (doremir_check(input)) {
-        doremir_error_log(result);
+    if (fae_check(input)) {
+        fae_error_log(result);
     }                                    
     
-    if (doremir_check(output)) {
-        doremir_error_log(result);
+    if (fae_check(output)) {
+        fae_error_log(result);
     }                                    
 
-    result  = doremir_device_buffer_run(in, proc, out);
+    result  = fae_device_buffer_run(in, proc, out);
 
     // Handle possible error
-    if (doremir_check(result)) {
-        doremir_error_log(result);
+    if (fae_check(result)) {
+        fae_error_log(result);
     }                                    
     
-    doremir_device_buffer_close(input);
-    doremir_device_buffer_close(output);
+    fae_device_buffer_close(input);
+    fae_device_buffer_close(output);
 }
 ~~~~
 

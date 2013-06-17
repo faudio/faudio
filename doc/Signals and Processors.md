@@ -11,10 +11,10 @@
 The most important concepts in the Audio Engine are the notion of *signals* and
 *processors*. Both have simple definitions:
 
-* A <em>[signal](@ref doremir_signal_t)</em> is a function of time, for example 
+* A <em>[signal](@ref fae_signal_t)</em> is a function of time, for example 
   \f$ y(t)=sin(2\pi\,t) \f$.
 
-* A <em>[processor](@ref doremir_processor_t)</em> a function from a signal to a
+* A <em>[processor](@ref fae_processor_t)</em> a function from a signal to a
   signal, for example \f$ y(t)=\frac{1}{2}\,x(t) \f$.
 
 Both signals and processors can be built by *composition* of simple values: signals
@@ -134,7 +134,7 @@ TODO
 
 ### Signals from numbers {#id19230}
 
-Numbers can be converted to signals using @ref doremir_signal_constant. The
+Numbers can be converted to signals using @ref fae_signal_constant. The
 resulting signal is a constant function that ignores the incoming time.
 
 \f$
@@ -143,7 +143,7 @@ resulting signal is a constant function that ignores the incoming time.
 
 ### Signals from events {#id11324}
 
-Events can be converted to signals using @ref doremir_signal_value. Each occurence
+Events can be converted to signals using @ref fae_signal_value. Each occurence
 will update the given signal to the incoming value.
 
 ### Signals from buffers {#id13431}

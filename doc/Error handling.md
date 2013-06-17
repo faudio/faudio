@@ -27,17 +27,17 @@ are grouped into *optional* values and *error* values.
 *Optional values* simply means that a function returns null instead of an ordinary
 value. They are used for simple cases where no additional information about the
 condition is needed. Examples of functions returning optional values are
-ref doremir_list_index and @ref doremir_priority_queue_peek.
+ref fae_list_index and @ref fae_priority_queue_peek.
 
 ## Error values {#id24834}
 
 *Error values* are used in cases where the system has access to information about the
 error. Error values depend on the interface mechanism: any value can be passed to
-@ref doremir_check, which returns true if and only if the value is an error. 
+@ref fae_check, which returns true if and only if the value is an error. 
 
-Functions returning errors must have their return value passed to @ref doremir_check 
+Functions returning errors must have their return value passed to @ref fae_check 
 before the value is used by another function. If an error has
-occurred, check will return true and the other methods of the @ref doremir_error_t
+occurred, check will return true and the other methods of the @ref fae_error_t
 interface can be used to obtain more information about the condition, otherwise the
 value can be used normally. Note that values returned from construction and copy
 functions must be destroyed whether an error has occured or not.
@@ -46,7 +46,7 @@ functions must be destroyed whether an error has occured or not.
 TODO not sure about this...
 
 As sa a special case in the interface mechanism, `null` is considered to implement
-[Error](@ref doremir_error_t). This means that the same procedure can be used to
+[Error](@ref fae_error_t). This means that the same procedure can be used to
 check for optional values and error values.
 -->
 
@@ -65,12 +65,12 @@ handler function.
 ## Adding log entries {#id10103}
 
 Non-recoverable errors are always logged. The user can add recoverable errors to
-the log using @ref doremir_audio_engine_log. Typically, this function is used with
-@ref doremir_check, as in:
+the log using @ref fae_audio_engine_log. Typically, this function is used with
+@ref fae_check, as in:
 
 ~~~
-if (doremir_check(value)) {
-    doremir_error_log(NULL, value);
+if (fae_check(value)) {
+    fae_error_log(NULL, value);
     exit(-1);
 }
 ~~~
@@ -78,8 +78,8 @@ if (doremir_check(value)) {
 There are also some convenience functions to log an arbitrary entry, for example:
 
 ~~~
-doremir_audio_engine_log_info("Are you aware of this?");
-doremir_audio_engine_log_error("That is an error!");
+fae_audio_engine_log_info("Are you aware of this?");
+fae_audio_engine_log_error("That is an error!");
 ~~~
 
 
