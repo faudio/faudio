@@ -391,6 +391,12 @@ fae_string_t fae_show(fae_ptr_t a)
     return fae_string_show(a);
 }
 
+fae_string_t fae_to_string(fae_ptr_t a)
+{
+    return fae_string_to_string(a);
+}
+
+
 void fae_print(char *f, fae_ptr_t a)
 {
     if (a) {
