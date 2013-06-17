@@ -394,7 +394,7 @@ fae_string_t fae_show(fae_ptr_t a)
 void fae_print(char *f, fae_ptr_t a)
 {
     if (a) {
-        fae_string_t str = fae_string_show(a);
+        fae_string_t str = fae_string_to_string(a);
         char *cstr = fae_string_to_utf8(str);
         printf(f, cstr);
         free(cstr);
@@ -419,7 +419,10 @@ void fae_dprint(char *f, fae_ptr_t a)
 
 void fae_print_ln(fae_ptr_t a)
 {
-    fae_print("%s\n", a);
+    if (a)
+        fae_print("%s\n", a);
+    else
+        fae_print("", a);
 }
 
 void fae_dprint_ln(fae_ptr_t a)

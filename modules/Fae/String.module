@@ -92,7 +92,7 @@ module Fae.String
     matches : (String,String) -> Bool;  // regex, input
 
     // Formatting
-    formatIntegral  : (Char*, Long) -> String;
+    formatIntegral : (Char*, Long) -> String;
     formatFloating : (Char*, Double) -> String;
 }
 

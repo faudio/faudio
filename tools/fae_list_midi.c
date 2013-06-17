@@ -4,15 +4,27 @@
 
 void print_midi_devices(midi_session_t session)
 {
-    fae_print("Listing midi devices: \n", NULL);
+    fae_print("Listing midi devices: \n", NULL);                           
+
     fae_for_each(x, fae_device_midi_all(session)) {
-        fae_print("    Device: %s\n", x);
-        fae_print("        Input:  %s\n", fb(fae_device_midi_has_input(x)));
-        fae_print("        Output: %s\n", fb(fae_device_midi_has_output(x)));
+        fae_print_ln(string(""));
+        fae_print("    Device:        %s\n", fae_string_to_string(fae_device_midi_name(x)));
+        fae_print("    Host:          %s\n", fae_string_to_string(fae_device_midi_host_name(x)));
+        fae_print("    Input:         %s\n", fb(fae_device_midi_has_input(x)));
+        fae_print("    Output:        %s\n", fb(fae_device_midi_has_output(x)));
     }
-    fae_print("Default input is : %s\n", fae_device_midi_default_input(session));
-    fae_print("Default output is : %s\n", fae_device_midi_default_output(session));
-    fae_print("\n", NULL);
+
+    fae_print_ln(string(""));
+
+    fae_print("Default input is:  %s\n", fae_string_to_string(
+        fae_device_midi_name(
+            fae_device_midi_default_input(session))));
+
+    fae_print("Default output is: %s\n", fae_string_to_string(
+        fae_device_midi_name(
+            fae_device_midi_default_output(session))));
+
+    fae_print_ln(string(""));
 }
 
 int main (int argc, char const *argv[])
