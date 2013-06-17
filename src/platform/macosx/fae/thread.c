@@ -22,18 +22,11 @@ struct _fae_thread_mutex_t {
     pthread_mutex_t         native;
 };
 
-// struct _fae_thread_condition_t {
-//     impl_t                  impl;       //  Interface dispatcher
-//     pthread_cond_t          native;
-//     fae_thread_mutex_t  mutex;
-// };
-
 static pthread_t main_thread_g = NULL;
 
 static void fae_thread_fatal(char *msg, int error);
 ptr_t thread_impl(fae_id_t interface);
 ptr_t mutex_impl(fae_id_t interface);
-// ptr_t condition_impl(fae_id_t interface);
 
 // --------------------------------------------------------------------------------
 
@@ -218,74 +211,6 @@ bool fae_thread_unlock(fae_thread_mutex_t mutex)
     }
 }
 
-
-// --------------------------------------------------------------------------------
-
-// /** Create a condition.
-//
-//     Conditions have single-ownership semantics and must be finalized by passing it
-//     to a destructive function.
-//  */ fae_thread_condition_t fae_thread_create_condition(fae_thread_mutex_t mutex)
-// {
-//     fae_thread_condition_t cond = fae_new(thread_condition);
-//     cond->impl = &condition_impl;
-//     cond->mutex = mutex;
-//
-//     int result = pthread_cond_init(&cond->native, NULL);
-//
-//     if (result != 0) {
-//         fae_thread_fatal("create_condition", result);
-//     }
-//
-//     return cond;
-// }
-//
-// /** Destroy a condition.
-//  */
-// void fae_thread_destroy_condition(fae_thread_condition_t cond)
-// {
-//     int result = pthread_cond_destroy(&cond->native);
-//     fae_delete(cond);
-//
-//     if (result != 0) {
-//         fae_thread_fatal("destroy_condition", result);
-//     }
-// }
-//
-// /** Wait for a condition to be signaled.
-//  */
-// void fae_thread_wait_for(fae_thread_condition_t cond)
-// {
-//     int result = pthread_cond_wait(&cond->native, &cond->mutex->native);
-//
-//     if (result != 0) {
-//         fae_thread_fatal("wait_for", result);
-//     }
-// }
-//
-// /** Signal a condition to one listener.
-//  */
-// void fae_thread_notify(fae_thread_condition_t cond)
-// {
-//     int result = pthread_cond_signal(&cond->native);
-//
-//     if (result != 0) {
-//         fae_thread_fatal("notify", result);
-//     }
-// }
-//
-// /** Signal a condition to all listeners.
-//  */
-// void fae_thread_notify_all(fae_thread_condition_t cond)
-// {
-//     int result = pthread_cond_broadcast(&cond->native);
-//
-//     if (result != 0) {
-//         fae_thread_fatal("notify_all", result);
-//     }
-// }
-//
-
 // --------------------------------------------------------------------------------
 
 bool thread_equal(ptr_t m, ptr_t n)
@@ -375,38 +300,6 @@ ptr_t mutex_impl(fae_id_t interface)
         return NULL;
     }
 }
-
-// fae_string_t condition_show(ptr_t a)
-// {
-//     string_t str = string("<Condition ");
-//     str = string_dappend(str, fae_string_format_integral(" %p", (long) a));
-//     str = string_dappend(str, string(">"));
-//     return str;
-// }
-//
-// void condition_destroy(ptr_t a)
-// {
-//     fae_thread_destroy_condition(a);
-// }
-//
-// ptr_t condition_impl(fae_id_t interface)
-// {
-//     static fae_string_show_t condition_show_impl
-//         = { condition_show };
-//     static fae_destroy_t condition_destroy_impl
-//         = { condition_destroy };
-//
-//     switch (interface) {
-//     case fae_string_show_i:
-//         return &condition_show_impl;
-//
-//     case fae_destroy_i:
-//         return &condition_destroy_impl;
-//
-//     default:
-//         return NULL;
-//     }
-// }
 
 
 // --------------------------------------------------------------------------------

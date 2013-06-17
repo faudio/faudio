@@ -2,12 +2,11 @@
 /**
     @addtogroup FaeThread
 
-    Cross-platform threads.
+    Minimal, cross-platform threads.
 
-    Standard low-level constructs such as threads, mutexes and conditions are
-    provided by this module. For more high-level blocking constructs, see
-    the @ref FaeThreadFuture and @ref FaeThreadImproving modules. For non-blocking communication
-    see the @ref FaeAtomic modules.
+    We provide threads and mutexes but no conditions. as they can not be easily
+    implemented on all platforms, and have limited applications in real-time audio processing
+    anyway. For non-blocking constructs, see the @ref FaeAtomic modules.
 
     @par Literals
     - `thread(function, data)`
