@@ -82,14 +82,14 @@ module Fae.String
     toUtf8       : String -> Utf8;
     toUtf16      : String -> Utf16;
     toUtf32      : String -> Utf32;
-    toCfString   : String -> Void*;
-    fromUtf8     : Utf8 -> String;
-    fromUtf16    : Utf16 -> String;
-    fromUtf32    : Utf32 -> String;
-    fromCfString : Void* -> String;
+    toNative     : String -> Ptr;
+    fromUtf8     : Utf8   -> String;
+    fromUtf16    : Utf16  -> String;
+    fromUtf32    : Utf32  -> String;
+    fromNative   : Ptr    -> String;
 
     // Matching
-    matches : (String,String) -> Bool;  // regex, input
+    // matches : (String,String) -> Bool;  // regex, input
 
     // Formatting
     formatIntegral : (Char*, Long) -> String;

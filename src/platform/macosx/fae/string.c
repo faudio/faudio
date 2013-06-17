@@ -18,7 +18,7 @@
     @return
         A new CFStringRef.
  */
-void *fae_string_to_cf_string(fae_string_t str)
+void *fae_string_to_native(fae_string_t str)
 {
     char *cstr;
     CFStringRef cfstr;
@@ -38,7 +38,7 @@ void *fae_string_to_cf_string(fae_string_t str)
     @return
         A new string.
  */
-fae_string_t fae_string_from_cf_string(void *cfstr)
+fae_string_t fae_string_from_native(void *cfstr)
 {
     CFIndex size;
     char *cstr;
