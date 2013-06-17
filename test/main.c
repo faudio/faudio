@@ -2,9 +2,6 @@
 #include <fae/fae.h>
 #include <fae/util.h>
 
-int  version[3] = { 2, 0, 0 };
-char *bits      = sizeof(void *) == 4 ? "32-bit" : "64-bit";
-
 void test_section(char *str)
 {
     printf("\n\n--------------------\n");
@@ -1799,7 +1796,9 @@ static const bool stop_k       = false;
 
 int main(int argc, char const *argv[])
 {
-    printf("FAE %s v%d.%d.%d\n", bits, version[0], version[1], version[2]);
+
+    char *bits      = sizeof(void *) == 4 ? "32-bit" : "64-bit";
+    printf("FAE %s v%s\n", bits, unstring(fae_fae_version_string()));
 
     printf("sizeof(fae_ptr_t) = %d\n", (unsigned int) sizeof(fae_ptr_t));
     printf("sizeof(int32_t) = %d\n", (unsigned int) sizeof(int32_t));
