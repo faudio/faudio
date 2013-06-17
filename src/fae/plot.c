@@ -16,7 +16,7 @@ enum plot_backend {
     core_plot
 };
 
-enum plot_backend   plot_backend_g  = core_plot;
+enum plot_backend plot_backend_g = gnu_plot;
 
 void fae_audio_engine_log_info(fae_string_t);
 void run_core_plot(plot_func func, ptr_t funcData, nullary_t cont, ptr_t contData);

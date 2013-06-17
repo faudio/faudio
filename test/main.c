@@ -1810,9 +1810,7 @@ int main(int argc, char const *argv[])
         }
 
         fae_audio_engine_set_log_std();
-        fae_plot_use_gnu();
         // fae_audio_engine_set_log_file(string("/Users/hans/Library/Logs/FAEAudio.log"));
-        // fae_plot_use_core();
 
         fae_audio_engine_initialize();
 
@@ -1856,7 +1854,7 @@ int main(int argc, char const *argv[])
         test_regex();
         // test_plot(NULL, NULL);
         // test_plot_buffer();
-        // test_plot_file(string_dappend(fae_system_directory_current(), string("/test/in.wav")));
+        test_plot_file(string_dappend(fae_system_directory_current(), string("/test/in.wav")));
 
         // test_processor_graphs(string_dappend(fae_system_directory_current(), string("/test/proc.dot")));
         // test_dispatcher();
