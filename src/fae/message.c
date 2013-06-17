@@ -277,11 +277,11 @@ ptr_t dispatcher_impl(fae_id_t interface)
 }
 
 
-void fae_audio_engine_log_error_from(fae_string_t msg, fae_string_t origin);
+void fae_fae_log_error_from(fae_string_t msg, fae_string_t origin);
 
 void message_fatal(char *msg, int error)
 {
-    fae_audio_engine_log_error_from(string_dappend(string(msg), format_integral(" (error code %d)", error)), string("Doremir.message"));
-    fae_audio_engine_log_error(string("Terminating Audio Engine"));
+    fae_fae_log_error_from(string_dappend(string(msg), format_integral(" (error code %d)", error)), string("Doremir.message"));
+    fae_fae_log_error(string("Terminating Audio Engine"));
     exit(error);
 }

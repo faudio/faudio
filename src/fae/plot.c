@@ -18,7 +18,7 @@ enum plot_backend {
 
 enum plot_backend plot_backend_g = gnu_plot;
 
-void fae_audio_engine_log_info(fae_string_t);
+void fae_fae_log_info(fae_string_t);
 void run_core_plot(plot_func func, ptr_t funcData, nullary_t cont, ptr_t contData);
 void run_gnu_plot(plot_func func, ptr_t funcData, nullary_t cont, ptr_t contData);
 
@@ -28,7 +28,7 @@ void run_gnu_plot(plot_func func, ptr_t funcData, nullary_t cont, ptr_t contData
 void fae_plot_use_gnu()
 {
     plot_backend_g = gnu_plot;
-    fae_audio_engine_log_info(string("Using gnuplot backend"));
+    fae_fae_log_info(string("Using gnuplot backend"));
 }
 
 /** Use CorePlot for plotting.
@@ -36,7 +36,7 @@ void fae_plot_use_gnu()
 void fae_plot_use_core()
 {
     plot_backend_g = core_plot;
-    fae_audio_engine_log_info(string("Using CorePlot backend"));
+    fae_fae_log_info(string("Using CorePlot backend"));
 }
 
 /** Run a plot of the given functions.

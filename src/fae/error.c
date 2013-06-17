@@ -22,7 +22,7 @@ struct simple_error {
 typedef struct simple_error       *simple_error_t;
 
 
-void fae_audio_engine_log(fae_ptr_t data, fae_error_t error);
+void fae_fae_log(fae_ptr_t data, fae_error_t error);
 
 /** Creates a simple error.
     @param severity     Severity of the error.
@@ -121,7 +121,7 @@ bool fae_error_check(fae_ptr_t a)
  */
 void fae_error_log(fae_ptr_t context, fae_error_t error)
 {
-    fae_audio_engine_log(context, error);
+    fae_fae_log(context, error);
 }
 
 /** Convert the given error to a formated string.

@@ -1,5 +1,5 @@
 
-#include <fae/audio_engine.h>
+#include <fae/fae.h>
 #include <fae/util.h>
 
 int  version[3] = { 2, 0, 0 };
@@ -8,7 +8,7 @@ char *bits      = sizeof(void *) == 4 ? "32-bit" : "64-bit";
 void test_section(char *str)
 {
     printf("\n\n--------------------\n");
-    fae_audio_engine_log_info(string_dappend(string("Running test: "), string(str)));
+    fae_fae_log_info(string_dappend(string("Running test: "), string(str)));
 }
 
 
@@ -1456,16 +1456,16 @@ void test_error()
 void test_log()
 {
     test_section("Logging");
-    fae_audio_engine_log_info(string("---------------"));
-    fae_audio_engine_log_info(string("Log test: Do not take these seriously"));
+    fae_fae_log_info(string("---------------"));
+    fae_fae_log_info(string("Log test: Do not take these seriously"));
 
     for (int i = 0; i < 3; ++i) {
 
-        fae_audio_engine_log_info(string("We have a problem"));
-        // fae_audio_engine_log_warning(string("We have a problem"));
-        fae_audio_engine_log_error(string("We have a problem"));
+        fae_fae_log_info(string("We have a problem"));
+        // fae_fae_log_warning(string("We have a problem"));
+        fae_fae_log_error(string("We have a problem"));
 
-        fae_audio_engine_log(NULL,
+        fae_fae_log(NULL,
                                  fae_error_create_simple(
                                      error,
                                      string("We have a problem"),
@@ -1473,7 +1473,7 @@ void test_log()
         fae_thread_sleep(50);
     }
 
-    fae_audio_engine_log_info(string("---------------"));
+    fae_fae_log_info(string("---------------"));
 }
 
 
@@ -1786,8 +1786,8 @@ cleanup:
 void test_version()
 {
     test_section("Versioning");
-    fae_print("%s\n", fae_audio_engine_version());
-    fae_print("%s\n", fae_audio_engine_version_string());
+    fae_print("%s\n", fae_fae_version());
+    fae_print("%s\n", fae_fae_version_string());
 }
 
 // --------------------------------------------------------------------------------
@@ -1811,10 +1811,10 @@ int main(int argc, char const *argv[])
             getchar();
         }
 
-        fae_audio_engine_set_log_std();
-        // fae_audio_engine_set_log_file(string("/Users/hans/Library/Logs/FAEAudio.log"));
+        fae_fae_set_log_std();
+        // fae_fae_set_log_file(string("/Users/hans/Library/Logs/FAEAudio.log"));
 
-        fae_audio_engine_initialize();
+        fae_fae_initialize();
 
         // goto begin;
         test_value_references();
@@ -1880,7 +1880,7 @@ int main(int argc, char const *argv[])
         // test_midi_hotplug();
 
 // end:
-        fae_audio_engine_terminate();
+        fae_fae_terminate();
     }
 
     return 0;

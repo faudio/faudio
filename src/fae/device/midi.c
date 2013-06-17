@@ -590,7 +590,7 @@ ptr_t midi_stream_impl(fae_id_t interface)
 
 // --------------------------------------------------------------------------------
 
-void fae_audio_engine_log_error_from(fae_string_t msg, fae_string_t origin);
+void fae_fae_log_error_from(fae_string_t msg, fae_string_t origin);
 
 error_t midi_device_error(string_t msg)
 {
@@ -615,11 +615,11 @@ error_t native_error(string_t msg, int code)
 
 void midi_device_fatal(string_t msg, int code)
 {
-    fae_audio_engine_log_error_from(
+    fae_fae_log_error_from(
         string_dappend(msg, format_integral(" (error code %d)", code)),
         string("Doremir.Device.Midi"));
 
-    fae_audio_engine_log_error(string("Terminating Audio Engine"));
+    fae_fae_log_error(string("Terminating Audio Engine"));
     exit(error);
 }
 

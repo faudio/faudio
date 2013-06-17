@@ -134,15 +134,15 @@
 #define format_integral     fae_string_format_integral
 #define format_floating     fae_string_format_floating
 
-void fae_audio_engine_log_info(fae_string_t);
-void fae_audio_engine_log_warning(fae_string_t);
-void fae_audio_engine_log_error(fae_string_t);
-void fae_audio_engine_dlog_info(fae_string_t);
+void fae_fae_log_info(fae_string_t);
+void fae_fae_log_warning(fae_string_t);
+void fae_fae_log_error(fae_string_t);
+void fae_fae_dlog_info(fae_string_t);
 
-#define inform(s)           fae_audio_engine_log_info(s)
-#define dinform(s)          fae_audio_engine_dlog_info(s)
-#define warn(s)             fae_audio_engine_log_warning(s)
-#define fail(s)             fae_audio_engine_log_error(s)
+#define inform(s)           fae_fae_log_info(s)
+#define dinform(s)          fae_fae_dlog_info(s)
+#define warn(s)             fae_fae_log_warning(s)
+#define fail(s)             fae_fae_log_error(s)
 #define log_error(e)        fae_error_log(NULL,e)
 
 #define tb                  fae_to_bool

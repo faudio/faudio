@@ -6,7 +6,7 @@
 #  find src -name '*'
 list(APPEND SRCS
   fae.c
-  fae/audio_engine.c
+  fae/fae.c
   fae/atomic/queue.c
   fae/atomic/ring_buffer.c
   fae/atomic/stack.c

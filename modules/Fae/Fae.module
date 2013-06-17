@@ -19,7 +19,7 @@
     ~~~~
 
  */
-module Fae.AudioEngine
+module Fae.Fae
 {
     import Fae.Atomic;
     import Fae.Atomic.Queue;

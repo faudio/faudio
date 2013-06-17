@@ -1,5 +1,5 @@
 
-#include <fae/audio_engine.h>
+#include <fae/fae.h>
 #include <fae/util.h>
 
 midi_device_t find_device(midi_session_t session, string_t pattern) {
@@ -71,9 +71,9 @@ cleanup:
 
 int main (int argc, char const *argv[])
 {
-    fae_audio_engine_initialize();
+    fae_fae_initialize();
     echo();
-    fae_audio_engine_terminate();
+    fae_fae_terminate();
     return 0;
 }
 

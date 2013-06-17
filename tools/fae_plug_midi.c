@@ -1,5 +1,5 @@
 
-#include <fae/audio_engine.h>
+#include <fae/fae.h>
 #include <fae/util.h>
 #include <fae/thread.h>
 #include <CoreMidi/MIDIServices.h>
@@ -28,7 +28,7 @@ int main (int argc, char const *argv[])
 {
     midi_session_t session;
 
-    fae_audio_engine_initialize();
+    fae_fae_initialize();
     session = fae_device_midi_begin_session();
 
     if (fae_check(session)) {

@@ -769,9 +769,9 @@ fae_ptr_t string_impl(fae_id_t interface)
 
 void string_fatal(char *msg, int error)
 {
-    void fae_audio_engine_log_error_from(fae_string_t msg, fae_string_t origin);
+    void fae_fae_log_error_from(fae_string_t msg, fae_string_t origin);
 
-    fae_audio_engine_log_error_from(string(msg), string("Doremir.String"));
+    fae_fae_log_error_from(string(msg), string("Doremir.String"));
     exit(error);
 }
 

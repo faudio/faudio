@@ -306,12 +306,12 @@ fae_ptr_t buffer_impl(fae_id_t interface)
 }
 
 
-void fae_audio_engine_log_error_from(fae_string_t msg, fae_string_t origin);
+void fae_fae_log_error_from(fae_string_t msg, fae_string_t origin);
 
 void buffer_fatal(char *msg, int error)
 {
-    fae_audio_engine_log_error_from(string_dappend(string(msg), format_integral(" (error code %d)", error)), string("Doremir.Buffer"));
-    fae_audio_engine_log_error(string("Terminating Audio Engine"));
+    fae_fae_log_error_from(string_dappend(string(msg), format_integral(" (error code %d)", error)), string("Doremir.Buffer"));
+    fae_fae_log_error(string("Terminating Audio Engine"));
     exit(error);
 }
 

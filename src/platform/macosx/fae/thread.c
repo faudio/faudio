@@ -411,11 +411,11 @@ ptr_t mutex_impl(fae_id_t interface)
 
 // --------------------------------------------------------------------------------
 
-void fae_audio_engine_log_error_from(fae_string_t msg, fae_string_t origin);
+void fae_fae_log_error_from(fae_string_t msg, fae_string_t origin);
 
 void fae_thread_fatal(char *msg, int error)
 {
-    fae_audio_engine_log_error_from(string(msg), string("Doremir.Thread"));
+    fae_fae_log_error_from(string(msg), string("Doremir.Thread"));
     exit(error);
 }
 

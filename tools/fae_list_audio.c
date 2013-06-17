@@ -1,5 +1,5 @@
 
-#include <fae/audio_engine.h>
+#include <fae/fae.h>
 #include <fae/util.h>
 
 void print_audio_devices(audio_session_t session)
@@ -19,7 +19,7 @@ int main (int argc, char const *argv[])
 {    
     audio_session_t session;    
     
-    fae_audio_engine_initialize();
+    fae_fae_initialize();
     session = fae_device_audio_begin_session();
 
     if (fae_check(session)) {
@@ -30,12 +30,12 @@ int main (int argc, char const *argv[])
     print_audio_devices(session);
 
     fae_device_audio_end_session(session);
-    fae_audio_engine_terminate();
+    fae_fae_terminate();
 
     return 0;
 
 error:
     fae_device_audio_end_session(session);
-    fae_audio_engine_terminate();
+    fae_fae_terminate();
     return -1;
 }
