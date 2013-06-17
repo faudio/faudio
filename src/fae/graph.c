@@ -161,15 +161,6 @@ fae_graph_t fae_graph_disconnect(fae_graph_node_t node1,
     return new_graph(fae_copy(nodes), fae_map_remove(edge, edges));
 }
 
-fae_graph_t fae_graph_from_list(fae_list_t list)
-{
-    assert(false && "Not implemented.");
-}
-
-fae_list_t fae_graph_to_list(fae_graph_t graph)
-{
-    assert(false && "Not implemented.");
-}
 
 // --------------------------------------------------------------------------------
 

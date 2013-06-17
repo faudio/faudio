@@ -32,8 +32,6 @@ fae_graph_t fae_graph_disconnect(fae_graph_node_t,
 fae_string_t fae_graph_to_dot(fae_string_t,
                               fae_string_t,
                               fae_graph_t);
-fae_graph_t fae_graph_from_list(fae_list_t);
-fae_list_t fae_graph_to_list(fae_graph_t);
 
 /** @}
     @}

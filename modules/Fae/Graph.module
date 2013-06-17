@@ -66,7 +66,7 @@ module Fae.Graph
     toDot            : (String,String,Graph) -> String;
 
     // Conversions   
-    fromList         : List -> Graph;   // [(e,(n,n))]
-    toList           : Graph -> List;   // [(e,(n,n))]
+    // fromList         : List -> Graph;   // [(e,(n,n))]
+    // toList           : Graph -> List;   // [(e,(n,n))]
 }
 
