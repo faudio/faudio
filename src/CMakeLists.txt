@@ -5,66 +5,66 @@
 # To update, use 
 #  find src -name '*'
 list(APPEND SRCS
-  doremir.c
-  doremir/audio_engine.c
-  doremir/atomic/queue.c
-  doremir/atomic/ring_buffer.c
-  doremir/atomic/stack.c
-  doremir/device/audio.c
-  doremir/device/midi.c
-  doremir/device/file.c
-  doremir/device/buffer.c
-  doremir/dynamic.c
-  doremir/buffer.c
-  doremir/error.c
-  doremir/event.c
-  doremir/list.c
-  doremir/map.c 
-  doremir/message.c
-  doremir/graph.c
-  doremir/midi.c
-  doremir/pair.c
-  doremir/plot/gnuplot.c
-  doremir/plot.c
-  doremir/priority_queue.c
-  doremir/processor.c
-  doremir/processor/vm.c
-  doremir/processor/split.c
-  doremir/processor/unary.c
-  doremir/processor/binary.c
-  doremir/processor/delay.c
-  doremir/processor/seq.c
-  doremir/processor/par.c
-  doremir/processor/loop.c
-  doremir/ratio.c
-  doremir/scheduler.c
-  doremir/set.c
-  doremir/signal.c
-  doremir/string.c
-  doremir/string/trex.c
-  doremir/string/parson.c
-  doremir/time.c
-  doremir/type.c
+  fae.c
+  fae/audio_engine.c
+  fae/atomic/queue.c
+  fae/atomic/ring_buffer.c
+  fae/atomic/stack.c
+  fae/device/audio.c
+  fae/device/midi.c
+  fae/device/file.c
+  fae/device/buffer.c
+  fae/dynamic.c
+  fae/buffer.c
+  fae/error.c
+  fae/event.c
+  fae/list.c
+  fae/map.c 
+  fae/message.c
+  fae/graph.c
+  fae/midi.c
+  fae/pair.c
+  fae/plot/gnuplot.c
+  fae/plot.c
+  fae/priority_queue.c
+  fae/processor.c
+  fae/processor/vm.c
+  fae/processor/split.c
+  fae/processor/unary.c
+  fae/processor/binary.c
+  fae/processor/delay.c
+  fae/processor/seq.c
+  fae/processor/par.c
+  fae/processor/loop.c
+  fae/ratio.c
+  fae/scheduler.c
+  fae/set.c
+  fae/signal.c
+  fae/string.c
+  fae/string/trex.c
+  fae/string/parson.c
+  fae/time.c
+  fae/type.c
   )
 list(APPEND SRCS_OSX
-  platform/macosx/doremir/atomic.c
-  platform/macosx/doremir/thread.c
-  platform/macosx/doremir/string.c
-  platform/macosx/doremir/device.c
-  platform/macosx/doremir/system/directory.c
-  platform/macosx/doremir/system/event.c
+  platform/macosx/fae/atomic.c
+  platform/macosx/fae/thread.c
+  platform/macosx/fae/string.c
+  platform/macosx/fae/device.c
+  platform/macosx/fae/system/directory.c
+  platform/macosx/fae/system/event.c
   )
 if(${ENABLE_COREPLOT})
   list(APPEND SRCS_OSX
-    platform/macosx/doremir/plot/coreplot.m
+    platform/macosx/fae/plot/coreplot.m
   )
 endif()
 
 list(APPEND SRCS_MSYS
-  doremir/atomic_win.c
-  doremir/device_win.c
-  doremir/directory_win.c
-  doremir/thread_win.c
+  fae/atomic_win.c
+  fae/device_win.c
+  fae/directory_win.c
+  fae/thread_win.c
   )
 
 if(APPLE)
