@@ -2,19 +2,28 @@
 Introduction {#mainpage}
 ====
 
-The DoReMIR Audio Engine provides real-time and non-real-time audio processing,
-midi processing, as well as real-time scheduling and event handling. It is based on
-high-level, semantically well-defiend concepts such as [signals][s],
-[processors][p] and [events][ev].
+The DoReMIR Audio Engine provides real-time and non-real-time audio processing.
 
-The Audio Engine is specified in [Modulo][modlang] and implemented in [C][clang].
-Bindings can be generated to any language supported by Modulo.
+## Basic concepts
 
-© DoReMIR Music Research 2013. All rights reserved.
+* A *signal* is a time-varying value
+* A *processor* is a transformer of signals
+* A *device* is a provider and consumer of signals
 
-[modlang]: https://github.com/hanshoglund/modulo
-[clang]: http://en.wikipedia.org/wiki/C_%28programming_language%29
-[s]: @ref Signals
-[p]: @ref Processors
-[ev]: @ref Events
+* An *event* is a sequence of messages
+* A *sender* is a provider of messages
+* A *receiver* is a consumer of messages
 
+
+### Signals:     
+
+* Constant value                            (S a)
+* Time (linear)                             S Time
+* Map/Ap2                                   (a -> b) -> S a -> S b, (a -> b -> c) -> S a -> S b -> S c
+* Accum/loop                                (Time -> a -> b -> b) -> S a -> S b
+* Read/write buffer                         B a -> S a, B a -> S a -> S ()
+* Send/recv to bus                          Z a -> S a, B a -> S a -> S ()
+* Switch from messages                      S a -> E (S a) -> S a
+* External: VST, AU, FluidSynth etc         S a -> S b
+
+### Events:

@@ -4,6 +4,10 @@ Additions
 
 * Audio.endAllSession
 * Midi.endAllSessions
+* Compound (audio + midi) session
+    * But not compound devices!
+* Get device from stream, get session from device
+* Get native stream/device where applicable
 
 * Event
     * First, rest
