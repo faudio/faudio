@@ -23,8 +23,6 @@ c:
 	modulo -Mmodules --language=c    <modules/Fae/Dynamic.module    		>include/fae/dynamic.h && \
 	modulo -Mmodules --language=c    <modules/Fae/Event.module    		>include/fae/event.h && \
 	modulo -Mmodules --language=c    <modules/Fae/Thread.module    		>include/fae/thread.h && \
-	modulo -Mmodules --language=c    <modules/Fae/Thread/Future.module    	>include/fae/thread/future.h && \
-	modulo -Mmodules --language=c    <modules/Fae/Thread/Improving.module    	>include/fae/thread/improving.h && \
 	modulo -Mmodules --language=c    <modules/Fae/Std.module    		>include/fae/std.h && \
 	modulo -Mmodules --language=c    <modules/Fae/String.module    		>include/fae/string.h && \
 	modulo -Mmodules --language=c    <modules/Fae/String/List.module    	>include/fae/string/list.h && \
@@ -70,8 +68,6 @@ gen-lisp:
 	modulo -Mmodules --language=lisp <modules/Fae/Atomic/Stack.module       	>bindings/lisp/fae/atomic/stack.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/Atomic/RingBuffer.module  	>bindings/lisp/fae/atomic/ring-buffer.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/Thread.module    		>bindings/lisp/fae/thread.lisp && \
-	modulo -Mmodules --language=lisp <modules/Fae/Thread/Future.module    	>bindings/lisp/fae/thread/future.lisp && \
-	modulo -Mmodules --language=lisp <modules/Fae/Thread/Improving.module    	>bindings/lisp/fae/thread/improving.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/System.module    		>bindings/lisp/fae/system.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/System/Directory.module    	>bindings/lisp/fae/system/directory.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/System/Event.module    	>bindings/lisp/fae/system/event.lisp && \
