@@ -44,10 +44,11 @@ MISC_OPTS      = -mmin-macosx-version=10.5 -mmacosx-version-min=10.5 -isysroot /
 FRAMEWORK_OPTS = -shared -o ../Frameworks/FAE.framework/Versions/2.0.0alpha4/FAE -install_name /Users/hans/audio/build/Frameworks/FAE.framework/Versions/2.0.0alpha4/FAE
 SHARED_OPTS    = -shared -o lib/libfae.dylib -install_name /usr/local/lib/libfae.dylib
 
-lib/libfae.dylib:
+lib/libfae.dylib: bin/config.h
 	cc -arch x86_64 \
 		$(SHARED_OPTS) \
 		-I include \
+		-I bin \
 		$(LIB_DIRS) \
 		$(LIBS) \
 		$(FILES)
@@ -55,15 +56,29 @@ lib/libfae.dylib:
 TEST_OPTS      = -o bin/fae_tests
 
 
-bin/fae_tests:
+bin/fae_tests: bin/config.h
 	cc -arch x86_64 \
 		$(TEST_OPTS) \
 		-I include \
+		-I bin \
 		$(LIB_DIRS) \
 		$(LIBS) \
 		$(FILES) \
 		test/main.c
 
+bin/fae_list_midi: bin/config.h
+	cc -arch x86_64 \
+		-o bin/fae_list_midi \
+		-I include \
+		-I bin \
+		$(LIB_DIRS) \
+		$(LIBS) \
+		$(FILES) \
+		tools/fae_list_midi.c
+
+
+bin/config.h:
+	cp include/config.h_ bin/config.h
 
 clean:
 	rm -f bin/*
