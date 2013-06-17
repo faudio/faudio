@@ -22,7 +22,7 @@ list(APPEND SRCS
   fae/map.c 
   fae/message.c
   fae/graph.c
-  fae/midi.c
+  fae/midi_msg.c
   fae/pair.c
   fae/plot/gnuplot.c
   fae/plot.c

@@ -36,7 +36,7 @@ c:
 	modulo -Mmodules --language=c    <modules/Fae/Map.module    		>include/fae/map.h && \
 	modulo -Mmodules --language=c    <modules/Fae/Graph.module    		>include/fae/graph.h && \
 	modulo -Mmodules --language=c    <modules/Fae/PriorityQueue.module		>include/fae/priority_queue.h && \
-	modulo -Mmodules --language=c    <modules/Fae/Midi.module    		>include/fae/midi.h && \
+	modulo -Mmodules --language=c    <modules/Fae/MidiMsg.module    		>include/fae/midi_msg.h && \
 	modulo -Mmodules --language=c    <modules/Fae/Time.module    		>include/fae/time.h && \
 	modulo -Mmodules --language=c    <modules/Fae/Processor.module  		>include/fae/processor.h && \
 	modulo -Mmodules --language=c    <modules/Fae/Processor/Unary.module  	>include/fae/processor/unary.h && \
@@ -86,7 +86,7 @@ gen-lisp:
 	modulo -Mmodules --language=lisp <modules/Fae/Map.module    		>bindings/lisp/fae/map.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/Graph.module    		>bindings/lisp/fae/graph.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/PriorityQueue.module		>bindings/lisp/fae/priority-queue.lisp && \
-	modulo -Mmodules --language=lisp <modules/Fae/Midi.module    		>bindings/lisp/fae/midi.lisp && \
+	modulo -Mmodules --language=lisp <modules/Fae/MidiMsg.module    		>bindings/lisp/fae/midi_msg.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/Time.module    		>bindings/lisp/fae/time.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/Processor.module  		>bindings/lisp/fae/processor.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/Processor/External/AudioUnit.module	>bindings/lisp/fae/processor/external/audio-unit.lisp && \

@@ -46,7 +46,7 @@
 #define buffer_t            fae_buffer_t
 #define frames_t            fae_type_frames_t
 #define type_t              fae_type_t
-#define midi_t              fae_midi_t
+#define midi_msg_t          fae_midi_msg_t
 #define time_t              fae_time_t
 #define clock_t             fae_time_clock_t
 #define event_t             fae_event_t
@@ -82,8 +82,8 @@
 #define atomic_stack()      fae_atomic_stack_create()
 #define atomic_ring_buffer(s) fae_atomic_ring_buffer_create(s)
 #define buffer(s)           fae_buffer_create(s)
-#define midi(s,a,b)         fae_midi_create_simple(s,a,b)
-#define midi_sysex(b)       fae_midi_create_sysex(b)
+#define midi_msg(s,a,b)     fae_midi_msg_create_simple(s,a,b)
+#define midi_msg_sysex(b)   fae_midi_msg_create_sysex(b)
 #define dispatcher()        fae_message_create_dispatcher()
 #define lockfree_dispatcher() fae_message_create_lockfree_dispatcher()
 

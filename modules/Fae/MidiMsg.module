@@ -19,7 +19,7 @@
     - doremir_dynamic_t
     
  */
-module Fae.Midi
+module Fae.MidiMsg
 {
     import Fae.Std;
     import Fae.Pair;
@@ -38,19 +38,19 @@ module Fae.Midi
 
     type Channel = Int;    
     type Data    = Int;    
-    type Midi    = opaque;
+    type MidiMsg = opaque;
 
-    createSimple  : (Status, Int, Int) -> Midi;
-    createSysex   : Buffer -> Midi;
-    copy          : Midi -> Midi;
-    destroy       : Midi -> Void;
+    createSimple  : (Status, Int, Int) -> MidiMsg;
+    createSysex   : Buffer -> MidiMsg;
+    copy          : MidiMsg -> MidiMsg;
+    destroy       : MidiMsg -> Void;
 
-    status        : Midi -> Status;
-    channel       : Midi -> Channel;
+    status        : MidiMsg -> Status;
+    channel       : MidiMsg -> Channel;
 
-    isSimple      : Midi -> Bool;
-    simpleData    : Midi -> Pair;
-    isSysex       : Midi -> Bool;
-    sysexData     : Midi -> Buffer;    
+    isSimple      : MidiMsg -> Bool;
+    simpleData    : MidiMsg -> Pair;
+    isSysex       : MidiMsg -> Bool;
+    sysexData     : MidiMsg -> Buffer;    
 }
 

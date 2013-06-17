@@ -33,7 +33,7 @@ module Fae.AudioEngine
     import Fae.Device.Midi;
     import Fae.Device.File;
     import Fae.Message;
-    import Fae.Midi;
+    import Fae.MidiMsg;
     import Fae.Processor;
     import Fae.Plot;
     import Fae.Scheduler;

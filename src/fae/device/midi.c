@@ -6,7 +6,7 @@
  */
 
 #include <fae/device/midi.h>
-#include <fae/midi.h>
+#include <fae/midi_msg.h>
 #include <fae/list.h>
 #include <fae/thread.h>
 #include <fae/util.h>
@@ -78,7 +78,7 @@ inline static void delete_device(device_t device);
 inline static stream_t new_stream(device_t device);
 inline static void delete_stream(stream_t stream);
 
-long fae_midi_simple_to_long(fae_midi_t midi);
+long fae_midi_simple_to_long(fae_midi_msg_t midi);
 
 
 // --------------------------------------------------------------------------------
@@ -502,8 +502,8 @@ void midi_stream_sync(ptr_t a)
             PmMessage msg   = event.message;
 
             // FIXME detect sysex
-            midi_t midi = midi(Pm_MessageStatus(msg), Pm_MessageData1(msg), Pm_MessageData2(msg));
-            stream->incoming = fae_list_dcons(midi, stream->incoming);
+            midi_msg_t midi_msg = midi_msg(Pm_MessageStatus(msg), Pm_MessageData1(msg), Pm_MessageData2(msg));
+            stream->incoming = fae_list_dcons(midi_msg, stream->incoming);
 
             // TODO midi thru
         }
@@ -522,12 +522,12 @@ void midi_stream_send(ptr_t a, address_t addr, message_t msg)
 {
     PmError result;
     stream_t stream = (stream_t) a;
-    midi_t   midi   = (midi_t) msg;
+    midi_msg_t midi   = (midi_msg_t) msg;
     // TODO use dynamic introspection to detect lists (?)
 
-    if (fae_midi_is_simple(midi)) {
+    if (fae_midi_msg_is_simple(midi)) {
         // timestamp ignored
-        long midi_msg = fae_midi_simple_to_long(midi);
+        long midi_msg = fae_midi_msg_simple_to_long(midi);
 
         // printf("Sending: %s %08x\n", unstring(fae_string_show(midi)), (int) midi_msg);
 
