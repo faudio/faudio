@@ -15,8 +15,8 @@ function(add_tool name)
 endfunction()
 
 
-add_tool(ae_list_audio)
-add_tool(ae_list_midi)
-add_tool(ae_echo_midi)
-add_tool(ae_plug_midi)
+add_tool(fae_list_audio)
+add_tool(fae_list_midi)
+add_tool(fae_echo_midi)
+add_tool(fae_plug_midi)
 
