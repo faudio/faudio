@@ -1,6 +1,6 @@
 
 /**
-    @addtogroup FaeAudioEngine
+    @addtogroup FaeFae
 
     This modules exports the entire audio engine. Example usage:
 
