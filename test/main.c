@@ -145,12 +145,14 @@ void test_string()
         fae_dprint("str: %s\n", t);
     }
 
+/*
     {
         string_t s = string("FooBarBaz");
         string_t t = fae_string_join_map(apply1, fae_string_single, s);
         fae_dprint("str: %s\n", s);
         fae_dprint("str: %s\n", t);
     }
+*/
 
     {
         string_t s = string("A double quote: \", A backslash: \\");
@@ -326,8 +328,8 @@ void test_type()
     test_section("Types");
 
     fae_dprint("type(i8)                  ==> %s\n", type(i8));
-    fae_dprint("size_of(1024,type(i8))    ==> %s\n", i32(fae_type_size_of(1024, type(i8))));
-    fae_dprint("align_of(1024,type(i8))   ==> %s\n", i32(fae_type_align_of(type(i8))));
+    // fae_dprint("size_of(1024,type(i8))    ==> %s\n", i32(fae_type_size_of(1024, type(i8))));
+    // fae_dprint("align_of(1024,type(i8))   ==> %s\n", i32(fae_type_align_of(type(i8))));
     printf("\n");
 
     fae_dprint("type(f64)                 ==> %s\n", type(f64));

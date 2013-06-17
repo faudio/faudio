@@ -63,8 +63,8 @@ module Fae.String
     length : String -> Int;
     charAt : (Int,String) -> Char16;
 
-    map         : (Unary, Ptr, String) -> String; // (Char16 -> Char16) -> String -> String
-    joinMap     : (Unary, Ptr, String) -> String; // (Char16 -> String) -> String -> String
+    // map         : (Unary, Ptr, String) -> String; // (Char16 -> Char16) -> String -> String
+    // joinMap     : (Unary, Ptr, String) -> String; // (Char16 -> String) -> String -> String
 
     /** @interface fae_string_show_t 
         String conversion interface.

@@ -41,9 +41,6 @@ fae_type_t fae_type_get_pair_snd(fae_type_t);
 fae_type_t fae_type_get_vector_base(fae_type_t);
 size_t fae_type_get_vector_size(fae_type_t);
 fae_type_t fae_type_get_frame_base(fae_type_t);
-size_t fae_type_size_of(fae_type_frames_t, fae_type_t);
-size_t fae_type_offset_of(fae_type_frames_t, fae_type_t);
-size_t fae_type_align_of(fae_type_t);
 
 /** @}
     @}

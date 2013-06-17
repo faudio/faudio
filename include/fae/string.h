@@ -24,10 +24,6 @@ fae_string_t fae_string_dappend(fae_string_t, fae_string_t);
 void fae_string_destroy(fae_string_t);
 int fae_string_length(fae_string_t);
 fae_char16_t fae_string_char_at(int, fae_string_t);
-fae_string_t fae_string_map(fae_unary_t, fae_ptr_t, fae_string_t);
-fae_string_t fae_string_join_map(fae_unary_t,
-                                 fae_ptr_t,
-                                 fae_string_t);
 typedef struct {
             fae_string_t (* show)(fae_ptr_t);
         } fae_string_show_t;
