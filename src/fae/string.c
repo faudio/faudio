@@ -535,6 +535,10 @@ fae_ptr_t fae_string_from_json(fae_string_t string)
 
 // --------------------------------------------------------------------------------
 
+/** Return true iff the given string matches the given regular expression.
+    @param expr   A regular expression string.
+    @param string String to match.
+ */
 bool fae_string_matches(fae_string_t expr, fae_string_t string)
 {
     if (fae_string_length(expr) <= 0) {

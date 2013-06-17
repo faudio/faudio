@@ -1,8 +1,11 @@
-a
+
 /**
     @addtogroup FaeType
     
-    Provides audio types.
+    Provides audio types. An *audio type* is either a simple type such as `i8`, or a
+    compound such as `(i8, i8)`. Compound types are constructed from simple types.
+    
+    Each signals has an associated type, which is checked at runtime.
 
     Type            | Description
     ----------------| ----------------------------
@@ -82,8 +85,8 @@ module Fae.Type
     getVectorSize   : Type -> Size;
     getFrameBase    : Type -> Type;
  
-    sizeOf   : (Frames, Type) -> Size;
-    offsetOf : (Frames, Type) -> Size;
-    alignOf  : Type -> Size;
+    // sizeOf   : (Frames, Type) -> Size;
+    // offsetOf : (Frames, Type) -> Size;
+    // alignOf  : Type -> Size;
 }
 
