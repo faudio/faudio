@@ -703,10 +703,20 @@ EXCLUDE_SYMLINKS       = NO
 
 EXCLUDE_PATTERNS       = */include/fae/processor \
                          */modules/Fae/Processor/* \
+                         */modules/Fae/Processor.module \
+                         */include/fae/processor.h \
                          */include/fae/scheduler* \
                          */modules/Fae/Scheduler* \
+                         */include/fae/atomic/queue* \
+                         */modules/Fae/Atomic/Queue* \
+                         */include/fae/std* \
+                         */modules/Fae/Std* \
+                         */include/fae/atomic/ring_buffer* \
+                         */modules/Fae/Atomic/RingBuffer* \
                          */include/fae/priority_queue* \
                          */modules/Fae/PriorityQueue* \
+                         */include/fae/message* \
+                         */modules/Fae/Message* \
                          */include/fae/event* \
                          */modules/Fae/Event* 
 
