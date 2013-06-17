@@ -25,7 +25,6 @@ c:
 	modulo -Mmodules --language=c    <modules/Fae/Thread.module    		>include/fae/thread.h && \
 	modulo -Mmodules --language=c    <modules/Fae/Std.module    		>include/fae/std.h && \
 	modulo -Mmodules --language=c    <modules/Fae/String.module    		>include/fae/string.h && \
-	modulo -Mmodules --language=c    <modules/Fae/String/List.module    	>include/fae/string/list.h && \
 	modulo -Mmodules --language=c    <modules/Fae/Error.module    		>include/fae/error.h && \
 	modulo -Mmodules --language=c    <modules/Fae/Buffer.module    		>include/fae/buffer.h && \
 	modulo -Mmodules --language=c    <modules/Fae/Ratio.module    		>include/fae/ratio.h && \
@@ -83,7 +82,6 @@ gen-lisp:
 	modulo -Mmodules --language=lisp <modules/Fae/Event.module    		>bindings/lisp/fae/event.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/Std.module    		>bindings/lisp/fae/std.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/String.module    		>bindings/lisp/fae/string.lisp && \
-	modulo -Mmodules --language=lisp <modules/Fae/String/List.module    	>bindings/lisp/fae/string/list.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/Error.module    		>bindings/lisp/fae/error.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/Buffer.module    		>bindings/lisp/fae/buffer.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/Ratio.module    		>bindings/lisp/fae/ratio.lisp && \

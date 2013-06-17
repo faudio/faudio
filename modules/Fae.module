@@ -201,6 +201,9 @@ module Fae
 
     check   : Ptr -> Bool;
 
+    show     : Ptr -> Ptr;
+    toString : Ptr -> Ptr;
+
     print    : (Char*,Ptr) -> Void;
     dprint   : (Char*,Ptr) -> Void;
 }
