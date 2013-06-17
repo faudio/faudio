@@ -26,7 +26,7 @@ DOXYFILE_ENCODING      = UTF-8
 # identify the project. Note that if you do not use Doxywizard you need
 # to put quotes around the project name if it contains spaces.
 
-PROJECT_NAME           = "DoReMIR Audio Engine"
+PROJECT_NAME           = "Fae documentation"
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number.
 # This could be handy for archiving the generated documentation or
@@ -701,10 +701,8 @@ EXCLUDE_SYMLINKS       = NO
 # against the file with absolute path, so to exclude all test directories
 # for example use the pattern */test/*
 
-EXCLUDE_PATTERNS       = */include/doremir/processor \
-                         */modules/Doremir/Processor/* \
-                         */include/doremir/thread  \
-                         */modules/Doremir/Thread/*
+EXCLUDE_PATTERNS       = */include/fae/processor \
+                         */modules/Fae/Processor/*
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the
@@ -887,8 +885,8 @@ HTML_FILE_EXTENSION    = .html
 # have to redo this when upgrading to a newer version of doxygen or when
 # changing the value of configuration settings such as GENERATE_TREEVIEW!
 
-# HTML_HEADER      = doc/include/header.html
-# HTML_FOOTER      = doc/include/footer.html
+HTML_HEADER      = doc/include/header.html
+HTML_FOOTER      = doc/include/footer.html
 
 # The HTML_EXTRA_FILES tag can be used to specify one or more extra images or
 # other source files which should be copied to the HTML output directory. Note
