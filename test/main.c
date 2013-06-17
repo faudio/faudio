@@ -1,7 +1,5 @@
 
 #include <doremir/audio_engine.h>
-#include <doremir/priority_queue.h>
-#include <doremir/thread.h>
 #include <doremir/util.h>
 
 #include <unistd.h> // for sysconf(3)

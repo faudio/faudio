@@ -20,6 +20,7 @@
 #include <doremir/scheduler.h>
 #include <doremir/thread.h>
 #include <doremir/time.h>
+#include <doremir/priority_queue.h>
 
 /** @defgroup Doremir Doremir
     @{

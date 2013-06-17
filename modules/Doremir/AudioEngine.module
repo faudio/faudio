@@ -39,6 +39,7 @@ module Doremir.AudioEngine
     import Doremir.Scheduler;
     import Doremir.Thread;
     import Doremir.Time;
+    import Doremir.PriorityQueue;
 
     version : () -> List;
     versionString : () -> String;
