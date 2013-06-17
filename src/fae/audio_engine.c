@@ -30,6 +30,9 @@ void fae_thread_terminate();
 void fae_time_initialize();
 void fae_time_terminate();
 
+/** Returns the version of the Audio Engine as a list 
+    on the form `("alpha", 1, 0, 5, "")`.
+ */
 fae_list_t fae_audio_engine_version()
 {
     return list(
@@ -40,6 +43,9 @@ fae_list_t fae_audio_engine_version()
         string(version_g.suff));
 }
 
+/** Returns the version of the Audio Engine as a string
+    on the form "alpha1.0.5".
+ */
 fae_string_t fae_audio_engine_version_string()
 {
     char version[100];
