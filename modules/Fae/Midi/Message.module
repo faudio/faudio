@@ -1,6 +1,6 @@
 
 /** 
-    @addtogroup FaeMessage
+    @addtogroup FaeMidiMessage
     
     Immutable representation of Midi messages.
 
