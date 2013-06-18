@@ -2,7 +2,9 @@
 /** 
     @addtogroup FaeBuffer
     
-    Low-level buffer data structure. Each buffer is a mutable sequence of bytes with single-ownership
+    Mutable buffers. 
+    
+    Each buffer is a mutable sequence of bytes with single-ownership
     semantics. The length of a buffer can never change, but its memory can be reused using the destructive
     resize operation.
     

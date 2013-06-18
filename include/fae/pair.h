@@ -12,7 +12,12 @@
     */
 
 typedef struct _fae_pair_t * fae_pair_t;
+typedef struct {
+            fae_ptr_t first; fae_ptr_t second;
+        } fae_pair_struct_t;
 fae_pair_t fae_pair_create(fae_ptr_t, fae_ptr_t);
+fae_pair_t fae_pair_read(fae_pair_struct_t *);
+void fae_pair_write(fae_pair_struct_t *, fae_pair_t);
 fae_pair_t fae_pair_copy(fae_pair_t);
 void fae_pair_destroy(fae_pair_t);
 fae_ptr_t fae_pair_first(fae_pair_t);

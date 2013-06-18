@@ -2,7 +2,7 @@
 /** 
     @addtogroup FaeAtomicRingBuffer
     
-    A byte-level, bounded atomic queue.
+    A byte-level, bounded lock-free queue.
     
     This structure is called a buffer for historical reasons, it is more accurately
     a queue and does not support random accces.

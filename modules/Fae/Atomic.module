@@ -2,7 +2,7 @@
 /**
     @addtogroup FaeAtomic
 
-    An atomic reference.
+    Mutable atomic references.
 
     @par Literals
     - `atomic()`

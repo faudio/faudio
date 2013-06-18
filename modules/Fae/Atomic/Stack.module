@@ -2,7 +2,7 @@
 /** 
     @addtogroup FaeAtomicStack
     
-    Lock-free stack (LIFO) data structure
+    Mutable atomic (lock-free) stacks.
 
     @see 
     - [Data structures](@ref DataStructures)

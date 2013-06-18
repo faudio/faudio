@@ -2,7 +2,7 @@
 /** 
     @addtogroup FaeMidiMsg
     
-    Midi messages.
+    Immutable representation of Midi messages.
 
     @par Literals
     - `midi(note_on, 60, 127)`

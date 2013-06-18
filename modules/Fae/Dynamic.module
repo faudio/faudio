@@ -2,7 +2,7 @@
 /**
     @addtogroup FaeDynamic
     
-    Basic dynamic types.     
+    Provides dynamic typing.     
  */
 
 module Fae.Dynamic

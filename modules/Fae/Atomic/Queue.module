@@ -2,7 +2,7 @@
 /** 
     @addtogroup FaeAtomicQueue
     
-    Lock-free queue (FIFO) data structure.
+    Mutable atomic (lock-free) queues.
 
     @par Literals
     - `atomic_queue()` 

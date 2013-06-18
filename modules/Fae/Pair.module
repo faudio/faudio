@@ -2,7 +2,7 @@
 /** 
     @addtogroup FaePair
     
-    Pair data structure.
+    Immutable pair data structure.
 
     @par Literals
     - `pair(1, 2)`
@@ -25,8 +25,11 @@ module Fae.Pair
     import Fae.List;
 
     type Pair = opaque;
+    type Struct = struct { first : Ptr, second : Ptr };
 
     create  : (Ptr, Ptr) -> Pair;
+    read : (Struct*) -> Pair;
+    write : (Struct*, Pair) -> Void;
     copy   : Pair -> Pair;
     destroy : Pair -> Void;
 
