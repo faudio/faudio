@@ -2,7 +2,6 @@
 (defctype plot-function (:pointer (:pointer :void)))
 (defcfun (plot-use-gnu "fae_plot_use_gnu") :void)
 (defcfun (plot-use-core "fae_plot_use_core") :void)
-(defcfun (plot-discrete "fae_plot_discrete") :void (a list))
 (defcfun (plot-continous "fae_plot_continous") :void (a plot-function) (b ptr) (c nullary) (d ptr))
 (defcfun (plot-buffer-float "fae_plot_buffer_float") :void (a buffer) (b nullary) (c ptr))
 (defcfun (plot-buffer-double "fae_plot_buffer_double") :void (a buffer) (b nullary) (c ptr))

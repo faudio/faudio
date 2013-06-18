@@ -15,5 +15,3 @@
 (defcfun (graph-connect "fae_graph_connect") graph (a graph-node) (b graph-node) (c graph-edge) (d graph))
 (defcfun (graph-disconnect "fae_graph_disconnect") graph (a graph-node) (b graph-node) (c graph))
 (defcfun (graph-to-dot "fae_graph_to_dot") string (a string) (b string) (c graph))
-(defcfun (graph-from-list "fae_graph_from_list") graph (a list))
-(defcfun (graph-to-list "fae_graph_to_list") list (a graph))
