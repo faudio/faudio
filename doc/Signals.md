@@ -1,5 +1,5 @@
 
-# Signals and processors {#Signals}
+# Signals {#Signals}
 
 @anchor Signals
 @anchor Processors
@@ -8,27 +8,18 @@
 @note
     This page is under construction.
 
-The most important concepts in the Audio Engine are the notion of *signals* and
+The most important concepts in Fae are the notion of *signals* and
 *processors*. Both have simple definitions:
 
 * A <em>[signal](@ref fae_signal_t)</em> is a function of time, for example 
   \f$ y(t)=sin(2\pi\,t) \f$.
 
-* A <em>[processor](@ref fae_processor_t)</em> a function from a signal to a
-  signal, for example \f$ y(t)=\frac{1}{2}\,x(t) \f$.
+Signals can be composed to create more complex signals.
 
-Both signals and processors can be built by *composition* of simple values: signals
-can be composed to create more complex signals, and processors can be composed to
-create more complex processors. Signals and processors interact by abstraction and
-application: a function from signals to signals can be converted to a processor,
-and a processor can be applied to a signal to yield another signal.
-
-While many signals can be described by simple formulas, other signals such as
-real-world audio recordings have no simple representation, and must be sampled to
-be handled by a computer. The Audio Engine hide this complexity by representing
-signals as opaque types. The problem of sampling and resampling are handled by
-[input and output devices](@ref Devices). Thus signals are conceptually *continous*
-and have neither sample rate or duration.
+While many signals can be described by simple formulas, other signals such as real-world
+audio recordings have no simple representation, and must be sampled to be handled by a
+computer. Fae hide this complexity by representing signals as opaque types. Thus signals
+are conceptually *continous* and have neither sample rate or duration.
 
 
 # Audio types {#SignalTypes}

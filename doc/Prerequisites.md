@@ -4,7 +4,7 @@
 @anchor Prerequisites
 @tableofcontents
  
-The following tools and libraries are required to build the Audio Engine.
+The following tools and libraries are required to build Fae.
 
 # Platform {#Platform} 
 
@@ -14,10 +14,6 @@ Supported platforms are:
   * Mac OS X 10.5 or later
 
 Porting to Linux should be relatively easy but has not been done yet.
-
-The Audio Engine is *strictly* 32-bit at the moment. This requires some precautions when cross-compiling on a 64-bit
-system, in particular all library dependencies must also be compiled in 32-bit (or universal) mode. If you get
-unexpected linking errors, you likely have the wrong version of some library.
 
 # Compiler {#Compiler}
 
@@ -32,7 +28,7 @@ The default Windows compiler (Visual C/C++) is not well supported, the MinGW ver
 
 # Tools {#Tools}
 
-The following tools are required to build the Audio Engine.
+The following tools are required to build Fae.
 
 ### CMake
 

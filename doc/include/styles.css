@@ -4,7 +4,7 @@ body, table, div, p, dl {
   max-  width: 1100px;
         color: #333;
         font-family: Helvetica, arial, freesans, clean, sans-serif;
-        font-size: 15px;
+        font-size: 14px;
         line-height: 1.5;
 }
 
@@ -297,7 +297,7 @@ div.center img {
 }
 
 address.footer {
-        text-align: right;
+        text-align: left;
         padding-right: 12px;
         padding-bottom: 12px;
 }
@@ -307,6 +307,9 @@ img.footer {
 /*        vertical-align: middle;*/
 }
 
+hr.footer {
+        visibility: hidden;
+}
 
 
 /* @group Code Colorization */
@@ -621,7 +624,8 @@ div.dynheader {
         user-select: none;
 }
 
-address {
+address { 
+        visibility:hidden;
         font-style: normal;
         color: #2A3D61;
 }
@@ -715,19 +719,6 @@ table.fieldtable th {
 .navpath li.navelem a:hover
 {
         color:#6884BD;
-}
-
-.navpath li.footer
-{
-        list-style-type:none;
-        float:right;
-        padding-left:10px;
-        padding-right:15px;
-/*        background-image:none;*/
-/*        background-repeat:no-repeat;*/
-/*        background-position:right;*/
-        color:#364D7C;
-        font-size: 8pt;
 }
 
 
@@ -938,7 +929,7 @@ div.toc {
         border-radius: 6px;
         float: right;
         height: auto;
-        margin: 0 20px 10px 10px;
+        margin: 0 40px 20px 40px;
         min-width: 200px;
         width: 30%;
 }

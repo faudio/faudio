@@ -7,14 +7,14 @@
 @note
     This page is under construction.
 
-Devices are the entities that allow the Audio Engine to communicate with the
+Devices are the entities that allow Fae to communicate with the
 outside world. Any client will need to connect at least two devices to each other
 to form a audio stream. While signals and processors denote functions, devices
 denote sources and sinks of audio data, such as files, memory buffers or audio
 hardware.
 
 Devices are grouped into *real-time devices*, *non-real-time devices*. Audio and
-midi information are handled by different devices. Note that the Audio Engine does not
+midi information are handled by different devices. Note that Fae does not
 provide non-real-time midi at the moment: if you need to parse and process a midi
 file you must use some other method.
 
@@ -30,7 +30,7 @@ audio computation. These concepts are hierarchical, each stream is associated wi
 a device and each device with a session.
 
 Typically, each physical audio or midi interface is represented by a
-single device in the Audio Engine. The operating system may also provide abstract
+single device in Fae. The operating system may also provide abstract
 devices, representing network connections, software mixers and the like.
 
 The Audio Engine places certain restrictions on the order or acquisition of
@@ -47,7 +47,7 @@ TODO
 @image latex device_states.pdf "State transactions of the audio system (simplified)" width=0.8\textwidth
 
 @note
-    The semantics of *streams* have been changed from earlier versions of the Audio Engine, in which a *stream*
+    The semantics of *streams* have been changed from earlier versions of Fae, in which a *stream*
     could be repeatedly stopped and started.
 
 
@@ -75,8 +75,7 @@ to get a value, and a destruction method to release. Note that devices, sessions
 streams have single-ownership semantics.
 
 ~~~~
-#include <fae/device/audio.h>
-#include <fae/thread.h>
+#include <fae/fae.h>
 #include <fae/util.h>
 
 int main (int argc, char const *argv[])
@@ -131,8 +130,7 @@ has returned. Errors are handled by a special callback, to which you can pass
 [fae_error_log](@ref fae_error_log), or a user defined function.
 
 ~~~~
-#include <fae/time.h>
-#include <fae/thread.h>
+#include <fae/fae.h>
 #include <fae/device/audio.h>
 
 stream_t run_callback(stream_t stream)
@@ -185,8 +183,7 @@ TODO
 ## File devices {#id9192746}
 
 ~~~~
-#include <fae/time.h>
-#include <fae/thread.h>
+#include <fae/fae.h>
 #include <fae/device/file.h>
 
 typedef fae_device_file_t   device_t;
@@ -230,8 +227,7 @@ int main (int argc, char const *argv[])
 ## Buffer devices {#id11127283}
 
 ~~~~
-#include <fae/time.h>
-#include <fae/thread.h>
+#include <fae/fae.h>
 #include <fae/device/file.h>
 
 typedef fae_device_file_t   device_t;

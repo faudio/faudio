@@ -13,7 +13,7 @@ message passing between the audio thread and other threads. The fact that the
 data structures are persistent eliminate many of the problems commonly associated
 with multi-threaded programming.
 
-The data structures in the Audio Engine are somewhat different from the structures
+The data structures in Fae are somewhat different from the structures
 found in most languages, in that they have single-ownership semantics. This
 eliminates the need for a garbage collector while still allowing a high-level
 programming style. To understand single-ownership semantics, you should read the
@@ -42,7 +42,7 @@ Type                           | Semantics
 [String](@ref FaeString)   | A sequence of Unicode characters
 
 There is also a set of *mutable* data structures not included in this table. These
-are used internally in the Audio Engine and need rarely be accessed by the user. For
+are used internally in Fae and need rarely be accessed by the user. For
 completeness, they are:
 
 Type                                              | Semantics
@@ -126,7 +126,7 @@ outside the scope of the compiler to assure that the extracted elements are of t
 right type. There are several ways to do this:
 
 * Assure that the structure contains a specific type.
-    * For example, many functions in the Audio Engine API return pairs and lists, their
+    * For example, many functions in Fae API return pairs and lists, their
       documentation clearly stating what type of elements the list will contain.
 * Assure that the structure contains a generic type.
     * For example, a function may require a set of values implementing [Show](@ref fae_string_show_t).

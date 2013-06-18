@@ -10,7 +10,7 @@
 First ensure that your system meets the [platform](@ref Platform) requirements, and
 that the necessary [compiler](@ref Compiler) and [tools](@ref Tools) are available.
 
-The source code for the Audio Engine can be obtained by.
+The source code for Fae can be obtained by.
 
     $ git clone git@github.com:fae/fae.git
     $ cd audio-engine
@@ -115,19 +115,4 @@ This command builds documentation in the `doc/build` subdirectory. By default bo
 HTML and PDF files are produced.
 
     make dist
-
-This command uploads the current build to the DoReMIR package server.
-
-    make components_resolve
-
-This command downloads all dependencies of the Audio Engine from the DoReMIR
-package server *or* builds them locally, depending on the current build options.
-Usually this command is carried out by the bootstrap script. Using
-`components_resolve` when the local dependencies are already in place has no
-effect.
-
-    make components_clean
-
-This command removes all local dependencies. After this the `components_resolve`
-command can be used again.
 
