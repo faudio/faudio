@@ -296,12 +296,12 @@ void test_system_time()
 
 // --------------------------------------------------------------------------------
 
-void test_midi_msg()
+void test_midi_message()
 {
     test_section("Midi");
 
     {
-        fae_midi_msg_t m = fae_midi_msg_create_simple(0xa, 60, 127);
+        fae_midi_message_t m = fae_midi_message_create_simple(0xa, 60, 127);
         fae_dprint("m                            ==> %s\n", m);
     }
 
@@ -312,7 +312,7 @@ void test_midi_msg()
             fae_buffer_set(b, i, i);
         }
 
-        fae_midi_msg_t m = fae_midi_msg_create_sysex(b);
+        fae_midi_message_t m = fae_midi_message_create_sysex(b);
         fae_dprint("m                            ==> %s\n", m);
     }
 }
@@ -1648,24 +1648,24 @@ void print_midi_devices(midi_session_t session)
 ptr_t to_note_on(ptr_t occ) {
     // fae_print("%s\n", occ);
     int16_t kc = ti16(fae_list_head(occ));
-    return midi_msg(0x90, 48 + kc, 120);
+    return midi_message(0x90, 48 + kc, 120);
 }
 
 ptr_t to_note_off(ptr_t occ) {
     // fae_print("%s\n", occ);
     int16_t kc = ti16(fae_list_head(occ));
-    return midi_msg(0x80, 48 + kc, 120);
+    return midi_message(0x80, 48 + kc, 120);
 }
 
 ptr_t to_control(ptr_t occ) {
     // fae_print("%s\n", occ);
     double x = tf64(fae_pair_first(occ));
-    return midi_msg(0xb0, 7, x/1900 * 127);
+    return midi_message(0xb0, 7, x/1900 * 127);
 }
 ptr_t to_control2(ptr_t occ) {
     // fae_print("%s\n", occ);
     double y = tf64(fae_pair_second(occ));
-    return midi_msg(0xb0, 1, y/1200 * 127);
+    return midi_message(0xb0, 1, y/1200 * 127);
 }
 
 
@@ -1826,7 +1826,7 @@ int main(int argc, char const *argv[])
         test_time();
         test_system_time();
         // test_type();
-        test_midi_msg();
+        test_midi_message();
 
         // test_thread();
         // test_mutex();

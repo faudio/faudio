@@ -6,7 +6,7 @@
  */
 
 #include <fae/midi.h>
-#include <fae/midi_msg.h>
+#include <fae/midi/message.h>
 #include <fae/list.h>
 #include <fae/thread.h>
 #include <fae/util.h>
@@ -78,7 +78,7 @@ inline static void delete_device(device_t device);
 inline static stream_t new_stream(device_t device);
 inline static void delete_stream(stream_t stream);
 
-long fae_midi_msg_simple_to_long(fae_midi_msg_t midi);
+long fae_midi_message_simple_to_long(fae_midi_message_t midi);
 
 
 // --------------------------------------------------------------------------------
@@ -502,8 +502,8 @@ void midi_stream_sync(ptr_t a)
             PmMessage msg   = event.message;
 
             // FIXME detect sysex
-            midi_msg_t midi_msg = midi_msg(Pm_MessageStatus(msg), Pm_MessageData1(msg), Pm_MessageData2(msg));
-            stream->incoming = fae_list_dcons(midi_msg, stream->incoming);
+            midi_message_t midi_message = midi_message(Pm_MessageStatus(msg), Pm_MessageData1(msg), Pm_MessageData2(msg));
+            stream->incoming = fae_list_dcons(midi_message, stream->incoming);
 
             // TODO midi thru
         }
@@ -522,16 +522,16 @@ void midi_stream_send(ptr_t a, address_t addr, message_t msg)
 {
     PmError result;
     stream_t stream = (stream_t) a;
-    midi_msg_t midi   = (midi_msg_t) msg;
+    midi_message_t midi   = (midi_message_t) msg;
     // TODO use dynamic introspection to detect lists (?)
 
-    if (fae_midi_msg_is_simple(midi)) {
+    if (fae_midi_message_is_simple(midi)) {
         // timestamp ignored
-        long midi_msg = fae_midi_msg_simple_to_long(midi);
+        long midi_message = fae_midi_message_simple_to_long(midi);
 
-        // printf("Sending: %s %08x\n", unstring(fae_string_show(midi)), (int) midi_msg);
+        // printf("Sending: %s %08x\n", unstring(fae_string_show(midi)), (int) midi_message);
 
-        result = Pm_WriteShort(stream->native_output, 0, midi_msg);
+        result = Pm_WriteShort(stream->native_output, 0, midi_message);
 
         if (result != pmNoError) {
             native_error(string("Could not send midi"), result);

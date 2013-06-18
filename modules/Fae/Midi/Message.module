@@ -1,6 +1,6 @@
 
 /** 
-    @addtogroup FaeMidiMsg
+    @addtogroup FaeMessage
     
     Immutable representation of Midi messages.
 
@@ -19,7 +19,7 @@
     - fae_dynamic_t
     
  */
-module Fae.MidiMsg
+module Fae.Midi.Message
 {
     import Fae.Std;
     import Fae.Pair;
@@ -38,19 +38,19 @@ module Fae.MidiMsg
 
     type Channel = Int;    
     type Data    = Int;    
-    type MidiMsg = opaque;
+    type Message = opaque;
 
-    createSimple  : (Status, Int, Int) -> MidiMsg;
-    createSysex   : Buffer -> MidiMsg;
-    copy          : MidiMsg -> MidiMsg;
-    destroy       : MidiMsg -> Void;
+    createSimple  : (Status, Int, Int) -> Message;
+    createSysex   : Buffer -> Message;
+    copy          : Message -> Message;
+    destroy       : Message -> Void;
 
-    status        : MidiMsg -> Status;
-    channel       : MidiMsg -> Channel;
+    status        : Message -> Status;
+    channel       : Message -> Channel;
 
-    isSimple      : MidiMsg -> Bool;
-    simpleData    : MidiMsg -> Pair;
-    isSysex       : MidiMsg -> Bool;
-    sysexData     : MidiMsg -> Buffer;    
+    isSimple      : Message -> Bool;
+    simpleData    : Message -> Pair;
+    isSysex       : Message -> Bool;
+    sysexData     : Message -> Buffer;    
 }
 

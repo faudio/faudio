@@ -13,7 +13,7 @@
 #include <fae/audio.h>
 #include <fae/midi.h>
 #include <fae/device/file.h>
-#include <fae/midi_msg.h>
+#include <fae/midi/message.h>
 #include <fae/plot.h>
 #include <fae/thread.h>
 #include <fae/time.h>
