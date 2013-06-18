@@ -53,7 +53,7 @@ c:
 	modulo -Mmodules --language=c    <modules/Fae/Device.module		>include/fae/device.h && \
 	modulo -Mmodules --language=c    <modules/Fae/Device/Buffer.module	>include/fae/device/buffer.h && \
 	modulo -Mmodules --language=c    <modules/Fae/Device/File.module    	>include/fae/device/file.h && \
-	modulo -Mmodules --language=c    <modules/Fae/Device/Audio.module    	>include/fae/device/audio.h && \
+	modulo -Mmodules --language=c    <modules/Fae/Audio.module    		>include/fae/audio.h && \
 	modulo -Mmodules --language=c    <modules/Fae/Midi.module    	>include/fae/midi.h && \
 	modulo -Mmodules --language=c    <modules/Fae/Scheduler.module  	>include/fae/scheduler.h && \
 	modulo -Mmodules --language=c    <modules/Fae/Message.module 		>include/fae/message.h;
@@ -103,8 +103,8 @@ gen-lisp:
 	modulo -Mmodules --language=lisp <modules/Fae/Device.module		>bindings/lisp/fae/device.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/Device/Buffer.module	>bindings/lisp/fae/device/buffer.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/Device/File.module    	>bindings/lisp/fae/device/file.lisp && \
-	modulo -Mmodules --language=lisp <modules/Fae/Device/Audio.module    	>bindings/lisp/fae/device/audio.lisp && \
-	modulo -Mmodules --language=lisp <modules/Fae/Midi.module    	>bindings/lisp/fae/midi.lisp && \
+	modulo -Mmodules --language=lisp <modules/Fae/Audio.module    		>bindings/lisp/fae/audio.lisp && \
+	modulo -Mmodules --language=lisp <modules/Fae/Midi.module    		>bindings/lisp/fae/midi.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/Scheduler.module  	>bindings/lisp/fae/scheduler.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/Message.module 		>bindings/lisp/fae/message.lisp;  
 

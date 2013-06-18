@@ -1559,13 +1559,13 @@ void print_audio_devices(audio_session_t session)
 {
     fae_print("\n", NULL);
     fae_print("    Listing audio devices: \n", NULL);
-    fae_for_each(x, fae_device_audio_all(session)) {
+    fae_for_each(x, fae_audio_all(session)) {
         fae_print("        Device: %s\n", x);
-        fae_print("            Input:  %s\n", fae_device_audio_input_type(x));
-        fae_print("            Output: %s\n", fae_device_audio_output_type(x));
+        fae_print("            Input:  %s\n", fae_audio_input_type(x));
+        fae_print("            Output: %s\n", fae_audio_output_type(x));
     }
-    fae_print("    Default input is : %s\n", fae_device_audio_default_input(session));
-    fae_print("    Default output is : %s\n", fae_device_audio_default_output(session));
+    fae_print("    Default input is : %s\n", fae_audio_default_input(session));
+    fae_print("    Default output is : %s\n", fae_audio_default_output(session));
     fae_print("\n", NULL);
 }
 
@@ -1592,7 +1592,7 @@ void test_audio_stream()
     // proc2    = seq(proc1, proc1);
 
     // Begin session
-    session = fae_device_audio_begin_session();
+    session = fae_audio_begin_session();
 
     // Handle possible error
     if (fae_check(session)) {
@@ -1604,11 +1604,11 @@ void test_audio_stream()
     // Session obtained, we can now access devices
     print_audio_devices(session);
 
-    input = fae_device_audio_default_input(session);
-    output = fae_device_audio_default_output(session);
+    input = fae_audio_default_input(session);
+    output = fae_audio_default_output(session);
 
     // Start stream
-    stream = fae_device_audio_open_stream(input, proc2, output);
+    stream = fae_audio_open_stream(input, proc2, output);
 
     // Handle possible error
     if (fae_check(stream)) {
@@ -1617,12 +1617,12 @@ void test_audio_stream()
         goto cleanup;
     }
 
-    fae_device_audio_set_status_callback(status_changed, string("foobar"), session);
+    fae_audio_set_status_callback(status_changed, string("foobar"), session);
     fae_thread_sleep(3000);
 
 cleanup:
-    fae_device_audio_close_stream(stream);
-    fae_device_audio_end_session(session);
+    fae_audio_close_stream(stream);
+    fae_audio_end_session(session);
     fae_destroy(proc1);
     fae_destroy(proc2);
 }

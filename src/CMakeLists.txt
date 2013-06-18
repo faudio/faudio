@@ -10,9 +10,9 @@ list(APPEND SRCS
   fae/atomic/queue.c
   fae/atomic/ring_buffer.c
   fae/atomic/stack.c
-  fae/device/audio.c
   fae/device/file.c
   fae/device/buffer.c
+  fae/audio.c
   fae/midi.c
   fae/dynamic.c
   fae/buffer.c

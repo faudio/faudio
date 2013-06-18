@@ -10,7 +10,7 @@
 #include <fae/error.h>
 #include <fae/event.h>
 #include <fae/graph.h>
-#include <fae/device/audio.h>
+#include <fae/audio.h>
 #include <fae/midi.h>
 #include <fae/device/file.h>
 #include <fae/midi_msg.h>

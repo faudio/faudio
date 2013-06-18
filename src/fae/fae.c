@@ -21,8 +21,8 @@ static ptr_t          log_data_g    = NULL;
 
 static struct { char* pre; int x; int y; int z; char* suff; } version_g = AE_VERSION;
 
-void fae_device_audio_initialize();
-void fae_device_audio_terminate();
+void fae_audio_initialize();
+void fae_audio_terminate();
 void fae_midi_initialize();
 void fae_midi_terminate();
 void fae_thread_initialize();
@@ -67,7 +67,7 @@ fae_string_t fae_fae_version_string()
  */
 void fae_fae_initialize()
 {
-    fae_device_audio_initialize();
+    fae_audio_initialize();
     fae_midi_initialize();
     fae_thread_initialize();
     fae_time_initialize();
@@ -84,7 +84,7 @@ void fae_fae_initialize()
 void fae_fae_terminate()
 {
     if ((init_count_g--)) {
-        fae_device_audio_terminate();
+        fae_audio_terminate();
         fae_midi_terminate();
         fae_thread_terminate();
         fae_time_terminate();

@@ -5,7 +5,7 @@
     All rights reserved.
  */
 
-#include <fae/device/audio.h>
+#include <fae/audio.h>
 
 #include <fae/atomic.h> // TODO improving
 #include <fae/thread.h>
@@ -22,17 +22,17 @@
  */
 
 
-typedef fae_device_audio_t                  device_t;
-typedef fae_device_audio_stream_t           stream_t;
-typedef fae_device_audio_session_t          session_t;
-typedef fae_device_audio_stream_callback_t  stream_callback_t;
-typedef fae_device_audio_session_callback_t session_callback_t;
-typedef fae_device_audio_status_callback_t  status_callback_t;
+typedef fae_audio_device_t           device_t;
+typedef fae_audio_stream_t           stream_t;
+typedef fae_audio_session_t          session_t;
+typedef fae_audio_stream_callback_t  stream_callback_t;
+typedef fae_audio_session_callback_t session_callback_t;
+typedef fae_audio_status_callback_t  status_callback_t;
 
 typedef PaDeviceIndex native_index_t;
 typedef PaStream     *native_stream_t;
 
-struct _fae_device_audio_session_t {
+struct _fae_audio_session_t {
 
     impl_t              impl;               // Dispatcher
     system_time_t       acquired;           // Time of acquisition (not used at the moment)
@@ -43,7 +43,7 @@ struct _fae_device_audio_session_t {
     device_t            def_output;         // If present, these are also in the above list
 };
 
-struct _fae_device_audio_t {
+struct _fae_audio_device_t {
 
     impl_t              impl;               // Dispatcher
     native_index_t      index;              // Native device index
@@ -55,7 +55,7 @@ struct _fae_device_audio_t {
     double              volume;
 };
 
-struct _fae_device_audio_stream_t {
+struct _fae_audio_stream_t {
 
     impl_t              impl;               // Dispatcher
     native_stream_t     native;             // Native stream
@@ -109,7 +109,7 @@ static void native_finished_callback(void *data);
 
 inline static session_t new_session()
 {
-    session_t session = fae_new(device_audio_session);
+    session_t session = fae_new(audio_session);
     session->impl = &audio_session_impl;
     return session;
 }
@@ -147,7 +147,7 @@ inline static device_t new_device(native_index_t index)
         return NULL;
     }
 
-    device_t device = fae_new(device_audio);
+    device_t device = fae_new(audio_device);
     device->impl    = &audio_device_impl;
 
     const PaDeviceInfo  *info      = Pa_GetDeviceInfo(index);
@@ -171,7 +171,7 @@ inline static void delete_device(device_t device)
 
 inline static stream_t new_stream(device_t input, device_t output, processor_t proc, double sample_rate, long max_buffer_size)
 {
-    stream_t stream         = fae_new(device_audio_stream);
+    stream_t stream         = fae_new(audio_stream);
 
     stream->impl            = &audio_stream_impl;
 
@@ -205,20 +205,20 @@ inline static void delete_stream(stream_t stream)
 
 // --------------------------------------------------------------------------------
 
-void fae_device_audio_initialize()
+void fae_audio_initialize()
 {
     pa_mutex  = fae_thread_create_mutex();
     pa_status = false;
 }
 
-void fae_device_audio_terminate()
+void fae_audio_terminate()
 {
     fae_thread_destroy_mutex(pa_mutex);
 }
 
 // --------------------------------------------------------------------------------
 
-session_t fae_device_audio_begin_session()
+session_t fae_audio_begin_session()
 {
     if (!pa_mutex) {
         assert(false && "Module not initalized");
@@ -244,7 +244,7 @@ session_t fae_device_audio_begin_session()
     }
 }
 
-void fae_device_audio_end_session(session_t session)
+void fae_audio_end_session(session_t session)
 {
     if (!pa_mutex) {
         assert(false && "Module not initalized");
@@ -263,14 +263,14 @@ void fae_device_audio_end_session(session_t session)
     delete_session(session);
 }
 
-void fae_device_audio_with_session(
+void fae_audio_with_session(
     session_callback_t session_callback,
     ptr_t                           session_data,
     error_callback_t                error_callback,
     ptr_t                           error_data
 )
 {
-    session_t session = fae_device_audio_begin_session();
+    session_t session = fae_audio_begin_session();
 
     if (fae_check(session)) {
         error_callback(error_data, (error_t) session);
@@ -278,64 +278,64 @@ void fae_device_audio_with_session(
         session_callback(session_data, session);
     }
 
-    fae_device_audio_end_session(session);
+    fae_audio_end_session(session);
 }
 
-fae_list_t fae_device_audio_all(session_t session)
+fae_list_t fae_audio_all(session_t session)
 {
     return fae_copy(session->devices);
 }
 
-fae_pair_t fae_device_audio_default(session_t session)
+fae_pair_t fae_audio_default(session_t session)
 {
     return pair(session->def_input, session->def_output);
 }
 
-device_t fae_device_audio_default_input(session_t session)
+device_t fae_audio_default_input(session_t session)
 {
     return session->def_input;
 }
 
-device_t fae_device_audio_default_output(session_t session)
+device_t fae_audio_default_output(session_t session)
 {
     return session->def_output;
 }
 
-fae_string_t fae_device_audio_name(device_t device)
+fae_string_t fae_audio_name(device_t device)
 {
     return fae_copy(device->name);
 }
 
-fae_string_t fae_device_audio_host_name(device_t device)
+fae_string_t fae_audio_host_name(device_t device)
 {
     return fae_copy(device->host_name);
 }
 
-type_t fae_device_audio_input_type(device_t device)
+type_t fae_audio_input_type(device_t device)
 {
     const PaDeviceInfo *info = Pa_GetDeviceInfo(device->index);
     return fae_type_repeat(info->maxInputChannels, type_frame(type(f32)));
 }
 
-type_t fae_device_audio_output_type(device_t device)
+type_t fae_audio_output_type(device_t device)
 {
     const PaDeviceInfo  *info = Pa_GetDeviceInfo(device->index);
     return fae_type_repeat(info->maxOutputChannels, type_frame(type(f32)));
 }
 
-bool fae_device_audio_has_input(device_t device)
+bool fae_audio_has_input(device_t device)
 {
-    return fae_not_equal(fae_device_audio_input_type(device), type(unit));
+    return fae_not_equal(fae_audio_input_type(device), type(unit));
 }
-bool fae_device_audio_has_output(device_t device)
+bool fae_audio_has_output(device_t device)
 {
-    return fae_not_equal(fae_device_audio_output_type(device), type(unit));
+    return fae_not_equal(fae_audio_output_type(device), type(unit));
 }
 
 
 void add_audio_status_listener(status_callback_t function, ptr_t data);
 
-void fae_device_audio_set_status_callback(
+void fae_audio_set_status_callback(
     status_callback_t function,
     ptr_t             data,
     session_t         session)
@@ -350,11 +350,11 @@ void fae_device_audio_set_status_callback(
 
 static inline int num_input_channels(device_t device)
 {
-    return device ? fae_type_channels(fae_device_audio_input_type(device)) : 0;
+    return device ? fae_type_channels(fae_audio_input_type(device)) : 0;
 }
 static inline int num_output_channels(device_t device)
 {
-    return device ? fae_type_channels(fae_device_audio_output_type(device)) : 0;
+    return device ? fae_type_channels(fae_audio_output_type(device)) : 0;
 }
 
 // static inline size_t get_max_buffer_size(device_t device)
@@ -392,7 +392,7 @@ void audio_inform_opening(device_t input, processor_t proc, device_t output)
 
 // TODO change sample rate
 // TODO use unspec vector size if we can determine max
-stream_t fae_device_audio_open_stream(device_t input, processor_t proc, device_t output)
+stream_t fae_audio_open_stream(device_t input, processor_t proc, device_t output)
 {
     PaError         status;
     unsigned long   buffer_size = 256;
@@ -404,10 +404,10 @@ stream_t fae_device_audio_open_stream(device_t input, processor_t proc, device_t
         // TODO
         // if (fae_not_equal(
         //             fae_processor_input_type(proc),
-        //             fae_device_audio_input_type(input))) {
+        //             fae_audio_input_type(input))) {
         //     char msg[100];
         //     snprintf(msg, 100, "Could not connect device %s to processor %s",
-        //              unstring(fae_string_show(fae_device_audio_input_type(input))),
+        //              unstring(fae_string_show(fae_audio_input_type(input))),
         //              unstring(fae_string_show(proc)));
         //     error_t err = fae_error_create_simple(error,
         //                                               string(msg),
@@ -418,11 +418,11 @@ stream_t fae_device_audio_open_stream(device_t input, processor_t proc, device_t
     {
         // if (fae_not_equal(
         //             fae_processor_output_type(proc),
-        //             fae_device_audio_output_type(output))) {
+        //             fae_audio_output_type(output))) {
         //     char msg[100];
         //     snprintf(msg, 100, "Could not connect processor %s to device %s",
         //              unstring(fae_string_show(proc)),
-        //              unstring(fae_string_show(fae_device_audio_output_type(output))));
+        //              unstring(fae_string_show(fae_audio_output_type(output))));
         //     error_t err = fae_error_create_simple(error,
         //                                               string(msg),
         //                                               string("Doremir.Device.Audio"));
@@ -477,7 +477,7 @@ stream_t fae_device_audio_open_stream(device_t input, processor_t proc, device_t
     return stream;
 }
 
-void fae_device_audio_close_stream(stream_t stream)
+void fae_audio_close_stream(stream_t stream)
 {
     inform(string("Closing real-time audio stream"));
 
@@ -486,7 +486,7 @@ void fae_device_audio_close_stream(stream_t stream)
     delete_stream(stream);
 }
 
-void fae_device_audio_with_stream(device_t            input,
+void fae_audio_with_stream(device_t            input,
                                       processor_t         processor,
                                       device_t            output,
                                       stream_callback_t   stream_callback,
@@ -494,7 +494,7 @@ void fae_device_audio_with_stream(device_t            input,
                                       error_callback_t    error_callback,
                                       ptr_t               error_data)
 {
-    stream_t stream = fae_device_audio_open_stream(input, processor, output);
+    stream_t stream = fae_audio_open_stream(input, processor, output);
 
     if (fae_check(stream)) {
         error_callback(error_data, (error_t) stream);
@@ -502,7 +502,7 @@ void fae_device_audio_with_stream(device_t            input,
         stream_callback(stream_data, stream);
     }
 
-    fae_device_audio_close_stream(stream);
+    fae_audio_close_stream(stream);
 }
 
 
@@ -633,7 +633,7 @@ fae_string_t audio_session_show(ptr_t a)
 
 void audio_session_destroy(ptr_t a)
 {
-    fae_device_audio_end_session(a);
+    fae_audio_end_session(a);
 }
 
 ptr_t audio_session_impl(fae_id_t interface)
@@ -676,9 +676,9 @@ fae_string_t audio_device_show(ptr_t a)
     device_t device = (device_t) a;
 
     string_t str = string("<AudioDevice ");
-    str = string_dappend(str, fae_device_audio_host_name(device));
+    str = string_dappend(str, fae_audio_host_name(device));
     str = string_dappend(str, string(" "));
-    str = string_dappend(str, fae_device_audio_name(device));
+    str = string_dappend(str, fae_audio_name(device));
     str = string_dappend(str, string(">"));
     return str;
 }
@@ -715,7 +715,7 @@ fae_string_t audio_stream_show(ptr_t a)
 
 void audio_stream_destroy(ptr_t a)
 {
-    fae_device_audio_close_stream(a);
+    fae_audio_close_stream(a);
 }
 
 fae_time_t audio_stream_time(ptr_t a)
@@ -740,20 +740,23 @@ int64_t audio_stream_ticks(ptr_t a)
 
 void audio_stream_sync(ptr_t a)
 {
-    stream_t stream = (stream_t) a;
+    // stream_t stream = (stream_t) a;
     // fae_message_sync(((sender_t) stream->incoming));
+    assert (false && "Not implemented");
 }
 
 fae_list_t audio_stream_receive(ptr_t a, address_t addr)
 {
-    stream_t stream = (stream_t) a;
+    // stream_t stream = (stream_t) a;
     // return fae_message_receive(((sender_t) stream->incoming), addr);
+    assert (false && "Not implemented");
 }
 
 void audio_stream_send(ptr_t a, address_t addr, message_t msg)
 {
-    stream_t stream = (stream_t) a;
+    // stream_t stream = (stream_t) a;
     // fae_message_send(((receiver_t) stream->incoming), addr, msg);
+    assert (false && "Not implemented");
 }
 
 ptr_t audio_stream_impl(fae_id_t interface)

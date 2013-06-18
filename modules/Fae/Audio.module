@@ -1,6 +1,6 @@
 
 /**
-    @addtogroup FaeDeviceAudio
+    @addtogroup FaeAudio
 
     Real-time audio devices. These device run processors on the input and output
     the underlying system, typically physical audio interfaces. A running audio
@@ -37,7 +37,7 @@
     @see
     - @ref Devices
  */
-module Fae.Device.Audio
+module Fae.Audio
 {
     import Fae.List;
     import Fae.Pair;
@@ -46,7 +46,8 @@ module Fae.Device.Audio
     import Fae.Processor;
 
     type Session = opaque;
-    type Stream = opaque;
+    type Device  = opaque;
+    type Stream  = opaque;
     type SessionCallback = ((Ptr, Session) -> Session)*;
     type StreamCallback = ((Ptr, Stream) -> Stream)*;
     type StatusCallback = Nullary;
@@ -57,23 +58,23 @@ module Fae.Device.Audio
         SessionCallback, Ptr,
         Callback, Ptr) -> Void;
 
-    all : Session -> List;      // [Audio]
-    default : Session -> Pair;  // (Audio,Audio)
-    defaultInput : Session -> Audio;
-    defaultOutput : Session -> Audio;
+    all : Session -> List;      // [Device]
+    default : Session -> Pair;  // (Device,Device)
+    defaultInput : Session -> Device;
+    defaultOutput : Session -> Device;
     setStatusCallback : (StatusCallback, Ptr, Session) -> Void;
 
-    name : Audio -> String;
-    hostName : Audio -> String;
-    hasInput : Audio -> Bool;
-    hasOutput : Audio -> Bool;
-    inputType : Audio -> Type;
-    outputType : Audio -> Type;
+    name : Device -> String;
+    hostName : Device -> String;
+    hasInput : Device -> Bool;
+    hasOutput : Device -> Bool;
+    inputType : Device -> Type;
+    outputType : Device -> Type;
 
-    openStream : (Audio, Processor, Audio) -> Stream;
+    openStream : (Device, Processor, Device) -> Stream;
     closeStream : Stream -> Void;
     withStream : (
-        Audio, Processor, Audio,
+        Device, Processor, Device,
         StreamCallback, Ptr,
         Callback, Ptr
         ) -> Void;
