@@ -7,16 +7,15 @@ test: bin/fae_tests
 
 
 FILES= \
-	src/*.c \
-	src/fae/*.c \
-	src/fae/atomic/*.c \
-	src/fae/device/*.c \
-	src/fae/plot/*.c \
-	src/fae/processor/*.c \
-	src/fae/string/*.c \
-	src/platform/macosx/fae/*.c \
-	src/platform/macosx/fae/plot/*.m \
-	src/platform/macosx/fae/system/*.c
+	fae/core.c \
+	fae/*.c \
+	fae/atomic/*.c \
+	fae/device/*.c \
+	fae/plot/*.c \
+	fae/string/*.c \
+	platform/macosx/fae/*.c \
+	platform/macosx/fae/plot/*.m \
+	platform/macosx/fae/system/*.c
 
 LIBS= \
 	-lportmidi \
@@ -98,7 +97,8 @@ bin/fae_list_midi: bin/config.h
 		tools/fae_list_midi.c
 
 
-bin/config.h:
+bin/config.h:                
+	mkdir -p bin
 	cp include/config.h_ bin/config.h
 
 clean:
