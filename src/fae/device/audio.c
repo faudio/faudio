@@ -189,8 +189,8 @@ inline static stream_t new_stream(device_t input, device_t output, processor_t p
 
     stream->sample_count    = 0;
 
-    stream->incoming        = (sender_t)   lockfree_dispatcher();
-    stream->outgoing        = (receiver_t) lockfree_dispatcher();
+    // stream->incoming        = (sender_t)   lockfree_dispatcher();
+    // stream->outgoing        = (receiver_t) lockfree_dispatcher();
 
     return stream;
 }
@@ -401,32 +401,33 @@ stream_t fae_device_audio_open_stream(device_t input, processor_t proc, device_t
 
     audio_inform_opening(input, proc, output);
     {
-        if (fae_not_equal(
-                    fae_processor_input_type(proc),
-                    fae_device_audio_input_type(input))) {
-            char msg[100];
-            snprintf(msg, 100, "Could not connect device %s to processor %s",
-                     unstring(fae_string_show(fae_device_audio_input_type(input))),
-                     unstring(fae_string_show(proc)));
-            error_t err = fae_error_create_simple(error,
-                                                      string(msg),
-                                                      string("Doremir.Device.Audio"));
-            return (stream_t) err;
-        }
+        // TODO
+        // if (fae_not_equal(
+        //             fae_processor_input_type(proc),
+        //             fae_device_audio_input_type(input))) {
+        //     char msg[100];
+        //     snprintf(msg, 100, "Could not connect device %s to processor %s",
+        //              unstring(fae_string_show(fae_device_audio_input_type(input))),
+        //              unstring(fae_string_show(proc)));
+        //     error_t err = fae_error_create_simple(error,
+        //                                               string(msg),
+        //                                               string("Doremir.Device.Audio"));
+        //     return (stream_t) err;
+        // }
     }
     {
-        if (fae_not_equal(
-                    fae_processor_output_type(proc),
-                    fae_device_audio_output_type(output))) {
-            char msg[100];
-            snprintf(msg, 100, "Could not connect processor %s to device %s",
-                     unstring(fae_string_show(proc)),
-                     unstring(fae_string_show(fae_device_audio_output_type(output))));
-            error_t err = fae_error_create_simple(error,
-                                                      string(msg),
-                                                      string("Doremir.Device.Audio"));
-            return (stream_t) err;
-        }
+        // if (fae_not_equal(
+        //             fae_processor_output_type(proc),
+        //             fae_device_audio_output_type(output))) {
+        //     char msg[100];
+        //     snprintf(msg, 100, "Could not connect processor %s to device %s",
+        //              unstring(fae_string_show(proc)),
+        //              unstring(fae_string_show(fae_device_audio_output_type(output))));
+        //     error_t err = fae_error_create_simple(error,
+        //                                               string(msg),
+        //                                               string("Doremir.Device.Audio"));
+        //     return (stream_t) err;
+        // }
     }
     {
         PaStreamParameters inp = {
@@ -552,7 +553,7 @@ int during_processing(stream_t stream, unsigned count, float **input, float **ou
     // };
 
     // Syncronize messages
-    fae_message_sync(stream->incoming);
+    // fae_message_sync(stream->incoming);
 
     // deliver inputs
     // stream->proc_impl->process(stream->proc, &info, NULL);
@@ -740,19 +741,19 @@ int64_t audio_stream_ticks(ptr_t a)
 void audio_stream_sync(ptr_t a)
 {
     stream_t stream = (stream_t) a;
-    fae_message_sync(((sender_t) stream->incoming));
+    // fae_message_sync(((sender_t) stream->incoming));
 }
 
 fae_list_t audio_stream_receive(ptr_t a, address_t addr)
 {
     stream_t stream = (stream_t) a;
-    return fae_message_receive(((sender_t) stream->incoming), addr);
+    // return fae_message_receive(((sender_t) stream->incoming), addr);
 }
 
 void audio_stream_send(ptr_t a, address_t addr, message_t msg)
 {
     stream_t stream = (stream_t) a;
-    fae_message_send(((receiver_t) stream->incoming), addr, msg);
+    // fae_message_send(((receiver_t) stream->incoming), addr, msg);
 }
 
 ptr_t audio_stream_impl(fae_id_t interface)
@@ -763,10 +764,10 @@ ptr_t audio_stream_impl(fae_id_t interface)
         = { audio_stream_destroy };
     static fae_time_clock_interface_t audio_stream_time_clock_interface_impl
         = { audio_stream_time, audio_stream_tick_rate, audio_stream_ticks };
-    static fae_message_receiver_interface_t audio_stream_message_receiver_interface_impl
-        = { audio_stream_send };
-    static fae_message_sender_interface_t audio_stream_message_sender_interface_impl
-        = { audio_stream_sync, audio_stream_receive };
+    // static fae_message_receiver_interface_t audio_stream_message_receiver_interface_impl
+    //     = { audio_stream_send };
+    // static fae_message_sender_interface_t audio_stream_message_sender_interface_impl
+    //     = { audio_stream_sync, audio_stream_receive };
 
     switch (interface) {
 
@@ -780,11 +781,11 @@ ptr_t audio_stream_impl(fae_id_t interface)
     case fae_time_clock_interface_i:
         return &audio_stream_time_clock_interface_impl;
 
-    case fae_message_sender_interface_i:
-        return &audio_stream_message_sender_interface_impl;
+    // case fae_message_sender_interface_i:
+        // return &audio_stream_message_sender_interface_impl;
 
-    case fae_message_receiver_interface_i:
-        return &audio_stream_message_receiver_interface_impl;
+    // case fae_message_receiver_interface_i:
+        // return &audio_stream_message_receiver_interface_impl;
 
     default:
         return NULL;

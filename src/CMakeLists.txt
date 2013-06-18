@@ -17,27 +17,15 @@ list(APPEND SRCS
   fae/dynamic.c
   fae/buffer.c
   fae/error.c
-  fae/event.c
   fae/list.c
   fae/map.c 
-  fae/message.c
   fae/graph.c
   fae/midi_msg.c
   fae/pair.c
   fae/plot/gnuplot.c
   fae/plot.c
   fae/priority_queue.c
-  fae/processor.c
-  fae/processor/vm.c
-  fae/processor/split.c
-  fae/processor/unary.c
-  fae/processor/binary.c
-  fae/processor/delay.c
-  fae/processor/seq.c
-  fae/processor/par.c
-  fae/processor/loop.c
   fae/ratio.c
-  fae/scheduler.c
   fae/set.c
   fae/signal.c
   fae/string.c
@@ -52,7 +40,7 @@ list(APPEND SRCS_OSX
   platform/macosx/fae/string.c
   platform/macosx/fae/device.c
   platform/macosx/fae/system/directory.c
-  platform/macosx/fae/system/event.c
+  # platform/macosx/fae/system/event.c
   )
 if(${ENABLE_COREPLOT})
   list(APPEND SRCS_OSX

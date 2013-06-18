@@ -329,28 +329,28 @@ void test_type()
     // fae_dprint("align_of(1024,type(i8))   ==> %s\n", i32(fae_type_align_of(type(i8))));
     printf("\n");
 
-    fae_dprint("type(f64)                 ==> %s\n", type(f64));
-    fae_dprint("size_of(1024,type(f64))   ==> %s\n", i32(fae_type_size_of(1024, type(f64))));
-    fae_dprint("align_of(1024,type(f64))  ==> %s\n", i32(fae_type_align_of(type(f64))));
-    printf("\n");
-
-    type_t t = type_pair(type(i8), type(f64));
-    fae_dprint("t                            ==> %s\n", t);
-    fae_dprint("size_of(1024,t)              ==> %s\n", i32(fae_type_size_of(1024, t)));
-    fae_dprint("align_of(1024,t)             ==> %s\n", i32(fae_type_align_of(t)));
-    printf("\n");
-
-    type_t u = type_pair(type_vector(type(i8), 10), type(f64));
-    fae_dprint("u                            ==> %s\n", u);
-    fae_dprint("size_of(1024,u)              ==> %s\n", i32(fae_type_size_of(1024, u)));
-    fae_dprint("align_of(1024,u)             ==> %s\n", i32(fae_type_align_of(u)));
-    printf("\n");
-
-    type_t u2 = type_pair(type_frame(type(i8)), type(f64));
-    fae_dprint("u2                           ==> %s\n", u2);
-    fae_dprint("size_of(1024,u2)             ==> %s\n", i32(fae_type_size_of(1024, u2)));
-    fae_dprint("align_of(1024,u2)            ==> %s\n", i32(fae_type_align_of(u2)));
-    printf("\n");
+    // fae_dprint("type(f64)                 ==> %s\n", type(f64));
+    // fae_dprint("size_of(1024,type(f64))   ==> %s\n", i32(fae_type_size_of(1024, type(f64))));
+    // fae_dprint("align_of(1024,type(f64))  ==> %s\n", i32(fae_type_align_of(type(f64))));
+    // printf("\n");
+    // 
+    // type_t t = type_pair(type(i8), type(f64));
+    // fae_dprint("t                            ==> %s\n", t);
+    // fae_dprint("size_of(1024,t)              ==> %s\n", i32(fae_type_size_of(1024, t)));
+    // fae_dprint("align_of(1024,t)             ==> %s\n", i32(fae_type_align_of(t)));
+    // printf("\n");
+    // 
+    // type_t u = type_pair(type_vector(type(i8), 10), type(f64));
+    // fae_dprint("u                            ==> %s\n", u);
+    // fae_dprint("size_of(1024,u)              ==> %s\n", i32(fae_type_size_of(1024, u)));
+    // fae_dprint("align_of(1024,u)             ==> %s\n", i32(fae_type_align_of(u)));
+    // printf("\n");
+    // 
+    // type_t u2 = type_pair(type_frame(type(i8)), type(f64));
+    // fae_dprint("u2                           ==> %s\n", u2);
+    // fae_dprint("size_of(1024,u2)             ==> %s\n", i32(fae_type_size_of(1024, u2)));
+    // fae_dprint("align_of(1024,u2)            ==> %s\n", i32(fae_type_align_of(u2)));
+    // printf("\n");
 
     type_t v = type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
                                              type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
@@ -358,8 +358,8 @@ void test_type()
                                                                type(i8))))))))));
 
     fae_print("v                            ==> %s\n", v);
-    fae_dprint("size_of(1024,v)              ==> %s\n", i32(fae_type_size_of(1024, v)));
-    fae_dprint("align_of(1024,v)             ==> %s\n", i32(fae_type_align_of(v)));
+    // fae_dprint("size_of(1024,v)              ==> %s\n", i32(fae_type_size_of(1024, v)));
+    // fae_dprint("align_of(1024,v)             ==> %s\n", i32(fae_type_align_of(v)));
     fae_destroy(v);
     printf("\n");
 }
@@ -1193,121 +1193,120 @@ void test_json(string_t path)
 
 #pragma mark -
 
-void test_dispatcher()
-{
-    test_section("Dispatcher");
+// void test_dispatcher()
+// {
+//     test_section("Dispatcher");
+// 
+//     dispatcher_t disp = lockfree_dispatcher();
+// 
+//     ptr_t val = map(
+//                     string("lyrics"), list(string("Help"), string("me"), string("if"), string("you"), string("can")),
+//                     string("pitches"), list(ratio(60, 1), ratio(62, 1))
+//                 );
+// 
+//     fae_message_send((receiver_t) disp, i16(1), val);
+//     fae_message_send((receiver_t) disp, i16(2), string("World!"));
+//     fae_message_send((receiver_t) disp, i16(2), string("World!"));
+//     fae_message_send((receiver_t) disp, i16(2), string("World!"));
+//     fae_message_send((receiver_t) disp, i16(2), string("World!"));
+// 
+//     list_t msgs = fae_list_empty();
+// 
+//     while (true) {
+//         fae_message_sync((sender_t) disp);
+//         msgs = fae_message_receive((sender_t) disp, i16(1));
+// 
+//         if (fae_list_is_empty(msgs)) {
+//             break;
+//         }
+// 
+//         fae_print("             | 1: %s\n", msgs);
+//     }
+// 
+//     fae_destroy(disp);
+// }
+//      
 
-    dispatcher_t disp = lockfree_dispatcher();
+// --------------------------------------------------------------------------------
 
-    ptr_t val = map(
-                    string("lyrics"), list(string("Help"), string("me"), string("if"), string("you"), string("can")),
-                    string("pitches"), list(ratio(60, 1), ratio(62, 1))
-                );
-
-    fae_message_send((receiver_t) disp, i16(1), val);
-    fae_message_send((receiver_t) disp, i16(2), string("World!"));
-    fae_message_send((receiver_t) disp, i16(2), string("World!"));
-    fae_message_send((receiver_t) disp, i16(2), string("World!"));
-    fae_message_send((receiver_t) disp, i16(2), string("World!"));
-
-    list_t msgs = fae_list_empty();
-
-    while (true) {
-        fae_message_sync((sender_t) disp);
-        msgs = fae_message_receive((sender_t) disp, i16(1));
-
-        if (fae_list_is_empty(msgs)) {
-            break;
-        }
-
-        fae_print("             | 1: %s\n", msgs);
-    }
-
-    fae_destroy(disp);
-}
+// void test_system_event()
+// {
+//     test_section("System events");
+// 
+//     fae_message_sender_t s =
+//         fae_system_event_receive(
+//             list(
+//                 // i16(mouse_move_event)
+//                 // i16(mouse_down_event)
+//                 i16(key_down_event),
+//                 i16(key_up_event)
+// 
+//             ));
+//     fae_message_receiver_t r =
+//         fae_system_event_send_std();
+// 
+//     for (int i = 0; i < 100000; ++i) {
+//         fae_message_sync(s);
+//         fae_for_each(x, fae_message_receive(s, i16(0))) {
+//             // fae_print("    Received: %s\n", x);
+//             fae_message_send(r, i16(0), x);
+//         }
+//         fae_thread_sleep(5);
+//     }
+// }
 
 
 // --------------------------------------------------------------------------------
 
-void test_system_event()
-{
-    test_section("System events");
-
-    fae_message_sender_t s =
-        fae_system_event_receive(
-            list(
-                // i16(mouse_move_event)
-                // i16(mouse_down_event)
-                i16(key_down_event),
-                i16(key_up_event)
-
-            ));
-    fae_message_receiver_t r =
-        fae_system_event_send_std();
-
-    for (int i = 0; i < 100000; ++i) {
-        fae_message_sync(s);
-        fae_for_each(x, fae_message_receive(s, i16(0))) {
-            // fae_print("    Received: %s\n", x);
-            fae_message_send(r, i16(0), x);
-        }
-        fae_thread_sleep(5);
-    }
-}
-
-
-// --------------------------------------------------------------------------------
-
-void test_event()
-{
-    {
-        // fae_time_t t = seconds(0);
-
-        // event_t ha = now(string("höglund"));
-        // event_t ho = now(string("holmgren"));
-
-        // event_t a = merge_event(ha,
-            // delay_event(milliseconds(200*2), merge_event(ha,
-            // delay_event(milliseconds(200*2), merge_event(ha,
-            // delay_event(milliseconds(200*2), merge_event(ha,
-            // delay_event(milliseconds(200*2), merge_event(ha,
-            // delay_event(milliseconds(200*2), merge_event(ha, never())))))))))));
-
-        // event_t b = merge_event(ho,
-        //     delay_event(milliseconds(240*2), merge_event(ho,
-        //     delay_event(milliseconds(240*2), merge_event(ho,
-        //     delay_event(milliseconds(240*2), merge_event(ho,
-        //     delay_event(milliseconds(240*2), merge_event(ho,
-        //     delay_event(milliseconds(240*2), merge_event(ho, never())))))))))));
-
-        // event_t s1 = fae_event_later(seconds(1), NULL);
-        // event_t s3 = fae_event_later(seconds(3), NULL);
-
-        event_t mm = fae_system_event_mouse_move();
-        // event_t md = fae_system_event_mouse_down();
-        // event_t mu = fae_system_event_mouse_up();
-        // event_t kd = fae_system_event_key_down();
-        // event_t ku = fae_system_event_key_up();
-        // event_t mouseX = fae_event_map(apply1, fae_pair_fst, mm);
-        // event_t mouseY = fae_event_map(apply1, fae_pair_snd, mm);
-
-        // event_t y2 = merge_event(switch_event(kd, merge_event(a, mm), merge_event(b, md)), later(seconds(5), list(string("flux"))));
-        // event_t y2 = switch_event(ku, switch_event(kd,never(),mm), merge_event(delay_event(seconds(3),b),md));
-        // event_t y2 = switch_event(kd,mm,merge_event(md,mu));
-        // event_t y2 = fae_event_filter(fae_less_than, f64(500), mouseX);
-        event_t y2 = mm;
-        // fae_print("The event: %s\n", mouseX);
-        event_t z  = fae_system_event_write_std(y2);
-
-        {
-            clock_t     clk = fae_time_get_system_prec_clock();
-            scheduler_t sched = fae_scheduler_create(clk);
-            fae_scheduler_schedule(sched, z);
-            fae_scheduler_loop(sched);
-        }
-    }
-
-}
+// void test_event()
+// {
+//     {
+//         // fae_time_t t = seconds(0);
+// 
+//         // event_t ha = now(string("höglund"));
+//         // event_t ho = now(string("holmgren"));
+// 
+//         // event_t a = merge_event(ha,
+//             // delay_event(milliseconds(200*2), merge_event(ha,
+//             // delay_event(milliseconds(200*2), merge_event(ha,
+//             // delay_event(milliseconds(200*2), merge_event(ha,
+//             // delay_event(milliseconds(200*2), merge_event(ha,
+//             // delay_event(milliseconds(200*2), merge_event(ha, never())))))))))));
+// 
+//         // event_t b = merge_event(ho,
+//         //     delay_event(milliseconds(240*2), merge_event(ho,
+//         //     delay_event(milliseconds(240*2), merge_event(ho,
+//         //     delay_event(milliseconds(240*2), merge_event(ho,
+//         //     delay_event(milliseconds(240*2), merge_event(ho,
+//         //     delay_event(milliseconds(240*2), merge_event(ho, never())))))))))));
+// 
+//         // event_t s1 = fae_event_later(seconds(1), NULL);
+//         // event_t s3 = fae_event_later(seconds(3), NULL);
+// 
+//         event_t mm = fae_system_event_mouse_move();
+//         // event_t md = fae_system_event_mouse_down();
+//         // event_t mu = fae_system_event_mouse_up();
+//         // event_t kd = fae_system_event_key_down();
+//         // event_t ku = fae_system_event_key_up();
+//         // event_t mouseX = fae_event_map(apply1, fae_pair_first, mm);
+//         // event_t mouseY = fae_event_map(apply1, fae_pair_second, mm);
+// 
+//         // event_t y2 = merge_event(switch_event(kd, merge_event(a, mm), merge_event(b, md)), later(seconds(5), list(string("flux"))));
+//         // event_t y2 = switch_event(ku, switch_event(kd,never(),mm), merge_event(delay_event(seconds(3),b),md));
+//         // event_t y2 = switch_event(kd,mm,merge_event(md,mu));
+//         // event_t y2 = fae_event_filter(fae_less_than, f64(500), mouseX);
+//         event_t y2 = mm;
+//         // fae_print("The event: %s\n", mouseX);
+//         event_t z  = fae_system_event_write_std(y2);
+// 
+//         {
+//             clock_t     clk = fae_time_get_system_prec_clock();
+//             scheduler_t sched = fae_scheduler_create(clk);
+//             fae_scheduler_schedule(sched, z);
+//             fae_scheduler_loop(sched);
+//         }
+//     }
+// }
 
 
 // --------------------------------------------------------------------------------
@@ -1326,37 +1325,37 @@ ptr_t add1234(ptr_t c, ptr_t x)
     return i8(ti8(x) + 1234);
 }
 
-void test_processor_graphs(string_t path)
-{
-    test_section("Processors");
-
-    inform(string_append(string("Writing "), path));
-
-    processor_t p, q, chain, rchain;
-    p = unary(type(i8), type(i8), add1234, NULL);
-    chain = seq(p, seq(p, seq(p, seq(p, seq(p, p)))));
-    rchain = seq(seq(seq(seq(p, p), p), p), p);
-    q =
-        seq(split(type(i8)),
-
-            par(
-                seq(seq(seq(p, p), p), p),
-
-                seq(
-                    split(type(i8)),
-                    par(seq(split(type(i8)), par(chain, seq(split(type(i8)), par(chain, chain)))),
-                        seq(split(type(i8)), par(p, seq(p, p))))
-                )
-
-            )
-
-
-           )
-
-        ;
-
-    fae_processor_write_graph(q, path);
-}
+// void test_processor_graphs(string_t path)
+// {
+//     test_section("Processors");
+// 
+//     inform(string_append(string("Writing "), path));
+// 
+//     processor_t p, q, chain, rchain;
+//     p = unary(type(i8), type(i8), add1234, NULL);
+//     chain = seq(p, seq(p, seq(p, seq(p, seq(p, p)))));
+//     rchain = seq(seq(seq(seq(p, p), p), p), p);
+//     q =
+//         seq(split(type(i8)),
+// 
+//             par(
+//                 seq(seq(seq(p, p), p), p),
+// 
+//                 seq(
+//                     split(type(i8)),
+//                     par(seq(split(type(i8)), par(chain, seq(split(type(i8)), par(chain, chain)))),
+//                         seq(split(type(i8)), par(p, seq(p, p))))
+//                 )
+// 
+//             )
+// 
+// 
+//            )
+// 
+//         ;
+// 
+//     fae_processor_write_graph(q, path);
+// }  
 
 
 // --------------------------------------------------------------------------------
@@ -1433,7 +1432,7 @@ void test_plot_file(string_t path)
 
     fae_print("%s\n", res);
 
-    buffer_t buf = fae_pair_snd(res);
+    buffer_t buf = fae_pair_second(res);
     fae_plot_buffer_double(buf, NULL, NULL);
     fae_destroy(buf);
     fae_destroy(res);
@@ -1511,7 +1510,8 @@ void test_file_stream(string_t in_path, string_t out_path)
     processor_t proc;
 
     // Processor to use
-    proc    = fae_processor_identity(type_pair(type_frame(type(f32)), type_frame(type(f32))));
+    // proc    = fae_processor_identity(type_pair(type_frame(type(f32)), type_frame(type(f32))));
+    proc = NULL;
 
     // Open streams
     input   = fae_device_file_open(in_path);
@@ -1588,8 +1588,8 @@ void test_audio_stream()
     processor_t     proc1, proc2;
 
     // Processor to use
-    proc1    = id(type_pair(type_frame(type(f32)), type_frame(type(f32))));
-    proc2    = seq(proc1, proc1);
+    // proc1    = id(type_pair(type_frame(type(f32)), type_frame(type(f32))));
+    // proc2    = seq(proc1, proc1);
 
     // Begin session
     session = fae_device_audio_begin_session();
@@ -1659,12 +1659,12 @@ ptr_t to_note_off(ptr_t occ) {
 
 ptr_t to_control(ptr_t occ) {
     // fae_print("%s\n", occ);
-    double x = tf64(fae_pair_fst(occ));
+    double x = tf64(fae_pair_first(occ));
     return midi_msg(0xb0, 7, x/1900 * 127);
 }
 ptr_t to_control2(ptr_t occ) {
     // fae_print("%s\n", occ);
-    double y = tf64(fae_pair_snd(occ));
+    double y = tf64(fae_pair_second(occ));
     return midi_msg(0xb0, 1, y/1200 * 127);
 }
 
@@ -1733,14 +1733,14 @@ void test_midi_stream()
 
     // event_t notes2 = fae_event_before(later(seconds(3),0), notes);
 
-    event_t notes   = fae_event_receive((sender_t) in_stream, i32(0));
-    event_t sender  = fae_event_send((receiver_t) out_stream, i32(0), notes);
-    event_t sender2 = fae_system_event_write_std(notes);
+    // event_t notes   = fae_event_receive((sender_t) in_stream, i32(0));
+    // event_t sender  = fae_event_send((receiver_t) out_stream, i32(0), notes);
+    // event_t sender2 = fae_system_event_write_std(notes);
 
-    scheduler_t sched = fae_scheduler_create(fae_time_get_system_prec_clock());
-    fae_scheduler_schedule(sched, sender);
-    fae_scheduler_schedule(sched, sender2);
-    fae_scheduler_loop(sched);
+    // scheduler_t sched = fae_scheduler_create(fae_time_get_system_prec_clock());
+    // fae_scheduler_schedule(sched, sender);
+    // fae_scheduler_schedule(sched, sender2);
+    // fae_scheduler_loop(sched);
 
     // for (int i = 0; i < 30; ++i) {
     //     fae_message_send((receiver_t) out_stream, 0, midi(0x90, 48 + i * 2, 100));

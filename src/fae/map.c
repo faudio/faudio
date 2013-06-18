@@ -118,13 +118,13 @@ fae_map_t fae_map_dremove(fae_map_key_t key, fae_map_t map)
 
 fae_map_t fae_map_add_entry(fae_pair_t x, fae_map_t map)
 {
-    entry_t entry = new_entry(fae_pair_fst(x), fae_pair_snd(x));
+    entry_t entry = new_entry(fae_pair_first(x), fae_pair_second(x));
     return new_map(fae_set_add(entry, map->entries));
 }
 
 fae_map_t fae_map_remove_entry(fae_pair_t x, fae_map_t map)
 {
-    entry_t entry = new_entry(fae_pair_fst(x), fae_pair_snd(x));
+    entry_t entry = new_entry(fae_pair_first(x), fae_pair_second(x));
     return new_map(fae_set_remove(entry, map->entries));
 }
 
@@ -199,8 +199,8 @@ fae_map_t fae_map_map(unary_t func, ptr_t data, fae_map_t map)
 {
     map_t result = fae_map_empty();
     fae_map_for_each(key_val, map) {
-        ptr_t key = fae_pair_fst(key_val);
-        ptr_t val = fae_pair_snd(key_val);
+        ptr_t key = fae_pair_first(key_val);
+        ptr_t val = fae_pair_second(key_val);
         result = fae_map_add(key, func(data, val), result);
     }
     return result;

@@ -89,7 +89,7 @@ module Fae.String
     fromNative   : Ptr    -> String;
 
     // Matching
-    // matches : (String,String) -> Bool;  // regex, input
+    matches : (String,String) -> Bool;  // regex, input
 
     // Formatting
     formatIntegral : (Char*, Long) -> String;

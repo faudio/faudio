@@ -32,11 +32,8 @@ module Fae.Fae
     import Fae.Device.Audio;
     import Fae.Device.Midi;
     import Fae.Device.File;
-    import Fae.Message;
     import Fae.MidiMsg;
-    import Fae.Processor;
     import Fae.Plot;
-    import Fae.Scheduler;
     import Fae.Thread;
     import Fae.Time;
     import Fae.PriorityQueue;

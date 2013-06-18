@@ -78,7 +78,7 @@ inline static void delete_device(device_t device);
 inline static stream_t new_stream(device_t device);
 inline static void delete_stream(stream_t stream);
 
-long fae_midi_simple_to_long(fae_midi_msg_t midi);
+long fae_midi_msg_simple_to_long(fae_midi_msg_t midi);
 
 
 // --------------------------------------------------------------------------------

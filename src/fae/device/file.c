@@ -9,10 +9,7 @@
 #include <fae/thread.h>
 #include <fae/error.h>
 #include <fae/util.h>
-
 #include <sndfile.h>
-
-#include "../processor/vm.h"
 
 typedef fae_device_file_t                  device_t;
 typedef fae_device_file_result_t           result_t;

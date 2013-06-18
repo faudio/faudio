@@ -39,6 +39,7 @@ fae_string_t fae_string_from_utf8(fae_string_utf8_t);
 fae_string_t fae_string_from_utf16(fae_string_utf16_t);
 fae_string_t fae_string_from_utf32(fae_string_utf32_t);
 fae_string_t fae_string_from_native(fae_ptr_t);
+bool fae_string_matches(fae_string_t, fae_string_t);
 fae_string_t fae_string_format_integral(char *, long);
 fae_string_t fae_string_format_floating(char *, double);
 

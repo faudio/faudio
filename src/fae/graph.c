@@ -193,8 +193,8 @@ fae_string_t fae_graph_to_dot(
 
     fae_set_for_each(node, graph->nodes) {
         if (fae_dynamic_get_type(node) == pair_type_repr) {
-            char *cs = unstring(fae_string_to_string(fae_pair_fst(node)));
-            char *ds = unstring(fae_string_to_string(fae_pair_snd(node)));
+            char *cs = unstring(fae_string_to_string(fae_pair_first(node)));
+            char *ds = unstring(fae_string_to_string(fae_pair_second(node)));
 
             snprintf(buf, 100, "    \"%s\" [label = \"%s\"];\n", cs, ds);
             str = string_dappend(str, string(buf));
@@ -208,13 +208,13 @@ fae_string_t fae_graph_to_dot(
     fae_map_for_each(node_edge_pair, graph->edges) {
         ptr_t node1, node2, label;
 
-        node1 = ((edge_t) fae_pair_fst(node_edge_pair))->node1;
-        node2 = ((edge_t) fae_pair_fst(node_edge_pair))->node2;
-        label = fae_pair_snd(node_edge_pair);
+        node1 = ((edge_t) fae_pair_first(node_edge_pair))->node1;
+        node2 = ((edge_t) fae_pair_first(node_edge_pair))->node2;
+        label = fae_pair_second(node_edge_pair);
 
         if (fae_dynamic_get_type(node1) == pair_type_repr) {
-            node1   = fae_pair_fst(node1);
-            node2   = fae_pair_fst(node2);
+            node1   = fae_pair_first(node1);
+            node2   = fae_pair_first(node2);
         }
 
         char *n1    = unstring(fae_string_to_string(node1));

@@ -13,11 +13,8 @@
 #include <fae/device/audio.h>
 #include <fae/device/midi.h>
 #include <fae/device/file.h>
-#include <fae/message.h>
 #include <fae/midi_msg.h>
-#include <fae/processor.h>
 #include <fae/plot.h>
-#include <fae/scheduler.h>
 #include <fae/thread.h>
 #include <fae/time.h>
 #include <fae/priority_queue.h>

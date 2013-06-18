@@ -26,8 +26,8 @@ void echo()
     midi_session_t  session;
     midi_device_t   input, output;
     midi_stream_t   in_stream, out_stream;
-    event_t         send, recv;
-    scheduler_t     sched;
+    // event_t         send, recv;
+    // scheduler_t     sched;
 
     session = fae_device_midi_begin_session();
 
@@ -54,16 +54,16 @@ void echo()
         goto cleanup;
     }
 
-    recv = fae_event_receive((sender_t) in_stream, i32(0));
-    send = fae_event_send((receiver_t) out_stream, i32(0), recv);
+    // recv = fae_event_receive((sender_t) in_stream, i32(0));
+    // send = fae_event_send((receiver_t) out_stream, i32(0), recv);
 
-    sched = fae_scheduler_create(fae_time_get_system_prec_clock());
-    fae_scheduler_schedule(sched, send);
+    // sched = fae_scheduler_create(fae_time_get_system_prec_clock());
+    // fae_scheduler_schedule(sched, send);
 
     printf("Input:  %s\n", unstring(fae_device_midi_name(input)));
     printf("Output: %s\n", unstring(fae_device_midi_name(output)));
     printf("Echoing midi...\n");
-    fae_scheduler_loop(sched);
+    // fae_scheduler_loop(sched);
 
 cleanup:
     fae_device_midi_end_session(session);
