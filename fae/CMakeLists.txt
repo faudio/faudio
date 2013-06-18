@@ -5,54 +5,50 @@
 # To update, use 
 #  find src -name '*'
 list(APPEND SRCS
+  core.c
   fae.c
-  fae/fae.c
-  fae/atomic/queue.c
-  fae/atomic/ring_buffer.c
-  fae/atomic/stack.c
-  fae/device/file.c
-  fae/device/buffer.c
-  fae/audio.c
-  fae/midi.c
-  fae/dynamic.c
-  fae/buffer.c
-  fae/error.c
-  fae/list.c
-  fae/map.c 
-  fae/graph.c
-  fae/midi_msg.c
-  fae/pair.c
-  fae/plot/gnuplot.c
-  fae/plot.c
-  fae/priority_queue.c
-  fae/ratio.c
-  fae/set.c
-  fae/signal.c
-  fae/string.c
-  fae/string/trex.c
-  fae/string/parson.c
-  fae/time.c
-  fae/type.c
+  atomic/queue.c
+  atomic/ring_buffer.c
+  atomic/stack.c
+  device/file.c
+  device/buffer.c
+  audio.c
+  midi.c
+  dynamic.c
+  buffer.c
+  error.c
+  list.c
+  map.c 
+  graph.c
+  midi/message.c
+  pair.c
+  plot/gnuplot.c
+  plot.c
+  priority_queue.c
+  ratio.c
+  set.c
+  signal.c
+  string.c
+  string/trex.c
+  string/parson.c
+  time.c
+  type.c
   )
 list(APPEND SRCS_OSX
-  platform/macosx/fae/atomic.c
-  platform/macosx/fae/thread.c
-  platform/macosx/fae/string.c
-  platform/macosx/fae/device.c
-  platform/macosx/fae/system/directory.c
-  # platform/macosx/fae/system/event.c
+  ../platform/macosx/fae/atomic.c
+  ../platform/macosx/fae/thread.c
+  ../platform/macosx/fae/string.c
+  ../platform/macosx/fae/device.c
+  ../platform/macosx/fae/system/directory.c
+  # ../platform/macosx/fae/system/event.c
   )
 if(${ENABLE_COREPLOT})
   list(APPEND SRCS_OSX
-    platform/macosx/fae/plot/coreplot.m
+    ../platform/macosx/fae/plot/coreplot.m
   )
 endif()
 
 list(APPEND SRCS_MSYS
-  fae/atomic_win.c
-  fae/device_win.c
-  fae/directory_win.c
-  fae/thread_win.c
   )
 
 if(APPLE)

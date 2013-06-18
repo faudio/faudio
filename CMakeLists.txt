@@ -318,8 +318,8 @@ if (COMPONENTS_RESOLVED)
   ## ----------------------------------------------------------------------
   ## Add main targets
 
-  add_subdirectory(src)
+  add_subdirectory(fae)
   add_subdirectory(test)
-  add_subdirectory(tools)
+  add_subdirectory(examples)
 
 endif(COMPONENTS_RESOLVED)
