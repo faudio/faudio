@@ -29,7 +29,7 @@ module Fae.Signal
 
     time                : () -> Signal; // Time
     delay               : (Time, Signal)  -> Signal;
-    fix                 : (Signal -> Signal) -> Signal;
+    fix                 : (((Ptr, Signal) -> Signal)*, Ptr) -> Signal;
 
     add                 : () -> Signal;
     subtract            : () -> Signal;

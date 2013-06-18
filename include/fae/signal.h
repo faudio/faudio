@@ -32,7 +32,9 @@ fae_signal_t fae_signal_lift3(fae_ternary_t,
                               fae_signal_t);
 fae_signal_t fae_signal_time();
 fae_signal_t fae_signal_delay(fae_time_t, fae_signal_t);
-fae_signal_t fae_signal_fix(fae_signal_t (fae_signal_t));
+fae_signal_t fae_signal_fix(fae_signal_t (*)(fae_ptr_t,
+                                             fae_signal_t),
+                            fae_ptr_t);
 fae_signal_t fae_signal_add();
 fae_signal_t fae_signal_subtract();
 fae_signal_t fae_signal_multiply();
