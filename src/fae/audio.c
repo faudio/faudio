@@ -718,25 +718,25 @@ void audio_stream_destroy(ptr_t a)
     fae_audio_close_stream(a);
 }
 
-fae_time_t audio_stream_time(ptr_t a)
-{
-    stream_t stream = (stream_t) a;
-    double  sr = stream->sample_rate;
-    int64_t t  = stream->sample_count;
-    return milliseconds(((double)t) / sr * 1000);
-}
+// fae_time_t audio_stream_time(ptr_t a)
+// {
+    // stream_t stream = (stream_t) a;
+    // double  sr = stream->sample_rate;
+    // int64_t t  = stream->sample_count;
+    // return milliseconds(((double)t) / sr * 1000);
+// }
 
-double audio_stream_tick_rate(ptr_t a)
-{
-    stream_t stream = (stream_t) a;
-    return stream->sample_rate;
-}
+// double audio_stream_tick_rate(ptr_t a)
+// {
+    // stream_t stream = (stream_t) a;
+    // return stream->sample_rate;
+// }
 
-int64_t audio_stream_ticks(ptr_t a)
-{
-    stream_t stream = (stream_t) a;
-    return stream->sample_count; // TODO atomic
-}
+// int64_t audio_stream_ticks(ptr_t a)
+// {
+    // stream_t stream = (stream_t) a;
+    // return stream->sample_count; // TODO atomic
+// }
 
 void audio_stream_sync(ptr_t a)
 {
@@ -765,8 +765,8 @@ ptr_t audio_stream_impl(fae_id_t interface)
         = { audio_stream_show };
     static fae_destroy_t audio_stream_destroy_impl
         = { audio_stream_destroy };
-    static fae_time_clock_interface_t audio_stream_time_clock_interface_impl
-        = { audio_stream_time, audio_stream_tick_rate, audio_stream_ticks };
+    // static fae_time_clock_interface_t audio_stream_time_clock_interface_impl
+        // = { audio_stream_time, audio_stream_tick_rate, audio_stream_ticks };
     // static fae_message_receiver_interface_t audio_stream_message_receiver_interface_impl
     //     = { audio_stream_send };
     // static fae_message_sender_interface_t audio_stream_message_sender_interface_impl
@@ -781,8 +781,8 @@ ptr_t audio_stream_impl(fae_id_t interface)
     case fae_destroy_i:
         return &audio_stream_destroy_impl;
 
-    case fae_time_clock_interface_i:
-        return &audio_stream_time_clock_interface_impl;
+    // case fae_time_clock_interface_i:
+        // return &audio_stream_time_clock_interface_impl;
 
     // case fae_message_sender_interface_i:
         // return &audio_stream_message_sender_interface_impl;

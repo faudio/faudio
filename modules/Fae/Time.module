@@ -75,21 +75,21 @@ module Fae.Time
     
     // Clocks
     
-    /** @interface fae_time_clock_interface_t */
-    type ClockInterface = struct {
-        time     : (Ptr -> Time)*,
-        tickRate : (Ptr -> Double)*,
-        ticks    : (Ptr -> Int64)*
-    };                 
-    
-    type Clock = opaque;
-    
-    time     : Clock -> Time;
-    tickRate : Clock -> Double;
-    ticks    : Clock -> Int64;
-
-    getSystemClock      : () -> Clock;
-    getSystemPrecClock  : () -> Clock;
-    getCpuClock         : () -> Clock;
+    // /** @interface fae_time_clock_interface_t */
+    // type ClockInterface = struct {
+    //     time     : (Ptr -> Time)*,
+    //     tickRate : (Ptr -> Double)*,
+    //     ticks    : (Ptr -> Int64)*
+    // };                 
+    // 
+    // type Clock = opaque;
+    // 
+    // time     : Clock -> Time;
+    // tickRate : Clock -> Double;
+    // ticks    : Clock -> Int64;
+    // 
+    // getSystemClock      : () -> Clock;
+    // getSystemPrecClock  : () -> Clock;
+    // getCpuClock         : () -> Clock;
 }
 

@@ -275,24 +275,24 @@ void test_time()
 
 // --------------------------------------------------------------------------------
 
-void test_system_time()
-{
-    test_section("System time");
-
-    clock_t system_clock = fae_time_get_system_prec_clock();
-
-    for (int i = 0; i < 10; ++i) {
-        // fae_print("system()                     ==> %s\n", fae_time_system());
-        // fae_print("cpu()                        ==> %s\n", fae_time_cpu());
-        // fae_print("system()                     ==> %s\n", fae_time_from_system(fae_time_system()));
-        // fae_print("cpu()                        ==> %s\n", fae_time_from_cpu(fae_time_cpu()));
-
-        fae_print("time(systemClock)            ==> %s\n", fae_time_time(system_clock));
-        fae_print("ticks(systemClock)           ==> %s\n", i64(fae_time_ticks(system_clock)));
-
-        fae_thread_sleep(50);
-    }
-}
+// void test_system_time()
+// {
+//     test_section("System time");
+// 
+//     clock_t system_clock = fae_time_get_system_prec_clock();
+// 
+//     for (int i = 0; i < 10; ++i) {
+//         // fae_print("system()                     ==> %s\n", fae_time_system());
+//         // fae_print("cpu()                        ==> %s\n", fae_time_cpu());
+//         // fae_print("system()                     ==> %s\n", fae_time_from_system(fae_time_system()));
+//         // fae_print("cpu()                        ==> %s\n", fae_time_from_cpu(fae_time_cpu()));
+// 
+//         fae_print("time(systemClock)            ==> %s\n", fae_time_time(system_clock));
+//         fae_print("ticks(systemClock)           ==> %s\n", i64(fae_time_ticks(system_clock)));
+// 
+//         fae_thread_sleep(50);
+//     }
+// }
 
 // --------------------------------------------------------------------------------
 
@@ -1824,7 +1824,7 @@ int main(int argc, char const *argv[])
         test_rational();
         test_buffer();
         test_time();
-        test_system_time();
+        // test_system_time();
         // test_type();
         test_midi_message();
 

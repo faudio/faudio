@@ -30,18 +30,6 @@ fae_time_t fae_time_from_system(fae_time_system_t);
 fae_time_t fae_time_from_cpu(fae_time_cpu_t);
 fae_time_system_t fae_time_system();
 fae_time_cpu_t fae_time_cpu();
-typedef struct {
-            fae_time_t (* time)(fae_ptr_t);
-            double (* tick_rate)(fae_ptr_t);
-            int64_t (* ticks)(fae_ptr_t);
-        } fae_time_clock_interface_t;
-typedef struct _fae_time_clock_t * fae_time_clock_t;
-fae_time_t fae_time_time(fae_time_clock_t);
-double fae_time_tick_rate(fae_time_clock_t);
-int64_t fae_time_ticks(fae_time_clock_t);
-fae_time_clock_t fae_time_get_system_clock();
-fae_time_clock_t fae_time_get_system_prec_clock();
-fae_time_clock_t fae_time_get_cpu_clock();
 
 /** @}
     @}
