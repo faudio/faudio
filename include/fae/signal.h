@@ -18,18 +18,11 @@
 typedef struct _fae_signal_t * fae_signal_t;
 fae_type_t fae_signal_type_of(fae_signal_t);
 fae_signal_t fae_signal_constant(fae_ptr_t);
-fae_signal_t fae_signal_identity(fae_signal_t);
 fae_signal_t fae_signal_apply(fae_signal_t, fae_signal_t);
-fae_signal_t fae_signal_lift(fae_unary_t, fae_ptr_t, fae_signal_t);
-fae_signal_t fae_signal_lift2(fae_binary_t,
-                              fae_ptr_t,
-                              fae_signal_t,
-                              fae_signal_t);
-fae_signal_t fae_signal_lift3(fae_ternary_t,
-                              fae_ptr_t,
-                              fae_signal_t,
-                              fae_signal_t,
-                              fae_signal_t);
+fae_signal_t fae_signal_identity(fae_signal_t);
+fae_signal_t fae_signal_lift(fae_unary_t, fae_ptr_t);
+fae_signal_t fae_signal_lift2(fae_binary_t, fae_ptr_t);
+fae_signal_t fae_signal_lift3(fae_ternary_t, fae_ptr_t);
 fae_signal_t fae_signal_time();
 fae_signal_t fae_signal_delay(fae_time_t, fae_signal_t);
 fae_signal_t fae_signal_fix(fae_signal_t (*)(fae_ptr_t,

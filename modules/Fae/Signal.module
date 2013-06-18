@@ -19,13 +19,12 @@ module Fae.Signal
     typeOf : Signal -> Type;
 
 
-    constant            : Ptr    -> Signal;
-    identity            : Signal -> Signal;
-
-    apply               : (Signal, Signal) -> Signal;
-    lift                : (Unary,   Ptr, Signal)                 -> Signal;
-    lift2               : (Binary,  Ptr, Signal, Signal)         -> Signal;
-    lift3               : (Ternary, Ptr, Signal, Signal, Signal) -> Signal;
+    constant            : Ptr              -> Signal; // a -> S a
+    apply               : (Signal, Signal) -> Signal; // S (a -> b)    -> S a -> S b
+    identity            : Signal           -> Signal; // S (a -> a)
+    lift                : (Unary,   Ptr)   -> Signal; // (a -> b)      -> S a -> S b
+    lift2               : (Binary,  Ptr)   -> Signal; // (a -> b -> c) -> S a -> S b -> S c
+    lift3               : (Ternary, Ptr)   -> Signal; // ...
 
     time                : () -> Signal; // Time
     delay               : (Time, Signal)  -> Signal;
