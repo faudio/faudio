@@ -49,7 +49,14 @@
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#BasicBuild">Basic build</a></li>
+<ul><li class="level1"><a href="#Prerequisites">Prerequisites</a><ul><li class="level2"><a href="#Libraries">Libraries</a></li>
+</ul>
+</li>
+<li class="level1"><a href="#Platform">Platform</a><ul><li class="level2"><a href="#Compiler">Compiler</a></li>
+<li class="level2"><a href="#Tools">Tools</a></li>
+</ul>
+</li>
+<li class="level1"><a href="#BasicBuild">Basic build</a></li>
 <li class="level1"><a href="#AdvancedBuild">Advanced build</a><ul><li class="level2"><a href="#Dependencies">Building local dependencies</a></li>
 <li class="level2"><a href="#SettingOptions">Setting and inspecting options</a></li>
 <li class="level2"><a href="#SeparateBuildDir">Using a separate build directory</a></li>
@@ -64,10 +71,77 @@
 </li>
 </ul>
 </div>
-<div class="textblock"><dl class="section note"><dt>Note</dt><dd>This page is under construction.</dd></dl>
+<div class="textblock"><h1><a class="anchor" id="Prerequisites"></a>
+Prerequisites</h1>
+<p><a class="anchor" id="Prerequisites"></a></p>
+<p>The following tools and libraries are required to build Fae.</p>
+<h1><a class="anchor" id="Platform"></a>
+Platform</h1>
+<p>Supported platforms are:</p>
+<ul>
+<li>Windows XP or later</li>
+<li>Mac OS X 10.5 or later</li>
+</ul>
+<p>Porting to Linux should be relatively easy but has not been done yet.</p>
+<h2><a class="anchor" id="Compiler"></a>
+Compiler</h2>
+<p>A compiler supporting the C99 standard is required. Currently tested are:</p>
+<ul>
+<li>clang 3.1 or later (Apple call this compiler "4.0.0 based of SVN 3.1")</li>
+<li>GCC 4.6.2 or later</li>
+</ul>
+<p>The default Windows compiler (Visual C/C++) is not well supported, the MinGW version of GCC is recommended.</p>
+<h2><a class="anchor" id="Tools"></a>
+Tools</h2>
+<p>The following tools are required to build Fae.</p>
+<h3>CMake</h3>
+<p><a href="http://www.cmake.org">http://www.cmake.org</a></p>
+<p>Required for building the libraries and binaries.</p>
+<p>At present the <em>only</em> supported generators are Makefiles on Linux OS X, and MSYS Makefiles on Windows. Cygwin Makefiles <em>might</em> work, but is not well tested, and not recommended as the Cygwin compiler might not generate standard Windows binaries.</p>
+<h3>Modulo</h3>
+<p><a href="https://github.com/hanshoglund/modulo">https://github.com/hanshoglund/modulo</a></p>
+<p>Required for generating headers and low-level language bindings.</p>
+<h3>Dist</h3>
+<p><a href="https://github.com/hanshoglund/dist">https://github.com/hanshoglund/dist</a></p>
+<p>Required for automatic package resolution. Not required if dependencies are built locally or available through some other package management system.</p>
+<h3>Doxygen</h3>
+<p><a href="http://www.stack.nl/~dimitri/doxygen">http://www.stack.nl/~dimitri/doxygen</a></p>
+<p>Required for generating the documentation.</p>
+<h3>GraphViz</h3>
+<p><a href="http://www.graphviz.org/">http://www.graphviz.org/</a></p>
+<p>Optionally used for generating graphs.</p>
+<h3>gnuplot</h3>
+<p><a href="http://gnuplot.sourceforge.net/">http://gnuplot.sourceforge.net/</a></p>
+<p>Optionally used for generating plots.</p>
+<h3>ImageMagick</h3>
+<p><a href="http://www.imagemagick.org/script/index.php">http://www.imagemagick.org/script/index.php</a></p>
+<p>Optionally used for converting graphs.</p>
+<h3>libpng</h3>
+<p>TODO URL</p>
+<p>libpng</p>
+<h3>GhostScript</h3>
+<p><a href="http://pages.cs.wisc.edu/~ghost/">http://pages.cs.wisc.edu/~ghost/</a></p>
+<p>Optionally used for converting plots.</p>
+<h3>GNU Make</h3>
+<p>Required for building language bindings and documentation.</p>
+<h2><a class="anchor" id="Libraries"></a>
+Libraries</h2>
+<p><a class="anchor" id="Libraries"></a> These are typically handled by the package mangager, see build and install.</p>
+<h3>Portaudio</h3>
+<p><a href="http://www.portaudio.com">http://www.portaudio.com</a> <a href="http://portmedia.sourceforge.net">http://portmedia.sourceforge.net</a></p>
+<p>Required for real-time audio streams on all systems.</p>
+<h3>Portmidi</h3>
+<p><a href="http://portmedia.sourceforge.net">http://portmedia.sourceforge.net</a></p>
+<p>Required for real-time midi streams on all systems.</p>
+<h3>Libsndfile</h3>
+<p><a href="http://www.mega-nerd.com/libsndfile">http://www.mega-nerd.com/libsndfile</a></p>
+<p>Required for non-real-time audio streams on all systems.</p>
+<h3>Fluidsynth</h3>
+<p><a href="http://sourceforge.net/apps/trac/fluidsynth">http://sourceforge.net/apps/trac/fluidsynth</a></p>
+<p>Required for using the Fluidsynth audio processor.</p>
 <h1><a class="anchor" id="BasicBuild"></a>
 Basic build</h1>
-<p>First ensure that your system meets the <a class="el" href="md__prerequisites.html#Platform">platform</a> requirements, and that the necessary <a class="el" href="md__prerequisites.html#Compiler">compiler</a> and <a class="el" href="md__prerequisites.html#Tools">tools</a> are available.</p>
+<p>First ensure that your system meets the <a class="el" href="md__build_and_install.html#Platform">platform</a> requirements, and that the necessary <a class="el" href="md__build_and_install.html#Compiler">compiler</a> and <a class="el" href="md__build_and_install.html#Tools">tools</a> are available.</p>
 <p>The source code for Fae can be obtained by. </p>
 <pre class="fragment">$ git clone git@github.com:fae/fae.git
 $ cd audio-engine
@@ -80,7 +154,7 @@ $ make test
 Advanced build</h1>
 <h2><a class="anchor" id="Dependencies"></a>
 Building local dependencies</h2>
-<p>The bootstrap script automatically downloads the <a class="el" href="md__prerequisites.html#Libraries">required libraries</a>. You can also build libraries locally, using the component commands described below.</p>
+<p>The bootstrap script automatically downloads the <a class="el" href="md__build_and_install.html#Libraries">required libraries</a>. You can also build libraries locally, using the component commands described below.</p>
 <h2><a class="anchor" id="SettingOptions"></a>
 Setting and inspecting options</h2>
 <p>Build options can be changed using any CMake tool, such as <code>cmake-gui</code> or <code>ccmake</code>.</p>
@@ -149,7 +223,7 @@ Commands</h2>
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jun 18 2013 20:29:58 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Wed Jun 19 2013 01:14:06 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

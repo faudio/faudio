@@ -78,26 +78,14 @@
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;fae_time_t <a class="code" href="group___fae_time.html#ga32b2a33c23320905953784679d062e79" title="Convert system CPU time to a time interval.">fae_time_from_cpu</a>(<a class="code" href="group___fae_time.html#ga22c5fc159ca4867c3ca3330679e70094">fae_time_cpu_t</a>);</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<a class="code" href="group___fae_time.html#ga3f6d0e6d5818f63c6251e90b5c3be2cc">fae_time_system_t</a> <a class="code" href="group___fae_time.html#ga30a3fb78f0f1bd5163ad7facb895e1e0" title="Get the system time.">fae_time_system</a>();</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="group___fae_time.html#ga22c5fc159ca4867c3ca3330679e70094">fae_time_cpu_t</a> <a class="code" href="group___fae_time.html#ga2b6cecf8d42efa9c9698b85c0a7f8f2b" title="Get the system CPU time.">fae_time_cpu</a>();</div>
-<div class="line"><a name="l00033"></a><span class="lineno"><a class="code" href="structfae__time__clock__interface__t.html">   33</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="code" href="group___fae.html#ga6481e5986a4910f7aa5842b05947cd70">   34</a></span>&#160;            <a class="code" href="group___fae_time.html#ga24fcf1450ea9516fe7d650762e22d945">fae_time_t</a> (* time)(<a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>);</div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="code" href="group___fae.html#ga6a3f2a88d228138ab402c6c720bd8ad9">   35</a></span>&#160;            double (* tick_rate)(<a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>);</div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="code" href="group___fae.html#ga3a2ffba02075ea3d5f59b3a8c075331d">   36</a></span>&#160;            int64_t (* ticks)(<a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        } <a class="code" href="structfae__time__clock__interface__t.html">fae_time_clock_interface_t</a>;</div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="code" href="group___fae_time.html#ga0292dad16755298bbe8ecb487a31a664">   38</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_fae_time_clock_t * <a class="code" href="group___fae_time.html#ga0292dad16755298bbe8ecb487a31a664">fae_time_clock_t</a>;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;fae_time_t <a class="code" href="group___fae_time.html#ga308829f8077f8ad8f8ba7b2339a77c91">fae_time_time</a>(<a class="code" href="group___fae_time.html#ga0292dad16755298bbe8ecb487a31a664">fae_time_clock_t</a>);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keywordtype">double</span> <a class="code" href="group___fae_time.html#ga22c0f2806b2b8a228d420013e4b0af4e">fae_time_tick_rate</a>(<a class="code" href="group___fae_time.html#ga0292dad16755298bbe8ecb487a31a664">fae_time_clock_t</a>);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;int64_t <a class="code" href="group___fae_time.html#ga88e3a0696644c0b2d7b9c6bd9d42bd49">fae_time_ticks</a>(<a class="code" href="group___fae_time.html#ga0292dad16755298bbe8ecb487a31a664">fae_time_clock_t</a>);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<a class="code" href="group___fae_time.html#ga0292dad16755298bbe8ecb487a31a664">fae_time_clock_t</a> <a class="code" href="group___fae_time.html#gaf505ff8c14b336580a001e6038bb7bf8">fae_time_get_system_clock</a>();</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<a class="code" href="group___fae_time.html#ga0292dad16755298bbe8ecb487a31a664">fae_time_clock_t</a> <a class="code" href="group___fae_time.html#gab2decf6c6b66b1538584f5b49e33b9e1">fae_time_get_system_prec_clock</a>();</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<a class="code" href="group___fae_time.html#ga0292dad16755298bbe8ecb487a31a664">fae_time_clock_t</a> <a class="code" href="group___fae_time.html#gae09884c1d8a59419889f80ece95e00d8">fae_time_get_cpu_clock</a>();</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#endif // _FAE_TIME</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#endif // _FAE_TIME</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jun 18 2013 20:29:57 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Wed Jun 19 2013 01:14:05 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

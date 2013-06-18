@@ -1,5 +1,5 @@
 <map id="src/fae/midi_msg.c" name="src/fae/midi_msg.c">
-<area shape="rect" id="node3" href="$midi__msg_8h.html" title="fae/midi_msg.h" alt="" coords="81,86,205,117"/>
+<area shape="rect" id="node3" href="$message_8h.html" title="fae/midi/message.h" alt="" coords="66,86,221,117"/>
 <area shape="rect" id="node13" href="$util_8h.html" title="fae/util.h" alt="" coords="396,86,477,117"/>
 <area shape="rect" id="node7" href="$pair_8h.html" title="fae/pair.h" alt="" coords="126,246,215,277"/>
 <area shape="rect" id="node9" href="$buffer_8h.html" title="fae/buffer.h" alt="" coords="49,166,151,197"/>

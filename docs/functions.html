@@ -131,7 +131,7 @@
 : <a class="el" href="structfae__number__t.html#a5067a6c6954cdc92239b58be4fff24e2">fae_number_t</a>
 </li>
 <li>acquired
-: <a class="el" href="struct__fae__device__audio__session__t.html#a2578c231e07c0d3e2543993aa9f3cf2f">_fae_device_audio_session_t</a>
+: <a class="el" href="struct__fae__audio__session__t.html#a8f0f999f91c9c15d5bb7f747e924c095">_fae_audio_session_t</a>
 , <a class="el" href="struct__fae__midi__session__t.html#a8ac7454325f3973601ea9d7016d71071">_fae_midi_session_t</a>
 </li>
 <li>add
@@ -178,14 +178,14 @@
 , <a class="el" href="struct__fae__buffer__t.html#a1b567d0eeec7a51e83f1882b510d201b">_fae_buffer_t</a>
 , <a class="el" href="struct__fae__string__t.html#a8ba557386b26b964099878239499cc3f">_fae_string_t</a>
 , <a class="el" href="structnullary__closure.html#a7afb281890eb791c2cdffea81c05812f">nullary_closure</a>
-, <a class="el" href="struct__fae__midi__msg__t.html#a1a8c7f6882dcb183f45a82632c448d8c">_fae_midi_msg_t</a>
+, <a class="el" href="struct__fae__midi__message__t.html#a96bf897e957f48645dc367667aa7576d">_fae_midi_message_t</a>
 </li>
 <li>def_input
-: <a class="el" href="struct__fae__device__audio__session__t.html#ad356febcb8dd020e93e3fa5991ba23ad">_fae_device_audio_session_t</a>
+: <a class="el" href="struct__fae__audio__session__t.html#adf32d96e927f34ea075bc798e69d36ca">_fae_audio_session_t</a>
 , <a class="el" href="struct__fae__midi__session__t.html#aa96728d4ae8104b28243f234541a099b">_fae_midi_session_t</a>
 </li>
 <li>def_output
-: <a class="el" href="struct__fae__device__audio__session__t.html#ac50eb9ea519fb5965a993f5e4106e8d0">_fae_device_audio_session_t</a>
+: <a class="el" href="struct__fae__audio__session__t.html#ab82102d4676b42e967ae90dac4144d67">_fae_audio_session_t</a>
 , <a class="el" href="struct__fae__midi__session__t.html#a10cc5eb7c747d44d290bcf599d7a5abc">_fae_midi_session_t</a>
 </li>
 <li>denom
@@ -204,7 +204,7 @@
 : <a class="el" href="struct__fae__midi__stream__t.html#a23bc4eac32b38b33805ce3a494bc4aae">_fae_midi_stream_t</a>
 </li>
 <li>devices
-: <a class="el" href="struct__fae__device__audio__session__t.html#ac733d2bcddb2c9f17643e1c8d47cab19">_fae_device_audio_session_t</a>
+: <a class="el" href="struct__fae__audio__session__t.html#a6cbd62a7f81bf62599d3c1a152a364ce">_fae_audio_session_t</a>
 , <a class="el" href="struct__fae__midi__session__t.html#a8ca4a9865b5a9d4bfb5a242c9d5b0a98">_fae_midi_session_t</a>
 </li>
 <li>disp
@@ -243,8 +243,9 @@
 : <a class="el" href="struct__fae__device__file__t.html#a34ab42dddafe38d8a51845c162c42cd1">_fae_device_file_t</a>
 </li>
 <li>first
-: <a class="el" href="struct__fae__pair__t.html#a8dac15470393cec5d76e245ebc1e5b19">_fae_pair_t</a>
-, <a class="el" href="struct__fae__atomic__queue__t.html#aa3af1237d5ef685b517f1bddca2863d8">_fae_atomic_queue_t</a>
+: <a class="el" href="struct__fae__atomic__queue__t.html#aa3af1237d5ef685b517f1bddca2863d8">_fae_atomic_queue_t</a>
+, <a class="el" href="struct__fae__pair__t.html#a8dac15470393cec5d76e245ebc1e5b19">_fae_pair_t</a>
+, <a class="el" href="group___fae.html#ga4d1834233060c2955476801c58b69296">fae_pair_struct_t</a>
 </li>
 <li>frame
 : <a class="el" href="struct__fae__type__t.html#a68f7ce476ff9b44a13ae1923359cc09a">_fae_type_t</a>
@@ -273,7 +274,7 @@
 
 <h3><a class="anchor" id="index_h"></a>- h -</h3><ul>
 <li>host_name
-: <a class="el" href="struct__fae__device__audio__t.html#ad22a70cb828112ae135eb818564f2d3c">_fae_device_audio_t</a>
+: <a class="el" href="struct__fae__audio__device__t.html#ab5f21fc4eba17f37ffd7f376c43830c7">_fae_audio_device_t</a>
 , <a class="el" href="struct__fae__midi__device__t.html#a85cf6c2119adb7f7fa1e6d6dbc5a20d2">_fae_midi_device_t</a>
 </li>
 </ul>
@@ -283,60 +284,59 @@
 <li>impl
 : <a class="el" href="struct__fae__atomic__queue__t.html#aec8124710fb549e4af4baf39c1e364b8">_fae_atomic_queue_t</a>
 , <a class="el" href="struct__fae__atomic__ring__buffer__t.html#a1e0daef6f05565d8906c90ed881858a0">_fae_atomic_ring_buffer_t</a>
-, <a class="el" href="struct__fae__buffer__t.html#a7218077c939125a317a502308a8c26be">_fae_buffer_t</a>
+, <a class="el" href="struct__fae__audio__session__t.html#aaf10aa6f3c9efced84ae30c15bbf41ab">_fae_audio_session_t</a>
 , <a class="el" href="struct__fae__device__file__t.html#a14f79c142a678debe8b35511570786bb">_fae_device_file_t</a>
 , <a class="el" href="struct__fae__midi__device__t.html#a03d838d41bca0d99de4da47adba3ac03">_fae_midi_device_t</a>
-, <a class="el" href="struct__fae__thread__t.html#a7ae462e0736d95753557e2e9fd2a9ed0">_fae_thread_t</a>
 , <a class="el" href="struct__fae__thread__mutex__t.html#afd6cc29183ee66a7987d6215c9731e2d">_fae_thread_mutex_t</a>
-, <a class="el" href="struct__fae__midi__stream__t.html#abefbad0b60b1795aad188a066e68664c">_fae_midi_stream_t</a>
 , <a class="el" href="struct__fae__thread__condition__t.html#a930f076c3008ce67f22b6e715c93d35b">_fae_thread_condition_t</a>
+, <a class="el" href="struct__fae__midi__stream__t.html#abefbad0b60b1795aad188a066e68664c">_fae_midi_stream_t</a>
 , <a class="el" href="structsimple__error.html#a8e3e65146952288f0408a7d461301870">simple_error</a>
-, <a class="el" href="struct__fae__midi__msg__t.html#a86747b9324b0036b462388b1b5381047">_fae_midi_msg_t</a>
+, <a class="el" href="struct__fae__midi__message__t.html#ac17b62acaa83e2e4f4132327e60e3a8f">_fae_midi_message_t</a>
 , <a class="el" href="struct__fae__pair__t.html#a6bd10fb5c0d8f2083230e582d7556a0e">_fae_pair_t</a>
-, <a class="el" href="struct__fae__device__audio__session__t.html#a634bbe8536755abe00509085e2134431">_fae_device_audio_session_t</a>
+, <a class="el" href="struct__fae__audio__device__t.html#aa3bc4a1ddf33fabd324459319853d63d">_fae_audio_device_t</a>
 , <a class="el" href="structedge.html#aeb03bae3e8dbdb77515bf8c6f42cc36e">edge</a>
 , <a class="el" href="struct__fae__priority__queue__t.html#acf1c2f660b2908116460cabfcb3ede2b">_fae_priority_queue_t</a>
+, <a class="el" href="struct__fae__thread__t.html#a7ae462e0736d95753557e2e9fd2a9ed0">_fae_thread_t</a>
 , <a class="el" href="structlog__event__sink.html#a2d7dcf13c3df2611527a3a45a59a22e5">log_event_sink</a>
 , <a class="el" href="structio__event__sink.html#aa350a6d825b9d54e3ca205e7d3a81c15">io_event_sink</a>
 , <a class="el" href="structevent__source.html#ad8dc3d8b1e094faa0bfe7d6385e04f01">event_source</a>
 , <a class="el" href="struct__fae__atomic__t.html#a10010940936ffdc783caa77e0a2f0844">_fae_atomic_t</a>
 , <a class="el" href="struct__fae__type__t.html#a98f9a1a2af528a2712acc4f1d84c06e6">_fae_type_t</a>
-, <a class="el" href="structsystem__prec__clock.html#a8ea0580a13560725b85a6d6d48ab46cd">system_prec_clock</a>
-, <a class="el" href="structsystem__clock.html#a7a2049e5522d1af58fbc4b39e7f490f9">system_clock</a>
 , <a class="el" href="struct__fae__time__t.html#a15f4917332ef7164d4afcc3d2e13f6ac">_fae_time_t</a>
 , <a class="el" href="struct__fae__string__t.html#aa148801f6dcb4ae9ed62b42f62e058e3">_fae_string_t</a>
+, <a class="el" href="struct__fae__signal__t.html#ac4fbe07ba11b91230b45cef47ad4cbb7">_fae_signal_t</a>
 , <a class="el" href="struct__fae__ratio__t.html#a9bbdb973a88160bb5587a69077dbe406">_fae_ratio_t</a>
 , <a class="el" href="struct__fae__graph__t.html#aab2de25a683c4e8375af9d94c8dc0c55">_fae_graph_t</a>
 , <a class="el" href="struct__fae__set__t.html#ad174c75c48ad6e1f763b8fa107a74d54">_fae_set_t</a>
 , <a class="el" href="struct__fae__atomic__stack__t.html#af5c3d6933dd3c66bf249efaf4b47854e">_fae_atomic_stack_t</a>
-, <a class="el" href="struct__fae__device__audio__t.html#af614a11d582d398e4db0743bdd8ce6c9">_fae_device_audio_t</a>
+, <a class="el" href="struct__fae__audio__stream__t.html#afb93882d19e0cd016e3e94bba0e11d57">_fae_audio_stream_t</a>
 , <a class="el" href="struct__fae__list__t.html#aaca8e13b9a644843c36b850a43c2a8ff">_fae_list_t</a>
 , <a class="el" href="structentry.html#a5a81f6ec347c752a29f5838f901ece9f">entry</a>
 , <a class="el" href="struct__fae__midi__session__t.html#ae051fad4e65957956991e9fa717e6cf1">_fae_midi_session_t</a>
-, <a class="el" href="struct__fae__device__audio__stream__t.html#a060f3d47bf593ed751550526239f7377">_fae_device_audio_stream_t</a>
+, <a class="el" href="struct__fae__buffer__t.html#a7218077c939125a317a502308a8c26be">_fae_buffer_t</a>
 , <a class="el" href="struct__fae__map__t.html#a21ccaca7feb93b5f76e44bd106667d36">_fae_map_t</a>
 </li>
 <li>in_disp
 : <a class="el" href="struct__fae__device__file__result__t.html#a2f5a5c6008e6135d512a0ec8fafdc885">_fae_device_file_result_t</a>
 </li>
 <li>incoming
-: <a class="el" href="struct__fae__midi__stream__t.html#a25c22909637b9ff679b62ec9a07fbeb9">_fae_midi_stream_t</a>
-, <a class="el" href="struct__fae__device__audio__stream__t.html#a1a0dbca3dfd469beb749244cf01aeff2">_fae_device_audio_stream_t</a>
+: <a class="el" href="struct__fae__audio__stream__t.html#a973bd97f2ec642179eb83b82cc51cd58">_fae_audio_stream_t</a>
+, <a class="el" href="struct__fae__midi__stream__t.html#a25c22909637b9ff679b62ec9a07fbeb9">_fae_midi_stream_t</a>
 </li>
 <li>index
-: <a class="el" href="struct__fae__midi__device__t.html#a800c376d14d62b0c02fc48718307ee7e">_fae_midi_device_t</a>
-, <a class="el" href="struct__fae__device__audio__t.html#acc549eec3c8dccd35ad4c16a4c7c404e">_fae_device_audio_t</a>
+: <a class="el" href="struct__fae__audio__device__t.html#a3869ee8760eb4346823b5dafa041994d">_fae_audio_device_t</a>
+, <a class="el" href="struct__fae__midi__device__t.html#a800c376d14d62b0c02fc48718307ee7e">_fae_midi_device_t</a>
 </li>
 <li>input
 : <a class="el" href="struct__fae__device__file__result__t.html#a9b147a923e9f7d1ea8f69fb3fd5607ac">_fae_device_file_result_t</a>
+, <a class="el" href="struct__fae__audio__stream__t.html#a0e72b446a269290caf5d1ed96e702733">_fae_audio_stream_t</a>
 , <a class="el" href="struct__fae__midi__device__t.html#acf7c90601e07ac579580da7edd1a8ab8">_fae_midi_device_t</a>
-, <a class="el" href="struct__fae__device__audio__stream__t.html#a95ce32a5e60c7782b396eb7e7467e2e3">_fae_device_audio_stream_t</a>
 </li>
 <li>input_channels
-: <a class="el" href="struct__fae__device__audio__stream__t.html#a4c51880fc3e46741fa681c1898ef9dd1">_fae_device_audio_stream_t</a>
+: <a class="el" href="struct__fae__audio__stream__t.html#a50a0325aa5b6820c322ae1545f01f6d9">_fae_audio_stream_t</a>
 </li>
 <li>is_sysex
-: <a class="el" href="struct__fae__midi__msg__t.html#a7c29855de85557fa8cb020d3960e59ab">_fae_midi_msg_t</a>
+: <a class="el" href="struct__fae__midi__message__t.html#a5f8b8e361d93c8da166f4d67b48070e8">_fae_midi_message_t</a>
 </li>
 <li>items
 : <a class="el" href="structjson__array__t.html#abef9539699db9baeb8d1b8afd47bbc47">json_array_t</a>
@@ -379,7 +379,7 @@
 : <a class="el" href="structevent__source.html#a907c6aee275669f04ce5c0e95739dea9">event_source</a>
 </li>
 <li>max_buffer_size
-: <a class="el" href="struct__fae__device__audio__stream__t.html#a9164f67eec010280b3c7bce4abcc085a">_fae_device_audio_stream_t</a>
+: <a class="el" href="struct__fae__audio__stream__t.html#a82890c878c84a9275a2f47d56a3b50a3">_fae_audio_stream_t</a>
 </li>
 <li>message
 : <a class="el" href="structsimple__error.html#a3fd8eb4413431fb4d86222df5db1b710">simple_error</a>
@@ -389,7 +389,7 @@
 : <a class="el" href="structfae__number__t.html#af110c58c71dd1ee50844f39ba4f17c07">fae_number_t</a>
 </li>
 <li>muted
-: <a class="el" href="struct__fae__device__audio__t.html#a25bcbabf4e15fc6e561f8f5f91c3940b">_fae_device_audio_t</a>
+: <a class="el" href="struct__fae__audio__device__t.html#a4c9cb73afc6f2da85c357c7e2307d431">_fae_audio_device_t</a>
 </li>
 <li>mutex
 : <a class="el" href="struct__fae__thread__condition__t.html#a3f80302dd905e9e904c705583b1ebf2d">_fae_thread_condition_t</a>
@@ -399,14 +399,14 @@
 
 <h3><a class="anchor" id="index_n"></a>- n -</h3><ul>
 <li>name
-: <a class="el" href="struct__fae__device__audio__t.html#a18c024b6a77139a8564ae81ff0794db3">_fae_device_audio_t</a>
+: <a class="el" href="struct__fae__audio__device__t.html#a226cc99e05e466c0d935859fe095df3c">_fae_audio_device_t</a>
 , <a class="el" href="struct__fae__midi__device__t.html#ac3fe6158e912f3c4fedf5dc898d0d56d">_fae_midi_device_t</a>
 </li>
 <li>names
 : <a class="el" href="structjson__object__t.html#a2a776c59434da6c716718e7497ba476d">json_object_t</a>
 </li>
 <li>native
-: <a class="el" href="struct__fae__device__audio__stream__t.html#a305e90e802ff889eb7bf5d14e082a981">_fae_device_audio_stream_t</a>
+: <a class="el" href="struct__fae__audio__stream__t.html#ac5d516c64c0709e62b11eff79e4eeeb8">_fae_audio_stream_t</a>
 , <a class="el" href="struct__fae__thread__mutex__t.html#a9694cf3f1849513f9811fe243abc4407">_fae_thread_mutex_t</a>
 , <a class="el" href="struct__fae__thread__condition__t.html#af5337adf30f296b65d4eaedd17fd62aa">_fae_thread_condition_t</a>
 , <a class="el" href="struct__fae__thread__t.html#a0d44093988ef41c04df40261a97c82d3">_fae_thread_t</a>
@@ -460,15 +460,15 @@
 : <a class="el" href="struct__fae__device__file__result__t.html#a213f336e6acea57dfb8cbe6667704167">_fae_device_file_result_t</a>
 </li>
 <li>outgoing
-: <a class="el" href="struct__fae__device__audio__stream__t.html#ad806ae62cdd0eea254fcee071e9c9cb3">_fae_device_audio_stream_t</a>
+: <a class="el" href="struct__fae__audio__stream__t.html#ae082be722038b6d116c06de47c4dcdb2">_fae_audio_stream_t</a>
 </li>
 <li>output
 : <a class="el" href="struct__fae__device__file__result__t.html#a31bb3923e8284d0b245265077e9da211">_fae_device_file_result_t</a>
 , <a class="el" href="struct__fae__midi__device__t.html#a6d8c6014c6a2c962c786452fdacd0796">_fae_midi_device_t</a>
-, <a class="el" href="struct__fae__device__audio__stream__t.html#a5bb6d917185c30c78fb2372f0a98a6ce">_fae_device_audio_stream_t</a>
+, <a class="el" href="struct__fae__audio__stream__t.html#a6685bf0747d02bffcd0a138bf41b67f4">_fae_audio_stream_t</a>
 </li>
 <li>output_channels
-: <a class="el" href="struct__fae__device__audio__stream__t.html#a3e7e43fd7b6d2dbfb83fe07e5985be0c">_fae_device_audio_stream_t</a>
+: <a class="el" href="struct__fae__audio__stream__t.html#a8febc7abfc78ba677b435cef482b252b">_fae_audio_stream_t</a>
 </li>
 </ul>
 
@@ -485,10 +485,10 @@
 </li>
 <li>proc
 : <a class="el" href="struct__fae__device__file__result__t.html#a00dca4df8d17f11c732aeab8d5c9332f">_fae_device_file_result_t</a>
-, <a class="el" href="struct__fae__device__audio__stream__t.html#acc5361e5a7512a57563a1c5b859da678">_fae_device_audio_stream_t</a>
+, <a class="el" href="struct__fae__audio__stream__t.html#af9dec529e1ac16969d51f66e533fdb8b">_fae_audio_stream_t</a>
 </li>
 <li>proc_impl
-: <a class="el" href="struct__fae__device__audio__stream__t.html#a5497c06ab3d9e0e2d9c648634a239818">_fae_device_audio_stream_t</a>
+: <a class="el" href="struct__fae__audio__stream__t.html#a65b6a16ee803a2f1804ff46f621dbb0e">_fae_audio_stream_t</a>
 , <a class="el" href="struct__fae__device__file__result__t.html#a8a737681161eb55871dee7b0eff4ed96">_fae_device_file_result_t</a>
 </li>
 </ul>
@@ -504,13 +504,14 @@
 
 <h3><a class="anchor" id="index_s"></a>- s -</h3><ul>
 <li>sample_count
-: <a class="el" href="struct__fae__device__audio__stream__t.html#ac1d16d9c403650ef7035a1272d28c4c2">_fae_device_audio_stream_t</a>
+: <a class="el" href="struct__fae__audio__stream__t.html#ad1dd60b6acde2f6bbedacb5241a813a3">_fae_audio_stream_t</a>
 </li>
 <li>sample_rate
-: <a class="el" href="struct__fae__device__audio__stream__t.html#a8f79ff855b80ff44c1d6cea2f2fd0961">_fae_device_audio_stream_t</a>
+: <a class="el" href="struct__fae__audio__stream__t.html#af89c6dca948d8bb37c3f3a4492f92863">_fae_audio_stream_t</a>
 </li>
 <li>second
 : <a class="el" href="struct__fae__pair__t.html#aad595f7c6684a8844fa657f4301caf14">_fae_pair_t</a>
+, <a class="el" href="group___fae.html#gaca7a0e0865b60cf28d094042d0dd35bf">fae_pair_struct_t</a>
 </li>
 <li>severity
 : <a class="el" href="group___fae.html#gaa83ef845d9e74afd88fa2cfb4f686e36">fae_error_interface_t</a>
@@ -520,15 +521,15 @@
 : <a class="el" href="group___fae.html#gac2c41910be272e147701931d625fc58c">fae_string_show_t</a>
 </li>
 <li>simple
-: <a class="el" href="struct__fae__type__t.html#a7aa042833ec089279a3006303dbb17d4">_fae_type_t</a>
-, <a class="el" href="struct__fae__midi__msg__t.html#aefd911e714bedd446d2ca2ba95ce6012">_fae_midi_msg_t</a>
+: <a class="el" href="struct__fae__midi__message__t.html#ae0ad05b1f9f10dbdc52ca300fab34b95">_fae_midi_message_t</a>
+, <a class="el" href="struct__fae__type__t.html#a7aa042833ec089279a3006303dbb17d4">_fae_type_t</a>
 </li>
 <li>simple_type
 : <a class="el" href="struct__fae__type__t.html#afb754378f3ac1af105093511511776d9a6845d2625cd3390223086aa7a9499ca0">_fae_type_t</a>
 </li>
 <li>size
-: <a class="el" href="struct__fae__string__t.html#a6432f809f00d411e8cd10b7ccd8db446">_fae_string_t</a>
-, <a class="el" href="struct__fae__buffer__t.html#a134e3e7c823355c1bd9e729914ccf9ee">_fae_buffer_t</a>
+: <a class="el" href="struct__fae__buffer__t.html#a134e3e7c823355c1bd9e729914ccf9ee">_fae_buffer_t</a>
+, <a class="el" href="struct__fae__string__t.html#a6432f809f00d411e8cd10b7ccd8db446">_fae_string_t</a>
 , <a class="el" href="struct__fae__type__t.html#a46c7a1211b66c7a35f0eb7071dd7b016">_fae_type_t</a>
 </li>
 <li>snd
@@ -547,7 +548,7 @@
 : <a class="el" href="structfae__number__t.html#a47583e6412e623d9a539cb1340b858ac">fae_number_t</a>
 </li>
 <li>sysex
-: <a class="el" href="struct__fae__midi__msg__t.html#aa163ff5a0b7172c39ae3cfeea1822de1">_fae_midi_msg_t</a>
+: <a class="el" href="struct__fae__midi__message__t.html#a637d870cbd9183d017f27dca8d246c96">_fae_midi_message_t</a>
 </li>
 </ul>
 
@@ -559,15 +560,8 @@
 <li>thread
 : <a class="el" href="structevent__source.html#aad0c36b74847f85893249e7f2df29558">event_source</a>
 </li>
-<li>tick_rate
-: <a class="el" href="group___fae.html#ga6a3f2a88d228138ab402c6c720bd8ad9">fae_time_clock_interface_t</a>
-</li>
-<li>ticks
-: <a class="el" href="group___fae.html#ga3a2ffba02075ea3d5f59b3a8c075331d">fae_time_clock_interface_t</a>
-</li>
 <li>time
-: <a class="el" href="group___fae.html#ga6481e5986a4910f7aa5842b05947cd70">fae_time_clock_interface_t</a>
-, <a class="el" href="struct__fae__device__file__result__t.html#a44173cc01f46a084460f8e9fa2426013">_fae_device_file_result_t</a>
+: <a class="el" href="struct__fae__device__file__result__t.html#a44173cc01f46a084460f8e9fa2426013">_fae_device_file_result_t</a>
 </li>
 <li>top
 : <a class="el" href="struct__fae__atomic__stack__t.html#a1d5083c4981e083bbb98b3312fb652e5">_fae_atomic_stack_t</a>
@@ -598,14 +592,14 @@
 : <a class="el" href="struct__fae__type__t.html#afb754378f3ac1af105093511511776d9addc4c99ebb6d24a13a9045ab017fea34">_fae_type_t</a>
 </li>
 <li>volume
-: <a class="el" href="struct__fae__device__audio__t.html#afe0b93885c2530ed5bc85f0cd3008618">_fae_device_audio_t</a>
+: <a class="el" href="struct__fae__audio__device__t.html#a053d675bb0d6216b3f1cc666a3db1826">_fae_audio_device_t</a>
 </li>
 </ul>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jun 18 2013 20:29:58 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Wed Jun 19 2013 01:14:06 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

@@ -62,12 +62,7 @@
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for midi_msg.h:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="midi__msg_8h__incl.svg" width="491" height="603"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div><div class="textblock"><div class="dynheader">
-This graph shows which files directly or indirectly include this file:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="midi__msg_8h__dep__incl.svg" width="1106" height="203"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="midi__msg_8h__incl.svg" width="458" height="603"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <p><a href="midi__msg_8h_source.html">Go to the source code of this file.</a></p>
@@ -78,7 +73,7 @@ Typedefs</h2></td></tr>
 <tr class="separator:gac9804ee570dd04c0f3e41614426ce34d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga24a345330cc039b2fdbc732e952db5b1"><td class="memItemLeft" align="right" valign="top">typedef int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi_msg.html#ga24a345330cc039b2fdbc732e952db5b1">fae_midi_msg_data_t</a></td></tr>
 <tr class="separator:ga24a345330cc039b2fdbc732e952db5b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga04722986196d1e23248e800b67809242"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="struct__fae__midi__msg__t.html">_fae_midi_msg_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi_msg.html#ga04722986196d1e23248e800b67809242">fae_midi_msg_t</a></td></tr>
+<tr class="memitem:ga04722986196d1e23248e800b67809242"><td class="memItemLeft" align="right" valign="top">typedef struct _fae_midi_msg_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi_msg.html#ga04722986196d1e23248e800b67809242">fae_midi_msg_t</a></td></tr>
 <tr class="separator:ga04722986196d1e23248e800b67809242"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
@@ -100,41 +95,31 @@ Enumerations</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ga421ec873a8ed932e76ff9c9adeb2491a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_midi_msg.html#ga04722986196d1e23248e800b67809242">fae_midi_msg_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi_msg.html#ga421ec873a8ed932e76ff9c9adeb2491a">fae_midi_msg_create_simple</a> (<a class="el" href="group___fae_midi_msg.html#gab5a701c35c2a44d3329303388390510f">fae_midi_msg_status_t</a>, int, int)</td></tr>
-<tr class="memdesc:ga421ec873a8ed932e76ff9c9adeb2491a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a simple message from the given components.  <a href="group___fae_midi_msg.html#ga421ec873a8ed932e76ff9c9adeb2491a"></a><br/></td></tr>
 <tr class="separator:ga421ec873a8ed932e76ff9c9adeb2491a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6b460aeceb2e702479c9f7cd7f7daadf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_midi_msg.html#ga04722986196d1e23248e800b67809242">fae_midi_msg_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi_msg.html#ga6b460aeceb2e702479c9f7cd7f7daadf">fae_midi_msg_create_sysex</a> (<a class="el" href="group___fae_buffer.html#ga9447030a16ca7d8603451107e0f516ec">fae_buffer_t</a>)</td></tr>
-<tr class="memdesc:ga6b460aeceb2e702479c9f7cd7f7daadf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a sysex message from the given data buffer (not including F0 and F7).  <a href="group___fae_midi_msg.html#ga6b460aeceb2e702479c9f7cd7f7daadf"></a><br/></td></tr>
 <tr class="separator:ga6b460aeceb2e702479c9f7cd7f7daadf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gabe68de6283d8bdb48cd935ccb47234a9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_midi_msg.html#ga04722986196d1e23248e800b67809242">fae_midi_msg_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi_msg.html#gabe68de6283d8bdb48cd935ccb47234a9">fae_midi_msg_copy</a> (<a class="el" href="group___fae_midi_msg.html#ga04722986196d1e23248e800b67809242">fae_midi_msg_t</a>)</td></tr>
-<tr class="memdesc:gabe68de6283d8bdb48cd935ccb47234a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the given midi message.  <a href="group___fae_midi_msg.html#gabe68de6283d8bdb48cd935ccb47234a9"></a><br/></td></tr>
 <tr class="separator:gabe68de6283d8bdb48cd935ccb47234a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gabce5a1b39ea4668202d9e737365d5322"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi_msg.html#gabce5a1b39ea4668202d9e737365d5322">fae_midi_msg_destroy</a> (<a class="el" href="group___fae_midi_msg.html#ga04722986196d1e23248e800b67809242">fae_midi_msg_t</a>)</td></tr>
-<tr class="memdesc:gabce5a1b39ea4668202d9e737365d5322"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy the given midi_msg message.  <a href="group___fae_midi_msg.html#gabce5a1b39ea4668202d9e737365d5322"></a><br/></td></tr>
 <tr class="separator:gabce5a1b39ea4668202d9e737365d5322"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga11f3e3c9b7727a1af8c210cc186bcbaa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_midi_msg.html#gab5a701c35c2a44d3329303388390510f">fae_midi_msg_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi_msg.html#ga11f3e3c9b7727a1af8c210cc186bcbaa">fae_midi_msg_status</a> (<a class="el" href="group___fae_midi_msg.html#ga04722986196d1e23248e800b67809242">fae_midi_msg_t</a>)</td></tr>
-<tr class="memdesc:ga11f3e3c9b7727a1af8c210cc186bcbaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the status byte of given midi_msg message.  <a href="group___fae_midi_msg.html#ga11f3e3c9b7727a1af8c210cc186bcbaa"></a><br/></td></tr>
 <tr class="separator:ga11f3e3c9b7727a1af8c210cc186bcbaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga09b0c5dd032a3dc3adc05460ce5377a1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_midi_msg.html#gac9804ee570dd04c0f3e41614426ce34d">fae_midi_msg_channel_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi_msg.html#ga09b0c5dd032a3dc3adc05460ce5377a1">fae_midi_msg_channel</a> (<a class="el" href="group___fae_midi_msg.html#ga04722986196d1e23248e800b67809242">fae_midi_msg_t</a>)</td></tr>
-<tr class="memdesc:ga09b0c5dd032a3dc3adc05460ce5377a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the channel byte of given midi_msg message.  <a href="group___fae_midi_msg.html#ga09b0c5dd032a3dc3adc05460ce5377a1"></a><br/></td></tr>
 <tr class="separator:ga09b0c5dd032a3dc3adc05460ce5377a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7874c78a962d80419868f91f74b29c20"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi_msg.html#ga7874c78a962d80419868f91f74b29c20">fae_midi_msg_is_simple</a> (<a class="el" href="group___fae_midi_msg.html#ga04722986196d1e23248e800b67809242">fae_midi_msg_t</a>)</td></tr>
-<tr class="memdesc:ga7874c78a962d80419868f91f74b29c20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the status byte of given midi_msg message.  <a href="group___fae_midi_msg.html#ga7874c78a962d80419868f91f74b29c20"></a><br/></td></tr>
 <tr class="separator:ga7874c78a962d80419868f91f74b29c20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad9f12a6ec3aa30c1c65d62c3c7b1f81b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_pair.html#ga1f7c75839e2ea6e61c31fdb4b0cd1e1a">fae_pair_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi_msg.html#gad9f12a6ec3aa30c1c65d62c3c7b1f81b">fae_midi_msg_simple_data</a> (<a class="el" href="group___fae_midi_msg.html#ga04722986196d1e23248e800b67809242">fae_midi_msg_t</a>)</td></tr>
-<tr class="memdesc:gad9f12a6ec3aa30c1c65d62c3c7b1f81b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return whether the given midi_msg message is a non-sysex message.  <a href="group___fae_midi_msg.html#gad9f12a6ec3aa30c1c65d62c3c7b1f81b"></a><br/></td></tr>
 <tr class="separator:gad9f12a6ec3aa30c1c65d62c3c7b1f81b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9a6ca73b2ce6db351aea5a1b97494d84"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi_msg.html#ga9a6ca73b2ce6db351aea5a1b97494d84">fae_midi_msg_is_sysex</a> (<a class="el" href="group___fae_midi_msg.html#ga04722986196d1e23248e800b67809242">fae_midi_msg_t</a>)</td></tr>
-<tr class="memdesc:ga9a6ca73b2ce6db351aea5a1b97494d84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return whether the given midi_msg message is a sysex message.  <a href="group___fae_midi_msg.html#ga9a6ca73b2ce6db351aea5a1b97494d84"></a><br/></td></tr>
 <tr class="separator:ga9a6ca73b2ce6db351aea5a1b97494d84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga611b9443ae4c9c0c6cd00c56e2da8cfc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_buffer.html#ga9447030a16ca7d8603451107e0f516ec">fae_buffer_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi_msg.html#ga611b9443ae4c9c0c6cd00c56e2da8cfc">fae_midi_msg_sysex_data</a> (<a class="el" href="group___fae_midi_msg.html#ga04722986196d1e23248e800b67809242">fae_midi_msg_t</a>)</td></tr>
-<tr class="memdesc:ga611b9443ae4c9c0c6cd00c56e2da8cfc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the data buffer of a sysex message, except for the wrapping <code>F0</code> and <code>F7</code> bytes.  <a href="group___fae_midi_msg.html#ga611b9443ae4c9c0c6cd00c56e2da8cfc"></a><br/></td></tr>
 <tr class="separator:ga611b9443ae4c9c0c6cd00c56e2da8cfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jun 18 2013 20:29:57 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Wed Jun 19 2013 00:38:16 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

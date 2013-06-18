@@ -93,8 +93,9 @@ th {
 td.entry {
         width: 40%;
 }
-td.entry > img {
-        display: none;
+td.entry > img {          
+        height: 1px;
+        visibility: hidden;
 }
 
 
@@ -324,7 +325,7 @@ span.keywordtype {
         font-weight: bold;
 }
 span.keywordflow {
-        color: #000
+        color: #000;
         font-weight: bold;
 }
 
@@ -653,16 +654,26 @@ table.fieldtable {
         margin-bottom: 4px;
 }
 
-table.fieldtable td, table.fieldtable th {
-  border: 1px solid #bbb;
-  padding: 3px 7px 2px;
+table.fieldtable td {
+        border-left: 1px solid #bbb;
+        border-bottom: 1px solid #bbb;
+        border-top: 1px solid #bbb;
+        padding: 3px 7px 2px;
 }
 
 table.fieldtable th {
-  font-size: 110%;
-  padding-bottom: 4px;
-  padding-top: 5px;
+        border: 1px solid #bbb;
+        padding: 3px 7px 2px;
+        font-size: 110%;
+        padding-bottom: 4px;
+        padding-top: 5px;
 }
+
+table.fieldtable td.fielddoc {
+        border-left: 0px solid #bbb;
+        border-right: 1px solid #bbb;
+}
+
 
 
 
@@ -852,7 +863,7 @@ dl.section dd {
  
 #projectname
 {
-        font: 300% Tahoma, Arial,sans-serif;
+        font: 350% Gill Sans, Tahoma, Arial,sans-serif;
         margin: 0px;
         padding: 2px 0px;
 }

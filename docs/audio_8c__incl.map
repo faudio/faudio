@@ -1,8 +1,8 @@
-<map id="src/fae/device/audio.c" name="src/fae/device/audio.c">
-<area shape="rect" id="node3" href="$audio_8h.html" title="fae/device/audio.h" alt="" coords="71,86,221,117"/>
-<area shape="rect" id="node14" href="$atomic_8h.html" title="fae/atomic.h" alt="" coords="247,86,353,117"/>
-<area shape="rect" id="node16" href="$thread_8h.html" title="fae/thread.h" alt="" coords="377,86,483,117"/>
-<area shape="rect" id="node18" href="$util_8h.html" title="fae/util.h" alt="" coords="508,86,589,117"/>
+<map id="src/fae/audio.c" name="src/fae/audio.c">
+<area shape="rect" id="node3" href="$audio_8h.html" title="fae/audio.h" alt="" coords="96,86,196,117"/>
+<area shape="rect" id="node14" href="$atomic_8h.html" title="fae/atomic.h" alt="" coords="221,86,328,117"/>
+<area shape="rect" id="node16" href="$thread_8h.html" title="fae/thread.h" alt="" coords="352,86,457,117"/>
+<area shape="rect" id="node18" href="$util_8h.html" title="fae/util.h" alt="" coords="483,86,564,117"/>
 <area shape="rect" id="node5" href="$list_8h.html" title="fae/list.h" alt="" coords="5,246,85,277"/>
 <area shape="rect" id="node7" href="$pair_8h.html" title="fae/pair.h" alt="" coords="42,166,131,197"/>
 <area shape="rect" id="node10" href="$device_8h.html" title="fae/device.h" alt="" coords="155,166,260,197"/>

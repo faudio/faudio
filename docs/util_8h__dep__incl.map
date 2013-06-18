@@ -2,10 +2,10 @@
 <area shape="rect" id="node3" href="$queue_8c.html" title="src/fae/atomic/queue.c" alt="" coords="4,95,184,126"/>
 <area shape="rect" id="node5" href="$ring__buffer_8c.html" title="src/fae/atomic/ring\l_buffer.c" alt="" coords="208,85,361,136"/>
 <area shape="rect" id="node7" href="$stack_8c.html" title="src/fae/atomic/stack.c" alt="" coords="387,95,559,126"/>
-<area shape="rect" id="node9" href="$buffer_8c.html" title="src/fae/buffer.c" alt="" coords="585,95,711,126"/>
-<area shape="rect" id="node11" href="$audio_8c.html" title="src/fae/device/audio.c" alt="" coords="736,95,912,126"/>
-<area shape="rect" id="node13" href="$file_8c.html" title="src/fae/device/file.c" alt="" coords="936,95,1093,126"/>
-<area shape="rect" id="node15" href="$dynamic_8c.html" title="src/fae/dynamic.c" alt="" coords="1117,95,1260,126"/>
-<area shape="rect" id="node17" href="$error_8c.html" title="src/fae/error.c" alt="" coords="1285,95,1405,126"/>
-<area shape="rect" id="node19" href="$fae_2fae_8c.html" title="src/fae/fae.c" alt="" coords="1429,95,1537,126"/>
+<area shape="rect" id="node9" href="$audio_8c.html" title="src/fae/audio.c" alt="" coords="584,95,709,126"/>
+<area shape="rect" id="node11" href="$buffer_8c.html" title="src/fae/buffer.c" alt="" coords="734,95,860,126"/>
+<area shape="rect" id="node13" href="$file_8c.html" title="src/fae/device/file.c" alt="" coords="885,95,1043,126"/>
+<area shape="rect" id="node15" href="$dynamic_8c.html" title="src/fae/dynamic.c" alt="" coords="1067,95,1209,126"/>
+<area shape="rect" id="node17" href="$error_8c.html" title="src/fae/error.c" alt="" coords="1234,95,1355,126"/>
+<area shape="rect" id="node19" href="$fae_2fae_8c.html" title="src/fae/fae.c" alt="" coords="1379,95,1487,126"/>
 </map>

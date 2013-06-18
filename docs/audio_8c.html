@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>Fae: src/fae/device/audio.c File Reference</title>
+<title>Fae: src/fae/audio.c File Reference</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -44,7 +44,7 @@
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b2fa8b1b41d9767cc2106bf0a5be9954.html">fae</a></li><li class="navelem"><a class="el" href="dir_d32d4553c1fbd8bb93de0e32c024802c.html">device</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_b2fa8b1b41d9767cc2106bf0a5be9954.html">fae</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -56,7 +56,7 @@
 <div class="title">audio.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;<a class="el" href="audio_8h_source.html">fae/device/audio.h</a>&gt;</code><br/>
+<div class="textblock"><code>#include &lt;<a class="el" href="audio_8h_source.html">fae/audio.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="atomic_8h_source.html">fae/atomic.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="thread_8h_source.html">fae/thread.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="util_8h_source.html">fae/util.h</a>&gt;</code><br/>
@@ -64,35 +64,33 @@
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for audio.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="audio_8c__incl.svg" width="719" height="283"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="audio_8c__incl.svg" width="694" height="283"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__fae__device__audio__session__t.html">_fae_device_audio_session_t</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__fae__audio__session__t.html">_fae_audio_session_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__fae__device__audio__t.html">_fae_device_audio_t</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__fae__audio__device__t.html">_fae_audio_device_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__fae__device__audio__stream__t.html">_fae_device_audio_stream_t</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__fae__audio__stream__t.html">_fae_audio_stream_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a98bce33c50bd470899cbd504a53c2b34"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fae_device.html#ga62f035a1db106d6a577a00686656a570">fae_device_audio_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a></td></tr>
-<tr class="separator:a98bce33c50bd470899cbd504a53c2b34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18f80f6c2068f9369b9b3a166215acc1"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fae_device_audio.html#gabe724e3cbf5f21751ef5aa01b03061da">fae_device_audio_stream_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a18f80f6c2068f9369b9b3a166215acc1">stream_t</a></td></tr>
-<tr class="separator:a18f80f6c2068f9369b9b3a166215acc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2dbca9ec75318a01b7e5bd619c82af87"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fae_device_audio.html#ga5a3cabf9ea8c9118899d7cf88c40b963">fae_device_audio_session_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a></td></tr>
-<tr class="separator:a2dbca9ec75318a01b7e5bd619c82af87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6334f5d5ed8fb9599eedc10a0917d3ea"><td class="memItemLeft" align="right" valign="top">typedef <br class="typebreak"/>
-<a class="el" href="group___fae_device_audio.html#gacf55d59eaffcf67029bb7feb6cb8ea72">fae_device_audio_stream_callback_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a6334f5d5ed8fb9599eedc10a0917d3ea">stream_callback_t</a></td></tr>
-<tr class="separator:a6334f5d5ed8fb9599eedc10a0917d3ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa760d9b07a5ef8eb0606db495de5be99"><td class="memItemLeft" align="right" valign="top">typedef <br class="typebreak"/>
-<a class="el" href="group___fae_device_audio.html#gaf29b84b888c2413dc9d248248b03846f">fae_device_audio_session_callback_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#aa760d9b07a5ef8eb0606db495de5be99">session_callback_t</a></td></tr>
-<tr class="separator:aa760d9b07a5ef8eb0606db495de5be99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73db3e792fdf3123933b3da60156f57a"><td class="memItemLeft" align="right" valign="top">typedef <br class="typebreak"/>
-<a class="el" href="group___fae_device_audio.html#ga5c0c28b4624f170a727005d28aa34622">fae_device_audio_status_callback_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a73db3e792fdf3123933b3da60156f57a">status_callback_t</a></td></tr>
-<tr class="separator:a73db3e792fdf3123933b3da60156f57a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7f863cf60c228d0330f026750a3c501"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fae_audio.html#ga3c19c7494175055bd354d3a8628edd4e">fae_audio_device_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a></td></tr>
+<tr class="separator:ae7f863cf60c228d0330f026750a3c501"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a484fe30eb7662ea8fafe70b571b3723b"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fae_audio.html#gabedc03d3d3d615f99f27d5ec6727ca6e">fae_audio_stream_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a484fe30eb7662ea8fafe70b571b3723b">stream_t</a></td></tr>
+<tr class="separator:a484fe30eb7662ea8fafe70b571b3723b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed3639665f12c998c5a6422ed0207493"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fae_audio.html#gade5ba73a5be381d816360c9a2bf69602">fae_audio_session_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a></td></tr>
+<tr class="separator:aed3639665f12c998c5a6422ed0207493"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abeae03e14939129284312a0a28276109"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fae_audio.html#gab5989a341f15530ec05e1c4aa25dbdd1">fae_audio_stream_callback_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#abeae03e14939129284312a0a28276109">stream_callback_t</a></td></tr>
+<tr class="separator:abeae03e14939129284312a0a28276109"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e0429a0488185f4d8e75804f05a87f7"><td class="memItemLeft" align="right" valign="top">typedef <br class="typebreak"/>
+<a class="el" href="group___fae_audio.html#ga6b36e7ca06338694576a2746d31d5f0f">fae_audio_session_callback_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a4e0429a0488185f4d8e75804f05a87f7">session_callback_t</a></td></tr>
+<tr class="separator:a4e0429a0488185f4d8e75804f05a87f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af808f17923458a08f6758ff41e1c2f18"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fae_audio.html#ga4a16612539535e93c2320f76649bab4a">fae_audio_status_callback_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#af808f17923458a08f6758ff41e1c2f18">status_callback_t</a></td></tr>
+<tr class="separator:af808f17923458a08f6758ff41e1c2f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc068dabb5b30f522b4a8c904ab59144"><td class="memItemLeft" align="right" valign="top">typedef PaDeviceIndex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#afc068dabb5b30f522b4a8c904ab59144">native_index_t</a></td></tr>
 <tr class="separator:afc068dabb5b30f522b4a8c904ab59144"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a131bad9c819d4f95e6419197e81d4ca9"><td class="memItemLeft" align="right" valign="top">typedef PaStream *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a131bad9c819d4f95e6419197e81d4ca9">native_stream_t</a></td></tr>
@@ -110,54 +108,54 @@ Functions</h2></td></tr>
 <tr class="separator:a5e186eb73348b75828309d2878438eb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a781d429c026e8089ec39de11a9f91e0d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a781d429c026e8089ec39de11a9f91e0d">audio_stream_impl</a> (<a class="el" href="group___fae.html#gad8d3bb5fc1ed0e69cbb413934d749edc">fae_id_t</a> interface)</td></tr>
 <tr class="separator:a781d429c026e8089ec39de11a9f91e0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac40fe72c78ae84d79a9cb766b21dfd21"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#ac40fe72c78ae84d79a9cb766b21dfd21">before_processing</a> (<a class="el" href="audio_8c.html#a18f80f6c2068f9369b9b3a166215acc1">stream_t</a> stream)</td></tr>
+<tr class="memitem:ac40fe72c78ae84d79a9cb766b21dfd21"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#ac40fe72c78ae84d79a9cb766b21dfd21">before_processing</a> (<a class="el" href="audio_8c.html#a484fe30eb7662ea8fafe70b571b3723b">stream_t</a> stream)</td></tr>
 <tr class="separator:ac40fe72c78ae84d79a9cb766b21dfd21"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf20306b9a8e736c5fb34c7c931451d2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#adf20306b9a8e736c5fb34c7c931451d2">after_processing</a> (<a class="el" href="audio_8c.html#a18f80f6c2068f9369b9b3a166215acc1">stream_t</a> stream)</td></tr>
+<tr class="memitem:adf20306b9a8e736c5fb34c7c931451d2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#adf20306b9a8e736c5fb34c7c931451d2">after_processing</a> (<a class="el" href="audio_8c.html#a484fe30eb7662ea8fafe70b571b3723b">stream_t</a> stream)</td></tr>
 <tr class="separator:adf20306b9a8e736c5fb34c7c931451d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7c6d34322f7b922e1e093c743362932"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#ac7c6d34322f7b922e1e093c743362932">during_processing</a> (<a class="el" href="audio_8c.html#a18f80f6c2068f9369b9b3a166215acc1">stream_t</a> stream, unsigned count, float **input, float **output)</td></tr>
+<tr class="memitem:ac7c6d34322f7b922e1e093c743362932"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#ac7c6d34322f7b922e1e093c743362932">during_processing</a> (<a class="el" href="audio_8c.html#a484fe30eb7662ea8fafe70b571b3723b">stream_t</a> stream, unsigned count, float **input, float **output)</td></tr>
 <tr class="separator:ac7c6d34322f7b922e1e093c743362932"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a825607ef0b1ecda71059efef160bf48b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a825607ef0b1ecda71059efef160bf48b">fae_device_audio_initialize</a> ()</td></tr>
-<tr class="separator:a825607ef0b1ecda71059efef160bf48b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a330ddfe1d2d52785edb455f8b00c53ba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a330ddfe1d2d52785edb455f8b00c53ba">fae_device_audio_terminate</a> ()</td></tr>
-<tr class="separator:a330ddfe1d2d52785edb455f8b00c53ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaaad3892b879c703dc6bc26f3f402d074"><td class="memItemLeft" align="right" valign="top"><a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_device_audio.html#gaaad3892b879c703dc6bc26f3f402d074">fae_device_audio_begin_session</a> ()</td></tr>
-<tr class="separator:gaaad3892b879c703dc6bc26f3f402d074"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga20173a6617c335502a233405a7b1f664"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_device_audio.html#ga20173a6617c335502a233405a7b1f664">fae_device_audio_end_session</a> (<a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a> session)</td></tr>
-<tr class="separator:ga20173a6617c335502a233405a7b1f664"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc6b00e9460f77f698e331ed4c195394"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#acc6b00e9460f77f698e331ed4c195394">fae_device_audio_with_session</a> (<a class="el" href="audio_8c.html#aa760d9b07a5ef8eb0606db495de5be99">session_callback_t</a> session_callback, <a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> session_data, <a class="el" href="util_8h.html#a8c95fe643ed7e82601fcfff638bc18c6">error_callback_t</a> error_callback, <a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> error_data)</td></tr>
-<tr class="separator:acc6b00e9460f77f698e331ed4c195394"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga284849795c398fe98d970a7dc7db2f7e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_list.html#ga62e8420b5e2c8b334f662b986633ff3a">fae_list_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_device_audio.html#ga284849795c398fe98d970a7dc7db2f7e">fae_device_audio_all</a> (<a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a> session)</td></tr>
-<tr class="separator:ga284849795c398fe98d970a7dc7db2f7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga032677a0c1961de10cbb0d266d932e1b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_pair.html#ga1f7c75839e2ea6e61c31fdb4b0cd1e1a">fae_pair_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_device_audio.html#ga032677a0c1961de10cbb0d266d932e1b">fae_device_audio_default</a> (<a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a> session)</td></tr>
-<tr class="separator:ga032677a0c1961de10cbb0d266d932e1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga41b73da6265f9d6ee00373351f3b57b1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_device_audio.html#ga41b73da6265f9d6ee00373351f3b57b1">fae_device_audio_default_input</a> (<a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a> session)</td></tr>
-<tr class="separator:ga41b73da6265f9d6ee00373351f3b57b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab13f788e413000eee018404fbf2d0a0f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_device_audio.html#gab13f788e413000eee018404fbf2d0a0f">fae_device_audio_default_output</a> (<a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a> session)</td></tr>
-<tr class="separator:gab13f788e413000eee018404fbf2d0a0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafa0ed35a2e5f6c8d3ca658cc3452099e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_string.html#gaec46988276ade4118709314865160b76">fae_string_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_device_audio.html#gafa0ed35a2e5f6c8d3ca658cc3452099e">fae_device_audio_name</a> (<a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a> device)</td></tr>
-<tr class="separator:gafa0ed35a2e5f6c8d3ca658cc3452099e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad6a0370bbf6a8303cb15defd8ec2d0c7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_string.html#gaec46988276ade4118709314865160b76">fae_string_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_device_audio.html#gad6a0370bbf6a8303cb15defd8ec2d0c7">fae_device_audio_host_name</a> (<a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a> device)</td></tr>
-<tr class="separator:gad6a0370bbf6a8303cb15defd8ec2d0c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga54b4e63d8504b1c334d979179855fb72"><td class="memItemLeft" align="right" valign="top"><a class="el" href="util_8h.html#a6d321238f6ec269499a691fb2fb62bd3">type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_device_audio.html#ga54b4e63d8504b1c334d979179855fb72">fae_device_audio_input_type</a> (<a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a> device)</td></tr>
-<tr class="separator:ga54b4e63d8504b1c334d979179855fb72"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3514139de07e3c6f9128e74b4955a309"><td class="memItemLeft" align="right" valign="top"><a class="el" href="util_8h.html#a6d321238f6ec269499a691fb2fb62bd3">type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_device_audio.html#ga3514139de07e3c6f9128e74b4955a309">fae_device_audio_output_type</a> (<a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a> device)</td></tr>
-<tr class="separator:ga3514139de07e3c6f9128e74b4955a309"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga183f42e4e1c6b4aa2e87d00280bc1bcb"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_device_audio.html#ga183f42e4e1c6b4aa2e87d00280bc1bcb">fae_device_audio_has_input</a> (<a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a> device)</td></tr>
-<tr class="separator:ga183f42e4e1c6b4aa2e87d00280bc1bcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab4899e33f9041f14fb6d287166447d69"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_device_audio.html#gab4899e33f9041f14fb6d287166447d69">fae_device_audio_has_output</a> (<a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a> device)</td></tr>
-<tr class="separator:gab4899e33f9041f14fb6d287166447d69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44c768db46dc1d3b9a8107a6cbb4b500"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a44c768db46dc1d3b9a8107a6cbb4b500">add_audio_status_listener</a> (<a class="el" href="audio_8c.html#a73db3e792fdf3123933b3da60156f57a">status_callback_t</a> function, <a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> data)</td></tr>
+<tr class="memitem:ae6ecf5a8bdd01552dfd8fa2ac91c8017"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#ae6ecf5a8bdd01552dfd8fa2ac91c8017">fae_audio_initialize</a> ()</td></tr>
+<tr class="separator:ae6ecf5a8bdd01552dfd8fa2ac91c8017"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3330f4dd7732401677e60956c808c156"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a3330f4dd7732401677e60956c808c156">fae_audio_terminate</a> ()</td></tr>
+<tr class="separator:a3330f4dd7732401677e60956c808c156"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad72fa5df463ed2312f0c5d18c2d5deb7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_audio.html#gad72fa5df463ed2312f0c5d18c2d5deb7">fae_audio_begin_session</a> ()</td></tr>
+<tr class="separator:gad72fa5df463ed2312f0c5d18c2d5deb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5f19cd16b081b5fd4682dc7befe783e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_audio.html#ga5f19cd16b081b5fd4682dc7befe783e2">fae_audio_end_session</a> (<a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a> session)</td></tr>
+<tr class="separator:ga5f19cd16b081b5fd4682dc7befe783e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d5e768feb1e397f19bcd18fdaea5d3b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a6d5e768feb1e397f19bcd18fdaea5d3b">fae_audio_with_session</a> (<a class="el" href="audio_8c.html#a4e0429a0488185f4d8e75804f05a87f7">session_callback_t</a> session_callback, <a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> session_data, <a class="el" href="util_8h.html#a8c95fe643ed7e82601fcfff638bc18c6">error_callback_t</a> error_callback, <a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> error_data)</td></tr>
+<tr class="separator:a6d5e768feb1e397f19bcd18fdaea5d3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga16d4287804753a5ee3f3ac4cac2be208"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_list.html#ga62e8420b5e2c8b334f662b986633ff3a">fae_list_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_audio.html#ga16d4287804753a5ee3f3ac4cac2be208">fae_audio_all</a> (<a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a> session)</td></tr>
+<tr class="separator:ga16d4287804753a5ee3f3ac4cac2be208"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9e47b76523b4d8d2e017ec83fa9e496a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_pair.html#ga1f7c75839e2ea6e61c31fdb4b0cd1e1a">fae_pair_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_audio.html#ga9e47b76523b4d8d2e017ec83fa9e496a">fae_audio_default</a> (<a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a> session)</td></tr>
+<tr class="separator:ga9e47b76523b4d8d2e017ec83fa9e496a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4d631691f883c5d12c919a66fa68c848"><td class="memItemLeft" align="right" valign="top"><a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_audio.html#ga4d631691f883c5d12c919a66fa68c848">fae_audio_default_input</a> (<a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a> session)</td></tr>
+<tr class="separator:ga4d631691f883c5d12c919a66fa68c848"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadce5a958ec6f2f323b746ba15d96708d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_audio.html#gadce5a958ec6f2f323b746ba15d96708d">fae_audio_default_output</a> (<a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a> session)</td></tr>
+<tr class="separator:gadce5a958ec6f2f323b746ba15d96708d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaaccbd0828c84d403dc99af9a5503ff8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_string.html#gaec46988276ade4118709314865160b76">fae_string_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_audio.html#gaaaccbd0828c84d403dc99af9a5503ff8">fae_audio_name</a> (<a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a> device)</td></tr>
+<tr class="separator:gaaaccbd0828c84d403dc99af9a5503ff8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga901487887fb41c7682f04d03a910365c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_string.html#gaec46988276ade4118709314865160b76">fae_string_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_audio.html#ga901487887fb41c7682f04d03a910365c">fae_audio_host_name</a> (<a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a> device)</td></tr>
+<tr class="separator:ga901487887fb41c7682f04d03a910365c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4b9717831acf68869429b56f4f7bf1da"><td class="memItemLeft" align="right" valign="top"><a class="el" href="util_8h.html#a6d321238f6ec269499a691fb2fb62bd3">type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_audio.html#ga4b9717831acf68869429b56f4f7bf1da">fae_audio_input_type</a> (<a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a> device)</td></tr>
+<tr class="separator:ga4b9717831acf68869429b56f4f7bf1da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad180575d859879d48d71154323b9b9c6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="util_8h.html#a6d321238f6ec269499a691fb2fb62bd3">type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_audio.html#gad180575d859879d48d71154323b9b9c6">fae_audio_output_type</a> (<a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a> device)</td></tr>
+<tr class="separator:gad180575d859879d48d71154323b9b9c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadaf6d454542b738dd5e60f7750cae982"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_audio.html#gadaf6d454542b738dd5e60f7750cae982">fae_audio_has_input</a> (<a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a> device)</td></tr>
+<tr class="separator:gadaf6d454542b738dd5e60f7750cae982"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf8378aad9f2af002322439390748f9e6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_audio.html#gaf8378aad9f2af002322439390748f9e6">fae_audio_has_output</a> (<a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a> device)</td></tr>
+<tr class="separator:gaf8378aad9f2af002322439390748f9e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44c768db46dc1d3b9a8107a6cbb4b500"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a44c768db46dc1d3b9a8107a6cbb4b500">add_audio_status_listener</a> (<a class="el" href="audio_8c.html#af808f17923458a08f6758ff41e1c2f18">status_callback_t</a> function, <a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> data)</td></tr>
 <tr class="separator:a44c768db46dc1d3b9a8107a6cbb4b500"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa995720944f966932cf50ed2d832871"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#aaa995720944f966932cf50ed2d832871">fae_device_audio_set_status_callback</a> (<a class="el" href="audio_8c.html#a73db3e792fdf3123933b3da60156f57a">status_callback_t</a> function, <a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> data, <a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a> session)</td></tr>
-<tr class="separator:aaa995720944f966932cf50ed2d832871"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f3915d117383f8978846e7b39791253"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a5f3915d117383f8978846e7b39791253">audio_inform_opening</a> (<a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a> input, <a class="el" href="util_8h.html#a78a0380cda121cdfbd5bc21168841230">processor_t</a> proc, <a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a> output)</td></tr>
+<tr class="memitem:a27dc3622db8ab2048a6c8bcdae98c2dd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a27dc3622db8ab2048a6c8bcdae98c2dd">fae_audio_set_status_callback</a> (<a class="el" href="audio_8c.html#af808f17923458a08f6758ff41e1c2f18">status_callback_t</a> function, <a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> data, <a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a> session)</td></tr>
+<tr class="separator:a27dc3622db8ab2048a6c8bcdae98c2dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f3915d117383f8978846e7b39791253"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a5f3915d117383f8978846e7b39791253">audio_inform_opening</a> (<a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a> input, <a class="el" href="util_8h.html#a78a0380cda121cdfbd5bc21168841230">processor_t</a> proc, <a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a> output)</td></tr>
 <tr class="separator:a5f3915d117383f8978846e7b39791253"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6226cc722c480b01b490fed5f561c50b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="audio_8c.html#a18f80f6c2068f9369b9b3a166215acc1">stream_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a6226cc722c480b01b490fed5f561c50b">fae_device_audio_open_stream</a> (<a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a> input, <a class="el" href="util_8h.html#a78a0380cda121cdfbd5bc21168841230">processor_t</a> proc, <a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a> output)</td></tr>
-<tr class="separator:a6226cc722c480b01b490fed5f561c50b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga14b5c0c85985d7025989a64da78067da"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_device_audio.html#ga14b5c0c85985d7025989a64da78067da">fae_device_audio_close_stream</a> (<a class="el" href="audio_8c.html#a18f80f6c2068f9369b9b3a166215acc1">stream_t</a> stream)</td></tr>
-<tr class="separator:ga14b5c0c85985d7025989a64da78067da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2798f83a4dfa3b11c3b4dc778545cc41"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a2798f83a4dfa3b11c3b4dc778545cc41">fae_device_audio_with_stream</a> (<a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a> input, <a class="el" href="util_8h.html#a78a0380cda121cdfbd5bc21168841230">processor_t</a> processor, <a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a> output, <a class="el" href="audio_8c.html#a6334f5d5ed8fb9599eedc10a0917d3ea">stream_callback_t</a> stream_callback, <a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> stream_data, <a class="el" href="util_8h.html#a8c95fe643ed7e82601fcfff638bc18c6">error_callback_t</a> error_callback, <a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> error_data)</td></tr>
-<tr class="separator:a2798f83a4dfa3b11c3b4dc778545cc41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7cc29d8800bbf9ca6b60e58dac373d26"><td class="memItemLeft" align="right" valign="top"><a class="el" href="audio_8c.html#a484fe30eb7662ea8fafe70b571b3723b">stream_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a7cc29d8800bbf9ca6b60e58dac373d26">fae_audio_open_stream</a> (<a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a> input, <a class="el" href="util_8h.html#a78a0380cda121cdfbd5bc21168841230">processor_t</a> proc, <a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a> output)</td></tr>
+<tr class="separator:a7cc29d8800bbf9ca6b60e58dac373d26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadad8bf66840d7981982a6cba6fa2bfd5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_audio.html#gadad8bf66840d7981982a6cba6fa2bfd5">fae_audio_close_stream</a> (<a class="el" href="audio_8c.html#a484fe30eb7662ea8fafe70b571b3723b">stream_t</a> stream)</td></tr>
+<tr class="separator:gadad8bf66840d7981982a6cba6fa2bfd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affbe64741b937fa82f72f6661e1d8536"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#affbe64741b937fa82f72f6661e1d8536">fae_audio_with_stream</a> (<a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a> input, <a class="el" href="util_8h.html#a78a0380cda121cdfbd5bc21168841230">processor_t</a> processor, <a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a> output, <a class="el" href="audio_8c.html#abeae03e14939129284312a0a28276109">stream_callback_t</a> stream_callback, <a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> stream_data, <a class="el" href="util_8h.html#a8c95fe643ed7e82601fcfff638bc18c6">error_callback_t</a> error_callback, <a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> error_data)</td></tr>
+<tr class="separator:affbe64741b937fa82f72f6661e1d8536"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2bfe00ec54abd2aa2e81e5285c8c2d6e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a2bfe00ec54abd2aa2e81e5285c8c2d6e">audio_session_equal</a> (<a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> a, <a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> b)</td></tr>
 <tr class="separator:a2bfe00ec54abd2aa2e81e5285c8c2d6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5925061fb3b7d3ceb4e96f25cfa45ac5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_string.html#gaec46988276ade4118709314865160b76">fae_string_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a5925061fb3b7d3ceb4e96f25cfa45ac5">audio_session_show</a> (<a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> a)</td></tr>
@@ -172,12 +170,6 @@ Functions</h2></td></tr>
 <tr class="separator:a4d6de459044d804fc9632fde43a9dcac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b184134911fdaff21fe97f5ac2eb152"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a1b184134911fdaff21fe97f5ac2eb152">audio_stream_destroy</a> (<a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> a)</td></tr>
 <tr class="separator:a1b184134911fdaff21fe97f5ac2eb152"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6dfa13c55e7aa2949effc1e156199dcf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_time.html#ga24fcf1450ea9516fe7d650762e22d945">fae_time_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#a6dfa13c55e7aa2949effc1e156199dcf">audio_stream_time</a> (<a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> a)</td></tr>
-<tr class="separator:a6dfa13c55e7aa2949effc1e156199dcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2c84e15412ce9f14034ba852f10fa77"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#ae2c84e15412ce9f14034ba852f10fa77">audio_stream_tick_rate</a> (<a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> a)</td></tr>
-<tr class="separator:ae2c84e15412ce9f14034ba852f10fa77"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeca96dde13898ce8dbf0a628e6724170"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#aeca96dde13898ce8dbf0a628e6724170">audio_stream_ticks</a> (<a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> a)</td></tr>
-<tr class="separator:aeca96dde13898ce8dbf0a628e6724170"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab326ad3a66ddda9b863936b59cd372bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#ab326ad3a66ddda9b863936b59cd372bf">audio_stream_sync</a> (<a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> a)</td></tr>
 <tr class="separator:ab326ad3a66ddda9b863936b59cd372bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9f32b36a4a6ef64287325571771179c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_list.html#ga62e8420b5e2c8b334f662b986633ff3a">fae_list_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="audio_8c.html#ad9f32b36a4a6ef64287325571771179c">audio_stream_receive</a> (<a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> a, <a class="el" href="util_8h.html#a040334f0aa47ee7e10f99b98e6138558">address_t</a> addr)</td></tr>
@@ -191,72 +183,72 @@ Functions</h2></td></tr>
 <tr class="separator:a23e55d2654d26e61d4365710bcd84f92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a class="anchor" id="a98bce33c50bd470899cbd504a53c2b34"></a>
+<a class="anchor" id="ae7f863cf60c228d0330f026750a3c501"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="group___fae_device.html#ga62f035a1db106d6a577a00686656a570">fae_device_audio_t</a> <a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a></td>
+          <td class="memname">typedef <a class="el" href="group___fae_audio.html#ga3c19c7494175055bd354d3a8628edd4e">fae_audio_device_t</a> <a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a class="anchor" id="a18f80f6c2068f9369b9b3a166215acc1"></a>
+<a class="anchor" id="a484fe30eb7662ea8fafe70b571b3723b"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="group___fae_device_audio.html#gabe724e3cbf5f21751ef5aa01b03061da">fae_device_audio_stream_t</a> <a class="el" href="audio_8c.html#a18f80f6c2068f9369b9b3a166215acc1">stream_t</a></td>
+          <td class="memname">typedef <a class="el" href="group___fae_audio.html#gabedc03d3d3d615f99f27d5ec6727ca6e">fae_audio_stream_t</a> <a class="el" href="audio_8c.html#a484fe30eb7662ea8fafe70b571b3723b">stream_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a class="anchor" id="a2dbca9ec75318a01b7e5bd619c82af87"></a>
+<a class="anchor" id="aed3639665f12c998c5a6422ed0207493"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="group___fae_device_audio.html#ga5a3cabf9ea8c9118899d7cf88c40b963">fae_device_audio_session_t</a> <a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a></td>
+          <td class="memname">typedef <a class="el" href="group___fae_audio.html#gade5ba73a5be381d816360c9a2bf69602">fae_audio_session_t</a> <a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a class="anchor" id="a6334f5d5ed8fb9599eedc10a0917d3ea"></a>
+<a class="anchor" id="abeae03e14939129284312a0a28276109"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="group___fae_device_audio.html#gacf55d59eaffcf67029bb7feb6cb8ea72">fae_device_audio_stream_callback_t</a> <a class="el" href="audio_8c.html#a6334f5d5ed8fb9599eedc10a0917d3ea">stream_callback_t</a></td>
+          <td class="memname">typedef <a class="el" href="group___fae_audio.html#gab5989a341f15530ec05e1c4aa25dbdd1">fae_audio_stream_callback_t</a> <a class="el" href="audio_8c.html#abeae03e14939129284312a0a28276109">stream_callback_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a class="anchor" id="aa760d9b07a5ef8eb0606db495de5be99"></a>
+<a class="anchor" id="a4e0429a0488185f4d8e75804f05a87f7"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="group___fae_device_audio.html#gaf29b84b888c2413dc9d248248b03846f">fae_device_audio_session_callback_t</a> <a class="el" href="audio_8c.html#aa760d9b07a5ef8eb0606db495de5be99">session_callback_t</a></td>
+          <td class="memname">typedef <a class="el" href="group___fae_audio.html#ga6b36e7ca06338694576a2746d31d5f0f">fae_audio_session_callback_t</a> <a class="el" href="audio_8c.html#a4e0429a0488185f4d8e75804f05a87f7">session_callback_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a class="anchor" id="a73db3e792fdf3123933b3da60156f57a"></a>
+<a class="anchor" id="af808f17923458a08f6758ff41e1c2f18"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="group___fae_device_audio.html#ga5c0c28b4624f170a727005d28aa34622">fae_device_audio_status_callback_t</a> <a class="el" href="audio_8c.html#a73db3e792fdf3123933b3da60156f57a">status_callback_t</a></td>
+          <td class="memname">typedef <a class="el" href="group___fae_audio.html#ga4a16612539535e93c2320f76649bab4a">fae_audio_status_callback_t</a> <a class="el" href="audio_8c.html#af808f17923458a08f6758ff41e1c2f18">status_callback_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -385,7 +377,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void before_processing </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a18f80f6c2068f9369b9b3a166215acc1">stream_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#a484fe30eb7662ea8fafe70b571b3723b">stream_t</a>&#160;</td>
           <td class="paramname"><em>stream</em></td><td>)</td>
           <td></td>
         </tr>
@@ -401,7 +393,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void after_processing </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a18f80f6c2068f9369b9b3a166215acc1">stream_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#a484fe30eb7662ea8fafe70b571b3723b">stream_t</a>&#160;</td>
           <td class="paramname"><em>stream</em></td><td>)</td>
           <td></td>
         </tr>
@@ -417,7 +409,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">int during_processing </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a18f80f6c2068f9369b9b3a166215acc1">stream_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#a484fe30eb7662ea8fafe70b571b3723b">stream_t</a>&#160;</td>
           <td class="paramname"><em>stream</em>, </td>
         </tr>
         <tr>
@@ -448,12 +440,12 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a825607ef0b1ecda71059efef160bf48b"></a>
+<a class="anchor" id="ae6ecf5a8bdd01552dfd8fa2ac91c8017"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void fae_device_audio_initialize </td>
+          <td class="memname">void fae_audio_initialize </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -463,12 +455,12 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a330ddfe1d2d52785edb455f8b00c53ba"></a>
+<a class="anchor" id="a3330f4dd7732401677e60956c808c156"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void fae_device_audio_terminate </td>
+          <td class="memname">void fae_audio_terminate </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -478,14 +470,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="acc6b00e9460f77f698e331ed4c195394"></a>
+<a class="anchor" id="a6d5e768feb1e397f19bcd18fdaea5d3b"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void fae_device_audio_with_session </td>
+          <td class="memname">void fae_audio_with_session </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#aa760d9b07a5ef8eb0606db495de5be99">session_callback_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#a4e0429a0488185f4d8e75804f05a87f7">session_callback_t</a>&#160;</td>
           <td class="paramname"><em>session_callback</em>, </td>
         </tr>
         <tr>
@@ -523,7 +515,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void add_audio_status_listener </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a73db3e792fdf3123933b3da60156f57a">status_callback_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#af808f17923458a08f6758ff41e1c2f18">status_callback_t</a>&#160;</td>
           <td class="paramname"><em>function</em>, </td>
         </tr>
         <tr>
@@ -542,14 +534,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aaa995720944f966932cf50ed2d832871"></a>
+<a class="anchor" id="a27dc3622db8ab2048a6c8bcdae98c2dd"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void fae_device_audio_set_status_callback </td>
+          <td class="memname">void fae_audio_set_status_callback </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a73db3e792fdf3123933b3da60156f57a">status_callback_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#af808f17923458a08f6758ff41e1c2f18">status_callback_t</a>&#160;</td>
           <td class="paramname"><em>function</em>, </td>
         </tr>
         <tr>
@@ -561,7 +553,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a>&#160;</td>
           <td class="paramname"><em>session</em>&#160;</td>
         </tr>
         <tr>
@@ -581,7 +573,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void audio_inform_opening </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a>&#160;</td>
           <td class="paramname"><em>input</em>, </td>
         </tr>
         <tr>
@@ -593,7 +585,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a>&#160;</td>
           <td class="paramname"><em>output</em>&#160;</td>
         </tr>
         <tr>
@@ -606,14 +598,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a6226cc722c480b01b490fed5f561c50b"></a>
+<a class="anchor" id="a7cc29d8800bbf9ca6b60e58dac373d26"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="audio_8c.html#a18f80f6c2068f9369b9b3a166215acc1">stream_t</a> fae_device_audio_open_stream </td>
+          <td class="memname"><a class="el" href="audio_8c.html#a484fe30eb7662ea8fafe70b571b3723b">stream_t</a> fae_audio_open_stream </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a>&#160;</td>
           <td class="paramname"><em>input</em>, </td>
         </tr>
         <tr>
@@ -625,7 +617,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a>&#160;</td>
           <td class="paramname"><em>output</em>&#160;</td>
         </tr>
         <tr>
@@ -638,14 +630,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a2798f83a4dfa3b11c3b4dc778545cc41"></a>
+<a class="anchor" id="affbe64741b937fa82f72f6661e1d8536"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void fae_device_audio_with_stream </td>
+          <td class="memname">void fae_audio_with_stream </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a>&#160;</td>
           <td class="paramname"><em>input</em>, </td>
         </tr>
         <tr>
@@ -657,13 +649,13 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a>&#160;</td>
           <td class="paramname"><em>output</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a6334f5d5ed8fb9599eedc10a0917d3ea">stream_callback_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#abeae03e14939129284312a0a28276109">stream_callback_t</a>&#160;</td>
           <td class="paramname"><em>stream_callback</em>, </td>
         </tr>
         <tr>
@@ -826,54 +818,6 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a6dfa13c55e7aa2949effc1e156199dcf"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group___fae_time.html#ga24fcf1450ea9516fe7d650762e22d945">fae_time_t</a> audio_stream_time </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a>&#160;</td>
-          <td class="paramname"><em>a</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ae2c84e15412ce9f14034ba852f10fa77"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double audio_stream_tick_rate </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a>&#160;</td>
-          <td class="paramname"><em>a</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="aeca96dde13898ce8dbf0a628e6724170"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int64_t audio_stream_ticks </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a>&#160;</td>
-          <td class="paramname"><em>a</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a class="anchor" id="ab326ad3a66ddda9b863936b59cd372bf"></a>
 <div class="memitem">
 <div class="memproto">
@@ -978,7 +922,7 @@ Functions</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jun 18 2013 20:29:57 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Wed Jun 19 2013 01:14:06 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

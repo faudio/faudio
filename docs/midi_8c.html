@@ -57,7 +57,7 @@
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;<a class="el" href="midi_8h_source.html">fae/midi.h</a>&gt;</code><br/>
-<code>#include &lt;<a class="el" href="midi__msg_8h_source.html">fae/midi_msg.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="message_8h_source.html">fae/midi/message.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="list_8h_source.html">fae/list.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="thread_8h_source.html">fae/thread.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="util_8h_source.html">fae/util.h</a>&gt;</code><br/>
@@ -65,7 +65,7 @@
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for midi.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="midi_8c__incl.svg" width="780" height="283"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="midi_8c__incl.svg" width="786" height="283"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
@@ -112,47 +112,47 @@ Functions</h2></td></tr>
 <tr class="separator:a2a2ce31ae0a36368c8eead54c20884dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0892325c35f7e503afadb1ff4de954c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#ac0892325c35f7e503afadb1ff4de954c">midi_stream_impl</a> (<a class="el" href="group___fae.html#gad8d3bb5fc1ed0e69cbb413934d749edc">fae_id_t</a> interface)</td></tr>
 <tr class="separator:ac0892325c35f7e503afadb1ff4de954c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a4d70abf6f16b1d66ee8db315c761ba"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a3a4d70abf6f16b1d66ee8db315c761ba">fae_midi_msg_simple_to_long</a> (<a class="el" href="group___fae_midi_msg.html#ga04722986196d1e23248e800b67809242">fae_midi_msg_t</a> midi)</td></tr>
-<tr class="separator:a3a4d70abf6f16b1d66ee8db315c761ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21697d26aa78a856adcd17a4e938d335"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a21697d26aa78a856adcd17a4e938d335">fae_midi_message_simple_to_long</a> (<a class="el" href="group___fae_midi_message.html#ga986753d496dfcf47ea606a9eb399c1fc">fae_midi_message_t</a> midi)</td></tr>
+<tr class="separator:a21697d26aa78a856adcd17a4e938d335"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49d3f1ab830057dd9f249d3982311c5c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a49d3f1ab830057dd9f249d3982311c5c">fae_midi_initialize</a> ()</td></tr>
 <tr class="separator:a49d3f1ab830057dd9f249d3982311c5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22fd0e17ac9a9e982f7d814b04930eac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a22fd0e17ac9a9e982f7d814b04930eac">fae_midi_terminate</a> ()</td></tr>
 <tr class="separator:a22fd0e17ac9a9e982f7d814b04930eac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga83745237faa2106a9424e9b45c0accfc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#ga83745237faa2106a9424e9b45c0accfc">fae_midi_begin_session</a> ()</td></tr>
+<tr class="memitem:ga83745237faa2106a9424e9b45c0accfc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#ga83745237faa2106a9424e9b45c0accfc">fae_midi_begin_session</a> ()</td></tr>
 <tr class="separator:ga83745237faa2106a9424e9b45c0accfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52c16c7b89a67dec2df8265d814be574"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a52c16c7b89a67dec2df8265d814be574">fae_midi_end_session</a> (<a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a> session)</td></tr>
+<tr class="memitem:a52c16c7b89a67dec2df8265d814be574"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a52c16c7b89a67dec2df8265d814be574">fae_midi_end_session</a> (<a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a> session)</td></tr>
 <tr class="separator:a52c16c7b89a67dec2df8265d814be574"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0a84d73e1f18c23558a1d2e1e5e39de"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#aa0a84d73e1f18c23558a1d2e1e5e39de">fae_midi_with_session</a> (<a class="el" href="audio_8c.html#aa760d9b07a5ef8eb0606db495de5be99">session_callback_t</a> session_callback, <a class="el" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4">fae_ptr_t</a> session_data, <a class="el" href="util_8h.html#a8c95fe643ed7e82601fcfff638bc18c6">error_callback_t</a> error_callback, <a class="el" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4">fae_ptr_t</a> error_data)</td></tr>
+<tr class="memitem:aa0a84d73e1f18c23558a1d2e1e5e39de"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#aa0a84d73e1f18c23558a1d2e1e5e39de">fae_midi_with_session</a> (<a class="el" href="audio_8c.html#a4e0429a0488185f4d8e75804f05a87f7">session_callback_t</a> session_callback, <a class="el" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4">fae_ptr_t</a> session_data, <a class="el" href="util_8h.html#a8c95fe643ed7e82601fcfff638bc18c6">error_callback_t</a> error_callback, <a class="el" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4">fae_ptr_t</a> error_data)</td></tr>
 <tr class="separator:aa0a84d73e1f18c23558a1d2e1e5e39de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15423cb3563c5b032001401714fb52d0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_list.html#ga62e8420b5e2c8b334f662b986633ff3a">fae_list_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a15423cb3563c5b032001401714fb52d0">fae_midi_all</a> (<a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a> session)</td></tr>
+<tr class="memitem:a15423cb3563c5b032001401714fb52d0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_list.html#ga62e8420b5e2c8b334f662b986633ff3a">fae_list_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a15423cb3563c5b032001401714fb52d0">fae_midi_all</a> (<a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a> session)</td></tr>
 <tr class="separator:a15423cb3563c5b032001401714fb52d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe4161d7ef30dd2b16321edf295b32be"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_pair.html#ga1f7c75839e2ea6e61c31fdb4b0cd1e1a">fae_pair_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#abe4161d7ef30dd2b16321edf295b32be">fae_midi_default</a> (<a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a> session)</td></tr>
+<tr class="memitem:abe4161d7ef30dd2b16321edf295b32be"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_pair.html#ga1f7c75839e2ea6e61c31fdb4b0cd1e1a">fae_pair_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#abe4161d7ef30dd2b16321edf295b32be">fae_midi_default</a> (<a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a> session)</td></tr>
 <tr class="separator:abe4161d7ef30dd2b16321edf295b32be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27a01074babddacad9fbe0395da1c8f9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a27a01074babddacad9fbe0395da1c8f9">fae_midi_default_input</a> (<a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a> session)</td></tr>
+<tr class="memitem:a27a01074babddacad9fbe0395da1c8f9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a27a01074babddacad9fbe0395da1c8f9">fae_midi_default_input</a> (<a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a> session)</td></tr>
 <tr class="separator:a27a01074babddacad9fbe0395da1c8f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b83761def74d7d018b4a25995536a5a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a5b83761def74d7d018b4a25995536a5a">fae_midi_default_output</a> (<a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a> session)</td></tr>
+<tr class="memitem:a5b83761def74d7d018b4a25995536a5a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a5b83761def74d7d018b4a25995536a5a">fae_midi_default_output</a> (<a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a> session)</td></tr>
 <tr class="separator:a5b83761def74d7d018b4a25995536a5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adfc0695e9cafc84cca370b443eb4f03a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#adfc0695e9cafc84cca370b443eb4f03a">add_midi_status_listener</a> (<a class="el" href="audio_8c.html#a73db3e792fdf3123933b3da60156f57a">status_callback_t</a> function, <a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> data)</td></tr>
+<tr class="memitem:adfc0695e9cafc84cca370b443eb4f03a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#adfc0695e9cafc84cca370b443eb4f03a">add_midi_status_listener</a> (<a class="el" href="audio_8c.html#af808f17923458a08f6758ff41e1c2f18">status_callback_t</a> function, <a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> data)</td></tr>
 <tr class="separator:adfc0695e9cafc84cca370b443eb4f03a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a56b4a459c5759536bbe1a0eea7cb5ea0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a56b4a459c5759536bbe1a0eea7cb5ea0">fae_midi_set_status_callback</a> (<a class="el" href="audio_8c.html#a73db3e792fdf3123933b3da60156f57a">status_callback_t</a> function, <a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> data, <a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a> session)</td></tr>
+<tr class="memitem:a56b4a459c5759536bbe1a0eea7cb5ea0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a56b4a459c5759536bbe1a0eea7cb5ea0">fae_midi_set_status_callback</a> (<a class="el" href="audio_8c.html#af808f17923458a08f6758ff41e1c2f18">status_callback_t</a> function, <a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> data, <a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a> session)</td></tr>
 <tr class="separator:a56b4a459c5759536bbe1a0eea7cb5ea0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6265fd53a16bb41666bb5ed7b753a10"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_string.html#gaec46988276ade4118709314865160b76">fae_string_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#ae6265fd53a16bb41666bb5ed7b753a10">fae_midi_name</a> (<a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a> device)</td></tr>
+<tr class="memitem:ae6265fd53a16bb41666bb5ed7b753a10"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_string.html#gaec46988276ade4118709314865160b76">fae_string_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#ae6265fd53a16bb41666bb5ed7b753a10">fae_midi_name</a> (<a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a> device)</td></tr>
 <tr class="separator:ae6265fd53a16bb41666bb5ed7b753a10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53cf4e469cb6cc2c33cc741114e687f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_string.html#gaec46988276ade4118709314865160b76">fae_string_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a53cf4e469cb6cc2c33cc741114e687f8">fae_midi_host_name</a> (<a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a> device)</td></tr>
+<tr class="memitem:a53cf4e469cb6cc2c33cc741114e687f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_string.html#gaec46988276ade4118709314865160b76">fae_string_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a53cf4e469cb6cc2c33cc741114e687f8">fae_midi_host_name</a> (<a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a> device)</td></tr>
 <tr class="separator:a53cf4e469cb6cc2c33cc741114e687f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d9f446fc4ae0a15b9884e99ef08e654"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a3d9f446fc4ae0a15b9884e99ef08e654">fae_midi_has_input</a> (<a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a> device)</td></tr>
+<tr class="memitem:a3d9f446fc4ae0a15b9884e99ef08e654"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a3d9f446fc4ae0a15b9884e99ef08e654">fae_midi_has_input</a> (<a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a> device)</td></tr>
 <tr class="separator:a3d9f446fc4ae0a15b9884e99ef08e654"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0215d83908d9794b97ac6474e321f6f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#af0215d83908d9794b97ac6474e321f6f">fae_midi_has_output</a> (<a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a> device)</td></tr>
+<tr class="memitem:af0215d83908d9794b97ac6474e321f6f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#af0215d83908d9794b97ac6474e321f6f">fae_midi_has_output</a> (<a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a> device)</td></tr>
 <tr class="separator:af0215d83908d9794b97ac6474e321f6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9cd32df4d932c44b97a7f06a9904467b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a9cd32df4d932c44b97a7f06a9904467b">midi_inform_opening</a> (<a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a> device)</td></tr>
+<tr class="memitem:a9cd32df4d932c44b97a7f06a9904467b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a9cd32df4d932c44b97a7f06a9904467b">midi_inform_opening</a> (<a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a> device)</td></tr>
 <tr class="separator:a9cd32df4d932c44b97a7f06a9904467b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8186df03bde17b4694334cf11dde9741"><td class="memItemLeft" align="right" valign="top">PmTimestamp&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a8186df03bde17b4694334cf11dde9741">midi_time_callback</a> (void *data)</td></tr>
 <tr class="separator:a8186df03bde17b4694334cf11dde9741"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1182d872f3dfbc01aaf4065ce6e35043"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_midi.html#gaecca10a4d57d3e12df8c66ee75e30c2e">fae_midi_stream_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a1182d872f3dfbc01aaf4065ce6e35043">fae_midi_open_stream</a> (<a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a> device)</td></tr>
+<tr class="memitem:a1182d872f3dfbc01aaf4065ce6e35043"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_midi.html#gaecca10a4d57d3e12df8c66ee75e30c2e">fae_midi_stream_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a1182d872f3dfbc01aaf4065ce6e35043">fae_midi_open_stream</a> (<a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a> device)</td></tr>
 <tr class="separator:a1182d872f3dfbc01aaf4065ce6e35043"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38e2fb20ab4b55ebbc1f4628fe450af1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a38e2fb20ab4b55ebbc1f4628fe450af1">fae_midi_close_stream</a> (<a class="el" href="audio_8c.html#a18f80f6c2068f9369b9b3a166215acc1">stream_t</a> stream)</td></tr>
+<tr class="memitem:a38e2fb20ab4b55ebbc1f4628fe450af1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a38e2fb20ab4b55ebbc1f4628fe450af1">fae_midi_close_stream</a> (<a class="el" href="audio_8c.html#a484fe30eb7662ea8fafe70b571b3723b">stream_t</a> stream)</td></tr>
 <tr class="separator:a38e2fb20ab4b55ebbc1f4628fe450af1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d57963b60c3a57e4e735588202bbb60"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a8d57963b60c3a57e4e735588202bbb60">fae_midi_with_stream</a> (<a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a> device, <a class="el" href="audio_8c.html#a6334f5d5ed8fb9599eedc10a0917d3ea">stream_callback_t</a> stream_callback, <a class="el" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4">fae_ptr_t</a> stream_data, <a class="el" href="util_8h.html#a8c95fe643ed7e82601fcfff638bc18c6">error_callback_t</a> error_callback, <a class="el" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4">fae_ptr_t</a> error_data)</td></tr>
+<tr class="memitem:a8d57963b60c3a57e4e735588202bbb60"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a8d57963b60c3a57e4e735588202bbb60">fae_midi_with_stream</a> (<a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a> device, <a class="el" href="audio_8c.html#abeae03e14939129284312a0a28276109">stream_callback_t</a> stream_callback, <a class="el" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4">fae_ptr_t</a> stream_data, <a class="el" href="util_8h.html#a8c95fe643ed7e82601fcfff638bc18c6">error_callback_t</a> error_callback, <a class="el" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4">fae_ptr_t</a> error_data)</td></tr>
 <tr class="separator:a8d57963b60c3a57e4e735588202bbb60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8672ad449efc736d467f0c6f90aa7615"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_string.html#gaec46988276ade4118709314865160b76">fae_string_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="midi_8c.html#a8672ad449efc736d467f0c6f90aa7615">midi_session_show</a> (<a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> a)</td></tr>
 <tr class="separator:a8672ad449efc736d467f0c6f90aa7615"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -182,7 +182,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="group___fae_midi.html#gac3323a401e147720578dcce2c452db5d">fae_midi_device_t</a> <a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a></td>
+          <td class="memname">typedef <a class="el" href="group___fae_midi.html#gac3323a401e147720578dcce2c452db5d">fae_midi_device_t</a> <a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -194,7 +194,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="group___fae_midi.html#gaecca10a4d57d3e12df8c66ee75e30c2e">fae_midi_stream_t</a> <a class="el" href="audio_8c.html#a18f80f6c2068f9369b9b3a166215acc1">stream_t</a></td>
+          <td class="memname">typedef <a class="el" href="group___fae_midi.html#gaecca10a4d57d3e12df8c66ee75e30c2e">fae_midi_stream_t</a> <a class="el" href="audio_8c.html#a484fe30eb7662ea8fafe70b571b3723b">stream_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -206,7 +206,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="group___fae_midi.html#ga9ae465564701d86a972cd1b3b4d372fe">fae_midi_session_t</a> <a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a></td>
+          <td class="memname">typedef <a class="el" href="group___fae_midi.html#ga9ae465564701d86a972cd1b3b4d372fe">fae_midi_session_t</a> <a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -218,7 +218,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="group___fae_midi.html#ga6a2695dde9d4e4f2bc154da829a1f9d6">fae_midi_stream_callback_t</a> <a class="el" href="audio_8c.html#a6334f5d5ed8fb9599eedc10a0917d3ea">stream_callback_t</a></td>
+          <td class="memname">typedef <a class="el" href="group___fae_midi.html#ga6a2695dde9d4e4f2bc154da829a1f9d6">fae_midi_stream_callback_t</a> <a class="el" href="audio_8c.html#abeae03e14939129284312a0a28276109">stream_callback_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -230,7 +230,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="group___fae_midi.html#ga5f783a235dc758b4e9369556621c0e27">fae_midi_session_callback_t</a> <a class="el" href="audio_8c.html#aa760d9b07a5ef8eb0606db495de5be99">session_callback_t</a></td>
+          <td class="memname">typedef <a class="el" href="group___fae_midi.html#ga5f783a235dc758b4e9369556621c0e27">fae_midi_session_callback_t</a> <a class="el" href="audio_8c.html#a4e0429a0488185f4d8e75804f05a87f7">session_callback_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -242,7 +242,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="group___fae_midi.html#ga3e42bb62f1f334d178802f0d7f95ddd5">fae_midi_status_callback_t</a> <a class="el" href="audio_8c.html#a73db3e792fdf3123933b3da60156f57a">status_callback_t</a></td>
+          <td class="memname">typedef <a class="el" href="group___fae_midi.html#ga3e42bb62f1f334d178802f0d7f95ddd5">fae_midi_status_callback_t</a> <a class="el" href="audio_8c.html#af808f17923458a08f6758ff41e1c2f18">status_callback_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -416,14 +416,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a3a4d70abf6f16b1d66ee8db315c761ba"></a>
+<a class="anchor" id="a21697d26aa78a856adcd17a4e938d335"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">long fae_midi_msg_simple_to_long </td>
+          <td class="memname">long fae_midi_message_simple_to_long </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="group___fae_midi_msg.html#ga04722986196d1e23248e800b67809242">fae_midi_msg_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="group___fae_midi_message.html#ga986753d496dfcf47ea606a9eb399c1fc">fae_midi_message_t</a>&#160;</td>
           <td class="paramname"><em>midi</em></td><td>)</td>
           <td></td>
         </tr>
@@ -469,7 +469,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void fae_midi_end_session </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a>&#160;</td>
           <td class="paramname"><em>session</em></td><td>)</td>
           <td></td>
         </tr>
@@ -485,7 +485,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void fae_midi_with_session </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#aa760d9b07a5ef8eb0606db495de5be99">session_callback_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#a4e0429a0488185f4d8e75804f05a87f7">session_callback_t</a>&#160;</td>
           <td class="paramname"><em>session_callback</em>, </td>
         </tr>
         <tr>
@@ -523,7 +523,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="group___fae_list.html#ga62e8420b5e2c8b334f662b986633ff3a">fae_list_t</a> fae_midi_all </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a>&#160;</td>
           <td class="paramname"><em>session</em></td><td>)</td>
           <td></td>
         </tr>
@@ -539,7 +539,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="group___fae_pair.html#ga1f7c75839e2ea6e61c31fdb4b0cd1e1a">fae_pair_t</a> fae_midi_default </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a>&#160;</td>
           <td class="paramname"><em>session</em></td><td>)</td>
           <td></td>
         </tr>
@@ -553,9 +553,9 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a> fae_midi_default_input </td>
+          <td class="memname"><a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a> fae_midi_default_input </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a>&#160;</td>
           <td class="paramname"><em>session</em></td><td>)</td>
           <td></td>
         </tr>
@@ -569,9 +569,9 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a> fae_midi_default_output </td>
+          <td class="memname"><a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a> fae_midi_default_output </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a>&#160;</td>
           <td class="paramname"><em>session</em></td><td>)</td>
           <td></td>
         </tr>
@@ -587,7 +587,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void add_midi_status_listener </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a73db3e792fdf3123933b3da60156f57a">status_callback_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#af808f17923458a08f6758ff41e1c2f18">status_callback_t</a>&#160;</td>
           <td class="paramname"><em>function</em>, </td>
         </tr>
         <tr>
@@ -613,7 +613,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void fae_midi_set_status_callback </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a73db3e792fdf3123933b3da60156f57a">status_callback_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#af808f17923458a08f6758ff41e1c2f18">status_callback_t</a>&#160;</td>
           <td class="paramname"><em>function</em>, </td>
         </tr>
         <tr>
@@ -625,7 +625,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">session_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#aed3639665f12c998c5a6422ed0207493">session_t</a>&#160;</td>
           <td class="paramname"><em>session</em>&#160;</td>
         </tr>
         <tr>
@@ -645,7 +645,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="group___fae_string.html#gaec46988276ade4118709314865160b76">fae_string_t</a> fae_midi_name </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a>&#160;</td>
           <td class="paramname"><em>device</em></td><td>)</td>
           <td></td>
         </tr>
@@ -661,7 +661,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="group___fae_string.html#gaec46988276ade4118709314865160b76">fae_string_t</a> fae_midi_host_name </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a>&#160;</td>
           <td class="paramname"><em>device</em></td><td>)</td>
           <td></td>
         </tr>
@@ -677,7 +677,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">bool fae_midi_has_input </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a>&#160;</td>
           <td class="paramname"><em>device</em></td><td>)</td>
           <td></td>
         </tr>
@@ -693,7 +693,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">bool fae_midi_has_output </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a>&#160;</td>
           <td class="paramname"><em>device</em></td><td>)</td>
           <td></td>
         </tr>
@@ -709,7 +709,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void midi_inform_opening </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a>&#160;</td>
           <td class="paramname"><em>device</em></td><td>)</td>
           <td></td>
         </tr>
@@ -741,7 +741,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="group___fae_midi.html#gaecca10a4d57d3e12df8c66ee75e30c2e">fae_midi_stream_t</a> fae_midi_open_stream </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a>&#160;</td>
           <td class="paramname"><em>device</em></td><td>)</td>
           <td></td>
         </tr>
@@ -757,7 +757,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void fae_midi_close_stream </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a18f80f6c2068f9369b9b3a166215acc1">stream_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#a484fe30eb7662ea8fafe70b571b3723b">stream_t</a>&#160;</td>
           <td class="paramname"><em>stream</em></td><td>)</td>
           <td></td>
         </tr>
@@ -773,13 +773,13 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void fae_midi_with_stream </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">device_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#ae7f863cf60c228d0330f026750a3c501">device_t</a>&#160;</td>
           <td class="paramname"><em>device</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="audio_8c.html#a6334f5d5ed8fb9599eedc10a0917d3ea">stream_callback_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="audio_8c.html#abeae03e14939129284312a0a28276109">stream_callback_t</a>&#160;</td>
           <td class="paramname"><em>stream_callback</em>, </td>
         </tr>
         <tr>
@@ -994,7 +994,7 @@ Functions</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jun 18 2013 20:29:57 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Wed Jun 19 2013 01:14:06 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

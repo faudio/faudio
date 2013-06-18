@@ -56,7 +56,7 @@
 <div class="title">device.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;<a class="el" href="audio_8h_source.html">fae/device/audio.h</a>&gt;</code><br/>
+<div class="textblock"><code>#include &lt;<a class="el" href="audio_8h_source.html">fae/audio.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="midi_8h_source.html">fae/midi.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="string_8h_source.html">fae/string.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="thread_8h_source.html">fae/thread.h</a>&gt;</code><br/>
@@ -66,7 +66,7 @@
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for device.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="device_8c__incl.svg" width="1098" height="302"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="device_8c__incl.svg" width="1047" height="302"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
@@ -76,9 +76,8 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a9ebc3d4a2084b8e61cd074feaab05a19"><td class="memItemLeft" align="right" valign="top">typedef <br class="typebreak"/>
-<a class="el" href="group___fae_device_audio.html#ga5c0c28b4624f170a727005d28aa34622">fae_device_audio_status_callback_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="device_8c.html#a9ebc3d4a2084b8e61cd074feaab05a19">audio_status_callback_t</a></td></tr>
-<tr class="separator:a9ebc3d4a2084b8e61cd074feaab05a19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f4ed7c86b18ffd9b922d491e368aea7"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fae_audio.html#ga4a16612539535e93c2320f76649bab4a">fae_audio_status_callback_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="device_8c.html#a2f4ed7c86b18ffd9b922d491e368aea7">audio_status_callback_t</a></td></tr>
+<tr class="separator:a2f4ed7c86b18ffd9b922d491e368aea7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a48a697506dfd582bf56cfa84e26cda92"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fae_midi.html#ga3e42bb62f1f334d178802f0d7f95ddd5">fae_midi_status_callback_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="device_8c.html#a48a697506dfd582bf56cfa84e26cda92">midi_status_callback_t</a></td></tr>
 <tr class="separator:a48a697506dfd582bf56cfa84e26cda92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c09ba06578644578f5b32ca68624ba0"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structnullary__closure.html">nullary_closure</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="device_8c.html#a8c09ba06578644578f5b32ca68624ba0">closure_t</a></td></tr>
@@ -88,7 +87,7 @@ Typedefs</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:a1d733d2010891cd55b0a409a39c1e89f"><td class="memItemLeft" align="right" valign="top">OSStatus&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="device_8c.html#a1d733d2010891cd55b0a409a39c1e89f">audio_listener</a> (AudioObjectID <a class="el" href="util_8h.html#ae51cc96caf06257fe90b1c95358a8494">id</a>, UInt32 size, <a class="el" href="util_8h.html#a6d6d85baf846e06f09b217a15c18edf2">const</a> AudioObjectPropertyAddress addresses[], void *data)</td></tr>
 <tr class="separator:a1d733d2010891cd55b0a409a39c1e89f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62f38ff7390d55ad2dc516d52d31db84"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="device_8c.html#a62f38ff7390d55ad2dc516d52d31db84">add_audio_status_listener</a> (<a class="el" href="device_8c.html#a9ebc3d4a2084b8e61cd074feaab05a19">audio_status_callback_t</a> function, <a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> data)</td></tr>
+<tr class="memitem:a62f38ff7390d55ad2dc516d52d31db84"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="device_8c.html#a62f38ff7390d55ad2dc516d52d31db84">add_audio_status_listener</a> (<a class="el" href="device_8c.html#a2f4ed7c86b18ffd9b922d491e368aea7">audio_status_callback_t</a> function, <a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> data)</td></tr>
 <tr class="separator:a62f38ff7390d55ad2dc516d52d31db84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73d9224e72d3bdbb90790b5ea625f3e9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="device_8c.html#a73d9224e72d3bdbb90790b5ea625f3e9">midi_listener</a> (<a class="el" href="util_8h.html#a6d6d85baf846e06f09b217a15c18edf2">const</a> MIDINotification *message, void *data)</td></tr>
 <tr class="separator:a73d9224e72d3bdbb90790b5ea625f3e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -98,12 +97,12 @@ Functions</h2></td></tr>
 <tr class="separator:a376ef80dc11c44d5d439076bffb1beb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a class="anchor" id="a9ebc3d4a2084b8e61cd074feaab05a19"></a>
+<a class="anchor" id="a2f4ed7c86b18ffd9b922d491e368aea7"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="group___fae_device_audio.html#ga5c0c28b4624f170a727005d28aa34622">fae_device_audio_status_callback_t</a> <a class="el" href="device_8c.html#a9ebc3d4a2084b8e61cd074feaab05a19">audio_status_callback_t</a></td>
+          <td class="memname">typedef <a class="el" href="group___fae_audio.html#ga4a16612539535e93c2320f76649bab4a">fae_audio_status_callback_t</a> <a class="el" href="device_8c.html#a2f4ed7c86b18ffd9b922d491e368aea7">audio_status_callback_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -180,7 +179,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void add_audio_status_listener </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="device_8c.html#a9ebc3d4a2084b8e61cd074feaab05a19">audio_status_callback_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="device_8c.html#a2f4ed7c86b18ffd9b922d491e368aea7">audio_status_callback_t</a>&#160;</td>
           <td class="paramname"><em>function</em>, </td>
         </tr>
         <tr>
@@ -271,7 +270,7 @@ Functions</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jun 18 2013 20:29:58 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Wed Jun 19 2013 01:14:06 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

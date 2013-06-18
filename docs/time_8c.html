@@ -69,10 +69,6 @@ Include dependency graph for time.c:</div>
 Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__fae__time__t.html">_fae_time_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsystem__clock.html">system_clock</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsystem__prec__clock.html">system_prec_clock</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -80,10 +76,6 @@ Typedefs</h2></td></tr>
 <tr class="separator:a9e0afb4831c4be2b71e807f9f3c0e5fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58eae77b24eba06c59b7eba9ec93b314"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fae_ratio.html#gae288c366fa258bff6f864af1b2a59673">fae_ratio_denom_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time_8c.html#a58eae77b24eba06c59b7eba9ec93b314">denom_t</a></td></tr>
 <tr class="separator:a58eae77b24eba06c59b7eba9ec93b314"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad460e2d54682239274ad259ff16f0cbb"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structsystem__clock.html">system_clock</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time_8c.html#ad460e2d54682239274ad259ff16f0cbb">system_clock_t</a></td></tr>
-<tr class="separator:ad460e2d54682239274ad259ff16f0cbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50e3593c72798f58f2c25a754f713771"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structsystem__prec__clock.html">system_prec_clock</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time_8c.html#a50e3593c72798f58f2c25a754f713771">system_prec_clock_t</a></td></tr>
-<tr class="separator:a50e3593c72798f58f2c25a754f713771"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -136,32 +128,6 @@ Functions</h2></td></tr>
 <tr class="memitem:ga2b6cecf8d42efa9c9698b85c0a7f8f2b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_time.html#ga22c5fc159ca4867c3ca3330679e70094">fae_time_cpu_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_time.html#ga2b6cecf8d42efa9c9698b85c0a7f8f2b">fae_time_cpu</a> ()</td></tr>
 <tr class="memdesc:ga2b6cecf8d42efa9c9698b85c0a7f8f2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the system CPU time.  <a href="group___fae_time.html#ga2b6cecf8d42efa9c9698b85c0a7f8f2b"></a><br/></td></tr>
 <tr class="separator:ga2b6cecf8d42efa9c9698b85c0a7f8f2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga308829f8077f8ad8f8ba7b2339a77c91"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_time.html#ga24fcf1450ea9516fe7d650762e22d945">fae_time_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_time.html#ga308829f8077f8ad8f8ba7b2339a77c91">fae_time_time</a> (<a class="el" href="group___fae_time.html#ga0292dad16755298bbe8ecb487a31a664">fae_time_clock_t</a> clock)</td></tr>
-<tr class="separator:ga308829f8077f8ad8f8ba7b2339a77c91"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga22c0f2806b2b8a228d420013e4b0af4e"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_time.html#ga22c0f2806b2b8a228d420013e4b0af4e">fae_time_tick_rate</a> (<a class="el" href="group___fae_time.html#ga0292dad16755298bbe8ecb487a31a664">fae_time_clock_t</a> clock)</td></tr>
-<tr class="separator:ga22c0f2806b2b8a228d420013e4b0af4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga88e3a0696644c0b2d7b9c6bd9d42bd49"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_time.html#ga88e3a0696644c0b2d7b9c6bd9d42bd49">fae_time_ticks</a> (<a class="el" href="group___fae_time.html#ga0292dad16755298bbe8ecb487a31a664">fae_time_clock_t</a> clock)</td></tr>
-<tr class="separator:ga88e3a0696644c0b2d7b9c6bd9d42bd49"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c8f40e60d35a528667f446bdbd46f39"><td class="memItemLeft" align="right" valign="top"><a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time_8c.html#a5c8f40e60d35a528667f446bdbd46f39">system_clock_impl</a> (<a class="el" href="group___fae.html#gad8d3bb5fc1ed0e69cbb413934d749edc">fae_id_t</a> interface)</td></tr>
-<tr class="separator:a5c8f40e60d35a528667f446bdbd46f39"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf505ff8c14b336580a001e6038bb7bf8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="util_8h.html#a33f6338b5bbb294b41e5c35a8d0f5bf3">clock_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_time.html#gaf505ff8c14b336580a001e6038bb7bf8">fae_time_get_system_clock</a> ()</td></tr>
-<tr class="separator:gaf505ff8c14b336580a001e6038bb7bf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c8b956ce072fdb1402d597b9474fcc3"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time_8c.html#a0c8b956ce072fdb1402d597b9474fcc3">system_tick_rate</a> (<a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> a)</td></tr>
-<tr class="separator:a0c8b956ce072fdb1402d597b9474fcc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03b4acd973a0df2784d6c0bf6095743b"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time_8c.html#a03b4acd973a0df2784d6c0bf6095743b">system_ticks</a> (<a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> a)</td></tr>
-<tr class="separator:a03b4acd973a0df2784d6c0bf6095743b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49272dcf60659c767188a1ff67f19d7f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_time.html#ga24fcf1450ea9516fe7d650762e22d945">fae_time_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time_8c.html#a49272dcf60659c767188a1ff67f19d7f">system_time</a> (<a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> a)</td></tr>
-<tr class="separator:a49272dcf60659c767188a1ff67f19d7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab5f89cc56abeecb62d63f76d75616d17"><td class="memItemLeft" align="right" valign="top"><a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time_8c.html#ab5f89cc56abeecb62d63f76d75616d17">system_prec_clock_impl</a> (<a class="el" href="group___fae.html#gad8d3bb5fc1ed0e69cbb413934d749edc">fae_id_t</a> interface)</td></tr>
-<tr class="separator:ab5f89cc56abeecb62d63f76d75616d17"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab2decf6c6b66b1538584f5b49e33b9e1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="util_8h.html#a33f6338b5bbb294b41e5c35a8d0f5bf3">clock_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_time.html#gab2decf6c6b66b1538584f5b49e33b9e1">fae_time_get_system_prec_clock</a> ()</td></tr>
-<tr class="separator:gab2decf6c6b66b1538584f5b49e33b9e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3f10799e19e523729f71317cd99414b"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time_8c.html#af3f10799e19e523729f71317cd99414b">system_prec_tick_rate</a> (<a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> a)</td></tr>
-<tr class="separator:af3f10799e19e523729f71317cd99414b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f6d8360e3529d348838bea815d52007"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time_8c.html#a3f6d8360e3529d348838bea815d52007">system_prec_ticks</a> (<a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> a)</td></tr>
-<tr class="separator:a3f6d8360e3529d348838bea815d52007"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07cac61f7af95e6f73508190679d4618"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_time.html#ga24fcf1450ea9516fe7d650762e22d945">fae_time_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time_8c.html#a07cac61f7af95e6f73508190679d4618">system_prec_time</a> (<a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> a)</td></tr>
-<tr class="separator:a07cac61f7af95e6f73508190679d4618"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ebc9417c30fcfcf4e1397504f132bf3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time_8c.html#a7ebc9417c30fcfcf4e1397504f132bf3">time_equal</a> (<a class="el" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4">fae_ptr_t</a> a, <a class="el" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4">fae_ptr_t</a> b)</td></tr>
 <tr class="separator:a7ebc9417c30fcfcf4e1397504f132bf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88fb882e41995f5d21442411d607c721"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="time_8c.html#a88fb882e41995f5d21442411d607c721">time_less_than</a> (<a class="el" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4">fae_ptr_t</a> a, <a class="el" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4">fae_ptr_t</a> b)</td></tr>
@@ -212,30 +178,6 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ad460e2d54682239274ad259ff16f0cbb"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef struct <a class="el" href="structsystem__clock.html">system_clock</a>* <a class="el" href="time_8c.html#ad460e2d54682239274ad259ff16f0cbb">system_clock_t</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a50e3593c72798f58f2c25a754f713771"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef struct <a class="el" href="structsystem__prec__clock.html">system_prec_clock</a>* <a class="el" href="time_8c.html#a50e3593c72798f58f2c25a754f713771">system_prec_clock_t</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a86a5bc9640a03eec31d37e6b2891c3ff"></a>
 <div class="memitem">
@@ -260,134 +202,6 @@ Functions</h2></td></tr>
           <td class="memname">void fae_time_terminate </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a5c8f40e60d35a528667f446bdbd46f39"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> system_clock_impl </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="group___fae.html#gad8d3bb5fc1ed0e69cbb413934d749edc">fae_id_t</a>&#160;</td>
-          <td class="paramname"><em>interface</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a0c8b956ce072fdb1402d597b9474fcc3"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double system_tick_rate </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a>&#160;</td>
-          <td class="paramname"><em>a</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a03b4acd973a0df2784d6c0bf6095743b"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int64_t system_ticks </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a>&#160;</td>
-          <td class="paramname"><em>a</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a49272dcf60659c767188a1ff67f19d7f"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group___fae_time.html#ga24fcf1450ea9516fe7d650762e22d945">fae_time_t</a> system_time </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a>&#160;</td>
-          <td class="paramname"><em>a</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ab5f89cc56abeecb62d63f76d75616d17"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a> system_prec_clock_impl </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="group___fae.html#gad8d3bb5fc1ed0e69cbb413934d749edc">fae_id_t</a>&#160;</td>
-          <td class="paramname"><em>interface</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="af3f10799e19e523729f71317cd99414b"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double system_prec_tick_rate </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a>&#160;</td>
-          <td class="paramname"><em>a</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a3f6d8360e3529d348838bea815d52007"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int64_t system_prec_ticks </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a>&#160;</td>
-          <td class="paramname"><em>a</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a07cac61f7af95e6f73508190679d4618"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group___fae_time.html#ga24fcf1450ea9516fe7d650762e22d945">fae_time_t</a> system_prec_time </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a>&#160;</td>
-          <td class="paramname"><em>a</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -661,7 +475,7 @@ Functions</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jun 18 2013 20:29:58 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Wed Jun 19 2013 01:14:06 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

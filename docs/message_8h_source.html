@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>Fae documentation: include/fae/message.h Source File</title>
+<title>Fae: include/fae/midi/message.h Source File</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Fae documentation
+   <div id="projectname">Fae
    </div>
   </td>
  </tr>
@@ -40,12 +40,11 @@
       <li><a href="index.html"><span>Introduction</span></a></li>
       <li><a href="pages.html"><span>Documentation</span></a></li>
       <li><a href="modules.html"><span>API&#160;Reference</span></a></li>
-      <li class="current"><a href="files.html"><span>Files</span></a></li>
     </ul>
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_aa61b2fff6575bd45838b59453565768.html">fae</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_aa61b2fff6575bd45838b59453565768.html">fae</a></li><li class="navelem"><a class="el" href="dir_a44f006ca1b7888c9df7caaff5d6ba83.html">midi</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -54,43 +53,46 @@
 </div><!--header-->
 <div class="contents">
 <a href="message_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef _FAE_MESSAGE</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _FAE_MESSAGE</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef _FAE_MIDI_MESSAGE</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _FAE_MIDI_MESSAGE</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="fae_2fae_8h.html">fae.h</a>&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="std_8h.html">fae/std.h</a>&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="pair_8h.html">fae/pair.h</a>&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="list_8h.html">fae/list.h</a>&gt;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="code" href="group___fae_message.html#ga9f96742b4f7782ed0487643f72dc9fd1">   16</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="group___fae.html#ga18511afeb78cd3a102d5b30b8457bd73">fae_ptr_t</a> <a class="code" href="group___fae_message.html#ga9f96742b4f7782ed0487643f72dc9fd1" title="A message address.">fae_message_address_t</a>;</div>
-<div class="line"><a name="l00017"></a><span class="lineno"><a class="code" href="group___fae_message.html#ga5b9a46abe988ad9f5bc68c43cf03e036">   17</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="group___fae.html#ga18511afeb78cd3a102d5b30b8457bd73">fae_ptr_t</a> <a class="code" href="group___fae_message.html#ga5b9a46abe988ad9f5bc68c43cf03e036" title="A single message.">fae_message_t</a>;</div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="code" href="structfae__message__sender__interface__t.html">   18</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
-<div class="line"><a name="l00019"></a><span class="lineno"><a class="code" href="group___fae.html#ga3e2c92f3ed6bca3eed9740d84fff9c2d">   19</a></span>&#160;            void (* sync)(<a class="code" href="group___fae.html#ga18511afeb78cd3a102d5b30b8457bd73">fae_ptr_t</a>);</div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="code" href="group___fae.html#ga9d76fae06388d59b1cbb1520be314a9b">   20</a></span>&#160;            <a class="code" href="group___fae_list.html#ga62e8420b5e2c8b334f662b986633ff3a">fae_list_t</a> (* receive)(<a class="code" href="group___fae.html#ga18511afeb78cd3a102d5b30b8457bd73">fae_ptr_t</a>, <a class="code" href="group___fae_message.html#ga9f96742b4f7782ed0487643f72dc9fd1" title="A message address.">fae_message_address_t</a>);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        } <a class="code" href="structfae__message__sender__interface__t.html" title="Message sender interface.">fae_message_sender_interface_t</a>;</div>
-<div class="line"><a name="l00022"></a><span class="lineno"><a class="code" href="structfae__message__receiver__interface__t.html">   22</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>{</div>
-<div class="line"><a name="l00023"></a><span class="lineno"><a class="code" href="group___fae.html#gacf0d04c9b9c3c9d17ed814cc0edf080e">   23</a></span>&#160;            void (* send)(<a class="code" href="group___fae.html#ga18511afeb78cd3a102d5b30b8457bd73">fae_ptr_t</a>, <a class="code" href="group___fae_message.html#ga9f96742b4f7782ed0487643f72dc9fd1" title="A message address.">fae_message_address_t</a>, <a class="code" href="group___fae_message.html#ga5b9a46abe988ad9f5bc68c43cf03e036" title="A single message.">fae_message_t</a>);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        } <a class="code" href="structfae__message__receiver__interface__t.html" title="Message sender interface.">fae_message_receiver_interface_t</a>;</div>
-<div class="line"><a name="l00025"></a><span class="lineno"><a class="code" href="group___fae_message.html#ga5ded1c91dc5703ae4e4f1a2d384cb401">   25</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_fae_message_sender_t * <a class="code" href="group___fae_message.html#ga5ded1c91dc5703ae4e4f1a2d384cb401" title="A type implementing the sender interface.">fae_message_sender_t</a>;</div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="code" href="group___fae_message.html#gad4fa0892762e971102cf9b529bb71bbd">   26</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_fae_message_receiver_t * <a class="code" href="group___fae_message.html#gad4fa0892762e971102cf9b529bb71bbd" title="A type implementing the receiver interface.">fae_message_receiver_t</a>;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fae_message.html#ga0496c122ad158a7aabbd71811c12179e" title="Send a message to the given address using the given sender.">fae_message_send</a>(<a class="code" href="group___fae_message.html#gad4fa0892762e971102cf9b529bb71bbd" title="A type implementing the receiver interface.">fae_message_receiver_t</a>,</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                      <a class="code" href="group___fae_message.html#ga9f96742b4f7782ed0487643f72dc9fd1" title="A message address.">fae_message_address_t</a>,</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;                      <a class="code" href="group___fae_message.html#ga5b9a46abe988ad9f5bc68c43cf03e036" title="A single message.">fae_message_t</a>);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<a class="code" href="struct__fae__list__t.html">fae_list_t</a> <a class="code" href="group___fae_message.html#gaf3f4b4fd9972b244e640c4966380d3c9" title="Query the given sender for incoming messages in the given address.">fae_message_receive</a>(<a class="code" href="group___fae_message.html#ga5ded1c91dc5703ae4e4f1a2d384cb401" title="A type implementing the sender interface.">fae_message_sender_t</a>,</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;                               <a class="code" href="group___fae_message.html#ga9f96742b4f7782ed0487643f72dc9fd1" title="A message address.">fae_message_address_t</a>);</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fae_message.html#ga92a5db08d3c800b18970d81fe93b56d7" title="Syncronize the given sender.">fae_message_sync</a>(<a class="code" href="group___fae_message.html#ga5ded1c91dc5703ae4e4f1a2d384cb401" title="A type implementing the sender interface.">fae_message_sender_t</a>);</div>
-<div class="line"><a name="l00033"></a><span class="lineno"><a class="code" href="group___fae_message.html#gaaf4c0b836b7fa618fb77f2d2a4e4b3a0">   33</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__fae__message__dispatcher__t.html">_fae_message_dispatcher_t</a> * <a class="code" href="group___fae_message.html#gaaf4c0b836b7fa618fb77f2d2a4e4b3a0" title="A message dispatcher.">fae_message_dispatcher_t</a>;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;fae_message_dispatcher_t <a class="code" href="group___fae_message.html#ga5054af96acad4abbe1b48e7ed937ef26" title="Create a dispatcher for single-threaded use.">fae_message_create_dispatcher</a>();</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;fae_message_dispatcher_t <a class="code" href="group___fae_message.html#ga00af9a010ad473b220f20d1c3cb42b2c" title="Create a dispatcher for multi-threaded use.">fae_message_create_lockfree_dispatcher</a>();</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fae_message.html#ga88d3795a6e9841c49075277d977c6889" title="Destroy the given dispatcher.">fae_message_destroy_dispatcher</a>(fae_message_dispatcher_t);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#endif // _FAE_MESSAGE</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;fae/std.h&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="pair_8h.html">fae/pair.h</a>&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="buffer_8h.html">fae/buffer.h</a>&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="code" href="group___fae_midi_message.html#ga5315acba0dc998b2541bb4eb0cacdbf7">   17</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="code" href="group___fae_midi_message.html#gga5315acba0dc998b2541bb4eb0cacdbf7aca154ab360fdd6f9578d9a301d634bcb">   18</a></span>&#160;            <a class="code" href="group___fae_midi_message.html#gga5315acba0dc998b2541bb4eb0cacdbf7aca154ab360fdd6f9578d9a301d634bcb">note_off</a>,</div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="code" href="group___fae_midi_message.html#gga5315acba0dc998b2541bb4eb0cacdbf7aa3aad707828be70a9dad4f256c1a0a28">   19</a></span>&#160;            <a class="code" href="group___fae_midi_message.html#gga5315acba0dc998b2541bb4eb0cacdbf7aa3aad707828be70a9dad4f256c1a0a28">note_on</a>,</div>
+<div class="line"><a name="l00020"></a><span class="lineno"><a class="code" href="group___fae_midi_message.html#gga5315acba0dc998b2541bb4eb0cacdbf7a6586f26d582b52e7f4c3bd4fd32bf814">   20</a></span>&#160;            <a class="code" href="group___fae_midi_message.html#gga5315acba0dc998b2541bb4eb0cacdbf7a6586f26d582b52e7f4c3bd4fd32bf814">after_touch</a>,</div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="code" href="group___fae_midi_message.html#gga5315acba0dc998b2541bb4eb0cacdbf7ab6bf71590067f051c8e0c3c7e114442c">   21</a></span>&#160;            <a class="code" href="group___fae_midi_message.html#gga5315acba0dc998b2541bb4eb0cacdbf7ab6bf71590067f051c8e0c3c7e114442c">control_change</a>,</div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="code" href="group___fae_midi_message.html#gga5315acba0dc998b2541bb4eb0cacdbf7ab4d364a14ba45bcc49464e6e5e4cc60e">   22</a></span>&#160;            <a class="code" href="group___fae_midi_message.html#gga5315acba0dc998b2541bb4eb0cacdbf7ab4d364a14ba45bcc49464e6e5e4cc60e">program_change</a>,</div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="code" href="group___fae_midi_message.html#gga5315acba0dc998b2541bb4eb0cacdbf7ae5e28da496463f48ff30c639c8a54950">   23</a></span>&#160;            <a class="code" href="group___fae_midi_message.html#gga5315acba0dc998b2541bb4eb0cacdbf7ae5e28da496463f48ff30c639c8a54950">channel_pressure</a>,</div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="code" href="group___fae_midi_message.html#gga5315acba0dc998b2541bb4eb0cacdbf7ac5197e881e3d9989c62d322e63c0affe">   24</a></span>&#160;            <a class="code" href="group___fae_midi_message.html#gga5315acba0dc998b2541bb4eb0cacdbf7ac5197e881e3d9989c62d322e63c0affe">pitch_wheel</a>,</div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="code" href="group___fae_midi_message.html#gga5315acba0dc998b2541bb4eb0cacdbf7a2868e44729ef465f8774fb5bd3947fca">   25</a></span>&#160;            <a class="code" href="group___fae_midi_message.html#gga5315acba0dc998b2541bb4eb0cacdbf7a2868e44729ef465f8774fb5bd3947fca">sysex</a></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        } <a class="code" href="group___fae_midi_message.html#ga5315acba0dc998b2541bb4eb0cacdbf7">fae_midi_message_status_t</a>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="code" href="group___fae_midi_message.html#ga1b64a7e0d3e7c37621d579e8a8225678">   27</a></span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">int</span> <a class="code" href="group___fae_midi_message.html#ga1b64a7e0d3e7c37621d579e8a8225678">fae_midi_message_channel_t</a>;</div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="code" href="group___fae_midi_message.html#ga5f088474b55ae1feeca9bd2989d7f64d">   28</a></span>&#160;<span class="keyword">typedef</span> <span class="keywordtype">int</span> <a class="code" href="group___fae_midi_message.html#ga5f088474b55ae1feeca9bd2989d7f64d">fae_midi_message_data_t</a>;</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="code" href="group___fae_midi_message.html#ga986753d496dfcf47ea606a9eb399c1fc">   29</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__fae__midi__message__t.html">_fae_midi_message_t</a> * <a class="code" href="group___fae_midi_message.html#ga986753d496dfcf47ea606a9eb399c1fc">fae_midi_message_t</a>;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;fae_midi_message_t <a class="code" href="group___fae_midi_message.html#ga10c28b6c3b1517ef1c6963a7a62e3233" title="Creates a simple message from the given components.">fae_midi_message_create_simple</a>(<a class="code" href="group___fae_midi_message.html#ga5315acba0dc998b2541bb4eb0cacdbf7">fae_midi_message_status_t</a>,</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;                                                  <span class="keywordtype">int</span>,</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                                                  <span class="keywordtype">int</span>);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;fae_midi_message_t <a class="code" href="group___fae_midi_message.html#ga0fec3860dc26d5d97682a87c625dde27" title="Creates a sysex message from the given data buffer (not including F0 and F7).">fae_midi_message_create_sysex</a>(<a class="code" href="struct__fae__buffer__t.html">fae_buffer_t</a>);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;fae_midi_message_t <a class="code" href="group___fae_midi_message.html#ga7459747f7aedbac315cb2780cfabb4da" title="Copy the given midi message.">fae_midi_message_copy</a>(fae_midi_message_t);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fae_midi_message.html#ga21a0322b5a95db95c8f9a8807e382800" title="Destroy the given midi_message message.">fae_midi_message_destroy</a>(fae_midi_message_t);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<a class="code" href="group___fae_midi_message.html#ga5315acba0dc998b2541bb4eb0cacdbf7">fae_midi_message_status_t</a> <a class="code" href="group___fae_midi_message.html#gacd33fbc7aa22a37be72bfd8ab1d5cf62" title="Return the status byte of given midi_message message.">fae_midi_message_status</a>(fae_midi_message_t);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<a class="code" href="group___fae_midi_message.html#ga1b64a7e0d3e7c37621d579e8a8225678">fae_midi_message_channel_t</a> <a class="code" href="group___fae_midi_message.html#ga512d34812574d1c8393e3912c08691f4" title="Return the channel byte of given midi_message message.">fae_midi_message_channel</a>(fae_midi_message_t);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fae_midi_message.html#ga9f6147feae23413bd967057e2041f13b" title="Return the status byte of given midi_message message.">fae_midi_message_is_simple</a>(fae_midi_message_t);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<a class="code" href="struct__fae__pair__t.html">fae_pair_t</a> <a class="code" href="group___fae_midi_message.html#gacf3616953cc4434b74967f3cb299a3a9" title="Return whether the given midi_message message is a non-sysex message.">fae_midi_message_simple_data</a>(fae_midi_message_t);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fae_midi_message.html#gac8f6f6230809dd91e482d92264b57f54" title="Return whether the given midi_message message is a sysex message.">fae_midi_message_is_sysex</a>(fae_midi_message_t);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<a class="code" href="struct__fae__buffer__t.html">fae_buffer_t</a> <a class="code" href="group___fae_midi_message.html#ga81201c7f794e8705e155ed79bd4d7b03" title="Return the data buffer of a sysex message, except for the wrapping F0 and F7 bytes.">fae_midi_message_sysex_data</a>(fae_midi_message_t);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#endif // _FAE_MIDI_MESSAGE</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jun 17 2013 22:23:46 for Fae documentation by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Wed Jun 19 2013 01:14:05 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>
