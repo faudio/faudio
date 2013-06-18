@@ -1,6 +1,6 @@
 
 /**
-    @addtogroup FaeDeviceMidi
+    @addtogroup FaeMidi
 
     Real-time midi device.
 
