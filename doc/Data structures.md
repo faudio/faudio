@@ -34,12 +34,12 @@ The core data structures are:
 
 Type                           | Semantics
 -------------------------------|------------------------------------------------------
-[Pair](@ref DoremirPair)       | An ordered pair
-[List](@ref DoremirList)       | An ordered sequence
-[Set](@ref DoremirSet)         | An ordered set
-[Map](@ref DoremirMap)         | A set of ordered pairs
-[Graph](@ref DoremirGraph)     | A labeled, directed graph
-[String](@ref DoremirString)   | A sequence of Unicode characters
+[Pair](@ref FaePair)       | An ordered pair
+[List](@ref FaeList)       | An ordered sequence
+[Set](@ref FaeSet)         | An ordered set
+[Map](@ref FaeMap)         | A set of ordered pairs
+[Graph](@ref FaeGraph)     | A labeled, directed graph
+[String](@ref FaeString)   | A sequence of Unicode characters
 
 There is also a set of *mutable* data structures not included in this table. These
 are used internally in the Audio Engine and need rarely be accessed by the user. For
@@ -47,12 +47,12 @@ completeness, they are:
 
 Type                                              | Semantics
 --------------------------------------------------|------------------------------------------------------
-[Priority queue](@ref DoremirPriorityQueue)       | A first-in, ordered out priority queue
-[Atomic](@ref DoremirAtomic)                      | An atomic reference
-[Atomic queue](@ref DoremirAtomicQueue)           | A first-in, first-out atomic queue
-[Atomic stack](@ref DoremirAtomicStack)           | A last-in, first-out atomic queue
-[Atomic ringbuffer](@ref DoremirAtomicRingBuffer) | A byte-level, bounded, first-in, first-out atomic queue
-[Buffer](@ref DoremirBuffer)                      | A byte-level mutable buffer
+[Priority queue](@ref FaePriorityQueue)       | A first-in, ordered out priority queue
+[Atomic](@ref FaeAtomic)                      | An atomic reference
+[Atomic queue](@ref FaeAtomicQueue)           | A first-in, first-out atomic queue
+[Atomic stack](@ref FaeAtomicStack)           | A last-in, first-out atomic queue
+[Atomic ringbuffer](@ref FaeAtomicRingBuffer) | A byte-level, bounded, first-in, first-out atomic queue
+[Buffer](@ref FaeBuffer)                      | A byte-level mutable buffer
 
 
 

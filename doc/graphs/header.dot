@@ -2,8 +2,8 @@
 #ifndef _HEADER
 #define _HEADER
 
-// #define NODE_COLOR "#000000"
-#define NODE_COLOR "#c0c0c0"
+#define NODE_COLOR "#000000"
+// #define NODE_COLOR "#c0c0c0"
 
 #define GRAPH_FORMAT \
     graph [ranksep=0.5, nodesep=0.5, rankdir=LR]; \

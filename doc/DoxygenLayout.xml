@@ -20,10 +20,12 @@
       <tab type="namespacemembers" visible="no" title="" intro=""/>
     </tab>
 
+<!--
     <tab type="files" visible="yes" title="Files">
       <tab type="filelist" visible="no" title="" intro=""/>
       <tab type="globals" visible="no" title="" intro=""/>
     </tab>
+-->
 
   </navindex>
 
