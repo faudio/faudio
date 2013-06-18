@@ -59,7 +59,7 @@ underlying audio system is detected while a session is still active, a new sessi
 has to be started to observe the new setup.
 
 You can register a callback to be invoked when the a possible change in hardware
-setup is detected, see @ref fae_device_audio_set_status_callback. Note that
+setup is detected, see @ref fae__audio_set_status_callback. Note that
 this callback may be invoked in an interrupt handler thread and that the task of
 ending a session should generally be handled in the same thread that created the
 session. Use an atomic reference or a condition variable to communicate the
@@ -68,7 +68,7 @@ notification to the appropriate thread.
 
 ## Audio streams {#AudioStreams}
 
-### Acquire-release style {#AudioAR}
+### Imperative style {#AudioAR}
 
 The acquire-release style use a paired method pattern. You call a creation method
 to get a value, and a destruction method to release. Note that devices, sessions and
@@ -76,47 +76,44 @@ streams have single-ownership semantics.
 
 ~~~~
 #include <fae/fae.h>
-#include <fae/util.h>
 
 int main (int argc, char const *argv[])
 {
-    session_t       session;
-    device_t        input, output;
-    processor_t     proc;
-    stream_t        stream
+    fae_audio_session_t     session;
+    fae_audio_device_t      input, output;
+    fae_audio_stream_t      stream
+    fae_processor_t         proc;
     
     // Processor to use
     proc = fae_processor_identity(type_pair(type(f32), type(f32)));
     
     // Begin session
-    session = fae_device_audio_begin_session();
-
-    // Handle possible error
+    session = fae_audio_begin_session();
     if (fae_check(stream)) {
         fae_error_log(stream);
         goto cleanup;
-    }
-
-    // Session obtained, we can now access devices
-    input  = fae_device_audio_default_input(session);
-    input  = fae_device_audio_default_output(session);
     
-    // Start stream
-    stream = fae_device_audio_open_stream(input, proc, output);
+    } else {
+        // Session obtained, we can now access devices
+        input  = fae_audio_default_input(session);
+        input  = fae_audio_default_output(session);
 
-    // Handle possible error
-    if (fae_check(stream)) {
-        fae_error_log(stream);
-        goto cleanup;
+        // Start stream
+        stream = fae_audio_open_stream(input, proc, output);
+        if (fae_check(stream)) {
+            fae_error_log(stream);
+            goto cleanup;
+        
+        } else {
+            // Stream active, let it run for 5 seconds
+            fae_thread_sleep(5000);
+        }
     }
-
-    // Stream active, let it run for 5 seconds
-    fae_thread_sleep(5000);
 
     // Cleanup
 cleanup:
-    fae_device_audio_close_stream(stream);
-    fae_device_audio_end_session(session);
+    fae_destroy(stream);
+    fae_destroy(session);
     fae_destroy(proc);
 }
 ~~~~
@@ -131,7 +128,6 @@ has returned. Errors are handled by a special callback, to which you can pass
 
 ~~~~
 #include <fae/fae.h>
-#include <fae/device/audio.h>
 
 stream_t run_callback(stream_t stream)
 {
@@ -142,19 +138,17 @@ stream_t run_callback(stream_t stream)
 
 session_t session_callback(void* data, session_t session)
 {
-    device_t    input, output;
-    processor_t proc;
+    fae_audio_device_t    input, output;
+    fae_processor_t       proc;
 
     // Session obtained, we can now access devices
-    input  = fae_device_audio_default_input(session);
-    output = fae_device_audio_default_input(session);
+    input   = fae_audio_default_input(session);
+    output  = fae_audio_default_input(session);
     proc    = (processor_t*) data;
 
     // Start stream
-    fae_device_audio_with_stream(
-        input, proc, output,
-        run_callback, fae_error_log, NULL
-    );
+    fae_audio_with_stream(input, proc, output,
+                          run_callback, fae_error_log, NULL);
 
     fae_destroy(proc);
     return session;
@@ -163,13 +157,13 @@ session_t session_callback(void* data, session_t session)
 int main (int argc, char const *argv[])
 {                  
     // Processor to use
-    processor_t proc = fae_processor_identity(type_pair(type(f32), type(f32)));
+    fae_processor_t proc = fae_processor_identity(
+                                type_pair(type(f32), 
+                                          type(f32)));
     
     // Begin session
-    fae_device_audio_with_session(
-        session_callback, proc,
-        fae_error_log, NULL
-    );
+    fae_audio_with_session(session_callback, proc,
+                           fae_error_log, NULL);
 }
 ~~~~
 
@@ -184,23 +178,22 @@ TODO
 
 ~~~~
 #include <fae/fae.h>
-#include <fae/device/file.h>
 
-typedef fae_device_file_t   device_t;
+typedef fae__file_t   device_t;
 typedef fae_processor_t     processor_t;
 
 int main (int argc, char const *argv[])
 {
-    device_t    input, output;
-    processor_t proc;
-    result_t    result;
+    fae_device_t    input, output;
+    fae_processor_t proc;
+    fae_result_t    result;
 
     // Processor to use
     proc    = fae_processor_identity(type_pair(type(f32), type(f32)));
 
     // Open streams
-    input   = fae_device_file_open(string("test/in.wav"));
-    output  = fae_device_file_open(string("test/out.wav"));
+    input   = fae__file_open(string("test/in.wav"));
+    output  = fae__file_open(string("test/out.wav"));
 
     // Handle possible errors
     if (fae_check(input)) {
@@ -211,15 +204,15 @@ int main (int argc, char const *argv[])
         fae_error_log(result);
     }                                    
 
-    result  = fae_device_file_run(in, proc, out);
+    result  = fae__file_run(in, proc, out);
 
     // Handle possible error
     if (fae_check(result)) {
         fae_error_log(result);
     }                                    
     
-    fae_device_buffer_destroy(input);
-    fae_device_buffer_destroy(output);;
+    fae_destroy(input);
+    fae_destroy(output);;
 }
 ~~~~
 
@@ -228,9 +221,8 @@ int main (int argc, char const *argv[])
 
 ~~~~
 #include <fae/fae.h>
-#include <fae/device/file.h>
 
-typedef fae_device_file_t   device_t;
+typedef fae__file_t   device_t;
 typedef fae_processor_t     processor_t;
 
 int main (int argc, char const *argv[])
@@ -243,8 +235,8 @@ int main (int argc, char const *argv[])
     proc    = fae_processor_identity(type_pair(type(f32), type(f32)));
 
     // Open streams
-    input   = fae_device_buffer_open(fae_buffer_create(1024));
-    output  = fae_device_buffer_open(fae_buffer_create(1024));
+    input   = fae_buffer_open(fae_buffer_create(1024));
+    output  = fae_buffer_open(fae_buffer_create(1024));
 
     // Handle possible errors
     if (fae_check(input)) {
@@ -255,15 +247,15 @@ int main (int argc, char const *argv[])
         fae_error_log(result);
     }                                    
 
-    result  = fae_device_buffer_run(in, proc, out);
+    result  = fae_buffer_run(in, proc, out);
 
     // Handle possible error
     if (fae_check(result)) {
         fae_error_log(result);
     }                                    
     
-    fae_device_buffer_close(input);
-    fae_device_buffer_close(output);
+    fae_destroy(input);
+    fae_destroy(output);
 }
 ~~~~
 
