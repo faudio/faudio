@@ -5,7 +5,7 @@
     All rights reserved.
  */
 
-#include <fae/device/midi.h>
+#include <fae/midi.h>
 #include <fae/midi_msg.h>
 #include <fae/list.h>
 #include <fae/thread.h>
@@ -20,17 +20,17 @@
         * TODO proper error checking
  */
 
-typedef fae_device_midi_t                  device_t;
-typedef fae_device_midi_stream_t           stream_t;
-typedef fae_device_midi_session_t          session_t;
-typedef fae_device_midi_stream_callback_t  stream_callback_t;
-typedef fae_device_midi_session_callback_t session_callback_t;
-typedef fae_device_midi_status_callback_t  status_callback_t;
+typedef fae_midi_device_t           device_t;
+typedef fae_midi_stream_t           stream_t;
+typedef fae_midi_session_t          session_t;
+typedef fae_midi_stream_callback_t  stream_callback_t;
+typedef fae_midi_session_callback_t session_callback_t;
+typedef fae_midi_status_callback_t  status_callback_t;
 
 typedef PmDeviceID    native_index_t;
 typedef PmStream     *native_stream_t;
 
-struct _fae_device_midi_session_t {
+struct _fae_midi_session_t {
 
     impl_t              impl;               // Dispatcher
     system_time_t       acquired;           // Time of acquisition (not used at the moment)
@@ -41,7 +41,7 @@ struct _fae_device_midi_session_t {
     device_t            def_output;         // If present, these are also in the above list
 };
 
-struct _fae_device_midi_t {
+struct _fae_midi_device_t {
 
     impl_t              impl;               // Dispatcher
     native_index_t      index;              // Native device index
@@ -51,7 +51,7 @@ struct _fae_device_midi_t {
     string_t            host_name;
 };
 
-struct _fae_device_midi_stream_t {
+struct _fae_midi_stream_t {
 
     impl_t              impl;               // Dispatcher
     native_stream_t     native_input,
@@ -85,7 +85,7 @@ long fae_midi_msg_simple_to_long(fae_midi_msg_t midi);
 
 inline static session_t new_session()
 {
-    session_t session = fae_new(device_midi_session);
+    session_t session = fae_new(midi_session);
     session->impl = &midi_session_impl;
     return session;
 }
@@ -123,7 +123,7 @@ inline static device_t new_device(native_index_t index)
         return NULL;
     }
 
-    device_t device = fae_new(device_midi);
+    device_t device = fae_new(midi_device);
     device->impl    = &midi_device_impl;
 
     const PmDeviceInfo  *info = Pm_GetDeviceInfo(index);
@@ -146,7 +146,7 @@ inline static void delete_device(device_t device)
 
 inline static stream_t new_stream(device_t device)
 {
-    stream_t stream         = fae_new(device_midi_stream);
+    stream_t stream         = fae_new(midi_stream);
 
     stream->impl            = &midi_stream_impl;
     stream->device          = device;
@@ -165,13 +165,13 @@ inline static void delete_stream(stream_t stream)
 
 // --------------------------------------------------------------------------------
 
-void fae_device_midi_initialize()
+void fae_midi_initialize()
 {
     pm_mutex  = fae_thread_create_mutex();
     pm_status = false;
 }
 
-void fae_device_midi_terminate()
+void fae_midi_terminate()
 {
     fae_thread_destroy_mutex(pm_mutex);
 }
@@ -179,7 +179,7 @@ void fae_device_midi_terminate()
 // --------------------------------------------------------------------------------
 
 
-session_t fae_device_midi_begin_session()
+session_t fae_midi_begin_session()
 {
     PmError result;
     
@@ -211,7 +211,7 @@ session_t fae_device_midi_begin_session()
     }
 }
 
-void fae_device_midi_end_session(session_t session)
+void fae_midi_end_session(session_t session)
 { 
     PmError result;
     
@@ -236,12 +236,12 @@ void fae_device_midi_end_session(session_t session)
     delete_session(session);
 }
 
-void fae_device_midi_with_session(session_callback_t    session_callback,
+void fae_midi_with_session(session_callback_t    session_callback,
                                       fae_ptr_t         session_data,
                                       error_callback_t      error_callback,
                                       fae_ptr_t         error_data)
 {
-    session_t session = fae_device_midi_begin_session();
+    session_t session = fae_midi_begin_session();
 
     if (fae_check(session)) {
         error_callback(error_data, (error_t) session);
@@ -249,32 +249,32 @@ void fae_device_midi_with_session(session_callback_t    session_callback,
         session_callback(session_data, session);
     }
 
-    fae_device_midi_end_session(session);
+    fae_midi_end_session(session);
 }
 
-fae_list_t fae_device_midi_all(session_t session)
+fae_list_t fae_midi_all(session_t session)
 {
     return fae_copy(session->devices);
 }
 
-fae_pair_t fae_device_midi_default(session_t session)
+fae_pair_t fae_midi_default(session_t session)
 {
     return pair(session->def_input, session->def_output);
 }
 
-device_t fae_device_midi_default_input(session_t session)
+device_t fae_midi_default_input(session_t session)
 {
     return session->def_input;
 }
 
-device_t fae_device_midi_default_output(session_t session)
+device_t fae_midi_default_output(session_t session)
 {
     return session->def_output;
 }
 
 void add_midi_status_listener(status_callback_t function, ptr_t data);
 
-void fae_device_midi_set_status_callback(
+void fae_midi_set_status_callback(
     status_callback_t function,
     ptr_t             data,
     session_t         session)
@@ -285,22 +285,22 @@ void fae_device_midi_set_status_callback(
     add_midi_status_listener(function, data);
 }
 
-fae_string_t fae_device_midi_name(device_t device)
+fae_string_t fae_midi_name(device_t device)
 {
     return fae_copy(device->name);
 }
 
-fae_string_t fae_device_midi_host_name(device_t device)
+fae_string_t fae_midi_host_name(device_t device)
 {
     return fae_copy(device->host_name);
 }
 
-bool fae_device_midi_has_input(device_t device)
+bool fae_midi_has_input(device_t device)
 {
     return device->input;
 }
 
-bool fae_device_midi_has_output(device_t device)
+bool fae_midi_has_output(device_t device)
 {
     return device->output;
 }
@@ -325,7 +325,7 @@ PmTimestamp midi_time_callback(void *data)
     return 0; // FIXME
 }
 
-fae_device_midi_stream_t fae_device_midi_open_stream(device_t device)
+fae_midi_stream_t fae_midi_open_stream(device_t device)
 {
     assert(device && "Not a device");
     midi_inform_opening(device);
@@ -355,7 +355,7 @@ fae_device_midi_stream_t fae_device_midi_open_stream(device_t device)
 }
 
 
-void fae_device_midi_close_stream(stream_t stream)
+void fae_midi_close_stream(stream_t stream)
 {
     inform(string("Closing real-time midi stream"));
     if (stream->native_input)
@@ -365,13 +365,13 @@ void fae_device_midi_close_stream(stream_t stream)
 }
 
 
-void fae_device_midi_with_stream(device_t           device,
+void fae_midi_with_stream(device_t           device,
                                      stream_callback_t  stream_callback,
                                      fae_ptr_t      stream_data,
                                      error_callback_t   error_callback,
                                      fae_ptr_t      error_data)
 {
-    stream_t stream = fae_device_midi_open_stream(device);
+    stream_t stream = fae_midi_open_stream(device);
 
     if (fae_check(stream)) {
         error_callback(error_data, (error_t) stream);
@@ -379,7 +379,7 @@ void fae_device_midi_with_stream(device_t           device,
         stream_callback(stream_data, stream);
     }
 
-    fae_device_midi_close_stream(stream);
+    fae_midi_close_stream(stream);
 }
 
 
@@ -400,7 +400,7 @@ fae_string_t midi_session_show(ptr_t a)
 
 void midi_session_destroy(ptr_t a)
 {
-    fae_device_midi_end_session(a);
+    fae_midi_end_session(a);
 }
 
 ptr_t midi_session_impl(fae_id_t interface)
@@ -438,9 +438,9 @@ fae_string_t midi_device_show(ptr_t a)
     device_t device = (device_t) a;
 
     string_t str = string("<MidiDevice ");
-    str = string_dappend(str, fae_device_midi_host_name(device));
+    str = string_dappend(str, fae_midi_host_name(device));
     str = string_dappend(str, string(" "));
-    str = string_dappend(str, fae_device_midi_name(device));
+    str = string_dappend(str, fae_midi_name(device));
     str = string_dappend(str, string(">"));
     return str;
 }
@@ -477,7 +477,7 @@ fae_string_t midi_stream_show(ptr_t a)
 
 void midi_stream_destroy(ptr_t a)
 {
-    fae_device_midi_close_stream(a);
+    fae_midi_close_stream(a);
 }
 
 void midi_stream_sync(ptr_t a)

@@ -6,7 +6,7 @@
  */
 
 #include <fae/device/audio.h>
-#include <fae/device/midi.h>
+#include <fae/midi.h>
 #include <fae/string.h>
 #include <fae/thread.h>
 #include <fae/util.h>
@@ -21,7 +21,7 @@
     TODO remove added listeners?
  */
 typedef fae_device_audio_status_callback_t  audio_status_callback_t;
-typedef fae_device_midi_status_callback_t   midi_status_callback_t;
+typedef fae_midi_status_callback_t          midi_status_callback_t;
 
 struct nullary_closure {
     nullary_t   function;

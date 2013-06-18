@@ -18,7 +18,7 @@
     @see 
     - @ref Devices
  */
-module Fae.Device.Midi
+module Fae.Midi
 {
     import Fae.List;
     import Fae.Pair;
@@ -26,6 +26,7 @@ module Fae.Device.Midi
     import Fae.Error;
     import Fae.Event;
 
+    type Device = opaque;
     type Session = opaque;
     type Stream = opaque;
     type SessionCallback = ((Ptr, Session) -> Session)*;
@@ -38,21 +39,21 @@ module Fae.Device.Midi
         SessionCallback, Ptr, 
         Callback, Ptr) -> Void;
 
-    all : Session -> List;      // [Midi]
-    default : Session -> Pair;  // (Midi,Midi)
-    defaultInput : Session -> Midi;
-    defaultOutput : Session -> Midi;
+    all : Session -> List;      // [Device]
+    default : Session -> Pair;  // (Device,Device)
+    defaultInput : Session -> Device;
+    defaultOutput : Session -> Device;
     setStatusCallback : (StatusCallback, Ptr, Session) -> Void;
 
-    name : Midi -> String;
-    hostName : Midi -> String;
-    hasInput : Midi -> Bool;
-    hasOutput : Midi -> Bool;
+    name : Device -> String;
+    hostName : Device -> String;
+    hasInput : Device -> Bool;
+    hasOutput : Device -> Bool;
 
-    openStream : Midi -> Stream;
+    openStream : Device -> Stream;
     closeStream : Stream -> Void;
     withStream : (
-        Midi, 
+        Device, 
         StreamCallback, Ptr, 
         Callback, Ptr
         ) -> Void;

@@ -1,7 +1,6 @@
 
 #include <fae/fae.h>
 #include <fae/util.h>
-#include <fae/thread.h>
 #include <CoreMidi/MIDIServices.h>
 
 ptr_t status_callback(ptr_t c, ptr_t v)
@@ -16,8 +15,8 @@ ptr_t status_callback(ptr_t c, ptr_t v)
 
 ptr_t listen(ptr_t c)
 {
-    fae_device_midi_set_status_callback(
-        (fae_device_midi_status_callback_t) status_callback, 
+    fae_midi_set_status_callback(
+        (fae_midi_status_callback_t) status_callback, 
         NULL, 
         (midi_session_t) c);
                           
@@ -29,7 +28,7 @@ int main (int argc, char const *argv[])
     midi_session_t session;
 
     fae_fae_initialize();
-    session = fae_device_midi_begin_session();
+    session = fae_midi_begin_session();
 
     if (fae_check(session)) {
         log_error((error_t) session);
@@ -44,6 +43,6 @@ int main (int argc, char const *argv[])
     listen(session);
 
 cleanup:
-    fae_device_midi_end_session(session);
+    fae_midi_end_session(session);
     return 0; 
 }

@@ -11,7 +11,7 @@
 #include <fae/event.h>
 #include <fae/graph.h>
 #include <fae/device/audio.h>
-#include <fae/device/midi.h>
+#include <fae/midi.h>
 #include <fae/device/file.h>
 #include <fae/midi_msg.h>
 #include <fae/plot.h>

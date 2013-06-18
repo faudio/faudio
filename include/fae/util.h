@@ -60,13 +60,13 @@
 #define message_t           fae_message_t
 
 #define audio_device_t      fae_device_audio_t
-#define midi_device_t       fae_device_midi_t
+#define midi_device_t       fae_midi_device_t
 #define file_device_t       fae_device_file_t
 #define buffer_device_t     fae_device_buffer_t
 #define audio_stream_t      fae_device_audio_stream_t
-#define midi_stream_t       fae_device_midi_stream_t
+#define midi_stream_t       fae_midi_stream_t
 #define audio_session_t     fae_device_audio_session_t
-#define midi_session_t      fae_device_midi_session_t
+#define midi_session_t      fae_midi_session_t
 #define file_result_t       fae_device_file_result_t
 #define buffer_result_t     fae_device_buffer_result_t
 

@@ -3,9 +3,9 @@
 #include <fae/util.h>
 
 midi_device_t find_device(midi_session_t session, string_t pattern) {
-    fae_for_each(device, fae_device_midi_all(session)) {
+    fae_for_each(device, fae_midi_all(session)) {
         if (fae_string_matches(pattern,
-                                   fae_device_midi_name(device)))
+                                   fae_midi_name(device)))
             return device;
     }
     return NULL;
@@ -13,12 +13,12 @@ midi_device_t find_device(midi_session_t session, string_t pattern) {
 
 midi_device_t find_input(midi_session_t session, string_t pattern) {
     midi_device_t device = find_device(session, pattern);
-    return device ? device : fae_device_midi_default_input(session);
+    return device ? device : fae_midi_default_input(session);
 }
 
 midi_device_t find_output(midi_session_t session, string_t pattern) {
     midi_device_t device = find_device(session, pattern);
-    return device ? device : fae_device_midi_default_output(session);
+    return device ? device : fae_midi_default_output(session);
 }
 
 void echo()
@@ -29,7 +29,7 @@ void echo()
     // event_t         send, recv;
     // scheduler_t     sched;
 
-    session = fae_device_midi_begin_session();
+    session = fae_midi_begin_session();
 
     if (fae_check(session)) {
         log_error((error_t) session);
@@ -39,8 +39,8 @@ void echo()
 
     input       = find_input(session, string(""));
     output      = find_output(session, string(""));
-    in_stream   = fae_device_midi_open_stream(input);
-    out_stream  = fae_device_midi_open_stream(output);
+    in_stream   = fae_midi_open_stream(input);
+    out_stream  = fae_midi_open_stream(output);
 
     if (fae_check(in_stream)) {
         log_error((error_t) in_stream);
@@ -60,13 +60,13 @@ void echo()
     // sched = fae_scheduler_create(fae_time_get_system_prec_clock());
     // fae_scheduler_schedule(sched, send);
 
-    printf("Input:  %s\n", unstring(fae_device_midi_name(input)));
-    printf("Output: %s\n", unstring(fae_device_midi_name(output)));
+    printf("Input:  %s\n", unstring(fae_midi_name(input)));
+    printf("Output: %s\n", unstring(fae_midi_name(output)));
     printf("Echoing midi...\n");
     // fae_scheduler_loop(sched);
 
 cleanup:
-    fae_device_midi_end_session(session);
+    fae_midi_end_session(session);
 }
 
 int main (int argc, char const *argv[])

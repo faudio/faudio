@@ -1635,13 +1635,13 @@ void print_midi_devices(midi_session_t session)
 {
     fae_print("\n", NULL);
     fae_print("    Listing midi devices: \n", NULL);
-    fae_for_each(x, fae_device_midi_all(session)) {
+    fae_for_each(x, fae_midi_all(session)) {
         fae_print("        Device: %s\n", x);
-        fae_print("            Input:  %s\n", fb(fae_device_midi_has_input(x)));
-        fae_print("            Output: %s\n", fb(fae_device_midi_has_output(x)));
+        fae_print("            Input:  %s\n", fb(fae_midi_has_input(x)));
+        fae_print("            Output: %s\n", fb(fae_midi_has_output(x)));
     }
-    fae_print("    Default input is : %s\n", fae_device_midi_default_input(session));
-    fae_print("    Default output is : %s\n", fae_device_midi_default_output(session));
+    fae_print("    Default input is : %s\n", fae_midi_default_input(session));
+    fae_print("    Default output is : %s\n", fae_midi_default_output(session));
     fae_print("\n", NULL);
 }
 
@@ -1678,7 +1678,7 @@ void test_midi_stream()
     midi_stream_t  in_stream, out_stream;
 
     // Begin session
-    session = fae_device_midi_begin_session();
+    session = fae_midi_begin_session();
 
     // Handle possible error
     if (fae_check(session)) {
@@ -1690,13 +1690,13 @@ void test_midi_stream()
     // Session obtained, we can now access devices
     print_midi_devices(session);
 
-    input = fae_list_index(2, fae_device_midi_all(session));
-    // output = fae_device_midi_default_output(session);
-    output = fae_list_index(6, fae_device_midi_all(session));
+    input = fae_list_index(2, fae_midi_all(session));
+    // output = fae_midi_default_output(session);
+    output = fae_list_index(6, fae_midi_all(session));
 
     // Start streams
-    in_stream  = fae_device_midi_open_stream(input);
-    out_stream = fae_device_midi_open_stream(output);
+    in_stream  = fae_midi_open_stream(input);
+    out_stream = fae_midi_open_stream(output);
 
     // Handle possible errors
     if (fae_check(in_stream)) {
@@ -1712,7 +1712,7 @@ void test_midi_stream()
     }
 
     // TODO
-    // fae_device_midi_set_status_callback(status_changed, string("foobar"), session);
+    // fae_midi_set_status_callback(status_changed, string("foobar"), session);
 
     // event_t notes  =
     //     merge_event(later(divisions(1,10), midi(0x90, 48, 10)),
@@ -1748,8 +1748,8 @@ void test_midi_stream()
     // }
 
 cleanup:
-    // fae_device_midi_close_stream(stream);
-    fae_device_midi_end_session(session);
+    // fae_midi_close_stream(stream);
+    fae_midi_end_session(session);
 }           
 
 
@@ -1761,7 +1761,7 @@ void test_midi_hotplug()
     midi_session_t session;
 
     // Begin session
-    session = fae_device_midi_begin_session();
+    session = fae_midi_begin_session();
 
     // Handle possible error
     if (fae_check(session)) {
@@ -1770,13 +1770,13 @@ void test_midi_hotplug()
         goto cleanup;
     }
 
-    fae_device_midi_set_status_callback(status_changed, string("hello"), session);
+    fae_midi_set_status_callback(status_changed, string("hello"), session);
     
     // CFRunLoopRun();
     // fae_thread_sleep(20000);
 cleanup:
-    // fae_device_midi_close_stream(stream);
-    fae_device_midi_end_session(session);
+    // fae_midi_close_stream(stream);
+    fae_midi_end_session(session);
 }
 
 
