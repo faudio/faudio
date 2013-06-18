@@ -11,9 +11,9 @@ list(APPEND SRCS
   fae/atomic/ring_buffer.c
   fae/atomic/stack.c
   fae/device/audio.c
-  fae/device/midi.c
   fae/device/file.c
   fae/device/buffer.c
+  fae/midi.c
   fae/dynamic.c
   fae/buffer.c
   fae/error.c
