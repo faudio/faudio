@@ -1,0 +1,11 @@
+<map id="include/fae/util/apply.h" name="include/fae/util/apply.h">
+<area shape="rect" id="node3" href="$util_8h.html" title="include/fae/util.h" alt="" coords="667,86,804,117"/>
+<area shape="rect" id="node5" href="$queue_8c.html" title="src/fae/atomic/queue.c" alt="" coords="4,175,184,206"/>
+<area shape="rect" id="node7" href="$ring__buffer_8c.html" title="src/fae/atomic/ring\l_buffer.c" alt="" coords="208,165,361,216"/>
+<area shape="rect" id="node9" href="$stack_8c.html" title="src/fae/atomic/stack.c" alt="" coords="387,175,559,206"/>
+<area shape="rect" id="node11" href="$buffer_8c.html" title="src/fae/buffer.c" alt="" coords="585,175,711,206"/>
+<area shape="rect" id="node13" href="$audio_8c.html" title="src/fae/device/audio.c" alt="" coords="736,175,912,206"/>
+<area shape="rect" id="node15" href="$file_8c.html" title="src/fae/device/file.c" alt="" coords="936,175,1093,206"/>
+<area shape="rect" id="node17" href="$dynamic_8c.html" title="src/fae/dynamic.c" alt="" coords="1117,175,1260,206"/>
+<area shape="rect" id="node19" href="$error_8c.html" title="src/fae/error.c" alt="" coords="1285,175,1405,206"/>
+</map>

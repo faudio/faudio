@@ -1,0 +1,11 @@
+<map id="include/fae/std.h" name="include/fae/std.h">
+<area shape="rect" id="node3" href="$atomic_8h.html" title="include/fae/atomic.h" alt="" coords="232,86,393,117"/>
+<area shape="rect" id="node8" href="$buffer_8h.html" title="include/fae/buffer.h" alt="" coords="23,246,179,277"/>
+<area shape="rect" id="node10" href="$midi__msg_8h.html" title="include/fae/midi_msg.h" alt="" coords="5,326,184,357"/>
+<area shape="rect" id="node13" href="$plot_8h.html" title="include/fae/plot.h" alt="" coords="208,326,351,357"/>
+<area shape="rect" id="node17" href="$thread_8h.html" title="include/fae/thread.h" alt="" coords="329,246,489,277"/>
+<area shape="rect" id="node25" href="$ratio_8h.html" title="include/fae/ratio.h" alt="" coords="615,86,763,117"/>
+<area shape="rect" id="node28" href="$fae_8h.html" title="include/fae.h" alt="" coords="788,86,897,117"/>
+<area shape="rect" id="node5" href="$fae_2fae_8h.html" title="include/fae/fae.h" alt="" coords="145,166,284,197"/>
+<area shape="rect" id="node20" href="$queue_8c.html" title="src/fae/atomic/queue.c" alt="" coords="308,166,488,197"/>
+</map>

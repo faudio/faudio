@@ -1,0 +1,26 @@
+<map id="Doremir" name="Doremir">
+<area shape="rect" id="node1" href="$group___doremir_message.html" title="Provides message dispatching." alt="" coords="145,4,226,36"/>
+<area shape="rect" id="node2" href="$group___doremir_error.html" title="Error handling types and functions." alt="" coords="158,60,213,92"/>
+<area shape="rect" id="node3" href="$group___doremir_set.html" title="Immutable ordered set data structure." alt="" coords="164,116,206,148"/>
+<area shape="rect" id="node4" href="$group___doremir_priority_queue.html" title="Priority queue data structure." alt="" coords="128,172,242,204"/>
+<area shape="rect" id="node5" href="$group___doremir_thread.html" title="Cross&#45;platform threads." alt="" coords="152,228,219,260"/>
+<area shape="rect" id="node6" href="$group___doremir_std.html" title="This module just exports the C standard library." alt="" coords="164,284,207,316"/>
+<area shape="rect" id="node7" href="$group___doremir_processor.html" title="Provides signal processors." alt="" coords="143,340,228,372"/>
+<area shape="rect" id="node8" href="$group___doremir_audio_engine.html" title="This modules exports the entire audio engine." alt="" coords="132,396,239,428"/>
+<area shape="rect" id="node9" href="$group___doremir_time.html" title="Aribitrary precision time interval." alt="" coords="159,452,211,484"/>
+<area shape="rect" id="node10" href="$group___doremir_plot.html" title="Provides basic plotting." alt="" coords="162,508,208,540"/>
+<area shape="rect" id="node11" href="$group___doremir_type.html" title="Provides signal types." alt="" coords="159,564,212,596"/>
+<area shape="rect" id="node12" href="$group___doremir_map.html" title="Immutable ordered map data structure." alt="" coords="159,620,212,652"/>
+<area shape="rect" id="node13" href="$group___doremir_string.html" title="Immutable string type." alt="" coords="155,676,215,708"/>
+<area shape="rect" id="node14" href="$group___doremir_midi.html" title="Midi messages." alt="" coords="160,732,211,764"/>
+<area shape="rect" id="node15" href="$group___doremir_scheduler.html" title="Provides task scheduling." alt="" coords="142,788,229,820"/>
+<area shape="rect" id="node16" href="$group___doremir_buffer.html" title="Low&#45;level buffer data structure." alt="" coords="155,844,216,876"/>
+<area shape="rect" id="node17" href="$group___doremir_pair.html" title="Pair data structure." alt="" coords="162,900,209,932"/>
+<area shape="rect" id="node18" href="$group___doremir_graph.html" title="Immutable directed graph data structure." alt="" coords="153,956,218,988"/>
+<area shape="rect" id="node19" href="$group___doremir_device.html" title="Provides input and output devices." alt="" coords="152,1012,218,1044"/>
+<area shape="rect" id="node20" href="$group___doremir_atomic.html" title="Cross&#45;platform atomic variables." alt="" coords="152,1068,219,1100"/>
+<area shape="rect" id="node21" href="$group___doremir_list.html" title="Immutable list data structure." alt="" coords="165,1124,206,1156"/>
+<area shape="rect" id="node22" href="$group___doremir_event.html" title="Event" alt="" coords="157,1180,214,1212"/>
+<area shape="rect" id="node23" href="$group___doremir_ratio.html" title="Fixed&#45;precision rational numbers." alt="" coords="158,1236,213,1268"/>
+<area shape="rect" id="node25" href="$group___doremir_signal.html" title="Provides signals." alt="" coords="154,1292,217,1324"/>
+</map>

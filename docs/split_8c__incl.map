@@ -1,0 +1,10 @@
+<map id="src/fae/processor/split.c" name="src/fae/processor/split.c">
+<area shape="rect" id="node5" href="$string_8h.html" title="fae/string.h" alt="" coords="190,86,289,117"/>
+<area shape="rect" id="node9" href="$util_8h.html" title="fae/util.h" alt="" coords="470,86,551,117"/>
+<area shape="rect" id="node7" href="$fae_2fae_8h.html" title="fae.h" alt="" coords="134,166,188,197"/>
+<area shape="rect" id="node11" href="$arch_8h.html" title="fae/util/arch.h" alt="" coords="214,166,332,197"/>
+<area shape="rect" id="node13" href="$alignof_8h.html" title="fae/util/alignof.h" alt="" coords="357,166,492,197"/>
+<area shape="rect" id="node15" href="$minmax_8h.html" title="fae/util/minmax.h" alt="" coords="517,166,659,197"/>
+<area shape="rect" id="node17" href="$literals_8h.html" title="fae/util/literals.h" alt="" coords="683,166,815,197"/>
+<area shape="rect" id="node19" href="$macros_8h.html" title="fae/util/macros.h" alt="" coords="839,166,976,197"/>
+</map>

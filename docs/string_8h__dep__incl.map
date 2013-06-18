@@ -1,0 +1,11 @@
+<map id="include/fae/string.h" name="include/fae/string.h">
+<area shape="rect" id="node3" href="$buffer_8h.html" title="include/fae/buffer.h" alt="" coords="4,95,160,126"/>
+<area shape="rect" id="node5" href="$file_8h.html" title="include/fae/device\l/file.h" alt="" coords="185,85,332,136"/>
+<area shape="rect" id="node7" href="$dynamic_8h.html" title="include/fae/dynamic.h" alt="" coords="357,95,531,126"/>
+<area shape="rect" id="node9" href="$error_8h.html" title="include/fae/error.h" alt="" coords="555,95,705,126"/>
+<area shape="rect" id="node11" href="$graph_8h.html" title="include/fae/graph.h" alt="" coords="731,95,888,126"/>
+<area shape="rect" id="node13" href="$map_8h.html" title="include/fae/map.h" alt="" coords="912,95,1059,126"/>
+<area shape="rect" id="node15" href="$set_8h.html" title="include/fae/set.h" alt="" coords="1083,95,1219,126"/>
+<area shape="rect" id="node17" href="$directory_8h.html" title="include/fae/system\l/directory.h" alt="" coords="1243,85,1391,136"/>
+<area shape="rect" id="node19" href="$event_8h.html" title="include/fae/system\l/event.h" alt="" coords="1416,85,1564,136"/>
+</map>

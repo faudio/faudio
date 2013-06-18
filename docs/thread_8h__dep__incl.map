@@ -1,0 +1,11 @@
+<map id="include/fae/thread.h" name="include/fae/thread.h">
+<area shape="rect" id="node3" href="$fae_2fae_8h.html" title="include/fae/fae.h" alt="" coords="5,95,144,126"/>
+<area shape="rect" id="node6" href="$audio_8c.html" title="src/fae/device/audio.c" alt="" coords="168,95,344,126"/>
+<area shape="rect" id="node8" href="$file_8c.html" title="src/fae/device/file.c" alt="" coords="368,95,525,126"/>
+<area shape="rect" id="node10" href="$midi_8c.html" title="src/fae/midi.c" alt="" coords="549,95,664,126"/>
+<area shape="rect" id="node12" href="$gnuplot_8c.html" title="src/fae/plot/gnuplot.c" alt="" coords="688,95,859,126"/>
+<area shape="rect" id="node14" href="$plot_8c.html" title="src/fae/plot.c" alt="" coords="883,95,996,126"/>
+<area shape="rect" id="node16" href="$device_8c.html" title="src/platform/macosx\l/fae/device.c" alt="" coords="1021,85,1181,136"/>
+<area shape="rect" id="node18" href="$coreplot_8m.html" title="src/platform/macosx\l/fae/plot/coreplot.m" alt="" coords="1206,85,1367,136"/>
+<area shape="rect" id="node20" href="$event_8c.html" title="src/platform/macosx\l/fae/system/event.c" alt="" coords="1391,85,1552,136"/>
+</map>

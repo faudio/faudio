@@ -1,0 +1,10 @@
+<map id="src/platform/macosx/doremir/atomic.c" name="src/platform/macosx/doremir/atomic.c">
+<area shape="rect" id="node3" href="$atomic_8h.html" title="doremir/atomic.h" alt="" coords="39,104,176,136"/>
+<area shape="rect" id="node9" href="$string_8h.html" title="doremir/string.h" alt="" coords="90,344,219,376"/>
+<area shape="rect" id="node14" href="$util_8h.html" title="doremir/util.h" alt="" coords="269,104,381,136"/>
+<area shape="rect" id="node5" href="$doremir_8h.html" title="doremir.h" alt="" coords="91,184,175,216"/>
+<area shape="rect" id="node7" href="$std_8h.html" title="doremir/std.h" alt="" coords="5,264,117,296"/>
+<area shape="rect" id="node16" href="$arch_8h.html" title="doremir/util/arch.h" alt="" coords="250,184,400,216"/>
+<area shape="rect" id="node18" href="$alignof_8h.html" title="doremir/util/alignof.h" alt="" coords="425,184,591,216"/>
+<area shape="rect" id="node20" href="$minmax_8h.html" title="doremir/util/minmax.h" alt="" coords="615,184,787,216"/>
+</map>

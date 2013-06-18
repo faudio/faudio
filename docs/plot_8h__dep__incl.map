@@ -1,0 +1,11 @@
+<map id="include/fae/plot.h" name="include/fae/plot.h">
+<area shape="rect" id="node3" href="$fae_2fae_8h.html" title="include/fae/fae.h" alt="" coords="296,95,435,126"/>
+<area shape="rect" id="node19" href="$gnuplot_8c.html" title="src/fae/plot/gnuplot.c" alt="" coords="459,95,629,126"/>
+<area shape="rect" id="node21" href="$plot_8c.html" title="src/fae/plot.c" alt="" coords="654,95,767,126"/>
+<area shape="rect" id="node23" href="$coreplot_8m.html" title="src/platform/macosx\l/fae/plot/coreplot.m" alt="" coords="791,85,952,136"/>
+<area shape="rect" id="node5" href="$atomic_8h.html" title="include/fae/atomic.h" alt="" coords="4,184,165,216"/>
+<area shape="rect" id="node8" href="$buffer_8h.html" title="include/fae/buffer.h" alt="" coords="782,184,937,216"/>
+<area shape="rect" id="node11" href="$device_8h.html" title="include/fae/device.h" alt="" coords="190,184,351,216"/>
+<area shape="rect" id="node13" href="$dynamic_8h.html" title="include/fae/dynamic.h" alt="" coords="375,184,548,216"/>
+<area shape="rect" id="node15" href="$error_8h.html" title="include/fae/error.h" alt="" coords="573,184,723,216"/>
+</map>

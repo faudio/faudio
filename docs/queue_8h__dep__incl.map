@@ -1,0 +1,11 @@
+<map id="include/fae/atomic/queue.h" name="include/fae/atomic/queue.h">
+<area shape="rect" id="node3" href="$fae_2fae_8h.html" title="include/fae/fae.h" alt="" coords="665,104,804,136"/>
+<area shape="rect" id="node8" href="$queue_8c.html" title="src/fae/atomic/queue.c" alt="" coords="514,264,693,296"/>
+<area shape="rect" id="node23" href="$message_8c.html" title="src/fae/message.c" alt="" coords="1159,104,1304,136"/>
+<area shape="rect" id="node5" href="$atomic_8h.html" title="include/fae/atomic.h" alt="" coords="4,184,165,216"/>
+<area shape="rect" id="node10" href="$buffer_8h.html" title="include/fae/buffer.h" alt="" coords="190,184,345,216"/>
+<area shape="rect" id="node12" href="$device_8h.html" title="include/fae/device.h" alt="" coords="370,184,531,216"/>
+<area shape="rect" id="node14" href="$dynamic_8h.html" title="include/fae/dynamic.h" alt="" coords="555,184,728,216"/>
+<area shape="rect" id="node16" href="$error_8h.html" title="include/fae/error.h" alt="" coords="753,184,903,216"/>
+<area shape="rect" id="node19" href="$graph_8h.html" title="include/fae/graph.h" alt="" coords="928,184,1085,216"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="src/platform/windows/fae/atomic.c" name="src/platform/windows/fae/atomic.c">
+<area shape="rect" id="node3" href="$atomic_8h.html" title="fae/atomic.h" alt="" coords="483,104,589,136"/>
+<area shape="rect" id="node5" href="$fae_2fae_8h.html" title="fae.h" alt="" coords="508,184,563,216"/>
+<area shape="rect" id="node10" href="$stack_8h.html" title="fae/atomic/stack.h" alt="" coords="185,264,332,296"/>
+<area shape="rect" id="node14" href="$system_8h.html" title="fae/system.h" alt="" coords="569,264,676,296"/>
+<area shape="rect" id="node16" href="$error_8h.html" title="fae/error.h" alt="" coords="700,264,795,296"/>
+</map>

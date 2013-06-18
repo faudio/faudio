@@ -1,0 +1,9 @@
+<map id="src/doremir/device_osx.c" name="src/doremir/device_osx.c">
+<area shape="rect" id="node3" href="$audio_8h.html" title="doremir/device/audio.h" alt="" coords="5,104,187,136"/>
+<area shape="rect" id="node10" href="$device_2midi_8h.html" title="doremir/device/midi.h" alt="" coords="210,104,381,136"/>
+<area shape="rect" id="node14" href="$string_8h.html" title="doremir/string.h" alt="" coords="406,104,535,136"/>
+<area shape="rect" id="node16" href="$thread_8h.html" title="doremir/thread.h" alt="" coords="560,104,696,136"/>
+<area shape="rect" id="node18" href="$util_8h.html" title="doremir/util.h" alt="" coords="721,104,833,136"/>
+<area shape="rect" id="node5" href="$list_8h.html" title="doremir/list.h" alt="" coords="141,264,251,296"/>
+<area shape="rect" id="node7" href="$pair_8h.html" title="doremir/pair.h" alt="" coords="136,184,255,216"/>
+</map>

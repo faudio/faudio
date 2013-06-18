@@ -1,0 +1,11 @@
+<map id="include/fae/processor.h" name="include/fae/processor.h">
+<area shape="rect" id="node3" href="$audio_8h.html" title="include/fae/device\l/audio.h" alt="" coords="225,85,372,136"/>
+<area shape="rect" id="node5" href="$fae_2fae_8h.html" title="include/fae/fae.h" alt="" coords="411,194,550,225"/>
+<area shape="rect" id="node8" href="$signal_8h.html" title="include/fae/signal.h" alt="" coords="157,283,312,314"/>
+<area shape="rect" id="node14" href="$device_2buffer_8h.html" title="include/fae/device\l/buffer.h" alt="" coords="473,85,620,136"/>
+<area shape="rect" id="node16" href="$file_8h.html" title="include/fae/device\l/file.h" alt="" coords="645,85,792,136"/>
+<area shape="rect" id="node23" href="$processor_8c.html" title="src/fae/processor.c" alt="" coords="817,95,967,126"/>
+<area shape="rect" id="node10" href="$audio_8c.html" title="src/fae/device/audio.c" alt="" coords="211,194,387,225"/>
+<area shape="rect" id="node12" href="$device_8c.html" title="src/platform/macosx\l/fae/device.c" alt="" coords="26,184,187,235"/>
+<area shape="rect" id="node19" href="$device_2buffer_8c.html" title="src/fae/device/buffer.c" alt="" coords="630,194,807,225"/>
+</map>

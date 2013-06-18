@@ -1,0 +1,10 @@
+<map id="src/fae/midi_msg.c" name="src/fae/midi_msg.c">
+<area shape="rect" id="node3" href="$midi__msg_8h.html" title="fae/midi_msg.h" alt="" coords="81,86,205,117"/>
+<area shape="rect" id="node13" href="$util_8h.html" title="fae/util.h" alt="" coords="396,86,477,117"/>
+<area shape="rect" id="node7" href="$pair_8h.html" title="fae/pair.h" alt="" coords="126,246,215,277"/>
+<area shape="rect" id="node9" href="$buffer_8h.html" title="fae/buffer.h" alt="" coords="49,166,151,197"/>
+<area shape="rect" id="node15" href="$arch_8h.html" title="fae/util/arch.h" alt="" coords="226,166,344,197"/>
+<area shape="rect" id="node17" href="$alignof_8h.html" title="fae/util/alignof.h" alt="" coords="369,166,504,197"/>
+<area shape="rect" id="node19" href="$minmax_8h.html" title="fae/util/minmax.h" alt="" coords="529,166,671,197"/>
+<area shape="rect" id="node21" href="$literals_8h.html" title="fae/util/literals.h" alt="" coords="695,166,827,197"/>
+</map>

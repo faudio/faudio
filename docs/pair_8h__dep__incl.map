@@ -1,0 +1,11 @@
+<map id="include/fae/pair.h" name="include/fae/pair.h">
+<area shape="rect" id="node3" href="$buffer_8h.html" title="include/fae/buffer.h" alt="" coords="75,184,231,216"/>
+<area shape="rect" id="node5" href="$midi__msg_8h.html" title="include/fae/midi_msg.h" alt="" coords="5,264,184,296"/>
+<area shape="rect" id="node7" href="$audio_8h.html" title="include/fae/device\l/audio.h" alt="" coords="126,85,273,136"/>
+<area shape="rect" id="node9" href="$graph_8h.html" title="include/fae/graph.h" alt="" coords="299,95,456,126"/>
+<area shape="rect" id="node11" href="$map_8h.html" title="include/fae/map.h" alt="" coords="480,95,627,126"/>
+<area shape="rect" id="node13" href="$midi_8h.html" title="include/fae/midi.h" alt="" coords="651,95,796,126"/>
+<area shape="rect" id="node16" href="$signal_8h.html" title="include/fae/signal.h" alt="" coords="871,184,1027,216"/>
+<area shape="rect" id="node18" href="$type_8h.html" title="include/fae/type.h" alt="" coords="821,95,968,126"/>
+<area shape="rect" id="node22" href="$pair_8c.html" title="src/fae/pair.c" alt="" coords="1043,95,1156,126"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="include/fae/error.h" name="include/fae/error.h">
+<area shape="rect" id="node3" href="$audio_8h.html" title="include/fae/device\l/audio.h" alt="" coords="5,85,152,136"/>
+<area shape="rect" id="node5" href="$fae_2fae_8h.html" title="include/fae/fae.h" alt="" coords="301,194,440,225"/>
+<area shape="rect" id="node17" href="$midi_8h.html" title="include/fae/midi.h" alt="" coords="177,95,321,126"/>
+<area shape="rect" id="node21" href="$buffer_8c.html" title="src/fae/buffer.c" alt="" coords="422,95,548,126"/>
+<area shape="rect" id="node23" href="$file_8c.html" title="src/fae/device/file.c" alt="" coords="573,95,731,126"/>
+<area shape="rect" id="node25" href="$error_8c.html" title="src/fae/error.c" alt="" coords="754,95,875,126"/>
+<area shape="rect" id="node10" href="$audio_8c.html" title="src/fae/device/audio.c" alt="" coords="136,363,312,394"/>
+<area shape="rect" id="node14" href="$device_8c.html" title="src/platform/macosx\l/fae/device.c" alt="" coords="115,184,276,235"/>
+<area shape="rect" id="node7" href="$atomic_8h.html" title="include/fae/atomic.h" alt="" coords="290,283,451,314"/>
+</map>

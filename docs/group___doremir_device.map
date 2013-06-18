@@ -1,0 +1,7 @@
+<map id="Device" name="Device">
+<area shape="rect" id="node1" href="$group___doremir_device_file.html" title="Non&#45;real&#45;time file device." alt="" coords="251,4,295,36"/>
+<area shape="rect" id="node2" href="$group___doremir_device_buffer.html" title="Non&#45;real&#45;time memory device." alt="" coords="243,60,304,92"/>
+<area shape="rect" id="node3" href="$group___doremir_device_audio.html" title="Real&#45;time audio device." alt="" coords="243,116,304,148"/>
+<area shape="rect" id="node4" href="$group___doremir_device_midi.html" title="Real&#45;time midi device." alt="" coords="248,172,299,204"/>
+<area shape="rect" id="node6" href="$group___doremir.html" title="Core definitions." alt="" coords="5,88,80,120"/>
+</map>

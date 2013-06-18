@@ -1,0 +1,11 @@
+<map id="include/fae/atomic.h" name="include/fae/atomic.h">
+<area shape="rect" id="node3" href="$fae_2fae_8h.html" title="include/fae/fae.h" alt="" coords="22,95,161,126"/>
+<area shape="rect" id="node8" href="$ring__buffer_8c.html" title="src/fae/atomic/ring\l_buffer.c" alt="" coords="63,264,216,315"/>
+<area shape="rect" id="node10" href="$queue_8c.html" title="src/fae/atomic/queue.c" alt="" coords="236,95,416,126"/>
+<area shape="rect" id="node13" href="$stack_8c.html" title="src/fae/atomic/stack.c" alt="" coords="441,95,613,126"/>
+<area shape="rect" id="node15" href="$audio_8c.html" title="src/fae/device/audio.c" alt="" coords="639,95,815,126"/>
+<area shape="rect" id="node17" href="$macosx_2fae_2atomic_8c.html" title="src/platform/macosx\l/fae/atomic.c" alt="" coords="838,85,999,136"/>
+<area shape="rect" id="node19" href="$event_8c.html" title="src/platform/macosx\l/fae/system/event.c" alt="" coords="1023,85,1184,136"/>
+<area shape="rect" id="node21" href="$windows_2fae_2atomic_8c.html" title="src/platform/windows\l/fae/atomic.c" alt="" coords="1209,85,1377,136"/>
+<area shape="rect" id="node6" href="$buffer_8h.html" title="include/fae/buffer.h" alt="" coords="4,184,160,216"/>
+</map>

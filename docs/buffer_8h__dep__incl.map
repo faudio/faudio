@@ -1,0 +1,11 @@
+<map id="include/fae/buffer.h" name="include/fae/buffer.h">
+<area shape="rect" id="node3" href="$midi__msg_8h.html" title="include/fae/midi_msg.h" alt="" coords="130,95,309,126"/>
+<area shape="rect" id="node8" href="$plot_8h.html" title="include/fae/plot.h" alt="" coords="318,264,460,296"/>
+<area shape="rect" id="node20" href="$ring__buffer_8c.html" title="src/fae/atomic/ring\l_buffer.c" alt="" coords="386,85,539,136"/>
+<area shape="rect" id="node22" href="$buffer_8c.html" title="src/fae/buffer.c" alt="" coords="563,95,689,126"/>
+<area shape="rect" id="node5" href="$fae_2fae_8h.html" title="include/fae/fae.h" alt="" coords="320,184,459,216"/>
+<area shape="rect" id="node15" href="$midi_8c.html" title="src/fae/midi.c" alt="" coords="5,184,120,216"/>
+<area shape="rect" id="node17" href="$midi__msg_8c.html" title="src/fae/midi_msg.c" alt="" coords="145,184,295,216"/>
+<area shape="rect" id="node11" href="$gnuplot_8c.html" title="src/fae/plot/gnuplot.c" alt="" coords="221,344,392,376"/>
+<area shape="rect" id="node13" href="$plot_8c.html" title="src/fae/plot.c" alt="" coords="417,344,529,376"/>
+</map>
