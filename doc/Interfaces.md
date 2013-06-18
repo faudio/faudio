@@ -9,7 +9,7 @@
 
 In the Fae API, an *interface* (not to be confuseed with and *audio interace*) is a
 collection of function types, identified by a unique value known as the *interface
-identifier*. They are used extensively inside the Audio Engine.
+identifier*. They are used extensively inside Fae.
 
 Any [reference type][reftype] may provide implementations for an arbitrary number
 of interfaces by implementing a so-called *dispatch function*, which takes a

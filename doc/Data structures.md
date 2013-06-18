@@ -7,11 +7,10 @@
 @note
     This page is under construction.
 
-The Audio Engine include a set of general purpose
-[persistent&nbsp;data&nbsp;structures][persistent], which are primarily used for
-message passing between the audio thread and other threads. The fact that the
-data structures are persistent eliminate many of the problems commonly associated
-with multi-threaded programming.
+Fae include a set of general purpose [persistent&nbsp;data&nbsp;structures][persistent],
+which are primarily used for message passing between the audio thread and other threads.
+The fact that the data structures are persistent eliminate many of the problems commonly
+associated with multi-threaded programming.
 
 The data structures in Fae are somewhat different from the structures
 found in most languages, in that they have single-ownership semantics. This
@@ -138,7 +137,7 @@ does not need to use its values.
 
 
 
-# Value references {#ValueReferences}
+# Value references {#id182783728273}
 @anchor ValueReferences
 
 Value types can be converted to reference types using a set of conversion
@@ -162,7 +161,7 @@ Conversely, it is not safe to treat a value reference as a pointer by dereferenc
 it, or doing pointer arithmetic. It is guaranteed that the value references will
 never overlap with real references. 
 
-## Creating a value reference {#CreatingValueReference}
+## Creating a value reference {#id817283782}
 
 Value references are created by the following functions:
 

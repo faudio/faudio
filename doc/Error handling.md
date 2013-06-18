@@ -53,7 +53,7 @@ check for optional values and error values.
 
 # Logging {#id24103}
 
-The Audio Engine provides a simple logging system. 
+Fae provides a simple logging system. 
 
 ## Setting up the log handler {#id30965}
 

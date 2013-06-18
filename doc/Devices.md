@@ -23,7 +23,7 @@ file you must use some other method.
 
 ## Sessions and streams {#SessionsAndStreams}
 
-The Audio Engine provides access to real-time devices through of *sessions*, and
+Fae provides access to real-time devices through of *sessions*, and
 *streams*. While a *device* provides access to an external audio interface, a
 *session* provides access to the entire audio system, and a *stream* to a specific
 audio computation. These concepts are hierarchical, each stream is associated with
@@ -33,7 +33,7 @@ Typically, each physical audio or midi interface is represented by a
 single device in Fae. The operating system may also provide abstract
 devices, representing network connections, software mixers and the like.
 
-The Audio Engine places certain restrictions on the order or acquisition of
+Fae places certain restrictions on the order or acquisition of
 sessions, devices and streams. Any client that wants to obtain a device must first
 initiate a session. The initialization of a session may fail, for example if the
 underlying audio system is already being used by an exclusive process. If it
