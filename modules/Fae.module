@@ -15,14 +15,14 @@ module Fae
 
     // Basic types
 
-    /** @typedef doremir_ptr_t
+    /** @typedef fae_ptr_t
         Generic pointer type.
     */
     type Ptr = Void*;
 
     // Function types
 
-    /** @typedef doremir_nullary_t
+    /** @typedef fae_nullary_t
         A nullary function.
 
         By convention, the first argument is a pointer to an environment that allow
@@ -30,7 +30,7 @@ module Fae
     */
     type Nullary = (Ptr -> Ptr)*;
 
-    /** @typedef doremir_unary_t
+    /** @typedef fae_unary_t
         A unary function.
 
         By convention, the first argument is a pointer to an environment that allow
@@ -38,7 +38,7 @@ module Fae
     */
     type Unary   = ((Ptr, Ptr) -> Ptr)*;
 
-    /** @typedef doremir_binary_t
+    /** @typedef fae_binary_t
         A binary function.
 
         By convention, the first argument is a pointer to an environment that allow
@@ -46,7 +46,7 @@ module Fae
     */
     type Binary  = ((Ptr, Ptr, Ptr) -> Ptr)*;
 
-    /** @typedef doremir_ternary_t
+    /** @typedef fae_ternary_t
         A ternary function.
 
         By convention, the first argument is a pointer to an environment that allow
@@ -54,7 +54,7 @@ module Fae
     */
     type Ternary  = ((Ptr, Ptr, Ptr, Ptr) -> Ptr)*;
 
-    /** @typedef doremir_pred_t
+    /** @typedef fae_pred_t
         A predicate function.
 
         By convention, the first argument is a pointer to an environment that allow
@@ -66,13 +66,13 @@ module Fae
     // Character types
 
     /**
-        @typedef doremir_char8_t
+        @typedef fae_char8_t
         An 8-bit character.
 
-        @typedef doremir_char16_t
+        @typedef fae_char16_t
         A 16-bit character.
 
-        @typedef doremir_char32_t
+        @typedef fae_char32_t
         A 32-bit character.
      */
     type Char8  = Char;
@@ -118,12 +118,12 @@ module Fae
 
     // Interface dispatch
 
-    /** @typedef doremir_id_t
+    /** @typedef fae_id_t
         Unique identifier. Only used for interface lookup at the moment.
     */
     type Id = Int64;
 
-    /** @typedef doremir_impl_t
+    /** @typedef fae_impl_t
         Callback to lookup an interface implementation.
     */
     type Impl = (Id -> Ptr)*;
@@ -133,7 +133,7 @@ module Fae
 
     // Interfaces
 
-    /** @interface doremir_equal_t
+    /** @interface fae_equal_t
         Equality comparison interface.
     */
     type Equal   = struct {
@@ -143,7 +143,7 @@ module Fae
     equal            : (Ptr, Ptr) -> Bool;
     notEqual         : (Ptr, Ptr) -> Bool;
 
-    /** @interface doremir_order_t
+    /** @interface fae_order_t
         Less-than comparison interface.
     */
     type Order  = struct {
@@ -158,7 +158,7 @@ module Fae
     min              : (Ptr, Ptr) -> Ptr;
     max              : (Ptr, Ptr) -> Ptr;
 
-    /** @interface doremir_number_t
+    /** @interface fae_number_t
         Arithmetic operations interface.
     */
     type Number = struct {
@@ -180,14 +180,14 @@ module Fae
     ddivide      : (Ptr, Ptr) -> Ptr;
     dabsolute    : Ptr -> Ptr;
 
-    /** @interface doremir_copy_t
+    /** @interface fae_copy_t
         Generic copying interface.
     */
     type Copy   = struct {
         copy : (Ptr -> Ptr)*
     };
 
-    /** @interface doremir_destroy_t
+    /** @interface fae_destroy_t
         Generic destruction interface.
     */
     type Destroy   = struct {
