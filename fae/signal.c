@@ -5,19 +5,94 @@
 
 typedef fae_signal_t signal_t;
 
+/*
+    Signals are built from the following primitives:
+
+        constant            : a                  -> S a
+        identity            :                       S a -> S b
+        lift                : (a -> b)           -> S a -> S b
+        lift2               : (a -> b -> c)      -> S a -> S b -> S c
+        lift3               : (a -> b -> c -> d) -> S a -> S b -> S c -> S d
+        time                :                       S Time
+        delay               : Time               -> S a -> S a
+        read                : Int                -> S a
+        write               : Int                -> S a
+
+        apply               :  S (a -> b) -> S a -> S b
+
+        const x     returns a signal of arity 0
+        id          returns a signal of arity 1
+        lift  f     returns a signal of arity 1
+        lift2 f     returns a signal of arity 2
+        lift3 f     returns a signal of arity 3
+        time        returns a signal of arity 0
+        delay t     returns a signal of arity 1
+        read n      returns a signal of arity 0
+        write n     returns a signal of arity 1
+
+        apply f x   where f has arity n returns a signal of arity (n-1).
+
+ */
 struct _fae_signal_t {
     impl_t          impl;       //  Interface dispatcher
+
+    enum {
+        const_signal,
+        id_signal,
+        lift_signal,
+        time_signal,
+        delay_signal,
+        read_signal,
+        write_signal
+    }                       tag;
+
+    union {
+        struct {
+            ptr_t           value;
+        }                   const_;
+        struct {
+            signal_t        arguments[1];
+            int             num_args;
+            int             saturation;
+        }                   id;
+        struct {
+            ptr_t           function;
+            ptr_t           data;
+            signal_t        arguments[12];
+            int             num_args;
+            int             saturation;
+        }                   lift;
+        struct {
+            time_t          time;
+            signal_t        arguments[1];
+            int             num_args;
+            int             saturation;
+        }                   delay;
+        struct {
+            int             address;
+        }                   read;
+        struct {
+            int             address;
+            signal_t        arguments[1];
+            int             num_args;
+            int             saturation;
+        }                   write;
+
+    }                       fields;
+
 };
 
 // --------------------------------------------------------------------------------
 
-inline static signal_t new_signal()
+inline static signal_t new_signal(int tag)
 {
     fae_ptr_t signal_impl(fae_id_t interface);
+    assert(false);
 }
 
 inline static void delete_signal(signal_t signal)
 {
+    assert(false);
 }
 
 // --------------------------------------------------------------------------------
@@ -29,12 +104,17 @@ fae_type_t fae_signal_type_of(fae_signal_t signal)
 
 fae_signal_t fae_signal_constant(fae_ptr_t value)
 {
-    assert(false);
+    signal_t signal = new_signal(const_signal);
+    signal->fields.const_.value = value;
+    return signal;
 }
 
-fae_signal_t fae_signal_identity(fae_signal_t signal)
+fae_signal_t fae_signal_identity()
 {
-    assert(false);
+    signal_t signal = new_signal(id_signal);
+    signal->fields.id.num_args   = 1;
+    signal->fields.id.saturation = 0;
+    return signal;
 }
 
 fae_signal_t fae_signal_apply(fae_signal_t signal1, fae_signal_t signal2)
@@ -44,7 +124,12 @@ fae_signal_t fae_signal_apply(fae_signal_t signal1, fae_signal_t signal2)
 
 fae_signal_t fae_signal_lift(fae_unary_t function, fae_ptr_t data)
 {
-    assert(false);
+    signal_t signal = new_signal(id_signal);
+    signal->fields.lift.function     = function;
+    signal->fields.lift.data         = data;
+    signal->fields.lift.num_args     = 1;
+    signal->fields.lift.saturation   = 0;
+    return signal;
 }
 
 fae_signal_t fae_signal_lift2(fae_binary_t function, fae_ptr_t data)
@@ -59,7 +144,7 @@ fae_signal_t fae_signal_lift3(fae_ternary_t function, fae_ptr_t data)
 
 fae_signal_t fae_signal_time()
 {
-    assert(false);
+    return new_signal(time_signal);
 }
 
 fae_signal_t fae_signal_delay(fae_time_t time, fae_signal_t signal)
@@ -72,14 +157,21 @@ fae_signal_t fae_signal_fix(fae_signal_t (*function)(fae_ptr_t, fae_signal_t), f
     assert(false);
 }
 
+
+
+
+
+
+static ptr_t _add(ptr_t c, ptr_t x, ptr_t y) { return fae_add(x, y); }
 fae_signal_t fae_signal_add()
 {
-    assert(false);
+    return fae_signal_lift2(_add, NULL);
 }
 
+static ptr_t _subtract(ptr_t c, ptr_t x, ptr_t y) { return fae_subtract(x, y); }
 fae_signal_t fae_signal_subtract()
 {
-    assert(false);
+    return fae_signal_lift2(_subtract, NULL);
 }
 
 fae_signal_t fae_signal_multiply()
