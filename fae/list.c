@@ -207,7 +207,7 @@ int fae_list_length(list_t xs)
 {
     int count = 0;
     impl_for_each(xs, value) {
-        value = value;   // kill warning
+        value = 0; // kill warning
         count++;
     }
     return count;

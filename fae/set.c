@@ -193,9 +193,9 @@ fae_set_t fae_set_intersection(fae_set_t a, fae_set_t b)
 {
     set_t c = fae_set_empty();
     fae_for_each(x, base_to_list(a->elems)) {
-        if (fae_set_has(x, b));
-
-        c = fae_set_dadd(x, c);
+        if (fae_set_has(x, b)) {
+            c = fae_set_dadd(x, c);
+        }
     }
     return c;
 }

@@ -114,7 +114,7 @@ static inline void delete_range_end(atomic_t begin, atomic_t end)
 fae_atomic_queue_t fae_atomic_queue_create()
 {
     atomic_queue_t queue = new_queue();
-    node_t node          = new_node(NULL);
+    node_t node          = new_node();
 
     set_node(queue->first, node);
     set_node(queue->div,   node);
@@ -151,7 +151,7 @@ bool fae_atomic_queue_write(fae_atomic_queue_t queue, fae_ptr_t value)
     delete_range(queue->first, queue->div);
 
     get_node(queue->last)->value = value;
-    get_node(queue->last)->next  = new_node(NULL);
+    get_node(queue->last)->next  = new_node();
 
     forward_node(queue->last);
     return true;

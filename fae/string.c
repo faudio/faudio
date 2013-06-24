@@ -296,7 +296,7 @@ fae_string_utf8_t fae_string_to_utf8(fae_string_t str)
         size_t  status = iconv(conv, &in, &inSize, &out, &outSize);
         iconv_close(conv);
 
-        if (status < 0) {
+        if (status == ((size_t)-1)) {
             iconv_fail();
         }
     }
@@ -357,7 +357,7 @@ fae_string_t fae_string_from_utf8(fae_string_utf8_t cstr)
         size_t status = iconv(conv, &in, &inSize, &out, &outSize);
         iconv_close(conv);
 
-        if (status < 0) {
+        if (status == ((size_t)-1)) {
             iconv_fail();
         }
     }
@@ -664,7 +664,7 @@ static bool string_less_than(fae_ptr_t as, fae_ptr_t bs)
     cs = (string_t) as;
     ds = (string_t) bs;
 
-    for (size_t i;
+    for (size_t i = 0;
             i < pred(size_min(cs->size, ds->size));
             ++i) {
         if (cs->data[i] < ds->data[i]) {
@@ -689,7 +689,7 @@ static bool string_greater_than(fae_ptr_t as, fae_ptr_t bs)
     cs = (string_t) as;
     ds = (string_t) bs;
 
-    for (size_t i;
+    for (size_t i = 0;
             i < pred(size_min(cs->size, ds->size));
             ++i) {
         if (cs->data[i] > ds->data[i]) {
