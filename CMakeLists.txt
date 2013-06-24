@@ -187,8 +187,10 @@ if (COMPONENTS_RESOLVED)
   if (APPLE)
     # message("Sysroot is " ${CMAKE_OSX_SYSROOT})
     # message("Target is "${CMAKE_OSX_DEPLOYMENT_TARGET})
+    set(CMAKE_C_COMPILER "/usr/bin/clang")
     add_definitions(-std=c99)
     # add_definitions(-std=gnu99)
+    add_definitions(-fcolor-diagnostics)
     add_definitions(
         -Wall
         # -Wmissing-noreturn

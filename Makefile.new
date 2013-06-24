@@ -5,6 +5,7 @@
 test: bin/fae_tests
 	bin/fae_tests
 
+CC = clang -fcolor-diagnostics
 
 FILES= \
 	fae/core.c \
@@ -58,7 +59,7 @@ TEST_OPTS      = \
 	-o bin/fae_tests
 
 lib/libfae.dylib: bin/config.h
-	cc -arch x86_64 \
+	$(CC) -arch x86_64 \
 		$(SHARED_OPTS) \
 		-I include \
 		-I bin \
@@ -67,7 +68,7 @@ lib/libfae.dylib: bin/config.h
 		$(FILES)
 
 lib/libfae.a: bin/config.h
-	cc -arch x86_64 \
+	$(CC) -arch x86_64 \
 		$(STATIC_OPTS) \
 		-I include \
 		-I bin \
@@ -77,7 +78,7 @@ lib/libfae.a: bin/config.h
 
 
 bin/fae_tests: bin/config.h
-	cc -arch x86_64 \
+	$(CC) -arch x86_64 \
 		$(TEST_OPTS) \
 		-I include \
 		-I bin \
@@ -87,7 +88,7 @@ bin/fae_tests: bin/config.h
 		test/main.c
 
 bin/fae_list_midi: bin/config.h
-	cc -arch x86_64 \
+	$(CC) -arch x86_64 \
 		-o bin/fae_list_midi \
 		-I include \
 		-I bin \
