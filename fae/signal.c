@@ -61,14 +61,17 @@ struct _fae_signal_t {
     }                       tag;
 
     union {
+
         struct {
             ptr_t           value;
         }                   constant;
+
         struct {
             uint8_t         arity;
             uint8_t         saturation;
             signal_t        arguments[256];
         }                   identity;
+
         struct {
             uint8_t         arity;
             uint8_t         saturation;
@@ -76,18 +79,21 @@ struct _fae_signal_t {
             ptr_t           function;
             ptr_t           data;
         }                   lifted;
+
         struct {
-            time_t          time;
         }                   time;
+
         struct {
             uint8_t         arity;
             uint8_t         saturation;
             signal_t        arguments[256];
             time_t          time;
         }                   delay;
+
         struct {
             int             address;
         }                   read;
+
         struct {
             uint8_t         arity;
             uint8_t         saturation;
@@ -291,13 +297,14 @@ fae_signal_t fae_signal_fix(fae_signal_t (*function)(fae_ptr_t, fae_signal_t), f
     the value of the signal in a context.
  */
 
-typedef struct {                                           
+struct context_ {                                           
     int64_t count;           // invocation count (monotonically increasing with time)
     time_t  time;            // current time (if applicable)
     double  rate;            // samples per second (if applicable)
 
     ptr_t   buses[0xffff];   // buses
-} context_t;
+};             
+typedef struct context_ *context_t;
  
 static ptr_t compute(context_t context, fae_signal_t signal);
 // static void before(context_t context, fae_signal_t signal);
@@ -350,7 +357,7 @@ ptr_t compute_lifted(context_t context, signal_t signal) {
     }
 }
 ptr_t compute_time(context_t context, signal_t signal) {
-    return time_get(signal, time);
+    return context->time;
 }
 ptr_t compute_delay(context_t context, signal_t signal) {
     assert(false && "Not implemented");
@@ -380,15 +387,15 @@ ptr_t compute(context_t context, fae_signal_t signal) {
  */
 void fae_signal_run(signal_t signal, fae_unary_t function, fae_ptr_t data) {
 
-    context_t context;
+    struct context_ context;
     context.count = 0;
     context.time  = seconds(0);
     context.rate  = 44100;
     // context.buses[0];
 
-    while (1) {
+    for (int i = 0; i < 400; ++i) {
         // TODO fix time etc
-        function(data, compute(context, signal));
+        function(data, compute(&context, signal));
     }
 }
 

@@ -1791,6 +1791,7 @@ void test_signal()
     test_section("Signals");
     
     fae_signal_t s = fae_signal_constant(i16(1));
+    fae_signal_t p = fae_signal_constant(i16(10));
     // fae_signal_t t = fae_signal_apply(fae_signal_identity(), s);
 
     fae_signal_t add  = fae_signal_add();
