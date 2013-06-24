@@ -19,4 +19,5 @@ add_tool(fae_list_audio)
 add_tool(fae_list_midi)
 add_tool(fae_echo_midi)
 add_tool(fae_plug_midi)
+add_tool(fae_default_midi)
 
