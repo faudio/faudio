@@ -18,6 +18,7 @@
 #include <fae/thread.h>
 #include <fae/time.h>
 #include <fae/priority_queue.h>
+#include <fae/signal.h>
 
 /** @defgroup Fae Fae
     @{

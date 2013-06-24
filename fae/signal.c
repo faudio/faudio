@@ -104,12 +104,16 @@ struct _fae_signal_t {
 inline static signal_t new_signal(int tag)
 {
     fae_ptr_t signal_impl(fae_id_t interface);
-    assert(false);
+
+    signal_t s = fae_new(signal);
+    s->impl = &signal_impl;
+    s->tag  = tag;
+    return s;
 }
 
 inline static void delete_signal(signal_t signal)
 {
-    assert(false);
+    fae_delete(signal);
 }
                         
 #define is_constant(v)    (v->tag == constant_signal)
@@ -135,6 +139,70 @@ fae_type_t fae_signal_type_of(fae_signal_t signal)
     assert(false);
 }
 
+
+signal_t copy_constant(signal_t signal) {
+    assert(false && "Not implemented");
+}   
+signal_t copy_identity(signal_t signal) {
+    signal_t signal2 = new_signal(identity_signal);
+    identity_get(signal2, arity)        = identity_get(signal, arity);
+    identity_get(signal2, saturation)   = identity_get(signal, saturation);
+    for (int i = 0; i < identity_get(signal, saturation); ++i) {
+        identity_get(signal2, arguments)[i]    = identity_get(signal, arguments)[i];        
+    }
+    return signal2;
+}
+signal_t copy_lifted(signal_t signal) {
+    signal_t signal2 = new_signal(lifted_signal);
+    lifted_get(signal2, arity)        = lifted_get(signal, arity);
+    lifted_get(signal2, saturation)   = lifted_get(signal, saturation);
+    for (int i = 0; i < lifted_get(signal, saturation); ++i) {
+        lifted_get(signal2, arguments)[i]    = lifted_get(signal, arguments)[i];        
+    }
+    lifted_get(signal2, function)   = lifted_get(signal, function);
+    lifted_get(signal2, data)   = lifted_get(signal, data);
+    return signal2;
+}
+signal_t copy_time(signal_t signal) {
+    assert(false && "Not implemented");
+}
+signal_t copy_delay(signal_t signal) {
+    signal_t signal2 = new_signal(delay_signal);
+    delay_get(signal2, arity)        = delay_get(signal, arity);
+    delay_get(signal2, saturation)   = delay_get(signal, saturation);
+    for (int i = 0; i < delay_get(signal, saturation); ++i) {
+        delay_get(signal2, arguments)[i]    = delay_get(signal, arguments)[i];        
+    }
+    delay_get(signal2, time)   = delay_get(signal, time);
+    return signal2;
+}
+signal_t copy_read(signal_t signal) {
+    assert(false && "Not implemented");
+}
+signal_t copy_write(signal_t signal) {
+    signal_t signal2 = new_signal(write_signal);
+    write_get(signal2, arity)        = write_get(signal, arity);
+    write_get(signal2, saturation)   = write_get(signal, saturation);
+    for (int i = 0; i < write_get(signal, saturation); ++i) {
+        write_get(signal2, arguments)[i]    = write_get(signal, arguments)[i];        
+    }
+    write_get(signal2, address)   = write_get(signal, address);
+    return signal2;
+} 
+
+fae_signal_t fae_signal_copy(fae_signal_t signal) {
+    match(signal->tag) {
+        against (constant_signal)   copy_constant(signal);
+        against (identity_signal)   copy_identity(signal);
+        against (lifted_signal)     copy_lifted(signal);
+        against (time_signal)       copy_time(signal);
+        against (delay_signal)      copy_delay(signal);
+        against (read_signal)       copy_read(signal);
+        against (write_signal)      copy_write(signal);
+        no_default();
+    }
+}
+
 fae_signal_t fae_signal_constant(fae_ptr_t value)
 {
     signal_t signal = new_signal(constant_signal);
@@ -152,7 +220,24 @@ fae_signal_t fae_signal_identity()
 
 fae_signal_t fae_signal_apply(fae_signal_t signal1, fae_signal_t signal2)
 {
-    assert(false);
+    // TODO not pretty to assume lifted
+    // It works because saturation/arity/args are always first
+    assert(lifted_get(signal1, saturation) 
+             <
+           lifted_get(signal1, arity));
+
+   signal_t signal1p = fae_signal_copy(signal1);    
+
+   int n = lifted_get(signal1, saturation);
+   lifted_get(signal1p, arguments)[n] = signal2;
+   lifted_get(signal1p, saturation)++;
+
+   return signal1p;
+}
+fae_signal_t fae_signal_dapply(fae_signal_t signal1, fae_signal_t signal2) {
+    signal_t signal1p = fae_signal_apply(signal1, signal2);
+    fae_destroy(signal1);
+    return signal1p;
 }
 
 fae_signal_t fae_signal_lift(fae_unary_t function, fae_ptr_t data)
@@ -167,7 +252,12 @@ fae_signal_t fae_signal_lift(fae_unary_t function, fae_ptr_t data)
 
 fae_signal_t fae_signal_lift2(fae_binary_t function, fae_ptr_t data)
 {
-    assert(false && "Not implemented");
+    signal_t signal = new_signal(lifted_signal);
+    lifted_get(signal, function)     = function;
+    lifted_get(signal, data)         = data;
+    lifted_get(signal, arity)        = 2;
+    lifted_get(signal, saturation)   = 0;
+    return signal;
 }
 
 fae_signal_t fae_signal_lift3(fae_ternary_t function, fae_ptr_t data)
@@ -222,13 +312,19 @@ ptr_t compute_constant(context_t context, signal_t signal) {
 }   
 
 ptr_t compute_identity(context_t context, signal_t signal) {
-    // TODO assert saturated
+    assert(identity_get(signal, saturation) 
+            == 
+           identity_get(signal, arity));
+    
     signal_t arg1 = identity_get(signal, arguments)[0];
     return compute(context, arg1);
 }
 
 ptr_t compute_lifted(context_t context, signal_t signal) {
-    // TODO assert saturated
+    assert(lifted_get(signal, saturation) 
+            == 
+           lifted_get(signal, arity));
+
     switch (lifted_get(signal, arity)) {
         case 1: {
             signal_t arg1 = lifted_get(signal, arguments)[0];
@@ -237,7 +333,16 @@ ptr_t compute_lifted(context_t context, signal_t signal) {
             return func(data, 
                 compute(context, arg1));
         }
-        // case 2:
+        case 2: {
+            signal_t  arg1 = lifted_get(signal, arguments)[0];
+            signal_t  arg2 = lifted_get(signal, arguments)[1];
+            binary_t  func = lifted_get(signal, function);
+            ptr_t     data = lifted_get(signal, data);
+            return func(data, 
+                compute(context, arg1),
+                compute(context, arg2)
+                );
+        }
         // case 3:
         default: {
             assert(false && "Strange arity");
@@ -271,7 +376,21 @@ ptr_t compute(context_t context, fae_signal_t signal) {
 }
 
 
+/* Run the given signal (for debug).
+ */
+void fae_signal_run(signal_t signal, fae_unary_t function, fae_ptr_t data) {
 
+    context_t context;
+    context.count = 0;
+    context.time  = seconds(0);
+    context.rate  = 44100;
+    // context.buses[0];
+
+    while (1) {
+        // TODO fix time etc
+        function(data, compute(context, signal));
+    }
+}
 
 
 

@@ -30,6 +30,10 @@ module Fae.Signal
     delay               : (Time, Signal)  -> Signal; // Time           -> S a -> S a
     fix                 : (((Ptr, Signal) -> Signal)*, Ptr) -> Signal; // (S a -> S a) -> S a
 
+    // debug
+    run :               (Signal, Unary, Ptr) -> Void;
+    
+
     add                 : () -> Signal;
     subtract            : () -> Signal;
     multiply            : () -> Signal;

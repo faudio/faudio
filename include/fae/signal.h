@@ -28,6 +28,7 @@ fae_signal_t fae_signal_delay(fae_time_t, fae_signal_t);
 fae_signal_t fae_signal_fix(fae_signal_t (*)(fae_ptr_t,
                                              fae_signal_t),
                             fae_ptr_t);
+void fae_signal_run(fae_signal_t, fae_unary_t, fae_ptr_t);
 fae_signal_t fae_signal_add();
 fae_signal_t fae_signal_subtract();
 fae_signal_t fae_signal_multiply();

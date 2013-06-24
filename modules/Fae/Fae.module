@@ -37,6 +37,7 @@ module Fae.Fae
     import Fae.Thread;
     import Fae.Time;
     import Fae.PriorityQueue;
+    import Fae.Signal;
 
     version : () -> List;
     versionString : () -> String;

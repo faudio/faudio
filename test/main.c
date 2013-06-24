@@ -1780,6 +1780,28 @@ cleanup:
 }
 
 
+ptr_t print_signal(ptr_t data, ptr_t value) {
+    fae_print("   %s\n", value);
+}
+ptr_t signal_succ(ptr_t data, ptr_t value) {
+    return fae_add(value, i16(1));
+}
+void test_signal()
+{
+    test_section("Signals");
+    
+    fae_signal_t s = fae_signal_constant(i16(1));
+    // fae_signal_t t = fae_signal_apply(fae_signal_identity(), s);
+
+    fae_signal_t add  = fae_signal_add();
+    fae_signal_t id   = fae_signal_identity();
+    fae_signal_t succ = fae_signal_lift(signal_succ, NULL);
+    fae_signal_t t    = fae_signal_apply(fae_signal_apply(add, s), s);
+
+    fae_signal_run(t, print_signal, NULL);
+}
+
+
 void test_version()
 {
     test_section("Versioning");
@@ -1872,8 +1894,10 @@ int main(int argc, char const *argv[])
         test_buffer_stream();
         // test_audio_stream();
         // test_midi_stream();
+
+        test_signal();
         
-        test_version();
+        // test_version();
         
 // begin:
         // test_midi_hotplug();
