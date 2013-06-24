@@ -18,7 +18,6 @@ typedef fae_signal_t signal_t;
         read                : Int                -> ~a
         write               : Int                -> a ~> a
         
-
         constant            : a                  -> S a
         identity            :                       S a -> S a
         lift                : (a -> b)           -> S a -> S b
@@ -32,7 +31,7 @@ typedef fae_signal_t signal_t;
         apply               :  (S a -> S b) -> S a -> S b
 
         const x     returns a signal of arity 0
-        id          returns a signal of arity 1
+        identity    returns a signal of arity 1
         lift  f     returns a signal of arity 1
         lift2 f     returns a signal of arity 2
         lift3 f     returns a signal of arity 3
@@ -42,15 +41,19 @@ typedef fae_signal_t signal_t;
         write n     returns a signal of arity 1
 
         apply f x   where f has arity n returns a signal of arity (n-1).
+        
+    Note that apply is not (<*>), of Applicative, it is simply primitive application of
+    two signals (as this implementation includes partial application support).
 
  */
 struct _fae_signal_t {
+    
     impl_t          impl;       //  Interface dispatcher
 
     enum {
-        const_signal,
-        id_signal,
-        lift_signal,
+        constant_signal,
+        identity_signal,
+        lifted_signal,
         time_signal,
         delay_signal,
         read_signal,
@@ -60,33 +63,33 @@ struct _fae_signal_t {
     union {
         struct {
             ptr_t           value;
-        }                   const_;
+        }                   constant;
         struct {
-            signal_t        arguments[1];
-            int             num_args;
-            int             saturation;
-        }                   id;
+            uint8_t         arity;
+            uint8_t         saturation;
+            signal_t        arguments[256];
+        }                   identity;
         struct {
+            uint8_t         arity;
+            uint8_t         saturation;
+            signal_t        arguments[256];
             ptr_t           function;
             ptr_t           data;
-            signal_t        arguments[12];
-            int             num_args;
-            int             saturation;
-        }                   lift;
+        }                   lifted;
         struct {
+            uint8_t         arity;
+            uint8_t         saturation;
+            signal_t        arguments[256];
             time_t          time;
-            signal_t        arguments[1];
-            int             num_args;
-            int             saturation;
         }                   delay;
         struct {
             int             address;
         }                   read;
         struct {
+            uint8_t         arity;
+            uint8_t         saturation;
+            signal_t        arguments[256];
             int             address;
-            signal_t        arguments[1];
-            int             num_args;
-            int             saturation;
         }                   write;
 
     }                       fields;
@@ -105,6 +108,22 @@ inline static void delete_signal(signal_t signal)
 {
     assert(false);
 }
+                        
+#define is_constant(v)    (v->tag == constant_signal)
+#define is_identity(v)    (v->tag == identity_signal)
+#define is_lifted(v)      (v->tag == lifted_signal)
+#define is_time(v)        (v->tag == time_signal)
+#define is_delay(v)       (v->tag == delay_signal)
+#define is_read(v)        (v->tag == read_signal)
+#define is_write(v)       (v->tag == write_signal)
+
+#define constant_get(v,f) v->fields.constant.f
+#define identity_get(v,f) v->fields.identity.f
+#define lifted_get(v,f)   v->fields.lifted.f
+#define time_get(v,f)     v->fields.time.f
+#define delay_get(v,f)    v->fields.delay.f
+#define read_get(v,f)     v->fields.read.f
+#define write_get(v,f)    v->fields.write.f
 
 // --------------------------------------------------------------------------------
 
@@ -115,16 +134,16 @@ fae_type_t fae_signal_type_of(fae_signal_t signal)
 
 fae_signal_t fae_signal_constant(fae_ptr_t value)
 {
-    signal_t signal = new_signal(const_signal);
-    signal->fields.const_.value = value;
+    signal_t signal = new_signal(constant_signal);
+    constant_get(signal, value) = value;
     return signal;
 }
 
 fae_signal_t fae_signal_identity()
 {
-    signal_t signal = new_signal(id_signal);
-    signal->fields.id.num_args   = 1;
-    signal->fields.id.saturation = 0;
+    signal_t signal = new_signal(identity_signal);
+    identity_get(signal, arity)      = 1;
+    identity_get(signal, saturation) = 0;
     return signal;
 }
 
@@ -135,22 +154,22 @@ fae_signal_t fae_signal_apply(fae_signal_t signal1, fae_signal_t signal2)
 
 fae_signal_t fae_signal_lift(fae_unary_t function, fae_ptr_t data)
 {
-    signal_t signal = new_signal(id_signal);
-    signal->fields.lift.function     = function;
-    signal->fields.lift.data         = data;
-    signal->fields.lift.num_args     = 1;
-    signal->fields.lift.saturation   = 0;
+    signal_t signal = new_signal(lifted_signal);
+    lifted_get(signal, function)     = function;
+    lifted_get(signal, data)         = data;
+    lifted_get(signal, arity)        = 1;
+    lifted_get(signal, saturation)   = 0;
     return signal;
 }
 
 fae_signal_t fae_signal_lift2(fae_binary_t function, fae_ptr_t data)
 {
-    assert(false);
+    assert(false && "Not implemented");
 }
 
 fae_signal_t fae_signal_lift3(fae_ternary_t function, fae_ptr_t data)
 {
-    assert(false);
+    assert(false && "Not implemented");
 }
 
 fae_signal_t fae_signal_time()
@@ -160,18 +179,41 @@ fae_signal_t fae_signal_time()
 
 fae_signal_t fae_signal_delay(fae_time_t time, fae_signal_t signal)
 {
-    assert(false);
+    assert(false && "Not implemented");
 }
 
 fae_signal_t fae_signal_fix(fae_signal_t (*function)(fae_ptr_t, fae_signal_t), fae_ptr_t data)
 {
-    assert(false);
+    assert(false && "Not implemented");
 }
 
 
 void before(fae_signal_t signal) {}
 void run(fae_signal_t signal) {}
 void after(fae_signal_t signal) {}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // TODO optimized version for non-ptr types
 
