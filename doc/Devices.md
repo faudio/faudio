@@ -82,10 +82,10 @@ int main (int argc, char const *argv[])
     fae_audio_session_t     session;
     fae_audio_device_t      input, output;
     fae_audio_stream_t      stream
-    fae_processor_t         proc;
+    fae_signal_t            id;
     
     // Processor to use
-    proc = fae_processor_identity(type_pair(type(f32), type(f32)));
+    id = fae_signal_identity();
     
     // Begin session
     session = fae_audio_begin_session();
@@ -99,7 +99,7 @@ int main (int argc, char const *argv[])
         input  = fae_audio_default_output(session);
 
         // Start stream
-        stream = fae_audio_open_stream(input, proc, output);
+        stream = fae_audio_open_stream(input, id, output);
         if (fae_check(stream)) {
             fae_error_log(stream);
             goto cleanup;
@@ -114,7 +114,7 @@ int main (int argc, char const *argv[])
 cleanup:
     fae_destroy(stream);
     fae_destroy(session);
-    fae_destroy(proc);
+    fae_destroy(id);
 }
 ~~~~
 
@@ -128,41 +128,40 @@ has returned. Errors are handled by a special callback, to which you can pass
 
 ~~~~
 #include <fae/fae.h>
+#include <fae/util.h>
 
 stream_t run_callback(stream_t stream)
 {
     // Stream active, let it run for 5 seconds
-    fae_thread_sleep(fae_seconds(10));
+    fae_thread_sleep(seconds(10));
     return stream;
 }
 
 session_t session_callback(void* data, session_t session)
 {
     fae_audio_device_t    input, output;
-    fae_processor_t       proc;
+    fae_signal_t          id;
 
     // Session obtained, we can now access devices
     input   = fae_audio_default_input(session);
     output  = fae_audio_default_input(session);
-    proc    = (processor_t*) data;
+    id      = (signal_t*) data;
 
     // Start stream
-    fae_audio_with_stream(input, proc, output,
+    fae_audio_with_stream(input, id, output,
                           run_callback, fae_error_log, NULL);
 
-    fae_destroy(proc);
+    fae_destroy(id);
     return session;
 }
 
 int main (int argc, char const *argv[])
 {                  
     // Processor to use
-    fae_processor_t proc = fae_processor_identity(
-                                type_pair(type(f32), 
-                                          type(f32)));
+    fae_signal_t signal = fae_signal_identity();
     
     // Begin session
-    fae_audio_with_session(session_callback, proc,
+    fae_audio_with_session(session_callback, id,
                            fae_error_log, NULL);
 }
 ~~~~
@@ -179,17 +178,17 @@ TODO
 ~~~~
 #include <fae/fae.h>
 
-typedef fae__file_t   device_t;
-typedef fae_processor_t     processor_t;
+typedef fae_file_t      device_t;
+typedef fae_signal_t    signal_t;
 
 int main (int argc, char const *argv[])
 {
     fae_device_t    input, output;
-    fae_processor_t proc;
+    fae_signal_t    id;
     fae_result_t    result;
 
     // Processor to use
-    proc    = fae_processor_identity(type_pair(type(f32), type(f32)));
+    id = fae_signal_identity();
 
     // Open streams
     input   = fae__file_open(string("test/in.wav"));
@@ -204,7 +203,7 @@ int main (int argc, char const *argv[])
         fae_error_log(result);
     }                                    
 
-    result  = fae__file_run(in, proc, out);
+    result  = fae__file_run(in, id, out);
 
     // Handle possible error
     if (fae_check(result)) {
@@ -222,17 +221,17 @@ int main (int argc, char const *argv[])
 ~~~~
 #include <fae/fae.h>
 
-typedef fae__file_t   device_t;
-typedef fae_processor_t     processor_t;
+typedef fae_file_t   device_t;
+typedef fae_signal_t signal_t;
 
 int main (int argc, char const *argv[])
 {
     device_t    input, output;
-    processor_t proc;
+    signal_t    id;
     result_t    result;
 
     // Processor to use
-    proc    = fae_processor_identity(type_pair(type(f32), type(f32)));
+    id = fae_signal_identity();
 
     // Open streams
     input   = fae_buffer_open(fae_buffer_create(1024));
@@ -247,7 +246,7 @@ int main (int argc, char const *argv[])
         fae_error_log(result);
     }                                    
 
-    result  = fae_buffer_run(in, proc, out);
+    result  = fae_buffer_run(in, id, out);
 
     // Handle possible error
     if (fae_check(result)) {

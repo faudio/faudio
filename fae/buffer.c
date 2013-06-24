@@ -45,11 +45,14 @@ fae_buffer_t fae_buffer_create(size_t size)
     fae_ptr_t buffer_impl(fae_id_t interface);
 
     buffer_t b = fae_new(buffer);
+    
     b->impl = &buffer_impl;
     b->size = size;
     b->data = malloc(size);
+    
     b->destroy_function = default_destroy;
     b->destroy_data     = NULL;
+    
     memset(b->data, 0, b->size);
 
     if (!b->data) {
@@ -82,8 +85,10 @@ fae_buffer_t fae_buffer_wrap(fae_ptr_t   ptr,
     b->impl = &buffer_impl;
     b->size = size;
     b->data = ptr;
+    
     b->destroy_function = destroy_function;
     b->destroy_data     = destroy_data;
+    
     return b;
 }
 
@@ -209,26 +214,28 @@ fae_pair_t fae_buffer_read_audio(fae_string_file_path_t path)
 {
     type_t type;
     buffer_t buffer;
+    SNDFILE *f;
 
-    SF_INFO info;
+    SF_INFO     info;
     info.format = 0;
-    char *file = fae_string_to_utf8(path);
-    SNDFILE *f = sf_open(file, SFM_READ, &info);
+    char *file  = fae_string_to_utf8(path);
+    f           = sf_open(file, SFM_READ, &info);
 
     if (sf_error(f)) {
         char err[100];
         snprintf(err, 100, "Could not read audio file '%s'", file);
-        return (pair_t) fae_error_create_simple(error, string(err), string("Doremir.Buffer"));
+        return (pair_t) fae_error_create_simple(
+            error, string(err), string("Doremir.Buffer"));
     }
 
     inform(string_dappend(string("Reading "), string(file)));
 
     size_t bufSize = info.frames * info.channels * sizeof(double);
-    buffer = fae_buffer_create(bufSize);
-    double *raw = fae_buffer_unsafe_address(buffer);
+    buffer         = fae_buffer_create(bufSize);
+    double *raw    = fae_buffer_unsafe_address(buffer);
 
     sf_count_t sz = sf_read_double(f, raw, bufSize / sizeof(double));
-    buffer = fae_buffer_resize(sz * sizeof(double), buffer);
+    buffer        = fae_buffer_resize(sz * sizeof(double), buffer);
 
     if (info.channels == 1) {
         type = type_vector(type(f64), info.frames);

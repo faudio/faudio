@@ -8,8 +8,19 @@ typedef fae_signal_t signal_t;
 /*
     Signals are built from the following primitives:
 
+        constant            : a                  -> ~f32
+        identity            :                       a ~> a
+        lift                : (a -> b)           -> a ~> b
+        lift2               : (a -> b -> c)      -> a ~> b ~> c
+        lift3               : (a -> b -> c -> d) -> a ~> b ~> c ~> d
+        time                :                       ~Time
+        delay               : Time               -> a ~> a
+        read                : Int                -> ~a
+        write               : Int                -> a ~> a
+        
+
         constant            : a                  -> S a
-        identity            :                       S a -> S b
+        identity            :                       S a -> S a
         lift                : (a -> b)           -> S a -> S b
         lift2               : (a -> b -> c)      -> S a -> S b -> S c
         lift3               : (a -> b -> c -> d) -> S a -> S b -> S c -> S d
@@ -18,7 +29,7 @@ typedef fae_signal_t signal_t;
         read                : Int                -> S a
         write               : Int                -> S a
 
-        apply               :  S (a -> b) -> S a -> S b
+        apply               :  (S a -> S b) -> S a -> S b
 
         const x     returns a signal of arity 0
         id          returns a signal of arity 1
@@ -158,9 +169,11 @@ fae_signal_t fae_signal_fix(fae_signal_t (*function)(fae_ptr_t, fae_signal_t), f
 }
 
 
+void before(fae_signal_t signal) {}
+void run(fae_signal_t signal) {}
+void after(fae_signal_t signal) {}
 
-
-
+// TODO optimized version for non-ptr types
 
 static ptr_t _add(ptr_t c, ptr_t x, ptr_t y) { return fae_add(x, y); }
 fae_signal_t fae_signal_add()
