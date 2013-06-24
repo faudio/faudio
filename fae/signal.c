@@ -77,6 +77,9 @@ struct _fae_signal_t {
             ptr_t           data;
         }                   lifted;
         struct {
+            time_t          time;
+        }                   time;
+        struct {
             uint8_t         arity;
             uint8_t         saturation;
             signal_t        arguments[256];
@@ -187,10 +190,85 @@ fae_signal_t fae_signal_fix(fae_signal_t (*function)(fae_ptr_t, fae_signal_t), f
     assert(false && "Not implemented");
 }
 
+// TODO destroy
 
-void before(fae_signal_t signal) {}
-void run(fae_signal_t signal) {}
-void after(fae_signal_t signal) {}
+
+
+
+
+/*
+    This is were the magic happens. The compute(context, signal) computes
+    the value of the signal in a context.
+ */
+
+typedef struct {                                           
+    int64_t count;           // invocation count (monotonically increasing with time)
+    time_t  time;            // current time (if applicable)
+    double  rate;            // samples per second (if applicable)
+
+    ptr_t   buses[0xffff];   // buses
+} context_t;
+ 
+static ptr_t compute(context_t context, fae_signal_t signal);
+// static void before(context_t context, fae_signal_t signal);
+// static void after(context_t context, fae_signal_t signal);
+
+
+// void before(context_t context, fae_signal_t signal) {}
+// void after(context_t context, fae_signal_t signal) {}
+
+ptr_t compute_constant(context_t context, signal_t signal) {
+    return constant_get(signal, value);
+}   
+
+ptr_t compute_identity(context_t context, signal_t signal) {
+    // TODO assert saturated
+    signal_t arg1 = identity_get(signal, arguments)[0];
+    return compute(context, arg1);
+}
+
+ptr_t compute_lifted(context_t context, signal_t signal) {
+    // TODO assert saturated
+    switch (lifted_get(signal, arity)) {
+        case 1: {
+            signal_t arg1 = lifted_get(signal, arguments)[0];
+            unary_t  func = lifted_get(signal, function);
+            ptr_t    data = lifted_get(signal, data);
+            return func(data, 
+                compute(context, arg1));
+        }
+        // case 2:
+        // case 3:
+        default: {
+            assert(false && "Strange arity");
+        }
+    }
+}
+ptr_t compute_time(context_t context, signal_t signal) {
+    return time_get(signal, time);
+}
+ptr_t compute_delay(context_t context, signal_t signal) {
+    assert(false && "Not implemented");
+}
+ptr_t compute_read(context_t context, signal_t signal) {
+    assert(false && "Not implemented");
+}
+ptr_t compute_write(context_t context, signal_t signal) {
+    assert(false && "Not implemented");
+}
+
+ptr_t compute(context_t context, fae_signal_t signal) {
+    match(signal->tag) {
+        against (constant_signal)   compute_constant(context, signal);
+        against (identity_signal)   compute_identity(context, signal);
+        against (lifted_signal)     compute_lifted(context, signal);
+        against (time_signal)       compute_time(context, signal);
+        against (delay_signal)      compute_delay(context, signal);
+        against (read_signal)       compute_read(context, signal);
+        against (write_signal)      compute_write(context, signal);
+        no_default();
+    }
+}
 
 
 
