@@ -291,7 +291,12 @@ fae_signal_t fae_signal_lift2(fae_binary_t function, fae_ptr_t data)
 
 fae_signal_t fae_signal_lift3(fae_ternary_t function, fae_ptr_t data)
 {
-    assert(false && "Not implemented");
+    signal_t signal = new_signal(lifted_signal);
+    lifted_get(signal, function)     = function;
+    lifted_get(signal, data)         = data;
+    lifted_get(signal, arity)        = 3;
+    lifted_get(signal, saturation)   = 0;
+    return signal;
 }
 
 fae_signal_t fae_signal_time()
@@ -378,24 +383,40 @@ ptr_t compute_lifted(context_t context, signal_t signal)
                    );
     }
 
-    // case 3:
+    case 3: {
+        signal_t  arg1 = lifted_get(signal, arguments)[0];
+        signal_t  arg2 = lifted_get(signal, arguments)[1];
+        signal_t  arg3 = lifted_get(signal, arguments)[2];
+        ternary_t func = lifted_get(signal, function);
+        ptr_t     data = lifted_get(signal, data);
+        return func(data,
+                    compute(context, arg1),
+                    compute(context, arg2),
+                    compute(context, arg3)
+                   );
+    }
+
     default: {
         assert(false && "Strange arity");
     }
     }
 }
+
 ptr_t compute_time(context_t context, signal_t signal)
 {
     return context->time;
 }
+
 ptr_t compute_delay(context_t context, signal_t signal)
 {
     assert(false && "Not implemented");
 }
+
 ptr_t compute_read(context_t context, signal_t signal)
 {
     assert(false && "Not implemented");
 }
+
 ptr_t compute_write(context_t context, signal_t signal)
 {
     assert(false && "Not implemented");
