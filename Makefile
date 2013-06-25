@@ -63,11 +63,11 @@ doc:
 .PHONY: test
 test: all
 	echo && \
-	build/bin/doremir_audio_tests;
+	build/bin/fae_tests;
 
 .PHONY: debug
 debug: all
-	$(DEBUGGER) build/bin/doremir_audio_tests;
+	$(DEBUGGER) build/bin/fae_tests;
 
 .PHONY: run_scorecleaner
 run_scorecleaner: 
