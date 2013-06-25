@@ -7,7 +7,7 @@
 
 #include <fae/plot.h>
 #include <fae/thread.h>
-#include <fae/system.h>
+// #include <fae/system.h>
 #include <fae/util.h>
 
 typedef fae_plot_function_t plot_func_t;

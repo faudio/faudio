@@ -10,6 +10,7 @@
 #include <fae/atomic.h> // TODO improving
 #include <fae/thread.h>
 #include <fae/util.h>
+#include <fae/time.h>
 
 #include <portaudio.h>
 
@@ -61,16 +62,16 @@ struct _fae_audio_stream_t {
     native_stream_t     native;             // Native stream
 
     device_t            input, output;
-    processor_t         proc;
-    proc_interface_t   *proc_impl;
+    // ptr_t               proc;
+    // proc_interface_t   *proc_impl;
 
     unsigned            input_channels, output_channels;
     double              sample_rate;
     long                max_buffer_size;
     int32_t             sample_count;       // Monotonically increasing sample count
 
-    sender_t            incoming;
-    receiver_t          outgoing;
+    // sender_t            incoming;
+    // receiver_t          outgoing;
 };
 
 static mutex_t pa_mutex;
@@ -86,7 +87,7 @@ inline static void session_init_devices(session_t session);
 inline static void delete_session(session_t session);
 inline static device_t new_device(native_index_t index);
 inline static void delete_device(device_t device);
-inline static stream_t new_stream(device_t input, device_t output, processor_t proc, double sample_rate, long max_buffer_size);
+inline static stream_t new_stream(device_t input, device_t output, ptr_t proc, double sample_rate, long max_buffer_size);
 inline static void delete_stream(stream_t stream);
 
 void before_processing(stream_t stream);
@@ -169,7 +170,7 @@ inline static void delete_device(device_t device)
     fae_delete(device);
 }
 
-inline static stream_t new_stream(device_t input, device_t output, processor_t proc, double sample_rate, long max_buffer_size)
+inline static stream_t new_stream(device_t input, device_t output, ptr_t proc, double sample_rate, long max_buffer_size)
 {
     stream_t stream         = fae_new(audio_stream);
 
@@ -183,9 +184,9 @@ inline static stream_t new_stream(device_t input, device_t output, processor_t p
     stream->sample_rate     = sample_rate;
     stream->max_buffer_size = max_buffer_size;
 
-    stream->proc            = proc;
-    stream->proc_impl       = fae_interface(fae_processor_interface_i, stream->proc);
-    assert(stream->proc_impl && "Must implement Processor");
+    // stream->proc            = proc;
+    // stream->proc_impl       = fae_interface(fae_processor_interface_i, stream->proc);
+    // assert(stream->proc_impl && "Must implement Processor");
 
     stream->sample_count    = 0;
 
@@ -197,8 +198,8 @@ inline static stream_t new_stream(device_t input, device_t output, processor_t p
 
 inline static void delete_stream(stream_t stream)
 {
-    fae_destroy(stream->incoming);
-    fae_destroy(stream->outgoing);
+    // fae_destroy(stream->incoming);
+    // fae_destroy(stream->outgoing);
     fae_delete(stream);
 }
 
@@ -382,7 +383,7 @@ static inline int num_output_channels(device_t device)
 //     }
 // }
 
-void audio_inform_opening(device_t input, processor_t proc, device_t output)
+void audio_inform_opening(device_t input, ptr_t proc, device_t output)
 {
     inform(string("Opening real-time audio stream"));
     inform(string_dappend(string("    Input:  "), input ? fae_string_show(input) : string("-")));
@@ -392,7 +393,7 @@ void audio_inform_opening(device_t input, processor_t proc, device_t output)
 
 // TODO change sample rate
 // TODO use unspec vector size if we can determine max
-stream_t fae_audio_open_stream(device_t input, processor_t proc, device_t output)
+stream_t fae_audio_open_stream(device_t input, ptr_t proc, device_t output)
 {
     PaError         status;
     unsigned long   buffer_size = 256;
@@ -487,7 +488,7 @@ void fae_audio_close_stream(stream_t stream)
 }
 
 void fae_audio_with_stream(device_t            input,
-                                      processor_t         processor,
+                                      ptr_t         processor,
                                       device_t            output,
                                       stream_callback_t   stream_callback,
                                       ptr_t               stream_data,
@@ -511,13 +512,13 @@ void fae_audio_with_stream(device_t            input,
 
 void before_processing(stream_t stream)
 {
-    fae_processor_info_t info = {
-        .sample_rate = stream->sample_rate,
-        .frame_size  = stream->max_buffer_size,
-        .sample_time = stream->sample_count,
-        .total_time  = NULL, // TODO
-        .dispatcher  = (dispatcher_t) stream->incoming
-    };
+    // fae_processor_info_t info = {
+    //     .sample_rate = stream->sample_rate,
+    //     .frame_size  = stream->max_buffer_size,
+    //     .sample_time = stream->sample_count,
+    //     .total_time  = NULL, // TODO
+    //     .dispatcher  = (dispatcher_t) stream->incoming
+    // };
 
 
     size_t sz = 1204 * 1204 * sizeof(double);
@@ -525,20 +526,20 @@ void before_processing(stream_t stream)
     memset(b, 0, sz);
 
     // allocate buffers
-    stream->proc_impl->before(stream->proc, &info);
+    // stream->proc_impl->before(stream->proc, &info);
 }
 
 void after_processing(stream_t stream)
 {
-    fae_processor_info_t info = {
-        .sample_rate = stream->sample_rate,
-        .frame_size  = stream->max_buffer_size,
-        .sample_time = stream->sample_count,
-        .total_time  = NULL, // TODO
-        .dispatcher  = (dispatcher_t) stream->incoming
-    };
+    // fae_processor_info_t info = {
+    //     .sample_rate = stream->sample_rate,
+    //     .frame_size  = stream->max_buffer_size,
+    //     .sample_time = stream->sample_count,
+    //     .total_time  = NULL, // TODO
+    //     .dispatcher  = (dispatcher_t) stream->incoming
+    // };
 
-    stream->proc_impl->after(stream->proc, &info);
+    // stream->proc_impl->after(stream->proc, &info);
     // free buffers
 }
 
@@ -738,26 +739,26 @@ void audio_stream_destroy(ptr_t a)
     // return stream->sample_count; // TODO atomic
 // }
 
-void audio_stream_sync(ptr_t a)
-{
+// void audio_stream_sync(ptr_t a)
+// {
     // stream_t stream = (stream_t) a;
     // fae_message_sync(((sender_t) stream->incoming));
-    assert (false && "Not implemented");
-}
+    // assert (false && "Not implemented");
+// }
 
-fae_list_t audio_stream_receive(ptr_t a, address_t addr)
-{
+// fae_list_t audio_stream_receive(ptr_t a, address_t addr)
+// {
     // stream_t stream = (stream_t) a;
     // return fae_message_receive(((sender_t) stream->incoming), addr);
-    assert (false && "Not implemented");
-}
+    // assert (false && "Not implemented");
+// }
 
-void audio_stream_send(ptr_t a, address_t addr, message_t msg)
-{
+// void audio_stream_send(ptr_t a, address_t addr, message_t msg)
+// {
     // stream_t stream = (stream_t) a;
     // fae_message_send(((receiver_t) stream->incoming), addr, msg);
-    assert (false && "Not implemented");
-}
+    // assert (false && "Not implemented");
+// }
 
 ptr_t audio_stream_impl(fae_id_t interface)
 {

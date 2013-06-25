@@ -11,8 +11,6 @@ module Fae.Signal
     import Fae.Pair;
     import Fae.Type;
     import Fae.Time;
-    import Fae.Event;
-    import Fae.Processor;
     
     type Signal = opaque;
 

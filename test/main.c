@@ -1109,29 +1109,29 @@ void test_map()
 
 // --------------------------------------------------------------------------------
 
-void test_graph(string_t path)
-{
-    test_section("Graph");
-    {
-        graph_t a = fae_graph_empty();
-
-
-        a = fae_graph_insert(string("foo"), a);
-        a = fae_graph_connect(string("foo"), string("foo"), string("(1)"), a);
-
-        // a = fae_graph_insert(pair(string("a"), string("b")), a);
-        // a = fae_graph_connect(
-        //     pair(string("a"), string("b")),
-        //     pair(string("a"), string("b")),
-        //     string("(1)"), a);
-
-        fae_print("a                            ==> %s\n", a);
-        fae_system_directory_write_file(path, fae_graph_to_dot(
-                                                string("#include \"doc/graphs/header.dot\""),
-                                                string(""),
-                                                a));
-    }
-}
+// void test_graph(string_t path)
+// {
+//     test_section("Graph");
+//     {
+//         graph_t a = fae_graph_empty();
+// 
+// 
+//         a = fae_graph_insert(string("foo"), a);
+//         a = fae_graph_connect(string("foo"), string("foo"), string("(1)"), a);
+// 
+//         // a = fae_graph_insert(pair(string("a"), string("b")), a);
+//         // a = fae_graph_connect(
+//         //     pair(string("a"), string("b")),
+//         //     pair(string("a"), string("b")),
+//         //     string("(1)"), a);
+// 
+//         fae_print("a                            ==> %s\n", a);
+//         fae_system_directory_write_file(path, fae_graph_to_dot(
+//                                                 string("#include \"doc/graphs/header.dot\""),
+//                                                 string(""),
+//                                                 a));
+//     }
+// }
 
 
 // --------------------------------------------------------------------------------
@@ -1501,57 +1501,57 @@ void test_regex()
 
 // --------------------------------------------------------------------------------
 
-void test_file_stream(string_t in_path, string_t out_path)
-{
-    test_section("File streams");
-
-    file_device_t    input, output;
-    file_result_t    result;
-    processor_t proc;
-
-    // Processor to use
-    // proc    = fae_processor_identity(type_pair(type_frame(type(f32)), type_frame(type(f32))));
-    proc = NULL;
-
-    // Open streams
-    input   = fae_device_file_open(in_path);
-    output  = fae_device_file_open(out_path);
-
-    // Handle possible errors
-    if (fae_check(input)) {
-        log_error((error_t) input);
-        warn(string("Aborting test due to error"));
-        goto cleanup;
-    }
-
-    if (fae_check(output)) {
-        log_error((error_t) output);
-        warn(string("Aborting test due to error"));
-        goto cleanup;
-    }
-
-    result = fae_device_file_run(input, proc, output);
-
-    // Handle possible error
-    if (fae_check(result)) {
-        log_error((error_t) result);
-        warn(string("Aborting test due to error"));
-        goto cleanup;
-    }
-
-cleanup:
-    fae_device_file_close(input);
-    fae_device_file_close(output);
-}
-
-
-// --------------------------------------------------------------------------------
-
-void test_buffer_stream()
-{
-    test_section("Buffer streams");
-}
-
+// void test_file_stream(string_t in_path, string_t out_path)
+// {
+//     test_section("File streams");
+// 
+//     file_device_t    input, output;
+//     file_result_t    result;
+//     // processor_t proc;
+// 
+//     // Processor to use
+//     // proc    = fae_processor_identity(type_pair(type_frame(type(f32)), type_frame(type(f32))));
+//     proc = NULL;
+// 
+//     // Open streams
+//     input   = fae_device_file_open(in_path);
+//     output  = fae_device_file_open(out_path);
+// 
+//     // Handle possible errors
+//     if (fae_check(input)) {
+//         log_error((error_t) input);
+//         warn(string("Aborting test due to error"));
+//         goto cleanup;
+//     }
+// 
+//     if (fae_check(output)) {
+//         log_error((error_t) output);
+//         warn(string("Aborting test due to error"));
+//         goto cleanup;
+//     }
+// 
+//     result = fae_device_file_run(input, proc, output);
+// 
+//     // Handle possible error
+//     if (fae_check(result)) {
+//         log_error((error_t) result);
+//         warn(string("Aborting test due to error"));
+//         goto cleanup;
+//     }
+// 
+// cleanup:
+//     fae_device_file_close(input);
+//     fae_device_file_close(output);
+// }
+// 
+// 
+// // --------------------------------------------------------------------------------
+// 
+// void test_buffer_stream()
+// {
+//     test_section("Buffer streams");
+// }
+//           
 
 // --------------------------------------------------------------------------------
 
@@ -1585,7 +1585,7 @@ void test_audio_stream()
     audio_session_t session;
     audio_device_t  input, output;
     audio_stream_t  stream;
-    processor_t     proc1, proc2;
+    // processor_t     proc1, proc2;
 
     // Processor to use
     // proc1    = id(type_pair(type_frame(type(f32)), type_frame(type(f32))));
@@ -1608,7 +1608,7 @@ void test_audio_stream()
     output = fae_audio_default_output(session);
 
     // Start stream
-    stream = fae_audio_open_stream(input, proc2, output);
+    stream = fae_audio_open_stream(input, NULL, output);
 
     // Handle possible error
     if (fae_check(stream)) {
@@ -1623,8 +1623,6 @@ void test_audio_stream()
 cleanup:
     fae_audio_close_stream(stream);
     fae_audio_end_session(session);
-    fae_destroy(proc1);
-    fae_destroy(proc2);
 }
 
 
@@ -1867,7 +1865,7 @@ int main(int argc, char const *argv[])
         test_list();
         test_set();
         test_map();
-        test_graph(string_dappend(fae_system_directory_current(), string("/test/gen.dot")));
+        // test_graph(string_dappend(fae_system_directory_current(), string("/test/gen.dot")));
         test_priority_queue(10);
         test_json(
             string_dappend(fae_system_directory_current(), string("/test/example.json")));
@@ -1892,7 +1890,7 @@ int main(int argc, char const *argv[])
         // test_file_stream(
         //     string_dappend(fae_system_directory_current(), string("/test/in.wav")),
         //     string_dappend(fae_system_directory_current(), string("/test/out.wav")));
-        test_buffer_stream();
+        // test_buffer_stream();
         // test_audio_stream();
         // test_midi_stream();
 

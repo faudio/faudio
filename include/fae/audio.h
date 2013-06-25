@@ -6,7 +6,7 @@
 #include <fae/pair.h>
 #include <fae/device.h>
 #include <fae/error.h>
-#include <fae/processor.h>
+#include <fae/type.h>
 
 /** @defgroup Fae Fae
     @{
@@ -42,11 +42,11 @@ bool fae_audio_has_output(fae_audio_device_t);
 fae_type_t fae_audio_input_type(fae_audio_device_t);
 fae_type_t fae_audio_output_type(fae_audio_device_t);
 fae_audio_stream_t fae_audio_open_stream(fae_audio_device_t,
-                                         fae_processor_t,
+                                         fae_ptr_t,
                                          fae_audio_device_t);
 void fae_audio_close_stream(fae_audio_stream_t);
 void fae_audio_with_stream(fae_audio_device_t,
-                           fae_processor_t,
+                           fae_ptr_t,
                            fae_audio_device_t,
                            fae_audio_stream_callback_t,
                            fae_ptr_t,

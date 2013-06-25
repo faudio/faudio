@@ -24,7 +24,6 @@ module Fae.Midi
     import Fae.Pair;
     import Fae.Device;
     import Fae.Error;
-    import Fae.Event;
 
     type Device = opaque;
     type Session = opaque;

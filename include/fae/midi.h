@@ -6,7 +6,6 @@
 #include <fae/pair.h>
 #include <fae/device.h>
 #include <fae/error.h>
-#include <fae/event.h>
 
 /** @defgroup Fae Fae
     @{

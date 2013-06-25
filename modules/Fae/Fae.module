@@ -27,11 +27,10 @@ module Fae.Fae
     import Fae.Atomic.RingBuffer;
     import Fae.System;
     import Fae.Error;
-    import Fae.Event;
     import Fae.Graph;
     import Fae.Audio;
     import Fae.Midi;
-    import Fae.Device.File;
+    // import Fae.Device.File;
     import Fae.Midi.Message;
     import Fae.Plot;
     import Fae.Thread;

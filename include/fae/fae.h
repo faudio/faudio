@@ -8,11 +8,9 @@
 #include <fae/atomic/ring_buffer.h>
 #include <fae/system.h>
 #include <fae/error.h>
-#include <fae/event.h>
 #include <fae/graph.h>
 #include <fae/audio.h>
 #include <fae/midi.h>
-#include <fae/device/file.h>
 #include <fae/midi/message.h>
 #include <fae/plot.h>
 #include <fae/thread.h>
@@ -33,7 +31,7 @@ void fae_fae_terminate();
 typedef void (* fae_fae_log_func_t)(fae_ptr_t,
                                     fae_time_system_t,
                                     fae_error_t);
-void fae_fae_set_log_file(fae_string_file_path_t);
+void fae_fae_set_log_file(fae_system_directory_file_path_t);
 void fae_fae_set_log_std();
 void fae_fae_set_log(fae_fae_log_func_t, fae_ptr_t);
 void fae_fae_log(fae_ptr_t, fae_error_t);

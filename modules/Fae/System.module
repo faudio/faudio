@@ -7,7 +7,7 @@
 
 module Fae.System
 {
-    import Fae.System.Event;
+    // import Fae.System.Event;
     import Fae.System.Directory;
 }
 

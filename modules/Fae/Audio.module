@@ -43,7 +43,7 @@ module Fae.Audio
     import Fae.Pair;
     import Fae.Device;
     import Fae.Error;
-    import Fae.Processor;
+    import Fae.Type;
 
     type Session = opaque;
     type Device  = opaque;
@@ -71,10 +71,10 @@ module Fae.Audio
     inputType : Device -> Type;
     outputType : Device -> Type;
 
-    openStream : (Device, Processor, Device) -> Stream;
+    openStream : (Device, Ptr, Device) -> Stream;
     closeStream : Stream -> Void;
     withStream : (
-        Device, Processor, Device,
+        Device, Ptr, Device,
         StreamCallback, Ptr,
         Callback, Ptr
         ) -> Void;

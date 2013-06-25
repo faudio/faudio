@@ -10,8 +10,8 @@ list(APPEND SRCS
   atomic/queue.c
   atomic/ring_buffer.c
   atomic/stack.c
-  device/file.c
-  device/buffer.c
+  # device/file.c
+  # device/buffer.c
   audio.c
   midi.c
   dynamic.c

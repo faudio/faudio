@@ -421,16 +421,14 @@ void fae_signal_run(signal_t signal, fae_unary_t function, fae_ptr_t data) {
 
 // TODO optimized version for non-ptr types
 
-static ptr_t _add(ptr_t c, ptr_t x, ptr_t y) { return fae_add(x, y); }
 fae_signal_t fae_signal_add()
 {
-    return fae_signal_lift2(_add, NULL);
+    return fae_signal_lift2(apply2, fae_add);
 }
 
-static ptr_t _subtract(ptr_t c, ptr_t x, ptr_t y) { return fae_subtract(x, y); }
 fae_signal_t fae_signal_subtract()
 {
-    return fae_signal_lift2(_subtract, NULL);
+    return fae_signal_lift2(apply2, fae_subtract);
 }
 
 fae_signal_t fae_signal_multiply()

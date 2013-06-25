@@ -6,8 +6,6 @@
 #include <fae/pair.h>
 #include <fae/type.h>
 #include <fae/time.h>
-#include <fae/event.h>
-#include <fae/processor.h>
 
 /** @defgroup Fae Fae
     @{
