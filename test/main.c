@@ -932,7 +932,7 @@ void test_list()
         list_t zss = list(xs, ys, xs);
 
         fae_print("[xs,ys]                      ==> %s\n", zss);
-        fae_print("join([xs,ys])              ==> %s\n", fae_list_join(zss));
+        fae_print("join([xs,ys])                ==> %s\n", fae_list_join(zss));
 
         fae_destroy(xs);
         fae_destroy(ys);
@@ -946,7 +946,7 @@ void test_list()
         list_t ys = fae_list_join_map(dup_list, 0, xs);
 
         fae_print("xs                           ==> %s\n", xs);
-        fae_print("joinMap(\\x -> [x,x])       ==> %s\n", ys);
+        fae_print("joinMap(\\x -> [x,x])         ==> %s\n", ys);
 
         fae_destroy(xs);
         fae_destroy(ys);
