@@ -22,7 +22,6 @@ c:
 	modulo -Mmodules --language=c    <modules/Fae/System/Directory.module   >include/fae/system/directory.h && \
 	modulo -Mmodules --language=c    <modules/Fae/System/Event.module    	>include/fae/system/event.h && \
 	modulo -Mmodules --language=c    <modules/Fae/Dynamic.module    	>include/fae/dynamic.h && \
-	modulo -Mmodules --language=c    <modules/Fae/Event.module    		>include/fae/event.h && \
 	modulo -Mmodules --language=c    <modules/Fae/Thread.module    		>include/fae/thread.h && \
 	modulo -Mmodules --language=c    <modules/Fae/Std.module    		>include/fae/std.h && \
 	modulo -Mmodules --language=c    <modules/Fae/String.module    		>include/fae/string.h && \
@@ -65,7 +64,6 @@ gen-lisp:
 	modulo -Mmodules --language=lisp <modules/Fae/System/Directory.module   >bindings/lisp/fae/system/directory.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/System/Event.module    	>bindings/lisp/fae/system/event.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/Dynamic.module    	>bindings/lisp/fae/dynamic.lisp && \
-	modulo -Mmodules --language=lisp <modules/Fae/Event.module    		>bindings/lisp/fae/event.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/Std.module    		>bindings/lisp/fae/std.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/String.module    		>bindings/lisp/fae/string.lisp && \
 	modulo -Mmodules --language=lisp <modules/Fae/Error.module    		>bindings/lisp/fae/error.lisp && \
