@@ -326,9 +326,11 @@ fae_signal_t fae_signal_fix(fae_signal_t (*function)(fae_ptr_t, fae_signal_t), f
  */
 
 struct context_ {
-    int64_t count;           // invocation count (monotonically increasing with time)
-    time_t  time;            // current time (if applicable)
-    double  rate;            // samples per second (if applicable)
+    int64_t     count;           // invocation count (monotonically increasing with time)
+    double      rate;            // samples per second (if applicable)
+    int64_t     size;            // number of samples
+    time_t      time;            // current time (if applicable)
+    time_t      diff;            // difference in seconds (size/rate)
 
     ptr_t   buses[0xffff];   // buses
 };
@@ -444,12 +446,17 @@ void fae_signal_run(signal_t signal, fae_unary_t function, fae_ptr_t data)
 
     struct context_ context;
     context.count = 0;
-    context.time  = seconds(0);
     context.rate  = 44100;
+    context.size  = 1024;
+
+    context.time  = seconds(0);
+    context.diff  = divisions(context.size, context.rate);
     // context.buses[0];
 
     for (int i = 0; i < 400; ++i) {
         // TODO fix time etc
+        context.count += 1;
+        context.time = fae_dadd(context.time, fae_copy(context.diff)); // TODO rate
         function(data, compute(&context, signal));
     }
 }
@@ -648,12 +655,12 @@ fae_signal_t fae_signal_abs()
 
 fae_signal_t fae_signal_min()
 {
-    assert(false);
+    return fae_signal_lift2(apply2, fae_min);
 }
 
 fae_signal_t fae_signal_max()
 {
-    assert(false);
+    return fae_signal_lift2(apply2, fae_max);
 }
 
 fae_signal_t fae_signal_fmod()

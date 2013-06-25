@@ -1371,8 +1371,8 @@ double f1(void *ct, int i, double t, double x)
     double pi  = 3.141592653589793;
     double tau = 2 * pi;
     double t0  = x;
-    double t2  = t + x;
-    t2 = t2;
+    // double t2  = t + x;
+    // t2 = t2;
 
 #define step(p) ((float)((int)fmod(t,p)%p))/p
 
@@ -1785,25 +1785,35 @@ cleanup:
 ptr_t print_signal(ptr_t data, ptr_t value)
 {
     fae_print("   %s\n", value);
+    return value;
 }
 ptr_t signal_succ(ptr_t data, ptr_t value)
 {
     return fae_add(value, i16(1));
 }
+#define ap fae_signal_apply
+#define ap2(f,x,y) ap(ap(f,x),y)
+#define constant(x) fae_signal_constant(x)
 void test_signal()
 {
     test_section("Signals");
 
-    fae_signal_t s = fae_signal_constant(i16(1));
-    fae_signal_t p = fae_signal_constant(i16(10));
+    // fae_signal_t s = fae_signal_constant(i16(1));
+    // fae_signal_t p = fae_signal_constant(i16(10));
     // fae_signal_t t = fae_signal_apply(fae_signal_identity(), s);
 
-    fae_signal_t add  = fae_signal_add();
-    fae_signal_t id   = fae_signal_identity();
-    fae_signal_t succ = fae_signal_lift(signal_succ, NULL);
-    fae_signal_t t    = fae_signal_apply(fae_signal_apply(add, s), s);
+    // fae_signal_t add  = fae_signal_add();
+    // fae_signal_t max  = fae_signal_max();
+    fae_signal_t time = fae_signal_time();
+    fae_signal_t min  = fae_signal_min();
+    // fae_signal_t id   = fae_signal_identity();
+    // fae_signal_t succ = fae_signal_lift(signal_succ, NULL);
+    // fae_signal_t t    = fae_signal_apply(fae_signal_apply(add, s), s);
 
-    fae_signal_run(t, print_signal, NULL);
+    fae_signal_run(
+        ap2(min, time, constant(seconds(4))),
+
+        print_signal, NULL);
 }
 
 
@@ -1825,7 +1835,7 @@ int main(int argc, char const *argv[])
 {
 
     char *bits      = sizeof(void *) == 4 ? "32-bit" : "64-bit";
-    printf("FAE %s v%s\n", bits, unstring(fae_fae_version_string()));
+    printf("Fae %s v%s\n", bits, unstring(fae_fae_version_string()));
 
     printf("sizeof(fae_ptr_t) = %d\n", (unsigned int) sizeof(fae_ptr_t));
     printf("sizeof(int32_t) = %d\n", (unsigned int) sizeof(int32_t));
