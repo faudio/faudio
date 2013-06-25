@@ -370,7 +370,7 @@ static inline list_t dmerge_sort(list_t xs)
     right = dmerge_sort(right);
 
     if (fae_less_than(fae_list_last(left),
-                          fae_list_head(right))) {
+                      fae_list_head(right))) {
         return fae_list_dappend(left, right);
     } else {
         return dmerge(left, right);

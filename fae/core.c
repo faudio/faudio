@@ -425,10 +425,11 @@ void fae_dprint(char *f, fae_ptr_t a)
 
 void fae_print_ln(fae_ptr_t a)
 {
-    if (a)
+    if (a) {
         fae_print("%s\n", a);
-    else
+    } else {
         fae_print("", a);
+    }
 }
 
 void fae_dprint_ln(fae_ptr_t a)

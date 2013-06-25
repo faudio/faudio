@@ -19,7 +19,13 @@ static unsigned       init_count_g  = 0;
 static log_func_t     log_func_g    = NULL;
 static ptr_t          log_data_g    = NULL;
 
-static struct { char* pre; int x; int y; int z; char* suff; } version_g = AE_VERSION;
+static struct {
+    char *pre;
+    int x;
+    int y;
+    int z;
+    char *suff;
+} version_g = AE_VERSION;
 
 void fae_audio_initialize();
 void fae_audio_terminate();
@@ -30,17 +36,17 @@ void fae_thread_terminate();
 void fae_time_initialize();
 void fae_time_terminate();
 
-/** Returns the version of the Audio Engine as a list 
+/** Returns the version of the Audio Engine as a list
     on the form `("alpha", 1, 0, 5, "")`.
  */
 fae_list_t fae_fae_version()
 {
     return list(
-        string(version_g.pre), 
-        i16(version_g.x),
-        i16(version_g.y),
-        i16(version_g.z),
-        string(version_g.suff));
+               string(version_g.pre),
+               i16(version_g.x),
+               i16(version_g.y),
+               i16(version_g.z),
+               string(version_g.suff));
 }
 
 /** Returns the version of the Audio Engine as a string
@@ -49,13 +55,13 @@ fae_list_t fae_fae_version()
 fae_string_t fae_fae_version_string()
 {
     char version[100];
-    sprintf(version, 
-        "%s%d.%d.%d%s", 
-        version_g.pre, 
-        version_g.x, 
-        version_g.y, 
-        version_g.z, 
-        version_g.suff);
+    sprintf(version,
+            "%s%d.%d.%d%s",
+            version_g.pre,
+            version_g.x,
+            version_g.y,
+            version_g.z,
+            version_g.suff);
     return string(version);
 }
 
@@ -108,9 +114,9 @@ static inline void stdlog(ptr_t data, fae_time_system_t t, fae_error_t e)
         strftime(msg, 50, iso8601_k "  ", tm);
     }
     fae_with(str, fae_error_format(color, e),
-                 fae_destroy(str)) {
+             fae_destroy(str)) {
         fae_with(cstr, fae_string_to_utf8(str),
-                     free(cstr)) {
+                 free(cstr)) {
             strncat(msg, cstr, max_log_length_k - 2);
             strncat(msg, "\n", 1);
         }

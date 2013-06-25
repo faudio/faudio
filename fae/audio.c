@@ -488,12 +488,12 @@ void fae_audio_close_stream(stream_t stream)
 }
 
 void fae_audio_with_stream(device_t            input,
-                                      ptr_t         processor,
-                                      device_t            output,
-                                      stream_callback_t   stream_callback,
-                                      ptr_t               stream_data,
-                                      error_callback_t    error_callback,
-                                      ptr_t               error_data)
+                           ptr_t         processor,
+                           device_t            output,
+                           stream_callback_t   stream_callback,
+                           ptr_t               stream_data,
+                           error_callback_t    error_callback,
+                           ptr_t               error_data)
 {
     stream_t stream = fae_audio_open_stream(input, processor, output);
 
@@ -721,43 +721,43 @@ void audio_stream_destroy(ptr_t a)
 
 // fae_time_t audio_stream_time(ptr_t a)
 // {
-    // stream_t stream = (stream_t) a;
-    // double  sr = stream->sample_rate;
-    // int64_t t  = stream->sample_count;
-    // return milliseconds(((double)t) / sr * 1000);
+// stream_t stream = (stream_t) a;
+// double  sr = stream->sample_rate;
+// int64_t t  = stream->sample_count;
+// return milliseconds(((double)t) / sr * 1000);
 // }
 
 // double audio_stream_tick_rate(ptr_t a)
 // {
-    // stream_t stream = (stream_t) a;
-    // return stream->sample_rate;
+// stream_t stream = (stream_t) a;
+// return stream->sample_rate;
 // }
 
 // int64_t audio_stream_ticks(ptr_t a)
 // {
-    // stream_t stream = (stream_t) a;
-    // return stream->sample_count; // TODO atomic
+// stream_t stream = (stream_t) a;
+// return stream->sample_count; // TODO atomic
 // }
 
 // void audio_stream_sync(ptr_t a)
 // {
-    // stream_t stream = (stream_t) a;
-    // fae_message_sync(((sender_t) stream->incoming));
-    // assert (false && "Not implemented");
+// stream_t stream = (stream_t) a;
+// fae_message_sync(((sender_t) stream->incoming));
+// assert (false && "Not implemented");
 // }
 
 // fae_list_t audio_stream_receive(ptr_t a, address_t addr)
 // {
-    // stream_t stream = (stream_t) a;
-    // return fae_message_receive(((sender_t) stream->incoming), addr);
-    // assert (false && "Not implemented");
+// stream_t stream = (stream_t) a;
+// return fae_message_receive(((sender_t) stream->incoming), addr);
+// assert (false && "Not implemented");
 // }
 
 // void audio_stream_send(ptr_t a, address_t addr, message_t msg)
 // {
-    // stream_t stream = (stream_t) a;
-    // fae_message_send(((receiver_t) stream->incoming), addr, msg);
-    // assert (false && "Not implemented");
+// stream_t stream = (stream_t) a;
+// fae_message_send(((receiver_t) stream->incoming), addr, msg);
+// assert (false && "Not implemented");
 // }
 
 ptr_t audio_stream_impl(fae_id_t interface)
@@ -767,7 +767,7 @@ ptr_t audio_stream_impl(fae_id_t interface)
     static fae_destroy_t audio_stream_destroy_impl
         = { audio_stream_destroy };
     // static fae_time_clock_interface_t audio_stream_time_clock_interface_impl
-        // = { audio_stream_time, audio_stream_tick_rate, audio_stream_ticks };
+    // = { audio_stream_time, audio_stream_tick_rate, audio_stream_ticks };
     // static fae_message_receiver_interface_t audio_stream_message_receiver_interface_impl
     //     = { audio_stream_send };
     // static fae_message_sender_interface_t audio_stream_message_sender_interface_impl
@@ -782,13 +782,13 @@ ptr_t audio_stream_impl(fae_id_t interface)
     case fae_destroy_i:
         return &audio_stream_destroy_impl;
 
-    // case fae_time_clock_interface_i:
+        // case fae_time_clock_interface_i:
         // return &audio_stream_time_clock_interface_impl;
 
-    // case fae_message_sender_interface_i:
+        // case fae_message_sender_interface_i:
         // return &audio_stream_message_sender_interface_impl;
 
-    // case fae_message_receiver_interface_i:
+        // case fae_message_receiver_interface_i:
         // return &audio_stream_message_receiver_interface_impl;
 
     default:
@@ -804,15 +804,15 @@ void fae_fae_log_error_from(fae_string_t msg, fae_string_t origin);
 error_t audio_device_error(string_t msg)
 {
     return fae_error_create_simple(error,
-                                       msg,
-                                       string("Doremir.Device.Audio"));
+                                   msg,
+                                   string("Doremir.Device.Audio"));
 }
 
 error_t audio_device_error_with(string_t msg, int code)
 {
     return fae_error_create_simple(error,
-                                       string_dappend(msg, format_integral(" (error code %d)", code)),
-                                       string("Doremir.Device.Audio"));
+                                   string_dappend(msg, format_integral(" (error code %d)", code)),
+                                   string("Doremir.Device.Audio"));
 }
 
 void audio_device_fatal(string_t msg, int code)

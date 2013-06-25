@@ -86,8 +86,8 @@ PLOTTER(double);
     32-bit floating point data.
  */
 void fae_plot_buffer_float(fae_buffer_t  buffer,
-                               fae_nullary_t cont,
-                               fae_ptr_t     data)
+                           fae_nullary_t cont,
+                           fae_ptr_t     data)
 {
     fae_plot_continous(plot_float, buffer, cont, data);
 }
@@ -96,8 +96,8 @@ void fae_plot_buffer_float(fae_buffer_t  buffer,
     64-bit floating point data.
  */
 void fae_plot_buffer_double(fae_buffer_t      buffer,
-                                fae_nullary_t     cont,
-                                fae_ptr_t         data)
+                            fae_nullary_t     cont,
+                            fae_ptr_t         data)
 {
     fae_plot_continous(plot_double, buffer, cont, data);
 }

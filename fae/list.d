@@ -357,9 +357,9 @@ list_t fae_list_dfilter(fae_pred_t pred, fae_ptr_t data, fae_list_t list) {}
         O(n)
  */
 fae_ptr_t fae_list_fold_left(fae_binary_t func,
-                                     fae_ptr_t    data,
-                                     fae_ptr_t    init,
-                                     fae_list_t   list) {}
+                             fae_ptr_t    data,
+                             fae_ptr_t    init,
+                             fae_list_t   list) {}
 
 /** Fold over the given list from left to right.
 
@@ -367,9 +367,9 @@ fae_ptr_t fae_list_fold_left(fae_binary_t func,
         O(n)
  */
 fae_ptr_t fae_list_dfold_left(fae_binary_t func,
-                                      fae_ptr_t    data,
-                                      fae_ptr_t    init,
-                                      fae_list_t   list) {}
+                              fae_ptr_t    data,
+                              fae_ptr_t    init,
+                              fae_list_t   list) {}
 
 /** Concatenate all elements of the given list.
 
@@ -402,8 +402,8 @@ list_t fae_list_djoin(fae_list_t lists) {}
         O(n)
  */
 fae_list_t fae_list_join_map(fae_unary_t func,
-                                     fae_ptr_t data,
-                                     fae_list_t list) {}
+                             fae_ptr_t data,
+                             fae_list_t list) {}
 
 /** Map over the given list and join the results.
 
@@ -417,8 +417,8 @@ fae_list_t fae_list_join_map(fae_unary_t func,
         O(n)
  */
 fae_list_t fae_list_djoin_map(fae_unary_t func,
-                                      fae_ptr_t data,
-                                      fae_list_t list) {}
+                              fae_ptr_t data,
+                              fae_list_t list) {}
 
 
 // --------------------------------------------------------------------------------

@@ -409,4 +409,4 @@ ptr_t log_event_sink_impl(fae_id_t interface)
     default:
         return NULL;
     }
-}     
+}

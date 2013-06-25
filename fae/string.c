@@ -118,7 +118,7 @@ fae_string_t fae_string_copy(fae_string_t str)
     The returned string should be destroyed by the caller.
  */
 fae_string_t fae_string_append(fae_string_t str1,
-                                       fae_string_t str2)
+                               fae_string_t str2)
 {
     string_t cs = new_string(str1->size + str2->size, NULL);
     cs->data = malloc(cs->size * char_size_k);
@@ -134,7 +134,7 @@ fae_string_t fae_string_append(fae_string_t str1,
     The returned string should be destroyed by the caller.
  */
 fae_string_t fae_string_dappend(fae_string_t str1,
-                                        fae_string_t str2)
+                                fae_string_t str2)
 {
     size_t oldSize = str1->size;
 
@@ -296,7 +296,7 @@ fae_string_utf8_t fae_string_to_utf8(fae_string_t str)
         size_t  status = iconv(conv, &in, &inSize, &out, &outSize);
         iconv_close(conv);
 
-        if (status == ((size_t)-1)) {
+        if (status == ((size_t) - 1)) {
             iconv_fail();
         }
     }
@@ -357,7 +357,7 @@ fae_string_t fae_string_from_utf8(fae_string_utf8_t cstr)
         size_t status = iconv(conv, &in, &inSize, &out, &outSize);
         iconv_close(conv);
 
-        if (status == ((size_t)-1)) {
+        if (status == ((size_t) - 1)) {
             iconv_fail();
         }
     }
@@ -604,9 +604,9 @@ string_t fae_string_join_map(unary_t func, ptr_t data, string_t string)
     string_t result = string("");
 
     for (int i = 0; i < string->size; ++i) {
-        result = string_dappend(result, 
-        
-            func(data, (ptr_t) (long) string->data[i]));
+        result = string_dappend(result,
+
+                                func(data, (ptr_t)(long) string->data[i]));
     }
 
     return result;

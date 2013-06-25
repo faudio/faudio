@@ -46,14 +46,14 @@ fae_pair_t fae_pair_create(fae_ptr_t first, fae_ptr_t second)
 
 /** Create a pair by reading the components of a structure.
  */
-fae_pair_t fae_pair_read(fae_pair_struct_t* input)
+fae_pair_t fae_pair_read(fae_pair_struct_t *input)
 {
     return new_pair(input->first, input->second);
 }
 
 /** Write the values of a pair to a structure.
  */
-void fae_pair_write(fae_pair_struct_t* output, fae_pair_t pair)
+void fae_pair_write(fae_pair_struct_t *output, fae_pair_t pair)
 {
     output->first = pair->first;
     output->second = pair->second;

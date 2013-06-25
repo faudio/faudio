@@ -84,7 +84,7 @@ fae_graph_t fae_graph_empty()
     @param graph    The graph.
  */
 fae_graph_t fae_graph_insert(fae_graph_node_t node,
-                                     fae_graph_t graph)
+                             fae_graph_t graph)
 {
     set_t nodes = graph->nodes;
     map_t edges = graph->edges;
@@ -96,7 +96,7 @@ fae_graph_t fae_graph_insert(fae_graph_node_t node,
     @param graph    The graph.
  */
 fae_graph_t fae_graph_remove(fae_graph_node_t node,
-                                     fae_graph_t graph)
+                             fae_graph_t graph)
 {
     assert(false && "Not implemented");
     // set_t nodes = graph->nodes;
@@ -131,9 +131,9 @@ void fae_graph_destroy(fae_graph_t graph)
     @param graph    The graph.
  */
 fae_graph_t fae_graph_connect(fae_graph_node_t node1,
-                                      fae_graph_node_t node2,
-                                      fae_graph_edge_t label,
-                                      fae_graph_t graph)
+                              fae_graph_node_t node2,
+                              fae_graph_edge_t label,
+                              fae_graph_t graph)
 {
     set_t nodes = graph->nodes;
     map_t edges = graph->edges;
@@ -152,8 +152,8 @@ fae_graph_t fae_graph_connect(fae_graph_node_t node1,
     @param graph    The graph.
  */
 fae_graph_t fae_graph_disconnect(fae_graph_node_t node1,
-                                         fae_graph_node_t node2,
-                                         fae_graph_t graph)
+                                 fae_graph_node_t node2,
+                                 fae_graph_t graph)
 {
     set_t nodes = graph->nodes;
     map_t edges = graph->edges;

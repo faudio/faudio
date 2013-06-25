@@ -134,17 +134,14 @@ void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
 
     // assert(fae_equal(fae_thread_main(), fae_thread_current())
     //        && "Must be run from main thread");
-    if(fae_not_equal(fae_thread_main(), fae_thread_current()))
-    {
+    if (fae_not_equal(fae_thread_main(), fae_thread_current())) {
         inform(string("Can not register midi status listerner for non-main thread."));
-    }
-    else
-    {
+    } else {
         inform(string("Exited midi_listener_loop\n"));
         midi_listener_loop(closure);
-        inform(string("Exited midi_listener_loop\n"));        
+        inform(string("Exited midi_listener_loop\n"));
     }
-    
+
 
 }
 

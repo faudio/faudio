@@ -1,4 +1,4 @@
-    
+
 /*
     FAE
     Copyright (c) DoReMIR Music Research 2012-2013
@@ -45,14 +45,14 @@ fae_buffer_t fae_buffer_create(size_t size)
     fae_ptr_t buffer_impl(fae_id_t interface);
 
     buffer_t b = fae_new(buffer);
-    
+
     b->impl = &buffer_impl;
     b->size = size;
     b->data = malloc(size);
-    
+
     b->destroy_function = default_destroy;
     b->destroy_data     = NULL;
-    
+
     memset(b->data, 0, b->size);
 
     if (!b->data) {
@@ -85,10 +85,10 @@ fae_buffer_t fae_buffer_wrap(fae_ptr_t   ptr,
     b->impl = &buffer_impl;
     b->size = size;
     b->data = ptr;
-    
+
     b->destroy_function = destroy_function;
     b->destroy_data     = destroy_data;
-    
+
     return b;
 }
 
@@ -137,6 +137,7 @@ void fae_buffer_destroy(fae_buffer_t buffer)
     if (buffer->destroy_function) {
         buffer->destroy_function(buffer->data, buffer->destroy_data);
     }
+
     fae_delete(buffer);
 }
 
@@ -225,7 +226,7 @@ fae_pair_t fae_buffer_read_audio(fae_string_file_path_t path)
         char err[100];
         snprintf(err, 100, "Could not read audio file '%s'", file);
         return (pair_t) fae_error_create_simple(
-            error, string(err), string("Doremir.Buffer"));
+                   error, string(err), string("Doremir.Buffer"));
     }
 
     inform(string_dappend(string("Reading "), string(file)));
@@ -249,8 +250,8 @@ fae_pair_t fae_buffer_read_audio(fae_string_file_path_t path)
 }
 
 void fae_buffer_write_audio(fae_string_file_path_t path,
-                                fae_type_t             type,
-                                fae_buffer_t           buffer)
+                            fae_type_t             type,
+                            fae_buffer_t           buffer)
 {
     assert(false && "Not implemented");
 }

@@ -142,14 +142,14 @@ void test_string()
         fae_dprint("str: %s\n", t);
     }
 
-/*
-    {
-        string_t s = string("FooBarBaz");
-        string_t t = fae_string_join_map(apply1, fae_string_single, s);
-        fae_dprint("str: %s\n", s);
-        fae_dprint("str: %s\n", t);
-    }
-*/
+    /*
+        {
+            string_t s = string("FooBarBaz");
+            string_t t = fae_string_join_map(apply1, fae_string_single, s);
+            fae_dprint("str: %s\n", s);
+            fae_dprint("str: %s\n", t);
+        }
+    */
 
     {
         string_t s = string("A double quote: \", A backslash: \\");
@@ -173,9 +173,9 @@ void test_show()
     fae_dprint("%s\n", list(i8(1)));
     fae_dprint("%s\n", list(i8(1), i8(2), list(i8(1), i8(2), fb(true))));
     fae_dprint("%s\n", list(
-                       pair(string("hans"), string("höglund")),
-                       pair(string("lisa"), string("streich")),
-                       pair(string("mats"), string("erlandsson"))));
+                   pair(string("hans"), string("höglund")),
+                   pair(string("lisa"), string("streich")),
+                   pair(string("mats"), string("erlandsson"))));
 }
 
 
@@ -278,18 +278,18 @@ void test_time()
 // void test_system_time()
 // {
 //     test_section("System time");
-// 
+//
 //     clock_t system_clock = fae_time_get_system_prec_clock();
-// 
+//
 //     for (int i = 0; i < 10; ++i) {
 //         // fae_print("system()                     ==> %s\n", fae_time_system());
 //         // fae_print("cpu()                        ==> %s\n", fae_time_cpu());
 //         // fae_print("system()                     ==> %s\n", fae_time_from_system(fae_time_system()));
 //         // fae_print("cpu()                        ==> %s\n", fae_time_from_cpu(fae_time_cpu()));
-// 
+//
 //         fae_print("time(systemClock)            ==> %s\n", fae_time_time(system_clock));
 //         fae_print("ticks(systemClock)           ==> %s\n", i64(fae_time_ticks(system_clock)));
-// 
+//
 //         fae_thread_sleep(50);
 //     }
 // }
@@ -333,19 +333,19 @@ void test_type()
     // fae_dprint("size_of(1024,type(f64))   ==> %s\n", i32(fae_type_size_of(1024, type(f64))));
     // fae_dprint("align_of(1024,type(f64))  ==> %s\n", i32(fae_type_align_of(type(f64))));
     // printf("\n");
-    // 
+    //
     // type_t t = type_pair(type(i8), type(f64));
     // fae_dprint("t                            ==> %s\n", t);
     // fae_dprint("size_of(1024,t)              ==> %s\n", i32(fae_type_size_of(1024, t)));
     // fae_dprint("align_of(1024,t)             ==> %s\n", i32(fae_type_align_of(t)));
     // printf("\n");
-    // 
+    //
     // type_t u = type_pair(type_vector(type(i8), 10), type(f64));
     // fae_dprint("u                            ==> %s\n", u);
     // fae_dprint("size_of(1024,u)              ==> %s\n", i32(fae_type_size_of(1024, u)));
     // fae_dprint("align_of(1024,u)             ==> %s\n", i32(fae_type_align_of(u)));
     // printf("\n");
-    // 
+    //
     // type_t u2 = type_pair(type_frame(type(i8)), type(f64));
     // fae_dprint("u2                           ==> %s\n", u2);
     // fae_dprint("size_of(1024,u2)             ==> %s\n", i32(fae_type_size_of(1024, u2)));
@@ -619,9 +619,9 @@ void test_for_each()
     printf("\n");
 
     fae_with(map, map(
-                     string("foo"), i16(1),
-                     string("bar"), list(i16(1), i16(2), i16(3))),
-                 fae_destroy(map)) {
+                 string("foo"), i16(1),
+                 string("bar"), list(i16(1), i16(2), i16(3))),
+             fae_destroy(map)) {
         fae_for_each(x, fae_map_to_list(map)) {
             fae_print(">    %s\n", x);
         }
@@ -1114,17 +1114,17 @@ void test_map()
 //     test_section("Graph");
 //     {
 //         graph_t a = fae_graph_empty();
-// 
-// 
+//
+//
 //         a = fae_graph_insert(string("foo"), a);
 //         a = fae_graph_connect(string("foo"), string("foo"), string("(1)"), a);
-// 
+//
 //         // a = fae_graph_insert(pair(string("a"), string("b")), a);
 //         // a = fae_graph_connect(
 //         //     pair(string("a"), string("b")),
 //         //     pair(string("a"), string("b")),
 //         //     string("(1)"), a);
-// 
+//
 //         fae_print("a                            ==> %s\n", a);
 //         fae_system_directory_write_file(path, fae_graph_to_dot(
 //                                                 string("#include \"doc/graphs/header.dot\""),
@@ -1172,18 +1172,18 @@ void test_json(string_t path)
     fae_puts(json2);
 
     fae_puts(fae_string_to_json(
-                     pair(i32(1), i32(2))));
+                 pair(i32(1), i32(2))));
 
     fae_puts(fae_string_to_json(
-                     list(pair(i32(1), i32(2)), pair(i32(3), i32(4)))));
+                 list(pair(i32(1), i32(2)), pair(i32(3), i32(4)))));
 
     fae_puts(fae_string_to_json(
-                     set(pair(i32(1), i32(2)), pair(i32(1), i32(2)))));
+                 set(pair(i32(1), i32(2)), pair(i32(1), i32(2)))));
 
     fae_puts(fae_string_to_json(
-                     map(
-                         string("foo"), i32(1),
-                         string("bar"), list(i32(1), i32(2), i32(3)))));
+                 map(
+                     string("foo"), i32(1),
+                     string("bar"), list(i32(1), i32(2), i32(3)))));
 
 }
 
@@ -1196,43 +1196,43 @@ void test_json(string_t path)
 // void test_dispatcher()
 // {
 //     test_section("Dispatcher");
-// 
+//
 //     dispatcher_t disp = lockfree_dispatcher();
-// 
+//
 //     ptr_t val = map(
 //                     string("lyrics"), list(string("Help"), string("me"), string("if"), string("you"), string("can")),
 //                     string("pitches"), list(ratio(60, 1), ratio(62, 1))
 //                 );
-// 
+//
 //     fae_message_send((receiver_t) disp, i16(1), val);
 //     fae_message_send((receiver_t) disp, i16(2), string("World!"));
 //     fae_message_send((receiver_t) disp, i16(2), string("World!"));
 //     fae_message_send((receiver_t) disp, i16(2), string("World!"));
 //     fae_message_send((receiver_t) disp, i16(2), string("World!"));
-// 
+//
 //     list_t msgs = fae_list_empty();
-// 
+//
 //     while (true) {
 //         fae_message_sync((sender_t) disp);
 //         msgs = fae_message_receive((sender_t) disp, i16(1));
-// 
+//
 //         if (fae_list_is_empty(msgs)) {
 //             break;
 //         }
-// 
+//
 //         fae_print("             | 1: %s\n", msgs);
 //     }
-// 
+//
 //     fae_destroy(disp);
 // }
-//      
+//
 
 // --------------------------------------------------------------------------------
 
 // void test_system_event()
 // {
 //     test_section("System events");
-// 
+//
 //     fae_message_sender_t s =
 //         fae_system_event_receive(
 //             list(
@@ -1240,11 +1240,11 @@ void test_json(string_t path)
 //                 // i16(mouse_down_event)
 //                 i16(key_down_event),
 //                 i16(key_up_event)
-// 
+//
 //             ));
 //     fae_message_receiver_t r =
 //         fae_system_event_send_std();
-// 
+//
 //     for (int i = 0; i < 100000; ++i) {
 //         fae_message_sync(s);
 //         fae_for_each(x, fae_message_receive(s, i16(0))) {
@@ -1262,27 +1262,27 @@ void test_json(string_t path)
 // {
 //     {
 //         // fae_time_t t = seconds(0);
-// 
+//
 //         // event_t ha = now(string("höglund"));
 //         // event_t ho = now(string("holmgren"));
-// 
+//
 //         // event_t a = merge_event(ha,
 //             // delay_event(milliseconds(200*2), merge_event(ha,
 //             // delay_event(milliseconds(200*2), merge_event(ha,
 //             // delay_event(milliseconds(200*2), merge_event(ha,
 //             // delay_event(milliseconds(200*2), merge_event(ha,
 //             // delay_event(milliseconds(200*2), merge_event(ha, never())))))))))));
-// 
+//
 //         // event_t b = merge_event(ho,
 //         //     delay_event(milliseconds(240*2), merge_event(ho,
 //         //     delay_event(milliseconds(240*2), merge_event(ho,
 //         //     delay_event(milliseconds(240*2), merge_event(ho,
 //         //     delay_event(milliseconds(240*2), merge_event(ho,
 //         //     delay_event(milliseconds(240*2), merge_event(ho, never())))))))))));
-// 
+//
 //         // event_t s1 = fae_event_later(seconds(1), NULL);
 //         // event_t s3 = fae_event_later(seconds(3), NULL);
-// 
+//
 //         event_t mm = fae_system_event_mouse_move();
 //         // event_t md = fae_system_event_mouse_down();
 //         // event_t mu = fae_system_event_mouse_up();
@@ -1290,7 +1290,7 @@ void test_json(string_t path)
 //         // event_t ku = fae_system_event_key_up();
 //         // event_t mouseX = fae_event_map(apply1, fae_pair_first, mm);
 //         // event_t mouseY = fae_event_map(apply1, fae_pair_second, mm);
-// 
+//
 //         // event_t y2 = merge_event(switch_event(kd, merge_event(a, mm), merge_event(b, md)), later(seconds(5), list(string("flux"))));
 //         // event_t y2 = switch_event(ku, switch_event(kd,never(),mm), merge_event(delay_event(seconds(3),b),md));
 //         // event_t y2 = switch_event(kd,mm,merge_event(md,mu));
@@ -1298,7 +1298,7 @@ void test_json(string_t path)
 //         event_t y2 = mm;
 //         // fae_print("The event: %s\n", mouseX);
 //         event_t z  = fae_system_event_write_std(y2);
-// 
+//
 //         {
 //             clock_t     clk = fae_time_get_system_prec_clock();
 //             scheduler_t sched = fae_scheduler_create(clk);
@@ -1328,34 +1328,34 @@ ptr_t add1234(ptr_t c, ptr_t x)
 // void test_processor_graphs(string_t path)
 // {
 //     test_section("Processors");
-// 
+//
 //     inform(string_append(string("Writing "), path));
-// 
+//
 //     processor_t p, q, chain, rchain;
 //     p = unary(type(i8), type(i8), add1234, NULL);
 //     chain = seq(p, seq(p, seq(p, seq(p, seq(p, p)))));
 //     rchain = seq(seq(seq(seq(p, p), p), p), p);
 //     q =
 //         seq(split(type(i8)),
-// 
+//
 //             par(
 //                 seq(seq(seq(p, p), p), p),
-// 
+//
 //                 seq(
 //                     split(type(i8)),
 //                     par(seq(split(type(i8)), par(chain, seq(split(type(i8)), par(chain, chain)))),
 //                         seq(split(type(i8)), par(p, seq(p, p))))
 //                 )
-// 
+//
 //             )
-// 
-// 
+//
+//
 //            )
-// 
+//
 //         ;
-// 
+//
 //     fae_processor_write_graph(q, path);
-// }  
+// }
 
 
 // --------------------------------------------------------------------------------
@@ -1462,10 +1462,10 @@ void test_log()
         fae_fae_log_error(string("We have a problem"));
 
         fae_fae_log(NULL,
-                                 fae_error_create_simple(
-                                     error,
-                                     string("We have a problem"),
-                                     string("Doremir.FooBar")));
+                    fae_error_create_simple(
+                        error,
+                        string("We have a problem"),
+                        string("Doremir.FooBar")));
         fae_thread_sleep(50);
     }
 
@@ -1504,54 +1504,54 @@ void test_regex()
 // void test_file_stream(string_t in_path, string_t out_path)
 // {
 //     test_section("File streams");
-// 
+//
 //     file_device_t    input, output;
 //     file_result_t    result;
 //     // processor_t proc;
-// 
+//
 //     // Processor to use
 //     // proc    = fae_processor_identity(type_pair(type_frame(type(f32)), type_frame(type(f32))));
 //     proc = NULL;
-// 
+//
 //     // Open streams
 //     input   = fae_device_file_open(in_path);
 //     output  = fae_device_file_open(out_path);
-// 
+//
 //     // Handle possible errors
 //     if (fae_check(input)) {
 //         log_error((error_t) input);
 //         warn(string("Aborting test due to error"));
 //         goto cleanup;
 //     }
-// 
+//
 //     if (fae_check(output)) {
 //         log_error((error_t) output);
 //         warn(string("Aborting test due to error"));
 //         goto cleanup;
 //     }
-// 
+//
 //     result = fae_device_file_run(input, proc, output);
-// 
+//
 //     // Handle possible error
 //     if (fae_check(result)) {
 //         log_error((error_t) result);
 //         warn(string("Aborting test due to error"));
 //         goto cleanup;
 //     }
-// 
+//
 // cleanup:
 //     fae_device_file_close(input);
 //     fae_device_file_close(output);
 // }
-// 
-// 
+//
+//
 // // --------------------------------------------------------------------------------
-// 
+//
 // void test_buffer_stream()
 // {
 //     test_section("Buffer streams");
 // }
-//           
+//
 
 // --------------------------------------------------------------------------------
 
@@ -1643,27 +1643,31 @@ void print_midi_devices(midi_session_t session)
     fae_print("\n", NULL);
 }
 
-ptr_t to_note_on(ptr_t occ) {
+ptr_t to_note_on(ptr_t occ)
+{
     // fae_print("%s\n", occ);
     int16_t kc = ti16(fae_list_head(occ));
     return midi_message(0x90, 48 + kc, 120);
 }
 
-ptr_t to_note_off(ptr_t occ) {
+ptr_t to_note_off(ptr_t occ)
+{
     // fae_print("%s\n", occ);
     int16_t kc = ti16(fae_list_head(occ));
     return midi_message(0x80, 48 + kc, 120);
 }
 
-ptr_t to_control(ptr_t occ) {
+ptr_t to_control(ptr_t occ)
+{
     // fae_print("%s\n", occ);
     double x = tf64(fae_pair_first(occ));
-    return midi_message(0xb0, 7, x/1900 * 127);
+    return midi_message(0xb0, 7, x / 1900 * 127);
 }
-ptr_t to_control2(ptr_t occ) {
+ptr_t to_control2(ptr_t occ)
+{
     // fae_print("%s\n", occ);
     double y = tf64(fae_pair_second(occ));
-    return midi_message(0xb0, 1, y/1200 * 127);
+    return midi_message(0xb0, 1, y / 1200 * 127);
 }
 
 
@@ -1748,7 +1752,7 @@ void test_midi_stream()
 cleanup:
     // fae_midi_close_stream(stream);
     fae_midi_end_session(session);
-}           
+}
 
 
 
@@ -1769,7 +1773,7 @@ void test_midi_hotplug()
     }
 
     fae_midi_set_status_callback(status_changed, string("hello"), session);
-    
+
     // CFRunLoopRun();
     // fae_thread_sleep(20000);
 cleanup:
@@ -1778,16 +1782,18 @@ cleanup:
 }
 
 
-ptr_t print_signal(ptr_t data, ptr_t value) {
+ptr_t print_signal(ptr_t data, ptr_t value)
+{
     fae_print("   %s\n", value);
 }
-ptr_t signal_succ(ptr_t data, ptr_t value) {
+ptr_t signal_succ(ptr_t data, ptr_t value)
+{
     return fae_add(value, i16(1));
 }
 void test_signal()
 {
     test_section("Signals");
-    
+
     fae_signal_t s = fae_signal_constant(i16(1));
     fae_signal_t p = fae_signal_constant(i16(10));
     // fae_signal_t t = fae_signal_apply(fae_signal_identity(), s);
@@ -1895,9 +1901,9 @@ int main(int argc, char const *argv[])
         // test_midi_stream();
 
         test_signal();
-        
+
         // test_version();
-        
+
 // begin:
         // test_midi_hotplug();
 

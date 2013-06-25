@@ -48,7 +48,7 @@ intptr_t fae_atomic_get(fae_atomic_t a)
 }
 
 void fae_atomic_modify(fae_atomic_t a,
-                           fae_atomic_updater_t f)
+                       fae_atomic_updater_t f)
 {
 }
 

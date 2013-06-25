@@ -183,7 +183,7 @@ void fae_midi_terminate()
 session_t fae_midi_begin_session()
 {
     PmError result;
-    
+
     if (!pm_mutex) {
         assert(false && "Module not initalized");
     }
@@ -197,6 +197,7 @@ session_t fae_midi_begin_session()
             return (session_t) midi_device_error(string("Overlapping real-time midi sessions"));
         } else {
             result = Pm_Initialize();
+
             if (result < 0) {
                 return (session_t) native_error(string("Could not start midi"), result);
             }
@@ -213,9 +214,9 @@ session_t fae_midi_begin_session()
 }
 
 void fae_midi_end_session(session_t session)
-{ 
+{
     PmError result;
-    
+
     if (!pm_mutex) {
         assert(false && "Not initalized");
     }
@@ -226,10 +227,12 @@ void fae_midi_end_session(session_t session)
     {
         if (pm_status) {
             result = Pm_Terminate();
+
             if (result < 0) {
                 fae_error_log(NULL, native_error(string("Could not stop midi"), result));
                 return;
             }
+
             pm_status = false;
         }
     }
@@ -238,9 +241,9 @@ void fae_midi_end_session(session_t session)
 }
 
 void fae_midi_with_session(session_callback_t    session_callback,
-                                      fae_ptr_t         session_data,
-                                      error_callback_t      error_callback,
-                                      fae_ptr_t         error_data)
+                           fae_ptr_t         session_data,
+                           error_callback_t      error_callback,
+                           fae_ptr_t         error_data)
 {
     session_t session = fae_midi_begin_session();
 
@@ -338,6 +341,7 @@ fae_midi_stream_t fae_midi_open_stream(device_t device)
         inform(string("Opening input\n"));
         result = Pm_OpenInput(&stream->native_input, device->index, NULL, 0,
                               midi_time_callback, NULL);
+
         if (result < 0) {
             native_error(string("Could not open midi input"), result);
         }
@@ -347,6 +351,7 @@ fae_midi_stream_t fae_midi_open_stream(device_t device)
         inform(string("Opening output\n"));
         result = Pm_OpenOutput(&stream->native_output, device->index, NULL, 0,
                                midi_time_callback, NULL, -1);
+
         if (result < 0) {
             native_error(string("Could not open midi output"), result);
         }
@@ -359,18 +364,22 @@ fae_midi_stream_t fae_midi_open_stream(device_t device)
 void fae_midi_close_stream(stream_t stream)
 {
     inform(string("Closing real-time midi stream"));
-    if (stream->native_input)
+
+    if (stream->native_input) {
         Pm_Close(stream->native_input);
-    if (stream->native_output)
+    }
+
+    if (stream->native_output) {
         Pm_Close(stream->native_output);
+    }
 }
 
 
 void fae_midi_with_stream(device_t           device,
-                                     stream_callback_t  stream_callback,
-                                     fae_ptr_t      stream_data,
-                                     error_callback_t   error_callback,
-                                     fae_ptr_t      error_data)
+                          stream_callback_t  stream_callback,
+                          fae_ptr_t      stream_data,
+                          error_callback_t   error_callback,
+                          fae_ptr_t      error_data)
 {
     stream_t stream = fae_midi_open_stream(device);
 
@@ -484,78 +493,78 @@ void midi_stream_destroy(ptr_t a)
 // void midi_stream_sync(ptr_t a)
 // {
 //     stream_t stream = (stream_t) a;
-// 
+//
 //     fae_destroy(stream->incoming);
 //     stream->incoming = fae_list_empty();
-// 
+//
 //     // TODO need to get error?
 //     while (Pm_Poll(stream->native_input) == TRUE) {
-// 
+//
 //         PmEvent buffer[1024];
 //         PmError result = Pm_Read(stream->native_input, buffer, 1024);
-//         
+//
 //         if (result < 0) {
 //             native_error(string("Could not receive midi"), result);
 //         }
-//         
+//
 //         for (int i = 0; i < result; ++i) {
 //             PmEvent   event = buffer[i];
 //             PmMessage msg   = event.message;
-// 
+//
 //             // FIXME detect sysex
 //             midi_message_t midi_message = midi_message(Pm_MessageStatus(msg), Pm_MessageData1(msg), Pm_MessageData2(msg));
 //             stream->incoming = fae_list_dcons(midi_message, stream->incoming);
-// 
+//
 //             // TODO midi thru
 //         }
 //     }
-// 
+//
 // }
-// 
+//
 // fae_list_t midi_stream_receive(ptr_t a, address_t addr)
 // {
 //     // Ignore address
 //     stream_t stream = (stream_t) a;
 //     return fae_list_copy(stream->incoming);
 // }
-// 
+//
 // void midi_stream_send(ptr_t a, address_t addr, message_t msg)
 // {
 //     PmError result;
 //     stream_t stream = (stream_t) a;
 //     midi_message_t midi   = (midi_message_t) msg;
 //     // TODO use dynamic introspection to detect lists (?)
-// 
+//
 //     if (fae_midi_message_is_simple(midi)) {
 //         // timestamp ignored
 //         long midi_message = fae_midi_message_simple_to_long(midi);
-// 
+//
 //         // printf("Sending: %s %08x\n", unstring(fae_string_show(midi)), (int) midi_message);
-// 
+//
 //         result = Pm_WriteShort(stream->native_output, 0, midi_message);
-// 
+//
 //         if (result != pmNoError) {
 //             native_error(string("Could not send midi"), result);
 //         }
 //     } else {
 //         assert(false && "Not implemented");
-// 
+//
 //         unsigned char buf[2048];
 //         buf[0]    = 'f';
 //         buf[0]    = '0';
 //         buf[2046] = 'f';
 //         buf[2047] = '7';
-// 
+//
 //         // check buffer size <= (2048-2)
 //         // copy sysex buffer to buf+1
-// 
+//
 //         result = Pm_WriteSysEx(stream->native_output, 0, buf);
 //         if (result != pmNoError) {
 //             native_error(string("Could not send midi"), result);
 //         }
 //     }
-// 
-// }    
+//
+// }
 
 ptr_t midi_stream_impl(fae_id_t interface)
 {
@@ -564,9 +573,9 @@ ptr_t midi_stream_impl(fae_id_t interface)
     static fae_destroy_t midi_stream_destroy_impl
         = { midi_stream_destroy };
     // static fae_message_receiver_interface_t midi_stream_message_receiver_interface_impl
-        // = { midi_stream_send };
+    // = { midi_stream_send };
     // static fae_message_sender_interface_t midi_stream_message_sender_interface_impl
-        // = { midi_stream_sync, midi_stream_receive };
+    // = { midi_stream_sync, midi_stream_receive };
 
     switch (interface) {
 
@@ -577,10 +586,10 @@ ptr_t midi_stream_impl(fae_id_t interface)
     case fae_destroy_i:
         return &midi_stream_destroy_impl;
 
-    // case fae_message_sender_interface_i:
+        // case fae_message_sender_interface_i:
         // return &midi_stream_message_sender_interface_impl;
 
-    // case fae_message_receiver_interface_i:
+        // case fae_message_receiver_interface_i:
         // return &midi_stream_message_receiver_interface_impl;
 
     default:
@@ -596,22 +605,22 @@ void fae_fae_log_error_from(fae_string_t msg, fae_string_t origin);
 error_t midi_device_error(string_t msg)
 {
     return fae_error_create_simple(error,
-                                       msg,
-                                       string("Doremir.Device.Midi"));
+                                   msg,
+                                   string("Doremir.Device.Midi"));
 }
 
 error_t midi_device_error_with(string_t msg, int code)
 {
     return fae_error_create_simple(error,
-                                       string_dappend(msg, format_integral(" (error code %d)", code)),
-                                       string("Doremir.Device.Midi"));
-}     
+                                   string_dappend(msg, format_integral(" (error code %d)", code)),
+                                   string("Doremir.Device.Midi"));
+}
 error_t native_error(string_t msg, int code)
 {
     return fae_error_create_simple(error,
-                                       string_dappend(msg, string((char*) Pm_GetErrorText(code))),
-                                       string("Doremir.Device.Midi"));
-}     
+                                   string_dappend(msg, string((char *) Pm_GetErrorText(code))),
+                                   string("Doremir.Device.Midi"));
+}
 
 
 void midi_device_fatal(string_t msg, int code)

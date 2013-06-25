@@ -97,11 +97,11 @@ fae_ptr_t fae_atomic_get(fae_atomic_t a)
 }
 
 /** Update the given atomic value by applying the given pure function.
-    
+
     @param atomic   Atomic reference.
     @param func     Function to be applied to the value.
     @param data     Value to be passed to the function.
-    
+
     @par Atomicity Atomic
  */
 void fae_atomic_modify(fae_atomic_t atomic, fae_unary_t func, fae_ptr_t data)
@@ -116,7 +116,7 @@ void fae_atomic_modify(fae_atomic_t atomic, fae_unary_t func, fae_ptr_t data)
 }
 
 /** Set the given given atomic reference.
-    
+
     @par Atomicity Atomic
  */
 void fae_atomic_set(fae_atomic_t atomic, fae_ptr_t value)

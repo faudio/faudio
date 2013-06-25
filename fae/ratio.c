@@ -231,8 +231,8 @@ fae_ratio_t fae_ratio_absolute(fae_ratio_t x)
     For example \f$11/3\f$ becomes \f$3+2/3\f$.
  */
 void fae_ratio_to_mixed(fae_ratio_t x,
-                            fae_ratio_num_t *n,
-                            fae_ratio_t     *y)
+                        fae_ratio_num_t *n,
+                        fae_ratio_t     *y)
 {
     num_t   a = x->num;
     denom_t b = x->denom;

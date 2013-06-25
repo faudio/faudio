@@ -50,8 +50,8 @@ void delete_midi_message(fae_midi_message_t midi)
     @return         A new Midi message.
  */
 fae_midi_message_t fae_midi_message_create_simple(status_t status,
-                                          data_t data1,
-                                          data_t data2)
+                                                  data_t data1,
+                                                  data_t data2)
 {
     assert(status != 0xf0 && status != 0xf7);
 
