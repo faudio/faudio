@@ -100,6 +100,8 @@ void fae_destroy(fae_ptr_t);
 bool fae_check(fae_ptr_t);
 void fae_print(char *, fae_ptr_t);
 void fae_dprint(char *, fae_ptr_t);
+void fae_print_ln(fae_ptr_t);
+void fae_dprint_ln(fae_ptr_t);
 
 /** @}
     */

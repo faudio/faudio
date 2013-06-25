@@ -206,5 +206,7 @@ module Fae
 
     print    : (Char*,Ptr) -> Void;
     dprint   : (Char*,Ptr) -> Void;
+    printLn  : (Ptr) -> Void;
+    dprintLn : (Ptr) -> Void;
 }
 

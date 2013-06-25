@@ -191,6 +191,8 @@ if (COMPONENTS_RESOLVED)
     add_definitions(-std=c99)
     # add_definitions(-std=gnu99)
     add_definitions(-fcolor-diagnostics)
+    add_definitions(-Werror)
+    add_definitions(-Wno-error=logical-op-parentheses)
     add_definitions(
         -Wall
         # -Wmissing-noreturn
