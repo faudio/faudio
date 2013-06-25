@@ -629,7 +629,7 @@ void midi_device_fatal(string_t msg, int code)
         string_dappend(msg, format_integral(" (error code %d)", code)),
         string("Doremir.Device.Midi"));
 
-    fae_fae_log_error(string("Terminating Audio Engine"));
+    fae_fae_log_error(string("Terminating Fae"));
     exit(error);
 }
 

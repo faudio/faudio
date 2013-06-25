@@ -36,7 +36,7 @@ void fae_thread_terminate();
 void fae_time_initialize();
 void fae_time_terminate();
 
-/** Returns the version of the Audio Engine as a list
+/** Returns the version of Fae as a list
     on the form `("alpha", 1, 0, 5, "")`.
  */
 fae_list_t fae_fae_version()
@@ -49,7 +49,7 @@ fae_list_t fae_fae_version()
                string(version_g.suff));
 }
 
-/** Returns the version of the Audio Engine as a string
+/** Returns the version of Fae as a string
     on the form "alpha1.0.5".
  */
 fae_string_t fae_fae_version_string()
@@ -77,7 +77,7 @@ void fae_fae_initialize()
     fae_midi_initialize();
     fae_thread_initialize();
     fae_time_initialize();
-    fae_fae_log_info(string("Initialized Audio Engine."));
+    fae_fae_log_info(string("Initialized Fae."));
 
     init_count_g++;
 }
@@ -94,9 +94,9 @@ void fae_fae_terminate()
         fae_midi_terminate();
         fae_thread_terminate();
         fae_time_terminate();
-        fae_fae_log_info(string("Terminated Audio Engine."));
+        fae_fae_log_info(string("Terminated Fae."));
     } else {
-        fae_fae_log_warning(string("Audio Engine could not terminate: inconsistent state."));
+        fae_fae_log_warning(string("Fae could not terminate: inconsistent state."));
     }
 }
 
@@ -125,7 +125,7 @@ static inline void stdlog(ptr_t data, fae_time_system_t t, fae_error_t e)
     fflush(file);
 }
 
-/** Instruct the Audio Engine to write log messages to the specific file.
+/** Instruct Fae to write log messages to the specific file.
  */
 void fae_fae_set_log_file(fae_string_file_path_t path)
 {
@@ -135,7 +135,7 @@ void fae_fae_set_log_file(fae_string_file_path_t path)
     free(cpath);
 }
 
-/** Instruct the Audio Engine to write log messages to the standard output.
+/** Instruct Fae to write log messages to the standard output.
  */
 void fae_fae_set_log_std()
 {
@@ -143,7 +143,7 @@ void fae_fae_set_log_std()
     log_func_g  = stdlog;
 }
 
-/** Instruct the Audio Engine to pass log messages to the given handler.
+/** Instruct Fae to pass log messages to the given handler.
  */
 void fae_fae_set_log(fae_fae_log_func_t f, fae_ptr_t data)
 {
