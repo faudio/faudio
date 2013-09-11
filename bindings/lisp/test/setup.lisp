@@ -10,7 +10,7 @@
 (defvar *foreign-lib*)
 
 ; Load Lisp bindings
-(asdf:load-system :audio-engine)
+(asdf:load-system :fae)
 
 ; Load library and setup tests
 (let ((framework-name "FAE")
