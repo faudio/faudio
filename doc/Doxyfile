@@ -26,7 +26,7 @@ DOXYFILE_ENCODING      = UTF-8
 # identify the project. Note that if you do not use Doxywizard you need
 # to put quotes around the project name if it contains spaces.
 
-PROJECT_NAME           = "Fae"
+PROJECT_NAME           = "func"
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number.
 # This could be handy for archiving the generated documentation or
@@ -655,7 +655,7 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories
 # with spaces.
 
-INPUT = doc modules include src fae
+INPUT = doc modules include src fae platform
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is
@@ -707,10 +707,12 @@ EXCLUDE_PATTERNS       = */include/fae/processor \
                          */include/fae/processor.h \
                          */include/fae/scheduler* \
                          */modules/Fae/Scheduler* \
-                         */include/fae/atomic/queue* \
-                         */modules/Fae/Atomic/Queue* \
                          */include/fae/std* \
                          */modules/Fae/Std* \
+                         */include/fae/plot* \
+                         */modules/Fae/Plot* \
+                         */include/fae/graph* \
+                         */modules/Fae/Graph* \
                          */include/fae/atomic/ring_buffer* \
                          */modules/Fae/Atomic/RingBuffer* \
                          */include/fae/priority_queue* \

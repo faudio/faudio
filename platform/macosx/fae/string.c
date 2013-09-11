@@ -10,13 +10,11 @@
 #include <fae/dynamic.h>
 #include <iconv.h>
 
-#include <CoreFoundation/CoreFoundation.h> // TODO OS X only
+#include <CoreFoundation/CoreFoundation.h>
 
-/** Encode a string as a CFString.
-
-    @note   OS X only
-    @return
-        A new CFStringRef.
+/** Convert a string to a the string representation used by the platform.
+    
+    * On Mac OS X and iOS, `CFStringRef` is used.
  */
 void *fae_string_to_native(fae_string_t str)
 {
@@ -30,13 +28,9 @@ void *fae_string_to_native(fae_string_t str)
     return (void *) cfstr;
 }
 
-/** Deencode a string from a CFString.
+/** Convert a value of the string representation used by the platform to a string.
 
-    @note   OS X only
-    @param cfstr
-        A CFStringRef.
-    @return
-        A new string.
+    * On Mac OS X and iOS, `CFStringRef` is used.
  */
 fae_string_t fae_string_from_native(void *cfstr)
 {

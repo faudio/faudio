@@ -16,49 +16,49 @@ module Fae
     // Basic types
 
     /** @typedef fae_ptr_t
-        Generic pointer type.
+        Pointer type, equivalent to `void*`.
     */
     type Ptr = Void*;
 
     // Function types
 
     /** @typedef fae_nullary_t
-        A nullary function.
+        A nullary function, defined as `fae_ptr_t(*fae_nullary_t )(fae_ptr_t)`.
 
-        By convention, the first argument is a pointer to an environment that allow
-        clients to close over variables in the environment.
+        The first argument is an environment pointer which is usually passed along with the function.
+        This is the standard C technique for closing over variables.
     */
     type Nullary = (Ptr -> Ptr)*;
 
     /** @typedef fae_unary_t
         A unary function.
 
-        By convention, the first argument is a pointer to an environment that allow
-        clients to close over variables in the environment.
+        The first argument is an environment pointer which is usually passed along with the function.
+        This is the standard C technique for closing over variables.
     */
     type Unary   = ((Ptr, Ptr) -> Ptr)*;
 
     /** @typedef fae_binary_t
         A binary function.
 
-        By convention, the first argument is a pointer to an environment that allow
-        clients to close over variables in the environment.
+        The first argument is an environment pointer which is usually passed along with the function.
+        This is the standard C technique for closing over variables.
     */
     type Binary  = ((Ptr, Ptr, Ptr) -> Ptr)*;
 
     /** @typedef fae_ternary_t
         A ternary function.
 
-        By convention, the first argument is a pointer to an environment that allow
-        clients to close over variables in the environment.
+        The first argument is an environment pointer which is usually passed along with the function.
+        This is the standard C technique for closing over variables.
     */
     type Ternary  = ((Ptr, Ptr, Ptr, Ptr) -> Ptr)*;
 
     /** @typedef fae_pred_t
-        A predicate function.
+        A predicate, or boolean function.
 
-        By convention, the first argument is a pointer to an environment that allow
-        clients to close over variables in the environment.
+        The first argument is an environment pointer which is usually passed along with the function.
+        This is the standard C technique for closing over variables.
     */
     type Pred   = ((Ptr, Ptr) -> Bool)*;
 

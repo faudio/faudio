@@ -127,7 +127,7 @@ void fae_audio_set_status_callback(
 fae_audio_stream_t
 fae_audio_open_stream(
     fae_audio_device_t    input,
-    fae_processor_t       processor,
+    fae_ptr_t             processor,
     fae_audio_device_t    output) {}
 
 /**
@@ -149,7 +149,7 @@ void fae_audio_close_stream(
  */
 void fae_audio_with_stream(
     fae_audio_device_t                 input,
-    fae_processor_t                    processor,
+    fae_ptr_t                          processor,
     fae_audio_device_t                 output,
     fae_audio_stream_callback_t stream_callback,
     fae_ptr_t                          stream_data,

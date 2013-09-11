@@ -3,16 +3,29 @@
 body, table, div, p, dl {
   max-  width: 1100px;
         color: #333;
+/*
         font-family: Helvetica, arial, freesans, clean, sans-serif;
-        font-size: 14px;
+        font-size: 15px;
         line-height: 1.5;
+*/
+        font-size: 14px;
+        font-family: Helvetica, Arial, Geneva;
+        line-height: 1.8;
+}
+
+h1, h2, h3, h4, .tablist, .title {
+        font-family: Palatino;
+        color: black;
+        text-decoration:none;
+        text-shadow: 0px 0px 2px #eef;
 }
 
 body {
+        color: black;
         background-color: #fff;
         padding: 20px;
         max-width: 960px;
-        margin: 0 auto;
+        margin: 0;
 }
 
 div.levels {
@@ -65,9 +78,11 @@ div.levels {
     padding: 0 10px;
 }
 
+/*
 .tablist a:hover {
   text-decoration: underline;
 }
+*/
 
 .tablist li.current a {
     color: #333;
@@ -85,10 +100,6 @@ th {
         margin: 0px;
         padding: 5px;
 }
-/*tr:nth-child(even) {
-        background-color: #eee;
-}
-*/
 
 td.entry {
         width: 40%;
@@ -243,11 +254,6 @@ div.groupText {
         font-style: italic;
 }
 
-body {
-/*  background-color: white;*/
-        color: black;
-        margin: 0;
-}
 
 div.contents {
         margin-top: 10px;
@@ -271,7 +277,6 @@ td.indexvalue {
 }
 
 tr.memlist {
-/*  background-color: #EEF1F7;*/
 }
 
 p.formulaDsp {
@@ -364,7 +369,6 @@ span.vhdllogic {
 }
 
 blockquote {
-/*        background-color: #F7F8FB;*/
         border-left: 2px solid #9CAFD4;
         margin: 0 24px 0 4px;
         padding: 0 12px 0 16px;
@@ -414,14 +418,11 @@ table.memberdecls {
 }
 
 .memberdecls td.glow, .fieldtable tr.glow {
-/*  background-color: cyan;*/
-/*  box-shadow: 0 0 15px cyan;*/
 }
 
 .mdescLeft, .mdescRight,
 .memItemLeft, .memItemRight,
 .memTemplItemLeft, .memTemplItemRight, .memTemplParams {
-/*  background-color: #F9FAFC;*/
               border: none;
               margin: 4px;
               padding: 1px 0 0 8px;
@@ -469,8 +470,6 @@ table.memberdecls {
 }
 
 .memnav {
-/*  background-color: #EBEFF6;*/
-/*  border: 1px solid #A3B4D7;*/
         text-align: center;
         margin: 2px;
         margin-right: 15px;
@@ -507,11 +506,9 @@ table.memberdecls {
 /*        border-left: 1px solid #A8B8D9;*/
 /*        border-right: 1px solid #A8B8D9;*/
         padding: 6px 0px 6px 0px;
-/*        color: #253555;*/
         font-weight: bold;
 /*        text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.9);*/
 /*        background-repeat:repeat-x;*/
-/*        background-color: #E2E8F2;*/
 
 
 }
@@ -521,7 +518,6 @@ table.memberdecls {
 /*        border-left: 1px solid #A8B8D9;      */
 /*        border-right: 1px solid #A8B8D9; */
         padding: 6px 10px 2px 10px;
-/*        background-color: #FBFCFD;*/
 /*        border-top-width: 0;*/
 }
 
@@ -759,7 +755,6 @@ div.ingroups a
 
 div.header
 {
-/*  background-color: #F9FAFC;*/
         margin:  0px;
 /*  border-bottom: 1px solid #C4CFE5;*/
 }
@@ -787,7 +782,6 @@ dl.note
         padding-left: 3px;
         border-left:4px solid;
         border-style: none;
-/*        border-color: #D0C000;*/
 }
 
 dl.warning, dl.attention
@@ -796,7 +790,6 @@ dl.warning, dl.attention
         padding-left: 3px;
         border-left:4px solid;
         border-style: none;
-/*        border-color: #FF0000;*/
 }
 
 dl.pre, dl.post, dl.invariant
@@ -805,7 +798,6 @@ dl.pre, dl.post, dl.invariant
         padding-left: 3px;
         border-left:4px solid;
         border-style: none;
-/*        border-color: #00D000;*/
 }
 
 dl.deprecated
@@ -814,7 +806,6 @@ dl.deprecated
         padding-left: 3px;
         border-left:4px solid;
         border-style: none;
-/*        border-color: #505050;*/
 }
 
 dl.todo
@@ -823,7 +814,6 @@ dl.todo
         padding-left: 3px;
         border-left:4px solid;
         border-style: none;
-/*        border-color: #00C0E0;*/
 }
 
 dl.test
@@ -832,7 +822,6 @@ dl.test
         padding-left: 3px;
         border-left:4px solid;
         border-style: none;
-/*        border-color: #3030E0;*/
 }
 
 dl.bug
@@ -841,7 +830,6 @@ dl.bug
         padding-left: 3px;
         border-left:4px solid;
         border-style: none;
-/*        border-color: #C08050;*/
 }
 
 dl.section dd {
@@ -860,10 +848,13 @@ dl.section dd {
 { 
         border: 0px none;
 }
+
  
 #projectname
 {
-        font: 350% Gill Sans, Tahoma, Arial,sans-serif;
+/*
+        
+*/        font: 350% Palatino,serif;
         margin: 0px;
         padding: 2px 0px;
 }
@@ -955,7 +946,6 @@ div.toc li {
 
 div.toc h3 {
 /*        font: bold 12px/1.2 Arial,FreeSans,sans-serif;*/
-/*        color: #4665A2;*/
         border-bottom: 0 none;
         margin: 0;
 }

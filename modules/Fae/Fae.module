@@ -2,18 +2,18 @@
 /**
     @addtogroup FaeFae
 
-    This modules exports the entire audio engine. Example usage:
+    This modules exports Fae. Example usage:
 
     ~~~~
-    #import <fae/audio_engine.h>
+    #import <fae/fae.h>
 
     int main (int argc, char const *argv[])
     {
-        fae_audio_engine_initialize();
+        fae_fae_initialize();
 
         ...
 
-        fae_audio_engine_terminate();
+        fae_fae_terminate();
         return 0;
     }
     ~~~~
