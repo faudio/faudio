@@ -17,10 +17,6 @@
         * For memory management we use structural sharing with one reference count per node.
             * Pros: Copying a list is O(1)
             * Cons: No destructive optimizations, all destrutive methods are wrappers
-
-    Possibilities:
-        * Add a "transient list" type with no sharing.
-          This gives us "as good as mutable" destrucive operations but slow copy.
  */
 
 struct node {
@@ -98,7 +94,6 @@ inline static void delete_list(list_t list)
 
     impl_for_each_node(my_list, node)
         fae_print("%s\n", node->value);
-
  */
 #define impl_for_each_node(list, var) \
     for(node_t _n = list->node; _n; _n = _n->next) \
@@ -135,7 +130,6 @@ inline static void delete_list(list_t list)
         A node_t pointer.
     @param value
         Value to add.
-
  */
 
 #define begin_node(var, next) \
