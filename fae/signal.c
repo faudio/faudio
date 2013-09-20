@@ -192,75 +192,41 @@ fae_signal_t fae_signal_copy(fae_signal_t signal)
 
 fae_signal_t fae_signal_constant(fae_ptr_t value)
 {
-    signal_t signal = new_signal(constant_signal);
-    constant_get(signal, value) = value;
-    return signal;
+    assert(false && "Not implemented");
 }
 
 fae_signal_t fae_signal_identity()
 {
-    signal_t signal = new_signal(identity_signal);
-    identity_get(signal, arity)      = 1;
-    identity_get(signal, saturation) = 0;
-    return signal;
+    assert(false && "Not implemented");
 }
 
 fae_signal_t fae_signal_apply(fae_signal_t signal1, fae_signal_t signal2)
 {
-    // TODO not pretty to assume lifted
-    // It works because saturation/arity/args are always first
-    assert(lifted_get(signal1, saturation)
-           <
-           lifted_get(signal1, arity));
-
-    signal_t signal1p = fae_signal_copy(signal1);
-
-    int n = lifted_get(signal1, saturation);
-    lifted_get(signal1p, arguments)[n] = signal2;
-    lifted_get(signal1p, saturation)++;
-
-    return signal1p;
+    assert(false && "Not implemented");
 }
 fae_signal_t fae_signal_dapply(fae_signal_t signal1, fae_signal_t signal2)
 {
-    signal_t signal1p = fae_signal_apply(signal1, signal2);
-    fae_destroy(signal1);
-    return signal1p;
+    assert(false && "Not implemented");
 }
 
 fae_signal_t fae_signal_lift(fae_unary_t function, fae_ptr_t data)
 {
-    signal_t signal = new_signal(lifted_signal);
-    lifted_get(signal, function)     = function;
-    lifted_get(signal, data)         = data;
-    lifted_get(signal, arity)        = 1;
-    lifted_get(signal, saturation)   = 0;
-    return signal;
+    assert(false && "Not implemented");
 }
 
 fae_signal_t fae_signal_lift2(fae_binary_t function, fae_ptr_t data)
 {
-    signal_t signal = new_signal(lifted_signal);
-    lifted_get(signal, function)     = function;
-    lifted_get(signal, data)         = data;
-    lifted_get(signal, arity)        = 2;
-    lifted_get(signal, saturation)   = 0;
-    return signal;
+    assert(false && "Not implemented");
 }
 
 fae_signal_t fae_signal_lift3(fae_ternary_t function, fae_ptr_t data)
 {
-    signal_t signal = new_signal(lifted_signal);
-    lifted_get(signal, function)     = function;
-    lifted_get(signal, data)         = data;
-    lifted_get(signal, arity)        = 3;
-    lifted_get(signal, saturation)   = 0;
-    return signal;
+    assert(false && "Not implemented");
 }
 
 fae_signal_t fae_signal_time()
 {
-    return new_signal(time_signal);
+    assert(false && "Not implemented");
 }
 
 fae_signal_t fae_signal_delay(fae_time_t time, fae_signal_t signal)
