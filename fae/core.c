@@ -11,35 +11,6 @@
 
 #pragma GCC diagnostic ignored "-Wparentheses"
 
-/*
-    fae_ptr_t
-
-    v = value
-    _ = anything
-
-    Layout                                  Tag
-    ===================================     ===
-
-    bool
-    _______v ________ ________ _____111     0x7
-    int8
-    vvvvvvvv ________ ________ _____110     0x6
-    int16
-    vvvvvvvv vvvvvvvv ________ _____101     0x5
-    boxed int32
-    vvvvvvvv vvvvvvvv vvvvvvvv vvvvv100     0x4
-    boxed int64
-    vvvvvvvv vvvvvvvv vvvvvvvv vvvvv011     0x3
-    boxed float
-    vvvvvvvv vvvvvvvv vvvvvvvv vvvvv010     0x2
-    boxed double
-    vvvvvvvv vvvvvvvv vvvvvvvv vvvvv001     0x1
-    ptr
-    vvvvvvvv vvvvvvvv vvvvvvvv vvvvv000     0x0
-
-    Note: ptr includes 0 (NULL)
- */
-
 int fae_type(fae_ptr_t a)
 {
     return ((intptr_t) a) & 0x7;
