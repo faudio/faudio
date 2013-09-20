@@ -21,4 +21,5 @@ add_tool(fae_echo_midi)
 add_tool(fae_plug_midi)
 add_tool(fae_default_midi)
 add_tool(fae_template)
+add_tool(fae_sndfile)
 
