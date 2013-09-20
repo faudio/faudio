@@ -214,23 +214,23 @@ fae_string_t simple_error_origin(fae_ptr_t a)
 fae_string_t simple_error_show(fae_ptr_t a)
 {
     simple_error_t simple = (simple_error_t) a;
-    string_t str = string("<");
+    string_t result = string("<");
 
     switch (simple->severity) {
     case info:
-        str = string_dappend(str, string("Info "));
+        result = string_dappend(result, string("Info "));
         break;
 
     case warning:
-        str = string_dappend(str, string("Warning "));
+        result = string_dappend(result, string("Warning "));
         break;
 
     case error:
-        str = string_dappend(str, string("Error "));
+        result = string_dappend(result, string("Error "));
         break;
 
     case misc:
-        str = string_dappend(str, string("Misc "));
+        result = string_dappend(result, string("Misc "));
         break;
 
     default:
@@ -238,23 +238,26 @@ fae_string_t simple_error_show(fae_ptr_t a)
     }
 
     if (fae_string_length(simple->origin) > 0) {
-        str = string_dappend(str, fae_copy(simple->origin));
-        str = string_dappend(str, string(": "));
+        result = string_dappend(result, fae_copy(simple->origin));
+        result = string_dappend(result, string(": "));
     }
 
-    str = string_dappend(str, fae_copy(simple->message));
-    str = string_dappend(str, string(">"));
+    result = string_dappend(result, fae_copy(simple->message));
+    result = string_dappend(result, string(">"));
 
-    return str;
+    return result;
 }
 
 fae_ptr_t simple_error_impl(fae_id_t interface)
 {
-    static fae_string_show_t simple_error_show_impl = { simple_error_show };
-    static fae_copy_t simple_error_copy_impl = { simple_error_copy };
-    static fae_destroy_t simple_error_destroy_impl = { simple_error_destroy };
-    static fae_error_interface_t simple_error_error_impl =
-    { simple_error_severity, simple_error_message, simple_error_origin };
+    static fae_string_show_t simple_error_show_impl
+        = { simple_error_show };
+    static fae_copy_t simple_error_copy_impl
+        = { simple_error_copy };
+    static fae_destroy_t simple_error_destroy_impl
+        = { simple_error_destroy };
+    static fae_error_interface_t simple_error_error_impl
+        = { simple_error_severity, simple_error_message, simple_error_origin };
 
     switch (interface) {
     case fae_copy_i:

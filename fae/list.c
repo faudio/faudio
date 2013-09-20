@@ -686,84 +686,81 @@ list_t fae_list_to_list(list_t list)
 
 // --------------------------------------------------------------------------------
 
-bool list_equal(ptr_t a, ptr_t b)
+bool list_equal(ptr_t list1, ptr_t list2)
 {
-    node_t an = ((list_t) a)->node;
-    node_t bn = ((list_t) b)->node;
+    node_t node1 = ((list_t) list1)->node;
+    node_t node2 = ((list_t) list2)->node;
 
-    while (an && bn) {
-        if (!fae_equal(an->value, bn->value)) {
+    while (node1 && node2) {
+        if (!fae_equal(node1->value, node2->value)) {
             return false;
         }
 
-        an = an->next;
-        bn = bn->next;
+        node1 = node1->next;
+        node2 = node2->next;
     }
 
-    return !(an || bn);
+    return !(node1 || node2);
 }
 
-bool list_less_than(ptr_t a, ptr_t b)
+bool list_less_than(ptr_t list1, ptr_t list2)
 {
-    node_t an = ((list_t) a)->node;
-    node_t bn = ((list_t) b)->node;
+    node_t node1 = ((list_t) list1)->node;
+    node_t node2 = ((list_t) list2)->node;
 
-    while (an && bn) {
-        if (fae_less_than(an->value, bn->value)) {
+    while (node1 && node2) {
+        if (fae_less_than(node1->value, node2->value)) {
             return true;
         }
 
-        if (fae_greater_than(an->value, bn->value)) {
+        if (fae_greater_than(node1->value, node2->value)) {
             return false;
         }
 
-        an = an->next;
-        bn = bn->next;
+        node1 = node1->next;
+        node2 = node2->next;
     }
 
-    return bn && !an;
+    return node2 && !node1;
 }
 
-bool list_greater_than(ptr_t a, ptr_t b)
+bool list_greater_than(ptr_t list1, ptr_t list2)
 {
-    node_t an = ((list_t) a)->node;
-    node_t bn = ((list_t) b)->node;
+    node_t node1 = ((list_t) list1)->node;
+    node_t node2 = ((list_t) list2)->node;
 
-    while (an && bn) {
-        if (fae_greater_than(an->value, bn->value)) {
+    while (node1 && node2) {
+        if (fae_greater_than(node1->value, node2->value)) {
             return true;
         }
 
-        if (fae_less_than(an->value, bn->value)) {
+        if (fae_less_than(node1->value, node2->value)) {
             return false;
         }
 
-        an = an->next;
-        bn = bn->next;
+        node1 = node1->next;
+        node2 = node2->next;
     }
 
-    return an && !bn;
+    return node1 && !node2;
 }
 
-fae_string_t list_show(ptr_t xs)
+fae_string_t list_show(ptr_t list)
 {
-    string_t s  = string("");
-    node_t   xn = ((list_t) xs)->node;
+    string_t result  = string("");
+    node_t   node = ((list_t) list)->node;
+    result = string_dappend(result, string("["));
 
-    s = string_dappend(s, string("["));
-
-    while (xn) {
-        s = string_dappend(s, fae_string_show(xn->value));
-        xn = xn->next;
-
-        if (xn) {
-            s = string_dappend(s, string(","));
+    while (node) {
+        result  = string_dappend(result, fae_string_show(node->value));
+        node    = node->next;
+        if (node) {
+            result = string_dappend(result, string(","));
         }
     };
 
-    s = string_dappend(s, string("]"));
-
-    return s;
+    result = string_dappend(result, string("]"));
+    return result;
 }
 
 ptr_t list_copy(ptr_t a)
@@ -783,12 +780,18 @@ type_repr_t list_get_type(fae_ptr_t a)
 
 ptr_t list_impl(fae_id_t interface)
 {
-    static fae_equal_t list_equal_impl = { list_equal };
-    static fae_order_t list_order_impl = { list_less_than, list_greater_than };
-    static fae_string_show_t list_show_impl = { list_show };
-    static fae_copy_t list_copy_impl = { list_copy };
-    static fae_destroy_t list_destroy_impl = { list_destroy };
-    static fae_dynamic_t list_dynamic_impl = { list_get_type };
+    static fae_equal_t list_equal_impl 
+        = { list_equal };
+    static fae_order_t list_order_impl 
+        = { list_less_than, list_greater_than };
+    static fae_string_show_t list_show_impl 
+        = { list_show };
+    static fae_copy_t list_copy_impl 
+        = { list_copy };
+    static fae_destroy_t list_destroy_impl 
+        = { list_destroy };
+    static fae_dynamic_t list_dynamic_impl 
+        = { list_get_type };
 
     switch (interface) {
     case fae_equal_i:

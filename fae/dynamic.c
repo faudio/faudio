@@ -17,6 +17,8 @@ bool fae_dynamic_check(fae_ptr_t a)
 fae_dynamic_type_repr_t fae_dynamic_get_type(fae_ptr_t a)
 {
     assert(fae_interface(fae_dynamic_i, a) && "Must implement Dynamic");
-    return ((fae_dynamic_t *) fae_interface(fae_dynamic_i, a))->get_type(a);
+
+    return ((fae_dynamic_t *) 
+        fae_interface(fae_dynamic_i, a))->get_type(a);
 }
 
