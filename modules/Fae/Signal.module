@@ -14,17 +14,32 @@ module Fae.Signal
     
     type Signal = opaque;
 
-    // typeOf : Signal -> Type;
+    /** @typedef fae_signal_unary_signal_t
+        Like fae_unary_t, but speficied on signals.
+    */
+    type UnarySignal    = ((Ptr, Signal) -> Signal)*;
+
+    /** @typedef fae_signal_unary_double_t
+        Like fae_unary_t, but speficied on doubles.
+    */
+    type UnaryDouble    = ((Ptr, Double) -> Double)*;
+
+    /** @typedef fae_signal_binary_double_t
+        Like fae_binary_t, but speficied on doubles.
+    */
+    type BinaryDouble   = ((Ptr, Double, Double) -> Double)*;
 
 
-    constant            : Ptr              -> Signal;
-    identity            : ()               -> Signal;
-    lift                : (Unary,   Ptr)   -> Signal;
-    lift2               : (Binary,  Ptr)   -> Signal;
+    time        : () -> Signal;
+    random      : () -> Signal;
+    constant    : Double -> Signal;
+    lift        : ( String -> UnaryDouble, Ptr, Signal)           -> Signal;
+    lift2       : ( String -> BinaryDouble, Ptr, Signal, Signal)  -> Signal;
+    loop        : ( UnarySignal, Ptr )                            -> Signal;
+    delay       : ( Int, Signal )                                 -> Signal;
+    input       : ( Int )                                         -> Signal;
+    output      : ( Int, Int, Signal )                            -> Signal;
 
-    time                : () -> Signal;
-    delay               : (Time, Signal)  -> Signal;
-    fix                 : (((Ptr, Signal) -> Signal)*, Ptr) -> Signal;
 
 /*
     add                 : () -> Signal;
@@ -72,6 +87,31 @@ module Fae.Signal
     ceil                : () -> Signal;
     rint                : () -> Signal;    
     */
+
+    // isVariable : Signal -> Bool;
+    // isConstant :: Signal -> Bool;
+    // areConstant :: [Signal] -> Bool;
+    // signalNodeCount :: Signal -> Int;
+    // signalTree :: Signal -> Tree String;
+    // requiredInputs :: Signal -> Int;
+    // requiredBuses :: Signal -> Int;
+    // requiredDelay :: Signal -> Int;
+    // optimize :: Signal -> Signal;
+    // optimize1 :: Signal -> Signal;
+    // simplify :: Signal -> Signal;
+    // time :: Signal;
+    // random :: Signal;
+    // latter :: Signal -> Signal -> Signal
+    // former :: Signal -> Signal -> Signal
+    // loop :: (Signal -> Signal) -> Signal
+    // delay :: Int -> Signal -> Signal
+    // fmod :: Signal -> Signal -> Signal
+    // impulse :: Signal
+    // line :: Double -> Signal
+    // saw :: Double -> Signal
+    // saw' :: Double -> Signal
+    // lowPass :: Signal -> Signal -> Signal -> Signal -> Signal -> Signal
+    // biquad :: Signal -> Signal -> Signal -> Signal -> Signal -> Signal -> Signal
 
 }
 

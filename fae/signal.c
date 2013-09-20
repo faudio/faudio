@@ -190,56 +190,6 @@ fae_signal_t fae_signal_copy(fae_signal_t signal)
     }
 }
 
-fae_signal_t fae_signal_constant(fae_ptr_t value)
-{
-    assert(false && "Not implemented");
-}
-
-fae_signal_t fae_signal_identity()
-{
-    assert(false && "Not implemented");
-}
-
-fae_signal_t fae_signal_apply(fae_signal_t signal1, fae_signal_t signal2)
-{
-    assert(false && "Not implemented");
-}
-fae_signal_t fae_signal_dapply(fae_signal_t signal1, fae_signal_t signal2)
-{
-    assert(false && "Not implemented");
-}
-
-fae_signal_t fae_signal_lift(fae_unary_t function, fae_ptr_t data)
-{
-    assert(false && "Not implemented");
-}
-
-fae_signal_t fae_signal_lift2(fae_binary_t function, fae_ptr_t data)
-{
-    assert(false && "Not implemented");
-}
-
-fae_signal_t fae_signal_lift3(fae_ternary_t function, fae_ptr_t data)
-{
-    assert(false && "Not implemented");
-}
-
-fae_signal_t fae_signal_time()
-{
-    assert(false && "Not implemented");
-}
-
-fae_signal_t fae_signal_delay(fae_time_t time, fae_signal_t signal)
-{
-    assert(false && "Not implemented");
-}
-
-fae_signal_t fae_signal_fix(fae_signal_t (*function)(fae_ptr_t, fae_signal_t), fae_ptr_t data)
-{
-    assert(false && "Not implemented");
-}
-
-// TODO destroy
 
 
 
