@@ -43,7 +43,6 @@ struct _fae_list_t {
  */
 inline static node_t new_node(ptr_t value, node_t next)
 {
-    // db_node_alloc();
     node_t node = fae_new_struct(node);
     node->count = 1;
     node->value = value;
@@ -59,8 +58,6 @@ inline static node_t take_node(node_t node)
         node->count++;  // TODO make atomic
     }
 
-    // db_node_take(node);
-
     return node;
 }
 
@@ -74,10 +71,8 @@ inline static void release_node(node_t node)
     }
 
     node->count--;
-    // db_node_release(node);
 
     if (node->count == 0) {
-        // db_node_free();
         release_node(node->next);
         fae_delete(node);
     }
