@@ -12,10 +12,10 @@ typedef fae_midi_message_status_t   status_t;
 typedef fae_midi_message_data_t     data_t;
 
 struct _fae_midi_message_t {
-    impl_t                  impl;           //  Interface dispatcher
-    bool                    is_sysex;       //  Whether it is a sysex message
-    union {                                 //  Status and data
-        uint8_t             simple[3];
+    impl_t              impl;           //    Interface dispatcher
+    bool                is_sysex;       //    Whether it is a sysex message
+    union {                             //    Status or buffer data
+        uint8_t         simple[3];
         fae_buffer_t    sysex;
     } data;
 };
@@ -30,8 +30,8 @@ inline static fae_midi_message_t new_midi_message()
 {
     fae_ptr_t midi_message_impl(fae_id_t interface);
 
-    fae_midi_message_t t = fae_new(midi_message);
-    t->impl  = &midi_message_impl;
+    fae_midi_message_t t  = fae_new(midi_message);
+    t->impl               = &midi_message_impl;
     return t;
 }
 
@@ -149,15 +149,20 @@ fae_buffer_t fae_midi_message_sysex_data(fae_midi_message_t midi_message)
     return midi_message->data.sysex;
 }
 
-#define midi_message_wrap(status, data1, data2)   \
-         ((((data2) << 16) & 0xFF0000) |  \
-          (((data1) << 8) & 0xFF00) |     \
-          ((status) & 0xFF))
+#define midi_message_wrap(status, data1, data2) \
+    ((((data2) << 16) & 0xFF0000) | \
+    (((data1) << 8) & 0xFF00) |     \
+    ((status) & 0xFF))
 
 long fae_midi_message_simple_to_long(fae_midi_message_t midi_message)
 {
     assert(is_simple(midi_message) && "Not a simple message");
-    return midi_message_wrap(midi_message->data.simple[0], midi_message->data.simple[1], midi_message->data.simple[2]);
+
+    return midi_message_wrap(
+                             midi_message->data.simple[0], 
+                             midi_message->data.simple[1], 
+                             midi_message->data.simple[2]
+                             );
 }
 
 

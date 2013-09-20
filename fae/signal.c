@@ -5,47 +5,6 @@
 
 typedef fae_signal_t signal_t;
 
-/*
-    Signals are built from the following primitives:
-
-        constant            : a                  -> ~f32
-        identity            :                       a ~> a
-        lift                : (a -> b)           -> a ~> b
-        lift2               : (a -> b -> c)      -> a ~> b ~> c
-        lift3               : (a -> b -> c -> d) -> a ~> b ~> c ~> d
-        time                :                       ~Time
-        delay               : Time               -> a ~> a
-        read                : Int                -> ~a
-        write               : Int                -> a ~> a
-
-        constant            : a                  -> S a
-        identity            :                       S a -> S a
-        lift                : (a -> b)           -> S a -> S b
-        lift2               : (a -> b -> c)      -> S a -> S b -> S c
-        lift3               : (a -> b -> c -> d) -> S a -> S b -> S c -> S d
-        time                :                       S Time
-        delay               : Time               -> S a -> S a
-        read                : Int                -> S a
-        write               : Int                -> S a
-
-        apply               :  (S a -> S b) -> S a -> S b
-
-        const x     returns a signal of arity 0
-        identity    returns a signal of arity 1
-        lift  f     returns a signal of arity 1
-        lift2 f     returns a signal of arity 2
-        lift3 f     returns a signal of arity 3
-        time        returns a signal of arity 0
-        delay t     returns a signal of arity 1
-        read n      returns a signal of arity 0
-        write n     returns a signal of arity 1
-
-        apply f x   where f has arity n returns a signal of arity (n-1).
-
-    Note that apply is not (<*>), of Applicative, it is simply primitive application of
-    two signals (as this implementation includes partial application support).
-
- */
 struct _fae_signal_t {
 
     impl_t          impl;       //  Interface dispatcher
