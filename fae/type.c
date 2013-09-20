@@ -12,7 +12,7 @@ typedef fae_type_simple_t simple_t;
 
 struct _fae_type_t {
 
-    impl_t                  impl;           //  Interface dispatcher
+    impl_t                  impl;           
 
     enum {
         simple_type,
