@@ -360,12 +360,12 @@ void fae_signal_run(signal_t signal, fae_unary_t function, fae_ptr_t data)
 
 fae_signal_t fae_signal_add()
 {
-    return fae_signal_lift2(apply2, fae_add);
+    assert(false);
 }
 
 fae_signal_t fae_signal_subtract()
 {
-    return fae_signal_lift2(apply2, fae_subtract);
+    assert(false);
 }
 
 fae_signal_t fae_signal_multiply()
@@ -530,12 +530,12 @@ fae_signal_t fae_signal_abs()
 
 fae_signal_t fae_signal_min()
 {
-    return fae_signal_lift2(apply2, fae_min);
+    assert(false);
 }
 
 fae_signal_t fae_signal_max()
 {
-    return fae_signal_lift2(apply2, fae_max);
+    assert(false);
 }
 
 fae_signal_t fae_signal_fmod()

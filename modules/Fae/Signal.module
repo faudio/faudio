@@ -88,30 +88,24 @@ module Fae.Signal
     rint                : () -> Signal;    
     */
 
-    // isVariable : Signal -> Bool;
-    // isConstant :: Signal -> Bool;
-    // areConstant :: [Signal] -> Bool;
-    // signalNodeCount :: Signal -> Int;
-    // signalTree :: Signal -> Tree String;
-    // requiredInputs :: Signal -> Int;
-    // requiredBuses :: Signal -> Int;
-    // requiredDelay :: Signal -> Int;
-    // optimize :: Signal -> Signal;
-    // optimize1 :: Signal -> Signal;
-    // simplify :: Signal -> Signal;
-    // time :: Signal;
-    // random :: Signal;
-    // latter :: Signal -> Signal -> Signal
-    // former :: Signal -> Signal -> Signal
-    // loop :: (Signal -> Signal) -> Signal
-    // delay :: Int -> Signal -> Signal
-    // fmod :: Signal -> Signal -> Signal
-    // impulse :: Signal
-    // line :: Double -> Signal
-    // saw :: Double -> Signal
-    // saw' :: Double -> Signal
-    // lowPass :: Signal -> Signal -> Signal -> Signal -> Signal -> Signal
-    // biquad :: Signal -> Signal -> Signal -> Signal -> Signal -> Signal -> Signal
+    isVariable : Signal -> Bool;
+    isConstant : Signal -> Bool;
+    areConstant : List -> Bool; // [Signal]
+    signalNodeCount : Signal -> Int;
+    // signalTree : Signal -> Tree String;
+    requiredInputs : Signal -> Int;
+    requiredBuses : Signal -> Int;
+    requiredDelay : Signal -> Int;
+    // optimize : Signal -> Signal;
+    // optimize1 : Signal -> Signal;
+    simplify : Signal -> Signal;
+
+    latter : (Signal, Signal) -> Signal;
+    former : (Signal, Signal) -> Signal;
+    impulse : () -> Signal;
+    line : Double -> Signal;
+    lowPass : (Signal, Signal, Signal, Signal, Signal) -> Signal;
+    biquad : (Signal, Signal, Signal, Signal, Signal, Signal) -> Signal;
 
 }
 
