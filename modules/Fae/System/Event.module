@@ -1,6 +1,6 @@
 
 /**
-    @addtogroup FaeSystemEvent
+    @addtogroup FaSystemEvent
 
     Provides mouse and keyboard events.
 
@@ -10,12 +10,12 @@
 
  */
 
-module Fae.System.Event
+module Fa.System.Event
 {
-    import Fae;
-    import Fae.Message;
-    import Fae.Event;
-    import Fae.String;
+    import Fa;
+    import Fa.Message;
+    import Fa.Event;
+    import Fa.String;
 
     type Type = enum {
         MouseMoveEvent,

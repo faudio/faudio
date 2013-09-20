@@ -1,14 +1,14 @@
 
 /**
-    @addtogroup FaeDeviceBuffer
+    @addtogroup FaDeviceBuffer
     
     Non-real-time memory device.
     
  */
-module Fae.Device.Buffer
+module Fa.Device.Buffer
 {
-    import Fae.Device;
-    import Fae.Processor;
+    import Fa.Device;
+    import Fa.Processor;
 
     type Result = opaque;
 

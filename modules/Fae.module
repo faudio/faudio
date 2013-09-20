@@ -1,36 +1,36 @@
 
 /**
-    @addtogroup Fae
+    @addtogroup Fa
 
-    Core definitions. Import @ref FaeAudioEngine instead of this module.
+    Core definitions. Import @ref FaAudioEngine instead of this module.
 
  */
-module Fae
+module Fa
 {
-    import Fae.Std;
+    import Fa.Std;
 
-    import "C" Fae.Alloc;
-    import "C" Fae.Interfaces;
+    import "C" Fa.Alloc;
+    import "C" Fa.Interfaces;
 
 
     // Basic types
 
-    /** @typedef fae_ptr_t
+    /** @typedef fa_ptr_t
         Pointer type, equivalent to `void*`.
     */
     type Ptr = Void*;
 
     // Function types
 
-    /** @typedef fae_nullary_t
-        A nullary function, defined as `fae_ptr_t(*fae_nullary_t )(fae_ptr_t)`.
+    /** @typedef fa_nullary_t
+        A nullary function, defined as `fa_ptr_t(*fa_nullary_t )(fa_ptr_t)`.
 
         The first argument is an environment pointer which is usually passed along with the function.
         This is the standard C technique for closing over variables.
     */
     type Nullary = (Ptr -> Ptr)*;
 
-    /** @typedef fae_unary_t
+    /** @typedef fa_unary_t
         A unary function.
 
         The first argument is an environment pointer which is usually passed along with the function.
@@ -38,7 +38,7 @@ module Fae
     */
     type Unary   = ((Ptr, Ptr) -> Ptr)*;
 
-    /** @typedef fae_binary_t
+    /** @typedef fa_binary_t
         A binary function.
 
         The first argument is an environment pointer which is usually passed along with the function.
@@ -46,7 +46,7 @@ module Fae
     */
     type Binary  = ((Ptr, Ptr, Ptr) -> Ptr)*;
 
-    /** @typedef fae_ternary_t
+    /** @typedef fa_ternary_t
         A ternary function.
 
         The first argument is an environment pointer which is usually passed along with the function.
@@ -54,7 +54,7 @@ module Fae
     */
     type Ternary  = ((Ptr, Ptr, Ptr, Ptr) -> Ptr)*;
 
-    /** @typedef fae_pred_t
+    /** @typedef fa_pred_t
         A predicate, or boolean function.
 
         The first argument is an environment pointer which is usually passed along with the function.
@@ -66,13 +66,13 @@ module Fae
     // Character types
 
     /**
-        @typedef fae_char8_t
+        @typedef fa_char8_t
         An 8-bit character.
 
-        @typedef fae_char16_t
+        @typedef fa_char16_t
         A 16-bit character.
 
-        @typedef fae_char32_t
+        @typedef fa_char32_t
         A 32-bit character.
      */
     type Char8  = Char;
@@ -118,12 +118,12 @@ module Fae
 
     // Interface dispatch
 
-    /** @typedef fae_id_t
+    /** @typedef fa_id_t
         Unique identifier. Only used for interface lookup at the moment.
     */
     type Id = Int64;
 
-    /** @typedef fae_impl_t
+    /** @typedef fa_impl_t
         Callback to lookup an interface implementation.
     */
     type Impl = (Id -> Ptr)*;
@@ -133,7 +133,7 @@ module Fae
 
     // Interfaces
 
-    /** @interface fae_equal_t
+    /** @interface fa_equal_t
         Equality comparison interface.
     */
     type Equal   = struct {
@@ -143,7 +143,7 @@ module Fae
     equal            : (Ptr, Ptr) -> Bool;
     notEqual         : (Ptr, Ptr) -> Bool;
 
-    /** @interface fae_order_t
+    /** @interface fa_order_t
         Less-than comparison interface.
     */
     type Order  = struct {
@@ -158,7 +158,7 @@ module Fae
     min              : (Ptr, Ptr) -> Ptr;
     max              : (Ptr, Ptr) -> Ptr;
 
-    /** @interface fae_number_t
+    /** @interface fa_number_t
         Arithmetic operations interface.
     */
     type Number = struct {
@@ -180,14 +180,14 @@ module Fae
     ddivide      : (Ptr, Ptr) -> Ptr;
     dabsolute    : Ptr -> Ptr;
 
-    /** @interface fae_copy_t
+    /** @interface fa_copy_t
         Generic copying interface.
     */
     type Copy   = struct {
         copy : (Ptr -> Ptr)*
     };
 
-    /** @interface fae_destroy_t
+    /** @interface fa_destroy_t
         Generic destruction interface.
     */
     type Destroy   = struct {

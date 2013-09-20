@@ -1,6 +1,6 @@
 
 /**
-    @addtogroup FaeDevice
+    @addtogroup FaDevice
     
     Provides input and output devices.
     
@@ -8,9 +8,9 @@
     - @ref Devices
  */
 
-module Fae.Device
+module Fa.Device
 {
-    import Fae;
+    import Fa;
 
     type Audio = opaque;
     type Midi = opaque;

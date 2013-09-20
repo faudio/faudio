@@ -1,14 +1,14 @@
 
 /**
-    @addtogroup FaeSystemDirectory
+    @addtogroup FaSystemDirectory
     
     Cross-platform directory utilities.    
  */
 
-module Fae.System.Directory
+module Fa.System.Directory
 {
-    import Fae;
-    import Fae.String;
+    import Fa;
+    import Fa.String;
     type FilePath = String;
 
     home : () -> FilePath;

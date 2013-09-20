@@ -1,6 +1,6 @@
 
-#include <fae/fae.h>
-#include <fae/util.h>
+#include <fa/fa.h>
+#include <fa/util.h>
 
 /*
     This program does ...
@@ -9,12 +9,12 @@
 
 void helper_function()
 {
-    fae_print_ln(string("This is fae_template!"));
+    fa_print_ln(string("This is fa_template!"));
 }
 
 int main(int argc, char const *argv[])
 {
-    fae_fae_initialize();
+    fa_fa_initialize();
     helper_function();
-    fae_fae_terminate();
+    fa_fa_terminate();
 }

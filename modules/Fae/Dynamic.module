@@ -1,14 +1,14 @@
 
 /**
-    @addtogroup FaeDynamic
+    @addtogroup FaDynamic
     
     Provides dynamic typing.     
  */
 
-module Fae.Dynamic
+module Fa.Dynamic
 {
-    import Fae;
-    import Fae.String;
+    import Fa;
+    import Fa.String;
 
     type TypeRepr = enum {                   
         BoolTypeRepr, 

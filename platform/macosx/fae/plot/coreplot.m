@@ -1,12 +1,12 @@
 
 /*
-    FAE
+    FA
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
  */
 
-#include <fae/plot.h>
-#include <fae/thread.h>
+#include <fa/plot.h>
+#include <fa/thread.h>
 
 #include <Cocoa/Cocoa.h>
 #import  <CorePlot/CorePlot.h>
@@ -193,8 +193,8 @@ void run_main_loop()
     }
 }
 
-void run_core_plot(fae_plot_function_t func, fae_ptr_t data,
-                   fae_nullary_t cont, fae_ptr_t cont_data)
+void run_core_plot(fa_plot_function_t func, fa_ptr_t data,
+                   fa_nullary_t cont, fa_ptr_t cont_data)
 {
     plot_count_g    = 0;
     plot_func_g     = (plot_func_t) func;
@@ -202,7 +202,7 @@ void run_core_plot(fae_plot_function_t func, fae_ptr_t data,
 
     // We will not return, so continuation is called on a new thread
     if (cont)
-        fae_thread_create(cont, cont_data);
+        fa_thread_create(cont, cont_data);
 
     run_main_loop();
 }

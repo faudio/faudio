@@ -1,6 +1,6 @@
 
 /** 
-    @addtogroup FaeAtomicStack
+    @addtogroup FaAtomicStack
     
     Mutable atomic (lock-free) stacks.
 
@@ -8,9 +8,9 @@
     - [Data structures](@ref DataStructures)
 
  */
-module Fae.Atomic.Stack
+module Fa.Atomic.Stack
 {
-    import Fae;
+    import Fa;
 
     type Stack = opaque;
     

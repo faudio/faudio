@@ -1,15 +1,15 @@
 
 /*
-    FAE
+    FA
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
  */
 
-#include <fae/plot.h>
-#include <fae/thread.h>
-#include <fae/util.h>
+#include <fa/plot.h>
+#include <fa/thread.h>
+#include <fa/util.h>
 
-typedef fae_plot_function_t plot_func;
+typedef fa_plot_function_t plot_func;
 
 enum plot_backend {
     gnu_plot,
@@ -18,25 +18,25 @@ enum plot_backend {
 
 enum plot_backend plot_backend_g = gnu_plot;
 
-void fae_fae_log_info(fae_string_t);
+void fa_fa_log_info(fa_string_t);
 void run_core_plot(plot_func func, ptr_t funcData, nullary_t cont, ptr_t contData);
 void run_gnu_plot(plot_func func, ptr_t funcData, nullary_t cont, ptr_t contData);
 
 
 /** Use gnuplot for plotting.
  */
-void fae_plot_use_gnu()
+void fa_plot_use_gnu()
 {
     plot_backend_g = gnu_plot;
-    fae_fae_log_info(string("Using gnuplot backend"));
+    fa_fa_log_info(string("Using gnuplot backend"));
 }
 
 /** Use CorePlot for plotting.
  */
-void fae_plot_use_core()
+void fa_plot_use_core()
 {
     plot_backend_g = core_plot;
-    fae_fae_log_info(string("Using CorePlot backend"));
+    fa_fa_log_info(string("Using CorePlot backend"));
 }
 
 /** Run a plot of the given functions.
@@ -45,12 +45,12 @@ void fae_plot_use_core()
     @param cont         Continuation function.
     @param cont_data    Value to be passed to the continuation function.
  */
-void fae_plot_continous
+void fa_plot_continous
 (
     plot_func           func,
-    fae_ptr_t       data,
-    fae_nullary_t   cont,
-    fae_ptr_t       cont_data
+    fa_ptr_t       data,
+    fa_nullary_t   cont,
+    fa_ptr_t       cont_data
 )
 {
     switch (plot_backend_g) {
@@ -67,10 +67,10 @@ void fae_plot_continous
 #define PLOTTER(T) \
     double plot_##T(void *data, int i, double t, double x)      \
     {                                                           \
-        fae_buffer_t buf = data;                            \
+        fa_buffer_t buf = data;                            \
                                                                 \
-        size_t  sz = fae_buffer_size(buf) / sizeof(T);      \
-        T     * ds = fae_buffer_unsafe_address(buf);        \
+        size_t  sz = fa_buffer_size(buf) / sizeof(T);      \
+        T     * ds = fa_buffer_unsafe_address(buf);        \
                                                                 \
         if (i == 0) {                                           \
             return ds[((size_t)(sz * ((x + 1) / 2)))];          \
@@ -85,20 +85,20 @@ PLOTTER(double);
 /** Run a plot on the given buffer, treating its contents as
     32-bit floating point data.
  */
-void fae_plot_buffer_float(fae_buffer_t  buffer,
-                           fae_nullary_t cont,
-                           fae_ptr_t     data)
+void fa_plot_buffer_float(fa_buffer_t  buffer,
+                           fa_nullary_t cont,
+                           fa_ptr_t     data)
 {
-    fae_plot_continous(plot_float, buffer, cont, data);
+    fa_plot_continous(plot_float, buffer, cont, data);
 }
 
 /** Run a plot on the given buffer, treating its contents as
     64-bit floating point data.
  */
-void fae_plot_buffer_double(fae_buffer_t      buffer,
-                            fae_nullary_t     cont,
-                            fae_ptr_t         data)
+void fa_plot_buffer_double(fa_buffer_t      buffer,
+                            fa_nullary_t     cont,
+                            fa_ptr_t         data)
 {
-    fae_plot_continous(plot_double, buffer, cont, data);
+    fa_plot_continous(plot_double, buffer, cont, data);
 }
 

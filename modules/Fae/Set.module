@@ -1,6 +1,6 @@
 
 /** 
-    @addtogroup FaeSet
+    @addtogroup FaSet
     
     Immutable ordered set data structure.
 
@@ -12,24 +12,24 @@
     - `{1,2,3}`
     
     @par Requires 
-    - fae_order_t
+    - fa_order_t
 
     @par Implements 
-    - fae_equal_t
-    - fae_string_show_t
-    - fae_copy_t
-    - fae_destroy_t
-    - fae_dynamic_t
+    - fa_equal_t
+    - fa_string_show_t
+    - fa_copy_t
+    - fa_destroy_t
+    - fa_dynamic_t
 
     @see 
     - [Data structures](@ref DataStructures)
     
  */
-module Fae.Set
+module Fa.Set
 {
-    import Fae;
-    import Fae.List;
-    import Fae.String;
+    import Fa;
+    import Fa.List;
+    import Fa.String;
 
     type Set = opaque;
     

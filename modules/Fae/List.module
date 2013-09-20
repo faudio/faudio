@@ -1,35 +1,35 @@
 
 /**
-    @addtogroup FaeList
+    @addtogroup FaList
 
     Immutable list data structure.
 
-    - Fast front access: ([empty](@ref fae_list_empty), 
-                          [single](@ref fae_list_single), 
-                          [cons](@ref fae_list_cons), 
-                          [head](@ref fae_list_head), 
-                          [tail](@ref fae_list_tail)).
+    - Fast front access: ([empty](@ref fa_list_empty), 
+                          [single](@ref fa_list_single), 
+                          [cons](@ref fa_list_cons), 
+                          [head](@ref fa_list_head), 
+                          [tail](@ref fa_list_tail)).
 
-    - Slow back access ([init](@ref fae_list_init), 
-                        [last](@ref fae_list_last)).
+    - Slow back access ([init](@ref fa_list_init), 
+                        [last](@ref fa_list_last)).
 
-    - Slow random access ([index](@ref fae_list_index), 
-                          [insert](@ref fae_list_insert), 
-                          [remove](@ref fae_list_remove)).
+    - Slow random access ([index](@ref fa_list_index), 
+                          [insert](@ref fa_list_insert), 
+                          [remove](@ref fa_list_remove)).
 
-    - Slow range access: ([take](@ref fae_list_take), 
-                          [drop](@ref fae_list_drop), 
-                          [range](@ref fae_list_range), 
-                          [insertRange](@ref fae_list_insert_range), 
-                          [removeRange](@ref fae_list_remove_range))
+    - Slow range access: ([take](@ref fa_list_take), 
+                          [drop](@ref fa_list_drop), 
+                          [range](@ref fa_list_range), 
+                          [insertRange](@ref fa_list_insert_range), 
+                          [removeRange](@ref fa_list_remove_range))
 
-    - Linear [find](@ref fae_list_find), 
-             [map](@ref fae_list_map), 
-             [fold](@ref fae_list_fold), 
-             [reverse](@ref fae_list_reverse) and 
-             [filter](@ref fae_list_filter).
+    - Linear [find](@ref fa_list_find), 
+             [map](@ref fa_list_map), 
+             [fold](@ref fa_list_fold), 
+             [reverse](@ref fa_list_reverse) and 
+             [filter](@ref fa_list_filter).
 
-    - Logarithmic [sort](@ref fae_list_sort).
+    - Logarithmic [sort](@ref fa_list_sort).
 
     @par Literals
     - `list(1, 2, 3)`
@@ -39,27 +39,27 @@
     
     @par Iteration
     ~~~
-    fae_list_for_each (list(1,2,3), x)
+    fa_list_for_each (list(1,2,3), x)
     {
-        fae_print("%s\n", x);
+        fa_print("%s\n", x);
     }
     ~~~
 
     @par Implements
-    - fae_equal_t
-    - fae_order_t
-    - fae_copy_t
-    - fae_destroy_t
-    - fae_dynamic_t
-    - fae_string_show_t
+    - fa_equal_t
+    - fa_order_t
+    - fa_copy_t
+    - fa_destroy_t
+    - fa_dynamic_t
+    - fa_string_show_t
 
     @see
     - [Data structures](@ref DataStructures)
 
  */
-module Fae.List
+module Fa.List
 {
-    import Fae;
+    import Fa;
 
     type List   = opaque;
 

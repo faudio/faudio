@@ -1,6 +1,6 @@
 
 /** 
-    @addtogroup FaeMidiMessage
+    @addtogroup FaMidiMessage
     
     Immutable representation of Midi messages.
 
@@ -11,19 +11,19 @@
     - `midi_sysex(buffer)`
 
     @par Implements 
-    - fae_equal_t
-    - fae_order_t
-    - fae_string_show_t
-    - fae_copy_t
-    - fae_destroy_t
-    - fae_dynamic_t
+    - fa_equal_t
+    - fa_order_t
+    - fa_string_show_t
+    - fa_copy_t
+    - fa_destroy_t
+    - fa_dynamic_t
     
  */
-module Fae.Midi.Message
+module Fa.Midi.Message
 {
-    import Fae.Std;
-    import Fae.Pair;
-    import Fae.Buffer;
+    import Fa.Std;
+    import Fa.Pair;
+    import Fa.Buffer;
     
     type Status = enum {
         NoteOff,

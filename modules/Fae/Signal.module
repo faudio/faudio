@@ -1,31 +1,31 @@
 
 /**
-    @addtogroup FaeSignal
+    @addtogroup FaSignal
     
     Provides signals.
     
  */
-module Fae.Signal
+module Fa.Signal
 {
-    import Fae;    
-    import Fae.Pair;
-    import Fae.Type;
-    import Fae.Time;
+    import Fa;    
+    import Fa.Pair;
+    import Fa.Type;
+    import Fa.Time;
     
     type Signal = opaque;
 
-    /** @typedef fae_signal_unary_signal_t
-        Like fae_unary_t, but speficied on signals.
+    /** @typedef fa_signal_unary_signal_t
+        Like fa_unary_t, but speficied on signals.
     */
     type UnarySignal    = ((Ptr, Signal) -> Signal)*;
 
-    /** @typedef fae_signal_unary_double_t
-        Like fae_unary_t, but speficied on doubles.
+    /** @typedef fa_signal_unary_double_t
+        Like fa_unary_t, but speficied on doubles.
     */
     type UnaryDouble    = ((Ptr, Double) -> Double)*;
 
-    /** @typedef fae_signal_binary_double_t
-        Like fae_binary_t, but speficied on doubles.
+    /** @typedef fa_signal_binary_double_t
+        Like fa_binary_t, but speficied on doubles.
     */
     type BinaryDouble   = ((Ptr, Double, Double) -> Double)*;
 

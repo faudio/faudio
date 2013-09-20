@@ -1,11 +1,11 @@
 
 /** 
-    @addtogroup FaeStd
+    @addtogroup FaStd
     
     This module just exports the C standard library.
 
  */
-module Fae.Std
+module Fa.Std
 {
     import "C" assert;
     import "C" complex;

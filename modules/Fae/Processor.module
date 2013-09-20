@@ -1,6 +1,6 @@
 
 /**
-    @addtogroup FaeProcessor
+    @addtogroup FaProcessor
 
     Provides signal processors.
 
@@ -16,20 +16,20 @@
     - `split(T)`
 
     @par Implements
-    - fae_processor_interface_t
-    - fae_string_show_t
-    - fae_destroy_t
+    - fa_processor_interface_t
+    - fa_string_show_t
+    - fa_destroy_t
  */
-module Fae.Processor
+module Fa.Processor
 {
-    import Fae;
-    import Fae.Time;
-    import Fae.Type;
-    import Fae.Graph;
-    import Fae.Buffer;
-    import Fae.Message;
+    import Fa;
+    import Fa.Time;
+    import Fa.Type;
+    import Fa.Graph;
+    import Fa.Buffer;
+    import Fa.Message;
 
-    /** @struct fae_processor_info_t
+    /** @struct fa_processor_info_t
         Information available to a processor at processing time.
       */
     type Info = struct {
@@ -44,19 +44,19 @@ module Fae.Processor
         bufSeq    : Int  // merge these?
     };
 
-    /** @typedef fae_processor_samples_t
+    /** @typedef fa_processor_samples_t
         
         The samples manipulated by a processor.
         TODO a vector of raw buffer pointers.
      */
     type Samples = Ptr*;
 
-    /** @interface fae_processor_interface_t
+    /** @interface fa_processor_interface_t
         
         Processing interface.
         
         Generally there is no need to implement this directly, the primitive
-        wrappers or combinator functions in @ref FaeProcessor can be used to 
+        wrappers or combinator functions in @ref FaProcessor can be used to 
         create instances.                                             
       */
     type Interface = struct {
@@ -71,13 +71,13 @@ module Fae.Processor
         graph : ((Ptr, Info*, Graph) -> Graph)*
     };
 
-    /** @typedef fae_processor_t
+    /** @typedef fa_processor_t
 
         A type implementing the processor interface.
 
         If you cast a value to this type, you must assure that it implements
-        @ref fae_processor_interface_t, conversely if you cast a value from
-        this type you can assume that it implements @ref fae_processor_t.
+        @ref fa_processor_interface_t, conversely if you cast a value from
+        this type you can assume that it implements @ref fa_processor_t.
      */
     type Processor = opaque;
 

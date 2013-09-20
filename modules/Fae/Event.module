@@ -1,6 +1,6 @@
 
 /** 
-    @addtogroup FaeEvent
+    @addtogroup FaEvent
     
     Functional scheduler events.
 
@@ -19,17 +19,17 @@
     
 
     @par Implements 
-    - fae_destroy_t
-    - fae_string_show_t
+    - fa_destroy_t
+    - fa_string_show_t
  */
-module Fae.Event
+module Fa.Event
 {
-    import Fae;
-    import Fae.Std;
-    import Fae.Time;
-    import Fae.Message;
+    import Fa;
+    import Fa.Std;
+    import Fa.Time;
+    import Fa.Message;
 
-    /** @typedef fae_buffer_t
+    /** @typedef fa_buffer_t
         The buffer. 
      */
     type Event = opaque;

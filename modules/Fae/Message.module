@@ -1,73 +1,73 @@
 
 /**
-    @addtogroup FaeMessage
+    @addtogroup FaMessage
 
     Provides message dispatching.
 
     @note 
         This module is fairly low-level, you typically want to use the the
-        [Event](@ref FaeEvent) wrappers @ref fae_event_send and @ref
-        fae_event_receive instead.
+        [Event](@ref FaEvent) wrappers @ref fa_event_send and @ref
+        fa_event_receive instead.
 
     Message passing is the process of delivering a *message* to an *address*. Any
     ordered type can be used as an addreses, but typically it is an objet with fast
     equality comparison such as an integer. Message passing is captured by two
-    interfaces: [Sender](@ref fae_message_sender_interface_t) which provides
-    messages, and [Receiver](@ref fae_message_receiver_interface_t) which
+    interfaces: [Sender](@ref fa_message_sender_interface_t) which provides
+    messages, and [Receiver](@ref fa_message_receiver_interface_t) which
     accepts them. Note that the method names are contrary to the interfaces: you
     *send* to a *receiver* and *receive* from a *sender*.
     
     The *dispatcher* type provides message passing accross thread boundaries:
-    it implements both [Sender](@ref fae_message_sender_interface_t) and 
-    [Receiver](@ref fae_message_receiver_interface_t).
+    it implements both [Sender](@ref fa_message_sender_interface_t) and 
+    [Receiver](@ref fa_message_receiver_interface_t).
     
     @par Dispatcher literals
     - `dispatcher()`
     - `lockfree_dispatcher()`
     
     @par Dispatcher implements
-    - fae_destroy_t
-    - fae_message_sender_t
-    - fae_message_receiver_t
-    - fae_string_show_t
+    - fa_destroy_t
+    - fa_message_sender_t
+    - fa_message_receiver_t
+    - fa_string_show_t
 
     @see
     - [Data structures](@ref DataStructures)
 
     
  */
-module Fae.Message
+module Fa.Message
 {
-    import Fae;
-    import Fae.Std;
-    import Fae.Pair;
-    import Fae.List;
+    import Fa;
+    import Fa.Std;
+    import Fa.Pair;
+    import Fa.List;
 
-    /** @typedef fae_message_address_t
+    /** @typedef fa_message_address_t
         
         A message address. 
     
-        The actual value should typically implement [Equal](@ref fae_equal_t)
-        and [Order](@ref fae_order_t), allthough this is not enforced at the
+        The actual value should typically implement [Equal](@ref fa_equal_t)
+        and [Order](@ref fa_order_t), allthough this is not enforced at the
         moment.
      */
     type Address = Ptr; // Must implement Equal, Order
     
-    /** @typedef fae_message_t
+    /** @typedef fa_message_t
         
         A single message.
 
-        The actual value should typically implement [Dynamic](@ref fae_dynamic_t), 
+        The actual value should typically implement [Dynamic](@ref fa_dynamic_t), 
         allthough this is not enforced at the moment.
      */
     type Message = Ptr;
 
-    /** @interface fae_message_sender_interface_t
+    /** @interface fa_message_sender_interface_t
         
         Message sender interface.
         
         Generally there is no need to implement this directly, the primitive
-        wrappers or combinator functions in @ref FaeProcessor can be used to 
+        wrappers or combinator functions in @ref FaProcessor can be used to 
         create instances.                                             
       */
     type SenderInterface = struct {
@@ -75,35 +75,35 @@ module Fae.Message
         receive : ((Ptr,Address) -> List)* // [Message]
     };
 
-    /** @interface fae_message_receiver_interface_t
+    /** @interface fa_message_receiver_interface_t
         
         Message sender interface.
         
         Generally there is no need to implement this directly, the primitive
-        wrappers or combinator functions in @ref FaeProcessor can be used to 
+        wrappers or combinator functions in @ref FaProcessor can be used to 
         create instances.                                             
       */
     type ReceiverInterface = struct {
         send : ((Ptr,Address,Message) -> Void)*
     };
 
-    /** @typedef fae_message_sender_t
+    /** @typedef fa_message_sender_t
 
         A type implementing the sender interface.
 
         If you cast a value to this type, you must assure that it implements
-        @ref fae_sender_interface_t, conversely if you cast a value from
-        this type you can assume that it implements @ref fae_sender_t.
+        @ref fa_sender_interface_t, conversely if you cast a value from
+        this type you can assume that it implements @ref fa_sender_t.
      */
     type Sender = opaque;
     
-    /** @typedef fae_message_receiver_t
+    /** @typedef fa_message_receiver_t
 
         A type implementing the receiver interface.
 
         If you cast a value to this type, you must assure that it implements
-        @ref fae_receiver_interface_t, conversely if you cast a value from
-        this type you can assume that it implements @ref fae_receiver_t.
+        @ref fa_receiver_interface_t, conversely if you cast a value from
+        this type you can assume that it implements @ref fa_receiver_t.
      */
     type Receiver = opaque;
 
@@ -113,7 +113,7 @@ module Fae.Message
 
 
 
-    /** @typedef fae_message_dispatcher_t
+    /** @typedef fa_message_dispatcher_t
         A message dispatcher.
      */
     type Dispatcher = opaque;

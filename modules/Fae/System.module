@@ -1,13 +1,13 @@
 
 /**
-    @addtogroup FaeSystem
+    @addtogroup FaSystem
     
     Provides low-level system facilities.    
  */
 
-module Fae.System
+module Fa.System
 {
-    // import Fae.System.Event;
-    import Fae.System.Directory;
+    // import Fa.System.Event;
+    import Fa.System.Directory;
 }
 

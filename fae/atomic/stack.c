@@ -1,14 +1,14 @@
 
 /*
-    FAE
+    FA
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
  */
 
-#include <fae/atomic/stack.h>
-#include <fae/atomic.h>
-#include <fae/string.h>
-#include <fae/util.h>
+#include <fa/atomic/stack.h>
+#include <fa/atomic.h>
+#include <fa/string.h>
+#include <fa/util.h>
 
 /*
     Notes:
@@ -28,16 +28,16 @@ struct node {
 
 typedef struct node *node_t;
 
-struct _fae_atomic_stack_t {
+struct _fa_atomic_stack_t {
     impl_t      impl;               //  Interface dispatcher
     atomic_t    top;
 };
 
-fae_ptr_t atomic_stack_impl(fae_id_t interface);
+fa_ptr_t atomic_stack_impl(fa_id_t interface);
 
 static inline node_t new_node(ptr_t value, node_t next)
 {
-    node_t node = fae_new_struct(node);
+    node_t node = fa_new_struct(node);
     node->value = value;
     node->next  = next;
     return node;
@@ -45,12 +45,12 @@ static inline node_t new_node(ptr_t value, node_t next)
 
 static inline void delete_node(node_t node)
 {
-    fae_delete(node);
+    fa_delete(node);
 }
 
-static inline fae_atomic_stack_t new_stack()
+static inline fa_atomic_stack_t new_stack()
 {
-    atomic_stack_t stack = fae_new(atomic_stack);
+    atomic_stack_t stack = fa_new(atomic_stack);
 
     stack->impl  = &atomic_stack_impl;
     stack->top   = atomic();
@@ -60,29 +60,29 @@ static inline fae_atomic_stack_t new_stack()
 
 static inline void delete_stack(atomic_stack_t stack)
 {
-    fae_delete(stack->top);
-    fae_delete(stack);
+    fa_delete(stack->top);
+    fa_delete(stack);
 }
 
 /** Atomically get the node from a place.
  */
 static inline node_t get_node(atomic_t place)
 {
-    return (node_t) fae_atomic_get(place);
+    return (node_t) fa_atomic_get(place);
 }
 
 /** Atomically set a place to a node.
  */
 static inline void set_node(atomic_t place, node_t node)
 {
-    fae_atomic_set(place, node);
+    fa_atomic_set(place, node);
 }
 
 /** Atomically forward a place to point to the next node.
  */
 static inline void forward_node(atomic_t place)
 {
-    fae_atomic_exchange(place, get_node(place), (get_node(place))->next);
+    fa_atomic_exchange(place, get_node(place), (get_node(place))->next);
 }
 
 // --------------------------------------------------------------------------------
@@ -91,7 +91,7 @@ static inline void forward_node(atomic_t place)
     @par Atomicity
         Non-atomic
  */
-fae_atomic_stack_t fae_atomic_stack_create()
+fa_atomic_stack_t fa_atomic_stack_create()
 {
     atomic_stack_t stack = new_stack();
     return stack;
@@ -101,7 +101,7 @@ fae_atomic_stack_t fae_atomic_stack_create()
     @par Atomicity
         Non-atomic
  */
-void fae_atomic_stack_destroy(fae_atomic_stack_t stack)
+void fa_atomic_stack_destroy(fa_atomic_stack_t stack)
 {
     while (true) {
         node_t node = get_node(stack->top);
@@ -126,14 +126,14 @@ void fae_atomic_stack_destroy(fae_atomic_stack_t stack)
     @par Atomicity
         Atomic
  */
-bool fae_atomic_stack_write(fae_atomic_stack_t stack, fae_ptr_t value)
+bool fa_atomic_stack_write(fa_atomic_stack_t stack, fa_ptr_t value)
 {
     node_t node, node2;
 
     do {
         node = get_node(stack->top);
         node2 = new_node(value, node);
-    } while (!fae_atomic_exchange(stack->top, node, node2));
+    } while (!fa_atomic_exchange(stack->top, node, node2));
 
     return true;
 }
@@ -144,7 +144,7 @@ bool fae_atomic_stack_write(fae_atomic_stack_t stack, fae_ptr_t value)
     @par Atomicity
         Atomic
  */
-fae_ptr_t fae_atomic_stack_read(fae_atomic_stack_t stack)
+fa_ptr_t fa_atomic_stack_read(fa_atomic_stack_t stack)
 {
     node_t node;
 
@@ -154,7 +154,7 @@ fae_ptr_t fae_atomic_stack_read(fae_atomic_stack_t stack)
         if (!node) {
             return false;
         }
-    } while (!fae_atomic_exchange(stack->top, node, node->next));
+    } while (!fa_atomic_exchange(stack->top, node, node->next));
 
     ptr_t value = node->value;
     delete_node(node);
@@ -163,7 +163,7 @@ fae_ptr_t fae_atomic_stack_read(fae_atomic_stack_t stack)
 
 // --------------------------------------------------------------------------------
 
-fae_string_t atomic_stack_show(fae_ptr_t v)
+fa_string_t atomic_stack_show(fa_ptr_t v)
 {
     string_t s = string("<AtomicStack ");
     s = string_dappend(s, format_integral("%p", (long) v));
@@ -171,22 +171,22 @@ fae_string_t atomic_stack_show(fae_ptr_t v)
     return s;
 }
 
-void atomic_stack_destroy(fae_ptr_t a)
+void atomic_stack_destroy(fa_ptr_t a)
 {
-    fae_atomic_stack_destroy(a);
+    fa_atomic_stack_destroy(a);
 }
 
 
-fae_ptr_t atomic_stack_impl(fae_id_t interface)
+fa_ptr_t atomic_stack_impl(fa_id_t interface)
 {
-    static fae_string_show_t atomic_stack_show_impl = { atomic_stack_show };
-    static fae_destroy_t atomic_stack_destroy_impl = { atomic_stack_destroy };
+    static fa_string_show_t atomic_stack_show_impl = { atomic_stack_show };
+    static fa_destroy_t atomic_stack_destroy_impl = { atomic_stack_destroy };
 
     switch (interface) {
-    case fae_string_show_i:
+    case fa_string_show_i:
         return &atomic_stack_show_impl;
 
-    case fae_destroy_i:
+    case fa_destroy_i:
         return &atomic_stack_destroy_impl;
 
     default:

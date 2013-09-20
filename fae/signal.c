@@ -1,11 +1,11 @@
 
 
-#include <fae/signal.h>
-#include <fae/util.h>
+#include <fa/signal.h>
+#include <fa/util.h>
 
-typedef fae_signal_t signal_t;
+typedef fa_signal_t signal_t;
 
-struct _fae_signal_t {
+struct _fa_signal_t {
 
     impl_t          impl;       //  Interface dispatcher
 
@@ -68,9 +68,9 @@ struct _fae_signal_t {
 
 inline static signal_t new_signal(int tag)
 {
-    fae_ptr_t signal_impl(fae_id_t interface);
+    fa_ptr_t signal_impl(fa_id_t interface);
 
-    signal_t s = fae_new(signal);
+    signal_t s = fa_new(signal);
     s->impl = &signal_impl;
     s->tag  = tag;
     return s;
@@ -78,7 +78,7 @@ inline static signal_t new_signal(int tag)
 
 inline static void delete_signal(signal_t signal)
 {
-    fae_delete(signal);
+    fa_delete(signal);
 }
 
 #define is_constant(v)    (v->tag == constant_signal)
@@ -99,7 +99,7 @@ inline static void delete_signal(signal_t signal)
 
 // --------------------------------------------------------------------------------
 
-fae_type_t fae_signal_type_of(fae_signal_t signal)
+fa_type_t fa_signal_type_of(fa_signal_t signal)
 {
     assert(false);
 }
@@ -176,7 +176,7 @@ signal_t copy_write(signal_t signal)
     return signal2;
 }
 
-fae_signal_t fae_signal_copy(fae_signal_t signal)
+fa_signal_t fa_signal_copy(fa_signal_t signal)
 {
     match(signal->tag) {
         against(constant_signal)   copy_constant(signal);
@@ -211,13 +211,13 @@ struct context_ {
 };
 typedef struct context_ *context_t;
 
-static ptr_t compute(context_t context, fae_signal_t signal);
-// static void before(context_t context, fae_signal_t signal);
-// static void after(context_t context, fae_signal_t signal);
+static ptr_t compute(context_t context, fa_signal_t signal);
+// static void before(context_t context, fa_signal_t signal);
+// static void after(context_t context, fa_signal_t signal);
 
 
-// void before(context_t context, fae_signal_t signal) {}
-// void after(context_t context, fae_signal_t signal) {}
+// void before(context_t context, fa_signal_t signal) {}
+// void after(context_t context, fa_signal_t signal) {}
 
 ptr_t compute_constant(context_t context, signal_t signal)
 {
@@ -299,7 +299,7 @@ ptr_t compute_write(context_t context, signal_t signal)
     assert(false && "Not implemented");
 }
 
-ptr_t compute(context_t context, fae_signal_t signal)
+ptr_t compute(context_t context, fa_signal_t signal)
 {
     match(signal->tag) {
         against(constant_signal)   compute_constant(context, signal);
@@ -316,7 +316,7 @@ ptr_t compute(context_t context, fae_signal_t signal)
 
 /* Run the given signal (for debug).
  */
-void fae_signal_run(signal_t signal, fae_unary_t function, fae_ptr_t data)
+void fa_signal_run(signal_t signal, fa_unary_t function, fa_ptr_t data)
 {
 
     struct context_ context;
@@ -331,7 +331,7 @@ void fae_signal_run(signal_t signal, fae_unary_t function, fae_ptr_t data)
     for (int i = 0; i < 400; ++i) {
         // TODO fix time etc
         context.count += 1;
-        context.time = fae_dadd(context.time, fae_copy(context.diff)); // TODO rate
+        context.time = fa_dadd(context.time, fa_copy(context.diff)); // TODO rate
         function(data, compute(&context, signal));
     }
 }
@@ -358,207 +358,207 @@ void fae_signal_run(signal_t signal, fae_unary_t function, fae_ptr_t data)
 
 // TODO optimized version for non-ptr types
 
-fae_signal_t fae_signal_add()
+fa_signal_t fa_signal_add()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_subtract()
+fa_signal_t fa_signal_subtract()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_multiply()
+fa_signal_t fa_signal_multiply()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_power()
+fa_signal_t fa_signal_power()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_divide()
+fa_signal_t fa_signal_divide()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_modulo()
+fa_signal_t fa_signal_modulo()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_absolute()
+fa_signal_t fa_signal_absolute()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_not()
+fa_signal_t fa_signal_not()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_and()
+fa_signal_t fa_signal_and()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_or()
+fa_signal_t fa_signal_or()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_xor()
+fa_signal_t fa_signal_xor()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_bit_not()
+fa_signal_t fa_signal_bit_not()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_bit_and()
+fa_signal_t fa_signal_bit_and()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_bit_or()
+fa_signal_t fa_signal_bit_or()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_bit_xor()
+fa_signal_t fa_signal_bit_xor()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_shift_left()
+fa_signal_t fa_signal_shift_left()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_shift_right()
+fa_signal_t fa_signal_shift_right()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_equal()
+fa_signal_t fa_signal_equal()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_less_than()
+fa_signal_t fa_signal_less_than()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_greater_than()
+fa_signal_t fa_signal_greater_than()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_less_than_equal()
+fa_signal_t fa_signal_less_than_equal()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_greater_than_equal()
+fa_signal_t fa_signal_greater_than_equal()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_acos()
+fa_signal_t fa_signal_acos()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_asin()
+fa_signal_t fa_signal_asin()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_atan()
+fa_signal_t fa_signal_atan()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_cos()
+fa_signal_t fa_signal_cos()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_sin()
+fa_signal_t fa_signal_sin()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_tan()
+fa_signal_t fa_signal_tan()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_exp()
+fa_signal_t fa_signal_exp()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_log()
+fa_signal_t fa_signal_log()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_log10()
+fa_signal_t fa_signal_log10()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_pow()
+fa_signal_t fa_signal_pow()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_sqrt()
+fa_signal_t fa_signal_sqrt()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_abs()
+fa_signal_t fa_signal_abs()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_min()
+fa_signal_t fa_signal_min()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_max()
+fa_signal_t fa_signal_max()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_fmod()
+fa_signal_t fa_signal_fmod()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_remainder()
+fa_signal_t fa_signal_remainder()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_floor()
+fa_signal_t fa_signal_floor()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_ceil()
+fa_signal_t fa_signal_ceil()
 {
     assert(false);
 }
 
-fae_signal_t fae_signal_rint()
+fa_signal_t fa_signal_rint()
 {
     assert(false);
 }
@@ -567,7 +567,7 @@ fae_signal_t fae_signal_rint()
 
 // --------------------------------------------------------------------------------
 
-fae_ptr_t signal_impl(fae_id_t interface)
+fa_ptr_t signal_impl(fa_id_t interface)
 {
 
     switch (interface) {

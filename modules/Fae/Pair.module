@@ -1,6 +1,6 @@
 
 /** 
-    @addtogroup FaePair
+    @addtogroup FaPair
     
     Immutable pair data structure.
 
@@ -8,21 +8,21 @@
     - `pair(1, 2)`
 
     @par Implements 
-    - fae_equal_t
-    - fae_order_t
-    - fae_copy_t
-    - fae_destroy_t
-    - fae_dynamic_t
-    - fae_string_show_t
+    - fa_equal_t
+    - fa_order_t
+    - fa_copy_t
+    - fa_destroy_t
+    - fa_dynamic_t
+    - fa_string_show_t
 
     @see 
     - [Data structures](@ref DataStructures)
 
  */
-module Fae.Pair
+module Fa.Pair
 {
-    import Fae;
-    import Fae.List;
+    import Fa;
+    import Fa.List;
 
     type Pair = opaque;
     type Struct = struct { first : Ptr, second : Ptr };

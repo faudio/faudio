@@ -1,39 +1,39 @@
 
 /**
-    @addtogroup FaeThread
+    @addtogroup FaThread
 
     Minimal, cross-platform threads.
 
     We provide threads and mutexes but no conditions. as they can not be easily
     implemented on all platforms, and have limited applications in real-time audio processing
-    anyway. For non-blocking constructs, see the @ref FaeAtomic modules.
+    anyway. For non-blocking constructs, see the @ref FaAtomic modules.
 
     @par Literals
     - `thread(function, data)`
 
     @par Thread implements 
-    - fae_equal_t
-    - fae_order_t
-    - fae_dynamic_t
-    - fae_string_show_t
+    - fa_equal_t
+    - fa_order_t
+    - fa_dynamic_t
+    - fa_string_show_t
     
     Threads do not implement destroy, as there is no way of knowing whether
     the destroyed thread should be joined or detached.
 
     @par Mutex implements
-    - fae_string_show_t
-    - fae_destroy_t
+    - fa_string_show_t
+    - fa_destroy_t
 
     @par Condition implements
-    - fae_string_show_t
-    - fae_destroy_t
+    - fa_string_show_t
+    - fa_destroy_t
     
     
  */
-module Fae.Thread
+module Fa.Thread
 {
-    import Fae;
-    import Fae.Std;
+    import Fa;
+    import Fa.Std;
 
     type Thread = opaque;
     type Mutex = opaque;

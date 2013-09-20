@@ -1,6 +1,6 @@
 
 /** 
-    @addtogroup FaeRatio
+    @addtogroup FaRatio
     
     Fixed-precision rational numbers.
 
@@ -10,18 +10,18 @@
     - `ratio(-1, 2)`
 
     @par Implements 
-    - fae_equal_t
-    - fae_order_t
-    - fae_string_show_t
-    - fae_copy_t
-    - fae_destroy_t
-    - fae_dynamic_t
-    - fae_number_t
+    - fa_equal_t
+    - fa_order_t
+    - fa_string_show_t
+    - fa_copy_t
+    - fa_destroy_t
+    - fa_dynamic_t
+    - fa_number_t
 
  */
-module Fae.Ratio 
+module Fa.Ratio 
 {
-    import Fae.Std;
+    import Fa.Std;
 
     type Num    = Int32;
     type Denom  = Int32;

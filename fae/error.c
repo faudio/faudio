@@ -1,16 +1,16 @@
 
 /*
-    FAE
+    FA
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
  */
 
-#include <fae.h>
-#include <fae/string.h>
-#include <fae/error.h>
-#include <fae/util.h>
+#include <fa.h>
+#include <fa/string.h>
+#include <fa/error.h>
+#include <fa/util.h>
 
-typedef fae_error_interface_t error_interface_t;
+typedef fa_error_interface_t error_interface_t;
 
 struct simple_error {
     impl_t        impl;       //  Interface dispatcher
@@ -22,7 +22,7 @@ struct simple_error {
 typedef struct simple_error       *simple_error_t;
 
 
-void fae_fae_log(fae_ptr_t data, fae_error_t error);
+void fa_fa_log(fa_ptr_t data, fa_error_t error);
 
 /** Creates a simple error.
     @param severity     Severity of the error.
@@ -30,75 +30,75 @@ void fae_fae_log(fae_ptr_t data, fae_error_t error);
     @param origin       Error origin (typically module name).
     @return
         A value of some type implementing
-            [Error](@ref fae_error_interface_t),
-            [Copy](@ref fae_copy_t) and
-            [Destroy](@ref fae_destroy_t)
+            [Error](@ref fa_error_interface_t),
+            [Copy](@ref fa_copy_t) and
+            [Destroy](@ref fa_destroy_t)
  */
-fae_error_t fae_error_create_simple(
-    fae_error_severity_t    severity,
-    fae_string_t            message,
-    fae_string_t            origin
+fa_error_t fa_error_create_simple(
+    fa_error_severity_t    severity,
+    fa_string_t            message,
+    fa_string_t            origin
 )
 {
-    fae_ptr_t simple_error_impl(fae_id_t interface);
-    simple_error_t e  = fae_new_struct(simple_error);
+    fa_ptr_t simple_error_impl(fa_id_t interface);
+    simple_error_t e  = fa_new_struct(simple_error);
     e->impl     = &simple_error_impl;
     e->severity = severity;
-    e->message  = fae_copy(message);
-    e->origin   = fae_copy(origin);
+    e->message  = fa_copy(message);
+    e->origin   = fa_copy(origin);
     return (error_t) e;
 }
 
-fae_error_t fae_error_copy_simple(simple_error_t simple)
+fa_error_t fa_error_copy_simple(simple_error_t simple)
 {
-    fae_ptr_t simple_error_impl(fae_id_t interface);
-    simple_error_t e  = fae_new_struct(simple_error);
+    fa_ptr_t simple_error_impl(fa_id_t interface);
+    simple_error_t e  = fa_new_struct(simple_error);
     e->impl     = &simple_error_impl;
     e->severity = simple->severity;
-    e->message  = fae_copy(simple->message);
-    e->origin   = fae_copy(simple->origin);
+    e->message  = fa_copy(simple->message);
+    e->origin   = fa_copy(simple->origin);
     return (error_t) e;
 }
 
-void fae_error_destroy_simple(simple_error_t simple)
+void fa_error_destroy_simple(simple_error_t simple)
 {
-    fae_destroy(simple->message);
-    fae_destroy(simple->origin);
-    fae_delete(simple);
+    fa_destroy(simple->message);
+    fa_destroy(simple->origin);
+    fa_delete(simple);
 }
 
 
 /** Return the severity of the given error.
  */
-fae_error_severity_t fae_error_severity(fae_error_t a)
+fa_error_severity_t fa_error_severity(fa_error_t a)
 {
-    assert(fae_interface(fae_error_i, a) && "Must implement Error");
-    return ((error_interface_t *) fae_interface(fae_error_i, a))->severity(a);
+    assert(fa_interface(fa_error_i, a) && "Must implement Error");
+    return ((error_interface_t *) fa_interface(fa_error_i, a))->severity(a);
 }
 
 /** Return the message of the given error.
  */
-fae_string_t fae_error_message(fae_error_t a)
+fa_string_t fa_error_message(fa_error_t a)
 {
-    assert(fae_interface(fae_error_i, a) && "Must implement Error");
-    return ((error_interface_t *) fae_interface(fae_error_i, a))->message(a);
+    assert(fa_interface(fa_error_i, a) && "Must implement Error");
+    return ((error_interface_t *) fa_interface(fa_error_i, a))->message(a);
 }
 
 /** Return the origin of the given error.
  */
-fae_string_t fae_error_origin(fae_error_t a)
+fa_string_t fa_error_origin(fa_error_t a)
 {
-    assert(fae_interface(fae_error_i, a) && "Must implement Error");
-    return ((error_interface_t *) fae_interface(fae_error_i, a))->origin(a);
+    assert(fa_interface(fa_error_i, a) && "Must implement Error");
+    return ((error_interface_t *) fa_interface(fa_error_i, a))->origin(a);
 }
 
 /** Return whether the given value is an error or not.
 
-    This function is often used with [log](@ref fae_error_log) as in:
+    This function is often used with [log](@ref fa_error_log) as in:
 
     ~~~
-    if (fae_check(value)) {
-        fae_error_log(NULL, value);
+    if (fa_check(value)) {
+        fa_error_log(NULL, value);
         exit(-1);
     }
     ~~~
@@ -107,9 +107,9 @@ fae_string_t fae_error_origin(fae_error_t a)
     @return
       A boolean.
  */
-bool fae_error_check(fae_ptr_t a)
+bool fa_error_check(fa_ptr_t a)
 {
-    return fae_interface(fae_error_i, a);
+    return fa_interface(fa_error_i, a);
 }
 
 /** Write a log message.
@@ -117,17 +117,17 @@ bool fae_error_check(fae_ptr_t a)
     @param context
         Ignored, declared for compability with user-defined callbacks.
     @param error
-        Condition to log. Must implement [Error](@ref fae_error_interface_t).
+        Condition to log. Must implement [Error](@ref fa_error_interface_t).
  */
-void fae_error_log(fae_ptr_t context, fae_error_t error)
+void fa_error_log(fa_ptr_t context, fa_error_t error)
 {
-    fae_fae_log(context, error);
+    fa_fa_log(context, error);
 }
 
 /** Convert the given error to a formated string.
     @param colored Include color escapes for terminals.
  */
-fae_string_t fae_error_format(bool colored, fae_error_t a)
+fa_string_t fa_error_format(bool colored, fa_error_t a)
 {
     simple_error_t simple = (simple_error_t) a;
     string_t str = string("");
@@ -169,13 +169,13 @@ fae_string_t fae_error_format(bool colored, fae_error_t a)
         assert(false && "Missing label");
     }
 
-    if (fae_string_length(simple->origin) > 0) {
+    if (fa_string_length(simple->origin) > 0) {
         str = string_dappend(str, strs[4 + colored * 6]);
-        str = string_dappend(str, fae_copy(simple->origin));
+        str = string_dappend(str, fa_copy(simple->origin));
         str = string_dappend(str, strs[5 + colored * 6]);
     }
 
-    str = string_dappend(str, fae_copy(simple->message));
+    str = string_dappend(str, fa_copy(simple->message));
 
     return str;
 }
@@ -183,35 +183,35 @@ fae_string_t fae_error_format(bool colored, fae_error_t a)
 
 // --------------------------------------------------------------------------------
 
-fae_ptr_t simple_error_copy(fae_ptr_t a)
+fa_ptr_t simple_error_copy(fa_ptr_t a)
 {
-    return fae_error_copy_simple(a);
+    return fa_error_copy_simple(a);
 }
 
-void simple_error_destroy(fae_ptr_t a)
+void simple_error_destroy(fa_ptr_t a)
 {
-    fae_error_destroy_simple(a);
+    fa_error_destroy_simple(a);
 }
 
-fae_error_severity_t simple_error_severity(fae_ptr_t a)
+fa_error_severity_t simple_error_severity(fa_ptr_t a)
 {
     simple_error_t simple = (simple_error_t) a;
     return simple->severity;
 }
 
-fae_string_t simple_error_message(fae_ptr_t a)
+fa_string_t simple_error_message(fa_ptr_t a)
 {
     simple_error_t simple = (simple_error_t) a;
     return simple->message;
 }
 
-fae_string_t simple_error_origin(fae_ptr_t a)
+fa_string_t simple_error_origin(fa_ptr_t a)
 {
     simple_error_t simple = (simple_error_t) a;
     return simple->origin;
 }
 
-fae_string_t simple_error_show(fae_ptr_t a)
+fa_string_t simple_error_show(fa_ptr_t a)
 {
     simple_error_t simple = (simple_error_t) a;
     string_t result = string("<");
@@ -237,39 +237,39 @@ fae_string_t simple_error_show(fae_ptr_t a)
         assert(false && "Missing label");
     }
 
-    if (fae_string_length(simple->origin) > 0) {
-        result = string_dappend(result, fae_copy(simple->origin));
+    if (fa_string_length(simple->origin) > 0) {
+        result = string_dappend(result, fa_copy(simple->origin));
         result = string_dappend(result, string(": "));
     }
 
-    result = string_dappend(result, fae_copy(simple->message));
+    result = string_dappend(result, fa_copy(simple->message));
     result = string_dappend(result, string(">"));
 
     return result;
 }
 
-fae_ptr_t simple_error_impl(fae_id_t interface)
+fa_ptr_t simple_error_impl(fa_id_t interface)
 {
-    static fae_string_show_t simple_error_show_impl
+    static fa_string_show_t simple_error_show_impl
         = { simple_error_show };
-    static fae_copy_t simple_error_copy_impl
+    static fa_copy_t simple_error_copy_impl
         = { simple_error_copy };
-    static fae_destroy_t simple_error_destroy_impl
+    static fa_destroy_t simple_error_destroy_impl
         = { simple_error_destroy };
-    static fae_error_interface_t simple_error_error_impl
+    static fa_error_interface_t simple_error_error_impl
         = { simple_error_severity, simple_error_message, simple_error_origin };
 
     switch (interface) {
-    case fae_copy_i:
+    case fa_copy_i:
         return &simple_error_copy_impl;
 
-    case fae_destroy_i:
+    case fa_destroy_i:
         return &simple_error_destroy_impl;
 
-    case fae_error_i:
+    case fa_error_i:
         return &simple_error_error_impl;
 
-    case fae_string_show_i:
+    case fa_string_show_i:
         return &simple_error_show_impl;
 
     default:

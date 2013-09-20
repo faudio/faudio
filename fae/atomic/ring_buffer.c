@@ -1,19 +1,19 @@
 
 /*
-    FAE
+    FA
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
  */
 
-#include <fae/atomic/ring_buffer.h>
-#include <fae/atomic.h>
-#include <fae/buffer.h>
-#include <fae/string.h>
-#include <fae/util.h>
+#include <fa/atomic/ring_buffer.h>
+#include <fa/atomic.h>
+#include <fa/buffer.h>
+#include <fa/string.h>
+#include <fa/util.h>
 
 // http://www.cs.sunysb.edu/~skiena/392/programs/queue.c
 
-struct _fae_atomic_ring_buffer_t {
+struct _fa_atomic_ring_buffer_t {
 
     impl_t              impl;       //  Interface dispatcher
     buffer_t            data;       //  Data buffer
@@ -22,24 +22,24 @@ struct _fae_atomic_ring_buffer_t {
     atomic_t            stop;
 };
 
-fae_ptr_t atomic_ring_buffer_impl(fae_id_t interface);
+fa_ptr_t atomic_ring_buffer_impl(fa_id_t interface);
 
 
 /** Create a new ring buffer.
     @note
         O(n)
  */
-fae_atomic_ring_buffer_t fae_atomic_ring_buffer_create(size_t size)
+fa_atomic_ring_buffer_t fa_atomic_ring_buffer_create(size_t size)
 {
-    ringbuffer_t b = fae_new(atomic_ring_buffer);
+    ringbuffer_t b = fa_new(atomic_ring_buffer);
 
     b->impl = &atomic_ring_buffer_impl;
-    b->data = fae_buffer_create(size);
+    b->data = fa_buffer_create(size);
 
-    b->start = fae_atomic_create();
-    b->stop  = fae_atomic_create();
-    fae_atomic_set(b->start, 0);
-    fae_atomic_set(b->stop, 0);
+    b->start = fa_atomic_create();
+    b->stop  = fa_atomic_create();
+    fa_atomic_set(b->start, 0);
+    fa_atomic_set(b->stop, 0);
 
     return b;
 }
@@ -48,18 +48,18 @@ fae_atomic_ring_buffer_t fae_atomic_ring_buffer_create(size_t size)
     @note
         O(n)
  */
-fae_atomic_ring_buffer_t
-fae_atomic_ring_buffer_copy(fae_atomic_ring_buffer_t buffer)
+fa_atomic_ring_buffer_t
+fa_atomic_ring_buffer_copy(fa_atomic_ring_buffer_t buffer)
 {
-    ringbuffer_t b = fae_new(atomic_ring_buffer);
+    ringbuffer_t b = fa_new(atomic_ring_buffer);
 
     b->impl = &atomic_ring_buffer_impl;
-    b->data = fae_buffer_copy(buffer->data);
+    b->data = fa_buffer_copy(buffer->data);
 
-    b->start = fae_atomic_create();
-    b->stop  = fae_atomic_create();
-    fae_atomic_set(b->start, fae_atomic_get(buffer->start));
-    fae_atomic_set(b->stop, fae_atomic_get(buffer->stop));
+    b->start = fa_atomic_create();
+    b->stop  = fa_atomic_create();
+    fa_atomic_set(b->start, fa_atomic_get(buffer->start));
+    fa_atomic_set(b->stop, fa_atomic_get(buffer->stop));
 
     return b;
 }
@@ -68,9 +68,9 @@ fae_atomic_ring_buffer_copy(fae_atomic_ring_buffer_t buffer)
     @note
         O(n)
  */
-fae_atomic_ring_buffer_t
-fae_atomic_ring_buffer_resize(size_t  size,
-                              fae_atomic_ring_buffer_t buffer)
+fa_atomic_ring_buffer_t
+fa_atomic_ring_buffer_resize(size_t  size,
+                              fa_atomic_ring_buffer_t buffer)
 {
     assert(false && "Not implemented");
 }
@@ -79,8 +79,8 @@ fae_atomic_ring_buffer_resize(size_t  size,
     @note
         O(n)
  */
-void fae_atomic_ring_buffer_swap(fae_atomic_ring_buffer_t buffer,
-                                 fae_atomic_ring_buffer_t buffer2)
+void fa_atomic_ring_buffer_swap(fa_atomic_ring_buffer_t buffer,
+                                 fa_atomic_ring_buffer_t buffer2)
 {
     assert(false && "Not implemented");
 }
@@ -89,7 +89,7 @@ void fae_atomic_ring_buffer_swap(fae_atomic_ring_buffer_t buffer,
     @note
         O(n)
  */
-void fae_atomic_ring_buffer_destroy(fae_atomic_ring_buffer_t buffer)
+void fa_atomic_ring_buffer_destroy(fa_atomic_ring_buffer_t buffer)
 {
     assert(false && "Not implemented");
 }
@@ -98,7 +98,7 @@ void fae_atomic_ring_buffer_destroy(fae_atomic_ring_buffer_t buffer)
     @note
         O(n)
  */
-size_t fae_atomic_ring_buffer_size(fae_atomic_ring_buffer_t buffer)
+size_t fa_atomic_ring_buffer_size(fa_atomic_ring_buffer_t buffer)
 {
     assert(false && "Not implemented");
 }
@@ -107,7 +107,7 @@ size_t fae_atomic_ring_buffer_size(fae_atomic_ring_buffer_t buffer)
     @note
         O(n)
  */
-uint8_t fae_atomic_ring_buffer_read(fae_atomic_ring_buffer_t buffer)
+uint8_t fa_atomic_ring_buffer_read(fa_atomic_ring_buffer_t buffer)
 {
     assert(false && "Not implemented");
 }
@@ -116,7 +116,7 @@ uint8_t fae_atomic_ring_buffer_read(fae_atomic_ring_buffer_t buffer)
     @note
         O(n)
  */
-bool fae_atomic_ring_buffer_write(fae_atomic_ring_buffer_t buffer,
+bool fa_atomic_ring_buffer_write(fa_atomic_ring_buffer_t buffer,
                                   uint8_t value)
 {
     assert(false && "Not implemented");
@@ -126,7 +126,7 @@ bool fae_atomic_ring_buffer_write(fae_atomic_ring_buffer_t buffer,
 
 // --------------------------------------------------------------------------------
 
-fae_string_t atomic_ring_buffer_show(fae_ptr_t v)
+fa_string_t atomic_ring_buffer_show(fa_ptr_t v)
 {
     string_t s = string("<RingBuffer ");
     s = string_dappend(s, format_integral("%p", (long) v));
@@ -134,22 +134,22 @@ fae_string_t atomic_ring_buffer_show(fae_ptr_t v)
     return s;
 }
 
-void atomic_ring_buffer_destroy(fae_ptr_t a)
+void atomic_ring_buffer_destroy(fa_ptr_t a)
 {
-    fae_atomic_ring_buffer_destroy(a);
+    fa_atomic_ring_buffer_destroy(a);
 }
 
 
-fae_ptr_t atomic_ring_buffer_impl(fae_id_t interface)
+fa_ptr_t atomic_ring_buffer_impl(fa_id_t interface)
 {
-    static fae_string_show_t atomic_ring_buffer_show_impl = { atomic_ring_buffer_show };
-    static fae_destroy_t atomic_ring_buffer_destroy_impl = { atomic_ring_buffer_destroy };
+    static fa_string_show_t atomic_ring_buffer_show_impl = { atomic_ring_buffer_show };
+    static fa_destroy_t atomic_ring_buffer_destroy_impl = { atomic_ring_buffer_destroy };
 
     switch (interface) {
-    case fae_string_show_i:
+    case fa_string_show_i:
         return &atomic_ring_buffer_show_impl;
 
-    case fae_destroy_i:
+    case fa_destroy_i:
         return &atomic_ring_buffer_destroy_impl;
 
     default:

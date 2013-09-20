@@ -1,15 +1,15 @@
 
 /**
-    @addtogroup FaeDeviceFile
+    @addtogroup FaDeviceFile
     
     Non-real-time file device.
     
  */
-module Fae.Device.File
+module Fa.Device.File
 {
-    import Fae.String;
-    import Fae.Device;
-    import Fae.Processor;
+    import Fa.String;
+    import Fa.Device;
+    import Fa.Processor;
 
     type Result = opaque;
 

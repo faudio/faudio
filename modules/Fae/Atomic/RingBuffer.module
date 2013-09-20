@@ -1,6 +1,6 @@
 
 /** 
-    @addtogroup FaeAtomicRingBuffer
+    @addtogroup FaAtomicRingBuffer
     
     A byte-level, bounded lock-free queue.
     
@@ -15,16 +15,16 @@
     - `atomic_ring_buffer(size)` 
 
     @par Implements 
-    - fae_destroy_t
-    - fae_string_show_t
+    - fa_destroy_t
+    - fa_string_show_t
 
     @see 
     - [Data structures](@ref DataStructures)
 
  */
-module Fae.Atomic.RingBuffer
+module Fa.Atomic.RingBuffer
 {            
-    import Fae;
+    import Fa;
     
     type RingBuffer = opaque;
 

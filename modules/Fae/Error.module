@@ -1,25 +1,25 @@
 
 /**
-    @addtogroup FaeError
+    @addtogroup FaError
     
     Error handling types and functions.
  */                                             
  
-module Fae.Error
+module Fa.Error
 {
-    import Fae;
-    import Fae.String;
+    import Fa;
+    import Fa.String;
 
     type Severity = enum {
         Info, Warning, Error, Misc
     };
 
-    /** @interface fae_error_interface_t
+    /** @interface fa_error_interface_t
         
         Error interface.
 
         Generally there is no need to implement this interface directly, the
-        @ref fae_error_create_simple function returns an implementation
+        @ref fa_error_create_simple function returns an implementation
         suitable for most purposes.        
     */
     type Interface  = struct {
@@ -28,16 +28,16 @@ module Fae.Error
         origin : (Ptr -> String)*
     };    
 
-    /** @typedef fae_error_t
+    /** @typedef fa_error_t
 
         A type implementing the error interface.
 
         If you cast a value to this type, you must assure that it implements
-        @ref fae_error_interface_t, conversely if you cast a value from
-        this type you can assume that it implements @ref fae_error_t.
+        @ref fa_error_interface_t, conversely if you cast a value from
+        this type you can assume that it implements @ref fa_error_t.
         
         You can check whether an arbitrary reference is an error using
-        @ref fae_error_check.
+        @ref fa_error_check.
      */
     type Error = opaque;
 
@@ -49,7 +49,7 @@ module Fae.Error
     origin    : Error -> String;
     format    : (Bool,Error) -> String;
 
-    /** @typedef fae_error_callback_t
+    /** @typedef fa_error_callback_t
         
         An error handler routine.
      */

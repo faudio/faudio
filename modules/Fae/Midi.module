@@ -1,29 +1,29 @@
 
 /**
-    @addtogroup FaeMidi
+    @addtogroup FaMidi
 
     Real-time midi device.
 
     @par Sessions, devices and streams implement 
-    - fae_destroy_t
-    - fae_string_show_t
+    - fa_destroy_t
+    - fa_string_show_t
 
     @par Devices also implement 
-    - fae_equal_t
+    - fa_equal_t
 
     @par Streams also implement 
-    - fae_message_sender_t
-    - fae_message_receiver_t
+    - fa_message_sender_t
+    - fa_message_receiver_t
     
     @see 
     - @ref Devices
  */
-module Fae.Midi
+module Fa.Midi
 {
-    import Fae.List;
-    import Fae.Pair;
-    import Fae.Device;
-    import Fae.Error;
+    import Fa.List;
+    import Fa.Pair;
+    import Fa.Device;
+    import Fa.Error;
 
     type Device = opaque;
     type Session = opaque;

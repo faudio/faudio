@@ -1,42 +1,42 @@
 
 /**
-    @addtogroup FaeFae
+    @addtogroup FaFa
 
-    This modules exports Fae. Example usage:
+    This modules exports Fa. Example usage:
 
     ~~~~
-    #import <fae/fae.h>
+    #import <fa/fa.h>
 
     int main (int argc, char const *argv[])
     {
-        fae_fae_initialize();
+        fa_fa_initialize();
 
         ...
 
-        fae_fae_terminate();
+        fa_fa_terminate();
         return 0;
     }
     ~~~~
 
  */
-module Fae.Fae
+module Fa.Fa
 {
-    import Fae.Atomic;
-    import Fae.Atomic.Queue;
-    import Fae.Atomic.Stack;
-    import Fae.Atomic.RingBuffer;
-    import Fae.System;
-    import Fae.Error;
-    import Fae.Graph;
-    import Fae.Audio;
-    import Fae.Midi;
-    // import Fae.Device.File;
-    import Fae.Midi.Message;
-    import Fae.Plot;
-    import Fae.Thread;
-    import Fae.Time;
-    import Fae.PriorityQueue;
-    import Fae.Signal;
+    import Fa.Atomic;
+    import Fa.Atomic.Queue;
+    import Fa.Atomic.Stack;
+    import Fa.Atomic.RingBuffer;
+    import Fa.System;
+    import Fa.Error;
+    import Fa.Graph;
+    import Fa.Audio;
+    import Fa.Midi;
+    // import Fa.Device.File;
+    import Fa.Midi.Message;
+    import Fa.Plot;
+    import Fa.Thread;
+    import Fa.Time;
+    import Fa.PriorityQueue;
+    import Fa.Signal;
 
     version : () -> List;
     versionString : () -> String;

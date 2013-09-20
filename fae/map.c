@@ -1,15 +1,15 @@
 
 /*
-    FAE
+    FA
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
  */
 
-#include <fae/map.h>
-#include <fae/set.h>
-#include <fae/string.h>
-#include <fae/dynamic.h>
-#include <fae/util.h>
+#include <fa/map.h>
+#include <fa/set.h>
+#include <fa/string.h>
+#include <fa/dynamic.h>
+#include <fa/util.h>
 
 /*
     Notes:
@@ -26,7 +26,7 @@ struct entry {
 
 typedef struct entry *entry_t;
 
-struct _fae_map_t {
+struct _fa_map_t {
     impl_t          impl;       //  Interface dispatcher
     set_t           entries;    //  Set of entries
 };
@@ -34,10 +34,10 @@ struct _fae_map_t {
 
 // --------------------------------------------------------------------------------
 
-entry_t new_entry(fae_ptr_t key, fae_ptr_t value)
+entry_t new_entry(fa_ptr_t key, fa_ptr_t value)
 {
-    fae_ptr_t entry_impl(fae_id_t interface);
-    entry_t entry   = fae_new_struct(entry);
+    fa_ptr_t entry_impl(fa_id_t interface);
+    entry_t entry   = fa_new_struct(entry);
     entry->impl     = &entry_impl;
     entry->key      = key;
     entry->value    = value;
@@ -51,13 +51,13 @@ entry_t copy_entry(entry_t entry)
 
 void delete_entry(pair_t entry)
 {
-    fae_delete(entry);
+    fa_delete(entry);
 }
 
 inline static map_t new_map(set_t entries)
 {
-    fae_ptr_t map_impl(fae_id_t interface);
-    map_t map       = fae_new(map);
+    fa_ptr_t map_impl(fa_id_t interface);
+    map_t map       = fa_new(map);
     map->impl       = &map_impl;
     map->entries    = entries;
     return map;
@@ -65,84 +65,84 @@ inline static map_t new_map(set_t entries)
 
 inline static void delete_map(map_t map)
 {
-    fae_delete(map->entries);
-    fae_delete(map);
+    fa_delete(map->entries);
+    fa_delete(map);
 }
 
 
 // --------------------------------------------------------------------------------
 
-fae_map_t fae_map_empty()
+fa_map_t fa_map_empty()
 {
-    return new_map(fae_set_empty());
+    return new_map(fa_set_empty());
 }
 
-fae_map_t fae_map_add(fae_map_key_t key, fae_ptr_t value, fae_map_t map)
-{
-    entry_t entry = new_entry(key, value);
-    return new_map(fae_set_add(entry, map->entries));
-}
-
-fae_map_t fae_map_set(fae_map_key_t key, fae_ptr_t value, fae_map_t map)
+fa_map_t fa_map_add(fa_map_key_t key, fa_ptr_t value, fa_map_t map)
 {
     entry_t entry = new_entry(key, value);
-    return new_map(fae_set_set(entry, map->entries));
+    return new_map(fa_set_add(entry, map->entries));
 }
 
-fae_map_t fae_map_remove(fae_map_key_t key, fae_map_t map)
+fa_map_t fa_map_set(fa_map_key_t key, fa_ptr_t value, fa_map_t map)
+{
+    entry_t entry = new_entry(key, value);
+    return new_map(fa_set_set(entry, map->entries));
+}
+
+fa_map_t fa_map_remove(fa_map_key_t key, fa_map_t map)
 {
     entry_t entry = new_entry(key, NULL); // we compare on keys, so value does not matter
-    return new_map(fae_set_dremove(entry, map->entries));
+    return new_map(fa_set_dremove(entry, map->entries));
 }
 
-fae_map_t fae_map_dadd(fae_map_key_t key, fae_ptr_t value, fae_map_t map)
+fa_map_t fa_map_dadd(fa_map_key_t key, fa_ptr_t value, fa_map_t map)
 {
-    map_t map2 = fae_map_add(key, value, map);
-    fae_map_destroy(map);
+    map_t map2 = fa_map_add(key, value, map);
+    fa_map_destroy(map);
     return map2;
 }
 
-fae_map_t fae_map_dset(fae_map_key_t key, fae_ptr_t value, fae_map_t map)
+fa_map_t fa_map_dset(fa_map_key_t key, fa_ptr_t value, fa_map_t map)
 {
-    map_t map2 = fae_map_set(key, value, map);
-    fae_map_destroy(map);
+    map_t map2 = fa_map_set(key, value, map);
+    fa_map_destroy(map);
     return map2;
 }
 
-fae_map_t fae_map_dremove(fae_map_key_t key, fae_map_t map)
+fa_map_t fa_map_dremove(fa_map_key_t key, fa_map_t map)
 {
-    map_t map2 = fae_map_remove(key, map);
-    fae_map_destroy(map);
+    map_t map2 = fa_map_remove(key, map);
+    fa_map_destroy(map);
     return map2;
 }
 
-fae_map_t fae_map_add_entry(fae_pair_t x, fae_map_t map)
+fa_map_t fa_map_add_entry(fa_pair_t x, fa_map_t map)
 {
-    entry_t entry = new_entry(fae_pair_first(x), fae_pair_second(x));
-    return new_map(fae_set_add(entry, map->entries));
+    entry_t entry = new_entry(fa_pair_first(x), fa_pair_second(x));
+    return new_map(fa_set_add(entry, map->entries));
 }
 
-fae_map_t fae_map_remove_entry(fae_pair_t x, fae_map_t map)
+fa_map_t fa_map_remove_entry(fa_pair_t x, fa_map_t map)
 {
-    entry_t entry = new_entry(fae_pair_first(x), fae_pair_second(x));
-    return new_map(fae_set_remove(entry, map->entries));
+    entry_t entry = new_entry(fa_pair_first(x), fa_pair_second(x));
+    return new_map(fa_set_remove(entry, map->entries));
 }
 
-fae_map_t fae_map_copy(fae_map_t map)
+fa_map_t fa_map_copy(fa_map_t map)
 {
-    return new_map(fae_set_copy(map->entries));
+    return new_map(fa_set_copy(map->entries));
 }
 
-void fae_map_destroy(fae_map_t map)
+void fa_map_destroy(fa_map_t map)
 {
-    fae_set_destroy(map->entries);
-    fae_delete(map);
+    fa_set_destroy(map->entries);
+    fa_delete(map);
 }
 
-fae_ptr_t fae_map_get(fae_map_key_t key, fae_map_t map)
+fa_ptr_t fa_map_get(fa_map_key_t key, fa_map_t map)
 {
     entry_t entry  = new_entry(key, NULL); // we compare on keys, so value does not matter
-    entry_t entry2 = fae_set_get(entry, map->entries);
+    entry_t entry2 = fa_set_get(entry, map->entries);
 
     if (!entry2) {
         return NULL;
@@ -151,57 +151,57 @@ fae_ptr_t fae_map_get(fae_map_key_t key, fae_map_t map)
     }
 }
 
-bool fae_map_has_key(fae_map_key_t key, fae_map_t map)
+bool fa_map_has_key(fa_map_key_t key, fa_map_t map)
 {
     entry_t entry  = new_entry(key, NULL); // we compare on keys, so value does not matter
-    return fae_set_get(entry, map->entries);
+    return fa_set_get(entry, map->entries);
 }
 
-bool fae_map_has_elem(fae_ptr_t x, fae_map_t map)
+bool fa_map_has_elem(fa_ptr_t x, fa_map_t map)
 {
     // entry_t entry = new_entry(NULL, x);
-    // return fae_set_get(COMP_VALUE(entry), map->entries);
+    // return fa_set_get(COMP_VALUE(entry), map->entries);
     assert(false && "Not implemented");
 }
 
-bool fae_map_has_entry(fae_pair_t entry, fae_map_t map)
+bool fa_map_has_entry(fa_pair_t entry, fa_map_t map)
 {
-    // return fae_set_get(COMP_BOTH(entry), map->entries);
+    // return fa_set_get(COMP_BOTH(entry), map->entries);
     assert(false && "Not implemented");
 }
 
-int fae_map_size(fae_map_t map)
+int fa_map_size(fa_map_t map)
 {
-    return fae_set_size(map->entries);
+    return fa_set_size(map->entries);
 }
 
-bool fae_map_is_empty(fae_map_t map)
+bool fa_map_is_empty(fa_map_t map)
 {
-    return fae_set_is_empty(map->entries);
+    return fa_set_is_empty(map->entries);
 }
 
-bool fae_map_is_single(fae_map_t map)
+bool fa_map_is_single(fa_map_t map)
 {
-    return fae_set_is_single(map->entries);
+    return fa_set_is_single(map->entries);
 }
 
-bool fae_map_is_submap_of(fae_map_t a, fae_map_t b)
+bool fa_map_is_submap_of(fa_map_t a, fa_map_t b)
 {
-    return fae_set_is_subset_of(a->entries, b->entries);
+    return fa_set_is_subset_of(a->entries, b->entries);
 }
 
-bool fae_map_is_proper_submap_of(fae_map_t a, fae_map_t b)
+bool fa_map_is_proper_submap_of(fa_map_t a, fa_map_t b)
 {
-    return fae_set_is_proper_subset_of(a->entries, b->entries);
+    return fa_set_is_proper_subset_of(a->entries, b->entries);
 }
 
-fae_map_t fae_map_map(unary_t func, ptr_t data, fae_map_t map)
+fa_map_t fa_map_map(unary_t func, ptr_t data, fa_map_t map)
 {
-    map_t result = fae_map_empty();
-    fae_map_for_each(key_val, map) {
-        ptr_t key = fae_pair_first(key_val);
-        ptr_t val = fae_pair_second(key_val);
-        result = fae_map_add(key, func(data, val), result);
+    map_t result = fa_map_empty();
+    fa_map_for_each(key_val, map) {
+        ptr_t key = fa_pair_first(key_val);
+        ptr_t val = fa_pair_second(key_val);
+        result = fa_map_add(key, func(data, val), result);
     }
     return result;
 }
@@ -212,12 +212,12 @@ fae_map_t fae_map_map(unary_t func, ptr_t data, fae_map_t map)
 
 /** Create a set from the given elements.
  */
-map_t fae_map(int count, ...)
+map_t fa_map(int count, ...)
 {
     assert((count % 2 == 0)
            && "Map literal must have an even number of elements");
 
-    map_t s = fae_map_empty();
+    map_t s = fa_map_empty();
     va_list args;
 
     va_start(args, count);
@@ -225,7 +225,7 @@ map_t fae_map(int count, ...)
     for (int i = 0; i < count; i += 2) {
         ptr_t key = va_arg(args, ptr_t);
         ptr_t value = va_arg(args, ptr_t);
-        s = fae_map_dadd(key, value, s);
+        s = fa_map_dadd(key, value, s);
     }
 
     va_end(args);
@@ -236,46 +236,46 @@ pair_t entry_to_pair(ptr_t data, entry_t entry)
 {
     return pair(entry->key, entry->value);
 }
-fae_list_t fae_map_to_list(fae_map_t map)
+fa_list_t fa_map_to_list(fa_map_t map)
 {
-    return fae_list_map(
-               (fae_unary_t) entry_to_pair, NULL,
-               fae_set_to_list(map->entries));
+    return fa_list_map(
+               (fa_unary_t) entry_to_pair, NULL,
+               fa_set_to_list(map->entries));
 }
 
 
 // --------------------------------------------------------------------------------
 
-bool entry_equal(fae_ptr_t a, fae_ptr_t b)
+bool entry_equal(fa_ptr_t a, fa_ptr_t b)
 {
     entry_t c = (entry_t) a;
     entry_t d = (entry_t) b;
-    return fae_equal(c->key, d->key);
+    return fa_equal(c->key, d->key);
 }
 
-bool entry_less_than(fae_ptr_t a, fae_ptr_t b)
+bool entry_less_than(fa_ptr_t a, fa_ptr_t b)
 {
     entry_t c = (entry_t) a;
     entry_t d = (entry_t) b;
-    return fae_less_than(c->key, d->key);
+    return fa_less_than(c->key, d->key);
 }
 
-bool entry_greater_than(fae_ptr_t a, fae_ptr_t b)
+bool entry_greater_than(fa_ptr_t a, fa_ptr_t b)
 {
     entry_t c = (entry_t) a;
     entry_t d = (entry_t) b;
-    return fae_greater_than(c->key, d->key);
+    return fa_greater_than(c->key, d->key);
 }
 
-fae_string_t entry_show(fae_ptr_t a)
+fa_string_t entry_show(fa_ptr_t a)
 {
     entry_t b = (entry_t) a;
     string_t s = string("<Entry (");
-    s = string_dappend(s, fae_string_show(b->key));
+    s = string_dappend(s, fa_string_show(b->key));
     s = string_dappend(s, string(","));
 
     if (b->value) {
-        s = string_dappend(s, fae_string_show(b->value));
+        s = string_dappend(s, fa_string_show(b->value));
     } else {
         s = string_dappend(s, string("null"));
     }
@@ -284,38 +284,38 @@ fae_string_t entry_show(fae_ptr_t a)
     return s;
 }
 
-fae_ptr_t entry_copy(fae_ptr_t a)
+fa_ptr_t entry_copy(fa_ptr_t a)
 {
     return copy_entry(a);
 }
 
-void entry_destroy(fae_ptr_t a)
+void entry_destroy(fa_ptr_t a)
 {
     delete_entry(a);
 }
 
-fae_ptr_t entry_impl(fae_id_t interface)
+fa_ptr_t entry_impl(fa_id_t interface)
 {
-    static fae_equal_t entry_equal_impl = { entry_equal };
-    static fae_order_t entry_order_impl = { entry_less_than, entry_greater_than };
-    static fae_string_show_t entry_show_impl = { entry_show };
-    static fae_copy_t entry_copy_impl = { entry_copy };
-    static fae_destroy_t entry_destroy_impl = { entry_destroy };
+    static fa_equal_t entry_equal_impl = { entry_equal };
+    static fa_order_t entry_order_impl = { entry_less_than, entry_greater_than };
+    static fa_string_show_t entry_show_impl = { entry_show };
+    static fa_copy_t entry_copy_impl = { entry_copy };
+    static fa_destroy_t entry_destroy_impl = { entry_destroy };
 
     switch (interface) {
-    case fae_equal_i:
+    case fa_equal_i:
         return &entry_equal_impl;
 
-    case fae_order_i:
+    case fa_order_i:
         return &entry_order_impl;
 
-    case fae_string_show_i:
+    case fa_string_show_i:
         return &entry_show_impl;
 
-    case fae_copy_i:
+    case fa_copy_i:
         return &entry_copy_impl;
 
-    case fae_destroy_i:
+    case fa_destroy_i:
         return &entry_destroy_impl;
 
     default:
@@ -326,37 +326,37 @@ fae_ptr_t entry_impl(fae_id_t interface)
 
 // --------------------------------------------------------------------------------
 
-bool map_equal(fae_ptr_t a, fae_ptr_t b)
+bool map_equal(fa_ptr_t a, fa_ptr_t b)
 {
     map_t c = (map_t) a;
     map_t d = (map_t) b;
-    return fae_equal(c->entries, d->entries);
+    return fa_equal(c->entries, d->entries);
 }
 
-bool map_less_than(fae_ptr_t a, fae_ptr_t b)
+bool map_less_than(fa_ptr_t a, fa_ptr_t b)
 {
     map_t c = (map_t) a;
     map_t d = (map_t) b;
-    return fae_less_than(c->entries, d->entries);
+    return fa_less_than(c->entries, d->entries);
 }
 
-bool map_greater_than(fae_ptr_t a, fae_ptr_t b)
+bool map_greater_than(fa_ptr_t a, fa_ptr_t b)
 {
     map_t c = (map_t) a;
     map_t d = (map_t) b;
-    return fae_greater_than(c->entries, d->entries);
+    return fa_greater_than(c->entries, d->entries);
 }
 
-fae_string_t map_show(fae_ptr_t x)
+fa_string_t map_show(fa_ptr_t x)
 {
     map_t map = (map_t) x;
     string_t s  = string("{");
 
-    fae_for_each_last(x, fae_set_to_list(map->entries), last) {
+    fa_for_each_last(x, fa_set_to_list(map->entries), last) {
         entry_t entry = x;
-        s = string_dappend(s, fae_string_show(entry->key));
+        s = string_dappend(s, fa_string_show(entry->key));
         s = string_dappend(s, string(": "));
-        s = string_dappend(s, fae_string_show(entry->value));
+        s = string_dappend(s, fa_string_show(entry->value));
 
         if (!last) {
             s = string_dappend(s, string(", "));
@@ -366,43 +366,43 @@ fae_string_t map_show(fae_ptr_t x)
     return s;
 }
 
-fae_ptr_t map_copy(fae_ptr_t a)
+fa_ptr_t map_copy(fa_ptr_t a)
 {
-    return fae_map_copy(a);
+    return fa_map_copy(a);
 }
 
-void map_destroy(fae_ptr_t a)
+void map_destroy(fa_ptr_t a)
 {
-    fae_map_destroy(a);
+    fa_map_destroy(a);
 }
 
-type_repr_t map_get_type(fae_ptr_t a)
+type_repr_t map_get_type(fa_ptr_t a)
 {
     return map_type_repr;
 }
 
-fae_ptr_t map_impl(fae_id_t interface)
+fa_ptr_t map_impl(fa_id_t interface)
 {
-    static fae_equal_t map_equal_impl = { map_equal };
-    static fae_string_show_t map_show_impl = { map_show };
-    static fae_copy_t map_copy_impl = { map_copy };
-    static fae_destroy_t map_destroy_impl = { map_destroy };
-    static fae_dynamic_t map_dynamic_impl = { map_get_type };
+    static fa_equal_t map_equal_impl = { map_equal };
+    static fa_string_show_t map_show_impl = { map_show };
+    static fa_copy_t map_copy_impl = { map_copy };
+    static fa_destroy_t map_destroy_impl = { map_destroy };
+    static fa_dynamic_t map_dynamic_impl = { map_get_type };
 
     switch (interface) {
-    case fae_equal_i:
+    case fa_equal_i:
         return &map_equal_impl;
 
-    case fae_string_show_i:
+    case fa_string_show_i:
         return &map_show_impl;
 
-    case fae_copy_i:
+    case fa_copy_i:
         return &map_copy_impl;
 
-    case fae_destroy_i:
+    case fa_destroy_i:
         return &map_destroy_impl;
 
-    case fae_dynamic_i:
+    case fa_dynamic_i:
         return &map_dynamic_impl;
 
     default:

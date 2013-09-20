@@ -1,18 +1,18 @@
 
 /*
-    FAE
+    FA
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
  */
 
-#include <fae/plot.h>
-#include <fae/thread.h>
-#include <fae/system.h>
-#include <fae/util.h>
+#include <fa/plot.h>
+#include <fa/thread.h>
+#include <fa/system.h>
+#include <fa/util.h>
 
-typedef fae_plot_function_t plot_func_t;
+typedef fa_plot_function_t plot_func_t;
 
-#define fae_iter(var, begin, end) \
+#define fa_iter(var, begin, end) \
     for (int var = begin; var < end; ++var)
 
 #define kSamples        500000
@@ -53,16 +53,16 @@ void generate_plot_file(plot_func_t func,
     tmpnam(data_path);
     tmpnam(plot_path);
 
-    fae_with_temp(home, fae_system_directory_home()) {
-        snprintf(out_dir,   kPathSize, "%s/.faeaudio", unstring(home));
+    fa_with_temp(home, fa_system_directory_home()) {
+        snprintf(out_dir,   kPathSize, "%s/.faaudio", unstring(home));
         snprintf(out_path,  kPathSize, "%s/plot", out_dir);
     }
 
     // Write data and plot file
 
-    fae_with(data_file, fopen(data_path, "w+"), fclose(data_file)) {
+    fa_with(data_file, fopen(data_path, "w+"), fclose(data_file)) {
 
-        fae_iter(sample, 0, kSamples) {
+        fa_iter(sample, 0, kSamples) {
             // for (int sample = 0; sample < kSamples; ++sample) {
 
             double x = ((double) sample) / ((double) kSamples) * 2 - 1;
@@ -82,7 +82,7 @@ void generate_plot_file(plot_func_t func,
         }
 
     }
-    fae_with(plot_file, fopen(plot_path, "w+"), fclose(plot_file)) {
+    fa_with(plot_file, fopen(plot_path, "w+"), fclose(plot_file)) {
         fprintf(plot_file, kPlotFormat, data_path, out_path, kDownSapling);
     }
 
@@ -109,7 +109,7 @@ void run_gnu_plot(plot_func_t func, ptr_t func_data, nullary_t cont, ptr_t cont_
                                          string(".ps"))));
 
     // Assure output directory exists
-    fae_system_directory_create(string(out_dir));
+    fa_system_directory_create(string(out_dir));
 
     // Remove old file
     sprintf(cmd, "rm -f %s.ps", out_path);

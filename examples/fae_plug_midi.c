@@ -1,6 +1,6 @@
 
-#include <fae/fae.h>
-#include <fae/util.h>
+#include <fa/fa.h>
+#include <fa/util.h>
 #include <CoreMidi/MIDIServices.h>
 
 ptr_t status_callback(ptr_t c, ptr_t v)
@@ -15,8 +15,8 @@ ptr_t status_callback(ptr_t c, ptr_t v)
 
 ptr_t listen(ptr_t c)
 {
-    fae_midi_set_status_callback(
-        (fae_midi_status_callback_t) status_callback,
+    fa_midi_set_status_callback(
+        (fa_midi_status_callback_t) status_callback,
         NULL,
         (midi_session_t) c);
 
@@ -27,22 +27,22 @@ int main(int argc, char const *argv[])
 {
     midi_session_t session;
 
-    fae_fae_initialize();
-    session = fae_midi_begin_session();
+    fa_fa_initialize();
+    session = fa_midi_begin_session();
 
-    if (fae_check(session)) {
+    if (fa_check(session)) {
         log_error((error_t) session);
         warn(string("Aborting test due to error"));
         goto cleanup;
     }
 
     // This should fail (and does!)
-    // thread_t listen_thread = fae_thread_create(listen, (ptr_t) session);
-    // fae_thread_join(listen_thread);
+    // thread_t listen_thread = fa_thread_create(listen, (ptr_t) session);
+    // fa_thread_join(listen_thread);
 
     listen(session);
 
 cleanup:
-    fae_midi_end_session(session);
+    fa_midi_end_session(session);
     return 0;
 }

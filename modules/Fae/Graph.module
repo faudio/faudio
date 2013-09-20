@@ -1,6 +1,6 @@
 
 /** 
-    @addtogroup FaeGraph
+    @addtogroup FaGraph
     
     Immutable directed graph data structure.
     
@@ -10,24 +10,24 @@
     @par Literals
 
     @par Requires 
-    - fae_equal_t
+    - fa_equal_t
 
     @par Implements 
-    - fae_equal_t
-    - fae_copy_t
-    - fae_destroy_t
-    - fae_string_show_t
+    - fa_equal_t
+    - fa_copy_t
+    - fa_destroy_t
+    - fa_string_show_t
 
     @see 
     - [Data structures](@ref DataStructures)
     
  */
-module Fae.Graph 
+module Fa.Graph 
 {
-    import Fae;
-    import Fae.Pair;
-    import Fae.List;
-    import Fae.String;
+    import Fa;
+    import Fa.Pair;
+    import Fa.List;
+    import Fa.String;
     
     type Graph = opaque;
     type Node = Ptr;

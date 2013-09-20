@@ -1,15 +1,15 @@
 
 /*
-    FAE
+    FA
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
  */
 
-#include <fae/audio.h>
-#include <fae/midi.h>
-#include <fae/string.h>
-#include <fae/thread.h>
-#include <fae/util.h>
+#include <fa/audio.h>
+#include <fa/midi.h>
+#include <fa/string.h>
+#include <fa/thread.h>
+#include <fa/util.h>
 
 #include <CoreAudio/AudioHardware.h>
 #include <CoreMidi/MIDIServices.h>
@@ -20,8 +20,8 @@
 
     TODO remove added listeners?
  */
-typedef fae_audio_status_callback_t audio_status_callback_t;
-typedef fae_midi_status_callback_t  midi_status_callback_t;
+typedef fa_audio_status_callback_t audio_status_callback_t;
+typedef fa_midi_status_callback_t  midi_status_callback_t;
 
 struct nullary_closure {
     nullary_t   function;
@@ -121,7 +121,7 @@ void midi_listener_loop(closure_t closure)
     CFStringRef name;
     MIDIClientRef client;
 
-    name = fae_string_to_native(string("DoReMIRAudio"));
+    name = fa_string_to_native(string("DoReMIRAudio"));
     result = MIDIClientCreate(name, midi_listener, closure, &client);
     // client is ignored
     assert(result == noErr);
@@ -132,9 +132,9 @@ void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
     closure_t closure;
     closure = new_closure(function, data);
 
-    // assert(fae_equal(fae_thread_main(), fae_thread_current())
+    // assert(fa_equal(fa_thread_main(), fa_thread_current())
     //        && "Must be run from main thread");
-    if (fae_not_equal(fae_thread_main(), fae_thread_current())) {
+    if (fa_not_equal(fa_thread_main(), fa_thread_current())) {
         inform(string("Can not register midi status listerner for non-main thread."));
     } else {
         inform(string("Exited midi_listener_loop\n"));

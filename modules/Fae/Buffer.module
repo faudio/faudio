@@ -1,6 +1,6 @@
 
 /** 
-    @addtogroup FaeBuffer
+    @addtogroup FaBuffer
     
     Mutable buffers. 
     
@@ -15,22 +15,22 @@
     - `buffer(size)` 
 
     @par Implements 
-    - fae_copy_t
-    - fae_destroy_t
-    - fae_string_show_t
+    - fa_copy_t
+    - fa_destroy_t
+    - fa_string_show_t
 
     @see 
     - [Data structures](@ref DataStructures)
  */
-module Fae.Buffer
+module Fa.Buffer
 {
-    import Fae;
-    import Fae.Std;
-    import Fae.Pair;
-    import Fae.String;
-    import Fae.Type;
+    import Fa;
+    import Fa.Std;
+    import Fa.Pair;
+    import Fa.String;
+    import Fa.Type;
 
-    /** @typedef fae_buffer_t
+    /** @typedef fa_buffer_t
         The buffer. 
      */
     type Buffer = opaque;

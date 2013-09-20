@@ -1,6 +1,6 @@
 
 /** 
-    @addtogroup FaeMap
+    @addtogroup FaMap
     
     Immutable ordered map data structure.
 
@@ -9,25 +9,25 @@
            string("favouriteColor"), string("blue"))`
 
     @par Requires 
-    - fae_order_t
+    - fa_order_t
 
     @par Implements 
-    - fae_equal_t
-    - fae_copy_t
-    - fae_destroy_t
-    - fae_dynamic_t
-    - fae_string_show_t
+    - fa_equal_t
+    - fa_copy_t
+    - fa_destroy_t
+    - fa_dynamic_t
+    - fa_string_show_t
 
     @see 
     - [Data structures](@ref DataStructures)
     
  */
-module Fae.Map 
+module Fa.Map 
 {
-    import Fae;
-    import Fae.Pair;
-    import Fae.List;
-    import Fae.String;
+    import Fa;
+    import Fa.Pair;
+    import Fa.List;
+    import Fa.String;
     
     type Map = opaque;
     type Key = Ptr;
