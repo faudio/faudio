@@ -2,21 +2,21 @@
 .PHONY: test
 .PHONY: clean
 
-test: bin/fae_tests
-	bin/fae_tests
+test: bin/fa_tests
+	bin/fa_tests
 
 CC = clang -fcolor-diagnostics
 
 FILES= \
-	fae/core.c \
-	fae/*.c \
-	fae/atomic/*.c \
-	fae/device/*.c \
-	fae/plot/*.c \
-	fae/string/*.c \
-	platform/macosx/fae/*.c \
-	platform/macosx/fae/plot/*.m \
-	platform/macosx/fae/system/*.c
+	fa/core.c \
+	fa/*.c \
+	fa/atomic/*.c \
+	fa/device/*.c \
+	fa/plot/*.c \
+	fa/string/*.c \
+	platform/macosx/fa/*.c \
+	platform/macosx/fa/plot/*.m \
+	platform/macosx/fa/system/*.c
 
 LIBS= \
 	-lportmidi \
@@ -46,19 +46,19 @@ MISC_OPTS      = \
 	-ObjC -all_load 
 FRAMEWORK_OPTS = \
 	-shared \
-	-o ../Frameworks/FAE.framework/Versions/2.0.0alpha4/FAE \
-	-install_name /Users/hans/audio/build/Frameworks/FAE.framework/Versions/2.0.0alpha4/FAE
+	-o ../Frameworks/FA.framework/Versions/2.0.0alpha4/FA \
+	-install_name /Users/hans/audio/build/Frameworks/FA.framework/Versions/2.0.0alpha4/FA
 SHARED_OPTS    = \
 	-shared \
-	-o lib/libfae.dylib \
-	-install_name /usr/local/lib/libfae.dylib
+	-o lib/libfa.dylib \
+	-install_name /usr/local/lib/libfa.dylib
 STATIC_OPTS    = \
 	-static \
-	-o lib/libfae.a
+	-o lib/libfa.a
 TEST_OPTS      = \
-	-o bin/fae_tests
+	-o bin/fa_tests
 
-lib/libfae.dylib: bin/config.h
+lib/libfa.dylib: bin/config.h
 	$(CC) -arch x86_64 \
 		$(SHARED_OPTS) \
 		-I include \
@@ -67,7 +67,7 @@ lib/libfae.dylib: bin/config.h
 		$(LIBS) \
 		$(FILES)
 
-lib/libfae.a: bin/config.h
+lib/libfa.a: bin/config.h
 	$(CC) -arch x86_64 \
 		$(STATIC_OPTS) \
 		-I include \
@@ -77,7 +77,7 @@ lib/libfae.a: bin/config.h
 		$(FILES)
 
 
-bin/fae_tests: bin/config.h
+bin/fa_tests: bin/config.h
 	$(CC) -arch x86_64 \
 		$(TEST_OPTS) \
 		-I include \
@@ -87,15 +87,15 @@ bin/fae_tests: bin/config.h
 		$(FILES) \
 		test/main.c
 
-bin/fae_list_midi: bin/config.h
+bin/fa_list_midi: bin/config.h
 	$(CC) -arch x86_64 \
-		-o bin/fae_list_midi \
+		-o bin/fa_list_midi \
 		-I include \
 		-I bin \
 		$(LIB_DIRS) \
 		$(LIBS) \
 		$(FILES) \
-		tools/fae_list_midi.c
+		tools/fa_list_midi.c
 
 
 bin/config.h:                

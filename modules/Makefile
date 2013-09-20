@@ -21,6 +21,7 @@ c:
 	modulo -Mmodules --language=c    <modules/Fa/System.module    		>include/fa/system.h && \
 	modulo -Mmodules --language=c    <modules/Fa/System/Directory.module   >include/fa/system/directory.h && \
 	modulo -Mmodules --language=c    <modules/Fa/System/Event.module    	>include/fa/system/event.h && \
+	modulo -Mmodules --language=c    <modules/Fa/Device.module    	>include/fa/device.h && \
 	modulo -Mmodules --language=c    <modules/Fa/Dynamic.module    	>include/fa/dynamic.h && \
 	modulo -Mmodules --language=c    <modules/Fa/Thread.module    		>include/fa/thread.h && \
 	modulo -Mmodules --language=c    <modules/Fa/Std.module    		>include/fa/std.h && \

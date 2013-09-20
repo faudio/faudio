@@ -1,6 +1,6 @@
 
 ##
-##  CMake build for FAE
+##  CMake build for FA
 ##
 ##  This script is slighly unusual, in that it requires components_resolve to be called once before
 ##  building anything. Follow the instructions in README and all we be well.
@@ -12,7 +12,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 ## ----------------------------------------------------------------------
 ## Basic definitions
 
-project(FAE C CXX)
+project(FA C CXX)
 set(VERSION_PRE "")
 set(VERSION_X 2)
 set(VERSION_Y 1)
@@ -322,7 +322,7 @@ if (COMPONENTS_RESOLVED)
   ## ----------------------------------------------------------------------
   ## Add main targets
 
-  add_subdirectory(fae)
+  add_subdirectory(fa)
   add_subdirectory(test)
   add_subdirectory(examples)
 

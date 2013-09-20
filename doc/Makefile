@@ -31,7 +31,7 @@ plots:
 doxygen:
 	doxygen doc/Doxyfile \
 	&& mkdir -p doc/build/html/images \
-	&& cp doc/include/styles.css doc/build/html/styles.css; 
+	&& cp doc/include/styles2.css doc/build/html/styles.css; 
 
 dirs:
 	mkdir -p doc/build/html \

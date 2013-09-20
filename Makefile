@@ -54,7 +54,7 @@ components_clean:
 
 .PHONY: format
 format:
-	astyle -n -r "fae/*.c" "fae/*.d" "fae/*.h" "platform/*.c" "test/*.c" "examples/*.c"
+	astyle -n -r "fa/*.c" "fa/*.d" "fa/*.h" "platform/*.c" "test/*.c" "examples/*.c"
 
 .PHONY: doc
 doc: 
@@ -63,11 +63,11 @@ doc:
 .PHONY: test
 test: all
 	echo && \
-	build/bin/fae_tests;
+	build/bin/fa_tests;
 
 .PHONY: debug
 debug: all
-	$(DEBUGGER) build/bin/fae_tests;
+	$(DEBUGGER) build/bin/fa_tests;
 
 .PHONY: run_scorecleaner
 run_scorecleaner: 

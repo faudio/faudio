@@ -15,11 +15,11 @@ function(add_tool name)
 endfunction()
 
 
-add_tool(fae_list_audio)
-add_tool(fae_list_midi)
-add_tool(fae_echo_midi)
-add_tool(fae_plug_midi)
-add_tool(fae_default_midi)
-add_tool(fae_template)
-add_tool(fae_sndfile)
+add_tool(fa_list_audio)
+add_tool(fa_list_midi)
+add_tool(fa_echo_midi)
+add_tool(fa_plug_midi)
+add_tool(fa_default_midi)
+add_tool(fa_template)
+add_tool(fa_sndfile)
 
