@@ -1,13 +1,13 @@
 
-var fae     = require('./');
-var dev     = fae.device;
-var audio   = fae.device.audio;
+var fa      = require('./');
+var dev     = fa.device;
+var audio   = fa.device.audio;
 
-console.log(fae.version());
-console.log(fae.versionString());
-fae.setLogStd();
+console.log(fa.version());
+console.log(fa.versionString());
+fa.setLogStd();
 
-fae.withEngine(function() {
+fa.withEngine(function() {
     audio.withSession(function(session) {
 
         console.log("Instance: " + String(session instanceof audio.Session))
