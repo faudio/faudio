@@ -91,7 +91,7 @@ bool fae_midi_has_input(fae_midi_device_t) {}
 bool fae_midi_has_output(fae_midi_device_t) {}
 
 /** Set a callback to be invoked when a status change is detected on the
-    given session. This is mainly useful for detecting a change in hardware setup.
+    given session (mainly useful for hardware setup changes).
 
     Note that this function will not modify the devices in a session, you have to
     restart the session to get a fresh snapshot.

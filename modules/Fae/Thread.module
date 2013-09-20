@@ -37,11 +37,10 @@ module Fae.Thread
 
     type Thread = opaque;
     type Mutex = opaque;
-    type Condition = opaque;
-    type Millis = Int;
+    type Milliseconds = Int;
 
     create  : (Nullary, Ptr) -> Thread;
-    sleep   : Millis -> Void;
+    sleep   : Milliseconds -> Void;
     join    : Thread -> Void;
     detach  : Thread -> Void;
     main    : () -> Thread;

@@ -78,7 +78,7 @@ fae_thread_t fae_thread_create(fae_nullary_t func, fae_ptr_t data)
 
 /** Sleep the current thread for the given time.
  */
-void fae_thread_sleep(fae_thread_millis_t s)
+void fae_thread_sleep(fae_thread_milliseconds_t s)
 {
     usleep(s * 1000);
 }

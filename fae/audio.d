@@ -101,7 +101,7 @@ fae_type_t fae_audio_input_type(fae_audio_device_t) {}
 fae_type_t fae_audio_output_type(fae_audio_device_t) {}
 
 /** Set a callback to be invoked when a status change is detected on the
-    given session. This is mainly useful for detecting a change in hardware setup.
+    given session (mainly useful for hardware setup changes).
 
     Note that this function will not modify the devices in a session, you have to
     restart the session to get a fresh snapshot.
