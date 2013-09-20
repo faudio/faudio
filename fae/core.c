@@ -292,21 +292,19 @@ fae_ptr_t fae_from_double(double a)
 }
 
 // --------------------------------------------------------------------------------
-// Generic functions
-// --------------------------------------------------------------------------------
 
 #define GENERIC1(I,F,A,B) \
-    B fae_##F(A a)                                                                      \
-    {                                                                                       \
-        assert(fae_interface(fae_##I##_i, a) && "Must implement " #I);              \
-        return ((fae_##I##_t*) fae_interface(fae_##I##_i, a))->F(a);            \
+    B fae_##F(A a)                                                      \
+    {                                                                   \
+        assert(fae_interface(fae_##I##_i, a) && "Must implement " #I);  \
+        return ((fae_##I##_t*) fae_interface(fae_##I##_i, a))->F(a);    \
     }
 
 #define GENERIC2(I,F,A,B,C) \
-    C fae_##F(A a, B b)                                                                 \
-    {                                                                                       \
-        assert(fae_interface(fae_##I##_i, a) && "Must implement " #I);              \
-        return ((fae_##I##_t*) fae_interface(fae_##I##_i, a))->F(a, b);         \
+    C fae_##F(A a, B b)                                                 \
+    {                                                                   \
+        assert(fae_interface(fae_##I##_i, a) && "Must implement " #I);  \
+        return ((fae_##I##_t*) fae_interface(fae_##I##_i, a))->F(a, b); \
     }
 
 
@@ -433,156 +431,156 @@ bool fae_check(fae_ptr_t a)
 
 
 #define UNBOXED_WRAPPER_IMPL(T) \
-    bool T##_equal(fae_ptr_t a, fae_ptr_t b)                                        \
-    {                                                                                       \
-        return (fae_to_##T(a) == fae_to_##T(b));                                    \
-    }                                                                                       \
-    bool T##_less_than(fae_ptr_t a, fae_ptr_t b)                                    \
-    {                                                                                       \
-        return (fae_to_##T(a) < fae_to_##T(b));                                     \
-    }                                                                                       \
-    bool T##_greater_than(fae_ptr_t a, fae_ptr_t b)                                 \
-    {                                                                                       \
-        return (fae_to_##T(a) > fae_to_##T(b));                                     \
-    }                                                                                       \
-    fae_ptr_t T##_add(fae_ptr_t a, fae_ptr_t b)                                 \
-    {                                                                                       \
-        return fae_from_##T(fae_to_##T(a) + fae_to_##T(b));                     \
-    }                                                                                       \
-    fae_ptr_t T##_subtract(fae_ptr_t a, fae_ptr_t b)                            \
-    {                                                                                       \
-        return fae_from_##T(fae_to_##T(a) - fae_to_##T(b));                     \
-    }                                                                                       \
-    fae_ptr_t T##_multiply(fae_ptr_t a, fae_ptr_t b)                            \
-    {                                                                                       \
-        return fae_from_##T(fae_to_##T(a) * fae_to_##T(b));                     \
-    }                                                                                       \
-    fae_ptr_t T##_divide(fae_ptr_t a, fae_ptr_t b)                              \
-    {                                                                                       \
-        return fae_from_##T(fae_to_##T(a) / fae_to_##T(b));                     \
-    }                                                                                       \
-    fae_ptr_t T##_absolute(fae_ptr_t a)                                             \
-    {                                                                                       \
-        return fae_from_##T(abs(fae_to_##T(a)));                                    \
-    }                                                                                       \
-    fae_ptr_t T##_copy(fae_ptr_t a)                                                 \
-    {                                                                                       \
-        return a;                                                                           \
-    }                                                                                       \
-    fae_dynamic_type_repr_t T##_get_type(fae_ptr_t a)                               \
-    {                                                                                       \
-        return T##_type_repr_impl;                                                          \
-    }                                                                                       \
-    void T##_destroy(fae_ptr_t a)                                                       \
-    {                                                                                       \
-        /* nothing to do */                                                                 \
+    bool T##_equal(fae_ptr_t a, fae_ptr_t b)                                \
+    {                                                                       \
+        return (fae_to_##T(a) == fae_to_##T(b));                            \
+    }                                                                       \
+    bool T##_less_than(fae_ptr_t a, fae_ptr_t b)                            \
+    {                                                                       \
+        return (fae_to_##T(a) < fae_to_##T(b));                             \
+    }                                                                       \
+    bool T##_greater_than(fae_ptr_t a, fae_ptr_t b)                         \
+    {                                                                       \
+        return (fae_to_##T(a) > fae_to_##T(b));                             \
+    }                                                                       \
+    fae_ptr_t T##_add(fae_ptr_t a, fae_ptr_t b)                             \
+    {                                                                       \
+        return fae_from_##T(fae_to_##T(a) + fae_to_##T(b));                 \
+    }                                                                       \
+    fae_ptr_t T##_subtract(fae_ptr_t a, fae_ptr_t b)                        \
+    {                                                                       \
+        return fae_from_##T(fae_to_##T(a) - fae_to_##T(b));                 \
+    }                                                                       \
+    fae_ptr_t T##_multiply(fae_ptr_t a, fae_ptr_t b)                        \
+    {                                                                       \
+        return fae_from_##T(fae_to_##T(a) * fae_to_##T(b));                 \
+    }                                                                       \
+    fae_ptr_t T##_divide(fae_ptr_t a, fae_ptr_t b)                          \
+    {                                                                       \
+        return fae_from_##T(fae_to_##T(a) / fae_to_##T(b));                 \
+    }                                                                       \
+    fae_ptr_t T##_absolute(fae_ptr_t a)                                     \
+    {                                                                       \
+        return fae_from_##T(abs(fae_to_##T(a)));                            \
+    }                                                                       \
+    fae_ptr_t T##_copy(fae_ptr_t a)                                         \
+    {                                                                       \
+        return a;                                                           \
+    }                                                                       \
+    fae_dynamic_type_repr_t T##_get_type(fae_ptr_t a)                       \
+    {                                                                       \
+        return T##_type_repr_impl;                                          \
+    }                                                                       \
+    void T##_destroy(fae_ptr_t a)                                           \
+    {                                                                       \
+        /* nothing to do */                                                 \
     }
 
 #define BOXED_WRAPPER_IMPL(T) \
-    bool T##_equal(fae_ptr_t a, fae_ptr_t b)                                        \
-    {                                                                                       \
-        return (fae_peek_##T(a) == fae_peek_##T(b));                                \
-    }                                                                                       \
-    bool T##_less_than(fae_ptr_t a, fae_ptr_t b)                                    \
-    {                                                                                       \
-        return (fae_peek_##T(a) < fae_peek_##T(b));                                 \
-    }                                                                                       \
-    bool T##_greater_than(fae_ptr_t a, fae_ptr_t b)                                 \
-    {                                                                                       \
-        return (fae_peek_##T(a) > fae_peek_##T(b));                                 \
-    }                                                                                       \
-    fae_ptr_t T##_add(fae_ptr_t a, fae_ptr_t b)                                 \
-    {                                                                                       \
-        return fae_from_##T(fae_peek_##T(a) + fae_peek_##T(b));                 \
-    }                                                                                       \
-    fae_ptr_t T##_subtract(fae_ptr_t a, fae_ptr_t b)                            \
-    {                                                                                       \
-        return fae_from_##T(fae_peek_##T(a) - fae_peek_##T(b));                 \
-    }                                                                                       \
-    fae_ptr_t T##_multiply(fae_ptr_t a, fae_ptr_t b)                            \
-    {                                                                                       \
-        return fae_from_##T(fae_peek_##T(a) * fae_peek_##T(b));                 \
-    }                                                                                       \
-    fae_ptr_t T##_divide(fae_ptr_t a, fae_ptr_t b)                              \
-    {                                                                                       \
-        return fae_from_##T(fae_peek_##T(a) / fae_peek_##T(b));                 \
-    }                                                                                       \
-    fae_ptr_t T##_absolute(fae_ptr_t a)                                             \
-    {                                                                                       \
-        return fae_from_##T(abs(fae_peek_##T(a))); /* TODO use tg? */               \
-    }                                                                                       \
-    fae_ptr_t T##_copy(fae_ptr_t a)                                                 \
-    {                                                                                       \
-        return fae_copy_##T(a);                                                         \
-    }                                                                                       \
-    fae_dynamic_type_repr_t T##_get_type(fae_ptr_t a)                               \
-    {                                                                                       \
-        return T##_type_repr_impl;                                                          \
-    }                                                                                       \
-    void T##_destroy(fae_ptr_t a)                                                       \
-    {                                                                                       \
-        fae_to_##T(a);                                                                  \
+    bool T##_equal(fae_ptr_t a, fae_ptr_t b)                                \
+    {                                                                       \
+        return (fae_peek_##T(a) == fae_peek_##T(b));                        \
+    }                                                                       \
+    bool T##_less_than(fae_ptr_t a, fae_ptr_t b)                            \
+    {                                                                       \
+        return (fae_peek_##T(a) < fae_peek_##T(b));                         \
+    }                                                                       \
+    bool T##_greater_than(fae_ptr_t a, fae_ptr_t b)                         \
+    {                                                                       \
+        return (fae_peek_##T(a) > fae_peek_##T(b));                         \
+    }                                                                       \
+    fae_ptr_t T##_add(fae_ptr_t a, fae_ptr_t b)                             \
+    {                                                                       \
+        return fae_from_##T(fae_peek_##T(a) + fae_peek_##T(b));             \
+    }                                                                       \
+    fae_ptr_t T##_subtract(fae_ptr_t a, fae_ptr_t b)                        \
+    {                                                                       \
+        return fae_from_##T(fae_peek_##T(a) - fae_peek_##T(b));             \
+    }                                                                       \
+    fae_ptr_t T##_multiply(fae_ptr_t a, fae_ptr_t b)                        \
+    {                                                                       \
+        return fae_from_##T(fae_peek_##T(a) * fae_peek_##T(b));             \
+    }                                                                       \
+    fae_ptr_t T##_divide(fae_ptr_t a, fae_ptr_t b)                          \
+    {                                                                       \
+        return fae_from_##T(fae_peek_##T(a) / fae_peek_##T(b));             \
+    }                                                                       \
+    fae_ptr_t T##_absolute(fae_ptr_t a)                                     \
+    {                                                                       \
+        return fae_from_##T(abs(fae_peek_##T(a))); /* TODO use tg? */       \
+    }                                                                       \
+    fae_ptr_t T##_copy(fae_ptr_t a)                                         \
+    {                                                                       \
+        return fae_copy_##T(a);                                             \
+    }                                                                       \
+    fae_dynamic_type_repr_t T##_get_type(fae_ptr_t a)                       \
+    {                                                                       \
+        return T##_type_repr_impl;                                          \
+    }                                                                       \
+    void T##_destroy(fae_ptr_t a)                                           \
+    {                                                                       \
+        fae_to_##T(a);                                                      \
     }
 
 #define UNBOXED_SHOW_IMPL(T,F) \
-    fae_string_t T##_show(fae_ptr_t a)                                              \
-    {                                                                                       \
-        int  n;                                                                             \
-        char cs[16];                                                                        \
-        n = snprintf(cs, 16, F, fae_to_##T(a));                                         \
-        cs[n] = 0; /* terminate */                                                          \
-        return fae_string_from_utf8(cs);                                                \
+    fae_string_t T##_show(fae_ptr_t a)                                      \
+    {                                                                       \
+        int  n;                                                             \
+        char cs[16];                                                        \
+        n = snprintf(cs, 16, F, fae_to_##T(a));                             \
+        cs[n] = 0; /* terminate */                                          \
+        return fae_string_from_utf8(cs);                                    \
     }
 
 #define BOXED_SHOW_IMPL(T,F) \
-    fae_string_t T##_show(fae_ptr_t a)                                              \
-    {                                                                                       \
-        int  n;                                                                             \
-        char cs[16];                                                                        \
-        n = snprintf(cs, 16, F, fae_peek_##T(a));                                       \
-        cs[n] = 0; /* terminate */                                                          \
-        return fae_string_from_utf8(cs);                                                \
+    fae_string_t T##_show(fae_ptr_t a)                                      \
+    {                                                                       \
+        int  n;                                                             \
+        char cs[16];                                                        \
+        n = snprintf(cs, 16, F, fae_peek_##T(a));                           \
+        cs[n] = 0; /* terminate */                                          \
+        return fae_string_from_utf8(cs);                                    \
     }
 
 /* Generates T_impl
  */
 #define IMPLEMENT_WRAPPER(T) \
     fae_ptr_t T##_impl(fae_id_t interface)                                          \
-    {                                                                                       \
-        static fae_equal_t   T##_equal_impl   =                                         \
-            { T##_equal };                                                                  \
-        static fae_order_t   T##_order_impl   =                                         \
-            { T##_less_than, T##_greater_than };                                            \
-        static fae_number_t  T##_number_impl  =                                         \
-            { T##_add, T##_subtract, T##_multiply, T##_divide, T##_absolute };              \
-        static fae_string_show_t    T##_show_impl    =                                  \
-            { T##_show };                                                                   \
-        static fae_copy_t    T##_copy_impl    =                                         \
-            { T##_copy };                                                                   \
-        static fae_dynamic_t T##_dynamic_impl =                                         \
-            { T##_get_type };                                                               \
-        static fae_destroy_t T##_destroy_impl =                                         \
-            { T##_destroy };                                                                \
-                                                                                            \
-        switch (interface)                                                                  \
-        {                                                                                   \
-        case fae_equal_i:                                                               \
-            return &T##_equal_impl;                                                         \
-        case fae_order_i:                                                               \
-            return &T##_order_impl;                                                         \
-        case fae_number_i:                                                              \
-            return &T##_number_impl;                                                        \
-        case fae_string_show_i:                                                         \
-            return &T##_show_impl;                                                          \
-        case fae_copy_i:                                                                \
-            return &T##_copy_impl;                                                          \
-        case fae_dynamic_i:                                                             \
-            return &T##_dynamic_impl;                                                       \
-        case fae_destroy_i:                                                             \
-            return &T##_destroy_impl;                                                       \
-        default:                                                                            \
-            return NULL;                                                                    \
-        }                                                                                   \
+    {                                                                               \
+        static fae_equal_t   T##_equal_impl   =                                     \
+            { T##_equal };                                                          \
+        static fae_order_t   T##_order_impl   =                                     \
+            { T##_less_than, T##_greater_than };                                    \
+        static fae_number_t  T##_number_impl  =                                     \
+            { T##_add, T##_subtract, T##_multiply, T##_divide, T##_absolute };      \
+        static fae_string_show_t    T##_show_impl    =                              \
+            { T##_show };                                                           \
+        static fae_copy_t    T##_copy_impl    =                                     \
+            { T##_copy };                                                           \
+        static fae_dynamic_t T##_dynamic_impl =                                     \
+            { T##_get_type };                                                       \
+        static fae_destroy_t T##_destroy_impl =                                     \
+            { T##_destroy };                                                        \
+                                                                                    \
+        switch (interface)                                                          \
+        {                                                                           \
+        case fae_equal_i:                                                           \
+            return &T##_equal_impl;                                                 \
+        case fae_order_i:                                                           \
+            return &T##_order_impl;                                                 \
+        case fae_number_i:                                                          \
+            return &T##_number_impl;                                                \
+        case fae_string_show_i:                                                     \
+            return &T##_show_impl;                                                  \
+        case fae_copy_i:                                                            \
+            return &T##_copy_impl;                                                  \
+        case fae_dynamic_i:                                                         \
+            return &T##_dynamic_impl;                                               \
+        case fae_destroy_i:                                                         \
+            return &T##_destroy_impl;                                               \
+        default:                                                                    \
+            return NULL;                                                            \
+        }                                                                           \
     }
 
 
@@ -617,16 +615,11 @@ IMPLEMENT_WRAPPER(float);
 IMPLEMENT_WRAPPER(double);
 
 
-// @cond internal
-// Dummy struct as clang (C99?) does not allow us to call the pointer directly
-struct fae_impl_disp {
-    fae_impl_t impl;
-};
-// @endcond
 
 fae_ptr_t fae_interface(fae_id_t type, fae_ptr_t pointer)
 {
     assert(pointer && "The null pointer have no interfaces");
+    struct fae_impl_disp { fae_impl_t impl; };
 
     switch (fae_type(pointer)) {
     case 7:
