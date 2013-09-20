@@ -159,10 +159,10 @@ long fae_midi_message_simple_to_long(fae_midi_message_t midi_message)
     assert(is_simple(midi_message) && "Not a simple message");
 
     return midi_message_wrap(
-                             midi_message->data.simple[0], 
-                             midi_message->data.simple[1], 
-                             midi_message->data.simple[2]
-                             );
+               midi_message->data.simple[0],
+               midi_message->data.simple[1],
+               midi_message->data.simple[2]
+           );
 }
 
 

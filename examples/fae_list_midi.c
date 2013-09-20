@@ -4,7 +4,7 @@
 
 /*
     This program prints the currently connected MIDI devices.
-    
+
     The output consists of device declarations separated by blank lines.
 
     An example device declaration:
@@ -12,8 +12,8 @@
         Name:           Network Session 1
         Host:           CoreMIDI
         Input:          true
-        Output:         false     
-        
+        Output:         false
+
     The actual output has no indentation.
  */
 
@@ -29,11 +29,11 @@ fae_midi_session_t print_midi_devices(fae_ptr_t _, midi_session_t session)
     return session;
 }
 
-int main (int argc, char const *argv[])
+int main(int argc, char const *argv[])
 {
     fae_fae_initialize();
     fae_midi_with_session(
-        print_midi_devices, NULL, 
+        print_midi_devices, NULL,
         fae_error_log, NULL);
     fae_fae_terminate();
 }

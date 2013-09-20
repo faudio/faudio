@@ -4,7 +4,7 @@
 
 /*
     This program prints the currently connected MIDI devices.
-    
+
     The output consists of device declarations separated by blank lines.
 
     An example device declaration:
@@ -12,8 +12,8 @@
         Name:           Built-in Microphone
         Host:           Core Audio
         Input:          2
-        Output:         0     
-        
+        Output:         0
+
     The actual output has no indentation.
  */
 
@@ -29,11 +29,11 @@ fae_audio_session_t print_audio_devices(fae_ptr_t _, audio_session_t session)
     return session;
 }
 
-int main (int argc, char const *argv[])
+int main(int argc, char const *argv[])
 {
     fae_fae_initialize();
     fae_audio_with_session(
-        print_audio_devices, NULL, 
+        print_audio_devices, NULL,
         fae_error_log, NULL);
     fae_fae_terminate();
 }

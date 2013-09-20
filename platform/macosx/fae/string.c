@@ -13,7 +13,7 @@
 #include <CoreFoundation/CoreFoundation.h>
 
 /** Convert a string to a the string representation used by the platform.
-    
+
     * On Mac OS X and iOS, `CFStringRef` is used.
  */
 void *fae_string_to_native(fae_string_t str)

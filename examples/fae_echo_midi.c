@@ -2,23 +2,24 @@
 #include <fae/fae.h>
 #include <fae/util.h>
 
-midi_device_t find_device(midi_session_t session, string_t pattern) 
+midi_device_t find_device(midi_session_t session, string_t pattern)
 {
     fae_for_each(device, fae_midi_all(session)) {
         if (fae_string_matches(pattern,
-                                   fae_midi_name(device)))
+                               fae_midi_name(device))) {
             return device;
+        }
     }
     return NULL;
 }
 
-midi_device_t find_input(midi_session_t session, string_t pattern) 
+midi_device_t find_input(midi_session_t session, string_t pattern)
 {
     midi_device_t device = find_device(session, pattern);
     return device ? device : fae_midi_default_input(session);
 }
 
-midi_device_t find_output(midi_session_t session, string_t pattern) 
+midi_device_t find_output(midi_session_t session, string_t pattern)
 {
     midi_device_t device = find_device(session, pattern);
     return device ? device : fae_midi_default_output(session);
@@ -72,7 +73,7 @@ cleanup:
     fae_midi_end_session(session);
 }
 
-int main (int argc, char const *argv[])
+int main(int argc, char const *argv[])
 {
     fae_fae_initialize();
     echo();

@@ -213,7 +213,7 @@ typedef fae_string_file_path_t path_t;
 
 /**
     Reads and audio file.
-    
+
     @returns
         A pair $$(type, buffer)$$.
  */
