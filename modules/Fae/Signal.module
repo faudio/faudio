@@ -14,24 +14,19 @@ module Fae.Signal
     
     type Signal = opaque;
 
-    typeOf : Signal -> Type;
+    // typeOf : Signal -> Type;
 
 
-    constant            : Ptr              -> Signal; // a             -> S a
-    identity            : ()               -> Signal; //                  S a -> S b
-    apply               : (Signal, Signal) -> Signal; //                  S (a -> b) -> S a -> S b
-    lift                : (Unary,   Ptr)   -> Signal; // (a -> b)      -> S a -> S b
-    lift2               : (Binary,  Ptr)   -> Signal; // (a -> b -> c) -> S a -> S b -> S c
-    lift3               : (Ternary, Ptr)   -> Signal; // ...
+    constant            : Ptr              -> Signal;
+    identity            : ()               -> Signal;
+    lift                : (Unary,   Ptr)   -> Signal;
+    lift2               : (Binary,  Ptr)   -> Signal;
 
-    time                : () -> Signal;              //                   S Time
-    delay               : (Time, Signal)  -> Signal; // Time           -> S a -> S a
-    fix                 : (((Ptr, Signal) -> Signal)*, Ptr) -> Signal; // (S a -> S a) -> S a
+    time                : () -> Signal;
+    delay               : (Time, Signal)  -> Signal;
+    fix                 : (((Ptr, Signal) -> Signal)*, Ptr) -> Signal;
 
-    // debug
-    run :               (Signal, Unary, Ptr) -> Void;
-    
-
+/*
     add                 : () -> Signal;
     subtract            : () -> Signal;
     multiply            : () -> Signal;
@@ -75,6 +70,8 @@ module Fae.Signal
     remainder           : () -> Signal;
     floor               : () -> Signal;
     ceil                : () -> Signal;
-    rint                : () -> Signal;
+    rint                : () -> Signal;    
+    */
+
 }
 

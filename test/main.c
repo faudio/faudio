@@ -1782,39 +1782,39 @@ cleanup:
 }
 
 
-ptr_t print_signal(ptr_t data, ptr_t value)
-{
-    fae_print("   %s\n", value);
-    return value;
-}
-ptr_t signal_succ(ptr_t data, ptr_t value)
-{
-    return fae_add(value, i16(1));
-}
-#define ap fae_signal_apply
-#define ap2(f,x,y) ap(ap(f,x),y)
-#define constant(x) fae_signal_constant(x)
-void test_signal()
-{
-    test_section("Signals");
-
-    // fae_signal_t s = fae_signal_constant(i16(1));
-    // fae_signal_t p = fae_signal_constant(i16(10));
-    // fae_signal_t t = fae_signal_apply(fae_signal_identity(), s);
-
-    // fae_signal_t add  = fae_signal_add();
-    // fae_signal_t max  = fae_signal_max();
-    fae_signal_t time = fae_signal_time();
-    fae_signal_t min  = fae_signal_min();
-    // fae_signal_t id   = fae_signal_identity();
-    // fae_signal_t succ = fae_signal_lift(signal_succ, NULL);
-    // fae_signal_t t    = fae_signal_apply(fae_signal_apply(add, s), s);
-
-    fae_signal_run(
-        ap2(min, time, constant(seconds(4))),
-
-        print_signal, NULL);
-}
+// ptr_t print_signal(ptr_t data, ptr_t value)
+// {
+//     fae_print("   %s\n", value);
+//     return value;
+// }
+// ptr_t signal_succ(ptr_t data, ptr_t value)
+// {
+//     return fae_add(value, i16(1));
+// }
+// #define ap fae_signal_apply
+// #define ap2(f,x,y) ap(ap(f,x),y)
+// #define constant(x) fae_signal_constant(x)
+// void test_signal()
+// {
+//     test_section("Signals");
+// 
+//     // fae_signal_t s = fae_signal_constant(i16(1));
+//     // fae_signal_t p = fae_signal_constant(i16(10));
+//     // fae_signal_t t = fae_signal_apply(fae_signal_identity(), s);
+// 
+//     // fae_signal_t add  = fae_signal_add();
+//     // fae_signal_t max  = fae_signal_max();
+//     fae_signal_t time = fae_signal_time();
+//     fae_signal_t min  = fae_signal_min();
+//     // fae_signal_t id   = fae_signal_identity();
+//     // fae_signal_t succ = fae_signal_lift(signal_succ, NULL);
+//     // fae_signal_t t    = fae_signal_apply(fae_signal_apply(add, s), s);
+// 
+//     fae_signal_run(
+//         ap2(min, time, constant(seconds(4))),
+// 
+//         print_signal, NULL);
+// }          
 
 
 void test_version()
@@ -1892,16 +1892,7 @@ int main(int argc, char const *argv[])
         test_regex();
         // test_plot(NULL, NULL);
         // test_plot_buffer();
-        // test_plot_file(string_dappend(fae_system_directory_current(), string("/test/in.wav")));
-
-        // test_processor_graphs(string_dappend(fae_system_directory_current(), string("/test/proc.dot")));
-        // test_dispatcher();
-        // test_system_event();
-
-        // test_event();
-        // goto end;
-        // test_scheduler();
-        // test_processor();
+        test_plot_file(string_dappend(fae_system_directory_current(), string("/test/in.wav")));
 
         // test_file_stream(
         //     string_dappend(fae_system_directory_current(), string("/test/in.wav")),
@@ -1910,7 +1901,7 @@ int main(int argc, char const *argv[])
         // test_audio_stream();
         // test_midi_stream();
 
-        test_signal();
+        // test_signal();
 
         // test_version();
 
