@@ -14,7 +14,7 @@ body, table, div, p, dl {
 }
 
 h1, h2, h3, h4, .tablist, .title {
-        font-family: Palatino;
+        font-family: Arial;
         color: black;
         text-decoration:none;
         text-shadow: 0px 0px 2px #eef;
@@ -854,7 +854,8 @@ dl.section dd {
 {
 /*
         
-*/        font: 350% Palatino,serif;
+*/        font-family: Helvetica Neue, Arial,sans-serif; 
+        font-size: 350%;
         margin: 0px;
         padding: 2px 0px;
 }

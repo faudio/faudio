@@ -26,7 +26,7 @@ DOXYFILE_ENCODING      = UTF-8
 # identify the project. Note that if you do not use Doxywizard you need
 # to put quotes around the project name if it contains spaces.
 
-PROJECT_NAME           = "faudio"
+PROJECT_NAME           = "faudio v2.0"
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number.
 # This could be handy for archiving the generated documentation or
@@ -655,7 +655,7 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories
 # with spaces.
 
-INPUT = doc modules include src fae platform
+INPUT = doc modules include src fa platform
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is
@@ -701,26 +701,26 @@ EXCLUDE_SYMLINKS       = NO
 # against the file with absolute path, so to exclude all test directories
 # for example use the pattern */test/*
 
-EXCLUDE_PATTERNS       = */include/fae/processor \
-                         */modules/Fae/Processor/* \
-                         */modules/Fae/Processor.module \
-                         */include/fae/processor.h \
-                         */include/fae/scheduler* \
-                         */modules/Fae/Scheduler* \
-                         */include/fae/std* \
-                         */modules/Fae/Std* \
-                         */include/fae/plot* \
-                         */modules/Fae/Plot* \
-                         */include/fae/graph* \
-                         */modules/Fae/Graph* \
-                         */include/fae/atomic/ring_buffer* \
-                         */modules/Fae/Atomic/RingBuffer* \
-                         */include/fae/priority_queue* \
-                         */modules/Fae/PriorityQueue* \
-                         */include/fae/message* \
-                         */modules/Fae/Message* \
-                         */include/fae/event* \
-                         */modules/Fae/Event* 
+EXCLUDE_PATTERNS       = */include/fa/processor \
+                         */modules/Fa/Processor/* \
+                         */modules/Fa/Processor.module \
+                         */include/fa/processor.h \
+                         */include/fa/scheduler* \
+                         */modules/Fa/Scheduler* \
+                         */include/fa/std* \
+                         */modules/Fa/Std* \
+                         */include/fa/plot* \
+                         */modules/Fa/Plot* \
+                         */include/fa/graph* \
+                         */modules/Fa/Graph* \
+                         */include/fa/atomic/ring_buffer* \
+                         */modules/Fa/Atomic/RingBuffer* \
+                         */include/fa/priority_queue* \
+                         */modules/Fa/PriorityQueue* \
+                         */include/fa/message* \
+                         */modules/Fa/Message* \
+                         */include/fa/event* \
+                         */modules/Fa/Event* 
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the

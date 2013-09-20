@@ -8,17 +8,17 @@
 @note
     This page is under construction.
 
-The most important concepts in Fae are the notion of *signals* and
+The most important concepts in Fa are the notion of *signals* and
 *processors*. Both have simple definitions:
 
-* A <em>[signal](@ref fae_signal_t)</em> is a function of time, for example 
+* A <em>[signal](@ref fa_signal_t)</em> is a function of time, for example 
   \f$ y(t)=sin(2\pi\,t) \f$.
 
 Signals can be composed to create more complex signals.
 
 While many signals can be described by simple formulas, other signals such as real-world
 audio recordings have no simple representation, and must be sampled to be handled by a
-computer. Fae hide this complexity by representing signals as opaque types. Thus signals
+computer. Fa hide this complexity by representing signals as opaque types. Thus signals
 are conceptually *continous* and have neither sample rate or duration.
 
 
@@ -125,7 +125,7 @@ TODO
 
 ### Signals from numbers {#id19230}
 
-Numbers can be converted to signals using @ref fae_signal_constant. The
+Numbers can be converted to signals using @ref fa_signal_constant. The
 resulting signal is a constant function that ignores the incoming time.
 
 \f$
@@ -134,7 +134,7 @@ resulting signal is a constant function that ignores the incoming time.
 
 ### Signals from events {#id11324}
 
-Events can be converted to signals using @ref fae_signal_value. Each occurence
+Events can be converted to signals using @ref fa_signal_value. Each occurence
 will update the given signal to the incoming value.
 
 ### Signals from buffers {#id13431}

@@ -2,7 +2,7 @@
 Introduction {#mainpage}
 ====
 
-*func* is a high-level, declarative audio engine written in ANSI C.
+*faudio* is a high-level, declarative audio engine written in ANSI C.
 
 Main features:
 

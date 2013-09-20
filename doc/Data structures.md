@@ -7,12 +7,12 @@
 @note
     This page is under construction.
 
-Fae include a set of general purpose [persistent&nbsp;data&nbsp;structures][persistent],
+Fa include a set of general purpose [persistent&nbsp;data&nbsp;structures][persistent],
 which are primarily used for message passing between the audio thread and other threads.
 The fact that the data structures are persistent eliminate many of the problems commonly
 associated with multi-threaded programming.
 
-The data structures in Fae are somewhat different from the structures
+The data structures in Fa are somewhat different from the structures
 found in most languages, in that they have single-ownership semantics. This
 eliminates the need for a garbage collector while still allowing a high-level
 programming style. To understand single-ownership semantics, you should read the
@@ -22,9 +22,9 @@ All data structures are polymorphic over reference types, see the section on
 
 Note that there is no interface capturing the notion of a data structure: they are
 simply reference types obeying the conventions described below. However, all data
-structures support generic [equality](@ref fae_equal_t) or 
-[ordering](@ref fae_order_t), [copying](@ref fae_copy_t) and 
-[destruction](@ref fae_destroy_t).
+structures support generic [equality](@ref fa_equal_t) or 
+[ordering](@ref fa_order_t), [copying](@ref fa_copy_t) and 
+[destruction](@ref fa_destroy_t).
 
 
 # Overview {#Overview}
@@ -33,25 +33,25 @@ The core data structures are:
 
 Type                           | Semantics
 -------------------------------|------------------------------------------------------
-[Pair](@ref FaePair)       | An ordered pair
-[List](@ref FaeList)       | An ordered sequence
-[Set](@ref FaeSet)         | An ordered set
-[Map](@ref FaeMap)         | A set of ordered pairs
-[Graph](@ref FaeGraph)     | A labeled, directed graph
-[String](@ref FaeString)   | A sequence of Unicode characters
+[Pair](@ref FaPair)       | An ordered pair
+[List](@ref FaList)       | An ordered sequence
+[Set](@ref FaSet)         | An ordered set
+[Map](@ref FaMap)         | A set of ordered pairs
+[Graph](@ref FaGraph)     | A labeled, directed graph
+[String](@ref FaString)   | A sequence of Unicode characters
 
 There is also a set of *mutable* data structures not included in this table. These
-are used internally in Fae and need rarely be accessed by the user. For
+are used internally in Fa and need rarely be accessed by the user. For
 completeness, they are:
 
 Type                                              | Semantics
 --------------------------------------------------|------------------------------------------------------
-[Priority queue](@ref FaePriorityQueue)       | A first-in, ordered out priority queue
-[Atomic](@ref FaeAtomic)                      | An atomic reference
-[Atomic queue](@ref FaeAtomicQueue)           | A first-in, first-out atomic queue
-[Atomic stack](@ref FaeAtomicStack)           | A last-in, first-out atomic queue
-[Atomic ringbuffer](@ref FaeAtomicRingBuffer) | A byte-level, bounded, first-in, first-out atomic queue
-[Buffer](@ref FaeBuffer)                      | A byte-level mutable buffer
+[Priority queue](@ref FaPriorityQueue)       | A first-in, ordered out priority queue
+[Atomic](@ref FaAtomic)                      | An atomic reference
+[Atomic queue](@ref FaAtomicQueue)           | A first-in, first-out atomic queue
+[Atomic stack](@ref FaAtomicStack)           | A last-in, first-out atomic queue
+[Atomic ringbuffer](@ref FaAtomicRingBuffer) | A byte-level, bounded, first-in, first-out atomic queue
+[Buffer](@ref FaBuffer)                      | A byte-level mutable buffer
 
 
 
@@ -65,7 +65,7 @@ TODO
 
 ### Show
 
-When [printed](@ref fae_print), the data structures are rendered in a language-neutral form. 
+When [printed](@ref fa_print), the data structures are rendered in a language-neutral form. 
 
 - `(1,2)`
 - `[1,2,3]`
@@ -114,7 +114,7 @@ destruction, which are subject to the following restrictions:
 To establish an ordering, you should either synchronize the threads *t* and *u*, or
 transfer the data structure in an atomic variable or queue. Note that copying is
 considered both *usage* of the copied value and a *creation* of the copy. Also some
-functions (such as @ref fae_list_dcons) are both destructive on its input, and
+functions (such as @ref fa_list_dcons) are both destructive on its input, and
 constructive on its output.
 
 ## Type safety {#id19466}
@@ -125,13 +125,13 @@ outside the scope of the compiler to assure that the extracted elements are of t
 right type. There are several ways to do this:
 
 * Assure that the structure contains a specific type.
-    * For example, many functions in Fae API return pairs and lists, their
+    * For example, many functions in Fa API return pairs and lists, their
       documentation clearly stating what type of elements the list will contain.
 * Assure that the structure contains a generic type.
-    * For example, a function may require a set of values implementing [Show](@ref fae_string_show_t).
+    * For example, a function may require a set of values implementing [Show](@ref fa_string_show_t).
 
 In some cases, it does not matter what type a data structure contains, as the
-elements are not going to be inspected. For example, @ref fae_list_reverse can
+elements are not going to be inspected. For example, @ref fa_list_reverse can
 receive a list of any type, as it operates purely on the structure of the list and
 does not need to use its values. 
 
@@ -148,10 +148,10 @@ A value reference is a proper reference that can be safely stored in a data
 structure. Like other data structures, value references may be created and
 destroyed from any thread and have single ownership semantics. Value references are
 in fact tiny data structures containing a single element. They support all normal
-data structure operations including [equality](@ref fae_equal_t) or 
-[ordering](@ref fae_order_t), [copying](@ref fae_copy_t) and 
-[destruction](@ref fae_destroy_t). 
-In addition, they also support [arithmetic](@ref fae_number_t).
+data structure operations including [equality](@ref fa_equal_t) or 
+[ordering](@ref fa_order_t), [copying](@ref fa_copy_t) and 
+[destruction](@ref fa_destroy_t). 
+In addition, they also support [arithmetic](@ref fa_number_t).
 
 It is not specified exactly how value references are implemented; however the
 reference representation of a value typically have a different bit pattern from the
@@ -165,50 +165,50 @@ never overlap with real references.
 
 Value references are created by the following functions:
 
-* [fae_from_bool](@ref fae_from_bool) or [b](@ref fae_from_bool)
-* [fae_from_int8](@ref fae_from_int8) or [i8](@ref fae_from_int8)
-* [fae_from_int16](@ref fae_from_int16) or [i16](@ref fae_from_int16)
-* [fae_from_int32](@ref fae_from_int32) or [i32](@ref fae_from_int32)
-* [fae_from_int64](@ref fae_from_int64) or [i64](@ref fae_from_int64)
-* [fae_from_float](@ref fae_from_float) or [f32](@ref fae_from_float)
-* [fae_from_double](@ref fae_from_double) or [f64](@ref fae_from_double)
+* [fa_from_bool](@ref fa_from_bool) or [b](@ref fa_from_bool)
+* [fa_from_int8](@ref fa_from_int8) or [i8](@ref fa_from_int8)
+* [fa_from_int16](@ref fa_from_int16) or [i16](@ref fa_from_int16)
+* [fa_from_int32](@ref fa_from_int32) or [i32](@ref fa_from_int32)
+* [fa_from_int64](@ref fa_from_int64) or [i64](@ref fa_from_int64)
+* [fa_from_float](@ref fa_from_float) or [f32](@ref fa_from_float)
+* [fa_from_double](@ref fa_from_double) or [f64](@ref fa_from_double)
 
 ## Checking the type of a value reference {#CheckingTypeValueReference}
 
-The [fae_is_ref](@ref fae_is_ref) and [fae_is_value](@ref fae_is_value) function
+The [fa_is_ref](@ref fa_is_ref) and [fa_is_value](@ref fa_is_value) function
 can be used to distinguish value references from real references.
 
-* [fae_is_bool](@ref fae_is_bool) or [qb](@ref fae_is_bool)
-* [fae_is_int8](@ref fae_is_int8) or [qi8](@ref fae_is_int8)
-* [fae_is_int16](@ref fae_is_int16) or [qi16](@ref fae_is_int16)
-* [fae_is_int32](@ref fae_is_int32) or [qi32](@ref fae_is_int32)
-* [fae_is_int64](@ref fae_is_int64) or [qi64](@ref fae_is_int64)
-* [fae_is_float](@ref fae_is_float) or [qf32](@ref fae_is_float)
-* [fae_is_double](@ref fae_is_double) or [qf64](@ref fae_is_double)
+* [fa_is_bool](@ref fa_is_bool) or [qb](@ref fa_is_bool)
+* [fa_is_int8](@ref fa_is_int8) or [qi8](@ref fa_is_int8)
+* [fa_is_int16](@ref fa_is_int16) or [qi16](@ref fa_is_int16)
+* [fa_is_int32](@ref fa_is_int32) or [qi32](@ref fa_is_int32)
+* [fa_is_int64](@ref fa_is_int64) or [qi64](@ref fa_is_int64)
+* [fa_is_float](@ref fa_is_float) or [qf32](@ref fa_is_float)
+* [fa_is_double](@ref fa_is_double) or [qf64](@ref fa_is_double)
 
 ## Extracting the value of a value reference {#ExtractingAValueReference}
 
 The following functions extract the value of a value reference and destroy the associated
 storage, if any. These functions can be applied directly, or by using 
-@ref fae_deep_destroy.
+@ref fa_deep_destroy.
 
-* [fae_to_bool](@ref fae_to_bool) or [tb](@ref fae_to_bool)
-* [fae_to_int8](@ref fae_to_int8) or [ti8](@ref fae_to_int8)
-* [fae_to_int16](@ref fae_to_int16) or [ti16](@ref fae_to_int16)
-* [fae_to_int32](@ref fae_to_int32) or [ti32](@ref fae_to_int32)
-* [fae_to_int64](@ref fae_to_int64) or [ti64](@ref fae_to_int64)
-* [fae_to_float](@ref fae_to_float) or [tf32](@ref fae_to_float)
-* [fae_to_double](@ref fae_to_double) or [tf64](@ref fae_to_double)
+* [fa_to_bool](@ref fa_to_bool) or [tb](@ref fa_to_bool)
+* [fa_to_int8](@ref fa_to_int8) or [ti8](@ref fa_to_int8)
+* [fa_to_int16](@ref fa_to_int16) or [ti16](@ref fa_to_int16)
+* [fa_to_int32](@ref fa_to_int32) or [ti32](@ref fa_to_int32)
+* [fa_to_int64](@ref fa_to_int64) or [ti64](@ref fa_to_int64)
+* [fa_to_float](@ref fa_to_float) or [tf32](@ref fa_to_float)
+* [fa_to_double](@ref fa_to_double) or [tf64](@ref fa_to_double)
 
 In some cases it is useful to inspect the value of a reference without destroying it.
 The *peek* functions can be used for that purpose. There are no peek functions for
 small types, as they have no associated storage, and the *to* function can be used instead.
 
-* [fae_peek_int32](@ref fae_peek_int32) or [pi32](@ref fae_peek_int32)
-* [fae_peek_int64](@ref fae_peek_int64) or [pi64](@ref fae_peek_int64)
-* [fae_peek_float](@ref fae_peek_float) or [pf32](@ref fae_peek_float)
-* [fae_peek_double](@ref fae_peek_double) or [pf64](@ref fae_peek_double)
+* [fa_peek_int32](@ref fa_peek_int32) or [pi32](@ref fa_peek_int32)
+* [fa_peek_int64](@ref fa_peek_int64) or [pi64](@ref fa_peek_int64)
+* [fa_peek_float](@ref fa_peek_float) or [pf32](@ref fa_peek_float)
+* [fa_peek_double](@ref fa_peek_double) or [pf64](@ref fa_peek_double)
 
 
 [persistent]: http://en.wikipedia.org/wiki/Persistent_data_structure
-[util]: @ref fae/util/literals.h
+[util]: @ref fa/util/literals.h
