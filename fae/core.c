@@ -9,8 +9,6 @@
 #include <fae/dynamic.h>
 #include <fae/string.h>
 
-#pragma GCC diagnostic ignored "-Wparentheses"
-
 int fae_type(fae_ptr_t a)
 {
     return ((intptr_t) a) & 0x7;
@@ -126,7 +124,7 @@ bool fae_to_bool(fae_ptr_t a)
 
 fae_ptr_t fae_from_bool(bool a)
 {
-    return (fae_ptr_t)((intptr_t) a << 24 & ~0x7 | 0x7);
+    return (fae_ptr_t)(((intptr_t) a << 24 & ~0x7) | 0x7);
 }
 
 // --------------------------------------------------------------------------------
@@ -140,7 +138,7 @@ int8_t fae_to_int8(fae_ptr_t a)
 
 fae_ptr_t fae_from_int8(int8_t a)
 {
-    return (fae_ptr_t)((intptr_t) a << 24 & ~0x7 | 0x6);
+    return (fae_ptr_t)(((intptr_t) a << 24 & ~0x7) | 0x6);
 }
 
 // --------------------------------------------------------------------------------
@@ -154,7 +152,7 @@ int16_t fae_to_int16(fae_ptr_t a)
 
 fae_ptr_t fae_from_int16(int16_t a)
 {
-    return (fae_ptr_t)((intptr_t) a << 8 & ~0x7 | 0x5);
+    return (fae_ptr_t)(((intptr_t) a << 8 & ~0x7) | 0x5);
 }
 
 // --------------------------------------------------------------------------------
@@ -188,7 +186,7 @@ fae_ptr_t fae_from_int32(int32_t a)
 {
     int32_t *p = malloc(sizeof(int32_t));
     *p = a;
-    return (fae_ptr_t)(((intptr_t) p) & ~0x7 | 0x4);
+    return (fae_ptr_t)((((intptr_t) p) & ~0x7) | 0x4);
 }
 
 // --------------------------------------------------------------------------------
@@ -215,14 +213,14 @@ fae_ptr_t fae_copy_int64(fae_ptr_t a)
     intptr_t p = (intptr_t) a;
     int64_t *q = malloc(sizeof(int64_t));
     *q = *((int64_t *)(p & ~0x7));
-    return (fae_ptr_t)(((intptr_t) q) & ~0x7 | 0x3);
+    return (fae_ptr_t)((((intptr_t) q) & ~0x7) | 0x3);
 }
 
 fae_ptr_t fae_from_int64(int64_t a)
 {
     int64_t *p = malloc(sizeof(int64_t));
     *p = a;
-    return (fae_ptr_t)(((intptr_t) p) & ~0x7 | 0x3);
+    return (fae_ptr_t)((((intptr_t) p) & ~0x7) | 0x3);
 }
 
 // --------------------------------------------------------------------------------
@@ -248,14 +246,14 @@ fae_ptr_t fae_copy_float(fae_ptr_t a)
     intptr_t p = (intptr_t) a;
     float *q = malloc(sizeof(float));
     *q = *((float *)(p & ~0x7));
-    return (fae_ptr_t)(((intptr_t) q) & ~0x7 | 0x2);
+    return (fae_ptr_t)((((intptr_t) q) & ~0x7) | 0x2);
 }
 
 fae_ptr_t fae_from_float(float a)
 {
     float *p = malloc(sizeof(float));
     *p = a;
-    return (fae_ptr_t)(((intptr_t) p) & ~0x7 | 0x2);
+    return (fae_ptr_t)((((intptr_t) p) & ~0x7) | 0x2);
 }
 
 // --------------------------------------------------------------------------------
@@ -281,14 +279,14 @@ fae_ptr_t fae_copy_double(fae_ptr_t a)
     intptr_t p = (intptr_t) a;
     double *q = malloc(sizeof(double));
     *q = *((double *)(p & ~0x7));
-    return (fae_ptr_t)(((intptr_t) q) & ~0x7 | 0x1);
+    return (fae_ptr_t)((((intptr_t) q) & ~0x7) | 0x1);
 }
 
 fae_ptr_t fae_from_double(double a)
 {
     double *p = malloc(sizeof(double));
     *p = a;
-    return (fae_ptr_t)(((intptr_t) p) & ~0x7 | 0x1);
+    return (fae_ptr_t)((((intptr_t) p) & ~0x7) | 0x1);
 }
 
 // --------------------------------------------------------------------------------
