@@ -59,10 +59,10 @@ module Fa.Buffer
 
 
     // Input / Output
-    readRaw     : FilePath -> Buffer;
-    writeRaw    : (FilePath,Buffer) -> Void;    
-    readAudio   : FilePath -> Pair; // (Type,Buffer)
-    writeAudio  : (FilePath,Type,Buffer) -> Void;
+    readRaw     : String -> Buffer;
+    writeRaw    : (String,Buffer) -> Void;    
+    readAudio   : String -> Pair; // (Type,Buffer)
+    writeAudio  : (String,Type,Buffer) -> Void;
 
     unsafeAddress : Buffer -> Void*;
 }

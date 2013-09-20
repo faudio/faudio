@@ -33,12 +33,10 @@ void fa_buffer_set_int32(fa_buffer_t, size_t, int32_t);
 void fa_buffer_set_int64(fa_buffer_t, size_t, int64_t);
 void fa_buffer_set_float(fa_buffer_t, size_t, float);
 void fa_buffer_set_double(fa_buffer_t, size_t, double);
-fa_buffer_t fa_buffer_read_raw(fa_string_file_path_t);
-void fa_buffer_write_raw(fa_string_file_path_t, fa_buffer_t);
-fa_pair_t fa_buffer_read_audio(fa_string_file_path_t);
-void fa_buffer_write_audio(fa_string_file_path_t,
-                           fa_type_t,
-                           fa_buffer_t);
+fa_buffer_t fa_buffer_read_raw(fa_string_t);
+void fa_buffer_write_raw(fa_string_t, fa_buffer_t);
+fa_pair_t fa_buffer_read_audio(fa_string_t);
+void fa_buffer_write_audio(fa_string_t, fa_type_t, fa_buffer_t);
 void * fa_buffer_unsafe_address(fa_buffer_t);
 
 /** @}

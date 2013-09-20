@@ -129,7 +129,7 @@ static inline void stdlog(ptr_t data, fa_time_system_t t, fa_error_t e)
 
 /** Instruct Fa to write log messages to the specific file.
  */
-void fa_fa_set_log_file(fa_string_file_path_t path)
+void fa_fa_set_log_file(fa_string_t path)
 {
     char *cpath = fa_string_to_utf8(path);
     log_data_g  = fopen(cpath, "a");

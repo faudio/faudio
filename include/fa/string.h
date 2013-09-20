@@ -14,7 +14,6 @@ typedef fa_char8_t * fa_string_utf8_t;
 typedef fa_char16_t * fa_string_utf16_t;
 typedef fa_char32_t * fa_string_utf32_t;
 typedef struct _fa_string_t * fa_string_t;
-typedef fa_string_t fa_string_file_path_t;
 fa_string_t fa_string_empty();
 fa_string_t fa_string_single(fa_char16_t);
 fa_string_t fa_string_repeat(int, fa_char16_t);

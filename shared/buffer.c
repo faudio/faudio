@@ -217,7 +217,7 @@ void *fa_buffer_unsafe_address(fa_buffer_t buffer)
 
 // --------------------------------------------------------------------------------
 
-typedef fa_string_file_path_t path_t;
+typedef fa_string_t path_t;
 
 /**
     Reads and audio file.
@@ -225,7 +225,7 @@ typedef fa_string_file_path_t path_t;
     @returns
         A pair $$type, buffer)$$.
  */
-fa_pair_t fa_buffer_read_audio(fa_string_file_path_t path)
+fa_pair_t fa_buffer_read_audio(fa_string_t path)
 {
     type_t          type;
     buffer_t        buffer;
@@ -265,7 +265,7 @@ fa_pair_t fa_buffer_read_audio(fa_string_file_path_t path)
     return pair(type, buffer);
 }
 
-void fa_buffer_write_audio(fa_string_file_path_t path,
+void fa_buffer_write_audio(fa_string_t path,
                             fa_type_t             type,
                             fa_buffer_t           buffer)
 {

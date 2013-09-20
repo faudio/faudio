@@ -47,7 +47,7 @@ module Fa.Fa
     // Time.System, Error.Some
     type LogFunc = ((Ptr, System, Error) -> Void)*;
 
-    setLogFile  : FilePath -> Void;
+    setLogFile  : String -> Void;
     setLogStd   : () -> Void;
     setLog      : (LogFunc,Ptr) -> Void;
 

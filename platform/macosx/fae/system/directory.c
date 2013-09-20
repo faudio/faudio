@@ -15,13 +15,13 @@
 #include <sys/stat.h>
 #include <pwd.h>
 
-fa_string_file_path_t fa_system_directory_home()
+fa_string_t fa_system_directory_home()
 {
     struct passwd *pw = getpwuid(getuid());
     return string(pw->pw_dir);
 }
 
-fa_string_file_path_t fa_system_directory_current()
+fa_string_t fa_system_directory_current()
 {
     char cwd[1024];
     getcwd(cwd, sizeof(cwd));
@@ -34,7 +34,7 @@ void fa_system_directory_create(string_t path)
     mkdir(unstring(path), (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH));
 }
 
-fa_string_t fa_system_directory_read_file(fa_string_file_path_t path)
+fa_string_t fa_system_directory_read_file(fa_string_t path)
 {
     size_t buf_size = 1000000;
     char buf[buf_size + 1];
@@ -58,7 +58,7 @@ fa_string_t fa_system_directory_read_file(fa_string_file_path_t path)
 }
 
 
-void fa_system_directory_write_file(fa_string_file_path_t path,
+void fa_system_directory_write_file(fa_string_t path,
                                      fa_string_t string)
 {
     FILE *f = fopen(unstring(path), "w+");
@@ -66,7 +66,7 @@ void fa_system_directory_write_file(fa_string_file_path_t path,
     fclose(f);
 }
 
-void fa_system_directory_append_file(fa_string_file_path_t path,
+void fa_system_directory_append_file(fa_string_t path,
                                       fa_string_t string)
 {
     FILE *f = fopen(unstring(path), "a+");

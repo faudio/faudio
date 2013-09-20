@@ -47,9 +47,9 @@ module Fa.System.Event
     // receiveHandle : Handle -> Sender;                   // Sender String
     // sendHandle    : Handle -> Receiver;                 // Receiver String
     
-    // readFile      : FilePath -> Event;                  // Event String
-    // writeFile     : (FilePath, Event)  -> Event;        // Event String -> Event ()
-    // receiveFile   : FilePath -> Sender;                 // Sender String
-    // sendFile      : FilePath -> Receiver;               // Receiver String
+    // readFile      : String -> Event;                  // Event String
+    // writeFile     : (String, Event)  -> Event;        // Event String -> Event ()
+    // receiveFile   : String -> Sender;                 // Sender String
+    // sendFile      : String -> Receiver;               // Receiver String
 }
 

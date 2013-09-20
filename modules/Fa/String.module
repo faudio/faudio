@@ -48,7 +48,6 @@ module Fa.String
         A file path.
      */
     type String = opaque;
-    type FilePath = String;
 
     // Constructors
     empty   : () -> String;

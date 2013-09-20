@@ -31,7 +31,7 @@ void fa_fa_terminate();
 typedef void (* fa_fa_log_func_t)(fa_ptr_t,
                                   fa_time_system_t,
                                   fa_error_t);
-void fa_fa_set_log_file(fa_system_directory_file_path_t);
+void fa_fa_set_log_file(fa_string_t);
 void fa_fa_set_log_std();
 void fa_fa_set_log(fa_fa_log_func_t, fa_ptr_t);
 void fa_fa_log(fa_ptr_t, fa_error_t);
