@@ -1,5 +1,6 @@
 
-all : html
+# all : html
+all : html-fast
 # 
 # 
 # pdf:
@@ -13,6 +14,7 @@ all : html
 # 		Build\ and\ install.md;
 
 html: graphs plots doxygen dirs
+html-fast: doxygen dirs
 
 pdf: graphs plots doxygen dirs
 	pushd doc/build/latex; \
