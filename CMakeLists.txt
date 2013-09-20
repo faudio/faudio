@@ -322,7 +322,7 @@ if (COMPONENTS_RESOLVED)
   ## ----------------------------------------------------------------------
   ## Add main targets
 
-  add_subdirectory(fa)
+  add_subdirectory(shared)
   add_subdirectory(test)
   add_subdirectory(examples)
 
