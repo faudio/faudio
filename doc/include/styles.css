@@ -852,10 +852,9 @@ dl.section dd {
  
 #projectname
 {
-/*
-        
-*/        font-family: Helvetica Neue, Arial,sans-serif; 
-        font-size: 350%;
+        font-family: Helvetica Neue, Arial,sans-serif; 
+        text-shadow: 0px 0px 4px rgba(150, 150, 150, 0.3);
+        font-size: 480%;
         margin: 0px;
         padding: 2px 0px;
 }

@@ -20,8 +20,8 @@ html-fast: doxygen dirs
 
 pdf: graphs plots doxygen dirs
 	pushd doc/build/latex \
-		&& make
-		&& cp refman.pdf "../book/faudio.pdf" \
+		&& make \
+		&& mv refman.pdf "../book/faudio.pdf"; \
 	popd
 
 graphs:
