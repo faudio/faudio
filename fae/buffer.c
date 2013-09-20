@@ -18,7 +18,7 @@
 #define print_max_size_k 80
 
 struct _fae_buffer_t {
-    impl_t          impl;               //  Interface dispatcher
+    impl_t          impl;
 
     size_t          size;
     uint8_t        *data;
@@ -44,18 +44,18 @@ fae_buffer_t fae_buffer_create(size_t size)
 {
     fae_ptr_t buffer_impl(fae_id_t interface);
 
-    buffer_t b = fae_new(buffer);
+    buffer_t buffer = fae_new(buffer);
 
-    b->impl = &buffer_impl;
-    b->size = size;
-    b->data = malloc(size);
+    buffer->impl = &buffer_impl;
+    buffer->size = size;
+    buffer->data = malloc(size);
 
-    b->destroy_function = default_destroy;
-    b->destroy_data     = NULL;
+    buffer->destroy_function = default_destroy;
+    buffer->destroy_data     = NULL;
 
-    memset(b->data, 0, b->size);
+    memset(buffer->data, 0, buffer->size);
 
-    if (!b->data) {
+    if (!buffer->data) {
         if (errno == ENOMEM) {
             buffer_fatal("Out of memory", errno);
         } else {
@@ -63,10 +63,11 @@ fae_buffer_t fae_buffer_create(size_t size)
         }
     }
 
-    return b;
+    return buffer;
 }
 
 /** Create a buffer wrapping the given memory region.
+
     @param ptr  Pointer to wrap.
     @param size Number of bytes to wrap.
     @param destroy_function Function to call upon destruction (nullable).
@@ -74,7 +75,7 @@ fae_buffer_t fae_buffer_create(size_t size)
     @note
         O(1)
  */
-fae_buffer_t fae_buffer_wrap(fae_ptr_t   ptr,
+fae_buffer_t fae_buffer_wrap(fae_ptr_t   pointer,
                              size_t      size,
                              fae_unary_t destroy_function,
                              fae_ptr_t   destroy_data)
@@ -84,7 +85,7 @@ fae_buffer_t fae_buffer_wrap(fae_ptr_t   ptr,
     buffer_t b = fae_new(buffer);
     b->impl = &buffer_impl;
     b->size = size;
-    b->data = ptr;
+    b->data = pointer;
 
     b->destroy_function = destroy_function;
     b->destroy_data     = destroy_data;
@@ -109,12 +110,12 @@ fae_buffer_t fae_buffer_resize(size_t size, fae_buffer_t buffer)
 {
     fae_ptr_t buffer_impl(fae_id_t interface);
 
-    buffer_t copy = fae_new(buffer);
-    copy->impl = &buffer_impl;
-    copy->size = size;
-    copy->data = malloc(size);
-    copy->destroy_function = buffer->destroy_function;
-    copy->destroy_data     = buffer->destroy_data;
+    buffer_t copy           = fae_new(buffer);
+    copy->impl              = &buffer_impl;
+    copy->size              = size;
+    copy->data              = malloc(size);
+    copy->destroy_function  = buffer->destroy_function;
+    copy->destroy_data      = buffer->destroy_data;
 
     if (!copy->data) {
         if (errno == ENOMEM) {
@@ -167,30 +168,35 @@ uint8_t fae_buffer_get(fae_buffer_t buffer, size_t index)
 void fae_buffer_set(fae_buffer_t buffer, size_t index, uint8_t value)
 {
     assert(index < buffer->size && "Buffer overflow");
+
     buffer->data[index] = value;
 }
 
 float fae_buffer_get_float(fae_buffer_t buffer, size_t index)
 {
     assert(index * sizeof(float) < buffer->size && "Buffer overflow");
+
     return ((float *) buffer->data)[index];
 }
 
 void fae_buffer_set_float(fae_buffer_t buffer, size_t index, float value)
 {
     assert(index * sizeof(float) < buffer->size && "Buffer overflow");
+
     ((float *) buffer->data)[index] = value;
 }
 
 double fae_buffer_get_double(fae_buffer_t buffer, size_t index)
 {
     assert(index * sizeof(double) < buffer->size && "Buffer overflow");
+
     return ((double *) buffer->data)[index];
 }
 
 void fae_buffer_set_double(fae_buffer_t buffer, size_t index, double value)
 {
     assert(index * sizeof(double) < buffer->size && "Buffer overflow");
+
     ((double *) buffer->data)[index] = value;
 }
 
@@ -215,43 +221,45 @@ typedef fae_string_file_path_t path_t;
     Reads and audio file.
 
     @returns
-        A pair $$(type, buffer)$$.
+        A pair $$type, buffer)$$.
  */
 fae_pair_t fae_buffer_read_audio(fae_string_file_path_t path)
 {
-    type_t type;
-    buffer_t buffer;
-    SNDFILE *f;
+    type_t          type;
+    buffer_t        buffer;
 
-    SF_INFO     info;
-    info.format = 0;
-    char *file  = fae_string_to_utf8(path);
-    f           = sf_open(file, SFM_READ, &info);
+    SNDFILE         *file;
+    SF_INFO         info;
+    info.format     = 0;
 
-    if (sf_error(f)) {
-        char err[100];
-        snprintf(err, 100, "Could not read audio file '%s'", file);
-        return (pair_t) fae_error_create_simple(
-                   error, string(err), string("Doremir.Buffer"));
+    {
+        char *cpath     = fae_string_to_utf8(path);
+        file            = sf_open(cpath, SFM_READ, &info);
+
+        if (sf_error(file)) {
+            char err[100];
+            snprintf(err, 100, "Could not read audio file '%s'", cpath);
+            return (pair_t) fae_error_create_simple(
+                       error, string(err), string("Doremir.Buffer"));
+        }
+        inform(string_append(string("Reading "), path));
     }
+    {
+        size_t bufSize  = info.frames * info.channels * sizeof(double);
+        buffer          = fae_buffer_create(bufSize);
+        double *raw     = fae_buffer_unsafe_address(buffer);
 
-    inform(string_dappend(string("Reading "), string(file)));
+        sf_count_t sz   = sf_read_double(file, raw, bufSize / sizeof(double));
+        buffer          = fae_buffer_resize(sz * sizeof(double), buffer);
 
-    size_t bufSize = info.frames * info.channels * sizeof(double);
-    buffer         = fae_buffer_create(bufSize);
-    double *raw    = fae_buffer_unsafe_address(buffer);
-
-    sf_count_t sz = sf_read_double(f, raw, bufSize / sizeof(double));
-    buffer        = fae_buffer_resize(sz * sizeof(double), buffer);
-
-    if (info.channels == 1) {
-        type = type_vector(type(f64), info.frames);
-    } else if (info.channels == 2) {
-        type = type_vector(type_pair(type(f64), type(f64)), info.frames);
-    } else {
-        buffer_fatal("Unknown buffer type", info.channels);
+        if (info.channels == 1) {
+            type = type_vector(type(f64), info.frames);
+        } else if (info.channels == 2) {
+            type = type_vector(type_pair(type(f64), type(f64)), info.frames);
+        } else {
+            buffer_fatal("Unknown buffer type", info.channels);
+        }
     }
-
     return pair(type, buffer);
 }
 
@@ -320,10 +328,10 @@ fae_ptr_t buffer_impl(fae_id_t interface)
 }
 
 
-void fae_fae_log_error_from(fae_string_t msg, fae_string_t origin);
-
 void buffer_fatal(char *msg, int error)
 {
+    void fae_fae_log_error_from(fae_string_t msg, fae_string_t origin);
+
     fae_fae_log_error_from(string_dappend(string(msg), format_integral(" (error code %d)", error)), string("Doremir.Buffer"));
     fae_fae_log_error(string("Terminating Audio Engine"));
     exit(error);
