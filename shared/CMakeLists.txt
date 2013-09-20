@@ -60,47 +60,47 @@ endif()
 
 if(APPLE)
   if(BUILD_SHARED)
-    add_library(fae SHARED ${SRCS_ALL})
-    set_target_properties(fae PROPERTIES 
-      OUTPUT_NAME                 "fae"
+    add_library(fsound SHARED ${SRCS_ALL})
+    set_target_properties(fsound PROPERTIES 
+      OUTPUT_NAME                 "fsound"
       LIBRARY_OUTPUT_DIRECTORY    "../lib"
       INSTALL_NAME_DIR            "/usr/local/lib"
       )
-    target_link_libraries(fae ${EXTS})
-    set(MAIN_LIBRARY fae PARENT_SCOPE)
+    target_link_libraries(fsound ${EXTS})
+    set(MAIN_LIBRARY fsound PARENT_SCOPE)
   endif(BUILD_SHARED)
   if(BUILD_FRAMEWORK)
-    add_library(FAE_framework SHARED ${SRCS_ALL})
-    set_target_properties(FAE_framework PROPERTIES
+    add_library(fsound_framework SHARED ${SRCS_ALL})
+    set_target_properties(fsound_framework PROPERTIES
       FRAMEWORK                   TRUE
-      OUTPUT_NAME                 "FAE"
+      OUTPUT_NAME                 "Fsound"
       FRAMEWORK_VERSION           ${VERSION}
       LIBRARY_OUTPUT_DIRECTORY    "../Frameworks"
-      INSTALL_NAME_DIR            "@executable_path/../Frameworks/FAE.framework/FAE"
+      INSTALL_NAME_DIR            "@executable_path/../Frameworks/Fsound.framework/Fsound"
       LINK_FLAGS                  "${STD_LINK_FLAGS}"
      )
-    target_link_libraries(FAE_framework ${EXTS})
-    set(MAIN_LIBRARY FAE_framework PARENT_SCOPE)
+    target_link_libraries(fsound_framework ${EXTS})
+    set(MAIN_LIBRARY fsound_framework PARENT_SCOPE)
   endif(BUILD_FRAMEWORK)
 endif(APPLE)
 
 if(MSYS)
   if(BUILD_SHARED)
-    add_library(fae SHARED ${SRCS_ALL})
-    set_target_properties(fae PROPERTIES 
+    add_library(fsound SHARED ${SRCS_ALL})
+    set_target_properties(fsound PROPERTIES 
       OUTPUT_NAME                 "ae"
       RUNTIME_OUTPUT_DIRECTORY    "../bin"
       )
-    target_link_libraries(fae ${EXTS})
-    set(MAIN_LIBRARY fae PARENT_SCOPE)    
+    target_link_libraries(fsound ${EXTS})
+    set(MAIN_LIBRARY fsound PARENT_SCOPE)    
   endif(BUILD_SHARED)
   if(True)
-    add_library(fae_static ${SRCS_ALL})
-    set_target_properties(fae_static PROPERTIES 
+    add_library(fsound_static ${SRCS_ALL})
+    set_target_properties(fsound_static PROPERTIES 
       OUTPUT_NAME                 "ae"
       RUNTIME_OUTPUT_DIRECTORY    "../lib"
       )
-    target_link_libraries(fae_static ${EXTS})
-    set(MAIN_STATIC_LIBRARY fae_static PARENT_SCOPE)    
+    target_link_libraries(fsound_static ${EXTS})
+    set(MAIN_STATIC_LIBRARY fsound_static PARENT_SCOPE)    
   endif(True)
 endif(MSYS)
