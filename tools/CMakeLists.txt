@@ -22,4 +22,4 @@ add_tool(plug_midi)
 add_tool(default_midi)
 add_tool(template)
 add_tool(sndfile)
-
+add_tool(plot_file)

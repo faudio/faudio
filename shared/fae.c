@@ -67,7 +67,7 @@ void fa_fa_initialize()
     fa_midi_initialize();
     fa_thread_initialize();
     fa_time_initialize();
-    fa_fa_log_info(string("Initialized Fa."));
+    fa_fa_log_info(string("Initialized faudio."));
 
     init_count_g++;
 }
@@ -79,9 +79,9 @@ void fa_fa_terminate()
         fa_midi_terminate();
         fa_thread_terminate();
         fa_time_terminate();
-        fa_fa_log_info(string("Terminated Fa."));
+        fa_fa_log_info(string("Terminated faudio."));
     } else {
-        fa_fa_log_warning(string("Fa could not terminate: inconsistent state."));
+        fa_fa_log_warning(string("Could not terminate faudio: inconsistent state."));
     }
 }
 
