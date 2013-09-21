@@ -4,7 +4,7 @@
 function(add_tool name)
   add_executable(${name} ${SRCS_ALL} "${name}.c")
   set_target_properties(${name} PROPERTIES 
-    OUTPUT_NAME                 "${name}"
+    OUTPUT_NAME                 "fa_${name}"
     RUNTIME_OUTPUT_DIRECTORY    "../bin"
     )
   if(APPLE)
@@ -15,11 +15,11 @@ function(add_tool name)
 endfunction()
 
 
-add_tool(fa_list_audio)
-add_tool(fa_list_midi)
-add_tool(fa_echo_midi)
-add_tool(fa_plug_midi)
-add_tool(fa_default_midi)
-add_tool(fa_template)
-add_tool(fa_sndfile)
+add_tool(list_audio)
+add_tool(list_midi)
+add_tool(echo_midi)
+add_tool(plug_midi)
+add_tool(default_midi)
+add_tool(template)
+add_tool(sndfile)
 
