@@ -61,8 +61,8 @@ option(BUILD_TESTS              "Build unit tests"                          True
 
 option(PROFILING                "Compile with profiler flags -pg set"       False)
 
-option(BUILD_COMPONENTS         "Build dependent components locally"        False)
-option(SHOW_COMPONENT_OUTPUT    "Show output while building components"     False)
+option(BUILD_COMPONENTS         "Build dependent components locally"        True)
+option(SHOW_COMPONENT_OUTPUT    "Show output while building components"     True)
 
 
 ## ----------------------------------------------------------------------
@@ -128,7 +128,7 @@ endif()
 list(APPEND COMPONENT_DEFINES
   "-DAUDIO_ENGINE_WORKING_DIR=${CMAKE_SOURCE_DIR}")
 
-# include(AudioEngine)
+include(AudioEngine)
 
 add_custom_target(components_print
   COMMAND cmake 
@@ -171,8 +171,6 @@ if (COMPONENTS_RESOLVED)
   find_package(Portaudio)
   find_package(Portmidi)
   find_package(Sndfile)
-  # find_package(Gtest)
-  # find_package(ICU)
   if(ENABLE_FLUIDSYNTH)
     find_package(Fluidsynth)
     find_package(Glib)
