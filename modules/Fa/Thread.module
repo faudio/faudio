@@ -27,17 +27,54 @@ module Fa.Thread
     type Mutex = opaque;
     type Milliseconds = Int;
 
-    create  : (Nullary, Ptr) -> Thread;
-    sleep   : Milliseconds -> Void;
-    join    : Thread -> Void;
-    detach  : Thread -> Void;
-    main    : () -> Thread;
-    current : () -> Thread;
+    /** Create a new thread executing the given function asynhronously.
 
+        Threads have single-ownership semantics and must be finalized by passing it
+        to a destructive function.
+
+        @param func Function to execute.
+        @param data Value to be passed to the function.
+        @return     A new thread executing concurrently with the current thread.
+     */
+    create  : (Nullary, Ptr) -> Thread;
+    /** Destroy a thread, and return after its associated function has returned.
+        @param thread Thread to join (destroyed).
+      */
+    join    : Thread -> Void;
+    /** Destroy a thread and return directly. The associated function may continous executing
+        in the background.
+        @param thread Thread to detach (destroyed).
+      */
+    detach  : Thread -> Void;
+
+    /** Return the main thread.
+      */
+    main    : () -> Thread;
+    /** Return the current thread.
+      */
+    current : () -> Thread;
+    
+    /** Sleep the current thread for the given time.
+     */
+    sleep   : Milliseconds -> Void;
+
+    /** Create a mutex.
+
+        Mutexes have single-ownership semantics and must be finalized by passing it
+        to a destructive function.
+     */
     createMutex     : () -> Mutex;
+    /** Destroy a mutex.
+     */
     destroyMutex    : Mutex -> Void;
+    /** Acquire the lock of a mutex.
+     */
     lock            : Mutex -> Bool;
+    /** Try acquiring the lock of a mutex.
+     */
     tryLock         : Mutex -> Bool;
+    /** Release the lock of a mutex.
+     */
     unlock          : Mutex -> Bool;
 }
 

@@ -56,15 +56,6 @@ inline static void delete_thread(thread_t thread)
 // --------------------------------------------------------------------------------
 
 
-/** Create a new thread executing the given function asynhronously.
-
-    Threads have single-ownership semantics and must be finalized by passing it
-    to a destructive function.
-
-    @param func Function to execute.
-    @param data Value to be passed to the function.
-    @return     A new thread executing concurrently with the current thread.
- */
 fa_thread_t fa_thread_create(fa_nullary_t func, fa_ptr_t data)
 {
     fa_thread_t thread = new_thread();
@@ -78,16 +69,11 @@ fa_thread_t fa_thread_create(fa_nullary_t func, fa_ptr_t data)
     return thread;
 }
 
-/** Sleep the current thread for the given time.
- */
 void fa_thread_sleep(fa_thread_milliseconds_t s)
 {
     usleep(s * 1000);
 }
 
-/** Destroy a thread, and return after its associated function has returned.
-    @param thread Thread to join (destroyed).
-  */
 void fa_thread_join(fa_thread_t thread)
 {
     int result = pthread_join(thread->native, NULL);
@@ -98,10 +84,6 @@ void fa_thread_join(fa_thread_t thread)
     }
 }
 
-/** Destroy a thread and return directly. The associated function may continous executing
-    in the background.
-    @param thread Thread to detach (destroyed).
-  */
 void fa_thread_detach(fa_thread_t thread)
 {
     int result = pthread_detach(thread->native);
@@ -112,8 +94,6 @@ void fa_thread_detach(fa_thread_t thread)
     }
 }
 
-/** Return the main thread.
-  */
 fa_thread_t fa_thread_main()
 {
     assert(main_thread_g && "Module not initialized");
@@ -123,8 +103,6 @@ fa_thread_t fa_thread_main()
     return thread;
 }
 
-/** Return the current thread.
-  */
 fa_thread_t fa_thread_current()
 {
     fa_thread_t thread = new_thread();
@@ -135,11 +113,6 @@ fa_thread_t fa_thread_current()
 
 // --------------------------------------------------------------------------------
 
-/** Create a mutex.
-
-    Mutexes have single-ownership semantics and must be finalized by passing it
-    to a destructive function.
- */
 fa_thread_mutex_t fa_thread_create_mutex()
 {
     fa_thread_mutex_t mutex = fa_new(thread_mutex);
@@ -154,8 +127,6 @@ fa_thread_mutex_t fa_thread_create_mutex()
     return mutex;
 }
 
-/** Destroy a mutex.
- */
 void fa_thread_destroy_mutex(fa_thread_mutex_t mutex)
 {
     int result = pthread_mutex_destroy(&mutex->native);
@@ -166,8 +137,6 @@ void fa_thread_destroy_mutex(fa_thread_mutex_t mutex)
     }
 }
 
-/** Acquire the lock of a mutex.
- */
 bool fa_thread_lock(fa_thread_mutex_t mutex)
 {
     int result = pthread_mutex_lock(&mutex->native);
@@ -180,8 +149,6 @@ bool fa_thread_lock(fa_thread_mutex_t mutex)
     }
 }
 
-/** Try acquiring the lock of a mutex.
- */
 bool fa_thread_try_lock(fa_thread_mutex_t mutex)
 {
     int result = pthread_mutex_trylock(&mutex->native);
@@ -199,8 +166,6 @@ bool fa_thread_try_lock(fa_thread_mutex_t mutex)
     }
 }
 
-/** Release the lock of a mutex.
- */
 bool fa_thread_unlock(fa_thread_mutex_t mutex)
 {
     int result = pthread_mutex_unlock(&mutex->native);

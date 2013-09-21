@@ -14,10 +14,6 @@
 
 #include <CoreFoundation/CoreFoundation.h>
 
-/** Convert a string to a the string representation used by the platform.
-
-    * On Mac OS X and iOS, `CFStringRef` is used.
- */
 void *fa_string_to_native(fa_string_t str)
 {
     char *cstr;
@@ -30,10 +26,6 @@ void *fa_string_to_native(fa_string_t str)
     return (void *) cfstr;
 }
 
-/** Convert a value of the string representation used by the platform to a string.
-
-    * On Mac OS X and iOS, `CFStringRef` is used.
- */
 fa_string_t fa_string_from_native(void *cfstr)
 {
     CFIndex size;

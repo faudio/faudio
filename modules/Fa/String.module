@@ -120,6 +120,10 @@ module Fa.String
             A heap-allocated encoded string.
      */
     toUtf16      : String -> Utf16;
+    /** Convert a string to a the string representation used by the platform.
+
+        * On Mac OS X and iOS, `CFStringRef` is used.
+     */
     toNative     : String -> Ptr;
     /** Deencode a string from UTF-8.
 
@@ -135,6 +139,10 @@ module Fa.String
             A new string.
      */
     fromUtf16    : Utf16  -> String;
+    /** Convert a value of the string representation used by the platform to a string.
+
+        * On Mac OS X and iOS, `CFStringRef` is used.
+     */
     fromNative   : Ptr    -> String;
 
     // Matching

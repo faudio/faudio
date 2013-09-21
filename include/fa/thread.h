@@ -40,37 +40,65 @@ typedef struct _fa_thread_mutex_t * fa_thread_mutex_t;
 
 typedef int fa_thread_milliseconds_t;
 
+/** Create a new thread executing the given function asynhronously.
 
+    Threads have single-ownership semantics and must be finalized by passing it
+    to a destructive function.
+
+    @param func Function to execute.
+    @param data Value to be passed to the function.
+    @return     A new thread executing concurrently with the current thread.
+*/
 fa_thread_t fa_thread_create(fa_nullary_t, fa_ptr_t);
 
-
-void fa_thread_sleep(fa_thread_milliseconds_t);
-
-
+/** Destroy a thread, and return after its associated function has returned.
+    @param thread Thread to join (destroyed).
+      
+*/
 void fa_thread_join(fa_thread_t);
 
-
+/** Destroy a thread and return directly. The associated function may continous executing
+    in the background.
+    @param thread Thread to detach (destroyed).
+      
+*/
 void fa_thread_detach(fa_thread_t);
 
-
+/** Return the main thread.
+      
+*/
 fa_thread_t fa_thread_main();
 
-
+/** Return the current thread.
+      
+*/
 fa_thread_t fa_thread_current();
 
+/** Sleep the current thread for the given time.
+*/
+void fa_thread_sleep(fa_thread_milliseconds_t);
 
+/** Create a mutex.
+
+    Mutexes have single-ownership semantics and must be finalized by passing it
+    to a destructive function.
+*/
 fa_thread_mutex_t fa_thread_create_mutex();
 
-
+/** Destroy a mutex.
+*/
 void fa_thread_destroy_mutex(fa_thread_mutex_t);
 
-
+/** Acquire the lock of a mutex.
+*/
 bool fa_thread_lock(fa_thread_mutex_t);
 
-
+/** Try acquiring the lock of a mutex.
+*/
 bool fa_thread_try_lock(fa_thread_mutex_t);
 
-
+/** Release the lock of a mutex.
+*/
 bool fa_thread_unlock(fa_thread_mutex_t);
 
 /** @}
