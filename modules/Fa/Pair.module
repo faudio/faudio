@@ -30,6 +30,7 @@ module Fa.Pair
     create  : (Ptr, Ptr) -> Pair;
     read : (Struct*) -> Pair;
     write : (Struct*, Pair) -> Void;
+    decons : (Ptr*, Ptr*, Pair) -> Void;
     copy   : Pair -> Pair;
     destroy : Pair -> Void;
 

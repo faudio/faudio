@@ -50,6 +50,9 @@ fa_pair_t fa_pair_read(fa_pair_struct_t *);
 void fa_pair_write(fa_pair_struct_t *, fa_pair_t);
 
 
+void fa_pair_decons(fa_ptr_t *, fa_ptr_t *, fa_pair_t);
+
+
 fa_pair_t fa_pair_copy(fa_pair_t);
 
 

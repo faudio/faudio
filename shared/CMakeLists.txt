@@ -73,10 +73,10 @@ if(APPLE)
     add_library(faudio_framework SHARED ${SRCS_ALL})
     set_target_properties(faudio_framework PROPERTIES
       FRAMEWORK                   TRUE
-      OUTPUT_NAME                 "Fsound"
+      OUTPUT_NAME                 "Faudio"
       FRAMEWORK_VERSION           ${VERSION}
       LIBRARY_OUTPUT_DIRECTORY    "../Frameworks"
-      INSTALL_NAME_DIR            "@executable_path/../Frameworks/Fsound.framework/Fsound"
+      INSTALL_NAME_DIR            "@executable_path/../Frameworks/Faudio.framework/Faudio"
       LINK_FLAGS                  "${STD_LINK_FLAGS}"
      )
     target_link_libraries(faudio_framework ${EXTS})

@@ -59,6 +59,12 @@ void fa_pair_write(fa_pair_struct_t *output, fa_pair_t pair)
     output->second = pair->values[1];
 }
 
+void fa_pair_decons(fa_ptr_t *a, fa_ptr_t *b, fa_pair_t pair)
+{
+    *a = pair->values[0];
+    *b = pair->values[1];
+}
+
 /** Copy the given pair.
  */
 fa_pair_t fa_pair_copy(fa_pair_t pair)
