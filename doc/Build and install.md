@@ -51,12 +51,14 @@ compiler might not generate standard Windows binaries.
 
 Required for generating headers and low-level language bindings.
 
+<!--
 ### Dist
 
 <https://github.com/hanshoglund/dist>
 
 Required for automatic package resolution. Not required if dependencies are built locally or available through some other package
 management system.
+-->
 
 ### Doxygen
 
@@ -82,11 +84,13 @@ Optionally used for generating plots.
 
 Optionally used for converting graphs.
 
+<!--
 ### libpng
 
 TODO URL
 
 libpng
+-->
 
 ### GhostScript
 

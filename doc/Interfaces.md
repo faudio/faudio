@@ -46,7 +46,7 @@ using an interface method without knowledge of the exact type. Generic functions
 generally accept one or more parameters of type `void *`.
 
 For example, this is a way to implement the *min* function for any type supporing
-the [Order](@ref fa_order_t) interface.
+the fa_order_t interface.
 
 ~~~~
 void * fa_min(void *a, void *b) 
@@ -149,7 +149,7 @@ inline bool fa_greater_than (void *, void *)
 To implement an interface for a reference type, the following has to be provided:
 
 * Functions implementing the interface methods
-* A dispatch function of type [Impl](@ref fa_impl_t)
+* A dispatch function of type @ref fa_impl_t
 * A field in the type that points to the dispatch function
 * A construction routine that sets the pointer to the dispatch function
 
@@ -158,7 +158,7 @@ incoming interface identifiers, returning a pointer to the appropriate interface
 struct.
 
 As an example, let us write a custom reference type `foo`, implementing @ref
-fa_equal_t and [Order](@ref fa_order_t).
+fa_equal_t and fa_order_t.
 
 ## The methods {#Methods}
 
@@ -185,7 +185,7 @@ bool foo_greater_than(void *a, void *b)
 
 ## The dispatch function {#Dispatch}
 
-The dispatch function should have the type [Impl](@ref fa_impl_t). For example:
+The dispatch function should have the type fa_impl_t. For example:
 
 ~~~~
 fa_ptr_t foo_impl(fa_id_t interface)
@@ -215,7 +215,7 @@ implementing type. The name of the fields is irrelevant, typically `impl` is use
 ~~~~
 struct foo
 {
-    fa_impl_t impl; /* Interface dispatcher* /
+    fa_impl_t impl;     //  Interface dispatcher
     ...
 };
 ~~~~
@@ -230,7 +230,7 @@ fa_ptr_t foo_impl(fa_id_t interface);
 struct foo *create_foo()
 {
     struct foo *foo = malloc(sizeof(_foo));
-    foo->impl = &foo_impl;                      /* Setting up dispatcher */
+    foo->impl = &foo_impl;                      //  Setting up dispatcher
     ...
     return foo;
 }

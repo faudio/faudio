@@ -37,8 +37,8 @@ Type                           | Semantics
 [List](@ref FaList)       | An ordered sequence
 [Set](@ref FaSet)         | An ordered set
 [Map](@ref FaMap)         | A set of ordered pairs
-[Graph](@ref FaGraph)     | A labeled, directed graph
 [String](@ref FaString)   | A sequence of Unicode characters
+<!-- [Graph](@ref FaGraph)     | A labeled, directed graph -->
 
 There is also a set of *mutable* data structures not included in this table. These
 are used internally in Fa and need rarely be accessed by the user. For
@@ -46,12 +46,16 @@ completeness, they are:
 
 Type                                              | Semantics
 --------------------------------------------------|------------------------------------------------------
-[Priority queue](@ref FaPriorityQueue)       | A first-in, ordered out priority queue
 [Atomic](@ref FaAtomic)                      | An atomic reference
 [Atomic queue](@ref FaAtomicQueue)           | A first-in, first-out atomic queue
 [Atomic stack](@ref FaAtomicStack)           | A last-in, first-out atomic queue
-[Atomic ringbuffer](@ref FaAtomicRingBuffer) | A byte-level, bounded, first-in, first-out atomic queue
 [Buffer](@ref FaBuffer)                      | A byte-level mutable buffer
+<!--
+[Atomic ringbuffer](@ref FaAtomicRingBuffer) | A byte-level, bounded, first-in, first-out atomic queue
+-->
+<!--
+[Priority queue](@ref FaPriorityQueue)       | A first-in, ordered out priority queue
+-->
 
 
 
@@ -161,6 +165,7 @@ Conversely, it is not safe to treat a value reference as a pointer by dereferenc
 it, or doing pointer arithmetic. It is guaranteed that the value references will
 never overlap with real references. 
 
+<!--
 ## Creating a value reference {#id817283782}
 
 Value references are created by the following functions:
@@ -207,7 +212,8 @@ small types, as they have no associated storage, and the *to* function can be us
 * [fa_peek_int32](@ref fa_peek_int32) or [pi32](@ref fa_peek_int32)
 * [fa_peek_int64](@ref fa_peek_int64) or [pi64](@ref fa_peek_int64)
 * [fa_peek_float](@ref fa_peek_float) or [pf32](@ref fa_peek_float)
-* [fa_peek_double](@ref fa_peek_double) or [pf64](@ref fa_peek_double)
+* [fa_peek_double](@ref fa_peek_double) or [pf64](@ref fa_peek_double) -->
+
 
 
 [persistent]: http://en.wikipedia.org/wiki/Persistent_data_structure
