@@ -43,7 +43,7 @@ module Fa.Graph
 
     // Edges
     connect          : (Node,Node,Edge,Graph) -> Graph;
-    disconnect       : (Node,Node,Graph) -> Graph;
+    // disconnect       : (Node,Node,Graph) -> Graph;
 
     // Introspection
     // nodes            : Graph -> NodeList;

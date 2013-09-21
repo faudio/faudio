@@ -65,7 +65,7 @@ module Fa.Map
     sum              : (Map, Map) -> Map;
     product          : (Map, Map) -> Map;
     difference       : (Map, Map) -> Map;
-    power            : Map -> Map;
+    // power            : Map -> Map;
 
     // Functor
     map              : (Unary, Ptr, Map) -> Map;

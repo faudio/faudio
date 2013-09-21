@@ -61,7 +61,7 @@ module Fa.Set
     intersection     : (Set, Set) -> Set; // left biased
     difference       : (Set, Set) -> Set;
     product          : (Set, Set) -> Set;
-    power            : Set -> Set;
+    // power            : Set -> Set;
 
     // Conversions   
     fromList         : List -> Set;

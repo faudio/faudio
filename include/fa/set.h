@@ -34,7 +34,6 @@ fa_set_t fa_set_sum(fa_set_t, fa_set_t);
 fa_set_t fa_set_intersection(fa_set_t, fa_set_t);
 fa_set_t fa_set_difference(fa_set_t, fa_set_t);
 fa_set_t fa_set_product(fa_set_t, fa_set_t);
-fa_set_t fa_set_power(fa_set_t);
 fa_set_t fa_set_from_list(fa_list_t);
 fa_list_t fa_set_to_list(fa_set_t);
 

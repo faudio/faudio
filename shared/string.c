@@ -326,17 +326,6 @@ fa_string_utf16_t fa_string_to_utf16(fa_string_t as)
     return cstr;
 }
 
-/** Encode the given string as UTF-32.
-
-    @param  str String to encode.
-    @return
-        A heap-allocated encoded string.
- */
-fa_string_utf32_t fa_string_to_utf32(fa_string_t str)
-{
-    assert(false && "Not implemented");
-}
-
 /** Deencode a string from UTF-8.
 
     @param  str Encoded string.
@@ -382,17 +371,6 @@ fa_string_t fa_string_from_utf16(fa_string_utf16_t cstr)
     string_t as = new_string(size, malloc(size * char_size_k));
     memcpy(cstr, as->data, as->size * char_size_k);
     return as;
-}
-
-/** Deencode a string from UTF-32.
-
-    @param  str Encoded string.
-    @return
-        A new string.
- */
-fa_string_t fa_string_from_utf32(fa_string_utf32_t cstr)
-{
-    assert(false && "Not implemented");
 }
 
 

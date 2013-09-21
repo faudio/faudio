@@ -26,9 +26,6 @@ fa_graph_t fa_graph_connect(fa_graph_node_t,
                             fa_graph_node_t,
                             fa_graph_edge_t,
                             fa_graph_t);
-fa_graph_t fa_graph_disconnect(fa_graph_node_t,
-                               fa_graph_node_t,
-                               fa_graph_t);
 fa_string_t fa_graph_to_dot(fa_string_t, fa_string_t, fa_graph_t);
 
 /** @}

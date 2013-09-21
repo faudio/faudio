@@ -222,11 +222,6 @@ fa_set_t fa_set_product(fa_set_t a, fa_set_t b)
     return c;
 }
 
-fa_set_t fa_set_power(fa_set_t set)
-{
-    assert(false && "Not implemented");
-}
-
 
 // --------------------------------------------------------------------------------
 

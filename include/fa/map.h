@@ -39,7 +39,6 @@ bool fa_map_is_proper_submap_of(fa_map_t, fa_map_t);
 fa_map_t fa_map_sum(fa_map_t, fa_map_t);
 fa_map_t fa_map_product(fa_map_t, fa_map_t);
 fa_map_t fa_map_difference(fa_map_t, fa_map_t);
-fa_map_t fa_map_power(fa_map_t);
 fa_map_t fa_map_map(fa_unary_t, fa_ptr_t, fa_map_t);
 fa_map_t fa_map_from_pair(fa_pair_t);
 fa_map_t fa_map_from_list(fa_list_t);
