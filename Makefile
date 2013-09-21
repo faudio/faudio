@@ -62,7 +62,6 @@ doc:
 
 .PHONY: test
 test: all
-	echo && \
 	build/bin/fa_tests;
 
 .PHONY: debug

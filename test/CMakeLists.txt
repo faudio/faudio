@@ -1,9 +1,10 @@
 
 # Uses EXTS, APPLE and MSYS + options and MAIN_LIBRARY
 
-if(BUILD_TESTS)
+# add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/all_tests.c)
 
-  add_executable(fa_tests ${SRCS_ALL} "main.c")
+if(BUILD_TESTS)
+  add_executable(fa_tests ${SRCS_ALL} main.c)
   
   set_target_properties(fa_tests PROPERTIES 
     OUTPUT_NAME                 "fa_tests"
@@ -14,5 +15,4 @@ if(BUILD_TESTS)
   else()
     target_link_libraries(fa_tests ${MAIN_STATIC_LIBRARY})
   endif()
-
 endif(BUILD_TESTS)
