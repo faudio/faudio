@@ -18,7 +18,7 @@ struct _fa_midi_message_t {
     bool                is_sysex;       //    Whether it is a sysex message
     union {                             //    Status or buffer data
         uint8_t         simple[3];
-        fa_buffer_t    sysex;
+        fa_buffer_t     sysex;
     } data;
 };
 
@@ -32,8 +32,8 @@ inline static fa_midi_message_t new_midi_message()
 {
     fa_ptr_t midi_message_impl(fa_id_t interface);
 
-    fa_midi_message_t t  = fa_new(midi_message);
-    t->impl               = &midi_message_impl;
+    fa_midi_message_t t = fa_new(midi_message);
+    t->impl             = &midi_message_impl;
     return t;
 }
 
