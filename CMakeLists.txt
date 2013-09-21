@@ -322,6 +322,6 @@ if (COMPONENTS_RESOLVED)
 
   add_subdirectory(shared)
   add_subdirectory(test)
-  add_subdirectory(examples)
+  add_subdirectory(tools)
 
 endif(COMPONENTS_RESOLVED)
