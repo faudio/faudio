@@ -40,40 +40,51 @@ typedef struct {
             fa_ptr_t first; fa_ptr_t second;
         } fa_pair_struct_t;
 
-
+/** Create a new pair.
+*/
 fa_pair_t fa_pair_create(fa_ptr_t, fa_ptr_t);
 
-
+/** Create a pair by reading the components of a structure.
+*/
 fa_pair_t fa_pair_read(fa_pair_struct_t *);
 
-
+/** Write the values of a pair to a structure.
+*/
 void fa_pair_write(fa_pair_struct_t *, fa_pair_t);
+
+/** Copy the given pair.
+*/
+fa_pair_t fa_pair_copy(fa_pair_t);
+
+/** Destroy the given pair.
+*/
+void fa_pair_destroy(fa_pair_t);
 
 
 void fa_pair_decons(fa_ptr_t *, fa_ptr_t *, fa_pair_t);
 
-
-fa_pair_t fa_pair_copy(fa_pair_t);
-
-
-void fa_pair_destroy(fa_pair_t);
-
-
+/** Get the first component of the given pair.
+*/
 fa_ptr_t fa_pair_first(fa_pair_t);
 
-
+/** Get the second component of the given pair.
+*/
 fa_ptr_t fa_pair_second(fa_pair_t);
 
-
+/** Return a pair containing the given value as both its left and right component.
+*/
 fa_pair_t fa_pair_duplicate(fa_ptr_t);
 
-
+/** Swap the components of the given pair.
+*/
 fa_pair_t fa_pair_swap(fa_pair_t);
 
-
+/** Return the left-associated version of the given nested pair.
+*/
 fa_pair_t fa_pair_assoc(fa_pair_t);
 
-
+/** Return the right-associated version of the given nested pair.
+*/
 fa_pair_t fa_pair_unassoc(fa_pair_t);
 
 

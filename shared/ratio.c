@@ -42,8 +42,6 @@ void delete_ratio(fa_ratio_t p)
 
 void normalize_mutable(fa_ratio_t x);
 
-/** Create a rational number.
- */
 fa_ratio_t fa_ratio_create(num_t num, denom_t denom)
 {
     assert(denom != 0 && "Divide by zero.");
@@ -55,8 +53,6 @@ fa_ratio_t fa_ratio_create(num_t num, denom_t denom)
     return p;
 }
 
-/** Copy a rational number.
- */
 fa_ratio_t fa_ratio_copy(fa_ratio_t p)
 {
     ratio_t q = new_ratio();
@@ -65,30 +61,21 @@ fa_ratio_t fa_ratio_copy(fa_ratio_t p)
     return q;
 }
 
-/** Destroy a rational number.
- */
 void fa_ratio_destroy(fa_ratio_t p)
 {
     delete_ratio(p);
 }
 
-/** Return the numerator of the given rational number.
- */
 num_t fa_ratio_num(fa_ratio_t x)
 {
     return x->num;
 }
 
-/** Return the denominator of the given rational number.
- */
 denom_t fa_ratio_denom(fa_ratio_t x)
 {
     return x->denom;
 }
 
-/** Destruct the given rational number, writing its numerator
-    and denominator to the given locations.
- */
 void fa_ratio_match(fa_ratio_t x, num_t *a, denom_t *b)
 {
     *a = x->num;
@@ -98,8 +85,6 @@ void fa_ratio_match(fa_ratio_t x, num_t *a, denom_t *b)
 
 // --------------------------------------------------------------------------------
 
-/** Add the given rational numbers.
- */
 fa_ratio_t fa_ratio_add(fa_ratio_t x, fa_ratio_t y)
 {
     num_t   a = x->num;
@@ -110,8 +95,6 @@ fa_ratio_t fa_ratio_add(fa_ratio_t x, fa_ratio_t y)
     return ratio(a * d + b * c, b * d);
 }
 
-/** Subtract the given rational numbers.
- */
 fa_ratio_t fa_ratio_subtract(fa_ratio_t x, fa_ratio_t y)
 {
     num_t   a = x->num;
@@ -122,8 +105,6 @@ fa_ratio_t fa_ratio_subtract(fa_ratio_t x, fa_ratio_t y)
     return ratio(a * d - b * c, b * d);
 }
 
-/** Multiply the given rational numbers.
- */
 fa_ratio_t fa_ratio_multiply(fa_ratio_t x, fa_ratio_t y)
 {
     num_t   a = x->num;
@@ -134,8 +115,6 @@ fa_ratio_t fa_ratio_multiply(fa_ratio_t x, fa_ratio_t y)
     return ratio(a * c, b * d);
 }
 
-/** Divide the given rational numbers.
- */
 fa_ratio_t fa_ratio_divide(fa_ratio_t x, fa_ratio_t y)
 {
     num_t   a = x->num;
@@ -146,29 +125,21 @@ fa_ratio_t fa_ratio_divide(fa_ratio_t x, fa_ratio_t y)
     return ratio(a * d, b * c);
 }
 
-/** Return the successor of the given rational number.
- */
 fa_ratio_t fa_ratio_succ(fa_ratio_t x)
 {
     return fa_ratio_add(x, ratio(1, 1));
 }
 
-/** Return the predecessor of the given rational number.
- */
 fa_ratio_t fa_ratio_pred(fa_ratio_t x)
 {
     return fa_ratio_subtract(x, ratio(1, 1));
 }
 
-/** Negate the given rational number.
- */
 fa_ratio_t fa_ratio_negate(fa_ratio_t x)
 {
     return fa_ratio_multiply(x, ratio(-1, 1));
 }
 
-/** Invert the given rational number.
- */
 fa_ratio_t fa_ratio_recip(fa_ratio_t x)
 {
     return fa_ratio_divide(ratio(1, 1), x);
@@ -184,7 +155,6 @@ inline static int gcd(int x, int y)
         y = x % y;
         x = t;
     }
-
     return x;
 }
 
@@ -203,8 +173,6 @@ void normalize_mutable(fa_ratio_t x)
     }
 }
 
-/** Normalize the given rational number.
- */
 fa_ratio_t fa_ratio_normalize(fa_ratio_t x)
 {
     ratio_t y = fa_ratio_copy(x);
@@ -212,8 +180,6 @@ fa_ratio_t fa_ratio_normalize(fa_ratio_t x)
     return y;
 }
 
-/** Return the absolute value of the given rational number.
- */
 fa_ratio_t fa_ratio_absolute(fa_ratio_t x)
 {
     num_t   a = x->num;
@@ -228,10 +194,6 @@ fa_ratio_t fa_ratio_absolute(fa_ratio_t x)
     return ratio(a, b);
 }
 
-/** Convert the given rational number to mixed form.
-
-    For example \f$11/3\f$ becomes \f$3+2/3\f$.
- */
 void fa_ratio_to_mixed(fa_ratio_t x,
                         fa_ratio_num_t *n,
                         fa_ratio_t     *y)

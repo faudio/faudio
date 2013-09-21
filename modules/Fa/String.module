@@ -50,16 +50,44 @@ module Fa.String
     type String = opaque;
 
     // Constructors
+    /** Create an empty string.
+
+        The returned string should be destroyed by the caller.
+     */
     empty   : () -> String;
+    /** Create a single-char string.
+
+        The returned string should be destroyed by the caller.
+     */
     single  : Char16 -> String;
+    /** Create a string by repeating the given character.
+
+        The returned string should be destroyed by the caller.
+     */
     repeat  : (Int, Char16) -> String;
+    /** Copy the given string.
+
+        The returned string should be destroyed by the caller.
+     */
     copy    : String -> String;
+    /** Append the given strings.
+
+        The returned string should be destroyed by the caller.
+     */
     append  : (String, String) -> String;
     dappend : (String, String) -> String;
+    /** Destroy the given string.
+     */
     destroy : String -> Void;
     
     // Predicate and lookup
+    /** Return the number of characters in the given string.
+     */
     length : String -> Int;
+    /** Return the character at the given position in the string.
+        @param pos
+        @param str
+     */
     charAt : (Int,String) -> Char16;
 
     // map         : (Unary, Ptr, String) -> String; // (Char16 -> Char16) -> String -> String
@@ -78,10 +106,34 @@ module Fa.String
     fromJson : String -> Ptr;
     
     // Conversion
+    /** Encode the given string as UTF-8.
+
+        @param  str String to encode.
+        @return
+            A heap-allocated encoded string.
+     */
     toUtf8       : String -> Utf8;
+    /** Encode the given string as UTF-16.
+
+        @param  str String to encode.
+        @return
+            A heap-allocated encoded string.
+     */
     toUtf16      : String -> Utf16;
     toNative     : String -> Ptr;
+    /** Deencode a string from UTF-8.
+
+        @param  str Encoded string.
+        @return
+            A new string.
+     */
     fromUtf8     : Utf8   -> String;
+    /** Deencode a string from UTF-16.
+
+        @param  str Encoded string.
+        @return
+            A new string.
+     */
     fromUtf16    : Utf16  -> String;
     fromNative   : Ptr    -> String;
 
@@ -89,7 +141,23 @@ module Fa.String
     matches : (String,String) -> Bool;  // regex, input
 
     // Formatting
+    /** Format an integer.
+        @param format
+            A printf-style format string.
+        @param value
+            Integer value.
+        @return
+            A new formatted string.
+     */
     formatIntegral : (Char*, Long) -> String;
+    /** Format a floating-point value.
+        @param format
+            A printf-style format string.
+        @param value
+            Numeric value.
+        @return
+            A new formatted string.
+     */
     formatFloating : (Char*, Double) -> String;
 }
 

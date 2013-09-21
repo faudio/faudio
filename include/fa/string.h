@@ -61,31 +61,51 @@ typedef fa_char32_t * fa_string_utf32_t;
 */
 typedef struct _fa_string_t * fa_string_t;
 
+/** Create an empty string.
 
+    The returned string should be destroyed by the caller.
+*/
 fa_string_t fa_string_empty();
 
+/** Create a single-char string.
 
+    The returned string should be destroyed by the caller.
+*/
 fa_string_t fa_string_single(fa_char16_t);
 
+/** Create a string by repeating the given character.
 
+    The returned string should be destroyed by the caller.
+*/
 fa_string_t fa_string_repeat(int, fa_char16_t);
 
+/** Copy the given string.
 
+    The returned string should be destroyed by the caller.
+*/
 fa_string_t fa_string_copy(fa_string_t);
 
+/** Append the given strings.
 
+    The returned string should be destroyed by the caller.
+*/
 fa_string_t fa_string_append(fa_string_t, fa_string_t);
 
 
 fa_string_t fa_string_dappend(fa_string_t, fa_string_t);
 
-
+/** Destroy the given string.
+*/
 void fa_string_destroy(fa_string_t);
 
-
+/** Return the number of characters in the given string.
+*/
 int fa_string_length(fa_string_t);
 
-
+/** Return the character at the given position in the string.
+    @param pos
+    @param str
+*/
 fa_char16_t fa_string_char_at(int, fa_string_t);
 
 /** @interface fa_string_show_t 
@@ -108,19 +128,39 @@ fa_string_t fa_string_to_json(fa_ptr_t);
 
 fa_ptr_t fa_string_from_json(fa_string_t);
 
+/** Encode the given string as UTF-8.
 
+    @param  str String to encode.
+    @return
+        A heap-allocated encoded string.
+*/
 fa_string_utf8_t fa_string_to_utf8(fa_string_t);
 
+/** Encode the given string as UTF-16.
 
+    @param  str String to encode.
+    @return
+        A heap-allocated encoded string.
+*/
 fa_string_utf16_t fa_string_to_utf16(fa_string_t);
 
 
 fa_ptr_t fa_string_to_native(fa_string_t);
 
+/** Deencode a string from UTF-8.
 
+    @param  str Encoded string.
+    @return
+        A new string.
+*/
 fa_string_t fa_string_from_utf8(fa_string_utf8_t);
 
+/** Deencode a string from UTF-16.
 
+    @param  str Encoded string.
+    @return
+        A new string.
+*/
 fa_string_t fa_string_from_utf16(fa_string_utf16_t);
 
 
@@ -129,10 +169,24 @@ fa_string_t fa_string_from_native(fa_ptr_t);
 
 bool fa_string_matches(fa_string_t, fa_string_t);
 
-
+/** Format an integer.
+    @param format
+        A printf-style format string.
+    @param value
+        Integer value.
+    @return
+        A new formatted string.
+*/
 fa_string_t fa_string_format_integral(char *, long);
 
-
+/** Format a floating-point value.
+    @param format
+        A printf-style format string.
+    @param value
+        Numeric value.
+    @return
+        A new formatted string.
+*/
 fa_string_t fa_string_format_floating(char *, double);
 
 /** @}

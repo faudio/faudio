@@ -38,26 +38,69 @@ module Fa.Fa
     import Fa.PriorityQueue;
     import Fa.Signal;
 
+    /** Returns the version of Fa as a list
+        on the form `("alpha", 1, 0, 5, "")`.
+     */
     version : () -> List;
+    /** Returns the version of Fa as a string
+        on the form "alpha1.0.5".
+     */
     versionString : () -> String;
 
+    /** Performs global initialization.
+
+        This function must be called exactly once before any other function in the library.
+        A call to fa_fa_terminate() will reset the global state so that
+        fa_fa_initialize() may be called again and so on.
+     */
     initialize : () -> Void;
+    /** Performs global cleanup.
+
+        This function may be used to reset the global state as per above. It is not necessary to
+        call this function before the program finishes.
+     */
     terminate : () -> Void;
 
     // Time.System, Error.Some
     type LogFunc = ((Ptr, System, Error) -> Void)*;
 
+    /** Instruct Fa to write log messages to the specific file.
+     */
     setLogFile  : String -> Void;
+    /** Instruct Fa to write log messages to the standard output.
+     */
     setLogStd   : () -> Void;
+    /** Instruct Fa to pass log messages to the given handler.
+     */
     setLog      : (LogFunc,Ptr) -> Void;
 
+    /** Write a log message.
+
+        @param context
+            Ignored, declared for compability with user-defined callbacks.
+        @param error
+            Condition to log. Must implement [Error](@ref fa_error_interface_t).
+     */
     log             : (Ptr,Error) -> Void;
+    /** Write an informative message to the log.
+     */
     logInfo         : (String) -> Void;
+    /** Write a warning to the log.
+     */
     logWarning      : (String) -> Void;
+    /** Write an error to the log.
+     */
     logError        : (String) -> Void;
+    /** Write an informative message to the log.
+     */
     logInfoFrom     : (String,String) -> Void;
+    /** Write a warning to the log.
+     */
     logWarningFrom  : (String,String) -> Void;
+    /** Write an error to the log.
+     */
     logErrorFrom    : (String,String) -> Void;
+    
     dlog            : (Ptr,Error) -> Void;
     dlogInfo        : (String) -> Void;
 }

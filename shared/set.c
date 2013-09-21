@@ -225,8 +225,6 @@ fa_set_t fa_set_product(fa_set_t a, fa_set_t b)
 
 // --------------------------------------------------------------------------------
 
-/** Create a set from the given elements.
- */
 set_t fa_set(int count, ...)
 {
     set_t s = fa_set_empty();

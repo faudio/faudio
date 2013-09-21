@@ -63,18 +63,6 @@ inline static void delete_time(fa_time_t time)
 
 // --------------------------------------------------------------------------------
 
-/** Create a new time interval.
-    @param days
-        Number of days.
-    @param hours
-        Number of hours.
-    @param minutes
-        Number of minutes.
-    @param seconds
-        Number of seconds (destroyed).
-    @return
-        A new time value.
- */
 fa_time_t fa_time_create(int32_t days, int32_t hours, int32_t minutes, fa_ratio_t seconds)
 {
     int  whole = days * (60 * 60 * 24) + hours * (60 * 60) + minutes * 60;
@@ -82,17 +70,11 @@ fa_time_t fa_time_create(int32_t days, int32_t hours, int32_t minutes, fa_ratio_
     // TODO should dadd, but Lisp doesn't like it
 }
 
-/**
-    Copy the given time interval.
- */
 fa_time_t fa_time_copy(fa_time_t time)
 {
     return new_time(fa_ratio_copy(time->value));
 }
 
-/**
-    Destroy the given time interval.
- */
 void fa_time_destroy(fa_time_t time)
 {
     delete_time(time);
@@ -101,14 +83,6 @@ void fa_time_destroy(fa_time_t time)
 
 // --------------------------------------------------------------------------------
 
-/**
-    Return the fractions of a second in this time interval.
-
-    @param time
-        Time interval.
-    @return
-        Rational number, representing the remainder of time in seconds over one.
- */
 fa_ratio_t fa_time_divisions(fa_time_t time)
 {
     num_t   a;
@@ -117,14 +91,6 @@ fa_ratio_t fa_time_divisions(fa_time_t time)
     return ratio(a % b, b);
 }
 
-/**
-    Return the number of whole seconds in this time interval.
-
-    @param time
-        Time interval.
-    @return
-        Integer representing this time in seconds modulo one.
- */
 int32_t fa_time_seconds(fa_time_t time)
 {
     num_t   a;
@@ -133,14 +99,6 @@ int32_t fa_time_seconds(fa_time_t time)
     return (a / b) % 60;
 }
 
-/**
-    Return the number of whole minutes in this time interval.
-
-    @param time
-        Time interval.
-    @return
-        Integer representing this time in minutes modulo one.
- */
 int32_t fa_time_minutes(fa_time_t time)
 {
     num_t   a;
@@ -149,14 +107,6 @@ int32_t fa_time_minutes(fa_time_t time)
     return (a / b) % (60 * 60) / 60;
 }
 
-/**
-    Return the number of whole hours in this time interval.
-
-    @param time
-        Time interval.
-    @return
-        Integer representing this time in hours modulo one.
- */
 int32_t fa_time_hours(fa_time_t time)
 {
     num_t   a;
@@ -165,14 +115,6 @@ int32_t fa_time_hours(fa_time_t time)
     return (a / b) % (60 * 60 * 24) / (60 * 60);
 }
 
-/**
-    Return the number of whole days in this time interval.
-
-    @param time
-        Time interval.
-    @return
-        Integer representing this time in days modulo one.
- */
 int32_t fa_time_days(fa_time_t time)
 {
     num_t   a;
@@ -181,12 +123,6 @@ int32_t fa_time_days(fa_time_t time)
     return (a / b) / (60 * 60 * 24);
 }
 
-/** Convert the time to seconds.
-    This may lose precision.
-
-    @param time
-        Time interval.
- */
 int32_t fa_time_to_seconds(fa_time_t time)
 {
     return fa_time_days(time)    * 24 * 60 * 60
@@ -207,11 +143,6 @@ int32_t fa_time_to_milliseconds(fa_time_t time)
 }
 
 
-/** Print the time as an ISO 8601 duration.
-
-    The ISO represenation use decimal fractions of a second, and may lose precision. For example
-    the duration of 1 min 24 1/3 sec would be represented as `P0000-00-00T00:01:24.3333`.
- */
 fa_string_t fa_time_to_iso(fa_time_t time)
 {
     fa_time_t t = (fa_time_t) time;
@@ -221,23 +152,19 @@ fa_string_t fa_time_to_iso(fa_time_t time)
     s = string_dappend(s, format_integral("T%02i", fa_time_hours(t)));
     s = string_dappend(s, format_integral(":%02i", fa_time_minutes(t)));
     s = string_dappend(s, format_integral(":%02i", fa_time_seconds(t)));
+
     // TODO approximate ratio
     s = string_dappend(s, string(".0000"));
 
     return s;
 }
 
-/** Convert system time to a time interval.
-    Generally, system time is seconds since the Unix epoch.
- */
 fa_time_t fa_time_from_system(fa_time_system_t time)
 {
     // return seconds(ti64(time));
     assert(false && "Not implemented");
 }
 
-/** Convert system CPU time to a time interval.
- */
 fa_time_t fa_time_from_cpu(fa_time_cpu_t cpu_time)
 {
     // int64_t t = fa_peek_int64(cpu_time);
@@ -248,8 +175,6 @@ fa_time_t fa_time_from_cpu(fa_time_cpu_t cpu_time)
     assert(false && "Not implemented");
 }
 
-/** Get the system time.
- */
 fa_time_system_t fa_time_system()
 {
     // // TODO warning OK
@@ -260,8 +185,6 @@ fa_time_system_t fa_time_system()
     assert(false && "Not implemented");
 }
 
-/** Get the system CPU time.
- */
 fa_time_cpu_t fa_time_cpu()
 {
     // // TODO warning OK

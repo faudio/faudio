@@ -14,9 +14,7 @@ module Fa.Error
         Info, Warning, Error, Misc
     };
 
-    /** @interface fa_error_interface_t
-        
-        Error interface.
+    /** Error interface.
 
         Generally there is no need to implement this interface directly, the
         @ref fa_error_create_simple function returns an implementation
@@ -28,9 +26,7 @@ module Fa.Error
         origin : (Ptr -> String)*
     };    
 
-    /** @typedef fa_error_t
-
-        A type implementing the error interface.
+    /** A type implementing the error interface.
 
         If you cast a value to this type, you must assure that it implements
         @ref fa_error_interface_t, conversely if you cast a value from
@@ -41,20 +37,59 @@ module Fa.Error
      */
     type Error = opaque;
 
+    /** Return whether the given value is an error or not.
+
+        This function is often used with [log](@ref fa_error_log) as in:
+
+        ~~~
+        if (fa_check(value)) {
+            fa_error_log(NULL, value);
+            exit(-1);
+        }
+        ~~~
+
+        @param value Value to check (can be any type).
+        @return
+          A boolean.
+     */
     check     : Ptr -> Bool;
+    /** Write a log message.
+
+        @param context
+            Ignored, declared for compability with user-defined callbacks.
+        @param error
+            Condition to log. Must implement [Error](@ref fa_error_interface_t).
+     */
     log       : (Ptr,Error) -> Void; // Ptr ignored
 
+    /** Return the severity of the given error.
+     */
     severity  : Error -> Severity;
+    /** Return the message of the given error.
+     */
     message   : Error -> String;
+    /** Return the origin of the given error.
+     */
     origin    : Error -> String;
+    /** Convert the given error to a formated string.
+        @param colored Include color escapes for terminals.
+     */
     format    : (Bool,Error) -> String;
 
-    /** @typedef fa_error_callback_t
-        
-        An error handler routine.
+    /** An error handler routine.
      */
     type Callback = ((Ptr,Error) -> Void)*;
     
+    /** Creates a simple error.
+        @param severity     Severity of the error.
+        @param message      Error message.
+        @param origin       Error origin (typically module name).
+        @return
+            A value of some type implementing
+                [Error](@ref fa_error_interface_t),
+                [Copy](@ref fa_copy_t) and
+                [Destroy](@ref fa_destroy_t)
+     */
     createSimple : (Severity, String, String) -> Error;
 }
 

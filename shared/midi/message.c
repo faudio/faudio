@@ -45,12 +45,6 @@ void delete_midi_message(fa_midi_message_t midi)
 
 // --------------------------------------------------------------------------------
 
-/** Creates a simple message from the given components.
-    @param status   The status byte.
-    @param data1    The first data byte.
-    @param data2    The second data byte.
-    @return         A new Midi message.
- */
 fa_midi_message_t fa_midi_message_create_simple(status_t status,
                                                   data_t data1,
                                                   data_t data2)
@@ -66,10 +60,6 @@ fa_midi_message_t fa_midi_message_create_simple(status_t status,
     return m;
 }
 
-/** Creates a sysex message from the given data buffer (not including F0 and F7).
-    @param data     Raw data buffer (transfered).
-    @return         A new sysex message.
- */
 fa_midi_message_t fa_midi_message_create_sysex(fa_buffer_t data)
 {
     fa_midi_message_t m = new_midi_message();
@@ -78,8 +68,6 @@ fa_midi_message_t fa_midi_message_create_sysex(fa_buffer_t data)
     return m;
 }
 
-/** Copy the given midi message.
- */
 fa_midi_message_t fa_midi_message_copy(fa_midi_message_t midi_message)
 {
     fa_midi_message_t m = new_midi_message();
@@ -94,8 +82,6 @@ fa_midi_message_t fa_midi_message_copy(fa_midi_message_t midi_message)
     return m;
 }
 
-/** Destroy the given midi_message message.
- */
 void fa_midi_message_destroy(fa_midi_message_t midi_message)
 {
     if (midi_message->is_sysex) {
@@ -105,46 +91,34 @@ void fa_midi_message_destroy(fa_midi_message_t midi_message)
     delete_midi_message(midi_message);
 }
 
-/** Return the status byte of given midi_message message.
- */
 bool fa_midi_message_is_simple(fa_midi_message_t midi_message)
 {
     return !midi_message->is_sysex;
 }
 
-/** Return whether the given midi_message message is a sysex message.
- */
 bool fa_midi_message_is_sysex(fa_midi_message_t midi_message)
 {
     return midi_message->is_sysex;
 }
 
-/** Return the status byte of given midi_message message.
- */
 fa_midi_message_status_t fa_midi_message_status(fa_midi_message_t midi_message)
 {
     assert(is_simple(midi_message) && "Not a simple message");
     return midi_message->data.simple[0] & 0xf0;
 }
 
-/** Return the channel byte of given midi_message message.
- */
 fa_midi_message_channel_t fa_midi_message_channel(fa_midi_message_t midi_message)
 {
     assert(is_simple(midi_message) && "Not a simple message");
     return midi_message->data.simple[0] & 0x0f;
 }
 
-/** Return whether the given midi_message message is a non-sysex message.
- */
 fa_pair_t fa_midi_message_simple_data(fa_midi_message_t midi_message)
 {
     assert(is_simple(midi_message) && "Not a simple message");
     return fa_pair_create(i8(midi_message->data.simple[1]), i8(midi_message->data.simple[2]));
 }
 
-/** Return the data buffer of a sysex message, except for the wrapping `F0` and `F7` bytes.
- */
 fa_buffer_t fa_midi_message_sysex_data(fa_midi_message_t midi_message)
 {
     assert(is_sysex(midi_message) && "Not a sysex message");

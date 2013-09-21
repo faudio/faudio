@@ -26,16 +26,6 @@ typedef struct simple_error       *simple_error_t;
 
 void fa_fa_log(fa_ptr_t data, fa_error_t error);
 
-/** Creates a simple error.
-    @param severity     Severity of the error.
-    @param message      Error message.
-    @param origin       Error origin (typically module name).
-    @return
-        A value of some type implementing
-            [Error](@ref fa_error_interface_t),
-            [Copy](@ref fa_copy_t) and
-            [Destroy](@ref fa_destroy_t)
- */
 fa_error_t fa_error_create_simple(
     fa_error_severity_t    severity,
     fa_string_t            message,
@@ -70,65 +60,34 @@ void fa_error_destroy_simple(simple_error_t simple)
 }
 
 
-/** Return the severity of the given error.
- */
 fa_error_severity_t fa_error_severity(fa_error_t a)
 {
     assert(fa_interface(fa_error_i, a) && "Must implement Error");
     return ((error_interface_t *) fa_interface(fa_error_i, a))->severity(a);
 }
 
-/** Return the message of the given error.
- */
 fa_string_t fa_error_message(fa_error_t a)
 {
     assert(fa_interface(fa_error_i, a) && "Must implement Error");
     return ((error_interface_t *) fa_interface(fa_error_i, a))->message(a);
 }
 
-/** Return the origin of the given error.
- */
 fa_string_t fa_error_origin(fa_error_t a)
 {
     assert(fa_interface(fa_error_i, a) && "Must implement Error");
     return ((error_interface_t *) fa_interface(fa_error_i, a))->origin(a);
 }
 
-/** Return whether the given value is an error or not.
-
-    This function is often used with [log](@ref fa_error_log) as in:
-
-    ~~~
-    if (fa_check(value)) {
-        fa_error_log(NULL, value);
-        exit(-1);
-    }
-    ~~~
-
-    @param value Value to check (can be any type).
-    @return
-      A boolean.
- */
 bool fa_error_check(fa_ptr_t a)
 {
     return fa_interface(fa_error_i, a);
 }
 
-/** Write a log message.
-
-    @param context
-        Ignored, declared for compability with user-defined callbacks.
-    @param error
-        Condition to log. Must implement [Error](@ref fa_error_interface_t).
- */
 void fa_error_log(fa_ptr_t context, fa_error_t error)
 {
     fa_fa_log(context, error);
 }
 
-/** Convert the given error to a formated string.
-    @param colored Include color escapes for terminals.
- */
 fa_string_t fa_error_format(bool colored, fa_error_t a)
 {
     simple_error_t simple = (simple_error_t) a;

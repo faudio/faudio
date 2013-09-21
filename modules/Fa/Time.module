@@ -48,18 +48,87 @@ module Fa.Time
     type Time = opaque;
 
     // Constructors
+    /** Create a new time interval.
+        @param days
+            Number of days.
+        @param hours
+            Number of hours.
+        @param minutes
+            Number of minutes.
+        @param seconds
+            Number of seconds (destroyed).
+        @return
+            A new time value.
+     */
     create      : (Int32, Int32, Int32, Ratio) -> Time;
+    /**
+        Copy the given time interval.
+     */
     copy        : Time -> Time;
+    /**
+        Destroy the given time interval.
+     */
     destroy     : Time -> Void;
 
     // Introspection
+    /**
+        Return the number of whole days in this time interval.
+
+        @param time
+            Time interval.
+        @return
+            Integer representing this time in days modulo one.
+     */
     days        : Time -> Int32;
+    /**
+        Return the number of whole hours in this time interval.
+
+        @param time
+            Time interval.
+        @return
+            Integer representing this time in hours modulo one.
+     */
     hours       : Time -> Int32;
+    /**
+        Return the number of whole minutes in this time interval.
+
+        @param time
+            Time interval.
+        @return
+            Integer representing this time in minutes modulo one.
+     */
     minutes     : Time -> Int32;
+    /**
+        Return the number of whole seconds in this time interval.
+
+        @param time
+            Time interval.
+        @return
+            Integer representing this time in seconds modulo one.
+     */
     seconds     : Time -> Int32;
+    /**
+        Return the fractions of a second in this time interval.
+
+        @param time
+            Time interval.
+        @return
+            Rational number, representing the remainder of time in seconds over one.
+     */
     divisions   : Time -> Ratio;
 
+    /** Print the time as an ISO 8601 duration.
+
+        The ISO represenation use decimal fractions of a second, and may lose precision. For example
+        the duration of 1 min 24 1/3 sec would be represented as `P0000-00-00T00:01:24.3333`.
+     */
     toIso           : Time -> String;
+    /** Convert the time to seconds.
+        This may lose precision.
+
+        @param time
+            Time interval.
+     */
     toSeconds       : Time -> Int32;
     toMilliseconds  : Time -> Int32;
 
@@ -67,9 +136,18 @@ module Fa.Time
     type System = opaque; 
     type Cpu    = opaque; 
 
+    /** Convert system time to a time interval.
+        Generally, system time is seconds since the Unix epoch.
+     */
     fromSystem  : System -> Time;
+    /** Convert system CPU time to a time interval.
+     */
     fromCpu     : Cpu -> Time;
+    /** Get the system time.
+     */
     system      : () -> System;
+    /** Get the system CPU time.
+     */
     cpu         : () -> Cpu;
 
     

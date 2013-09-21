@@ -63,19 +63,11 @@ void delete_string(string_t str)
 
 // --------------------------------------------------------------------------------
 
-/** Create an empty string.
-
-    The returned string should be destroyed by the caller.
- */
 fa_string_t fa_string_empty()
 {
     return new_string(0, NULL);
 }
 
-/** Create a single-char string.
-
-    The returned string should be destroyed by the caller.
- */
 fa_string_t fa_string_single(fa_char16_t chr)
 {
     string_t str = new_string(1, NULL);
@@ -85,10 +77,6 @@ fa_string_t fa_string_single(fa_char16_t chr)
     return str;
 }
 
-/** Create a string by repeating the given character.
-
-    The returned string should be destroyed by the caller.
- */
 fa_string_t fa_string_repeat(int times, fa_char16_t chr)
 {
     string_t s = string("");
@@ -100,11 +88,6 @@ fa_string_t fa_string_repeat(int times, fa_char16_t chr)
     return s;
 }
 
-
-/** Copy the given string.
-
-    The returned string should be destroyed by the caller.
- */
 fa_string_t fa_string_copy(fa_string_t str)
 {
     string_t pst = new_string(str->size, NULL);
@@ -115,10 +98,6 @@ fa_string_t fa_string_copy(fa_string_t str)
     return pst;
 }
 
-/** Append the given strings.
-
-    The returned string should be destroyed by the caller.
- */
 fa_string_t fa_string_append(fa_string_t str1,
                                fa_string_t str2)
 {
@@ -131,10 +110,6 @@ fa_string_t fa_string_append(fa_string_t str1,
     return cs;
 }
 
-/** Append the given strings, which are both destroyed.
-
-    The returned string should be destroyed by the caller.
- */
 fa_string_t fa_string_dappend(fa_string_t str1,
                                 fa_string_t str2)
 {
@@ -149,45 +124,28 @@ fa_string_t fa_string_dappend(fa_string_t str1,
     return str1;
 }
 
-/** Destroy the given string.
- */
 void fa_string_destroy(fa_string_t str)
 {
     free(str->data);
     delete_string(str);
 }
 
-/** Return the number of characters in the given string.
- */
 int fa_string_length(fa_string_t str)
 {
     return str->size;
 }
 
-/** Return the character at the given position in the string.
-    @param pos
-    @param str
- */
 uint16_t fa_string_char_at(int pos, fa_string_t str)
 {
     if (pos < 0 || pos >= str->size) {
         assert(false && "Character out of range");
     }
-
     return str->data[pos];
 }
 
 
 // --------------------------------------------------------------------------------
 
-/** Format an integer.
-    @param format
-        A printf-style format string.
-    @param value
-        Integer value.
-    @return
-        A new formatted string.
- */
 fa_string_t fa_string_format_integral(char *format, long value)
 {
     char buffer[100];
@@ -203,14 +161,6 @@ fa_string_t fa_string_format_integral(char *format, long value)
     return fa_string_from_utf8(buffer);
 }
 
-/** Format a floating-point value.
-    @param format
-        A printf-style format string.
-    @param value
-        Numeric value.
-    @return
-        A new formatted string.
- */
 fa_string_t fa_string_format_floating(char *format, double value)
 {
     char buffer[100];
@@ -276,12 +226,6 @@ static inline size_t raw_size_16(uint16_t *s)
     return i;
 }
 
-/** Encode the given string as UTF-8.
-
-    @param  str String to encode.
-    @return
-        A heap-allocated encoded string.
- */
 fa_string_utf8_t fa_string_to_utf8(fa_string_t str)
 {
     size_t inSize, outSize, cstrSize;
@@ -311,12 +255,6 @@ fa_string_utf8_t fa_string_to_utf8(fa_string_t str)
     return cstr;
 }
 
-/** Encode the given string as UTF-16.
-
-    @param  str String to encode.
-    @return
-        A heap-allocated encoded string.
- */
 fa_string_utf16_t fa_string_to_utf16(fa_string_t as)
 {
     size_t size = as->size;
@@ -326,12 +264,6 @@ fa_string_utf16_t fa_string_to_utf16(fa_string_t as)
     return cstr;
 }
 
-/** Deencode a string from UTF-8.
-
-    @param  str Encoded string.
-    @return
-        A new string.
- */
 fa_string_t fa_string_from_utf8(fa_string_utf8_t cstr)
 {
     size_t inSize, outSize, strSize;
@@ -359,12 +291,6 @@ fa_string_t fa_string_from_utf8(fa_string_utf8_t cstr)
     return new_string(strSize / char_size_k, (uint16_t *) str);
 }
 
-/** Deencode a string from UTF-16.
-
-    @param  str Encoded string.
-    @return
-        A new string.
- */
 fa_string_t fa_string_from_utf16(fa_string_utf16_t cstr)
 {
     size_t size = raw_size_16(cstr);
@@ -376,9 +302,6 @@ fa_string_t fa_string_from_utf16(fa_string_utf16_t cstr)
 
 // --------------------------------------------------------------------------------
 
-/** Convert the given value to a string.
-    @see [Show](@ref fa_string_show_t)
-  */
 fa_string_t fa_string_show(fa_ptr_t a)
 {
     assert(fa_interface(fa_string_show_i, a) && "Must implement Show");

@@ -37,22 +37,16 @@ void delete_pair(pair_t p)
 
 // -----------------------------------------------------------------------------
 
-/** Create a new pair.
- */
 fa_pair_t fa_pair_create(fa_ptr_t first, fa_ptr_t second)
 {
     return new_pair(first, second);
 }
 
-/** Create a pair by reading the components of a structure.
- */
 fa_pair_t fa_pair_read(fa_pair_struct_t *input)
 {
     return new_pair(input->first, input->second);
 }
 
-/** Write the values of a pair to a structure.
- */
 void fa_pair_write(fa_pair_struct_t *output, fa_pair_t pair)
 {
     output->first  = pair->values[0];
@@ -65,51 +59,36 @@ void fa_pair_decons(fa_ptr_t *a, fa_ptr_t *b, fa_pair_t pair)
     *b = pair->values[1];
 }
 
-/** Copy the given pair.
- */
 fa_pair_t fa_pair_copy(fa_pair_t pair)
 {
     return new_pair(pair->values[0], pair->values[1]);
 }
 
-/** Destroy the given pair.
- */
 void fa_pair_destroy(fa_pair_t pair)
 {
     delete_pair(pair);
 }
 
-/** Get the first component of the given pair.
- */
 fa_ptr_t fa_pair_first(fa_pair_t pair)
 {
     return pair->values[0];
 }
 
-/** Get the second component of the given pair.
- */
 fa_ptr_t fa_pair_second(fa_pair_t pair)
 {
     return pair->values[1];
 }
 
-/** Return a pair containing the given value as both its left and right component.
- */
 fa_pair_t fa_pair_duplicate(fa_ptr_t value)
 {
     return new_pair(fa_copy(value), fa_copy(value));
 }
 
-/** Swap the components of the given pair.
- */
 fa_pair_t fa_pair_swap(fa_pair_t pair)
 {
     return new_pair(fa_copy(pair->values[1]), fa_copy(pair->values[0]));
 }
 
-// (a, (b, c)) -> ((a, b), c)
-/** Return the left-associated version of the given nested pair.
- */
 fa_pair_t fa_pair_assoc(fa_pair_t p)
 {
     ptr_t a = fa_copy(p->values[0]);
@@ -119,9 +98,6 @@ fa_pair_t fa_pair_assoc(fa_pair_t p)
     return new_pair(new_pair(a, b), c);
 }
 
-// ((a, b), c) -> (a, (b, c))
-/** Return the right-associated version of the given nested pair.
- */
 fa_pair_t fa_pair_unassoc(fa_pair_t p)
 {
     ptr_t a = fa_copy(((pair_t) p->values[0])->values[0]);
@@ -159,7 +135,6 @@ fa_pair_t fa_pair_dswap(fa_pair_t pair)
     return pair2;
 }
 
-// (a, (b, c)) -> ((a, b), c)
 fa_pair_t fa_pair_dassoc(fa_pair_t pair)
 {
     pair_t pair2 = fa_pair_assoc(pair);
@@ -168,7 +143,6 @@ fa_pair_t fa_pair_dassoc(fa_pair_t pair)
     return pair2;
 }
 
-// ((a, b), c) -> (a, (b, c))
 fa_pair_t fa_pair_dunassoc(fa_pair_t pair)
 {
     pair_t pair2 = fa_pair_unassoc(pair);
