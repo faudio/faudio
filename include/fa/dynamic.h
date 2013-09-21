@@ -5,11 +5,18 @@
 #include <fa.h>
 #include <fa/string.h>
 
-/** @defgroup Fa Fa
+/** @addtogroup FaDynamic
+
+    @addtogroup FaDynamic
+    
+    Provides dynamic typing.     
+ 
+    @defgroup Fa Fa
     @{
     @defgroup FaDynamic Dynamic
     @{
     */
+
 
 typedef enum {
             bool_type_repr,
@@ -26,10 +33,16 @@ typedef enum {
             string_type_repr,
             ratio_type_repr
         } fa_dynamic_type_repr_t;
+
+
 typedef struct {
             fa_dynamic_type_repr_t (* get_type)(fa_ptr_t);
         } fa_dynamic_t;
+
+
 bool fa_dynamic_check(fa_ptr_t);
+
+
 fa_dynamic_type_repr_t fa_dynamic_get_type(fa_ptr_t);
 
 /** @}

@@ -1,7 +1,5 @@
 
 /**
-    @addtogroup FaAtomic
-
     Mutable atomic references.
 
     @par Literals
@@ -24,15 +22,67 @@ module Fa.Atomic
 
     type Atomic = opaque;
 
+    /** Create a new atomic reference.
+        @par Atomicity
+            Non-atomic
+     */
     create  : () -> Atomic;
+
+    /** Copy the given atomic reference.
+        @par Atomicity
+            Non-atomic
+     */
     copy    : Atomic -> Atomic;
+
+    /** Swap contents of the given atomic reference.
+        @par Atomicity
+            Non-atomic
+     */
     swap    : (Atomic, Atomic) -> Void;
+
+    /** Destroy the given atomic reference.
+        @par Atomicity
+            Non-atomic
+     */
     destroy : Atomic -> Void;
 
+
+
+    /** Compares the given value with the current value of the given atomic reference,
+        replacing it if successful.
+
+        @param a   The atomic reference.
+        @param old Old value.
+        @param new New value.
+        @return
+            Whether comparison was successful, i.e. whether the values where exchanged.
+        @par Atomicity
+            Atomic
+     */
     exchange : (Atomic, Ptr, Ptr) -> Bool;
+
+    /** Return the current value of the given atomic reference.
+        @par Atomicity
+            Atomic
+     */
     get     : Atomic -> Ptr;
+
+    /** Update the given atomic value by applying the given pure function.
+
+        @param atomic   Atomic reference.
+        @param func     Function to be applied to the value.
+        @param data     Value to be passed to the function.
+
+        @par Atomicity Atomic
+     */
     set     : (Atomic, Ptr) -> Void;
+
+    /** Set the given given atomic reference.
+
+        @par Atomicity Atomic
+     */
     modify  : (Atomic, Unary, Ptr) -> Void;
+    
 
     // TODO increment : (Atomic, Int32) -> Void;
 }

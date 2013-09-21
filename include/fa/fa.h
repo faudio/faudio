@@ -18,30 +18,84 @@
 #include <fa/priority_queue.h>
 #include <fa/signal.h>
 
-/** @defgroup Fa Fa
+/** @addtogroup FaFa
+
+    @addtogroup FaFa
+
+    This modules exports Fa. Example usage:
+
+    ~~~~
+    #import <fa/fa.h>
+
+    int main (int argc, char const *argv[])
+    {
+        fa_fa_initialize();
+
+        ...
+
+        fa_fa_terminate();
+        return 0;
+    }
+    ~~~~
+
+ 
+    @defgroup Fa Fa
     @{
     @defgroup FaFa Fa
     @{
     */
 
+
 fa_list_t fa_fa_version();
+
+
 fa_string_t fa_fa_version_string();
+
+
 void fa_fa_initialize();
+
+
 void fa_fa_terminate();
+
+
 typedef void (* fa_fa_log_func_t)(fa_ptr_t,
                                   fa_time_system_t,
                                   fa_error_t);
+
+
 void fa_fa_set_log_file(fa_string_t);
+
+
 void fa_fa_set_log_std();
+
+
 void fa_fa_set_log(fa_fa_log_func_t, fa_ptr_t);
+
+
 void fa_fa_log(fa_ptr_t, fa_error_t);
+
+
 void fa_fa_log_info(fa_string_t);
+
+
 void fa_fa_log_warning(fa_string_t);
+
+
 void fa_fa_log_error(fa_string_t);
+
+
 void fa_fa_log_info_from(fa_string_t, fa_string_t);
+
+
 void fa_fa_log_warning_from(fa_string_t, fa_string_t);
+
+
 void fa_fa_log_error_from(fa_string_t, fa_string_t);
+
+
 void fa_fa_dlog(fa_ptr_t, fa_error_t);
+
+
 void fa_fa_dlog_info(fa_string_t);
 
 /** @}

@@ -4,7 +4,13 @@
 
 #include <fa/system/directory.h>
 
-/** @defgroup Fa Fa
+/** @addtogroup FaSystem
+
+    @addtogroup FaSystem
+    
+    Provides low-level system facilities.    
+ 
+    @defgroup Fa Fa
     @{
     @defgroup FaSystem System
     @{

@@ -25,7 +25,14 @@
 #include <wchar.h>
 #include <wctype.h>
 
-/** @defgroup Fa Fa
+/** @addtogroup FaStd
+ 
+    @addtogroup FaStd
+    
+    This module just exports the C standard library.
+
+ 
+    @defgroup Fa Fa
     @{
     @defgroup FaStd Std
     @{

@@ -4,7 +4,17 @@
 
 #include <fa.h>
 
-/** @defgroup Fa Fa
+/** @addtogroup FaAtomicStack
+ 
+    @addtogroup FaAtomicStack
+    
+    Mutable atomic (lock-free) stacks.
+
+    @see 
+    - [Data structures](@ref DataStructures)
+
+ 
+    @defgroup Fa Fa
     @{
     @defgroup FaAtomic Atomic
     @{
@@ -12,10 +22,19 @@
     @{
     */
 
+
 typedef struct _fa_atomic_stack_t * fa_atomic_stack_t;
+
+
 fa_atomic_stack_t fa_atomic_stack_create();
+
+
 void fa_atomic_stack_destroy(fa_atomic_stack_t);
+
+
 fa_ptr_t fa_atomic_stack_read(fa_atomic_stack_t);
+
+
 bool fa_atomic_stack_write(fa_atomic_stack_t, fa_ptr_t);
 
 /** @}

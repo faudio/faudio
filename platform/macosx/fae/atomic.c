@@ -21,10 +21,6 @@ struct _fa_atomic_t {
 
 fa_ptr_t atomic_impl(fa_id_t interface);
 
-/** Create a new atomic reference.
-    @par Atomicity
-        Non-atomic
- */
 fa_atomic_t fa_atomic_create()
 {
     atomic_t a = fa_new(atomic);
@@ -35,10 +31,6 @@ fa_atomic_t fa_atomic_create()
     return a;
 }
 
-/** Copy the given atomic reference.
-    @par Atomicity
-        Non-atomic
- */
 fa_atomic_t fa_atomic_copy(fa_atomic_t a)
 {
     atomic_t b = fa_atomic_create();
@@ -46,10 +38,6 @@ fa_atomic_t fa_atomic_copy(fa_atomic_t a)
     return b;
 }
 
-/** Swap contents of the given atomic reference.
-    @par Atomicity
-        Non-atomic
- */
 void fa_atomic_swap(fa_atomic_t a, fa_atomic_t b)
 {
     ptr_t x  = a->value;
@@ -57,10 +45,6 @@ void fa_atomic_swap(fa_atomic_t a, fa_atomic_t b)
     b->value = x;
 }
 
-/** Destroy the given atomic reference.
-    @par Atomicity
-        Non-atomic
- */
 void fa_atomic_destroy(fa_atomic_t a)
 {
     fa_delete(a);
@@ -69,26 +53,11 @@ void fa_atomic_destroy(fa_atomic_t a)
 
 // --------------------------------------------------------------------------------
 
-/** Compares the given value with the current value of the given atomic reference,
-    replacing it if successful.
-
-    @param a   The atomic reference.
-    @param old Old value.
-    @param new New value.
-    @return
-        Whether comparison was successful, i.e. whether the values where exchanged.
-    @par Atomicity
-        Atomic
- */
 bool fa_atomic_exchange(fa_atomic_t a, fa_ptr_t old, fa_ptr_t new)
 {
     return OSAtomicCompareAndSwapPtrBarrier(old, new, (ptr_t) &a->value);
 }
 
-/** Return the current value of the given atomic reference.
-    @par Atomicity
-        Atomic
- */
 fa_ptr_t fa_atomic_get(fa_atomic_t a)
 {
 #if (DOREMIR_ARCH_BITS == 32)
@@ -98,14 +67,6 @@ fa_ptr_t fa_atomic_get(fa_atomic_t a)
 #endif
 }
 
-/** Update the given atomic value by applying the given pure function.
-
-    @param atomic   Atomic reference.
-    @param func     Function to be applied to the value.
-    @param data     Value to be passed to the function.
-
-    @par Atomicity Atomic
- */
 void fa_atomic_modify(fa_atomic_t atomic, fa_unary_t func, fa_ptr_t data)
 {
     bool result = false;
@@ -117,10 +78,6 @@ void fa_atomic_modify(fa_atomic_t atomic, fa_unary_t func, fa_ptr_t data)
     }
 }
 
-/** Set the given given atomic reference.
-
-    @par Atomicity Atomic
- */
 void fa_atomic_set(fa_atomic_t atomic, fa_ptr_t value)
 {
     bool result = false;
