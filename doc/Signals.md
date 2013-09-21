@@ -8,20 +8,24 @@
 @note
     This page is under construction.
 
-The most important concepts in Fa are the notion of *signals* and
+The most important concepts in *faudio* are the notion of *signals* and
 *processors*. Both have simple definitions:
 
 * A <em>[signal](@ref fa_signal_t)</em> is a function of time, for example 
   \f$ y(t)=sin(2\pi\,t) \f$.
 
+* A <em>[processor](@ref fa_signal_processor_t)</em> is a function from a signal
+  to another signal.
+
 Signals can be composed to create more complex signals.
 
 While many signals can be described by simple formulas, other signals such as real-world
 audio recordings have no simple representation, and must be sampled to be handled by a
-computer. Fa hide this complexity by representing signals as opaque types. Thus signals
+computer. *faudio* hide this complexity by representing signals as opaque types. Thus signals
 are conceptually *continous* and have neither sample rate or duration.
 
 
+<!--
 # Audio types {#SignalTypes}
 
 Each signal has an associated *audio type*, describing the range of the
@@ -246,6 +250,7 @@ TODO
 TODO
 
 
+-->
 
 
 

@@ -9,7 +9,7 @@
 @anchor Prerequisites
 @tableofcontents
  
-The following tools and libraries are required to build Fa.
+The following tools and libraries are required to build *faudio*.
 
 # Platform {#Platform} 
 
@@ -33,7 +33,7 @@ The default Windows compiler (Visual C/C++) is not well supported, the MinGW ver
 
 ## Tools {#Tools}
 
-The following tools are required to build Fa.
+The following tools are required to build *faudio*.
 
 ### CMake
 
@@ -141,7 +141,7 @@ Required for using the Fluidsynth audio processor.
 First ensure that your system meets the [platform](@ref Platform) requirements, and
 that the necessary [compiler](@ref Compiler) and [tools](@ref Tools) are available.
 
-The source code for Fa can be obtained by.
+The source code for *faudio* can be obtained by.
 
     $ git clone git@github.com:faudio/faudio.git
     $ cd audio-engine

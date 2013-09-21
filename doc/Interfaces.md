@@ -11,32 +11,38 @@ In faudio, an *interface* (not to be confuseed with and *audio interface*) is a
 collection of function types, identified by a unique value known as the *interface
 identifier*. They are used extensively inside faudio.
 
-Any [reference type][reftype] may provide implementations for an arbitrary number
-of interfaces by implementing a so-called *dispatch function*, which takes a
-reference of the given type and an interface identifier and returns a pointer to a
-structure conforming to the interface type. This structure is known as an
-*implementation*.
+In *faudio*, all non-primitive types are defined as [reference types][reftype], and may
+provide implementations for an arbitrary number of interfaces by implementing a so-called
+*dispatch function*, which takes a reference of the given type and an interface identifier
+and returns a pointer to a structure conforming to the interface type. This structure is
+known as an *implementation*.
 
 Interfaces can be used to decorate a type with additional semantics such as
 [equality](@ref fa_equal_t) or [ordering](@ref fa_order_t). Another use
 is to overload common functionality, such as 
 [arithmetic operators](@ref fa_number_t).
 
+~~~~
+fa_list_t numbers1 = fa_list_of(i32, 1, 2, 3, 4, 5);
+fa_list_t numbers2 = fa_list_of(i32, 6, 7, 8);
+
+fa_print("%b", fa_less_than(numbers1, numbers2));
+~~~~
 
 
 # Using an interface {#Using}
 
-Interface methods are called by invoking [interface](@ref fa_interface), passing the
+Interface methods are called by invoking @ref fa_interface, passing the
 interface identifier and the value on which the interface is going to be
 dispatched. This is usually one of the arguments to the invoked method, but it can
 be any value. If the given value does not implement the interface, @ref
-[interface](@ref fa_interface) returns null.
+@ref fa_interface returns `NULL`.
 
-Note that [interface](@ref fa_interface) is actually the *only* way to call an
+Note that @ref fa_interface is actually the *only* way to call an
 interface method: in particular it is not safe to cast a pointer of some type to
 the interface type and call the methods from that pointer. It follows that you must
-not use a pointer to an interface type (such as [Equal](@ref fa_equal_t)) as
-an argument to [interface](@ref fa_interface).
+not use a pointer to an interface type (such as @ref fa_equal_t) as
+an argument to @ref fa_interface.
 
 
 ## Generic functions {#GenericFunctions}
@@ -56,7 +62,7 @@ void * fa_min(void *a, void *b)
 ~~~~
 
 Note that most interfaces define generic functions wrapping their methods, saving
-the user from having to write an explicit [interface](@ref fa_interface) call. By
+the user from having to write an explicit @ref fa_interface call. By
 convention, the wrapper should be a function of the same name as the interface
 method. Thus the above function could be defined more briefly as follows.
 
@@ -81,7 +87,7 @@ Note that restriction on generic values correspond to *existential* quantificati
 
 ## Dynamic checks {#DynInterfaceCheck}
 
-As [interface](@ref fa_interface) returns a pointer to the interface or `null`, it can be
+As @ref fa_interface returns a pointer to the interface or `null`, it can be
 used for dynamically inspecting a whether an arbitrary value supports an interface
 or not. If a type is known to support an interface at compile-time, this check can
 be omitted.

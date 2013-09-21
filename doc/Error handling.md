@@ -12,13 +12,13 @@ Generally, errors can be grouped into *recoverable* and *non-recoverable* errors
 
 Non-recoverable errors are those that occur outside the control of the Audio
 Engine. They will usually terminate the process. Recoverable errors are those that
-occur outside the control of the user, but in control of Fa. In most
+occur outside the control of the user, but in control of *faudio*. In most
 systems, such errors can be *handled* by the user by some mechanism in the API such
 as exceptions.
 
 # Handling errors {#id441}
 
-In Fa, recoverable errors always occur when a function is called, and
+In *faudio*, recoverable errors always occur when a function is called, and
 must be detected by the user by inspecting the return value of the function. They
 are grouped into *optional* values and *error* values.
 
@@ -53,11 +53,11 @@ check for optional values and error values.
 
 # Logging {#id24103}
 
-Fa provides a simple logging system. 
+*faudio* provides a simple logging system. 
 
 ## Setting up the log handler {#id30965}
 
-By default, Fa discards all incoming log messages. To set a different
+By default, *faudio* discards all incoming log messages. To set a different
 behaviour, use one of the setup functions in [Doremir.AudioEngine][dae]. Typically
 you want to set the log handler to write to a file, or pass them to a custom
 handler function.

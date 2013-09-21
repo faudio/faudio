@@ -7,14 +7,14 @@
 @note
     This page is under construction.
 
-Devices are the entities that allow Fa to communicate with the
+Devices are the entities that allow *faudio* to communicate with the
 outside world. Any client will need to connect at least two devices to each other
 to form a audio stream. While signals and processors denote functions, devices
 denote sources and sinks of audio data, such as files, memory buffers or audio
 hardware.
 
 Devices are grouped into *real-time devices*, *non-real-time devices*. Audio and
-midi information are handled by different devices. Note that Fa does not
+midi information are handled by different devices. Note that *faudio* does not
 provide non-real-time midi at the moment: if you need to parse and process a midi
 file you must use some other method.
 
@@ -23,17 +23,17 @@ file you must use some other method.
 
 ## Sessions and streams {#SessionsAndStreams}
 
-Fa provides access to real-time devices through of *sessions*, and
+*faudio* provides access to real-time devices through of *sessions*, and
 *streams*. While a *device* provides access to an external audio interface, a
 *session* provides access to the entire audio system, and a *stream* to a specific
 audio computation. These concepts are hierarchical, each stream is associated with
 a device and each device with a session.
 
 Typically, each physical audio or midi interface is represented by a
-single device in Fa. The operating system may also provide abstract
+single device in *faudio*. The operating system may also provide abstract
 devices, representing network connections, software mixers and the like.
 
-Fa places certain restrictions on the order or acquisition of
+*faudio* places certain restrictions on the order or acquisition of
 sessions, devices and streams. Any client that wants to obtain a device must first
 initiate a session. The initialization of a session may fail, for example if the
 underlying audio system is already being used by an exclusive process. If it
@@ -47,7 +47,7 @@ TODO
 @image latex device_states.pdf "State transactions of the audio system (simplified)" width=0.8\textwidth
 
 @note
-    The semantics of *streams* have been changed from earlier versions of Fa, in which a *stream*
+    The semantics of *streams* have been changed from earlier versions of *faudio*, in which a *stream*
     could be repeatedly stopped and started.
 
 
