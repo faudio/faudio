@@ -64,68 +64,255 @@ module Fa.List
     type List   = opaque;
 
     // Constructors
+    /** Create an empty list.
+
+        The returned list must be destroyed by passing to a destructive function.
+
+        @return
+            A new list.
+        @par Performance
+            O(1)
+     */
     empty       : () -> List;
+    /** Create a new list containing the given element.
+
+        The returned list must be destroyed by passing to a destructive function.
+
+        @param value
+            Value to store.
+        @return
+            A new list.
+        @par Performance
+            O(1)
+     */
     single      : Ptr -> List;
+    /** Create a new list by inserting the given element at the beginning of the given list.
+
+        The returned list must be destroyed by passing to a destructive function.
+
+        @param head
+            Value to form head of list.
+        @param tail
+            List to form tail of list.
+        @return
+            A new list.
+        @par Performance
+            O(1)
+     */
     cons        : (Ptr, List) -> List;
     dcons       : (Ptr, List) -> List;
+    
+    /** Create a list by repeating the given element.
+     */
     repeat      : (Int, Ptr) -> List;
+    
+    /** Create a list from the given range.
+     */
     enumerate   : (Int, Int) -> List;
+    /** Copy the given list.
+
+        The returned list must be destroyed by passing to a destructive function.
+
+        @par Performance
+            O(1)
+     */
     copy        : List -> List;
+    /** Destroy the given list.
+
+        @par Performance
+            O(n)
+     */
     destroy     : List -> Void;
 
     // Predicates
+    /** Return whether the given list is empty.
+        @par Performance
+            O(1)
+     */
     isEmpty     : List -> Bool;
+    /** Return whether the given list has a single element.
+        @par Performance
+            O(1)
+     */
     isSingle    : List -> Bool;
+    /** Return the lenght of the given list.
+        @par Performance
+            O(n)
+     */
     length      : List -> Int;
 
     // Sequential access
+    /** Return the first element of the given list.
+        @par Performance
+            O(1)
+     */
     head        : List -> Ptr;
+    /** Return all elements but the first of the given list.
+        @par Performance
+            O(1)
+     */
     tail        : List -> List;
     dtail       : List -> List;
+    /** Return all elements but the last of the given list.
+        @par Performance
+            O(n)
+     */
     init        : List -> List;
     dinit       : List -> List;
+    /** Return the last element of the given list.
+        @par Performance
+            O(n)
+     */
     last        : List -> Ptr;
 
     // Misc operations
+    /** Return the result of appending the given lists.
+        @par Performance
+            O(n)
+     */
     append      : (List, List) -> List;
     dappend     : (List, List) -> List;
+    /** Return the reverse of the given list.
+        @par Performance
+            O(n)
+     */
     reverse     : List -> List;
     dreverse    : List -> List;
+    /** Return the given list sorted.
+        @par Performance
+            O(n log n)
+     */
     sort        : List -> List;
     dsort       : List -> List;
 
     // Random access
+    /** Return the *n* leading elements of the given list.
+        @par Performance
+            O(n)
+     */
     take         : (Int, List) -> List;
     dtake        : (Int, List) -> List;
+    /** Return the all but the *n* leading elements of the given list.
+        @par Performance
+            O(n)
+     */
     drop         : (Int, List) -> List;
     ddrop        : (Int, List) -> List;
+    /** List index operator.
+        @returns
+            The nth element of the given list.
+        @par Performance
+            O(n)
+     */
     index        : (Int, List) -> Ptr;
+    /** Return the given range of the given list.
+        @par Performance
+            O(n)
+     */
     range        : (Int, Int, List) -> List;
+    /** Insert the given element into the given list.
+        @par Performance
+            O(n)
+     */
     insert       : (Int, Ptr, List) -> List;
     dinsert      : (Int, Ptr, List) -> List;
+    /** Insert the given range into the given list.
+        @par Performance
+            O(n)
+     */
     insertRange  : (Int, List, List) -> List;
     dinsertRange : (Int, List, List) -> List;
+    /** Remove the given element from the given list.
+        @par Performance
+            O(n)
+     */
     remove       : (Int, List) -> List;
     dremove      : (Int, List) -> List;
+    /** Remove the given range from the given list.
+        @par Performance
+            O(n)
+     */
     removeRange  : (Int, Int, List) -> List;
     dremoveRange : (Int, Int, List) -> List;
 
     // Searching
+    /** Return whether the given list contains the given element.
+        @par Performance
+            O(n)
+     */
     has         : (Ptr, List) -> Bool;
+    /** Return the first element satisfying the given predicate in the
+        list, if found.
+        @param list     List.
+        @param value    Value to search for.
+        @return         Index of the found value (optional).
+        @par Performance
+            O(log n)
+     */
     find        : (Pred, Ptr, List) -> Ptr;
+    /** Return the index of the first occurance given element in the
+        list, or a negative value if no such element is found
+        @par Performance
+            O(n)
+     */
     indexOf     : (Ptr, List) -> Int;
+    /** Return the index of the first element satisfying the given predicate in the
+        list, or a negative value if no such element is found.
+        @par Performance
+            O(log n)
+     */
     findIndex   : (Pred, Ptr, List) -> Int;
 
     // Maps and folds
+    
+    /** Return the given list with all elements not satisfying the given predicate removed.
+        @par Performance
+            O(n)
+     */
     filter      : (Pred, Ptr, List) -> List;
     dfilter     : (Pred, Ptr, List) -> List;
+    /** Return the result of applying the given function to all elements of the given list.
+
+        @par Laws
+
+            map(apply1, id, xs)                == xs
+            map(apply1, f, map(apply1, g, xs)) == map(apply1, comp(f, g), xs)
+
+        @par Performance
+            O(n)
+     */
     map         : (Unary, Ptr, List) -> List;
     dmap        : (Unary, Ptr, List) -> List;
+    
+    /** Map over the given list and join the results.
+
+        This function is useful to apply functions from singletons to lists.
+
+        @par Laws
+
+            joinMap(apply1, single, xs) == xs`
+
+        @par Performance
+            O(n)
+     */
     joinMap     : (Unary, Ptr, List) -> List;
     djoinMap    : (Unary, Ptr, List) -> List;
+    
+    /** Concatenate all elements of the given list.
+
+        The given list must contain lists only.
+
+        @par Performance
+            O(n)
+     */
     join        : List -> List;
     djoin       : List -> List;
 
+    /** Fold over the given list from left to right.
+
+        @par Performance
+            O(n)
+     */
     foldLeft    : (Binary, Ptr, Ptr, List) -> Ptr;
     dfoldLeft   : (Binary, Ptr, Ptr, List) -> Ptr;
 

@@ -87,20 +87,12 @@ static inline void forward_node(atomic_t place)
 
 // --------------------------------------------------------------------------------
 
-/** Create a new stack.
-    @par Atomicity
-        Non-atomic
- */
 fa_atomic_stack_t fa_atomic_stack_create()
 {
     atomic_stack_t stack = new_stack();
     return stack;
 }
 
-/** Destroy the given stack.
-    @par Atomicity
-        Non-atomic
- */
 void fa_atomic_stack_destroy(fa_atomic_stack_t stack)
 {
     while (true) {
@@ -120,12 +112,6 @@ void fa_atomic_stack_destroy(fa_atomic_stack_t stack)
 
 // --------------------------------------------------------------------------------
 
-/** Write the given value to the given stack.
-    @param stackr   Queue.
-    @param value    Value to write (optional).
-    @par Atomicity
-        Atomic
- */
 bool fa_atomic_stack_write(fa_atomic_stack_t stack, fa_ptr_t value)
 {
     node_t node, node2;
@@ -138,12 +124,6 @@ bool fa_atomic_stack_write(fa_atomic_stack_t stack, fa_ptr_t value)
     return true;
 }
 
-/** Read a value from the given stack.
-    @return
-        A value (optional).
-    @par Atomicity
-        Atomic
- */
 fa_ptr_t fa_atomic_stack_read(fa_atomic_stack_t stack)
 {
     node_t node;

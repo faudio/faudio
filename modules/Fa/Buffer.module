@@ -35,14 +35,51 @@ module Fa.Buffer
      */
     type Buffer = opaque;
 
+    /** Create a new buffer.
+        @note
+            O(n)
+     */
     create  : (Size) -> Buffer;
+    /** Create a buffer wrapping the given memory region.
+
+        @param ptr  Pointer to wrap.
+        @param size Number of bytes to wrap.
+        @param destroy_function Function to call upon destruction (nullable).
+        @param destroy_data Data closed over by the destroy function.
+        @note
+            O(1)
+     */
     wrap    : (Ptr, Size, Unary, Ptr) -> Buffer;
+    /** Copy the given buffer.
+        @note
+            O(n)
+     */
     copy    : Buffer -> Buffer;
+    /** Copy the given buffer using the given size.
+        @note
+            O(n)
+     */
     resize  : (Size, Buffer) -> Buffer;
+    /** Destroy the given buffer.
+        @note
+            O(n)
+     */
     destroy : Buffer -> Void;
 
+    /** Return the size of the buffer.
+        @note
+            O(1)
+     */
     size    : Buffer -> Size;  
+    /** Read a value from the buffer.
+        @note
+            O(1)
+     */
     get     : (Buffer, Size) -> UInt8;
+    /** Update a value in the buffer.
+        @note
+            O(1)
+     */
     set     : (Buffer, Size, UInt8) -> Void;
 
     getInt16  : (Buffer, Size) -> Int16;
@@ -61,9 +98,23 @@ module Fa.Buffer
     // Input / Output
     readRaw     : String -> Buffer;
     writeRaw    : (String,Buffer) -> Void;    
+    
+    /**
+        Reads an audio file.
+
+        @returns
+            A pair $$type, buffer)$$.
+     */
     readAudio   : String -> Pair; // (Type,Buffer)
     writeAudio  : (String,Type,Buffer) -> Void;
 
+    /** Return the address of the buffer.
+
+        This function is unsafe as it provides access to the buffer contents without
+        ownership semantics.
+        @note
+            O(1)
+     */
     unsafeAddress : Buffer -> Void*;
 }
 

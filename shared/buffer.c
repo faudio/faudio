@@ -38,10 +38,6 @@ fa_ptr_t default_destroy(fa_ptr_t b, fa_ptr_t _)
     return NULL;
 }
 
-/** Create a new buffer.
-    @note
-        O(n)
- */
 fa_buffer_t fa_buffer_create(size_t size)
 {
     fa_ptr_t buffer_impl(fa_id_t interface);
@@ -68,15 +64,6 @@ fa_buffer_t fa_buffer_create(size_t size)
     return buffer;
 }
 
-/** Create a buffer wrapping the given memory region.
-
-    @param ptr  Pointer to wrap.
-    @param size Number of bytes to wrap.
-    @param destroy_function Function to call upon destruction (nullable).
-    @param destroy_data Data closed over by the destroy function.
-    @note
-        O(1)
- */
 fa_buffer_t fa_buffer_wrap(fa_ptr_t   pointer,
                              size_t      size,
                              fa_unary_t destroy_function,
@@ -95,19 +82,11 @@ fa_buffer_t fa_buffer_wrap(fa_ptr_t   pointer,
     return b;
 }
 
-/** Copy the given buffer.
-    @note
-        O(n)
- */
 fa_buffer_t fa_buffer_copy(fa_buffer_t buffer)
 {
     return fa_buffer_resize(buffer->size, buffer);
 }
 
-/** Copy the given buffer using the given size.
-    @note
-        O(n)
- */
 fa_buffer_t fa_buffer_resize(size_t size, fa_buffer_t buffer)
 {
     fa_ptr_t buffer_impl(fa_id_t interface);
@@ -131,10 +110,6 @@ fa_buffer_t fa_buffer_resize(size_t size, fa_buffer_t buffer)
     return copy;
 }
 
-/** Destroy the given buffer.
-    @note
-        O(n)
- */
 void fa_buffer_destroy(fa_buffer_t buffer)
 {
     if (buffer->destroy_function) {
@@ -144,29 +119,17 @@ void fa_buffer_destroy(fa_buffer_t buffer)
     fa_delete(buffer);
 }
 
-/** Return the size of the buffer.
-    @note
-        O(1)
- */
 size_t fa_buffer_size(fa_buffer_t buffer)
 {
     return buffer->size;
 }
 
-/** Read a value from the buffer.
-    @note
-        O(1)
- */
 uint8_t fa_buffer_get(fa_buffer_t buffer, size_t index)
 {
     assert(index < buffer->size && "Buffer overflow");
     return buffer->data[index];
 }
 
-/** Update a value in the buffer.
-    @note
-        O(1)
- */
 void fa_buffer_set(fa_buffer_t buffer, size_t index, uint8_t value)
 {
     assert(index < buffer->size && "Buffer overflow");
@@ -203,13 +166,6 @@ void fa_buffer_set_double(fa_buffer_t buffer, size_t index, double value)
 }
 
 
-/** Return the address of the buffer.
-
-    This function is unsafe as it provides access to the buffer contents without
-    ownership semantics.
-    @note
-        O(1)
- */
 void *fa_buffer_unsafe_address(fa_buffer_t buffer)
 {
     return buffer->data;
@@ -219,12 +175,6 @@ void *fa_buffer_unsafe_address(fa_buffer_t buffer)
 
 typedef fa_string_t path_t;
 
-/**
-    Reads and audio file.
-
-    @returns
-        A pair $$type, buffer)$$.
- */
 fa_pair_t fa_buffer_read_audio(fa_string_t path)
 {
     type_t          type;

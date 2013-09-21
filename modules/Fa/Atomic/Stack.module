@@ -14,10 +14,30 @@ module Fa.Atomic.Stack
 
     type Stack = opaque;
     
+    /** Create a new stack.
+        @par Atomicity
+            Non-atomic
+     */
     create : () -> Stack;
+    /** Destroy the given stack.
+        @par Atomicity
+            Non-atomic
+     */
     destroy : Stack -> Void;
     
+    /** Read a value from the given stack.
+        @return
+            A value (optional).
+        @par Atomicity
+            Atomic
+     */
     read : Stack -> Ptr;
+    /** Write the given value to the given stack.
+        @param stackr   Queue.
+        @param value    Value to write (optional).
+        @par Atomicity
+            Atomic
+     */
     write : (Stack, Ptr) -> Bool;
 }
 

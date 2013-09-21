@@ -6,8 +6,6 @@
 
 /** @addtogroup FaAtomicQueue
  
-    @addtogroup FaAtomicQueue
-    
     Mutable atomic (lock-free) queues.
 
     @par Literals
@@ -32,16 +30,32 @@
 
 typedef struct _fa_atomic_queue_t * fa_atomic_queue_t;
 
-
+/** Create a new queue.
+    @par Atomicity
+        Non-atomic
+*/
 fa_atomic_queue_t fa_atomic_queue_create();
 
-
+/** Destroy the given queue.
+    @par Atomicity
+        Non-atomic
+*/
 void fa_atomic_queue_destroy(fa_atomic_queue_t);
 
-
+/** Read a value from the given queue.
+    @return
+        A value (optional).
+    @par Atomicity
+        Atomic
+*/
 fa_ptr_t fa_atomic_queue_read(fa_atomic_queue_t);
 
-
+/** Write the given value to the given queue.
+    @param queuer   Queue.
+    @param value    Value to write (optional).
+    @par Atomicity
+        Atomic
+*/
 bool fa_atomic_queue_write(fa_atomic_queue_t, fa_ptr_t);
 
 /** @}

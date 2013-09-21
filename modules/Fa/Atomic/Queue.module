@@ -1,7 +1,5 @@
 
 /** 
-    @addtogroup FaAtomicQueue
-    
     Mutable atomic (lock-free) queues.
 
     @par Literals
@@ -21,10 +19,30 @@ module Fa.Atomic.Queue
     
     type Queue = opaque;
     
+    /** Create a new queue.
+        @par Atomicity
+            Non-atomic
+     */
     create : () -> Queue;
+    /** Destroy the given queue.
+        @par Atomicity
+            Non-atomic
+     */
     destroy : Queue -> Void;
     
+    /** Read a value from the given queue.
+        @return
+            A value (optional).
+        @par Atomicity
+            Atomic
+     */
     read : Queue -> Ptr;
+    /** Write the given value to the given queue.
+        @param queuer   Queue.
+        @param value    Value to write (optional).
+        @par Atomicity
+            Atomic
+     */
     write : (Queue, Ptr) -> Bool;
 }
 

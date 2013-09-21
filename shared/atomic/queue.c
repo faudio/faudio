@@ -107,10 +107,6 @@ static inline void delete_range_end(atomic_t begin, atomic_t end)
 
 // --------------------------------------------------------------------------------
 
-/** Create a new queue.
-    @par Atomicity
-        Non-atomic
- */
 fa_atomic_queue_t fa_atomic_queue_create()
 {
     atomic_queue_t queue = new_queue();
@@ -123,10 +119,6 @@ fa_atomic_queue_t fa_atomic_queue_create()
     return queue;
 }
 
-/** Destroy the given queue.
-    @par Atomicity
-        Non-atomic
- */
 void fa_atomic_queue_destroy(fa_atomic_queue_t queue)
 {
     delete_range_end(queue->first, queue->last);
@@ -136,12 +128,6 @@ void fa_atomic_queue_destroy(fa_atomic_queue_t queue)
 
 // --------------------------------------------------------------------------------
 
-/** Write the given value to the given queue.
-    @param queuer   Queue.
-    @param value    Value to write (optional).
-    @par Atomicity
-        Atomic
- */
 bool fa_atomic_queue_write(fa_atomic_queue_t queue, fa_ptr_t value)
 {
     if (!value) {
@@ -157,12 +143,6 @@ bool fa_atomic_queue_write(fa_atomic_queue_t queue, fa_ptr_t value)
     return true;
 }
 
-/** Read a value from the given queue.
-    @return
-        A value (optional).
-    @par Atomicity
-        Atomic
- */
 fa_ptr_t fa_atomic_queue_read(fa_atomic_queue_t queue)
 {
     ptr_t value;
