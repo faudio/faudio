@@ -30,7 +30,6 @@ module Fa.Fa
     import Fa.Graph;
     import Fa.Audio;
     import Fa.Midi;
-    // import Fa.Device.File;
     import Fa.Midi.Message;
     import Fa.Plot;
     import Fa.Thread;
