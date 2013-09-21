@@ -17,14 +17,12 @@
     @{
     */
 
-/** @typedef fa_ptr_t
-    Pointer type, equivalent to `void*`.
+/** Pointer type, equivalent to `void*`.
     
 */
 typedef void * fa_ptr_t;
 
-/** @typedef fa_nullary_t
-    A nullary function, defined as `fa_ptr_t(*fa_nullary_t )(fa_ptr_t)`.
+/** A nullary function, defined as `fa_ptr_t(*fa_nullary_t )(fa_ptr_t)`.
 
     The first argument is an environment pointer which is usually passed along with the function.
     This is the standard C technique for closing over variables.
@@ -32,8 +30,7 @@ typedef void * fa_ptr_t;
 */
 typedef fa_ptr_t (* fa_nullary_t)(fa_ptr_t);
 
-/** @typedef fa_unary_t
-    A unary function.
+/** A unary function.
 
     The first argument is an environment pointer which is usually passed along with the function.
     This is the standard C technique for closing over variables.
@@ -41,8 +38,7 @@ typedef fa_ptr_t (* fa_nullary_t)(fa_ptr_t);
 */
 typedef fa_ptr_t (* fa_unary_t)(fa_ptr_t, fa_ptr_t);
 
-/** @typedef fa_binary_t
-    A binary function.
+/** A binary function.
 
     The first argument is an environment pointer which is usually passed along with the function.
     This is the standard C technique for closing over variables.
@@ -50,8 +46,7 @@ typedef fa_ptr_t (* fa_unary_t)(fa_ptr_t, fa_ptr_t);
 */
 typedef fa_ptr_t (* fa_binary_t)(fa_ptr_t, fa_ptr_t, fa_ptr_t);
 
-/** @typedef fa_ternary_t
-    A ternary function.
+/** A ternary function.
 
     The first argument is an environment pointer which is usually passed along with the function.
     This is the standard C technique for closing over variables.
@@ -62,8 +57,7 @@ typedef fa_ptr_t (* fa_ternary_t)(fa_ptr_t,
                                   fa_ptr_t,
                                   fa_ptr_t);
 
-/** @typedef fa_pred_t
-    A predicate, or boolean function.
+/** A predicate, or boolean function.
 
     The first argument is an environment pointer which is usually passed along with the function.
     This is the standard C technique for closing over variables.
@@ -71,22 +65,16 @@ typedef fa_ptr_t (* fa_ternary_t)(fa_ptr_t,
 */
 typedef bool (* fa_pred_t)(fa_ptr_t, fa_ptr_t);
 
-/**
-    @typedef fa_char8_t
-    An 8-bit character.
-
-    @typedef fa_char16_t
-    A 16-bit character.
-
-    @typedef fa_char32_t
-    A 32-bit character.
+/** An 8-bit character. 
 */
 typedef char fa_char8_t;
 
-
+/** A 16-bit character. 
+*/
 typedef uint16_t fa_char16_t;
 
-
+/** A 32-bit character. 
+*/
 typedef uint32_t fa_char32_t;
 
 
@@ -176,14 +164,12 @@ fa_ptr_t fa_from_float(float);
 
 fa_ptr_t fa_from_double(double);
 
-/** @typedef fa_id_t
-    Unique identifier. Only used for interface lookup at the moment.
+/** Unique identifier. Only used for interface lookup at the moment.
     
 */
 typedef int64_t fa_id_t;
 
-/** @typedef fa_impl_t
-    Callback to lookup an interface implementation.
+/** Callback to lookup an interface implementation.
     
 */
 typedef fa_ptr_t (* fa_impl_t)(fa_id_t);
@@ -191,8 +177,7 @@ typedef fa_ptr_t (* fa_impl_t)(fa_id_t);
 
 fa_ptr_t fa_interface(fa_id_t, fa_ptr_t);
 
-/** @interface fa_equal_t
-    Equality comparison interface.
+/** Equality comparison interface.
     
 */
 typedef struct {
@@ -205,8 +190,7 @@ bool fa_equal(fa_ptr_t, fa_ptr_t);
 
 bool fa_not_equal(fa_ptr_t, fa_ptr_t);
 
-/** @interface fa_order_t
-    Less-than comparison interface.
+/** Less-than comparison interface.
     
 */
 typedef struct {
@@ -232,8 +216,7 @@ fa_ptr_t fa_min(fa_ptr_t, fa_ptr_t);
 
 fa_ptr_t fa_max(fa_ptr_t, fa_ptr_t);
 
-/** @interface fa_number_t
-    Arithmetic operations interface.
+/** Arithmetic operations interface.
     
 */
 typedef struct {
@@ -274,16 +257,14 @@ fa_ptr_t fa_ddivide(fa_ptr_t, fa_ptr_t);
 
 fa_ptr_t fa_dabsolute(fa_ptr_t);
 
-/** @interface fa_copy_t
-    Generic copying interface.
+/** Generic copying interface.
     
 */
 typedef struct {
             fa_ptr_t (* copy)(fa_ptr_t);
         } fa_copy_t;
 
-/** @interface fa_destroy_t
-    Generic destruction interface.
+/** Generic destruction interface.
     
 */
 typedef struct {

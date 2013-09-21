@@ -15,47 +15,41 @@ module Fa
 
     // Basic types
 
-    /** @typedef fa_ptr_t
-        Pointer type, equivalent to `void*`.
+    /** Pointer type, equivalent to `void*`.
     */
     type Ptr = Void*;
 
     // Function types
 
-    /** @typedef fa_nullary_t
-        A nullary function, defined as `fa_ptr_t(*fa_nullary_t )(fa_ptr_t)`.
+    /** A nullary function, defined as `fa_ptr_t(*fa_nullary_t )(fa_ptr_t)`.
 
         The first argument is an environment pointer which is usually passed along with the function.
         This is the standard C technique for closing over variables.
     */
     type Nullary = (Ptr -> Ptr)*;
 
-    /** @typedef fa_unary_t
-        A unary function.
+    /** A unary function.
 
         The first argument is an environment pointer which is usually passed along with the function.
         This is the standard C technique for closing over variables.
     */
     type Unary   = ((Ptr, Ptr) -> Ptr)*;
 
-    /** @typedef fa_binary_t
-        A binary function.
+    /** A binary function.
 
         The first argument is an environment pointer which is usually passed along with the function.
         This is the standard C technique for closing over variables.
     */
     type Binary  = ((Ptr, Ptr, Ptr) -> Ptr)*;
 
-    /** @typedef fa_ternary_t
-        A ternary function.
+    /** A ternary function.
 
         The first argument is an environment pointer which is usually passed along with the function.
         This is the standard C technique for closing over variables.
     */
     type Ternary  = ((Ptr, Ptr, Ptr, Ptr) -> Ptr)*;
 
-    /** @typedef fa_pred_t
-        A predicate, or boolean function.
+    /** A predicate, or boolean function.
 
         The first argument is an environment pointer which is usually passed along with the function.
         This is the standard C technique for closing over variables.
@@ -65,18 +59,11 @@ module Fa
 
     // Character types
 
-    /**
-        @typedef fa_char8_t
-        An 8-bit character.
-
-        @typedef fa_char16_t
-        A 16-bit character.
-
-        @typedef fa_char32_t
-        A 32-bit character.
-     */
+    /** An 8-bit character. */
     type Char8  = Char;
+    /** A 16-bit character. */
     type Char16 = UInt16;
+    /** A 32-bit character. */
     type Char32 = UInt32;
 
 
@@ -118,13 +105,11 @@ module Fa
 
     // Interface dispatch
 
-    /** @typedef fa_id_t
-        Unique identifier. Only used for interface lookup at the moment.
+    /** Unique identifier. Only used for interface lookup at the moment.
     */
     type Id = Int64;
 
-    /** @typedef fa_impl_t
-        Callback to lookup an interface implementation.
+    /** Callback to lookup an interface implementation.
     */
     type Impl = (Id -> Ptr)*;
 
@@ -133,8 +118,7 @@ module Fa
 
     // Interfaces
 
-    /** @interface fa_equal_t
-        Equality comparison interface.
+    /** Equality comparison interface.
     */
     type Equal   = struct {
         equal : ((Ptr, Ptr) -> Bool)*
@@ -143,8 +127,7 @@ module Fa
     equal            : (Ptr, Ptr) -> Bool;
     notEqual         : (Ptr, Ptr) -> Bool;
 
-    /** @interface fa_order_t
-        Less-than comparison interface.
+    /** Less-than comparison interface.
     */
     type Order  = struct {
         lessThan    : ((Ptr, Ptr) -> Bool)*,
@@ -158,8 +141,7 @@ module Fa
     min              : (Ptr, Ptr) -> Ptr;
     max              : (Ptr, Ptr) -> Ptr;
 
-    /** @interface fa_number_t
-        Arithmetic operations interface.
+    /** Arithmetic operations interface.
     */
     type Number = struct {
         add      : ((Ptr, Ptr) -> Ptr)*,
@@ -180,15 +162,13 @@ module Fa
     ddivide      : (Ptr, Ptr) -> Ptr;
     dabsolute    : Ptr -> Ptr;
 
-    /** @interface fa_copy_t
-        Generic copying interface.
+    /** Generic copying interface.
     */
     type Copy   = struct {
         copy : (Ptr -> Ptr)*
     };
 
-    /** @interface fa_destroy_t
-        Generic destruction interface.
+    /** Generic destruction interface.
     */
     type Destroy   = struct {
         destroy : (Ptr -> Void)*
