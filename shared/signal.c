@@ -331,76 +331,58 @@ int fa_signal_required_delay(fa_signal_t a)
 }
 
 
-
-/*
-    signalTree :: Signal -> Tree String
-    signalTree = go . simplify
-        where
-            go Time = Node "time" []
-            go Random = Node "random" []
-            go (Constant x) = Node (show x) []
-            go (Lift n _ a) = Node n [signalTree a]
-            go (Lift2 n _ a b) = Node n [signalTree a, signalTree b]
-            go (Input c) = Node ("input " ++ show c) []
-            go (Output n c a) = Node ("output " ++ show c ++ "[-"++show n++"]") [signalTree a]
-*/
-fa_pair_t 	fa_signal_to_tree(fa_signal_t signal)
+fa_pair_t   fa_signal_to_tree(fa_signal_t signal)
 {
-    switch(signal->tag) {
-        case time_signal:           return pair(string("time"), empty());
-        case random_signal:         return pair(string("random"), empty());
-        case constant_signal:       return pair(fa_string_to_string(f64(constant_get(signal,value))), empty());
-        case lift_signal:           return pair(lift_get(signal,name), list(
-            fa_signal_to_tree(lift_get(signal,a))
-        ));
-        case lift2_signal:          return pair(lift_get(signal,name), list(
-            fa_signal_to_tree(lift2_get(signal,a)),
-            fa_signal_to_tree(lift2_get(signal,b))
-        ));
-        case input_signal:          return pair(string("input "), empty());
-        case output_signal:         return pair(string("output "), list(
-            fa_signal_to_tree(lift_get(signal,a))
-        ));
-        default:                    assert(false);
+    switch (signal->tag) {
+    case time_signal:
+        return pair(string("time"), empty());
+
+    case random_signal:
+        return pair(string("random"), empty());
+
+    case constant_signal:
+        return pair(fa_string_to_string(f64(constant_get(signal, value))), empty());
+
+    case lift_signal:
+        return pair(lift_get(signal, name), list(
+                        fa_signal_to_tree(lift_get(signal, a))
+                    ));
+
+    case lift2_signal:
+        return pair(lift_get(signal, name), list(
+                        fa_signal_to_tree(lift2_get(signal, a)),
+                        fa_signal_to_tree(lift2_get(signal, b))
+                    ));
+
+    case input_signal:
+        return pair(string("input "), empty());
+
+    case output_signal:
+        return pair(string("output "), list(
+                        fa_signal_to_tree(lift_get(signal, a))
+                    ));
+
+    default:
+        assert(false);
     }
 }
 
 
-/*
-    Console.Write(indent);
-    if (last)
-    {
-        Console.Write("\\-");
-        indent += "  ";
-    }
-    else
-    {
-        Console.Write("|-");
-        indent += "| ";
-    }
-    Console.WriteLine(Name);
-
-    for (int i = 0; i < Children.Count; i++)
-        Children[i].PrintPretty(indent, i == Children.Count - 1);
-    
-*/
 string_t draw_tree(string_t indent, string_t str, pair_t p, bool is_last)
-{           
+{
     str = string_append(str, indent);
 
-    if (is_last)
-    {
-        str     = string_dappend(str, string("\\-"));
-        indent   = string_append(indent, string("  "));
+    if (is_last) {
+        str         = string_dappend(str, string("\\-"));
+        indent      = string_append(indent, string("  "));
+    } else {
+        str         = string_dappend(str, string("|-"));
+        indent      = string_append(indent, string("| "));
     }
-    else
-    {
-        str     = string_dappend(str, string("|-"));
-        indent   = string_append(indent, string("| "));
-    }    
+
     str = string_dappend(str, fa_string_to_string(fa_pair_first(p)));
     str = string_dappend(str, string("\n"));
-    
+
     fa_for_each_last(x, fa_pair_second(p), last) {
         str = draw_tree(indent, str, x, last);
     }
@@ -449,44 +431,51 @@ void split_part(struct part *p, struct part *p2, struct part *p3)
 
 
 
-fa_signal_t simp(struct part* p, fa_signal_t signal2)
-{             
+fa_signal_t simp(struct part *p, fa_signal_t signal2)
+{
     struct part pa;
     struct part pb;
-                        
+
     switch (signal2->tag) {
-        case loop_signal:        return fa_copy(signal2); // TODO
-        case delay_signal:       return fa_copy(signal2); // TODO
-        
-        case lift_signal: {
-            string_t name   = lift_get(signal2, name);
-            d2d_t f         = lift_get(signal2, f);
-            ptr_t fd        = lift_get(signal2, fd);
-            signal_t a      = simp(p, lift_get(signal2, a));
-            return fa_signal_lift(name, f, fd, a);
-        }
-        case lift2_signal:       { 
-            split_part(p, &pa, &pb);
-            
-            return fa_signal_lift2(
-            lift2_get(signal2, name),
-            lift2_get(signal2, f),
-            lift2_get(signal2, fd),
-            simp(&pa, lift2_get(signal2, a)), // TODO split the partition
-            simp(&pb, lift2_get(signal2, b))
-            );                     
-        }
-        case output_signal:      return fa_signal_output(
-            output_get(signal2, n),
-            output_get(signal2, c),
-            simp(p, output_get(signal2, a))
-            );
-        
-        default: return fa_copy(signal2);
+    case loop_signal:
+        return fa_copy(signal2); // TODO
+
+    case delay_signal:
+        return fa_copy(signal2); // TODO
+
+    case lift_signal: {
+        string_t name   = lift_get(signal2, name);
+        d2d_t f         = lift_get(signal2, f);
+        ptr_t fd        = lift_get(signal2, fd);
+        signal_t a      = simp(p, lift_get(signal2, a));
+        return fa_signal_lift(name, f, fd, a);
+    }
+
+    case lift2_signal:       {
+        split_part(p, &pa, &pb);
+
+        return fa_signal_lift2(
+                   lift2_get(signal2, name),
+                   lift2_get(signal2, f),
+                   lift2_get(signal2, fd),
+                   simp(&pa, lift2_get(signal2, a)), // TODO split the partition
+                   simp(&pb, lift2_get(signal2, b))
+               );
+    }
+
+    case output_signal:
+        return fa_signal_output(
+                   output_get(signal2, n),
+                   output_get(signal2, c),
+                   simp(p, output_get(signal2, a))
+               );
+
+    default:
+        return fa_copy(signal2);
     }
 }
 fa_signal_t fa_signal_simplify(fa_signal_t signal2)
-{             
+{
     struct part p;
     init_part(&p);
     return simp(&p, signal2);
@@ -529,27 +518,27 @@ state_t new_state()
 
     return state;
 }
-inline static 
+inline static
 double state_random(state_t state)
 {
     return ((double)rand() / (double)RAND_MAX) * 2 - 1;
 }
-inline static 
+inline static
 double state_time(state_t state)
 {
     return state->count / state->rate;
 }
-inline static 
+inline static
 double read_samp(int c, state_t state)
 {
     assert(false && "read_samp");
 }
-inline static 
+inline static
 double write_samp(int n, int c, double x, state_t state)
 {
     assert(false && "write_samp");
 }
-inline static 
+inline static
 void inc_state(state_t state)
 {
     state->count++;
@@ -559,11 +548,11 @@ void inc_state(state_t state)
 /**
     Step over a sample.
  */
-inline static 
+inline static
 double step(signal_t signal, state_t state)
 {
     switch (signal->tag) {
-        
+
     case time_signal:
         return state_time(state);
 
@@ -666,8 +655,7 @@ inline static double _former(ptr_t _, double x, double y)
 }
 fa_signal_t fa_signal_former(fa_signal_t a, fa_signal_t b)
 {
-    return fa_signal_lift2(
-               string("former"), _former, NULL, a, b);
+    return fa_signal_lift2(string("former"), _former, NULL, a, b);
 }
 
 inline static double _latter(ptr_t _, double x, double y)
@@ -676,8 +664,7 @@ inline static double _latter(ptr_t _, double x, double y)
 }
 fa_signal_t fa_signal_latter(fa_signal_t a, fa_signal_t b)
 {
-    return fa_signal_lift2(
-               string("latter"), _latter, NULL, a, b);
+    return fa_signal_lift2(string("latter"), _latter, NULL, a, b);
 }
 
 
@@ -688,15 +675,14 @@ inline static double _impulse(ptr_t _, double x)
 }
 fa_signal_t fa_signal_impulse()
 {
-    return fa_signal_lift(
-               string("mkImp"), _impulse, NULL, fa_signal_time());
+    return fa_signal_lift(string("mkImp"), _impulse, NULL, fa_signal_time());
 }
 
 
 fa_signal_t fa_signal_line(double x)
-{                                                     
-    double tau = 2*3.141592653589793;
-    return fa_signal_multiply(fa_signal_time(), fa_signal_constant(x*tau));
+{
+    double tau = 2 * 3.141592653589793;
+    return fa_signal_multiply(fa_signal_time(), fa_signal_constant(x * tau));
 }
 
 
@@ -707,8 +693,7 @@ inline static double _add(ptr_t _, double x, double y)
 }
 fa_signal_t fa_signal_add(fa_signal_t a, fa_signal_t b)
 {
-    return fa_signal_lift2(
-               string("(+)"), _add, NULL, a, b);
+    return fa_signal_lift2(string("(+)"), _add, NULL, a, b);
 }
 
 
@@ -718,8 +703,7 @@ inline static double _mul(ptr_t _, double x, double y)
 }
 fa_signal_t fa_signal_multiply(fa_signal_t a, fa_signal_t b)
 {
-    return fa_signal_lift2(
-               string("(*)"), _mul, NULL, a, b);
+    return fa_signal_lift2(string("(*)"), _mul, NULL, a, b);
 }
 
 
@@ -729,8 +713,7 @@ inline static double _sin(ptr_t _, double x)
 }
 fa_signal_t fa_signal_sin(fa_signal_t a)
 {
-    return fa_signal_lift(
-               string("sin"), _sin, NULL, a);
+    return fa_signal_lift(string("sin"), _sin, NULL, a);
 }
 
 
