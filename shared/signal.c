@@ -435,30 +435,41 @@ state_t new_state()
 
     return state;
 }
+inline static 
 double state_random(state_t state)
 {
     return ((double)rand() / (double)RAND_MAX) * 2 - 1;
 }
+inline static 
 double state_time(state_t state)
 {
     return state->count / state->rate;
 }
+inline static 
 double read_samp(int c, state_t state)
 {
     assert(false && "read_samp");
 }
+inline static 
 double write_samp(int n, int c, double x, state_t state)
 {
     assert(false && "write_samp");
 }
+inline static 
 void inc_state(state_t state)
 {
     state->count++;
 }
 
+
+/**
+    Step over a sample.
+ */
+inline static 
 double step(signal_t signal, state_t state)
 {
     switch (signal->tag) {
+        
     case time_signal:
         return state_time(state);
 
@@ -469,32 +480,32 @@ double step(signal_t signal, state_t state)
         return constant_get(signal, value);
 
     case lift_signal: {
-        d2d_t    f = lift_get(signal, f);
-        signal_t a = lift_get(signal, a);
-        double xa = step(a, state);
+        d2d_t    f      = lift_get(signal, f);
+        signal_t a      = lift_get(signal, a);
+        double   xa     = step(a, state);
         return f(NULL, xa);
     }
 
     case lift2_signal: {
-        dd2d_t   f = lift2_get(signal, f);
-        signal_t a = lift2_get(signal, a);
-        signal_t b = lift2_get(signal, b);
-        double xa = step(a, state);
-        double xb = step(b, state);
+        dd2d_t   f      = lift2_get(signal, f);
+        signal_t a      = lift2_get(signal, a);
+        signal_t b      = lift2_get(signal, b);
+        double   xa     = step(a, state);
+        double   xb     = step(b, state);
         return f(NULL, xa, xb);
     }
 
     case input_signal: {
-        int c = input_get(signal, c);
+        int     c       = input_get(signal, c);
         return read_samp(c, state);
     }
 
     case output_signal: {
-        int n = output_get(signal, n);
-        int c = output_get(signal, c);
-        signal_t a = output_get(signal, a);
+        int     n       = output_get(signal, n);
+        int     c       = output_get(signal, c);
+        signal_t a      = output_get(signal, a);
 
-        double xa = step(a, state);
+        double  xa      = step(a, state);
         write_samp(n, c, xa, state);
         return xa;
     }
@@ -579,7 +590,7 @@ ptr_t fa_signal_run_file(int n, signal_t a, string_t path)
 
 
 
-static inline double _former(ptr_t _, double x, double y)
+inline static double _former(ptr_t _, double x, double y)
 {
     return x;
 }
@@ -589,7 +600,7 @@ fa_signal_t fa_signal_former(fa_signal_t a, fa_signal_t b)
                string("former"), _former, NULL, a, b);
 }
 
-static inline double _latter(ptr_t _, double x, double y)
+inline static double _latter(ptr_t _, double x, double y)
 {
     return y;
 }
@@ -601,7 +612,7 @@ fa_signal_t fa_signal_latter(fa_signal_t a, fa_signal_t b)
 
 
 
-static inline double _impulse(ptr_t _, double x)
+inline static double _impulse(ptr_t _, double x)
 {
     return (x == 0) ? 1 : 0;
 }
@@ -620,7 +631,7 @@ fa_signal_t fa_signal_line(double x)
 
 
 
-static inline double _add(ptr_t _, double x, double y)
+inline static double _add(ptr_t _, double x, double y)
 {
     return x + y;
 }
@@ -631,7 +642,7 @@ fa_signal_t fa_signal_add(fa_signal_t a, fa_signal_t b)
 }
 
 
-static inline double _mul(ptr_t _, double x, double y)
+inline static double _mul(ptr_t _, double x, double y)
 {
     return x * y;
 }
@@ -642,7 +653,7 @@ fa_signal_t fa_signal_multiply(fa_signal_t a, fa_signal_t b)
 }
 
 
-static inline double _sin(ptr_t _, double x)
+inline static double _sin(ptr_t _, double x)
 {
     return sin(x);
 }
@@ -654,6 +665,12 @@ fa_signal_t fa_signal_sin(fa_signal_t a)
 
 
 
+/*
+biquad :: Signal -> Signal -> Signal -> Signal -> Signal -> Signal -> Signal
+biquad b0 b1 b2 a1 a2 x = loop $ \y ->
+    b0*x + b1 * delay 1 x + b2 * delay 2 x
+         - a1 * delay 1 y - a2 * delay 2 y
+*/
 
 
 

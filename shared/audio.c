@@ -54,8 +54,8 @@ struct _fa_audio_device_t {
     string_t            name;               // Cached names
     string_t            host_name;
 
-    bool                muted;              // Not used at the moment
-    double              volume;
+    // bool                muted;              // Not used at the moment
+    // double              volume;
 };
 
 struct _fa_audio_stream_t {
@@ -64,16 +64,11 @@ struct _fa_audio_stream_t {
     native_stream_t     native;             // Native stream
 
     device_t            input, output;
-    // ptr_t               proc;
-    // proc_interface_t   *proc_impl;
 
     unsigned            input_channels, output_channels;
     double              sample_rate;
     long                max_buffer_size;
     int32_t             sample_count;       // Monotonically increasing sample count
-
-    // sender_t            incoming;
-    // receiver_t          outgoing;
 };
 
 static mutex_t pa_mutex;
@@ -159,8 +154,8 @@ inline static device_t new_device(native_index_t index)
     device->index       = index;
     device->name        = string((char *) info->name);      // const cast
     device->host_name   = string((char *) host_info->name);
-    device->muted       = false;
-    device->volume      = 1.0;
+    // device->muted       = false;
+    // device->volume      = 1.0;
 
     return device;
 }
@@ -547,46 +542,7 @@ void after_processing(stream_t stream)
 
 int during_processing(stream_t stream, unsigned count, float **input, float **output)
 {
-    // fa_processor_info_t info = {
-    //     .sample_rate = stream->sample_rate,
-    //     .frame_size  = stream->max_buffer_size,
-    //     .sample_time = stream->sample_count,
-    //     .total_time  = NULL, // TODO
-    //     .dispatcher  = (dispatcher_t) stream->incoming
-    // };
 
-    // Syncronize messages
-    // fa_message_sync(stream->incoming);
-
-    // deliver inputs
-    // stream->proc_impl->process(stream->proc, &info, NULL);
-    // deliver outputs
-
-
-    if ((stream->sample_count % 4096) == 0) {
-        printf("%d\n", stream->sample_count);
-    }
-
-    float tab[256];
-    float tau = 3.1415 * 2;
-
-    for (int i = 0; i < 256; ++i) {
-        tab[i] = sin(((float)i) / 256 * tau * 5) * 0.5;
-    }
-
-
-    for (unsigned channel = 0; channel < stream->input_channels; ++channel) {
-        // float *in  = input[channel];
-        float *out = output[channel];
-
-        for (int i = 0; i < count; ++i) {
-            if (channel == 1) {
-                out[i] = tab[i % 256];
-            } else {
-                out[i] = 0;
-            }
-        }
-    }
 
     stream->sample_count += count; // TODO atomic incr
     return paContinue;
