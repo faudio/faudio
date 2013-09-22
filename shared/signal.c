@@ -331,36 +331,45 @@ int fa_signal_required_delay(fa_signal_t a)
 }
 
 
-fa_pair_t   fa_signal_to_tree(fa_signal_t signal)
+fa_pair_t fa_signal_to_tree(fa_signal_t signal)
 {
     switch (signal->tag) {
     case time_signal:
-        return pair(string("time"), empty());
+        return pair(string("time"), list());
 
     case random_signal:
-        return pair(string("random"), empty());
+        return pair(string("random"), list());
 
     case constant_signal:
-        return pair(fa_string_to_string(f64(constant_get(signal, value))), empty());
+        return pair(
+            fa_string_to_string(f64(constant_get(signal, value))), 
+            list());
 
     case lift_signal:
-        return pair(lift_get(signal, name), list(
-                        fa_signal_to_tree(lift_get(signal, a))
-                    ));
+        return pair(
+            lift_get(signal, name), 
+            list(fa_signal_to_tree(lift_get(signal, a))));
 
     case lift2_signal:
-        return pair(lift_get(signal, name), list(
-                        fa_signal_to_tree(lift2_get(signal, a)),
-                        fa_signal_to_tree(lift2_get(signal, b))
-                    ));
+        return pair(
+            lift_get(signal, name), 
+            list(
+                fa_signal_to_tree(lift2_get(signal, a)),
+                fa_signal_to_tree(lift2_get(signal, b))));
 
     case input_signal:
-        return pair(string_dappend(string("input "), fa_string_show(i32(input_get(signal, c)))), empty());
+        return pair(
+            string_dappend(
+                string("input "), 
+                fa_string_show(i32(input_get(signal, c)))), 
+            list());
 
     case output_signal:
-        return pair(string_dappend(string("output "), fa_string_show(i32(output_get(signal, c)))), list(
-                        fa_signal_to_tree(output_get(signal, a))
-                    ));
+        return pair(
+            string_dappend(
+                string("output "), 
+                fa_string_show(i32(output_get(signal, c)))), 
+            list(fa_signal_to_tree(output_get(signal, a))));
 
     default:
         assert(false);
@@ -436,41 +445,41 @@ fa_signal_t simp(struct part *p, fa_signal_t signal2)
     switch (signal2->tag) {
 
     case loop_signal: {
-        struct part pa;
+        s2s_t f             = loop_get(signal2, f);
+        ptr_t fd            = loop_get(signal2, fd);
+
         int c;
+        struct part pa;
         run_part(p, &c, &pa);
         c = neg(c);
 
-        s2s_t f  = loop_get(signal2, f);
-        ptr_t fd = loop_get(signal2, fd);
-
-        signal_t input = fa_signal_input(c);
-        f(fd, input);
-        signal_t res   = simp(&pa, f(fd, input));
+        signal_t input      = fa_signal_input(c);
+        signal_t res        = simp(&pa, f(fd, input));
 
         return fa_signal_output(1, c, res);
     }
 
     case delay_signal: {
-        struct part pa;
+        signal_t a          = delay_get(signal2, a);
+        int n               = delay_get(signal2, n);
+        
         int c;
+        struct part pa;
         run_part(p, &c, &pa);
         c = neg(c);
 
-        signal_t a  = delay_get(signal2, a);
-        int n       = delay_get(signal2, n);
-
-        signal_t inp = fa_signal_input(c);
-        signal_t outp = fa_signal_output(n, c, simp(&pa, a));
+        signal_t inp        = fa_signal_input(c);
+        signal_t outp       = fa_signal_output(n, c, simp(&pa, a));
 
         return fa_signal_former(inp, outp);
     }
 
     case lift_signal: {
-        string_t name   = lift_get(signal2, name);
-        d2d_t f         = lift_get(signal2, f);
-        ptr_t fd        = lift_get(signal2, fd);
-        signal_t a      = simp(p, lift_get(signal2, a));
+        string_t name       = lift_get(signal2, name);
+        d2d_t f             = lift_get(signal2, f);
+        ptr_t fd            = lift_get(signal2, fd);
+
+        signal_t a          = simp(p, lift_get(signal2, a));
         return fa_signal_lift(name, f, fd, a);
     }
 
@@ -478,20 +487,23 @@ fa_signal_t simp(struct part *p, fa_signal_t signal2)
         string_t    name    = lift2_get(signal2, name);
         dd2d_t      f       = lift2_get(signal2, f);
         ptr_t       fd      = lift2_get(signal2, fd);
+
         struct part pa;
         struct part pb;
-
         split_part(p, &pa, &pb);
-        signal_t a      = simp(&pa, lift2_get(signal2, a));
-        signal_t b      = simp(&pb, lift2_get(signal2, b));
+
+        signal_t a          = simp(&pa, lift2_get(signal2, a));
+        signal_t b          = simp(&pb, lift2_get(signal2, b));
 
         return fa_signal_lift2(name, f, fd, a, b);
     }
 
     case output_signal: {
-        int n = output_get(signal2, n);
-        int c = output_get(signal2, c);
-        signal_t a = simp(p, output_get(signal2, a));
+        int n               = output_get(signal2, n);
+        int c               = output_get(signal2, c);
+
+        signal_t a          = simp(p, output_get(signal2, a));
+
         return fa_signal_output(n, c, a);
     }
 
@@ -578,14 +590,17 @@ double step(signal_t signal, state_t state)
 {
     switch (signal->tag) {
 
-    case time_signal:
+    case time_signal: {
         return state_time(state);
+    }
 
-    case random_signal:
+    case random_signal: {
         return state_random(state);
+    }
 
-    case constant_signal:
+    case constant_signal: {
         return constant_get(signal, value);
+    }
 
     case lift_signal: {
         d2d_t    f      = lift_get(signal, f);
@@ -631,15 +646,11 @@ double step(signal_t signal, state_t state)
 void fa_signal_run(int n, signal_t a, double *output)
 {
     state_t state = new_state();
-    // TODO optimize
-    // TODO simplify
-    // TODO verify
     signal_t a2 = fa_signal_simplify(a);
+    // TODO optimize
+    // TODO verify
 
-
-    // pair_t p = pair(i32(1),i32(2));
     for (int i = 0; i < n; ++ i) {
-        // p = fa_pair_swap(p);
         output[i] = step(a2, state);
         inc_state(state);
     }
@@ -648,10 +659,9 @@ void fa_signal_run(int n, signal_t a, double *output)
 void fa_signal_print(int n, signal_t a)
 {
     state_t state = new_state();
-    // TODO optimize
-    // TODO simplify
-    // TODO verify
     signal_t a2 = fa_signal_simplify(a);
+    // TODO optimize
+    // TODO verify
 
     for (int i = 0; i < n; ++ i) {
         double x = step(a2, state);
