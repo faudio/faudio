@@ -8,24 +8,26 @@
  */
 typedef fa_signal_t signal_t;
 
-#define N (44100*60)
+#define N (44100*60*30)
 
 #define PI 3.1415
+#define TAU (2 * PI)
 #define add_ fa_signal_add
 #define mul_ fa_signal_multiply
 #define sin_ fa_signal_sin
 #define time_ fa_signal_time
+#define rand_ fa_signal_random
 #define const_ fa_signal_constant
 
 void helper_function()
 {
-    signal_t a = mul_(sin_(mul_(time_(), const_(2 * PI * 440))), const_(0.1));
-    signal_t b = mul_(sin_(mul_(time_(), const_(2 * PI * 440 * 2 / 3))), const_(0.1));
-    signal_t c = mul_(sin_(mul_(time_(), const_(2 * PI * 440 * 4 / 5))), const_(0.1));
-    signal_t d = mul_(sin_(mul_(time_(), const_(2 * PI * 440 * 6 / 7))), const_(0.1));
+    // signal_t a = mul_(sin_(mul_(time_(), const_(TAU * 440))), const_(0.1));
+    // signal_t b = mul_(sin_(mul_(time_(), const_(TAU * 440 * 2 / 3))), const_(0.1));
+    // signal_t c = mul_(sin_(mul_(time_(), const_(TAU * 440 * 4 / 5))), const_(0.1));
+    // signal_t d = mul_(sin_(mul_(time_(), const_(TAU * 440 * 6 / 7))), const_(0.1));
+    // signal_t r = add_(add_(a, b), add_(c, d));
 
-
-    signal_t r = add_(add_(a, b), add_(c, d));
+    signal_t r = mul_(rand_(), mul_(sin_(mul_(time_(), const_(TAU * 0.5))), const_(0.5)));
 
     // double *xs = fa_malloc(8 * N);
     // fa_signal_run(N, r, xs);
