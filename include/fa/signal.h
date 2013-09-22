@@ -118,27 +118,6 @@ fa_signal_t fa_signal_multiply(fa_signal_t, fa_signal_t);
 fa_signal_t fa_signal_sin(fa_signal_t);
 
 
-bool fa_signal_is_variable(fa_signal_t);
-
-
-bool fa_signal_is_constant(fa_signal_t);
-
-
-bool fa_signal_are_constant(fa_list_t);
-
-
-int fa_signal_signal_node_count(fa_signal_t);
-
-
-int fa_signal_required_inputs(fa_signal_t);
-
-
-int fa_signal_required_buses(fa_signal_t);
-
-
-int fa_signal_required_delay(fa_signal_t);
-
-
 fa_pair_t fa_signal_to_tree(fa_signal_t);
 
 

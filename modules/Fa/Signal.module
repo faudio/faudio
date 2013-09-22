@@ -117,14 +117,14 @@ module Fa.Signal
     // ceil                : (Signal, Signal) -> Signal;
     // rint                : (Signal, Signal) -> Signal;    
     //                        
-    isVariable : Signal -> Bool;
-    isConstant : Signal -> Bool;
-    areConstant : List -> Bool; // [Signal]
-    signalNodeCount : Signal -> Int;
+    // isVariable : Signal -> Bool;
+    // isConstant : Signal -> Bool;
+    // areConstant : List -> Bool; // [Signal]
+    // signalNodeCount : Signal -> Int;
     // signalTree : Signal -> Tree String;
-    requiredInputs : Signal -> Int;
-    requiredBuses : Signal -> Int;
-    requiredDelay : Signal -> Int;
+    // requiredInputs : Signal -> Int;
+    // requiredBuses : Signal -> Int;
+    // requiredDelay : Signal -> Int;
     // optimize : Signal -> Signal;
     // optimize1 : Signal -> Signal;
 
