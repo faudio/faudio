@@ -395,34 +395,34 @@ void split_part(struct part *p, struct part *p2, struct part *p3)
     p3->o = p->d;
     p3->o = p->d * 2;
 }
-list_t drun_part_all(struct part *p, int n)
+
+
+fa_signal_t fa_signal_simplify(fa_signal_t signal2)
 {
-    list_t list = empty();
-    int r;
-
-    while (n > 0) {
-        run_part(p, &r, p);
-        list = fa_list_dcons(i32(r), list);
-        n--;
-    }
-
-    return fa_list_reverse(list);
-}
-
-
-fa_signal_t fa_signal_simplify(fa_signal_t a)
-{
-    match(a->tag) {
-        against(time_signal)        fa_signal_copy(a);
-        against(random_signal)      fa_signal_copy(a);
-        against(constant_signal)    fa_signal_copy(a);
-        against(lift_signal)        fa_signal_copy(a);
-        against(lift2_signal)       fa_signal_copy(a);
-        against(loop_signal)        fa_signal_copy(a);
-        against(delay_signal)       fa_signal_copy(a);
-        against(input_signal)       fa_signal_copy(a);
-        against(output_signal)      fa_signal_copy(a);
-        no_default();
+    match(signal2->tag) {
+        against(loop_signal)        fa_copy(signal2);
+        against(delay_signal)       fa_copy(signal2);
+        
+        // against(lift_signal)        fa_copy(fa_signal_lift(
+        //     lift_get(signal2, name),
+        //     lift_get(signal2, f),
+        //     lift_get(signal2, fd),
+        //     lift_get(signal2, a)
+        //     ));
+        // against(lift2_signal)       fa_copy(
+        //     lift2_get(signal2, name),
+        //     lift2_get(signal2, f),
+        //     lift2_get(signal2, fd),
+        //     lift2_get(signal2, a),
+        //     lift2_get(signal2, b)
+        //     );
+        // against(output_signal)      fa_copy(
+        //     output_get(signal2, n),
+        //     output_get(signal2, c),
+        //     output_get(signal2, a)
+        //     );
+        
+        default(fa_copy(signal2));
     }
 }
 
@@ -593,30 +593,6 @@ ptr_t fa_signal_run_file(int n, signal_t a, string_t path)
 }
 
 
-// fa_signal_t fa_signal_low_pass(fa_signal_t,
-//                                fa_signal_t,
-//                                fa_signal_t,
-//                                fa_signal_t,
-//                                fa_signal_t)
-// {
-// }
-//
-//
-// fa_signal_t fa_signal_biquad(fa_signal_t,
-//                              fa_signal_t,
-//                              fa_signal_t,
-//                              fa_signal_t,
-//                              fa_signal_t,
-//                              fa_signal_t)
-// {
-// }
-
-
-
-
-
-
-
 
 inline static double _former(ptr_t _, double x, double y)
 {
@@ -690,21 +666,6 @@ fa_signal_t fa_signal_sin(fa_signal_t a)
     return fa_signal_lift(
                string("sin"), _sin, NULL, a);
 }
-
-
-
-/*
-biquad :: Signal -> Signal -> Signal -> Signal -> Signal -> Signal -> Signal
-biquad b0 b1 b2 a1 a2 x = loop $ \y ->
-    b0*x + b1 * delay 1 x + b2 * delay 2 x
-         - a1 * delay 1 y - a2 * delay 2 y
-*/
-
-
-
-
-
-
 
 
 
