@@ -69,6 +69,9 @@ module Fa
 
     // Type predicates and conversions
 
+    /**
+        @see [Value references](@ref ValueReferences)
+      */
     isBool     : Ptr -> Bool;
     isInt8     : Ptr -> Bool;
     isInt16    : Ptr -> Bool;
@@ -113,6 +116,10 @@ module Fa
     */
     type Impl = (Id -> Ptr)*;
 
+    /** Returns an implenentation of the given interface on the given value.
+        @return Pointer to implementation (optional).
+        @see [Interfaces](@ref Interfaces)
+      */
     interface : (Id, Ptr) -> Ptr;
 
 
@@ -124,7 +131,13 @@ module Fa
         equal : ((Ptr, Ptr) -> Bool)*
     };
 
+    /** Return whether the given values are equal.
+        @see [Equal](@ref fa_equal_t)
+      */
     equal            : (Ptr, Ptr) -> Bool;
+    /** Return whether the given values are unequal.
+        @see [Equal](@ref fa_equal_t)
+      */
     notEqual         : (Ptr, Ptr) -> Bool;
 
     /** Less-than comparison interface.
@@ -174,16 +187,43 @@ module Fa
         destroy : (Ptr -> Void)*
     };
 
+    /** Copy the given value.
+        @see [Copy](@ref fa_copy_t)
+      */
     copy    : Ptr -> Ptr;
+    /** Move the given value. This is the identity function,
+        just serves as a notification.
+      */
     move    : Ptr -> Ptr;
+    
+    /** Destroy the given value.
+        @param  Value to destroy (destroyed).
+        @see [Destroy](@ref fa_destroy_t)
+      */
     destroy : Ptr -> Void;
     // TODO deepDestroy : Ptr -> Void;
 
+    /** Return whether the given value is an error or not.
+
+        This function is often used with [log](@ref fa_error_log) as in:
+
+        ~~~
+        if (fa_check(value)) {
+            fa_error_log(NULL, value);
+            exit(-1);
+        }
+        ~~~
+
+        @param value Value to check (can be any type).
+        @return
+          A boolean.
+     */
     check   : Ptr -> Bool;
 
-    // show     : Ptr -> Ptr;
-    // toString : Ptr -> Ptr;
-
+    /** Print the given value, using [Show](@ref fa_string_show_t).
+        @param format   A printf-style format string.
+        @param value    Value to print.
+      */
     print    : (Char*,Ptr) -> Void;
     dprint   : (Char*,Ptr) -> Void;
     printLn  : (Ptr) -> Void;

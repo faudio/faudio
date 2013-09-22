@@ -77,7 +77,10 @@ typedef uint16_t fa_char16_t;
 */
 typedef uint32_t fa_char32_t;
 
-
+/**
+    @see [Value references](@ref ValueReferences)
+      
+*/
 bool fa_is_bool(fa_ptr_t);
 
 
@@ -174,7 +177,11 @@ typedef int64_t fa_id_t;
 */
 typedef fa_ptr_t (* fa_impl_t)(fa_id_t);
 
-
+/** Returns an implenentation of the given interface on the given value.
+    @return Pointer to implementation (optional).
+    @see [Interfaces](@ref Interfaces)
+      
+*/
 fa_ptr_t fa_interface(fa_id_t, fa_ptr_t);
 
 /** Equality comparison interface.
@@ -184,10 +191,16 @@ typedef struct {
             bool (* equal)(fa_ptr_t, fa_ptr_t);
         } fa_equal_t;
 
-
+/** Return whether the given values are equal.
+    @see [Equal](@ref fa_equal_t)
+      
+*/
 bool fa_equal(fa_ptr_t, fa_ptr_t);
 
-
+/** Return whether the given values are unequal.
+    @see [Equal](@ref fa_equal_t)
+      
+*/
 bool fa_not_equal(fa_ptr_t, fa_ptr_t);
 
 /** Less-than comparison interface.
@@ -271,19 +284,47 @@ typedef struct {
             void (* destroy)(fa_ptr_t);
         } fa_destroy_t;
 
-
+/** Copy the given value.
+    @see [Copy](@ref fa_copy_t)
+      
+*/
 fa_ptr_t fa_copy(fa_ptr_t);
 
-
+/** Move the given value. This is the identity function,
+    just serves as a notification.
+      
+*/
 fa_ptr_t fa_move(fa_ptr_t);
 
-
+/** Destroy the given value.
+    @param  Value to destroy (destroyed).
+    @see [Destroy](@ref fa_destroy_t)
+      
+*/
 void fa_destroy(fa_ptr_t);
 
+/** Return whether the given value is an error or not.
 
+    This function is often used with [log](@ref fa_error_log) as in:
+
+    ~~~
+    if (fa_check(value)) {
+        fa_error_log(NULL, value);
+        exit(-1);
+    }
+    ~~~
+
+    @param value Value to check (can be any type).
+    @return
+      A boolean.
+*/
 bool fa_check(fa_ptr_t);
 
-
+/** Print the given value, using [Show](@ref fa_string_show_t).
+    @param format   A printf-style format string.
+    @param value    Value to print.
+      
+*/
 void fa_print(char *, fa_ptr_t);
 
 

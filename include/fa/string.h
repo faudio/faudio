@@ -144,7 +144,10 @@ fa_string_utf8_t fa_string_to_utf8(fa_string_t);
 */
 fa_string_utf16_t fa_string_to_utf16(fa_string_t);
 
+/** Convert a string to a the string representation used by the platform.
 
+    * On Mac OS X and iOS, `CFStringRef` is used.
+*/
 fa_ptr_t fa_string_to_native(fa_string_t);
 
 /** Deencode a string from UTF-8.
@@ -163,7 +166,10 @@ fa_string_t fa_string_from_utf8(fa_string_utf8_t);
 */
 fa_string_t fa_string_from_utf16(fa_string_utf16_t);
 
+/** Convert a value of the string representation used by the platform to a string.
 
+    * On Mac OS X and iOS, `CFStringRef` is used.
+*/
 fa_string_t fa_string_from_native(fa_ptr_t);
 
 
