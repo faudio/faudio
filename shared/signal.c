@@ -333,28 +333,7 @@ int fa_signal_required_delay(fa_signal_t a)
 
 
 
-fa_signal_t fa_signal_latter(fa_signal_t a, fa_signal_t b)
-{
-    assert(false && "Not implemented");
-}
 
-
-fa_signal_t fa_signal_former(fa_signal_t a, fa_signal_t b)
-{
-    assert(false && "Not implemented");
-}
-
-
-fa_signal_t fa_signal_impulse()
-{
-    assert(false && "Not implemented");
-}
-
-
-fa_signal_t fa_signal_line(double x)
-{
-    assert(false && "Not implemented");
-}
 
 
 /*
@@ -600,22 +579,51 @@ ptr_t fa_signal_run_file(int n, signal_t a, string_t path)
 
 
 
+static inline double _former(ptr_t _, double x, double y)
+{
+    return x;
+}
+fa_signal_t fa_signal_former(fa_signal_t a, fa_signal_t b)
+{
+    return fa_signal_lift2(
+               string("former"), _former, NULL, a, b);
+}
+
+static inline double _latter(ptr_t _, double x, double y)
+{
+    return y;
+}
+fa_signal_t fa_signal_latter(fa_signal_t a, fa_signal_t b)
+{
+    return fa_signal_lift2(
+               string("latter"), _latter, NULL, a, b);
+}
 
 
 
-double _add(ptr_t _, double x, double y)
+static inline double _impulse(ptr_t _, double x)
+{
+    return (x == 0) ? 1 : 0;
+}
+fa_signal_t fa_signal_impulse()
+{
+    return fa_signal_lift(
+               string("mkImp"), _impulse, NULL, fa_signal_time());
+}
+
+
+fa_signal_t fa_signal_line(double x)
+{                                                     
+    double tau = 2*3.141592653589793;
+    return fa_signal_multiply(fa_signal_time(), fa_signal_constant(x*tau));
+}
+
+
+
+static inline double _add(ptr_t _, double x, double y)
 {
     return x + y;
 }
-double _mul(ptr_t _, double x, double y)
-{
-    return x * y;
-}
-double _sin(ptr_t _, double x)
-{
-    return sin(x);
-}
-
 fa_signal_t fa_signal_add(fa_signal_t a, fa_signal_t b)
 {
     return fa_signal_lift2(
@@ -623,6 +631,10 @@ fa_signal_t fa_signal_add(fa_signal_t a, fa_signal_t b)
 }
 
 
+static inline double _mul(ptr_t _, double x, double y)
+{
+    return x * y;
+}
 fa_signal_t fa_signal_multiply(fa_signal_t a, fa_signal_t b)
 {
     return fa_signal_lift2(
@@ -630,6 +642,10 @@ fa_signal_t fa_signal_multiply(fa_signal_t a, fa_signal_t b)
 }
 
 
+static inline double _sin(ptr_t _, double x)
+{
+    return sin(x);
+}
 fa_signal_t fa_signal_sin(fa_signal_t a)
 {
     return fa_signal_lift(
