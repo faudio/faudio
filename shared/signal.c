@@ -18,7 +18,7 @@ typedef fa_signal_binary_double_t   dd2d_t;
 
 struct _fa_signal_t {
 
-    impl_t          impl;       //  Interface dispatcher
+    impl_t                  impl;
 
     enum {
         time_signal,
@@ -33,49 +33,50 @@ struct _fa_signal_t {
     }                       tag;
 
     union {
-        struct {} time;
+        struct {}           time;
 
-        struct {} random;
-
-        struct {
-            double value;
-        } constant;
+        struct {}           random;
 
         struct {
-            string_t name;
-            d2d_t f;
-            ptr_t fd;
-            signal_t a;
-        } lift;
+            double          value;
+        }                   constant;
 
         struct {
-            string_t name;
-            dd2d_t f;
-            ptr_t fd;
-            signal_t a;
-            signal_t b;
-        } lift2;
+            string_t        name;
+            d2d_t           f;
+            ptr_t           fd;
+            signal_t        a;
+        }                   lift;
 
         struct {
-            s2s_t f;
-            ptr_t fd;
+            string_t        name;
+            dd2d_t          f;
+            ptr_t           fd;
+            signal_t        a;
+            signal_t        b;
+        }                   lift2;
+
+        struct {
+            s2s_t           f;
+            ptr_t           fd;
         } loop;
 
         struct {
-            int n;
-            signal_t a;
+            int             n;
+            signal_t        a;
         } delay;
 
         struct {
-            int c;
+            int             c;
         } input;
 
         struct {
-            int n;
-            int c;
-            signal_t a;
-        } output;
+            int             n;
+            int             c;
+            signal_t        a;
+        }                   output;
     }                       fields;
+
 };
 
 // --------------------------------------------------------------------------------
@@ -133,7 +134,7 @@ signal_t fa_signal_random()
 fa_signal_t fa_signal_constant(double x)
 {
     signal_t signal = new_signal(constant_signal);
-    constant_get(signal,value) = x;
+    constant_get(signal, value) = x;
     return signal;
 }
 
@@ -144,10 +145,10 @@ fa_signal_t fa_signal_lift(fa_string_t n,
                            fa_signal_t a)
 {
     signal_t signal = new_signal(lift_signal);
-    lift_get(signal,name) = n;
-    lift_get(signal,f)    = f;
-    lift_get(signal,fd)   = fd;
-    lift_get(signal,a)    = a;
+    lift_get(signal, name) = n;
+    lift_get(signal, f)    = f;
+    lift_get(signal, fd)   = fd;
+    lift_get(signal, a)    = a;
     return signal;
 }
 
@@ -159,19 +160,19 @@ fa_signal_t fa_signal_lift2(fa_string_t n,
                             fa_signal_t b)
 {
     signal_t signal = new_signal(lift2_signal);
-    lift2_get(signal,name) = n;
-    lift2_get(signal,f)  = f;
-    lift2_get(signal,fd) = fd;
-    lift2_get(signal,a)  = a;
-    lift2_get(signal,b)  = b;
+    lift2_get(signal, name) = n;
+    lift2_get(signal, f)  = f;
+    lift2_get(signal, fd) = fd;
+    lift2_get(signal, a)  = a;
+    lift2_get(signal, b)  = b;
     return signal;
 }
 
 fa_signal_t fa_signal_loop(fa_signal_unary_signal_t f, fa_ptr_t fd)
 {
     signal_t signal = new_signal(lift2_signal);
-    loop_get(signal,f)  = f;
-    loop_get(signal,fd) = fd;
+    loop_get(signal, f)  = f;
+    loop_get(signal, fd) = fd;
     return signal;
 }
 
@@ -179,8 +180,8 @@ fa_signal_t fa_signal_loop(fa_signal_unary_signal_t f, fa_ptr_t fd)
 fa_signal_t fa_signal_delay(int n, fa_signal_t a)
 {
     signal_t signal = new_signal(delay_signal);
-    delay_get(signal,n)  = n;
-    delay_get(signal,a)  = a;
+    delay_get(signal, n)  = n;
+    delay_get(signal, a)  = a;
     return signal;
 }
 
@@ -188,7 +189,7 @@ fa_signal_t fa_signal_delay(int n, fa_signal_t a)
 fa_signal_t fa_signal_input(int c)
 {
     signal_t signal = new_signal(input_signal);
-    input_get(signal,c)  = c;
+    input_get(signal, c)  = c;
     return signal;
 }
 
@@ -196,9 +197,9 @@ fa_signal_t fa_signal_input(int c)
 fa_signal_t fa_signal_output(int n, int c, fa_signal_t a)
 {
     signal_t signal = new_signal(output_signal);
-    output_get(signal,n)  = n;
-    output_get(signal,c)  = c;
-    output_get(signal,a)  = a;
+    output_get(signal, n)  = n;
+    output_get(signal, c)  = c;
+    output_get(signal, a)  = a;
     return signal;
 }
 
@@ -280,15 +281,15 @@ bool fa_signal_is_variable(fa_signal_t a)
 
 
     if (a->tag == lift_signal) {
-        return fa_signal_is_variable(lift_get(a,a));
+        return fa_signal_is_variable(lift_get(a, a));
     }
 
     if (a->tag == lift2_signal) {
-        return fa_signal_is_variable(lift2_get(a,a)) && fa_signal_is_variable(lift2_get(a,b));
+        return fa_signal_is_variable(lift2_get(a, a)) && fa_signal_is_variable(lift2_get(a, b));
     }
 
     if (a->tag == output_signal) {
-        return fa_signal_is_variable(output_get(a,a));
+        return fa_signal_is_variable(output_get(a, a));
     }
 
     assert(false);
@@ -370,32 +371,34 @@ struct part {
     int o, d;
 };
 void init_part(struct part *p)
-{   
+{
     p->o = 0;
-    p->d = 1; 
+    p->d = 1;
 }
-void run_part(struct part *p, int* r, struct part *p2)
-{   
+void run_part(struct part *p, int *r, struct part *p2)
+{
     r = 0;
     p2->o = p->o + p->d;
-    p2->d = p->d; 
+    p2->d = p->d;
 }
 void split_part(struct part *p, struct part *p2, struct part *p3)
 {
     p2->o = p->o;
-    p2->o = p->d*2;
+    p2->o = p->d * 2;
     p3->o = p->d;
-    p3->o = p->d*2;
+    p3->o = p->d * 2;
 }
 list_t drun_part_all(struct part *p, int n)
-{       
+{
     list_t list = empty();
     int r;
-    while (n > 0) {   
-        run_part (p, &r, p);
+
+    while (n > 0) {
+        run_part(p, &r, p);
         list = fa_list_dcons(i32(r), list);
         n--;
-    }                     
+    }
+
     return fa_list_reverse(list);
 }
 
@@ -484,33 +487,33 @@ double step(signal_t signal, state_t state)
         return state_random(state);
 
     case constant_signal:
-        return constant_get(signal,value);
+        return constant_get(signal, value);
 
     case lift_signal: {
-        d2d_t    f = lift_get(signal,f);
-        signal_t a = lift_get(signal,a);
+        d2d_t    f = lift_get(signal, f);
+        signal_t a = lift_get(signal, a);
         double xa = step(a, state);
         return f(NULL, xa);
     }
 
     case lift2_signal: {
-        dd2d_t   f = lift2_get(signal,f);
-        signal_t a = lift2_get(signal,a);
-        signal_t b = lift2_get(signal,b);
+        dd2d_t   f = lift2_get(signal, f);
+        signal_t a = lift2_get(signal, a);
+        signal_t b = lift2_get(signal, b);
         double xa = step(a, state);
         double xb = step(b, state);
         return f(NULL, xa, xb);
     }
 
     case input_signal: {
-        int c = input_get(signal,c);
+        int c = input_get(signal, c);
         return read_samp(c, state);
     }
 
     case output_signal: {
-        int n = output_get(signal,n);
-        int c = output_get(signal,c);
-        signal_t a = output_get(signal,a);
+        int n = output_get(signal, n);
+        int c = output_get(signal, c);
+        signal_t a = output_get(signal, a);
 
         double xa = step(a, state);
         write_samp(n, c, xa, state);
