@@ -1,7 +1,7 @@
 
 /*
     faudio
-    
+
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
 
@@ -86,7 +86,7 @@ fa_graph_t fa_graph_empty()
     @param graph    The graph.
  */
 fa_graph_t fa_graph_insert(fa_graph_node_t node,
-                             fa_graph_t graph)
+                           fa_graph_t graph)
 {
     set_t nodes = graph->nodes;
     map_t edges = graph->edges;
@@ -98,7 +98,7 @@ fa_graph_t fa_graph_insert(fa_graph_node_t node,
     @param graph    The graph.
  */
 fa_graph_t fa_graph_remove(fa_graph_node_t node,
-                             fa_graph_t graph)
+                           fa_graph_t graph)
 {
     assert(false && "Not implemented");
     // set_t nodes = graph->nodes;
@@ -133,9 +133,9 @@ void fa_graph_destroy(fa_graph_t graph)
     @param graph    The graph.
  */
 fa_graph_t fa_graph_connect(fa_graph_node_t node1,
-                              fa_graph_node_t node2,
-                              fa_graph_edge_t label,
-                              fa_graph_t graph)
+                            fa_graph_node_t node2,
+                            fa_graph_edge_t label,
+                            fa_graph_t graph)
 {
     set_t nodes = graph->nodes;
     map_t edges = graph->edges;
@@ -154,8 +154,8 @@ fa_graph_t fa_graph_connect(fa_graph_node_t node1,
     @param graph    The graph.
  */
 fa_graph_t fa_graph_disconnect(fa_graph_node_t node1,
-                                 fa_graph_node_t node2,
-                                 fa_graph_t graph)
+                               fa_graph_node_t node2,
+                               fa_graph_t graph)
 {
     set_t nodes = graph->nodes;
     map_t edges = graph->edges;

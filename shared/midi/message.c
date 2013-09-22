@@ -1,7 +1,7 @@
 
 /*
     faudio
-    
+
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
 
@@ -46,8 +46,8 @@ void delete_midi_message(fa_midi_message_t midi)
 // --------------------------------------------------------------------------------
 
 fa_midi_message_t fa_midi_message_create_simple(status_t status,
-                                                  data_t data1,
-                                                  data_t data2)
+                                                data_t data1,
+                                                data_t data2)
 {
     assert(status != 0xf0 && status != 0xf7);
 

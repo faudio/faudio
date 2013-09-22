@@ -1,7 +1,7 @@
 
 /*
     faudio
-    
+
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
 
@@ -619,7 +619,9 @@ IMPLEMENT_WRAPPER(double);
 fa_ptr_t fa_interface(fa_id_t type, fa_ptr_t pointer)
 {
     assert(pointer && "The null pointer have no interfaces");
-    struct fa_impl_disp { fa_impl_t impl; };
+    struct fa_impl_disp {
+        fa_impl_t impl;
+    };
 
     switch (fa_type(pointer)) {
     case 7:

@@ -15,6 +15,7 @@ void plot_file(string_t path)
         fa_error_log("Could not plot file!", (error_t) res);
         return;
     }
+
     buffer_t buf = fa_pair_second(res);
     fa_plot_buffer_double(buf, NULL, NULL);
     fa_destroy(buf);

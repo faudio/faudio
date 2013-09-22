@@ -1,7 +1,7 @@
 
 /*
     faudio
-    
+
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
 
@@ -88,8 +88,8 @@ PLOTTER(double);
     32-bit floating point data.
  */
 void fa_plot_buffer_float(fa_buffer_t  buffer,
-                           fa_nullary_t cont,
-                           fa_ptr_t     data)
+                          fa_nullary_t cont,
+                          fa_ptr_t     data)
 {
     fa_plot_continous(plot_float, buffer, cont, data);
 }
@@ -98,8 +98,8 @@ void fa_plot_buffer_float(fa_buffer_t  buffer,
     64-bit floating point data.
  */
 void fa_plot_buffer_double(fa_buffer_t      buffer,
-                            fa_nullary_t     cont,
-                            fa_ptr_t         data)
+                           fa_nullary_t     cont,
+                           fa_ptr_t         data)
 {
     fa_plot_continous(plot_double, buffer, cont, data);
 }

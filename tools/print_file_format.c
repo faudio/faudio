@@ -17,7 +17,7 @@ void read_and_print(string_t path)
     } else {
         type_t   type;
         buffer_t buffer;
-        fa_pair_decons((void**) &type, (void**) &buffer, res);
+        fa_pair_decons((void **) &type, (void **) &buffer, res);
 
         fa_print("The type is: %s\n", type);
         fa_print("The size is: %s\n", i64(fa_buffer_size(buffer)));

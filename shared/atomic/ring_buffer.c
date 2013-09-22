@@ -70,7 +70,7 @@ fa_atomic_ring_buffer_copy(fa_atomic_ring_buffer_t buffer)
  */
 fa_atomic_ring_buffer_t
 fa_atomic_ring_buffer_resize(size_t  size,
-                              fa_atomic_ring_buffer_t buffer)
+                             fa_atomic_ring_buffer_t buffer)
 {
     assert(false && "Not implemented");
 }
@@ -80,7 +80,7 @@ fa_atomic_ring_buffer_resize(size_t  size,
         O(n)
  */
 void fa_atomic_ring_buffer_swap(fa_atomic_ring_buffer_t buffer,
-                                 fa_atomic_ring_buffer_t buffer2)
+                                fa_atomic_ring_buffer_t buffer2)
 {
     assert(false && "Not implemented");
 }
@@ -117,7 +117,7 @@ uint8_t fa_atomic_ring_buffer_read(fa_atomic_ring_buffer_t buffer)
         O(n)
  */
 bool fa_atomic_ring_buffer_write(fa_atomic_ring_buffer_t buffer,
-                                  uint8_t value)
+                                 uint8_t value)
 {
     assert(false && "Not implemented");
 }

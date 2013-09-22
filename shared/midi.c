@@ -1,7 +1,7 @@
 
 /*
     faudio
-    
+
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
 
@@ -243,9 +243,9 @@ void fa_midi_end_session(session_t session)
 }
 
 void fa_midi_with_session(session_callback_t    session_callback,
-                           fa_ptr_t         session_data,
-                           error_callback_t      error_callback,
-                           fa_ptr_t         error_data)
+                          fa_ptr_t         session_data,
+                          error_callback_t      error_callback,
+                          fa_ptr_t         error_data)
 {
     session_t session = fa_midi_begin_session();
 
@@ -378,10 +378,10 @@ void fa_midi_close_stream(stream_t stream)
 
 
 void fa_midi_with_stream(device_t           device,
-                          stream_callback_t  stream_callback,
-                          fa_ptr_t      stream_data,
-                          error_callback_t   error_callback,
-                          fa_ptr_t      error_data)
+                         stream_callback_t  stream_callback,
+                         fa_ptr_t      stream_data,
+                         error_callback_t   error_callback,
+                         fa_ptr_t      error_data)
 {
     stream_t stream = fa_midi_open_stream(device);
 
@@ -607,21 +607,21 @@ void fa_fa_log_error_from(fa_string_t msg, fa_string_t origin);
 error_t midi_device_error(string_t msg)
 {
     return fa_error_create_simple(error,
-                                   msg,
-                                   string("Doremir.Device.Midi"));
+                                  msg,
+                                  string("Doremir.Device.Midi"));
 }
 
 error_t midi_device_error_with(string_t msg, int code)
 {
     return fa_error_create_simple(error,
-                                   string_dappend(msg, format_integral(" (error code %d)", code)),
-                                   string("Doremir.Device.Midi"));
+                                  string_dappend(msg, format_integral(" (error code %d)", code)),
+                                  string("Doremir.Device.Midi"));
 }
 error_t native_error(string_t msg, int code)
 {
     return fa_error_create_simple(error,
-                                   string_dappend(msg, string((char *) Pm_GetErrorText(code))),
-                                   string("Doremir.Device.Midi"));
+                                  string_dappend(msg, string((char *) Pm_GetErrorText(code))),
+                                  string("Doremir.Device.Midi"));
 }
 
 

@@ -1,7 +1,7 @@
 
 /*
     faudio
-    
+
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
 
@@ -155,6 +155,7 @@ inline static int gcd(int x, int y)
         y = x % y;
         x = t;
     }
+
     return x;
 }
 
@@ -195,8 +196,8 @@ fa_ratio_t fa_ratio_absolute(fa_ratio_t x)
 }
 
 void fa_ratio_to_mixed(fa_ratio_t x,
-                        fa_ratio_num_t *n,
-                        fa_ratio_t     *y)
+                       fa_ratio_num_t *n,
+                       fa_ratio_t     *y)
 {
     num_t   a = x->num;
     denom_t b = x->denom;

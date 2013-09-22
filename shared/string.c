@@ -1,7 +1,7 @@
 
 /*
     faudio
-    
+
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
 
@@ -99,7 +99,7 @@ fa_string_t fa_string_copy(fa_string_t str)
 }
 
 fa_string_t fa_string_append(fa_string_t str1,
-                               fa_string_t str2)
+                             fa_string_t str2)
 {
     string_t cs = new_string(str1->size + str2->size, NULL);
     cs->data = malloc(cs->size * char_size_k);
@@ -111,7 +111,7 @@ fa_string_t fa_string_append(fa_string_t str1,
 }
 
 fa_string_t fa_string_dappend(fa_string_t str1,
-                                fa_string_t str2)
+                              fa_string_t str2)
 {
     size_t oldSize = str1->size;
 
@@ -140,6 +140,7 @@ uint16_t fa_string_char_at(int pos, fa_string_t str)
     if (pos < 0 || pos >= str->size) {
         assert(false && "Character out of range");
     }
+
     return str->data[pos];
 }
 

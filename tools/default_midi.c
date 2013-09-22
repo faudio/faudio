@@ -15,12 +15,12 @@
 fa_midi_session_t print_midi_devices(fa_ptr_t _, midi_session_t session)
 {
     fa_print("Input:          %s\n", fa_string_to_string(
-                  fa_midi_name(
-                      fa_midi_default_input(session))));
+                 fa_midi_name(
+                     fa_midi_default_input(session))));
 
     fa_print("Output:         %s\n", fa_string_to_string(
-                  fa_midi_name(
-                      fa_midi_default_output(session))));
+                 fa_midi_name(
+                     fa_midi_default_output(session))));
 
     fa_print_ln(string(""));
 

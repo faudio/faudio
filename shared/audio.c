@@ -1,7 +1,7 @@
 
 /*
     faudio
-    
+
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
 
@@ -490,12 +490,12 @@ void fa_audio_close_stream(stream_t stream)
 }
 
 void fa_audio_with_stream(device_t            input,
-                           ptr_t         processor,
-                           device_t            output,
-                           stream_callback_t   stream_callback,
-                           ptr_t               stream_data,
-                           error_callback_t    error_callback,
-                           ptr_t               error_data)
+                          ptr_t         processor,
+                          device_t            output,
+                          stream_callback_t   stream_callback,
+                          ptr_t               stream_data,
+                          error_callback_t    error_callback,
+                          ptr_t               error_data)
 {
     stream_t stream = fa_audio_open_stream(input, processor, output);
 
@@ -806,15 +806,15 @@ void fa_fa_log_error_from(fa_string_t msg, fa_string_t origin);
 error_t audio_device_error(string_t msg)
 {
     return fa_error_create_simple(error,
-                                   msg,
-                                   string("Doremir.Device.Audio"));
+                                  msg,
+                                  string("Doremir.Device.Audio"));
 }
 
 error_t audio_device_error_with(string_t msg, int code)
 {
     return fa_error_create_simple(error,
-                                   string_dappend(msg, format_integral(" (error code %d)", code)),
-                                   string("Doremir.Device.Audio"));
+                                  string_dappend(msg, format_integral(" (error code %d)", code)),
+                                  string("Doremir.Device.Audio"));
 }
 
 void audio_device_fatal(string_t msg, int code)

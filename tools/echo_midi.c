@@ -6,7 +6,7 @@ midi_device_t find_device(midi_session_t session, string_t pattern)
 {
     fa_for_each(device, fa_midi_all(session)) {
         if (fa_string_matches(pattern,
-                               fa_midi_name(device))) {
+                              fa_midi_name(device))) {
             return device;
         }
     }

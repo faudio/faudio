@@ -1,7 +1,7 @@
 
 /*
     faudio
-    
+
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
 
@@ -201,12 +201,12 @@ fa_signal_t fa_signal_line(double x)
 
 
 typedef struct {
-    double* inputs;
-    double* buses;
-    
+    double *inputs;
+    double *buses;
+
     int count;
     double rate;
-    
+
 }  _state_t;
 typedef _state_t *state_t;
 
@@ -214,91 +214,104 @@ typedef _state_t *state_t;
 double  kRate       = 44100;
 int     kMaxInputs  = 1024;
 int     kMaxBuses   = 1024;
-int     kMaxDelay   = 44100*60*5;
+int     kMaxDelay   = 44100 * 60 * 5;
 
 state_t new_state()
-{                 
-    srand (time(NULL)); // TODO
+{
+    srand(time(NULL));  // TODO
     state_t state = fa_malloc(sizeof(_state_t));
 
     state->inputs = fa_malloc(kMaxInputs);
-    state->buses  = fa_malloc(kMaxBuses*kMaxDelay);
+    state->buses  = fa_malloc(kMaxBuses * kMaxDelay);
     memset(state->inputs, 0, kMaxInputs);
-    memset(state->buses, 0,  kMaxBuses*kMaxDelay);
+    memset(state->buses, 0,  kMaxBuses * kMaxDelay);
 
     state->count = 0;
     state->rate  = kRate;
 
-    return state; 
+    return state;
 }
-double state_random(state_t state) { 
-    return  ((double)rand()/(double)RAND_MAX) * 2 - 1;
+double state_random(state_t state)
+{
+    return ((double)rand() / (double)RAND_MAX) * 2 - 1;
 }
-double state_time(state_t state) { 
-    return state->count / state->rate; 
+double state_time(state_t state)
+{
+    return state->count / state->rate;
 }
-double read_samp(int c, state_t state) { 
+double read_samp(int c, state_t state)
+{
     assert(false && "read_samp");
 }
-double write_samp(int n, int c, double x, state_t state) { 
+double write_samp(int n, int c, double x, state_t state)
+{
     assert(false && "write_samp");
 }
-void inc_state(state_t state) { 
+void inc_state(state_t state)
+{
     state->count++;
 }
 
 double step(signal_t signal, state_t state)
 {
-    switch(signal->tag) {
-        case time_signal:
-            return state_time(state);
-        case random_signal:
-            return state_random(state);
-        case constant_signal:
-            return signal->fields.constant.value;
-        case lift_signal: {
-            d2d_t    f = signal->fields.lift.f;
-            signal_t a = signal->fields.lift.a;
-            double xa = step(a, state);
-            return f(NULL, xa);
-        }
-        case lift2_signal: {
-            dd2d_t   f = signal->fields.lift2.f;
-            signal_t a = signal->fields.lift2.a;
-            signal_t b = signal->fields.lift2.b;
-            double xa = step(a, state);
-            double xb = step(b, state);
-            return f(NULL, xa, xb);
-        }
-        case input_signal: {
-            int c = signal->fields.input.c;
-            return read_samp(c, state);
-        }
-        case output_signal: {
-            int n = signal->fields.output.n;
-            int c = signal->fields.output.c;
-            signal_t a = signal->fields.output.a;
-            
-            double xa = step(a, state);
-            write_samp(n, c, xa, state);
-            return xa;
-        }
-        default:
-            assert(false && "step: Strange signal");
-    }       
+    switch (signal->tag) {
+    case time_signal:
+        return state_time(state);
+
+    case random_signal:
+        return state_random(state);
+
+    case constant_signal:
+        return signal->fields.constant.value;
+
+    case lift_signal: {
+        d2d_t    f = signal->fields.lift.f;
+        signal_t a = signal->fields.lift.a;
+        double xa = step(a, state);
+        return f(NULL, xa);
+    }
+
+    case lift2_signal: {
+        dd2d_t   f = signal->fields.lift2.f;
+        signal_t a = signal->fields.lift2.a;
+        signal_t b = signal->fields.lift2.b;
+        double xa = step(a, state);
+        double xb = step(b, state);
+        return f(NULL, xa, xb);
+    }
+
+    case input_signal: {
+        int c = signal->fields.input.c;
+        return read_samp(c, state);
+    }
+
+    case output_signal: {
+        int n = signal->fields.output.n;
+        int c = signal->fields.output.c;
+        signal_t a = signal->fields.output.a;
+
+        double xa = step(a, state);
+        write_samp(n, c, xa, state);
+        return xa;
+    }
+
+    default:
+        assert(false && "step: Strange signal");
+    }
+
     assert(false);
 }
 
 // No allocation in loop
 // Use ringbuffers for transfer
 
-void fa_signal_run(int n, signal_t a, double* output)
+void fa_signal_run(int n, signal_t a, double *output)
 {
     state_t state = new_state();
     // TODO optimize
     // TODO simplify
     // TODO verify
-                                   
+
     // pair_t p = pair(i32(1),i32(2));
     for (int i = 0; i < n; ++ i) {
         // p = fa_pair_swap(p);
@@ -313,7 +326,7 @@ void fa_signal_print(int n, signal_t a)
     // TODO optimize
     // TODO simplify
     // TODO verify
-    
+
     for (int i = 0; i < n; ++ i) {
         double x = step(a, state);
         printf("%3d: %4f\n", i, x);
@@ -329,8 +342,8 @@ void fa_signal_print(int n, signal_t a)
 //                                fa_signal_t)
 // {
 // }
-// 
-// 
+//
+//
 // fa_signal_t fa_signal_biquad(fa_signal_t,
 //                              fa_signal_t,
 //                              fa_signal_t,
@@ -338,7 +351,7 @@ void fa_signal_print(int n, signal_t a)
 //                              fa_signal_t,
 //                              fa_signal_t)
 // {
-// }    
+// }
 
 
 

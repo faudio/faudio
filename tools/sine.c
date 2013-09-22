@@ -8,14 +8,14 @@
  */
 typedef fa_signal_t signal_t;
 
-#define N (44100*60*10)
+#define N (44100*60*60)
 
 void helper_function()
 {
     signal_t a = fa_signal_random();
-    
-    double* xs = fa_malloc(8*N);
-    fa_signal_run(N,a,xs);
+
+    double *xs = fa_malloc(8 * N);
+    fa_signal_run(N, a, xs);
 
     // fa_signal_print(N,a);
 }

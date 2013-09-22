@@ -1,7 +1,7 @@
 
 /*
     faudio
-    
+
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
 
@@ -14,7 +14,7 @@ typedef fa_type_simple_t simple_t;
 
 struct _fa_type_t {
 
-    impl_t                  impl;           
+    impl_t                  impl;
 
     enum {
         simple_type,

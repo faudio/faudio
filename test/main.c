@@ -173,9 +173,9 @@ void test_show()
     fa_dprint("%s\n", list(i8(1)));
     fa_dprint("%s\n", list(i8(1), i8(2), list(i8(1), i8(2), fb(true))));
     fa_dprint("%s\n", list(
-                   pair(string("hans"), string("höglund")),
-                   pair(string("lisa"), string("streich")),
-                   pair(string("mats"), string("erlandsson"))));
+                  pair(string("hans"), string("höglund")),
+                  pair(string("lisa"), string("streich")),
+                  pair(string("mats"), string("erlandsson"))));
 }
 
 
@@ -619,9 +619,9 @@ void test_for_each()
     printf("\n");
 
     fa_with(map, map(
-                 string("foo"), i16(1),
-                 string("bar"), list(i16(1), i16(2), i16(3))),
-             fa_destroy(map)) {
+                string("foo"), i16(1),
+                string("bar"), list(i16(1), i16(2), i16(3))),
+            fa_destroy(map)) {
         fa_for_each(x, fa_map_to_list(map)) {
             fa_print(">    %s\n", x);
         }
@@ -1172,18 +1172,18 @@ void test_json(string_t path)
     fa_puts(json2);
 
     fa_puts(fa_string_to_json(
-                 pair(i32(1), i32(2))));
+                pair(i32(1), i32(2))));
 
     fa_puts(fa_string_to_json(
-                 list(pair(i32(1), i32(2)), pair(i32(3), i32(4)))));
+                list(pair(i32(1), i32(2)), pair(i32(3), i32(4)))));
 
     fa_puts(fa_string_to_json(
-                 set(pair(i32(1), i32(2)), pair(i32(1), i32(2)))));
+                set(pair(i32(1), i32(2)), pair(i32(1), i32(2)))));
 
     fa_puts(fa_string_to_json(
-                 map(
-                     string("foo"), i32(1),
-                     string("bar"), list(i32(1), i32(2), i32(3)))));
+                map(
+                    string("foo"), i32(1),
+                    string("bar"), list(i32(1), i32(2), i32(3)))));
 
 }
 
@@ -1462,10 +1462,10 @@ void test_log()
         fa_fa_log_error(string("We have a problem"));
 
         fa_fa_log(NULL,
-                    fa_error_create_simple(
-                        error,
-                        string("We have a problem"),
-                        string("Doremir.FooBar")));
+                  fa_error_create_simple(
+                      error,
+                      string("We have a problem"),
+                      string("Doremir.FooBar")));
         fa_thread_sleep(50);
     }
 
@@ -1797,11 +1797,11 @@ cleanup:
 // void test_signal()
 // {
 //     test_section("Signals");
-// 
+//
 //     // fa_signal_t s = fa_signal_constant(i16(1));
 //     // fa_signal_t p = fa_signal_constant(i16(10));
 //     // fa_signal_t t = fa_signal_apply(fa_signal_identity(), s);
-// 
+//
 //     // fa_signal_t add  = fa_signal_add();
 //     // fa_signal_t max  = fa_signal_max();
 //     fa_signal_t time = fa_signal_time();
@@ -1809,12 +1809,12 @@ cleanup:
 //     // fa_signal_t id   = fa_signal_identity();
 //     // fa_signal_t succ = fa_signal_lift(signal_succ, NULL);
 //     // fa_signal_t t    = fa_signal_apply(fa_signal_apply(add, s), s);
-// 
+//
 //     fa_signal_run(
 //         ap2(min, time, constant(seconds(4))),
-// 
+//
 //         print_signal, NULL);
-// }          
+// }
 
 
 void test_version()

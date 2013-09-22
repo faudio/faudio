@@ -1,7 +1,7 @@
 
 /*
     faudio
-    
+
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
 
@@ -361,7 +361,7 @@ static inline list_t dmerge_sort(list_t xs)
     right = dmerge_sort(right);
 
     if (fa_less_than(fa_list_last(left),
-                      fa_list_head(right))) {
+                     fa_list_head(right))) {
         return fa_list_dappend(left, right);
     } else {
         return dmerge(left, right);
@@ -756,12 +756,14 @@ fa_string_t list_show(ptr_t list)
     while (node) {
         result  = string_dappend(result, fa_string_show(node->value));
         node    = node->next;
+
         if (node) {
             result = string_dappend(result, string(","));
         }
     };
 
     result = string_dappend(result, string("]"));
+
     return result;
 }
 
@@ -782,17 +784,17 @@ type_repr_t list_get_type(fa_ptr_t a)
 
 ptr_t list_impl(fa_id_t interface)
 {
-    static fa_equal_t list_equal_impl 
+    static fa_equal_t list_equal_impl
         = { list_equal };
-    static fa_order_t list_order_impl 
+    static fa_order_t list_order_impl
         = { list_less_than, list_greater_than };
-    static fa_string_show_t list_show_impl 
+    static fa_string_show_t list_show_impl
         = { list_show };
-    static fa_copy_t list_copy_impl 
+    static fa_copy_t list_copy_impl
         = { list_copy };
-    static fa_destroy_t list_destroy_impl 
+    static fa_destroy_t list_destroy_impl
         = { list_destroy };
-    static fa_dynamic_t list_dynamic_impl 
+    static fa_dynamic_t list_dynamic_impl
         = { list_get_type };
 
     switch (interface) {

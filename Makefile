@@ -54,7 +54,7 @@ components_clean:
 
 .PHONY: format
 format:
-	astyle -n -r "fa/*.c" "fa/*.d" "fa/*.h" "platform/*.c" "test/*.c" "examples/*.c"
+	astyle -n -r "shared/*.c" "platform/*.c" "test/*.c" "tools/*.c"
 
 .PHONY: doc
 doc: 

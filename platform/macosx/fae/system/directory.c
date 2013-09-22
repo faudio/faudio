@@ -1,7 +1,7 @@
 
 /*
     faudio
-    
+
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
 
@@ -59,7 +59,7 @@ fa_string_t fa_system_directory_read_file(fa_string_t path)
 
 
 void fa_system_directory_write_file(fa_string_t path,
-                                     fa_string_t string)
+                                    fa_string_t string)
 {
     FILE *f = fopen(unstring(path), "w+");
     fprintf(f, "%s", unstring(string));
@@ -67,7 +67,7 @@ void fa_system_directory_write_file(fa_string_t path,
 }
 
 void fa_system_directory_append_file(fa_string_t path,
-                                      fa_string_t string)
+                                     fa_string_t string)
 {
     FILE *f = fopen(unstring(path), "a+");
     fprintf(f, "%s", unstring(string));

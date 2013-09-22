@@ -1,7 +1,7 @@
 
 /*
     faudio
-    
+
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
 
@@ -65,9 +65,9 @@ fa_buffer_t fa_buffer_create(size_t size)
 }
 
 fa_buffer_t fa_buffer_wrap(fa_ptr_t   pointer,
-                             size_t      size,
-                             fa_unary_t destroy_function,
-                             fa_ptr_t   destroy_data)
+                           size_t      size,
+                           fa_unary_t destroy_function,
+                           fa_ptr_t   destroy_data)
 {
     fa_ptr_t buffer_impl(fa_id_t interface);
 
@@ -194,6 +194,7 @@ fa_pair_t fa_buffer_read_audio(fa_string_t path)
             return (pair_t) fa_error_create_simple(
                        error, string(err), string("Doremir.Buffer"));
         }
+
         inform(string_append(string("Reading "), path));
     }
     {
@@ -216,8 +217,8 @@ fa_pair_t fa_buffer_read_audio(fa_string_t path)
 }
 
 void fa_buffer_write_audio(fa_string_t path,
-                            fa_type_t             type,
-                            fa_buffer_t           buffer)
+                           fa_type_t             type,
+                           fa_buffer_t           buffer)
 {
     assert(false && "Not implemented");
 }

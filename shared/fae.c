@@ -1,7 +1,7 @@
 
 /*
     faudio
-    
+
     Copyright (c) DoReMIR Music Research 2012-2013
     All rights reserved.
 
@@ -71,7 +71,7 @@ void fa_fa_initialize()
 
     init_count_g++;
 }
- 
+
 long gBytesAlloc = 0;
 
 void fa_fa_terminate()
@@ -82,8 +82,8 @@ void fa_fa_terminate()
         fa_thread_terminate();
         fa_time_terminate();
 
-        fa_fa_log_info(fa_string_dappend(string("Total bytes allocated: "), 
-            fa_string_show(i32(gBytesAlloc))));
+        fa_fa_log_info(fa_string_dappend(string("Total bytes allocated: "),
+                                         fa_string_show(i32(gBytesAlloc))));
 
         fa_fa_log_info(string("Terminated faudio."));
     } else {
@@ -94,16 +94,16 @@ void fa_fa_terminate()
 // --------------------------------------------------------------------------------
 
 
-void* fa_malloc (size_t size)
+void *fa_malloc(size_t size)
 {
     gBytesAlloc += size;
     return malloc(size);
 }
-void* fa_realloc (void* ptr, size_t size)
+void *fa_realloc(void *ptr, size_t size)
 {
     return realloc(ptr, size);
 }
-void fa_free (void* ptr)
+void fa_free(void *ptr)
 {
     free(ptr);
 }
@@ -123,9 +123,9 @@ static inline void stdlog(ptr_t data, fa_time_system_t t, fa_error_t e)
         strftime(msg, 50, iso8601_k "  ", tm);
     }
     fa_with(str, fa_error_format(color, e),
-             fa_destroy(str)) {
+            fa_destroy(str)) {
         fa_with(cstr, fa_string_to_utf8(str),
-                 free(cstr)) {
+                free(cstr)) {
             strncat(msg, cstr, kMaxLogSize - 2);
             strncat(msg, "\n", 1);
         }
