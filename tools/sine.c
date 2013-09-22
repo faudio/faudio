@@ -23,15 +23,11 @@ typedef fa_signal_t signal_t;
 #define delay_      fa_signal_delay
 #define loop_       fa_signal_loop
 
-signal_t iir2(ptr_t _, signal_t a)
-{                          
-    return add_(a, const_(1));
-}
 
 
-signal_t iir(ptr_t _, signal_t a)
-{                          
-    return add_(a, loop_(iir2, NULL));
+signal_t fir(ptr_t a, signal_t rec)
+{
+    return add_((signal_t) a, mul_(rec, const_(0.9999)));
 }
 
 void helper_function()
@@ -53,8 +49,6 @@ void helper_function()
     // signal_t r = fa_signal_input(1);
     // signal_t r = fa_signal_output(1,0,time_());
 
-    signal_t r = loop_(iir, NULL);
-
     // double freq = 110;
     // double amp = 1;
     // signal_t r = const_(0);
@@ -66,19 +60,17 @@ void helper_function()
     // }
     // 
     // r = mul_(r, const_(0.01));
-
+    
+    signal_t r = loop_(fir, imp_());
 
 
     // double *xs = fa_malloc(8 * N);
     // fa_signal_run(N, r, xs);
 
     signal_t r2 = fa_signal_simplify(r);
-    printf("%p\n", r2);
-
     fa_print_ln(fa_signal_draw_tree(fa_signal_to_tree(r2)));
-    exit(0);
 
-    ptr_t res = fa_signal_run_file(N, r, string("test.wav"));
+    ptr_t res = fa_signal_run_file(N, r2, string("test.wav"));
 
     if (fa_check(res)) {
         fa_error_log(NULL, res);
