@@ -170,7 +170,7 @@ fa_signal_t fa_signal_lift2(fa_string_t n,
 
 fa_signal_t fa_signal_loop(fa_signal_unary_signal_t f, fa_ptr_t fd)
 {
-    signal_t signal = new_signal(lift2_signal);
+    signal_t signal = new_signal(loop_signal);
     loop_get(signal, f)  = f;
     loop_get(signal, fd) = fd;
     return signal;
@@ -233,7 +233,7 @@ signal_t copy_lift2(signal_t signal2)
 
 signal_t copy_loop(signal_t signal2)
 {
-    signal_t signal = new_signal(lift2_signal);
+    signal_t signal = new_signal(loop_signal);
     loop_get(signal, f)  = loop_get(signal2, f);
     loop_get(signal, fd) = loop_get(signal2, fd);
     return signal;
@@ -355,11 +355,11 @@ fa_pair_t   fa_signal_to_tree(fa_signal_t signal)
                     ));
 
     case input_signal:
-        return pair(string("input "), empty());
+        return pair(string_dappend(string("input "), fa_string_show(i32(input_get(signal, c)))), empty());
 
     case output_signal:
-        return pair(string("output "), list(
-                        fa_signal_to_tree(lift_get(signal, a))
+        return pair(string_dappend(string("output "), fa_string_show(i32(output_get(signal, c)))), list(
+                        fa_signal_to_tree(output_get(signal, a))
                     ));
 
     default:
@@ -368,32 +368,31 @@ fa_pair_t   fa_signal_to_tree(fa_signal_t signal)
 }
 
 
-string_t draw_tree(string_t indent, string_t str, pair_t p, bool is_last)
+string_t draw_tree(pair_t p, string_t indent, string_t str, bool is_last)
 {
     str = string_append(str, indent);
 
     if (is_last) {
-        str         = string_dappend(str, string("\\-"));
-        indent      = string_append(indent, string("  "));
+        str         = string_dappend(str, string("`- "));
+        indent      = string_append(indent, string("   "));
     } else {
-        str         = string_dappend(str, string("|-"));
-        indent      = string_append(indent, string("| "));
+        str         = string_dappend(str, string("+- "));
+        indent      = string_append(indent, string("|  "));
     }
-
     str = string_dappend(str, fa_string_to_string(fa_pair_first(p)));
     str = string_dappend(str, string("\n"));
 
+
     fa_for_each_last(x, fa_pair_second(p), last) {
-        str = draw_tree(indent, str, x, last);
+        str = draw_tree(x, indent, str, last);
     }
     return str;
 }
 
 string_t fa_signal_draw_tree(fa_pair_t p)
 {
-    return draw_tree(string(""), string(""), p, true);
+    return draw_tree(p, string(""), string(""), true);
 }
-
 
 
 
@@ -417,7 +416,7 @@ void init_part(struct part *p)
 }
 void run_part(struct part *p, int *r, struct part *p2)
 {
-    r = 0;
+    *r = p->o;
     p2->o = p->o + p->d;
     p2->d = p->d;
 }
@@ -429,19 +428,42 @@ void split_part(struct part *p, struct part *p2, struct part *p3)
     p3->o = p->d * 2;
 }
 
-
+#define neg(x) ((x + 1)*(-1))
 
 fa_signal_t simp(struct part *p, fa_signal_t signal2)
 {
-    struct part pa;
-    struct part pb;
-
     switch (signal2->tag) {
-    case loop_signal:
-        return fa_copy(signal2); // TODO
 
-    case delay_signal:
-        return fa_copy(signal2); // TODO
+    case loop_signal: {
+        struct part pa;
+        int c;
+        run_part(p, &c, &pa);
+        c = neg(c);
+
+        s2s_t f  = loop_get(signal2, f);
+        ptr_t fd = loop_get(signal2, fd);
+
+        signal_t input = fa_signal_input(c);
+        f(fd, input);
+        signal_t res   = simp(&pa, f(fd, input));
+
+        return fa_signal_output(1, c, res);
+    }
+
+    case delay_signal: {                   
+        struct part pa;
+        int c;
+        run_part(p, &c, &pa);
+        c = neg(c);
+
+        signal_t a  = delay_get(signal2, a);
+        int n       = delay_get(signal2, n);
+
+        signal_t inp = fa_signal_input(c);
+        signal_t outp = fa_signal_output(n,c,simp(&pa, a));
+                                    
+        return fa_signal_former(inp, outp);
+    }
 
     case lift_signal: {
         string_t name   = lift_get(signal2, name);
@@ -452,23 +474,25 @@ fa_signal_t simp(struct part *p, fa_signal_t signal2)
     }
 
     case lift2_signal:       {
-        split_part(p, &pa, &pb);
+        string_t    name    = lift2_get(signal2, name);
+        dd2d_t      f       = lift2_get(signal2, f);
+        ptr_t       fd      = lift2_get(signal2, fd);
+        struct part pa;
+        struct part pb;
 
-        return fa_signal_lift2(
-                   lift2_get(signal2, name),
-                   lift2_get(signal2, f),
-                   lift2_get(signal2, fd),
-                   simp(&pa, lift2_get(signal2, a)), // TODO split the partition
-                   simp(&pb, lift2_get(signal2, b))
-               );
+        split_part(p, &pa, &pb);
+        signal_t a      = simp(&pa, lift2_get(signal2, a));
+        signal_t b      = simp(&pb, lift2_get(signal2, b));
+
+        return fa_signal_lift2(name, f, fd, a, b);
     }
 
-    case output_signal:
-        return fa_signal_output(
-                   output_get(signal2, n),
-                   output_get(signal2, c),
-                   simp(p, output_get(signal2, a))
-               );
+    case output_signal: {
+        int n = output_get(signal2, n);
+        int c = output_get(signal2, c);
+        signal_t a = simp(p, output_get(signal2, a));
+        return fa_signal_output(n, c, a);
+    }
 
     default:
         return fa_copy(signal2);
@@ -609,11 +633,13 @@ void fa_signal_run(int n, signal_t a, double *output)
     // TODO optimize
     // TODO simplify
     // TODO verify
+    signal_t a2 = fa_signal_simplify(a);
+    
 
     // pair_t p = pair(i32(1),i32(2));
     for (int i = 0; i < n; ++ i) {
         // p = fa_pair_swap(p);
-        output[i] = step(a, state);
+        output[i] = step(a2, state);
         inc_state(state);
     }
 }
@@ -624,9 +650,10 @@ void fa_signal_print(int n, signal_t a)
     // TODO optimize
     // TODO simplify
     // TODO verify
+    signal_t a2 = fa_signal_simplify(a);
 
     for (int i = 0; i < n; ++ i) {
-        double x = step(a, state);
+        double x = step(a2, state);
         printf("%3d: %4f\n", i, x);
         inc_state(state);
     }

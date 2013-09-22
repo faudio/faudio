@@ -20,6 +20,19 @@ typedef fa_signal_t signal_t;
 #define const_      fa_signal_constant
 #define imp_        fa_signal_impulse
 #define line_       fa_signal_line
+#define delay_      fa_signal_delay
+#define loop_       fa_signal_loop
+
+signal_t iir2(ptr_t _, signal_t a)
+{                          
+    return add_(a, const_(1));
+}
+
+
+signal_t iir(ptr_t _, signal_t a)
+{                          
+    return add_(a, loop_(iir2, NULL));
+}
 
 void helper_function()
 {
@@ -36,22 +49,34 @@ void helper_function()
     // signal_t r = mul_(sin_(line_(440)), const_(0.5));
     // signal_t r = add_(const_(0.5), const_(0.5));
 
+    // signal_t r = delay_(1, add_(const_(0.5), const_(0.5)));
+    // signal_t r = fa_signal_input(1);
+    // signal_t r = fa_signal_output(1,0,time_());
 
-    double freq = 110;
-    double amp = 1;
-    signal_t r = const_(0);
-    for (int i = 0; i < 10; ++i)
-    {
-        r = add_(r, mul_(sin_(line_(freq)), const_(amp)));
-        freq *= (4.0/3);
-        amp  *= 0.9;
-    }                    
-    r = mul_(r, const_(0.01));
+    signal_t r = loop_(iir, NULL);
+
+    // double freq = 110;
+    // double amp = 1;
+    // signal_t r = const_(0);
+    // 
+    // for (int i = 0; i < 10; ++i) {
+    //     r = add_(r, mul_(sin_(line_(freq)), const_(amp)));
+    //     freq *= (4.0 / 3);
+    //     amp  *= 0.9;
+    // }
+    // 
+    // r = mul_(r, const_(0.01));
 
 
 
     // double *xs = fa_malloc(8 * N);
     // fa_signal_run(N, r, xs);
+
+    signal_t r2 = fa_signal_simplify(r);
+    printf("%p\n", r2);
+
+    fa_print_ln(fa_signal_draw_tree(fa_signal_to_tree(r2)));
+    exit(0);
 
     ptr_t res = fa_signal_run_file(N, r, string("test.wav"));
 
@@ -59,15 +84,9 @@ void helper_function()
         fa_error_log(NULL, res);
         exit(-1);
     }
-           
-    fa_print_ln(fa_signal_draw_tree(fa_signal_to_tree(r)));
-    
-    // fa_signal_print(N,r);
 
-    signal_t r2 = fa_copy(r);
-    
-    fa_destroy(r2);
-    fa_destroy(r);
+
+    // fa_signal_print(N,r);
 }
 
 int main(int argc, char const *argv[])
