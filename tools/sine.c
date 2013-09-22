@@ -8,7 +8,7 @@
  */
 typedef fa_signal_t signal_t;
 
-#define N           (44100*10)
+#define N           (44100*1)
 #define PI          3.1415
 #define TAU         (2 * PI)
 
@@ -60,6 +60,11 @@ void helper_function()
     }
 
     // fa_signal_print(N,r);
+
+    signal_t r2 = fa_copy(r);
+    
+    fa_destroy(r2);
+    fa_destroy(r);
 }
 
 int main(int argc, char const *argv[])

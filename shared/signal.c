@@ -161,10 +161,10 @@ fa_signal_t fa_signal_lift2(fa_string_t n,
 {
     signal_t signal = new_signal(lift2_signal);
     lift2_get(signal, name) = n;
-    lift2_get(signal, f)  = f;
-    lift2_get(signal, fd) = fd;
-    lift2_get(signal, a)  = a;
-    lift2_get(signal, b)  = b;
+    lift2_get(signal, f)    = f;
+    lift2_get(signal, fd)   = fd;
+    lift2_get(signal, a)    = a;
+    lift2_get(signal, b)    = b;
     return signal;
 }
 
@@ -203,59 +203,87 @@ fa_signal_t fa_signal_output(int n, int c, fa_signal_t a)
     return signal;
 }
 
-
-signal_t copy_constant(signal_t signal)
+signal_t copy_constant(signal_t signal2)
 {
-    assert(false && "Not implemented");
+    signal_t signal = new_signal(constant_signal);
+    constant_get(signal, value) = constant_get(signal2, value);
+    return signal;
 }
 
-signal_t copy_identity(signal_t signal)
+signal_t copy_lift(signal_t signal2)
 {
-    assert(false && "Not implemented");
+    signal_t signal = new_signal(lift_signal);
+    lift_get(signal, name) = lift_get(signal2, name);
+    lift_get(signal, f)    = lift_get(signal2, f);
+    lift_get(signal, fd)   = lift_get(signal2, fd);
+    lift_get(signal, a)    = lift_get(signal2, a);
+    return signal;
 }
 
-signal_t copy_lifted(signal_t signal)
+signal_t copy_lift2(signal_t signal2)
 {
-    assert(false && "Not implemented");
+    signal_t signal = new_signal(lift2_signal);
+    lift2_get(signal, name) = lift2_get(signal2, name);
+    lift2_get(signal, f)    = lift2_get(signal2, f);
+    lift2_get(signal, fd)   = lift2_get(signal2, fd);
+    lift2_get(signal, a)    = lift2_get(signal2, a);
+    lift2_get(signal, b)    = lift2_get(signal2, b);
+    return signal;
 }
 
-signal_t copy_time(signal_t signal)
+signal_t copy_loop(signal_t signal2)
 {
-    assert(false && "Not implemented");
+    signal_t signal = new_signal(lift2_signal);
+    loop_get(signal, f)  = loop_get(signal2, f);
+    loop_get(signal, fd) = loop_get(signal2, fd);
+    return signal;
 }
 
-signal_t copy_delay(signal_t signal)
+signal_t copy_delay(signal_t signal2)
 {
-    assert(false && "Not implemented");
+    signal_t signal = new_signal(delay_signal);
+    delay_get(signal, n)  = delay_get(signal2, n);
+    delay_get(signal, a)  = delay_get(signal2, a);
+    return signal;
 }
 
-signal_t copy_read(signal_t signal)
+signal_t copy_input(signal_t signal2)
 {
-    assert(false && "Not implemented");
+    signal_t signal = new_signal(input_signal);
+    input_get(signal, c)  = input_get(signal2, c);
+    return signal;
 }
 
-signal_t copy_write(signal_t signal)
+signal_t copy_output(signal_t signal2)
 {
-    assert(false && "Not implemented");
+    signal_t signal = new_signal(output_signal);
+    output_get(signal, n)  = output_get(signal2, n);
+    output_get(signal, c)  = output_get(signal2, c);
+    output_get(signal, a)  = output_get(signal2, a);
+    return signal;
 }
 
 fa_signal_t fa_signal_copy(fa_signal_t signal)
 {
     match(signal->tag) {
-        against(time_signal)        copy_constant(signal);
-        against(random_signal)      copy_identity(signal);
-        against(constant_signal)    copy_lifted(signal);
-        against(lift_signal)        copy_time(signal);
-        against(lift2_signal)       copy_delay(signal);
-        against(loop_signal)        copy_read(signal);
-        against(delay_signal)       copy_write(signal);
-        against(input_signal)       copy_write(signal);
-        against(output_signal)      copy_write(signal);
+        against(time_signal)        fa_signal_time();
+        against(random_signal)      fa_signal_random();
+        against(constant_signal)    copy_constant(signal);
+        against(lift_signal)        copy_lift(signal);
+        against(lift2_signal)       copy_lift2(signal);
+        against(loop_signal)        copy_loop(signal);
+        against(delay_signal)       copy_delay(signal);
+        against(input_signal)       copy_input(signal);
+        against(output_signal)      copy_output(signal);
         no_default();
     }
 }
 
-
+void fa_signal_destroy(fa_signal_t signal)
+{
+    // TODO
+    delete_signal(signal);
+}
 
 
 
@@ -694,13 +722,32 @@ biquad b0 b1 b2 a1 a2 x = loop $ \y ->
 
 
 
-
 // --------------------------------------------------------------------------------
+
+ptr_t signal_copy(ptr_t a)
+{
+    return fa_signal_copy(a);
+}
+
+void signal_destroy(ptr_t a)
+{
+    return fa_signal_destroy(a);
+}
 
 fa_ptr_t signal_impl(fa_id_t interface)
 {
+    static fa_copy_t signal_copy_impl
+        = { signal_copy };
+    static fa_destroy_t signal_destroy_impl
+        = { signal_destroy };
 
     switch (interface) {
+    case fa_copy_i:
+        return &signal_copy_impl;
+
+    case fa_destroy_i:
+        return &signal_destroy_impl;
+
     default:
         return NULL;
     }
