@@ -14,18 +14,15 @@ module Fa.Signal
     
     type Signal = opaque;
 
-    /** @typedef fa_signal_unary_signal_t
-        Like fa_unary_t, but speficied on signals.
+    /** Like fa_unary_t, but speficied on signals.
     */
     type UnarySignal    = ((Ptr, Signal) -> Signal)*;
 
-    /** @typedef fa_signal_unary_double_t
-        Like fa_unary_t, but speficied on doubles.
+    /** Like fa_unary_t, but speficied on doubles.
     */
     type UnaryDouble    = ((Ptr, Double) -> Double)*;
 
-    /** @typedef fa_signal_binary_double_t
-        Like fa_binary_t, but speficied on doubles.
+    /** Like fa_binary_t, but speficied on doubles.
     */
     type BinaryDouble   = ((Ptr, Double, Double) -> Double)*;
 

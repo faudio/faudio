@@ -23,21 +23,18 @@
 
 typedef struct _fa_signal_t * fa_signal_t;
 
-/** @typedef fa_signal_unary_signal_t
-    Like fa_unary_t, but speficied on signals.
+/** Like fa_unary_t, but speficied on signals.
     
 */
 typedef fa_signal_t (* fa_signal_unary_signal_t)(fa_ptr_t,
                                                  fa_signal_t);
 
-/** @typedef fa_signal_unary_double_t
-    Like fa_unary_t, but speficied on doubles.
+/** Like fa_unary_t, but speficied on doubles.
     
 */
 typedef double (* fa_signal_unary_double_t)(fa_ptr_t, double);
 
-/** @typedef fa_signal_binary_double_t
-    Like fa_binary_t, but speficied on doubles.
+/** Like fa_binary_t, but speficied on doubles.
     
 */
 typedef double (* fa_signal_binary_double_t)(fa_ptr_t,

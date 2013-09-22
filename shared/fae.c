@@ -71,6 +71,8 @@ void fa_fa_initialize()
 
     init_count_g++;
 }
+ 
+long gBytesAlloc = 0;
 
 void fa_fa_terminate()
 {
@@ -79,6 +81,10 @@ void fa_fa_terminate()
         fa_midi_terminate();
         fa_thread_terminate();
         fa_time_terminate();
+
+        fa_fa_log_info(fa_string_dappend(string("Total bytes allocated: "), 
+            fa_string_show(i32(gBytesAlloc))));
+
         fa_fa_log_info(string("Terminated faudio."));
     } else {
         fa_fa_log_warning(string("Could not terminate faudio: inconsistent state."));
@@ -87,12 +93,30 @@ void fa_fa_terminate()
 
 // --------------------------------------------------------------------------------
 
-#define max_log_length_k 3000
+
+void* fa_malloc (size_t size)
+{
+    gBytesAlloc += size;
+    return malloc(size);
+}
+void* fa_realloc (void* ptr, size_t size)
+{
+    return realloc(ptr, size);
+}
+void fa_free (void* ptr)
+{
+    free(ptr);
+}
+
+
+// --------------------------------------------------------------------------------
+
+#define kMaxLogSize 3000
 
 static inline void stdlog(ptr_t data, fa_time_system_t t, fa_error_t e)
 {
     FILE *file = data;
-    char msg[max_log_length_k + 50];
+    char msg[kMaxLogSize + 50];
     bool color = (file == stdout && isatty(fileno(stdout)));
 
     fa_let(tm, localtime((long *) &t)) {
@@ -102,7 +126,7 @@ static inline void stdlog(ptr_t data, fa_time_system_t t, fa_error_t e)
              fa_destroy(str)) {
         fa_with(cstr, fa_string_to_utf8(str),
                  free(cstr)) {
-            strncat(msg, cstr, max_log_length_k - 2);
+            strncat(msg, cstr, kMaxLogSize - 2);
             strncat(msg, "\n", 1);
         }
     }

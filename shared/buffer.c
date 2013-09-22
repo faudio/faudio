@@ -34,7 +34,7 @@ void buffer_fatal(char *msg, int error);
 
 fa_ptr_t default_destroy(fa_ptr_t b, fa_ptr_t _)
 {
-    free(b);
+    fa_free(b);
     return NULL;
 }
 
@@ -46,7 +46,7 @@ fa_buffer_t fa_buffer_create(size_t size)
 
     buffer->impl = &buffer_impl;
     buffer->size = size;
-    buffer->data = malloc(size);
+    buffer->data = fa_malloc(size);
 
     buffer->destroy_function = default_destroy;
     buffer->destroy_data     = NULL;
@@ -94,7 +94,7 @@ fa_buffer_t fa_buffer_resize(size_t size, fa_buffer_t buffer)
     buffer_t copy           = fa_new(buffer);
     copy->impl              = &buffer_impl;
     copy->size              = size;
-    copy->data              = malloc(size);
+    copy->data              = fa_malloc(size);
     copy->destroy_function  = buffer->destroy_function;
     copy->destroy_data      = buffer->destroy_data;
 
