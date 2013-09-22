@@ -10,27 +10,67 @@
 #include <fa/signal.h>
 #include <fa/util.h>
 
-typedef fa_signal_t signal_t;
+typedef fa_signal_t                 signal_t;
+typedef fa_signal_unary_double_t    d2d_t;
+typedef fa_signal_binary_double_t   dd2d_t;
 
 struct _fa_signal_t {
 
     impl_t          impl;       //  Interface dispatcher
 
     enum {
-        constant_signal,
-        identity_signal,
-        lifted_signal,
         time_signal,
+        random_signal,
+        constant_signal,
+        lift_signal,
+        lift2_signal,
+        loop_signal,
         delay_signal,
-        read_signal,
-        write_signal
+        input_signal,
+        output_signal
     }                       tag;
 
     union {
+        struct {} time;
 
+        struct {} random;
 
+        struct {
+            double value;
+        } constant;
+
+        struct {
+            string_t name;
+            fa_signal_unary_double_t f;
+            signal_t a;
+        } lift;
+
+        struct {
+            string_t name;
+            fa_signal_binary_double_t f;
+            signal_t a;
+            signal_t b;
+        } lift2;
+
+        struct {
+            fa_signal_unary_signal_t f;
+        } loop;
+
+        struct {
+            int n;
+            signal_t a;
+        } delay;
+
+        struct {
+            int c;
+        } input;
+
+        struct {
+            int n;
+            int c;
+            signal_t a;
+        } output;
     }                       fields;
-
 };
 
 // --------------------------------------------------------------------------------
@@ -68,10 +108,212 @@ inline static void delete_signal(signal_t signal)
 
 // --------------------------------------------------------------------------------
 
-fa_type_t fa_signal_type_of(fa_signal_t signal)
+
+bool fa_signal_is_variable(fa_signal_t a)
 {
+    assert(false && "Not implemented");
+}
+
+
+bool fa_signal_is_constant(fa_signal_t a)
+{
+    assert(false && "Not implemented");
+}
+
+
+bool fa_signal_are_constant(fa_list_t a)
+{
+    assert(false && "Not implemented");
+}
+
+
+int fa_signal_signal_node_count(fa_signal_t a)
+{
+    assert(false && "Not implemented");
+}
+
+
+int fa_signal_required_inputs(fa_signal_t a)
+{
+    assert(false && "Not implemented");
+}
+
+
+int fa_signal_required_buses(fa_signal_t a)
+{
+    assert(false && "Not implemented");
+}
+
+
+int fa_signal_required_delay(fa_signal_t a)
+{
+    assert(false && "Not implemented");
+}
+
+
+fa_signal_t fa_signal_simplify(fa_signal_t a)
+{
+    assert(false && "Not implemented");
+}
+
+
+fa_signal_t fa_signal_latter(fa_signal_t a, fa_signal_t b)
+{
+    assert(false && "Not implemented");
+}
+
+
+fa_signal_t fa_signal_former(fa_signal_t a, fa_signal_t b)
+{
+    assert(false && "Not implemented");
+}
+
+
+fa_signal_t fa_signal_impulse()
+{
+    assert(false && "Not implemented");
+}
+
+
+fa_signal_t fa_signal_line(double x)
+{
+    assert(false && "Not implemented");
+}
+
+
+
+typedef struct {
+    double* inputs;
+    double* buses;
+    
+    int count;
+    double rate;
+    
+}  _state_t;
+typedef _state_t *state_t;
+
+
+double  kRate       = 44100;
+int     kMaxInputs  = 1024;
+int     kMaxBuses   = 20;
+int     kMaxDelay   = 44100*60*5;
+
+state_t new_state()
+{                 
+    srand (time(NULL)); // TODO
+    state_t state = fa_malloc(sizeof(_state_t));
+
+    state->inputs = fa_malloc(kMaxInputs);
+    state->buses  = fa_malloc(kMaxBuses*kMaxDelay);
+    memset(state->inputs, 0, kMaxInputs);
+    memset(state->buses, 0,  kMaxBuses*kMaxDelay);
+
+    state->count = 0;
+    state->rate  = kRate;
+
+    return state; 
+}
+double state_random(state_t state) { 
+    return rand();
+}
+double state_time(state_t state) { 
+    return state->count / state->rate; 
+}
+double read_samp(int c, state_t state) { 
+    assert(false && "read_samp");
+}
+double write_samp(int n, int c, double x, state_t state) { 
+    assert(false && "write_samp");
+}
+void inc_state(state_t state) { 
+    state->count++;
+}
+
+double step(signal_t signal, state_t state)
+{
+    switch(signal->tag) {
+        case time_signal:
+            return state_time(state);
+        case random_signal:
+            return state_random(state);
+        case constant_signal:
+            return signal->fields.constant.value;
+        case lift_signal: {
+            d2d_t    f = signal->fields.lift.f;
+            signal_t a = signal->fields.lift.a;
+            double xa = step(a, state);
+            return f(NULL, xa);
+        }
+        case lift2_signal: {
+            dd2d_t   f = signal->fields.lift2.f;
+            signal_t a = signal->fields.lift2.a;
+            signal_t b = signal->fields.lift2.b;
+            double xa = step(a, state);
+            double xb = step(b, state);
+            return f(NULL, xa, xb);
+        }
+        case loop_signal:
+            assert(false && "step: No loop");
+        case delay_signal:
+            assert(false && "step: No delay");
+        case input_signal: {
+            int c = signal->fields.input.c;
+            return read_samp(c, state);
+        }
+        case output_signal: {
+            int n = signal->fields.output.n;
+            int c = signal->fields.output.c;
+            signal_t a = signal->fields.output.a;
+            
+            double xa = step(a, state);
+            write_samp(n, c, xa, state);
+            return xa;
+        }
+        default:
+            assert(false && "step: Strange signal");
+            ;
+    }       
     assert(false);
 }
+
+void run(int n, signal_t a, float* output)
+{
+    state_t state = new_state();
+    // TODO optimize
+    // TODO simplify
+    // TODO verify
+    
+    for (int i = 0; i < n; ++ i) {
+        output[i] = step(a, state);
+        inc_state(state);
+    }
+}
+
+
+// fa_signal_t fa_signal_low_pass(fa_signal_t,
+//                                fa_signal_t,
+//                                fa_signal_t,
+//                                fa_signal_t,
+//                                fa_signal_t)
+// {
+// }
+// 
+// 
+// fa_signal_t fa_signal_biquad(fa_signal_t,
+//                              fa_signal_t,
+//                              fa_signal_t,
+//                              fa_signal_t,
+//                              fa_signal_t,
+//                              fa_signal_t)
+// {
+// }    
+
+
+
+
+
+
+
 
 
 signal_t copy_constant(signal_t signal)
@@ -112,13 +354,15 @@ signal_t copy_write(signal_t signal)
 fa_signal_t fa_signal_copy(fa_signal_t signal)
 {
     match(signal->tag) {
-        against(constant_signal)   copy_constant(signal);
-        against(identity_signal)   copy_identity(signal);
-        against(lifted_signal)     copy_lifted(signal);
-        against(time_signal)       copy_time(signal);
-        against(delay_signal)      copy_delay(signal);
-        against(read_signal)       copy_read(signal);
-        against(write_signal)      copy_write(signal);
+        against(time_signal)        copy_constant(signal);
+        against(random_signal)      copy_identity(signal);
+        against(constant_signal)    copy_lifted(signal);
+        against(lift_signal)        copy_time(signal);
+        against(lift2_signal)       copy_delay(signal);
+        against(loop_signal)        copy_read(signal);
+        against(delay_signal)       copy_write(signal);
+        against(input_signal)       copy_write(signal);
+        against(output_signal)      copy_write(signal);
         no_default();
     }
 }

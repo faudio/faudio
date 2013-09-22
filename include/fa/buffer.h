@@ -53,7 +53,7 @@ fa_buffer_t fa_buffer_create(size_t);
 
     @param ptr  Pointer to wrap.
     @param size Number of bytes to wrap.
-    @param destroy_function Function to call upon destruction (nullable).
+    @param destroy_function Function to call upon destruction (optional).
     @param destroy_data Data closed over by the destroy function.
     @note
         O(1)

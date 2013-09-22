@@ -30,8 +30,8 @@ module Fa.Signal
     time        : () -> Signal;
     random      : () -> Signal;
     constant    : Double -> Signal;
-    lift        : ( String -> UnaryDouble, Ptr, Signal)           -> Signal;
-    lift2       : ( String -> BinaryDouble, Ptr, Signal, Signal)  -> Signal;
+    lift        : ( String -> UnaryDouble, Ptr, Signal )          -> Signal;
+    lift2       : ( String -> BinaryDouble, Ptr, Signal, Signal ) -> Signal;
     loop        : ( UnarySignal, Ptr )                            -> Signal;
     delay       : ( Int, Signal )                                 -> Signal;
     input       : ( Int )                                         -> Signal;
