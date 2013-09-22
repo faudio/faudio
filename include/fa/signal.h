@@ -74,6 +74,12 @@ fa_signal_t fa_signal_input(int);
 fa_signal_t fa_signal_output(int, int, fa_signal_t);
 
 
+void fa_signal_run(int, fa_signal_t, double *);
+
+
+void fa_signal_print(int, fa_signal_t);
+
+
 fa_signal_t fa_signal_add(fa_signal_t, fa_signal_t);
 
 

@@ -37,6 +37,9 @@ module Fa.Signal
     input       : ( Int )                                         -> Signal;
     output      : ( Int, Int, Signal )                            -> Signal;
 
+    run : ( Int, Signal, Double* ) -> Void;
+    print : ( Int, Signal ) -> Void;
+
     add                 : (Signal, Signal) -> Signal;
     subtract            : (Signal, Signal) -> Signal;
     multiply            : (Signal, Signal) -> Signal;

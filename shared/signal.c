@@ -108,6 +108,17 @@ inline static void delete_signal(signal_t signal)
 
 // --------------------------------------------------------------------------------
 
+signal_t fa_signal_time()
+{
+    signal_t signal = new_signal(time_signal);
+    return signal;
+}
+
+signal_t fa_signal_random()
+{
+    signal_t signal = new_signal(random_signal);
+    return signal;
+}
 
 bool fa_signal_is_variable(fa_signal_t a)
 {
@@ -271,7 +282,7 @@ double step(signal_t signal, state_t state)
     assert(false);
 }
 
-void run(int n, signal_t a, float* output)
+void fa_signal_run(int n, signal_t a, double* output)
 {
     state_t state = new_state();
     // TODO optimize
@@ -280,6 +291,20 @@ void run(int n, signal_t a, float* output)
     
     for (int i = 0; i < n; ++ i) {
         output[i] = step(a, state);
+        inc_state(state);
+    }
+}
+
+void fa_signal_print(int n, signal_t a)
+{
+    state_t state = new_state();
+    // TODO optimize
+    // TODO simplify
+    // TODO verify
+    
+    for (int i = 0; i < n; ++ i) {
+        double x = step(a, state);
+        printf("%3d: %4f\n", i, x);
         inc_state(state);
     }
 }
