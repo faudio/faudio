@@ -127,6 +127,8 @@ module Fa.Signal
     requiredDelay : Signal -> Int;
     // optimize : Signal -> Signal;
     // optimize1 : Signal -> Signal;
+
+    toTree : Signal -> Pair; // (String,[...])
     simplify : Signal -> Signal;
 
     latter : (Signal, Signal) -> Signal;

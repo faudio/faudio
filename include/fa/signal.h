@@ -139,6 +139,9 @@ int fa_signal_required_buses(fa_signal_t);
 int fa_signal_required_delay(fa_signal_t);
 
 
+fa_pair_t fa_signal_to_tree(fa_signal_t);
+
+
 fa_signal_t fa_signal_simplify(fa_signal_t);
 
 

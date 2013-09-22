@@ -58,7 +58,9 @@ void helper_function()
         fa_error_log(NULL, res);
         exit(-1);
     }
-
+           
+    fa_print_ln(fa_string_to_json(fa_signal_to_tree(r)));
+    
     // fa_signal_print(N,r);
 
     signal_t r2 = fa_copy(r);

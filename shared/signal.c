@@ -361,6 +361,41 @@ int fa_signal_required_delay(fa_signal_t a)
 
 
 
+/*
+    signalTree :: Signal -> Tree String
+    signalTree = go . simplify
+        where
+            go Time = Node "time" []
+            go Random = Node "random" []
+            go (Constant x) = Node (show x) []
+            go (Lift n _ a) = Node n [signalTree a]
+            go (Lift2 n _ a b) = Node n [signalTree a, signalTree b]
+            go (Input c) = Node ("input " ++ show c) []
+            go (Output n c a) = Node ("output " ++ show c ++ "[-"++show n++"]") [signalTree a]
+*/
+fa_pair_t 	fa_signal_to_tree(fa_signal_t signal)
+{
+    switch(signal->tag) {
+        case time_signal:           return pair(string("time"), empty());
+        case random_signal:         return pair(string("random"), empty());
+        case constant_signal:       return pair(fa_string_to_string(f64(constant_get(signal,value))), empty());
+        case lift_signal:           return pair(lift_get(signal,name), list(
+            fa_signal_to_tree(lift_get(signal,a))
+        ));
+        case lift2_signal:          return pair(lift_get(signal,name), list(
+            fa_signal_to_tree(lift2_get(signal,a)),
+            fa_signal_to_tree(lift2_get(signal,b))
+        ));
+        case input_signal:          return pair(string("input "), empty());
+        case output_signal:         return pair(string("output "), list(
+            fa_signal_to_tree(lift_get(signal,a))
+        ));
+        default:                    assert(false);
+    }
+}
+
+
+
 
 
 
@@ -396,33 +431,39 @@ void split_part(struct part *p, struct part *p2, struct part *p3)
     p3->o = p->d * 2;
 }
 
-
 fa_signal_t fa_signal_simplify(fa_signal_t signal2)
 {
-    match(signal2->tag) {
-        against(loop_signal)        fa_copy(signal2);
-        against(delay_signal)       fa_copy(signal2);
+    assert(false);
+}
+
+
+fa_signal_t simp(fa_signal_t signal2)
+{
+    switch (signal2->tag) {
+        case loop_signal:        return fa_copy(signal2);
+        case delay_signal:       return fa_copy(signal2);
         
-        // against(lift_signal)        fa_copy(fa_signal_lift(
-        //     lift_get(signal2, name),
-        //     lift_get(signal2, f),
-        //     lift_get(signal2, fd),
-        //     lift_get(signal2, a)
-        //     ));
-        // against(lift2_signal)       fa_copy(
-        //     lift2_get(signal2, name),
-        //     lift2_get(signal2, f),
-        //     lift2_get(signal2, fd),
-        //     lift2_get(signal2, a),
-        //     lift2_get(signal2, b)
-        //     );
-        // against(output_signal)      fa_copy(
-        //     output_get(signal2, n),
-        //     output_get(signal2, c),
-        //     output_get(signal2, a)
-        //     );
+        case lift_signal: {
+            string_t name   = lift_get(signal2, name);
+            d2d_t f         = lift_get(signal2, f);
+            ptr_t fd        = lift_get(signal2, fd);
+            signal_t a      = simp(lift_get(signal2, a));
+            return fa_signal_lift(name, f, fd, a);
+        }
+        case lift2_signal:       return fa_signal_lift2(
+            lift2_get(signal2, name),
+            lift2_get(signal2, f),
+            lift2_get(signal2, fd),
+            simp(lift2_get(signal2, a)), // TODO split the partition
+            simp(lift2_get(signal2, b))
+            );
+        case output_signal:      return fa_signal_output(
+            output_get(signal2, n),
+            output_get(signal2, c),
+            simp(output_get(signal2, a))
+            );
         
-        default(fa_copy(signal2));
+        default: return fa_copy(signal2);
     }
 }
 
