@@ -191,8 +191,7 @@ fa_pair_t fa_buffer_read_audio(fa_string_t path)
         if (sf_error(file)) {
             char err[100];
             snprintf(err, 100, "Could not read audio file '%s'", cpath);
-            return (pair_t) fa_error_create_simple(
-                       error, string(err), string("Doremir.Buffer"));
+            return (pair_t) fa_error_create_simple(error, string(err), string("Doremir.Buffer"));
         }
 
         inform(string_append(string("Reading "), path));
@@ -216,11 +215,43 @@ fa_pair_t fa_buffer_read_audio(fa_string_t path)
     return pair(type, buffer);
 }
 
-void fa_buffer_write_audio(fa_string_t path,
-                           fa_type_t             type,
-                           fa_buffer_t           buffer)
+// TODO only writes one channel etc
+ptr_t fa_buffer_write_audio(fa_string_t  path,
+                            fa_type_t    type,
+                            fa_buffer_t  buffer)
 {
-    assert(false && "Not implemented");
+    const char     *cpath = fa_string_to_utf8(path);
+    double         *ptr   = fa_buffer_unsafe_address(buffer);
+    size_t         size   = fa_buffer_size(buffer) / sizeof(double);
+
+
+    SF_INFO         info;
+    info.samplerate = 44100;
+    info.channels   = 1;
+    info.format     = SF_FORMAT_WAV | SF_FORMAT_PCM_24;
+    SNDFILE        *file  = sf_open(cpath, SFM_WRITE, &info);
+
+    if (sf_error(file)) {
+        char err[100];
+        snprintf(err, 100, "Could not write audio file '%s' (%s)", cpath, sf_strerror(file));
+        return (pair_t) fa_error_create_simple(
+                   error, string(err), string("Doremir.Buffer"));
+    }
+    sf_count_t written = sf_write_double(file, ptr, size);
+    
+    if (written != size) {
+        return (pair_t) fa_error_create_simple(error, string("To few bytes written"), string("Doremir.Buffer"));
+    }
+    if (sf_close(file)) {
+        return (pair_t) fa_error_create_simple(error, string("Could not close"), string("Doremir.Buffer"));
+    }
+
+    return NULL;
+    
+    
+    // file = 0;
+    // cpath = 0;
+    // assert(false);
 }
 
 

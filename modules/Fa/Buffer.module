@@ -106,7 +106,7 @@ module Fa.Buffer
             A pair $$type, buffer)$$.
      */
     readAudio   : String -> Pair; // (Type,Buffer)
-    writeAudio  : (String,Type,Buffer) -> Void;
+    writeAudio  : (String,Type,Buffer) -> Ptr; // Error?
 
     /** Return the address of the buffer.
 

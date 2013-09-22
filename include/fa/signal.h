@@ -6,6 +6,7 @@
 #include <fa/pair.h>
 #include <fa/type.h>
 #include <fa/time.h>
+#include <fa/buffer.h>
 
 /** @addtogroup FaSignal
 
@@ -75,6 +76,12 @@ fa_signal_t fa_signal_output(int, int, fa_signal_t);
 
 
 void fa_signal_run(int, fa_signal_t, double *);
+
+
+fa_ptr_t fa_signal_run_file(int, fa_signal_t, fa_string_t);
+
+
+fa_buffer_t fa_signal_run_buffer(int, fa_signal_t);
 
 
 void fa_signal_print(int, fa_signal_t);

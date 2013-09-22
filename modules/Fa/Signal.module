@@ -11,6 +11,7 @@ module Fa.Signal
     import Fa.Pair;
     import Fa.Type;
     import Fa.Time;
+    import Fa.Buffer;
     
     type Signal = opaque;
 
@@ -38,6 +39,8 @@ module Fa.Signal
     output      : ( Int, Int, Signal )                            -> Signal;
 
     run : ( Int, Signal, Double* ) -> Void;
+    runFile : ( Int, Signal, String ) -> Ptr;
+    runBuffer : ( Int, Signal ) -> Buffer;
     print : ( Int, Signal ) -> Void;
 
     add                 : (Signal, Signal) -> Signal;

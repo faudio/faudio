@@ -79,7 +79,8 @@ fa_string_t fa_error_origin(fa_error_t a)
 }
 
 bool fa_error_check(fa_ptr_t a)
-{
+{                           
+    if (a == NULL) return false;
     return fa_interface(fa_error_i, a);
 }
 

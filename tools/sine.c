@@ -14,8 +14,14 @@ void helper_function()
 {
     signal_t a = fa_signal_random();
 
-    double *xs = fa_malloc(8 * N);
-    fa_signal_run(N, a, xs);
+    // double *xs = fa_malloc(8 * N);
+    // fa_signal_run(N, a, xs);
+
+    ptr_t res = fa_signal_run_file(N, a, string("test.wav"));
+    if (fa_check(res)) {
+        fa_error_log(NULL, res);
+        exit(-1);
+    }
 
     // fa_signal_print(N,a);
 }

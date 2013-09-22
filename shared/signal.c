@@ -8,6 +8,7 @@
  */
 
 #include <fa/signal.h>
+#include <fa/buffer.h>
 #include <fa/util.h>
 
 typedef fa_signal_t                 signal_t;
@@ -332,6 +333,21 @@ void fa_signal_print(int n, signal_t a)
         printf("%3d: %4f\n", i, x);
         inc_state(state);
     }
+}
+
+buffer_t fa_signal_run_buffer(int n, signal_t a)
+{
+    buffer_t b = fa_buffer_create(n*sizeof(double));
+    fa_signal_run(n, a, fa_buffer_unsafe_address(b));
+    return b;
+}
+ 
+ptr_t fa_signal_run_file(int n, signal_t a, string_t path)
+{
+    buffer_t b = fa_signal_run_buffer(n, a);
+    ptr_t res = fa_buffer_write_audio(path, NULL, b);
+    fa_destroy(b);
+    return res;
 }
 
 
