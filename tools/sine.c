@@ -8,7 +8,7 @@
  */
 typedef fa_signal_t signal_t;
 
-#define N           (44100*1)
+#define N           (44100*60)
 #define PI          3.1415
 #define TAU         (2 * PI)
 
@@ -27,19 +27,20 @@ void helper_function()
     // signal_t b = mul_(sin_(mul_(time_(), const_(TAU * 440 * 2 / 3))), const_(0.1));
     // signal_t c = mul_(sin_(mul_(time_(), const_(TAU * 440 * 4 / 5))), const_(0.1));
     // signal_t d = mul_(sin_(mul_(time_(), const_(TAU * 440 * 6 / 7))), const_(0.1));
-    // signal_t r = add_(add_(a, b), add_(c, d));
+    // signal_t r = add_(a, add_(b, add_(c, d)));
 
     // signal_t r = mul_(rand_(), mul_(sin_(mul_(time_(), const_(TAU * 0.5))), const_(0.5)));
     // signal_t r = mul_(imp_(), const_(0.5));
 
 
     // signal_t r = mul_(sin_(line_(440)), const_(0.5));
+    // signal_t r = add_(const_(0.5), const_(0.5));
 
 
     double freq = 110;
     double amp = 1;
     signal_t r = const_(0);
-    for (int i = 0; i < 100; ++i)
+    for (int i = 0; i < 10; ++i)
     {
         r = add_(r, mul_(sin_(line_(freq)), const_(amp)));
         freq *= (4.0/3);
@@ -59,7 +60,7 @@ void helper_function()
         exit(-1);
     }
            
-    fa_print_ln(fa_string_to_json(fa_signal_to_tree(r)));
+    fa_print_ln(fa_signal_draw_tree(fa_signal_to_tree(r)));
     
     // fa_signal_print(N,r);
 

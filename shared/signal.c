@@ -291,36 +291,7 @@ void fa_signal_destroy(fa_signal_t signal)
 
 bool fa_signal_is_variable(fa_signal_t a)
 {
-    if (a->tag == constant_signal) {
-        return false;
-    }
-
-    if (a->tag == random_signal) {
-        return true;
-    }
-
-    if (a->tag == time_signal) {
-        return true;
-    }
-
-    if (a->tag == input_signal) {
-        return true;
-    }
-
-
-    if (a->tag == lift_signal) {
-        return fa_signal_is_variable(lift_get(a, a));
-    }
-
-    if (a->tag == lift2_signal) {
-        return fa_signal_is_variable(lift2_get(a, a)) && fa_signal_is_variable(lift2_get(a, b));
-    }
-
-    if (a->tag == output_signal) {
-        return fa_signal_is_variable(output_get(a, a));
-    }
-
-    assert(false);
+    assert(false && "Not implemented");
 }
 
 
@@ -395,6 +366,51 @@ fa_pair_t 	fa_signal_to_tree(fa_signal_t signal)
 }
 
 
+/*
+    Console.Write(indent);
+    if (last)
+    {
+        Console.Write("\\-");
+        indent += "  ";
+    }
+    else
+    {
+        Console.Write("|-");
+        indent += "| ";
+    }
+    Console.WriteLine(Name);
+
+    for (int i = 0; i < Children.Count; i++)
+        Children[i].PrintPretty(indent, i == Children.Count - 1);
+    
+*/
+string_t draw_tree(string_t indent, string_t str, pair_t p, bool is_last)
+{           
+    str = string_append(str, indent);
+
+    if (is_last)
+    {
+        str     = string_dappend(str, string("\\-"));
+        indent   = string_append(indent, string("  "));
+    }
+    else
+    {
+        str     = string_dappend(str, string("|-"));
+        indent   = string_append(indent, string("| "));
+    }    
+    str = string_dappend(str, fa_string_to_string(fa_pair_first(p)));
+    str = string_dappend(str, string("\n"));
+    
+    fa_for_each_last(x, fa_pair_second(p), last) {
+        str = draw_tree(indent, str, x, last);
+    }
+    return str;
+}
+
+string_t fa_signal_draw_tree(fa_pair_t p)
+{
+    return draw_tree(string(""), string(""), p, true);
+}
 
 
 
@@ -431,40 +447,49 @@ void split_part(struct part *p, struct part *p2, struct part *p3)
     p3->o = p->d * 2;
 }
 
-fa_signal_t fa_signal_simplify(fa_signal_t signal2)
-{
-    assert(false);
-}
 
 
-fa_signal_t simp(fa_signal_t signal2)
-{
+fa_signal_t simp(struct part* p, fa_signal_t signal2)
+{             
+    struct part pa;
+    struct part pb;
+                        
     switch (signal2->tag) {
-        case loop_signal:        return fa_copy(signal2);
-        case delay_signal:       return fa_copy(signal2);
+        case loop_signal:        return fa_copy(signal2); // TODO
+        case delay_signal:       return fa_copy(signal2); // TODO
         
         case lift_signal: {
             string_t name   = lift_get(signal2, name);
             d2d_t f         = lift_get(signal2, f);
             ptr_t fd        = lift_get(signal2, fd);
-            signal_t a      = simp(lift_get(signal2, a));
+            signal_t a      = simp(p, lift_get(signal2, a));
             return fa_signal_lift(name, f, fd, a);
         }
-        case lift2_signal:       return fa_signal_lift2(
+        case lift2_signal:       { 
+            split_part(p, &pa, &pb);
+            
+            return fa_signal_lift2(
             lift2_get(signal2, name),
             lift2_get(signal2, f),
             lift2_get(signal2, fd),
-            simp(lift2_get(signal2, a)), // TODO split the partition
-            simp(lift2_get(signal2, b))
-            );
+            simp(&pa, lift2_get(signal2, a)), // TODO split the partition
+            simp(&pb, lift2_get(signal2, b))
+            );                     
+        }
         case output_signal:      return fa_signal_output(
             output_get(signal2, n),
             output_get(signal2, c),
-            simp(output_get(signal2, a))
+            simp(p, output_get(signal2, a))
             );
         
         default: return fa_copy(signal2);
     }
+}
+fa_signal_t fa_signal_simplify(fa_signal_t signal2)
+{             
+    struct part p;
+    init_part(&p);
+    return simp(&p, signal2);
 }
 
 

@@ -129,6 +129,7 @@ module Fa.Signal
     // optimize1 : Signal -> Signal;
 
     toTree : Signal -> Pair; // (String,[...])
+    drawTree : Pair -> String;
     simplify : Signal -> Signal;
 
     latter : (Signal, Signal) -> Signal;
