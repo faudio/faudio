@@ -242,17 +242,35 @@ fa_signal_t fa_signal_copy(fa_signal_t signal)
 
 bool fa_signal_is_variable(fa_signal_t a)
 {
-    if (a->tag == constant_signal) return false;
-    
-    if (a->tag == random_signal) return true;
-    if (a->tag == time_signal) return true;
-    if (a->tag == input_signal) return true;
-    
+    if (a->tag == constant_signal) {
+        return false;
+    }
 
-    if (a->tag == lift_signal) return fa_signal_is_variable(a->fields.lift.a);
-    if (a->tag == lift2_signal) return fa_signal_is_variable(a->fields.lift2.a) && fa_signal_is_variable(a->fields.lift2.b);
-    if (a->tag == output_signal) return fa_signal_is_variable(a->fields.output.a);
-    
+    if (a->tag == random_signal) {
+        return true;
+    }
+
+    if (a->tag == time_signal) {
+        return true;
+    }
+
+    if (a->tag == input_signal) {
+        return true;
+    }
+
+
+    if (a->tag == lift_signal) {
+        return fa_signal_is_variable(a->fields.lift.a);
+    }
+
+    if (a->tag == lift2_signal) {
+        return fa_signal_is_variable(a->fields.lift2.a) && fa_signal_is_variable(a->fields.lift2.b);
+    }
+
+    if (a->tag == output_signal) {
+        return fa_signal_is_variable(a->fields.output.a);
+    }
+
     assert(false);
 }
 
@@ -460,11 +478,11 @@ void fa_signal_print(int n, signal_t a)
 
 buffer_t fa_signal_run_buffer(int n, signal_t a)
 {
-    buffer_t b = fa_buffer_create(n*sizeof(double));
+    buffer_t b = fa_buffer_create(n * sizeof(double));
     fa_signal_run(n, a, fa_buffer_unsafe_address(b));
     return b;
 }
- 
+
 ptr_t fa_signal_run_file(int n, signal_t a, string_t path)
 {
     buffer_t b = fa_signal_run_buffer(n, a);
@@ -502,28 +520,37 @@ ptr_t fa_signal_run_file(int n, signal_t a, string_t path)
 
 
 
-double _add(ptr_t _, double x, double y) { return x + y; }
-double _mul(ptr_t _, double x, double y) { return x * y; }
-double _sin(ptr_t _, double x) { return sin(x); }
+double _add(ptr_t _, double x, double y)
+{
+    return x + y;
+}
+double _mul(ptr_t _, double x, double y)
+{
+    return x * y;
+}
+double _sin(ptr_t _, double x)
+{
+    return sin(x);
+}
 
 fa_signal_t fa_signal_add(fa_signal_t a, fa_signal_t b)
 {
     return fa_signal_lift2(
-        string("(+)"), _add, NULL, a, b);
+               string("(+)"), _add, NULL, a, b);
 }
 
 
 fa_signal_t fa_signal_multiply(fa_signal_t a, fa_signal_t b)
 {
     return fa_signal_lift2(
-        string("(*)"), _mul, NULL, a, b);
+               string("(*)"), _mul, NULL, a, b);
 }
 
 
 fa_signal_t fa_signal_sin(fa_signal_t a)
 {
     return fa_signal_lift(
-        string("sin"), _sin, NULL, a);
+               string("sin"), _sin, NULL, a);
 }
 
 

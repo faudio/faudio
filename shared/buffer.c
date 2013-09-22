@@ -237,18 +237,20 @@ ptr_t fa_buffer_write_audio(fa_string_t  path,
         return (pair_t) fa_error_create_simple(
                    error, string(err), string("Doremir.Buffer"));
     }
+
     sf_count_t written = sf_write_double(file, ptr, size);
-    
+
     if (written != size) {
         return (pair_t) fa_error_create_simple(error, string("To few bytes written"), string("Doremir.Buffer"));
     }
+
     if (sf_close(file)) {
         return (pair_t) fa_error_create_simple(error, string("Could not close"), string("Doremir.Buffer"));
     }
 
     return NULL;
-    
-    
+
+
     // file = 0;
     // cpath = 0;
     // assert(false);

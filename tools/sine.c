@@ -19,18 +19,19 @@ typedef fa_signal_t signal_t;
 
 void helper_function()
 {
-    signal_t a = mul_(sin_(mul_(time_(), const_(2*PI*440))), const_(0.1));
-    signal_t b = mul_(sin_(mul_(time_(), const_(2*PI*440*2/3))), const_(0.1));
-    signal_t c = mul_(sin_(mul_(time_(), const_(2*PI*440*4/5))), const_(0.1));
-    signal_t d = mul_(sin_(mul_(time_(), const_(2*PI*440*6/7))), const_(0.1));
+    signal_t a = mul_(sin_(mul_(time_(), const_(2 * PI * 440))), const_(0.1));
+    signal_t b = mul_(sin_(mul_(time_(), const_(2 * PI * 440 * 2 / 3))), const_(0.1));
+    signal_t c = mul_(sin_(mul_(time_(), const_(2 * PI * 440 * 4 / 5))), const_(0.1));
+    signal_t d = mul_(sin_(mul_(time_(), const_(2 * PI * 440 * 6 / 7))), const_(0.1));
 
 
-    signal_t r = add_(add_(a,b),add_(c,d));
-    
+    signal_t r = add_(add_(a, b), add_(c, d));
+
     // double *xs = fa_malloc(8 * N);
     // fa_signal_run(N, r, xs);
 
     ptr_t res = fa_signal_run_file(N, r, string("test.wav"));
+
     if (fa_check(res)) {
         fa_error_log(NULL, res);
         exit(-1);
