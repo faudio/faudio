@@ -379,6 +379,7 @@ string_t draw_tree(pair_t p, string_t indent, string_t str, bool is_last)
         str         = string_dappend(str, string("+- "));
         indent      = string_append(indent, string("|  "));
     }
+
     str = string_dappend(str, fa_string_to_string(fa_pair_first(p)));
     str = string_dappend(str, string("\n"));
 
@@ -450,7 +451,7 @@ fa_signal_t simp(struct part *p, fa_signal_t signal2)
         return fa_signal_output(1, c, res);
     }
 
-    case delay_signal: {                   
+    case delay_signal: {
         struct part pa;
         int c;
         run_part(p, &c, &pa);
@@ -460,8 +461,8 @@ fa_signal_t simp(struct part *p, fa_signal_t signal2)
         int n       = delay_get(signal2, n);
 
         signal_t inp = fa_signal_input(c);
-        signal_t outp = fa_signal_output(n,c,simp(&pa, a));
-                                    
+        signal_t outp = fa_signal_output(n, c, simp(&pa, a));
+
         return fa_signal_former(inp, outp);
     }
 
@@ -634,7 +635,7 @@ void fa_signal_run(int n, signal_t a, double *output)
     // TODO simplify
     // TODO verify
     signal_t a2 = fa_signal_simplify(a);
-    
+
 
     // pair_t p = pair(i32(1),i32(2));
     for (int i = 0; i < n; ++ i) {
