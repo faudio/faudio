@@ -120,6 +120,13 @@ signal_t fa_signal_random()
     return signal;
 }
 
+
+
+
+
+
+
+
 bool fa_signal_is_variable(fa_signal_t a)
 {
     assert(false && "Not implemented");
@@ -206,7 +213,7 @@ typedef _state_t *state_t;
 
 double  kRate       = 44100;
 int     kMaxInputs  = 1024;
-int     kMaxBuses   = 20;
+int     kMaxBuses   = 1024;
 int     kMaxDelay   = 44100*60*5;
 
 state_t new_state()
@@ -225,7 +232,7 @@ state_t new_state()
     return state; 
 }
 double state_random(state_t state) { 
-    return rand();
+    return  ((double)rand()/(double)RAND_MAX) * 2 - 1;
 }
 double state_time(state_t state) { 
     return state->count / state->rate; 
@@ -282,14 +289,19 @@ double step(signal_t signal, state_t state)
     assert(false);
 }
 
+// No allocation in loop
+// Use ringbuffers for transfer
+
 void fa_signal_run(int n, signal_t a, double* output)
 {
     state_t state = new_state();
     // TODO optimize
     // TODO simplify
     // TODO verify
-    
+                                   
+    // pair_t p = pair(i32(1),i32(2));
     for (int i = 0; i < n; ++ i) {
+        // p = fa_pair_swap(p);
         output[i] = step(a, state);
         inc_state(state);
     }

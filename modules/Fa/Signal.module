@@ -41,50 +41,50 @@ module Fa.Signal
     print : ( Int, Signal ) -> Void;
 
     add                 : (Signal, Signal) -> Signal;
-    subtract            : (Signal, Signal) -> Signal;
-    multiply            : (Signal, Signal) -> Signal;
-    power               : (Signal, Signal) -> Signal;
-    divide              : (Signal, Signal) -> Signal;
-    modulo              : (Signal, Signal) -> Signal;
-    absolute            : (Signal, Signal) -> Signal;
-
-    not                 : () -> Signal;
-    and                 : (Signal, Signal) -> Signal;
-    or                  : (Signal, Signal) -> Signal;
-    xor                 : (Signal, Signal) -> Signal;
-    bitNot              : (Signal, Signal) -> Signal;
-    bitAnd              : (Signal, Signal) -> Signal;
-    bitOr               : (Signal, Signal) -> Signal;
-    bitXor              : (Signal, Signal) -> Signal;
-    shiftLeft           : (Signal, Signal) -> Signal;
-    shiftRight          : (Signal, Signal) -> Signal;
-
-    equal               : (Signal, Signal) -> Signal;
-    lessThan            : (Signal, Signal) -> Signal;
-    greaterThan         : (Signal, Signal) -> Signal;
-    lessThanEqual       : (Signal, Signal) -> Signal;
-    greaterThanEqual    : (Signal, Signal) -> Signal;
-
-    acos                : (Signal, Signal) -> Signal;
-    asin                : (Signal, Signal) -> Signal;
-    atan                : (Signal, Signal) -> Signal;
-    cos                 : (Signal, Signal) -> Signal;
+    // subtract            : (Signal, Signal) -> Signal;
+    // multiply            : (Signal, Signal) -> Signal;
+    // power               : (Signal, Signal) -> Signal;
+    // divide              : (Signal, Signal) -> Signal;
+    // modulo              : (Signal, Signal) -> Signal;
+    // absolute            : (Signal, Signal) -> Signal;
+    // 
+    // not                 : () -> Signal;
+    // and                 : (Signal, Signal) -> Signal;
+    // or                  : (Signal, Signal) -> Signal;
+    // xor                 : (Signal, Signal) -> Signal;
+    // bitNot              : (Signal, Signal) -> Signal;
+    // bitAnd              : (Signal, Signal) -> Signal;
+    // bitOr               : (Signal, Signal) -> Signal;
+    // bitXor              : (Signal, Signal) -> Signal;
+    // shiftLeft           : (Signal, Signal) -> Signal;
+    // shiftRight          : (Signal, Signal) -> Signal;
+    // 
+    // equal               : (Signal, Signal) -> Signal;
+    // lessThan            : (Signal, Signal) -> Signal;
+    // greaterThan         : (Signal, Signal) -> Signal;
+    // lessThanEqual       : (Signal, Signal) -> Signal;
+    // greaterThanEqual    : (Signal, Signal) -> Signal;
+    // 
+    // acos                : (Signal, Signal) -> Signal;
+    // asin                : (Signal, Signal) -> Signal;
+    // atan                : (Signal, Signal) -> Signal;
+    // cos                 : (Signal, Signal) -> Signal;
     sin                 : (Signal, Signal) -> Signal;
-    tan                 : (Signal, Signal) -> Signal;
-    exp                 : (Signal, Signal) -> Signal;
-    log                 : (Signal, Signal) -> Signal;
-    log10               : (Signal, Signal) -> Signal;
-    pow                 : (Signal, Signal) -> Signal;
-    sqrt                : (Signal, Signal) -> Signal;
-    abs                 : (Signal, Signal) -> Signal;
-    min                 : (Signal, Signal) -> Signal;
-    max                 : (Signal, Signal) -> Signal;
-    fmod                : (Signal, Signal) -> Signal;
-    remainder           : (Signal, Signal) -> Signal;
-    floor               : (Signal, Signal) -> Signal;
-    ceil                : (Signal, Signal) -> Signal;
-    rint                : (Signal, Signal) -> Signal;    
-
+    // tan                 : (Signal, Signal) -> Signal;
+    // exp                 : (Signal, Signal) -> Signal;
+    // log                 : (Signal, Signal) -> Signal;
+    // log10               : (Signal, Signal) -> Signal;
+    // pow                 : (Signal, Signal) -> Signal;
+    // sqrt                : (Signal, Signal) -> Signal;
+    // abs                 : (Signal, Signal) -> Signal;
+    // min                 : (Signal, Signal) -> Signal;
+    // max                 : (Signal, Signal) -> Signal;
+    // fmod                : (Signal, Signal) -> Signal;
+    // remainder           : (Signal, Signal) -> Signal;
+    // floor               : (Signal, Signal) -> Signal;
+    // ceil                : (Signal, Signal) -> Signal;
+    // rint                : (Signal, Signal) -> Signal;    
+    //                        
     isVariable : Signal -> Bool;
     isConstant : Signal -> Bool;
     areConstant : List -> Bool; // [Signal]
