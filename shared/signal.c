@@ -183,6 +183,57 @@ fa_signal_t fa_signal_output(int, int, fa_signal_t)
 }
 */
 
+signal_t copy_constant(signal_t signal)
+{
+    assert(false && "Not implemented");
+}
+
+signal_t copy_identity(signal_t signal)
+{
+    assert(false && "Not implemented");
+}
+
+signal_t copy_lifted(signal_t signal)
+{
+    assert(false && "Not implemented");
+}
+
+signal_t copy_time(signal_t signal)
+{
+    assert(false && "Not implemented");
+}
+
+signal_t copy_delay(signal_t signal)
+{
+    assert(false && "Not implemented");
+}
+
+signal_t copy_read(signal_t signal)
+{
+    assert(false && "Not implemented");
+}
+
+signal_t copy_write(signal_t signal)
+{
+    assert(false && "Not implemented");
+}
+
+fa_signal_t fa_signal_copy(fa_signal_t signal)
+{
+    match(signal->tag) {
+        against(time_signal)        copy_constant(signal);
+        against(random_signal)      copy_identity(signal);
+        against(constant_signal)    copy_lifted(signal);
+        against(lift_signal)        copy_time(signal);
+        against(lift2_signal)       copy_delay(signal);
+        against(loop_signal)        copy_read(signal);
+        against(delay_signal)       copy_write(signal);
+        against(input_signal)       copy_write(signal);
+        against(output_signal)      copy_write(signal);
+        no_default();
+    }
+}
+
 
 
 
@@ -191,13 +242,24 @@ fa_signal_t fa_signal_output(int, int, fa_signal_t)
 
 bool fa_signal_is_variable(fa_signal_t a)
 {
-    assert(false && "Not implemented");
+    if (a->tag == constant_signal) return false;
+    
+    if (a->tag == random_signal) return true;
+    if (a->tag == time_signal) return true;
+    if (a->tag == input_signal) return true;
+    
+
+    if (a->tag == lift_signal) return fa_signal_is_variable(a->fields.lift.a);
+    if (a->tag == lift2_signal) return fa_signal_is_variable(a->fields.lift2.a) && fa_signal_is_variable(a->fields.lift2.b);
+    if (a->tag == output_signal) return fa_signal_is_variable(a->fields.output.a);
+    
+    assert(false);
 }
 
 
 bool fa_signal_is_constant(fa_signal_t a)
 {
-    assert(false && "Not implemented");
+    return !fa_signal_is_variable(a);
 }
 
 
@@ -438,94 +500,30 @@ ptr_t fa_signal_run_file(int n, signal_t a, string_t path)
 
 
 
-signal_t copy_constant(signal_t signal)
-{
-    assert(false && "Not implemented");
-}
-
-signal_t copy_identity(signal_t signal)
-{
-    assert(false && "Not implemented");
-}
-
-signal_t copy_lifted(signal_t signal)
-{
-    assert(false && "Not implemented");
-}
-
-signal_t copy_time(signal_t signal)
-{
-    assert(false && "Not implemented");
-}
-
-signal_t copy_delay(signal_t signal)
-{
-    assert(false && "Not implemented");
-}
-
-signal_t copy_read(signal_t signal)
-{
-    assert(false && "Not implemented");
-}
-
-signal_t copy_write(signal_t signal)
-{
-    assert(false && "Not implemented");
-}
-
-fa_signal_t fa_signal_copy(fa_signal_t signal)
-{
-    match(signal->tag) {
-        against(time_signal)        copy_constant(signal);
-        against(random_signal)      copy_identity(signal);
-        against(constant_signal)    copy_lifted(signal);
-        against(lift_signal)        copy_time(signal);
-        against(lift2_signal)       copy_delay(signal);
-        against(loop_signal)        copy_read(signal);
-        against(delay_signal)       copy_write(signal);
-        against(input_signal)       copy_write(signal);
-        against(output_signal)      copy_write(signal);
-        no_default();
-    }
-}
 
 
 double _add(ptr_t _, double x, double y) { return x + y; }
 double _mul(ptr_t _, double x, double y) { return x * y; }
 double _sin(ptr_t _, double x) { return sin(x); }
+
 fa_signal_t fa_signal_add(fa_signal_t a, fa_signal_t b)
 {
     return fa_signal_lift2(
-        string("(+)"),
-        _add,
-        NULL,
-        a,
-        b
-        );
+        string("(+)"), _add, NULL, a, b);
 }
 
 
 fa_signal_t fa_signal_multiply(fa_signal_t a, fa_signal_t b)
 {
     return fa_signal_lift2(
-        string("*"),
-        _mul,
-        NULL,
-        a,
-        b
-        );
+        string("(*)"), _mul, NULL, a, b);
 }
 
 
 fa_signal_t fa_signal_sin(fa_signal_t a)
 {
     return fa_signal_lift(
-        string("sin"),
-        _sin,
-        NULL,
-        a
-        );
-
+        string("sin"), _sin, NULL, a);
 }
 
 
