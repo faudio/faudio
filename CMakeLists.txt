@@ -188,17 +188,19 @@ if (COMPONENTS_RESOLVED)
     set(CMAKE_C_COMPILER "/usr/bin/clang")
     add_definitions(-std=c99)
     add_definitions(-fcolor-diagnostics)
-    add_definitions(-Werror)
+    if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
+      add_definitions(-Werror)
+    endif()
     add_definitions(-Wno-error=logical-op-parentheses)
     add_definitions(
         -Wall
+        )
         # -Wmissing-noreturn
         # -Wswitch-default
         # -Wswitch-enum
         # -Wreturn-type
         # -Wdeprecated
         # -Wswitch
-        )
     add_definitions("-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
     add_definitions("-isysroot ${CMAKE_OSX_SYSROOT}")
     add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=1)
