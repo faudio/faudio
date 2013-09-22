@@ -12,9 +12,9 @@
 #include <fa/util.h>
 
 typedef fa_signal_t                 signal_t;
-typedef fa_signal_unary_signal_t    s2s_t;
-typedef fa_signal_unary_double_t    d2d_t;
-typedef fa_signal_binary_double_t   dd2d_t;
+typedef fa_signal_unary_signal_t    fixpoint_t;
+typedef fa_signal_unary_double_t    dunary_t;
+typedef fa_signal_binary_double_t   dbinary_t;
 
 struct _fa_signal_t {
 
@@ -43,21 +43,21 @@ struct _fa_signal_t {
 
         struct {
             string_t        name;
-            d2d_t           f;
+            dunary_t           f;
             ptr_t           fd;
             signal_t        a;
         }                   lift;
 
         struct {
             string_t        name;
-            dd2d_t          f;
+            dbinary_t          f;
             ptr_t           fd;
             signal_t        a;
             signal_t        b;
         }                   lift2;
 
         struct {
-            s2s_t           f;
+            fixpoint_t           f;
             ptr_t           fd;
         } loop;
 
@@ -445,7 +445,7 @@ fa_signal_t simp(struct part *p, fa_signal_t signal2)
     switch (signal2->tag) {
 
     case loop_signal: {
-        s2s_t f             = loop_get(signal2, f);
+        fixpoint_t f       = loop_get(signal2, f);
         ptr_t fd            = loop_get(signal2, fd);
 
         int c;
@@ -476,7 +476,7 @@ fa_signal_t simp(struct part *p, fa_signal_t signal2)
 
     case lift_signal: {
         string_t name       = lift_get(signal2, name);
-        d2d_t f             = lift_get(signal2, f);
+        dunary_t f             = lift_get(signal2, f);
         ptr_t fd            = lift_get(signal2, fd);
 
         signal_t a          = simp(p, lift_get(signal2, a));
@@ -485,7 +485,7 @@ fa_signal_t simp(struct part *p, fa_signal_t signal2)
 
     case lift2_signal:       {
         string_t    name    = lift2_get(signal2, name);
-        dd2d_t      f       = lift2_get(signal2, f);
+        dbinary_t      f       = lift2_get(signal2, f);
         ptr_t       fd      = lift2_get(signal2, fd);
 
         struct part pa;
@@ -603,14 +603,14 @@ double step(signal_t signal, state_t state)
     }
 
     case lift_signal: {
-        d2d_t    f      = lift_get(signal, f);
+        dunary_t f      = lift_get(signal, f);
         signal_t a      = lift_get(signal, a);
         double   xa     = step(a, state);
         return f(NULL, xa);
     }
 
     case lift2_signal: {
-        dd2d_t   f      = lift2_get(signal, f);
+        dbinary_t   f   = lift2_get(signal, f);
         signal_t a      = lift2_get(signal, a);
         signal_t b      = lift2_get(signal, b);
         double   xa     = step(a, state);
