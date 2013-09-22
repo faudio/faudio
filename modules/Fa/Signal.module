@@ -31,8 +31,8 @@ module Fa.Signal
     time        : () -> Signal;
     random      : () -> Signal;
     constant    : Double -> Signal;
-    lift        : ( String -> UnaryDouble, Ptr, Signal )          -> Signal;
-    lift2       : ( String -> BinaryDouble, Ptr, Signal, Signal ) -> Signal;
+    lift        : ( String, UnaryDouble, Ptr, Signal )            -> Signal;
+    lift2       : ( String, BinaryDouble, Ptr, Signal, Signal )   -> Signal;
     loop        : ( UnarySignal, Ptr )                            -> Signal;
     delay       : ( Int, Signal )                                 -> Signal;
     input       : ( Int )                                         -> Signal;
@@ -45,7 +45,7 @@ module Fa.Signal
 
     add                 : (Signal, Signal) -> Signal;
     // subtract            : (Signal, Signal) -> Signal;
-    // multiply            : (Signal, Signal) -> Signal;
+    multiply            : (Signal, Signal) -> Signal;
     // power               : (Signal, Signal) -> Signal;
     // divide              : (Signal, Signal) -> Signal;
     // modulo              : (Signal, Signal) -> Signal;
@@ -72,7 +72,7 @@ module Fa.Signal
     // asin                : (Signal, Signal) -> Signal;
     // atan                : (Signal, Signal) -> Signal;
     // cos                 : (Signal, Signal) -> Signal;
-    sin                 : (Signal, Signal) -> Signal;
+    sin                 : (Signal) -> Signal;
     // tan                 : (Signal, Signal) -> Signal;
     // exp                 : (Signal, Signal) -> Signal;
     // log                 : (Signal, Signal) -> Signal;

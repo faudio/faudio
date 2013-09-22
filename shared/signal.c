@@ -12,6 +12,7 @@
 #include <fa/util.h>
 
 typedef fa_signal_t                 signal_t;
+typedef fa_signal_unary_signal_t    s2s_t;
 typedef fa_signal_unary_double_t    d2d_t;
 typedef fa_signal_binary_double_t   dd2d_t;
 
@@ -42,19 +43,21 @@ struct _fa_signal_t {
 
         struct {
             string_t name;
-            fa_signal_unary_double_t f;
+            d2d_t f;
+            ptr_t fd;
             signal_t a;
         } lift;
 
         struct {
             string_t name;
-            fa_signal_binary_double_t f;
+            dd2d_t f;
+            ptr_t fd;
             signal_t a;
             signal_t b;
         } lift2;
 
         struct {
-            fa_signal_unary_signal_t f;
+            s2s_t f;
         } loop;
 
         struct {
@@ -121,6 +124,64 @@ signal_t fa_signal_random()
     return signal;
 }
 
+fa_signal_t fa_signal_constant(double x)
+{
+    signal_t signal = new_signal(constant_signal);
+    signal->fields.constant.value = x;
+    return signal;
+}
+
+
+fa_signal_t fa_signal_lift(fa_string_t n,
+                           fa_signal_unary_double_t f,
+                           fa_ptr_t fd,
+                           fa_signal_t a)
+{
+    signal_t signal = new_signal(lift_signal);
+    signal->fields.lift.name = n;
+    signal->fields.lift.f  = f;
+    signal->fields.lift.fd = fd;
+    signal->fields.lift.a  = a;
+    return signal;
+}
+
+
+fa_signal_t fa_signal_lift2(fa_string_t n,
+                            fa_signal_binary_double_t f,
+                            fa_ptr_t fd,
+                            fa_signal_t a,
+                            fa_signal_t b)
+{
+    signal_t signal = new_signal(lift2_signal);
+    signal->fields.lift2.name = n;
+    signal->fields.lift2.f  = f;
+    signal->fields.lift2.fd = fd;
+    signal->fields.lift2.a  = a;
+    signal->fields.lift2.b  = b;
+    return signal;
+}
+
+/*
+
+fa_signal_t fa_signal_loop(fa_signal_unary_signal_t, fa_ptr_t)
+{
+}
+
+
+fa_signal_t fa_signal_delay(int, fa_signal_t)
+{
+}
+
+
+fa_signal_t fa_signal_input(int)
+{
+}
+
+
+fa_signal_t fa_signal_output(int, int, fa_signal_t)
+{
+}
+*/
 
 
 
@@ -429,235 +490,67 @@ fa_signal_t fa_signal_copy(fa_signal_t signal)
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// TODO optimized version for non-ptr types
-
-fa_signal_t fa_signal_add()
+double _add(ptr_t _, double x, double y) { return x + y; }
+double _mul(ptr_t _, double x, double y) { return x * y; }
+double _sin(ptr_t _, double x) { return sin(x); }
+fa_signal_t fa_signal_add(fa_signal_t a, fa_signal_t b)
 {
-    assert(false);
+    return fa_signal_lift2(
+        string("(+)"),
+        _add,
+        NULL,
+        a,
+        b
+        );
 }
 
-fa_signal_t fa_signal_subtract()
+
+fa_signal_t fa_signal_multiply(fa_signal_t a, fa_signal_t b)
 {
-    assert(false);
+    return fa_signal_lift2(
+        string("*"),
+        _mul,
+        NULL,
+        a,
+        b
+        );
 }
 
-fa_signal_t fa_signal_multiply()
+
+fa_signal_t fa_signal_sin(fa_signal_t a)
 {
-    assert(false);
+    return fa_signal_lift(
+        string("sin"),
+        _sin,
+        NULL,
+        a
+        );
+
 }
 
-fa_signal_t fa_signal_power()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_divide()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_modulo()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_absolute()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_not()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_and()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_or()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_xor()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_bit_not()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_bit_and()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_bit_or()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_bit_xor()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_shift_left()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_shift_right()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_equal()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_less_than()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_greater_than()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_less_than_equal()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_greater_than_equal()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_acos()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_asin()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_atan()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_cos()
-{
-    assert(false);
-}
 
-fa_signal_t fa_signal_sin()
-{
-    assert(false);
-}
-
-fa_signal_t fa_signal_tan()
-{
-    assert(false);
-}
-
-fa_signal_t fa_signal_exp()
-{
-    assert(false);
-}
-
-fa_signal_t fa_signal_log()
-{
-    assert(false);
-}
-
-fa_signal_t fa_signal_log10()
-{
-    assert(false);
-}
-
-fa_signal_t fa_signal_pow()
-{
-    assert(false);
-}
-
-fa_signal_t fa_signal_sqrt()
-{
-    assert(false);
-}
-
-fa_signal_t fa_signal_abs()
-{
-    assert(false);
-}
-
-fa_signal_t fa_signal_min()
-{
-    assert(false);
-}
-
-fa_signal_t fa_signal_max()
-{
-    assert(false);
-}
-
-fa_signal_t fa_signal_fmod()
-{
-    assert(false);
-}
-
-fa_signal_t fa_signal_remainder()
-{
-    assert(false);
-}
-
-fa_signal_t fa_signal_floor()
-{
-    assert(false);
-}
-
-fa_signal_t fa_signal_ceil()
-{
-    assert(false);
-}
-
-fa_signal_t fa_signal_rint()
-{
-    assert(false);
-}
 
 
 

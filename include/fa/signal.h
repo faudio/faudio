@@ -52,12 +52,14 @@ fa_signal_t fa_signal_random();
 fa_signal_t fa_signal_constant(double);
 
 
-fa_signal_t fa_signal_lift(fa_signal_unary_double_t (fa_string_t),
+fa_signal_t fa_signal_lift(fa_string_t,
+                           fa_signal_unary_double_t,
                            fa_ptr_t,
                            fa_signal_t);
 
 
-fa_signal_t fa_signal_lift2(fa_signal_binary_double_t (fa_string_t),
+fa_signal_t fa_signal_lift2(fa_string_t,
+                            fa_signal_binary_double_t,
                             fa_ptr_t,
                             fa_signal_t,
                             fa_signal_t);
@@ -90,7 +92,10 @@ void fa_signal_print(int, fa_signal_t);
 fa_signal_t fa_signal_add(fa_signal_t, fa_signal_t);
 
 
-fa_signal_t fa_signal_sin(fa_signal_t, fa_signal_t);
+fa_signal_t fa_signal_multiply(fa_signal_t, fa_signal_t);
+
+
+fa_signal_t fa_signal_sin(fa_signal_t);
 
 
 bool fa_signal_is_variable(fa_signal_t);
