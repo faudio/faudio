@@ -94,21 +94,21 @@ inline static void delete_signal(signal_t signal)
     fa_delete(signal);
 }
 
-#define is_constant(v)    (v->tag == constant_signal)
-#define is_identity(v)    (v->tag == identity_signal)
-#define is_lifted(v)      (v->tag == lifted_signal)
-#define is_time(v)        (v->tag == time_signal)
-#define is_delay(v)       (v->tag == delay_signal)
-#define is_read(v)        (v->tag == read_signal)
-#define is_write(v)       (v->tag == write_signal)
+#define is_time(v)          (v->tag == time_signal)
+#define is_random(v)        (v->tag == random_signal)
+#define is_constant(v)      (v->tag == constant_signal)
+#define is_lift(v)          (v->tag == lift_signal)
+#define is_lift2(v)         (v->tag == lift2_signal)
+#define is_input(v)         (v->tag == input_signal)
+#define is_output(v)        (v->tag == output_signal)
 
-#define constant_get(v,f) v->fields.constant.f
-#define identity_get(v,f) v->fields.identity.f
-#define lifted_get(v,f)   v->fields.lifted.f
-#define time_get(v,f)     v->fields.time.f
-#define delay_get(v,f)    v->fields.delay.f
-#define read_get(v,f)     v->fields.read.f
-#define write_get(v,f)    v->fields.write.f
+#define time_get(v,f)       v->fields.time.f
+#define random_get(v,f)     v->fields.random.f
+#define constant_get(v,f)   v->fields.constant.f
+#define lift_get(v,f)       v->fields.lift.f
+#define lift2_get(v,f)      v->fields.lift2.f
+#define input_get(v,f)      v->fields.input.f
+#define output_get(v,f)     v->fields.output.f
 
 // --------------------------------------------------------------------------------
 
@@ -138,10 +138,10 @@ fa_signal_t fa_signal_lift(fa_string_t n,
                            fa_signal_t a)
 {
     signal_t signal = new_signal(lift_signal);
-    signal->fields.lift.name = n;
-    signal->fields.lift.f  = f;
-    signal->fields.lift.fd = fd;
-    signal->fields.lift.a  = a;
+    lift_get(signal,name) = n;
+    lift_get(signal,f)    = f;
+    lift_get(signal,fd)   = fd;
+    lift_get(signal,a)    = a;
     return signal;
 }
 

@@ -42,22 +42,42 @@ typedef double (* fa_signal_binary_double_t)(fa_ptr_t,
                                              double,
                                              double);
 
-
+/**
+    This primitive signal represents elapsed time in seconds.
+    
+    Semantically $$y(t) = t$$.
+*/
 fa_signal_t fa_signal_time();
 
-
+/**
+    This primitive signal represents a random number.
+    
+    Semantically $$y(t) = random(-1,1)$$.
+*/
 fa_signal_t fa_signal_random();
 
-
+/**
+    This primitive signal represents a constant value.
+    
+    Semantically $$y(c)(t) = c$$.
+*/
 fa_signal_t fa_signal_constant(double);
 
-
+/**
+    This primitive signal lifts a unary function to signal level.
+    
+    Semantically $$y(f,a)(t) = f(a(t))$$.
+*/
 fa_signal_t fa_signal_lift(fa_string_t,
                            fa_signal_unary_double_t,
                            fa_ptr_t,
                            fa_signal_t);
 
-
+/**
+    This primitive signal lifts a binary function to signal level.
+    
+    Semantically $$y(f,a,b)(b) = f(a(t), b(t))$$.
+*/
 fa_signal_t fa_signal_lift2(fa_string_t,
                             fa_signal_binary_double_t,
                             fa_ptr_t,

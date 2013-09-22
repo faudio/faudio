@@ -28,10 +28,39 @@ module Fa.Signal
     type BinaryDouble   = ((Ptr, Double, Double) -> Double)*;
 
 
+    /**
+        This primitive signal represents elapsed time in seconds.
+        
+        Semantically $$y(t) = t$$.
+     */
     time        : () -> Signal;
+
+    /**
+        This primitive signal represents a random number.
+        
+        Semantically $$y(t) = random(-1,1)$$.
+     */
     random      : () -> Signal;
+    
+    /**
+        This primitive signal represents a constant value.
+        
+        Semantically $$y(c)(t) = c$$.
+     */
     constant    : Double -> Signal;
+
+    /**
+        This primitive signal lifts a unary function to signal level.
+        
+        Semantically $$y(f,a)(t) = f(a(t))$$.
+     */
     lift        : ( String, UnaryDouble, Ptr, Signal )            -> Signal;
+
+    /**
+        This primitive signal lifts a binary function to signal level.
+        
+        Semantically $$y(f,a,b)(b) = f(a(t), b(t))$$.
+     */
     lift2       : ( String, BinaryDouble, Ptr, Signal, Signal )   -> Signal;
     loop        : ( UnarySignal, Ptr )                            -> Signal;
     delay       : ( Int, Signal )                                 -> Signal;
