@@ -252,10 +252,6 @@ double step(signal_t signal, state_t state)
             double xb = step(b, state);
             return f(NULL, xa, xb);
         }
-        case loop_signal:
-            assert(false && "step: No loop");
-        case delay_signal:
-            assert(false && "step: No delay");
         case input_signal: {
             int c = signal->fields.input.c;
             return read_samp(c, state);
@@ -271,7 +267,6 @@ double step(signal_t signal, state_t state)
         }
         default:
             assert(false && "step: Strange signal");
-            ;
     }       
     assert(false);
 }
