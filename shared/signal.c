@@ -344,7 +344,9 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
 
     case constant_signal:
         return pair(
-            fa_string_to_string(f64(constant_get(signal, value))), 
+            fa_string_to_string(
+                fa_from_double(
+                constant_get(signal, value))), 
             list());
 
     case lift_signal:
@@ -361,7 +363,7 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
 
     case input_signal:
         return pair(
-            string_dappend(
+            concat(
                 string("input "), 
                 fa_string_show(fa_from_int32(input_get(signal, c)))), 
             list());
