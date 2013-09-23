@@ -456,7 +456,7 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
 
         int channel;
         part_t part1;
-        // Allocate one channel for the feedback loop
+        // Allocate one bus channel for the delay
         run_part_neg(part, &channel, &part1);
 
         signal_t input          = fa_signal_input(channel);
@@ -471,7 +471,7 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
         
         int channel;
         part_t part1;
-        // Allocate one channel for the delay
+        // Allocate one bus channel for the delay
         run_part_neg(part, &channel, &part1);
 
         signal_t input          = fa_signal_input(channel);
@@ -739,6 +739,8 @@ ptr_t fa_signal_run_file(int n, signal_t a, string_t path)
 
 
 
+// --------------------------------------------------------------------------------
+// Derived signals
 
 
 inline static double _former(ptr_t _, double x, double y)
