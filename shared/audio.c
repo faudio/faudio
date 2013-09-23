@@ -36,6 +36,19 @@ typedef fa_audio_status_callback_t  status_callback_t;
 typedef PaDeviceIndex native_index_t;
 typedef PaStream     *native_stream_t;
 
+
+// TODO formalize better
+struct _state_t {
+    double *inputs;
+    // ...
+};
+typedef struct _state_t *state_t;
+state_t new_state();
+void inc_state(state_t state);
+double step(signal_t signal, state_t state);
+fa_signal_t fa_signal_simplify(fa_signal_t signal2);
+
+
 struct _fa_audio_session_t {
 
     impl_t              impl;               // Dispatcher
@@ -66,6 +79,7 @@ struct _fa_audio_stream_t {
 
     device_t            input, output;
     signal_t            signal;
+    state_t             state; // DSP state
 
     unsigned            input_channels, output_channels;
     double              sample_rate;
@@ -392,7 +406,7 @@ void audio_inform_opening(device_t input, ptr_t proc, device_t output)
 stream_t fa_audio_open_stream(device_t input, signal_t signal, device_t output)
 {
     PaError         status;
-    unsigned long   buffer_size = 256;
+    unsigned long   buffer_size = 16;
     double          sample_rate = 44100;
     stream_t        stream      = new_stream(input, output, signal, sample_rate, buffer_size);
 
@@ -508,8 +522,10 @@ void fa_audio_with_stream(device_t            input,
 
 void before_processing(stream_t stream)
 {
-    // signal_t s = stream->signal;
-    // fa_print_ln(s);
+    stream->state  = new_state();
+    stream->signal = fa_signal_simplify(stream->signal); // TODO is this safe?
+    // TODO optimize
+    // TODO verify
 }
 
 void after_processing(stream_t stream)
@@ -518,15 +534,14 @@ void after_processing(stream_t stream)
 
 int during_processing(stream_t stream, unsigned count, float **input, float **output)
 {
-    for (int i = 0; i < count; ++i) {
-        output[0][i] = input[0][i];
-        output[1][i] = input[1][i];
+    for (int i = 0; i < count; ++ i) {
+        // TODO inputs
+        double x = step(stream->signal, stream->state);
+        output[0][i] = x;
+        output[1][i] = x;
+        inc_state(stream->state);
     }
-
-
-
     stream->sample_count += count; // TODO atomic incr
-    // return paContinue;
     return paContinue;
 }
 

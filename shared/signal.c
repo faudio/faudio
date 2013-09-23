@@ -445,7 +445,7 @@ void run_part_neg(struct part *p, int *r, struct part *p2)
 }
 
 
-inline static
+// inline static
 fa_signal_t simplify(part_t *part, fa_signal_t signal2)
 {
     switch (signal2->tag) {
@@ -586,7 +586,7 @@ void write_samp(int n, int c, double x, state_t state)
     write_bus(n, neg(c), x, state);
 }
 
-inline static
+// inline static
 void inc_state(state_t state)
 {
     state->count++;
@@ -627,7 +627,7 @@ void write_bus(int n, int c, double x, state_t state)
 /**
     Step over a sample.
  */
-inline static
+// inline static
 double step(signal_t signal, state_t state)
 {
     switch (signal->tag) {

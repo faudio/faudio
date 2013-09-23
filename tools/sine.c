@@ -6,7 +6,7 @@
     This program does ...
 
  */
-typedef fa_signal_t signal_t;
+// typedef fa_signal_t signal_t;
 
 #define N           (44100*60)
 #define PI          3.1415
@@ -49,18 +49,17 @@ void helper_function()
     // signal_t r = fa_signal_input(1);
     // signal_t r = fa_signal_output(1,0,time_());
 
-    double freq = 110;
+    double freq = 100;
     double amp = 1;
     signal_t r = const_(0);
-    
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 30; ++i) {
         r = add_(mul_(sin_(line_(freq)), const_(amp)), r);
-        freq *= (4.0 / 3);
+        freq *= (5.0 / 4.0);
         amp  *= 0.9;
-    }
-    
-    r = mul_(r, const_(0.01));
-    // r = loop_(fir, r);
+    }    
+    r = mul_(r, const_(0.002));
+
+
     
     // signal_t r = loop_(fir, imp_());
 
@@ -68,17 +67,29 @@ void helper_function()
     // double *xs = fa_malloc(8 * N);
     // fa_signal_run(N, r, xs);
 
-    signal_t r2 = fa_signal_simplify(r);
-    fa_print_ln(fa_signal_draw_tree(fa_signal_to_tree(r2)));
+    // signal_t r2 = fa_signal_simplify(r);
+    // fa_print_ln(fa_signal_draw_tree(fa_signal_to_tree(r2)));
 
-    ptr_t res = fa_signal_run_file(N, r2, string("test.wav"));
-
-    if (fa_check(res)) {
-        fa_error_log(NULL, res);
-        exit(-1);
+    
+    {
+        fa_audio_session_t s = fa_audio_begin_session();
+        fa_audio_device_t i = fa_audio_default_input(s);
+        fa_audio_device_t o = fa_audio_default_output(s);
+        fa_audio_stream_t st = fa_audio_open_stream(i, r, o);
+        if (fa_check(st)) {
+            fa_error_log(st, NULL);
+        }
+        
+        fa_thread_sleep(1000 * 30);        
+        fa_audio_end_session(s);        
     }
+    
 
-
+    // ptr_t res = fa_signal_run_file(N, r, string("test.wav"));
+    // if (fa_check(res)) {
+    //     fa_error_log(NULL, res);
+    //     exit(-1);
+    // }
     // fa_signal_print(N,r);
 }
 

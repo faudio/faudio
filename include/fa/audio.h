@@ -7,6 +7,7 @@
 #include <fa/device.h>
 #include <fa/error.h>
 #include <fa/type.h>
+#include <fa/signal.h>
 
 /** @addtogroup FaAudio
 
@@ -170,7 +171,7 @@ fa_type_t fa_audio_output_type(fa_audio_device_t);
         Returns an error if the session could not be started.
 */
 fa_audio_stream_t fa_audio_open_stream(fa_audio_device_t,
-                                       fa_ptr_t,
+                                       fa_signal_t,
                                        fa_audio_device_t);
 
 /**
@@ -190,7 +191,7 @@ void fa_audio_close_stream(fa_audio_stream_t);
     @param error_callback   Function to receive eventual errors.
 */
 void fa_audio_with_stream(fa_audio_device_t,
-                          fa_ptr_t,
+                          fa_signal_t,
                           fa_audio_device_t,
                           fa_audio_stream_callback_t,
                           fa_ptr_t,

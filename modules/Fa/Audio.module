@@ -30,6 +30,7 @@ module Fa.Audio
     import Fa.Device;
     import Fa.Error;
     import Fa.Type;
+    import Fa.Signal;
 
     type Session = opaque;
     type Device  = opaque;
@@ -145,7 +146,7 @@ module Fa.Audio
         @par Errors
             Returns an error if the session could not be started.
      */
-    openStream : (Device, Ptr, Device) -> Stream;
+    openStream : (Device, Signal, Device) -> Stream;
     
     /**
         Close the given stream.
@@ -164,7 +165,7 @@ module Fa.Audio
         @param error_callback   Function to receive eventual errors.
      */
     withStream : (
-        Device, Ptr, Device,
+        Device, Signal, Device,
         StreamCallback, Ptr,
         Callback, Ptr
         ) -> Void;

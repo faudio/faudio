@@ -50,9 +50,7 @@
 #define time_t              fa_time_t
 #define clock_t             fa_time_clock_t
 #define event_t             fa_event_t
-#define processor_t         fa_processor_t
-#define proc_t              fa_processor_t
-#define proc_interface_t    fa_processor_interface_t
+#define signal_t            fa_signal_t
 #define sender_t            fa_message_sender_t
 #define receiver_t          fa_message_receiver_t
 #define dispatcher_t        fa_message_dispatcher_t
