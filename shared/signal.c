@@ -287,7 +287,8 @@ void fa_signal_destroy(fa_signal_t signal)
 
 
 
-
+// --------------------------------------------------------------------------------
+// Introspection etc
 
 bool fa_signal_is_variable(fa_signal_t a)
 {
@@ -329,9 +330,6 @@ int fa_signal_required_delay(fa_signal_t a)
 {
     assert(false && "Not implemented");
 }
-
-
-
 
 fa_pair_t fa_signal_to_tree(fa_signal_t signal)
 {
@@ -385,7 +383,6 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
     }
 }
 
-
 string_t draw_tree(pair_t value, string_t indent, bool is_last, string_t result)
 {
     ptr_t  label    = fa_pair_first(value);
@@ -415,6 +412,8 @@ string_t fa_signal_draw_tree(fa_pair_t p)
 }
 
 
+// --------------------------------------------------------------------------------
+// Simplification
 
 struct part {
     int o, d;
@@ -526,11 +525,8 @@ fa_signal_t fa_signal_simplify(fa_signal_t signal2)
     return simplify(&p, signal2);
 }
 
-
-
-
-
-
+// --------------------------------------------------------------------------------
+// Running
 
 typedef struct {
     double *inputs;
@@ -550,7 +546,7 @@ long    kMaxDelay   = (44100 * 2);
 
 state_t new_state()
 {
-    srand(time(NULL));  // TODO
+    srand(time(NULL));  // TODO localize
     state_t state = fa_malloc(sizeof(_state_t));
 
     state->inputs = fa_malloc(kMaxInputs);
@@ -563,6 +559,7 @@ state_t new_state()
 
     return state;
 }
+
 inline static
 double state_random(state_t state)
 {
@@ -574,19 +571,39 @@ double state_time(state_t state)
     return state->count / state->rate;
 }
 
+void    write_bus(int n, int c, double x, state_t state);
+double  read_bus(int c, state_t state);
+double  read_actual_input(int c, state_t state);
+
+inline static
+double read_samp(int c, state_t state)
+{
+    return (c > 0) ? read_actual_input(c, state) : read_bus(neg(c), state);
+}
+inline static
+void write_samp(int n, int c, double x, state_t state)
+{
+    write_bus(n, neg(c), x, state);
+}
+
+inline static
+void inc_state(state_t state)
+{
+    state->count++;
+}
 
 //----------
-// Internal
+// Internal state stuff
 
 int buffer_pointer(state_t state)
 {
     return state->count % kMaxDelay;
 }
+
 int index_bus(int n, int c)
 {
     return c*kMaxDelay + n;
 }
-
 
 double read_actual_input(int c, state_t state)
 {
@@ -604,26 +621,7 @@ void write_bus(int n, int c, double x, state_t state)
     int bp = buffer_pointer(state);
     state->buses[index_bus(bp + n % kMaxDelay, c)] = x;
 }
-
 //----------
-
-inline static
-double read_samp(int c, state_t state)
-{
-    return (c > 0) ? read_actual_input(c, state) : read_bus(neg(c), state);
-}
-inline static
-void write_samp(int n, int c, double x, state_t state)
-{
-    write_bus(n, neg(c), x, state);
-}
-
-
-inline static
-void inc_state(state_t state)
-{
-    state->count++;
-}
 
 
 /**
@@ -737,6 +735,9 @@ ptr_t fa_signal_run_file(int n, signal_t a, string_t path)
     fa_destroy(b);
     return res;
 }
+
+
+
 
 
 
