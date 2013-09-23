@@ -34,19 +34,11 @@ module Fa.Atomic
      */
     copy    : Atomic -> Atomic;
 
-    /** Swap contents of the given atomic reference.
-        @par Atomicity
-            Non-atomic
-     */
-    swap    : (Atomic, Atomic) -> Void;
-
     /** Destroy the given atomic reference.
         @par Atomicity
             Non-atomic
      */
     destroy : Atomic -> Void;
-
-
 
     /** Compares the given value with the current value of the given atomic reference,
         replacing it if successful.
@@ -82,7 +74,6 @@ module Fa.Atomic
         @par Atomicity Atomic
      */
     modify  : (Atomic, Unary, Ptr) -> Void;
-    
 
     // TODO increment : (Atomic, Int32) -> Void;
 }

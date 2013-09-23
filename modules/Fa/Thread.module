@@ -2,7 +2,7 @@
 /**
     @addtogroup FaThread
 
-    Cross-platform threads.
+    Provides threads.
 
     We provide threads and mutexes. For non-blocking constructs, see the @ref FaAtomic modules.
 
@@ -46,6 +46,13 @@ module Fa.Thread
         @param thread Thread to detach (destroyed).
       */
     detach  : Thread -> Void;
+
+    /** Convert a thread to a the underlying thread type used by the platform.
+
+        * On Mac OS X and iOS, `pthread_t` is used.
+     */
+    toNative     : Thread -> Ptr;
+
 
     /** Return the main thread.
       */

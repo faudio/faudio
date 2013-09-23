@@ -17,22 +17,11 @@
 
     @par Sessions implement
     - fa_equal_t
-    - fa_destroy_t
-    - fa_string_show_t
-
-    @par Devices implement
-    - fa_equal_t
+    - fa_destroy_t (sessions and streams)
     - fa_string_show_t
 
     Devices implement [Equal](@ref fa_equal_t) and [Show](@ref fa_string_show_t),
     but now destroy, as they are always managed by the underlying session.
-
-    @par Streams implement
-    - fa_time_clock_t
-    - fa_message_sender_t
-    - fa_message_receiver_t
-    - fa_destroy_t
-    - fa_string_show_t
 
     Stream implements [Clock](@ref fa_time_clock_t) by counting the number
     of processed samples. Precision is usually limited to the current frame size.
@@ -40,7 +29,6 @@
     Stream also implements [SenderInterface](@ref fa_message_sender_t) and
     [ReceiverInterface](@ref fa_message_sender_t), dispatching messages to the underlying
     processor network. The address of a processor can be obtained by @ref fa_processor_address.
-
 
     @see
     - @ref Devices

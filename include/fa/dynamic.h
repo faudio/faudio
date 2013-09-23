@@ -9,7 +9,8 @@
 
     @addtogroup FaDynamic
     
-    Provides dynamic typing.     
+    Provides dynamic typing. This can be used with all [Value references](@ref ValueReferences)
+    and data structures to inspect the type at runtime.
  
     @defgroup Fa Fa
     @{
@@ -34,15 +35,21 @@ typedef enum {
             ratio_type_repr
         } fa_dynamic_type_repr_t;
 
-
+/** Dynamic typing interface.
+*/
 typedef struct {
             fa_dynamic_type_repr_t (* get_type)(fa_ptr_t);
         } fa_dynamic_t;
 
-
+/**
+    Whether the given value supports dynamic typing.
+*/
 bool fa_dynamic_check(fa_ptr_t);
 
-
+/**
+    Returns a value representating the the type of the given value, which
+    must implement @ref fa_dynamic_t. 
+*/
 fa_dynamic_type_repr_t fa_dynamic_get_type(fa_ptr_t);
 
 /** @}

@@ -38,12 +38,16 @@ fa_atomic_t fa_atomic_copy(fa_atomic_t a)
     return b;
 }
 
+/*
+This is to easily mixed up with exchange. Hiding for now.
+
 void fa_atomic_swap(fa_atomic_t a, fa_atomic_t b)
 {
     ptr_t x  = a->value;
     a->value = b->value;
     b->value = x;
 }
+*/
 
 void fa_atomic_destroy(fa_atomic_t a)
 {

@@ -9,7 +9,7 @@
 
     @addtogroup FaThread
 
-    Cross-platform threads.
+    Provides threads.
 
     We provide threads and mutexes. For non-blocking constructs, see the @ref FaAtomic modules.
 
@@ -63,6 +63,12 @@ void fa_thread_join(fa_thread_t);
       
 */
 void fa_thread_detach(fa_thread_t);
+
+/** Convert a thread to a the underlying thread type used by the platform.
+
+    * On Mac OS X and iOS, `pthread_t` is used.
+*/
+fa_ptr_t fa_thread_to_native(fa_thread_t);
 
 /** Return the main thread.
       

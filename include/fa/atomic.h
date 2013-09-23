@@ -43,12 +43,6 @@ fa_atomic_t fa_atomic_create();
 */
 fa_atomic_t fa_atomic_copy(fa_atomic_t);
 
-/** Swap contents of the given atomic reference.
-    @par Atomicity
-        Non-atomic
-*/
-void fa_atomic_swap(fa_atomic_t, fa_atomic_t);
-
 /** Destroy the given atomic reference.
     @par Atomicity
         Non-atomic

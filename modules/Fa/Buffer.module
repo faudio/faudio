@@ -8,8 +8,7 @@
     semantics. The length of a buffer can never change, but its memory can be reused using the destructive
     resize operation.
     
-    Note that buffers are not collections as their contents are mutable.
-
+    TODO formalize bounds checking etc.
 
     @par Literals
     - `buffer(size)` 
