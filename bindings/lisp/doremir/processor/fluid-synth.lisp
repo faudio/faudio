@@ -1,6 +1,0 @@
-(in-package :audio-engine)
-(define-foreign-type processor-fluid-synth-type () () (:actual-type :pointer))
-(define-parse-method processor-fluid-synth () (make-instance 'processor-fluid-synth-type))
-(defclass processor-fluid-synth () ((processor-fluid-synth-ptr :initarg :processor-fluid-synth-ptr)))
-(defmethod translate-to-foreign (x (type processor-fluid-synth-type)) (slot-value x 'processor-fluid-synth-ptr))
-(defmethod translate-from-foreign (x (type processor-fluid-synth-type)) (make-instance 'processor-fluid-synth :processor-fluid-synth-ptr x))

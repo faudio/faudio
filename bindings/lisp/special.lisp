@@ -5,7 +5,7 @@
     All rights reserved.
 |#
 
-(in-package :audio-engine)
+(in-package :faudio)
 
 #|
     Miscellaneous primitives.
@@ -13,9 +13,9 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-(defcfun (string-from-utf8# "doremir_string_from_utf8") :pointer (a :pointer))
-(defcfun (string-to-utf8#  "doremir_string_to_utf8") :pointer (a :pointer))
-(defcfun (string-destroy# "doremir_string_destroy") :void (a :pointer))
+(defcfun (string-from-utf8# "fa_string_from_utf8") :pointer (a :pointer))
+(defcfun (string-to-utf8#  "fa_string_to_utf8") :pointer (a :pointer))
+(defcfun (string-destroy# "fa_string_destroy") :void (a :pointer))
 
 (defmethod translate-to-foreign (x (type string-type))
   (string-from-utf8#
@@ -31,10 +31,10 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-(defcfun (ratio-create# "doremir_ratio_create") :pointer (a :int32) (b :int32))
-(defcfun (ratio-destroy# "doremir_ratio_destroy") :void (a :pointer))
-(defcfun (ratio-num# "doremir_ratio_num") :int32 (a :pointer))
-(defcfun (ratio-denom# "doremir_ratio_denom") :int32 (a :pointer))
+(defcfun (ratio-create# "fa_ratio_create") :pointer (a :int32) (b :int32))
+(defcfun (ratio-destroy# "fa_ratio_destroy") :void (a :pointer))
+(defcfun (ratio-num# "fa_ratio_num") :int32 (a :pointer))
+(defcfun (ratio-denom# "fa_ratio_denom") :int32 (a :pointer))
 
 (defun export-ratio# (x)
   (ratio-create# (numerator x) (denominator x)))
@@ -56,10 +56,10 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-(defcfun (pair-create# "doremir_pair_create") :pointer (a ptr) (b ptr))
-(defcfun (pair-destroy# "doremir_pair_destroy") :void (a :pointer))
-(defcfun (pair-fst# "doremir_pair_fst") ptr (a :pointer))
-(defcfun (pair-snd# "doremir_pair_snd") ptr (a :pointer))
+(defcfun (pair-create# "fa_pair_create") :pointer (a ptr) (b ptr))
+(defcfun (pair-destroy# "fa_pair_destroy") :void (a :pointer))
+(defcfun (pair-fst# "fa_pair_fst") ptr (a :pointer))
+(defcfun (pair-snd# "fa_pair_snd") ptr (a :pointer))
 
 (defun export-pair# (x)
   (pair-create# (car x) (cdr x)))
@@ -78,11 +78,11 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-(defcfun (list-empty# "doremir_list_empty") :pointer)
-(defcfun (list-cons#  "doremir_list_cons")  :pointer (a ptr) (b :pointer))
-(defcfun (list-dcons# "doremir_list_dcons") :pointer (a ptr) (b :pointer))
-(defcfun (list-head#  "doremir_list_head") ptr (a :pointer))
-(defcfun (list-tail#  "doremir_list_tail") :pointer (a :pointer))
+(defcfun (list-empty# "fa_list_empty") :pointer)
+(defcfun (list-cons#  "fa_list_cons")  :pointer (a ptr) (b :pointer))
+(defcfun (list-dcons# "fa_list_dcons") :pointer (a ptr) (b :pointer))
+(defcfun (list-head#  "fa_list_head") ptr (a :pointer))
+(defcfun (list-tail#  "fa_list_tail") :pointer (a :pointer))
 
 (defun export-list# (x)
   (cond
@@ -145,7 +145,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-(defcfun (dynamic-get-type# "doremir_dynamic_get_type") dynamic-type-repr (a :pointer))
+(defcfun (dynamic-get-type# "fa_dynamic_get_type") dynamic-type-repr (a :pointer))
 
 (defun import-dynamic# (x)
   (ecase (dynamic-get-type# x)
@@ -283,11 +283,11 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-(defcfun (string-show# "doremir_string_show") string (a :pointer))
+(defcfun (string-show# "fa_string_show") string (a :pointer))
 
 (defmethod print-object ((x buffer) out) (format out "~a" (string-show# (slot-value x 'buffer-ptr))))
 
-(defmethod print-object ((x midi) out) (format out "~a" (string-show# (slot-value x 'midi-ptr))))
+(defmethod print-object ((x midi-message) out) (format out "~a" (string-show# (slot-value x 'midi-message-ptr))))
 (defmethod print-object ((x list) out) (format out "~a" (string-show# (slot-value x 'list-ptr))))
 (defmethod print-object ((x pair) out) (format out "~a" (string-show# (slot-value x 'pair-ptr))))
 (defmethod print-object ((x set) out) (format out "~a" (string-show# (slot-value x 'set-ptr))))
@@ -299,25 +299,21 @@
 (defmethod print-object ((x atomic-stack) out) (format out "~a" (string-show# (slot-value x 'atomic-stack-ptr))))
 (defmethod print-object ((x atomic-ring-buffer) out) (format out "~a" (string-show# (slot-value x 'atomic-ring-buffer-ptr))))
 
-(defmethod print-object ((x message-dispatcher) out) (format out "~a" (string-show# (slot-value x 'message-dispatcher-ptr))))
-(defmethod print-object ((x priority-queue) out) (format out "~a" (string-show# (slot-value x 'priority-queue-ptr))))
-(defmethod print-object ((x processor) out) (format out "~a" (string-show# (slot-value x 'processor-ptr))))
-(defmethod print-object ((x scheduler) out) (format out "~a" (string-show# (slot-value x 'scheduler-ptr))))
+; (defmethod print-object ((x message-dispatcher) out) (format out "~a" (string-show# (slot-value x 'message-dispatcher-ptr))))
+; (defmethod print-object ((x priority-queue) out) (format out "~a" (string-show# (slot-value x 'priority-queue-ptr))))
+; (defmethod print-object ((x processor) out) (format out "~a" (string-show# (slot-value x 'processor-ptr))))
+; (defmethod print-object ((x scheduler) out) (format out "~a" (string-show# (slot-value x 'scheduler-ptr))))
 (defmethod print-object ((x signal) out) (format out "~a" (string-show# (slot-value x 'signal-ptr))))
 (defmethod print-object ((x thread) out) (format out "~a" (string-show# (slot-value x 'thread-ptr))))
 
 (defmethod print-object ((x time) out) (format out "~a" (string-show# (slot-value x 'time-ptr))))
 (defmethod print-object ((x type) out) (format out "~a" (string-show# (slot-value x 'type-ptr))))
-(defmethod print-object ((x event) out) (format out "~a" (string-show# (slot-value x 'event-ptr))))
-(defmethod print-object ((x scheduler) out) (format out "~a" (string-show# (slot-value x 'scheduler-ptr))))
 
-(defmethod print-object ((x device-audio-session) out) (format out "~a" (string-show# (slot-value x 'device-audio-session-ptr))))
-(defmethod print-object ((x device-audio-stream) out) (format out "~a" (string-show# (slot-value x 'device-audio-stream-ptr))))
-(defmethod print-object ((x device-audio) out) (format out "~a" (string-show# (slot-value x 'device-audio-ptr))))
-(defmethod print-object ((x device-midi-session) out) (format out "~a" (string-show# (slot-value x 'device-midi-session-ptr))))
-(defmethod print-object ((x device-midi-stream) out) (format out "~a" (string-show# (slot-value x 'device-midi-stream-ptr))))
-(defmethod print-object ((x device-midi) out) (format out "~a" (string-show# (slot-value x 'device-midi-ptr))))
-(defmethod print-object ((x device-file) out) (format out "~a" (string-show# (slot-value x 'device-file-ptr))))
-(defmethod print-object ((x device-buffer) out) (format out "~a" (string-show# (slot-value x 'device-buffer-ptr))))
+(defmethod print-object ((x audio-session) out) (format out "~a" (string-show# (slot-value x 'audio-session-ptr))))
+(defmethod print-object ((x audio-stream) out) (format out "~a" (string-show# (slot-value x 'audio-stream-ptr))))
+(defmethod print-object ((x audio-device) out) (format out "~a" (string-show# (slot-value x 'audio-device-ptr))))
+(defmethod print-object ((x midi-session) out) (format out "~a" (string-show# (slot-value x 'midi-session-ptr))))
+(defmethod print-object ((x midi-stream) out) (format out "~a" (string-show# (slot-value x 'midi-stream-ptr))))
+(defmethod print-object ((x midi-device) out) (format out "~a" (string-show# (slot-value x 'midi-device-ptr))))
 
 

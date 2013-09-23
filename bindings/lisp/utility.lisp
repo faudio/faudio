@@ -5,7 +5,7 @@
     All rights reserved.
 |#
 
-(in-package :audio-engine)
+(in-package :faudio)
 
 #|
     High-level functions.
@@ -62,11 +62,11 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-(defmethod filter (p (xs event))
-  (event-filter* p xs))
-
-(defmethod map (p (xs event))
-  (event-map* p xs))
+; (defmethod filter (p (xs event))
+;   (event-filter* p xs))
+; 
+; (defmethod map (p (xs event))
+;   (event-map* p xs))
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -119,32 +119,6 @@
                      (thread-unlock ,lock)))
                   (t nil)))))
 
-; ---------------------------------------------------------------------------------------------------
-
-(defmacro input-type    (&rest args)  `(processor-input-type ,@args))
-(defmacro output-type   (&rest args)  `(processor-output-type ,@args))
-(defmacro unary         (&rest args)  `(processor-unary ,@args))
-(defmacro binary        (&rest args)  `(processor-binary ,@args))
-(defmacro identity      (&rest args)  `(processor-identity ,@args))
-(defmacro constant      (&rest args)  `(processor-constant ,@args))
-(defmacro loop          (&rest args)  `(processor-loop ,@args))
-(defmacro split         (&rest args)  `(processor-split ,@args))
-(defmacro delay         (&rest args)  `(processor-delay ,@args))
-
-
-; seq and par are binary, sequence and parallel are the reduced version
-(defmacro seq (&rest args) `(processor-sequence ,@args))
-(defmacro par (&rest args) `(processor-parallel ,@args))
-
-(defun sequence (head &rest args)
-  (cond
-   (args (seq head (apply 'sequence args)))
-   (t    head)))
-
-(defun parallel (head &rest args)
-  (cond
-   (args (par head (apply 'parallel args)))
-   (t    head)))
 
 ; ---------------------------------------------------------------------------------------------------
 

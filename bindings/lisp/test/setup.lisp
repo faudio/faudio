@@ -5,22 +5,23 @@
     All rights reserved.
 |#
 
-#-sbcl (in-package :audio-engine)
+#-sbcl (in-package :faudio)
 
 (defvar *foreign-lib*)
 
 ; Load Lisp bindings
-(asdf:load-system :fae)
+(asdf:load-system :faudio)
 
 ; Load library and setup tests
-(let ((framework-name "FAE")
+(let ((framework-name "Faudio")
       (framework-path (format nil "~a/audio/build/Frameworks/" (user-homedir-pathname)))
-      (log-path       (format nil "~a/Library/Logs/FAE.log" (user-homedir-pathname))))
+      (log-path       (format nil "~a/Library/Logs/Fsound.log" (user-homedir-pathname))))
   (push framework-path cffi:*darwin-framework-directories*)
   (setf *foreign-lib* (cffi:load-foreign-library `(:framework ,framework-name)))
-  (audio-engine::audioengine-set-log-file log-path)
-  (audio-engine::plot-use-gnu)
-  (audio-engine::audioengine-initialize))
+  ;(faudio::fa-set-log-file log-path)
+  ;(faudio::plot-use-gnu)
+  ;(faudio::audioengine-initialize)
+)
 
 ; To unload, evaluate this
 ; (close-foreign-library *foreign-lib*)

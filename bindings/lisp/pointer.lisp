@@ -5,51 +5,51 @@
     All rights reserved.
 |#
 
-(in-package :audio-engine)
+(in-package :faudio)
 
 #|
     Pointer specific primitives. This file needs to be loaded before the
     generated files, special.lisp is loaded afterwards.
 |#
 
-(defcfun (is-bool#      "doremir_is_bool") :boolean (a :pointer))
-(defcfun (is-int8#      "doremir_is_int8") :boolean (a :pointer))
-(defcfun (is-int16#     "doremir_is_int16") :boolean (a :pointer))
-(defcfun (is-int32#     "doremir_is_int32") :boolean (a :pointer))
-(defcfun (is-int64#     "doremir_is_int64") :boolean (a :pointer))
-(defcfun (is-float#     "doremir_is_float") :boolean (a :pointer))
-(defcfun (is-double#    "doremir_is_double") :boolean (a :pointer))
-(defcfun (is-dynamic#   "doremir_dynamic_check") :boolean (a :pointer))
-(defcfun (is-ref#       "doremir_is_ref") :boolean (a :pointer))
+(defcfun (is-bool#      "fa_is_bool") :boolean (a :pointer))
+(defcfun (is-int8#      "fa_is_int8") :boolean (a :pointer))
+(defcfun (is-int16#     "fa_is_int16") :boolean (a :pointer))
+(defcfun (is-int32#     "fa_is_int32") :boolean (a :pointer))
+(defcfun (is-int64#     "fa_is_int64") :boolean (a :pointer))
+(defcfun (is-float#     "fa_is_float") :boolean (a :pointer))
+(defcfun (is-double#    "fa_is_double") :boolean (a :pointer))
+(defcfun (is-dynamic#   "fa_dynamic_check") :boolean (a :pointer))
+(defcfun (is-ref#       "fa_is_ref") :boolean (a :pointer))
 
-(defcfun (to-bool#      "doremir_to_bool") :boolean (a :pointer))
-(defcfun (to-int8#      "doremir_to_int8") :int8 (a :pointer))
-(defcfun (to-int16#     "doremir_to_int16") :int16 (a :pointer))
-(defcfun (to-int32#     "doremir_to_int32") :int32 (a :pointer))
-(defcfun (to-int64#     "doremir_to_int64") :int64 (a :pointer))
-(defcfun (to-float#     "doremir_to_float") :float (a :pointer))
-(defcfun (to-double#    "doremir_to_double") :double (a :pointer))
+(defcfun (to-bool#      "fa_to_bool") :boolean (a :pointer))
+(defcfun (to-int8#      "fa_to_int8") :int8 (a :pointer))
+(defcfun (to-int16#     "fa_to_int16") :int16 (a :pointer))
+(defcfun (to-int32#     "fa_to_int32") :int32 (a :pointer))
+(defcfun (to-int64#     "fa_to_int64") :int64 (a :pointer))
+(defcfun (to-float#     "fa_to_float") :float (a :pointer))
+(defcfun (to-double#    "fa_to_double") :double (a :pointer))
 
-(defcfun (peek-bool#    "doremir_peek_bool") :boolean (a :pointer))
-(defcfun (peek-int8#    "doremir_peek_int8") :int8 (a :pointer))
-(defcfun (peek-int16#   "doremir_peek_int16") :int16 (a :pointer))
-(defcfun (peek-int32#   "doremir_peek_int32") :int32 (a :pointer))
-(defcfun (peek-int64#   "doremir_peek_int64") :int64 (a :pointer))
-(defcfun (peek-float#   "doremir_peek_float") :float (a :pointer))
-(defcfun (peek-double#  "doremir_peek_double") :double (a :pointer))
+(defcfun (peek-bool#    "fa_peek_bool") :boolean (a :pointer))
+(defcfun (peek-int8#    "fa_peek_int8") :int8 (a :pointer))
+(defcfun (peek-int16#   "fa_peek_int16") :int16 (a :pointer))
+(defcfun (peek-int32#   "fa_peek_int32") :int32 (a :pointer))
+(defcfun (peek-int64#   "fa_peek_int64") :int64 (a :pointer))
+(defcfun (peek-float#   "fa_peek_float") :float (a :pointer))
+(defcfun (peek-double#  "fa_peek_double") :double (a :pointer))
 
-(defcfun (from-bool#    "doremir_from_bool") :pointer (a :boolean))
-(defcfun (from-int8#    "doremir_from_int8") :pointer (a :int8))
-(defcfun (from-int16#   "doremir_from_int16") :pointer (a :int16))
-(defcfun (from-int32#   "doremir_from_int32") :pointer (a :int32))
-(defcfun (from-int64#   "doremir_from_int64") :pointer (a :int64))
-(defcfun (from-float#   "doremir_from_float") :pointer (a :float))
-(defcfun (from-double#  "doremir_from_double") :pointer (a :double))
+(defcfun (from-bool#    "fa_from_bool") :pointer (a :boolean))
+(defcfun (from-int8#    "fa_from_int8") :pointer (a :int8))
+(defcfun (from-int16#   "fa_from_int16") :pointer (a :int16))
+(defcfun (from-int32#   "fa_from_int32") :pointer (a :int32))
+(defcfun (from-int64#   "fa_from_int64") :pointer (a :int64))
+(defcfun (from-float#   "fa_from_float") :pointer (a :float))
+(defcfun (from-double#  "fa_from_double") :pointer (a :double))
 
-(defcfun (destroy#      "doremir_destroy") :void (a :pointer))
+(defcfun (destroy#      "fa_destroy") :void (a :pointer))
 
-(defcfun (string-from-utf8# "doremir_string_from_utf8") :pointer (a :pointer))
-(defcfun (string-to-utf8#   "doremir_string_to_utf8") :pointer (a :pointer))
+(defcfun (string-from-utf8# "fa_string_from_utf8") :pointer (a :pointer))
+(defcfun (string-to-utf8#   "fa_string_to_utf8") :pointer (a :pointer))
 
 
 (define-foreign-type ptr-type () () (:actual-type :pointer))

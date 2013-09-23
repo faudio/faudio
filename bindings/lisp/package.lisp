@@ -5,9 +5,9 @@
     All rights reserved.
 |#
 
-(defpackage #:audio-engine
+(defpackage #:faudio
 
-  (:nicknames   :ae)
+  (:nicknames   :fa)
 
   (:use         :common-lisp
                 :cffi)

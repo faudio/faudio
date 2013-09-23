@@ -1,4 +1,5 @@
 
+
 #|
     FAE
     Copyright (c) DoReMIR Music Research 2012-2013
@@ -48,7 +49,7 @@
       - Calling a generic function on a type that does not implement a required interface is undefined
 |#
 
-(in-package :audio-engine)
+(in-package :faudio)
 
 (defvar x nil)
 (defvar y nil)
@@ -416,7 +417,7 @@
 (setf x (buffer-read-audio* "/Users/hans/Desktop/test.wav"))
 (setf x (buffer-read-audio* "does-not-exist.wav"))
 (setf x 
-      (from-pointer 'buffer (pair-snd x)))
+      (from-pointer 'buffer (pair-second x)))
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -484,6 +485,43 @@
 ; Audio processing
 ; ---------------------------------------------------------------------------------------------------
 
+(defmacro time
+  (&rest args) `(signal-time ,@args))
+(defmacro noise
+  (&rest args) `(signal-random ,@args))
+(defmacro constant
+  (&rest args) `(signal-constant ,@args))
+(defmacro input
+  (&rest args) `(signal-input ,@args))
+(defmacro output
+  (&rest args) `(signal-output ,@args))
+(defmacro delay
+  (&rest args) `(signal-delay ,@args))
+(defmacro +~
+  (&rest args) `(signal-add ,@args))
+(defmacro *~
+  (&rest args) `(signal-multiply ,@args))
+(defmacro sin~
+  (&rest args) `(signal-sin ,@args))
+
+
+
+; Signals
+
+(setf x (time))
+(setf x (noise))
+(setf x (constant 0.5d0))
+(setf x (input 1))
+
+(setf x (*~ (constant 0.3d0) 
+            (sin~ (signal-line 440d0))))
+
+(signal-run-file (* 44100 10) x "/Users/hans/audio/out.wav")
+
+
+
+
+
 ; Doremir.Type
 ;
 ; You can always give a function expecting a type a *type expression* (see below). 
@@ -526,198 +564,6 @@
 (setf x (type-repeat 0 :f32)) ; ()
 (type-channels x)
 
-
-; ---------------------------------------------------------------------------------------------------
-
-; Doremir.Processor
-
-; TODO combine defcallback/unary/binary into single macro
-; i.e. define-processor
-
-;(type-offset-of 256 (input-type x))
-
-(defcallback add-i8 :char ((c ptr) (x :char))
-  (declare (ignore c))
-  (+ x 1))
-
-(defcallback add-f32 :float ((c ptr) (x :float))
-  (declare (ignore c))
-  (+ x 1))
-
-(defcallback add-i8-i8 :char ((c ptr) (x :float) (y :float))
-  (declare (ignore c))
-  (+ x y))
-
-(setf x (unary :i8 :i8 (callback add-i8) nil))
-(setf x (unary :f32 :f32 (callback add-f32) nil))
-(setf x (binary :i8 :i8 :i8 (callback add-i8-i8) nil))
-(setf y x)
-
-(input-type x)
-(output-type x)
-
-(setf y (identity :i8))
-(setf x (constant :i8 :i8 0))
-(setf x (sequence x y))
-(setf x (parallel x y))
-(setf x (loop x))
-(setf x (split :f32))
-; TODO (setf x (delay :f32 44100))
-
-(equal
-  (input-type (parallel (identity :i8) (identity :i8)))
-  (output-type (split :i8)))
-
-(parallel
-  (sequence (identity '(:frame :i8)) (constant '(:frame :i8) '(:frame :i16) nil) (identity '(:frame :i16)))
-  (identity '(:vector :f32 1024))
-  (identity '(:frame :f32)))
-
-(sequence
- (split :i8)
- (parallel (identity :i8) (identity :i8))
- (identity '(:i8 . :i8))
- (binary :i8 :i8 :f32 (callback add-i8-i8) nil))
-
-; TODO short names
-(setf x (processor-add i))
-(setf x (processor-subtract i))
-(setf x (processor-multiply i))
-(setf x (processor-power i))
-(setf x (processor-divide i))
-(setf x (processor-modulo i))
-(setf x (processor-absolute i))
-(setf x (processor-not i))
-(setf x (processor-and i))
-(setf x (processor-or i))
-(setf x (processor-xor i))
-(setf x (processor-bit i))
-(setf x (processor-bit i))
-(setf x (processor-bit i))
-(setf x (processor-bit i))
-(setf x (processor-shift i))
-(setf x (processor-shift i))
-(setf x (processor-equal i))
-(setf x (processor-less-than i))
-(setf x (processor-greater-than i))
-(setf x (processor-less-than-equal i))
-(setf x (processor-greater-than-equal i))
-(setf x (processor-acos i))
-(setf x (processor-asin i))
-(setf x (processor-atan i))
-(setf x (processor-cos i))
-(setf x (processor-sin i))
-(setf x (processor-tan i))
-(setf x (processor-exp i))
-(setf x (processor-log i))
-(setf x (processor-log10 i))
-(setf x (processor-pow i))
-(setf x (processor-sqrt i))
-(setf x (processor-abs i))
-(setf x (processor-min i))
-(setf x (processor-max i))
-(setf x (processor-fmod i))
-(setf x (processor-remainder i))
-(setf x (processor-floor i))
-(setf x (processor-ceil i))
-(setf x (processor-rint i))
-
-; ---------------------------------------------------------------------------------------------------
-
-; Doremir.Signal
-
-; TODO, see API reference
-
-
-; ---------------------------------------------------------------------------------------------------
-; Events and scheduling
-; ---------------------------------------------------------------------------------------------------
-
-; Doremir.Event
-
-(run-event (never))
-(run-event (now 1234))
-(run-event (later (seconds 1) 3456))
-(run-event (delay (seconds 2) (now 5678)))
-(run-event (merge (now 1) (later (seconds 1) 2)))
-
-(run-event (after key-down mouse-move-x))
-(run-event (before key-down mouse-move-x))
-
-(setf mouse-down (system-event-mouse-down))
-(setf mouse-down-x (map (lambda (x) (round (pair-fst x)))  mouse-down))
-
-(setf mouse-move (system-event-mouse-move))
-(setf mouse-move-x (map (lambda (x) (round (pair-fst x))) mouse-move))
-(setf mouse-move-y (map (lambda (x) (round (pair-snd x))) mouse-move))
-
-(setf key-down
-      (map (lambda (xs) (+ (- (list-index 1 xs) 97) 48))
-           (system-event-key-down)))
-
-(run-event (system-event-key-down))
-(run-event key-down)
-(run-event mouse-move-x)
-(run-event mouse-move-y)
-
-
-
-(run-event
- (let* ((scale         (lambda (from to) (lambda (x) (round (* to (/ x from))))))
-        (make-note     (lambda (x) (midi #x90 x 100)))
-        (make-volume   (lambda (x) (midi #xb0 7 (funcall (funcall scale 100 127) x))))
-        (volume-slider (input-slider :title "Volume")))
-   (merge
-    (send (to-receiver z) 0 (map make-note key-down))
-    (send (to-receiver z) 0 (map make-volume volume-slider))
-    (never))) :duration (seconds 30))
-
-
-
-(setf z (system-event-send-log))
-
-; Run the given event for some duration, writing its values to the log.
-; TODO infinate duration and 'stop' event (i.e. hitting escape)
-(defun run-event (event &key (duration (time :seconds 5)))
-  (let* ((scheduler
-          (scheduler-create
-           (time-get-system-prec-clock))))
-    (audioengine-log-info "Running event")
-    (scheduler-schedule scheduler (system-event-write-log event))
-    (scheduler-loop-for duration scheduler)
-    ; later...
-    (destroy scheduler)
-    (audioengine-log-info "Stopped running event")))
-
-
-; Event receiving values from an input slider
-;
-; This is the simplest way to create an event from an interface. Usually we want to
-; use a single dispatcher and send values on separate channels.
-
-(defun input-slider (&key (title "Input"))
-  (let* ((slider-chan 0)
-         (disp (message-create-dispatcher))               
-         (handler (lambda (interface value gesture)
-                    (message-send
-                        (to-receiver disp) slider-chan value))) 
-         (class (capi:define-interface simple-slider ()
-                  ()
-                  (:panes
-                   (slider capi:slider
-                           :tick-frequency 10
-                           :callback handler))))
-         (interface (capi:display
-                     (make-instance 'simple-slider
-                                    :title title
-                                    :best-width 500))))
-    (event-receive (to-sender disp) slider-chan)))
-
-(run-event (input-slider :title "Foo"))
-
-
-; TODO update GUI from event
-(setf (capi:range-slug-start (slot-value i 'slider)) (random 100))
 
 
 

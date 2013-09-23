@@ -1,0 +1,11 @@
+(in-package :faudio)
+(define-foreign-type atomic-stack-type () () (:actual-type :pointer))
+(define-parse-method atomic-stack () (make-instance 'atomic-stack-type))
+(defclass atomic-stack () ((atomic-stack-ptr :initarg :atomic-stack-ptr)))
+(defmethod translate-to-foreign (x (type atomic-stack-type)) (slot-value x 'atomic-stack-ptr))
+(defmethod translate-from-foreign (x (type atomic-stack-type)) (make-instance 'atomic-stack :atomic-stack-ptr x))
+(defcfun (atomic-stack-create "fa_atomic_stack_create") atomic-stack)
+(defcfun (atomic-stack-destroy "fa_atomic_stack_destroy") :void (a atomic-stack))
+(defcfun (atomic-stack-read "fa_atomic_stack_read") ptr (a atomic-stack))
+(defcfun (atomic-stack-write "fa_atomic_stack_write") :boolean (a atomic-stack) (b ptr))
+
