@@ -10,7 +10,7 @@
  
     @addtogroup FaMidiMessage
     
-    Immutable representation of Midi messages.
+    Immutable MIDI messages.
 
     @par Literals
     - `midi(note_on, 60, 127)`

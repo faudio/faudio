@@ -76,13 +76,13 @@ fa_ptr_t fa_atomic_get(fa_atomic_t);
 
     @par Atomicity Atomic
 */
-void fa_atomic_set(fa_atomic_t, fa_ptr_t);
+void fa_atomic_modify(fa_atomic_t, fa_unary_t, fa_ptr_t);
 
 /** Set the given given atomic reference.
 
     @par Atomicity Atomic
 */
-void fa_atomic_modify(fa_atomic_t, fa_unary_t, fa_ptr_t);
+void fa_atomic_set(fa_atomic_t, fa_ptr_t);
 
 /** @}
     @}

@@ -8,7 +8,7 @@
  
     @addtogroup FaRatio
     
-    Fixed-precision rational numbers.
+    Rational numbers.
 
     @par Literals
     - `ratio(1, 2)`
