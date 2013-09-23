@@ -457,6 +457,7 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
 
         int channel;
         part_t part1;
+        // Allocate one channel for the feedback loop
         run_part_neg(part, &channel, &part1);
 
         signal_t input          = fa_signal_input(channel);
@@ -471,6 +472,7 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
         
         int channel;
         part_t part1;
+        // Allocate one channel for the delay
         run_part_neg(part, &channel, &part1);
 
         signal_t input          = fa_signal_input(channel);
@@ -495,6 +497,7 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
 
         part_t part1;
         part_t part2;
+        // Split the channel partition
         split_part(part, &part1, &part2);
 
         signal_t a              = simplify(&part1, lift2_get(signal2, a));
@@ -541,9 +544,9 @@ typedef _state_t *state_t;
 
 
 double  kRate       = 44100;
-int     kMaxInputs  = 1024;
-int     kMaxBuses   = 1024;
-int     kMaxDelay   = 44100 * 60 * 5;
+long    kMaxInputs  = 1024;
+long    kMaxBuses   = 512;
+long    kMaxDelay   = (44100 * 2);
 
 state_t new_state()
 {
