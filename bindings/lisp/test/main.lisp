@@ -53,7 +53,7 @@
 (fa-log-info "What to say?")
 (fa-log-warning "Beware!")
 (fa-log-error "Rattlesnakes!")
-(fa-log-error-from "Rattlesnakes!" "Test.Lisp")
+(fa-log-error-from "Rattlesnakes!" "test")
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -99,6 +99,7 @@
 ; Fa.Ratio
 ;
 ; faudio ratios are interchangable with Lisp rationals.
+; You can pass Lisp rationals to a function expecting fa_ratio_t and vice versa
 
 (setf x (ratio-create 1 2))
 (setf y (ratio-create 278 12))
@@ -125,6 +126,7 @@
 ; Fa.String
 ;
 ; faudio strings are interchangable with Lisp strings.
+; You can pass Lisp strings to a function expecting fa_string_t and vice versa
 ;
 ; Note that LispWorks does not support the full Unicode range (only UCS-2).
 
@@ -523,34 +525,34 @@
 
 ; Fa.Device.Audio
 
-(setf s (device-audio-begin-session))
+(setf s (audio-begin-session))
 (error-check s)
 (error-log nil (to-error s))
 (error-message (to-error s))
-(device-audio-end-session s)
+(audio-end-session s)
 
-(device-audio-all s)
-(setf x (device-audio-default-input s))
-(setf y (device-audio-default-output s))
+(audio-all s)
+(setf x (audio-default-input s))
+(setf y (audio-default-output s))
 
-(device-audio-name x)
-(device-audio-host-name x)
-(device-audio-has-input x)
-(device-audio-has-output x)
-(device-audio-input-type x)
-(device-audio-output-type x)
-(type-channels (device-audio-input-type x))
-(type-channels (device-audio-output-type x))
-(type-size-of 1024 (device-audio-input-type x))
+(audio-name x)
+(audio-host-name x)
+(audio-has-input x)
+(audio-has-output x)
+(audio-input-type x)
+(audio-output-type x)
+(type-channels (audio-input-type x))
+(type-channels (audio-output-type x))
+(type-size-of 1024 (audio-input-type x))
 
-(device-audio-set-status-callback* (lambda ()
+(audio-set-status-callback* (lambda ()
   (capi:display-message "Audio setup changed")
   (fa-log-info "Audio setup changed")) s)
 
 (setf p (processor-identity '(:pair (:frame :f32) (:frame :f32))))
-(setf z (device-audio-open-stream x p y))
+(setf z (audio-open-stream x p y))
 ; close-all!
-(device-audio-close-stream z)
+(audio-close-stream z)
 
 ; TODO unregister status callback?
 ; TODO status callback does not care about sessions (work even after session becomes inactive)
@@ -560,29 +562,29 @@
 
 ; Fa.Device.Midi
 
-(setf s (device-midi-begin-session))
+(setf s (midi-begin-session))
 (error-check s)
 (error-log nil (to-error x))
 (error-message (to-error s))
-(device-midi-end-session s)
+(midi-end-session s)
 
-(device-midi-all s)
-(setf x (from-pointer 'device-midi (nth 6 (import-list (device-midi-all s)))))
-(setf x (device-midi-default-input s))
-(setf y (device-midi-default-output s))
+(midi-all s)
+(setf x (from-pointer 'midi (nth 6 (import-list (midi-all s)))))
+(setf x (midi-default-input s))
+(setf y (midi-default-output s))
 
-(device-midi-name x)
-(device-midi-host-name x)
-(device-midi-has-input x)
-(device-midi-has-output x)
+(midi-name x)
+(midi-host-name x)
+(midi-has-input x)
+(midi-has-output x)
 
-; FIXME (device-midi-set-status-callback (callback midi-status-changed) nil s)
-(device-midi-set-status-callback* (lambda ()
+; FIXME (midi-set-status-callback (callback midi-status-changed) nil s)
+(midi-set-status-callback* (lambda ()
   (capi:display-message "Audio setup changed")
   (fa-log-info "Audio setup changed")) s)
 
 (defun register-midi-listener ()
-  (device-midi-set-status-callback* (lambda ()
+  (midi-set-status-callback* (lambda ()
                                       (capi:display-message "Audio setup changed")
                                       (fa-log-info "Audio setup changed")) s)
   )
@@ -591,33 +593,13 @@
 
 
 
-(setf z (device-midi-open-stream x))
-(device-midi-close-stream z)
+(setf z (midi-open-stream x))
+(midi-close-stream z)
 
 ;(setf z (system-event-send-log))
 (message-send
  (to-receiver z) 0
  (midi #x90 (+ 48 (random 12)) 120))
-
-
-
-; ---------------------------------------------------------------------------------------------------
-
-; Fa.Device.File
-
-(device-file-open)
-(device-file-close)
-(device-file-run)
-
-; ---------------------------------------------------------------------------------------------------
-
-; Fa.Device.Buffer
-
-(device-buffer-open)
-(device-buffer-close)
-(device-buffer-run)
-
-
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -635,22 +617,22 @@
 (plot-buffer-double x nil nil)
 (plot-buffer-float x nil nil)
 
-; ---------------------------------------------------------------------------------------------------
-
-; Fa.Message
-
-(setf x (message-create-dispatcher))
-(setf x (message-create-lockfree-dispatcher))
-(setf s (to-sender x))
-(setf r (to-receiver x))
-
-(message-send r 0 123)
-(message-send r 0 (export-list '(1 2 3)))
-
-(progn
-  (message-sync s)
-  (dolist (x (import-list (message-receive s 0)))
-    (cl:print (from-dynamic x))))
+; ; ---------------------------------------------------------------------------------------------------
+; 
+; ; Fa.Message
+; 
+; (setf x (message-create-dispatcher))
+; (setf x (message-create-lockfree-dispatcher))
+; (setf s (to-sender x))
+; (setf r (to-receiver x))
+; 
+; (message-send r 0 123)
+; (message-send r 0 (export-list '(1 2 3)))
+; 
+; (progn
+;   (message-sync s)
+;   (dolist (x (import-list (message-receive s 0)))
+;     (cl:print (from-dynamic x))))
 
 ; ---------------------------------------------------------------------------------------------------
 
