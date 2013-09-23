@@ -79,10 +79,6 @@ struct _fa_signal_t {
 
 };
 
-#define neg(x) ((x + 1)*(-1))
-
-// --------------------------------------------------------------------------------
-
 inline static signal_t new_signal(int tag)
 {
     fa_ptr_t signal_impl(fa_id_t interface);
@@ -118,6 +114,8 @@ inline static void delete_signal(signal_t signal)
 #define delay_get(v,f)      v->fields.delay.f
 #define input_get(v,f)      v->fields.input.f
 #define output_get(v,f)     v->fields.output.f
+
+#define neg(x) ((x + 1)*(-1))
 
 // --------------------------------------------------------------------------------
 
@@ -267,17 +265,17 @@ signal_t copy_output(signal_t signal2)
 
 fa_signal_t fa_signal_copy(fa_signal_t signal)
 {
-    match(signal->tag) {
-        against(time_signal)        fa_signal_time();
-        against(random_signal)      fa_signal_random();
-        against(constant_signal)    copy_constant(signal);
-        against(lift_signal)        copy_lift(signal);
-        against(lift2_signal)       copy_lift2(signal);
-        against(loop_signal)        copy_loop(signal);
-        against(delay_signal)       copy_delay(signal);
-        against(input_signal)       copy_input(signal);
-        against(output_signal)      copy_output(signal);
-        no_default();
+    switch (signal->tag) {
+        case time_signal:                return fa_signal_time();
+        case random_signal:              return fa_signal_random();
+        case constant_signal:            return copy_constant(signal);
+        case lift_signal:                return copy_lift(signal);
+        case lift2_signal:               return copy_lift2(signal);
+        case loop_signal:                return copy_loop(signal);
+        case delay_signal:               return copy_delay(signal);
+        case input_signal:               return copy_input(signal);
+        case output_signal:              return copy_output(signal);
+        default:                         assert(false);
     }
 }
 
@@ -363,14 +361,14 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
         return pair(
             string_dappend(
                 string("input "), 
-                fa_string_show(i32(input_get(signal, c)))), 
+                fa_string_show(fa_from_int32(input_get(signal, c)))), 
             list());
 
     case output_signal:
         return pair(
             string_dappend(
                 string("output "), 
-                fa_string_show(i32(output_get(signal, c)))), 
+                fa_string_show(fa_from_int32(output_get(signal, c)))), 
             list(fa_signal_to_tree(output_get(signal, a))));
 
     default:
@@ -408,16 +406,6 @@ string_t fa_signal_draw_tree(fa_pair_t p)
 
 
 
-/*
-    runPart (Part (o,d)) = (o, Part (o+d,d))
-    splitPart (Part (o,d)) = (Part (o,d*2), Part (d,d*2))
-    nextP = fst . runPart
-    skipP = snd . runPart
-    runPartAll g = let
-        (x,g2) = runPart g
-        in x : runPartAll g2
-*/
-
 struct part {
     int o, d;
 };
@@ -446,7 +434,7 @@ fa_signal_t simp(struct part *p, fa_signal_t signal2)
     switch (signal2->tag) {
 
     case loop_signal: {
-        fixpoint_t f       = loop_get(signal2, f);
+        fixpoint_t f        = loop_get(signal2, f);
         ptr_t fd            = loop_get(signal2, fd);
 
         int c;
