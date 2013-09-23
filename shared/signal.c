@@ -377,38 +377,40 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
 }
 
 
-string_t draw_tree(pair_t p, string_t indent, string_t str, bool is_last)
+string_t draw_tree(pair_t value, string_t indent, bool is_last, string_t result)
 {
-    str = string_append(str, indent);
+    ptr_t  label    = fa_pair_first(value);
+    list_t children = fa_pair_second(value);
+    
+    write_to(result, indent);
 
     if (is_last) {
-        str         = string_dappend(str, string("`- "));
-        indent      = string_append(indent, string("   "));
+        write_to(result, string("`- "));
+        write_to(indent, string("   "));
     } else {
-        str         = string_dappend(str, string("+- "));
-        indent      = string_append(indent, string("|  "));
+        write_to(result, string("+- "));
+        write_to(indent, string("|  "));
     }
+    write_to(result, fa_string_to_string(label));
+    write_to(result, string("\n"));
 
-    str = string_dappend(str, fa_string_to_string(fa_pair_first(p)));
-    str = string_dappend(str, string("\n"));
-
-
-    fa_for_each_last(x, fa_pair_second(p), last) {
-        str = draw_tree(x, indent, str, last);
+    fa_for_each_last(x, children, last) {
+        result = draw_tree(x, indent, last, result);
     }
-    return str;
+    return result;
 }
 
 string_t fa_signal_draw_tree(fa_pair_t p)
 {
-    return draw_tree(p, string(""), string(""), true);
+    return draw_tree(p, string(""), true, string(""));
 }
 
 
 
 struct part {
     int o, d;
-};
+};     
+typedef struct part part_t;
 void init_part(struct part *p)
 {
     p->o = 0;
@@ -429,69 +431,70 @@ void split_part(struct part *p, struct part *p2, struct part *p3)
 }
 
 
-fa_signal_t simp(struct part *p, fa_signal_t signal2)
+inline static
+fa_signal_t simplify(part_t *part, fa_signal_t signal2)
 {
     switch (signal2->tag) {
 
     case loop_signal: {
-        fixpoint_t f        = loop_get(signal2, f);
-        ptr_t fd            = loop_get(signal2, fd);
+        fixpoint_t fix      = loop_get(signal2, f);
+        ptr_t      fix_data = loop_get(signal2, fd);
 
-        int c;
-        struct part pa;
-        run_part(p, &c, &pa);
-        c = neg(c);
+        int channel;
+        part_t part1;
+        run_part(part, &channel, &part1);
+        channel = neg(channel);
 
-        signal_t input      = fa_signal_input(c);
-        signal_t res        = simp(&pa, f(fd, input));
+        signal_t input          = fa_signal_input(channel);
+        signal_t res            = simplify(&part1, fix(fix_data, input));
 
-        return fa_signal_output(1, c, res);
+        return fa_signal_output(1, channel, res);
     }
 
     case delay_signal: {
-        signal_t a          = delay_get(signal2, a);
-        int n               = delay_get(signal2, n);
+        signal_t a              = delay_get(signal2, a);
+        int samples             = delay_get(signal2, n);
         
-        int c;
-        struct part pa;
-        run_part(p, &c, &pa);
-        c = neg(c);
+        int channel;
+        part_t part1;
+        run_part(part, &channel, &part1);
+        channel = neg(channel);
 
-        signal_t inp        = fa_signal_input(c);
-        signal_t outp       = fa_signal_output(n, c, simp(&pa, a));
+        signal_t input          = fa_signal_input(channel);
+        signal_t output         = fa_signal_output(samples, channel, simplify(&part1, a));
 
-        return fa_signal_former(inp, outp);
+        return fa_signal_former(input, output);
     }
 
     case lift_signal: {
-        string_t name       = lift_get(signal2, name);
-        dunary_t f             = lift_get(signal2, f);
-        ptr_t fd            = lift_get(signal2, fd);
+        string_t    name        = lift_get(signal2, name);
+        dunary_t    func        = lift_get(signal2, f);
+        ptr_t       func_data   = lift_get(signal2, fd);
 
-        signal_t a          = simp(p, lift_get(signal2, a));
-        return fa_signal_lift(name, f, fd, a);
+        signal_t a              = simplify(part, lift_get(signal2, a));
+        return fa_signal_lift(name, func, func_data, a);
     }
 
-    case lift2_signal:       {
-        string_t    name    = lift2_get(signal2, name);
-        dbinary_t      f       = lift2_get(signal2, f);
-        ptr_t       fd      = lift2_get(signal2, fd);
+    case lift2_signal: {
+        string_t    name        = lift2_get(signal2, name);
+        dbinary_t   func        = lift2_get(signal2, f);
+        ptr_t       func_data   = lift2_get(signal2, fd);
 
-        struct part pa;
-        struct part pb;
-        split_part(p, &pa, &pb);
+        part_t part1;
+        part_t part2;
+        split_part(part, &part1, &part2);
 
-        signal_t a          = simp(&pa, lift2_get(signal2, a));
-        signal_t b          = simp(&pb, lift2_get(signal2, b));
+        signal_t a              = simplify(&part1, lift2_get(signal2, a));
+        signal_t b              = simplify(&part2, lift2_get(signal2, b));
 
-        return fa_signal_lift2(name, f, fd, a, b);
+        return fa_signal_lift2(name, func, func_data, a, b);
     }
 
     case output_signal: {
-        int n               = output_get(signal2, n);
-        int c               = output_get(signal2, c);
+        int n                   = output_get(signal2, n);
+        int c                   = output_get(signal2, c);
 
-        signal_t a          = simp(p, output_get(signal2, a));
+        signal_t a              = simplify(part, output_get(signal2, a));
 
         return fa_signal_output(n, c, a);
     }
@@ -502,9 +505,9 @@ fa_signal_t simp(struct part *p, fa_signal_t signal2)
 }
 fa_signal_t fa_signal_simplify(fa_signal_t signal2)
 {
-    struct part p;
+    part_t p;
     init_part(&p);
-    return simp(&p, signal2);
+    return simplify(&p, signal2);
 }
 
 
