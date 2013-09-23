@@ -11,7 +11,7 @@
 #include <fa/buffer.h>
 #include <fa/util.h>
 
-typedef fa_signal_t                 signal_t;
+// typedef fa_signal_t                 signal_t;
 typedef fa_signal_unary_signal_t    fixpoint_t;
 typedef fa_signal_unary_double_t    dunary_t;
 typedef fa_signal_binary_double_t   dbinary_t;

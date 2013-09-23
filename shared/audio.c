@@ -9,7 +9,8 @@
 
 #include <fa/audio.h>
 
-#include <fa/atomic.h> // TODO improving
+#include <fa/atomic.h>
+#include <fa/signal.h>
 #include <fa/thread.h>
 #include <fa/util.h>
 #include <fa/time.h>
@@ -64,6 +65,7 @@ struct _fa_audio_stream_t {
     native_stream_t     native;             // Native stream
 
     device_t            input, output;
+    signal_t            signal;
 
     unsigned            input_channels, output_channels;
     double              sample_rate;
@@ -84,7 +86,7 @@ inline static void session_init_devices(session_t session);
 inline static void delete_session(session_t session);
 inline static device_t new_device(native_index_t index);
 inline static void delete_device(device_t device);
-inline static stream_t new_stream(device_t input, device_t output, ptr_t proc, double sample_rate, long max_buffer_size);
+inline static stream_t new_stream(device_t input, device_t output, signal_t signal, double sample_rate, long max_buffer_size);
 inline static void delete_stream(stream_t stream);
 
 void before_processing(stream_t stream);
@@ -167,7 +169,7 @@ inline static void delete_device(device_t device)
     fa_delete(device);
 }
 
-inline static stream_t new_stream(device_t input, device_t output, ptr_t proc, double sample_rate, long max_buffer_size)
+inline static stream_t new_stream(device_t input, device_t output, signal_t signal, double sample_rate, long max_buffer_size)
 {
     stream_t stream         = fa_new(audio_stream);
 
@@ -180,11 +182,8 @@ inline static stream_t new_stream(device_t input, device_t output, ptr_t proc, d
 
     stream->sample_rate     = sample_rate;
     stream->max_buffer_size = max_buffer_size;
-
-    // stream->proc            = proc;
-    // stream->proc_impl       = fa_interface(fa_processor_interface_i, stream->proc);
-    // assert(stream->proc_impl && "Must implement Processor");
-
+                       
+    stream->signal          = signal;
     stream->sample_count    = 0;
 
     // stream->incoming        = (sender_t)   lockfree_dispatcher();
@@ -390,14 +389,14 @@ void audio_inform_opening(device_t input, ptr_t proc, device_t output)
 
 // TODO change sample rate
 // TODO use unspec vector size if we can determine max
-stream_t fa_audio_open_stream(device_t input, ptr_t proc, device_t output)
+stream_t fa_audio_open_stream(device_t input, signal_t signal, device_t output)
 {
     PaError         status;
     unsigned long   buffer_size = 256;
     double          sample_rate = 44100;
-    stream_t        stream      = new_stream(input, output, proc, sample_rate, buffer_size);
+    stream_t        stream      = new_stream(input, output, signal, sample_rate, buffer_size);
 
-    audio_inform_opening(input, proc, output);
+    audio_inform_opening(input, signal, output);
     {
         // TODO
         // if (fa_not_equal(
@@ -485,14 +484,14 @@ void fa_audio_close_stream(stream_t stream)
 }
 
 void fa_audio_with_stream(device_t            input,
-                          ptr_t         processor,
+                          signal_t            signal,
                           device_t            output,
                           stream_callback_t   stream_callback,
                           ptr_t               stream_data,
                           error_callback_t    error_callback,
                           ptr_t               error_data)
 {
-    stream_t stream = fa_audio_open_stream(input, processor, output);
+    stream_t stream = fa_audio_open_stream(input, signal, output);
 
     if (fa_check(stream)) {
         error_callback(error_data, (error_t) stream);
@@ -509,44 +508,28 @@ void fa_audio_with_stream(device_t            input,
 
 void before_processing(stream_t stream)
 {
-    // fa_processor_info_t info = {
-    //     .sample_rate = stream->sample_rate,
-    //     .frame_size  = stream->max_buffer_size,
-    //     .sample_time = stream->sample_count,
-    //     .total_time  = NULL, // TODO
-    //     .dispatcher  = (dispatcher_t) stream->incoming
-    // };
-
-
-    size_t sz = 1204 * 1204 * sizeof(double);
-    void *b = malloc(sz);
-    memset(b, 0, sz);
-
-    // allocate buffers
-    // stream->proc_impl->before(stream->proc, &info);
+    // signal_t s = stream->signal;
+    // fa_print_ln(s);
 }
 
 void after_processing(stream_t stream)
 {
-    // fa_processor_info_t info = {
-    //     .sample_rate = stream->sample_rate,
-    //     .frame_size  = stream->max_buffer_size,
-    //     .sample_time = stream->sample_count,
-    //     .total_time  = NULL, // TODO
-    //     .dispatcher  = (dispatcher_t) stream->incoming
-    // };
-
-    // stream->proc_impl->after(stream->proc, &info);
-    // free buffers
 }
 
 int during_processing(stream_t stream, unsigned count, float **input, float **output)
 {
+    for (int i = 0; i < count; ++i) {
+        output[0][i] = input[0][i];
+        output[1][i] = input[1][i];
+    }
+
 
 
     stream->sample_count += count; // TODO atomic incr
+    // return paContinue;
     return paContinue;
 }
+
 
 
 /* The callbacks */
@@ -558,14 +541,6 @@ int native_audio_callback(const void                       *input,
                           PaStreamCallbackFlags             flags,
                           void                             *data)
 {
-    // if (flags)
-    // {
-    //     if (flags & paInputUnderflow)  warn(string("Input underflow"));
-    //     if (flags & paInputOverflow)   warn(string("Input overflow"));
-    //     if (flags & paOutputUnderflow) warn(string("Output underflow"));
-    //     if (flags & paOutputOverflow)  warn(string("Output overflow"));
-    //     if (flags & paPrimingOutput)   warn(string("Priming output"));
-    // }
     return during_processing(data, count, (float **) input, (float **) output);
 }
 
