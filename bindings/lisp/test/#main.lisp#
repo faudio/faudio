@@ -84,6 +84,7 @@
 (setf x (export-list '()))
 (setf y (export-list '(1 2 3)))
 
+(setf y 1)
 (equal              x y)
 (less-than          x y)
 (greater-than       x y)
@@ -196,10 +197,10 @@
 (setf x (string-empty))
 (setf x (string-single 104))
 (setf x (string-repeat 30 (char-int #\a)))
-(setf x (string-append "hans " "höglund"))
+(setf x (string-append "hans " "höglund"))
 (destroy x)
 
-(string-length "högtalare")
+(string-length "högtalare")
 (code-char (string-char-at 0 "foo"))
 
 (string-matches "a*b*c+" "aaacc")
@@ -343,7 +344,7 @@
                   (list-single 1) x))
 (setf x (map-add-entry
          (pair-create "surname"
-                      "höglund") x))
+                      "höglund") x))
 (setf x (map-remove "name" x))        ; Map.remove removes if present, otherwise does nothing
 (setf x (map-remove "skills" x))
 (setf y (map-copy x))
