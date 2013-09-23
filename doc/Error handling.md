@@ -4,17 +4,12 @@
 @anchor Errors
 @tableofcontents
 
-@note
-    This page is under construction.
-
-
 Generally, errors can be grouped into *recoverable* and *non-recoverable* errors.
 
-Non-recoverable errors are those that occur outside the control of the Audio
-Engine. They will usually terminate the process. Recoverable errors are those that
-occur outside the control of the user, but in control of *faudio*. In most
-systems, such errors can be *handled* by the user by some mechanism in the API such
-as exceptions.
+Non-recoverable errors are those that occur outside the control of the *faudio*. They will
+usually terminate the process. Recoverable errors are those that occur outside the control
+of the user, but in control of *faudio*. In most systems, such errors can be *handled* by
+the user by some mechanism in the API such as exceptions.
 
 # Handling errors {#id441}
 
@@ -58,14 +53,14 @@ check for optional values and error values.
 ## Setting up the log handler {#id30965}
 
 By default, *faudio* discards all incoming log messages. To set a different
-behaviour, use one of the setup functions in [Doremir.AudioEngine][dae]. Typically
+behaviour, use one of the setup functions in [Fa.Fa](@ref FaFa). Typically
 you want to set the log handler to write to a file, or pass them to a custom
 handler function.
 
 ## Adding log entries {#id10103}
 
 Non-recoverable errors are always logged. The user can add recoverable errors to
-the log using @ref fa_audio_engine_log. Typically, this function is used with
+the log using @ref fa_fa_log. Typically, this function is used with
 @ref fa_check, as in:
 
 ~~~
@@ -78,8 +73,8 @@ if (fa_check(value)) {
 There are also some convenience functions to log an arbitrary entry, for example:
 
 ~~~
-fa_audio_engine_log_info("Are you aware of this?");
-fa_audio_engine_log_error("That is an error!");
+fa_fa_log_info("Are you aware of this?");
+fa_fa_log_error("That is an error!");
 ~~~
 
 

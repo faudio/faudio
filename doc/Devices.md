@@ -4,9 +4,6 @@
 @anchor Devices
 @tableofcontents
 
-@note
-    This page is under construction.
-
 Devices are the entities that allow *faudio* to communicate with the
 outside world. Any client will need to connect at least two devices to each other
 to form a audio stream. While signals and processors denote functions, devices

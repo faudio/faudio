@@ -5,9 +5,6 @@
 @anchor Processors
 @tableofcontents
 
-@note
-    This page is under construction.
-
 The most important concepts in *faudio* are the notion of *signals* and
 *processors*. Both have simple definitions:
 

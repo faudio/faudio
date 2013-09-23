@@ -1,54 +1,5 @@
 
 
-#|
-    FAE
-    Copyright (c) DoReMIR Music Research 2012-2013
-    All rights reserved.
-|#
-
-
-#|
-    ## Conventions
-
-        All Modulo/C functions are exposed directly. Name is the same as in C except that:
-
-            - There is no global 'ae' prefix, instead all symbols are in the 'ae' package.
-            - Names are separated by dashes instead of underscores.
-
-        For example 'ae_device_audio_name' becomes (ae:device-audio-name x).
-        
-        Sometimes a Lisp wrapper is added to adapt error checking, wrapping of closures etc. The name
-        is the same as the wrapped function with a star suffix. For example, (list-find) is
-        available in two forms:
-    
-          list-find     accepts CFFI callbacks only
-          list-find*    accepts functions
-
-        Note that the Lisp wrappers are a work in progress. See utility.lisp for more information.
-        
-    ## Types
-
-        Opaque types (most of them) are represented by a Lisp class of the same name. For example
-        the type String in module Doremir.String is represented by a type (defclass string).
-
-    ## Resource management
-        
-        This is manual. Each created value object must be destroyed by passing it to (destroy), or
-        another destructive function such as (list-dcons). See the reference page 'Data Structures'
-        for more information.
-
-        We might want to hook into the Lisp GC using something like the trivial garbage; however
-        in many cases this might not necessarilty be practical. Things like sessions, devices and 
-        buffers often needs to be managed manually in any case (the same problem applies to streams
-        and sockets).
-                                                                  
-    ## Undefined behaviour
-
-      - Calling a function on a destroyed object is undefined
-      - Calling (from-pointer) with the wrong type is undefined
-      - Calling a generic function on a type that does not implement a required interface is undefined
-|#
-
 (in-package :faudio)
 
 (defvar x nil)
@@ -58,22 +9,6 @@
 (defvar d nil)
 (defvar p nil)
 
-; ---------------------------------------------------------------------------------------------------
-; Top-level functions
-; ---------------------------------------------------------------------------------------------------
-;
-; Doremir
-;
-; These generic functions work for most types, see the "Implements" section in each
-; relevant module documentation entry.
-;
-; Note that there is no multiple dispatch in this system: implementations assume
-; that the given arguments are of the same type and dispatches on the leftmost
-; argument. If you try to compare, say an integer and a list you will crash.
-;
-; Note:
-;   We could add runtime checks to fix this, but that would slow down certain operations.
-;   Let me know if this is a problem. /Hans
 
 (setf x 1)
 (setf y 2)
@@ -108,22 +43,22 @@
 
 ; ---------------------------------------------------------------------------------------------------
 ;
-; Doremir.AudioEngine
+; Fa.AudioEngine
 
-(audioengine-initialize)
-(audioengine-terminate)
-(audioengine-set-log-file "/Users/hans/Library/Logs/FAE.log")
-(audioengine-set-log-std)
+(fa-initialize)
+(fa-terminate)
+(fa-set-log-file "/Users/hans/Library/Logs/Faudio.log")
+(fa-set-log-std)
 
-(audioengine-log-info "What to say?")
-(audioengine-log-warning "Beware!")
-(audioengine-log-error "Rattlesnakes!")
-(audioengine-log-error-from "Rattlesnakes!" "Test.Lisp")
+(fa-log-info "What to say?")
+(fa-log-warning "Beware!")
+(fa-log-error "Rattlesnakes!")
+(fa-log-error-from "Rattlesnakes!" "Test.Lisp")
 
 
 ; ---------------------------------------------------------------------------------------------------
 ;
-; Doremir.Error
+; Fa.Error
 
 (setf x (error-create-simple 2 "An error" "From.Here"))
 (destroy x)
@@ -138,7 +73,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 ;
-; Doremir.Dynamic
+; Fa.Dynamic
 ;
 ; Note:
 ;   Modulo is not smart enough to translate enums to Lisp yet
@@ -161,9 +96,9 @@
 ; Data structures
 ; ---------------------------------------------------------------------------------------------------
 ;
-; Doremir.Ratio
+; Fa.Ratio
 ;
-; AE ratios are interchangable with Lisp rationals.
+; faudio ratios are interchangable with Lisp rationals.
 
 (setf x (ratio-create 1 2))
 (setf y (ratio-create 278 12))
@@ -187,9 +122,9 @@
 
 ; ---------------------------------------------------------------------------------------------------
 ;
-; Doremir.String
+; Fa.String
 ;
-; AE strings are interchangable with Lisp strings.
+; faudio strings are interchangable with Lisp strings.
 ;
 ; Note that LispWorks does not support the full Unicode range (only UCS-2).
 
@@ -207,12 +142,12 @@
 
 ; ---------------------------------------------------------------------------------------------------
 ;
-; Doremir.Pair
+; Fa.Pair
 ;
-; AE pairs are distinct from Lisp conses:
+; faudio pairs are distinct from Lisp conses:
 ;
-;   * AE pairs print as (1,2), not as '(1 . 2).
-;   * You can pass Lisp conses to functions expecting AE pairs, but not the other way around.
+;   * faudio pairs print as (1,2), not as '(1 . 2).
+;   * You can pass Lisp conses to functions expecting faudio pairs, but not the other way around.
 ;   * You can use (import-pair) and (export-pair) to convert, see example below.
 
 (setf x (pair-create 1 2))
@@ -233,12 +168,12 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Doremir.List
+; Fa.List
 
-; AE lists are distinct from Lisp lists:
+; faudio lists are distinct from Lisp lists:
 ;
-;   * AE lists print as [1,2,3], not as '(1 2 3).
-;   * You can pass Lisp lists to functions expecting AE lists, but not the other way around.
+;   * faudio lists print as [1,2,3], not as '(1 2 3).
+;   * You can pass Lisp lists to functions expecting faudio lists, but not the other way around.
 ;   * You can use (import-list) and (export-list) to convert, see example below.
 
 (setf x (list-empty))
@@ -291,7 +226,7 @@
   (list-single (list-cons 1 (list-single 2)))))
 
 
-; Mixing AE and Lisp lists
+; Mixing faudio and Lisp lists
 (list-append '(1 2 3) (list-single 4))
 (list-dcons 1 '())
 (list-is-empty '())
@@ -303,7 +238,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Doremir.Set
+; Fa.Set
 
 (setf x (set-empty))
 (setf x (set-single 1))
@@ -328,12 +263,12 @@
 (set-product x y)
 (set-difference x y)
 
-(set-to-list x)                   ; Convert to AE list
+(set-to-list x)                   ; Convert to faudio list
 (import-list (set-to-list x))     ; Convert to Lisp list
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Doremir.Map
+; Fa.Map
 
 (setf x (map-empty))
 (setf x (map-dadd "name" "hans" x))
@@ -369,16 +304,16 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Doremir.Buffer
+; Fa.Buffer
 ;
-; The AE buffers are simply raw blocks of memory with a known size.
+; The faudio buffers are simply raw blocks of memory with a known size.
 
 ; All memory is allocated outside the control of Lisp and must be freed by destroying 
 ; the buffer. You can acces individual elements using the (get) function, copy the buffer 
 ; to the Lisp heap using (buffer-to-array) and copy it back using (array-to-buffer).
 ;
 ; Reading or writing outside the range is undefined, but fails with an error message in
-; a debug build of the AE.
+; a debug build of the faudio.
 
 (setf x (buffer-create 10))
 (setf x (buffer-resize 20 x))
@@ -421,7 +356,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Doremir.Midi
+; Fa.Midi
 
 (setf x (midi #x91 60 127))
 (setf x (midi-create-sysex (buffer-create 1024)))
@@ -441,7 +376,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Doremir.Time
+; Fa.Time
 ;
 ; Use the (time) function to create a time value. All the given components are added, 
 ; together so (time :minutes 1 :seconds 2) is equivalent to (time :seconds 62).
@@ -537,7 +472,7 @@
 
 
 
-; Doremir.Type
+; Fa.Type
 ;
 ; You can always give a function expecting a type a *type expression* (see below). 
 ; Use (type *expr*) to force conversion.
@@ -586,7 +521,7 @@
 ; Devices
 ; ---------------------------------------------------------------------------------------------------
 
-; Doremir.Device.Audio
+; Fa.Device.Audio
 
 (setf s (device-audio-begin-session))
 (error-check s)
@@ -610,7 +545,7 @@
 
 (device-audio-set-status-callback* (lambda ()
   (capi:display-message "Audio setup changed")
-  (audioengine-log-info "Audio setup changed")) s)
+  (fa-log-info "Audio setup changed")) s)
 
 (setf p (processor-identity '(:pair (:frame :f32) (:frame :f32))))
 (setf z (device-audio-open-stream x p y))
@@ -623,7 +558,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Doremir.Device.Midi
+; Fa.Device.Midi
 
 (setf s (device-midi-begin-session))
 (error-check s)
@@ -644,12 +579,12 @@
 ; FIXME (device-midi-set-status-callback (callback midi-status-changed) nil s)
 (device-midi-set-status-callback* (lambda ()
   (capi:display-message "Audio setup changed")
-  (audioengine-log-info "Audio setup changed")) s)
+  (fa-log-info "Audio setup changed")) s)
 
 (defun register-midi-listener ()
   (device-midi-set-status-callback* (lambda ()
                                       (capi:display-message "Audio setup changed")
-                                      (audioengine-log-info "Audio setup changed")) s)
+                                      (fa-log-info "Audio setup changed")) s)
   )
 (mp:process-send mp:*main-process* #'register-midi-listener)
 
@@ -668,7 +603,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Doremir.Device.File
+; Fa.Device.File
 
 (device-file-open)
 (device-file-close)
@@ -676,7 +611,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Doremir.Device.Buffer
+; Fa.Device.Buffer
 
 (device-buffer-open)
 (device-buffer-close)
@@ -689,7 +624,7 @@
 ; Utility
 ; ---------------------------------------------------------------------------------------------------
 
-; Doremir.Plot
+; Fa.Plot
 
 (setf b (buffer-create 1024))
 (dotimes (i (/ (buffer-size b) 8))
@@ -702,7 +637,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Doremir.Message
+; Fa.Message
 
 (setf x (message-create-dispatcher))
 (setf x (message-create-lockfree-dispatcher))
@@ -719,7 +654,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Doremir.Atomic
+; Fa.Atomic
 
 (setf x (atomic-create))
 (setf y (atomic-copy x))
@@ -734,7 +669,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Doremir.Atomic.Queue
+; Fa.Atomic.Queue
 
 (setf x (atomic-queue-create))
 (destroy x)
@@ -743,7 +678,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Doremir.Atomic.Stack
+; Fa.Atomic.Stack
 
 (setf x (atomic-stack-create))
 (destroy x)
@@ -753,12 +688,12 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Doremir.Thread
+; Fa.Thread
 ;
-; You can use an AE mutex to syncronize threads created by Lisp and vice versa.
+; You can use an faudio mutex to syncronize threads created by Lisp and vice versa.
 
 (setf x (thread-create* (lambda () 
-                          (audioengine-log-info 
+                          (fa-log-info 
                            "And there's someone in a thread."))))
 (thread-join x)
 (thread-detach x)
@@ -789,12 +724,12 @@
 
 (thread-holding
  (y)
- (audioengine-log-info "I have the mutex"))
+ (fa-log-info "I have the mutex"))
 
 (thread-create* (lambda ()
-  (audioengine-log-info "I am waiting.")
+  (fa-log-info "I am waiting.")
   (thread-holding (y) 
-                  (audioengine-log-info "Finally, got it!"))))
+                  (fa-log-info "Finally, got it!"))))
 
 
 

@@ -4,9 +4,6 @@
 @anchor Interfaces
 @tableofcontents
 
-@note
-    This page is under construction.
-
 In faudio, an *interface* (not to be confuseed with and *audio interface*) is a
 collection of function types, identified by a unique value known as the *interface
 identifier*. They are used extensively inside faudio.

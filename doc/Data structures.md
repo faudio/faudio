@@ -4,9 +4,6 @@
 @anchor DataStructures
 @tableofcontents
 
-@note
-    This page is under construction.
-
 *faudio* include a set of general purpose [persistent&nbsp;data&nbsp;structures][persistent],
 which are primarily used for message passing between the audio thread and other threads.
 The fact that the data structures are persistent eliminate many of the problems commonly
