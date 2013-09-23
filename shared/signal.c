@@ -689,7 +689,16 @@ void fa_signal_run(int n, signal_t a, double *output)
     // TODO optimize
     // TODO verify
 
+    // TODO general progress monitor
+    // printf("\n");
     for (int i = 0; i < n; ++ i) {
+
+        // int percent = round(((float) i)*100 / (float)n);
+        // if ((i % (n/100)) == 0) {
+        //     printf("\rGenerating samples, done: %d%%", percent);
+        //     fflush ( stdout );
+        // }
+            
         output[i] = step(a2, state);
         inc_state(state);
     }
