@@ -330,9 +330,8 @@ int fa_signal_required_delay(fa_signal_t a)
     assert(false && "Not implemented");
 }
 
-#define ap3(a,b,c) string_dappend(a,string_dappend(b,c))
-#define ap4(a,b,c,d) string_dappend(a,ap3(b,c,d))
-#define ap5(a,b,c,d,e) string_dappend(a,ap4(b,c,d,e))
+
+
 
 fa_pair_t fa_signal_to_tree(fa_signal_t signal)
 {
@@ -369,7 +368,7 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
 
     case output_signal:
         return pair(
-            ap5(
+            concat(
                 string("output "), 
                 fa_string_show(fa_from_int32(output_get(signal, c))),
                 string("[-"),
@@ -503,12 +502,12 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
     }
 
     case output_signal: {
-        int n                   = output_get(signal2, n);
-        int c                   = output_get(signal2, c);
+        int samples             = output_get(signal2, n);
+        int channel             = output_get(signal2, c);
 
         signal_t a              = simplify(part, output_get(signal2, a));
 
-        return fa_signal_output(n, c, a);
+        return fa_signal_output(samples, channel, a);
     }
 
     default:

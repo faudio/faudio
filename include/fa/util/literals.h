@@ -36,5 +36,13 @@ fa_map_t fa_map(int count, ...);
 // #define map6(a,b,c,d,e,f)                   fa_map(6,a,b,c,d,e,f)
 #define map(...) VARARG(map, __VA_ARGS__)
 
+#define concat0()                           fa_string_empty()
+#define concat1(a)                          a
+#define concat2(a,b)                        fa_string_append(a,b)
+#define concat3(a,b,c)                      concat2(a,concat2(b,c))
+#define concat4(a,b,c,d)                    concat2(a,concat3(b,c,d))
+#define concat5(a,b,c,d,e)                  concat2(a,concat4(b,c,d,e))
+#define concat(...) VARARG(concat, __VA_ARGS__)
+
 #endif // _FA_UTIL_LITERALS
 

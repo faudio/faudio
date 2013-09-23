@@ -27,7 +27,7 @@ typedef fa_signal_t signal_t;
 
 signal_t fir(ptr_t a, signal_t rec)
 {
-    return add_((signal_t) a, mul_(rec, const_(0.9999)));
+    return add_((signal_t) delay_(10, a), mul_(rec, const_(0.9999)));
 }
 
 void helper_function()
@@ -49,19 +49,20 @@ void helper_function()
     // signal_t r = fa_signal_input(1);
     // signal_t r = fa_signal_output(1,0,time_());
 
-    // double freq = 110;
-    // double amp = 1;
-    // signal_t r = const_(0);
-    // 
-    // for (int i = 0; i < 10; ++i) {
-    //     r = add_(r, mul_(sin_(line_(freq)), const_(amp)));
-    //     freq *= (4.0 / 3);
-    //     amp  *= 0.9;
-    // }
-    // 
-    // r = mul_(r, const_(0.01));
+    double freq = 110;
+    double amp = 1;
+    signal_t r = const_(0);
     
-    signal_t r = loop_(fir, imp_());
+    for (int i = 0; i < 10; ++i) {
+        r = add_(mul_(sin_(line_(freq)), const_(amp)), r);
+        freq *= (4.0 / 3);
+        amp  *= 0.9;
+    }
+    
+    r = mul_(r, const_(0.01));
+    // r = loop_(fir, r);
+    
+    // signal_t r = loop_(fir, imp_());
 
 
     // double *xs = fa_malloc(8 * N);
