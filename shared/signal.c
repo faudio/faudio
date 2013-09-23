@@ -819,12 +819,19 @@ void signal_destroy(ptr_t a)
     return fa_signal_destroy(a);
 }
 
+string_t signal_show(ptr_t a)
+{
+    return fa_signal_draw_tree(fa_signal_to_tree(a));
+}
+
 fa_ptr_t signal_impl(fa_id_t interface)
 {
     static fa_copy_t signal_copy_impl
         = { signal_copy };
     static fa_destroy_t signal_destroy_impl
         = { signal_destroy };
+    static fa_string_show_t signal_show_impl 
+        = { signal_show };
 
     switch (interface) {
     case fa_copy_i:
@@ -832,6 +839,9 @@ fa_ptr_t signal_impl(fa_id_t interface)
 
     case fa_destroy_i:
         return &signal_destroy_impl;
+
+    case fa_string_show_i:
+        return &signal_show_impl;
 
     default:
         return NULL;
