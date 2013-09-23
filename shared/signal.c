@@ -330,6 +330,9 @@ int fa_signal_required_delay(fa_signal_t a)
     assert(false && "Not implemented");
 }
 
+#define ap3(a,b,c) string_dappend(a,string_dappend(b,c))
+#define ap4(a,b,c,d) string_dappend(a,ap3(b,c,d))
+#define ap5(a,b,c,d,e) string_dappend(a,ap4(b,c,d,e))
 
 fa_pair_t fa_signal_to_tree(fa_signal_t signal)
 {
@@ -366,9 +369,14 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
 
     case output_signal:
         return pair(
-            string_dappend(
+            ap5(
                 string("output "), 
-                fa_string_show(fa_from_int32(output_get(signal, c)))), 
+                fa_string_show(fa_from_int32(output_get(signal, c))),
+                string("[-"),
+                fa_string_show(fa_from_int32(output_get(signal, n))),
+                string("]")
+                ), 
+
             list(fa_signal_to_tree(output_get(signal, a))));
 
     default:
@@ -430,6 +438,12 @@ void split_part(struct part *p, struct part *p2, struct part *p3)
     p3->o = p->d * 2;
 }
 
+void run_part_neg(struct part *p, int *r, struct part *p2)
+{
+    run_part(p, r, p2);
+    *r = neg(*r);
+}
+
 
 inline static
 fa_signal_t simplify(part_t *part, fa_signal_t signal2)
@@ -442,8 +456,7 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
 
         int channel;
         part_t part1;
-        run_part(part, &channel, &part1);
-        channel = neg(channel);
+        run_part_neg(part, &channel, &part1);
 
         signal_t input          = fa_signal_input(channel);
         signal_t res            = simplify(&part1, fix(fix_data, input));
@@ -457,8 +470,7 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
         
         int channel;
         part_t part1;
-        run_part(part, &channel, &part1);
-        channel = neg(channel);
+        run_part_neg(part, &channel, &part1);
 
         signal_t input          = fa_signal_input(channel);
         signal_t output         = fa_signal_output(samples, channel, simplify(&part1, a));
