@@ -677,46 +677,6 @@ void audio_stream_destroy(ptr_t a)
     fa_audio_close_stream(a);
 }
 
-// fa_time_t audio_stream_time(ptr_t a)
-// {
-// stream_t stream = (stream_t) a;
-// double  sr = stream->sample_rate;
-// int64_t t  = stream->sample_count;
-// return milliseconds(((double)t) / sr * 1000);
-// }
-
-// double audio_stream_tick_rate(ptr_t a)
-// {
-// stream_t stream = (stream_t) a;
-// return stream->sample_rate;
-// }
-
-// int64_t audio_stream_ticks(ptr_t a)
-// {
-// stream_t stream = (stream_t) a;
-// return stream->sample_count; // TODO atomic
-// }
-
-// void audio_stream_sync(ptr_t a)
-// {
-// stream_t stream = (stream_t) a;
-// fa_message_sync(((sender_t) stream->incoming));
-// assert (false && "Not implemented");
-// }
-
-// fa_list_t audio_stream_receive(ptr_t a, address_t addr)
-// {
-// stream_t stream = (stream_t) a;
-// return fa_message_receive(((sender_t) stream->incoming), addr);
-// assert (false && "Not implemented");
-// }
-
-// void audio_stream_send(ptr_t a, address_t addr, message_t msg)
-// {
-// stream_t stream = (stream_t) a;
-// fa_message_send(((receiver_t) stream->incoming), addr, msg);
-// assert (false && "Not implemented");
-// }
 
 ptr_t audio_stream_impl(fa_id_t interface)
 {
@@ -724,12 +684,6 @@ ptr_t audio_stream_impl(fa_id_t interface)
         = { audio_stream_show };
     static fa_destroy_t audio_stream_destroy_impl
         = { audio_stream_destroy };
-    // static fa_time_clock_interface_t audio_stream_time_clock_interface_impl
-    // = { audio_stream_time, audio_stream_tick_rate, audio_stream_ticks };
-    // static fa_message_receiver_interface_t audio_stream_message_receiver_interface_impl
-    //     = { audio_stream_send };
-    // static fa_message_sender_interface_t audio_stream_message_sender_interface_impl
-    //     = { audio_stream_sync, audio_stream_receive };
 
     switch (interface) {
 
@@ -739,15 +693,6 @@ ptr_t audio_stream_impl(fa_id_t interface)
 
     case fa_destroy_i:
         return &audio_stream_destroy_impl;
-
-        // case fa_time_clock_interface_i:
-        // return &audio_stream_time_clock_interface_impl;
-
-        // case fa_message_sender_interface_i:
-        // return &audio_stream_message_sender_interface_impl;
-
-        // case fa_message_receiver_interface_i:
-        // return &audio_stream_message_receiver_interface_impl;
 
     default:
         return NULL;
