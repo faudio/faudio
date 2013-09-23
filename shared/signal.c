@@ -50,14 +50,14 @@ struct _fa_signal_t {
 
         struct {
             string_t        name;
-            dbinary_t          f;
+            dbinary_t       f;
             ptr_t           fd;
             signal_t        a;
             signal_t        b;
         }                   lift2;
 
         struct {
-            fixpoint_t           f;
+            fixpoint_t      f;
             ptr_t           fd;
         } loop;
 

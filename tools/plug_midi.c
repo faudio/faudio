@@ -42,7 +42,7 @@ ptr_t loop_checking_midi(ptr_t queue)
     MIDIClientRef client;
     CFStringRef cf_name = fa_string_to_native(string("faudio1"));
     OSStatus res = MIDIClientCreate(cf_name, &cb, queue, &client);
-    printf("Result: %d\n", res);
+    printf("Result: %ld\n", res);
 
     CFRunLoopRun();
     assert(false && "Never happens");

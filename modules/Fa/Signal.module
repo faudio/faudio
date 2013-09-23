@@ -31,38 +31,53 @@ module Fa.Signal
     /**
         This primitive signal represents elapsed time in seconds.
         
-        Semantically $$y(t) = t$$.
+        @par Semantic $$y(t) = t$$.
      */
     time        : () -> Signal;
 
     /**
-        This primitive signal represents a random number.
+        This primitive signal represents a random number in the range -1 to 1.
+        This can be used as a white-noise generator.
         
-        Semantically $$y(t) = random(-1,1)$$.
+        @par Semantic $$y(t) = random(-1,1)$$.
      */
     random      : () -> Signal;
     
     /**
         This primitive signal represents a constant value.
         
-        Semantically $$y(c)(t) = c$$.
+        @par Semantic $$y(c)(t) = c$$.
      */
     constant    : Double -> Signal;
 
     /**
         This primitive signal lifts a unary function to signal level.
         
-        Semantically $$y(f,a)(t) = f(a(t))$$.
+        @par Semantic $$y(f,a)(t) = f(a(t))$$.
      */
     lift        : ( String, UnaryDouble, Ptr, Signal )            -> Signal;
 
     /**
         This primitive signal lifts a binary function to signal level.
         
-        Semantically $$y(f,a,b)(b) = f(a(t), b(t))$$.
+        @par Semantic $$y(f,a,b)(t) = f(a(t), b(t))$$.
      */
     lift2       : ( String, BinaryDouble, Ptr, Signal, Signal )   -> Signal;
+
+    /**
+        The loop primitive provides feedback. The given signal function receives
+        a signal which is the same as the output of the function with an implicit
+        one-sample delay.
+        
+        @par Semantic $$y(f)(t) = f(y(t-1))$$.
+     */
     loop        : ( UnarySignal, Ptr )                            -> Signal;
+
+    /**
+        The delay primitive provides time shifting.
+        
+        @par Semantic $$y(n,a)(t) = a(t-n)$$.
+     */
     delay       : ( Int, Signal )                                 -> Signal;
     input       : ( Int )                                         -> Signal;
     output      : ( Int, Int, Signal )                            -> Signal;

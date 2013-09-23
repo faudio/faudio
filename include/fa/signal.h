@@ -45,28 +45,29 @@ typedef double (* fa_signal_binary_double_t)(fa_ptr_t,
 /**
     This primitive signal represents elapsed time in seconds.
     
-    Semantically $$y(t) = t$$.
+    @par Semantic $$y(t) = t$$.
 */
 fa_signal_t fa_signal_time();
 
 /**
-    This primitive signal represents a random number.
+    This primitive signal represents a random number in the range -1 to 1.
+    This can be used as a white-noise generator.
     
-    Semantically $$y(t) = random(-1,1)$$.
+    @par Semantic $$y(t) = random(-1,1)$$.
 */
 fa_signal_t fa_signal_random();
 
 /**
     This primitive signal represents a constant value.
     
-    Semantically $$y(c)(t) = c$$.
+    @par Semantic $$y(c)(t) = c$$.
 */
 fa_signal_t fa_signal_constant(double);
 
 /**
     This primitive signal lifts a unary function to signal level.
     
-    Semantically $$y(f,a)(t) = f(a(t))$$.
+    @par Semantic $$y(f,a)(t) = f(a(t))$$.
 */
 fa_signal_t fa_signal_lift(fa_string_t,
                            fa_signal_unary_double_t,
@@ -76,7 +77,7 @@ fa_signal_t fa_signal_lift(fa_string_t,
 /**
     This primitive signal lifts a binary function to signal level.
     
-    Semantically $$y(f,a,b)(b) = f(a(t), b(t))$$.
+    @par Semantic $$y(f,a,b)(t) = f(a(t), b(t))$$.
 */
 fa_signal_t fa_signal_lift2(fa_string_t,
                             fa_signal_binary_double_t,
@@ -84,10 +85,20 @@ fa_signal_t fa_signal_lift2(fa_string_t,
                             fa_signal_t,
                             fa_signal_t);
 
-
+/**
+    The loop primitive provides feedback. The given signal function receives
+    a signal which is the same as the output of the function with an implicit
+    one-sample delay.
+    
+    @par Semantic $$y(f)(t) = f(y(t-1))$$.
+*/
 fa_signal_t fa_signal_loop(fa_signal_unary_signal_t, fa_ptr_t);
 
-
+/**
+    The delay primitive provides time shifting.
+    
+    @par Semantic $$y(n,a)(t) = a(t-n)$$.
+*/
 fa_signal_t fa_signal_delay(int, fa_signal_t);
 
 
