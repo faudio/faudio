@@ -377,7 +377,7 @@ stream_t fa_audio_open_stream(device_t input,
                               )
 {
     PaError         status;
-    unsigned long   buffer_size = 64;
+    unsigned long   buffer_size = 128;
     double          sample_rate = 44100;
 
     stream_t        stream      = new_stream(input, output, sample_rate, buffer_size);
@@ -419,6 +419,10 @@ stream_t fa_audio_open_stream(device_t input,
         PaStreamCallback               *callback = native_audio_callback;
         ptr_t                           data     = stream;
 
+        
+        // TODO necessary to sleep?
+        fa_thread_sleep(400);
+        
         status = Pa_OpenStream(&stream->native, in, out, sample_rate, buffer_size, flags, callback, data);
 
         if (status != paNoError) {
