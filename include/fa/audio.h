@@ -169,9 +169,9 @@ typedef fa_list_t (* fa_audio_proc_t)(fa_ptr_t, fa_list_t);
         Returns an error if the session could not be started.
 */
 fa_audio_stream_t fa_audio_open_stream(fa_audio_device_t,
+                                       fa_audio_device_t,
                                        fa_audio_proc_t,
-                                       fa_ptr_t,
-                                       fa_audio_device_t);
+                                       fa_ptr_t);
 
 /**
     Close the given stream.
@@ -190,9 +190,9 @@ void fa_audio_close_stream(fa_audio_stream_t);
     @param error_callback   Function to receive eventual errors.
 */
 void fa_audio_with_stream(fa_audio_device_t,
+                          fa_audio_device_t,
                           fa_audio_proc_t,
                           fa_ptr_t,
-                          fa_audio_device_t,
                           fa_audio_stream_callback_t,
                           fa_ptr_t,
                           fa_error_callback_t,

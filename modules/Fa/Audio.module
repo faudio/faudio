@@ -140,7 +140,7 @@ module Fa.Audio
         @par Errors
             Returns an error if the session could not be started.
      */
-    openStream : (Device, Proc, Ptr, Device) -> Stream;
+    openStream : (Device, Device, Proc, Ptr) -> Stream;
     
     /**
         Close the given stream.
@@ -159,7 +159,7 @@ module Fa.Audio
         @param error_callback   Function to receive eventual errors.
      */
     withStream : (
-        Device, Proc, Ptr, Device,
+        Device, Device, Proc, Ptr,
         StreamCallback, Ptr,
         Callback, Ptr
         ) -> Void;

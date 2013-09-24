@@ -370,7 +370,11 @@ void audio_inform_opening(device_t input, ptr_t proc, device_t output)
 
 // TODO change sample rate
 // TODO use unspec vector size if we can determine max
-stream_t fa_audio_open_stream(device_t input, proc_t proc, ptr_t proc_data, device_t output)
+stream_t fa_audio_open_stream(device_t input, 
+                              device_t output, 
+                              proc_t proc, 
+                              ptr_t proc_data
+                              )
 {
     PaError         status;
     unsigned long   buffer_size = 64;
@@ -450,15 +454,15 @@ void fa_audio_close_stream(stream_t stream)
 }
 
 void fa_audio_with_stream(device_t            input,
+                          device_t            output,
                           proc_t              proc, 
                           ptr_t               proc_data, 
-                          device_t            output,
                           stream_callback_t   stream_callback,
                           ptr_t               stream_data,
                           error_callback_t    error_callback,
                           ptr_t               error_data)
 {
-    stream_t stream = fa_audio_open_stream(input, proc, proc_data, output);
+    stream_t stream = fa_audio_open_stream(input, output, proc, proc_data);
 
     if (fa_check(stream)) {
         error_callback(error_data, (error_t) stream);
