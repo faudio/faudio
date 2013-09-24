@@ -422,55 +422,44 @@
 ; Audio processing
 ; ---------------------------------------------------------------------------------------------------
 
-(defmacro time
-  (&rest args) `(signal-time ,@args))
-(defmacro noise
-  (&rest args) `(signal-random ,@args))
-(defmacro constant
-  (&rest args) `(signal-constant (coerce ,@args 'double-float)))
-(defmacro input
-  (&rest args) `(signal-input ,@args))
-(defmacro output
-  (&rest args) `(signal-output ,@args))
-(defmacro delay
-  (&rest args) `(signal-delay ,@args))
-(defmacro +~
-  (&rest args) `(signal-add ,@args))
-(defmacro *~
-  (&rest args) `(signal-multiply ,@args))
-(defmacro sin~
-  (&rest args) `(signal-sin ,@args))
-(defmacro sine
-          (&rest args) `(signal-sin (signal-line (coerce ,@args 'double-float))))
-
-
 ; Signals
 
 (setf x (time))
-(setf x (noise))
+(setf x (random))
 (setf x (constant 0.5))
 (setf x (input 1))
-(setf x (sine 440.0))
+(setf x (sin (line 440.0)))
 
 
 (setf x (*~ (constant 0.3) 
-            (sine 220)))
+            (sin (line 220))))
 
 
 
-(setf a (*~ (sin~ (signal-line 440d0)) (constant 0.1d0)))
-(setf b (*~ (sin~ (signal-line 450d0)) (constant 0.1d0)))
-(setf c (*~ (sin~ (signal-line 460d0)) (constant 0.1d0)))
-(setf d (*~ (sin~ (signal-line 490d0)) (constant 0.1d0)))
-(setf x (*~ (sin~ (signal-line 0.5d0))
-         (+~ (+~ a b) (+~ c d))))
+(setf a (*~ (sin (line 440)) (constant 0.1)))
+(setf b (*~ (sin (line 450)) (constant 0.1)))
+(setf c (*~ (sin (line 460)) (constant 0.1)))
+(setf d (*~ (sin (line 490)) (constant 0.1)))
+(setf x (*~ (sin (line 0.5))
+  (+~ (+~ a b) (+~ c d))))
 
-(signal-run-file 
- (* 44100 60) 
- x 
- "/Users/hans/audio/out.wav")
+(setf x 
+  (+~
+    (*~ (input 0)                (sin (line 0.1)))
+    (*~ (constant 0.01) (*~ (random) (cos (line 0.1))))))
 
 
+(setf s (audio-begin-session))
+
+(let*
+    ((s (audio-begin-session))
+     (i (audio-default-input s))
+     (o (audio-default-output s))
+     (st (audio-open-stream i x o)))
+  (thread-sleep 5000)
+  (audio-end-session s))
+
+(signal-run-file (* 44100 60) x "/Users/hans/audio/out.wav")
 
 
 

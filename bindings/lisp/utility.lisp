@@ -122,6 +122,21 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
+(defmacro time (&rest args) `(signal-time ,@args))
+(defmacro random (&rest args) `(signal-random ,@args))
+(defmacro constant (&rest args) `(signal-constant (coerce ,@args 'double-float)))
+(defmacro input (&rest args) `(signal-input ,@args))
+(defmacro output (&rest args) `(signal-output ,@args))
+(defmacro delay (&rest args) `(signal-delay ,@args))
+(defmacro +~ (&rest args) `(signal-add ,@args))
+(defmacro *~ (&rest args) `(signal-multiply ,@args))
+(defmacro line (&rest args) `(signal-line (coerce ,@args 'double-float)))
+(defmacro input (&rest args) `(signal-input ,@args))
+(defmacro sin (&rest args) `(signal-sin ,@args))
+(defmacro cos (&rest args) `(signal-cos ,@args))
+(defmacro loop (&rest args) `(signal-loop (coerce ,@args 'double-float)))
+
+
 (defmacro never         (&rest args)  `(event-never ,@args))
 (defmacro now           (&rest args)  `(event-now ,@args))
 (defmacro later         (&rest args)  `(event-later ,@args))

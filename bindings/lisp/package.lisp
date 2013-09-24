@@ -15,6 +15,9 @@
   (:shadow      :string
                 :number
                 :list
+                :random
+                :sin
+                :cos
                 :loop
                 :set
                 :map

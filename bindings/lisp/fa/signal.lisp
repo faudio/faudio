@@ -23,6 +23,7 @@
 (defcfun (signal-add "fa_signal_add") signal (a signal) (b signal))
 (defcfun (signal-multiply "fa_signal_multiply") signal (a signal) (b signal))
 (defcfun (signal-sin "fa_signal_sin") signal (a signal))
+(defcfun (signal-cos "fa_signal_cos") signal (a signal))
 (defcfun (signal-to-tree "fa_signal_to_tree") pair (a signal))
 (defcfun (signal-draw-tree "fa_signal_draw_tree") string (a pair))
 (defcfun (signal-simplify "fa_signal_simplify") signal (a signal))

@@ -11,6 +11,7 @@
 
 ; Load Lisp bindings
 (asdf:load-system :faudio)
+(asdf:operate 'asdf:load-op :faudio :force t)
 
 ; Load library and setup tests
 (let ((framework-name "Faudio")
@@ -18,9 +19,9 @@
       (log-path       (format nil "~a/Library/Logs/Fsound.log" (user-homedir-pathname))))
   (push framework-path cffi:*darwin-framework-directories*)
   (setf *foreign-lib* (cffi:load-foreign-library `(:framework ,framework-name)))
-  ;(faudio::fa-set-log-file log-path)
+  (faudio::fa-set-log-file log-path)
   ;(faudio::plot-use-gnu)
-  ;(faudio::audioengine-initialize)
+  (faudio::fa-initialize)
 )
 
 ; To unload, evaluate this

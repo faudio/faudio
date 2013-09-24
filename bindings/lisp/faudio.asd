@@ -24,9 +24,9 @@
       :pathname "fa"
       :components (
         (:file "std")
-        (:file "string")
         (:file "list")
         (:file "pair")
+        (:file "string")
         (:file "set")
         (:file "map")
         (:file "graph")
