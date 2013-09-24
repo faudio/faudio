@@ -35,11 +35,11 @@ signal_t fir(ptr_t a, signal_t rec)
 
 void helper_function()
 {
-    // signal_t a = mul_(sin_(mul_(time_(), const_(TAU * 440))), const_(0.1));
-    // signal_t b = mul_(sin_(mul_(time_(), const_(TAU * 440 * 2 / 3))), const_(0.1));
-    // signal_t c = mul_(sin_(mul_(time_(), const_(TAU * 440 * 4 / 5))), const_(0.1));
-    // signal_t d = mul_(sin_(mul_(time_(), const_(TAU * 440 * 6 / 7))), const_(0.1));
-    // signal_t r = add_(a, add_(b, add_(c, d)));
+    signal_t a = mul_(sin_(mul_(time_(), const_(TAU * 440))), const_(0.1));
+    signal_t b = mul_(sin_(mul_(time_(), const_(TAU * 440 * 2 / 3))), const_(0.1));
+    signal_t c = mul_(sin_(mul_(time_(), const_(TAU * 440 * 4 / 5))), const_(0.1));
+    signal_t d = mul_(sin_(mul_(time_(), const_(TAU * 440 * 6 / 7))), const_(0.1));
+    signal_t r = add_(a, add_(b, add_(c, d)));
 
     // signal_t r = mul_(rand_(), mul_(sin_(mul_(time_(), const_(TAU * 0.5))), const_(0.5)));
     // signal_t r = mul_(imp_(), const_(0.5));
@@ -62,10 +62,11 @@ void helper_function()
     // }    
     // r = mul_(r, const_(0.002));
 
-    signal_t r = add_(
-        mul_(input_(0)                 , sin_(line_(0.1))),
-        mul_(mul_(const_(0.01),rand_()) , cos_(line_(0.1)))
-        );
+    // signal_t r = time_();
+    // signal_t r = add_(
+    //     mul_(input_(0)                  , sin_(line_(0.1))),
+    //     mul_(mul_(const_(0.01),rand_()) , cos_(line_(0.1)))
+    //     );
 
     
     // signal_t r = loop_(fir, imp_());
@@ -86,11 +87,13 @@ void helper_function()
         if (fa_check(st)) {
             fa_error_log(st, NULL);
         }
-        
-        fa_thread_sleep(1000 * 30);        
+    
+        while(1) {
+            fa_thread_sleep(1000 * 30);        
+        }
         fa_audio_end_session(s);        
     }
-    
+    // fa_signal_print(44100*2, r);
 
     // ptr_t res = fa_signal_run_file(N, r, string("test.wav"));
     // if (fa_check(res)) {
