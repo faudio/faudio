@@ -25,6 +25,6 @@
 (defcfun (buffer-read-raw "fa_buffer_read_raw") buffer (a string))
 (defcfun (buffer-write-raw "fa_buffer_write_raw") :void (a string) (b buffer))
 (defcfun (buffer-read-audio "fa_buffer_read_audio") pair (a string))
-(defcfun (buffer-write-audio "fa_buffer_write_audio") ptr (a string) (b type) (c buffer))
+(defcfun (buffer-write-audio "fa_buffer_write_audio") ptr (a string) (b :int) (c buffer))
 (defcfun (buffer-unsafe-address "fa_buffer_unsafe_address") (:pointer :void) (a buffer))
 
