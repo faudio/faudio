@@ -456,7 +456,7 @@
      (i (audio-default-input s))
      (o (audio-default-output s))
      (st (audio-open-stream i x o)))
-  (thread-sleep 5000)
+  (thread-sleep 30000)
   (destroy st)
   (destroy s))
 
