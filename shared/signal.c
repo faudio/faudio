@@ -578,7 +578,7 @@ double  read_actual_input(int c, state_t state);
 inline static
 double read_samp(int c, state_t state)
 {
-    return (c > 0) ? read_actual_input(c, state) : read_bus(neg(c), state);
+    return (c >= 0) ? read_actual_input(c, state) : read_bus(neg(c), state);
 }
 inline static
 void write_samp(int n, int c, double x, state_t state)
@@ -808,6 +808,14 @@ inline static double _sin(ptr_t _, double x)
 fa_signal_t fa_signal_sin(fa_signal_t a)
 {
     return fa_signal_lift(string("sin"), _sin, NULL, a);
+}
+inline static double _cos(ptr_t _, double x)
+{
+    return cos(x);
+}
+fa_signal_t fa_signal_cos(fa_signal_t a)
+{
+    return fa_signal_lift(string("cos"), _cos, NULL, a);
 }
 
 

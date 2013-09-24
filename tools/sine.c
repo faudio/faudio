@@ -15,6 +15,7 @@
 #define add_        fa_signal_add
 #define mul_        fa_signal_multiply
 #define sin_        fa_signal_sin
+#define cos_        fa_signal_cos
 #define time_       fa_signal_time
 #define rand_       fa_signal_random
 #define const_      fa_signal_constant
@@ -22,6 +23,8 @@
 #define line_       fa_signal_line
 #define delay_      fa_signal_delay
 #define loop_       fa_signal_loop
+#define input_      fa_signal_input
+#define output_     fa_signal_output
 
 
 
@@ -49,16 +52,20 @@ void helper_function()
     // signal_t r = fa_signal_input(1);
     // signal_t r = fa_signal_output(1,0,time_());
 
-    double freq = 100;
-    double amp = 1;
-    signal_t r = const_(0);
-    for (int i = 0; i < 30; ++i) {
-        r = add_(mul_(sin_(line_(freq)), const_(amp)), r);
-        freq *= (5.0 / 4.0);
-        amp  *= 0.9;
-    }    
-    r = mul_(r, const_(0.002));
+    // double freq = 100;
+    // double amp = 1;
+    // signal_t r = const_(0);
+    // for (int i = 0; i < 30; ++i) {
+    //     r = add_(mul_(sin_(line_(freq)), const_(amp)), r);
+    //     freq *= (5.0 / 4.0);
+    //     amp  *= 0.9;
+    // }    
+    // r = mul_(r, const_(0.002));
 
+    signal_t r = add_(
+        mul_(input_(0)                 , sin_(line_(0.1))),
+        mul_(mul_(const_(0.01),rand_()) , cos_(line_(0.1)))
+        );
 
     
     // signal_t r = loop_(fir, imp_());

@@ -406,7 +406,7 @@ void audio_inform_opening(device_t input, ptr_t proc, device_t output)
 stream_t fa_audio_open_stream(device_t input, signal_t signal, device_t output)
 {
     PaError         status;
-    unsigned long   buffer_size = 16;
+    unsigned long   buffer_size = 32;
     double          sample_rate = 44100;
     stream_t        stream      = new_stream(input, output, signal, sample_rate, buffer_size);
 
@@ -535,7 +535,10 @@ void after_processing(stream_t stream)
 int during_processing(stream_t stream, unsigned count, float **input, float **output)
 {
     for (int i = 0; i < count; ++ i) {
-        // TODO inputs
+        // TODO inputs                  
+        stream->state->inputs[0] = input[0][i];
+        stream->state->inputs[1] = input[1][i];
+        
         double x = step(stream->signal, stream->state);
         output[0][i] = x;
         output[1][i] = x;

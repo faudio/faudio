@@ -151,6 +151,9 @@ fa_signal_t fa_signal_add(fa_signal_t, fa_signal_t);
 fa_signal_t fa_signal_multiply(fa_signal_t, fa_signal_t);
 
 
+fa_signal_t fa_signal_cos(fa_signal_t);
+
+
 fa_signal_t fa_signal_sin(fa_signal_t);
 
 /** Convert the signal to a tree represented as set of

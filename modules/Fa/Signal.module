@@ -155,7 +155,7 @@ module Fa.Signal
     // acos                : (Signal, Signal) -> Signal;
     // asin                : (Signal, Signal) -> Signal;
     // atan                : (Signal, Signal) -> Signal;
-    // cos                 : (Signal, Signal) -> Signal;
+    cos                 : (Signal) -> Signal;
     sin                 : (Signal) -> Signal;
     // tan                 : (Signal, Signal) -> Signal;
     // exp                 : (Signal, Signal) -> Signal;
