@@ -109,9 +109,6 @@ void before_processing(stream_t stream);
 void after_processing(stream_t stream);
 int during_processing(stream_t stream, unsigned count, float **input, float **output);
 
-static inline int num_input_channels(device_t device);
-static inline int num_output_channels(device_t device);
-
 static int native_audio_callback(const void *input_ptr,
                                  void *output_ptr,
                                  unsigned long frame_count,
@@ -193,8 +190,8 @@ inline static stream_t new_stream(device_t input, device_t output, signal_t sign
 
     stream->input           = input;
     stream->output          = output;
-    stream->input_channels  = num_input_channels(input);
-    stream->output_channels = num_output_channels(output);
+    stream->input_channels  = fa_audio_input_channels(input);
+    stream->output_channels = fa_audio_output_channels(output);
 
     stream->sample_rate     = sample_rate;
     stream->max_buffer_size = max_buffer_size;
@@ -328,23 +325,23 @@ fa_string_t fa_audio_host_name(device_t device)
               
 int fa_audio_input_channels(device_t device)
 {
-    assert(false && "Not implemented");
+    const PaDeviceInfo *info = Pa_GetDeviceInfo(device->index);
+    return info->maxInputChannels;
 }
 
 int fa_audio_output_channels(device_t device)
 {
-    assert(false && "Not implemented");
+    const PaDeviceInfo *info = Pa_GetDeviceInfo(device->index);
+    return info->maxOutputChannels;
 }
 
 bool fa_audio_has_input(device_t device)
-{                          
-    assert(false && "Not implemented");
-    // return fa_not_equal(fa_audio_input_type(device), type(unit));
+{
+    return fa_audio_input_channels(device) != 0;
 }
 bool fa_audio_has_output(device_t device)
 {
-    assert(false && "Not implemented");
-    // return fa_not_equal(fa_audio_output_type(device), type(unit));
+    return fa_audio_output_channels(device) != 0;
 }
 
 
@@ -363,16 +360,6 @@ void fa_audio_set_status_callback(
 
 // --------------------------------------------------------------------------------
 
-static inline int num_input_channels(device_t device)
-{
-    assert(false && "Not implemented");
-    // return device ? fa_type_channels(fa_audio_input_type(device)) : 0;
-}
-static inline int num_output_channels(device_t device)
-{
-    assert(false && "Not implemented");
-    // return device ? fa_type_channels(fa_audio_output_type(device)) : 0;
-}
 
 void audio_inform_opening(device_t input, ptr_t proc, device_t output)
 {
