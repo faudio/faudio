@@ -243,6 +243,17 @@
 (defun list-find-index* (f xs)
   (list-find-index (callback predcall1#) (func-to-int# f) xs))
 
+
+(defcallback list2listcall# list ((f ptr) (x list))
+  (funcall (int-to-func# f) x))
+
+(defun audio-open-stream* (i f o)
+  (audio-open-stream i (callback list2listcall#) (func-to-int# 
+                                                  (lambda (inputs) 
+                                                    (export-list
+                                                    (funcall f (mapcar (lambda (x) (from-pointer 'signal x)) (import-list inputs)))))
+                                                  ) o))
+
 ; ---------------------------------------------------------------------------------------------------
 
 (defun event-map* (f xs)

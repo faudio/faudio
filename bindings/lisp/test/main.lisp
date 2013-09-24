@@ -449,13 +449,17 @@
     (* (constant 0.01) (* (random) (cos (line 0.1))))))
 
 
-(setf s (audio-begin-session))
 
 (let*
     ((s (audio-begin-session))
      (i (audio-default-input s))
      (o (audio-default-output s))
-     (st (audio-open-stream i x o)))
+     (st (audio-open-stream* i 
+                             (lambda (inputs) (cl:list 
+                                               (* (constant 0.1) (sin (line 220)))
+                                               (* (constant 0.1) (sin (line 222)))
+                                               ))
+                             o)))
   (thread-sleep 30000)
   (destroy st)
   (destroy s))
@@ -539,8 +543,6 @@
   (capi:display-message "Audio setup changed")
   (fa-log-info "Audio setup changed")) s)
 
-(setf p (processor-identity '(:pair (:frame :f32) (:frame :f32))))
-(setf z (audio-open-stream x p y))
 ; close-all!
 (audio-close-stream z)
 

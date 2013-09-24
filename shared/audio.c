@@ -26,6 +26,7 @@
  */
 
 
+typedef fa_audio_proc_t             proc_t;
 typedef fa_audio_device_t           device_t;
 typedef fa_audio_stream_t           stream_t;
 typedef fa_audio_session_t          session_t;
@@ -102,7 +103,7 @@ inline static void session_init_devices(session_t session);
 inline static void delete_session(session_t session);
 inline static device_t new_device(native_index_t index);
 inline static void delete_device(device_t device);
-inline static stream_t new_stream(device_t input, device_t output, signal_t signal, double sample_rate, long max_buffer_size);
+inline static stream_t new_stream(device_t input, device_t output, double sample_rate, long max_buffer_size);
 inline static void delete_stream(stream_t stream);
 
 void before_processing(stream_t stream);
@@ -182,7 +183,7 @@ inline static void delete_device(device_t device)
     fa_delete(device);
 }
 
-inline static stream_t new_stream(device_t input, device_t output, signal_t signal, double sample_rate, long max_buffer_size)
+inline static stream_t new_stream(device_t input, device_t output, double sample_rate, long max_buffer_size)
 {
     stream_t stream         = fa_new(audio_stream);
 
@@ -196,9 +197,7 @@ inline static stream_t new_stream(device_t input, device_t output, signal_t sign
     stream->sample_rate     = sample_rate;
     stream->max_buffer_size = max_buffer_size;
                        
-    stream->signal_count    = 1;
-    stream->signals[0]      = signal;
-
+    stream->signal_count    = 0;
     stream->sample_count    = 0;
 
     // stream->incoming        = (sender_t)   lockfree_dispatcher();
@@ -371,16 +370,28 @@ void audio_inform_opening(device_t input, ptr_t proc, device_t output)
 
 // TODO change sample rate
 // TODO use unspec vector size if we can determine max
-stream_t fa_audio_open_stream(device_t input, signal_t signal, device_t output)
+stream_t fa_audio_open_stream(device_t input, proc_t proc, ptr_t proc_data, device_t output)
 {
     PaError         status;
-    unsigned long   buffer_size = 32;
+    unsigned long   buffer_size = 64;
     double          sample_rate = 44100;
 
-    // TODO pass many signals here
-    stream_t        stream      = new_stream(input, output, signal, sample_rate, buffer_size);
+    stream_t        stream      = new_stream(input, output, sample_rate, buffer_size);
+                                                      
+    // TODO number of inputs
+    list_t all_inputs = list(fa_signal_input(0), fa_signal_input(1));
 
-    audio_inform_opening(input, signal, output);
+    list_t all_signals = all_inputs;
+    if (proc) {
+        all_signals = proc(proc_data, all_inputs);
+    }
+    stream->signal_count        = fa_list_length(all_signals);
+
+    for (int i = 0; i < stream->signal_count; ++i) {
+        stream->signals[i] = fa_list_index(i, all_signals);
+    }
+
+    audio_inform_opening(input, all_signals, output);
     {
         PaStreamParameters inp = {
             .suggestedLatency           = 0,
@@ -439,14 +450,15 @@ void fa_audio_close_stream(stream_t stream)
 }
 
 void fa_audio_with_stream(device_t            input,
-                          signal_t            signal,
+                          proc_t              proc, 
+                          ptr_t               proc_data, 
                           device_t            output,
                           stream_callback_t   stream_callback,
                           ptr_t               stream_data,
                           error_callback_t    error_callback,
                           ptr_t               error_data)
 {
-    stream_t stream = fa_audio_open_stream(input, signal, output);
+    stream_t stream = fa_audio_open_stream(input, proc, proc_data, output);
 
     if (fa_check(stream)) {
         error_callback(error_data, (error_t) stream);
@@ -464,7 +476,10 @@ void fa_audio_with_stream(device_t            input,
 void before_processing(stream_t stream)
 {
     stream->state      = new_state();
-    stream->signals[0] = fa_signal_simplify(stream->signals[0]); // TODO is this safe?
+
+    for (int i = 0; i < stream->signal_count; ++i) {
+        stream->signals[i] = fa_signal_simplify(stream->signals[i]); // TODO is this safe?
+    }
     // TODO optimize
     // TODO verify
 }
@@ -476,14 +491,12 @@ void after_processing(stream_t stream)
 int during_processing(stream_t stream, unsigned count, float **input, float **output)
 {
     for (int i = 0; i < count; ++ i) {
-        // TODO inputs                  
-        stream->state->inputs[0] = input[0][i];
-        stream->state->inputs[1] = input[1][i];
+        for (int c = 0; c < stream->signal_count; ++c) {
+            stream->state->inputs[c] = input[c][i];
         
-        double x = step(stream->signals[0], stream->state);
-        double y = step(stream->signals[0], stream->state);
-        output[0][i] = x;
-        output[1][i] = y;
+            double x = step(stream->signals[c], stream->state);
+            output[c][i] = x;
+        }
         inc_state(stream->state);
     }
     stream->sample_count += count; // TODO atomic incr

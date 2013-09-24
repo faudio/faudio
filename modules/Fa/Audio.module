@@ -128,7 +128,9 @@ module Fa.Audio
     
     inputChannels : Device -> Int;
     outputChannels : Device -> Int;
+    
 
+    type Proc = ((Ptr,List) -> List)*;
     /**
         Open a stream on the given devices.
 
@@ -138,7 +140,7 @@ module Fa.Audio
         @par Errors
             Returns an error if the session could not be started.
      */
-    openStream : (Device, Signal, Device) -> Stream;
+    openStream : (Device, Proc, Ptr, Device) -> Stream;
     
     /**
         Close the given stream.
@@ -157,7 +159,7 @@ module Fa.Audio
         @param error_callback   Function to receive eventual errors.
      */
     withStream : (
-        Device, Signal, Device,
+        Device, Proc, Ptr, Device,
         StreamCallback, Ptr,
         Callback, Ptr
         ) -> Void;

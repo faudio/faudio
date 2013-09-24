@@ -17,7 +17,7 @@
 #define sin_        fa_signal_sin
 #define cos_        fa_signal_cos
 #define time_       fa_signal_time
-#define rand_       fa_signal_random
+#define random_     fa_signal_random
 #define const_      fa_signal_constant
 #define imp_        fa_signal_impulse
 #define line_       fa_signal_line
@@ -31,6 +31,12 @@
 signal_t fir(ptr_t a, signal_t rec)
 {
     return add_((signal_t) delay_(10, a), mul_(rec, const_(0.9999)));
+}      
+list_t just(ptr_t x, list_t xs) {
+    return x;
+}
+list_t identity(ptr_t x, list_t xs) {
+    return xs;
 }
 
 void helper_function()
@@ -41,7 +47,7 @@ void helper_function()
     signal_t d = mul_(sin_(mul_(time_(), const_(TAU * 440 * 6 / 7))), const_(0.1));
     signal_t r = add_(a, add_(b, add_(c, d)));
 
-    // signal_t r = mul_(rand_(), mul_(sin_(mul_(time_(), const_(TAU * 0.5))), const_(0.5)));
+    // signal_t r = mul_(random_(), mul_(sin_(mul_(time_(), const_(TAU * 0.5))), const_(0.5)));
     // signal_t r = mul_(imp_(), const_(0.5));
 
 
@@ -65,7 +71,7 @@ void helper_function()
     // signal_t r = time_();
     // signal_t r = add_(
     //     mul_(input_(0)                  , sin_(line_(0.1))),
-    //     mul_(mul_(const_(0.01),rand_()) , cos_(line_(0.1)))
+    //     mul_(mul_(const_(0.01),random_()) , cos_(line_(0.1)))
     //     );
 
     
@@ -78,12 +84,19 @@ void helper_function()
     // signal_t r2 = fa_signal_simplify(r);
     // fa_print_ln(fa_signal_draw_tree(fa_signal_to_tree(r2)));
 
-    
+
     {
         fa_audio_session_t s = fa_audio_begin_session();
-        fa_audio_device_t i = fa_audio_default_input(s);
-        fa_audio_device_t o = fa_audio_default_output(s);
-        fa_audio_stream_t st = fa_audio_open_stream(i, r, o);
+        fa_audio_device_t i  = fa_audio_default_input(s);
+        fa_audio_device_t o  = fa_audio_default_output(s);
+
+        // fa_audio_stream_t st = fa_audio_open_stream(i, just, list(
+        //     mul_(const_(0.5), mul_(sin_(line_(0.2)), input_(0)))
+        //     ,
+        //     mul_(const_(0.5), mul_(cos_(line_(0.2)), input_(1)))            
+        // ), o);
+        fa_audio_stream_t st = fa_audio_open_stream(i, NULL, NULL, o);
+
         if (fa_check(st)) {
             fa_error_log(st, NULL);
         }
@@ -101,6 +114,8 @@ void helper_function()
     //     exit(-1);
     // }
     // fa_signal_print(N,r);
+    
+    r = 0;
 }
 
 int main(int argc, char const *argv[])

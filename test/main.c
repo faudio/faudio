@@ -1608,7 +1608,7 @@ void test_audio_stream()
     output = fa_audio_default_output(session);
 
     // Start stream
-    stream = fa_audio_open_stream(input, NULL, output);
+    stream = fa_audio_open_stream(input, NULL, NULL, output);
 
     // Handle possible error
     if (fa_check(stream)) {
