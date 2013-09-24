@@ -6,10 +6,9 @@
 (defmethod translate-from-foreign (x (type atomic-type)) (make-instance 'atomic :atomic-ptr x))
 (defcfun (atomic-create "fa_atomic_create") atomic)
 (defcfun (atomic-copy "fa_atomic_copy") atomic (a atomic))
-(defcfun (atomic-swap "fa_atomic_swap") :void (a atomic) (b atomic))
 (defcfun (atomic-destroy "fa_atomic_destroy") :void (a atomic))
 (defcfun (atomic-exchange "fa_atomic_exchange") :boolean (a atomic) (b ptr) (c ptr))
 (defcfun (atomic-get "fa_atomic_get") ptr (a atomic))
-(defcfun (atomic-set "fa_atomic_set") :void (a atomic) (b ptr))
 (defcfun (atomic-modify "fa_atomic_modify") :void (a atomic) (b unary) (c ptr))
+(defcfun (atomic-set "fa_atomic_set") :void (a atomic) (b ptr))
 

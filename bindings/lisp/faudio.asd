@@ -42,6 +42,7 @@
           :pathname "midi"
           :components (
             (:file "message")))
+        (:file "signal")
         (:file "audio")
         (:file "atomic")
         (:module "atomic2"
@@ -50,7 +51,6 @@
             (:file "queue")
             (:file "stack")
             (:file "ring-buffer")))
-        (:file "signal")
         (:file "thread")
         (:file "fa")))
     (:file "special")

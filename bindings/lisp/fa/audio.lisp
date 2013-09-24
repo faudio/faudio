@@ -31,7 +31,7 @@
 (defcfun (audio-has-output "fa_audio_has_output") :boolean (a audio-device))
 (defcfun (audio-input-type "fa_audio_input_type") type (a audio-device))
 (defcfun (audio-output-type "fa_audio_output_type") type (a audio-device))
-(defcfun (audio-open-stream "fa_audio_open_stream") audio-stream (a audio-device) (b ptr) (c audio-device))
+(defcfun (audio-open-stream "fa_audio_open_stream") audio-stream (a audio-device) (b signal) (c audio-device))
 (defcfun (audio-close-stream "fa_audio_close_stream") :void (a audio-stream))
-(defcfun (audio-with-stream "fa_audio_with_stream") :void (a audio-device) (b ptr) (c audio-device) (d audio-stream-callback) (e ptr) (f error-callback) (g ptr))
+(defcfun (audio-with-stream "fa_audio_with_stream") :void (a audio-device) (b signal) (c audio-device) (d audio-stream-callback) (e ptr) (f error-callback) (g ptr))
 

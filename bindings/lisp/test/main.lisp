@@ -460,7 +460,7 @@
   (destroy st)
   (destroy s))
 
-(signal-run-file (* 44100 60) x "/Users/hans/audio/out.wav")
+(signal-run-file (cl:* 44100 60) x "/Users/hans/audio/out.wav")
 
 
 

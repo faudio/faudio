@@ -13,6 +13,7 @@
 (defcfun (thread-create "fa_thread_create") thread (a nullary) (b ptr))
 (defcfun (thread-join "fa_thread_join") :void (a thread))
 (defcfun (thread-detach "fa_thread_detach") :void (a thread))
+(defcfun (thread-to-native "fa_thread_to_native") ptr (a thread))
 (defcfun (thread-main "fa_thread_main") thread)
 (defcfun (thread-current "fa_thread_current") thread)
 (defcfun (thread-sleep "fa_thread_sleep") :void (a thread-milliseconds))
