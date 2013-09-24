@@ -43,7 +43,7 @@
 
 ; ---------------------------------------------------------------------------------------------------
 ;
-; Fa.AudioEngine
+; Fa
 
 (fa-initialize)
 (fa-terminate)
@@ -411,15 +411,12 @@
 (time-to-seconds x)
 
 ; Clocks
-(setf z (time-get-system-prec-clock))
-(setf x (time-time z))
-(setf x (time-ticks z))
-(setf x (time-tick-rate z))
+; (setf z (time-get-system-prec-clock))
+; (setf x (time-time z))
+; (setf x (time-ticks z))
+; (setf x (time-tick-rate z))
 
 
-
-; ---------------------------------------------------------------------------------------------------
-; Audio processing
 ; ---------------------------------------------------------------------------------------------------
 
 ; Signals
@@ -431,9 +428,6 @@
 (setf x (sin (line 440.0)))
 
 (setf x (+ x x))
-
-
-
 
 
 (defcallback add1 :double ((f :pointer) (x :double))
@@ -484,60 +478,8 @@
 
 (signal-run-file (cl:* 44100 60) x "/Users/hans/audio/out.wav")
 
-
-
-
-
-
-
-; Fa.Type
-;
-; You can always give a function expecting a type a *type expression* (see below). 
-; Use (type *expr*) to force conversion.
-
-(setf x nil)
-(setf x :unit)
-(setf x :i8)
-(setf x :i16)
-(setf x :i32)
-(setf x :i64)
-(setf x :f32)
-(setf x :f64)
-(setf x :ptr)
-(setf x '(:pair :f32 :i32))
-(setf x '(:f32 . :f32))
-(setf x '((:f32 . :f32) . (:f32 . :f32)))
-(setf x '(:frame :f32))
-(setf x '(:vector (:pair :i8 :i32) 24))
-(setf x '(:vector :f32 1024))
-
-(setf x (type nil))
-(setf x (type :i32))
-(setf x (type :unit))
-(setf x (type '(:pair :i8 :i8)))
-(setf x (type '(:vector (:pair :i8 :i32) 24)))
-; etc
-
-(type-is-simple x)
-(type-is-pair x)
-(type-is-vector x)
-(type-is-frame x)
-
-(type-size-of 256 x)
-(type-offset-of 256 x)
-(type-align-of x)
-
-(setf x (type-repeat 8 :f32)) ; (f32,...)
-(setf x (type-repeat 1 :f32)) ; f32
-(setf x (type-repeat 0 :f32)) ; ()
-(type-channels x)
-
-
-
-
 ; ---------------------------------------------------------------------------------------------------
 ; Devices
-; ---------------------------------------------------------------------------------------------------
 
 ; Fa.Device.Audio
 
@@ -606,8 +548,6 @@
 (mp:process-send mp:*main-process* #'register-midi-listener)
 
 
-
-
 (setf z (midi-open-stream x))
 (midi-close-stream z)
 
@@ -619,7 +559,6 @@
 
 ; ---------------------------------------------------------------------------------------------------
 ; Utility
-; ---------------------------------------------------------------------------------------------------
 
 ; Fa.Plot
 
