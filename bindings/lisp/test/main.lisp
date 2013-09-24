@@ -430,8 +430,20 @@
 (setf x (input 1))
 (setf x (sin (line 440.0)))
 
-(defcallback add1 :double ((_ :pointer :void) (x :double)))
-(setf x (signal-lift "" (callback add1) (cffi:null-pointer) x))
+(setf x (+ x x))
+
+
+
+
+
+(defcallback add1 :double ((f :pointer) (x :double))
+  0.5)
+(setf x (signal-lift "test" (callback add1) 0 (time)))
+
+(defcallback foo :double ((f :pointer) (x :double) (y :double))
+  0.5)
+(setf x (signal-lift2 "test2" (callback foo) 0 (time) (time)))
+
 
 (eq (type-of nil) 'cl:null)
 (type-of 1/2)
@@ -463,8 +475,7 @@
               (cl:print (mapcar (lambda (x) (* (constant 0.5) x)) inputs))
               (cl:list 
                (* (sin (line 70)) (sin (line 550)))
-               (* (sin (line 141)) (cos (line 550)))
-               )))))
+               (* (sin (line 141)) (cos (line 550))))))))
 
   (capi:popup-confirmer nil "Playing..."
                         :callback-type :none :ok-button "Stop" :no-button nil :cancel-button nil :value-function #'(lambda (dummy) t))
