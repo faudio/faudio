@@ -430,18 +430,23 @@
 (setf x (input 1))
 (setf x (sin (line 440.0)))
 
+(defcallback add1 :double ((_ :pointer :void) (x :double)))
+(setf x (signal-lift "" (callback add1) (cffi:null-pointer) x))
+
+(eq (type-of nil) 'cl:null)
+(type-of 1/2)
 
 (setf x (* (constant 0.3) 
-            (sin (line 220))))
+           (sin (line 220))))
 
 
-
-(setf a (* (sin (line 440)) (constant 0.1)))
-(setf b (* (sin (line 450)) (constant 0.1)))
-(setf c (* (sin (line 460)) (constant 0.1)))
-(setf d (* (sin (line 490)) (constant 0.1)))
-(setf x (* (sin (line 0.5))
-  (+ (+ a b) (+ c d))))
+(setf x 
+  (let* ((a (* (sin (line 440)) (constant 0.1)))
+         (b (* (sin (line 450)) (constant 0.1)))
+         (c (* (sin (line 460)) (constant 0.1)))
+         (d (* (sin (line 490)) (constant 0.1))))
+    (* (sin (line 0.5))
+       (+ (+ a b) (+ c d)))))
 
 (setf x 
   (+
@@ -449,20 +454,20 @@
     (* (constant 0.01) (* (random) (cos (line 0.1))))))
 
 
-
-(let*
-    ((s (audio-begin-session))
-     (i (audio-default-input s))
-     (o (audio-default-output s))
-     (st (audio-open-stream* 
-          i o 
-          (lambda (inputs) (cl:list 
-                            (* (input 0) (sin (line 550)))
-                            (* (input 1) (cos (line 550)))
-                            )))))
+(let* ((s (audio-begin-session))
+       (i (audio-default-input s))
+       (o (audio-default-output s))
+       (st (audio-open-stream* i o 
+            (lambda (inputs)
+              (cl:print (cl:length inputs))
+              (cl:print (mapcar (lambda (x) (* (constant 0.5) x)) inputs))
+              (cl:list 
+               (* (sin (line 70)) (sin (line 550)))
+               (* (sin (line 141)) (cos (line 550)))
+               )))))
 
   (capi:popup-confirmer nil "Playing..."
-    :callback-type :none :ok-button "Done" :no-button nil :cancel-button nil :value-function #'(lambda (dummy) t))
+                        :callback-type :none :ok-button "Stop" :no-button nil :cancel-button nil :value-function #'(lambda (dummy) t))
   (destroy st)
   (destroy s))
 
@@ -545,8 +550,9 @@
 (type-channels (audio-output-type x))
 (type-size-of 1024 (audio-input-type x))
 
+(setf s nil)
 (audio-set-status-callback* (lambda ()
-  (capi:display-message "Audio setup changed")
+  ;(capi:display-message "Audio setup changed")
   (fa-log-info "Audio setup changed")) s)
 
 ; close-all!

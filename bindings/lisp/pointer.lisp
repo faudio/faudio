@@ -57,6 +57,7 @@
 
 (defmethod translate-to-foreign (x (type ptr-type))
   (etypecase x
+    (cl:null            (cffi:null-pointer)) 
     (cl:boolean         (from-bool# x))
     (cl:integer         (from-int32# x))
     (cl:ratio           (export-ratio# x))
