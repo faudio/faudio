@@ -702,25 +702,16 @@ EXCLUDE_SYMLINKS       = NO
 # for example use the pattern */test/*
 
 EXCLUDE_PATTERNS       = */include/fa/processor \
-                         */modules/Fa/Processor/* \
-                         */modules/Fa/Processor.module \
                          */include/fa/processor.h \
                          */include/fa/scheduler* \
-                         */modules/Fa/Scheduler* \
                          */include/fa/std* \
-                         */modules/Fa/Std* \
                          */include/fa/plot* \
-                         */modules/Fa/Plot* \
                          */include/fa/graph* \
-                         */modules/Fa/Graph* \
                          */include/fa/atomic/ring_buffer* \
-                         */modules/Fa/Atomic/RingBuffer* \
                          */include/fa/priority_queue* \
-                         */modules/Fa/PriorityQueue* \
                          */include/fa/message* \
-                         */modules/Fa/Message* \
                          */include/fa/event* \
-                         */modules/Fa/Event* 
+                         */include/fa/type* \
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the

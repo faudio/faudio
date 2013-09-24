@@ -95,7 +95,7 @@ void helper_function()
         //     ,
         //     mul_(const_(0.5), mul_(cos_(line_(0.2)), input_(1)))            
         // ), o);
-        fa_audio_stream_t st = fa_audio_open_stream(i, NULL, NULL, o);
+        fa_audio_stream_t st = fa_audio_open_stream(i, o, NULL, NULL);
 
         if (fa_check(st)) {
             fa_error_log(st, NULL);
