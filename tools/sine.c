@@ -31,11 +31,13 @@
 signal_t fir(ptr_t a, signal_t rec)
 {
     return add_((signal_t) delay_(10, a), mul_(rec, const_(0.9999)));
-}      
-list_t just(ptr_t x, list_t xs) {
+}
+list_t just(ptr_t x, list_t xs)
+{
     return x;
 }
-list_t identity(ptr_t x, list_t xs) {
+list_t identity(ptr_t x, list_t xs)
+{
     return xs;
 }
 
@@ -65,7 +67,7 @@ void helper_function()
     //     r = add_(mul_(sin_(line_(freq)), const_(amp)), r);
     //     freq *= (5.0 / 4.0);
     //     amp  *= 0.9;
-    // }    
+    // }
     // r = mul_(r, const_(0.002));
 
     // signal_t r = time_();
@@ -74,7 +76,7 @@ void helper_function()
     //     mul_(mul_(const_(0.01),random_()) , cos_(line_(0.1)))
     //     );
 
-    
+
     // signal_t r = loop_(fir, imp_());
 
 
@@ -93,18 +95,19 @@ void helper_function()
         // fa_audio_stream_t st = fa_audio_open_stream(i, just, list(
         //     mul_(const_(0.5), mul_(sin_(line_(0.2)), input_(0)))
         //     ,
-        //     mul_(const_(0.5), mul_(cos_(line_(0.2)), input_(1)))            
+        //     mul_(const_(0.5), mul_(cos_(line_(0.2)), input_(1)))
         // ), o);
         fa_audio_stream_t st = fa_audio_open_stream(i, o, NULL, NULL);
 
         if (fa_check(st)) {
             fa_error_log(st, NULL);
         }
-    
-        while(1) {
-            fa_thread_sleep(1000 * 30);        
+
+        while (1) {
+            fa_thread_sleep(1000 * 30);
         }
-        fa_audio_end_session(s);        
+
+        fa_audio_end_session(s);
     }
     // fa_signal_print(44100*2, r);
 
@@ -114,7 +117,7 @@ void helper_function()
     //     exit(-1);
     // }
     // fa_signal_print(N,r);
-    
+
     r = 0;
 }
 

@@ -196,7 +196,7 @@ inline static stream_t new_stream(device_t input, device_t output, double sample
 
     stream->sample_rate     = sample_rate;
     stream->max_buffer_size = max_buffer_size;
-                       
+
     stream->signal_count    = 0;
     stream->sample_count    = 0;
 
@@ -321,7 +321,7 @@ fa_string_t fa_audio_host_name(device_t device)
 {
     return fa_copy(device->host_name);
 }
-              
+
 int fa_audio_input_channels(device_t device)
 {
     const PaDeviceInfo *info = Pa_GetDeviceInfo(device->index);
@@ -370,25 +370,27 @@ void audio_inform_opening(device_t input, ptr_t proc, device_t output)
 
 // TODO change sample rate
 // TODO use unspec vector size if we can determine max
-stream_t fa_audio_open_stream(device_t input, 
-                              device_t output, 
-                              proc_t proc, 
+stream_t fa_audio_open_stream(device_t input,
+                              device_t output,
+                              proc_t proc,
                               ptr_t proc_data
-                              )
+                             )
 {
     PaError         status;
     unsigned long   buffer_size = 128;
     double          sample_rate = 44100;
 
     stream_t        stream      = new_stream(input, output, sample_rate, buffer_size);
-                                                      
+
     // TODO number of inputs
     list_t all_inputs = list(fa_signal_input(0), fa_signal_input(1));
 
     list_t all_signals = all_inputs;
+
     if (proc) {
         all_signals = proc(proc_data, all_inputs);
     }
+
     stream->signal_count        = fa_list_length(all_signals);
 
     for (int i = 0; i < stream->signal_count; ++i) {
@@ -419,10 +421,10 @@ stream_t fa_audio_open_stream(device_t input,
         PaStreamCallback               *callback = native_audio_callback;
         ptr_t                           data     = stream;
 
-        
+
         // TODO necessary to sleep?
         fa_thread_sleep(400);
-        
+
         status = Pa_OpenStream(&stream->native, in, out, sample_rate, buffer_size, flags, callback, data);
 
         if (status != paNoError) {
@@ -459,8 +461,8 @@ void fa_audio_close_stream(stream_t stream)
 
 void fa_audio_with_stream(device_t            input,
                           device_t            output,
-                          proc_t              proc, 
-                          ptr_t               proc_data, 
+                          proc_t              proc,
+                          ptr_t               proc_data,
                           stream_callback_t   stream_callback,
                           ptr_t               stream_data,
                           error_callback_t    error_callback,
@@ -488,6 +490,7 @@ void before_processing(stream_t stream)
     for (int i = 0; i < stream->signal_count; ++i) {
         stream->signals[i] = fa_signal_simplify(stream->signals[i]); // TODO is this safe?
     }
+
     // TODO optimize
     // TODO verify
 }
@@ -501,12 +504,14 @@ int during_processing(stream_t stream, unsigned count, float **input, float **ou
     for (int i = 0; i < count; ++ i) {
         for (int c = 0; c < stream->signal_count; ++c) {
             stream->state->inputs[c] = input[c][i];
-        
+
             double x = step(stream->signals[c], stream->state);
             output[c][i] = x;
         }
+
         inc_state(stream->state);
     }
+
     stream->sample_count += count; // TODO atomic incr
     return paContinue;
 }

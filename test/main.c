@@ -323,12 +323,12 @@ void test_midi_message()
 // void test_type()
 // {
 //     test_section("Types");
-// 
+//
 //     fa_dprint("type(i8)                  ==> %s\n", type(i8));
 //     // fa_dprint("size_of(1024,type(i8))    ==> %s\n", i32(fa_type_size_of(1024, type(i8))));
 //     // fa_dprint("align_of(1024,type(i8))   ==> %s\n", i32(fa_type_align_of(type(i8))));
 //     printf("\n");
-// 
+//
 //     // fa_dprint("type(f64)                 ==> %s\n", type(f64));
 //     // fa_dprint("size_of(1024,type(f64))   ==> %s\n", i32(fa_type_size_of(1024, type(f64))));
 //     // fa_dprint("align_of(1024,type(f64))  ==> %s\n", i32(fa_type_align_of(type(f64))));
@@ -351,18 +351,18 @@ void test_midi_message()
 //     // fa_dprint("size_of(1024,u2)             ==> %s\n", i32(fa_type_size_of(1024, u2)));
 //     // fa_dprint("align_of(1024,u2)            ==> %s\n", i32(fa_type_align_of(u2)));
 //     // printf("\n");
-// 
+//
 //     type_t v = type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
 //                                              type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
 //                                                        type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
 //                                                                type(i8))))))))));
-// 
+//
 //     fa_print("v                            ==> %s\n", v);
 //     // fa_dprint("size_of(1024,v)              ==> %s\n", i32(fa_type_size_of(1024, v)));
 //     // fa_dprint("align_of(1024,v)             ==> %s\n", i32(fa_type_align_of(v)));
 //     fa_destroy(v);
 //     printf("\n");
-// }      
+// }
 
 
 

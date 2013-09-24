@@ -266,16 +266,35 @@ signal_t copy_output(signal_t signal2)
 fa_signal_t fa_signal_copy(fa_signal_t signal)
 {
     switch (signal->tag) {
-        case time_signal:                return fa_signal_time();
-        case random_signal:              return fa_signal_random();
-        case constant_signal:            return copy_constant(signal);
-        case lift_signal:                return copy_lift(signal);
-        case lift2_signal:               return copy_lift2(signal);
-        case loop_signal:                return copy_loop(signal);
-        case delay_signal:               return copy_delay(signal);
-        case input_signal:               return copy_input(signal);
-        case output_signal:              return copy_output(signal);
-        default:                         assert(false);
+    case time_signal:
+        return fa_signal_time();
+
+    case random_signal:
+        return fa_signal_random();
+
+    case constant_signal:
+        return copy_constant(signal);
+
+    case lift_signal:
+        return copy_lift(signal);
+
+    case lift2_signal:
+        return copy_lift2(signal);
+
+    case loop_signal:
+        return copy_loop(signal);
+
+    case delay_signal:
+        return copy_delay(signal);
+
+    case input_signal:
+        return copy_input(signal);
+
+    case output_signal:
+        return copy_output(signal);
+
+    default:
+        assert(false);
     }
 }
 
@@ -342,41 +361,41 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
 
     case constant_signal:
         return pair(
-            fa_string_to_string(
-                fa_from_double(
-                constant_get(signal, value))), 
-            list());
+                   fa_string_to_string(
+                       fa_from_double(
+                           constant_get(signal, value))),
+                   list());
 
     case lift_signal:
         return pair(
-            lift_get(signal, name), 
-            list(fa_signal_to_tree(lift_get(signal, a))));
+                   lift_get(signal, name),
+                   list(fa_signal_to_tree(lift_get(signal, a))));
 
     case lift2_signal:
         return pair(
-            lift_get(signal, name), 
-            list(
-                fa_signal_to_tree(lift2_get(signal, a)),
-                fa_signal_to_tree(lift2_get(signal, b))));
+                   lift_get(signal, name),
+                   list(
+                       fa_signal_to_tree(lift2_get(signal, a)),
+                       fa_signal_to_tree(lift2_get(signal, b))));
 
     case input_signal:
         return pair(
-            concat(
-                string("input "), 
-                fa_string_show(fa_from_int32(input_get(signal, c)))), 
-            list());
+                   concat(
+                       string("input "),
+                       fa_string_show(fa_from_int32(input_get(signal, c)))),
+                   list());
 
     case output_signal:
         return pair(
-            concat(
-                string("output "), 
-                fa_string_show(fa_from_int32(output_get(signal, c))),
-                string("[-"),
-                fa_string_show(fa_from_int32(output_get(signal, n))),
-                string("]")
-                ), 
+                   concat(
+                       string("output "),
+                       fa_string_show(fa_from_int32(output_get(signal, c))),
+                       string("[-"),
+                       fa_string_show(fa_from_int32(output_get(signal, n))),
+                       string("]")
+                   ),
 
-            list(fa_signal_to_tree(output_get(signal, a))));
+                   list(fa_signal_to_tree(output_get(signal, a))));
 
     default:
         assert(false);
@@ -387,7 +406,7 @@ string_t draw_tree(pair_t value, string_t indent, bool is_last, string_t result)
 {
     ptr_t  label    = fa_pair_first(value);
     list_t children = fa_pair_second(value);
-    
+
     write_to(result, indent);
 
     if (is_last) {
@@ -397,6 +416,7 @@ string_t draw_tree(pair_t value, string_t indent, bool is_last, string_t result)
         write_to(result, string("+- "));
         write_to(indent, string("|  "));
     }
+
     write_to(result, fa_string_to_string(label));
     write_to(result, string("\n"));
 
@@ -417,7 +437,7 @@ string_t fa_signal_draw_tree(fa_pair_t p)
 
 struct part {
     int o, d;
-};     
+};
 typedef struct part part_t;
 void init_part(struct part *p)
 {
@@ -468,7 +488,7 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
     case delay_signal: {
         signal_t a              = delay_get(signal2, a);
         int samples             = delay_get(signal2, n);
-        
+
         int channel;
         part_t part1;
         // Allocate one bus channel for the delay
@@ -602,7 +622,7 @@ int buffer_pointer(state_t state)
 
 int index_bus(int n, int c)
 {
-    return c*kMaxDelay + n;
+    return c * kMaxDelay + n;
 }
 
 double read_actual_input(int c, state_t state)
@@ -617,7 +637,7 @@ double read_bus(int c, state_t state)
 }
 
 void write_bus(int n, int c, double x, state_t state)
-{                            
+{
     int bp = buffer_pointer(state);
     state->buses[index_bus(bp + n % kMaxDelay, c)] = x;
 }
@@ -701,7 +721,7 @@ void fa_signal_run(int n, signal_t a, double *output)
         //     printf("\rGenerating samples, done: %d%%", percent);
         //     fflush ( stdout );
         // }
-            
+
         output[i] = step(a2, state);
         inc_state(state);
     }
@@ -857,7 +877,7 @@ fa_ptr_t signal_impl(fa_id_t interface)
         = { signal_copy };
     static fa_destroy_t signal_destroy_impl
         = { signal_destroy };
-    static fa_string_show_t signal_show_impl 
+    static fa_string_show_t signal_show_impl
         = { signal_show };
 
     switch (interface) {
