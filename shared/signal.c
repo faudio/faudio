@@ -572,7 +572,7 @@ state_t new_state()
     state->inputs = fa_malloc(kMaxInputs);
     state->buses  = fa_malloc(kMaxBuses * kMaxDelay);
     memset(state->inputs, 0, kMaxInputs);
-    memset(state->buses, 0,  kMaxBuses * kMaxDelay);
+    memset(state->buses,  0, kMaxBuses * kMaxDelay);
 
     state->count = 0;
     state->rate  = kRate;
