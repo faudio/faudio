@@ -36,6 +36,7 @@ typedef fa_audio_status_callback_t  status_callback_t;
 typedef PaDeviceIndex native_index_t;
 typedef PaStream     *native_stream_t;
 
+#define kMaxSignals 8
 
 // TODO formalize better
 struct _state_t {
@@ -68,7 +69,7 @@ struct _fa_audio_device_t {
     string_t            name;               // Cached names
     string_t            host_name;
 
-    // bool                muted;              // Not used at the moment
+    // bool                muted;           // Not used at the moment
     // double              volume;
 };
 
@@ -78,8 +79,9 @@ struct _fa_audio_stream_t {
     native_stream_t     native;             // Native stream
 
     device_t            input, output;
-    signal_t            signal;
-    state_t             state; // DSP state
+    unsigned            signal_count;       // Number of signals (same as number of outputs)
+    signal_t            signals[kMaxSignals];
+    state_t             state;              // DSP state
 
     unsigned            input_channels, output_channels;
     double              sample_rate;
@@ -197,7 +199,9 @@ inline static stream_t new_stream(device_t input, device_t output, signal_t sign
     stream->sample_rate     = sample_rate;
     stream->max_buffer_size = max_buffer_size;
                        
-    stream->signal          = signal;
+    stream->signal_count    = 1;
+    stream->signals[0]      = signal;
+
     stream->sample_count    = 0;
 
     // stream->incoming        = (sender_t)   lockfree_dispatcher();
@@ -408,38 +412,11 @@ stream_t fa_audio_open_stream(device_t input, signal_t signal, device_t output)
     PaError         status;
     unsigned long   buffer_size = 32;
     double          sample_rate = 44100;
+
+    // TODO pass many signals here
     stream_t        stream      = new_stream(input, output, signal, sample_rate, buffer_size);
 
     audio_inform_opening(input, signal, output);
-    {
-        // TODO
-        // if (fa_not_equal(
-        //             fa_processor_input_type(proc),
-        //             fa_audio_input_type(input))) {
-        //     char msg[100];
-        //     snprintf(msg, 100, "Could not connect device %s to processor %s",
-        //              unstring(fa_string_show(fa_audio_input_type(input))),
-        //              unstring(fa_string_show(proc)));
-        //     error_t err = fa_error_create_simple(error,
-        //                                               string(msg),
-        //                                               string("Doremir.Device.Audio"));
-        //     return (stream_t) err;
-        // }
-    }
-    {
-        // if (fa_not_equal(
-        //             fa_processor_output_type(proc),
-        //             fa_audio_output_type(output))) {
-        //     char msg[100];
-        //     snprintf(msg, 100, "Could not connect processor %s to device %s",
-        //              unstring(fa_string_show(proc)),
-        //              unstring(fa_string_show(fa_audio_output_type(output))));
-        //     error_t err = fa_error_create_simple(error,
-        //                                               string(msg),
-        //                                               string("Doremir.Device.Audio"));
-        //     return (stream_t) err;
-        // }
-    }
     {
         PaStreamParameters inp = {
             .suggestedLatency           = 0,
@@ -522,8 +499,8 @@ void fa_audio_with_stream(device_t            input,
 
 void before_processing(stream_t stream)
 {
-    stream->state  = new_state();
-    stream->signal = fa_signal_simplify(stream->signal); // TODO is this safe?
+    stream->state      = new_state();
+    stream->signals[0] = fa_signal_simplify(stream->signals[0]); // TODO is this safe?
     // TODO optimize
     // TODO verify
 }
@@ -539,9 +516,10 @@ int during_processing(stream_t stream, unsigned count, float **input, float **ou
         stream->state->inputs[0] = input[0][i];
         stream->state->inputs[1] = input[1][i];
         
-        double x = step(stream->signal, stream->state);
+        double x = step(stream->signals[0], stream->state);
+        double y = step(stream->signals[0], stream->state);
         output[0][i] = x;
-        output[1][i] = x;
+        output[1][i] = y;
         inc_state(stream->state);
     }
     stream->sample_count += count; // TODO atomic incr
