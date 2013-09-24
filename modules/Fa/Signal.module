@@ -14,7 +14,6 @@ module Fa.Signal
 {
     import Fa;    
     import Fa.Pair;
-    import Fa.Type;
     import Fa.Time;
     import Fa.Buffer;
     

@@ -325,26 +325,26 @@ fa_string_t fa_audio_host_name(device_t device)
 {
     return fa_copy(device->host_name);
 }
-
-type_t fa_audio_input_type(device_t device)
+              
+int fa_audio_input_channels(device_t device)
 {
-    const PaDeviceInfo *info = Pa_GetDeviceInfo(device->index);
-    return fa_type_repeat(info->maxInputChannels, type_frame(type(f32)));
+    assert(false && "Not implemented");
 }
 
-type_t fa_audio_output_type(device_t device)
+int fa_audio_output_channels(device_t device)
 {
-    const PaDeviceInfo  *info = Pa_GetDeviceInfo(device->index);
-    return fa_type_repeat(info->maxOutputChannels, type_frame(type(f32)));
+    assert(false && "Not implemented");
 }
 
 bool fa_audio_has_input(device_t device)
-{
-    return fa_not_equal(fa_audio_input_type(device), type(unit));
+{                          
+    assert(false && "Not implemented");
+    // return fa_not_equal(fa_audio_input_type(device), type(unit));
 }
 bool fa_audio_has_output(device_t device)
 {
-    return fa_not_equal(fa_audio_output_type(device), type(unit));
+    assert(false && "Not implemented");
+    // return fa_not_equal(fa_audio_output_type(device), type(unit));
 }
 
 
@@ -365,37 +365,14 @@ void fa_audio_set_status_callback(
 
 static inline int num_input_channels(device_t device)
 {
-    return device ? fa_type_channels(fa_audio_input_type(device)) : 0;
+    assert(false && "Not implemented");
+    // return device ? fa_type_channels(fa_audio_input_type(device)) : 0;
 }
 static inline int num_output_channels(device_t device)
 {
-    return device ? fa_type_channels(fa_audio_output_type(device)) : 0;
+    assert(false && "Not implemented");
+    // return device ? fa_type_channels(fa_audio_output_type(device)) : 0;
 }
-
-// static inline size_t get_max_buffer_size(device_t device)
-// {
-//     const PaDeviceInfo  *info      = Pa_GetDeviceInfo(device->index);
-//     const PaHostApiInfo *host_info = Pa_GetHostApiInfo(info->hostApi);
-//     long min, max, prefered, granularity;
-//     PaError err = paNoError;
-//
-//     switch(host_info->type)
-//     {
-//     case paCoreAudio: {
-//         // error
-//         err = PaMacCore_GetBufferSizeRange(device->index, min, max);
-//         assert(err == paNoError);
-//         return max;
-//     }
-//     case paASIO: {
-//         err = PaAsio_GetAvailableBufferSizes(device->index, min, max, prefered, granularity);
-//         assert(err == paNoError);
-//         return max;
-//     }
-//     default:
-//         return 0;
-//     }
-// }
 
 void audio_inform_opening(device_t input, ptr_t proc, device_t output)
 {

@@ -4,7 +4,6 @@
 
 #include <fa.h>
 #include <fa/pair.h>
-#include <fa/type.h>
 #include <fa/time.h>
 #include <fa/buffer.h>
 

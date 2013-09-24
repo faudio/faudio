@@ -177,7 +177,7 @@ typedef fa_string_t path_t;
 
 fa_pair_t fa_buffer_read_audio(fa_string_t path)
 {
-    type_t          type;
+    int             channels;
     buffer_t        buffer;
 
     SNDFILE         *file;
@@ -205,19 +205,19 @@ fa_pair_t fa_buffer_read_audio(fa_string_t path)
         buffer          = fa_buffer_resize(sz * sizeof(double), buffer);
 
         if (info.channels == 1) {
-            type = type_vector(type(f64), info.frames);
+            channels = 1;
         } else if (info.channels == 2) {
-            type = type_vector(type_pair(type(f64), type(f64)), info.frames);
+            channels = 2;
         } else {
             buffer_fatal("Unknown buffer type", info.channels);
         }
     }
-    return pair(type, buffer);
+    return pair(i32(channels), buffer);
 }
 
 // TODO only writes one channel etc
 ptr_t fa_buffer_write_audio(fa_string_t  path,
-                            fa_type_t    type,
+                            int          channels,
                             fa_buffer_t  buffer)
 {
     const char     *cpath = fa_string_to_utf8(path);

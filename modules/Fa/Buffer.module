@@ -27,7 +27,7 @@ module Fa.Buffer
     import Fa.Std;
     import Fa.Pair;
     import Fa.String;
-    import Fa.Type;
+    // import Fa.Type;
 
     /** @typedef fa_buffer_t
         The buffer. 
@@ -104,8 +104,8 @@ module Fa.Buffer
         @returns
             A pair $$type, buffer)$$.
      */
-    readAudio   : String -> Pair; // (Type,Buffer)
-    writeAudio  : (String,Type,Buffer) -> Ptr; // Error?
+    readAudio   : String -> Pair; // (Int,Buffer)
+    writeAudio  : (String,Int,Buffer) -> Ptr; // Error?
 
     /** Return the address of the buffer.
 

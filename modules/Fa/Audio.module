@@ -29,7 +29,6 @@ module Fa.Audio
     import Fa.Pair;
     import Fa.Device;
     import Fa.Error;
-    import Fa.Type;
     import Fa.Signal;
 
     type Session = opaque;
@@ -127,15 +126,8 @@ module Fa.Audio
      */
     hasOutput : Device -> Bool;
     
-    /** Return the input type of the given device.
-        @param device   The device.
-     */
-    inputType : Device -> Type;
-    
-    /** Return the output type of the given device.
-        @param device   The device.
-     */
-    outputType : Device -> Type;
+    inputChannels : Device -> Int;
+    outputChannels : Device -> Int;
 
     /**
         Open a stream on the given devices.

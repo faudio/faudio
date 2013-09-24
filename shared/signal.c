@@ -731,7 +731,7 @@ buffer_t fa_signal_run_buffer(int n, signal_t a)
 ptr_t fa_signal_run_file(int n, signal_t a, string_t path)
 {
     buffer_t b = fa_signal_run_buffer(n, a);
-    ptr_t res = fa_buffer_write_audio(path, NULL, b);
+    ptr_t res = fa_buffer_write_audio(path, 1, b); // TODO number of channels
     fa_destroy(b);
     return res;
 }

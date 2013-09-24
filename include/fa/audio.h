@@ -6,7 +6,6 @@
 #include <fa/pair.h>
 #include <fa/device.h>
 #include <fa/error.h>
-#include <fa/type.h>
 #include <fa/signal.h>
 
 /** @addtogroup FaAudio
@@ -151,15 +150,11 @@ bool fa_audio_has_input(fa_audio_device_t);
 */
 bool fa_audio_has_output(fa_audio_device_t);
 
-/** Return the input type of the given device.
-    @param device   The device.
-*/
-fa_type_t fa_audio_input_type(fa_audio_device_t);
 
-/** Return the output type of the given device.
-    @param device   The device.
-*/
-fa_type_t fa_audio_output_type(fa_audio_device_t);
+int fa_audio_input_channels(fa_audio_device_t);
+
+
+int fa_audio_output_channels(fa_audio_device_t);
 
 /**
     Open a stream on the given devices.

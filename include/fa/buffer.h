@@ -6,7 +6,6 @@
 #include <fa/std.h>
 #include <fa/pair.h>
 #include <fa/string.h>
-#include <fa/type.h>
 
 /** @addtogroup FaBuffer
  
@@ -140,7 +139,7 @@ void fa_buffer_write_raw(fa_string_t, fa_buffer_t);
 fa_pair_t fa_buffer_read_audio(fa_string_t);
 
 
-fa_ptr_t fa_buffer_write_audio(fa_string_t, fa_type_t, fa_buffer_t);
+fa_ptr_t fa_buffer_write_audio(fa_string_t, int, fa_buffer_t);
 
 /** Return the address of the buffer.
 

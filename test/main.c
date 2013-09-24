@@ -320,49 +320,49 @@ void test_midi_message()
 
 // --------------------------------------------------------------------------------
 
-void test_type()
-{
-    test_section("Types");
-
-    fa_dprint("type(i8)                  ==> %s\n", type(i8));
-    // fa_dprint("size_of(1024,type(i8))    ==> %s\n", i32(fa_type_size_of(1024, type(i8))));
-    // fa_dprint("align_of(1024,type(i8))   ==> %s\n", i32(fa_type_align_of(type(i8))));
-    printf("\n");
-
-    // fa_dprint("type(f64)                 ==> %s\n", type(f64));
-    // fa_dprint("size_of(1024,type(f64))   ==> %s\n", i32(fa_type_size_of(1024, type(f64))));
-    // fa_dprint("align_of(1024,type(f64))  ==> %s\n", i32(fa_type_align_of(type(f64))));
-    // printf("\n");
-    //
-    // type_t t = type_pair(type(i8), type(f64));
-    // fa_dprint("t                            ==> %s\n", t);
-    // fa_dprint("size_of(1024,t)              ==> %s\n", i32(fa_type_size_of(1024, t)));
-    // fa_dprint("align_of(1024,t)             ==> %s\n", i32(fa_type_align_of(t)));
-    // printf("\n");
-    //
-    // type_t u = type_pair(type_vector(type(i8), 10), type(f64));
-    // fa_dprint("u                            ==> %s\n", u);
-    // fa_dprint("size_of(1024,u)              ==> %s\n", i32(fa_type_size_of(1024, u)));
-    // fa_dprint("align_of(1024,u)             ==> %s\n", i32(fa_type_align_of(u)));
-    // printf("\n");
-    //
-    // type_t u2 = type_pair(type_frame(type(i8)), type(f64));
-    // fa_dprint("u2                           ==> %s\n", u2);
-    // fa_dprint("size_of(1024,u2)             ==> %s\n", i32(fa_type_size_of(1024, u2)));
-    // fa_dprint("align_of(1024,u2)            ==> %s\n", i32(fa_type_align_of(u2)));
-    // printf("\n");
-
-    type_t v = type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
-                                             type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
-                                                       type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
-                                                               type(i8))))))))));
-
-    fa_print("v                            ==> %s\n", v);
-    // fa_dprint("size_of(1024,v)              ==> %s\n", i32(fa_type_size_of(1024, v)));
-    // fa_dprint("align_of(1024,v)             ==> %s\n", i32(fa_type_align_of(v)));
-    fa_destroy(v);
-    printf("\n");
-}
+// void test_type()
+// {
+//     test_section("Types");
+// 
+//     fa_dprint("type(i8)                  ==> %s\n", type(i8));
+//     // fa_dprint("size_of(1024,type(i8))    ==> %s\n", i32(fa_type_size_of(1024, type(i8))));
+//     // fa_dprint("align_of(1024,type(i8))   ==> %s\n", i32(fa_type_align_of(type(i8))));
+//     printf("\n");
+// 
+//     // fa_dprint("type(f64)                 ==> %s\n", type(f64));
+//     // fa_dprint("size_of(1024,type(f64))   ==> %s\n", i32(fa_type_size_of(1024, type(f64))));
+//     // fa_dprint("align_of(1024,type(f64))  ==> %s\n", i32(fa_type_align_of(type(f64))));
+//     // printf("\n");
+//     //
+//     // type_t t = type_pair(type(i8), type(f64));
+//     // fa_dprint("t                            ==> %s\n", t);
+//     // fa_dprint("size_of(1024,t)              ==> %s\n", i32(fa_type_size_of(1024, t)));
+//     // fa_dprint("align_of(1024,t)             ==> %s\n", i32(fa_type_align_of(t)));
+//     // printf("\n");
+//     //
+//     // type_t u = type_pair(type_vector(type(i8), 10), type(f64));
+//     // fa_dprint("u                            ==> %s\n", u);
+//     // fa_dprint("size_of(1024,u)              ==> %s\n", i32(fa_type_size_of(1024, u)));
+//     // fa_dprint("align_of(1024,u)             ==> %s\n", i32(fa_type_align_of(u)));
+//     // printf("\n");
+//     //
+//     // type_t u2 = type_pair(type_frame(type(i8)), type(f64));
+//     // fa_dprint("u2                           ==> %s\n", u2);
+//     // fa_dprint("size_of(1024,u2)             ==> %s\n", i32(fa_type_size_of(1024, u2)));
+//     // fa_dprint("align_of(1024,u2)            ==> %s\n", i32(fa_type_align_of(u2)));
+//     // printf("\n");
+// 
+//     type_t v = type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
+//                                              type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
+//                                                        type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
+//                                                                type(i8))))))))));
+// 
+//     fa_print("v                            ==> %s\n", v);
+//     // fa_dprint("size_of(1024,v)              ==> %s\n", i32(fa_type_size_of(1024, v)));
+//     // fa_dprint("align_of(1024,v)             ==> %s\n", i32(fa_type_align_of(v)));
+//     fa_destroy(v);
+//     printf("\n");
+// }      
 
 
 
@@ -1561,8 +1561,8 @@ void print_audio_devices(audio_session_t session)
     fa_print("    Listing audio devices: \n", NULL);
     fa_for_each(x, fa_audio_all(session)) {
         fa_print("        Device: %s\n", x);
-        fa_print("            Input:  %s\n", fa_audio_input_type(x));
-        fa_print("            Output: %s\n", fa_audio_output_type(x));
+        fa_print("            Input:  %s\n", i32(fa_audio_input_channels(x)));
+        fa_print("            Output: %s\n", i32(fa_audio_output_channels(x)));
     }
     fa_print("    Default input is : %s\n", fa_audio_default_input(session));
     fa_print("    Default output is : %s\n", fa_audio_default_output(session));
