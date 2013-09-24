@@ -1,5 +1,5 @@
 
-MODULO=modulo
+MODULO=modulo --lisp-package=faudio
 
 all:	c
 bindings: lisp
