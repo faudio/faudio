@@ -18,6 +18,9 @@
                 :random
                 :sin
                 :cos
+                :+
+                :-
+                :*
                 :loop
                 :set
                 :map

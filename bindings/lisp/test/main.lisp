@@ -431,22 +431,22 @@
 (setf x (sin (line 440.0)))
 
 
-(setf x (*~ (constant 0.3) 
+(setf x (* (constant 0.3) 
             (sin (line 220))))
 
 
 
-(setf a (*~ (sin (line 440)) (constant 0.1)))
-(setf b (*~ (sin (line 450)) (constant 0.1)))
-(setf c (*~ (sin (line 460)) (constant 0.1)))
-(setf d (*~ (sin (line 490)) (constant 0.1)))
-(setf x (*~ (sin (line 0.5))
-  (+~ (+~ a b) (+~ c d))))
+(setf a (* (sin (line 440)) (constant 0.1)))
+(setf b (* (sin (line 450)) (constant 0.1)))
+(setf c (* (sin (line 460)) (constant 0.1)))
+(setf d (* (sin (line 490)) (constant 0.1)))
+(setf x (* (sin (line 0.5))
+  (+ (+ a b) (+ c d))))
 
 (setf x 
-  (+~
-    (*~ (input 0)                (sin (line 0.1)))
-    (*~ (constant 0.01) (*~ (random) (cos (line 0.1))))))
+  (+
+    (* (input 0)                   (sin (line 0.1)))
+    (* (constant 0.01) (* (random) (cos (line 0.1))))))
 
 
 (setf s (audio-begin-session))
@@ -457,7 +457,8 @@
      (o (audio-default-output s))
      (st (audio-open-stream i x o)))
   (thread-sleep 5000)
-  (audio-end-session s))
+  (destroy st)
+  (destroy s))
 
 (signal-run-file (* 44100 60) x "/Users/hans/audio/out.wav")
 
@@ -635,8 +636,8 @@
 (atomic-exchange x 1 0)
 (atomic-get x)
 (atomic-set x 0)
-(atomic-add x 1)
-; (atomic-modify (lambda (x) x) x)
+; (atomic-add x 1)
+; (atomic-modify (lambda (i) (+ 1 i)) x)
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -644,7 +645,7 @@
 
 (setf x (atomic-queue-create))
 (destroy x)
-(atomic-queue-write x (random 20))
+(atomic-queue-write x (cl:random 20))
 (atomic-queue-read x)
 
 ; ---------------------------------------------------------------------------------------------------
@@ -653,7 +654,7 @@
 
 (setf x (atomic-stack-create))
 (destroy x)
-(atomic-stack-write x (random 20))
+(atomic-stack-write x (cl:random 20))
 (atomic-stack-read x)
 
 
