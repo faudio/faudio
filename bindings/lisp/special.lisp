@@ -247,12 +247,13 @@
 (defcallback list2listcall# list ((f ptr) (x list))
   (funcall (int-to-func# f) x))
 
-(defun audio-open-stream* (i f o)
-  (audio-open-stream i (callback list2listcall#) (func-to-int# 
-                                                  (lambda (inputs) 
-                                                    (export-list
-                                                    (funcall f (mapcar (lambda (x) (from-pointer 'signal x)) (import-list inputs)))))
-                                                  ) o))
+(defun audio-open-stream* (i o f)
+  (audio-open-stream i o (callback list2listcall#) 
+    (func-to-int# 
+      (lambda (inputs) 
+        (export-list
+          (funcall f (mapcar (lambda (x) (from-pointer 'signal x)) 
+            (import-list inputs))))))))
 
 ; ---------------------------------------------------------------------------------------------------
 

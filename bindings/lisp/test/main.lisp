@@ -454,17 +454,23 @@
     ((s (audio-begin-session))
      (i (audio-default-input s))
      (o (audio-default-output s))
-     (st (audio-open-stream* i 
-                             (lambda (inputs) (cl:list 
-                                               (* (constant 0.1) (sin (line 220)))
-                                               (* (constant 0.1) (sin (line 222)))
-                                               ))
-                             o)))
-  (thread-sleep 30000)
+     (st (audio-open-stream* 
+          i o 
+          (lambda (inputs) (cl:list 
+                            (* (input 0) (sin (line 550)))
+                            (* (input 1) (cos (line 550)))
+                            )))))
+
+  (capi:popup-confirmer nil "Playing..."
+    :callback-type :none :ok-button "Done" :no-button nil :cancel-button nil :value-function #'(lambda (dummy) t))
   (destroy st)
   (destroy s))
 
 (signal-run-file (cl:* 44100 60) x "/Users/hans/audio/out.wav")
+
+
+
+
 
 
 

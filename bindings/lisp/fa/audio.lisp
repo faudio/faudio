@@ -32,7 +32,7 @@
 (defcfun (audio-input-channels "fa_audio_input_channels") :int (a audio-device))
 (defcfun (audio-output-channels "fa_audio_output_channels") :int (a audio-device))
 (defctype audio-proc (:pointer (:pointer :void)))
-(defcfun (audio-open-stream "fa_audio_open_stream") audio-stream (a audio-device) (b audio-proc) (c ptr) (d audio-device))
+(defcfun (audio-open-stream "fa_audio_open_stream") audio-stream (a audio-device) (b audio-device) (c audio-proc) (d ptr))
 (defcfun (audio-close-stream "fa_audio_close_stream") :void (a audio-stream))
-(defcfun (audio-with-stream "fa_audio_with_stream") :void (a audio-device) (b audio-proc) (c ptr) (d audio-device) (e audio-stream-callback) (f ptr) (g error-callback) (h ptr))
+(defcfun (audio-with-stream "fa_audio_with_stream") :void (a audio-device) (b audio-device) (c audio-proc) (d ptr) (e audio-stream-callback) (f ptr) (g error-callback) (h ptr))
 
