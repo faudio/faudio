@@ -115,7 +115,7 @@ inline static void delete_signal(signal_t signal)
 #define input_get(v,f)      v->fields.input.f
 #define output_get(v,f)     v->fields.output.f
 
-#define neg(x) ((x + 1)*(-1))
+#define neg_bus(x) ((x + 1)*(-1))
 
 // --------------------------------------------------------------------------------
 
@@ -451,17 +451,17 @@ void run_part(struct part *p, int *r, struct part *p2)
     p2->d = p->d;
 }
 void split_part(struct part *p, struct part *p2, struct part *p3)
-{
+{           
     p2->o = p->o;
-    p2->o = p->d * 2;
+    p2->d = p->d * 2;
     p3->o = p->d;
-    p3->o = p->d * 2;
+    p3->d = p->d * 2;
 }
 
 void run_part_neg(struct part *p, int *r, struct part *p2)
 {
     run_part(p, r, p2);
-    *r = neg(*r);
+    *r = neg_bus(*r);
 }
 
 
@@ -598,12 +598,12 @@ double  read_actual_input(int c, state_t state);
 inline static
 double read_samp(int c, state_t state)
 {
-    return (c >= 0) ? read_actual_input(c, state) : read_bus(neg(c), state);
+    return (c >= 0) ? read_actual_input(c, state) : read_bus(neg_bus(c), state);
 }
 inline static
 void write_samp(int n, int c, double x, state_t state)
 {
-    write_bus(n, neg(c), x, state);
+    write_bus(n, neg_bus(c), x, state);
 }
 
 // inline static
@@ -666,18 +666,20 @@ double step(signal_t signal, state_t state)
 
     case lift_signal: {
         dunary_t f      = lift_get(signal, f);
+        ptr_t    fd     = lift_get(signal, fd);
         signal_t a      = lift_get(signal, a);
         double   xa     = step(a, state);
-        return f(NULL, xa);
+        return f(fd, xa);
     }
 
     case lift2_signal: {
         dbinary_t   f   = lift2_get(signal, f);
+        ptr_t       fd  = lift2_get(signal, fd);
         signal_t a      = lift2_get(signal, a);
         signal_t b      = lift2_get(signal, b);
         double   xa     = step(a, state);
         double   xb     = step(b, state);
-        return f(NULL, xa, xb);
+        return f(fd, xa, xb);
     }
 
     case input_signal: {
@@ -798,6 +800,46 @@ fa_signal_t fa_signal_line(double x)
     double tau = 2 * 3.141592653589793;
     return fa_signal_multiply(fa_signal_time(), fa_signal_constant(x * tau));
 }
+
+
+inline static double _play(ptr_t buffer, double i)
+{                 
+    size_t size = fa_buffer_size(buffer);
+    if (i < 0) {
+        return 0;
+    } else {       
+        size_t i2 = floor(i);
+        if (i2 >= size) {
+            return 0;
+        } else {
+            return fa_buffer_get_double(buffer, floor(i));
+        }
+    }
+}
+fa_signal_t fa_signal_play(fa_buffer_t buffer, fa_signal_t i)
+{                         
+    return fa_signal_lift(string("play"), _play, buffer, i);
+}
+
+inline static double _record(ptr_t buffer, double i, double x)
+{                                  
+    size_t size = fa_buffer_size(buffer);
+    if (i >= 0) {
+        size_t i2 = floor(i);
+        if (i2 < size) {
+            fa_buffer_set_double(buffer, i2, x);
+        }
+    }
+    return x;
+}
+fa_signal_t fa_signal_record(fa_buffer_t buffer, fa_signal_t i, fa_signal_t x)
+{
+    return fa_signal_lift2(string("record"), _record, buffer, i, x);
+}
+
+
+
+
 
 
 
