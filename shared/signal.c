@@ -562,7 +562,7 @@ typedef _state_t *state_t;
 double  kRate       = 44100;
 long    kMaxInputs  = 1024;
 long    kMaxBuses   = 512;
-long    kMaxDelay   = (44100 * 2);
+long    kMaxDelay   = (44100 * 5);
 
 state_t new_state()
 {
@@ -639,7 +639,7 @@ double read_bus(int c, state_t state)
 void write_bus(int n, int c, double x, state_t state)
 {
     int bp = buffer_pointer(state);
-    state->buses[index_bus(bp + n % kMaxDelay, c)] = x;
+    state->buses[index_bus((bp + n) % kMaxDelay, c)] = x;
 }
 //----------
 
