@@ -143,6 +143,32 @@ fa_buffer_t fa_signal_run_buffer(int, fa_signal_t);
 */
 fa_ptr_t fa_signal_run_file(int, fa_signal_t, fa_string_t);
 
+/**
+    Index a buffer at the given sample.
+
+    This signal writes raw buffer indices, so to read a buffer *b*
+    of *n* channels at channel *c* and sample *n*, do `record(b, i*n+c)`.
+
+    @param buffer
+        Buffer to read from.
+    @param index
+        Index to read from.
+*/
+fa_signal_t fa_signal_play(fa_buffer_t, fa_signal_t);
+
+/**
+    Index a buffer at the given sample and returns the written value.
+
+
+    @param buffer
+        Buffer to write to.
+    @param index
+        Index to write to.
+    @param value
+        Value to write.
+*/
+fa_signal_t fa_signal_record(fa_buffer_t, fa_signal_t, fa_signal_t);
+
 
 fa_signal_t fa_signal_add(fa_signal_t, fa_signal_t);
 

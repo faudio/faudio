@@ -22,6 +22,8 @@
 (defcfun (signal-run "fa_signal_run") :void (a :int) (b signal) (c (:pointer :double)))
 (defcfun (signal-run-buffer "fa_signal_run_buffer") buffer (a :int) (b signal))
 (defcfun (signal-run-file "fa_signal_run_file") ptr (a :int) (b signal) (c string))
+(defcfun (signal-play "fa_signal_play") signal (a buffer) (b signal))
+(defcfun (signal-record "fa_signal_record") signal (a buffer) (b signal) (c signal))
 (defcfun (signal-add "fa_signal_add") signal (a signal) (b signal))
 (defcfun (signal-multiply "fa_signal_multiply") signal (a signal) (b signal))
 (defcfun (signal-cos "fa_signal_cos") signal (a signal))

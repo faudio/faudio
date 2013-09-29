@@ -123,7 +123,33 @@ module Fa.Signal
      */
     runFile : ( Int, Signal, String ) -> Ptr;
 
+    
 
+    /**
+        Index a buffer at the given sample.
+
+        This signal writes raw buffer indices, so to read a buffer *b*
+        of *n* channels at channel *c* and sample *n*, do `record(b, i*n+c)`.
+
+        @param buffer
+            Buffer to read from.
+        @param index
+            Index to read from. If negative, returns zero.
+     */
+    play : (Buffer, Signal) -> Signal;
+
+    /**
+        Index a buffer at the given sample and returns the written value.
+
+
+        @param buffer
+            Buffer to write to.
+        @param index
+            Index to write to. If negative or larger than buffer size, nothing is written.
+        @param value
+            Value to write.
+     */
+    record : (Buffer, Signal, Signal) -> Signal;
 
 
     add                 : (Signal, Signal) -> Signal;

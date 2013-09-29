@@ -460,21 +460,42 @@
     (* (constant 0.01) (* (random) (cos (line 0.1))))))
 
 
-(let* ((s (audio-begin-session))
+
+(setf buf (from-pointer 
+           'buffer 
+           (pair-second (buffer-read-audio* "/Users/hans/Desktop/fuga102.wav"))))
+
+(buffer-size buf)
+(buffer-get-double buf 2312)
+
+
+; FIXME
+(signal-run-proc 
+ (lambda (inputs) 
+   (duplicate 
+    (signal-play 
+     buf 
+;     (* (time) (constant 44100))
+     (constant 0)
+                 ))))
+
+
+(signal-run-proc (lambda (inputs)
+  (cl:list 
+   (* (sin (line 70)) (sin (line 550)))
+   (* (sin (line 141)) (cos (line 550))))))
+
+(defun duplicate (x) (cl:list x x))
+(defun signal-run-proc (proc) 
+  (let* ((s (audio-begin-session))
        (i (audio-default-input s))
        (o (audio-default-output s))
-       (st (audio-open-stream* i o 
-            (lambda (inputs)
-              (cl:print (cl:length inputs))
-              (cl:print (mapcar (lambda (x) (* (constant 0.5) x)) inputs))
-              (cl:list 
-               (* (sin (line 70)) (sin (line 550)))
-               (* (sin (line 141)) (cos (line 550))))))))
+       (st (audio-open-stream* i o proc)))
 
   (capi:popup-confirmer nil "Playing..."
                         :callback-type :none :ok-button "Stop" :no-button nil :cancel-button nil :value-function #'(lambda (dummy) t))
   (destroy st)
-  (destroy s))
+  (destroy s))) 
 
 (signal-run-file (cl:* 44100 60) x "/Users/hans/audio/out.wav")
 
