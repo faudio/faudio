@@ -633,8 +633,8 @@
 (setf buf (buffer-create (cl:* 88200 8)))
 
 ; Buffer from signal
-(setf buf (signal-run-buffer 44100 (random)))
-(setf buf (signal-run-buffer 44100 (sin (line 440))))
+(setf buf (signal-run-buffer 44100 (* (constant 0.1) (random))))
+(setf buf (signal-run-buffer 44100 (* (constant 0.1) (sin (line 220)))))
 
 (cl:print buf)
 (destroy buf)

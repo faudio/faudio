@@ -22,7 +22,9 @@
 (asdf:oos 'asdf:load-op :faudio)
 
 ; Force recompile
-; (asdf:operate 'asdf:load-op :faudio :force t)
+#|
+  (asdf:operate 'asdf:load-op :faudio :force t)
+|#
 
 ; Load library and setup tests
 (let ((framework-name "Faudio")

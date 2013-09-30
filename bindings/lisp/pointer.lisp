@@ -8,8 +8,10 @@
 (in-package :faudio)
 
 #|
-    Pointer specific primitives. This file needs to be loaded before the
-    generated files, special.lisp is loaded afterwards.
+    Pointer specific primitives. 
+    
+    This file needs to be loaded before the generated files, 
+    special.lisp and utility.lisp is loaded afterwards.
 |#
 
 (defcfun (is-bool#      "fa_is_bool") :boolean (a :pointer))

@@ -311,15 +311,11 @@
 (defmethod print-object ((x atomic-stack) out) (format out "~a" (string-show# (slot-value x 'atomic-stack-ptr))))
 (defmethod print-object ((x atomic-ring-buffer) out) (format out "~a" (string-show# (slot-value x 'atomic-ring-buffer-ptr))))
 
-; (defmethod print-object ((x message-dispatcher) out) (format out "~a" (string-show# (slot-value x 'message-dispatcher-ptr))))
-; (defmethod print-object ((x priority-queue) out) (format out "~a" (string-show# (slot-value x 'priority-queue-ptr))))
-; (defmethod print-object ((x processor) out) (format out "~a" (string-show# (slot-value x 'processor-ptr))))
-; (defmethod print-object ((x scheduler) out) (format out "~a" (string-show# (slot-value x 'scheduler-ptr))))
 (defmethod print-object ((x signal) out) (format out "~a" (string-show# (slot-value x 'signal-ptr))))
+
 (defmethod print-object ((x thread) out) (format out "~a" (string-show# (slot-value x 'thread-ptr))))
 
 (defmethod print-object ((x time) out) (format out "~a" (string-show# (slot-value x 'time-ptr))))
-(defmethod print-object ((x type) out) (format out "~a" (string-show# (slot-value x 'type-ptr))))
 
 (defmethod print-object ((x audio-session) out) (format out "~a" (string-show# (slot-value x 'audio-session-ptr))))
 (defmethod print-object ((x audio-stream) out) (format out "~a" (string-show# (slot-value x 'audio-stream-ptr))))

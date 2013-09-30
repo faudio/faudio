@@ -80,8 +80,6 @@
 (defmethod (setf get) (v (b buffer) i)
   (buffer-set b i v))
 
-; ---------------------------------------------------------------------------------------------------
-
 (defun buffer-to-array (x)
   (setf sz (buffer-size x))
   (setf a (make-array sz :element-type 'unsigned-byte))
@@ -171,28 +169,7 @@
 
 
 
-; (defmacro never         (&rest args)  `(event-never ,@args))
-; (defmacro now           (&rest args)  `(event-now ,@args))
-; (defmacro later         (&rest args)  `(event-later ,@args))
-; (defmacro delay         (&rest args)  `(event-delay ,@args))
-; (defmacro switch        (&rest args)  `(event-switch ,@args))
-; (defmacro loop          (&rest args)  `(event-loop ,@args))
-; (defmacro receive       (&rest args)  `(event-receive ,@args))
-; (defmacro send          (&rest args)  `(event-send ,@args))
-; 
-; (defmacro before        (&rest args)  `(event-before ,@args))
-; (defmacro after         (&rest args)  `(event-after ,@args))
 
-
-; seq and par are binary, sequence and parallel are the reduced version
-(defmacro merge2 (&rest args) `(event-merge ,@args))
-
-(defun merge (head &rest args)
-  (cond
-   (args        (merge2 head (apply 'merge args)))
-   ((null head) (event-never))
-   (t           head)
-   ))
 
 
 ; (defmacro < (&rest args) `(greater-than ,@args))
