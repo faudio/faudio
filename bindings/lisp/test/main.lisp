@@ -428,143 +428,100 @@
 (setf x (sin (line 440.0)))
 
 (setf x (+ x x))
-
-
-(defcallback add1 :double ((f :pointer) (x :double))
-  0.5)
-(setf x (signal-lift "test" (callback add1) 0 (time)))
-
-(defcallback foo :double ((f :pointer) (x :double) (y :double))
-  0.5)
-(setf x (signal-lift2 "test2" (callback foo) 0 (time) (time)))
-
-
-(eq (type-of nil) 'cl:null)
-(type-of 1/2)
-
-(setf x (* (constant 0.3) 
-           (sin (line 220))))
-
-
-(setf x 
-  (let* ((a (* (sin (line 440)) (constant 0.1)))
-         (b (* (sin (line 450)) (constant 0.1)))
-         (c (* (sin (line 460)) (constant 0.1)))
-         (d (* (sin (line 490)) (constant 0.1))))
-    (* (sin (line 0.5))
-       (+ (+ a b) (+ c d)))))
-(signal-run-proc (lambda (_) (cl:list (signal-delay 1000 x) x)))
-
-(setf x 
-  (+
-    (* (input 0)                   (sin (line 0.1)))
-    (* (constant 0.01) (* (random) (cos (line 0.1))))))
-
-
+; 
+; 
+; (defcallback add1 :double ((f :pointer) (x :double))
+;   0.5)
+; (setf x (signal-lift "test" (callback add1) 0 (time)))
+; 
+; (defcallback foo :double ((f :pointer) (x :double) (y :double))
+;   0.5)
+; (setf x (signal-lift2 "test2" (callback foo) 0 (time) (time)))
+; 
+; 
+; (eq (type-of nil) 'cl:null)
+; (type-of 1/2)
+; 
+; (setf x (* (constant 0.3) 
+;            (sin (line 220))))
+; 
+; 
+; (setf x 
+;   (let* ((a (* (sin (line 440)) (constant 0.1)))
+;          (b (* (sin (line 450)) (constant 0.1)))
+;          (c (* (sin (line 460)) (constant 0.1)))
+;          (d (* (sin (line 490)) (constant 0.1))))
+;     (* (sin (line 0.5))
+;        (+ (+ a b) (+ c d)))))
+; 
+; (signal-run-default (lambda (inputs) 
+;   (cl:list (signal-delay 1000 x) x)))
+; 
+; (setf x 
+;   (+
+;     (* (input 0)                   (sin (line 0.1)))
+;     (* (constant 0.01) (* (random) (cos (line 0.1))))))
+; 
+;                           
 
 (setf buf (from-pointer 
            'buffer 
-           (pair-second (buffer-read-audio* "/Users/hans/Desktop/fuga_108.wav"))))
+           (pair-second (buffer-read-audio* "/Users/hans/Desktop/bb.wav"))))
 
-(destroy buf)
 (buffer-size buf)
-(buffer-get-double buf 2312)
+(destroy buf)
 
 
-)
-
-
-(defcallback add1 signal ((_ :pointer) (x signal))
-  (+ x (constant 1)))
-(defcallback same signal ((_ :pointer) (x signal))
-  x)
-
-(defcfun (signal-loop "fa_signal_loop") signal (a :pointer) (b :pointer))
-(defcfun (signal-lift "fa_signal_lift") signal (a string) (b :pointer) (c :pointer) (d signal))
-(defcfun (signal-lift2 "fa_signal_lift2") signal (a string) (b :pointer) (c :pointer) (d signal) (e signal))
-
-
-
-(signal-loop (get-callback 'add1) (cffi:null-pointer))
-(time)
-(signal-delay 2 (time))
-
-
-(defun counter ()
-  (+ (signal-loop (callback add1) (cffi:null-pointer)) (constant -1)))
 
 ; Play back buf
-(signal-run-proc (lambda (is)
+(signal-run-default (lambda (is)
  (let* (
-       (j (+ (signal-loop (callback add1) (cffi:null-pointer)) (constant -1)))
+       (j (counter))
        (li (+ (* j (constant 2)) (constant 0)))
        (ri (+ (* j (constant 2)) (constant 1)))
        
-       (lis (* (constant 0.5) li))
-       (ris (* (constant 0.5) ri))
-       (lib (+ (constant (cl:* 30 44100)) (* li (constant -1))))
-       (rib (+ (constant (cl:* 30 44100)) (* li (constant -1))))
+       (lis (* (constant 10) li))
+       (ris (* (constant 10) ri))
+       (lib (* li (constant -1)))
+       (rib (* li (constant -1)))
 
-       (l (signal-play buf lis))
-       (r (signal-play buf ris))
+       (l (signal-play buf li))
+       (r (signal-play buf ri))
        )
    (cl:print l)
    (cl:list l r)
    )))
 
-(defun signal-print* (n x)
-  (let* ((buffer (signal-run-buffer n x)))
-    (dotimes (i (/ (size buffer) 8)) 
-      (cl:print (coerce 
-                 (buffer-get-double buffer i) 
-                 'single-float)))
-    (destroy buffer)))
-
 (signal-print* 10 (time))
 (signal-print* (cl:* 10) (counter))
 
-
-(signal-run-proc (lambda (inputs) 
-                   
-))
-
-; FIXME
-(signal-run-proc 
- (lambda (inputs) 
-   (duplicate 
-    (signal-play 
-     buf 
-;     (* (time) (constant 44100))
-     (constant 0)
-                 ))))
-
-
-(signal-run-proc 
- (duplicate
-  (* (* (constant 0.1) (time))
-   (* (constant 0.1) (time)))))
-
-; FIXME
-(signal-run-proc (lambda (inputs)
+; Frequency modulation
+(signal-run-default (lambda (inputs)
   (cl:list 
    (* (* (constant 0.1) (time))
-    (sin (line 70)) (sin (line 550)))
+    (* (sin (line 70))  (sin (line 550)))) 
    (* (* (constant 0.1) (time))
     (* (sin (line 141)) (cos (line 550)))))))
 
-(signal-run-proc (lambda (is) (duplicate (sin (line 440)))))
+; Sine
+(signal-run-default (lambda (inputs) 
+  (duplicate 
+    (* (constant 0.15) (sin (line 440))))))
 
-(defun duplicate (x) (cl:list x x))
-(defun signal-run-proc (proc) 
-  (let* ((s (audio-begin-session))
-       (i (audio-default-input s))
-       (o (audio-default-output s))
-       (st (audio-open-stream* i o proc)))
-
-  (capi:popup-confirmer nil "Playing..."
-                        :callback-type :none :ok-button "Stop" :no-button nil :cancel-button nil :value-function #'(lambda (dummy) t))
-  (destroy st)
-  (destroy s))) 
+; (defun duplicate (x) (cl:list x x))
+; (defun signal-run-default (inputs) 
+;   (let* ((s (audio-begin-session))
+;        (i (audio-default-input s))
+;        (o (audio-default-output s))
+;        (st (audio-open-stream* i o proc)))
+;   (capi:popup-confirmer nil "Running signal..."
+;     :callback-type :none 
+;     :ok-button "Stop" 
+;     :no-button nil 
+;     :cancel-button nil 
+;     :value-function #'(lambda (dummy) t))
+;   (destroy st)
+;   (destroy s))) 
 
 (signal-run-file (cl:* 44100 60) x "/Users/hans/audio/out.wav")
 
