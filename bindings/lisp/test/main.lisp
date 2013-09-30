@@ -407,123 +407,9 @@
 (time-divisions x)
 
 (time-to-iso x)
-;(time-to-milliseconds x)
+(time-to-milliseconds x)
 (time-to-seconds x)
 
-; Clocks
-; (setf z (time-get-system-prec-clock))
-; (setf x (time-time z))
-; (setf x (time-ticks z))
-; (setf x (time-tick-rate z))
-
-
-; ---------------------------------------------------------------------------------------------------
-
-; Signals
-
-(setf x (time))
-(setf x (random))
-(setf x (constant 0.5))
-(setf x (input 1))
-(setf x (sin (line 440.0)))
-
-(setf x (+ x x))
-; 
-; 
-; (defcallback add1 :double ((f :pointer) (x :double))
-;   0.5)
-; (setf x (signal-lift "test" (callback add1) 0 (time)))
-; 
-; (defcallback foo :double ((f :pointer) (x :double) (y :double))
-;   0.5)
-; (setf x (signal-lift2 "test2" (callback foo) 0 (time) (time)))
-; 
-; 
-; (eq (type-of nil) 'cl:null)
-; (type-of 1/2)
-; 
-; (setf x (* (constant 0.3) 
-;            (sin (line 220))))
-; 
-; 
-; (setf x 
-;   (let* ((a (* (sin (line 440)) (constant 0.1)))
-;          (b (* (sin (line 450)) (constant 0.1)))
-;          (c (* (sin (line 460)) (constant 0.1)))
-;          (d (* (sin (line 490)) (constant 0.1))))
-;     (* (sin (line 0.5))
-;        (+ (+ a b) (+ c d)))))
-; 
-; (signal-run-default (lambda (inputs) 
-;   (cl:list (signal-delay 1000 x) x)))
-; 
-; (setf x 
-;   (+
-;     (* (input 0)                   (sin (line 0.1)))
-;     (* (constant 0.01) (* (random) (cos (line 0.1))))))
-; 
-;                           
-
-(setf buf (from-pointer 
-           'buffer 
-           (pair-second (buffer-read-audio* "/Users/hans/Desktop/bb.wav"))))
-
-(buffer-size buf)
-(destroy buf)
-
-
-
-; Play back buf
-(signal-run-default 
- (lambda (inputs)
-   (let* ((j (counter))                            ; 0,1,2..
-          (li (+ (* j (constant 2)) (constant 0))) ; left channel indices (0,2,4..)
-          (ri (+ (* j (constant 2)) (constant 1))) ; right channel indices (1,3,5..)
-          
-          (lis (* (constant 10) li)) ; Faster
-          (ris (* (constant 10) ri))
-          (lib (* li (constant -1))) ; Backwards
-          (rib (* li (constant -1)))
-          
-          (l (signal-play buf li))   ; Left channel
-          (r (signal-play buf ri))   ; Right channel
-          )
-;     (cl:print l)
-     (cl:list l r))))
-
-(signal-print* 10 (input 0)) ; Always 0
-(signal-print* 10 (time))
-(signal-print* 10 (counter))
-
-; Frequency modulation
-(signal-run-default (lambda (inputs)
-  (cl:list 
-   (* (* (constant 0.1) (time))
-    (* (sin (line 70))  (sin (line 550)))) 
-   (* (* (constant 0.1) (time))
-    (* (sin (line 141)) (cos (line 550)))))))
-
-; Sine
-(signal-run-default (lambda (inputs) 
-  (duplicate 
-    (* (constant 0.15) (sin (line 120))))))
-
-; (defun duplicate (x) (cl:list x x))
-; (defun signal-run-default (inputs) 
-;   (let* ((s (audio-begin-session))
-;        (i (audio-default-input s))
-;        (o (audio-default-output s))
-;        (st (audio-open-stream* i o proc)))
-;   (capi:popup-confirmer nil "Running signal..."
-;     :callback-type :none 
-;     :ok-button "Stop" 
-;     :no-button nil 
-;     :cancel-button nil 
-;     :value-function #'(lambda (dummy) t))
-;   (destroy st)
-;   (destroy s))) 
-
-(signal-run-file (cl:* 44100 60) x "/Users/hans/audio/out.wav")
 
 ; ---------------------------------------------------------------------------------------------------
 ; Devices
@@ -555,11 +441,7 @@
   ;(capi:display-message "Audio setup changed")
   (fa-log-info "Audio setup changed")) s)
 
-; close-all!
 (audio-close-stream z)
-
-; TODO unregister status callback?
-; TODO status callback does not care about sessions (work even after session becomes inactive)
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -696,4 +578,49 @@
                   (fa-log-info "Finally, got it!"))))
 
 
+
+; ---------------------------------------------------------------------------------------------------
+
+; Signals
+
+(setf x (time))
+(setf x (random))
+(setf x (constant 0.5))
+(setf x (input 1))
+(setf x (sin (line 440.0)))
+(setf x (+ x x))
+
+(signal-print* 10 x)
+(signal-run-file (cl:* 44100 60) x "/Users/hans/audio/test.wav")
+
+(signal-print* 10 (input 0)) ; Always 0
+(signal-print* 10 (time))
+(signal-print* 10 (counter))
+
+; Read buf
+(setf buf (from-pointer 'buffer (pair-second (buffer-read-audio* "/Users/hans/Desktop/bb.wav"))))
+(destroy buf)
+
+; Play back buf
+(signal-run-default 
+ (lambda (inputs)
+   (let* ((j (counter))                                       ; 0,1,2..
+          (left-index (+ (* j (constant 2)) (constant 0)))    ; 0,2,4..)
+          (right-index (+ (* j (constant 2)) (constant 1)))   ; 1,3,5..
+          (left (signal-play buf left-index))
+          (right (signal-play buf right-index)))
+     (cl:list left right)))) ; Stereo output
+
+; Frequency modulation
+(signal-run-default (lambda (inputs)
+  (cl:list 
+   (* (* (constant 0.1) (time))
+    (* (sin (line 70))  (sin (line 550)))) 
+   (* (* (constant 0.1) (time))
+    (* (sin (line 141)) (cos (line 550)))))))
+
+; Sine
+(signal-run-default (lambda (inputs) 
+  (duplicate 
+    (* (constant 0.15) (sin (line 120))))))
 
