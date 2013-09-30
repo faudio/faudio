@@ -123,6 +123,7 @@
 ; ---------------------------------------------------------------------------------------------------
 
 (defmacro time (&rest args) `(signal-time ,@args))
+(defmacro counter (&rest args) `(signal-counter ,@args))
 (defmacro random (&rest args) `(signal-random ,@args))
 (defmacro constant (&rest args) `(signal-constant (coerce ,@args 'double-float)))
 (defmacro input (&rest args) `(signal-input ,@args))
@@ -137,17 +138,50 @@
 (defmacro loop (&rest args) `(signal-loop (coerce ,@args 'double-float)))
 
 
-(defmacro never         (&rest args)  `(event-never ,@args))
-(defmacro now           (&rest args)  `(event-now ,@args))
-(defmacro later         (&rest args)  `(event-later ,@args))
-(defmacro delay         (&rest args)  `(event-delay ,@args))
-(defmacro switch        (&rest args)  `(event-switch ,@args))
-(defmacro loop          (&rest args)  `(event-loop ,@args))
-(defmacro receive       (&rest args)  `(event-receive ,@args))
-(defmacro send          (&rest args)  `(event-send ,@args))
+(defun duplicate (x) (cl:list x x))
+(defun signal-run-default (proc) 
+  (let* ((s (audio-begin-session))
+       (i (audio-default-input s))
+       (o (audio-default-output s))
+       (st (audio-open-stream* i o proc)))
+  (capi:popup-confirmer nil "Running signal..."
+    :callback-type :none 
+    :ok-button "Stop" 
+    :no-button nil 
+    :cancel-button nil 
+    :value-function #'(lambda (dummy) t))
+  (destroy st)
+  (destroy s))) 
 
-(defmacro before        (&rest args)  `(event-before ,@args))
-(defmacro after         (&rest args)  `(event-after ,@args))
+(defun signal-print* (n x)
+  (let* ((buffer (signal-run-buffer n x)))
+    (dotimes (i (/ (size buffer) 8)) 
+      (cl:print (coerce 
+                 (buffer-get-double buffer i) 
+                 'single-float)))
+    (destroy buffer)))
+
+(defcallback signal-counter-add1 signal ((_ :pointer) (x signal))
+  (+ x (constant 1)))
+(defun signal-counter ()
+  (+ (signal-loop (callback signal-counter-add1) (cffi:null-pointer)) (constant -1)))
+
+
+
+
+
+
+; (defmacro never         (&rest args)  `(event-never ,@args))
+; (defmacro now           (&rest args)  `(event-now ,@args))
+; (defmacro later         (&rest args)  `(event-later ,@args))
+; (defmacro delay         (&rest args)  `(event-delay ,@args))
+; (defmacro switch        (&rest args)  `(event-switch ,@args))
+; (defmacro loop          (&rest args)  `(event-loop ,@args))
+; (defmacro receive       (&rest args)  `(event-receive ,@args))
+; (defmacro send          (&rest args)  `(event-send ,@args))
+; 
+; (defmacro before        (&rest args)  `(event-before ,@args))
+; (defmacro after         (&rest args)  `(event-after ,@args))
 
 
 ; seq and par are binary, sequence and parallel are the reduced version
