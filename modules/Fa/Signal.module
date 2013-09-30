@@ -48,7 +48,9 @@ module Fa.Signal
     
     /**
         Returns a signal representing the given constant value.
-        
+
+        @param value
+            Constant value.
         @par Semantic $$y(c)(t) = c$$.
      */
     constant    : Double -> Signal;
@@ -56,6 +58,15 @@ module Fa.Signal
     /**
         Returns a signal that applies the given function to output of the given signal.
         
+        @param name          
+            Name of resulting processor. This is used for printing and some optimization techniques.
+        @param function, data
+            Function to lift and pointer to data closed over by the function.
+        @param signal
+            Signal to apply to the resulting processor.
+        @return
+            Result of appying the given processor to the given signal.
+
         @par Semantic $$y(f,a)(t) = f(a(t))$$.
      */
     lift        : ( String, UnaryDouble, Ptr, Signal )            -> Signal;
@@ -63,13 +74,25 @@ module Fa.Signal
     /**
         Returns a signal that applies the given function to output of the given signals.
         
+        Returns a signal that applies the given function to output of the given signal.
+        
+        @param name          
+            Name of resulting processor. This is used for printing and some optimization techniques.
+        @param function, data
+            Function to lift and pointer to data closed over by the function.
+        @param signal1, signal2
+            Signals to apply to the resulting processor.
+        @return
+            Result of appying the given processor to the given signals.
+
         @par Semantic $$y(f,a,b)(t) = f(a(t), b(t))$$.
      */
     lift2       : ( String, BinaryDouble, Ptr, Signal, Signal )   -> Signal;
 
     /**
         Returns a signal that closes over the given signal function in a feedback loop.
-        The given signal function receives its own output with an implicit 1-sample delay.
+
+        The given signal function receives its own output with an implicit one-sample delay.
         
         @par Semantic $$y(f)(t) = f(y(t-1))$$.
      */
@@ -77,10 +100,10 @@ module Fa.Signal
 
     /**
         Returns a signal that delays the given signal by the given number of 
-        samples. The resulting signal returns 0 until the first sample of the
-        original signal.
-        
-        @par Semantic $$y(n,a)(t) = a(t-n)$$.
+        samples. 
+                
+        @par Semantic $$y(n,a)(t) = \\begin{cases} 0 & \mbox{if} (t-n) < 0   \\\\   a(t-n) & \mbox{if} (t-n) \\geq 0 \\end{cases}$$.
+
      */
     delay       : ( Int, Signal )                                 -> Signal;
 
@@ -153,50 +176,50 @@ module Fa.Signal
 
 
     add                 : (Signal, Signal) -> Signal;
-    // subtract            : (Signal, Signal) -> Signal;
+    subtract            : (Signal, Signal) -> Signal;
     multiply            : (Signal, Signal) -> Signal;
-    // power               : (Signal, Signal) -> Signal;
-    // divide              : (Signal, Signal) -> Signal;
-    // modulo              : (Signal, Signal) -> Signal;
-    // absolute            : (Signal, Signal) -> Signal;
-    // 
-    // not                 : () -> Signal;
-    // and                 : (Signal, Signal) -> Signal;
-    // or                  : (Signal, Signal) -> Signal;
-    // xor                 : (Signal, Signal) -> Signal;
-    // bitNot              : (Signal, Signal) -> Signal;
-    // bitAnd              : (Signal, Signal) -> Signal;
-    // bitOr               : (Signal, Signal) -> Signal;
-    // bitXor              : (Signal, Signal) -> Signal;
-    // shiftLeft           : (Signal, Signal) -> Signal;
-    // shiftRight          : (Signal, Signal) -> Signal;
-    // 
-    // equal               : (Signal, Signal) -> Signal;
-    // lessThan            : (Signal, Signal) -> Signal;
-    // greaterThan         : (Signal, Signal) -> Signal;
-    // lessThanEqual       : (Signal, Signal) -> Signal;
-    // greaterThanEqual    : (Signal, Signal) -> Signal;
-    // 
-    // acos                : (Signal, Signal) -> Signal;
-    // asin                : (Signal, Signal) -> Signal;
-    // atan                : (Signal, Signal) -> Signal;
+    power               : (Signal, Signal) -> Signal;
+    divide              : (Signal, Signal) -> Signal;
+    modulo              : (Signal, Signal) -> Signal;
+    absolute            : (Signal, Signal) -> Signal;
+    
+    not                 : () -> Signal;
+    and                 : (Signal, Signal) -> Signal;
+    or                  : (Signal, Signal) -> Signal;
+    xor                 : (Signal, Signal) -> Signal;
+    bitNot              : (Signal, Signal) -> Signal;
+    bitAnd              : (Signal, Signal) -> Signal;
+    bitOr               : (Signal, Signal) -> Signal;
+    bitXor              : (Signal, Signal) -> Signal;
+    shiftLeft           : (Signal, Signal) -> Signal;
+    shiftRight          : (Signal, Signal) -> Signal;
+    
+    equal               : (Signal, Signal) -> Signal;
+    lessThan            : (Signal, Signal) -> Signal;
+    greaterThan         : (Signal, Signal) -> Signal;
+    lessThanEqual       : (Signal, Signal) -> Signal;
+    greaterThanEqual    : (Signal, Signal) -> Signal;
+    
+    acos                : (Signal, Signal) -> Signal;
+    asin                : (Signal, Signal) -> Signal;
+    atan                : (Signal, Signal) -> Signal;
     cos                 : (Signal) -> Signal;
     sin                 : (Signal) -> Signal;
-    // tan                 : (Signal, Signal) -> Signal;
-    // exp                 : (Signal, Signal) -> Signal;
-    // log                 : (Signal, Signal) -> Signal;
-    // log10               : (Signal, Signal) -> Signal;
-    // pow                 : (Signal, Signal) -> Signal;
-    // sqrt                : (Signal, Signal) -> Signal;
-    // abs                 : (Signal, Signal) -> Signal;
-    // min                 : (Signal, Signal) -> Signal;
-    // max                 : (Signal, Signal) -> Signal;
-    // fmod                : (Signal, Signal) -> Signal;
-    // remainder           : (Signal, Signal) -> Signal;
-    // floor               : (Signal, Signal) -> Signal;
-    // ceil                : (Signal, Signal) -> Signal;
-    // rint                : (Signal, Signal) -> Signal;    
-    //                        
+    tan                 : (Signal, Signal) -> Signal;
+    exp                 : (Signal, Signal) -> Signal;
+    log                 : (Signal, Signal) -> Signal;
+    log10               : (Signal, Signal) -> Signal;
+    pow                 : (Signal, Signal) -> Signal;
+    sqrt                : (Signal, Signal) -> Signal;
+    abs                 : (Signal, Signal) -> Signal;
+    min                 : (Signal, Signal) -> Signal;
+    max                 : (Signal, Signal) -> Signal;
+    fmod                : (Signal, Signal) -> Signal;
+    remainder           : (Signal, Signal) -> Signal;
+    floor               : (Signal, Signal) -> Signal;
+    ceil                : (Signal, Signal) -> Signal;
+    rint                : (Signal, Signal) -> Signal;    
+                           
     // isVariable : Signal -> Bool;
     // isConstant : Signal -> Bool;
     // areConstant : List -> Bool; // [Signal]
@@ -219,6 +242,14 @@ module Fa.Signal
         suitable for printing.
      */
     drawTree : Pair -> String;
+    
+    /** Simplify a signal by removing all non-primitive constructors.
+        The returned signal must be freed by the caller.
+
+        @returns
+            A simplified signal. If the given signal was already simplified,
+            a copy of that signal (as per @ref fa_copy) is returned.
+     */
     simplify : Signal -> Signal;
 
     impulse : () -> Signal;
