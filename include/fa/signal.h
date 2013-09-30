@@ -172,15 +172,14 @@ fa_ptr_t fa_signal_run_file(int, fa_signal_t, fa_string_t);
     This signal writes raw buffer indices, so to read a buffer *b*
     of *n* channels at channel *c* and sample *n*, do `record(b, i*n+c)`.
 
+    The read is performed modulo `length(b)/8`, so negative or larger values wrap
+    around. Thus you can loop a buffer by simply incrementing the index or play it
+    backwards by decrementing.
+
     @param buffer
         Buffer to read from.
     @param index
         Sample index to read from.
-
-        The read is performed modulo `length(b)/8` so negative or larger
-        values wrap around to always refer to a valid index in the buffer.
-        Thus you can loop a buffer by simply incrementing the index or
-        play it backwards by decrementing.
 */
 fa_signal_t fa_signal_play(fa_buffer_t, fa_signal_t);
 

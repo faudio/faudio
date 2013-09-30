@@ -154,15 +154,14 @@ module Fa.Signal
         This signal writes raw buffer indices, so to read a buffer *b*
         of *n* channels at channel *c* and sample *n*, do `record(b, i*n+c)`.
 
+        The read is performed modulo `length(b)/8`, so negative or larger values wrap
+        around. Thus you can loop a buffer by simply incrementing the index or play it
+        backwards by decrementing.
+
         @param buffer
             Buffer to read from.
         @param index
             Sample index to read from.
-
-            The read is performed modulo `length(b)/8` so negative or larger
-            values wrap around to always refer to a valid index in the buffer.
-            Thus you can loop a buffer by simply incrementing the index or
-            play it backwards by decrementing.
      */
     play : (Buffer, Signal) -> Signal;
 
