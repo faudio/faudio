@@ -805,16 +805,8 @@ fa_signal_t fa_signal_line(double x)
 inline static double _play(ptr_t buffer, double i)
 {                 
     size_t size = fa_buffer_size(buffer);
-    if (i < 0) {
-        return 0;
-    } else {       
-        size_t i2 = floor(i);
-        if (i2 >= size) {
-            return 0;
-        } else {
-            return fa_buffer_get_double(buffer, floor(i));
-        }
-    }
+    uint64_t j = ((uint64_t) i) % (size/sizeof(double));
+    return fa_buffer_get_double(buffer, j);
 }
 fa_signal_t fa_signal_play(fa_buffer_t buffer, fa_signal_t i)
 {                         

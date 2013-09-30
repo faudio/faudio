@@ -175,7 +175,12 @@ fa_ptr_t fa_signal_run_file(int, fa_signal_t, fa_string_t);
     @param buffer
         Buffer to read from.
     @param index
-        Index to read from. If negative, returns zero.
+        Sample index to read from.
+
+        The read is performed modulo `length(b)/8` so negative or larger
+        values wrap around to always refer to a valid index in the buffer.
+        Thus you can loop a buffer by simply incrementing the index or
+        play it backwards by decrementing.
 */
 fa_signal_t fa_signal_play(fa_buffer_t, fa_signal_t);
 
