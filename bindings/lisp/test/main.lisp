@@ -453,6 +453,7 @@
          (d (* (sin (line 490)) (constant 0.1))))
     (* (sin (line 0.5))
        (+ (+ a b) (+ c d)))))
+(signal-run-proc (lambda (_) (cl:list (signal-delay 1000 x) x)))
 
 (setf x 
   (+
@@ -463,11 +464,69 @@
 
 (setf buf (from-pointer 
            'buffer 
-           (pair-second (buffer-read-audio* "/Users/hans/Desktop/fuga102.wav"))))
+           (pair-second (buffer-read-audio* "/Users/hans/Desktop/fuga_108.wav"))))
 
+(destroy buf)
 (buffer-size buf)
 (buffer-get-double buf 2312)
 
+
+)
+
+
+(defcallback add1 signal ((_ :pointer) (x signal))
+  (+ x (constant 1)))
+(defcallback same signal ((_ :pointer) (x signal))
+  x)
+
+(defcfun (signal-loop "fa_signal_loop") signal (a :pointer) (b :pointer))
+(defcfun (signal-lift "fa_signal_lift") signal (a string) (b :pointer) (c :pointer) (d signal))
+(defcfun (signal-lift2 "fa_signal_lift2") signal (a string) (b :pointer) (c :pointer) (d signal) (e signal))
+
+
+
+(signal-loop (get-callback 'add1) (cffi:null-pointer))
+(time)
+(signal-delay 2 (time))
+
+
+(defun counter ()
+  (+ (signal-loop (callback add1) (cffi:null-pointer)) (constant -1)))
+
+; Play back buf
+(signal-run-proc (lambda (is)
+ (let* (
+       (j (+ (signal-loop (callback add1) (cffi:null-pointer)) (constant -1)))
+       (li (+ (* j (constant 2)) (constant 0)))
+       (ri (+ (* j (constant 2)) (constant 1)))
+       
+       (lis (* (constant 0.5) li))
+       (ris (* (constant 0.5) ri))
+       (lib (+ (constant (cl:* 30 44100)) (* li (constant -1))))
+       (rib (+ (constant (cl:* 30 44100)) (* li (constant -1))))
+
+       (l (signal-play buf lis))
+       (r (signal-play buf ris))
+       )
+   (cl:print l)
+   (cl:list l r)
+   )))
+
+(defun signal-print* (n x)
+  (let* ((buffer (signal-run-buffer n x)))
+    (dotimes (i (/ (size buffer) 8)) 
+      (cl:print (coerce 
+                 (buffer-get-double buffer i) 
+                 'single-float)))
+    (destroy buffer)))
+
+(signal-print* 10 (time))
+(signal-print* (cl:* 44100 60) (counter))
+
+
+(signal-run-proc (lambda (inputs) 
+                   
+))
 
 ; FIXME
 (signal-run-proc 
@@ -480,10 +539,20 @@
                  ))))
 
 
+(signal-run-proc 
+ (duplicate
+  (* (* (constant 0.1) (time))
+   (* (constant 0.1) (time)))))
+
+; FIXME
 (signal-run-proc (lambda (inputs)
   (cl:list 
-   (* (sin (line 70)) (sin (line 550)))
-   (* (sin (line 141)) (cos (line 550))))))
+   (* (* (constant 0.1) (time))
+    (sin (line 70)) (sin (line 550)))
+   (* (* (constant 0.1) (time))
+    (* (sin (line 141)) (cos (line 550)))))))
+
+(signal-run-proc (lambda (is) (duplicate (sin (line 440)))))
 
 (defun duplicate (x) (cl:list x x))
 (defun signal-run-proc (proc) 

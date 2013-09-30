@@ -87,5 +87,11 @@ gen-lisp:
 fix-lisp: gen-lisp
 	perl -i -pe 's/\(defctype ptr/; (defctype ptr/g' bindings/lisp/fa.lisp
 
+	perl -i -pe 's/\(defcfun \(signal-lift \"fa_signal_lift\"\) signal \(a string\) \(b signal-unary-double\) \(c ptr\) \(d signal\)\)/(defcfun (signal-lift "fa_signal_lift") signal (a string) (b :pointer) (c :pointer) (d signal))/g' bindings/lisp/fa/signal.lisp
+	perl -i -pe 's/\(defcfun \(signal-lift2 \"fa_signal_lift2\"\) signal \(a string\) \(b signal-binary-double\) \(c ptr\) \(d signal\) \(e signal\)\)/(defcfun (signal-lift2 "fa_signal_lift2") signal (a string) (b :pointer) (c :pointer) (d signal) (e signal))/g' bindings/lisp/fa/signal.lisp
+	perl -i -pe 's/\(defcfun \(signal-loop \"fa_signal_loop\"\) signal \(a signal-unary-signal\) \(b ptr\)\)/(defcfun (signal-loop "fa_signal_loop") signal (a :pointer) (b :pointer))/g' bindings/lisp/fa/signal.lisp
+
+# perl -i -pe 's/A/B/g' bindings/lisp/fa.lisp
+
 clean-lisp:
 	find bindings -name '*.lisp' | xargs rm -v;
