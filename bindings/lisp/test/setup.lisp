@@ -25,6 +25,8 @@
 #|
   (asdf:operate 'asdf:load-op :faudio :force t)
 |#
+(asdf:operate 'asdf:load-op :faudio :force t)
+
 
 ; Load library and setup tests
 (let ((framework-name "Faudio")
@@ -41,7 +43,7 @@
 
 ; Unload
 #|
-  (close-foreign-library *foreign-lib*)
+  (cffi:close-foreign-library *foreign-lib*)
 |#
 
 

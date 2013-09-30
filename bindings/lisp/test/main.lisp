@@ -635,22 +635,19 @@
 (setf buf (buffer-create (cl:* 88200 8)))
 
 ; Buffer from signal
-(setf buf (signal-run-buffer 44100 (* (constant 0.1) (random))))
-(setf buf (signal-run-buffer 44100 (* (constant 0.1) (sin (line 220)))))
+(setf buf (signal-run-buffer 44100 (* 0.1 (random))))
+(setf buf (signal-run-buffer 44100 (* 0.1 (sin (line 220)))))
 
 (cl:print buf)
 ;(defcfun (plot-buffer-double "fa_plot_buffer_double") :void (a buffer) (b :pointer) (c :pointer))
-;(plot-buffer-double buf nil nil)
-;(plot-buffer-double buf nil nil)
 (destroy buf)
-
 
 ; Play buffer
 (signal-run-default 
  (lambda (inputs)
    (let* ((j (counter))                                       ; 0,1,2..
-          (left-index (+ (* j (constant 2)) (constant 0)))    ; 0,2,4..
-          (right-index (+ (* j (constant 2)) (constant 1)))   ; 1,3,5..
+          (left-index (+ (* j 2) 0))    ; 0,2,4..
+          (right-index (+ (* j 2) 1))   ; 1,3,5..
           (left (signal-play buf left-index))
           (right (signal-play buf right-index)))
      (cl:list left right)))) ; Stereo output
@@ -658,13 +655,22 @@
 ; Frequency modulation
 (signal-run-default (lambda (inputs)
   (cl:list 
-   (* (* (constant 0.1) (time))
+   (* (* 0.1 (time))
     (* (sin (line 70))  (sin (line 550)))) 
-   (* (* (constant 0.1) (time))
+   (* (* 0.1 (time))
     (* (sin (line 141)) (cos (line 550)))))))
 
 ; Sine
 (signal-run-default (lambda (inputs) 
   (duplicate 
-   (* (constant 0.1) (sin (line 120))))))
+   (* 0.1 (sin (line 130))))))
+
+; Echo inputs
+(signal-run-default 
+ (lambda (inputs)
+   inputs))
+
+(signal-run-default
+ (lambda (inputs)
+   (mapcar (lambda (x) (* x 0.4)) inputs)))
 
