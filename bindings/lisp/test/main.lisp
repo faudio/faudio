@@ -598,7 +598,6 @@
 (signal-print* 10 (counter))
 
 
-
 ;;;;;;;;;;
 
 ; Lifting Lisp callbacks to signal level
@@ -608,8 +607,11 @@
   (cl:* 0.1 x))
 (defun attenuate (x)
   (signal-lift "(/10)" (callback div10) (cffi:null-pointer) x))
-(attenuate (time)
+(type-of (attenuate (time))) ; TODO problem with printing this
 
+; TODO
+; RT is much slower than NRT!
+; Is this caused by the RT thread acquiring locks?
 (signal-run-default (lambda (inputs) 
   (cl:list 
    (attenuate (sin (line 220))))))
@@ -647,7 +649,7 @@
 (signal-run-default 
  (lambda (inputs)
    (let* ((j (counter))                                       ; 0,1,2..
-          (left-index (+ (* j (constant 2)) (constant 0)))    ; 0,2,4..)
+          (left-index (+ (* j (constant 2)) (constant 0)))    ; 0,2,4..
           (right-index (+ (* j (constant 2)) (constant 1)))   ; 1,3,5..
           (left (signal-play buf left-index))
           (right (signal-play buf right-index)))
