@@ -110,6 +110,15 @@ fa_buffer_t fa_buffer_resize(size_t size, fa_buffer_t buffer)
     return copy;
 }
 
+fa_buffer_t fa_buffer_dresize(size_t size, fa_buffer_t buffer)
+{
+    // TODO could use realloc and be much more efficient
+
+    buffer_t buffer2 = fa_buffer_resize(size, buffer);
+    fa_destroy(buffer);
+    return buffer2;
+}
+
 void fa_buffer_destroy(fa_buffer_t buffer)
 {
     if (buffer->destroy_function) {
@@ -202,7 +211,7 @@ fa_pair_t fa_buffer_read_audio(fa_string_t path)
         double *raw     = fa_buffer_unsafe_address(buffer);
 
         sf_count_t sz   = sf_read_double(file, raw, bufSize / sizeof(double));
-        buffer          = fa_buffer_resize(sz * sizeof(double), buffer);
+        buffer          = fa_buffer_dresize(sz * sizeof(double), buffer);
 
         if (info.channels == 1) {
             channels = 1;
@@ -210,6 +219,10 @@ fa_pair_t fa_buffer_read_audio(fa_string_t path)
             channels = 2;
         } else {
             buffer_fatal("Unknown buffer type", info.channels);
+        }
+
+        if (sf_close(file)) {
+            return (pair_t) fa_error_create_simple(error, string("Could not close"), string("Doremir.Buffer"));
         }
     }
     return pair(i32(channels), buffer);

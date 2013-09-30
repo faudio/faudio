@@ -20,6 +20,8 @@ typedef fa_fa_log_func_t log_func_t;
 static unsigned       init_count_g  = 0;
 static log_func_t     log_func_g    = NULL;
 static ptr_t          log_data_g    = NULL;
+static long           gBytesAlloc;
+static long           gBytesFreed;
 
 static struct {
     char *pre;
@@ -69,10 +71,9 @@ void fa_fa_initialize()
     fa_time_initialize();
     fa_fa_log_info(string("Initialized faudio."));
 
+    gBytesAlloc = 0;
     init_count_g++;
 }
-
-long gBytesAlloc = 0;
 
 void fa_fa_terminate()
 {
