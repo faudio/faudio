@@ -521,7 +521,7 @@
     (destroy buffer)))
 
 (signal-print* 10 (time))
-(signal-print* (cl:* 44100 60) (counter))
+(signal-print* (cl:* 10) (counter))
 
 
 (signal-run-proc (lambda (inputs) 
