@@ -597,11 +597,49 @@
 (signal-print* 10 (time))
 (signal-print* 10 (counter))
 
-; Read buf
+
+
+;;;;;;;;;;
+
+; Lifting Lisp callbacks to signal level
+
+(defcallback div10 :double ((_ :pointer) (x :double))
+  (the double-float x)
+  (cl:* 0.1 x))
+(defun attenuate (x)
+  (signal-lift "(/10)" (callback div10) (cffi:null-pointer) x))
+(attenuate (time)
+
+(signal-run-default (lambda (inputs) 
+  (cl:list 
+   (attenuate (sin (line 220))))))
+
+(signal-run-file (cl:* 44100 60)
+                 (attenuate (sin (line 220)))
+                 "/Users/hans/audio/test.wav")
+;;;;;;;;;;;
+
+
+
+
+;;;;;;;;;;
+
+; Misc
+
+; Empty buffer
 (setf buf (from-pointer 'buffer (pair-second (buffer-read-audio* "/Users/hans/Desktop/bb.wav"))))
+
+; Empty buffer
+(setf buf (buffer-create (cl:* 88200 8)))
+
+; Buffer from signal
+(setf buf (signal-run-buffer 44100 (random)))
+(setf buf (signal-run-buffer 44100 (sin (line 440))))
+
+(cl:print buf)
 (destroy buf)
 
-; Play back buf
+; Play buffer
 (signal-run-default 
  (lambda (inputs)
    (let* ((j (counter))                                       ; 0,1,2..
@@ -622,5 +660,5 @@
 ; Sine
 (signal-run-default (lambda (inputs) 
   (duplicate 
-    (* (constant 0.15) (sin (line 120))))))
+   (* (constant 0.1) (sin (line 120))))))
 
