@@ -474,26 +474,26 @@
 
 
 ; Play back buf
-(signal-run-default (lambda (is)
- (let* (
-       (j (counter))
-       (li (+ (* j (constant 2)) (constant 0)))
-       (ri (+ (* j (constant 2)) (constant 1)))
-       
-       (lis (* (constant 10) li))
-       (ris (* (constant 10) ri))
-       (lib (* li (constant -1)))
-       (rib (* li (constant -1)))
+(signal-run-default 
+ (lambda (inputs)
+   (let* ((j (counter))                            ; 0,1,2..
+          (li (+ (* j (constant 2)) (constant 0))) ; left channel indices (0,2,4..)
+          (ri (+ (* j (constant 2)) (constant 1))) ; right channel indices (1,3,5..)
+          
+          (lis (* (constant 10) li)) ; Faster
+          (ris (* (constant 10) ri))
+          (lib (* li (constant -1))) ; Backwards
+          (rib (* li (constant -1)))
+          
+          (l (signal-play buf li))   ; Left channel
+          (r (signal-play buf ri))   ; Right channel
+          )
+;     (cl:print l)
+     (cl:list l r))))
 
-       (l (signal-play buf li))
-       (r (signal-play buf ri))
-       )
-   (cl:print l)
-   (cl:list l r)
-   )))
-
+(signal-print* 10 (input 0)) ; Always 0
 (signal-print* 10 (time))
-(signal-print* (cl:* 10) (counter))
+(signal-print* 10 (counter))
 
 ; Frequency modulation
 (signal-run-default (lambda (inputs)
@@ -506,7 +506,7 @@
 ; Sine
 (signal-run-default (lambda (inputs) 
   (duplicate 
-    (* (constant 0.15) (sin (line 440))))))
+    (* (constant 0.15) (sin (line 120))))))
 
 ; (defun duplicate (x) (cl:list x x))
 ; (defun signal-run-default (inputs) 
@@ -618,23 +618,6 @@
 (plot-buffer-double x nil nil)
 (plot-buffer-float x nil nil)
 
-; ; ---------------------------------------------------------------------------------------------------
-; 
-; ; Fa.Message
-; 
-; (setf x (message-create-dispatcher))
-; (setf x (message-create-lockfree-dispatcher))
-; (setf s (to-sender x))
-; (setf r (to-receiver x))
-; 
-; (message-send r 0 123)
-; (message-send r 0 (export-list '(1 2 3)))
-; 
-; (progn
-;   (message-sync s)
-;   (dolist (x (import-list (message-receive s 0)))
-;     (cl:print (from-dynamic x))))
-
 ; ---------------------------------------------------------------------------------------------------
 
 ; Fa.Atomic
@@ -643,12 +626,10 @@
 (setf y (atomic-copy x))
 (destroy x)
 
-(atomic-exchange x 0 1)             ; FIXME does not work from Lisp
+(atomic-exchange x 0 1) ; FIXME does not work from Lisp
 (atomic-exchange x 1 0)
 (atomic-get x)
 (atomic-set x 0)
-; (atomic-add x 1)
-; (atomic-modify (lambda (i) (+ 1 i)) x)
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -673,7 +654,7 @@
 
 ; Fa.Thread
 ;
-; You can use an faudio mutex to syncronize threads created by Lisp and vice versa.
+; We can use an faudio mutex to syncronize threads created by Lisp and vice versa.
 
 (setf x (thread-create* (lambda () 
                           (fa-log-info 
@@ -695,7 +676,7 @@
 (equal 
   (thread-current) (thread-main))
 
-
+; ---------------------------------------------------------------------------------------------------
 ; Mutexes
 
 (setf y (thread-create-mutex))
