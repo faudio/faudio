@@ -120,20 +120,31 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-(defmacro time (&rest args) `(signal-time ,@args))
-(defmacro counter (&rest args) `(signal-counter ,@args))
-(defmacro random (&rest args) `(signal-random ,@args))
+(defun is-signal (x) 
+  (cl:equal (type-of x) 'signal))
+
+(defun number-or-signal (x) 
+  (if (is-signal x)
+    x
+    (signal-constant (coerce x 'double-float))))
+(defun wrap-signal  (x) `(number-or-signal ,x))
+
 (defmacro constant (&rest args) `(signal-constant (coerce ,@args 'double-float)))
-(defmacro input (&rest args) `(signal-input ,@args))
-(defmacro output (&rest args) `(signal-output ,@args))
-(defmacro delay (&rest args) `(signal-delay ,@args))
-(defmacro + (&rest args) `(signal-add ,@args))
-(defmacro * (&rest args) `(signal-multiply ,@args))
+(defmacro time (&rest args) `(signal-time))
+(defmacro counter (&rest args) `(signal-counter))
+(defmacro random (&rest args) `(signal-random))
+(defmacro input (n &rest args) `(signal-input ,n))
+(defmacro output (n c &rest args) `(signal-output ,n ,c ,@(mapcar 'wrap-signal args)))
+(defmacro + (&rest args) `(signal-add ,@(mapcar 'wrap-signal args)))
+(defmacro * (&rest args) `(signal-multiply ,@(mapcar 'wrap-signal args)))
+(defmacro sin (&rest args) `(signal-sin ,@(mapcar 'wrap-signal args)))
+(defmacro cos (&rest args) `(signal-cos ,@(mapcar 'wrap-signal args)))
+
+(defmacro delay (n &rest args) `(signal-delay ,n ,@(mapcar 'wrap-signal args)))
 (defmacro line (&rest args) `(signal-line (coerce ,@args 'double-float)))
-(defmacro input (&rest args) `(signal-input ,@args))
-(defmacro sin (&rest args) `(signal-sin ,@args))
-(defmacro cos (&rest args) `(signal-cos ,@args))
 (defmacro loop (&rest args) `(signal-loop (coerce ,@args 'double-float)))
+(defmacro input (&rest args) `(signal-input ,@args))
+
 
 
 (defun duplicate (x) (cl:list x x))
@@ -160,9 +171,12 @@
     (destroy buffer)))
 
 (defcallback signal-counter-add1 signal ((_ :pointer) (x signal))
-  (+ x (constant 1)))
+  (signal-add x (constant 1)))
+
 (defun signal-counter ()
-  (+ (signal-loop (callback signal-counter-add1) (cffi:null-pointer)) (constant -1)))
+  (signal-add 
+    (signal-loop (callback signal-counter-add1) (cffi:null-pointer))
+    (constant -1)))
 
 
 
