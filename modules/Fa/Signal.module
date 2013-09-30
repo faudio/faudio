@@ -204,15 +204,16 @@ module Fa.Signal
     lessThanEqual       : (Signal, Signal) -> Signal;
     greaterThanEqual    : (Signal, Signal) -> Signal;
     
-    acos                : (Signal, Signal) -> Signal;
-    asin                : (Signal, Signal) -> Signal;
-    atan                : (Signal, Signal) -> Signal;
+    acos                : (Signal) -> Signal;
+    asin                : (Signal) -> Signal;
+    atan                : (Signal) -> Signal;
     cos                 : (Signal) -> Signal;
     sin                 : (Signal) -> Signal;
-    tan                 : (Signal, Signal) -> Signal;
-    exp                 : (Signal, Signal) -> Signal;
-    log                 : (Signal, Signal) -> Signal;
-    log10               : (Signal, Signal) -> Signal;
+    tan                 : (Signal) -> Signal;
+    exp                 : (Signal) -> Signal;
+    log                 : (Signal) -> Signal;
+    log10               : (Signal) -> Signal;
+
     pow                 : (Signal, Signal) -> Signal;
     sqrt                : (Signal, Signal) -> Signal;
     abs                 : (Signal, Signal) -> Signal;

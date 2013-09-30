@@ -263,13 +263,13 @@ fa_signal_t fa_signal_less_than_equal(fa_signal_t, fa_signal_t);
 fa_signal_t fa_signal_greater_than_equal(fa_signal_t, fa_signal_t);
 
 
-fa_signal_t fa_signal_acos(fa_signal_t, fa_signal_t);
+fa_signal_t fa_signal_acos(fa_signal_t);
 
 
-fa_signal_t fa_signal_asin(fa_signal_t, fa_signal_t);
+fa_signal_t fa_signal_asin(fa_signal_t);
 
 
-fa_signal_t fa_signal_atan(fa_signal_t, fa_signal_t);
+fa_signal_t fa_signal_atan(fa_signal_t);
 
 
 fa_signal_t fa_signal_cos(fa_signal_t);
@@ -278,16 +278,16 @@ fa_signal_t fa_signal_cos(fa_signal_t);
 fa_signal_t fa_signal_sin(fa_signal_t);
 
 
-fa_signal_t fa_signal_tan(fa_signal_t, fa_signal_t);
+fa_signal_t fa_signal_tan(fa_signal_t);
 
 
-fa_signal_t fa_signal_exp(fa_signal_t, fa_signal_t);
+fa_signal_t fa_signal_exp(fa_signal_t);
 
 
-fa_signal_t fa_signal_log(fa_signal_t, fa_signal_t);
+fa_signal_t fa_signal_log(fa_signal_t);
 
 
-fa_signal_t fa_signal_log10(fa_signal_t, fa_signal_t);
+fa_signal_t fa_signal_log10(fa_signal_t);
 
 
 fa_signal_t fa_signal_pow(fa_signal_t, fa_signal_t);
