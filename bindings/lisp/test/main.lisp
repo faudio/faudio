@@ -637,7 +637,11 @@
 (setf buf (signal-run-buffer 44100 (* (constant 0.1) (sin (line 220)))))
 
 (cl:print buf)
+;(defcfun (plot-buffer-double "fa_plot_buffer_double") :void (a buffer) (b :pointer) (c :pointer))
+;(plot-buffer-double buf nil nil)
+;(plot-buffer-double buf nil nil)
 (destroy buf)
+
 
 ; Play buffer
 (signal-run-default 

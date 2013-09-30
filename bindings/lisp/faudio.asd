@@ -43,6 +43,7 @@
           :components (
             (:file "message")))
         (:file "signal")
+        (:file "plot")
         (:file "audio")
         (:file "atomic")
         (:module "atomic2"
