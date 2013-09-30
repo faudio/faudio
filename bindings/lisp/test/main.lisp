@@ -626,7 +626,7 @@
 
 ; Misc
 
-; Empty buffer
+; Read file to buffer
 (setf buf (from-pointer 'buffer (pair-second (buffer-read-audio* "/Users/hans/Desktop/bb.wav"))))
 
 ; Empty buffer
