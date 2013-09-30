@@ -910,7 +910,7 @@ void signal_destroy(ptr_t a)
 
 string_t signal_show(ptr_t a)
 {
-    return fa_signal_draw_tree(fa_signal_to_tree(a));
+    return fa_signal_draw_tree(fa_signal_to_tree(fa_signal_simplify(a)));
 }
 
 fa_ptr_t signal_impl(fa_id_t interface)
