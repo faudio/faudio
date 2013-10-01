@@ -549,11 +549,12 @@ fa_signal_t fa_signal_simplify(fa_signal_t signal2)
 // Running
 
 typedef struct {
-    double *inputs;
-    double *buses;
+    double *inputs;     // Current input values
+    double *buses;      // Current and future bus values
+    ptr_t  *controls;   // Current control values (array of lists)
 
-    int count;
-    double rate;
+    int count;          // Number of processed samples
+    double rate;        // Sample rate
 
 }  _state_t;
 typedef _state_t *state_t;
@@ -612,6 +613,11 @@ void inc_state(state_t state)
     state->count++;
 }
 
+void set_control(int c, ptr_t x, state_t state)
+{
+    // TODO
+}
+
 //----------
 // Internal state stuff
 
@@ -641,6 +647,7 @@ void write_bus(int n, int c, double x, state_t state)
     int bp = buffer_pointer(state);
     state->buses[index_bus((bp + n) % kMaxDelay, c)] = x;
 }
+
 //----------
 
 
@@ -724,6 +731,7 @@ void fa_signal_run(int n, signal_t a, double *output)
         //     fflush ( stdout );
         // }
 
+        // TODO set controls
         output[i] = step(a2, state);
         inc_state(state);
     }
@@ -737,6 +745,8 @@ void fa_signal_print(int n, signal_t a)
     // TODO verify
 
     for (int i = 0; i < n; ++ i) {
+        
+        // TODO set controls
         double x = step(a2, state);
         printf("%3d: %4f\n", i, x);
         inc_state(state);

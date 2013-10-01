@@ -503,13 +503,15 @@ void after_processing(stream_t stream)
 int during_processing(stream_t stream, unsigned count, float **input, float **output)
 {
     for (int i = 0; i < count; ++ i) {
+
+        // TODO set controls
+
         for (int c = 0; c < stream->signal_count; ++c) {
             stream->state->inputs[c] = input[c][i];
 
             double x = step(stream->signals[c], stream->state);
             output[c][i] = x;
         }
-
         inc_state(stream->state);
     }
 
