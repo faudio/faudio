@@ -778,18 +778,6 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
 
             if (timeSamp <= state->count) {
 
-                // printf("Time: %s\nAction: %s\n\n",       
-                //     unstring(fa_string_show(time)),
-                //     // unstring(fa_string_show(i32(timeSamp))), 
-                //     unstring(fa_string_show(action)));
-
-                // printf("Time: %s\nAction: %i %lf\n\n",       
-                //     unstring(fa_string_show(time)),
-                //     // unstring(fa_string_show(i32(timeSamp))), 
-                //     fa_action_set_channel(action),
-                //     fa_action_set_value(action)
-                //     );
-
                 // TODO other action types
                 int ch = fa_action_set_channel(action);
                 double v = fa_action_set_value(action);
