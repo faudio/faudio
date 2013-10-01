@@ -12,5 +12,6 @@
 (defcfun (pair-left-destroy "fa_pair_left_destroy") :void (a pair-left))
 (defcfun (pair-left-decons "fa_pair_left_decons") :void (a (:pointer ptr)) (b (:pointer ptr)) (c pair-left))
 (defcfun (pair-left-to-pair "fa_pair_left_to_pair") pair (a pair-left))
+(defcfun (pair-left-from-pair "fa_pair_left_from_pair") pair-left (a pair))
 (defcfun (pair-left-to-list "fa_pair_left_to_list") list (a pair-left))
 
