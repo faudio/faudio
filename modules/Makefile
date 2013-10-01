@@ -9,6 +9,7 @@ c:
 	mkdir -p include/fa/atomic
 	mkdir -p include/fa/device
 	mkdir -p include/fa/midi
+	mkdir -p include/fa/pair
 	mkdir -p include/fa/processor
 	mkdir -p include/fa/processor/external
 	mkdir -p include/fa/string
@@ -34,6 +35,7 @@ c:
 	$(MODULO) -Mmodules --language=c    <modules/Fa/List.module    		>include/fa/list.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Set.module    		>include/fa/set.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Pair.module    		>include/fa/pair.h && \
+	$(MODULO) -Mmodules --language=c    <modules/Fa/Pair/Left.module    		>include/fa/pair/left.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Plot.module    		>include/fa/plot.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Map.module    		>include/fa/map.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Graph.module    		>include/fa/graph.h && \
@@ -51,6 +53,7 @@ gen-lisp:
 	mkdir -p bindings/lisp/fa/device
 	mkdir -p bindings/lisp/fa/midi
 	mkdir -p bindings/lisp/fa/processor
+	mkdir -p bindings/lisp/fa/pair
 	mkdir -p bindings/lisp/fa/processor/external
 	mkdir -p bindings/lisp/fa/string
 	mkdir -p bindings/lisp/fa/system
@@ -74,6 +77,7 @@ gen-lisp:
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/List.module    		>bindings/lisp/fa/list.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Set.module    		>bindings/lisp/fa/set.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Pair.module    		>bindings/lisp/fa/pair.lisp && \
+	$(MODULO) -Mmodules --language=lisp <modules/Fa/Pair/Left.module    		>bindings/lisp/fa/pair/left.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Plot.module    		>bindings/lisp/fa/plot.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Map.module    		>bindings/lisp/fa/map.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Graph.module    		>bindings/lisp/fa/graph.lisp && \

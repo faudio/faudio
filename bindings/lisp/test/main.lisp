@@ -602,7 +602,7 @@
 (signal-print* 10 (counter))
 
 
-(signal-print* 10 (signal-input 0))
+(signal-print* 10 (signal-input 64))
 
 ;;;;;;;;;;
 

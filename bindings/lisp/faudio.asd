@@ -26,6 +26,10 @@
         (:file "std")
         (:file "list")
         (:file "pair")
+        (:module "pair2"
+          :pathname "pair"
+          :components (
+            (:file "left")))
         (:file "string")
         (:file "set")
         (:file "map")

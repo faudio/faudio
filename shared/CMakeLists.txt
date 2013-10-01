@@ -19,6 +19,7 @@ list(APPEND SRCS
   graph.c
   midi/message.c
   pair.c
+  pair/left.c
   plot/gnuplot.c
   plot.c
   priority_queue.c

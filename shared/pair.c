@@ -156,6 +156,8 @@ fa_list_t fa_pair_to_list(fa_pair_t pair)
     return list(pair->values[0], pair->values[1]);
 }
 
+// --------------------------------------------------------------------------------
+
 bool pair_equal(fa_ptr_t a, fa_ptr_t b)
 {
     pair_t c = (pair_t) a;

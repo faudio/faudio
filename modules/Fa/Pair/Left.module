@@ -1,0 +1,53 @@
+
+/** 
+    Immutable left-leaning pair data structure.
+    
+    This type is identical to @ref fa_pair_t, except that it compares on the first element.
+    Useful for ordered lists etc.
+
+    @par Literals
+    - `pair_left(1, 2)`
+
+    @par Implements 
+    - fa_equal_t
+    - fa_order_t
+    - fa_copy_t
+    - fa_destroy_t
+    - fa_string_show_t
+
+    @see 
+    - [Data structures](@ref DataStructures)
+
+ */
+module Fa.Pair.Left
+{
+    import Fa;
+    import Fa.Pair;
+    import Fa.List;
+
+    type Left = opaque;
+    type Struct = struct { first : Ptr, second : Ptr };
+
+    /** Create a new pair.
+     */
+    create  : (Ptr, Ptr) -> Left;
+    /** Create a pair by reading the components of a structure.
+     */
+    read : (Struct*) -> Left;
+    /** Write the values of a pair to a structure.
+     */
+    write : (Struct*, Left) -> Void;
+    /** Copy the given pair.
+     */
+    copy   : Left -> Left;
+    /** Destroy the given pair.
+     */
+    destroy : Left -> Void;
+    decons : (Ptr*, Ptr*, Left) -> Void;
+    
+    toPair   : Left -> Pair;
+    fromPair : Pair -> Left;
+
+    toList : Left -> List;
+}
+

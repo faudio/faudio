@@ -25,6 +25,7 @@
 #define severity_t          fa_error_severity_t
 
 #define pair_t              fa_pair_t
+#define pair_left_t         fa_pair_left_t
 #define list_t              fa_list_t
 #define set_t               fa_set_t
 #define map_t               fa_map_t
