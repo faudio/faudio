@@ -813,6 +813,7 @@ void fa_signal_print(int n, list_t controls, signal_t a)
         double x = fa_buffer_get_double(b, i);
         printf("%3ld: %4f\n", (long) i, x);
     }
+    fa_destroy(b);
 }
 
 buffer_t fa_signal_run_buffer(int n, list_t controls, signal_t a)
