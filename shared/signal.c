@@ -626,31 +626,31 @@ void inc_state(state_t state)
 
 void reset_controls(state_t state)
 {
-    // for (int c = 0; c < kMaxControls; ++c) {
-    //     // TODO destroy previous values
-    //     state->controls[c] = NULL;
-    // }
+    for (int c = 0; c < kMaxControls; ++c) {
+        // TODO destroy previous values
+        state->controls[c] = NULL;
+    }
 }
 
 void push_control(int c, ptr_t x, state_t state)
 {
-    printf("Pushed %d %s\n", c, unstring(fa_string_show(x)));
+    // printf("Pushed %d %s\n", c, unstring(fa_string_show(x)));
 
-    // if (!state->controls[c]) {
-    //     state->controls[c] = fa_list_single(x);
-    // } else {
-    //     state->controls[c] = fa_list_dcons(x, state->controls[c]);
-    // }
+    if (!state->controls[c]) {
+        state->controls[c] = fa_list_single(x);
+    } else {
+        state->controls[c] = fa_list_dcons(x, state->controls[c]);
+    }
 }
 
 // TODO should use global empty list
 list_t get_controls(int c, state_t state) {
     return list();
-    // if (!state->controls[c]) {
-    //     return list();
-    // } else {
-    //     return state->controls[c];
-    // }
+    if (!state->controls[c]) {
+        return list();
+    } else {
+        return state->controls[c];
+    }
 }
 
 
@@ -753,13 +753,13 @@ double step(signal_t signal, state_t state)
 
 void fa_signal_run(int n, signal_t a, double *output)
 {
-    // list_t controls = list(
-        // pair(i32(0),        pair(i32(0), string("hans"))),
-        // pair(i32(0),        pair(i32(0), string("sven"))),
-        // pair(i32(0),        pair(i32(0), string("elin"))),
-        // pair(i32(0),        pair(i32(0), string("alva"))),
-        // pair(i32(44100),    pair(i32(0), string("what")))
-    // );    
+    list_t controls = list(
+        pair(i32(0),        pair(i32(0), string("hans"))),
+        pair(i32(0),        pair(i32(0), string("sven"))),
+        pair(i32(111),        pair(i32(0), string("elin"))),
+        pair(i32(12441),        pair(i32(0), string("alva"))),
+        pair(i32(44100),    pair(i32(0), string("what")))
+    );    
      // [(Time, (Channel, Ptr)]    TODO should be a param
     
     state_t state = new_state();
@@ -770,29 +770,24 @@ void fa_signal_run(int n, signal_t a, double *output)
     // TODO progress monitor
     for (int i = 0; i < n; ++ i) {
         
-        // USED(controls);
-
-/*
         reset_controls(state);
         int taken = 0;
         fa_for_each(x, controls) {
             int t        = fa_peek_int32(fa_pair_first(x));
             pair_t chPtr = fa_pair_second(x);
         
-            // USED(chPtr);
-            // USED(taken);
-
             if (t <= state->count) {
                 taken++;
                 int ch      = ti32(fa_pair_first(chPtr));
                 ptr_t ptr   = fa_pair_second(chPtr);
+                
+                // printf("Time: %d\n", t);
                 push_control(ch, ptr, state);
             } else {
                 break;
             }
         }
         controls = fa_list_ddrop(taken, controls);
-*/
         
         output[i] = step(a2, state);
         inc_state(state);
