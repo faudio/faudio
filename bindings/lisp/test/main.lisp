@@ -651,7 +651,19 @@
 ;(defcfun (plot-buffer-double "fa_plot_buffer_double") :void (a buffer) (b :pointer) (c :pointer))
 (destroy buf)
 
-; Play buffer
+; Record stereo buffer
+(signal-run-default 
+ (lambda (inputs)
+   (let* ((j (counter))                 ; 0,1,2..
+          (left-index (+ (* j 2) 0))    ; 0,2,4..
+          (right-index (+ (* j 2) 1))   ; 1,3,5..
+          (left (signal-record buf left-index (first inputs)))
+          (right (signal-record buf right-index (second inputs))))
+     (cl:list 
+      (signal-latter left (constant 0)) 
+      (signal-latter right (constant 0)))))) ; No output
+
+; Play stereo buffer
 (signal-run-default 
  (lambda (inputs)
    (let* ((j (counter))                 ; 0,1,2..
