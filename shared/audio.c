@@ -10,6 +10,8 @@
 #include <fa/audio.h>
 
 #include <fa/atomic.h>
+#include <fa/atomic/queue.h>
+#include <fa/priority_queue.h>
 #include <fa/signal.h>
 #include <fa/thread.h>
 #include <fa/util.h>
@@ -88,6 +90,9 @@ struct _fa_audio_stream_t {
     double              sample_rate;
     long                max_buffer_size;
     int32_t             sample_count;       // Monotonically increasing sample count
+    
+    atomic_queue_t      in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
+    priority_queue_t    controls;           // Scheduled controls (Time, (Channel, Ptr))
 };
 
 static mutex_t pa_mutex;
