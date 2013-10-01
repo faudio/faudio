@@ -613,6 +613,11 @@ void inc_state(state_t state)
     state->count++;
 }
 
+void reset_controls(state_t state)
+{
+    // TODO
+}
+
 void push_control(int c, ptr_t x, state_t state)
 {
     // TODO
@@ -716,6 +721,12 @@ double step(signal_t signal, state_t state)
 
 void fa_signal_run(int n, signal_t a, double *output)
 {
+    list_t controls = list(
+        pair(i32(0),    pair(i32(0), string("hans"))),
+        pair(i32(10),   pair(i32(0), string("sven")))
+    );    
+     // [(Time, (Channel, Ptr)]    TODO should be a param
+    
     state_t state = new_state();
     signal_t a2 = fa_signal_simplify(a);
     // TODO optimize
@@ -731,12 +742,29 @@ void fa_signal_run(int n, signal_t a, double *output)
         //     fflush ( stdout );
         // }
 
-        // TODO set controls
+        reset_controls(state);
+        int taken = 0;
+        fa_for_each(x, controls) {
+            int t        = ti32(fa_pair_first(x));
+            pair_t chPtr = fa_pair_second(x);
+
+            if (t <= state->count) {
+                taken++;
+                int ch      = ti32(fa_pair_first(chPtr));
+                ptr_t ptr   = fa_pair_second(chPtr);
+                push_control(ch, ptr, state);
+            } else {
+                break;
+            }
+        }
+
+        controls = fa_list_ddrop(taken, controls);
         output[i] = step(a2, state);
         inc_state(state);
     }
 }
 
+// FIXME should use run
 void fa_signal_print(int n, signal_t a)
 {
     state_t state = new_state();
