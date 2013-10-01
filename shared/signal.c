@@ -613,7 +613,7 @@ void inc_state(state_t state)
     state->count++;
 }
 
-void set_control(int c, ptr_t x, state_t state)
+void push_control(int c, ptr_t x, state_t state)
 {
     // TODO
 }
