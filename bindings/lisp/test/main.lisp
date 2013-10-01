@@ -626,14 +626,16 @@
 (time-to-milliseconds (seconds 7.5))
 (sign
 
-(signal-run-file* 441000 
-                  (* (* (* (stime) 0.1) (signal-input 32)) (sin (line 440)))
-                  :path "/Users/hans/audio/test.wav"
-                  :controls (cl:list 
-                             (pair-create (seconds 1)   (action-set 32 0.5D0))
-                             (pair-create (seconds 3)   (action-set 32 0.99D0))
-                             (pair-create (seconds 7.1) (action-set 32 0.0D0))
-                             ))
+(signal-run-file* 
+ (cl:* 44100 60)
+ (* (* (* (stime) 0.1) (signal-input 32)) (sin (line 440)))
+ :path "/Users/hans/audio/test.wav"
+ :controls (cl:list 
+            (pair-create (seconds 1)   (action-set 32 0.5D0))
+            (pair-create (seconds 3)   (action-set 32 0.99D0))
+            (pair-create (seconds 7.1) (action-set 32 0.0D0))
+            (pair-create (seconds 45)  (action-set 32 0.1D0))
+            ))
 
 ;;;;;;;;;;
 
@@ -653,9 +655,9 @@
   (cl:list 
    (attenuate (sin (line 440))))))
 
-(signal-run-file (cl:* 44100 60)
-                 (attenuate (sin (line 220)))
-                 "/Users/hans/audio/test.wav")
+(signal-run-file* (cl:* 44100 60)
+                  (attenuate (sin (line 220)))
+                  :path "/Users/hans/audio/test.wav")
 (play-file "/Users/hans/audio/test.wav") ; FIXME mono vs stereo files
 ;;;;;;;;;;;
 
