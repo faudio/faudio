@@ -685,6 +685,32 @@ void write_bus(int n, int c, double x, state_t state)
 
 //----------
 
+// inline static
+void update_controls(priority_queue_t controls2, state_t state)
+{
+    while (1) {
+        pair_t x = fa_priority_queue_peek(controls2);
+        if (!x) break;
+        
+        time_t   time        = fa_pair_first(x);
+        action_t action      = fa_pair_second(x);
+
+        int timeSamp = ( ((double) fa_time_to_milliseconds(time)) / 1000.0 ) * 44100; // TODO
+
+        if (timeSamp <= state->count) {
+
+            // TODO other action types
+            int ch = fa_action_set_channel(action);
+            double v = fa_action_set_value(action);
+            write_samp(0, ch, v, state);
+            
+            fa_priority_queue_pop(controls2);
+        } else {
+            break;
+        }
+    }
+}
+
 
 /**
     Step over a sample.
@@ -746,7 +772,6 @@ double step(signal_t signal, state_t state)
     assert(false);
 }
 
-#define USED(X) X = *(&X)
 // No allocation in loop
 // Use ringbuffers for transfer
 
@@ -764,30 +789,8 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
 
     // TODO progress monitor
     for (int i = 0; i < n; ++ i) {
-        
         reset_controls(state);
-
-        while (1) {
-            pair_t x = fa_priority_queue_peek(controls2);
-            if (!x) break;
-            
-            time_t   time        = fa_pair_first(x);
-            action_t action      = fa_pair_second(x);
-
-            int timeSamp = ( ((double) fa_time_to_milliseconds(time)) / 1000.0 ) * 44100; // TODO
-
-            if (timeSamp <= state->count) {
-
-                // TODO other action types
-                int ch = fa_action_set_channel(action);
-                double v = fa_action_set_value(action);
-                write_samp(0, ch, v, state);
-                
-                fa_priority_queue_pop(controls2);
-            } else {
-                break;
-            }
-        }
+        update_controls(controls2, state);
         output[i] = step(a2, state);
         inc_state(state);
     }
