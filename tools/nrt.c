@@ -32,11 +32,7 @@ void helper_function()
 {
     signal_t r = time_();
 
-    fa_signal_run_buffer(44100*2, r);
-    fa_signal_run_buffer(44100*2, r);
-    fa_signal_run_buffer(44100*2, r);
-
-    // fa_signal_run_file(44100*2, r, string("test.wav"));
+    fa_signal_run_file(44100*2, r, string("test.wav"));
 }
 
 int main(int argc, char const *argv[])

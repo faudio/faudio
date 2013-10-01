@@ -598,8 +598,8 @@
 (signal-run-default (lambda (inputs) (duplicate (* 0.2 x))))     ; Don't play too loud
 
 
-(signal-print* 100 (time))
-(signal-print* 100 (counter))
+(signal-print* 10 (time))
+(signal-print* 10 (counter))
 
 
 ;;;;;;;;;;
@@ -641,7 +641,7 @@
 (fa-initialize)
 
 ; Empty buffer
-(setf buf (buffer-create (cl:* 88200 8)))
+(setf buf (buffer-create (cl:* 88200 8 2)))
 
 ; Buffer from signal
 (setf buf (signal-run-buffer 44100 (* 0.1 (random))))
