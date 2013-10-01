@@ -814,14 +814,10 @@ fa_signal_t fa_signal_play(fa_buffer_t buffer, fa_signal_t i)
 }
 
 inline static double _record(ptr_t buffer, double i, double x)
-{                                  
+{
     size_t size = fa_buffer_size(buffer);
-    if (i >= 0) {
-        size_t i2 = floor(i);
-        if (i2 < size) {
-            fa_buffer_set_double(buffer, i2, x);
-        }
-    }
+    uint64_t j = ((uint64_t) i) % (size/sizeof(double));
+    fa_buffer_set_double(buffer, j, x);
     return x;
 }
 fa_signal_t fa_signal_record(fa_buffer_t buffer, fa_signal_t i, fa_signal_t x)

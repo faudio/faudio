@@ -21,7 +21,7 @@ static unsigned       init_count_g  = 0;
 static log_func_t     log_func_g    = NULL;
 static ptr_t          log_data_g    = NULL;
 static long           gBytesAlloc;
-static long           gBytesFreed;
+// static long           gBytesFreed;
 
 static struct {
     char *pre;
