@@ -637,6 +637,27 @@
             (pair-create (seconds 45)  (action-set 32 0.1D0))
             ))
 
+
+
+
+(setf se (audio-begin-session))
+(setf i (audio-default-input se))
+(setf o (audio-default-output se))
+(setf s (audio-open-stream* i o (lambda (_) (cl:list   
+                                             (* (input 32) (* 0.1 (sin (line 440))))
+                                             ))))
+(audio-send (seconds 20) (action-set 32 0.5D0) s)
+(audio-send (seconds 55) (action-set 32 0.1D0) s)
+(audio-send (seconds 0) (action-set 32 0.0D0) s)
+(destroy s)
+(destroy se)
+
+
+
+(signal-run-default (lambda (inputs) 
+  (duplicate 
+   (* 0.1 (sin (line 440))))))
+
 ;;;;;;;;;;
 
 ; Lifting Lisp callbacks to signal level

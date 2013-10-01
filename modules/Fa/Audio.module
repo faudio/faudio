@@ -30,6 +30,7 @@ module Fa.Audio
     import Fa.Device;
     import Fa.Error;
     import Fa.Signal;
+    import Fa.Action;
 
     type Session = opaque;
     type Device  = opaque;
@@ -131,6 +132,7 @@ module Fa.Audio
     
 
     type Proc = ((Ptr,List) -> List)*;
+    
     /**
         Open a stream on the given devices.
 
@@ -164,5 +166,10 @@ module Fa.Audio
         Callback, Ptr
         ) -> Void;
 
+    /**
+        Schedule an action on the stream.
+        @warning Experimental
+     */
+    send : (Time, Action, Stream) -> Void;
 }
 

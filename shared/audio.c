@@ -11,6 +11,7 @@
 
 #include <fa/atomic.h>
 #include <fa/atomic/queue.h>
+#include <fa/pair/left.h>
 #include <fa/priority_queue.h>
 #include <fa/signal.h>
 #include <fa/thread.h>
@@ -488,6 +489,15 @@ void fa_audio_with_stream(device_t            input,
     fa_audio_close_stream(stream);
 }
 
+void fa_audio_send(fa_time_t time, 
+                   fa_action_t action, 
+                   fa_audio_stream_t stream)
+{
+    pair_left_t pair = pair_left(time, action);
+    fa_atomic_queue_write(stream->in_controls, pair);
+}
+
+
 
 // --------------------------------------------------------------------------------
 
@@ -511,10 +521,13 @@ void after_processing(stream_t stream)
 
 int during_processing(stream_t stream, unsigned count, float **input, float **output)
 {
+    // TODO fetch and schedule incoming control changes
+    ptr_t val;
+    while ((val = fa_atomic_queue_read(stream->in_controls))) {
+        fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
+    }
+
     for (int i = 0; i < count; ++ i) {
-
-        // TODO fetch and schedule incoming control changes
-
         // Note: This could be done outside sample loop
         // which would be faster but less exact
         reset_controls(stream->state);

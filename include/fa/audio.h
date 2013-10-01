@@ -7,6 +7,7 @@
 #include <fa/device.h>
 #include <fa/error.h>
 #include <fa/signal.h>
+#include <fa/action.h>
 
 /** @addtogroup FaAudio
 
@@ -197,6 +198,12 @@ void fa_audio_with_stream(fa_audio_device_t,
                           fa_ptr_t,
                           fa_error_callback_t,
                           fa_ptr_t);
+
+/**
+    Schedule an action on the stream.
+    @warning Experimental
+*/
+void fa_audio_send(fa_time_t, fa_action_t, fa_audio_stream_t);
 
 /** @}
     @}
