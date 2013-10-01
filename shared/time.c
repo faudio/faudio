@@ -131,7 +131,7 @@ int32_t fa_time_to_seconds(fa_time_t time)
            + fa_time_seconds(time);
 }
 
-#define approx_ratio(r) ( ((double) fa_ratio_num(r)) / ((double) fa_ratio_denom(r)) )
+#define approx_millis(r) ( (int32_t) ( ((double) fa_ratio_num(r)) / ((double) fa_ratio_denom(r)) * 1000 ) )
 /** Convert the time to milliseconds.
     This may lose precision.
 
@@ -145,7 +145,7 @@ int32_t fa_time_to_milliseconds(fa_time_t time)
            + fa_time_hours(time)   * 60 * 60 * 1000
            + fa_time_minutes(time) * 60 * 1000
            + fa_time_seconds(time) * 1000
-           + approx_ratio(fa_time_divisions(time));
+           + approx_millis(fa_time_divisions(time));
 }
 
 
