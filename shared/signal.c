@@ -806,22 +806,13 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
     delete_state(state);
 }
 
-// FIXME should use run
 void fa_signal_print(int n, list_t controls, signal_t a)
 {
-    state_t state = new_state();
-    signal_t a2 = fa_signal_simplify(a);
-    // TODO optimize
-    // TODO verify
-
-    for (int i = 0; i < n; ++ i) {
-        
-        // TODO set controls
-        double x = step(a2, state);
-        printf("%3d: %4f\n", i, x);
-        inc_state(state);
+    buffer_t b = fa_signal_run_buffer(n, controls, a);
+    for (size_t i = 0; i < fa_buffer_size(b); ++i) {
+        double x = fa_buffer_get_double(b, i);
+        printf("%3ld: %4f\n", (long) i, x);
     }
-    delete_state(state);
 }
 
 buffer_t fa_signal_run_buffer(int n, list_t controls, signal_t a)
