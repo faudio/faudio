@@ -386,7 +386,7 @@ stream_t fa_audio_open_stream(device_t input,
                              )
 {
     PaError         status;
-    unsigned long   buffer_size = 64;
+    unsigned long   buffer_size = 16;
     double          sample_rate = 44100;
 
     stream_t        stream      = new_stream(input, output, sample_rate, buffer_size);

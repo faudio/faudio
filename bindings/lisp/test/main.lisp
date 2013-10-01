@@ -716,6 +716,17 @@
    (* (* 0.1 (stime))
     (* (sin (line 141)) (cos (line 550)))))))
 
+; Additive synthesis
+(setf 
+ x 
+ (let* ((notes '(110 120 130 140 150 160 170 180 190 200 210 220 230 240 250))
+        (sines (mapcar (lambda (x) (sin (line (cl:* 4 x)))) notes))
+        )
+   (* 0.05 (reduce (lambda (x y) (+ y x)) (reverse sines)))))
+(signal-run-default (lambda (_) (duplicate x)))
+
+; (reduce 'cl:+ '() :initial-value 1)
+
 ; Sine
 (signal-run-default (lambda (inputs) 
   (duplicate 
