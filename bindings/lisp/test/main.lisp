@@ -637,9 +637,6 @@
             (pair-create (seconds 45)  (action-set 32 0.1D0))
             ))
 
-
-
-
 (setf se (audio-begin-session))
 (setf i (audio-default-input se))
 (setf o (audio-default-output se))
@@ -651,6 +648,8 @@
 (audio-send (seconds 0) (action-set 32 0.0D0) s)
 (destroy s)
 (destroy se)
+
+
 
 
 
