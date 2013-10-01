@@ -606,6 +606,7 @@ double state_time(state_t state)
 void    write_bus(int n, int c, double x, state_t state);
 double  read_bus(int c, state_t state);
 double  read_actual_input(int c, state_t state);
+void write_actual_input(int c, double x, state_t state);
 
 inline static
 double read_samp(int c, state_t state)
@@ -616,7 +617,12 @@ double read_samp(int c, state_t state)
 inline static
 void write_samp(int n, int c, double x, state_t state)
 {
-    write_bus(n, neg_bus(c), x, state);
+    // write_bus(n, neg_bus(c), x, state);
+    if (c >= 0) {
+        write_actual_input(c, x, state);
+    } else {
+        write_bus(n, neg_bus(c), x, state);
+    }
 }
 
 // inline static
@@ -659,6 +665,11 @@ double read_actual_input(int c, state_t state)
 {
     return state->inputs[c];
 }
+
+void write_actual_input(int c, double x, state_t state)
+{
+    state->inputs[c] = x;
+}   
 
 double read_bus(int c, state_t state)
 {
@@ -767,12 +778,23 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
 
             if (timeSamp <= state->count) {
 
-                mark_used(action);
                 // printf("Time: %s\nAction: %s\n\n",       
                 //     unstring(fa_string_show(time)),
                 //     // unstring(fa_string_show(i32(timeSamp))), 
                 //     unstring(fa_string_show(action)));
 
+                // printf("Time: %s\nAction: %i %lf\n\n",       
+                //     unstring(fa_string_show(time)),
+                //     // unstring(fa_string_show(i32(timeSamp))), 
+                //     fa_action_set_channel(action),
+                //     fa_action_set_value(action)
+                //     );
+
+                // TODO other action types
+                int ch = fa_action_set_channel(action);
+                double v = fa_action_set_value(action);
+                write_samp(0, ch, v, state);
+                
                 fa_priority_queue_pop(controls2);
             } else {
                 break;

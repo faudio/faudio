@@ -9,6 +9,9 @@
 (defcfun (action-set "fa_action_set") action (a action-channel) (b :double))
 (defcfun (action-accum "fa_action_accum") action (a action-channel) (b signal-unary-double) (c ptr))
 (defcfun (action-send "fa_action_send") action (a action-name) (b ptr))
+(defcfun (action-is-set "fa_action_is_set") :boolean (a action))
+(defcfun (action-set-channel "fa_action_set_channel") action-channel (a action))
+(defcfun (action-set-value "fa_action_set_value") :double (a action))
 (defcfun (action-copy "fa_action_copy") action (a action))
 (defcfun (action-destroy "fa_action_destroy") :void (a action))
 

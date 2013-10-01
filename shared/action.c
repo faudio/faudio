@@ -118,6 +118,22 @@ void fa_action_destroy(fa_action_t action)
     delete_action(action);
 }
 
+bool fa_action_is_set(fa_action_t action)
+{
+    return is_set(action);
+}
+
+fa_action_channel_t fa_action_set_channel(fa_action_t action)
+{
+    assert(is_set(action) && "Not a set action");
+    return set_get(action, channel);
+}
+
+double fa_action_set_value(fa_action_t action)
+{
+    assert(is_set(action) && "Not a set action");
+    return set_get(action, value);
+}
 
 
 // --------------------------------------------------------------------------------

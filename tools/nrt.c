@@ -30,14 +30,14 @@
 void helper_function()
 {                   
     list_t actions = list();
-    for (int i = 0; i < 300; ++i) {
+    for (int i = 0; i < 30; ++i) {
         actions = fa_list_dcons(
-            pair(hms(0,0,i), action_set(32, 0.5)),
+            pair(hms(0,0,i+3), action_set(1, (i%10)*0.1)),
             actions
             );
     }
     
-    signal_t r = mul_(input_(32), random_());
+    signal_t r = mul_(input_(1), random_());
 
     fa_signal_run_file(44100*300, actions, r, string("test.wav"));
 

@@ -48,6 +48,15 @@ fa_action_t fa_action_accum(fa_action_channel_t,
 fa_action_t fa_action_send(fa_action_name_t, fa_ptr_t);
 
 
+bool fa_action_is_set(fa_action_t);
+
+
+fa_action_channel_t fa_action_set_channel(fa_action_t);
+
+
+double fa_action_set_value(fa_action_t);
+
+
 fa_action_t fa_action_copy(fa_action_t);
 
 

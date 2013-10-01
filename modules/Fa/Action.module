@@ -27,6 +27,10 @@ module Fa.Action
     accum : (Channel, UnaryDouble, Ptr) -> Action;
     send : (Name, Ptr) -> Action;
 
+    isSet : Action -> Bool;
+    setChannel : Action -> Channel;
+    setValue : Action -> Double;
+
     copy : Action -> Action;
     destroy : Action -> Void;
 }
