@@ -154,15 +154,34 @@ void fa_signal_print(int, fa_signal_t);
 /** Run the given signal for *n* samples, writing the results to the given buffer.
 
     The given pointer must point to a buffer of at least `n * sizeof(double)`.
+
+    @param samples
+        Number of samples to generate.
+    @param signal
+        Signal to run.
+    @param buffer
+        Buffer to receive result.
 */
 void fa_signal_run(int, fa_signal_t, double *);
 
 /** Run the given signal, writing the results to a freshly created @ref buffer_t.
     The resulting buffer must be freed by the caller.
+
+    @param samples
+        Number of samples to generate.
+    @param signal
+        Signal to run.
 */
 fa_buffer_t fa_signal_run_buffer(int, fa_signal_t);
 
 /** Run the given signal, writing the results to the given file.
+
+    @param samples
+        Number of samples to generate.
+    @param signal
+        Signal to run.
+    @param path
+        Name of file to write.
 */
 fa_ptr_t fa_signal_run_file(int, fa_signal_t, fa_string_t);
 
