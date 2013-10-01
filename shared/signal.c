@@ -8,6 +8,9 @@
  */
 
 #include <fa/signal.h>
+#include <fa/pair/left.h>
+#include <fa/priority_queue.h>
+#include <fa/action.h>
 #include <fa/buffer.h>
 #include <fa/util.h>
 
@@ -15,6 +18,7 @@
 typedef fa_signal_unary_signal_t    fixpoint_t;
 typedef fa_signal_unary_double_t    dunary_t;
 typedef fa_signal_binary_double_t   dbinary_t;
+typedef fa_action_t                 action_t;
 
 struct _fa_signal_t {
 
@@ -737,12 +741,10 @@ double step(signal_t signal, state_t state)
 
 void fa_signal_run(int n, list_t controls, signal_t a, double *output)
 {
-    // FIXME
-    controls = list(
-        pair(i32(0),            pair(i32(0), f64(0))),
-        pair(i32(44100*5),      pair(i32(0), f64(1)))
-    );    
-     // [(Time, (Channel, Ptr)]    TODO should be a param
+    priority_queue_t controls2 = priority_queue();
+    fa_for_each(x, controls) {
+        fa_priority_queue_insert(fa_pair_left_from_pair(x), controls2);
+    }
     
     state_t state = new_state();
     signal_t a2 = fa_signal_simplify(a);
@@ -753,21 +755,29 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
     for (int i = 0; i < n; ++ i) {
         
         reset_controls(state);
-        int taken = 0;
-        fa_for_each(x, controls) {
-            int t        = fa_peek_int32(fa_pair_first(x));
-            pair_t ptr   = fa_pair_second(x);
-        
-            if (t <= state->count) {
-                // printf("Time: %d\n", t);
-                taken++;
-                push_control(ptr, state);
+
+        while (1) {
+            pair_t x = fa_priority_queue_peek(controls2);
+            if (!x) break;
+            
+            time_t   time        = fa_pair_first(x);
+            action_t action      = fa_pair_second(x);
+
+            int timeSamp = ( ((double) fa_time_to_milliseconds(time)) / 1000.0 ) * 44100; // TODO
+
+            if (timeSamp <= state->count) {
+
+                mark_used(action);
+                // printf("Time: %s\nAction: %s\n\n",       
+                //     unstring(fa_string_show(time)),
+                //     // unstring(fa_string_show(i32(timeSamp))), 
+                //     unstring(fa_string_show(action)));
+
+                fa_priority_queue_pop(controls2);
             } else {
                 break;
             }
         }
-        controls = fa_list_ddrop(taken, controls);
-        
         output[i] = step(a2, state);
         inc_state(state);
     }

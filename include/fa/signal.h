@@ -158,7 +158,7 @@ void fa_signal_print(int, fa_list_t, fa_signal_t);
     @param samples
         Number of samples to generate.
     @param controls
-        List of control values (must be pairs of fa_time_t and fa_action_t).
+        List of control values (must be pairs of @ref fa_time_t and @ref fa_action_t).
         Optional, a null pointer is interpreted as the empty list.
     @param signal
         Signal to run.

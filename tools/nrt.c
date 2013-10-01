@@ -28,10 +28,21 @@
 
 
 void helper_function()
-{
+{                   
+    list_t actions = list();
+    for (int i = 0; i < 300; ++i) {
+        actions = fa_list_dcons(
+            pair(hms(0,0,i), action_set(32, 0.5)),
+            actions
+            );
+    }
+    
     signal_t r = mul_(input_(32), random_());
 
-    fa_signal_run_file(44100*10, NULL, r, string("test.wav"));
+    fa_signal_run_file(44100*300, actions, r, string("test.wav"));
+
+
+    mark_used(actions);
 }
 
 int main(int argc, char const *argv[])

@@ -19,6 +19,7 @@
 #include <fa/thread.h>
 #include <fa/time.h>
 #include <fa/priority_queue.h>
+#include <fa/action.h>
 #include <fa/signal.h>
 
 /** @addtogroup FaFa

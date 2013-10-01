@@ -38,6 +38,7 @@ module Fa.Fa
     import Fa.Thread;
     import Fa.Time;
     import Fa.PriorityQueue;
+    import Fa.Action;
     import Fa.Signal;
 
     /** Returns the version of Fa as a list
