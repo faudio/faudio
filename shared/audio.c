@@ -511,15 +511,12 @@ void after_processing(stream_t stream)
 
 int during_processing(stream_t stream, unsigned count, float **input, float **output)
 {
-    // fetch incoming scheduled messages, i.e [(Time, (Channel, Ptr))]
-    // add all (Channel, Pointer) pairs to priority queue with correct time stamp
-
     for (int i = 0; i < count; ++ i) {
 
-        // TODO set controls, that is
-        //      fetch due events, i.e. [(Channel, Ptr)]
-        //      iterate through with push_control
+        // TODO fetch and schedule incoming control changes
 
+        // Note: This could be done outside sample loop
+        // which would be faster but less exact
         reset_controls(stream->state);
         update_controls(stream->controls, stream->state);
 

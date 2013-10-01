@@ -669,7 +669,7 @@
 ; Misc
 
 ; Read file to buffer
-(setf buf (from-pointer 'buffer (pair-second (buffer-read-audio* "/Users/hans/Desktop/bb.wav"))))
+(setf buf (from-pointer 'buffer (pair-second (buffer-read-audio* "/Users/hans/Desktop/Passager.wav"))))
 (destroy buf)
 (hcl:mark-and-sweep 3)
 (fa-terminate)
