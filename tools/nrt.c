@@ -27,12 +27,11 @@
 #define output_     fa_signal_output
 
 
-
 void helper_function()
 {
-    signal_t r = time_();
+    signal_t r = mul_(input_(32), random_());
 
-    fa_signal_run_file(44100*2, r, string("test.wav"));
+    fa_signal_run_file(44100*10, r, string("test.wav"));
 }
 
 int main(int argc, char const *argv[])

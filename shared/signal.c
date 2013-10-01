@@ -193,7 +193,6 @@ fa_signal_t fa_signal_input(int c)
     return signal;
 }
 
-
 fa_signal_t fa_signal_output(int n, int c, fa_signal_t a)
 {
     signal_t signal = new_signal(output_signal);
@@ -612,6 +611,7 @@ double read_samp(int c, state_t state)
 {
     return (c >= 0) ? read_actual_input(c, state) : read_bus(neg_bus(c), state);
 }
+
 inline static
 void write_samp(int n, int c, double x, state_t state)
 {
@@ -640,16 +640,6 @@ void push_control(int c, ptr_t x, state_t state)
         state->controls[c] = fa_list_single(x);
     } else {
         state->controls[c] = fa_list_dcons(x, state->controls[c]);
-    }
-}
-
-// TODO should use global empty list
-list_t get_controls(int c, state_t state) {
-    return list();
-    if (!state->controls[c]) {
-        return list();
-    } else {
-        return state->controls[c];
     }
 }
 
@@ -754,11 +744,8 @@ double step(signal_t signal, state_t state)
 void fa_signal_run(int n, signal_t a, double *output)
 {
     list_t controls = list(
-        pair(i32(0),        pair(i32(0), string("hans"))),
-        pair(i32(0),        pair(i32(0), string("sven"))),
-        pair(i32(111),        pair(i32(0), string("elin"))),
-        pair(i32(12441),        pair(i32(0), string("alva"))),
-        pair(i32(44100),    pair(i32(0), string("what")))
+        pair(i32(0),            pair(i32(0), f64(0))),
+        pair(i32(44100*5),      pair(i32(0), f64(1)))
     );    
      // [(Time, (Channel, Ptr)]    TODO should be a param
     

@@ -602,6 +602,8 @@
 (signal-print* 10 (counter))
 
 
+(signal-print* 10 (signal-input 0))
+
 ;;;;;;;;;;
 
 ; Lifting Lisp callbacks to signal level
