@@ -48,6 +48,7 @@ struct _state_t {
 };
 typedef struct _state_t *state_t;
 state_t new_state();
+void delete_state(state_t state);
 void inc_state(state_t state);
 double step(signal_t signal, state_t state);
 fa_signal_t fa_signal_simplify(fa_signal_t signal2);
@@ -502,7 +503,8 @@ void before_processing(stream_t stream)
 }
 
 void after_processing(stream_t stream)
-{
+{   
+    delete_state(stream->state);
 }
 
 int during_processing(stream_t stream, unsigned count, float **input, float **output)

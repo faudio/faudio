@@ -560,25 +560,36 @@ typedef struct {
 typedef _state_t *state_t;
 
 
-double  kRate       = 44100;
-long    kMaxInputs  = 1024;
-long    kMaxBuses   = 512;
-long    kMaxDelay   = (44100 * 5);
+double  kRate           = 44100;
+long    kMaxInputs      = 128;
+long    kMaxBuses       = 64;
+long    kMaxControls    = 64;
+long    kMaxDelay       = (44100 * 5);
 
 state_t new_state()
 {
     srand(time(NULL));  // TODO localize
     state_t state = fa_malloc(sizeof(_state_t));
 
-    state->inputs = fa_malloc(kMaxInputs);
-    state->buses  = fa_malloc(kMaxBuses * kMaxDelay);
-    memset(state->inputs, 0, kMaxInputs);
-    memset(state->buses,  0, kMaxBuses * kMaxDelay);
+    state->inputs   = fa_malloc(kMaxInputs              * sizeof(double));
+    state->buses    = fa_malloc(kMaxBuses * kMaxDelay   * sizeof(double));
+    state->controls = fa_malloc(kMaxControls            * sizeof(ptr_t));
+    memset(state->inputs,   0, kMaxInputs               * sizeof(double));
+    memset(state->buses,    0, kMaxBuses * kMaxDelay    * sizeof(double));
+    memset(state->controls, 0, kMaxControls             * sizeof(ptr_t));
 
     state->count = 0;
     state->rate  = kRate;
 
     return state;
+}
+
+void delete_state(state_t state)
+{
+    fa_free(state->inputs);
+    fa_free(state->buses);
+    fa_free(state->controls);
+    fa_free(state);
 }
 
 inline static
@@ -615,13 +626,33 @@ void inc_state(state_t state)
 
 void reset_controls(state_t state)
 {
-    // TODO
+    // for (int c = 0; c < kMaxControls; ++c) {
+    //     // TODO destroy previous values
+    //     state->controls[c] = NULL;
+    // }
 }
 
 void push_control(int c, ptr_t x, state_t state)
 {
-    // TODO
+    printf("Pushed %d %s\n", c, unstring(fa_string_show(x)));
+
+    // if (!state->controls[c]) {
+    //     state->controls[c] = fa_list_single(x);
+    // } else {
+    //     state->controls[c] = fa_list_dcons(x, state->controls[c]);
+    // }
 }
+
+// TODO should use global empty list
+list_t get_controls(int c, state_t state) {
+    return list();
+    // if (!state->controls[c]) {
+    //     return list();
+    // } else {
+    //     return state->controls[c];
+    // }
+}
+
 
 //----------
 // Internal state stuff
@@ -716,15 +747,19 @@ double step(signal_t signal, state_t state)
     assert(false);
 }
 
+#define USED(X) X = *(&X)
 // No allocation in loop
 // Use ringbuffers for transfer
 
 void fa_signal_run(int n, signal_t a, double *output)
 {
-    list_t controls = list(
-        pair(i32(0),    pair(i32(0), string("hans"))),
-        pair(i32(10),   pair(i32(0), string("sven")))
-    );    
+    // list_t controls = list(
+        // pair(i32(0),        pair(i32(0), string("hans"))),
+        // pair(i32(0),        pair(i32(0), string("sven"))),
+        // pair(i32(0),        pair(i32(0), string("elin"))),
+        // pair(i32(0),        pair(i32(0), string("alva"))),
+        // pair(i32(44100),    pair(i32(0), string("what")))
+    // );    
      // [(Time, (Channel, Ptr)]    TODO should be a param
     
     state_t state = new_state();
@@ -732,21 +767,20 @@ void fa_signal_run(int n, signal_t a, double *output)
     // TODO optimize
     // TODO verify
 
-    // TODO general progress monitor
-    // printf("\n");
+    // TODO progress monitor
     for (int i = 0; i < n; ++ i) {
+        
+        // USED(controls);
 
-        // int percent = round(((float) i)*100 / (float)n);
-        // if ((i % (n/100)) == 0) {
-        //     printf("\rGenerating samples, done: %d%%", percent);
-        //     fflush ( stdout );
-        // }
-
+/*
         reset_controls(state);
         int taken = 0;
         fa_for_each(x, controls) {
-            int t        = ti32(fa_pair_first(x));
+            int t        = fa_peek_int32(fa_pair_first(x));
             pair_t chPtr = fa_pair_second(x);
+        
+            // USED(chPtr);
+            // USED(taken);
 
             if (t <= state->count) {
                 taken++;
@@ -757,11 +791,13 @@ void fa_signal_run(int n, signal_t a, double *output)
                 break;
             }
         }
-
         controls = fa_list_ddrop(taken, controls);
+*/
+        
         output[i] = step(a2, state);
         inc_state(state);
     }
+    delete_state(state);
 }
 
 // FIXME should use run
@@ -779,6 +815,7 @@ void fa_signal_print(int n, signal_t a)
         printf("%3d: %4f\n", i, x);
         inc_state(state);
     }
+    delete_state(state);
 }
 
 buffer_t fa_signal_run_buffer(int n, signal_t a)
