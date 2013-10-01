@@ -47,6 +47,7 @@
           :components (
             (:file "message")))
         (:file "signal")
+        (:file "action")
         (:file "plot")
         (:file "audio")
         (:file "atomic")

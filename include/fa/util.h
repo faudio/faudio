@@ -92,6 +92,10 @@
 #define type_vector(a,n)    fa_type_vector(a,n)
 #define type_frame(a)       fa_type_frame(a)
 
+#define action_set          fa_action_set
+#define action_accum        fa_action_accum
+#define action_send         fa_action_send
+
 #define hms(h,m,s)          fa_time_create(0,h,m,ratio(s,1))
 #define days(d)             fa_time_create(d,0,0,ratio(0,1))
 #define hours(h)            fa_time_create(0,h,0,ratio(0,1))

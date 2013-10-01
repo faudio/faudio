@@ -7,6 +7,7 @@
 list(APPEND SRCS
   core.c
   fae.c
+  action.c
   atomic/queue.c
   atomic/stack.c
   audio.c
