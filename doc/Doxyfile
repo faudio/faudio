@@ -703,7 +703,7 @@ EXCLUDE_SYMLINKS       = NO
 
 EXCLUDE_PATTERNS       = */include/fa/processor \
                          */include/fa/processor.h \
-                         */include/fa/system/directory* \
+                         */include/fa/system/event* \
                          */include/fa/atomic/stack* \
                          */include/fa/scheduler* \
                          */include/fa/std* \
