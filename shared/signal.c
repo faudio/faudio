@@ -550,7 +550,7 @@ fa_signal_t fa_signal_simplify(fa_signal_t signal2)
 typedef struct {
     double *inputs;     // Current input values
     double *buses;      // Current and future bus values
-    ptr_t  *controls;   // Current control values (array of lists)
+    ptr_t   controls;   // Current control values (list of actions)
 
     int count;          // Number of processed samples
     double rate;        // Sample rate
@@ -562,7 +562,6 @@ typedef _state_t *state_t;
 double  kRate           = 44100;
 long    kMaxInputs      = 128;
 long    kMaxBuses       = 64;
-long    kMaxControls    = 64;
 long    kMaxDelay       = (44100 * 5);
 
 state_t new_state()
@@ -572,13 +571,12 @@ state_t new_state()
 
     state->inputs   = fa_malloc(kMaxInputs              * sizeof(double));
     state->buses    = fa_malloc(kMaxBuses * kMaxDelay   * sizeof(double));
-    state->controls = fa_malloc(kMaxControls            * sizeof(ptr_t));
     memset(state->inputs,   0, kMaxInputs               * sizeof(double));
     memset(state->buses,    0, kMaxBuses * kMaxDelay    * sizeof(double));
-    memset(state->controls, 0, kMaxControls             * sizeof(ptr_t));
 
-    state->count = 0;
-    state->rate  = kRate;
+    state->controls     = NULL;
+    state->count        = 0;
+    state->rate         = kRate;
 
     return state;
 }
@@ -587,7 +585,6 @@ void delete_state(state_t state)
 {
     fa_free(state->inputs);
     fa_free(state->buses);
-    fa_free(state->controls);
     fa_free(state);
 }
 
@@ -626,20 +623,17 @@ void inc_state(state_t state)
 
 void reset_controls(state_t state)
 {
-    for (int c = 0; c < kMaxControls; ++c) {
-        // TODO destroy previous values
-        state->controls[c] = NULL;
-    }
+    state->controls = NULL;
 }
 
-void push_control(int c, ptr_t x, state_t state)
+void push_control(ptr_t x, state_t state)
 {
     // printf("Pushed %d %s\n", c, unstring(fa_string_show(x)));
 
-    if (!state->controls[c]) {
-        state->controls[c] = fa_list_single(x);
+    if (!state->controls) {
+        state->controls = fa_list_single(x);
     } else {
-        state->controls[c] = fa_list_dcons(x, state->controls[c]);
+        state->controls = fa_list_dcons(x, state->controls);
     }
 }
 
@@ -761,15 +755,12 @@ void fa_signal_run(int n, signal_t a, double *output)
         int taken = 0;
         fa_for_each(x, controls) {
             int t        = fa_peek_int32(fa_pair_first(x));
-            pair_t chPtr = fa_pair_second(x);
+            pair_t ptr   = fa_pair_second(x);
         
             if (t <= state->count) {
-                taken++;
-                int ch      = ti32(fa_pair_first(chPtr));
-                ptr_t ptr   = fa_pair_second(chPtr);
-                
                 // printf("Time: %d\n", t);
-                push_control(ch, ptr, state);
+                taken++;
+                push_control(ptr, state);
             } else {
                 break;
             }
