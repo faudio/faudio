@@ -735,9 +735,10 @@ double step(signal_t signal, state_t state)
 // No allocation in loop
 // Use ringbuffers for transfer
 
-void fa_signal_run(int n, signal_t a, double *output)
+void fa_signal_run(int n, list_t controls, signal_t a, double *output)
 {
-    list_t controls = list(
+    // FIXME
+    controls = list(
         pair(i32(0),            pair(i32(0), f64(0))),
         pair(i32(44100*5),      pair(i32(0), f64(1)))
     );    
@@ -774,7 +775,7 @@ void fa_signal_run(int n, signal_t a, double *output)
 }
 
 // FIXME should use run
-void fa_signal_print(int n, signal_t a)
+void fa_signal_print(int n, list_t controls, signal_t a)
 {
     state_t state = new_state();
     signal_t a2 = fa_signal_simplify(a);
@@ -791,16 +792,16 @@ void fa_signal_print(int n, signal_t a)
     delete_state(state);
 }
 
-buffer_t fa_signal_run_buffer(int n, signal_t a)
+buffer_t fa_signal_run_buffer(int n, list_t controls, signal_t a)
 {
     buffer_t b = fa_buffer_create(n * sizeof(double));
-    fa_signal_run(n, a, fa_buffer_unsafe_address(b));
+    fa_signal_run(n, controls, a, fa_buffer_unsafe_address(b));
     return b;
 }
 
-ptr_t fa_signal_run_file(int n, signal_t a, string_t path)
+ptr_t fa_signal_run_file(int n, list_t controls, signal_t a, string_t path)
 {
-    buffer_t b = fa_signal_run_buffer(n, a);
+    buffer_t b = fa_signal_run_buffer(n, controls, a);
     ptr_t res = fa_buffer_write_audio(path, 1, b); // TODO number of channels
     fa_destroy(b);
     return res;

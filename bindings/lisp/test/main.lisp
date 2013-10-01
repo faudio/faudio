@@ -593,8 +593,8 @@
 (setf x (constant pi))
 
 (signal-print* 10 x)
-(signal-run-buffer (cl:* 44100 60) x)
-(signal-run-file (cl:* 44100 60) x "/Users/hans/audio/test.wav")
+(signal-run-buffer (cl:* 44100 60) (cl:list) x)
+(signal-run-file (cl:* 44100 60) (cl:list) x "/Users/hans/audio/test.wav")
 (signal-run-default (lambda (inputs) (duplicate (* 0.2 x))))     ; Don't play too loud
 
 
@@ -646,8 +646,8 @@
 (setf buf (buffer-create (cl:* 88200 8 2)))
 
 ; Buffer from signal
-(setf buf (signal-run-buffer 44100 (* 0.1 (random))))
-(setf buf (signal-run-buffer 44100 (* 0.1 (sin (line 220)))))
+(setf buf (signal-run-buffer 44100 (cl:list) (* 0.1 (random))))
+(setf buf (signal-run-buffer 44100 (cl:list) (* 0.1 (sin (line 220)))))
 
 (cl:print buf)
 ;(defcfun (plot-buffer-double "fa_plot_buffer_double") :void (a buffer) (b :pointer) (c :pointer))

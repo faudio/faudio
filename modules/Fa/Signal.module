@@ -129,41 +129,50 @@ module Fa.Signal
 
     /** Run the given signal for *n* samples, printing the values to `stdout`.
      */
-    print : ( Int, Signal ) -> Void;    
+    print : ( Int, List, Signal ) -> Void;    
 
     /** Run the given signal for *n* samples, writing the results to the given buffer.
 
-        The given pointer must point to a buffer of at least `n * sizeof(double)`.
+        The given pointer must point to a buffer of at least `samples * sizeof(double)`.
 
         @param samples
             Number of samples to generate.
+        @param controls
+            List of control values (must be pairs of fa_time_t and fa_action_t).
+            Optional, a null pointer is interpreted as the empty list.
         @param signal
             Signal to run.
         @param buffer
             Buffer to receive result.
      */
-    run : ( Int, Signal, Double* ) -> Void;
+    run : ( Int, List, Signal, Double* ) -> Void;
 
     /** Run the given signal, writing the results to a freshly created @ref buffer_t.
         The resulting buffer must be freed by the caller.
 
         @param samples
             Number of samples to generate.
+        @param controls
+            List of control values (must be pairs of fa_time_t and fa_action_t).
+            Optional, a null pointer is interpreted as the empty list.
         @param signal
             Signal to run.
      */
-    runBuffer : ( Int, Signal ) -> Buffer;
+    runBuffer : ( Int, List, Signal ) -> Buffer;
 
     /** Run the given signal, writing the results to the given file.
 
         @param samples
             Number of samples to generate.
+        @param controls
+            List of control values (must be pairs of fa_time_t and fa_action_t).
+            Optional, a null pointer is interpreted as the empty list.
         @param signal
             Signal to run.
         @param path
             Name of file to write.
      */
-    runFile : ( Int, Signal, String ) -> Ptr;
+    runFile : ( Int, List, Signal, String ) -> Ptr;
 
     
 

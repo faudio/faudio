@@ -163,7 +163,7 @@
   (destroy s))) 
 
 (defun signal-print* (n x)
-  (let* ((buffer (signal-run-buffer n x)))
+  (let* ((buffer (signal-run-buffer n (cl:list) x)))
     (dotimes (i (/ (size buffer) 8)) 
       (cl:print (coerce 
                  (buffer-get-double buffer i) 
