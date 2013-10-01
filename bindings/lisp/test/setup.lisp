@@ -25,7 +25,7 @@
 #|
   (asdf:operate 'asdf:load-op :faudio :force t)
 |#
-(asdf:operate 'asdf:load-op :faudio :force t)
+; (asdf:operate 'asdf:load-op :faudio :force t)
 
 
 ; Load library and setup tests

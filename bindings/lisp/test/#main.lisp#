@@ -133,10 +133,10 @@
 (setf x (string-empty))
 (setf x (string-single 104))
 (setf x (string-repeat 30 (char-int #\a)))
-(setf x (string-append "hans " "höglund"))
+(setf x (string-append "hans " "hÃ¶glund"))
 (destroy x)
 
-(string-length "högtalare")
+(string-length "hÃ¶gtalare")
 (code-char (string-char-at 0 "foo"))
 
 (string-matches "a*b*c+" "aaacc")
@@ -280,7 +280,7 @@
                   (list-single 1) x))
 (setf x (map-add-entry
          (pair-create "surname"
-                      "höglund") x))
+                      "hÃ¶glund") x))
 (setf x (map-remove "name" x))        ; Map.remove removes if present, otherwise does nothing
 (setf x (map-remove "skills" x))
 (setf y (map-copy x))
@@ -703,3 +703,16 @@
     (destroy buf)))
 
 (play-file "/Users/hans/Desktop/Passager.wav")
+
+
+
+
+(* (+ (time) 1) (random))
+
+
+(setf x (time))
+(setf y (random))
+
+(+ 
+ (* (control "x-value" 0) x) 
+ (* (control "y-value" 0.5) y))
