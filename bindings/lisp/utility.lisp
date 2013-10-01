@@ -130,7 +130,7 @@
 (defun wrap-signal  (x) `(number-or-signal ,x))
 
 (defmacro constant (&rest args) `(signal-constant (coerce ,@args 'double-float)))
-(defmacro time (&rest args) `(signal-time))
+(defmacro stime (&rest args) `(signal-time))
 (defmacro counter (&rest args) `(signal-counter))
 (defmacro random (&rest args) `(signal-random))
 (defmacro input (n &rest args) `(signal-input ,n))
@@ -162,8 +162,8 @@
   (destroy st)
   (destroy s))) 
 
-(defun signal-print* (n x)
-  (let* ((buffer (signal-run-buffer n (cl:list) x)))
+(defun signal-print* (n x &key (controls '()))
+  (let* ((buffer (signal-run-buffer n controls x)))
     (dotimes (i (/ (size buffer) 8)) 
       (cl:print (coerce 
                  (buffer-get-double buffer i) 

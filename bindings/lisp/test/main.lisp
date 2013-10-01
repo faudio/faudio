@@ -583,7 +583,7 @@
 
 ; Signals
 
-(setf x (time))
+(setf x (stime))
 (setf x (counter))
 (setf x (random))
 (setf x (constant 0.5))
@@ -598,11 +598,42 @@
 (signal-run-default (lambda (inputs) (duplicate (* 0.2 x))))     ; Don't play too loud
 
 
-(signal-print* 10 (time))
+(signal-print* 10 (stime))
 (signal-print* 10 (counter))
 
 
 (signal-print* 10 (signal-input 64))
+
+
+
+
+;;;;;;;;;
+
+(milliseconds 1)
+(defun ms (x) (milliseconds x))
+
+; TODO move
+(defun signal-run-file* (n x &key (controls '()) (path "test.wav"))
+  (signal-run-file n controls x path))
+
+(hours 1)
+(seconds 1.5)
+(minutes 1)
+(ms 500)
+(ms 2000)
+
+(time-divisions (seconds 7.5))
+(time-to-milliseconds (seconds 7.5))
+(sign
+
+(signal-run-file* 441000 
+                  (* (* (* (stime) 0.1) (signal-input 32)) (sin (line 440)))
+                  :path "/Users/hans/audio/test.wav"
+                  :controls (cl:list 
+                             (pair-create (seconds 1)   (action-set 32 0.5D0))
+                             (pair-create (seconds 3)   (action-set 32 0.99D0))
+                             (pair-create (seconds 7.1) (action-set 32 0.0D0))
+                             ))
 
 ;;;;;;;;;;
 
@@ -613,7 +644,7 @@
   (cl:* 0.1 x))
 (defun attenuate (x)
   (signal-lift "(/10)" (callback div10) (cffi:null-pointer) x))
-(type-of (attenuate (time))) ; TODO problem with printing this
+(type-of (attenuate (stime))) ; TODO problem with printing this
 
 ; TODO
 ; RT is much slower than NRT!
@@ -678,9 +709,9 @@
 ; Frequency modulation
 (signal-run-default (lambda (inputs)
   (cl:list 
-   (* (* 0.1 (time))
+   (* (* 0.1 (stime))
     (* (sin (line 70))  (sin (line 550)))) 
-   (* (* 0.1 (time))
+   (* (* 0.1 (stime))
     (* (sin (line 141)) (cos (line 550)))))))
 
 ; Sine
