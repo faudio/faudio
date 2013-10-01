@@ -70,6 +70,7 @@
 #define buffer_result_t     fa_device_buffer_result_t
 
 #define pair(a,b)           fa_pair_create(a,b)
+#define pair_left(a,b)      fa_pair_left_create(a,b)
 #define string(a)           fa_string_from_utf8(a)
 #define string16(a)         fa_string_from_utf16(u##a)
 #define string32(a)         fa_string_from_utf32(U##a)
@@ -159,6 +160,9 @@ void fa_fa_dlog_info(fa_string_t);
 #define i64                 fa_from_int64
 #define f32                 fa_from_double
 #define f64                 fa_from_double
+
+#define mark_used(X) X = *(&X)
+
 
 #endif // _FA_UTIL
 

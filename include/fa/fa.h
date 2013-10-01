@@ -8,6 +8,9 @@
 #include <fa/atomic/ring_buffer.h>
 #include <fa/system.h>
 #include <fa/error.h>
+#include <fa/pair.h>
+#include <fa/pair/left.h>
+#include <fa/list.h>
 #include <fa/graph.h>
 #include <fa/audio.h>
 #include <fa/midi.h>

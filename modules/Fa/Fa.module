@@ -27,6 +27,9 @@ module Fa.Fa
     import Fa.Atomic.RingBuffer;
     import Fa.System;
     import Fa.Error;
+    import Fa.Pair;
+    import Fa.Pair.Left;
+    import Fa.List;
     import Fa.Graph;
     import Fa.Audio;
     import Fa.Midi;
