@@ -46,22 +46,22 @@ struct _fa_signal_t {
 
         struct {
             string_t        name;
-            dunary_t           f;
-            ptr_t           fd;
+            dunary_t        function;
+            ptr_t           data;
             signal_t        a;
         }                   lift;
 
         struct {
             string_t        name;
-            dbinary_t       f;
-            ptr_t           fd;
+            dbinary_t       function;
+            ptr_t           data;
             signal_t        a;
             signal_t        b;
         }                   lift2;
 
         struct {
-            fixpoint_t      f;
-            ptr_t           fd;
+            fixpoint_t      function;
+            ptr_t           data;
         } loop;
 
         struct {
@@ -143,39 +143,39 @@ fa_signal_t fa_signal_constant(double x)
 
 
 fa_signal_t fa_signal_lift(fa_string_t n,
-                           fa_signal_unary_double_t f,
-                           fa_ptr_t fd,
+                           fa_signal_unary_double_t function,
+                           fa_ptr_t data,
                            fa_signal_t a)
 {
     signal_t signal = new_signal(lift_signal);
-    lift_get(signal, name) = n;
-    lift_get(signal, f)    = f;
-    lift_get(signal, fd)   = fd;
-    lift_get(signal, a)    = a;
+    lift_get(signal, name)      = n;
+    lift_get(signal, function)  = function;
+    lift_get(signal, data)      = data;
+    lift_get(signal, a)         = a;
     return signal;
 }
 
 
 fa_signal_t fa_signal_lift2(fa_string_t n,
-                            fa_signal_binary_double_t f,
-                            fa_ptr_t fd,
+                            fa_signal_binary_double_t function,
+                            fa_ptr_t data,
                             fa_signal_t a,
                             fa_signal_t b)
 {
     signal_t signal = new_signal(lift2_signal);
-    lift2_get(signal, name) = n;
-    lift2_get(signal, f)    = f;
-    lift2_get(signal, fd)   = fd;
-    lift2_get(signal, a)    = a;
-    lift2_get(signal, b)    = b;
+    lift2_get(signal, name)     = n;
+    lift2_get(signal, function) = function;
+    lift2_get(signal, data)     = data;
+    lift2_get(signal, a)        = a;
+    lift2_get(signal, b)        = b;
     return signal;
 }
 
-fa_signal_t fa_signal_loop(fa_signal_unary_signal_t f, fa_ptr_t fd)
+fa_signal_t fa_signal_loop(fa_signal_unary_signal_t function, fa_ptr_t data)
 {
     signal_t signal = new_signal(loop_signal);
-    loop_get(signal, f)  = f;
-    loop_get(signal, fd) = fd;
+    loop_get(signal, function)  = function;
+    loop_get(signal, data)      = data;
     return signal;
 }
 
@@ -215,29 +215,29 @@ signal_t copy_constant(signal_t signal2)
 signal_t copy_lift(signal_t signal2)
 {
     signal_t signal = new_signal(lift_signal);
-    lift_get(signal, name) = lift_get(signal2, name);
-    lift_get(signal, f)    = lift_get(signal2, f);
-    lift_get(signal, fd)   = lift_get(signal2, fd);
-    lift_get(signal, a)    = lift_get(signal2, a);
+    lift_get(signal, name)      = lift_get(signal2, name);
+    lift_get(signal, function)  = lift_get(signal2, function);
+    lift_get(signal, data)      = lift_get(signal2, data);
+    lift_get(signal, a)         = lift_get(signal2, a);
     return signal;
 }
 
 signal_t copy_lift2(signal_t signal2)
 {
     signal_t signal = new_signal(lift2_signal);
-    lift2_get(signal, name) = lift2_get(signal2, name);
-    lift2_get(signal, f)    = lift2_get(signal2, f);
-    lift2_get(signal, fd)   = lift2_get(signal2, fd);
-    lift2_get(signal, a)    = lift2_get(signal2, a);
-    lift2_get(signal, b)    = lift2_get(signal2, b);
+    lift2_get(signal, name)     = lift2_get(signal2, name);
+    lift2_get(signal, function) = lift2_get(signal2, function);
+    lift2_get(signal, data)     = lift2_get(signal2, data);
+    lift2_get(signal, a)        = lift2_get(signal2, a);
+    lift2_get(signal, b)        = lift2_get(signal2, b);
     return signal;
 }
 
 signal_t copy_loop(signal_t signal2)
 {
     signal_t signal = new_signal(loop_signal);
-    loop_get(signal, f)  = loop_get(signal2, f);
-    loop_get(signal, fd) = loop_get(signal2, fd);
+    loop_get(signal, function)  = loop_get(signal2, function);
+    loop_get(signal, data)      = loop_get(signal2, data);
     return signal;
 }
 
@@ -473,8 +473,8 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
     switch (signal2->tag) {
 
     case loop_signal: {
-        fixpoint_t fix      = loop_get(signal2, f);
-        ptr_t      fix_data = loop_get(signal2, fd);
+        fixpoint_t fix      = loop_get(signal2, function);
+        ptr_t      fix_data = loop_get(signal2, data);
 
         int channel;
         part_t part1;
@@ -504,8 +504,8 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
 
     case lift_signal: {
         string_t    name        = lift_get(signal2, name);
-        dunary_t    func        = lift_get(signal2, f);
-        ptr_t       func_data   = lift_get(signal2, fd);
+        dunary_t    func        = lift_get(signal2, function);
+        ptr_t       func_data   = lift_get(signal2, data);
 
         signal_t a              = simplify(part, lift_get(signal2, a));
         return fa_signal_lift(name, func, func_data, a);
@@ -513,8 +513,8 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
 
     case lift2_signal: {
         string_t    name        = lift2_get(signal2, name);
-        dbinary_t   func        = lift2_get(signal2, f);
-        ptr_t       func_data   = lift2_get(signal2, fd);
+        dbinary_t   func        = lift2_get(signal2, function);
+        ptr_t       func_data   = lift2_get(signal2, data);
 
         part_t part1;
         part_t part2;
@@ -735,34 +735,34 @@ double step(signal_t signal, state_t state)
     }
 
     case lift_signal: {
-        dunary_t f      = lift_get(signal, f);
-        ptr_t    fd     = lift_get(signal, fd);
-        signal_t a      = lift_get(signal, a);
-        double   xa     = step(a, state);
-        return f(fd, xa);
+        dunary_t    function  = lift_get(signal, function);
+        ptr_t       data      = lift_get(signal, data);
+        signal_t    a         = lift_get(signal, a);
+        double      xa        = step(a, state);
+        return function(data, xa);
     }
 
     case lift2_signal: {
-        dbinary_t   f   = lift2_get(signal, f);
-        ptr_t       fd  = lift2_get(signal, fd);
-        signal_t a      = lift2_get(signal, a);
-        signal_t b      = lift2_get(signal, b);
-        double   xa     = step(a, state);
-        double   xb     = step(b, state);
-        return f(fd, xa, xb);
+        dbinary_t   function  = lift2_get(signal, function);
+        ptr_t       data      = lift2_get(signal, data);
+        signal_t    a         = lift2_get(signal, a);
+        signal_t    b         = lift2_get(signal, b);
+        double      xa        = step(a, state);
+        double      xb        = step(b, state);
+        return function(data, xa, xb);
     }
 
     case input_signal: {
-        int     c       = input_get(signal, c);
+        int         c         = input_get(signal, c);
         return read_samp(c, state);
     }
 
     case output_signal: {
-        int     n       = output_get(signal, n);
-        int     c       = output_get(signal, c);
-        signal_t a      = output_get(signal, a);
+        int         n         = output_get(signal, n);
+        int         c         = output_get(signal, c);
+        signal_t    a         = output_get(signal, a);
 
-        double  xa      = step(a, state);
+        double      xa        = step(a, state);
         write_samp(n, c, xa, state);
         return xa;
     }
