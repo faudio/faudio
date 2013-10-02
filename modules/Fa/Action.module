@@ -22,10 +22,15 @@ module Fa.Action
     type Action = opaque;
     type Channel = Int;
     type Name = String;
+    type Params = Ptr;
+    type Value = Ptr;
 
     set : (Channel, Double) -> Action;
     accum : (Channel, UnaryDouble, Ptr) -> Action;
-    send : (Name, Ptr) -> Action;
+
+    load : (Name, Params) -> Action;
+    send : (Name, Value) -> Action;
+
 
     isSet : Action -> Bool;
     setChannel : Action -> Channel;

@@ -66,6 +66,8 @@
 (defcfun (signal-floor "fa_signal_floor") signal (a signal) (b signal))
 (defcfun (signal-ceil "fa_signal_ceil") signal (a signal) (b signal))
 (defcfun (signal-rint "fa_signal_rint") signal (a signal) (b signal))
+(defcfun (signal-counter "fa_signal_counter") signal)
+(defcfun (signal-impulses "fa_signal_impulses") signal (a :int))
 (defcfun (signal-vst "fa_signal_vst") list (a string) (b string) (c list))
 (defcfun (signal-fluid "fa_signal_fluid") list (a string))
 (defcfun (signal-to-tree "fa_signal_to_tree") pair (a signal))

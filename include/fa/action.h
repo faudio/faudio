@@ -37,6 +37,12 @@ typedef int fa_action_channel_t;
 typedef fa_string_t fa_action_name_t;
 
 
+typedef fa_ptr_t fa_action_params_t;
+
+
+typedef fa_ptr_t fa_action_value_t;
+
+
 fa_action_t fa_action_set(fa_action_channel_t, double);
 
 
@@ -45,7 +51,10 @@ fa_action_t fa_action_accum(fa_action_channel_t,
                             fa_ptr_t);
 
 
-fa_action_t fa_action_send(fa_action_name_t, fa_ptr_t);
+fa_action_t fa_action_load(fa_action_name_t, fa_action_params_t);
+
+
+fa_action_t fa_action_send(fa_action_name_t, fa_action_value_t);
 
 
 bool fa_action_is_set(fa_action_t);

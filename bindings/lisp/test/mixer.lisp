@@ -19,9 +19,8 @@
     (+
       (* (smooth (input 34)) (* 0.1 (sin (line 660))))
       (* (smooth (input 35)) (* 0.1 (sin (line 770))))
-      ))
+      ))))))
 
-                                             ))))
 ;(audio-send (seconds 20) (action-set 32 0.5D0) s)
 ;(audio-send (seconds 55) (action-set 32 0.1D0) s)
 ;(audio-send (seconds 0) (action-set 32 0.0D0) s)
