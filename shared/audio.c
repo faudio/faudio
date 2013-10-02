@@ -375,6 +375,9 @@ void fa_audio_set_status_callback(
 
 // --------------------------------------------------------------------------------
 
+#define kOutputOffset 0
+#define kInputOffset 8
+#define kControlOffset 16
 
 void audio_inform_opening(device_t input, ptr_t proc, device_t output)
 {
@@ -400,7 +403,7 @@ stream_t fa_audio_open_stream(device_t input,
     stream_t        stream      = new_stream(input, output, sample_rate, buffer_size);
 
     // TODO number of inputs
-    list_t all_inputs = list(fa_signal_input(0), fa_signal_input(1));
+    list_t all_inputs = list(fa_signal_input(kInputOffset+0), fa_signal_input(kInputOffset+1));
 
     list_t all_signals = all_inputs;
 
@@ -522,10 +525,13 @@ void before_processing(stream_t stream)
 {
     stream->state      = new_state();
 
-    for (int i = 0; i < stream->signal_count; ++i) {
-        stream->signals[i] = fa_signal_simplify(stream->signals[i]); // TODO is this safe?
+    signal_t merged = fa_signal_constant(0);
+    for (int c = 0; c < stream->signal_count; ++c) {
+        signal_t withOutput = fa_signal_output(0, kOutputOffset+c, stream->signals[c]);
+        merged = fa_signal_former(merged, withOutput); // Could use any combinator here
     }
 
+    stream->signals[0] = fa_signal_simplify(merged);
     // TODO optimize
     // TODO verify
 }
@@ -534,6 +540,8 @@ void after_processing(stream_t stream)
 {
     delete_state(stream->state);
 }
+
+#define VALS inputs
 
 void during_processing(stream_t stream, unsigned count, float **input, float **output)
 {
@@ -555,14 +563,24 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
         update_controls(stream->controls, stream->state);
 
         for (int c = 0; c < stream->signal_count; ++c) {
-            stream->state->inputs[c] = input[c][i];
-
-            double x = step(stream->signals[c], stream->state);
-
-            output[c][i] = x;
-
-            // TODO run inserts
+            stream->state->VALS[c+kInputOffset] = input[c][i];
         }
+        
+        step(stream->signals[0], stream->state);
+        
+        for (int c = 0; c < stream->signal_count; ++c) {
+            output[c][i] = stream->state->VALS[c+kOutputOffset];
+        }
+
+        // for (int c = 0; c < stream->signal_count; ++c) {
+        //     stream->state->inputs[c] = input[c][i];
+        // 
+        //     double x = step(stream->signals[c], stream->state);
+        // 
+        //     output[c][i] = x;
+        // 
+        //     // TODO run inserts
+        // }
 
         inc_state(stream->state);
     }
