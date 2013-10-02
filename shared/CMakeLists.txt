@@ -33,11 +33,11 @@ list(APPEND SRCS
   time.c
   )
 list(APPEND SRCS_OSX
-  ../platform/macosx/fae/atomic.c
-  ../platform/macosx/fae/thread.c
-  ../platform/macosx/fae/string.c
-  ../platform/macosx/fae/device.c
-  ../platform/macosx/fae/system/directory.c
+  ../platform/macosx/atomic.c
+  ../platform/macosx/thread.c
+  ../platform/macosx/string.c
+  ../platform/macosx/device.c
+  ../platform/macosx/system/directory.c
   # ../platform/macosx/fae/system/event.c
   )
 
