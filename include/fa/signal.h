@@ -350,6 +350,28 @@ fa_signal_t fa_signal_ceil(fa_signal_t, fa_signal_t);
 
 fa_signal_t fa_signal_rint(fa_signal_t, fa_signal_t);
 
+/** Run a signal through an external VST plug-in.
+    
+    @param name
+        Name of plug-in.
+    @param path
+        Path of plug-in.
+    @param inputs
+        Inputs signals.
+    @return
+        A list of @ref fa_signal_t (outputs).
+*/
+fa_list_t fa_signal_vst(fa_string_t, fa_string_t, fa_list_t);
+
+/** Run a signal through an external VST plug-in.
+    
+    @param name
+        Name of plug-in.
+    @return
+        A list of @ref fa_signal_t (outputs).
+*/
+fa_list_t fa_signal_fluid(fa_string_t);
+
 /** Convert the signal to a tree represented as set of
     nested pairs of type `(String,[...])`.
     

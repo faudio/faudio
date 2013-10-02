@@ -53,9 +53,6 @@ typedef double (* fa_plot_function_t)(fa_ptr_t,
 void fa_plot_use_gnu();
 
 
-void fa_plot_use_core();
-
-
 void fa_plot_continous(fa_plot_function_t,
                        fa_ptr_t,
                        fa_nullary_t,

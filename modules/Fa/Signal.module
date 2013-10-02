@@ -264,6 +264,29 @@ module Fa.Signal
     // optimize : Signal -> Signal;
     // optimize1 : Signal -> Signal;
 
+    /** Run a signal through an external VST plug-in.
+    
+        @param name
+            Name of plug-in.
+        @param path
+            Path of plug-in.
+        @param inputs
+            Inputs signals.
+        @return
+            A list of @ref fa_signal_t (outputs).
+     */
+    vst : (String, String, List) -> List;
+
+    /** Run a signal through an external VST plug-in.
+    
+        @param name
+            Name of plug-in.
+        @return
+            A list of @ref fa_signal_t (outputs).
+     */
+    fluid : String -> List;
+    
+
     /** Convert the signal to a tree represented as set of
         nested pairs of type `(String,[...])`.
         
