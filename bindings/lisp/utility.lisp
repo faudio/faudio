@@ -120,6 +120,12 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
+(defcfun (signal-loop "fa_signal_loop") signal (a unary) (b ptr))
+(defcallback signalcall1# ptr ((f ptr) (x ptr))
+  (funcall (int-to-func# f) (from-pointer 'signal x)))
+(defun signal-loop* (f)
+  (signal-loop (callback signalcall1#) (func-to-int# f)))
+
 (defun is-signal (x) 
   (cl:equal (type-of x) 'signal))
 
@@ -162,6 +168,8 @@
   (destroy st)
   (destroy s))) 
 
+
+
 (defun signal-print* (n x &key (controls '()))
   (let* ((buffer (signal-run-buffer n controls x)))
     (dotimes (i (/ (size buffer) 8)) 
@@ -170,6 +178,9 @@
                  'single-float)))
     (destroy buffer)))
 
+
+
+
 (defcallback signal-counter-add1 signal ((_ :pointer) (x signal))
   (signal-add x (constant 1)))
 
@@ -177,29 +188,6 @@
   (signal-add 
     (signal-loop (callback signal-counter-add1) (cffi:null-pointer))
     (constant -1)))
-
-
-
-
-
-
-
-
-
-; (defmacro < (&rest args) `(greater-than ,@args))
-; (defmacro > (&rest args) `(less-than ,@args))
-; (defmacro <= (&rest args) `(less-than-equal ,@args))
-; (defmacro >= (&rest args) `(less-than-equal ,@args))
-; (defmacro + (&rest args) `(add ,@args))
-; (defmacro - (&rest args) `(subtract ,@args))
-; (defmacro * (&rest args) `(multiply ,@args))
-; (defmacro / (&rest args) `(divide ,@args))
-; (defmacro abs (&rest args) `(absolute ,@args))
-
-
-
-
-
 
 
 
