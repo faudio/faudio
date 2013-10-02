@@ -128,6 +128,14 @@ fa_signal_t fa_signal_loop(fa_signal_unary_signal_t, fa_ptr_t);
 */
 fa_signal_t fa_signal_delay(int, fa_signal_t);
 
+
+fa_signal_t fa_signal_insert(fa_string_t,
+                             int,
+                             int,
+                             int,
+                             int,
+                             fa_signal_t);
+
 /** The primitive input signal, reading from the bus of the given number.
 */
 fa_signal_t fa_signal_input(int);

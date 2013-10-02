@@ -107,6 +107,9 @@ module Fa.Signal
      */
     delay       : ( Int, Signal )                                 -> Signal;
 
+    insert : ( String, Int, Int, Int, Int, Signal ) -> Signal;
+
+
     /** The primitive input signal, reading from the bus of the given number.
      */
     input       : ( Int )                                         -> Signal;
