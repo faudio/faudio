@@ -763,10 +763,18 @@ void write_bus(int n, int c, double x, state_t state)
 //----------
 
 // inline static
-void update_controls(priority_queue_t controls2, state_t state)
+void run_action(action_t action, state_t state) {
+    if (fa_action_is_set(action)) {
+        int ch = fa_action_set_channel(action);
+        double v = fa_action_set_value(action);
+        write_samp(0, ch, v, state);
+    }
+}
+
+void update_controls(priority_queue_t controls, state_t state)
 {
     while (1) {
-        pair_t x = fa_priority_queue_peek(controls2);
+        pair_t x = fa_priority_queue_peek(controls);
 
         if (!x) {
             break;
@@ -778,13 +786,8 @@ void update_controls(priority_queue_t controls2, state_t state)
         int timeSamp = (((double) fa_time_to_milliseconds(time)) / 1000.0) * 44100;   // TODO
 
         if (timeSamp <= state->count) {
-
-            // TODO other action types
-            int ch = fa_action_set_channel(action);
-            double v = fa_action_set_value(action);
-            write_samp(0, ch, v, state);
-
-            fa_priority_queue_pop(controls2);
+            run_action(action, state);
+            fa_priority_queue_pop(controls);
         } else {
             break;
         }
