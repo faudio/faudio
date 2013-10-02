@@ -17,10 +17,13 @@
 #include <portmidi.h>
 
 /*
-    Notes:
-        * Device detection handled by excplicit CoreMIDI/?? calls
-        * Call MIDIRestart() ?
-        * TODO proper error checking
+    ## Notes
+    
+    * Device detection handled by excplicit CoreMIDI/?? calls
+
+    * Call MIDIRestart() ?
+
+    * TODO proper error checking
  */
 
 typedef fa_midi_device_t           device_t;

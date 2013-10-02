@@ -14,7 +14,12 @@
 #include <sndfile.h>
 
 /*
-    Notes:
+    ## Notes
+    
+    * Each buffer is an address range with an optional destroy function 
+      and its closure.
+
+    * The create/destroy functions uses the standard fa_malloc/fa_free allocator.
  */
 
 #define print_max_size_k 80

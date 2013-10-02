@@ -13,12 +13,18 @@
 #include <fa/util.h>
 
 /*
-    Notes:
-        * The list type is a wrapper structure containing the dispatcher.
-        * Below that is straightforward immutable, singly-linked node sequence
-        * For memory management we use structural sharing with one reference count per node.
-            * Pros: Copying a list is O(1)
-            * Cons: No destructive optimizations, all destrutive methods are wrappers
+    ## Notes
+
+    * The list type is a wrapper structure containing the dispatcher.
+        
+    * Below that is straightforward immutable, singly-linked node sequence
+        
+    * For memory management we use structural sharing with one reference 
+      count per node.
+      
+        - Copying a list is O(1)
+
+        - Overhead in destructive operations.
  */
 
 struct node {

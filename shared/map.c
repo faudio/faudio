@@ -14,10 +14,13 @@
 #include <fa/util.h>
 
 /*
-    Notes:
-        * We implement Map as a Set of entries
-        * An entry is exactly like a pair, but compares on the first element only
-        * Performance, memory etc depend entirely on Set implementation
+    ## Notes
+    
+    * We implement Map as a Set of entries
+
+    * An entry is exactly like a pair, but compares on the first element only
+
+    * Performance, memory etc depend entirely on Set implementation
  */
 
 struct entry {

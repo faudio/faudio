@@ -16,21 +16,17 @@
 #include "string/parson.h"
 
 /*
-    Notes:
-        * Straightforward implementation using bounded buffer
-        * Slow copying
-        * Reasonable dappend (using realloc)
+    ## Notes
 
-    Possibilities:
-        * More efficient append
-            * Separate size from char count and pre-allocate (such as 2^n).
-        * Real-time alternative?
-            * Non-amortized allocator?
-            * Regional string buffer/symbol table solution?
+    * Straightforward implementation using bounded buffer
+
+    * Slow copying
+
+    * Reasonable dappend (using realloc)
  */
 
-#define standard_code_k   "UTF-16LE"          // Internal string code
-#define char_size_k       sizeof(uint16_t)    // Internal char size
+#define kStandardCode       "UTF-16LE"          // Internal string code
+#define kStandardCodeSize   sizeof(uint16_t)    // Internal char size
 
 struct _fa_string_t {
     impl_t          impl;           // Dispatcher
@@ -71,7 +67,7 @@ fa_string_t fa_string_empty()
 fa_string_t fa_string_single(fa_char16_t chr)
 {
     string_t str = new_string(1, NULL);
-    str->data = malloc(char_size_k);
+    str->data = malloc(kStandardCodeSize);
     str->data[0] = chr;
 
     return str;
@@ -91,9 +87,9 @@ fa_string_t fa_string_repeat(int times, fa_char16_t chr)
 fa_string_t fa_string_copy(fa_string_t str)
 {
     string_t pst = new_string(str->size, NULL);
-    pst->data = malloc(str->size * char_size_k);
+    pst->data = malloc(str->size * kStandardCodeSize);
 
-    memcpy(pst->data, str->data, str->size * char_size_k);
+    memcpy(pst->data, str->data, str->size * kStandardCodeSize);
 
     return pst;
 }
@@ -102,10 +98,10 @@ fa_string_t fa_string_append(fa_string_t str1,
                              fa_string_t str2)
 {
     string_t cs = new_string(str1->size + str2->size, NULL);
-    cs->data = malloc(cs->size * char_size_k);
+    cs->data = malloc(cs->size * kStandardCodeSize);
 
-    memcpy(cs->data, str1->data, str1->size * char_size_k);
-    memcpy(cs->data + str1->size, str2->data, str2->size * char_size_k);
+    memcpy(cs->data, str1->data, str1->size * kStandardCodeSize);
+    memcpy(cs->data + str1->size, str2->data, str2->size * kStandardCodeSize);
 
     return cs;
 }
@@ -116,9 +112,9 @@ fa_string_t fa_string_dappend(fa_string_t str1,
     size_t oldSize = str1->size;
 
     str1->size = str1->size + str2->size;
-    str1->data = realloc(str1->data, str1->size * char_size_k);
+    str1->data = realloc(str1->data, str1->size * kStandardCodeSize);
 
-    memcpy(str1->data + oldSize, str2->data, str2->size * char_size_k);
+    memcpy(str1->data + oldSize, str2->data, str2->size * kStandardCodeSize);
 
     free(str2);
     return str1;
@@ -232,14 +228,14 @@ fa_string_utf8_t fa_string_to_utf8(fa_string_t str)
     size_t inSize, outSize, cstrSize;
     char *in, *out, *cstr;
 
-    inSize  = str->size * char_size_k;   // exact char count
+    inSize  = str->size * kStandardCodeSize;   // exact char count
     outSize = str->size * 4;            // worst case, we shrink after iconv
     in      = (char *) str->data;
     out     = malloc(outSize);
     cstr    = out;
 
     {
-        iconv_t conv   = iconv_open("UTF-8", standard_code_k);
+        iconv_t conv   = iconv_open("UTF-8", kStandardCode);
         size_t  status = iconv(conv, &in, &inSize, &out, &outSize);
         iconv_close(conv);
 
@@ -259,8 +255,8 @@ fa_string_utf8_t fa_string_to_utf8(fa_string_t str)
 fa_string_utf16_t fa_string_to_utf16(fa_string_t as)
 {
     size_t size = as->size;
-    uint16_t *cstr = malloc((size + 1) * char_size_k);
-    memcpy(cstr, as->data, as->size * char_size_k);
+    uint16_t *cstr = malloc((size + 1) * kStandardCodeSize);
+    memcpy(cstr, as->data, as->size * kStandardCodeSize);
     cstr[size] = 0;
     return cstr;
 }
@@ -277,7 +273,7 @@ fa_string_t fa_string_from_utf8(fa_string_utf8_t cstr)
     str     = out;
 
     {
-        iconv_t conv = iconv_open(standard_code_k, "UTF-8");
+        iconv_t conv = iconv_open(kStandardCode, "UTF-8");
         size_t status = iconv(conv, &in, &inSize, &out, &outSize);
         iconv_close(conv);
 
@@ -289,14 +285,14 @@ fa_string_t fa_string_from_utf8(fa_string_utf8_t cstr)
     strSize = out - str;
     str     = realloc(str, strSize);
 
-    return new_string(strSize / char_size_k, (uint16_t *) str);
+    return new_string(strSize / kStandardCodeSize, (uint16_t *) str);
 }
 
 fa_string_t fa_string_from_utf16(fa_string_utf16_t cstr)
 {
     size_t size = raw_size_16(cstr);
-    string_t as = new_string(size, malloc(size * char_size_k));
-    memcpy(cstr, as->data, as->size * char_size_k);
+    string_t as = new_string(size, malloc(size * kStandardCodeSize));
+    memcpy(cstr, as->data, as->size * kStandardCodeSize);
     return as;
 }
 

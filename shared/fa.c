@@ -13,15 +13,15 @@
 #include <unistd.h> // isatty
 #include "config.h"
 
-#define iso8601_k "%Y-%m-%d %H:%M:%S%z"
+#define kIso8601 "%Y-%m-%d %H:%M:%S%z"
 
 typedef fa_fa_log_func_t log_func_t;
 
-static unsigned       init_count_g  = 0;
-static log_func_t     log_func_g    = NULL;
-static ptr_t          log_data_g    = NULL;
-static long           gBytesAlloc;
+static unsigned       gInitCount    = 0;
+static long           gBytesAlloc   = 0;
 // static long           gBytesFreed;
+static log_func_t     gLogFunc      = NULL;
+static ptr_t          gLogData      = NULL;
 
 static struct {
     char *pre;
@@ -72,12 +72,12 @@ void fa_fa_initialize()
     fa_fa_log_info(string("Initialized faudio."));
 
     gBytesAlloc = 0;
-    init_count_g++;
+    gInitCount++;
 }
 
 void fa_fa_terminate()
 {
-    if ((init_count_g--)) {
+    if ((gInitCount--)) {
         fa_audio_terminate();
         fa_midi_terminate();
         fa_thread_terminate();
@@ -121,7 +121,7 @@ static inline void stdlog(ptr_t data, fa_time_system_t t, fa_error_t e)
     bool color = (file == stdout && isatty(fileno(stdout)));
 
     fa_let(tm, localtime((long *) &t)) {
-        strftime(msg, 50, iso8601_k "  ", tm);
+        strftime(msg, 50, kIso8601 "  ", tm);
     }
     fa_with(str, fa_error_format(color, e),
             fa_destroy(str)) {
@@ -138,21 +138,21 @@ static inline void stdlog(ptr_t data, fa_time_system_t t, fa_error_t e)
 void fa_fa_set_log_file(fa_string_t path)
 {
     char *cpath = fa_string_to_utf8(path);
-    log_data_g  = fopen(cpath, "a");
-    log_func_g  = stdlog;
+    gLogData  = fopen(cpath, "a");
+    gLogFunc  = stdlog;
     free(cpath);
 }
 
 void fa_fa_set_log_std()
 {
-    log_data_g  = stdout;
-    log_func_g  = stdlog;
+    gLogData  = stdout;
+    gLogFunc  = stdlog;
 }
 
 void fa_fa_set_log(fa_fa_log_func_t f, fa_ptr_t data)
 {
-    log_func_g  = f;
-    log_data_g  = data;
+    gLogFunc  = f;
+    gLogData  = data;
 }
 
 
@@ -160,8 +160,8 @@ void fa_fa_set_log(fa_fa_log_func_t f, fa_ptr_t data)
 
 void fa_fa_log(fa_ptr_t data, fa_error_t e)
 {
-    if (log_func_g) {
-        log_func_g(log_data_g, (ptr_t) time(NULL), e);
+    if (gLogFunc) {
+        gLogFunc(gLogData, (ptr_t) time(NULL), e);
     }
 }
 

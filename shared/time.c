@@ -27,18 +27,18 @@ struct _fa_time_t {
     ratio_t         value;      //  Value in seconds
 };
 
-static clock_serv_t mach_clock_g;
+static clock_serv_t gMachClock;
 
 // --------------------------------------------------------------------------------
 
 void fa_time_initialize()
 {
-    host_get_clock_service(mach_host_self(), REALTIME_CLOCK, &mach_clock_g);
+    host_get_clock_service(mach_host_self(), REALTIME_CLOCK, &gMachClock);
 }
 
 void fa_time_terminate()
 {
-    mach_port_deallocate(mach_task_self(), mach_clock_g);
+    mach_port_deallocate(mach_task_self(), gMachClock);
 }
 
 // --------------------------------------------------------------------------------
@@ -305,7 +305,7 @@ fa_time_cpu_t fa_time_cpu()
 // int64_t system_prec_ticks(ptr_t a)
 // {
 //     mach_timespec_t ts;
-//     clock_get_time(mach_clock_g, &ts);
+//     clock_get_time(gMachClock, &ts);
 //
 //     return ts.tv_sec * 1000000000 + ts.tv_nsec;
 // }
@@ -313,7 +313,7 @@ fa_time_cpu_t fa_time_cpu()
 // fa_time_t system_prec_time(ptr_t a)
 // {
 //     mach_timespec_t ts;
-//     clock_get_time(mach_clock_g, &ts);
+//     clock_get_time(gMachClock, &ts);
 //
 //     // clock_gettime(CLOCK_REALTIME, &ts);
 //

@@ -14,12 +14,18 @@
 #include <fa/dynamic.h>
 #include <fa/util.h>
 
-/*  Notes:
-        * Map is implemented in terms of Set
-        * Set is implemented in terms of a (persistent) base type
-            * Requires the operations defined below
-            * We use lists until we have proper intmaps
-            * We really want fast size, insert, remove, indexOf
+/*  
+    ## Notes
+
+    * Map is implemented in terms of Set
+
+    * Set is implemented in terms of a (persistent) base type
+
+        - Requires the operations defined below
+
+        - We use lists until we have proper intmaps
+
+        - We really want fast size, insert, remove, indexOf
  */
 
 #define base_t              list_t

@@ -10,10 +10,15 @@
 #include <fa/priority_queue.h>
 #include <fa/util.h>
 
-/*  Notes:
-        * This is a mutable version of the skew heap, see http://en.wikipedia.org/wiki/Skew_heap
-        * Ordering is fixed to fa_less_than at the moment
-            * We may want to optimize by adding special mergeBy, insertBy etc.
+/*  
+    ## Notes
+
+    * This is a mutable version of the skew heap, see 
+      <http://en.wikipedia.org/wiki/Skew_heap>
+
+    * Ordering is fixed to fa_less_than at the moment
+
+        - We may want to optimize by adding special mergeBy, insertBy etc.
  */
 
 typedef struct node            *node_t;
