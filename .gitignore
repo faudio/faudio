@@ -20,3 +20,5 @@ DUMP
 build2
 bin
 *.wav
+test-svg/
+*.dsp
