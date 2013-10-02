@@ -53,7 +53,6 @@ option(ENABLE_NONREALTIME_AUDIO "Enable non-real-time audio"                True
 option(ENABLE_FLUIDSYNTH        "Enable the Fluidsynth processor"           ${NOT_APPLE})
 option(ENABLE_AUDIO_UNIT        "Enable AudioUnit processors"               ${APPLE})
 option(ENABLE_VST               "Enable VST processors"                     True)
-option(ENABLE_COREPLOT          "Enable CorePlot plot backend"              True)
 
 option(BUILD_FRAMEWORK          "Build an OS X framework"                   ${APPLE})
 option(BUILD_SHARED             "Build a shared library"                    ${NOT_APPLE})
@@ -221,7 +220,6 @@ if (COMPONENTS_RESOLVED)
 
   include_directories("include")
   include_directories("${CMAKE_BINARY_DIR}/include") # for the conf file
-  include_directories("external/coreplot/include")
   # include_directories(${CMAKE_SOURCE_DIR})           # for scl and scl-c
   include_directories(${PTHREADS_INCLUDE_DIRS})
   include_directories(${ICONV_INCLUDE_DIRS})
@@ -247,7 +245,6 @@ if (COMPONENTS_RESOLVED)
     ${ICU_LIBRARIES}
     ${FLUIDSYNTH_LIBRARIES} # May be empty
     ${GLIB_LIBRARIES}       # May be empty
-    "external/coreplot/"
     "/mingw/lib"
     "/mingw"
     )
@@ -280,7 +277,6 @@ if (COMPONENTS_RESOLVED)
     find_library(COREMIDI           CoreMidi)
     find_library(AUDIOUNIT          AudioUnit)
     find_library(AUDIOTOOLBOX       AudioToolbox)
-    find_library(COREPLOT           CorePlot)
     find_library(QUARTZCORE         QuartzCore)
     list(APPEND EXTS ${COCOA})
     list(APPEND EXTS ${COREAUDIO})
@@ -288,7 +284,6 @@ if (COMPONENTS_RESOLVED)
     list(APPEND EXTS ${AUDIOUNIT})
     list(APPEND EXTS ${AUDIOTOOLBOX})
     list(APPEND EXTS ${QUARTZCORE})
-    list(APPEND EXTS ${COREPLOT})
   endif ()
 
   if(MSYS)
@@ -310,7 +305,6 @@ if (COMPONENTS_RESOLVED)
   set(FA_HAS_FLUIDSYNTH     ENABLE_FLUIDSYNTH)
   set(FA_HAS_AUDIO_UNIT     ENABLE_AUDIO_UNIT)
   set(FA_HAS_VST            ENABLE_VST)
-  set(FA_HAS_COREPLOT       ENABLE_COREPLOT)
 
   configure_file(
     ${CMAKE_SOURCE_DIR}/include/config.h.in

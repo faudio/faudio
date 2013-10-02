@@ -14,14 +14,12 @@
 typedef fa_plot_function_t plot_func;
 
 enum plot_backend {
-    gnu_plot,
-    core_plot
+    gnu_plot
 };
 
 enum plot_backend plot_backend_g = gnu_plot;
 
 void fa_fa_log_info(fa_string_t);
-void run_core_plot(plot_func func, ptr_t funcData, nullary_t cont, ptr_t contData);
 void run_gnu_plot(plot_func func, ptr_t funcData, nullary_t cont, ptr_t contData);
 
 
@@ -31,14 +29,6 @@ void fa_plot_use_gnu()
 {
     plot_backend_g = gnu_plot;
     fa_fa_log_info(string("Using gnuplot backend"));
-}
-
-/** Use CorePlot for plotting.
- */
-void fa_plot_use_core()
-{
-    plot_backend_g = core_plot;
-    fa_fa_log_info(string("Using CorePlot backend"));
 }
 
 /** Run a plot of the given functions.
@@ -60,9 +50,7 @@ void fa_plot_continous
         run_gnu_plot(func, data, cont, cont_data);
         return;
 
-    case core_plot:
-        run_core_plot(func, data, cont, cont_data);
-        return;
+        assert(false && "Unknown plot backend.");
     }
 }
 

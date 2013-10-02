@@ -41,7 +41,6 @@ module Fa.Plot
     // Backend selection
     
     useGnu  : () -> Void;
-    useCore : () -> Void;
 
     
     // Plotting

@@ -40,11 +40,6 @@ list(APPEND SRCS_OSX
   ../platform/macosx/fae/system/directory.c
   # ../platform/macosx/fae/system/event.c
   )
-if(${ENABLE_COREPLOT})
-  list(APPEND SRCS_OSX
-    ../platform/macosx/fae/plot/coreplot.m
-  )
-endif()
 
 list(APPEND SRCS_MSYS
   )

@@ -9,7 +9,6 @@
 #cmakedefine FA_HAS_FLUIDSYNTH
 #cmakedefine FA_HAS_AUDIO_UNIT
 #cmakedefine FA_HAS_VST
-#cmakedefine FA_HAS_COREPLOT
 
 #endif // _CONFIG_H
 
