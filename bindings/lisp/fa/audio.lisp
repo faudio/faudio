@@ -25,6 +25,7 @@
 (defcfun (audio-default-input "fa_audio_default_input") audio-device (a audio-session))
 (defcfun (audio-default-output "fa_audio_default_output") audio-device (a audio-session))
 (defcfun (audio-set-status-callback "fa_audio_set_status_callback") :void (a audio-status-callback) (b ptr) (c audio-session))
+(defcfun (audio-session "fa_audio_session") audio-session (a audio-device))
 (defcfun (audio-name "fa_audio_name") string (a audio-device))
 (defcfun (audio-host-name "fa_audio_host_name") string (a audio-device))
 (defcfun (audio-has-input "fa_audio_has_input") :boolean (a audio-device))
@@ -35,5 +36,6 @@
 (defcfun (audio-open-stream "fa_audio_open_stream") audio-stream (a audio-device) (b audio-device) (c audio-proc) (d ptr))
 (defcfun (audio-close-stream "fa_audio_close_stream") :void (a audio-stream))
 (defcfun (audio-with-stream "fa_audio_with_stream") :void (a audio-device) (b audio-device) (c audio-proc) (d ptr) (e audio-stream-callback) (f ptr) (g error-callback) (h ptr))
+(defcfun (audio-devices "fa_audio_devices") list (a audio-stream))
 (defcfun (audio-send "fa_audio_send") :void (a time) (b action) (c audio-stream))
 

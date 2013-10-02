@@ -72,6 +72,7 @@ struct _fa_audio_device_t {
 
     impl_t              impl;               // Dispatcher
     native_index_t      index;              // Native device index
+    session_t           session;            // Underlying session
 
     string_t            name;               // Cached names
     string_t            host_name;
@@ -84,8 +85,8 @@ struct _fa_audio_stream_t {
 
     impl_t              impl;               // Dispatcher
     native_stream_t     native;             // Native stream
-
     device_t            input, output;
+
     unsigned            signal_count;       // Number of signals (same as number of outputs)
     signal_t            signals[kMaxSignals];
     state_t             state;              // DSP state
@@ -110,7 +111,7 @@ ptr_t audio_stream_impl(fa_id_t interface);
 inline static session_t new_session();
 inline static void session_init_devices(session_t session);
 inline static void delete_session(session_t session);
-inline static device_t new_device(native_index_t index);
+inline static device_t new_device(session_t session, native_index_t index);
 inline static void delete_device(device_t device);
 inline static stream_t new_stream(device_t input, device_t output, double sample_rate, long max_buffer_size);
 inline static void delete_stream(stream_t stream);
@@ -146,7 +147,7 @@ inline static void session_init_devices(session_t session)
     devices = fa_list_empty();
 
     for (size_t i = 0; i < count; ++i) {
-        device_t device = new_device(i);
+        device_t device = new_device(session, i);
 
         if (device) {
             devices = fa_list_dcons(device, devices);
@@ -154,8 +155,8 @@ inline static void session_init_devices(session_t session)
     }
 
     session->devices      = fa_list_dreverse(devices);
-    session->def_input    = new_device(Pa_GetDefaultInputDevice());
-    session->def_output   = new_device(Pa_GetDefaultOutputDevice());
+    session->def_input    = new_device(session, Pa_GetDefaultInputDevice());
+    session->def_output   = new_device(session, Pa_GetDefaultOutputDevice());
 }
 
 inline static void delete_session(session_t session)
@@ -164,7 +165,7 @@ inline static void delete_session(session_t session)
     fa_delete(session);
 }
 
-inline static device_t new_device(native_index_t index)
+inline static device_t new_device(session_t session, native_index_t index)
 {
     if (index == paNoDevice) {
         return NULL;
@@ -177,6 +178,7 @@ inline static device_t new_device(native_index_t index)
     const PaHostApiInfo *host_info = Pa_GetHostApiInfo(info->hostApi);
 
     device->index       = index;
+    device->session     = session;
     device->name        = string((char *) info->name);      // const cast
     device->host_name   = string((char *) host_info->name);
     // device->muted       = false;
@@ -319,6 +321,11 @@ device_t fa_audio_default_input(session_t session)
 device_t fa_audio_default_output(session_t session)
 {
     return session->def_output;
+}
+
+session_t fa_audio_session(device_t device)
+{
+    return device->session;
 }
 
 fa_string_t fa_audio_name(device_t device)
@@ -487,6 +494,15 @@ void fa_audio_with_stream(device_t            input,
     }
 
     fa_audio_close_stream(stream);
+}
+
+list_t fa_audio_devices(fa_audio_stream_t stream)
+{                 
+    if (fa_equal(stream->input, stream->output)) {
+        return list(stream->input);
+    } else {
+        return list(stream->input, stream->output);
+    }
 }
 
 void fa_audio_send(fa_time_t time, 

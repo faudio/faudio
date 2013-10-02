@@ -131,6 +131,11 @@ void fa_audio_set_status_callback(fa_audio_status_callback_t,
                                   fa_ptr_t,
                                   fa_audio_session_t);
 
+/** Return the session associated with the given device.
+    @param device   The device.
+*/
+fa_audio_session_t fa_audio_session(fa_audio_device_t);
+
 /** Return the name of the given device.
     @param device   The device.
 */
@@ -198,6 +203,12 @@ void fa_audio_with_stream(fa_audio_device_t,
                           fa_ptr_t,
                           fa_error_callback_t,
                           fa_ptr_t);
+
+/** Return the devices associated with the given stream.
+    @param device   The device.
+    @return A list of @ref fa_audio_device_t
+*/
+fa_list_t fa_audio_devices(fa_audio_stream_t);
 
 /**
     Schedule an action on the stream.

@@ -107,6 +107,11 @@ module Fa.Audio
      */
     setStatusCallback : (StatusCallback, Ptr, Session) -> Void;
 
+    /** Return the session associated with the given device.
+        @param device   The device.
+     */
+    session : Device -> Session;
+
     /** Return the name of the given device.
         @param device   The device.
      */
@@ -128,6 +133,7 @@ module Fa.Audio
     hasOutput : Device -> Bool;
     
     inputChannels : Device -> Int;
+    
     outputChannels : Device -> Int;
     
 
@@ -165,6 +171,12 @@ module Fa.Audio
         StreamCallback, Ptr,
         Callback, Ptr
         ) -> Void;
+
+    /** Return the devices associated with the given stream.
+        @param device   The device.
+        @return A list of @ref fa_audio_device_t
+     */
+    devices : Stream -> List;
 
     /**
         Schedule an action on the stream.
