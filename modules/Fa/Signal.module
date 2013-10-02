@@ -255,6 +255,9 @@ module Fa.Signal
     floor               : (Signal, Signal) -> Signal;
     ceil                : (Signal, Signal) -> Signal;
     rint                : (Signal, Signal) -> Signal;    
+
+    counter             : () -> Signal;
+    impulses            : (Int) -> Signal;
                            
     // isVariable : Signal -> Bool;
     // isConstant : Signal -> Bool;

@@ -941,6 +941,31 @@ fa_signal_t fa_signal_impulse()
     return fa_signal_lift(string("mkImp"), _impulse, NULL, fa_signal_time());
 }
 
+/*
+    (defun signal-counter ()
+      (- (signal-loop* (lambda (x) (+ x 1))) 1))
+    
+*/
+inline static signal_t _fix_counter(ptr_t _, signal_t x)
+{
+    return fa_signal_add(x, fa_signal_constant(1));
+}
+fa_signal_t fa_signal_counter()
+{
+    return fa_signal_add(fa_signal_loop(_fix_counter, NULL), fa_signal_constant(-1));
+}
+
+inline static double _impulses(ptr_t n, double x)
+{
+    int n2 = (int) n;
+    int x2 = (int) x;
+    return (x2 % n2) == 0 ? 1 : 0;
+}
+fa_signal_t fa_signal_impulses(int n)
+{
+    return fa_signal_lift(string("mkImps"), _impulses, (ptr_t) n, fa_signal_counter());
+}
+
 
 fa_signal_t fa_signal_line(double x)
 {

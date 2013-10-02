@@ -358,6 +358,12 @@ fa_signal_t fa_signal_ceil(fa_signal_t, fa_signal_t);
 
 fa_signal_t fa_signal_rint(fa_signal_t, fa_signal_t);
 
+
+fa_signal_t fa_signal_counter();
+
+
+fa_signal_t fa_signal_impulses(int);
+
 /** Run a signal through an external VST plug-in.
     
     @param name
