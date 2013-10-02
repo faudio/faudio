@@ -623,7 +623,7 @@
 (ms 2000)
 
 (time-divisions (seconds 7.5))
-(time-to-milliseconds (seconds 7.5))
+(time-to-milliseconds (seconds 1/17))
 (sign
 
 (signal-run-file* 
