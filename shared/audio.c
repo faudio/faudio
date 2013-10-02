@@ -544,8 +544,13 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
     }
 
     for (int i = 0; i < count; ++ i) {
+
         // Note: This could be done outside sample loop
-        // which would be faster but less exact
+        //       which would be faster but less exact
+
+        // Note 2: Instead of running signals separately, we could wrap them in 
+        //         Output constructors and copy the appropriate buffers from the state.
+
         reset_controls(stream->state);
         update_controls(stream->controls, stream->state);
 
@@ -553,7 +558,10 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
             stream->state->inputs[c] = input[c][i];
 
             double x = step(stream->signals[c], stream->state);
+
             output[c][i] = x;
+
+            // TODO run inserts
         }
 
         inc_state(stream->state);
