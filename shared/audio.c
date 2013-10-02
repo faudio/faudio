@@ -520,6 +520,9 @@ void fa_audio_send(fa_time_t time,
 
 // --------------------------------------------------------------------------------
 
+#define VALS inputs
+#define MERGED_SIGNAL signals[0]
+
 
 void before_processing(stream_t stream)
 {
@@ -531,7 +534,7 @@ void before_processing(stream_t stream)
         merged = fa_signal_former(merged, withOutput); // Could use any combinator here
     }
 
-    stream->signals[0] = fa_signal_simplify(merged);
+    stream->MERGED_SIGNAL = fa_signal_simplify(merged);
     // TODO optimize
     // TODO verify
 }
@@ -540,8 +543,6 @@ void after_processing(stream_t stream)
 {
     delete_state(stream->state);
 }
-
-#define VALS inputs
 
 void during_processing(stream_t stream, unsigned count, float **input, float **output)
 {
@@ -555,10 +556,6 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
 
         // Note: This could be done outside sample loop
         //       which would be faster but less exact
-
-        // Note 2: Instead of running signals separately, we could wrap them in 
-        //         Output constructors and copy the appropriate buffers from the state.
-
         reset_controls(stream->state);
         update_controls(stream->controls, stream->state);
 
@@ -566,21 +563,14 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
             stream->state->VALS[c+kInputOffset] = input[c][i];
         }
         
-        step(stream->signals[0], stream->state);
+        step(stream->MERGED_SIGNAL, stream->state);
+        // TODO run inserts
+        // This one must know about all current inserts and pass the state
+        // so that the buffers can be updated
         
         for (int c = 0; c < stream->signal_count; ++c) {
             output[c][i] = stream->state->VALS[c+kOutputOffset];
         }
-
-        // for (int c = 0; c < stream->signal_count; ++c) {
-        //     stream->state->inputs[c] = input[c][i];
-        // 
-        //     double x = step(stream->signals[c], stream->state);
-        // 
-        //     output[c][i] = x;
-        // 
-        //     // TODO run inserts
-        // }
 
         inc_state(stream->state);
     }
