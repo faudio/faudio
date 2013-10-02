@@ -29,7 +29,7 @@ static struct {
     int y;
     int z;
     char *suff;
-} version_g = AE_VERSION;
+} version_g = FA_VERSION;
 
 void fa_audio_initialize();
 void fa_audio_terminate();
