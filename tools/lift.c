@@ -36,7 +36,7 @@ signal_t fir(ptr_t a, signal_t rec)
     return add_((signal_t) delay_(10, a), mul_(rec, const_(0.9999)));
 }
 
-double times (ptr_t _, double x, double y)
+double times(ptr_t _, double x, double y)
 {
     return x + y;
 }
@@ -44,12 +44,12 @@ double times (ptr_t _, double x, double y)
 void helper_function()
 {
     signal_t r = fa_signal_lift2(string("times"), times, NULL, const_(0.1), sin_(line_(440)));
-    
+
     {
         fa_audio_session_t s = fa_audio_begin_session();
         fa_audio_device_t i  = fa_audio_default_input(s);
         fa_audio_device_t o  = fa_audio_default_output(s);
-        fa_audio_stream_t st = fa_audio_open_stream(i, o, just, list(r,r));
+        fa_audio_stream_t st = fa_audio_open_stream(i, o, just, list(r, r));
 
         if (fa_check(st)) {
             fa_error_log(st, NULL);
@@ -58,6 +58,7 @@ void helper_function()
                 fa_thread_sleep(10000);
             }
         }
+
         fa_audio_end_session(s);
     }
 }

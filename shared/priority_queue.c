@@ -10,10 +10,10 @@
 #include <fa/priority_queue.h>
 #include <fa/util.h>
 
-/*  
+/*
     ## Notes
 
-    * This is a mutable version of the skew heap, see 
+    * This is a mutable version of the skew heap, see
       <http://en.wikipedia.org/wiki/Skew_heap>
 
     * Ordering is fixed to fa_less_than at the moment

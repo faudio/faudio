@@ -18,7 +18,7 @@
 
 /*
     ## Notes
-    
+
     * Device detection handled by excplicit CoreMIDI/?? calls
 
     * Call MIDIRestart() ?

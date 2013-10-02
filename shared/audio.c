@@ -95,7 +95,7 @@ struct _fa_audio_stream_t {
     double              sample_rate;
     long                max_buffer_size;
     int32_t             sample_count;       // Monotonically increasing sample count
-    
+
     atomic_queue_t      in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
     priority_queue_t    controls;           // Scheduled controls (Time, (Channel, Ptr))
 };
@@ -497,7 +497,7 @@ void fa_audio_with_stream(device_t            input,
 }
 
 list_t fa_audio_devices(fa_audio_stream_t stream)
-{                 
+{
     if (fa_equal(stream->input, stream->output)) {
         return list(stream->input);
     } else {
@@ -505,8 +505,8 @@ list_t fa_audio_devices(fa_audio_stream_t stream)
     }
 }
 
-void fa_audio_send(fa_time_t time, 
-                   fa_action_t action, 
+void fa_audio_send(fa_time_t time,
+                   fa_action_t action,
                    fa_audio_stream_t stream)
 {
     pair_left_t pair = pair_left(time, action);
@@ -531,7 +531,7 @@ void before_processing(stream_t stream)
 }
 
 void after_processing(stream_t stream)
-{   
+{
     delete_state(stream->state);
 }
 
@@ -539,6 +539,7 @@ int during_processing(stream_t stream, unsigned count, float **input, float **ou
 {
     // TODO fetch and schedule incoming control changes
     ptr_t val;
+
     while ((val = fa_atomic_queue_read(stream->in_controls))) {
         fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
     }
@@ -555,6 +556,7 @@ int during_processing(stream_t stream, unsigned count, float **input, float **ou
             double x = step(stream->signals[c], stream->state);
             output[c][i] = x;
         }
+
         inc_state(stream->state);
     }
 

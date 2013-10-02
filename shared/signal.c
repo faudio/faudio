@@ -453,7 +453,7 @@ void run_part(struct part *p, int *r, struct part *p2)
     p2->d = p->d;
 }
 void split_part(struct part *p, struct part *p2, struct part *p3)
-{           
+{
     p2->o = p->o;
     p2->d = p->d * 2;
     p3->o = p->d;
@@ -668,7 +668,7 @@ double read_actual_input(int c, state_t state)
 void write_actual_input(int c, double x, state_t state)
 {
     state->inputs[c] = x;
-}   
+}
 
 double read_bus(int c, state_t state)
 {
@@ -689,12 +689,15 @@ void update_controls(priority_queue_t controls2, state_t state)
 {
     while (1) {
         pair_t x = fa_priority_queue_peek(controls2);
-        if (!x) break;
-        
+
+        if (!x) {
+            break;
+        }
+
         time_t   time        = fa_pair_first(x);
         action_t action      = fa_pair_second(x);
 
-        int timeSamp = ( ((double) fa_time_to_milliseconds(time)) / 1000.0 ) * 44100; // TODO
+        int timeSamp = (((double) fa_time_to_milliseconds(time)) / 1000.0) * 44100;   // TODO
 
         if (timeSamp <= state->count) {
 
@@ -702,7 +705,7 @@ void update_controls(priority_queue_t controls2, state_t state)
             int ch = fa_action_set_channel(action);
             double v = fa_action_set_value(action);
             write_samp(0, ch, v, state);
-            
+
             fa_priority_queue_pop(controls2);
         } else {
             break;
@@ -780,7 +783,7 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
     fa_for_each(x, controls) {
         fa_priority_queue_insert(fa_pair_left_from_pair(x), controls2);
     }
-    
+
     state_t state = new_state();
     signal_t a2 = fa_signal_simplify(a);
     // TODO optimize
@@ -793,16 +796,19 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
         output[i] = step(a2, state);
         inc_state(state);
     }
+
     delete_state(state);
 }
 
 void fa_signal_print(int n, list_t controls, signal_t a)
 {
     buffer_t b = fa_signal_run_buffer(n, controls, a);
+
     for (size_t i = 0; i < fa_buffer_size(b); ++i) {
         double x = fa_buffer_get_double(b, i);
         printf("%3ld: %4f\n", (long) i, x);
     }
+
     fa_destroy(b);
 }
 
@@ -866,20 +872,20 @@ fa_signal_t fa_signal_line(double x)
 
 
 inline static double _play(ptr_t buffer, double i)
-{                 
+{
     size_t size = fa_buffer_size(buffer);
-    uint64_t j = ((uint64_t) i) % (size/sizeof(double));
+    uint64_t j = ((uint64_t) i) % (size / sizeof(double));
     return fa_buffer_get_double(buffer, j);
 }
 fa_signal_t fa_signal_play(fa_buffer_t buffer, fa_signal_t i)
-{                         
+{
     return fa_signal_lift(string("play"), _play, buffer, i);
 }
 
 inline static double _record(ptr_t buffer, double i, double x)
 {
     size_t size = fa_buffer_size(buffer);
-    uint64_t j = ((uint64_t) i) % (size/sizeof(double));
+    uint64_t j = ((uint64_t) i) % (size / sizeof(double));
     fa_buffer_set_double(buffer, j, x);
     return x;
 }

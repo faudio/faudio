@@ -39,16 +39,17 @@ signal_t add1(ptr_t _, signal_t x)
 
 void helper_function(string_t path)
 {
-    {                    
+    {
         buffer_t buf;
         pair_t res = fa_buffer_read_audio(path);
+
         if (fa_error_check(res)) {
             fa_print("Error: Could not read file '%s'\n", path);
             exit(-1);
         } else {
             buf = fa_pair_second(res);
         }
-        
+
         signal_t j  = add_(loop_(add1, NULL), const_(-1));  // 0,1,2,3 ...
         signal_t li = add_(mul_(j, const_(2)), const_(0));
         signal_t ri = add_(mul_(j, const_(2)), const_(1));
@@ -63,8 +64,8 @@ void helper_function(string_t path)
         fa_audio_session_t s = fa_audio_begin_session();
         fa_audio_device_t i  = fa_audio_default_input(s);
         fa_audio_device_t o  = fa_audio_default_output(s);
-        fa_audio_stream_t st = fa_audio_open_stream(i, o, just, list(l,r));
-        
+        fa_audio_stream_t st = fa_audio_open_stream(i, o, just, list(l, r));
+
         if (fa_check(st)) {
             fa_error_log(st, NULL);
         } else {
@@ -72,6 +73,7 @@ void helper_function(string_t path)
                 fa_thread_sleep(10000);
             }
         }
+
         fa_audio_end_session(s);
     }
 }

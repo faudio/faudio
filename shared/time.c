@@ -139,7 +139,7 @@ int32_t fa_time_to_seconds(fa_time_t time)
         Time interval.
  */
 int32_t fa_time_to_milliseconds(fa_time_t time)
-{            
+{
     // TODO very slow
     return fa_time_days(time)      * 24 * 60 * 60 * 1000
            + fa_time_hours(time)   * 60 * 60 * 1000

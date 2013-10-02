@@ -9,13 +9,13 @@
 void helper_function()
 {
     list_t xs = list(
-        pair(i32(3), i32(30)),
-        pair(i32(2), i32(40)),
-        pair(i32(2), i32(45)),
-        pair(i32(4), i32(20)),
-        pair(i32(5), i32(10))
-        );
-    
+                    pair(i32(3), i32(30)),
+                    pair(i32(2), i32(40)),
+                    pair(i32(2), i32(45)),
+                    pair(i32(4), i32(20)),
+                    pair(i32(5), i32(10))
+                );
+
 
 
     xs = fa_list_dmap(apply1, fa_pair_left_from_pair, xs);

@@ -14,7 +14,7 @@
 #include <fa/dynamic.h>
 #include <fa/util.h>
 
-/*  
+/*
     ## Notes
 
     * Map is implemented in terms of Set

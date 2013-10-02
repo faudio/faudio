@@ -15,7 +15,7 @@
 
 /*
     ## Notes
-    
+
     * We implement Map as a Set of entries
 
     * An entry is exactly like a pair, but compares on the first element only

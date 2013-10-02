@@ -11,6 +11,7 @@ void read_and_print(string_t path)
     fa_print_ln(string_append(string("Reading file "), path));
 
     pair_t res = fa_buffer_read_audio(path);
+
     if (fa_error_check(res)) {
         fa_print("Error: Could not read file '%s'\n", path);
     } else {

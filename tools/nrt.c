@@ -28,18 +28,19 @@
 
 
 void helper_function()
-{                   
+{
     list_t actions = list();
+
     for (int i = 0; i < 30; ++i) {
         actions = fa_list_dcons(
-            pair(hms(0,0,i+3), action_set(1, (i%10)*0.1)),
-            actions
-            );
+                      pair(hms(0, 0, i + 3), action_set(1, (i % 10) * 0.1)),
+                      actions
+                  );
     }
-    
+
     signal_t r = mul_(input_(1), random_());
 
-    fa_signal_run_file(44100*300, actions, r, string("test.wav"));
+    fa_signal_run_file(44100 * 300, actions, r, string("test.wav"));
 
 
     mark_used(actions);
