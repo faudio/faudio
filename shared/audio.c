@@ -118,7 +118,7 @@ inline static void delete_stream(stream_t stream);
 
 void before_processing(stream_t stream);
 void after_processing(stream_t stream);
-int during_processing(stream_t stream, unsigned count, float **input, float **output);
+void during_processing(stream_t stream, unsigned count, float **input, float **output);
 
 static int native_audio_callback(const void *input_ptr,
                                  void *output_ptr,
@@ -535,9 +535,8 @@ void after_processing(stream_t stream)
     delete_state(stream->state);
 }
 
-int during_processing(stream_t stream, unsigned count, float **input, float **output)
+void during_processing(stream_t stream, unsigned count, float **input, float **output)
 {
-    // TODO fetch and schedule incoming control changes
     ptr_t val;
 
     while ((val = fa_atomic_queue_read(stream->in_controls))) {
@@ -561,7 +560,6 @@ int during_processing(stream_t stream, unsigned count, float **input, float **ou
     }
 
     stream->sample_count += count; // TODO atomic incr
-    return paContinue;
 }
 
 
@@ -575,7 +573,8 @@ int native_audio_callback(const void                       *input,
                           PaStreamCallbackFlags             flags,
                           void                             *data)
 {
-    return during_processing(data, count, (float **) input, (float **) output);
+    during_processing(data, count, (float **) input, (float **) output);
+    return paContinue;
 }
 
 void native_finished_callback(void *data)
