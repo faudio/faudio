@@ -629,9 +629,8 @@ fa_signal_t fa_signal_simplify(fa_signal_t signal2)
 // Running
 
 typedef struct {
-    double *inputs;     // Current input values
+    double *inputs;     // Current input values (TODO should not be called inputs as they are also outputs...)
     double *buses;      // Current and future bus values
-    ptr_t   controls;   // Current control values (list of actions)
 
     int count;          // Number of processed samples
     double rate;        // Sample rate
@@ -655,7 +654,6 @@ state_t new_state()
     memset(state->inputs,   0, kMaxInputs               * sizeof(double));
     memset(state->buses,    0, kMaxBuses * kMaxDelay    * sizeof(double));
 
-    state->controls     = NULL;
     state->count        = 0;
     state->rate         = kRate;
 
@@ -706,22 +704,6 @@ void write_samp(int n, int c, double x, state_t state)
 void inc_state(state_t state)
 {
     state->count++;
-}
-
-void reset_controls(state_t state)
-{
-    state->controls = NULL;
-}
-
-void push_control(ptr_t x, state_t state)
-{
-    // printf("Pushed %d %s\n", c, unstring(fa_string_show(x)));
-
-    if (!state->controls) {
-        state->controls = fa_list_single(x);
-    } else {
-        state->controls = fa_list_dcons(x, state->controls);
-    }
 }
 
 
@@ -872,7 +854,6 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
 
     // TODO progress monitor
     for (int i = 0; i < n; ++ i) {
-        reset_controls(state);
         update_controls(controls2, state);
         output[i] = step(a2, state);
         inc_state(state);

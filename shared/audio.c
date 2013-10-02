@@ -51,7 +51,6 @@ typedef struct _state_t *state_t;
 state_t new_state();
 void delete_state(state_t state);
 void inc_state(state_t state);
-void reset_controls(state_t state);
 void update_controls(priority_queue_t controls2, state_t state);
 double step(signal_t signal, state_t state);
 fa_signal_t fa_signal_simplify(fa_signal_t signal2);
@@ -552,7 +551,6 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
 
         // Note: This could be done outside sample loop
         //       which would be faster but less exact
-        reset_controls(stream->state);
         update_controls(stream->controls, stream->state);
 
         for (int c = 0; c < stream->signal_count; ++c) {
