@@ -24,7 +24,7 @@ size_t fa_atomic_ring_buffer_write_many(ring_buffer_t dst,
 #define read_many_ fa_atomic_ring_buffer_read_many
 #define write_many_ fa_atomic_ring_buffer_write_many
 
-void helper_function()
+void test_basic()
 {
     ring_buffer_t b = create_(5*sizeof(double));
     uint8_t foo[] = {0,1,2,3,4,5,6,7,8,9};
@@ -72,11 +72,26 @@ void helper_function()
     printf("%f\n", readd_(b));
     printf("%f\n", readd_(b));
 
+}    
+
+void test_speed()
+{       
+    int N = 44100*1;
+    ring_buffer_t b = create_(N*sizeof(double));
+
+    for (int i = 0; i < N; ++i) {
+        writed_(b, 1);
+    }
+    double x = 0;
+    for (int i = 0; i < N; ++i) {
+        x += readd_(b);
+    }
+    printf("Sum: %f!\n", x);
 }
 
 int main(int argc, char const *argv[])
 {
     fa_fa_initialize();
-    helper_function();
+    test_speed();
     fa_fa_terminate();
 }
