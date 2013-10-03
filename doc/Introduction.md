@@ -6,9 +6,8 @@ Introduction {#mainpage}
 
 Main features:
 
-* Real-time and non-realtime.
-* Arbitrary number of streams in the same application.
-* Distributable audio computations.
+* Real-time and non-realtime processing.
+* Arbitrary number of streams in the same process.
 * Device detection/hot-plugging.
 * Arbitrary complex audio routing.
 * High-level interface, using declarative *signals*.
