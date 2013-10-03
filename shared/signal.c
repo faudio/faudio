@@ -635,6 +635,8 @@ typedef struct {
     int count;          // Number of processed samples
     double rate;        // Sample rate
 
+    ptr_t poll;         // Poll actions to run
+
 }  _state_t;
 typedef _state_t *state_t;
 
@@ -681,7 +683,7 @@ double state_time(state_t state)
 void    write_bus(int n, int c, double x, state_t state);
 double  read_bus(int c, state_t state);
 double  read_actual_input(int c, state_t state);
-void write_actual_input(int c, double x, state_t state);
+void    write_actual_input(int c, double x, state_t state);
 
 inline static
 double read_samp(int c, state_t state)
@@ -753,7 +755,7 @@ void run_action(action_t action, state_t state) {
     }
 }
 
-void update_controls(priority_queue_t controls, state_t state)
+void run_actions(priority_queue_t controls, state_t state)
 {
     while (1) {
         pair_t x = fa_priority_queue_peek(controls);
@@ -854,7 +856,7 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
 
     // TODO progress monitor
     for (int i = 0; i < n; ++ i) {
-        update_controls(controls2, state);
+        run_actions(controls2, state);
         output[i] = step(a2, state);
         inc_state(state);
     }
