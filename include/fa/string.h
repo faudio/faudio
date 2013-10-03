@@ -119,13 +119,23 @@ typedef struct {
 
 fa_string_t fa_string_show(fa_ptr_t);
 
-
+/** Behaves like the identity function on strings and as [show](@ref fa_string_show)
+    on all other value.
+    @see [Show](@ref fa_string_show_t)
+      
+*/
 fa_string_t fa_string_to_string(fa_ptr_t);
 
-
+/** Generic JSON conversion.
+    @param a    Value implementing [Show](@ref fa_string_show_t) or [Dynamic](@ref fa_string_dynamic_t).
+      
+*/
 fa_string_t fa_string_to_json(fa_ptr_t);
 
-
+/** Generic JSON conversion.
+    @param string   A JSON string.
+      
+*/
 fa_ptr_t fa_string_from_json(fa_string_t);
 
 /** Encode the given string as UTF-8.
@@ -172,7 +182,10 @@ fa_string_t fa_string_from_utf16(fa_string_utf16_t);
 */
 fa_string_t fa_string_from_native(fa_ptr_t);
 
-
+/** Return true iff the given string matches the given regular expression.
+    @param expr   A regular expression string.
+    @param string String to match.
+*/
 bool fa_string_matches(fa_string_t, fa_string_t);
 
 /** Format an integer.

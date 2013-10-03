@@ -140,9 +140,6 @@ uint16_t fa_string_char_at(int pos, fa_string_t str)
     return str->data[pos];
 }
 
-
-// --------------------------------------------------------------------------------
-
 fa_string_t fa_string_format_integral(char *format, long value)
 {
     char buffer[100];
@@ -174,13 +171,12 @@ fa_string_t fa_string_format_floating(char *format, double value)
 }
 
 
-// --------------------------------------------------------------------------------
-
 /** Fail with error message, interpreting errno as an iconv error.
 
     This function does not return.
  */
-static inline void iconv_fail()
+inline static 
+void iconv_fail()
 {
     switch (errno) {
     case E2BIG:
@@ -201,7 +197,8 @@ static inline void iconv_fail()
     }
 }
 
-static inline size_t raw_size(char *s)
+inline static 
+size_t raw_size(char *s)
 {
     size_t i = 0;
 
@@ -212,7 +209,8 @@ static inline size_t raw_size(char *s)
     return i;
 }
 
-static inline size_t raw_size_16(uint16_t *s)
+inline static 
+size_t raw_size_16(uint16_t *s)
 {
     size_t i = 0;
 
@@ -297,18 +295,12 @@ fa_string_t fa_string_from_utf16(fa_string_utf16_t cstr)
 }
 
 
-// --------------------------------------------------------------------------------
-
 fa_string_t fa_string_show(fa_ptr_t a)
 {
     assert(fa_interface(fa_string_show_i, a) && "Must implement Show");
     return ((fa_string_show_t *) fa_interface(fa_string_show_i, a))->show(a);
 }
 
-/** Behaves like the identity function on strings and as [show](@ref fa_string_show)
-    on all other value.
-    @see [Show](@ref fa_string_show_t)
-  */
 fa_string_t fa_string_to_string(fa_ptr_t a)
 {
     assert(fa_interface(fa_string_show_i, a) && "Must implement Show");
@@ -323,8 +315,8 @@ fa_string_t fa_string_to_string(fa_ptr_t a)
     }
 }
 
-
-inline static ptr_t jsonify(ptr_t a)
+inline static 
+ptr_t jsonify(ptr_t a)
 {
     switch (fa_dynamic_get_type(a)) {
     case pair_type_repr:
@@ -344,18 +336,7 @@ inline static ptr_t jsonify(ptr_t a)
     }
 }
 
-/** Generic JSON conversion.
-    @param a    Value implementing [Show](@ref fa_string_show_t) or [Dynamic](@ref fa_string_dynamic_t).
-  */
-fa_string_t fa_string_to_json(fa_ptr_t a)
-{
-    if (!fa_interface(fa_dynamic_i, a)) {
-        return fa_string_show(a);
-    } else {
-        return fa_string_show(jsonify(a));
-    }
-}
-
+inline static
 ptr_t unjsonify(JSON_Value *a, bool *ok)
 {
     switch (json_value_get_type(a)) {
@@ -417,9 +398,15 @@ ptr_t unjsonify(JSON_Value *a, bool *ok)
     }
 }
 
-/** Generic JSON conversion.
-    @param string   A JSON string.
-  */
+fa_string_t fa_string_to_json(fa_ptr_t a)
+{
+    if (!fa_interface(fa_dynamic_i, a)) {
+        return fa_string_show(a);
+    } else {
+        return fa_string_show(jsonify(a));
+    }
+}
+
 fa_ptr_t fa_string_from_json(fa_string_t string)
 {
     bool ok = true;
@@ -432,13 +419,6 @@ fa_ptr_t fa_string_from_json(fa_string_t string)
     }
 }
 
-
-// --------------------------------------------------------------------------------
-
-/** Return true iff the given string matches the given regular expression.
-    @param expr   A regular expression string.
-    @param string String to match.
- */
 bool fa_string_matches(fa_string_t expr, fa_string_t string)
 {
     if (fa_string_length(expr) <= 0) {
@@ -465,40 +445,6 @@ bool fa_string_matches(fa_string_t expr, fa_string_t string)
 }
 
 
-// --------------------------------------------------------------------------------
-
-/** Return the result of applying the given function to all characters of the
-    given string.
-
-    @par Laws
-
-        map(apply1, id, xs)                == xs
-        map(apply1, f, map(apply1, g, xs)) == map(apply1, comp(f, g), xs)
-
-    @par Performance
-        O(n)
- */
-// string_t fa_string_map(unary_t func, ptr_t data, string_t string)
-// {
-//     string_t result = fa_string_copy(string);
-//     for (int i = 0; i < string->size; ++i)
-//     {
-//         result->data[i] = (uint16_t) (int32_t) func(data, (ptr_t) (int32_t) string->data[i]);
-//     }
-//     return result;
-// }
-
-/** Map over the given string and join the results.
-
-    This function is useful to apply functions from single characters to strings.
-
-    @par Laws
-
-        joinMap(apply1, single, xs) == xs`
-
-    @par Performance
-        O(n)
- */
 string_t fa_string_join_map(unary_t func, ptr_t data, string_t string)
 {
     string_t result = string("");

@@ -76,7 +76,7 @@ void test_basic()
 
 void test_speed()
 {
-    int N = 44100 * 1;
+    int N = 44100 * 10;
     ring_buffer_t b = create_(N * sizeof(double));
 
     for (int i = 0; i < N; ++i) {
