@@ -12,6 +12,7 @@
 #include <fa/util.h>
 
 // http://www.cs.sunysb.edu/~skiena/392/programs/queue.c
+typedef uint8_t byte_t;
 typedef fa_atomic_ring_buffer_t ring_buffer_t;
 
 struct _fa_atomic_ring_buffer_t {
@@ -58,13 +59,13 @@ size_t fa_atomic_ring_buffer_size(ring_buffer_t buffer)
     return buffer->size;
 }
 
-uint8_t fa_atomic_ring_buffer_read(ring_buffer_t buffer)
+byte_t fa_atomic_ring_buffer_read(ring_buffer_t buffer)
 {
-    char x;
+    byte_t x;
     if (buffer->count <= 0)
         assert(false && "Underflow");
     else {
-        x = ((char*) buffer->data)[buffer->first];
+        x = ((byte_t*) buffer->data)[buffer->first];
         buffer->first = (buffer->first+1) % buffer->size;
         buffer->count = buffer->count - 1;
     }
@@ -72,12 +73,12 @@ uint8_t fa_atomic_ring_buffer_read(ring_buffer_t buffer)
 }
 
 bool fa_atomic_ring_buffer_write(ring_buffer_t buffer,
-                                 uint8_t value)
+                                 byte_t value)
 {
     if (buffer->count >= buffer->size)
         assert(false && "Overflow");
     else {
-        ((char*) buffer->data)[buffer->last] = value;
+        ((byte_t*) buffer->data)[buffer->last] = value;
         buffer->last = (buffer->last+1) % buffer->size;
         buffer->count = buffer->count + 1;
     }
@@ -90,7 +91,7 @@ bool fa_atomic_ring_buffer_write(ring_buffer_t buffer,
 // TODO more efficient versions
 // Can using memcpy + slicing or virtual memory
 
-size_t fa_atomic_ring_buffer_read_many(uint8_t* dst,
+size_t fa_atomic_ring_buffer_read_many(byte_t* dst,
                                        ring_buffer_t src,
                                        size_t count)
 {             
@@ -101,7 +102,7 @@ size_t fa_atomic_ring_buffer_read_many(uint8_t* dst,
 }
 
 size_t fa_atomic_ring_buffer_write_many(ring_buffer_t dst,
-                                        uint8_t* src,
+                                        byte_t* src,
                                         size_t count)
 {
     for (size_t i = 0; i < count; ++i) {
@@ -114,7 +115,7 @@ size_t fa_atomic_ring_buffer_write_many(ring_buffer_t dst,
 float fa_atomic_ring_buffer_read_float(ring_buffer_t buffer)
 {
     float x;
-    fa_atomic_ring_buffer_read_many((uint8_t*) &x, buffer, sizeof(x));
+    fa_atomic_ring_buffer_read_many((byte_t*) &x, buffer, sizeof(x));
     return x;
 }
 
@@ -122,7 +123,7 @@ float fa_atomic_ring_buffer_read_float(ring_buffer_t buffer)
 double fa_atomic_ring_buffer_read_double(ring_buffer_t  buffer)
 {
     double x;
-    fa_atomic_ring_buffer_read_many((uint8_t*) &x, buffer, sizeof(x));
+    fa_atomic_ring_buffer_read_many((byte_t*) &x, buffer, sizeof(x));
     return x;
 }
 
@@ -130,13 +131,13 @@ double fa_atomic_ring_buffer_read_double(ring_buffer_t  buffer)
 bool fa_atomic_ring_buffer_write_float(ring_buffer_t buffer,
                                        float value)
 {
-    return fa_atomic_ring_buffer_write_many(buffer, (uint8_t*) &value, sizeof(value));
+    return fa_atomic_ring_buffer_write_many(buffer, (byte_t*) &value, sizeof(value));
 }
 
 bool fa_atomic_ring_buffer_write_double(ring_buffer_t buffer,
                                        double value)
 {
-    return fa_atomic_ring_buffer_write_many(buffer, (uint8_t*) &value, sizeof(value));
+    return fa_atomic_ring_buffer_write_many(buffer, (byte_t*) &value, sizeof(value));
 }
 
 
