@@ -530,6 +530,7 @@ void before_processing(stream_t stream)
     }
 
     stream->MERGED_SIGNAL = fa_signal_simplify(merged);
+    fa_print_ln(stream->MERGED_SIGNAL);
     // TODO optimize
     // TODO verify
 }
@@ -558,8 +559,9 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
         }
         
         step(stream->MERGED_SIGNAL, stream->state);
+        
         // TODO run inserts
-        // This one must know about all current inserts and pass the state
+        // We must know about all current inserts and pass the state
         // so that the buffers can be updated
         
         for (int c = 0; c < stream->signal_count; ++c) {
