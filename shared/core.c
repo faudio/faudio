@@ -172,21 +172,21 @@ int32_t fa_to_int32(fa_ptr_t a)
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x4 && "Wrong type, expected int32");
     int32_t v = *((int32_t *)(p & ~0x7));
-    free((int32_t *)(p & ~0x7));
+    fa_free((int32_t *)(p & ~0x7));
     return v;
 }
 
 fa_ptr_t fa_copy_int32(fa_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
-    int32_t *q = malloc(sizeof(int32_t));
+    int32_t *q = fa_malloc(sizeof(int32_t));
     *q = *((int32_t *)(p & ~0x7));
     return (fa_ptr_t)(((intptr_t) q) | 0x4);
 }
 
 fa_ptr_t fa_from_int32(int32_t a)
 {
-    int32_t *p = malloc(sizeof(int32_t));
+    int32_t *p = fa_malloc(sizeof(int32_t));
     *p = a;
     return (fa_ptr_t)((((intptr_t) p) & ~0x7) | 0x4);
 }
@@ -206,21 +206,21 @@ int64_t fa_to_int64(fa_ptr_t a)
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x3 && "Wrong type, expected int64");
     int64_t v = *((int64_t *)(p & ~0x7));
-    free((int64_t *)(p & ~0x7));
+    fa_free((int64_t *)(p & ~0x7));
     return v;
 }
 
 fa_ptr_t fa_copy_int64(fa_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
-    int64_t *q = malloc(sizeof(int64_t));
+    int64_t *q = fa_malloc(sizeof(int64_t));
     *q = *((int64_t *)(p & ~0x7));
     return (fa_ptr_t)((((intptr_t) q) & ~0x7) | 0x3);
 }
 
 fa_ptr_t fa_from_int64(int64_t a)
 {
-    int64_t *p = malloc(sizeof(int64_t));
+    int64_t *p = fa_malloc(sizeof(int64_t));
     *p = a;
     return (fa_ptr_t)((((intptr_t) p) & ~0x7) | 0x3);
 }
@@ -239,21 +239,21 @@ float fa_to_float(fa_ptr_t a)
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x2 && "Wrong type, expected float");
     float v = *((float *)(p & ~0x7));
-    free((float *)(p & ~0x7));
+    fa_free((float *)(p & ~0x7));
     return v;
 }
 
 fa_ptr_t fa_copy_float(fa_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
-    float *q = malloc(sizeof(float));
+    float *q = fa_malloc(sizeof(float));
     *q = *((float *)(p & ~0x7));
     return (fa_ptr_t)((((intptr_t) q) & ~0x7) | 0x2);
 }
 
 fa_ptr_t fa_from_float(float a)
 {
-    float *p = malloc(sizeof(float));
+    float *p = fa_malloc(sizeof(float));
     *p = a;
     return (fa_ptr_t)((((intptr_t) p) & ~0x7) | 0x2);
 }
@@ -272,21 +272,21 @@ double fa_to_double(fa_ptr_t a)
     intptr_t p = (intptr_t) a;
     assert((p & 0x7) == 0x1 && "Wrong type, expected double");
     double v = *((double *)(p & ~0x7));
-    free((double *)(p & ~0x7));
+    fa_free((double *)(p & ~0x7));
     return v;
 }
 
 fa_ptr_t fa_copy_double(fa_ptr_t a)
 {
     intptr_t p = (intptr_t) a;
-    double *q = malloc(sizeof(double));
+    double *q = fa_malloc(sizeof(double));
     *q = *((double *)(p & ~0x7));
     return (fa_ptr_t)((((intptr_t) q) & ~0x7) | 0x1);
 }
 
 fa_ptr_t fa_from_double(double a)
 {
-    double *p = malloc(sizeof(double));
+    double *p = fa_malloc(sizeof(double));
     *p = a;
     return (fa_ptr_t)((((intptr_t) p) & ~0x7) | 0x1);
 }
@@ -372,7 +372,7 @@ void fa_print(char *f, fa_ptr_t a)
         fa_string_t str = fa_string_to_string(a);
         char *cstr = fa_string_to_utf8(str);
         printf(f, cstr);
-        free(cstr);
+        fa_free(cstr);
         fa_destroy(str);
     } else {
         printf("%s", f);
@@ -383,7 +383,7 @@ void fa_puts(fa_string_t string)
 {
     char *cstr = fa_string_to_utf8(string);
     puts(cstr);
-    free(cstr);
+    fa_free(cstr);
 }
 
 void fa_dprint(char *f, fa_ptr_t a)
