@@ -59,7 +59,7 @@ size_t fa_atomic_ring_buffer_size(ring_buffer_t buffer)
     return buffer->size;
 }
 
-byte_t fa_atomic_ring_buffer_read(ring_buffer_t buffer)
+byte_t unsafe_read_byte(ring_buffer_t buffer)
 {
     byte_t x;
     if (buffer->count <= 0)
@@ -72,7 +72,7 @@ byte_t fa_atomic_ring_buffer_read(ring_buffer_t buffer)
     return x;
 }
 
-bool fa_atomic_ring_buffer_write(ring_buffer_t buffer,
+bool unsafe_write_byte(ring_buffer_t buffer,
                                  byte_t value)
 {
     if (buffer->count >= buffer->size)
@@ -85,8 +85,7 @@ bool fa_atomic_ring_buffer_write(ring_buffer_t buffer,
     return true;
 }
 
-// TODO above methods (unsafe) should be primitive
-// Also they should put check *inside* assertion
+// TODO Primitives should put check *inside* assertion
 
 // TODO more efficient versions
 // Can using memcpy + slicing or virtual memory
@@ -96,7 +95,7 @@ size_t fa_atomic_ring_buffer_read_many(byte_t* dst,
                                        size_t count)
 {             
     for (size_t i = 0; i < count; ++i) {
-        dst[i] = fa_atomic_ring_buffer_read(src);
+        dst[i] = unsafe_read_byte(src);
     }
     return count;
 }
@@ -106,11 +105,22 @@ size_t fa_atomic_ring_buffer_write_many(ring_buffer_t dst,
                                         size_t count)
 {
     for (size_t i = 0; i < count; ++i) {
-        fa_atomic_ring_buffer_write(dst, src[i]);
+        unsafe_write_byte(dst, src[i]);
     }
     return count;
 }
 
+
+byte_t fa_atomic_ring_buffer_read(ring_buffer_t buffer)
+{
+    return unsafe_read_byte(buffer);
+}
+
+bool fa_atomic_ring_buffer_write(ring_buffer_t buffer,
+                                 byte_t value)
+{
+    return unsafe_write_byte(buffer, value);
+}
 
 float fa_atomic_ring_buffer_read_float(ring_buffer_t buffer)
 {
