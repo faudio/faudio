@@ -35,7 +35,13 @@ module Fa.Atomic.RingBuffer
     destroy : RingBuffer -> Void;
 
     size : RingBuffer -> Size;  
-    read : RingBuffer -> UInt8;
-    write : (RingBuffer, UInt8) -> Bool;
+
+    read        : RingBuffer -> UInt8;
+    readFloat   : RingBuffer -> Float;
+    readDouble  : RingBuffer -> Double;
+
+    write       : (RingBuffer, UInt8) -> Bool;
+    writeFloat  : (RingBuffer, Float) -> Bool;
+    writeDouble : (RingBuffer, Double) -> Bool;
 }
 
