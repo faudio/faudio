@@ -30,4 +30,5 @@ add_tool(nrt)
 add_tool(left)
 add_tool(version)
 add_tool(stereo)
+add_tool(fifo)
 

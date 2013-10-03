@@ -709,7 +709,6 @@ EXCLUDE_PATTERNS       = */include/fa/processor \
                          */include/fa/std* \
                          */include/fa/plot* \
                          */include/fa/graph* \
-                         */include/fa/atomic/ring_buffer* \
                          */include/fa/message* \
                          */include/fa/event* \
                          */include/fa/type* \

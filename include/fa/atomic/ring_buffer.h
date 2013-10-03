@@ -43,17 +43,6 @@ typedef struct _fa_atomic_ring_buffer_t * fa_atomic_ring_buffer_t;
 fa_atomic_ring_buffer_t fa_atomic_ring_buffer_create(size_t);
 
 
-fa_atomic_ring_buffer_t fa_atomic_ring_buffer_copy(fa_atomic_ring_buffer_t);
-
-
-fa_atomic_ring_buffer_t fa_atomic_ring_buffer_resize(size_t,
-                                                     fa_atomic_ring_buffer_t);
-
-
-void fa_atomic_ring_buffer_swap(fa_atomic_ring_buffer_t,
-                                fa_atomic_ring_buffer_t);
-
-
 void fa_atomic_ring_buffer_destroy(fa_atomic_ring_buffer_t);
 
 

@@ -12,114 +12,90 @@
 #include <fa/util.h>
 
 // http://www.cs.sunysb.edu/~skiena/392/programs/queue.c
+typedef fa_atomic_ring_buffer_t ring_buffer_t;
 
 struct _fa_atomic_ring_buffer_t {
 
-    impl_t              impl;       //  Interface dispatcher
-    buffer_t            data;       //  Data buffer
-
-    atomic_t            start;
-    atomic_t            stop;
+    impl_t              impl;                   //  Interface dispatcher
+    
+    ptr_t               data;                   //  Underlying buffer
+    size_t              size;
+    size_t              first, last, count;
 };
-
-fa_ptr_t atomic_ring_buffer_impl(fa_id_t interface);
 
 
 /** Create a new ring buffer.
     @note
         O(n)
  */
-fa_atomic_ring_buffer_t fa_atomic_ring_buffer_create(size_t size)
+ring_buffer_t fa_atomic_ring_buffer_create(size_t size)
 {
     ringbuffer_t b = fa_new(atomic_ring_buffer);
 
+    fa_ptr_t atomic_ring_buffer_impl(fa_id_t interface);
     b->impl = &atomic_ring_buffer_impl;
-    b->data = fa_buffer_create(size);
 
-    b->start = fa_atomic_create();
-    b->stop  = fa_atomic_create();
-    fa_atomic_set(b->start, 0);
-    fa_atomic_set(b->stop, 0);
+    b->data = fa_malloc(size/*+1*/);    // Memory region (data..data+size) [0,1,2,3,4,5]
+    b->size = size;
+
+    b->first = 0;                   // Next read, always < size
+    b->last  = size-1;              // One before next write, always < size
+    b->count = 0;                   // Bytes written not yet read
 
     return b;
 }
 
-/** Copy the given buffer.
-    @note
-        O(n)
- */
-fa_atomic_ring_buffer_t
-fa_atomic_ring_buffer_copy(fa_atomic_ring_buffer_t buffer)
-{
-    ringbuffer_t b = fa_new(atomic_ring_buffer);
-
-    b->impl = &atomic_ring_buffer_impl;
-    b->data = fa_buffer_copy(buffer->data);
-
-    b->start = fa_atomic_create();
-    b->stop  = fa_atomic_create();
-    fa_atomic_set(b->start, fa_atomic_get(buffer->start));
-    fa_atomic_set(b->stop, fa_atomic_get(buffer->stop));
-
-    return b;
-}
-
-/** Copy the given buffer using the given size.
-    @note
-        O(n)
- */
-fa_atomic_ring_buffer_t
-fa_atomic_ring_buffer_resize(size_t  size,
-                             fa_atomic_ring_buffer_t buffer)
+ring_buffer_t
+fa_atomic_ring_buffer_resize(size_t         size,
+                             ring_buffer_t  buffer)
 {
     assert(false && "Not implemented");
 }
 
-/** Swap the contents of the given ring buffers.
-    @note
-        O(n)
- */
-void fa_atomic_ring_buffer_swap(fa_atomic_ring_buffer_t buffer,
-                                fa_atomic_ring_buffer_t buffer2)
+
+ring_buffer_t
+fa_atomic_ring_buffer_copy(ring_buffer_t buffer)
 {
     assert(false && "Not implemented");
 }
 
-/** Destroy the given ring buffer.
-    @note
-        O(n)
- */
-void fa_atomic_ring_buffer_destroy(fa_atomic_ring_buffer_t buffer)
+void fa_atomic_ring_buffer_destroy(ring_buffer_t buffer)
 {
-    assert(false && "Not implemented");
+    // fa_destroy(buffer->data);
+    fa_free(buffer->data);
+    fa_delete(buffer);
 }
 
-/** Return the size of the given ring buffer.
-    @note
-        O(n)
- */
-size_t fa_atomic_ring_buffer_size(fa_atomic_ring_buffer_t buffer)
+
+size_t fa_atomic_ring_buffer_size(ring_buffer_t buffer)
 {
-    assert(false && "Not implemented");
+    return buffer->size;
 }
 
-/** Read a value from the ring buffer.
-    @note
-        O(n)
- */
-uint8_t fa_atomic_ring_buffer_read(fa_atomic_ring_buffer_t buffer)
+uint8_t fa_atomic_ring_buffer_read(ring_buffer_t buffer)
 {
-    assert(false && "Not implemented");
+    char x;
+    if (buffer->count <= 0)
+        assert(false && "Underflow");
+    else {
+        x = ((char*) buffer->data)[buffer->first];
+        buffer->first = (buffer->first+1) % buffer->size;
+        buffer->count = buffer->count - 1;
+    }
+    return x;
 }
 
-/** Write a value to the ring buffer.
-    @note
-        O(n)
- */
-bool fa_atomic_ring_buffer_write(fa_atomic_ring_buffer_t buffer,
+bool fa_atomic_ring_buffer_write(ring_buffer_t buffer,
                                  uint8_t value)
 {
-    assert(false && "Not implemented");
+    if (buffer->count >= buffer->size)
+        assert(false && "Overflow");
+    else {
+        buffer->last = (buffer->last+1) % buffer->size;
+        ((char*) buffer->data)[buffer->last] = value;
+        buffer->count = buffer->count + 1;
+    }
+    return true;
 }
 
 
