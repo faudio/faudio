@@ -19,7 +19,7 @@ struct _fa_atomic_ring_buffer_t {
 
     impl_t              impl;                   //  Interface dispatcher
 
-    ptr_t               data;                   //  Underlying buffer
+    byte_t             *data;                   //  Underlying buffer
     size_t              size;
     size_t              first, last, count;
 };
@@ -64,7 +64,7 @@ byte_t unsafe_read_byte(ring_buffer_t buffer)
     byte_t x;
     assert((buffer->count > 0) && "Underflow");
     {
-        x = ((byte_t *) buffer->data)[buffer->first];
+        x = buffer->data[buffer->first];
         buffer->first = (buffer->first + 1) % buffer->size;
         buffer->count = buffer->count - 1;
     }
@@ -76,7 +76,7 @@ bool unsafe_write_byte(ring_buffer_t buffer,
 {
     assert((buffer->count < buffer->size) && "Overflow");
     {
-        ((byte_t *) buffer->data)[buffer->last] = value;
+        buffer->data[buffer->last] = value;
         buffer->last = (buffer->last + 1) % buffer->size;
         buffer->count = buffer->count + 1;
     }
