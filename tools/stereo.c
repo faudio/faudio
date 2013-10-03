@@ -16,15 +16,15 @@ void helper_function()
 {
     signal_t left, right;
 
-    left   = fa_signal_delay(1,         fa_signal_impulses(44100/4));
-    right  = fa_signal_delay(1+44100/8, fa_signal_impulses(44100/4));
+    left   = fa_signal_delay(1,         fa_signal_impulses(44100 / 4));
+    right  = fa_signal_delay(1 + 44100 / 8, fa_signal_impulses(44100 / 4));
     // right = fa_signal_delay(22050, fa_signal_impulses(44100));
-    
+
     {
         fa_audio_session_t s = fa_audio_begin_session();
         fa_audio_device_t i  = fa_audio_default_input(s);
         fa_audio_device_t o  = fa_audio_default_output(s);
-                                                                
+
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, list(left, right));
 
         if (fa_check(st)) {

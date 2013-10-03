@@ -18,7 +18,7 @@ typedef fa_atomic_ring_buffer_t ring_buffer_t;
 struct _fa_atomic_ring_buffer_t {
 
     impl_t              impl;                   //  Interface dispatcher
-    
+
     ptr_t               data;                   //  Underlying buffer
     size_t              size;
     size_t              first, last, count;
@@ -64,20 +64,20 @@ byte_t unsafe_read_byte(ring_buffer_t buffer)
     byte_t x;
     assert((buffer->count > 0) && "Underflow");
     {
-        x = ((byte_t*) buffer->data)[buffer->first];
-        buffer->first = (buffer->first+1) % buffer->size;
+        x = ((byte_t *) buffer->data)[buffer->first];
+        buffer->first = (buffer->first + 1) % buffer->size;
         buffer->count = buffer->count - 1;
     }
     return x;
 }
 
 bool unsafe_write_byte(ring_buffer_t buffer,
-                                 byte_t value)
+                       byte_t value)
 {
     assert((buffer->count < buffer->size) && "Overflow");
     {
-        ((byte_t*) buffer->data)[buffer->last] = value;
-        buffer->last = (buffer->last+1) % buffer->size;
+        ((byte_t *) buffer->data)[buffer->last] = value;
+        buffer->last = (buffer->last + 1) % buffer->size;
         buffer->count = buffer->count + 1;
     }
     return true;
@@ -86,23 +86,25 @@ bool unsafe_write_byte(ring_buffer_t buffer,
 // TODO more efficient versions
 // Can using memcpy + slicing or virtual memory
 
-size_t fa_atomic_ring_buffer_read_many(byte_t* dst,
+size_t fa_atomic_ring_buffer_read_many(byte_t *dst,
                                        ring_buffer_t src,
                                        size_t count)
-{             
+{
     for (size_t i = 0; i < count; ++i) {
         dst[i] = unsafe_read_byte(src);
     }
+
     return count;
 }
 
 size_t fa_atomic_ring_buffer_write_many(ring_buffer_t dst,
-                                        byte_t* src,
+                                        byte_t *src,
                                         size_t count)
 {
     for (size_t i = 0; i < count; ++i) {
         unsafe_write_byte(dst, src[i]);
     }
+
     return count;
 }
 
@@ -121,7 +123,7 @@ bool fa_atomic_ring_buffer_write(ring_buffer_t buffer,
 float fa_atomic_ring_buffer_read_float(ring_buffer_t buffer)
 {
     float x;
-    fa_atomic_ring_buffer_read_many((byte_t*) &x, buffer, sizeof(x));
+    fa_atomic_ring_buffer_read_many((byte_t *) &x, buffer, sizeof(x));
     return x;
 }
 
@@ -129,7 +131,7 @@ float fa_atomic_ring_buffer_read_float(ring_buffer_t buffer)
 double fa_atomic_ring_buffer_read_double(ring_buffer_t  buffer)
 {
     double x;
-    fa_atomic_ring_buffer_read_many((byte_t*) &x, buffer, sizeof(x));
+    fa_atomic_ring_buffer_read_many((byte_t *) &x, buffer, sizeof(x));
     return x;
 }
 
@@ -137,13 +139,13 @@ double fa_atomic_ring_buffer_read_double(ring_buffer_t  buffer)
 bool fa_atomic_ring_buffer_write_float(ring_buffer_t buffer,
                                        float value)
 {
-    return fa_atomic_ring_buffer_write_many(buffer, (byte_t*) &value, sizeof(value));
+    return fa_atomic_ring_buffer_write_many(buffer, (byte_t *) &value, sizeof(value));
 }
 
 bool fa_atomic_ring_buffer_write_double(ring_buffer_t buffer,
-                                       double value)
+                                        double value)
 {
-    return fa_atomic_ring_buffer_write_many(buffer, (byte_t*) &value, sizeof(value));
+    return fa_atomic_ring_buffer_write_many(buffer, (byte_t *) &value, sizeof(value));
 }
 
 

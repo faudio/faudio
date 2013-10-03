@@ -402,7 +402,7 @@ stream_t fa_audio_open_stream(device_t input,
     stream_t        stream      = new_stream(input, output, sample_rate, buffer_size);
 
     // TODO number of inputs
-    list_t all_inputs = list(fa_signal_input(kInputOffset+0), fa_signal_input(kInputOffset+1));
+    list_t all_inputs = list(fa_signal_input(kInputOffset + 0), fa_signal_input(kInputOffset + 1));
 
     list_t all_signals = all_inputs;
 
@@ -524,8 +524,9 @@ void before_processing(stream_t stream)
     stream->state      = new_state();
 
     signal_t merged = fa_signal_constant(0);
+
     for (int c = 0; c < stream->signal_count; ++c) {
-        signal_t withOutput = fa_signal_output(0, kOutputOffset+c, stream->signals[c]);
+        signal_t withOutput = fa_signal_output(0, kOutputOffset + c, stream->signals[c]);
         merged = fa_signal_former(merged, withOutput); // Could use any combinator here
     }
 
@@ -555,17 +556,17 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
         run_actions(stream->controls, stream->state);
 
         for (int c = 0; c < stream->signal_count; ++c) {
-            stream->state->VALS[c+kInputOffset] = input[c][i];
+            stream->state->VALS[c + kInputOffset] = input[c][i];
         }
-        
+
         step(stream->MERGED_SIGNAL, stream->state);
-        
+
         // TODO run inserts
         // We must know about all current inserts and pass the state
         // so that the buffers can be updated
-        
+
         for (int c = 0; c < stream->signal_count; ++c) {
-            output[c][i] = stream->state->VALS[c+kOutputOffset];
+            output[c][i] = stream->state->VALS[c + kOutputOffset];
         }
 
         inc_state(stream->state);

@@ -78,7 +78,7 @@ struct _fa_signal_t {
             int             output;
             signal_t        a;
         }                   insert;
-        
+
         struct {
             int             c;
         }                   input;
@@ -509,12 +509,12 @@ void run_part_neg(struct part *p, int *r, struct part *p2)
 
 
 // TODO
-int get_buffer_range(part_t *part, 
-                     part_t *newPart, 
-                     string_t name, 
-                     int is, 
+int get_buffer_range(part_t *part,
+                     part_t *newPart,
+                     string_t name,
+                     int is,
                      int os)
-{            
+{
     newPart->o = part->o;
     newPart->d = part->d;
     return 16;
@@ -569,14 +569,14 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
             part_t part1;
             int index = get_buffer_range(part, &part1, name, numInputs, numOutputs);
 
-            signal_t inputS     = fa_signal_input(index+output);
-            signal_t outputS    = fa_signal_output(1, index+input, simplify(&part1, a));
-            
+            signal_t inputS     = fa_signal_input(index + output);
+            signal_t outputS    = fa_signal_output(1, index + input, simplify(&part1, a));
+
             return fa_signal_former(inputS, outputS);
         } else {
             part_t part1; // Not used
             int index = get_buffer_range(part, &part1, name, numInputs, numOutputs);
-            return fa_signal_input(index+output);
+            return fa_signal_input(index + output);
         }
     }
 
@@ -747,7 +747,8 @@ void write_bus(int n, int c, double x, state_t state)
 //----------
 
 // inline static
-void run_action(action_t action, state_t state) {
+void run_action(action_t action, state_t state)
+{
     if (fa_action_is_set(action)) {
         int ch = fa_action_set_channel(action);
         double v = fa_action_set_value(action);
@@ -930,7 +931,7 @@ fa_signal_t fa_signal_impulse()
 /*
     (defun signal-counter ()
       (- (signal-loop* (lambda (x) (+ x 1))) 1))
-    
+
 */
 inline static signal_t _fix_counter(ptr_t _, signal_t x)
 {
