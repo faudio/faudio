@@ -62,9 +62,8 @@ size_t fa_atomic_ring_buffer_size(ring_buffer_t buffer)
 byte_t unsafe_read_byte(ring_buffer_t buffer)
 {
     byte_t x;
-    if (buffer->count <= 0)
-        assert(false && "Underflow");
-    else {
+    assert((buffer->count > 0) && "Underflow");
+    {
         x = ((byte_t*) buffer->data)[buffer->first];
         buffer->first = (buffer->first+1) % buffer->size;
         buffer->count = buffer->count - 1;
@@ -75,9 +74,8 @@ byte_t unsafe_read_byte(ring_buffer_t buffer)
 bool unsafe_write_byte(ring_buffer_t buffer,
                                  byte_t value)
 {
-    if (buffer->count >= buffer->size)
-        assert(false && "Overflow");
-    else {
+    assert((buffer->count < buffer->size) && "Overflow");
+    {
         ((byte_t*) buffer->data)[buffer->last] = value;
         buffer->last = (buffer->last+1) % buffer->size;
         buffer->count = buffer->count + 1;
