@@ -83,8 +83,6 @@ bool unsafe_write_byte(ring_buffer_t buffer,
     return true;
 }
 
-// TODO Primitives should put check *inside* assertion
-
 // TODO more efficient versions
 // Can using memcpy + slicing or virtual memory
 
