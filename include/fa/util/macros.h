@@ -110,7 +110,10 @@
 #define no_default() default: assert(false && "Missing label")
 
 
-
+#define push_list(x, xs) \
+    xs = fa_list_cons(x, xs)
+#define dpush_list(x, xs) \
+    xs = fa_list_dcons(x, xs)
 
 #define write_to(s, t) \
     s = fa_string_append(s, t)
