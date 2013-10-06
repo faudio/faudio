@@ -635,7 +635,7 @@ typedef struct {
     int         count;      // Number of processed samples
     double      rate;       // Sample rate
 
-    // nullary_t fs;
+    // binary_t  fs;
     // nullary_t ds;
     // ptr_t     ps;
 
