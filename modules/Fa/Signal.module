@@ -132,7 +132,7 @@ module Fa.Signal
     /** Add a custom processor to be executed with the given signal.
         You probably do not want to do this.
      */
-    addCustomProcessor : (CustomProcessor*, Signal) -> Signal;
+    custom      : (CustomProcessor*, Signal) -> Signal;
 
     /** The primitive input signal, reading from the bus of the given number.
      */

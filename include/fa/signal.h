@@ -162,8 +162,8 @@ typedef struct {
 /** Add a custom processor to be executed with the given signal.
     You probably do not want to do this.
 */
-fa_signal_t fa_signal_add_custom_processor(fa_signal_custom_processor_t *,
-                                           fa_signal_t);
+fa_signal_t fa_signal_custom(fa_signal_custom_processor_t *,
+                             fa_signal_t);
 
 /** The primitive input signal, reading from the bus of the given number.
 */

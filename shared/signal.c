@@ -33,6 +33,7 @@ struct _fa_signal_t {
         loop_signal,
         delay_signal,
         insert_signal,
+        custom_signal,
         input_signal,
         output_signal
     }                       tag;
@@ -79,6 +80,11 @@ struct _fa_signal_t {
             int             output;
             signal_t        a;
         }                   insert;
+        
+        struct {
+            custom_proc_t   proc;
+            signal_t        a;
+        }                   custom;
 
         struct {
             int             c;
@@ -117,6 +123,7 @@ inline static void delete_signal(signal_t signal)
 #define is_delay(v)         (v->tag == delay_signal)
 #define is_loop(v)          (v->tag == loop_signal)
 #define is_insert(v)        (v->tag == insert_signal)
+#define is_custom(v)        (v->tag == custom_signal)
 #define is_input(v)         (v->tag == input_signal)
 #define is_output(v)        (v->tag == output_signal)
 
@@ -128,6 +135,7 @@ inline static void delete_signal(signal_t signal)
 #define loop_get(v,f)       v->fields.loop.f
 #define delay_get(v,f)      v->fields.delay.f
 #define insert_get(v,f)     v->fields.insert.f
+#define custom_get(v,f)     v->fields.custom.f
 #define input_get(v,f)      v->fields.input.f
 #define output_get(v,f)     v->fields.output.f
 
@@ -213,6 +221,13 @@ fa_signal_t fa_signal_insert(string_t name, int numInputs, int numOutputs, int i
     return signal;
 }
 
+fa_signal_t fa_signal_custom(custom_proc_t proc, signal_t a)
+{
+    signal_t signal = new_signal(custom_signal);
+    custom_get(signal, proc)        = proc;
+    custom_get(signal, a)           = a;
+    return signal;
+}
 
 fa_signal_t fa_signal_input(int c)
 {
@@ -287,6 +302,15 @@ fa_signal_t copy_insert(signal_t signal2)
     return signal;
 }
 
+fa_signal_t copy_custom(signal_t signal2)
+{
+    signal_t signal = new_signal(custom_signal);
+    custom_get(signal, proc)        = custom_get(signal2, proc);
+    custom_get(signal, a)           = custom_get(signal2, a);
+    return signal;
+}
+
+
 signal_t copy_input(signal_t signal2)
 {
     signal_t signal = new_signal(input_signal);
@@ -329,6 +353,9 @@ fa_signal_t fa_signal_copy(fa_signal_t signal)
 
     case insert_signal:
         return copy_insert(signal);
+
+    case custom_signal:
+        return copy_custom(signal);
 
     case input_signal:
         return copy_input(signal);
@@ -581,6 +608,12 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
         }
     }
 
+    case custom_signal: {
+        signal_t a              = simplify(part, custom_get(signal2, a));
+        // TODO gather proc
+        return a;
+    }
+
     case lift_signal: {
         string_t    name        = lift_get(signal2, name);
         dunary_t    func        = lift_get(signal2, function);
@@ -629,6 +662,8 @@ fa_signal_t fa_signal_simplify(fa_signal_t signal2)
 // --------------------------------------------------------------------------------
 // Running
 
+#define kMaxCustomProcs 10
+
 typedef struct {
     double     *inputs;                 // Current input values (TODO should not be called inputs as they are also outputs...)
     double     *buses;                  // Current and future bus values
@@ -637,7 +672,7 @@ typedef struct {
     double      rate;                   // Sample rate
 
     int           custom_proc_count;
-    custom_proc_t *custom_procs;        // Array of custom processors
+    custom_proc_t custom_procs[kMaxCustomProcs];      // Array of custom processors
 
 }  _state_t;
 typedef _state_t *state_t;
@@ -662,9 +697,14 @@ state_t new_state()
     state->rate               = kRate;
 
     state->custom_proc_count  = 0;
-    state->custom_procs       = NULL;
     
     return state;
+}
+
+void add_custom_proc(custom_proc_t proc, state_t state)
+{
+    assert(state->custom_proc_count < kMaxCustomProcs && "Too many custom processors");
+    state->custom_procs[state->custom_proc_count++] = proc;
 }
 
 void delete_state(state_t state)
