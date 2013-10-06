@@ -254,7 +254,7 @@ fa_signal_t fa_signal_divide(fa_signal_t, fa_signal_t);
 fa_signal_t fa_signal_modulo(fa_signal_t, fa_signal_t);
 
 
-fa_signal_t fa_signal_absolute(fa_signal_t, fa_signal_t);
+fa_signal_t fa_signal_absolute(fa_signal_t);
 
 
 fa_signal_t fa_signal_not();
@@ -332,10 +332,7 @@ fa_signal_t fa_signal_log10(fa_signal_t);
 fa_signal_t fa_signal_pow(fa_signal_t, fa_signal_t);
 
 
-fa_signal_t fa_signal_sqrt(fa_signal_t, fa_signal_t);
-
-
-fa_signal_t fa_signal_abs(fa_signal_t, fa_signal_t);
+fa_signal_t fa_signal_sqrt(fa_signal_t);
 
 
 fa_signal_t fa_signal_min(fa_signal_t, fa_signal_t);

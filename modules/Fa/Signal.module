@@ -216,7 +216,7 @@ module Fa.Signal
     power               : (Signal, Signal) -> Signal;
     divide              : (Signal, Signal) -> Signal;
     modulo              : (Signal, Signal) -> Signal;
-    absolute            : (Signal, Signal) -> Signal;
+    absolute            : Signal           -> Signal;
     
     not                 : () -> Signal;
     and                 : (Signal, Signal) -> Signal;
@@ -246,8 +246,7 @@ module Fa.Signal
     log10               : (Signal) -> Signal;
 
     pow                 : (Signal, Signal) -> Signal;
-    sqrt                : (Signal, Signal) -> Signal;
-    abs                 : (Signal, Signal) -> Signal;
+    sqrt                : Signal           -> Signal;
     min                 : (Signal, Signal) -> Signal;
     max                 : (Signal, Signal) -> Signal;
     fmod                : (Signal, Signal) -> Signal;
