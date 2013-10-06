@@ -77,11 +77,19 @@ void instance_send_midi(AudioComponentInstance instance, int status, int data1, 
 
 
 
-// TODO localize
-AudioUnitRenderActionFlags  gRenderFlags;
-int                         gBusNumber;
-AudioTimeStamp              gTimeStamp;
-AudioBufferList*            gBufferList;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 struct au_context {
     AudioComponentInstance      Instance;
@@ -161,12 +169,12 @@ void instance_prepare(au_context_t context)
     AudioUnitReset(instance, kAudioUnitScope_Input, 0);
     AudioUnitReset(instance, kAudioUnitScope_Output, 0);
     
-    gRenderFlags = 0;
-    gBusNumber   = 0;                              
+    context->RenderFlags = 0;
+    context->BusNumber   = 0;                              
     
-    init_audio_time_stamp(&gTimeStamp, sampleTime / sampleRate);
+    init_audio_time_stamp(&context->TimeStamp, sampleTime / sampleRate);
     
-    gBufferList  = create_buffer_list(numberOfChannels, 1, numberOfFrames);
+    context->BufferList  = create_buffer_list(numberOfChannels, 1, numberOfFrames);
     // TODO different number of buses ?
     
     
@@ -185,9 +193,9 @@ void instance_process(au_context_t context, double* output)
     int     numberOfChannels = 2;
     int     numberOfFrames   = 44100; // TODO
     
-    gTimeStamp.mSampleTime = sampleTime;
+    context->TimeStamp.mSampleTime = sampleTime;
     
-    if ((err = AudioUnitRender (instance, &gRenderFlags, &gTimeStamp, gBusNumber, numberOfFrames, gBufferList))) 
+    if ((err = AudioUnitRender (instance, &context->RenderFlags, &context->TimeStamp, context->BusNumber, numberOfFrames, context->BufferList))) 
     {
         fa_print_ln(from_os_status(err));
         assert(false && "Could not render");
@@ -195,10 +203,10 @@ void instance_process(au_context_t context, double* output)
     
     for(int channel = 0; channel < numberOfChannels; ++channel)
     {
-        // TODO assert (channel < gBufferList->mNumberBuffers)
-        // TODO assert (frame < gBufferList->mDataByteSize / sizeof(Float32))
+        // TODO assert (channel < context->BufferList->mNumberBuffers)
+        // TODO assert (frame < context->BufferList->mDataByteSize / sizeof(Float32))
         
-        Float32* buffer = (Float32*) gBufferList->mBuffers[channel].mData;
+        Float32* buffer = (Float32*) context->BufferList->mBuffers[channel].mData;
     
         for(int frame = 0; frame < numberOfFrames; ++frame)
         {          
@@ -225,7 +233,7 @@ void instance_cleanup(au_context_t context)
     AudioUnitReset(instance, kAudioUnitScope_Input, 0);
     AudioUnitReset(instance, kAudioUnitScope_Output, 0);
     
-    freeBufferList(gBufferList);
+    freeBufferList(context->BufferList);
 }
 
 
