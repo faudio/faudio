@@ -31,7 +31,7 @@ ptr_t render_(ptr_t x, fa_signal_state_t *state) {
 }
 ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
-    printf("Received %s!\n", unstring(fa_string_show(msg)));
+    printf("Received %s : %s!\n", unstring(n), unstring(fa_string_show(msg)));
     return x;
 }
 
@@ -75,7 +75,15 @@ void helper_function()
         fa_destroy(st);
         fa_destroy(s);
     } else {
-        fa_signal_run_file(44100*10, list(), r, string("test.wav"));
+        fa_signal_run_file(44100*10, list(
+            pair(hms(0,0,0), fa_action_send(string("DLS"), list(i32(1),i32(2),i32(3),string("hans")))),
+            pair(hms(0,0,0), fa_action_send(string("DLS"), list(i32(1),i32(2),i32(3),string("hans")))),
+            pair(hms(0,0,0), fa_action_send(string("DLS"), list(i32(1),i32(2),i32(3),string("hans")))),
+            pair(hms(0,0,0), fa_action_send(string("DLS"), list(i32(1),i32(2),i32(3),string("hans"))))
+            
+            ), 
+            r, 
+            string("test.wav"));
     }
 }
 

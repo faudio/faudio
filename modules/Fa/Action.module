@@ -27,14 +27,20 @@ module Fa.Action
 
     set : (Channel, Double) -> Action;
     accum : (Channel, UnaryDouble, Ptr) -> Action;
-
-    load : (Name, Params) -> Action;
     send : (Name, Value) -> Action;
-
 
     isSet : Action -> Bool;
     setChannel : Action -> Channel;
     setValue : Action -> Double;
+
+    isAccum : Action -> Bool;
+    accumChannel : Action -> Channel;
+    accumFunction : Action -> UnaryDouble;
+    accumData : Action -> Ptr;
+
+    isSend : Action -> Bool;
+    sendName : Action -> Name;
+    sendValue : Action -> Value;
 
     copy : Action -> Action;
     destroy : Action -> Void;

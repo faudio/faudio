@@ -838,14 +838,13 @@ void run_action(action_t action, state_t state)
         write_samp(0, ch, v, state);
     }
     
-    if (false/*action_is_send*/) {
+    if (fa_action_is_send(action)) {
         for (int i = 0; i < state->custom_proc_count; ++i) {
-            custom_proc_t proc = state->custom_procs[state->custom_proc_count];
+            custom_proc_t proc = state->custom_procs[i];
             mark_used(proc);
 
-            string_t name = NULL;
-            ptr_t value = NULL;
-            // TODO
+            string_t name = fa_action_send_name(action);
+            ptr_t value = fa_action_send_value(action);
             proc->receive(proc->data, name, value);
         }
     }

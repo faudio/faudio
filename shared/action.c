@@ -82,7 +82,7 @@ fa_action_t fa_action_accum(channel_t       channel,
                             unary_double_t  function,
                             fa_ptr_t        data)
 {
-    action_t action = new_action(set_action);
+    action_t action = new_action(accum_action);
     accum_get(action, channel)  = channel;
     accum_get(action, function) = function;
     accum_get(action, data)     = data;
@@ -92,7 +92,7 @@ fa_action_t fa_action_accum(channel_t       channel,
 
 fa_action_t fa_action_send(fa_action_name_t name, fa_ptr_t value)
 {
-    action_t action = new_action(set_action);
+    action_t action = new_action(send_action);
     send_get(action, name)  = name;
     send_get(action, value) = value;
     return action;
@@ -134,6 +134,53 @@ double fa_action_set_value(fa_action_t action)
     assert(is_set(action) && "Not a set action");
     return set_get(action, value);
 }
+
+
+
+bool fa_action_is_accum(fa_action_t action)
+{
+    return is_accum(action);
+}
+
+fa_action_channel_t fa_action_accum_channel(fa_action_t action)
+{
+    assert(is_accum(action) && "Not an accum action");
+    return accum_get(action, channel);
+}
+
+fa_signal_unary_double_t fa_action_accum_function(fa_action_t action)
+{
+    assert(is_accum(action) && "Not an accum action");
+    return accum_get(action, function);
+}
+
+fa_ptr_t fa_action_accum_data(fa_action_t action)
+{
+    assert(is_accum(action) && "Not an accum action");
+    return accum_get(action, data);
+}
+
+
+
+bool fa_action_is_send(fa_action_t action)
+{
+    return is_send(action);
+}
+
+fa_action_name_t fa_action_send_name(fa_action_t action)
+{
+    assert(is_send(action) && "Not a send action");
+    return send_get(action, name);
+}
+
+fa_action_value_t fa_action_send_value(fa_action_t action)
+{
+    assert(is_send(action) && "Not a send action");
+    return send_get(action, value);
+}
+
+
+
 
 
 // --------------------------------------------------------------------------------

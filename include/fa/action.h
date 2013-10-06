@@ -51,9 +51,6 @@ fa_action_t fa_action_accum(fa_action_channel_t,
                             fa_ptr_t);
 
 
-fa_action_t fa_action_load(fa_action_name_t, fa_action_params_t);
-
-
 fa_action_t fa_action_send(fa_action_name_t, fa_action_value_t);
 
 
@@ -64,6 +61,27 @@ fa_action_channel_t fa_action_set_channel(fa_action_t);
 
 
 double fa_action_set_value(fa_action_t);
+
+
+bool fa_action_is_accum(fa_action_t);
+
+
+fa_action_channel_t fa_action_accum_channel(fa_action_t);
+
+
+fa_signal_unary_double_t fa_action_accum_function(fa_action_t);
+
+
+fa_ptr_t fa_action_accum_data(fa_action_t);
+
+
+bool fa_action_is_send(fa_action_t);
+
+
+fa_action_name_t fa_action_send_name(fa_action_t);
+
+
+fa_action_value_t fa_action_send_value(fa_action_t);
 
 
 fa_action_t fa_action_copy(fa_action_t);
