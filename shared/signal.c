@@ -635,8 +635,9 @@ typedef struct {
     int         count;      // Number of processed samples
     double      rate;       // Sample rate
 
-    // binary_t  fs;
-    // nullary_t ds;
+    // binary_t  fs;        // Called before first rendering
+    // binary_t  fs;        // Called before each rendering
+    // binary_t  fs;        // Called after last rendering
     // ptr_t     ps;
 
 }  _state_t;
@@ -858,11 +859,15 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
     // TODO verify
 
     // TODO progress monitor
+
+    // TODO custom prepare
     for (int i = 0; i < n; ++ i) {
         run_actions(controls2, state);
+        // TODO custom process
         output[i] = step(a2, state);
         inc_state(state);
     }
+    // TODO custom post
 
     delete_state(state);
 }

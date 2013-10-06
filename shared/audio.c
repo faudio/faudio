@@ -555,10 +555,13 @@ void before_processing(stream_t stream)
     fa_print_ln(stream->MERGED_SIGNAL);
     // TODO optimize
     // TODO verify
+
+    // TODO custom prepare
 }
 
 void after_processing(stream_t stream)
 {
+    // TODO custom post
     delete_state(stream->state);
 }
 
@@ -575,6 +578,7 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
         // Note: This could be done outside sample loop
         //       which would be faster but less exact
         run_actions(stream->controls, stream->state);
+        // TODO custom process
 
         for (int c = 0; c < stream->signal_count; ++c) {
             stream->state->VALS[c + kInputOffset] = input[c][i];
