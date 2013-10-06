@@ -263,7 +263,15 @@ list_t find_dls_music_device()
     // AudioComponent dls = AudioComponentFindNext(component, &desc);
 }
 
-
+ptr_t new_dls_music_device_instance()
+{
+    list_t components = find_dls_music_device();
+    assert(fa_list_is_single(components) && "Missing or ambigous DLSMusicDevice");
+    ptr_t dls = fa_list_head(components);
+    ptr_t instance = NULL;
+    AudioComponentInstanceNew(dls, (AudioComponentInstance*) &instance);
+    return instance;
+}
 
 
 /*
@@ -273,11 +281,7 @@ list_t find_dls_music_device()
 
 void run_dsl()
 {                  
-    list_t components = find_dls_music_device();
-    assert(fa_list_is_single(components) && "Missing or ambigous DLSMusicDevice");
-    ptr_t dls = fa_list_head(components);
-    ptr_t instance = NULL;
-    AudioComponentInstanceNew(dls, (AudioComponentInstance*) &instance);
+    ptr_t instance = new_dls_music_device_instance();
 
     // Render to channels * 44100 samples
     buffer_t outb = fa_buffer_create(2*44100*sizeof(double));
@@ -286,7 +290,7 @@ void run_dsl()
     
     instance_prepare(instance);
 
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 1; ++i) {
         instance_send_midi(instance, 0x90, 60+i*3, 90);
     }
     instance_process(instance, out);
