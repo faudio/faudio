@@ -1,8 +1,8 @@
 
 # Uses EXTS, APPLE and MSYS + options and MAIN_LIBRARY
 
-function(add_tool name)
-  add_executable(${name} ${SRCS_ALL} "${name}.c")
+function(add_tool2 name extension)
+  add_executable(${name} ${SRCS_ALL} "${name}.${extension}")
   set_target_properties(${name} PROPERTIES 
     OUTPUT_NAME                 "fa_${name}"
     RUNTIME_OUTPUT_DIRECTORY    "../bin"
@@ -14,6 +14,9 @@ function(add_tool name)
   endif()
 endfunction()
 
+function(add_tool name)
+  add_tool2(${name} c)
+endfunction()
 
 add_tool(list_audio)
 add_tool(list_midi)
@@ -32,4 +35,5 @@ add_tool(version)
 add_tool(stereo)
 add_tool(fifo)
 add_tool(test_fs)
+add_tool2(test_dls m)
 
