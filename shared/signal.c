@@ -549,7 +549,7 @@ int get_buffer_range(part_t *part,
 }
 
 // inline static
-fa_signal_t simplify(part_t *part, fa_signal_t signal2)
+fa_signal_t simplify(part_t *part, list_t *procs, fa_signal_t signal2)
 {
     switch (signal2->tag) {
 
@@ -563,7 +563,7 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
         run_part_neg(part, &channel, &part1);
 
         signal_t input          = fa_signal_input(channel);
-        signal_t res            = simplify(&part1, fix(fix_data, input));
+        signal_t res            = simplify(&part1, procs, fix(fix_data, input));
 
         return fa_signal_output(1, channel, res);
     }
@@ -578,7 +578,7 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
         run_part_neg(part, &channel, &part1);
 
         signal_t input          = fa_signal_input(channel);
-        signal_t output         = fa_signal_output(samples, channel, simplify(&part1, a));
+        signal_t output         = fa_signal_output(samples, channel, simplify(&part1, procs, a));
 
         return fa_signal_former(input, output);
     }
@@ -598,7 +598,7 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
             int index = get_buffer_range(part, &part1, name, numInputs, numOutputs);
 
             signal_t inputS     = fa_signal_input(index + output);
-            signal_t outputS    = fa_signal_output(1, index + input, simplify(&part1, a));
+            signal_t outputS    = fa_signal_output(1, index + input, simplify(&part1, procs, a));
 
             return fa_signal_former(inputS, outputS);
         } else {
@@ -609,8 +609,11 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
     }
 
     case custom_signal: {
-        signal_t a              = simplify(part, custom_get(signal2, a));
-        // TODO gather proc
+        signal_t a              = simplify(part, procs, custom_get(signal2, a));
+
+        custom_proc_t proc = custom_get(signal2, proc);
+        // Push to processor list
+        *procs = fa_list_dcons(proc, *procs);
         return a;
     }
 
@@ -619,7 +622,7 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
         dunary_t    func        = lift_get(signal2, function);
         ptr_t       func_data   = lift_get(signal2, data);
 
-        signal_t a              = simplify(part, lift_get(signal2, a));
+        signal_t a              = simplify(part, procs, lift_get(signal2, a));
         return fa_signal_lift(name, func, func_data, a);
     }
 
@@ -633,8 +636,8 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
         // Split the channel partition
         split_part(part, &part1, &part2);
 
-        signal_t a              = simplify(&part1, lift2_get(signal2, a));
-        signal_t b              = simplify(&part2, lift2_get(signal2, b));
+        signal_t a              = simplify(&part1, procs, lift2_get(signal2, a));
+        signal_t b              = simplify(&part2, procs, lift2_get(signal2, b));
 
         return fa_signal_lift2(name, func, func_data, a, b);
     }
@@ -643,7 +646,7 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
         int samples             = output_get(signal2, n);
         int channel             = output_get(signal2, c);
 
-        signal_t a              = simplify(part, output_get(signal2, a));
+        signal_t a              = simplify(part, procs, output_get(signal2, a));
 
         return fa_signal_output(samples, channel, a);
     }
@@ -654,9 +657,19 @@ fa_signal_t simplify(part_t *part, fa_signal_t signal2)
 }
 fa_signal_t fa_signal_simplify(fa_signal_t signal2)
 {
-    part_t p;
-    init_part(&p);
-    return simplify(&p, signal2);
+    part_t part;
+    init_part(&part);
+    list_t procs = list();
+    return simplify(&part, &procs, signal2);
+}
+
+list_t fa_signal_get_procs(fa_signal_t signal2)
+{
+    part_t part;
+    init_part(&part);
+    list_t procs = list();
+    simplify(&part, &procs, signal2);
+    return procs;
 }
 
 // --------------------------------------------------------------------------------
@@ -704,7 +717,8 @@ state_t new_state()
 void add_custom_proc(custom_proc_t proc, state_t state)
 {
     assert(state->custom_proc_count < kMaxCustomProcs && "Too many custom processors");
-    state->custom_procs[state->custom_proc_count++] = proc;
+    state->custom_procs[state->custom_proc_count] = proc;
+    state->custom_proc_count++;
 }
 
 void delete_state(state_t state)
@@ -795,7 +809,9 @@ void write_bus(int n, int c, double x, state_t state)
 void run_custom_procs(int when, state_t state)
 {             
     for (int i = 0; i < state->custom_proc_count; ++i) {
-        custom_proc_t proc = state->custom_procs[state->custom_proc_count];
+
+        custom_proc_t proc = state->custom_procs[i];
+        // printf("Running custom proc %p!\n", proc);
         
         switch(when) {
             case 0:
@@ -930,6 +946,9 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
     }
 
     state_t state = new_state();
+    fa_for_each(x, fa_signal_get_procs(a)) {
+        add_custom_proc(x, state);
+    }
     signal_t a2 = fa_signal_simplify(a);
     // TODO optimize
     // TODO verify

@@ -36,6 +36,7 @@ typedef fa_audio_session_t          session_t;
 typedef fa_audio_stream_callback_t  stream_callback_t;
 typedef fa_audio_session_callback_t session_callback_t;
 typedef fa_audio_status_callback_t  status_callback_t;
+typedef fa_signal_custom_processor_t   *custom_proc_t;
 
 typedef PaDeviceIndex native_index_t;
 typedef PaStream     *native_stream_t;
@@ -48,7 +49,9 @@ struct _state_t {
     // ...
 };
 typedef struct _state_t *state_t;
+list_t fa_signal_get_procs(fa_signal_t signal2);
 state_t new_state();
+void add_custom_proc(custom_proc_t proc, state_t state);
 void delete_state(state_t state);
 void inc_state(state_t state);
 void run_actions(priority_queue_t controls2, state_t state);
@@ -552,6 +555,10 @@ void before_processing(stream_t stream)
         merged = fa_signal_former(merged, withOutput); // Could use any combinator here
     }
 
+    fa_for_each(x, fa_signal_get_procs(merged)) {
+        // printf("Adding custom proc %p!\n", x);
+        add_custom_proc(x, stream->state);
+    }
     stream->MERGED_SIGNAL = fa_signal_simplify(merged);
     fa_print_ln(stream->MERGED_SIGNAL);
     // TODO optimize
