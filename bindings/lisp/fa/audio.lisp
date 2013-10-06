@@ -20,6 +20,7 @@
 (defcfun (audio-begin-session "fa_audio_begin_session") audio-session)
 (defcfun (audio-end-session "fa_audio_end_session") :void (a audio-session))
 (defcfun (audio-with-session "fa_audio_with_session") :void (a audio-session-callback) (b ptr) (c error-callback) (d ptr))
+(defcfun (audio-current-sessions "fa_audio_current_sessions") list)
 (defcfun (audio-all "fa_audio_all") list (a audio-session))
 (defcfun (audio-default "fa_audio_default") pair (a audio-session))
 (defcfun (audio-default-input "fa_audio_default_input") audio-device (a audio-session))

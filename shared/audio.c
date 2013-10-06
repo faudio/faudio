@@ -99,8 +99,9 @@ struct _fa_audio_stream_t {
     priority_queue_t    controls;           // Scheduled controls (Time, (Channel, Ptr))
 };
 
-static mutex_t pa_mutex;
-static bool    pa_status;
+static mutex_t   pa_mutex;
+static bool      pa_status;
+static session_t last_session;
 
 error_t audio_device_error(string_t msg);
 error_t audio_device_error_with(string_t msg, int error);
@@ -228,8 +229,9 @@ inline static void delete_stream(stream_t stream)
 
 void fa_audio_initialize()
 {
-    pa_mutex  = fa_thread_create_mutex();
-    pa_status = false;
+    pa_mutex        = fa_thread_create_mutex();
+    pa_status       = false;
+    last_session    = NULL;
 }
 
 void fa_audio_terminate()
@@ -260,6 +262,7 @@ session_t fa_audio_begin_session()
             session_t session = new_session();
             session_init_devices(session);
             // session->acquired = time(NULL);      // TODO
+            last_session = session;
             return session;
         }
     }
@@ -300,6 +303,15 @@ void fa_audio_with_session(
     }
 
     fa_audio_end_session(session);
+}
+
+fa_list_t fa_audio_current_sessions()
+{
+    if (!last_session) {
+        return list();
+    } else {
+        return list(last_session);
+    }
 }
 
 fa_list_t fa_audio_all(session_t session)

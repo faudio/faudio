@@ -70,6 +70,15 @@ module Fa.Audio
         SessionCallback, Ptr,
         Callback, Ptr) -> Void;
 
+
+    /** Get all currently active audio sessions. Note that at most one audio session
+        can be active at the same time, so this function returns a list of zero or
+        one elements.
+        
+        @returns A list of @ref fa_audio_session_t.
+     */
+    currentSessions : () -> List;
+
     /** Get all active audio devices of the given session.
 
         @param session   The session.

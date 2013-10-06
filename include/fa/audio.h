@@ -92,6 +92,14 @@ void fa_audio_with_session(fa_audio_session_callback_t,
                            fa_error_callback_t,
                            fa_ptr_t);
 
+/** Get all currently active audio sessions. Note that at most one audio session
+    can be active at the same time, so this function returns a list of zero or
+    one elements.
+    
+    @returns A list of @ref fa_audio_session_t.
+*/
+fa_list_t fa_audio_current_sessions();
+
 /** Get all active audio devices of the given session.
 
     @param session   The session.
