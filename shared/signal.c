@@ -635,9 +635,10 @@ typedef struct {
     int         count;      // Number of processed samples
     double      rate;       // Sample rate
 
-    // binary_t  fs;        // Called before first rendering
-    // binary_t  fs;        // Called before each rendering
-    // binary_t  fs;        // Called after last rendering
+    // binary_t  fs;        // Called before first rendering with (data_ptr, state)
+    // binary_t  fs;        // Called before each rendering with (data_ptr, state)
+    // binary_t  fs;        // Called after last rendering with (data_ptr, state)
+    // binary_t  fs;        // Called on message reception with (data_ptr, name, message)
     // ptr_t     ps;
 
 }  _state_t;
