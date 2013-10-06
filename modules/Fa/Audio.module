@@ -78,6 +78,12 @@ module Fa.Audio
         @returns A list of @ref fa_audio_session_t.
      */
     currentSessions : () -> List;
+    
+    /** End all currently active audio sessions.
+        
+        @returns The null pointer if successful, or an error value otherwise.
+     */
+    endAllSessions : () -> Ptr;
 
     /** Get all active audio devices of the given session.
 

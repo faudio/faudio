@@ -101,7 +101,7 @@ struct _fa_audio_stream_t {
 
 static mutex_t   pa_mutex;
 static bool      pa_status;
-static session_t last_session;
+static session_t current_session;
 
 error_t audio_device_error(string_t msg);
 error_t audio_device_error_with(string_t msg, int error);
@@ -231,7 +231,7 @@ void fa_audio_initialize()
 {
     pa_mutex        = fa_thread_create_mutex();
     pa_status       = false;
-    last_session    = NULL;
+    current_session = NULL;
 }
 
 void fa_audio_terminate()
@@ -262,7 +262,7 @@ session_t fa_audio_begin_session()
             session_t session = new_session();
             session_init_devices(session);
             // session->acquired = time(NULL);      // TODO
-            last_session = session;
+            current_session = session;
             return session;
         }
     }
@@ -283,6 +283,7 @@ void fa_audio_end_session(session_t session)
             pa_status = false;
         }
     }
+    current_session = NULL;
     fa_thread_unlock(pa_mutex);
     delete_session(session);
 }
@@ -307,11 +308,19 @@ void fa_audio_with_session(
 
 fa_list_t fa_audio_current_sessions()
 {
-    if (!last_session) {
+    if (!current_session) {
         return list();
     } else {
-        return list(last_session);
+        return list(current_session);
     }
+}
+
+fa_ptr_t fa_audio_end_all_sessions()
+{
+    fa_dfor_each(x, fa_audio_current_sessions()) {
+        fa_audio_end_session(x);
+    }
+    return NULL;
 }
 
 fa_list_t fa_audio_all(session_t session)

@@ -100,6 +100,12 @@ void fa_audio_with_session(fa_audio_session_callback_t,
 */
 fa_list_t fa_audio_current_sessions();
 
+/** End all currently active audio sessions.
+    
+    @returns The null pointer if successful, or an error value otherwise.
+*/
+fa_ptr_t fa_audio_end_all_sessions();
+
 /** Get all active audio devices of the given session.
 
     @param session   The session.

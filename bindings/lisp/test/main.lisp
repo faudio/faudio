@@ -422,9 +422,14 @@
 (error-message (to-error s))
 (audio-end-session s)
 
+(audio-current-sessions)
+(audio-end-all-sessions)
+
 (audio-all s)
 (setf x (audio-default-input s))
 (setf y (audio-default-output s))
+
+;(error-check nil)
 
 (audio-name x)
 (audio-host-name x)
