@@ -105,33 +105,10 @@
 #define milliseconds(s)     fa_time_create(0,0,0,ratio(s,1000))
 #define microseconds(s)     fa_time_create(0,0,0,ratio(s,1000000))
 
-#define never()             fa_event_never()
-#define now(x)              fa_event_now(x)
-#define later(t,x)          fa_event_later(t,x)
-#define delay_event(t,x)    fa_event_delay(t,x)
-#define merge_event(x,y)    fa_event_merge(x,y)
-#define switch_event(p,x,y) fa_event_switch(p,x,y)
-#define receive_event(s,a)  fa_event_receive(s,a)
-#define send_event(s,a)     fa_event_send(s,a,x)
-
-#define before_event(p,x)   fa_event_before(p,x)
-#define after_event(p,x)    fa_event_after(p,x)
-#define head_event(x)       fa_event_head(x)
-#define tail_event(x)       fa_event_tail(fa_event_offset(x),x)
-
-#define unary(a,b,f,x)      fa_processor_unary(a,b,f,x)
-#define binary(a,b,c,f,x)   fa_processor_binary(a,b,c,f,x)
-#define split(a)            fa_processor_split(a)
-#define id(a)               fa_processor_identity(a)
-#define const(a,b)          fa_processor_constant(a,b)
-#define par(x,y)            fa_processor_parallel(x,y)
-#define comp(x,y)           fa_processor_compose(x,y)
-#define seq(x,y)            fa_processor_sequence(x,y)
-#define loop(x)             fa_processor_loop(x)
-
 #define empty               fa_list_empty
 #define cons                fa_list_cons
 #define is_empty            fa_list_is_empty
+
 #define char_at             fa_string_char_at
 #define string_append       fa_string_append
 #define string_dappend      fa_string_dappend
