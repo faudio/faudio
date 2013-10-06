@@ -15,6 +15,8 @@ void helper_function()
 int main(int argc, char const *argv[])
 {
     fa_fa_initialize();
+    
     helper_function();
+    
     fa_fa_terminate();
 }

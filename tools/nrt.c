@@ -3,7 +3,8 @@
 #include <fa/util.h>
 
 /*
-    This program does ...
+    This program does runs a signal in non-realtime and writes
+    the result to a file named 'test.wav'.
 
  */
 // typedef fa_signal_t signal_t;

@@ -3,8 +3,7 @@
 #include <fa/util.h>
 
 /*
-    This program creates and opens a plot of the given
-    audio file.
+    This program creates and opens a plot of the given audio file.
  */
 
 void plot_file(string_t path)

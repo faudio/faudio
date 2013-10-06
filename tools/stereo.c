@@ -3,8 +3,7 @@
 #include <fa/util.h>
 
 /*
-    This program does ...
-
+    This program does plays alternating inpulses the left and right speaker.
  */
 
 list_t just(ptr_t x, list_t inputs)
@@ -12,7 +11,7 @@ list_t just(ptr_t x, list_t inputs)
     return x;
 }
 
-void helper_function()
+void play_impulses()
 {
     signal_t left, right;
 
@@ -43,6 +42,8 @@ int main(int argc, char const *argv[])
 {
     fa_fa_set_log_std();
     fa_fa_initialize();
-    helper_function();
+    
+    play_impulses();
+    
     fa_fa_terminate();
 }

@@ -3,7 +3,7 @@
 #include <fa/util.h>
 
 /*
-    This program does ...
+    This program does plays the given audio file in the default output device.
 
  */
 // typedef fa_signal_t signal_t;
