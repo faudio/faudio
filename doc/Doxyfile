@@ -701,17 +701,14 @@ EXCLUDE_SYMLINKS       = NO
 # against the file with absolute path, so to exclude all test directories
 # for example use the pattern */test/*
 
-EXCLUDE_PATTERNS       = */include/fa/processor \
-                         */include/fa/processor.h \
-                         */include/fa/system/event* \
-                         */include/fa/atomic/stack* \
-                         */include/fa/scheduler* \
-                         */include/fa/std* \
-                         */include/fa/plot* \
+# Public
+EXCLUDE_PATTERNS       = */include/fa/atomic* \
                          */include/fa/graph* \
-                         */include/fa/message* \
-                         */include/fa/event* \
-                         */include/fa/type* \
+                         */include/fa/pair/left* \
+                         */include/fa/pair/set* \
+                         */include/fa/pair/std* \
+                         */include/fa/pair/system* \
+                         */include/fa/pair/thread* \
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the
