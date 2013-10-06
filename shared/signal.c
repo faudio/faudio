@@ -786,9 +786,11 @@ void run_action(action_t action, state_t state)
         for (int i = 0; i < state->custom_proc_count; ++i) {
             custom_proc_t proc = state->custom_procs[state->custom_proc_count];
             mark_used(proc);
-            
-            // proc->receive(proc->data, name, value);
+
+            string_t name = NULL;
+            ptr_t value = NULL;
             // TODO
+            proc->receive(proc->data, name, value);
         }
     }
 }

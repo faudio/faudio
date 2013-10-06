@@ -52,6 +52,7 @@ state_t new_state();
 void delete_state(state_t state);
 void inc_state(state_t state);
 void run_actions(priority_queue_t controls2, state_t state);
+void run_custom_procs(int when, state_t state);
 double step(signal_t signal, state_t state);
 fa_signal_t fa_signal_simplify(fa_signal_t signal2);
 
@@ -556,12 +557,12 @@ void before_processing(stream_t stream)
     // TODO optimize
     // TODO verify
 
-    // TODO custom prepare
+    run_custom_procs(0, stream->state);
 }
 
 void after_processing(stream_t stream)
 {
-    // TODO custom post
+    run_custom_procs(2, stream->state);
     delete_state(stream->state);
 }
 
@@ -578,7 +579,7 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
         // Note: This could be done outside sample loop
         //       which would be faster but less exact
         run_actions(stream->controls, stream->state);
-        // TODO custom process
+        run_custom_procs(1, stream->state);
 
         for (int c = 0; c < stream->signal_count; ++c) {
             stream->state->VALS[c + kInputOffset] = input[c][i];
