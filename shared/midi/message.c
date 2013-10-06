@@ -101,6 +101,14 @@ bool fa_midi_message_is_sysex(fa_midi_message_t midi_message)
     return midi_message->is_sysex;
 }
 
+void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2)
+{
+    *statusCh = midi_message->data.simple[0];
+    *data1    = midi_message->data.simple[1];
+    *data2    = midi_message->data.simple[2];
+}
+
+
 fa_midi_message_status_t fa_midi_message_status(fa_midi_message_t midi_message)
 {
     assert(is_simple(midi_message) && "Not a simple message");

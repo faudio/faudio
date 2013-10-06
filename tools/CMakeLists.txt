@@ -36,5 +36,5 @@ add_tool(stereo)
 add_tool(fifo)   
 add_tool(custom)
 add_tool(test_fs)
-add_tool2(test_dls m)
+add_tool(test_dls)
 

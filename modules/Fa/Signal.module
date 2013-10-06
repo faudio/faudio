@@ -314,6 +314,14 @@ module Fa.Signal
             A list of @ref fa_signal_t (outputs).
      */
     fluid : String -> List;
+
+    /** Returns a pair of signals from the DLSMusicDevice.
+        @warning
+            This function is experimental.    
+        @return
+            A pair of @ref fa_signal_t (outputs).
+     */
+    dls : () -> Pair;
     
 
     /** Convert the signal to a tree represented as set of

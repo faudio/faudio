@@ -412,6 +412,14 @@ fa_list_t fa_signal_vst(fa_string_t, fa_string_t, fa_list_t);
 */
 fa_list_t fa_signal_fluid(fa_string_t);
 
+/** Returns a pair of signals from the DLSMusicDevice.
+    @warning
+        This function is experimental.    
+    @return
+        A pair of @ref fa_signal_t (outputs).
+*/
+fa_pair_t fa_signal_dls();
+
 /** Convert the signal to a tree represented as set of
     nested pairs of type `(String,[...])`.
     

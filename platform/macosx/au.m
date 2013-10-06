@@ -10,6 +10,34 @@
 #include <AudioUnit/AudioUnit.h>
 #include <AudioUnit/AUCocoaUIView.h>
 
+struct au_context {                     
+    double *outputs;
+    int channels;
+    int frames;
+    
+    AudioComponentInstance      Instance;
+    AudioUnitRenderActionFlags  RenderFlags;
+    int                         BusNumber;
+    AudioTimeStamp              TimeStamp;
+    AudioBufferList*            BufferList;
+};
+typedef struct au_context *au_context_t;
+
+au_context_t create_au_context(ptr_t instance, int channels, int frames)
+{
+    au_context_t context = fa_new_struct(au_context);
+    context->Instance = instance;
+    context->channels = channels;
+    context->frames = frames;
+    context->outputs = fa_malloc(sizeof(double)*channels*frames);
+    return context;
+}
+void destroy_au_context(au_context_t context) {
+    fa_free(context->outputs);
+    fa_delete(context);
+}
+
+
 
 string_t from_os_status(OSStatus err)
 {                
@@ -82,15 +110,6 @@ int instance_num_outputs(AudioComponentInstance instance)
 
 
 
-struct au_context {
-    AudioComponentInstance      Instance;
-    AudioUnitRenderActionFlags  RenderFlags;
-    int                         BusNumber;
-    AudioTimeStamp              TimeStamp;
-    AudioBufferList*            BufferList;
-};
-typedef struct au_context *au_context_t;
-
 
 void init_audio_time_stamp (AudioTimeStamp *time_stamp, Float64 inSampleTime) {
 
@@ -104,41 +123,26 @@ void init_audio_time_stamp (AudioTimeStamp *time_stamp, Float64 inSampleTime) {
    time_stamp->mFlags               = kAudioTimeStampSampleTimeValid;
 }
 
-
-/*
-    Allocate a buffer list.
-
-    struct AudioBuffer
-    {
-        UInt32  mNumberChannels;
-        UInt32  mDataByteSize;
-        void*   mData;              // interleaved samples
-    };
-    struct AudioBufferList
-    {
-        UInt32      mNumberBuffers;
-        AudioBuffer mBuffers[1];    // variable length array
-    };
-    
- */
 AudioBufferList* new_buffer_list(int numBuffers, int numChannels, int numFrames)
-{
-    size_t bufferSize     = sizeof(Float32) * numChannels * numFrames;
-    size_t bufferListSize = sizeof(UInt32) + bufferSize * numBuffers;
-
-    AudioBufferList* list = (AudioBufferList*) fa_malloc(bufferListSize);
-
-    list->mNumberBuffers = numBuffers;
+{                   
+    // Size of each mData                                         
+    size_t bufferSize = (sizeof(Float32) * numChannels * numFrames); 
+    
+    // Size of the whole thing
+    size_t size       = sizeof(UInt32) + (sizeof(AudioBuffer)) * numBuffers;
+    
+    AudioBufferList* bufferList = fa_malloc(size);
+    bufferList->mNumberBuffers = numBuffers;
 
     for(int i = 0; i < numBuffers; ++i)
     {
-        Float32 * buffer = (Float32*) fa_malloc(bufferSize);
+        Float32 * buffer = fa_malloc(bufferSize);
 
-        list->mBuffers[i].mNumberChannels = numChannels;
-        list->mBuffers[i].mDataByteSize   = bufferSize;
-        list->mBuffers[i].mData           = buffer;
+        bufferList->mBuffers[i].mNumberChannels = numChannels;
+        bufferList->mBuffers[i].mDataByteSize   = bufferSize;
+        bufferList->mBuffers[i].mData           = buffer;
     }
-    return list;
+    return bufferList;
 }
 
 void delete_buffer_list(AudioBufferList* list)
@@ -154,10 +158,10 @@ void au_prepare(au_context_t context)
 
     OSStatus err;
 
-    Float64 sampleRate       = (Float64) 44100;
+    Float64 sampleRate       = (Float64) 44100; // TODO
     Float64 sampleTime       = (Float64) 0;
-    UInt32  numberOfChannels = (UInt32)  2;
-    UInt32  numberOfFrames   = (UInt32)  44100;        // TODO
+    UInt32  numberOfChannels = (UInt32)  context->channels;
+    UInt32  numberOfFrames   = (UInt32)  context->frames;
 
     AudioUnitSetProperty (instance, kAudioUnitProperty_SampleRate, kAudioUnitScope_Global, 0,
                           &sampleRate, sizeof(sampleRate));
@@ -182,7 +186,9 @@ void au_prepare(au_context_t context)
     
     init_audio_time_stamp(&context->TimeStamp, sampleTime / sampleRate);
     
+    // 1 buffer per channel, 1 'channel' per buffer
     context->BufferList  = new_buffer_list(numberOfChannels, 1, numberOfFrames);
+
     // TODO different number of buses ?
     
     
@@ -191,15 +197,14 @@ void au_prepare(au_context_t context)
     }
 }
 
-void au_render(au_context_t context, double* output)
+void au_render(au_context_t context, double time, double* output)
 {
     AudioComponentInstance instance = context->Instance;
     OSStatus err;
     
-    // Float64 sampleRate       = (Float64) 44100;
-    Float64 sampleTime       = (Float64) 0;
-    int     numberOfChannels = 2;
-    int     numberOfFrames   = 44100; // TODO
+    Float64 sampleTime       = (Float64) time;
+    UInt32  numberOfChannels = (UInt32)  context->channels;
+    UInt32  numberOfFrames   = (UInt32)  context->frames;
     
     context->TimeStamp.mSampleTime = sampleTime;
     
@@ -217,10 +222,10 @@ void au_render(au_context_t context, double* output)
         {          
             double x = buffer[frame]; // sample for current (channel,frame)
 
-            // TODO just mono
-            if (channel == 0) {
-                output[frame] = x;
-            }
+            // Non-interleaved output
+            // output[numberOfFrames*channel + frame] = x;
+            context->outputs[numberOfFrames*channel + frame] = x;
+
         }
     }
 }
@@ -305,16 +310,6 @@ ptr_t new_dls_music_device_instance()
 }
 
 
-
-au_context_t create_au_context(ptr_t instance)
-{
-    au_context_t context = fa_new_struct(au_context);
-    context->Instance = instance;
-    return context;
-}
-void destroy_au_context(au_context_t context) {
-    fa_delete(context);
-}
 
 
 
