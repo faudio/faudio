@@ -629,13 +629,15 @@ fa_signal_t fa_signal_simplify(fa_signal_t signal2)
 // Running
 
 typedef struct {
-    double *inputs;     // Current input values (TODO should not be called inputs as they are also outputs...)
-    double *buses;      // Current and future bus values
+    double     *inputs;     // Current input values (TODO should not be called inputs as they are also outputs...)
+    double     *buses;      // Current and future bus values
 
-    int count;          // Number of processed samples
-    double rate;        // Sample rate
+    int         count;      // Number of processed samples
+    double      rate;       // Sample rate
 
-    ptr_t poll;         // Poll actions to run
+    // nullary_t fs;
+    // nullary_t ds;
+    // ptr_t     ps;
 
 }  _state_t;
 typedef _state_t *state_t;
