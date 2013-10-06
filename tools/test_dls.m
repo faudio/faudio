@@ -102,18 +102,35 @@ typedef struct au_context *au_context_t;
 
 
 void init_audio_time_stamp (AudioTimeStamp *time_stamp, Float64 inSampleTime) {
-   time_stamp->mSampleTime = inSampleTime;
-   time_stamp->mHostTime = 0;
-   time_stamp->mRateScalar = 0;
-   time_stamp->mWordClockTime = 0;
+
+   time_stamp->mSampleTime          = inSampleTime;
+
+   time_stamp->mHostTime            = 0;
+   time_stamp->mRateScalar          = 0;
+   time_stamp->mWordClockTime       = 0;
    memset (&time_stamp->mSMPTETime, 0, sizeof (SMPTETime));
-   time_stamp->mFlags = kAudioTimeStampSampleTimeValid;
+
+   time_stamp->mFlags               = kAudioTimeStampSampleTimeValid;
 }
+
 
 /*
     Allocate a buffer list.
+
+    struct AudioBuffer
+    {
+        UInt32  mNumberChannels;
+        UInt32  mDataByteSize;
+        void*   mData;              // interleaved samples
+    };
+    struct AudioBufferList
+    {
+        UInt32      mNumberBuffers;
+        AudioBuffer mBuffers[1];    // variable length array
+    };
+    
  */
-AudioBufferList* create_buffer_list(int numBuffers, int numChannels, int numFrames)
+AudioBufferList* new_buffer_list(int numBuffers, int numChannels, int numFrames)
 {
     size_t bufferSize     = sizeof(Float32) * numChannels * numFrames;
     size_t bufferListSize = sizeof(UInt32) + bufferSize * numBuffers;
@@ -133,7 +150,7 @@ AudioBufferList* create_buffer_list(int numBuffers, int numChannels, int numFram
     return list;
 }
 
-void free_buffer_list(AudioBufferList* list)
+void delete_buffer_list(AudioBufferList* list)
 {
     for (int i = 0; i < list->mNumberBuffers; ++i)
         fa_free(list->mBuffers[i].mData);
@@ -174,7 +191,7 @@ void instance_prepare(au_context_t context)
     
     init_audio_time_stamp(&context->TimeStamp, sampleTime / sampleRate);
     
-    context->BufferList  = create_buffer_list(numberOfChannels, 1, numberOfFrames);
+    context->BufferList  = new_buffer_list(numberOfChannels, 1, numberOfFrames);
     // TODO different number of buses ?
     
     
@@ -203,19 +220,16 @@ void instance_process(au_context_t context, double* output)
     
     for(int channel = 0; channel < numberOfChannels; ++channel)
     {
-        // TODO assert (channel < context->BufferList->mNumberBuffers)
-        // TODO assert (frame < context->BufferList->mDataByteSize / sizeof(Float32))
-        
         Float32* buffer = (Float32*) context->BufferList->mBuffers[channel].mData;
     
         for(int frame = 0; frame < numberOfFrames; ++frame)
         {          
-            // TODO writes interleaved
-            
-            // printf("Index: %d\n", channel + numberOfChannels * frame);
-            // printf("Value: %f\n", buffer[frame]);
-            
-            output[channel + numberOfChannels * frame] = buffer[frame];
+            double x = buffer[frame]; // sample for current (channel,frame)
+
+            // TODO just mono
+            if (channel == 0) {
+                output[frame] = x;
+            }
         }
     }
 }
@@ -233,8 +247,12 @@ void instance_cleanup(au_context_t context)
     AudioUnitReset(instance, kAudioUnitScope_Input, 0);
     AudioUnitReset(instance, kAudioUnitScope_Output, 0);
     
-    free_buffer_list(context->BufferList);
+    delete_buffer_list(context->BufferList);
 }
+
+
+
+
 
 
 
@@ -296,6 +314,11 @@ ptr_t new_dls_music_device_instance()
 }
 
 
+
+
+
+
+
 /*
     This program does ...
 
@@ -313,7 +336,7 @@ void run_dsl()
     
     instance_prepare(context);
     for (int i = 0; i < 1; ++i) {
-        instance_send_midi(context->Instance, 0x90, 72+i*3, 90);
+        instance_send_midi(context->Instance, 0x90, 60+i*3, 90);
     }
     instance_process(context, out);
     instance_cleanup(context);
