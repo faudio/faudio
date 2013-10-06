@@ -65,7 +65,7 @@ int instance_num_outputs(AudioComponentInstance instance)
 }
 
 
-void instance_send_midi(AudioComponentInstance instance, int status, int data1, int data2)
+void au_send_midi(AudioComponentInstance instance, int status, int data1, int data2)
 {
     OSStatus err;
     if ((err = MusicDeviceMIDIEvent(instance, status, data1, data2, 0))) {
@@ -157,7 +157,7 @@ void delete_buffer_list(AudioBufferList* list)
     fa_free(list);
 }
 
-void instance_prepare(au_context_t context)
+void au_prepare(au_context_t context)
 {
     AudioComponentInstance instance = context->Instance;
 
@@ -200,7 +200,7 @@ void instance_prepare(au_context_t context)
     }
 }
 
-void instance_process(au_context_t context, double* output)
+void au_render(au_context_t context, double* output)
 {
     AudioComponentInstance instance = context->Instance;
     OSStatus err;
@@ -234,7 +234,7 @@ void instance_process(au_context_t context, double* output)
     }
 }
 
-void instance_cleanup(au_context_t context)
+void au_cleanup(au_context_t context)
 {
     AudioComponentInstance instance = context->Instance;
     OSStatus err;
@@ -315,6 +315,15 @@ ptr_t new_dls_music_device_instance()
 
 
 
+au_context_t create_au_context(ptr_t instance)
+{
+    au_context_t context = fa_new_struct(au_context);
+    context->Instance = instance;
+    return context;
+}
+void destroy_au_context(au_context_t context) {
+    fa_delete(context);
+}
 
 
 
@@ -322,28 +331,35 @@ ptr_t new_dls_music_device_instance()
 /*
     This program does ...
 
+    create_au_context
+    destroy_au_context
+    new_dls_music_device_instance
+    au_prepare
+    au_send_midi
+    au_render
+    au_cleanup
+
  */
 
 void run_dsl()
 {                  
-    au_context_t context = fa_new_struct(au_context);
-    context->Instance = new_dls_music_device_instance();
+    au_context_t context = create_au_context(new_dls_music_device_instance());
     
     // Render to channels * 44100 samples
     buffer_t outb = fa_buffer_create(2*44100*sizeof(double));
     double* out = fa_buffer_unsafe_address(outb);
     
     
-    instance_prepare(context);
+    au_prepare(context);
     for (int i = 0; i < 1; ++i) {
-        instance_send_midi(context->Instance, 0x90, 60+i*3, 90);
+        au_send_midi(context->Instance, 0x90, 60+i*3, 90);
     }
-    instance_process(context, out);
-    instance_cleanup(context);
+    au_render(context, out);
+    au_cleanup(context);
     
-    fa_buffer_write_audio(string("test.wav"), 2, outb);
+    fa_buffer_write_audio(string("test.wav"), 1, outb);
 
-    fa_delete(context);
+    destroy_au_context(context);
 }
 
 int main(int argc, char const *argv[])
