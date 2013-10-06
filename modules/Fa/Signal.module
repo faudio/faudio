@@ -111,6 +111,29 @@ module Fa.Signal
     insert : ( String, Int, Int, Int, Int, Signal ) -> Signal;
 
 
+    type Name    = String;
+    type Message = Ptr;
+
+    type State = struct {
+        inputs : Double*,
+        dummy  : Ptr,
+        count  : Int,
+        rate   : Double
+    };
+
+    type CustomProcessor = struct {
+        before  : ((Ptr,State*) -> Ptr)*,
+        after   : ((Ptr,State*) -> Ptr)*,
+        render  : ((Ptr,State*) -> Ptr)*,
+        receive : ((Ptr,Name,Message) -> Ptr)*,
+        data : Ptr
+    };
+    
+    /** Add a custom processor to be executed with the given signal.
+        You probably do not want to do this.
+     */
+    addCustomProcessor : (CustomProcessor*, Signal) -> Signal;
+
     /** The primitive input signal, reading from the bus of the given number.
      */
     input       : ( Int )                                         -> Signal;

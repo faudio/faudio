@@ -14,10 +14,11 @@
 #include <fa/buffer.h>
 #include <fa/util.h>
 
-typedef fa_signal_unary_signal_t    fixpoint_t;
-typedef fa_signal_unary_double_t    dunary_t;
-typedef fa_signal_binary_double_t   dbinary_t;
-typedef fa_action_t                 action_t;
+typedef fa_signal_custom_processor_t   *custom_proc_t;
+typedef fa_signal_unary_signal_t        fixpoint_t;
+typedef fa_signal_unary_double_t        dunary_t;
+typedef fa_signal_binary_double_t       dbinary_t;
+typedef fa_action_t                     action_t;
 
 struct _fa_signal_t {
 
@@ -629,17 +630,14 @@ fa_signal_t fa_signal_simplify(fa_signal_t signal2)
 // Running
 
 typedef struct {
-    double     *inputs;     // Current input values (TODO should not be called inputs as they are also outputs...)
-    double     *buses;      // Current and future bus values
+    double     *inputs;                 // Current input values (TODO should not be called inputs as they are also outputs...)
+    double     *buses;                  // Current and future bus values
 
-    int         count;      // Number of processed samples
-    double      rate;       // Sample rate
+    int         count;                  // Number of processed samples
+    double      rate;                   // Sample rate
 
-    // binary_t  fs;        // Called before first rendering with (data_ptr, state)
-    // binary_t  fs;        // Called before each rendering with (data_ptr, state)
-    // binary_t  fs;        // Called after last rendering with (data_ptr, state)
-    // binary_t  fs;        // Called on message reception with (data_ptr, name, message)
-    // ptr_t     ps;
+    int           custom_proc_count;
+    custom_proc_t *custom_procs;        // Array of custom processors
 
 }  _state_t;
 typedef _state_t *state_t;
@@ -660,9 +658,12 @@ state_t new_state()
     memset(state->inputs,   0, kMaxInputs               * sizeof(double));
     memset(state->buses,    0, kMaxBuses * kMaxDelay    * sizeof(double));
 
-    state->count        = 0;
-    state->rate         = kRate;
+    state->count              = 0;
+    state->rate               = kRate;
 
+    state->custom_proc_count  = 0;
+    state->custom_procs       = NULL;
+    
     return state;
 }
 
@@ -750,6 +751,28 @@ void write_bus(int n, int c, double x, state_t state)
 
 //----------
 
+// 0 prepare, 1 run, 2 cleanup
+void run_custom_procs(int when, state_t state)
+{             
+    for (int i = 0; i < state->custom_proc_count; ++i) {
+        custom_proc_t proc = state->custom_procs[state->custom_proc_count];
+        
+        switch(when) {
+            case 0:
+                proc->before(proc->data, (fa_signal_state_t*) state);
+                break;
+            case 1:
+                proc->render(proc->data, (fa_signal_state_t*) state);
+                break;
+            case 2:
+                proc->after(proc->data, (fa_signal_state_t*) state);
+                break;
+            default:
+                assert(false);
+        }
+    }
+}
+
 // inline static
 void run_action(action_t action, state_t state)
 {
@@ -757,6 +780,16 @@ void run_action(action_t action, state_t state)
         int ch = fa_action_set_channel(action);
         double v = fa_action_set_value(action);
         write_samp(0, ch, v, state);
+    }
+    
+    if (false/*action_is_send*/) {
+        for (int i = 0; i < state->custom_proc_count; ++i) {
+            custom_proc_t proc = state->custom_procs[state->custom_proc_count];
+            mark_used(proc);
+            
+            // proc->receive(proc->data, name, value);
+            // TODO
+        }
     }
 }
 
@@ -861,14 +894,17 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
 
     // TODO progress monitor
 
-    // TODO custom prepare
+    run_custom_procs(0, state);
+
     for (int i = 0; i < n; ++ i) {
         run_actions(controls2, state);
-        // TODO custom process
+        run_custom_procs(1, state);
+
         output[i] = step(a2, state);
+
         inc_state(state);
     }
-    // TODO custom post
+    run_custom_procs(2, state);
 
     delete_state(state);
 }

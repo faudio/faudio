@@ -137,6 +137,34 @@ fa_signal_t fa_signal_insert(fa_string_t,
                              int,
                              fa_signal_t);
 
+
+typedef fa_string_t fa_signal_name_t;
+
+
+typedef fa_ptr_t fa_signal_message_t;
+
+
+typedef struct {
+            double * inputs; fa_ptr_t dummy; int count; double rate;
+        } fa_signal_state_t;
+
+
+typedef struct {
+            fa_ptr_t (* before)(fa_ptr_t, fa_signal_state_t *);
+            fa_ptr_t (* after)(fa_ptr_t, fa_signal_state_t *);
+            fa_ptr_t (* render)(fa_ptr_t, fa_signal_state_t *);
+            fa_ptr_t (* receive)(fa_ptr_t,
+                                 fa_signal_name_t,
+                                 fa_signal_message_t);
+            fa_ptr_t data;
+        } fa_signal_custom_processor_t;
+
+/** Add a custom processor to be executed with the given signal.
+    You probably do not want to do this.
+*/
+fa_signal_t fa_signal_add_custom_processor(fa_signal_custom_processor_t *,
+                                           fa_signal_t);
+
 /** The primitive input signal, reading from the bus of the given number.
 */
 fa_signal_t fa_signal_input(int);
