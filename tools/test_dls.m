@@ -83,6 +83,16 @@ int                         gBusNumber;
 AudioTimeStamp              gTimeStamp;
 AudioBufferList*            gBufferList;
 
+struct au_context {
+    AudioComponentInstance      Instance;
+    AudioUnitRenderActionFlags  RenderFlags;
+    int                         BusNumber;
+    AudioTimeStamp              TimeStamp;
+    AudioBufferList*            BufferList;
+};
+typedef struct au_context *au_context_t;
+
+
 void init_audio_time_stamp (AudioTimeStamp *time_stamp, Float64 inSampleTime) {
    time_stamp->mSampleTime = inSampleTime;
    time_stamp->mHostTime = 0;
@@ -122,8 +132,10 @@ void freeBufferList(AudioBufferList* list)
     free(list);
 }
 
-void instance_prepare(AudioComponentInstance instance)
+void instance_prepare(au_context_t context)
 {
+    AudioComponentInstance instance = context->Instance;
+
     OSStatus err;
 
     Float64 sampleRate       = (Float64) 44100;
@@ -163,8 +175,9 @@ void instance_prepare(AudioComponentInstance instance)
     }
 }
 
-void instance_process(AudioComponentInstance instance, double* output)
+void instance_process(au_context_t context, double* output)
 {
+    AudioComponentInstance instance = context->Instance;
     OSStatus err;
     
     // Float64 sampleRate       = (Float64) 44100;
@@ -199,8 +212,9 @@ void instance_process(AudioComponentInstance instance, double* output)
     }
 }
 
-void instance_cleanup(AudioComponentInstance instance)
+void instance_cleanup(au_context_t context)
 {
+    AudioComponentInstance instance = context->Instance;
     OSStatus err;
     
     if ((err = AudioUnitUninitialize(instance))) {
@@ -281,24 +295,24 @@ ptr_t new_dls_music_device_instance()
 
 void run_dsl()
 {                  
-    ptr_t instance = new_dls_music_device_instance();
-
+    au_context_t context = fa_new_struct(au_context);
+    context->Instance = new_dls_music_device_instance();
+    
     // Render to channels * 44100 samples
     buffer_t outb = fa_buffer_create(2*44100*sizeof(double));
     double* out = fa_buffer_unsafe_address(outb);
     
     
-    instance_prepare(instance);
-
+    instance_prepare(context);
     for (int i = 0; i < 1; ++i) {
-        instance_send_midi(instance, 0x90, 60+i*3, 90);
+        instance_send_midi(context->Instance, 0x90, 72+i*3, 90);
     }
-    instance_process(instance, out);
-
-    instance_cleanup(instance);
+    instance_process(context, out);
+    instance_cleanup(context);
     
     fa_buffer_write_audio(string("test.wav"), 2, outb);
-    
+
+    fa_delete(context);
 }
 
 int main(int argc, char const *argv[])
