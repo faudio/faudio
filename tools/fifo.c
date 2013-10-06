@@ -16,13 +16,13 @@ size_t fa_atomic_ring_buffer_write_many(ring_buffer_t dst,
                                         size_t count);
 
 
-#define create_ fa_atomic_ring_buffer_create
-#define read_   fa_atomic_ring_buffer_read
-#define write_  fa_atomic_ring_buffer_write
-#define readd_   fa_atomic_ring_buffer_read_double
-#define writed_  fa_atomic_ring_buffer_write_double
-#define read_many_ fa_atomic_ring_buffer_read_many
-#define write_many_ fa_atomic_ring_buffer_write_many
+#define create_         fa_atomic_ring_buffer_create
+#define read_           fa_atomic_ring_buffer_read
+#define write_          fa_atomic_ring_buffer_write
+#define readd_          fa_atomic_ring_buffer_read_double
+#define writed_         fa_atomic_ring_buffer_write_double
+#define read_many_      fa_atomic_ring_buffer_read_many
+#define write_many_     fa_atomic_ring_buffer_write_many
 
 void test_basic()
 {

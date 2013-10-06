@@ -8,29 +8,12 @@
  */
 // typedef fa_signal_t signal_t;
 
-#define N           (44100*60)
-#define PI          3.1415
-#define TAU         (2 * PI)
-
-#define add_        fa_signal_add
-#define mul_        fa_signal_multiply
-#define sin_        fa_signal_sin
-#define cos_        fa_signal_cos
-#define time_       fa_signal_time
-#define random_     fa_signal_random
-#define const_      fa_signal_constant
-#define imp_        fa_signal_impulse
-#define line_       fa_signal_line
-#define delay_      fa_signal_delay
-#define loop_       fa_signal_loop
-#define input_      fa_signal_input
-#define output_     fa_signal_output
-
-
+#define PI  3.1415
+#define TAU (2 * PI)
 
 signal_t fir(ptr_t a, signal_t rec)
 {
-    return add_((signal_t) delay_(10, a), mul_(rec, const_(0.9999)));
+    return fa_add((signal_t) delay(10, a), fa_multiply(rec, constant(0.9999)));
 }
 list_t just(ptr_t x, list_t xs)
 {
@@ -43,37 +26,37 @@ list_t identity(ptr_t x, list_t xs)
 
 void helper_function()
 {
-    signal_t a = mul_(sin_(mul_(time_(), const_(TAU * 440))), const_(0.1));
-    signal_t b = mul_(sin_(mul_(time_(), const_(TAU * 440 * 2 / 3))), const_(0.1));
-    signal_t c = mul_(sin_(mul_(time_(), const_(TAU * 440 * 4 / 5))), const_(0.1));
-    signal_t d = mul_(sin_(mul_(time_(), const_(TAU * 440 * 6 / 7))), const_(0.1));
-    signal_t r = add_(a, add_(b, add_(c, d)));
+    signal_t a = fa_multiply(fa_signal_sin(fa_multiply(stime(), constant(TAU * 440))), constant(0.1));
+    signal_t b = fa_multiply(fa_signal_sin(fa_multiply(stime(), constant(TAU * 440 * 2 / 3))), constant(0.1));
+    signal_t c = fa_multiply(fa_signal_sin(fa_multiply(stime(), constant(TAU * 440 * 4 / 5))), constant(0.1));
+    signal_t d = fa_multiply(fa_signal_sin(fa_multiply(stime(), constant(TAU * 440 * 6 / 7))), constant(0.1));
+    signal_t r = fa_add(a, fa_add(b, fa_add(c, d)));
 
-    // signal_t r = mul_(random_(), mul_(sin_(mul_(time_(), const_(TAU * 0.5))), const_(0.5)));
-    // signal_t r = mul_(imp_(), const_(0.5));
+    // signal_t r = fa_multiply(random_(), fa_multiply(fa_signal_sin(fa_multiply(stime(), constant(TAU * 0.5))), constant(0.5)));
+    // signal_t r = fa_multiply(imp_(), constant(0.5));
 
 
-    // signal_t r = mul_(sin_(line_(440)), const_(0.5));
-    // signal_t r = add_(const_(0.5), const_(0.5));
+    // signal_t r = fa_multiply(fa_signal_sin(line_(440)), constant(0.5));
+    // signal_t r = fa_add(constant(0.5), constant(0.5));
 
-    // signal_t r = delay_(1, add_(const_(0.5), const_(0.5)));
+    // signal_t r = delay(1, fa_add(constant(0.5), constant(0.5)));
     // signal_t r = fa_signal_input(1);
-    // signal_t r = fa_signal_output(1,0,time_());
+    // signal_t r = fa_signal_output(1,0,stime());
 
     // double freq = 100;
     // double amp = 1;
-    // signal_t r = const_(0);
+    // signal_t r = constant(0);
     // for (int i = 0; i < 30; ++i) {
-    //     r = add_(mul_(sin_(line_(freq)), const_(amp)), r);
+    //     r = fa_add(fa_multiply(fa_signal_sin(line_(freq)), constant(amp)), r);
     //     freq *= (5.0 / 4.0);
     //     amp  *= 0.9;
     // }
-    // r = mul_(r, const_(0.002));
+    // r = fa_multiply(r, constant(0.002));
 
-    // signal_t r = time_();
-    // signal_t r = add_(
-    //     mul_(input_(0)                  , sin_(line_(0.1))),
-    //     mul_(mul_(const_(0.01),random_()) , cos_(line_(0.1)))
+    // signal_t r = stime();
+    // signal_t r = fa_add(
+    //     fa_multiply(fa_input(0)                  , fa_signal_sin(line_(0.1))),
+    //     fa_multiply(fa_multiply(constant(0.01),random_()) , cos_(line_(0.1)))
     //     );
 
 
@@ -93,9 +76,9 @@ void helper_function()
         fa_audio_device_t o  = fa_audio_default_output(s);
 
         // fa_audio_stream_t st = fa_audio_open_stream(i, just, list(
-        //     mul_(const_(0.5), mul_(sin_(line_(0.2)), input_(0)))
+        //     fa_multiply(constant(0.5), fa_multiply(fa_signal_sin(line_(0.2)), fa_input(0)))
         //     ,
-        //     mul_(const_(0.5), mul_(cos_(line_(0.2)), input_(1)))
+        //     fa_multiply(constant(0.5), fa_multiply(cos_(line_(0.2)), fa_input(1)))
         // ), o);
         fa_audio_stream_t st = fa_audio_open_stream(i, o, NULL, NULL);
 

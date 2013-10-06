@@ -8,24 +8,6 @@
  */
 // typedef fa_signal_t signal_t;
 
-#define N           (44100*60)
-#define PI          3.1415
-#define TAU         (2 * PI)
-
-#define add_        fa_signal_add
-#define mul_        fa_signal_multiply
-#define sin_        fa_signal_sin
-#define cos_        fa_signal_cos
-#define time_       fa_signal_time
-#define random_     fa_signal_random
-#define const_      fa_signal_constant
-#define imp_        fa_signal_impulse
-#define line_       fa_signal_line
-#define delay_      fa_signal_delay
-#define loop_       fa_signal_loop
-#define input_      fa_signal_input
-#define output_     fa_signal_output
-
 list_t just(ptr_t x, list_t xs)
 {
     return x;
@@ -33,7 +15,7 @@ list_t just(ptr_t x, list_t xs)
 
 signal_t fir(ptr_t a, signal_t rec)
 {
-    return add_((signal_t) delay_(10, a), mul_(rec, const_(0.9999)));
+    return fa_add((signal_t) delay(10, a), fa_multiply(rec, constant(0.9999)));
 }
 
 double times(ptr_t _, double x, double y)
@@ -43,7 +25,7 @@ double times(ptr_t _, double x, double y)
 
 void helper_function()
 {
-    signal_t r = fa_signal_lift2(string("times"), times, NULL, const_(0.1), sin_(line_(440)));
+    signal_t r = fa_signal_lift2(string("times"), times, NULL, constant(0.1), fa_signal_sin(line(440)));
 
     {
         fa_audio_session_t s = fa_audio_begin_session();

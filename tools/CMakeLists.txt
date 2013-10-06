@@ -31,4 +31,5 @@ add_tool(left)
 add_tool(version)
 add_tool(stereo)
 add_tool(fifo)
+add_tool(test_fs)
 

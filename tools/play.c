@@ -8,24 +8,6 @@
  */
 // typedef fa_signal_t signal_t;
 
-#define N           (44100*60)
-#define PI          3.1415
-#define TAU         (2 * PI)
-
-#define add_        fa_signal_add
-#define mul_        fa_signal_multiply
-#define sin_        fa_signal_sin
-#define cos_        fa_signal_cos
-#define time_       fa_signal_time
-#define random_     fa_signal_random
-#define const_      fa_signal_constant
-#define imp_        fa_signal_impulse
-#define line_       fa_signal_line
-#define delay_      fa_signal_delay
-#define loop_       fa_signal_loop
-#define input_      fa_signal_input
-#define output_     fa_signal_output
-
 list_t just(ptr_t x, list_t xs)
 {
     return x;
@@ -33,7 +15,7 @@ list_t just(ptr_t x, list_t xs)
 
 signal_t add1(ptr_t _, signal_t x)
 {
-    return add_(x, const_(1));
+    return fa_add(x, constant(1));
 }
 
 
@@ -50,9 +32,9 @@ void helper_function(string_t path)
             buf = fa_pair_second(res);
         }
 
-        signal_t j  = add_(loop_(add1, NULL), const_(-1));  // 0,1,2,3 ...
-        signal_t li = add_(mul_(j, const_(2)), const_(0));
-        signal_t ri = add_(mul_(j, const_(2)), const_(1));
+        signal_t j  = fa_add(loop(add1, NULL), constant(-1));  // 0,1,2,3 ...
+        signal_t li = fa_add(fa_multiply(j, constant(2)), constant(0));
+        signal_t ri = fa_add(fa_multiply(j, constant(2)), constant(1));
 
         signal_t l = fa_signal_play(buf, li);
         signal_t r = fa_signal_play(buf, ri);
