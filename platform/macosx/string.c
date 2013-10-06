@@ -26,23 +26,25 @@ void *fa_string_to_native(fa_string_t str)
     return (void *) cfstr;
 }
 
-fa_string_t fa_string_from_native(void *cfstr)
-{
+fa_string_t fa_string_from_native(void *input)
+{                    
+    CFStringRef cfRef = input;
     CFIndex size;
     char *cstr;
     string_t str;
 
-    if ((cstr = (char *) CFStringGetCStringPtr(cfstr, kCFStringEncodingUTF8))) {
+    if ((cstr = (char *) CFStringGetCStringPtr(cfRef, kCFStringEncodingUTF8))) {
         return fa_string_from_utf8(cstr);
-    } else {
-        size        = CFStringGetLength(cfstr);
-        cstr        = malloc(size + 1);
+    } else 
+    {
+        size        = CFStringGetLength(cfRef);
+        cstr        = fa_malloc(size + 1);
         cstr[size]  = 0;                     // necesary ?
 
-        CFStringGetCString(cfstr, cstr, size + 1, kCFStringEncodingUTF8);
+        CFStringGetCString(cfRef, cstr, size + 1, kCFStringEncodingUTF8);
         str = fa_string_from_utf8(cstr);
 
-        free(cstr);
+        fa_free(cstr);
         return str;
     }
 }
