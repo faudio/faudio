@@ -35,7 +35,7 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
     return x;
 }
 
-#define RT 0
+#define RT 1
 
 void helper_function()
 {
@@ -60,26 +60,30 @@ void helper_function()
         fa_audio_session_t s = fa_audio_begin_session();
         fa_audio_device_t i  = fa_audio_default_input(s);
         fa_audio_device_t o  = fa_audio_default_output(s);        
-        list_t out           = list(r,r);
+        list_t out           = list(r,a);
 
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
 
         if (fa_check(st)) {
             fa_error_log(st, NULL);
         }
-
-        // while (1) {
-            fa_thread_sleep(1000*10);
-        // }
+        
+        fa_audio_send(
+            hms(0,0,0), fa_action_send(string("DLS"), string("hello!")), st
+            );
+        
+        while (1) {
+            fa_audio_send(
+                hms(0,0,0), fa_action_send(string("DLS"), string("hello!")), st
+                );
+            fa_thread_sleep(1000*1);
+        }
 
         fa_destroy(st);
         fa_destroy(s);
     } else {
         fa_signal_run_file(44100*10, list(
-            pair(hms(0,0,0), fa_action_send(string("DLS"), list(i32(1),i32(2),i32(3),string("hans")))),
-            pair(hms(0,0,0), fa_action_send(string("DLS"), list(i32(1),i32(2),i32(3),string("hans")))),
-            pair(hms(0,0,0), fa_action_send(string("DLS"), list(i32(1),i32(2),i32(3),string("hans")))),
-            pair(hms(0,0,0), fa_action_send(string("DLS"), list(i32(1),i32(2),i32(3),string("hans"))))
+            pair(hms(0,0,0), fa_action_send(string("DLS"), string("hello!")))
             
             ), 
             r, 
