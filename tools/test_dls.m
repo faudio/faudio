@@ -118,13 +118,13 @@ AudioBufferList* create_buffer_list(int numBuffers, int numChannels, int numFram
     size_t bufferSize     = sizeof(Float32) * numChannels * numFrames;
     size_t bufferListSize = sizeof(UInt32) + bufferSize * numBuffers;
 
-    AudioBufferList* list = (AudioBufferList*) calloc(1, bufferListSize);
+    AudioBufferList* list = (AudioBufferList*) fa_malloc(bufferListSize);
 
     list->mNumberBuffers = numBuffers;
 
     for(int i = 0; i < numBuffers; ++i)
     {
-        Float32 * buffer = (Float32*) calloc(1, bufferSize);
+        Float32 * buffer = (Float32*) fa_malloc(bufferSize);
 
         list->mBuffers[i].mNumberChannels = numChannels;
         list->mBuffers[i].mDataByteSize   = bufferSize;
@@ -133,11 +133,11 @@ AudioBufferList* create_buffer_list(int numBuffers, int numChannels, int numFram
     return list;
 }
 
-void freeBufferList(AudioBufferList* list)
+void free_buffer_list(AudioBufferList* list)
 {
     for (int i = 0; i < list->mNumberBuffers; ++i)
-        free(list->mBuffers[i].mData);
-    free(list);
+        fa_free(list->mBuffers[i].mData);
+    fa_free(list);
 }
 
 void instance_prepare(au_context_t context)
@@ -233,7 +233,7 @@ void instance_cleanup(au_context_t context)
     AudioUnitReset(instance, kAudioUnitScope_Input, 0);
     AudioUnitReset(instance, kAudioUnitScope_Output, 0);
     
-    freeBufferList(context->BufferList);
+    free_buffer_list(context->BufferList);
 }
 
 
