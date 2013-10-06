@@ -175,7 +175,7 @@ fa_string_t fa_string_format_floating(char *format, double value)
 
     This function does not return.
  */
-inline static 
+inline static
 void iconv_fail()
 {
     switch (errno) {
@@ -197,7 +197,7 @@ void iconv_fail()
     }
 }
 
-inline static 
+inline static
 size_t raw_size(char *s)
 {
     size_t i = 0;
@@ -209,7 +209,7 @@ size_t raw_size(char *s)
     return i;
 }
 
-inline static 
+inline static
 size_t raw_size_16(uint16_t *s)
 {
     size_t i = 0;
@@ -315,7 +315,7 @@ fa_string_t fa_string_to_string(fa_ptr_t a)
     }
 }
 
-inline static 
+inline static
 ptr_t jsonify(ptr_t a)
 {
     switch (fa_dynamic_get_type(a)) {
