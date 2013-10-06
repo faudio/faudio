@@ -999,7 +999,6 @@ fa_signal_t fa_signal_add(fa_signal_t a, fa_signal_t b)
     return fa_signal_lift2(string("(+)"), _add, NULL, a, b);
 }
 
-
 inline static double _mul(ptr_t _, double x, double y)
 {
     return x * y;
@@ -1009,6 +1008,33 @@ fa_signal_t fa_signal_multiply(fa_signal_t a, fa_signal_t b)
     return fa_signal_lift2(string("(*)"), _mul, NULL, a, b);
 }
 
+inline static double _subtract(ptr_t _, double x, double y)
+{
+    return x - y;
+}
+fa_signal_t fa_signal_subtract(fa_signal_t a, fa_signal_t b)
+{
+    return fa_signal_lift2(string("(-)"), _subtract, NULL, a, b);
+}
+
+inline static double _divide(ptr_t _, double x, double y)
+{
+    return x / y;
+}
+fa_signal_t fa_signal_divide(fa_signal_t a, fa_signal_t b)
+{
+    return fa_signal_lift2(string("(/)"), _divide, NULL, a, b);
+}
+
+
+inline static double _absolute(ptr_t _, double x)
+{
+    return abs(x);
+}
+fa_signal_t fa_signal_absolute(fa_signal_t a)
+{
+    return fa_signal_lift(string("absolute"), _absolute, NULL, a);
+}
 
 inline static double _sin(ptr_t _, double x)
 {
@@ -1018,6 +1044,7 @@ fa_signal_t fa_signal_sin(fa_signal_t a)
 {
     return fa_signal_lift(string("sin"), _sin, NULL, a);
 }
+
 inline static double _cos(ptr_t _, double x)
 {
     return cos(x);
@@ -1055,6 +1082,31 @@ void signal_destroy(ptr_t a)
     return fa_signal_destroy(a);
 }
 
+ptr_t signal_add(ptr_t a, ptr_t b)
+{
+    return fa_signal_add(a, b);
+}
+
+ptr_t signal_subtract(ptr_t a, ptr_t b)
+{
+    return fa_signal_subtract(a, b);
+}
+
+ptr_t signal_multiply(ptr_t a, ptr_t b)
+{
+    return fa_signal_multiply(a, b);
+}
+
+ptr_t signal_divide(ptr_t a, ptr_t b)
+{
+    return fa_signal_divide(a, b);
+}
+
+ptr_t signal_absolute(ptr_t a)
+{
+    return fa_signal_absolute(a);
+}
+
 string_t signal_show(ptr_t a)
 {
     return fa_signal_draw_tree(fa_signal_to_tree(fa_signal_simplify(a)));
@@ -1066,6 +1118,8 @@ fa_ptr_t signal_impl(fa_id_t interface)
         = { signal_copy };
     static fa_destroy_t signal_destroy_impl
         = { signal_destroy };
+    static fa_number_t  signal_number_impl
+        = { signal_add, signal_subtract, signal_multiply, signal_divide, signal_absolute };
     static fa_string_show_t signal_show_impl
         = { signal_show };
 
@@ -1075,6 +1129,9 @@ fa_ptr_t signal_impl(fa_id_t interface)
 
     case fa_destroy_i:
         return &signal_destroy_impl;
+
+    case fa_number_i:
+        return &signal_number_impl;
 
     case fa_string_show_i:
         return &signal_show_impl;

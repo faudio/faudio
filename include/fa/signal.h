@@ -16,6 +16,7 @@
     @par Implements
     - fa_copy_t
     - fa_string_show_t
+    - fa_number_t
     - fa_destroy_t
     
  
