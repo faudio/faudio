@@ -13,7 +13,6 @@
 
 string_t from_os_status(OSStatus err)
 {                
-    // FIXME OK?
     return string((char*) GetMacOSStatusErrorString(err));
 }
 
@@ -22,8 +21,6 @@ string_t component_name(AudioComponent component)
     CFStringRef cf_str;
     AudioComponentCopyName(component, &cf_str);
     return fa_string_from_native((void*) cf_str);
-    
-    // return string("z");
 }
 
 inline static 
@@ -32,25 +29,22 @@ void instance_num_channels(AudioComponentInstance instance, int* numIns, int* nu
     *numIns = 0;
     *numOuts = 0;
 
+    OSStatus err;
     AUChannelInfo supportedChannels [128];
     UInt32 supportedChannelsSize = sizeof (supportedChannels);
 
-    if (AudioUnitGetProperty (instance, kAudioUnitProperty_SupportedNumChannels, kAudioUnitScope_Global,
-                              0, supportedChannels, &supportedChannelsSize) == noErr
+    if ((err = AudioUnitGetProperty (instance, kAudioUnitProperty_SupportedNumChannels, kAudioUnitScope_Global,
+                              0, supportedChannels, &supportedChannelsSize)
                &&
-        supportedChannelsSize > 0)
+        supportedChannelsSize > 0))
     {
-        for (int i = 0; i < supportedChannelsSize / sizeof (AUChannelInfo); ++i)
-        {                     
-            *numIns = MAX(*numIns, (int) supportedChannels[i].inChannels);
-            *numOuts = MAX(*numOuts, (int) supportedChannels[i].outChannels);
-        }
+        assert(false && "Could not get number of channels");
     }
-    else
-    {     
-        // TODO why is this default?
-        *numIns = 1;
-        *numOuts = 1;
+        
+    for (int i = 0; i < supportedChannelsSize / sizeof (AUChannelInfo); ++i)
+    {                     
+        *numIns = MAX(*numIns, (int) supportedChannels[i].inChannels);
+        *numOuts = MAX(*numOuts, (int) supportedChannels[i].outChannels);
     }
 }
 
@@ -89,16 +83,13 @@ int                         gBusNumber;
 AudioTimeStamp              gTimeStamp;
 AudioBufferList*            gBufferList;
 
-void FillOutAudioTimeStampWithSampleTime2 (
-   AudioTimeStamp *outATS,
-   Float64 inSampleTime
-) {
-   outATS->mSampleTime = inSampleTime;
-   outATS->mHostTime = 0;
-   outATS->mRateScalar = 0;
-   outATS->mWordClockTime = 0;
-   memset (&outATS->mSMPTETime, 0, sizeof (SMPTETime));
-   outATS->mFlags = kAudioTimeStampSampleTimeValid;
+void init_audio_time_stamp (AudioTimeStamp *time_stamp, Float64 inSampleTime) {
+   time_stamp->mSampleTime = inSampleTime;
+   time_stamp->mHostTime = 0;
+   time_stamp->mRateScalar = 0;
+   time_stamp->mWordClockTime = 0;
+   memset (&time_stamp->mSMPTETime, 0, sizeof (SMPTETime));
+   time_stamp->mFlags = kAudioTimeStampSampleTimeValid;
 }
 
 /*
@@ -147,8 +138,6 @@ void instance_prepare(AudioComponentInstance instance)
     AudioUnitSetProperty (instance, kAudioUnitProperty_SampleRate, kAudioUnitScope_Output, 0,
                           &sampleRate, sizeof(sampleRate));
     
-    // set latency ?
-    
     AudioUnitSetProperty (instance, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, 0,
                           &numberOfFrames, sizeof(numberOfFrames));
     AudioUnitSetProperty (instance, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Input, 0,
@@ -163,13 +152,7 @@ void instance_prepare(AudioComponentInstance instance)
     gRenderFlags = 0;
     gBusNumber   = 0;                              
     
-    memset(&gTimeStamp, 0, sizeof(AudioTimeStamp));
-    FillOutAudioTimeStampWithSampleTime2(&gTimeStamp, sampleTime / sampleRate);
-
-    // FillOutAudioTimeStampWithSampleTime2(&gTimeStamp, sampleTime / sampleRate);
-    // // gTimeStamp.mHostTime   = AudioGetCurrentHostTime();
-    // gTimeStamp.mFlags      = kAudioTimeStampSampleTimeValid | kAudioTimeStampHostTimeValid;
-    // gTimeStamp.mFlags      = 0;
+    init_audio_time_stamp(&gTimeStamp, sampleTime / sampleRate);
     
     gBufferList  = create_buffer_list(numberOfChannels, 1, numberOfFrames);
     // TODO different number of buses ?
@@ -233,11 +216,6 @@ void instance_cleanup(AudioComponentInstance instance)
 
 
 
-
-
-
-
-
 /**
     @return 
         A list of AudioComponent
@@ -295,32 +273,24 @@ list_t find_dls_music_device()
 
 void run_dsl()
 {                  
-    fa_print_ln(string("This is test_dls!"));
-    
     list_t components = find_dls_music_device();
-    printf("%d\n", fa_list_length(components));
+    assert(fa_list_is_single(components) && "Missing or ambigous DLSMusicDevice");
     ptr_t dls = fa_list_head(components);
-    printf("%s\n", unstring(component_name(dls)));
-    
-    // mark_used(dls);
     ptr_t instance = NULL;
     AudioComponentInstanceNew(dls, (AudioComponentInstance*) &instance);
 
-    printf("%d\n%d\n", instance_num_inputs(instance), instance_num_outputs(instance));
-
-
     // Render to channels * 44100 samples
-    
     buffer_t outb = fa_buffer_create(2*44100*sizeof(double));
     double* out = fa_buffer_unsafe_address(outb);
-    // double* out = fa_malloc(2*44100*sizeof(double));
-
+    
+    
     instance_prepare(instance);
 
-    for (int i = 0; i < 30; ++i)
-        instance_send_midi(instance, 0x90, 48+i*3, 90);
-
+    for (int i = 0; i < 3; ++i) {
+        instance_send_midi(instance, 0x90, 60+i*3, 90);
+    }
     instance_process(instance, out);
+
     instance_cleanup(instance);
     
     fa_buffer_write_audio(string("test.wav"), 2, outb);
