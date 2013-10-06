@@ -238,6 +238,8 @@ ptr_t fa_buffer_write_audio(fa_string_t  path,
                             int          channels,
                             fa_buffer_t  buffer)
 {
+    assert(channels == 1 && "fa_buffer_write_audio: Can not write more than 1 channels");
+    
     const char     *cpath = fa_string_to_utf8(path);
     double         *ptr   = fa_buffer_unsafe_address(buffer);
     size_t         size   = fa_buffer_size(buffer) / sizeof(double);
