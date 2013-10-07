@@ -1225,7 +1225,7 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
     // printf("Message: %s\n", unstring(fa_string_show(msg)));           
 
     // TODO pre-allocate
-    if (fa_equal(n, string("DLS"))) {
+    if (true /*fa_equal(n, string("DLS"))*/) {
         int status, data1, data2;
         fa_midi_message_decons(msg, &status, &data1, &data2);
         au_send_midi(context, status, data1, data2);
