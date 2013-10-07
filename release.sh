@@ -6,11 +6,14 @@ if [[ $* != *--clean* ]]; then
 	mkdir -p distribute
 	mkdir -p distribute/bin
 	mkdir -p distribute/include
+	mkdir -p distribute/bindings
 	# mkdir -p distribute/lib
 	mkdir -p distribute/Frameworks
 
 	cp -R include distribute
 	rm distribute/include/config.h.in
+
+	cp -R bindings/lisp distribute/bindings
 
 	cp -R build/Frameworks/Faudio.framework distribute/Frameworks
 
