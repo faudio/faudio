@@ -477,6 +477,7 @@
 (midi-close-stream z)
 
 ; TODO send/recv
+(midi-schedule (milliseconds 0) (action-send "" (midi #x91 60 127)) z)
 
 
 ; ---------------------------------------------------------------------------------------------------

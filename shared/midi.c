@@ -9,6 +9,9 @@
 
 #include <fa/midi.h>
 #include <fa/midi/message.h>
+#include <fa/atomic/queue.h>
+#include <fa/pair/left.h>
+#include <fa/priority_queue.h>
 #include <fa/list.h>
 #include <fa/thread.h>
 #include <fa/time.h>
@@ -61,9 +64,16 @@ struct _fa_midi_stream_t {
 
     impl_t              impl;               // Dispatcher
     native_stream_t     native_input,
-                        native_output;      // Native stream
+                        native_output;      // Native stream(s)
     device_t            device;
-    list_t              incoming;
+
+    int32_t             time;               // Current time in milliseconds (TODO!)
+
+
+    atomic_queue_t      in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
+    priority_queue_t    controls;           // Scheduled controls (Time, (Channel, Ptr))
+
+    // list_t              incoming;
 };
 
 static mutex_t   pm_mutex;
@@ -157,9 +167,13 @@ inline static stream_t new_stream(device_t device)
 
     stream->impl            = &midi_stream_impl;
     stream->device          = device;
-    stream->incoming        = fa_list_empty();
+
     stream->native_input    = NULL;
     stream->native_output   = NULL;
+
+    stream->time            = 0;
+    stream->in_controls     = atomic_queue();
+    stream->controls        = priority_queue();
 
     return stream;
 }
@@ -232,6 +246,7 @@ void fa_midi_end_session(session_t session)
     fa_thread_lock(pm_mutex);
     {
         if (pm_status) {
+            inform(string("(actually terminating)"));
             result = Pm_Terminate();
 
             if (result < 0) {
@@ -309,7 +324,7 @@ void fa_midi_set_status_callback(
 {
     assert(session && "Not a real session");
 
-    // See device_osx.c and device_win.c
+    // See platform/*/device.c
     add_midi_status_listener(function, data);
 }
 
