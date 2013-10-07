@@ -154,6 +154,7 @@
 
 
 (defun duplicate (x) (cl:list x x))
+
 (defun signal-run-default (proc &key (stream-callback (lambda (x) nil))) 
   (let* ((s (audio-begin-session))
        (i (audio-default-input s))
@@ -169,6 +170,14 @@
   (destroy st)
   (destroy s))) 
 
+
+(defun signal-run-file* (n x &key (controls '()) (path "test.wav"))
+  (signal-run-file n controls x path))
+
+(defun signal-dls* ()
+  (let* ((dls (signal-dls)))
+    (cl:list (from-pointer 'signal (pair-first dls)) 
+             (from-pointer 'signal (pair-second dls)))))
 
 
 (defun signal-print* (n x &key (controls '()))

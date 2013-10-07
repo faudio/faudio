@@ -618,8 +618,6 @@
 (defun ms (x) (milliseconds x))
 
 ; TODO move
-(defun signal-run-file* (n x &key (controls '()) (path "test.wav"))
-  (signal-run-file n controls x path))
 
 (hours 1)
 (seconds 1.5)
@@ -758,9 +756,9 @@
    (* 0.1 (sin (line 440))))))
 
 ; Echo inputs
-(signal-run-default 
- (lambda (inputs)
-   inputs))
+;(signal-run-default 
+; (lambda (inputs)
+;   inputs))
 
 (signal-run-default
  (lambda (inputs)
@@ -771,10 +769,8 @@
    (mapcar (lambda (x) (* (delay 88200 x) 0.4)) inputs)))
 
 
-(defun signal-dls* ()
-(let* ((dls (signal-dls)))
-     (cl:list (from-pointer 'signal (pair-first dls)) 
-              (from-pointer 'signal (pair-second dls)))))
+
+(car (signal-dls*))
 
 ; DLSMusicDevice
 ;(setf out (pair-to-list (signal-dls)))
@@ -786,8 +782,18 @@
    (audio-send (milliseconds 0)   (action-send "DLS" (midi #x91 60 127)) stream)
    (audio-send (milliseconds 100) (action-send "DLS" (midi #x91 63 127)) stream)
    (audio-send (milliseconds 200) (action-send "DLS" (midi #x91 65 127)) stream)
-   (audio-send (milliseconds 300) (action-send "DLS" (midi #x91 62 127)) stream)
-   ))
+   (audio-send (milliseconds 300) (action-send "DLS" (midi #x91 62 127)) stream)))
+
+(signal-run-file* 
+ (cl:* 44100 300) 
+ (car (signal-dls*)) 
+ :controls (cl:list 
+            (pair-create (milliseconds 0)   (action-send "DLS" (midi #x91 60 127)))
+            (pair-create (milliseconds 100) (action-send "DLS" (midi #x91 63 127)))
+            (pair-create (milliseconds 200) (action-send "DLS" (midi #x91 65 127)))
+            (pair-create (milliseconds 300) (action-send "DLS" (midi #x91 62 127)))
+            ) 
+ :path "/Users/hans/audio/test.wav")
 
 ; (action-send-name (action-send "DLS" (midi #x90 60 127)))
 ; (from-pointer 'midi-message (action-send-value (action-send "DLS" (midi #x91 60 127))))
