@@ -8,6 +8,7 @@
 * Bump 
     * CMakeLists.txt
     * bindings/lisp/faudio.asd
+    * doc/Doxyfile
     * `git add` (changed files)
     * `git commit -m "vX.X.X"`
     * `git tag vX.X.X`
@@ -20,3 +21,4 @@
     * Upload the generated zip/tarball
 
 * Run `.release.sh --clean`
+

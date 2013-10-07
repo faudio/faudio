@@ -23,6 +23,16 @@ if [[ $* != *--clean* ]]; then
 	mv distribute faudio
 	tar -pvczf faudio-$VERSION.tar.gz faudio
 	rm -rf faudio
+	
+	make modules doc
+    pushd pages
+    git rm -rf docs
+    cp -R ../doc/build/html/ docs
+    git add docs         
+    git commit -m "Updated docs"
+    git push
+    popd
+    
 
 else
 	echo "Cleaning"
