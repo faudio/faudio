@@ -286,8 +286,8 @@ void fa_audio_end_session(session_t session)
             Pa_Terminate();
             pa_status = false;
         }
+        current_session = NULL;
     }
-    current_session = NULL;
     fa_thread_unlock(pa_mutex);
     delete_session(session);
 }

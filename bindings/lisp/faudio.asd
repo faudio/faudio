@@ -40,7 +40,6 @@
         (:file "buffer")
         (:file "time")
         (:file "error")
-        (:file "midi")
         (:module "midi2"
           :pathname "midi"
           :components (
@@ -48,6 +47,7 @@
         (:file "signal")
         (:file "action")
         (:file "plot")
+        (:file "midi")
         (:file "audio")
         (:file "atomic")
         (:module "atomic2"

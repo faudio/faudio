@@ -66,8 +66,9 @@ struct _fa_midi_stream_t {
     list_t              incoming;
 };
 
-static mutex_t pm_mutex;
-static bool    pm_status;
+static mutex_t   pm_mutex;
+static bool      pm_status;
+static session_t current_session;
 
 error_t midi_device_error(string_t msg);
 error_t midi_device_error_with(string_t msg, int error);
@@ -173,8 +174,9 @@ inline static void delete_stream(stream_t stream)
 
 void fa_midi_initialize()
 {
-    pm_mutex  = fa_thread_create_mutex();
-    pm_status = false;
+    pm_mutex        = fa_thread_create_mutex();
+    pm_status       = false;
+    current_session = NULL;
 }
 
 void fa_midi_terminate()
@@ -213,6 +215,7 @@ session_t fa_midi_begin_session()
             session_t session = new_session();
             session_init_devices(session);
             // session->acquired = time(NULL);      // TODO
+            current_session = session;
             return session;
         }
     }
@@ -239,6 +242,7 @@ void fa_midi_end_session(session_t session)
             }
 
             pm_status = false;
+            current_session = session;
         }
     }
     fa_thread_unlock(pm_mutex);
@@ -259,6 +263,23 @@ void fa_midi_with_session(session_callback_t    session_callback,
     }
 
     fa_midi_end_session(session);
+}
+
+fa_list_t fa_midi_current_sessions()
+{
+    if (!current_session) {
+        return list();
+    } else {
+        return list(current_session);
+    }
+}
+
+fa_ptr_t fa_midi_end_all_sessions()
+{
+    fa_dfor_each(x, fa_midi_current_sessions()) {
+        fa_midi_end_session(x);
+    }
+    return NULL;
 }
 
 fa_list_t fa_midi_all(session_t session)

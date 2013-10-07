@@ -20,6 +20,8 @@
 (defcfun (midi-begin-session "fa_midi_begin_session") midi-session)
 (defcfun (midi-end-session "fa_midi_end_session") :void (a midi-session))
 (defcfun (midi-with-session "fa_midi_with_session") :void (a midi-session-callback) (b ptr) (c error-callback) (d ptr))
+(defcfun (midi-current-sessions "fa_midi_current_sessions") list)
+(defcfun (midi-end-all-sessions "fa_midi_end_all_sessions") ptr)
 (defcfun (midi-all "fa_midi_all") list (a midi-session))
 (defcfun (midi-default "fa_midi_default") pair (a midi-session))
 (defcfun (midi-default-input "fa_midi_default_input") midi-device (a midi-session))

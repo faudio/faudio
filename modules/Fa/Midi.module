@@ -62,6 +62,20 @@ module Fa.Midi
         SessionCallback, Ptr, 
         Callback, Ptr) -> Void;
 
+    /** Get all currently active MIDI sessions. Note that at most one midi session
+        can be active at the same time, so this function returns a list of zero or
+        one elements.
+        
+        @returns A list of @ref fa_midi_session_t.
+     */
+    currentSessions : () -> List;
+    
+    /** End all currently active MIDI sessions.
+        
+        @returns The null pointer if successful, or an error value otherwise.
+     */
+    endAllSessions : () -> Ptr;
+
     /** Get all active midi devices of the given session.
 
         @param session   The session.
