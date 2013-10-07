@@ -265,7 +265,7 @@ session_t fa_audio_begin_session()
 
             session_t session = new_session();
             session_init_devices(session);
-            // session->acquired = time(NULL);      // TODO
+
             current_session = session;
             return session;
         }
