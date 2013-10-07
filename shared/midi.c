@@ -29,15 +29,15 @@
     * TODO proper error checking
  */
 
-typedef fa_midi_device_t           device_t;
-typedef fa_midi_stream_t           stream_t;
-typedef fa_midi_session_t          session_t;
-typedef fa_midi_stream_callback_t  stream_callback_t;
-typedef fa_midi_session_callback_t session_callback_t;
-typedef fa_midi_status_callback_t  status_callback_t;
+typedef fa_midi_device_t            device_t;
+typedef fa_midi_stream_t            stream_t;
+typedef fa_midi_session_t           session_t;
+typedef fa_midi_stream_callback_t   stream_callback_t;
+typedef fa_midi_session_callback_t  session_callback_t;
+typedef fa_midi_status_callback_t   status_callback_t;
 
-typedef PmDeviceID    native_index_t;
-typedef PmStream     *native_stream_t;
+typedef PmDeviceID                  native_index_t;
+typedef PmStream                   *native_stream_t;
 
 struct _fa_midi_session_t {
 
@@ -619,10 +619,6 @@ ptr_t midi_stream_impl(fa_id_t interface)
         = { midi_stream_show };
     static fa_destroy_t midi_stream_destroy_impl
         = { midi_stream_destroy };
-    // static fa_message_receiver_interface_t midi_stream_message_receiver_interface_impl
-    // = { midi_stream_send };
-    // static fa_message_sender_interface_t midi_stream_message_sender_interface_impl
-    // = { midi_stream_sync, midi_stream_receive };
 
     switch (interface) {
 
@@ -632,12 +628,6 @@ ptr_t midi_stream_impl(fa_id_t interface)
 
     case fa_destroy_i:
         return &midi_stream_destroy_impl;
-
-        // case fa_message_sender_interface_i:
-        // return &midi_stream_message_sender_interface_impl;
-
-        // case fa_message_receiver_interface_i:
-        // return &midi_stream_message_receiver_interface_impl;
 
     default:
         return NULL;
