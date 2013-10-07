@@ -705,8 +705,8 @@ EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = */include/fa/atomic* \
                          */include/fa/graph* \
                          */include/fa/pair/left* \
-                         */include/fa/pair/set* \
-                         */include/fa/pair/std* \
+                         */include/fa/set* \
+                         */include/fa/std* \
                          */include/fa/system* \
                          */include/fa/plot* \
                          */include/fa/priority_queue* \
