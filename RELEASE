@@ -1,11 +1,10 @@
 
 ## Release check-list
 
-* Check semantic version
-* Commit, push and `make test`
 * Set Release (later: for now, everything is Debug)
+* Commit, push and `make test`
 
-* Bump 
+* Bump version 
     * CMakeLists.txt
     * bindings/lisp/faudio.asd
     * doc/Doxyfile
