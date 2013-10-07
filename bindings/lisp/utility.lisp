@@ -154,11 +154,12 @@
 
 
 (defun duplicate (x) (cl:list x x))
-(defun signal-run-default (proc) 
+(defun signal-run-default (proc &key (stream-callback (lambda (x) nil))) 
   (let* ((s (audio-begin-session))
        (i (audio-default-input s))
        (o (audio-default-output s))
        (st (audio-open-stream* i o proc)))
+  (funcall stream-callback st)
   (capi:popup-confirmer nil "Running signal..."
     :callback-type :none 
     :ok-button "Stop" 

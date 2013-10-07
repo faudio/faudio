@@ -771,6 +771,27 @@
    (mapcar (lambda (x) (* (delay 88200 x) 0.4)) inputs)))
 
 
+(defun signal-dls* ()
+(let* ((dls (signal-dls)))
+     (cl:list (from-pointer 'signal (pair-first dls)) 
+              (from-pointer 'signal (pair-second dls)))))
+
+; DLSMusicDevice
+;(setf out (pair-to-list (signal-dls)))
+(signal-run-default 
+ (lambda (inputs) (signal-dls*)) 
+ :stream-callback 
+ (lambda (stream)
+   (cl:print stream)
+   (audio-send (milliseconds 0)   (action-send "DLS" (midi #x91 60 127)) stream)
+   (audio-send (milliseconds 100) (action-send "DLS" (midi #x91 63 127)) stream)
+   (audio-send (milliseconds 200) (action-send "DLS" (midi #x91 65 127)) stream)
+   (audio-send (milliseconds 300) (action-send "DLS" (midi #x91 62 127)) stream)
+   ))
+
+; (action-send-name (action-send "DLS" (midi #x90 60 127)))
+; (from-pointer 'midi-message (action-send-value (action-send "DLS" (midi #x91 60 127))))
+
 (defun signal-run-many (xs)
   (signal-run-default (lambda (dummy) xs)))
 
