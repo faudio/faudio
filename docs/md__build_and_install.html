@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>Fae: Build and install</title>
+<title>faudio v2.2.2: Build and install</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Fae
+   <div id="projectname">faudio v2.2.2
    </div>
   </td>
  </tr>
@@ -74,7 +74,7 @@
 <div class="textblock"><h1><a class="anchor" id="Prerequisites"></a>
 Prerequisites</h1>
 <p><a class="anchor" id="Prerequisites"></a></p>
-<p>The following tools and libraries are required to build Fae.</p>
+<p>The following tools and libraries are required to build <em>faudio</em>.</p>
 <h1><a class="anchor" id="Platform"></a>
 Platform</h1>
 <p>Supported platforms are:</p>
@@ -93,7 +93,7 @@ Compiler</h2>
 <p>The default Windows compiler (Visual C/C++) is not well supported, the MinGW version of GCC is recommended.</p>
 <h2><a class="anchor" id="Tools"></a>
 Tools</h2>
-<p>The following tools are required to build Fae.</p>
+<p>The following tools are required to build <em>faudio</em>.</p>
 <h3>CMake</h3>
 <p><a href="http://www.cmake.org">http://www.cmake.org</a></p>
 <p>Required for building the libraries and binaries.</p>
@@ -101,9 +101,6 @@ Tools</h2>
 <h3>Modulo</h3>
 <p><a href="https://github.com/hanshoglund/modulo">https://github.com/hanshoglund/modulo</a></p>
 <p>Required for generating headers and low-level language bindings.</p>
-<h3>Dist</h3>
-<p><a href="https://github.com/hanshoglund/dist">https://github.com/hanshoglund/dist</a></p>
-<p>Required for automatic package resolution. Not required if dependencies are built locally or available through some other package management system.</p>
 <h3>Doxygen</h3>
 <p><a href="http://www.stack.nl/~dimitri/doxygen">http://www.stack.nl/~dimitri/doxygen</a></p>
 <p>Required for generating the documentation.</p>
@@ -116,9 +113,6 @@ Tools</h2>
 <h3>ImageMagick</h3>
 <p><a href="http://www.imagemagick.org/script/index.php">http://www.imagemagick.org/script/index.php</a></p>
 <p>Optionally used for converting graphs.</p>
-<h3>libpng</h3>
-<p>TODO URL</p>
-<p>libpng</p>
 <h3>GhostScript</h3>
 <p><a href="http://pages.cs.wisc.edu/~ghost/">http://pages.cs.wisc.edu/~ghost/</a></p>
 <p>Optionally used for converting plots.</p>
@@ -142,8 +136,8 @@ Libraries</h2>
 <h1><a class="anchor" id="BasicBuild"></a>
 Basic build</h1>
 <p>First ensure that your system meets the <a class="el" href="md__build_and_install.html#Platform">platform</a> requirements, and that the necessary <a class="el" href="md__build_and_install.html#Compiler">compiler</a> and <a class="el" href="md__build_and_install.html#Tools">tools</a> are available.</p>
-<p>The source code for Fae can be obtained by. </p>
-<pre class="fragment">$ git clone git@github.com:fae/fae.git
+<p>The source code for <em>faudio</em> can be obtained by. </p>
+<pre class="fragment">$ git clone git@github.com:faudio/faudio.git
 $ cd audio-engine
 </pre><p>After changing into the <code>audio-engine</code> directory, the <code>bootstrap</code> script should be run. This will create a standard out-of-source build in the <code>build</code> subdirectory. After a successful bootstrap, you can run <code>make help</code> to view build commands or <code>make</code> to perform the build.</p>
 <p>All in all, the simplest possible build session looks like this: </p>
@@ -223,7 +217,7 @@ Commands</h2>
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 19 2013 01:14:06 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Mon Oct 7 2013 11:36:36 for faudio v2.2.2 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

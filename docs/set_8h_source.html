@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>Fae: include/fae/set.h Source File</title>
+<title>faudio v2.0: include/fa/set.h Source File</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Fae
+   <div id="projectname">faudio v2.0
    </div>
   </td>
  </tr>
@@ -44,7 +44,7 @@
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_aa61b2fff6575bd45838b59453565768.html">fae</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_6b89b2d2887aea5b8d12d30c5d3aa615.html">fa</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -53,46 +53,91 @@
 </div><!--header-->
 <div class="contents">
 <a href="set_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef _FAE_SET</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _FAE_SET</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef _FA_SET</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _FA_SET</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="fae_2fae_8h.html">fae.h</a>&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="list_8h.html">fae/list.h</a>&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="string_8h.html">fae/string.h</a>&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="fa_2fa_8h.html">fa.h</a>&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="list_8h.html">fa/list.h</a>&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="string_8h.html">fa/string.h</a>&gt;</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="code" href="group___fae_set.html#ga51dde2329edd32c7f85af76489dbb364">   15</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__fae__set__t.html">_fae_set_t</a> * <a class="code" href="group___fae_set.html#ga51dde2329edd32c7f85af76489dbb364">fae_set_t</a>;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;fae_set_t <a class="code" href="group___fae_set.html#ga662f7cd238c6c2946f48b6063ccf2165">fae_set_empty</a>();</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;fae_set_t <a class="code" href="group___fae_set.html#ga4d88a05e9dd377b6462f5ba1508669af">fae_set_single</a>(<a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>);</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;fae_set_t <a class="code" href="group___fae_set.html#gab054a3dea19bd5ffb11c043ee50fad89">fae_set_add</a>(<a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>, fae_set_t);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;fae_set_t <a class="code" href="group___fae_set.html#gaef9553c84fd35c9ef0b80c59c78c0d37">fae_set_set</a>(<a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>, fae_set_t);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;fae_set_t <a class="code" href="group___fae_set.html#ga02140820935c255ffa82bfa648c1113d">fae_set_remove</a>(<a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>, fae_set_t);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;fae_set_t <a class="code" href="group___fae_set.html#ga480f94bc9acd9f24c90ad39da4847e9c">fae_set_dadd</a>(<a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>, fae_set_t);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;fae_set_t <a class="code" href="group___fae_set.html#gac6d649cc490094026a3872580620ab16">fae_set_dset</a>(<a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>, fae_set_t);</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;fae_set_t <a class="code" href="group___fae_set.html#ga6c0a8662c23f65cf7a8ed1fda3685c32">fae_set_dremove</a>(<a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>, fae_set_t);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;fae_set_t <a class="code" href="group___fae_set.html#ga47957b4169668c5bf1cd4df934c2c4ce">fae_set_copy</a>(fae_set_t);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fae_set.html#ga8765d1e7ebac5ebd58ac4fe6597e12e5">fae_set_destroy</a>(fae_set_t);</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keywordtype">int</span> <a class="code" href="group___fae_set.html#ga88ac796cfa688840a044f92c123f6c14">fae_set_size</a>(fae_set_t);</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fae_set.html#gac931b6b09c751bcfc10ceeba8b157988">fae_set_is_empty</a>(fae_set_t);</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fae_set.html#ga93322538f5bb9c4d6b6ae536bf9ee6e3">fae_set_is_single</a>(fae_set_t);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fae_set.html#ga85a904dd974529005459da7b92009ecc">fae_set_has</a>(<a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>, fae_set_t);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a> <a class="code" href="group___fae_set.html#ga11a16a5d5e11c13f75e865f5a33527b1">fae_set_get</a>(<a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>, fae_set_t);</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fae_set.html#ga76770c523137ad2e961c01f8dcbd09be">fae_set_is_subset_of</a>(fae_set_t, fae_set_t);</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fae_set.html#ga28531d9f8f07e4e36029c61db531adf8">fae_set_is_proper_subset_of</a>(fae_set_t, fae_set_t);</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;fae_set_t <a class="code" href="group___fae_set.html#ga4101f77ffc253b7d2741268339dba528">fae_set_sum</a>(fae_set_t, fae_set_t);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;fae_set_t <a class="code" href="group___fae_set.html#ga02d9e522c552f9a3d562a219d63c34b7">fae_set_intersection</a>(fae_set_t, fae_set_t);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;fae_set_t <a class="code" href="group___fae_set.html#ga2ab1360df2a621e643c600fba39ed1d6">fae_set_difference</a>(fae_set_t, fae_set_t);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;fae_set_t <a class="code" href="group___fae_set.html#ga9201f36bbc3524809c8b4a794d836472">fae_set_product</a>(fae_set_t, fae_set_t);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;fae_set_t <a class="code" href="group___fae_set.html#gab9fbf2823f20cddc0f6df50d40cdb658">fae_set_power</a>(fae_set_t);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;fae_set_t <a class="code" href="group___fae_set.html#ga1ece9fe59129e652ac45711c8cc4b3c7">fae_set_from_list</a>(<a class="code" href="struct__fae__list__t.html">fae_list_t</a>);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<a class="code" href="struct__fae__list__t.html">fae_list_t</a> <a class="code" href="group___fae_set.html#gae9a3e1bde112d70e78ab3a8c88228555">fae_set_to_list</a>(fae_set_t);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#endif // _FAE_SET</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">   43</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_fa_set_t * <a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a> <a class="code" href="group___fa_set.html#ga786a1ae6374f913191be7abea91227b3">fa_set_empty</a>();</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a> <a class="code" href="group___fa_set.html#ga3cecaa1307ec4f718b66a6b7dce16f04">fa_set_single</a>(<a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a> <a class="code" href="group___fa_set.html#ga56154720d947c216be25d0d9dabea284">fa_set_add</a>(<a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>, <a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a> <a class="code" href="group___fa_set.html#gac55e19a90e119120dcb59703c7104a88">fa_set_set</a>(<a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>, <a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a> <a class="code" href="group___fa_set.html#ga4fea66374e1279a32421f27c5518e037">fa_set_remove</a>(<a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>, <a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a> <a class="code" href="group___fa_set.html#ga9f0e5078b329bf37893cf7108d20a23a">fa_set_dadd</a>(<a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>, <a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a> <a class="code" href="group___fa_set.html#gadd235b842ff577da6b17ec4ab3bab831">fa_set_dset</a>(<a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>, <a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a> <a class="code" href="group___fa_set.html#ga11dbbab42c0f888f8a773cc4ca372007">fa_set_dremove</a>(<a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>, <a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a> <a class="code" href="group___fa_set.html#ga95f49f26dc7b13603cc56e16cdb2fcda">fa_set_copy</a>(<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fa_set.html#gaa7760aab0e9e3979c3563e76c0cdbbd5">fa_set_destroy</a>(<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keywordtype">int</span> <a class="code" href="group___fa_set.html#ga51a44b57e7d16c240b2797046cf3556b">fa_set_size</a>(<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fa_set.html#gabf98467a95efc851309d5f5519d9d00f">fa_set_is_empty</a>(<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fa_set.html#ga1316b250b87eb6c9448ff1ee4903e85b">fa_set_is_single</a>(<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fa_set.html#gaa24c4c69ee73f48b11e9849b44d03515">fa_set_has</a>(<a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>, <a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a> <a class="code" href="group___fa_set.html#ga90637ff5ae25684a569924e74a22905d">fa_set_get</a>(<a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>, <a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fa_set.html#gaa0babbd88a7ab9b303e92eaf84fb41e0">fa_set_is_subset_of</a>(<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>, <a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>);</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fa_set.html#gad406b2d2e8181a38064cd5da6aba92fa">fa_set_is_proper_subset_of</a>(<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>, <a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>);</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a> <a class="code" href="group___fa_set.html#gaa851ca130d69c22ce666ed546c0dfa4e">fa_set_sum</a>(<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>, <a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a> <a class="code" href="group___fa_set.html#ga6504e607b9a9804c8653ef1c288dc269">fa_set_intersection</a>(<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>, <a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>);</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a> <a class="code" href="group___fa_set.html#gab48e2548b66e7c1a89981939ce916674">fa_set_difference</a>(<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>, <a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>);</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a> <a class="code" href="group___fa_set.html#ga7bbe6c42db55e6efa4c7a9a1e3df4326">fa_set_product</a>(<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>, <a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>);</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a> <a class="code" href="group___fa_set.html#ga9492504940fd41d5bbed3363cebf11f7">fa_set_from_list</a>(<a class="code" href="group___fa_list.html#ga35ecb12ab934ded0cce0bcf28e3bc5d2">fa_list_t</a>);</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<a class="code" href="group___fa_list.html#ga35ecb12ab934ded0cce0bcf28e3bc5d2">fa_list_t</a> <a class="code" href="group___fa_set.html#ga83d414dd13505af04d5c8582bc85b8e9">fa_set_to_list</a>(<a class="code" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">fa_set_t</a>);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">#endif // _FA_SET</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 19 2013 01:14:05 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Mon Oct 7 2013 09:37:16 for faudio v2.0 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

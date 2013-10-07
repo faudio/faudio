@@ -1,6 +1,0 @@
-<map id="Atomic" name="Atomic">
-<area shape="rect" id="node1" href="$group___doremir_atomic_stack.html" title="Lock&#45;free stack (LIFO) data structure." alt="" coords="262,4,320,36"/>
-<area shape="rect" id="node2" href="$group___doremir_atomic_queue.html" title="Lock&#45;free queue (FIFO) data structure." alt="" coords="257,60,324,92"/>
-<area shape="rect" id="node3" href="$group___doremir_atomic_ring_buffer.html" title="Circular buffer data structure." alt="" coords="246,116,336,148"/>
-<area shape="rect" id="node5" href="$group___doremir.html" title="Core definitions." alt="" coords="5,60,80,92"/>
-</map>

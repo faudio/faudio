@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>Fae: include/fae/system/event.h Source File</title>
+<title>faudio v2.0: include/fa/system/event.h Source File</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Fae
+   <div id="projectname">faudio v2.0
    </div>
   </td>
  </tr>
@@ -44,7 +44,7 @@
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_aa61b2fff6575bd45838b59453565768.html">fae</a></li><li class="navelem"><a class="el" href="dir_1b06eafe90438f848d288ff161880575.html">system</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_6b89b2d2887aea5b8d12d30c5d3aa615.html">fa</a></li><li class="navelem"><a class="el" href="dir_addf4d55ac20521f8659acdbb3fba501.html">system</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -53,42 +53,66 @@
 </div><!--header-->
 <div class="contents">
 <a href="event_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef _FAE_SYSTEM_EVENT</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _FAE_SYSTEM_EVENT</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef _FA_SYSTEM_EVENT</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _FA_SYSTEM_EVENT</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;fae.h&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;fae/message.h&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;fae/event.h&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="string_8h.html">fae/string.h</a>&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;fa.h&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;fa/message.h&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;fa/event.h&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="string_8h.html">fa/string.h</a>&gt;</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="code" href="group___fae_system_event.html#ga2fc2e620ef60cad47aed8ab7ef3a96e5">   18</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
-<div class="line"><a name="l00019"></a><span class="lineno"><a class="code" href="group___fae_system_event.html#gga2fc2e620ef60cad47aed8ab7ef3a96e5aa33ee525ba3c1c9962c900861bafbfe8">   19</a></span>&#160;            <a class="code" href="group___fae_system_event.html#gga2fc2e620ef60cad47aed8ab7ef3a96e5aa33ee525ba3c1c9962c900861bafbfe8">mouse_move_event</a>,</div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="code" href="group___fae_system_event.html#gga2fc2e620ef60cad47aed8ab7ef3a96e5adc3968d6e80d81b1198b4eb8efc88890">   20</a></span>&#160;            <a class="code" href="group___fae_system_event.html#gga2fc2e620ef60cad47aed8ab7ef3a96e5adc3968d6e80d81b1198b4eb8efc88890">mouse_drag_event</a>,</div>
-<div class="line"><a name="l00021"></a><span class="lineno"><a class="code" href="group___fae_system_event.html#gga2fc2e620ef60cad47aed8ab7ef3a96e5af9280d8461c35a4ade6d4d2f1274104b">   21</a></span>&#160;            <a class="code" href="group___fae_system_event.html#gga2fc2e620ef60cad47aed8ab7ef3a96e5af9280d8461c35a4ade6d4d2f1274104b">mouse_up_event</a>,</div>
-<div class="line"><a name="l00022"></a><span class="lineno"><a class="code" href="group___fae_system_event.html#gga2fc2e620ef60cad47aed8ab7ef3a96e5ae211f232c88aec63186f4dcadccceb4a">   22</a></span>&#160;            <a class="code" href="group___fae_system_event.html#gga2fc2e620ef60cad47aed8ab7ef3a96e5ae211f232c88aec63186f4dcadccceb4a">mouse_down_event</a>,</div>
-<div class="line"><a name="l00023"></a><span class="lineno"><a class="code" href="group___fae_system_event.html#gga2fc2e620ef60cad47aed8ab7ef3a96e5ae6251812e2338683a4ca3818f72bc16c">   23</a></span>&#160;            <a class="code" href="group___fae_system_event.html#gga2fc2e620ef60cad47aed8ab7ef3a96e5ae6251812e2338683a4ca3818f72bc16c">key_up_event</a>,</div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="code" href="group___fae_system_event.html#gga2fc2e620ef60cad47aed8ab7ef3a96e5a8411490d265befc4c73d49e57a2d714f">   24</a></span>&#160;            <a class="code" href="group___fae_system_event.html#gga2fc2e620ef60cad47aed8ab7ef3a96e5a8411490d265befc4c73d49e57a2d714f">key_down_event</a></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;        } <a class="code" href="group___fae_system_event.html#ga2fc2e620ef60cad47aed8ab7ef3a96e5">fae_system_event_type_t</a>;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;fae_event_t <a class="code" href="group___fae_system_event.html#ga3b9f02a548356023a2b0dfe5101bbcf8">fae_system_event_mouse_move</a>();</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;fae_event_t <a class="code" href="group___fae_system_event.html#ga09779938c8d4ba059d5fe9978f404649">fae_system_event_mouse_drag</a>();</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;fae_event_t <a class="code" href="group___fae_system_event.html#gadedfbe1070dcbe7dd6a65b519d6c3f8f">fae_system_event_mouse_up</a>();</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;fae_event_t <a class="code" href="group___fae_system_event.html#ga46ab2ddbad1228770619b0eddaee08cd">fae_system_event_mouse_down</a>();</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;fae_event_t <a class="code" href="group___fae_system_event.html#ga8b450593bcde69ca6591768bc436dc34">fae_system_event_key_up</a>();</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;fae_event_t <a class="code" href="group___fae_system_event.html#gaebc516449354f79b541859490d714150">fae_system_event_key_down</a>();</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;fae_event_t <a class="code" href="group___fae_system_event.html#gae06b2d2b28bd13c39c9f2a512e07108b" title="Returns an event selected from the given types.">fae_system_event_select</a>(<a class="code" href="struct__fae__list__t.html">fae_list_t</a>);</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;fae_message_sender_t <a class="code" href="group___fae_system_event.html#gab5bf20019a6e2ad7eb9dfdb611b1a283" title="Returns a sender of values selected from the given types.">fae_system_event_receive</a>(<a class="code" href="struct__fae__list__t.html">fae_list_t</a>);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;fae_event_t <a class="code" href="group___fae_system_event.html#gafa49236328a844678c1e82146fda5e68" title="Transforms the given event to write its values to the standard output.">fae_system_event_write_std</a>(fae_event_t);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;fae_message_receiver_t <a class="code" href="group___fae_system_event.html#ga9ef516aaa5244e4b5af3cef9afc26ee5">fae_system_event_send_std</a>();</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;fae_event_t <a class="code" href="group___fae_system_event.html#ga9f09ca9fb9deefb8a29a3cd212baf604" title="Transforms the given event to write its values to the log.">fae_system_event_write_log</a>(fae_event_t);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;fae_message_receiver_t <a class="code" href="group___fae_system_event.html#gab88042e6f77138ad85046adcc66ad47b">fae_system_event_send_log</a>();</div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="code" href="group___fa_system_event.html#gaeade6f81e9d8ab944b0795c319375276">   30</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="code" href="group___fa_system_event.html#ggaeade6f81e9d8ab944b0795c319375276aa33ee525ba3c1c9962c900861bafbfe8">   31</a></span>&#160;            <a class="code" href="group___fa_system_event.html#ggaeade6f81e9d8ab944b0795c319375276aa33ee525ba3c1c9962c900861bafbfe8">mouse_move_event</a>,</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="code" href="group___fa_system_event.html#ggaeade6f81e9d8ab944b0795c319375276adc3968d6e80d81b1198b4eb8efc88890">   32</a></span>&#160;            <a class="code" href="group___fa_system_event.html#ggaeade6f81e9d8ab944b0795c319375276adc3968d6e80d81b1198b4eb8efc88890">mouse_drag_event</a>,</div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="code" href="group___fa_system_event.html#ggaeade6f81e9d8ab944b0795c319375276af9280d8461c35a4ade6d4d2f1274104b">   33</a></span>&#160;            <a class="code" href="group___fa_system_event.html#ggaeade6f81e9d8ab944b0795c319375276af9280d8461c35a4ade6d4d2f1274104b">mouse_up_event</a>,</div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="code" href="group___fa_system_event.html#ggaeade6f81e9d8ab944b0795c319375276ae211f232c88aec63186f4dcadccceb4a">   34</a></span>&#160;            <a class="code" href="group___fa_system_event.html#ggaeade6f81e9d8ab944b0795c319375276ae211f232c88aec63186f4dcadccceb4a">mouse_down_event</a>,</div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="code" href="group___fa_system_event.html#ggaeade6f81e9d8ab944b0795c319375276ae6251812e2338683a4ca3818f72bc16c">   35</a></span>&#160;            <a class="code" href="group___fa_system_event.html#ggaeade6f81e9d8ab944b0795c319375276ae6251812e2338683a4ca3818f72bc16c">key_up_event</a>,</div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="code" href="group___fa_system_event.html#ggaeade6f81e9d8ab944b0795c319375276a8411490d265befc4c73d49e57a2d714f">   36</a></span>&#160;            <a class="code" href="group___fa_system_event.html#ggaeade6f81e9d8ab944b0795c319375276a8411490d265befc4c73d49e57a2d714f">key_down_event</a></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        } <a class="code" href="group___fa_system_event.html#gaeade6f81e9d8ab944b0795c319375276">fa_system_event_type_t</a>;</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#endif // _FAE_SYSTEM_EVENT</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;fa_event_t <a class="code" href="group___fa_system_event.html#gadbbd367ba7a43a86a5b5cbff9fde59d1">fa_system_event_mouse_move</a>();</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;fa_event_t <a class="code" href="group___fa_system_event.html#ga1bc7d790a82c9e5099c8ebdd61be8ce1">fa_system_event_mouse_drag</a>();</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;fa_event_t <a class="code" href="group___fa_system_event.html#gaa7c95ea4079bcc6e7cda104ed327566a">fa_system_event_mouse_up</a>();</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;fa_event_t <a class="code" href="group___fa_system_event.html#ga57b462853c671daec1f92ad8acd63478">fa_system_event_mouse_down</a>();</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;fa_event_t <a class="code" href="group___fa_system_event.html#gaa61a030c4ee5c324be27289614d2af2b">fa_system_event_key_up</a>();</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;fa_event_t <a class="code" href="group___fa_system_event.html#ga2bd1e8b40f279013b222f1e241525baa">fa_system_event_key_down</a>();</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;fa_event_t <a class="code" href="group___fa_system_event.html#gacc7f978d3cf4a67b31af89b621fc2030">fa_system_event_select</a>(<a class="code" href="group___fa_list.html#ga35ecb12ab934ded0cce0bcf28e3bc5d2">fa_list_t</a>);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;fa_message_sender_t <a class="code" href="group___fa_system_event.html#ga0b7d02cdc683bec020f91fc7a439542b">fa_system_event_receive</a>(<a class="code" href="group___fa_list.html#ga35ecb12ab934ded0cce0bcf28e3bc5d2">fa_list_t</a>);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;fa_event_t <a class="code" href="group___fa_system_event.html#ga1dcf95fb482090896f69be4479323365">fa_system_event_write_std</a>(fa_event_t);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;fa_message_receiver_t <a class="code" href="group___fa_system_event.html#ga2415c7cfe51b5e3843e2f16063707de7">fa_system_event_send_std</a>();</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;fa_event_t <a class="code" href="group___fa_system_event.html#ga1214bffe4dd7addce92212e27a4ac1c7">fa_system_event_write_log</a>(fa_event_t);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;fa_message_receiver_t <a class="code" href="group___fa_system_event.html#ga30c824d88dd9e68db0e635a9028dc39c">fa_system_event_send_log</a>();</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor">#endif // _FA_SYSTEM_EVENT</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 19 2013 01:14:05 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Mon Oct 7 2013 00:03:56 for faudio v2.0 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

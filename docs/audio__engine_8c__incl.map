@@ -1,9 +1,0 @@
-<map id="src/fae/audio_engine.c" name="src/fae/audio_engine.c">
-<area shape="rect" id="node3" href="$audio__engine_8h.html" title="fae/audio_engine.h" alt="" coords="314,86,467,117"/>
-<area shape="rect" id="node15" href="$util_8h.html" title="fae/util.h" alt="" coords="492,86,573,117"/>
-<area shape="rect" id="node5" href="$atomic_8h.html" title="fae/atomic.h" alt="" coords="5,166,112,197"/>
-<area shape="rect" id="node7" href="$queue_8h.html" title="fae/atomic/queue.h" alt="" coords="137,166,292,197"/>
-<area shape="rect" id="node9" href="$stack_8h.html" title="fae/atomic/stack.h" alt="" coords="317,166,464,197"/>
-<area shape="rect" id="node11" href="$ring__buffer_8h.html" title="fae/atomic/ring_buffer.h" alt="" coords="489,166,676,197"/>
-<area shape="rect" id="node13" href="$system_8h.html" title="fae/system.h" alt="" coords="701,166,808,197"/>
-</map>

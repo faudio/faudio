@@ -1,9 +1,0 @@
-<map id="src/fae/atomic/queue.c" name="src/fae/atomic/queue.c">
-<area shape="rect" id="node5" href="$atomic_8h.html" title="fae/atomic.h" alt="" coords="196,86,303,117"/>
-<area shape="rect" id="node13" href="$string_8h.html" title="fae/string.h" alt="" coords="73,86,172,117"/>
-<area shape="rect" id="node16" href="$util_8h.html" title="fae/util.h" alt="" coords="388,86,469,117"/>
-<area shape="rect" id="node7" href="$fae_2fae_8h.html" title="fae.h" alt="" coords="103,166,157,197"/>
-<area shape="rect" id="node18" href="$arch_8h.html" title="fae/util/arch.h" alt="" coords="304,166,423,197"/>
-<area shape="rect" id="node20" href="$alignof_8h.html" title="fae/util/alignof.h" alt="" coords="448,166,583,197"/>
-<area shape="rect" id="node22" href="$minmax_8h.html" title="fae/util/minmax.h" alt="" coords="608,166,749,197"/>
-</map>

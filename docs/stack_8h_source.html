@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>Fae: include/fae/atomic/stack.h Source File</title>
+<title>faudio v2.0: include/fa/atomic/stack.h Source File</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Fae
+   <div id="projectname">faudio v2.0
    </div>
   </td>
  </tr>
@@ -44,7 +44,7 @@
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_aa61b2fff6575bd45838b59453565768.html">fae</a></li><li class="navelem"><a class="el" href="dir_588024bfd14cddb4941052edc4e6dbca.html">atomic</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_6b89b2d2887aea5b8d12d30c5d3aa615.html">fa</a></li><li class="navelem"><a class="el" href="dir_d6856f1c307e6e1177295c1c530418b8.html">atomic</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -53,24 +53,28 @@
 </div><!--header-->
 <div class="contents">
 <a href="stack_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef _FAE_ATOMIC_STACK</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _FAE_ATOMIC_STACK</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef _FA_ATOMIC_STACK</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _FA_ATOMIC_STACK</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;fae.h&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;fa.h&gt;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="code" href="group___fae_atomic_stack.html#ga4eae9f89d5fb0c9c9444110662f7e013">   15</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__fae__atomic__stack__t.html">_fae_atomic_stack_t</a> * <a class="code" href="group___fae_atomic_stack.html#ga4eae9f89d5fb0c9c9444110662f7e013">fae_atomic_stack_t</a>;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;fae_atomic_stack_t <a class="code" href="group___fae_atomic_stack.html#gaaafffd313f1501ea612cfa2761bc9a9d" title="Create a new stack.">fae_atomic_stack_create</a>();</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fae_atomic_stack.html#ga91361eabed100b980a8bf69307c71ba3" title="Destroy the given stack.">fae_atomic_stack_destroy</a>(fae_atomic_stack_t);</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a> <a class="code" href="group___fae_atomic_stack.html#ga56fe2d4f0dd493c694a833ca04f80e2a" title="Read a value from the given stack.">fae_atomic_stack_read</a>(fae_atomic_stack_t);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fae_atomic_stack.html#ga2cfba772c602c6632ea19c9f975b20a0" title="Write the given value to the given stack.">fae_atomic_stack_write</a>(fae_atomic_stack_t, <a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#endif // _FAE_ATOMIC_STACK</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="code" href="group___fa_atomic_stack.html#ga12448e3a1d7002a702efc2a78eebfa69">   26</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_fa_atomic_stack_t * <a class="code" href="group___fa_atomic_stack.html#ga12448e3a1d7002a702efc2a78eebfa69">fa_atomic_stack_t</a>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="group___fa_atomic_stack.html#ga12448e3a1d7002a702efc2a78eebfa69">fa_atomic_stack_t</a> <a class="code" href="group___fa_atomic_stack.html#gacfb347f6def65c5207877d6dba9fbc62" title="Create a new stack.">fa_atomic_stack_create</a>();</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fa_atomic_stack.html#gafc82024d4717e9ce25046a4802b45113" title="Destroy the given stack.">fa_atomic_stack_destroy</a>(<a class="code" href="group___fa_atomic_stack.html#ga12448e3a1d7002a702efc2a78eebfa69">fa_atomic_stack_t</a>);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a> <a class="code" href="group___fa_atomic_stack.html#ga4130c20a7fa08cdc5b65aa87b9948a9e" title="Read a value from the given stack.">fa_atomic_stack_read</a>(<a class="code" href="group___fa_atomic_stack.html#ga12448e3a1d7002a702efc2a78eebfa69">fa_atomic_stack_t</a>);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fa_atomic_stack.html#gab23da68a22bd383b66172bbc55a1ec63" title="Write the given value to the given stack.">fa_atomic_stack_write</a>(<a class="code" href="group___fa_atomic_stack.html#ga12448e3a1d7002a702efc2a78eebfa69">fa_atomic_stack_t</a>, <a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#endif // _FA_ATOMIC_STACK</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 19 2013 01:14:05 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Mon Oct 7 2013 00:02:42 for faudio v2.0 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

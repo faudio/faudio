@@ -1,6 +1,0 @@
-<map id="include/fae/device/midi.h" name="include/fae/device/midi.h">
-<area shape="rect" id="node3" href="$audio__engine_8h.html" title="include/fae/audio_engine.h" alt="" coords="5,114,213,145"/>
-<area shape="rect" id="node7" href="$device_2midi_8c.html" title="src/fae/device/midi.c" alt="" coords="238,114,404,145"/>
-<area shape="rect" id="node9" href="$device_8c.html" title="src/platform/macosx\l/fae/device.c" alt="" coords="429,104,589,155"/>
-<area shape="rect" id="node5" href="$audio__engine_8c.html" title="src/fae/audio_engine.c" alt="" coords="20,203,199,234"/>
-</map>

@@ -1,11 +1,4 @@
-<map id="include/fae/set.h" name="include/fae/set.h">
-<area shape="rect" id="node3" href="$literals_8h.html" title="include/fae/util/literals.h" alt="" coords="574,86,761,117"/>
-<area shape="rect" id="node15" href="$graph_8c.html" title="src/fae/graph.c" alt="" coords="735,255,861,286"/>
-<area shape="rect" id="node17" href="$map_8c.html" title="src/fae/map.c" alt="" coords="887,255,1003,286"/>
-<area shape="rect" id="node19" href="$set_8c.html" title="src/fae/set.c" alt="" coords="1028,255,1133,286"/>
-<area shape="rect" id="node5" href="$util_8h.html" title="include/fae/util.h" alt="" coords="563,166,700,197"/>
-<area shape="rect" id="node7" href="$queue_8c.html" title="src/fae/atomic/queue.c" alt="" coords="530,255,709,286"/>
-<area shape="rect" id="node9" href="$ring__buffer_8c.html" title="src/fae/atomic/ring\l_buffer.c" alt="" coords="4,245,157,296"/>
-<area shape="rect" id="node11" href="$stack_8c.html" title="src/fae/atomic/stack.c" alt="" coords="183,255,355,286"/>
-<area shape="rect" id="node13" href="$audio_8c.html" title="src/fae/audio.c" alt="" coords="380,255,505,286"/>
+<map id="include/fa/set.h" name="include/fa/set.h">
+<area shape="rect" id="node3" href="$literals_8h.html" title="include/fa/util/literals.h" alt="" coords="5,86,184,117"/>
+<area shape="rect" id="node5" href="$util_8h.html" title="include/fa/util.h" alt="" coords="30,166,159,197"/>
 </map>

@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>Fae: Signals</title>
+<title>faudio v2.2.2: Signals</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Fae
+   <div id="projectname">faudio v2.2.2
    </div>
   </td>
  </tr>
@@ -48,244 +48,21 @@
 <div class="title">Signals </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="toc"><h3>Table of Contents</h3>
-<ul><li class="level1"><a href="#SignalTypes">Audio types</a><ul><li class="level2"><a href="#Simple">Simple types</a><ul><li class="level3"><a href="#Int">Fixed-point types</a></li>
-<li class="level3"><a href="#Float">Floating-point types</a></li>
-</ul>
-</li>
-<li class="level2"><a href="#Compound">Compound types</a><ul><li class="level3"><a href="#Pairs">Pairs</a></li>
-<li class="level3"><a href="#Vectors">Vectors</a></li>
-<li class="level3"><a href="#Frames">Frames</a></li>
-</ul>
-</li>
-<li class="level2"><a href="#Special">Special types</a></li>
-</ul>
-</li>
-<li class="level1"><a href="#id10569">Using signals</a><ul><li class="level2"><a href="#id16916">Creating signals</a><ul><li class="level3"><a href="#id19230">Signals from numbers</a></li>
-<li class="level3"><a href="#id11324">Signals from events</a></li>
-<li class="level3"><a href="#id13431">Signals from buffers</a></li>
-<li class="level3"><a href="#id1298921">Signals from devices</a></li>
-</ul>
-</li>
-<li class="level2"><a href="#id29154">Modifying signals</a><ul><li class="level3"><a href="#id6220">Unary operators</a></li>
-<li class="level3"><a href="#id13489">Binary operators</a></li>
-<li class="level3"><a href="#id4828">Applying processors to signals</a></li>
-</ul>
-</li>
-<li class="level2"><a href="#id15466">Delayed signals</a><ul><li class="level3"><a href="#id29844">The time signal</a></li>
-<li class="level3"><a href="#id29841">Simple delays</a></li>
-<li class="level3"><a href="#id4345">Recursive delay</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="level1"><a href="#id6587">Using processors</a><ul><li class="level2"><a href="#id3674123">Creating processors</a><ul><li class="level3"><a href="#id2712183">Identity processor</a></li>
-<li class="level3"><a href="#id223183">Constant processor</a></li>
-<li class="level3"><a href="#id314133">Split processor</a></li>
-<li class="level3"><a href="#id61221230">Unary processors</a></li>
-<li class="level3"><a href="#id14512489">Binary processors</a></li>
-</ul>
-</li>
-<li class="level2"><a href="#id19739">Modifying processors</a><ul><li class="level3"><a href="#id4287">Sequential composition</a></li>
-<li class="level3"><a href="#id12464">Parallel composition</a></li>
-<li class="level3"><a href="#id19712333">Recursive composition</a></li>
-</ul>
-</li>
-<li class="level2"><a href="#id25821265">External processors</a><ul><li class="level3"><a href="#id17205">FluidSynth</a></li>
-<li class="level3"><a href="#id8544">Audio Units</a></li>
-<li class="level3"><a href="#id792">VST</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
 <div class="textblock"><p><a class="anchor" id="Signals"></a><a class="anchor" id="Processors"></a></p>
-<dl class="section note"><dt>Note</dt><dd>This page is under construction.</dd></dl>
-<p>The most important concepts in Fae are the notion of <em>signals</em> and <em>processors</em>. Both have simple definitions:</p>
+<p>The most important concepts in <em>faudio</em> are the notion of <em>signals</em> and <em>processors</em>. Both have simple definitions:</p>
 <ul>
-<li>A <em><a class="el" href="group___fae_signal.html#gaa5af2a7b3b3b53144baab3287f772445">signal</a></em> is a function of time, for example \( y(t)=sin(2\pi\,t) \).</li>
+<li>A <em><a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">signal</a></em> is a function of time, for example \( y(t)=sin(2\pi\,t) \).</li>
+</ul>
+<ul>
+<li>A <em>processor</em> is a function from a signal to another signal.</li>
 </ul>
 <p>Signals can be composed to create more complex signals.</p>
-<p>While many signals can be described by simple formulas, other signals such as real-world audio recordings have no simple representation, and must be sampled to be handled by a computer. Fae hide this complexity by representing signals as opaque types. Thus signals are conceptually <em>continous</em> and have neither sample rate or duration.</p>
-<h1><a class="anchor" id="SignalTypes"></a>
-Audio types</h1>
-<p>Each signal has an associated <em>audio type</em>, describing the range of the time function. Audio types are grouped into <em>simple</em>, <em>compound</em> and <em>special</em>. For the runtime representation of audio types, see this module.</p>
-<h2><a class="anchor" id="Simple"></a>
-Simple types</h2>
-<p>The <em>simple</em> audio types represent the amplitude range of the signal. They can be grouped into <em>fixed-point</em> and <em>floating-point</em> types. As expected, the Audio Engine processes fixed point data using modulo arithmetic, and floating-point data types using floating-point arithmetic.</p>
-<h3><a class="anchor" id="Int"></a>
-Fixed-point types</h3>
-<table class="doxtable">
-<tr>
-<th>Type </th><th>Description</th></tr>
-<tr>
-<td><code>i8</code> </td><td>A 8-bit fixed-point number, range from \(0\) to \(2^{8} - 1\) </td></tr>
-<tr>
-<td><code>i16</code> </td><td>A 16-bit fixed-point number, range from \(0\) to \(2^{16} - 1\) </td></tr>
-<tr>
-<td><code>i32</code> </td><td>A 32-bit fixed-point number, range from \(0\) to \(2^{32} - 1\) </td></tr>
-<tr>
-<td><code>i64</code> </td><td>A 64-bit fixed-point number, range from \(0\) to \(2^{64} - 1\) </td></tr>
-</table>
-<h3><a class="anchor" id="Float"></a>
-Floating-point types</h3>
-<table class="doxtable">
-<tr>
-<th>Type </th><th>Description</th></tr>
-<tr>
-<td><code>f32</code> </td><td>A 32-bit floating-point number, usually ranging from \(-1\) to \(1\) </td></tr>
-<tr>
-<td><code>f64</code> </td><td>A 64-bit floating-point number, usually ranging from \(-1\) to \(1\) </td></tr>
-</table>
-<h2><a class="anchor" id="Compound"></a>
-Compound types</h2>
-<p>The <em>compound</em> audio types are created by the combination of (simple or compound) audio types, written as follows.</p>
-<table class="doxtable">
-<tr>
-<th>Type </th><th>Description</th></tr>
-<tr>
-<td><code>()</code> </td><td>Unit type </td></tr>
-<tr>
-<td><code>(a, a)</code> </td><td>Pair of \(a\) and \(b\) </td></tr>
-<tr>
-<td><code>[a x N]</code> </td><td>Vector of \(a\) </td></tr>
-<tr>
-<td><code>{a}</code> </td><td>Frame of \(a\) </td></tr>
-</table>
-<h3><a class="anchor" id="Pairs"></a>
-Pairs</h3>
-<p>Pairs represent multichannel audio of possibly different types. For example, a signal of 2 channels of 32-bit floating point audio would have the type <code>(f32,f32)</code>.</p>
-<p>More complex channel configurations can be constructed by nested pairs. For example a a three-channel stream could be represented as <code>(a,(b,c))</code>. Note that by convention, nested pairs associate to the right.</p>
-<h3><a class="anchor" id="Vectors"></a>
-Vectors</h3>
-<p>Vectors represent multichannel audio of a single type. The vector type <code>[a x 1]</code> is equivalent to <code>a</code>, and <code>[a x N]</code> is equivalent to <code>(a,[a x N-1])</code>. For example, a signal of 10 channels of 32-bit floating point audio would have the type <code>[f32 x 10]</code>.</p>
-<p>Vectors can also be used to represent resampled audio. For example, an upsampling processor might take a signal of type <code>{f32}</code> as input, and return a signal of type <code>[{f32} x 2]</code> as output, meaning that the output have twice the amount of samples as the input. A downsampling processor might in turn take an input of type <code>[{f32} x 2]</code> and output a signal of type <code>{f32}</code>. This makes it possible to describe the density of information in and audio signal without having to describe how it is represented.</p>
-<p>Vectors and pairs can be used together to represent different kinds of interleaved samples. For example <code>[(f32,f32) x 1024]</code> means a sequence of 1024 pairs of samples, while <code>([f32 x 1024],[f32 x 1024])</code> means a pair of sequences of 1024 samples.</p>
-<h3><a class="anchor" id="Frames"></a>
-Frames</h3>
-<p>Frames are special vectors of an unspecified length. The actual amount of samples in a frame is determined at runtime and may vary during a single audio session. The <em>buffer size</em> of an audio stream is the maximum length of a frame, and is typically a multiple of two.</p>
-<p>Frames make it possible to embed audio and control rate streams in a single signal. For example the type of a low-frequency oscillator could be <code>f32 ~&gt; {f32}</code> where the input type changes every frame instead of every sample.</p>
-<h2><a class="anchor" id="Special"></a>
-Special types</h2>
-<p>The <em>special</em> types are the types of signals and processors, written as follows.</p>
-<table class="doxtable">
-<tr>
-<th>Type </th><th>Description</th></tr>
-<tr>
-<td><code>~a</code> </td><td>signal of \(a\) </td></tr>
-<tr>
-<td><code>a ~&gt; b</code> </td><td>processor from \(a\) to \(b\) </td></tr>
-</table>
-<h1><a class="anchor" id="id10569"></a>
-Using signals</h1>
-<p>TODO</p>
-<h2><a class="anchor" id="id16916"></a>
-Creating signals</h2>
-<h3><a class="anchor" id="id19230"></a>
-Signals from numbers</h3>
-<p>Numbers can be converted to signals using <a class="el" href="group___fae_signal.html#ga61da2e612f8387367d57785dd7f0635e">fae_signal_constant</a>. The resulting signal is a constant function that ignores the incoming time.</p>
-<p>\( y(t) = c \)</p>
-<h3><a class="anchor" id="id11324"></a>
-Signals from events</h3>
-<p>Events can be converted to signals using fae_signal_value. Each occurence will update the given signal to the incoming value.</p>
-<h3><a class="anchor" id="id13431"></a>
-Signals from buffers</h3>
-<p>TODO</p>
-<h3><a class="anchor" id="id1298921"></a>
-Signals from devices</h3>
-<p>TODO</p>
-<h2><a class="anchor" id="id29154"></a>
-Modifying signals</h2>
-<h3><a class="anchor" id="id6220"></a>
-Unary operators</h3>
-<p>TODO</p>
-<h3><a class="anchor" id="id13489"></a>
-Binary operators</h3>
-<p>TODO</p>
-<h3><a class="anchor" id="id4828"></a>
-Applying processors to signals</h3>
-<p>TODO</p>
-<h2><a class="anchor" id="id15466"></a>
-Delayed signals</h2>
-<h3><a class="anchor" id="id29844"></a>
-The time signal</h3>
-<p>TODO</p>
-<h3><a class="anchor" id="id29841"></a>
-Simple delays</h3>
-<p>TODO</p>
-<h3><a class="anchor" id="id4345"></a>
-Recursive delay</h3>
-<p>TODO</p>
-<h2><a class="anchor" id="id19230"></a>
-Signals from numbers</h2>
-<p>TODO</p>
-<h1><a class="anchor" id="id6587"></a>
-Using processors</h1>
-<h2><a class="anchor" id="id3674123"></a>
-Creating processors</h2>
-<h3><a class="anchor" id="id2712183"></a>
-Identity processor</h3>
-<h3><a class="anchor" id="id223183"></a>
-Constant processor</h3>
-<h3><a class="anchor" id="id314133"></a>
-Split processor</h3>
-<div class="image">
-<img src="dsp_split.png" alt="dsp_split.png"/>
-<div class="caption">
-A processor</div></div>
-<h3><a class="anchor" id="id61221230"></a>
-Unary processors</h3>
-<p>TODO </p>
-<div class="image">
-<img src="dsp_unary.png" alt="dsp_unary.png"/>
-<div class="caption">
-A processor</div></div>
-<h3><a class="anchor" id="id14512489"></a>
-Binary processors</h3>
-<div class="image">
-<img src="dsp_binary.png" alt="dsp_binary.png"/>
-<div class="caption">
-A processor</div></div>
-<h2><a class="anchor" id="id19739"></a>
-Modifying processors</h2>
-<h3><a class="anchor" id="id4287"></a>
-Sequential composition</h3>
-<p>Sequential processors.</p>
-<div class="image">
-<img src="dsp_seq.png" alt="dsp_seq.png"/>
-<div class="caption">
-A processor</div></div>
-<h3><a class="anchor" id="id12464"></a>
-Parallel composition</h3>
-<p>Sequential processors.</p>
-<div class="image">
-<img src="dsp_par.png" alt="dsp_par.png"/>
-<div class="caption">
-A processor</div></div>
-<h3><a class="anchor" id="id19712333"></a>
-Recursive composition</h3>
-<p>Recursive processors.</p>
-<div class="image">
-<img src="dsp_loop.png" alt="dsp_loop.png"/>
-<div class="caption">
-A processor</div></div>
-<h2><a class="anchor" id="id25821265"></a>
-External processors</h2>
-<h3><a class="anchor" id="id17205"></a>
-FluidSynth</h3>
-<p>TODO</p>
-<h3><a class="anchor" id="id8544"></a>
-Audio Units</h3>
-<p>TODO</p>
-<h3><a class="anchor" id="id792"></a>
-VST</h3>
-<p>TODO </p>
+<p>While many signals can be described by simple formulas, other signals such as real-world audio recordings have no simple representation, and must be sampled to be handled by a computer. <em>faudio</em> hide this complexity by representing signals as opaque types. Thus signals are conceptually <em>continous</em> and have neither sample rate or duration. </p>
 </div></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 19 2013 01:14:06 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Mon Oct 7 2013 11:36:36 for faudio v2.2.2 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

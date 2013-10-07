@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>Functional Audio Engine: Globals</title>
+<title>faudio v2.0: Globals</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Functional Audio Engine
+   <div id="projectname">faudio v2.0
    </div>
   </td>
  </tr>
@@ -47,7 +47,6 @@
     <ul class="tablist">
       <li><a href="globals.html"><span>All</span></a></li>
       <li class="current"><a href="globals_func.html"><span>Functions</span></a></li>
-      <li><a href="globals_vars.html"><span>Variables</span></a></li>
       <li><a href="globals_type.html"><span>Typedefs</span></a></li>
       <li><a href="globals_enum.html"><span>Enumerations</span></a></li>
       <li><a href="globals_eval.html"><span>Enumerator</span></a></li>
@@ -57,22 +56,7 @@
   <div id="navrow4" class="tabs3">
     <ul class="tablist">
       <li><a href="globals_func.html#index_a"><span>a</span></a></li>
-      <li><a href="globals_func_0x62.html#index_b"><span>b</span></a></li>
-      <li><a href="globals_func_0x63.html#index_c"><span>c</span></a></li>
-      <li><a href="globals_func_0x64.html#index_d"><span>d</span></a></li>
-      <li><a href="globals_func_0x65.html#index_e"><span>e</span></a></li>
       <li class="current"><a href="globals_func_0x66.html#index_f"><span>f</span></a></li>
-      <li><a href="globals_func_0x67.html#index_g"><span>g</span></a></li>
-      <li><a href="globals_func_0x69.html#index_i"><span>i</span></a></li>
-      <li><a href="globals_func_0x6a.html#index_j"><span>j</span></a></li>
-      <li><a href="globals_func_0x6c.html#index_l"><span>l</span></a></li>
-      <li><a href="globals_func_0x6d.html#index_m"><span>m</span></a></li>
-      <li><a href="globals_func_0x6e.html#index_n"><span>n</span></a></li>
-      <li><a href="globals_func_0x70.html#index_p"><span>p</span></a></li>
-      <li><a href="globals_func_0x72.html#index_r"><span>r</span></a></li>
-      <li><a href="globals_func_0x73.html#index_s"><span>s</span></a></li>
-      <li><a href="globals_func_0x74.html#index_t"><span>t</span></a></li>
-      <li><a href="globals_func_0x75.html#index_u"><span>u</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -80,2171 +64,1264 @@
 &#160;
 
 <h3><a class="anchor" id="index_f"></a>- f -</h3><ul>
-<li>fae_absolute()
-: <a class="el" href="group___fae.html#ga0db88b51758f56ab543f556403bca45f">fae.h</a>
-, <a class="el" href="group___fae.html#ga0db88b51758f56ab543f556403bca45f">fae.d</a>
+<li>fa_absolute()
+: <a class="el" href="group___fa.html#gab9d159e8118c32dcbef25cc951f565fb">fa.h</a>
 </li>
-<li>fae_add()
-: <a class="el" href="group___fae.html#ga2694a4814d195bcdfe944270aa091a8d">fae.d</a>
-, <a class="el" href="group___fae.html#ga2694a4814d195bcdfe944270aa091a8d">fae.h</a>
+<li>fa_add()
+: <a class="el" href="group___fa.html#ga6fd1d184fda1beb3c85f4042a1da7e7d">fa.h</a>
 </li>
-<li>fae_atomic_add()
-: <a class="el" href="windows_2fae_2atomic_8c.html#aca9b77ca89857da7bf7709e187014ab7">atomic.c</a>
+<li>fa_atomic_copy()
+: <a class="el" href="group___fa_atomic.html#ga21238eae25bc01226d791dd662960f54">atomic.h</a>
 </li>
-<li>fae_atomic_copy()
-: <a class="el" href="group___fae_atomic.html#ga2b095f39bb659490b2f0ba592718673c">atomic.c</a>
-, <a class="el" href="group___fae_atomic.html#ga2b095f39bb659490b2f0ba592718673c">atomic.h</a>
-, <a class="el" href="group___fae_atomic.html#ga2b095f39bb659490b2f0ba592718673c">atomic.c</a>
+<li>fa_atomic_create()
+: <a class="el" href="group___fa_atomic.html#ga4342c7467122777598bda9c4fbe55b8d">atomic.h</a>
 </li>
-<li>fae_atomic_create()
-: <a class="el" href="group___fae_atomic.html#gaf2c4197b28725a7d421ca5ba90c5ea48">atomic.h</a>
-, <a class="el" href="group___fae_atomic.html#gaf2c4197b28725a7d421ca5ba90c5ea48">atomic.c</a>
+<li>fa_atomic_destroy()
+: <a class="el" href="group___fa_atomic.html#ga2fdb4d4171c21bb31870d4f9a599b90a">atomic.h</a>
 </li>
-<li>fae_atomic_destroy()
-: <a class="el" href="group___fae_atomic.html#gadf99fc44d7dc4a2a34ee7c694ae04f6f">atomic.h</a>
-, <a class="el" href="group___fae_atomic.html#gadf99fc44d7dc4a2a34ee7c694ae04f6f">atomic.c</a>
+<li>fa_atomic_exchange()
+: <a class="el" href="group___fa_atomic.html#gab99e35ac5b904cc12da67c98b09906b8">atomic.h</a>
 </li>
-<li>fae_atomic_exchange()
-: <a class="el" href="group___fae_atomic.html#gab3fa67acab6c04418faecda162f10919">atomic.c</a>
-, <a class="el" href="group___fae_atomic.html#gab3fa67acab6c04418faecda162f10919">atomic.h</a>
+<li>fa_atomic_get()
+: <a class="el" href="group___fa_atomic.html#gae74bf15614ddafc535495371a90005f9">atomic.h</a>
 </li>
-<li>fae_atomic_get()
-: <a class="el" href="group___fae_atomic.html#gae6f7cd8a77b009b24a0ae138112f6886">atomic.h</a>
-, <a class="el" href="group___fae_atomic.html#gae6f7cd8a77b009b24a0ae138112f6886">atomic.c</a>
+<li>fa_atomic_modify()
+: <a class="el" href="group___fa_atomic.html#ga3e9dcd19730f28c92babdbcb22cc6323">atomic.h</a>
 </li>
-<li>fae_atomic_modify()
-: <a class="el" href="group___fae_atomic.html#gac5fd435247194017e924deb712a18e18">atomic.h</a>
-, <a class="el" href="group___fae_atomic.html#gac5fd435247194017e924deb712a18e18">atomic.c</a>
+<li>fa_atomic_queue_create()
+: <a class="el" href="group___fa_atomic_queue.html#gab64418bd1d44abd7e744450c27013381">queue.h</a>
 </li>
-<li>fae_atomic_queue_create()
-: <a class="el" href="queue_8c.html#a987e16bd003de9b5fc51f61ed8dd4f97">queue.c</a>
+<li>fa_atomic_queue_destroy()
+: <a class="el" href="group___fa_atomic_queue.html#ga9cd02972c6ee5bf4bafabd8cb99d088e">queue.h</a>
 </li>
-<li>fae_atomic_queue_destroy()
-: <a class="el" href="queue_8c.html#a9f9b26a446f6d196b1b4ce934407325d">queue.c</a>
+<li>fa_atomic_queue_read()
+: <a class="el" href="group___fa_atomic_queue.html#ga29256fdb985bbbf50237e7f09a19d321">queue.h</a>
 </li>
-<li>fae_atomic_queue_read()
-: <a class="el" href="queue_8c.html#a7c7cef9e98c221ea27d6e61291e24a07">queue.c</a>
+<li>fa_atomic_queue_write()
+: <a class="el" href="group___fa_atomic_queue.html#gad50c1f595e886372f2c9118d91de44df">queue.h</a>
 </li>
-<li>fae_atomic_queue_write()
-: <a class="el" href="queue_8c.html#ab4b78308bc2c02de90f449861654f832">queue.c</a>
+<li>fa_atomic_set()
+: <a class="el" href="group___fa_atomic.html#ga820dc9617e6f395ba7007263fa093508">atomic.h</a>
 </li>
-<li>fae_atomic_ring_buffer_copy()
-: <a class="el" href="ring__buffer_8c.html#a1de8969281d25466d67c625f55784832">ring_buffer.c</a>
+<li>fa_atomic_stack_create()
+: <a class="el" href="group___fa_atomic_stack.html#gacfb347f6def65c5207877d6dba9fbc62">stack.h</a>
 </li>
-<li>fae_atomic_ring_buffer_create()
-: <a class="el" href="ring__buffer_8c.html#a58f932a3219eb3177607323025c60fe1">ring_buffer.c</a>
+<li>fa_atomic_stack_destroy()
+: <a class="el" href="group___fa_atomic_stack.html#gafc82024d4717e9ce25046a4802b45113">stack.h</a>
 </li>
-<li>fae_atomic_ring_buffer_destroy()
-: <a class="el" href="ring__buffer_8c.html#a386f1ec0aa85a0c04b5119ba074e6810">ring_buffer.c</a>
+<li>fa_atomic_stack_read()
+: <a class="el" href="group___fa_atomic_stack.html#ga4130c20a7fa08cdc5b65aa87b9948a9e">stack.h</a>
 </li>
-<li>fae_atomic_ring_buffer_read()
-: <a class="el" href="ring__buffer_8c.html#a54cbd36922215f70ce9b06cbf975434e">ring_buffer.c</a>
+<li>fa_atomic_stack_write()
+: <a class="el" href="group___fa_atomic_stack.html#gab23da68a22bd383b66172bbc55a1ec63">stack.h</a>
 </li>
-<li>fae_atomic_ring_buffer_resize()
-: <a class="el" href="ring__buffer_8c.html#a47bdf6747b922f0eb6f9b277c8615ee1">ring_buffer.c</a>
+<li>fa_atomic_swap()
+: <a class="el" href="group___fa_atomic.html#gaa27c3538da57c9184b01beb9da4e0216">atomic.h</a>
 </li>
-<li>fae_atomic_ring_buffer_size()
-: <a class="el" href="ring__buffer_8c.html#a2d759e260f9f67c567d751498b4e5c65">ring_buffer.c</a>
+<li>fa_audio_all()
+: <a class="el" href="group___fa_audio.html#gad0f1728e07aaffd98ee8282e26dc0312">audio.h</a>
 </li>
-<li>fae_atomic_ring_buffer_swap()
-: <a class="el" href="ring__buffer_8c.html#a5211a160f2de06f8500f4325a40606fb">ring_buffer.c</a>
+<li>fa_audio_begin_session()
+: <a class="el" href="group___fa_audio.html#ga0022e6e72ee2f2c4c04a6165847a50dd">audio.h</a>
 </li>
-<li>fae_atomic_ring_buffer_write()
-: <a class="el" href="ring__buffer_8c.html#a3884379ea4677fd1dec3ad0012961a0e">ring_buffer.c</a>
+<li>fa_audio_close_stream()
+: <a class="el" href="group___fa_audio.html#ga9ca7cddbf2139f453021b0f50340a8b9">audio.h</a>
 </li>
-<li>fae_atomic_set()
-: <a class="el" href="group___fae_atomic.html#ga1c95d7f5d22deaf237a6b0f611b93022">atomic.h</a>
-, <a class="el" href="group___fae_atomic.html#ga1c95d7f5d22deaf237a6b0f611b93022">atomic.c</a>
+<li>fa_audio_default()
+: <a class="el" href="group___fa_audio.html#gac076f231dff388c5b9ad5920c46a010c">audio.h</a>
 </li>
-<li>fae_atomic_stack_create()
-: <a class="el" href="group___fae_atomic_stack.html#gaaafffd313f1501ea612cfa2761bc9a9d">stack.h</a>
-, <a class="el" href="group___fae_atomic_stack.html#gaaafffd313f1501ea612cfa2761bc9a9d">stack.c</a>
+<li>fa_audio_default_input()
+: <a class="el" href="group___fa_audio.html#ga42d3ed3b24b951f57c8009ae6e50a0b6">audio.h</a>
 </li>
-<li>fae_atomic_stack_destroy()
-: <a class="el" href="group___fae_atomic_stack.html#ga91361eabed100b980a8bf69307c71ba3">stack.h</a>
-, <a class="el" href="group___fae_atomic_stack.html#ga91361eabed100b980a8bf69307c71ba3">stack.c</a>
+<li>fa_audio_default_output()
+: <a class="el" href="group___fa_audio.html#ga69dbc7e4715ae5441d6fe7b888213927">audio.h</a>
 </li>
-<li>fae_atomic_stack_read()
-: <a class="el" href="group___fae_atomic_stack.html#ga56fe2d4f0dd493c694a833ca04f80e2a">stack.h</a>
-, <a class="el" href="group___fae_atomic_stack.html#ga56fe2d4f0dd493c694a833ca04f80e2a">stack.c</a>
+<li>fa_audio_end_session()
+: <a class="el" href="group___fa_audio.html#ga51569c363f5d53cd81406d31f765f0b7">audio.h</a>
 </li>
-<li>fae_atomic_stack_write()
-: <a class="el" href="group___fae_atomic_stack.html#ga2cfba772c602c6632ea19c9f975b20a0">stack.h</a>
-, <a class="el" href="group___fae_atomic_stack.html#ga2cfba772c602c6632ea19c9f975b20a0">stack.c</a>
+<li>fa_audio_has_input()
+: <a class="el" href="group___fa_audio.html#gaa2258e5c08f655922bf121750c3c45a6">audio.h</a>
 </li>
-<li>fae_atomic_swap()
-: <a class="el" href="group___fae_atomic.html#ga57edaed2494b0193c4c9ffb3e9397c91">atomic.h</a>
-, <a class="el" href="group___fae_atomic.html#ga57edaed2494b0193c4c9ffb3e9397c91">atomic.c</a>
+<li>fa_audio_has_output()
+: <a class="el" href="group___fa_audio.html#ga21d384456aaea8f6241587def515cfd6">audio.h</a>
 </li>
-<li>fae_audio_engine_log_error_from()
-: <a class="el" href="windows_2fae_2thread_8c.html#a76c250c122cd7b8b4adde50a58bc03a1">thread.c</a>
+<li>fa_audio_host_name()
+: <a class="el" href="group___fa_audio.html#gadd64f26116e4f0d5c12f36be0ee3854c">audio.h</a>
 </li>
-<li>fae_buffer_copy()
-: <a class="el" href="group___fae_buffer.html#ga623af19561a4fcf618e62d7ee954e722">buffer.h</a>
-, <a class="el" href="group___fae_buffer.html#ga623af19561a4fcf618e62d7ee954e722">buffer.c</a>
+<li>fa_audio_input_type()
+: <a class="el" href="group___fa_audio.html#ga55d57b2cf4c08e14f049069398b04b23">audio.h</a>
 </li>
-<li>fae_buffer_create()
-: <a class="el" href="group___fae_buffer.html#ga2d3fee184a2d58a1386530d146468cba">buffer.h</a>
-, <a class="el" href="group___fae_buffer.html#ga2d3fee184a2d58a1386530d146468cba">buffer.c</a>
+<li>fa_audio_name()
+: <a class="el" href="group___fa_audio.html#ga1e102c887744ca430396569fae8f08ff">audio.h</a>
 </li>
-<li>fae_buffer_destroy()
-: <a class="el" href="group___fae_buffer.html#gaeea151221203bbdc8d4b45771bf0cfd9">buffer.h</a>
-, <a class="el" href="group___fae_buffer.html#gaeea151221203bbdc8d4b45771bf0cfd9">buffer.c</a>
+<li>fa_audio_open_stream()
+: <a class="el" href="group___fa_audio.html#gadb134e7014e89d287d2eba97541f64cd">audio.h</a>
 </li>
-<li>fae_buffer_get()
-: <a class="el" href="group___fae_buffer.html#ga3f197d64679d273f36908b7a10162681">buffer.h</a>
-, <a class="el" href="group___fae_buffer.html#ga3f197d64679d273f36908b7a10162681">buffer.c</a>
+<li>fa_audio_output_type()
+: <a class="el" href="group___fa_audio.html#ga8cd26904e2677f5971c87456548deb6d">audio.h</a>
 </li>
-<li>fae_buffer_get_double()
-: <a class="el" href="group___fae_buffer.html#ga2352681893f84f03eb58f70e6287a49d">buffer.h</a>
-, <a class="el" href="group___fae_buffer.html#ga2352681893f84f03eb58f70e6287a49d">buffer.c</a>
+<li>fa_audio_set_status_callback()
+: <a class="el" href="group___fa_audio.html#ga9073b93a4d372953ca2b5ee43016284c">audio.h</a>
 </li>
-<li>fae_buffer_get_float()
-: <a class="el" href="group___fae_buffer.html#gacb7e18978a22769dd7a6e5ff268b2045">buffer.h</a>
-, <a class="el" href="group___fae_buffer.html#gacb7e18978a22769dd7a6e5ff268b2045">buffer.c</a>
+<li>fa_audio_with_session()
+: <a class="el" href="group___fa_audio.html#ga10f42df431c12566e51f9c830c888822">audio.h</a>
 </li>
-<li>fae_buffer_get_int16()
-: <a class="el" href="group___fae_buffer.html#ga9e7b92142ff6f75cb59f03f88c954485">buffer.h</a>
+<li>fa_audio_with_stream()
+: <a class="el" href="group___fa_audio.html#gae2813f73978148fa21820c816eaac1b5">audio.h</a>
 </li>
-<li>fae_buffer_get_int32()
-: <a class="el" href="group___fae_buffer.html#gac546a30c44a54efc2039b31794fec8c0">buffer.h</a>
+<li>fa_buffer_copy()
+: <a class="el" href="group___fa_buffer.html#gadd289da83b48c0688d17cea75cb6e85a">buffer.h</a>
 </li>
-<li>fae_buffer_get_int64()
-: <a class="el" href="group___fae_buffer.html#ga137709144b3d8fdd26a05d96b9f27a8d">buffer.h</a>
+<li>fa_buffer_create()
+: <a class="el" href="group___fa_buffer.html#ga43b53698a7fee13e6527fa7852c22e10">buffer.h</a>
 </li>
-<li>fae_buffer_read_audio()
-: <a class="el" href="group___fae_buffer.html#ga433f6fcb6798a860f606b80fbff42005">buffer.h</a>
-, <a class="el" href="group___fae_buffer.html#ga433f6fcb6798a860f606b80fbff42005">buffer.c</a>
+<li>fa_buffer_destroy()
+: <a class="el" href="group___fa_buffer.html#ga04722846432ccfc5b8b3d1c4b8cc82aa">buffer.h</a>
 </li>
-<li>fae_buffer_read_raw()
-: <a class="el" href="group___fae_buffer.html#gadead373ea60cf7046265dad9f824a407">buffer.h</a>
+<li>fa_buffer_get()
+: <a class="el" href="group___fa_buffer.html#ga39ecf48c5d384e8fddc7773b01012134">buffer.h</a>
 </li>
-<li>fae_buffer_resize()
-: <a class="el" href="group___fae_buffer.html#ga442d4fc7ba07896d0f50c498c695496a">buffer.h</a>
-, <a class="el" href="group___fae_buffer.html#ga442d4fc7ba07896d0f50c498c695496a">buffer.c</a>
+<li>fa_buffer_get_double()
+: <a class="el" href="group___fa_buffer.html#ga52aca26331034919331c2575f7428c4e">buffer.h</a>
 </li>
-<li>fae_buffer_set()
-: <a class="el" href="group___fae_buffer.html#gac2b3b32810c97e621fb951271ba3bd59">buffer.h</a>
-, <a class="el" href="group___fae_buffer.html#gac2b3b32810c97e621fb951271ba3bd59">buffer.c</a>
+<li>fa_buffer_get_float()
+: <a class="el" href="group___fa_buffer.html#gaf3d78190b22ce9201038a6839b8c4078">buffer.h</a>
 </li>
-<li>fae_buffer_set_double()
-: <a class="el" href="group___fae_buffer.html#gada66dcebbc4554e5382c7e76e7f41c5f">buffer.h</a>
-, <a class="el" href="group___fae_buffer.html#gada66dcebbc4554e5382c7e76e7f41c5f">buffer.c</a>
+<li>fa_buffer_get_int16()
+: <a class="el" href="group___fa_buffer.html#gab080639b0a9bde928fc6a5415d6843cb">buffer.h</a>
 </li>
-<li>fae_buffer_set_float()
-: <a class="el" href="group___fae_buffer.html#ga46992bfc12f00236264d83961bc8be9a">buffer.h</a>
-, <a class="el" href="group___fae_buffer.html#ga46992bfc12f00236264d83961bc8be9a">buffer.c</a>
+<li>fa_buffer_get_int32()
+: <a class="el" href="group___fa_buffer.html#ga0e427a7f81c48741d07da313137893c0">buffer.h</a>
 </li>
-<li>fae_buffer_set_int16()
-: <a class="el" href="group___fae_buffer.html#gae981fa6cb0c04b388f5b2f437cfe3ef0">buffer.h</a>
+<li>fa_buffer_get_int64()
+: <a class="el" href="group___fa_buffer.html#ga55c0402a648a7631a42d0346bd770e45">buffer.h</a>
 </li>
-<li>fae_buffer_set_int32()
-: <a class="el" href="group___fae_buffer.html#ga6351dc6a225c0d657b859e0d987e3ddf">buffer.h</a>
+<li>fa_buffer_read_audio()
+: <a class="el" href="group___fa_buffer.html#ga726b62de04881b92437a3701ae7a9d53">buffer.h</a>
 </li>
-<li>fae_buffer_set_int64()
-: <a class="el" href="group___fae_buffer.html#ga9b350d6420d49d24319d69386bec2afa">buffer.h</a>
+<li>fa_buffer_read_raw()
+: <a class="el" href="group___fa_buffer.html#ga145a4dd3efa50942302899caf11404a5">buffer.h</a>
 </li>
-<li>fae_buffer_size()
-: <a class="el" href="group___fae_buffer.html#gabb3e894972940a25516724193f953bbf">buffer.h</a>
-, <a class="el" href="group___fae_buffer.html#gabb3e894972940a25516724193f953bbf">buffer.c</a>
+<li>fa_buffer_resize()
+: <a class="el" href="group___fa_buffer.html#gacd9208f35640cff4ca7bc9264e6e3cc1">buffer.h</a>
 </li>
-<li>fae_buffer_unsafe_address()
-: <a class="el" href="group___fae_buffer.html#ga92ede2bfe640172d92f56399b3f49d8c">buffer.h</a>
-, <a class="el" href="group___fae_buffer.html#ga92ede2bfe640172d92f56399b3f49d8c">buffer.c</a>
+<li>fa_buffer_set()
+: <a class="el" href="group___fa_buffer.html#ga87d9b61a3c7a84bbe52ae2e64071370b">buffer.h</a>
 </li>
-<li>fae_buffer_wrap()
-: <a class="el" href="group___fae_buffer.html#ga6efe0d87fb3de26cbdaf918eed926564">buffer.h</a>
-, <a class="el" href="group___fae_buffer.html#ga6efe0d87fb3de26cbdaf918eed926564">buffer.c</a>
+<li>fa_buffer_set_double()
+: <a class="el" href="group___fa_buffer.html#ga689109700522a6f8e660966e79e605db">buffer.h</a>
 </li>
-<li>fae_buffer_write_audio()
-: <a class="el" href="group___fae_buffer.html#gada774f552de04bb73095cc99bb0a77ed">buffer.h</a>
-, <a class="el" href="group___fae_buffer.html#gada774f552de04bb73095cc99bb0a77ed">buffer.c</a>
+<li>fa_buffer_set_float()
+: <a class="el" href="group___fa_buffer.html#gaeb6c338d2d6181ac3d8abc1eee1086b8">buffer.h</a>
 </li>
-<li>fae_buffer_write_raw()
-: <a class="el" href="group___fae_buffer.html#gaa863dcc29757b893286cf0e4a5054ec5">buffer.h</a>
-</li>
-<li>fae_check()
-: <a class="el" href="group___fae.html#gad94fd6639b72f2105b98a0b696a16a3b">fae.h</a>
-, <a class="el" href="group___fae.html#gad94fd6639b72f2105b98a0b696a16a3b">fae.c</a>
-, <a class="el" href="group___fae.html#gad94fd6639b72f2105b98a0b696a16a3b">fae.d</a>
-</li>
-<li>fae_copy()
-: <a class="el" href="group___fae.html#ga01fbb74728efdc041e7c6e4c74b26a46">fae.h</a>
-, <a class="el" href="group___fae.html#ga01fbb74728efdc041e7c6e4c74b26a46">fae.d</a>
-</li>
-<li>fae_copy_double()
-: <a class="el" href="fae_8c.html#ac1c0fe3f20125bd3fd5a8b5a1b822d8d">fae.c</a>
-</li>
-<li>fae_copy_float()
-: <a class="el" href="fae_8c.html#a5099040aa49c6b35462edc118aaa1386">fae.c</a>
-</li>
-<li>fae_copy_int32()
-: <a class="el" href="fae_8c.html#a01f1c9cdf1dd2971764cdc8e4e3f85bc">fae.c</a>
-</li>
-<li>fae_copy_int64()
-: <a class="el" href="fae_8c.html#ace31cb0a321852dab59e4813d4a2dcaa">fae.c</a>
-</li>
-<li>fae_dabsolute()
-: <a class="el" href="group___fae.html#ga88ca9c4aed7789bf188beb3ecdec3980">fae.h</a>
-, <a class="el" href="group___fae.html#ga88ca9c4aed7789bf188beb3ecdec3980">fae.d</a>
-</li>
-<li>fae_dadd()
-: <a class="el" href="group___fae.html#ga3450a6ee00888af8e8d7224384700f90">fae.h</a>
-, <a class="el" href="group___fae.html#ga3450a6ee00888af8e8d7224384700f90">fae.c</a>
-, <a class="el" href="group___fae.html#ga3450a6ee00888af8e8d7224384700f90">fae.d</a>
-</li>
-<li>fae_ddivide()
-: <a class="el" href="group___fae.html#gaf2922fa59e07b906415b271f5715d879">fae.h</a>
-, <a class="el" href="group___fae.html#gaf2922fa59e07b906415b271f5715d879">fae.d</a>
-</li>
-<li>fae_deep_destroy()
-: <a class="el" href="fae_8d.html#aff057def6d575b716ba06c536cb03f7b">fae.d</a>
-</li>
-<li>fae_destroy()
-: <a class="el" href="group___fae.html#gacdb22f4d142a4f2b1b8da5ae6a4b40b0">fae.h</a>
-, <a class="el" href="group___fae.html#gacdb22f4d142a4f2b1b8da5ae6a4b40b0">fae.d</a>
-</li>
-<li>fae_device_audio_all()
-: <a class="el" href="group___fae_device_audio.html#ga284849795c398fe98d970a7dc7db2f7e">audio.h</a>
-, <a class="el" href="group___fae_device_audio.html#ga284849795c398fe98d970a7dc7db2f7e">audio.c</a>
-, <a class="el" href="group___fae_device_audio.html#ga284849795c398fe98d970a7dc7db2f7e">audio.d</a>
-</li>
-<li>fae_device_audio_begin_session()
-: <a class="el" href="group___fae_device_audio.html#gaaad3892b879c703dc6bc26f3f402d074">audio.h</a>
-, <a class="el" href="group___fae_device_audio.html#gaaad3892b879c703dc6bc26f3f402d074">audio.c</a>
-, <a class="el" href="group___fae_device_audio.html#gaaad3892b879c703dc6bc26f3f402d074">audio.d</a>
-</li>
-<li>fae_device_audio_close_stream()
-: <a class="el" href="group___fae_device_audio.html#ga14b5c0c85985d7025989a64da78067da">audio.h</a>
-, <a class="el" href="group___fae_device_audio.html#ga14b5c0c85985d7025989a64da78067da">audio.c</a>
-, <a class="el" href="group___fae_device_audio.html#ga14b5c0c85985d7025989a64da78067da">audio.d</a>
-</li>
-<li>fae_device_audio_default()
-: <a class="el" href="group___fae_device_audio.html#ga032677a0c1961de10cbb0d266d932e1b">audio.h</a>
-, <a class="el" href="group___fae_device_audio.html#ga032677a0c1961de10cbb0d266d932e1b">audio.c</a>
-, <a class="el" href="group___fae_device_audio.html#ga032677a0c1961de10cbb0d266d932e1b">audio.d</a>
-</li>
-<li>fae_device_audio_default_input()
-: <a class="el" href="group___fae_device_audio.html#ga41b73da6265f9d6ee00373351f3b57b1">audio.h</a>
-, <a class="el" href="group___fae_device_audio.html#ga41b73da6265f9d6ee00373351f3b57b1">audio.c</a>
-, <a class="el" href="group___fae_device_audio.html#ga41b73da6265f9d6ee00373351f3b57b1">audio.d</a>
-</li>
-<li>fae_device_audio_default_output()
-: <a class="el" href="group___fae_device_audio.html#gab13f788e413000eee018404fbf2d0a0f">audio.h</a>
-, <a class="el" href="group___fae_device_audio.html#gab13f788e413000eee018404fbf2d0a0f">audio.c</a>
-, <a class="el" href="group___fae_device_audio.html#gab13f788e413000eee018404fbf2d0a0f">audio.d</a>
-</li>
-<li>fae_device_audio_end_session()
-: <a class="el" href="group___fae_device_audio.html#ga20173a6617c335502a233405a7b1f664">audio.d</a>
-, <a class="el" href="group___fae_device_audio.html#ga20173a6617c335502a233405a7b1f664">audio.h</a>
-, <a class="el" href="group___fae_device_audio.html#ga20173a6617c335502a233405a7b1f664">audio.c</a>
-</li>
-<li>fae_device_audio_has_input()
-: <a class="el" href="group___fae_device_audio.html#ga183f42e4e1c6b4aa2e87d00280bc1bcb">audio.h</a>
-, <a class="el" href="group___fae_device_audio.html#ga183f42e4e1c6b4aa2e87d00280bc1bcb">audio.c</a>
-, <a class="el" href="group___fae_device_audio.html#ga183f42e4e1c6b4aa2e87d00280bc1bcb">audio.d</a>
-</li>
-<li>fae_device_audio_has_output()
-: <a class="el" href="group___fae_device_audio.html#gab4899e33f9041f14fb6d287166447d69">audio.h</a>
-, <a class="el" href="group___fae_device_audio.html#gab4899e33f9041f14fb6d287166447d69">audio.c</a>
-, <a class="el" href="group___fae_device_audio.html#gab4899e33f9041f14fb6d287166447d69">audio.d</a>
-</li>
-<li>fae_device_audio_host_name()
-: <a class="el" href="group___fae_device_audio.html#gad6a0370bbf6a8303cb15defd8ec2d0c7">audio.h</a>
-, <a class="el" href="group___fae_device_audio.html#gad6a0370bbf6a8303cb15defd8ec2d0c7">audio.c</a>
-, <a class="el" href="group___fae_device_audio.html#gad6a0370bbf6a8303cb15defd8ec2d0c7">audio.d</a>
-</li>
-<li>fae_device_audio_initialize()
-: <a class="el" href="audio_8c.html#a825607ef0b1ecda71059efef160bf48b">audio.c</a>
-, <a class="el" href="fae_2fae_8c.html#a825607ef0b1ecda71059efef160bf48b">fae.c</a>
-</li>
-<li>fae_device_audio_input_type()
-: <a class="el" href="group___fae_device_audio.html#ga54b4e63d8504b1c334d979179855fb72">audio.h</a>
-, <a class="el" href="group___fae_device_audio.html#ga54b4e63d8504b1c334d979179855fb72">audio.c</a>
-, <a class="el" href="group___fae_device_audio.html#ga54b4e63d8504b1c334d979179855fb72">audio.d</a>
-</li>
-<li>fae_device_audio_name()
-: <a class="el" href="group___fae_device_audio.html#gafa0ed35a2e5f6c8d3ca658cc3452099e">audio.h</a>
-, <a class="el" href="group___fae_device_audio.html#gafa0ed35a2e5f6c8d3ca658cc3452099e">audio.c</a>
-, <a class="el" href="group___fae_device_audio.html#gafa0ed35a2e5f6c8d3ca658cc3452099e">audio.d</a>
-</li>
-<li>fae_device_audio_open_stream()
-: <a class="el" href="group___fae_device_audio.html#ga9ec66d91c50601291a1e5cf3362c435e">audio.h</a>
-, <a class="el" href="audio_8c.html#a6226cc722c480b01b490fed5f561c50b">audio.c</a>
-, <a class="el" href="group___fae_device_audio.html#ga9ec66d91c50601291a1e5cf3362c435e">audio.d</a>
-</li>
-<li>fae_device_audio_output_type()
-: <a class="el" href="group___fae_device_audio.html#ga3514139de07e3c6f9128e74b4955a309">audio.h</a>
-, <a class="el" href="group___fae_device_audio.html#ga3514139de07e3c6f9128e74b4955a309">audio.c</a>
-, <a class="el" href="group___fae_device_audio.html#ga3514139de07e3c6f9128e74b4955a309">audio.d</a>
-</li>
-<li>fae_device_audio_set_status_callback()
-: <a class="el" href="group___fae_device_audio.html#gabb2bfbd1553ca6e5475c8e9cde959cba">audio.h</a>
-, <a class="el" href="audio_8c.html#aaa995720944f966932cf50ed2d832871">audio.c</a>
-, <a class="el" href="group___fae_device_audio.html#gabb2bfbd1553ca6e5475c8e9cde959cba">audio.d</a>
-</li>
-<li>fae_device_audio_terminate()
-: <a class="el" href="audio_8c.html#a330ddfe1d2d52785edb455f8b00c53ba">audio.c</a>
-, <a class="el" href="fae_2fae_8c.html#a330ddfe1d2d52785edb455f8b00c53ba">fae.c</a>
-</li>
-<li>fae_device_audio_with_session()
-: <a class="el" href="group___fae_device_audio.html#ga5c1afcab3c9bcb2aa1278f17af100f28">audio.h</a>
-, <a class="el" href="audio_8c.html#acc6b00e9460f77f698e331ed4c195394">audio.c</a>
-, <a class="el" href="group___fae_device_audio.html#ga5c1afcab3c9bcb2aa1278f17af100f28">audio.d</a>
-</li>
-<li>fae_device_audio_with_stream()
-: <a class="el" href="group___fae_device_audio.html#gaccfc0837873f06fcb86be48aa02512d4">audio.h</a>
-, <a class="el" href="audio_8c.html#a2798f83a4dfa3b11c3b4dc778545cc41">audio.c</a>
-, <a class="el" href="group___fae_device_audio.html#gaccfc0837873f06fcb86be48aa02512d4">audio.d</a>
-</li>
-<li>fae_device_buffer_close()
-: <a class="el" href="group___fae_device_buffer.html#gafc6f8a53e4c6fc662d0e749344f67c2d">buffer.h</a>
-</li>
-<li>fae_device_buffer_open()
-: <a class="el" href="group___fae_device_buffer.html#ga2c168e65496634b26fb8d233ac77bab2">buffer.h</a>
-</li>
-<li>fae_device_buffer_run()
-: <a class="el" href="group___fae_device_buffer.html#gaff1cca65dac7bfafbc4e6b3143530afe">buffer.h</a>
-</li>
-<li>fae_device_file_close()
-: <a class="el" href="group___fae_device_file.html#gab5afd6988dc662f463edb1fe4ea2fdd6">file.h</a>
-, <a class="el" href="file_8c.html#a8a770af054fc0f198ba61e3d39562515">file.c</a>
-, <a class="el" href="group___fae_device_file.html#gab5afd6988dc662f463edb1fe4ea2fdd6">file.d</a>
-</li>
-<li>fae_device_file_open()
-: <a class="el" href="group___fae_device_file.html#ga0687274912a3fe6df14d4337251bb54f">file.h</a>
-, <a class="el" href="file_8c.html#a8a0398cd51fa7521fcfbc6a0fd5ee811">file.c</a>
-, <a class="el" href="group___fae_device_file.html#ga0687274912a3fe6df14d4337251bb54f">file.d</a>
-</li>
-<li>fae_device_file_run()
-: <a class="el" href="group___fae_device_file.html#ga8e9681815f55699f1a1e398250f067ed">file.h</a>
-, <a class="el" href="file_8c.html#afbf2b5bd5d0c5a41bfca4267118099b4">file.c</a>
-, <a class="el" href="group___fae_device_file.html#ga8e9681815f55699f1a1e398250f067ed">file.d</a>
-</li>
-<li>fae_device_midi_all()
-: <a class="el" href="group___fae_device_midi.html#gae66a07c8bab70f6c37dcd9aa971cd4b7">midi.h</a>
-, <a class="el" href="midi_8c.html#a7633ec9ce258a339bece7fdbf9f3ad57">midi.c</a>
-, <a class="el" href="group___fae_device_midi.html#gae66a07c8bab70f6c37dcd9aa971cd4b7">midi.d</a>
-</li>
-<li>fae_device_midi_begin_session()
-: <a class="el" href="group___fae_device_midi.html#ga4925ebbf63d365faf25bac10be4987a0">midi.h</a>
-, <a class="el" href="group___fae_device_midi.html#ga4925ebbf63d365faf25bac10be4987a0">midi.c</a>
-, <a class="el" href="group___fae_device_midi.html#ga4925ebbf63d365faf25bac10be4987a0">midi.d</a>
-</li>
-<li>fae_device_midi_close_stream()
-: <a class="el" href="group___fae_device_midi.html#ga695b5d5d8e4c7a706ed839dbc262b421">midi.h</a>
-, <a class="el" href="midi_8c.html#a9551a013f22d9c9b5fa2d0f4cbf550fd">midi.c</a>
-, <a class="el" href="group___fae_device_midi.html#ga695b5d5d8e4c7a706ed839dbc262b421">midi.d</a>
-</li>
-<li>fae_device_midi_default()
-: <a class="el" href="group___fae_device_midi.html#gadc9be70d745b57155b01e07489163675">midi.h</a>
-, <a class="el" href="midi_8c.html#a5b94c20b286965e1d435be6789ae5389">midi.c</a>
-, <a class="el" href="group___fae_device_midi.html#gadc9be70d745b57155b01e07489163675">midi.d</a>
-</li>
-<li>fae_device_midi_default_input()
-: <a class="el" href="group___fae_device_midi.html#ga3162ae543b0bc36d19ff7886f26b4d42">midi.h</a>
-, <a class="el" href="midi_8c.html#a9e7fb023bb2aed6a9c65b449240b5347">midi.c</a>
-, <a class="el" href="group___fae_device_midi.html#ga3162ae543b0bc36d19ff7886f26b4d42">midi.d</a>
-</li>
-<li>fae_device_midi_default_output()
-: <a class="el" href="group___fae_device_midi.html#ga603c9d4ac3978e2d1e3f21dd127e4e03">midi.h</a>
-, <a class="el" href="midi_8c.html#a09e762caa4d95d2c8a487bb7427adbac">midi.c</a>
-, <a class="el" href="group___fae_device_midi.html#ga603c9d4ac3978e2d1e3f21dd127e4e03">midi.d</a>
-</li>
-<li>fae_device_midi_end_session()
-: <a class="el" href="group___fae_device_midi.html#ga7ee7a626f2e96c061519f0f7fbf1b852">midi.h</a>
-, <a class="el" href="midi_8c.html#ac7d7c502e89a5bc3cec1e2c993e84bf8">midi.c</a>
-, <a class="el" href="group___fae_device_midi.html#ga7ee7a626f2e96c061519f0f7fbf1b852">midi.d</a>
-</li>
-<li>fae_device_midi_has_input()
-: <a class="el" href="group___fae_device_midi.html#ga046e1ca954261cbf08f47ab08bf3f2e4">midi.h</a>
-, <a class="el" href="midi_8c.html#ad15460053fc68d1c5b626a8ffb73b44f">midi.c</a>
-, <a class="el" href="group___fae_device_midi.html#ga046e1ca954261cbf08f47ab08bf3f2e4">midi.d</a>
-</li>
-<li>fae_device_midi_has_output()
-: <a class="el" href="group___fae_device_midi.html#gaf8f8e21c86c84e749653f0a70d6a5e41">midi.h</a>
-, <a class="el" href="midi_8c.html#abc509bb38d79f19c7d328bf69b7c6305">midi.c</a>
-, <a class="el" href="group___fae_device_midi.html#gaf8f8e21c86c84e749653f0a70d6a5e41">midi.d</a>
-</li>
-<li>fae_device_midi_host_name()
-: <a class="el" href="group___fae_device_midi.html#gaec0fae768da8d7add78fea48fafbe8ea">midi.h</a>
-, <a class="el" href="midi_8c.html#a6571a8da07751df9fdcf632297e257f5">midi.c</a>
-, <a class="el" href="group___fae_device_midi.html#gaec0fae768da8d7add78fea48fafbe8ea">midi.d</a>
-</li>
-<li>fae_device_midi_initialize()
-: <a class="el" href="midi_8c.html#adfe983fb54986a701b54f8b2476249d4">midi.c</a>
-, <a class="el" href="fae_2fae_8c.html#adfe983fb54986a701b54f8b2476249d4">fae.c</a>
-</li>
-<li>fae_device_midi_name()
-: <a class="el" href="group___fae_device_midi.html#gac8ade685eb4ec279d90317376b7d2fe8">midi.h</a>
-, <a class="el" href="midi_8c.html#a1a02fd18a069cb00a4ed4309f876d5d6">midi.c</a>
-, <a class="el" href="group___fae_device_midi.html#gac8ade685eb4ec279d90317376b7d2fe8">midi.d</a>
-</li>
-<li>fae_device_midi_open_stream()
-: <a class="el" href="group___fae_device_midi.html#ga3d04323d00d2cdb0e462f3d395b6f986">midi.h</a>
-, <a class="el" href="midi_8c.html#aed14f3a284b0f3987d3ba4d20d5e2761">midi.c</a>
-, <a class="el" href="group___fae_device_midi.html#ga3d04323d00d2cdb0e462f3d395b6f986">midi.d</a>
-</li>
-<li>fae_device_midi_set_status_callback()
-: <a class="el" href="group___fae_device_midi.html#gab78d4970b44bab8fd73d8c0c6eddaa0e">midi.h</a>
-, <a class="el" href="midi_8c.html#ad32f8901a2486df0d22461486daa3296">midi.c</a>
-, <a class="el" href="group___fae_device_midi.html#gab78d4970b44bab8fd73d8c0c6eddaa0e">midi.d</a>
-</li>
-<li>fae_device_midi_terminate()
-: <a class="el" href="midi_8c.html#a469bd4a002dae1a1bc8660fb9b2f0abb">midi.c</a>
-, <a class="el" href="fae_2fae_8c.html#a469bd4a002dae1a1bc8660fb9b2f0abb">fae.c</a>
-</li>
-<li>fae_device_midi_with_session()
-: <a class="el" href="group___fae_device_midi.html#ga801ea243639f42fb943af653d01405e0">midi.h</a>
-, <a class="el" href="midi_8c.html#a21c2cadac39f7ac7269811c966136d34">midi.c</a>
-, <a class="el" href="group___fae_device_midi.html#ga801ea243639f42fb943af653d01405e0">midi.d</a>
-</li>
-<li>fae_device_midi_with_stream()
-: <a class="el" href="group___fae_device_midi.html#gaf1651ea2f01052803ca539a9275fdc48">midi.h</a>
-, <a class="el" href="midi_8c.html#a450d2b19b65b42e54152491b6180d2b6">midi.c</a>
-, <a class="el" href="group___fae_device_midi.html#gaf1651ea2f01052803ca539a9275fdc48">midi.d</a>
-</li>
-<li>fae_divide()
-: <a class="el" href="group___fae.html#ga1f1fd08a2caedbeb0ecee640d8f137cf">fae.h</a>
-, <a class="el" href="group___fae.html#ga1f1fd08a2caedbeb0ecee640d8f137cf">fae.d</a>
-</li>
-<li>fae_dmultiply()
-: <a class="el" href="group___fae.html#gafaca8ba0dca97d2acd6cca57f2183863">fae.h</a>
-, <a class="el" href="group___fae.html#gafaca8ba0dca97d2acd6cca57f2183863">fae.d</a>
-</li>
-<li>fae_dprint()
-: <a class="el" href="group___fae.html#ga9f04668b3300c19d4175a1d6e894d175">fae.h</a>
-, <a class="el" href="group___fae.html#ga9f04668b3300c19d4175a1d6e894d175">fae.c</a>
-, <a class="el" href="group___fae.html#ga9f04668b3300c19d4175a1d6e894d175">fae.d</a>
-</li>
-<li>fae_dprint_ln()
-: <a class="el" href="fae_8c.html#ae621fcb8621b22ed3574726e4312bcb0">fae.c</a>
-</li>
-<li>fae_dsubtract()
-: <a class="el" href="group___fae.html#gac2ad008994ba7cc812813feef0abf054">fae.h</a>
-, <a class="el" href="group___fae.html#gac2ad008994ba7cc812813feef0abf054">fae.d</a>
-</li>
-<li>fae_dynamic_check()
-: <a class="el" href="group___fae_dynamic.html#ga1cd3469340d9859032170147c4a05b9e">dynamic.h</a>
-, <a class="el" href="group___fae_dynamic.html#ga1cd3469340d9859032170147c4a05b9e">dynamic.c</a>
+<li>fa_buffer_set_int16()
+: <a class="el" href="group___fa_buffer.html#ga58c9c18f400109b3d7426b0b4569a815">buffer.h</a>
 </li>
-<li>fae_dynamic_get_type()
-: <a class="el" href="group___fae_dynamic.html#ga74f1e835f6f2c8832ae4d02d730a8010">dynamic.h</a>
-, <a class="el" href="group___fae_dynamic.html#ga74f1e835f6f2c8832ae4d02d730a8010">dynamic.c</a>
+<li>fa_buffer_set_int32()
+: <a class="el" href="group___fa_buffer.html#gaf3a158eaec3dc2f2e852c3b2c33ed292">buffer.h</a>
 </li>
-<li>fae_equal()
-: <a class="el" href="group___fae.html#gad149f662999ca0857fdc53acf8246792">fae.h</a>
-, <a class="el" href="group___fae.html#gad149f662999ca0857fdc53acf8246792">fae.d</a>
-</li>
-<li>fae_error_check()
-: <a class="el" href="group___fae_error.html#ga3f0b4f0a3846b84dabf7064de7af6637">error.h</a>
-, <a class="el" href="group___fae_error.html#ga3f0b4f0a3846b84dabf7064de7af6637">error.c</a>
-</li>
-<li>fae_error_copy_simple()
-: <a class="el" href="error_8c.html#a62d55001f9d75ffba450c17d28561d16">error.c</a>
-</li>
-<li>fae_error_create_simple()
-: <a class="el" href="group___fae_error.html#ga09f33a19a552b561696085fffd61588d">error.h</a>
-, <a class="el" href="group___fae_error.html#ga09f33a19a552b561696085fffd61588d">error.c</a>
-</li>
-<li>fae_error_destroy_simple()
-: <a class="el" href="error_8c.html#a29e647c0d83d8eba994fb82dc7cfc792">error.c</a>
-</li>
-<li>fae_error_format()
-: <a class="el" href="group___fae_error.html#ga936511fa92825eabce12f03fa51f84b9">error.h</a>
-, <a class="el" href="group___fae_error.html#ga936511fa92825eabce12f03fa51f84b9">error.c</a>
-</li>
-<li>fae_error_log()
-: <a class="el" href="group___fae_error.html#gab00e79d4c453b5f159223d3b44cabee9">error.h</a>
-, <a class="el" href="group___fae_error.html#gab00e79d4c453b5f159223d3b44cabee9">error.c</a>
-</li>
-<li>fae_error_message()
-: <a class="el" href="group___fae_error.html#ga1c6f12ef4fe504fe001483136c69dfec">error.h</a>
-, <a class="el" href="group___fae_error.html#ga1c6f12ef4fe504fe001483136c69dfec">error.c</a>
-</li>
-<li>fae_error_origin()
-: <a class="el" href="group___fae_error.html#gabf110e5a0c8aa3450bfdc9161ec02909">error.h</a>
-, <a class="el" href="group___fae_error.html#gabf110e5a0c8aa3450bfdc9161ec02909">error.c</a>
-</li>
-<li>fae_error_severity()
-: <a class="el" href="group___fae_error.html#gaef85cea119770751e0770a1e22d912c8">error.h</a>
-, <a class="el" href="group___fae_error.html#gaef85cea119770751e0770a1e22d912c8">error.c</a>
-</li>
-<li>fae_event_add_sync()
-: <a class="el" href="fae_2event_8c.html#ae21e937ff4f9d869eeaa1c1a57887252">event.c</a>
-</li>
-<li>fae_event_after()
-: <a class="el" href="fae_2event_8c.html#ae7d785db3453bc720aeef1188d093c76">event.c</a>
-</li>
-<li>fae_event_before()
-: <a class="el" href="fae_2event_8c.html#a4447d343c2c4f54ffa7a6c1bdcd51792">event.c</a>
-</li>
-<li>fae_event_delay()
-: <a class="el" href="fae_2event_8c.html#ad90aa38d8fcf54016649f941efabb4c0">event.c</a>
-</li>
-<li>fae_event_destroy()
-: <a class="el" href="fae_2event_8c.html#a099d93277e345605bb02008fe95fbebb">event.c</a>
-</li>
-<li>fae_event_filter()
-: <a class="el" href="fae_2event_8c.html#a443071138130c65f65eae22ec6e44707">event.c</a>
-</li>
-<li>fae_event_has_more()
-: <a class="el" href="fae_2event_8c.html#a97204ef45ec41ffc963f521e4f5fe742">event.c</a>
-</li>
-<li>fae_event_has_values()
-: <a class="el" href="fae_2event_8c.html#aa7075aeced87a7f7c844e2083b2edf9a">event.c</a>
-</li>
-<li>fae_event_later()
-: <a class="el" href="fae_2event_8c.html#a4d0897b6e151aa934f858dbd8bea72dd">event.c</a>
-</li>
-<li>fae_event_map()
-: <a class="el" href="fae_2event_8c.html#ab6099da044f4794ba53903161e3d6838">event.c</a>
-</li>
-<li>fae_event_map2()
-: <a class="el" href="fae_2event_8c.html#ab5ca4191e7f8116a346bb59435845d1b">event.c</a>
-</li>
-<li>fae_event_merge()
-: <a class="el" href="fae_2event_8c.html#a06982468df3ac52c0e31395732020797">event.c</a>
-</li>
-<li>fae_event_never()
-: <a class="el" href="fae_2event_8c.html#ae5c0c368c1a757f68e82ea67d651178c">event.c</a>
-</li>
-<li>fae_event_now()
-: <a class="el" href="fae_2event_8c.html#a389e87109f5a568ef0d333152c9cf342">event.c</a>
-</li>
-<li>fae_event_offset()
-: <a class="el" href="fae_2event_8c.html#a269903d312054c20db5b31e6322e8f40">event.c</a>
-</li>
-<li>fae_event_receive()
-: <a class="el" href="fae_2event_8c.html#a06f838880335861a88277ed977d32d19">event.c</a>
-</li>
-<li>fae_event_send()
-: <a class="el" href="fae_2event_8c.html#aa0a71a5f4b18b8d727fdcbd5005df281">event.c</a>
-</li>
-<li>fae_event_switch()
-: <a class="el" href="fae_2event_8c.html#a83b92c1a3688cf433e1b4272e51e3b78">event.c</a>
-</li>
-<li>fae_event_values()
-: <a class="el" href="fae_2event_8c.html#ae192c93e9643aed35afbc8ee17f1c2c2">event.c</a>
-</li>
-<li>fae_fae_dlog()
-: <a class="el" href="group___fae_fae.html#gaf30c834cffbe4300858cf654a3a385ec">fae.h</a>
-, <a class="el" href="group___fae_fae.html#gaf30c834cffbe4300858cf654a3a385ec">fae.c</a>
-</li>
-<li>fae_fae_dlog_info()
-: <a class="el" href="group___fae_fae.html#gafcfb4ecd3a1989ec122df65372d7f5d1">fae.h</a>
-, <a class="el" href="group___fae_fae.html#gafcfb4ecd3a1989ec122df65372d7f5d1">util.h</a>
-, <a class="el" href="group___fae_fae.html#gafcfb4ecd3a1989ec122df65372d7f5d1">fae.c</a>
-</li>
-<li>fae_fae_initialize()
-: <a class="el" href="group___fae_fae.html#gab6077407488cb6fc8cc3ca7c2f1b4755">fae.h</a>
-, <a class="el" href="group___fae_fae.html#gab6077407488cb6fc8cc3ca7c2f1b4755">fae.c</a>
-</li>
-<li>fae_fae_log()
-: <a class="el" href="group___fae_fae.html#ga4868b74f884bbe35601875c48c59cd1d">fae.h</a>
-, <a class="el" href="group___fae_fae.html#ga4868b74f884bbe35601875c48c59cd1d">error.c</a>
-, <a class="el" href="group___fae_fae.html#ga4868b74f884bbe35601875c48c59cd1d">fae.c</a>
-</li>
-<li>fae_fae_log_error()
-: <a class="el" href="group___fae_fae.html#gac36018ad4dbbe0fd75d80f94699bf68f">fae.h</a>
-, <a class="el" href="group___fae_fae.html#gac36018ad4dbbe0fd75d80f94699bf68f">util.h</a>
-, <a class="el" href="group___fae_fae.html#gac36018ad4dbbe0fd75d80f94699bf68f">fae.c</a>
-</li>
-<li>fae_fae_log_error_from()
-: <a class="el" href="group___fae_fae.html#ga8517e71f10e80a6c4a02bd01b1457708">fae.h</a>
-, <a class="el" href="group___fae_fae.html#ga8517e71f10e80a6c4a02bd01b1457708">buffer.c</a>
-, <a class="el" href="group___fae_fae.html#ga8517e71f10e80a6c4a02bd01b1457708">audio.c</a>
-, <a class="el" href="group___fae_fae.html#ga8517e71f10e80a6c4a02bd01b1457708">midi.c</a>
-, <a class="el" href="group___fae_fae.html#ga8517e71f10e80a6c4a02bd01b1457708">fae.c</a>
-, <a class="el" href="group___fae_fae.html#ga8517e71f10e80a6c4a02bd01b1457708">thread.c</a>
-</li>
-<li>fae_fae_log_info()
-: <a class="el" href="group___fae_fae.html#ga8f7700178be1f78c6dd18d164880a24e">fae.h</a>
-, <a class="el" href="group___fae_fae.html#ga8f7700178be1f78c6dd18d164880a24e">util.h</a>
-, <a class="el" href="group___fae_fae.html#ga8f7700178be1f78c6dd18d164880a24e">fae.c</a>
-, <a class="el" href="group___fae_fae.html#ga8f7700178be1f78c6dd18d164880a24e">plot.c</a>
-</li>
-<li>fae_fae_log_info_from()
-: <a class="el" href="group___fae_fae.html#gaa6d1510c74f2662ff618a2b243b2957e">fae.h</a>
-, <a class="el" href="group___fae_fae.html#gaa6d1510c74f2662ff618a2b243b2957e">fae.c</a>
-</li>
-<li>fae_fae_log_warning()
-: <a class="el" href="group___fae_fae.html#gadff524aa3b0d6ec4f2162a9ff49c85c9">fae.h</a>
-, <a class="el" href="group___fae_fae.html#gadff524aa3b0d6ec4f2162a9ff49c85c9">util.h</a>
-, <a class="el" href="group___fae_fae.html#gadff524aa3b0d6ec4f2162a9ff49c85c9">fae.c</a>
-</li>
-<li>fae_fae_log_warning_from()
-: <a class="el" href="group___fae_fae.html#ga0e525e51b8e9495c67a9c83f7b972325">fae.h</a>
-, <a class="el" href="group___fae_fae.html#ga0e525e51b8e9495c67a9c83f7b972325">fae.c</a>
-</li>
-<li>fae_fae_set_log()
-: <a class="el" href="group___fae_fae.html#gab23b0c26796484ca67291ee94c135652">fae.h</a>
-, <a class="el" href="group___fae_fae.html#gab23b0c26796484ca67291ee94c135652">fae.c</a>
-</li>
-<li>fae_fae_set_log_file()
-: <a class="el" href="group___fae_fae.html#gab54dd527a8bfef74bfec7ca9a2adbe01">fae.h</a>
-, <a class="el" href="group___fae_fae.html#gab54dd527a8bfef74bfec7ca9a2adbe01">fae.c</a>
-</li>
-<li>fae_fae_set_log_std()
-: <a class="el" href="group___fae_fae.html#gaa0ae0148a4a3c56d19783e3c4801554b">fae.h</a>
-, <a class="el" href="group___fae_fae.html#gaa0ae0148a4a3c56d19783e3c4801554b">fae.c</a>
-</li>
-<li>fae_fae_terminate()
-: <a class="el" href="group___fae_fae.html#gad919ee7af16ac4bd4deeb2c4da3c87ae">fae.h</a>
-, <a class="el" href="group___fae_fae.html#gad919ee7af16ac4bd4deeb2c4da3c87ae">fae.c</a>
-</li>
-<li>fae_fae_version()
-: <a class="el" href="group___fae_fae.html#gaa364bb17f1679d1911e9dc5e26a6a431">fae.h</a>
-, <a class="el" href="group___fae_fae.html#gaa364bb17f1679d1911e9dc5e26a6a431">fae.c</a>
-</li>
-<li>fae_fae_version_string()
-: <a class="el" href="group___fae_fae.html#ga860ef56da9c773f428f42125d4651c09">fae.h</a>
-, <a class="el" href="group___fae_fae.html#ga860ef56da9c773f428f42125d4651c09">fae.c</a>
-</li>
-<li>fae_from_bool()
-: <a class="el" href="group___fae.html#ga4b0ed1bd9e03d89ceff8d4030bc8e457">fae.h</a>
-, <a class="el" href="group___fae.html#ga4b0ed1bd9e03d89ceff8d4030bc8e457">fae.c</a>
-, <a class="el" href="group___fae.html#ga4b0ed1bd9e03d89ceff8d4030bc8e457">fae.d</a>
-</li>
-<li>fae_from_double()
-: <a class="el" href="group___fae.html#gad649323868b6ccb2d53e8f7d30151eac">fae.h</a>
-, <a class="el" href="group___fae.html#gad649323868b6ccb2d53e8f7d30151eac">fae.c</a>
-, <a class="el" href="group___fae.html#gad649323868b6ccb2d53e8f7d30151eac">fae.d</a>
-</li>
-<li>fae_from_float()
-: <a class="el" href="group___fae.html#ga6a0cf452699fd1c513eafbe03134cacb">fae.h</a>
-, <a class="el" href="group___fae.html#ga6a0cf452699fd1c513eafbe03134cacb">fae.c</a>
-, <a class="el" href="group___fae.html#ga6a0cf452699fd1c513eafbe03134cacb">fae.d</a>
-</li>
-<li>fae_from_int16()
-: <a class="el" href="group___fae.html#ga7f8db192bc2e5c6c80eb6accc5884781">fae.h</a>
-, <a class="el" href="group___fae.html#ga7f8db192bc2e5c6c80eb6accc5884781">fae.c</a>
-, <a class="el" href="group___fae.html#ga7f8db192bc2e5c6c80eb6accc5884781">fae.d</a>
-</li>
-<li>fae_from_int32()
-: <a class="el" href="group___fae.html#gaf8570493f5780f5bec75b28c0c5089c9">fae.h</a>
-, <a class="el" href="group___fae.html#gaf8570493f5780f5bec75b28c0c5089c9">fae.c</a>
-, <a class="el" href="group___fae.html#gaf8570493f5780f5bec75b28c0c5089c9">fae.d</a>
-</li>
-<li>fae_from_int64()
-: <a class="el" href="group___fae.html#ga1a493e817f57fbb3e3671c372ab6e58a">fae.h</a>
-, <a class="el" href="group___fae.html#ga1a493e817f57fbb3e3671c372ab6e58a">fae.c</a>
-, <a class="el" href="group___fae.html#ga1a493e817f57fbb3e3671c372ab6e58a">fae.d</a>
-</li>
-<li>fae_from_int8()
-: <a class="el" href="group___fae.html#gabd964551251e177454f238b8e43db645">fae.h</a>
-, <a class="el" href="group___fae.html#gabd964551251e177454f238b8e43db645">fae.c</a>
-, <a class="el" href="group___fae.html#gabd964551251e177454f238b8e43db645">fae.d</a>
-</li>
-<li>fae_graph_connect()
-: <a class="el" href="group___fae_graph.html#gaa4d98a7cb6671ac4374867dbc72f9089">graph.h</a>
-, <a class="el" href="group___fae_graph.html#gaa4d98a7cb6671ac4374867dbc72f9089">graph.c</a>
-</li>
-<li>fae_graph_copy()
-: <a class="el" href="graph_8c.html#a4c1c2f1bd04fff53be0d5c2e02212a8b">graph.c</a>
-</li>
-<li>fae_graph_destroy()
-: <a class="el" href="group___fae_graph.html#gad3a810f9541061b85c3894538960b1b3">graph.h</a>
-, <a class="el" href="group___fae_graph.html#gad3a810f9541061b85c3894538960b1b3">graph.c</a>
-</li>
-<li>fae_graph_disconnect()
-: <a class="el" href="group___fae_graph.html#gac6b7ebceaa49d5396d12782d7460a0a6">graph.h</a>
-, <a class="el" href="group___fae_graph.html#gac6b7ebceaa49d5396d12782d7460a0a6">graph.c</a>
-</li>
-<li>fae_graph_empty()
-: <a class="el" href="group___fae_graph.html#gac91bc4c5490fa90564228e4eacd77006">graph.h</a>
-, <a class="el" href="group___fae_graph.html#gac91bc4c5490fa90564228e4eacd77006">graph.c</a>
-</li>
-<li>fae_graph_insert()
-: <a class="el" href="group___fae_graph.html#ga134d6e693261ad381f2f409505fa088a">graph.h</a>
-, <a class="el" href="group___fae_graph.html#ga134d6e693261ad381f2f409505fa088a">graph.c</a>
-</li>
-<li>fae_graph_remove()
-: <a class="el" href="group___fae_graph.html#ga8b3115e4eed8d3238ec243f7a630d310">graph.h</a>
-, <a class="el" href="group___fae_graph.html#ga8b3115e4eed8d3238ec243f7a630d310">graph.c</a>
-</li>
-<li>fae_graph_to_dot()
-: <a class="el" href="group___fae_graph.html#gab9c153b1bfd98adf311f1a61f25fe8ef">graph.h</a>
-, <a class="el" href="group___fae_graph.html#gab9c153b1bfd98adf311f1a61f25fe8ef">graph.c</a>
-</li>
-<li>fae_greater_than()
-: <a class="el" href="group___fae.html#gab7f5bdb17cd1679d5d30bd5c85cf93b0">fae.h</a>
-, <a class="el" href="group___fae.html#gab7f5bdb17cd1679d5d30bd5c85cf93b0">fae.d</a>
-</li>
-<li>fae_greater_than_equal()
-: <a class="el" href="group___fae.html#gafab1466d501fcb2e50a1ce311590f87b">fae.h</a>
-, <a class="el" href="group___fae.html#gafab1466d501fcb2e50a1ce311590f87b">fae.c</a>
-, <a class="el" href="group___fae.html#gafab1466d501fcb2e50a1ce311590f87b">fae.d</a>
-</li>
-<li>fae_interface()
-: <a class="el" href="group___fae.html#gab12166c1a3c557fcd0ae42835343b6ca">fae.h</a>
-, <a class="el" href="group___fae.html#gab12166c1a3c557fcd0ae42835343b6ca">fae.c</a>
-, <a class="el" href="group___fae.html#gab12166c1a3c557fcd0ae42835343b6ca">fae.d</a>
-</li>
-<li>fae_is_bool()
-: <a class="el" href="group___fae.html#gaca250cd2773ff9fc2d5d7e96660e9edd">fae.h</a>
-, <a class="el" href="group___fae.html#gaca250cd2773ff9fc2d5d7e96660e9edd">fae.c</a>
-, <a class="el" href="group___fae.html#gaca250cd2773ff9fc2d5d7e96660e9edd">fae.d</a>
-</li>
-<li>fae_is_double()
-: <a class="el" href="group___fae.html#gae1173f7e05e915249a13afcbebeb9040">fae.h</a>
-, <a class="el" href="group___fae.html#gae1173f7e05e915249a13afcbebeb9040">fae.c</a>
-, <a class="el" href="group___fae.html#gae1173f7e05e915249a13afcbebeb9040">fae.d</a>
-</li>
-<li>fae_is_float()
-: <a class="el" href="group___fae.html#gaa5f9c95333b61866e98e4e79372cba93">fae.h</a>
-, <a class="el" href="group___fae.html#gaa5f9c95333b61866e98e4e79372cba93">fae.c</a>
-, <a class="el" href="group___fae.html#gaa5f9c95333b61866e98e4e79372cba93">fae.d</a>
-</li>
-<li>fae_is_int16()
-: <a class="el" href="group___fae.html#gaa2e1582aa22a350bef55ef56cc535c61">fae.h</a>
-, <a class="el" href="group___fae.html#gaa2e1582aa22a350bef55ef56cc535c61">fae.c</a>
-, <a class="el" href="group___fae.html#gaa2e1582aa22a350bef55ef56cc535c61">fae.d</a>
-</li>
-<li>fae_is_int32()
-: <a class="el" href="group___fae.html#ga82fecf7e631764d115475e3ab4e9193f">fae.h</a>
-, <a class="el" href="group___fae.html#ga82fecf7e631764d115475e3ab4e9193f">fae.c</a>
-, <a class="el" href="group___fae.html#ga82fecf7e631764d115475e3ab4e9193f">fae.d</a>
-</li>
-<li>fae_is_int64()
-: <a class="el" href="group___fae.html#ga720aeb077362c1b738116faeea405e5c">fae.h</a>
-, <a class="el" href="group___fae.html#ga720aeb077362c1b738116faeea405e5c">fae.c</a>
-, <a class="el" href="group___fae.html#ga720aeb077362c1b738116faeea405e5c">fae.d</a>
-</li>
-<li>fae_is_int8()
-: <a class="el" href="group___fae.html#ga5131fab2a8a822945e3723fa19235d00">fae.h</a>
-, <a class="el" href="group___fae.html#ga5131fab2a8a822945e3723fa19235d00">fae.c</a>
-, <a class="el" href="group___fae.html#ga5131fab2a8a822945e3723fa19235d00">fae.d</a>
-</li>
-<li>fae_is_ref()
-: <a class="el" href="group___fae.html#ga7f0758f234e37a20a7c9dada18f7152c">fae.h</a>
-, <a class="el" href="group___fae.html#ga7f0758f234e37a20a7c9dada18f7152c">fae.c</a>
-, <a class="el" href="group___fae.html#ga7f0758f234e37a20a7c9dada18f7152c">fae.d</a>
-</li>
-<li>fae_less_than()
-: <a class="el" href="group___fae.html#ga27de18f0eb45863de69ff7c01a103198">fae.h</a>
-, <a class="el" href="group___fae.html#ga27de18f0eb45863de69ff7c01a103198">fae.d</a>
-</li>
-<li>fae_less_than_equal()
-: <a class="el" href="group___fae.html#gabdc1724304b0c1ad75c7c27a14e51ae6">fae.h</a>
-, <a class="el" href="group___fae.html#gabdc1724304b0c1ad75c7c27a14e51ae6">fae.c</a>
-, <a class="el" href="group___fae.html#gabdc1724304b0c1ad75c7c27a14e51ae6">fae.d</a>
-</li>
-<li>fae_list()
-: <a class="el" href="literals_8h.html#a538444b5fcdfd1e87eebe6538c72f27d">literals.h</a>
-, <a class="el" href="list_8c.html#ad151784cb4032d09ef3160c9ccc469c4">list.c</a>
-</li>
-<li>fae_list_append()
-: <a class="el" href="group___fae_list.html#ga752119fa45cc5f63b1f56d65e7bea15f">list.h</a>
-, <a class="el" href="list_8c.html#aca347211d282939ecb5223a7636b4627">list.c</a>
-, <a class="el" href="group___fae_list.html#ga752119fa45cc5f63b1f56d65e7bea15f">list.d</a>
-</li>
-<li>fae_list_cons()
-: <a class="el" href="group___fae_list.html#gaf9d9836cd556e41a8bf8c4e83fa847f0">list.h</a>
-, <a class="el" href="list_8c.html#ab05d894e2507ec9078af273c169c8055">list.c</a>
-, <a class="el" href="group___fae_list.html#gaf9d9836cd556e41a8bf8c4e83fa847f0">list.d</a>
-</li>
-<li>fae_list_copy()
-: <a class="el" href="group___fae_list.html#gaf7e5f878ca2d73bf865b0235e6af0fd6">list.h</a>
-, <a class="el" href="list_8c.html#ac97be38d9b10ec646d68b0da89c5ca97">list.c</a>
-, <a class="el" href="group___fae_list.html#gaf7e5f878ca2d73bf865b0235e6af0fd6">list.d</a>
-</li>
-<li>fae_list_dappend()
-: <a class="el" href="group___fae_list.html#gaa476596b2a28f77cd499dff0a1505e3b">list.h</a>
-, <a class="el" href="list_8c.html#ac8ff4991694cfb6be9f90ca15d5c923b">list.c</a>
-, <a class="el" href="group___fae_list.html#gaa476596b2a28f77cd499dff0a1505e3b">list.d</a>
-</li>
-<li>fae_list_dcons()
-: <a class="el" href="group___fae_list.html#ga6c3df44070e5a53039e28824f753747d">list.h</a>
-, <a class="el" href="list_8c.html#ad7e29251f00363588ecc6762f5b95223">list.c</a>
-, <a class="el" href="group___fae_list.html#ga6c3df44070e5a53039e28824f753747d">list.d</a>
-</li>
-<li>fae_list_ddrop()
-: <a class="el" href="group___fae_list.html#gaae7ec7a1a1b5a611e4235eee476fb768">list.h</a>
-, <a class="el" href="list_8c.html#af4347b73234ed25b8803f4b8056faa9e">list.c</a>
-, <a class="el" href="group___fae_list.html#gaae7ec7a1a1b5a611e4235eee476fb768">list.d</a>
-</li>
-<li>fae_list_destroy()
-: <a class="el" href="group___fae_list.html#ga2de1d66504de4c4cd9c09d300c8b3711">list.h</a>
-, <a class="el" href="list_8c.html#acbe468f4dca276b021e010e8c8cc8ab4">list.c</a>
-, <a class="el" href="group___fae_list.html#ga2de1d66504de4c4cd9c09d300c8b3711">list.d</a>
-</li>
-<li>fae_list_dfilter()
-: <a class="el" href="group___fae_list.html#ga06d79563f36385a72c0ed467015ae0ae">list.h</a>
-, <a class="el" href="list_8c.html#ad7ee55c612e17489fc9d24dce15e1a5b">list.c</a>
-, <a class="el" href="group___fae_list.html#ga06d79563f36385a72c0ed467015ae0ae">list.d</a>
-</li>
-<li>fae_list_dfold_left()
-: <a class="el" href="group___fae_list.html#ga461d5ee3398c39638bb1c3c44a3cebf8">list.h</a>
-, <a class="el" href="list_8c.html#aea03ba4b1404078cb5c00a80c53b1687">list.c</a>
-, <a class="el" href="group___fae_list.html#ga461d5ee3398c39638bb1c3c44a3cebf8">list.d</a>
-</li>
-<li>fae_list_dinit()
-: <a class="el" href="group___fae_list.html#ga3185eff078d6a9851229de02b9ce3fba">list.h</a>
-, <a class="el" href="list_8c.html#af60c0199a6f09778c960638430a0ea0c">list.c</a>
-, <a class="el" href="group___fae_list.html#ga3185eff078d6a9851229de02b9ce3fba">list.d</a>
-</li>
-<li>fae_list_dinsert()
-: <a class="el" href="group___fae_list.html#gad2b38b5965591646a852d97b9138f072">list.h</a>
-, <a class="el" href="list_8c.html#a2b995ca1c8f2b5b47833976f342c3975">list.c</a>
-, <a class="el" href="group___fae_list.html#gad2b38b5965591646a852d97b9138f072">list.d</a>
-</li>
-<li>fae_list_dinsert_range()
-: <a class="el" href="group___fae_list.html#ga29730a6cbae05f8adecb33588546af4e">list.h</a>
-, <a class="el" href="list_8c.html#afa0867c4493b774eac57a7525bb0c5eb">list.c</a>
-, <a class="el" href="group___fae_list.html#ga29730a6cbae05f8adecb33588546af4e">list.d</a>
-</li>
-<li>fae_list_djoin()
-: <a class="el" href="group___fae_list.html#gaa7abd84a4b1120909db4aec32096a350">list.h</a>
-, <a class="el" href="list_8c.html#a9645a68a70e35b913aee9451e9bd77ce">list.c</a>
-, <a class="el" href="group___fae_list.html#gaa7abd84a4b1120909db4aec32096a350">list.d</a>
-</li>
-<li>fae_list_djoin_map()
-: <a class="el" href="group___fae_list.html#gae588f2cb152d8d89151d0c976cccd890">list.h</a>
-, <a class="el" href="list_8c.html#a9c84c21e277bda7060dbbdcee70c76d3">list.c</a>
-, <a class="el" href="group___fae_list.html#gae588f2cb152d8d89151d0c976cccd890">list.d</a>
-</li>
-<li>fae_list_dmap()
-: <a class="el" href="group___fae_list.html#ga7b1c8ec3207b086a0593e6095c2e622b">list.h</a>
-, <a class="el" href="list_8c.html#adabe14d66a5dccedbf4e742208008641">list.c</a>
-, <a class="el" href="group___fae_list.html#ga7b1c8ec3207b086a0593e6095c2e622b">list.d</a>
-</li>
-<li>fae_list_dremove()
-: <a class="el" href="group___fae_list.html#gaaa3d4d95a7c6483946214ea50cca3725">list.h</a>
-, <a class="el" href="list_8c.html#a31c44c9e675b6afbc6f25b76c278af56">list.c</a>
-, <a class="el" href="group___fae_list.html#gaaa3d4d95a7c6483946214ea50cca3725">list.d</a>
-</li>
-<li>fae_list_dremove_range()
-: <a class="el" href="group___fae_list.html#gaff06bc7686c894ee32e42b91d5c35c3e">list.h</a>
-, <a class="el" href="list_8c.html#acfe09bea8c41d00188516c2ce4846260">list.c</a>
-, <a class="el" href="group___fae_list.html#gaff06bc7686c894ee32e42b91d5c35c3e">list.d</a>
-</li>
-<li>fae_list_dreverse()
-: <a class="el" href="group___fae_list.html#gabb56c1f9981935b012014b1be85bad8f">list.h</a>
-, <a class="el" href="list_8c.html#aa48a9057b507d0de9baeb74b1cfcfd8a">list.c</a>
-, <a class="el" href="group___fae_list.html#gabb56c1f9981935b012014b1be85bad8f">list.d</a>
-</li>
-<li>fae_list_drop()
-: <a class="el" href="group___fae_list.html#ga7fed967ffc0e3a55af5a8102a44dc02c">list.h</a>
-, <a class="el" href="list_8c.html#a420f2163962e233e9b43ca70e3305cf2">list.c</a>
-, <a class="el" href="group___fae_list.html#ga7fed967ffc0e3a55af5a8102a44dc02c">list.d</a>
-</li>
-<li>fae_list_dsort()
-: <a class="el" href="group___fae_list.html#gabd7bb49dab6e1717286c363e7fbc191d">list.h</a>
-, <a class="el" href="list_8c.html#aef3dcb22e6944b56cd820dc88c9e2b05">list.c</a>
-, <a class="el" href="group___fae_list.html#gabd7bb49dab6e1717286c363e7fbc191d">list.d</a>
-</li>
-<li>fae_list_dtail()
-: <a class="el" href="group___fae_list.html#ga6daea31f091a95b9c5ea483860a2dfe0">list.h</a>
-, <a class="el" href="list_8c.html#ac35ed7628b1cf45f81813ce95fa6b170">list.c</a>
-, <a class="el" href="group___fae_list.html#ga6daea31f091a95b9c5ea483860a2dfe0">list.d</a>
-</li>
-<li>fae_list_dtake()
-: <a class="el" href="group___fae_list.html#ga3186aea56360e8b6d32674c75f7481c1">list.h</a>
-, <a class="el" href="list_8c.html#ae6e85eb002f28e04efe2c8c1eab06f72">list.c</a>
-, <a class="el" href="group___fae_list.html#ga3186aea56360e8b6d32674c75f7481c1">list.d</a>
-</li>
-<li>fae_list_empty()
-: <a class="el" href="group___fae_list.html#gac7cc8e649da0ffca0fcddc85856964ed">list.h</a>
-, <a class="el" href="group___fae_list.html#gac7cc8e649da0ffca0fcddc85856964ed">list.c</a>
-, <a class="el" href="group___fae_list.html#gac7cc8e649da0ffca0fcddc85856964ed">list.d</a>
-</li>
-<li>fae_list_enumerate()
-: <a class="el" href="group___fae_list.html#gae6fcc90fcdfa1e7391cf918469251880">list.h</a>
-, <a class="el" href="group___fae_list.html#gae6fcc90fcdfa1e7391cf918469251880">list.c</a>
-, <a class="el" href="group___fae_list.html#gae6fcc90fcdfa1e7391cf918469251880">list.d</a>
-</li>
-<li>fae_list_filter()
-: <a class="el" href="group___fae_list.html#gaecd50514e6a28b73648ebd88358f1588">list.h</a>
-, <a class="el" href="list_8c.html#a2d36f87a64b0bf8f557265407cbea6aa">list.c</a>
-, <a class="el" href="group___fae_list.html#gaecd50514e6a28b73648ebd88358f1588">list.d</a>
-</li>
-<li>fae_list_find()
-: <a class="el" href="group___fae_list.html#gafc54126e160f99edae4678a7b835e05e">list.h</a>
-, <a class="el" href="list_8c.html#ac7679a9c303419967f85b1049a4d81ee">list.c</a>
-, <a class="el" href="group___fae_list.html#gafc54126e160f99edae4678a7b835e05e">list.d</a>
-</li>
-<li>fae_list_find_index()
-: <a class="el" href="group___fae_list.html#ga97b47aaf1a29936440e2084d3bdb9950">list.h</a>
-, <a class="el" href="list_8c.html#a1ea610906621dc74bd4ce1f43c5e4bd6">list.c</a>
-, <a class="el" href="group___fae_list.html#ga97b47aaf1a29936440e2084d3bdb9950">list.d</a>
-</li>
-<li>fae_list_fold_left()
-: <a class="el" href="group___fae_list.html#ga75dd107280ee95f07b4790eed3105c9d">list.h</a>
-, <a class="el" href="list_8c.html#aef6157ae1e7dd96cb04361a307419178">list.c</a>
-, <a class="el" href="group___fae_list.html#ga75dd107280ee95f07b4790eed3105c9d">list.d</a>
-</li>
-<li>fae_list_has()
-: <a class="el" href="group___fae_list.html#ga801c9f33c1d0708c083897e3b75d4138">list.h</a>
-, <a class="el" href="list_8c.html#ad3bfc196a563713ad8d94cf89a4d16af">list.c</a>
-, <a class="el" href="group___fae_list.html#ga801c9f33c1d0708c083897e3b75d4138">list.d</a>
-</li>
-<li>fae_list_head()
-: <a class="el" href="group___fae_list.html#ga63b174d647704686e3f723ea0f3051e6">list.h</a>
-, <a class="el" href="list_8c.html#a8d33598d0e91cb9df165dc0f8ee28876">list.c</a>
-, <a class="el" href="group___fae_list.html#ga63b174d647704686e3f723ea0f3051e6">list.d</a>
-</li>
-<li>fae_list_index()
-: <a class="el" href="group___fae_list.html#ga07550905a1301faa06083580525110ce">list.h</a>
-, <a class="el" href="list_8c.html#a2d8dd35bfd05ea4fa79f30493f0240b9">list.c</a>
-, <a class="el" href="group___fae_list.html#ga07550905a1301faa06083580525110ce">list.d</a>
-</li>
-<li>fae_list_index_of()
-: <a class="el" href="group___fae_list.html#gab187751c6e833a1443d481081fb77918">list.h</a>
-, <a class="el" href="list_8c.html#add26dd78db709c33dc93b8b093e3da2d">list.c</a>
-, <a class="el" href="group___fae_list.html#gab187751c6e833a1443d481081fb77918">list.d</a>
-</li>
-<li>fae_list_init()
-: <a class="el" href="group___fae_list.html#ga5a3f322d104d0f0e5ccfe14f80e6ee8d">list.h</a>
-, <a class="el" href="list_8c.html#a1fc1f10a55842c7f3ce4c001c4596182">list.c</a>
-, <a class="el" href="group___fae_list.html#ga5a3f322d104d0f0e5ccfe14f80e6ee8d">list.d</a>
-</li>
-<li>fae_list_insert()
-: <a class="el" href="group___fae_list.html#gac13ca18fcb39fe836c9c235b7f065517">list.h</a>
-, <a class="el" href="list_8c.html#a835e8eef0fe6b813638182c2663b3448">list.c</a>
-, <a class="el" href="group___fae_list.html#gac13ca18fcb39fe836c9c235b7f065517">list.d</a>
-</li>
-<li>fae_list_insert_range()
-: <a class="el" href="group___fae_list.html#ga81a5afabe37f9aaac066753d483115a7">list.h</a>
-, <a class="el" href="list_8c.html#a78b56d5e4e2c83685e4a47f94a3e0284">list.c</a>
-, <a class="el" href="group___fae_list.html#ga81a5afabe37f9aaac066753d483115a7">list.d</a>
-</li>
-<li>fae_list_is_empty()
-: <a class="el" href="group___fae_list.html#gaf5239337403c864866caf5e9850489fd">list.h</a>
-, <a class="el" href="list_8c.html#a927fc67aa742365d12758a89cdfbd39b">list.c</a>
-, <a class="el" href="group___fae_list.html#gaf5239337403c864866caf5e9850489fd">list.d</a>
-</li>
-<li>fae_list_is_single()
-: <a class="el" href="group___fae_list.html#ga661b7f98acc8e9132021e1ca4a4b503e">list.h</a>
-, <a class="el" href="list_8c.html#ada005da2a216fee48e2c572aa111f73c">list.c</a>
-, <a class="el" href="group___fae_list.html#ga661b7f98acc8e9132021e1ca4a4b503e">list.d</a>
-</li>
-<li>fae_list_join()
-: <a class="el" href="group___fae_list.html#gaa0b7f2f407264ea9dacef92486998670">list.h</a>
-, <a class="el" href="list_8c.html#a3f80f1ce02e3c40f81f3b248d2d55e7b">list.c</a>
-, <a class="el" href="group___fae_list.html#gaa0b7f2f407264ea9dacef92486998670">list.d</a>
-</li>
-<li>fae_list_join_map()
-: <a class="el" href="group___fae_list.html#ga01f44734be424bbe5777c3ee1a214b59">list.h</a>
-, <a class="el" href="list_8c.html#ab03076307a08b6d45b39c162ee740779">list.c</a>
-, <a class="el" href="group___fae_list.html#ga01f44734be424bbe5777c3ee1a214b59">list.d</a>
-</li>
-<li>fae_list_last()
-: <a class="el" href="group___fae_list.html#ga5a4257c5841e1d95cae5aab695fc3f60">list.h</a>
-, <a class="el" href="list_8c.html#a3ebfd1fd4dc3a9faa5faba0b47c5dcae">list.c</a>
-, <a class="el" href="group___fae_list.html#ga5a4257c5841e1d95cae5aab695fc3f60">list.d</a>
-</li>
-<li>fae_list_length()
-: <a class="el" href="group___fae_list.html#ga847c4b9300b649a36af8965f8d78d753">list.h</a>
-, <a class="el" href="list_8c.html#a64a2282f8987de590bff4d3c8f141962">list.c</a>
-, <a class="el" href="group___fae_list.html#ga847c4b9300b649a36af8965f8d78d753">list.d</a>
-</li>
-<li>fae_list_map()
-: <a class="el" href="group___fae_list.html#gacb2243a40c8c86d7609d6cb238dfa2dd">list.h</a>
-, <a class="el" href="list_8c.html#a912cbc0033ef10ad6dc883479b1c4c31">list.c</a>
-, <a class="el" href="group___fae_list.html#gacb2243a40c8c86d7609d6cb238dfa2dd">list.d</a>
-</li>
-<li>fae_list_range()
-: <a class="el" href="group___fae_list.html#gacdb16eff1de2419e1945cca8e165cab5">list.h</a>
-, <a class="el" href="list_8c.html#a63ac56300ba26971b7c1de7b4b725c14">list.c</a>
-, <a class="el" href="group___fae_list.html#gacdb16eff1de2419e1945cca8e165cab5">list.d</a>
-</li>
-<li>fae_list_remove()
-: <a class="el" href="group___fae_list.html#gae4c16256ea684efb6b20d1e411e1c11d">list.h</a>
-, <a class="el" href="list_8c.html#a0c6886b09e7a231da9222df41a3e0a62">list.c</a>
-, <a class="el" href="group___fae_list.html#gae4c16256ea684efb6b20d1e411e1c11d">list.d</a>
-</li>
-<li>fae_list_remove_range()
-: <a class="el" href="group___fae_list.html#ga7f0174bb96f87ddbe54f278bb79a887b">list.h</a>
-, <a class="el" href="list_8c.html#a2dc72e57beac01810b76bd99c237f0d3">list.c</a>
-, <a class="el" href="group___fae_list.html#ga7f0174bb96f87ddbe54f278bb79a887b">list.d</a>
-</li>
-<li>fae_list_repeat()
-: <a class="el" href="group___fae_list.html#ga4a5aa40fa5cb4b3abb5e839162ca521b">list.h</a>
-, <a class="el" href="list_8c.html#a9c89c8799a10ee95431d27cb01c95c67">list.c</a>
-, <a class="el" href="group___fae_list.html#ga4a5aa40fa5cb4b3abb5e839162ca521b">list.d</a>
-</li>
-<li>fae_list_reverse()
-: <a class="el" href="group___fae_list.html#ga9c24f4f6109adcf2098249804ccd4ccc">list.h</a>
-, <a class="el" href="list_8c.html#a313b6953299abbbed002ca3dc5487a11">list.c</a>
-, <a class="el" href="group___fae_list.html#ga9c24f4f6109adcf2098249804ccd4ccc">list.d</a>
-</li>
-<li>fae_list_single()
-: <a class="el" href="group___fae_list.html#gac3b55fb733098b8d3669f4859c38859f">list.h</a>
-, <a class="el" href="list_8c.html#a3e83a6304b45e53d4843a5f4f652da52">list.c</a>
-, <a class="el" href="group___fae_list.html#gac3b55fb733098b8d3669f4859c38859f">list.d</a>
-</li>
-<li>fae_list_sort()
-: <a class="el" href="group___fae_list.html#ga7390e3c49267e3d9a33e8dbd0dd3f76f">list.h</a>
-, <a class="el" href="list_8c.html#a380956ce8c6d51b32792f50c78cb23a8">list.c</a>
-, <a class="el" href="group___fae_list.html#ga7390e3c49267e3d9a33e8dbd0dd3f76f">list.d</a>
-</li>
-<li>fae_list_tail()
-: <a class="el" href="group___fae_list.html#gab4625e0e807d8480e36cba212dedf827">list.h</a>
-, <a class="el" href="list_8c.html#ae418076916596c146645de8bd20cb2f7">list.c</a>
-, <a class="el" href="group___fae_list.html#gab4625e0e807d8480e36cba212dedf827">list.d</a>
-</li>
-<li>fae_list_take()
-: <a class="el" href="group___fae_list.html#ga88089d50b098f6efbfc31f79ffbaa65b">list.h</a>
-, <a class="el" href="list_8c.html#a6cacd3e4877dbd62ce930675b2fd597a">list.c</a>
-, <a class="el" href="group___fae_list.html#ga88089d50b098f6efbfc31f79ffbaa65b">list.d</a>
-</li>
-<li>fae_list_to_list()
-: <a class="el" href="group___fae_list.html#ga2de1e02b67497326f561dbb704ff1473">list.h</a>
-, <a class="el" href="list_8c.html#a8066d9f710f88aeeb791d72e8d06b03c">list.c</a>
-</li>
-<li>fae_map()
-: <a class="el" href="literals_8h.html#a51830d099d1c7203d403f823ac44e2ee">literals.h</a>
-, <a class="el" href="map_8c.html#ab5187a060aaa2ea376f2eb500b5f9d8c">map.c</a>
-</li>
-<li>fae_map_add()
-: <a class="el" href="group___fae_map.html#ga5b98beb03797316e0f8e50e76da22313">map.h</a>
-, <a class="el" href="group___fae_map.html#ga5b98beb03797316e0f8e50e76da22313">map.c</a>
-</li>
-<li>fae_map_add_entry()
-: <a class="el" href="group___fae_map.html#ga0363ca8972ed725fd46be5ece459f3fa">map.h</a>
-, <a class="el" href="group___fae_map.html#ga0363ca8972ed725fd46be5ece459f3fa">map.c</a>
-</li>
-<li>fae_map_copy()
-: <a class="el" href="group___fae_map.html#ga64ba51afb59e49c717c0fe479e3e6a24">map.h</a>
-, <a class="el" href="group___fae_map.html#ga64ba51afb59e49c717c0fe479e3e6a24">map.c</a>
-</li>
-<li>fae_map_dadd()
-: <a class="el" href="group___fae_map.html#ga411a26b882540df4c167393575e7c3f5">map.h</a>
-, <a class="el" href="group___fae_map.html#ga411a26b882540df4c167393575e7c3f5">map.c</a>
-</li>
-<li>fae_map_destroy()
-: <a class="el" href="group___fae_map.html#ga829aea00a7947563aa8b64151dfe6d33">map.h</a>
-, <a class="el" href="group___fae_map.html#ga829aea00a7947563aa8b64151dfe6d33">map.c</a>
-</li>
-<li>fae_map_difference()
-: <a class="el" href="group___fae_map.html#ga67dfe92ce79a65d4504681606524b92f">map.h</a>
-</li>
-<li>fae_map_dremove()
-: <a class="el" href="group___fae_map.html#ga30f16be21225b2cce875d6d6e7a8daac">map.h</a>
-, <a class="el" href="group___fae_map.html#ga30f16be21225b2cce875d6d6e7a8daac">map.c</a>
-</li>
-<li>fae_map_dset()
-: <a class="el" href="group___fae_map.html#gae90a8522c7efc48ec4b04940ac1762e6">map.h</a>
-, <a class="el" href="group___fae_map.html#gae90a8522c7efc48ec4b04940ac1762e6">map.c</a>
-</li>
-<li>fae_map_empty()
-: <a class="el" href="group___fae_map.html#ga5d4a8f22d5f692d19030a3ddd0318432">map.h</a>
-, <a class="el" href="group___fae_map.html#ga5d4a8f22d5f692d19030a3ddd0318432">map.c</a>
-</li>
-<li>fae_map_from_list()
-: <a class="el" href="group___fae_map.html#ga17ac8203f4fd1c5565250850ec23af1e">map.h</a>
-</li>
-<li>fae_map_from_pair()
-: <a class="el" href="group___fae_map.html#ga4021d295cad3973e017c80b5d15ba2c0">map.h</a>
-</li>
-<li>fae_map_get()
-: <a class="el" href="group___fae_map.html#gaa47a02c656a64557639425518576c84f">map.h</a>
-, <a class="el" href="group___fae_map.html#gaa47a02c656a64557639425518576c84f">map.c</a>
-</li>
-<li>fae_map_has_elem()
-: <a class="el" href="group___fae_map.html#ga15b731fc4b03ad6eaa8609fc13ed395e">map.c</a>
-, <a class="el" href="group___fae_map.html#ga15b731fc4b03ad6eaa8609fc13ed395e">map.h</a>
-</li>
-<li>fae_map_has_entry()
-: <a class="el" href="group___fae_map.html#ga486f6eb6ada7d7f179b169212a02a9cc">map.h</a>
-, <a class="el" href="group___fae_map.html#ga486f6eb6ada7d7f179b169212a02a9cc">map.c</a>
-</li>
-<li>fae_map_has_key()
-: <a class="el" href="group___fae_map.html#ga7f8f3d5aaae2e4e650b9c23f45e2fec3">map.c</a>
-, <a class="el" href="group___fae_map.html#ga7f8f3d5aaae2e4e650b9c23f45e2fec3">map.h</a>
-</li>
-<li>fae_map_is_empty()
-: <a class="el" href="group___fae_map.html#ga0f7025fe9da0950f9e72db48bd6dcbda">map.h</a>
-, <a class="el" href="group___fae_map.html#ga0f7025fe9da0950f9e72db48bd6dcbda">map.c</a>
-</li>
-<li>fae_map_is_proper_submap_of()
-: <a class="el" href="group___fae_map.html#gaa50db6a6d4a64f297ae916c9d14c05fe">map.h</a>
-, <a class="el" href="group___fae_map.html#gaa50db6a6d4a64f297ae916c9d14c05fe">map.c</a>
-</li>
-<li>fae_map_is_single()
-: <a class="el" href="group___fae_map.html#ga5eacb47a02a68f365e395f50f0fbe1de">map.h</a>
-, <a class="el" href="group___fae_map.html#ga5eacb47a02a68f365e395f50f0fbe1de">map.c</a>
-</li>
-<li>fae_map_is_submap_of()
-: <a class="el" href="group___fae_map.html#ga5bb596843f67d48aa8b308db74669e1f">map.c</a>
-, <a class="el" href="group___fae_map.html#ga5bb596843f67d48aa8b308db74669e1f">map.h</a>
-</li>
-<li>fae_map_map()
-: <a class="el" href="group___fae_map.html#ga748d96da37d5cc4e4de4cc41ed6c1563">map.h</a>
-, <a class="el" href="map_8c.html#ae7e5641c642c1cb0bbb91c589d1a054f">map.c</a>
-</li>
-<li>fae_map_power()
-: <a class="el" href="group___fae_map.html#gaa9c510773f2ff3753e5e03cc6ef40c77">map.h</a>
-</li>
-<li>fae_map_product()
-: <a class="el" href="group___fae_map.html#gaa9f2f9bc5a148a72493287e88ae518f9">map.h</a>
-</li>
-<li>fae_map_remove()
-: <a class="el" href="group___fae_map.html#gae35549382b6a642c6896e308c7e324e4">map.h</a>
-, <a class="el" href="group___fae_map.html#gae35549382b6a642c6896e308c7e324e4">map.c</a>
-</li>
-<li>fae_map_remove_entry()
-: <a class="el" href="group___fae_map.html#gaa61e9b0235feb4886d497cbca8cb721d">map.c</a>
-, <a class="el" href="group___fae_map.html#gaa61e9b0235feb4886d497cbca8cb721d">map.h</a>
-</li>
-<li>fae_map_set()
-: <a class="el" href="group___fae_map.html#ga59a493482239ad5f77118fb3bc760ab4">map.h</a>
-, <a class="el" href="group___fae_map.html#ga59a493482239ad5f77118fb3bc760ab4">map.c</a>
-</li>
-<li>fae_map_set_entry()
-: <a class="el" href="group___fae_map.html#ga9e6fbfa4d846781551f5a800ece3a082">map.h</a>
-</li>
-<li>fae_map_size()
-: <a class="el" href="group___fae_map.html#ga4e44f9e806348d5bc32b071920a9f4e3">map.h</a>
-, <a class="el" href="group___fae_map.html#ga4e44f9e806348d5bc32b071920a9f4e3">map.c</a>
-</li>
-<li>fae_map_sum()
-: <a class="el" href="group___fae_map.html#ga2d4248eb7a66239aa78c68bd83551f3a">map.h</a>
-</li>
-<li>fae_map_to_list()
-: <a class="el" href="group___fae_map.html#gab412d0cdfcc7eaecf08f0b8be1e5a5c0">map.c</a>
-, <a class="el" href="group___fae_map.html#gab412d0cdfcc7eaecf08f0b8be1e5a5c0">map.h</a>
-</li>
-<li>fae_max()
-: <a class="el" href="group___fae.html#gaf667436814a45f9abc36fc96a1bf2014">fae.h</a>
-, <a class="el" href="group___fae.html#gaf667436814a45f9abc36fc96a1bf2014">fae.c</a>
-, <a class="el" href="group___fae.html#gaf667436814a45f9abc36fc96a1bf2014">fae.d</a>
-</li>
-<li>fae_midi_msg_channel()
-: <a class="el" href="group___fae_midi_msg.html#ga09b0c5dd032a3dc3adc05460ce5377a1">midi_msg.h</a>
-, <a class="el" href="group___fae_midi_msg.html#ga09b0c5dd032a3dc3adc05460ce5377a1">midi_msg.c</a>
-</li>
-<li>fae_midi_msg_copy()
-: <a class="el" href="group___fae_midi_msg.html#gabe68de6283d8bdb48cd935ccb47234a9">midi_msg.h</a>
-, <a class="el" href="group___fae_midi_msg.html#gabe68de6283d8bdb48cd935ccb47234a9">midi_msg.c</a>
-</li>
-<li>fae_midi_msg_create_simple()
-: <a class="el" href="group___fae_midi_msg.html#ga421ec873a8ed932e76ff9c9adeb2491a">midi_msg.h</a>
-, <a class="el" href="group___fae_midi_msg.html#ga421ec873a8ed932e76ff9c9adeb2491a">midi_msg.c</a>
-</li>
-<li>fae_midi_msg_create_sysex()
-: <a class="el" href="group___fae_midi_msg.html#ga6b460aeceb2e702479c9f7cd7f7daadf">midi_msg.h</a>
-, <a class="el" href="group___fae_midi_msg.html#ga6b460aeceb2e702479c9f7cd7f7daadf">midi_msg.c</a>
-</li>
-<li>fae_midi_msg_destroy()
-: <a class="el" href="group___fae_midi_msg.html#gabce5a1b39ea4668202d9e737365d5322">midi_msg.h</a>
-, <a class="el" href="group___fae_midi_msg.html#gabce5a1b39ea4668202d9e737365d5322">midi_msg.c</a>
-</li>
-<li>fae_midi_msg_is_simple()
-: <a class="el" href="group___fae_midi_msg.html#ga7874c78a962d80419868f91f74b29c20">midi_msg.h</a>
-, <a class="el" href="group___fae_midi_msg.html#ga7874c78a962d80419868f91f74b29c20">midi_msg.c</a>
-</li>
-<li>fae_midi_msg_is_sysex()
-: <a class="el" href="group___fae_midi_msg.html#ga9a6ca73b2ce6db351aea5a1b97494d84">midi_msg.c</a>
-, <a class="el" href="group___fae_midi_msg.html#ga9a6ca73b2ce6db351aea5a1b97494d84">midi_msg.h</a>
-</li>
-<li>fae_midi_msg_simple_data()
-: <a class="el" href="group___fae_midi_msg.html#gad9f12a6ec3aa30c1c65d62c3c7b1f81b">midi_msg.h</a>
-, <a class="el" href="group___fae_midi_msg.html#gad9f12a6ec3aa30c1c65d62c3c7b1f81b">midi_msg.c</a>
-</li>
-<li>fae_midi_msg_simple_to_long()
-: <a class="el" href="midi__msg_8c.html#aef6ed90f28d7add86213c83e3c9a7bf3">midi_msg.c</a>
-</li>
-<li>fae_midi_msg_status()
-: <a class="el" href="group___fae_midi_msg.html#ga11f3e3c9b7727a1af8c210cc186bcbaa">midi_msg.h</a>
-, <a class="el" href="group___fae_midi_msg.html#ga11f3e3c9b7727a1af8c210cc186bcbaa">midi_msg.c</a>
-</li>
-<li>fae_midi_msg_sysex_data()
-: <a class="el" href="group___fae_midi_msg.html#ga611b9443ae4c9c0c6cd00c56e2da8cfc">midi_msg.h</a>
-, <a class="el" href="group___fae_midi_msg.html#ga611b9443ae4c9c0c6cd00c56e2da8cfc">midi_msg.c</a>
-</li>
-<li>fae_midi_simple_to_long()
-: <a class="el" href="midi_8c.html#af601d821ebbe0d394e5ab49c6df5ea41">midi.c</a>
-</li>
-<li>fae_min()
-: <a class="el" href="group___fae.html#ga70c02f66dfd094a19908af857019cebc">fae.h</a>
-, <a class="el" href="group___fae.html#ga70c02f66dfd094a19908af857019cebc">fae.c</a>
-, <a class="el" href="group___fae.html#ga70c02f66dfd094a19908af857019cebc">fae.d</a>
-</li>
-<li>fae_move()
-: <a class="el" href="group___fae.html#ga1acce998009b0b0b0451f766e4702246">fae.h</a>
-, <a class="el" href="group___fae.html#ga1acce998009b0b0b0451f766e4702246">fae.c</a>
-, <a class="el" href="group___fae.html#ga1acce998009b0b0b0451f766e4702246">fae.d</a>
-</li>
-<li>fae_multiply()
-: <a class="el" href="group___fae.html#ga4d14ce7495d1fcfaec1e68c26e333202">fae.d</a>
-, <a class="el" href="group___fae.html#ga4d14ce7495d1fcfaec1e68c26e333202">fae.h</a>
-</li>
-<li>fae_not_equal()
-: <a class="el" href="group___fae.html#gaaa30002071fca7f613bcd3f2650e75ef">fae.h</a>
-, <a class="el" href="group___fae.html#gaaa30002071fca7f613bcd3f2650e75ef">fae.c</a>
-, <a class="el" href="group___fae.html#gaaa30002071fca7f613bcd3f2650e75ef">fae.d</a>
-</li>
-<li>fae_pair_assoc()
-: <a class="el" href="group___fae_pair.html#gac6caa52f3cbbef520fb7615cd84b409c">pair.h</a>
-, <a class="el" href="group___fae_pair.html#gac6caa52f3cbbef520fb7615cd84b409c">pair.c</a>
-</li>
-<li>fae_pair_copy()
-: <a class="el" href="group___fae_pair.html#ga55091315fa053cfb0cac7104005044af">pair.h</a>
-, <a class="el" href="group___fae_pair.html#ga55091315fa053cfb0cac7104005044af">pair.c</a>
-</li>
-<li>fae_pair_create()
-: <a class="el" href="group___fae_pair.html#gab4fe4f0cd57e984a98d2e3c631603023">pair.h</a>
-, <a class="el" href="group___fae_pair.html#gab4fe4f0cd57e984a98d2e3c631603023">pair.c</a>
-</li>
-<li>fae_pair_dassoc()
-: <a class="el" href="pair_8c.html#a6a52d5de992daefcc62e044fdf8f91cf">pair.c</a>
-</li>
-<li>fae_pair_ddup()
-: <a class="el" href="pair_8c.html#ad0028878440d6d127b18339dab642d4a">pair.c</a>
-</li>
-<li>fae_pair_destroy()
-: <a class="el" href="group___fae_pair.html#gae1905d4954c025b25e4bbff8782c3e72">pair.h</a>
-, <a class="el" href="group___fae_pair.html#gae1905d4954c025b25e4bbff8782c3e72">pair.c</a>
-</li>
-<li>fae_pair_dfst()
-: <a class="el" href="pair_8c.html#ab930106f8d7e28ddf653f07fe24e3184">pair.c</a>
-</li>
-<li>fae_pair_dsnd()
-: <a class="el" href="pair_8c.html#ae624bf3a132cf886b0399a8d677cfc30">pair.c</a>
-</li>
-<li>fae_pair_dswap()
-: <a class="el" href="pair_8c.html#ac77152b4afc6ec76110c68be0cb484f6">pair.c</a>
-</li>
-<li>fae_pair_dunassoc()
-: <a class="el" href="pair_8c.html#a1f43be5a3110e90fb805d8502a1f17f0">pair.c</a>
-</li>
-<li>fae_pair_dup()
-: <a class="el" href="group___fae_pair.html#ga868525e38f1c3e8ae6c664b1dfcb5a51">pair.h</a>
-, <a class="el" href="group___fae_pair.html#ga868525e38f1c3e8ae6c664b1dfcb5a51">pair.c</a>
-</li>
-<li>fae_pair_fst()
-: <a class="el" href="group___fae_pair.html#ga8472ecfcb3ab9e31757e55a98fb7d021">pair.h</a>
-, <a class="el" href="group___fae_pair.html#ga8472ecfcb3ab9e31757e55a98fb7d021">pair.c</a>
-</li>
-<li>fae_pair_snd()
-: <a class="el" href="group___fae_pair.html#ga24198bae271ad5db355bdb4fa25b7a91">pair.h</a>
-, <a class="el" href="group___fae_pair.html#ga24198bae271ad5db355bdb4fa25b7a91">pair.c</a>
-</li>
-<li>fae_pair_swap()
-: <a class="el" href="group___fae_pair.html#ga7dc7432c55c6d5f3b3a50c1466308d72">pair.h</a>
-, <a class="el" href="group___fae_pair.html#ga7dc7432c55c6d5f3b3a50c1466308d72">pair.c</a>
-</li>
-<li>fae_pair_to_list()
-: <a class="el" href="group___fae_pair.html#gaeba19915871277e8a079114676efe4e3">pair.h</a>
-, <a class="el" href="group___fae_pair.html#gaeba19915871277e8a079114676efe4e3">pair.c</a>
-</li>
-<li>fae_pair_unassoc()
-: <a class="el" href="group___fae_pair.html#ga271991b7c581d131de9034b790374586">pair.h</a>
-, <a class="el" href="group___fae_pair.html#ga271991b7c581d131de9034b790374586">pair.c</a>
-</li>
-<li>fae_peek_bool()
-: <a class="el" href="group___fae.html#gaf2cb6c45d94fb08754b05c4ded8395f8">fae.h</a>
-, <a class="el" href="group___fae.html#gaf2cb6c45d94fb08754b05c4ded8395f8">fae.d</a>
-</li>
-<li>fae_peek_double()
-: <a class="el" href="group___fae.html#ga1e99433aae3721ccae9c3ce23a1a6f91">fae.h</a>
-, <a class="el" href="group___fae.html#ga1e99433aae3721ccae9c3ce23a1a6f91">fae.c</a>
-, <a class="el" href="group___fae.html#ga1e99433aae3721ccae9c3ce23a1a6f91">fae.d</a>
-</li>
-<li>fae_peek_float()
-: <a class="el" href="group___fae.html#gab62491a8d79c110d46bcbaf90d3714ac">fae.c</a>
-, <a class="el" href="group___fae.html#gab62491a8d79c110d46bcbaf90d3714ac">fae.d</a>
-, <a class="el" href="group___fae.html#gab62491a8d79c110d46bcbaf90d3714ac">fae.h</a>
-</li>
-<li>fae_peek_int16()
-: <a class="el" href="group___fae.html#ga528e91e32bdbc39960f08512beb9af68">fae.h</a>
-, <a class="el" href="group___fae.html#ga528e91e32bdbc39960f08512beb9af68">fae.d</a>
-</li>
-<li>fae_peek_int32()
-: <a class="el" href="group___fae.html#gaae00a803d63ba7178d20bf5ca7074ac1">fae.h</a>
-, <a class="el" href="group___fae.html#gaae00a803d63ba7178d20bf5ca7074ac1">fae.c</a>
-, <a class="el" href="group___fae.html#gaae00a803d63ba7178d20bf5ca7074ac1">fae.d</a>
-</li>
-<li>fae_peek_int64()
-: <a class="el" href="group___fae.html#gacca43f8086238b4f0adcb580eefad51e">fae.h</a>
-, <a class="el" href="group___fae.html#gacca43f8086238b4f0adcb580eefad51e">fae.c</a>
-, <a class="el" href="group___fae.html#gacca43f8086238b4f0adcb580eefad51e">fae.d</a>
-</li>
-<li>fae_peek_int8()
-: <a class="el" href="group___fae.html#ga1a8987722d5a02537cf85a9858b8fc2c">fae.h</a>
-, <a class="el" href="group___fae.html#ga1a8987722d5a02537cf85a9858b8fc2c">fae.d</a>
-</li>
-<li>fae_plot_buffer_double()
-: <a class="el" href="group___fae_plot.html#gaec526d99b5d921c8c556609f8cf3db30">plot.h</a>
-, <a class="el" href="group___fae_plot.html#gaec526d99b5d921c8c556609f8cf3db30">plot.c</a>
-</li>
-<li>fae_plot_buffer_float()
-: <a class="el" href="group___fae_plot.html#ga0b3172b9e5bd9e6d8f8a94f58d75e789">plot.h</a>
-, <a class="el" href="group___fae_plot.html#ga0b3172b9e5bd9e6d8f8a94f58d75e789">plot.c</a>
-</li>
-<li>fae_plot_continous()
-: <a class="el" href="group___fae_plot.html#ga808742bb3fc1e4d7746bf3538ce3a85a">plot.h</a>
-, <a class="el" href="group___fae_plot.html#ga808742bb3fc1e4d7746bf3538ce3a85a">plot.c</a>
-</li>
-<li>fae_plot_use_core()
-: <a class="el" href="group___fae_plot.html#gaa9b7f4db5f1cb9393174e7e54b197b5e">plot.h</a>
-, <a class="el" href="group___fae_plot.html#gaa9b7f4db5f1cb9393174e7e54b197b5e">plot.c</a>
-</li>
-<li>fae_plot_use_gnu()
-: <a class="el" href="group___fae_plot.html#ga2a7270313c00657339fe592f42ce8bc6">plot.h</a>
-, <a class="el" href="group___fae_plot.html#ga2a7270313c00657339fe592f42ce8bc6">plot.c</a>
-</li>
-<li>fae_print()
-: <a class="el" href="group___fae.html#ga005cfb892800199c73ac8f97a4fa77e9">fae.h</a>
-, <a class="el" href="group___fae.html#ga005cfb892800199c73ac8f97a4fa77e9">fae.c</a>
-, <a class="el" href="group___fae.html#ga005cfb892800199c73ac8f97a4fa77e9">fae.d</a>
-</li>
-<li>fae_print_ln()
-: <a class="el" href="fae_8c.html#af25dc62b61f6cf5424efd467e6e7944e">fae.c</a>
-</li>
-<li>fae_priority_queue_destroy()
-: <a class="el" href="priority__queue_8c.html#ab9b0eb719329ab6ae95cc028d8229944">priority_queue.c</a>
-</li>
-<li>fae_priority_queue_empty()
-: <a class="el" href="priority__queue_8c.html#a7a6b97a24f0fb0b6e1192ed3af0993dd">priority_queue.c</a>
-</li>
-<li>fae_priority_queue_insert()
-: <a class="el" href="priority__queue_8c.html#a5263cfb4edb4d7cab601d56215418114">priority_queue.c</a>
-</li>
-<li>fae_priority_queue_merge()
-: <a class="el" href="priority__queue_8c.html#a53db33f9b85ee556b897a19c1815ee9c">priority_queue.c</a>
-</li>
-<li>fae_priority_queue_peek()
-: <a class="el" href="priority__queue_8c.html#aec58404b5265dc8f332a779de9fb9b84">priority_queue.c</a>
-</li>
-<li>fae_priority_queue_pop()
-: <a class="el" href="priority__queue_8c.html#a082d71064188cbc8cea98e701fa84c59">priority_queue.c</a>
-</li>
-<li>fae_priority_queue_single()
-: <a class="el" href="priority__queue_8c.html#a4d5479e9048a65fe4bef27b1170f8cc2">priority_queue.c</a>
-</li>
-<li>fae_puts()
-: <a class="el" href="fae_8c.html#af6db0539399e832f20e70c27cd18a1a8">fae.c</a>
-</li>
-<li>fae_ratio_absolute()
-: <a class="el" href="ratio_8c.html#a0ab777df432cca4804116469c4450250">ratio.c</a>
-</li>
-<li>fae_ratio_add()
-: <a class="el" href="group___fae_ratio.html#ga2e7094c3ff8c72a44e3286ea3fe9c79b">ratio.c</a>
-, <a class="el" href="group___fae_ratio.html#ga2e7094c3ff8c72a44e3286ea3fe9c79b">ratio.h</a>
-</li>
-<li>fae_ratio_copy()
-: <a class="el" href="group___fae_ratio.html#gacbcf67df220d604c5bf81b2f0f193160">ratio.h</a>
-, <a class="el" href="group___fae_ratio.html#gacbcf67df220d604c5bf81b2f0f193160">ratio.c</a>
-</li>
-<li>fae_ratio_create()
-: <a class="el" href="group___fae_ratio.html#ga5c741d9f14f1d80f96dc705f2dac06e1">ratio.h</a>
-, <a class="el" href="group___fae_ratio.html#ga5c741d9f14f1d80f96dc705f2dac06e1">ratio.c</a>
-</li>
-<li>fae_ratio_denom()
-: <a class="el" href="group___fae_ratio.html#ga300a5ac9ae750bf65512d3a162ec674b">ratio.h</a>
-, <a class="el" href="group___fae_ratio.html#ga300a5ac9ae750bf65512d3a162ec674b">ratio.c</a>
-</li>
-<li>fae_ratio_destroy()
-: <a class="el" href="group___fae_ratio.html#ga0253759ee98faeeb14d926ad2f7a894d">ratio.c</a>
-, <a class="el" href="group___fae_ratio.html#ga0253759ee98faeeb14d926ad2f7a894d">ratio.h</a>
-</li>
-<li>fae_ratio_divide()
-: <a class="el" href="group___fae_ratio.html#gae049e6b3e95d1605bec90d93c0602819">ratio.h</a>
-, <a class="el" href="group___fae_ratio.html#gae049e6b3e95d1605bec90d93c0602819">ratio.c</a>
-</li>
-<li>fae_ratio_match()
-: <a class="el" href="group___fae_ratio.html#gafda80db0422ccd8d458aab1543147439">ratio.c</a>
-, <a class="el" href="group___fae_ratio.html#gafda80db0422ccd8d458aab1543147439">ratio.h</a>
-</li>
-<li>fae_ratio_multiply()
-: <a class="el" href="group___fae_ratio.html#gae2abf37afe08aa1db949cce136e3c2b8">ratio.h</a>
-, <a class="el" href="group___fae_ratio.html#gae2abf37afe08aa1db949cce136e3c2b8">ratio.c</a>
-</li>
-<li>fae_ratio_negate()
-: <a class="el" href="group___fae_ratio.html#ga128ca1e81d24b4eb1bb0cf1d126d2e9b">ratio.c</a>
-, <a class="el" href="group___fae_ratio.html#ga128ca1e81d24b4eb1bb0cf1d126d2e9b">ratio.h</a>
-</li>
-<li>fae_ratio_normalize()
-: <a class="el" href="group___fae_ratio.html#ga743ad0235e626d7edb2267dafe364a5a">ratio.h</a>
-, <a class="el" href="group___fae_ratio.html#ga743ad0235e626d7edb2267dafe364a5a">ratio.c</a>
-</li>
-<li>fae_ratio_num()
-: <a class="el" href="group___fae_ratio.html#gab2f32e2b92c1cd2fc62bf0502af81e21">ratio.h</a>
-, <a class="el" href="group___fae_ratio.html#gab2f32e2b92c1cd2fc62bf0502af81e21">ratio.c</a>
-</li>
-<li>fae_ratio_pred()
-: <a class="el" href="group___fae_ratio.html#ga27a3ece92fc5f8cc653c5b5e30163745">ratio.h</a>
-, <a class="el" href="group___fae_ratio.html#ga27a3ece92fc5f8cc653c5b5e30163745">ratio.c</a>
-</li>
-<li>fae_ratio_recip()
-: <a class="el" href="group___fae_ratio.html#ga5ea8fe3ccad59783290c66bb79e89847">ratio.c</a>
-, <a class="el" href="group___fae_ratio.html#ga5ea8fe3ccad59783290c66bb79e89847">ratio.h</a>
-</li>
-<li>fae_ratio_subtract()
-: <a class="el" href="group___fae_ratio.html#ga9ecea67cb92b319afd8cd5753422e190">ratio.h</a>
-, <a class="el" href="group___fae_ratio.html#ga9ecea67cb92b319afd8cd5753422e190">ratio.c</a>
-</li>
-<li>fae_ratio_succ()
-: <a class="el" href="group___fae_ratio.html#gaa10b507c5b36b1b6aa8d79d09d9a298e">ratio.c</a>
-, <a class="el" href="group___fae_ratio.html#gaa10b507c5b36b1b6aa8d79d09d9a298e">ratio.h</a>
-</li>
-<li>fae_ratio_to_mixed()
-: <a class="el" href="group___fae_ratio.html#ga0e27f41855fcd228d6a0534f4504b077">ratio.h</a>
-, <a class="el" href="group___fae_ratio.html#ga0e27f41855fcd228d6a0534f4504b077">ratio.c</a>
-</li>
-<li>fae_set()
-: <a class="el" href="set_8c.html#abaa95c229b69acd6a994776b6a99b980">set.c</a>
-, <a class="el" href="literals_8h.html#aef4f0647fb1038e1c16c033d1e85e669">literals.h</a>
-</li>
-<li>fae_set_add()
-: <a class="el" href="group___fae_set.html#gab054a3dea19bd5ffb11c043ee50fad89">set.h</a>
-, <a class="el" href="group___fae_set.html#gab054a3dea19bd5ffb11c043ee50fad89">set.c</a>
-</li>
-<li>fae_set_copy()
-: <a class="el" href="group___fae_set.html#ga47957b4169668c5bf1cd4df934c2c4ce">set.h</a>
-, <a class="el" href="group___fae_set.html#ga47957b4169668c5bf1cd4df934c2c4ce">set.c</a>
-</li>
-<li>fae_set_dadd()
-: <a class="el" href="group___fae_set.html#ga480f94bc9acd9f24c90ad39da4847e9c">set.h</a>
-, <a class="el" href="group___fae_set.html#ga480f94bc9acd9f24c90ad39da4847e9c">set.c</a>
-</li>
-<li>fae_set_destroy()
-: <a class="el" href="group___fae_set.html#ga8765d1e7ebac5ebd58ac4fe6597e12e5">set.c</a>
-, <a class="el" href="group___fae_set.html#ga8765d1e7ebac5ebd58ac4fe6597e12e5">set.h</a>
-</li>
-<li>fae_set_difference()
-: <a class="el" href="group___fae_set.html#ga2ab1360df2a621e643c600fba39ed1d6">set.h</a>
-, <a class="el" href="group___fae_set.html#ga2ab1360df2a621e643c600fba39ed1d6">set.c</a>
-</li>
-<li>fae_set_dremove()
-: <a class="el" href="group___fae_set.html#ga6c0a8662c23f65cf7a8ed1fda3685c32">set.c</a>
-, <a class="el" href="group___fae_set.html#ga6c0a8662c23f65cf7a8ed1fda3685c32">set.h</a>
-</li>
-<li>fae_set_dset()
-: <a class="el" href="group___fae_set.html#gac6d649cc490094026a3872580620ab16">set.h</a>
-, <a class="el" href="group___fae_set.html#gac6d649cc490094026a3872580620ab16">set.c</a>
-</li>
-<li>fae_set_empty()
-: <a class="el" href="group___fae_set.html#ga662f7cd238c6c2946f48b6063ccf2165">set.h</a>
-, <a class="el" href="group___fae_set.html#ga662f7cd238c6c2946f48b6063ccf2165">set.c</a>
-</li>
-<li>fae_set_from_list()
-: <a class="el" href="group___fae_set.html#ga1ece9fe59129e652ac45711c8cc4b3c7">set.h</a>
-</li>
-<li>fae_set_get()
-: <a class="el" href="group___fae_set.html#ga11a16a5d5e11c13f75e865f5a33527b1">set.h</a>
-, <a class="el" href="group___fae_set.html#ga11a16a5d5e11c13f75e865f5a33527b1">set.c</a>
-</li>
-<li>fae_set_has()
-: <a class="el" href="group___fae_set.html#ga85a904dd974529005459da7b92009ecc">set.h</a>
-, <a class="el" href="group___fae_set.html#ga85a904dd974529005459da7b92009ecc">set.c</a>
-</li>
-<li>fae_set_intersection()
-: <a class="el" href="group___fae_set.html#ga02d9e522c552f9a3d562a219d63c34b7">set.h</a>
-, <a class="el" href="group___fae_set.html#ga02d9e522c552f9a3d562a219d63c34b7">set.c</a>
-</li>
-<li>fae_set_is_empty()
-: <a class="el" href="group___fae_set.html#gac931b6b09c751bcfc10ceeba8b157988">set.h</a>
-, <a class="el" href="group___fae_set.html#gac931b6b09c751bcfc10ceeba8b157988">set.c</a>
-</li>
-<li>fae_set_is_proper_subset_of()
-: <a class="el" href="group___fae_set.html#ga28531d9f8f07e4e36029c61db531adf8">set.h</a>
-, <a class="el" href="group___fae_set.html#ga28531d9f8f07e4e36029c61db531adf8">set.c</a>
-</li>
-<li>fae_set_is_single()
-: <a class="el" href="group___fae_set.html#ga93322538f5bb9c4d6b6ae536bf9ee6e3">set.c</a>
-, <a class="el" href="group___fae_set.html#ga93322538f5bb9c4d6b6ae536bf9ee6e3">set.h</a>
-</li>
-<li>fae_set_is_subset_of()
-: <a class="el" href="group___fae_set.html#ga76770c523137ad2e961c01f8dcbd09be">set.h</a>
-, <a class="el" href="group___fae_set.html#ga76770c523137ad2e961c01f8dcbd09be">set.c</a>
-</li>
-<li>fae_set_power()
-: <a class="el" href="group___fae_set.html#gab9fbf2823f20cddc0f6df50d40cdb658">set.h</a>
-, <a class="el" href="group___fae_set.html#gab9fbf2823f20cddc0f6df50d40cdb658">set.c</a>
-</li>
-<li>fae_set_product()
-: <a class="el" href="group___fae_set.html#ga9201f36bbc3524809c8b4a794d836472">set.c</a>
-, <a class="el" href="group___fae_set.html#ga9201f36bbc3524809c8b4a794d836472">set.h</a>
-</li>
-<li>fae_set_remove()
-: <a class="el" href="group___fae_set.html#ga02140820935c255ffa82bfa648c1113d">set.c</a>
-, <a class="el" href="group___fae_set.html#ga02140820935c255ffa82bfa648c1113d">set.h</a>
-</li>
-<li>fae_set_set()
-: <a class="el" href="group___fae_set.html#gaef9553c84fd35c9ef0b80c59c78c0d37">set.h</a>
-, <a class="el" href="group___fae_set.html#gaef9553c84fd35c9ef0b80c59c78c0d37">set.c</a>
-</li>
-<li>fae_set_single()
-: <a class="el" href="group___fae_set.html#ga4d88a05e9dd377b6462f5ba1508669af">set.h</a>
-, <a class="el" href="group___fae_set.html#ga4d88a05e9dd377b6462f5ba1508669af">set.c</a>
-</li>
-<li>fae_set_size()
-: <a class="el" href="group___fae_set.html#ga88ac796cfa688840a044f92c123f6c14">set.h</a>
-, <a class="el" href="group___fae_set.html#ga88ac796cfa688840a044f92c123f6c14">set.c</a>
-</li>
-<li>fae_set_sum()
-: <a class="el" href="group___fae_set.html#ga4101f77ffc253b7d2741268339dba528">set.c</a>
-, <a class="el" href="group___fae_set.html#ga4101f77ffc253b7d2741268339dba528">set.h</a>
-</li>
-<li>fae_set_to_list()
-: <a class="el" href="group___fae_set.html#gae9a3e1bde112d70e78ab3a8c88228555">set.h</a>
-, <a class="el" href="set_8c.html#ab39b30f98d35a0abc1b93975fc4aa340">set.c</a>
-</li>
-<li>fae_show()
-: <a class="el" href="fae_8c.html#ad3d67eff342bd5044e3faa51564cfaad">fae.c</a>
-</li>
-<li>fae_signal_abs()
-: <a class="el" href="group___fae_signal.html#ga1a33f2a4d940145fad03ada9009e8f47">signal.c</a>
-, <a class="el" href="group___fae_signal.html#ga1a33f2a4d940145fad03ada9009e8f47">signal.h</a>
-</li>
-<li>fae_signal_absolute()
-: <a class="el" href="group___fae_signal.html#ga2c5dceede7d67191dc9508c67b7ba2d8">signal.c</a>
-, <a class="el" href="group___fae_signal.html#ga2c5dceede7d67191dc9508c67b7ba2d8">signal.h</a>
-</li>
-<li>fae_signal_acos()
-: <a class="el" href="group___fae_signal.html#ga4635da113e92af24b11ee6edaadeb12c">signal.c</a>
-, <a class="el" href="group___fae_signal.html#ga4635da113e92af24b11ee6edaadeb12c">signal.h</a>
-</li>
-<li>fae_signal_add()
-: <a class="el" href="group___fae_signal.html#ga143cbac808d6c9ebd0fc95005573ccee">signal.c</a>
-, <a class="el" href="group___fae_signal.html#ga143cbac808d6c9ebd0fc95005573ccee">signal.h</a>
-</li>
-<li>fae_signal_and()
-: <a class="el" href="group___fae_signal.html#gab8af7140f9e9d786e240ff441613c7fa">signal.c</a>
-, <a class="el" href="group___fae_signal.html#gab8af7140f9e9d786e240ff441613c7fa">signal.h</a>
-</li>
-<li>fae_signal_apply()
-: <a class="el" href="group___fae_signal.html#ga0465adaceddafd2d52d090ccea6881a6">signal.c</a>
-, <a class="el" href="group___fae_signal.html#ga0465adaceddafd2d52d090ccea6881a6">signal.h</a>
-</li>
-<li>fae_signal_apply2()
-: <a class="el" href="group___fae_signal.html#ga59673a9742961f688a7244f252526002">signal.h</a>
-, <a class="el" href="group___fae_signal.html#ga59673a9742961f688a7244f252526002">signal.c</a>
-</li>
-<li>fae_signal_apply3()
-: <a class="el" href="group___fae_signal.html#gaf4f9603b20466c8846430d51c78df1f3">signal.c</a>
-, <a class="el" href="group___fae_signal.html#gaf4f9603b20466c8846430d51c78df1f3">signal.h</a>
-</li>
-<li>fae_signal_asin()
-: <a class="el" href="group___fae_signal.html#ga0c331f3f9423dac7adf29537a6a2d231">signal.c</a>
-, <a class="el" href="group___fae_signal.html#ga0c331f3f9423dac7adf29537a6a2d231">signal.h</a>
-</li>
-<li>fae_signal_atan()
-: <a class="el" href="group___fae_signal.html#ga84d62733cdc27b8390dd5a8b55c1f73f">signal.h</a>
-, <a class="el" href="group___fae_signal.html#ga84d62733cdc27b8390dd5a8b55c1f73f">signal.c</a>
-</li>
-<li>fae_signal_bit_and()
-: <a class="el" href="group___fae_signal.html#gae798b409ebc318a7db9f1f29da2be8e3">signal.c</a>
-, <a class="el" href="group___fae_signal.html#gae798b409ebc318a7db9f1f29da2be8e3">signal.h</a>
-</li>
-<li>fae_signal_bit_not()
-: <a class="el" href="group___fae_signal.html#gafb1d3475c8a7b0ce834809c663a95d55">signal.c</a>
-, <a class="el" href="group___fae_signal.html#gafb1d3475c8a7b0ce834809c663a95d55">signal.h</a>
-</li>
-<li>fae_signal_bit_or()
-: <a class="el" href="group___fae_signal.html#ga21bd4097c9e1e230e5eb00a5c1d71a66">signal.h</a>
-, <a class="el" href="group___fae_signal.html#ga21bd4097c9e1e230e5eb00a5c1d71a66">signal.c</a>
-</li>
-<li>fae_signal_bit_xor()
-: <a class="el" href="group___fae_signal.html#ga0cdc65b34367b8d577048df6e2ba72ee">signal.c</a>
-, <a class="el" href="group___fae_signal.html#ga0cdc65b34367b8d577048df6e2ba72ee">signal.h</a>
-</li>
-<li>fae_signal_ceil()
-: <a class="el" href="group___fae_signal.html#ga24f5e5905783cb632cb4a60af5f723e6">signal.h</a>
-, <a class="el" href="group___fae_signal.html#ga24f5e5905783cb632cb4a60af5f723e6">signal.c</a>
-</li>
-<li>fae_signal_constant()
-: <a class="el" href="group___fae_signal.html#ga61da2e612f8387367d57785dd7f0635e">signal.c</a>
-, <a class="el" href="group___fae_signal.html#ga61da2e612f8387367d57785dd7f0635e">signal.h</a>
-</li>
-<li>fae_signal_cos()
-: <a class="el" href="group___fae_signal.html#gabf5ce342e2a8e8ce51df6a540d13bef3">signal.h</a>
-, <a class="el" href="group___fae_signal.html#gabf5ce342e2a8e8ce51df6a540d13bef3">signal.c</a>
-</li>
-<li>fae_signal_delay()
-: <a class="el" href="group___fae_signal.html#gaa77692586a5dc616d5da476b2cd3609f">signal.c</a>
-, <a class="el" href="group___fae_signal.html#gaa77692586a5dc616d5da476b2cd3609f">signal.h</a>
-</li>
-<li>fae_signal_divide()
-: <a class="el" href="group___fae_signal.html#ga81494565d7ee3092797d93cd92241e09">signal.h</a>
-, <a class="el" href="group___fae_signal.html#ga81494565d7ee3092797d93cd92241e09">signal.c</a>
-</li>
-<li>fae_signal_equal()
-: <a class="el" href="group___fae_signal.html#gafc1de24568d78a79463252c0484c1e53">signal.h</a>
-, <a class="el" href="group___fae_signal.html#gafc1de24568d78a79463252c0484c1e53">signal.c</a>
-</li>
-<li>fae_signal_exp()
-: <a class="el" href="group___fae_signal.html#gaf9e1732296b335c5b89188c21a86e7c1">signal.h</a>
-, <a class="el" href="group___fae_signal.html#gaf9e1732296b335c5b89188c21a86e7c1">signal.c</a>
-</li>
-<li>fae_signal_floor()
-: <a class="el" href="group___fae_signal.html#ga0a9ac1849edb6e872a68affbca85fce7">signal.h</a>
-, <a class="el" href="group___fae_signal.html#ga0a9ac1849edb6e872a68affbca85fce7">signal.c</a>
-</li>
-<li>fae_signal_fmod()
-: <a class="el" href="group___fae_signal.html#gaf3bc1b1c24a564dcbbc5e89d859490a9">signal.h</a>
-, <a class="el" href="group___fae_signal.html#gaf3bc1b1c24a564dcbbc5e89d859490a9">signal.c</a>
-</li>
-<li>fae_signal_greater_than()
-: <a class="el" href="group___fae_signal.html#gaae5c3214ad05c22fa56df4bc5b0c658e">signal.h</a>
-, <a class="el" href="group___fae_signal.html#gaae5c3214ad05c22fa56df4bc5b0c658e">signal.c</a>
-</li>
-<li>fae_signal_greater_than_equal()
-: <a class="el" href="group___fae_signal.html#gad5a5b410676baafe630a1aba17f3f10e">signal.h</a>
-, <a class="el" href="group___fae_signal.html#gad5a5b410676baafe630a1aba17f3f10e">signal.c</a>
-</li>
-<li>fae_signal_less_than()
-: <a class="el" href="group___fae_signal.html#ga5fb8c972b7285c63c8a4cc58653bddf2">signal.h</a>
-, <a class="el" href="group___fae_signal.html#ga5fb8c972b7285c63c8a4cc58653bddf2">signal.c</a>
-</li>
-<li>fae_signal_less_than_equal()
-: <a class="el" href="group___fae_signal.html#ga055e719db852269ba4f9dd6cda473963">signal.c</a>
-, <a class="el" href="group___fae_signal.html#ga055e719db852269ba4f9dd6cda473963">signal.h</a>
-</li>
-<li>fae_signal_lift()
-: <a class="el" href="group___fae_signal.html#gabe3e214d434da5b84e829929fbf0f1b6">signal.h</a>
-, <a class="el" href="group___fae_signal.html#gabe3e214d434da5b84e829929fbf0f1b6">signal.c</a>
-</li>
-<li>fae_signal_lift2()
-: <a class="el" href="group___fae_signal.html#ga7a36eea873c6f4627d23f9ebabeb8f58">signal.h</a>
-, <a class="el" href="group___fae_signal.html#ga7a36eea873c6f4627d23f9ebabeb8f58">signal.c</a>
-</li>
-<li>fae_signal_lift3()
-: <a class="el" href="group___fae_signal.html#ga72bccd536c2cf93f6aa324b0ba6a69e1">signal.h</a>
-, <a class="el" href="group___fae_signal.html#ga72bccd536c2cf93f6aa324b0ba6a69e1">signal.c</a>
-</li>
-<li>fae_signal_log()
-: <a class="el" href="group___fae_signal.html#ga81f777dbfdf1aeb68806fc4afd1ae10a">signal.h</a>
-, <a class="el" href="group___fae_signal.html#ga81f777dbfdf1aeb68806fc4afd1ae10a">signal.c</a>
-</li>
-<li>fae_signal_log10()
-: <a class="el" href="group___fae_signal.html#ga6f7dcb11f123f98ada144764aa4d37e5">signal.h</a>
-, <a class="el" href="group___fae_signal.html#ga6f7dcb11f123f98ada144764aa4d37e5">signal.c</a>
-</li>
-<li>fae_signal_max()
-: <a class="el" href="group___fae_signal.html#ga0ad971cfe9e3eaf859096b68275bd559">signal.c</a>
-, <a class="el" href="group___fae_signal.html#ga0ad971cfe9e3eaf859096b68275bd559">signal.h</a>
-</li>
-<li>fae_signal_min()
-: <a class="el" href="group___fae_signal.html#gaa1e1ed094add81f932f7c298f297dcfe">signal.h</a>
-, <a class="el" href="group___fae_signal.html#gaa1e1ed094add81f932f7c298f297dcfe">signal.c</a>
-</li>
-<li>fae_signal_modulo()
-: <a class="el" href="group___fae_signal.html#ga1063304189652c8b2d6dbc802eda6623">signal.h</a>
-, <a class="el" href="group___fae_signal.html#ga1063304189652c8b2d6dbc802eda6623">signal.c</a>
-</li>
-<li>fae_signal_multiply()
-: <a class="el" href="group___fae_signal.html#gacc315a6d64e9764b8af2f16905816a39">signal.h</a>
-, <a class="el" href="group___fae_signal.html#gacc315a6d64e9764b8af2f16905816a39">signal.c</a>
-</li>
-<li>fae_signal_not()
-: <a class="el" href="group___fae_signal.html#gab8472a7f7cafa79a9e6dbbbea270636b">signal.h</a>
-, <a class="el" href="group___fae_signal.html#gab8472a7f7cafa79a9e6dbbbea270636b">signal.c</a>
-</li>
-<li>fae_signal_or()
-: <a class="el" href="group___fae_signal.html#ga3cf4427ca9a2bde70033a07aec82a147">signal.h</a>
-, <a class="el" href="group___fae_signal.html#ga3cf4427ca9a2bde70033a07aec82a147">signal.c</a>
-</li>
-<li>fae_signal_pow()
-: <a class="el" href="group___fae_signal.html#gaebb57c4abc2f6af3f475b131ddcef86f">signal.h</a>
-, <a class="el" href="group___fae_signal.html#gaebb57c4abc2f6af3f475b131ddcef86f">signal.c</a>
-</li>
-<li>fae_signal_power()
-: <a class="el" href="group___fae_signal.html#gaaabbcdfbaee1dae5dbaccf2bead84ba3">signal.h</a>
-, <a class="el" href="group___fae_signal.html#gaaabbcdfbaee1dae5dbaccf2bead84ba3">signal.c</a>
-</li>
-<li>fae_signal_remainder()
-: <a class="el" href="group___fae_signal.html#ga4d66f20d4079dfeba5768e13a6ea9e22">signal.h</a>
-, <a class="el" href="group___fae_signal.html#ga4d66f20d4079dfeba5768e13a6ea9e22">signal.c</a>
-</li>
-<li>fae_signal_rint()
-: <a class="el" href="group___fae_signal.html#ga18bc46a7c7029820cfa516040da06db9">signal.c</a>
-, <a class="el" href="group___fae_signal.html#ga18bc46a7c7029820cfa516040da06db9">signal.h</a>
-</li>
-<li>fae_signal_shift_left()
-: <a class="el" href="group___fae_signal.html#gafa54818116e3b382a155150b21de5f9c">signal.c</a>
-, <a class="el" href="group___fae_signal.html#gafa54818116e3b382a155150b21de5f9c">signal.h</a>
-</li>
-<li>fae_signal_shift_right()
-: <a class="el" href="group___fae_signal.html#gab6b93ddbc53f27eaa5a3ae7ba5f88151">signal.c</a>
-, <a class="el" href="group___fae_signal.html#gab6b93ddbc53f27eaa5a3ae7ba5f88151">signal.h</a>
-</li>
-<li>fae_signal_sin()
-: <a class="el" href="group___fae_signal.html#gaca7062ed1f04c15c772e25b41da48d65">signal.c</a>
-, <a class="el" href="group___fae_signal.html#gaca7062ed1f04c15c772e25b41da48d65">signal.h</a>
-</li>
-<li>fae_signal_sqrt()
-: <a class="el" href="group___fae_signal.html#ga4be2d9214ecf8b2ad70ffb3b077495b9">signal.c</a>
-, <a class="el" href="group___fae_signal.html#ga4be2d9214ecf8b2ad70ffb3b077495b9">signal.h</a>
-</li>
-<li>fae_signal_subtract()
-: <a class="el" href="group___fae_signal.html#ga4fccc35371ff347d66c07d8711d082be">signal.h</a>
-, <a class="el" href="group___fae_signal.html#ga4fccc35371ff347d66c07d8711d082be">signal.c</a>
-</li>
-<li>fae_signal_tan()
-: <a class="el" href="group___fae_signal.html#gae5c35b1b8d937ac1233a8d4a3ff86a15">signal.c</a>
-, <a class="el" href="group___fae_signal.html#gae5c35b1b8d937ac1233a8d4a3ff86a15">signal.h</a>
-</li>
-<li>fae_signal_type_of()
-: <a class="el" href="group___fae_signal.html#ga32fb68af0811ccf8535a8be16c03b37d">signal.c</a>
-, <a class="el" href="group___fae_signal.html#ga32fb68af0811ccf8535a8be16c03b37d">signal.h</a>
-</li>
-<li>fae_signal_value()
-: <a class="el" href="group___fae_signal.html#ga86dfda8f406b597972eed9077bc58502">signal.c</a>
-, <a class="el" href="group___fae_signal.html#ga86dfda8f406b597972eed9077bc58502">signal.h</a>
-</li>
-<li>fae_signal_xor()
-: <a class="el" href="group___fae_signal.html#gabd692dbb117ae38eb53555a24876ee0a">signal.h</a>
-, <a class="el" href="group___fae_signal.html#gabd692dbb117ae38eb53555a24876ee0a">signal.c</a>
-</li>
-<li>fae_string_append()
-: <a class="el" href="group___fae_string.html#ga15bd908dfbaa6539a460397b078711f3">string.c</a>
-, <a class="el" href="group___fae_string.html#ga15bd908dfbaa6539a460397b078711f3">string.h</a>
-</li>
-<li>fae_string_char_at()
-: <a class="el" href="group___fae_string.html#ga0694fad225797e3079e9b9675b35503f">string.c</a>
-, <a class="el" href="group___fae_string.html#ga0694fad225797e3079e9b9675b35503f">string.h</a>
-</li>
-<li>fae_string_copy()
-: <a class="el" href="group___fae_string.html#ga66575576e02e3b756f4ce0eec2bf4b27">string.c</a>
-, <a class="el" href="group___fae_string.html#ga66575576e02e3b756f4ce0eec2bf4b27">string.h</a>
-</li>
-<li>fae_string_dappend()
-: <a class="el" href="group___fae_string.html#ga8167ec8d781c5138deaf78ed8d013436">string.h</a>
-, <a class="el" href="group___fae_string.html#ga8167ec8d781c5138deaf78ed8d013436">string.c</a>
-</li>
-<li>fae_string_destroy()
-: <a class="el" href="group___fae_string.html#gabdb01013e2f2896695769f9cbaf53fa9">string.c</a>
-, <a class="el" href="group___fae_string.html#gabdb01013e2f2896695769f9cbaf53fa9">string.h</a>
-</li>
-<li>fae_string_empty()
-: <a class="el" href="group___fae_string.html#gaf1e00928d07a7df3fffac1a7e0deb80a">string.c</a>
-, <a class="el" href="group___fae_string.html#gaf1e00928d07a7df3fffac1a7e0deb80a">string.h</a>
-</li>
-<li>fae_string_format_floating()
-: <a class="el" href="group___fae_string.html#ga92be3587d0c1e4dfbf60335373f6f3f9">string.h</a>
-, <a class="el" href="group___fae_string.html#ga92be3587d0c1e4dfbf60335373f6f3f9">string.c</a>
-</li>
-<li>fae_string_format_integral()
-: <a class="el" href="group___fae_string.html#ga3e5a5f058600cb2ed7d45beb27186567">string.c</a>
-, <a class="el" href="group___fae_string.html#ga3e5a5f058600cb2ed7d45beb27186567">string.h</a>
-</li>
-<li>fae_string_from_json()
-: <a class="el" href="group___fae_string.html#ga306d5fe18080c5d006c0e1451d3cc814">string.c</a>
-, <a class="el" href="group___fae_string.html#ga306d5fe18080c5d006c0e1451d3cc814">string.h</a>
-</li>
-<li>fae_string_from_native()
-: <a class="el" href="group___fae_string.html#ga5abf6c32fae5455d7250adc8caaf34a7">string.h</a>
-, <a class="el" href="group___fae_string.html#ga5abf6c32fae5455d7250adc8caaf34a7">string.c</a>
-</li>
-<li>fae_string_from_utf16()
-: <a class="el" href="group___fae_string.html#gaed6e8c9d8a94e88001571b2237daf88a">string.c</a>
-, <a class="el" href="group___fae_string.html#gaed6e8c9d8a94e88001571b2237daf88a">string.h</a>
-</li>
-<li>fae_string_from_utf32()
-: <a class="el" href="group___fae_string.html#gad257dc15db3374472480a154e003509e">string.c</a>
-, <a class="el" href="group___fae_string.html#gad257dc15db3374472480a154e003509e">string.h</a>
-</li>
-<li>fae_string_from_utf8()
-: <a class="el" href="group___fae_string.html#ga37b9333270e695293deab29f81722c6f">string.h</a>
-, <a class="el" href="group___fae_string.html#ga37b9333270e695293deab29f81722c6f">string.c</a>
-</li>
-<li>fae_string_join_map()
-: <a class="el" href="fae_2string_8c.html#abb286174253c44ebd0e010490b6af6cb">string.c</a>
-</li>
-<li>fae_string_length()
-: <a class="el" href="group___fae_string.html#gacee698d23474ec9010f015ef81286add">string.h</a>
-, <a class="el" href="group___fae_string.html#gacee698d23474ec9010f015ef81286add">string.c</a>
-</li>
-<li>fae_string_matches()
-: <a class="el" href="fae_2string_8c.html#afabf0959f09b21bf2829c63fc148cf8a">string.c</a>
-</li>
-<li>fae_string_repeat()
-: <a class="el" href="group___fae_string.html#ga128b95ca050e6cb5f368ddc1dbb4fbbb">string.c</a>
-, <a class="el" href="group___fae_string.html#ga128b95ca050e6cb5f368ddc1dbb4fbbb">string.h</a>
-</li>
-<li>fae_string_show()
-: <a class="el" href="group___fae_string.html#ga6fb1d28c6f49b31f0fc800d7966dddfe">string.h</a>
-, <a class="el" href="group___fae_string.html#ga6fb1d28c6f49b31f0fc800d7966dddfe">string.c</a>
-</li>
-<li>fae_string_single()
-: <a class="el" href="group___fae_string.html#ga44fb84df55206f6e782bce5415c8007f">string.c</a>
-, <a class="el" href="group___fae_string.html#ga44fb84df55206f6e782bce5415c8007f">string.h</a>
-</li>
-<li>fae_string_to_json()
-: <a class="el" href="group___fae_string.html#ga1349e2fad336c74d0614e1941b64b7f8">string.h</a>
-, <a class="el" href="group___fae_string.html#ga1349e2fad336c74d0614e1941b64b7f8">string.c</a>
-</li>
-<li>fae_string_to_native()
-: <a class="el" href="group___fae_string.html#ga81d2d3d7d8c2bf6ac2d8945a13647f48">string.c</a>
-, <a class="el" href="group___fae_string.html#ga81d2d3d7d8c2bf6ac2d8945a13647f48">string.h</a>
-</li>
-<li>fae_string_to_string()
-: <a class="el" href="group___fae_string.html#ga102964c7dac8099ce15846d87797d2e0">string.h</a>
-, <a class="el" href="group___fae_string.html#ga102964c7dac8099ce15846d87797d2e0">string.c</a>
-</li>
-<li>fae_string_to_utf16()
-: <a class="el" href="group___fae_string.html#ga77fce96650daf558671fb202ab5e6c77">string.h</a>
-, <a class="el" href="group___fae_string.html#ga77fce96650daf558671fb202ab5e6c77">string.c</a>
-</li>
-<li>fae_string_to_utf32()
-: <a class="el" href="group___fae_string.html#gacbbc36bff136edff01d2ff4d8d2cfd1f">string.h</a>
-, <a class="el" href="group___fae_string.html#gacbbc36bff136edff01d2ff4d8d2cfd1f">string.c</a>
-</li>
-<li>fae_string_to_utf8()
-: <a class="el" href="group___fae_string.html#gae44242e9946b99fa9b58c7433ed17b70">string.c</a>
-, <a class="el" href="group___fae_string.html#gae44242e9946b99fa9b58c7433ed17b70">string.h</a>
-</li>
-<li>fae_subtract()
-: <a class="el" href="group___fae.html#ga9057454928604792d07caba356a40d19">fae.d</a>
-, <a class="el" href="group___fae.html#ga9057454928604792d07caba356a40d19">fae.h</a>
-</li>
-<li>fae_system_directory_append_file()
-: <a class="el" href="group___fae_system_directory.html#gad72ce4c75f6f50ca5851568600fc8421">directory.c</a>
-, <a class="el" href="group___fae_system_directory.html#gad72ce4c75f6f50ca5851568600fc8421">directory.h</a>
-</li>
-<li>fae_system_directory_create()
-: <a class="el" href="directory_8c.html#a8e758daca564397466747d18f4a8e79b">directory.c</a>
-, <a class="el" href="group___fae_system_directory.html#ga18a8650302ce9e34db8d315c4f33852f">directory.h</a>
-</li>
-<li>fae_system_directory_current()
-: <a class="el" href="group___fae_system_directory.html#ga5017419ee780025c84febee5faf9c36c">directory.c</a>
-, <a class="el" href="group___fae_system_directory.html#ga5017419ee780025c84febee5faf9c36c">directory.h</a>
-</li>
-<li>fae_system_directory_home()
-: <a class="el" href="group___fae_system_directory.html#gaf69611eff5b8e3ee7a5c6ecaa89dc704">directory.h</a>
-, <a class="el" href="group___fae_system_directory.html#gaf69611eff5b8e3ee7a5c6ecaa89dc704">directory.c</a>
-</li>
-<li>fae_system_directory_read_file()
-: <a class="el" href="group___fae_system_directory.html#ga82ecf05bc3c7561022f254fb41072c1a">directory.h</a>
-, <a class="el" href="group___fae_system_directory.html#ga82ecf05bc3c7561022f254fb41072c1a">directory.c</a>
-</li>
-<li>fae_system_directory_remove()
-: <a class="el" href="group___fae_system_directory.html#ga97535c7d74c6dc601c835175ab1a12b7">directory.h</a>
-</li>
-<li>fae_system_directory_write_file()
-: <a class="el" href="group___fae_system_directory.html#gab1af0854858d4d365cddd3ac9a3ae756">directory.c</a>
-, <a class="el" href="group___fae_system_directory.html#gab1af0854858d4d365cddd3ac9a3ae756">directory.h</a>
-</li>
-<li>fae_system_event_key_down()
-: <a class="el" href="group___fae_system_event.html#gaebc516449354f79b541859490d714150">event.h</a>
-, <a class="el" href="group___fae_system_event.html#gaebc516449354f79b541859490d714150">event.c</a>
-</li>
-<li>fae_system_event_key_up()
-: <a class="el" href="group___fae_system_event.html#ga8b450593bcde69ca6591768bc436dc34">event.h</a>
-, <a class="el" href="group___fae_system_event.html#ga8b450593bcde69ca6591768bc436dc34">event.c</a>
-</li>
-<li>fae_system_event_mouse_down()
-: <a class="el" href="group___fae_system_event.html#ga46ab2ddbad1228770619b0eddaee08cd">event.h</a>
-, <a class="el" href="group___fae_system_event.html#ga46ab2ddbad1228770619b0eddaee08cd">event.c</a>
-</li>
-<li>fae_system_event_mouse_drag()
-: <a class="el" href="group___fae_system_event.html#ga09779938c8d4ba059d5fe9978f404649">event.h</a>
-, <a class="el" href="group___fae_system_event.html#ga09779938c8d4ba059d5fe9978f404649">event.c</a>
-</li>
-<li>fae_system_event_mouse_move()
-: <a class="el" href="group___fae_system_event.html#ga3b9f02a548356023a2b0dfe5101bbcf8">event.h</a>
-, <a class="el" href="group___fae_system_event.html#ga3b9f02a548356023a2b0dfe5101bbcf8">event.c</a>
-</li>
-<li>fae_system_event_mouse_up()
-: <a class="el" href="group___fae_system_event.html#gadedfbe1070dcbe7dd6a65b519d6c3f8f">event.c</a>
-, <a class="el" href="group___fae_system_event.html#gadedfbe1070dcbe7dd6a65b519d6c3f8f">event.h</a>
-</li>
-<li>fae_system_event_receive()
-: <a class="el" href="group___fae_system_event.html#gab5bf20019a6e2ad7eb9dfdb611b1a283">event.c</a>
-, <a class="el" href="group___fae_system_event.html#gab5bf20019a6e2ad7eb9dfdb611b1a283">event.h</a>
-</li>
-<li>fae_system_event_select()
-: <a class="el" href="group___fae_system_event.html#gae06b2d2b28bd13c39c9f2a512e07108b">event.h</a>
-, <a class="el" href="group___fae_system_event.html#gae06b2d2b28bd13c39c9f2a512e07108b">event.c</a>
-</li>
-<li>fae_system_event_send_log()
-: <a class="el" href="group___fae_system_event.html#gab88042e6f77138ad85046adcc66ad47b">event.c</a>
-, <a class="el" href="group___fae_system_event.html#gab88042e6f77138ad85046adcc66ad47b">event.h</a>
-</li>
-<li>fae_system_event_send_std()
-: <a class="el" href="group___fae_system_event.html#ga9ef516aaa5244e4b5af3cef9afc26ee5">event.c</a>
-, <a class="el" href="group___fae_system_event.html#ga9ef516aaa5244e4b5af3cef9afc26ee5">event.h</a>
-</li>
-<li>fae_system_event_write_log()
-: <a class="el" href="group___fae_system_event.html#ga9f09ca9fb9deefb8a29a3cd212baf604">event.c</a>
-, <a class="el" href="group___fae_system_event.html#ga9f09ca9fb9deefb8a29a3cd212baf604">event.h</a>
-</li>
-<li>fae_system_event_write_std()
-: <a class="el" href="group___fae_system_event.html#gafa49236328a844678c1e82146fda5e68">event.c</a>
-, <a class="el" href="group___fae_system_event.html#gafa49236328a844678c1e82146fda5e68">event.h</a>
-</li>
-<li>fae_thread_create()
-: <a class="el" href="group___fae_thread.html#gaefca34bc23763c2dd982e1b2570fe7b2">thread.h</a>
-, <a class="el" href="group___fae_thread.html#gaefca34bc23763c2dd982e1b2570fe7b2">thread.c</a>
-</li>
-<li>fae_thread_create_mutex()
-: <a class="el" href="group___fae_thread.html#ga4d6cbcf73c66ab5457da90d1fc5be340">thread.c</a>
-, <a class="el" href="group___fae_thread.html#ga4d6cbcf73c66ab5457da90d1fc5be340">thread.h</a>
-</li>
-<li>fae_thread_current()
-: <a class="el" href="group___fae_thread.html#ga7f385ffcc5fb71ea18bae307683a1b83">thread.c</a>
-, <a class="el" href="group___fae_thread.html#ga7f385ffcc5fb71ea18bae307683a1b83">thread.h</a>
-</li>
-<li>fae_thread_destroy_mutex()
-: <a class="el" href="group___fae_thread.html#ga3ccb8bfae39206fc4a21b87018579160">thread.c</a>
-, <a class="el" href="group___fae_thread.html#ga3ccb8bfae39206fc4a21b87018579160">thread.h</a>
-, <a class="el" href="group___fae_thread.html#ga3ccb8bfae39206fc4a21b87018579160">thread.c</a>
-</li>
-<li>fae_thread_detach()
-: <a class="el" href="group___fae_thread.html#ga40b3dcd3a1a9c23158264f28cdc91807">thread.c</a>
-, <a class="el" href="group___fae_thread.html#ga40b3dcd3a1a9c23158264f28cdc91807">thread.h</a>
-, <a class="el" href="group___fae_thread.html#ga40b3dcd3a1a9c23158264f28cdc91807">thread.c</a>
-</li>
-<li>fae_thread_initialize()
-: <a class="el" href="fae_2fae_8c.html#a655b8ee9167cdf88b8b927e9c85587ed">fae.c</a>
-, <a class="el" href="macosx_2fae_2thread_8c.html#a655b8ee9167cdf88b8b927e9c85587ed">thread.c</a>
-</li>
-<li>fae_thread_join()
-: <a class="el" href="group___fae_thread.html#gac1f16a95f816eef5c4a0739c052d04b2">thread.h</a>
-, <a class="el" href="group___fae_thread.html#gac1f16a95f816eef5c4a0739c052d04b2">thread.c</a>
-</li>
-<li>fae_thread_lock()
-: <a class="el" href="group___fae_thread.html#ga51be29bde00f3957efa0f24296da136a">thread.c</a>
-, <a class="el" href="group___fae_thread.html#ga51be29bde00f3957efa0f24296da136a">thread.h</a>
-, <a class="el" href="group___fae_thread.html#ga51be29bde00f3957efa0f24296da136a">thread.c</a>
-</li>
-<li>fae_thread_main()
-: <a class="el" href="group___fae_thread.html#ga9fdb80594a9d254d43a4e01db42609a2">thread.h</a>
-, <a class="el" href="group___fae_thread.html#ga9fdb80594a9d254d43a4e01db42609a2">thread.c</a>
-</li>
-<li>fae_thread_sleep()
-: <a class="el" href="group___fae_thread.html#ga6bd410510a588236488d5185f6e3bfa7">thread.h</a>
-, <a class="el" href="windows_2fae_2thread_8c.html#a38023d29a49206caba69a0412fe525e7">thread.c</a>
-</li>
-<li>fae_thread_terminate()
-: <a class="el" href="fae_2fae_8c.html#a4cc570ada28a950235594976cbe01e50">fae.c</a>
-, <a class="el" href="windows_2fae_2thread_8c.html#a4cc570ada28a950235594976cbe01e50">thread.c</a>
-</li>
-<li>fae_thread_try_lock()
-: <a class="el" href="group___fae_thread.html#ga9a426c0154c1ee980d607a747c040c59">thread.h</a>
-, <a class="el" href="group___fae_thread.html#ga9a426c0154c1ee980d607a747c040c59">thread.c</a>
-</li>
-<li>fae_thread_unlock()
-: <a class="el" href="group___fae_thread.html#ga8717337019025cd5127f9a826e04f35a">thread.c</a>
-, <a class="el" href="group___fae_thread.html#ga8717337019025cd5127f9a826e04f35a">thread.h</a>
-</li>
-<li>fae_time_copy()
-: <a class="el" href="group___fae_time.html#ga2dbc45e4d069c382f26dcf39b7cccde4">time.h</a>
-, <a class="el" href="group___fae_time.html#ga2dbc45e4d069c382f26dcf39b7cccde4">time.c</a>
-</li>
-<li>fae_time_cpu()
-: <a class="el" href="group___fae_time.html#ga2b6cecf8d42efa9c9698b85c0a7f8f2b">time.h</a>
-, <a class="el" href="group___fae_time.html#ga2b6cecf8d42efa9c9698b85c0a7f8f2b">time.c</a>
-</li>
-<li>fae_time_create()
-: <a class="el" href="group___fae_time.html#gad3cd66787ccb71df0b3a2f89a7ea3904">time.h</a>
-, <a class="el" href="group___fae_time.html#gad3cd66787ccb71df0b3a2f89a7ea3904">time.c</a>
-</li>
-<li>fae_time_days()
-: <a class="el" href="group___fae_time.html#gaa8d6c7f6f82199ecc2b497f553515df5">time.h</a>
-, <a class="el" href="group___fae_time.html#gaa8d6c7f6f82199ecc2b497f553515df5">time.c</a>
-</li>
-<li>fae_time_destroy()
-: <a class="el" href="group___fae_time.html#ga51c43220b2bd0d478b15baa22b42f5e7">time.c</a>
-, <a class="el" href="group___fae_time.html#ga51c43220b2bd0d478b15baa22b42f5e7">time.h</a>
-</li>
-<li>fae_time_divisions()
-: <a class="el" href="group___fae_time.html#gacec181c91b7b03a906a8e6ac6db780a6">time.c</a>
-, <a class="el" href="group___fae_time.html#gacec181c91b7b03a906a8e6ac6db780a6">time.h</a>
-</li>
-<li>fae_time_from_cpu()
-: <a class="el" href="group___fae_time.html#ga32b2a33c23320905953784679d062e79">time.c</a>
-, <a class="el" href="group___fae_time.html#ga32b2a33c23320905953784679d062e79">time.h</a>
-</li>
-<li>fae_time_from_system()
-: <a class="el" href="group___fae_time.html#gab188d8062150c06a3dd4310ac9e37691">time.h</a>
-, <a class="el" href="group___fae_time.html#gab188d8062150c06a3dd4310ac9e37691">time.c</a>
-</li>
-<li>fae_time_get_cpu_clock()
-: <a class="el" href="group___fae_time.html#gae09884c1d8a59419889f80ece95e00d8">time.h</a>
-</li>
-<li>fae_time_get_system_clock()
-: <a class="el" href="group___fae_time.html#gaf505ff8c14b336580a001e6038bb7bf8">time.c</a>
-, <a class="el" href="group___fae_time.html#gaf505ff8c14b336580a001e6038bb7bf8">time.h</a>
-</li>
-<li>fae_time_get_system_prec_clock()
-: <a class="el" href="group___fae_time.html#gab2decf6c6b66b1538584f5b49e33b9e1">time.c</a>
-, <a class="el" href="group___fae_time.html#gab2decf6c6b66b1538584f5b49e33b9e1">time.h</a>
-</li>
-<li>fae_time_hours()
-: <a class="el" href="group___fae_time.html#ga6fcb5beedcb335f28b25cfc66e7e6d1a">time.h</a>
-, <a class="el" href="group___fae_time.html#ga6fcb5beedcb335f28b25cfc66e7e6d1a">time.c</a>
-</li>
-<li>fae_time_initialize()
-: <a class="el" href="fae_2fae_8c.html#a86a5bc9640a03eec31d37e6b2891c3ff">fae.c</a>
-, <a class="el" href="time_8c.html#a86a5bc9640a03eec31d37e6b2891c3ff">time.c</a>
-</li>
-<li>fae_time_minutes()
-: <a class="el" href="group___fae_time.html#gaa28090c3d5e727f6c7348cb3b089cd96">time.c</a>
-, <a class="el" href="group___fae_time.html#gaa28090c3d5e727f6c7348cb3b089cd96">time.h</a>
-</li>
-<li>fae_time_seconds()
-: <a class="el" href="group___fae_time.html#ga42713e3024f955aa5e9959694e881ab9">time.h</a>
-, <a class="el" href="group___fae_time.html#ga42713e3024f955aa5e9959694e881ab9">time.c</a>
-</li>
-<li>fae_time_system()
-: <a class="el" href="group___fae_time.html#ga30a3fb78f0f1bd5163ad7facb895e1e0">time.c</a>
-, <a class="el" href="group___fae_time.html#ga30a3fb78f0f1bd5163ad7facb895e1e0">time.h</a>
-</li>
-<li>fae_time_terminate()
-: <a class="el" href="fae_2fae_8c.html#a2525c1e3279ea8719d9eb448c002e6ab">fae.c</a>
-, <a class="el" href="time_8c.html#a2525c1e3279ea8719d9eb448c002e6ab">time.c</a>
-</li>
-<li>fae_time_tick_rate()
-: <a class="el" href="group___fae_time.html#ga22c0f2806b2b8a228d420013e4b0af4e">time.h</a>
-, <a class="el" href="group___fae_time.html#ga22c0f2806b2b8a228d420013e4b0af4e">time.c</a>
-</li>
-<li>fae_time_ticks()
-: <a class="el" href="group___fae_time.html#ga88e3a0696644c0b2d7b9c6bd9d42bd49">time.h</a>
-, <a class="el" href="group___fae_time.html#ga88e3a0696644c0b2d7b9c6bd9d42bd49">time.c</a>
-</li>
-<li>fae_time_time()
-: <a class="el" href="group___fae_time.html#ga308829f8077f8ad8f8ba7b2339a77c91">time.h</a>
-, <a class="el" href="group___fae_time.html#ga308829f8077f8ad8f8ba7b2339a77c91">time.c</a>
-</li>
-<li>fae_time_to_iso()
-: <a class="el" href="group___fae_time.html#gadd6c1ebba4dca5f8d34579a55bc3851e">time.h</a>
-, <a class="el" href="group___fae_time.html#gadd6c1ebba4dca5f8d34579a55bc3851e">time.c</a>
-</li>
-<li>fae_time_to_milliseconds()
-: <a class="el" href="group___fae_time.html#gada99ffb469433b31491fe0146235a7ca">time.h</a>
-, <a class="el" href="group___fae_time.html#gada99ffb469433b31491fe0146235a7ca">time.c</a>
-</li>
-<li>fae_time_to_seconds()
-: <a class="el" href="group___fae_time.html#ga84ad8478ac6b0a17a2c236c82eb9a3be">time.c</a>
-, <a class="el" href="group___fae_time.html#ga84ad8478ac6b0a17a2c236c82eb9a3be">time.h</a>
-</li>
-<li>fae_to_bool()
-: <a class="el" href="group___fae.html#ga9fdde7e63c9eb0ce1e87cd97c563b6f9">fae.d</a>
-, <a class="el" href="group___fae.html#ga9fdde7e63c9eb0ce1e87cd97c563b6f9">fae.h</a>
-, <a class="el" href="group___fae.html#ga9fdde7e63c9eb0ce1e87cd97c563b6f9">fae.c</a>
-</li>
-<li>fae_to_double()
-: <a class="el" href="group___fae.html#ga78c8ccdef373b603f0bd0f1e0a4ea812">fae.c</a>
-, <a class="el" href="group___fae.html#ga78c8ccdef373b603f0bd0f1e0a4ea812">fae.d</a>
-, <a class="el" href="group___fae.html#ga78c8ccdef373b603f0bd0f1e0a4ea812">fae.h</a>
-</li>
-<li>fae_to_float()
-: <a class="el" href="group___fae.html#gaefcab59785ca6351871d55f32580f56b">fae.c</a>
-, <a class="el" href="group___fae.html#gaefcab59785ca6351871d55f32580f56b">fae.d</a>
-, <a class="el" href="group___fae.html#gaefcab59785ca6351871d55f32580f56b">fae.h</a>
-</li>
-<li>fae_to_int16()
-: <a class="el" href="group___fae.html#ga709aca0bd6fb4ad5b7994b55531d88a5">fae.d</a>
-, <a class="el" href="group___fae.html#ga709aca0bd6fb4ad5b7994b55531d88a5">fae.c</a>
-, <a class="el" href="group___fae.html#ga709aca0bd6fb4ad5b7994b55531d88a5">fae.h</a>
-</li>
-<li>fae_to_int32()
-: <a class="el" href="group___fae.html#ga6718c5e75b75b13be4f585be66a960a7">fae.c</a>
-, <a class="el" href="group___fae.html#ga6718c5e75b75b13be4f585be66a960a7">fae.h</a>
-, <a class="el" href="group___fae.html#ga6718c5e75b75b13be4f585be66a960a7">fae.d</a>
-</li>
-<li>fae_to_int64()
-: <a class="el" href="group___fae.html#ga125d60bb13cbd98122d190c7b1e67ae5">fae.h</a>
-, <a class="el" href="group___fae.html#ga125d60bb13cbd98122d190c7b1e67ae5">fae.c</a>
-, <a class="el" href="group___fae.html#ga125d60bb13cbd98122d190c7b1e67ae5">fae.d</a>
-</li>
-<li>fae_to_int8()
-: <a class="el" href="group___fae.html#gac4cb106c198c0230ab4e28b722c68451">fae.c</a>
-, <a class="el" href="group___fae.html#gac4cb106c198c0230ab4e28b722c68451">fae.h</a>
-, <a class="el" href="group___fae.html#gac4cb106c198c0230ab4e28b722c68451">fae.d</a>
-</li>
-<li>fae_to_string()
-: <a class="el" href="fae_8c.html#a6efc5041c0fad17721da73718b38c1e1">fae.c</a>
-</li>
-<li>fae_type()
-: <a class="el" href="fae_8c.html#ad0ffc4e39edc54ad647cf987aa390efc">fae.c</a>
-</li>
-<li>fae_type_align_of()
-: <a class="el" href="type_8c.html#a69910efbb34caddb20927b0ba974bc93">type.c</a>
-</li>
-<li>fae_type_channels()
-: <a class="el" href="group___fae_type.html#ga513c09fa6cd75a35aa9dac066430bfa5">type.h</a>
-, <a class="el" href="group___fae_type.html#ga513c09fa6cd75a35aa9dac066430bfa5">type.c</a>
-</li>
-<li>fae_type_copy()
-: <a class="el" href="group___fae_type.html#ga7f61d2419f516809e400a40f5f1e0c75">type.c</a>
-, <a class="el" href="group___fae_type.html#ga7f61d2419f516809e400a40f5f1e0c75">type.h</a>
-</li>
-<li>fae_type_destroy()
-: <a class="el" href="group___fae_type.html#ga39c08937cff6cedfe1f018bcadd3acc8">type.c</a>
-, <a class="el" href="group___fae_type.html#ga39c08937cff6cedfe1f018bcadd3acc8">type.h</a>
-</li>
-<li>fae_type_frame()
-: <a class="el" href="group___fae_type.html#ga7c37ed8c3415076c2ef504f1df7257c9">type.h</a>
-, <a class="el" href="group___fae_type.html#ga7c37ed8c3415076c2ef504f1df7257c9">type.c</a>
-</li>
-<li>fae_type_get_frame_base()
-: <a class="el" href="group___fae_type.html#ga458c0cf333e8e6ba6a7a825f7889577d">type.h</a>
-, <a class="el" href="group___fae_type.html#ga458c0cf333e8e6ba6a7a825f7889577d">type.c</a>
-</li>
-<li>fae_type_get_pair_fst()
-: <a class="el" href="group___fae_type.html#ga97ca752e26498ec13f39abea0953494a">type.h</a>
-, <a class="el" href="group___fae_type.html#ga97ca752e26498ec13f39abea0953494a">type.c</a>
-</li>
-<li>fae_type_get_pair_snd()
-: <a class="el" href="group___fae_type.html#ga6ff561299cbc98b5ff9daee1215512f1">type.c</a>
-, <a class="el" href="group___fae_type.html#ga6ff561299cbc98b5ff9daee1215512f1">type.h</a>
-</li>
-<li>fae_type_get_simple()
-: <a class="el" href="group___fae_type.html#ga0e7d01135fc3211bdca753a0f8c07d9e">type.h</a>
-, <a class="el" href="group___fae_type.html#ga0e7d01135fc3211bdca753a0f8c07d9e">type.c</a>
-</li>
-<li>fae_type_get_vector_base()
-: <a class="el" href="group___fae_type.html#ga7be34c603554eb8b4ae0891080b66bff">type.c</a>
-, <a class="el" href="group___fae_type.html#ga7be34c603554eb8b4ae0891080b66bff">type.h</a>
-</li>
-<li>fae_type_get_vector_size()
-: <a class="el" href="group___fae_type.html#gaa3623ae398a4583bc499fe542470879f">type.c</a>
-, <a class="el" href="group___fae_type.html#gaa3623ae398a4583bc499fe542470879f">type.h</a>
-</li>
-<li>fae_type_is_frame()
-: <a class="el" href="group___fae_type.html#gabf6a71eee7f26a3a4dd6daa5b34be006">type.c</a>
-, <a class="el" href="group___fae_type.html#gabf6a71eee7f26a3a4dd6daa5b34be006">type.h</a>
-</li>
-<li>fae_type_is_pair()
-: <a class="el" href="group___fae_type.html#ga24505f0f2e26dd00f07853ff9994a5c9">type.h</a>
-, <a class="el" href="group___fae_type.html#ga24505f0f2e26dd00f07853ff9994a5c9">type.c</a>
-</li>
-<li>fae_type_is_simple()
-: <a class="el" href="group___fae_type.html#gac217d4436ae34de9aa686de36af8e4fe">type.h</a>
-, <a class="el" href="group___fae_type.html#gac217d4436ae34de9aa686de36af8e4fe">type.c</a>
-</li>
-<li>fae_type_is_vector()
-: <a class="el" href="group___fae_type.html#ga0d8732a6a782dc43ca467951a0db4864">type.h</a>
-, <a class="el" href="group___fae_type.html#ga0d8732a6a782dc43ca467951a0db4864">type.c</a>
-</li>
-<li>fae_type_offset_of()
-: <a class="el" href="type_8c.html#aac69423132a94e033937e4021ed1919c">type.c</a>
-</li>
-<li>fae_type_pair()
-: <a class="el" href="group___fae_type.html#gafe9b4cbbf53cb5022fc809b6d3d4e8c6">type.h</a>
-, <a class="el" href="group___fae_type.html#gafe9b4cbbf53cb5022fc809b6d3d4e8c6">type.c</a>
-</li>
-<li>fae_type_repeat()
-: <a class="el" href="group___fae_type.html#gaae7284a87de0a841864438cb0bbf24ba">type.h</a>
-, <a class="el" href="group___fae_type.html#gaae7284a87de0a841864438cb0bbf24ba">type.c</a>
-</li>
-<li>fae_type_simple()
-: <a class="el" href="group___fae_type.html#gac121b8271f10f043e1e1f50f561c1c8d">type.h</a>
-, <a class="el" href="group___fae_type.html#gac121b8271f10f043e1e1f50f561c1c8d">type.c</a>
-</li>
-<li>fae_type_size_of()
-: <a class="el" href="type_8c.html#a2e9faf630c7d240c6f2862bae79a0725">type.c</a>
-</li>
-<li>fae_type_str()
-: <a class="el" href="fae_8c.html#a1f0ada23b08c6379ee47fd51e39063a7">fae.c</a>
-</li>
-<li>fae_type_vector()
-: <a class="el" href="group___fae_type.html#ga1e3d6f6b227fef61024de496d86e108e">type.h</a>
-, <a class="el" href="group___fae_type.html#ga1e3d6f6b227fef61024de496d86e108e">type.c</a>
+<li>fa_buffer_set_int64()
+: <a class="el" href="group___fa_buffer.html#gad6aac54065401793f8708c5fa8f74767">buffer.h</a>
+</li>
+<li>fa_buffer_size()
+: <a class="el" href="group___fa_buffer.html#ga05d5260ebed7510d21c4053e0121f2ab">buffer.h</a>
+</li>
+<li>fa_buffer_unsafe_address()
+: <a class="el" href="group___fa_buffer.html#ga125988f48e9c7d1539205920021eb4a7">buffer.h</a>
+</li>
+<li>fa_buffer_wrap()
+: <a class="el" href="group___fa_buffer.html#ga8137d02314fa218c84c0c71c261618b1">buffer.h</a>
+</li>
+<li>fa_buffer_write_audio()
+: <a class="el" href="group___fa_buffer.html#gaeaa5ddd0d8d7826f05c71472161a2113">buffer.h</a>
+</li>
+<li>fa_buffer_write_raw()
+: <a class="el" href="group___fa_buffer.html#gabfa8ff3773b978a3085c197315e55b5d">buffer.h</a>
+</li>
+<li>fa_check()
+: <a class="el" href="group___fa.html#gacc01bbdf50f2aa29f3975c25d9c8204c">fa.h</a>
+</li>
+<li>fa_copy()
+: <a class="el" href="group___fa.html#gaf487dba47aa0c9467498c00e4ebed334">fa.h</a>
+</li>
+<li>fa_dabsolute()
+: <a class="el" href="group___fa.html#ga487c5a88cb338d93a04d90f8bf2658f5">fa.h</a>
+</li>
+<li>fa_dadd()
+: <a class="el" href="group___fa.html#ga12d5b703038c63a26f42700db2ae572f">fa.h</a>
+</li>
+<li>fa_ddivide()
+: <a class="el" href="group___fa.html#gaf560602a29201ead4236f568eaba698e">fa.h</a>
+</li>
+<li>fa_destroy()
+: <a class="el" href="group___fa.html#ga022f0971e46eebf097b5e64c089bd715">fa.h</a>
+</li>
+<li>fa_divide()
+: <a class="el" href="group___fa.html#ga878efba6269c7482e036a95b4deb4d1c">fa.h</a>
+</li>
+<li>fa_dmultiply()
+: <a class="el" href="group___fa.html#gaecc4041a09770bd70b68f16e84207382">fa.h</a>
+</li>
+<li>fa_dprint()
+: <a class="el" href="group___fa.html#ga683ca5af5cc36e760f0ec2cefbbf5561">fa.h</a>
+</li>
+<li>fa_dprint_ln()
+: <a class="el" href="group___fa.html#gae2f4d4158d30b5bcf88f77e29a082b52">fa.h</a>
+</li>
+<li>fa_dsubtract()
+: <a class="el" href="group___fa.html#ga5539b6c31b05eabf6f3d8c086b157b8e">fa.h</a>
+</li>
+<li>fa_dynamic_check()
+: <a class="el" href="group___fa_dynamic.html#gaef3cc7a4fc92b9a1db18fa309b5f4667">dynamic.h</a>
+</li>
+<li>fa_dynamic_get_type()
+: <a class="el" href="group___fa_dynamic.html#gac7edfacf718be3ec36b758210c991002">dynamic.h</a>
+</li>
+<li>fa_equal()
+: <a class="el" href="group___fa.html#gad03fec93de641c52d4b8c3af47b5f3c6">fa.h</a>
+</li>
+<li>fa_error_check()
+: <a class="el" href="group___fa_error.html#gaa5d514787265486532359c4b6b3eedca">error.h</a>
+</li>
+<li>fa_error_create_simple()
+: <a class="el" href="group___fa_error.html#ga4560fff1a957e82d8ab065a6ed244890">error.h</a>
+</li>
+<li>fa_error_format()
+: <a class="el" href="group___fa_error.html#ga4d06afcc9453324e08064b6001228985">error.h</a>
+</li>
+<li>fa_error_log()
+: <a class="el" href="group___fa_error.html#ga0053afc7a37791bee61e09b927a98de6">error.h</a>
+</li>
+<li>fa_error_message()
+: <a class="el" href="group___fa_error.html#gacca0b0b553aae9b6bee8c68f0ce4c84c">error.h</a>
+</li>
+<li>fa_error_origin()
+: <a class="el" href="group___fa_error.html#ga7be2135dd2b3cef0e2ce655ce2607d23">error.h</a>
+</li>
+<li>fa_error_severity()
+: <a class="el" href="group___fa_error.html#ga906cc979707cc5591defc80b1877bdd5">error.h</a>
+</li>
+<li>fa_fa_dlog()
+: <a class="el" href="group___fa_fa.html#gacdbeee7a3e25ee13fb19b71c60602718">fa.h</a>
+</li>
+<li>fa_fa_dlog_info()
+: <a class="el" href="group___fa_fa.html#ga939fbc3489d171ee481958f8fcde8cf2">fa.h</a>
+, <a class="el" href="util_8h.html#a939fbc3489d171ee481958f8fcde8cf2">util.h</a>
+</li>
+<li>fa_fa_initialize()
+: <a class="el" href="group___fa_fa.html#gad368f15339a02fc1e2999f06f4b0e5e7">fa.h</a>
+</li>
+<li>fa_fa_log()
+: <a class="el" href="group___fa_fa.html#ga33bba6b6d105af00bdba065371ee3b2e">fa.h</a>
+</li>
+<li>fa_fa_log_error()
+: <a class="el" href="group___fa_fa.html#ga3a5ad0223c636eb29f326070112cac20">fa.h</a>
+, <a class="el" href="util_8h.html#a3a5ad0223c636eb29f326070112cac20">util.h</a>
+</li>
+<li>fa_fa_log_error_from()
+: <a class="el" href="group___fa_fa.html#gaecb14c1769970c94fdc8f7dfb094e175">fa.h</a>
+</li>
+<li>fa_fa_log_info()
+: <a class="el" href="group___fa_fa.html#ga4b5197b7cd4a1c6b30b38820212b66d3">fa.h</a>
+, <a class="el" href="util_8h.html#a4b5197b7cd4a1c6b30b38820212b66d3">util.h</a>
+</li>
+<li>fa_fa_log_info_from()
+: <a class="el" href="group___fa_fa.html#ga0a6f68a1dbdac64fb93aa9ade1babf68">fa.h</a>
+</li>
+<li>fa_fa_log_warning()
+: <a class="el" href="group___fa_fa.html#gab33512a1e8ef235f9b302b0579fc7337">fa.h</a>
+, <a class="el" href="util_8h.html#ab33512a1e8ef235f9b302b0579fc7337">util.h</a>
+</li>
+<li>fa_fa_log_warning_from()
+: <a class="el" href="group___fa_fa.html#ga104bf354138bb6658c60eafd15d118ec">fa.h</a>
+</li>
+<li>fa_fa_set_log()
+: <a class="el" href="group___fa_fa.html#ga589482517300c16c256423918ee30275">fa.h</a>
+</li>
+<li>fa_fa_set_log_file()
+: <a class="el" href="group___fa_fa.html#gab2daf53d3801475f97f8cc251a182279">fa.h</a>
+</li>
+<li>fa_fa_set_log_std()
+: <a class="el" href="group___fa_fa.html#ga25cd67724f6cddd2a7b1abbf024e15ff">fa.h</a>
+</li>
+<li>fa_fa_terminate()
+: <a class="el" href="group___fa_fa.html#gaf67f9aba7a93e42c55d709ffb8f12b1b">fa.h</a>
+</li>
+<li>fa_fa_version()
+: <a class="el" href="group___fa_fa.html#gacfbab11023ede99b5986ed2dc3be459a">fa.h</a>
+</li>
+<li>fa_fa_version_string()
+: <a class="el" href="group___fa_fa.html#ga85b74ecd01f238d2863656b84422f3ea">fa.h</a>
+</li>
+<li>fa_free()
+: <a class="el" href="alloc_8h.html#afd68511245d1cc12f07d6249e6a8ce1e">alloc.h</a>
+</li>
+<li>fa_from_bool()
+: <a class="el" href="group___fa.html#gad923ed7c8ee86cbadb0cf50878a46e79">fa.h</a>
+</li>
+<li>fa_from_double()
+: <a class="el" href="group___fa.html#gafd6e041f2b455fc2184025d7cf41ad4a">fa.h</a>
+</li>
+<li>fa_from_float()
+: <a class="el" href="group___fa.html#gad91677c612a9a516261d499afcdead6f">fa.h</a>
+</li>
+<li>fa_from_int16()
+: <a class="el" href="group___fa.html#ga02757b8d184afec403585cd9fc01067b">fa.h</a>
+</li>
+<li>fa_from_int32()
+: <a class="el" href="group___fa.html#ga6f823c293e8585f3befc70b7659edf51">fa.h</a>
+</li>
+<li>fa_from_int64()
+: <a class="el" href="group___fa.html#ga05eb37e556b1ad5907c8868a4b6b3c33">fa.h</a>
+</li>
+<li>fa_from_int8()
+: <a class="el" href="group___fa.html#gad54f3ef91226619bf87daf135537be91">fa.h</a>
+</li>
+<li>fa_greater_than()
+: <a class="el" href="group___fa.html#gae1a5b993761f7ec95c0058721642bebf">fa.h</a>
+</li>
+<li>fa_greater_than_equal()
+: <a class="el" href="group___fa.html#ga92d03898b1531bd7a82b2598b5b4172a">fa.h</a>
+</li>
+<li>fa_interface()
+: <a class="el" href="group___fa.html#ga95dbbc4b32707af0a81071e8870d86c5">fa.h</a>
+</li>
+<li>fa_is_bool()
+: <a class="el" href="group___fa.html#ga5a27d35157dab17807ada61111c34182">fa.h</a>
+</li>
+<li>fa_is_double()
+: <a class="el" href="group___fa.html#ga7a3b9ebfd0344619d0726ac125f5589e">fa.h</a>
+</li>
+<li>fa_is_float()
+: <a class="el" href="group___fa.html#gaba2ff3f95148a7ee5a620dd197dc6592">fa.h</a>
+</li>
+<li>fa_is_int16()
+: <a class="el" href="group___fa.html#ga9d42e3872e699d7ddf636e86e2a89c9a">fa.h</a>
+</li>
+<li>fa_is_int32()
+: <a class="el" href="group___fa.html#ga4da0a31ecb61656245219757ed906b13">fa.h</a>
+</li>
+<li>fa_is_int64()
+: <a class="el" href="group___fa.html#gaf304d0e5086321148936b9170a584c99">fa.h</a>
+</li>
+<li>fa_is_int8()
+: <a class="el" href="group___fa.html#ga87f4d8b94d93d1a9258d9b4cda0677cb">fa.h</a>
+</li>
+<li>fa_is_ref()
+: <a class="el" href="group___fa.html#ga30c4ba988122e6047ecb0befed2451be">fa.h</a>
+</li>
+<li>fa_less_than()
+: <a class="el" href="group___fa.html#ga02de7d3cb44fba7a2b9cafa567e41307">fa.h</a>
+</li>
+<li>fa_less_than_equal()
+: <a class="el" href="group___fa.html#ga5adb26a2c58653771b0efed86d895356">fa.h</a>
+</li>
+<li>fa_list()
+: <a class="el" href="literals_8h.html#afc98313ce849ba0001fa3aaa3e5e5383">literals.h</a>
+</li>
+<li>fa_list_append()
+: <a class="el" href="group___fa_list.html#gabede6a0b39da17fdd710e925cc723058">list.h</a>
+</li>
+<li>fa_list_cons()
+: <a class="el" href="group___fa_list.html#ga729b08c806316dc7deea4acddf1a5be7">list.h</a>
+</li>
+<li>fa_list_copy()
+: <a class="el" href="group___fa_list.html#ga66f4bd69cb969527c6bdf3c9a67e4e2e">list.h</a>
+</li>
+<li>fa_list_dappend()
+: <a class="el" href="group___fa_list.html#ga01d06192c9190712155c0a3bec4c48b2">list.h</a>
+</li>
+<li>fa_list_dcons()
+: <a class="el" href="group___fa_list.html#ga2bf9a699ab55ff76f4c84fb21cdf0149">list.h</a>
+</li>
+<li>fa_list_ddrop()
+: <a class="el" href="group___fa_list.html#ga5e6ea0b935bc9d28fdbbb81d32df9b70">list.h</a>
+</li>
+<li>fa_list_destroy()
+: <a class="el" href="group___fa_list.html#gadb3da69c4836351dbae228908b69af6b">list.h</a>
+</li>
+<li>fa_list_dfilter()
+: <a class="el" href="group___fa_list.html#gad87e0747672a99d5681ed43d0196fbab">list.h</a>
+</li>
+<li>fa_list_dfold_left()
+: <a class="el" href="group___fa_list.html#ga3d4d66c590878d9fb97eb5887e4daeeb">list.h</a>
+</li>
+<li>fa_list_dinit()
+: <a class="el" href="group___fa_list.html#gaa08c14fe7be44fc8f41583df233aa7f4">list.h</a>
+</li>
+<li>fa_list_dinsert()
+: <a class="el" href="group___fa_list.html#gaf4f4f6f6f65a13c0c6e46c608a4bdbb2">list.h</a>
+</li>
+<li>fa_list_dinsert_range()
+: <a class="el" href="group___fa_list.html#ga2a815684ff75a1995edcbd70c31c2c9d">list.h</a>
+</li>
+<li>fa_list_djoin()
+: <a class="el" href="group___fa_list.html#ga0c436ba6fa3095e79f9932643ac89b28">list.h</a>
+</li>
+<li>fa_list_djoin_map()
+: <a class="el" href="group___fa_list.html#ga075d1d1b3fb347714077a387792dd0e2">list.h</a>
+</li>
+<li>fa_list_dmap()
+: <a class="el" href="group___fa_list.html#ga7c58982825231fb5f29a6263e93ab6af">list.h</a>
+</li>
+<li>fa_list_dremove()
+: <a class="el" href="group___fa_list.html#gabc91ac489a072e96e09dc220ce8a470d">list.h</a>
+</li>
+<li>fa_list_dremove_range()
+: <a class="el" href="group___fa_list.html#ga519ed0da90166b01e8e1a980b3ea44f7">list.h</a>
+</li>
+<li>fa_list_dreverse()
+: <a class="el" href="group___fa_list.html#gab5eff9641c5cc4b70dcec7483d3380c4">list.h</a>
+</li>
+<li>fa_list_drop()
+: <a class="el" href="group___fa_list.html#ga68064e2dd851b1aa0cdca28eca97d7c0">list.h</a>
+</li>
+<li>fa_list_dsort()
+: <a class="el" href="group___fa_list.html#gaf5150fb9f75ec08ad365152f1dbd9822">list.h</a>
+</li>
+<li>fa_list_dtail()
+: <a class="el" href="group___fa_list.html#gae5bafdc575a28cc868533195c3c7e73b">list.h</a>
+</li>
+<li>fa_list_dtake()
+: <a class="el" href="group___fa_list.html#ga600d73ac17a74963c4515a1a84cba3c0">list.h</a>
+</li>
+<li>fa_list_empty()
+: <a class="el" href="group___fa_list.html#gabf678944a2862ba07072920e37cdb23d">list.h</a>
+</li>
+<li>fa_list_enumerate()
+: <a class="el" href="group___fa_list.html#gaefdea8e23085289a5d368af6d08a4d52">list.h</a>
+</li>
+<li>fa_list_filter()
+: <a class="el" href="group___fa_list.html#gae96c9b60369fa98bc575ef233c609dcd">list.h</a>
+</li>
+<li>fa_list_find()
+: <a class="el" href="group___fa_list.html#ga0470a8ef5946c8fda29fdede36638f8d">list.h</a>
+</li>
+<li>fa_list_find_index()
+: <a class="el" href="group___fa_list.html#ga63d9945981b44c759677b31e968fc4eb">list.h</a>
+</li>
+<li>fa_list_fold_left()
+: <a class="el" href="group___fa_list.html#ga0df18741c4ec2dcd44a55951717215fc">list.h</a>
+</li>
+<li>fa_list_has()
+: <a class="el" href="group___fa_list.html#ga79f2c9a65ccf85529be97f52b08a005e">list.h</a>
+</li>
+<li>fa_list_head()
+: <a class="el" href="group___fa_list.html#ga96c4d3f03c7cb8182c775ea3c1ed6ef3">list.h</a>
+</li>
+<li>fa_list_index()
+: <a class="el" href="group___fa_list.html#ga8e0cf8e57f8382f46dad02cda2716398">list.h</a>
+</li>
+<li>fa_list_index_of()
+: <a class="el" href="group___fa_list.html#gafc0fe96afe58615ed7f289ff7306ee3f">list.h</a>
+</li>
+<li>fa_list_init()
+: <a class="el" href="group___fa_list.html#gabf78759ae89492ef49ade110ae81195b">list.h</a>
+</li>
+<li>fa_list_insert()
+: <a class="el" href="group___fa_list.html#gab0e40bc42b5bd7f4d350a4938dcc3edd">list.h</a>
+</li>
+<li>fa_list_insert_range()
+: <a class="el" href="group___fa_list.html#gaee2a8db68b96923c8681762ebc7ef276">list.h</a>
+</li>
+<li>fa_list_is_empty()
+: <a class="el" href="group___fa_list.html#gaad6f17971589651521ccf16371f12f6d">list.h</a>
+</li>
+<li>fa_list_is_single()
+: <a class="el" href="group___fa_list.html#ga87980489a3b6986e91bc6feb4831384e">list.h</a>
+</li>
+<li>fa_list_join()
+: <a class="el" href="group___fa_list.html#ga6ae6e94eecba554067452b1be9319a90">list.h</a>
+</li>
+<li>fa_list_join_map()
+: <a class="el" href="group___fa_list.html#gadf1a980fd457676983390e682e73fc25">list.h</a>
+</li>
+<li>fa_list_last()
+: <a class="el" href="group___fa_list.html#gac64d6c0110ff15ef32829e6e7d08e760">list.h</a>
+</li>
+<li>fa_list_length()
+: <a class="el" href="group___fa_list.html#gaa2e5d47067e992e0e9fe94db7f9230c5">list.h</a>
+</li>
+<li>fa_list_map()
+: <a class="el" href="group___fa_list.html#ga10f59581fbc8756c9100cbd5861ff6f6">list.h</a>
+</li>
+<li>fa_list_range()
+: <a class="el" href="group___fa_list.html#gabfc1bee96b85315eb9b05cb176def2eb">list.h</a>
+</li>
+<li>fa_list_remove()
+: <a class="el" href="group___fa_list.html#ga18be040384b76484ef866257eab39b6f">list.h</a>
+</li>
+<li>fa_list_remove_range()
+: <a class="el" href="group___fa_list.html#gac121c8f5693af68c42d5e93aa5fa56b6">list.h</a>
+</li>
+<li>fa_list_repeat()
+: <a class="el" href="group___fa_list.html#ga5b08e18a142e9ae30634a4748162bec3">list.h</a>
+</li>
+<li>fa_list_reverse()
+: <a class="el" href="group___fa_list.html#ga52748615759a2ffef53d2bcaef7bdfb5">list.h</a>
+</li>
+<li>fa_list_single()
+: <a class="el" href="group___fa_list.html#ga58e83d9e5e16f9806375ea1c8284c5d0">list.h</a>
+</li>
+<li>fa_list_sort()
+: <a class="el" href="group___fa_list.html#ga59388f79a5f49842426cf618537cc177">list.h</a>
+</li>
+<li>fa_list_tail()
+: <a class="el" href="group___fa_list.html#gacaafbfc627d334b56ce9f4d02da1d953">list.h</a>
+</li>
+<li>fa_list_take()
+: <a class="el" href="group___fa_list.html#gabd0cd2d50dafeef48d3365d9d9275d33">list.h</a>
+</li>
+<li>fa_list_to_list()
+: <a class="el" href="group___fa_list.html#ga3873015a195676d9592c98d750dcde14">list.h</a>
+</li>
+<li>fa_malloc()
+: <a class="el" href="alloc_8h.html#af5ed0edc2b381ab04d1f6f8e0e18f933">alloc.h</a>
+</li>
+<li>fa_map()
+: <a class="el" href="literals_8h.html#ac572f2bbaad3972dcbd82c7e29bfea88">literals.h</a>
+</li>
+<li>fa_map_add()
+: <a class="el" href="group___fa_map.html#gaef7d04aa9f332126cebbb8dfacf152ff">map.h</a>
+</li>
+<li>fa_map_add_entry()
+: <a class="el" href="group___fa_map.html#gabe7557d426d8e85bf7986adc2df0598e">map.h</a>
+</li>
+<li>fa_map_copy()
+: <a class="el" href="group___fa_map.html#ga4f60e11ddfaef035c9f417d66c41cb53">map.h</a>
+</li>
+<li>fa_map_dadd()
+: <a class="el" href="group___fa_map.html#gab0cc51d559d7e9d4339817c3a1c351ea">map.h</a>
+</li>
+<li>fa_map_destroy()
+: <a class="el" href="group___fa_map.html#ga30cbbcd20df6265eb2716e6990eb50cf">map.h</a>
+</li>
+<li>fa_map_difference()
+: <a class="el" href="group___fa_map.html#ga17ccd4fa786c256c5545f0540466b529">map.h</a>
+</li>
+<li>fa_map_dremove()
+: <a class="el" href="group___fa_map.html#gac730c41d30eab8b13c76b44f07eeff95">map.h</a>
+</li>
+<li>fa_map_dset()
+: <a class="el" href="group___fa_map.html#gac6487a20f8778fa707a78a850bd68977">map.h</a>
+</li>
+<li>fa_map_empty()
+: <a class="el" href="group___fa_map.html#gab96a62b8c3900af432faa9c7fe9a06e6">map.h</a>
+</li>
+<li>fa_map_from_list()
+: <a class="el" href="group___fa_map.html#gaa72c1ebf8cc61021233fdb2a5bebbead">map.h</a>
+</li>
+<li>fa_map_from_pair()
+: <a class="el" href="group___fa_map.html#ga04e53ec63cb17ff3b5d12af2dca4cb75">map.h</a>
+</li>
+<li>fa_map_get()
+: <a class="el" href="group___fa_map.html#ga6a581e8d58bdddef94191078bca655a9">map.h</a>
+</li>
+<li>fa_map_has_elem()
+: <a class="el" href="group___fa_map.html#ga898dda5ee020f9607bed3897b643901d">map.h</a>
+</li>
+<li>fa_map_has_entry()
+: <a class="el" href="group___fa_map.html#gafbdde94176e02e443f9f66f702fcf873">map.h</a>
+</li>
+<li>fa_map_has_key()
+: <a class="el" href="group___fa_map.html#ga6107b250434e48f4026b072257b1fc29">map.h</a>
+</li>
+<li>fa_map_is_empty()
+: <a class="el" href="group___fa_map.html#ga38e3be75910d557a752ced0839dfad3c">map.h</a>
+</li>
+<li>fa_map_is_proper_submap_of()
+: <a class="el" href="group___fa_map.html#ga5d969117553cec91dc74b50c5c73a664">map.h</a>
+</li>
+<li>fa_map_is_single()
+: <a class="el" href="group___fa_map.html#ga7de611244cbac7ceded34bb27bce49d1">map.h</a>
+</li>
+<li>fa_map_is_submap_of()
+: <a class="el" href="group___fa_map.html#gaa3e28b9260c1110e8f4547f1733035ce">map.h</a>
+</li>
+<li>fa_map_map()
+: <a class="el" href="group___fa_map.html#gae7c28934a010f4bd30c4d9b7051170fa">map.h</a>
+</li>
+<li>fa_map_product()
+: <a class="el" href="group___fa_map.html#ga850da17ce9aa890d64e6b21e0c2b56d3">map.h</a>
+</li>
+<li>fa_map_remove()
+: <a class="el" href="group___fa_map.html#ga90589067eb2c4963de269e4fc8e4461e">map.h</a>
+</li>
+<li>fa_map_remove_entry()
+: <a class="el" href="group___fa_map.html#ga9f8096b42a65e7d1d6abd282dd74cd2a">map.h</a>
+</li>
+<li>fa_map_set()
+: <a class="el" href="group___fa_map.html#ga3cb9053640652ca425041acdde23459b">map.h</a>
+</li>
+<li>fa_map_set_entry()
+: <a class="el" href="group___fa_map.html#ga0624f5b2fcfeb60ea82a186c72c45967">map.h</a>
+</li>
+<li>fa_map_size()
+: <a class="el" href="group___fa_map.html#ga06bd55c8e1345e03677d974af3e4168f">map.h</a>
+</li>
+<li>fa_map_sum()
+: <a class="el" href="group___fa_map.html#gaacce16c5229e6424d6df94141bd843a4">map.h</a>
+</li>
+<li>fa_map_to_list()
+: <a class="el" href="group___fa_map.html#gae98e37ced96d48a4e808c396ea739d65">map.h</a>
+</li>
+<li>fa_max()
+: <a class="el" href="group___fa.html#ga1697e7fd66a06331090f4a9b8a9601af">fa.h</a>
+</li>
+<li>fa_midi_all()
+: <a class="el" href="group___fa_midi.html#ga5ae4490b13f24a0697e8e72c5e8f98f8">midi.h</a>
+</li>
+<li>fa_midi_begin_session()
+: <a class="el" href="group___fa_midi.html#ga2f1b526042c4356ce7e2adcf0d11ecad">midi.h</a>
+</li>
+<li>fa_midi_close_stream()
+: <a class="el" href="group___fa_midi.html#ga876d025cf738bf4a0771ca695ba6a693">midi.h</a>
+</li>
+<li>fa_midi_default()
+: <a class="el" href="group___fa_midi.html#ga16ab90b8b25085612c42f76049d4da87">midi.h</a>
+</li>
+<li>fa_midi_default_input()
+: <a class="el" href="group___fa_midi.html#ga810b96b9181c8548f55a2b1f90f7d9c5">midi.h</a>
+</li>
+<li>fa_midi_default_output()
+: <a class="el" href="group___fa_midi.html#ga119d4817da1838a206eb15a93ae6b573">midi.h</a>
+</li>
+<li>fa_midi_end_session()
+: <a class="el" href="group___fa_midi.html#ga711084651fc74079373ae12b66ee81d1">midi.h</a>
+</li>
+<li>fa_midi_has_input()
+: <a class="el" href="group___fa_midi.html#ga156c254899dabc30fd8fe2e8dbde6e30">midi.h</a>
+</li>
+<li>fa_midi_has_output()
+: <a class="el" href="group___fa_midi.html#ga6b577d672f97fe3cba33aa432dba0d3f">midi.h</a>
+</li>
+<li>fa_midi_host_name()
+: <a class="el" href="group___fa_midi.html#ga5a7331a7b471a400c65554009c3a6c96">midi.h</a>
+</li>
+<li>fa_midi_message_channel()
+: <a class="el" href="group___fa_midi_message.html#ga0a69747ff264837ac34856236cfb7c91">message.h</a>
+</li>
+<li>fa_midi_message_copy()
+: <a class="el" href="group___fa_midi_message.html#ga61b3241874b69293ec584cffaf9c2499">message.h</a>
+</li>
+<li>fa_midi_message_create_simple()
+: <a class="el" href="group___fa_midi_message.html#ga4500a770fd4a7fc5d5e742482a3f912f">message.h</a>
+</li>
+<li>fa_midi_message_create_sysex()
+: <a class="el" href="group___fa_midi_message.html#ga5e8a42ea0df3947dc05f3a4b8094d997">message.h</a>
+</li>
+<li>fa_midi_message_destroy()
+: <a class="el" href="group___fa_midi_message.html#ga2be7b8c0a76ff0bd41d1bc0de9dac64c">message.h</a>
+</li>
+<li>fa_midi_message_is_simple()
+: <a class="el" href="group___fa_midi_message.html#ga9ba41b60a78f7237ee9a7144cbdd8974">message.h</a>
+</li>
+<li>fa_midi_message_is_sysex()
+: <a class="el" href="group___fa_midi_message.html#gaee2b89290975550e99a9e34709652b76">message.h</a>
+</li>
+<li>fa_midi_message_simple_data()
+: <a class="el" href="group___fa_midi_message.html#ga13bc73f40612cd1a7a664401f18fddec">message.h</a>
+</li>
+<li>fa_midi_message_status()
+: <a class="el" href="group___fa_midi_message.html#ga14462260226e1d8d04a57b810a040be2">message.h</a>
+</li>
+<li>fa_midi_message_sysex_data()
+: <a class="el" href="group___fa_midi_message.html#ga7e2849c26bc45d768164c1f1de5fb8fe">message.h</a>
+</li>
+<li>fa_midi_name()
+: <a class="el" href="group___fa_midi.html#gab36c5d046acdbdbaf36823dde9342c4f">midi.h</a>
+</li>
+<li>fa_midi_open_stream()
+: <a class="el" href="group___fa_midi.html#ga84cc0d002a3f2b0ce00dd672729fc0a6">midi.h</a>
+</li>
+<li>fa_midi_set_status_callback()
+: <a class="el" href="group___fa_midi.html#ga6b13902995f9e0b4cf3404eaa60aa3f9">midi.h</a>
+</li>
+<li>fa_midi_with_session()
+: <a class="el" href="group___fa_midi.html#ga3d11338c0c4c7cb2f4e67640eb06cd73">midi.h</a>
+</li>
+<li>fa_midi_with_stream()
+: <a class="el" href="group___fa_midi.html#gaef0d95b11e19edb6b559498759c67de3">midi.h</a>
+</li>
+<li>fa_min()
+: <a class="el" href="group___fa.html#gaa4c932e61c244bb35c6a8b930ebd3137">fa.h</a>
+</li>
+<li>fa_move()
+: <a class="el" href="group___fa.html#ga8b443c900e67dc0ddeeb7488a1a6e91e">fa.h</a>
+</li>
+<li>fa_multiply()
+: <a class="el" href="group___fa.html#gadc7d9ae3f48dcce1fd7a5c3f3168942a">fa.h</a>
+</li>
+<li>fa_not_equal()
+: <a class="el" href="group___fa.html#ga09e253befdd57132cad5a36552c38b06">fa.h</a>
+</li>
+<li>fa_pair_assoc()
+: <a class="el" href="group___fa_pair.html#gaa54c75840c92ec648dffff918be0fec0">pair.h</a>
+</li>
+<li>fa_pair_copy()
+: <a class="el" href="group___fa_pair.html#ga2ab1b112e51beaf44bc22093c60e2d4c">pair.h</a>
+</li>
+<li>fa_pair_create()
+: <a class="el" href="group___fa_pair.html#ga021232bc4c3b3d309f9ec6d3eb87e18a">pair.h</a>
+</li>
+<li>fa_pair_decons()
+: <a class="el" href="group___fa_pair.html#ga4ae27ac5bb37aaaaa34aed8238d6d654">pair.h</a>
+</li>
+<li>fa_pair_destroy()
+: <a class="el" href="group___fa_pair.html#ga1f4399848759bab2c41d6e4c544dd976">pair.h</a>
+</li>
+<li>fa_pair_duplicate()
+: <a class="el" href="group___fa_pair.html#ga97c5c21f38cdbf0021bc51dfa7a5e924">pair.h</a>
+</li>
+<li>fa_pair_first()
+: <a class="el" href="group___fa_pair.html#gae7377b9606b945378e5a4e8646343b29">pair.h</a>
+</li>
+<li>fa_pair_read()
+: <a class="el" href="group___fa_pair.html#gaab0cee4f61bbfa9ba432a5d3b32dd1af">pair.h</a>
+</li>
+<li>fa_pair_second()
+: <a class="el" href="group___fa_pair.html#gab20bf25361bd2e143ffd7ef1c63d34ce">pair.h</a>
+</li>
+<li>fa_pair_swap()
+: <a class="el" href="group___fa_pair.html#ga8a8b4bc505963cc7f6cc0f5aa7fbcf2d">pair.h</a>
+</li>
+<li>fa_pair_to_list()
+: <a class="el" href="group___fa_pair.html#ga83dc8d7460cacb47cdf4f8de545a4801">pair.h</a>
+</li>
+<li>fa_pair_unassoc()
+: <a class="el" href="group___fa_pair.html#gabe21b3800b242e2d4ea9903538a22997">pair.h</a>
+</li>
+<li>fa_pair_write()
+: <a class="el" href="group___fa_pair.html#ga2c29509ff569a3a2434c3a55b29fbce9">pair.h</a>
+</li>
+<li>fa_peek_bool()
+: <a class="el" href="group___fa.html#gaf62f450b2fbfad1e5f0f38ab86cc92a7">fa.h</a>
+</li>
+<li>fa_peek_double()
+: <a class="el" href="group___fa.html#ga200818ddcf978b28655be294f31dc44a">fa.h</a>
+</li>
+<li>fa_peek_float()
+: <a class="el" href="group___fa.html#ga40d5666a21e0d0b3b1605c5954d66936">fa.h</a>
+</li>
+<li>fa_peek_int16()
+: <a class="el" href="group___fa.html#gab75b22c11cb380a936d46b35f52c05cd">fa.h</a>
+</li>
+<li>fa_peek_int32()
+: <a class="el" href="group___fa.html#gaa37149d037a7350fee17588c67700782">fa.h</a>
+</li>
+<li>fa_peek_int64()
+: <a class="el" href="group___fa.html#gaff1d0c4e9aec07b144ab4fa3e8a91882">fa.h</a>
+</li>
+<li>fa_peek_int8()
+: <a class="el" href="group___fa.html#ga8da8227f29d593d51bd4c4abc821029b">fa.h</a>
+</li>
+<li>fa_print()
+: <a class="el" href="group___fa.html#ga9215cf018539286a2ccd5c5f69ddb7f6">fa.h</a>
+</li>
+<li>fa_print_ln()
+: <a class="el" href="group___fa.html#gace3fe5056db52ec9145f1444c82b7216">fa.h</a>
+</li>
+<li>fa_ratio_absolute()
+: <a class="el" href="group___fa_ratio.html#ga9dcd1a06c34ce0079e830aeb4cd221e3">ratio.h</a>
+</li>
+<li>fa_ratio_add()
+: <a class="el" href="group___fa_ratio.html#gafa2dda07fa8a0a19f1c8f94927ff9aa0">ratio.h</a>
+</li>
+<li>fa_ratio_copy()
+: <a class="el" href="group___fa_ratio.html#gab398d0f45cfbea2dbb9014c5a8a8dde1">ratio.h</a>
+</li>
+<li>fa_ratio_create()
+: <a class="el" href="group___fa_ratio.html#ga36f5f3f077f41be6690dbc28f766b2bd">ratio.h</a>
+</li>
+<li>fa_ratio_denom()
+: <a class="el" href="group___fa_ratio.html#ga9792fb8e35b60295d228f7561782e968">ratio.h</a>
+</li>
+<li>fa_ratio_destroy()
+: <a class="el" href="group___fa_ratio.html#gaf9f00033d518136b71f44536bd2a2ce7">ratio.h</a>
+</li>
+<li>fa_ratio_divide()
+: <a class="el" href="group___fa_ratio.html#gaad43995fa5792fbaaf0de365359f314c">ratio.h</a>
+</li>
+<li>fa_ratio_match()
+: <a class="el" href="group___fa_ratio.html#ga24d33b8664441aa01c98ce1421e67800">ratio.h</a>
+</li>
+<li>fa_ratio_multiply()
+: <a class="el" href="group___fa_ratio.html#ga1f6c80370dc6bd4dbe8c11f940f99850">ratio.h</a>
+</li>
+<li>fa_ratio_negate()
+: <a class="el" href="group___fa_ratio.html#ga73b98e67b3b767c581ebbcd8d7feb570">ratio.h</a>
+</li>
+<li>fa_ratio_normalize()
+: <a class="el" href="group___fa_ratio.html#gadeae1d38ee14513a69c13268f493ca21">ratio.h</a>
+</li>
+<li>fa_ratio_num()
+: <a class="el" href="group___fa_ratio.html#gad6b63fda25c4ebf1f2ffaf6a3ea21fc0">ratio.h</a>
+</li>
+<li>fa_ratio_pred()
+: <a class="el" href="group___fa_ratio.html#ga15c8b6f2a064f29c6d182415c8ce1741">ratio.h</a>
+</li>
+<li>fa_ratio_recip()
+: <a class="el" href="group___fa_ratio.html#gae33f4542c944ddd87244e886b4cb6f3f">ratio.h</a>
+</li>
+<li>fa_ratio_subtract()
+: <a class="el" href="group___fa_ratio.html#gaf4cb029e3aa2fb3b5e1f40331661fdc2">ratio.h</a>
+</li>
+<li>fa_ratio_succ()
+: <a class="el" href="group___fa_ratio.html#gafcc536a5f22f7255978602ec003bf0fd">ratio.h</a>
+</li>
+<li>fa_ratio_to_mixed()
+: <a class="el" href="group___fa_ratio.html#ga14ea710182d4fade4d9c8976a73b5401">ratio.h</a>
+</li>
+<li>fa_realloc()
+: <a class="el" href="alloc_8h.html#ab1850d348d50dd021f200b6ac7c17617">alloc.h</a>
+</li>
+<li>fa_set()
+: <a class="el" href="literals_8h.html#a5b08ef2ae368393b181f80873ae03f48">literals.h</a>
+</li>
+<li>fa_set_add()
+: <a class="el" href="group___fa_set.html#ga56154720d947c216be25d0d9dabea284">set.h</a>
+</li>
+<li>fa_set_copy()
+: <a class="el" href="group___fa_set.html#ga95f49f26dc7b13603cc56e16cdb2fcda">set.h</a>
+</li>
+<li>fa_set_dadd()
+: <a class="el" href="group___fa_set.html#ga9f0e5078b329bf37893cf7108d20a23a">set.h</a>
+</li>
+<li>fa_set_destroy()
+: <a class="el" href="group___fa_set.html#gaa7760aab0e9e3979c3563e76c0cdbbd5">set.h</a>
+</li>
+<li>fa_set_difference()
+: <a class="el" href="group___fa_set.html#gab48e2548b66e7c1a89981939ce916674">set.h</a>
+</li>
+<li>fa_set_dremove()
+: <a class="el" href="group___fa_set.html#ga11dbbab42c0f888f8a773cc4ca372007">set.h</a>
+</li>
+<li>fa_set_dset()
+: <a class="el" href="group___fa_set.html#gadd235b842ff577da6b17ec4ab3bab831">set.h</a>
+</li>
+<li>fa_set_empty()
+: <a class="el" href="group___fa_set.html#ga786a1ae6374f913191be7abea91227b3">set.h</a>
+</li>
+<li>fa_set_from_list()
+: <a class="el" href="group___fa_set.html#ga9492504940fd41d5bbed3363cebf11f7">set.h</a>
+</li>
+<li>fa_set_get()
+: <a class="el" href="group___fa_set.html#ga90637ff5ae25684a569924e74a22905d">set.h</a>
+</li>
+<li>fa_set_has()
+: <a class="el" href="group___fa_set.html#gaa24c4c69ee73f48b11e9849b44d03515">set.h</a>
+</li>
+<li>fa_set_intersection()
+: <a class="el" href="group___fa_set.html#ga6504e607b9a9804c8653ef1c288dc269">set.h</a>
+</li>
+<li>fa_set_is_empty()
+: <a class="el" href="group___fa_set.html#gabf98467a95efc851309d5f5519d9d00f">set.h</a>
+</li>
+<li>fa_set_is_proper_subset_of()
+: <a class="el" href="group___fa_set.html#gad406b2d2e8181a38064cd5da6aba92fa">set.h</a>
+</li>
+<li>fa_set_is_single()
+: <a class="el" href="group___fa_set.html#ga1316b250b87eb6c9448ff1ee4903e85b">set.h</a>
+</li>
+<li>fa_set_is_subset_of()
+: <a class="el" href="group___fa_set.html#gaa0babbd88a7ab9b303e92eaf84fb41e0">set.h</a>
+</li>
+<li>fa_set_product()
+: <a class="el" href="group___fa_set.html#ga7bbe6c42db55e6efa4c7a9a1e3df4326">set.h</a>
+</li>
+<li>fa_set_remove()
+: <a class="el" href="group___fa_set.html#ga4fea66374e1279a32421f27c5518e037">set.h</a>
+</li>
+<li>fa_set_set()
+: <a class="el" href="group___fa_set.html#gac55e19a90e119120dcb59703c7104a88">set.h</a>
+</li>
+<li>fa_set_single()
+: <a class="el" href="group___fa_set.html#ga3cecaa1307ec4f718b66a6b7dce16f04">set.h</a>
+</li>
+<li>fa_set_size()
+: <a class="el" href="group___fa_set.html#ga51a44b57e7d16c240b2797046cf3556b">set.h</a>
+</li>
+<li>fa_set_sum()
+: <a class="el" href="group___fa_set.html#gaa851ca130d69c22ce666ed546c0dfa4e">set.h</a>
+</li>
+<li>fa_set_to_list()
+: <a class="el" href="group___fa_set.html#ga83d414dd13505af04d5c8582bc85b8e9">set.h</a>
+</li>
+<li>fa_signal_add()
+: <a class="el" href="group___fa_signal.html#ga689590317e264f11442cd1ebf2b34fb8">signal.h</a>
+</li>
+<li>fa_signal_are_constant()
+: <a class="el" href="group___fa_signal.html#gab7bbf3df3a283a47b6d74fa286acf226">signal.h</a>
+</li>
+<li>fa_signal_biquad()
+: <a class="el" href="group___fa_signal.html#ga4ee8f61aeab26a162693c1f57b6de599">signal.h</a>
+</li>
+<li>fa_signal_constant()
+: <a class="el" href="group___fa_signal.html#ga9fe0724b36da19886a373a0b578d30c5">signal.h</a>
+</li>
+<li>fa_signal_delay()
+: <a class="el" href="group___fa_signal.html#ga7a10c409ddf5d80eccfe8875e395d3fe">signal.h</a>
+</li>
+<li>fa_signal_former()
+: <a class="el" href="group___fa_signal.html#ga57376b841ad9fb32baf083cbc1552366">signal.h</a>
+</li>
+<li>fa_signal_impulse()
+: <a class="el" href="group___fa_signal.html#gab58471c81821440157ba721c92813ce7">signal.h</a>
+</li>
+<li>fa_signal_input()
+: <a class="el" href="group___fa_signal.html#ga2f2c7d5f0d9add8c65d0b7dbe34448cf">signal.h</a>
+</li>
+<li>fa_signal_is_constant()
+: <a class="el" href="group___fa_signal.html#ga6eefead18742679c61606d6772bad0a0">signal.h</a>
+</li>
+<li>fa_signal_is_variable()
+: <a class="el" href="group___fa_signal.html#ga4795e437b4cc828ba4cf6e977d897024">signal.h</a>
+</li>
+<li>fa_signal_latter()
+: <a class="el" href="group___fa_signal.html#ga2076f9095f9a3e32953f64d9a9bf0192">signal.h</a>
+</li>
+<li>fa_signal_lift()
+: <a class="el" href="group___fa_signal.html#gafa9c273844554b10d1eccbc0ade2a01b">signal.h</a>
+</li>
+<li>fa_signal_lift2()
+: <a class="el" href="group___fa_signal.html#ga5af714af7c599f3c45f17e21cd551661">signal.h</a>
+</li>
+<li>fa_signal_line()
+: <a class="el" href="group___fa_signal.html#ga662c2ee3cb779bea499c03ef7a24edf0">signal.h</a>
+</li>
+<li>fa_signal_loop()
+: <a class="el" href="group___fa_signal.html#ga2b54d7290dc7491490545e92df9e4281">signal.h</a>
+</li>
+<li>fa_signal_low_pass()
+: <a class="el" href="group___fa_signal.html#gaf9acaec0d82b8eb3ed51fc779aa20015">signal.h</a>
+</li>
+<li>fa_signal_multiply()
+: <a class="el" href="group___fa_signal.html#ga02bdf2059e2e4f5bbbc2df8dac7161fc">signal.h</a>
+</li>
+<li>fa_signal_output()
+: <a class="el" href="group___fa_signal.html#gadc2cfc6557787b22a09c9b49c65fc22a">signal.h</a>
+</li>
+<li>fa_signal_print()
+: <a class="el" href="group___fa_signal.html#gafc77a2544db341ef7aa377c06d88b389">signal.h</a>
+</li>
+<li>fa_signal_random()
+: <a class="el" href="group___fa_signal.html#ga3e53efe955d4c0c931b6440765936117">signal.h</a>
+</li>
+<li>fa_signal_required_buses()
+: <a class="el" href="group___fa_signal.html#ga9b1e63d8e17f02af74248fb46b0178a0">signal.h</a>
+</li>
+<li>fa_signal_required_delay()
+: <a class="el" href="group___fa_signal.html#gac973ea2e76a2d534843a43c0e52ad001">signal.h</a>
+</li>
+<li>fa_signal_required_inputs()
+: <a class="el" href="group___fa_signal.html#gaa6b5e5279655ef9231b2ab64f9a50e87">signal.h</a>
+</li>
+<li>fa_signal_run()
+: <a class="el" href="group___fa_signal.html#ga66f6aac9fb620a8b5a0392a71c3dd1bd">signal.h</a>
+</li>
+<li>fa_signal_run_buffer()
+: <a class="el" href="group___fa_signal.html#ga71c840a04ca424b1f9a4e9562ee250a1">signal.h</a>
+</li>
+<li>fa_signal_run_file()
+: <a class="el" href="group___fa_signal.html#ga0ba9836f6b940c67a09c43e1281583b7">signal.h</a>
+</li>
+<li>fa_signal_signal_node_count()
+: <a class="el" href="group___fa_signal.html#ga21fa4c18724f5fff6d4c5917c97d91b0">signal.h</a>
+</li>
+<li>fa_signal_simplify()
+: <a class="el" href="group___fa_signal.html#ga95eede8e1e56bc9ba9582e21f8323690">signal.h</a>
+</li>
+<li>fa_signal_sin()
+: <a class="el" href="group___fa_signal.html#ga0862bb87a84d703ff3a5bdf03f9d337d">signal.h</a>
+</li>
+<li>fa_signal_time()
+: <a class="el" href="group___fa_signal.html#ga1884836b27b28547fcccdda085c6e947">signal.h</a>
+</li>
+<li>fa_string_append()
+: <a class="el" href="group___fa_string.html#ga2b9be3fb893f9d8b7d14362e47644040">string.h</a>
+</li>
+<li>fa_string_char_at()
+: <a class="el" href="group___fa_string.html#gaaf369309c09d23b1f2a66c13a6a0696a">string.h</a>
+</li>
+<li>fa_string_copy()
+: <a class="el" href="group___fa_string.html#ga555f1377b94458a0ed364592d1a9e97f">string.h</a>
+</li>
+<li>fa_string_dappend()
+: <a class="el" href="group___fa_string.html#gab3f2263e600e0223da71ea555a13a5b5">string.h</a>
+</li>
+<li>fa_string_destroy()
+: <a class="el" href="group___fa_string.html#ga20853ed1b733d374d5712b6a7c64cba1">string.h</a>
+</li>
+<li>fa_string_empty()
+: <a class="el" href="group___fa_string.html#ga41b5eaaca6caf7c02b5a84724547aaaf">string.h</a>
+</li>
+<li>fa_string_format_floating()
+: <a class="el" href="group___fa_string.html#ga31e191dfacc16171eae10567a1ed1319">string.h</a>
+</li>
+<li>fa_string_format_integral()
+: <a class="el" href="group___fa_string.html#gaa819d19d4172ad02aa0b11a9657b9a12">string.h</a>
+</li>
+<li>fa_string_from_json()
+: <a class="el" href="group___fa_string.html#ga11b867ca51f00771da74a28ce14c3835">string.h</a>
+</li>
+<li>fa_string_from_native()
+: <a class="el" href="group___fa_string.html#gab1661965ec85f42802a84f4f84db84b9">string.h</a>
+</li>
+<li>fa_string_from_utf16()
+: <a class="el" href="group___fa_string.html#ga4e7e54b5f75ccf1cb062b9db8a03bdf9">string.h</a>
+</li>
+<li>fa_string_from_utf8()
+: <a class="el" href="group___fa_string.html#ga154cbfd5f999ea2d1860547ad3073d26">string.h</a>
+</li>
+<li>fa_string_length()
+: <a class="el" href="group___fa_string.html#ga0a002948546b73dbceffe889a610ad12">string.h</a>
+</li>
+<li>fa_string_matches()
+: <a class="el" href="group___fa_string.html#ga1481bb7fa48d7634dc7f4ebce34bb15c">string.h</a>
+</li>
+<li>fa_string_repeat()
+: <a class="el" href="group___fa_string.html#ga83b36f8c5439db458146b3290d0b9b32">string.h</a>
+</li>
+<li>fa_string_show()
+: <a class="el" href="group___fa_string.html#gaa4399a2272d4bd533ccfded3e7d9ec1e">string.h</a>
+</li>
+<li>fa_string_single()
+: <a class="el" href="group___fa_string.html#ga397016ba506c7e2d2bde48d345097714">string.h</a>
+</li>
+<li>fa_string_to_json()
+: <a class="el" href="group___fa_string.html#ga5dadc1727e2ed0d6db8c28a268f0eb8e">string.h</a>
+</li>
+<li>fa_string_to_native()
+: <a class="el" href="group___fa_string.html#gaefc0160c76260703ecedb57e76b2729a">string.h</a>
+</li>
+<li>fa_string_to_string()
+: <a class="el" href="group___fa_string.html#gaa72e9e82fd082d0e59fb5692ff765ac1">string.h</a>
+</li>
+<li>fa_string_to_utf16()
+: <a class="el" href="group___fa_string.html#ga18d4fdb79675f21ae838fd68d40eaa1e">string.h</a>
+</li>
+<li>fa_string_to_utf8()
+: <a class="el" href="group___fa_string.html#gaf49dbc04c46b729b84cf9dd9fc29b267">string.h</a>
+</li>
+<li>fa_subtract()
+: <a class="el" href="group___fa.html#ga2c81b2776c59249abf3c14a6e28527fb">fa.h</a>
+</li>
+<li>fa_system_directory_append_file()
+: <a class="el" href="group___fa_system_directory.html#ga6f41c8b8abfe80b742935a704906b74f">directory.h</a>
+</li>
+<li>fa_system_directory_create()
+: <a class="el" href="group___fa_system_directory.html#ga07cbf82fab52fcd51db4d1fba901896b">directory.h</a>
+</li>
+<li>fa_system_directory_current()
+: <a class="el" href="group___fa_system_directory.html#ga73e2bc30ca0f998629a0414aea4e9b1f">directory.h</a>
+</li>
+<li>fa_system_directory_home()
+: <a class="el" href="group___fa_system_directory.html#ga6897f00485acd18599c8f4205b178eb4">directory.h</a>
+</li>
+<li>fa_system_directory_read_file()
+: <a class="el" href="group___fa_system_directory.html#ga625ddccd4c1d5071fe3602fc7c267288">directory.h</a>
+</li>
+<li>fa_system_directory_remove()
+: <a class="el" href="group___fa_system_directory.html#gae358d192b2753437b591451eb5fe1388">directory.h</a>
+</li>
+<li>fa_system_directory_write_file()
+: <a class="el" href="group___fa_system_directory.html#gaae8b1af26fecb4f938a70731a84ede4b">directory.h</a>
+</li>
+<li>fa_system_event_key_down()
+: <a class="el" href="group___fa_system_event.html#ga2bd1e8b40f279013b222f1e241525baa">event.h</a>
+</li>
+<li>fa_system_event_key_up()
+: <a class="el" href="group___fa_system_event.html#gaa61a030c4ee5c324be27289614d2af2b">event.h</a>
+</li>
+<li>fa_system_event_mouse_down()
+: <a class="el" href="group___fa_system_event.html#ga57b462853c671daec1f92ad8acd63478">event.h</a>
+</li>
+<li>fa_system_event_mouse_drag()
+: <a class="el" href="group___fa_system_event.html#ga1bc7d790a82c9e5099c8ebdd61be8ce1">event.h</a>
+</li>
+<li>fa_system_event_mouse_move()
+: <a class="el" href="group___fa_system_event.html#gadbbd367ba7a43a86a5b5cbff9fde59d1">event.h</a>
+</li>
+<li>fa_system_event_mouse_up()
+: <a class="el" href="group___fa_system_event.html#gaa7c95ea4079bcc6e7cda104ed327566a">event.h</a>
+</li>
+<li>fa_system_event_receive()
+: <a class="el" href="group___fa_system_event.html#ga0b7d02cdc683bec020f91fc7a439542b">event.h</a>
+</li>
+<li>fa_system_event_select()
+: <a class="el" href="group___fa_system_event.html#gacc7f978d3cf4a67b31af89b621fc2030">event.h</a>
+</li>
+<li>fa_system_event_send_log()
+: <a class="el" href="group___fa_system_event.html#ga30c824d88dd9e68db0e635a9028dc39c">event.h</a>
+</li>
+<li>fa_system_event_send_std()
+: <a class="el" href="group___fa_system_event.html#ga2415c7cfe51b5e3843e2f16063707de7">event.h</a>
+</li>
+<li>fa_system_event_write_log()
+: <a class="el" href="group___fa_system_event.html#ga1214bffe4dd7addce92212e27a4ac1c7">event.h</a>
+</li>
+<li>fa_system_event_write_std()
+: <a class="el" href="group___fa_system_event.html#ga1dcf95fb482090896f69be4479323365">event.h</a>
+</li>
+<li>fa_thread_create()
+: <a class="el" href="group___fa_thread.html#ga3fcea56c4d4587449f8e7536cbdce994">thread.h</a>
+</li>
+<li>fa_thread_create_mutex()
+: <a class="el" href="group___fa_thread.html#ga06266c98c357794d97111b15b6a8257c">thread.h</a>
+</li>
+<li>fa_thread_current()
+: <a class="el" href="group___fa_thread.html#ga1fb7335a50aa9eea5c096c33fd6baec0">thread.h</a>
+</li>
+<li>fa_thread_destroy_mutex()
+: <a class="el" href="group___fa_thread.html#gab5be3bcaa828338c5afe18207ca48bb2">thread.h</a>
+</li>
+<li>fa_thread_detach()
+: <a class="el" href="group___fa_thread.html#ga8ff985a3dee3e27c8691d0778e3521a6">thread.h</a>
+</li>
+<li>fa_thread_join()
+: <a class="el" href="group___fa_thread.html#ga7f7cb06e7321cdbad9b0f3bd63c035a5">thread.h</a>
+</li>
+<li>fa_thread_lock()
+: <a class="el" href="group___fa_thread.html#ga7d7fe6c1a96f9479f91978d1cc0f712b">thread.h</a>
+</li>
+<li>fa_thread_main()
+: <a class="el" href="group___fa_thread.html#ga9e6021c99ac7040340ccf57c9d833895">thread.h</a>
+</li>
+<li>fa_thread_sleep()
+: <a class="el" href="group___fa_thread.html#ga51adcec1fecd8365fa7fae16e6ae9fc3">thread.h</a>
+</li>
+<li>fa_thread_try_lock()
+: <a class="el" href="group___fa_thread.html#gae661812bfc16e4dca48ac1857a258411">thread.h</a>
+</li>
+<li>fa_thread_unlock()
+: <a class="el" href="group___fa_thread.html#gaba1e584e0f35b3eeb88d9b8e1b95cd5a">thread.h</a>
+</li>
+<li>fa_time_copy()
+: <a class="el" href="group___fa_time.html#ga6250abc1ea94cbfa2fa45ac443463e4a">time.h</a>
+</li>
+<li>fa_time_cpu()
+: <a class="el" href="group___fa_time.html#ga57c7a9ba9dcda18fa177acddd4b2999f">time.h</a>
+</li>
+<li>fa_time_create()
+: <a class="el" href="group___fa_time.html#ga66de7f25c52b2de626812c85249019d8">time.h</a>
+</li>
+<li>fa_time_days()
+: <a class="el" href="group___fa_time.html#ga6a43973c5b917d0a2b4d075fc36eb357">time.h</a>
+</li>
+<li>fa_time_destroy()
+: <a class="el" href="group___fa_time.html#ga9445dd80ebe6c768465f3508ec50aee0">time.h</a>
+</li>
+<li>fa_time_divisions()
+: <a class="el" href="group___fa_time.html#ga0cc8d310c6b514cdfc9382aed962e357">time.h</a>
+</li>
+<li>fa_time_from_cpu()
+: <a class="el" href="group___fa_time.html#gaddddc53e2f82d26ed52a779632d6ee4d">time.h</a>
+</li>
+<li>fa_time_from_system()
+: <a class="el" href="group___fa_time.html#ga3dace87b57a96896135e06578ce29422">time.h</a>
+</li>
+<li>fa_time_hours()
+: <a class="el" href="group___fa_time.html#gae8290fd5bbeb264b78f3465ab7fb65d8">time.h</a>
+</li>
+<li>fa_time_minutes()
+: <a class="el" href="group___fa_time.html#ga3e6fb4c4ede37a303d7894722f9c6f8b">time.h</a>
+</li>
+<li>fa_time_seconds()
+: <a class="el" href="group___fa_time.html#gac6fb1194681b8499725a1392fbb053cc">time.h</a>
+</li>
+<li>fa_time_system()
+: <a class="el" href="group___fa_time.html#ga444c67ce06dbeeff96495ff6954301b0">time.h</a>
+</li>
+<li>fa_time_to_iso()
+: <a class="el" href="group___fa_time.html#ga24afe7bafbd5dc56d670905c3bb8bd44">time.h</a>
+</li>
+<li>fa_time_to_milliseconds()
+: <a class="el" href="group___fa_time.html#ga1d6fa47a36cadea8d1b2b2ebe5590b0e">time.h</a>
+</li>
+<li>fa_time_to_seconds()
+: <a class="el" href="group___fa_time.html#ga355199847e263921f46ef5d846a937d7">time.h</a>
+</li>
+<li>fa_to_bool()
+: <a class="el" href="group___fa.html#gaaf4259b5ac3ff48af05cb68457ba221a">fa.h</a>
+</li>
+<li>fa_to_double()
+: <a class="el" href="group___fa.html#ga0749b5e5c77eafd3830f6083071da851">fa.h</a>
+</li>
+<li>fa_to_float()
+: <a class="el" href="group___fa.html#ga31d4fdab1b7c75dac4ed030032671672">fa.h</a>
+</li>
+<li>fa_to_int16()
+: <a class="el" href="group___fa.html#gae127bdbf90563944797d0c6413bec857">fa.h</a>
+</li>
+<li>fa_to_int32()
+: <a class="el" href="group___fa.html#ga723ce012ab74eca29af86cd0d8cdbc96">fa.h</a>
+</li>
+<li>fa_to_int64()
+: <a class="el" href="group___fa.html#ga3ebe4f1a3cf5fe95f4c43263f14b3661">fa.h</a>
+</li>
+<li>fa_to_int8()
+: <a class="el" href="group___fa.html#gabd43542166bbe006f8e0c4ccc6d72100">fa.h</a>
+</li>
+<li>fa_type_channels()
+: <a class="el" href="group___fa_type.html#ga31fb45fb9de6628cbe8878265c10486b">type.h</a>
+</li>
+<li>fa_type_copy()
+: <a class="el" href="group___fa_type.html#gabcf288b17604a764d26810027e4f488e">type.h</a>
+</li>
+<li>fa_type_destroy()
+: <a class="el" href="group___fa_type.html#ga6c334702ecbb2cdc47175e69ad1b1cab">type.h</a>
+</li>
+<li>fa_type_frame()
+: <a class="el" href="group___fa_type.html#gad2486ace348ebf5356f0764f2993fc7f">type.h</a>
+</li>
+<li>fa_type_get_frame_base()
+: <a class="el" href="group___fa_type.html#ga1e2bbf8d08f3c50749bcdd80386105e7">type.h</a>
+</li>
+<li>fa_type_get_pair_fst()
+: <a class="el" href="group___fa_type.html#ga3aa1a7c7679af017f22ec09a682a1b4d">type.h</a>
+</li>
+<li>fa_type_get_pair_snd()
+: <a class="el" href="group___fa_type.html#gae942c744601044370daa9d4c7560c271">type.h</a>
+</li>
+<li>fa_type_get_simple()
+: <a class="el" href="group___fa_type.html#gacb4091eea33d7c5377d2bfc4621d499f">type.h</a>
+</li>
+<li>fa_type_get_vector_base()
+: <a class="el" href="group___fa_type.html#gabd8a080499bb2b3aac5bf27c1213b268">type.h</a>
+</li>
+<li>fa_type_get_vector_size()
+: <a class="el" href="group___fa_type.html#gaff214cfc881b008f1fe26462855937cc">type.h</a>
+</li>
+<li>fa_type_is_frame()
+: <a class="el" href="group___fa_type.html#ga6f941d55c47168ac7b46011d2f61d0a8">type.h</a>
+</li>
+<li>fa_type_is_pair()
+: <a class="el" href="group___fa_type.html#gaaee67b822b84d688b690e9c68f10f6ae">type.h</a>
+</li>
+<li>fa_type_is_simple()
+: <a class="el" href="group___fa_type.html#gabf3a15c50f9f608fa14d57c2ab2da39b">type.h</a>
+</li>
+<li>fa_type_is_vector()
+: <a class="el" href="group___fa_type.html#gaa8940bfef5bb5b1e37f28b1708a57a2c">type.h</a>
+</li>
+<li>fa_type_pair()
+: <a class="el" href="group___fa_type.html#gab7fd7e17698f1ad6b0ef99ced98e367f">type.h</a>
+</li>
+<li>fa_type_repeat()
+: <a class="el" href="group___fa_type.html#gaa2834c51252394a9f229cfcf44691402">type.h</a>
+</li>
+<li>fa_type_simple()
+: <a class="el" href="group___fa_type.html#ga57d91de13dcbca6a11f1609c78f0cbeb">type.h</a>
+</li>
+<li>fa_type_vector()
+: <a class="el" href="group___fa_type.html#gae88cd7d5e1b9d89f32d90d8d6c6a91cf">type.h</a>
 </li>
 </ul>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jun 18 2013 18:50:43 for Functional Audio Engine by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Sun Sep 22 2013 19:04:46 for faudio v2.0 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

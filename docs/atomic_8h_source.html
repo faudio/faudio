@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>Fae: include/fae/atomic.h Source File</title>
+<title>faudio v2.0: include/fa/atomic.h Source File</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Fae
+   <div id="projectname">faudio v2.0
    </div>
   </td>
  </tr>
@@ -44,7 +44,7 @@
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_aa61b2fff6575bd45838b59453565768.html">fae</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_6b89b2d2887aea5b8d12d30c5d3aa615.html">fa</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -53,29 +53,35 @@
 </div><!--header-->
 <div class="contents">
 <a href="atomic_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef _FAE_ATOMIC</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _FAE_ATOMIC</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef _FA_ATOMIC</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _FA_ATOMIC</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="fae_2fae_8h.html">fae.h</a>&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;fae/std.h&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="fa_2fa_8h.html">fa.h</a>&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="std_8h.html">fa/std.h</a>&gt;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;</div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="code" href="group___fae_atomic.html#ga54a94f24b5d6fbe66e807e8048118a07">   14</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__fae__atomic__t.html">_fae_atomic_t</a> * <a class="code" href="group___fae_atomic.html#ga54a94f24b5d6fbe66e807e8048118a07">fae_atomic_t</a>;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;fae_atomic_t <a class="code" href="group___fae_atomic.html#gaf2c4197b28725a7d421ca5ba90c5ea48" title="Create a new atomic reference.">fae_atomic_create</a>();</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;fae_atomic_t <a class="code" href="group___fae_atomic.html#ga2b095f39bb659490b2f0ba592718673c" title="Copy the given atomic reference.">fae_atomic_copy</a>(fae_atomic_t);</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fae_atomic.html#ga57edaed2494b0193c4c9ffb3e9397c91" title="Swap contents of the given atomic reference.">fae_atomic_swap</a>(fae_atomic_t, fae_atomic_t);</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fae_atomic.html#gadf99fc44d7dc4a2a34ee7c694ae04f6f" title="Destroy the given atomic reference.">fae_atomic_destroy</a>(fae_atomic_t);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fae_atomic.html#gab3fa67acab6c04418faecda162f10919" title="Compares the given value with the current value of the given atomic reference, replacing it if succes...">fae_atomic_exchange</a>(fae_atomic_t, <a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>, <a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a> <a class="code" href="group___fae_atomic.html#gae6f7cd8a77b009b24a0ae138112f6886" title="Return the current value of the given atomic reference.">fae_atomic_get</a>(fae_atomic_t);</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fae_atomic.html#ga1c95d7f5d22deaf237a6b0f611b93022" title="Set the given given atomic reference.">fae_atomic_set</a>(fae_atomic_t, <a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fae_atomic.html#gac5fd435247194017e924deb712a18e18" title="Update the given atomic value by applying the given pure function.">fae_atomic_modify</a>(fae_atomic_t, <a class="code" href="group___fae.html#ga89ae9936173403c7db68b5f2921fc9d2" title="A unary function.">fae_unary_t</a>, <a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>);</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#endif // _FAE_ATOMIC</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="code" href="group___fa_atomic.html#gaa3c9a8cdc36169052d96fa152e2eb9ae">   32</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_fa_atomic_t * <a class="code" href="group___fa_atomic.html#gaa3c9a8cdc36169052d96fa152e2eb9ae">fa_atomic_t</a>;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<a class="code" href="group___fa_atomic.html#gaa3c9a8cdc36169052d96fa152e2eb9ae">fa_atomic_t</a> <a class="code" href="group___fa_atomic.html#ga4342c7467122777598bda9c4fbe55b8d" title="Create a new atomic reference.">fa_atomic_create</a>();</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<a class="code" href="group___fa_atomic.html#gaa3c9a8cdc36169052d96fa152e2eb9ae">fa_atomic_t</a> <a class="code" href="group___fa_atomic.html#ga21238eae25bc01226d791dd662960f54" title="Copy the given atomic reference.">fa_atomic_copy</a>(<a class="code" href="group___fa_atomic.html#gaa3c9a8cdc36169052d96fa152e2eb9ae">fa_atomic_t</a>);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fa_atomic.html#ga2fdb4d4171c21bb31870d4f9a599b90a" title="Destroy the given atomic reference.">fa_atomic_destroy</a>(<a class="code" href="group___fa_atomic.html#gaa3c9a8cdc36169052d96fa152e2eb9ae">fa_atomic_t</a>);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fa_atomic.html#gab99e35ac5b904cc12da67c98b09906b8" title="Compares the given value with the current value of the given atomic reference, replacing it if succes...">fa_atomic_exchange</a>(<a class="code" href="group___fa_atomic.html#gaa3c9a8cdc36169052d96fa152e2eb9ae">fa_atomic_t</a>, <a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>, <a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a> <a class="code" href="group___fa_atomic.html#gae74bf15614ddafc535495371a90005f9" title="Return the current value of the given atomic reference.">fa_atomic_get</a>(<a class="code" href="group___fa_atomic.html#gaa3c9a8cdc36169052d96fa152e2eb9ae">fa_atomic_t</a>);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fa_atomic.html#ga3e9dcd19730f28c92babdbcb22cc6323" title="Update the given atomic value by applying the given pure function.">fa_atomic_modify</a>(<a class="code" href="group___fa_atomic.html#gaa3c9a8cdc36169052d96fa152e2eb9ae">fa_atomic_t</a>, <a class="code" href="group___fa.html#gaaafae8ab9ebae9019133108e56d2d4d1" title="A unary function.">fa_unary_t</a>, <a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fa_atomic.html#ga820dc9617e6f395ba7007263fa093508" title="Set the given given atomic reference.">fa_atomic_set</a>(<a class="code" href="group___fa_atomic.html#gaa3c9a8cdc36169052d96fa152e2eb9ae">fa_atomic_t</a>, <a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#endif // _FA_ATOMIC</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 19 2013 01:14:05 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Mon Oct 7 2013 00:02:42 for faudio v2.0 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

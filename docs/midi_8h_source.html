@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>Fae: include/fae/midi.h Source File</title>
+<title>faudio v2.2.2: include/fa/midi.h Source File</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Fae
+   <div id="projectname">faudio v2.2.2
    </div>
   </td>
  </tr>
@@ -44,7 +44,7 @@
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_aa61b2fff6575bd45838b59453565768.html">fae</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_6b89b2d2887aea5b8d12d30c5d3aa615.html">fa</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -53,55 +53,79 @@
 </div><!--header-->
 <div class="contents">
 <a href="midi_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef _FAE_MIDI</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _FAE_MIDI</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef _FA_MIDI</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _FA_MIDI</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="list_8h.html">fae/list.h</a>&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="pair_8h.html">fae/pair.h</a>&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="device_8h.html">fae/device.h</a>&gt;</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="error_8h.html">fae/error.h</a>&gt;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;fae/event.h&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
-<div class="line"><a name="l00017"></a><span class="lineno"><a class="code" href="group___fae_midi.html#gac3323a401e147720578dcce2c452db5d">   17</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__fae__midi__device__t.html">_fae_midi_device_t</a> * <a class="code" href="group___fae_midi.html#gac3323a401e147720578dcce2c452db5d">fae_midi_device_t</a>;</div>
-<div class="line"><a name="l00018"></a><span class="lineno"><a class="code" href="group___fae_midi.html#ga9ae465564701d86a972cd1b3b4d372fe">   18</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__fae__midi__session__t.html">_fae_midi_session_t</a> * <a class="code" href="group___fae_midi.html#ga9ae465564701d86a972cd1b3b4d372fe">fae_midi_session_t</a>;</div>
-<div class="line"><a name="l00019"></a><span class="lineno"><a class="code" href="group___fae_midi.html#gaecca10a4d57d3e12df8c66ee75e30c2e">   19</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__fae__midi__stream__t.html">_fae_midi_stream_t</a> * <a class="code" href="group___fae_midi.html#gaecca10a4d57d3e12df8c66ee75e30c2e">fae_midi_stream_t</a>;</div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="code" href="group___fae_midi.html#ga5f783a235dc758b4e9369556621c0e27">   20</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="group___fae_midi.html#ga9ae465564701d86a972cd1b3b4d372fe">fae_midi_session_t</a> (* <a class="code" href="group___fae_midi.html#ga5f783a235dc758b4e9369556621c0e27">fae_midi_session_callback_t</a>)(<a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>,</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;                                                           <a class="code" href="group___fae_midi.html#ga9ae465564701d86a972cd1b3b4d372fe">fae_midi_session_t</a>);</div>
-<div class="line"><a name="l00022"></a><span class="lineno"><a class="code" href="group___fae_midi.html#ga6a2695dde9d4e4f2bc154da829a1f9d6">   22</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="group___fae_midi.html#gaecca10a4d57d3e12df8c66ee75e30c2e">fae_midi_stream_t</a> (* <a class="code" href="group___fae_midi.html#ga6a2695dde9d4e4f2bc154da829a1f9d6">fae_midi_stream_callback_t</a>)(<a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>,</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;                                                         <a class="code" href="group___fae_midi.html#gaecca10a4d57d3e12df8c66ee75e30c2e">fae_midi_stream_t</a>);</div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="code" href="group___fae_midi.html#ga3e42bb62f1f334d178802f0d7f95ddd5">   24</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="group___fae.html#ga08575a144de95fa3985dc31d18853192" title="A nullary function.">fae_nullary_t</a> <a class="code" href="group___fae_midi.html#ga3e42bb62f1f334d178802f0d7f95ddd5">fae_midi_status_callback_t</a>;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;fae_midi_session_t <a class="code" href="group___fae_midi.html#ga83745237faa2106a9424e9b45c0accfc" title="Begin a new midi session.">fae_midi_begin_session</a>();</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fae_midi.html#gaea0678906cd9a211c9324df0fd7c8a05" title="End the given session.">fae_midi_end_session</a>(fae_midi_session_t);</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fae_midi.html#ga7b9447c380e821888ba62cedbe1a350e" title="Begin a new session, and retain it for the duration of a call to the given function.">fae_midi_with_session</a>(<a class="code" href="group___fae_midi.html#ga5f783a235dc758b4e9369556621c0e27">fae_midi_session_callback_t</a>,</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                           <a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>,</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;                           <a class="code" href="group___fae_error.html#ga2abe2dd713d82605e3dd774edb82a763" title="An error handler routine.">fae_error_callback_t</a>,</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;                           <a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>);</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<a class="code" href="struct__fae__list__t.html">fae_list_t</a> <a class="code" href="group___fae_midi.html#gab074ad52ba19526b6b8fe519c36cf91a" title="Get all active midi devices of the given session.">fae_midi_all</a>(fae_midi_session_t);</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="struct__fae__pair__t.html">fae_pair_t</a> <a class="code" href="group___fae_midi.html#ga24e67baeae639bd22b335ffd63ba745c" title="Get the standard devices of the given session.">fae_midi_default</a>(fae_midi_session_t);</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;fae_midi_device_t <a class="code" href="group___fae_midi.html#gac9897bb858520b220cebbd71e8907e8f" title="Get the standard input device of the given session.">fae_midi_default_input</a>(fae_midi_session_t);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;fae_midi_device_t <a class="code" href="group___fae_midi.html#ga014e128220b858fdea7859eb7240f850" title="Get the standard output device of the given session.">fae_midi_default_output</a>(fae_midi_session_t);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fae_midi.html#ga931496ed2ea0841e97d4ca7b31033f52" title="Set a callback to be invoked when a status change is detected on the given session.">fae_midi_set_status_callback</a>(<a class="code" href="group___fae_midi.html#ga3e42bb62f1f334d178802f0d7f95ddd5">fae_midi_status_callback_t</a>,</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;                                  <a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>,</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;                                  fae_midi_session_t);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<a class="code" href="struct__fae__string__t.html">fae_string_t</a> <a class="code" href="group___fae_midi.html#gab66fc7945957ec6fa5e9b4aa7c7f15f3" title="Return the name of the given device.">fae_midi_name</a>(fae_midi_device_t);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<a class="code" href="struct__fae__string__t.html">fae_string_t</a> <a class="code" href="group___fae_midi.html#ga76cb59f1f06835475c9c5cc56ae16d44" title="Return the host name of the given device.">fae_midi_host_name</a>(fae_midi_device_t);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fae_midi.html#ga51adbe7093567f9dafb943606e5d1dd4" title="Return whether the given device has input or not.">fae_midi_has_input</a>(fae_midi_device_t);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fae_midi.html#ga401c11f504e9a6b981ee461e118a809a" title="Return whether the given device has output or not.">fae_midi_has_output</a>(fae_midi_device_t);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;fae_midi_stream_t <a class="code" href="group___fae_midi.html#gaf7fc95bbda67d03b854e612118d294d0" title="Open a stream on the given devices.">fae_midi_open_stream</a>(fae_midi_device_t);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fae_midi.html#gaca1c82945f65c422d6f00d3ed383384e" title="Close the given stream.">fae_midi_close_stream</a>(fae_midi_stream_t);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fae_midi.html#ga749343e6de8d85c648b52d2ad5bd5fb9" title="Run a stream on the given devices.">fae_midi_with_stream</a>(fae_midi_device_t,</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                          <a class="code" href="group___fae_midi.html#ga6a2695dde9d4e4f2bc154da829a1f9d6">fae_midi_stream_callback_t</a>,</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                          <a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>,</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                          <a class="code" href="group___fae_error.html#ga2abe2dd713d82605e3dd774edb82a763" title="An error handler routine.">fae_error_callback_t</a>,</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                          <a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>);</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="list_8h.html">fa/list.h</a>&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="pair_8h.html">fa/pair.h</a>&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="device_8h.html">fa/device.h</a>&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="error_8h.html">fa/error.h</a>&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="code" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">   37</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_fa_midi_device_t * <a class="code" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a>;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="code" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">   40</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_fa_midi_session_t * <a class="code" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno"><a class="code" href="group___fa_midi.html#ga85772039b62d8bb718a51e1ffbbb2fa2">   43</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_fa_midi_stream_t * <a class="code" href="group___fa_midi.html#ga85772039b62d8bb718a51e1ffbbb2fa2">fa_midi_stream_t</a>;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="code" href="group___fa_midi.html#ga20fb39192d8af433b1506a529bc981e7">   46</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a> (* <a class="code" href="group___fa_midi.html#ga20fb39192d8af433b1506a529bc981e7">fa_midi_session_callback_t</a>)(<a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>,</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                                                         <a class="code" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#endif // _FAE_MIDI</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="code" href="group___fa_midi.html#ga8022098ffcf993ccdaed068b97ab7bfc">   50</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="group___fa_midi.html#ga85772039b62d8bb718a51e1ffbbb2fa2">fa_midi_stream_t</a> (* <a class="code" href="group___fa_midi.html#ga8022098ffcf993ccdaed068b97ab7bfc">fa_midi_stream_callback_t</a>)(<a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>,</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                                                       <a class="code" href="group___fa_midi.html#ga85772039b62d8bb718a51e1ffbbb2fa2">fa_midi_stream_t</a>);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
+<div class="line"><a name="l00054"></a><span class="lineno"><a class="code" href="group___fa_midi.html#gacc769aa23b097e8b8dc3d4807b9a066d">   54</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="group___fa.html#ga43b940a9294fd58a54087ef0b416e479" title="A nullary function, defined as fa_ptr_t(*fa_nullary_t )(fa_ptr_t).">fa_nullary_t</a> <a class="code" href="group___fa_midi.html#gacc769aa23b097e8b8dc3d4807b9a066d">fa_midi_status_callback_t</a>;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<a class="code" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a> <a class="code" href="group___fa_midi.html#ga2f1b526042c4356ce7e2adcf0d11ecad" title="Begin a new midi session.">fa_midi_begin_session</a>();</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fa_midi.html#ga711084651fc74079373ae12b66ee81d1" title="End the given session.">fa_midi_end_session</a>(<a class="code" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fa_midi.html#ga3d11338c0c4c7cb2f4e67640eb06cd73" title="Begin a new session, and retain it for the duration of a call to the given function.">fa_midi_with_session</a>(<a class="code" href="group___fa_midi.html#ga20fb39192d8af433b1506a529bc981e7">fa_midi_session_callback_t</a>,</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;                          <a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>,</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                          <a class="code" href="group___fa_error.html#ga43d8d45a005130a5052ba3281a8bf33e" title="An error handler routine.">fa_error_callback_t</a>,</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                          <a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<a class="code" href="group___fa_list.html#ga35ecb12ab934ded0cce0bcf28e3bc5d2">fa_list_t</a> <a class="code" href="group___fa_midi.html#ga5ae4490b13f24a0697e8e72c5e8f98f8" title="Get all active midi devices of the given session.">fa_midi_all</a>(<a class="code" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<a class="code" href="group___fa_pair.html#gac2b2e58c230bac4f8a63ef6c05072680">fa_pair_t</a> <a class="code" href="group___fa_midi.html#ga16ab90b8b25085612c42f76049d4da87" title="Get the standard devices of the given session.">fa_midi_default</a>(<a class="code" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>);</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<a class="code" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a> <a class="code" href="group___fa_midi.html#ga810b96b9181c8548f55a2b1f90f7d9c5" title="Get the standard input device of the given session.">fa_midi_default_input</a>(<a class="code" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>);</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<a class="code" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a> <a class="code" href="group___fa_midi.html#ga119d4817da1838a206eb15a93ae6b573" title="Get the standard output device of the given session.">fa_midi_default_output</a>(<a class="code" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fa_midi.html#ga6b13902995f9e0b4cf3404eaa60aa3f9" title="Set a callback to be invoked when a status change is detected on the given session (mainly useful for...">fa_midi_set_status_callback</a>(<a class="code" href="group___fa_midi.html#gacc769aa23b097e8b8dc3d4807b9a066d">fa_midi_status_callback_t</a>,</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                                 <a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>,</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;                                 <a class="code" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>);</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<a class="code" href="group___fa_string.html#gacada63033b77bc6c39fa632ae199349b" title="An immutable Unicode string.">fa_string_t</a> <a class="code" href="group___fa_midi.html#gab36c5d046acdbdbaf36823dde9342c4f" title="Return the name of the given device.">fa_midi_name</a>(<a class="code" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a>);</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<a class="code" href="group___fa_string.html#gacada63033b77bc6c39fa632ae199349b" title="An immutable Unicode string.">fa_string_t</a> <a class="code" href="group___fa_midi.html#ga5a7331a7b471a400c65554009c3a6c96" title="Return the host name of the given device.">fa_midi_host_name</a>(<a class="code" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a>);</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fa_midi.html#ga156c254899dabc30fd8fe2e8dbde6e30" title="Return whether the given device has input or not.">fa_midi_has_input</a>(<a class="code" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a>);</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fa_midi.html#ga6b577d672f97fe3cba33aa432dba0d3f" title="Return whether the given device has output or not.">fa_midi_has_output</a>(<a class="code" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a>);</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<a class="code" href="group___fa_midi.html#ga85772039b62d8bb718a51e1ffbbb2fa2">fa_midi_stream_t</a> <a class="code" href="group___fa_midi.html#ga84cc0d002a3f2b0ce00dd672729fc0a6" title="Open a stream on the given devices.">fa_midi_open_stream</a>(<a class="code" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a>);</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fa_midi.html#ga876d025cf738bf4a0771ca695ba6a693" title="Close the given stream.">fa_midi_close_stream</a>(<a class="code" href="group___fa_midi.html#ga85772039b62d8bb718a51e1ffbbb2fa2">fa_midi_stream_t</a>);</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fa_midi.html#gaef0d95b11e19edb6b559498759c67de3" title="Run a stream on the given devices.">fa_midi_with_stream</a>(<a class="code" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a>,</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;                         <a class="code" href="group___fa_midi.html#ga8022098ffcf993ccdaed068b97ab7bfc">fa_midi_stream_callback_t</a>,</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;                         <a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>,</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;                         <a class="code" href="group___fa_error.html#ga43d8d45a005130a5052ba3281a8bf33e" title="An error handler routine.">fa_error_callback_t</a>,</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;                         <a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>);</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;<span class="preprocessor">#endif // _FA_MIDI</span></div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;<span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 19 2013 01:14:05 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Mon Oct 7 2013 11:36:33 for faudio v2.2.2 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

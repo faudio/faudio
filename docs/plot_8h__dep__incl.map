@@ -1,11 +1,11 @@
-<map id="include/fae/plot.h" name="include/fae/plot.h">
-<area shape="rect" id="node3" href="$fae_2fae_8h.html" title="include/fae/fae.h" alt="" coords="296,95,435,126"/>
-<area shape="rect" id="node19" href="$gnuplot_8c.html" title="src/fae/plot/gnuplot.c" alt="" coords="459,95,629,126"/>
-<area shape="rect" id="node21" href="$plot_8c.html" title="src/fae/plot.c" alt="" coords="654,95,767,126"/>
-<area shape="rect" id="node23" href="$coreplot_8m.html" title="src/platform/macosx\l/fae/plot/coreplot.m" alt="" coords="791,85,952,136"/>
-<area shape="rect" id="node5" href="$atomic_8h.html" title="include/fae/atomic.h" alt="" coords="4,184,165,216"/>
-<area shape="rect" id="node8" href="$buffer_8h.html" title="include/fae/buffer.h" alt="" coords="782,184,937,216"/>
-<area shape="rect" id="node11" href="$device_8h.html" title="include/fae/device.h" alt="" coords="190,184,351,216"/>
-<area shape="rect" id="node13" href="$dynamic_8h.html" title="include/fae/dynamic.h" alt="" coords="375,184,548,216"/>
-<area shape="rect" id="node15" href="$error_8h.html" title="include/fae/error.h" alt="" coords="573,184,723,216"/>
+<map id="include/fa/plot.h" name="include/fa/plot.h">
+<area shape="rect" id="node3" href="$fa_2fa_8h.html" title="include/fa/fa.h" alt="" coords="341,86,464,117"/>
+<area shape="rect" id="node5" href="$action_8h.html" title="include/fa/action.h" alt="" coords="5,326,155,357"/>
+<area shape="rect" id="node8" href="$buffer_8h.html" title="include/fa/buffer.h" alt="" coords="847,326,995,357"/>
+<area shape="rect" id="node11" href="$device_8h.html" title="include/fa/device.h" alt="" coords="326,166,479,197"/>
+<area shape="rect" id="node13" href="$dynamic_8h.html" title="include/fa/dynamic.h" alt="" coords="503,166,668,197"/>
+<area shape="rect" id="node15" href="$error_8h.html" title="include/fa/error.h" alt="" coords="691,166,833,197"/>
+<area shape="rect" id="node18" href="$list_8h.html" title="include/fa/list.h" alt="" coords="101,166,227,197"/>
+<area shape="rect" id="node22" href="$map_8h.html" title="include/fa/map.h" alt="" coords="208,326,347,357"/>
+<area shape="rect" id="node24" href="$pair_8h.html" title="include/fa/pair.h" alt="" coords="210,246,344,277"/>
 </map>

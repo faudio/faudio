@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>Fae: include/fae/device.h Source File</title>
+<title>faudio v2.2.2: include/fa/device.h Source File</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Fae
+   <div id="projectname">faudio v2.2.2
    </div>
   </td>
  </tr>
@@ -44,7 +44,7 @@
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_aa61b2fff6575bd45838b59453565768.html">fae</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_6b89b2d2887aea5b8d12d30c5d3aa615.html">fa</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -53,23 +53,29 @@
 </div><!--header-->
 <div class="contents">
 <a href="device_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef _FAE_DEVICE</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _FAE_DEVICE</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef _FA_DEVICE</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _FA_DEVICE</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="fae_2fae_8h.html">fae.h</a>&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="fa_2fa_8h.html">fa.h</a>&gt;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="code" href="group___fae_device.html#ga62f035a1db106d6a577a00686656a570">   13</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_fae_device_audio_t * <a class="code" href="group___fae_device.html#ga62f035a1db106d6a577a00686656a570">fae_device_audio_t</a>;</div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="code" href="group___fae_device.html#gad9144179f64f52f21e11ab8a61b35af9">   14</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_fae_device_midi_t * <a class="code" href="group___fae_device.html#gad9144179f64f52f21e11ab8a61b35af9">fae_device_midi_t</a>;</div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="code" href="group___fae_device.html#ga320bb8409a812d50e1cbfe168d3182a0">   15</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__fae__device__file__t.html">_fae_device_file_t</a> * <a class="code" href="group___fae_device.html#ga320bb8409a812d50e1cbfe168d3182a0">fae_device_file_t</a>;</div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="code" href="group___fae_device.html#gad0e3991e650fb90a8c0123e3362a6a66">   16</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_fae_device_buffer_t * <a class="code" href="group___fae_device.html#gad0e3991e650fb90a8c0123e3362a6a66">fae_device_buffer_t</a>;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#endif // _FAE_DEVICE</span></div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="code" href="group___fa_device.html#ga5480c5f6d4daac6376beb794f70fea31">   23</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_fa_device_audio_t * <a class="code" href="group___fa_device.html#ga5480c5f6d4daac6376beb794f70fea31">fa_device_audio_t</a>;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="code" href="group___fa_device.html#ga87679e8213f675bc66e71f776c05526c">   26</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_fa_device_midi_t * <a class="code" href="group___fa_device.html#ga87679e8213f675bc66e71f776c05526c">fa_device_midi_t</a>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="code" href="group___fa_device.html#ga174e0149dd8d57532608e418d8dcf3b0">   29</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_fa_device_file_t * <a class="code" href="group___fa_device.html#ga174e0149dd8d57532608e418d8dcf3b0">fa_device_file_t</a>;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="code" href="group___fa_device.html#gafb38d6e2111e159bd1221509e992b455">   32</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_fa_device_buffer_t * <a class="code" href="group___fa_device.html#gafb38d6e2111e159bd1221509e992b455">fa_device_buffer_t</a>;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#endif // _FA_DEVICE</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 19 2013 01:14:05 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Mon Oct 7 2013 11:36:33 for faudio v2.2.2 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

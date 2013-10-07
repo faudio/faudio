@@ -1,8 +1,5 @@
-<map id="include/fae/device.h" name="include/fae/device.h">
-<area shape="rect" id="node3" href="$fae_2fae_8h.html" title="fae.h" alt="" coords="727,86,781,117"/>
-<area shape="rect" id="node5" href="$atomic_8h.html" title="fae/atomic.h" alt="" coords="5,166,112,197"/>
-<area shape="rect" id="node10" href="$stack_8h.html" title="fae/atomic/stack.h" alt="" coords="317,166,464,197"/>
-<area shape="rect" id="node14" href="$system_8h.html" title="fae/system.h" alt="" coords="701,166,808,197"/>
-<area shape="rect" id="node16" href="$error_8h.html" title="fae/error.h" alt="" coords="832,166,927,197"/>
-<area shape="rect" id="node21" href="$graph_8h.html" title="fae/graph.h" alt="" coords="1074,166,1176,197"/>
+<map id="include/fa/device.h" name="include/fa/device.h">
+<area shape="rect" id="node3" href="$fa_2fa_8h.html" title="fa.h" alt="" coords="751,86,797,117"/>
+<area shape="rect" id="node15" href="$error_8h.html" title="fa/error.h" alt="" coords="790,166,876,197"/>
+<area shape="rect" id="node18" href="$pair_8h.html" title="fa/pair.h" alt="" coords="901,166,981,197"/>
 </map>

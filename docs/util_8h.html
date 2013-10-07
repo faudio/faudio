@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>Fae: include/fae/util.h File Reference</title>
+<title>faudio v2.2.2: include/fa/util.h File Reference</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Fae
+   <div id="projectname">faudio v2.2.2
    </div>
   </td>
  </tr>
@@ -44,7 +44,7 @@
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_aa61b2fff6575bd45838b59453565768.html">fae</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_6b89b2d2887aea5b8d12d30c5d3aa615.html">fa</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -55,22 +55,17 @@
 <div class="title">util.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;<a class="el" href="arch_8h_source.html">fae/util/arch.h</a>&gt;</code><br/>
-<code>#include &lt;<a class="el" href="alignof_8h_source.html">fae/util/alignof.h</a>&gt;</code><br/>
-<code>#include &lt;<a class="el" href="minmax_8h_source.html">fae/util/minmax.h</a>&gt;</code><br/>
-<code>#include &lt;<a class="el" href="literals_8h_source.html">fae/util/literals.h</a>&gt;</code><br/>
-<code>#include &lt;<a class="el" href="macros_8h_source.html">fae/util/macros.h</a>&gt;</code><br/>
-<code>#include &lt;<a class="el" href="apply_8h_source.html">fae/util/apply.h</a>&gt;</code><br/>
+<div class="textblock"><code>#include &lt;<a class="el" href="arch_8h_source.html">fa/util/arch.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="alignof_8h_source.html">fa/util/alignof.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="minmax_8h_source.html">fa/util/minmax.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="literals_8h_source.html">fa/util/literals.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="macros_8h_source.html">fa/util/macros.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="apply_8h_source.html">fa/util/apply.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="time_8h_source.html">time.h</a>&gt;</code><br/>
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for util.h:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="util_8h__incl.svg" width="1038" height="203"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div><div class="textblock"><div class="dynheader">
-This graph shows which files directly or indirectly include this file:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="util_8h__dep__incl.svg" width="1492" height="142"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="util_8h__incl.svg" width="980" height="203"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <p><a href="util_8h_source.html">Go to the source code of this file.</a></p>
@@ -79,274 +74,251 @@ This graph shows which files directly or indirectly include this file:</div>
 Macros</h2></td></tr>
 <tr class="memitem:a198813f63c4c43af209d7858a02b7318"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a198813f63c4c43af209d7858a02b7318">system_time_t</a>&#160;&#160;&#160;<a class="el" href="util_8h.html#a7157cbb87d46be33f7f913fa09144900">time_t</a></td></tr>
 <tr class="separator:a198813f63c4c43af209d7858a02b7318"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18d7a80112683e0b9f39616a5738345e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a>&#160;&#160;&#160;<a class="el" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4">fae_ptr_t</a></td></tr>
+<tr class="memitem:a18d7a80112683e0b9f39616a5738345e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a18d7a80112683e0b9f39616a5738345e">ptr_t</a>&#160;&#160;&#160;<a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a></td></tr>
 <tr class="separator:a18d7a80112683e0b9f39616a5738345e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc495b83eb8bc8b1c5a289f3cb79712a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#abc495b83eb8bc8b1c5a289f3cb79712a">impl_t</a>&#160;&#160;&#160;<a class="el" href="group___fae.html#ga581a82bb89c14969b88662add57ad568">fae_impl_t</a></td></tr>
+<tr class="memitem:abc495b83eb8bc8b1c5a289f3cb79712a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#abc495b83eb8bc8b1c5a289f3cb79712a">impl_t</a>&#160;&#160;&#160;<a class="el" href="group___fa.html#gac13cc6d4ef02b8763045164333cfd763">fa_impl_t</a></td></tr>
 <tr class="separator:abc495b83eb8bc8b1c5a289f3cb79712a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89fb6865d36605f4149ea48decdbee04"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a89fb6865d36605f4149ea48decdbee04">pred_t</a>&#160;&#160;&#160;<a class="el" href="group___fae.html#gaeca2a35b16f98a1eed01cc23972b67fd">fae_pred_t</a></td></tr>
+<tr class="memitem:a89fb6865d36605f4149ea48decdbee04"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a89fb6865d36605f4149ea48decdbee04">pred_t</a>&#160;&#160;&#160;<a class="el" href="group___fa.html#gae6b6ae9fb073db0ba0bd323d511c6a98">fa_pred_t</a></td></tr>
 <tr class="separator:a89fb6865d36605f4149ea48decdbee04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd19bd5f6e5229624b9ddaa41a9a41a9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#acd19bd5f6e5229624b9ddaa41a9a41a9">nullary_t</a>&#160;&#160;&#160;<a class="el" href="group___fae.html#ga08575a144de95fa3985dc31d18853192">fae_nullary_t</a></td></tr>
+<tr class="memitem:acd19bd5f6e5229624b9ddaa41a9a41a9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#acd19bd5f6e5229624b9ddaa41a9a41a9">nullary_t</a>&#160;&#160;&#160;<a class="el" href="group___fa.html#ga43b940a9294fd58a54087ef0b416e479">fa_nullary_t</a></td></tr>
 <tr class="separator:acd19bd5f6e5229624b9ddaa41a9a41a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24ee634cad1f3216f72992782b39a8fd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a24ee634cad1f3216f72992782b39a8fd">unary_t</a>&#160;&#160;&#160;<a class="el" href="group___fae.html#ga89ae9936173403c7db68b5f2921fc9d2">fae_unary_t</a></td></tr>
+<tr class="memitem:a24ee634cad1f3216f72992782b39a8fd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a24ee634cad1f3216f72992782b39a8fd">unary_t</a>&#160;&#160;&#160;<a class="el" href="group___fa.html#gaaafae8ab9ebae9019133108e56d2d4d1">fa_unary_t</a></td></tr>
 <tr class="separator:a24ee634cad1f3216f72992782b39a8fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2145182b96fcbc3671e84f2cdfe76734"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a2145182b96fcbc3671e84f2cdfe76734">binary_t</a>&#160;&#160;&#160;<a class="el" href="group___fae.html#gae8800961187889a0bba3f01862919aee">fae_binary_t</a></td></tr>
+<tr class="memitem:a2145182b96fcbc3671e84f2cdfe76734"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a2145182b96fcbc3671e84f2cdfe76734">binary_t</a>&#160;&#160;&#160;<a class="el" href="group___fa.html#gab70ba406935a18c1d645d12e7abf2e63">fa_binary_t</a></td></tr>
 <tr class="separator:a2145182b96fcbc3671e84f2cdfe76734"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9404c122d1ab1b469e2285bd2e8ae7d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ad9404c122d1ab1b469e2285bd2e8ae7d">ternary_t</a>&#160;&#160;&#160;<a class="el" href="group___fae.html#gabbd2feff1878427e64ac454e0542a010">fae_ternary_t</a></td></tr>
+<tr class="memitem:ad9404c122d1ab1b469e2285bd2e8ae7d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ad9404c122d1ab1b469e2285bd2e8ae7d">ternary_t</a>&#160;&#160;&#160;<a class="el" href="group___fa.html#gadbab7e8e405b3d2436de1e1126cc4817">fa_ternary_t</a></td></tr>
 <tr class="separator:ad9404c122d1ab1b469e2285bd2e8ae7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04d78e8ed37c45fec82c01594f93c303"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a04d78e8ed37c45fec82c01594f93c303">error_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_error.html#gaf9830ae96f902091ac8f87255b671c4f">fae_error_t</a></td></tr>
+<tr class="memitem:a04d78e8ed37c45fec82c01594f93c303"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a04d78e8ed37c45fec82c01594f93c303">error_t</a>&#160;&#160;&#160;<a class="el" href="group___fa_error.html#ga4a4feb4d3686657ac8dbd2be421cbb15">fa_error_t</a></td></tr>
 <tr class="separator:a04d78e8ed37c45fec82c01594f93c303"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c95fe643ed7e82601fcfff638bc18c6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a8c95fe643ed7e82601fcfff638bc18c6">error_callback_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_error.html#ga2abe2dd713d82605e3dd774edb82a763">fae_error_callback_t</a></td></tr>
+<tr class="memitem:a8c95fe643ed7e82601fcfff638bc18c6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a8c95fe643ed7e82601fcfff638bc18c6">error_callback_t</a>&#160;&#160;&#160;<a class="el" href="group___fa_error.html#ga43d8d45a005130a5052ba3281a8bf33e">fa_error_callback_t</a></td></tr>
 <tr class="separator:a8c95fe643ed7e82601fcfff638bc18c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc9fdebdc1460f0ff9ca77bd71547bcc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#afc9fdebdc1460f0ff9ca77bd71547bcc">severity_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_error.html#gae992e8c25323e179035d2cc31a97ddf3">fae_error_severity_t</a></td></tr>
+<tr class="memitem:afc9fdebdc1460f0ff9ca77bd71547bcc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#afc9fdebdc1460f0ff9ca77bd71547bcc">severity_t</a>&#160;&#160;&#160;<a class="el" href="group___fa_error.html#ga5cf5c13f1e12ae6b125c0265f59f4d82">fa_error_severity_t</a></td></tr>
 <tr class="separator:afc9fdebdc1460f0ff9ca77bd71547bcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a704e79e79d4b04b0bea83014318a4e61"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a704e79e79d4b04b0bea83014318a4e61">pair_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_pair.html#ga1f7c75839e2ea6e61c31fdb4b0cd1e1a">fae_pair_t</a></td></tr>
+<tr class="memitem:a704e79e79d4b04b0bea83014318a4e61"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a704e79e79d4b04b0bea83014318a4e61">pair_t</a>&#160;&#160;&#160;<a class="el" href="group___fa_pair.html#gac2b2e58c230bac4f8a63ef6c05072680">fa_pair_t</a></td></tr>
 <tr class="separator:a704e79e79d4b04b0bea83014318a4e61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13a0ab89a1af47576ad47fd8814f5909"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a13a0ab89a1af47576ad47fd8814f5909">list_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_list.html#ga62e8420b5e2c8b334f662b986633ff3a">fae_list_t</a></td></tr>
+<tr class="memitem:aeb96032f569288866770474f5b66d803"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aeb96032f569288866770474f5b66d803">pair_left_t</a>&#160;&#160;&#160;fa_pair_left_t</td></tr>
+<tr class="separator:aeb96032f569288866770474f5b66d803"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13a0ab89a1af47576ad47fd8814f5909"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a13a0ab89a1af47576ad47fd8814f5909">list_t</a>&#160;&#160;&#160;<a class="el" href="group___fa_list.html#ga35ecb12ab934ded0cce0bcf28e3bc5d2">fa_list_t</a></td></tr>
 <tr class="separator:a13a0ab89a1af47576ad47fd8814f5909"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a125a98fe61f2699b9fda5b1dec46475d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a125a98fe61f2699b9fda5b1dec46475d">set_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_set.html#ga51dde2329edd32c7f85af76489dbb364">fae_set_t</a></td></tr>
+<tr class="memitem:a125a98fe61f2699b9fda5b1dec46475d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a125a98fe61f2699b9fda5b1dec46475d">set_t</a>&#160;&#160;&#160;fa_set_t</td></tr>
 <tr class="separator:a125a98fe61f2699b9fda5b1dec46475d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa65d211e594f5e97971f60e2db8a4ed9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aa65d211e594f5e97971f60e2db8a4ed9">map_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_map.html#ga32218b30b73e61a0f22e4952c54964c8">fae_map_t</a></td></tr>
+<tr class="memitem:aa65d211e594f5e97971f60e2db8a4ed9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aa65d211e594f5e97971f60e2db8a4ed9">map_t</a>&#160;&#160;&#160;<a class="el" href="group___fa_map.html#gadcbb0c425af31be6aeb265159b2a7db0">fa_map_t</a></td></tr>
 <tr class="separator:aa65d211e594f5e97971f60e2db8a4ed9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a55fba1bf635a08be321a56bdc7f6596b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a55fba1bf635a08be321a56bdc7f6596b">graph_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_graph.html#ga31ade0db45461dcf8dc71a5ec1ee6f34">fae_graph_t</a></td></tr>
+<tr class="memitem:a55fba1bf635a08be321a56bdc7f6596b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a55fba1bf635a08be321a56bdc7f6596b">graph_t</a>&#160;&#160;&#160;fa_graph_t</td></tr>
 <tr class="separator:a55fba1bf635a08be321a56bdc7f6596b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af27c04510837126cd3662933bc34431b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#af27c04510837126cd3662933bc34431b">string_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_string.html#gaec46988276ade4118709314865160b76">fae_string_t</a></td></tr>
+<tr class="memitem:af27c04510837126cd3662933bc34431b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#af27c04510837126cd3662933bc34431b">string_t</a>&#160;&#160;&#160;<a class="el" href="group___fa_string.html#gacada63033b77bc6c39fa632ae199349b">fa_string_t</a></td></tr>
 <tr class="separator:af27c04510837126cd3662933bc34431b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abcc570da32d8a5ce724dc3932053beed"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#abcc570da32d8a5ce724dc3932053beed">type_repr_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_dynamic.html#ga8d235b649f5b8d2ee955d4d865a5046e">fae_dynamic_type_repr_t</a></td></tr>
+<tr class="memitem:abcc570da32d8a5ce724dc3932053beed"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#abcc570da32d8a5ce724dc3932053beed">type_repr_t</a>&#160;&#160;&#160;<a class="el" href="group___fa_dynamic.html#ga38427e999172dad2684f07793859f416">fa_dynamic_type_repr_t</a></td></tr>
 <tr class="separator:abcc570da32d8a5ce724dc3932053beed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83e1e9e5aaee1bd8a1cb11d39a6ecb93"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a83e1e9e5aaee1bd8a1cb11d39a6ecb93">priority_queue_t</a>&#160;&#160;&#160;fae_priority_queue_t</td></tr>
+<tr class="memitem:a83e1e9e5aaee1bd8a1cb11d39a6ecb93"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a83e1e9e5aaee1bd8a1cb11d39a6ecb93">priority_queue_t</a>&#160;&#160;&#160;fa_priority_queue_t</td></tr>
 <tr class="separator:a83e1e9e5aaee1bd8a1cb11d39a6ecb93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a058876d9d19ff0425379180a909c7ed5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a058876d9d19ff0425379180a909c7ed5">scheduler_t</a>&#160;&#160;&#160;fae_scheduler_t</td></tr>
+<tr class="memitem:a058876d9d19ff0425379180a909c7ed5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a058876d9d19ff0425379180a909c7ed5">scheduler_t</a>&#160;&#160;&#160;fa_scheduler_t</td></tr>
 <tr class="separator:a058876d9d19ff0425379180a909c7ed5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23d399eb43d88c70c47f3f3daafabf1b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a23d399eb43d88c70c47f3f3daafabf1b">atomic_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_atomic.html#ga54a94f24b5d6fbe66e807e8048118a07">fae_atomic_t</a></td></tr>
+<tr class="memitem:a23d399eb43d88c70c47f3f3daafabf1b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a23d399eb43d88c70c47f3f3daafabf1b">atomic_t</a>&#160;&#160;&#160;fa_atomic_t</td></tr>
 <tr class="separator:a23d399eb43d88c70c47f3f3daafabf1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8c1ed8a040b48958d924e2d11916217"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ae8c1ed8a040b48958d924e2d11916217">atomic_queue_t</a>&#160;&#160;&#160;fae_atomic_queue_t</td></tr>
+<tr class="memitem:ae8c1ed8a040b48958d924e2d11916217"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ae8c1ed8a040b48958d924e2d11916217">atomic_queue_t</a>&#160;&#160;&#160;fa_atomic_queue_t</td></tr>
 <tr class="separator:ae8c1ed8a040b48958d924e2d11916217"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6d5547d886a77eebad80406e870a2fb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ae6d5547d886a77eebad80406e870a2fb">atomic_stack_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_atomic_stack.html#ga4eae9f89d5fb0c9c9444110662f7e013">fae_atomic_stack_t</a></td></tr>
+<tr class="memitem:ae6d5547d886a77eebad80406e870a2fb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ae6d5547d886a77eebad80406e870a2fb">atomic_stack_t</a>&#160;&#160;&#160;fa_atomic_stack_t</td></tr>
 <tr class="separator:ae6d5547d886a77eebad80406e870a2fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a089601391ec32a8823a256a039ac075c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a089601391ec32a8823a256a039ac075c">ringbuffer_t</a>&#160;&#160;&#160;fae_atomic_ring_buffer_t</td></tr>
+<tr class="memitem:a089601391ec32a8823a256a039ac075c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a089601391ec32a8823a256a039ac075c">ringbuffer_t</a>&#160;&#160;&#160;fa_atomic_ring_buffer_t</td></tr>
 <tr class="separator:a089601391ec32a8823a256a039ac075c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a608886e38de551d883250e166014c151"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a608886e38de551d883250e166014c151">thread_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_thread.html#ga7bde642d7978cfaef92300ab2f865231">fae_thread_t</a></td></tr>
+<tr class="memitem:a608886e38de551d883250e166014c151"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a608886e38de551d883250e166014c151">thread_t</a>&#160;&#160;&#160;fa_thread_t</td></tr>
 <tr class="separator:a608886e38de551d883250e166014c151"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93e65d556f878c762685fae603d1f95d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a93e65d556f878c762685fae603d1f95d">mutex_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_thread.html#ga69e32d0be6e878b981258339b444dc7a">fae_thread_mutex_t</a></td></tr>
+<tr class="memitem:a93e65d556f878c762685fae603d1f95d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a93e65d556f878c762685fae603d1f95d">mutex_t</a>&#160;&#160;&#160;fa_thread_mutex_t</td></tr>
 <tr class="separator:a93e65d556f878c762685fae603d1f95d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a90b4e3de0937bb1fb23c9c539dbb8955"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a90b4e3de0937bb1fb23c9c539dbb8955">ratio_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_ratio.html#gacee6f32b72349c26a6d2a90686facc3b">fae_ratio_t</a></td></tr>
+<tr class="memitem:a90b4e3de0937bb1fb23c9c539dbb8955"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a90b4e3de0937bb1fb23c9c539dbb8955">ratio_t</a>&#160;&#160;&#160;<a class="el" href="group___fa_ratio.html#gaf3b37b5fdfcccb6283b7ac806c72b273">fa_ratio_t</a></td></tr>
 <tr class="separator:a90b4e3de0937bb1fb23c9c539dbb8955"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30fe0633adbbaa7a5b6a4fd8d479bf0c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a30fe0633adbbaa7a5b6a4fd8d479bf0c">buffer_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_buffer.html#ga9447030a16ca7d8603451107e0f516ec">fae_buffer_t</a></td></tr>
+<tr class="memitem:a30fe0633adbbaa7a5b6a4fd8d479bf0c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a30fe0633adbbaa7a5b6a4fd8d479bf0c">buffer_t</a>&#160;&#160;&#160;<a class="el" href="group___fa_buffer.html#ga0ed7a1d783ab322e2e8be02432d0839e">fa_buffer_t</a></td></tr>
 <tr class="separator:a30fe0633adbbaa7a5b6a4fd8d479bf0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0d44166aabf21dc2226c1e5ad75955f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#af0d44166aabf21dc2226c1e5ad75955f">frames_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_type.html#ga01ca219251cd4b36ba5444a8848089d0">fae_type_frames_t</a></td></tr>
+<tr class="memitem:af0d44166aabf21dc2226c1e5ad75955f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#af0d44166aabf21dc2226c1e5ad75955f">frames_t</a>&#160;&#160;&#160;fa_type_frames_t</td></tr>
 <tr class="separator:af0d44166aabf21dc2226c1e5ad75955f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d321238f6ec269499a691fb2fb62bd3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a6d321238f6ec269499a691fb2fb62bd3">type_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_type.html#ga5fefbac5dae4e382d149afc943af0eb1">fae_type_t</a></td></tr>
+<tr class="memitem:a6d321238f6ec269499a691fb2fb62bd3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a6d321238f6ec269499a691fb2fb62bd3">type_t</a>&#160;&#160;&#160;fa_type_t</td></tr>
 <tr class="separator:a6d321238f6ec269499a691fb2fb62bd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8535c57c31c3298a061ae4f6df780ddc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a8535c57c31c3298a061ae4f6df780ddc">midi_message_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_midi_message.html#ga986753d496dfcf47ea606a9eb399c1fc">fae_midi_message_t</a></td></tr>
+<tr class="memitem:a8535c57c31c3298a061ae4f6df780ddc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a8535c57c31c3298a061ae4f6df780ddc">midi_message_t</a>&#160;&#160;&#160;<a class="el" href="group___fa_midi_message.html#gaa73293eb40a2cffdc2294e3cb6dc2564">fa_midi_message_t</a></td></tr>
 <tr class="separator:a8535c57c31c3298a061ae4f6df780ddc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7157cbb87d46be33f7f913fa09144900"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a7157cbb87d46be33f7f913fa09144900">time_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_time.html#ga24fcf1450ea9516fe7d650762e22d945">fae_time_t</a></td></tr>
+<tr class="memitem:a7157cbb87d46be33f7f913fa09144900"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a7157cbb87d46be33f7f913fa09144900">time_t</a>&#160;&#160;&#160;<a class="el" href="group___fa_time.html#ga227cc693f20b4873fed11028bcade184">fa_time_t</a></td></tr>
 <tr class="separator:a7157cbb87d46be33f7f913fa09144900"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33f6338b5bbb294b41e5c35a8d0f5bf3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a33f6338b5bbb294b41e5c35a8d0f5bf3">clock_t</a>&#160;&#160;&#160;fae_time_clock_t</td></tr>
+<tr class="memitem:a33f6338b5bbb294b41e5c35a8d0f5bf3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a33f6338b5bbb294b41e5c35a8d0f5bf3">clock_t</a>&#160;&#160;&#160;fa_time_clock_t</td></tr>
 <tr class="separator:a33f6338b5bbb294b41e5c35a8d0f5bf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7126e5080661f59d7842b9a0a042cff8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a7126e5080661f59d7842b9a0a042cff8">event_t</a>&#160;&#160;&#160;fae_event_t</td></tr>
+<tr class="memitem:a7126e5080661f59d7842b9a0a042cff8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a7126e5080661f59d7842b9a0a042cff8">event_t</a>&#160;&#160;&#160;fa_event_t</td></tr>
 <tr class="separator:a7126e5080661f59d7842b9a0a042cff8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78a0380cda121cdfbd5bc21168841230"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a78a0380cda121cdfbd5bc21168841230">processor_t</a>&#160;&#160;&#160;fae_processor_t</td></tr>
-<tr class="separator:a78a0380cda121cdfbd5bc21168841230"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91f69826574598e63aa804536f111209"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a91f69826574598e63aa804536f111209">proc_t</a>&#160;&#160;&#160;fae_processor_t</td></tr>
-<tr class="separator:a91f69826574598e63aa804536f111209"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1554afa2496505ee00d56c8b7e8dd2c9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a1554afa2496505ee00d56c8b7e8dd2c9">proc_interface_t</a>&#160;&#160;&#160;fae_processor_interface_t</td></tr>
-<tr class="separator:a1554afa2496505ee00d56c8b7e8dd2c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ae1668b40bf4532f25212477d50cc17"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a3ae1668b40bf4532f25212477d50cc17">sender_t</a>&#160;&#160;&#160;fae_message_sender_t</td></tr>
+<tr class="memitem:a4179e0566b0727e21f1fd4b5e6533dee"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a4179e0566b0727e21f1fd4b5e6533dee">signal_t</a>&#160;&#160;&#160;<a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a></td></tr>
+<tr class="separator:a4179e0566b0727e21f1fd4b5e6533dee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ae1668b40bf4532f25212477d50cc17"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a3ae1668b40bf4532f25212477d50cc17">sender_t</a>&#160;&#160;&#160;fa_message_sender_t</td></tr>
 <tr class="separator:a3ae1668b40bf4532f25212477d50cc17"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1fdd552be1f2943c96493711cfa98113"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a1fdd552be1f2943c96493711cfa98113">receiver_t</a>&#160;&#160;&#160;fae_message_receiver_t</td></tr>
+<tr class="memitem:a1fdd552be1f2943c96493711cfa98113"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a1fdd552be1f2943c96493711cfa98113">receiver_t</a>&#160;&#160;&#160;fa_message_receiver_t</td></tr>
 <tr class="separator:a1fdd552be1f2943c96493711cfa98113"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a900967135162310e82026fcaea1444d7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a900967135162310e82026fcaea1444d7">dispatcher_t</a>&#160;&#160;&#160;fae_message_dispatcher_t</td></tr>
+<tr class="memitem:a900967135162310e82026fcaea1444d7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a900967135162310e82026fcaea1444d7">dispatcher_t</a>&#160;&#160;&#160;fa_message_dispatcher_t</td></tr>
 <tr class="separator:a900967135162310e82026fcaea1444d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a040334f0aa47ee7e10f99b98e6138558"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a040334f0aa47ee7e10f99b98e6138558">address_t</a>&#160;&#160;&#160;fae_message_address_t</td></tr>
+<tr class="memitem:a040334f0aa47ee7e10f99b98e6138558"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a040334f0aa47ee7e10f99b98e6138558">address_t</a>&#160;&#160;&#160;fa_message_address_t</td></tr>
 <tr class="separator:a040334f0aa47ee7e10f99b98e6138558"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aadbab714ce7548f02f951a6232f6203a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aadbab714ce7548f02f951a6232f6203a">message_t</a>&#160;&#160;&#160;fae_message_t</td></tr>
+<tr class="memitem:aadbab714ce7548f02f951a6232f6203a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aadbab714ce7548f02f951a6232f6203a">message_t</a>&#160;&#160;&#160;fa_message_t</td></tr>
 <tr class="separator:aadbab714ce7548f02f951a6232f6203a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3806143c8393650e29b7611e497ae5a2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a3806143c8393650e29b7611e497ae5a2">audio_device_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_audio.html#ga3c19c7494175055bd354d3a8628edd4e">fae_audio_device_t</a></td></tr>
+<tr class="memitem:a3806143c8393650e29b7611e497ae5a2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a3806143c8393650e29b7611e497ae5a2">audio_device_t</a>&#160;&#160;&#160;<a class="el" href="group___fa_audio.html#ga03de89ee66c6465f8cedd3a0286598f4">fa_audio_device_t</a></td></tr>
 <tr class="separator:a3806143c8393650e29b7611e497ae5a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3fb371afa4d54ec45264373dfbe0048f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a3fb371afa4d54ec45264373dfbe0048f">midi_device_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_midi.html#gac3323a401e147720578dcce2c452db5d">fae_midi_device_t</a></td></tr>
+<tr class="memitem:a3fb371afa4d54ec45264373dfbe0048f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a3fb371afa4d54ec45264373dfbe0048f">midi_device_t</a>&#160;&#160;&#160;<a class="el" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a></td></tr>
 <tr class="separator:a3fb371afa4d54ec45264373dfbe0048f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f640f77ab578795cb3533a7ca96ed53"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a2f640f77ab578795cb3533a7ca96ed53">file_device_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_device.html#ga320bb8409a812d50e1cbfe168d3182a0">fae_device_file_t</a></td></tr>
+<tr class="memitem:a2f640f77ab578795cb3533a7ca96ed53"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a2f640f77ab578795cb3533a7ca96ed53">file_device_t</a>&#160;&#160;&#160;<a class="el" href="group___fa_device.html#ga174e0149dd8d57532608e418d8dcf3b0">fa_device_file_t</a></td></tr>
 <tr class="separator:a2f640f77ab578795cb3533a7ca96ed53"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46a276c4303e2a5fdd8fb7b1649b8e8e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a46a276c4303e2a5fdd8fb7b1649b8e8e">buffer_device_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_device.html#gad0e3991e650fb90a8c0123e3362a6a66">fae_device_buffer_t</a></td></tr>
+<tr class="memitem:a46a276c4303e2a5fdd8fb7b1649b8e8e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a46a276c4303e2a5fdd8fb7b1649b8e8e">buffer_device_t</a>&#160;&#160;&#160;<a class="el" href="group___fa_device.html#gafb38d6e2111e159bd1221509e992b455">fa_device_buffer_t</a></td></tr>
 <tr class="separator:a46a276c4303e2a5fdd8fb7b1649b8e8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a805cfc729cb4a08629525d9fd6a7307e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a805cfc729cb4a08629525d9fd6a7307e">audio_stream_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_audio.html#gabedc03d3d3d615f99f27d5ec6727ca6e">fae_audio_stream_t</a></td></tr>
+<tr class="memitem:a805cfc729cb4a08629525d9fd6a7307e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a805cfc729cb4a08629525d9fd6a7307e">audio_stream_t</a>&#160;&#160;&#160;<a class="el" href="group___fa_audio.html#ga78fbee3026130ce00d8e00a4e73a84c3">fa_audio_stream_t</a></td></tr>
 <tr class="separator:a805cfc729cb4a08629525d9fd6a7307e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4fbe370335f58a4367f17a86c326cf69"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a4fbe370335f58a4367f17a86c326cf69">midi_stream_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_midi.html#gaecca10a4d57d3e12df8c66ee75e30c2e">fae_midi_stream_t</a></td></tr>
+<tr class="memitem:a4fbe370335f58a4367f17a86c326cf69"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a4fbe370335f58a4367f17a86c326cf69">midi_stream_t</a>&#160;&#160;&#160;<a class="el" href="group___fa_midi.html#ga85772039b62d8bb718a51e1ffbbb2fa2">fa_midi_stream_t</a></td></tr>
 <tr class="separator:a4fbe370335f58a4367f17a86c326cf69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaba7b2e3dc159ba7a5527b8d2df1aa91"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aaba7b2e3dc159ba7a5527b8d2df1aa91">audio_session_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_audio.html#gade5ba73a5be381d816360c9a2bf69602">fae_audio_session_t</a></td></tr>
+<tr class="memitem:aaba7b2e3dc159ba7a5527b8d2df1aa91"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aaba7b2e3dc159ba7a5527b8d2df1aa91">audio_session_t</a>&#160;&#160;&#160;<a class="el" href="group___fa_audio.html#ga62ee22268c23f1b18447141feccc01e0">fa_audio_session_t</a></td></tr>
 <tr class="separator:aaba7b2e3dc159ba7a5527b8d2df1aa91"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada34fd649ffd2545a85effb96e6d7337"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ada34fd649ffd2545a85effb96e6d7337">midi_session_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_midi.html#ga9ae465564701d86a972cd1b3b4d372fe">fae_midi_session_t</a></td></tr>
+<tr class="memitem:ada34fd649ffd2545a85effb96e6d7337"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ada34fd649ffd2545a85effb96e6d7337">midi_session_t</a>&#160;&#160;&#160;<a class="el" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a></td></tr>
 <tr class="separator:ada34fd649ffd2545a85effb96e6d7337"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f23198966e5079e5b7e0dccd6f7d672"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a7f23198966e5079e5b7e0dccd6f7d672">file_result_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_device_file.html#gac564a223feea472a2ac5cabf30f7c205">fae_device_file_result_t</a></td></tr>
+<tr class="memitem:a7f23198966e5079e5b7e0dccd6f7d672"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a7f23198966e5079e5b7e0dccd6f7d672">file_result_t</a>&#160;&#160;&#160;fa_device_file_result_t</td></tr>
 <tr class="separator:a7f23198966e5079e5b7e0dccd6f7d672"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeccb870de8da4de26f1cb88ee7dc806b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aeccb870de8da4de26f1cb88ee7dc806b">buffer_result_t</a>&#160;&#160;&#160;<a class="el" href="group___fae_device_buffer.html#ga4f4a55d6d541c04c6007e5a3a43852bc">fae_device_buffer_result_t</a></td></tr>
+<tr class="memitem:aeccb870de8da4de26f1cb88ee7dc806b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aeccb870de8da4de26f1cb88ee7dc806b">buffer_result_t</a>&#160;&#160;&#160;fa_device_buffer_result_t</td></tr>
 <tr class="separator:aeccb870de8da4de26f1cb88ee7dc806b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a40ed40659d2ed7f8712b0fe6ba6edebe"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a40ed40659d2ed7f8712b0fe6ba6edebe">pair</a>(a, b)&#160;&#160;&#160;<a class="el" href="group___fae_pair.html#gab4fe4f0cd57e984a98d2e3c631603023">fae_pair_create</a>(a,b)</td></tr>
+<tr class="memitem:a40ed40659d2ed7f8712b0fe6ba6edebe"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a40ed40659d2ed7f8712b0fe6ba6edebe">pair</a>(a, b)&#160;&#160;&#160;<a class="el" href="group___fa_pair.html#ga021232bc4c3b3d309f9ec6d3eb87e18a">fa_pair_create</a>(a,b)</td></tr>
 <tr class="separator:a40ed40659d2ed7f8712b0fe6ba6edebe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41106000aac73b61e4fc2ef9dd39a603"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a41106000aac73b61e4fc2ef9dd39a603">string</a>(a)&#160;&#160;&#160;<a class="el" href="group___fae_string.html#ga37b9333270e695293deab29f81722c6f">fae_string_from_utf8</a>(a)</td></tr>
+<tr class="memitem:ac4d1bd03ca6c3233c65e5ce45db38b2c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ac4d1bd03ca6c3233c65e5ce45db38b2c">pair_left</a>(a, b)&#160;&#160;&#160;fa_pair_left_create(a,b)</td></tr>
+<tr class="separator:ac4d1bd03ca6c3233c65e5ce45db38b2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41106000aac73b61e4fc2ef9dd39a603"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a41106000aac73b61e4fc2ef9dd39a603">string</a>(a)&#160;&#160;&#160;<a class="el" href="group___fa_string.html#ga154cbfd5f999ea2d1860547ad3073d26">fa_string_from_utf8</a>(a)</td></tr>
 <tr class="separator:a41106000aac73b61e4fc2ef9dd39a603"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad14a343c5aa3f0c91ecb865056a9e629"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ad14a343c5aa3f0c91ecb865056a9e629">string16</a>(a)&#160;&#160;&#160;<a class="el" href="group___fae_string.html#gaed6e8c9d8a94e88001571b2237daf88a">fae_string_from_utf16</a>(u##a)</td></tr>
+<tr class="memitem:ad14a343c5aa3f0c91ecb865056a9e629"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ad14a343c5aa3f0c91ecb865056a9e629">string16</a>(a)&#160;&#160;&#160;<a class="el" href="group___fa_string.html#ga4e7e54b5f75ccf1cb062b9db8a03bdf9">fa_string_from_utf16</a>(u##a)</td></tr>
 <tr class="separator:ad14a343c5aa3f0c91ecb865056a9e629"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b458934f562f240152bfe4d5fc78839"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a3b458934f562f240152bfe4d5fc78839">string32</a>(a)&#160;&#160;&#160;<a class="el" href="group___fae_string.html#gad257dc15db3374472480a154e003509e">fae_string_from_utf32</a>(U##a)</td></tr>
+<tr class="memitem:a3b458934f562f240152bfe4d5fc78839"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a3b458934f562f240152bfe4d5fc78839">string32</a>(a)&#160;&#160;&#160;fa_string_from_utf32(U##a)</td></tr>
 <tr class="separator:a3b458934f562f240152bfe4d5fc78839"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ebb1e1e5bc93a359c8d5778a9aa48bd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a3ebb1e1e5bc93a359c8d5778a9aa48bd">unstring</a>(a)&#160;&#160;&#160;<a class="el" href="group___fae_string.html#gae44242e9946b99fa9b58c7433ed17b70">fae_string_to_utf8</a>(a)</td></tr>
+<tr class="memitem:a3ebb1e1e5bc93a359c8d5778a9aa48bd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a3ebb1e1e5bc93a359c8d5778a9aa48bd">unstring</a>(a)&#160;&#160;&#160;<a class="el" href="group___fa_string.html#gaf49dbc04c46b729b84cf9dd9fc29b267">fa_string_to_utf8</a>(a)</td></tr>
 <tr class="separator:a3ebb1e1e5bc93a359c8d5778a9aa48bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a866d3cbbee2679ec3c34f27a256445de"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(a, b)&#160;&#160;&#160;<a class="el" href="group___fae_ratio.html#ga5c741d9f14f1d80f96dc705f2dac06e1">fae_ratio_create</a>(a,b)</td></tr>
+<tr class="memitem:a866d3cbbee2679ec3c34f27a256445de"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(a, b)&#160;&#160;&#160;<a class="el" href="group___fa_ratio.html#ga36f5f3f077f41be6690dbc28f766b2bd">fa_ratio_create</a>(a,b)</td></tr>
 <tr class="separator:a866d3cbbee2679ec3c34f27a256445de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af99dc793b720803e9d2eaf6b3d4c1e7c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#af99dc793b720803e9d2eaf6b3d4c1e7c">priority_queue</a>()&#160;&#160;&#160;<a class="el" href="priority__queue_8c.html#a7a6b97a24f0fb0b6e1192ed3af0993dd">fae_priority_queue_empty</a>()</td></tr>
+<tr class="memitem:af99dc793b720803e9d2eaf6b3d4c1e7c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#af99dc793b720803e9d2eaf6b3d4c1e7c">priority_queue</a>()&#160;&#160;&#160;fa_priority_queue_empty()</td></tr>
 <tr class="separator:af99dc793b720803e9d2eaf6b3d4c1e7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5181e62dd55d17e3c1fd4ad40865f737"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a5181e62dd55d17e3c1fd4ad40865f737">atomic</a>()&#160;&#160;&#160;<a class="el" href="group___fae_atomic.html#gaf2c4197b28725a7d421ca5ba90c5ea48">fae_atomic_create</a>()</td></tr>
+<tr class="memitem:a5181e62dd55d17e3c1fd4ad40865f737"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a5181e62dd55d17e3c1fd4ad40865f737">atomic</a>()&#160;&#160;&#160;fa_atomic_create()</td></tr>
 <tr class="separator:a5181e62dd55d17e3c1fd4ad40865f737"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e0b7a481baccdd5493632222a87eb1c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a1e0b7a481baccdd5493632222a87eb1c">atomic_queue</a>()&#160;&#160;&#160;<a class="el" href="queue_8c.html#a987e16bd003de9b5fc51f61ed8dd4f97">fae_atomic_queue_create</a>()</td></tr>
+<tr class="memitem:a1e0b7a481baccdd5493632222a87eb1c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a1e0b7a481baccdd5493632222a87eb1c">atomic_queue</a>()&#160;&#160;&#160;fa_atomic_queue_create()</td></tr>
 <tr class="separator:a1e0b7a481baccdd5493632222a87eb1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afaa07ad4066d0ec4099621d93752328c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#afaa07ad4066d0ec4099621d93752328c">atomic_stack</a>()&#160;&#160;&#160;<a class="el" href="group___fae_atomic_stack.html#gaaafffd313f1501ea612cfa2761bc9a9d">fae_atomic_stack_create</a>()</td></tr>
+<tr class="memitem:afaa07ad4066d0ec4099621d93752328c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#afaa07ad4066d0ec4099621d93752328c">atomic_stack</a>()&#160;&#160;&#160;fa_atomic_stack_create()</td></tr>
 <tr class="separator:afaa07ad4066d0ec4099621d93752328c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d03b39b3482ef1468833e26c4dc318d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a9d03b39b3482ef1468833e26c4dc318d">atomic_ring_buffer</a>(s)&#160;&#160;&#160;<a class="el" href="ring__buffer_8c.html#a58f932a3219eb3177607323025c60fe1">fae_atomic_ring_buffer_create</a>(s)</td></tr>
+<tr class="memitem:a9d03b39b3482ef1468833e26c4dc318d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a9d03b39b3482ef1468833e26c4dc318d">atomic_ring_buffer</a>(s)&#160;&#160;&#160;fa_atomic_ring_buffer_create(s)</td></tr>
 <tr class="separator:a9d03b39b3482ef1468833e26c4dc318d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0c623e8b04565926f5b48888327724a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ad0c623e8b04565926f5b48888327724a">buffer</a>(s)&#160;&#160;&#160;<a class="el" href="group___fae_buffer.html#ga2d3fee184a2d58a1386530d146468cba">fae_buffer_create</a>(s)</td></tr>
+<tr class="memitem:ad0c623e8b04565926f5b48888327724a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ad0c623e8b04565926f5b48888327724a">buffer</a>(s)&#160;&#160;&#160;<a class="el" href="group___fa_buffer.html#ga43b53698a7fee13e6527fa7852c22e10">fa_buffer_create</a>(s)</td></tr>
 <tr class="separator:ad0c623e8b04565926f5b48888327724a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe87b5d5847b162857214714959ae009"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#abe87b5d5847b162857214714959ae009">midi_message</a>(s, a, b)&#160;&#160;&#160;<a class="el" href="group___fae_midi_message.html#ga10c28b6c3b1517ef1c6963a7a62e3233">fae_midi_message_create_simple</a>(s,a,b)</td></tr>
+<tr class="memitem:abe87b5d5847b162857214714959ae009"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#abe87b5d5847b162857214714959ae009">midi_message</a>(s, a, b)&#160;&#160;&#160;<a class="el" href="group___fa_midi_message.html#ga4500a770fd4a7fc5d5e742482a3f912f">fa_midi_message_create_simple</a>(s,a,b)</td></tr>
 <tr class="separator:abe87b5d5847b162857214714959ae009"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace523bd6c305173f0f79c98ccc0920f2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ace523bd6c305173f0f79c98ccc0920f2">midi_message_sysex</a>(b)&#160;&#160;&#160;<a class="el" href="group___fae_midi_message.html#ga0fec3860dc26d5d97682a87c625dde27">fae_midi_message_create_sysex</a>(b)</td></tr>
+<tr class="memitem:ace523bd6c305173f0f79c98ccc0920f2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ace523bd6c305173f0f79c98ccc0920f2">midi_message_sysex</a>(b)&#160;&#160;&#160;<a class="el" href="group___fa_midi_message.html#ga5e8a42ea0df3947dc05f3a4b8094d997">fa_midi_message_create_sysex</a>(b)</td></tr>
 <tr class="separator:ace523bd6c305173f0f79c98ccc0920f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa077bf90808ea71d9ff1adc21dbd7479"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aa077bf90808ea71d9ff1adc21dbd7479">dispatcher</a>()&#160;&#160;&#160;fae_message_create_dispatcher()</td></tr>
+<tr class="memitem:aa077bf90808ea71d9ff1adc21dbd7479"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aa077bf90808ea71d9ff1adc21dbd7479">dispatcher</a>()&#160;&#160;&#160;fa_message_create_dispatcher()</td></tr>
 <tr class="separator:aa077bf90808ea71d9ff1adc21dbd7479"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79bac10a3506c76eb8241ddadd3efb6a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a79bac10a3506c76eb8241ddadd3efb6a">lockfree_dispatcher</a>()&#160;&#160;&#160;fae_message_create_lockfree_dispatcher()</td></tr>
+<tr class="memitem:a79bac10a3506c76eb8241ddadd3efb6a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a79bac10a3506c76eb8241ddadd3efb6a">lockfree_dispatcher</a>()&#160;&#160;&#160;fa_message_create_lockfree_dispatcher()</td></tr>
 <tr class="separator:a79bac10a3506c76eb8241ddadd3efb6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b26bb6fd1c369f574114d3152d49bca"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a4b26bb6fd1c369f574114d3152d49bca">type</a>(a)&#160;&#160;&#160;<a class="el" href="group___fae_type.html#gac121b8271f10f043e1e1f50f561c1c8d">fae_type_simple</a>(a##_type)</td></tr>
+<tr class="memitem:a4b26bb6fd1c369f574114d3152d49bca"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a4b26bb6fd1c369f574114d3152d49bca">type</a>(a)&#160;&#160;&#160;fa_type_simple(a##_type)</td></tr>
 <tr class="separator:a4b26bb6fd1c369f574114d3152d49bca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b61b3008dd0fa7253d443e538937e55"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a9b61b3008dd0fa7253d443e538937e55">type_pair</a>(a, b)&#160;&#160;&#160;<a class="el" href="group___fae_type.html#gafe9b4cbbf53cb5022fc809b6d3d4e8c6">fae_type_pair</a>(a,b)</td></tr>
+<tr class="memitem:a9b61b3008dd0fa7253d443e538937e55"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a9b61b3008dd0fa7253d443e538937e55">type_pair</a>(a, b)&#160;&#160;&#160;fa_type_pair(a,b)</td></tr>
 <tr class="separator:a9b61b3008dd0fa7253d443e538937e55"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19aec539cd12c06158dbd7345fb13114"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a19aec539cd12c06158dbd7345fb13114">type_vector</a>(a, n)&#160;&#160;&#160;<a class="el" href="group___fae_type.html#ga1e3d6f6b227fef61024de496d86e108e">fae_type_vector</a>(a,n)</td></tr>
+<tr class="memitem:a19aec539cd12c06158dbd7345fb13114"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a19aec539cd12c06158dbd7345fb13114">type_vector</a>(a, n)&#160;&#160;&#160;fa_type_vector(a,n)</td></tr>
 <tr class="separator:a19aec539cd12c06158dbd7345fb13114"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1f43bb59038247af6dfbd37bf8eea578"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a1f43bb59038247af6dfbd37bf8eea578">type_frame</a>(a)&#160;&#160;&#160;<a class="el" href="group___fae_type.html#ga7c37ed8c3415076c2ef504f1df7257c9">fae_type_frame</a>(a)</td></tr>
+<tr class="memitem:a1f43bb59038247af6dfbd37bf8eea578"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a1f43bb59038247af6dfbd37bf8eea578">type_frame</a>(a)&#160;&#160;&#160;fa_type_frame(a)</td></tr>
 <tr class="separator:a1f43bb59038247af6dfbd37bf8eea578"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e8aef59b2725d985f4fdfeb7bbe76c7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a7e8aef59b2725d985f4fdfeb7bbe76c7">hms</a>(h, m, s)&#160;&#160;&#160;<a class="el" href="group___fae_time.html#gad3cd66787ccb71df0b3a2f89a7ea3904">fae_time_create</a>(0,h,m,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(s,1))</td></tr>
+<tr class="memitem:af18599886995e27774c59b182b04c8ed"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#af18599886995e27774c59b182b04c8ed">action_set</a>&#160;&#160;&#160;<a class="el" href="group___fa_action.html#gad2818d311d7bf18517fa3ac7a8ad13da">fa_action_set</a></td></tr>
+<tr class="separator:af18599886995e27774c59b182b04c8ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4076ed0bd2b626cc46af5484c7fa289c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a4076ed0bd2b626cc46af5484c7fa289c">action_accum</a>&#160;&#160;&#160;<a class="el" href="group___fa_action.html#ga73b344deb9ce4422b02d8bba2b247be9">fa_action_accum</a></td></tr>
+<tr class="separator:a4076ed0bd2b626cc46af5484c7fa289c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6215920d5a92a91dfbfea0aa821d6bc7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a6215920d5a92a91dfbfea0aa821d6bc7">action_send</a>&#160;&#160;&#160;<a class="el" href="group___fa_action.html#gad319d19b5fd1e13c381d1085fa167b81">fa_action_send</a></td></tr>
+<tr class="separator:a6215920d5a92a91dfbfea0aa821d6bc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e8aef59b2725d985f4fdfeb7bbe76c7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a7e8aef59b2725d985f4fdfeb7bbe76c7">hms</a>(h, m, s)&#160;&#160;&#160;<a class="el" href="group___fa_time.html#ga66de7f25c52b2de626812c85249019d8">fa_time_create</a>(0,h,m,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(s,1))</td></tr>
 <tr class="separator:a7e8aef59b2725d985f4fdfeb7bbe76c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a300f263b1eae073cc0df9c2450f9b3de"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a300f263b1eae073cc0df9c2450f9b3de">days</a>(d)&#160;&#160;&#160;<a class="el" href="group___fae_time.html#gad3cd66787ccb71df0b3a2f89a7ea3904">fae_time_create</a>(d,0,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(0,1))</td></tr>
+<tr class="memitem:a300f263b1eae073cc0df9c2450f9b3de"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a300f263b1eae073cc0df9c2450f9b3de">days</a>(d)&#160;&#160;&#160;<a class="el" href="group___fa_time.html#ga66de7f25c52b2de626812c85249019d8">fa_time_create</a>(d,0,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(0,1))</td></tr>
 <tr class="separator:a300f263b1eae073cc0df9c2450f9b3de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2538097ff7138a83801cced657c8cfbf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a2538097ff7138a83801cced657c8cfbf">hours</a>(h)&#160;&#160;&#160;<a class="el" href="group___fae_time.html#gad3cd66787ccb71df0b3a2f89a7ea3904">fae_time_create</a>(0,h,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(0,1))</td></tr>
+<tr class="memitem:a2538097ff7138a83801cced657c8cfbf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a2538097ff7138a83801cced657c8cfbf">hours</a>(h)&#160;&#160;&#160;<a class="el" href="group___fa_time.html#ga66de7f25c52b2de626812c85249019d8">fa_time_create</a>(0,h,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(0,1))</td></tr>
 <tr class="separator:a2538097ff7138a83801cced657c8cfbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a237a482b0d534168d425b103ab35cf61"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a237a482b0d534168d425b103ab35cf61">minutes</a>(m)&#160;&#160;&#160;<a class="el" href="group___fae_time.html#gad3cd66787ccb71df0b3a2f89a7ea3904">fae_time_create</a>(0,0,m,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(0,1))</td></tr>
+<tr class="memitem:a237a482b0d534168d425b103ab35cf61"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a237a482b0d534168d425b103ab35cf61">minutes</a>(m)&#160;&#160;&#160;<a class="el" href="group___fa_time.html#ga66de7f25c52b2de626812c85249019d8">fa_time_create</a>(0,0,m,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(0,1))</td></tr>
 <tr class="separator:a237a482b0d534168d425b103ab35cf61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a3cd4cff330c981ed89bbd3a3426273"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a1a3cd4cff330c981ed89bbd3a3426273">seconds</a>(s)&#160;&#160;&#160;<a class="el" href="group___fae_time.html#gad3cd66787ccb71df0b3a2f89a7ea3904">fae_time_create</a>(0,0,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(s,1))</td></tr>
+<tr class="memitem:a1a3cd4cff330c981ed89bbd3a3426273"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a1a3cd4cff330c981ed89bbd3a3426273">seconds</a>(s)&#160;&#160;&#160;<a class="el" href="group___fa_time.html#ga66de7f25c52b2de626812c85249019d8">fa_time_create</a>(0,0,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(s,1))</td></tr>
 <tr class="separator:a1a3cd4cff330c981ed89bbd3a3426273"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91bb660ad7b1ca43a90fbf23a97a0911"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a91bb660ad7b1ca43a90fbf23a97a0911">divisions</a>(a, b)&#160;&#160;&#160;<a class="el" href="group___fae_time.html#gad3cd66787ccb71df0b3a2f89a7ea3904">fae_time_create</a>(0,0,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(a,b))</td></tr>
+<tr class="memitem:a91bb660ad7b1ca43a90fbf23a97a0911"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a91bb660ad7b1ca43a90fbf23a97a0911">divisions</a>(a, b)&#160;&#160;&#160;<a class="el" href="group___fa_time.html#ga66de7f25c52b2de626812c85249019d8">fa_time_create</a>(0,0,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(a,b))</td></tr>
 <tr class="separator:a91bb660ad7b1ca43a90fbf23a97a0911"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1927a5c766ad43616ed0add6a80d2393"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a1927a5c766ad43616ed0add6a80d2393">milliseconds</a>(s)&#160;&#160;&#160;<a class="el" href="group___fae_time.html#gad3cd66787ccb71df0b3a2f89a7ea3904">fae_time_create</a>(0,0,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(s,1000))</td></tr>
+<tr class="memitem:a1927a5c766ad43616ed0add6a80d2393"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a1927a5c766ad43616ed0add6a80d2393">milliseconds</a>(s)&#160;&#160;&#160;<a class="el" href="group___fa_time.html#ga66de7f25c52b2de626812c85249019d8">fa_time_create</a>(0,0,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(s,1000))</td></tr>
 <tr class="separator:a1927a5c766ad43616ed0add6a80d2393"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d5c56472e8b46114ed4f93e3715aea1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a4d5c56472e8b46114ed4f93e3715aea1">microseconds</a>(s)&#160;&#160;&#160;<a class="el" href="group___fae_time.html#gad3cd66787ccb71df0b3a2f89a7ea3904">fae_time_create</a>(0,0,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(s,1000000))</td></tr>
+<tr class="memitem:a4d5c56472e8b46114ed4f93e3715aea1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a4d5c56472e8b46114ed4f93e3715aea1">microseconds</a>(s)&#160;&#160;&#160;<a class="el" href="group___fa_time.html#ga66de7f25c52b2de626812c85249019d8">fa_time_create</a>(0,0,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(s,1000000))</td></tr>
 <tr class="separator:a4d5c56472e8b46114ed4f93e3715aea1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3712895ac3547efa843741c487028ae7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a3712895ac3547efa843741c487028ae7">never</a>()&#160;&#160;&#160;fae_event_never()</td></tr>
-<tr class="separator:a3712895ac3547efa843741c487028ae7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a14d520764f9140033850944f5b8a686a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a14d520764f9140033850944f5b8a686a">now</a>(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)&#160;&#160;&#160;fae_event_now(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td></tr>
-<tr class="separator:a14d520764f9140033850944f5b8a686a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3324999ce4f9f3ed13308ce8171ce8ff"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a3324999ce4f9f3ed13308ce8171ce8ff">later</a>(t, <a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)&#160;&#160;&#160;fae_event_later(t,<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td></tr>
-<tr class="separator:a3324999ce4f9f3ed13308ce8171ce8ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c1bf7b09287332a081a2ebc7b27bf7f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a1c1bf7b09287332a081a2ebc7b27bf7f">delay_event</a>(t, <a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)&#160;&#160;&#160;fae_event_delay(t,<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td></tr>
-<tr class="separator:a1c1bf7b09287332a081a2ebc7b27bf7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d0a3555d0f46c3d9103dffcd1b0123f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a3d0a3555d0f46c3d9103dffcd1b0123f">merge_event</a>(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, <a class="el" href="fae_2fae_8c.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>)&#160;&#160;&#160;fae_event_merge(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>,<a class="el" href="fae_2fae_8c.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>)</td></tr>
-<tr class="separator:a3d0a3555d0f46c3d9103dffcd1b0123f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6bfaa0a98357e716e28fec505ee3fed"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#af6bfaa0a98357e716e28fec505ee3fed">switch_event</a>(p, <a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, <a class="el" href="fae_2fae_8c.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>)&#160;&#160;&#160;fae_event_switch(p,<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>,<a class="el" href="fae_2fae_8c.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>)</td></tr>
-<tr class="separator:af6bfaa0a98357e716e28fec505ee3fed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae264f342e3b86342154dc1f69721c463"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ae264f342e3b86342154dc1f69721c463">receive_event</a>(s, a)&#160;&#160;&#160;fae_event_receive(s,a)</td></tr>
-<tr class="separator:ae264f342e3b86342154dc1f69721c463"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abf51f3f322f52a9312df11cb41d822d5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#abf51f3f322f52a9312df11cb41d822d5">send_event</a>(s, a)&#160;&#160;&#160;fae_event_send(s,a,<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td></tr>
-<tr class="separator:abf51f3f322f52a9312df11cb41d822d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1caf6d210fcaa274c9bcbeb4652c817"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aa1caf6d210fcaa274c9bcbeb4652c817">before_event</a>(p, <a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)&#160;&#160;&#160;fae_event_before(p,<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td></tr>
-<tr class="separator:aa1caf6d210fcaa274c9bcbeb4652c817"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a142b0dc3f03ee3f1e77fd8fac7d9b0f3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a142b0dc3f03ee3f1e77fd8fac7d9b0f3">after_event</a>(p, <a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)&#160;&#160;&#160;fae_event_after(p,<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td></tr>
-<tr class="separator:a142b0dc3f03ee3f1e77fd8fac7d9b0f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f365b7810cab2d96e9ebfde29e4aaff"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a3f365b7810cab2d96e9ebfde29e4aaff">head_event</a>(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)&#160;&#160;&#160;fae_event_head(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td></tr>
-<tr class="separator:a3f365b7810cab2d96e9ebfde29e4aaff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d79bc106a142490143c56dec51da0b4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a5d79bc106a142490143c56dec51da0b4">tail_event</a>(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)&#160;&#160;&#160;fae_event_tail(fae_event_offset(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>),<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td></tr>
-<tr class="separator:a5d79bc106a142490143c56dec51da0b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a1aab9661ed47d8b97cf7b6c2dbfe54"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a3a1aab9661ed47d8b97cf7b6c2dbfe54">unary</a>(a, b, f, <a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)&#160;&#160;&#160;fae_processor_unary(a,b,f,<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td></tr>
-<tr class="separator:a3a1aab9661ed47d8b97cf7b6c2dbfe54"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c6d8a3ca4162d053f5eaf0f6cf90905"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a0c6d8a3ca4162d053f5eaf0f6cf90905">binary</a>(a, b, c, f, <a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)&#160;&#160;&#160;fae_processor_binary(a,b,c,f,<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td></tr>
-<tr class="separator:a0c6d8a3ca4162d053f5eaf0f6cf90905"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25e499698a4598c3c0de806b26adae07"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a25e499698a4598c3c0de806b26adae07">split</a>(a)&#160;&#160;&#160;fae_processor_split(a)</td></tr>
-<tr class="separator:a25e499698a4598c3c0de806b26adae07"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae51cc96caf06257fe90b1c95358a8494"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ae51cc96caf06257fe90b1c95358a8494">id</a>(a)&#160;&#160;&#160;fae_processor_identity(a)</td></tr>
-<tr class="separator:ae51cc96caf06257fe90b1c95358a8494"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d6d85baf846e06f09b217a15c18edf2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a6d6d85baf846e06f09b217a15c18edf2">const</a>(a, b)&#160;&#160;&#160;fae_processor_constant(a,b)</td></tr>
-<tr class="separator:a6d6d85baf846e06f09b217a15c18edf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa4df066d1a4510c4e109cd82ebf9a792"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aa4df066d1a4510c4e109cd82ebf9a792">par</a>(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, <a class="el" href="fae_2fae_8c.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>)&#160;&#160;&#160;fae_processor_parallel(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>,<a class="el" href="fae_2fae_8c.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>)</td></tr>
-<tr class="separator:aa4df066d1a4510c4e109cd82ebf9a792"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f10357b7853d68ea282c991200508d3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a6f10357b7853d68ea282c991200508d3">comp</a>(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, <a class="el" href="fae_2fae_8c.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>)&#160;&#160;&#160;fae_processor_compose(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>,<a class="el" href="fae_2fae_8c.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>)</td></tr>
-<tr class="separator:a6f10357b7853d68ea282c991200508d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7992f3df43b7c43a9fcfff3373759d1a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a7992f3df43b7c43a9fcfff3373759d1a">seq</a>(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, <a class="el" href="fae_2fae_8c.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>)&#160;&#160;&#160;fae_processor_sequence(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>,<a class="el" href="fae_2fae_8c.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>)</td></tr>
-<tr class="separator:a7992f3df43b7c43a9fcfff3373759d1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe55b3856151a7e5302f608b23f9a825"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#abe55b3856151a7e5302f608b23f9a825">loop</a>(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)&#160;&#160;&#160;fae_processor_loop(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td></tr>
-<tr class="separator:abe55b3856151a7e5302f608b23f9a825"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00b5ed499d524a920815b9d8f24ef3a2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a00b5ed499d524a920815b9d8f24ef3a2">empty</a>&#160;&#160;&#160;<a class="el" href="group___fae_list.html#gac7cc8e649da0ffca0fcddc85856964ed">fae_list_empty</a></td></tr>
+<tr class="memitem:a546a1ede08738a7492f1450382489335"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a546a1ede08738a7492f1450382489335">stime</a>&#160;&#160;&#160;<a class="el" href="group___fa_signal.html#ga1884836b27b28547fcccdda085c6e947">fa_signal_time</a></td></tr>
+<tr class="separator:a546a1ede08738a7492f1450382489335"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36b803e0123070cccb24a3fe98994b16"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a36b803e0123070cccb24a3fe98994b16">srandom</a>&#160;&#160;&#160;<a class="el" href="group___fa_signal.html#ga3e53efe955d4c0c931b6440765936117">fa_signal_random</a></td></tr>
+<tr class="separator:a36b803e0123070cccb24a3fe98994b16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8e9443eab9b01139ff3abfc68cd22ed"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aa8e9443eab9b01139ff3abfc68cd22ed">constant</a>&#160;&#160;&#160;<a class="el" href="group___fa_signal.html#ga9fe0724b36da19886a373a0b578d30c5">fa_signal_constant</a></td></tr>
+<tr class="separator:aa8e9443eab9b01139ff3abfc68cd22ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a855273c9c5dd4bb511e9a1cb760438aa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a855273c9c5dd4bb511e9a1cb760438aa">impulse</a>&#160;&#160;&#160;<a class="el" href="group___fa_signal.html#gab58471c81821440157ba721c92813ce7">fa_signal_impulse</a></td></tr>
+<tr class="separator:a855273c9c5dd4bb511e9a1cb760438aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5bdec07ba0f5f220bcb40d5258725d95"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a5bdec07ba0f5f220bcb40d5258725d95">line</a>&#160;&#160;&#160;<a class="el" href="group___fa_signal.html#ga662c2ee3cb779bea499c03ef7a24edf0">fa_signal_line</a></td></tr>
+<tr class="separator:a5bdec07ba0f5f220bcb40d5258725d95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac16a222c648fdce7e5eb4f7e6cdb4d9d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ac16a222c648fdce7e5eb4f7e6cdb4d9d">delay</a>&#160;&#160;&#160;<a class="el" href="group___fa_signal.html#ga7a10c409ddf5d80eccfe8875e395d3fe">fa_signal_delay</a></td></tr>
+<tr class="separator:ac16a222c648fdce7e5eb4f7e6cdb4d9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8093cf142de43413a3649101cf95152c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a8093cf142de43413a3649101cf95152c">loop</a>&#160;&#160;&#160;<a class="el" href="group___fa_signal.html#ga2b54d7290dc7491490545e92df9e4281">fa_signal_loop</a></td></tr>
+<tr class="separator:a8093cf142de43413a3649101cf95152c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00b5ed499d524a920815b9d8f24ef3a2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a00b5ed499d524a920815b9d8f24ef3a2">empty</a>&#160;&#160;&#160;<a class="el" href="group___fa_list.html#gabf678944a2862ba07072920e37cdb23d">fa_list_empty</a></td></tr>
 <tr class="separator:a00b5ed499d524a920815b9d8f24ef3a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab0c423922624e8a93628dbf4b3d6287"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aab0c423922624e8a93628dbf4b3d6287">cons</a>&#160;&#160;&#160;<a class="el" href="group___fae_list.html#gaf9d9836cd556e41a8bf8c4e83fa847f0">fae_list_cons</a></td></tr>
+<tr class="memitem:aab0c423922624e8a93628dbf4b3d6287"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aab0c423922624e8a93628dbf4b3d6287">cons</a>&#160;&#160;&#160;<a class="el" href="group___fa_list.html#ga729b08c806316dc7deea4acddf1a5be7">fa_list_cons</a></td></tr>
 <tr class="separator:aab0c423922624e8a93628dbf4b3d6287"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b63eb54857113ea4ed31a590a0eedb4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a7b63eb54857113ea4ed31a590a0eedb4">is_empty</a>&#160;&#160;&#160;<a class="el" href="group___fae_list.html#gaf5239337403c864866caf5e9850489fd">fae_list_is_empty</a></td></tr>
+<tr class="memitem:a7b63eb54857113ea4ed31a590a0eedb4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a7b63eb54857113ea4ed31a590a0eedb4">is_empty</a>&#160;&#160;&#160;<a class="el" href="group___fa_list.html#gaad6f17971589651521ccf16371f12f6d">fa_list_is_empty</a></td></tr>
 <tr class="separator:a7b63eb54857113ea4ed31a590a0eedb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac28489771b783d77b626fd862aaf6fa9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ac28489771b783d77b626fd862aaf6fa9">char_at</a>&#160;&#160;&#160;<a class="el" href="group___fae_string.html#ga0694fad225797e3079e9b9675b35503f">fae_string_char_at</a></td></tr>
+<tr class="memitem:ac28489771b783d77b626fd862aaf6fa9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ac28489771b783d77b626fd862aaf6fa9">char_at</a>&#160;&#160;&#160;<a class="el" href="group___fa_string.html#gaaf369309c09d23b1f2a66c13a6a0696a">fa_string_char_at</a></td></tr>
 <tr class="separator:ac28489771b783d77b626fd862aaf6fa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a996cbb41ab01b17d9b069368e7a58293"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a996cbb41ab01b17d9b069368e7a58293">string_append</a>&#160;&#160;&#160;<a class="el" href="group___fae_string.html#ga15bd908dfbaa6539a460397b078711f3">fae_string_append</a></td></tr>
+<tr class="memitem:a996cbb41ab01b17d9b069368e7a58293"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a996cbb41ab01b17d9b069368e7a58293">string_append</a>&#160;&#160;&#160;<a class="el" href="group___fa_string.html#ga2b9be3fb893f9d8b7d14362e47644040">fa_string_append</a></td></tr>
 <tr class="separator:a996cbb41ab01b17d9b069368e7a58293"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff073ffd5ec3ce5a25517b0ff2ec2b4c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aff073ffd5ec3ce5a25517b0ff2ec2b4c">string_dappend</a>&#160;&#160;&#160;<a class="el" href="group___fae_string.html#ga8167ec8d781c5138deaf78ed8d013436">fae_string_dappend</a></td></tr>
+<tr class="memitem:aff073ffd5ec3ce5a25517b0ff2ec2b4c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aff073ffd5ec3ce5a25517b0ff2ec2b4c">string_dappend</a>&#160;&#160;&#160;<a class="el" href="group___fa_string.html#gab3f2263e600e0223da71ea555a13a5b5">fa_string_dappend</a></td></tr>
 <tr class="separator:aff073ffd5ec3ce5a25517b0ff2ec2b4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a986d6a32fb028d2f4151cd4eb0c57f0c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a986d6a32fb028d2f4151cd4eb0c57f0c">format_integral</a>&#160;&#160;&#160;<a class="el" href="group___fae_string.html#ga3e5a5f058600cb2ed7d45beb27186567">fae_string_format_integral</a></td></tr>
+<tr class="memitem:a986d6a32fb028d2f4151cd4eb0c57f0c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a986d6a32fb028d2f4151cd4eb0c57f0c">format_integral</a>&#160;&#160;&#160;<a class="el" href="group___fa_string.html#gaa819d19d4172ad02aa0b11a9657b9a12">fa_string_format_integral</a></td></tr>
 <tr class="separator:a986d6a32fb028d2f4151cd4eb0c57f0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a399d079387107181a4f887f1a02dac4f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a399d079387107181a4f887f1a02dac4f">format_floating</a>&#160;&#160;&#160;<a class="el" href="group___fae_string.html#ga92be3587d0c1e4dfbf60335373f6f3f9">fae_string_format_floating</a></td></tr>
+<tr class="memitem:a399d079387107181a4f887f1a02dac4f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a399d079387107181a4f887f1a02dac4f">format_floating</a>&#160;&#160;&#160;<a class="el" href="group___fa_string.html#ga31e191dfacc16171eae10567a1ed1319">fa_string_format_floating</a></td></tr>
 <tr class="separator:a399d079387107181a4f887f1a02dac4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44c899035accfb84c3a43cdf18ccce67"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a44c899035accfb84c3a43cdf18ccce67">inform</a>(s)&#160;&#160;&#160;<a class="el" href="group___fae_fae.html#ga8f7700178be1f78c6dd18d164880a24e">fae_fae_log_info</a>(s)</td></tr>
+<tr class="memitem:a44c899035accfb84c3a43cdf18ccce67"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a44c899035accfb84c3a43cdf18ccce67">inform</a>(s)&#160;&#160;&#160;<a class="el" href="util_8h.html#a4b5197b7cd4a1c6b30b38820212b66d3">fa_fa_log_info</a>(s)</td></tr>
 <tr class="separator:a44c899035accfb84c3a43cdf18ccce67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89983e3eede205a038417482937f11e9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a89983e3eede205a038417482937f11e9">dinform</a>(s)&#160;&#160;&#160;<a class="el" href="group___fae_fae.html#gafcfb4ecd3a1989ec122df65372d7f5d1">fae_fae_dlog_info</a>(s)</td></tr>
+<tr class="memitem:a89983e3eede205a038417482937f11e9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a89983e3eede205a038417482937f11e9">dinform</a>(s)&#160;&#160;&#160;<a class="el" href="util_8h.html#a939fbc3489d171ee481958f8fcde8cf2">fa_fa_dlog_info</a>(s)</td></tr>
 <tr class="separator:a89983e3eede205a038417482937f11e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93942d758939b33b45f9ab3821f068e9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a93942d758939b33b45f9ab3821f068e9">warn</a>(s)&#160;&#160;&#160;<a class="el" href="group___fae_fae.html#gadff524aa3b0d6ec4f2162a9ff49c85c9">fae_fae_log_warning</a>(s)</td></tr>
+<tr class="memitem:a93942d758939b33b45f9ab3821f068e9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a93942d758939b33b45f9ab3821f068e9">warn</a>(s)&#160;&#160;&#160;<a class="el" href="util_8h.html#ab33512a1e8ef235f9b302b0579fc7337">fa_fa_log_warning</a>(s)</td></tr>
 <tr class="separator:a93942d758939b33b45f9ab3821f068e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc84d45ae7d25d204d99bf4cb6f240af"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#adc84d45ae7d25d204d99bf4cb6f240af">fail</a>(s)&#160;&#160;&#160;<a class="el" href="group___fae_fae.html#gac36018ad4dbbe0fd75d80f94699bf68f">fae_fae_log_error</a>(s)</td></tr>
+<tr class="memitem:adc84d45ae7d25d204d99bf4cb6f240af"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#adc84d45ae7d25d204d99bf4cb6f240af">fail</a>(s)&#160;&#160;&#160;<a class="el" href="util_8h.html#a3a5ad0223c636eb29f326070112cac20">fa_fa_log_error</a>(s)</td></tr>
 <tr class="separator:adc84d45ae7d25d204d99bf4cb6f240af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0644f77980b364658aaae86db2e40c2e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a0644f77980b364658aaae86db2e40c2e">log_error</a>(e)&#160;&#160;&#160;<a class="el" href="group___fae_error.html#gab00e79d4c453b5f159223d3b44cabee9">fae_error_log</a>(NULL,e)</td></tr>
+<tr class="memitem:a0644f77980b364658aaae86db2e40c2e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a0644f77980b364658aaae86db2e40c2e">log_error</a>(e)&#160;&#160;&#160;<a class="el" href="group___fa_error.html#ga0053afc7a37791bee61e09b927a98de6">fa_error_log</a>(NULL,e)</td></tr>
 <tr class="separator:a0644f77980b364658aaae86db2e40c2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70597aa9a5baaa4676f9f8cbe306dae0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a70597aa9a5baaa4676f9f8cbe306dae0">tb</a>&#160;&#160;&#160;<a class="el" href="group___fae.html#ga9fdde7e63c9eb0ce1e87cd97c563b6f9">fae_to_bool</a></td></tr>
+<tr class="memitem:a70597aa9a5baaa4676f9f8cbe306dae0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a70597aa9a5baaa4676f9f8cbe306dae0">tb</a>&#160;&#160;&#160;<a class="el" href="group___fa.html#gaaf4259b5ac3ff48af05cb68457ba221a">fa_to_bool</a></td></tr>
 <tr class="separator:a70597aa9a5baaa4676f9f8cbe306dae0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc8254b904e9d51c6cbbfb181bb8a21c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#afc8254b904e9d51c6cbbfb181bb8a21c">ti8</a>&#160;&#160;&#160;<a class="el" href="group___fae.html#gac4cb106c198c0230ab4e28b722c68451">fae_to_int8</a></td></tr>
+<tr class="memitem:afc8254b904e9d51c6cbbfb181bb8a21c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#afc8254b904e9d51c6cbbfb181bb8a21c">ti8</a>&#160;&#160;&#160;<a class="el" href="group___fa.html#gabd43542166bbe006f8e0c4ccc6d72100">fa_to_int8</a></td></tr>
 <tr class="separator:afc8254b904e9d51c6cbbfb181bb8a21c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6b8c1ec154479d936eb1b59c881fd29"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aa6b8c1ec154479d936eb1b59c881fd29">ti16</a>&#160;&#160;&#160;<a class="el" href="group___fae.html#ga709aca0bd6fb4ad5b7994b55531d88a5">fae_to_int16</a></td></tr>
+<tr class="memitem:aa6b8c1ec154479d936eb1b59c881fd29"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aa6b8c1ec154479d936eb1b59c881fd29">ti16</a>&#160;&#160;&#160;<a class="el" href="group___fa.html#gae127bdbf90563944797d0c6413bec857">fa_to_int16</a></td></tr>
 <tr class="separator:aa6b8c1ec154479d936eb1b59c881fd29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60df3d72a00a89968d23e30748f11b9d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a60df3d72a00a89968d23e30748f11b9d">ti32</a>&#160;&#160;&#160;<a class="el" href="group___fae.html#ga6718c5e75b75b13be4f585be66a960a7">fae_to_int32</a></td></tr>
+<tr class="memitem:a60df3d72a00a89968d23e30748f11b9d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a60df3d72a00a89968d23e30748f11b9d">ti32</a>&#160;&#160;&#160;<a class="el" href="group___fa.html#ga723ce012ab74eca29af86cd0d8cdbc96">fa_to_int32</a></td></tr>
 <tr class="separator:a60df3d72a00a89968d23e30748f11b9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27707680be848e84fde6baabf204979f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a27707680be848e84fde6baabf204979f">ti64</a>&#160;&#160;&#160;<a class="el" href="group___fae.html#ga125d60bb13cbd98122d190c7b1e67ae5">fae_to_int64</a></td></tr>
+<tr class="memitem:a27707680be848e84fde6baabf204979f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a27707680be848e84fde6baabf204979f">ti64</a>&#160;&#160;&#160;<a class="el" href="group___fa.html#ga3ebe4f1a3cf5fe95f4c43263f14b3661">fa_to_int64</a></td></tr>
 <tr class="separator:a27707680be848e84fde6baabf204979f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab560dcab8d761c3e1d5647e52e2fded2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ab560dcab8d761c3e1d5647e52e2fded2">tf32</a>&#160;&#160;&#160;<a class="el" href="group___fae.html#ga78c8ccdef373b603f0bd0f1e0a4ea812">fae_to_double</a></td></tr>
+<tr class="memitem:ab560dcab8d761c3e1d5647e52e2fded2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ab560dcab8d761c3e1d5647e52e2fded2">tf32</a>&#160;&#160;&#160;<a class="el" href="group___fa.html#ga0749b5e5c77eafd3830f6083071da851">fa_to_double</a></td></tr>
 <tr class="separator:ab560dcab8d761c3e1d5647e52e2fded2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa33b0bee200da54f77fa7bf8f2da7d0d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aa33b0bee200da54f77fa7bf8f2da7d0d">tf64</a>&#160;&#160;&#160;<a class="el" href="group___fae.html#ga78c8ccdef373b603f0bd0f1e0a4ea812">fae_to_double</a></td></tr>
+<tr class="memitem:aa33b0bee200da54f77fa7bf8f2da7d0d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aa33b0bee200da54f77fa7bf8f2da7d0d">tf64</a>&#160;&#160;&#160;<a class="el" href="group___fa.html#ga0749b5e5c77eafd3830f6083071da851">fa_to_double</a></td></tr>
 <tr class="separator:aa33b0bee200da54f77fa7bf8f2da7d0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb2b04c78b5f8887d44071fb06f21cfc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#afb2b04c78b5f8887d44071fb06f21cfc">fb</a>&#160;&#160;&#160;<a class="el" href="group___fae.html#ga4b0ed1bd9e03d89ceff8d4030bc8e457">fae_from_bool</a></td></tr>
+<tr class="memitem:afb2b04c78b5f8887d44071fb06f21cfc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#afb2b04c78b5f8887d44071fb06f21cfc">fb</a>&#160;&#160;&#160;<a class="el" href="group___fa.html#gad923ed7c8ee86cbadb0cf50878a46e79">fa_from_bool</a></td></tr>
 <tr class="separator:afb2b04c78b5f8887d44071fb06f21cfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b1c3ba7ed71c46505556d43a9bee9e1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a8b1c3ba7ed71c46505556d43a9bee9e1">i8</a>&#160;&#160;&#160;<a class="el" href="group___fae.html#gabd964551251e177454f238b8e43db645">fae_from_int8</a></td></tr>
+<tr class="memitem:a8b1c3ba7ed71c46505556d43a9bee9e1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a8b1c3ba7ed71c46505556d43a9bee9e1">i8</a>&#160;&#160;&#160;<a class="el" href="group___fa.html#gad54f3ef91226619bf87daf135537be91">fa_from_int8</a></td></tr>
 <tr class="separator:a8b1c3ba7ed71c46505556d43a9bee9e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e01dd59d72c4919aa21a46fa5299e23"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a3e01dd59d72c4919aa21a46fa5299e23">i16</a>&#160;&#160;&#160;<a class="el" href="group___fae.html#ga7f8db192bc2e5c6c80eb6accc5884781">fae_from_int16</a></td></tr>
+<tr class="memitem:a3e01dd59d72c4919aa21a46fa5299e23"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a3e01dd59d72c4919aa21a46fa5299e23">i16</a>&#160;&#160;&#160;<a class="el" href="group___fa.html#ga02757b8d184afec403585cd9fc01067b">fa_from_int16</a></td></tr>
 <tr class="separator:a3e01dd59d72c4919aa21a46fa5299e23"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a832509ea197065489f1d60b6d7958cbf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a832509ea197065489f1d60b6d7958cbf">i32</a>&#160;&#160;&#160;<a class="el" href="group___fae.html#gaf8570493f5780f5bec75b28c0c5089c9">fae_from_int32</a></td></tr>
+<tr class="memitem:a832509ea197065489f1d60b6d7958cbf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a832509ea197065489f1d60b6d7958cbf">i32</a>&#160;&#160;&#160;<a class="el" href="group___fa.html#ga6f823c293e8585f3befc70b7659edf51">fa_from_int32</a></td></tr>
 <tr class="separator:a832509ea197065489f1d60b6d7958cbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa777e5139adfca31612ec04bc2b26845"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aa777e5139adfca31612ec04bc2b26845">i64</a>&#160;&#160;&#160;<a class="el" href="group___fae.html#ga1a493e817f57fbb3e3671c372ab6e58a">fae_from_int64</a></td></tr>
+<tr class="memitem:aa777e5139adfca31612ec04bc2b26845"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#aa777e5139adfca31612ec04bc2b26845">i64</a>&#160;&#160;&#160;<a class="el" href="group___fa.html#ga05eb37e556b1ad5907c8868a4b6b3c33">fa_from_int64</a></td></tr>
 <tr class="separator:aa777e5139adfca31612ec04bc2b26845"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1bd198f821a2a4ea63fa8ab2e4a2afb3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a1bd198f821a2a4ea63fa8ab2e4a2afb3">f32</a>&#160;&#160;&#160;<a class="el" href="group___fae.html#gad649323868b6ccb2d53e8f7d30151eac">fae_from_double</a></td></tr>
+<tr class="memitem:a1bd198f821a2a4ea63fa8ab2e4a2afb3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a1bd198f821a2a4ea63fa8ab2e4a2afb3">f32</a>&#160;&#160;&#160;<a class="el" href="group___fa.html#gafd6e041f2b455fc2184025d7cf41ad4a">fa_from_double</a></td></tr>
 <tr class="separator:a1bd198f821a2a4ea63fa8ab2e4a2afb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d69936f20818f2cd1b34d1d2fd841be"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a1d69936f20818f2cd1b34d1d2fd841be">f64</a>&#160;&#160;&#160;<a class="el" href="group___fae.html#gad649323868b6ccb2d53e8f7d30151eac">fae_from_double</a></td></tr>
+<tr class="memitem:a1d69936f20818f2cd1b34d1d2fd841be"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a1d69936f20818f2cd1b34d1d2fd841be">f64</a>&#160;&#160;&#160;<a class="el" href="group___fa.html#gafd6e041f2b455fc2184025d7cf41ad4a">fa_from_double</a></td></tr>
 <tr class="separator:a1d69936f20818f2cd1b34d1d2fd841be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a396f9684f983c393fcb68f2534d3ee36"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a396f9684f983c393fcb68f2534d3ee36">mark_used</a>(X)&#160;&#160;&#160;X = *(&amp;X)</td></tr>
+<tr class="separator:a396f9684f983c393fcb68f2534d3ee36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga8f7700178be1f78c6dd18d164880a24e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_fae.html#ga8f7700178be1f78c6dd18d164880a24e">fae_fae_log_info</a> (<a class="el" href="group___fae_string.html#gaec46988276ade4118709314865160b76">fae_string_t</a>)</td></tr>
-<tr class="memdesc:ga8f7700178be1f78c6dd18d164880a24e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write an informative message to the log.  <a href="group___fae_fae.html#ga8f7700178be1f78c6dd18d164880a24e"></a><br/></td></tr>
-<tr class="separator:ga8f7700178be1f78c6dd18d164880a24e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gadff524aa3b0d6ec4f2162a9ff49c85c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_fae.html#gadff524aa3b0d6ec4f2162a9ff49c85c9">fae_fae_log_warning</a> (<a class="el" href="group___fae_string.html#gaec46988276ade4118709314865160b76">fae_string_t</a>)</td></tr>
-<tr class="memdesc:gadff524aa3b0d6ec4f2162a9ff49c85c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a warning to the log.  <a href="group___fae_fae.html#gadff524aa3b0d6ec4f2162a9ff49c85c9"></a><br/></td></tr>
-<tr class="separator:gadff524aa3b0d6ec4f2162a9ff49c85c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac36018ad4dbbe0fd75d80f94699bf68f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_fae.html#gac36018ad4dbbe0fd75d80f94699bf68f">fae_fae_log_error</a> (<a class="el" href="group___fae_string.html#gaec46988276ade4118709314865160b76">fae_string_t</a>)</td></tr>
-<tr class="memdesc:gac36018ad4dbbe0fd75d80f94699bf68f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write an error to the log.  <a href="group___fae_fae.html#gac36018ad4dbbe0fd75d80f94699bf68f"></a><br/></td></tr>
-<tr class="separator:gac36018ad4dbbe0fd75d80f94699bf68f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafcfb4ecd3a1989ec122df65372d7f5d1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_fae.html#gafcfb4ecd3a1989ec122df65372d7f5d1">fae_fae_dlog_info</a> (<a class="el" href="group___fae_string.html#gaec46988276ade4118709314865160b76">fae_string_t</a>)</td></tr>
-<tr class="separator:gafcfb4ecd3a1989ec122df65372d7f5d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b5197b7cd4a1c6b30b38820212b66d3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a4b5197b7cd4a1c6b30b38820212b66d3">fa_fa_log_info</a> (<a class="el" href="group___fa_string.html#gacada63033b77bc6c39fa632ae199349b">fa_string_t</a>)</td></tr>
+<tr class="separator:a4b5197b7cd4a1c6b30b38820212b66d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab33512a1e8ef235f9b302b0579fc7337"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#ab33512a1e8ef235f9b302b0579fc7337">fa_fa_log_warning</a> (<a class="el" href="group___fa_string.html#gacada63033b77bc6c39fa632ae199349b">fa_string_t</a>)</td></tr>
+<tr class="separator:ab33512a1e8ef235f9b302b0579fc7337"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a5ad0223c636eb29f326070112cac20"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a3a5ad0223c636eb29f326070112cac20">fa_fa_log_error</a> (<a class="el" href="group___fa_string.html#gacada63033b77bc6c39fa632ae199349b">fa_string_t</a>)</td></tr>
+<tr class="separator:a3a5ad0223c636eb29f326070112cac20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a939fbc3489d171ee481958f8fcde8cf2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="util_8h.html#a939fbc3489d171ee481958f8fcde8cf2">fa_fa_dlog_info</a> (<a class="el" href="group___fa_string.html#gacada63033b77bc6c39fa632ae199349b">fa_string_t</a>)</td></tr>
+<tr class="separator:a939fbc3489d171ee481958f8fcde8cf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a class="anchor" id="a198813f63c4c43af209d7858a02b7318"></a>
@@ -366,7 +338,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define ptr_t&#160;&#160;&#160;<a class="el" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4">fae_ptr_t</a></td>
+          <td class="memname">#define ptr_t&#160;&#160;&#160;<a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -378,7 +350,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define impl_t&#160;&#160;&#160;<a class="el" href="group___fae.html#ga581a82bb89c14969b88662add57ad568">fae_impl_t</a></td>
+          <td class="memname">#define impl_t&#160;&#160;&#160;<a class="el" href="group___fa.html#gac13cc6d4ef02b8763045164333cfd763">fa_impl_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -390,7 +362,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define pred_t&#160;&#160;&#160;<a class="el" href="group___fae.html#gaeca2a35b16f98a1eed01cc23972b67fd">fae_pred_t</a></td>
+          <td class="memname">#define pred_t&#160;&#160;&#160;<a class="el" href="group___fa.html#gae6b6ae9fb073db0ba0bd323d511c6a98">fa_pred_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -402,7 +374,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define nullary_t&#160;&#160;&#160;<a class="el" href="group___fae.html#ga08575a144de95fa3985dc31d18853192">fae_nullary_t</a></td>
+          <td class="memname">#define nullary_t&#160;&#160;&#160;<a class="el" href="group___fa.html#ga43b940a9294fd58a54087ef0b416e479">fa_nullary_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -414,7 +386,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define unary_t&#160;&#160;&#160;<a class="el" href="group___fae.html#ga89ae9936173403c7db68b5f2921fc9d2">fae_unary_t</a></td>
+          <td class="memname">#define unary_t&#160;&#160;&#160;<a class="el" href="group___fa.html#gaaafae8ab9ebae9019133108e56d2d4d1">fa_unary_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -426,7 +398,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define binary_t&#160;&#160;&#160;<a class="el" href="group___fae.html#gae8800961187889a0bba3f01862919aee">fae_binary_t</a></td>
+          <td class="memname">#define binary_t&#160;&#160;&#160;<a class="el" href="group___fa.html#gab70ba406935a18c1d645d12e7abf2e63">fa_binary_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -438,7 +410,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define ternary_t&#160;&#160;&#160;<a class="el" href="group___fae.html#gabbd2feff1878427e64ac454e0542a010">fae_ternary_t</a></td>
+          <td class="memname">#define ternary_t&#160;&#160;&#160;<a class="el" href="group___fa.html#gadbab7e8e405b3d2436de1e1126cc4817">fa_ternary_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -450,7 +422,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define error_t&#160;&#160;&#160;<a class="el" href="group___fae_error.html#gaf9830ae96f902091ac8f87255b671c4f">fae_error_t</a></td>
+          <td class="memname">#define error_t&#160;&#160;&#160;<a class="el" href="group___fa_error.html#ga4a4feb4d3686657ac8dbd2be421cbb15">fa_error_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -462,7 +434,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define error_callback_t&#160;&#160;&#160;<a class="el" href="group___fae_error.html#ga2abe2dd713d82605e3dd774edb82a763">fae_error_callback_t</a></td>
+          <td class="memname">#define error_callback_t&#160;&#160;&#160;<a class="el" href="group___fa_error.html#ga43d8d45a005130a5052ba3281a8bf33e">fa_error_callback_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -474,7 +446,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define severity_t&#160;&#160;&#160;<a class="el" href="group___fae_error.html#gae992e8c25323e179035d2cc31a97ddf3">fae_error_severity_t</a></td>
+          <td class="memname">#define severity_t&#160;&#160;&#160;<a class="el" href="group___fa_error.html#ga5cf5c13f1e12ae6b125c0265f59f4d82">fa_error_severity_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -486,7 +458,19 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define pair_t&#160;&#160;&#160;<a class="el" href="group___fae_pair.html#ga1f7c75839e2ea6e61c31fdb4b0cd1e1a">fae_pair_t</a></td>
+          <td class="memname">#define pair_t&#160;&#160;&#160;<a class="el" href="group___fa_pair.html#gac2b2e58c230bac4f8a63ef6c05072680">fa_pair_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aeb96032f569288866770474f5b66d803"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define pair_left_t&#160;&#160;&#160;fa_pair_left_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -498,7 +482,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define list_t&#160;&#160;&#160;<a class="el" href="group___fae_list.html#ga62e8420b5e2c8b334f662b986633ff3a">fae_list_t</a></td>
+          <td class="memname">#define list_t&#160;&#160;&#160;<a class="el" href="group___fa_list.html#ga35ecb12ab934ded0cce0bcf28e3bc5d2">fa_list_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -510,7 +494,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define set_t&#160;&#160;&#160;<a class="el" href="group___fae_set.html#ga51dde2329edd32c7f85af76489dbb364">fae_set_t</a></td>
+          <td class="memname">#define set_t&#160;&#160;&#160;fa_set_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -522,7 +506,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define map_t&#160;&#160;&#160;<a class="el" href="group___fae_map.html#ga32218b30b73e61a0f22e4952c54964c8">fae_map_t</a></td>
+          <td class="memname">#define map_t&#160;&#160;&#160;<a class="el" href="group___fa_map.html#gadcbb0c425af31be6aeb265159b2a7db0">fa_map_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -534,7 +518,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define graph_t&#160;&#160;&#160;<a class="el" href="group___fae_graph.html#ga31ade0db45461dcf8dc71a5ec1ee6f34">fae_graph_t</a></td>
+          <td class="memname">#define graph_t&#160;&#160;&#160;fa_graph_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -546,7 +530,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define string_t&#160;&#160;&#160;<a class="el" href="group___fae_string.html#gaec46988276ade4118709314865160b76">fae_string_t</a></td>
+          <td class="memname">#define string_t&#160;&#160;&#160;<a class="el" href="group___fa_string.html#gacada63033b77bc6c39fa632ae199349b">fa_string_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -558,7 +542,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define type_repr_t&#160;&#160;&#160;<a class="el" href="group___fae_dynamic.html#ga8d235b649f5b8d2ee955d4d865a5046e">fae_dynamic_type_repr_t</a></td>
+          <td class="memname">#define type_repr_t&#160;&#160;&#160;<a class="el" href="group___fa_dynamic.html#ga38427e999172dad2684f07793859f416">fa_dynamic_type_repr_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -570,7 +554,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define priority_queue_t&#160;&#160;&#160;fae_priority_queue_t</td>
+          <td class="memname">#define priority_queue_t&#160;&#160;&#160;fa_priority_queue_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -582,7 +566,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define scheduler_t&#160;&#160;&#160;fae_scheduler_t</td>
+          <td class="memname">#define scheduler_t&#160;&#160;&#160;fa_scheduler_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -594,7 +578,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define atomic_t&#160;&#160;&#160;<a class="el" href="group___fae_atomic.html#ga54a94f24b5d6fbe66e807e8048118a07">fae_atomic_t</a></td>
+          <td class="memname">#define atomic_t&#160;&#160;&#160;fa_atomic_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -606,7 +590,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define atomic_queue_t&#160;&#160;&#160;fae_atomic_queue_t</td>
+          <td class="memname">#define atomic_queue_t&#160;&#160;&#160;fa_atomic_queue_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -618,7 +602,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define atomic_stack_t&#160;&#160;&#160;<a class="el" href="group___fae_atomic_stack.html#ga4eae9f89d5fb0c9c9444110662f7e013">fae_atomic_stack_t</a></td>
+          <td class="memname">#define atomic_stack_t&#160;&#160;&#160;fa_atomic_stack_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -630,7 +614,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define ringbuffer_t&#160;&#160;&#160;fae_atomic_ring_buffer_t</td>
+          <td class="memname">#define ringbuffer_t&#160;&#160;&#160;fa_atomic_ring_buffer_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -642,7 +626,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define thread_t&#160;&#160;&#160;<a class="el" href="group___fae_thread.html#ga7bde642d7978cfaef92300ab2f865231">fae_thread_t</a></td>
+          <td class="memname">#define thread_t&#160;&#160;&#160;fa_thread_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -654,7 +638,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define mutex_t&#160;&#160;&#160;<a class="el" href="group___fae_thread.html#ga69e32d0be6e878b981258339b444dc7a">fae_thread_mutex_t</a></td>
+          <td class="memname">#define mutex_t&#160;&#160;&#160;fa_thread_mutex_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -666,7 +650,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define ratio_t&#160;&#160;&#160;<a class="el" href="group___fae_ratio.html#gacee6f32b72349c26a6d2a90686facc3b">fae_ratio_t</a></td>
+          <td class="memname">#define ratio_t&#160;&#160;&#160;<a class="el" href="group___fa_ratio.html#gaf3b37b5fdfcccb6283b7ac806c72b273">fa_ratio_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -678,7 +662,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define buffer_t&#160;&#160;&#160;<a class="el" href="group___fae_buffer.html#ga9447030a16ca7d8603451107e0f516ec">fae_buffer_t</a></td>
+          <td class="memname">#define buffer_t&#160;&#160;&#160;<a class="el" href="group___fa_buffer.html#ga0ed7a1d783ab322e2e8be02432d0839e">fa_buffer_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -690,7 +674,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define frames_t&#160;&#160;&#160;<a class="el" href="group___fae_type.html#ga01ca219251cd4b36ba5444a8848089d0">fae_type_frames_t</a></td>
+          <td class="memname">#define frames_t&#160;&#160;&#160;fa_type_frames_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -702,7 +686,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define type_t&#160;&#160;&#160;<a class="el" href="group___fae_type.html#ga5fefbac5dae4e382d149afc943af0eb1">fae_type_t</a></td>
+          <td class="memname">#define type_t&#160;&#160;&#160;fa_type_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -714,7 +698,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define midi_message_t&#160;&#160;&#160;<a class="el" href="group___fae_midi_message.html#ga986753d496dfcf47ea606a9eb399c1fc">fae_midi_message_t</a></td>
+          <td class="memname">#define midi_message_t&#160;&#160;&#160;<a class="el" href="group___fa_midi_message.html#gaa73293eb40a2cffdc2294e3cb6dc2564">fa_midi_message_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -726,7 +710,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define time_t&#160;&#160;&#160;<a class="el" href="group___fae_time.html#ga24fcf1450ea9516fe7d650762e22d945">fae_time_t</a></td>
+          <td class="memname">#define time_t&#160;&#160;&#160;<a class="el" href="group___fa_time.html#ga227cc693f20b4873fed11028bcade184">fa_time_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -738,7 +722,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define clock_t&#160;&#160;&#160;fae_time_clock_t</td>
+          <td class="memname">#define clock_t&#160;&#160;&#160;fa_time_clock_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -750,43 +734,19 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define event_t&#160;&#160;&#160;fae_event_t</td>
+          <td class="memname">#define event_t&#160;&#160;&#160;fa_event_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a class="anchor" id="a78a0380cda121cdfbd5bc21168841230"></a>
+<a class="anchor" id="a4179e0566b0727e21f1fd4b5e6533dee"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define processor_t&#160;&#160;&#160;fae_processor_t</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a91f69826574598e63aa804536f111209"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define proc_t&#160;&#160;&#160;fae_processor_t</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a1554afa2496505ee00d56c8b7e8dd2c9"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define proc_interface_t&#160;&#160;&#160;fae_processor_interface_t</td>
+          <td class="memname">#define signal_t&#160;&#160;&#160;<a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -798,7 +758,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define sender_t&#160;&#160;&#160;fae_message_sender_t</td>
+          <td class="memname">#define sender_t&#160;&#160;&#160;fa_message_sender_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -810,7 +770,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define receiver_t&#160;&#160;&#160;fae_message_receiver_t</td>
+          <td class="memname">#define receiver_t&#160;&#160;&#160;fa_message_receiver_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -822,7 +782,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define dispatcher_t&#160;&#160;&#160;fae_message_dispatcher_t</td>
+          <td class="memname">#define dispatcher_t&#160;&#160;&#160;fa_message_dispatcher_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -834,7 +794,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define address_t&#160;&#160;&#160;fae_message_address_t</td>
+          <td class="memname">#define address_t&#160;&#160;&#160;fa_message_address_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -846,7 +806,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define message_t&#160;&#160;&#160;fae_message_t</td>
+          <td class="memname">#define message_t&#160;&#160;&#160;fa_message_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -858,7 +818,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define audio_device_t&#160;&#160;&#160;<a class="el" href="group___fae_audio.html#ga3c19c7494175055bd354d3a8628edd4e">fae_audio_device_t</a></td>
+          <td class="memname">#define audio_device_t&#160;&#160;&#160;<a class="el" href="group___fa_audio.html#ga03de89ee66c6465f8cedd3a0286598f4">fa_audio_device_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -870,7 +830,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define midi_device_t&#160;&#160;&#160;<a class="el" href="group___fae_midi.html#gac3323a401e147720578dcce2c452db5d">fae_midi_device_t</a></td>
+          <td class="memname">#define midi_device_t&#160;&#160;&#160;<a class="el" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -882,7 +842,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define file_device_t&#160;&#160;&#160;<a class="el" href="group___fae_device.html#ga320bb8409a812d50e1cbfe168d3182a0">fae_device_file_t</a></td>
+          <td class="memname">#define file_device_t&#160;&#160;&#160;<a class="el" href="group___fa_device.html#ga174e0149dd8d57532608e418d8dcf3b0">fa_device_file_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -894,7 +854,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define buffer_device_t&#160;&#160;&#160;<a class="el" href="group___fae_device.html#gad0e3991e650fb90a8c0123e3362a6a66">fae_device_buffer_t</a></td>
+          <td class="memname">#define buffer_device_t&#160;&#160;&#160;<a class="el" href="group___fa_device.html#gafb38d6e2111e159bd1221509e992b455">fa_device_buffer_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -906,7 +866,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define audio_stream_t&#160;&#160;&#160;<a class="el" href="group___fae_audio.html#gabedc03d3d3d615f99f27d5ec6727ca6e">fae_audio_stream_t</a></td>
+          <td class="memname">#define audio_stream_t&#160;&#160;&#160;<a class="el" href="group___fa_audio.html#ga78fbee3026130ce00d8e00a4e73a84c3">fa_audio_stream_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -918,7 +878,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define midi_stream_t&#160;&#160;&#160;<a class="el" href="group___fae_midi.html#gaecca10a4d57d3e12df8c66ee75e30c2e">fae_midi_stream_t</a></td>
+          <td class="memname">#define midi_stream_t&#160;&#160;&#160;<a class="el" href="group___fa_midi.html#ga85772039b62d8bb718a51e1ffbbb2fa2">fa_midi_stream_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -930,7 +890,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define audio_session_t&#160;&#160;&#160;<a class="el" href="group___fae_audio.html#gade5ba73a5be381d816360c9a2bf69602">fae_audio_session_t</a></td>
+          <td class="memname">#define audio_session_t&#160;&#160;&#160;<a class="el" href="group___fa_audio.html#ga62ee22268c23f1b18447141feccc01e0">fa_audio_session_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -942,7 +902,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define midi_session_t&#160;&#160;&#160;<a class="el" href="group___fae_midi.html#ga9ae465564701d86a972cd1b3b4d372fe">fae_midi_session_t</a></td>
+          <td class="memname">#define midi_session_t&#160;&#160;&#160;<a class="el" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -954,7 +914,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define file_result_t&#160;&#160;&#160;<a class="el" href="group___fae_device_file.html#gac564a223feea472a2ac5cabf30f7c205">fae_device_file_result_t</a></td>
+          <td class="memname">#define file_result_t&#160;&#160;&#160;fa_device_file_result_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -966,7 +926,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define buffer_result_t&#160;&#160;&#160;<a class="el" href="group___fae_device_buffer.html#ga4f4a55d6d541c04c6007e5a3a43852bc">fae_device_buffer_result_t</a></td>
+          <td class="memname">#define buffer_result_t&#160;&#160;&#160;fa_device_buffer_result_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -992,7 +952,33 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="group___fae_pair.html#gab4fe4f0cd57e984a98d2e3c631603023">fae_pair_create</a>(a,b)</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="group___fa_pair.html#ga021232bc4c3b3d309f9ec6d3eb87e18a">fa_pair_create</a>(a,b)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ac4d1bd03ca6c3233c65e5ce45db38b2c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define pair_left</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">a, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">b&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;fa_pair_left_create(a,b)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1008,7 +994,7 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">a</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___fae_string.html#ga37b9333270e695293deab29f81722c6f">fae_string_from_utf8</a>(a)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="group___fa_string.html#ga154cbfd5f999ea2d1860547ad3073d26">fa_string_from_utf8</a>(a)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1024,7 +1010,7 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">a</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___fae_string.html#gaed6e8c9d8a94e88001571b2237daf88a">fae_string_from_utf16</a>(u##a)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="group___fa_string.html#ga4e7e54b5f75ccf1cb062b9db8a03bdf9">fa_string_from_utf16</a>(u##a)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1040,7 +1026,7 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">a</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___fae_string.html#gad257dc15db3374472480a154e003509e">fae_string_from_utf32</a>(U##a)</td>
+          <td>&#160;&#160;&#160;fa_string_from_utf32(U##a)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1056,7 +1042,7 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">a</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___fae_string.html#gae44242e9946b99fa9b58c7433ed17b70">fae_string_to_utf8</a>(a)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="group___fa_string.html#gaf49dbc04c46b729b84cf9dd9fc29b267">fa_string_to_utf8</a>(a)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1082,7 +1068,7 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="group___fae_ratio.html#ga5c741d9f14f1d80f96dc705f2dac06e1">fae_ratio_create</a>(a,b)</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="group___fa_ratio.html#ga36f5f3f077f41be6690dbc28f766b2bd">fa_ratio_create</a>(a,b)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1097,7 +1083,7 @@ Functions</h2></td></tr>
           <td class="memname">#define priority_queue</td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="priority__queue_8c.html#a7a6b97a24f0fb0b6e1192ed3af0993dd">fae_priority_queue_empty</a>()</td>
+          <td>&#160;&#160;&#160;fa_priority_queue_empty()</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1112,7 +1098,7 @@ Functions</h2></td></tr>
           <td class="memname">#define atomic</td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___fae_atomic.html#gaf2c4197b28725a7d421ca5ba90c5ea48">fae_atomic_create</a>()</td>
+          <td>&#160;&#160;&#160;fa_atomic_create()</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1127,7 +1113,7 @@ Functions</h2></td></tr>
           <td class="memname">#define atomic_queue</td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="queue_8c.html#a987e16bd003de9b5fc51f61ed8dd4f97">fae_atomic_queue_create</a>()</td>
+          <td>&#160;&#160;&#160;fa_atomic_queue_create()</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1142,7 +1128,7 @@ Functions</h2></td></tr>
           <td class="memname">#define atomic_stack</td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___fae_atomic_stack.html#gaaafffd313f1501ea612cfa2761bc9a9d">fae_atomic_stack_create</a>()</td>
+          <td>&#160;&#160;&#160;fa_atomic_stack_create()</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1158,7 +1144,7 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">s</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="ring__buffer_8c.html#a58f932a3219eb3177607323025c60fe1">fae_atomic_ring_buffer_create</a>(s)</td>
+          <td>&#160;&#160;&#160;fa_atomic_ring_buffer_create(s)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1174,7 +1160,7 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">s</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___fae_buffer.html#ga2d3fee184a2d58a1386530d146468cba">fae_buffer_create</a>(s)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="group___fa_buffer.html#ga43b53698a7fee13e6527fa7852c22e10">fa_buffer_create</a>(s)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1206,7 +1192,7 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="group___fae_midi_message.html#ga10c28b6c3b1517ef1c6963a7a62e3233">fae_midi_message_create_simple</a>(s,a,b)</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="group___fa_midi_message.html#ga4500a770fd4a7fc5d5e742482a3f912f">fa_midi_message_create_simple</a>(s,a,b)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1222,7 +1208,7 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">b</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___fae_midi_message.html#ga0fec3860dc26d5d97682a87c625dde27">fae_midi_message_create_sysex</a>(b)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="group___fa_midi_message.html#ga5e8a42ea0df3947dc05f3a4b8094d997">fa_midi_message_create_sysex</a>(b)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1237,7 +1223,7 @@ Functions</h2></td></tr>
           <td class="memname">#define dispatcher</td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;fae_message_create_dispatcher()</td>
+          <td>&#160;&#160;&#160;fa_message_create_dispatcher()</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1252,7 +1238,7 @@ Functions</h2></td></tr>
           <td class="memname">#define lockfree_dispatcher</td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;fae_message_create_lockfree_dispatcher()</td>
+          <td>&#160;&#160;&#160;fa_message_create_lockfree_dispatcher()</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1268,7 +1254,7 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">a</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___fae_type.html#gac121b8271f10f043e1e1f50f561c1c8d">fae_type_simple</a>(a##_type)</td>
+          <td>&#160;&#160;&#160;fa_type_simple(a##_type)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1294,7 +1280,7 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="group___fae_type.html#gafe9b4cbbf53cb5022fc809b6d3d4e8c6">fae_type_pair</a>(a,b)</td>
+          <td></td><td>&#160;&#160;&#160;fa_type_pair(a,b)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1320,7 +1306,7 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="group___fae_type.html#ga1e3d6f6b227fef61024de496d86e108e">fae_type_vector</a>(a,n)</td>
+          <td></td><td>&#160;&#160;&#160;fa_type_vector(a,n)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1336,7 +1322,43 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">a</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___fae_type.html#ga7c37ed8c3415076c2ef504f1df7257c9">fae_type_frame</a>(a)</td>
+          <td>&#160;&#160;&#160;fa_type_frame(a)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af18599886995e27774c59b182b04c8ed"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define action_set&#160;&#160;&#160;<a class="el" href="group___fa_action.html#gad2818d311d7bf18517fa3ac7a8ad13da">fa_action_set</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a4076ed0bd2b626cc46af5484c7fa289c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define action_accum&#160;&#160;&#160;<a class="el" href="group___fa_action.html#ga73b344deb9ce4422b02d8bba2b247be9">fa_action_accum</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a6215920d5a92a91dfbfea0aa821d6bc7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define action_send&#160;&#160;&#160;<a class="el" href="group___fa_action.html#gad319d19b5fd1e13c381d1085fa167b81">fa_action_send</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1368,7 +1390,7 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="group___fae_time.html#gad3cd66787ccb71df0b3a2f89a7ea3904">fae_time_create</a>(0,h,m,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(s,1))</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="group___fa_time.html#ga66de7f25c52b2de626812c85249019d8">fa_time_create</a>(0,h,m,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(s,1))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1384,7 +1406,7 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">d</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___fae_time.html#gad3cd66787ccb71df0b3a2f89a7ea3904">fae_time_create</a>(d,0,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(0,1))</td>
+          <td>&#160;&#160;&#160;<a class="el" href="group___fa_time.html#ga66de7f25c52b2de626812c85249019d8">fa_time_create</a>(d,0,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(0,1))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1400,7 +1422,7 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">h</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___fae_time.html#gad3cd66787ccb71df0b3a2f89a7ea3904">fae_time_create</a>(0,h,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(0,1))</td>
+          <td>&#160;&#160;&#160;<a class="el" href="group___fa_time.html#ga66de7f25c52b2de626812c85249019d8">fa_time_create</a>(0,h,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(0,1))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1416,7 +1438,7 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">m</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___fae_time.html#gad3cd66787ccb71df0b3a2f89a7ea3904">fae_time_create</a>(0,0,m,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(0,1))</td>
+          <td>&#160;&#160;&#160;<a class="el" href="group___fa_time.html#ga66de7f25c52b2de626812c85249019d8">fa_time_create</a>(0,0,m,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(0,1))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1432,7 +1454,7 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">s</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___fae_time.html#gad3cd66787ccb71df0b3a2f89a7ea3904">fae_time_create</a>(0,0,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(s,1))</td>
+          <td>&#160;&#160;&#160;<a class="el" href="group___fa_time.html#ga66de7f25c52b2de626812c85249019d8">fa_time_create</a>(0,0,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(s,1))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1458,7 +1480,7 @@ Functions</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="group___fae_time.html#gad3cd66787ccb71df0b3a2f89a7ea3904">fae_time_create</a>(0,0,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(a,b))</td>
+          <td></td><td>&#160;&#160;&#160;<a class="el" href="group___fa_time.html#ga66de7f25c52b2de626812c85249019d8">fa_time_create</a>(0,0,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(a,b))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1474,7 +1496,7 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">s</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___fae_time.html#gad3cd66787ccb71df0b3a2f89a7ea3904">fae_time_create</a>(0,0,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(s,1000))</td>
+          <td>&#160;&#160;&#160;<a class="el" href="group___fa_time.html#ga66de7f25c52b2de626812c85249019d8">fa_time_create</a>(0,0,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(s,1000))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -1490,518 +1512,91 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">s</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___fae_time.html#gad3cd66787ccb71df0b3a2f89a7ea3904">fae_time_create</a>(0,0,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(s,1000000))</td>
+          <td>&#160;&#160;&#160;<a class="el" href="group___fa_time.html#ga66de7f25c52b2de626812c85249019d8">fa_time_create</a>(0,0,0,<a class="el" href="util_8h.html#a866d3cbbee2679ec3c34f27a256445de">ratio</a>(s,1000000))</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a class="anchor" id="a3712895ac3547efa843741c487028ae7"></a>
+<a class="anchor" id="a546a1ede08738a7492f1450382489335"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define never</td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;fae_event_never()</td>
+          <td class="memname">#define stime&#160;&#160;&#160;<a class="el" href="group___fa_signal.html#ga1884836b27b28547fcccdda085c6e947">fa_signal_time</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a class="anchor" id="a14d520764f9140033850944f5b8a686a"></a>
+<a class="anchor" id="a36b803e0123070cccb24a3fe98994b16"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define now</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a></td><td>)</td>
-          <td>&#160;&#160;&#160;fae_event_now(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td>
+          <td class="memname">#define srandom&#160;&#160;&#160;<a class="el" href="group___fa_signal.html#ga3e53efe955d4c0c931b6440765936117">fa_signal_random</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a class="anchor" id="a3324999ce4f9f3ed13308ce8171ce8ff"></a>
+<a class="anchor" id="aa8e9443eab9b01139ff3abfc68cd22ed"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define later</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">t, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;fae_event_later(t,<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td>
+          <td class="memname">#define constant&#160;&#160;&#160;<a class="el" href="group___fa_signal.html#ga9fe0724b36da19886a373a0b578d30c5">fa_signal_constant</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a class="anchor" id="a1c1bf7b09287332a081a2ebc7b27bf7f"></a>
+<a class="anchor" id="a855273c9c5dd4bb511e9a1cb760438aa"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define delay_event</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">t, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;fae_event_delay(t,<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td>
+          <td class="memname">#define impulse&#160;&#160;&#160;<a class="el" href="group___fa_signal.html#gab58471c81821440157ba721c92813ce7">fa_signal_impulse</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a class="anchor" id="a3d0a3555d0f46c3d9103dffcd1b0123f"></a>
+<a class="anchor" id="a5bdec07ba0f5f220bcb40d5258725d95"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define merge_event</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><a class="el" href="fae_2fae_8c.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;fae_event_merge(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>,<a class="el" href="fae_2fae_8c.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>)</td>
+          <td class="memname">#define line&#160;&#160;&#160;<a class="el" href="group___fa_signal.html#ga662c2ee3cb779bea499c03ef7a24edf0">fa_signal_line</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a class="anchor" id="af6bfaa0a98357e716e28fec505ee3fed"></a>
+<a class="anchor" id="ac16a222c648fdce7e5eb4f7e6cdb4d9d"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define switch_event</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">p, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><a class="el" href="fae_2fae_8c.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;fae_event_switch(p,<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>,<a class="el" href="fae_2fae_8c.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>)</td>
+          <td class="memname">#define delay&#160;&#160;&#160;<a class="el" href="group___fa_signal.html#ga7a10c409ddf5d80eccfe8875e395d3fe">fa_signal_delay</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a class="anchor" id="ae264f342e3b86342154dc1f69721c463"></a>
+<a class="anchor" id="a8093cf142de43413a3649101cf95152c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define receive_event</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">s, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">a&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;fae_event_receive(s,a)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="abf51f3f322f52a9312df11cb41d822d5"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define send_event</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">s, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">a&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;fae_event_send(s,a,<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="aa1caf6d210fcaa274c9bcbeb4652c817"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define before_event</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">p, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;fae_event_before(p,<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a142b0dc3f03ee3f1e77fd8fac7d9b0f3"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define after_event</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">p, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;fae_event_after(p,<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a3f365b7810cab2d96e9ebfde29e4aaff"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define head_event</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a></td><td>)</td>
-          <td>&#160;&#160;&#160;fae_event_head(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a5d79bc106a142490143c56dec51da0b4"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define tail_event</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a></td><td>)</td>
-          <td>&#160;&#160;&#160;fae_event_tail(fae_event_offset(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>),<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a3a1aab9661ed47d8b97cf7b6c2dbfe54"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define unary</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">a, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">b, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">f, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;fae_processor_unary(a,b,f,<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a0c6d8a3ca4162d053f5eaf0f6cf90905"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define binary</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">a, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">b, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">c, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">f, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;fae_processor_binary(a,b,c,f,<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a25e499698a4598c3c0de806b26adae07"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define split</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">a</td><td>)</td>
-          <td>&#160;&#160;&#160;fae_processor_split(a)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ae51cc96caf06257fe90b1c95358a8494"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define id</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">a</td><td>)</td>
-          <td>&#160;&#160;&#160;fae_processor_identity(a)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a6d6d85baf846e06f09b217a15c18edf2"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define const</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">a, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">b&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;fae_processor_constant(a,b)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="aa4df066d1a4510c4e109cd82ebf9a792"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define par</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><a class="el" href="fae_2fae_8c.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;fae_processor_parallel(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>,<a class="el" href="fae_2fae_8c.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a6f10357b7853d68ea282c991200508d3"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define comp</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><a class="el" href="fae_2fae_8c.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;fae_processor_compose(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>,<a class="el" href="fae_2fae_8c.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a7992f3df43b7c43a9fcfff3373759d1a"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define seq</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><a class="el" href="fae_2fae_8c.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;fae_processor_sequence(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>,<a class="el" href="fae_2fae_8c.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="abe55b3856151a7e5302f608b23f9a825"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define loop</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a></td><td>)</td>
-          <td>&#160;&#160;&#160;fae_processor_loop(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td>
+          <td class="memname">#define loop&#160;&#160;&#160;<a class="el" href="group___fa_signal.html#ga2b54d7290dc7491490545e92df9e4281">fa_signal_loop</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2013,7 +1608,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define empty&#160;&#160;&#160;<a class="el" href="group___fae_list.html#gac7cc8e649da0ffca0fcddc85856964ed">fae_list_empty</a></td>
+          <td class="memname">#define empty&#160;&#160;&#160;<a class="el" href="group___fa_list.html#gabf678944a2862ba07072920e37cdb23d">fa_list_empty</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2025,7 +1620,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define cons&#160;&#160;&#160;<a class="el" href="group___fae_list.html#gaf9d9836cd556e41a8bf8c4e83fa847f0">fae_list_cons</a></td>
+          <td class="memname">#define cons&#160;&#160;&#160;<a class="el" href="group___fa_list.html#ga729b08c806316dc7deea4acddf1a5be7">fa_list_cons</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2037,7 +1632,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define is_empty&#160;&#160;&#160;<a class="el" href="group___fae_list.html#gaf5239337403c864866caf5e9850489fd">fae_list_is_empty</a></td>
+          <td class="memname">#define is_empty&#160;&#160;&#160;<a class="el" href="group___fa_list.html#gaad6f17971589651521ccf16371f12f6d">fa_list_is_empty</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2049,7 +1644,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define char_at&#160;&#160;&#160;<a class="el" href="group___fae_string.html#ga0694fad225797e3079e9b9675b35503f">fae_string_char_at</a></td>
+          <td class="memname">#define char_at&#160;&#160;&#160;<a class="el" href="group___fa_string.html#gaaf369309c09d23b1f2a66c13a6a0696a">fa_string_char_at</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2061,7 +1656,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define string_append&#160;&#160;&#160;<a class="el" href="group___fae_string.html#ga15bd908dfbaa6539a460397b078711f3">fae_string_append</a></td>
+          <td class="memname">#define string_append&#160;&#160;&#160;<a class="el" href="group___fa_string.html#ga2b9be3fb893f9d8b7d14362e47644040">fa_string_append</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2073,7 +1668,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define string_dappend&#160;&#160;&#160;<a class="el" href="group___fae_string.html#ga8167ec8d781c5138deaf78ed8d013436">fae_string_dappend</a></td>
+          <td class="memname">#define string_dappend&#160;&#160;&#160;<a class="el" href="group___fa_string.html#gab3f2263e600e0223da71ea555a13a5b5">fa_string_dappend</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2085,7 +1680,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define format_integral&#160;&#160;&#160;<a class="el" href="group___fae_string.html#ga3e5a5f058600cb2ed7d45beb27186567">fae_string_format_integral</a></td>
+          <td class="memname">#define format_integral&#160;&#160;&#160;<a class="el" href="group___fa_string.html#gaa819d19d4172ad02aa0b11a9657b9a12">fa_string_format_integral</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2097,7 +1692,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define format_floating&#160;&#160;&#160;<a class="el" href="group___fae_string.html#ga92be3587d0c1e4dfbf60335373f6f3f9">fae_string_format_floating</a></td>
+          <td class="memname">#define format_floating&#160;&#160;&#160;<a class="el" href="group___fa_string.html#ga31e191dfacc16171eae10567a1ed1319">fa_string_format_floating</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2113,7 +1708,7 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">s</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___fae_fae.html#ga8f7700178be1f78c6dd18d164880a24e">fae_fae_log_info</a>(s)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="util_8h.html#a4b5197b7cd4a1c6b30b38820212b66d3">fa_fa_log_info</a>(s)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2129,7 +1724,7 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">s</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___fae_fae.html#gafcfb4ecd3a1989ec122df65372d7f5d1">fae_fae_dlog_info</a>(s)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="util_8h.html#a939fbc3489d171ee481958f8fcde8cf2">fa_fa_dlog_info</a>(s)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2145,7 +1740,7 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">s</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___fae_fae.html#gadff524aa3b0d6ec4f2162a9ff49c85c9">fae_fae_log_warning</a>(s)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="util_8h.html#ab33512a1e8ef235f9b302b0579fc7337">fa_fa_log_warning</a>(s)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2161,7 +1756,7 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">s</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___fae_fae.html#gac36018ad4dbbe0fd75d80f94699bf68f">fae_fae_log_error</a>(s)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="util_8h.html#a3a5ad0223c636eb29f326070112cac20">fa_fa_log_error</a>(s)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2177,7 +1772,7 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">e</td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="group___fae_error.html#gab00e79d4c453b5f159223d3b44cabee9">fae_error_log</a>(NULL,e)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="group___fa_error.html#ga0053afc7a37791bee61e09b927a98de6">fa_error_log</a>(NULL,e)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2189,7 +1784,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define tb&#160;&#160;&#160;<a class="el" href="group___fae.html#ga9fdde7e63c9eb0ce1e87cd97c563b6f9">fae_to_bool</a></td>
+          <td class="memname">#define tb&#160;&#160;&#160;<a class="el" href="group___fa.html#gaaf4259b5ac3ff48af05cb68457ba221a">fa_to_bool</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2201,7 +1796,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define ti8&#160;&#160;&#160;<a class="el" href="group___fae.html#gac4cb106c198c0230ab4e28b722c68451">fae_to_int8</a></td>
+          <td class="memname">#define ti8&#160;&#160;&#160;<a class="el" href="group___fa.html#gabd43542166bbe006f8e0c4ccc6d72100">fa_to_int8</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2213,7 +1808,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define ti16&#160;&#160;&#160;<a class="el" href="group___fae.html#ga709aca0bd6fb4ad5b7994b55531d88a5">fae_to_int16</a></td>
+          <td class="memname">#define ti16&#160;&#160;&#160;<a class="el" href="group___fa.html#gae127bdbf90563944797d0c6413bec857">fa_to_int16</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2225,7 +1820,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define ti32&#160;&#160;&#160;<a class="el" href="group___fae.html#ga6718c5e75b75b13be4f585be66a960a7">fae_to_int32</a></td>
+          <td class="memname">#define ti32&#160;&#160;&#160;<a class="el" href="group___fa.html#ga723ce012ab74eca29af86cd0d8cdbc96">fa_to_int32</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2237,7 +1832,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define ti64&#160;&#160;&#160;<a class="el" href="group___fae.html#ga125d60bb13cbd98122d190c7b1e67ae5">fae_to_int64</a></td>
+          <td class="memname">#define ti64&#160;&#160;&#160;<a class="el" href="group___fa.html#ga3ebe4f1a3cf5fe95f4c43263f14b3661">fa_to_int64</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2249,7 +1844,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define tf32&#160;&#160;&#160;<a class="el" href="group___fae.html#ga78c8ccdef373b603f0bd0f1e0a4ea812">fae_to_double</a></td>
+          <td class="memname">#define tf32&#160;&#160;&#160;<a class="el" href="group___fa.html#ga0749b5e5c77eafd3830f6083071da851">fa_to_double</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2261,7 +1856,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define tf64&#160;&#160;&#160;<a class="el" href="group___fae.html#ga78c8ccdef373b603f0bd0f1e0a4ea812">fae_to_double</a></td>
+          <td class="memname">#define tf64&#160;&#160;&#160;<a class="el" href="group___fa.html#ga0749b5e5c77eafd3830f6083071da851">fa_to_double</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2273,7 +1868,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define fb&#160;&#160;&#160;<a class="el" href="group___fae.html#ga4b0ed1bd9e03d89ceff8d4030bc8e457">fae_from_bool</a></td>
+          <td class="memname">#define fb&#160;&#160;&#160;<a class="el" href="group___fa.html#gad923ed7c8ee86cbadb0cf50878a46e79">fa_from_bool</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2285,7 +1880,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define i8&#160;&#160;&#160;<a class="el" href="group___fae.html#gabd964551251e177454f238b8e43db645">fae_from_int8</a></td>
+          <td class="memname">#define i8&#160;&#160;&#160;<a class="el" href="group___fa.html#gad54f3ef91226619bf87daf135537be91">fa_from_int8</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2297,7 +1892,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define i16&#160;&#160;&#160;<a class="el" href="group___fae.html#ga7f8db192bc2e5c6c80eb6accc5884781">fae_from_int16</a></td>
+          <td class="memname">#define i16&#160;&#160;&#160;<a class="el" href="group___fa.html#ga02757b8d184afec403585cd9fc01067b">fa_from_int16</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2309,7 +1904,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define i32&#160;&#160;&#160;<a class="el" href="group___fae.html#gaf8570493f5780f5bec75b28c0c5089c9">fae_from_int32</a></td>
+          <td class="memname">#define i32&#160;&#160;&#160;<a class="el" href="group___fa.html#ga6f823c293e8585f3befc70b7659edf51">fa_from_int32</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2321,7 +1916,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define i64&#160;&#160;&#160;<a class="el" href="group___fae.html#ga1a493e817f57fbb3e3671c372ab6e58a">fae_from_int64</a></td>
+          <td class="memname">#define i64&#160;&#160;&#160;<a class="el" href="group___fa.html#ga05eb37e556b1ad5907c8868a4b6b3c33">fa_from_int64</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2333,7 +1928,7 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define f32&#160;&#160;&#160;<a class="el" href="group___fae.html#gad649323868b6ccb2d53e8f7d30151eac">fae_from_double</a></td>
+          <td class="memname">#define f32&#160;&#160;&#160;<a class="el" href="group___fa.html#gafd6e041f2b455fc2184025d7cf41ad4a">fa_from_double</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2345,7 +1940,88 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define f64&#160;&#160;&#160;<a class="el" href="group___fae.html#gad649323868b6ccb2d53e8f7d30151eac">fae_from_double</a></td>
+          <td class="memname">#define f64&#160;&#160;&#160;<a class="el" href="group___fa.html#gafd6e041f2b455fc2184025d7cf41ad4a">fa_from_double</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a396f9684f983c393fcb68f2534d3ee36"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define mark_used</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">X</td><td>)</td>
+          <td>&#160;&#160;&#160;X = *(&amp;X)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="a4b5197b7cd4a1c6b30b38820212b66d3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void fa_fa_log_info </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___fa_string.html#gacada63033b77bc6c39fa632ae199349b">fa_string_t</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ab33512a1e8ef235f9b302b0579fc7337"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void fa_fa_log_warning </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___fa_string.html#gacada63033b77bc6c39fa632ae199349b">fa_string_t</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a3a5ad0223c636eb29f326070112cac20"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void fa_fa_log_error </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___fa_string.html#gacada63033b77bc6c39fa632ae199349b">fa_string_t</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a939fbc3489d171ee481958f8fcde8cf2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void fa_fa_dlog_info </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___fa_string.html#gacada63033b77bc6c39fa632ae199349b">fa_string_t</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -2356,7 +2032,7 @@ Functions</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 19 2013 01:14:05 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Mon Oct 7 2013 11:36:36 for faudio v2.2.2 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>Fae: include/fae/system/event.h File Reference</title>
+<title>faudio v2.0: include/fa/system/event.h File Reference</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Fae
+   <div id="projectname">faudio v2.0
    </div>
   </td>
  </tr>
@@ -44,7 +44,7 @@
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_aa61b2fff6575bd45838b59453565768.html">fae</a></li><li class="navelem"><a class="el" href="dir_1b06eafe90438f848d288ff161880575.html">system</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_6b89b2d2887aea5b8d12d30c5d3aa615.html">fa</a></li><li class="navelem"><a class="el" href="dir_addf4d55ac20521f8659acdbb3fba501.html">system</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -55,73 +55,64 @@
 <div class="title">event.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;fae.h&gt;</code><br/>
-<code>#include &lt;fae/message.h&gt;</code><br/>
-<code>#include &lt;fae/event.h&gt;</code><br/>
-<code>#include &lt;<a class="el" href="string_8h_source.html">fae/string.h</a>&gt;</code><br/>
+<div class="textblock"><code>#include &lt;fa.h&gt;</code><br/>
+<code>#include &lt;fa/message.h&gt;</code><br/>
+<code>#include &lt;fa/event.h&gt;</code><br/>
+<code>#include &lt;<a class="el" href="string_8h_source.html">fa/string.h</a>&gt;</code><br/>
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for event.h:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="event_8h__incl.svg" width="882" height="382"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div><div class="textblock"><div class="dynheader">
-This graph shows which files directly or indirectly include this file:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="event_8h__dep__incl.svg" width="940" height="400"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="event_8h__incl.svg" width="735" height="283"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <p><a href="event_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:ga2fc2e620ef60cad47aed8ab7ef3a96e5"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_system_event.html#ga2fc2e620ef60cad47aed8ab7ef3a96e5">fae_system_event_type_t</a> { <br/>
-&#160;&#160;<a class="el" href="group___fae_system_event.html#gga2fc2e620ef60cad47aed8ab7ef3a96e5aa33ee525ba3c1c9962c900861bafbfe8">mouse_move_event</a>, 
-<a class="el" href="group___fae_system_event.html#gga2fc2e620ef60cad47aed8ab7ef3a96e5adc3968d6e80d81b1198b4eb8efc88890">mouse_drag_event</a>, 
-<a class="el" href="group___fae_system_event.html#gga2fc2e620ef60cad47aed8ab7ef3a96e5af9280d8461c35a4ade6d4d2f1274104b">mouse_up_event</a>, 
-<a class="el" href="group___fae_system_event.html#gga2fc2e620ef60cad47aed8ab7ef3a96e5ae211f232c88aec63186f4dcadccceb4a">mouse_down_event</a>, 
+<tr class="memitem:gaeade6f81e9d8ab944b0795c319375276"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_system_event.html#gaeade6f81e9d8ab944b0795c319375276">fa_system_event_type_t</a> { <br/>
+&#160;&#160;<a class="el" href="group___fa_system_event.html#ggaeade6f81e9d8ab944b0795c319375276aa33ee525ba3c1c9962c900861bafbfe8">mouse_move_event</a>, 
+<a class="el" href="group___fa_system_event.html#ggaeade6f81e9d8ab944b0795c319375276adc3968d6e80d81b1198b4eb8efc88890">mouse_drag_event</a>, 
+<a class="el" href="group___fa_system_event.html#ggaeade6f81e9d8ab944b0795c319375276af9280d8461c35a4ade6d4d2f1274104b">mouse_up_event</a>, 
+<a class="el" href="group___fa_system_event.html#ggaeade6f81e9d8ab944b0795c319375276ae211f232c88aec63186f4dcadccceb4a">mouse_down_event</a>, 
 <br/>
-&#160;&#160;<a class="el" href="group___fae_system_event.html#gga2fc2e620ef60cad47aed8ab7ef3a96e5ae6251812e2338683a4ca3818f72bc16c">key_up_event</a>, 
-<a class="el" href="group___fae_system_event.html#gga2fc2e620ef60cad47aed8ab7ef3a96e5a8411490d265befc4c73d49e57a2d714f">key_down_event</a>
+&#160;&#160;<a class="el" href="group___fa_system_event.html#ggaeade6f81e9d8ab944b0795c319375276ae6251812e2338683a4ca3818f72bc16c">key_up_event</a>, 
+<a class="el" href="group___fa_system_event.html#ggaeade6f81e9d8ab944b0795c319375276a8411490d265befc4c73d49e57a2d714f">key_down_event</a>
 <br/>
  }</td></tr>
-<tr class="separator:ga2fc2e620ef60cad47aed8ab7ef3a96e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:gaeade6f81e9d8ab944b0795c319375276"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga3b9f02a548356023a2b0dfe5101bbcf8"><td class="memItemLeft" align="right" valign="top">fae_event_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_system_event.html#ga3b9f02a548356023a2b0dfe5101bbcf8">fae_system_event_mouse_move</a> ()</td></tr>
-<tr class="separator:ga3b9f02a548356023a2b0dfe5101bbcf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga09779938c8d4ba059d5fe9978f404649"><td class="memItemLeft" align="right" valign="top">fae_event_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_system_event.html#ga09779938c8d4ba059d5fe9978f404649">fae_system_event_mouse_drag</a> ()</td></tr>
-<tr class="separator:ga09779938c8d4ba059d5fe9978f404649"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gadedfbe1070dcbe7dd6a65b519d6c3f8f"><td class="memItemLeft" align="right" valign="top">fae_event_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_system_event.html#gadedfbe1070dcbe7dd6a65b519d6c3f8f">fae_system_event_mouse_up</a> ()</td></tr>
-<tr class="separator:gadedfbe1070dcbe7dd6a65b519d6c3f8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga46ab2ddbad1228770619b0eddaee08cd"><td class="memItemLeft" align="right" valign="top">fae_event_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_system_event.html#ga46ab2ddbad1228770619b0eddaee08cd">fae_system_event_mouse_down</a> ()</td></tr>
-<tr class="separator:ga46ab2ddbad1228770619b0eddaee08cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8b450593bcde69ca6591768bc436dc34"><td class="memItemLeft" align="right" valign="top">fae_event_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_system_event.html#ga8b450593bcde69ca6591768bc436dc34">fae_system_event_key_up</a> ()</td></tr>
-<tr class="separator:ga8b450593bcde69ca6591768bc436dc34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaebc516449354f79b541859490d714150"><td class="memItemLeft" align="right" valign="top">fae_event_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_system_event.html#gaebc516449354f79b541859490d714150">fae_system_event_key_down</a> ()</td></tr>
-<tr class="separator:gaebc516449354f79b541859490d714150"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae06b2d2b28bd13c39c9f2a512e07108b"><td class="memItemLeft" align="right" valign="top">fae_event_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_system_event.html#gae06b2d2b28bd13c39c9f2a512e07108b">fae_system_event_select</a> (<a class="el" href="group___fae_list.html#ga62e8420b5e2c8b334f662b986633ff3a">fae_list_t</a>)</td></tr>
-<tr class="memdesc:gae06b2d2b28bd13c39c9f2a512e07108b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an event selected from the given types.  <a href="group___fae_system_event.html#gae06b2d2b28bd13c39c9f2a512e07108b"></a><br/></td></tr>
-<tr class="separator:gae06b2d2b28bd13c39c9f2a512e07108b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab5bf20019a6e2ad7eb9dfdb611b1a283"><td class="memItemLeft" align="right" valign="top">fae_message_sender_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_system_event.html#gab5bf20019a6e2ad7eb9dfdb611b1a283">fae_system_event_receive</a> (<a class="el" href="group___fae_list.html#ga62e8420b5e2c8b334f662b986633ff3a">fae_list_t</a>)</td></tr>
-<tr class="memdesc:gab5bf20019a6e2ad7eb9dfdb611b1a283"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a sender of values selected from the given types.  <a href="group___fae_system_event.html#gab5bf20019a6e2ad7eb9dfdb611b1a283"></a><br/></td></tr>
-<tr class="separator:gab5bf20019a6e2ad7eb9dfdb611b1a283"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafa49236328a844678c1e82146fda5e68"><td class="memItemLeft" align="right" valign="top">fae_event_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_system_event.html#gafa49236328a844678c1e82146fda5e68">fae_system_event_write_std</a> (fae_event_t)</td></tr>
-<tr class="memdesc:gafa49236328a844678c1e82146fda5e68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transforms the given event to write its values to the standard output.  <a href="group___fae_system_event.html#gafa49236328a844678c1e82146fda5e68"></a><br/></td></tr>
-<tr class="separator:gafa49236328a844678c1e82146fda5e68"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9ef516aaa5244e4b5af3cef9afc26ee5"><td class="memItemLeft" align="right" valign="top">fae_message_receiver_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_system_event.html#ga9ef516aaa5244e4b5af3cef9afc26ee5">fae_system_event_send_std</a> ()</td></tr>
-<tr class="separator:ga9ef516aaa5244e4b5af3cef9afc26ee5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9f09ca9fb9deefb8a29a3cd212baf604"><td class="memItemLeft" align="right" valign="top">fae_event_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_system_event.html#ga9f09ca9fb9deefb8a29a3cd212baf604">fae_system_event_write_log</a> (fae_event_t)</td></tr>
-<tr class="memdesc:ga9f09ca9fb9deefb8a29a3cd212baf604"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transforms the given event to write its values to the log.  <a href="group___fae_system_event.html#ga9f09ca9fb9deefb8a29a3cd212baf604"></a><br/></td></tr>
-<tr class="separator:ga9f09ca9fb9deefb8a29a3cd212baf604"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab88042e6f77138ad85046adcc66ad47b"><td class="memItemLeft" align="right" valign="top">fae_message_receiver_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_system_event.html#gab88042e6f77138ad85046adcc66ad47b">fae_system_event_send_log</a> ()</td></tr>
-<tr class="separator:gab88042e6f77138ad85046adcc66ad47b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadbbd367ba7a43a86a5b5cbff9fde59d1"><td class="memItemLeft" align="right" valign="top">fa_event_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_system_event.html#gadbbd367ba7a43a86a5b5cbff9fde59d1">fa_system_event_mouse_move</a> ()</td></tr>
+<tr class="separator:gadbbd367ba7a43a86a5b5cbff9fde59d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1bc7d790a82c9e5099c8ebdd61be8ce1"><td class="memItemLeft" align="right" valign="top">fa_event_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_system_event.html#ga1bc7d790a82c9e5099c8ebdd61be8ce1">fa_system_event_mouse_drag</a> ()</td></tr>
+<tr class="separator:ga1bc7d790a82c9e5099c8ebdd61be8ce1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa7c95ea4079bcc6e7cda104ed327566a"><td class="memItemLeft" align="right" valign="top">fa_event_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_system_event.html#gaa7c95ea4079bcc6e7cda104ed327566a">fa_system_event_mouse_up</a> ()</td></tr>
+<tr class="separator:gaa7c95ea4079bcc6e7cda104ed327566a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga57b462853c671daec1f92ad8acd63478"><td class="memItemLeft" align="right" valign="top">fa_event_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_system_event.html#ga57b462853c671daec1f92ad8acd63478">fa_system_event_mouse_down</a> ()</td></tr>
+<tr class="separator:ga57b462853c671daec1f92ad8acd63478"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa61a030c4ee5c324be27289614d2af2b"><td class="memItemLeft" align="right" valign="top">fa_event_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_system_event.html#gaa61a030c4ee5c324be27289614d2af2b">fa_system_event_key_up</a> ()</td></tr>
+<tr class="separator:gaa61a030c4ee5c324be27289614d2af2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2bd1e8b40f279013b222f1e241525baa"><td class="memItemLeft" align="right" valign="top">fa_event_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_system_event.html#ga2bd1e8b40f279013b222f1e241525baa">fa_system_event_key_down</a> ()</td></tr>
+<tr class="separator:ga2bd1e8b40f279013b222f1e241525baa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacc7f978d3cf4a67b31af89b621fc2030"><td class="memItemLeft" align="right" valign="top">fa_event_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_system_event.html#gacc7f978d3cf4a67b31af89b621fc2030">fa_system_event_select</a> (<a class="el" href="group___fa_list.html#ga35ecb12ab934ded0cce0bcf28e3bc5d2">fa_list_t</a>)</td></tr>
+<tr class="separator:gacc7f978d3cf4a67b31af89b621fc2030"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0b7d02cdc683bec020f91fc7a439542b"><td class="memItemLeft" align="right" valign="top">fa_message_sender_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_system_event.html#ga0b7d02cdc683bec020f91fc7a439542b">fa_system_event_receive</a> (<a class="el" href="group___fa_list.html#ga35ecb12ab934ded0cce0bcf28e3bc5d2">fa_list_t</a>)</td></tr>
+<tr class="separator:ga0b7d02cdc683bec020f91fc7a439542b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1dcf95fb482090896f69be4479323365"><td class="memItemLeft" align="right" valign="top">fa_event_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_system_event.html#ga1dcf95fb482090896f69be4479323365">fa_system_event_write_std</a> (fa_event_t)</td></tr>
+<tr class="separator:ga1dcf95fb482090896f69be4479323365"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2415c7cfe51b5e3843e2f16063707de7"><td class="memItemLeft" align="right" valign="top">fa_message_receiver_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_system_event.html#ga2415c7cfe51b5e3843e2f16063707de7">fa_system_event_send_std</a> ()</td></tr>
+<tr class="separator:ga2415c7cfe51b5e3843e2f16063707de7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1214bffe4dd7addce92212e27a4ac1c7"><td class="memItemLeft" align="right" valign="top">fa_event_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_system_event.html#ga1214bffe4dd7addce92212e27a4ac1c7">fa_system_event_write_log</a> (fa_event_t)</td></tr>
+<tr class="separator:ga1214bffe4dd7addce92212e27a4ac1c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga30c824d88dd9e68db0e635a9028dc39c"><td class="memItemLeft" align="right" valign="top">fa_message_receiver_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_system_event.html#ga30c824d88dd9e68db0e635a9028dc39c">fa_system_event_send_log</a> ()</td></tr>
+<tr class="separator:ga30c824d88dd9e68db0e635a9028dc39c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 19 2013 01:14:05 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Mon Oct 7 2013 00:03:57 for faudio v2.0 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

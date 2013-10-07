@@ -1,9 +1,6 @@
-<map id="include/fae/map.h" name="include/fae/map.h">
-<area shape="rect" id="node3" href="$fae_2fae_8h.html" title="fae.h" alt="" coords="275,246,329,277"/>
-<area shape="rect" id="node16" href="$pair_8h.html" title="fae/pair.h" alt="" coords="250,86,339,117"/>
-<area shape="rect" id="node19" href="$list_8h.html" title="fae/list.h" alt="" coords="301,166,381,197"/>
-<area shape="rect" id="node23" href="$string_8h.html" title="fae/string.h" alt="" coords="405,166,504,197"/>
-<area shape="rect" id="node5" href="$atomic_8h.html" title="fae/atomic.h" alt="" coords="5,326,112,357"/>
-<area shape="rect" id="node10" href="$stack_8h.html" title="fae/atomic/stack.h" alt="" coords="317,326,464,357"/>
-<area shape="rect" id="node14" href="$system_8h.html" title="fae/system.h" alt="" coords="701,326,808,357"/>
+<map id="include/fa/map.h" name="include/fa/map.h">
+<area shape="rect" id="node3" href="$fa_2fa_8h.html" title="fa.h" alt="" coords="715,166,761,197"/>
+<area shape="rect" id="node15" href="$pair_8h.html" title="fa/pair.h" alt="" coords="864,246,944,277"/>
+<area shape="rect" id="node18" href="$list_8h.html" title="fa/list.h" alt="" coords="823,326,895,357"/>
+<area shape="rect" id="node24" href="$string_8h.html" title="fa/string.h" alt="" coords="776,86,867,117"/>
 </map>

@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>Fae: include/fae/plot.h Source File</title>
+<title>faudio v2.0: include/fa/plot.h Source File</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Fae
+   <div id="projectname">faudio v2.0
    </div>
   </td>
  </tr>
@@ -44,7 +44,7 @@
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_aa61b2fff6575bd45838b59453565768.html">fae</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_6b89b2d2887aea5b8d12d30c5d3aa615.html">fa</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -53,35 +53,40 @@
 </div><!--header-->
 <div class="contents">
 <a href="plot_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef _FAE_PLOT</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _FAE_PLOT</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef _FA_PLOT</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _FA_PLOT</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="fae_2fae_8h.html">fae.h</a>&gt;</span></div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;fae/std.h&gt;</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="buffer_8h.html">fae/buffer.h</a>&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="fa_2fa_8h.html">fa.h</a>&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="std_8h.html">fa/std.h</a>&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="buffer_8h.html">fa/buffer.h</a>&gt;</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="code" href="group___fae_plot.html#ga25cb110010d065104699b008d98b4704">   15</a></span>&#160;<span class="keyword">typedef</span> double (* <a class="code" href="group___fae_plot.html#ga25cb110010d065104699b008d98b4704" title="Callback to be invoked by the plotter.">fae_plot_function_t</a>)(<a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>,</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;                                       int,</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;                                       double,</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;                                       double);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fae_plot.html#ga2a7270313c00657339fe592f42ce8bc6" title="Use gnuplot for plotting.">fae_plot_use_gnu</a>();</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fae_plot.html#gaa9b7f4db5f1cb9393174e7e54b197b5e" title="Use CorePlot for plotting.">fae_plot_use_core</a>();</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fae_plot.html#ga808742bb3fc1e4d7746bf3538ce3a85a" title="Run a plot of the given functions.">fae_plot_continous</a>(<a class="code" href="group___fae_plot.html#ga25cb110010d065104699b008d98b4704" title="Callback to be invoked by the plotter.">fae_plot_function_t</a>,</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;                        <a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>,</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;                        <a class="code" href="group___fae.html#ga08575a144de95fa3985dc31d18853192" title="A nullary function.">fae_nullary_t</a>,</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;                        <a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fae_plot.html#ga0b3172b9e5bd9e6d8f8a94f58d75e789" title="Run a plot on the given buffer, treating its contents as 32-bit floating point data.">fae_plot_buffer_float</a>(<a class="code" href="struct__fae__buffer__t.html">fae_buffer_t</a>, <a class="code" href="group___fae.html#ga08575a144de95fa3985dc31d18853192" title="A nullary function.">fae_nullary_t</a>, <a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>);</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fae_plot.html#gaec526d99b5d921c8c556609f8cf3db30" title="Run a plot on the given buffer, treating its contents as 64-bit floating point data.">fae_plot_buffer_double</a>(<a class="code" href="struct__fae__buffer__t.html">fae_buffer_t</a>,</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;                            <a class="code" href="group___fae.html#ga08575a144de95fa3985dc31d18853192" title="A nullary function.">fae_nullary_t</a>,</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                            <a class="code" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4" title="Generic pointer type.">fae_ptr_t</a>);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#endif // _FAE_PLOT</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="code" href="group___fa_plot.html#ga6c91e512a0be9ba8332e0023697c8c8f">   47</a></span>&#160;<span class="keyword">typedef</span> double (* <a class="code" href="group___fa_plot.html#ga6c91e512a0be9ba8332e0023697c8c8f" title="Callback to be invoked by the plotter.">fa_plot_function_t</a>)(<a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>,</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                                      int,</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                                      double,</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                                      double);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fa_plot.html#ga016706d500d136cf55d2b01002163de7">fa_plot_use_gnu</a>();</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fa_plot.html#ga285506e3a3a8cdba5ecad4f3a70a6833">fa_plot_continous</a>(<a class="code" href="group___fa_plot.html#ga6c91e512a0be9ba8332e0023697c8c8f" title="Callback to be invoked by the plotter.">fa_plot_function_t</a>,</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                       <a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>,</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                       <a class="code" href="group___fa.html#ga43b940a9294fd58a54087ef0b416e479" title="A nullary function, defined as fa_ptr_t(*fa_nullary_t )(fa_ptr_t).">fa_nullary_t</a>,</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                       <a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fa_plot.html#ga07bfe0fbe9280762eca9d2f3204ba2ee">fa_plot_buffer_float</a>(<a class="code" href="group___fa_buffer.html#ga0ed7a1d783ab322e2e8be02432d0839e" title="The buffer.">fa_buffer_t</a>, <a class="code" href="group___fa.html#ga43b940a9294fd58a54087ef0b416e479" title="A nullary function, defined as fa_ptr_t(*fa_nullary_t )(fa_ptr_t).">fa_nullary_t</a>, <a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fa_plot.html#ga245d4644c4b5a90497ab27b46c3ceaf2">fa_plot_buffer_double</a>(<a class="code" href="group___fa_buffer.html#ga0ed7a1d783ab322e2e8be02432d0839e" title="The buffer.">fa_buffer_t</a>, <a class="code" href="group___fa.html#ga43b940a9294fd58a54087ef0b416e479" title="A nullary function, defined as fa_ptr_t(*fa_nullary_t )(fa_ptr_t).">fa_nullary_t</a>, <a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">#endif // _FA_PLOT</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 19 2013 01:14:05 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Mon Oct 7 2013 00:42:37 for faudio v2.0 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

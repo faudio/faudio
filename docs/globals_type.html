@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>Functional Audio Engine: Globals</title>
+<title>faudio v2.0: Globals</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Functional Audio Engine
+   <div id="projectname">faudio v2.0
    </div>
   </td>
  </tr>
@@ -47,7 +47,6 @@
     <ul class="tablist">
       <li><a href="globals.html"><span>All</span></a></li>
       <li><a href="globals_func.html"><span>Functions</span></a></li>
-      <li><a href="globals_vars.html"><span>Variables</span></a></li>
       <li class="current"><a href="globals_type.html"><span>Typedefs</span></a></li>
       <li><a href="globals_enum.html"><span>Enumerations</span></a></li>
       <li><a href="globals_eval.html"><span>Enumerator</span></a></li>
@@ -57,20 +56,7 @@
   <div id="navrow4" class="tabs3">
     <ul class="tablist">
       <li><a href="#index_a"><span>a</span></a></li>
-      <li><a href="#index_c"><span>c</span></a></li>
-      <li><a href="#index_d"><span>d</span></a></li>
-      <li><a href="#index_e"><span>e</span></a></li>
       <li><a href="#index_f"><span>f</span></a></li>
-      <li><a href="#index_i"><span>i</span></a></li>
-      <li><a href="#index_j"><span>j</span></a></li>
-      <li><a href="#index_l"><span>l</span></a></li>
-      <li><a href="#index_m"><span>m</span></a></li>
-      <li><a href="#index_n"><span>n</span></a></li>
-      <li><a href="#index_p"><span>p</span></a></li>
-      <li><a href="#index_q"><span>q</span></a></li>
-      <li><a href="#index_r"><span>r</span></a></li>
-      <li><a href="#index_s"><span>s</span></a></li>
-      <li><a href="#index_t"><span>t</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -93,411 +79,199 @@
 <li>apply_func_4
 : <a class="el" href="apply_8h.html#afc52f13f7687e88859dc21400fba95d7">apply.h</a>
 </li>
-<li>audio_status_callback_t
-: <a class="el" href="device_8c.html#a9ebc3d4a2084b8e61cd074feaab05a19">device.c</a>
-</li>
-</ul>
-
-
-<h3><a class="anchor" id="index_c"></a>- c -</h3><ul>
-<li>closure_t
-: <a class="el" href="device_8c.html#a8c09ba06578644578f5b32ca68624ba0">device.c</a>
-</li>
-</ul>
-
-
-<h3><a class="anchor" id="index_d"></a>- d -</h3><ul>
-<li>data_t
-: <a class="el" href="midi__msg_8c.html#ac2437197d6b236bdad02b647473ef986">midi_msg.c</a>
-</li>
-<li>denom_t
-: <a class="el" href="ratio_8c.html#a58eae77b24eba06c59b7eba9ec93b314">ratio.c</a>
-, <a class="el" href="time_8c.html#a58eae77b24eba06c59b7eba9ec93b314">time.c</a>
-</li>
-<li>device_t
-: <a class="el" href="audio_8c.html#a98bce33c50bd470899cbd504a53c2b34">audio.c</a>
-, <a class="el" href="file_8c.html#adc7ce9516be0adaccb80a002a7bf1425">file.c</a>
-, <a class="el" href="midi_8c.html#a8522c27bce4c6f60e5eeb63016c9811c">midi.c</a>
-</li>
-</ul>
-
-
-<h3><a class="anchor" id="index_e"></a>- e -</h3><ul>
-<li>edge_t
-: <a class="el" href="graph_8c.html#ab5945ff966d9d42cc74dde5d869cbdec">graph.c</a>
-</li>
-<li>entry_t
-: <a class="el" href="map_8c.html#a9dd420b4ce0c70523d82c3bfb660a265">map.c</a>
-</li>
-<li>error_interface_t
-: <a class="el" href="error_8c.html#aba9d2cb537a4a7405329035e8273498e">error.c</a>
-</li>
-<li>event_source_t
-: <a class="el" href="platform_2macosx_2fae_2system_2event_8c.html#abca67c298cd6045b065b93c4bc43662f">event.c</a>
-</li>
-<li>event_type_t
-: <a class="el" href="platform_2macosx_2fae_2system_2event_8c.html#aa3c90df012ac9636bb5315152d9f3b9d">event.c</a>
-</li>
 </ul>
 
 
 <h3><a class="anchor" id="index_f"></a>- f -</h3><ul>
-<li>fae_atomic_stack_t
-: <a class="el" href="group___fae_atomic_stack.html#ga4eae9f89d5fb0c9c9444110662f7e013">stack.h</a>
+<li>fa_atomic_queue_t
+: <a class="el" href="group___fa_atomic_queue.html#ga31bf61a25a3ef94a5590f863b5448be7">queue.h</a>
 </li>
-<li>fae_atomic_t
-: <a class="el" href="group___fae_atomic.html#ga54a94f24b5d6fbe66e807e8048118a07">atomic.h</a>
+<li>fa_atomic_stack_t
+: <a class="el" href="group___fa_atomic_stack.html#ga12448e3a1d7002a702efc2a78eebfa69">stack.h</a>
 </li>
-<li>fae_binary_t
-: <a class="el" href="group___fae.html#gaefa97a47ee5d0dfe5dc8cb42949a2bec">fae.h</a>
+<li>fa_atomic_t
+: <a class="el" href="group___fa_atomic.html#gaa3c9a8cdc36169052d96fa152e2eb9ae">atomic.h</a>
 </li>
-<li>fae_buffer_t
-: <a class="el" href="group___fae_buffer.html#ga9447030a16ca7d8603451107e0f516ec">buffer.h</a>
+<li>fa_audio_device_t
+: <a class="el" href="group___fa_audio.html#ga03de89ee66c6465f8cedd3a0286598f4">audio.h</a>
 </li>
-<li>fae_char16_t
-: <a class="el" href="group___fae.html#ga469b69092cef2cd806735c0196a680ab">fae.h</a>
+<li>fa_audio_session_callback_t
+: <a class="el" href="group___fa_audio.html#gafd8f3afd0f59b1df855bbc368c2ec419">audio.h</a>
 </li>
-<li>fae_char32_t
-: <a class="el" href="group___fae.html#ga37696d0cead6355a124255df7b043c4f">fae.h</a>
+<li>fa_audio_session_t
+: <a class="el" href="group___fa_audio.html#ga62ee22268c23f1b18447141feccc01e0">audio.h</a>
 </li>
-<li>fae_char8_t
-: <a class="el" href="group___fae.html#gabc1b56c0888c0e91ab75950697ea3090">fae.h</a>
+<li>fa_audio_status_callback_t
+: <a class="el" href="group___fa_audio.html#gaac3fa018078a475e6c5ed48efcbdb887">audio.h</a>
 </li>
-<li>fae_device_audio_session_callback_t
-: <a class="el" href="group___fae_device_audio.html#gaf29b84b888c2413dc9d248248b03846f">audio.h</a>
+<li>fa_audio_stream_callback_t
+: <a class="el" href="group___fa_audio.html#gab6aa7a7bed246893a5cb6d20d2e53199">audio.h</a>
 </li>
-<li>fae_device_audio_session_t
-: <a class="el" href="group___fae_device_audio.html#ga5a3cabf9ea8c9118899d7cf88c40b963">audio.h</a>
+<li>fa_audio_stream_t
+: <a class="el" href="group___fa_audio.html#ga78fbee3026130ce00d8e00a4e73a84c3">audio.h</a>
 </li>
-<li>fae_device_audio_status_callback_t
-: <a class="el" href="group___fae_device_audio.html#ga5c0c28b4624f170a727005d28aa34622">audio.h</a>
+<li>fa_binary_t
+: <a class="el" href="group___fa.html#gab70ba406935a18c1d645d12e7abf2e63">fa.h</a>
 </li>
-<li>fae_device_audio_stream_callback_t
-: <a class="el" href="group___fae_device_audio.html#gacf55d59eaffcf67029bb7feb6cb8ea72">audio.h</a>
+<li>fa_buffer_t
+: <a class="el" href="group___fa_buffer.html#ga0ed7a1d783ab322e2e8be02432d0839e">buffer.h</a>
 </li>
-<li>fae_device_audio_stream_t
-: <a class="el" href="group___fae_device_audio.html#gabe724e3cbf5f21751ef5aa01b03061da">audio.h</a>
+<li>fa_char16_t
+: <a class="el" href="group___fa.html#ga33e83372a0abc1895fdad5fb4d15eae3">fa.h</a>
 </li>
-<li>fae_device_audio_t
-: <a class="el" href="group___fae_device.html#ga62f035a1db106d6a577a00686656a570">device.h</a>
+<li>fa_char32_t
+: <a class="el" href="group___fa.html#gaca70e02afbba75b08b2b6531b821f67b">fa.h</a>
 </li>
-<li>fae_device_buffer_result_t
-: <a class="el" href="group___fae_device_buffer.html#ga4f4a55d6d541c04c6007e5a3a43852bc">buffer.h</a>
+<li>fa_char8_t
+: <a class="el" href="group___fa.html#ga98bfdb5d0438f95f3438cddeab1818e8">fa.h</a>
 </li>
-<li>fae_device_buffer_t
-: <a class="el" href="group___fae_device.html#gad0e3991e650fb90a8c0123e3362a6a66">device.h</a>
+<li>fa_device_audio_t
+: <a class="el" href="group___fa_device.html#ga5480c5f6d4daac6376beb794f70fea31">device.h</a>
 </li>
-<li>fae_device_file_result_t
-: <a class="el" href="group___fae_device_file.html#gac564a223feea472a2ac5cabf30f7c205">file.h</a>
+<li>fa_device_buffer_t
+: <a class="el" href="group___fa_device.html#gafb38d6e2111e159bd1221509e992b455">device.h</a>
 </li>
-<li>fae_device_file_t
-: <a class="el" href="group___fae_device.html#ga320bb8409a812d50e1cbfe168d3182a0">device.h</a>
+<li>fa_device_file_t
+: <a class="el" href="group___fa_device.html#ga174e0149dd8d57532608e418d8dcf3b0">device.h</a>
 </li>
-<li>fae_device_midi_session_callback_t
-: <a class="el" href="group___fae_device_midi.html#ga56d46e5caf87ad5b22bedbbd7078dcc6">midi.h</a>
+<li>fa_device_midi_t
+: <a class="el" href="group___fa_device.html#ga87679e8213f675bc66e71f776c05526c">device.h</a>
 </li>
-<li>fae_device_midi_session_t
-: <a class="el" href="group___fae_device_midi.html#gad10bbb36fa4bbadb12e98fecf7d7d496">midi.h</a>
+<li>fa_error_callback_t
+: <a class="el" href="group___fa_error.html#ga43d8d45a005130a5052ba3281a8bf33e">error.h</a>
 </li>
-<li>fae_device_midi_status_callback_t
-: <a class="el" href="group___fae_device_midi.html#gab72473c607bb523c286467e0cc1e76b7">midi.h</a>
+<li>fa_error_t
+: <a class="el" href="group___fa_error.html#ga4a4feb4d3686657ac8dbd2be421cbb15">error.h</a>
 </li>
-<li>fae_device_midi_stream_callback_t
-: <a class="el" href="group___fae_device_midi.html#gaf82e062ea590aade28c0030032146235">midi.h</a>
+<li>fa_fa_log_func_t
+: <a class="el" href="group___fa_fa.html#ga69c193c7578e2c089376128747cdebca">fa.h</a>
 </li>
-<li>fae_device_midi_stream_t
-: <a class="el" href="group___fae_device_midi.html#ga2e27050ca445a7d906d6dbff44322356">midi.h</a>
+<li>fa_id_t
+: <a class="el" href="group___fa.html#gaeb5011c69dfea4d2c41c05a2c95899d0">fa.h</a>
 </li>
-<li>fae_device_midi_t
-: <a class="el" href="group___fae_device.html#gad9144179f64f52f21e11ab8a61b35af9">device.h</a>
+<li>fa_impl_t
+: <a class="el" href="group___fa.html#gac13cc6d4ef02b8763045164333cfd763">fa.h</a>
 </li>
-<li>fae_error_callback_t
-: <a class="el" href="group___fae_error.html#ga2abe2dd713d82605e3dd774edb82a763">error.h</a>
+<li>fa_list_t
+: <a class="el" href="group___fa_list.html#ga35ecb12ab934ded0cce0bcf28e3bc5d2">list.h</a>
 </li>
-<li>fae_error_t
-: <a class="el" href="group___fae_error.html#gaf9830ae96f902091ac8f87255b671c4f">error.h</a>
+<li>fa_map_key_t
+: <a class="el" href="group___fa_map.html#ga01c714699c14e805664c65b6a0ea974d">map.h</a>
 </li>
-<li>fae_fae_log_func_t
-: <a class="el" href="group___fae_fae.html#ga82132171bbf19c3a28fe50691b35f6ff">fae.h</a>
+<li>fa_map_t
+: <a class="el" href="group___fa_map.html#gadcbb0c425af31be6aeb265159b2a7db0">map.h</a>
 </li>
-<li>fae_graph_edge_list_t
-: <a class="el" href="group___fae_graph.html#ga117109e2fc060352289fa3fee234f379">graph.h</a>
+<li>fa_midi_device_t
+: <a class="el" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">midi.h</a>
 </li>
-<li>fae_graph_edge_t
-: <a class="el" href="group___fae_graph.html#gac7b45613ecd18282f6c9562f8545bd0e">graph.h</a>
+<li>fa_midi_message_channel_t
+: <a class="el" href="group___fa_midi_message.html#gae7fc48e105b9bec5500bc422231a1159">message.h</a>
 </li>
-<li>fae_graph_node_list_t
-: <a class="el" href="group___fae_graph.html#gaad041856a4b24d1e06ce1f6349078e9b">graph.h</a>
+<li>fa_midi_message_data_t
+: <a class="el" href="group___fa_midi_message.html#gadc3c487a2892db5309395922f92e8d28">message.h</a>
 </li>
-<li>fae_graph_node_t
-: <a class="el" href="group___fae_graph.html#gaf4d43821aa386db9b11ecbf5b1f7711f">graph.h</a>
+<li>fa_midi_message_t
+: <a class="el" href="group___fa_midi_message.html#gaa73293eb40a2cffdc2294e3cb6dc2564">message.h</a>
 </li>
-<li>fae_graph_t
-: <a class="el" href="group___fae_graph.html#ga31ade0db45461dcf8dc71a5ec1ee6f34">graph.h</a>
+<li>fa_midi_session_callback_t
+: <a class="el" href="group___fa_midi.html#ga20fb39192d8af433b1506a529bc981e7">midi.h</a>
 </li>
-<li>fae_id_t
-: <a class="el" href="group___fae.html#ga90fdea61ccb95271af45ddb2747fad45">fae.h</a>
+<li>fa_midi_session_t
+: <a class="el" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">midi.h</a>
 </li>
-<li>fae_impl_t
-: <a class="el" href="group___fae.html#ga61228cc337f5847c9283caa7353bd1d8">fae.h</a>
+<li>fa_midi_status_callback_t
+: <a class="el" href="group___fa_midi.html#gacc769aa23b097e8b8dc3d4807b9a066d">midi.h</a>
 </li>
-<li>fae_list_t
-: <a class="el" href="group___fae_list.html#ga62e8420b5e2c8b334f662b986633ff3a">list.h</a>
+<li>fa_midi_stream_callback_t
+: <a class="el" href="group___fa_midi.html#ga8022098ffcf993ccdaed068b97ab7bfc">midi.h</a>
 </li>
-<li>fae_map_key_t
-: <a class="el" href="group___fae_map.html#ga7ae92e9445948fe2a902049c65d20fb1">map.h</a>
+<li>fa_midi_stream_t
+: <a class="el" href="group___fa_midi.html#ga85772039b62d8bb718a51e1ffbbb2fa2">midi.h</a>
 </li>
-<li>fae_map_t
-: <a class="el" href="group___fae_map.html#ga32218b30b73e61a0f22e4952c54964c8">map.h</a>
+<li>fa_nullary_t
+: <a class="el" href="group___fa.html#ga43b940a9294fd58a54087ef0b416e479">fa.h</a>
 </li>
-<li>fae_midi_msg_channel_t
-: <a class="el" href="group___fae_midi_msg.html#gac9804ee570dd04c0f3e41614426ce34d">midi_msg.h</a>
+<li>fa_pair_t
+: <a class="el" href="group___fa_pair.html#gac2b2e58c230bac4f8a63ef6c05072680">pair.h</a>
 </li>
-<li>fae_midi_msg_data_t
-: <a class="el" href="group___fae_midi_msg.html#ga24a345330cc039b2fdbc732e952db5b1">midi_msg.h</a>
+<li>fa_pred_t
+: <a class="el" href="group___fa.html#gae6b6ae9fb073db0ba0bd323d511c6a98">fa.h</a>
 </li>
-<li>fae_midi_msg_t
-: <a class="el" href="group___fae_midi_msg.html#ga04722986196d1e23248e800b67809242">midi_msg.h</a>
+<li>fa_ptr_t
+: <a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa.h</a>
 </li>
-<li>fae_nullary_t
-: <a class="el" href="group___fae.html#gaeafea34a015fd6d8a046d65e1c5cfcde">fae.h</a>
+<li>fa_ratio_denom_t
+: <a class="el" href="group___fa_ratio.html#ga18626f0c26ea1666ce0725605044cfa1">ratio.h</a>
 </li>
-<li>fae_pair_t
-: <a class="el" href="group___fae_pair.html#ga1f7c75839e2ea6e61c31fdb4b0cd1e1a">pair.h</a>
+<li>fa_ratio_num_t
+: <a class="el" href="group___fa_ratio.html#ga6d6962b946d96535558e341030f16e07">ratio.h</a>
 </li>
-<li>fae_plot_function_t
-: <a class="el" href="group___fae_plot.html#ga25cb110010d065104699b008d98b4704">plot.h</a>
+<li>fa_ratio_t
+: <a class="el" href="group___fa_ratio.html#gaf3b37b5fdfcccb6283b7ac806c72b273">ratio.h</a>
 </li>
-<li>fae_pred_t
-: <a class="el" href="group___fae.html#ga704924964c46a6f9136907003085afcb">fae.h</a>
+<li>fa_set_t
+: <a class="el" href="group___fa_set.html#ga7a64878223baf48e12857d8d5fda700c">set.h</a>
 </li>
-<li>fae_ptr_t
-: <a class="el" href="group___fae.html#ga18511afeb78cd3a102d5b30b8457bd73">fae.h</a>
+<li>fa_signal_binary_double_t
+: <a class="el" href="group___fa_signal.html#ga7593031729bc7c15d5da9a06ce3eaf4a">signal.h</a>
 </li>
-<li>fae_ratio_denom_t
-: <a class="el" href="group___fae_ratio.html#gae288c366fa258bff6f864af1b2a59673">ratio.h</a>
+<li>fa_signal_t
+: <a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">signal.h</a>
 </li>
-<li>fae_ratio_num_t
-: <a class="el" href="group___fae_ratio.html#ga56eac0be0476edf0ad8b9141a6ad905d">ratio.h</a>
+<li>fa_signal_unary_double_t
+: <a class="el" href="group___fa_signal.html#gaced7eb8d67eb2fe39927934c4abc7255">signal.h</a>
 </li>
-<li>fae_ratio_t
-: <a class="el" href="group___fae_ratio.html#gacee6f32b72349c26a6d2a90686facc3b">ratio.h</a>
+<li>fa_signal_unary_signal_t
+: <a class="el" href="group___fa_signal.html#gaa1f5df5ce102da5b837ccfee4632c7b4">signal.h</a>
 </li>
-<li>fae_set_t
-: <a class="el" href="group___fae_set.html#ga51dde2329edd32c7f85af76489dbb364">set.h</a>
+<li>fa_string_t
+: <a class="el" href="group___fa_string.html#gacada63033b77bc6c39fa632ae199349b">string.h</a>
 </li>
-<li>fae_signal_t
-: <a class="el" href="group___fae_signal.html#gaa5af2a7b3b3b53144baab3287f772445">signal.h</a>
+<li>fa_string_utf16_t
+: <a class="el" href="group___fa_string.html#ga8187bab75e77f0bbeeaf7ec2992cf7a9">string.h</a>
 </li>
-<li>fae_string_file_path_t
-: <a class="el" href="group___fae_string.html#gad0e308c85f2b581c6ee1e09f6599df71">string.h</a>
+<li>fa_string_utf32_t
+: <a class="el" href="group___fa_string.html#ga3e5927ccdebcd9dee40aa6af077662ae">string.h</a>
 </li>
-<li>fae_string_t
-: <a class="el" href="group___fae_string.html#gaec46988276ade4118709314865160b76">string.h</a>
+<li>fa_string_utf8_t
+: <a class="el" href="group___fa_string.html#ga3f817d24799e6924bc6a5186cd184fd8">string.h</a>
 </li>
-<li>fae_string_utf16_t
-: <a class="el" href="group___fae_string.html#ga51af81ffcd1d51907af53bd8900ceee2">string.h</a>
+<li>fa_ternary_t
+: <a class="el" href="group___fa.html#gadbab7e8e405b3d2436de1e1126cc4817">fa.h</a>
 </li>
-<li>fae_string_utf32_t
-: <a class="el" href="group___fae_string.html#ga703cec45759bf3095327b4d4f5f24aec">string.h</a>
+<li>fa_thread_milliseconds_t
+: <a class="el" href="group___fa_thread.html#gae8301fa8843d14e895188258cf6b9580">thread.h</a>
 </li>
-<li>fae_string_utf8_t
-: <a class="el" href="group___fae_string.html#ga1fdfde57daecf51d354b7324d6d2ca38">string.h</a>
+<li>fa_thread_mutex_t
+: <a class="el" href="group___fa_thread.html#ga659c355795f6866eec71ecd8eeadbd59">thread.h</a>
 </li>
-<li>fae_system_directory_file_path_t
-: <a class="el" href="group___fae_system_directory.html#ga74e76dcdfb8c6b8d9093d3cdaca4932c">directory.h</a>
+<li>fa_thread_t
+: <a class="el" href="group___fa_thread.html#gaec6debf84c8113cb354a7352b4e17abd">thread.h</a>
 </li>
-<li>fae_ternary_t
-: <a class="el" href="group___fae.html#gae6eb66fe9d0e0c744774cddb7ded092f">fae.h</a>
+<li>fa_time_cpu_t
+: <a class="el" href="group___fa_time.html#gad5df86fd93935de47e33a85850ff046b">time.h</a>
 </li>
-<li>fae_thread_condition_t
-: <a class="el" href="group___fae_thread.html#ga720dc3a725a3ef6c8e705350f4f4d4aa">thread.h</a>
+<li>fa_time_system_t
+: <a class="el" href="group___fa_time.html#ga7dd7e28574eec80380aac22be7087d2e">time.h</a>
 </li>
-<li>fae_thread_millis_t
-: <a class="el" href="group___fae_thread.html#gac3f4030d47bb2bbcaabb040c23f20856">thread.h</a>
+<li>fa_time_t
+: <a class="el" href="group___fa_time.html#ga227cc693f20b4873fed11028bcade184">time.h</a>
 </li>
-<li>fae_thread_mutex_t
-: <a class="el" href="group___fae_thread.html#ga69e32d0be6e878b981258339b444dc7a">thread.h</a>
+<li>fa_type_frames_t
+: <a class="el" href="group___fa_type.html#ga2b8319ff3362cfcf724e8400bbf488f0">type.h</a>
 </li>
-<li>fae_thread_t
-: <a class="el" href="group___fae_thread.html#ga7bde642d7978cfaef92300ab2f865231">thread.h</a>
+<li>fa_type_t
+: <a class="el" href="group___fa_type.html#ga0f8305888888a99e806d13d64a36117d">type.h</a>
 </li>
-<li>fae_time_clock_t
-: <a class="el" href="group___fae_time.html#ga0292dad16755298bbe8ecb487a31a664">time.h</a>
-</li>
-<li>fae_time_cpu_t
-: <a class="el" href="group___fae_time.html#ga22c5fc159ca4867c3ca3330679e70094">time.h</a>
-</li>
-<li>fae_time_system_t
-: <a class="el" href="group___fae_time.html#ga3f6d0e6d5818f63c6251e90b5c3be2cc">time.h</a>
-</li>
-<li>fae_time_t
-: <a class="el" href="group___fae_time.html#ga24fcf1450ea9516fe7d650762e22d945">time.h</a>
-</li>
-<li>fae_type_frames_t
-: <a class="el" href="group___fae_type.html#ga01ca219251cd4b36ba5444a8848089d0">type.h</a>
-</li>
-<li>fae_type_t
-: <a class="el" href="group___fae_type.html#ga5fefbac5dae4e382d149afc943af0eb1">type.h</a>
-</li>
-<li>fae_unary_t
-: <a class="el" href="group___fae.html#gad59ba5811ab3c94255230066f774702d">fae.h</a>
-</li>
-</ul>
-
-
-<h3><a class="anchor" id="index_i"></a>- i -</h3><ul>
-<li>io_event_sink_t
-: <a class="el" href="platform_2macosx_2fae_2system_2event_8c.html#afe1e4b5df1b6b29a72c5318f10d0209a">event.c</a>
-</li>
-</ul>
-
-
-<h3><a class="anchor" id="index_j"></a>- j -</h3><ul>
-<li>JSON_Array
-: <a class="el" href="parson_8h.html#a65f383a4ad17a6872ee422c28ff4ab66">parson.h</a>
-</li>
-<li>JSON_Object
-: <a class="el" href="parson_8h.html#aac3bec48f2f023bc1b362fc7cf0697c8">parson.h</a>
-</li>
-<li>JSON_Value
-: <a class="el" href="parson_8h.html#a91dc2479d3207401f079aad08043852e">parson.h</a>
-</li>
-<li>JSON_Value_Type
-: <a class="el" href="parson_8h.html#aa08c82969e48d288c8e86d59b59ba009">parson.h</a>
-</li>
-<li>JSON_Value_Value
-: <a class="el" href="parson_8c.html#aef51e45ef64657b4f22fe3ffe678b6ac">parson.c</a>
-</li>
-</ul>
-
-
-<h3><a class="anchor" id="index_l"></a>- l -</h3><ul>
-<li>log_event_sink_t
-: <a class="el" href="platform_2macosx_2fae_2system_2event_8c.html#ab64c30447011b4d0180926d9573c87d0">event.c</a>
-</li>
-<li>log_func_t
-: <a class="el" href="fae_2fae_8c.html#a8e1acb02dfcf4a55d24ad43105dce865">fae.c</a>
-</li>
-</ul>
-
-
-<h3><a class="anchor" id="index_m"></a>- m -</h3><ul>
-<li>midi_status_callback_t
-: <a class="el" href="device_8c.html#ad20e55e017e812aa0608378172a547e8">device.c</a>
-</li>
-</ul>
-
-
-<h3><a class="anchor" id="index_n"></a>- n -</h3><ul>
-<li>native_index_t
-: <a class="el" href="audio_8c.html#afc068dabb5b30f522b4a8c904ab59144">audio.c</a>
-, <a class="el" href="midi_8c.html#a837da59dd7c356b93a4d4357943bcfde">midi.c</a>
-</li>
-<li>native_stream_t
-: <a class="el" href="midi_8c.html#a233506f748cad7979e287656bce344bf">midi.c</a>
-, <a class="el" href="audio_8c.html#a131bad9c819d4f95e6419197e81d4ca9">audio.c</a>
-</li>
-<li>node_t
-: <a class="el" href="list_8c.html#a0271670bc3cdd274903d16277b94e10a">list.c</a>
-, <a class="el" href="graph_8c.html#ae48b7acc0805703aeb5fa993db440cc6">graph.c</a>
-, <a class="el" href="priority__queue_8c.html#a0271670bc3cdd274903d16277b94e10a">priority_queue.c</a>
-, <a class="el" href="queue_8c.html#a0271670bc3cdd274903d16277b94e10a">queue.c</a>
-, <a class="el" href="stack_8c.html#a0271670bc3cdd274903d16277b94e10a">stack.c</a>
-</li>
-<li>num_t
-: <a class="el" href="time_8c.html#a9e0afb4831c4be2b71e807f9f3c0e5fb">time.c</a>
-, <a class="el" href="ratio_8c.html#a9e0afb4831c4be2b71e807f9f3c0e5fb">ratio.c</a>
-</li>
-</ul>
-
-
-<h3><a class="anchor" id="index_p"></a>- p -</h3><ul>
-<li>path_t
-: <a class="el" href="buffer_8c.html#a32cb7fae89a79d89283bbcde819cedc0">buffer.c</a>
-</li>
-<li>plot_func
-: <a class="el" href="plot_8c.html#a02bf461f0d708e65c789acb7286dd7d9">plot.c</a>
-</li>
-<li>plot_func_t
-: <a class="el" href="gnuplot_8c.html#ab1216ce23a4b1419f9b18b4f64087dd8">gnuplot.c</a>
-, <a class="el" href="coreplot_8m.html#a545b288fb2c9e07e0d43252a98f0de30">coreplot.m</a>
-</li>
-</ul>
-
-
-<h3><a class="anchor" id="index_q"></a>- q -</h3><ul>
-<li>queue_t
-: <a class="el" href="priority__queue_8c.html#ac05ded49c770c8d85a1b36aa10158861">priority_queue.c</a>
-</li>
-</ul>
-
-
-<h3><a class="anchor" id="index_r"></a>- r -</h3><ul>
-<li>result_t
-: <a class="el" href="file_8c.html#ab22b923b41535240ce19134ccd23ee90">file.c</a>
-</li>
-</ul>
-
-
-<h3><a class="anchor" id="index_s"></a>- s -</h3><ul>
-<li>session_callback_t
-: <a class="el" href="audio_8c.html#aa760d9b07a5ef8eb0606db495de5be99">audio.c</a>
-, <a class="el" href="midi_8c.html#a8c4a44b3a5a3509e2ea12fd99dc3dddd">midi.c</a>
-</li>
-<li>session_t
-: <a class="el" href="midi_8c.html#a640cc25d6eef9964b5e46858b66b4198">midi.c</a>
-, <a class="el" href="audio_8c.html#a2dbca9ec75318a01b7e5bd619c82af87">audio.c</a>
-</li>
-<li>simple_error_t
-: <a class="el" href="error_8c.html#ab69bc560c3bbafc71c57e3a844fe3306">error.c</a>
-</li>
-<li>simple_t
-: <a class="el" href="type_8c.html#aedc265def68fa27d822ee75c0fd7075b">type.c</a>
-</li>
-<li>status_callback_t
-: <a class="el" href="midi_8c.html#a9a5e0cbde7c41a58a5a425264372a373">midi.c</a>
-, <a class="el" href="audio_8c.html#a73db3e792fdf3123933b3da60156f57a">audio.c</a>
-</li>
-<li>status_t
-: <a class="el" href="midi__msg_8c.html#afba4f0852e955f7b2a8220ea22f91341">midi_msg.c</a>
-</li>
-<li>stream_callback_t
-: <a class="el" href="audio_8c.html#a6334f5d5ed8fb9599eedc10a0917d3ea">audio.c</a>
-, <a class="el" href="midi_8c.html#aaa7f6e05390af7cfaab5282cf9981a4c">midi.c</a>
-</li>
-<li>stream_t
-: <a class="el" href="audio_8c.html#a18f80f6c2068f9369b9b3a166215acc1">audio.c</a>
-, <a class="el" href="midi_8c.html#afe2f5ee9fc8d9bf953048aefc0d79d86">midi.c</a>
-</li>
-<li>system_clock_t
-: <a class="el" href="time_8c.html#ad460e2d54682239274ad259ff16f0cbb">time.c</a>
-</li>
-<li>system_prec_clock_t
-: <a class="el" href="time_8c.html#a50e3593c72798f58f2c25a754f713771">time.c</a>
-</li>
-</ul>
-
-
-<h3><a class="anchor" id="index_t"></a>- t -</h3><ul>
-<li>TRex
-: <a class="el" href="trex_8h.html#aa61d61bb361c4cf0d780693a32ecd72f">trex.h</a>
-</li>
-<li>TRexBool
-: <a class="el" href="trex_8h.html#afe4d09d8c3955fd4f9869415c61c8885">trex.h</a>
-</li>
-<li>TRexNode
-: <a class="el" href="trex_8c.html#a9874185e025e3da1a9c1af71f8c611a7">trex.c</a>
-</li>
-<li>TRexNodeType
-: <a class="el" href="trex_8c.html#a0cadd6a5242beb6810816e5693fa1000">trex.c</a>
+<li>fa_unary_t
+: <a class="el" href="group___fa.html#gaaafae8ab9ebae9019133108e56d2d4d1">fa.h</a>
 </li>
 </ul>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jun 18 2013 18:50:43 for Functional Audio Engine by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Sun Sep 22 2013 19:04:46 for faudio v2.0 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

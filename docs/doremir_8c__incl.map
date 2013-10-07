@@ -1,8 +1,0 @@
-<map id="src/doremir.c" name="src/doremir.c">
-<area shape="rect" id="node3" href="$doremir_8h.html" title="doremir.h" alt="" coords="340,166,424,197"/>
-<area shape="rect" id="node13" href="$string_8h.html" title="doremir/string.h" alt="" coords="470,326,599,357"/>
-<area shape="rect" id="node20" href="$dynamic_8h.html" title="doremir/dynamic.h" alt="" coords="405,86,553,117"/>
-<area shape="rect" id="node5" href="$std_8h.html" title="doremir/std.h" alt="" coords="335,246,447,277"/>
-<area shape="rect" id="node16" href="$alloc_8h.html" title="doremir/alloc.h" alt="" coords="4,246,128,277"/>
-<area shape="rect" id="node18" href="$interfaces_8h.html" title="doremir/interfaces.h" alt="" coords="153,246,311,277"/>
-</map>

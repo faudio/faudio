@@ -1,11 +1,3 @@
-<map id="include/fae/interfaces.h" name="include/fae/interfaces.h">
-<area shape="rect" id="node3" href="$fae_8h.html" title="include/fae.h" alt="" coords="541,86,651,117"/>
-<area shape="rect" id="node5" href="$stack_8h.html" title="include/fae/atomic\l/stack.h" alt="" coords="89,165,237,216"/>
-<area shape="rect" id="node11" href="$directory_8h.html" title="include/fae/system\l/directory.h" alt="" coords="263,165,411,216"/>
-<area shape="rect" id="node13" href="$event_8h.html" title="include/fae/system\l/event.h" alt="" coords="436,165,584,216"/>
-<area shape="rect" id="node15" href="$dynamic_8c.html" title="src/fae/dynamic.c" alt="" coords="609,175,752,206"/>
-<area shape="rect" id="node17" href="$error_8c.html" title="src/fae/error.c" alt="" coords="777,175,897,206"/>
-<area shape="rect" id="node19" href="$fae_8c.html" title="src/fae.c" alt="" coords="921,175,1001,206"/>
-<area shape="rect" id="node7" href="$fae_2fae_8h.html" title="include/fae/fae.h" alt="" coords="5,264,144,296"/>
-<area shape="rect" id="node9" href="$stack_8c.html" title="src/fae/atomic/stack.c" alt="" coords="168,264,340,296"/>
+<map id="include/fa/interfaces.h" name="include/fa/interfaces.h">
+<area shape="rect" id="node3" href="$fa_8h.html" title="include/fa.h" alt="" coords="41,86,143,117"/>
 </map>

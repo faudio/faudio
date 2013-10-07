@@ -1,8 +1,6 @@
-<map id="include/fae/signal.h" name="include/fae/signal.h">
-<area shape="rect" id="node3" href="$fae_2fae_8h.html" title="fae.h" alt="" coords="363,246,417,277"/>
-<area shape="rect" id="node14" href="$time_8h.html" title="fae/time.h" alt="" coords="489,326,579,357"/>
-<area shape="rect" id="node17" href="$pair_8h.html" title="fae/pair.h" alt="" coords="346,166,435,197"/>
-<area shape="rect" id="node20" href="$type_8h.html" title="fae/type.h" alt="" coords="415,86,507,117"/>
-<area shape="rect" id="node5" href="$atomic_8h.html" title="fae/atomic.h" alt="" coords="5,326,112,357"/>
-<area shape="rect" id="node10" href="$stack_8h.html" title="fae/atomic/stack.h" alt="" coords="317,326,464,357"/>
+<map id="include/fa/signal.h" name="include/fa/signal.h">
+<area shape="rect" id="node3" href="$fa_2fa_8h.html" title="fa.h" alt="" coords="718,166,764,197"/>
+<area shape="rect" id="node15" href="$pair_8h.html" title="fa/pair.h" alt="" coords="896,246,976,277"/>
+<area shape="rect" id="node18" href="$time_8h.html" title="fa/time.h" alt="" coords="790,246,871,277"/>
+<area shape="rect" id="node24" href="$buffer_8h.html" title="fa/buffer.h" alt="" coords="841,86,935,117"/>
 </map>

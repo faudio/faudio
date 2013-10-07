@@ -1,9 +1,0 @@
-<map id="src/fae/atomic/ring_buffer.c" name="src/fae/atomic/ring_buffer.c">
-<area shape="rect" id="node5" href="$atomic_8h.html" title="fae/atomic.h" alt="" coords="75,104,181,136"/>
-<area shape="rect" id="node13" href="$buffer_8h.html" title="fae/buffer.h" alt="" coords="212,104,313,136"/>
-<area shape="rect" id="node20" href="$string_8h.html" title="fae/string.h" alt="" coords="441,184,540,216"/>
-<area shape="rect" id="node28" href="$util_8h.html" title="fae/util.h" alt="" coords="388,104,469,136"/>
-<area shape="rect" id="node7" href="$fae_2fae_8h.html" title="fae.h" alt="" coords="210,344,264,376"/>
-<area shape="rect" id="node17" href="$pair_8h.html" title="fae/pair.h" alt="" coords="274,264,363,296"/>
-<area shape="rect" id="node23" href="$type_8h.html" title="fae/type.h" alt="" coords="325,184,416,216"/>
-</map>

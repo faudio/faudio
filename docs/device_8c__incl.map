@@ -1,9 +1,0 @@
-<map id="src/platform/macosx/fae/device.c" name="src/platform/macosx/fae/device.c">
-<area shape="rect" id="node3" href="$audio_8h.html" title="fae/audio.h" alt="" coords="4,104,104,136"/>
-<area shape="rect" id="node10" href="$midi_8h.html" title="fae/midi.h" alt="" coords="129,104,220,136"/>
-<area shape="rect" id="node14" href="$string_8h.html" title="fae/string.h" alt="" coords="244,104,343,136"/>
-<area shape="rect" id="node16" href="$thread_8h.html" title="fae/thread.h" alt="" coords="367,104,472,136"/>
-<area shape="rect" id="node18" href="$util_8h.html" title="fae/util.h" alt="" coords="498,104,579,136"/>
-<area shape="rect" id="node5" href="$list_8h.html" title="fae/list.h" alt="" coords="75,264,155,296"/>
-<area shape="rect" id="node7" href="$pair_8h.html" title="fae/pair.h" alt="" coords="70,184,159,216"/>
-</map>

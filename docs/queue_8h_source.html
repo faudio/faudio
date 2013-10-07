@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>Fae documentation: include/fae/atomic/queue.h Source File</title>
+<title>faudio v2.0: include/fa/atomic/queue.h Source File</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Fae documentation
+   <div id="projectname">faudio v2.0
    </div>
   </td>
  </tr>
@@ -40,12 +40,11 @@
       <li><a href="index.html"><span>Introduction</span></a></li>
       <li><a href="pages.html"><span>Documentation</span></a></li>
       <li><a href="modules.html"><span>API&#160;Reference</span></a></li>
-      <li class="current"><a href="files.html"><span>Files</span></a></li>
     </ul>
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_aa61b2fff6575bd45838b59453565768.html">fae</a></li><li class="navelem"><a class="el" href="dir_588024bfd14cddb4941052edc4e6dbca.html">atomic</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_6b89b2d2887aea5b8d12d30c5d3aa615.html">fa</a></li><li class="navelem"><a class="el" href="dir_d6856f1c307e6e1177295c1c530418b8.html">atomic</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -54,24 +53,28 @@
 </div><!--header-->
 <div class="contents">
 <a href="queue_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div>
-<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef _FAE_ATOMIC_QUEUE</span></div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _FAE_ATOMIC_QUEUE</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#ifndef _FA_ATOMIC_QUEUE</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor"></span><span class="preprocessor">#define _FA_ATOMIC_QUEUE</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;fae.h&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;fa.h&gt;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="code" href="group___fae_atomic_queue.html#ga7254154c06a174385d64c29de051da1a">   15</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__fae__atomic__queue__t.html">_fae_atomic_queue_t</a> * <a class="code" href="group___fae_atomic_queue.html#ga7254154c06a174385d64c29de051da1a">fae_atomic_queue_t</a>;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;fae_atomic_queue_t <a class="code" href="group___fae_atomic_queue.html#ga987e16bd003de9b5fc51f61ed8dd4f97" title="Create a new queue.">fae_atomic_queue_create</a>();</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fae_atomic_queue.html#gaa4b6914ceeb5c44f439543ecf4322dc0" title="Destroy the given queue.">fae_atomic_queue_destroy</a>(fae_atomic_queue_t);</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<a class="code" href="group___fae.html#ga18511afeb78cd3a102d5b30b8457bd73">fae_ptr_t</a> <a class="code" href="group___fae_atomic_queue.html#ga76123e3df4381b49cf553fd26d5e0796" title="Read a value from the given queue.">fae_atomic_queue_read</a>(fae_atomic_queue_t);</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fae_atomic_queue.html#gabf9893793425cd212761d093f9e6fb36" title="Write the given value to the given queue.">fae_atomic_queue_write</a>(fae_atomic_queue_t, <a class="code" href="group___fae.html#ga18511afeb78cd3a102d5b30b8457bd73">fae_ptr_t</a>);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#endif // _FAE_ATOMIC_QUEUE</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="code" href="group___fa_atomic_queue.html#ga31bf61a25a3ef94a5590f863b5448be7">   31</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>_fa_atomic_queue_t * <a class="code" href="group___fa_atomic_queue.html#ga31bf61a25a3ef94a5590f863b5448be7">fa_atomic_queue_t</a>;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<a class="code" href="group___fa_atomic_queue.html#ga31bf61a25a3ef94a5590f863b5448be7">fa_atomic_queue_t</a> <a class="code" href="group___fa_atomic_queue.html#gab64418bd1d44abd7e744450c27013381" title="Create a new queue.">fa_atomic_queue_create</a>();</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keywordtype">void</span> <a class="code" href="group___fa_atomic_queue.html#ga9cd02972c6ee5bf4bafabd8cb99d088e" title="Destroy the given queue.">fa_atomic_queue_destroy</a>(<a class="code" href="group___fa_atomic_queue.html#ga31bf61a25a3ef94a5590f863b5448be7">fa_atomic_queue_t</a>);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a> <a class="code" href="group___fa_atomic_queue.html#ga29256fdb985bbbf50237e7f09a19d321" title="Read a value from the given queue.">fa_atomic_queue_read</a>(<a class="code" href="group___fa_atomic_queue.html#ga31bf61a25a3ef94a5590f863b5448be7">fa_atomic_queue_t</a>);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="group___fa_atomic_queue.html#gad50c1f595e886372f2c9118d91de44df" title="Write the given value to the given queue.">fa_atomic_queue_write</a>(<a class="code" href="group___fa_atomic_queue.html#ga31bf61a25a3ef94a5590f863b5448be7">fa_atomic_queue_t</a>, <a class="code" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197" title="Pointer type, equivalent to void*.">fa_ptr_t</a>);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#endif // _FA_ATOMIC_QUEUE</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor"></span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jun 17 2013 22:25:12 for Fae documentation by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Mon Oct 7 2013 00:02:42 for faudio v2.0 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

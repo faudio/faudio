@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>Fae: include/fae/alloc.h File Reference</title>
+<title>faudio v2.2.2: include/fa/alloc.h File Reference</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Fae
+   <div id="projectname">faudio v2.2.2
    </div>
   </td>
  </tr>
@@ -44,12 +44,13 @@
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_aa61b2fff6575bd45838b59453565768.html">fae</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_6b89b2d2887aea5b8d12d30c5d3aa615.html">fa</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">alloc.h File Reference</div>  </div>
 </div><!--header-->
@@ -57,63 +58,131 @@
 <div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="alloc_8h__dep__incl.svg" width="1007" height="302"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="alloc_8h__dep__incl.svg" width="152" height="123"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <p><a href="alloc_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a3493bfc6f4d8d4836776e595bc61ea74"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="alloc_8h.html#a3493bfc6f4d8d4836776e595bc61ea74">fae_new</a>(T)&#160;&#160;&#160;malloc(sizeof(struct _fae_##T##_t))</td></tr>
-<tr class="separator:a3493bfc6f4d8d4836776e595bc61ea74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b7ae221f84ecfb99d0804023cc1e43e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="alloc_8h.html#a3b7ae221f84ecfb99d0804023cc1e43e">fae_new_struct</a>(T)&#160;&#160;&#160;malloc(sizeof(struct T))</td></tr>
-<tr class="separator:a3b7ae221f84ecfb99d0804023cc1e43e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9324f268b37e29def8e86ce4c359f6b9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="alloc_8h.html#a9324f268b37e29def8e86ce4c359f6b9">fae_delete</a>(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)&#160;&#160;&#160;free(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td></tr>
-<tr class="separator:a9324f268b37e29def8e86ce4c359f6b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4254c22897cd7ec31ac52d20fd808ae"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="alloc_8h.html#af4254c22897cd7ec31ac52d20fd808ae">fa_new</a>(T)&#160;&#160;&#160;<a class="el" href="alloc_8h.html#af5ed0edc2b381ab04d1f6f8e0e18f933">fa_malloc</a>(sizeof(struct _fa_##T##_t))</td></tr>
+<tr class="separator:af4254c22897cd7ec31ac52d20fd808ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad61e673720215fcccb9dc57902e8fde4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="alloc_8h.html#ad61e673720215fcccb9dc57902e8fde4">fa_new_struct</a>(T)&#160;&#160;&#160;<a class="el" href="alloc_8h.html#af5ed0edc2b381ab04d1f6f8e0e18f933">fa_malloc</a>(sizeof(struct T))</td></tr>
+<tr class="separator:ad61e673720215fcccb9dc57902e8fde4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0ac57121ac73b73d732f425f589031f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="alloc_8h.html#af0ac57121ac73b73d732f425f589031f">fa_delete</a>(x)&#160;&#160;&#160;<a class="el" href="alloc_8h.html#afd68511245d1cc12f07d6249e6a8ce1e">fa_free</a>(x)</td></tr>
+<tr class="separator:af0ac57121ac73b73d732f425f589031f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:af5ed0edc2b381ab04d1f6f8e0e18f933"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="alloc_8h.html#af5ed0edc2b381ab04d1f6f8e0e18f933">fa_malloc</a> (size_t size)</td></tr>
+<tr class="separator:af5ed0edc2b381ab04d1f6f8e0e18f933"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1850d348d50dd021f200b6ac7c17617"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="alloc_8h.html#ab1850d348d50dd021f200b6ac7c17617">fa_realloc</a> (void *ptr, size_t size)</td></tr>
+<tr class="separator:ab1850d348d50dd021f200b6ac7c17617"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd68511245d1cc12f07d6249e6a8ce1e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="alloc_8h.html#afd68511245d1cc12f07d6249e6a8ce1e">fa_free</a> (void *ptr)</td></tr>
+<tr class="separator:afd68511245d1cc12f07d6249e6a8ce1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a class="anchor" id="a3493bfc6f4d8d4836776e595bc61ea74"></a>
+<a class="anchor" id="af4254c22897cd7ec31ac52d20fd808ae"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define fae_new</td>
+          <td class="memname">#define fa_new</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">T</td><td>)</td>
-          <td>&#160;&#160;&#160;malloc(sizeof(struct _fae_##T##_t))</td>
+          <td>&#160;&#160;&#160;<a class="el" href="alloc_8h.html#af5ed0edc2b381ab04d1f6f8e0e18f933">fa_malloc</a>(sizeof(struct _fa_##T##_t))</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a class="anchor" id="a3b7ae221f84ecfb99d0804023cc1e43e"></a>
+<a class="anchor" id="ad61e673720215fcccb9dc57902e8fde4"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define fae_new_struct</td>
+          <td class="memname">#define fa_new_struct</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">T</td><td>)</td>
-          <td>&#160;&#160;&#160;malloc(sizeof(struct T))</td>
+          <td>&#160;&#160;&#160;<a class="el" href="alloc_8h.html#af5ed0edc2b381ab04d1f6f8e0e18f933">fa_malloc</a>(sizeof(struct T))</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a class="anchor" id="a9324f268b37e29def8e86ce4c359f6b9"></a>
+<a class="anchor" id="af0ac57121ac73b73d732f425f589031f"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define fae_delete</td>
+          <td class="memname">#define fa_delete</td>
           <td>(</td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a></td><td>)</td>
-          <td>&#160;&#160;&#160;free(<a class="el" href="fae_2fae_8c.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>)</td>
+          <td class="paramname">x</td><td>)</td>
+          <td>&#160;&#160;&#160;<a class="el" href="alloc_8h.html#afd68511245d1cc12f07d6249e6a8ce1e">fa_free</a>(x)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="af5ed0edc2b381ab04d1f6f8e0e18f933"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void* fa_malloc </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>size</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ab1850d348d50dd021f200b6ac7c17617"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void* fa_realloc </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>ptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="afd68511245d1cc12f07d6249e6a8ce1e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void fa_free </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>ptr</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -124,7 +193,7 @@ Macros</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 19 2013 01:14:05 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Mon Oct 7 2013 11:36:34 for faudio v2.2.2 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

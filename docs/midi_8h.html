@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>Fae: include/fae/midi.h File Reference</title>
+<title>faudio v2.2.2: include/fa/midi.h File Reference</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Fae
+   <div id="projectname">faudio v2.2.2
    </div>
   </td>
  </tr>
@@ -44,7 +44,7 @@
   </div>
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_aa61b2fff6575bd45838b59453565768.html">fae</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_6b89b2d2887aea5b8d12d30c5d3aa615.html">fa</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -55,93 +55,91 @@
 <div class="title">midi.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;<a class="el" href="list_8h_source.html">fae/list.h</a>&gt;</code><br/>
-<code>#include &lt;<a class="el" href="pair_8h_source.html">fae/pair.h</a>&gt;</code><br/>
-<code>#include &lt;<a class="el" href="device_8h_source.html">fae/device.h</a>&gt;</code><br/>
-<code>#include &lt;<a class="el" href="error_8h_source.html">fae/error.h</a>&gt;</code><br/>
-<code>#include &lt;fae/event.h&gt;</code><br/>
+<div class="textblock"><code>#include &lt;<a class="el" href="list_8h_source.html">fa/list.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="pair_8h_source.html">fa/pair.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="device_8h_source.html">fa/device.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="error_8h_source.html">fa/error.h</a>&gt;</code><br/>
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for midi.h:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="midi_8h__incl.svg" width="588" height="443"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="midi_8h__incl.svg" width="711" height="363"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="midi_8h__dep__incl.svg" width="1092" height="222"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="midi_8h__dep__incl.svg" width="948" height="363"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <p><a href="midi_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:gac3323a401e147720578dcce2c452db5d"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="struct__fae__midi__device__t.html">_fae_midi_device_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#gac3323a401e147720578dcce2c452db5d">fae_midi_device_t</a></td></tr>
-<tr class="separator:gac3323a401e147720578dcce2c452db5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9ae465564701d86a972cd1b3b4d372fe"><td class="memItemLeft" align="right" valign="top">typedef struct <br class="typebreak"/>
-<a class="el" href="struct__fae__midi__session__t.html">_fae_midi_session_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#ga9ae465564701d86a972cd1b3b4d372fe">fae_midi_session_t</a></td></tr>
-<tr class="separator:ga9ae465564701d86a972cd1b3b4d372fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaecca10a4d57d3e12df8c66ee75e30c2e"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="struct__fae__midi__stream__t.html">_fae_midi_stream_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#gaecca10a4d57d3e12df8c66ee75e30c2e">fae_midi_stream_t</a></td></tr>
-<tr class="separator:gaecca10a4d57d3e12df8c66ee75e30c2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5f783a235dc758b4e9369556621c0e27"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fae_midi.html#ga9ae465564701d86a972cd1b3b4d372fe">fae_midi_session_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#ga5f783a235dc758b4e9369556621c0e27">fae_midi_session_callback_t</a> )(<a class="el" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4">fae_ptr_t</a>, <a class="el" href="group___fae_midi.html#ga9ae465564701d86a972cd1b3b4d372fe">fae_midi_session_t</a>)</td></tr>
-<tr class="separator:ga5f783a235dc758b4e9369556621c0e27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6a2695dde9d4e4f2bc154da829a1f9d6"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fae_midi.html#gaecca10a4d57d3e12df8c66ee75e30c2e">fae_midi_stream_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#ga6a2695dde9d4e4f2bc154da829a1f9d6">fae_midi_stream_callback_t</a> )(<a class="el" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4">fae_ptr_t</a>, <a class="el" href="group___fae_midi.html#gaecca10a4d57d3e12df8c66ee75e30c2e">fae_midi_stream_t</a>)</td></tr>
-<tr class="separator:ga6a2695dde9d4e4f2bc154da829a1f9d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3e42bb62f1f334d178802f0d7f95ddd5"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fae.html#ga08575a144de95fa3985dc31d18853192">fae_nullary_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#ga3e42bb62f1f334d178802f0d7f95ddd5">fae_midi_status_callback_t</a></td></tr>
-<tr class="separator:ga3e42bb62f1f334d178802f0d7f95ddd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabbbfd1ec30a186768ba2744e46bacc9b"><td class="memItemLeft" align="right" valign="top">typedef struct _fa_midi_device_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a></td></tr>
+<tr class="separator:gabbbfd1ec30a186768ba2744e46bacc9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga222964548b932c6f53b575b23629530e"><td class="memItemLeft" align="right" valign="top">typedef struct _fa_midi_session_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a></td></tr>
+<tr class="separator:ga222964548b932c6f53b575b23629530e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga85772039b62d8bb718a51e1ffbbb2fa2"><td class="memItemLeft" align="right" valign="top">typedef struct _fa_midi_stream_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga85772039b62d8bb718a51e1ffbbb2fa2">fa_midi_stream_t</a></td></tr>
+<tr class="separator:ga85772039b62d8bb718a51e1ffbbb2fa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga20fb39192d8af433b1506a529bc981e7"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga20fb39192d8af433b1506a529bc981e7">fa_midi_session_callback_t</a> )(<a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>, <a class="el" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>)</td></tr>
+<tr class="separator:ga20fb39192d8af433b1506a529bc981e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8022098ffcf993ccdaed068b97ab7bfc"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fa_midi.html#ga85772039b62d8bb718a51e1ffbbb2fa2">fa_midi_stream_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga8022098ffcf993ccdaed068b97ab7bfc">fa_midi_stream_callback_t</a> )(<a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>, <a class="el" href="group___fa_midi.html#ga85772039b62d8bb718a51e1ffbbb2fa2">fa_midi_stream_t</a>)</td></tr>
+<tr class="separator:ga8022098ffcf993ccdaed068b97ab7bfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacc769aa23b097e8b8dc3d4807b9a066d"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fa.html#ga43b940a9294fd58a54087ef0b416e479">fa_nullary_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#gacc769aa23b097e8b8dc3d4807b9a066d">fa_midi_status_callback_t</a></td></tr>
+<tr class="separator:gacc769aa23b097e8b8dc3d4807b9a066d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga83745237faa2106a9424e9b45c0accfc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_midi.html#ga9ae465564701d86a972cd1b3b4d372fe">fae_midi_session_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#ga83745237faa2106a9424e9b45c0accfc">fae_midi_begin_session</a> ()</td></tr>
-<tr class="memdesc:ga83745237faa2106a9424e9b45c0accfc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Begin a new midi session.  <a href="group___fae_midi.html#ga83745237faa2106a9424e9b45c0accfc"></a><br/></td></tr>
-<tr class="separator:ga83745237faa2106a9424e9b45c0accfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaea0678906cd9a211c9324df0fd7c8a05"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#gaea0678906cd9a211c9324df0fd7c8a05">fae_midi_end_session</a> (<a class="el" href="group___fae_midi.html#ga9ae465564701d86a972cd1b3b4d372fe">fae_midi_session_t</a>)</td></tr>
-<tr class="memdesc:gaea0678906cd9a211c9324df0fd7c8a05"><td class="mdescLeft">&#160;</td><td class="mdescRight">End the given session.  <a href="group___fae_midi.html#gaea0678906cd9a211c9324df0fd7c8a05"></a><br/></td></tr>
-<tr class="separator:gaea0678906cd9a211c9324df0fd7c8a05"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7b9447c380e821888ba62cedbe1a350e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#ga7b9447c380e821888ba62cedbe1a350e">fae_midi_with_session</a> (<a class="el" href="group___fae_midi.html#ga5f783a235dc758b4e9369556621c0e27">fae_midi_session_callback_t</a>, <a class="el" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4">fae_ptr_t</a>, <a class="el" href="group___fae_error.html#ga2abe2dd713d82605e3dd774edb82a763">fae_error_callback_t</a>, <a class="el" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4">fae_ptr_t</a>)</td></tr>
-<tr class="memdesc:ga7b9447c380e821888ba62cedbe1a350e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Begin a new session, and retain it for the duration of a call to the given function.  <a href="group___fae_midi.html#ga7b9447c380e821888ba62cedbe1a350e"></a><br/></td></tr>
-<tr class="separator:ga7b9447c380e821888ba62cedbe1a350e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab074ad52ba19526b6b8fe519c36cf91a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_list.html#ga62e8420b5e2c8b334f662b986633ff3a">fae_list_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#gab074ad52ba19526b6b8fe519c36cf91a">fae_midi_all</a> (<a class="el" href="group___fae_midi.html#ga9ae465564701d86a972cd1b3b4d372fe">fae_midi_session_t</a>)</td></tr>
-<tr class="memdesc:gab074ad52ba19526b6b8fe519c36cf91a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get all active midi devices of the given session.  <a href="group___fae_midi.html#gab074ad52ba19526b6b8fe519c36cf91a"></a><br/></td></tr>
-<tr class="separator:gab074ad52ba19526b6b8fe519c36cf91a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga24e67baeae639bd22b335ffd63ba745c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_pair.html#ga1f7c75839e2ea6e61c31fdb4b0cd1e1a">fae_pair_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#ga24e67baeae639bd22b335ffd63ba745c">fae_midi_default</a> (<a class="el" href="group___fae_midi.html#ga9ae465564701d86a972cd1b3b4d372fe">fae_midi_session_t</a>)</td></tr>
-<tr class="memdesc:ga24e67baeae639bd22b335ffd63ba745c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the standard devices of the given session.  <a href="group___fae_midi.html#ga24e67baeae639bd22b335ffd63ba745c"></a><br/></td></tr>
-<tr class="separator:ga24e67baeae639bd22b335ffd63ba745c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac9897bb858520b220cebbd71e8907e8f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_midi.html#gac3323a401e147720578dcce2c452db5d">fae_midi_device_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#gac9897bb858520b220cebbd71e8907e8f">fae_midi_default_input</a> (<a class="el" href="group___fae_midi.html#ga9ae465564701d86a972cd1b3b4d372fe">fae_midi_session_t</a>)</td></tr>
-<tr class="memdesc:gac9897bb858520b220cebbd71e8907e8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the standard input device of the given session.  <a href="group___fae_midi.html#gac9897bb858520b220cebbd71e8907e8f"></a><br/></td></tr>
-<tr class="separator:gac9897bb858520b220cebbd71e8907e8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga014e128220b858fdea7859eb7240f850"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_midi.html#gac3323a401e147720578dcce2c452db5d">fae_midi_device_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#ga014e128220b858fdea7859eb7240f850">fae_midi_default_output</a> (<a class="el" href="group___fae_midi.html#ga9ae465564701d86a972cd1b3b4d372fe">fae_midi_session_t</a>)</td></tr>
-<tr class="memdesc:ga014e128220b858fdea7859eb7240f850"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the standard output device of the given session.  <a href="group___fae_midi.html#ga014e128220b858fdea7859eb7240f850"></a><br/></td></tr>
-<tr class="separator:ga014e128220b858fdea7859eb7240f850"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga931496ed2ea0841e97d4ca7b31033f52"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#ga931496ed2ea0841e97d4ca7b31033f52">fae_midi_set_status_callback</a> (<a class="el" href="group___fae_midi.html#ga3e42bb62f1f334d178802f0d7f95ddd5">fae_midi_status_callback_t</a>, <a class="el" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4">fae_ptr_t</a>, <a class="el" href="group___fae_midi.html#ga9ae465564701d86a972cd1b3b4d372fe">fae_midi_session_t</a>)</td></tr>
-<tr class="memdesc:ga931496ed2ea0841e97d4ca7b31033f52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a callback to be invoked when a status change is detected on the given session.  <a href="group___fae_midi.html#ga931496ed2ea0841e97d4ca7b31033f52"></a><br/></td></tr>
-<tr class="separator:ga931496ed2ea0841e97d4ca7b31033f52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab66fc7945957ec6fa5e9b4aa7c7f15f3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_string.html#gaec46988276ade4118709314865160b76">fae_string_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#gab66fc7945957ec6fa5e9b4aa7c7f15f3">fae_midi_name</a> (<a class="el" href="group___fae_midi.html#gac3323a401e147720578dcce2c452db5d">fae_midi_device_t</a>)</td></tr>
-<tr class="memdesc:gab66fc7945957ec6fa5e9b4aa7c7f15f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the name of the given device.  <a href="group___fae_midi.html#gab66fc7945957ec6fa5e9b4aa7c7f15f3"></a><br/></td></tr>
-<tr class="separator:gab66fc7945957ec6fa5e9b4aa7c7f15f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga76cb59f1f06835475c9c5cc56ae16d44"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_string.html#gaec46988276ade4118709314865160b76">fae_string_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#ga76cb59f1f06835475c9c5cc56ae16d44">fae_midi_host_name</a> (<a class="el" href="group___fae_midi.html#gac3323a401e147720578dcce2c452db5d">fae_midi_device_t</a>)</td></tr>
-<tr class="memdesc:ga76cb59f1f06835475c9c5cc56ae16d44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the host name of the given device.  <a href="group___fae_midi.html#ga76cb59f1f06835475c9c5cc56ae16d44"></a><br/></td></tr>
-<tr class="separator:ga76cb59f1f06835475c9c5cc56ae16d44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga51adbe7093567f9dafb943606e5d1dd4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#ga51adbe7093567f9dafb943606e5d1dd4">fae_midi_has_input</a> (<a class="el" href="group___fae_midi.html#gac3323a401e147720578dcce2c452db5d">fae_midi_device_t</a>)</td></tr>
-<tr class="memdesc:ga51adbe7093567f9dafb943606e5d1dd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return whether the given device has input or not.  <a href="group___fae_midi.html#ga51adbe7093567f9dafb943606e5d1dd4"></a><br/></td></tr>
-<tr class="separator:ga51adbe7093567f9dafb943606e5d1dd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga401c11f504e9a6b981ee461e118a809a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#ga401c11f504e9a6b981ee461e118a809a">fae_midi_has_output</a> (<a class="el" href="group___fae_midi.html#gac3323a401e147720578dcce2c452db5d">fae_midi_device_t</a>)</td></tr>
-<tr class="memdesc:ga401c11f504e9a6b981ee461e118a809a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return whether the given device has output or not.  <a href="group___fae_midi.html#ga401c11f504e9a6b981ee461e118a809a"></a><br/></td></tr>
-<tr class="separator:ga401c11f504e9a6b981ee461e118a809a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf7fc95bbda67d03b854e612118d294d0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fae_midi.html#gaecca10a4d57d3e12df8c66ee75e30c2e">fae_midi_stream_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#gaf7fc95bbda67d03b854e612118d294d0">fae_midi_open_stream</a> (<a class="el" href="group___fae_midi.html#gac3323a401e147720578dcce2c452db5d">fae_midi_device_t</a>)</td></tr>
-<tr class="memdesc:gaf7fc95bbda67d03b854e612118d294d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open a stream on the given devices.  <a href="group___fae_midi.html#gaf7fc95bbda67d03b854e612118d294d0"></a><br/></td></tr>
-<tr class="separator:gaf7fc95bbda67d03b854e612118d294d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaca1c82945f65c422d6f00d3ed383384e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#gaca1c82945f65c422d6f00d3ed383384e">fae_midi_close_stream</a> (<a class="el" href="group___fae_midi.html#gaecca10a4d57d3e12df8c66ee75e30c2e">fae_midi_stream_t</a>)</td></tr>
-<tr class="memdesc:gaca1c82945f65c422d6f00d3ed383384e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the given stream.  <a href="group___fae_midi.html#gaca1c82945f65c422d6f00d3ed383384e"></a><br/></td></tr>
-<tr class="separator:gaca1c82945f65c422d6f00d3ed383384e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga749343e6de8d85c648b52d2ad5bd5fb9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fae_midi.html#ga749343e6de8d85c648b52d2ad5bd5fb9">fae_midi_with_stream</a> (<a class="el" href="group___fae_midi.html#gac3323a401e147720578dcce2c452db5d">fae_midi_device_t</a>, <a class="el" href="group___fae_midi.html#ga6a2695dde9d4e4f2bc154da829a1f9d6">fae_midi_stream_callback_t</a>, <a class="el" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4">fae_ptr_t</a>, <a class="el" href="group___fae_error.html#ga2abe2dd713d82605e3dd774edb82a763">fae_error_callback_t</a>, <a class="el" href="group___fae.html#gaa562f79074fc34bd8744b9f0892418d4">fae_ptr_t</a>)</td></tr>
-<tr class="memdesc:ga749343e6de8d85c648b52d2ad5bd5fb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run a stream on the given devices.  <a href="group___fae_midi.html#ga749343e6de8d85c648b52d2ad5bd5fb9"></a><br/></td></tr>
-<tr class="separator:ga749343e6de8d85c648b52d2ad5bd5fb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2f1b526042c4356ce7e2adcf0d11ecad"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga2f1b526042c4356ce7e2adcf0d11ecad">fa_midi_begin_session</a> ()</td></tr>
+<tr class="memdesc:ga2f1b526042c4356ce7e2adcf0d11ecad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Begin a new midi session.  <a href="group___fa_midi.html#ga2f1b526042c4356ce7e2adcf0d11ecad"></a><br/></td></tr>
+<tr class="separator:ga2f1b526042c4356ce7e2adcf0d11ecad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga711084651fc74079373ae12b66ee81d1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga711084651fc74079373ae12b66ee81d1">fa_midi_end_session</a> (<a class="el" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>)</td></tr>
+<tr class="memdesc:ga711084651fc74079373ae12b66ee81d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">End the given session.  <a href="group___fa_midi.html#ga711084651fc74079373ae12b66ee81d1"></a><br/></td></tr>
+<tr class="separator:ga711084651fc74079373ae12b66ee81d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3d11338c0c4c7cb2f4e67640eb06cd73"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga3d11338c0c4c7cb2f4e67640eb06cd73">fa_midi_with_session</a> (<a class="el" href="group___fa_midi.html#ga20fb39192d8af433b1506a529bc981e7">fa_midi_session_callback_t</a>, <a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>, <a class="el" href="group___fa_error.html#ga43d8d45a005130a5052ba3281a8bf33e">fa_error_callback_t</a>, <a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>)</td></tr>
+<tr class="memdesc:ga3d11338c0c4c7cb2f4e67640eb06cd73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Begin a new session, and retain it for the duration of a call to the given function.  <a href="group___fa_midi.html#ga3d11338c0c4c7cb2f4e67640eb06cd73"></a><br/></td></tr>
+<tr class="separator:ga3d11338c0c4c7cb2f4e67640eb06cd73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5ae4490b13f24a0697e8e72c5e8f98f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_list.html#ga35ecb12ab934ded0cce0bcf28e3bc5d2">fa_list_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga5ae4490b13f24a0697e8e72c5e8f98f8">fa_midi_all</a> (<a class="el" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>)</td></tr>
+<tr class="memdesc:ga5ae4490b13f24a0697e8e72c5e8f98f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get all active midi devices of the given session.  <a href="group___fa_midi.html#ga5ae4490b13f24a0697e8e72c5e8f98f8"></a><br/></td></tr>
+<tr class="separator:ga5ae4490b13f24a0697e8e72c5e8f98f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga16ab90b8b25085612c42f76049d4da87"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_pair.html#gac2b2e58c230bac4f8a63ef6c05072680">fa_pair_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga16ab90b8b25085612c42f76049d4da87">fa_midi_default</a> (<a class="el" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>)</td></tr>
+<tr class="memdesc:ga16ab90b8b25085612c42f76049d4da87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the standard devices of the given session.  <a href="group___fa_midi.html#ga16ab90b8b25085612c42f76049d4da87"></a><br/></td></tr>
+<tr class="separator:ga16ab90b8b25085612c42f76049d4da87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga810b96b9181c8548f55a2b1f90f7d9c5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga810b96b9181c8548f55a2b1f90f7d9c5">fa_midi_default_input</a> (<a class="el" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>)</td></tr>
+<tr class="memdesc:ga810b96b9181c8548f55a2b1f90f7d9c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the standard input device of the given session.  <a href="group___fa_midi.html#ga810b96b9181c8548f55a2b1f90f7d9c5"></a><br/></td></tr>
+<tr class="separator:ga810b96b9181c8548f55a2b1f90f7d9c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga119d4817da1838a206eb15a93ae6b573"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga119d4817da1838a206eb15a93ae6b573">fa_midi_default_output</a> (<a class="el" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>)</td></tr>
+<tr class="memdesc:ga119d4817da1838a206eb15a93ae6b573"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the standard output device of the given session.  <a href="group___fa_midi.html#ga119d4817da1838a206eb15a93ae6b573"></a><br/></td></tr>
+<tr class="separator:ga119d4817da1838a206eb15a93ae6b573"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6b13902995f9e0b4cf3404eaa60aa3f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga6b13902995f9e0b4cf3404eaa60aa3f9">fa_midi_set_status_callback</a> (<a class="el" href="group___fa_midi.html#gacc769aa23b097e8b8dc3d4807b9a066d">fa_midi_status_callback_t</a>, <a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>, <a class="el" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>)</td></tr>
+<tr class="memdesc:ga6b13902995f9e0b4cf3404eaa60aa3f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a callback to be invoked when a status change is detected on the given session (mainly useful for hardware setup changes).  <a href="group___fa_midi.html#ga6b13902995f9e0b4cf3404eaa60aa3f9"></a><br/></td></tr>
+<tr class="separator:ga6b13902995f9e0b4cf3404eaa60aa3f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab36c5d046acdbdbaf36823dde9342c4f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_string.html#gacada63033b77bc6c39fa632ae199349b">fa_string_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#gab36c5d046acdbdbaf36823dde9342c4f">fa_midi_name</a> (<a class="el" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a>)</td></tr>
+<tr class="memdesc:gab36c5d046acdbdbaf36823dde9342c4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the name of the given device.  <a href="group___fa_midi.html#gab36c5d046acdbdbaf36823dde9342c4f"></a><br/></td></tr>
+<tr class="separator:gab36c5d046acdbdbaf36823dde9342c4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5a7331a7b471a400c65554009c3a6c96"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_string.html#gacada63033b77bc6c39fa632ae199349b">fa_string_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga5a7331a7b471a400c65554009c3a6c96">fa_midi_host_name</a> (<a class="el" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a>)</td></tr>
+<tr class="memdesc:ga5a7331a7b471a400c65554009c3a6c96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the host name of the given device.  <a href="group___fa_midi.html#ga5a7331a7b471a400c65554009c3a6c96"></a><br/></td></tr>
+<tr class="separator:ga5a7331a7b471a400c65554009c3a6c96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga156c254899dabc30fd8fe2e8dbde6e30"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga156c254899dabc30fd8fe2e8dbde6e30">fa_midi_has_input</a> (<a class="el" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a>)</td></tr>
+<tr class="memdesc:ga156c254899dabc30fd8fe2e8dbde6e30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return whether the given device has input or not.  <a href="group___fa_midi.html#ga156c254899dabc30fd8fe2e8dbde6e30"></a><br/></td></tr>
+<tr class="separator:ga156c254899dabc30fd8fe2e8dbde6e30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6b577d672f97fe3cba33aa432dba0d3f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga6b577d672f97fe3cba33aa432dba0d3f">fa_midi_has_output</a> (<a class="el" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a>)</td></tr>
+<tr class="memdesc:ga6b577d672f97fe3cba33aa432dba0d3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return whether the given device has output or not.  <a href="group___fa_midi.html#ga6b577d672f97fe3cba33aa432dba0d3f"></a><br/></td></tr>
+<tr class="separator:ga6b577d672f97fe3cba33aa432dba0d3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga84cc0d002a3f2b0ce00dd672729fc0a6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_midi.html#ga85772039b62d8bb718a51e1ffbbb2fa2">fa_midi_stream_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga84cc0d002a3f2b0ce00dd672729fc0a6">fa_midi_open_stream</a> (<a class="el" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a>)</td></tr>
+<tr class="memdesc:ga84cc0d002a3f2b0ce00dd672729fc0a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open a stream on the given devices.  <a href="group___fa_midi.html#ga84cc0d002a3f2b0ce00dd672729fc0a6"></a><br/></td></tr>
+<tr class="separator:ga84cc0d002a3f2b0ce00dd672729fc0a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga876d025cf738bf4a0771ca695ba6a693"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga876d025cf738bf4a0771ca695ba6a693">fa_midi_close_stream</a> (<a class="el" href="group___fa_midi.html#ga85772039b62d8bb718a51e1ffbbb2fa2">fa_midi_stream_t</a>)</td></tr>
+<tr class="memdesc:ga876d025cf738bf4a0771ca695ba6a693"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the given stream.  <a href="group___fa_midi.html#ga876d025cf738bf4a0771ca695ba6a693"></a><br/></td></tr>
+<tr class="separator:ga876d025cf738bf4a0771ca695ba6a693"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaef0d95b11e19edb6b559498759c67de3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#gaef0d95b11e19edb6b559498759c67de3">fa_midi_with_stream</a> (<a class="el" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a>, <a class="el" href="group___fa_midi.html#ga8022098ffcf993ccdaed068b97ab7bfc">fa_midi_stream_callback_t</a>, <a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>, <a class="el" href="group___fa_error.html#ga43d8d45a005130a5052ba3281a8bf33e">fa_error_callback_t</a>, <a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>)</td></tr>
+<tr class="memdesc:gaef0d95b11e19edb6b559498759c67de3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run a stream on the given devices.  <a href="group___fa_midi.html#gaef0d95b11e19edb6b559498759c67de3"></a><br/></td></tr>
+<tr class="separator:gaef0d95b11e19edb6b559498759c67de3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 19 2013 01:14:05 for Fae by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Mon Oct 7 2013 11:36:35 for faudio v2.2.2 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>
