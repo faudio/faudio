@@ -5,6 +5,8 @@
 #include <fa/list.h>
 #include <fa/pair.h>
 #include <fa/device.h>
+#include <fa/action.h>
+#include <fa/time.h>
 #include <fa/error.h>
 
 /** @addtogroup FaMidi
@@ -175,6 +177,12 @@ void fa_midi_with_stream(fa_midi_device_t,
                          fa_ptr_t,
                          fa_error_callback_t,
                          fa_ptr_t);
+
+/**
+    Schedule an action on the stream.
+    @warning Experimental
+*/
+void fa_midi_schedule(fa_time_t, fa_action_t, fa_midi_stream_t);
 
 /** @}
     @}

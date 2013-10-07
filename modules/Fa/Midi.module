@@ -23,6 +23,8 @@ module Fa.Midi
     import Fa.List;
     import Fa.Pair;
     import Fa.Device;
+    import Fa.Action;
+    import Fa.Time;
     import Fa.Error;
 
     type Device = opaque;
@@ -142,6 +144,12 @@ module Fa.Midi
         Callback, Ptr
         ) -> Void;
     
+    /**
+        Schedule an action on the stream.
+        @warning Experimental
+     */
+    schedule : (Time, Action, Stream) -> Void;
+
     // openAll : Session -> List;  // [Stream]
     // closeAll : Session -> List;  // [Stream]
     // withAll : (Session, StreamsCallback, Ptr, Callback, Ptr) -> Void;  // [Stream]

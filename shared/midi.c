@@ -398,6 +398,14 @@ void fa_midi_with_stream(device_t           device,
 }
 
 
+void fa_midi_schedule(fa_time_t        time,
+                      fa_action_t      action,
+                      fa_midi_stream_t stream)
+{                                              
+    // TODO
+    // pair_left_t pair = pair_left(time, action);
+    // fa_atomic_queue_write(stream->in_controls, pair);
+}
 
 
 
