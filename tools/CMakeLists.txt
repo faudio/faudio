@@ -37,4 +37,4 @@ add_tool(fifo)
 add_tool(custom)
 add_tool(test_fs)
 add_tool(test_dls)
-
+add_tool(test_midi)

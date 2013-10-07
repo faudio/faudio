@@ -10,7 +10,7 @@ list_t just(ptr_t x, list_t xs)
     return x;
 }
 
-void run_dsl()
+void run_dls()
 {                  
     if (RT)
     {
@@ -61,7 +61,7 @@ int main(int argc, char const *argv[])
 {
     fa_fa_initialize();
     
-    run_dsl();
+    run_dls();
     
     fa_fa_terminate();
 }

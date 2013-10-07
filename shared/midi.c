@@ -432,13 +432,51 @@ void fa_midi_with_stream(device_t           device,
 }
 
 
+inline static 
+void send_out(midi_message_t midi, stream_t stream)
+{                                                 
+    PmError result;
+    if (fa_midi_message_is_simple(midi)) {
+        // timestamp ignored
+        long midi_message = fa_midi_message_simple_to_long(midi);
+
+        printf("Sending: %s %08x\n", unstring(fa_string_show(midi)), (int) midi_message);
+
+        result = Pm_WriteShort(stream->native_output, 0, midi_message);
+
+        if (result != pmNoError) {
+            native_error(string("Could not send midi"), result);
+        }
+    } else {
+        assert(false && "Can not send sysex yet");
+//
+//         unsigned char buf[2048];
+//         buf[0]    = 'f';
+//         buf[0]    = '0';
+//         buf[2046] = 'f';
+//         buf[2047] = '7';
+//
+//         // check buffer size <= (2048-2)
+//         // copy sysex buffer to buf+1
+//
+//         result = Pm_WriteSysEx(stream->native_output, 0, buf);
+//         if (result != pmNoError) {
+//             native_error(string("Could not send midi"), result);
+//         }
+    }
+
+}
+
 void fa_midi_schedule(fa_time_t        time,
                       fa_action_t      action,
                       fa_midi_stream_t stream)
 {                                              
-    // TODO
-    // pair_left_t pair = pair_left(time, action);
-    // fa_atomic_queue_write(stream->in_controls, pair);
+    if (fa_action_is_send(action)) {
+        string_t name = fa_action_send_name(action);
+        ptr_t    value = fa_action_send_value(action);
+        send_out(value, stream); // TODO laterz
+        mark_used(name);
+    }
 }
 
 
