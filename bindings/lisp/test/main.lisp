@@ -753,7 +753,15 @@
 ; Sine
 (signal-run-default (lambda (inputs) 
   (duplicate 
-   (* 0.1 (sin (line 440))))))
+   (* (input 29) (sin (line 440)))))
+
+                    :stream-callback
+                    (lambda (st) 
+                      (cl:print st)
+                      (audio-send (seconds 1) (action-set 29 0.5D0) st)
+                      )
+                    
+                    )
 
 ; Echo inputs
 ;(signal-run-default 
@@ -769,24 +777,25 @@
    (mapcar (lambda (x) (* (delay 88200 x) 0.4)) inputs)))
 
 
-
-(car (signal-dls*))
+(signal-dls*)
 
 ; DLSMusicDevice
-;(setf out (pair-to-list (signal-dls)))
 (signal-run-default 
- (lambda (inputs) (signal-dls*)) 
+ (lambda (inputs) 
+   (mapcar 
+    (lambda (x) (* 0.5 x)) 
+    (signal-dls*)))
  :stream-callback 
  (lambda (stream)
    (cl:print stream)
    (audio-send (milliseconds 0)   (action-send "DLS" (midi #x91 60 127)) stream)
    (audio-send (milliseconds 100) (action-send "DLS" (midi #x91 63 127)) stream)
    (audio-send (milliseconds 200) (action-send "DLS" (midi #x91 65 127)) stream)
-   (audio-send (milliseconds 300) (action-send "DLS" (midi #x91 62 127)) stream)))
+   (audio-send (seconds 5) (action-send "DLS" (midi #x91 62 127)) stream)))
 
 (signal-run-file* 
- (cl:* 44100 300) 
- (car (signal-dls*)) 
+ (cl:* 44100 5) 
+ (delay 22050 (car (signal-dls*)))
  :controls (cl:list 
             (pair-create (milliseconds 0)   (action-send "DLS" (midi #x91 60 127)))
             (pair-create (milliseconds 100) (action-send "DLS" (midi #x91 63 127)))
