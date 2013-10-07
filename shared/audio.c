@@ -528,9 +528,9 @@ list_t fa_audio_devices(fa_audio_stream_t stream)
     }
 }
 
-void fa_audio_send(fa_time_t time,
-                   fa_action_t action,
-                   fa_audio_stream_t stream)
+void fa_audio_schedule(fa_time_t time,
+                       fa_action_t action,
+                       fa_audio_stream_t stream)
 {
     pair_left_t pair = pair_left(time, action);
     fa_atomic_queue_write(stream->in_controls, pair);

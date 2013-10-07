@@ -228,7 +228,7 @@ fa_list_t fa_audio_devices(fa_audio_stream_t);
     Schedule an action on the stream.
     @warning Experimental
 */
-void fa_audio_send(fa_time_t, fa_action_t, fa_audio_stream_t);
+void fa_audio_schedule(fa_time_t, fa_action_t, fa_audio_stream_t);
 
 /** @}
     @}

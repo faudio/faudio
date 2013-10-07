@@ -26,7 +26,7 @@ void run_dsl()
         }
         
         for (int i = 0; true; ++i) {
-            fa_audio_send(
+            fa_audio_schedule(
                 hms(0,0,0), 
                 fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 60+((i%12)*3), 90)), 
                 st);

@@ -68,12 +68,12 @@ void helper_function()
             fa_error_log(st, NULL);
         }
         
-        fa_audio_send(
+        fa_audio_schedule(
             hms(0,0,0), fa_action_send(string("DLS"), string("hello!")), st
             );
         
         while (1) {
-            fa_audio_send(
+            fa_audio_schedule(
                 hms(0,0,0), fa_action_send(string("DLS"), string("hello!")), st
                 );
             fa_thread_sleep(1000*1);

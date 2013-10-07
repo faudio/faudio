@@ -21,9 +21,9 @@
       (* (smooth (input 35)) (* 0.1 (sin (line 770))))
       ))))))
 
-;(audio-send (seconds 20) (action-set 32 0.5D0) s)
-;(audio-send (seconds 55) (action-set 32 0.1D0) s)
-;(audio-send (seconds 0) (action-set 32 0.0D0) s)
+;(audio-schedule (seconds 20) (action-set 32 0.5D0) s)
+;(audio-schedule (seconds 55) (action-set 32 0.1D0) s)
+;(audio-schedule (seconds 0) (action-set 32 0.0D0) s)
 (destroy s)
 (destroy se)
 
@@ -40,7 +40,7 @@
               :callback (lambda (interf value type)
                   (setf x (cl:* (coerce value 'double-float) 0.01D0))
                   (cl:print x)
-                  (audio-send
+                  (audio-schedule
                    (seconds 0)
                    (action-set 32 x) s)))
      (slider2 capi:slider
@@ -50,7 +50,7 @@
               :callback (lambda (interf value type)
                   (setf x (cl:* (coerce value 'double-float) 0.01D0))
                   (cl:print x)
-                  (audio-send
+                  (audio-schedule
                    (seconds 0)
                    (action-set 33 x) s)))
      (slider3 capi:slider
@@ -60,7 +60,7 @@
               :callback (lambda (interf value type)
                   (setf x (cl:* (coerce value 'double-float) 0.01D0))
                   (cl:print x)
-                  (audio-send
+                  (audio-schedule
                    (seconds 0)
                    (action-set 34 x) s)))
      (slider4 capi:slider
@@ -70,7 +70,7 @@
               :callback (lambda (interf value type)
                   (setf x (cl:* (coerce value 'double-float) 0.01D0))
                   (cl:print x)
-                  (audio-send
+                  (audio-schedule
                    (seconds 0)
                    (action-set 35 x) s)))
      )

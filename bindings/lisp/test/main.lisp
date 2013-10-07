@@ -646,9 +646,9 @@
 (setf s (audio-open-stream* i o (lambda (_) (cl:list   
                                              (* (input 32) (* 0.1 (sin (line 440))))
                                              ))))
-(audio-send (seconds 20) (action-set 32 0.5D0) s)
-(audio-send (seconds 55) (action-set 32 0.1D0) s)
-(audio-send (seconds 0) (action-set 32 0.0D0) s)
+(audio-schedule (seconds 20) (action-set 32 0.5D0) s)
+(audio-schedule (seconds 55) (action-set 32 0.1D0) s)
+(audio-schedule (seconds 0) (action-set 32 0.0D0) s)
 (destroy s)
 (destroy se)
 
@@ -758,7 +758,7 @@
                     :stream-callback
                     (lambda (st) 
                       (cl:print st)
-                      (audio-send (seconds 1) (action-set 29 0.5D0) st)
+                      (audio-schedule (seconds 1) (action-set 29 0.5D0) st)
                       )
                     
                     )
@@ -788,10 +788,10 @@
  :stream-callback 
  (lambda (stream)
    (cl:print stream)
-   (audio-send (milliseconds 0)   (action-send "DLS" (midi #x91 60 127)) stream)
-   (audio-send (milliseconds 100) (action-send "DLS" (midi #x91 63 127)) stream)
-   (audio-send (milliseconds 200) (action-send "DLS" (midi #x91 65 127)) stream)
-   (audio-send (seconds 5) (action-send "DLS" (midi #x91 62 127)) stream)))
+   (audio-schedule (milliseconds 0)   (action-send "DLS" (midi #x91 60 127)) stream)
+   (audio-schedule (milliseconds 100) (action-send "DLS" (midi #x91 63 127)) stream)
+   (audio-schedule (milliseconds 200) (action-send "DLS" (midi #x91 65 127)) stream)
+   (audio-schedule (seconds 5) (action-send "DLS" (midi #x91 62 127)) stream)))
 
 (signal-run-file* 
  (cl:* 44100 5) 

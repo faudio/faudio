@@ -197,6 +197,6 @@ module Fa.Audio
         Schedule an action on the stream.
         @warning Experimental
      */
-    send : (Time, Action, Stream) -> Void;
+    schedule : (Time, Action, Stream) -> Void;
 }
 
