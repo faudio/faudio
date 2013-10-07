@@ -57,7 +57,7 @@
 <!-- Node4 -->
 <g id="node7" class="node"><title>Node4</title>
 <a xlink:href="action_8h.html" target="_top" xlink:title="include/fa/action.h">
-<polygon fill="none" stroke="black" points="389.526,-60.6953 389.526,-83.3047 502.034,-83.3047 502.034,-60.6953 389.526,-60.6953"/>
+<polygon fill="none" stroke="red" points="389.526,-60.6953 389.526,-83.3047 502.034,-83.3047 502.034,-60.6953 389.526,-60.6953"/>
 <text text-anchor="middle" x="445.78" y="-68.3047" font-family="Futura" font-size="11.00">include/fa/action.h</text>
 </a>
 </g>

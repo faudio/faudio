@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>faudio v2.2.2: include/fa/signal.h File Reference</title>
+<title>faudio v2.2.3: include/fa/signal.h File Reference</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">faudio v2.2.2
+   <div id="projectname">faudio v2.2.3
    </div>
   </td>
  </tr>
@@ -68,7 +68,7 @@ Include dependency graph for signal.h:</div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="signal_8h__dep__incl.svg" width="892" height="443"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="signal_8h__dep__incl.svg" width="911" height="443"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <p><a href="signal_8h_source.html">Go to the source code of this file.</a></p>
@@ -83,6 +83,7 @@ Data Structures</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:gac5c72f160cd6e93a6783551627b166e5"><td class="memItemLeft" align="right" valign="top">typedef struct _fa_signal_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a></td></tr>
+<tr class="memdesc:gac5c72f160cd6e93a6783551627b166e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">The abstract type of signals.  <a href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5"></a><br/></td></tr>
 <tr class="separator:gac5c72f160cd6e93a6783551627b166e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa1f5df5ce102da5b837ccfee4632c7b4"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_signal.html#gaa1f5df5ce102da5b837ccfee4632c7b4">fa_signal_unary_signal_t</a> )(<a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>, <a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>)</td></tr>
 <tr class="memdesc:gaa1f5df5ce102da5b837ccfee4632c7b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Like fa_unary_t, but speficied on signals.  <a href="group___fa_signal.html#gaa1f5df5ce102da5b837ccfee4632c7b4"></a><br/></td></tr>
@@ -121,8 +122,6 @@ Functions</h2></td></tr>
 <tr class="memitem:ga7a10c409ddf5d80eccfe8875e395d3fe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_signal.html#ga7a10c409ddf5d80eccfe8875e395d3fe">fa_signal_delay</a> (int, <a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>)</td></tr>
 <tr class="memdesc:ga7a10c409ddf5d80eccfe8875e395d3fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a signal that delays the given signal by the given number of samples.  <a href="group___fa_signal.html#ga7a10c409ddf5d80eccfe8875e395d3fe"></a><br/></td></tr>
 <tr class="separator:ga7a10c409ddf5d80eccfe8875e395d3fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac801dd7f5f5260e608d33326d29ba042"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_signal.html#gac801dd7f5f5260e608d33326d29ba042">fa_signal_insert</a> (<a class="el" href="group___fa_string.html#gacada63033b77bc6c39fa632ae199349b">fa_string_t</a>, int, int, int, int, <a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>)</td></tr>
-<tr class="separator:gac801dd7f5f5260e608d33326d29ba042"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae12f04028e9ed54abbe0d4a3b1bd4666"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_signal.html#gae12f04028e9ed54abbe0d4a3b1bd4666">fa_signal_custom</a> (<a class="el" href="structfa__signal__custom__processor__t.html">fa_signal_custom_processor_t</a> *, <a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>)</td></tr>
 <tr class="memdesc:gae12f04028e9ed54abbe0d4a3b1bd4666"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a custom processor to be executed with the given signal.  <a href="group___fa_signal.html#gae12f04028e9ed54abbe0d4a3b1bd4666"></a><br/></td></tr>
 <tr class="separator:gae12f04028e9ed54abbe0d4a3b1bd4666"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -247,7 +246,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:gad61a6900385bbfca1b50844ee23f13d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run a signal through an external VST plug-in.  <a href="group___fa_signal.html#gad61a6900385bbfca1b50844ee23f13d8"></a><br/></td></tr>
 <tr class="separator:gad61a6900385bbfca1b50844ee23f13d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga357d3bef78de7c85b1840494a05ee8f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_pair.html#gac2b2e58c230bac4f8a63ef6c05072680">fa_pair_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_signal.html#ga357d3bef78de7c85b1840494a05ee8f5">fa_signal_dls</a> ()</td></tr>
-<tr class="memdesc:ga357d3bef78de7c85b1840494a05ee8f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair of signals from the DLSMusicDevice.  <a href="group___fa_signal.html#ga357d3bef78de7c85b1840494a05ee8f5"></a><br/></td></tr>
+<tr class="memdesc:ga357d3bef78de7c85b1840494a05ee8f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pair of signals from the <code>DLSMusicDevice</code>.  <a href="group___fa_signal.html#ga357d3bef78de7c85b1840494a05ee8f5"></a><br/></td></tr>
 <tr class="separator:ga357d3bef78de7c85b1840494a05ee8f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0037e22bd29c8150d31e61a7789f7095"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_pair.html#gac2b2e58c230bac4f8a63ef6c05072680">fa_pair_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_signal.html#ga0037e22bd29c8150d31e61a7789f7095">fa_signal_to_tree</a> (<a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>)</td></tr>
 <tr class="memdesc:ga0037e22bd29c8150d31e61a7789f7095"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the signal to a tree represented as set of nested pairs of type <code>(String,[...])</code>.  <a href="group___fa_signal.html#ga0037e22bd29c8150d31e61a7789f7095"></a><br/></td></tr>
@@ -262,16 +261,12 @@ Functions</h2></td></tr>
 <tr class="separator:gab58471c81821440157ba721c92813ce7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga662c2ee3cb779bea499c03ef7a24edf0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_signal.html#ga662c2ee3cb779bea499c03ef7a24edf0">fa_signal_line</a> (double)</td></tr>
 <tr class="separator:ga662c2ee3cb779bea499c03ef7a24edf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf9acaec0d82b8eb3ed51fc779aa20015"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_signal.html#gaf9acaec0d82b8eb3ed51fc779aa20015">fa_signal_low_pass</a> (<a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>, <a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>, <a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>, <a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>, <a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>)</td></tr>
-<tr class="separator:gaf9acaec0d82b8eb3ed51fc779aa20015"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4ee8f61aeab26a162693c1f57b6de599"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_signal.html#ga4ee8f61aeab26a162693c1f57b6de599">fa_signal_biquad</a> (<a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>, <a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>, <a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>, <a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>, <a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>, <a class="el" href="group___fa_signal.html#gac5c72f160cd6e93a6783551627b166e5">fa_signal_t</a>)</td></tr>
-<tr class="separator:ga4ee8f61aeab26a162693c1f57b6de599"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Oct 7 2013 11:52:11 for faudio v2.2.2 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Mon Oct 7 2013 16:06:57 for faudio v2.2.3 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

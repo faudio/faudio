@@ -1,11 +1,11 @@
 <map id="include/fa/action.h" name="include/fa/action.h">
-<area shape="rect" id="node3" href="$audio_8h.html" title="include/fa/audio.h" alt="" coords="235,86,383,117"/>
-<area shape="rect" id="node5" href="$fa_2fa_8h.html" title="include/fa/fa.h" alt="" coords="393,166,516,197"/>
-<area shape="rect" id="node8" href="$buffer_8h.html" title="include/fa/buffer.h" alt="" coords="750,406,897,437"/>
-<area shape="rect" id="node10" href="$device_8h.html" title="include/fa/device.h" alt="" coords="206,246,359,277"/>
-<area shape="rect" id="node13" href="$dynamic_8h.html" title="include/fa/dynamic.h" alt="" coords="600,246,765,277"/>
-<area shape="rect" id="node15" href="$error_8h.html" title="include/fa/error.h" alt="" coords="383,246,525,277"/>
-<area shape="rect" id="node19" href="$list_8h.html" title="include/fa/list.h" alt="" coords="5,246,131,277"/>
-<area shape="rect" id="node24" href="$map_8h.html" title="include/fa/map.h" alt="" coords="493,406,632,437"/>
-<area shape="rect" id="node26" href="$pair_8h.html" title="include/fa/pair.h" alt="" coords="704,326,839,357"/>
+<area shape="rect" id="node3" href="$audio_8h.html" title="include/fa/audio.h" alt="" coords="574,86,721,117"/>
+<area shape="rect" id="node5" href="$fa_2fa_8h.html" title="include/fa/fa.h" alt="" coords="464,166,587,197"/>
+<area shape="rect" id="node13" href="$midi_8h.html" title="include/fa/midi.h" alt="" coords="323,326,460,357"/>
+<area shape="rect" id="node8" href="$buffer_8h.html" title="include/fa/buffer.h" alt="" coords="430,246,577,277"/>
+<area shape="rect" id="node10" href="$device_8h.html" title="include/fa/device.h" alt="" coords="602,246,755,277"/>
+<area shape="rect" id="node16" href="$dynamic_8h.html" title="include/fa/dynamic.h" alt="" coords="189,246,355,277"/>
+<area shape="rect" id="node18" href="$error_8h.html" title="include/fa/error.h" alt="" coords="23,246,165,277"/>
+<area shape="rect" id="node23" href="$list_8h.html" title="include/fa/list.h" alt="" coords="830,246,956,277"/>
+<area shape="rect" id="node28" href="$map_8h.html" title="include/fa/map.h" alt="" coords="773,326,912,357"/>
 </map>

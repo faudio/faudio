@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>faudio v2.2.2: String</title>
+<title>faudio v2.2.3: String</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">faudio v2.2.2
+   <div id="projectname">faudio v2.2.3
    </div>
   </td>
  </tr>
@@ -53,12 +53,12 @@
 </div><!--header-->
 <div class="contents">
 
-<p>Immutable string type.  
+<p>Provides high-level strings.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">interface &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfa__string__show__t.html">fa_string_show_t</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structfa__string__show__t.html">fa_string_show_t</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">String conversion interface.  <a href="structfa__string__show__t.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -106,6 +106,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:gaaf369309c09d23b1f2a66c13a6a0696a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the character at the given position in the string.  <a href="#gaaf369309c09d23b1f2a66c13a6a0696a"></a><br/></td></tr>
 <tr class="separator:gaaf369309c09d23b1f2a66c13a6a0696a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa4399a2272d4bd533ccfded3e7d9ec1e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_string.html#gacada63033b77bc6c39fa632ae199349b">fa_string_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_string.html#gaa4399a2272d4bd533ccfded3e7d9ec1e">fa_string_show</a> (<a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>)</td></tr>
+<tr class="memdesc:gaa4399a2272d4bd533ccfded3e7d9ec1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic string conversion.  <a href="#gaa4399a2272d4bd533ccfded3e7d9ec1e"></a><br/></td></tr>
 <tr class="separator:gaa4399a2272d4bd533ccfded3e7d9ec1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa72e9e82fd082d0e59fb5692ff765ac1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_string.html#gacada63033b77bc6c39fa632ae199349b">fa_string_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_string.html#gaa72e9e82fd082d0e59fb5692ff765ac1">fa_string_to_string</a> (<a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>)</td></tr>
 <tr class="memdesc:gaa72e9e82fd082d0e59fb5692ff765ac1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Behaves like the identity function on strings and as <a class="el" href="group___fa_string.html#gaa4399a2272d4bd533ccfded3e7d9ec1e">show</a> on all other value.  <a href="#gaa72e9e82fd082d0e59fb5692ff765ac1"></a><br/></td></tr>
@@ -145,8 +146,15 @@ Functions</h2></td></tr>
 <tr class="separator:ga31e191dfacc16171eae10567a1ed1319"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>Immutable string type. </p>
-<dl class="section user"><dt>Literals</dt><dd><ul>
+<p>Provides high-level strings. </p>
+<p>A string is an immutable sequence of Unicode characters with single-ownership semantics. To convert a string from and to its ordinary C representation, use <a class="el" href="group___fa_string.html#ga154cbfd5f999ea2d1860547ad3073d26">fa_string_from_utf8</a>, <a class="el" href="group___fa_string.html#gaf49dbc04c46b729b84cf9dd9fc29b267">fa_string_to_utf8</a>, or the utility wrappers <code>string</code> and <code>unstring</code>.</p>
+<p>For example:</p>
+<div class="fragment"><div class="line"><span class="keywordtype">char</span>*       cstr  = <span class="stringliteral">&quot;Hello&quot;</span>;</div>
+<div class="line"><a class="code" href="util_8h.html#af27c04510837126cd3662933bc34431b">string_t</a>    str   = <a class="code" href="util_8h.html#a41106000aac73b61e4fc2ef9dd39a603">string</a>(cstr);</div>
+<div class="line"><a class="code" href="util_8h.html#af27c04510837126cd3662933bc34431b">string_t</a>    str2  = <a class="code" href="group___fa_string.html#gab3f2263e600e0223da71ea555a13a5b5">fa_string_dappend</a>(str, <span class="keywordtype">string</span>(<span class="stringliteral">&quot; world!&quot;</span>));</div>
+<div class="line"></div>
+<div class="line">printf(<span class="stringliteral">&quot;%s\n&quot;</span>, <a class="code" href="util_8h.html#a3ebb1e1e5bc93a359c8d5778a9aa48bd">unstring</a>(str2));</div>
+</div><!-- fragment --><dl class="section user"><dt>Literals</dt><dd><ul>
 <li><code>string("foo")</code></li>
 </ul>
 </dd></dl>
@@ -448,6 +456,15 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Generic string conversion. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>Value to convert. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A new string. </dd></dl>
 
 </div>
 </div>
@@ -767,7 +784,7 @@ Functions</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Oct 7 2013 11:52:12 for faudio v2.2.2 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Mon Oct 7 2013 16:06:57 for faudio v2.2.3 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

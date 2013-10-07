@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>faudio v2.2.2: include/fa/midi.h File Reference</title>
+<title>faudio v2.2.3: include/fa/midi.h File Reference</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">faudio v2.2.2
+   <div id="projectname">faudio v2.2.3
    </div>
   </td>
  </tr>
@@ -58,16 +58,18 @@
 <div class="textblock"><code>#include &lt;<a class="el" href="list_8h_source.html">fa/list.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="pair_8h_source.html">fa/pair.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="device_8h_source.html">fa/device.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="action_8h_source.html">fa/action.h</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="time_8h_source.html">fa/time.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="error_8h_source.html">fa/error.h</a>&gt;</code><br/>
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for midi.h:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="midi_8h__incl.svg" width="711" height="363"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="midi_8h__incl.svg" width="568" height="523"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="midi_8h__dep__incl.svg" width="948" height="363"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="midi_8h__dep__incl.svg" width="1006" height="363"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <p><a href="midi_8h_source.html">Go to the source code of this file.</a></p>
@@ -75,16 +77,22 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:gabbbfd1ec30a186768ba2744e46bacc9b"><td class="memItemLeft" align="right" valign="top">typedef struct _fa_midi_device_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a></td></tr>
+<tr class="memdesc:gabbbfd1ec30a186768ba2744e46bacc9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">A MIDI device.  <a href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b"></a><br/></td></tr>
 <tr class="separator:gabbbfd1ec30a186768ba2744e46bacc9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga222964548b932c6f53b575b23629530e"><td class="memItemLeft" align="right" valign="top">typedef struct _fa_midi_session_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a></td></tr>
+<tr class="memdesc:ga222964548b932c6f53b575b23629530e"><td class="mdescLeft">&#160;</td><td class="mdescRight">A MIDI session.  <a href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e"></a><br/></td></tr>
 <tr class="separator:ga222964548b932c6f53b575b23629530e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga85772039b62d8bb718a51e1ffbbb2fa2"><td class="memItemLeft" align="right" valign="top">typedef struct _fa_midi_stream_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga85772039b62d8bb718a51e1ffbbb2fa2">fa_midi_stream_t</a></td></tr>
+<tr class="memdesc:ga85772039b62d8bb718a51e1ffbbb2fa2"><td class="mdescLeft">&#160;</td><td class="mdescRight">A MIDI stream.  <a href="group___fa_midi.html#ga85772039b62d8bb718a51e1ffbbb2fa2"></a><br/></td></tr>
 <tr class="separator:ga85772039b62d8bb718a51e1ffbbb2fa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga20fb39192d8af433b1506a529bc981e7"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga20fb39192d8af433b1506a529bc981e7">fa_midi_session_callback_t</a> )(<a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>, <a class="el" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>)</td></tr>
+<tr class="memdesc:ga20fb39192d8af433b1506a529bc981e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback to receive MIDI sessions.  <a href="group___fa_midi.html#ga20fb39192d8af433b1506a529bc981e7"></a><br/></td></tr>
 <tr class="separator:ga20fb39192d8af433b1506a529bc981e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8022098ffcf993ccdaed068b97ab7bfc"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fa_midi.html#ga85772039b62d8bb718a51e1ffbbb2fa2">fa_midi_stream_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga8022098ffcf993ccdaed068b97ab7bfc">fa_midi_stream_callback_t</a> )(<a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>, <a class="el" href="group___fa_midi.html#ga85772039b62d8bb718a51e1ffbbb2fa2">fa_midi_stream_t</a>)</td></tr>
+<tr class="memdesc:ga8022098ffcf993ccdaed068b97ab7bfc"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback to receive MIDI streams.  <a href="group___fa_midi.html#ga8022098ffcf993ccdaed068b97ab7bfc"></a><br/></td></tr>
 <tr class="separator:ga8022098ffcf993ccdaed068b97ab7bfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacc769aa23b097e8b8dc3d4807b9a066d"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fa.html#ga43b940a9294fd58a54087ef0b416e479">fa_nullary_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#gacc769aa23b097e8b8dc3d4807b9a066d">fa_midi_status_callback_t</a></td></tr>
+<tr class="memdesc:gacc769aa23b097e8b8dc3d4807b9a066d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback to be invoked upon changes to the MIDI setup.  <a href="group___fa_midi.html#gacc769aa23b097e8b8dc3d4807b9a066d"></a><br/></td></tr>
 <tr class="separator:gacc769aa23b097e8b8dc3d4807b9a066d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
@@ -98,6 +106,12 @@ Functions</h2></td></tr>
 <tr class="memitem:ga3d11338c0c4c7cb2f4e67640eb06cd73"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga3d11338c0c4c7cb2f4e67640eb06cd73">fa_midi_with_session</a> (<a class="el" href="group___fa_midi.html#ga20fb39192d8af433b1506a529bc981e7">fa_midi_session_callback_t</a>, <a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>, <a class="el" href="group___fa_error.html#ga43d8d45a005130a5052ba3281a8bf33e">fa_error_callback_t</a>, <a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>)</td></tr>
 <tr class="memdesc:ga3d11338c0c4c7cb2f4e67640eb06cd73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Begin a new session, and retain it for the duration of a call to the given function.  <a href="group___fa_midi.html#ga3d11338c0c4c7cb2f4e67640eb06cd73"></a><br/></td></tr>
 <tr class="separator:ga3d11338c0c4c7cb2f4e67640eb06cd73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf7d4af506bd8ec5194a2952346b968d7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_list.html#ga35ecb12ab934ded0cce0bcf28e3bc5d2">fa_list_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#gaf7d4af506bd8ec5194a2952346b968d7">fa_midi_current_sessions</a> ()</td></tr>
+<tr class="memdesc:gaf7d4af506bd8ec5194a2952346b968d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get all currently active MIDI sessions.  <a href="group___fa_midi.html#gaf7d4af506bd8ec5194a2952346b968d7"></a><br/></td></tr>
+<tr class="separator:gaf7d4af506bd8ec5194a2952346b968d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7bd603a4286ddff81c1fd7c7656b4255"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga7bd603a4286ddff81c1fd7c7656b4255">fa_midi_end_all_sessions</a> ()</td></tr>
+<tr class="memdesc:ga7bd603a4286ddff81c1fd7c7656b4255"><td class="mdescLeft">&#160;</td><td class="mdescRight">End all currently active MIDI sessions.  <a href="group___fa_midi.html#ga7bd603a4286ddff81c1fd7c7656b4255"></a><br/></td></tr>
+<tr class="separator:ga7bd603a4286ddff81c1fd7c7656b4255"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5ae4490b13f24a0697e8e72c5e8f98f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_list.html#ga35ecb12ab934ded0cce0bcf28e3bc5d2">fa_list_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga5ae4490b13f24a0697e8e72c5e8f98f8">fa_midi_all</a> (<a class="el" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>)</td></tr>
 <tr class="memdesc:ga5ae4490b13f24a0697e8e72c5e8f98f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get all active midi devices of the given session.  <a href="group___fa_midi.html#ga5ae4490b13f24a0697e8e72c5e8f98f8"></a><br/></td></tr>
 <tr class="separator:ga5ae4490b13f24a0697e8e72c5e8f98f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -134,12 +148,15 @@ Functions</h2></td></tr>
 <tr class="memitem:gaef0d95b11e19edb6b559498759c67de3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#gaef0d95b11e19edb6b559498759c67de3">fa_midi_with_stream</a> (<a class="el" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a>, <a class="el" href="group___fa_midi.html#ga8022098ffcf993ccdaed068b97ab7bfc">fa_midi_stream_callback_t</a>, <a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>, <a class="el" href="group___fa_error.html#ga43d8d45a005130a5052ba3281a8bf33e">fa_error_callback_t</a>, <a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>)</td></tr>
 <tr class="memdesc:gaef0d95b11e19edb6b559498759c67de3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run a stream on the given devices.  <a href="group___fa_midi.html#gaef0d95b11e19edb6b559498759c67de3"></a><br/></td></tr>
 <tr class="separator:gaef0d95b11e19edb6b559498759c67de3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab4d2b9248bde928af90b2fbffa259946"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#gab4d2b9248bde928af90b2fbffa259946">fa_midi_schedule</a> (<a class="el" href="group___fa_time.html#ga227cc693f20b4873fed11028bcade184">fa_time_t</a>, <a class="el" href="group___fa_action.html#gadb08ae063168671e5fedc6c23f20ae4b">fa_action_t</a>, <a class="el" href="group___fa_midi.html#ga85772039b62d8bb718a51e1ffbbb2fa2">fa_midi_stream_t</a>)</td></tr>
+<tr class="memdesc:gab4d2b9248bde928af90b2fbffa259946"><td class="mdescLeft">&#160;</td><td class="mdescRight">Schedule an action on the stream.  <a href="group___fa_midi.html#gab4d2b9248bde928af90b2fbffa259946"></a><br/></td></tr>
+<tr class="separator:gab4d2b9248bde928af90b2fbffa259946"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Oct 7 2013 11:52:11 for faudio v2.2.2 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Mon Oct 7 2013 16:06:57 for faudio v2.2.3 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>
