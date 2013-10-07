@@ -413,6 +413,8 @@ fa_list_t fa_signal_vst(fa_string_t, fa_string_t, fa_list_t);
 fa_list_t fa_signal_fluid(fa_string_t);
 
 /** Returns a pair of signals from the DLSMusicDevice.
+    You can send messages to it using the name `DLS`.
+    
     @warning
         This function is experimental.    
     @return

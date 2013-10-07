@@ -316,6 +316,8 @@ module Fa.Signal
     fluid : String -> List;
 
     /** Returns a pair of signals from the DLSMusicDevice.
+        You can send messages to it using the name `DLS`.
+        
         @warning
             This function is experimental.    
         @return
