@@ -393,7 +393,7 @@ void fa_audio_set_status_callback(
 {
     assert(session && "Not a real session");
 
-    // See device_osx.c and device_win.c
+    // See platform/*/device.c
     add_audio_status_listener(function, data);
 }
 
