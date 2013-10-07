@@ -26,7 +26,10 @@
     @{
     */
 
-
+/** The abstract type of signals.
+    
+    Each signals denotes a function of time.
+*/
 typedef struct _fa_signal_t * fa_signal_t;
 
 /** Like fa_unary_t, but speficied on signals.
@@ -130,14 +133,6 @@ fa_signal_t fa_signal_loop(fa_signal_unary_signal_t, fa_ptr_t);
 fa_signal_t fa_signal_delay(int, fa_signal_t);
 
 
-fa_signal_t fa_signal_insert(fa_string_t,
-                             int,
-                             int,
-                             int,
-                             int,
-                             fa_signal_t);
-
-
 typedef fa_string_t fa_signal_name_t;
 
 
@@ -160,7 +155,10 @@ typedef struct {
         } fa_signal_custom_processor_t;
 
 /** Add a custom processor to be executed with the given signal.
-    You probably do not want to do this.
+
+    @warning
+        You probably do not want to do this. Custom processors are for exceptional
+        cases such as implementing wrappers for new plug-in format.
 */
 fa_signal_t fa_signal_custom(fa_signal_custom_processor_t *,
                              fa_signal_t);
@@ -400,6 +398,8 @@ fa_signal_t fa_signal_impulses(int);
         Inputs signals.
     @return
         A list of @ref fa_signal_t (outputs).
+    @warning
+        Experimental.    
 */
 fa_list_t fa_signal_vst(fa_string_t, fa_string_t, fa_list_t);
 
@@ -409,16 +409,18 @@ fa_list_t fa_signal_vst(fa_string_t, fa_string_t, fa_list_t);
         Name of plug-in.
     @return
         A list of @ref fa_signal_t (outputs).
+    @warning
+        Experimental.    
 */
 fa_list_t fa_signal_fluid(fa_string_t);
 
-/** Returns a pair of signals from the DLSMusicDevice.
+/** Returns a pair of signals from the `DLSMusicDevice`.
     You can send messages to it using the name `DLS`.
     
-    @warning
-        This function is experimental.    
     @return
         A pair of @ref fa_signal_t (outputs).
+    @warning
+        Experimental.    
 */
 fa_pair_t fa_signal_dls();
 
@@ -448,21 +450,6 @@ fa_signal_t fa_signal_impulse();
 
 
 fa_signal_t fa_signal_line(double);
-
-
-fa_signal_t fa_signal_low_pass(fa_signal_t,
-                               fa_signal_t,
-                               fa_signal_t,
-                               fa_signal_t,
-                               fa_signal_t);
-
-
-fa_signal_t fa_signal_biquad(fa_signal_t,
-                             fa_signal_t,
-                             fa_signal_t,
-                             fa_signal_t,
-                             fa_signal_t,
-                             fa_signal_t);
 
 /** @}
     @}

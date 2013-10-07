@@ -10,7 +10,7 @@
 
     @addtogroup Fa
 
-    Core definitions. Import @ref FaAudioEngine instead of this module.
+    Basic definitions. 
 
  
     @defgroup Fa Fa

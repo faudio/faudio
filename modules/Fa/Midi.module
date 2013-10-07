@@ -2,7 +2,7 @@
 /**
     @addtogroup FaMidi
 
-    Real-time midi device.
+    Provides real-time MIDi.
 
     @par Sessions, devices and streams implement 
     - fa_destroy_t
@@ -27,12 +27,30 @@ module Fa.Midi
     import Fa.Time;
     import Fa.Error;
 
+    /** A MIDI device.
+     */
     type Device = opaque;
+
+    /** A MIDI session.
+     */
     type Session = opaque;
+    
+    /** A MIDI stream.
+     */
     type Stream = opaque;
+    
+    /** A callback to receive MIDI sessions.
+     */
     type SessionCallback = ((Ptr, Session) -> Session)*;
+    
+    /** A callback to receive MIDI streams.
+     */
     type StreamCallback = ((Ptr, Stream) -> Stream)*;
+    
+    /** A callback to be invoked upon changes to the MIDI setup.
+     */
     type StatusCallback = Nullary;
+
 
     /** Begin a new midi session.
 
@@ -106,9 +124,10 @@ module Fa.Midi
         Note that this function will not modify the devices in a session, you have to
         restart the session to get a fresh snapshot.
 
-        @param device   The device.
+        @param device
+            The device.
         @warning
-            On OS X this function must be called from the main thread.
+            Experimental.
      */
     setStatusCallback : (StatusCallback, Ptr, Session) -> Void;
 
@@ -163,9 +182,16 @@ module Fa.Midi
         @warning Experimental
      */
     schedule : (Time, Action, Stream) -> Void;
-
-    // openAll : Session -> List;  // [Stream]
-    // closeAll : Session -> List;  // [Stream]
-    // withAll : (Session, StreamsCallback, Ptr, Callback, Ptr) -> Void;  // [Stream]
 }
 
+
+
+// Devices implement [Equal](@ref fa_equal_t) and [Show](@ref fa_string_show_t),
+// but now destroy, as they are always managed by the underlying session.
+// 
+// Stream implements [Clock](@ref fa_time_clock_t) by counting the number
+// of processed samples. Precision is usually limited to the current frame size.
+// 
+// Stream also implements [SenderInterface](@ref fa_message_sender_t) and
+// [ReceiverInterface](@ref fa_message_sender_t), dispatching messages to the underlying
+// processor network. The address of a processor can be obtained by @ref fa_processor_address.

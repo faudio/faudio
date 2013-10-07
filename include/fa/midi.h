@@ -13,7 +13,7 @@
 
     @addtogroup FaMidi
 
-    Real-time midi device.
+    Provides real-time MIDi.
 
     @par Sessions, devices and streams implement 
     - fa_destroy_t
@@ -35,24 +35,30 @@
     @{
     */
 
-
+/** A MIDI device.
+*/
 typedef struct _fa_midi_device_t * fa_midi_device_t;
 
-
+/** A MIDI session.
+*/
 typedef struct _fa_midi_session_t * fa_midi_session_t;
 
-
+/** A MIDI stream.
+*/
 typedef struct _fa_midi_stream_t * fa_midi_stream_t;
 
-
+/** A callback to receive MIDI sessions.
+*/
 typedef fa_midi_session_t (* fa_midi_session_callback_t)(fa_ptr_t,
                                                          fa_midi_session_t);
 
-
+/** A callback to receive MIDI streams.
+*/
 typedef fa_midi_stream_t (* fa_midi_stream_callback_t)(fa_ptr_t,
                                                        fa_midi_stream_t);
 
-
+/** A callback to be invoked upon changes to the MIDI setup.
+*/
 typedef fa_nullary_t fa_midi_status_callback_t;
 
 /** Begin a new midi session.
@@ -133,9 +139,10 @@ fa_midi_device_t fa_midi_default_output(fa_midi_session_t);
     Note that this function will not modify the devices in a session, you have to
     restart the session to get a fresh snapshot.
 
-    @param device   The device.
+    @param device
+        The device.
     @warning
-        On OS X this function must be called from the main thread.
+        Experimental.
 */
 void fa_midi_set_status_callback(fa_midi_status_callback_t,
                                  fa_ptr_t,

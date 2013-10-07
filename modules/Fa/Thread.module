@@ -23,8 +23,14 @@ module Fa.Thread
     import Fa;
     import Fa.Std;
 
+    /** The abstract type of threads.
+     */
     type Thread = opaque;
+    
+    /** The abstract type of mutexes.
+     */
     type Mutex = opaque;
+    
     type Milliseconds = Int;
 
     /** Create a new thread executing the given function asynhronously.

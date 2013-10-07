@@ -4,8 +4,8 @@
     
     Mutable buffers. 
     
-    Each buffer is a mutable sequence of bytes with single-ownership
-    semantics. The length of a buffer can never change, but its memory can be reused using the destructive
+    Each buffer is a mutable sequence of bytes with single-ownership semantics. The length
+    of a buffer can never change, but its memory can be reused using the destructive
     resize operation.
     
     TODO formalize bounds checking etc.
@@ -39,6 +39,7 @@ module Fa.Buffer
             O(n)
      */
     create  : (Size) -> Buffer;
+
     /** Create a buffer wrapping the given memory region.
 
         @param ptr  Pointer to wrap.
@@ -49,16 +50,31 @@ module Fa.Buffer
             O(1)
      */
     wrap    : (Ptr, Size, Unary, Ptr) -> Buffer;
+
     /** Copy the given buffer.
         @note
             O(n)
      */
     copy    : Buffer -> Buffer;
-    /** Copy the given buffer using the given size.
+
+    /** Return a new buffer of the given size containing the contents
+        of the given buffer padded with zero bytes at the end.
         @note
             O(n)
      */
     resize  : (Size, Buffer) -> Buffer;
+
+    /** Return a new buffer of the given size containing the contents
+        of the given buffer padded with zero bytes at the end.
+        
+        The given buffer is destroyed. This function can reuse memory
+        from the destroyed buffer and be considerably faster than @ref fa_buffer_resize.
+        
+        @note
+            O(n)
+     */
+    dresize  : (Size, Buffer) -> Buffer;
+
     /** Destroy the given buffer.
         @note
             O(n)
@@ -70,41 +86,121 @@ module Fa.Buffer
             O(1)
      */
     size    : Buffer -> Size;  
-    /** Read a value from the buffer.
+
+    /** Get a value from the buffer.
         @note
             O(1)
      */
     get     : (Buffer, Size) -> UInt8;
+
     /** Update a value in the buffer.
         @note
             O(1)
      */
     set     : (Buffer, Size, UInt8) -> Void;
 
+    /** Get a value from the buffer.
+        @note
+            O(1)
+     */
     getInt16  : (Buffer, Size) -> Int16;
+    
+    /** Get a value from the buffer.
+        @note
+            O(1)
+     */
     getInt32  : (Buffer, Size) -> Int32;
+    
+    /** Get a value from the buffer.
+        @note
+            O(1)
+     */
     getInt64  : (Buffer, Size) -> Int64;
+    
+    /** Get a value from the buffer.
+        @note
+            O(1)
+     */
     getFloat  : (Buffer, Size) -> Float;
+    
+    /** Get a value from the buffer.
+        @note
+            O(1)
+     */
     getDouble : (Buffer, Size) -> Double;
 
+    
+    /** Update a value in the buffer.
+        @note
+            O(1)
+     */
     setInt16  : (Buffer, Size, Int16) -> Void;
+    
+    /** Update a value in the buffer.
+        @note
+            O(1)
+     */
     setInt32  : (Buffer, Size, Int32) -> Void;
+    
+    /** Update a value in the buffer.
+        @note
+            O(1)
+     */
     setInt64  : (Buffer, Size, Int64) -> Void;    
+    
+    /** Update a value in the buffer.
+        @note
+            O(1)
+     */
     setFloat  : (Buffer, Size, Float) -> Void;
+    
+    /** Update a value in the buffer.
+        @note
+            O(1)
+     */
     setDouble : (Buffer, Size, Double) -> Void;    
 
 
-    // Input / Output
+    /**
+        Reads a buffer from a file.
+
+        @param path
+            Path to the file to read.
+        @return
+            A new buffer.
+     */
     readRaw     : String -> Buffer;
+    
+    /**
+        Write a buffer to a file.
+
+        @param path
+            Path to the file to write.
+     */
     writeRaw    : (String,Buffer) -> Void;    
     
     /**
-        Reads an audio file.
+        Read an audio file.
 
-        @returns
-            A pair $$type, buffer)$$.
+        @param path
+            Path to the file to read.
+        @return
+            A `(Channels, Buffer)` pair.
      */
     readAudio   : String -> Pair; // (Int,Buffer)
+
+    /**
+        Write an audio file.
+
+        @param path
+            Path to the file to read.
+        @param channels
+            Number of channels.
+        @param buffer
+            Buffer to write.
+        @return
+            The null pointer or an error value.
+     */
     writeAudio  : (String,Int,Buffer) -> Ptr; // Error?
 
     /** Return the address of the buffer.

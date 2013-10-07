@@ -26,7 +26,7 @@
 
     @addtogroup FaFa
 
-    This modules exports Fa. Example usage:
+    Miscellaneous utilities.
 
     ~~~~
     #import <fa/fa.h>

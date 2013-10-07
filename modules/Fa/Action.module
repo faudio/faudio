@@ -1,8 +1,22 @@
 
 /** 
-    Actions on control values.
+    Scheduling actions.
+    
+    The action types represent a single interaction with a running stream, such
+    as a note or a control change.
+    
+    Actions can be *scheduled* on both real-time and non-real-time 
+    devices: in the first case they are carried out when the internal clock of
+    the stream reaches the scheduled time, in the latter case they are simply
+    carried out at the appropriate time.
+    
+    For scheduling actions, see @ref fa_audio_schedule, @ref fa_midi_schedule
+    or @ref fa_signal_run.
 
     @par Literals
+    - `set`
+    - `accum`
+    - `send`
 
     @par Implements 
     - fa_copy_t
@@ -18,26 +32,77 @@ module Fa.Action
     import Fa.Pair;
     import Fa.List;
     import Fa.Signal;
-
+    
+    /** The abstract type of actions.
+    */
     type Action = opaque;
+    
+    
+    /** Channel on which to carry out the action.
+    */
     type Channel = Int;
+
+    /** Name of external processor to receive the action.
+    */
     type Name = String;
-    type Params = Ptr;
+
+    /** Value to send.
+    */
     type Value = Ptr;
 
+    /** The `set` action updates a single global bus.
+
+        The resulting action must be destroyed by the caller.
+        
+        @param channel
+            Channel to update.
+        @param value
+            Value to set.
+     */
     set : (Channel, Double) -> Action;
+
+    /** The `accum` action updates a single global bus by applying
+        a function to its previous value.
+
+        The resulting action must be destroyed by the caller.
+        
+        @param channel
+            Channel to update.
+        @param function
+            Function to apply.
+        @param data
+            Data closed over by the function.
+     */
     accum : (Channel, UnaryDouble, Ptr) -> Action;
+
+    /** The `send` action sends a message, the type of which depends on
+        the type of receiver. Often this is @ref fa_midi_message_t or 
+        a value implementing @ref fa_dynamic_t.
+
+        The resulting action must be destroyed by the caller.
+        
+        @param name
+            Name of receiver.
+        @param value
+            Value to send.
+     */
     send : (Name, Value) -> Action;
 
+    /** Return whether the given action is a set action.
+      */
     isSet : Action -> Bool;
     setChannel : Action -> Channel;
     setValue : Action -> Double;
 
+    /** Return whether the given action is an accum action.
+      */
     isAccum : Action -> Bool;
     accumChannel : Action -> Channel;
     accumFunction : Action -> UnaryDouble;
     accumData : Action -> Ptr;
 
+    /** Return whether the given action is a send action.
+      */
     isSend : Action -> Bool;
     sendName : Action -> Name;
     sendValue : Action -> Value;

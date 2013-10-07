@@ -11,25 +11,17 @@
 
 /** @addtogroup FaAudio
 
-    Real-time audio devices. These device run processors on the input and output
+    Provides real-time audio.
+    
+    These device run processors on the input and output
     the underlying system, typically physical audio interfaces. A running audio
     computation is represented by a *stream*. Access to the current device setups
     is provided by *sessions*.
 
-    @par Sessions implement
+    @par Implements
     - fa_equal_t
     - fa_destroy_t (sessions and streams)
     - fa_string_show_t
-
-    Devices implement [Equal](@ref fa_equal_t) and [Show](@ref fa_string_show_t),
-    but now destroy, as they are always managed by the underlying session.
-
-    Stream implements [Clock](@ref fa_time_clock_t) by counting the number
-    of processed samples. Precision is usually limited to the current frame size.
-
-    Stream also implements [SenderInterface](@ref fa_message_sender_t) and
-    [ReceiverInterface](@ref fa_message_sender_t), dispatching messages to the underlying
-    processor network. The address of a processor can be obtained by @ref fa_processor_address.
 
     @see
     - @ref Devices
@@ -40,25 +32,35 @@
     @{
     */
 
-
+/** An audio session.
+*/
 typedef struct _fa_audio_session_t * fa_audio_session_t;
 
-
+/** An audio device.
+*/
 typedef struct _fa_audio_device_t * fa_audio_device_t;
 
-
+/** An audio stream.
+*/
 typedef struct _fa_audio_stream_t * fa_audio_stream_t;
 
-
+/** A callback to receive audio sessions.
+*/
 typedef fa_audio_session_t (* fa_audio_session_callback_t)(fa_ptr_t,
                                                            fa_audio_session_t);
 
-
+/** A callback to receive audio streams.
+*/
 typedef fa_audio_stream_t (* fa_audio_stream_callback_t)(fa_ptr_t,
                                                          fa_audio_stream_t);
 
-
+/** A callback to be invoked upon changes to the audio setup.
+*/
 typedef fa_nullary_t fa_audio_status_callback_t;
+
+/** An audio processor, or a function from a list of signals to a list of signals.
+*/
+typedef fa_list_t (* fa_audio_proc_t)(fa_ptr_t, fa_list_t);
 
 /** Begin a new audio session.
 
@@ -139,7 +141,10 @@ fa_audio_device_t fa_audio_default_output(fa_audio_session_t);
     Note that this function will not modify the devices in a session, you have to
     restart the session to get a fresh snapshot.
 
-    @param device   The device.
+    @param device
+        The device.
+    @warning
+        Experimental.
 */
 void fa_audio_set_status_callback(fa_audio_status_callback_t,
                                   fa_ptr_t,
@@ -170,14 +175,15 @@ bool fa_audio_has_input(fa_audio_device_t);
 */
 bool fa_audio_has_output(fa_audio_device_t);
 
-
+/** Return the number of inputs of the given device.
+    @param device   The device.
+*/
 int fa_audio_input_channels(fa_audio_device_t);
 
-
+/** Return the number of outputs of the given device.
+    @param device   The device.
+*/
 int fa_audio_output_channels(fa_audio_device_t);
-
-
-typedef fa_list_t (* fa_audio_proc_t)(fa_ptr_t, fa_list_t);
 
 /**
     Open a stream on the given devices.

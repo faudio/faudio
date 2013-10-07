@@ -31,6 +31,8 @@ module Fa.Set
     import Fa.List;
     import Fa.String;
 
+    /** The abstract type of sets.
+     */
     type Set = opaque;
     
     // Constructors

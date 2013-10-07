@@ -2,7 +2,21 @@
 /** 
     @addtogroup FaString
     
-    Immutable string type.
+    Provides high-level strings.
+    
+    A string is an immutable sequence of Unicode characters with single-ownership semantics.
+    To convert a string from and to its ordinary C representation, use @ref fa_string_from_utf8,
+    @ref fa_string_to_utf8, or the utility wrappers `string` and `unstring`.
+
+    For example:
+    
+    ~~~c
+    char*       cstr  = "Hello";
+    string_t    str   = string(cstr);
+    string_t    str2  = fa_string_dappend(str, string(" world!"));
+
+    printf("%s\n", unstring(str2));
+    ~~~
 
     @par Literals
     - `string("foo")`
@@ -93,13 +107,19 @@ module Fa.String
      */
     charAt : (Int,String) -> Char16;
 
-    /** @interface fa_string_show_t 
-        String conversion interface.
+    /** String conversion interface.
     */
     type Show  = struct {
         show : (Ptr -> String)*
     };
 
+    /** Generic string conversion.
+
+        @param value
+            Value to convert.
+        @return
+            A new string.
+     */
     show     : Ptr -> String;
     
     /** Behaves like the identity function on strings and as [show](@ref fa_string_show)

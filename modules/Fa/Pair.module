@@ -24,6 +24,8 @@ module Fa.Pair
     import Fa;
     import Fa.List;
 
+    /** The abstract type of pairs.
+     */
     type Pair = opaque;
     type Struct = struct { first : Ptr, second : Ptr };
 

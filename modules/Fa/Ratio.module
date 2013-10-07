@@ -25,6 +25,9 @@ module Fa.Ratio
 
     type Num    = Int32;
     type Denom  = Int32;
+    
+    /** A rational number.
+     */
     type Ratio  = opaque;
 
     /** Create a rational number.

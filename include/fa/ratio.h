@@ -37,7 +37,8 @@ typedef int32_t fa_ratio_num_t;
 
 typedef int32_t fa_ratio_denom_t;
 
-
+/** A rational number.
+*/
 typedef struct _fa_ratio_t * fa_ratio_t;
 
 /** Create a rational number.

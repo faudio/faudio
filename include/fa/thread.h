@@ -31,10 +31,12 @@
     @{
     */
 
-
+/** The abstract type of threads.
+*/
 typedef struct _fa_thread_t * fa_thread_t;
 
-
+/** The abstract type of mutexes.
+*/
 typedef struct _fa_thread_mutex_t * fa_thread_mutex_t;
 
 

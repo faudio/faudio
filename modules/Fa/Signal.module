@@ -18,6 +18,10 @@ module Fa.Signal
     import Fa.Time;
     import Fa.Buffer;
     
+    /** The abstract type of signals.
+    
+        Each signals denotes a function of time.
+     */
     type Signal = opaque;
 
     /** Like fa_unary_t, but speficied on signals.
@@ -108,7 +112,7 @@ module Fa.Signal
      */
     delay       : ( Int, Signal )                                 -> Signal;
 
-    insert : ( String, Int, Int, Int, Int, Signal ) -> Signal;
+    // insert : ( String, Int, Int, Int, Int, Signal ) -> Signal;
 
 
     type Name    = String;
@@ -130,7 +134,10 @@ module Fa.Signal
     };
     
     /** Add a custom processor to be executed with the given signal.
-        You probably do not want to do this.
+
+        @warning
+            You probably do not want to do this. Custom processors are for exceptional
+            cases such as implementing wrappers for new plug-in format.
      */
     custom      : (CustomProcessor*, Signal) -> Signal;
 
@@ -303,6 +310,8 @@ module Fa.Signal
             Inputs signals.
         @return
             A list of @ref fa_signal_t (outputs).
+        @warning
+            Experimental.    
      */
     vst : (String, String, List) -> List;
 
@@ -312,16 +321,18 @@ module Fa.Signal
             Name of plug-in.
         @return
             A list of @ref fa_signal_t (outputs).
+        @warning
+            Experimental.    
      */
     fluid : String -> List;
 
-    /** Returns a pair of signals from the DLSMusicDevice.
+    /** Returns a pair of signals from the `DLSMusicDevice`.
         You can send messages to it using the name `DLS`.
         
-        @warning
-            This function is experimental.    
         @return
             A pair of @ref fa_signal_t (outputs).
+        @warning
+            Experimental.    
      */
     dls : () -> Pair;
     
@@ -349,8 +360,10 @@ module Fa.Signal
 
     impulse : () -> Signal;
     line : Double -> Signal;
-    lowPass : (Signal, Signal, Signal, Signal, Signal) -> Signal;
-    biquad : (Signal, Signal, Signal, Signal, Signal, Signal) -> Signal;
+    
+    
+    // lowPass : (Signal, Signal, Signal, Signal, Signal) -> Signal;
+    // biquad : (Signal, Signal, Signal, Signal, Signal, Signal) -> Signal;
 
 }
 

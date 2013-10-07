@@ -10,20 +10,26 @@
 
     @addtogroup FaTime
 
-    Aribitrary precision time interval.
-
-    This type uses standard time units, with arbitrary divisions of a second. Allthough
-    day is the longest unit, times longer than a day are supported by this type; they are
-    simply expressed as days instead of years, weaks and months. Thus no particular
-    calendar has to be adopted.
-
-    To *deconstruct* a type, use `fa_time_days`, `fa_time_hours` etc. To *convert* a
-    type to a numeric type (such as number of milliseconds), use
-    `fa_time_to_milliseconds` etc. For example:
+    Time values.
     
-        fa_time_minutes(hms(0,4,33))    = 4
-        fa_time_seconds(hms(0,4,33))    = 33
-        fa_time_to_minutes(hms(0,4,33)) = 4*60 + 33 = 273
+    This type represent a point in time relative to a stream-specific *start time*.
+
+    The represeentation supports small divisions of a second. Values longer than a
+    day are supported, but must be represented explicitly as a number of days, since
+    weeks, months, years and so on would require a calendar representation.
+
+    To *deconstruct* a time interval into its components, use `fa_time_days`,
+    `fa_time_hours` and so on. To *convert* a type into a single numeric value
+    such as number of seconds, use `fa_time_to_seconds` and so on. 
+    
+    For example:
+    
+    ~~~c    
+    fa_time_minutes(hms(0,4,33))    => 4
+    fa_time_seconds(hms(0,4,33))    => 33
+
+    fa_time_to_minutes(hms(0,4,33)) => 4*60 + 33 = 273
+    ~~~
 
     @par Literals
     - `hms(0,1,30)`
@@ -53,10 +59,11 @@
     @{
     */
 
-
+/** The abstract type of times.
+*/
 typedef struct _fa_time_t * fa_time_t;
 
-/** Create a new time interval.
+/** Create a new time value.
     @param days
         Number of days.
     @param hours
@@ -71,60 +78,60 @@ typedef struct _fa_time_t * fa_time_t;
 fa_time_t fa_time_create(int32_t, int32_t, int32_t, fa_ratio_t);
 
 /**
-    Copy the given time interval.
+    Copy the given time value.
 */
 fa_time_t fa_time_copy(fa_time_t);
 
 /**
-    Destroy the given time interval.
+    Destroy the given time value.
 */
 void fa_time_destroy(fa_time_t);
 
 /**
-    Return the number of whole days in this time interval.
+    Return the number of whole days in this time value.
 
     @param time
-        Time interval.
+        Time value.
     @return
         Integer representing this time in days modulo one.
 */
 int32_t fa_time_days(fa_time_t);
 
 /**
-    Return the number of whole hours in this time interval.
+    Return the number of whole hours in this time value.
 
     @param time
-        Time interval.
+        Time value.
     @return
         Integer representing this time in hours modulo one.
 */
 int32_t fa_time_hours(fa_time_t);
 
 /**
-    Return the number of whole minutes in this time interval.
+    Return the number of whole minutes in this time value.
 
     @param time
-        Time interval.
+        Time value.
     @return
         Integer representing this time in minutes modulo one.
 */
 int32_t fa_time_minutes(fa_time_t);
 
 /**
-    Return the number of whole seconds in this time interval.
+    Return the number of whole seconds in this time value.
 
     @param time
-        Time interval.
+        Time value.
     @return
         Integer representing this time in seconds modulo one.
 */
 int32_t fa_time_seconds(fa_time_t);
 
 /**
-    Return the fractions of a second in this time interval.
+    Return the fractions of a second in this time value.
 
     @param time
-        Time interval.
+        Time value.
     @return
         Rational number, representing the remainder of time in seconds over one.
 */
@@ -141,25 +148,27 @@ fa_string_t fa_time_to_iso(fa_time_t);
     This may lose precision.
 
     @param time
-        Time interval.
+        Time value.
 */
 int32_t fa_time_to_seconds(fa_time_t);
 
 
 int32_t fa_time_to_milliseconds(fa_time_t);
 
-
+/** The system time type.
+*/
 typedef struct _fa_time_system_t * fa_time_system_t;
 
-
+/** The system CPU time type.
+*/
 typedef struct _fa_time_cpu_t * fa_time_cpu_t;
 
-/** Convert system time to a time interval.
+/** Convert system time to a time value.
     Generally, system time is seconds since the Unix epoch.
 */
 fa_time_t fa_time_from_system(fa_time_system_t);
 
-/** Convert system CPU time to a time interval.
+/** Convert system CPU time to a time value.
 */
 fa_time_t fa_time_from_cpu(fa_time_cpu_t);
 

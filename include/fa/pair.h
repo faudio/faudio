@@ -32,7 +32,8 @@
     @{
     */
 
-
+/** The abstract type of pairs.
+*/
 typedef struct _fa_pair_t * fa_pair_t;
 
 

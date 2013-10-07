@@ -39,7 +39,8 @@
     @{
     */
 
-
+/** The abstract type of sets.
+*/
 typedef struct _fa_set_t * fa_set_t;
 
 

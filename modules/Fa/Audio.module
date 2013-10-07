@@ -1,24 +1,16 @@
 
 /**
-    Real-time audio devices. These device run processors on the input and output
+    Provides real-time audio.
+    
+    These device run processors on the input and output
     the underlying system, typically physical audio interfaces. A running audio
     computation is represented by a *stream*. Access to the current device setups
     is provided by *sessions*.
 
-    @par Sessions implement
+    @par Implements
     - fa_equal_t
     - fa_destroy_t (sessions and streams)
     - fa_string_show_t
-
-    Devices implement [Equal](@ref fa_equal_t) and [Show](@ref fa_string_show_t),
-    but now destroy, as they are always managed by the underlying session.
-
-    Stream implements [Clock](@ref fa_time_clock_t) by counting the number
-    of processed samples. Precision is usually limited to the current frame size.
-
-    Stream also implements [SenderInterface](@ref fa_message_sender_t) and
-    [ReceiverInterface](@ref fa_message_sender_t), dispatching messages to the underlying
-    processor network. The address of a processor can be obtained by @ref fa_processor_address.
 
     @see
     - @ref Devices
@@ -32,12 +24,34 @@ module Fa.Audio
     import Fa.Signal;
     import Fa.Action;
 
+    
+    /** An audio session.
+     */
     type Session = opaque;
+    
+    /** An audio device.
+     */
     type Device  = opaque;
+    
+    /** An audio stream.
+     */
     type Stream  = opaque;
+    
+    /** A callback to receive audio sessions.
+     */
     type SessionCallback = ((Ptr, Session) -> Session)*;
+    
+    /** A callback to receive audio streams.
+     */
     type StreamCallback = ((Ptr, Stream) -> Stream)*;
+    
+    /** A callback to be invoked upon changes to the audio setup.
+     */
     type StatusCallback = Nullary;
+
+    /** An audio processor, or a function from a list of signals to a list of signals.
+     */
+    type Proc = ((Ptr,List) -> List)*;
 
     /** Begin a new audio session.
 
@@ -118,7 +132,10 @@ module Fa.Audio
         Note that this function will not modify the devices in a session, you have to
         restart the session to get a fresh snapshot.
 
-        @param device   The device.
+        @param device
+            The device.
+        @warning
+            Experimental.
      */
     setStatusCallback : (StatusCallback, Ptr, Session) -> Void;
 
@@ -147,13 +164,17 @@ module Fa.Audio
      */
     hasOutput : Device -> Bool;
     
+    /** Return the number of inputs of the given device.
+        @param device   The device.
+     */
     inputChannels : Device -> Int;
     
+    /** Return the number of outputs of the given device.
+        @param device   The device.
+     */
     outputChannels : Device -> Int;
     
 
-    type Proc = ((Ptr,List) -> List)*;
-    
     /**
         Open a stream on the given devices.
 
