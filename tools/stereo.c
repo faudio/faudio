@@ -15,7 +15,7 @@ void play_impulses()
 {
     signal_t left, right;
 
-    left   = fa_signal_delay(1,         fa_signal_impulses(44100 / 4));
+    left   = fa_signal_delay(1,             fa_signal_impulses(44100 / 4));
     right  = fa_signal_delay(1 + 44100 / 8, fa_signal_impulses(44100 / 4));
     // right = fa_signal_delay(22050, fa_signal_impulses(44100));
 
