@@ -114,33 +114,33 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-(defun export-type# (x)
-  (cond
-    ((eq x :unit)      (type-simple 0))
-    ((eq x :i8)        (type-simple 1))
-    ((eq x :i16)       (type-simple 2))
-    ((eq x :i32)       (type-simple 3))
-    ((eq x :i64)       (type-simple 4))
-    ((eq x :f32)       (type-simple 5))
-    ((eq x :f64)       (type-simple 6))
-    ((eq x :ptr)       (type-simple 7))
-    ((eq x nil)        (type-simple 0))
-    ((consp x)
-      (cond
-        ((eq :frame  (car x))     (type-frame (export-type# (cadr x))))
-        ((eq :vector (car x))     (type-vector (export-type# (cadr x)) (caddr x)))
-        ((eq :pair   (car x))     (type-pair (export-type# (cadr x)) (export-type# (caddr x))))
-        (t                        (type-pair (export-type# (car x)) (export-type# (cdr x))))))
-    ((eq (type-of x) 'type) (slot-value x 'type-ptr))
-    (t                      x)))
+; (defun export-type# (x)
+;   (cond
+;     ((eq x :unit)      (type-simple 0))
+;     ((eq x :i8)        (type-simple 1))
+;     ((eq x :i16)       (type-simple 2))
+;     ((eq x :i32)       (type-simple 3))
+;     ((eq x :i64)       (type-simple 4))
+;     ((eq x :f32)       (type-simple 5))
+;     ((eq x :f64)       (type-simple 6))
+;     ((eq x :ptr)       (type-simple 7))
+;     ((eq x nil)        (type-simple 0))
+;     ((consp x)
+;       (cond
+;         ((eq :frame  (car x))     (type-frame (export-type# (cadr x))))
+;         ((eq :vector (car x))     (type-vector (export-type# (cadr x)) (caddr x)))
+;         ((eq :pair   (car x))     (type-pair (export-type# (cadr x)) (export-type# (caddr x))))
+;         (t                        (type-pair (export-type# (car x)) (export-type# (cdr x))))))
+;     ((eq (type-of x) 'type) (slot-value x 'type-ptr))
+;     (t                      x)))
 
-(defmethod translate-to-foreign (x (type type-type))
-  (export-type# (export-type# x)))
-(defmethod translate-from-foreign (x (type type-type))
-    (make-instance 'type :type-ptr x))
+; (defmethod translate-to-foreign (x (type type-type))
+  ; (export-type# (export-type# x)))
+; (defmethod translate-from-foreign (x (type type-type))
+    ; (make-instance 'type :type-ptr x))
 
-(defun type (x)
-  (export-type# x)) ; FIXME should not do slot-value??
+; (defun type (x)
+  ; (export-type# x)) ; FIXME should not do slot-value??
 
 
 ; ---------------------------------------------------------------------------------------------------
