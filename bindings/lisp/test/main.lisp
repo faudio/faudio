@@ -463,7 +463,6 @@
 (midi-end-all-sessions)
 
 (midi-all s)
-(setf x (from-pointer 'midi (nth 6 (import-list (midi-all s)))))
 (setf x (midi-default-input s))
 (setf y (midi-default-output s))
 
@@ -472,26 +471,12 @@
 (midi-has-input x)
 (midi-has-output x)
 
-; FIXME (midi-set-status-callback (callback midi-status-changed) nil s)
-(midi-set-status-callback* (lambda ()
-  (capi:display-message "Audio setup changed")
-  (fa-log-info "Audio setup changed")) s)
-
-(defun register-midi-listener ()
-  (midi-set-status-callback* (lambda ()
-                                      (capi:display-message "Audio setup changed")
-                                      (fa-log-info "Audio setup changed")) s)
-  )
-(mp:process-send mp:*main-process* #'register-midi-listener)
-
+; TODO status callbacks
 
 (setf z (midi-open-stream x))
 (midi-close-stream z)
 
-;(setf z (system-event-send-log))
-(message-send
- (to-receiver z) 0
- (midi #x90 (+ 48 (random 12)) 120))
+; TODO send/recv
 
 
 ; ---------------------------------------------------------------------------------------------------
