@@ -68,7 +68,7 @@ struct _fa_midi_stream_t {
 
 static mutex_t   pm_mutex;
 static bool      pm_status;
-static session_t current_session;
+static session_t midi_current_session;
 
 error_t midi_device_error(string_t msg);
 error_t midi_device_error_with(string_t msg, int error);
@@ -176,7 +176,7 @@ void fa_midi_initialize()
 {
     pm_mutex        = fa_thread_create_mutex();
     pm_status       = false;
-    current_session = NULL;
+    midi_current_session = NULL;
 }
 
 void fa_midi_terminate()
@@ -204,18 +204,16 @@ session_t fa_midi_begin_session()
             return (session_t) midi_device_error(string("Overlapping real-time midi sessions"));
         } else {
             result = Pm_Initialize();
-
             if (result < 0) {
                 return (session_t) native_error(string("Could not start midi"), result);
             }
-
             pm_status = true;
             fa_thread_unlock(pm_mutex);
 
             session_t session = new_session();
             session_init_devices(session);
-            // session->acquired = time(NULL);      // TODO
-            current_session = session;
+
+            midi_current_session = session;
             return session;
         }
     }
@@ -242,7 +240,7 @@ void fa_midi_end_session(session_t session)
             }
 
             pm_status = false;
-            current_session = session;
+            midi_current_session = NULL;
         }
     }
     fa_thread_unlock(pm_mutex);
@@ -267,10 +265,10 @@ void fa_midi_with_session(session_callback_t    session_callback,
 
 fa_list_t fa_midi_current_sessions()
 {
-    if (!current_session) {
+    if (!midi_current_session) {
         return list();
     } else {
-        return list(current_session);
+        return list(midi_current_session);
     }
 }
 

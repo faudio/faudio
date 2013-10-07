@@ -455,9 +455,12 @@
 
 (setf s (midi-begin-session))
 (error-check s)
-(error-log nil (to-error x))
+(error-log nil (to-error s))
 (error-message (to-error s))
 (midi-end-session s)
+
+(midi-current-sessions)
+(midi-end-all-sessions)
 
 (midi-all s)
 (setf x (from-pointer 'midi (nth 6 (import-list (midi-all s)))))
