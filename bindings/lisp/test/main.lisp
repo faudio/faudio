@@ -777,10 +777,10 @@
  :stream-callback 
  (lambda (stream)
    (cl:print stream)
-   (audio-schedule (milliseconds 0)   (action-send "DLS" (midi #x91 60 127)) stream)
-   (audio-schedule (milliseconds 100) (action-send "DLS" (midi #x91 63 127)) stream)
-   (audio-schedule (milliseconds 200) (action-send "DLS" (midi #x91 65 127)) stream)
-   (audio-schedule (seconds 5) (action-send "DLS" (midi #x91 62 127)) stream)))
+   (audio-schedule (milliseconds 0)   (action-send "DLS" (midi #x91 70 127)) stream)
+   (audio-schedule (milliseconds 100) (action-send "DLS" (midi #x91 73 127)) stream)
+   (audio-schedule (milliseconds 200) (action-send "DLS" (midi #x91 75 127)) stream)
+   (audio-schedule (milliseconds 300) (action-send "DLS" (midi #x91 72 127)) stream)))
 
 (signal-run-file* 
  (cl:* 44100 5) 
