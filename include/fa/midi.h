@@ -4,7 +4,6 @@
 
 #include <fa/list.h>
 #include <fa/pair.h>
-#include <fa/device.h>
 #include <fa/action.h>
 #include <fa/time.h>
 #include <fa/error.h>

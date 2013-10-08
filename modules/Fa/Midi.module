@@ -22,7 +22,6 @@ module Fa.Midi
 {
     import Fa.List;
     import Fa.Pair;
-    import Fa.Device;
     import Fa.Action;
     import Fa.Time;
     import Fa.Error;

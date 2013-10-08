@@ -19,7 +19,6 @@ module Fa.Audio
 {
     import Fa.List;
     import Fa.Pair;
-    import Fa.Device;
     import Fa.Error;
     import Fa.Signal;
     import Fa.Action;

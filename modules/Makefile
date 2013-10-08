@@ -24,7 +24,6 @@ c:
 	$(MODULO) -Mmodules --language=c    <modules/Fa/System.module    		>include/fa/system.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/System/Directory.module 	>include/fa/system/directory.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/System/Event.module    		>include/fa/system/event.h && \
-	$(MODULO) -Mmodules --language=c    <modules/Fa/Device.module    		>include/fa/device.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Dynamic.module    		>include/fa/dynamic.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Thread.module    		>include/fa/thread.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Std.module    			>include/fa/std.h && \
