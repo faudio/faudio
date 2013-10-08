@@ -16,8 +16,8 @@ void run_fs()
 int main(int argc, char const *argv[])
 {
     fa_fa_initialize();
-    
+
     run_fs();
-    
+
     fa_fa_terminate();
 }

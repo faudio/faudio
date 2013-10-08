@@ -42,8 +42,8 @@ int main(int argc, char const *argv[])
 {
     fa_fa_set_log_std();
     fa_fa_initialize();
-    
+
     play_impulses();
-    
+
     fa_fa_terminate();
 }

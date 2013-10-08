@@ -14,8 +14,8 @@ void print_version()
 int main(int argc, char const *argv[])
 {
     fa_fa_initialize();
-    
+
     print_version();
-    
+
     fa_fa_terminate();
 }

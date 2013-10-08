@@ -218,9 +218,11 @@ session_t fa_midi_begin_session()
             return (session_t) midi_device_error(string("Overlapping real-time midi sessions"));
         } else {
             result = Pm_Initialize();
+
             if (result < 0) {
                 return (session_t) native_error(string("Could not start midi"), result);
             }
+
             pm_status = true;
             fa_thread_unlock(pm_mutex);
 
@@ -432,10 +434,11 @@ void fa_midi_with_stream(device_t           device,
 }
 
 
-inline static 
+inline static
 void send_out(midi_message_t midi, stream_t stream)
-{                                                 
+{
     PmError result;
+
     if (fa_midi_message_is_simple(midi)) {
         // timestamp ignored
         long midi_message = fa_midi_message_simple_to_long(midi);
@@ -470,7 +473,7 @@ void send_out(midi_message_t midi, stream_t stream)
 void fa_midi_schedule(fa_time_t        time,
                       fa_action_t      action,
                       fa_midi_stream_t stream)
-{                                              
+{
     if (fa_action_is_send(action)) {
         string_t name = fa_action_send_name(action);
         ptr_t    value = fa_action_send_value(action);

@@ -27,7 +27,7 @@ void *fa_string_to_native(fa_string_t str)
 }
 
 fa_string_t fa_string_from_native(void *input)
-{                    
+{
     CFStringRef cfRef = input;
     CFIndex size;
     char *cstr;
@@ -35,8 +35,7 @@ fa_string_t fa_string_from_native(void *input)
 
     if ((cstr = (char *) CFStringGetCStringPtr(cfRef, kCFStringEncodingUTF8))) {
         return fa_string_from_utf8(cstr);
-    } else 
-    {
+    } else {
         size        = CFStringGetLength(cfRef);
         cstr        = fa_malloc(size + 1);
         cstr[size]  = 0;                     // necesary ?

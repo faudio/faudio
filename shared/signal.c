@@ -81,7 +81,7 @@ struct _fa_signal_t {
             int             output;
             signal_t        a;
         }                   insert;
-        
+
         struct {
             custom_proc_t   proc;
             signal_t        a;
@@ -711,7 +711,7 @@ state_t new_state()
     state->rate               = kRate;
 
     state->custom_proc_count  = 0;
-    
+
     return state;
 }
 
@@ -808,24 +808,27 @@ void write_bus(int n, int c, double x, state_t state)
 
 // 0 prepare, 1 run, 2 cleanup
 void run_custom_procs(int when, state_t state)
-{             
+{
     for (int i = 0; i < state->custom_proc_count; ++i) {
 
         custom_proc_t proc = state->custom_procs[i];
         // printf("Running custom proc %p!\n", proc);
-        
-        switch(when) {
-            case 0:
-                proc->before(proc->data, (fa_signal_state_t*) state);
-                break;
-            case 1:
-                proc->render(proc->data, (fa_signal_state_t*) state);
-                break;
-            case 2:
-                proc->after(proc->data, (fa_signal_state_t*) state);
-                break;
-            default:
-                assert(false);
+
+        switch (when) {
+        case 0:
+            proc->before(proc->data, (fa_signal_state_t *) state);
+            break;
+
+        case 1:
+            proc->render(proc->data, (fa_signal_state_t *) state);
+            break;
+
+        case 2:
+            proc->after(proc->data, (fa_signal_state_t *) state);
+            break;
+
+        default:
+            assert(false);
         }
     }
 }
@@ -838,7 +841,7 @@ void run_action(action_t action, state_t state)
         double v = fa_action_set_value(action);
         write_samp(0, ch, v, state);
     }
-    
+
     if (fa_action_is_send(action)) {
         for (int i = 0; i < state->custom_proc_count; ++i) {
             custom_proc_t proc = state->custom_procs[i];
@@ -965,6 +968,7 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
 
         inc_state(state);
     }
+
     run_custom_procs(2, state);
 
     delete_state(state);
@@ -1178,42 +1182,46 @@ void destroy_au_context(au_context_t context);
 ptr_t new_dls_music_device_instance();
 void au_prepare(au_context_t context);
 void au_send_midi(au_context_t context, int status, int data1, int data2);
-void au_render(au_context_t context, double time, double* output);
+void au_render(au_context_t context, double time, double *output);
 void au_cleanup(au_context_t context);
 
 void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2);
 
 
-ptr_t before_(ptr_t x, fa_signal_state_t *state) {
+ptr_t before_(ptr_t x, fa_signal_state_t *state)
+{
     au_context_t context = x;
     au_prepare(context);
     return x;
     mark_used(context);
 }
 
-ptr_t after_(ptr_t x, fa_signal_state_t *state) {
+ptr_t after_(ptr_t x, fa_signal_state_t *state)
+{
     au_context_t context = x;
     au_cleanup(context);
     return x;
     mark_used(context);
 }
 
-struct au_context {                     
+struct au_context {
     double *outputs;
 };
 
 #define kAUVec 32
 
-ptr_t render_(ptr_t x, fa_signal_state_t *state) {
+ptr_t render_(ptr_t x, fa_signal_state_t *state)
+{
     au_context_t context = x;
-    
+
     // context->Time = state->count;
     if (state->count % kAUVec == 0) {
         au_render(context, state->count, NULL);
     }
-    state->inputs[32] = context->outputs[kAUVec*0 + (state->count % kAUVec)];
-    state->inputs[33] = context->outputs[kAUVec*1 + (state->count % kAUVec)];
-    
+
+    state->inputs[32] = context->outputs[kAUVec * 0 + (state->count % kAUVec)];
+    state->inputs[33] = context->outputs[kAUVec * 1 + (state->count % kAUVec)];
+
     return x;
     mark_used(context);
 }
@@ -1222,7 +1230,7 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     au_context_t context = x;
     assert(fa_midi_message_is_simple(msg));
-    // printf("Message: %s\n", unstring(fa_string_show(msg)));           
+    // printf("Message: %s\n", unstring(fa_string_show(msg)));
 
     // TODO pre-allocate
     if (true /*fa_equal(n, string("DLS"))*/) {
@@ -1230,6 +1238,7 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
         fa_midi_message_decons(msg, &status, &data1, &data2);
         au_send_midi(context, status, data1, data2);
     }
+
     return x;
     mark_used(context);
 }
