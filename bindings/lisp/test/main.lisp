@@ -488,14 +488,18 @@
 (midi-has-input x)
 (midi-has-output x)
 
-; TODO status callbacks
+; TODO status callback
 
-(setf z (midi-open-stream x))
+
+(setf z (midi-open-stream y))
 (midi-close-stream z)
 
 ; TODO send/recv
-(midi-schedule (milliseconds 0) (action-send "" (midi #x91 60 127)) z)
-
+(progn
+  (midi-schedule (milliseconds 0) (action-send "" (midi #x91 60 127)) z)
+  (midi-schedule (milliseconds 100) (action-send "" (midi #x91 63 127)) z)
+  (midi-schedule (milliseconds 200) (action-send "" (midi #x91 65 127)) z)
+  (midi-schedule (milliseconds 300) (action-send "" (midi #x91 62 127)) z))
 
 ; ---------------------------------------------------------------------------------------------------
 ; Utility
