@@ -46,6 +46,9 @@ typedef PaStream     *native_stream_t;
 // TODO formalize better
 struct _state_t {
     double *inputs;
+    void   *_;
+    int     count;
+    double  rate;
     // ...
 };
 typedef struct _state_t *state_t;
@@ -529,6 +532,11 @@ list_t fa_audio_devices(fa_audio_stream_t stream)
     }
 }
 
+fa_clock_t fa_audio_stream_clock(fa_audio_stream_t stream)
+{
+    return (fa_clock_t) stream;
+}
+
 void fa_audio_schedule(fa_time_t time,
                        fa_action_t action,
                        fa_audio_stream_t stream)
@@ -732,16 +740,34 @@ void audio_stream_destroy(ptr_t a)
     fa_audio_close_stream(a);
 }
 
+int64_t audio_stream_milliseconds(ptr_t a)
+{
+    stream_t stream = (stream_t) a;
+    double c = (double) stream->state->count;
+    double r = (double) stream->state->count;
+    return ((int64_t) (c / r * 1000));
+}
+
+fa_time_t audio_stream_time(ptr_t a)
+{
+    int64_t ms = audio_stream_milliseconds(a);
+    return milliseconds(ms);
+}
+ 
 
 ptr_t audio_stream_impl(fa_id_t interface)
 {
     static fa_string_show_t audio_stream_show_impl
         = { audio_stream_show };
+    static fa_clock_interface_t audio_stream_clock_impl
+        = { audio_stream_time, audio_stream_milliseconds };
     static fa_destroy_t audio_stream_destroy_impl
         = { audio_stream_destroy };
 
     switch (interface) {
 
+    case fa_clock_interface_i:
+        return &audio_stream_clock_impl;
 
     case fa_string_show_i:
         return &audio_stream_show_impl;
