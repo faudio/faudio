@@ -23,8 +23,8 @@ module Fa.Ratio
 {
     import Fa.Std;
 
-    type Num    = Int32;
-    type Denom  = Int32;
+    type Numerator   = Int32;
+    type Denominator = Int32;
     
     /** A rational number.
      */
@@ -32,17 +32,17 @@ module Fa.Ratio
 
     /** Create a rational number.
      */
-    create  : (Num, Denom) -> Ratio;
+    create  : (Numerator, Denominator) -> Ratio;
     /** Return the numerator of the given rational number.
      */
-    num     : Ratio -> Num;
+    num     : Ratio -> Numerator;
     /** Return the denominator of the given rational number.
      */
-    denom   : Ratio -> Denom;
+    denom   : Ratio -> Denominator;
     /** Destruct the given rational number, writing its numerator
         and denominator to the given locations.
      */
-    match   : (Ratio, Num*, Denom*) -> Void;
+    match   : (Ratio, Numerator*, Denominator*) -> Void;
     /** Copy a rational number.
      */
     copy    : Ratio -> Ratio;
@@ -85,6 +85,6 @@ module Fa.Ratio
 
         For example \f$11/3\f$ becomes \f$3+2/3\f$.
      */
-    toMixed : (Ratio, Num*, Ratio*) -> Void;
+    toMixed : (Ratio, Numerator*, Ratio*) -> Void;
 }
 

@@ -63,6 +63,18 @@
 */
 typedef struct _fa_time_t * fa_time_t;
 
+/** A number of days.
+*/
+typedef int32_t fa_time_days_t;
+
+/** A number of hours.
+*/
+typedef int32_t fa_time_hours_t;
+
+/** A number of minutes.
+*/
+typedef int32_t fa_time_minutes_t;
+
 /** A number of seconds.
 */
 typedef int32_t fa_time_seconds_t;
@@ -83,7 +95,10 @@ typedef int64_t fa_time_milliseconds_t;
     @return
         A new time value.
 */
-fa_time_t fa_time_create(int32_t, int32_t, int32_t, fa_ratio_t);
+fa_time_t fa_time_create(fa_time_days_t,
+                         fa_time_hours_t,
+                         fa_time_minutes_t,
+                         fa_ratio_t);
 
 /**
     Copy the given time value.

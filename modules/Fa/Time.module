@@ -55,6 +55,18 @@ module Fa.Time
      */
     type Time = opaque;
 
+    /** A number of days.
+     */
+    type Days = Int32;
+
+    /** A number of hours.
+     */
+    type Hours = Int32;
+
+    /** A number of minutes.
+     */
+    type Minutes = Int32;
+
     /** A number of seconds.
      */
     type Seconds = Int32;
@@ -77,7 +89,7 @@ module Fa.Time
         @return
             A new time value.
      */
-    create      : (Int32, Int32, Int32, Ratio) -> Time;
+    create      : (Days, Hours, Minutes, Ratio) -> Time;
     /**
         Copy the given time value.
      */
