@@ -23,7 +23,6 @@ c:
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Atomic/RingBuffer.module	>include/fa/atomic/ring_buffer.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/System.module    		>include/fa/system.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/System/Directory.module 	>include/fa/system/directory.h && \
-	$(MODULO) -Mmodules --language=c    <modules/Fa/System/Event.module    		>include/fa/system/event.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Dynamic.module    		>include/fa/dynamic.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Thread.module    		>include/fa/thread.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Std.module    			>include/fa/std.h && \
@@ -68,7 +67,6 @@ gen-lisp:
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Thread.module    		>bindings/lisp/fa/thread.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/System.module    		>bindings/lisp/fa/system.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/System/Directory.module 	>bindings/lisp/fa/system/directory.lisp && \
-	$(MODULO) -Mmodules --language=lisp <modules/Fa/System/Event.module    		>bindings/lisp/fa/system/event.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Dynamic.module    		>bindings/lisp/fa/dynamic.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Std.module    			>bindings/lisp/fa/std.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/String.module    		>bindings/lisp/fa/string.lisp && \

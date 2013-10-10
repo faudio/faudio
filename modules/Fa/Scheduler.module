@@ -14,14 +14,13 @@ module Fa.Scheduler
 {
     import Fa;
     import Fa.Time;
-    import Fa.Event;
 
     type Scheduler = opaque;
 
     create   : Clock -> Scheduler; // Requires Clock
     destroy  : Scheduler -> Void;
     
-    schedule : (Scheduler, Event) -> Void;
+    schedule : (Scheduler, Ptr) -> Void;
     execute  : Scheduler -> Void;
     loop     : Scheduler -> Void;
     loopFor  : (Time, Scheduler) -> Void;
