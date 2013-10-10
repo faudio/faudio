@@ -15,6 +15,7 @@
 #include <fa/list.h>
 #include <fa/thread.h>
 #include <fa/time.h>
+#include <fa/clock.h>
 #include <fa/util.h>
 
 #include <portmidi.h>
@@ -61,7 +62,8 @@ struct _fa_midi_stream_t {
     native_stream_t     native_input,
                         native_output;      // Native stream(s)
     device_t            device;
-
+ 
+    fa_clock_t          clock;              // Clock used for scheduler and incoming events
     atomic_queue_t      in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
     priority_queue_t    controls;           // Scheduled controls (Time, (Channel, Ptr))
 
@@ -163,6 +165,7 @@ inline static stream_t new_stream(device_t device)
     stream->native_input    = NULL;
     stream->native_output   = NULL;
 
+    stream->clock           = NULL; // FIXME
     stream->in_controls     = atomic_queue();
     stream->controls        = priority_queue();
 
@@ -356,8 +359,9 @@ void midi_inform_opening(device_t device)
 }
 
 PmTimestamp midi_time_callback(void *data)
-{
-    return 0; // FIXME
+{                     
+    stream_t stream = data;
+    return fa_clock_milliseconds(stream->clock); // FIXME
 }
 
 fa_midi_stream_t fa_midi_open_stream(device_t device)
@@ -371,7 +375,7 @@ fa_midi_stream_t fa_midi_open_stream(device_t device)
     if (device->input) {
         inform(string("Opening input\n"));
         result = Pm_OpenInput(&stream->native_input, device->index, NULL, 0,
-                              midi_time_callback, NULL);
+                              midi_time_callback, stream);
 
         if (result < 0) {
             native_error(string("Could not open midi input"), result);
@@ -381,12 +385,17 @@ fa_midi_stream_t fa_midi_open_stream(device_t device)
     if (device->output) {
         inform(string("Opening output\n"));
         result = Pm_OpenOutput(&stream->native_output, device->index, NULL, 0,
-                               midi_time_callback, NULL, -1);
+                               midi_time_callback, stream, -1);
 
         if (result < 0) {
             native_error(string("Could not open midi output"), result);
         }
     }
+    
+    // TODO create input thread if needed
+    // The thread needs to
+        // forward incoming events (mutex?)
+        // poll time and run things from the priority queue (mutex?)
 
     return stream;
 }
@@ -408,9 +417,9 @@ void fa_midi_close_stream(stream_t stream)
 
 void fa_midi_with_stream(device_t           device,
                          stream_callback_t  stream_callback,
-                         fa_ptr_t      stream_data,
+                         fa_ptr_t           stream_data,
                          error_callback_t   error_callback,
-                         fa_ptr_t      error_data)
+                         fa_ptr_t           error_data)
 {
     stream_t stream = fa_midi_open_stream(device);
 
@@ -431,8 +440,7 @@ void fa_midi_add_message_callback(fa_midi_message_callback_t function,
                                   fa_ptr_t data,
                                   fa_midi_stream_t stream)
 {
-    // TODO
-    function(data, midi_message(0x90, 60, 127));
+    // TODO register in stream
 }
 
 
