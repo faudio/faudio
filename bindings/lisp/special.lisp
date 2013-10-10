@@ -273,16 +273,16 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-(defun audio-set-status-callback* (f session)
-  (audio-set-status-callback 
+(defun audio-add-status-callback* (f session)
+  (audio-add-status-callback 
     (callback funcall0#) 
     (func-to-int# f)
     session))
 
 ; ---------------------------------------------------------------------------------------------------
 
-(defun midi-set-status-callback* (f session)
-  (midi-set-status-callback 
+(defun midi-add-status-callback* (f session)
+  (midi-add-status-callback 
     (callback funcall0#) 
     (func-to-int# f)
     session))
