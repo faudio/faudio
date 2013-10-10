@@ -759,6 +759,10 @@
 
 (signal-run-default
  (lambda (inputs)
+   (duplicate (* 0.2 (sin (line 440))))))
+
+(signal-run-default
+ (lambda (inputs)
    (mapcar (lambda (x) (* x 0.4)) inputs)))
 
 (signal-run-default
