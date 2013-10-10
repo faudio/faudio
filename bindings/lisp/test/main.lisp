@@ -411,6 +411,21 @@
 (time-to-seconds x)
 
 
+; Fa.Clock
+
+(setf x) ; TODO
+
+; Clock from an audio stream
+(let* ((s (audio-begin-session))
+       (i (audio-default-input s))
+       (o (audio-default-output s))
+       (st (audio-open-stream* i o (lambda (is) (duplicate (constant 0))))))
+  (setf x (audio-stream-clock st)))
+
+(clock-time x)
+(clock-milliseconds x)
+
+
 ; ---------------------------------------------------------------------------------------------------
 ; Devices
 

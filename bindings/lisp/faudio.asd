@@ -39,6 +39,7 @@
         (:file "dynamic")
         (:file "buffer")
         (:file "time")
+        (:file "clock")
         (:file "error")
         (:module "midi2"
           :pathname "midi"

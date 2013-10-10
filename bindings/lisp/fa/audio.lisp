@@ -39,5 +39,6 @@
 (defcfun (audio-close-stream "fa_audio_close_stream") :void (a audio-stream))
 (defcfun (audio-with-stream "fa_audio_with_stream") :void (a audio-device) (b audio-device) (c audio-proc) (d ptr) (e audio-stream-callback) (f ptr) (g error-callback) (h ptr))
 (defcfun (audio-devices "fa_audio_devices") list (a audio-stream))
+(defcfun (audio-stream-clock "fa_audio_stream_clock") clock (a audio-stream))
 (defcfun (audio-schedule "fa_audio_schedule") :void (a time) (b action) (c audio-stream))
 
