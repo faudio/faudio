@@ -17,6 +17,7 @@
 (defctype midi-session-callback (:pointer (:pointer :void)))
 (defctype midi-stream-callback (:pointer (:pointer :void)))
 (defctype midi-status-callback nullary)
+(defctype midi-message-callback unary)
 (defcfun (midi-begin-session "fa_midi_begin_session") midi-session)
 (defcfun (midi-end-session "fa_midi_end_session") :void (a midi-session))
 (defcfun (midi-with-session "fa_midi_with_session") :void (a midi-session-callback) (b ptr) (c error-callback) (d ptr))
@@ -26,7 +27,7 @@
 (defcfun (midi-default "fa_midi_default") pair (a midi-session))
 (defcfun (midi-default-input "fa_midi_default_input") midi-device (a midi-session))
 (defcfun (midi-default-output "fa_midi_default_output") midi-device (a midi-session))
-(defcfun (midi-set-status-callback "fa_midi_set_status_callback") :void (a midi-status-callback) (b ptr) (c midi-session))
+(defcfun (midi-add-status-callback "fa_midi_add_status_callback") :void (a midi-status-callback) (b ptr) (c midi-session))
 (defcfun (midi-name "fa_midi_name") string (a midi-device))
 (defcfun (midi-host-name "fa_midi_host_name") string (a midi-device))
 (defcfun (midi-has-input "fa_midi_has_input") :boolean (a midi-device))
@@ -34,5 +35,6 @@
 (defcfun (midi-open-stream "fa_midi_open_stream") midi-stream (a midi-device))
 (defcfun (midi-close-stream "fa_midi_close_stream") :void (a midi-stream))
 (defcfun (midi-with-stream "fa_midi_with_stream") :void (a midi-device) (b midi-stream-callback) (c ptr) (d error-callback) (e ptr))
+(defcfun (midi-add-message-callback "fa_midi_add_message_callback") :void (a midi-message-callback) (b ptr) (c midi-stream))
 (defcfun (midi-schedule "fa_midi_schedule") :void (a time) (b action) (c midi-stream))
 

@@ -17,6 +17,7 @@
 (defctype audio-session-callback (:pointer (:pointer :void)))
 (defctype audio-stream-callback (:pointer (:pointer :void)))
 (defctype audio-status-callback nullary)
+(defctype audio-message-callback unary)
 (defctype audio-proc (:pointer (:pointer :void)))
 (defcfun (audio-begin-session "fa_audio_begin_session") audio-session)
 (defcfun (audio-end-session "fa_audio_end_session") :void (a audio-session))
@@ -27,7 +28,7 @@
 (defcfun (audio-default "fa_audio_default") pair (a audio-session))
 (defcfun (audio-default-input "fa_audio_default_input") audio-device (a audio-session))
 (defcfun (audio-default-output "fa_audio_default_output") audio-device (a audio-session))
-(defcfun (audio-set-status-callback "fa_audio_set_status_callback") :void (a audio-status-callback) (b ptr) (c audio-session))
+(defcfun (audio-add-status-callback "fa_audio_add_status_callback") :void (a audio-status-callback) (b ptr) (c audio-session))
 (defcfun (audio-session "fa_audio_session") audio-session (a audio-device))
 (defcfun (audio-name "fa_audio_name") string (a audio-device))
 (defcfun (audio-host-name "fa_audio_host_name") string (a audio-device))
@@ -40,5 +41,6 @@
 (defcfun (audio-with-stream "fa_audio_with_stream") :void (a audio-device) (b audio-device) (c audio-proc) (d ptr) (e audio-stream-callback) (f ptr) (g error-callback) (h ptr))
 (defcfun (audio-devices "fa_audio_devices") list (a audio-stream))
 (defcfun (audio-stream-clock "fa_audio_stream_clock") clock (a audio-stream))
+(defcfun (audio-add-message-callback "fa_audio_add_message_callback") :void (a audio-message-callback) (b ptr) (c audio-stream))
 (defcfun (audio-schedule "fa_audio_schedule") :void (a time) (b action) (c audio-stream))
 
