@@ -527,7 +527,7 @@ bool midi_device_equal(ptr_t a, ptr_t b)
 {
     device_t device1 = (device_t) a;
     device_t device2 = (device_t) b;
-    // // TODO check that session is valid
+    // TODO check that session is valid
     return device1->index == device2->index;
 }
 
