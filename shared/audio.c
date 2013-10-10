@@ -410,8 +410,6 @@ void audio_inform_opening(device_t input, ptr_t proc, device_t output)
     inform(string("Opening real-time audio stream"));
     inform(string_dappend(string("    Input:  "), input ? fa_string_show(input) : string("-")));
     inform(string_dappend(string("    Output: "), output ? fa_string_show(output) : string("-")));
-    // FIXME must simplify first
-    // inform(string_dappend(string("    Processor: "), proc ? fa_string_show(proc) : string("-")));
 }
 
 // TODO change sample rate

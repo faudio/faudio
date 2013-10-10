@@ -22,11 +22,6 @@
 /*
     ## Notes
 
-    * Device detection handled by excplicit CoreMIDI/?? calls
-
-    * Call MIDIRestart() ?
-
-    * TODO proper error checking
  */
 
 typedef fa_midi_device_t            device_t;
@@ -66,9 +61,6 @@ struct _fa_midi_stream_t {
     native_stream_t     native_input,
                         native_output;      // Native stream(s)
     device_t            device;
-
-    int32_t             time;               // Current time in milliseconds (TODO!)
-
 
     atomic_queue_t      in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
     priority_queue_t    controls;           // Scheduled controls (Time, (Channel, Ptr))
@@ -171,7 +163,6 @@ inline static stream_t new_stream(device_t device)
     stream->native_input    = NULL;
     stream->native_output   = NULL;
 
-    stream->time            = 0;
     stream->in_controls     = atomic_queue();
     stream->controls        = priority_queue();
 
@@ -463,22 +454,7 @@ void send_out(midi_message_t midi, stream_t stream)
         }
     } else {
         assert(false && "Can not send sysex yet");
-//
-//         unsigned char buf[2048];
-//         buf[0]    = 'f';
-//         buf[0]    = '0';
-//         buf[2046] = 'f';
-//         buf[2047] = '7';
-//
-//         // check buffer size <= (2048-2)
-//         // copy sysex buffer to buf+1
-//
-//         result = Pm_WriteSysEx(stream->native_output, 0, buf);
-//         if (result != pmNoError) {
-//             native_error(string("Could not send midi"), result);
-//         }
     }
-
 }
 
 void fa_midi_schedule(fa_time_t        time,
