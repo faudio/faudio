@@ -32,6 +32,7 @@ list(APPEND SRCS
   string/trex.c
   string/parson.c
   time.c
+  clock.c
   )
 list(APPEND SRCS_OSX
   ../platform/macosx/atomic.c

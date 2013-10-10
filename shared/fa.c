@@ -37,8 +37,8 @@ void fa_midi_initialize();
 void fa_midi_terminate();
 void fa_thread_initialize();
 void fa_thread_terminate();
-void fa_time_initialize();
-void fa_time_terminate();
+void fa_clock_initialize();
+void fa_clock_terminate();
 
 fa_list_t fa_fa_version()
 {
@@ -68,7 +68,7 @@ void fa_fa_initialize()
     fa_audio_initialize();
     fa_midi_initialize();
     fa_thread_initialize();
-    fa_time_initialize();
+    fa_clock_initialize();
     fa_fa_log_info(string("Initialized faudio."));
 
     gBytesAlloc = 0;
@@ -81,7 +81,7 @@ void fa_fa_terminate()
         fa_audio_terminate();
         fa_midi_terminate();
         fa_thread_terminate();
-        fa_time_terminate();
+        fa_clock_terminate();
 
         fa_fa_log_info(fa_string_dappend(string("Total bytes allocated: "),
                                          fa_string_show(i32(gBytesAlloc))));

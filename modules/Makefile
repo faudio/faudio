@@ -41,6 +41,7 @@ c:
 	$(MODULO) -Mmodules --language=c    <modules/Fa/PriorityQueue.module		>include/fa/priority_queue.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Midi/Message.module    		>include/fa/midi/message.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Time.module    			>include/fa/time.h && \
+	$(MODULO) -Mmodules --language=c    <modules/Fa/Clock.module    		>include/fa/clock.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Action.module  			>include/fa/action.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Signal.module  			>include/fa/signal.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Audio.module    		>include/fa/audio.h && \
@@ -84,6 +85,7 @@ gen-lisp:
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/PriorityQueue.module		>bindings/lisp/fa/priority-queue.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Midi/Message.module    		>bindings/lisp/fa/midi/message.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Time.module    			>bindings/lisp/fa/time.lisp && \
+	$(MODULO) -Mmodules --language=lisp <modules/Fa/Clock.module			>bindings/lisp/fa/clock.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Action.module  			>bindings/lisp/fa/action.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Signal.module  			>bindings/lisp/fa/signal.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Audio.module    		>bindings/lisp/fa/audio.lisp && \

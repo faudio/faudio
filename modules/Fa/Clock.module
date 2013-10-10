@@ -1,0 +1,35 @@
+
+/**
+    Provides various clocks.
+        
+    A clock is (not surprisingly) a provider of time.
+
+    @par Implements
+    - fa_string_show_t (all clock types)
+    - fa_destroy_t (all clock types)
+
+    @since
+        2.3
+ */
+module Fa.Clock
+{
+    import Fa;
+    import Fa.Time;
+
+    type ClockInterface = struct {
+        time     : (Ptr -> Time)*,
+        tickRate : (Ptr -> Double)*,
+        ticks    : (Ptr -> Int64)*
+    };                 
+    
+    type Clock = opaque;
+    
+    time     : Clock -> Time;
+    tickRate : Clock -> Double;
+    ticks    : Clock -> Int64;
+    
+    getSystemClock      : () -> Clock;
+    getSystemPrecClock  : () -> Clock;
+    getCpuClock         : () -> Clock;
+}
+
