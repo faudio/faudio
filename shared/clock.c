@@ -9,7 +9,7 @@
 
 #include <fa/time.h>
 #include <fa/clock.h>
-#include <fa/util.h>
+// #include <fa/util.h>
 
 #include <time.h>
 #include <sys/time.h>
@@ -35,30 +35,18 @@ void fa_clock_terminate()
 
 // --------------------------------------------------------------------------------
 
-// fa_time_t fa_time_time(fa_clock_t clock)
-// {
-//     assert(fa_interface(fa_clock_interface_i, clock)
-//            && "Must implement Clock");
-//     return ((fa_clock_interface_t *)
-//             fa_interface(fa_clock_interface_i, clock))->time(clock);
-// }
-//
-// double fa_time_tick_rate(fa_clock_t clock)
-// {
-//     assert(fa_interface(fa_clock_interface_i, clock)
-//            && "Must implement Clock");
-//     return ((fa_clock_interface_t *)
-//             fa_interface(fa_clock_interface_i, clock))->tick_rate(clock);
-// }
-//
-// int64_t fa_time_ticks(fa_clock_t clock)
-// {
-//     assert(fa_interface(fa_clock_interface_i, clock)
-//            && "Must implement Clock");
-//     return ((fa_clock_interface_t *)
-//             fa_interface(fa_clock_interface_i, clock))->ticks(clock);
-// }
-
+fa_time_t 	fa_clock_time (fa_clock_t clock)
+{
+    assert(fa_interface(fa_clock_interface_i, clock) && "Must implement Clock");
+    return ((fa_clock_interface_t *) fa_interface(fa_clock_interface_i, clock))->time(clock);
+    
+}
+ 
+fa_time_milliseconds_t 	fa_clock_milliseconds (fa_clock_t clock)
+{
+    assert(fa_interface(fa_clock_interface_i, clock) && "Must implement Clock");
+    return ((fa_clock_interface_t *) fa_interface(fa_clock_interface_i, clock))->milliseconds(clock);
+}
 
 // --------------------------------------------------------------------------------
 

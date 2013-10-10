@@ -744,7 +744,7 @@ int64_t audio_stream_milliseconds(ptr_t a)
 {
     stream_t stream = (stream_t) a;
     double c = (double) stream->state->count;
-    double r = (double) stream->state->count;
+    double r = (double) stream->state->rate;
     return ((int64_t) (c / r * 1000));
 }
 

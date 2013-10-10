@@ -24,7 +24,13 @@ void run_dls()
             fa_error_log(st, NULL);
         }
 
-        for (int i = 0; true; ++i) {
+        for (int i = 0; true; ++i) {                                 
+            fa_clock_t cl = fa_audio_stream_clock(st);                                 
+            mark_used(cl);
+            
+            printf("Scheduling msec: %lld \n", fa_clock_milliseconds(cl));
+            printf("Scheduling time: %s \n", unstring(fa_string_show(fa_clock_time(cl))));
+     
             fa_audio_schedule(
                 hms(0, 0, 0),
                 fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 60 + ((i % 12) * 3), 90)),
