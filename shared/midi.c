@@ -319,7 +319,7 @@ device_t fa_midi_default_output(session_t session)
 
 void add_midi_status_listener(status_callback_t function, ptr_t data);
 
-void fa_midi_set_status_callback(
+void fa_midi_add_status_callback(
     status_callback_t function,
     ptr_t             data,
     session_t         session)

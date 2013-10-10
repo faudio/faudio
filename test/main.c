@@ -1617,7 +1617,7 @@ void test_audio_stream()
         goto cleanup;
     }
 
-    fa_audio_set_status_callback(status_changed, string("foobar"), session);
+    fa_audio_add_status_callback(status_changed, string("foobar"), session);
     fa_thread_sleep(3000);
 
 cleanup:
@@ -1714,7 +1714,7 @@ void test_midi_stream()
     }
 
     // TODO
-    // fa_midi_set_status_callback(status_changed, string("foobar"), session);
+    // fa_midi_add_status_callback(status_changed, string("foobar"), session);
 
     // event_t notes  =
     //     merge_event(later(divisions(1,10), midi(0x90, 48, 10)),
@@ -1772,7 +1772,7 @@ void test_midi_hotplug()
         goto cleanup;
     }
 
-    fa_midi_set_status_callback(status_changed, string("hello"), session);
+    fa_midi_add_status_callback(status_changed, string("hello"), session);
 
     // CFRunLoopRun();
     // fa_thread_sleep(20000);

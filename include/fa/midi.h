@@ -56,6 +56,10 @@ typedef fa_midi_stream_t (* fa_midi_stream_callback_t)(fa_ptr_t,
 */
 typedef fa_nullary_t fa_midi_status_callback_t;
 
+/** A callback to be invoked whenever a message is received.
+*/
+typedef fa_unary_t fa_midi_message_callback_t;
+
 /** Begin a new midi session.
 
     @return
@@ -128,18 +132,24 @@ fa_midi_device_t fa_midi_default_input(fa_midi_session_t);
 */
 fa_midi_device_t fa_midi_default_output(fa_midi_session_t);
 
-/** Set a callback to be invoked when a status change is detected on the
-    given session (mainly useful for hardware setup changes).
+/** Register a callback to be invoked when a hardware change is detected.
 
-    Note that this function will not modify the devices in a session, you have to
-    restart the session to get a fresh snapshot.
+    Note that this function will not modify the devices available from a 
+    session, you have to start a new session to get a fresh snapshot.
+    
+    Multiple callbacks can be registered this way. All registered callbacks
+    are associated with a session and will be removed when the session ends.
 
-    @param device
-        The device.
+    @param callback
+        Callback to register.
+    @param callback_data
+        Data closed over by the callback function.
+    @param session
+        Session on which to register the callback.
     @warning
         Experimental.
 */
-void fa_midi_set_status_callback(fa_midi_status_callback_t,
+void fa_midi_add_status_callback(fa_midi_status_callback_t,
                                  fa_ptr_t,
                                  fa_midi_session_t);
 
@@ -193,6 +203,25 @@ void fa_midi_with_stream(fa_midi_device_t,
                          fa_ptr_t,
                          fa_error_callback_t,
                          fa_ptr_t);
+
+/** Register a callback to be invoked when a message is received.
+
+    Multiple callbacks can be registered this way. All registered callbacks
+    are associated with a stream and will be removed when the stream is stopped
+    or its associated session ends.
+
+    @param callback
+        Callback to register.
+    @param callback_data
+        Data closed over by the callback function.
+    @param session
+        Stream on which to register the callback.
+    @warning
+        Experimental.
+*/
+void fa_midi_add_message_callback(fa_midi_message_callback_t,
+                                  fa_ptr_t,
+                                  fa_midi_stream_t);
 
 /**
     Schedule an action on the stream.

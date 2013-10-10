@@ -390,7 +390,7 @@ bool fa_audio_has_output(device_t device)
 
 void add_audio_status_listener(status_callback_t function, ptr_t data);
 
-void fa_audio_set_status_callback(
+void fa_audio_add_status_callback(
     status_callback_t function,
     ptr_t             data,
     session_t         session)

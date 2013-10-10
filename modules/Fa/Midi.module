@@ -46,6 +46,10 @@ module Fa.Midi
      */
     type StatusCallback = Nullary;
 
+    /** A callback to be invoked whenever a message is received.
+     */
+    type MessageCallback = Unary;
+
 
     /** Begin a new midi session.
 
@@ -113,18 +117,24 @@ module Fa.Midi
      */
     defaultOutput : Session -> Device;
     
-    /** Set a callback to be invoked when a status change is detected on the
-        given session (mainly useful for hardware setup changes).
+    /** Register a callback to be invoked when a hardware change is detected.
 
-        Note that this function will not modify the devices in a session, you have to
-        restart the session to get a fresh snapshot.
+        Note that this function will not modify the devices available from a 
+        session, you have to start a new session to get a fresh snapshot.
+        
+        Multiple callbacks can be registered this way. All registered callbacks
+        are associated with a session and will be removed when the session ends.
 
-        @param device
-            The device.
+        @param callback
+            Callback to register.
+        @param callback_data
+            Data closed over by the callback function.
+        @param session
+            Session on which to register the callback.
         @warning
             Experimental.
      */
-    setStatusCallback : (StatusCallback, Ptr, Session) -> Void;
+    addStatusCallback : (StatusCallback, Ptr, Session) -> Void;
 
     /** Return the name of the given device.
         @param device   The device.
@@ -171,6 +181,24 @@ module Fa.Midi
         StreamCallback, Ptr, 
         Callback, Ptr
         ) -> Void;
+
+
+    /** Register a callback to be invoked when a message is received.
+
+        Multiple callbacks can be registered this way. All registered callbacks
+        are associated with a stream and will be removed when the stream is stopped
+        or its associated session ends.
+
+        @param callback
+            Callback to register.
+        @param callback_data
+            Data closed over by the callback function.
+        @param session
+            Stream on which to register the callback.
+        @warning
+            Experimental.
+     */
+    addMessageCallback : (MessageCallback, Ptr, Stream) -> Void;
     
     /**
         Schedule an action on the stream.

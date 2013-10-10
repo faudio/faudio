@@ -58,6 +58,10 @@ typedef fa_audio_stream_t (* fa_audio_stream_callback_t)(fa_ptr_t,
 */
 typedef fa_nullary_t fa_audio_status_callback_t;
 
+/** A callback to be invoked whenever a message is received.
+*/
+typedef fa_unary_t fa_audio_message_callback_t;
+
 /** An audio processor, or a function from a list of signals to a list of signals.
 */
 typedef fa_list_t (* fa_audio_proc_t)(fa_ptr_t, fa_list_t);
@@ -135,18 +139,24 @@ fa_audio_device_t fa_audio_default_input(fa_audio_session_t);
 */
 fa_audio_device_t fa_audio_default_output(fa_audio_session_t);
 
-/** Set a callback to be invoked when a status change is detected on the
-    given session (mainly useful for hardware setup changes).
+/** Register a callback to be invoked when a hardware change is detected.
 
-    Note that this function will not modify the devices in a session, you have to
-    restart the session to get a fresh snapshot.
+    Note that this function will not modify the devices available from a 
+    session, you have to start a new session to get a fresh snapshot.
+    
+    Multiple callbacks can be registered this way. All registered callbacks
+    are associated with a session and will be removed when the session ends.
 
-    @param device
-        The device.
+    @param callback
+        Callback to register.
+    @param callback_data
+        Data closed over by the callback function.
+    @param session
+        Session on which to register the callback.
     @warning
         Experimental.
 */
-void fa_audio_set_status_callback(fa_audio_status_callback_t,
+void fa_audio_add_status_callback(fa_audio_status_callback_t,
                                   fa_ptr_t,
                                   fa_audio_session_t);
 
@@ -210,10 +220,14 @@ void fa_audio_close_stream(fa_audio_stream_t);
 
     @param input
         Input device.
-    @param processor        Processor to run over the devices.
-    @param input            Output device.
-    @param callback         Function to receive the stream.
-    @param error_callback   Function to receive eventual errors.
+    @param processor
+        Processor to run over the devices.
+    @param input
+        Output device.
+    @param callback
+        Function to receive the stream.
+    @param error_callback
+        Function to receive eventual errors.
 */
 void fa_audio_with_stream(fa_audio_device_t,
                           fa_audio_device_t,
@@ -235,6 +249,25 @@ fa_list_t fa_audio_devices(fa_audio_stream_t);
     @return A clock.
 */
 fa_clock_t fa_audio_stream_clock(fa_audio_stream_t);
+
+/** Register a callback to be invoked when a message is received.
+
+    Multiple callbacks can be registered this way. All registered callbacks
+    are associated with a stream and will be removed when the stream is stopped
+    or its associated session ends.
+
+    @param callback
+        Callback to register.
+    @param callback_data
+        Data closed over by the callback function.
+    @param session
+        Stream on which to register the callback.
+    @warning
+        Experimental.
+*/
+void fa_audio_add_message_callback(fa_audio_message_callback_t,
+                                   fa_ptr_t,
+                                   fa_audio_stream_t);
 
 /**
     Schedule an action on the stream.
