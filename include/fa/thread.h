@@ -4,6 +4,7 @@
 
 #include <fa.h>
 #include <fa/std.h>
+#include <fa/time.h>
 
 /** @addtogroup FaThread
 
@@ -38,9 +39,6 @@ typedef struct _fa_thread_t * fa_thread_t;
 /** The abstract type of mutexes.
 */
 typedef struct _fa_thread_mutex_t * fa_thread_mutex_t;
-
-
-typedef int fa_thread_milliseconds_t;
 
 /** Create a new thread executing the given function asynhronously.
 
@@ -84,7 +82,7 @@ fa_thread_t fa_thread_current();
 
 /** Sleep the current thread for the given time.
 */
-void fa_thread_sleep(fa_thread_milliseconds_t);
+void fa_thread_sleep(fa_time_milliseconds_t);
 
 /** Create a mutex.
 

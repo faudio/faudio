@@ -63,6 +63,14 @@
 */
 typedef struct _fa_time_t * fa_time_t;
 
+/** A number of seconds.
+*/
+typedef int32_t fa_time_seconds_t;
+
+/** A number of milliseconds.
+*/
+typedef int64_t fa_time_milliseconds_t;
+
 /** Create a new time value.
     @param days
         Number of days.
@@ -150,10 +158,10 @@ fa_string_t fa_time_to_iso(fa_time_t);
     @param time
         Time value.
 */
-int32_t fa_time_to_seconds(fa_time_t);
+fa_time_seconds_t fa_time_to_seconds(fa_time_t);
 
 
-int32_t fa_time_to_milliseconds(fa_time_t);
+fa_time_milliseconds_t fa_time_to_milliseconds(fa_time_t);
 
 /** The system time type.
 

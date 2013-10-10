@@ -55,6 +55,15 @@ module Fa.Time
      */
     type Time = opaque;
 
+    /** A number of seconds.
+     */
+    type Seconds = Int32;
+
+    /** A number of milliseconds.
+     */
+    type Milliseconds = Int64;
+
+
     // Constructors
     /** Create a new time value.
         @param days
@@ -137,8 +146,8 @@ module Fa.Time
         @param time
             Time value.
      */
-    toSeconds       : Time -> Int32;
-    toMilliseconds  : Time -> Int32;
+    toSeconds       : Time -> Seconds;
+    toMilliseconds  : Time -> Milliseconds;
 
     /** The system time type.
 

@@ -17,19 +17,17 @@ module Fa.Clock
     import Fa.Time;
 
     type ClockInterface = struct {
-        time     : (Ptr -> Time)*,
-        tickRate : (Ptr -> Double)*,
-        ticks    : (Ptr -> Int64)*
+        time         : (Ptr -> Time)*,
+        milliseconds : (Ptr -> Int64)*
     };                 
     
     type Clock = opaque;
     
-    time     : Clock -> Time;
-    tickRate : Clock -> Double;
-    ticks    : Clock -> Int64;
+    time         : Clock -> Time;
+    milliseconds : Clock -> Milliseconds;
     
-    getSystemClock      : () -> Clock;
-    getSystemPrecClock  : () -> Clock;
-    getCpuClock         : () -> Clock;
+    // getSystemClock      : () -> Clock;
+    // getSystemPrecClock  : () -> Clock;
+    // getCpuClock         : () -> Clock;
 }
 

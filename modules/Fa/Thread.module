@@ -22,6 +22,7 @@ module Fa.Thread
 {
     import Fa;
     import Fa.Std;
+    import Fa.Time;
 
     /** The abstract type of threads.
      */
@@ -31,8 +32,6 @@ module Fa.Thread
      */
     type Mutex = opaque;
     
-    type Milliseconds = Int;
-
     /** Create a new thread executing the given function asynhronously.
 
         Threads have single-ownership semantics and must be finalized by passing it

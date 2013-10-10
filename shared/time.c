@@ -109,13 +109,14 @@ int32_t fa_time_to_seconds(fa_time_t time)
 }
 
 #define approx_millis(r) ( (int32_t) ( ((double) fa_ratio_num(r)) / ((double) fa_ratio_denom(r)) * 1000 ) )
+
 /** Convert the time to milliseconds.
     This may lose precision.
 
     @param time
         Time interval.
  */
-int32_t fa_time_to_milliseconds(fa_time_t time)
+fa_time_milliseconds_t fa_time_to_milliseconds(fa_time_t time)
 {
     // TODO very slow
     return fa_time_days(time)      * 24 * 60 * 60 * 1000
