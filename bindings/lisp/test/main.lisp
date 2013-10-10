@@ -744,17 +744,14 @@
     (* (sin (line 141)) (cos (line 550)))))))
 
 ; Additive synthesis
-(setf 
- x 
- (let* ((notes '(110 120 130 140 150 160 170 180 190 200 210 220 230 240 250))
-        (sines (mapcar (lambda (x) (sin (line (cl:* 4 x)))) notes))
-        )
-   (* 0.05 (reduce (lambda (x y) (+ y x)) (reverse sines)))))
-(signal-run-default (lambda (_) (duplicate x)))
+(let* ((notes '(100 200 350 475 620))
+       (sines (mapcar (lambda (x) (sin (line (cl:* 4 x)))) notes))
+       (synth (* 0.05 (reduce (lambda (x y) (+ y x)) (reverse sines)))))
+  (signal-run-default (lambda (_) (duplicate (* 0.1 synth)))))
 
 ; (reduce 'cl:+ '() :initial-value 1)
 
-; Sine
+; Control value
 (signal-run-default (lambda (inputs) 
   (duplicate 
    (* (input 29) (sin (line 440)))))
@@ -762,9 +759,9 @@
                     :stream-callback
                     (lambda (st) 
                       (cl:print st)
-                      (audio-schedule (seconds 1) (action-set 29 0.5D0) st)
+                      (audio-schedule (seconds 2) (action-set 29 0.1D0) st)
                       )
-                    
+                    ; Wait 2 seconds!
                     )
 
 ; Echo inputs
@@ -772,14 +769,17 @@
 ; (lambda (inputs)
 ;   inputs))
 
+; Sine
 (signal-run-default
  (lambda (inputs)
    (duplicate (* 0.2 (sin (line 440))))))
 
+; Echo input
 (signal-run-default
  (lambda (inputs)
-   (mapcar (lambda (x) (* x 0.4)) inputs)))
+   (mapcar (lambda (x) (* x 0.1)) inputs)))
 
+; Delay input
 (signal-run-default
  (lambda (inputs)
    (mapcar (lambda (x) (* (delay 88200 x) 0.4)) inputs)))
@@ -796,10 +796,10 @@
  :stream-callback 
  (lambda (stream)
    (cl:print stream)
-   (audio-schedule (milliseconds 0)   (action-send "DLS" (midi #x91 70 127)) stream)
-   (audio-schedule (milliseconds 100) (action-send "DLS" (midi #x91 73 127)) stream)
-   (audio-schedule (milliseconds 200) (action-send "DLS" (midi #x91 75 127)) stream)
-   (audio-schedule (milliseconds 300) (action-send "DLS" (midi #x91 72 127)) stream)))
+   (audio-schedule (milliseconds 0)   (action-send "DLS" (midi #x91 60 127)) stream)
+   (audio-schedule (milliseconds 100) (action-send "DLS" (midi #x91 63 127)) stream)
+   (audio-schedule (milliseconds 200) (action-send "DLS" (midi #x91 65 127)) stream)
+   (audio-schedule (milliseconds 300) (action-send "DLS" (midi #x91 62 127)) stream)))
 
 (signal-run-file* 
  (cl:* 44100 5) 
