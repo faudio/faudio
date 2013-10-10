@@ -490,7 +490,7 @@
 
 ; TODO status callback
 
-
+(setf q (midi-open-stream x))
 (setf z (midi-open-stream y))
 (midi-close-stream z)
 
@@ -500,6 +500,12 @@
   (midi-schedule (milliseconds 100) (action-send "" (midi #x91 63 127)) z)
   (midi-schedule (milliseconds 200) (action-send "" (midi #x91 65 127)) z)
   (midi-schedule (milliseconds 300) (action-send "" (midi #x91 62 127)) z))
+
+(midi-add-message-callback* (lambda (msg)
+                              (cl:print (from-pointer 'midi-message msg))
+  (capi:display-message "Midi received")
+  (fa-log-info "Midi message received")
+ ) q)
 
 ; ---------------------------------------------------------------------------------------------------
 ; Utility

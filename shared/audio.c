@@ -296,11 +296,10 @@ void fa_audio_end_session(session_t session)
     delete_session(session);
 }
 
-void fa_audio_with_session(
-    session_callback_t session_callback,
-    ptr_t                           session_data,
-    error_callback_t                error_callback,
-    ptr_t                           error_data
+void fa_audio_with_session(session_callback_t session_callback,
+                           ptr_t                           session_data,
+                           error_callback_t                error_callback,
+                           ptr_t                           error_data
 )
 {
     session_t session = fa_audio_begin_session();
@@ -390,10 +389,9 @@ bool fa_audio_has_output(device_t device)
 
 void add_audio_status_listener(status_callback_t function, ptr_t data);
 
-void fa_audio_add_status_callback(
-    status_callback_t function,
-    ptr_t             data,
-    session_t         session)
+void fa_audio_add_status_callback(status_callback_t function,
+                                  ptr_t             data,
+                                  session_t         session)
 {
     assert(session && "Not a real session");
 
@@ -535,6 +533,13 @@ list_t fa_audio_devices(fa_audio_stream_t stream)
 fa_clock_t fa_audio_stream_clock(fa_audio_stream_t stream)
 {
     return (fa_clock_t) stream;
+}
+
+void fa_audio_add_message_callback(fa_audio_message_callback_t function,
+                                   fa_ptr_t data,
+                                   fa_audio_stream_t stream)
+{
+    // TODO
 }
 
 void fa_audio_schedule(fa_time_t time,

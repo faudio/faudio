@@ -279,6 +279,12 @@
     (func-to-int# f)
     session))
 
+(defun audio-add-message-callback* (f stream)
+  (audio-add-message-callback 
+    (callback funcall1#) 
+    (func-to-int# f)
+    stream))
+
 ; ---------------------------------------------------------------------------------------------------
 
 (defun midi-add-status-callback* (f session)
@@ -286,6 +292,12 @@
     (callback funcall0#) 
     (func-to-int# f)
     session))
+
+(defun midi-add-message-callback* (f stream)
+  (midi-add-message-callback 
+    (callback funcall1#) 
+    (func-to-int# f)
+    stream))
     
 ; ---------------------------------------------------------------------------------------------------
 

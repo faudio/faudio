@@ -319,10 +319,9 @@ device_t fa_midi_default_output(session_t session)
 
 void add_midi_status_listener(status_callback_t function, ptr_t data);
 
-void fa_midi_add_status_callback(
-    status_callback_t function,
-    ptr_t             data,
-    session_t         session)
+void fa_midi_add_status_callback(status_callback_t function,
+                                 ptr_t             data,
+                                 session_t         session)
 {
     assert(session && "Not a real session");
 
@@ -431,6 +430,18 @@ void fa_midi_with_stream(device_t           device,
     }
 
     fa_midi_close_stream(stream);
+}
+
+
+
+
+
+void fa_midi_add_message_callback(fa_midi_message_callback_t function,
+                                  fa_ptr_t data,
+                                  fa_midi_stream_t stream)
+{
+    // TODO
+    function(data, midi_message(0x90, 60, 127));
 }
 
 
