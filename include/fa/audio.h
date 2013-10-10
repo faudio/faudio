@@ -7,6 +7,7 @@
 #include <fa/error.h>
 #include <fa/signal.h>
 #include <fa/action.h>
+#include <fa/clock.h>
 
 /** @addtogroup FaAudio
 
@@ -224,10 +225,16 @@ void fa_audio_with_stream(fa_audio_device_t,
                           fa_ptr_t);
 
 /** Return the devices associated with the given stream.
-    @param device   The device.
+    @param stream   The stream.
     @return A list of @ref fa_audio_device_t
 */
 fa_list_t fa_audio_devices(fa_audio_stream_t);
+
+/** Return the clock associated with a given stream.
+    @param stream The stream.
+    @return A clock.
+*/
+fa_clock_t fa_audio_stream_clock(fa_audio_stream_t);
 
 /**
     Schedule an action on the stream.

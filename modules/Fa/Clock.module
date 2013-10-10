@@ -18,11 +18,13 @@ module Fa.Clock
     import Fa;
     import Fa.Time;
 
-    type ClockInterface = struct {
+    type Interface = struct {
         time         : (Ptr -> Time)*,
         milliseconds : (Ptr -> Int64)*
     };                 
-    
+
+    /** A value of an unknown type implementing @ref fa_clock_interface.
+     */
     type Clock = opaque;
 
     /** Returns the current time according to the given clock.

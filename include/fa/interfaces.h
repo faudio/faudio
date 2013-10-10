@@ -12,14 +12,9 @@ enum fa_interfaces {
     fa_dynamic_i,
     fa_error_i,
     fa_equal_i,
-
-    fa_time_clock_interface_i,
-    fa_message_sender_interface_i,
-    fa_message_receiver_interface_i,
-    fa_number_i,
     fa_order_i,
-
-    fa_processor_interface_i,
+    fa_number_i,
+    fa_clock_interface_i,
     fa_string_show_i
 };
 

@@ -22,7 +22,7 @@ module Fa.Audio
     import Fa.Error;
     import Fa.Signal;
     import Fa.Action;
-
+    import Fa.Clock;
     
     /** An audio session.
      */
@@ -35,7 +35,7 @@ module Fa.Audio
     /** An audio stream.
      */
     type Stream  = opaque;
-    
+
     /** A callback to receive audio sessions.
      */
     type SessionCallback = ((Ptr, Session) -> Session)*;
@@ -173,7 +173,6 @@ module Fa.Audio
      */
     outputChannels : Device -> Int;
     
-
     /**
         Open a stream on the given devices.
 
@@ -208,10 +207,16 @@ module Fa.Audio
         ) -> Void;
 
     /** Return the devices associated with the given stream.
-        @param device   The device.
+        @param stream   The stream.
         @return A list of @ref fa_audio_device_t
      */
     devices : Stream -> List;
+
+    /** Return the clock associated with a given stream.
+        @param stream The stream.
+        @return A clock.
+     */
+    streamClock : Stream -> Clock;
 
     /**
         Schedule an action on the stream.
