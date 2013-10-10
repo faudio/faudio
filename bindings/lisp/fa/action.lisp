@@ -6,7 +6,6 @@
 (defmethod translate-from-foreign (x (type action-type)) (make-instance 'action :action-ptr x))
 (defctype action-channel :int)
 (defctype action-name string)
-(defctype action-params ptr)
 (defctype action-value ptr)
 (defcfun (action-set "fa_action_set") action (a action-channel) (b :double))
 (defcfun (action-accum "fa_action_accum") action (a action-channel) (b signal-unary-double) (c ptr))

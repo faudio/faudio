@@ -20,13 +20,4 @@
 (defclass time-system () ((time-system-ptr :initarg :time-system-ptr)))
 (defmethod translate-to-foreign (x (type time-system-type)) (slot-value x 'time-system-ptr))
 (defmethod translate-from-foreign (x (type time-system-type)) (make-instance 'time-system :time-system-ptr x))
-(define-foreign-type time-cpu-type () () (:actual-type :pointer))
-(define-parse-method time-cpu () (make-instance 'time-cpu-type))
-(defclass time-cpu () ((time-cpu-ptr :initarg :time-cpu-ptr)))
-(defmethod translate-to-foreign (x (type time-cpu-type)) (slot-value x 'time-cpu-ptr))
-(defmethod translate-from-foreign (x (type time-cpu-type)) (make-instance 'time-cpu :time-cpu-ptr x))
-(defcfun (time-from-system "fa_time_from_system") time (a time-system))
-(defcfun (time-from-cpu "fa_time_from_cpu") time (a time-cpu))
-(defcfun (time-system "fa_time_system") time-system)
-(defcfun (time-cpu "fa_time_cpu") time-cpu)
 

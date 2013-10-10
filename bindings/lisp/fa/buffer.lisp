@@ -8,6 +8,7 @@
 (defcfun (buffer-wrap "fa_buffer_wrap") buffer (a ptr) (b :int32) (c unary) (d ptr))
 (defcfun (buffer-copy "fa_buffer_copy") buffer (a buffer))
 (defcfun (buffer-resize "fa_buffer_resize") buffer (a :int32) (b buffer))
+(defcfun (buffer-dresize "fa_buffer_dresize") buffer (a :int32) (b buffer))
 (defcfun (buffer-destroy "fa_buffer_destroy") :void (a buffer))
 (defcfun (buffer-size "fa_buffer_size") :int32 (a buffer))
 (defcfun (buffer-get "fa_buffer_get") :uint8 (a buffer) (b :int32))

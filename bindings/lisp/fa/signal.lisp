@@ -14,7 +14,6 @@
 (defcfun (signal-lift2 "fa_signal_lift2") signal (a string) (b :pointer) (c :pointer) (d signal) (e signal))
 (defcfun (signal-loop "fa_signal_loop") signal (a :pointer) (b :pointer))
 (defcfun (signal-delay "fa_signal_delay") signal (a :int) (b signal))
-(defcfun (signal-insert "fa_signal_insert") signal (a string) (b :int) (c :int) (d :int) (e :int) (f signal))
 (defctype signal-name string)
 (defctype signal-message ptr)
 (defctype signal-state (:pointer :void))
@@ -80,6 +79,4 @@
 (defcfun (signal-simplify "fa_signal_simplify") signal (a signal))
 (defcfun (signal-impulse "fa_signal_impulse") signal)
 (defcfun (signal-line "fa_signal_line") signal (a :double))
-(defcfun (signal-low-pass "fa_signal_low_pass") signal (a signal) (b signal) (c signal) (d signal) (e signal))
-(defcfun (signal-biquad "fa_signal_biquad") signal (a signal) (b signal) (c signal) (d signal) (e signal) (f signal))
 
