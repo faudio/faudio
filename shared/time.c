@@ -165,66 +165,32 @@ fa_string_t fa_time_to_iso(fa_time_t time)
     return s;
 }
 
-fa_time_t fa_time_from_system(fa_time_system_t time)
-{
-    // return seconds(ti64(time));
-    assert(false && "Not implemented");
-}
-
-fa_time_t fa_time_from_cpu(fa_time_cpu_t cpu_time)
-{
-    // int64_t t = fa_peek_int64(cpu_time);
-    // int64_t q = t / CLOCKS_PER_SEC;
-    // int64_t r = t % CLOCKS_PER_SEC;
-    //
-    // return fa_add(seconds(q), divisions(r, CLOCKS_PER_SEC));
-    assert(false && "Not implemented");
-}
-
-fa_time_system_t fa_time_system()
-{
-    // // TODO warning OK
-    // system_time_t t;
-    // time(&t);
-    // int64_t lt = t;
-    // return i64(lt);
-    assert(false && "Not implemented");
-}
-
-fa_time_cpu_t fa_time_cpu()
-{
-    // // TODO warning OK
-    // system_clock_t t = clock();
-    // int64_t lt = t;
-    // return i64(lt);
-    assert(false && "Not implemented");
-}
 
 
 // --------------------------------------------------------------------------------
 
-// fa_time_t fa_time_time(fa_time_clock_t clock)
+// fa_time_t fa_time_time(fa_clock_t clock)
 // {
-//     assert(fa_interface(fa_time_clock_interface_i, clock)
+//     assert(fa_interface(fa_clock_interface_i, clock)
 //            && "Must implement Clock");
-//     return ((fa_time_clock_interface_t *)
-//             fa_interface(fa_time_clock_interface_i, clock))->time(clock);
+//     return ((fa_clock_interface_t *)
+//             fa_interface(fa_clock_interface_i, clock))->time(clock);
 // }
 //
-// double fa_time_tick_rate(fa_time_clock_t clock)
+// double fa_time_tick_rate(fa_clock_t clock)
 // {
-//     assert(fa_interface(fa_time_clock_interface_i, clock)
+//     assert(fa_interface(fa_clock_interface_i, clock)
 //            && "Must implement Clock");
-//     return ((fa_time_clock_interface_t *)
-//             fa_interface(fa_time_clock_interface_i, clock))->tick_rate(clock);
+//     return ((fa_clock_interface_t *)
+//             fa_interface(fa_clock_interface_i, clock))->tick_rate(clock);
 // }
 //
-// int64_t fa_time_ticks(fa_time_clock_t clock)
+// int64_t fa_time_ticks(fa_clock_t clock)
 // {
-//     assert(fa_interface(fa_time_clock_interface_i, clock)
+//     assert(fa_interface(fa_clock_interface_i, clock)
 //            && "Must implement Clock");
-//     return ((fa_time_clock_interface_t *)
-//             fa_interface(fa_time_clock_interface_i, clock))->ticks(clock);
+//     return ((fa_clock_interface_t *)
+//             fa_interface(fa_clock_interface_i, clock))->ticks(clock);
 // }
 
 
@@ -265,12 +231,12 @@ fa_time_cpu_t fa_time_cpu()
 //
 // ptr_t system_clock_impl(fa_id_t interface)
 // {
-//     static fa_time_clock_interface_t system_clock_clock
+//     static fa_clock_interface_t system_clock_clock
 //         = { system_time, system_tick_rate, system_ticks };
 //
 //     switch (interface) {
 //
-//     case fa_time_clock_interface_i:
+//     case fa_clock_interface_i:
 //         return &system_clock_clock;
 //
 //     default:
@@ -326,12 +292,12 @@ fa_time_cpu_t fa_time_cpu()
 //
 // ptr_t system_prec_clock_impl(fa_id_t interface)
 // {
-//     static fa_time_clock_interface_t system_prec_clock_clock
+//     static fa_clock_interface_t system_prec_clock_clock
 //         = { system_prec_time, system_prec_tick_rate, system_prec_ticks };
 //
 //     switch (interface) {
 //
-//     case fa_time_clock_interface_i:
+//     case fa_clock_interface_i:
 //         return &system_prec_clock_clock;
 //
 //     default:

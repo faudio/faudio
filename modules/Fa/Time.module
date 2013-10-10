@@ -141,45 +141,28 @@ module Fa.Time
     toMilliseconds  : Time -> Int32;
 
     /** The system time type.
+
+        This is the same as `time_t` in the standard C header `time.h`.
      */
     type System = opaque; 
-
-    /** The system CPU time type.
-     */
-    type Cpu    = opaque; 
-
-    /** Convert system time to a time value.
-        Generally, system time is seconds since the Unix epoch.
-     */
-    fromSystem  : System -> Time;
-    /** Convert system CPU time to a time value.
-     */
-    fromCpu     : Cpu -> Time;
-    /** Get the system time.
-     */
-    system      : () -> System;
-    /** Get the system CPU time.
-     */
-    cpu         : () -> Cpu;
-
     
-    // Clocks
-    
-    // /** @interface fa_time_clock_interface_t */
-    // type ClockInterface = struct {
-    //     time     : (Ptr -> Time)*,
-    //     tickRate : (Ptr -> Double)*,
-    //     ticks    : (Ptr -> Int64)*
-    // };                 
+    // /** The system CPU time type.
+    //  */
+    // type Cpu    = opaque; 
     // 
-    // type Clock = opaque;
-    // 
-    // time     : Clock -> Time;
-    // tickRate : Clock -> Double;
-    // ticks    : Clock -> Int64;
-    // 
-    // getSystemClock      : () -> Clock;
-    // getSystemPrecClock  : () -> Clock;
-    // getCpuClock         : () -> Clock;
+    // /** Convert system time to a time value.
+    //     Generally, system time is seconds since the Unix epoch.
+    //  */
+    // fromSystem  : System -> Time;
+    // /** Convert system CPU time to a time value.
+    //  */
+    // fromCpu     : Cpu -> Time;
+    // /** Get the system time.
+    //  */
+    // system      : () -> System;
+    // /** Get the system CPU time.
+    //  */
+    // cpu         : () -> Cpu;
+    //                                      
 }
 

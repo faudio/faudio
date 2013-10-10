@@ -156,29 +156,9 @@ int32_t fa_time_to_seconds(fa_time_t);
 int32_t fa_time_to_milliseconds(fa_time_t);
 
 /** The system time type.
+    This is 
 */
 typedef struct _fa_time_system_t * fa_time_system_t;
-
-/** The system CPU time type.
-*/
-typedef struct _fa_time_cpu_t * fa_time_cpu_t;
-
-/** Convert system time to a time value.
-    Generally, system time is seconds since the Unix epoch.
-*/
-fa_time_t fa_time_from_system(fa_time_system_t);
-
-/** Convert system CPU time to a time value.
-*/
-fa_time_t fa_time_from_cpu(fa_time_cpu_t);
-
-/** Get the system time.
-*/
-fa_time_system_t fa_time_system();
-
-/** Get the system CPU time.
-*/
-fa_time_cpu_t fa_time_cpu();
 
 /** @}
     @}
