@@ -13,6 +13,9 @@
     however does not usually indicate real-world time, but the current time
     of an audio computation.
 
+    The most accuraet clocks are those derived directly from an audio stream. See
+    @ref fa_audio_stream_clock.
+
     @par Implements
     - fa_string_show_t (all clock types)
     - fa_destroy_t (all clock types)
