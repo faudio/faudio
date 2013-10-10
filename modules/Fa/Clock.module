@@ -2,7 +2,9 @@
 /**
     Provides various clocks.
         
-    A clock is (not surprisingly) a provider of time.
+    As one might expect, a clock is a provider of time. A clock in *faudio*,
+    however does not usually indicate real-world time, but the current time
+    of an audio computation.
 
     @par Implements
     - fa_string_show_t (all clock types)
@@ -22,8 +24,21 @@ module Fa.Clock
     };                 
     
     type Clock = opaque;
-    
+
+    /** Returns the current time according to the given clock.
+        @param clock
+            Clock to use.
+        @return
+            The current time.
+     */
     time         : Clock -> Time;
+
+    /** Returns the current time in milliseconds according to the given clock.
+        @param clock
+            Clock to use.
+        @return
+            The current time in milliseconds.
+     */
     milliseconds : Clock -> Milliseconds;
     
     // getSystemClock      : () -> Clock;
