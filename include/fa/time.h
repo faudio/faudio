@@ -156,7 +156,8 @@ int32_t fa_time_to_seconds(fa_time_t);
 int32_t fa_time_to_milliseconds(fa_time_t);
 
 /** The system time type.
-    This is 
+
+    This is the same as `time_t` in the standard C header `time.h`.
 */
 typedef struct _fa_time_system_t * fa_time_system_t;
 
