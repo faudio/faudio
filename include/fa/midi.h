@@ -21,10 +21,6 @@
     @par Devices also implement 
     - fa_equal_t
 
-    @par Streams also implement 
-    - fa_message_sender_t
-    - fa_message_receiver_t
-    
     @see 
     - @ref Devices
  

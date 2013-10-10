@@ -140,6 +140,7 @@ module Fa.Time
         the duration of 1 min 24 1/3 sec would be represented as `P0000-00-00T00:01:24.3333`.
      */
     toIso           : Time -> String;
+
     /** Convert the time to seconds.
         This may lose precision.
 
@@ -147,6 +148,13 @@ module Fa.Time
             Time value.
      */
     toSeconds       : Time -> Seconds;
+
+    /** Convert the time to milliseconds.
+        This may lose precision.
+
+        @param time
+            Time value.
+     */
     toMilliseconds  : Time -> Milliseconds;
 
     /** The system time type.

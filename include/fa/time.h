@@ -160,7 +160,12 @@ fa_string_t fa_time_to_iso(fa_time_t);
 */
 fa_time_seconds_t fa_time_to_seconds(fa_time_t);
 
+/** Convert the time to milliseconds.
+    This may lose precision.
 
+    @param time
+        Time value.
+*/
 fa_time_milliseconds_t fa_time_to_milliseconds(fa_time_t);
 
 /** The system time type.
