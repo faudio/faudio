@@ -54,6 +54,12 @@ fa_time_t fa_clock_time(fa_clock_t);
 */
 fa_time_milliseconds_t fa_clock_milliseconds(fa_clock_t);
 
+/** Returns the standard clock.
+    @return
+        A clock.
+*/
+fa_clock_t fa_clock_standard();
+
 /** @}
     @}
     */

@@ -103,67 +103,78 @@ fa_time_milliseconds_t fa_clock_milliseconds(fa_clock_t clock)
 
 // --------------------------------------------------------------------------------
 
-struct _standard_clock {
+typedef struct standard_clock *standard_clock_t;
+struct standard_clock {
     impl_t impl;
 };
-typedef struct _standard_clock *standard_clock_t;
 
-// inline static standard_clock_t new_standard_clock()
-// {
-//     fa_ptr_t standard_clock_impl(fa_id_t interface);
-//     standard_clock_t c = fa_new(standard_clock);
-//     c->impl = &standard_clock_impl;
-//     return c;
-// }
-// 
-// inline static void delete_standard_clock(standard_clock_t standard_clock)
-// {
-//     fa_delete(standard_clock);
-// }
-// 
-// fa_string_t standard_clock_show(fa_ptr_t a)
-// {
-//     string_t str = string("<StandardClock ");
-//     str = string_dappend(str, fa_string_format_integral(" %p", (long) a));
-//     str = string_dappend(str, string(">"));
-//     return str;
-// }
+inline static standard_clock_t new_standard_clock()
+{
+    fa_ptr_t standard_clock_impl(fa_id_t interface);
+    standard_clock_t c = fa_new_struct(standard_clock);
+    c->impl = &standard_clock_impl;
+    return c;
+}
+
+inline static void delete_standard_clock(standard_clock_t standard_clock)
+{
+    fa_delete(standard_clock);
+}
+
+fa_clock_t fa_clock_standard()
+{
+    return (fa_clock_t) new_standard_clock(); // TODO singleton
+}
+
+
+fa_string_t standard_clock_show(fa_ptr_t a)
+{
+    string_t str = string("<StandardClock ");
+    str = string_dappend(str, fa_string_format_integral(" %p", (long) a));
+    str = string_dappend(str, string(">"));
+    return str;
+}
 
 int64_t standard_clock_milliseconds(fa_ptr_t a)
 {
-    // TODO
-    double c = (double) 0;
-    double r = (double) 0;
-    return ((int64_t)(c / r * 1000));
+    mach_timespec_t ts;
+    clock_get_time(gMachClock, &ts);
+
+    return ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
 }
 
 fa_time_t standard_clock_time(fa_ptr_t a)
 {
-    int64_t ms = standard_clock_milliseconds(a);
-    return fa_milliseconds(ms);
+    mach_timespec_t ts;
+    clock_get_time(gMachClock, &ts);
+    // clock_gettime(CLOCK_REALTIME, &ts);
+
+    time_t s  = seconds(ts.tv_sec); // TODO with tv_nsec
+    time_t ds = divisions(ts.tv_nsec / 1000000, 1000);
+    return fa_dadd(s, ds);
 }
 
 
-// fa_ptr_t standard_clock_impl(fa_id_t interface)
-// {
-//     static fa_string_show_t audio_stream_show_impl
-//         = { audio_stream_show };
-//     
-//     static fa_clock_interface_t audio_stream_clock_impl
-//         = { audio_stream_time, audio_stream_milliseconds };
-// 
-//     switch (interface) {
-// 
-//     case fa_clock_interface_i:
-//         return &audio_stream_clock_impl;
-// 
-//     case fa_string_show_i:
-//         return &audio_stream_show_impl;
-// 
-//     default:
-//         return NULL;
-//     }
-// }
+fa_ptr_t standard_clock_impl(fa_id_t interface)
+{
+    static fa_string_show_t standard_clock_show_impl
+        = { standard_clock_show };
+    
+    static fa_clock_interface_t standard_clock_clock_impl
+        = { standard_clock_time, standard_clock_milliseconds };
+
+    switch (interface) {
+
+    case fa_clock_interface_i:
+        return &standard_clock_clock_impl;
+
+    case fa_string_show_i:
+        return &standard_clock_show_impl;
+
+    default:
+        return NULL;
+    }
+}   
 
 
 //
@@ -186,28 +197,6 @@ fa_time_t standard_clock_time(fa_ptr_t a)
 //     return 1000000000;
 // }
 //
-// // TODO separate init/term
-// int64_t system_prec_ticks(ptr_t a)
-// {
-//     mach_timespec_t ts;
-//     clock_get_time(gMachClock, &ts);
-//
-//     return ts.tv_sec * 1000000000 + ts.tv_nsec;
-// }
-//
-// fa_time_t system_prec_time(ptr_t a)
-// {
-//     mach_timespec_t ts;
-//     clock_get_time(gMachClock, &ts);
-//
-//     // clock_gettime(CLOCK_REALTIME, &ts);
-//
-//     time_t s  = seconds(ts.tv_sec); // TODO with tv_nsec
-//     time_t ds = divisions(ts.tv_nsec / 1000000, 1000);
-//     return fa_dadd(s, ds);
-//
-//
-// }
 //
 // ptr_t system_prec_clock_impl(fa_id_t interface)
 // {

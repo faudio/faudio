@@ -45,6 +45,12 @@ module Fa.Clock
             The current time in milliseconds.
      */
     milliseconds : Clock -> Milliseconds;
+
+    /** Returns the standard clock.
+        @return
+            A clock.
+     */
+    standard : () -> Clock;
     
     // getSystemClock      : () -> Clock;
     // getSystemPrecClock  : () -> Clock;

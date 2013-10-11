@@ -25,7 +25,9 @@ void run_dls()
         }
 
         for (int i = 0; true; ++i) {
-            fa_clock_t cl = fa_audio_stream_clock(st);
+
+            fa_clock_t cl = fa_clock_standard();
+            // fa_clock_t cl = fa_audio_stream_clock(st);
             mark_used(cl);
 
             printf("Scheduling msec: %lld \n", fa_clock_milliseconds(cl));
