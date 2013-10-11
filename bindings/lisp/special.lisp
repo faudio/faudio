@@ -296,7 +296,10 @@
 (defun midi-add-message-callback* (f stream)
   (midi-add-message-callback 
     (callback funcall1#) 
-    (func-to-int# f)
+    (func-to-int# (lambda (time-msg-pair)
+      (let* ((time (from-pointer 'time (pair-first time-msg-pair)))
+             (msg  (from-pointer 'midi-message (pair-second time-msg-pair))))
+      (funcall f time msg))))
     stream))
     
 ; ---------------------------------------------------------------------------------------------------

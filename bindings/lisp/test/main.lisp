@@ -496,49 +496,40 @@
 (midi-close-stream z)
 (midi-close-stream q)
 
-; TODO send/recv
-(progn
-  (midi-schedule (milliseconds 0) (action-send "" (midi #x91 60 127)) z)
-  (midi-schedule (milliseconds 100) (action-send "" (midi #x91 63 127)) z)
-  (midi-schedule (milliseconds 200) (action-send "" (midi #x91 65 127)) z)
-  (midi-schedule (milliseconds 300) (action-send "" (midi #x91 62 127)) z))
 
 
 
+; More complete examples:
 
 (progn
   (setf s (midi-begin-session))
   (setf x (midi-default-input s))
-  (setf q (midi-open-stream x))
+  (setf y (midi-default-output s))
+  (setf midi-in-stream (midi-open-stream x))
+  (setf midi-out-stream (midi-open-stream y))
  )
-(cl:print q)
-(midi-close-stream q)
+(midi-close-stream midi-in-stream)
+(midi-close-stream midi-out-stream)
 (midi-end-all-sessions)
 
-;(defcfun (midi-add-message-callback "fa_midi_add_message_callback") :void (a midi-message-callback) (b ptr) (c midi-stream))
-(defun midi-add-message-callback* (f stream)
-  (midi-add-message-callback 
-    (callback funcall1#) 
-    (func-to-int# (lambda (time-msg-pair)
-      (let* ((time (from-pointer 'time (pair-first time-msg-pair)))
-             (msg  (from-pointer 'midi-message (pair-second time-msg-pair))))
-      (funcall f time msg))))
-    stream))
 
+; Output
+(progn
+  (midi-schedule (milliseconds 0) (action-send "" (midi #x91 60 127)) midi-out-stream)
+  (midi-schedule (milliseconds 100) (action-send "" (midi #x91 63 127)) midi-out-stream)
+  (midi-schedule (milliseconds 200) (action-send "" (midi #x91 65 127)) midi-out-stream)
+  (midi-schedule (milliseconds 300) (action-send "" (midi #x91 62 127)) midi-out-stream))
+
+; Input
 (defvar *msgs* nil)
 (push 1 *msgs*)
 (cl:print *msgs*)
 
-(from-pointer 'time (pair-first *last-msg*))
-(from-pointer 'midi-message (pair-second *last-msg*))
-
 (midi-add-message-callback* 
  (lambda (time msg)
    (push (cl:list time msg) *msgs*)
-   ;(capi:display-message "Midi received")
-   ;(fa-log-info (string-show msg))
    (fa-log-info "Midi message received")
-   ) q)
+   ) midi-in-stream)
 
 ; ---------------------------------------------------------------------------------------------------
 ; Utility
