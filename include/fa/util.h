@@ -102,7 +102,7 @@
 #define minutes(m)          fa_time_create(0,0,m,ratio(0,1))
 #define seconds(s)          fa_time_create(0,0,0,ratio(s,1))
 #define divisions(a,b)      fa_time_create(0,0,0,ratio(a,b))
-#define milliseconds(s)     fa_time_create(0,0,0,ratio(s,1000))
+#define fa_milliseconds(s)  fa_time_create(0,0,0,ratio(s,1000))
 #define microseconds(s)     fa_time_create(0,0,0,ratio(s,1000000))
 
 #define stime               fa_signal_time

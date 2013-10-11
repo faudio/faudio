@@ -754,7 +754,7 @@ int64_t audio_stream_milliseconds(ptr_t a)
 fa_time_t audio_stream_time(ptr_t a)
 {
     int64_t ms = audio_stream_milliseconds(a);
-    return milliseconds(ms);
+    return fa_milliseconds(ms);
 }
 
 

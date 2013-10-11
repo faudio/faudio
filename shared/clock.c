@@ -9,7 +9,7 @@
 
 #include <fa/time.h>
 #include <fa/clock.h>
-// #include <fa/util.h>
+#include <fa/util.h>
 
 #include <time.h>
 #include <sys/time.h>
@@ -100,7 +100,72 @@ fa_time_milliseconds_t fa_clock_milliseconds(fa_clock_t clock)
 //
 //
 //
-// // --------------------------------------------------------------------------------
+
+// --------------------------------------------------------------------------------
+
+struct _standard_clock {
+    impl_t impl;
+};
+typedef struct _standard_clock *standard_clock_t;
+
+// inline static standard_clock_t new_standard_clock()
+// {
+//     fa_ptr_t standard_clock_impl(fa_id_t interface);
+//     standard_clock_t c = fa_new(standard_clock);
+//     c->impl = &standard_clock_impl;
+//     return c;
+// }
+// 
+// inline static void delete_standard_clock(standard_clock_t standard_clock)
+// {
+//     fa_delete(standard_clock);
+// }
+// 
+// fa_string_t standard_clock_show(fa_ptr_t a)
+// {
+//     string_t str = string("<StandardClock ");
+//     str = string_dappend(str, fa_string_format_integral(" %p", (long) a));
+//     str = string_dappend(str, string(">"));
+//     return str;
+// }
+
+int64_t standard_clock_milliseconds(fa_ptr_t a)
+{
+    // TODO
+    double c = (double) 0;
+    double r = (double) 0;
+    return ((int64_t)(c / r * 1000));
+}
+
+fa_time_t standard_clock_time(fa_ptr_t a)
+{
+    int64_t ms = standard_clock_milliseconds(a);
+    return fa_milliseconds(ms);
+}
+
+
+// fa_ptr_t standard_clock_impl(fa_id_t interface)
+// {
+//     static fa_string_show_t audio_stream_show_impl
+//         = { audio_stream_show };
+//     
+//     static fa_clock_interface_t audio_stream_clock_impl
+//         = { audio_stream_time, audio_stream_milliseconds };
+// 
+//     switch (interface) {
+// 
+//     case fa_clock_interface_i:
+//         return &audio_stream_clock_impl;
+// 
+//     case fa_string_show_i:
+//         return &audio_stream_show_impl;
+// 
+//     default:
+//         return NULL;
+//     }
+// }
+
+
 //
 // struct system_prec_clock {
 //     impl_t impl;
