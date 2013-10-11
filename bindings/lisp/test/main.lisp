@@ -484,6 +484,7 @@
 (setf y (midi-default-output s))
 
 (midi-name x)
+(midi-name y)
 (midi-host-name x)
 (midi-has-input x)
 (midi-has-output x)
@@ -493,6 +494,7 @@
 (setf q (midi-open-stream x))
 (setf z (midi-open-stream y))
 (midi-close-stream z)
+(midi-close-stream q)
 
 ; TODO send/recv
 (progn
@@ -501,11 +503,42 @@
   (midi-schedule (milliseconds 200) (action-send "" (midi #x91 65 127)) z)
   (midi-schedule (milliseconds 300) (action-send "" (midi #x91 62 127)) z))
 
-(midi-add-message-callback* (lambda (msg)
-                              (cl:print (from-pointer 'midi-message msg))
-  (capi:display-message "Midi received")
-  (fa-log-info "Midi message received")
- ) q)
+
+
+
+(progn
+  (setf s (midi-begin-session))
+  (setf x (midi-default-input s))
+  (setf q (midi-open-stream x))
+ )
+(cl:print q)
+(midi-close-stream q)
+(midi-end-all-sessions)
+
+;(defcfun (midi-add-message-callback "fa_midi_add_message_callback") :void (a midi-message-callback) (b ptr) (c midi-stream))
+(defun midi-add-message-callback* (f stream)
+  (midi-add-message-callback 
+    (callback funcall1#) 
+    (func-to-int# (lambda (time-msg-pair)
+      (let* ((time (from-pointer 'time (pair-first time-msg-pair)))
+             (msg  (from-pointer 'midi-message (pair-second time-msg-pair))))
+      (funcall f time msg))))
+    stream))
+
+(defvar *msgs* nil)
+(push 1 *msgs*)
+(cl:print *msgs*)
+
+(from-pointer 'time (pair-first *last-msg*))
+(from-pointer 'midi-message (pair-second *last-msg*))
+
+(midi-add-message-callback* 
+ (lambda (time msg)
+   (push (cl:list time msg) *msgs*)
+   ;(capi:display-message "Midi received")
+   ;(fa-log-info (string-show msg))
+   (fa-log-info "Midi message received")
+   ) q)
 
 ; ---------------------------------------------------------------------------------------------------
 ; Utility

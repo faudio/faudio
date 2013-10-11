@@ -7,4 +7,5 @@
 (defmethod translate-from-foreign (x (type clock-type)) (make-instance 'clock :clock-ptr x))
 (defcfun (clock-time "fa_clock_time") time (a clock))
 (defcfun (clock-milliseconds "fa_clock_milliseconds") time-milliseconds (a clock))
+(defcfun (clock-standard "fa_clock_standard") clock)
 
