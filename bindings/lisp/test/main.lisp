@@ -508,6 +508,8 @@
   (setf midi-in-stream (midi-open-stream x))
   (setf midi-out-stream (midi-open-stream y))
  )
+(cl:print midi-in-stream)
+(cl:print midi-out-stream)
 (midi-close-stream midi-in-stream)
 (midi-close-stream midi-out-stream)
 (midi-end-all-sessions)
@@ -523,7 +525,7 @@
 ; Input
 (defvar *msgs* nil)
 (push 1 *msgs*)
-(cl:print *msgs*)
+(progn (mapcar 'cl:print *msgs*) nil)
 
 (midi-add-message-callback* 
  (lambda (time msg)
