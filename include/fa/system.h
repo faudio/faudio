@@ -6,8 +6,6 @@
 
 /** @addtogroup FaSystem
 
-    @addtogroup FaSystem
-    
     Provides low-level system facilities.    
  
     @defgroup Fa Fa

@@ -7,8 +7,6 @@
 
 /** @addtogroup FaDynamic
 
-    @addtogroup FaDynamic
-    
     Provides dynamic typing. This can be used with all [Value references](@ref ValueReferences)
     and data structures to inspect the type at runtime.
  

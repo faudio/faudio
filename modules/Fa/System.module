@@ -1,7 +1,5 @@
 
 /**
-    @addtogroup FaSystem
-    
     Provides low-level system facilities.    
  */
 

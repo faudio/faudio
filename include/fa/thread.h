@@ -8,8 +8,6 @@
 
 /** @addtogroup FaThread
 
-    @addtogroup FaThread
-
     Provides threads.
 
     We provide threads and mutexes. For non-blocking constructs, see the @ref FaAtomic modules.

@@ -24,8 +24,6 @@
 
 /** @addtogroup FaFa
 
-    @addtogroup FaFa
-
     Miscellaneous utilities.
 
     ~~~~

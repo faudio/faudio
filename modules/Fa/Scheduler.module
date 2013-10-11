@@ -1,7 +1,5 @@
 
 /**
-    @addtogroup FaScheduler
-    
     Provides task scheduling.
 
     @par Implements 

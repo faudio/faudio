@@ -1,7 +1,5 @@
 
 /**
-    @addtogroup FaMessage
-
     Provides message dispatching.
 
     @note 

@@ -6,8 +6,6 @@
 
 /** @addtogroup FaPriorityQueue
 
-    @addtogroup FaPriorityQueue
-
     Priority queue data structure.
 
     @par Requires

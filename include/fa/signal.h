@@ -9,8 +9,6 @@
 
 /** @addtogroup FaSignal
 
-    @addtogroup FaSignal
-    
     Provides signals.
 
     @par Implements

@@ -8,8 +8,6 @@
 
 /** @addtogroup FaMidiMessage
  
-    @addtogroup FaMidiMessage
-    
     Immutable MIDI messages.
 
     @par Literals

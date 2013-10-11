@@ -7,8 +7,6 @@
 
 /** @addtogroup FaPair
  
-    @addtogroup FaPair
-    
     Immutable pair data structure.
 
     @par Literals

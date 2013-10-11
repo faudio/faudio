@@ -7,8 +7,6 @@
 
 /** @addtogroup FaError
 
-    @addtogroup FaError
-    
     Error handling types and functions.
  
     @defgroup Fa Fa

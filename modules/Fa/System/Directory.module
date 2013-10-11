@@ -1,7 +1,5 @@
 
 /**
-    @addtogroup FaSystemDirectory
-    
     Cross-platform directory utilities.    
  */
 

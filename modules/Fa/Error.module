@@ -1,7 +1,5 @@
 
 /**
-    @addtogroup FaError
-    
     Error handling types and functions.
  */                                             
  

@@ -8,10 +8,7 @@
 
 /** @addtogroup Fa
 
-    @addtogroup Fa
-
     Basic definitions. 
-
  
     @defgroup Fa Fa
     @{

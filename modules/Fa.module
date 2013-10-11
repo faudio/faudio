@@ -1,9 +1,6 @@
 
 /**
-    @addtogroup Fa
-
     Basic definitions. 
-
  */
 module Fa
 {

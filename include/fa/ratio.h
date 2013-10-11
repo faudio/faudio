@@ -6,8 +6,6 @@
 
 /** @addtogroup FaRatio
  
-    @addtogroup FaRatio
-    
     Rational numbers.
 
     @par Literals

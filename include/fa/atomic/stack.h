@@ -6,8 +6,6 @@
 
 /** @addtogroup FaAtomicStack
  
-    @addtogroup FaAtomicStack
-    
     Mutable atomic (lock-free) stacks.
 
     @see 

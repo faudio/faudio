@@ -1,7 +1,5 @@
 
 /**
-    @addtogroup FaSystemEvent
-
     Provides mouse and keyboard events.
 
     @note

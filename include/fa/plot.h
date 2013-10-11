@@ -8,8 +8,6 @@
 
 /** @addtogroup FaPlot
  
-    @addtogroup FaPlot
-    
     Provides basic plotting.
     
     There are currently two backends:

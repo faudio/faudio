@@ -1,7 +1,5 @@
 
 /** 
-    @addtogroup FaRatio
-    
     Rational numbers.
 
     @par Literals

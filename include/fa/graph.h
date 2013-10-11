@@ -9,8 +9,6 @@
 
 /** @addtogroup FaGraph
  
-    @addtogroup FaGraph
-    
     Immutable directed graph data structure.
     
     @warning

@@ -1,7 +1,5 @@
 
 /**
-    @addtogroup FaSignal
-    
     Provides signals.
 
     @par Implements

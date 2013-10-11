@@ -10,8 +10,6 @@
 
 /** @addtogroup FaMidi
 
-    @addtogroup FaMidi
-
     Provides real-time MIDi.
 
     @par Sessions, devices and streams implement 

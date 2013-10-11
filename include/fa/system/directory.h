@@ -7,8 +7,6 @@
 
 /** @addtogroup FaSystemDirectory
 
-    @addtogroup FaSystemDirectory
-    
     Cross-platform directory utilities.    
  
     @defgroup Fa Fa

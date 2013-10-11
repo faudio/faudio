@@ -9,8 +9,6 @@
 
 /** @addtogroup FaMap
  
-    @addtogroup FaMap
-    
     Immutable ordered map data structure.
 
     @par Literals

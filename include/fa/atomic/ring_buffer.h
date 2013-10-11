@@ -6,8 +6,6 @@
 
 /** @addtogroup FaAtomicRingBuffer
  
-    @addtogroup FaAtomicRingBuffer
-    
     A byte-level, bounded lock-free queue.
     
     This structure is called a buffer for historical reasons, it is more accurately

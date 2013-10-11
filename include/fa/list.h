@@ -6,8 +6,6 @@
 
 /** @addtogroup FaList
 
-    @addtogroup FaList
-
     Immutable list data structure.
 
     @par Literals

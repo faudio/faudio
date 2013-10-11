@@ -6,8 +6,6 @@
 
 /** @addtogroup FaString
  
-    @addtogroup FaString
-    
     Provides high-level strings.
     
     A string is an immutable sequence of Unicode characters with single-ownership semantics.

@@ -8,10 +8,7 @@
 
 /** @addtogroup FaSet
  
-    @addtogroup FaSet
-    
     Immutable ordered set data structure.
-
 
     @par Literals
     - `set(1, 2, 3)`

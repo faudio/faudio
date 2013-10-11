@@ -27,8 +27,6 @@
 
 /** @addtogroup FaStd
  
-    @addtogroup FaStd
-    
     This module just exports the C standard library.
 
  

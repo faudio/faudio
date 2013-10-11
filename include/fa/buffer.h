@@ -9,8 +9,6 @@
 
 /** @addtogroup FaBuffer
  
-    @addtogroup FaBuffer
-    
     Mutable buffers. 
     
     Each buffer is a mutable sequence of bytes with single-ownership semantics. The length
