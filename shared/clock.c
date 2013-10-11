@@ -35,14 +35,14 @@ void fa_clock_terminate()
 
 // --------------------------------------------------------------------------------
 
-fa_time_t   fa_clock_time(fa_clock_t clock)
+fa_time_t fa_clock_time(fa_clock_t clock)
 {
     assert(fa_interface(fa_clock_interface_i, clock) && "Must implement Clock");
     return ((fa_clock_interface_t *) fa_interface(fa_clock_interface_i, clock))->time(clock);
 
 }
 
-fa_time_milliseconds_t  fa_clock_milliseconds(fa_clock_t clock)
+fa_time_milliseconds_t fa_clock_milliseconds(fa_clock_t clock)
 {
     assert(fa_interface(fa_clock_interface_i, clock) && "Must implement Clock");
     return ((fa_clock_interface_t *) fa_interface(fa_clock_interface_i, clock))->milliseconds(clock);

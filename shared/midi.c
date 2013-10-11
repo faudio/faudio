@@ -62,7 +62,7 @@ struct _fa_midi_stream_t {
     native_stream_t     native_input,
                         native_output;      // Native stream(s)
     device_t            device;
- 
+
     fa_clock_t          clock;              // Clock used for scheduler and incoming events
     atomic_queue_t      in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
     priority_queue_t    controls;           // Scheduled controls (Time, (Channel, Ptr))
@@ -359,7 +359,7 @@ void midi_inform_opening(device_t device)
 }
 
 PmTimestamp midi_time_callback(void *data)
-{                     
+{
     stream_t stream = data;
     return fa_clock_milliseconds(stream->clock); // FIXME
 }
@@ -391,11 +391,11 @@ fa_midi_stream_t fa_midi_open_stream(device_t device)
             native_error(string("Could not open midi output"), result);
         }
     }
-    
+
     // TODO create input thread if needed
     // The thread needs to
-        // forward incoming events (mutex?)
-        // poll time and run things from the priority queue (mutex?)
+    // forward incoming events (mutex?)
+    // poll time and run things from the priority queue (mutex?)
 
     return stream;
 }

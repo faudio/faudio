@@ -300,7 +300,7 @@ void fa_audio_with_session(session_callback_t session_callback,
                            ptr_t                           session_data,
                            error_callback_t                error_callback,
                            ptr_t                           error_data
-)
+                          )
 {
     session_t session = fa_audio_begin_session();
 
