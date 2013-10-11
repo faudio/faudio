@@ -84,6 +84,24 @@
 #define fa_for_each(var, list) \
     fa_dfor_each(var, fa_list_copy(list))
 
+/** Execute the following statement once for each item in the
+    given list (destructive).
+
+    Syntax:
+
+        fa_for_each(var, list)
+            statement;
+
+    Example:
+
+        fa_dloop(
+            ptr_t, x, list(1,2,3)
+        )
+        {
+            use_resource(x);
+        }
+
+ */
 #define fa_dfor_each(var, list) \
     fa_with (__j, list, fa_list_destroy(__j)) \
         for (; !fa_list_is_empty(__j); __j = fa_list_dtail(__j)) \
@@ -104,18 +122,13 @@
 #define fa_map_for_each(x,set) \
     fa_for_each(x,fa_map_to_list(set))
 
-#define match switch
-#define against(label) case label: return
-#define default(x) default: return (x)
-#define no_default() default: assert(false && "Missing label")
-
-
-#define push_list(x, xs) \
+#define fa_push_list(x, xs) \
     xs = fa_list_cons(x, xs)
-#define dpush_list(x, xs) \
+
+#define fa_dpush_list(x, xs) \
     xs = fa_list_dcons(x, xs)
 
-#define write_to(s, t) \
+#define fa_append_to(s, t) \
     s = fa_string_append(s, t)
 
 

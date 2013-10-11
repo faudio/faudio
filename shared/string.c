@@ -78,7 +78,7 @@ fa_string_t fa_string_repeat(int times, fa_char16_t chr)
     string_t s = string("");
 
     for (int i = 0; i < times; ++i) {
-        write_to(s, fa_string_single(chr));
+        fa_append_to(s, fa_string_single(chr));
     }
 
     return s;

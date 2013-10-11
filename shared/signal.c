@@ -478,18 +478,18 @@ string_t draw_tree(pair_t value, string_t indent, bool is_last, string_t result)
     ptr_t  label    = fa_pair_first(value);
     list_t children = fa_pair_second(value);
 
-    write_to(result, indent);
+    fa_append_to(result, indent);
 
     if (is_last) {
-        write_to(result, string("`- "));
-        write_to(indent, string("   "));
+        fa_append_to(result, string("`- "));
+        fa_append_to(indent, string("   "));
     } else {
-        write_to(result, string("+- "));
-        write_to(indent, string("|  "));
+        fa_append_to(result, string("+- "));
+        fa_append_to(indent, string("|  "));
     }
 
-    write_to(result, fa_string_to_string(label));
-    write_to(result, string("\n"));
+    fa_append_to(result, fa_string_to_string(label));
+    fa_append_to(result, string("\n"));
 
     fa_for_each_last(x, children, last) {
         result = draw_tree(x, indent, last, result);
