@@ -1,11 +1,11 @@
 <map id="include/fa/atomic/stack.h" name="include/fa/atomic/stack.h">
-<area shape="rect" id="node3" href="$fa_2fa_8h.html" title="include/fa/fa.h" alt="" coords="677,86,800,117"/>
+<area shape="rect" id="node3" href="$fa_2fa_8h.html" title="include/fa/fa.h" alt="" coords="669,86,792,117"/>
 <area shape="rect" id="node5" href="$action_8h.html" title="include/fa/action.h" alt="" coords="5,246,155,277"/>
 <area shape="rect" id="node8" href="$atomic_8h.html" title="include/fa/atomic.h" alt="" coords="130,166,283,197"/>
 <area shape="rect" id="node11" href="$buffer_8h.html" title="include/fa/buffer.h" alt="" coords="307,166,455,197"/>
-<area shape="rect" id="node13" href="$device_8h.html" title="include/fa/device.h" alt="" coords="480,166,632,197"/>
-<area shape="rect" id="node15" href="$dynamic_8h.html" title="include/fa/dynamic.h" alt="" coords="656,166,821,197"/>
-<area shape="rect" id="node17" href="$error_8h.html" title="include/fa/error.h" alt="" coords="845,166,987,197"/>
-<area shape="rect" id="node20" href="$graph_8h.html" title="include/fa/graph.h" alt="" coords="1113,246,1263,277"/>
-<area shape="rect" id="node23" href="$list_8h.html" title="include/fa/list.h" alt="" coords="1011,166,1137,197"/>
+<area shape="rect" id="node13" href="$clock_8h.html" title="include/fa/clock.h" alt="" coords="480,166,624,197"/>
+<area shape="rect" id="node15" href="$dynamic_8h.html" title="include/fa/dynamic.h" alt="" coords="648,166,813,197"/>
+<area shape="rect" id="node17" href="$error_8h.html" title="include/fa/error.h" alt="" coords="837,166,979,197"/>
+<area shape="rect" id="node20" href="$graph_8h.html" title="include/fa/graph.h" alt="" coords="1105,246,1255,277"/>
+<area shape="rect" id="node23" href="$list_8h.html" title="include/fa/list.h" alt="" coords="1003,166,1129,197"/>
 </map>

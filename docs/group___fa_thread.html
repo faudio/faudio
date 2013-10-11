@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>faudio v2.0: Thread</title>
+<title>faudio v2.2.3: Thread</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">faudio v2.0
+   <div id="projectname">faudio v2.2.3
    </div>
   </td>
  </tr>
@@ -58,11 +58,11 @@
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:gaec6debf84c8113cb354a7352b4e17abd"><td class="memItemLeft" align="right" valign="top">typedef struct _fa_thread_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_thread.html#gaec6debf84c8113cb354a7352b4e17abd">fa_thread_t</a></td></tr>
+<tr class="memdesc:gaec6debf84c8113cb354a7352b4e17abd"><td class="mdescLeft">&#160;</td><td class="mdescRight">The abstract type of threads.  <a href="#gaec6debf84c8113cb354a7352b4e17abd"></a><br/></td></tr>
 <tr class="separator:gaec6debf84c8113cb354a7352b4e17abd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga659c355795f6866eec71ecd8eeadbd59"><td class="memItemLeft" align="right" valign="top">typedef struct _fa_thread_mutex_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_thread.html#ga659c355795f6866eec71ecd8eeadbd59">fa_thread_mutex_t</a></td></tr>
+<tr class="memdesc:ga659c355795f6866eec71ecd8eeadbd59"><td class="mdescLeft">&#160;</td><td class="mdescRight">The abstract type of mutexes.  <a href="#ga659c355795f6866eec71ecd8eeadbd59"></a><br/></td></tr>
 <tr class="separator:ga659c355795f6866eec71ecd8eeadbd59"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae8301fa8843d14e895188258cf6b9580"><td class="memItemLeft" align="right" valign="top">typedef int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_thread.html#gae8301fa8843d14e895188258cf6b9580">fa_thread_milliseconds_t</a></td></tr>
-<tr class="separator:gae8301fa8843d14e895188258cf6b9580"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -84,9 +84,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga1fb7335a50aa9eea5c096c33fd6baec0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_thread.html#gaec6debf84c8113cb354a7352b4e17abd">fa_thread_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_thread.html#ga1fb7335a50aa9eea5c096c33fd6baec0">fa_thread_current</a> ()</td></tr>
 <tr class="memdesc:ga1fb7335a50aa9eea5c096c33fd6baec0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current thread.  <a href="#ga1fb7335a50aa9eea5c096c33fd6baec0"></a><br/></td></tr>
 <tr class="separator:ga1fb7335a50aa9eea5c096c33fd6baec0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga51adcec1fecd8365fa7fae16e6ae9fc3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_thread.html#ga51adcec1fecd8365fa7fae16e6ae9fc3">fa_thread_sleep</a> (<a class="el" href="group___fa_thread.html#gae8301fa8843d14e895188258cf6b9580">fa_thread_milliseconds_t</a>)</td></tr>
-<tr class="memdesc:ga51adcec1fecd8365fa7fae16e6ae9fc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sleep the current thread for the given time.  <a href="#ga51adcec1fecd8365fa7fae16e6ae9fc3"></a><br/></td></tr>
-<tr class="separator:ga51adcec1fecd8365fa7fae16e6ae9fc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga13ecb7218778400e516be77d12624272"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_thread.html#ga13ecb7218778400e516be77d12624272">fa_thread_sleep</a> (<a class="el" href="group___fa_time.html#gadebdebeab6c5ba7cd8002d0773635e61">fa_time_milliseconds_t</a>)</td></tr>
+<tr class="memdesc:ga13ecb7218778400e516be77d12624272"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sleep the current thread for the given time.  <a href="#ga13ecb7218778400e516be77d12624272"></a><br/></td></tr>
+<tr class="separator:ga13ecb7218778400e516be77d12624272"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga06266c98c357794d97111b15b6a8257c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_thread.html#ga659c355795f6866eec71ecd8eeadbd59">fa_thread_mutex_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_thread.html#ga06266c98c357794d97111b15b6a8257c">fa_thread_create_mutex</a> ()</td></tr>
 <tr class="memdesc:ga06266c98c357794d97111b15b6a8257c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a mutex.  <a href="#ga06266c98c357794d97111b15b6a8257c"></a><br/></td></tr>
 <tr class="separator:ga06266c98c357794d97111b15b6a8257c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -105,7 +105,7 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Provides threads. </p>
-<p>We provide threads and mutexes. For non-blocking constructs, see the FaAtomic modules.</p>
+<p>We provide threads and mutexes. For non-blocking constructs, see the <a class="el" href="group___fa_atomic.html">Atomic</a> modules.</p>
 <dl class="section user"><dt>Literals</dt><dd><ul>
 <li><code>thread(function, data)</code></li>
 </ul>
@@ -129,6 +129,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>The abstract type of threads. </p>
+
 </div>
 </div>
 <a class="anchor" id="ga659c355795f6866eec71ecd8eeadbd59"></a>
@@ -141,17 +143,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a class="anchor" id="gae8301fa8843d14e895188258cf6b9580"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef int <a class="el" href="group___fa_thread.html#gae8301fa8843d14e895188258cf6b9580">fa_thread_milliseconds_t</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<p>The abstract type of mutexes. </p>
 
 </div>
 </div>
@@ -295,14 +287,14 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ga51adcec1fecd8365fa7fae16e6ae9fc3"></a>
+<a class="anchor" id="ga13ecb7218778400e516be77d12624272"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void fa_thread_sleep </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="group___fa_thread.html#gae8301fa8843d14e895188258cf6b9580">fa_thread_milliseconds_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="group___fa_time.html#gadebdebeab6c5ba7cd8002d0773635e61">fa_time_milliseconds_t</a>&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -407,7 +399,7 @@ Functions</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Oct 7 2013 00:03:59 for faudio v2.0 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Fri Oct 11 2013 02:31:09 for faudio v2.2.3 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

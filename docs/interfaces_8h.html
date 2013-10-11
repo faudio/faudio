@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>faudio v2.2.3: include/fa/interfaces.h File Reference</title>
+<title>faudio v2.3.0: include/fa/interfaces.h File Reference</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">faudio v2.2.3
+   <div id="projectname">faudio v2.3.0
    </div>
   </td>
  </tr>
@@ -57,7 +57,8 @@
 <div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="interfaces_8h__dep__incl.svg" width="184" height="123"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="interfaces_8h__dep__incl.svg" width="184" height="123"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 </div>
 <p><a href="interfaces_8h_source.html">Go to the source code of this file.</a></p>
@@ -71,14 +72,11 @@ Enumerations</h2></td></tr>
 <a class="el" href="interfaces_8h.html#a7c337b4de759549a84c656770ce01cd2aa3e8efbadb2c2678959576a6e2346dfc">fa_error_i</a>, 
 <br/>
 &#160;&#160;<a class="el" href="interfaces_8h.html#a7c337b4de759549a84c656770ce01cd2a9b8bb278c9a713e6ec54d275002e0a01">fa_equal_i</a>, 
-<a class="el" href="interfaces_8h.html#a7c337b4de759549a84c656770ce01cd2a44ec5f4e77c7e0298cbb3dcaa74aacff">fa_time_clock_interface_i</a>, 
-<a class="el" href="interfaces_8h.html#a7c337b4de759549a84c656770ce01cd2ac5a899cead006e47dd50e79103fc599f">fa_message_sender_interface_i</a>, 
-<a class="el" href="interfaces_8h.html#a7c337b4de759549a84c656770ce01cd2a5efc742c51d31f62f7cc1bcc64471aa4">fa_message_receiver_interface_i</a>, 
-<br/>
-&#160;&#160;<a class="el" href="interfaces_8h.html#a7c337b4de759549a84c656770ce01cd2a29a648811f9c4772b419decc4b00048b">fa_number_i</a>, 
 <a class="el" href="interfaces_8h.html#a7c337b4de759549a84c656770ce01cd2ae08a92558a44d2796dc2a5df8ff1b3c3">fa_order_i</a>, 
-<a class="el" href="interfaces_8h.html#a7c337b4de759549a84c656770ce01cd2a36e2c9652c9da4f9165dff1682bf9204">fa_processor_interface_i</a>, 
-<a class="el" href="interfaces_8h.html#a7c337b4de759549a84c656770ce01cd2a288b4ff774c44b5d4915d2337fea1307">fa_string_show_i</a>
+<a class="el" href="interfaces_8h.html#a7c337b4de759549a84c656770ce01cd2a29a648811f9c4772b419decc4b00048b">fa_number_i</a>, 
+<a class="el" href="interfaces_8h.html#a7c337b4de759549a84c656770ce01cd2ae3047dcd8bdee218a2c19fc3e7543729">fa_clock_interface_i</a>, 
+<br/>
+&#160;&#160;<a class="el" href="interfaces_8h.html#a7c337b4de759549a84c656770ce01cd2a288b4ff774c44b5d4915d2337fea1307">fa_string_show_i</a>
 <br/>
  }</td></tr>
 <tr class="separator:a7c337b4de759549a84c656770ce01cd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -104,17 +102,11 @@ Enumerations</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><em><a class="anchor" id="a7c337b4de759549a84c656770ce01cd2a9b8bb278c9a713e6ec54d275002e0a01"></a>fa_equal_i</em>&nbsp;</td><td class="fielddoc">
 </td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="a7c337b4de759549a84c656770ce01cd2a44ec5f4e77c7e0298cbb3dcaa74aacff"></a>fa_time_clock_interface_i</em>&nbsp;</td><td class="fielddoc">
-</td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="a7c337b4de759549a84c656770ce01cd2ac5a899cead006e47dd50e79103fc599f"></a>fa_message_sender_interface_i</em>&nbsp;</td><td class="fielddoc">
-</td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="a7c337b4de759549a84c656770ce01cd2a5efc742c51d31f62f7cc1bcc64471aa4"></a>fa_message_receiver_interface_i</em>&nbsp;</td><td class="fielddoc">
+<tr><td class="fieldname"><em><a class="anchor" id="a7c337b4de759549a84c656770ce01cd2ae08a92558a44d2796dc2a5df8ff1b3c3"></a>fa_order_i</em>&nbsp;</td><td class="fielddoc">
 </td></tr>
 <tr><td class="fieldname"><em><a class="anchor" id="a7c337b4de759549a84c656770ce01cd2a29a648811f9c4772b419decc4b00048b"></a>fa_number_i</em>&nbsp;</td><td class="fielddoc">
 </td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="a7c337b4de759549a84c656770ce01cd2ae08a92558a44d2796dc2a5df8ff1b3c3"></a>fa_order_i</em>&nbsp;</td><td class="fielddoc">
-</td></tr>
-<tr><td class="fieldname"><em><a class="anchor" id="a7c337b4de759549a84c656770ce01cd2a36e2c9652c9da4f9165dff1682bf9204"></a>fa_processor_interface_i</em>&nbsp;</td><td class="fielddoc">
+<tr><td class="fieldname"><em><a class="anchor" id="a7c337b4de759549a84c656770ce01cd2ae3047dcd8bdee218a2c19fc3e7543729"></a>fa_clock_interface_i</em>&nbsp;</td><td class="fielddoc">
 </td></tr>
 <tr><td class="fieldname"><em><a class="anchor" id="a7c337b4de759549a84c656770ce01cd2a288b4ff774c44b5d4915d2337fea1307"></a>fa_string_show_i</em>&nbsp;</td><td class="fielddoc">
 </td></tr>
@@ -126,7 +118,7 @@ Enumerations</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Oct 7 2013 16:06:57 for faudio v2.2.3 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Fri Oct 11 2013 03:51:49 for faudio v2.3.0 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

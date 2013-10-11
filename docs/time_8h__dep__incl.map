@@ -1,11 +1,11 @@
 <map id="include/fa/time.h" name="include/fa/time.h">
-<area shape="rect" id="node3" href="$fa_2fa_8h.html" title="include/fa/fa.h" alt="" coords="426,86,549,117"/>
-<area shape="rect" id="node8" href="$midi_8h.html" title="include/fa/midi.h" alt="" coords="357,406,493,437"/>
-<area shape="rect" id="node13" href="$signal_8h.html" title="include/fa/signal.h" alt="" coords="662,246,809,277"/>
-<area shape="rect" id="node30" href="$util_8h.html" title="include/fa/util.h" alt="" coords="886,86,1015,117"/>
-<area shape="rect" id="node5" href="$action_8h.html" title="include/fa/action.h" alt="" coords="462,326,612,357"/>
-<area shape="rect" id="node11" href="$buffer_8h.html" title="include/fa/buffer.h" alt="" coords="538,166,685,197"/>
-<area shape="rect" id="node17" href="$device_8h.html" title="include/fa/device.h" alt="" coords="5,246,157,277"/>
-<area shape="rect" id="node20" href="$dynamic_8h.html" title="include/fa/dynamic.h" alt="" coords="223,166,388,197"/>
-<area shape="rect" id="node22" href="$error_8h.html" title="include/fa/error.h" alt="" coords="57,166,199,197"/>
+<area shape="rect" id="node3" href="$clock_8h.html" title="include/fa/clock.h" alt="" coords="339,86,483,117"/>
+<area shape="rect" id="node7" href="$fa_2fa_8h.html" title="include/fa/fa.h" alt="" coords="470,246,593,277"/>
+<area shape="rect" id="node13" href="$midi_8h.html" title="include/fa/midi.h" alt="" coords="601,566,737,597"/>
+<area shape="rect" id="node18" href="$signal_8h.html" title="include/fa/signal.h" alt="" coords="276,406,424,437"/>
+<area shape="rect" id="node31" href="$util_8h.html" title="include/fa/util.h" alt="" coords="757,86,885,117"/>
+<area shape="rect" id="node5" href="$audio_8h.html" title="include/fa/audio.h" alt="" coords="134,166,281,197"/>
+<area shape="rect" id="node9" href="$action_8h.html" title="include/fa/action.h" alt="" coords="482,486,632,517"/>
+<area shape="rect" id="node16" href="$buffer_8h.html" title="include/fa/buffer.h" alt="" coords="144,326,292,357"/>
+<area shape="rect" id="node24" href="$dynamic_8h.html" title="include/fa/dynamic.h" alt="" coords="317,326,483,357"/>
 </map>

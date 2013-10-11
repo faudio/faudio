@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>faudio v2.2.3: include/fa/midi.h File Reference</title>
+<title>faudio v2.3.0: include/fa/midi.h File Reference</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">faudio v2.2.3
+   <div id="projectname">faudio v2.3.0
    </div>
   </td>
  </tr>
@@ -57,19 +57,20 @@
 <div class="contents">
 <div class="textblock"><code>#include &lt;<a class="el" href="list_8h_source.html">fa/list.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="pair_8h_source.html">fa/pair.h</a>&gt;</code><br/>
-<code>#include &lt;<a class="el" href="device_8h_source.html">fa/device.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="action_8h_source.html">fa/action.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="time_8h_source.html">fa/time.h</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="error_8h_source.html">fa/error.h</a>&gt;</code><br/>
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for midi.h:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="midi_8h__incl.svg" width="568" height="523"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="midi_8h__incl.svg" width="619" height="523"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="midi_8h__dep__incl.svg" width="1006" height="363"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="midi_8h__dep__incl.svg" width="994" height="363"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 </div>
 <p><a href="midi_8h_source.html">Go to the source code of this file.</a></p>
@@ -94,6 +95,9 @@ Typedefs</h2></td></tr>
 <tr class="memitem:gacc769aa23b097e8b8dc3d4807b9a066d"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fa.html#ga43b940a9294fd58a54087ef0b416e479">fa_nullary_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#gacc769aa23b097e8b8dc3d4807b9a066d">fa_midi_status_callback_t</a></td></tr>
 <tr class="memdesc:gacc769aa23b097e8b8dc3d4807b9a066d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback to be invoked upon changes to the MIDI setup.  <a href="group___fa_midi.html#gacc769aa23b097e8b8dc3d4807b9a066d"></a><br/></td></tr>
 <tr class="separator:gacc769aa23b097e8b8dc3d4807b9a066d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga446c3043288f44554ba1c69ab03f4a1d"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fa.html#gaaafae8ab9ebae9019133108e56d2d4d1">fa_unary_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga446c3043288f44554ba1c69ab03f4a1d">fa_midi_message_callback_t</a></td></tr>
+<tr class="memdesc:ga446c3043288f44554ba1c69ab03f4a1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback to be invoked whenever a message is received.  <a href="group___fa_midi.html#ga446c3043288f44554ba1c69ab03f4a1d"></a><br/></td></tr>
+<tr class="separator:ga446c3043288f44554ba1c69ab03f4a1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -124,9 +128,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga119d4817da1838a206eb15a93ae6b573"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga119d4817da1838a206eb15a93ae6b573">fa_midi_default_output</a> (<a class="el" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>)</td></tr>
 <tr class="memdesc:ga119d4817da1838a206eb15a93ae6b573"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the standard output device of the given session.  <a href="group___fa_midi.html#ga119d4817da1838a206eb15a93ae6b573"></a><br/></td></tr>
 <tr class="separator:ga119d4817da1838a206eb15a93ae6b573"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6b13902995f9e0b4cf3404eaa60aa3f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga6b13902995f9e0b4cf3404eaa60aa3f9">fa_midi_set_status_callback</a> (<a class="el" href="group___fa_midi.html#gacc769aa23b097e8b8dc3d4807b9a066d">fa_midi_status_callback_t</a>, <a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>, <a class="el" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>)</td></tr>
-<tr class="memdesc:ga6b13902995f9e0b4cf3404eaa60aa3f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a callback to be invoked when a status change is detected on the given session (mainly useful for hardware setup changes).  <a href="group___fa_midi.html#ga6b13902995f9e0b4cf3404eaa60aa3f9"></a><br/></td></tr>
-<tr class="separator:ga6b13902995f9e0b4cf3404eaa60aa3f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3b8c3191a123cdde29422564b0c27242"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga3b8c3191a123cdde29422564b0c27242">fa_midi_add_status_callback</a> (<a class="el" href="group___fa_midi.html#gacc769aa23b097e8b8dc3d4807b9a066d">fa_midi_status_callback_t</a>, <a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>, <a class="el" href="group___fa_midi.html#ga222964548b932c6f53b575b23629530e">fa_midi_session_t</a>)</td></tr>
+<tr class="memdesc:ga3b8c3191a123cdde29422564b0c27242"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback to be invoked when a hardware change is detected.  <a href="group___fa_midi.html#ga3b8c3191a123cdde29422564b0c27242"></a><br/></td></tr>
+<tr class="separator:ga3b8c3191a123cdde29422564b0c27242"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab36c5d046acdbdbaf36823dde9342c4f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_string.html#gacada63033b77bc6c39fa632ae199349b">fa_string_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#gab36c5d046acdbdbaf36823dde9342c4f">fa_midi_name</a> (<a class="el" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a>)</td></tr>
 <tr class="memdesc:gab36c5d046acdbdbaf36823dde9342c4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the name of the given device.  <a href="group___fa_midi.html#gab36c5d046acdbdbaf36823dde9342c4f"></a><br/></td></tr>
 <tr class="separator:gab36c5d046acdbdbaf36823dde9342c4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -148,6 +152,9 @@ Functions</h2></td></tr>
 <tr class="memitem:gaef0d95b11e19edb6b559498759c67de3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#gaef0d95b11e19edb6b559498759c67de3">fa_midi_with_stream</a> (<a class="el" href="group___fa_midi.html#gabbbfd1ec30a186768ba2744e46bacc9b">fa_midi_device_t</a>, <a class="el" href="group___fa_midi.html#ga8022098ffcf993ccdaed068b97ab7bfc">fa_midi_stream_callback_t</a>, <a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>, <a class="el" href="group___fa_error.html#ga43d8d45a005130a5052ba3281a8bf33e">fa_error_callback_t</a>, <a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>)</td></tr>
 <tr class="memdesc:gaef0d95b11e19edb6b559498759c67de3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run a stream on the given devices.  <a href="group___fa_midi.html#gaef0d95b11e19edb6b559498759c67de3"></a><br/></td></tr>
 <tr class="separator:gaef0d95b11e19edb6b559498759c67de3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga490033730090d113b8a9341f5967a588"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#ga490033730090d113b8a9341f5967a588">fa_midi_add_message_callback</a> (<a class="el" href="group___fa_midi.html#ga446c3043288f44554ba1c69ab03f4a1d">fa_midi_message_callback_t</a>, <a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>, <a class="el" href="group___fa_midi.html#ga85772039b62d8bb718a51e1ffbbb2fa2">fa_midi_stream_t</a>)</td></tr>
+<tr class="memdesc:ga490033730090d113b8a9341f5967a588"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback to be invoked when a message is received.  <a href="group___fa_midi.html#ga490033730090d113b8a9341f5967a588"></a><br/></td></tr>
+<tr class="separator:ga490033730090d113b8a9341f5967a588"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab4d2b9248bde928af90b2fbffa259946"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_midi.html#gab4d2b9248bde928af90b2fbffa259946">fa_midi_schedule</a> (<a class="el" href="group___fa_time.html#ga227cc693f20b4873fed11028bcade184">fa_time_t</a>, <a class="el" href="group___fa_action.html#gadb08ae063168671e5fedc6c23f20ae4b">fa_action_t</a>, <a class="el" href="group___fa_midi.html#ga85772039b62d8bb718a51e1ffbbb2fa2">fa_midi_stream_t</a>)</td></tr>
 <tr class="memdesc:gab4d2b9248bde928af90b2fbffa259946"><td class="mdescLeft">&#160;</td><td class="mdescRight">Schedule an action on the stream.  <a href="group___fa_midi.html#gab4d2b9248bde928af90b2fbffa259946"></a><br/></td></tr>
 <tr class="separator:gab4d2b9248bde928af90b2fbffa259946"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -156,7 +163,7 @@ Functions</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Oct 7 2013 16:06:57 for faudio v2.2.3 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Fri Oct 11 2013 03:51:49 for faudio v2.3.0 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

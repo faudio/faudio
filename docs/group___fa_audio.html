@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>faudio v2.2.3: Audio</title>
+<title>faudio v2.3.0: Audio</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">faudio v2.2.3
+   <div id="projectname">faudio v2.3.0
    </div>
   </td>
  </tr>
@@ -76,6 +76,9 @@ _fa_audio_session_t *&#160;</td><td class="memItemRight" valign="bottom"><a clas
 <tr class="memitem:gaac3fa018078a475e6c5ed48efcbdb887"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fa.html#ga43b940a9294fd58a54087ef0b416e479">fa_nullary_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_audio.html#gaac3fa018078a475e6c5ed48efcbdb887">fa_audio_status_callback_t</a></td></tr>
 <tr class="memdesc:gaac3fa018078a475e6c5ed48efcbdb887"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback to be invoked upon changes to the audio setup.  <a href="#gaac3fa018078a475e6c5ed48efcbdb887"></a><br/></td></tr>
 <tr class="separator:gaac3fa018078a475e6c5ed48efcbdb887"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaee8c48d438acabf22f2dfa3b85a4196c"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fa.html#gaaafae8ab9ebae9019133108e56d2d4d1">fa_unary_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_audio.html#gaee8c48d438acabf22f2dfa3b85a4196c">fa_audio_message_callback_t</a></td></tr>
+<tr class="memdesc:gaee8c48d438acabf22f2dfa3b85a4196c"><td class="mdescLeft">&#160;</td><td class="mdescRight">A callback to be invoked whenever a message is received.  <a href="#gaee8c48d438acabf22f2dfa3b85a4196c"></a><br/></td></tr>
+<tr class="separator:gaee8c48d438acabf22f2dfa3b85a4196c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae190189bb20427f20453f2e4d48ecc7b"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="group___fa_list.html#ga35ecb12ab934ded0cce0bcf28e3bc5d2">fa_list_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_audio.html#gae190189bb20427f20453f2e4d48ecc7b">fa_audio_proc_t</a> )(<a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>, <a class="el" href="group___fa_list.html#ga35ecb12ab934ded0cce0bcf28e3bc5d2">fa_list_t</a>)</td></tr>
 <tr class="memdesc:gae190189bb20427f20453f2e4d48ecc7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">An audio processor, or a function from a list of signals to a list of signals.  <a href="#gae190189bb20427f20453f2e4d48ecc7b"></a><br/></td></tr>
 <tr class="separator:gae190189bb20427f20453f2e4d48ecc7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -109,9 +112,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga69dbc7e4715ae5441d6fe7b888213927"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_audio.html#ga03de89ee66c6465f8cedd3a0286598f4">fa_audio_device_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_audio.html#ga69dbc7e4715ae5441d6fe7b888213927">fa_audio_default_output</a> (<a class="el" href="group___fa_audio.html#ga62ee22268c23f1b18447141feccc01e0">fa_audio_session_t</a>)</td></tr>
 <tr class="memdesc:ga69dbc7e4715ae5441d6fe7b888213927"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the standard output device of the given session.  <a href="#ga69dbc7e4715ae5441d6fe7b888213927"></a><br/></td></tr>
 <tr class="separator:ga69dbc7e4715ae5441d6fe7b888213927"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9073b93a4d372953ca2b5ee43016284c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_audio.html#ga9073b93a4d372953ca2b5ee43016284c">fa_audio_set_status_callback</a> (<a class="el" href="group___fa_audio.html#gaac3fa018078a475e6c5ed48efcbdb887">fa_audio_status_callback_t</a>, <a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>, <a class="el" href="group___fa_audio.html#ga62ee22268c23f1b18447141feccc01e0">fa_audio_session_t</a>)</td></tr>
-<tr class="memdesc:ga9073b93a4d372953ca2b5ee43016284c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a callback to be invoked when a status change is detected on the given session (mainly useful for hardware setup changes).  <a href="#ga9073b93a4d372953ca2b5ee43016284c"></a><br/></td></tr>
-<tr class="separator:ga9073b93a4d372953ca2b5ee43016284c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga55a46955e0a5c6e6e180c458d6e31e4c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_audio.html#ga55a46955e0a5c6e6e180c458d6e31e4c">fa_audio_add_status_callback</a> (<a class="el" href="group___fa_audio.html#gaac3fa018078a475e6c5ed48efcbdb887">fa_audio_status_callback_t</a>, <a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>, <a class="el" href="group___fa_audio.html#ga62ee22268c23f1b18447141feccc01e0">fa_audio_session_t</a>)</td></tr>
+<tr class="memdesc:ga55a46955e0a5c6e6e180c458d6e31e4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback to be invoked when a hardware change is detected.  <a href="#ga55a46955e0a5c6e6e180c458d6e31e4c"></a><br/></td></tr>
+<tr class="separator:ga55a46955e0a5c6e6e180c458d6e31e4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga257ea2a1df4d9ead031603ce8a2d5628"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_audio.html#ga62ee22268c23f1b18447141feccc01e0">fa_audio_session_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_audio.html#ga257ea2a1df4d9ead031603ce8a2d5628">fa_audio_session</a> (<a class="el" href="group___fa_audio.html#ga03de89ee66c6465f8cedd3a0286598f4">fa_audio_device_t</a>)</td></tr>
 <tr class="memdesc:ga257ea2a1df4d9ead031603ce8a2d5628"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the session associated with the given device.  <a href="#ga257ea2a1df4d9ead031603ce8a2d5628"></a><br/></td></tr>
 <tr class="separator:ga257ea2a1df4d9ead031603ce8a2d5628"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -145,6 +148,12 @@ Functions</h2></td></tr>
 <tr class="memitem:ga14e19f4be79e48064d76b7ed1bd7e19b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_list.html#ga35ecb12ab934ded0cce0bcf28e3bc5d2">fa_list_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_audio.html#ga14e19f4be79e48064d76b7ed1bd7e19b">fa_audio_devices</a> (<a class="el" href="group___fa_audio.html#ga78fbee3026130ce00d8e00a4e73a84c3">fa_audio_stream_t</a>)</td></tr>
 <tr class="memdesc:ga14e19f4be79e48064d76b7ed1bd7e19b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the devices associated with the given stream.  <a href="#ga14e19f4be79e48064d76b7ed1bd7e19b"></a><br/></td></tr>
 <tr class="separator:ga14e19f4be79e48064d76b7ed1bd7e19b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga237574d9289f4544258a1cb455f16ade"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_clock.html#ga20b3a0f49788fbedba140b1d315d2313">fa_clock_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_audio.html#ga237574d9289f4544258a1cb455f16ade">fa_audio_stream_clock</a> (<a class="el" href="group___fa_audio.html#ga78fbee3026130ce00d8e00a4e73a84c3">fa_audio_stream_t</a>)</td></tr>
+<tr class="memdesc:ga237574d9289f4544258a1cb455f16ade"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the clock associated with a given stream.  <a href="#ga237574d9289f4544258a1cb455f16ade"></a><br/></td></tr>
+<tr class="separator:ga237574d9289f4544258a1cb455f16ade"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaeac72d4383e27c4e3cfe0bf7e27d3292"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_audio.html#gaeac72d4383e27c4e3cfe0bf7e27d3292">fa_audio_add_message_callback</a> (<a class="el" href="group___fa_audio.html#gaee8c48d438acabf22f2dfa3b85a4196c">fa_audio_message_callback_t</a>, <a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>, <a class="el" href="group___fa_audio.html#ga78fbee3026130ce00d8e00a4e73a84c3">fa_audio_stream_t</a>)</td></tr>
+<tr class="memdesc:gaeac72d4383e27c4e3cfe0bf7e27d3292"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a callback to be invoked when a message is received.  <a href="#gaeac72d4383e27c4e3cfe0bf7e27d3292"></a><br/></td></tr>
+<tr class="separator:gaeac72d4383e27c4e3cfe0bf7e27d3292"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3eb12d10ad95c4b8ad29fca2992d6cd4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_audio.html#ga3eb12d10ad95c4b8ad29fca2992d6cd4">fa_audio_schedule</a> (<a class="el" href="group___fa_time.html#ga227cc693f20b4873fed11028bcade184">fa_time_t</a>, <a class="el" href="group___fa_action.html#gadb08ae063168671e5fedc6c23f20ae4b">fa_action_t</a>, <a class="el" href="group___fa_audio.html#ga78fbee3026130ce00d8e00a4e73a84c3">fa_audio_stream_t</a>)</td></tr>
 <tr class="memdesc:ga3eb12d10ad95c4b8ad29fca2992d6cd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Schedule an action on the stream.  <a href="#ga3eb12d10ad95c4b8ad29fca2992d6cd4"></a><br/></td></tr>
 <tr class="separator:ga3eb12d10ad95c4b8ad29fca2992d6cd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -244,6 +253,20 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>A callback to be invoked upon changes to the audio setup. </p>
+
+</div>
+</div>
+<a class="anchor" id="gaee8c48d438acabf22f2dfa3b85a4196c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="group___fa.html#gaaafae8ab9ebae9019133108e56d2d4d1">fa_unary_t</a> <a class="el" href="group___fa_audio.html#gaee8c48d438acabf22f2dfa3b85a4196c">fa_audio_message_callback_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A callback to be invoked whenever a message is received. </p>
 
 </div>
 </div>
@@ -489,12 +512,12 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ga9073b93a4d372953ca2b5ee43016284c"></a>
+<a class="anchor" id="ga55a46955e0a5c6e6e180c458d6e31e4c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void fa_audio_set_status_callback </td>
+          <td class="memname">void fa_audio_add_status_callback </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="group___fa_audio.html#gaac3fa018078a475e6c5ed48efcbdb887">fa_audio_status_callback_t</a>&#160;</td>
           <td class="paramname">, </td>
@@ -519,11 +542,14 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Set a callback to be invoked when a status change is detected on the given session (mainly useful for hardware setup changes). </p>
-<p>Note that this function will not modify the devices in a session, you have to restart the session to get a fresh snapshot.</p>
+<p>Register a callback to be invoked when a hardware change is detected. </p>
+<p>Note that this function will not modify the devices available from a session, you have to start a new session to get a fresh snapshot.</p>
+<p>Multiple callbacks can be registered this way. All registered callbacks are associated with a session and will be removed when the session ends.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">device</td><td>The device. </td></tr>
+    <tr><td class="paramname">callback</td><td>Callback to register. </td></tr>
+    <tr><td class="paramname">callback_data</td><td>Data closed over by the callback function. </td></tr>
+    <tr><td class="paramname">session</td><td>Session on which to register the callback. </td></tr>
   </table>
   </dd>
 </dl>
@@ -863,11 +889,80 @@ Functions</h2></td></tr>
 <p>Return the devices associated with the given stream. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">device</td><td>The device. </td></tr>
+    <tr><td class="paramname">stream</td><td>The stream. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A list of <a class="el" href="group___fa_audio.html#ga03de89ee66c6465f8cedd3a0286598f4">fa_audio_device_t</a> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga237574d9289f4544258a1cb455f16ade"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___fa_clock.html#ga20b3a0f49788fbedba140b1d315d2313">fa_clock_t</a> fa_audio_stream_clock </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___fa_audio.html#ga78fbee3026130ce00d8e00a4e73a84c3">fa_audio_stream_t</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the clock associated with a given stream. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">stream</td><td>The stream. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A clock. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gaeac72d4383e27c4e3cfe0bf7e27d3292"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void fa_audio_add_message_callback </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___fa_audio.html#gaee8c48d438acabf22f2dfa3b85a4196c">fa_audio_message_callback_t</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group___fa_audio.html#ga78fbee3026130ce00d8e00a4e73a84c3">fa_audio_stream_t</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Register a callback to be invoked when a message is received. </p>
+<p>Multiple callbacks can be registered this way. All registered callbacks are associated with a stream and will be removed when the stream is stopped or its associated session ends.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">callback</td><td>Callback to register. </td></tr>
+    <tr><td class="paramname">callback_data</td><td>Data closed over by the callback function. </td></tr>
+    <tr><td class="paramname">session</td><td>Stream on which to register the callback. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section warning"><dt>Warning</dt><dd>Experimental. </dd></dl>
 
 </div>
 </div>
@@ -910,7 +1005,7 @@ Functions</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Oct 7 2013 16:06:57 for faudio v2.2.3 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Fri Oct 11 2013 03:51:49 for faudio v2.3.0 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

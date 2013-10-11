@@ -1,11 +1,11 @@
 <map id="include/fa/midi.h" name="include/fa/midi.h">
-<area shape="rect" id="node3" href="$list_8h.html" title="fa/list.h" alt="" coords="356,86,428,117"/>
+<area shape="rect" id="node3" href="$list_8h.html" title="fa/list.h" alt="" coords="343,86,415,117"/>
 <area shape="rect" id="node7" href="$error_8h.html" title="fa/error.h" alt="" coords="43,246,129,277"/>
-<area shape="rect" id="node10" href="$pair_8h.html" title="fa/pair.h" alt="" coords="354,406,435,437"/>
-<area shape="rect" id="node16" href="$time_8h.html" title="fa/time.h" alt="" coords="131,406,212,437"/>
-<area shape="rect" id="node21" href="$action_8h.html" title="fa/action.h" alt="" coords="379,246,473,277"/>
-<area shape="rect" id="node33" href="$device_8h.html" title="fa/device.h" alt="" coords="234,86,331,117"/>
-<area shape="rect" id="node5" href="$fa_2fa_8h.html" title="fa.h" alt="" coords="236,166,283,197"/>
-<area shape="rect" id="node26" href="$signal_8h.html" title="fa/signal.h" alt="" coords="221,326,315,357"/>
-<area shape="rect" id="node19" href="$ratio_8h.html" title="fa/ratio.h" alt="" coords="129,486,215,517"/>
+<area shape="rect" id="node13" href="$pair_8h.html" title="fa/pair.h" alt="" coords="402,406,483,437"/>
+<area shape="rect" id="node19" href="$time_8h.html" title="fa/time.h" alt="" coords="206,406,287,437"/>
+<area shape="rect" id="node25" href="$action_8h.html" title="fa/action.h" alt="" coords="430,246,524,277"/>
+<area shape="rect" id="node5" href="$fa_2fa_8h.html" title="fa.h" alt="" coords="282,166,328,197"/>
+<area shape="rect" id="node30" href="$signal_8h.html" title="fa/signal.h" alt="" coords="354,326,448,357"/>
+<area shape="rect" id="node10" href="$string_8h.html" title="fa/string.h" alt="" coords="105,486,196,517"/>
+<area shape="rect" id="node22" href="$ratio_8h.html" title="fa/ratio.h" alt="" coords="220,486,305,517"/>
 </map>

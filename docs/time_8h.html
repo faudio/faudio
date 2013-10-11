@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>faudio v2.2.3: include/fa/time.h File Reference</title>
+<title>faudio v2.3.0: include/fa/time.h File Reference</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">faudio v2.2.3
+   <div id="projectname">faudio v2.3.0
    </div>
   </td>
  </tr>
@@ -61,12 +61,14 @@
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for time.h:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="time_8h__incl.svg" width="1094" height="283"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="time_8h__incl.svg" width="1094" height="283"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="time_8h__dep__incl.svg" width="1020" height="443"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="time_8h__dep__incl.svg" width="891" height="603"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 </div>
 <p><a href="time_8h_source.html">Go to the source code of this file.</a></p>
@@ -76,18 +78,30 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ga227cc693f20b4873fed11028bcade184"><td class="memItemLeft" align="right" valign="top">typedef struct _fa_time_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_time.html#ga227cc693f20b4873fed11028bcade184">fa_time_t</a></td></tr>
 <tr class="memdesc:ga227cc693f20b4873fed11028bcade184"><td class="mdescLeft">&#160;</td><td class="mdescRight">The abstract type of times.  <a href="group___fa_time.html#ga227cc693f20b4873fed11028bcade184"></a><br/></td></tr>
 <tr class="separator:ga227cc693f20b4873fed11028bcade184"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga126d90b34014d28bf3f4930b5e370598"><td class="memItemLeft" align="right" valign="top">typedef int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_time.html#ga126d90b34014d28bf3f4930b5e370598">fa_time_days_t</a></td></tr>
+<tr class="memdesc:ga126d90b34014d28bf3f4930b5e370598"><td class="mdescLeft">&#160;</td><td class="mdescRight">A number of days.  <a href="group___fa_time.html#ga126d90b34014d28bf3f4930b5e370598"></a><br/></td></tr>
+<tr class="separator:ga126d90b34014d28bf3f4930b5e370598"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabb41271106b33206f546a0cb3b56a33e"><td class="memItemLeft" align="right" valign="top">typedef int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_time.html#gabb41271106b33206f546a0cb3b56a33e">fa_time_hours_t</a></td></tr>
+<tr class="memdesc:gabb41271106b33206f546a0cb3b56a33e"><td class="mdescLeft">&#160;</td><td class="mdescRight">A number of hours.  <a href="group___fa_time.html#gabb41271106b33206f546a0cb3b56a33e"></a><br/></td></tr>
+<tr class="separator:gabb41271106b33206f546a0cb3b56a33e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1103d61f9fdf2839e8cc15ee5fac7b4e"><td class="memItemLeft" align="right" valign="top">typedef int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_time.html#ga1103d61f9fdf2839e8cc15ee5fac7b4e">fa_time_minutes_t</a></td></tr>
+<tr class="memdesc:ga1103d61f9fdf2839e8cc15ee5fac7b4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">A number of minutes.  <a href="group___fa_time.html#ga1103d61f9fdf2839e8cc15ee5fac7b4e"></a><br/></td></tr>
+<tr class="separator:ga1103d61f9fdf2839e8cc15ee5fac7b4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa8f8fedfa6f26ed6ad00d134c2aeb6b8"><td class="memItemLeft" align="right" valign="top">typedef int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_time.html#gaa8f8fedfa6f26ed6ad00d134c2aeb6b8">fa_time_seconds_t</a></td></tr>
+<tr class="memdesc:gaa8f8fedfa6f26ed6ad00d134c2aeb6b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">A number of seconds.  <a href="group___fa_time.html#gaa8f8fedfa6f26ed6ad00d134c2aeb6b8"></a><br/></td></tr>
+<tr class="separator:gaa8f8fedfa6f26ed6ad00d134c2aeb6b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadebdebeab6c5ba7cd8002d0773635e61"><td class="memItemLeft" align="right" valign="top">typedef int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_time.html#gadebdebeab6c5ba7cd8002d0773635e61">fa_time_milliseconds_t</a></td></tr>
+<tr class="memdesc:gadebdebeab6c5ba7cd8002d0773635e61"><td class="mdescLeft">&#160;</td><td class="mdescRight">A number of milliseconds.  <a href="group___fa_time.html#gadebdebeab6c5ba7cd8002d0773635e61"></a><br/></td></tr>
+<tr class="separator:gadebdebeab6c5ba7cd8002d0773635e61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7dd7e28574eec80380aac22be7087d2e"><td class="memItemLeft" align="right" valign="top">typedef struct _fa_time_system_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_time.html#ga7dd7e28574eec80380aac22be7087d2e">fa_time_system_t</a></td></tr>
 <tr class="memdesc:ga7dd7e28574eec80380aac22be7087d2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The system time type.  <a href="group___fa_time.html#ga7dd7e28574eec80380aac22be7087d2e"></a><br/></td></tr>
 <tr class="separator:ga7dd7e28574eec80380aac22be7087d2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad5df86fd93935de47e33a85850ff046b"><td class="memItemLeft" align="right" valign="top">typedef struct _fa_time_cpu_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_time.html#gad5df86fd93935de47e33a85850ff046b">fa_time_cpu_t</a></td></tr>
-<tr class="memdesc:gad5df86fd93935de47e33a85850ff046b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The system CPU time type.  <a href="group___fa_time.html#gad5df86fd93935de47e33a85850ff046b"></a><br/></td></tr>
-<tr class="separator:gad5df86fd93935de47e33a85850ff046b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga66de7f25c52b2de626812c85249019d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_time.html#ga227cc693f20b4873fed11028bcade184">fa_time_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_time.html#ga66de7f25c52b2de626812c85249019d8">fa_time_create</a> (int32_t, int32_t, int32_t, <a class="el" href="group___fa_ratio.html#gaf3b37b5fdfcccb6283b7ac806c72b273">fa_ratio_t</a>)</td></tr>
-<tr class="memdesc:ga66de7f25c52b2de626812c85249019d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new time value.  <a href="group___fa_time.html#ga66de7f25c52b2de626812c85249019d8"></a><br/></td></tr>
-<tr class="separator:ga66de7f25c52b2de626812c85249019d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga521d67bd86efa278dec6333428b5efed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_time.html#ga227cc693f20b4873fed11028bcade184">fa_time_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_time.html#ga521d67bd86efa278dec6333428b5efed">fa_time_create</a> (<a class="el" href="group___fa_time.html#ga126d90b34014d28bf3f4930b5e370598">fa_time_days_t</a>, <a class="el" href="group___fa_time.html#gabb41271106b33206f546a0cb3b56a33e">fa_time_hours_t</a>, <a class="el" href="group___fa_time.html#ga1103d61f9fdf2839e8cc15ee5fac7b4e">fa_time_minutes_t</a>, <a class="el" href="group___fa_ratio.html#gaf3b37b5fdfcccb6283b7ac806c72b273">fa_ratio_t</a>)</td></tr>
+<tr class="memdesc:ga521d67bd86efa278dec6333428b5efed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new time value.  <a href="group___fa_time.html#ga521d67bd86efa278dec6333428b5efed"></a><br/></td></tr>
+<tr class="separator:ga521d67bd86efa278dec6333428b5efed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6250abc1ea94cbfa2fa45ac443463e4a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_time.html#ga227cc693f20b4873fed11028bcade184">fa_time_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_time.html#ga6250abc1ea94cbfa2fa45ac443463e4a">fa_time_copy</a> (<a class="el" href="group___fa_time.html#ga227cc693f20b4873fed11028bcade184">fa_time_t</a>)</td></tr>
 <tr class="memdesc:ga6250abc1ea94cbfa2fa45ac443463e4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the given time value.  <a href="group___fa_time.html#ga6250abc1ea94cbfa2fa45ac443463e4a"></a><br/></td></tr>
 <tr class="separator:ga6250abc1ea94cbfa2fa45ac443463e4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -112,29 +126,18 @@ Functions</h2></td></tr>
 <tr class="memitem:ga24afe7bafbd5dc56d670905c3bb8bd44"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_string.html#gacada63033b77bc6c39fa632ae199349b">fa_string_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_time.html#ga24afe7bafbd5dc56d670905c3bb8bd44">fa_time_to_iso</a> (<a class="el" href="group___fa_time.html#ga227cc693f20b4873fed11028bcade184">fa_time_t</a>)</td></tr>
 <tr class="memdesc:ga24afe7bafbd5dc56d670905c3bb8bd44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print the time as an ISO 8601 duration.  <a href="group___fa_time.html#ga24afe7bafbd5dc56d670905c3bb8bd44"></a><br/></td></tr>
 <tr class="separator:ga24afe7bafbd5dc56d670905c3bb8bd44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga355199847e263921f46ef5d846a937d7"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_time.html#ga355199847e263921f46ef5d846a937d7">fa_time_to_seconds</a> (<a class="el" href="group___fa_time.html#ga227cc693f20b4873fed11028bcade184">fa_time_t</a>)</td></tr>
-<tr class="memdesc:ga355199847e263921f46ef5d846a937d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the time to seconds.  <a href="group___fa_time.html#ga355199847e263921f46ef5d846a937d7"></a><br/></td></tr>
-<tr class="separator:ga355199847e263921f46ef5d846a937d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1d6fa47a36cadea8d1b2b2ebe5590b0e"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_time.html#ga1d6fa47a36cadea8d1b2b2ebe5590b0e">fa_time_to_milliseconds</a> (<a class="el" href="group___fa_time.html#ga227cc693f20b4873fed11028bcade184">fa_time_t</a>)</td></tr>
-<tr class="separator:ga1d6fa47a36cadea8d1b2b2ebe5590b0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3dace87b57a96896135e06578ce29422"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_time.html#ga227cc693f20b4873fed11028bcade184">fa_time_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_time.html#ga3dace87b57a96896135e06578ce29422">fa_time_from_system</a> (<a class="el" href="group___fa_time.html#ga7dd7e28574eec80380aac22be7087d2e">fa_time_system_t</a>)</td></tr>
-<tr class="memdesc:ga3dace87b57a96896135e06578ce29422"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert system time to a time value.  <a href="group___fa_time.html#ga3dace87b57a96896135e06578ce29422"></a><br/></td></tr>
-<tr class="separator:ga3dace87b57a96896135e06578ce29422"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaddddc53e2f82d26ed52a779632d6ee4d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_time.html#ga227cc693f20b4873fed11028bcade184">fa_time_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_time.html#gaddddc53e2f82d26ed52a779632d6ee4d">fa_time_from_cpu</a> (<a class="el" href="group___fa_time.html#gad5df86fd93935de47e33a85850ff046b">fa_time_cpu_t</a>)</td></tr>
-<tr class="memdesc:gaddddc53e2f82d26ed52a779632d6ee4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert system CPU time to a time value.  <a href="group___fa_time.html#gaddddc53e2f82d26ed52a779632d6ee4d"></a><br/></td></tr>
-<tr class="separator:gaddddc53e2f82d26ed52a779632d6ee4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga444c67ce06dbeeff96495ff6954301b0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_time.html#ga7dd7e28574eec80380aac22be7087d2e">fa_time_system_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_time.html#ga444c67ce06dbeeff96495ff6954301b0">fa_time_system</a> ()</td></tr>
-<tr class="memdesc:ga444c67ce06dbeeff96495ff6954301b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the system time.  <a href="group___fa_time.html#ga444c67ce06dbeeff96495ff6954301b0"></a><br/></td></tr>
-<tr class="separator:ga444c67ce06dbeeff96495ff6954301b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga57c7a9ba9dcda18fa177acddd4b2999f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_time.html#gad5df86fd93935de47e33a85850ff046b">fa_time_cpu_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_time.html#ga57c7a9ba9dcda18fa177acddd4b2999f">fa_time_cpu</a> ()</td></tr>
-<tr class="memdesc:ga57c7a9ba9dcda18fa177acddd4b2999f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the system CPU time.  <a href="group___fa_time.html#ga57c7a9ba9dcda18fa177acddd4b2999f"></a><br/></td></tr>
-<tr class="separator:ga57c7a9ba9dcda18fa177acddd4b2999f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9e5aaffeae59378b33536e6a661fdbb8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_time.html#gaa8f8fedfa6f26ed6ad00d134c2aeb6b8">fa_time_seconds_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_time.html#ga9e5aaffeae59378b33536e6a661fdbb8">fa_time_to_seconds</a> (<a class="el" href="group___fa_time.html#ga227cc693f20b4873fed11028bcade184">fa_time_t</a>)</td></tr>
+<tr class="memdesc:ga9e5aaffeae59378b33536e6a661fdbb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the time to seconds.  <a href="group___fa_time.html#ga9e5aaffeae59378b33536e6a661fdbb8"></a><br/></td></tr>
+<tr class="separator:ga9e5aaffeae59378b33536e6a661fdbb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab891699e2edf24b67edb638a2b2779ac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_time.html#gadebdebeab6c5ba7cd8002d0773635e61">fa_time_milliseconds_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_time.html#gab891699e2edf24b67edb638a2b2779ac">fa_time_to_milliseconds</a> (<a class="el" href="group___fa_time.html#ga227cc693f20b4873fed11028bcade184">fa_time_t</a>)</td></tr>
+<tr class="memdesc:gab891699e2edf24b67edb638a2b2779ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert the time to milliseconds.  <a href="group___fa_time.html#gab891699e2edf24b67edb638a2b2779ac"></a><br/></td></tr>
+<tr class="separator:gab891699e2edf24b67edb638a2b2779ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Oct 7 2013 16:06:57 for faudio v2.2.3 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Fri Oct 11 2013 03:51:49 for faudio v2.3.0 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>
