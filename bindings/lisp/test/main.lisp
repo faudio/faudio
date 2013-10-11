@@ -785,6 +785,7 @@
 (let* ((notes '(100 200 350 475 620))
        (sines (mapcar (lambda (x) (sin (line (cl:* 4 x)))) notes))
        (synth (* 0.05 (reduce (lambda (x y) (+ y x)) (reverse sines)))))
+  (cl:print synth)
   (signal-run-default (lambda (_) (duplicate (* 0.1 synth)))))
 
 ; (reduce 'cl:+ '() :initial-value 1)
@@ -841,7 +842,7 @@
 
 (signal-run-file* 
  (cl:* 44100 5) 
- (delay 22050 (car (signal-dls*)))
+ (car (signal-dls*))
  :controls (cl:list 
             (pair-create (milliseconds 0)   (action-send "DLS" (midi #x91 60 127)))
             (pair-create (milliseconds 100) (action-send "DLS" (midi #x91 63 127)))
