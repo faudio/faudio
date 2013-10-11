@@ -7,6 +7,7 @@
 
  */
 
+#include <fa/atomic.h>
 #include <fa/midi.h>
 #include <fa/midi/message.h>
 #include <fa/atomic/queue.h>
@@ -31,9 +32,12 @@ typedef fa_midi_session_t           session_t;
 typedef fa_midi_stream_callback_t   stream_callback_t;
 typedef fa_midi_session_callback_t  session_callback_t;
 typedef fa_midi_status_callback_t   status_callback_t;
+typedef fa_action_t                 action_t;
 
 typedef PmDeviceID                  native_index_t;
 typedef PmStream                   *native_stream_t;
+
+#define kMaxMessageCallbacks 8
 
 struct _fa_midi_session_t {
 
@@ -62,6 +66,14 @@ struct _fa_midi_stream_t {
     native_stream_t     native_input,
                         native_output;      // Native stream(s)
     device_t            device;
+
+    thread_t            thread;
+    bool                thread_abort;       // Set to non-zero when thread should stop
+
+    // fa_atomic_t         receivers;          // Atomic [(Unary, Ptr)]
+    int                 message_callback_count;
+    fa_unary_t          message_callbacks[kMaxMessageCallbacks];
+    fa_ptr_t            message_callback_ptrs[kMaxMessageCallbacks];
 
     fa_clock_t          clock;              // Clock used for scheduler and incoming events
     atomic_queue_t      in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
@@ -165,7 +177,11 @@ inline static stream_t new_stream(device_t device)
     stream->native_input    = NULL;
     stream->native_output   = NULL;
 
-    stream->clock           = NULL; // FIXME
+    stream->thread          = NULL;
+    stream->thread_abort    = false;
+    stream->message_callback_count = 0;
+    
+    stream->clock           = fa_clock_standard(); // TODO change
     stream->in_controls     = atomic_queue();
     stream->controls        = priority_queue();
 
@@ -358,11 +374,22 @@ void midi_inform_opening(device_t device)
     }
 }
 
+
+
+
+
+
+
+static inline
+void send_out(midi_message_t midi, stream_t stream);
+
 PmTimestamp midi_time_callback(void *data)
 {
     stream_t stream = data;
     return fa_clock_milliseconds(stream->clock); // FIXME
 }
+
+ptr_t stream_thread_callback(ptr_t x);
 
 fa_midi_stream_t fa_midi_open_stream(device_t device)
 {
@@ -391,12 +418,8 @@ fa_midi_stream_t fa_midi_open_stream(device_t device)
             native_error(string("Could not open midi output"), result);
         }
     }
-
-    // TODO create input thread if needed
-    // The thread needs to
-    // forward incoming events (mutex?)
-    // poll time and run things from the priority queue (mutex?)
-
+    
+    stream->thread = fa_thread_create(stream_thread_callback, stream);
     return stream;
 }
 
@@ -404,6 +427,10 @@ fa_midi_stream_t fa_midi_open_stream(device_t device)
 void fa_midi_close_stream(stream_t stream)
 {
     inform(string("Closing real-time midi stream"));
+
+    // TODO instruct to stop
+    stream->thread_abort = true;
+    fa_thread_join(stream->thread);
 
     if (stream->native_input) {
         Pm_Close(stream->native_input);
@@ -436,15 +463,107 @@ void fa_midi_with_stream(device_t           device,
 
 
 
+ptr_t stream_thread_callback(ptr_t x)
+{                 
+    stream_t stream = x;
+    inform(string("  Midi service thread active"));
+
+    while(1) {              
+        if (stream->thread_abort) {
+            inform(string("  Midi service thread finished"));
+            return 0;
+        }
+        // inform(string("  Midi service thread!"));
+
+        // Inputs
+        if (stream->native_input) {
+            while (Pm_Poll(stream->native_input)) {
+
+                PmEvent events[1];
+                Pm_Read(stream->native_input, events, 1); // TODO error
+                
+                for (int i = 0; i < stream->message_callback_count; ++i) {
+                    unary_t f = stream->message_callbacks[i];
+                    ptr_t   x = stream->message_callback_ptrs[i];
+                    
+                    time_t time = fa_milliseconds(events[0].timestamp);
+                    midi_message_t msg = midi_message(
+                        Pm_MessageStatus(events[0].message), 
+                        Pm_MessageData1(events[0].message), 
+                        Pm_MessageData2(events[0].message));
+
+                    f(x, pair(time, msg));
+                }
+            }
+        }
+
+        // Outputs
+        if (stream->native_output) {
+            ptr_t val;
+            while ((val = fa_atomic_queue_read(stream->in_controls))) {
+                // inform(fa_string_show(val));
+                fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
+            }
+            while (1) {
+                pair_t x = fa_priority_queue_peek(stream->controls);
+                if (!x) {
+                    break;
+                }
+                time_t   time   = fa_pair_first(x);
+                action_t action = fa_pair_second(x);
+
+                int timeSamp = (((double) fa_time_to_milliseconds(time)) / 1000.0) * 44100;   // TODO
+
+                if (timeSamp <= fa_clock_milliseconds(stream->clock)) {
+                    if (fa_action_is_send(action)) {
+                        string_t name = fa_action_send_name(action);
+                        ptr_t    value = fa_action_send_value(action);
+                        send_out(value, stream); // TODO laterz
+                        mark_used(name);
+                    }
+                    fa_priority_queue_pop(stream->controls);
+                } else {
+                    break;
+                }
+            }
+        }
+        
+    }
+    assert(false && "Unreachable");
+}
+
 void fa_midi_add_message_callback(fa_midi_message_callback_t function,
                                   fa_ptr_t data,
                                   fa_midi_stream_t stream)
 {
-    // TODO register in stream
+    assert (stream->message_callback_count < kMaxMessageCallbacks && "Too many message callbacks");
+
+    int i = stream->message_callback_count;
+    stream->message_callbacks[i] = function;
+    stream->message_callback_ptrs[i] = data;
+    
+    stream->message_callback_count++;
 }
 
 
-inline static
+
+void fa_midi_schedule(fa_time_t        time,
+                      fa_action_t      action,
+                      fa_midi_stream_t stream)
+{
+    pair_left_t pair = pair_left(time, action);
+    fa_atomic_queue_write(stream->in_controls, pair);
+
+
+    // if (fa_action_is_send(action)) {
+    //     string_t name = fa_action_send_name(action);
+    //     ptr_t    value = fa_action_send_value(action);
+    //     send_out(value, stream); // TODO laterz
+    //     mark_used(name);
+    // }
+}
+
+
 void send_out(midi_message_t midi, stream_t stream)
 {
     PmError result;
@@ -464,22 +583,6 @@ void send_out(midi_message_t midi, stream_t stream)
         assert(false && "Can not send sysex yet");
     }
 }
-
-void fa_midi_schedule(fa_time_t        time,
-                      fa_action_t      action,
-                      fa_midi_stream_t stream)
-{
-    if (fa_action_is_send(action)) {
-        string_t name = fa_action_send_name(action);
-        ptr_t    value = fa_action_send_value(action);
-        send_out(value, stream); // TODO laterz
-        mark_used(name);
-    }
-}
-
-
-
-
 
 // --------------------------------------------------------------------------------
 
@@ -572,82 +675,6 @@ void midi_stream_destroy(ptr_t a)
 {
     fa_midi_close_stream(a);
 }
-
-// void midi_stream_sync(ptr_t a)
-// {
-//     stream_t stream = (stream_t) a;
-//
-//     fa_destroy(stream->incoming);
-//     stream->incoming = fa_list_empty();
-//
-//     // TODO need to get error?
-//     while (Pm_Poll(stream->native_input) == TRUE) {
-//
-//         PmEvent buffer[1024];
-//         PmError result = Pm_Read(stream->native_input, buffer, 1024);
-//
-//         if (result < 0) {
-//             native_error(string("Could not receive midi"), result);
-//         }
-//
-//         for (int i = 0; i < result; ++i) {
-//             PmEvent   event = buffer[i];
-//             PmMessage msg   = event.message;
-//
-//             // FIXME detect sysex
-//             midi_message_t midi_message = midi_message(Pm_MessageStatus(msg), Pm_MessageData1(msg), Pm_MessageData2(msg));
-//             stream->incoming = fa_list_dcons(midi_message, stream->incoming);
-//
-//             // TODO midi thru
-//         }
-//     }
-//
-// }
-//
-// fa_list_t midi_stream_receive(ptr_t a, address_t addr)
-// {
-//     // Ignore address
-//     stream_t stream = (stream_t) a;
-//     return fa_list_copy(stream->incoming);
-// }
-//
-// void midi_stream_send(ptr_t a, address_t addr, message_t msg)
-// {
-//     PmError result;
-//     stream_t stream = (stream_t) a;
-//     midi_message_t midi   = (midi_message_t) msg;
-//     // TODO use dynamic introspection to detect lists (?)
-//
-//     if (fa_midi_message_is_simple(midi)) {
-//         // timestamp ignored
-//         long midi_message = fa_midi_message_simple_to_long(midi);
-//
-//         // printf("Sending: %s %08x\n", unstring(fa_string_show(midi)), (int) midi_message);
-//
-//         result = Pm_WriteShort(stream->native_output, 0, midi_message);
-//
-//         if (result != pmNoError) {
-//             native_error(string("Could not send midi"), result);
-//         }
-//     } else {
-//         assert(false && "Not implemented");
-//
-//         unsigned char buf[2048];
-//         buf[0]    = 'f';
-//         buf[0]    = '0';
-//         buf[2046] = 'f';
-//         buf[2047] = '7';
-//
-//         // check buffer size <= (2048-2)
-//         // copy sysex buffer to buf+1
-//
-//         result = Pm_WriteSysEx(stream->native_output, 0, buf);
-//         if (result != pmNoError) {
-//             native_error(string("Could not send midi"), result);
-//         }
-//     }
-//
-// }
 
 ptr_t midi_stream_impl(fa_id_t interface)
 {
