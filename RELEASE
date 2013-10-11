@@ -2,7 +2,7 @@
 ## Release check-list
 
 * Set Release (later: for now, everything is Debug)
-* Commit, push and `make test`
+* Commit, push and `make modules bindings doc test`
 
 * Bump version 
     * CMakeLists.txt
