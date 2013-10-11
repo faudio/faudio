@@ -45,14 +45,17 @@ module Fa.Midi.Message
         @return         A new Midi message.
      */
     createSimple  : (Status, Int, Int) -> Message;
+    
     /** Creates a sysex message from the given data buffer (not including F0 and F7).
         @param data     Raw data buffer (transfered).
         @return         A new sysex message.
      */
     createSysex   : Buffer -> Message;
+    
     /** Copy the given midi message.
      */
     copy          : Message -> Message;
+    
     /** Destroy the given midi_message message.
      */
     destroy       : Message -> Void;
@@ -60,15 +63,20 @@ module Fa.Midi.Message
     /** Return whether the given midi_message message is a simple message.
      */
     isSimple      : Message -> Bool;
+    
+    /** Returns the status and channel part of a MIDI message.
+     */
     simpleData    : Message -> Pair;
-    /** Return the status byte of given midi_message message.
+    
+    /** Return the status byte of given MIDI message.
      */
     status        : Message -> Status;
-    /** Return the channel byte of given midi_message message.
+    
+    /** Return the channel byte of given MIDI message.
      */
     channel       : Message -> Channel;
 
-    /** Return whether the given midi_message message is a sysex message.
+    /** Return whether the given MIDI message is a sysex message.
      */
     isSysex       : Message -> Bool;
     /** Return the data buffer of a sysex message, except for the wrapping `F0` and `F7` bytes.

@@ -91,21 +91,45 @@ module Fa.Action
     /** Return whether the given action is a set action.
       */
     isSet : Action -> Bool;
+    
+    /** Get the channel of a set action.
+     */
     setChannel : Action -> Channel;
+
+    /** Get the value of a set action.
+     */
     setValue : Action -> Double;
 
-    /** Return whether the given action is an accum action.
+
+    /** Return whether the given action is an accumulation action.
       */
     isAccum : Action -> Bool;
+    
+    /** Get the channel of an accumulation action.
+     */
     accumChannel : Action -> Channel;
+    
+    /** Get the function of an accumulation action.
+     */
     accumFunction : Action -> UnaryDouble;
+    
+    /** Get the data of an accumulation action.
+     */
     accumData : Action -> Ptr;
 
+    
     /** Return whether the given action is a send action.
       */
     isSend : Action -> Bool;
+    
+    /** Get the name of an send action.
+     */
     sendName : Action -> Name;
+    
+    /** Get the value of an send action.
+     */
     sendValue : Action -> Value;
+    
 
     copy : Action -> Action;
     destroy : Action -> Void;

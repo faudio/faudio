@@ -82,18 +82,19 @@ void fa_midi_message_destroy(fa_midi_message_t);
 */
 bool fa_midi_message_is_simple(fa_midi_message_t);
 
-
+/** Returns the status and channel part of a MIDI message.
+*/
 fa_pair_t fa_midi_message_simple_data(fa_midi_message_t);
 
-/** Return the status byte of given midi_message message.
+/** Return the status byte of given MIDI message.
 */
 fa_midi_message_status_t fa_midi_message_status(fa_midi_message_t);
 
-/** Return the channel byte of given midi_message message.
+/** Return the channel byte of given MIDI message.
 */
 fa_midi_message_channel_t fa_midi_message_channel(fa_midi_message_t);
 
-/** Return whether the given midi_message message is a sysex message.
+/** Return whether the given MIDI message is a sysex message.
 */
 bool fa_midi_message_is_sysex(fa_midi_message_t);
 

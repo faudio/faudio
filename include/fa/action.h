@@ -106,24 +106,29 @@ fa_action_t fa_action_send(fa_action_name_t, fa_action_value_t);
 */
 bool fa_action_is_set(fa_action_t);
 
-
+/** Get the channel of a set action.
+*/
 fa_action_channel_t fa_action_set_channel(fa_action_t);
 
-
+/** Get the value of a set action.
+*/
 double fa_action_set_value(fa_action_t);
 
-/** Return whether the given action is an accum action.
+/** Return whether the given action is an accumulation action.
       
 */
 bool fa_action_is_accum(fa_action_t);
 
-
+/** Get the channel of an accumulation action.
+*/
 fa_action_channel_t fa_action_accum_channel(fa_action_t);
 
-
+/** Get the function of an accumulation action.
+*/
 fa_signal_unary_double_t fa_action_accum_function(fa_action_t);
 
-
+/** Get the data of an accumulation action.
+*/
 fa_ptr_t fa_action_accum_data(fa_action_t);
 
 /** Return whether the given action is a send action.
@@ -131,10 +136,12 @@ fa_ptr_t fa_action_accum_data(fa_action_t);
 */
 bool fa_action_is_send(fa_action_t);
 
-
+/** Get the name of an send action.
+*/
 fa_action_name_t fa_action_send_name(fa_action_t);
 
-
+/** Get the value of an send action.
+*/
 fa_action_value_t fa_action_send_value(fa_action_t);
 
 

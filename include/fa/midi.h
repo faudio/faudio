@@ -10,7 +10,7 @@
 
 /** @addtogroup FaMidi
 
-    Provides real-time MIDi.
+    Provides real-time MIDI.
 
     @par Sessions, devices and streams implement 
     - fa_destroy_t
