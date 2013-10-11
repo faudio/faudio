@@ -37,7 +37,8 @@ typedef fa_action_t                 action_t;
 typedef PmDeviceID                  native_index_t;
 typedef PmStream                   *native_stream_t;
 
-#define kMaxMessageCallbacks 8
+#define kMaxMessageCallbacks       8
+#define kMidiServiceThreadInterval 20
 
 struct _fa_midi_session_t {
 
@@ -462,6 +463,7 @@ void fa_midi_with_stream(device_t           device,
 
 
 
+void read_in(PmEvent* dest, stream_t stream);
 
 ptr_t stream_thread_callback(ptr_t x)
 {                 
@@ -480,7 +482,8 @@ ptr_t stream_thread_callback(ptr_t x)
             while (Pm_Poll(stream->native_input)) {
 
                 PmEvent events[1];
-                Pm_Read(stream->native_input, events, 1); // TODO error
+                read_in(events, stream);
+                // Pm_Read(stream->native_input, events, 1); // TODO error
                 
                 for (int i = 0; i < stream->message_callback_count; ++i) {
                     unary_t f = stream->message_callbacks[i];
@@ -528,6 +531,8 @@ ptr_t stream_thread_callback(ptr_t x)
             }
         }
         
+        // Sleep
+        fa_thread_sleep(kMidiServiceThreadInterval);
     }
     assert(false && "Unreachable");
 }
@@ -563,6 +568,16 @@ void fa_midi_schedule(fa_time_t        time,
     // }
 }
 
+            
+void read_in(PmEvent* dest, stream_t stream)
+{   
+    PmError result;
+    result = Pm_Read(stream->native_input, dest, 1);
+
+    if (result != pmNoError) {
+        native_error(string("Could not fetch midi"), result);
+    }
+}
 
 void send_out(midi_message_t midi, stream_t stream)
 {
