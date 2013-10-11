@@ -4,7 +4,11 @@
 
 fa_ptr_t received(ptr_t x, ptr_t timeMessage)
 {
-    fa_print_ln(fa_string_show(timeMessage));
+    fa_print_ln(fa_string_show(timeMessage)); 
+    
+    fa_destroy(fa_pair_first(timeMessage));
+    fa_destroy(fa_pair_second(timeMessage));
+    fa_destroy(timeMessage);
     return 0;
 }
 
