@@ -16,7 +16,7 @@
     
     @par Iteration
     ~~~
-    fa_list_for_each (list(1,2,3), x)
+    fa_for_each (x, list(1,2,3))
     {
         fa_print("%s\n", x);
     }
