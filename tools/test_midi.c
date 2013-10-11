@@ -16,7 +16,7 @@ void run_midi()
         fa_error_log(st, NULL);
     }
 
-    for (int i = 0; true; ++i) {
+    for (int i = 0; i < 20; ++i) {
         fa_midi_schedule(
             hms(0, 0, 0),
             fa_action_send(string("midi"), fa_midi_message_create_simple(0x90, 60 + ((i % 12) * 3), 90)),
@@ -30,6 +30,7 @@ void run_midi()
 
 int main(int argc, char const *argv[])
 {
+    fa_fa_set_log_std();
     fa_fa_initialize();
 
     run_midi();
