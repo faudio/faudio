@@ -19,18 +19,21 @@
 #include <mach/mach.h>
 #endif
 
-static clock_serv_t gMachClock;
+
+
+//static clock_serv_t gMachClock;
+
 
 // --------------------------------------------------------------------------------
 
 void fa_clock_initialize()
 {
-    host_get_clock_service(mach_host_self(), REALTIME_CLOCK, &gMachClock);
+    //host_get_clock_service(mach_host_self(), REALTIME_CLOCK, &gMachClock);
 }
 
 void fa_clock_terminate()
 {
-    mach_port_deallocate(mach_task_self(), gMachClock);
+    //mach_port_deallocate(mach_task_self(), gMachClock);
 }
 
 // --------------------------------------------------------------------------------
@@ -137,21 +140,23 @@ fa_string_t standard_clock_show(fa_ptr_t a)
 
 int64_t standard_clock_milliseconds(fa_ptr_t a)
 {
-    mach_timespec_t ts;
-    clock_get_time(gMachClock, &ts);
-
-    return ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
+//    mach_timespec_t ts;
+//    clock_get_time(gMachClock, &ts);
+//
+//    return ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
+    return 0;
 }
 
 fa_time_t standard_clock_time(fa_ptr_t a)
 {
-    mach_timespec_t ts;
-    clock_get_time(gMachClock, &ts);
-    // clock_gettime(CLOCK_REALTIME, &ts);
-
-    time_t s  = seconds(ts.tv_sec); // TODO with tv_nsec
-    time_t ds = divisions(ts.tv_nsec / 1000000, 1000);
-    return fa_dadd(s, ds);
+//    mach_timespec_t ts;
+//    clock_get_time(gMachClock, &ts);
+//    // clock_gettime(CLOCK_REALTIME, &ts);
+//
+//    time_t s  = seconds(ts.tv_sec); // TODO with tv_nsec
+//    time_t ds = divisions(ts.tv_nsec / 1000000, 1000);
+//    return fa_dadd(s, ds);
+    return 0;
 }
 
 
@@ -159,7 +164,7 @@ fa_ptr_t standard_clock_impl(fa_id_t interface)
 {
     static fa_string_show_t standard_clock_show_impl
         = { standard_clock_show };
-    
+
     static fa_clock_interface_t standard_clock_clock_impl
         = { standard_clock_time, standard_clock_milliseconds };
 
@@ -174,7 +179,7 @@ fa_ptr_t standard_clock_impl(fa_id_t interface)
     default:
         return NULL;
     }
-}   
+}
 
 
 //

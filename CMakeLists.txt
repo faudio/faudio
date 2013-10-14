@@ -39,13 +39,13 @@ endif()
 
 #
 #  This should hold
-#      CMAKE_OSX_DEPLOYMENT_TARGET 
-#         <= CMAKE_OSX_SYSROOT 
+#      CMAKE_OSX_DEPLOYMENT_TARGET
+#         <= CMAKE_OSX_SYSROOT
 #         <= (build machine OS X version)
-#  
+#
 #      CMAKE_OSX_DEPLOYMENT_TARGET is minimum supported version (i.e. 10.5)
 #      CMAKE_OSX_SYSROOT is path to SDK of maximum supported version
-#  
+#
 
 option(ENABLE_REALTIME_AUDIO    "Enable real-time audio"                    True)
 option(ENABLE_REALTIME_MIDI     "Enable real-time midi"                     True)
@@ -69,7 +69,7 @@ option(SHOW_COMPONENT_OUTPUT    "Show output while building components"     True
 
 include(Profiling)
 include(FixOSXLionPaths)
-find_package(Dist)
+#find_package(Dist)
 
 
 ## ----------------------------------------------------------------------
@@ -104,13 +104,13 @@ endif()
 ## ----------------------------------------------------------------------
 ## Component manager
 
-# 
+#
 #  These steps sets up the component manager and adds the components_resolve target
-# 
-#  Usually there is no need to use this explicitly, as the boot script calls 
+#
+#  Usually there is no need to use this explicitly, as the boot script calls
 #  "make components_resolve" and it only needs to be called once. Note that components_resolve
 #  calls cmake again to proceed below the guard below.
-# 
+#
 
 if(BUILD_COMPONENTS)
   list(APPEND COMPONENT_DEFINES
@@ -130,18 +130,18 @@ list(APPEND COMPONENT_DEFINES
 include(AudioEngine)
 
 add_custom_target(components_print
-  COMMAND cmake 
-  ${COMPONENT_DEFINES} 
+  COMMAND cmake
+  ${COMPONENT_DEFINES}
   -P "${CMAKE_SOURCE_DIR}/cmake/scripts/components_print.cmake")
 
 add_custom_target(components_resolve
-  COMMAND cmake 
-  ${COMPONENT_DEFINES} 
+  COMMAND cmake
+  ${COMPONENT_DEFINES}
   -P "${CMAKE_SOURCE_DIR}/cmake/scripts/components_resolve.cmake")
 
 add_custom_target(components_clean
-  COMMAND cmake 
-  ${COMPONENT_DEFINES} 
+  COMMAND cmake
+  ${COMPONENT_DEFINES}
   -P "${CMAKE_SOURCE_DIR}/cmake/scripts/components_clean.cmake")
 
 add_custom_target(format
@@ -161,7 +161,7 @@ add_custom_target(run_scorecleaner
 #  We only proceed here if the component mangager has been run, as per above.
 
 if (COMPONENTS_RESOLVED)
-  
+
   ## ----------------------------------------------------------------------
   # Find packages
 
@@ -263,7 +263,7 @@ if (COMPONENTS_RESOLVED)
     # find_library (OLE32   NAMES ole32   PATH_SUFFIXES lib PATHS "C:/MinGW")
     # find_library (WINMM   NAMES winmm   PATH_SUFFIXES lib PATHS "C:/MinGW")
     # find_library (WINSOCK NAMES ws2_32  PATH_SUFFIXES lib PATHS "C:/MinGW")
-    
+
     set(CMAKE_C_STANDARD_LIBRARIES "-lws2_32 ${CMAKE_C_STANDARD_LIBRARIES}")
     list(APPEND EXTS ${WINSOCK})
     list(APPEND EXTS ${WINMM})
@@ -287,11 +287,14 @@ if (COMPONENTS_RESOLVED)
   endif ()
 
   if(MSYS)
+    #find_library(WINMM              winmm)
+    set(WINMM winmm.lib)
+    list(APPEND EXTS ${WINMM})
   endif()
 
   ## ----------------------------------------------------------------------
   ## Add targets for source-only libraries
-  
+
   add_subdirectory(external)
 
 

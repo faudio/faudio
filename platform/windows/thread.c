@@ -5,7 +5,7 @@
     All rights reserved.
  */
 
-#include <fae/thread.h>
+#include <fa/thread.h>
 #include <Windows.h>
 
 struct _fae_thread_t {
