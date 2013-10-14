@@ -25,6 +25,8 @@ fae_atomic_t fae_atomic_create()
 fae_atomic_t fae_atomic_copy(fae_atomic_t a)
 {
     free(a);
+	
+	// hej
 }
 
 void fae_atomic_swap(fae_atomic_t a, fae_atomic_t b)
