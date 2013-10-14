@@ -1,4 +1,13 @@
-VERSION=2.x.x
+# VERSION=2.x.x
+
+if [ $# -ne 1 ]
+then
+  echo "Usage: `basename $0` [version]"
+  exit $E_BADARGS
+else
+	VERSION=$1
+fi
+
 
 if [[ $* != *--clean* ]]; then
 
@@ -26,13 +35,16 @@ if [[ $* != *--clean* ]]; then
 	
 	make modules doc
     pushd pages
+
     git rm -rf docs
     cp -R ../doc/build/html/ docs
-    git add docs         
+    mkdir -p versions/$VERSION
+    cp -R ../doc/build/html/ versions/$VERSION/docs
+
+    git add docs versions # -u does NOT work
     git commit -m "Updated docs"
     git push
     popd
-    
 
 else
 	echo "Cleaning"

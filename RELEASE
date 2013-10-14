@@ -13,7 +13,7 @@
     * `git tag vX.X.X`
     * `git push --tags`
 
-* Run `release.sh`
+* Run `release.sh X.X.X`
 
 * Go to <https://github.com/hanshoglund/faudio/releases/new> 
     * Write release notes
