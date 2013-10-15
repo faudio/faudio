@@ -6,6 +6,7 @@
  */
 
 #include <fa/atomic.h>
+#include <fa/util.h>    // for impl_t
 #include <Windows.h>
 
 /*
@@ -24,7 +25,7 @@ fa_atomic_t fa_atomic_create()
 
 fa_atomic_t fa_atomic_copy(fa_atomic_t a)
 {
-    free(a); // This is free
+    free(a);
 }
 
 void fa_atomic_swap(fa_atomic_t a, fa_atomic_t b)
