@@ -11,48 +11,47 @@
 /*
     TODO these are strictly 32-bit for now
  */
-struct _fae_atomic_t {
+struct _fa_atomic_t {
     impl_t      impl;       //  Interface dispatcher
     intptr_t    value;
 };
 
-fae_atomic_t fae_atomic_create()
+fa_atomic_t fa_atomic_create()
 {
-    fae_atomic_t a = malloc(sizeof(struct _fae_atomic_t));
+    fa_atomic_t a = malloc(sizeof(struct _fa_atomic_t));
     return a;
 }
 
-fae_atomic_t fae_atomic_copy(fae_atomic_t a)
+fa_atomic_t fa_atomic_copy(fa_atomic_t a)
 {
     free(a); // This is free
 }
 
-void fae_atomic_swap(fae_atomic_t a, fae_atomic_t b)
+void fa_atomic_swap(fa_atomic_t a, fa_atomic_t b)
 {
 }
 
-void fae_atomic_destroy(fae_atomic_t a)
+void fa_atomic_destroy(fa_atomic_t a)
 {
 }
 
-bool fae_atomic_exchange(fae_atomic_t a, intptr_t v)
+bool fa_atomic_exchange(fa_atomic_t a, fa_ptr_t pold, fa_ptr_t pnew)
 {
 }
 
-void fae_atomic_add(fae_atomic_t a, intptr_t v)
+void fa_atomic_add(fa_atomic_t a, intptr_t v)
 {
 }
 
-intptr_t fae_atomic_get(fae_atomic_t a)
+void* fa_atomic_get(fa_atomic_t a)
 {
 }
 
-void fae_atomic_modify(fae_atomic_t a,
-                       fae_atomic_updater_t f)
+void fa_atomic_modify(fa_atomic_t atomic, fa_unary_t func, fa_ptr_t data)
 {
 }
 
-void fae_atomic_set(fae_atomic_t a, intptr_t v)
+void fa_atomic_set(fa_atomic_t a, fa_ptr_t v)
 {
 }
 
