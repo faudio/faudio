@@ -171,7 +171,9 @@ bool fa_thread_unlock(fa_thread_mutex_t mutex)
 
 // --------------------------------------------------------------------------------
 
-void fa_audio_engine_log_error_from(fa_string_t msg, fa_string_t origin);
+void fa_audio_engine_log_error_from(fa_string_t msg, fa_string_t origin) {
+    assert(false && "implementation missing");
+}
 
 void fa_thread_fatal(char *msg, int error)
 {
