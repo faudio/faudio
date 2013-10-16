@@ -329,6 +329,9 @@ module Fa.Signal
         
         @return
             A pair of @ref fa_signal_t (outputs).
+        @note
+            This function is only available on Mac OS X and will
+            fail ungracefully on other platforms.
         @warning
             Experimental.    
      */
