@@ -200,13 +200,13 @@ fa_pair_t fa_buffer_read_audio(fa_string_t path)
 
     {
         char *cpath     = fa_string_to_utf8(path);
-        file            = sf_open(cpath, SFM_READ, &info);
+        //file            = sf_open(cpath, SFM_READ, &info);
 
-        if (sf_error(file)) {
-            char err[100];
-            snprintf(err, 100, "Could not read audio file '%s'", cpath);
-            return (pair_t) fa_error_create_simple(error, string(err), string("Doremir.Buffer"));
-        }
+//        if (sf_error(file)) {
+//            char err[100];
+//            snprintf(err, 100, "Could not read audio file '%s'", cpath);
+//            return (pair_t) fa_error_create_simple(error, string(err), string("Doremir.Buffer"));
+//        }
 
         inform(string_append(string("Reading "), path));
     }
@@ -215,8 +215,8 @@ fa_pair_t fa_buffer_read_audio(fa_string_t path)
         buffer          = fa_buffer_create(bufSize);
         double *raw     = fa_buffer_unsafe_address(buffer);
 
-        sf_count_t sz   = sf_read_double(file, raw, bufSize / sizeof(double));
-        buffer          = fa_buffer_dresize(sz * sizeof(double), buffer);
+        //sf_count_t sz   = sf_read_double(file, raw, bufSize / sizeof(double));
+        //buffer          = fa_buffer_dresize(sz * sizeof(double), buffer);
 
         if (info.channels == 1) {
             channels = 1;
@@ -226,9 +226,9 @@ fa_pair_t fa_buffer_read_audio(fa_string_t path)
             buffer_fatal("Unknown buffer type", info.channels);
         }
 
-        if (sf_close(file)) {
-            return (pair_t) fa_error_create_simple(error, string("Could not close"), string("Doremir.Buffer"));
-        }
+//        if (sf_close(file)) {
+//            return (pair_t) fa_error_create_simple(error, string("Could not close"), string("Doremir.Buffer"));
+//        }
     }
     return pair(i32(channels), buffer);
 }
@@ -249,24 +249,24 @@ ptr_t fa_buffer_write_audio(fa_string_t  path,
     info.samplerate = 44100;
     info.channels   = 1;
     info.format     = SF_FORMAT_WAV | SF_FORMAT_PCM_24;
-    SNDFILE        *file  = sf_open(cpath, SFM_WRITE, &info);
+    //SNDFILE        *file  = sf_open(cpath, SFM_WRITE, &info);
 
-    if (sf_error(file)) {
-        char err[100];
-        snprintf(err, 100, "Could not write audio file '%s' (%s)", cpath, sf_strerror(file));
-        return (pair_t) fa_error_create_simple(
-                   error, string(err), string("Doremir.Buffer"));
-    }
+//    if (sf_error(file)) {
+//        char err[100];
+//        snprintf(err, 100, "Could not write audio file '%s' (%s)", cpath, sf_strerror(file));
+//        return (pair_t) fa_error_create_simple(
+//                   error, string(err), string("Doremir.Buffer"));
+//    }
 
-    sf_count_t written = sf_write_double(file, ptr, size);
+    //sf_count_t written = sf_write_double(file, ptr, size);
 
-    if (written != size) {
-        return (pair_t) fa_error_create_simple(error, string("To few bytes written"), string("Doremir.Buffer"));
-    }
+//    if (written != size) {
+//        return (pair_t) fa_error_create_simple(error, string("To few bytes written"), string("Doremir.Buffer"));
+//    }
 
-    if (sf_close(file)) {
-        return (pair_t) fa_error_create_simple(error, string("Could not close"), string("Doremir.Buffer"));
-    }
+//    if (sf_close(file)) {
+//        return (pair_t) fa_error_create_simple(error, string("Could not close"), string("Doremir.Buffer"));
+//    }
 
     return NULL;
 
