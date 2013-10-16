@@ -264,7 +264,7 @@ if (COMPONENTS_RESOLVED)
     #find_library (WINMM   NAMES winmm   PATH_SUFFIXES lib PATHS "C:/MinGW")
     find_library (WINSOCK NAMES ws2_32  PATH_SUFFIXES lib PATHS "C:/MinGW")
     find_library(LSTDCXX  NAMES libstdc++-6 PATH_SUFFIXES lib PATHS "C:/MinGW")
-    find_library(LIBGCC   NAMES ibgcc_s_dw2-1 PATH_SUFFIXES lib PATHS "C:/MinGW")
+    find_library(LIBGCC   NAMES libgcc_s_dw2-1 PATH_SUFFIXES lib PATHS "C:/MinGW")
 
     find_library(WINMM          winmm)
     set(WINMM winmm.lib)
