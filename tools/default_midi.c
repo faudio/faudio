@@ -14,15 +14,22 @@
 
 fa_midi_session_t print_midi_devices(fa_ptr_t _, midi_session_t session)
 {
-    fa_print("Input:          %s\n", fa_string_to_string(
-                 fa_midi_name(
-                     fa_midi_default_input(session))));
+    fa_midi_device_t input  = fa_midi_default_input(session);
+    fa_midi_device_t output = fa_midi_default_input(session);
 
-    fa_print("Output:         %s\n", fa_string_to_string(
-                 fa_midi_name(
-                     fa_midi_default_output(session))));
+    if (fa_check(input)) {
+        fa_print("(No inputs)\n", NULL);
+    } else {
+        fa_print("Input:          %s\n", fa_string_to_string(
+                     fa_midi_name(input)));
 
-    fa_print_ln(string(""));
+    }
+    if (fa_check(output)) {
+        fa_print("(No outputs)\n", NULL);
+    } else {
+        fa_print("Output:         %s\n", fa_string_to_string(
+                     fa_midi_name(output)));
+    }
 
     return session;
 }
