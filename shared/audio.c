@@ -335,18 +335,31 @@ fa_list_t fa_audio_all(session_t session)
     return fa_copy(session->devices);
 }
 
+#define fail_if_no_input(type) \
+    if (!session->def_input) { \
+        return (type) audio_device_error(string("No input device available")); \
+    }
+#define fail_if_no_output(type) \
+    if (!session->def_output) { \
+        return (type) audio_device_error(string("No output device available")); \
+    }
+
 fa_pair_t fa_audio_default(session_t session)
-{
+{       
+    fail_if_no_input(fa_pair_t);
+    fail_if_no_output(fa_pair_t);
     return pair(session->def_input, session->def_output);
 }
 
 device_t fa_audio_default_input(session_t session)
 {
+    fail_if_no_input(device_t);
     return session->def_input;
 }
 
 device_t fa_audio_default_output(session_t session)
 {
+    fail_if_no_output(device_t);
     return session->def_output;
 }
 
@@ -424,7 +437,12 @@ stream_t fa_audio_open_stream(device_t input,
     unsigned long   buffer_size = 16;
     double          sample_rate = 44100;
 
-    stream_t        stream      = new_stream(input, output, sample_rate, buffer_size);
+    if (!input && !output) {
+        return (stream_t) audio_device_error_with(
+            string("Can not open a stream with no devices"), 0);
+    }
+
+    stream_t        stream = new_stream(input, output, sample_rate, buffer_size);
 
     // TODO number of inputs
     list_t all_inputs = list(fa_signal_input(kInputOffset + 0), fa_signal_input(kInputOffset + 1));

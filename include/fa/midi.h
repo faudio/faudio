@@ -122,11 +122,15 @@ fa_pair_t fa_midi_default(fa_midi_session_t);
 
 /** Get the standard input device of the given session.
     @param session   The session.
+    @return
+        A device or an error if there are no input devices available.
 */
 fa_midi_device_t fa_midi_default_input(fa_midi_session_t);
 
 /** Get the standard output device of the given session.
     @param session   The session.
+    @return
+        A device or an error if there are no output devices available.
 */
 fa_midi_device_t fa_midi_default_output(fa_midi_session_t);
 

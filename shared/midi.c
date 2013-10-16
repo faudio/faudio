@@ -313,18 +313,31 @@ fa_list_t fa_midi_all(session_t session)
     return fa_copy(session->devices);
 }
 
+#define fail_if_no_input(type) \
+    if (!session->def_input) { \
+        return (type) midi_device_error(string("No input device available")); \
+    }
+#define fail_if_no_output(type) \
+    if (!session->def_output) { \
+        return (type) midi_device_error(string("No output device available")); \
+    }
+
 fa_pair_t fa_midi_default(session_t session)
 {
+    fail_if_no_input(fa_pair_t);
+    fail_if_no_output(fa_pair_t);
     return pair(session->def_input, session->def_output);
 }
 
 device_t fa_midi_default_input(session_t session)
 {
+    fail_if_no_input(device_t);
     return session->def_input;
 }
 
 device_t fa_midi_default_output(session_t session)
 {
+    fail_if_no_output(device_t);
     return session->def_output;
 }
 
@@ -387,14 +400,18 @@ void send_out(midi_message_t midi, stream_t stream);
 PmTimestamp midi_time_callback(void *data)
 {
     stream_t stream = data;
-    return fa_clock_milliseconds(stream->clock); // FIXME
+    return fa_clock_milliseconds(stream->clock);
 }
 
 ptr_t stream_thread_callback(ptr_t x);
 
 fa_midi_stream_t fa_midi_open_stream(device_t device)
 {
-    assert(device && "Not a device");
+    if (!device) {
+        return (stream_t) midi_device_error_with(
+            string("Can not open a stream with no devices"), 0);
+    }
+
     midi_inform_opening(device);
 
     PmError result;
