@@ -417,9 +417,6 @@ fa_list_t fa_signal_fluid(fa_string_t);
     
     @return
         A pair of @ref fa_signal_t (outputs).
-    @note
-        This function is only available on Mac OS X and will
-        fail ungracefully on other platforms.
     @warning
         Experimental.    
 */
