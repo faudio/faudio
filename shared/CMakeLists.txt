@@ -37,6 +37,7 @@ list(APPEND SRCS
 list(APPEND SRCS_OSX
   ../platform/macosx/atomic.c
   ../platform/macosx/thread.c
+  ../platform/macosx/signal.c
   ../platform/macosx/string.c
   ../platform/macosx/device.c
   ../platform/macosx/au.m
@@ -45,6 +46,7 @@ list(APPEND SRCS_OSX
   )
 
 list(APPEND SRCS_MSYS
+  ../platform/windows/signal.c
   )
 
 if(APPLE)
