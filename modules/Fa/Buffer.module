@@ -183,7 +183,7 @@ module Fa.Buffer
         @param path
             Path to the file to read.
         @return
-            A `(Channels, Buffer)` pair.
+            A `(Channels, Buffer)` pair or an error value.
      */
     readAudio   : String -> Pair; // (Int,Buffer)
 

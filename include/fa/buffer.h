@@ -188,7 +188,7 @@ void fa_buffer_write_raw(fa_string_t, fa_buffer_t);
     @param path
         Path to the file to read.
     @return
-        A `(Channels, Buffer)` pair.
+        A `(Channels, Buffer)` pair or an error value.
 */
 fa_pair_t fa_buffer_read_audio(fa_string_t);
 
