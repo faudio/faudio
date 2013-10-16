@@ -121,11 +121,15 @@ module Fa.Audio
     
     /** Get the standard input device of the given session.
         @param session   The session.
+        @return
+            A device or an error if there are no input devices available.
      */
     defaultInput : Session -> Device;
     
     /** Get the standard output device of the given session.
         @param session   The session.
+        @return
+            A device or an error if there are no output devices available.
      */
     defaultOutput : Session -> Device;
     
