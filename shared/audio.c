@@ -424,7 +424,12 @@ stream_t fa_audio_open_stream(device_t input,
     unsigned long   buffer_size = 16;
     double          sample_rate = 44100;
 
-    stream_t        stream      = new_stream(input, output, sample_rate, buffer_size);
+    if (!input && !output) {
+        return (stream_t) audio_device_error_with(
+            string("Can not open a stream with no devices"), 0);
+    }
+
+    stream_t        stream = new_stream(input, output, sample_rate, buffer_size);
 
     // TODO number of inputs
     list_t all_inputs = list(fa_signal_input(kInputOffset + 0), fa_signal_input(kInputOffset + 1));

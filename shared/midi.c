@@ -394,7 +394,11 @@ ptr_t stream_thread_callback(ptr_t x);
 
 fa_midi_stream_t fa_midi_open_stream(device_t device)
 {
-    assert(device && "Not a device");
+    if (!device) {
+        return (stream_t) midi_device_error_with(
+            string("Can not open a stream with no devices"), 0);
+    }
+
     midi_inform_opening(device);
 
     PmError result;
