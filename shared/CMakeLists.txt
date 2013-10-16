@@ -47,6 +47,8 @@ list(APPEND SRCS_OSX
 list(APPEND SRCS_MSYS
   ../platform/windows/atomic.c
   ../platform/windows/thread.c
+  ../platform/windows/device.c
+  ../platform/windows/system/directory.c
   )
 
 if(APPLE)

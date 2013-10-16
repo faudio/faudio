@@ -245,8 +245,8 @@ if (COMPONENTS_RESOLVED)
     ${ICU_LIBRARIES}
     ${FLUIDSYNTH_LIBRARIES} # May be empty
     ${GLIB_LIBRARIES}       # May be empty
-    "/mingw/lib"
-    "/mingw"
+    "/c/mingw/lib"
+    "/c/mingw"
     )
 
   list(APPEND EXTS ${PTHREADS_LIBRARIES})
@@ -259,10 +259,13 @@ if (COMPONENTS_RESOLVED)
   list(APPEND EXTS ${GLIB_LIBRARIES})       # May be empty
 
   if (MSYS)
-    # find_library (MINGW32 NAMES mingw32 PATH_SUFFIXES lib PATHS "C:/MinGW")
-    # find_library (OLE32   NAMES ole32   PATH_SUFFIXES lib PATHS "C:/MinGW")
-    # find_library (WINMM   NAMES winmm   PATH_SUFFIXES lib PATHS "C:/MinGW")
-    # find_library (WINSOCK NAMES ws2_32  PATH_SUFFIXES lib PATHS "C:/MinGW")
+    find_library (MINGW32 NAMES mingw32 PATH_SUFFIXES lib PATHS "C:/MinGW")
+    find_library (OLE32   NAMES ole32   PATH_SUFFIXES lib PATHS "C:/MinGW")
+    #find_library (WINMM   NAMES winmm   PATH_SUFFIXES lib PATHS "C:/MinGW")
+    find_library (WINSOCK NAMES ws2_32  PATH_SUFFIXES lib PATHS "C:/MinGW")
+
+    find_library(WINMM          winmm)
+    set(WINMM winmm.lib)
 
     set(CMAKE_C_STANDARD_LIBRARIES "-lws2_32 ${CMAKE_C_STANDARD_LIBRARIES}")
     list(APPEND EXTS ${WINSOCK})
@@ -286,11 +289,11 @@ if (COMPONENTS_RESOLVED)
     list(APPEND EXTS ${QUARTZCORE})
   endif ()
 
-  if(MSYS)
+  #if(MSYS)
     #find_library(WINMM              winmm)
-    set(WINMM winmm.lib)
-    list(APPEND EXTS ${WINMM})
-  endif()
+    #set(WINMM winmm.lib)
+    #list(APPEND EXTS ${WINMM})
+  #endif()
 
   ## ----------------------------------------------------------------------
   ## Add targets for source-only libraries
