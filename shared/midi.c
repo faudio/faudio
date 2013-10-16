@@ -400,7 +400,7 @@ void send_out(midi_message_t midi, stream_t stream);
 PmTimestamp midi_time_callback(void *data)
 {
     stream_t stream = data;
-    return fa_clock_milliseconds(stream->clock); // FIXME
+    return fa_clock_milliseconds(stream->clock);
 }
 
 ptr_t stream_thread_callback(ptr_t x);
