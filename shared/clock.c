@@ -176,39 +176,3 @@ fa_ptr_t standard_clock_impl(fa_id_t interface)
     }
 }   
 
-
-//
-// struct system_prec_clock {
-//     impl_t impl;
-// };
-// typedef struct system_prec_clock *system_prec_clock_t;
-//
-// ptr_t system_prec_clock_impl(fa_id_t interface);
-//
-// clock_t fa_time_get_system_prec_clock()
-// {
-//     system_prec_clock_t clock = fa_new_struct(system_prec_clock);
-//     clock->impl = &system_prec_clock_impl;
-//     return (clock_t) clock;
-// }
-//
-// double system_prec_tick_rate(ptr_t a)
-// {
-//     return 1000000000;
-// }
-//
-//
-// ptr_t system_prec_clock_impl(fa_id_t interface)
-// {
-//     static fa_clock_interface_t system_prec_clock_clock
-//         = { system_prec_time, system_prec_tick_rate, system_prec_ticks };
-//
-//     switch (interface) {
-//
-//     case fa_clock_interface_i:
-//         return &system_prec_clock_clock;
-//
-//     default:
-//         return NULL;
-//     }
-// }
