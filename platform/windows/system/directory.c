@@ -36,7 +36,7 @@ fa_string_t fa_system_directory_current()
 {
     char path[MAX_PATH];
 	if(FAILED(GetCurrentDirectory(MAX_PATH, path))) {
-		assert(FALSE && "Error get current directory")
+		assert(FALSE && "Error get current directory");
 	}
 	return string(path);
 }
@@ -50,7 +50,7 @@ void fa_system_directory_create(string_t path)
 	*/
     if(FALSE == CreateDirectory(unstring(path),NULL)) 
 	{
-		id(ERROR_PATH_NOT_FOUND==GetLastError()) {
+		if(ERROR_PATH_NOT_FOUND==GetLastError()) {
 			assert(FALSE && "Intermediate directory not found");
 		}
 	}
