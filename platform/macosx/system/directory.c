@@ -61,7 +61,7 @@ fa_string_t fa_system_directory_read_file(fa_string_t path)
 void fa_system_directory_write_file(fa_string_t path,
                                     fa_string_t string)
 {
-    FILE *f = fopen(unstring(path), "w+");
+    FILE *f = fopen(unstring(path), "w");
     fprintf(f, "%s", unstring(string));
     fclose(f);
 }
@@ -69,7 +69,7 @@ void fa_system_directory_write_file(fa_string_t path,
 void fa_system_directory_append_file(fa_string_t path,
                                      fa_string_t string)
 {
-    FILE *f = fopen(unstring(path), "a+");
+    FILE *f = fopen(unstring(path), "a");
     fprintf(f, "%s", unstring(string));
     fclose(f);
 }
