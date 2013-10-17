@@ -25,11 +25,48 @@
 /*
     ## Notes
     
-    * Straightforward implementation in terms of CoreMIDI
+    * Implementation in terms of CoreMIDI
+
+      CoreMIDI requires a CFRunLoop to work properly, usually the main thread is used. This is not
+      an option here, so instead we will launch thread while the session is created. The begin_session()
+      function will initalize *both* session and devices, and opening/closing streams simply creates
+      a handle that can be used to register callbacks on the session thread.
+      
+      Syncronization (between MIDI vs user thread, user must syncronize externally):
+        midi callbaks 
+            reads session->streams
+            reads from stream->outgoing_messages
+
+        begin_session
+            owns everything in the session being created
+            writes gCurrentSession
+        end_session
+            owns everything in the session being destroyed
+            reads gCurrentSession
+        current_sessions
+            reads gCurrentSession
+        end_all_sessions
+            see end_session
+        all, default*
+            reads session
+        name, host_name, has_*
+            reads device
+        add_status_callback
+            writes in session
+            requires mutex?
+        open_stream, close_stream
+            reads+writes session
+            requires lock
+        add_message_callback
+            writes?
+        schedule
+            writes to stream->outgoing_messages
+    
     * We map: 
         - Sessions to CM Clients (still requiring uniqueness)
         - We do not provide any direct access to Devices/Enities
         - Each Endpoint shows up as a *separate* stream
+
      * The MIDI streams use MIDITimeStamp() for the clock. We might change this.
 
  */
@@ -51,6 +88,7 @@ typedef OSStatus                    native_error_t;
 // typedef PmError                     native_error_t;
 
 #define kMaxMessageCallbacks       8
+#define kMaxStatusCallbacks        8
 #define kMidiServiceThreadInterval 20
 
 // TODO move
@@ -70,6 +108,16 @@ struct _fa_midi_session_t {
 
     device_t            def_input;          // Default devices, both possibly null
     device_t            def_output;         // If present, these are also in the above list
+
+    list_t              streams;            // TODO mutable list of streams (invisible to user)
+
+    thread_t            thread;             // Thread on which the MIDI run loop is invoked
+    bool                thread_abort;       // Set to non-zero when thread should stop
+
+    int                 status_callback_count;
+    fa_unary_t          status_callbacks[kMaxStatusCallbacks];
+    fa_ptr_t            status_callback_ptrs[kMaxStatusCallbacks];
+    
 };
 
 struct _fa_midi_device_t {
@@ -80,17 +128,13 @@ struct _fa_midi_device_t {
     bool                input, output;      // Cached capabilities
     string_t            name;               // Cached names
     string_t            host_name;
+
 };
 
 struct _fa_midi_stream_t {
 
     impl_t              impl;               // Dispatcher
-    // native_stream_t     native_input,
-                        // native_output;      // Native stream(s)
     device_t            device;
-
-    thread_t            thread;
-    bool                thread_abort;       // Set to non-zero when thread should stop
 
     int                 message_callback_count;
     fa_unary_t          message_callbacks[kMaxMessageCallbacks];
@@ -218,8 +262,6 @@ inline static stream_t new_stream(device_t device)
     // stream->native_input    = NULL;
     // stream->native_output   = NULL;
 
-    stream->thread          = NULL;
-    stream->thread_abort    = false;
     stream->message_callback_count = 0;
     
     stream->clock           = fa_clock_standard(); // TODO change
@@ -252,7 +294,8 @@ void fa_midi_terminate()
 // --------------------------------------------------------------------------------
 
 void status_listener(const MIDINotification *message, void *refCon)
-{
+{             
+    inform(string("The status listener was invoked! (This should not be printed)"));
     // TODO invoke user-defined callbacks
 }
 
@@ -273,6 +316,7 @@ session_t fa_midi_begin_session()
             return (session_t) midi_device_error(string("Overlapping real-time midi sessions"));
         } else {
             CFStringRef name = fa_string_to_native(string("fa_test_core_midi"));
+            
             MIDIClientRef client;
             result = MIDIClientCreate(name, status_listener, NULL, &client);
 
@@ -484,8 +528,9 @@ fa_midi_stream_t fa_midi_open_stream(device_t device)
             native_error(string("Could not open midi output"), result);
         }
     }
-    
-    stream->thread = fa_thread_create(stream_thread_callback, stream);
+
+    // FIXME
+    // stream->thread = fa_thread_create(stream_thread_callback, stream);
     return stream;
 }
 
@@ -495,8 +540,8 @@ void fa_midi_close_stream(stream_t stream)
     inform(string("Closing real-time midi stream"));
 
     // TODO instruct to stop
-    stream->thread_abort = true;
-    fa_thread_join(stream->thread);
+    // stream->thread_abort = true;
+    // fa_thread_join(stream->thread);
 
     // if (stream->native_input) {
         // Pm_Close(stream->native_input);
@@ -538,10 +583,10 @@ ptr_t stream_thread_callback(ptr_t x)
     inform(string("  Midi service thread active"));
 
     while(1) {              
-        if (stream->thread_abort) {
-            inform(string("  Midi service thread finished"));
-            return 0;
-        }
+        // if (stream->thread_abort) {
+            // inform(string("  Midi service thread finished"));
+            // return 0;
+        // }
         // inform(string("  Midi service thread!"));
 
         // Inputs
