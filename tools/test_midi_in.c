@@ -2,7 +2,7 @@
 #include <fa/fa.h>
 #include <fa/util.h>
 
-fa_ptr_t received(ptr_t x, ptr_t timeMessage)
+fa_ptr_t received(ptr_t stream, ptr_t timeMessage)
 {
     fa_print_ln(fa_string_show(timeMessage)); 
     
@@ -19,7 +19,7 @@ void run_midi()
     assert(i && "No input");
 
     fa_midi_stream_t st = fa_midi_open_stream(i);
-    fa_midi_add_message_callback(received, NULL, st);
+    fa_midi_add_message_callback(received, st, st);
     
     if (fa_check(st)) {
         fa_error_log(st, NULL);
