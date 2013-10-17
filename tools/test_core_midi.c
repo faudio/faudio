@@ -9,7 +9,7 @@
 
  */                    
  
-char * MYCFStringCopyUTF8String(CFStringRef aString);
+char * get_cfstring(CFStringRef aString);
 
 void print_devices_with_status()
 {       
@@ -24,7 +24,7 @@ void print_devices_with_status()
         status = MIDIObjectGetStringProperty(device, kMIDIPropertyName, &name);
         if (/*status != noErr*/1) {                   
         
-            char* str = MYCFStringCopyUTF8String(name);
+            char* str = get_cfstring(name);
             printf("  Name: %s \n", str);
             
             // FIXME
@@ -170,19 +170,7 @@ int main(int argc, char const *argv[])
 // TODO
 
 
-char * MYCFStringCopyUTF8String(CFStringRef aString) {
-  if (aString == NULL) {
-    return NULL;
-  }
-
-  CFIndex length = CFStringGetLength(aString);
-  CFIndex maxSize =
-  CFStringGetMaximumSizeForEncoding(length,
-                                    kCFStringEncodingUTF8);
-  char *buffer = (char *)malloc(maxSize);
-  if (CFStringGetCString(aString, buffer, maxSize,
-                         kCFStringEncodingUTF8)) {
-    return buffer;
-  }
-  return NULL;
+char * get_cfstring(CFStringRef aString) {
+    string_t s = fa_string_from_native((void*) aString);
+    return unstring(s);
 }
