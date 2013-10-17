@@ -19,6 +19,7 @@
 #include <fa/time.h>
 
 #include <portaudio.h>
+#include "signal.h"
 
 /*
     Notes:
@@ -27,7 +28,6 @@
         * FIXME endSession must check for running streams, or we get consistency errors
             * Either abort streams or refuse to close session
  */
-
 
 typedef fa_audio_proc_t             proc_t;
 typedef fa_audio_device_t           device_t;
@@ -42,25 +42,6 @@ typedef PaDeviceIndex native_index_t;
 typedef PaStream     *native_stream_t;
 
 #define kMaxSignals 8
-
-// TODO formalize better
-struct _state_t {
-    double *inputs;
-    void   *_;
-    int     count;
-    double  rate;
-    // ...
-};
-typedef struct _state_t *state_t;
-list_t fa_signal_get_procs(fa_signal_t signal2);
-state_t new_state();
-void add_custom_proc(custom_proc_t proc, state_t state);
-void delete_state(state_t state);
-void inc_state(state_t state);
-void run_actions(priority_queue_t controls2, state_t state);
-void run_custom_procs(int when, state_t state);
-double step(signal_t signal, state_t state);
-fa_signal_t fa_signal_simplify(fa_signal_t signal2);
 
 
 struct _fa_audio_session_t {
