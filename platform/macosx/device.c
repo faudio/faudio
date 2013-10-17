@@ -176,21 +176,22 @@ void threaded_assert(int status, char* msg)
 
 ptr_t run_external_loop(ptr_t _)
 {
-    inform(string("  Midi status thread active"));
-    fa_print_ln(fa_string_show(fa_thread_current()));
-
-    OSStatus status;
-    CFStringRef name = fa_string_to_native(string("fa_test_core_midi"));
-
-    MIDIClientRef client;
-    status = MIDIClientCreate(name, midi_listener, NULL, &client);
-    threaded_assert ((status == noErr), "MIDIClientCreate failed");
-
-    CFRunLoopRun();
-    assert(false && "Unreachable");
+    // inform(string("  Midi status thread active"));
+    // fa_print_ln(fa_string_show(fa_thread_current()));
+    // 
+    // OSStatus status;
+    // CFStringRef name = fa_string_to_native(string("fa_test_core_midi"));
+    // 
+    // MIDIClientRef client;
+    // status = MIDIClientCreate(name, midi_listener, NULL, &client);
+    // threaded_assert ((status == noErr), "MIDIClientCreate failed");
+    // 
+    // CFRunLoopRun();
+    // assert(false && "Unreachable");
+    return NULL;
 }
 
 void add_midi_status_listener(midi_status_callback_t function, ptr_t data) {
-    fa_thread_create(run_external_loop, NULL);
+    // fa_thread_create(run_external_loop, NULL);
 }
 
