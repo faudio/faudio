@@ -35,7 +35,11 @@ void print_devices_with_status()
         status = noErr;
         status = MIDIObjectGetIntegerProperty(device, kMIDIPropertyOffline, &isOffline);
         if (/*status != noErr*/1) {
-            printf("  Offline: %ld\n", isOffline);
+            if (isOffline) {
+                printf("  -\n");
+            } else {
+                printf("  Online\n");
+            }
         }
         
         mark_used(device);
@@ -48,9 +52,24 @@ void print_num_devices()
     int numDevs     = MIDIGetNumberOfDevices();
     int numSources  = MIDIGetNumberOfSources();
     int numDests    = MIDIGetNumberOfDestinations();        
-    printf("Devices: %d Sources: %d Destinations: %d \n", numDevs, numSources, numDests);
+    printf("Devices: %d,  Sources: %d,  Destinations: %d \n", numDevs, numSources, numDests);
 }
 
+
+fa_midi_session_t print_midi_devices_using_fa(fa_ptr_t _, midi_session_t session)
+{
+    // fa_print("Listing MIDI devices:\n", 0);
+    // fa_print_ln(string(""));
+
+    fa_for_each(x, fa_midi_all(session)) {
+        fa_print("Name: %s\n", fa_string_to_string(fa_midi_name(x)));
+        fa_print("Host: %s\n", fa_string_to_string(fa_midi_host_name(x)));
+        fa_print("In:   %s\n", fb(fa_midi_has_input(x)));
+        fa_print("Out:  %s\n", fb(fa_midi_has_output(x)));
+        fa_print_ln(string(""));
+    }
+    return session;
+}
 
 
 void midi_listener(const MIDINotification *message, void *data)
@@ -61,8 +80,12 @@ void midi_listener(const MIDINotification *message, void *data)
     if (id == kMIDIMsgSetupChanged) {
         inform(string("Setup changed!\n"));
         print_num_devices();
-        // closure_t closure = data;
-        // closure->function(closure->data);
+        print_devices_with_status();
+
+        // fa_midi_with_session(
+        //     print_midi_devices_using_fa, NULL,
+        //     fa_error_log, NULL);
+
     }
 }
 
