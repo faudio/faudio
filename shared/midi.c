@@ -38,34 +38,29 @@
             reads from stream->outgoing_messages
 
         begin_session
-            owns everything in the session being created
-            writes gCurrentSession
         end_session
-            owns everything in the session being destroyed
-            reads gCurrentSession
         current_sessions
-            reads gCurrentSession
         end_all_sessions
-            see end_session
         all, default*
-            reads session
         name, host_name, has_*
-            reads device
         add_status_callback
-            writes in session
-            requires mutex?
+            Must lock to prevent interruption from NotifyProc
         open_stream, close_stream
             reads+writes session
             requires lock
         add_message_callback
+            Must lock to prevent interruption from ReadProc
             writes?
         schedule
             writes to stream->outgoing_messages
+            XXX who reads?
     
-    * We map: 
-        - Sessions to CM Clients (still requiring uniqueness)
-        - We do not provide any direct access to Devices/Enities
-        - Each Endpoint shows up as a *separate* stream
+    * Mapping: 
+        - Sessions MIDIClients (still requiring uniqueness)
+        - Devices to MIDIEndpoints
+            - We do not provide any direct access to MIDIDevices/MIDIEnities
+            - Each endpoint shows up as a *separate* device
+        - Streams to MIDIPorts
 
      * The MIDI streams use MIDITimeStamp() for the clock. We might change this.
 
@@ -81,7 +76,7 @@ typedef fa_action_t                 action_t;
 
 typedef MIDIClientRef               native_session_t;
 typedef MIDIEndpointRef             native_device_t;
-typedef void                        native_stream_t;
+typedef MIDIPortRef                 native_stream_t;
 typedef OSStatus                    native_error_t;
 // typedef PmDeviceID                  native_device_t;
 // typedef PmStream                   *native_stream_t;
@@ -102,22 +97,18 @@ struct _fa_midi_session_t {
 
     impl_t              impl;               // Dispatcher 
     native_session_t    native;
-    system_time_t       acquired;           // Time of acquisition (not used at the moment)
 
     list_t              devices;            // Cached device list
-
     device_t            def_input;          // Default devices, both possibly null
     device_t            def_output;         // If present, these are also in the above list
-
-    list_t              streams;            // TODO mutable list of streams (invisible to user)
-
+    
     thread_t            thread;             // Thread on which the MIDI run loop is invoked
     bool                thread_abort;       // Set to non-zero when thread should stop
 
+                                            // Status callbacks
     int                 status_callback_count;
     fa_unary_t          status_callbacks[kMaxStatusCallbacks];
     fa_ptr_t            status_callback_ptrs[kMaxStatusCallbacks];
-    
 };
 
 struct _fa_midi_device_t {
@@ -134,22 +125,21 @@ struct _fa_midi_device_t {
 struct _fa_midi_stream_t {
 
     impl_t              impl;               // Dispatcher
+    native_stream_t     native;             // Native stream
     device_t            device;
-
-    int                 message_callback_count;
-    fa_unary_t          message_callbacks[kMaxMessageCallbacks];
-    fa_ptr_t            message_callback_ptrs[kMaxMessageCallbacks];
 
     fa_clock_t          clock;              // Clock used for scheduler and incoming events
     atomic_queue_t      in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
     priority_queue_t    controls;           // Scheduled controls (Time, (Channel, Ptr))
 
-    // list_t              incoming;
+    int                 message_callback_count;
+    fa_unary_t          message_callbacks[kMaxMessageCallbacks];
+    fa_ptr_t            message_callback_ptrs[kMaxMessageCallbacks];
 };
 
-static mutex_t   coremidi_mutex;
-static bool      pm_status;
-static session_t midi_current_session;
+static mutex_t   gMidiMutex;
+static bool      gMidiActive;
+static session_t gMidiCurrentSession;
 
 error_t midi_device_error(string_t msg);
 error_t midi_device_error_with(string_t msg, int error);
@@ -281,14 +271,14 @@ inline static void delete_stream(stream_t stream)
 
 void fa_midi_initialize()
 {
-    coremidi_mutex        = fa_thread_create_mutex();
-    pm_status       = false;
-    midi_current_session = NULL;
+    gMidiMutex        = fa_thread_create_mutex();
+    gMidiActive       = false;
+    gMidiCurrentSession = NULL;
 }
 
 void fa_midi_terminate()
 {
-    fa_thread_destroy_mutex(coremidi_mutex);
+    fa_thread_destroy_mutex(gMidiMutex);
 }
 
 // --------------------------------------------------------------------------------
@@ -303,16 +293,16 @@ session_t fa_midi_begin_session()
 {
     native_error_t result;
 
-    if (!coremidi_mutex) {
+    if (!gMidiMutex) {
         assert(false && "Module not initalized");
     }
 
     inform(string("Initializing real-time midi session"));
 
-    fa_thread_lock(coremidi_mutex);
+    fa_thread_lock(gMidiMutex);
     {
-        if (pm_status) {
-            fa_thread_unlock(coremidi_mutex);
+        if (gMidiActive) {
+            fa_thread_unlock(gMidiMutex);
             return (session_t) midi_device_error(string("Overlapping real-time midi sessions"));
         } else {
             CFStringRef name = fa_string_to_native(string("fa_test_core_midi"));
@@ -324,13 +314,13 @@ session_t fa_midi_begin_session()
                 return (session_t) native_error(string("Could not start midi"), result);
             }
 
-            pm_status = true;
-            fa_thread_unlock(coremidi_mutex);
+            gMidiActive = true;
+            fa_thread_unlock(gMidiMutex);
 
             session_t session = new_session(client);
             session_init_devices(session);
 
-            midi_current_session = session;
+            gMidiCurrentSession = session;
             return session;
         }
     }
@@ -340,15 +330,15 @@ void fa_midi_end_session(session_t session)
 {
     native_error_t result;
 
-    if (!coremidi_mutex) {
+    if (!gMidiMutex) {
         assert(false && "Not initalized");
     }
 
     inform(string("Terminating real-time midi session"));
 
-    fa_thread_lock(coremidi_mutex);
+    fa_thread_lock(gMidiMutex);
     {
-        if (pm_status) {
+        if (gMidiActive) {
             inform(string("(actually terminating)"));
             result = MIDIClientDispose(session->native);
 
@@ -357,11 +347,11 @@ void fa_midi_end_session(session_t session)
                 return;
             }
 
-            pm_status = false;
-            midi_current_session = NULL;
+            gMidiActive = false;
+            gMidiCurrentSession = NULL;
         }
     }
-    fa_thread_unlock(coremidi_mutex);
+    fa_thread_unlock(gMidiMutex);
     delete_session(session);
 }
 
@@ -381,22 +371,30 @@ void fa_midi_with_session(session_callback_t    session_callback,
     fa_midi_end_session(session);
 }
 
-fa_list_t fa_midi_current_sessions()
+fa_list_t fa_midi_current_session()
 {
-    if (!midi_current_session) {
+    if (!gMidiCurrentSession) {
         return list();
     } else {
-        return list(midi_current_session);
+        return list(gMidiCurrentSession);
     }
 }
 
 fa_ptr_t fa_midi_end_all_sessions()
 {
-    fa_dfor_each(x, fa_midi_current_sessions()) {
+    fa_dfor_each(x, fa_midi_current_session()) {
         fa_midi_end_session(x);
     }
     return NULL;
 }
+
+
+
+
+
+
+
+
 
 fa_list_t fa_midi_all(session_t session)
 {
