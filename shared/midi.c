@@ -44,12 +44,12 @@
         all, default*
         name, host_name, has_*
         add_status_callback
-            Must lock to prevent interruption from NotifyProc
+            Must lock to prevent interruption from NotifyProc (?)
         open_stream, close_stream
             reads+writes session
             requires lock
         add_message_callback
-            Must lock to prevent interruption from ReadProc
+            Must lock to prevent interruption from ReadProc (?)
             writes?
         schedule
             writes to stream->outgoing_messages
@@ -311,16 +311,17 @@ session_t fa_midi_begin_session()
             result = MIDIClientCreate(name, status_listener, NULL, &client);
 
             if (result < 0) {
+                fa_thread_unlock(gMidiMutex);
                 return (session_t) native_error(string("Could not start midi"), result);
             }
 
             gMidiActive = true;
-            fa_thread_unlock(gMidiMutex);
 
             session_t session = new_session(client);
             session_init_devices(session);
 
             gMidiCurrentSession = session;
+            fa_thread_unlock(gMidiMutex);
             return session;
         }
     }
@@ -344,6 +345,7 @@ void fa_midi_end_session(session_t session)
 
             if (result < 0) {
                 fa_error_log(NULL, native_error(string("Could not stop midi"), result));
+                fa_thread_unlock(gMidiMutex);
                 return;
             }
 
