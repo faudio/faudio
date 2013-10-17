@@ -1,7 +1,7 @@
 
 #include <fa/fa.h>
 
-#define NO_THREAD_T // TODO
+#define NO_THREAD_T
 #include <fa/util.h>
 #undef NO_THREAD_T
 
@@ -9,6 +9,8 @@
 #include <CoreAudioKit/AUGenericView.h>
 #include <AudioUnit/AudioUnit.h>
 #include <AudioUnit/AUCocoaUIView.h>
+
+#include "au.h"
 
 struct au_context {                     
     double *outputs;
@@ -21,7 +23,6 @@ struct au_context {
     AudioTimeStamp              TimeStamp;
     AudioBufferList*            BufferList;
 };
-typedef struct au_context *au_context_t;
 
 au_context_t create_au_context(ptr_t instance, int channels, int frames)
 {
@@ -36,7 +37,6 @@ void destroy_au_context(au_context_t context) {
     fa_free(context->outputs);
     fa_delete(context);
 }
-
 
 
 string_t from_os_status(OSStatus err)
@@ -91,24 +91,6 @@ int instance_num_outputs(AudioComponentInstance instance)
     instance_num_channels(instance, &inputs, &outputs);
     return outputs;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 void init_audio_time_stamp (AudioTimeStamp *time_stamp, Float64 inSampleTime) {
@@ -246,12 +228,6 @@ void au_cleanup(au_context_t context)
     delete_buffer_list(context->BufferList);
 }
 
-
-
-
-
-
-
 /**
     @return 
         A list of AudioComponent
@@ -273,6 +249,10 @@ list_t find_audio_components(AudioComponentDescription* description)
     return all;
 }
 
+/**
+    @return 
+        A list of AudioComponent
+*/
 list_t find_all_audio_components()
 {
     AudioComponentDescription descr;
@@ -308,10 +288,6 @@ ptr_t new_dls_music_device_instance()
     AudioComponentInstanceNew(dls, (AudioComponentInstance*) &instance);
     return instance;
 }
-
-
-
-
 
 
 void au_send_midi(au_context_t context, int status, int data1, int data2)
