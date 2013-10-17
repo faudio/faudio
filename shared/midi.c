@@ -28,8 +28,7 @@
     * Straightforward implementation in terms of CoreMIDI
     * We map: 
         - Sessions to CM Clients (still requiring uniqueness)
-        - Devices to CM Devices
-        - We do not provide any direct access to Enities/Endpoints
+        - We do not provide any direct access to Devices/Enities
         - Each Endpoint shows up as a *separate* stream
      * The MIDI streams use MIDITimeStamp() for the clock. We might change this.
 
@@ -43,9 +42,10 @@ typedef fa_midi_session_callback_t  session_callback_t;
 typedef fa_midi_status_callback_t   status_callback_t;
 typedef fa_action_t                 action_t;
 
-typedef int                         native_device_t;
-typedef void                       *native_stream_t;
-typedef int                         native_error_t;
+typedef MIDIClientRef               native_session_t;
+typedef MIDIEndpointRef             native_device_t;
+typedef void                        native_stream_t;
+typedef OSStatus                    native_error_t;
 // typedef PmDeviceID                  native_device_t;
 // typedef PmStream                   *native_stream_t;
 // typedef PmError                     native_error_t;
@@ -53,9 +53,17 @@ typedef int                         native_error_t;
 #define kMaxMessageCallbacks       8
 #define kMidiServiceThreadInterval 20
 
+// TODO move
+inline static 
+char* get_cfstring(CFStringRef aString) {
+    string_t s = fa_string_from_native((void*) aString);
+    return unstring(s);
+}
+
 struct _fa_midi_session_t {
 
-    impl_t              impl;               // Dispatcher
+    impl_t              impl;               // Dispatcher 
+    native_session_t    native;
     system_time_t       acquired;           // Time of acquisition (not used at the moment)
 
     list_t              devices;            // Cached device list
@@ -67,7 +75,7 @@ struct _fa_midi_session_t {
 struct _fa_midi_device_t {
 
     impl_t              impl;               // Dispatcher
-    native_device_t      index;              // Native device index
+    native_device_t     index;              // Native device index
 
     bool                input, output;      // Cached capabilities
     string_t            name;               // Cached names
@@ -77,14 +85,13 @@ struct _fa_midi_device_t {
 struct _fa_midi_stream_t {
 
     impl_t              impl;               // Dispatcher
-    native_stream_t     native_input,
-                        native_output;      // Native stream(s)
+    // native_stream_t     native_input,
+                        // native_output;      // Native stream(s)
     device_t            device;
 
     thread_t            thread;
     bool                thread_abort;       // Set to non-zero when thread should stop
 
-    // fa_atomic_t         receivers;          // Atomic [(Unary, Ptr)]
     int                 message_callback_count;
     fa_unary_t          message_callbacks[kMaxMessageCallbacks];
     fa_ptr_t            message_callback_ptrs[kMaxMessageCallbacks];
@@ -96,7 +103,7 @@ struct _fa_midi_stream_t {
     // list_t              incoming;
 };
 
-static mutex_t   pm_mutex;
+static mutex_t   coremidi_mutex;
 static bool      pm_status;
 static session_t midi_current_session;
 
@@ -107,10 +114,10 @@ void midi_device_fatal(string_t msg, int code);
 ptr_t midi_session_impl(fa_id_t interface);
 ptr_t midi_device_impl(fa_id_t interface);
 ptr_t midi_stream_impl(fa_id_t interface);
-inline static session_t new_session();
+inline static session_t new_session(native_session_t native);
 inline static void session_init_devices(session_t session);
 inline static void delete_session(session_t session);
-inline static device_t new_device(native_device_t index);
+inline static device_t new_device(bool is_output, native_device_t native, session_t session);
 inline static void delete_device(device_t device);
 inline static stream_t new_stream(device_t device);
 inline static void delete_stream(stream_t stream);
@@ -120,35 +127,43 @@ long fa_midi_message_simple_to_long(fa_midi_message_t midi);
 
 // --------------------------------------------------------------------------------
 
-inline static session_t new_session()
+inline static session_t new_session(native_session_t native)
 {
     session_t session = fa_new(midi_session);
     session->impl = &midi_session_impl;
+    session->native = native;
     return session;
 }
 
 inline static void session_init_devices(session_t session)
 {
-    int count;
     list_t         devices;
 
-    // count   = Pm_CountDevices();
-    count = 0; // FIXME
     devices = fa_list_empty();
+    session->def_input  = NULL;
+    session->def_output = NULL;
 
-    for (size_t i = 0; i < count; ++i) {
-        device_t device = new_device(i);
-
+    for (size_t i = 0; i < MIDIGetNumberOfDestinations(); ++i) {
+        native_device_t native = MIDIGetDestination(i);
+        device_t device = new_device(true, native, session);
         if (device) {
             devices = fa_list_dcons(device, devices);
         }
+        if (i == 0) {
+            session->def_output = device;
+        }
     }
-
-    session->devices      = fa_list_dreverse(devices);
-    session->def_input = NULL; // FIXME
-    session->def_output = NULL; // FIXME
-    // session->def_input    = new_device(Pm_GetDefaultInputDeviceID());
-    // session->def_output   = new_device(Pm_GetDefaultOutputDeviceID());
+    for (size_t i = 0; i < MIDIGetNumberOfSources(); ++i) {
+        native_device_t native = MIDIGetSource(i);
+        device_t device = new_device(false, native, session);
+        if (device) {
+            devices = fa_list_dcons(device, devices);
+        }
+        if (i == 0) {
+            session->def_input = device;
+        }
+    }
+    session->devices = fa_list_dreverse(devices);
 }
 
 inline static void delete_session(session_t session)
@@ -157,8 +172,8 @@ inline static void delete_session(session_t session)
     fa_delete(session);
 }
 
-inline static device_t new_device(native_device_t index)
-{
+inline static device_t new_device(bool is_output, native_device_t native, session_t session)
+{                                 
     // if (index == pmNoDevice) {
         // return NULL;
     // }
@@ -168,15 +183,20 @@ inline static device_t new_device(native_device_t index)
 
     // const PmDeviceInfo  *info = Pm_GetDeviceInfo(index);
 
-    device->index       = index;
+    // device->index       = index;
     // device->input       = info->input;
     // device->output      = info->output;
     // device->name        = string((char *) info->name);      // const cast
     // device->host_name   = string((char *) info->interf);
-    device->input = false;
-    device->output = false;
-    device->name = string("");
-    device->host_name = string(""); // FIXME
+    device->input = !is_output;
+    device->output = is_output;
+
+    CFStringRef name;
+    if (MIDIObjectGetStringProperty(device, kMIDIPropertyName, &name)) {
+        assert(false && "Could not get name");
+    }
+    device->name = fa_string_from_native((void*) name);
+    device->host_name = string("CoreMIDI");
 
     return device;
 }
@@ -195,8 +215,8 @@ inline static stream_t new_stream(device_t device)
     stream->impl            = &midi_stream_impl;
     stream->device          = device;
 
-    stream->native_input    = NULL;
-    stream->native_output   = NULL;
+    // stream->native_input    = NULL;
+    // stream->native_output   = NULL;
 
     stream->thread          = NULL;
     stream->thread_abort    = false;
@@ -219,46 +239,51 @@ inline static void delete_stream(stream_t stream)
 
 void fa_midi_initialize()
 {
-    pm_mutex        = fa_thread_create_mutex();
+    coremidi_mutex        = fa_thread_create_mutex();
     pm_status       = false;
     midi_current_session = NULL;
 }
 
 void fa_midi_terminate()
 {
-    fa_thread_destroy_mutex(pm_mutex);
+    fa_thread_destroy_mutex(coremidi_mutex);
 }
 
 // --------------------------------------------------------------------------------
 
+void status_listener(const MIDINotification *message, void *refCon)
+{
+    // TODO invoke user-defined callbacks
+}
 
 session_t fa_midi_begin_session()
 {
     native_error_t result;
 
-    if (!pm_mutex) {
+    if (!coremidi_mutex) {
         assert(false && "Module not initalized");
     }
 
     inform(string("Initializing real-time midi session"));
 
-    fa_thread_lock(pm_mutex);
+    fa_thread_lock(coremidi_mutex);
     {
         if (pm_status) {
-            fa_thread_unlock(pm_mutex);
+            fa_thread_unlock(coremidi_mutex);
             return (session_t) midi_device_error(string("Overlapping real-time midi sessions"));
         } else {
-            // result = Pm_Initialize();
-            result = 0; // FIXME
+            CFStringRef name = fa_string_to_native(string("fa_test_core_midi"));
+            MIDIClientRef client;
+            result = MIDIClientCreate(name, status_listener, NULL, &client);
 
             if (result < 0) {
                 return (session_t) native_error(string("Could not start midi"), result);
             }
 
             pm_status = true;
-            fa_thread_unlock(pm_mutex);
+            fa_thread_unlock(coremidi_mutex);
 
-            session_t session = new_session();
+            session_t session = new_session(client);
             session_init_devices(session);
 
             midi_current_session = session;
@@ -271,18 +296,17 @@ void fa_midi_end_session(session_t session)
 {
     native_error_t result;
 
-    if (!pm_mutex) {
+    if (!coremidi_mutex) {
         assert(false && "Not initalized");
     }
 
     inform(string("Terminating real-time midi session"));
 
-    fa_thread_lock(pm_mutex);
+    fa_thread_lock(coremidi_mutex);
     {
         if (pm_status) {
             inform(string("(actually terminating)"));
-            // result = Pm_Terminate();
-            result = 0; // FIXME
+            result = MIDIClientDispose(session->native);
 
             if (result < 0) {
                 fa_error_log(NULL, native_error(string("Could not stop midi"), result));
@@ -293,7 +317,7 @@ void fa_midi_end_session(session_t session)
             midi_current_session = NULL;
         }
     }
-    fa_thread_unlock(pm_mutex);
+    fa_thread_unlock(coremidi_mutex);
     delete_session(session);
 }
 
@@ -474,15 +498,15 @@ void fa_midi_close_stream(stream_t stream)
     stream->thread_abort = true;
     fa_thread_join(stream->thread);
 
-    if (stream->native_input) {
+    // if (stream->native_input) {
         // Pm_Close(stream->native_input);
         // FIXME
-    }
+    // }
 
-    if (stream->native_output) {
+    // if (stream->native_output) {
         // Pm_Close(stream->native_output);
         // FIXME
-    }
+    // }
 }
 
 
@@ -521,7 +545,7 @@ ptr_t stream_thread_callback(ptr_t x)
         // inform(string("  Midi service thread!"));
 
         // Inputs
-        if (stream->native_input) {
+        // if (stream->native_input) {
             // while (Pm_Poll(stream->native_input)) {
             // 
             //     PmEvent events[1];
@@ -542,10 +566,10 @@ ptr_t stream_thread_callback(ptr_t x)
             //     }
             // }
             // FIXME
-        }
+        // }
 
         // Outputs
-        if (stream->native_output) {
+        if (/*stream->native_output*/false) { // FIXME
             ptr_t val;
             while ((val = fa_atomic_queue_read(stream->in_controls))) {
                 // inform(fa_string_show(val));
@@ -795,4 +819,9 @@ void midi_device_fatal(string_t msg, int code)
     fa_fa_log_error(string("Terminating Fa"));
     exit(error);
 }
+
+
+
+
+
 
