@@ -155,7 +155,11 @@ int main(int argc, char const *argv[])
 
 
     fa_thread_create(run_external_loop, NULL);
-    fa_thread_sleep(100000);
+
+    fa_thread_sleep(1000);
+    MIDIGetNumberOfDestinations();
+    MIDIGetNumberOfSources();
+    fa_thread_sleep(1000);
 
     fa_fa_terminate();
 }

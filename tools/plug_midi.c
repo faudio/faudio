@@ -23,7 +23,7 @@ fa_midi_session_t print_midi_devices(fa_ptr_t _, fa_midi_session_t session)
 
     while (1) {
         // TODO escape when setup changed
-        fa_thread_sleep(1); 
+        fa_thread_sleep(1000); 
     }
     return session;
 }
@@ -32,7 +32,7 @@ int main(int argc, char const *argv[])
 {
     fa_fa_set_log_std();
     fa_fa_initialize();
-    
+
     /** While a session ends, start a new one.
      */
     while (1) {
