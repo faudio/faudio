@@ -51,17 +51,6 @@ ptr_t loop_checking_midi(ptr_t queue)
 
 int main(int argc, char const *argv[])
 {
-    kMidiNotif = fa_atomic_queue_create();
-    fa_thread_create(loop_checking_midi, kMidiNotif);
-
-    while (1) {
-        fa_thread_sleep(50);
-
-        if (fa_atomic_queue_read(kMidiNotif)) {
-            status_callback(0, 0);
-        }
-    }
-
 //     midi_session_t session;
 //
 //     fa_fa_initialize();

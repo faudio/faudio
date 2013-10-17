@@ -59,7 +59,7 @@ void midi_listener(const MIDINotification *message, void *data)
 
     // UInt32                    sz = message->messageSize;
     if (id == kMIDIMsgSetupChanged) {
-        printf("Setup changed!\n");
+        inform(string("Setup changed!\n"));
         print_num_devices();
         // closure_t closure = data;
         // closure->function(closure->data);
@@ -78,6 +78,7 @@ void threaded_assert(int status, char* msg)
 ptr_t run_external_loop(ptr_t _)
 {
     fa_print_ln(string("Running the external loop"));
+    fa_print_ln(fa_string_show(fa_thread_current()));
 
     OSStatus status;
     CFStringRef name = fa_string_to_native(string("fa_test_core_midi"));
@@ -87,7 +88,7 @@ ptr_t run_external_loop(ptr_t _)
     threaded_assert ((status == noErr), "MIDIClientCreate failed");
 
     CFRunLoopRun();
-    mark_used(client);
+    // mark_used(client);
     assert(false && "Unreachable");
 }
 
@@ -124,10 +125,14 @@ int main(int argc, char const *argv[])
 {            
     fa_fa_set_log_std();
     fa_fa_initialize();
+    fa_print_ln(fa_string_show(fa_thread_current()));    
 
-    run_internal_loop(NULL);
+    // run_internal_loop(NULL);
     // run_external_loop(NULL);
-    // fa_thread_create(run_external_loop, NULL);
+
+
+    fa_thread_create(run_external_loop, NULL);
+    fa_thread_sleep(100000);
 
     fa_fa_terminate();
 }
