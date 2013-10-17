@@ -209,14 +209,19 @@
 
 (defvar *exported-closures#* (make-hash-table))
 
+(defvar *exported-closures-lock* (mp:make-lock
+                                  :name "exported-closures-lock"))
+
 (defun func-to-int# (f)
-   (let ((n (hash-table-count *exported-closures#*)))
-     (setf (gethash n *exported-closures#*) f)
-     n))
+  (mp:with-lock (*exported-closures-lock*)
+    (let ((n (hash-table-count *exported-closures#*)))
+      (setf (gethash n *exported-closures#*) f)
+      n)))
 
 (defun int-to-func# (n)
-  (let ((f (gethash n *exported-closures#*)))
-    (if f f (cl:error "Uknown func in INT-TO-FUNC"))))
+  (mp:with-lock (*exported-closures-lock*)
+    (let ((f (gethash n *exported-closures#*)))
+      (if f f (cl:error "Uknown func in INT-TO-FUNC")))))
 
 (defcallback funcall0# ptr ((f ptr))
   (funcall (int-to-func# f)))
