@@ -194,4 +194,3 @@ void add_midi_status_listener(midi_status_callback_t function, ptr_t data) {
     fa_thread_create(run_external_loop, NULL);
 }
 
-
