@@ -134,8 +134,6 @@ void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
     closure_t closure;
     closure = new_closure(function, data);
 
-    // assert(fa_equal(fa_thread_main(), fa_thread_current())
-    //        && "Must be run from main thread");
     if (fa_not_equal(fa_thread_main(), fa_thread_current())) {
         inform(string("Can not register midi status listerner for non-main thread."));
     } else {
