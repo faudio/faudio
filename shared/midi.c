@@ -289,13 +289,18 @@ void fa_midi_terminate()
 
 // --------------------------------------------------------------------------------
 
-void status_listener(const MIDINotification *message, ptr_t session)
-{             
+void status_listener(const MIDINotification *message, ptr_t x)
+{                                                            
+    session_t session = x;
     MIDINotificationMessageID id = message->messageID;
     
     if (id == kMIDIMsgSetupChanged) {
-        inform(string("The status listener was invoked! (This should not be printed)"));
-        // TODO invoke user-defined callbacks
+        int n = session->callbacks.count;
+        for (int i = 0; i < n; ++i) {
+            nullary_t f = session->callbacks.elements[i].function;
+            ptr_t     x = session->callbacks.elements[i].data;
+            f(x);
+        }
     }
 }
 
