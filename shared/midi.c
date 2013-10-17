@@ -19,10 +19,19 @@
 #include <fa/clock.h>
 #include <fa/util.h>
 
+#include <CoreMIDI/CoreMIDI.h>
 // #include <portmidi.h>
 
 /*
     ## Notes
+    
+    * Straightforward implementation in terms of CoreMIDI
+    * We map: 
+        - Sessions to CM Clients (still requiring uniqueness)
+        - Devices to CM Devices
+        - We do not provide any direct access to Enities/Endpoints
+        - Each Endpoint shows up as a *separate* stream
+     * The MIDI streams use MIDITimeStamp() for the clock. We might change this.
 
  */
 
@@ -34,10 +43,10 @@ typedef fa_midi_session_callback_t  session_callback_t;
 typedef fa_midi_status_callback_t   status_callback_t;
 typedef fa_action_t                 action_t;
 
-typedef int                  native_index_t;
-typedef void                   *native_stream_t;
-typedef int                     native_error_t;
-// typedef PmDeviceID                  native_index_t;
+typedef int                         native_device_t;
+typedef void                       *native_stream_t;
+typedef int                         native_error_t;
+// typedef PmDeviceID                  native_device_t;
 // typedef PmStream                   *native_stream_t;
 // typedef PmError                     native_error_t;
 
@@ -58,7 +67,7 @@ struct _fa_midi_session_t {
 struct _fa_midi_device_t {
 
     impl_t              impl;               // Dispatcher
-    native_index_t      index;              // Native device index
+    native_device_t      index;              // Native device index
 
     bool                input, output;      // Cached capabilities
     string_t            name;               // Cached names
@@ -101,7 +110,7 @@ ptr_t midi_stream_impl(fa_id_t interface);
 inline static session_t new_session();
 inline static void session_init_devices(session_t session);
 inline static void delete_session(session_t session);
-inline static device_t new_device(native_index_t index);
+inline static device_t new_device(native_device_t index);
 inline static void delete_device(device_t device);
 inline static stream_t new_stream(device_t device);
 inline static void delete_stream(stream_t stream);
@@ -120,7 +129,7 @@ inline static session_t new_session()
 
 inline static void session_init_devices(session_t session)
 {
-    native_index_t count;
+    int count;
     list_t         devices;
 
     // count   = Pm_CountDevices();
@@ -148,7 +157,7 @@ inline static void delete_session(session_t session)
     fa_delete(session);
 }
 
-inline static device_t new_device(native_index_t index)
+inline static device_t new_device(native_device_t index)
 {
     // if (index == pmNoDevice) {
         // return NULL;
