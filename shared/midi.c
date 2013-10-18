@@ -90,9 +90,6 @@ struct _fa_midi_session_t {
     list_t                          devices;            // Cached device list
     device_t                        def_input;          // Default devices, both possibly null
     device_t                        def_output;         // If present, these are also in the above list
-    
-    thread_t                        thread;             // Thread on which the MIDI run loop is invoked
-    void*                           thread_abort;       // Ref to runloop
 
     struct {
         int                         count;
@@ -140,6 +137,9 @@ struct _fa_midi_stream_t {
 static mutex_t                      gMidiMutex;
 static bool                         gMidiActive;
 static session_t                    gMidiCurrentSession;
+static session_t                    gPendingSession; // Set to 0 when a new session should be created, set to the session otherwise
+static thread_t                     gMidiThread;
+static CFRunLoopRef                 gMidiThreadRunLoop;
 
 error_t midi_device_error(string_t msg);
 error_t midi_device_error_with(string_t msg, int error);
@@ -160,16 +160,13 @@ long fa_midi_message_simple_to_long(fa_midi_message_t midi);
 
 // --------------------------------------------------------------------------------
 
-/** Intializes everything except native, devices and thread.
+/** Intializes everything except native and devices.
  */
 inline static session_t new_session()
 {
     session_t session   = fa_new(midi_session);
     session->impl       = &midi_session_impl;
     
-    // thread
-    session->thread             = NULL;
-    session->thread_abort       = NULL;
     session->callbacks.count    = 0;
     
     return session;
@@ -273,26 +270,12 @@ inline static void delete_stream(stream_t stream)
 
 // --------------------------------------------------------------------------------
 
-void fa_midi_initialize()
-{
-    gMidiMutex        = fa_thread_create_mutex();
-    gMidiActive       = false;
-    gMidiCurrentSession = NULL;
-}
-
-void fa_midi_terminate()
-{
-    fa_thread_destroy_mutex(gMidiMutex);
-}
-
-// --------------------------------------------------------------------------------
-
 void status_listener(const MIDINotification *message, ptr_t x)
 {                                                            
     session_t session = x;
     MIDINotificationMessageID id = message->messageID;
 
-    printf("Called status_listener (you should NOT be seing this, please report it as a bug)\n");
+    printf("Called status_listener (if you see this, please report it as a bug)\n");
     
     if (id == kMIDIMsgSetupChanged) {
         int n = session->callbacks.count;
@@ -304,45 +287,86 @@ void status_listener(const MIDINotification *message, ptr_t x)
     }
 }
 
-ptr_t session_thread(ptr_t x) {
-    native_error_t result;
-    session_t session = x;
-    fa_print_ln(fa_string_show(fa_thread_current()));
-                                                  
+ptr_t midi_thread(ptr_t x) {
+    native_error_t  result  = 0;
+    session_t       session = NULL;
+                                                   
     // Save the loop so we can stop it from outside
-    session->thread_abort = CFRunLoopGetCurrent();
-    
-    {
-        // TODO cache name
-        CFStringRef name = fa_string_to_native(string("faudio"));
-        result = MIDIClientCreate(name, status_listener, session, &session->native);
-        if (result) {
-            warn(fa_string_format_integral("%d", result));
-            // FIXME handle error
+    gMidiThreadRunLoop = CFRunLoopGetCurrent();
+
+    while (true) {                    
+        fa_thread_sleep(100);
+        if (gPendingSession) continue;
+        // Only proceed when gPendingSession becomes zero
+        {
+            result  = 0;
+            session = new_session(); // Still have to set native and devics
+
+            // This sets native
+            result = MIDIClientCreate(
+                fa_string_to_native(string("faudio")), 
+                status_listener, 
+                session, 
+                &session->native
+                );
+            if (result) {
+                warn(fa_string_format_integral("%d", result));
+                assert(false);
+            }
+            // This sets devices
+            session_init_devices(session);
+            gPendingSession = session;
         }
-
-        session_init_devices(session);
-
-        CFRunLoopRun(); // TODO find a way to stop runLoop
-
-        result = MIDIClientDispose(session->native);
-        if (result) {
-            warn(fa_string_format_integral("%d", result));
-            // FIXME handle error
-        } else {
-            inform(string("(disposed client)"));
+        // We will be stuck here until the run loop is stopped
+        // This only happen when a session is ended
+        CFRunLoopRun();
+        {
+            result = 0;
+            result = MIDIClientDispose(session->native);
+            if (result) {
+                warn(fa_string_format_integral("%d", result));
+                assert(false);
+            } else {
+                inform(string("(disposed client)"));
+            }
+            gMidiActive = false;
         }
-        fa_thread_sleep(3000);
     }
-    return NULL;
+    assert(false && "Unreachable");
 }
+
+
+void fa_midi_initialize()
+{
+    gMidiMutex          = fa_thread_create_mutex();
+    gMidiActive         = false;
+    gMidiCurrentSession = NULL;
+    gMidiThreadRunLoop  = NULL;
+    gMidiThread         = fa_thread_create(midi_thread, NULL);
+    gPendingSession     = (session_t) -1; // dummy
+    while (!gMidiThreadRunLoop) {
+        fa_thread_sleep(1); // Wait for run loop to be initialized by thread
+    }
+}
+
+void fa_midi_terminate()
+{
+    fa_thread_destroy_mutex(gMidiMutex);
+    // TODO indicate that MIDI thread should return after disposing client 
+    // TODO stop all sessions
+    fa_thread_join(gMidiThread);
+}
+
+#define assert_module_initialized() \
+    if (!gMidiMutex) { \
+        assert(false && "Not initialized"); \
+    }
+
+// --------------------------------------------------------------------------------
 
 session_t fa_midi_begin_session()
 {
-    if (!gMidiMutex) {
-        assert(false && "Module not initalized");
-    }
-
+    assert_module_initialized();
     inform(string("Initializing real-time midi session"));
 
     fa_with_lock(gMidiMutex);
@@ -352,21 +376,14 @@ session_t fa_midi_begin_session()
         if (gMidiActive) {
             fa_thread_unlock(gMidiMutex);
             return (session_t) midi_device_error(string("Overlapping real-time midi sessions"));
-        } else {                                                 
-            session_t session = new_session();
-            /* Still need to init native, devices and threads (see above).
-             */
-
-            fa_print_ln(fa_string_show(fa_thread_current()));
-            session->thread = fa_thread_create(session_thread, session);
-            // TODO get error from thread
-            
-            // FIXME assure init_devices done
-            fa_thread_sleep(500);
-
+        } else {            
+            gPendingSession = NULL;
+            while (!gPendingSession) {
+                fa_thread_sleep(1);
+            }
+            session_t session   = gPendingSession;                                                 
             gMidiActive         = true;
             gMidiCurrentSession = session;
-            fa_thread_unlock(gMidiMutex);
             return session;
         }
     }
@@ -374,30 +391,20 @@ session_t fa_midi_begin_session()
 
 void fa_midi_end_session(session_t session)
 {
-    if (!gMidiMutex) {
-        assert(false && "Not initalized");
-    }
-
+    assert_module_initialized();
     inform(string("Terminating real-time midi session"));
 
     fa_with_lock(gMidiMutex);
     {
         if (gMidiActive) {
             inform(string("(actually terminating)"));
-
-            CFRunLoopStop(session->thread_abort);
-            fa_thread_join(session->thread);
-            // TODO get error from thread
-
-            // FIXME this does *NOT* work, CoreMIDI will always use *one* thread
-            // (the first registered) for all further notifications.
-            
-            gMidiActive = false;
+            CFRunLoopStop(gMidiThreadRunLoop);
+            while (gMidiActive) {
+                fa_thread_sleep(1);
+            }
             gMidiCurrentSession = NULL;
         }
     }
-    delete_session(session);
-
     inform(string("(finished terminating)"));
 }
 
@@ -539,74 +546,14 @@ void midi_inform_opening(device_t device)
 
 fa_midi_stream_t fa_midi_open_stream(device_t device)
 {
-    // allocate
-    // if input
-        // create input port that writes to all callbacks in this stream
-        // connect native source
-    // if output
-        // create output port
-        // make main thread propagate writes to port
-
-
-
-
-
-    // if (!device) {
-    //     return (stream_t) midi_device_error_with(
-    //         string("Can not open a stream with no devices"), 0);
-    // }
-
     midi_inform_opening(device);
     assert(false);
-    // 
-    // native_error_t result;
-    // stream_t stream = new_stream(device);
-    // 
-    // if (device->input) {
-    //     inform(string("Opening input\n"));
-    //     // result = Pm_OpenInput(&stream->native_input, device->index, NULL, 0,
-    //     //                       midi_time_callback, stream);
-    //     result = 0; // FIXME
-    // 
-    //     if (result < 0) {
-    //         midi_error(string("Could not open midi input"), result);
-    //     }
-    // }
-    // 
-    // if (device->output) {
-    //     inform(string("Opening output\n"));
-    //     // result = Pm_OpenOutput(&stream->native_output, device->index, NULL, 0,
-    //     //                        midi_time_callback, stream, -1);
-    //     result = 0; // FIXME
-    // 
-    //     if (result < 0) {
-    //         midi_error(string("Could not open midi output"), result);
-    //     }
-    // }
-    // 
-    // // FIXME
-    // // stream->thread = fa_thread_create(stream_thread_callback, stream);
-    // return stream;  
 }
 
 
 void fa_midi_close_stream(stream_t stream)
 {
     inform(string("Closing real-time midi stream"));
-
-    // TODO instruct to stop
-    // stream->thread_abort = true;
-    // fa_thread_join(stream->thread);
-
-    // if (stream->native_input) {
-        // Pm_Close(stream->native_input);
-        // FIXME
-    // }
-
-    // if (stream->native_output) {
-        // Pm_Close(stream->native_output);
-        // FIXME
-    // }
 }
 
 
