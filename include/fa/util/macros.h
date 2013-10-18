@@ -23,7 +23,10 @@
          )
 
 /** Execute the following statement with a binding in scope, then
-    evaluate the given cleanup expression.
+    evaluate the given cleanup finalizer expression.
+
+    You can escape with-context with either continue or break: note that
+    continue *will* execute the finalizer expression, break will *not*.
 
     Syntax:
 
@@ -44,8 +47,10 @@
         __c = ((__typeof__(expr)*) 0), destr \
         )
 
-/** Execute the following statement with a binding in scope, then destroy
-    the value using fa_destroy.
+/** The same as fa_with, but uses fa_destroy as the finalize expression.
+
+    You can escape with-context with either continue or break: note that
+    continue *will* execute the finalizer expression, break will *not*.
 
     Syntax:
 
@@ -54,7 +59,7 @@
 
     Example:
 
-        fa_with(x, get_resource(), release_resource(x))
+        fa_with(x, get_resource())
         {
             use_resource(x);
         }
@@ -131,6 +136,28 @@
 #define fa_append_to(s, t) \
     s = fa_string_append(s, t)
 
+/** Execute following statement while locking on the given mutex.
+
+    You can escape locking context with either continue or break: note that
+    continue *will* release the lock, break will *not*.
+
+    Syntax:
+
+        fa_with_mutex(mutex)
+            statement;
+
+    Example:
+
+        fa_let(x, 23)
+        {
+            printf("%d\n", 23)
+        }
+ */
+#define fa_with_lock(mutex) \
+    fa_with(__mutex, \
+        fa_thread_lock(mutex), \
+        fa_thread_unlock((void*) mutex + 0*((intptr_t)__mutex)))
+    
 
 #endif // _FA_UTIL_MACROS
 
