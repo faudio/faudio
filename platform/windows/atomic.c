@@ -48,7 +48,8 @@ void fa_atomic_destroy(fa_atomic_t a)
 
 bool fa_atomic_exchange(fa_atomic_t a, fa_ptr_t pold, fa_ptr_t pnew)
 {
-	return (pold == InterlockedCompareExchangePointer((void**)&a->value, (void*) pnew, (void*) pold)); // FIXME
+	fa_ptr_t aptr = &a->value;
+	return (pold == InterlockedCompareExchangePointer((void**)&aptr, (void*) pnew, (void*) pold)); // FIXME
 }
 
 void fa_atomic_add(fa_atomic_t a, intptr_t v)
