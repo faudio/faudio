@@ -48,8 +48,7 @@ void fa_atomic_destroy(fa_atomic_t a)
 
 bool fa_atomic_exchange(fa_atomic_t a, fa_ptr_t pold, fa_ptr_t pnew)
 {
-	fa_ptr_t aptr = &a->value;
-	return (pold == InterlockedCompareExchangePointer((void**)&aptr, (void*) pnew, (void*) pold)); // FIXME
+	return (pold == InterlockedCompareExchangePointer((void**)&a->value, (void*) pnew, (void*) pold)); // FIXME
 }
 
 void fa_atomic_add(fa_atomic_t a, intptr_t v)
@@ -64,7 +63,7 @@ void* fa_atomic_get(fa_atomic_t a)
 
 void fa_atomic_modify(fa_atomic_t atomic, fa_unary_t func, fa_ptr_t data)
 {
-	bool result = FALSE;
+	bool result = false;
 
 	while(!result) {
 		ptr_t state = fa_atomic_get(atomic);
@@ -75,7 +74,7 @@ void fa_atomic_modify(fa_atomic_t atomic, fa_unary_t func, fa_ptr_t data)
 
 void fa_atomic_set(fa_atomic_t atomic, fa_ptr_t value)
 {
-	bool result = FALSE;
+	bool result = false;
 
 	while(!result) {
 		ptr_t state = fa_atomic_get(atomic);
