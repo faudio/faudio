@@ -33,12 +33,10 @@ void test_macros()
     }
 }
 
-static mutex_t gMutex;
-
-ptr_t foo(ptr_t _) {
+ptr_t foo(ptr_t mutex) {
 
     while (1) {
-        fa_with_lock(gMutex)
+        fa_with_lock(mutex)
         {
             printf("Foo!\n");
         }
@@ -46,12 +44,13 @@ ptr_t foo(ptr_t _) {
     return NULL;
 }
 
-ptr_t bar(ptr_t _) {
+ptr_t bar(ptr_t mutex) {
     while (1) {
-        fa_with_lock(gMutex)
+        fa_with_lock(mutex)
         {
+            // break; // This deadlocks
+            continue; // This does not
             printf("Bar!\n");
-            continue;
         }
     }
     return NULL;
@@ -63,10 +62,12 @@ int main(int argc, char const *argv[])
 
     // test_macros();
     
-    gMutex = fa_thread_create_mutex();
-    fa_thread_create(foo, NULL);
-    fa_thread_create(bar, NULL);
-    fa_thread_sleep(100000);
+    fa_with_temp(mutex, fa_thread_create_mutex())
+    {
+        fa_thread_create(foo, mutex);
+        fa_thread_create(bar, mutex);
+        fa_thread_sleep(100000);
+    }
 
     fa_fa_terminate();
 }
