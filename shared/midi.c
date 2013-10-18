@@ -167,7 +167,7 @@ inline static session_t new_session()
     session_t session   = fa_new(midi_session);
     session->impl       = &midi_session_impl;
     
-    session->callbacks.count    = 0;
+    session->callbacks.count = 0;
     
     return session;
 }
@@ -242,28 +242,28 @@ inline static void delete_device(device_t device)
     fa_delete(device);
 }
 
+// native
 inline static stream_t new_stream(device_t device)
 {        
-    assert(false);
     stream_t stream         = fa_new(midi_stream);
 
     stream->impl            = &midi_stream_impl;
     stream->device          = device;
 
-    // stream->native_input    = NULL;
-    // stream->native_output   = NULL;
-
-    // stream->message_callback_count = 0;
-    
     stream->clock           = fa_clock_standard(); // TODO change
     stream->in_controls     = atomic_queue();
     stream->controls        = priority_queue();
+
+    stream->callbacks.count = 0;
 
     return stream;
 }
 
 inline static void delete_stream(stream_t stream)
 {
+    // TODO flush pending events
+    fa_destroy(stream->controls);
+    fa_destroy(stream->in_controls);
     fa_delete(stream);
 }
 
@@ -544,16 +544,53 @@ void midi_inform_opening(device_t device)
 }
 
 
+void message_listener(const MIDIPacketList * packets, ptr_t x, ptr_t _)
+{
+    
+}
+
+
 fa_midi_stream_t fa_midi_open_stream(device_t device)
 {
     midi_inform_opening(device);
-    assert(false);
+    
+    stream_t stream = new_stream(device);
+
+    /* Note: we assume that either device->input or device->output is set but not both.
+     */
+    if (device->input) {
+        MIDIInputPortCreate(
+            device->session->native,
+            fa_string_to_native(string("faudio")),
+            message_listener,
+            NULL,
+            &stream->native
+            );
+        MIDIPortConnectSource(stream->native, device->native, NULL);
+    }
+    if (device->output) {
+        MIDIOutputPortCreate(
+            device->session->native,
+            fa_string_to_native(string("faudio")),
+            &stream->native
+            );
+    }
+    return stream;
 }
 
 
 void fa_midi_close_stream(stream_t stream)
 {
     inform(string("Closing real-time midi stream"));
+    
+    if (stream->device->input) {
+        MIDIPortDisconnectSource(stream->native, stream->device->native);
+        MIDIPortDispose(stream->native);
+    }
+    if (stream->device->output) {
+        MIDIPortDispose(stream->native);
+    }
+    
 }
 
 
