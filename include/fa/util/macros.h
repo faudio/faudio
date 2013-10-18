@@ -49,7 +49,7 @@
 
     Syntax:
 
-        fa_with(var, expr, final)
+        fa_with(var, expr)
             statement;
 
     Example:
