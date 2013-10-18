@@ -544,9 +544,33 @@ void midi_inform_opening(device_t device)
 }
 
 
-void message_listener(const MIDIPacketList * packets, ptr_t x, ptr_t _)
+void message_listener(const MIDIPacketList * packetList, ptr_t x, ptr_t _)
 {
-    
+    stream_t stream = x;
+    printf("Called status_listener (if you see this, please report it as a bug)\n");
+
+    int n = stream->callbacks.count;
+        
+    for (int i = 0; i < packetList->numPackets; ++i) {
+        const MIDIPacket* packet = &(packetList->packet[i]);
+
+        // TODO use CoreMIDI time
+        // time_t time = fa_milliseconds(packet->timeStamp);
+        time_t time = fa_clock_time(stream->clock);
+
+        // FIXME assumes simple message
+        midi_message_t msg = midi_message(
+            packet->data[0],
+            packet->data[1],
+            packet->data[2]);
+        
+        for (int j = 0; j < n; ++j) {
+            unary_t f = stream->callbacks.elements[j].function;
+            ptr_t   x = stream->callbacks.elements[j].data;
+                                
+            f(x, pair(time, msg));
+        }
+    }
 }
 
 
@@ -563,7 +587,7 @@ fa_midi_stream_t fa_midi_open_stream(device_t device)
             device->session->native,
             fa_string_to_native(string("faudio")),
             message_listener,
-            NULL,
+            stream,
             &stream->native
             );
         MIDIPortConnectSource(stream->native, device->native, NULL);
