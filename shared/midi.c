@@ -395,7 +395,7 @@ void fa_midi_end_session(session_t session)
             // TODO get error from thread
 
             // FIXME this does *NOT* work, CoreMIDI will always use *one* thread
-            // (the first registered) for all 
+            // (the first registered) for all further notifications.
             
             gMidiActive = false;
             gMidiCurrentSession = NULL;
