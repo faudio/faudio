@@ -471,7 +471,7 @@ void fa_midi_with_session(session_callback_t    session_callback,
     fa_midi_end_session(session);
 }
 
-fa_list_t fa_midi_current_session()
+fa_list_t fa_midi_current_sessions()
 {
     if (!gMidiCurrentSession) {
         return list();
@@ -482,7 +482,7 @@ fa_list_t fa_midi_current_session()
 
 fa_ptr_t fa_midi_end_all_sessions()
 {
-    fa_dfor_each(x, fa_midi_current_session()) {
+    fa_dfor_each(x, fa_midi_current_sessions()) {
         fa_midi_end_session(x);
     }
     return NULL;
