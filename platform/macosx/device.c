@@ -87,4 +87,12 @@ void add_audio_status_listener(audio_status_callback_t function, ptr_t data)
     assert(result == noErr);
 }
 
+void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
+{
+    // Note: This function does nothing on OS X
+
+    // It is only here if one wants to try and compile using the PortMIDI backend instead
+    // of the usual CoreMIDI implementation.
+}
+
 
