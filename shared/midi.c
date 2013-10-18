@@ -161,7 +161,6 @@ inline static device_t new_device(bool is_output, native_device_t native, sessio
 inline static void delete_device(device_t device);
 inline static stream_t new_stream(device_t device);
 inline static void delete_stream(stream_t stream);
-
 long fa_midi_message_simple_to_long(fa_midi_message_t midi);
 
 
@@ -309,6 +308,11 @@ void status_listener(const MIDINotification *message, ptr_t x)
             f(x);
         }
     }
+
+    fa_with_lock(gMidiMutex)
+    {         
+        // Do things with mutex
+    }
 }
 
 ptr_t session_thread(ptr_t x) {
@@ -319,27 +323,28 @@ ptr_t session_thread(ptr_t x) {
     // Save the loop so we can stop it from outside
     session->thread_abort = CFRunLoopGetCurrent();
     
-    // TODO cache name
-    CFStringRef name = fa_string_to_native(string("faudio"));
-    result = MIDIClientCreate(name, status_listener, session, &session->native);
-    if (result) {
-        warn(fa_string_format_integral("%d", result));
-        // FIXME handle error
+    {
+        // TODO cache name
+        CFStringRef name = fa_string_to_native(string("faudio"));
+        result = MIDIClientCreate(name, status_listener, session, &session->native);
+        if (result) {
+            warn(fa_string_format_integral("%d", result));
+            // FIXME handle error
+        }
+
+        session_init_devices(session);
+
+        CFRunLoopRun(); // TODO find a way to stop runLoop
+
+        result = MIDIClientDispose(session->native);
+        if (result) {
+            warn(fa_string_format_integral("%d", result));
+            // FIXME handle error
+        } else {
+            inform(string("(disposed client)"));
+        }
+        fa_thread_sleep(3000);
     }
-
-    session_init_devices(session);
-
-    CFRunLoopRun(); // TODO find a way to stop runLoop
-
-    result = MIDIClientDispose(session->native);
-    if (result) {
-        warn(fa_string_format_integral("%d", result));
-        // FIXME handle error
-    } else {
-        inform(string("(disposed client)"));
-    }
-    fa_thread_sleep(3000);
-    
     return NULL;
 }
 
@@ -360,6 +365,8 @@ session_t fa_midi_begin_session()
             return (session_t) midi_device_error(string("Overlapping real-time midi sessions"));
         } else {                                                 
             session_t session = new_session();
+            /* Still need to init native, devices and threads (see above).
+             */
 
             fa_print_ln(fa_string_show(fa_thread_current()));
             session->thread = fa_thread_create(session_thread, session);
@@ -556,6 +563,18 @@ ptr_t stream_thread_callback(ptr_t x);
 
 fa_midi_stream_t fa_midi_open_stream(device_t device)
 {
+    // allocate
+    // if input
+        // create input port that writes to all callbacks in this stream
+        // connect native source
+    // if output
+        // create output port
+        // make main thread propagate writes to port
+
+
+
+
+
     // if (!device) {
     //     return (stream_t) midi_device_error_with(
     //         string("Can not open a stream with no devices"), 0);
