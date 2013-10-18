@@ -488,6 +488,9 @@
 (midi-host-name x)
 (midi-has-input x)
 (midi-has-output x)
+(midi-has-input y)
+(midi-has-output y)
+
 
 ; TODO status callback
 
@@ -526,6 +529,10 @@
 (defvar *msgs* nil)
 (push 1 *msgs*)
 (progn (mapcar 'cl:print *msgs*) nil)
+
+(midi-message-channel (second (car *msgs*)))
+(midi-message-status (second (car *msgs*)))
+(midi-message-simple-data (second (car *msgs*)))
 
 (midi-add-message-callback* 
  (lambda (time msg)
