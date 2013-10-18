@@ -27,34 +27,32 @@
     
     * Implementation in terms of CoreMIDI
 
-      CoreMIDI requires a CFRunLoop to work properly, usually the main thread is used. This is not
-      an option here, so instead we will launch thread while the session is created. The begin_session()
-      function will initalize *both* session and devices, and opening/closing streams simply creates
-      a handle that can be used to register callbacks on the session thread.
+      CoreMIDI requires a deticated thread+CFRunLoop to work properly, usually the main thread is used. 
+      This is not an option here, so instead we launch a global MIDI thread while the *first* session is 
+      created. This is then recycled for each new session. All CoreMIDI interaction must happen on this
+      thread, and both status and MIDI callbacks are executed here.
       
-      Syncronization (between MIDI vs user thread, user must syncronize externally):
-        midi callbaks 
-            reads session->streams
-            reads from stream->outgoing_messages
-
-        begin_session
-        end_session
-        current_sessions
-        end_all_sessions
-        all, default*
-        name, host, has_*
-        add_status_callback
-            Must lock to prevent interruption from NotifyProc (?)
-        open_stream, close_stream
-            reads+writes session
-            requires lock
-        add_message_callback
-            Must lock to prevent interruption from ReadProc (?)
-            writes?
-        schedule
-            writes to stream->outgoing_messages
-            XXX who reads?
-    
+      The begin/end session functions defer to the MIDI thread to start or stop a new session. All session
+      data/devices etc. are copied into the session and read from other threads. The only immutable values
+      in sessions is the stream list and the status callback list, which are both add-only and needs no
+      locking.
+      
+      The only CoreMIDI interaction that happens while a session is active is open/close stream,
+      message scheduling and of course the callbacks.
+        Open/Close
+            Not sure! We need to call 
+                MIDIInputPortCreate()
+                MIDIOutputPortCreate()
+                MIDIPortConnectSource()
+                MIDISend()
+                MIDISendSysex()
+            I *think* we could use a global mutex here. Alternatively, we somehow have to forward these
+            requests to the MIDI thread.
+        Send
+            Similar to the audio implementation: messages are put in a queue and forwarded
+            to the MIDI thread.
+      
+      
     * Mapping: 
         - Sessions <-> MIDIClients 
             - Still requiring uniqueness
@@ -83,10 +81,6 @@ typedef OSStatus                    native_error_t;
 
 #define kMaxMessageCallbacks        8
 #define kMaxStatusCallbacks         8
-// #define midi_lock fa_thread_lock
-// #define midi_unlock fa_thread_unlock
-#define midi_lock mark_used
-#define midi_unlock mark_used
 
 
 struct _fa_midi_session_t {
@@ -308,11 +302,6 @@ void status_listener(const MIDINotification *message, ptr_t x)
             f(x);
         }
     }
-
-    fa_with_lock(gMidiMutex)
-    {         
-        // Do things with mutex
-    }
 }
 
 ptr_t session_thread(ptr_t x) {
@@ -356,12 +345,12 @@ session_t fa_midi_begin_session()
 
     inform(string("Initializing real-time midi session"));
 
-    midi_lock(gMidiMutex);
+    fa_with_lock(gMidiMutex);
     {
         /* Assure no overlaps.
          */
         if (gMidiActive) {
-            midi_unlock(gMidiMutex);
+            fa_thread_unlock(gMidiMutex);
             return (session_t) midi_device_error(string("Overlapping real-time midi sessions"));
         } else {                                                 
             session_t session = new_session();
@@ -377,8 +366,7 @@ session_t fa_midi_begin_session()
 
             gMidiActive         = true;
             gMidiCurrentSession = session;
-            
-            midi_unlock(gMidiMutex);
+            fa_thread_unlock(gMidiMutex);
             return session;
         }
     }
@@ -392,7 +380,7 @@ void fa_midi_end_session(session_t session)
 
     inform(string("Terminating real-time midi session"));
 
-    midi_lock(gMidiMutex);
+    fa_with_lock(gMidiMutex);
     {
         if (gMidiActive) {
             inform(string("(actually terminating)"));
@@ -408,7 +396,6 @@ void fa_midi_end_session(session_t session)
             gMidiCurrentSession = NULL;
         }
     }
-    midi_unlock(gMidiMutex);
     delete_session(session);
 
     inform(string("(finished terminating)"));
@@ -550,17 +537,6 @@ void midi_inform_opening(device_t device)
 }
 
 
-static inline
-void send_out(midi_message_t midi, stream_t stream);
-
-// PmTimestamp midi_time_callback(void *data)
-// {
-//     stream_t stream = data;
-//     return fa_clock_milliseconds(stream->clock);
-// }
-
-ptr_t stream_thread_callback(ptr_t x);
-
 fa_midi_stream_t fa_midi_open_stream(device_t device)
 {
     // allocate
@@ -654,80 +630,6 @@ void fa_midi_with_stream(device_t           device,
 
 
 
-// void read_in(PmEvent* dest, stream_t stream);
-
-ptr_t stream_thread_callback(ptr_t x)
-{                 
-    stream_t stream = x;
-    inform(string("  Midi service thread active"));
-
-    while(1) {              
-        // if (stream->thread_abort) {
-            // inform(string("  Midi service thread finished"));
-            // return 0;
-        // }
-        // inform(string("  Midi service thread!"));
-
-        // Inputs
-        // if (stream->native_input) {
-            // while (Pm_Poll(stream->native_input)) {
-            // 
-            //     PmEvent events[1];
-            //     read_in(events, stream);
-            //     // Pm_Read(stream->native_input, events, 1); // TODO error
-            //     
-            //     for (int i = 0; i < stream->message_callback_count; ++i) {
-            //         unary_t f = stream->message_callbacks[i];
-            //         ptr_t   x = stream->message_callback_ptrs[i];
-            //         
-            //         time_t time = fa_milliseconds(events[0].timestamp);
-            //         midi_message_t msg = midi_message(
-            //             Pm_MessageStatus(events[0].message), 
-            //             Pm_MessageData1(events[0].message), 
-            //             Pm_MessageData2(events[0].message));
-            // 
-            //         f(x, pair(time, msg));
-            //     }
-            // }
-            // FIXME
-        // }
-
-        // Outputs
-        if (/*stream->native_output*/false) { // FIXME
-            ptr_t val;
-            while ((val = fa_atomic_queue_read(stream->in_controls))) {
-                // inform(fa_string_show(val));
-                fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
-            }
-            while (1) {
-                pair_t x = fa_priority_queue_peek(stream->controls);
-                if (!x) {
-                    break;
-                }
-                time_t   time   = fa_pair_first(x);
-                action_t action = fa_pair_second(x);
-
-                int timeSamp = (((double) fa_time_to_milliseconds(time)) / 1000.0) * 44100;   // TODO
-
-                if (timeSamp <= fa_clock_milliseconds(stream->clock)) {
-                    if (fa_action_is_send(action)) {
-                        string_t name = fa_action_send_name(action);
-                        ptr_t    value = fa_action_send_value(action);
-                        send_out(value, stream); // TODO laterz
-                        mark_used(name);
-                    }
-                    fa_priority_queue_pop(stream->controls);
-                } else {
-                    break;
-                }
-            }
-        }
-        
-        // Sleep
-        // fa_thread_sleep(kMidiServiceThreadInterval);
-    }
-    assert(false && "Unreachable");
-}
 
 
 
@@ -741,43 +643,13 @@ void fa_midi_schedule(fa_time_t        time,
     if (fa_action_is_send(action)) {
         string_t name = fa_action_send_name(action);
         ptr_t    value = fa_action_send_value(action);
-        send_out(value, stream); // TODO laterz
+
+        // TODO forward to MIDI thread
         mark_used(name);
+        mark_used(value);
     }
 }
 
-            
-// void read_in(PmEvent* dest, stream_t stream)
-// {   
-//     native_error_t result;
-//     // result = Pm_Read(stream->native_input, dest, 1);
-//     result = 0; // FIXME
-// 
-//     if (result < 0) {
-//         midi_error(string("Could not fetch midi"), result);
-//     }
-// }
-
-void send_out(midi_message_t midi, stream_t stream)
-{
-    native_error_t result;
-
-    if (fa_midi_message_is_simple(midi)) {
-        // timestamp ignored
-        long midi_message = fa_midi_message_simple_to_long(midi);
-
-        printf("Sending: %s %08x\n", unstring(fa_string_show(midi)), (int) midi_message);
-
-        // result = Pm_WriteShort(stream->native_output, 0, midi_message);
-        result = 0; // FIXME
-
-        if (result < 0) {
-            midi_error(string("Could not send midi"), result);
-        }
-    } else {
-        assert(false && "Can not send sysex yet");
-    }
-}
 
 
 
