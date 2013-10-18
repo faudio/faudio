@@ -2,15 +2,14 @@
 #include <fa/fa.h>
 #include <fa/util.h>
 
+static int stop;
+
 /** Called whenever the MIDI setup changed.
  */
 ptr_t status_callback(ptr_t session)
 {
     printf("Midi status changed!\n");
-    // printf("    Sources:            %d\n", (int)MIDIGetNumberOfSources());
-    // printf("    Destinations:       %d\n", (int)MIDIGetNumberOfDestinations());
-    // printf("    Devices:            %d\n", (int)MIDIGetNumberOfDevices());
-
+    stop = true;
     return 0;
 }
 
@@ -18,11 +17,23 @@ ptr_t status_callback(ptr_t session)
  */
 fa_midi_session_t print_midi_devices(fa_ptr_t _, fa_midi_session_t session)
 {            
-    fa_print_ln(fa_string_show(fa_thread_current()));    
     fa_midi_add_status_callback(status_callback, session, session);
 
+    fa_thread_sleep(500); // FIXME why is this needed?
+    fa_for_each(x, fa_midi_all(session)) {
+        fa_print("Name: %s\n", fa_string_to_string(fa_midi_name(x)));
+        fa_print("Host: %s\n", fa_string_to_string(fa_midi_host_name(x)));
+        fa_print("In:   %s\n", fb(fa_midi_has_input(x)));
+        fa_print("Out:  %s\n", fb(fa_midi_has_output(x)));
+        fa_print_ln(string(""));
+        mark_used(x);
+    }
+                           
+    stop = false;
     while (1) {
-        // TODO escape when setup changed
+        if (stop) {
+            return session;
+        }
         fa_thread_sleep(1000); 
     }
     return session;

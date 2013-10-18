@@ -83,6 +83,11 @@ typedef OSStatus                    native_error_t;
 
 #define kMaxMessageCallbacks        8
 #define kMaxStatusCallbacks         8
+// #define midi_lock fa_thread_lock
+// #define midi_unlock fa_thread_unlock
+#define midi_lock mark_used
+#define midi_unlock mark_used
+
 
 struct _fa_midi_session_t {
     impl_t                          impl;               // Dispatcher 
@@ -93,7 +98,7 @@ struct _fa_midi_session_t {
     device_t                        def_output;         // If present, these are also in the above list
     
     thread_t                        thread;             // Thread on which the MIDI run loop is invoked
-    bool                            thread_abort;       // Set to non-zero when thread should stop
+    void*                           thread_abort;       // Ref to runloop
 
     struct {
         int                         count;
@@ -171,7 +176,7 @@ inline static session_t new_session()
     
     // thread
     session->thread             = NULL;
-    session->thread_abort       = false;
+    session->thread_abort       = NULL;
     session->callbacks.count    = 0;
     
     return session;
@@ -231,7 +236,7 @@ inline static device_t new_device(bool is_output, native_device_t native, sessio
 
     {
         CFStringRef name;
-        if (MIDIObjectGetStringProperty(device, kMIDIPropertyName, &name)) {
+        if (MIDIObjectGetStringProperty(native, kMIDIPropertyName, &name)) {
             assert(false && "Could not get name");
         }
         device->name = fa_string_from_native((void*) name);
@@ -308,19 +313,24 @@ ptr_t session_thread(ptr_t x) {
     native_error_t result;
     session_t session = x;
     fa_print_ln(fa_string_show(fa_thread_current()));
+                                                  
+    // Save the loop so we can stop it from outside
+    session->thread_abort = CFRunLoopGetCurrent();
     
     // TODO cache name
     CFStringRef name = fa_string_to_native(string("faudio"));
     result = MIDIClientCreate(name, status_listener, session, &session->native);
-    printf("%ld\n", result);
+    // FIXME handle error
     mark_used(result);
 
     session_init_devices(session);
 
     CFRunLoopRun(); // TODO find a way to stop runLoop
+
     result = MIDIClientDispose(session->native);
+    // FIXME handle error
     
-    assert(false && "Unreachable");
+    return NULL;
 }
 
 session_t fa_midi_begin_session()
@@ -331,12 +341,12 @@ session_t fa_midi_begin_session()
 
     inform(string("Initializing real-time midi session"));
 
-    fa_thread_lock(gMidiMutex);
+    midi_lock(gMidiMutex);
     {
         /* Assure no overlaps.
          */
         if (gMidiActive) {
-            fa_thread_unlock(gMidiMutex);
+            midi_unlock(gMidiMutex);
             return (session_t) midi_device_error(string("Overlapping real-time midi sessions"));
         } else {                                                 
             session_t session = new_session();
@@ -344,11 +354,14 @@ session_t fa_midi_begin_session()
             fa_print_ln(fa_string_show(fa_thread_current()));
             session->thread = fa_thread_create(session_thread, session);
             // TODO get error from thread
+            
+            // FIXME assure init_devices done
+            fa_thread_sleep(500);
 
             gMidiActive         = true;
             gMidiCurrentSession = session;
             
-            fa_thread_unlock(gMidiMutex);
+            midi_unlock(gMidiMutex);
             return session;
         }
     }
@@ -362,12 +375,12 @@ void fa_midi_end_session(session_t session)
 
     inform(string("Terminating real-time midi session"));
 
-    fa_thread_lock(gMidiMutex);
+    midi_lock(gMidiMutex);
     {
         if (gMidiActive) {
             inform(string("(actually terminating)"));
 
-            session->thread_abort = true;
+            CFRunLoopStop(session->thread_abort);
             fa_thread_join(session->thread);
             // TODO get error from thread
             
@@ -375,8 +388,10 @@ void fa_midi_end_session(session_t session)
             gMidiCurrentSession = NULL;
         }
     }
-    fa_thread_unlock(gMidiMutex);
+    midi_unlock(gMidiMutex);
     delete_session(session);
+
+    inform(string("(finished terminating)"));
 }
 
 void fa_midi_with_session(session_callback_t    session_callback,
