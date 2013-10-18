@@ -298,6 +298,8 @@ void status_listener(const MIDINotification *message, ptr_t x)
 {                                                            
     session_t session = x;
     MIDINotificationMessageID id = message->messageID;
+
+    printf("Called status_listener (you should NOT be seing this, please report it as a bug)\n");
     
     if (id == kMIDIMsgSetupChanged) {
         int n = session->callbacks.count;
@@ -320,15 +322,23 @@ ptr_t session_thread(ptr_t x) {
     // TODO cache name
     CFStringRef name = fa_string_to_native(string("faudio"));
     result = MIDIClientCreate(name, status_listener, session, &session->native);
-    // FIXME handle error
-    mark_used(result);
+    if (result) {
+        warn(fa_string_format_integral("%d", result));
+        // FIXME handle error
+    }
 
     session_init_devices(session);
 
     CFRunLoopRun(); // TODO find a way to stop runLoop
 
     result = MIDIClientDispose(session->native);
-    // FIXME handle error
+    if (result) {
+        warn(fa_string_format_integral("%d", result));
+        // FIXME handle error
+    } else {
+        inform(string("(disposed client)"));
+    }
+    fa_thread_sleep(3000);
     
     return NULL;
 }
@@ -383,6 +393,9 @@ void fa_midi_end_session(session_t session)
             CFRunLoopStop(session->thread_abort);
             fa_thread_join(session->thread);
             // TODO get error from thread
+
+            // FIXME this does *NOT* work, CoreMIDI will always use *one* thread
+            // (the first registered) for all 
             
             gMidiActive = false;
             gMidiCurrentSession = NULL;

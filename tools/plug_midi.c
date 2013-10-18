@@ -31,6 +31,7 @@ fa_midi_session_t print_midi_devices(fa_ptr_t _, fa_midi_session_t session)
                            
     stop = false;
     while (1) {
+        printf("Stop: %d\n", stop);
         if (stop) {
             return session;
         }
