@@ -17,41 +17,27 @@
 #include <fa/thread.h>
 #include <fa/time.h>
 #include <fa/clock.h>
+
+#define NO_THREAD_T
 #include <fa/util.h>
+#undef NO_THREAD_T
 
 #include <CoreMIDI/CoreMIDI.h>
-// #include <portmidi.h>
+#include <CoreServices/CoreServices.h>
 
 /*
     ## Notes
     
     * Implementation in terms of CoreMIDI
 
-      CoreMIDI requires a deticated thread+CFRunLoop to work properly, usually the main thread is used. 
-      This is not an option here, so instead we launch a global MIDI thread while the *first* session is 
-      created. This is then recycled for each new session. All CoreMIDI interaction must happen on this
-      thread, and both status and MIDI callbacks are executed here.
+      CoreMIDI requires a deticated thread+CFRunLoop to work properly, usually the main
+      thread is used. This is not an option here, so instead we launch a *global* MIDI
+      thread at initialization time. All CoreMIDI interaction must happen on this thread,
+      and both status and MIDI callbacks are executed here.
       
-      The begin/end session functions defer to the MIDI thread to start or stop a new session. All session
-      data/devices etc. are copied into the session and read from other threads. The only immutable values
-      in sessions is the stream list and the status callback list, which are both add-only and needs no
-      locking.
-      
-      The only CoreMIDI interaction that happens while a session is active is open/close stream,
-      message scheduling and of course the callbacks.
-        Open/Close
-            Not sure! We need to call 
-                MIDIInputPortCreate()
-                MIDIOutputPortCreate()
-                MIDIPortConnectSource()
-                MIDISend()
-                MIDISendSysex()
-            I *think* we could use a global mutex here. Alternatively, we somehow have to forward these
-            requests to the MIDI thread.
-        Send
-            Similar to the audio implementation: messages are put in a queue and forwarded
-            to the MIDI thread.
-      
+      The begin/end session functions defer to the MIDI thread to start or stop a new
+      session. All session data/devices etc. are copied into the session and read from
+      other threads. The only mutable values in sessions are the callbacks.
       
     * Mapping: 
         - Sessions <-> MIDIClients 
@@ -61,7 +47,8 @@
             - Each endpoint shows up as a *separate* device
         - Streams <-> MIDIPorts
 
-     * The MIDI streams use MIDITimeStamp() for the clock. We might change this.
+     * Each MIDI stream has an internal clock which currently defaults to the
+     fa_clock_standard(). We might add other options later, such as using the CoreMIDI time stamp.
 
  */
 
@@ -149,13 +136,13 @@ static mutex_t                      gMidiMutex;
 static bool                         gMidiActive;
 static session_t                    gMidiCurrentSession;
 static session_t                    gPendingSession; // Set to 0 when a new session should be created, set to the session otherwise
-static thread_t                     gMidiThread;
+static fa_thread_t                  gMidiThread;
 static CFRunLoopRef                 gMidiThreadRunLoop;
 
 error_t midi_device_error(string_t msg);
-error_t midi_device_error_with(string_t msg, int error);
-error_t midi_error(string_t msg, int code);
-void midi_device_fatal(string_t msg, int code);
+error_t midi_device_error_with(string_t msg, native_error_t error);
+error_t midi_error(string_t msg, native_error_t code);
+void midi_device_fatal(string_t msg, native_error_t code);
 ptr_t midi_session_impl(fa_id_t interface);
 ptr_t midi_device_impl(fa_id_t interface);
 ptr_t midi_stream_impl(fa_id_t interface);
@@ -456,9 +443,9 @@ void fa_midi_end_session(session_t session)
 }
 
 void fa_midi_with_session(session_callback_t    session_callback,
-                          fa_ptr_t         session_data,
+                          fa_ptr_t              session_data,
                           error_callback_t      error_callback,
-                          fa_ptr_t         error_data)
+                          fa_ptr_t              error_data)
 {
     session_t session = fa_midi_begin_session();
 
@@ -620,11 +607,10 @@ void message_listener(const MIDIPacketList * packetList, ptr_t x, ptr_t _)
     for (int i = 0; i < packetList->numPackets; ++i) {
         const MIDIPacket* packet = &(packetList->packet[i]);
 
-        // TODO use CoreMIDI time
-        // time_t time = fa_milliseconds(packet->timeStamp);
+        // TODO optionally use CoreMIDI time
         time_t time = fa_clock_time(stream->clock);
 
-        // FIXME assumes simple message
+        // TODO assumes simple message
         midi_message_t msg = midi_message(
             packet->data[0],
             packet->data[1],
@@ -671,8 +657,6 @@ void run_action(action_t action, stream_t stream)
     }
 }
 
-// TODO needs to be called periodically from run loop
-// This require some way to register actions on the session
 ptr_t send_actions(ptr_t x) {
     // printf("Called send_actions (if you see this, please report it as a bug)\n");
 
@@ -699,7 +683,6 @@ ptr_t send_actions(ptr_t x) {
     
         if (fa_less_than_equal(time, now)) {
             run_action(action, stream);
-            // TODO actually send it to port/endpoint (i.e. stream->native, device->native)
             fa_priority_queue_pop(stream->controls);
         } else {
             break;
@@ -825,7 +808,7 @@ bool midi_device_equal(ptr_t a, ptr_t b)
 {
     device_t device1 = (device_t) a;
     device_t device2 = (device_t) b;
-    // TODO check that session is valid
+    // TODO check that sessions are valid
     return fa_equal(device1->name, device2->name);
 }
 
@@ -909,23 +892,29 @@ error_t midi_device_error(string_t msg)
                                   string("Doremir.Device.Midi"));
 }
 
-error_t midi_device_error_with(string_t msg, int code)
+error_t midi_device_error_with(string_t msg, native_error_t code)
 {
     return fa_error_create_simple(error,
                                   string_dappend(msg, format_integral(" (error code %d)", code)),
                                   string("Doremir.Device.Midi"));
 }
-error_t midi_error(string_t msg, int code)
+
+// TODO consolidate
+string_t from_os_status2(OSStatus err)
+{                
+    return string((char*) GetMacOSStatusErrorString(err));
+}
+
+error_t midi_error(string_t msg, native_error_t code)
 {
-    // string_t msg2 = string((char *) Pm_GetErrorText(code));
-    string_t msg2 = string(""); // FIXME
+    string_t msg2 = from_os_status2(code); // FIXME
     return fa_error_create_simple(error,
                                   string_dappend(msg, msg2),
                                   string("Doremir.Device.Midi"));
 }
 
 
-void midi_device_fatal(string_t msg, int code)
+void midi_device_fatal(string_t msg, native_error_t code)
 {
     fa_fa_log_error_from(
         string_dappend(msg, format_integral(" (error code %d)", code)),
