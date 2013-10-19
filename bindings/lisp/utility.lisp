@@ -191,13 +191,13 @@
 
 
 
-(defcallback signal-counter-add1 signal ((_ :pointer) (x signal))
-  (signal-add x (constant 1)))
-
-(defun signal-counter ()
-  (signal-add 
-    (signal-loop (callback signal-counter-add1) (cffi:null-pointer))
-    (constant -1)))
+; (defcallback signal-counter-add1 signal ((_ :pointer) (x signal))
+;   (signal-add x (constant 1)))
+; 
+; (defun signal-counter ()
+;   (signal-add 
+;     (signal-loop (callback signal-counter-add1) (cffi:null-pointer))
+;     (constant -1)))
 
 
 
