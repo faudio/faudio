@@ -53,12 +53,20 @@ bool fa_atomic_exchange(fa_atomic_t a, fa_ptr_t pold, fa_ptr_t pnew)
 
 void fa_atomic_add(fa_atomic_t a, intptr_t v)
 {
+#if (DOREMIR_ARCH_BITS == 32)
 	InterlockedExchangeAdd((LONG*)&a->value, (LONG)v);
+#else
+	InterlockedExchangeAdd64((LONGLONG*)&a->value, (LONGLONG)v);
+#endif
 }
 
 void* fa_atomic_get(fa_atomic_t a)
 {
+#if (DOREMIR_ARCH_BITS == 32)
 	InterlockedCompareExchange((LONG*)&a->value, 0L, 0L);
+#else
+	InterlockedCompareExchange64((LONGLONG*)&a->value, 0LL, 0LL);
+#endif
 }
 
 void fa_atomic_modify(fa_atomic_t atomic, fa_unary_t func, fa_ptr_t data)
