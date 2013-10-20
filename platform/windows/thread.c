@@ -51,7 +51,7 @@ void fa_thread_terminate()
 
 static DWORD WINAPI start(LPVOID x)
 {
-    fa_closure_t *closure = x;  // CASTING FROM fa_nullary_t
+    fa_closure_t *closure = x;
     return closure->function(closure->value);
 }
 
