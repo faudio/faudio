@@ -134,6 +134,7 @@ struct _fa_midi_stream_t {
  */
 static mutex_t                      gMidiMutex;
 static bool                         gMidiActive;
+static bool                         gMidiTerminating;
 static session_t                    gMidiCurrentSession;
 static session_t                    gPendingSession; // Set to 0 when a new session should be created, set to the session otherwise
 static fa_thread_t                  gMidiThread;
@@ -313,8 +314,14 @@ ptr_t midi_thread(ptr_t x) {
 
     while (true) {                    
         fa_thread_sleep(100);
-        if (gPendingSession) continue;
+
+        if (gMidiTerminating) {
+            return NULL;
+        }
+
         // Only proceed when gPendingSession becomes zero
+        if (gPendingSession) continue;
+
         {
             result  = 0;
             session = new_session(); // Still have to set native and devics
@@ -353,6 +360,7 @@ ptr_t midi_thread(ptr_t x) {
             CFRunLoopRun();
 
             CFRelease(timer);
+            
         }
         {
             result = 0;
@@ -374,6 +382,7 @@ void fa_midi_initialize()
 {
     gMidiMutex          = fa_thread_create_mutex();
     gMidiActive         = false;
+    gMidiTerminating    = false;
     gMidiCurrentSession = NULL;
     gMidiThreadRunLoop  = NULL;
     gMidiThread         = fa_thread_create(midi_thread, NULL);
@@ -388,6 +397,10 @@ void fa_midi_terminate()
     fa_thread_destroy_mutex(gMidiMutex);
     // TODO indicate that MIDI thread should return after disposing client 
     // TODO stop all sessions
+
+    fa_midi_end_all_sessions();
+    gMidiTerminating = true;
+    gPendingSession  = NULL; // Wake up
     fa_thread_join(gMidiThread);
 }
 
