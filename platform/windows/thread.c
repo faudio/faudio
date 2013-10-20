@@ -6,7 +6,7 @@
  */
 
 #include <fa/thread.h>
-#include <fa/util.h>    // for impl_t
+#include <fa/util.h>
 #include <Windows.h>
 
 typedef struct {
@@ -21,7 +21,7 @@ struct _fa_thread_t {
 
 struct _fa_thread_mutex_t {
     impl_t          impl;       //  Interface dispatcher
-    HANDLE native;
+    LPCRITICAL_SECTION native;
 };
 
 struct _fa_thread_condition_t {
@@ -114,13 +114,13 @@ fa_thread_mutex_t fa_thread_create_mutex()
 {
     fa_thread_mutex_t mutex = malloc(sizeof(struct _fa_thread_mutex_t));
 
-    HANDLE result = CreateMutex(NULL, false, NULL);
+    LPCRITICAL_SECTION crit_sect = malloc(sizeof(CRITICAL_SECTION));
+	
+	if(!InitializeCriticalSectionAndSpinCount(crit_sect, 0x00000400)) {
+		fa_thread_fatal("create_mutex", GetLastError());
+	}
 
-    if (!result) {
-        fa_thread_fatal("create_mutex", GetLastError());
-    }
-
-    mutex->native = result;
+    mutex->native = crit_sect;
     return mutex;
 }
 
@@ -128,38 +128,35 @@ fa_thread_mutex_t fa_thread_create_mutex()
  */
 void fa_thread_destroy_mutex(fa_thread_mutex_t mutex)
 {
-    BOOL result = CloseHandle(mutex->native); // FIXME
-    free(mutex);
-
-    if (!result) {
-        fa_thread_fatal("destroy_mutex", GetLastError());
-    }
+	DeleteCriticalSection(mutex->native);
+	
+	if(mutex->native)
+		free(mutex->native);
+	
+	if(mutex)
+		free(mutex);
 }
 
 /** Acquire the lock of a mutex.
  */
 bool fa_thread_lock(fa_thread_mutex_t mutex)
 {
-    DWORD result = WaitForSingleObject(mutex->native, INFINITE);
-    assert(result != WAIT_FAILED);
-    return result == WAIT_OBJECT_0;
+    EnterCriticalSection(mutex->native);
+    return true;
 }
 
 /** Try acquiring the lock of a mutex.
  */
 bool fa_thread_try_lock(fa_thread_mutex_t mutex)
 {
-    DWORD result = WaitForSingleObject(mutex->native, 0);
-    assert(result != WAIT_FAILED);
-    return result == WAIT_OBJECT_0;
+    return TryEnterCriticalSection(mutex->native);
 }
 
 /** Release the lock of a mutex.
  */
 bool fa_thread_unlock(fa_thread_mutex_t mutex)
 {
-    BOOL result = ReleaseMutex(mutex->native);
-    assert(result != 0);
+    LeaveCriticalSection(mutex->native);
     return true;
 }
 
