@@ -1,0 +1,15 @@
+
+# v2.3.1
+
+- Supports audio and midi hot-plugging for OS X
+    - PortMidi replaces CoreMIDI as MIDI backend on OS X
+    - Both audio and MIDI support `add_status_callback`
+    - Adds related test programs `fa_plug_audio` and `fa_plug_midi`
+
+- Lisp bindings now lock the internal closure table
+
+- Documentation improvements
+
+- Miscellaneous
+    - Adds fa_with_lock macro
+    - Fixes Lisp error in `faudio::counter`
