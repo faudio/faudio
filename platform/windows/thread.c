@@ -9,15 +9,15 @@
 #include <fa/util.h>
 #include <Windows.h>
 
-typedef struct {
+typedef struct _fa_closure_t {
     DWORD       (*function)(DWORD);
     DWORD       value;
-} fa_closure_t;
+} *fa_closure_t;
 
 struct _fa_thread_t {
     impl_t          impl;       //  Interface dispatcher
     HANDLE native;
-    // DWORD tId;                 // Thread id
+    DWORD tId;					// Thread id
 };
 
 struct _fa_thread_mutex_t {
@@ -30,6 +30,11 @@ struct _fa_thread_condition_t {
     HANDLE native;
     fa_thread_mutex_t  mutex;
 };
+
+typedef struct _fa_parameters_t {
+	fa_closure_t closure;
+	fa_thread_t thread;
+} *fa_parameters_t;
 
 static HANDLE main_thread_g = INVALID_HANDLE_VALUE;
 
@@ -79,15 +84,23 @@ inline static void delete_thread(thread_t thread)
 
 static DWORD WINAPI start(LPVOID x)
 {
-    fa_closure_t *closure = x;
-    return closure->function(closure->value);
+    fa_parameters_t params = x;
+	params->thread->tId = GetCurrentThreadId();
+    return params->closure->function(params->closure->value);
 }
 
 fa_thread_t fa_thread_create(fa_nullary_t closure, fa_ptr_t data)
 {
-    fa_thread_t thread = malloc(sizeof(struct _fa_thread_t));
+    fa_thread_t thread 		= malloc(sizeof(struct _fa_thread_t));
+	fa_parameters_t params 	= malloc(sizeof(struct _fa_parameters_t));
+	
+	thread->native 	= INVALID_HANDLE_VALUE;
+	thread->tId 	= NULL;
+	
+	params->closure = (fa_closure_t) closure;
+	params->thread	= &thread;
 
-    HANDLE result = CreateThread(NULL, 0, start, closure, 0, NULL);
+    HANDLE result = CreateThread(NULL, 0, start, params, 0, NULL);
 
     if (!result) {
         fa_thread_fatal("create", GetLastError());
@@ -110,13 +123,12 @@ void fa_thread_join(fa_thread_t thread)
     do {
         Sleep(join_interval_k);
         result = GetExitCodeThread(thread->native, &exitCode);
-
         if (!result) {
             fa_thread_fatal("join", GetLastError());
         }
 
     } while (exitCode == STILL_ACTIVE);
-
+	
     free(thread);
 }
 
