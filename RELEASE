@@ -18,7 +18,7 @@
 * Run `release.sh X.X.X`
 
 * Go to <https://github.com/hanshoglund/faudio/releases/new> 
-    * Write release notes
+    * Write release notes in NOTES, copy to github form
     * Upload the generated zip/tarball
 
 * Run `.release.sh --clean`
