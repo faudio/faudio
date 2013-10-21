@@ -4,8 +4,8 @@
 
 fa_ptr_t received(ptr_t stream, ptr_t timeMessage)
 {
-    fa_print_ln(fa_string_show(timeMessage)); 
-    
+    fa_print_ln(fa_string_show(timeMessage));
+
     fa_destroy(fa_pair_first(timeMessage));
     fa_destroy(fa_pair_second(timeMessage));
     fa_destroy(timeMessage);
@@ -20,12 +20,12 @@ void run_midi()
 
     fa_midi_stream_t st = fa_midi_open_stream(i);
     fa_midi_add_message_callback(received, st, st);
-    
+
     if (fa_check(st)) {
         fa_error_log(st, NULL);
     }
 
-    while(1) {
+    while (1) {
         fa_thread_sleep(1000);
     }
 

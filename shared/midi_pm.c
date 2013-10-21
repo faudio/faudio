@@ -181,7 +181,7 @@ inline static stream_t new_stream(device_t device)
     stream->thread          = NULL;
     stream->thread_abort    = false;
     stream->message_callback_count = 0;
-    
+
     stream->clock           = fa_clock_standard(); // TODO change
     stream->in_controls     = atomic_queue();
     stream->controls        = priority_queue();
@@ -409,7 +409,7 @@ fa_midi_stream_t fa_midi_open_stream(device_t device)
 {
     if (!device) {
         return (stream_t) midi_device_error_with(
-            string("Can not open a stream with no devices"), 0);
+                   string("Can not open a stream with no devices"), 0);
     }
 
     midi_inform_opening(device);
@@ -436,7 +436,7 @@ fa_midi_stream_t fa_midi_open_stream(device_t device)
             native_error(string("Could not open midi output"), result);
         }
     }
-    
+
     stream->thread = fa_thread_create(stream_thread_callback, stream);
     return stream;
 }
@@ -480,18 +480,19 @@ void fa_midi_with_stream(device_t           device,
 
 
 
-void read_in(PmEvent* dest, stream_t stream);
+void read_in(PmEvent *dest, stream_t stream);
 
 ptr_t stream_thread_callback(ptr_t x)
-{                 
+{
     stream_t stream = x;
     inform(string("  Midi service thread active"));
 
-    while(1) {              
+    while (1) {
         if (stream->thread_abort) {
             inform(string("  Midi service thread finished"));
             return 0;
         }
+
         // inform(string("  Midi service thread!"));
 
         // Inputs
@@ -501,16 +502,16 @@ ptr_t stream_thread_callback(ptr_t x)
                 PmEvent events[1];
                 read_in(events, stream);
                 // Pm_Read(stream->native_input, events, 1); // TODO error
-                
+
                 for (int i = 0; i < stream->message_callback_count; ++i) {
                     unary_t f = stream->message_callbacks[i];
                     ptr_t   x = stream->message_callback_ptrs[i];
-                    
+
                     time_t time = fa_milliseconds(events[0].timestamp);
                     midi_message_t msg = midi_message(
-                        Pm_MessageStatus(events[0].message), 
-                        Pm_MessageData1(events[0].message), 
-                        Pm_MessageData2(events[0].message));
+                                             Pm_MessageStatus(events[0].message),
+                                             Pm_MessageData1(events[0].message),
+                                             Pm_MessageData2(events[0].message));
 
                     f(x, pair(time, msg));
                 }
@@ -520,15 +521,19 @@ ptr_t stream_thread_callback(ptr_t x)
         // Outputs
         if (stream->native_output) {
             ptr_t val;
+
             while ((val = fa_atomic_queue_read(stream->in_controls))) {
                 // inform(fa_string_show(val));
                 fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
             }
+
             while (1) {
                 pair_t x = fa_priority_queue_peek(stream->controls);
+
                 if (!x) {
                     break;
                 }
+
                 time_t   time   = fa_pair_first(x);
                 action_t action = fa_pair_second(x);
 
@@ -541,16 +546,18 @@ ptr_t stream_thread_callback(ptr_t x)
                         send_out(value, stream); // TODO laterz
                         mark_used(name);
                     }
+
                     fa_priority_queue_pop(stream->controls);
                 } else {
                     break;
                 }
             }
         }
-        
+
         // Sleep
         fa_thread_sleep(kMidiServiceThreadInterval);
     }
+
     assert(false && "Unreachable");
 }
 
@@ -558,12 +565,12 @@ void fa_midi_add_message_callback(fa_midi_message_callback_t function,
                                   fa_ptr_t data,
                                   fa_midi_stream_t stream)
 {
-    assert (stream->message_callback_count < kMaxMessageCallbacks && "Too many message callbacks");
+    assert(stream->message_callback_count < kMaxMessageCallbacks && "Too many message callbacks");
 
     int i = stream->message_callback_count;
     stream->message_callbacks[i] = function;
     stream->message_callback_ptrs[i] = data;
-    
+
     stream->message_callback_count++;
 }
 
@@ -585,9 +592,9 @@ void fa_midi_schedule(fa_time_t        time,
     // }
 }
 
-            
-void read_in(PmEvent* dest, stream_t stream)
-{   
+
+void read_in(PmEvent *dest, stream_t stream)
+{
     PmError result;
     result = Pm_Read(stream->native_input, dest, 1);
 

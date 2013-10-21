@@ -24,6 +24,7 @@ fa_midi_session_t print_midi_devices(fa_ptr_t _, midi_session_t session)
                      fa_midi_name(input)));
 
     }
+
     if (fa_check(output)) {
         fa_print("(No outputs)\n", NULL);
     } else {

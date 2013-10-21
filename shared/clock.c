@@ -159,7 +159,7 @@ fa_ptr_t standard_clock_impl(fa_id_t interface)
 {
     static fa_string_show_t standard_clock_show_impl
         = { standard_clock_show };
-    
+
     static fa_clock_interface_t standard_clock_clock_impl
         = { standard_clock_time, standard_clock_milliseconds };
 
@@ -174,5 +174,5 @@ fa_ptr_t standard_clock_impl(fa_id_t interface)
     default:
         return NULL;
     }
-}   
+}
 

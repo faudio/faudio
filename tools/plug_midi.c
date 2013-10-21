@@ -16,7 +16,7 @@ ptr_t status_callback(ptr_t session)
 /** Called whenever a new session is started.
  */
 fa_midi_session_t print_midi_devices(fa_ptr_t _, fa_midi_session_t session)
-{            
+{
     fa_midi_add_status_callback(status_callback, session, session);
 
     fa_thread_sleep(500); // FIXME why is this needed?
@@ -28,15 +28,18 @@ fa_midi_session_t print_midi_devices(fa_ptr_t _, fa_midi_session_t session)
         fa_print_ln(string(""));
         mark_used(x);
     }
-                           
+
     stop = false;
+
     while (1) {
         // printf("Stop: %d\n", stop);
         if (stop) {
             return session;
         }
-        fa_thread_sleep(1000); 
+
+        fa_thread_sleep(1000);
     }
+
     return session;
 }
 
@@ -52,5 +55,6 @@ int main(int argc, char const *argv[])
             print_midi_devices, NULL,
             fa_error_log, NULL);
     }
+
     fa_fa_terminate();
 }

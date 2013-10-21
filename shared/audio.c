@@ -326,7 +326,7 @@ fa_list_t fa_audio_all(session_t session)
     }
 
 fa_pair_t fa_audio_default(session_t session)
-{       
+{
     fail_if_no_input(fa_pair_t);
     fail_if_no_output(fa_pair_t);
     return pair(session->def_input, session->def_output);
@@ -420,7 +420,7 @@ stream_t fa_audio_open_stream(device_t input,
 
     if (!input && !output) {
         return (stream_t) audio_device_error_with(
-            string("Can not open a stream with no devices"), 0);
+                   string("Can not open a stream with no devices"), 0);
     }
 
     stream_t        stream = new_stream(input, output, sample_rate, buffer_size);
