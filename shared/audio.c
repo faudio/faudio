@@ -297,7 +297,7 @@ void fa_audio_with_session(session_callback_t session_callback,
 fa_list_t fa_audio_current_sessions()
 {
     if (!current_session) {
-        return list();
+        return empty();
     } else {
         return list(current_session);
     }

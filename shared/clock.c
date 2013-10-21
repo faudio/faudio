@@ -19,18 +19,25 @@
 #include <mach/mach.h>
 #endif
 
+
+#ifndef _WIN32
 static clock_serv_t gMachClock;
+#endif
 
 // --------------------------------------------------------------------------------
 
 void fa_clock_initialize()
 {
+#ifndef _WIN32
     host_get_clock_service(mach_host_self(), REALTIME_CLOCK, &gMachClock);
+#endif
 }
 
 void fa_clock_terminate()
 {
+#ifndef _WIN32
     mach_port_deallocate(mach_task_self(), gMachClock);
+#endif
 }
 
 // --------------------------------------------------------------------------------
@@ -48,58 +55,6 @@ fa_time_milliseconds_t fa_clock_milliseconds(fa_clock_t clock)
     return ((fa_clock_interface_t *) fa_interface(fa_clock_interface_i, clock))->milliseconds(clock);
 }
 
-// --------------------------------------------------------------------------------
-
-// struct system_clock {
-//     impl_t impl;
-// };
-// typedef struct system_clock *system_clock_t;
-//
-// ptr_t system_clock_impl(fa_id_t interface);
-//
-// clock_t fa_time_get_system_clock()
-// {
-//     system_clock_t clock = fa_new_struct(system_clock);
-//     clock->impl = &system_clock_impl;
-//     return (clock_t) clock;
-// }
-//
-// double system_tick_rate(ptr_t a)
-// {
-//     return 1;
-// }
-//
-// int64_t system_ticks(ptr_t a)
-// {
-//     // system_time_t t;
-//     // time(&t);
-//     // int64_t lt = t;
-//     // return lt;
-//     assert(false && "Not implemented");
-// }
-//
-// fa_time_t system_time(ptr_t a)
-// {
-//     return fa_time_from_system(fa_time_system());
-// }
-//
-// ptr_t system_clock_impl(fa_id_t interface)
-// {
-//     static fa_clock_interface_t system_clock_clock
-//         = { system_time, system_tick_rate, system_ticks };
-//
-//     switch (interface) {
-//
-//     case fa_clock_interface_i:
-//         return &system_clock_clock;
-//
-//     default:
-//         return NULL;
-//     }
-// }
-//
-//
-//
 
 // --------------------------------------------------------------------------------
 
@@ -137,21 +92,29 @@ fa_string_t standard_clock_show(fa_ptr_t a)
 
 int64_t standard_clock_milliseconds(fa_ptr_t a)
 {
+#ifndef _WIN32
     mach_timespec_t ts;
     clock_get_time(gMachClock, &ts);
 
     return ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
+#else
+    assert(false && "Not implemented");
+#endif
 }
 
 fa_time_t standard_clock_time(fa_ptr_t a)
 {
-    mach_timespec_t ts;
-    clock_get_time(gMachClock, &ts);
-    // clock_gettime(CLOCK_REALTIME, &ts);
+#ifndef _WIN32
+   mach_timespec_t ts;
+   clock_get_time(gMachClock, &ts);
+   // clock_gettime(CLOCK_REALTIME, &ts);
 
-    time_t s  = seconds(ts.tv_sec); // TODO with tv_nsec
-    time_t ds = divisions(ts.tv_nsec / 1000000, 1000);
-    return fa_dadd(s, ds);
+   time_t s  = seconds(ts.tv_sec); // TODO with tv_nsec
+   time_t ds = divisions(ts.tv_nsec / 1000000, 1000);
+   return fa_dadd(s, ds);
+#else
+    assert(false && "Not implemented");
+#endif
 }
 
 

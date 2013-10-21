@@ -24,3 +24,5 @@ test-svg/
 *.dsp
 test.app
 pages
+faudio_cbproject/
+

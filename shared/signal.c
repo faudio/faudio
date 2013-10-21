@@ -425,17 +425,17 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
 {
     switch (signal->tag) {
     case time_signal:
-        return pair(string("time"), list());
+        return pair(string("time"), empty());
 
     case random_signal:
-        return pair(string("random"), list());
+        return pair(string("random"), empty());
 
     case constant_signal:
         return pair(
                    fa_string_to_string(
                        fa_from_double(
                            constant_get(signal, value))),
-                   list());
+                   empty());
 
     case lift_signal:
         return pair(
@@ -454,7 +454,7 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
                    concat(
                        string("input "),
                        fa_string_show(fa_from_int32(input_get(signal, c)))),
-                   list());
+                   empty());
 
     case output_signal:
         return pair(
@@ -660,7 +660,7 @@ fa_signal_t fa_signal_simplify(fa_signal_t signal2)
 {
     part_t part;
     init_part(&part);
-    list_t procs = list();
+    list_t procs = empty();
     return simplify(&part, &procs, signal2);
 }
 
@@ -668,7 +668,7 @@ list_t fa_signal_get_procs(fa_signal_t signal2)
 {
     part_t part;
     init_part(&part);
-    list_t procs = list();
+    list_t procs = empty();
     simplify(&part, &procs, signal2);
     return procs;
 }

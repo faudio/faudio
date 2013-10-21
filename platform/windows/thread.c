@@ -5,71 +5,119 @@
     All rights reserved.
  */
 
-#include <fae/thread.h>
+#include <fa/thread.h>
+#include <fa/util.h>
 #include <Windows.h>
 
-struct _fae_thread_t {
-    impl_t          impl;       //  Interface dispatcher
-    HANDLE native;
+struct _fa_closure_t {
+    DWORD       (*function)(DWORD);
+    DWORD       value;
 };
 
-struct _fae_thread_mutex_t {
-    impl_t          impl;       //  Interface dispatcher
-    HANDLE native;
+typedef struct _fa_closure_t* fa_closure_t;
+
+struct _fa_thread_t {
+    impl_t          impl;       	//  Interface dispatcher
+    HANDLE native;					// 	Handle
+    DWORD tId;						// 	Id
+	fa_nullary_t function;
+	fa_ptr_t     value;
 };
 
-struct _fae_thread_condition_t {
+struct _fa_thread_mutex_t {
     impl_t          impl;       //  Interface dispatcher
-    HANDLE native;
-    fae_thread_mutex_t  mutex;
+    LPCRITICAL_SECTION native;
 };
 
-static void fae_thread_fatal(char *msg, int error);
+// struct _fa_thread_condition_t {
+    // impl_t          impl;       //  Interface dispatcher
+    // HANDLE native;
+    // fa_thread_mutex_t  mutex;
+// };
 
+static HANDLE main_thread_g = INVALID_HANDLE_VALUE;
+
+static void fa_thread_fatal(char *msg, int error);
 static const long join_interval_k = 50;
-
-
-static void fae_thread_fatal(char *msg, int error);
-
-// --------------------------------------------------------------------------------
-
-void fae_thread_initialize()
-{
-}
-
-void fae_thread_terminate()
-{
-}
+ptr_t thread_impl(fa_id_t iface);
+ptr_t mutex_impl(fa_id_t iface);
 
 // --------------------------------------------------------------------------------
 
-
-static DWORD WINAPI start(LPVOID x)
+void fa_thread_initialize()
 {
-    fae_closure_t *closure = x;
-    return closure->function(closure->value);
+	/*
+	http://weseetips.com/2008/03/26/getcurrentthread-returns-pseudo-handle-not-the-real-handle/
+	*/
+	if(!DuplicateHandle(
+			GetCurrentProcess(),
+			GetCurrentThread(),
+			GetCurrentProcess(),
+			&main_thread_g,
+			0,
+			true,
+			DUPLICATE_SAME_ACCESS))
+	{
+		fa_thread_fatal("duplicate_main", GetLastError());
+	}
 }
 
-fae_thread_t fae_thread_create(fae_closure_t *closure)
+void fa_thread_terminate()
 {
-    fae_thread_t thread = malloc(sizeof(struct _fae_thread_t));
+	main_thread_g = INVALID_HANDLE_VALUE;
+}
 
-    HANDLE result = CreateThread(NULL, 0, start, closure, 0, NULL);
+inline static thread_t xnew_thread()
+{
+    fa_thread_t thread = fa_new(thread);
+    thread->impl = &thread_impl;
+    return thread;
+}
+inline static void delete_thread(thread_t thread)
+{
+    fa_delete(thread);
+}
+
+// --------------------------------------------------------------------------------
+
+
+static DWORD WINAPI thread_proc(LPVOID x)
+{
+    fa_thread_t thread = x;
+	thread->tId = GetCurrentThreadId();
+#ifdef __MINGW32__
+    return (DWORD) thread->function(thread->value);
+#else
+    #error "only 32 bit"
+#endif
+}
+
+fa_thread_t fa_thread_create(fa_nullary_t function, fa_ptr_t value)
+{
+    fa_thread_t thread 	= fa_malloc(sizeof(struct _fa_thread_t)); // xnew_thread()
+
+	thread->impl    = &thread_impl;
+	thread->native 	= INVALID_HANDLE_VALUE;
+	thread->tId 	= 0;
+	thread->function= function;
+	thread->value   = value;
+
+    HANDLE result = CreateThread(NULL, 0, thread_proc, thread, 0, NULL);
 
     if (!result) {
-        fae_thread_fatal("create", GetLastError());
+        fa_thread_fatal("create", GetLastError());
     }
 
     thread->native = result;
     return thread;
 }
 
-void fae_thread_sleep(fae_thread_milli_seconds_t millis)
+void fa_thread_sleep(fa_time_milliseconds_t millis)
 {
     Sleep(millis);
 }
 
-void fae_thread_join(fae_thread_t thread)
+void fa_thread_join(fa_thread_t thread)
 {
     BOOL result;
     DWORD exitCode;
@@ -77,25 +125,57 @@ void fae_thread_join(fae_thread_t thread)
     do {
         Sleep(join_interval_k);
         result = GetExitCodeThread(thread->native, &exitCode);
-
         if (!result) {
-            fae_thread_fatal("join", GetLastError());
+            fa_thread_fatal("join", GetLastError());
         }
 
     } while (exitCode == STILL_ACTIVE);
 
-    free(thread);
+    fa_free(thread);
 }
 
-void fae_thread_detach(fae_thread_t thread)
+void fa_thread_detach(fa_thread_t thread)
 {
     BOOL result = CloseHandle(thread->native);
-    free(thread);
+    fa_free(thread);
 
     if (!result) {
-        fae_thread_fatal("detach", GetLastError());
+        fa_thread_fatal("detach", GetLastError());
     }
 }
+
+fa_thread_t fa_thread_main()
+{
+	assert( (main_thread_g != INVALID_HANDLE_VALUE)
+		&& "Module not initialized" );
+
+	fa_thread_t thread = xnew_thread();
+	thread->impl   = &thread_impl;
+	thread->native = main_thread_g;
+	return thread;
+}
+
+fa_thread_t fa_thread_current()
+{
+	/*
+	http://weseetips.com/2008/03/26/getcurrentthread-returns-pseudo-handle-not-the-real-handle/
+	*/
+	fa_thread_t thread = xnew_thread();
+	if(!DuplicateHandle(
+			GetCurrentProcess(),
+			GetCurrentThread(),
+			GetCurrentProcess(),
+			&thread->native,
+			0,
+			true,
+			DUPLICATE_SAME_ACCESS))
+	{
+		fa_thread_fatal("duplicate_handle", GetLastError());
+	}
+	return thread;
+}
+
+
 
 
 // --------------------------------------------------------------------------------
@@ -105,56 +185,54 @@ void fae_thread_detach(fae_thread_t thread)
     Mutexes have single-ownership semantics and must be finalized by passing it
     to a destroy function.
  */
-fae_thread_mutex_t fae_thread_create_mutex()
+fa_thread_mutex_t fa_thread_create_mutex()
 {
-    fae_thread_mutex_t mutex = malloc(sizeof(struct _fae_thread_mutex_t));
+    fa_thread_mutex_t mutex = fa_malloc(sizeof(struct _fa_thread_mutex_t));
 
-    HANDLE result = CreateMutex(NULL, false, NULL);
+    LPCRITICAL_SECTION crit_sect = fa_malloc(sizeof(CRITICAL_SECTION));
 
-    if (!result) {
-        fae_thread_fatal("create_mutex", GetLastError());
-    }
+	if(!InitializeCriticalSectionAndSpinCount(crit_sect, 0x00000400)) {
+		fa_thread_fatal("create_mutex", GetLastError());
+	}
 
-    mutex->native = result;
+    mutex->impl     = &mutex_impl;
+    mutex->native   = crit_sect;
     return mutex;
 }
 
 /** Destroy a mutex.
  */
-void fae_thread_destroy_mutex(fae_thread_mutex_t mutex)
+void fa_thread_destroy_mutex(fa_thread_mutex_t mutex)
 {
-    BOOL result = CloseHandle(mutex->native); // FIXME
-    free(mutex);
+	DeleteCriticalSection(mutex->native);
 
-    if (!result) {
-        fae_thread_fatal("destroy_mutex", GetLastError());
-    }
+	if(mutex->native)
+		fa_free(mutex->native);
+
+	if(mutex)
+		fa_free(mutex);
 }
 
 /** Acquire the lock of a mutex.
  */
-bool fae_thread_lock(fae_thread_mutex_t mutex)
+bool fa_thread_lock(fa_thread_mutex_t mutex)
 {
-    DWORD result = WaitForSingleObject(mutex->native, INFINITE);
-    assert(result != WAIT_FAILED);
-    return result == WAIT_OBJECT_0;
+    EnterCriticalSection(mutex->native);
+    return true;
 }
 
 /** Try acquiring the lock of a mutex.
  */
-bool fae_thread_try_lock(fae_thread_mutex_t mutex)
+bool fa_thread_try_lock(fa_thread_mutex_t mutex)
 {
-    DWORD result = WaitForSingleObject(mutex->native, 0);
-    assert(result != WAIT_FAILED);
-    return result == WAIT_OBJECT_0;
+    return TryEnterCriticalSection(mutex->native);
 }
 
 /** Release the lock of a mutex.
  */
-bool fae_thread_unlock(fae_thread_mutex_t mutex)
+bool fa_thread_unlock(fa_thread_mutex_t mutex)
 {
-    BOOL result = ReleaseMutex(mutex->native);
-    assert(result != 0);
+    LeaveCriticalSection(mutex->native);
     return true;
 }
 
@@ -166,11 +244,106 @@ bool fae_thread_unlock(fae_thread_mutex_t mutex)
 
 // --------------------------------------------------------------------------------
 
-void fae_audio_engine_log_error_from(fae_string_t msg, fae_string_t origin);
-
-void fae_thread_fatal(char *msg, int error)
+bool thread_equal(ptr_t m, ptr_t n)
 {
-    fae_audio_engine_log_error_from(string(msg), string("Doremir.Thread"));
+    fa_thread_t x = (fa_thread_t) m;
+    fa_thread_t y = (fa_thread_t) n;
+
+    return x->native == y->native;
+}
+
+bool thread_less_than(ptr_t m, ptr_t n)
+{
+    fa_thread_t x = (fa_thread_t) m;
+    fa_thread_t y = (fa_thread_t) n;
+
+    return x->native < y->native;
+}
+
+bool thread_greater_than(ptr_t m, ptr_t n)
+{
+    fa_thread_t x = (fa_thread_t) m;
+    fa_thread_t y = (fa_thread_t) n;
+
+    return x->native > y->native;
+}
+
+fa_string_t thread_show(ptr_t a)
+{
+    thread_t x = (thread_t) a;
+
+    string_t str = string("<Thread ");
+    str = string_dappend(str, fa_string_format_integral(" %p", (long) x->native));
+    str = string_dappend(str, string(">"));
+    return str;
+}
+
+ptr_t thread_impl(fa_id_t iface)
+{
+    static fa_equal_t thread_equal_impl
+        = { thread_equal };
+    static fa_order_t thread_order_impl
+        = { thread_less_than, thread_greater_than };
+    static fa_string_show_t thread_show_impl
+        = { thread_show };
+
+    switch (iface) {
+    case fa_equal_i:
+        return &thread_equal_impl;
+
+    case fa_order_i:
+        return &thread_order_impl;
+
+    case fa_string_show_i:
+        return &thread_show_impl;
+
+    default:
+        return NULL;
+    }
+}
+
+fa_string_t mutex_show(ptr_t a)
+{
+    string_t str = string("<Mutex ");
+    str = string_dappend(str, fa_string_format_integral(" %p", (long) a));
+    str = string_dappend(str, string(">"));
+    return str;
+}
+
+void mutex_destroy(ptr_t a)
+{
+    fa_thread_destroy_mutex(a);
+}
+
+ptr_t mutex_impl(fa_id_t iface)
+{
+    static fa_string_show_t mutex_show_impl
+        = { mutex_show };
+    static fa_destroy_t mutex_destroy_impl
+        = { mutex_destroy };
+
+    switch (iface) {
+    case fa_string_show_i:
+        return &mutex_show_impl;
+
+    case fa_destroy_i:
+        return &mutex_destroy_impl;
+
+    default:
+        return NULL;
+    }
+}
+
+
+// --------------------------------------------------------------------------------
+
+
+
+void fa_fa_log_error_from(fa_string_t msg, fa_string_t origin);
+
+void fa_thread_fatal(char *msg, int error)
+{
+    fa_fa_log_error_from(string(msg), string("Doremir.Thread"));
     exit(error);
 }
 

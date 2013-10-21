@@ -2,7 +2,7 @@
 # Uses EXTS, APPLE and MSYS + options
 # Sets MAIN_LIBRARY
 
-# To update, use 
+# To update, use
 #  find src -name '*'
 list(APPEND SRCS
   fa.c
@@ -17,7 +17,7 @@ list(APPEND SRCS
   buffer.c
   error.c
   list.c
-  map.c 
+  map.c
   graph.c
   midi/message.c
   pair.c
@@ -46,6 +46,10 @@ list(APPEND SRCS_OSX
   )
 
 list(APPEND SRCS_MSYS
+  ../platform/windows/atomic.c
+  ../platform/windows/thread.c
+  ../platform/windows/device.c
+  ../platform/windows/system/directory.c
   ../platform/windows/signal.c
   )
 
@@ -59,7 +63,7 @@ endif()
 if(APPLE)
   if(BUILD_SHARED)
     add_library(faudio SHARED ${SRCS_ALL})
-    set_target_properties(faudio PROPERTIES 
+    set_target_properties(faudio PROPERTIES
       OUTPUT_NAME                 "faudio"
       LIBRARY_OUTPUT_DIRECTORY    "../lib"
       INSTALL_NAME_DIR            "/usr/local/lib"
@@ -85,20 +89,20 @@ endif(APPLE)
 if(MSYS)
   if(BUILD_SHARED)
     add_library(faudio SHARED ${SRCS_ALL})
-    set_target_properties(faudio PROPERTIES 
-      OUTPUT_NAME                 "ae"
+    set_target_properties(faudio PROPERTIES
+      OUTPUT_NAME                 "faudio"
       RUNTIME_OUTPUT_DIRECTORY    "../bin"
       )
     target_link_libraries(faudio ${EXTS})
-    set(MAIN_LIBRARY faudio PARENT_SCOPE)    
+    set(MAIN_LIBRARY faudio PARENT_SCOPE)
   endif(BUILD_SHARED)
   if(True)
     add_library(faudio_static ${SRCS_ALL})
-    set_target_properties(faudio_static PROPERTIES 
-      OUTPUT_NAME                 "ae"
+    set_target_properties(faudio_static PROPERTIES
+      OUTPUT_NAME                 "faudio"
       RUNTIME_OUTPUT_DIRECTORY    "../lib"
       )
     target_link_libraries(faudio_static ${EXTS})
-    set(MAIN_STATIC_LIBRARY faudio_static PARENT_SCOPE)    
+    set(MAIN_STATIC_LIBRARY faudio_static PARENT_SCOPE)
   endif(True)
 endif(MSYS)
