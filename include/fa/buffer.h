@@ -12,11 +12,14 @@
     Mutable buffers. 
     
     Each buffer is a mutable sequence of bytes with single-ownership semantics. The length
-    of a buffer can never change, but its memory can be reused using the destructive
-    resize operation.
+    of a buffer can never change, but its memory can be reused using @ref fa_buffer_dresize.
     
-    TODO formalize bounds checking etc.
-
+    The contents of a buffer is *untyped*, i.e. it is possible to write 16-bit integer to
+    a buffer and subsequently read floats. The user must assure that the correct type is
+    being used. All `get` and `set` methods are *fail-fast*: reading or writing past the
+    size results in assertion errors in a debug build and undefined behaviour in a release
+    build.
+    
     @par Literals
     - `buffer(size)` 
 
@@ -39,7 +42,7 @@
 */
 typedef struct _fa_buffer_t * fa_buffer_t;
 
-/** Create a new buffer.
+/** Create a new buffer and initialize it to zero-bytes.
     @note
         O(n)
 */
