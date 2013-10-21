@@ -492,12 +492,14 @@
 (midi-has-output y)
 
 
-; TODO status callback
+(midi-add-status-callback* (lambda ()
+  (capi:display-message "Midi setup changed")
+  (fa-log-info "Midi setup changed")) s)
 
-(setf q (midi-open-stream x))
-(setf z (midi-open-stream y))
-(midi-close-stream z)
-(midi-close-stream q)
+;(setf q (midi-open-stream x))
+;(setf z (midi-open-stream y))
+;(midi-close-stream z)
+;(midi-close-stream q)
 
 
 
@@ -527,7 +529,7 @@
 
 ; Input
 (defvar *msgs* nil)
-(push 1 *msgs*)
+;(push 1 *msgs*)
 (progn (mapcar 'cl:print *msgs*) nil)
 
 (midi-message-channel (second (car *msgs*)))
