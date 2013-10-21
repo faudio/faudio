@@ -9,15 +9,22 @@
 #include <fa/util.h>
 #include <Windows.h>
 
-typedef struct _fa_closure_t {
+struct _fa_closure_t {
     DWORD       (*function)(DWORD);
     DWORD       value;
-} *fa_closure_t;
+};
+
+typedef struct _fa_closure_t* fa_closure_t;
+
+typedef struct _fa_parameters_t {
+	fa_closure_t closure;
+} *fa_parameters_t;
 
 struct _fa_thread_t {
-    impl_t          impl;       //  Interface dispatcher
-    HANDLE native;
-    DWORD tId;					// Thread id
+    impl_t          impl;       	//  Interface dispatcher
+    HANDLE native;					// 	Handle
+    DWORD tId;						// 	Id
+	fa_parameters_t params;			// 	Params
 };
 
 struct _fa_thread_mutex_t {
@@ -25,16 +32,11 @@ struct _fa_thread_mutex_t {
     LPCRITICAL_SECTION native;
 };
 
-struct _fa_thread_condition_t {
-    impl_t          impl;       //  Interface dispatcher
-    HANDLE native;
-    fa_thread_mutex_t  mutex;
-};
-
-typedef struct _fa_parameters_t {
-	fa_closure_t closure;
-	fa_thread_t thread;
-} *fa_parameters_t;
+// struct _fa_thread_condition_t {
+    // impl_t          impl;       //  Interface dispatcher
+    // HANDLE native;
+    // fa_thread_mutex_t  mutex;
+// };
 
 static HANDLE main_thread_g = INVALID_HANDLE_VALUE;
 
@@ -84,23 +86,24 @@ inline static void delete_thread(thread_t thread)
 
 static DWORD WINAPI start(LPVOID x)
 {
-    fa_parameters_t params = x;
-	params->thread->tId = GetCurrentThreadId();
-    return params->closure->function(params->closure->value);
+    fa_thread_t tinst = x;
+	tinst->tId = GetCurrentThreadId();
+	// ta bort params
+    return tinst->params->closure->function(tinst->params->closure->value);
 }
 
 fa_thread_t fa_thread_create(fa_nullary_t closure, fa_ptr_t data)
 {
-    fa_thread_t thread 		= malloc(sizeof(struct _fa_thread_t));
-	fa_parameters_t params 	= malloc(sizeof(struct _fa_parameters_t));
-	
+    fa_thread_t thread 	= fa_malloc(sizeof(struct _fa_thread_t)); // new_thread()
+
+	thread->impl    = &thread_impl;
 	thread->native 	= INVALID_HANDLE_VALUE;
 	thread->tId 	= NULL;
-	
-	params->closure = (fa_closure_t) closure;
-	params->thread	= &thread;
+	thread->params	= fa_malloc(sizeof(struct _fa_parameters_t));
 
-    HANDLE result = CreateThread(NULL, 0, start, params, 0, NULL);
+	thread->params->closure = (fa_closure_t) closure;
+
+    HANDLE result = CreateThread(NULL, 0, start, thread, 0, NULL);
 
     if (!result) {
         fa_thread_fatal("create", GetLastError());
@@ -128,14 +131,16 @@ void fa_thread_join(fa_thread_t thread)
         }
 
     } while (exitCode == STILL_ACTIVE);
-	
-    free(thread);
+
+	fa_free(thread->params);
+    fa_free(thread);
 }
 
 void fa_thread_detach(fa_thread_t thread)
 {
     BOOL result = CloseHandle(thread->native);
-    free(thread);
+	fa_free(thread->params);
+    fa_free(thread);
 
     if (!result) {
         fa_thread_fatal("detach", GetLastError());
@@ -148,7 +153,9 @@ fa_thread_t fa_thread_main()
 		&& "Module not initialized" );
 
 	fa_thread_t thread = new_thread();
+	thread->impl   = &thread_impl;
 	thread->native = main_thread_g;
+	thread->params = fa_malloc(sizeof(struct _fa_parameters_t));
 	return thread;
 }
 
@@ -184,15 +191,16 @@ fa_thread_t fa_thread_current()
  */
 fa_thread_mutex_t fa_thread_create_mutex()
 {
-    fa_thread_mutex_t mutex = malloc(sizeof(struct _fa_thread_mutex_t));
+    fa_thread_mutex_t mutex = fa_malloc(sizeof(struct _fa_thread_mutex_t));
 
-    LPCRITICAL_SECTION crit_sect = malloc(sizeof(CRITICAL_SECTION));
+    LPCRITICAL_SECTION crit_sect = fa_malloc(sizeof(CRITICAL_SECTION));
 
 	if(!InitializeCriticalSectionAndSpinCount(crit_sect, 0x00000400)) {
 		fa_thread_fatal("create_mutex", GetLastError());
 	}
 
-    mutex->native = crit_sect;
+    mutex->impl     = &mutex_impl;
+    mutex->native   = crit_sect;
     return mutex;
 }
 
@@ -203,10 +211,10 @@ void fa_thread_destroy_mutex(fa_thread_mutex_t mutex)
 	DeleteCriticalSection(mutex->native);
 
 	if(mutex->native)
-		free(mutex->native);
+		fa_free(mutex->native);
 
 	if(mutex)
-		free(mutex);
+		fa_free(mutex);
 }
 
 /** Acquire the lock of a mutex.
@@ -242,24 +250,24 @@ bool fa_thread_unlock(fa_thread_mutex_t mutex)
 
 bool thread_equal(ptr_t m, ptr_t n)
 {
-    thread_t x = (thread_t) m;
-    thread_t y = (thread_t) n;
+    fa_thread_t x = (fa_thread_t) m;
+    fa_thread_t y = (fa_thread_t) n;
 
     return x->native == y->native;
 }
 
 bool thread_less_than(ptr_t m, ptr_t n)
 {
-    thread_t x = (thread_t) m;
-    thread_t y = (thread_t) n;
+    fa_thread_t x = (fa_thread_t) m;
+    fa_thread_t y = (fa_thread_t) n;
 
     return x->native < y->native;
 }
 
 bool thread_greater_than(ptr_t m, ptr_t n)
 {
-    thread_t x = (thread_t) m;
-    thread_t y = (thread_t) n;
+    fa_thread_t x = (fa_thread_t) m;
+    fa_thread_t y = (fa_thread_t) n;
 
     return x->native > y->native;
 }
@@ -308,7 +316,7 @@ fa_string_t mutex_show(ptr_t a)
 
 void mutex_destroy(ptr_t a)
 {
-    fa_thread_unlock(a);
+    fa_thread_destroy_mutex(a);
 }
 
 ptr_t mutex_impl(fa_id_t iface)

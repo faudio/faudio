@@ -53,20 +53,20 @@ bool fa_atomic_exchange(fa_atomic_t a, fa_ptr_t pold, fa_ptr_t pnew)
 
 void fa_atomic_add(fa_atomic_t a, intptr_t v)
 {
-#if (DOREMIR_ARCH_BITS == 32)
+#ifdef __MINGW32__
 	InterlockedExchangeAdd((LONG*)&a->value, (LONG)v);
 #else
-	// NEEDS MINGW64
+	#error "only 32 bit supported needs MINGW64"
 	// InterlockedExchangeAdd64((LONGLONG*)&a->value, (LONGLONG)v);
 #endif
 }
 
 void* fa_atomic_get(fa_atomic_t a)
 {
-#if (DOREMIR_ARCH_BITS == 32)
+#ifdef __MINGW32__
 	InterlockedCompareExchange((LONG*)&a->value, 0L, 0L);
 #else
-	// NEEDS MINGW64
+	#error "only 32 bit supported needs MINGW64"
 	// InterlockedCompareExchange64((LONGLONG*)&a->value, 0LL, 0LL);
 #endif
 }
