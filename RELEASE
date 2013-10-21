@@ -1,13 +1,15 @@
 
 ## Release check-list
 
-* Set Release (later: for now, everything is Debug)
-* Commit, push and `make modules bindings doc test`
 
 * Bump version 
     * CMakeLists.txt
     * bindings/lisp/faudio.asd
     * doc/Doxyfile
+    * Set Release (later: for now, everything is Debug)
+    * Commit, push and `make modules bindings doc test`
+
+* Commit
     * `git add` (changed files)
     * `git commit -m "vX.X.X"`
     * `git tag vX.X.X`
