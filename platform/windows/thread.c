@@ -16,15 +16,12 @@ struct _fa_closure_t {
 
 typedef struct _fa_closure_t* fa_closure_t;
 
-typedef struct _fa_parameters_t {
-	fa_closure_t closure;
-} *fa_parameters_t;
-
 struct _fa_thread_t {
     impl_t          impl;       	//  Interface dispatcher
     HANDLE native;					// 	Handle
     DWORD tId;						// 	Id
-	fa_parameters_t params;			// 	Params
+	fa_nullary_t function;
+	fa_ptr_t     value;
 };
 
 struct _fa_thread_mutex_t {
@@ -70,7 +67,7 @@ void fa_thread_terminate()
 	main_thread_g = INVALID_HANDLE_VALUE;
 }
 
-inline static thread_t new_thread()
+inline static thread_t xnew_thread()
 {
     fa_thread_t thread = fa_new(thread);
     thread->impl = &thread_impl;
@@ -84,26 +81,28 @@ inline static void delete_thread(thread_t thread)
 // --------------------------------------------------------------------------------
 
 
-static DWORD WINAPI start(LPVOID x)
+static DWORD WINAPI thread_proc(LPVOID x)
 {
-    fa_thread_t tinst = x;
-	tinst->tId = GetCurrentThreadId();
-	// ta bort params
-    return tinst->params->closure->function(tinst->params->closure->value);
+    fa_thread_t thread = x;
+	thread->tId = GetCurrentThreadId();
+#ifdef __MINGW32__
+    return (DWORD) thread->function(thread->value);
+#else
+    #error "only 32 bit"
+#endif
 }
 
-fa_thread_t fa_thread_create(fa_nullary_t closure, fa_ptr_t data)
+fa_thread_t fa_thread_create(fa_nullary_t function, fa_ptr_t value)
 {
-    fa_thread_t thread 	= fa_malloc(sizeof(struct _fa_thread_t)); // new_thread()
+    fa_thread_t thread 	= fa_malloc(sizeof(struct _fa_thread_t)); // xnew_thread()
 
 	thread->impl    = &thread_impl;
 	thread->native 	= INVALID_HANDLE_VALUE;
-	thread->tId 	= NULL;
-	thread->params	= fa_malloc(sizeof(struct _fa_parameters_t));
+	thread->tId 	= 0;
+	thread->function= function;
+	thread->value   = value;
 
-	thread->params->closure = (fa_closure_t) closure;
-
-    HANDLE result = CreateThread(NULL, 0, start, thread, 0, NULL);
+    HANDLE result = CreateThread(NULL, 0, thread_proc, thread, 0, NULL);
 
     if (!result) {
         fa_thread_fatal("create", GetLastError());
@@ -132,14 +131,12 @@ void fa_thread_join(fa_thread_t thread)
 
     } while (exitCode == STILL_ACTIVE);
 
-	fa_free(thread->params);
     fa_free(thread);
 }
 
 void fa_thread_detach(fa_thread_t thread)
 {
     BOOL result = CloseHandle(thread->native);
-	fa_free(thread->params);
     fa_free(thread);
 
     if (!result) {
@@ -152,10 +149,9 @@ fa_thread_t fa_thread_main()
 	assert( (main_thread_g != INVALID_HANDLE_VALUE)
 		&& "Module not initialized" );
 
-	fa_thread_t thread = new_thread();
+	fa_thread_t thread = xnew_thread();
 	thread->impl   = &thread_impl;
 	thread->native = main_thread_g;
-	thread->params = fa_malloc(sizeof(struct _fa_parameters_t));
 	return thread;
 }
 
@@ -164,7 +160,7 @@ fa_thread_t fa_thread_current()
 	/*
 	http://weseetips.com/2008/03/26/getcurrentthread-returns-pseudo-handle-not-the-real-handle/
 	*/
-	fa_thread_t thread = new_thread();
+	fa_thread_t thread = xnew_thread();
 	if(!DuplicateHandle(
 			GetCurrentProcess(),
 			GetCurrentThread(),
