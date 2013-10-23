@@ -27,6 +27,7 @@ struct au_context {
 };
 
 #define kAUVec 32
+#define kAUOffset 32
 
 ptr_t render_(ptr_t x, fa_signal_state_t *state)
 {
@@ -37,8 +38,8 @@ ptr_t render_(ptr_t x, fa_signal_state_t *state)
         au_render(context, state->count, NULL);
     }
 
-    state->inputs[32] = context->outputs[kAUVec * 0 + (state->count % kAUVec)];
-    state->inputs[33] = context->outputs[kAUVec * 1 + (state->count % kAUVec)];
+    state->inputs[kAUOffset + 0] = context->outputs[kAUVec * 0 + (state->count % kAUVec)];
+    state->inputs[kAUOffset + 1] = context->outputs[kAUVec * 1 + (state->count % kAUVec)];
 
     return x;
     mark_used(context);
@@ -76,8 +77,8 @@ pair_t fa_signal_dls()
 
     // printf("Sending custom proc %p!\n", proc);
 
-    signal_t left  = fa_signal_input(32);
-    signal_t right = fa_signal_input(33);
+    signal_t left  = fa_signal_input(kAUOffset + 0);
+    signal_t right = fa_signal_input(kAUOffset + 1);
     signal_t left2 = fa_signal_custom(proc, left);
     return pair(left2, right);
     mark_used(left2);
