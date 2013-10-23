@@ -158,10 +158,10 @@ module Fa.Signal
      */
     former : (Signal, Signal) -> Signal;
 
-    type StreamInputCallback = ((Size, Ptr) -> Void)*;
-    type StreamOutputCallback = ((Size, Ptr) -> Void)*;
-    inputStream : (Int, StreamInputCallback) -> Signal;
-    outputStream : (Int, StreamOutputCallback, Signal) -> Signal;
+    type StreamInputCallback = ((Ptr, Size) -> Void)*;
+    type StreamOutputCallback = ((Ptr, Size) -> Void)*;
+    inputStream : (Int, StreamInputCallback, Ptr) -> Signal;
+    outputStream : (Int, StreamOutputCallback, Ptr, Signal) -> Signal;
     
 
 

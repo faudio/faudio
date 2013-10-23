@@ -1164,6 +1164,123 @@ fa_signal_t fa_signal_cos(fa_signal_t a)
     return fa_signal_lift(string("cos"), _cos, NULL, a);
 }
 
+// --------------------------------------------------------------------------------
+
+// Stream-based I/O
+
+#define kStreamInputOffset 48
+#define kStreamOutputOffset 60
+
+#define kStreamVectorSize 32
+
+/* 
+    Note: It is unclear whether stream I/O should happen on the main processing
+    thread or another thread. The latter solution would require us to start
+    up a separate thread here and use a ring buffer internally. We don't do this
+    here: the user can attach a ring buffer manually instead.
+ */
+
+
+
+
+ptr_t input_stream_before(ptr_t x, fa_signal_state_t *state)
+{                            
+    // Nothing
+    return x;
+}
+
+ptr_t input_stream_after(ptr_t x, fa_signal_state_t *state)
+{
+    // Nothing
+    return x;
+}
+
+ptr_t input_stream_render(ptr_t x, fa_signal_state_t *state)
+{
+    int bus = ti32(x);
+
+    if (state->count % kStreamVectorSize == 0) {
+        // TODO invoke the callback          
+    }
+    double result = 0;
+    state->inputs[kStreamInputOffset + bus] = result;
+    return x;
+}
+
+ptr_t input_stream_receive(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
+{
+    // Nothing
+    return x;
+}
+
+fa_signal_t fa_signal_input_stream(int bus, 
+                                   fa_signal_stream_input_callback_t function, 
+                                   ptr_t data)
+{
+    signal_t input = fa_signal_input(kStreamInputOffset + bus);
+    
+    fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
+    proc->before  = input_stream_before;
+    proc->after   = input_stream_after;
+    proc->render  = input_stream_render;
+    proc->receive = input_stream_receive;
+    // FIXME pass user data and special buffer
+    proc->data    = i32(bus);
+
+    return fa_signal_custom(proc, input);
+}
+
+
+
+
+ptr_t output_stream_before(ptr_t x, fa_signal_state_t *state)
+{
+    // Nothing
+    return x;
+}
+
+ptr_t output_stream_after(ptr_t x, fa_signal_state_t *state)
+{
+    // Nothing
+    return x;
+}
+
+ptr_t output_stream_render(ptr_t x, fa_signal_state_t *state)
+{
+    int bus = ti32(x);
+
+    double value = state->inputs[kStreamOutputOffset + bus];
+    mark_used(value);
+    
+    if (state->count % kStreamVectorSize == 0) {
+        // TODO invoke the callback          
+    }
+    return x;
+}
+
+ptr_t output_stream_receive(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
+{            
+    // Nothing
+    return x;
+}
+
+fa_signal_t fa_signal_output_stream(int bus,
+                                    fa_signal_stream_output_callback_t function,
+                                    ptr_t data,
+                                    fa_signal_t input)
+{
+    signal_t output =  fa_signal_output(0, kStreamOutputOffset + bus, input);
+
+    fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
+    proc->before  = output_stream_before;
+    proc->after   = output_stream_after;
+    proc->render  = output_stream_render;
+    proc->receive = output_stream_receive;
+    // FIXME pass user data and special buffer
+    proc->data    = i32(bus);
+
+    return fa_signal_custom(proc, output);
+}
 
 
 
