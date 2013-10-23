@@ -548,6 +548,7 @@ ptr_t stream_thread_callback(ptr_t x)
                     }
 
                     fa_priority_queue_pop(stream->controls);
+                    // TODO reschedule
                 } else {
                     break;
                 }
