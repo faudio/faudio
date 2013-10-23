@@ -583,14 +583,6 @@ void fa_midi_schedule(fa_time_t        time,
 {
     pair_left_t pair = pair_left(time, action);
     fa_atomic_queue_write(stream->in_controls, pair);
-
-
-    // if (fa_action_is_send(action)) {
-    //     string_t name = fa_action_send_name(action);
-    //     ptr_t    value = fa_action_send_value(action);
-    //     send_out(value, stream); // TODO laterz
-    //     mark_used(name);
-    // }
 }
 
 
