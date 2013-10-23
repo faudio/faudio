@@ -26,7 +26,7 @@ struct au_context {
     double *outputs;
 };
 
-#define kAUVec 32
+#define kAUVectorSize 32
 #define kAUOffset 32
 
 ptr_t render_(ptr_t x, fa_signal_state_t *state)
@@ -34,12 +34,12 @@ ptr_t render_(ptr_t x, fa_signal_state_t *state)
     au_context_t context = x;
 
     // context->Time = state->count;
-    if (state->count % kAUVec == 0) {
+    if (state->count % kAUVectorSize == 0) {
         au_render(context, state->count, NULL);
     }
 
-    state->inputs[kAUOffset + 0] = context->outputs[kAUVec * 0 + (state->count % kAUVec)];
-    state->inputs[kAUOffset + 1] = context->outputs[kAUVec * 1 + (state->count % kAUVec)];
+    state->inputs[kAUOffset + 0] = context->outputs[kAUVectorSize * 0 + (state->count % kAUVectorSize)];
+    state->inputs[kAUOffset + 1] = context->outputs[kAUVectorSize * 1 + (state->count % kAUVectorSize)];
 
     return x;
     mark_used(context);
@@ -65,7 +65,7 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 // Pair of signals
 pair_t fa_signal_dls()
 {
-    au_context_t context = create_au_context(new_dls_music_device_instance(), 2, kAUVec);
+    au_context_t context = create_au_context(new_dls_music_device_instance(), 2, kAUVectorSize);
     // TODO destroy
 
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
