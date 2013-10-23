@@ -1168,10 +1168,9 @@ fa_signal_t fa_signal_cos(fa_signal_t a)
 
 // Stream-based I/O
 
-#define kStreamInputOffset 48
+#define kStreamInputOffset  48
 #define kStreamOutputOffset 60
-
-#define kStreamVectorSize 32
+#define kStreamVectorSize   32
 
 /* 
     Note: It is unclear whether stream I/O should happen on the main processing
@@ -1180,6 +1179,25 @@ fa_signal_t fa_signal_cos(fa_signal_t a)
     here: the user can attach a ring buffer manually instead.
  */
 
+
+// TODO use this
+struct stream_io_context {                     
+    // double *outputs;
+    // int     frames;
+    int     bus;
+    ptr_t   function;
+    ptr_t   data;
+    
+    int frames;
+    double output[kStreamVectorSize];
+};
+typedef struct stream_io_context* stream_io_context_t;
+
+stream_io_context_t new_stream_io_context(int bus, ptr_t function, ptr_t data) {
+    stream_io_context_t context = malloc(1);
+    // TODO
+    return context;
+}
 
 
 
@@ -1197,7 +1215,8 @@ ptr_t input_stream_after(ptr_t x, fa_signal_state_t *state)
 
 ptr_t input_stream_render(ptr_t x, fa_signal_state_t *state)
 {
-    int bus = ti32(x);
+    stream_io_context_t context = x;
+    int bus = context->bus;
 
     if (state->count % kStreamVectorSize == 0) {
         // TODO invoke the callback          
@@ -1219,13 +1238,15 @@ fa_signal_t fa_signal_input_stream(int bus,
 {
     signal_t input = fa_signal_input(kStreamInputOffset + bus);
     
+    stream_io_context_t context = new_stream_io_context(bus, function, data);
+
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
     proc->before  = input_stream_before;
     proc->after   = input_stream_after;
     proc->render  = input_stream_render;
     proc->receive = input_stream_receive;
     // FIXME pass user data and special buffer
-    proc->data    = i32(bus);
+    proc->data    = context;
 
     return fa_signal_custom(proc, input);
 }
@@ -1247,7 +1268,8 @@ ptr_t output_stream_after(ptr_t x, fa_signal_state_t *state)
 
 ptr_t output_stream_render(ptr_t x, fa_signal_state_t *state)
 {
-    int bus = ti32(x);
+    stream_io_context_t context = x;
+    int bus = context->bus;
 
     double value = state->inputs[kStreamOutputOffset + bus];
     mark_used(value);
@@ -1271,13 +1293,15 @@ fa_signal_t fa_signal_output_stream(int bus,
 {
     signal_t output =  fa_signal_output(0, kStreamOutputOffset + bus, input);
 
+    stream_io_context_t context = new_stream_io_context(bus, function, data);
+    
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
     proc->before  = output_stream_before;
     proc->after   = output_stream_after;
     proc->render  = output_stream_render;
     proc->receive = output_stream_receive;
     // FIXME pass user data and special buffer
-    proc->data    = i32(bus);
+    proc->data    = context;
 
     return fa_signal_custom(proc, output);
 }
