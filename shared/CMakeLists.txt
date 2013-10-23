@@ -18,7 +18,6 @@ list(APPEND SRCS
   error.c
   list.c
   map.c
-  graph.c
   midi/message.c
   pair.c
   pair/left.c
