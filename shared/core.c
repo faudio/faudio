@@ -81,37 +81,6 @@ bool fa_is_ref(fa_ptr_t x)
     return (((intptr_t) x) & 0x7) == 0x0;
 }
 
-// fa_dynamic_type_repr_t bool_get_type(fa_ptr_t a)
-// {
-//     bool_type_repr;
-// }
-// fa_dynamic_type_repr_t int8_get_type(fa_ptr_t a)
-// {
-//     return i8_type_repr;
-// }
-// fa_dynamic_type_repr_t int16_get_type(fa_ptr_t a)
-// {
-//     return i16_type_repr;
-// }
-// fa_dynamic_type_repr_t int32_get_type(fa_ptr_t a)
-// {
-//     return i32_type_repr;
-// }
-// fa_dynamic_type_repr_t int64_get_type(fa_ptr_t a)
-// {
-//     return i64_type_repr;
-// }
-// fa_dynamic_type_repr_t float_get_type(fa_ptr_t a)
-// {
-//     return f32_type_repr;
-// }
-// fa_dynamic_type_repr_t double_get_type(fa_ptr_t a)
-// {
-//     return f64_type_repr;
-// }
-
-
-
 
 // --------------------------------------------------------------------------------
 // Wrapper functions

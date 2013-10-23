@@ -22,7 +22,7 @@
     * The create/destroy functions uses the standard fa_malloc/fa_free allocator.
  */
 
-#define print_max_size_k 80
+#define kMaxBufferSize 80
 
 struct _fa_buffer_t {
     impl_t          impl;
@@ -292,8 +292,8 @@ void buffer_destroy(fa_ptr_t a)
 fa_string_t buffer_show(fa_ptr_t a)
 {
     buffer_t buffer = (buffer_t) a;
-    bool     more   = fa_buffer_size(buffer) > print_max_size_k;
-    size_t   length = more ? print_max_size_k : fa_buffer_size(buffer);
+    bool     more   = fa_buffer_size(buffer) > kMaxBufferSize;
+    size_t   length = more ? kMaxBufferSize : fa_buffer_size(buffer);
     string_t str    = string("<Buffer");
 
     for (size_t i = 0; i < length; ++i) {

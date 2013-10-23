@@ -100,6 +100,7 @@ void init_audio_time_stamp (AudioTimeStamp *time_stamp, Float64 inSampleTime) {
    time_stamp->mHostTime            = 0;
    time_stamp->mRateScalar          = 0;
    time_stamp->mWordClockTime       = 0;
+
    memset (&time_stamp->mSMPTETime, 0, sizeof (SMPTETime));
 
    time_stamp->mFlags               = kAudioTimeStampSampleTimeValid;
@@ -275,16 +276,16 @@ list_t find_dls_music_device()
     descr.componentFlagsMask    = 0;
 
     return find_audio_components(&descr);
-    // assert(AudioComponentCount(&desc) > 0 && "No DLSMusicDevice");
-    // AudioComponent dls = AudioComponentFindNext(component, &desc);
 }
 
 ptr_t new_dls_music_device_instance()
 {
     list_t components = find_dls_music_device();
     assert(fa_list_is_single(components) && "Missing or ambigous DLSMusicDevice");
+    
     ptr_t dls = fa_list_head(components);
     ptr_t instance = NULL;
+    
     AudioComponentInstanceNew(dls, (AudioComponentInstance*) &instance);
     return instance;
 }
@@ -292,12 +293,11 @@ ptr_t new_dls_music_device_instance()
 
 void au_send_midi(au_context_t context, int status, int data1, int data2)
 {
+    OSStatus err;
     AudioComponentInstance instance = context->Instance;
     
-    OSStatus err;
     if ((err = MusicDeviceMIDIEvent(instance, status, data1, data2, 0))) {
         fa_print_ln(from_os_status(err));
         assert(false && "Could not send note");
     }
-    mark_used(err);
 }

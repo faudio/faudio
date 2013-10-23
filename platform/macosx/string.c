@@ -16,11 +16,8 @@
 
 void *fa_string_to_native(fa_string_t str)
 {
-    char *cstr;
-    CFStringRef cfstr;
-
-    cstr    = fa_string_to_utf8(str);
-    cfstr   = CFStringCreateWithCString(kCFAllocatorDefault, cstr, kCFStringEncodingUTF8);
+    char       *cstr    = fa_string_to_utf8(str);
+    CFStringRef cfstr   = CFStringCreateWithCString(kCFAllocatorDefault, cstr, kCFStringEncodingUTF8);
 
     free(cstr);
     return (void *) cfstr;
@@ -38,7 +35,7 @@ fa_string_t fa_string_from_native(void *input)
     } else {
         size        = CFStringGetLength(cfRef);
         cstr        = fa_malloc(size + 1);
-        cstr[size]  = 0;                     // necesary ?
+        cstr[size]  = 0;
 
         CFStringGetCString(cfRef, cstr, size + 1, kCFStringEncodingUTF8);
         str = fa_string_from_utf8(cstr);

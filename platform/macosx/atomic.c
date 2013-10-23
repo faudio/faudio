@@ -64,11 +64,10 @@ bool fa_atomic_exchange(fa_atomic_t a, fa_ptr_t old, fa_ptr_t new)
 
 fa_ptr_t fa_atomic_get(fa_atomic_t a)
 {
-#if (DOREMIR_ARCH_BITS == 32)
+    _Static_assert (sizeof(intptr_t) == 4, "Assumes 32-bit, see below");
     return (ptr_t) OSAtomicAdd32Barrier(0, (ptr_t) &a->value);
-#else
-    return (ptr_t) OSAtomicAdd64Barrier(0, (ptr_t) &a->value);
-#endif
+
+    // return (ptr_t) OSAtomicAdd64Barrier(0, (ptr_t) &a->value);
 }
 
 void fa_atomic_modify(fa_atomic_t atomic, fa_unary_t func, fa_ptr_t data)

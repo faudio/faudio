@@ -10,10 +10,10 @@
 #include <fa/action.h>
 #include <fa/util.h>
 
-typedef fa_action_t action_t;
-typedef fa_action_channel_t channel_t;
-typedef fa_action_name_t name_t;
-typedef fa_signal_unary_double_t unary_double_t;
+typedef fa_action_t                 action_t;
+typedef fa_action_channel_t         channel_t;
+typedef fa_action_name_t            name_t;
+typedef fa_signal_unary_double_t    unary_double_t;
 
 struct _fa_action_t {
 

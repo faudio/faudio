@@ -15,10 +15,10 @@
 typedef fa_error_interface_t error_interface_t;
 
 struct simple_error {
-    impl_t        impl;       //  Interface dispatcher
-    severity_t    severity;
-    string_t      message;
-    string_t      origin;
+    impl_t              impl;           //  Interface dispatcher
+    severity_t          severity;
+    string_t            message;
+    string_t            origin;
 };
 
 typedef struct simple_error       *simple_error_t;

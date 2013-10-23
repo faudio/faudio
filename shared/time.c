@@ -10,8 +10,8 @@
 #include <fa/time.h>
 #include <fa/util.h>
 
-typedef fa_ratio_numerator_t num_t;
-typedef fa_ratio_denominator_t denom_t;
+typedef fa_ratio_numerator_t    num_t;
+typedef fa_ratio_denominator_t  denom_t;
 
 struct _fa_time_t {
     impl_t          impl;       //  Interface dispatcher
@@ -24,12 +24,11 @@ inline static fa_time_t new_time(ratio_t value)
 {
     fa_ptr_t time_impl(fa_id_t interface);
 
-    fa_time_t t = fa_new(time);
-    t->impl  = &time_impl;
-    t->value = fa_copy(value);
-    // t->value = value;
-    return t;
+    fa_time_t t     = fa_new(time);
+    t->impl         = &time_impl;
+    t->value        = fa_copy(value);
     // TODO should not copy, but Lisp wants it (see also below)
+    return t;
 }
 
 inline static void delete_time(fa_time_t time)
@@ -43,8 +42,9 @@ inline static void delete_time(fa_time_t time)
 fa_time_t fa_time_create(int32_t days, int32_t hours, int32_t minutes, fa_ratio_t seconds)
 {
     int  whole = days * (60 * 60 * 24) + hours * (60 * 60) + minutes * 60;
+
+    // TODO should destructive add, but Lisp doesn't like it
     return new_time(fa_add(ratio(whole, 1), seconds));
-    // TODO should dadd, but Lisp doesn't like it
 }
 
 fa_time_t fa_time_copy(fa_time_t time)
@@ -118,7 +118,6 @@ int32_t fa_time_to_seconds(fa_time_t time)
  */
 fa_time_milliseconds_t fa_time_to_milliseconds(fa_time_t time)
 {
-    // TODO very slow
     return fa_time_days(time)      * 24 * 60 * 60 * 1000
            + fa_time_hours(time)   * 60 * 60 * 1000
            + fa_time_minutes(time) * 60 * 1000

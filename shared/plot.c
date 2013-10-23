@@ -57,10 +57,10 @@ void fa_plot_continous
 #define PLOTTER(T) \
     double plot_##T(void *data, int i, double t, double x)      \
     {                                                           \
-        fa_buffer_t buf = data;                            \
+        fa_buffer_t buf = data;                                 \
                                                                 \
-        size_t  sz = fa_buffer_size(buf) / sizeof(T);      \
-        T     * ds = fa_buffer_unsafe_address(buf);        \
+        size_t  sz = fa_buffer_size(buf) / sizeof(T);           \
+        T     * ds = fa_buffer_unsafe_address(buf);             \
                                                                 \
         if (i == 0) {                                           \
             return ds[((size_t)(sz * ((x + 1) / 2)))];          \
