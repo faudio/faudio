@@ -424,30 +424,28 @@ int fa_signal_required_delay(fa_signal_t a)
 fa_pair_t fa_signal_to_tree(fa_signal_t signal)
 {
     switch (signal->tag) {
+
     case time_signal:
         return pair(string("time"), empty());
 
     case random_signal:
         return pair(string("random"), empty());
 
-    case constant_signal:
-               {
-                   double value = constant_get(signal, value);
-                   return pair(fa_string_to_string(fa_from_double(value)), empty());    
-               }
+    case constant_signal: {
+        double value = constant_get(signal, value);
+        return pair(fa_string_to_string(fa_from_double(value)), empty());
+    }
 
-    case lift_signal:
-        {
-            pair_t tree = fa_signal_to_tree(lift_get(signal, a));
-            return pair(lift_get(signal, name), list(tree));
-        }
+    case lift_signal: {
+        pair_t tree = fa_signal_to_tree(lift_get(signal, a));
+        return pair(lift_get(signal, name), list(tree));
+    }
 
-    case lift2_signal: 
-        {
-            pair_t tree1 = fa_signal_to_tree(lift2_get(signal, a));
-            pair_t tree2 = fa_signal_to_tree(lift2_get(signal, b));
-            return pair(lift_get(signal, name), list(tree1, tree2));
-        }
+    case lift2_signal: {
+        pair_t tree1 = fa_signal_to_tree(lift2_get(signal, a));
+        pair_t tree2 = fa_signal_to_tree(lift2_get(signal, b));
+        return pair(lift_get(signal, name), list(tree1, tree2));
+    }
 
     case input_signal:
         return pair(
@@ -1172,7 +1170,7 @@ fa_signal_t fa_signal_cos(fa_signal_t a)
 #define kStreamOutputOffset 60
 #define kStreamVectorSize   32
 
-/* 
+/*
     Note: It is unclear whether stream I/O should happen on the main processing
     thread or another thread. The latter solution would require us to start
     up a separate thread here and use a ring buffer internally. We don't do this
@@ -1181,19 +1179,20 @@ fa_signal_t fa_signal_cos(fa_signal_t a)
 
 
 // TODO use this
-struct stream_io_context {                     
+struct stream_io_context {
     // double *outputs;
     // int     frames;
     int     bus;
     ptr_t   function;
     ptr_t   data;
-    
+
     int frames;
     double output[kStreamVectorSize];
 };
-typedef struct stream_io_context* stream_io_context_t;
+typedef struct stream_io_context *stream_io_context_t;
 
-stream_io_context_t new_stream_io_context(int bus, ptr_t function, ptr_t data) {
+stream_io_context_t new_stream_io_context(int bus, ptr_t function, ptr_t data)
+{
     stream_io_context_t context = malloc(1);
     // TODO
     return context;
@@ -1202,7 +1201,7 @@ stream_io_context_t new_stream_io_context(int bus, ptr_t function, ptr_t data) {
 
 
 ptr_t input_stream_before(ptr_t x, fa_signal_state_t *state)
-{                            
+{
     // Nothing
     return x;
 }
@@ -1219,8 +1218,9 @@ ptr_t input_stream_render(ptr_t x, fa_signal_state_t *state)
     int bus = context->bus;
 
     if (state->count % kStreamVectorSize == 0) {
-        // TODO invoke the callback          
+        // TODO invoke the callback
     }
+
     double result = 0;
     state->inputs[kStreamInputOffset + bus] = result;
     return x;
@@ -1232,12 +1232,12 @@ ptr_t input_stream_receive(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
     return x;
 }
 
-fa_signal_t fa_signal_input_stream(int bus, 
-                                   fa_signal_stream_input_callback_t function, 
+fa_signal_t fa_signal_input_stream(int bus,
+                                   fa_signal_stream_input_callback_t function,
                                    ptr_t data)
 {
     signal_t input = fa_signal_input(kStreamInputOffset + bus);
-    
+
     stream_io_context_t context = new_stream_io_context(bus, function, data);
 
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
@@ -1273,15 +1273,16 @@ ptr_t output_stream_render(ptr_t x, fa_signal_state_t *state)
 
     double value = state->inputs[kStreamOutputOffset + bus];
     mark_used(value);
-    
+
     if (state->count % kStreamVectorSize == 0) {
-        // TODO invoke the callback          
+        // TODO invoke the callback
     }
+
     return x;
 }
 
 ptr_t output_stream_receive(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
-{            
+{
     // Nothing
     return x;
 }
@@ -1294,7 +1295,7 @@ fa_signal_t fa_signal_output_stream(int bus,
     signal_t output =  fa_signal_output(0, kStreamOutputOffset + bus, input);
 
     stream_io_context_t context = new_stream_io_context(bus, function, data);
-    
+
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
     proc->before  = output_stream_before;
     proc->after   = output_stream_after;
