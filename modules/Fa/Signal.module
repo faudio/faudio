@@ -158,6 +158,12 @@ module Fa.Signal
      */
     former : (Signal, Signal) -> Signal;
 
+    type StreamInputCallback = ((Size, Ptr) -> Void)*;
+    type StreamOutputCallback = ((Size, Ptr) -> Void)*;
+    inputStream : (Int, StreamInputCallback) -> Signal;
+    outputStream : (Int, StreamOutputCallback, Signal) -> Signal;
+    
+
 
     /** Run the given signal for *n* samples, printing the values to `stdout`.
      */

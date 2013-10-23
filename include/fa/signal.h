@@ -180,6 +180,23 @@ fa_signal_t fa_signal_latter(fa_signal_t, fa_signal_t);
 */
 fa_signal_t fa_signal_former(fa_signal_t, fa_signal_t);
 
+
+typedef void (* fa_signal_stream_input_callback_t)(size_t,
+                                                   fa_ptr_t);
+
+
+typedef void (* fa_signal_stream_output_callback_t)(size_t,
+                                                    fa_ptr_t);
+
+
+fa_signal_t fa_signal_input_stream(int,
+                                   fa_signal_stream_input_callback_t);
+
+
+fa_signal_t fa_signal_output_stream(int,
+                                    fa_signal_stream_output_callback_t,
+                                    fa_signal_t);
+
 /** Run the given signal for *n* samples, printing the values to `stdout`.
 */
 void fa_signal_print(int, fa_list_t, fa_signal_t);
