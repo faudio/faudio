@@ -39,8 +39,8 @@ static HANDLE main_thread_g = INVALID_HANDLE_VALUE;
 
 static void fa_thread_fatal(char *msg, int error);
 static const long join_interval_k = 50;
-ptr_t thread_impl(fa_id_t iface);
-ptr_t mutex_impl(fa_id_t iface);
+fa_ptr_t thread_impl(fa_id_t iface);
+fa_ptr_t mutex_impl(fa_id_t iface);
 
 // --------------------------------------------------------------------------------
 
@@ -67,7 +67,7 @@ void fa_thread_terminate()
 	main_thread_g = INVALID_HANDLE_VALUE;
 }
 
-inline static thread_t xnew_thread()
+inline static thread_t new_thread()
 {
     fa_thread_t thread = fa_new(thread);
     thread->impl = &thread_impl;
@@ -94,13 +94,13 @@ static DWORD WINAPI thread_proc(LPVOID x)
 
 fa_thread_t fa_thread_create(fa_nullary_t function, fa_ptr_t value)
 {
-    fa_thread_t thread 	= fa_malloc(sizeof(struct _fa_thread_t)); // xnew_thread()
+    fa_thread_t thread 	= new_thread();
 
-	thread->impl    = &thread_impl;
-	thread->native 	= INVALID_HANDLE_VALUE;
-	thread->tId 	= 0;
-	thread->function= function;
-	thread->value   = value;
+	thread->impl    	= &thread_impl;
+	thread->native 		= INVALID_HANDLE_VALUE;
+	thread->tId 		= 0;
+	thread->function	= function;
+	thread->value   	= value;
 
     HANDLE result = CreateThread(NULL, 0, thread_proc, thread, 0, NULL);
 
@@ -149,9 +149,10 @@ fa_thread_t fa_thread_main()
 	assert( (main_thread_g != INVALID_HANDLE_VALUE)
 		&& "Module not initialized" );
 
-	fa_thread_t thread = xnew_thread();
-	thread->impl   = &thread_impl;
-	thread->native = main_thread_g;
+	fa_thread_t thread = new_thread();
+	thread->impl   	= &thread_impl;
+	thread->native 	= main_thread_g;
+	thread->tId		= (DWORD)0;
 	return thread;
 }
 
@@ -160,7 +161,10 @@ fa_thread_t fa_thread_current()
 	/*
 	http://weseetips.com/2008/03/26/getcurrentthread-returns-pseudo-handle-not-the-real-handle/
 	*/
-	fa_thread_t thread = xnew_thread();
+	fa_thread_t thread = new_thread();
+	thread->impl = &thread_impl;
+	thread->tId = (DWORD)0;
+	
 	if(!DuplicateHandle(
 			GetCurrentProcess(),
 			GetCurrentThread(),
@@ -244,41 +248,41 @@ bool fa_thread_unlock(fa_thread_mutex_t mutex)
 
 // --------------------------------------------------------------------------------
 
-bool thread_equal(ptr_t m, ptr_t n)
+bool thread_equal(fa_ptr_t m, fa_ptr_t n)
 {
     fa_thread_t x = (fa_thread_t) m;
     fa_thread_t y = (fa_thread_t) n;
 
-    return x->native == y->native;
+    return x->tId == y->tId;
 }
 
-bool thread_less_than(ptr_t m, ptr_t n)
+bool thread_less_than(fa_ptr_t m, fa_ptr_t n)
 {
     fa_thread_t x = (fa_thread_t) m;
     fa_thread_t y = (fa_thread_t) n;
 
-    return x->native < y->native;
+    return x->tId < y->tId;
 }
 
-bool thread_greater_than(ptr_t m, ptr_t n)
+bool thread_greater_than(fa_ptr_t m, fa_ptr_t n)
 {
     fa_thread_t x = (fa_thread_t) m;
     fa_thread_t y = (fa_thread_t) n;
 
-    return x->native > y->native;
+    return x->tId > y->tId;
 }
 
-fa_string_t thread_show(ptr_t a)
+fa_string_t thread_show(fa_ptr_t a)
 {
     thread_t x = (thread_t) a;
 
     string_t str = string("<Thread ");
-    str = string_dappend(str, fa_string_format_integral(" %p", (long) x->native));
+    str = string_dappend(str, fa_string_format_integral(" %p", (long) x->tId));
     str = string_dappend(str, string(">"));
     return str;
 }
 
-ptr_t thread_impl(fa_id_t iface)
+fa_ptr_t thread_impl(fa_id_t iface)
 {
     static fa_equal_t thread_equal_impl
         = { thread_equal };
@@ -302,7 +306,7 @@ ptr_t thread_impl(fa_id_t iface)
     }
 }
 
-fa_string_t mutex_show(ptr_t a)
+fa_string_t mutex_show(fa_ptr_t a)
 {
     string_t str = string("<Mutex ");
     str = string_dappend(str, fa_string_format_integral(" %p", (long) a));
@@ -310,12 +314,12 @@ fa_string_t mutex_show(ptr_t a)
     return str;
 }
 
-void mutex_destroy(ptr_t a)
+void mutex_destroy(fa_ptr_t a)
 {
     fa_thread_destroy_mutex(a);
 }
 
-ptr_t mutex_impl(fa_id_t iface)
+fa_ptr_t mutex_impl(fa_id_t iface)
 {
     static fa_string_show_t mutex_show_impl
         = { mutex_show };
