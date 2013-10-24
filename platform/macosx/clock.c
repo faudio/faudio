@@ -14,30 +14,21 @@
 #include <time.h>
 #include <sys/time.h>
 
-#ifdef __MACH__
 #include <mach/clock.h>
 #include <mach/mach.h>
-#endif
 
-
-#ifndef _WIN32
 static clock_serv_t gMachClock;
-#endif
 
 // --------------------------------------------------------------------------------
 
 void fa_clock_initialize()
 {
-#ifndef _WIN32
     host_get_clock_service(mach_host_self(), REALTIME_CLOCK, &gMachClock);
-#endif
 }
 
 void fa_clock_terminate()
 {
-#ifndef _WIN32
     mach_port_deallocate(mach_task_self(), gMachClock);
-#endif
 }
 
 // --------------------------------------------------------------------------------
@@ -92,19 +83,14 @@ fa_string_t standard_clock_show(fa_ptr_t a)
 
 int64_t standard_clock_milliseconds(fa_ptr_t a)
 {
-#ifndef _WIN32
     mach_timespec_t ts;
     clock_get_time(gMachClock, &ts);
 
     return ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
-#else
-    assert(false && "Not implemented");
-#endif
 }
 
 fa_time_t standard_clock_time(fa_ptr_t a)
 {
-#ifndef _WIN32
     mach_timespec_t ts;
     clock_get_time(gMachClock, &ts);
     // clock_gettime(CLOCK_REALTIME, &ts);
@@ -112,9 +98,6 @@ fa_time_t standard_clock_time(fa_ptr_t a)
     time_t s  = seconds(ts.tv_sec); // TODO with tv_nsec
     time_t ds = divisions(ts.tv_nsec / 1000000, 1000);
     return fa_dadd(s, ds);
-#else
-    assert(false && "Not implemented");
-#endif
 }
 
 

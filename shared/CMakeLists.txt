@@ -32,7 +32,6 @@ list(APPEND SRCS
   string/trex.c
   string/parson.c
   time.c
-  #clock.c
   )
 list(APPEND SRCS_OSX
   ../platform/macosx/atomic.c
@@ -41,6 +40,7 @@ list(APPEND SRCS_OSX
   ../platform/macosx/string.c
   ../platform/macosx/device.c
   ../platform/macosx/au.m
+  ../platform/macosx/clock.c
   ../platform/macosx/system/directory.c
   # ../platform/macosx/fae/system/event.c
   )
