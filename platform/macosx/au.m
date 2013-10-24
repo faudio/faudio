@@ -1,4 +1,12 @@
 
+/*
+    faudio
+
+    Copyright (c) DoReMIR Music Research 2012-2013
+    All rights reserved.
+
+ */
+
 #include <fa/fa.h>
 
 #define NO_THREAD_T

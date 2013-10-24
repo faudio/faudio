@@ -1,6 +1,11 @@
 
-// DLSMusicDevice wrapper
-// TODO clean
+/*
+    faudio
+
+    Copyright (c) DoReMIR Music Research 2012-2013
+    All rights reserved.
+
+ */
 
 typedef struct au_context *au_context_t;
 
