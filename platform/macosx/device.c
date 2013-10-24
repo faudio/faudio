@@ -16,14 +16,8 @@
 #include <CoreAudio/AudioHardware.h>
 #include <CoreMidi/MIDIServices.h>
 
-/*
-    Device detection for OS X
-    Used by implementation of the Device.Audio and Device.Midi modules.
-
-    TODO remove added listeners?
- */
-typedef fa_audio_status_callback_t audio_status_callback_t;
-typedef fa_midi_status_callback_t  midi_status_callback_t;
+typedef fa_audio_status_callback_t  audio_status_callback_t;
+typedef fa_midi_status_callback_t   midi_status_callback_t;
 
 struct nullary_closure {
     nullary_t   function;
@@ -87,65 +81,13 @@ void add_audio_status_listener(audio_status_callback_t function, ptr_t data)
     assert(result == noErr);
 }
 
-
-void midi_listener(const MIDINotification *message, void *data)
-{
-    MIDINotificationMessageID id = message->messageID;
-
-    // UInt32                    sz = message->messageSize;
-    if (id == kMIDIMsgSetupChanged) {
-        closure_t closure = data;
-        closure->function(closure->data);
-    }
-}
-
-//  From https://ccrma.stanford.edu/~craig/articles/linuxmidi/osxmidi/testout.c
-//
-//              "Note that notifyProc will always be called on the run loop
-//              which was current when MIDIClientCreate was first called."
-
-// See also     http://lists.apple.com/archives/coreaudio-api/2002/Feb/msg00180.html
-//              http://comelearncocoawithme.blogspot.se/2011/08/reading-from-external-controllers-with.html
-
-// http://lists.apple.com/archives/coreaudio-api/2001/Nov/msg00087.
-
-/*
-    https://groups.google.com/forum/?fromgroups=#!topic/overtone/Rts-8g_rlR0
-
-    In coremidi, this will work if & only if the device has previously been plugged
-    in to that machine - ie not if it's a device the computer's never spoken to
-    before.
- */
-
-void midi_listener_loop(closure_t closure)
-{
-    OSStatus result;
-    CFStringRef name;
-    MIDIClientRef client;
-
-    name = fa_string_to_native(string("DoReMIRAudio"));
-    result = MIDIClientCreate(name, midi_listener, closure, &client);
-    // client is ignored
-    assert(result == noErr);
-}
-
 void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
 {
-    closure_t closure;
-    closure = new_closure(function, data);
+    // Note: This function does nothing on OS X
 
-    // assert(fa_equal(fa_thread_main(), fa_thread_current())
-    //        && "Must be run from main thread");
-    if (fa_not_equal(fa_thread_main(), fa_thread_current())) {
-        inform(string("Can not register midi status listerner for non-main thread."));
-    } else {
-        inform(string("Exited midi_listener_loop\n"));
-        midi_listener_loop(closure);
-        inform(string("Exited midi_listener_loop\n"));
-    }
-
-
+    // It is only here if one wants to try and compile using the PortMIDI backend instead
+    // of the usual CoreMIDI implementation, in which case hog-plugging is not supported
+    // and the fa_audio_add_status_callback function has no effect.
 }
-
 
 

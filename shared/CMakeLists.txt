@@ -32,7 +32,7 @@ list(APPEND SRCS
   string/trex.c
   string/parson.c
   time.c
-  clock.c
+  #clock.c
   )
 list(APPEND SRCS_OSX
   ../platform/macosx/atomic.c
@@ -51,6 +51,7 @@ list(APPEND SRCS_MSYS
   ../platform/windows/device.c
   ../platform/windows/system/directory.c
   ../platform/windows/signal.c
+  ../platform/windows/clock.c
   )
 
 if(APPLE)
