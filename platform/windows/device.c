@@ -67,6 +67,11 @@ INT_PTR WINAPI hardware_callback(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
 		PDEV_BROADCAST_HDR pbdi = (PDEV_BROADCAST_HDR)lParam;
 		switch(wParam) {
 		case DBT_DEVICEARRIVAL:
+			/*
+				This code runs for all hardware changes but can and should be filtered
+				using the pbdi->dbch_devicetype member.
+				http://msdn.microsoft.com/en-us/library/windows/desktop/aa363246(v=vs.85).aspx
+			*/
 			if(tparams != NULL) {
 				tparams->function(tparams->data);
 			}
