@@ -94,7 +94,6 @@ HASH BuildMidiHash() {
 }
 
 bool CheckAudioHash() {
-	printf("%p == %p\n",audio_hash, BuildAudioHash());
 	return(audio_hash == BuildAudioHash());
 }
 
@@ -103,7 +102,6 @@ bool CheckMidiHash() {
 }
 
 bool RegisterDeviceInterfaceToHwnd(HWND hwnd, HDEVNOTIFY *hDeviceNotify) {
-	printf("LINE: %d\n",__LINE__);
 
 	DEV_BROADCAST_DEVICEINTERFACE NotificationFilter;
 
@@ -123,7 +121,7 @@ bool RegisterDeviceInterfaceToHwnd(HWND hwnd, HDEVNOTIFY *hDeviceNotify) {
 }
 
 DWORD WINAPI check_thread_midi(LPVOID params) {
-	printf("LINE: %d\n",__LINE__);
+	
 	pthread_params tp = params;
 
 	Sleep(500);
@@ -160,7 +158,7 @@ DWORD WINAPI check_thread_audio(LPVOID params) {
 }
 
 void ScheduleMidiCheck(pthread_params ptp) {
-	printf("LINE: %d\n",__LINE__);
+	
 	CloseHandle(CreateThread(NULL,0,check_thread_midi,ptp,0,0));
 }
 
@@ -172,47 +170,35 @@ INT_PTR WINAPI hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 	LRESULT lRet = 0;
 	PDEV_BROADCAST_HDR pbdi;
 	PDEV_BROADCAST_DEVICEINTERFACE pdi;
-	pthread_params ptparams = malloc(sizeof(thread_params));
+	static pthread_params ptparams = NULL;
 	static HDEVNOTIFY hDeviceNotify;
 
-	if(hwnd == NULL) {
-        printf("\n\nERROR HWND == NULL\n\n");
-	}
-
 	if(msg == WM_PARAMSG) {
-		printf("LINE: %d\n",__LINE__);
 		ptparams = (pthread_params) lParam;
 	}
 
-	printf("LINE: %d tp: %p\n",__LINE__,ptparams);
-
 	switch(msg) {
 	case WM_CREATE:
-		printf("LINE: %d\n",__LINE__);
 		if (!RegisterDeviceInterfaceToHwnd(hwnd, &hDeviceNotify)) {
             assert(false && "failed to register device interface");
         }
 		break;
 	case WM_CLOSE:
-		printf("LINE: %d\n",__LINE__);
 		if (!UnregisterDeviceNotification(hDeviceNotify)) {
            assert(false && "failed to unregister device interface");
         }
 		DestroyWindow(hwnd);
 		break;
 	case WM_DESTROY:
-		printf("LINE: %d\n",__LINE__);
 		PostQuitMessage(0);
 		break;
 	case WM_KEYDOWN:	// FIXME
-		printf("LINE: %d\n",__LINE__);
 		if(wParam == VK_ESCAPE) {
 			PostQuitMessage(0);
 		}
 		break;
 	case WM_DEVICECHANGE:
 	{
-		printf("LINE: %d\n",__LINE__);
 		switch(wParam) {
 		case DBT_DEVICEARRIVAL:
 			if(ptparams == NULL)
@@ -264,12 +250,8 @@ INT_PTR WINAPI hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 		break;
 	}
 	default:
-		printf("LINE: %d %p %p %p\n",__LINE__,msg,wParam,lParam);
-		if(ptparams) free(ptparams);
         return DefWindowProc(hwnd, msg, wParam, lParam);
 	}
-	if(ptparams)
-        free(ptparams);
 	return lRet;
 }
 
@@ -279,33 +261,22 @@ DWORD WINAPI window_thread(LPVOID params) {
 	A dummy receiving window is therefor created in hidden mode.
 	*/
 
-	printf("LINE: %d\n",__LINE__);
-
 	pthread_params ptparams = params;
 
-	WNDCLASSEX wndClass = {};
+	WNDCLASSEX wndClass = {0};
 	wndClass.cbSize = sizeof(WNDCLASSEX);
 	wndClass.hInstance = (HINSTANCE) GetModuleHandle(NULL);
 	wndClass.lpfnWndProc = (WNDPROC) hardware_status_callback;
 	wndClass.lpszClassName = WND_CLASS_NAME;
 
-	//assert(RegisterClassEx(&wndClass) && "error registering dummy window");
-
-    if(!RegisterClassEx(&wndClass)) {
-        printf("ERROR REGISTER CLASSEX");
-        exit(1);
-    }
+	assert(RegisterClassEx(&wndClass) && "error registering dummy window");
 
 	HINSTANCE hInstance = GetModuleHandle(NULL);
 
 	*(ptparams->phwnd) = CreateWindow(WND_CLASS_NAME, "new window", WS_ICONIC, 0, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
-	printf("LINE: %d\n",__LINE__);
-	//assert((*(ptparams->phwnd) != NULL) && "failed to create window");
-	if((*(ptparams->phwnd))==NULL) {
-        printf("ERROR CREATING WINDOW");
-        exit(1);
-    }
-	printf("LINE: %d\n",__LINE__);
+	
+	assert((*(ptparams->phwnd) != NULL) && "failed to create window");
+
 	ShowWindow(*(ptparams->phwnd),SW_HIDE);
 
 	SendMessage(*(ptparams->phwnd), WM_PARAMSG, (WPARAM) 0, (LPARAM) ptparams);
@@ -335,7 +306,7 @@ void add_audio_status_listener(audio_status_callback_t function, ptr_t data) {
 }
 
 void add_midi_status_listener(midi_status_callback_t function, ptr_t data) {
-    printf("LINE: %d\n",__LINE__);
+    
     mINumDevs = midiInGetNumDevs();
 	mONumDevs = midiOutGetNumDevs();
 
@@ -343,6 +314,7 @@ void add_midi_status_listener(midi_status_callback_t function, ptr_t data) {
 	midi_hash = BuildMidiHash();
 
 	pthread_params params = malloc(sizeof(thread_params));
+	params->phwnd	 = malloc(sizeof(HWND));
 	params->cb_type	 = MIDI_STATUS_CALLBACK;
 	params->function = function;
 	params->data	 = data;
