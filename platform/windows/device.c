@@ -10,8 +10,6 @@
 #include <windows.h>
 #include <dbt.h>
 #include <MMSystem.h>
-#include <Ks.h>
-#include <Ksmedia.h>
 
 #define WM_PARAMSG WM_USER + 1
 
@@ -33,8 +31,9 @@ enum callback_type {
 };
 
 static const char* WND_CLASS_NAME 	= "dummyWindow";
+
+/* This is the same as KSCATEGORY_AUDIO */
 static const GUID GUID_AUDIO_DEVIFACE = {0x6994AD04L,0x93EF,0x11D0, {0xA3,0xCC,0x00,0xA0,0xC9,0x22,0x31,0x96}};
-/*static const GUID GUID_USB_DEVIFACE = {0xA5DCBF10L, 0x6530, 0x11D2, {0x90, 0x1F, 0x00, 0xC0, 0x4F, 0xB9, 0x51, 0xED}};*/
 
 int mINumDevs;
 int mONumDevs;
@@ -56,6 +55,10 @@ void InitTable() {
 }
 
 HASH BuildAudioHash() {
+	/*
+	Fast hashing algorithm:
+	http://cs.mwsu.edu/~griffin/courses/2133/downloads/Spring11/p677-pearson.pdf
+	*/
 	HASH h = 0;
 	WAVEINCAPS	wic;
 	WAVEOUTCAPS woc;
@@ -75,6 +78,10 @@ HASH BuildAudioHash() {
 }
 
 HASH BuildMidiHash() {
+	/*
+	Fast hashing algorithm:
+	http://cs.mwsu.edu/~griffin/courses/2133/downloads/Spring11/p677-pearson.pdf
+	*/
 	HASH h = 0;
 	MIDIINCAPS	mic;
 	MIDIOUTCAPS moc;
@@ -121,7 +128,15 @@ bool RegisterDeviceInterfaceToHwnd(HWND hwnd, HDEVNOTIFY *hDeviceNotify) {
 }
 
 DWORD WINAPI check_thread_midi(LPVOID params) {
+	/*
+	midiXXXGetNumDevs() / midiXXXGetDevCaps() does not update until after the
+	WM_DEVICECHANGE message has been dispatched.
 	
+	This thread launches, waits a short while for device list to be updated
+	and then checks for changes.
+	
+	It works but it's not pretty.
+	*/
 	pthread_params tp = params;
 
 	Sleep(500);
@@ -140,6 +155,13 @@ DWORD WINAPI check_thread_midi(LPVOID params) {
 }
 
 DWORD WINAPI check_thread_audio(LPVOID params) {
+	/*
+	waveXXXGetNumDevs() / waveXXXGetDevCaps() does not update until after the
+	WM_DEVICECHANGE message has been dispatched.
+	
+	This thread launches, waits a short while for device list to be updated
+	and then checks for changes.
+	*/
 	pthread_params tp = params;
 
 	Sleep(500);
@@ -158,7 +180,6 @@ DWORD WINAPI check_thread_audio(LPVOID params) {
 }
 
 void ScheduleMidiCheck(pthread_params ptp) {
-	
 	CloseHandle(CreateThread(NULL,0,check_thread_midi,ptp,0,0));
 }
 
@@ -216,9 +237,17 @@ INT_PTR WINAPI hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 
 			switch(ptparams->cb_type) {
 			case AUDIO_STATUS_CALLBACK:
+				/*
+				Device check needs to be scheduled
+				See comment in check_thread_audio/midi
+				*/
 				ScheduleAudioCheck(ptparams);
 				break;
 			case MIDI_STATUS_CALLBACK:
+				/*
+				Device check needs to be scheduled
+				See comment in check_thread_audio/midi
+				*/
 				ScheduleMidiCheck(ptparams);
 				break;
 			}
@@ -239,9 +268,17 @@ INT_PTR WINAPI hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 
 			switch(ptparams->cb_type) {
 			case AUDIO_STATUS_CALLBACK:
+				/*
+				Device check needs to be scheduled
+				See comment in check_thread_audio/midi
+				*/
 				ScheduleAudioCheck(ptparams);
 				break;
 			case MIDI_STATUS_CALLBACK:
+				/*
+				Device check needs to be scheduled
+				See comment in check_thread_audio/midi
+				*/
 				ScheduleMidiCheck(ptparams);
 				break;
 			}
@@ -257,7 +294,7 @@ INT_PTR WINAPI hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 
 DWORD WINAPI window_thread(LPVOID params) {
 	/*
-	WM_DEVICECHANGE messages are sent to windows and services.
+	WM_DEVICECHANGE messages are only sent to windows and services.
 	A dummy receiving window is therefor created in hidden mode.
 	*/
 
@@ -272,8 +309,8 @@ DWORD WINAPI window_thread(LPVOID params) {
 	assert(RegisterClassEx(&wndClass) && "error registering dummy window");
 
 	HINSTANCE hInstance = GetModuleHandle(NULL);
-
-	*(ptparams->phwnd) = CreateWindow(WND_CLASS_NAME, "new window", WS_ICONIC, 0, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
+	*(ptparams->phwnd) = CreateWindow(WND_CLASS_NAME, "new window", WS_ICONIC, 
+		0, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
 	
 	assert((*(ptparams->phwnd) != NULL) && "failed to create window");
 
