@@ -34,7 +34,7 @@ void fa_clock_initialize()
 
 void fa_clock_terminate()
 {
-    // Not needed on Windows
+    // Nothing
 }
 
 void clock_get_time(struct timeval *tv)
