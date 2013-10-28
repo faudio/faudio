@@ -27,7 +27,15 @@ inline static fa_time_t new_time(ratio_t value)
     fa_time_t t     = fa_new(time);
     t->impl         = &time_impl;
     t->value        = fa_copy(value);
-    // TODO should not copy, but Lisp wants it (see also below)
+    
+    /*
+        TODO 
+        
+        Should not copy, but Lisp wants it (see also below)
+     
+        This must be wrong? Surely we could copy the parameter
+        passed to time_create instead of copying here 
+    */
     return t;
 }
 
@@ -212,8 +220,6 @@ fa_string_t time_show(fa_ptr_t a)
     s = string_dappend(s, fa_string_show(fa_time_divisions(t)));
     s = string_dappend(s, string("s"));
     s = string_dappend(s, string(">"));
-// fa_print("ratio: %s\n", t->value);
-// fa_print("ratio: %s\n", s);
 
     return s;
 }
