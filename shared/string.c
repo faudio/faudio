@@ -8,21 +8,25 @@
  */
 
 #include <fa/string.h>
-#include <fa/util.h>
+#include <fa/error.h>
 #include <fa/dynamic.h>
-#include <iconv.h>
+#include <fa/util.h>
 
 #include "string/trex.h"
 #include "string/parson.h"
+
+#include <iconv.h>
 
 /*
     ## Notes
 
     * Straightforward implementation using bounded buffer
 
-    * Slow copying
+        - Only 16-bit, extended range not supported
 
-    * Reasonable dappend (using realloc)
+        - Slow copying
+
+        - Reasonable dappend (using realloc)
  */
 
 #define kStandardCode       "UTF-16LE"          // Internal string code
@@ -37,7 +41,8 @@ struct _fa_string_t {
 
 // --------------------------------------------------------------------------------
 
-static void          string_fatal(char *msg, int error);
+fa_error_t string_error(string_t msg);
+static void string_fatal(char *msg, int error);
 static fa_ptr_t string_impl(fa_id_t interface);
 
 string_t new_string(size_t size, uint16_t *data)
@@ -413,7 +418,7 @@ fa_ptr_t fa_string_from_json(fa_string_t string)
     ptr_t result = unjsonify(json_parse_string(unstring(string)), &ok);
 
     if (!ok) {
-        assert(false && "Malformed JSON");    // TODO
+        return (fa_ptr_t) string_error(string("Malformed JSON value."));
     } else {
         return result;
     }
@@ -611,6 +616,13 @@ fa_ptr_t string_impl(fa_id_t interface)
     default:
         return NULL;
     }
+}
+
+error_t string_error(string_t msg)
+{
+    return fa_error_create_simple(error,
+                                  msg,
+                                  string("Fa.String"));
 }
 
 void string_fatal(char *msg, int error)
