@@ -197,8 +197,12 @@ void action_destroy(ptr_t a)
 
 string_t action_show(ptr_t a)
 {
-    // TODO
-    return string("<Action>");
+    action_t x = (action_t) a;
+
+    string_t str = string("<Action ");
+    str = string_dappend(str, fa_string_format_integral(" %p", (long) x));
+    str = string_dappend(str, string(">"));
+    return str;
 }
 
 fa_ptr_t action_impl(fa_id_t interface)
