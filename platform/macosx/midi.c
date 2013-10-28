@@ -241,7 +241,7 @@ inline static device_t new_device(bool is_output, native_device_t native, sessio
 
         device->name = fa_string_from_native((void *) name);
     }
-    device->host = string("CoreMIDI"); // TODO cache
+    device->host = string("CoreMIDI");
     return device;
 }
 
@@ -260,7 +260,7 @@ inline static stream_t new_stream(device_t device)
     stream->impl            = &midi_stream_impl;
     stream->device          = device;
 
-    stream->clock           = fa_clock_standard(); // TODO change
+    stream->clock           = fa_clock_standard();
     stream->in_controls     = atomic_queue();
     stream->controls        = priority_queue();
 
@@ -419,7 +419,7 @@ void fa_midi_initialize()
 void fa_midi_terminate()
 {
     fa_thread_destroy_mutex(gMidiMutex);
-    // TODO indicate that MIDI thread should return after disposing client
+
     // TODO stop all sessions
 
     fa_midi_end_all_sessions();

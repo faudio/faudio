@@ -84,7 +84,7 @@ inline static void delete_standard_clock(standard_clock_t standard_clock)
 
 fa_clock_t fa_clock_standard()
 {
-    return (fa_clock_t) new_standard_clock(); // TODO singleton
+    return (fa_clock_t) new_standard_clock();
 }
 
 
