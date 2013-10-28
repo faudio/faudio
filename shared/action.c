@@ -101,15 +101,7 @@ fa_action_t fa_action_send(fa_action_name_t name, fa_ptr_t value)
 
 fa_action_t fa_action_copy(fa_action_t action)
 {
-    // TODO
-    switch (action->tag) {
-
-        // case constant_signal:
-        // return copy_constant(signal);
-
-    default:
-        assert(false);
-    }
+    assert(false && "Not implemented");
 }
 
 void fa_action_destroy(fa_action_t action)
