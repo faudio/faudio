@@ -255,6 +255,36 @@ fa_string_utf8_t fa_string_to_utf8(fa_string_t str)
     return cstr;
 }
 
+fa_string_cp1252_t fa_string_to_cp1252(fa_string_t str)
+{
+    size_t inSize, outSize, cstrSize;
+    char *in, *out, *cstr;
+
+    inSize  = str->size * kStandardCodeSize;   // exact char count
+    outSize = str->size * 4;            // worst case, we shrink after iconv
+    in      = (char *) str->data;
+    out     = fa_malloc(outSize);
+    cstr    = out;
+
+    {
+        iconv_t conv   = iconv_open("CP1252", kStandardCode);
+        size_t  status = iconv(conv, &in, &inSize, &out, &outSize);
+        iconv_close(conv);
+
+        if (status == ((size_t) - 1)) {
+            iconv_fail();
+        }
+    }
+
+    cstrSize = out - cstr;
+    cstr     = realloc(cstr, cstrSize + 1);
+
+    cstr[cstrSize] = 0;                 // add null-terminator
+
+    return cstr;
+}
+
+
 fa_string_utf16_t fa_string_to_utf16(fa_string_t as)
 {
     size_t size = as->size;
@@ -277,6 +307,33 @@ fa_string_t fa_string_from_utf8(fa_string_utf8_t cstr)
 
     {
         iconv_t conv = iconv_open(kStandardCode, "UTF-8");
+        size_t status = iconv(conv, &in, &inSize, &out, &outSize);
+        iconv_close(conv);
+
+        if (status == ((size_t) - 1)) {
+            iconv_fail();
+        }
+    }
+
+    strSize = out - str;
+    str     = realloc(str, strSize);
+
+    return new_string(strSize / kStandardCodeSize, (uint16_t *) str);
+}
+
+fa_string_t fa_string_from_cp1252(fa_string_cp1252_t cstr)
+{
+    size_t inSize, outSize, strSize;
+    char *in, *out, *str;
+
+    inSize  = raw_size(cstr);    // char count is in [inSize/4,inSize]
+    outSize = inSize * 2;        // worst case, we shrink after iconv
+    in      = cstr;
+    out     = fa_malloc(outSize);
+    str     = out;
+
+    {
+        iconv_t conv = iconv_open(kStandardCode, "CP1252");
         size_t status = iconv(conv, &in, &inSize, &out, &outSize);
         iconv_close(conv);
 

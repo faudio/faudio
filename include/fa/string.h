@@ -48,6 +48,10 @@
     A UTF-8 encoded raw string.
     This type use the endianness of the system, and is terminated by a null character.
 
+    @typedef fa_string_cp1252_t
+    A CP1252 (also known as Windows-1252) encoded raw string.
+    This type use the endianness of the system, and is terminated by a null character.
+
     @typedef fa_string_utf16_t
     A UTF-16 encoded raw string.
     This type use the endianness of the system, and is terminated by a null character.
@@ -57,6 +61,9 @@
     This type use the endianness of the system, and is terminated by a null character.
 */
 typedef fa_char8_t * fa_string_utf8_t;
+
+
+typedef fa_char8_t * fa_string_cp1252_t;
 
 
 typedef fa_char16_t * fa_string_utf16_t;
@@ -163,6 +170,9 @@ fa_ptr_t fa_string_from_json(fa_string_t);
 */
 fa_string_utf8_t fa_string_to_utf8(fa_string_t);
 
+
+fa_string_cp1252_t fa_string_to_cp1252(fa_string_t);
+
 /** Encode the given string as UTF-16.
 
     @param  str String to encode.
@@ -184,6 +194,9 @@ fa_ptr_t fa_string_to_native(fa_string_t);
         A new string.
 */
 fa_string_t fa_string_from_utf8(fa_string_utf8_t);
+
+
+fa_string_t fa_string_from_cp1252(fa_string_cp1252_t);
 
 /** Deencode a string from UTF-16.
 

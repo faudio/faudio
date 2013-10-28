@@ -40,6 +40,10 @@ module Fa.String
         A UTF-8 encoded raw string.
         This type use the endianness of the system, and is terminated by a null character.
 
+        @typedef fa_string_cp1252_t
+        A CP1252 (also known as Windows-1252) encoded raw string.
+        This type use the endianness of the system, and is terminated by a null character.
+
         @typedef fa_string_utf16_t
         A UTF-16 encoded raw string.
         This type use the endianness of the system, and is terminated by a null character.
@@ -48,9 +52,10 @@ module Fa.String
         A UTF-32 encoded raw string.
         This type use the endianness of the system, and is terminated by a null character.
      */
-    type Utf8  = Char8*;
-    type Utf16 = Char16*;
-    type Utf32 = Char32*;
+    type Utf8   = Char8*;
+    type Cp1252 = Char8*;
+    type Utf16  = Char16*;
+    type Utf32  = Char32*;
 
     /**
         @typedef fa_string_t
@@ -143,6 +148,7 @@ module Fa.String
             A heap-allocated encoded string.
      */
     toUtf8       : String -> Utf8;
+    toCp1252     : String -> Cp1252;
 
     /** Encode the given string as UTF-16.
 
@@ -165,6 +171,7 @@ module Fa.String
             A new string.
      */
     fromUtf8     : Utf8   -> String;
+    fromCp1252   : Cp1252 -> String;
 
     /** Deencode a string from UTF-16.
 
