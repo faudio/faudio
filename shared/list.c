@@ -59,7 +59,7 @@ inline static node_t new_node(ptr_t value, node_t next)
 inline static node_t take_node(node_t node)
 {
     if (node) {
-        node->count++;  // TODO make atomic
+        node->count++;
     }
 
     return node;

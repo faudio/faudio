@@ -212,7 +212,6 @@ fa_string_t midi_message_show(fa_ptr_t a)
         s = string_dappend(s, fa_string_format_integral(" %02x", midi_message->data.simple[1]));
         s = string_dappend(s, fa_string_format_integral(" %02x", midi_message->data.simple[2]));
     } else {
-        // TODO dump without <Buffer > wrap
         s = string_dappend(s, string(" SysEx "));
         s = string_dappend(s, fa_string_show(midi_message->data.sysex));
         s = string_dappend(s, string(" "));
