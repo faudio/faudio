@@ -155,8 +155,14 @@ inline static device_t new_device(native_index_t index)
     device->index       = index;
     device->input       = info->input;
     device->output      = info->output;
+#ifndef _WIN32
     device->name        = string((char *) info->name);      // const cast
     device->host_name   = string((char *) info->interf);
+#else
+    // Experimental fix of #96
+    device->name        = fa_string_from_cp1252((char *) info->name);      // const cast
+    device->host_name   = fa_string_from_cp1252((char *) info->interf);
+#endif
 
     return device;
 }
