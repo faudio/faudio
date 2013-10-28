@@ -17,32 +17,33 @@
 #include <windows.h>
 
 struct {
-	LARGE_INTEGER 	currTime;
-	LARGE_INTEGER 	offset;
-	double			frequency;
+    LARGE_INTEGER   currTime;
+    LARGE_INTEGER   offset;
+    double          frequency;
 } clock_data;
 
 // --------------------------------------------------------------------------------
 
 void fa_clock_initialize()
 {
-	LARGE_INTEGER freq;
-	QueryPerformanceFrequency(&freq);
-	QueryPerformanceCounter(&clock_data.offset);
-	clock_data.frequency = (double) freq.QuadPart / 1000000.;
+    LARGE_INTEGER freq;
+    QueryPerformanceFrequency(&freq);
+    QueryPerformanceCounter(&clock_data.offset);
+    clock_data.frequency = (double) freq.QuadPart / 1000000.;
 }
 
 void fa_clock_terminate()
 {
-	// Not needed on Windows
+    // Not needed on Windows
 }
 
-void clock_get_time(struct timeval *tv) {
-	QueryPerformanceCounter(&clock_data.currTime);
-	clock_data.currTime.QuadPart -= clock_data.offset.QuadPart;
-	clock_data.currTime.QuadPart /= clock_data.frequency;
-	tv->tv_sec = clock_data.currTime.QuadPart / 1000000;
-	tv->tv_usec = clock_data.currTime.QuadPart % 1000000;
+void clock_get_time(struct timeval *tv)
+{
+    QueryPerformanceCounter(&clock_data.currTime);
+    clock_data.currTime.QuadPart -= clock_data.offset.QuadPart;
+    clock_data.currTime.QuadPart /= clock_data.frequency;
+    tv->tv_sec = clock_data.currTime.QuadPart / 1000000;
+    tv->tv_usec = clock_data.currTime.QuadPart % 1000000;
 }
 
 // --------------------------------------------------------------------------------
@@ -97,20 +98,20 @@ fa_string_t standard_clock_show(fa_ptr_t a)
 
 int64_t standard_clock_milliseconds(fa_ptr_t a)
 {
-	struct timeval tv;
-	clock_get_time(&tv);
+    struct timeval tv;
+    clock_get_time(&tv);
 
-	return (int64_t) tv.tv_sec * 1000 + tv.tv_usec / 1000;
+    return (int64_t) tv.tv_sec * 1000 + tv.tv_usec / 1000;
 }
 
 fa_time_t standard_clock_time(fa_ptr_t a)
 {
-	struct timeval tv;
-	clock_get_time(&tv);
+    struct timeval tv;
+    clock_get_time(&tv);
 
-	time_t s  = seconds(tv.tv_sec);
-	time_t ds = divisions(tv.tv_usec / 1000, 1000);
-    return fa_dadd(s,ds);
+    time_t s  = seconds(tv.tv_sec);
+    time_t ds = divisions(tv.tv_usec / 1000, 1000);
+    return fa_dadd(s, ds);
 }
 
 

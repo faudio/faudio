@@ -23,18 +23,18 @@ fa_ptr_t atomic_impl(fa_id_t);
 
 fa_atomic_t fa_atomic_create()
 {
-	atomic_t a = fa_new(atomic);
-	a->impl 	= &atomic_impl;
-	a->value 	= NULL;
+    atomic_t a = fa_new(atomic);
+    a->impl     = &atomic_impl;
+    a->value    = NULL;
 
-	return a;
+    return a;
 }
 
 fa_atomic_t fa_atomic_copy(fa_atomic_t a)
 {
-    atomic_t b 	= fa_atomic_create();
-	b->value	= a->value;
-	return b;
+    atomic_t b  = fa_atomic_create();
+    b->value    = a->value;
+    return b;
 }
 
 /*
@@ -43,53 +43,53 @@ void fa_atomic_swap(fa_atomic_t a, fa_atomic_t b){}
 
 void fa_atomic_destroy(fa_atomic_t a)
 {
-	fa_delete(a);
+    fa_delete(a);
 }
 
 bool fa_atomic_exchange(fa_atomic_t a, fa_ptr_t pold, fa_ptr_t pnew)
 {
-	return (pold == InterlockedCompareExchangePointer((ptr_t)&a->value, pnew, pold));
+    return (pold == InterlockedCompareExchangePointer((ptr_t)&a->value, pnew, pold));
 }
 
 void fa_atomic_add(fa_atomic_t a, intptr_t v)
 {
 #ifdef __MINGW32__
-	InterlockedExchangeAdd((LONG*)&a->value, (LONG)v);
+    InterlockedExchangeAdd((LONG *)&a->value, (LONG)v);
 #else
-	#error "only 32 bit supported needs MINGW64"
-	// InterlockedExchangeAdd64((LONGLONG*)&a->value, (LONGLONG)v);
+#error "only 32 bit supported needs MINGW64"
+    // InterlockedExchangeAdd64((LONGLONG*)&a->value, (LONGLONG)v);
 #endif
 }
 
-void* fa_atomic_get(fa_atomic_t a)
+void *fa_atomic_get(fa_atomic_t a)
 {
 #ifdef __MINGW32__
-	InterlockedCompareExchange((LONG*)&a->value, 0L, 0L);
+    InterlockedCompareExchange((LONG *)&a->value, 0L, 0L);
 #else
-	#error "only 32 bit supported needs MINGW64"
-	// InterlockedCompareExchange64((LONGLONG*)&a->value, 0LL, 0LL);
+#error "only 32 bit supported needs MINGW64"
+    // InterlockedCompareExchange64((LONGLONG*)&a->value, 0LL, 0LL);
 #endif
 }
 
 void fa_atomic_modify(fa_atomic_t atomic, fa_unary_t func, fa_ptr_t data)
 {
-	bool result = false;
+    bool result = false;
 
-	while(!result) {
-		ptr_t state = fa_atomic_get(atomic);
-		ptr_t value = func(state, data);
-		result = fa_atomic_exchange(atomic, state, value);
-	}
+    while (!result) {
+        ptr_t state = fa_atomic_get(atomic);
+        ptr_t value = func(state, data);
+        result = fa_atomic_exchange(atomic, state, value);
+    }
 }
 
 void fa_atomic_set(fa_atomic_t atomic, fa_ptr_t value)
 {
-	bool result = false;
+    bool result = false;
 
-	while(!result) {
-		ptr_t state = fa_atomic_get(atomic);
-		result = fa_atomic_exchange(atomic, state, value);
-	}
+    while (!result) {
+        ptr_t state = fa_atomic_get(atomic);
+        result = fa_atomic_exchange(atomic, state, value);
+    }
 }
 
 // --------------------------------------------------------------------------------

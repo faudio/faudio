@@ -64,7 +64,7 @@ bool fa_atomic_exchange(fa_atomic_t a, fa_ptr_t old, fa_ptr_t new)
 
 fa_ptr_t fa_atomic_get(fa_atomic_t a)
 {
-    _Static_assert (sizeof(intptr_t) == 4, "Assumes 32-bit, see below");
+    _Static_assert(sizeof(intptr_t) == 4, "Assumes 32-bit, see below");
     return (ptr_t) OSAtomicAdd32Barrier(0, (ptr_t) &a->value);
 
     // return (ptr_t) OSAtomicAdd64Barrier(0, (ptr_t) &a->value);
