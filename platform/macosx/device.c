@@ -16,14 +16,8 @@
 #include <CoreAudio/AudioHardware.h>
 #include <CoreMidi/MIDIServices.h>
 
-/*
-    Device detection for OS X
-    Used by implementation of the Device.Audio and Device.Midi modules.
-
-    TODO remove added listeners?
- */
-typedef fa_audio_status_callback_t audio_status_callback_t;
-typedef fa_midi_status_callback_t  midi_status_callback_t;
+typedef fa_audio_status_callback_t  audio_status_callback_t;
+typedef fa_midi_status_callback_t   midi_status_callback_t;
 
 struct nullary_closure {
     nullary_t   function;
@@ -92,7 +86,8 @@ void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
     // Note: This function does nothing on OS X
 
     // It is only here if one wants to try and compile using the PortMIDI backend instead
-    // of the usual CoreMIDI implementation.
+    // of the usual CoreMIDI implementation, in which case hog-plugging is not supported
+    // and the fa_audio_add_status_callback function has no effect.
 }
 
 
