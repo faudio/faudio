@@ -745,7 +745,7 @@
 (setf midi-session (midi-begin-session))
 (setf midi-output (midi-default-output midi-session))
 (setf midi-input (midi-default-input midi-session))
-(setf midi-stream (setf midi-stream (midi-open-stream midi-output)))
+(setf midi-stream (midi-open-stream midi-output))
 
 (setf note1 (action-send "" (midi #x99 60 127))) ; midi channel 10
 (setf note2 (action-send "" (midi #x99 62 127))) ; midi channel 10
@@ -760,47 +760,33 @@
  midi-stream)
 
 
-(midi-schedule 
 
 
+(setf audio-session (audio-begin-session))
+(setf audio-input (audio-default-input audio-session))
+(setf audio-output (audio-default-output audio-session))
+(setf audio-stream (audio-open-stream* audio-input audio-output (lambda (inputs) 
+   (mapcar 
+    (lambda (x) (* 0.5 x)) 
+    (signal-dls*)))))
 
-
-
+(defvar *on* t)
+(setf *on* t)
+(setf *on* nil)
+(audio-schedule-relative 
+ (seconds 0) 
+ (action-while* (lambda (_) *on*) note1) 
+ audio-stream)
 
 
 (setf all-notes (action-many (cl:list (pair-create note1 (milliseconds 500)) (pair-create note2 (milliseconds 0)))))
-
 (setf all-notes-loop (action-repeat (milliseconds 1000) all-notes))
-
 (midi-schedule-relative (milliseconds 0) all-notes-loop midi-output-stream)
-
-
-
-(list-map* (lambda (x) (cl:+ 1 x)) (list-single 1))
-(list-filter* (lambda (x) t) (list-single 1))
-
 (midi-schedule-relative (milliseconds 0) (action-while* (lambda (x)
                                        (declare (ignorable x))
                                        t)
                                      note1))
 
-
-
-
-
-
-(setf *on* nil)
-(setf p-action (action-while (cffi:callback foo) nil note1))
-
-(defvar *x* 0)
-(cl:print *x*)
-(defcallback foo :int ((f ptr) (x ptr))
- (fa-log-info  "BLA BLA")
- (incf *x*)
- nil)
-
-
-(midi-schedule-relative (milliseconds 0) p-action midi-output-stream)
 
 
 

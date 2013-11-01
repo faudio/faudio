@@ -43,4 +43,5 @@
 (defcfun (audio-stream-clock "fa_audio_stream_clock") clock (a audio-stream))
 (defcfun (audio-add-message-callback "fa_audio_add_message_callback") :void (a audio-message-callback) (b ptr) (c audio-stream))
 (defcfun (audio-schedule "fa_audio_schedule") :void (a time) (b action) (c audio-stream))
+(defcfun (audio-schedule-relative "fa_audio_schedule_relative") :void (a time) (b action) (c audio-stream))
 
