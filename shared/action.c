@@ -44,8 +44,7 @@ struct _fa_action_t {
         }                       send;
 
         struct {
-            // Returns either NULL or (SimpleAction, Action)
-            time_t              interval;
+            // Returns either NULL or (SimpleAction, (Time, Action))
             nullary_t           function;
             ptr_t               data;
         }                       compound;
@@ -110,10 +109,9 @@ fa_action_t fa_action_send(fa_action_name_t name, fa_ptr_t value)
     return action;
 }
 
-fa_action_t fa_action_compound(time_t interval, fa_nullary_t function, ptr_t data)
+fa_action_t fa_action_compound(fa_nullary_t function, ptr_t data)
 {
     action_t action = new_action(compound_action);
-    compound_get(action, interval)  = interval;
     compound_get(action, function)  = function;
     compound_get(action, data)      = data;
     return action;    
@@ -197,11 +195,7 @@ bool fa_action_is_compound(fa_action_t action)
     return is_compound(action);
 }
 
-fa_time_t fa_action_compound_interval(fa_action_t action)
-{
-    return compound_get(action, interval);
-}
-
+// () -> Maybe (SimpleAction, (Time, Action))
 fa_pair_t compound_render(fa_action_t action)
 {
     assert(is_compound(action) && "Not a compound action");
@@ -222,7 +216,17 @@ fa_action_t fa_action_compound_rest(fa_action_t action)
 {
     fa_pair_t maybeActions = compound_render(action);
     if (maybeActions) {
-        return fa_pair_second(maybeActions);
+        return fa_pair_second(fa_pair_second(maybeActions));
+    } else {
+        return NULL;
+    }
+}
+
+fa_time_t fa_action_compound_interval(fa_action_t action)
+{
+    fa_pair_t maybeActions = compound_render(action);
+    if (maybeActions) {
+        return fa_pair_first(fa_pair_second(maybeActions));
     } else {
         return NULL;
     }
@@ -239,12 +243,12 @@ static inline ptr_t _repeat(ptr_t data)
     action_t action = fa_pair_second(intervalAction);
 
     // TODO clean up pair
-    return pair(action, fa_action_repeat(interval, action));
+   return pair(action, pair(interval, fa_action_repeat(interval, action)));
 }
 
 fa_action_t fa_action_repeat(time_t interval, fa_action_t action)
 {
-    return fa_action_compound(interval, _repeat, pair(interval, action));
+    return fa_action_compound(_repeat, pair(interval, action));
 }
 
 
