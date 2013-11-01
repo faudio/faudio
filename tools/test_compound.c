@@ -16,15 +16,20 @@ void run_midi()
         fa_error_log(st, NULL);
     }
 
-    {           
-        fa_action_t note = fa_action_send(string("midi"), fa_midi_message_create_simple(0x90, 60, 90));
-        fa_action_t notes = fa_action_repeat(fa_milliseconds(100), note);
+    {                                              
+        time_t half     = fa_milliseconds(500);
+        time_t interv   = fa_milliseconds(1000);
+        fa_action_t note  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x90, 60, 0xff));
+        fa_action_t notes = fa_action_repeat(interv, note);
+        fa_action_t off   = fa_action_send(string("midi"), fa_midi_message_create_simple(0x90, 65, 0xff));
+        fa_action_t offs  = fa_action_repeat(interv, off);
         
-        fa_midi_schedule(
-            hms(0, 0, 0),
-            notes,
-            st);
-        fa_thread_sleep(10000);
+        fa_midi_schedule_relative(seconds(0), notes, st);
+        // fa_midi_schedule_relative(seconds(0), offs, st);
+        fa_thread_sleep(100000);
+        mark_used(half);
+        mark_used(notes);
+        mark_used(offs);
     }
 
     fa_destroy(st);
