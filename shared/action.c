@@ -291,7 +291,7 @@ static inline ptr_t _while(ptr_t data, ptr_t compound)
     action_t    action          = fa_pair_second(predAction);
 
     pred_t pred_function = fa_pair_first(predClosure);
-    ptr_t  pred_data     = fa_pair_first(predClosure);
+    ptr_t  pred_data     = fa_pair_second(predClosure);
     
     if (pred_function(pred_data, NULL)) {                            
         // Have to fake a time here...
