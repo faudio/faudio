@@ -688,17 +688,15 @@ void run_action(action_t action, stream_t stream, time_t now, list_t* resched)
         return;
     }
 
-
     if (fa_action_is_send(action)) {
         // string_t name   = fa_action_send_name(action);
         ptr_t value     = fa_action_send_value(action);
-        inform(fa_string_show(value));
 
         int sc, d1, d2;         
         fa_midi_message_decons(value, &sc, &d1, &d2);
 
         {
-            printf("%d %d %d\n", sc, d1, d2);
+            // printf("%d %d %d\n", sc, d1, d2);
 
             struct MIDIPacketList packetList;
             packetList.numPackets = 1;
@@ -766,8 +764,6 @@ ptr_t send_actions(ptr_t x)
 
         mark_used(time);
         mark_used(action);
-
-        // inform(fa_string_show(now));
 
         if (fa_less_than_equal(time, now)) {
             list_t resched = empty();
