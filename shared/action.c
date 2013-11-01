@@ -22,7 +22,8 @@ struct _fa_action_t {
     enum {
         set_action,
         accum_action,
-        send_action
+        send_action,
+        compound_action
     }                           tag;
 
     union {
@@ -41,6 +42,14 @@ struct _fa_action_t {
             name_t              name;
             ptr_t               value;
         }                       send;
+
+        struct {
+            // Returns either NULL or (SimpleAction, Action)
+            nullary_t           function;
+            ptr_t               data;
+        }                       compound;
+
+
     }                       fields;
 };
 
@@ -62,10 +71,12 @@ inline static void delete_action(action_t action)
 #define is_set(v)           (v->tag == set_action)
 #define is_accum(v)         (v->tag == accum_action)
 #define is_send(v)          (v->tag == send_action)
+#define is_compound(v)      (v->tag == compound_action)
 
 #define set_get(v,f)        v->fields.set.f
 #define accum_get(v,f)      v->fields.accum.f
 #define send_get(v,f)       v->fields.send.f
+#define compound_get(v,f)   v->fields.compound.f
 
 // --------------------------------------------------------------------------------
 
@@ -96,6 +107,14 @@ fa_action_t fa_action_send(fa_action_name_t name, fa_ptr_t value)
     send_get(action, name)  = name;
     send_get(action, value) = value;
     return action;
+}
+
+fa_action_t fa_action_compound(fa_nullary_t function, ptr_t data)
+{
+    action_t action = new_action(compound_action);
+    compound_get(action, function)  = function;
+    compound_get(action, data)      = data;
+    return action;    
 }
 
 
@@ -171,8 +190,34 @@ fa_action_value_t fa_action_send_value(fa_action_t action)
     return send_get(action, value);
 }
 
+bool fa_action_is_compound(fa_action_t action)
+{
+    return is_compound(action);
+}
 
 
+
+
+fa_pair_t compound_render(fa_action_t action)
+{
+    assert(is_compound(action) && "Not a compound action");
+    return compound_get(action, function)(compound_get(action, data));
+}
+
+
+// TODO move
+fa_action_t fa_action_repeat(fa_action_t action);
+
+static inline ptr_t _forever(ptr_t data)
+{
+    action_t action = data;
+    return pair(action, fa_action_repeat(action));
+}
+
+fa_action_t fa_action_repeat(fa_action_t action)
+{
+    return fa_action_compound(_forever, action);
+}
 
 
 // --------------------------------------------------------------------------------
