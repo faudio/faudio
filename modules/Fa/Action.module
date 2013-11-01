@@ -134,6 +134,12 @@ module Fa.Action
      */
     repeat : (Time, Action) -> Action;
 
+    many : (List) -> Action;
+    
+    while : (Pred, Ptr, Action) -> Action;
+    
+    null : () -> Action;
+
     isCompound : Action -> Bool;
     compoundInterval : Action -> Time;
     compoundFirst : Action -> Action; // Nullable

@@ -6,12 +6,6 @@
 
 #include <ApplicationServices/ApplicationServices.h> // DEBUG
 
-// TODO
-fa_action_t fa_action_repeat(time_t interval, fa_action_t action);
-fa_action_t fa_action_many(list_t timeActions);
-fa_action_t fa_action_while(pred_t, ptr_t, fa_action_t action);
-fa_action_t fa_action_null();
-
 
 bool pred1(ptr_t _, ptr_t x) {
     
