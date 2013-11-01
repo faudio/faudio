@@ -669,14 +669,23 @@ void message_listener(const MIDIPacketList *packetList, ptr_t x, ptr_t _)
 void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2);
 
 static inline
-void run_action(action_t action, stream_t stream)
+void run_action(action_t action, stream_t stream, time_t now, list_t* resched)
 {
     if(fa_action_is_compound(action)) {
         action_t first = fa_action_compound_first(action);
         if (first) {
-            run_action(first, stream);
-            return;
+            run_action(first, stream, now, resched);
         }
+        // Reschedule
+        if (fa_action_is_compound(action)) {
+            action_t rest = fa_action_compound_rest(action);
+            if (rest) {
+                time_t   interv = fa_action_compound_interval(action);
+                time_t   future = fa_add(now, interv);
+                fa_push_list(pair_left(future, rest), *resched);
+            }
+        }
+        return;
     }
 
 
@@ -762,19 +771,9 @@ ptr_t send_actions(ptr_t x)
         // inform(fa_string_show(now));
 
         if (fa_less_than_equal(time, now)) {
-            run_action(action, stream);
+            run_action(action, stream, now, &resched);
             fa_priority_queue_pop(stream->controls);
             
-            // Reschedule
-
-            if (fa_action_is_compound(action)) {
-                action_t rest = fa_action_compound_rest(action);
-                if (rest) {
-                    time_t   interv = fa_action_compound_interval(action);
-                    time_t   future = fa_add(now, interv);
-                    fa_push_list(pair_left(future, rest), resched);
-                }
-            }
         } else {
             break;
         }
