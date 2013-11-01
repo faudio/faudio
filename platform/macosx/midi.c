@@ -777,7 +777,7 @@ ptr_t send_actions(ptr_t x)
                     // inform(fa_string_show(future));
                     
                     // fa_midi_schedule(future, rest, stream);
-                    fa_push_list(pair(pair_left(future, rest), stream->controls), resched);
+                    fa_push_list(pair_left(future, rest), resched);
                     // fa_priority_queue_insert(pair_left(future, rest), stream->controls);
                 }
             }
@@ -786,8 +786,7 @@ ptr_t send_actions(ptr_t x)
         }
     }
     fa_for_each(x, resched) {
-        fa_priority_queue_insert(fa_pair_first(x), fa_pair_second(x));
-        fa_destroy(x);
+        fa_priority_queue_insert(x, stream->controls);
     }
 
     return NULL;
