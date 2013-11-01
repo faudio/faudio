@@ -240,10 +240,10 @@ static inline ptr_t _repeat(ptr_t data)
     pair_t intervalAction = data;                      
 
     time_t interval = fa_pair_first(intervalAction);
-    action_t action = fa_pair_second(intervalAction);
+    action_t simple = fa_pair_second(intervalAction);
 
     // TODO clean up pair
-   return pair(action, pair(interval, fa_action_repeat(interval, action)));
+    return pair(simple, pair(interval, fa_action_repeat(interval, simple)));
 }
 
 fa_action_t fa_action_repeat(time_t interval, fa_action_t action)
