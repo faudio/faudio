@@ -869,6 +869,11 @@ void fa_midi_schedule_relative(fa_time_t        time,
     fa_midi_schedule(fa_add(now, time), action, stream);
 }
 
+void fa_midi_set_clock(fa_midi_stream_t stream, fa_clock_t clock)
+{
+    stream->clock = clock;
+}
+
 
 
 

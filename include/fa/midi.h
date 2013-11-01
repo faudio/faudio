@@ -6,6 +6,7 @@
 #include <fa/pair.h>
 #include <fa/action.h>
 #include <fa/time.h>
+#include <fa/clock.h>
 #include <fa/error.h>
 
 /** @addtogroup FaMidi
@@ -224,6 +225,9 @@ void fa_midi_with_stream(fa_midi_device_t,
 void fa_midi_add_message_callback(fa_midi_message_callback_t,
                                   fa_ptr_t,
                                   fa_midi_stream_t);
+
+
+void fa_midi_set_clock(fa_midi_stream_t, fa_clock_t);
 
 /**
     Schedule an action on the stream.

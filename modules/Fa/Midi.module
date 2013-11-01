@@ -18,6 +18,7 @@ module Fa.Midi
     import Fa.Pair;
     import Fa.Action;
     import Fa.Time;
+    import Fa.Clock;
     import Fa.Error;
 
     /** A MIDI device.
@@ -204,6 +205,8 @@ module Fa.Midi
             Experimental.
      */
     addMessageCallback : (MessageCallback, Ptr, Stream) -> Void;
+
+    setClock : (Stream, Clock) -> Void;
     
     /**
         Schedule an action on the stream.
