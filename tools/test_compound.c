@@ -23,16 +23,18 @@ void run_midi()
                         
     {
         
-        fa_action_t note  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x99, 60, 90));
+        fa_action_t note1  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x99, 60, 90));
+        fa_action_t note2  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x99, 64, 90));
         fa_action_t notes = fa_action_many(list(
-                pair(note, fa_milliseconds(100)),
-                pair(note, fa_milliseconds(400)),
-                pair(note, fa_milliseconds(100)),
-                pair(note, fa_milliseconds(400))
+                pair(note2, fa_milliseconds(101)),
+                pair(note1, fa_milliseconds(202)),
+                pair(note2, fa_milliseconds(101)),
+                pair(note1, fa_milliseconds(101)),
+                pair(note1, fa_milliseconds(101))
             ));
         
         fa_midi_schedule_relative(seconds(0), 
-            fa_action_repeat(fa_milliseconds(1000), notes), 
+            fa_action_repeat(fa_milliseconds(606), notes), 
             st);
         fa_thread_sleep(100000);
     }
