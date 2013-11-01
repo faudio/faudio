@@ -130,6 +130,9 @@ module Fa.Action
      */
     sendValue : Action -> Value;
     
+    /** Repeat the given action indefinitely.
+     */
+    repeat : (Time, Action) -> Action;
 
     copy : Action -> Action;
     destroy : Action -> Void;

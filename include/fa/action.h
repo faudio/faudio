@@ -144,6 +144,10 @@ fa_action_name_t fa_action_send_name(fa_action_t);
 */
 fa_action_value_t fa_action_send_value(fa_action_t);
 
+/** Repeat the given action indefinitely.
+*/
+fa_action_t fa_action_repeat(fa_time_t, fa_action_t);
+
 
 fa_action_t fa_action_copy(fa_action_t);
 

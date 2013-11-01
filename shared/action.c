@@ -45,6 +45,7 @@ struct _fa_action_t {
 
         struct {
             // Returns either NULL or (SimpleAction, Action)
+            time_t              interval;
             nullary_t           function;
             ptr_t               data;
         }                       compound;
@@ -109,9 +110,10 @@ fa_action_t fa_action_send(fa_action_name_t name, fa_ptr_t value)
     return action;
 }
 
-fa_action_t fa_action_compound(fa_nullary_t function, ptr_t data)
+fa_action_t fa_action_compound(time_t interval, fa_nullary_t function, ptr_t data)
 {
     action_t action = new_action(compound_action);
+    compound_get(action, interval)  = interval;
     compound_get(action, function)  = function;
     compound_get(action, data)      = data;
     return action;    
@@ -206,17 +208,22 @@ fa_pair_t compound_render(fa_action_t action)
 
 
 // TODO move
-fa_action_t fa_action_repeat(fa_action_t action);
+fa_action_t fa_action_repeat(time_t interval, fa_action_t action);
 
-static inline ptr_t _forever(ptr_t data)
+static inline ptr_t _repeat(ptr_t data)
 {
-    action_t action = data;
-    return pair(action, fa_action_repeat(action));
+    pair_t intervalAction = data;                      
+
+    time_t interval = fa_pair_first(intervalAction);
+    action_t action = fa_pair_second(intervalAction);
+
+    // TODO clean up pair
+    return pair(action, fa_action_repeat(interval, action));
 }
 
-fa_action_t fa_action_repeat(fa_action_t action)
+fa_action_t fa_action_repeat(time_t interval, fa_action_t action)
 {
-    return fa_action_compound(_forever, action);
+    return fa_action_compound(interval, _repeat, pair(interval, action));
 }
 
 
