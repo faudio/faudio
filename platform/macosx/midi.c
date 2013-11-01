@@ -70,7 +70,7 @@ typedef OSStatus                    native_error_t;
 #define kMaxMessageCallbacks        8
 #define kMaxStatusCallbacks         8
 #define kMaxTimerCallbacks          512     // needs to be one per stream
-#define kMidiOutIntervalSec         0.001
+#define kMidiOutIntervalSec         0.01
 
 struct _fa_midi_session_t {
     impl_t                          impl;               // Dispatcher
@@ -772,13 +772,7 @@ ptr_t send_actions(ptr_t x)
                 if (rest) {
                     time_t   interv = fa_action_compound_interval(action);
                     time_t   future = fa_add(now, interv);
-                    
-                    // inform(fa_string_show(fa_action_compound_first(action)));
-                    // inform(fa_string_show(future));
-                    
-                    // fa_midi_schedule(future, rest, stream);
                     fa_push_list(pair_left(future, rest), resched);
-                    // fa_priority_queue_insert(pair_left(future, rest), stream->controls);
                 }
             }
         } else {
