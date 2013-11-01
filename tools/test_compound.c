@@ -10,14 +10,26 @@
 fa_action_t fa_action_repeat(time_t interval, fa_action_t action);
 fa_action_t fa_action_many(list_t timeActions);
 fa_action_t fa_action_while(pred_t, ptr_t, fa_action_t action);
+fa_action_t fa_action_null();
 
 
-bool pred_(ptr_t _, ptr_t x) {
+bool pred1(ptr_t _, ptr_t x) {
     
     CGEventRef event = CGEventCreate(nil);
     CGPoint loc = CGEventGetLocation(event);
     inform(fa_string_format_floating("x: %f", loc.x));
     bool res = loc.x > 200;
+    CFRelease(event);
+    
+    return res;
+}
+
+bool pred2(ptr_t _, ptr_t x) {
+    
+    CGEventRef event = CGEventCreate(nil);
+    CGPoint loc = CGEventGetLocation(event);
+    inform(fa_string_format_floating("x: %f", loc.x));
+    bool res = loc.y > 200;
     CFRelease(event);
     
     return res;
@@ -54,22 +66,28 @@ void run_midi()
         
         fa_action_t note1  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x99, 60, 127));
         fa_action_t note2  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x99, 64, 127));
-        fa_action_t notes = fa_action_many(list(
-                pair(note2, fa_milliseconds(100)),
+        fa_action_t notes1 = fa_action_many(list(
+                pair(note2, fa_milliseconds(100+200+100)),
+                pair(note2, fa_milliseconds(100+100))
+            ));
+        fa_action_t notes2 = fa_action_many(list(
+                pair(fa_action_null(), fa_milliseconds(100)),
                 pair(note1, fa_milliseconds(200)),
-                pair(note1, fa_milliseconds(100)),
-                pair(note2, fa_milliseconds(100)),
+                pair(note1, fa_milliseconds(100+100)),
                 pair(note1, fa_milliseconds(100))
             ));
         
         fa_midi_schedule_relative(seconds(0), 
             fa_action_repeat(fa_milliseconds(1000), 
-                fa_action_while(pred_, NULL,
-                    notes
-                    )
+                fa_action_many(list(
+                    pair(fa_action_while(pred1, NULL, notes1), fa_milliseconds(0)),
+                    pair(fa_action_while(pred2, NULL, notes2), fa_milliseconds(0))
+                ))
                 ), 
             st);
         fa_thread_sleep(100000);
+        mark_used(notes1);
+        mark_used(notes2);
     }
 
     // {                                         
