@@ -685,26 +685,49 @@ void run_action(action_t action, stream_t stream)
         ptr_t value     = fa_action_send_value(action);
         inform(fa_string_show(value));
 
-        struct MIDIPacketList packetList;
-        packetList.numPackets = 1;
-        packetList.packet[0].length = 3;
-        packetList.packet[0].timeStamp = 0;
-
-        int sc, d1, d2;
+        int sc, d1, d2;         
         fa_midi_message_decons(value, &sc, &d1, &d2);
-        packetList.packet[0].data[0] = sc;
-        packetList.packet[0].data[1] = d1;
-        packetList.packet[0].data[2] = d2;
 
-        native_error_t result = MIDISend(
-                                    stream->native,
-                                    stream->device->native,
-                                    &packetList
-                                );
+        {
+            printf("%d %d %d\n", sc, d1, d2);
 
-        if (result < 0) {
-            warn(string("Could not send MIDI"));
-            assert(false);
+            struct MIDIPacketList packetList;
+            packetList.numPackets = 1;
+            packetList.packet[0].length = 3;
+            packetList.packet[0].timeStamp = 0;
+            
+            packetList.packet[0].data[0] = sc;
+            packetList.packet[0].data[1] = d1;
+            packetList.packet[0].data[2] = d2;
+            MIDIPacketList* packetListPtr = &packetList;
+
+            // char data[3] = { sc, d1, d2 };
+            // char buf[256]; // TODO smaller
+            // MIDIPacketList* packetListPtr = (MIDIPacketList*) buf;
+            // MIDIPacket* packet = MIDIPacketListInit(packetListPtr);
+            // 
+            // if (!MIDIPacketListAdd(
+            //     packetListPtr,
+            //     256,
+            //     packet,
+            //     0,
+            //     3,
+            //     (const Byte*) data
+            //     )) {
+            //         warn(string("Could not create packet"));
+            //         assert(false);
+            //     }
+
+            
+            native_error_t result = MIDISend(
+                                        stream->native,
+                                        stream->device->native,
+                                        packetListPtr
+                                    );
+            if (result < 0) {
+                warn(string("Could not send MIDI"));
+                assert(false);
+            }
         }
     }
 }
