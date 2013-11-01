@@ -1,11 +1,27 @@
 
 #include <fa/fa.h>
+#define NO_THREAD_T
 #include <fa/util.h>
+#undef NO_THREAD_T
+
+#include <ApplicationServices/ApplicationServices.h> // DEBUG
 
 // TODO
 fa_action_t fa_action_repeat(time_t interval, fa_action_t action);
 fa_action_t fa_action_many(list_t timeActions);
+fa_action_t fa_action_while(pred_t, ptr_t, fa_action_t action);
 
+
+bool pred_(ptr_t _, ptr_t x) {
+    
+    CGEventRef event = CGEventCreate(nil);
+    CGPoint loc = CGEventGetLocation(event);
+    inform(fa_string_format_floating("x: %f", loc.x));
+    bool res = loc.x > 200;
+    CFRelease(event);
+    
+    return res;
+}
 
 void run_midi()
 {
@@ -20,21 +36,38 @@ void run_midi()
     if (fa_check(st)) {
         fa_error_log(st, NULL);
     }
+
+    {
+        fa_audio_session_t as = fa_audio_begin_session();
+        fa_audio_device_t ai = fa_audio_default_input(as);
+        fa_audio_device_t ao = fa_audio_default_output(as);
+        fa_audio_stream_t ast = fa_audio_open_stream(ai, ao, NULL, NULL);
+        fa_print_ln(ast);
+        
+        mark_used(ast);
+                                
+        // Use audio clock
+        fa_midi_set_clock(st, fa_audio_stream_clock(ast));
+    }
                         
     {
         
-        fa_action_t note1  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x99, 60, 90));
-        fa_action_t note2  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x99, 64, 90));
+        fa_action_t note1  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x99, 60, 127));
+        fa_action_t note2  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x99, 64, 127));
         fa_action_t notes = fa_action_many(list(
-                pair(note2, fa_milliseconds(101)),
-                pair(note1, fa_milliseconds(202)),
-                pair(note2, fa_milliseconds(101)),
-                pair(note1, fa_milliseconds(101)),
-                pair(note1, fa_milliseconds(101))
+                pair(note2, fa_milliseconds(100)),
+                pair(note1, fa_milliseconds(200)),
+                pair(note1, fa_milliseconds(100)),
+                pair(note2, fa_milliseconds(100)),
+                pair(note1, fa_milliseconds(100))
             ));
         
         fa_midi_schedule_relative(seconds(0), 
-            fa_action_repeat(fa_milliseconds(606), notes), 
+            fa_action_repeat(fa_milliseconds(1000), 
+                fa_action_while(pred_, NULL,
+                    notes
+                    )
+                ), 
             st);
         fa_thread_sleep(100000);
     }

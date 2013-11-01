@@ -236,6 +236,17 @@ fa_time_t fa_action_compound_interval(fa_action_t action)
 fa_action_t fa_action_repeat(time_t interval, fa_action_t action);
 fa_action_t fa_action_many(list_t timeActions);
 
+static inline ptr_t _null(ptr_t data, ptr_t compound)
+{          
+    return NULL;
+}
+
+fa_action_t fa_action_null()
+{
+    return fa_action_compound(_null, NULL);
+}
+
+
 static inline ptr_t _repeat(ptr_t data, ptr_t compound)
 {
     pair_t intervalAction = data;                      
@@ -271,6 +282,29 @@ static inline ptr_t _many(ptr_t data, ptr_t compound)
 fa_action_t fa_action_many(list_t timeActions)
 {
     return fa_action_compound(_many, timeActions);
+}
+
+static inline ptr_t _while(ptr_t data, ptr_t compound)
+{          
+    pair_t predAction = data;
+    pair_t      predClosure     = fa_pair_first(predAction);
+    action_t    action          = fa_pair_second(predAction);
+
+    pred_t pred_function = fa_pair_first(predClosure);
+    ptr_t  pred_data     = fa_pair_first(predClosure);
+    
+    if (pred_function(pred_data, NULL)) {                            
+        // Have to fake a time here...
+        return pair(action, pair(fa_milliseconds(0), fa_action_null()));
+    } else {
+        return NULL;
+    }
+}
+
+// [(Action, Time)] -> Action
+fa_action_t fa_action_while(pred_t pred, ptr_t ptr, fa_action_t action)
+{
+    return fa_action_compound(_while, pair(pair(pred, ptr), action));
 }
 
 

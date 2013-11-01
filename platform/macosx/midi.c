@@ -70,7 +70,7 @@ typedef OSStatus                    native_error_t;
 #define kMaxMessageCallbacks        8
 #define kMaxStatusCallbacks         8
 #define kMaxTimerCallbacks          512     // needs to be one per stream
-#define kMidiOutIntervalSec         0.015
+#define kMidiOutIntervalSec         0.010
 
 struct _fa_midi_session_t {
     impl_t                          impl;               // Dispatcher
@@ -672,18 +672,18 @@ static inline
 void run_action(action_t action, stream_t stream, time_t now, list_t* resched)
 {
     if(fa_action_is_compound(action)) {
+
         action_t first = fa_action_compound_first(action);
+        action_t rest = fa_action_compound_rest(action);
+
+        if (rest) {
+            // Reschedule
+            time_t   interv = fa_action_compound_interval(action);
+            time_t   future = fa_add(now, interv);
+            fa_push_list(pair_left(future, rest), *resched);
+        }
         if (first) {
             run_action(first, stream, now, resched);
-        }
-        // Reschedule
-        if (fa_action_is_compound(action)) {
-            action_t rest = fa_action_compound_rest(action);
-            if (rest) {
-                time_t   interv = fa_action_compound_interval(action);
-                time_t   future = fa_add(now, interv);
-                fa_push_list(pair_left(future, rest), *resched);
-            }
         }
         return;
     }
@@ -752,7 +752,6 @@ ptr_t send_actions(ptr_t x)
         fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
     }
 
-    list_t resched = empty();
 
     while (1) {
         pair_t x = fa_priority_queue_peek(stream->controls);
@@ -771,15 +770,16 @@ ptr_t send_actions(ptr_t x)
         // inform(fa_string_show(now));
 
         if (fa_less_than_equal(time, now)) {
+            list_t resched = empty();
             run_action(action, stream, now, &resched);
+            fa_for_each(x, resched) {
+                fa_priority_queue_insert(x, stream->controls);
+            }
             fa_priority_queue_pop(stream->controls);
             
         } else {
             break;
         }
-    }
-    fa_for_each(x, resched) {
-        fa_priority_queue_insert(x, stream->controls);
     }
 
     return NULL;
