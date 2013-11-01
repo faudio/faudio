@@ -202,8 +202,6 @@ fa_time_t fa_action_compound_interval(fa_action_t action)
     return compound_get(action, interval);
 }
 
-
-
 fa_pair_t compound_render(fa_action_t action)
 {
     assert(is_compound(action) && "Not a compound action");
