@@ -279,6 +279,14 @@ void fa_audio_add_message_callback(fa_audio_message_callback_t,
 */
 void fa_audio_schedule(fa_time_t, fa_action_t, fa_audio_stream_t);
 
+/**
+    Schedule an action on the stream.
+    @warning Experimental
+*/
+void fa_audio_schedule_relative(fa_time_t,
+                                fa_action_t,
+                                fa_audio_stream_t);
+
 /** @}
     @}
     */

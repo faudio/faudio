@@ -557,6 +557,14 @@ void fa_audio_schedule(fa_time_t time,
     fa_atomic_queue_write(stream->in_controls, pair);
 }
 
+void fa_audio_schedule_relative(fa_time_t        time,
+                              fa_action_t       action,
+                              fa_audio_stream_t  stream)
+{                                        
+    time_t now = fa_clock_time(fa_audio_stream_clock(stream));
+    fa_audio_schedule(fa_add(now, time), action, stream);
+}
+
 
 
 // --------------------------------------------------------------------------------

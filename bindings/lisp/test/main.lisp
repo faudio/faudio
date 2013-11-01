@@ -754,7 +754,16 @@
 (defvar *on* t)
 (setf *on* t)
 (setf *on* nil)
-(midi-schedule-relative (seconds 0) (action-while* (lambda (_) *on*) note1) midi-stream)
+(midi-schedule-relative 
+ (seconds 0) 
+ (action-while* (lambda (_) *on*) note1) 
+ midi-stream)
+
+
+(midi-schedule 
+
+
+
 
 
 
