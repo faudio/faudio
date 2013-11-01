@@ -1,4 +1,13 @@
 
+# v2.5.0
+
+- Adds compound scheduling
+    - See the documentation of `Fa.Action` for details
+
+- Adds device detection for Windows
+
+- Fixes Unicode-related bug on Windows
+
 # v2.4.0
 
 - Supports audio and midi hot-plugging for OS X

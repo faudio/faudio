@@ -36,5 +36,7 @@
 (defcfun (midi-close-stream "fa_midi_close_stream") :void (a midi-stream))
 (defcfun (midi-with-stream "fa_midi_with_stream") :void (a midi-device) (b midi-stream-callback) (c ptr) (d error-callback) (e ptr))
 (defcfun (midi-add-message-callback "fa_midi_add_message_callback") :void (a midi-message-callback) (b ptr) (c midi-stream))
+(defcfun (midi-set-clock "fa_midi_set_clock") :void (a midi-stream) (b clock))
 (defcfun (midi-schedule "fa_midi_schedule") :void (a time) (b action) (c midi-stream))
+(defcfun (midi-schedule-relative "fa_midi_schedule_relative") :void (a time) (b action) (c midi-stream))
 
