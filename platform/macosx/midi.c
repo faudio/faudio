@@ -70,7 +70,7 @@ typedef OSStatus                    native_error_t;
 #define kMaxMessageCallbacks        8
 #define kMaxStatusCallbacks         8
 #define kMaxTimerCallbacks          512     // needs to be one per stream
-#define kMidiOutIntervalSec         0.01
+#define kMidiOutIntervalSec         0.001
 
 struct _fa_midi_session_t {
     impl_t                          impl;               // Dispatcher
