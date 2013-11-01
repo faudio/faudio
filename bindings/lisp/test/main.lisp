@@ -79,7 +79,7 @@
 ;   Modulo is not smart enough to translate enums to Lisp yet
 ;   See the module file for the definition
 
-(dynamic-get-type nil)
+;(dynamic-get-type nil)
 (dynamic-get-type t)
 (dynamic-get-type 123)
 (dynamic-get-type 3.14159265)
@@ -181,7 +181,7 @@
 (setf x (list-empty))
 (setf x (list-single 0))
 (setf x (list-dcons 1 x))
-(setf x (list-dcons (random 20) x))
+(setf x (list-dcons (cl:random 20) x))
 (setf x (list-dtail x))
 (setf x (export-list '(1 2 3 4)))
 (setf y (list-copy x))
@@ -216,7 +216,7 @@
 (list-find* 'evenp '(1 2 3 4))
 (list-find-index* 'evenp '(1 2 3 4))
 (list-filter* 'evenp '(1 2 3 4))
-(list-map* (lambda (x) (+ 100 x)) '(1 2 3 4))
+(list-map* (lambda (x) (cl:+ 100 x)) '(1 2 3 4))
 
 (find 'evenp '(1 2 3 4))
 (find-index 'evenp '(1 2 3 4))
@@ -244,10 +244,10 @@
 
 (setf x (set-empty))
 (setf x (set-single 1))
-(setf x (set-dadd 1 x))             ; Set.add does not overwrite equals
-(setf x (set-dremove 1 x))          ; Set.set does (for numbers, it doesn't matter)
-(setf x (set-dadd (random 20) x))
-(setf x (set-dremove (random 20) x))
+(setf x (set-dadd 1 x))             ; Set.add does not overwrite equals (?)
+(setf x (set-dremove 1 x))
+(setf x (set-dadd (cl:random 20) x))
+(setf x (set-dremove (cl:random 20) x))
 (setf y (set-copy x))
 (destroy x)
 
@@ -358,19 +358,20 @@
 
 ; ---------------------------------------------------------------------------------------------------
 
-; Fa.Midi
+; Fa.Midi.Message
 
-(setf x (midi #x91 60 127))
-(setf x (midi-create-sysex (buffer-create 1024)))
+(setf x (midi #x94 60 127))
+(setf x (midi-message-create-sysex (buffer-create 1024)))
 (setf y (midi-copy x))
 (destroy x)
 
-(midi-is-simple x)
-(midi-status x)
-(midi-channel x)
-(midi-simple-data x)
-(pair-fst (midi-simple-data x))
-(pair-snd (midi-simple-data x))
+(midi-message-is-simple x)
+(midi-message-is-sysex x)
+(midi-message-status x) ; Masked without channel (TODO bad name?)
+(midi-message-channel x)
+(midi-message-simple-data x) ; (Pitch, Velocity) etc
+(pair-first (midi-message-simple-data x))
+(pair-second (midi-message-simple-data x))
 
 (midi-is-sysex x)
 (midi-sysex-data x)
@@ -400,20 +401,25 @@
 (setf x (from-pointer 'time (add x y)))
 (destroy x)
 
+; Deconstruct time
 (time-days x)
 (time-hours x)
 (time-minutes x)
 (time-seconds x)
 (time-divisions x)
 
+; Convert time
 (time-to-iso x)
 (time-to-milliseconds x)
 (time-to-seconds x)
 
 
+; ---------------------------------------------------------------------------------------------------
+
 ; Fa.Clock
 
-(setf x) ; TODO
+; The standard clock (not very precise!)
+(setf x (clock-standard))
 
 ; Clock from an audio stream
 (let* ((s (audio-begin-session))
@@ -604,15 +610,13 @@
 
 (thread-main)
 (thread-current)
+(equal (thread-current) (thread-main))
 
 (defvar *my-thread* nil)
 (cl:print *my-thread*)
 (mp:process-send mp:*main-process*
-  (setf *my-thread* (thread-current))
- )
+  (setf *my-thread* (thread-current)))
 
-(equal 
-  (thread-current) (thread-main))
 
 ; ---------------------------------------------------------------------------------------------------
 ; Mutexes
@@ -746,19 +750,41 @@
 (setf midi-output (midi-default-output midi-session))
 (setf midi-input (midi-default-input midi-session))
 (setf midi-stream (midi-open-stream midi-output))
+(midi-end-all-sessions)
 
 (setf note1 (action-send "" (midi #x99 60 127))) ; midi channel 10
-(setf note2 (action-send "" (midi #x99 62 127))) ; midi channel 10
+(setf note2 (action-send "" (midi #x99 69 127))) ; midi channel 10
 (midi-schedule-relative (seconds 0) note1 midi-stream)
+(midi-schedule-relative (seconds 0) note2 midi-stream)
+
+
+
+(midi-schedule-relative (seconds 0) (action-repeat (seconds 1) note2) midi-stream)
+
+(midi-schedule-relative (seconds 0) (action-null) midi-stream)
+(midi-schedule-relative (seconds 0) (action-many (cl:list)) midi-stream)
+(midi-schedule-relative (seconds 0) (action-many (cl:list
+                                         (pair-create note1 (seconds 0.1))
+                                         (pair-create note2 (seconds 0.3))))
+               midi-stream)
 
 (defvar *on* t)
 (setf *on* t)
 (setf *on* nil)
+
+; When on is non-nil
 (midi-schedule-relative 
  (seconds 0) 
  (action-while* (lambda (_) *on*) note1) 
  midi-stream)
 
+; Repeat when on is non-nil
+(midi-schedule-relative 
+ (seconds 0) 
+ (action-repeat 
+  (seconds 0.1) 
+  (action-while* (lambda (_) *on*) note1))
+ midi-stream)
 
 
 
@@ -777,6 +803,13 @@
  (seconds 0) 
  (action-while* (lambda (_) *on*) note1) 
  audio-stream)
+(audio-schedule-relative 
+ (seconds 0)
+ (action-repeat 
+  (milliseconds 100)
+  (action-while* (lambda (_) *on*) note1))
+ audio-stream)
+
 
 
 (setf all-notes (action-many (cl:list (pair-create note1 (milliseconds 500)) (pair-create note2 (milliseconds 0)))))
@@ -801,7 +834,7 @@
 (fa-initialize)
 
 ; Empty buffer
-(setf buf (buffer-create (cl:* 88200 8 2)))
+(setf buf (buffer-create (cl:* 88200 8 20)))
 
 ; Buffer from signal
 (setf buf (signal-run-buffer 44100 (cl:list) (* 0.1 (random))))
@@ -913,6 +946,11 @@
 
 ; (action-send-name (action-send "DLS" (midi #x90 60 127)))
 ; (from-pointer 'midi-message (action-send-value (action-send "DLS" (midi #x91 60 127))))
+
+
+
+
+; TODO move
 
 (defun signal-run-many (xs)
   (signal-run-default (lambda (dummy) xs)))
