@@ -832,8 +832,25 @@ void run_custom_procs(int when, state_t state)
 }
 
 // inline static
-void run_action(action_t action, state_t state)
+void run_action(action_t action, state_t state, time_t now, list_t* resched)
 {
+    if(fa_action_is_compound(action)) {
+
+        action_t first = fa_action_compound_first(action);
+        action_t rest = fa_action_compound_rest(action);
+
+        if (rest) {
+            // Reschedule
+            time_t   interv = fa_action_compound_interval(action);
+            time_t   future = fa_add(now, interv);
+            fa_push_list(pair_left(future, rest), *resched);
+        }
+        if (first) {
+            run_action(first, state, now, resched);
+        }
+        return;
+    }
+
     if (fa_action_is_set(action)) {
         int ch = fa_action_set_channel(action);
         double v = fa_action_set_value(action);
@@ -865,9 +882,14 @@ void run_actions(priority_queue_t controls, state_t state)
         action_t action      = fa_pair_second(x);
 
         int timeSamp = (((double) fa_time_to_milliseconds(time)) / 1000.0) * 44100;   // TODO
+        time_t now = fa_milliseconds(((double) state->count / 44100.0) * 1000.0); // Needed for rescheduling
 
         if (timeSamp <= state->count) {
-            run_action(action, state);
+            list_t resched = empty();
+            run_action(action, state, now, &resched); // TODO
+            fa_for_each(x, resched) {
+                fa_priority_queue_insert(x, controls);
+            }
             fa_priority_queue_pop(controls);
             // TODO reschedule
         } else {
