@@ -675,12 +675,15 @@ void run_action(action_t action, stream_t stream)
         action_t first = fa_action_compound_first(action);
         if (first) {
             run_action(first, stream);
+            return;
         }
     }
+
 
     if (fa_action_is_send(action)) {
         // string_t name   = fa_action_send_name(action);
         ptr_t value     = fa_action_send_value(action);
+        inform(fa_string_show(value));
 
         struct MIDIPacketList packetList;
         packetList.numPackets = 1;
@@ -717,6 +720,8 @@ ptr_t send_actions(ptr_t x)
         fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
     }
 
+    list_t resched = empty();
+
     while (1) {
         pair_t x = fa_priority_queue_peek(stream->controls);
 
@@ -731,6 +736,8 @@ ptr_t send_actions(ptr_t x)
         mark_used(time);
         mark_used(action);
 
+        // inform(fa_string_show(now));
+
         if (fa_less_than_equal(time, now)) {
             run_action(action, stream);
             fa_priority_queue_pop(stream->controls);
@@ -743,17 +750,21 @@ ptr_t send_actions(ptr_t x)
                     time_t   interv = fa_action_compound_interval(action);
                     time_t   future = fa_add(now, interv);
                     
-                    inform(fa_string_show(fa_action_compound_first(action)));
-                    inform(fa_string_show(now));
-                    inform(fa_string_show(future));
+                    // inform(fa_string_show(fa_action_compound_first(action)));
+                    // inform(fa_string_show(future));
                     
                     // fa_midi_schedule(future, rest, stream);
-                    fa_priority_queue_insert(pair_left(future, rest), stream->controls);
+                    fa_push_list(pair(pair_left(future, rest), stream->controls), resched);
+                    // fa_priority_queue_insert(pair_left(future, rest), stream->controls);
                 }
             }
         } else {
             break;
         }
+    }
+    fa_for_each(x, resched) {
+        fa_priority_queue_insert(fa_pair_first(x), fa_pair_second(x));
+        fa_destroy(x);
     }
 
     return NULL;
