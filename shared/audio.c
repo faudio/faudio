@@ -438,6 +438,10 @@ stream_t fa_audio_open_stream(device_t input,
 
     if (proc) {
         all_signals = proc(proc_data, all_inputs);
+    } else {                     
+        // TODO check number of channels
+        warn(string("Audio.openStream: Assuming stereo output"));
+        all_signals = list(fa_signal_constant(0), fa_signal_constant(0));
     }
 
     stream->signal_count        = fa_list_length(all_signals);
