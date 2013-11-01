@@ -210,6 +210,12 @@ module Fa.Midi
         @warning Experimental
      */
     schedule : (Time, Action, Stream) -> Void;
+
+    /**
+        Schedule an action on the stream.
+        @warning Experimental
+     */
+    scheduleRelative : (Time, Action, Stream) -> Void;
 }
 
 

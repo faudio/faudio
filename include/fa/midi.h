@@ -231,6 +231,14 @@ void fa_midi_add_message_callback(fa_midi_message_callback_t,
 */
 void fa_midi_schedule(fa_time_t, fa_action_t, fa_midi_stream_t);
 
+/**
+    Schedule an action on the stream.
+    @warning Experimental
+*/
+void fa_midi_schedule_relative(fa_time_t,
+                               fa_action_t,
+                               fa_midi_stream_t);
+
 /** @}
     @}
     */
