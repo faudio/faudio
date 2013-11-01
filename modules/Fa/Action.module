@@ -50,6 +50,10 @@ module Fa.Action
     */
     type Value = Ptr;
 
+    /** The `null` action that does nothing.
+     */
+    null : () -> Action;
+
     /** The `set` action updates a single global bus.
 
         The resulting action must be destroyed by the caller.
@@ -134,11 +138,16 @@ module Fa.Action
      */
     repeat : (Time, Action) -> Action;
 
+    /** Join a list of actions into a single compond action.
+     */
     many : (List) -> Action;
     
+    /** Creates a derived action from the given action that executes íf and only given predicate holds.
+
+        The predicate function is called *once*, just before the action is scheduled for execution. If
+        a while action is wrapped in a repeating action, the predicate will be called repeatedly.        
+     */
     while : (Pred, Ptr, Action) -> Action;
-    
-    null : () -> Action;
 
     isCompound : Action -> Bool;
     compoundInterval : Action -> Time;

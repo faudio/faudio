@@ -61,6 +61,10 @@ typedef fa_string_t fa_action_name_t;
 */
 typedef fa_ptr_t fa_action_value_t;
 
+/** The `null` action that does nothing.
+*/
+fa_action_t fa_action_null();
+
 /** The `set` action updates a single global bus.
 
     The resulting action must be destroyed by the caller.
@@ -148,14 +152,16 @@ fa_action_value_t fa_action_send_value(fa_action_t);
 */
 fa_action_t fa_action_repeat(fa_time_t, fa_action_t);
 
-
+/** Join a list of actions into a single compond action.
+*/
 fa_action_t fa_action_many(fa_list_t);
 
+/** Creates a derived action from the given action that executes íf and only given predicate holds.
 
+    The predicate function is called *once*, just before the action is scheduled for execution. If
+    a while action is wrapped in a repeating action, the predicate will be called repeatedly.        
+*/
 fa_action_t fa_action_while(fa_pred_t, fa_ptr_t, fa_action_t);
-
-
-fa_action_t fa_action_null();
 
 
 bool fa_action_is_compound(fa_action_t);
