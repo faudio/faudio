@@ -3,6 +3,8 @@
 
 - Fixes compound scheduling issues
 
+- Adds relative scheduling for Audio streams
+
 # v2.5.0
 
 - Adds compound scheduling
