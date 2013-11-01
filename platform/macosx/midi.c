@@ -671,6 +671,13 @@ void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *
 static inline
 void run_action(action_t action, stream_t stream)
 {
+    if(fa_action_is_compound(action)) {
+        action_t first = fa_action_compound_first(action);
+        if (first) {
+            run_action(first, stream);
+        }
+    }
+
     if (fa_action_is_send(action)) {
         // string_t name   = fa_action_send_name(action);
         ptr_t value     = fa_action_send_value(action);
@@ -727,7 +734,17 @@ ptr_t send_actions(ptr_t x)
         if (fa_less_than_equal(time, now)) {
             run_action(action, stream);
             fa_priority_queue_pop(stream->controls);
-            // TODO reschedule
+            
+            // Reschedule
+
+            if (fa_action_is_compound(action)) {
+                action_t rest = fa_action_compound_rest(action);
+                if (rest) {
+                    time_t   interv = fa_action_compound_interval(action);
+                    time_t   future = fa_add(now, interv);
+                    fa_midi_schedule(future, rest, stream);
+                }
+            }
         } else {
             break;
         }

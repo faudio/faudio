@@ -18,13 +18,13 @@ void run_midi()
 
     {           
         fa_action_t note = fa_action_send(string("midi"), fa_midi_message_create_simple(0x90, 60, 90));
-        fa_action_t notes = fa_action_repeat(seconds(1), note);
+        fa_action_t notes = fa_action_repeat(fa_milliseconds(100), note);
         
         fa_midi_schedule(
             hms(0, 0, 0),
             notes,
             st);
-        fa_thread_sleep(100);
+        fa_thread_sleep(10000);
     }
 
     fa_destroy(st);

@@ -149,6 +149,18 @@ fa_action_value_t fa_action_send_value(fa_action_t);
 fa_action_t fa_action_repeat(fa_time_t, fa_action_t);
 
 
+bool fa_action_is_compound(fa_action_t);
+
+
+fa_time_t fa_action_compound_interval(fa_action_t);
+
+
+fa_action_t fa_action_compound_first(fa_action_t);
+
+
+fa_action_t fa_action_compound_rest(fa_action_t);
+
+
 fa_action_t fa_action_copy(fa_action_t);
 
 

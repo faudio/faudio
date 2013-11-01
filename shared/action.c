@@ -197,6 +197,10 @@ bool fa_action_is_compound(fa_action_t action)
     return is_compound(action);
 }
 
+fa_time_t fa_action_compound_interval(fa_action_t action)
+{
+    return compound_get(action, interval);
+}
 
 
 
@@ -206,6 +210,25 @@ fa_pair_t compound_render(fa_action_t action)
     return compound_get(action, function)(compound_get(action, data));
 }
 
+fa_action_t fa_action_compound_first(fa_action_t action)
+{
+    fa_pair_t maybeActions = compound_render(action);
+    if (maybeActions) {
+        return fa_pair_first(maybeActions);
+    } else {
+        return NULL;
+    }
+}
+
+fa_action_t fa_action_compound_rest(fa_action_t action)
+{
+    fa_pair_t maybeActions = compound_render(action);
+    if (maybeActions) {
+        return fa_pair_second(maybeActions);
+    } else {
+        return NULL;
+    }
+}
 
 // TODO move
 fa_action_t fa_action_repeat(time_t interval, fa_action_t action);
