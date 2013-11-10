@@ -295,6 +295,8 @@ static inline ptr_t _while(ptr_t data, ptr_t compound)
     
     if (pred_function(pred_data, NULL)) {                            
         // Have to fake a time here...
+        // FIXME this does not seem right
+        // Surely the underlying action (if it is compound should have its interval (and its tail) propagated
         return pair(action, pair(fa_milliseconds(0), fa_action_null()));
     } else {
         return NULL;
