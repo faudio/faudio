@@ -622,6 +622,20 @@ void send_out(midi_message_t midi, stream_t stream)
     }
 }
 
+void fa_midi_schedule_relative(fa_time_t        time,
+                              fa_action_t       action,
+                              fa_midi_stream_t  stream)
+{                                        
+    time_t now = fa_clock_time(stream->clock);
+    fa_midi_schedule(fa_add(now, time), action, stream);
+}
+
+void fa_midi_set_clock(fa_midi_stream_t stream, fa_clock_t clock)
+{
+    stream->clock = clock;
+}
+
+
 // --------------------------------------------------------------------------------
 
 fa_string_t midi_session_show(ptr_t a)
