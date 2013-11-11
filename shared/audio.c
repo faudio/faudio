@@ -462,9 +462,9 @@ stream_t fa_audio_open_stream(device_t input,
         PaStreamParameters outp = {
             .suggestedLatency           = 0,
             .hostApiSpecificStreamInfo  = NULL,
-            .channelCount               = stream->output_channels,
+            .device                     = (output ? output->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
-            .device                     = (output ? output->index : 0)
+            .channelCount               = stream->output_channels
         };
 
         const PaStreamParameters       *in       = input ? &inp : NULL;
@@ -607,7 +607,7 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
 
     while ((val = fa_atomic_queue_read(stream->in_controls))) {
         fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
-    }
+    } 
 
     run_actions(stream->controls, stream->state);
 
@@ -629,7 +629,7 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
 
     assert((count == kMaxVectorSize) && "Wrong vector size");
     assert((stream->signal_count == 2) && "Wrong number of channels");
-
+    
     for (int i = 0; i < count; ++ i) {
         for (int c = 0; c < stream->signal_count; ++c) {
             stream->state->VALS[(c + kInputOffset) * kMaxVectorSize + i] = input[c][i];
@@ -649,8 +649,8 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
         for (int c = 0; c < stream->signal_count; ++c) {
             output[c][i] = stream->state->VALS[(c + kOutputOffset) * kMaxVectorSize + i];
         }
-    }
-
+    }       
+    
     stream->sample_count += count; // TODO atomic incr
 }
 
