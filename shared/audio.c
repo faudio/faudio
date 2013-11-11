@@ -609,11 +609,9 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
         fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
     }
 
-    for (int i = 0; i < count; ++ i) {
+    run_actions(stream->controls, stream->state);
 
-        // Note: This could be done outside sample loop
-        //       which would be faster but less exact
-        run_actions(stream->controls, stream->state);
+    for (int i = 0; i < count; ++ i) {
         run_custom_procs(1, stream->state);
 
         for (int c = 0; c < stream->signal_count; ++c) {

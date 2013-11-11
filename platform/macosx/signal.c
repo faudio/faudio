@@ -34,9 +34,9 @@ struct au_context {
     double *outputs;
 };
 
-#define kAUVectorSize 32
-
 #define kAUOffset 32
+#define kAUVectorSize 128
+
 
 ptr_t render_(ptr_t x, fa_signal_state_t *state)
 {

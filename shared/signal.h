@@ -8,6 +8,7 @@ struct _state_t {
     // ...
 };
 
+#define kMaxVectorSize 128
 #define kDefVectorSize 128
 #define kDefSampleRate 44100
 

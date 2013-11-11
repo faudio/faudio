@@ -675,6 +675,7 @@ list_t fa_signal_get_procs(fa_signal_t signal2)
 // Running
 
 #define kMaxCustomProcs 10
+#define kMaxVectorSize 128 // FIXME consolidate with the one in signa.h
 
 typedef struct {
     double     *inputs;                 // Current input values (TODO should not be called inputs as they are also outputs...)
@@ -700,9 +701,9 @@ state_t new_state()
     srand(time(NULL));  // TODO localize
     state_t state = fa_malloc(sizeof(_state_t));
 
-    state->inputs   = fa_malloc(kMaxInputs              * sizeof(double));
+    state->inputs   = fa_malloc(kMaxInputs * kMaxVectorSize * sizeof(double));
     state->buses    = fa_malloc(kMaxBuses * kMaxDelay   * sizeof(double));
-    memset(state->inputs,   0, kMaxInputs               * sizeof(double));
+    memset(state->inputs,   0, kMaxInputs * kMaxVectorSize * sizeof(double));
     memset(state->buses,    0, kMaxBuses * kMaxDelay    * sizeof(double));
 
     state->count              = 0;
