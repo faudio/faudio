@@ -995,6 +995,13 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
     delete_state(state);
 }
 
+buffer_t fa_signal_run_buffer(int n, list_t controls, signal_t a)
+{
+    buffer_t b = fa_buffer_create(n * sizeof(double));
+    fa_signal_run(n, controls, a, fa_buffer_unsafe_address(b));
+    return b;
+}
+
 void fa_signal_print(int n, list_t controls, signal_t a)
 {
     buffer_t b = fa_signal_run_buffer(n, controls, a);
@@ -1005,13 +1012,6 @@ void fa_signal_print(int n, list_t controls, signal_t a)
     }
 
     fa_destroy(b);
-}
-
-buffer_t fa_signal_run_buffer(int n, list_t controls, signal_t a)
-{
-    buffer_t b = fa_buffer_create(n * sizeof(double));
-    fa_signal_run(n, controls, a, fa_buffer_unsafe_address(b));
-    return b;
 }
 
 ptr_t fa_signal_run_file(int n, list_t controls, signal_t a, string_t path)
