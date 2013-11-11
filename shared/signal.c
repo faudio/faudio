@@ -741,13 +741,13 @@ double state_time(state_t state)
 
 void    write_bus(int n, int c, double x, state_t state);
 double  read_bus(int c, state_t state);
-double  read_actual_input(int c, state_t state);
-void    write_actual_input(int c, double x, state_t state);
+double  read_input(int c, state_t state);
+void    write_input(int c, double x, state_t state);
 
 inline static
 double read_samp1(int c, state_t state)
 {
-    return (c >= 0) ? read_actual_input(c, state) : read_bus(neg_bus(c), state);
+    return (c >= 0) ? read_input(c, state) : read_bus(neg_bus(c), state);
 }
 
 inline static
@@ -755,7 +755,7 @@ void write_samp1(int n, int c, double x, state_t state)
 {
     // write_bus(n, neg_bus(c), x, state);
     if (c >= 0) {
-        write_actual_input(c, x, state);
+        write_input(c, x, state);
     } else {
         write_bus(n, neg_bus(c), x, state);
     }
@@ -781,12 +781,12 @@ int index_bus(int n, int c)
     return c * kMaxDelay + n;
 }
 
-double read_actual_input(int c, state_t state)
+double read_input(int c, state_t state)
 {
     return state->inputs[c * kMaxVectorSize];
 }
 
-void write_actual_input(int c, double x, state_t state)
+void write_input(int c, double x, state_t state)
 {
     state->inputs[c * kMaxVectorSize] = x;
 }
