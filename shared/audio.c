@@ -42,7 +42,8 @@ typedef PaDeviceIndex native_index_t;
 typedef PaStream     *native_stream_t;
 
 #define kMaxSignals 8
-
+#define kDefVectorSize 128
+#define kDefSampleRate 44100
 
 struct _fa_audio_session_t {
 
@@ -421,8 +422,8 @@ stream_t fa_audio_open_stream(device_t input,
                              )
 {
     PaError         status;
-    unsigned long   buffer_size = 16;
-    double          sample_rate = 44100;
+    unsigned long   buffer_size = kDefVectorSize;
+    double          sample_rate = kDefSampleRate;
 
     if (!input && !output) {
         return (stream_t) audio_device_error_with(
