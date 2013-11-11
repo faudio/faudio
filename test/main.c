@@ -268,6 +268,10 @@ void test_time()
     fa_print("fa_time_to_iso(t)       ==> %s\n", fa_time_to_iso(t));
     fa_print("fa_time_to_iso(u)       ==> %s\n", fa_time_to_iso(u));
 
+
+    fa_print("200 ms       ==> %s\n", fa_milliseconds(200));
+    fa_print("200 ms       ==> %s\n", fa_time_create(0, 0, 0, ratio(1, 5)));
+
     fa_destroy(t);
     fa_destroy(u);
 }
