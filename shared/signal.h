@@ -22,4 +22,5 @@ void inc_state1(state_t state);
 void run_actions(priority_queue_t controls2, state_t state);
 void run_custom_procs(int when, state_t state);
 double step(signal_t signal, state_t state);
+void step_vector(signal_t signal, state_t state, int count, double* out);
 fa_signal_t fa_signal_simplify(fa_signal_t signal2);

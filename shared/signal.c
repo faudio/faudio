@@ -195,6 +195,8 @@ fa_signal_t fa_signal_lift2(fa_string_t n,
 
 fa_signal_t fa_signal_loop(fa_signal_unary_signal_t function, fa_ptr_t data)
 {
+    assert(false && "Loop not supported");
+
     signal_t signal = new_signal(loop_signal);
     loop_get(signal, function)  = function;
     loop_get(signal, data)      = data;
@@ -204,6 +206,8 @@ fa_signal_t fa_signal_loop(fa_signal_unary_signal_t function, fa_ptr_t data)
 
 fa_signal_t fa_signal_delay(int n, fa_signal_t a)
 {
+    assert(false && "Delay not supported");
+    
     signal_t signal = new_signal(delay_signal);
     delay_get(signal, n)  = n;
     delay_get(signal, a)  = a;
@@ -733,10 +737,17 @@ double state_random(state_t state)
 {
     return ((double)rand() / (double)RAND_MAX) * 2 - 1;
 }
+
 inline static
 double state_time(state_t state)
 {
     return state->count / state->rate;
+}
+
+inline static
+double state_time_plus(state_t state, int n)
+{
+    return (state->count + n) / state->rate;
 }
 
 double  read_input1(int c, state_t state);
@@ -1031,6 +1042,94 @@ double step(signal_t signal, state_t state)
     assert(false);
 }
 
+/**
+    Step over a vector of samples.
+ */
+void step_vector(signal_t signal, state_t state, int count, double* out)
+{
+    switch (signal->tag) {
+    
+    case time_signal: {
+        for (int i = 0; i < count; ++i) {
+            out[i] = state_time_plus(state, i);
+        }
+        return;
+    }
+    
+    case random_signal: {
+        for (int i = 0; i < count; ++i) {
+            out[i] = state_random(state);
+        }
+        return;
+    }
+    
+    case constant_signal: {
+        for (int i = 0; i < count; ++i) {
+            out[i] = constant_get(signal, value);
+        }
+        return;
+    }
+    
+    case lift_signal: {
+        dunary_t    function  = lift_get(signal, function);
+        ptr_t       data      = lift_get(signal, data);
+        signal_t    a         = lift_get(signal, a);
+        step_vector(a, state, count, out);
+
+        for (int i = 0; i < count; ++i) {
+            out[i] = function(data, out[i]);
+        }
+        return;
+    }
+
+    case lift2_signal: {
+        dbinary_t   function  = lift2_get(signal, function);
+        ptr_t       data      = lift2_get(signal, data);
+        signal_t    a         = lift2_get(signal, a);
+        signal_t    b         = lift2_get(signal, b);
+        
+        // TODO is stack allocation efficient enough?
+        double temp[count];
+        step_vector(a, state, count, out);
+        step_vector(b, state, count, temp);
+
+        for (int i = 0; i < count; ++i) {
+            out[i] = function(data, out[i], temp[i]);
+        }        
+        return;
+    }
+
+    case input_signal: {
+        int         c         = input_get(signal, c);
+        double* xs = read_samp(c, state);
+        
+        for (int i = 0; i < count; ++i) {
+            out[i] = xs[i];
+        }
+        return;
+    }
+
+    case output_signal: {
+        int         n         = output_get(signal, n);
+        int         c         = output_get(signal, c);
+        signal_t    a         = output_get(signal, a);
+    
+        step_vector(a, state, count, out);
+        double* xs = write_samp(n, c, state);
+
+        for (int i = 0; i < count; ++i) {
+            xs[i] = out[i];
+        }
+        return;
+    }
+
+    default:
+        assert(false && "step: Strange signal");
+    }
+
+    assert(false);
+}
+
 void fa_signal_run(int n, list_t controls, signal_t a, double *output)
 {
     priority_queue_t controls2 = priority_queue();
@@ -1139,6 +1238,7 @@ fa_signal_t fa_signal_counter()
 {
     return fa_signal_add(fa_signal_loop(_fix_counter, NULL), fa_signal_constant(-1));
 }
+
 
 inline static double _impulses(ptr_t n, double x)
 {
