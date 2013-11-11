@@ -624,10 +624,6 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
 
         step(stream->MERGED_SIGNAL, stream->state);
 
-        // TODO run inserts
-        // We must know about all current inserts and pass the state
-        // so that the buffers can be updated
-
         for (int c = 0; c < stream->signal_count; ++c) {
             output[c][i] = stream->state->VALS[c + kOutputOffset];
         }
