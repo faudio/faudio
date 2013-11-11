@@ -804,7 +804,15 @@ void write_bus(int n, int c, double x, state_t state)
 
 //----------
 
-// 0 prepare, 1 run, 2 cleanup
+/** 
+    Loops through the custom processors in a state_t or state2_t, running
+    the respective rendering action.
+
+    0 -> prepare
+    1 -> run
+    2 -> cleanup
+    
+ */
 void run_custom_procs(int when, state_t state)
 {
     for (int i = 0; i < state->custom_proc_count; ++i) {
@@ -831,7 +839,15 @@ void run_custom_procs(int when, state_t state)
     }
 }
 
-// inline static
+/**
+    Run a single action.
+    
+    @param 
+        action  Action to run.
+        state   State to run action on (for control updates and custom processor messages).
+        now     Current time (for rescheduling).
+        resched A list to which a (time, action) values is pushed for each rescheduled action.
+ */
 void run_action(action_t action, state_t state, time_t now, list_t* resched)
 {
     if(fa_action_is_compound(action)) {
@@ -845,7 +861,8 @@ void run_action(action_t action, state_t state, time_t now, list_t* resched)
             time_t   future = fa_add(now, interv);
             fa_push_list(pair_left(future, rest), *resched);
         }
-        if (first) {
+        if (first) {         
+            // Note: now is not used in this case, but pass it anyway
             run_action(first, state, now, resched);
         }
         return;
@@ -869,6 +886,12 @@ void run_action(action_t action, state_t state, time_t now, list_t* resched)
     }
 }
 
+/**
+    Run all due actions in the given queue.
+    @param
+        controls    A priority queue of (time, action) values.
+        state       State on which to run the actions (used for timing and passing to run_action).
+ */
 void run_actions(priority_queue_t controls, state_t state)
 {
     while (1) {
@@ -958,9 +981,6 @@ double step(signal_t signal, state_t state)
     assert(false);
 }
 
-// No allocation in loop
-// Use ringbuffers for transfer
-
 void fa_signal_run(int n, list_t controls, signal_t a, double *output)
 {
     priority_queue_t controls2 = priority_queue();
@@ -976,8 +996,6 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
 
     // TODO optimize
     // TODO verify
-
-    // TODO progress monitor
 
     run_custom_procs(0, state);
 
