@@ -32,7 +32,7 @@ void helper_function(string_t path)
             buf = fa_pair_second(res);
         }
 
-        signal_t j  = fa_add(loop(add1, NULL), constant(-1));  // 0,1,2,3 ...
+        signal_t j  = fa_signal_counter();
         signal_t li = fa_add(fa_multiply(j, constant(2)), constant(0));
         signal_t ri = fa_add(fa_multiply(j, constant(2)), constant(1));
 
