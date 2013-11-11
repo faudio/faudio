@@ -615,13 +615,13 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
         run_custom_procs(1, stream->state);
 
         for (int c = 0; c < stream->signal_count; ++c) {
-            stream->state->VALS[c + kInputOffset] = input[c][i];
+            stream->state->VALS[(c + kInputOffset) * kMaxVectorSize] = input[c][i];
         }
 
         step(stream->MERGED_SIGNAL, stream->state);
 
         for (int c = 0; c < stream->signal_count; ++c) {
-            output[c][i] = stream->state->VALS[c + kOutputOffset];
+            output[c][i] = stream->state->VALS[(c + kOutputOffset) * kMaxVectorSize];
         }
 
         inc_state1(stream->state);

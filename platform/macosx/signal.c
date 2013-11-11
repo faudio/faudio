@@ -13,6 +13,7 @@
 #include <fa/util.h>
 
 #include "au.h"
+#define kMaxVectorSize 128 // FIXME consolidate
 
 ptr_t before_(ptr_t x, fa_signal_state_t *state)
 {
@@ -46,8 +47,8 @@ ptr_t render_(ptr_t x, fa_signal_state_t *state)
         au_render(context, state->count, NULL);
     }
 
-    state->inputs[kAUOffset + 0] = context->outputs[kAUVectorSize * 0 + (state->count % kAUVectorSize)];
-    state->inputs[kAUOffset + 1] = context->outputs[kAUVectorSize * 1 + (state->count % kAUVectorSize)];
+    state->inputs[(kAUOffset + 0)*kMaxVectorSize] = context->outputs[kAUVectorSize * 0 + (state->count % kAUVectorSize)];
+    state->inputs[(kAUOffset + 1)*kMaxVectorSize] = context->outputs[kAUVectorSize * 1 + (state->count % kAUVectorSize)];
 
     return x;
     mark_used(context);
