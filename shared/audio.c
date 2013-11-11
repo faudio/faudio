@@ -612,7 +612,7 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
     run_actions(stream->controls, stream->state);
 
     // for (int i = 0; i < count; ++ i) {
-    //     // run_custom_procs(1, stream->state);
+    //     run_custom_procs(1, stream->state);
     // 
     //     for (int c = 0; c < stream->signal_count; ++c) {
     //         stream->state->VALS[(c + kInputOffset) * kMaxVectorSize] = input[c][i];
@@ -625,7 +625,7 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
     //     }
     // 
     //     inc_state1(stream->state);
-    // }
+    // }   
 
     assert((count == kMaxVectorSize) && "Wrong vector size");
     assert((stream->signal_count == 2) && "Wrong number of channels");
@@ -635,8 +635,9 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
             stream->state->VALS[(c + kInputOffset) * kMaxVectorSize + i] = input[c][i];
         }
     }
-
+    
     double out[count];
+    run_custom_procs(1, stream->state);
     step_vector(stream->MERGED_SIGNAL, stream->state, count, out);
     
     // TODO

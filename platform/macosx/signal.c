@@ -43,15 +43,25 @@ ptr_t render_(ptr_t x, fa_signal_state_t *state)
 {
     au_context_t context = x;
 
-    if (state->count % kAUVectorSize == 0) {
+    bool vector_mode = true;
+
+    if (!vector_mode) {
+        if (state->count % kAUVectorSize == 0) {
+            au_render(context, state->count, NULL);
+        }
+
+        state->inputs[(kAUOffset + 0)*kMaxVectorSize] = context->outputs[kAUVectorSize * 0 + (state->count % kAUVectorSize)];
+        state->inputs[(kAUOffset + 1)*kMaxVectorSize] = context->outputs[kAUVectorSize * 1 + (state->count % kAUVectorSize)];
+
+        return x;
+    } else {     
         au_render(context, state->count, NULL);
+        for (int i = 0; i < kAUVectorSize; ++i) {
+            state->inputs[(kAUOffset + 0)*kMaxVectorSize + i] = context->outputs[kAUVectorSize * 0 + i];
+            state->inputs[(kAUOffset + 1)*kMaxVectorSize + i] = context->outputs[kAUVectorSize * 1 + i];
+        }
+        return x;
     }
-
-    state->inputs[(kAUOffset + 0)*kMaxVectorSize] = context->outputs[kAUVectorSize * 0 + (state->count % kAUVectorSize)];
-    state->inputs[(kAUOffset + 1)*kMaxVectorSize] = context->outputs[kAUVectorSize * 1 + (state->count % kAUVectorSize)];
-
-    return x;
-    mark_used(context);
 }
 
 ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
