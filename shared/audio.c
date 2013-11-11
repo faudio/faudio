@@ -42,8 +42,6 @@ typedef PaDeviceIndex native_index_t;
 typedef PaStream     *native_stream_t;
 
 #define kMaxSignals 8
-#define kDefVectorSize 128
-#define kDefSampleRate 44100
 
 struct _fa_audio_session_t {
 

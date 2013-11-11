@@ -7,6 +7,11 @@ struct _state_t {
     double  rate;
     // ...
 };
+
+#define kDefVectorSize 128
+#define kDefSampleRate 44100
+
+
 typedef struct _state_t *state_t;
 list_t fa_signal_get_procs(fa_signal_t signal2);
 state_t new_state();
