@@ -395,11 +395,17 @@
 (setf x (time :seconds 3662))
 (setf x (time :minutes 4 :seconds 1/5))
 (setf x (time :minutes 4 :seconds 33.5))
+(setf x (time :milliseconds 500))
 (setf x (time :milliseconds 5512))
 (setf x (time :nanoseconds 1341405))
 (setf y (time-copy x))
 (setf x (from-pointer 'time (add x y)))
 (destroy x)
+
+(seconds 1)
+(hours 1)
+(minutes 1)
+(milliseconds 3)
 
 ; Deconstruct time
 (time-days x)

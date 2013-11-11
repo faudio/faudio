@@ -189,14 +189,8 @@
          (milliseconds-time (if milliseconds (time-create 0 0 0 (/ (rational milliseconds) 1000)) nil))
          (nanoseconds-time  (if nanoseconds (time-create 0 0 0 (/ (rational nanoseconds) 1000000)) nil))
 
-         (min-time          (if min     (time-create 0 0 min 0) nil))
-         (sec-time          (if min     (time-create 0 0 0 sec) nil))
-         (ms-time           (if milliseconds (time-create 0 0 0 (/ (rational milliseconds) 1000)) nil))
-         (ns-time           (if nanoseconds (time-create 0 0 0 (/ (rational nanoseconds) 1000000)) nil))
-
          (time-exprs  (remove nil (cl:list days-time hours-time minutes-time
-                                           seconds-time milliseconds-time nanoseconds-time
-                                           min-time sec-time ms-time ns-time))))
+                                           seconds-time milliseconds-time nanoseconds-time))))
     (reduce (lambda (x y)
       (from-pointer 'time (add x y))) time-exprs :initial-value zero-time)))
 
