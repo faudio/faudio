@@ -761,7 +761,7 @@ void write_samp(int n, int c, double x, state_t state)
 }
 
 // inline static
-void inc_state(state_t state)
+void inc_state1(state_t state)
 {
     state->count++;
 }
@@ -1005,7 +1005,7 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
 
         output[i] = step(a2, state);
 
-        inc_state(state);
+        inc_state1(state);
     }
 
     run_custom_procs(2, state);

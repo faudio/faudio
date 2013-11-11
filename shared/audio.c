@@ -626,7 +626,7 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
             output[c][i] = stream->state->VALS[c + kOutputOffset];
         }
 
-        inc_state(stream->state);
+        inc_state1(stream->state);
     }
 
     stream->sample_count += count; // TODO atomic incr
