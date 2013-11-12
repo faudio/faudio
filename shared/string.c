@@ -117,7 +117,7 @@ fa_string_t fa_string_dappend(fa_string_t str1,
     size_t oldSize = str1->size;
 
     str1->size = str1->size + str2->size;
-    str1->data = realloc(str1->data, str1->size * kStandardCodeSize);
+    str1->data = fa_realloc(str1->data, str1->size * kStandardCodeSize);
 
     memcpy(str1->data + oldSize, str2->data, str2->size * kStandardCodeSize);
 
@@ -248,7 +248,7 @@ fa_string_utf8_t fa_string_to_utf8(fa_string_t str)
     }
 
     cstrSize = out - cstr;
-    cstr     = realloc(cstr, cstrSize + 1);
+    cstr     = fa_realloc(cstr, cstrSize + 1);
 
     cstr[cstrSize] = 0;                 // add null-terminator
 
@@ -277,7 +277,7 @@ fa_string_cp1252_t fa_string_to_cp1252(fa_string_t str)
     }
 
     cstrSize = out - cstr;
-    cstr     = realloc(cstr, cstrSize + 1);
+    cstr     = fa_realloc(cstr, cstrSize + 1);
 
     cstr[cstrSize] = 0;                 // add null-terminator
 
@@ -316,7 +316,7 @@ fa_string_t fa_string_from_utf8(fa_string_utf8_t cstr)
     }
 
     strSize = out - str;
-    str     = realloc(str, strSize);
+    str     = fa_realloc(str, strSize);
 
     return new_string(strSize / kStandardCodeSize, (uint16_t *) str);
 }
