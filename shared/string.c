@@ -343,7 +343,7 @@ fa_string_t fa_string_from_cp1252(fa_string_cp1252_t cstr)
     }
 
     strSize = out - str;
-    str     = realloc(str, strSize);
+    str     = fa_realloc(str, strSize);
 
     return new_string(strSize / kStandardCodeSize, (uint16_t *) str);
 }
