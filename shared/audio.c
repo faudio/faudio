@@ -81,7 +81,8 @@ struct _fa_audio_stream_t {
     double              sample_rate;
     long                max_buffer_size;
     int32_t             sample_count;       // Monotonically increasing sample count
-
+    PaStreamCallbackFlags pa_flags;         // Potential error messages from PortAudio
+    
     atomic_queue_t      in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
     priority_queue_t    controls;           // Scheduled controls (Time, (Channel, Ptr))
 };
@@ -203,6 +204,7 @@ inline static stream_t new_stream(device_t input, device_t output, double sample
 
     stream->signal_count    = 0;
     stream->sample_count    = 0;
+    stream->pa_flags        = 0;
 
     stream->in_controls     = atomic_queue();
     stream->controls        = priority_queue();
@@ -408,7 +410,16 @@ void audio_inform_opening(device_t input, ptr_t proc, device_t output)
 {
     inform(string("Opening real-time audio stream"));
     inform(string_dappend(string("    Input:  "), input ? fa_string_show(input) : string("-")));
+    if (input) {
+        inform(fa_string_format_integral("defaultLowInputLatency: %d\n", Pa_GetDeviceInfo(input->index)->defaultLowInputLatency));
+        inform(fa_string_format_integral("defaultHighInputLatency: %d\n", Pa_GetDeviceInfo(input->index)->defaultHighInputLatency));
+    }
+
     inform(string_dappend(string("    Output: "), output ? fa_string_show(output) : string("-")));
+    if (output) {
+        inform(fa_string_format_integral("defaultLowOutputLatency: %d\n", Pa_GetDeviceInfo(output->index)->defaultLowOutputLatency));
+        inform(fa_string_format_integral("defaultHighOutputLatency: %d\n", Pa_GetDeviceInfo(output->index)->defaultHighOutputLatency));
+    }
 }
 
 // TODO change sample rate
@@ -451,8 +462,9 @@ stream_t fa_audio_open_stream(device_t input,
 
     audio_inform_opening(input, all_signals, output);
     {
+        // TODO test with lower latency
         PaStreamParameters inp = {
-            .suggestedLatency           = 0,
+            .suggestedLatency           = 0.1,
             .hostApiSpecificStreamInfo  = NULL,
             .device                     = (input ? input->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
@@ -460,7 +472,7 @@ stream_t fa_audio_open_stream(device_t input,
         };
 
         PaStreamParameters outp = {
-            .suggestedLatency           = 0,
+            .suggestedLatency           = 0.1,
             .hostApiSpecificStreamInfo  = NULL,
             .device                     = (output ? output->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
@@ -608,9 +620,9 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
     while ((val = fa_atomic_queue_read(stream->in_controls))) {
         fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
     } 
-
+    
     run_actions(stream->controls, stream->state);
-
+    
     // for (int i = 0; i < count; ++ i) {
     //     run_custom_procs(1, stream->state);
     // 
@@ -626,7 +638,7 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
     // 
     //     inc_state1(stream->state);
     // }   
-
+    
     assert((count == kMaxVectorSize) && "Wrong vector size");
     assert((stream->signal_count == 2) && "Wrong number of channels");
     
@@ -650,10 +662,9 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
             output[c][i] = stream->state->VALS[(c + kOutputOffset) * kMaxVectorSize + i];
         }
     }       
-    
+                    
     stream->sample_count += count; // TODO atomic incr
 }
-
 
 
 /* The callbacks */
@@ -666,11 +677,17 @@ int native_audio_callback(const void                       *input,
                           void                             *data)
 {
     during_processing(data, count, (float **) input, (float **) output);
+    stream_t stream = data;
+    stream->pa_flags |= flags;
+    
     return paContinue;
 }
 
 void native_finished_callback(void *data)
 {
+    stream_t stream = data;
+    inform(fa_string_format_integral("Stream flag result (0 = ok): %d", stream->pa_flags));
+
     after_processing(data);
 }
 
