@@ -35,10 +35,11 @@ void helper_function()
             fa_error_log(st, NULL);
         }
 
-        while (1) {
-            fa_thread_sleep(1000 * 30);
-        }
+        // while (1) {
+            fa_thread_sleep(4*1000);
+        // }
 
+        fa_audio_close_stream(st);
         fa_audio_end_session(s);
     }
 }
