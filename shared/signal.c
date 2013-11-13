@@ -907,7 +907,7 @@ void run_custom_procs(int when, state_t state)
         action  Action to run.
         state   State to run action on (for control updates and custom processor messages).
  */
-void run_simple_action(action_t action, state_t state)
+void run_simple_action(state_t state, action_t action)
 {
     assert(!fa_action_is_compound(action) && "Not a simple action");
     
@@ -955,7 +955,7 @@ void run_and_resched_action(action_t action, time_t now, list_t* resched, state_
         }
         return;
     }
-    run_simple_action(action, state);
+    run_simple_action(state, action);
 }
 
 /**
