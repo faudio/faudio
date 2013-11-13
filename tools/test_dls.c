@@ -26,18 +26,28 @@ void run_dls()
 
         for (int i = 0; true; ++i) {
 
-            fa_clock_t cl = fa_clock_standard();
-            // fa_clock_t cl = fa_audio_stream_clock(st);
+            // fa_clock_t cl = fa_clock_standard();
+            fa_clock_t cl = fa_audio_stream_clock(st);
             mark_used(cl);
 
             printf("Scheduling msec: %lld \n", fa_clock_milliseconds(cl));
             printf("Scheduling time: %s \n", unstring(fa_string_show(fa_clock_time(cl))));
 
+            fa_action_t chord = fa_action_many(list(
+                pair(
+                    fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 64 + ((i % 12) * 3), 90)),
+                    hms (0, 0, 0)
+                    ),
+                pair(
+                    fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 60 + ((i % 12) * 3), 90)),
+                    hms (0, 0, 0)
+                    )            
+            ));
             fa_audio_schedule(
                 hms(0, 0, 0),
-                fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 60 + ((i % 12) * 3), 90)),
+                chord,
                 st);
-            fa_thread_sleep(100 * 1);
+            fa_thread_sleep(200 * 1);
         }
 
         fa_destroy(st);
@@ -66,6 +76,7 @@ void run_dls()
 
 int main(int argc, char const *argv[])
 {
+    fa_fa_set_log_std();
     fa_fa_initialize();
 
     run_dls();

@@ -42,8 +42,6 @@ typedef PaDeviceIndex native_index_t;
 typedef PaStream     *native_stream_t;
 
 #define kMaxSignals 8
-#define kDefVectorSize 128
-#define kDefSampleRate 44100
 
 struct _fa_audio_session_t {
 
@@ -83,7 +81,14 @@ struct _fa_audio_stream_t {
     double              sample_rate;
     long                max_buffer_size;
     int32_t             sample_count;       // Monotonically increasing sample count
+    PaStreamCallbackFlags pa_flags;         // Potential error messages from PortAudio
 
+    struct {
+        thread_t        thread;
+        mutex_t         mutex;
+        bool            stop;
+    }                   controller;
+    
     atomic_queue_t      in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
     priority_queue_t    controls;           // Scheduled controls (Time, (Channel, Ptr))
 };
@@ -205,6 +210,7 @@ inline static stream_t new_stream(device_t input, device_t output, double sample
 
     stream->signal_count    = 0;
     stream->sample_count    = 0;
+    stream->pa_flags        = 0;
 
     stream->in_controls     = atomic_queue();
     stream->controls        = priority_queue();
@@ -410,7 +416,16 @@ void audio_inform_opening(device_t input, ptr_t proc, device_t output)
 {
     inform(string("Opening real-time audio stream"));
     inform(string_dappend(string("    Input:  "), input ? fa_string_show(input) : string("-")));
+    if (input) {
+        inform(fa_string_format_integral("defaultLowInputLatency: %d", Pa_GetDeviceInfo(input->index)->defaultLowInputLatency));
+        inform(fa_string_format_integral("defaultHighInputLatency: %d", Pa_GetDeviceInfo(input->index)->defaultHighInputLatency));
+    }
+
     inform(string_dappend(string("    Output: "), output ? fa_string_show(output) : string("-")));
+    if (output) {
+        inform(fa_string_format_integral("defaultLowOutputLatency: %d", Pa_GetDeviceInfo(output->index)->defaultLowOutputLatency));
+        inform(fa_string_format_integral("defaultHighOutputLatency: %d", Pa_GetDeviceInfo(output->index)->defaultHighOutputLatency));
+    }
 }
 
 // TODO change sample rate
@@ -453,8 +468,9 @@ stream_t fa_audio_open_stream(device_t input,
 
     audio_inform_opening(input, all_signals, output);
     {
+        // TODO test with lower latency
         PaStreamParameters inp = {
-            .suggestedLatency           = 0,
+            .suggestedLatency           = 0.1,
             .hostApiSpecificStreamInfo  = NULL,
             .device                     = (input ? input->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
@@ -462,11 +478,11 @@ stream_t fa_audio_open_stream(device_t input,
         };
 
         PaStreamParameters outp = {
-            .suggestedLatency           = 0,
+            .suggestedLatency           = 0.1,
             .hostApiSpecificStreamInfo  = NULL,
-            .channelCount               = stream->output_channels,
+            .device                     = (output ? output->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
-            .device                     = (output ? output->index : 0)
+            .channelCount               = stream->output_channels
         };
 
         const PaStreamParameters       *in       = input ? &inp : NULL;
@@ -496,7 +512,12 @@ stream_t fa_audio_open_stream(device_t input,
             return (stream_t) audio_device_error_with(string("Could not start stream"), status);
         }
     }
-
+    {
+        ptr_t audio_control_thread(ptr_t data);
+        stream->controller.thread = fa_thread_create(audio_control_thread, stream);
+        stream->controller.mutex  = fa_thread_create_mutex();
+        stream->controller.stop   = false;
+    }
     return stream;
 }
 
@@ -506,6 +527,13 @@ void fa_audio_close_stream(stream_t stream)
 
     // Note that after_processing will be called from native_finished_callback
     Pa_CloseStream(stream->native);
+    {
+        stream->controller.stop = true;
+        fa_thread_join(stream->controller.thread);
+        fa_thread_destroy_mutex(stream->controller.mutex);
+    }
+
+
     delete_stream(stream);
 }
 
@@ -555,18 +583,45 @@ void fa_audio_schedule(fa_time_t time,
                        fa_audio_stream_t stream)
 {
     pair_left_t pair = pair_left(time, action);
-    fa_atomic_queue_write(stream->in_controls, pair);
+    fa_with_lock(stream->controller.mutex) {     
+        fa_priority_queue_insert(pair, stream->controls);
+    }
 }
 
 void fa_audio_schedule_relative(fa_time_t        time,
-                              fa_action_t       action,
-                              fa_audio_stream_t  stream)
+                               fa_action_t       action,
+                               fa_audio_stream_t  stream)
 {                                        
     time_t now = fa_clock_time(fa_audio_stream_clock(stream));
     fa_audio_schedule(fa_add(now, time), action, stream);
 }
 
 
+ptr_t forward_action_to_audio_thread(ptr_t x, ptr_t action) {
+    stream_t stream = x;
+    fa_atomic_queue_write(stream->in_controls, action);
+    return NULL;
+}
+ptr_t audio_control_thread(ptr_t x)
+{                                
+    stream_t stream = x;
+    
+    inform(string("Audio control thread active"));
+    while (true) {                
+        if (stream->controller.stop) 
+            break;
+
+        fa_with_lock(stream->controller.mutex) {
+            run_actions(stream->controls, 
+                        fa_clock_time(fa_audio_stream_clock(stream)), 
+                        forward_action_to_audio_thread, 
+                        stream
+                        );
+        }
+    }
+    inform(string("Audio control thread finished"));
+    return NULL;
+}
 
 // --------------------------------------------------------------------------------
 
@@ -603,37 +658,66 @@ void after_processing(stream_t stream)
     delete_state(stream->state);
 }
 
+ptr_t run_simple_action2(ptr_t x, ptr_t a)
+{
+    return run_simple_action(x, a);
+}
 void during_processing(stream_t stream, unsigned count, float **input, float **output)
 {
-    ptr_t val;
-
-    while ((val = fa_atomic_queue_read(stream->in_controls))) {
-        fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
+    state_base_t state = (state_base_t) stream->state;
+    {
+        ptr_t action;
+        while ((action = fa_atomic_queue_read(stream->in_controls))) {
+            run_simple_action2(stream->state, action);
+        } 
     }
 
-    for (int i = 0; i < count; ++ i) {
+    if (!kVectorMode)
+    {
+        for (int i = 0; i < count; ++ i) {
+            run_custom_procs(1, stream->state);
+    
+            for (int c = 0; c < stream->signal_count; ++c) {
+                state->VALS[(c + kInputOffset) * kMaxVectorSize] = input[c][i];
+            }
+    
+            step(stream->MERGED_SIGNAL, stream->state);
+    
+            for (int c = 0; c < stream->signal_count; ++c) {
+                output[c][i] = state->VALS[(c + kOutputOffset) * kMaxVectorSize];
+            }
+    
+            inc_state1(stream->state);
+        }             
+    }
+    else
+    {
+        assert((count == kMaxVectorSize) && "Wrong vector size");
+        assert((stream->signal_count == 2) && "Wrong number of channels");
 
-        // Note: This could be done outside sample loop
-        //       which would be faster but less exact
-        run_actions(stream->controls, stream->state);
+        for (int i = 0; i < count; ++ i) {
+            for (int c = 0; c < stream->signal_count; ++c) {
+                state->VALS[(c + kInputOffset) * kMaxVectorSize + i] = input[c][i];
+            }
+        }
+
+        double out[count];
         run_custom_procs(1, stream->state);
+        step_vector(stream->MERGED_SIGNAL, stream->state, count, out);
 
-        for (int c = 0; c < stream->signal_count; ++c) {
-            stream->state->VALS[c + kInputOffset] = input[c][i];
+        // TODO
+        for (int i = 0; i < count; ++ i) {
+            inc_state1(stream->state);
         }
 
-        step(stream->MERGED_SIGNAL, stream->state);
-
-        for (int c = 0; c < stream->signal_count; ++c) {
-            output[c][i] = stream->state->VALS[c + kOutputOffset];
-        }
-
-        inc_state(stream->state);
-    }
-
+        for (int i = 0; i < count; ++ i) {
+            for (int c = 0; c < stream->signal_count; ++c) {
+                output[c][i] = state->VALS[(c + kOutputOffset) * kMaxVectorSize + i];
+            }
+        }       
+    }                    
     stream->sample_count += count; // TODO atomic incr
 }
-
 
 
 /* The callbacks */
@@ -646,11 +730,17 @@ int native_audio_callback(const void                       *input,
                           void                             *data)
 {
     during_processing(data, count, (float **) input, (float **) output);
+    stream_t stream = data;
+    stream->pa_flags |= flags;
+    
     return paContinue;
 }
 
 void native_finished_callback(void *data)
 {
+    stream_t stream = data;
+    inform(fa_string_format_integral("Stream flag result (0 = ok): %d", stream->pa_flags));
+
     after_processing(data);
 }
 
@@ -760,8 +850,10 @@ void audio_stream_destroy(ptr_t a)
 int64_t audio_stream_milliseconds(ptr_t a)
 {
     stream_t stream = (stream_t) a;
-    double c = (double) stream->state->count;
-    double r = (double) stream->state->rate;
+    state_base_t state = (state_base_t) stream->state;
+
+    double c = (double) state->count;
+    double r = (double) state->rate;
     return ((int64_t)(c / r * 1000));
 }
 

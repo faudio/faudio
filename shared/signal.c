@@ -12,8 +12,11 @@
 #include <fa/priority_queue.h>
 #include <fa/action.h>
 #include <fa/buffer.h>
+#include <fa/clock.h>
 #include <fa/util.h>
 #include <fa/midi/message.h>
+
+#include "signal.h"
 
 typedef fa_signal_custom_processor_t   *custom_proc_t;
 typedef fa_signal_unary_signal_t        fixpoint_t;
@@ -195,6 +198,11 @@ fa_signal_t fa_signal_lift2(fa_string_t n,
 
 fa_signal_t fa_signal_loop(fa_signal_unary_signal_t function, fa_ptr_t data)
 {
+    if (kVectorMode) {
+        warn(string("Loop not supported in vector mode"));
+        assert(false && "Loop not supported in vector mode");
+    }
+
     signal_t signal = new_signal(loop_signal);
     loop_get(signal, function)  = function;
     loop_get(signal, data)      = data;
@@ -204,6 +212,11 @@ fa_signal_t fa_signal_loop(fa_signal_unary_signal_t function, fa_ptr_t data)
 
 fa_signal_t fa_signal_delay(int n, fa_signal_t a)
 {
+    if (kVectorMode) {
+        warn(string("Delay not supported in vector mode"));
+        assert(false && "Delay not supported in vector mode");
+    }
+    
     signal_t signal = new_signal(delay_signal);
     delay_get(signal, n)  = n;
     delay_get(signal, a)  = a;
@@ -676,7 +689,7 @@ list_t fa_signal_get_procs(fa_signal_t signal2)
 
 #define kMaxCustomProcs 10
 
-typedef struct {
+struct _state_t {
     double     *inputs;                 // Current input values (TODO should not be called inputs as they are also outputs...)
     double     *buses;                  // Current and future bus values
 
@@ -686,8 +699,8 @@ typedef struct {
     int           custom_proc_count;
     custom_proc_t custom_procs[kMaxCustomProcs];      // Array of custom processors
 
-}  _state_t;
-typedef _state_t *state_t;
+};
+// typedef _state_t *state_t;
 
 
 double  kRate           = 44100;
@@ -698,11 +711,11 @@ long    kMaxDelay       = (44100 * 5);
 state_t new_state()
 {
     srand(time(NULL));  // TODO localize
-    state_t state = fa_malloc(sizeof(_state_t));
+    state_t state = fa_new_struct(_state_t);
 
-    state->inputs   = fa_malloc(kMaxInputs              * sizeof(double));
+    state->inputs   = fa_malloc(kMaxInputs * kMaxVectorSize * sizeof(double));
     state->buses    = fa_malloc(kMaxBuses * kMaxDelay   * sizeof(double));
-    memset(state->inputs,   0, kMaxInputs               * sizeof(double));
+    memset(state->inputs,   0, kMaxInputs * kMaxVectorSize * sizeof(double));
     memset(state->buses,    0, kMaxBuses * kMaxDelay    * sizeof(double));
 
     state->count              = 0;
@@ -732,36 +745,66 @@ double state_random(state_t state)
 {
     return ((double)rand() / (double)RAND_MAX) * 2 - 1;
 }
+
 inline static
 double state_time(state_t state)
 {
     return state->count / state->rate;
 }
 
-void    write_bus(int n, int c, double x, state_t state);
-double  read_bus(int c, state_t state);
-double  read_actual_input(int c, state_t state);
-void    write_actual_input(int c, double x, state_t state);
+inline static
+double state_time_plus(state_t state, int n)
+{
+    return (state->count + n) / state->rate;
+}
+
+double  read_input1(int c, state_t state);
+double  read_bus1(int c, state_t state);
+void    write_input1(int c, double x, state_t state);
+void    write_bus1(int n, int c, double x, state_t state);
+
+double*  read_input(int c, state_t state);
+double*  read_bus(int c, state_t state);
+double*  write_input(int c, state_t state);
+double*  write_bus(int n, int c, state_t state);
 
 inline static
-double read_samp(int c, state_t state)
+double read_samp1(int c, state_t state)
 {
-    return (c >= 0) ? read_actual_input(c, state) : read_bus(neg_bus(c), state);
+    return (c >= 0) ? read_input1(c, state) : read_bus1(neg_bus(c), state);
 }
 
 inline static
-void write_samp(int n, int c, double x, state_t state)
+void write_samp1(int n, int c, double x, state_t state)
 {
-    // write_bus(n, neg_bus(c), x, state);
+    // write_bus1(n, neg_bus(c), x, state);
     if (c >= 0) {
-        write_actual_input(c, x, state);
+        write_input1(c, x, state);
     } else {
-        write_bus(n, neg_bus(c), x, state);
+        write_bus1(n, neg_bus(c), x, state);
     }
 }
 
+inline static
+double* read_samp(int c, state_t state)
+{
+    return (c >= 0) ? read_input(c, state) : read_bus(neg_bus(c), state);
+}
+
+inline static
+double* write_samp(int n, int c, state_t state)
+{
+    // write_bus1(n, neg_bus(c), x, state);
+    if (c >= 0) {
+        return write_input(c, state);
+    } else {
+        return write_bus(n, neg_bus(c), state);
+    }
+}
+
+
 // inline static
-void inc_state(state_t state)
+void inc_state1(state_t state)
 {
     state->count++;
 }
@@ -780,31 +823,65 @@ int index_bus(int n, int c)
     return c * kMaxDelay + n;
 }
 
-double read_actual_input(int c, state_t state)
+double read_input1(int c, state_t state)
 {
-    return state->inputs[c];
+    return state->inputs[c * kMaxVectorSize];
 }
 
-void write_actual_input(int c, double x, state_t state)
+void write_input1(int c, double x, state_t state)
 {
-    state->inputs[c] = x;
+    state->inputs[c * kMaxVectorSize] = x;
 }
 
-double read_bus(int c, state_t state)
+double read_bus1(int c, state_t state)
 {
     int bp = buffer_pointer(state);
     return state->buses[index_bus(bp, c)];
 }
 
-void write_bus(int n, int c, double x, state_t state)
+void write_bus1(int n, int c, double x, state_t state)
 {
     int bp = buffer_pointer(state);
     state->buses[index_bus((bp + n) % kMaxDelay, c)] = x;
 }
 
+
+
+
+
+double* read_input(int c, state_t state)
+{
+    return state->inputs + (c * kMaxVectorSize);
+}
+
+double* write_input(int c, state_t state)
+{
+    return state->inputs + (c * kMaxVectorSize);
+}
+
+double* read_bus(int c, state_t state)
+{
+    int bp = buffer_pointer(state);
+    return state->buses + (index_bus(bp, c));
+}
+
+double* write_bus(int n, int c, state_t state)
+{
+    int bp = buffer_pointer(state);
+    return state->buses + (index_bus((bp + n) % kMaxDelay, c));
+}
+
 //----------
 
-// 0 prepare, 1 run, 2 cleanup
+/** 
+    Loops through the custom processors in a state_t or state2_t, running
+    the respective rendering action.
+
+    0 -> prepare
+    1 -> run
+    2 -> cleanup
+    
+ */
 void run_custom_procs(int when, state_t state)
 {
     for (int i = 0; i < state->custom_proc_count; ++i) {
@@ -831,30 +908,21 @@ void run_custom_procs(int when, state_t state)
     }
 }
 
-// inline static
-void run_action(action_t action, state_t state, time_t now, list_t* resched)
+/**
+    Run a simple action.
+    
+    @param 
+        action  Action to run.
+        state   State to run action on (for control updates and custom processor messages).
+ */
+ptr_t run_simple_action(state_t state, action_t action)
 {
-    if(fa_action_is_compound(action)) {
-
-        action_t first = fa_action_compound_first(action);
-        action_t rest = fa_action_compound_rest(action);
-
-        if (rest) {
-            // Reschedule
-            time_t   interv = fa_action_compound_interval(action);
-            time_t   future = fa_add(now, interv);
-            fa_push_list(pair_left(future, rest), *resched);
-        }
-        if (first) {
-            run_action(first, state, now, resched);
-        }
-        return;
-    }
-
+    assert(!fa_action_is_compound(action) && "Not a simple action");
+    
     if (fa_action_is_set(action)) {
         int ch = fa_action_set_channel(action);
         double v = fa_action_set_value(action);
-        write_samp(0, ch, v, state);
+        write_samp1(0, ch, v, state);
     }
 
     if (fa_action_is_send(action)) {
@@ -867,9 +935,47 @@ void run_action(action_t action, state_t state, time_t now, list_t* resched)
             proc->receive(proc->data, name, value);
         }
     }
+    // TODO clean up action
+    return NULL;
 }
 
-void run_actions(priority_queue_t controls, state_t state)
+/**
+    Run a single or compound action, pushing to the given rescheduling list of needed.
+    @param
+        action  Action to run.
+        now     Current time (for rescheduling).
+        resched A list to which a (time, action) values is pushed for each rescheduled action.
+        state   State to run action on.
+ */
+void run_and_resched_action(action_t action, time_t now, list_t* resched, unary_t function, ptr_t data)
+{
+    if(fa_action_is_compound(action)) {
+
+        action_t first = fa_action_compound_first(action);
+        action_t rest = fa_action_compound_rest(action);
+
+        if (rest) {
+            // Reschedule
+            time_t   interv = fa_action_compound_interval(action);
+            time_t   future = fa_add(now, interv);
+            fa_push_list(pair_left(future, rest), *resched);
+        }
+        if (first) {         
+            run_and_resched_action(first, now, resched, function, data);
+        }
+        return;
+    }                         
+    function(data, action);    
+    // run_simple_action(state, action);
+}
+
+/**
+    Run all due actions in the given queue.
+    @param
+        controls    A priority queue of (time, action) values.
+        state       State on which to run the actions (used for timing and passing to run_action).
+ */
+void run_actions(priority_queue_t controls, fa_time_t now, unary_t function, ptr_t data)
 {
     while (1) {
         pair_t x = fa_priority_queue_peek(controls);
@@ -881,12 +987,11 @@ void run_actions(priority_queue_t controls, state_t state)
         time_t   time        = fa_pair_first(x);
         action_t action      = fa_pair_second(x);
 
-        int timeSamp = (((double) fa_time_to_milliseconds(time)) / 1000.0) * 44100;   // TODO
-        time_t now = fa_milliseconds(((double) state->count / 44100.0) * 1000.0); // Needed for rescheduling
-
-        if (timeSamp <= state->count) {
+        if (fa_less_than_equal(time, now)) {
             list_t resched = empty();
-            run_action(action, state, now, &resched); // TODO
+            
+            run_and_resched_action(action, now, &resched, function, data); // TODO
+            
             fa_for_each(x, resched) {
                 fa_priority_queue_insert(x, controls);
             }
@@ -902,7 +1007,6 @@ void run_actions(priority_queue_t controls, state_t state)
 /**
     Step over a sample.
  */
-// inline static
 double step(signal_t signal, state_t state)
 {
     switch (signal->tag) {
@@ -939,7 +1043,7 @@ double step(signal_t signal, state_t state)
 
     case input_signal: {
         int         c         = input_get(signal, c);
-        return read_samp(c, state);
+        return read_samp1(c, state);
     }
 
     case output_signal: {
@@ -948,7 +1052,7 @@ double step(signal_t signal, state_t state)
         signal_t    a         = output_get(signal, a);
 
         double      xa        = step(a, state);
-        write_samp(n, c, xa, state);
+        write_samp1(n, c, xa, state);
         return xa;
     }
 
@@ -959,9 +1063,98 @@ double step(signal_t signal, state_t state)
     assert(false);
 }
 
-// No allocation in loop
-// Use ringbuffers for transfer
+/**
+    Step over a vector of samples.
+ */
+void step_vector(signal_t signal, state_t state, int count, double* out)
+{
+    switch (signal->tag) {
+    
+    case time_signal: {
+        for (int i = 0; i < count; ++i) {
+            out[i] = state_time_plus(state, i);
+        }
+        return;
+    }
+    
+    case random_signal: {
+        for (int i = 0; i < count; ++i) {
+            out[i] = state_random(state);
+        }
+        return;
+    }
+    
+    case constant_signal: {
+        for (int i = 0; i < count; ++i) {
+            out[i] = constant_get(signal, value);
+        }
+        return;
+    }
+    
+    case lift_signal: {
+        dunary_t    function  = lift_get(signal, function);
+        ptr_t       data      = lift_get(signal, data);
+        signal_t    a         = lift_get(signal, a);
+        step_vector(a, state, count, out);
 
+        for (int i = 0; i < count; ++i) {
+            out[i] = function(data, out[i]);
+        }
+        return;
+    }
+
+    case lift2_signal: {
+        dbinary_t   function  = lift2_get(signal, function);
+        ptr_t       data      = lift2_get(signal, data);
+        signal_t    a         = lift2_get(signal, a);
+        signal_t    b         = lift2_get(signal, b);
+        
+        // TODO is stack allocation efficient enough?
+        double temp[count];
+        step_vector(a, state, count, out);
+        step_vector(b, state, count, temp);
+
+        for (int i = 0; i < count; ++i) {
+            out[i] = function(data, out[i], temp[i]);
+        }        
+        return;
+    }
+
+    case input_signal: {
+        int         c         = input_get(signal, c);
+        double* xs = read_samp(c, state);
+        
+        for (int i = 0; i < count; ++i) {
+            out[i] = xs[i];
+        }
+        return;
+    }
+
+    case output_signal: {
+        int         n         = output_get(signal, n);
+        int         c         = output_get(signal, c);
+        signal_t    a         = output_get(signal, a);
+    
+        step_vector(a, state, count, out);
+        double* xs = write_samp(n, c, state);
+
+        for (int i = 0; i < count; ++i) {
+            xs[i] = out[i];
+        }
+        return;
+    }
+
+    default:
+        assert(false && "step: Strange signal");
+    }
+
+    assert(false);
+}
+
+ptr_t run_simple_action_(ptr_t x, ptr_t a)
+{
+    return run_simple_action(x, a);
+}
 void fa_signal_run(int n, list_t controls, signal_t a, double *output)
 {
     priority_queue_t controls2 = priority_queue();
@@ -974,20 +1167,21 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
         add_custom_proc(x, state);
     }
     signal_t a2 = fa_signal_simplify(a);
+
     // TODO optimize
     // TODO verify
-
-    // TODO progress monitor
 
     run_custom_procs(0, state);
 
     for (int i = 0; i < n; ++ i) {
-        run_actions(controls2, state);
+        time_t now = fa_milliseconds(((double) state->count / 44100.0) * 1000.0);
+        run_actions(controls2, now, run_simple_action_, state);
+        
         run_custom_procs(1, state);
 
         output[i] = step(a2, state);
 
-        inc_state(state);
+        inc_state1(state);
     }
 
     run_custom_procs(2, state);
@@ -1071,6 +1265,7 @@ fa_signal_t fa_signal_counter()
 {
     return fa_signal_add(fa_signal_loop(_fix_counter, NULL), fa_signal_constant(-1));
 }
+
 
 inline static double _impulses(ptr_t n, double x)
 {
@@ -1186,149 +1381,149 @@ fa_signal_t fa_signal_cos(fa_signal_t a)
 
 // --------------------------------------------------------------------------------
 
-// Stream-based I/O
-
-#define kStreamInputOffset  48
-#define kStreamOutputOffset 60
-#define kStreamVectorSize   32
-
-/*
-    Note: It is unclear whether stream I/O should happen on the main processing
-    thread or another thread. The latter solution would require us to start
-    up a separate thread here and use a ring buffer internally. We don't do this
-    here: the user can attach a ring buffer manually instead.
- */
-
-
-// TODO use this
-struct stream_io_context {
-    // double *outputs;
-    // int     frames;
-    int     bus;
-    ptr_t   function;
-    ptr_t   data;
-
-    int frames;
-    double output[kStreamVectorSize];
-};
-typedef struct stream_io_context *stream_io_context_t;
-
-stream_io_context_t new_stream_io_context(int bus, ptr_t function, ptr_t data)
-{
-    stream_io_context_t context = malloc(1);
-    // TODO
-    return context;
-}
-
-
-
-ptr_t input_stream_before(ptr_t x, fa_signal_state_t *state)
-{
-    // Nothing
-    return x;
-}
-
-ptr_t input_stream_after(ptr_t x, fa_signal_state_t *state)
-{
-    // Nothing
-    return x;
-}
-
-ptr_t input_stream_render(ptr_t x, fa_signal_state_t *state)
-{
-    stream_io_context_t context = x;
-    int bus = context->bus;
-
-    if (state->count % kStreamVectorSize == 0) {
-        // TODO invoke the callback
-    }
-
-    double result = 0;
-    state->inputs[kStreamInputOffset + bus] = result;
-    return x;
-}
-
-ptr_t input_stream_receive(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
-{
-    // Nothing
-    return x;
-}
-
-fa_signal_t fa_signal_input_stream(int bus,
-                                   fa_signal_stream_input_callback_t function,
-                                   ptr_t data)
-{
-    signal_t input = fa_signal_input(kStreamInputOffset + bus);
-
-    stream_io_context_t context = new_stream_io_context(bus, function, data);
-
-    fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
-    proc->before  = input_stream_before;
-    proc->after   = input_stream_after;
-    proc->render  = input_stream_render;
-    proc->receive = input_stream_receive;
-    // FIXME pass user data and special buffer
-    proc->data    = context;
-
-    return fa_signal_custom(proc, input);
-}
-
-
-
-
-ptr_t output_stream_before(ptr_t x, fa_signal_state_t *state)
-{
-    // Nothing
-    return x;
-}
-
-ptr_t output_stream_after(ptr_t x, fa_signal_state_t *state)
-{
-    // Nothing
-    return x;
-}
-
-ptr_t output_stream_render(ptr_t x, fa_signal_state_t *state)
-{
-    stream_io_context_t context = x;
-    int bus = context->bus;
-
-    double value = state->inputs[kStreamOutputOffset + bus];
-    mark_used(value);
-
-    if (state->count % kStreamVectorSize == 0) {
-        // TODO invoke the callback
-    }
-
-    return x;
-}
-
-ptr_t output_stream_receive(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
-{
-    // Nothing
-    return x;
-}
-
-fa_signal_t fa_signal_output_stream(int bus,
-                                    fa_signal_stream_output_callback_t function,
-                                    ptr_t data,
-                                    fa_signal_t input)
-{
-    signal_t output =  fa_signal_output(0, kStreamOutputOffset + bus, input);
-
-    stream_io_context_t context = new_stream_io_context(bus, function, data);
-
-    fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
-    proc->before  = output_stream_before;
-    proc->after   = output_stream_after;
-    proc->render  = output_stream_render;
-    proc->receive = output_stream_receive;
-    // FIXME pass user data and special buffer
-    proc->data    = context;
-
-    return fa_signal_custom(proc, output);
-}
-
+// // Stream-based I/O
+// 
+// #define kStreamInputOffset  48
+// #define kStreamOutputOffset 60
+// #define kStreamVectorSize   32
+// 
+// /*
+//     Note: It is unclear whether stream I/O should happen on the main processing
+//     thread or another thread. The latter solution would require us to start
+//     up a separate thread here and use a ring buffer internally. We don't do this
+//     here: the user can attach a ring buffer manually instead.
+//  */
+// 
+// 
+// // TODO use this
+// struct stream_io_context {
+//     // double *outputs;
+//     // int     frames;
+//     int     bus;
+//     ptr_t   function;
+//     ptr_t   data;
+// 
+//     int frames;
+//     double output[kStreamVectorSize];
+// };
+// typedef struct stream_io_context *stream_io_context_t;
+// 
+// stream_io_context_t new_stream_io_context(int bus, ptr_t function, ptr_t data)
+// {
+//     stream_io_context_t context = malloc(1);
+//     // TODO
+//     return context;
+// }
+// 
+// 
+// 
+// ptr_t input_stream_before(ptr_t x, fa_signal_state_t *state)
+// {
+//     // Nothing
+//     return x;
+// }
+// 
+// ptr_t input_stream_after(ptr_t x, fa_signal_state_t *state)
+// {
+//     // Nothing
+//     return x;
+// }
+// 
+// ptr_t input_stream_render(ptr_t x, fa_signal_state_t *state)
+// {
+//     stream_io_context_t context = x;
+//     int bus = context->bus;
+// 
+//     if (state->count % kStreamVectorSize == 0) {
+//         // TODO invoke the callback
+//     }
+// 
+//     double result = 0;
+//     state->inputs[kStreamInputOffset + bus] = result;
+//     return x;
+// }
+// 
+// ptr_t input_stream_receive(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
+// {
+//     // Nothing
+//     return x;
+// }
+// 
+// fa_signal_t fa_signal_input_stream(int bus,
+//                                    fa_signal_stream_input_callback_t function,
+//                                    ptr_t data)
+// {
+//     signal_t input = fa_signal_input(kStreamInputOffset + bus);
+// 
+//     stream_io_context_t context = new_stream_io_context(bus, function, data);
+// 
+//     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
+//     proc->before  = input_stream_before;
+//     proc->after   = input_stream_after;
+//     proc->render  = input_stream_render;
+//     proc->receive = input_stream_receive;
+//     // FIXME pass user data and special buffer
+//     proc->data    = context;
+// 
+//     return fa_signal_custom(proc, input);
+// }
+// 
+// 
+// 
+// 
+// ptr_t output_stream_before(ptr_t x, fa_signal_state_t *state)
+// {
+//     // Nothing
+//     return x;
+// }
+// 
+// ptr_t output_stream_after(ptr_t x, fa_signal_state_t *state)
+// {
+//     // Nothing
+//     return x;
+// }
+// 
+// ptr_t output_stream_render(ptr_t x, fa_signal_state_t *state)
+// {
+//     stream_io_context_t context = x;
+//     int bus = context->bus;
+// 
+//     double value = state->inputs[kStreamOutputOffset + bus];
+//     mark_used(value);
+// 
+//     if (state->count % kStreamVectorSize == 0) {
+//         // TODO invoke the callback
+//     }
+// 
+//     return x;
+// }
+// 
+// ptr_t output_stream_receive(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
+// {
+//     // Nothing
+//     return x;
+// }
+// 
+// fa_signal_t fa_signal_output_stream(int bus,
+//                                     fa_signal_stream_output_callback_t function,
+//                                     ptr_t data,
+//                                     fa_signal_t input)
+// {
+//     signal_t output =  fa_signal_output(0, kStreamOutputOffset + bus, input);
+// 
+//     stream_io_context_t context = new_stream_io_context(bus, function, data);
+// 
+//     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
+//     proc->before  = output_stream_before;
+//     proc->after   = output_stream_after;
+//     proc->render  = output_stream_render;
+//     proc->receive = output_stream_receive;
+//     // FIXME pass user data and special buffer
+//     proc->data    = context;
+// 
+//     return fa_signal_custom(proc, output);
+// }
+//               
 
 
 // --------------------------------------------------------------------------------

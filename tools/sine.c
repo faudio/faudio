@@ -18,7 +18,11 @@ list_t just(ptr_t x, list_t xs)
 
 void helper_function()
 {
-    signal_t a = fa_multiply(fa_signal_sin(fa_signal_line(440)), constant(0.1));
+    signal_t b = fa_multiply(fa_signal_sin(fa_signal_line(220)), constant(0.1));
+    signal_t c = fa_multiply(fa_signal_sin(fa_signal_line(330)), constant(0.1));
+    signal_t a = fa_add(b, c);
+    // signal_t a = fa_multiply(fa_signal_random(), constant(0.1));
+
     {
         fa_audio_session_t s = fa_audio_begin_session();
         fa_audio_device_t i  = fa_audio_default_input(s);
@@ -31,10 +35,11 @@ void helper_function()
             fa_error_log(st, NULL);
         }
 
-        while (1) {
-            fa_thread_sleep(1000 * 30);
-        }
+        // while (1) {
+            fa_thread_sleep(4*1000);
+        // }
 
+        fa_audio_close_stream(st);
         fa_audio_end_session(s);
     }
 }
