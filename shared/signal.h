@@ -16,7 +16,7 @@ struct _state_base_t {
 #define kDefVectorSize 128
 
 #define kDefSampleRate 44100
-
+#define kAudioSchedulerInterval 10
 
 typedef struct _state_t *state_t;
 typedef struct _state_base_t *state_base_t;

@@ -612,11 +612,14 @@ ptr_t audio_control_thread(ptr_t x)
             break;
 
         fa_with_lock(stream->controller.mutex) {
+            time_t now = fa_clock_time(fa_audio_stream_clock(stream));
             run_actions(stream->controls, 
-                        fa_clock_time(fa_audio_stream_clock(stream)), 
+                        now, 
                         forward_action_to_audio_thread, 
                         stream
                         );
+            fa_destroy(now);
+            fa_thread_sleep(kAudioSchedulerInterval);
         }
     }
     inform(string("Audio control thread finished"));

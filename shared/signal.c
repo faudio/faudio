@@ -973,7 +973,8 @@ void run_and_resched_action(action_t action, time_t now, list_t* resched, unary_
     Run all due actions in the given queue.
     @param
         controls    A priority queue of (time, action) values.
-        state       State on which to run the actions (used for timing and passing to run_action).
+        time        Due time (not destroyed).
+        function    Function to which due actions are passed.
  */
 void run_actions(priority_queue_t controls, fa_time_t now, unary_t function, ptr_t data)
 {
