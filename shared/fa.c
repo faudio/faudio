@@ -97,6 +97,7 @@ void fa_fa_terminate()
 
 void *fa_malloc(size_t size)
 {
+    // printf("Alloc!\n");
     gBytesAlloc += size;
     return malloc(size);
 }

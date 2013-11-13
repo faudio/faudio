@@ -970,7 +970,9 @@ void run_actions(priority_queue_t controls, state_t state)
 
         if (timeSamp <= state->count) {
             list_t resched = empty();
+            
             run_action(action, state, now, &resched); // TODO
+            
             fa_for_each(x, resched) {
                 fa_priority_queue_insert(x, controls);
             }
