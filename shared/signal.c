@@ -908,7 +908,7 @@ void run_custom_procs(int when, state_t state)
         action  Action to run.
         state   State to run action on (for control updates and custom processor messages).
  */
-void run_simple_action(state_t state, action_t action)
+ptr_t run_simple_action(state_t state, action_t action)
 {
     assert(!fa_action_is_compound(action) && "Not a simple action");
     
@@ -928,6 +928,7 @@ void run_simple_action(state_t state, action_t action)
             proc->receive(proc->data, name, value);
         }
     }
+    return NULL;
 }
 
 /**
@@ -938,7 +939,7 @@ void run_simple_action(state_t state, action_t action)
         resched A list to which a (time, action) values is pushed for each rescheduled action.
         state   State to run action on.
  */
-void run_and_resched_action(action_t action, time_t now, list_t* resched, state_t state)
+void run_and_resched_action(action_t action, time_t now, list_t* resched, unary_t function, ptr_t data)
 {
     if(fa_action_is_compound(action)) {
 
@@ -952,11 +953,12 @@ void run_and_resched_action(action_t action, time_t now, list_t* resched, state_
             fa_push_list(pair_left(future, rest), *resched);
         }
         if (first) {         
-            run_and_resched_action(first, now, resched, state);
+            run_and_resched_action(first, now, resched, function, data);
         }
         return;
-    }
-    run_simple_action(state, action);
+    }                         
+    function(data, action);    
+    // run_simple_action(state, action);
 }
 
 /**
@@ -965,7 +967,7 @@ void run_and_resched_action(action_t action, time_t now, list_t* resched, state_
         controls    A priority queue of (time, action) values.
         state       State on which to run the actions (used for timing and passing to run_action).
  */
-void run_actions(priority_queue_t controls, fa_time_t now, state_t state)
+void run_actions(priority_queue_t controls, fa_time_t now, unary_t function, ptr_t data)
 {
     while (1) {
         pair_t x = fa_priority_queue_peek(controls);
@@ -980,7 +982,7 @@ void run_actions(priority_queue_t controls, fa_time_t now, state_t state)
         if (fa_less_than_equal(time, now)) {
             list_t resched = empty();
             
-            run_and_resched_action(action, now, &resched, state); // TODO
+            run_and_resched_action(action, now, &resched, function, data); // TODO
             
             fa_for_each(x, resched) {
                 fa_priority_queue_insert(x, controls);
@@ -1141,6 +1143,10 @@ void step_vector(signal_t signal, state_t state, int count, double* out)
     assert(false);
 }
 
+ptr_t run_simple_action_(ptr_t x, ptr_t a)
+{
+    return run_simple_action(x, a);
+}
 void fa_signal_run(int n, list_t controls, signal_t a, double *output)
 {
     priority_queue_t controls2 = priority_queue();
@@ -1161,7 +1167,7 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
 
     for (int i = 0; i < n; ++ i) {
         time_t now = fa_milliseconds(((double) state->count / 44100.0) * 1000.0);
-        run_actions(controls2, now, state);
+        run_actions(controls2, now, run_simple_action_, state);
         
         run_custom_procs(1, state);
 

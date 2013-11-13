@@ -625,6 +625,10 @@ void after_processing(stream_t stream)
     delete_state(stream->state);
 }
 
+ptr_t run_simple_action2(ptr_t x, ptr_t a)
+{
+    return run_simple_action(x, a);
+}
 void during_processing(stream_t stream, unsigned count, float **input, float **output)
 {
     ptr_t val;
@@ -633,7 +637,7 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
         fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
     } 
     
-    run_actions(stream->controls, fa_clock_time(fa_audio_stream_clock(stream)), stream->state);
+    run_actions(stream->controls, fa_clock_time(fa_audio_stream_clock(stream)), run_simple_action2, stream->state);
 
     // pull out X of in_controls
     // what is in_controls? either simple actions to execute or callbacks
