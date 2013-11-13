@@ -1,6 +1,8 @@
 
+#include <fa/priority_queue.h>
+
 // TODO formalize better
-struct _state_t {
+struct _state_base_t {
     double *inputs;
     void   *_;
     int     count;
@@ -8,12 +10,17 @@ struct _state_t {
     // ...
 };
 
+#define kVectorMode false
+
 #define kMaxVectorSize 128
 #define kDefVectorSize 128
+
 #define kDefSampleRate 44100
 
 
 typedef struct _state_t *state_t;
+typedef struct _state_base_t *state_base_t;
+
 list_t fa_signal_get_procs(fa_signal_t signal2);
 state_t new_state();
 void add_custom_proc(fa_signal_custom_processor_t* proc, state_t state);

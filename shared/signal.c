@@ -16,6 +16,8 @@
 #include <fa/util.h>
 #include <fa/midi/message.h>
 
+#include "signal.h"
+
 typedef fa_signal_custom_processor_t   *custom_proc_t;
 typedef fa_signal_unary_signal_t        fixpoint_t;
 typedef fa_signal_unary_double_t        dunary_t;
@@ -196,7 +198,10 @@ fa_signal_t fa_signal_lift2(fa_string_t n,
 
 fa_signal_t fa_signal_loop(fa_signal_unary_signal_t function, fa_ptr_t data)
 {
-    assert(false && "Loop not supported");
+    if (kVectorMode) {
+        warn(string("Loop not supported in vector mode"));
+        assert(false && "Loop not supported in vector mode");
+    }
 
     signal_t signal = new_signal(loop_signal);
     loop_get(signal, function)  = function;
@@ -207,7 +212,10 @@ fa_signal_t fa_signal_loop(fa_signal_unary_signal_t function, fa_ptr_t data)
 
 fa_signal_t fa_signal_delay(int n, fa_signal_t a)
 {
-    assert(false && "Delay not supported");
+    if (kVectorMode) {
+        warn(string("Delay not supported in vector mode"));
+        assert(false && "Delay not supported in vector mode");
+    }
     
     signal_t signal = new_signal(delay_signal);
     delay_get(signal, n)  = n;
@@ -680,9 +688,8 @@ list_t fa_signal_get_procs(fa_signal_t signal2)
 // Running
 
 #define kMaxCustomProcs 10
-#define kMaxVectorSize 128 // FIXME consolidate with the one in signa.h
 
-typedef struct {
+struct _state_t {
     double     *inputs;                 // Current input values (TODO should not be called inputs as they are also outputs...)
     double     *buses;                  // Current and future bus values
 
@@ -692,8 +699,8 @@ typedef struct {
     int           custom_proc_count;
     custom_proc_t custom_procs[kMaxCustomProcs];      // Array of custom processors
 
-}  _state_t;
-typedef _state_t *state_t;
+};
+// typedef _state_t *state_t;
 
 
 double  kRate           = 44100;
@@ -704,7 +711,7 @@ long    kMaxDelay       = (44100 * 5);
 state_t new_state()
 {
     srand(time(NULL));  // TODO localize
-    state_t state = fa_malloc(sizeof(_state_t));
+    state_t state = fa_new_struct(_state_t);
 
     state->inputs   = fa_malloc(kMaxInputs * kMaxVectorSize * sizeof(double));
     state->buses    = fa_malloc(kMaxBuses * kMaxDelay   * sizeof(double));
@@ -928,6 +935,7 @@ ptr_t run_simple_action(state_t state, action_t action)
             proc->receive(proc->data, name, value);
         }
     }
+    // TODO clean up action
     return NULL;
 }
 

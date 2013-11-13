@@ -13,7 +13,7 @@
 #include <fa/util.h>
 
 #include "au.h"
-#define kMaxVectorSize 128 // FIXME consolidate
+#include "../shared/signal.h"
 
 ptr_t before_(ptr_t x, fa_signal_state_t *state)
 {
@@ -43,9 +43,7 @@ ptr_t render_(ptr_t x, fa_signal_state_t *state)
 {
     au_context_t context = x;
 
-    bool vector_mode = true;
-
-    if (!vector_mode) {
+    if (!kVectorMode) {
         if (state->count % kAUVectorSize == 0) {
             au_render(context, state->count, NULL);
         }

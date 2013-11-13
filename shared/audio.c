@@ -417,14 +417,14 @@ void audio_inform_opening(device_t input, ptr_t proc, device_t output)
     inform(string("Opening real-time audio stream"));
     inform(string_dappend(string("    Input:  "), input ? fa_string_show(input) : string("-")));
     if (input) {
-        inform(fa_string_format_integral("defaultLowInputLatency: %d\n", Pa_GetDeviceInfo(input->index)->defaultLowInputLatency));
-        inform(fa_string_format_integral("defaultHighInputLatency: %d\n", Pa_GetDeviceInfo(input->index)->defaultHighInputLatency));
+        inform(fa_string_format_integral("defaultLowInputLatency: %d", Pa_GetDeviceInfo(input->index)->defaultLowInputLatency));
+        inform(fa_string_format_integral("defaultHighInputLatency: %d", Pa_GetDeviceInfo(input->index)->defaultHighInputLatency));
     }
 
     inform(string_dappend(string("    Output: "), output ? fa_string_show(output) : string("-")));
     if (output) {
-        inform(fa_string_format_integral("defaultLowOutputLatency: %d\n", Pa_GetDeviceInfo(output->index)->defaultLowOutputLatency));
-        inform(fa_string_format_integral("defaultHighOutputLatency: %d\n", Pa_GetDeviceInfo(output->index)->defaultHighOutputLatency));
+        inform(fa_string_format_integral("defaultLowOutputLatency: %d", Pa_GetDeviceInfo(output->index)->defaultLowOutputLatency));
+        inform(fa_string_format_integral("defaultHighOutputLatency: %d", Pa_GetDeviceInfo(output->index)->defaultHighOutputLatency));
     }
 }
 
@@ -664,53 +664,58 @@ ptr_t run_simple_action2(ptr_t x, ptr_t a)
 }
 void during_processing(stream_t stream, unsigned count, float **input, float **output)
 {
+    state_base_t state = (state_base_t) stream->state;
     {
         ptr_t action;
         while ((action = fa_atomic_queue_read(stream->in_controls))) {
             run_simple_action2(stream->state, action);
         } 
     }
+
+    if (!kVectorMode)
+    {
+        for (int i = 0; i < count; ++ i) {
+            run_custom_procs(1, stream->state);
     
-    // for (int i = 0; i < count; ++ i) {
-    //     run_custom_procs(1, stream->state);
-    // 
-    //     for (int c = 0; c < stream->signal_count; ++c) {
-    //         stream->state->VALS[(c + kInputOffset) * kMaxVectorSize] = input[c][i];
-    //     }
-    // 
-    //     step(stream->MERGED_SIGNAL, stream->state);
-    // 
-    //     for (int c = 0; c < stream->signal_count; ++c) {
-    //         output[c][i] = stream->state->VALS[(c + kOutputOffset) * kMaxVectorSize];
-    //     }
-    // 
-    //     inc_state1(stream->state);
-    // }   
+            for (int c = 0; c < stream->signal_count; ++c) {
+                state->VALS[(c + kInputOffset) * kMaxVectorSize] = input[c][i];
+            }
     
-    assert((count == kMaxVectorSize) && "Wrong vector size");
-    assert((stream->signal_count == 2) && "Wrong number of channels");
+            step(stream->MERGED_SIGNAL, stream->state);
     
-    for (int i = 0; i < count; ++ i) {
-        for (int c = 0; c < stream->signal_count; ++c) {
-            stream->state->VALS[(c + kInputOffset) * kMaxVectorSize + i] = input[c][i];
-        }
+            for (int c = 0; c < stream->signal_count; ++c) {
+                output[c][i] = state->VALS[(c + kOutputOffset) * kMaxVectorSize];
+            }
+    
+            inc_state1(stream->state);
+        }             
     }
-    
-    double out[count];
-    run_custom_procs(1, stream->state);
-    step_vector(stream->MERGED_SIGNAL, stream->state, count, out);
-    
-    // TODO
-    for (int i = 0; i < count; ++ i) {
-        inc_state1(stream->state);
-    }
-    
-    for (int i = 0; i < count; ++ i) {
-        for (int c = 0; c < stream->signal_count; ++c) {
-            output[c][i] = stream->state->VALS[(c + kOutputOffset) * kMaxVectorSize + i];
+    else
+    {
+        assert((count == kMaxVectorSize) && "Wrong vector size");
+        assert((stream->signal_count == 2) && "Wrong number of channels");
+
+        for (int i = 0; i < count; ++ i) {
+            for (int c = 0; c < stream->signal_count; ++c) {
+                state->VALS[(c + kInputOffset) * kMaxVectorSize + i] = input[c][i];
+            }
         }
-    }       
-                    
+
+        double out[count];
+        run_custom_procs(1, stream->state);
+        step_vector(stream->MERGED_SIGNAL, stream->state, count, out);
+
+        // TODO
+        for (int i = 0; i < count; ++ i) {
+            inc_state1(stream->state);
+        }
+
+        for (int i = 0; i < count; ++ i) {
+            for (int c = 0; c < stream->signal_count; ++c) {
+                output[c][i] = state->VALS[(c + kOutputOffset) * kMaxVectorSize + i];
+            }
+        }       
+    }                    
     stream->sample_count += count; // TODO atomic incr
 }
 
@@ -845,8 +850,10 @@ void audio_stream_destroy(ptr_t a)
 int64_t audio_stream_milliseconds(ptr_t a)
 {
     stream_t stream = (stream_t) a;
-    double c = (double) stream->state->count;
-    double r = (double) stream->state->rate;
+    state_base_t state = (state_base_t) stream->state;
+
+    double c = (double) state->count;
+    double r = (double) state->rate;
     return ((int64_t)(c / r * 1000));
 }
 
