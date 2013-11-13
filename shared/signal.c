@@ -901,34 +901,16 @@ void run_custom_procs(int when, state_t state)
 }
 
 /**
-    Run a single action.
+    Run a simple action.
     
     @param 
         action  Action to run.
         state   State to run action on (for control updates and custom processor messages).
-        now     Current time (for rescheduling).
-        resched A list to which a (time, action) values is pushed for each rescheduled action.
  */
-void run_action(action_t action, state_t state, time_t now, list_t* resched)
+void run_simple_action(action_t action, state_t state)
 {
-    if(fa_action_is_compound(action)) {
-
-        action_t first = fa_action_compound_first(action);
-        action_t rest = fa_action_compound_rest(action);
-
-        if (rest) {
-            // Reschedule
-            time_t   interv = fa_action_compound_interval(action);
-            time_t   future = fa_add(now, interv);
-            fa_push_list(pair_left(future, rest), *resched);
-        }
-        if (first) {         
-            // Note: now is not used in this case, but pass it anyway
-            run_action(first, state, now, resched);
-        }
-        return;
-    }
-
+    assert(!fa_action_is_compound(action) && "Not a simple action");
+    
     if (fa_action_is_set(action)) {
         int ch = fa_action_set_channel(action);
         double v = fa_action_set_value(action);
@@ -945,6 +927,35 @@ void run_action(action_t action, state_t state, time_t now, list_t* resched)
             proc->receive(proc->data, name, value);
         }
     }
+}
+
+/**
+    Run a single or compound action, pushing to the given rescheduling list of needed.
+    @param
+        action  Action to run.
+        now     Current time (for rescheduling).
+        resched A list to which a (time, action) values is pushed for each rescheduled action.
+        state   State to run action on.
+ */
+void run_and_resched_action(action_t action, time_t now, list_t* resched, state_t state)
+{
+    if(fa_action_is_compound(action)) {
+
+        action_t first = fa_action_compound_first(action);
+        action_t rest = fa_action_compound_rest(action);
+
+        if (rest) {
+            // Reschedule
+            time_t   interv = fa_action_compound_interval(action);
+            time_t   future = fa_add(now, interv);
+            fa_push_list(pair_left(future, rest), *resched);
+        }
+        if (first) {         
+            run_and_resched_action(first, now, resched, state);
+        }
+        return;
+    }
+    run_simple_action(action, state);
 }
 
 /**
@@ -971,7 +982,7 @@ void run_actions(priority_queue_t controls, state_t state)
         if (timeSamp <= state->count) {
             list_t resched = empty();
             
-            run_action(action, state, now, &resched); // TODO
+            run_and_resched_action(action, now, &resched, state); // TODO
             
             fa_for_each(x, resched) {
                 fa_priority_queue_insert(x, controls);
