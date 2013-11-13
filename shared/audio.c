@@ -583,11 +583,9 @@ void fa_audio_schedule(fa_time_t time,
                        fa_audio_stream_t stream)
 {
     pair_left_t pair = pair_left(time, action);
-    fa_atomic_queue_write(stream->in_controls, pair);
-
-    // TODO
-    // with scheduler_lock
-    //      put pair in priority queue
+    fa_with_lock(stream->controller.mutex) {     
+        fa_priority_queue_insert(pair, stream->controls);
+    }
 }
 
 void fa_audio_schedule_relative(fa_time_t        time,
@@ -599,6 +597,11 @@ void fa_audio_schedule_relative(fa_time_t        time,
 }
 
 
+ptr_t forward_action_to_audio_thread(ptr_t x, ptr_t action) {
+    stream_t stream = x;
+    fa_atomic_queue_write(stream->in_controls, action);
+    return NULL;
+}
 ptr_t audio_control_thread(ptr_t x)
 {                                
     stream_t stream = x;
@@ -607,9 +610,14 @@ ptr_t audio_control_thread(ptr_t x)
     while (true) {                
         if (stream->controller.stop) 
             break;
-        // check for interruption
-        // with scheduler_lock
-        //      run_actions(stream->controls, fa_clock_time(fa_audio_stream_clock(stream)), callback, ptr)
+
+        fa_with_lock(stream->controller.mutex) {
+            run_actions(stream->controls, 
+                        fa_clock_time(fa_audio_stream_clock(stream)), 
+                        forward_action_to_audio_thread, 
+                        stream
+                        );
+        }
     }
     inform(string("Audio control thread finished"));
     return NULL;
@@ -656,16 +664,12 @@ ptr_t run_simple_action2(ptr_t x, ptr_t a)
 }
 void during_processing(stream_t stream, unsigned count, float **input, float **output)
 {
-    ptr_t val;
-
-    while ((val = fa_atomic_queue_read(stream->in_controls))) {
-        fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
-    } 
-    
-    run_actions(stream->controls, fa_clock_time(fa_audio_stream_clock(stream)), run_simple_action2, stream->state);
-
-    // pull out X of in_controls
-    // what is in_controls? either simple actions to execute or callbacks
+    {
+        ptr_t action;
+        while ((action = fa_atomic_queue_read(stream->in_controls))) {
+            run_simple_action2(stream->state, action);
+        } 
+    }
     
     // for (int i = 0; i < count; ++ i) {
     //     run_custom_procs(1, stream->state);
