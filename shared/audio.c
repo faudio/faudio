@@ -82,6 +82,12 @@ struct _fa_audio_stream_t {
     long                max_buffer_size;
     int32_t             sample_count;       // Monotonically increasing sample count
     PaStreamCallbackFlags pa_flags;         // Potential error messages from PortAudio
+
+    struct {
+        thread_t        thread;
+        mutex_t         mutex;
+        bool            stop;
+    }                   controller;
     
     atomic_queue_t      in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
     priority_queue_t    controls;           // Scheduled controls (Time, (Channel, Ptr))
@@ -506,7 +512,12 @@ stream_t fa_audio_open_stream(device_t input,
             return (stream_t) audio_device_error_with(string("Could not start stream"), status);
         }
     }
-
+    {
+        ptr_t audio_control_thread(ptr_t data);
+        stream->controller.thread = fa_thread_create(audio_control_thread, stream);
+        stream->controller.mutex  = fa_thread_create_mutex();
+        stream->controller.stop   = false;
+    }
     return stream;
 }
 
@@ -516,6 +527,13 @@ void fa_audio_close_stream(stream_t stream)
 
     // Note that after_processing will be called from native_finished_callback
     Pa_CloseStream(stream->native);
+    {
+        stream->controller.stop = true;
+        fa_thread_join(stream->controller.thread);
+        fa_thread_destroy_mutex(stream->controller.mutex);
+    }
+
+
     delete_stream(stream);
 }
 
@@ -581,13 +599,20 @@ void fa_audio_schedule_relative(fa_time_t        time,
 }
 
 
-ptr_t audio_control_thread(ptr_t data)
-{
-    while (true) {
+ptr_t audio_control_thread(ptr_t x)
+{                                
+    stream_t stream = x;
+    
+    inform(string("Audio control thread active"));
+    while (true) {                
+        if (stream->controller.stop) 
+            break;
         // check for interruption
         // with scheduler_lock
         //      run_actions(stream->controls, fa_clock_time(fa_audio_stream_clock(stream)), callback, ptr)
     }
+    inform(string("Audio control thread finished"));
+    return NULL;
 }
 
 // --------------------------------------------------------------------------------
