@@ -26,16 +26,7 @@ inline static fa_time_t new_time(ratio_t value)
 
     fa_time_t t     = fa_new(time);
     t->impl         = &time_impl;
-    t->value        = fa_copy(value);
-    
-    /*
-        TODO 
-        
-        Should not copy, but Lisp wants it (see also below)
-     
-        This must be wrong? Surely we could copy the parameter
-        passed to time_create instead of copying here 
-    */
+    t->value        = value;
     return t;
 }
 
@@ -50,9 +41,7 @@ inline static void delete_time(fa_time_t time)
 fa_time_t fa_time_create(int32_t days, int32_t hours, int32_t minutes, fa_ratio_t seconds)
 {
     int  whole = days * (60 * 60 * 24) + hours * (60 * 60) + minutes * 60;
-
-    // TODO should destructive add, but Lisp doesn't like it
-    return new_time(fa_add(ratio(whole, 1), seconds));
+    return new_time(fa_dadd(ratio(whole, 1), seconds));
 }
 
 fa_time_t fa_time_copy(fa_time_t time)

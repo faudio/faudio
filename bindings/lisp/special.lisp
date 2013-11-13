@@ -51,7 +51,10 @@
 
 (defmethod free-translated-object (x (type ratio-type) a)
   (declare (ignore a))
-  (ratio-destroy# x))
+  ; FIXME makes (time...) etc fail when object is printied (and otherwise?)
+  ; See #112 
+  ; (ratio-destroy# x)
+  )
 
 
 ; ---------------------------------------------------------------------------------------------------
