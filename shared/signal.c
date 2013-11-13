@@ -12,6 +12,7 @@
 #include <fa/priority_queue.h>
 #include <fa/action.h>
 #include <fa/buffer.h>
+#include <fa/clock.h>
 #include <fa/util.h>
 #include <fa/midi/message.h>
 
@@ -964,7 +965,7 @@ void run_and_resched_action(action_t action, time_t now, list_t* resched, state_
         controls    A priority queue of (time, action) values.
         state       State on which to run the actions (used for timing and passing to run_action).
  */
-void run_actions(priority_queue_t controls, state_t state)
+void run_actions(priority_queue_t controls, fa_time_t now, state_t state)
 {
     while (1) {
         pair_t x = fa_priority_queue_peek(controls);
@@ -976,10 +977,7 @@ void run_actions(priority_queue_t controls, state_t state)
         time_t   time        = fa_pair_first(x);
         action_t action      = fa_pair_second(x);
 
-        int timeSamp = (((double) fa_time_to_milliseconds(time)) / 1000.0) * 44100;   // TODO
-        time_t now = fa_milliseconds(((double) state->count / 44100.0) * 1000.0); // Needed for rescheduling
-
-        if (timeSamp <= state->count) {
+        if (fa_less_than_equal(time, now)) {
             list_t resched = empty();
             
             run_and_resched_action(action, now, &resched, state); // TODO
@@ -1162,7 +1160,9 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
     run_custom_procs(0, state);
 
     for (int i = 0; i < n; ++ i) {
-        run_actions(controls2, state);
+        time_t now = fa_milliseconds(((double) state->count / 44100.0) * 1000.0);
+        run_actions(controls2, now, state);
+        
         run_custom_procs(1, state);
 
         output[i] = step(a2, state);

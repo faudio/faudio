@@ -586,7 +586,7 @@ ptr_t audio_control_thread(ptr_t data)
     while (true) {
         // check for interruption
         // with scheduler_lock
-        //      run_actions(stream->controls, stream->clock ?, callback, ptr)
+        //      run_actions(stream->controls, fa_clock_time(fa_audio_stream_clock(stream)), callback, ptr)
     }
 }
 
@@ -633,7 +633,7 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
         fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
     } 
     
-    run_actions(stream->controls, stream->state);
+    run_actions(stream->controls, fa_clock_time(fa_audio_stream_clock(stream)), stream->state);
 
     // pull out X of in_controls
     // what is in_controls? either simple actions to execute or callbacks
