@@ -47,7 +47,7 @@ void run_dls()
                 hms(0, 0, 0),
                 chord,
                 st);
-            fa_thread_sleep(200 * 1);
+            fa_thread_sleep(50 * 1);
         }
 
         fa_destroy(st);
