@@ -47,7 +47,7 @@ void run_dls()
                 hms(0, 0, 0),
                 chord,
                 st);
-            fa_thread_sleep(500 * 1);
+            fa_thread_sleep(200 * 1);
         }
 
         fa_destroy(st);
@@ -76,6 +76,7 @@ void run_dls()
 
 int main(int argc, char const *argv[])
 {
+    fa_fa_set_log_std();
     fa_fa_initialize();
 
     run_dls();
