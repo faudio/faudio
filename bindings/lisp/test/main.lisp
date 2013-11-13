@@ -829,6 +829,33 @@
 
 
 
+(let* (
+       (note1 (action-send "" (midi #x99 56 127))) ; midi channel 10
+       (note2 (action-send "" (midi #x99 35 127))) ; midi channel 10
+       (tamb (action-send "" (midi #x99 54 127))) ; midi channel 10
+       (beat (action-many (cl:list
+                           (pair-create tamb (milliseconds 0))
+                           (pair-create note1 (milliseconds 100))
+                           (pair-create note1 (milliseconds 100))
+                           (pair-create note2 (milliseconds 100))
+                           (pair-create note1 (milliseconds 100))
+                           (pair-create note1 (milliseconds 100))
+                           (pair-create tamb (milliseconds 0))
+                           (pair-create note2 (milliseconds 100))
+                           (pair-create note1 (milliseconds 100))
+                           (pair-create tamb (milliseconds 0))
+                           (pair-create note1 (milliseconds 100))
+                           (pair-create note2 (milliseconds 100))
+                           ))))
+  (signal-run-default 
+   (lambda (inputs) 
+     (mapcar 
+      (lambda (x) (* 0.5 x)) 
+      (signal-dls*)))
+   :stream-callback
+   (lambda (s) 
+     (audio-schedule (milliseconds 0) (action-repeat (seconds 2) beat) s))))
+
 
 ; Misc
 
