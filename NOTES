@@ -1,4 +1,12 @@
 
+# v2.6.0
+
+- Adds experimental support for vectorized DSP
+
+- Fixes audio quality problems related to bad memory allocation
+
+- Fixes memory leaks related to `Time` module
+
 # v2.5.1
 
 - Fixes compound scheduling issues
