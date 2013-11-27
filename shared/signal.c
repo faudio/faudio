@@ -940,7 +940,6 @@ ptr_t run_simple_action(state_t state, action_t action)
 }
 
 // TODO move
-#define fa_max(X,Y) ((X) < (Y) ? (Y) : (X))
 static long long gMaxDiff = 0;
 
 /**
