@@ -116,7 +116,7 @@ fa_action_t fa_action_compound(fa_unary_t function, ptr_t data)
     action_t action = new_action(compound_action);
     compound_get(action, function)  = function;
     compound_get(action, data)      = data;
-    return action;    
+    return action;
 }
 
 
@@ -208,6 +208,7 @@ fa_pair_t compound_render(fa_action_t action)
 fa_action_t fa_action_compound_first(fa_action_t action)
 {
     fa_pair_t maybeActions = compound_render(action);
+
     if (maybeActions) {
         return fa_pair_first(maybeActions);
     } else {
@@ -218,6 +219,7 @@ fa_action_t fa_action_compound_first(fa_action_t action)
 fa_time_t fa_action_compound_interval(fa_action_t action)
 {
     fa_pair_t maybeActions = compound_render(action);
+
     if (maybeActions) {
         return fa_pair_first(fa_pair_second(maybeActions));
     } else {
@@ -228,6 +230,7 @@ fa_time_t fa_action_compound_interval(fa_action_t action)
 fa_action_t fa_action_compound_rest(fa_action_t action)
 {
     fa_pair_t maybeActions = compound_render(action);
+
     if (maybeActions) {
         return fa_pair_second(fa_pair_second(maybeActions));
     } else {
@@ -241,7 +244,7 @@ fa_action_t fa_action_repeat(time_t interval, fa_action_t action);
 fa_action_t fa_action_many(list_t timeActions);
 
 static inline ptr_t _null(ptr_t data, ptr_t compound)
-{          
+{
     return NULL;
 }
 
@@ -268,14 +271,14 @@ fa_action_t fa_action_repeat(time_t interval, fa_action_t simple)
 
 static inline ptr_t _many(ptr_t data, ptr_t compound)
 {
-    list_t timeActions = data;                      
+    list_t timeActions = data;
 
     if (fa_list_is_empty(timeActions)) {
         return NULL;
     } else {
         action_t first    = fa_pair_first(fa_list_head(timeActions));
         time_t   interval = fa_pair_second(fa_list_head(timeActions));
-        // TODO clean up pair                    
+        // TODO clean up pair
         action_t rest = fa_action_many(fa_list_tail(timeActions));
         return pair(first, pair(interval, rest));
     }
@@ -288,15 +291,15 @@ fa_action_t fa_action_many(list_t timeActions)
 }
 
 static inline ptr_t _while(ptr_t data, ptr_t compound)
-{          
+{
     pair_t predAction = data;
     pair_t      predClosure     = fa_pair_first(predAction);
     action_t    action          = fa_pair_second(predAction);
 
     pred_t pred_function = fa_pair_first(predClosure);
     ptr_t  pred_data     = fa_pair_second(predClosure);
-    
-    if (pred_function(pred_data, NULL)) {                            
+
+    if (pred_function(pred_data, NULL)) {
         // Have to fake a time here...
         // FIXME this does not seem right
         // Surely the underlying action (if it is compound should have its interval (and its tail) propagated
@@ -325,9 +328,9 @@ fa_action_t fa_action_while(pred_t pred, ptr_t ptr, fa_action_t action)
         resched A list to which a (time, action) values is pushed for each rescheduled action.
         state   State to run action on.
  */
-void run_and_resched_action(action_t action, time_t time, time_t now, list_t* resched, unary_t function, ptr_t data)
+void run_and_resched_action(action_t action, time_t time, time_t now, list_t *resched, unary_t function, ptr_t data)
 {
-    if(fa_action_is_compound(action)) {
+    if (fa_action_is_compound(action)) {
 
         action_t first  = fa_action_compound_first(action);
         action_t rest   = fa_action_compound_rest(action);
@@ -336,6 +339,7 @@ void run_and_resched_action(action_t action, time_t time, time_t now, list_t* re
         if (first) {
             run_and_resched_action(first, time, now, resched, function, data);
         }
+
         if (rest) {
             time_t   future = fa_add(time, interv);
 
@@ -347,11 +351,12 @@ void run_and_resched_action(action_t action, time_t time, time_t now, list_t* re
                 fa_push_list(pair_left(future, rest), *resched);
             }
         }
+
         return;
     } else {
         fa_print("-------------------------------------------------\n", NULL);
         fa_print("Forwarding:     %s\n", action);
-        
+
         // long long diff = fa_time_to_milliseconds(now) - fa_time_to_milliseconds(time);
         // gMaxDiff = fa_max(gMaxDiff, diff);
         // printf("Time diff:      %lld\n", diff);
@@ -388,9 +393,9 @@ void run_actions(priority_queue_t controls, fa_time_t now, unary_t function, ptr
             fa_priority_queue_pop(controls);
 
             list_t resched = empty();
-            
+
             run_and_resched_action(action, time, now, &resched, function, data); // TODO
-            
+
             fa_for_each(x, resched) {
                 fa_priority_queue_insert(x, controls);
             }

@@ -701,7 +701,7 @@ void run_action(action_t action, stream_t stream, time_t now, list_t* resched)
         // string_t name   = fa_action_send_name(action);
         ptr_t value     = fa_action_send_value(action);
 
-        int sc, d1, d2;         
+        int sc, d1, d2;
         fa_midi_message_decons(value, &sc, &d1, &d2);
 
         {
@@ -711,7 +711,7 @@ void run_action(action_t action, stream_t stream, time_t now, list_t* resched)
             packetList.numPackets = 1;
             packetList.packet[0].length = 3;
             packetList.packet[0].timeStamp = 0;
-            
+
             packetList.packet[0].data[0] = sc;
             packetList.packet[0].data[1] = d1;
             packetList.packet[0].data[2] = d2;
@@ -765,7 +765,7 @@ ptr_t send_actions(ptr_t x)
                 fa_priority_queue_insert(x, stream->controls);
             }
             fa_priority_queue_pop(stream->controls);
-            
+
         } else {
             break;
         }
@@ -785,7 +785,7 @@ ptr_t forward_action_to_midi(ptr_t x, ptr_t action)
         // string_t name   = fa_action_send_name(action);
         ptr_t value     = fa_action_send_value(action);
 
-        int sc, d1, d2;         
+        int sc, d1, d2;
         fa_midi_message_decons(value, &sc, &d1, &d2);
 
         {
@@ -795,17 +795,18 @@ ptr_t forward_action_to_midi(ptr_t x, ptr_t action)
             packetList.numPackets = 1;
             packetList.packet[0].length = 3;
             packetList.packet[0].timeStamp = 0;
-            
+
             packetList.packet[0].data[0] = sc;
             packetList.packet[0].data[1] = d1;
             packetList.packet[0].data[2] = d2;
-            MIDIPacketList* packetListPtr = &packetList;
+            MIDIPacketList *packetListPtr = &packetList;
 
             native_error_t result = MIDISend(
                                         stream->native,
                                         stream->device->native,
                                         packetListPtr
                                     );
+
             if (result < 0) {
                 warn(string("Could not send MIDI"));
                 assert(false);
@@ -817,23 +818,25 @@ ptr_t forward_action_to_midi(ptr_t x, ptr_t action)
 }
 
 ptr_t send_actions(ptr_t x)
-{                         
+{
     stream_t stream = x;
 
     ptr_t val;
+
     while ((val = fa_atomic_queue_read(stream->short_controls))) {
         forward_action_to_midi(stream, val);
     }
+
     while ((val = fa_atomic_queue_read(stream->in_controls))) {
         fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
     }
-    
+
     time_t   now    = fa_clock_time(stream->clock);
-    run_actions(stream->controls, 
-                now, 
-                forward_action_to_midi, 
+    run_actions(stream->controls,
+                now,
+                forward_action_to_midi,
                 stream
-                );
+               );
     fa_destroy(now);
 
     return NULL;
@@ -916,9 +919,9 @@ void fa_midi_schedule(fa_time_t        time,
 }
 
 void fa_midi_schedule_relative(fa_time_t        time,
-                              fa_action_t       action,
-                              fa_midi_stream_t  stream)
-{                                        
+                               fa_action_t       action,
+                               fa_midi_stream_t  stream)
+{
     if (fa_equal(time, seconds(0)) && !fa_action_is_compound(action)) {
         fa_atomic_queue_write(stream->short_controls, action);
     } else {

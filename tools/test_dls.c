@@ -34,15 +34,15 @@ void run_dls()
             printf("Scheduling time: %s \n", unstring(fa_string_show(fa_clock_time(cl))));
 
             fa_action_t chord = fa_action_many(list(
-                pair(
-                    fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 64 + ((i % 12) * 3), 90)),
-                    hms (0, 0, 0)
-                    ),
-                pair(
-                    fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 60 + ((i % 12) * 3), 90)),
-                    hms (0, 0, 0)
-                    )            
-            ));
+                                                   pair(
+                                                       fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 64 + ((i % 12) * 3), 90)),
+                                                       hms(0, 0, 0)
+                                                   ),
+                                                   pair(
+                                                       fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 60 + ((i % 12) * 3), 90)),
+                                                       hms(0, 0, 0)
+                                                   )
+                                               ));
             fa_audio_schedule(
                 hms(0, 0, 0),
                 chord,

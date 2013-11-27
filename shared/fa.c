@@ -99,12 +99,14 @@ void fa_fa_terminate()
 
 // --------------------------------------------------------------------------------
 
-void print_malloc_info(size_t ba) {
+void print_malloc_info(size_t ba)
+{
     // printf("Alloc!\n");
     // printf("%ld\n", ba);
 }
-void print_free_info(size_t rc) {
-    // printf("Delloc!\n");   
+void print_free_info(size_t rc)
+{
+    // printf("Delloc!\n");
     // printf("Regions: %ld\n", rc);
 }
 

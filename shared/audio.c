@@ -89,7 +89,7 @@ struct _fa_audio_stream_t {
         mutex_t         mutex;
         bool            stop;
     }                   controller;
-    
+
     atomic_queue_t      in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
     priority_queue_t    controls;           // Scheduled controls (Time, (Channel, Ptr))
 };
@@ -417,12 +417,14 @@ void audio_inform_opening(device_t input, ptr_t proc, device_t output)
 {
     inform(string("Opening real-time audio stream"));
     inform(string_dappend(string("    Input:  "), input ? fa_string_show(input) : string("-")));
+
     if (input) {
         inform(fa_string_format_integral("defaultLowInputLatency: %d", Pa_GetDeviceInfo(input->index)->defaultLowInputLatency));
         inform(fa_string_format_integral("defaultHighInputLatency: %d", Pa_GetDeviceInfo(input->index)->defaultHighInputLatency));
     }
 
     inform(string_dappend(string("    Output: "), output ? fa_string_show(output) : string("-")));
+
     if (output) {
         inform(fa_string_format_integral("defaultLowOutputLatency: %d", Pa_GetDeviceInfo(output->index)->defaultLowOutputLatency));
         inform(fa_string_format_integral("defaultHighOutputLatency: %d", Pa_GetDeviceInfo(output->index)->defaultHighOutputLatency));
@@ -455,7 +457,7 @@ stream_t fa_audio_open_stream(device_t input,
 
     if (proc) {
         all_signals = proc(proc_data, all_inputs);
-    } else {                     
+    } else {
         // TODO check number of channels
         warn(string("Audio.openStream: Assuming stereo output"));
         all_signals = list(fa_signal_constant(0), fa_signal_constant(0));
@@ -584,49 +586,53 @@ void fa_audio_schedule(fa_time_t time,
                        fa_audio_stream_t stream)
 {
     pair_left_t pair = pair_left(time, action);
-    fa_with_lock(stream->controller.mutex) {     
+    fa_with_lock(stream->controller.mutex) {
         fa_priority_queue_insert(pair, stream->controls);
     }
 }
 
 void fa_audio_schedule_relative(fa_time_t         time,
-                               fa_action_t        action,
-                               fa_audio_stream_t  stream)
-{                                        
+                                fa_action_t        action,
+                                fa_audio_stream_t  stream)
+{
     if (fa_equal(time, seconds(0)) && !fa_action_is_compound(action)) {
         fa_atomic_queue_write(stream->in_controls, action);
     } else {
         time_t now = fa_clock_time(fa_audio_stream_clock(stream));
-        fa_audio_schedule(fa_add(now, time), action, stream);        
+        fa_audio_schedule(fa_add(now, time), action, stream);
     }
 }
 
 
-ptr_t forward_action_to_audio_thread(ptr_t x, ptr_t action) {
+ptr_t forward_action_to_audio_thread(ptr_t x, ptr_t action)
+{
     stream_t stream = x;
     fa_atomic_queue_write(stream->in_controls, action);
     return NULL;
 }
 ptr_t audio_control_thread(ptr_t x)
-{                                
+{
     stream_t stream = x;
-    
+
     inform(string("Audio control thread active"));
-    while (true) {                
-        if (stream->controller.stop) 
+
+    while (true) {
+        if (stream->controller.stop) {
             break;
+        }
 
         fa_with_lock(stream->controller.mutex) {
             time_t now = fa_clock_time(fa_audio_stream_clock(stream));
-            run_actions(stream->controls, 
-                        now, 
-                        forward_action_to_audio_thread, 
+            run_actions(stream->controls,
+                        now,
+                        forward_action_to_audio_thread,
                         stream
-                        );
+                       );
             fa_destroy(now);
             // fa_thread_sleep(kAudioSchedulerInterval);
         }
     }
+
     inform(string("Audio control thread finished"));
     return NULL;
 }
@@ -675,31 +681,29 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
     state_base_t state = (state_base_t) stream->state;
     {
         ptr_t action;
+
         while ((action = fa_atomic_queue_read(stream->in_controls))) {
             run_simple_action2(stream->state, action);
-        } 
+        }
     }
 
-    if (!kVectorMode)
-    {
+    if (!kVectorMode) {
         for (int i = 0; i < count; ++ i) {
             run_custom_procs(1, stream->state);
-    
+
             for (int c = 0; c < stream->signal_count; ++c) {
                 state->VALS[(c + kInputOffset) * kMaxVectorSize] = input[c][i];
             }
-    
+
             step(stream->MERGED_SIGNAL, stream->state);
-    
+
             for (int c = 0; c < stream->signal_count; ++c) {
                 output[c][i] = state->VALS[(c + kOutputOffset) * kMaxVectorSize];
             }
-    
+
             inc_state1(stream->state);
-        }             
-    }
-    else
-    {
+        }
+    } else {
         assert((count == kMaxVectorSize) && "Wrong vector size");
         assert((stream->signal_count == 2) && "Wrong number of channels");
 
@@ -722,8 +726,9 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
             for (int c = 0; c < stream->signal_count; ++c) {
                 output[c][i] = state->VALS[(c + kOutputOffset) * kMaxVectorSize + i];
             }
-        }       
-    }                    
+        }
+    }
+
     stream->sample_count += count; // TODO atomic incr
 }
 
@@ -740,7 +745,7 @@ int native_audio_callback(const void                       *input,
     during_processing(data, count, (float **) input, (float **) output);
     stream_t stream = data;
     stream->pa_flags |= flags;
-    
+
     return paContinue;
 }
 
