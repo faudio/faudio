@@ -122,17 +122,17 @@
    ;; find audio devices
    ; (multiple-value-setq (*audio-input-devices* *audio-output-devices*)
        ; (audio-input-and-output-devices *audio-session*))
-  (setf *audio-input-devices* (cl:list (faudio::audio-default-input *audio-session*)))
-  (setf *audio-output-devices* (cl:list (faudio::audio-default-output *audio-session*)))
+  ; (setf *audio-input-devices* (cl:list (faudio::audio-default-input *audio-session*)))
+  ; (setf *audio-output-devices* (cl:list (faudio::audio-default-output *audio-session*)))
 
-   (setf *current-output* (find (list device-host-name device-name) *audio-output-devices*
-                                    :test #'(lambda (x y) (and (string= (first x) (faudio::audio-host-name y))
-                                                               (string= (second x) (faudio::audio-name y))))))
-   (assert (typep *current-output* 'faudio::audio-device))
+   ; (setf *current-output* (find (list device-host-name device-name) *audio-output-devices*
+   ;                                  :test #'(lambda (x y) (and (string= (first x) (faudio::audio-host-name y))
+   ;                                                             (string= (second x) (faudio::audio-name y))))))
+   ; (assert (typep *current-output* 'faudio::audio-device))
 
    (setf *audio-stream* (faudio::audio-open-stream*
                 (faudio::audio-default-input *audio-session*)
-                *current-output*
+                (faudio::audio-default-output *audio-session*)
                 (lambda (inputs)
                   (declare (ignorable inputs))
                   (mapcar 
@@ -161,7 +161,7 @@
      (let ((note-channel 0)
            (click-channel 9))
 
-       (loop repeat 8 with pitch = 60 do
+       (loop repeat 4 with pitch = 60 do
 
              (push-click-track-note ms click-channel)
 
@@ -212,7 +212,7 @@
              (incf ms 50)
              (incf pitch)
 
-             ;(incf ms 151/3)
+             (incf ms 151/3)
 
              (push-note-on ms note-channel pitch 120)
              (incf ms 250)

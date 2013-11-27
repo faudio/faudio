@@ -588,8 +588,8 @@ void fa_audio_schedule(fa_time_t time,
     }
 }
 
-void fa_audio_schedule_relative(fa_time_t        time,
-                               fa_action_t       action,
+void fa_audio_schedule_relative(fa_time_t         time,
+                               fa_action_t        action,
                                fa_audio_stream_t  stream)
 {                                        
     time_t now = fa_clock_time(fa_audio_stream_clock(stream));
@@ -611,8 +611,7 @@ ptr_t audio_control_thread(ptr_t x)
         if (stream->controller.stop) 
             break;
 
-        if (true) {
-        // fa_with_lock(stream->controller.mutex) {
+        fa_with_lock(stream->controller.mutex) {
             time_t now = fa_clock_time(fa_audio_stream_clock(stream));
             run_actions(stream->controls, 
                         now, 
@@ -620,7 +619,7 @@ ptr_t audio_control_thread(ptr_t x)
                         stream
                         );
             fa_destroy(now);
-            fa_thread_sleep(kAudioSchedulerInterval);
+            // fa_thread_sleep(kAudioSchedulerInterval);
         }
     }
     inform(string("Audio control thread finished"));

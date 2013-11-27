@@ -99,11 +99,18 @@ void fa_fa_terminate()
 
 // --------------------------------------------------------------------------------
 
+void print_malloc_info(size_t ba) {
+    // printf("Alloc!\n");
+    // printf("%ld\n", ba);
+}
+void print_free_info(size_t rc) {
+    // printf("Delloc!\n");   
+    // printf("Regions: %ld\n", rc);
+}
 
 void *fa_malloc(size_t size)
 {
-    printf("Alloc!\n");
-    printf("%ld\n", gBytesAlloc);
+    print_malloc_info(gBytesAlloc);
     gBytesAlloc += size;
     gRegionCount += 1;
     return malloc(size);
@@ -114,9 +121,8 @@ void *fa_realloc(void *ptr, size_t size)
 }
 void fa_free(void *ptr)
 {
-    printf("Delloc!\n");   
+    print_free_info(gRegionCount);
     gRegionCount -= 1;
-    printf("Regions: %ld\n", gRegionCount);
     free(ptr);
 }
 
