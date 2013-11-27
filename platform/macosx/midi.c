@@ -828,16 +828,13 @@ ptr_t send_actions(ptr_t x)
         fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
     }
     
-    // fa_with_lock(stream->controller.mutex) {
-        time_t   now    = fa_clock_time(stream->clock);
-        run_actions(stream->controls, 
-                    now, 
-                    forward_action_to_midi, 
-                    stream
-                    );
-        fa_destroy(now);
-        // fa_thread_sleep(kAudioSchedulerInterval);
-    // }
+    time_t   now    = fa_clock_time(stream->clock);
+    run_actions(stream->controls, 
+                now, 
+                forward_action_to_midi, 
+                stream
+                );
+    fa_destroy(now);
 
     return NULL;
 }
