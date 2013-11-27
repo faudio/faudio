@@ -20,6 +20,7 @@
 
 #include <portaudio.h>
 #include "signal.h"
+#include "action_internal.h"
 
 /*
     Notes:

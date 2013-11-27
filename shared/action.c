@@ -9,6 +9,8 @@
 
 #include <fa/action.h>
 #include <fa/util.h>
+#include <fa/pair/left.h>
+#include <fa/priority_queue.h>
 
 typedef fa_action_t                 action_t;
 typedef fa_action_channel_t         channel_t;
@@ -308,6 +310,94 @@ static inline ptr_t _while(ptr_t data, ptr_t compound)
 fa_action_t fa_action_while(pred_t pred, ptr_t ptr, fa_action_t action)
 {
     return fa_action_compound(_while, pair(pair(pred, ptr), action));
+}
+
+
+
+// TODO move
+// static long long gMaxDiff = 0;
+
+/**
+    Run a single or compound action, pushing to the given rescheduling list of needed.
+    @param
+        action  Action to run.
+        time     Current time (for rescheduling).
+        resched A list to which a (time, action) values is pushed for each rescheduled action.
+        state   State to run action on.
+ */
+void run_and_resched_action(action_t action, time_t time, time_t now, list_t* resched, unary_t function, ptr_t data)
+{
+    if(fa_action_is_compound(action)) {
+
+        action_t first  = fa_action_compound_first(action);
+        action_t rest   = fa_action_compound_rest(action);
+        time_t   interv = fa_action_compound_interval(action);
+
+        if (first) {
+            run_and_resched_action(first, time, now, resched, function, data);
+        }
+        if (rest) {
+            time_t   future = fa_add(time, interv);
+
+            if (fa_less_than_equal(future, now)) {
+                // Run directly
+                run_and_resched_action(rest, future, now, resched, function, data);
+            } else {
+                // Reschedule
+                fa_push_list(pair_left(future, rest), *resched);
+            }
+        }
+        return;
+    } else {
+        fa_print("-------------------------------------------------\n", NULL);
+        fa_print("Forwarding:     %s\n", action);
+        
+        // long long diff = fa_time_to_milliseconds(now) - fa_time_to_milliseconds(time);
+        // gMaxDiff = fa_max(gMaxDiff, diff);
+        // printf("Time diff:      %lld\n", diff);
+        // printf("Max time diff:  %lld\n", gMaxDiff);
+
+        function(data, action);
+        return;
+    }
+
+    assert(false && "Unreachable");
+}
+
+
+/**
+    Run all due actions in the given queue.
+    @param
+        controls    A priority queue of (time, action) values.
+        time        Current time (not destroyed).
+        function    Function to which due actions are passed.
+ */
+void run_actions(priority_queue_t controls, fa_time_t now, unary_t function, ptr_t data)
+{
+    while (1) {
+        pair_t x = fa_priority_queue_peek(controls);
+
+        if (!x) {
+            break;
+        }
+
+        time_t   time        = fa_pair_first(x);
+        action_t action      = fa_pair_second(x);
+
+        if (fa_less_than_equal(time, now)) {
+            fa_priority_queue_pop(controls);
+
+            list_t resched = empty();
+            
+            run_and_resched_action(action, time, now, &resched, function, data); // TODO
+            
+            fa_for_each(x, resched) {
+                fa_priority_queue_insert(x, controls);
+            }
+        } else {
+            break;
+        }
+    }
 }
 
 
