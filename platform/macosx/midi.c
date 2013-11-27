@@ -708,24 +708,6 @@ void run_action(action_t action, stream_t stream, time_t now, list_t* resched)
             packetList.packet[0].data[2] = d2;
             MIDIPacketList* packetListPtr = &packetList;
 
-            // char data[3] = { sc, d1, d2 };
-            // char buf[256]; // TODO smaller
-            // MIDIPacketList* packetListPtr = (MIDIPacketList*) buf;
-            // MIDIPacket* packet = MIDIPacketListInit(packetListPtr);
-            // 
-            // if (!MIDIPacketListAdd(
-            //     packetListPtr,
-            //     256,
-            //     packet,
-            //     0,
-            //     3,
-            //     (const Byte*) data
-            //     )) {
-            //         warn(string("Could not create packet"));
-            //         assert(false);
-            //     }
-
-            
             native_error_t result = MIDISend(
                                         stream->native,
                                         stream->device->native,
