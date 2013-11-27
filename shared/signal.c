@@ -940,7 +940,7 @@ ptr_t run_simple_action(state_t state, action_t action)
 }
 
 // TODO move
-static long long gMaxDiff = 0;
+// static long long gMaxDiff = 0;
 
 /**
     Run a single or compound action, pushing to the given rescheduling list of needed.
@@ -976,13 +976,9 @@ void run_and_resched_action(action_t action, time_t time, time_t now, list_t* re
     } else {
         fa_print("-------------------------------------------------\n", NULL);
         fa_print("Forwarding:     %s\n", action);
-        // fa_print("Scheduled time: %s\n", time);
-        // fa_print("Actual time:    %s\n", now);
-        // printf("Scheduled time: %lld\n", fa_time_to_milliseconds(time));
-        // printf("Actual time:    %lld\n", fa_time_to_milliseconds(now));
         
-        long long diff = fa_time_to_milliseconds(now) - fa_time_to_milliseconds(time);
-        gMaxDiff = fa_max(gMaxDiff, diff);
+        // long long diff = fa_time_to_milliseconds(now) - fa_time_to_milliseconds(time);
+        // gMaxDiff = fa_max(gMaxDiff, diff);
         // printf("Time diff:      %lld\n", diff);
         // printf("Max time diff:  %lld\n", gMaxDiff);
 
