@@ -19,6 +19,7 @@ typedef fa_fa_log_func_t log_func_t;
 
 static unsigned       gInitCount    = 0;
 static long           gBytesAlloc   = 0;
+static long           gRegionCount = 0;
 // static long           gBytesFreed;
 static log_func_t     gLogFunc      = NULL;
 static ptr_t          gLogData      = NULL;
@@ -72,6 +73,7 @@ void fa_fa_initialize()
     fa_fa_log_info(string("Initialized faudio."));
 
     gBytesAlloc = 0;
+    gRegionCount = 0;
     gInitCount++;
 }
 
@@ -86,6 +88,9 @@ void fa_fa_terminate()
         fa_fa_log_info(fa_string_dappend(string("Total bytes allocated: "),
                                          fa_string_show(i32(gBytesAlloc))));
 
+        fa_fa_log_info(fa_string_dappend(string("Regions leaked: "),
+                                         fa_string_show(i32(gRegionCount))));
+
         fa_fa_log_info(string("Terminated faudio."));
     } else {
         fa_fa_log_warning(string("Could not terminate faudio: inconsistent state."));
@@ -97,8 +102,10 @@ void fa_fa_terminate()
 
 void *fa_malloc(size_t size)
 {
-    // printf("Alloc!\n");
+    printf("Alloc!\n");
+    printf("%ld\n", gBytesAlloc);
     gBytesAlloc += size;
+    gRegionCount += 1;
     return malloc(size);
 }
 void *fa_realloc(void *ptr, size_t size)
@@ -107,6 +114,9 @@ void *fa_realloc(void *ptr, size_t size)
 }
 void fa_free(void *ptr)
 {
+    printf("Delloc!\n");   
+    gRegionCount -= 1;
+    printf("Regions: %ld\n", gRegionCount);
     free(ptr);
 }
 

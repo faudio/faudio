@@ -67,8 +67,8 @@ void run_test()
         int j = 100;
         int k = j*2;
 
-        fa_action_t note1  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x99, 60, 127));
-        fa_action_t note2  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x99, 61, 127));
+        fa_action_t note1  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x99, 60, 80));
+        fa_action_t note2  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x99, 61, 80));
 
         fa_action_t notes1 = fa_action_many(fa_list_join(list(
             list(
@@ -113,18 +113,18 @@ void run_test()
         // fa_audio_schedule_relative(seconds(0), notes1, ast);
         // fa_audio_schedule_relative(seconds(0), notes2, ast);
 
-        fa_audio_schedule_relative(seconds(0), fa_action_repeat(fa_milliseconds(3000), 
-            fa_action_many(list(
-            pair(notes1, fa_milliseconds(0)), 
-            pair(notes2, fa_milliseconds(0)) 
-            ))), ast);
+        // fa_audio_schedule_relative(seconds(0), fa_action_repeat(fa_milliseconds(3000), 
+        //     fa_action_many(list(
+        //     pair(notes1, fa_milliseconds(0)), 
+        //     pair(notes2, fa_milliseconds(0)) 
+        //     ))), ast);
 
         // 20 BE
         
-        // int n = 22;
-        // fa_audio_schedule_relative(seconds(0), fa_action_repeat(fa_milliseconds(n), note1), ast);
-        // fa_audio_schedule_relative(seconds(0), fa_action_repeat(fa_milliseconds(n*2), note2), ast);
-        
+        int n = 1000;
+        fa_audio_schedule_relative(seconds(0), fa_action_repeat(fa_milliseconds(n), note1), ast);
+        fa_audio_schedule_relative(seconds(0), fa_action_repeat(fa_milliseconds(n*2), note2), ast);
+        // 
 
         fa_thread_sleep(100000);
         mark_used(notes1);

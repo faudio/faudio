@@ -858,7 +858,7 @@ int64_t audio_stream_milliseconds(ptr_t a)
 
     double c = (double) state->count;
     double r = (double) state->rate;
-    return ((int64_t)(c / r * 1000));
+    return ((int64_t)(c / r * 1000.0));
 }
 
 fa_time_t audio_stream_time(ptr_t a)
