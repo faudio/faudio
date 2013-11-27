@@ -117,6 +117,7 @@ struct _fa_midi_stream_t {
 
     fa_clock_t                      clock;              // Clock used for scheduler and incoming events
     atomic_queue_t                  in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
+    atomic_queue_t                  short_controls;     // Controls to run directly (optimization)
     priority_queue_t                controls;           // Scheduled controls (Time, (Channel, Ptr))
     int                             timer_id;           // Used to unregister timer callbacks
 
@@ -265,6 +266,7 @@ inline static stream_t new_stream(device_t device)
 
     stream->clock           = fa_clock_standard();
     stream->in_controls     = atomic_queue();
+    stream->short_controls  = atomic_queue();
     stream->controls        = priority_queue();
 
     stream->callbacks.count = 0;
@@ -277,6 +279,7 @@ inline static void delete_stream(stream_t stream)
     // TODO flush pending events
     fa_destroy(stream->controls);
     fa_destroy(stream->in_controls);
+    fa_destroy(stream->short_controls);
     fa_delete(stream);
 }
 
@@ -818,6 +821,9 @@ ptr_t send_actions(ptr_t x)
     stream_t stream = x;
 
     ptr_t val;
+    while ((val = fa_atomic_queue_read(stream->short_controls))) {
+        forward_action_to_midi(stream, val);
+    }
     while ((val = fa_atomic_queue_read(stream->in_controls))) {
         fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
     }
@@ -916,8 +922,12 @@ void fa_midi_schedule_relative(fa_time_t        time,
                               fa_action_t       action,
                               fa_midi_stream_t  stream)
 {                                        
-    time_t now = fa_clock_time(stream->clock);
-    fa_midi_schedule(fa_add(now, time), action, stream);
+    if (fa_equal(time, seconds(0)) && !fa_action_is_compound(action)) {
+        fa_atomic_queue_write(stream->short_controls, action);
+    } else {
+        time_t now = fa_clock_time(stream->clock);
+        fa_midi_schedule(fa_add(now, time), action, stream);
+    }
 }
 
 void fa_midi_set_clock(fa_midi_stream_t stream, fa_clock_t clock)
