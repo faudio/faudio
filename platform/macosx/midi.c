@@ -732,9 +732,9 @@ void run_action(action_t action, stream_t stream, time_t now, list_t* resched)
 
 
 /*
-ptr_t send_actions(ptr_t x)
+ptr_t midi_stream_callback(ptr_t x)
 {
-    // printf("Called send_actions (if you see this, please report it as a bug)\n");
+    // printf("Called midi_stream_callback (if you see this, please report it as a bug)\n");
 
     stream_t stream = x;
     ptr_t val;
@@ -817,7 +817,7 @@ ptr_t forward_action_to_midi(ptr_t x, ptr_t action)
     return NULL;
 }
 
-ptr_t send_actions(ptr_t x)
+ptr_t midi_stream_callback(ptr_t x)
 {
     stream_t stream = x;
 
@@ -869,7 +869,7 @@ fa_midi_stream_t fa_midi_open_stream(device_t device)
             fa_string_to_native(string("faudio")),
             &stream->native
         );
-        stream->timer_id = fa_midi_add_timer_callback(send_actions, stream, stream->device->session);
+        stream->timer_id = fa_midi_add_timer_callback(midi_stream_callback, stream, stream->device->session);
     }
 
     return stream;
