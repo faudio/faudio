@@ -195,7 +195,8 @@ bool fa_action_is_compound(fa_action_t action)
     return is_compound(action);
 }
 
-// () -> Maybe (SimpleAction, (Time, Action))
+
+// Action -> Maybe (Action, (Time, Action))
 fa_pair_t compound_render(fa_action_t action)
 {
     assert(is_compound(action) && "Not a compound action");
@@ -212,6 +213,16 @@ fa_action_t fa_action_compound_first(fa_action_t action)
     }
 }
 
+fa_time_t fa_action_compound_interval(fa_action_t action)
+{
+    fa_pair_t maybeActions = compound_render(action);
+    if (maybeActions) {
+        return fa_pair_first(fa_pair_second(maybeActions));
+    } else {
+        return NULL;
+    }
+}
+
 fa_action_t fa_action_compound_rest(fa_action_t action)
 {
     fa_pair_t maybeActions = compound_render(action);
@@ -222,15 +233,6 @@ fa_action_t fa_action_compound_rest(fa_action_t action)
     }
 }
 
-fa_time_t fa_action_compound_interval(fa_action_t action)
-{
-    fa_pair_t maybeActions = compound_render(action);
-    if (maybeActions) {
-        return fa_pair_first(fa_pair_second(maybeActions));
-    } else {
-        return NULL;
-    }
-}
 
 // TODO move
 fa_action_t fa_action_repeat(time_t interval, fa_action_t action);
@@ -249,8 +251,7 @@ fa_action_t fa_action_null()
 
 static inline ptr_t _repeat(ptr_t data, ptr_t compound)
 {
-    pair_t intervalAction = data;                      
-
+    pair_t intervalAction = data;
     time_t interval = fa_pair_first(intervalAction);
     action_t simple = fa_pair_second(intervalAction);
 
@@ -258,9 +259,9 @@ static inline ptr_t _repeat(ptr_t data, ptr_t compound)
     return pair(simple, pair(interval, compound));
 }
 
-fa_action_t fa_action_repeat(time_t interval, fa_action_t action)
+fa_action_t fa_action_repeat(time_t interval, fa_action_t simple)
 {
-    return fa_action_compound(_repeat, pair(interval, action));
+    return fa_action_compound(_repeat, pair(interval, simple));
 }
 
 static inline ptr_t _many(ptr_t data, ptr_t compound)
@@ -270,11 +271,11 @@ static inline ptr_t _many(ptr_t data, ptr_t compound)
     if (fa_list_is_empty(timeActions)) {
         return NULL;
     } else {
-        action_t simple   = fa_pair_first(fa_list_head(timeActions));
+        action_t first    = fa_pair_first(fa_list_head(timeActions));
         time_t   interval = fa_pair_second(fa_list_head(timeActions));
         // TODO clean up pair                    
         action_t rest = fa_action_many(fa_list_tail(timeActions));
-        return pair(simple, pair(interval, rest));
+        return pair(first, pair(interval, rest));
     }
 }
 

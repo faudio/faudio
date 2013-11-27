@@ -943,37 +943,46 @@ ptr_t run_simple_action(state_t state, action_t action)
     Run a single or compound action, pushing to the given rescheduling list of needed.
     @param
         action  Action to run.
-        now     Current time (for rescheduling).
+        time     Current time (for rescheduling).
         resched A list to which a (time, action) values is pushed for each rescheduled action.
         state   State to run action on.
  */
-void run_and_resched_action(action_t action, time_t now, list_t* resched, unary_t function, ptr_t data)
+void run_and_resched_action(action_t action, time_t time, time_t now, list_t* resched, unary_t function, ptr_t data)
 {
     if(fa_action_is_compound(action)) {
 
-        action_t first = fa_action_compound_first(action);
-        action_t rest = fa_action_compound_rest(action);
+        action_t first  = fa_action_compound_first(action);
+        action_t rest   = fa_action_compound_rest(action);
+        time_t   interv = fa_action_compound_interval(action);
 
-        if (rest) {
-            // Reschedule
-            time_t   interv = fa_action_compound_interval(action);
-            time_t   future = fa_add(now, interv);
-            fa_push_list(pair_left(future, rest), *resched);
+        if (first) {
+            run_and_resched_action(first, time, now, resched, function, data);
         }
-        if (first) {         
-            run_and_resched_action(first, now, resched, function, data);
+        if (rest) {
+            time_t   future = fa_add(time, interv);
+
+            if (fa_less_than_equal(future, now)) {
+                // Run directly
+                run_and_resched_action(rest, future, now, resched, function, data);
+            } else {
+                // Reschedule
+                fa_push_list(pair_left(future, rest), *resched);
+            }
         }
         return;
-    }                         
-    function(data, action);    
-    // run_simple_action(state, action);
+    } else {
+        function(data, action);
+        return;
+    }
+
+    assert(false && "Unreachable");
 }
 
 /**
     Run all due actions in the given queue.
     @param
         controls    A priority queue of (time, action) values.
-        time        Due time (not destroyed).
+        time        Current time (not destroyed).
         function    Function to which due actions are passed.
  */
 void run_actions(priority_queue_t controls, fa_time_t now, unary_t function, ptr_t data)
@@ -989,15 +998,15 @@ void run_actions(priority_queue_t controls, fa_time_t now, unary_t function, ptr
         action_t action      = fa_pair_second(x);
 
         if (fa_less_than_equal(time, now)) {
+            fa_priority_queue_pop(controls);
+
             list_t resched = empty();
             
-            run_and_resched_action(action, now, &resched, function, data); // TODO
+            run_and_resched_action(action, time, now, &resched, function, data); // TODO
             
             fa_for_each(x, resched) {
                 fa_priority_queue_insert(x, controls);
             }
-            fa_priority_queue_pop(controls);
-            // TODO reschedule
         } else {
             break;
         }

@@ -611,7 +611,8 @@ ptr_t audio_control_thread(ptr_t x)
         if (stream->controller.stop) 
             break;
 
-        fa_with_lock(stream->controller.mutex) {
+        if (true) {
+        // fa_with_lock(stream->controller.mutex) {
             time_t now = fa_clock_time(fa_audio_stream_clock(stream));
             run_actions(stream->controls, 
                         now, 
