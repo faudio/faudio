@@ -25,6 +25,9 @@
 #include <CoreMIDI/CoreMIDI.h>
 #include <CoreServices/CoreServices.h>
 
+#include "../shared/action_internal.h"
+
+
 /*
     ## Notes
 
@@ -668,6 +671,9 @@ void message_listener(const MIDIPacketList *packetList, ptr_t x, ptr_t _)
 
 void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2);
 
+
+/*
+
 static inline
 void run_action(action_t action, stream_t stream, time_t now, list_t* resched)
 {
@@ -719,8 +725,10 @@ void run_action(action_t action, stream_t stream, time_t now, list_t* resched)
             }
         }
     }
-}
+}       */
 
+
+/*
 ptr_t send_actions(ptr_t x)
 {
     // printf("Called send_actions (if you see this, please report it as a bug)\n");
@@ -759,6 +767,71 @@ ptr_t send_actions(ptr_t x)
             break;
         }
     }
+
+    return NULL;
+}
+*/
+
+ptr_t forward_action_to_midi(ptr_t x, ptr_t action)
+{
+    stream_t stream = x;
+
+    fa_print("%s\n", action);
+
+    if (fa_action_is_send(action)) {
+        // string_t name   = fa_action_send_name(action);
+        ptr_t value     = fa_action_send_value(action);
+
+        int sc, d1, d2;         
+        fa_midi_message_decons(value, &sc, &d1, &d2);
+
+        {
+            // printf("%d %d %d\n", sc, d1, d2);
+
+            struct MIDIPacketList packetList;
+            packetList.numPackets = 1;
+            packetList.packet[0].length = 3;
+            packetList.packet[0].timeStamp = 0;
+            
+            packetList.packet[0].data[0] = sc;
+            packetList.packet[0].data[1] = d1;
+            packetList.packet[0].data[2] = d2;
+            MIDIPacketList* packetListPtr = &packetList;
+
+            native_error_t result = MIDISend(
+                                        stream->native,
+                                        stream->device->native,
+                                        packetListPtr
+                                    );
+            if (result < 0) {
+                warn(string("Could not send MIDI"));
+                assert(false);
+            }
+        }
+    }
+
+    return NULL;
+}
+
+ptr_t send_actions(ptr_t x)
+{                         
+    stream_t stream = x;
+
+    ptr_t val;
+    while ((val = fa_atomic_queue_read(stream->in_controls))) {
+        fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
+    }
+    
+    // fa_with_lock(stream->controller.mutex) {
+        time_t   now    = fa_clock_time(stream->clock);
+        run_actions(stream->controls, 
+                    now, 
+                    forward_action_to_midi, 
+                    stream
+                    );
+        fa_destroy(now);
+        // fa_thread_sleep(kAudioSchedulerInterval);
+    // }
 
     return NULL;
 }
