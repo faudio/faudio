@@ -98,6 +98,11 @@ void fa_audio_with_session(fa_audio_session_callback_t,
                            fa_error_callback_t,
                            fa_ptr_t);
 
+
+void fa_audio_set_parameter(fa_string_t,
+                            fa_ptr_t,
+                            fa_audio_session_t);
+
 /** Get all currently active audio sessions. Note that at most one audio session
     can be active at the same time, so this function returns a list of zero or
     one elements.

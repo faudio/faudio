@@ -155,8 +155,11 @@
 
 (defun duplicate (x) (cl:list x x))
 
-(defun signal-run-default (proc &key (stream-callback (lambda (x) nil))) 
-  (let* ((s (audio-begin-session))
+(defun signal-run-default (
+    proc
+    &key (session-callback (lambda (x) x)) 
+         (stream-callback (lambda (x) x))) 
+  (let* ((s (funcall session-callback (audio-begin-session))) 
        (i (audio-default-input s))
        (o (audio-default-output s))
        (st (audio-open-stream* i o proc)))

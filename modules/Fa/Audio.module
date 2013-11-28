@@ -88,6 +88,8 @@ module Fa.Audio
         Callback, Ptr) -> Void;
 
 
+    setParameter : (String, Ptr, Session) -> Void;
+
     /** Get all currently active audio sessions. Note that at most one audio session
         can be active at the same time, so this function returns a list of zero or
         one elements.

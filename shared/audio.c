@@ -10,6 +10,7 @@
 #include <fa/audio.h>
 
 #include <fa/atomic.h>
+#include <fa/dynamic.h>
 #include <fa/atomic/queue.h>
 #include <fa/pair/left.h>
 #include <fa/priority_queue.h>
@@ -53,6 +54,12 @@ struct _fa_audio_session_t {
 
     device_t            def_input;          // Default devices, both possibly null
     device_t            def_output;         // If present, these are also in the above list
+
+    struct {
+        double          latency;
+        int             vector_size;
+    }                   parameters;         // Parameters, which may be updated by set_parameters
+
 };
 
 struct _fa_audio_device_t {
@@ -153,6 +160,9 @@ inline static void session_init_devices(session_t session)
     session->devices      = fa_list_dreverse(devices);
     session->def_input    = new_device(session, Pa_GetDefaultInputDevice());
     session->def_output   = new_device(session, Pa_GetDefaultOutputDevice());
+
+    session->parameters.vector_size = kDefVectorSize;
+    session->parameters.latency     = kDefLatency;
 }
 
 inline static void delete_session(session_t session)
@@ -307,6 +317,51 @@ void fa_audio_with_session(session_callback_t session_callback,
     fa_audio_end_session(session);
 }
 
+void fa_audio_set_parameter(string_t name,
+                            ptr_t value,
+                            session_t session)
+{
+    if (fa_equal(name, string("latency"))) {
+        double x;
+
+        switch(fa_dynamic_get_type(value)) {
+            case i32_type_repr:
+                x = fa_peek_int32(value);  
+                break;
+            case f32_type_repr:
+                x = fa_peek_float(value);  
+                break;           
+            default:
+                warn(string("Wrong type"));
+                return;
+        }
+        
+        session->parameters.latency = x;
+    }
+
+    if (fa_equal(name, string("vector-size"))) {
+        int x;
+                
+        switch(fa_dynamic_get_type(value)) {
+            case i32_type_repr:
+                x = fa_peek_int32(value);  
+                break;
+            case f32_type_repr:
+                x = fa_peek_float(value);  
+                break;           
+            default:
+                warn(string("Wrong type"));
+                return;
+        }
+        
+        if (x <= kMaxVectorSize) {
+            session->parameters.vector_size = x;
+        } else {
+            warn(string("Vector size to large"));
+        }
+    }
+}
+
 fa_list_t fa_audio_current_sessions()
 {
     if (!current_session) {
@@ -430,8 +485,6 @@ void audio_inform_opening(device_t input, ptr_t proc, device_t output)
     }
 }
 
-// TODO change sample rate
-// TODO use unspec vector size if we can determine max
 stream_t fa_audio_open_stream(device_t input,
                               device_t output,
                               proc_t proc,
@@ -439,19 +492,22 @@ stream_t fa_audio_open_stream(device_t input,
                              )
 {
     PaError         status;
-    unsigned long   buffer_size = kDefVectorSize;
+    unsigned long   buffer_size = input->session->parameters.vector_size;
     double          sample_rate = kDefSampleRate;
 
     if (!input && !output) {
         return (stream_t) audio_device_error_with(
                    string("Can not open a stream with no devices"), 0);
     }
+    if (input && output && (input->session != output->session)) {
+        return (stream_t) audio_device_error_with(
+                   string("Can not open a stream on devices from different sessions"), 0);
+    }
 
     stream_t        stream = new_stream(input, output, sample_rate, buffer_size);
 
     // TODO number of inputs
     list_t all_inputs = list(fa_signal_input(kInputOffset + 0), fa_signal_input(kInputOffset + 1));
-
     list_t all_signals = all_inputs;
 
     if (proc) {
@@ -472,7 +528,7 @@ stream_t fa_audio_open_stream(device_t input,
     {
         // TODO test with lower latency
         PaStreamParameters inp = {
-            .suggestedLatency           = kSuggestedLatencySec,
+            .suggestedLatency           = input->session->parameters.latency,
             .hostApiSpecificStreamInfo  = NULL,
             .device                     = (input ? input->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
@@ -480,7 +536,7 @@ stream_t fa_audio_open_stream(device_t input,
         };
 
         PaStreamParameters outp = {
-            .suggestedLatency           = kSuggestedLatencySec,
+            .suggestedLatency           = output->session->parameters.latency,
             .hostApiSpecificStreamInfo  = NULL,
             .device                     = (output ? output->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),

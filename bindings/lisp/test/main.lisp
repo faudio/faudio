@@ -449,6 +449,8 @@
 (error-message (to-error s))
 (audio-end-session s)
 
+(audio-set-parameter "latency" 0.5 s)
+
 (audio-current-sessions)
 (audio-end-all-sessions)
 
@@ -476,6 +478,17 @@
   (fa-log-info "Audio setup changed")) s)
 
 (audio-close-stream z)
+
+
+
+(signal-run-default
+ (lambda (inputs)
+   (mapcar (lambda (x) (* x 0.1)) inputs))
+ :session-callback (lambda (s) 
+                     (audio-set-parameter "vector-size" 32 s)
+                     (audio-set-parameter "latency" 0.5 s)
+                     s)
+ )
 
 
 ; ---------------------------------------------------------------------------------------------------
