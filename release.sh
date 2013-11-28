@@ -23,6 +23,7 @@ if [[ $* != *--clean* ]]; then
 	rm distribute/include/config.h.in
 
 	cp -R bindings/lisp distribute/bindings
+	find distribute/bindings/lisp -type f -name '*~' -exec rm -f '{}' \;
 
 	cp -R build/Frameworks/Faudio.framework distribute/Frameworks
 
