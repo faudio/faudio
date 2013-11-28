@@ -253,23 +253,22 @@ session_t fa_audio_begin_session()
 
     inform(string("Initializing real-time audio session"));
 
-    fa_thread_lock(pa_mutex);
+    session_t session;
+    fa_with_lock(pa_mutex)
     {
         if (pa_status) {
-            fa_thread_unlock(pa_mutex);
-            return (session_t) audio_device_error(string("Overlapping real-time audio sessions"));
+            session = (session_t) audio_device_error(string("Overlapping real-time audio sessions"));
         } else {
             Pa_Initialize();
             pa_status = true;
-            fa_thread_unlock(pa_mutex);
 
-            session_t session = new_session();
+            session = new_session();
             session_init_devices(session);
 
             current_session = session;
-            return session;
         }
     }
+    return session;
 }
 
 void fa_audio_end_session(session_t session)
@@ -280,16 +279,14 @@ void fa_audio_end_session(session_t session)
 
     inform(string("Terminating real-time audio session"));
 
-    fa_thread_lock(pa_mutex);
+    fa_with_lock(pa_mutex)
     {
         if (pa_status) {
             Pa_Terminate();
             pa_status = false;
         }
-
         current_session = NULL;
     }
-    fa_thread_unlock(pa_mutex);
     delete_session(session);
 }
 

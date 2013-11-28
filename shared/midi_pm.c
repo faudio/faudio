@@ -228,28 +228,28 @@ session_t fa_midi_begin_session()
 
     inform(string("Initializing real-time midi session"));
 
-    fa_thread_lock(pm_mutex);
+    session_t session;
+    
+    fa_with_lock(pm_mutex)
     {
         if (pm_status) {
-            fa_thread_unlock(pm_mutex);
-            return (session_t) midi_device_error(string("Overlapping real-time midi sessions"));
+            session = (session_t) midi_device_error(string("Overlapping real-time midi sessions"));
         } else {
             result = Pm_Initialize();
 
             if (result < 0) {
-                return (session_t) native_error(string("Could not start midi"), result);
+                session =  (session_t) native_error(string("Could not start midi"), result);
+            } else {
+                pm_status = true;
+
+                session = new_session();
+                session_init_devices(session);
+
+                midi_current_session = session;
             }
-
-            pm_status = true;
-            fa_thread_unlock(pm_mutex);
-
-            session_t session = new_session();
-            session_init_devices(session);
-
-            midi_current_session = session;
-            return session;
         }
     }
+    return session;
 }
 
 void fa_midi_end_session(session_t session)
@@ -262,7 +262,7 @@ void fa_midi_end_session(session_t session)
 
     inform(string("Terminating real-time midi session"));
 
-    fa_thread_lock(pm_mutex);
+    fa_with_lock(pm_mutex)
     {
         if (pm_status) {
             inform(string("(actually terminating)"));
@@ -270,15 +270,13 @@ void fa_midi_end_session(session_t session)
 
             if (result < 0) {
                 fa_error_log(NULL, native_error(string("Could not stop midi"), result));
-                return;
+            } else {
+                pm_status = false;
+                midi_current_session = NULL;
+                delete_session(session);
             }
-
-            pm_status = false;
-            midi_current_session = NULL;
         }
     }
-    fa_thread_unlock(pm_mutex);
-    delete_session(session);
 }
 
 void fa_midi_with_session(session_callback_t    session_callback,
