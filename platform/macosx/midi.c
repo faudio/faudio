@@ -1078,7 +1078,7 @@ string_t from_os_status2(OSStatus err)
 
 error_t midi_error(string_t msg, native_error_t code)
 {
-    string_t msg2 = from_os_status2(code); // FIXME
+    string_t msg2 = from_os_status2(code);
     return fa_error_create_simple(error,
                                   string_dappend(msg, msg2),
                                   string("Doremir.Device.Midi"));

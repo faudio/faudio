@@ -1343,7 +1343,7 @@ fa_signal_t fa_signal_cos(fa_signal_t a)
 //     proc->after   = input_stream_after;
 //     proc->render  = input_stream_render;
 //     proc->receive = input_stream_receive;
-//     // FIXME pass user data and special buffer
+//     // Pass user data and special buffer
 //     proc->data    = context;
 //
 //     return fa_signal_custom(proc, input);
@@ -1399,7 +1399,7 @@ fa_signal_t fa_signal_cos(fa_signal_t a)
 //     proc->after   = output_stream_after;
 //     proc->render  = output_stream_render;
 //     proc->receive = output_stream_receive;
-//     // FIXME pass user data and special buffer
+//     // Pass user data and special buffer
 //     proc->data    = context;
 //
 //     return fa_signal_custom(proc, output);

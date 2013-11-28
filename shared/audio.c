@@ -629,14 +629,12 @@ ptr_t audio_control_thread(ptr_t x)
                        );
             fa_destroy(now);
 
-            // FIXME thread_sleep is to inexact.
+            // Note: thread_sleep may be to inexact.
 
             // We need to find a more precise way of invoking the scheduler. We could either
             //  * Look for a platform-independent timing library
             //  * Write platform-specific code
             //  * Use notifications from the audio thread (might not work at startup)
-
-            // Until we have a better solution we busy loop, eating CPU but getting better precision
             
             fa_thread_sleep(kAudioSchedulerIntervalMillis);
         }
