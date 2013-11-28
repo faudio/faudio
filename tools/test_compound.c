@@ -36,6 +36,7 @@ bool pred2(ptr_t _, ptr_t x)
 
 #define time_zero fa_milliseconds(0)
 #define fa_action_compose(x,y) fa_action_many(list(pair(x, time_zero), pair(y, time_zero)))
+#define fa_action_compose3(x,y,z) fa_action_many(list(pair(x, time_zero), pair(y, time_zero), pair(z, time_zero)))
 
 void run_midi()
 {
