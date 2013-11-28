@@ -192,13 +192,30 @@ fa_action_value_t fa_action_send_value(fa_action_t action)
     return send_get(action, value);
 }
 
+bool fa_action_is_simple(fa_action_t action)
+{
+    return !is_compound(action);
+}
+
 bool fa_action_is_compound(fa_action_t action)
 {
     return is_compound(action);
 }
 
 
-// Action -> Maybe (Action, (Time, Action))
+
+
+
+
+
+
+
+
+
+
+
+
+// Action -> Maybe (Maybe Action, Maybe (Time, Action))
 fa_pair_t compound_render(fa_action_t action)
 {
     assert(is_compound(action) && "Not a compound action");
@@ -207,10 +224,9 @@ fa_pair_t compound_render(fa_action_t action)
 
 fa_action_t fa_action_compound_first(fa_action_t action)
 {
-    fa_pair_t maybeActions = compound_render(action);
-
-    if (maybeActions) {
-        return fa_pair_first(maybeActions);
+    fa_pair_t maybeFirstRest = compound_render(action);
+    if (maybeFirstRest) {
+        return fa_pair_first(maybeFirstRest);
     } else {
         return NULL;
     }
@@ -218,30 +234,38 @@ fa_action_t fa_action_compound_first(fa_action_t action)
 
 fa_time_t fa_action_compound_interval(fa_action_t action)
 {
-    fa_pair_t maybeActions = compound_render(action);
-
-    if (maybeActions) {
-        return fa_pair_first(fa_pair_second(maybeActions));
-    } else {
-        return NULL;
-    }
+    fa_pair_t maybeFirstRest = compound_render(action);
+    if (maybeFirstRest) {
+        fa_pair_t maybeRest = fa_pair_second(maybeFirstRest);
+        if (maybeRest) {
+            return fa_pair_first(maybeRest);
+        }
+    }    
+    return NULL;
 }
 
 fa_action_t fa_action_compound_rest(fa_action_t action)
 {
-    fa_pair_t maybeActions = compound_render(action);
-
-    if (maybeActions) {
-        return fa_pair_second(fa_pair_second(maybeActions));
-    } else {
-        return NULL;
-    }
+    fa_pair_t maybeFirstRest = compound_render(action);
+    if (maybeFirstRest) {
+        fa_pair_t maybeRest = fa_pair_second(maybeFirstRest);
+        if (maybeRest) {
+            return fa_pair_second(maybeRest);
+        }
+    }    
+    return NULL;
 }
 
 
-// TODO move
-fa_action_t fa_action_repeat(time_t interval, fa_action_t action);
-fa_action_t fa_action_many(list_t timeActions);
+
+
+
+ 
+
+
+
+
+
 
 static inline ptr_t _null(ptr_t data, ptr_t compound)
 {
@@ -254,20 +278,23 @@ fa_action_t fa_action_null()
 }
 
 
+
+#define unpair(x,y,p) fa_pair_decons((ptr_t*) &x, (ptr_t*) &y, p)
+
 static inline ptr_t _repeat(ptr_t data, ptr_t compound)
 {
-    pair_t intervalAction = data;
-    time_t interval = fa_pair_first(intervalAction);
-    action_t simple = fa_pair_second(intervalAction);
-
-    // TODO clean up pair
+    time_t interval; 
+    action_t simple;
+    unpair(interval, simple, data);
     return pair(simple, pair(interval, compound));
 }
 
-fa_action_t fa_action_repeat(time_t interval, fa_action_t simple)
+fa_action_t fa_action_repeat(time_t interval, fa_action_t action)
 {
-    return fa_action_compound(_repeat, pair(interval, simple));
+    return fa_action_compound(_repeat, pair(interval, action));
 }
+
+
 
 static inline ptr_t _many(ptr_t data, ptr_t compound)
 {
@@ -276,9 +303,10 @@ static inline ptr_t _many(ptr_t data, ptr_t compound)
     if (fa_list_is_empty(timeActions)) {
         return NULL;
     } else {
-        action_t first    = fa_pair_first(fa_list_head(timeActions));
-        time_t   interval = fa_pair_second(fa_list_head(timeActions));
-        // TODO clean up pair
+        action_t first;    
+        time_t   interval;
+        unpair(first, interval, fa_list_head(timeActions)); 
+
         action_t rest = fa_action_many(fa_list_tail(timeActions));
         return pair(first, pair(interval, rest));
     }
@@ -290,30 +318,135 @@ fa_action_t fa_action_many(list_t timeActions)
     return fa_action_compound(_many, timeActions);
 }
 
+
+
 static inline ptr_t _if(ptr_t data, ptr_t compound)
 {
     pair_t predAction = data;
-    pair_t      predClosure     = fa_pair_first(predAction);
-    action_t    action          = fa_pair_second(predAction);
+    pair_t      predClosure;
+    pred_t      pred_function;
+    ptr_t       pred_data;
+    action_t    action;
+    unpair(predClosure, action, predAction);
+    unpair(pred_function, pred_data, predClosure);
 
-    pred_t pred_function = fa_pair_first(predClosure);
-    ptr_t  pred_data     = fa_pair_second(predClosure);
-
-    if (pred_function(pred_data, NULL)) {
-        // Have to fake a time here...
-        // FIXME this does not seem right
-        // Surely the underlying action (if it is compound should have its interval (and its tail) propagated
-        return pair(action, pair(fa_milliseconds(0), fa_action_null()));
-    } else {
-        return NULL;
+    if (fa_action_is_simple(action)) {
+        if (pred_function(pred_data, NULL)) {
+            return pair(action, NULL);
+        } else {
+            return NULL;
+        }
+    } else {   
+        action_t first    = fa_action_compound_first(action);
+        action_t rest     = fa_action_compound_rest(action);
+        time_t   interval = fa_action_compound_interval(action); 
+        
+        if (pred_function(pred_data, NULL)) {
+            return pair(first,            pair(interval, fa_action_if(pred_function, pred_data, rest)));
+        } else {
+            return pair(fa_action_null(), pair(interval, fa_action_if(pred_function, pred_data, rest)));
+        }
     }
 }
 
-// [(Action, Time)] -> Action
-fa_action_t fa_action_if(pred_t pred, ptr_t ptr, fa_action_t action)
+static inline ptr_t _while(ptr_t data, ptr_t compound)
 {
-    return fa_action_compound(_if, pair(pair(pred, ptr), action));
+    pair_t predAction = data;
+    pair_t      predClosure;
+    pred_t      pred_function;
+    ptr_t       pred_data;
+    action_t    action;
+    unpair(predClosure, action, predAction);
+    unpair(pred_function, pred_data, predClosure);
+
+    if (fa_action_is_simple(action)) {
+        if (pred_function(pred_data, NULL)) {
+            return pair(action, NULL);
+        } else {
+            return NULL;
+        }
+    } else {   
+        action_t first    = fa_action_compound_first(action);
+        action_t rest     = fa_action_compound_rest(action);
+        time_t   interval = fa_action_compound_interval(action); 
+        
+        if (pred_function(pred_data, NULL)) {
+            return pair(first,            pair(interval, fa_action_while(pred_function, pred_data, rest)));
+        } else {
+            return NULL;
+        }
+    }
 }
+
+static inline ptr_t _until(ptr_t data, ptr_t compound)
+{
+    pair_t predAction = data;
+    pair_t      predClosure;
+    pred_t      pred_function;
+    ptr_t       pred_data;
+    action_t    action;
+    unpair(predClosure, action, predAction);
+    unpair(pred_function, pred_data, predClosure);
+
+    if (fa_action_is_simple(action)) {
+        if (!pred_function(pred_data, NULL)) {
+            return pair(action, NULL);
+        } else {
+            return NULL;
+        }
+    } else {   
+        action_t first    = fa_action_compound_first(action);
+        action_t rest     = fa_action_compound_rest(action);
+        time_t   interval = fa_action_compound_interval(action); 
+        
+        if (!pred_function(pred_data, NULL)) {
+            return pair(first,            pair(interval, fa_action_until(pred_function, pred_data, rest)));
+        } else {
+            return NULL;
+        }
+    }
+}
+
+
+// [(Action, Time)] -> Action
+fa_action_t fa_action_if(pred_t pred, ptr_t data, fa_action_t action)
+{
+    return fa_action_compound(_if, pair(pair(pred, data), action));
+}
+
+fa_action_t fa_action_while(pred_t pred, ptr_t data, fa_action_t action)
+{
+    return fa_action_compound(_while, pair(pair(pred, data), action));
+}
+
+fa_action_t fa_action_until(pred_t pred, ptr_t data, fa_action_t action)
+{
+    return fa_action_compound(_until, pair(pair(pred, data), action));
+}
+
+static inline ptr_t _do(ptr_t data2, ptr_t compound)
+{
+    pair_t closure = data2;
+    nullary_t function;
+    ptr_t     data;
+    unpair(function, data, closure);    
+    return function(data);
+}
+
+/** Convert a unary function to an action.
+*/
+fa_action_t fa_action_do(fa_nullary_t function, fa_ptr_t data)
+{
+    return fa_action_compound(_do, pair(pair(function, data), fa_action_null()));
+}
+
+
+
+
+
+
+
+
 
 
 

@@ -155,6 +155,22 @@ module Fa.Action
      */
     if : (Pred, Ptr, Action) -> Action;
 
+    /** Creates a derived action from the given action that executes as long as the given predicate holds.
+        The predicate function is called for every occurence.
+     */
+    while : (Pred, Ptr, Action) -> Action;
+
+    /** Creates a derived action from the given action that executes as long as the given predicate
+        does *not* hold.
+        
+        The predicate function is called for every occurence.
+     */
+    until : (Pred, Ptr, Action) -> Action;
+
+    /** Convert a unary function to an action.
+     */
+    do : (Nullary, Ptr) -> Action;
+
     /** Returns whether the given action is simple or not.
      */
     isSimple : Action -> Bool;

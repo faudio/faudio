@@ -7,6 +7,7 @@
 #include <ApplicationServices/ApplicationServices.h> // DEBUG
 
 
+
 bool pred1(ptr_t _, ptr_t x)
 {
 
@@ -16,6 +17,7 @@ bool pred1(ptr_t _, ptr_t x)
     bool res = loc.x > 200;
     CFRelease(event);
 
+    printf("pred1: %d\n", res);
     return res;
 }
 
@@ -28,8 +30,12 @@ bool pred2(ptr_t _, ptr_t x)
     bool res = loc.y > 200;
     CFRelease(event);
 
+    printf("pred2: %d\n", res);
     return res;
 }
+
+#define time_zero fa_milliseconds(0)
+#define fa_action_compose(x,y) fa_action_many(list(pair(x, time_zero), pair(y, time_zero)))
 
 void run_midi()
 {
@@ -59,7 +65,7 @@ void run_midi()
     }
 
     {
-
+        
         fa_action_t note1  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x99, 60, 127));
         fa_action_t note2  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x99, 64, 127));
         fa_action_t notes1 = fa_action_many(list(
@@ -73,17 +79,23 @@ void run_midi()
                                                 pair(note1, fa_milliseconds(100))
                                             ));
 
+        fa_action_t x = fa_action_repeat(fa_milliseconds(1000/5), note1);
+        fa_action_t y = fa_action_repeat(fa_milliseconds(1100/5), note2);
+
         fa_midi_schedule_relative(seconds(0),
-                                  fa_action_repeat(fa_milliseconds(1000),
-                                                   fa_action_many(list(
-                                                           pair(fa_action_if(pred1, NULL, notes1), fa_milliseconds(0)),
-                                                           pair(fa_action_if(pred2, NULL, notes2), fa_milliseconds(0))
-                                                                  ))
-                                                  ),
-                                  st);
+            fa_action_compose(
+                fa_action_while(pred1, NULL, fa_action_repeat(seconds(1), note1)) 
+                ,
+                fa_action_while(pred2, NULL, fa_action_repeat(seconds(1), note2))
+                )
+            
+            , st);
+
         fa_thread_sleep(100000);
         mark_used(notes1);
-        mark_used(notes2);
+        mark_used(notes2);  
+        mark_used(x);
+        mark_used(y);
     }
 
     // {

@@ -137,10 +137,12 @@ struct _fa_midi_stream_t {
     is active at a time.
  */
 static mutex_t                      gMidiMutex;
+
 static bool                         gMidiActive;
 static bool                         gMidiTerminating;
+
+static session_t                    gPendingSession; 
 static session_t                    gMidiCurrentSession;
-static session_t                    gPendingSession; // Set to 0 when a new session should be created, set to the session otherwise
 static fa_thread_t                  gMidiThread;
 static CFRunLoopRef                 gMidiThreadRunLoop;
 
@@ -286,6 +288,24 @@ inline static void delete_stream(stream_t stream)
 
 // --------------------------------------------------------------------------------
 
+
+/*
+    gMidiActive
+        Set to false from start.
+        Set to true by user thread after starting a new session.
+        Set to false by MIDI thread to indicate session stopped.
+    
+    gPendingSession
+        Set to kNoSession from start.
+        Set to kRequestSession by user thread when a new session should be created
+        Set to the session by the MIDI thread to indicate session started
+*/
+
+
+// A non-null value which is not a valid pointer either
+#define kNoSession      ((session_t) 1)
+#define kRequestSession ((session_t) 0)
+
 void status_listener(const MIDINotification *message, ptr_t data)
 {
     session_t session = data;
@@ -332,21 +352,22 @@ ptr_t midi_thread(ptr_t x)
     // Save the loop so we can stop it from outside
     gMidiThreadRunLoop = CFRunLoopGetCurrent();
 
-    while (true) {
+    inform(string("CoreMIDI interaction thread active"));
+
+    // Until faudio is terminated, this thread will repeatedly wait for instructions 
+    // to start a session, and act as its run loop.
+
+    while (!gMidiTerminating) {
         fa_thread_sleep(100);
 
-        if (gMidiTerminating) {
-            return NULL;
-        }
-
         // Only proceed when gPendingSession becomes zero
-        if (gPendingSession) {
+        if (gPendingSession != kRequestSession) {
             continue;
         }
 
         {
             result  = 0;
-            session = new_session(); // Still have to set native and devics
+            session = new_session(); // Still have to set native and devices
 
             // This sets native
             result = MIDIClientCreate(
@@ -403,19 +424,24 @@ ptr_t midi_thread(ptr_t x)
         }
     }
 
-    assert(false && "Unreachable");
-}
+    inform(string("Disposing CoreMIDI interaction thread"));
 
+    // Successfully terminated
+    return NULL;
+}
 
 void fa_midi_initialize()
 {
     gMidiMutex          = fa_thread_create_mutex();
+
     gMidiActive         = false;
     gMidiTerminating    = false;
+
+    gPendingSession     = kNoSession;
     gMidiCurrentSession = NULL;
+
     gMidiThreadRunLoop  = NULL;
     gMidiThread         = fa_thread_create(midi_thread, NULL);
-    gPendingSession     = (session_t) - 1; // dummy
 
     while (!gMidiThreadRunLoop) {
         fa_thread_sleep(1); // Wait for run loop to be initialized by thread
@@ -430,7 +456,7 @@ void fa_midi_terminate()
 
     fa_midi_end_all_sessions();
     gMidiTerminating = true;
-    gPendingSession  = NULL; // Wake up
+    gPendingSession  = kRequestSession; // Wake up
     fa_thread_join(gMidiThread);
 }
 
@@ -446,26 +472,26 @@ session_t fa_midi_begin_session()
     assert_module_initialized();
     inform(string("Initializing real-time midi session"));
 
+    session_t session;
+    
     fa_with_lock(gMidiMutex);
     {
-        /* Assure no overlaps.
-         */
+        // Assure no overlaps.
         if (gMidiActive) {
-            fa_thread_unlock(gMidiMutex);
-            return (session_t) midi_device_error(string("Overlapping real-time midi sessions"));
+            session = (session_t) midi_device_error(string("Overlapping real-time midi sessions"));
         } else {
-            gPendingSession = NULL;
+            gPendingSession = kRequestSession;
 
+            // Wait for the MIDI thread to start the new session
             while (!gPendingSession) {
                 fa_thread_sleep(1);
             }
-
-            session_t session   = gPendingSession;
+            session             = gPendingSession;
             gMidiActive         = true;
             gMidiCurrentSession = session;
-            return session;
         }
     }
+    return session;
 }
 
 void fa_midi_end_session(session_t session)

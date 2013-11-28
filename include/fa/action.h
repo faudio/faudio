@@ -169,6 +169,22 @@ fa_action_t fa_action_many(fa_list_t);
 */
 fa_action_t fa_action_if(fa_pred_t, fa_ptr_t, fa_action_t);
 
+/** Creates a derived action from the given action that executes as long as the given predicate holds.
+    The predicate function is called for every occurence.
+*/
+fa_action_t fa_action_while(fa_pred_t, fa_ptr_t, fa_action_t);
+
+/** Creates a derived action from the given action that executes as long as the given predicate
+    does *not* hold.
+    
+    The predicate function is called for every occurence.
+*/
+fa_action_t fa_action_until(fa_pred_t, fa_ptr_t, fa_action_t);
+
+/** Convert a unary function to an action.
+*/
+fa_action_t fa_action_do(fa_nullary_t, fa_ptr_t);
+
 /** Returns whether the given action is simple or not.
 */
 bool fa_action_is_simple(fa_action_t);
