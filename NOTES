@@ -1,6 +1,13 @@
 
+# v2.7.0
 
-Remove debug printing!
+- Fixes to scheduling/action API
+
+- Fixes latency issues
+
+- Fixes miscellaneous scheduling bugs
+
+- Improves documentation
 
 # v2.6.0
 
