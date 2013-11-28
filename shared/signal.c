@@ -37,7 +37,6 @@ struct _fa_signal_t {
         lift2_signal,
         loop_signal,
         delay_signal,
-        // insert_signal,
         custom_signal,
         input_signal,
         output_signal
@@ -76,15 +75,6 @@ struct _fa_signal_t {
             int             n;
             signal_t        a;
         } delay;
-
-        // struct {
-        //     string_t        name;
-        //     int             numInputs;
-        //     int             numOutputs;
-        //     int             input;
-        //     int             output;
-        //     signal_t        a;
-        // }                   insert;
 
         struct {
             custom_proc_t   proc;
@@ -127,7 +117,6 @@ inline static void delete_signal(signal_t signal)
 
 #define is_delay(v)         (v->tag == delay_signal)
 #define is_loop(v)          (v->tag == loop_signal)
-// #define is_insert(v)        (v->tag == insert_signal)
 #define is_custom(v)        (v->tag == custom_signal)
 #define is_input(v)         (v->tag == input_signal)
 #define is_output(v)        (v->tag == output_signal)
@@ -139,7 +128,6 @@ inline static void delete_signal(signal_t signal)
 #define lift2_get(v,f)      v->fields.lift2.f
 #define loop_get(v,f)       v->fields.loop.f
 #define delay_get(v,f)      v->fields.delay.f
-// #define insert_get(v,f)     v->fields.insert.f
 #define custom_get(v,f)     v->fields.custom.f
 #define input_get(v,f)      v->fields.input.f
 #define output_get(v,f)     v->fields.output.f
@@ -224,18 +212,6 @@ fa_signal_t fa_signal_delay(int n, fa_signal_t a)
     return signal;
 }
 
-// fa_signal_t fa_signal_insert(string_t name, int numInputs, int numOutputs, int input, int output, signal_t a)
-// {
-//     signal_t signal = new_signal(insert_signal);
-//     insert_get(signal, name)        = name;
-//     insert_get(signal, numInputs)   = numInputs;
-//     insert_get(signal, numOutputs)  = numOutputs;
-//     insert_get(signal, input)       = input;
-//     insert_get(signal, output)      = output;
-//     insert_get(signal, a)           = a;
-//     return signal;
-// }
-
 fa_signal_t fa_signal_custom(custom_proc_t proc, signal_t a)
 {
     signal_t signal = new_signal(custom_signal);
@@ -305,18 +281,6 @@ signal_t copy_delay(signal_t signal2)
 }
 
 
-// fa_signal_t copy_insert(signal_t signal2)
-// {
-//     signal_t signal = new_signal(insert_signal);
-//     insert_get(signal, name)        = insert_get(signal2, name);
-//     insert_get(signal, numInputs)   = insert_get(signal2, numInputs);
-//     insert_get(signal, numOutputs)  = insert_get(signal2, numOutputs);
-//     insert_get(signal, input)       = insert_get(signal2, input);
-//     insert_get(signal, output)      = insert_get(signal2, output);
-//     insert_get(signal, a)           = insert_get(signal2, a);
-//     return signal;
-// }
-
 fa_signal_t copy_custom(signal_t signal2)
 {
     signal_t signal = new_signal(custom_signal);
@@ -365,9 +329,6 @@ fa_signal_t fa_signal_copy(fa_signal_t signal)
 
     case delay_signal:
         return copy_delay(signal);
-
-        // case insert_signal:
-        //     return copy_insert(signal);
 
     case custom_signal:
         return copy_custom(signal);
@@ -595,31 +556,6 @@ fa_signal_t simplify(part_t *part, list_t *procs, fa_signal_t signal2)
 
         return fa_signal_former(input, output);
     }
-
-    // case insert_signal: {
-    //     string_t name           = insert_get(signal2, name);
-    //
-    //     int      numInputs      = insert_get(signal2, numInputs);
-    //     int      numOutputs     = insert_get(signal2, numOutputs);
-    //     int      input          = insert_get(signal2, input);
-    //     int      output         = insert_get(signal2, output);
-    //
-    //     signal_t a = insert_get(signal2, a);
-    //
-    //     if (numInputs > 0) {
-    //         part_t part1;
-    //         int index = get_buffer_range(part, &part1, name, numInputs, numOutputs);
-    //
-    //         signal_t inputS     = fa_signal_input(index + output);
-    //         signal_t outputS    = fa_signal_output(1, index + input, simplify(&part1, procs, a));
-    //
-    //         return fa_signal_former(inputS, outputS);
-    //     } else {
-    //         part_t part1; // Not used
-    //         int index = get_buffer_range(part, &part1, name, numInputs, numOutputs);
-    //         return fa_signal_input(index + output);
-    //     }
-    // }
 
     case custom_signal: {
         signal_t a              = simplify(part, procs, custom_get(signal2, a));
