@@ -67,6 +67,10 @@ fa_ptr_t print_and_echo_dls(ptr_t x, ptr_t timeMessage)
     mark_used(time);
 }
 
+ptr_t times2 (ptr_t _, ptr_t x) {
+    return fa_multiply(x, fa_signal_constant(2.0));
+}
+
 void run_midi()
 {               
     fa_midi_session_t s     = fa_midi_begin_session();
@@ -86,7 +90,9 @@ void run_midi()
 
     fa_midi_stream_t ist = fa_midi_open_stream(i);
     fa_midi_stream_t ost = fa_midi_open_stream(o);
-    fa_audio_stream_t aost = fa_audio_open_stream(ai, ao, just, fa_pair_to_list(fa_signal_dls()));
+    fa_audio_stream_t aost = fa_audio_open_stream(ai, ao, just, 
+        fa_list_map(fa_multiply, fa_signal_constant(2.0), fa_pair_to_list(fa_signal_dls()))
+        );
     mark_used(ost);
     mark_used(aost);
 

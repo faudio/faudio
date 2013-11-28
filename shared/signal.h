@@ -12,11 +12,12 @@ struct _state_base_t {
 
 #define kVectorMode false
 
-#define kMaxVectorSize 128
-#define kDefVectorSize 128
+#define kMaxVectorSize 64
+#define kDefVectorSize 64
 
 #define kDefSampleRate 44100
-#define kAudioSchedulerInterval 5
+#define kSuggestedLatencySec 0.002
+#define kAudioSchedulerIntervalMillis 5
 
 typedef struct _state_t *state_t;
 typedef struct _state_base_t *state_base_t;

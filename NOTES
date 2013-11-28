@@ -1,4 +1,7 @@
 
+
+Remove debug printing!
+
 # v2.6.0
 
 - Adds experimental support for vectorized DSP

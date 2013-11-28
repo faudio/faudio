@@ -475,7 +475,7 @@ stream_t fa_audio_open_stream(device_t input,
     {
         // TODO test with lower latency
         PaStreamParameters inp = {
-            .suggestedLatency           = 0.0,
+            .suggestedLatency           = kSuggestedLatencySec,
             .hostApiSpecificStreamInfo  = NULL,
             .device                     = (input ? input->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
@@ -483,7 +483,7 @@ stream_t fa_audio_open_stream(device_t input,
         };
 
         PaStreamParameters outp = {
-            .suggestedLatency           = 0.0,
+            .suggestedLatency           = kSuggestedLatencySec,
             .hostApiSpecificStreamInfo  = NULL,
             .device                     = (output ? output->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
@@ -641,7 +641,7 @@ ptr_t audio_control_thread(ptr_t x)
 
             // Until we have a better solution we busy loop, eating CPU but getting better precision
             
-            // fa_thread_sleep(kAudioSchedulerInterval);
+            // fa_thread_sleep(kAudioSchedulerIntervalMillis);
         }
     }
 
