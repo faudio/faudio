@@ -76,8 +76,8 @@ void run_midi()
         fa_midi_schedule_relative(seconds(0),
                                   fa_action_repeat(fa_milliseconds(1000),
                                                    fa_action_many(list(
-                                                           pair(fa_action_while(pred1, NULL, notes1), fa_milliseconds(0)),
-                                                           pair(fa_action_while(pred2, NULL, notes2), fa_milliseconds(0))
+                                                           pair(fa_action_if(pred1, NULL, notes1), fa_milliseconds(0)),
+                                                           pair(fa_action_if(pred2, NULL, notes2), fa_milliseconds(0))
                                                                   ))
                                                   ),
                                   st);

@@ -245,8 +245,8 @@
 (defun list-find-index* (f xs)
   (list-find-index (callback predcall1#) (func-to-int# f) xs))
 
-(defun action-while* (f a)
- (action-while (callback predcall1#) (func-to-int# f) a))
+(defun action-if* (f a)
+ (action-if (callback predcall1#) (func-to-int# f) a))
 
 
 (defcallback list2listcall# list ((f ptr) (x list))

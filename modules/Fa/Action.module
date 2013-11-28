@@ -151,13 +151,9 @@ module Fa.Action
     many : (List) -> Action;
     
     /** Creates a derived action from the given action that executes íf and only given predicate holds.
-
-        The predicate function is called *once*, just before the action is scheduled for execution. If
-        a while action is wrapped in a repeating action, the predicate will be called repeatedly.        
+        The predicate function is called for every occurence.
      */
-    while : (Pred, Ptr, Action) -> Action;
-
-
+    if : (Pred, Ptr, Action) -> Action;
 
     /** Returns whether the given action is simple or not.
      */

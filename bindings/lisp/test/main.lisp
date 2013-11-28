@@ -781,7 +781,7 @@
 ; When on is non-nil
 (midi-schedule-relative 
  (seconds 0) 
- (action-while* (lambda (_) *on*) note1) 
+ (action-if* (lambda (_) *on*) note1) 
  midi-stream)
 
 ; Repeat when on is non-nil
@@ -789,7 +789,7 @@
  (seconds 0) 
  (action-repeat 
   (seconds 0.1) 
-  (action-while* (lambda (_) *on*) note1))
+  (action-if* (lambda (_) *on*) note1))
  midi-stream)
 
 
@@ -807,13 +807,13 @@
 (setf *on* nil)
 (audio-schedule-relative 
  (seconds 0) 
- (action-while* (lambda (_) *on*) note1) 
+ (action-if* (lambda (_) *on*) note1) 
  audio-stream)
 (audio-schedule-relative 
  (seconds 0)
  (action-repeat 
   (milliseconds 100)
-  (action-while* (lambda (_) *on*) note1))
+  (action-if* (lambda (_) *on*) note1))
  audio-stream)
 
 
@@ -821,7 +821,7 @@
 (setf all-notes (action-many (cl:list (pair-create note1 (milliseconds 500)) (pair-create note2 (milliseconds 0)))))
 (setf all-notes-loop (action-repeat (milliseconds 1000) all-notes))
 (midi-schedule-relative (milliseconds 0) all-notes-loop midi-output-stream)
-(midi-schedule-relative (milliseconds 0) (action-while* (lambda (x)
+(midi-schedule-relative (milliseconds 0) (action-if* (lambda (x)
                                        (declare (ignorable x))
                                        t)
                                      note1))

@@ -165,11 +165,9 @@ fa_action_t fa_action_repeat(fa_time_t, fa_action_t);
 fa_action_t fa_action_many(fa_list_t);
 
 /** Creates a derived action from the given action that executes íf and only given predicate holds.
-
-    The predicate function is called *once*, just before the action is scheduled for execution. If
-    a while action is wrapped in a repeating action, the predicate will be called repeatedly.        
+    The predicate function is called for every occurence.
 */
-fa_action_t fa_action_while(fa_pred_t, fa_ptr_t, fa_action_t);
+fa_action_t fa_action_if(fa_pred_t, fa_ptr_t, fa_action_t);
 
 /** Returns whether the given action is simple or not.
 */

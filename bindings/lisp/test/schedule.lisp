@@ -155,8 +155,8 @@
             (push-note-off (time channel note-number)
               (push-note-on time channel note-number 0))
             (push-click-track-note (time channel)
-              (push-action (faudio::action-while* #'(lambda (x) (declare (ignorable x)) *play-clicks*) (ensure-action (faudio::midi (+ #x90 channel) 76 120))) time clicks)
-              (push-action (faudio::action-while* #'(lambda (x) (declare (ignorable x)) *play-clicks*) (ensure-action (faudio::midi (+ #x90 channel) 76 0))) (+ time 50) clicks)))
+              (push-action (faudio::action-if* #'(lambda (x) (declare (ignorable x)) *play-clicks*) (ensure-action (faudio::midi (+ #x90 channel) 76 120))) time clicks)
+              (push-action (faudio::action-if* #'(lambda (x) (declare (ignorable x)) *play-clicks*) (ensure-action (faudio::midi (+ #x90 channel) 76 0))) (+ time 50) clicks)))
 
      (let ((note-channel 0)
            (click-channel 9))

@@ -290,7 +290,7 @@ fa_action_t fa_action_many(list_t timeActions)
     return fa_action_compound(_many, timeActions);
 }
 
-static inline ptr_t _while(ptr_t data, ptr_t compound)
+static inline ptr_t _if(ptr_t data, ptr_t compound)
 {
     pair_t predAction = data;
     pair_t      predClosure     = fa_pair_first(predAction);
@@ -310,9 +310,9 @@ static inline ptr_t _while(ptr_t data, ptr_t compound)
 }
 
 // [(Action, Time)] -> Action
-fa_action_t fa_action_while(pred_t pred, ptr_t ptr, fa_action_t action)
+fa_action_t fa_action_if(pred_t pred, ptr_t ptr, fa_action_t action)
 {
-    return fa_action_compound(_while, pair(pair(pred, ptr), action));
+    return fa_action_compound(_if, pair(pair(pred, ptr), action));
 }
 
 
