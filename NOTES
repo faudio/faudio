@@ -1,7 +1,10 @@
 
 # v2.7.0
 
-- Fixes to scheduling/action API
+- Improvements scheduling/action API
+    - Warning: Non-backwards compatible change: action-while is *permanently* renamed to action-if, and the new function called action-while have a new meaning.
+    
+- Adds dynamic DSP parameters
 
 - Fixes latency issues
 
