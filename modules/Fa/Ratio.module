@@ -31,47 +31,63 @@ module Fa.Ratio
     /** Create a rational number.
      */
     create  : (Numerator, Denominator) -> Ratio;
+
     /** Return the numerator of the given rational number.
      */
     num     : Ratio -> Numerator;
+
     /** Return the denominator of the given rational number.
      */
     denom   : Ratio -> Denominator;
+
     /** Destruct the given rational number, writing its numerator
         and denominator to the given locations.
      */
     match   : (Ratio, Numerator*, Denominator*) -> Void;
+
     /** Copy a rational number.
      */
     copy    : Ratio -> Ratio;
+
     /** Destroy a rational number.
      */
     destroy : Ratio -> Void;
+
+
+    // Arithmetic
             
     /** Add the given rational numbers.
      */
      add         : (Ratio, Ratio) -> Ratio;
+
     /** Subtract the given rational numbers.
      */
      subtract    : (Ratio, Ratio) -> Ratio;
+
     /** Multiply the given rational numbers.
      */
      multiply    : (Ratio, Ratio) -> Ratio;
+
     /** Divide the given rational numbers.
      */
      divide      : (Ratio, Ratio) -> Ratio;
+
     /** Return the successor of the given rational number.
      */
      succ        : Ratio -> Ratio;
+
     /** Return the predecessor of the given rational number.
      */
      pred        : Ratio -> Ratio;
+
     /** Negate the given rational number.
      */
      negate      : Ratio -> Ratio;
+
     /** Invert the given rational number.
      */
     recip       : Ratio -> Ratio;
+
     /** Return the absolute value of the given rational number.
      */
     absolute    : Ratio -> Ratio;
@@ -79,6 +95,7 @@ module Fa.Ratio
     /** Normalize the given rational number.
      */
     normalize : Ratio -> Ratio;
+
     /** Convert the given rational number to mixed form.
 
         For example \f$11/3\f$ becomes \f$3+2/3\f$.

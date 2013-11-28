@@ -28,20 +28,10 @@ module Fa.Pair.Left
     type Left = opaque;
     type Struct = struct { first : Ptr, second : Ptr };
 
-    /** Create a new pair.
-     */
     create  : (Ptr, Ptr) -> Left;
-    /** Create a pair by reading the components of a structure.
-     */
     read : (Struct*) -> Left;
-    /** Write the values of a pair to a structure.
-     */
     write : (Struct*, Left) -> Void;
-    /** Copy the given pair.
-     */
     copy   : Left -> Left;
-    /** Destroy the given pair.
-     */
     destroy : Left -> Void;
     decons : (Ptr*, Ptr*, Left) -> Void;
     

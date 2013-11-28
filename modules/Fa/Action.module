@@ -54,6 +54,14 @@ module Fa.Action
      */
     null : () -> Action;
 
+    /** Copy the given action.
+     */
+    copy : Action -> Action;
+    
+    /** Destroy the given action.
+     */
+    destroy : Action -> Void;
+
     /** The `set` action updates a single global bus.
 
         The resulting action must be destroyed by the caller.
@@ -149,12 +157,26 @@ module Fa.Action
      */
     while : (Pred, Ptr, Action) -> Action;
 
-    isCompound : Action -> Bool;
-    compoundInterval : Action -> Time;
-    compoundFirst : Action -> Action; // Nullable
-    compoundRest : Action -> Action; // Nullable
 
-    copy : Action -> Action;
-    destroy : Action -> Void;
+
+    /** Returns whether the given action is simple or not.
+     */
+    isSimple : Action -> Bool;
+
+    /** Returns whether the given action is compound or not.
+     */
+    isCompound : Action -> Bool;
+    
+    /** Given a compound action, return the minimum offset to its tail.
+     */
+    compoundInterval : Action -> Time;
+
+    /** Given a compound action, return its head (nullable).
+     */
+    compoundFirst : Action -> Action; // Nullable
+
+    /** Given a compound action, return its tail (nullable).
+     */
+    compoundRest : Action -> Action; // Nullable
 }
 

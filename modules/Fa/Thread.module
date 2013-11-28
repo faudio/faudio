@@ -40,10 +40,12 @@ module Fa.Thread
         @return     A new thread executing concurrently with the current thread.
      */
     create  : (Nullary, Ptr) -> Thread;
+
     /** Destroy a thread, and return after its associated function has returned.
         @param thread Thread to join (destroyed).
       */
     join    : Thread -> Void;
+
     /** Destroy a thread and return directly. The associated function may continous executing
         in the background.
         @param thread Thread to detach (destroyed).
@@ -56,12 +58,14 @@ module Fa.Thread
      */
     toNative     : Thread -> Ptr;
 
-
     /** Return the main thread.
       */
+
     main    : () -> Thread;
+
     /** Return the current thread.
       */
+
     current : () -> Thread;
     
     /** Sleep the current thread for the given time.
@@ -74,15 +78,19 @@ module Fa.Thread
         to a destructive function.
      */
     createMutex     : () -> Mutex;
+
     /** Destroy a mutex.
      */
     destroyMutex    : Mutex -> Void;
+
     /** Acquire the lock of a mutex.
      */
     lock            : Mutex -> Bool;
+
     /** Try acquiring the lock of a mutex.
      */
     tryLock         : Mutex -> Bool;
+
     /** Release the lock of a mutex.
      */
     unlock          : Mutex -> Bool;

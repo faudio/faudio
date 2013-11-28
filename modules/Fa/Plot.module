@@ -42,7 +42,6 @@ module Fa.Plot
 
     
     // Plotting
-    
     // discrete      : List -> Void;                           // Int -> [(Double, Double)]
     continous     : (Function, Ptr, Nullary, Ptr) -> Void;  // Int -> Double -> Double -> Double
 

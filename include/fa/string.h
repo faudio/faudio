@@ -166,11 +166,16 @@ fa_ptr_t fa_string_from_json(fa_string_t);
 
     @param  str String to encode.
     @return
-        A heap-allocated encoded string.
+    qA new encoded string.
 */
 fa_string_utf8_t fa_string_to_utf8(fa_string_t);
 
+/** Encode a string as CP1252, also known as the standard Windows charset.
 
+    @param  str String to encode.
+    @return
+        A new encoded string.
+*/
 fa_string_cp1252_t fa_string_to_cp1252(fa_string_t);
 
 /** Encode the given string as UTF-16.
@@ -195,7 +200,12 @@ fa_ptr_t fa_string_to_native(fa_string_t);
 */
 fa_string_t fa_string_from_utf8(fa_string_utf8_t);
 
+/** Deencode a string from CP1252, also known as the standard Windows charset.
 
+    @param  str Encoded string.
+    @return
+        A new string.
+*/
 fa_string_t fa_string_from_cp1252(fa_string_cp1252_t);
 
 /** Deencode a string from UTF-16.

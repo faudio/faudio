@@ -5,7 +5,6 @@
 
 module Fa.System
 {
-    // import Fa.System.Event;
     import Fa.System.Directory;
 }
 

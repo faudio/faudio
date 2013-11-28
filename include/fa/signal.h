@@ -211,7 +211,7 @@ void fa_signal_print(int, fa_list_t, fa_signal_t);
         Number of samples to generate.
     @param controls
         List of control values (must be pairs of @ref fa_time_t and @ref fa_action_t).
-        Optional, a null pointer is interpreted as the empty list.
+        Optionally, a null pointer is interpreted as the empty list.
     @param signal
         Signal to run.
     @param buffer
@@ -226,7 +226,7 @@ void fa_signal_run(int, fa_list_t, fa_signal_t, double *);
         Number of samples to generate.
     @param controls
         List of control values (must be pairs of fa_time_t and fa_action_t).
-        Optional, a null pointer is interpreted as the empty list.
+        Optionally, a null pointer is interpreted as the empty list.
     @param signal
         Signal to run.
 */
@@ -238,7 +238,7 @@ fa_buffer_t fa_signal_run_buffer(int, fa_list_t, fa_signal_t);
         Number of samples to generate.
     @param controls
         List of control values (must be pairs of fa_time_t and fa_action_t).
-        Optional, a null pointer is interpreted as the empty list.
+        Optionally, a null pointer is interpreted as the empty list.
     @param signal
         Signal to run.
     @param path

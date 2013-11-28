@@ -65,6 +65,14 @@ typedef fa_ptr_t fa_action_value_t;
 */
 fa_action_t fa_action_null();
 
+/** Copy the given action.
+*/
+fa_action_t fa_action_copy(fa_action_t);
+
+/** Destroy the given action.
+*/
+void fa_action_destroy(fa_action_t);
+
 /** The `set` action updates a single global bus.
 
     The resulting action must be destroyed by the caller.
@@ -163,23 +171,25 @@ fa_action_t fa_action_many(fa_list_t);
 */
 fa_action_t fa_action_while(fa_pred_t, fa_ptr_t, fa_action_t);
 
+/** Returns whether the given action is simple or not.
+*/
+bool fa_action_is_simple(fa_action_t);
 
+/** Returns whether the given action is compound or not.
+*/
 bool fa_action_is_compound(fa_action_t);
 
-
+/** Given a compound action, return the minimum offset to its tail.
+*/
 fa_time_t fa_action_compound_interval(fa_action_t);
 
-
+/** Given a compound action, return its head (nullable).
+*/
 fa_action_t fa_action_compound_first(fa_action_t);
 
-
+/** Given a compound action, return its tail (nullable).
+*/
 fa_action_t fa_action_compound_rest(fa_action_t);
-
-
-fa_action_t fa_action_copy(fa_action_t);
-
-
-void fa_action_destroy(fa_action_t);
 
 /** @}
     @}

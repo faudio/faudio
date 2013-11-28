@@ -43,24 +43,19 @@ typedef struct {
             fa_ptr_t first; fa_ptr_t second;
         } fa_pair_left_struct_t;
 
-/** Create a new pair.
-*/
+
 fa_pair_left_t fa_pair_left_create(fa_ptr_t, fa_ptr_t);
 
-/** Create a pair by reading the components of a structure.
-*/
+
 fa_pair_left_t fa_pair_left_read(fa_pair_left_struct_t *);
 
-/** Write the values of a pair to a structure.
-*/
+
 void fa_pair_left_write(fa_pair_left_struct_t *, fa_pair_left_t);
 
-/** Copy the given pair.
-*/
+
 fa_pair_left_t fa_pair_left_copy(fa_pair_left_t);
 
-/** Destroy the given pair.
-*/
+
 void fa_pair_left_destroy(fa_pair_left_t);
 
 

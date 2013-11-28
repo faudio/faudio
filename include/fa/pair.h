@@ -59,7 +59,8 @@ fa_pair_t fa_pair_copy(fa_pair_t);
 */
 void fa_pair_destroy(fa_pair_t);
 
-
+/** Get the first and second components of the given pair.
+*/
 void fa_pair_decons(fa_ptr_t *, fa_ptr_t *, fa_pair_t);
 
 /** Get the first component of the given pair.
@@ -86,7 +87,8 @@ fa_pair_t fa_pair_assoc(fa_pair_t);
 */
 fa_pair_t fa_pair_unassoc(fa_pair_t);
 
-
+/** Convert a pair to a list of two elements.
+*/
 fa_list_t fa_pair_to_list(fa_pair_t);
 
 /** @}

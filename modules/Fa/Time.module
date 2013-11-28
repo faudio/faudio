@@ -75,6 +75,7 @@ module Fa.Time
 
 
     // Constructors
+    
     /** Create a new time value.
         @param days
             Number of days.
@@ -88,16 +89,20 @@ module Fa.Time
             A new time value.
      */
     create      : (Days, Hours, Minutes, Ratio) -> Time;
+    
     /**
         Copy the given time value.
      */
     copy        : Time -> Time;
+    
     /**
         Destroy the given time value.
      */
     destroy     : Time -> Void;
 
+
     // Introspection
+
     /**
         Return the number of whole days in this time value.
 
@@ -107,6 +112,7 @@ module Fa.Time
             Integer representing this time in days modulo one.
      */
     days        : Time -> Int32;
+
     /**
         Return the number of whole hours in this time value.
 
@@ -116,6 +122,7 @@ module Fa.Time
             Integer representing this time in hours modulo one.
      */
     hours       : Time -> Int32;
+
     /**
         Return the number of whole minutes in this time value.
 
@@ -125,6 +132,7 @@ module Fa.Time
             Integer representing this time in minutes modulo one.
      */
     minutes     : Time -> Int32;
+
     /**
         Return the number of whole seconds in this time value.
 
@@ -134,6 +142,7 @@ module Fa.Time
             Integer representing this time in seconds modulo one.
      */
     seconds     : Time -> Int32;
+
     /**
         Return the fractions of a second in this time value.
 

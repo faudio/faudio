@@ -30,39 +30,53 @@ module Fa.Pair
     /** Create a new pair.
      */
     create  : (Ptr, Ptr) -> Pair;
+
     /** Create a pair by reading the components of a structure.
      */
     read : (Struct*) -> Pair;
+
     /** Write the values of a pair to a structure.
      */
     write : (Struct*, Pair) -> Void;
+
     /** Copy the given pair.
      */
     copy   : Pair -> Pair;
+
     /** Destroy the given pair.
      */
     destroy : Pair -> Void;
+
+    /** Get the first and second components of the given pair.
+     */
     decons : (Ptr*, Ptr*, Pair) -> Void;
 
     /** Get the first component of the given pair.
      */
     first : Pair -> Ptr;
+
     /** Get the second component of the given pair.
      */
     second : Pair -> Ptr;
+
     /** Return a pair containing the given value as both its left and right component.
      */
     duplicate : Ptr -> Pair;
+
     /** Swap the components of the given pair.
      */
     swap : Pair -> Pair;
+
     /** Return the left-associated version of the given nested pair.
      */
     assoc : Pair -> Pair;    
+
     /** Return the right-associated version of the given nested pair.
      */
     unassoc : Pair -> Pair;
-    
+
+    /** Convert a pair to a list of two elements.
+     */
     toList : Pair -> List;
 }
 
