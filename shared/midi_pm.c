@@ -608,7 +608,7 @@ void send_out(midi_message_t midi, stream_t stream)
         // timestamp ignored
         long midi_message = fa_midi_message_simple_to_long(midi);
 
-        printf("Sending: %s %08x\n", unstring(fa_string_show(midi)), (int) midi_message);
+        // printf("Sending: %s %08x\n", unstring(fa_string_show(midi)), (int) midi_message);
 
         result = Pm_WriteShort(stream->native_output, 0, midi_message);
 
