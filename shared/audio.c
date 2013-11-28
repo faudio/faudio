@@ -638,7 +638,7 @@ ptr_t audio_control_thread(ptr_t x)
 
             // Until we have a better solution we busy loop, eating CPU but getting better precision
             
-            // fa_thread_sleep(kAudioSchedulerIntervalMillis);
+            fa_thread_sleep(kAudioSchedulerIntervalMillis);
         }
     }
 
