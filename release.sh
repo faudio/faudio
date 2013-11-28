@@ -5,36 +5,36 @@ then
   echo "Usage: `basename $0` [version]"
   exit $E_BADARGS
 else
-	VERSION=$1
+    VERSION=$1
 fi
 
 
 if [[ $* != *--clean* ]]; then
 
-	rm -rf distribute
-	mkdir -p distribute
-	mkdir -p distribute/bin
-	mkdir -p distribute/include
-	mkdir -p distribute/bindings
-	# mkdir -p distribute/lib
-	mkdir -p distribute/Frameworks
+    rm -rf distribute
+    mkdir -p distribute
+    mkdir -p distribute/bin
+    mkdir -p distribute/include
+    mkdir -p distribute/bindings
+    # mkdir -p distribute/lib
+    mkdir -p distribute/Frameworks
 
-	cp -R include distribute
-	rm distribute/include/config.h.in
+    cp -R include distribute
+    rm distribute/include/config.h.in
 
-	cp -R bindings/lisp distribute/bindings
-	find distribute/bindings/lisp -type f -name '*~' -exec rm -f '{}' \;
+    cp -R bindings/lisp distribute/bindings
+    find distribute/bindings/lisp -type f -name '*~' -exec rm -f '{}' \;
 
-	cp -R build/Frameworks/Faudio.framework distribute/Frameworks
+    cp -R build/Frameworks/Faudio.framework distribute/Frameworks
 
-	cp -R build/bin distribute
-	rm distribute/bin/sbcl
+    cp -R build/bin distribute
+    rm distribute/bin/sbcl
 
-	mv distribute faudio
-	tar -pvczf faudio-$VERSION.tar.gz faudio
-	rm -rf faudio
-	
-	make modules doc
+    mv distribute faudio
+    tar -pvczf faudio-$VERSION.tar.gz faudio
+    rm -rf faudio
+    
+    make modules doc
     pushd pages
 
     git rm -rf docs
@@ -48,6 +48,6 @@ if [[ $* != *--clean* ]]; then
     popd
 
 else
-	echo "Cleaning"
-	rm -rf faudio-*.tar.gz
+    echo "Cleaning"
+    rm -rf faudio-*.tar.gz
 fi
