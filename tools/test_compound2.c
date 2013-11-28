@@ -66,8 +66,8 @@ void run_test()
 
     {
         // 201 109 !!!
-        int j = 109;
-        int k = 201;
+        int j = 66;
+        int k = 333;
 
         fa_action_t note1  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x99, 60, 80));
         fa_action_t note2  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x99, 61, 80));

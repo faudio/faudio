@@ -43,11 +43,12 @@ void run_dls()
                                                        hms(0, 0, 0)
                                                    )
                                                ));
-            fa_audio_schedule(
+            printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
+            fa_audio_schedule_relative(
                 hms(0, 0, 0),
                 chord,
                 st);
-            fa_thread_sleep(50 * 1);
+            fa_thread_sleep(150);
         }
 
         fa_destroy(st);

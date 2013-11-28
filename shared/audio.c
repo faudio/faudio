@@ -91,6 +91,7 @@ struct _fa_audio_stream_t {
     }                   controller;
 
     atomic_queue_t      in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
+    atomic_queue_t      short_controls;     // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
     priority_queue_t    controls;           // Scheduled controls (Time, (Channel, Ptr))
 };
 
@@ -214,6 +215,7 @@ inline static stream_t new_stream(device_t input, device_t output, double sample
     stream->pa_flags        = 0;
 
     stream->in_controls     = atomic_queue();
+    stream->short_controls  = atomic_queue();
     stream->controls        = priority_queue();
 
     return stream;
@@ -473,7 +475,7 @@ stream_t fa_audio_open_stream(device_t input,
     {
         // TODO test with lower latency
         PaStreamParameters inp = {
-            .suggestedLatency           = 0.1,
+            .suggestedLatency           = 0.0,
             .hostApiSpecificStreamInfo  = NULL,
             .device                     = (input ? input->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
@@ -481,7 +483,7 @@ stream_t fa_audio_open_stream(device_t input,
         };
 
         PaStreamParameters outp = {
-            .suggestedLatency           = 0.1,
+            .suggestedLatency           = 0.0,
             .hostApiSpecificStreamInfo  = NULL,
             .device                     = (output ? output->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
@@ -596,7 +598,7 @@ void fa_audio_schedule_relative(fa_time_t         time,
                                 fa_audio_stream_t  stream)
 {
     if (fa_equal(time, seconds(0)) && !fa_action_is_compound(action)) {
-        fa_atomic_queue_write(stream->in_controls, action);
+        fa_atomic_queue_write(stream->short_controls, action);
     } else {
         time_t now = fa_clock_time(fa_audio_stream_clock(stream));
         fa_audio_schedule(fa_add(now, time), action, stream);
@@ -629,6 +631,16 @@ ptr_t audio_control_thread(ptr_t x)
                         stream
                        );
             fa_destroy(now);
+
+            // FIXME thread_sleep is to inexact.
+
+            // We need to find a more precise way of invoking the scheduler. We could either
+            //  * Look for a platform-independent timing library
+            //  * Write platform-specific code
+            //  * Use notifications from the audio thread (might not work at startup)
+
+            // Until we have a better solution we busy loop, eating CPU but getting better precision
+            
             // fa_thread_sleep(kAudioSchedulerInterval);
         }
     }
@@ -681,8 +693,13 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
     state_base_t state = (state_base_t) stream->state;
     {
         ptr_t action;
-
         while ((action = fa_atomic_queue_read(stream->in_controls))) {
+            run_simple_action2(stream->state, action);
+        }
+    }
+    {
+        ptr_t action;
+        while ((action = fa_atomic_queue_read(stream->short_controls))) {
             run_simple_action2(stream->state, action);
         }
     }
