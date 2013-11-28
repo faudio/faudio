@@ -354,8 +354,8 @@ void run_and_resched_action(action_t action, time_t time, time_t now, list_t *re
 
         return;
     } else {
-        fa_print("-------------------------------------------------\n", NULL);
-        fa_print("Forwarding:     %s\n", action);
+        // fa_print("-------------------------------------------------\n", NULL);
+        // fa_print("Forwarding:     %s\n", action);
 
         // long long diff = fa_time_to_milliseconds(now) - fa_time_to_milliseconds(time);
         // gMaxDiff = fa_max(gMaxDiff, diff);
