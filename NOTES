@@ -1,4 +1,8 @@
 
+# v2.7.1
+
+- Fixes scheduling bugs
+
 # v2.7.0
 
 - Improvements scheduling/action API

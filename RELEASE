@@ -1,13 +1,16 @@
 
 ## Release check-list
 
+* Set Release (later: for now, everything is Debug)
+
+* `make modules bindings doc test`
+
+* Write release notes in NOTES, copy to github form
 
 * Bump version 
     * CMakeLists.txt
     * bindings/lisp/faudio.asd
     * doc/Doxyfile
-    * Set Release (later: for now, everything is Debug)
-    * `make modules bindings doc test`
 
 * Commit
     * `git add` (changed files)
@@ -18,7 +21,7 @@
 * Run `release.sh X.X.X`
 
 * Go to <https://github.com/hanshoglund/faudio/releases/new> 
-    * Write release notes in NOTES, copy to github form
+    * Copy release notes
     * Upload the generated zip/tarball
 
 * Run `.release.sh --clean`
