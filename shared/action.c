@@ -424,20 +424,20 @@ fa_action_t fa_action_until(pred_t pred, ptr_t data, fa_action_t action)
     return fa_action_compound(_until, pair(pair(pred, data), action));
 }
 
-static inline ptr_t _do(ptr_t data2, ptr_t compound)
+static inline ptr_t _do(ptr_t closure, ptr_t compound)
 {
-    pair_t closure = data2;
     nullary_t function;
     ptr_t     data;
-    unpair(function, data, closure);    
-    return function(data);
+    unpair(function, data, closure);
+    function(data);
+    return NULL;
 }
 
 /** Convert a unary function to an action.
 */
 fa_action_t fa_action_do(fa_nullary_t function, fa_ptr_t data)
 {
-    return fa_action_compound(_do, pair(pair(function, data), fa_action_null()));
+    return fa_action_compound(_do, pair(function, data));
 }
 
 

@@ -38,6 +38,11 @@ bool pred2(ptr_t _, ptr_t x)
 #define fa_action_compose(x,y) fa_action_many(list(pair(x, time_zero), pair(y, time_zero)))
 #define fa_action_compose3(x,y,z) fa_action_many(list(pair(x, time_zero), pair(y, time_zero), pair(z, time_zero)))
 
+ptr_t _print(ptr_t x) {
+    printf("Hello!\n");
+    return NULL;
+}
+
 void run_midi()
 {
     fa_midi_session_t s = fa_midi_begin_session();
@@ -84,11 +89,13 @@ void run_midi()
         fa_action_t y = fa_action_repeat(fa_milliseconds(1100/5), note2);
 
         fa_midi_schedule_relative(seconds(0),
-            fa_action_compose(
-                fa_action_while(pred1, NULL, fa_action_repeat(seconds(1), note1)) 
-                ,
-                fa_action_while(pred2, NULL, fa_action_repeat(seconds(1), note2))
-                )
+            // fa_action_compose3(
+                fa_action_repeat(fa_milliseconds(3000), fa_action_do(_print, NULL))
+                // ,
+                // fa_action_while(pred1, NULL, fa_action_repeat(seconds(1), note1)) 
+                // ,
+                // fa_action_while(pred2, NULL, fa_action_repeat(seconds(1), note2))
+                // )
             
             , st);
 
