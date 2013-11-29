@@ -25,6 +25,7 @@ struct _fa_action_t {
         set_action,
         accum_action,
         send_action,
+        do_action,
         compound_action
     }                           tag;
 
@@ -44,6 +45,11 @@ struct _fa_action_t {
             name_t              name;
             ptr_t               value;
         }                       send;
+
+        struct {
+            nullary_t           function;
+            ptr_t               data;
+        }                       do_;
 
         struct {
             // Action -> NULL or (SimpleAction, (Time, Action))
@@ -73,11 +79,13 @@ inline static void delete_action(action_t action)
 #define is_set(v)           (v->tag == set_action)
 #define is_accum(v)         (v->tag == accum_action)
 #define is_send(v)          (v->tag == send_action)
+#define is_do(v)            (v->tag == do_action)
 #define is_compound(v)      (v->tag == compound_action)
 
 #define set_get(v,f)        v->fields.set.f
 #define accum_get(v,f)      v->fields.accum.f
 #define send_get(v,f)       v->fields.send.f
+#define do_get(v,f)         v->fields.do_.f
 #define compound_get(v,f)   v->fields.compound.f
 
 // --------------------------------------------------------------------------------
@@ -108,6 +116,14 @@ fa_action_t fa_action_send(fa_action_name_t name, fa_ptr_t value)
     action_t action = new_action(send_action);
     send_get(action, name)  = name;
     send_get(action, value) = value;
+    return action;
+}
+
+fa_action_t fa_action_do(fa_nullary_t function, fa_ptr_t data)
+{
+    action_t action = new_action(do_action);
+    do_get(action, function)  = function;
+    do_get(action, data)      = data;
     return action;
 }
 
@@ -200,6 +216,12 @@ bool fa_action_is_simple(fa_action_t action)
 bool fa_action_is_compound(fa_action_t action)
 {
     return is_compound(action);
+}
+
+
+bool fa_action_is_do(fa_action_t action)
+{
+    return is_do(action);
 }
 
 
@@ -424,21 +446,6 @@ fa_action_t fa_action_until(pred_t pred, ptr_t data, fa_action_t action)
     return fa_action_compound(_until, pair(pair(pred, data), action));
 }
 
-static inline ptr_t _do(ptr_t closure, ptr_t compound)
-{
-    nullary_t function;
-    ptr_t     data;
-    unpair(function, data, closure);
-    function(data);
-    return NULL;
-}
-
-/** Convert a unary function to an action.
-*/
-fa_action_t fa_action_do(fa_nullary_t function, fa_ptr_t data)
-{
-    return fa_action_compound(_do, pair(function, data));
-}
 
 
 
@@ -494,6 +501,13 @@ void run_and_resched_action(action_t action, time_t time, time_t now, list_t *re
         // gMaxDiff = fa_max(gMaxDiff, diff);
         // printf("Time diff:      %lld\n", diff);
         // printf("Max time diff:  %lld\n", gMaxDiff);
+
+        // TODO should this always happen here?
+        if (is_do(action)) {
+            nullary_t function  = do_get(action, function);
+            ptr_t     data      = do_get(action, function);
+            function(data);
+        }
 
         function(data, action);
         return;
