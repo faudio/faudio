@@ -473,7 +473,7 @@ void run_and_resched_action(action_t action, time_t time, time_t now, list_t *re
             run_and_resched_action(first, time, now, resched, function, data);
         }
 
-        if (rest) {
+        if (rest && interv) {
             time_t   future = fa_add(time, interv);
 
             if (fa_less_than_equal(future, now)) {
