@@ -778,6 +778,20 @@
 
 
 
+(defun midi-schedule-now (a s) (midi-schedule-relative (seconds 0) a s))
+
+(midi-schedule-now note1 midi-stream)
+
+(midi-schedule-now (action-if* (lambda (_) t) note1) midi-stream)
+(midi-schedule-now (action-while* (lambda (_) t) note1) midi-stream)
+(midi-schedule-now (action-do* (lambda (x) x)) midi-stream)
+
+(defvar *foo* nil)
+(cl:print *foo*)
+(midi-schedule-relative (seconds 0.1) (action-do* (lambda () (progn (setf *foo* t) nil))) midi-stream)
+
+
+
 (midi-schedule-relative (seconds 0) (action-repeat (seconds 1) note2) midi-stream)
 
 (midi-schedule-relative (seconds 0) (action-null) midi-stream)
@@ -980,7 +994,7 @@
    (audio-schedule (milliseconds 300) (action-send "DLS" (midi #x91 62 127)) stream)))
 
 (signal-run-file* 
- (cl:* 44100 5) 
+ (cl:* 44100 60) 
  (car (signal-dls*))
  :controls (cl:list 
             (pair-create (milliseconds 0)   (action-send "DLS" (midi #x91 60 127)))

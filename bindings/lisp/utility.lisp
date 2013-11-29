@@ -36,6 +36,7 @@
 (defmethod find-index (p (xs list))
   (list-find-index* p xs))
 
+
 (defmethod filter (p (xs list))
   (list-filter* p xs))
 
