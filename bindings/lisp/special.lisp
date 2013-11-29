@@ -248,6 +248,14 @@
 (defun action-if* (f a)
  (action-if (callback predcall1#) (func-to-int# f) a))
 
+(defun action-while* (f a)
+  (action-while (callback predcall1#) (func-to-int# f) a))
+
+(defun action-until* (f a)
+ (action-until (callback predcall1#) (func-to-int# f) a))
+
+(defun action-do* (f)
+  (action-do (callback funcall0#) (func-to-int# f)))
 
 (defcallback list2listcall# list ((f ptr) (x list))
   (funcall (int-to-func# f) x))
