@@ -505,7 +505,7 @@ void run_and_resched_action(action_t action, time_t time, time_t now, list_t *re
         // TODO should this always happen here?
         if (is_do(action)) {
             nullary_t function  = do_get(action, function);
-            ptr_t     data      = do_get(action, function);
+            ptr_t     data      = do_get(action, data);
             function(data);
         }
 
