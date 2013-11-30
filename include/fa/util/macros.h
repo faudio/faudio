@@ -152,7 +152,7 @@
 #define fa_dpush_list(x, xs) \
     xs = fa_list_dcons(x, xs)
 
-#define fa_append_to(s, t) \
+#define fa_write_string(s, t) \
     s = fa_string_append(s, t)
 
 /** Execute following statement while locking on the given mutex.
