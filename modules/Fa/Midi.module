@@ -210,25 +210,20 @@ module Fa.Midi
     
     /**
         Schedule an action on the stream.
-        @warning Experimental
+        
+        The action will be run as soon as the time of the stream (as
+        reported by its clock) is greater than or equal to the given due time.
      */
     schedule : (Time, Action, Stream) -> Void;
 
     /**
         Schedule an action on the stream.
-        @warning Experimental
+
+        The action will be run when the given time has passed, relative to
+        when this function was invoked. This is a convenience function implemented
+        in terms of `fa_audio_schedule` and `fa_clock_time`, using the current
+        stream clock.
      */
     scheduleRelative : (Time, Action, Stream) -> Void;
 }
 
-
-
-// Devices implement [Equal](@ref fa_equal_t) and [Show](@ref fa_string_show_t),
-// but now destroy, as they are always managed by the underlying session.
-// 
-// Stream implements [Clock](@ref fa_time_clock_t) by counting the number
-// of processed samples. Precision is usually limited to the current frame size.
-// 
-// Stream also implements [SenderInterface](@ref fa_message_sender_t) and
-// [ReceiverInterface](@ref fa_message_sender_t), dispatching messages to the underlying
-// processor network. The address of a processor can be obtained by @ref fa_processor_address.

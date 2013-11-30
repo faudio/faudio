@@ -87,7 +87,22 @@ module Fa.Audio
         SessionCallback, Ptr,
         Callback, Ptr) -> Void;
 
+    /** Set an audio parameter value.
+    
+        This function should usually be called once, directly after the session has been
+        created, and will affect all streams created after the invocation.
 
+        ### Supported parameters ###
+        
+        Name           | Description
+        ---------------|------------------------------------------------------------------------
+        `latency`      | Suggested latency in seconds (integer or floating-point).
+        `vector-size`  | Suggested vector size (integer).
+        
+        @param name     Name of parameter to set.
+        @param value    A [reference](@ref ValueReferences) to the value to set.
+        @param session  Session in which to set the parameter.
+     */
     setParameter : (String, Ptr, Session) -> Void;
 
     /** Get all currently active audio sessions. Note that at most one audio session
@@ -149,8 +164,6 @@ module Fa.Audio
             Data closed over by the callback function.
         @param session
             Session on which to register the callback.
-        @warning
-            Experimental.
      */
     addStatusCallback : (StatusCallback, Ptr, Session) -> Void;
 
@@ -211,14 +224,20 @@ module Fa.Audio
 
         @param input
             Input device.
-        @param processor
-            Processor to run over the devices.
         @param input
             Output device.
-        @param callback
-            Function to receive the stream.
+        @param processor_callback
+            Function to receive incoming signals and return output signals.
+        @param processor_data
+            Pointer passed to processor callback.
+        @param stream_callback
+            Function to receive the stream if successful.
+        @param stream_data
+            Pointer passed to stream callback.
         @param error_callback
-            Function to receive eventual errors.
+            Function to errors if unsuccessful.
+        @param error_data
+            Pointer passed to error callback.
      */
     withStream : (
         Device, Device, Proc, Ptr,
@@ -257,13 +276,19 @@ module Fa.Audio
     
     /**
         Schedule an action on the stream.
-        @warning Experimental
+        
+        The action will be run as soon as the time of the stream (as
+        reported by its clock) is greater than or equal to the given due time.
      */
     schedule : (Time, Action, Stream) -> Void;
 
     /**
         Schedule an action on the stream.
-        @warning Experimental
+
+        The action will be run when the given time has passed, relative to
+        when this function was invoked. This is a convenience function implemented
+        in terms of `fa_audio_schedule` and `fa_clock_time`, using the current
+        stream clock.
      */
     scheduleRelative : (Time, Action, Stream) -> Void;
 }

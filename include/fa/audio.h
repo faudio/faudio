@@ -98,7 +98,22 @@ void fa_audio_with_session(fa_audio_session_callback_t,
                            fa_error_callback_t,
                            fa_ptr_t);
 
+/** Set an audio parameter value.
+    
+    This function should usually be called once, directly after the session has been
+    created, and will affect all streams created after the invocation.
 
+    ### Supported parameters ###
+    
+    Name           | Description
+    ---------------|------------------------------------------------------------------------
+    `latency`      | Suggested latency in seconds (integer or floating-point).
+    `vector-size`  | Suggested vector size (integer).
+    
+    @param name     Name of parameter to set.
+    @param value    A [reference](@ref ValueReferences) to the value to set.
+    @param session  Session in which to set the parameter.
+*/
 void fa_audio_set_parameter(fa_string_t,
                             fa_ptr_t,
                             fa_audio_session_t);
@@ -162,8 +177,6 @@ fa_audio_device_t fa_audio_default_output(fa_audio_session_t);
         Data closed over by the callback function.
     @param session
         Session on which to register the callback.
-    @warning
-        Experimental.
 */
 void fa_audio_add_status_callback(fa_audio_status_callback_t,
                                   fa_ptr_t,
@@ -229,14 +242,20 @@ void fa_audio_close_stream(fa_audio_stream_t);
 
     @param input
         Input device.
-    @param processor
-        Processor to run over the devices.
     @param input
         Output device.
-    @param callback
-        Function to receive the stream.
+    @param processor_callback
+        Function to receive incoming signals and return output signals.
+    @param processor_data
+        Pointer passed to processor callback.
+    @param stream_callback
+        Function to receive the stream if successful.
+    @param stream_data
+        Pointer passed to stream callback.
     @param error_callback
-        Function to receive eventual errors.
+        Function to errors if unsuccessful.
+    @param error_data
+        Pointer passed to error callback.
 */
 void fa_audio_with_stream(fa_audio_device_t,
                           fa_audio_device_t,
@@ -280,13 +299,19 @@ void fa_audio_add_message_callback(fa_audio_message_callback_t,
 
 /**
     Schedule an action on the stream.
-    @warning Experimental
+    
+    The action will be run as soon as the time of the stream (as
+    reported by its clock) is greater than or equal to the given due time.
 */
 void fa_audio_schedule(fa_time_t, fa_action_t, fa_audio_stream_t);
 
 /**
     Schedule an action on the stream.
-    @warning Experimental
+
+    The action will be run when the given time has passed, relative to
+    when this function was invoked. This is a convenience function implemented
+    in terms of `fa_audio_schedule` and `fa_clock_time`, using the current
+    stream clock.
 */
 void fa_audio_schedule_relative(fa_time_t,
                                 fa_action_t,

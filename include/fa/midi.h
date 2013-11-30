@@ -231,13 +231,19 @@ void fa_midi_set_clock(fa_midi_stream_t, fa_clock_t);
 
 /**
     Schedule an action on the stream.
-    @warning Experimental
+    
+    The action will be run as soon as the time of the stream (as
+    reported by its clock) is greater than or equal to the given due time.
 */
 void fa_midi_schedule(fa_time_t, fa_action_t, fa_midi_stream_t);
 
 /**
     Schedule an action on the stream.
-    @warning Experimental
+
+    The action will be run when the given time has passed, relative to
+    when this function was invoked. This is a convenience function implemented
+    in terms of `fa_audio_schedule` and `fa_clock_time`, using the current
+    stream clock.
 */
 void fa_midi_schedule_relative(fa_time_t,
                                fa_action_t,
