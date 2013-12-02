@@ -357,12 +357,15 @@ ptr_t midi_thread(ptr_t x)
     // Until faudio is terminated, this thread will repeatedly wait for instructions 
     // to start a session, and act as its run loop.
 
-    while (!gMidiTerminating) {
+    while (true) {
         fa_thread_sleep(100);
 
         // Only proceed when gPendingSession becomes zero
         if (gPendingSession != kRequestSession) {
             continue;
+        }
+        if (gMidiTerminating) {
+            break;
         }
 
         {
@@ -480,6 +483,7 @@ session_t fa_midi_begin_session()
         if (gMidiActive) {
             session = (session_t) midi_device_error(string("Overlapping real-time midi sessions"));
         } else {
+            // Wake up MIDI thread
             gPendingSession = kRequestSession;
 
             // Wait for the MIDI thread to start the new session
