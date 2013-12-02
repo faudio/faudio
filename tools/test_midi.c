@@ -8,7 +8,7 @@ void run_midi()
     // fa_midi_device_t i  = fa_midi_default_input(s);
 
     fa_midi_device_t o  = fa_midi_default_output(s);
-    assert(o && "No output");
+    assert(!fa_check(o) && "No output");
 
     fa_midi_stream_t st = fa_midi_open_stream(o);
 
