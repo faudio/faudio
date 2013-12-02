@@ -89,8 +89,12 @@ void run_midi()
         fa_action_t y = fa_action_repeat(fa_milliseconds(1100/5), note2);
 
         fa_midi_schedule_relative(seconds(0),
+            fa_action_repeat(fa_milliseconds(200), fa_action_if(pred1, NULL, 
+                fa_action_compose(note1, fa_action_do(_print, NULL))
+                ))
+            
             // fa_action_compose3(
-                fa_action_repeat(fa_milliseconds(3000), fa_action_do(_print, NULL))
+                // fa_action_repeat(fa_milliseconds(3000), fa_action_do(_print, NULL))
                 // ,
                 // fa_action_while(pred1, NULL, fa_action_repeat(seconds(1), note1)) 
                 // ,

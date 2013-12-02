@@ -884,6 +884,46 @@
      (audio-schedule (milliseconds 0) (action-repeat (seconds 2) beat) s))))
 
 
+(defvar *doit* t)
+(setf midi-session (midi-begin-session))
+(setf midi-output (midi-default-output midi-session))
+(setf midi-input (midi-default-input midi-session))
+(setf midi-stream (midi-open-stream midi-output))
+
+(setf audio-session (audio-begin-session))
+(setf audio-output (audio-default-output audio-session))
+(setf audio-input (audio-default-input audio-session))
+(setf audio-stream (audio-open-stream* (lambda (_) (cl
+
+;(midi-end-all-sessions)
+
+
+
+
+(signal-run-default 
+ (lambda (inputs) 
+   (mapcar 
+    (lambda (x) (* 0.5 x)) 
+    (signal-dls*)))
+ :stream-callback 
+ (lambda (stream)
+
+
+   (let* ((action1 (faudio::action-send "DLS "(faudio::midi #x90 60 100)))
+          (action2 (faudio::action-send "DLS "(faudio::midi #x90 62 100)))
+          (action3 (faudio::action-send "DLS "(faudio::midi #x90 64 100)))
+          (action-manyx (faudio::action-many (cl:list
+                                              (faudio::pair-create action1 (faudio::milliseconds 400))
+                                              (faudio::pair-create action2 (faudio::milliseconds 400))
+                                              (faudio::pair-create action3 (faudio::milliseconds 0)))))
+          (action-ifx (faudio::action-if* (lambda (x)
+                                            (declare (ignorable x))
+                                                ; (write-to-log-file :debug "ACTION-IF*")
+                                            *doit*)
+                                          action-manyx)))
+     (faudio::audio-schedule-relative (faudio::milliseconds 1000) action-manyx stream)
+     (faudio::audio-schedule-relative (faudio::milliseconds 2000) action-manyx stream))
+   ))
 ; Misc
 
 ; Read file to buffer
@@ -1027,3 +1067,22 @@
     (destroy buf)))
 
 (play-file "/Users/hans/Desktop/Passager.wav")
+
+
+(audio-end-all-sessions)
+(setf audio-session (audio-begin-session))
+(setf audio-input (audio-default-input audio-session))
+(setf audio-output (audio-default-output audio-session))
+(setf *audio-stream* (audio-open-stream* audio-input audio-output (lambda (inputs) (signal-dls*))))
+
+;(setf *audio-stream* );
+(defvar *foo* nil)
+(setf *foo* nil)
+(setf *foo* t)
+(let* ((action (faudio::action-send "DLS "(faudio::midi #x90 60 100)))
+               (actionx (faudio::action-if* (lambda (x)
+                                                 (declare (ignorable x))
+                                                ;(write-to-log-file :debug "ACTION-IF*")
+                                                 *foo*)
+                                               (action-repeat (seconds 0.5) action))))
+          (faudio::audio-schedule-relative (faudio::milliseconds 0) actionx *audio-stream*))
