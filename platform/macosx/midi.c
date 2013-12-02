@@ -241,6 +241,7 @@ inline static device_t new_device(bool is_output, native_device_t native, sessio
     {
         CFStringRef name;
 
+        printf("kMIDIPropertyName is %p\n", kMIDIPropertyName);
         if (MIDIObjectGetStringProperty(native, kMIDIPropertyName, &name)) {
             assert(false && "Could not get name");
         }
@@ -324,7 +325,7 @@ void status_listener(const MIDINotification *message, ptr_t data)
     }
 }
 
-void midi_timer(CFRunLoopTimerRef timer, void *data)
+static void midi_timer(CFRunLoopTimerRef timer, void *data)
 {
     session_t session = data;
 
@@ -393,6 +394,8 @@ ptr_t midi_thread(ptr_t x)
         {
             CFRunLoopTimerContext ctxt;
             ctxt.info = session;
+            
+            printf("kCFAllocatorDefault is %p\n", kCFAllocatorDefault);
             CFRunLoopTimerRef timer = CFRunLoopTimerCreate(
                                           kCFAllocatorDefault,
                                           0,
@@ -435,6 +438,8 @@ ptr_t midi_thread(ptr_t x)
 
 void fa_midi_initialize()
 {
+    MIDIRestart();
+
     gMidiMutex          = fa_thread_create_mutex();
 
     gMidiActive         = false;
