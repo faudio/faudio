@@ -1,4 +1,9 @@
 
+# v2.7.4
+
+- Fixes scheduling bugs
+- Fixes regression related to MIDI shutdown (fa_terminate did not return properly)
+
 # v2.7.3
 
 - Fixes scheduling bugs
