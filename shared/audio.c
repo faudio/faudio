@@ -185,13 +185,14 @@ inline static device_t new_device(session_t session, native_index_t index)
 
     device->index       = index;
     device->session     = session;
-#ifndef _WIN32
-    device->name        = fa_string_from_cp1252((char *) info->name);      // const cast
+
+    // Experimental fix of #96
+#ifdef _WIN32
+    device->name        = fa_string_from_cp1252((char *) info->name);       // const cast
     device->host_name   = fa_string_from_cp1252((char *) host_info->name);
 #else
-    // Experimental fix of #96
-    device->name        = fa_string_from_cp1252((char *) info->name);      // const cast
-    device->host_name   = fa_string_from_cp1252((char *) host_info->name);
+    device->name        = fa_string_from_utf8((char *) info->name);         // const cast
+    device->host_name   = fa_string_from_utf8((char *) host_info->name);
 #endif
     // device->muted       = false;
     // device->volume      = 1.0;
