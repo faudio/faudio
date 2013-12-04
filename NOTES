@@ -1,4 +1,10 @@
 
+# v2.7.5
+
+- Adds getClock for both audio and midi
+- Implements Equal for Clock
+- Fixes bug in termination of MIDI sessions
+
 # v2.7.4
 
 - Fixes scheduling bugs

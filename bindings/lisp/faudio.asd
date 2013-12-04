@@ -11,7 +11,7 @@
 (in-package :faudio-asd)
 
 (defsystem :faudio
-  :version "2.7.4"
+  :version "2.7.5"
   :description "Faudio"
   :author "hans.hoglund@doremir.com"
   :depends-on (:cffi)
