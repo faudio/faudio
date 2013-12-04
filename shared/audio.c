@@ -630,6 +630,11 @@ fa_clock_t fa_audio_stream_clock(fa_audio_stream_t stream)
     return (fa_clock_t) stream;
 }
 
+fa_clock_t fa_audio_get_clock(fa_audio_stream_t stream)
+{
+    return (fa_clock_t) stream;
+}
+
 void fa_audio_add_message_callback(fa_audio_message_callback_t function,
                                    fa_ptr_t data,
                                    fa_audio_stream_t stream)

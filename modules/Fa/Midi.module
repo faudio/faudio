@@ -206,7 +206,17 @@ module Fa.Midi
      */
     addMessageCallback : (MessageCallback, Ptr, Stream) -> Void;
 
+    /** Associate the given clock with the given stream.
+        @param stream The stream.
+        @param The clock.
+     */
     setClock : (Stream, Clock) -> Void;
+
+    /** Return the clock associated with a given stream.
+        @param stream The stream.
+        @return A clock.
+     */
+    getClock : Stream -> Clock;
     
     /**
         Schedule an action on the stream.

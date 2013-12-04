@@ -226,8 +226,17 @@ void fa_midi_add_message_callback(fa_midi_message_callback_t,
                                   fa_ptr_t,
                                   fa_midi_stream_t);
 
-
+/** Associate the given clock with the given stream.
+    @param stream The stream.
+    @param The clock.
+*/
 void fa_midi_set_clock(fa_midi_stream_t, fa_clock_t);
+
+/** Return the clock associated with a given stream.
+    @param stream The stream.
+    @return A clock.
+*/
+fa_clock_t fa_midi_get_clock(fa_midi_stream_t);
 
 /**
     Schedule an action on the stream.

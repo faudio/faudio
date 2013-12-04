@@ -255,6 +255,13 @@ module Fa.Audio
         @param stream The stream.
         @return A clock.
      */
+    getClock : Stream -> Clock;
+    
+    /** Return the clock associated with a given stream.
+        @param stream The stream.
+        @return A clock.
+        @deprecated Use @ref fa_audio_get_clock.
+     */
     streamClock : Stream -> Clock;
 
     /** Register a callback to be invoked when a message is received.

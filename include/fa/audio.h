@@ -276,6 +276,13 @@ fa_list_t fa_audio_devices(fa_audio_stream_t);
     @param stream The stream.
     @return A clock.
 */
+fa_clock_t fa_audio_get_clock(fa_audio_stream_t);
+
+/** Return the clock associated with a given stream.
+    @param stream The stream.
+    @return A clock.
+    @deprecated Use @ref fa_audio_get_clock.
+*/
 fa_clock_t fa_audio_stream_clock(fa_audio_stream_t);
 
 /** Register a callback to be invoked when a message is received.
