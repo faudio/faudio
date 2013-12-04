@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>faudio v2.7.3: Midi</title>
+<title>faudio v2.7.4: Midi</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">faudio v2.7.3
+   <div id="projectname">faudio v2.7.4
    </div>
   </td>
  </tr>
@@ -841,7 +841,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Schedule an action on the stream. </p>
-<dl class="section warning"><dt>Warning</dt><dd>Experimental </dd></dl>
+<p>The action will be run as soon as the time of the stream (as reported by its clock) is greater than or equal to the given due time. </p>
 
 </div>
 </div>
@@ -876,7 +876,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Schedule an action on the stream. </p>
-<dl class="section warning"><dt>Warning</dt><dd>Experimental </dd></dl>
+<p>The action will be run when the given time has passed, relative to when this function was invoked. This is a convenience function implemented in terms of <code>fa_audio_schedule</code> and <code>fa_clock_time</code>, using the current stream clock. </p>
 
 </div>
 </div>
@@ -884,7 +884,7 @@ Functions</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 29 2013 17:27:42 for faudio v2.7.3 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Tue Dec 3 2013 19:57:45 for faudio v2.7.4 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>

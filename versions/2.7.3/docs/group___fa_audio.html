@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.3"/>
-<title>faudio v2.7.3: Audio</title>
+<title>faudio v2.7.4: Audio</title>
 <!-- <link href="tabs.css" rel="stylesheet" type="text/css"/> -->
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">faudio v2.7.3
+   <div id="projectname">faudio v2.7.4
    </div>
   </td>
  </tr>
@@ -95,6 +95,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:ga10f42df431c12566e51f9c830c888822"><td class="mdescLeft">&#160;</td><td class="mdescRight">Begin a new session, and retain it for the duration of a call to the given function.  <a href="#ga10f42df431c12566e51f9c830c888822"></a><br/></td></tr>
 <tr class="separator:ga10f42df431c12566e51f9c830c888822"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae8b34af247263c4ef739f79aed7e21fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_audio.html#gae8b34af247263c4ef739f79aed7e21fc">fa_audio_set_parameter</a> (<a class="el" href="group___fa_string.html#gacada63033b77bc6c39fa632ae199349b">fa_string_t</a>, <a class="el" href="group___fa.html#ga915ddeae99ad7568b273d2b876425197">fa_ptr_t</a>, <a class="el" href="group___fa_audio.html#ga62ee22268c23f1b18447141feccc01e0">fa_audio_session_t</a>)</td></tr>
+<tr class="memdesc:gae8b34af247263c4ef739f79aed7e21fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set an audio parameter value.  <a href="#gae8b34af247263c4ef739f79aed7e21fc"></a><br/></td></tr>
 <tr class="separator:gae8b34af247263c4ef739f79aed7e21fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4ca512f9ca05840d737cc947e278dd19"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___fa_list.html#ga35ecb12ab934ded0cce0bcf28e3bc5d2">fa_list_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___fa_audio.html#ga4ca512f9ca05840d737cc947e278dd19">fa_audio_current_sessions</a> ()</td></tr>
 <tr class="memdesc:ga4ca512f9ca05840d737cc947e278dd19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get all currently active audio sessions.  <a href="#ga4ca512f9ca05840d737cc947e278dd19"></a><br/></td></tr>
@@ -412,6 +413,26 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Set an audio parameter value. </p>
+<p>This function should usually be called once, directly after the session has been created, and will affect all streams created after the invocation.</p>
+<h3>Supported parameters</h3>
+<table class="doxtable">
+<tr>
+<th>Name </th><th>Description</th></tr>
+<tr>
+<td><code>latency</code> </td><td>Suggested latency in seconds (integer or floating-point). </td></tr>
+<tr>
+<td><code>vector-size</code> </td><td>Suggested vector size (integer). </td></tr>
+</table>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Name of parameter to set. </td></tr>
+    <tr><td class="paramname">value</td><td>A <a class="el" href="md__data_structures.html#ValueReferences">reference</a> to the value to set. </td></tr>
+    <tr><td class="paramname">session</td><td>Session in which to set the parameter. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a class="anchor" id="ga4ca512f9ca05840d737cc947e278dd19"></a>
@@ -592,7 +613,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section warning"><dt>Warning</dt><dd>Experimental. </dd></dl>
 
 </div>
 </div>
@@ -901,10 +921,13 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">input</td><td>Input device. </td></tr>
-    <tr><td class="paramname">processor</td><td>Processor to run over the devices. </td></tr>
     <tr><td class="paramname">input</td><td>Output device. </td></tr>
-    <tr><td class="paramname">callback</td><td>Function to receive the stream. </td></tr>
-    <tr><td class="paramname">error_callback</td><td>Function to receive eventual errors. </td></tr>
+    <tr><td class="paramname">processor_callback</td><td>Function to receive incoming signals and return output signals. </td></tr>
+    <tr><td class="paramname">processor_data</td><td>Pointer passed to processor callback. </td></tr>
+    <tr><td class="paramname">stream_callback</td><td>Function to receive the stream if successful. </td></tr>
+    <tr><td class="paramname">stream_data</td><td>Pointer passed to stream callback. </td></tr>
+    <tr><td class="paramname">error_callback</td><td>Function to errors if unsuccessful. </td></tr>
+    <tr><td class="paramname">error_data</td><td>Pointer passed to error callback. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1036,7 +1059,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Schedule an action on the stream. </p>
-<dl class="section warning"><dt>Warning</dt><dd>Experimental </dd></dl>
+<p>The action will be run as soon as the time of the stream (as reported by its clock) is greater than or equal to the given due time. </p>
 
 </div>
 </div>
@@ -1071,7 +1094,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Schedule an action on the stream. </p>
-<dl class="section warning"><dt>Warning</dt><dd>Experimental </dd></dl>
+<p>The action will be run when the given time has passed, relative to when this function was invoked. This is a convenience function implemented in terms of <code>fa_audio_schedule</code> and <code>fa_clock_time</code>, using the current stream clock. </p>
 
 </div>
 </div>
@@ -1079,7 +1102,7 @@ Functions</h2></td></tr>
 <!-- HTML footer for doxygen 1.8.3-->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 29 2013 17:27:42 for faudio v2.7.3 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
+Generated on Tue Dec 3 2013 19:57:45 for faudio v2.7.4 by &#160;<a href="http://www.doxygen.org/index.html">Doxygen<!-- <img class="footer" src="doxygen.png" alt="doxygen"/> --></a> 1.8.3
 </small></address>
 </body>
 </html>
