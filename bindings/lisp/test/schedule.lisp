@@ -144,89 +144,98 @@
    (setf *global-clock* (faudio::audio-stream-clock *audio-stream*))))
 
 
+
 (defun test-faudio ()
 
- (let ((futures nil)
-       (clicks nil)
-       (ms 0)
-       (clock-start (+ (faudio::clock-milliseconds *global-clock*) 500)))
-   (labels ((push-note-on (time channel note-number velocity)
-              (push-action (faudio::midi (+ #x90 channel) note-number velocity) time futures))
-            (push-note-off (time channel note-number)
-              (push-note-on time channel note-number 0))
-            (push-click-track-note (time channel)
-              (push-action (faudio::action-if* #'(lambda (x) (declare (ignorable x)) *play-clicks*) (ensure-action (faudio::midi (+ #x90 channel) 76 120))) time clicks)
-              (push-action (faudio::action-if* #'(lambda (x) (declare (ignorable x)) *play-clicks*) (ensure-action (faudio::midi (+ #x90 channel) 76 0))) (+ time 50) clicks)))
+  (let ((futures nil)
+        (clicks nil)
+        (ms 0)
+        (clock-start (+ (faudio::clock-milliseconds *global-clock*) 500)))
+    (labels ((push-note-on (time channel note-number velocity)
+               (push-action (faudio::midi (+ #x90 channel) note-number velocity) time futures))
+             (push-note-off (time channel note-number)
+               (push-note-on time channel note-number 0))
+             (push-click-track-note (time channel)
+               (push-action (faudio::action-while* #'(lambda (x) (declare (ignorable x)) *play-clicks*) (ensure-action (faudio::midi (+ #x90 channel) 76 120))) time clicks)
+               (push-action (faudio::action-while* #'(lambda (x) (declare (ignorable x)) *play-clicks*) (ensure-action (faudio::midi (+ #x90 channel) 76 0))) (+ time 50) clicks)))
+               
 
-     (let ((note-channel 0)
-           (click-channel 9))
+      (incf ms 1000)
 
-       (loop repeat 4 with pitch = 60 do
+      (let ((note-channel 0)
+            (click-channel 9))
+          
+        (loop repeat 4 with pitch = 60 do
+                  
+              (push-click-track-note ms click-channel)
 
-             (push-click-track-note ms click-channel)
+              (push-note-on ms note-channel pitch 120)
+              (incf ms 449)
+              (push-note-off ms note-channel pitch)
+              (incf ms 1) ;; <----  Verkar som att ljudmotorn inte kan hantera små intervall mellan actions
+              (incf pitch)
 
-             (push-note-on ms note-channel pitch 120)
-             (incf ms 250)
-             (push-note-off ms note-channel pitch)
-             (incf ms 50)
-             (incf pitch)
+              (push-note-on ms note-channel pitch 120)
+              (incf ms 250)
+              (push-note-off ms note-channel pitch)
+              (incf ms 200)
+              (incf pitch)
 
-             (push-note-on ms note-channel pitch 120)
-             (incf ms 250)
-             (push-note-off ms note-channel pitch)
-             (incf ms 50)
-             (incf pitch)
+              (incf ms 151/3)
+              
+              (push-note-on ms note-channel pitch 120)
+              (incf ms 250)
+              (push-note-off ms note-channel pitch)
+              (incf ms 200)
+              (incf pitch)
+              ))
 
-             (push-note-on ms note-channel pitch 120)
-             (incf ms 250)
-             (push-note-off ms note-channel pitch)
-             (incf ms 50)
-             (incf pitch)))
+      (let ((note-channel 0)
+            (click-channel 9))
 
-     (setf futures (nreverse futures)
-           clicks (nreverse clicks))
-     (write-to-log-file :debug "futures: ~a" futures)
-     (write-to-log-file :debug "clicks: ~a" clicks)
-     (audio-schedule clock-start (make-action-many futures))
-     (audio-schedule clock-start (make-action-many clicks))
+        (loop repeat 0 do
+
+              (push-click-track-note ms click-channel)
+
+              (push-note-on ms note-channel 60 120)
+              (incf ms 0)
+              (push-note-on ms note-channel 64 120)
+              (incf ms 0)
+              (push-note-on ms note-channel 67 120)
+              (incf ms 0)
+
+              (incf ms 500)
+        
+              (push-note-off ms note-channel 60)
+              (incf ms 0)
+              (push-note-off ms note-channel 64)
+              (incf ms 0)
+              (push-note-off ms note-channel 67)
+              (incf ms 0)
+              ))
 
 
-     (incf ms 1000)
 
-     (let ((note-channel 0)
-           (click-channel 9))
+      (setf futures (nreverse futures)
+            clicks (nreverse clicks))
+      (audio-schedule clock-start (make-action-many-absolute futures))
+      (audio-schedule clock-start (make-action-many-absolute clicks))
+      )))
 
-       (loop repeat 8 with pitch = 60 do
 
-             (push-click-track-note ms click-channel)
-
-             (push-note-on ms note-channel pitch 120)
-             (incf ms 250)
-             (push-note-off ms note-channel pitch)
-             (incf ms 1) ;; <----  Verkar som att ljudmotorn inte kan hantera små intervall mellan actions
-             (incf pitch)
-
-             (push-note-on ms note-channel pitch 120)
-             (incf ms 250)
-             (push-note-off ms note-channel pitch)
-             (incf ms 50)
-             (incf pitch)
-
-             (incf ms 151/3)
-
-             (push-note-on ms note-channel pitch 120)
-             (incf ms 250)
-             (push-note-off ms note-channel pitch)
-             (incf ms 50)
-             (incf pitch)))
-
-     (setf futures (nreverse futures)
-           clicks (nreverse clicks))
-     (write-to-log-file :debug "futures: ~a" futures)
-     (write-to-log-file :debug "clicks: ~a" clicks)
-     (audio-schedule clock-start (make-action-many futures))
-     (audio-schedule clock-start (make-action-many clicks))
-     )))
+(defun make-action-many-absolute (l)
+  (setf l (stable-sort l #'< :key #'cdr))
+  (write-to-log-file :debug "make-action-many-absolute")
+  (faudio::action-many 
+   (concatenate 'list
+                (if (and l (plusp (cdar l))) (list (faudio::pair-create (faudio::action-null) (faudio::milliseconds (cdar l)))))
+                (maplist #'(lambda (x)
+                             (let ((a (caar x))
+                                   (b (if (and (cdadr x) (cdar x))
+                                          (- (cdadr x) (cdar x))
+                                        0)))
+                               (faudio::pair-create (ensure-action a) (faudio::milliseconds b))))
+                         l))))
 
 
 
