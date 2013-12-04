@@ -916,6 +916,11 @@ ptr_t audio_device_impl(fa_id_t interface)
 
 // --------------------------------------------------------------------------------
 
+bool audio_stream_equal(ptr_t a, ptr_t b)
+{
+    return a == b;
+}
+
 fa_string_t audio_stream_show(ptr_t a)
 {
     string_t str = string("<AudioStream ");
@@ -952,6 +957,8 @@ ptr_t audio_stream_impl(fa_id_t interface)
         = { audio_stream_show };
     static fa_clock_interface_t audio_stream_clock_impl
         = { audio_stream_time, audio_stream_milliseconds };
+    static fa_equal_t audio_stream_equal_impl
+        = { audio_stream_equal };
     static fa_destroy_t audio_stream_destroy_impl
         = { audio_stream_destroy };
 
@@ -962,6 +969,9 @@ ptr_t audio_stream_impl(fa_id_t interface)
 
     case fa_string_show_i:
         return &audio_stream_show_impl;
+
+    case fa_equal_i:
+        return &audio_stream_equal_impl;
 
     case fa_destroy_i:
         return &audio_stream_destroy_impl;

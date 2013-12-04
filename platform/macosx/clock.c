@@ -18,12 +18,16 @@
 #include <mach/mach.h>
 
 static clock_serv_t gMachClock;
+static fa_clock_t   kStandardClock;
 
 // --------------------------------------------------------------------------------
+
+static fa_clock_t new_standard_clock();
 
 void fa_clock_initialize()
 {
     host_get_clock_service(mach_host_self(), REALTIME_CLOCK, &gMachClock);
+    kStandardClock = new_standard_clock();
 }
 
 void fa_clock_terminate()
@@ -34,7 +38,7 @@ void fa_clock_terminate()
 // --------------------------------------------------------------------------------
 
 fa_time_t fa_clock_time(fa_clock_t clock)
-{
+{                      
     assert(fa_interface(fa_clock_interface_i, clock) && "Must implement Clock");
     return ((fa_clock_interface_t *) fa_interface(fa_clock_interface_i, clock))->time(clock);
 
@@ -54,12 +58,12 @@ struct standard_clock {
     impl_t impl;
 };
 
-inline static standard_clock_t new_standard_clock()
+static fa_clock_t new_standard_clock()
 {
     fa_ptr_t standard_clock_impl(fa_id_t interface);
     standard_clock_t c = fa_new_struct(standard_clock);
     c->impl = &standard_clock_impl;
-    return c;
+    return (fa_clock_t) c;
 }
 
 inline static void delete_standard_clock(standard_clock_t standard_clock)
@@ -69,9 +73,14 @@ inline static void delete_standard_clock(standard_clock_t standard_clock)
 
 fa_clock_t fa_clock_standard()
 {
-    return (fa_clock_t) new_standard_clock(); // TODO singleton
+    return kStandardClock; // TODO singleton
 }
 
+
+bool standard_clock_equal(fa_ptr_t a, fa_ptr_t b)
+{
+    return a == b;
+}
 
 fa_string_t standard_clock_show(fa_ptr_t a)
 {
@@ -103,6 +112,9 @@ fa_time_t standard_clock_time(fa_ptr_t a)
 
 fa_ptr_t standard_clock_impl(fa_id_t interface)
 {
+    static fa_equal_t standard_clock_equal_impl
+        = { standard_clock_equal };
+
     static fa_string_show_t standard_clock_show_impl
         = { standard_clock_show };
 
@@ -113,6 +125,9 @@ fa_ptr_t standard_clock_impl(fa_id_t interface)
 
     case fa_clock_interface_i:
         return &standard_clock_clock_impl;
+
+    case fa_equal_i:
+        return &standard_clock_equal_impl;
 
     case fa_string_show_i:
         return &standard_clock_show_impl;
