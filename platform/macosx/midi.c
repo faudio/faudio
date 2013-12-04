@@ -458,14 +458,13 @@ void fa_midi_initialize()
 
 void fa_midi_terminate()
 {
-    fa_thread_destroy_mutex(gMidiMutex);
-
-    // TODO stop all sessions
-
     fa_midi_end_all_sessions();
     gMidiTerminating = true;
     gPendingSession  = kRequestSession; // Wake up
     fa_thread_join(gMidiThread);
+
+    fa_thread_destroy_mutex(gMidiMutex);
+
 }
 
 #define assert_module_initialized() \
