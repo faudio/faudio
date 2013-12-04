@@ -822,9 +822,9 @@ void fa_midi_close_stream(stream_t stream)
 
     if (stream->device->output) {
         MIDIPortDispose(stream->native);
+        // TODO verify that this is atomic
         fa_midi_remove_timer_callback(stream->timer_id, stream->device->session);
     }
-
 }
 
 
