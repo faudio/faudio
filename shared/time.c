@@ -10,29 +10,35 @@
 #include <fa/time.h>
 #include <fa/util.h>
 
-typedef fa_ratio_numerator_t    num_t;
-typedef fa_ratio_denominator_t  denom_t;
+// typedef fa_ratio_numerator_t    num_t;
+// typedef fa_ratio_denominator_t  denom_t;
 
 struct _fa_time_t {
     impl_t          impl;       //  Interface dispatcher
-    ratio_t         value;      //  Value in seconds
+    double          dvalue;      // Value in seconds
+    // ratio_t         value;      //  Value in seconds
 };
+
+double to_double(fa_ratio_t x);
+static ratio_t from_double(double x) {
+    return ratio(x*10000,10000);
+}
 
 // --------------------------------------------------------------------------------
 
-inline static fa_time_t new_time(ratio_t value)
+inline static fa_time_t new_time(double dvalue)
 {
     fa_ptr_t time_impl(fa_id_t interface);
 
     fa_time_t t     = fa_new(time);
     t->impl         = &time_impl;
-    t->value        = value;
+    t->dvalue       = dvalue;
     return t;
 }
 
 inline static void delete_time(fa_time_t time)
 {
-    fa_ratio_destroy(time->value);
+    // fa_ratio_destroy(time->value);
     fa_delete(time);
 }
 
@@ -40,13 +46,13 @@ inline static void delete_time(fa_time_t time)
 
 fa_time_t fa_time_create(int32_t days, int32_t hours, int32_t minutes, fa_ratio_t seconds)
 {
-    int  whole = days * (60 * 60 * 24) + hours * (60 * 60) + minutes * 60;
-    return new_time(fa_dadd(ratio(whole, 1), seconds));
+    double whole = days * (60 * 60 * 24) + hours * (60 * 60) + minutes * 60;
+    return new_time(whole + to_double(seconds));
 }
 
 fa_time_t fa_time_copy(fa_time_t time)
 {
-    return new_time(fa_ratio_copy(time->value));
+    return new_time(time->dvalue);
 }
 
 void fa_time_destroy(fa_time_t time)
@@ -59,47 +65,40 @@ void fa_time_destroy(fa_time_t time)
 
 fa_ratio_t fa_time_divisions(fa_time_t time)
 {
-    num_t   a;
-    denom_t b;
-    fa_ratio_match(time->value, &a, &b);
-    return ratio(a % b, b);
+    // num_t   a;
+    // denom_t b;
+    // fa_ratio_match(time->value, &a, &b);
+    // return ratio(a % b, b);
+    return from_double(time->dvalue);
 }
 
 int32_t fa_time_seconds(fa_time_t time)
 {
-    num_t   a;
-    denom_t b;
-    fa_ratio_match(time->value, &a, &b);
-    return (a / b) % 60;
+    int32_t x = time->dvalue;
+    return x % 60;
 }
 
 int32_t fa_time_minutes(fa_time_t time)
 {
-    num_t   a;
-    denom_t b;
-    fa_ratio_match(time->value, &a, &b);
-    return (a / b) % (60 * 60) / 60;
+    int32_t x = time->dvalue;
+    return x % (60 * 60) / 60;
 }
 
 int32_t fa_time_hours(fa_time_t time)
 {
-    num_t   a;
-    denom_t b;
-    fa_ratio_match(time->value, &a, &b);
-    return (a / b) % (60 * 60 * 24) / (60 * 60);
+    int32_t x = time->dvalue;
+    return x % (60 * 60 * 24) / (60 * 60);
 }
 
 int32_t fa_time_days(fa_time_t time)
 {
-    num_t   a;
-    denom_t b;
-    fa_ratio_match(time->value, &a, &b);
-    return (a / b) / (60 * 60 * 24);
+    int32_t x = time->dvalue;
+    return x / (60 * 60 * 24);
 }
 
 int32_t fa_time_to_seconds(fa_time_t time)
 {
-    return fa_time_days(time)    * 24 * 60 * 60
+    return fa_time_days(time)      * 24 * 60 * 60
            + fa_time_hours(time)   * 60 * 60
            + fa_time_minutes(time) * 60
            + fa_time_seconds(time);
@@ -119,7 +118,8 @@ fa_time_milliseconds_t fa_time_to_milliseconds(fa_time_t time)
            + fa_time_hours(time)   * 60 * 60 * 1000
            + fa_time_minutes(time) * 60 * 1000
            + fa_time_seconds(time) * 1000
-           + approx_millis(fa_time_divisions(time));
+           + (time->dvalue * 1000.0);
+           // + approx_millis(fa_time_divisions(time));
 }
 
 
@@ -146,57 +146,56 @@ bool time_equal(fa_ptr_t a, fa_ptr_t b)
 {
     fa_time_t x = (fa_time_t) a;
     fa_time_t y = (fa_time_t) b;
-    return fa_equal(x->value, y->value);
+    return x->dvalue == y->dvalue;
 }
 
 bool time_less_than(fa_ptr_t a, fa_ptr_t b)
 {
     fa_time_t x = (fa_time_t) a;
     fa_time_t y = (fa_time_t) b;
-    return fa_less_than(x->value, y->value);
+    return x->dvalue < y->dvalue;
 }
 
 bool time_greater_than(fa_ptr_t a, fa_ptr_t b)
 {
     fa_time_t x = (fa_time_t) a;
     fa_time_t y = (fa_time_t) b;
-    return fa_greater_than(x->value, y->value);
+    return x->dvalue > y->dvalue;
 }
 
 fa_ptr_t time_add(fa_ptr_t a, fa_ptr_t b)
 {
     fa_ratio_t fa_ratio_add_safe(fa_ratio_t x, fa_ratio_t y);
-       
     fa_time_t x = (fa_time_t) a;
     fa_time_t y = (fa_time_t) b;
-    return new_time(fa_ratio_add_safe(x->value, y->value));
+    return new_time(x->dvalue + y->dvalue);
 }
 
 fa_ptr_t time_subtract(fa_ptr_t a, fa_ptr_t b)
 {
     fa_time_t x = (fa_time_t) a;
     fa_time_t y = (fa_time_t) b;
-    return new_time(fa_subtract(x->value, y->value));
+    return new_time(x->dvalue - y->dvalue);
 }
 
 fa_ptr_t time_multiply(fa_ptr_t a, fa_ptr_t b)
 {
     fa_time_t x = (fa_time_t) a;
     fa_time_t y = (fa_time_t) b;
-    return new_time(fa_multiply(x->value, y->value));
+    return new_time(x->dvalue * y->dvalue);
 }
 
 fa_ptr_t time_divide(fa_ptr_t a, fa_ptr_t b)
 {
     fa_time_t x = (fa_time_t) a;
     fa_time_t y = (fa_time_t) b;
-    return new_time(fa_divide(x->value, y->value));
+    return new_time(x->dvalue / y->dvalue);
 }
 
 fa_ptr_t time_absolute(fa_ptr_t a)
 {
     fa_time_t x = (fa_time_t) a;
-    return new_time(fa_absolute(x->value));
+    return new_time(fabs(x->dvalue));
 }
 
 fa_string_t time_show(fa_ptr_t a)
