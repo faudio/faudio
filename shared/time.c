@@ -165,9 +165,11 @@ bool time_greater_than(fa_ptr_t a, fa_ptr_t b)
 
 fa_ptr_t time_add(fa_ptr_t a, fa_ptr_t b)
 {
+    fa_ratio_t fa_ratio_add_safe(fa_ratio_t x, fa_ratio_t y);
+       
     fa_time_t x = (fa_time_t) a;
     fa_time_t y = (fa_time_t) b;
-    return new_time(fa_add(x->value, y->value));
+    return new_time(fa_ratio_add_safe(x->value, y->value));
 }
 
 fa_ptr_t time_subtract(fa_ptr_t a, fa_ptr_t b)

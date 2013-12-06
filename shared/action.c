@@ -482,6 +482,11 @@ void run_and_resched_action(action_t action, time_t time, time_t now, list_t *re
 
         if (rest && interv) {
             time_t   future = fa_add(time, interv);
+            
+            // inform(string(""));
+            // inform(string_dappend(string("Current time               : "), fa_string_show(time)));
+            // inform(string_dappend(string("Delta time                 : "), fa_string_show(interv)));
+            // inform(string_dappend(string("Rescheduling at future time: "), fa_string_show(future)));
 
             if (fa_less_than_equal(future, now)) {
                 // Run directly
@@ -509,6 +514,7 @@ void run_and_resched_action(action_t action, time_t time, time_t now, list_t *re
             function(data);
         }
 
+        // printf("Running!\n");
         function(data, action);
         return;
     }

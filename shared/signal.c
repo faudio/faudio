@@ -657,7 +657,6 @@ state_t new_state()
 
     state->count              = 0;
     state->rate               = kRate;
-
     state->custom_proc_count  = 0;
 
     return state;
