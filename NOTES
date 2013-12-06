@@ -1,4 +1,9 @@
 
+# v2.7.7
+
+- Fixes scheduling drifts
+- Better handling of actions dispatched to the wrong stream
+- Better error handling
 
 # v2.7.6
 

@@ -3,14 +3,14 @@
 
 * Set Release (later: for now, everything is Debug)
 
+* Write release notes in NOTES
+
 * Bump version 
     * CMakeLists.txt
     * bindings/lisp/faudio.asd
     * doc/Doxyfile
 
 * `make modules bindings doc test`
-
-* Write release notes in NOTES, copy to github form
 
 * Commit
     * `git add` (changed files)
