@@ -47,6 +47,7 @@ if [[ $* != *--clean* ]]; then
     git push
     popd
 
+	open -a "Firefox" "https://github.com/hanshoglund/faudio/releases/new"
 else
     echo "Cleaning"
     rm -rf faudio-*.tar.gz

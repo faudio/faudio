@@ -16,7 +16,7 @@
     * `git add` (changed files)
     * `git commit -m "vX.X.X"`
     * `git tag vX.X.X`
-    * `git push --tags`
+    * `git push && git push --tags`
 
 * Run `release.sh X.X.X`
 
