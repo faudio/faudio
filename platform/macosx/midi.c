@@ -714,7 +714,11 @@ ptr_t forward_action_to_midi(ptr_t x, ptr_t action)
 {
     stream_t stream = x;
 
-    fa_print("%s\n", action);
+    if(fa_action_is_compound(action)) {
+        warn(string_dappend(string("Compound action passed to Midi.forwardActionToMidi: "), fa_string_show(action)));
+        return NULL;
+    }
+    // fa_print("%s\n", action);
 
     if (fa_action_is_send(action)) {
         // string_t name   = fa_action_send_name(action);
@@ -747,8 +751,10 @@ ptr_t forward_action_to_midi(ptr_t x, ptr_t action)
                 assert(false);
             }
         }
+        return NULL;
     }
 
+    warn(string_dappend(string("Unknown simple action passed to Midi.forwardActionToMidi: "), fa_string_show(action)));
     return NULL;
 }
 

@@ -854,12 +854,16 @@ void run_custom_procs(int when, state_t state)
  */
 ptr_t run_simple_action(state_t state, action_t action)
 {
-    assert(!fa_action_is_compound(action) && "Not a simple action");
+    if(fa_action_is_compound(action)) {
+        warn(string_dappend(string("Compound action passed to Signal.runSimpleAction: "), fa_string_show(action)));
+        return NULL;
+    }
 
     if (fa_action_is_set(action)) {
         int ch = fa_action_set_channel(action);
         double v = fa_action_set_value(action);
         write_samp1(0, ch, v, state);
+        return NULL;
     }
 
     if (fa_action_is_send(action)) {
@@ -871,9 +875,10 @@ ptr_t run_simple_action(state_t state, action_t action)
             ptr_t value = fa_action_send_value(action);
             proc->receive(proc->data, name, value);
         }
+        return NULL;
     }
 
-    // TODO clean up action
+    warn(string_dappend(string("Unknown simple action passed to Signal.runSimpleAction: "), fa_string_show(action)));
     return NULL;
 }
 
