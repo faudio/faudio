@@ -1,4 +1,8 @@
 
+# v2.7.9
+
+- Fixes error in time to millisecond conversion
+
 # v2.7.8
 
 - Fixes more scheduling drifts
