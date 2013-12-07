@@ -873,6 +873,8 @@ ptr_t run_simple_action(state_t state, action_t action)
             string_t name = fa_action_send_name(action);
             ptr_t value = fa_action_send_value(action);
             proc->receive(proc->data, name, value);
+
+            // fa_print("  Sending to processor: %s\n", fa_string_show(value));
         }
         return NULL;
     }
