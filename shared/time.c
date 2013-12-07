@@ -114,12 +114,7 @@ int32_t fa_time_to_seconds(fa_time_t time)
  */
 fa_time_milliseconds_t fa_time_to_milliseconds(fa_time_t time)
 {
-    return fa_time_days(time)      * 24 * 60 * 60 * 1000
-           + fa_time_hours(time)   * 60 * 60 * 1000
-           + fa_time_minutes(time) * 60 * 1000
-           + fa_time_seconds(time) * 1000
-           + (time->dvalue * 1000.0);
-           // + approx_millis(fa_time_divisions(time));
+    return time->dvalue * 1000.0;
 }
 
 
