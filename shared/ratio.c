@@ -85,7 +85,7 @@ void fa_ratio_match(fa_ratio_t x, num_t *a, denom_t *b)
 
 // --------------------------------------------------------------------------------
 
-static double to_double(fa_ratio_t x) {
+double to_double(fa_ratio_t x) {
     return ((double) x->num) / ((double) x->denom);
 }
 
