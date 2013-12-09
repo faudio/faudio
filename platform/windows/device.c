@@ -12,22 +12,27 @@
 #include <dbt.h>
 #include <MMSystem.h>
 
-#define WM_PARAMSG WM_USER + 1
-
 typedef fa_audio_status_callback_t audio_status_callback_t;
 typedef fa_midi_status_callback_t  midi_status_callback_t;
 typedef WCHAR HASH;
 
-typedef struct _thread_params {
-    HWND        *phwnd;
-    fa_nullary_t function;
-    fa_ptr_t     data;
-} thread_params, *pthread_params;
+typedef struct nullary_closure {
+	nullary_t 	function;
+	ptr_t 		data;
+} *closure_t;
 
-pthread_params gMidiCallbackTable[1000];
-pthread_params gAudioCallbackTable[1000];
-long gMidiCallbackTableCount;
-long gAudioCallbackTableCount;
+callback_struct gMidiCallbackTable[1000];
+callback_struct gAudioCallbackTable[1000];
+long	gMidiCallbackTableCount;
+long	gAudioCallbackTableCount;
+int 	mINumDevs;
+int 	mONumDevs;
+int 	wINumDevs;
+int 	wONumDevs;
+HASH    audio_hash;
+HASH    midi_hash;
+WCHAR   rand_table[WCHAR_MAX];
+HWND 	hDummies[2];
 
 
 static const char *WND_CLASS_MIDI_NAME  = "midiDummyWindow";
@@ -40,11 +45,38 @@ static const char *WND_CLASS_AUDIO_NAME = "audioDummyWindow";
 static const GUID GUID_AUDIO_DEVIFACE = {0x6994AD04L, 0x93EF, 0x11D0, {0xA3, 0xCC, 0x00, 0xA0, 0xC9, 0x22, 0x31, 0x96}};
 
 // --------------------------------------------------------------------------------
-
+void fa_device_initialize();
+void fa_device_terminate();
+void InitTable();
+HASH BuildAudioHash();
+HASH BuildMidiHash();
+bool CheckAudioHash();
+bool CheckMidiHash();
+bool RegisterDeviceInterfaceToHwnd(HWND hwnd, HDEVNOTIFY *hDeviceNotify);
 DWORD WINAPI window_thread(LPVOID params);
+DWORD WINAPI check_thread_midi(LPVOID params);
+DWORD WINAPI check_thread_audio(LPVOID params);
+void ScheduleMidiCheck();
+void ScheduleAudioCheck();
+INT_PTR WINAPI midi_hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+INT_PTR WINAPI audio_hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+void add_audio_status_listener(audio_status_callback_t function, ptr_t data);
+void add_midi_status_listener(midi_status_callback_t function, ptr_t data);
 
 void fa_device_initialize()
 {
+	InitTable();
+	
+	wINumDevs = waveInGetNumDevs();
+    wONumDevs = waveOutGetNumDevs();
+
+    audio_hash  = BuildAudioHash();
+	
+	mINumDevs = midiInGetNumDevs();
+    mONumDevs = midiOutGetNumDevs();
+
+    midi_hash = BuildMidiHash();
+	
     gMidiCallbackTableCount  = 0;
     gAudioCallbackTableCount = 0;
 
@@ -67,15 +99,6 @@ void fa_device_terminate()
 }
 
 // --------------------------------------------------------------------------------
-
-int mINumDevs;
-int mONumDevs;
-int wINumDevs;
-int wONumDevs;
-
-HASH    audio_hash;
-HASH    midi_hash;
-WCHAR   rand_table[WCHAR_MAX];
 
 
 void InitTable()
@@ -170,8 +193,7 @@ bool RegisterDeviceInterfaceToHwnd(HWND hwnd, HDEVNOTIFY *hDeviceNotify)
     NotificationFilter.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE;
     NotificationFilter.dbcc_classguid = GUID_AUDIO_DEVIFACE;
 
-    HDEVNOTIFY hDevNotify = RegisterDeviceNotification(hwnd,
-                                                       &NotificationFilter, DEVICE_NOTIFY_WINDOW_HANDLE);
+    HDEVNOTIFY hDevNotify = RegisterDeviceNotification(hwnd,&NotificationFilter, DEVICE_NOTIFY_WINDOW_HANDLE);
 
     if (!hDevNotify) {
         return false;
@@ -180,7 +202,7 @@ bool RegisterDeviceInterfaceToHwnd(HWND hwnd, HDEVNOTIFY *hDeviceNotify)
     return true;
 }
 
-DWORD WINAPI check_thread_midi(LPVOID params)
+DWORD WINAPI check_thread_midi(LPVOID _)
 {
     /*
     midiXXXGetNumDevs() / midiXXXGetDevCaps() does not update until after the
@@ -191,13 +213,12 @@ DWORD WINAPI check_thread_midi(LPVOID params)
 
     It works but it's not pretty.
     */
-    pthread_params tp = params;
 
     Sleep(500);
     
     if (mINumDevs != midiInGetNumDevs() || mONumDevs != midiOutGetNumDevs()) {
         for (int i = 0; i < gMidiCallbackTableCount; ++i) {
-            pthread_params tp = gMidiCallbackTable[i];
+            callback_struct tp = gMidiCallbackTable[i];
             tp->function(tp->data);
         }
         mINumDevs = midiInGetNumDevs();
@@ -205,7 +226,7 @@ DWORD WINAPI check_thread_midi(LPVOID params)
         midi_hash = BuildMidiHash();
     } else if (!CheckMidiHash()) {
         for (int i = 0; i < gMidiCallbackTableCount; ++i) {
-            pthread_params tp = gMidiCallbackTable[i];
+            callback_struct tp = gMidiCallbackTable[i];
             tp->function(tp->data);
         }
         midi_hash = BuildMidiHash();
@@ -227,7 +248,7 @@ DWORD WINAPI check_thread_audio(LPVOID _)
     
     if (wINumDevs != waveInGetNumDevs() || wONumDevs != waveOutGetNumDevs()) {
         for (int i = 0; i < gAudioCallbackTableCount; ++i) {
-            pthread_params tp = gAudioCallbackTable[i];
+            callback_struct tp = gAudioCallbackTable[i];
             tp->function(tp->data);
         }
 
@@ -236,7 +257,7 @@ DWORD WINAPI check_thread_audio(LPVOID _)
         audio_hash = BuildAudioHash();
     } else if (!CheckAudioHash()) {
         for (int i = 0; i < gAudioCallbackTableCount; ++i) {
-            pthread_params tp = gAudioCallbackTable[i];
+            callback_struct tp = gAudioCallbackTable[i];
             tp->function(tp->data);
         }
         
@@ -246,14 +267,14 @@ DWORD WINAPI check_thread_audio(LPVOID _)
     return 0;
 }
 
-void ScheduleMidiCheck(pthread_params ptp)
+void ScheduleMidiCheck()
 {
-    CloseHandle(CreateThread(NULL, 0, check_thread_midi, ptp, 0, 0));
+    CloseHandle(CreateThread(NULL, 0, check_thread_midi, (LPVOID) NULL, 0, 0));
 }
 
-void ScheduleAudioCheck(pthread_params ptp)
+void ScheduleAudioCheck()
 {
-    CloseHandle(CreateThread(NULL, 0, check_thread_audio, ptp, 0, 0));
+    CloseHandle(CreateThread(NULL, 0, check_thread_audio, (LPVOID) NULL, 0, 0));
 }
 
 INT_PTR WINAPI audio_hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -261,12 +282,7 @@ INT_PTR WINAPI audio_hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam
     LRESULT lRet = 0;
     PDEV_BROADCAST_HDR pbdi;
     PDEV_BROADCAST_DEVICEINTERFACE pdi;
-    static pthread_params ptparams = NULL;
     static HDEVNOTIFY hDeviceNotify;
-
-    if (msg == WM_PARAMSG) {
-        ptparams = (pthread_params) lParam;
-    }
 
     switch (msg) {
     case WM_CREATE:
@@ -291,10 +307,6 @@ INT_PTR WINAPI audio_hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam
     case WM_DEVICECHANGE: {
         switch (wParam) {
         case DBT_DEVICEARRIVAL:
-            if (ptparams == NULL) {
-                break;
-            }
-
             pbdi = (PDEV_BROADCAST_HDR)lParam;
 
             if (pbdi->dbch_devicetype != DBT_DEVTYP_DEVICEINTERFACE) {
@@ -311,15 +323,11 @@ INT_PTR WINAPI audio_hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam
             Device check needs to be scheduled
             See comment in check_thread_audio/midi
             */
-            ScheduleAudioCheck(ptparams);
+            ScheduleAudioCheck();
 
             break;
 
         case DBT_DEVICEREMOVECOMPLETE:
-            if (ptparams == NULL) {
-                break;
-            }
-
             pbdi = (PDEV_BROADCAST_HDR)lParam;
 
             if (pbdi->dbch_devicetype != DBT_DEVTYP_DEVICEINTERFACE) {
@@ -336,7 +344,7 @@ INT_PTR WINAPI audio_hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam
             Device check needs to be scheduled
             See comment in check_thread_audio/midi
             */
-            ScheduleAudioCheck(ptparams);
+            ScheduleAudioCheck();
 
             break;
         }
@@ -356,12 +364,7 @@ INT_PTR WINAPI midi_hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam,
     LRESULT lRet = 0;
     PDEV_BROADCAST_HDR pbdi;
     PDEV_BROADCAST_DEVICEINTERFACE pdi;
-    static pthread_params ptparams = NULL;
     static HDEVNOTIFY hDeviceNotify;
-
-    if (msg == WM_PARAMSG) {
-        ptparams = (pthread_params) lParam;
-    }
 
     switch (msg) {
     case WM_CREATE:
@@ -386,9 +389,6 @@ INT_PTR WINAPI midi_hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam,
     case WM_DEVICECHANGE: {
         switch (wParam) {
         case DBT_DEVICEARRIVAL:
-            if (ptparams == NULL) {
-                break;
-            }
 
             pbdi = (PDEV_BROADCAST_HDR)lParam;
 
@@ -406,15 +406,11 @@ INT_PTR WINAPI midi_hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam,
             Device check needs to be scheduled
             See comment in check_thread_audio/midi
             */
-            ScheduleMidiCheck(ptparams);
+            ScheduleMidiCheck();
 
             break;
 
         case DBT_DEVICEREMOVECOMPLETE:
-            if (ptparams == NULL) {
-                break;
-            }
-
             pbdi = (PDEV_BROADCAST_HDR)lParam;
 
             if (pbdi->dbch_devicetype != DBT_DEVTYP_DEVICEINTERFACE) {
@@ -427,7 +423,7 @@ INT_PTR WINAPI midi_hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam,
                 break;
             }
 
-            ScheduleMidiCheck(ptparams);
+            ScheduleMidiCheck();
 
             break;
         }
@@ -446,10 +442,8 @@ DWORD WINAPI window_thread(LPVOID params)
 {
     /*
     WM_DEVICECHANGE messages are only sent to windows and services.
-    A dummy receiving window is therefor created in hidden mode.
+    A dummy receiving window is therefore created in hidden mode.
     */
-
-    pthread_params ptparams = params;
 
     WNDCLASSEX wndClass = {0};
     wndClass.cbSize = sizeof(WNDCLASSEX);
@@ -459,21 +453,19 @@ DWORD WINAPI window_thread(LPVOID params)
         wndClass.lpfnWndProc = (WNDPROC) midi_hardware_status_callback;
         wndClass.lpszClassName = WND_CLASS_MIDI_NAME;
         assert(RegisterClassEx(&wndClass) && "error registering dummy window");
-        *(ptparams->phwnd) = CreateWindow(WND_CLASS_MIDI_NAME, "midi window", WS_ICONIC,
+        hDummies[0] = CreateWindow(WND_CLASS_MIDI_NAME, "midi window", WS_ICONIC,
                                           0, 0, CW_USEDEFAULT, 0, NULL, NULL, wndClass.hInstance, NULL);
+		assert(hDummies[0] != NULL) && "failed to create window");
+		ShowWindow(hDummies[0], SW_HIDE);
     } else if (params == kMidiDeviceType) {
         wndClass.lpfnWndProc = (WNDPROC) audio_hardware_status_callback;
         wndClass.lpszClassName = WND_CLASS_AUDIO_NAME;
         assert(RegisterClassEx(&wndClass) && "error registering dummy window");
-        *(ptparams->phwnd) = CreateWindow(WND_CLASS_AUDIO_NAME, "audio window", WS_ICONIC,
+        hDummies[1] = CreateWindow(WND_CLASS_AUDIO_NAME, "audio window", WS_ICONIC,
                                           0, 0, CW_USEDEFAULT, 0, NULL, NULL, wndClass.hInstance, NULL);
+		assert(hDummies[1] != NULL) && "failed to create window");
+		ShowWindow(hDummies[1], SW_HIDE);
     }
-
-    assert((*(ptparams->phwnd) != NULL) && "failed to create window");
-
-    ShowWindow(*(ptparams->phwnd), SW_HIDE);
-
-    SendMessage(*(ptparams->phwnd), WM_PARAMSG, (WPARAM) 0, (LPARAM) ptparams);
 
     MSG msg;
 
@@ -489,47 +481,30 @@ DWORD WINAPI window_thread(LPVOID params)
 
 void add_audio_status_listener(audio_status_callback_t function, ptr_t data)
 {
-    wINumDevs = waveInGetNumDevs();
-    wONumDevs = waveOutGetNumDevs();
-
-    InitTable();
-    audio_hash  = BuildAudioHash();
-
     /*
     This data leaks memory.
     Implement a remove listener function?
     */
-    pthread_params params = malloc(sizeof(thread_params));
-    params->phwnd    = malloc(sizeof(HWND));
-    params->cb_type  = AUDIO_STATUS_CALLBACK;
-    params->function = function;
-    params->data     = data;
+    closure_t closure = malloc(sizeof(nullary_closure));
+    closure->function = function;
+    closure->data     = data;
     
     // Save params in global array
-    gAudioCallbackTable[gAudioCallbackTableCount++] = params;
+    gAudioCallbackTable[gAudioCallbackTableCount++] = closure;
 }
 
 void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
 {
-
-    mINumDevs = midiInGetNumDevs();
-    mONumDevs = midiOutGetNumDevs();
-
-    InitTable();
-    midi_hash = BuildMidiHash();
-
     /*
     This data leaks memory.
     Implement a remove listener function?
     */
-    pthread_params params = malloc(sizeof(thread_params));
-    params->phwnd    = malloc(sizeof(HWND));
-    params->cb_type  = MIDI_STATUS_CALLBACK;
-    params->function = function;
-    params->data     = data;
+    closure_t closure = malloc(sizeof(nullary_closure));
+    closure->function = function;
+    closure->data     = data;
 
     // Save params in global array
-    gMidiCallbackTable[gMidiCallbackTableCount++] = params;
+    gMidiCallbackTable[gMidiCallbackTableCount++] = closure;
 }
 
 // TODO remove user callbacks
