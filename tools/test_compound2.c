@@ -1,4 +1,4 @@
-
+#ifdef __APPLE__
 #include <fa/fa.h>
 #define NO_THREAD_T
 #include <fa/util.h>
@@ -135,13 +135,15 @@ void run_test()
     // fa_destroy(st);
     fa_destroy(s);
 }
-
+#endif
 int main(int argc, char const *argv[])
 {
+	#ifdef __APPLE__
     fa_fa_set_log_std();
     fa_fa_initialize();
 
     run_test();
 
     fa_fa_terminate();
+	#endif
 }

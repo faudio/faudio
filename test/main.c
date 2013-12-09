@@ -1883,7 +1883,7 @@ int main(int argc, char const *argv[])
         test_atomic_ring_buffer(5, 2);
 
         test_for_each();
-        test_list();
+        //test_list();
         test_set();
         test_map();
         // test_graph(string_dappend(fa_system_directory_current(), string("/test/gen.dot")));

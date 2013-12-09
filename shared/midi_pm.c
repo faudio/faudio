@@ -298,7 +298,7 @@ void fa_midi_with_session(session_callback_t    session_callback,
 fa_list_t fa_midi_current_sessions()
 {
     if (!midi_current_session) {
-        return list();
+        return empty();
     } else {
         return list(midi_current_session);
     }

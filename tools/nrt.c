@@ -11,7 +11,7 @@
 
 void helper_function()
 {
-    list_t actions = list();
+    list_t actions = empty();
 
     for (int i = 0; i < 30; ++i) {
         actions = fa_list_dcons(
