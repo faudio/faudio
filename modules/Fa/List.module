@@ -255,19 +255,20 @@ module Fa.List
     map         : (Unary, Ptr, List) -> List;
     dmap        : (Unary, Ptr, List) -> List;
     
-    /** Map over the given list and join the results.
+     // Map over the given list and join the results.
+     // 
+     //    This function is useful to apply functions from singletons to lists.
+     // 
+     //    @par Laws
+     // 
+     //        joinMap(apply1, single, xs) == xs`
+     // 
+     //    @par Performance
+     //        O(n)
+     // 
 
-        This function is useful to apply functions from singletons to lists.
-
-        @par Laws
-
-            joinMap(apply1, single, xs) == xs`
-
-        @par Performance
-            O(n)
-     */
-    joinMap     : (Unary, Ptr, List) -> List;
-    djoinMap    : (Unary, Ptr, List) -> List;
+    // joinMap     : (Unary, Ptr, List) -> List;
+    // djoinMap    : (Unary, Ptr, List) -> List;
     
     /** Concatenate all elements of the given list.
 

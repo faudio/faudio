@@ -944,18 +944,18 @@ void test_list()
     }
 
 
-    {
-        printf("\n");
-
-        list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-        list_t ys = fa_list_join_map(dup_list, 0, xs);
-
-        fa_print("xs                           ==> %s\n", xs);
-        fa_print("joinMap(\\x -> [x,x])         ==> %s\n", ys);
-
-        fa_destroy(xs);
-        fa_destroy(ys);
-    }
+    // {
+    //     printf("\n");
+    // 
+    //     list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+    //     list_t ys = fa_list_join_map(dup_list, 0, xs);
+    // 
+    //     fa_print("xs                           ==> %s\n", xs);
+    //     fa_print("joinMap(\\x -> [x,x])         ==> %s\n", ys);
+    // 
+    //     fa_destroy(xs);
+    //     fa_destroy(ys);
+    // }
 
 
     {
