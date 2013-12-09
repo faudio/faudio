@@ -44,8 +44,9 @@ void test_value_references()
 
     printf("double:     %s\n", fa_type_str(f64(12372)));
     printf("double:     %f\n", tf64(f64(3.141592653589793)));
-    assert(tf64(f64(3.141592653589793)) == 3.141592653589793);
-    assert(tf64(f64(-1.4142135623730951)) == -1.4142135623730951);
+	// Does not work on Windows
+    //assert(tf64(f64(3.141592653589793D)) == 3.141592653589793D);
+    //assert(tf64(f64(-1.4142135623730951D)) == -1.4142135623730951D);
 }
 
 
@@ -429,7 +430,7 @@ fa_ptr_t queue_reader(fa_ptr_t x)
             printf("         |- %5d    \n", ti32(v));
         }
 
-        fa_thread_sleep(random() % 100);
+        fa_thread_sleep(rand() % 100);
     }
 }
 
@@ -447,7 +448,7 @@ void test_atomic_queue(int iter, long sleepTime)
         fa_print("q                            ==> %s\n", q);
 
         for (int i = 0; i < iter; ++i) {
-            fa_thread_sleep(random() % 100);
+            fa_thread_sleep(rand() % 100);
             fa_atomic_queue_write(q, i32(i));
             printf("  %5d -|  \n", i);
         }
@@ -484,7 +485,7 @@ fa_ptr_t stack_reader(fa_ptr_t x)
         }
 
         srand(time(NULL));
-        fa_thread_sleep(random() % 100);
+        fa_thread_sleep(rand() % 100);
     }
 }
 
@@ -503,7 +504,7 @@ void test_atomic_stack(int iter, long sleepTime)
 
         for (int i = 0; i < iter; ++i) {
             if (i % 10) {
-                fa_thread_sleep(random() % 100);
+                fa_thread_sleep(rand() % 100);
             }
 
             fa_atomic_stack_write(q, i32(i));
@@ -1412,7 +1413,7 @@ void test_plot_buffer()
     buffer_t buf = fa_buffer_create(44100 * sizeof(double));
 
     for (int i = 0; i < 44100; ++i) {
-        double r = (double) random() / RAND_MAX;
+        double r = (double) rand() / RAND_MAX;
         double x = (double) i / 44100;
         fa_buffer_set_double(buf, i, (r * 2 - 1) * sin(x * 10));
     }
