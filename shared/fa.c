@@ -137,7 +137,11 @@ static inline void stdlog(ptr_t data, fa_time_system_t t, fa_error_t e)
 {
     FILE *file = data;
     char msg[kMaxLogSize + 50];
+#ifdef _WIN32
+    bool color = false;
+#else
     bool color = (file == stdout && isatty(fileno(stdout)));
+#endif
 
     fa_let(tm, localtime((long *) &t)) {
         strftime(msg, 50, kIso8601 "  ", tm);
