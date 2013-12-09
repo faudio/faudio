@@ -49,8 +49,6 @@
 (defcfun (list-dfilter "fa_list_dfilter") list (a pred) (b ptr) (c list))
 (defcfun (list-map "fa_list_map") list (a unary) (b ptr) (c list))
 (defcfun (list-dmap "fa_list_dmap") list (a unary) (b ptr) (c list))
-(defcfun (list-join-map "fa_list_join_map") list (a unary) (b ptr) (c list))
-(defcfun (list-djoin-map "fa_list_djoin_map") list (a unary) (b ptr) (c list))
 (defcfun (list-join "fa_list_join") list (a list))
 (defcfun (list-djoin "fa_list_djoin") list (a list))
 (defcfun (list-fold-left "fa_list_fold_left") ptr (a binary) (b ptr) (c ptr) (d list))
