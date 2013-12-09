@@ -1,20 +1,17 @@
-#ifdef __APPLE__
+
 #include <fa/fa.h>
 #define NO_THREAD_T
 #include <fa/util.h>
 #undef NO_THREAD_T
 
+#ifdef __APPLE__
 #include <ApplicationServices/ApplicationServices.h> // DEBUG
+#endif
 
-
-list_t just(ptr_t x, list_t xs)
-{
-    return x;
-}
 
 bool pred1(ptr_t _, ptr_t x)
 {
-
+#ifdef __APPLE__
     CGEventRef event = CGEventCreate(nil);
     CGPoint loc = CGEventGetLocation(event);
     inform(fa_string_format_floating("x: %f", loc.x));
@@ -22,10 +19,14 @@ bool pred1(ptr_t _, ptr_t x)
     CFRelease(event);
 
     return res;
+#else
+    return true;
+#endif
 }
 
 bool pred2(ptr_t _, ptr_t x)
 {
+#ifdef __APPLE__
 
     CGEventRef event = CGEventCreate(nil);
     CGPoint loc = CGEventGetLocation(event);
@@ -34,6 +35,14 @@ bool pred2(ptr_t _, ptr_t x)
     CFRelease(event);
 
     return res;
+#else
+    return true;
+#endif
+}
+
+list_t just(ptr_t x, list_t xs)
+{
+    return x;
 }
 
 void run_test()
@@ -135,15 +144,13 @@ void run_test()
     // fa_destroy(st);
     fa_destroy(s);
 }
-#endif
+
 int main(int argc, char const *argv[])
 {
-	#ifdef __APPLE__
     fa_fa_set_log_std();
     fa_fa_initialize();
 
     run_test();
 
     fa_fa_terminate();
-	#endif
 }

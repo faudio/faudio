@@ -1,36 +1,50 @@
-#ifdef __APPLE__
+
 #include <fa/fa.h>
 #define NO_THREAD_T
 #include <fa/util.h>
 #undef NO_THREAD_T
 
+#ifdef __APPLE__
 #include <ApplicationServices/ApplicationServices.h> // DEBUG
+#endif
+
 
 bool pred1(ptr_t _, ptr_t x)
 {
-
+#ifdef __APPLE__
     CGEventRef event = CGEventCreate(nil);
     CGPoint loc = CGEventGetLocation(event);
     inform(fa_string_format_floating("x: %f", loc.x));
     bool res = loc.x > 200;
     CFRelease(event);
 
-    printf("pred1: %d\n", res);
     return res;
+#else
+    return true;
+#endif
 }
 
 bool pred2(ptr_t _, ptr_t x)
 {
+#ifdef __APPLE__
 
     CGEventRef event = CGEventCreate(nil);
     CGPoint loc = CGEventGetLocation(event);
-    inform(fa_string_format_floating("y: %f", loc.y));
+    inform(fa_string_format_floating("x: %f", loc.x));
     bool res = loc.y > 200;
     CFRelease(event);
 
-    printf("pred2: %d\n", res);
     return res;
+#else
+    return true;
+#endif
 }
+
+list_t just(ptr_t x, list_t xs)
+{
+    return x;
+}
+
 
 #define time_zero fa_milliseconds(0)
 #define fa_action_compose(x,y) fa_action_many(list(pair(x, time_zero), pair(y, time_zero)))
@@ -142,15 +156,13 @@ void run_midi()
     fa_destroy(st);
     fa_destroy(s);
 }
-#endif
+
 int main(int argc, char const *argv[])
 {
-	#ifdef __APPLE__
     fa_fa_set_log_std();
     fa_fa_initialize();
 
     run_midi();
 
     fa_fa_terminate();
-	#endif
 }
