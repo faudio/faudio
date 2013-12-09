@@ -1,4 +1,4 @@
-#ifdef __APPLE__
+
 #include <fa/fa.h>
 #include <fa/util.h>
 
@@ -147,10 +147,9 @@ ptr_t run_internal_loop(ptr_t _)
 
     assert(false && "Unreachable");
 }
-#endif
+
 int main(int argc, char const *argv[])
 {
-	#ifdef __APPLE__
     fa_fa_set_log_std();
     fa_fa_initialize();
     fa_print_ln(fa_string_show(fa_thread_current()));
@@ -167,7 +166,6 @@ int main(int argc, char const *argv[])
     fa_thread_sleep(1000);
 
     fa_fa_terminate();
-	#endif
 }
 
 
@@ -179,10 +177,8 @@ int main(int argc, char const *argv[])
 
 // TODO
 
-#ifdef __APPLE__
 char *get_cfstring(CFStringRef aString)
 {
     string_t s = fa_string_from_native((void *) aString);
     return unstring(s);
 }
-#endif
