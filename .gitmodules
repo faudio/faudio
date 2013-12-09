@@ -1,27 +1,27 @@
-[submodule "external/boost"]
-	path = external/boost
-	url = git@git.doremir.com:/repositories/dependencies/boost.git
+#[submodule "external/boost"]
+#	path = external/boost
+#	url = git@git.doremir.com:/repositories/dependencies/boost.git
 [submodule "external/portaudio/source"]
 	path = external/portaudio/source
 	url = git@github.com:faudio/portaudio.git
-[submodule "external/portmidi/source"]
-	path = external/portmidi/source
-	url = git@git.doremir.com:/repositories/dependencies/portmidi.git
-[submodule "external/sndfile/source"]
-	path = external/sndfile/source
-	url = git@git.doremir.com:/repositories/dependencies/sndfile.git
-[submodule "external/gtest/source"]
-	path = external/gtest/source
-	url = git@git.doremir.com:/repositories/dependencies/gtest.git
-[submodule "external/fluidsynth/source"]
-	path = external/fluidsynth/source
-	url = git@git.doremir.com:/repositories/dependencies/fluidsynth.git
-[submodule "sprout"]
-	path = sprout
-	url = git@git.doremir.com:repositories/dependencies/sprout.git
-[submodule "external/sprout"]
-	path = external/sprout
-	url = git@git.doremir.com:repositories/dependencies/sprout.git
-[submodule "external/boost_lockfree"]
-	path = external/boost_lockfree
-	url = git@git.doremir.com:repositories/dependencies/boost_lockfree
+#[submodule "external/portmidi/source"]
+#	path = external/portmidi/source
+#	url = git@git.doremir.com:/repositories/dependencies/portmidi.git
+#[submodule "external/sndfile/source"]
+#	path = external/sndfile/source
+#	url = git@git.doremir.com:/repositories/dependencies/sndfile.git
+#[submodule "external/gtest/source"]
+#	path = external/gtest/source
+#	url = git@git.doremir.com:/repositories/dependencies/gtest.git
+#[submodule "external/fluidsynth/source"]
+#	path = external/fluidsynth/source
+#	url = git@git.doremir.com:/repositories/dependencies/fluidsynth.git
+#[submodule "sprout"]
+#	path = sprout
+#	url = git@git.doremir.com:repositories/dependencies/sprout.git
+#[submodule "external/sprout"]
+#	path = external/sprout
+#	url = git@git.doremir.com:repositories/dependencies/sprout.git
+#[submodule "external/boost_lockfree"]
+#	path = external/boost_lockfree
+#	url = git@git.doremir.com:repositories/dependencies/boost_lockfree
