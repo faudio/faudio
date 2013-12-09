@@ -3,7 +3,7 @@
 	url = git@git.doremir.com:/repositories/dependencies/boost.git
 [submodule "external/portaudio/source"]
 	path = external/portaudio/source
-	url = git@git.doremir.com:/repositories/dependencies/portaudio.git
+	url = git@github.com:faudio/portaudio.git
 [submodule "external/portmidi/source"]
 	path = external/portmidi/source
 	url = git@git.doremir.com:/repositories/dependencies/portmidi.git
