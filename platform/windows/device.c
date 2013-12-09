@@ -1,3 +1,4 @@
+
 #include <fa/audio.h>
 #include <fa/midi.h>
 #include <fa/string.h>
@@ -19,22 +20,53 @@ typedef WCHAR HASH;
 
 typedef struct _thread_params {
     HWND        *phwnd;
-    int          cb_type;
     fa_nullary_t function;
     fa_ptr_t     data;
 } thread_params, *pthread_params;
 
-enum callback_type {
-    MIDI_STATUS_CALLBACK,
-    AUDIO_STATUS_CALLBACK,
-    NULL_STATUS_CALLBACK
-};
+pthread_params gMidiCallbackTable[1000];
+pthread_params gAudioCallbackTable[1000];
+long gMidiCallbackTableCount;
+long gAudioCallbackTableCount;
+
 
 static const char *WND_CLASS_MIDI_NAME  = "midiDummyWindow";
 static const char *WND_CLASS_AUDIO_NAME = "audioDummyWindow";
 
+#define kAudioDeviceType ((void*) 0)
+#define kMidiDeviceType ((void*) 1)
+
 /* This is the same as KSCATEGORY_AUDIO */
 static const GUID GUID_AUDIO_DEVIFACE = {0x6994AD04L, 0x93EF, 0x11D0, {0xA3, 0xCC, 0x00, 0xA0, 0xC9, 0x22, 0x31, 0x96}};
+
+// --------------------------------------------------------------------------------
+
+DWORD WINAPI window_thread(LPVOID params);
+
+void fa_device_initialize()
+{
+    gMidiCallbackTableCount  = 0;
+    gAudioCallbackTableCount = 0;
+
+    {
+        HANDLE wt = CreateThread(NULL, 0, window_thread, kAudioDeviceType, 0, 0);
+        CloseHandle(wt);
+    }
+
+    {
+        HANDLE wt = CreateThread(NULL, 0, window_thread, kMidiDeviceType, 0, 0);
+        CloseHandle(wt);
+    }
+}
+
+void fa_device_terminate()
+{
+    // Nothing
+    
+    // TODO unregister and stop threads
+}
+
+// --------------------------------------------------------------------------------
 
 int mINumDevs;
 int mONumDevs;
@@ -44,6 +76,7 @@ int wONumDevs;
 HASH    audio_hash;
 HASH    midi_hash;
 WCHAR   rand_table[WCHAR_MAX];
+
 
 void InitTable()
 {
@@ -161,21 +194,27 @@ DWORD WINAPI check_thread_midi(LPVOID params)
     pthread_params tp = params;
 
     Sleep(500);
-
+    
     if (mINumDevs != midiInGetNumDevs() || mONumDevs != midiOutGetNumDevs()) {
-        tp->function(tp->data);
+        for (int i = 0; i < gMidiCallbackTableCount; ++i) {
+            pthread_params tp = gMidiCallbackTable[i];
+            tp->function(tp->data);
+        }
         mINumDevs = midiInGetNumDevs();
         mONumDevs = midiOutGetNumDevs();
         midi_hash = BuildMidiHash();
     } else if (!CheckMidiHash()) {
-        tp->function(tp->data);
+        for (int i = 0; i < gMidiCallbackTableCount; ++i) {
+            pthread_params tp = gMidiCallbackTable[i];
+            tp->function(tp->data);
+        }
         midi_hash = BuildMidiHash();
     }
 
     return 0;
 }
 
-DWORD WINAPI check_thread_audio(LPVOID params)
+DWORD WINAPI check_thread_audio(LPVOID _)
 {
     /*
     waveXXXGetNumDevs() / waveXXXGetDevCaps() does not update until after the
@@ -184,17 +223,23 @@ DWORD WINAPI check_thread_audio(LPVOID params)
     This thread launches, waits a short while for device list to be updated
     and then checks for changes.
     */
-    pthread_params tp = params;
-
     Sleep(500);
-
+    
     if (wINumDevs != waveInGetNumDevs() || wONumDevs != waveOutGetNumDevs()) {
-        tp->function(tp->data);
+        for (int i = 0; i < gAudioCallbackTableCount; ++i) {
+            pthread_params tp = gAudioCallbackTable[i];
+            tp->function(tp->data);
+        }
+
         wINumDevs  = waveInGetNumDevs();
         wONumDevs  = waveOutGetNumDevs();
         audio_hash = BuildAudioHash();
     } else if (!CheckAudioHash()) {
-        tp->function(tp->data);
+        for (int i = 0; i < gAudioCallbackTableCount; ++i) {
+            pthread_params tp = gAudioCallbackTable[i];
+            tp->function(tp->data);
+        }
+        
         audio_hash = BuildAudioHash();
     }
 
@@ -410,13 +455,13 @@ DWORD WINAPI window_thread(LPVOID params)
     wndClass.cbSize = sizeof(WNDCLASSEX);
     wndClass.hInstance = (HINSTANCE) GetModuleHandle(NULL);
 
-    if (ptparams->cb_type == MIDI_STATUS_CALLBACK) {
+    if (params == kAudioDeviceType) {
         wndClass.lpfnWndProc = (WNDPROC) midi_hardware_status_callback;
         wndClass.lpszClassName = WND_CLASS_MIDI_NAME;
         assert(RegisterClassEx(&wndClass) && "error registering dummy window");
         *(ptparams->phwnd) = CreateWindow(WND_CLASS_MIDI_NAME, "midi window", WS_ICONIC,
                                           0, 0, CW_USEDEFAULT, 0, NULL, NULL, wndClass.hInstance, NULL);
-    } else if (ptparams->cb_type == AUDIO_STATUS_CALLBACK) {
+    } else if (params == kMidiDeviceType) {
         wndClass.lpfnWndProc = (WNDPROC) audio_hardware_status_callback;
         wndClass.lpszClassName = WND_CLASS_AUDIO_NAME;
         assert(RegisterClassEx(&wndClass) && "error registering dummy window");
@@ -440,6 +485,8 @@ DWORD WINAPI window_thread(LPVOID params)
     return 0;
 }
 
+
+
 void add_audio_status_listener(audio_status_callback_t function, ptr_t data)
 {
     wINumDevs = waveInGetNumDevs();
@@ -457,8 +504,9 @@ void add_audio_status_listener(audio_status_callback_t function, ptr_t data)
     params->cb_type  = AUDIO_STATUS_CALLBACK;
     params->function = function;
     params->data     = data;
-    HANDLE wt = CreateThread(NULL, 0, window_thread, params, 0, 0);
-    CloseHandle(wt);
+    
+    // Save params in global array
+    gAudioCallbackTable[gAudioCallbackTableCount++] = params;
 }
 
 void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
@@ -479,6 +527,10 @@ void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
     params->cb_type  = MIDI_STATUS_CALLBACK;
     params->function = function;
     params->data     = data;
-    HANDLE wt = CreateThread(NULL, 0, window_thread, params, 0, 0);
-    CloseHandle(wt);
+
+    // Save params in global array
+    gMidiCallbackTable[gMidiCallbackTableCount++] = params;
 }
+
+// TODO remove user callbacks
+

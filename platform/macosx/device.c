@@ -33,6 +33,22 @@ inline static closure_t new_closure(nullary_t function, ptr_t data)
     return closure;
 }
 
+// --------------------------------------------------------------------------------
+
+void fa_device_initialize()
+{
+    // Nothing
+}
+
+void fa_device_terminate()
+{
+    // Nothing
+}
+
+// --------------------------------------------------------------------------------
+
+
+
 OSStatus audio_listener(AudioObjectID                       id,
                         UInt32                              size,
                         const AudioObjectPropertyAddress    addresses[],
