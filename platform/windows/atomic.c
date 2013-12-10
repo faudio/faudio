@@ -25,7 +25,7 @@ fa_atomic_t fa_atomic_create()
 {
     atomic_t a = fa_new(atomic);
     a->impl     = &atomic_impl;
-    a->value    = NULL;
+    a->value    = (intptr_t)0;
 
     return a;
 }
