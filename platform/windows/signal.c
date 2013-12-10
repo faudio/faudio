@@ -32,46 +32,39 @@ ptr_t after_(ptr_t x, fa_signal_state_t *state)
 #define kFluidOffset 34
 #define kFluidVectorSize 128
 
+// TODO not reentrant
+static float left[kMaxVectorSize];
+static float right[kMaxVectorSize];
+
+
 ptr_t render_(ptr_t x, fa_signal_state_t *state)
 {
     fluid_synth_t* synth = x;
-
-    float left[kFluidVectorSize];
-    float right[kFluidVectorSize];
 
 	// DEBUG
 	if ((state->count % 22050) == 0)
 		if (FLUID_FAILED == fluid_synth_noteon(synth, 1, 60, 127))
 			warn(string("Could not send..."));
 
-	
+	float *left2 = left;
+	float *right2 = right;
     if (!kVectorMode) {
-        if (state->count % kFluidVectorSize == 0) {
-            if (FLUID_OK != fluid_synth_write_float(
-                synth,
-                1, // frames
-                left, 0, 1,
-                right, 0, 1
-                )) 
-            {
-                warn(string("Fluidsynth: Could not render"));
-            }
-        }
-        state->inputs[(kFluidOffset + 0)*kMaxVectorSize] = left[0];
-        state->inputs[(kFluidOffset + 1)*kMaxVectorSize] = right[0];
-        return x;
+		warn(string("Fluidsynth requires vector mode for now"));
+		assert(false && "Fluidsynth requires vector mode for now");
     } else {
-        if (FLUID_OK != fluid_synth_write_float(
+        if (FLUID_OK != fluid_synth_nwrite_float(
             synth,
-            kFluidVectorSize,
-            left, 0, 1,
-            right, 0, 1
+            kMaxVectorSize,
+            &left2,
+			&right2,
+			NULL,
+			NULL
             )) 
         {
             warn(string("Fluidsynth: Could not render"));
         }
 
-        for (int i = 0; i < kFluidVectorSize; ++i) {
+        for (int i = 0; i < kMaxVectorSize; ++i) {
             state->inputs[(kFluidOffset + 0)*kMaxVectorSize + i] = left[i];
             state->inputs[(kFluidOffset + 1)*kMaxVectorSize + i] = right[i];
         }
@@ -99,7 +92,6 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
         int channel = status_channel        & 0x0f;
         int status  = (status_channel >> 4) & 0x0f;
         
-		return NULL; // DEBUG
 		printf("%p %d %d %d %d\n", synth, status, channel, data1, data2);
         switch (status) {
             case 0x8: // off
@@ -149,11 +141,11 @@ pair_t fa_signal_synth(string_t path2)
 
         // TODO configure
         // TODO hardcoded        
-        warn(string("Using hardcoded soundfont location 'C:\\Users\\Doremir\\sf.sf2'"));
-        char* path = "C:\\Users\\Doremir\\sf.sf2";
-        //char* path = unstring(path2);
+        // warn(string("Using hardcoded soundfont location 'C:\\Users\\Doremir\\sf.sf2'"));
+        // char* path = "C:\\Users\\Doremir\\sf.sf2";
+        char* path = unstring(path2);
 
-		fluid_settings_setnum(settings, "synth.gain", 1.0);
+		fluid_settings_setnum(settings, "synth.gain", 0.6);
 		fluid_settings_setint(settings, "synth.threadsafe-api", 0);
 		fluid_settings_setint(settings, "synth.verbose", 0);
         synth = new_fluid_synth(settings);

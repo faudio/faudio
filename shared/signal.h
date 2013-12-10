@@ -10,7 +10,7 @@ struct _state_base_t {
     // ...
 };
 
-#define kVectorMode false
+#define kVectorMode true
 
 #define kMaxVectorSize                  64
 #define kDefVectorSize                  64
