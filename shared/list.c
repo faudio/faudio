@@ -192,7 +192,7 @@ void fa_list_destroy(list_t xs)
 
 bool fa_list_is_empty(list_t xs)
 {
-    return !xs->node;
+    return xs->node == NULL;
 }
 
 bool fa_list_is_single(list_t xs)
