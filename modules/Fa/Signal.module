@@ -338,11 +338,24 @@ module Fa.Signal
         @note
             This function is only available on Mac OS X and will
             fail ungracefully on other platforms.
-        @warning
-            Experimental.    
      */
     dls : () -> Pair;
     
+
+    /** Returns a pair of signals from FluidSYnth.
+        You can send messages to it using the name `Fluid`.
+        
+        @param path
+            Path to a SoundFont.
+        @return
+            A pair of @ref fa_signal_t (outputs).
+        @note
+            This function is only available on Windows and will
+            fail ungracefully on other platforms.
+        @warning
+            Experimental.    
+     */
+    synth : String -> Pair;
 
     /** Convert the signal to a tree represented as set of
         nested pairs of type `(String,[...])`.

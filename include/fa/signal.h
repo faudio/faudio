@@ -439,10 +439,23 @@ fa_list_t fa_signal_fluid(fa_string_t);
     @note
         This function is only available on Mac OS X and will
         fail ungracefully on other platforms.
+*/
+fa_pair_t fa_signal_dls();
+
+/** Returns a pair of signals from FluidSYnth.
+    You can send messages to it using the name `Fluid`.
+    
+    @param path
+        Path to a SoundFont.
+    @return
+        A pair of @ref fa_signal_t (outputs).
+    @note
+        This function is only available on Windows and will
+        fail ungracefully on other platforms.
     @warning
         Experimental.    
 */
-fa_pair_t fa_signal_dls();
+fa_pair_t fa_signal_synth(fa_string_t);
 
 /** Convert the signal to a tree represented as set of
     nested pairs of type `(String,[...])`.

@@ -16,6 +16,11 @@
 #include "au.h"
 #include "../shared/signal.h"
 
+pair_t fa_signal_fluidsynth(string_t path2)
+{
+    assert(false && "Not available on this platform");
+}
+
 ptr_t before_(ptr_t x, fa_signal_state_t *state)
 {
     au_context_t context = x;
