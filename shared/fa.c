@@ -68,11 +68,19 @@ fa_string_t fa_fa_version_string()
 
 void fa_fa_initialize()
 {
-    fa_audio_initialize();
-    fa_midi_initialize();
+
     fa_thread_initialize();
     fa_clock_initialize();
     fa_device_initialize();
+
+    // This order is important!
+
+    // Audio and midi needs to be initalized last as they
+    // depend on threads and other stuff.
+
+    fa_audio_initialize();
+    fa_midi_initialize();
+
     fa_fa_log_info(string("Initialized faudio."));
 
     gBytesAlloc = 0;
