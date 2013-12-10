@@ -112,6 +112,7 @@ inline static session_t new_session()
 {
     session_t session = fa_new(midi_session);
     session->impl = &midi_session_impl;
+	session->streams = empty();
     return session;
 }
 
