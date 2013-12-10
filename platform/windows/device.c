@@ -24,15 +24,15 @@ typedef struct nullary_closure *closure_t;
 closure_t gMidiCallbackTable[1000];
 closure_t gAudioCallbackTable[1000];
 long    gMidiCallbackTableCount;
-long	gAudioCallbackTableCount;
-int 	mINumDevs;
-int 	mONumDevs;
-int 	wINumDevs;
-int 	wONumDevs;
+long    gAudioCallbackTableCount;
+int     mINumDevs;
+int     mONumDevs;
+int     wINumDevs;
+int     wONumDevs;
 HASH    audio_hash;
 HASH    midi_hash;
 WCHAR   rand_table[WCHAR_MAX];
-HWND 	hDummies[2];
+HWND     hDummies[2];
 
 static const char *WND_CLASS_MIDI_NAME  = "midiDummyWindow";
 static const char *WND_CLASS_AUDIO_NAME = "audioDummyWindow";
@@ -64,18 +64,18 @@ void add_midi_status_listener(midi_status_callback_t function, ptr_t data);
 
 void fa_device_initialize()
 {
-	InitTable();
-	
-	wINumDevs = waveInGetNumDevs();
+    InitTable();
+    
+    wINumDevs = waveInGetNumDevs();
     wONumDevs = waveOutGetNumDevs();
 
     audio_hash  = BuildAudioHash();
-	
-	mINumDevs = midiInGetNumDevs();
+    
+    mINumDevs = midiInGetNumDevs();
     mONumDevs = midiOutGetNumDevs();
 
     midi_hash = BuildMidiHash();
-	
+    
     gMidiCallbackTableCount  = 0;
     gAudioCallbackTableCount = 0;
 
@@ -219,8 +219,8 @@ DWORD WINAPI check_thread_midi(LPVOID _)
         for (int i = 0; i < gMidiCallbackTableCount; ++i) {
             closure_t tp = gMidiCallbackTable[i];
             if(tp) {
-				tp->function(tp->data);
-			}
+                tp->function(tp->data);
+            }
         }
         mINumDevs = midiInGetNumDevs();
         mONumDevs = midiOutGetNumDevs();
@@ -229,8 +229,8 @@ DWORD WINAPI check_thread_midi(LPVOID _)
         for (int i = 0; i < gMidiCallbackTableCount; ++i) {
             closure_t tp = gMidiCallbackTable[i];
             if(tp) {
-				tp->function(tp->data);
-			}
+                tp->function(tp->data);
+            }
         }
         midi_hash = BuildMidiHash();
     }
@@ -252,9 +252,9 @@ DWORD WINAPI check_thread_audio(LPVOID _)
     if (wINumDevs != waveInGetNumDevs() || wONumDevs != waveOutGetNumDevs()) {
         for (int i = 0; i < gAudioCallbackTableCount; ++i) {
             closure_t tp = gAudioCallbackTable[i];
-			if(tp) {
-				tp->function(tp->data);
-			}
+            if(tp) {
+                tp->function(tp->data);
+            }
         }
 
         wINumDevs  = waveInGetNumDevs();
@@ -264,8 +264,8 @@ DWORD WINAPI check_thread_audio(LPVOID _)
         for (int i = 0; i < gAudioCallbackTableCount; ++i) {
             closure_t tp = gAudioCallbackTable[i];
             if(tp) {
-				tp->function(tp->data);
-			}
+                tp->function(tp->data);
+            }
         }
         audio_hash = BuildAudioHash();
     }
@@ -461,16 +461,16 @@ DWORD WINAPI window_thread(LPVOID params)
         assert(RegisterClassEx(&wndClass) && "error registering dummy window");
         hDummies[0] = CreateWindow(WND_CLASS_MIDI_NAME, "midi window", WS_ICONIC,
                                           0, 0, CW_USEDEFAULT, 0, NULL, NULL, wndClass.hInstance, NULL);
-		assert((hDummies[0] != NULL) && "failed to create window");
-		ShowWindow(hDummies[0], SW_HIDE);
+        assert((hDummies[0] != NULL) && "failed to create window");
+        ShowWindow(hDummies[0], SW_HIDE);
     } else if (params == kMidiDeviceType) {
         wndClass.lpfnWndProc = (WNDPROC) audio_hardware_status_callback;
         wndClass.lpszClassName = WND_CLASS_AUDIO_NAME;
         assert(RegisterClassEx(&wndClass) && "error registering dummy window");
         hDummies[1] = CreateWindow(WND_CLASS_AUDIO_NAME, "audio window", WS_ICONIC,
                                           0, 0, CW_USEDEFAULT, 0, NULL, NULL, wndClass.hInstance, NULL);
-		assert((hDummies[1] != NULL) && "failed to create window");
-		ShowWindow(hDummies[1], SW_HIDE);
+        assert((hDummies[1] != NULL) && "failed to create window");
+        ShowWindow(hDummies[1], SW_HIDE);
     }
 
     MSG msg;
@@ -507,24 +507,24 @@ void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
 
 // TODO remove user callbacks
 void remove_audio_status_listener(audio_status_callback_t function)
-{	
-	for(int i=0;i<gAudioCallbackTableCount;i++) {
-		if(gAudioCallbackTable[i] && 
-			gAudioCallbackTable[i]->function == function)
-		{
-			free(gAudioCallbackTable[i]);
-		}
-	}
+{    
+    for(int i=0;i<gAudioCallbackTableCount;i++) {
+        if(gAudioCallbackTable[i] && 
+            gAudioCallbackTable[i]->function == function)
+        {
+            free(gAudioCallbackTable[i]);
+        }
+    }
 }
 
 void remove_midi_status_listener(midi_status_callback_t function)
 {
-	for(int i=0;i<gMidiCallbackTableCount;i++) {
-		if(gMidiCallbackTable[i] && 
-			gMidiCallbackTable[i]->function == function)
-		{
-			free(gMidiCallbackTable[i]);
-		}
-	}
+    for(int i=0;i<gMidiCallbackTableCount;i++) {
+        if(gMidiCallbackTable[i] && 
+            gMidiCallbackTable[i]->function == function)
+        {
+            free(gMidiCallbackTable[i]);
+        }
+    }
 }
 
