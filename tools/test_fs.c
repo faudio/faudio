@@ -16,7 +16,7 @@ void run_dls()
         fa_audio_session_t s = fa_audio_begin_session();
         fa_audio_device_t i  = fa_audio_default_input(s);
         fa_audio_device_t o  = fa_audio_default_output(s);
-        list_t out           = fa_pair_to_list(fa_signal_synth(string("/c/sf.sf2")));
+        list_t out           = fa_pair_to_list(fa_signal_synth(string("C:\\sf.sf2")));
 
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
 
