@@ -34,7 +34,6 @@ HASH    midi_hash;
 WCHAR   rand_table[WCHAR_MAX];
 HWND 	hDummies[2];
 
-
 static const char *WND_CLASS_MIDI_NAME  = "midiDummyWindow";
 static const char *WND_CLASS_AUDIO_NAME = "audioDummyWindow";
 
@@ -92,10 +91,10 @@ void fa_device_initialize()
 }
 
 void fa_device_terminate()
-{
-    // Nothing
-    
+{ 
     // TODO unregister and stop threads
+
+
 }
 
 // --------------------------------------------------------------------------------
@@ -481,10 +480,6 @@ DWORD WINAPI window_thread(LPVOID params)
 
 void add_audio_status_listener(audio_status_callback_t function, ptr_t data)
 {
-    /*
-    This data leaks memory.
-    Implement a remove listener function?
-    */
     closure_t closure = malloc(sizeof(struct nullary_closure));
     closure->function = function;
     closure->data     = data;
@@ -495,10 +490,6 @@ void add_audio_status_listener(audio_status_callback_t function, ptr_t data)
 
 void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
 {
-    /*
-    This data leaks memory.
-    Implement a remove listener function?
-    */
     closure_t closure = malloc(sizeof(struct nullary_closure));
     closure->function = function;
     closure->data     = data;
@@ -508,4 +499,25 @@ void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
 }
 
 // TODO remove user callbacks
+void remove_audio_status_listener(audio_status_callback_t function)
+{	
+	for(int i=0;i<gAudioCallbackTableCount;i++) {
+		if(gAudioCallbackTable[i] && 
+			gAudioCallbackTable[i]->function == function)
+		{
+			free(gAudioCallbackTable[i]);
+		}
+	}
+}
+
+void remove_midi_status_listener(midi_status_callback_t function)
+{
+	for(int i=0;i<gMidiCallbackTableCount;i++) {
+		if(gMidiCallbackTable[i] && 
+			gMidiCallbackTable[i]->function == function)
+		{
+			free(gMidiCallbackTable[i]);
+		}
+	}
+}
 
