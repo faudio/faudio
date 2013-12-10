@@ -598,8 +598,8 @@ void fa_audio_close_stream(stream_t stream)
     {
         // TODO need atomic
         native_stream_t native = stream->native;
-        stream->native = NULL;
         if (native) {
+            stream->native = NULL;
             Pa_CloseStream(native);            
             // after_processing will be called after this
         }

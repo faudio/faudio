@@ -46,6 +46,7 @@ struct _fa_midi_session_t {
     system_time_t       acquired;           // Time of acquisition (not used at the moment)
 
     list_t              devices;            // Cached device list
+    list_t              streams;            // All streams started on this sessiuon (list of stream_t)
 
     device_t            def_input;          // Default devices, both possibly null
     device_t            def_output;         // If present, these are also in the above list
@@ -69,7 +70,7 @@ struct _fa_midi_stream_t {
     device_t            device;
 
     thread_t            thread;
-    bool                thread_abort;       // Set to non-zero when thread should stop
+    bool                aborted;            // Set to non-zero when thread should stop (and native streams stopped)
 
     // fa_atomic_t         receivers;          // Atomic [(Unary, Ptr)]
     int                 message_callback_count;
@@ -185,7 +186,7 @@ inline static stream_t new_stream(device_t device)
     stream->native_output   = NULL;
 
     stream->thread          = NULL;
-    stream->thread_abort    = false;
+    stream->aborted         = false;
     stream->message_callback_count = 0;
 
     stream->clock           = fa_clock_standard(); // TODO change
@@ -266,6 +267,15 @@ void fa_midi_end_session(session_t session)
     {
         if (pm_status) {
             inform(string("(actually terminating)"));
+
+            inform(string("(closing streams)"));
+            fa_for_each(stream, session->streams) {
+                // It is OK if the stream is already closed
+                fa_midi_close_stream(stream);
+                delete_stream(stream);
+            }
+            inform(string("(stopping driver)"));
+
             result = Pm_Terminate();
 
             if (result < 0) {
@@ -450,17 +460,21 @@ void fa_midi_close_stream(stream_t stream)
 {
     inform(string("Closing real-time midi stream"));
 
-    // TODO instruct to stop
-    stream->thread_abort = true;
-    fa_thread_join(stream->thread);
+    if (!stream->aborted) {
+        stream->aborted = true;
+        // Wait
+        fa_thread_join(stream->thread);
 
-    if (stream->native_input) {
-        Pm_Close(stream->native_input);
+        if (stream->native_input) {
+            Pm_Close(stream->native_input);
+        }
+
+        if (stream->native_output) {
+            Pm_Close(stream->native_output);
+        }
     }
 
-    if (stream->native_output) {
-        Pm_Close(stream->native_output);
-    }
+    // Not deleted until session is gone
 }
 
 
@@ -491,8 +505,8 @@ ptr_t stream_thread_callback(ptr_t x)
     stream_t stream = x;
     inform(string("  Midi service thread active"));
 
-    while (1) {
-        if (stream->thread_abort) {
+    while (true) {
+        if (stream->aborted) {
             inform(string("  Midi service thread finished"));
             return 0;
         }
