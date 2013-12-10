@@ -162,7 +162,7 @@ inline static void session_init_devices(session_t session)
     session->devices      = fa_list_dreverse(devices);
     session->def_input    = new_device(session, Pa_GetDefaultInputDevice());
     session->def_output   = new_device(session, Pa_GetDefaultOutputDevice());
-    session->streams      = list();
+    session->streams      = empty();
 
     session->parameters.vector_size = kDefVectorSize;
     session->parameters.latency     = kDefLatency;

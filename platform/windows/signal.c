@@ -1,6 +1,11 @@
 
 #include <fa/signal.h>
+#include <fa/midi/message.h>
 #include <fa/util.h>
+
+#include <fa/action.h>
+#include "../shared/signal.h"
+
 #include <fluidsynth.h>
 
 pair_t fa_signal_dls()
@@ -21,7 +26,7 @@ ptr_t after_(ptr_t x, fa_signal_state_t *state)
     fluid_settings_t* settings = fluid_synth_get_settings(synth);
     
     delete_fluid_synth(synth);
-    delete_fluid_settings(synth);
+    delete_fluid_settings(settings);
 }
 
 #define kFluidOffset 34
@@ -43,7 +48,7 @@ ptr_t render_(ptr_t x, fa_signal_state_t *state)
                 right, 0, 1
                 )) 
             {
-                warn("Fluidsynth: Could not render");
+                warn(string("Fluidsynth: Could not render"));
             }
         }
         state->inputs[(kFluidOffset + 0)*kMaxVectorSize] = left[0];
@@ -57,7 +62,7 @@ ptr_t render_(ptr_t x, fa_signal_state_t *state)
             right, 0, 1
             )) 
         {
-            warn("Fluidsynth: Could not render");
+            warn(string("Fluidsynth: Could not render"));
         }
 
         for (int i = 0; i < kFluidVectorSize; ++i) {
@@ -70,6 +75,8 @@ ptr_t render_(ptr_t x, fa_signal_state_t *state)
     return NULL;
 }
 
+void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2);
+
 ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     fluid_synth_t* synth = x;
@@ -80,7 +87,7 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 
     // TODO
     if (true /*fa_equal(n, string("Fluid"))*/) {
-        int status, data1, data2;
+        int status_channel, data1, data2;
         fa_midi_message_decons(msg, &status_channel, &data1, &data2);
         
         int status  = status_channel        & 0x0f;
@@ -88,32 +95,32 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
         
         switch (status) {
             case 0x8: // off
-                if (FLUID_OK != fluid_send_noteoff(synth, channel, data1, data2))
-                    warn("Fluidsynth: Could not send message");
+                if (FLUID_OK != fluid_synth_noteoff(synth, channel, data1))
+                    warn(string("Fluidsynth: Could not send message"));
                 break;
             case 0x9: // 9 on
-                if (FLUID_OK != fluid_send_noten(synth, channel, data1, data2))
-                    warn("Fluidsynth: Could not send message");
+                if (FLUID_OK != fluid_synth_noteon(synth, channel, data1, data2))
+                    warn(string("Fluidsynth: Could not send message"));
                 break;
             case 0xa: // 10 polyp after
-                warn("Fluidsynth: Polyphonic key pressure not supported");
+                warn(string("Fluidsynth: Polyphonic key pressure not supported"));
                 break;
             case 0xb: // 11 control
                 if (FLUID_OK != fluid_synth_cc(synth, channel, data1, data2))
-                    warn("Fluidsynth: Could not send message");
+                    warn(string("Fluidsynth: Could not send message"));
                 break;
             case 0xc: // 12 program                
                 if (FLUID_OK != fluid_synth_program_change(synth, channel, data1))
-                    warn("Fluidsynth: Could not send message");
+                    warn(string("Fluidsynth: Could not send message"));
                 break;
             case 0xd: // 13 channel press
-                warn("Fluidsynth: Channel pressure not supported");
+                warn(string("Fluidsynth: Channel pressure not supported"));
                 break;
             case 0xe: // 14 pitch wheel
-                warn("Fluidsynth: Pitch wheel not supported");
+                warn(string("Fluidsynth: Pitch wheel not supported"));
                 break;
             default: {
-                warn(false && "Unknown MIDI message to Fluidsynth");
+                warn(string("Unknown MIDI message to Fluidsynth"));
                 assert(false && "Unknown MIDI message to Fluidsynth");
             }
         }
@@ -121,7 +128,7 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
     return NULL;
 }
 
-pair_t fa_signal_fluidsynth(string_t path2)
+pair_t fa_signal_synth(string_t path2)
 {
     // create synth
     fluid_synth_t* synth = NULL;
@@ -136,15 +143,16 @@ pair_t fa_signal_fluidsynth(string_t path2)
         // TODO hardcoded        
         // warn("Using hardcoded soundfont location '/c/sf.sf2'");
         // char* path = "/c/sf.sf2";
-        path = unstring(path2);
+        char* path = unstring(path2);
 
         if(FLUID_OK != fluid_synth_sfload(synth, path, true)) {
-            warn("Fluidsynth: Could not load sound font");
+            warn(string("Fluidsynth: Could not load sound font"));
         }
 
         synth = new_fluid_synth(settings);
     }
 
+    fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
     proc->before  = before_;
     proc->after   = after_;
     proc->render  = render_;
