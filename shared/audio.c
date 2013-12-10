@@ -55,6 +55,8 @@ struct _fa_audio_session_t {
     device_t            def_input;          // Default devices, both possibly null
     device_t            def_output;         // If present, these are also in the above list
 
+    list_t              streams;            // All streams started on this sessiuon (list of stream_t)
+
     struct {
         double          latency;
         int             vector_size;
@@ -78,7 +80,7 @@ struct _fa_audio_device_t {
 struct _fa_audio_stream_t {
 
     impl_t              impl;               // Dispatcher
-    native_stream_t     native;             // Native stream
+    native_stream_t     native;             // Native stream, or NULL if closed
     device_t            input, output;
 
     unsigned            signal_count;       // Number of signals (same as number of outputs)
@@ -160,6 +162,7 @@ inline static void session_init_devices(session_t session)
     session->devices      = fa_list_dreverse(devices);
     session->def_input    = new_device(session, Pa_GetDefaultInputDevice());
     session->def_output   = new_device(session, Pa_GetDefaultOutputDevice());
+    session->streams      = list();
 
     session->parameters.vector_size = kDefVectorSize;
     session->parameters.latency     = kDefLatency;
@@ -292,6 +295,12 @@ void fa_audio_end_session(session_t session)
 
     fa_with_lock(pa_mutex)
     {
+        fa_for_each(stream, session->streams) {
+            // It is OK if the stream is already closed
+            fa_audio_close_stream(stream);
+            delete_stream(stream);
+        }
+
         if (pa_status) {
             Pa_Terminate();
             pa_status = false;
@@ -576,7 +585,9 @@ stream_t fa_audio_open_stream(device_t input,
         stream->controller.thread = fa_thread_create(audio_control_thread, stream);
         stream->controller.mutex  = fa_thread_create_mutex();
         stream->controller.stop   = false;
-    }
+    }                       
+    
+    fa_push_list(stream, input->session->streams);
     return stream;
 }
 
@@ -584,16 +595,22 @@ void fa_audio_close_stream(stream_t stream)
 {
     inform(string("Closing real-time audio stream"));
 
-    // Note that after_processing will be called from native_finished_callback
-    Pa_CloseStream(stream->native);
+    {
+        // TODO need atomic
+        native_stream_t native = stream->native;
+        stream->native = NULL;
+        if (native) {
+            Pa_CloseStream(native);            
+            // after_processing will be called after this
+        }
+    }
+
     {
         stream->controller.stop = true;
         fa_thread_join(stream->controller.thread);
         fa_thread_destroy_mutex(stream->controller.mutex);
     }
-
-
-    delete_stream(stream);
+    // Not deleted until sesion is gone
 }
 
 void fa_audio_with_stream(device_t            input,
