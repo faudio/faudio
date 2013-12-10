@@ -39,6 +39,12 @@ ptr_t render_(ptr_t x, fa_signal_state_t *state)
     float left[kFluidVectorSize];
     float right[kFluidVectorSize];
 
+	// DEBUG
+	if ((state->count % 22050) == 0)
+		if (FLUID_FAILED == fluid_synth_noteon(synth, 1, 60, 127))
+			warn(string("Could not send..."));
+
+	
     if (!kVectorMode) {
         if (state->count % kFluidVectorSize == 0) {
             if (FLUID_OK != fluid_synth_write_float(
@@ -90,9 +96,11 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
         int status_channel, data1, data2;
         fa_midi_message_decons(msg, &status_channel, &data1, &data2);
         
-        int status  = status_channel        & 0x0f;
-        int channel = (status_channel >> 4) & 0x0f;
+        int channel = status_channel        & 0x0f;
+        int status  = (status_channel >> 4) & 0x0f;
         
+		return NULL; // DEBUG
+		printf("%p %d %d %d %d\n", synth, status, channel, data1, data2);
         switch (status) {
             case 0x8: // off
                 if (FLUID_OK != fluid_synth_noteoff(synth, channel, data1))
@@ -141,15 +149,22 @@ pair_t fa_signal_synth(string_t path2)
 
         // TODO configure
         // TODO hardcoded        
-        // warn("Using hardcoded soundfont location '/c/sf.sf2'");
-        // char* path = "/c/sf.sf2";
-        char* path = unstring(path2);
+        warn(string("Using hardcoded soundfont location 'C:\\Users\\Doremir\\sf.sf2'"));
+        char* path = "C:\\Users\\Doremir\\sf.sf2";
+        //char* path = unstring(path2);
 
-        if(FLUID_OK != fluid_synth_sfload(synth, path, true)) {
-            warn(string("Fluidsynth: Could not load sound font"));
-        }
-
+		fluid_settings_setnum(settings, "synth.gain", 1.0);
+		fluid_settings_setint(settings, "synth.threadsafe-api", 0);
+		fluid_settings_setint(settings, "synth.verbose", 0);
         synth = new_fluid_synth(settings);
+
+        if(FLUID_FAILED == fluid_synth_sfload(synth, path, true)) {
+            warn(string("Fluidsynth: Could not load sound font"));
+			return NULL; // TODO error
+        }
+		fluid_synth_set_sample_rate(synth, 44100);
+		
+		printf("%p\n", synth);
     }
 
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
