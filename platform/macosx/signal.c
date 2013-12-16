@@ -16,7 +16,7 @@
 #include "au.h"
 #include "../shared/signal.h"
 
-pair_t fa_signal_fluidsynth(string_t path2)
+pair_t fa_signal_synth(string_t path)
 {
     assert(false && "Not available on this platform");
 }
