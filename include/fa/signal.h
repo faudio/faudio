@@ -420,17 +420,6 @@ fa_signal_t fa_signal_impulses(int);
 */
 fa_list_t fa_signal_vst(fa_string_t, fa_string_t, fa_list_t);
 
-/** Run a signal through an external VST plug-in.
-    
-    @param name
-        Name of plug-in.
-    @return
-        A list of @ref fa_signal_t (outputs).
-    @warning
-        Experimental.    
-*/
-fa_list_t fa_signal_fluid(fa_string_t);
-
 /** Returns a pair of signals from the `DLSMusicDevice`.
     You can send messages to it using the name `DLS`.
     
@@ -442,7 +431,7 @@ fa_list_t fa_signal_fluid(fa_string_t);
 */
 fa_pair_t fa_signal_dls();
 
-/** Returns a pair of signals from FluidSYnth.
+/** Returns a pair of signals from FluidSynth (if available).
     You can send messages to it using the name `Fluid`.
     
     @param path

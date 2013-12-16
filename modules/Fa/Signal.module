@@ -319,17 +319,6 @@ module Fa.Signal
      */
     vst : (String, String, List) -> List;
 
-    /** Run a signal through an external VST plug-in.
-    
-        @param name
-            Name of plug-in.
-        @return
-            A list of @ref fa_signal_t (outputs).
-        @warning
-            Experimental.    
-     */
-    fluid : String -> List;
-
     /** Returns a pair of signals from the `DLSMusicDevice`.
         You can send messages to it using the name `DLS`.
         
@@ -342,7 +331,7 @@ module Fa.Signal
     dls : () -> Pair;
     
 
-    /** Returns a pair of signals from FluidSYnth.
+    /** Returns a pair of signals from FluidSynth (if available).
         You can send messages to it using the name `Fluid`.
         
         @param path

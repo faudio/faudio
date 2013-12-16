@@ -76,7 +76,6 @@
 (defcfun (signal-counter "fa_signal_counter") signal)
 (defcfun (signal-impulses "fa_signal_impulses") signal (a :int))
 (defcfun (signal-vst "fa_signal_vst") list (a string) (b string) (c list))
-(defcfun (signal-fluid "fa_signal_fluid") list (a string))
 (defcfun (signal-dls "fa_signal_dls") pair)
 (defcfun (signal-synth "fa_signal_synth") pair (a string))
 (defcfun (signal-to-tree "fa_signal_to_tree") pair (a signal))
