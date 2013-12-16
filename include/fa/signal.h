@@ -153,10 +153,24 @@ typedef struct {
         } fa_signal_custom_processor_t;
 
 /** Add a custom processor to be executed with the given signal.
+    
+    A custom processor is simply a routine invoked on the audio thread during
+    audio startup, shutdown, when a message is received, or whehn the main audio 
+    callback is invoked, in which the processor can perform custom audio processing.
+    
+    Note that this does *not* affect signal input or output. The processing routine 
+    is expected to know which channels to use for input and output. Normally a custom
+    processor would be wrapped in a higher-level function which uses `fa_signal_input`
+    and `fa_signal_output` to read and write to the corresponding channels.
+    
+    If a processor handles multichannel audio, simply add the processor to *one* of
+    the output signals, implying that all channels of the output must always be used
+    whether their output is needed or not (see also `fa_signal_former`).
 
     @warning
-        You probably do not want to do this. Custom processors are for exceptional
-        cases such as implementing wrappers for new plug-in format.
+        You probably do not want to do this. This is a very low-level function used
+        internally in faudio for implementing new I/O backends, plug-in formats. If
+        you simply want to lift a pure function into the audio thread, see `fa_signal_lift`.            
 */
 fa_signal_t fa_signal_custom(fa_signal_custom_processor_t *,
                              fa_signal_t);
@@ -170,34 +184,13 @@ fa_signal_t fa_signal_input(int);
 */
 fa_signal_t fa_signal_output(int, int, fa_signal_t);
 
-/** Returns a signal that evaluates both of the given signal, and returns
-    the result of the first one.
-*/
-fa_signal_t fa_signal_latter(fa_signal_t, fa_signal_t);
-
-/** Returns a signal that evaluates both of the given signal, and returns
-    the result of the second one.
+/** Returns a signal that evaluates both of the given signal, and the result of the first.
 */
 fa_signal_t fa_signal_former(fa_signal_t, fa_signal_t);
 
-
-typedef void (* fa_signal_stream_input_callback_t)(fa_ptr_t,
-                                                   size_t);
-
-
-typedef void (* fa_signal_stream_output_callback_t)(fa_ptr_t,
-                                                    size_t);
-
-
-fa_signal_t fa_signal_input_stream(int,
-                                   fa_signal_stream_input_callback_t,
-                                   fa_ptr_t);
-
-
-fa_signal_t fa_signal_output_stream(int,
-                                    fa_signal_stream_output_callback_t,
-                                    fa_ptr_t,
-                                    fa_signal_t);
+/** Returns a signal that evaluates both of the given signal, and returns the result of the second.
+*/
+fa_signal_t fa_signal_latter(fa_signal_t, fa_signal_t);
 
 /** Run the given signal for *n* samples, printing the values to `stdout`.
 */
