@@ -279,130 +279,145 @@ fa_signal_t fa_signal_play(fa_buffer_t, fa_signal_t);
 */
 fa_signal_t fa_signal_record(fa_buffer_t, fa_signal_t, fa_signal_t);
 
-
+/** Addition lifted to signals. 
+*/
 fa_signal_t fa_signal_add(fa_signal_t, fa_signal_t);
 
-
+/** Subtraction lifted to signals. 
+*/
 fa_signal_t fa_signal_subtract(fa_signal_t, fa_signal_t);
 
-
+/** Multiplication lifted to signals. 
+*/
 fa_signal_t fa_signal_multiply(fa_signal_t, fa_signal_t);
 
-
+/** The exponential function lifted to signals. 
+*/
 fa_signal_t fa_signal_power(fa_signal_t, fa_signal_t);
 
-
+/** Division function lifted to signals. 
+*/
 fa_signal_t fa_signal_divide(fa_signal_t, fa_signal_t);
 
-
+/** The modulo function lifted to signals. 
+*/
 fa_signal_t fa_signal_modulo(fa_signal_t, fa_signal_t);
 
-
+/** The absolute value of a signal. 
+*/
 fa_signal_t fa_signal_absolute(fa_signal_t);
 
-
+/** Negate a signal, treating 0 as false and all other values as true. 
+*/
 fa_signal_t fa_signal_not();
 
-
+/** Logical *and* of two signals, treating 0 as false and all other values as true. 
+*/
 fa_signal_t fa_signal_and(fa_signal_t, fa_signal_t);
 
-
+/** Logical *or* of two signals, treating 0 as false and all other values as true. 
+*/
 fa_signal_t fa_signal_or(fa_signal_t, fa_signal_t);
 
-
+/** Logical *exclusive or* of two signals, treating 0 as false and all other values as true. 
+*/
 fa_signal_t fa_signal_xor(fa_signal_t, fa_signal_t);
 
-
-fa_signal_t fa_signal_bit_not(fa_signal_t, fa_signal_t);
-
-
-fa_signal_t fa_signal_bit_and(fa_signal_t, fa_signal_t);
-
-
-fa_signal_t fa_signal_bit_or(fa_signal_t, fa_signal_t);
-
-
-fa_signal_t fa_signal_bit_xor(fa_signal_t, fa_signal_t);
-
-
-fa_signal_t fa_signal_shift_left(fa_signal_t, fa_signal_t);
-
-
-fa_signal_t fa_signal_shift_right(fa_signal_t, fa_signal_t);
-
-
+/** Equality of two signals, generating 1 if equal and 0 otherwise. 
+    Beware of floating-point equality. You should only use small integer numbers. 
+*/
 fa_signal_t fa_signal_equal(fa_signal_t, fa_signal_t);
 
-
+/** Compare two signals `x` and `y`, generating 1 if `x < y` and 0 otherwise. 
+*/
 fa_signal_t fa_signal_less_than(fa_signal_t, fa_signal_t);
 
-
+/** Compare two signals `x` and `y`, generating 1 if `x > y` and 0 otherwise. 
+*/
 fa_signal_t fa_signal_greater_than(fa_signal_t, fa_signal_t);
 
-
+/** Compare two signals `x` and `y`, generating 1 if `x <= y` and 0 otherwise. 
+*/
 fa_signal_t fa_signal_less_than_equal(fa_signal_t, fa_signal_t);
 
-
+/** Compare two signals `x` and `y`, generating 1 if `x >= y` and 0 otherwise. 
+*/
 fa_signal_t fa_signal_greater_than_equal(fa_signal_t, fa_signal_t);
 
-
+/** The acos function lifted to signals. 
+*/
 fa_signal_t fa_signal_acos(fa_signal_t);
 
-
+/** The asin function lifted to signals. 
+*/
 fa_signal_t fa_signal_asin(fa_signal_t);
 
-
+/** The atan function lifted to signals. 
+*/
 fa_signal_t fa_signal_atan(fa_signal_t);
 
-
+/** The cos function lifted to signals. 
+*/
 fa_signal_t fa_signal_cos(fa_signal_t);
 
-
+/** The sin function lifted to signals. 
+*/
 fa_signal_t fa_signal_sin(fa_signal_t);
 
-
+/** The tan function lifted to signals. 
+*/
 fa_signal_t fa_signal_tan(fa_signal_t);
 
-
+/** The exp function lifted to signals. 
+*/
 fa_signal_t fa_signal_exp(fa_signal_t);
 
-
+/** The natural logarithm of a signal. 
+*/
 fa_signal_t fa_signal_log(fa_signal_t);
 
-
+/** The common logarithm of a signal. 
+*/
 fa_signal_t fa_signal_log10(fa_signal_t);
 
-
-fa_signal_t fa_signal_pow(fa_signal_t, fa_signal_t);
-
-
+/** The square root of a signal. 
+*/
 fa_signal_t fa_signal_sqrt(fa_signal_t);
 
-
+/** The minimum of two signals. 
+*/
 fa_signal_t fa_signal_min(fa_signal_t, fa_signal_t);
 
-
+/** The maximum of two signals. 
+*/
 fa_signal_t fa_signal_max(fa_signal_t, fa_signal_t);
 
-
+/** The modulo of a signal. 
+*/
 fa_signal_t fa_signal_fmod(fa_signal_t, fa_signal_t);
 
-
+/** The remainder of a signal. 
+*/
 fa_signal_t fa_signal_remainder(fa_signal_t, fa_signal_t);
 
-
+/** Round the value of a signal towards negative infinity. 
+*/
 fa_signal_t fa_signal_floor(fa_signal_t, fa_signal_t);
 
-
+/** Round the value of a signal towards positive infinity. 
+*/
 fa_signal_t fa_signal_ceil(fa_signal_t, fa_signal_t);
 
-
-fa_signal_t fa_signal_rint(fa_signal_t, fa_signal_t);
-
-
+/** A signal that counts samples.
+    Generates the sequence `[0,1..]`.
+*/
 fa_signal_t fa_signal_counter();
 
-
+/** A signal which is one when the number of samples is divisible by the given
+    number, and zero otherwise.
+    
+    For example if the sample rate is 44100, `fa_signal_impulses(44100)` generates an impulse every second.
+*/
 fa_signal_t fa_signal_impulses(int);
 
 /** Run a signal through an external VST plug-in.
