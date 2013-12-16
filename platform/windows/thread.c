@@ -124,14 +124,18 @@ void fa_thread_join(fa_thread_t thread)
     do {
         Sleep(join_interval_k);
         result = GetExitCodeThread(thread->native, &exitCode);
-
+    
         if (!result) {
             fa_thread_fatal("join", GetLastError());
         }
-
+    
     } while (exitCode == STILL_ACTIVE);
 
-    fa_free(thread);
+    // TODO waitForSingleObject
+
+    // TODO prevent double free (or tolerate somehow?)
+    // TODO CloseHandle
+    // fa_free(thread);
 }
 
 void fa_thread_detach(fa_thread_t thread)
@@ -349,7 +353,9 @@ void fa_fa_log_error_from(fa_string_t msg, fa_string_t origin);
 
 void fa_thread_fatal(char *msg, int error)
 {
-    fa_fa_log_error_from(string(msg), string("Doremir.Thread"));
+    fa_fa_log_error_from(string(msg), 
+        string_dappend(string("Doremir.Thread, error code: "), 
+        fa_string_format_integral("%d", error)));
     exit(error);
 }
 
