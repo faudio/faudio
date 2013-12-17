@@ -438,7 +438,12 @@ ptr_t midi_thread(ptr_t x)
 
 void fa_midi_initialize()
 {
-    MIDIRestart();
+    // If MIDIRestart is called here:
+    //  * CoreMIDI constants are correctly set in RELEASE build (if not called, they are all zero)
+    //  * Hot-plugging stops working in DEBUG build
+    // Why?
+
+    // MIDIRestart();
 
     gMidiMutex          = fa_thread_create_mutex();
 
