@@ -34,6 +34,7 @@ fa_midi_session_t print_midi_devices(fa_ptr_t _, midi_session_t session)
 
 int main(int argc, char const *argv[])
 {
+    fa_fa_set_log_std();
     fa_fa_initialize();
     fa_midi_with_session(
         print_midi_devices, NULL,

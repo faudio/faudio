@@ -90,11 +90,14 @@ void run_midi()
 
     fa_midi_stream_t ist = fa_midi_open_stream(i);
     fa_midi_stream_t ost = fa_midi_open_stream(o);
-    fa_audio_stream_t aost = fa_audio_open_stream(ai, ao, just, 
-        fa_list_map(fa_multiply, fa_signal_constant(2.0), fa_pair_to_list(fa_signal_dls()))
-        );
-    mark_used(ost);
-    mark_used(aost);
+
+#ifndef _WIN32    
+	fa_pair_t synth = fa_signal_dls();
+#else
+	fa_pair_t synth = fa_signal_synth(string("C:\\sf.sf2"));
+#endif
+    list_t out           	= fa_pair_to_list(fa_signal_synth(string("C:\\sf.sf2")));
+	fa_audio_stream_t aost 	= fa_audio_open_stream(ai, ao, just, out);
 
     switch(kModeOfEchoing) {
     
@@ -119,6 +122,7 @@ void run_midi()
 
     while (1) {
         fa_thread_sleep(1000);
+		// fa_audio_schedule_relative(hms(0,0,0), fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 64 + ((0 % 12) * 3), 90)), aost);
     }
 
     fa_destroy(ist);
