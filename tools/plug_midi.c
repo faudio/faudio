@@ -19,7 +19,9 @@ fa_midi_session_t print_midi_devices(fa_ptr_t _, fa_midi_session_t session)
 {
     fa_midi_add_status_callback(status_callback, session, session);
 
-    fa_thread_sleep(500); // FIXME why is this needed?
+    // fa_thread_sleep(500); // FIXME why is this needed?
+
+    list_t open_streams = empty();
     fa_for_each(x, fa_midi_all(session)) {
         fa_print("Name: %s\n", fa_string_to_string(fa_midi_name(x)));
         fa_print("Host: %s\n", fa_string_to_string(fa_midi_host_name(x)));
@@ -29,6 +31,14 @@ fa_midi_session_t print_midi_devices(fa_ptr_t _, fa_midi_session_t session)
         mark_used(x);
     }
 
+    fa_for_each(x, fa_midi_all(session)) {
+        // if (fa_midi_has_input(x)) {            
+            fa_push_list(fa_midi_open_stream(x), open_streams);
+        // }
+    }
+    
+    // TODO stop all
+
     stop = false;
 
     while (1) {
@@ -36,8 +46,7 @@ fa_midi_session_t print_midi_devices(fa_ptr_t _, fa_midi_session_t session)
         if (stop) {
             return session;
         }
-
-        fa_thread_sleep(1000);
+        fa_thread_sleep(1);
     }
 
     return session;
