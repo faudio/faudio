@@ -594,22 +594,27 @@ stream_t fa_audio_open_stream(device_t input,
 void fa_audio_close_stream(stream_t stream)
 {
     inform(string("Closing real-time audio stream"));
+    inform(fa_string_format_integral("  Stream: %p \n", stream));
 
     {
         // TODO need atomic
         native_stream_t native = stream->native;
         if (native) {
+            inform(string("  (stream->native was set, now destroying stream)"));
             stream->native = NULL;
             Pa_CloseStream(native);            
             // after_processing will be called after this
+
+            inform(string("  (finished PA stream)"));
+                              
+            stream->controller.stop = true;
+            fa_thread_join(stream->controller.thread);
+            fa_thread_destroy_mutex(stream->controller.mutex);
+
+            inform(string("  (finished stopping stream thread, close finished)"));
         }
     }
 
-    {
-        stream->controller.stop = true;
-        fa_thread_join(stream->controller.thread);
-        fa_thread_destroy_mutex(stream->controller.mutex);
-    }
     // Not deleted until sesion is gone
 }
 
@@ -1032,3 +1037,5 @@ void audio_device_fatal(string_t msg, int code)
     exit(error);
 }
 
+
+// nothing really
