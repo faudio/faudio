@@ -132,10 +132,24 @@ module Fa.Signal
     };
     
     /** Add a custom processor to be executed with the given signal.
+        
+        A custom processor is simply a routine invoked on the audio thread during
+        audio startup, shutdown, when a message is received, or whehn the main audio 
+        callback is invoked, in which the processor can perform custom audio processing.
+        
+        Note that this does *not* affect signal input or output. The processing routine 
+        is expected to know which channels to use for input and output. Normally a custom
+        processor would be wrapped in a higher-level function which uses `fa_signal_input`
+        and `fa_signal_output` to read and write to the corresponding channels.
+        
+        If a processor handles multichannel audio, simply add the processor to *one* of
+        the output signals, implying that all channels of the output must always be used
+        whether their output is needed or not (see also `fa_signal_former`).
 
         @warning
-            You probably do not want to do this. Custom processors are for exceptional
-            cases such as implementing wrappers for new plug-in format.
+            You probably do not want to do this. This is a very low-level function used
+            internally in faudio for implementing new I/O backends, plug-in formats. If
+            you simply want to lift a pure function into the audio thread, see `fa_signal_lift`.            
      */
     custom      : (CustomProcessor*, Signal) -> Signal;
 
@@ -148,22 +162,16 @@ module Fa.Signal
      */
     output      : ( Int, Int, Signal )                            -> Signal;
 
-    /** Returns a signal that evaluates both of the given signal, and returns
-        the result of the first one.
-     */
-    latter : (Signal, Signal) -> Signal;
-
-    /** Returns a signal that evaluates both of the given signal, and returns
-        the result of the second one.
+    /** Returns a signal that evaluates both of the given signal, and the result of the first.
      */
     former : (Signal, Signal) -> Signal;
 
-    type StreamInputCallback = ((Ptr, Size) -> Void)*;
-    type StreamOutputCallback = ((Ptr, Size) -> Void)*;
-    inputStream : (Int, StreamInputCallback, Ptr) -> Signal;
-    outputStream : (Int, StreamOutputCallback, Ptr, Signal) -> Signal;
-    
+    /** Returns a signal that evaluates both of the given signal, and returns the result of the second.
+     */
+    latter : (Signal, Signal) -> Signal;
 
+
+    // Running
 
     /** Run the given signal for *n* samples, printing the values to `stdout`.
      */
@@ -245,52 +253,93 @@ module Fa.Signal
     record : (Buffer, Signal, Signal) -> Signal;
 
 
+    /** Addition lifted to signals. */
     add                 : (Signal, Signal) -> Signal;
+
+    /** Subtraction lifted to signals. */
     subtract            : (Signal, Signal) -> Signal;
+
+    /** Multiplication lifted to signals. */
     multiply            : (Signal, Signal) -> Signal;
+    
+    /** The exponential function lifted to signals. */
     power               : (Signal, Signal) -> Signal;
+
+    /** Division function lifted to signals. */
     divide              : (Signal, Signal) -> Signal;
+    
+    /** The modulo function lifted to signals. */
     modulo              : (Signal, Signal) -> Signal;
+    
+    /** The absolute value of a signal. */
     absolute            : Signal           -> Signal;
     
+    /** Negate a signal, treating 0 as false and all other values as true. */
     not                 : () -> Signal;
+    /** Logical *and* of two signals, treating 0 as false and all other values as true. */
     and                 : (Signal, Signal) -> Signal;
+    /** Logical *or* of two signals, treating 0 as false and all other values as true. */
     or                  : (Signal, Signal) -> Signal;
+    /** Logical *exclusive or* of two signals, treating 0 as false and all other values as true. */
     xor                 : (Signal, Signal) -> Signal;
-    bitNot              : (Signal, Signal) -> Signal;
-    bitAnd              : (Signal, Signal) -> Signal;
-    bitOr               : (Signal, Signal) -> Signal;
-    bitXor              : (Signal, Signal) -> Signal;
-    shiftLeft           : (Signal, Signal) -> Signal;
-    shiftRight          : (Signal, Signal) -> Signal;
     
+    /** Equality of two signals, generating 1 if equal and 0 otherwise. 
+        Beware of floating-point equality. You should only use small integer numbers. */
     equal               : (Signal, Signal) -> Signal;
-    lessThan            : (Signal, Signal) -> Signal;
+    
+    /** Compare two signals `x` and `y`, generating 1 if `x < y` and 0 otherwise. */
+    lessThan            : (Signal, Signal) -> Signal;    
+    /** Compare two signals `x` and `y`, generating 1 if `x > y` and 0 otherwise. */
     greaterThan         : (Signal, Signal) -> Signal;
+    /** Compare two signals `x` and `y`, generating 1 if `x <= y` and 0 otherwise. */
     lessThanEqual       : (Signal, Signal) -> Signal;
+    /** Compare two signals `x` and `y`, generating 1 if `x >= y` and 0 otherwise. */
     greaterThanEqual    : (Signal, Signal) -> Signal;
     
+    /** The acos function lifted to signals. */
     acos                : (Signal) -> Signal;
+    /** The asin function lifted to signals. */
     asin                : (Signal) -> Signal;
+    /** The atan function lifted to signals. */
     atan                : (Signal) -> Signal;
+    /** The cos function lifted to signals. */
     cos                 : (Signal) -> Signal;
+    /** The sin function lifted to signals. */
     sin                 : (Signal) -> Signal;
+    /** The tan function lifted to signals. */
     tan                 : (Signal) -> Signal;
+    /** The exp function lifted to signals. */
     exp                 : (Signal) -> Signal;
+    /** The natural logarithm of a signal. */
     log                 : (Signal) -> Signal;
+    /** The common logarithm of a signal. */
     log10               : (Signal) -> Signal;
 
-    pow                 : (Signal, Signal) -> Signal;
+    /** The square root of a signal. */
     sqrt                : Signal           -> Signal;
+    /** The minimum of two signals. */
     min                 : (Signal, Signal) -> Signal;
+    /** The maximum of two signals. */
     max                 : (Signal, Signal) -> Signal;
+    /** The modulo of a signal. */
     fmod                : (Signal, Signal) -> Signal;
+    /** The remainder of a signal. */
     remainder           : (Signal, Signal) -> Signal;
+    /** Round the value of a signal towards negative infinity. */
     floor               : (Signal, Signal) -> Signal;
+    /** Round the value of a signal towards positive infinity. */
     ceil                : (Signal, Signal) -> Signal;
-    rint                : (Signal, Signal) -> Signal;    
 
+    /** A signal that counts samples.
+        Generates the sequence `[0,1..]`.
+     */
     counter             : () -> Signal;
+
+    /** A signal which is one when the number of samples is divisible by the given
+        number, and zero otherwise.
+        
+        For example if the sample rate is 44100, `fa_signal_impulses(44100)` generates an impulse every second.
+     */
     impulses            : (Int) -> Signal;
                            
     // isVariable : Signal -> Bool;
@@ -319,17 +368,6 @@ module Fa.Signal
      */
     vst : (String, String, List) -> List;
 
-    /** Run a signal through an external VST plug-in.
-    
-        @param name
-            Name of plug-in.
-        @return
-            A list of @ref fa_signal_t (outputs).
-        @warning
-            Experimental.    
-     */
-    fluid : String -> List;
-
     /** Returns a pair of signals from the `DLSMusicDevice`.
         You can send messages to it using the name `DLS`.
         
@@ -342,7 +380,7 @@ module Fa.Signal
     dls : () -> Pair;
     
 
-    /** Returns a pair of signals from FluidSYnth.
+    /** Returns a pair of signals from FluidSynth (if available).
         You can send messages to it using the name `Fluid`.
         
         @param path

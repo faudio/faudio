@@ -1,5 +1,5 @@
 
-CSS=styles.css
+CSS=styles1.css
 
 # all : html
 all : html-fast

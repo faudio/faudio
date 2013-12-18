@@ -8,7 +8,7 @@
 
 /** @addtogroup FaTime
 
-    Time values.
+    Provides time representations.
     
     This type represent a point in time relative to a stream-specific *start time*.
 

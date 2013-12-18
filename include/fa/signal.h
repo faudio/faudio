@@ -153,10 +153,24 @@ typedef struct {
         } fa_signal_custom_processor_t;
 
 /** Add a custom processor to be executed with the given signal.
+    
+    A custom processor is simply a routine invoked on the audio thread during
+    audio startup, shutdown, when a message is received, or whehn the main audio 
+    callback is invoked, in which the processor can perform custom audio processing.
+    
+    Note that this does *not* affect signal input or output. The processing routine 
+    is expected to know which channels to use for input and output. Normally a custom
+    processor would be wrapped in a higher-level function which uses `fa_signal_input`
+    and `fa_signal_output` to read and write to the corresponding channels.
+    
+    If a processor handles multichannel audio, simply add the processor to *one* of
+    the output signals, implying that all channels of the output must always be used
+    whether their output is needed or not (see also `fa_signal_former`).
 
     @warning
-        You probably do not want to do this. Custom processors are for exceptional
-        cases such as implementing wrappers for new plug-in format.
+        You probably do not want to do this. This is a very low-level function used
+        internally in faudio for implementing new I/O backends, plug-in formats. If
+        you simply want to lift a pure function into the audio thread, see `fa_signal_lift`.            
 */
 fa_signal_t fa_signal_custom(fa_signal_custom_processor_t *,
                              fa_signal_t);
@@ -170,34 +184,13 @@ fa_signal_t fa_signal_input(int);
 */
 fa_signal_t fa_signal_output(int, int, fa_signal_t);
 
-/** Returns a signal that evaluates both of the given signal, and returns
-    the result of the first one.
-*/
-fa_signal_t fa_signal_latter(fa_signal_t, fa_signal_t);
-
-/** Returns a signal that evaluates both of the given signal, and returns
-    the result of the second one.
+/** Returns a signal that evaluates both of the given signal, and the result of the first.
 */
 fa_signal_t fa_signal_former(fa_signal_t, fa_signal_t);
 
-
-typedef void (* fa_signal_stream_input_callback_t)(fa_ptr_t,
-                                                   size_t);
-
-
-typedef void (* fa_signal_stream_output_callback_t)(fa_ptr_t,
-                                                    size_t);
-
-
-fa_signal_t fa_signal_input_stream(int,
-                                   fa_signal_stream_input_callback_t,
-                                   fa_ptr_t);
-
-
-fa_signal_t fa_signal_output_stream(int,
-                                    fa_signal_stream_output_callback_t,
-                                    fa_ptr_t,
-                                    fa_signal_t);
+/** Returns a signal that evaluates both of the given signal, and returns the result of the second.
+*/
+fa_signal_t fa_signal_latter(fa_signal_t, fa_signal_t);
 
 /** Run the given signal for *n* samples, printing the values to `stdout`.
 */
@@ -279,130 +272,145 @@ fa_signal_t fa_signal_play(fa_buffer_t, fa_signal_t);
 */
 fa_signal_t fa_signal_record(fa_buffer_t, fa_signal_t, fa_signal_t);
 
-
+/** Addition lifted to signals. 
+*/
 fa_signal_t fa_signal_add(fa_signal_t, fa_signal_t);
 
-
+/** Subtraction lifted to signals. 
+*/
 fa_signal_t fa_signal_subtract(fa_signal_t, fa_signal_t);
 
-
+/** Multiplication lifted to signals. 
+*/
 fa_signal_t fa_signal_multiply(fa_signal_t, fa_signal_t);
 
-
+/** The exponential function lifted to signals. 
+*/
 fa_signal_t fa_signal_power(fa_signal_t, fa_signal_t);
 
-
+/** Division function lifted to signals. 
+*/
 fa_signal_t fa_signal_divide(fa_signal_t, fa_signal_t);
 
-
+/** The modulo function lifted to signals. 
+*/
 fa_signal_t fa_signal_modulo(fa_signal_t, fa_signal_t);
 
-
+/** The absolute value of a signal. 
+*/
 fa_signal_t fa_signal_absolute(fa_signal_t);
 
-
+/** Negate a signal, treating 0 as false and all other values as true. 
+*/
 fa_signal_t fa_signal_not();
 
-
+/** Logical *and* of two signals, treating 0 as false and all other values as true. 
+*/
 fa_signal_t fa_signal_and(fa_signal_t, fa_signal_t);
 
-
+/** Logical *or* of two signals, treating 0 as false and all other values as true. 
+*/
 fa_signal_t fa_signal_or(fa_signal_t, fa_signal_t);
 
-
+/** Logical *exclusive or* of two signals, treating 0 as false and all other values as true. 
+*/
 fa_signal_t fa_signal_xor(fa_signal_t, fa_signal_t);
 
-
-fa_signal_t fa_signal_bit_not(fa_signal_t, fa_signal_t);
-
-
-fa_signal_t fa_signal_bit_and(fa_signal_t, fa_signal_t);
-
-
-fa_signal_t fa_signal_bit_or(fa_signal_t, fa_signal_t);
-
-
-fa_signal_t fa_signal_bit_xor(fa_signal_t, fa_signal_t);
-
-
-fa_signal_t fa_signal_shift_left(fa_signal_t, fa_signal_t);
-
-
-fa_signal_t fa_signal_shift_right(fa_signal_t, fa_signal_t);
-
-
+/** Equality of two signals, generating 1 if equal and 0 otherwise. 
+    Beware of floating-point equality. You should only use small integer numbers. 
+*/
 fa_signal_t fa_signal_equal(fa_signal_t, fa_signal_t);
 
-
+/** Compare two signals `x` and `y`, generating 1 if `x < y` and 0 otherwise. 
+*/
 fa_signal_t fa_signal_less_than(fa_signal_t, fa_signal_t);
 
-
+/** Compare two signals `x` and `y`, generating 1 if `x > y` and 0 otherwise. 
+*/
 fa_signal_t fa_signal_greater_than(fa_signal_t, fa_signal_t);
 
-
+/** Compare two signals `x` and `y`, generating 1 if `x <= y` and 0 otherwise. 
+*/
 fa_signal_t fa_signal_less_than_equal(fa_signal_t, fa_signal_t);
 
-
+/** Compare two signals `x` and `y`, generating 1 if `x >= y` and 0 otherwise. 
+*/
 fa_signal_t fa_signal_greater_than_equal(fa_signal_t, fa_signal_t);
 
-
+/** The acos function lifted to signals. 
+*/
 fa_signal_t fa_signal_acos(fa_signal_t);
 
-
+/** The asin function lifted to signals. 
+*/
 fa_signal_t fa_signal_asin(fa_signal_t);
 
-
+/** The atan function lifted to signals. 
+*/
 fa_signal_t fa_signal_atan(fa_signal_t);
 
-
+/** The cos function lifted to signals. 
+*/
 fa_signal_t fa_signal_cos(fa_signal_t);
 
-
+/** The sin function lifted to signals. 
+*/
 fa_signal_t fa_signal_sin(fa_signal_t);
 
-
+/** The tan function lifted to signals. 
+*/
 fa_signal_t fa_signal_tan(fa_signal_t);
 
-
+/** The exp function lifted to signals. 
+*/
 fa_signal_t fa_signal_exp(fa_signal_t);
 
-
+/** The natural logarithm of a signal. 
+*/
 fa_signal_t fa_signal_log(fa_signal_t);
 
-
+/** The common logarithm of a signal. 
+*/
 fa_signal_t fa_signal_log10(fa_signal_t);
 
-
-fa_signal_t fa_signal_pow(fa_signal_t, fa_signal_t);
-
-
+/** The square root of a signal. 
+*/
 fa_signal_t fa_signal_sqrt(fa_signal_t);
 
-
+/** The minimum of two signals. 
+*/
 fa_signal_t fa_signal_min(fa_signal_t, fa_signal_t);
 
-
+/** The maximum of two signals. 
+*/
 fa_signal_t fa_signal_max(fa_signal_t, fa_signal_t);
 
-
+/** The modulo of a signal. 
+*/
 fa_signal_t fa_signal_fmod(fa_signal_t, fa_signal_t);
 
-
+/** The remainder of a signal. 
+*/
 fa_signal_t fa_signal_remainder(fa_signal_t, fa_signal_t);
 
-
+/** Round the value of a signal towards negative infinity. 
+*/
 fa_signal_t fa_signal_floor(fa_signal_t, fa_signal_t);
 
-
+/** Round the value of a signal towards positive infinity. 
+*/
 fa_signal_t fa_signal_ceil(fa_signal_t, fa_signal_t);
 
-
-fa_signal_t fa_signal_rint(fa_signal_t, fa_signal_t);
-
-
+/** A signal that counts samples.
+    Generates the sequence `[0,1..]`.
+*/
 fa_signal_t fa_signal_counter();
 
-
+/** A signal which is one when the number of samples is divisible by the given
+    number, and zero otherwise.
+    
+    For example if the sample rate is 44100, `fa_signal_impulses(44100)` generates an impulse every second.
+*/
 fa_signal_t fa_signal_impulses(int);
 
 /** Run a signal through an external VST plug-in.
@@ -420,17 +428,6 @@ fa_signal_t fa_signal_impulses(int);
 */
 fa_list_t fa_signal_vst(fa_string_t, fa_string_t, fa_list_t);
 
-/** Run a signal through an external VST plug-in.
-    
-    @param name
-        Name of plug-in.
-    @return
-        A list of @ref fa_signal_t (outputs).
-    @warning
-        Experimental.    
-*/
-fa_list_t fa_signal_fluid(fa_string_t);
-
 /** Returns a pair of signals from the `DLSMusicDevice`.
     You can send messages to it using the name `DLS`.
     
@@ -442,7 +439,7 @@ fa_list_t fa_signal_fluid(fa_string_t);
 */
 fa_pair_t fa_signal_dls();
 
-/** Returns a pair of signals from FluidSYnth.
+/** Returns a pair of signals from FluidSynth (if available).
     You can send messages to it using the name `Fluid`.
     
     @param path
