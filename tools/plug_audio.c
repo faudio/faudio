@@ -2,21 +2,22 @@
 #include <fa/fa.h>
 #include <fa/util.h>
 
-static int stop;
+static int gStop;
 
 /** Called whenever the MIDI setup changed.
  */
 ptr_t status_callback(ptr_t session)
 {
     printf("Audio status changed!\n");
-    stop = true;
+    gStop = true;
     return 0;
 }
 
 static double freq = 440;
 fa_list_t _sine(fa_ptr_t _, fa_list_t inputs)
 {
-    return list(fa_multiply(fa_signal_sin(fa_signal_line(freq *= 1.2)), constant(0.1)));
+	fa_signal_t x = fa_multiply(fa_signal_sin(fa_signal_line(freq *= 1.2)), constant(0.1));
+    return list(x, x);
 }
 
 fa_audio_session_t play_sine(fa_ptr_t _, fa_audio_session_t session)
@@ -51,11 +52,11 @@ fa_audio_session_t print_audio_devices(fa_ptr_t _, fa_audio_session_t session)
 
     play_sine(NULL, session);
 
-    stop = false;
+    gStop = false;
 
     while (1) {
         // printf("Stop: %d\n", stop);
-        if (stop) {
+        if (gStop) {
             return session;
         }
 
