@@ -10,15 +10,28 @@
 (defvar *foreign-lib*)
 
 ; Deps
-#|
+
+#+cocoa
+(progn
   (pushnew "/Volumes/source/modus/cffi_0.10.7.1/" asdf:*central-registry* :test #'equal)
   (pushnew "/Volumes/source/modus/babel/" asdf:*central-registry* :test #'equal)
   (pushnew "/Volumes/source/modus/alexandria/" asdf:*central-registry* :test #'equal)
   (pushnew "/Volumes/source/modus/trivial-features/" asdf:*central-registry* :test #'equal)
   (pushnew "/Volumes/source/modus/faudio/" asdf:*central-registry* :test #'equal)
-|#
+  )
+#+win32
+(progn
+  (pushnew "C:\\Users\\Doremir\\Modus\\cffi_0.10.7.1\\" asdf:*central-registry* :test #'equal)
+  (pushnew "C:\\Users\\Doremir\\Modus\\babel\\" asdf:*central-registry* :test #'equal)
+  (pushnew "C:\\Users\\Doremir\\Modus\\alexandria\\" asdf:*central-registry* :test #'equal)
+  (pushnew "C:\\Users\\Doremir\\Modus\\trivial-features\\" asdf:*central-registry* :test #'equal)
+  (pushnew "C:\\Users\\Doremir\\Modus\\faudio\\" asdf:*central-registry* :test #'equal)
+  )
+
 
 ; Load bindings (old ASDF)
+;(setf asdf:*central-registry* (cl:list *default-pathname-defaults*))
+;(cl:print asdf:*central-registry*)
 (asdf:oos 'asdf:load-op :faudio)
 
 ; Force recompile
@@ -35,7 +48,8 @@
       (log-path        (format nil "~a/Library/Logs/Faudio.log" (user-homedir-pathname))))
   (push framework-path  cffi:*darwin-framework-directories*)
   (push framework-path2 cffi:*darwin-framework-directories*)
-  (setf *foreign-lib* (cffi:load-foreign-library `(:framework ,framework-name)))
+  #+cocoa (setf *foreign-lib* (cffi:load-foreign-library `(:framework ,framework-name)))
+  #+win32 (setf *foreign-lib* (cffi:load-foreign-library "C:\\Program Files (x86)\\LispWorks\\libfaudio.dll"))
   (faudio::fa-set-log-file log-path)
   ;(faudio::plot-use-gnu)
   (faudio::fa-initialize)

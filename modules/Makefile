@@ -1,5 +1,12 @@
 
+UNAME=$(shell uname)
+ifeq ($(UNAME), Darwin)
 MODULO=modulo --lisp-package=faudio
+else
+MODULO=modulo --lisp-package=faudio --lisp-primitive-bool=UChar
+endif
+
+
 
 all:	c
 bindings: lisp
