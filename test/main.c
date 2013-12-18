@@ -1870,20 +1870,20 @@ int main(int argc, char const *argv[])
         // test_type();
         test_midi_message();
 
-        // test_thread();
-        // test_mutex();
+        test_thread();
+        test_mutex();
 
         test_atomic();
         test_atomic_queue(5, 2);
-        // test_atomic_queue(10, 10);
-        // test_atomic_queue(300, 2);
+        test_atomic_queue(10, 10);
+        test_atomic_queue(50, 2);
         test_atomic_stack(5, 2);
         // test_atomic_stack(10, 10);
         // test_atomic_stack(300, 2);
         test_atomic_ring_buffer(5, 2);
 
         test_for_each();
-        //test_list();
+        test_list();
         test_set();
         test_map();
         // test_graph(string_dappend(fa_system_directory_current(), string("/test/gen.dot")));
