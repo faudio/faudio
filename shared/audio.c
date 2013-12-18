@@ -594,7 +594,7 @@ stream_t fa_audio_open_stream(device_t input,
 void fa_audio_close_stream(stream_t stream)
 {
     inform(string("Closing real-time audio stream"));
-    inform(fa_string_format_integral("  Stream: %p \n", stream));
+    inform(fa_string_format_integral("  Stream: %p \n", (long) stream));
 
     {
         // TODO need atomic

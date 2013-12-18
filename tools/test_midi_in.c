@@ -96,7 +96,7 @@ void run_midi()
 #else
 	fa_pair_t synth = fa_signal_synth(string("C:\\sf.sf2"));
 #endif
-    list_t out           	= fa_pair_to_list(fa_signal_synth(string("C:\\sf.sf2")));
+    list_t out           	= fa_pair_to_list(synth);
 	fa_audio_stream_t aost 	= fa_audio_open_stream(ai, ao, just, out);
 
     switch(kModeOfEchoing) {
