@@ -42,9 +42,9 @@ ptr_t render_(ptr_t x, fa_signal_state_t *state)
     fluid_synth_t* synth = x;
 
 	// DEBUG
-	if ((state->count % 22050) == 0)
-		if (FLUID_FAILED == fluid_synth_noteon(synth, 1, 60, 127))
-			warn(string("Could not send..."));
+	// if ((state->count % 22050) == 0)
+		// if (FLUID_FAILED == fluid_synth_noteon(synth, 1, 60, 127))
+			// warn(string("Could not send..."));
 
 	float *left2 = left;
 	float *right2 = right;
@@ -92,7 +92,7 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
         int channel = status_channel        & 0x0f;
         int status  = (status_channel >> 4) & 0x0f;
         
-		printf("%p %d %d %d %d\n", synth, status, channel, data1, data2);
+		// printf("%p %d %d %d %d\n", synth, status, channel, data1, data2);
         switch (status) {
             case 0x8: // off
                 if (FLUID_OK != fluid_synth_noteoff(synth, channel, data1))
