@@ -21,6 +21,7 @@ struct nullary_closure {
 };
 typedef struct nullary_closure *closure_t;
 
+int     gInitializedOnce = 0;
 closure_t gMidiCallbackTable[1000];
 closure_t gAudioCallbackTable[1000];
 long    gMidiCallbackTableCount;
@@ -63,6 +64,15 @@ void add_audio_status_listener(audio_status_callback_t function, ptr_t data);
 void add_midi_status_listener(midi_status_callback_t function, ptr_t data);
 
 void fa_device_initialize()
+{
+    // Dummy value 
+    if (gInitializedOnce != 1) {
+        gInitializedOnce = 1;
+        fa_device_initialize2();
+    }
+}
+
+void fa_device_initialize2()
 {
     InitTable();
     
