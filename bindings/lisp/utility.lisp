@@ -183,6 +183,10 @@
     (cl:list (from-pointer 'signal (pair-first dls)) 
              (from-pointer 'signal (pair-second dls)))))
 
+(defun signal-synth* (path)
+  (let* ((synth (signal-synth path)))
+    (cl:list (from-pointer 'signal (pair-first synth)) 
+             (from-pointer 'signal (pair-second synth)))))
 
 (defun signal-print* (n x &key (controls '()))
   (let* ((buffer (signal-run-buffer n controls x)))
