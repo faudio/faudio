@@ -1,12 +1,12 @@
-# [submodule "external/portaudio/source"]
-#   path = external/portaudio/source
-#   url = git@github.com:faudio/portaudio.git
-# [submodule "external/portmidi/source"]
-#   path = external/portmidi/source
-#   url = git@github.com:faudio/portmidi.git
-# [submodule "external/sndfile/source"]
-#   path = external/sndfile/source
-#   url = git@github.com:faudio/libsndfile.git
-# [submodule "external/fluidsynth/source"]
-#   path = external/fluidsynth/source
-#   url = git@github.com:faudio/fluidsynth.git
+[submodule "external/portaudio/source"]
+	path = external/portaudio/source
+	url = git@github.com:faudio/portaudio.git
+[submodule "external/portmidi/source"]
+	path = external/portmidi/source
+	url = git@github.com:faudio/portmidi.git
+[submodule "external/sndfile/source"]
+	path = external/sndfile/source
+	url = git@github.com:faudio/libsndfile.git
+[submodule "external/fluidsynth/source"]
+	path = external/fluidsynth/source
+	url = git@github.com:faudio/fluidsynth.git
