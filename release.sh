@@ -8,9 +8,18 @@ else
     VERSION=$1
 fi
 
+echo "Checking distribution environment..."
+command -v make >/dev/null 2>&1 	|| { echo "I require make but it's not installed. Aborting." >&2; exit 1; }
+command -v modulo >/dev/null 2>&1   || { echo "I require modulo but it's not installed. Aborting." >&2; exit 1; }
+command -v git >/dev/null 2>&1  	|| { echo "I require git but it's not installed. Aborting." >&2; exit 1; }
+
 
 if [[ $* != *--clean* ]]; then
 
+    echo "Running tests..."
+	make modules test
+
+    echo "Setting up distribution..."
     rm -rf distribute
     mkdir -p distribute
     mkdir -p distribute/bin
@@ -19,12 +28,18 @@ if [[ $* != *--clean* ]]; then
     # mkdir -p distribute/lib
     mkdir -p distribute/Frameworks
 
+    echo "Copying headers..."
     cp -R include distribute
     rm distribute/include/config.h.in
 
+    echo "Generating language bindings..."
+	make bindings
+    echo "Copying language bindings..."
     cp -R bindings/lisp distribute/bindings
     find distribute/bindings/lisp -type f -name '*~' -exec rm -f '{}' \;
+	find distribute/bindings/lisp -type f -name '*.gitignore' -exec rm -f '{}' \;
 
+    echo "Copying binaries..."
     cp -R build/Frameworks/Faudio.framework distribute/Frameworks
 
     cp -R build/bin distribute
@@ -34,10 +49,11 @@ if [[ $* != *--clean* ]]; then
     tar -pvczf faudio-$VERSION.tar.gz faudio
     rm -rf faudio
     
-    make modules doc
-
 	if [[ $* != *--no-upload* ]]; then
-	    pushd pages
+		echo "Uploading documentation"
+    	make doc
+	    
+		pushd pages
 	    git rm -rf docs
 	    cp -R ../doc/build/html/ docs
 	    mkdir -p versions/$VERSION
@@ -49,6 +65,8 @@ if [[ $* != *--clean* ]]; then
 	    popd
 	fi
 
+	echo "Distribution faudio-$VERSION.tar.gz created, please upload."
+	open .
 	open -a "Firefox" "https://github.com/hanshoglund/faudio/releases/new"
 else
     echo "Cleaning"
