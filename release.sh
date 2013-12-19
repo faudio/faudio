@@ -1,6 +1,6 @@
 # VERSION=2.x.x
 
-if [ $# -ne 1 ]
+if [ $# -lt 1 ]
 then
   echo "Usage: `basename $0` [version]"
   exit $E_BADARGS
@@ -35,17 +35,19 @@ if [[ $* != *--clean* ]]; then
     rm -rf faudio
     
     make modules doc
-    pushd pages
 
-    git rm -rf docs
-    cp -R ../doc/build/html/ docs
-    mkdir -p versions/$VERSION
-    cp -R ../doc/build/html/ versions/$VERSION/docs
+	if [[ $* != *--no-upload* ]]; then
+	    pushd pages
+	    git rm -rf docs
+	    cp -R ../doc/build/html/ docs
+	    mkdir -p versions/$VERSION
+	    cp -R ../doc/build/html/ versions/$VERSION/docs
 
-    git add docs versions # -u does NOT work
-    git commit -m "Updated docs"
-    git push
-    popd
+	    git add docs versions # -u does NOT work
+	    git commit -m "Updated docs"
+	    git push
+	    popd
+	fi
 
 	open -a "Firefox" "https://github.com/hanshoglund/faudio/releases/new"
 else
