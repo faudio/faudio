@@ -1,4 +1,12 @@
 
+# v2.8.0
+
+- Adds FluidSynth wrapper
+- Fixes issue with streams not being properly closed on session ends (all platforms)
+- Fixes issue with Lisp bindings caused by incorrect handling of C booleans
+- Fixes issues in device detection on Windows
+- Improves testing
+
 # v2.7.9
 
 - Fixes error in time to millisecond conversion
