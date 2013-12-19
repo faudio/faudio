@@ -364,6 +364,24 @@ fa_list_t fa_list_map(fa_unary_t, fa_ptr_t, fa_list_t);
 */
 fa_list_t fa_list_dmap(fa_unary_t, fa_ptr_t, fa_list_t);
 
+/**
+     Map over the given list and join the results.
+     
+    This function is useful to apply functions from singletons to lists.
+     
+    @par Laws
+     
+        joinMap(apply1, single, xs) == xs`
+     
+    @par Performance
+        O(n)
+     
+*/
+fa_list_t fa_list_join_map(fa_unary_t, fa_ptr_t, fa_list_t);
+
+
+fa_list_t fa_list_djoin_map(fa_unary_t, fa_ptr_t, fa_list_t);
+
 /** Concatenate all elements of the given list.
 
     The given list must contain lists only.
