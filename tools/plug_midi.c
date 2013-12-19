@@ -32,9 +32,10 @@ fa_midi_session_t print_midi_devices(fa_ptr_t _, fa_midi_session_t session)
     }
 
     fa_for_each(x, fa_midi_all(session)) {
-        // if (fa_midi_has_input(x)) {            
+        // if (fa_midi_has_input(x)) { 
+        if (!fa_string_matches(string(".*GS Wavetable.*"), fa_midi_name(x))) {
             fa_push_list(fa_midi_open_stream(x), open_streams);
-        // }
+        }
     }
     
     // TODO stop all
