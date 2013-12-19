@@ -46,6 +46,8 @@ $DLLS
     echo "Copying language bindings..."
 	cp -R bindings/lisp distribute/bindings
 	find distribute/bindings/lisp -type f -name '*~' -exec rm -f '{}' \;
+	find distribute/bindings/lisp -type f -name '*.bak' -exec rm -f '{}' \;
+	find distribute/bindings/lisp -type f -name '*.gitignore' -exec rm -f '{}' \;
 
     echo "Copying binaries..."
 	cp -R build/bin distribute
