@@ -8,10 +8,12 @@ else
     VERSION=$1
 fi
 
-command -v 7z >/dev/null 2>&1   || { echo "I require 7z but it's not installed. Aborting." >&2; exit 1; }
-command -v find >/dev/null 2>&1 || { echo "I require find but it's not installed. Aborting." >&2; exit 1; }
-command -v git >/dev/null 2>&1  || { echo "I require git but it's not installed. Aborting." >&2; exit 1; }
-command -v make >/dev/null 2>&1 || { echo "I require make but it's not installed. Aborting." >&2; exit 1; }
+echo "Checking distribution environment..."
+command -v make >/dev/null 2>&1 	|| { echo "I require make but it's not installed. Aborting." >&2; exit 1; }
+command -v modulo >/dev/null 2>&1   || { echo "I require modulo but it's not installed. Aborting." >&2; exit 1; }
+command -v 7z >/dev/null 2>&1   	|| { echo "I require 7z but it's not installed. Aborting." >&2; exit 1; }
+command -v find >/dev/null 2>&1 	|| { echo "I require find but it's not installed. Aborting." >&2; exit 1; }
+command -v git >/dev/null 2>&1  	|| { echo "I require git but it's not installed. Aborting." >&2; exit 1; }
 
 
 DLLS=`find build/bin/ -regex .*.dll`
@@ -19,9 +21,9 @@ DLLS=`find build/bin/ -regex .*.dll`
 if [[ $* != *--clean* ]]; then
 
 	echo "The following files will be copied:
-	------------------------------
-	$DLLS
-	------------------------------
+
+$DLLS
+
 	"
 
     # echo "Running tests..."
