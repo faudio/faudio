@@ -56,6 +56,7 @@ struct _fa_midi_device_t {
 
     impl_t              impl;               // Dispatcher
     native_index_t      index;              // Native device index
+    session_t           session;            // Underlying session
 
     bool                input, output;      // Cached capabilities
     string_t            name;               // Cached names
@@ -98,7 +99,7 @@ ptr_t midi_stream_impl(fa_id_t interface);
 inline static session_t new_session();
 inline static void session_init_devices(session_t session);
 inline static void delete_session(session_t session);
-inline static device_t new_device(native_index_t index);
+inline static device_t new_device(native_index_t index, session_t session);
 inline static void delete_device(device_t device);
 inline static stream_t new_stream(device_t device);
 inline static void delete_stream(stream_t stream);
@@ -125,7 +126,7 @@ inline static void session_init_devices(session_t session)
     devices = fa_list_empty();
 
     for (size_t i = 0; i < count; ++i) {
-        device_t device = new_device(i);
+        device_t device = new_device(i, session);
 
         if (device) {
             devices = fa_list_dcons(device, devices);
@@ -133,8 +134,8 @@ inline static void session_init_devices(session_t session)
     }
 
     session->devices      = fa_list_dreverse(devices);
-    session->def_input    = new_device(Pm_GetDefaultInputDeviceID());
-    session->def_output   = new_device(Pm_GetDefaultOutputDeviceID());
+    session->def_input    = new_device(Pm_GetDefaultInputDeviceID(), session);
+    session->def_output   = new_device(Pm_GetDefaultOutputDeviceID(), session);
 }
 
 inline static void delete_session(session_t session)
@@ -143,7 +144,7 @@ inline static void delete_session(session_t session)
     fa_delete(session);
 }
 
-inline static device_t new_device(native_index_t index)
+inline static device_t new_device(native_index_t index, session_t session)
 {
     if (index == pmNoDevice) {
         return NULL;
@@ -151,6 +152,7 @@ inline static device_t new_device(native_index_t index)
 
     device_t device = fa_new(midi_device);
     device->impl    = &midi_device_impl;
+    device->session = session;
 
     const PmDeviceInfo  *info = Pm_GetDeviceInfo(index);
 
@@ -278,6 +280,7 @@ void fa_midi_end_session(session_t session)
             inform(string("(stopping driver)"));
 
             result = Pm_Terminate();
+            fa_thread_sleep(300); // TODO needed?
 
             if (result < 0) {
                 fa_error_log(NULL, native_error(string("Could not stop midi"), result));
@@ -433,7 +436,7 @@ fa_midi_stream_t fa_midi_open_stream(device_t device)
     stream_t stream = new_stream(device);
 
     if (device->input) {
-        inform(string("Opening input\n"));
+        inform(string("  Opening input\n"));
         result = Pm_OpenInput(&stream->native_input, device->index, NULL, 0,
                               midi_time_callback, stream);
 
@@ -443,7 +446,7 @@ fa_midi_stream_t fa_midi_open_stream(device_t device)
     }
 
     if (device->output) {
-        inform(string("Opening output\n"));
+        inform(string("  Opening output\n"));
         result = Pm_OpenOutput(&stream->native_output, device->index, NULL, 0,
                                midi_time_callback, stream, -1);
 
@@ -453,6 +456,8 @@ fa_midi_stream_t fa_midi_open_stream(device_t device)
     }
 
     stream->thread = fa_thread_create(stream_thread_callback, stream);
+
+    fa_push_list(stream, device->session->streams);
     return stream;
 }
 
@@ -462,10 +467,12 @@ void fa_midi_close_stream(stream_t stream)
     inform(string("Closing real-time midi stream"));
 
     if (!stream->aborted) {
+        inform(string("  (Aborting midi service thread)"));
         stream->aborted = true;
         // Wait
         fa_thread_join(stream->thread);
 
+        inform(string("  (Closing native streams)"));
         if (stream->native_input) {
             Pm_Close(stream->native_input);
         }
