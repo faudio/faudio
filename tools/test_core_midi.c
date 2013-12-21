@@ -33,7 +33,7 @@ void print_devices_with_status()
             // printf("  Name: %s\n", unstring(fa_string_from_native((void*) name)));
         }
 
-        long isOffline;
+        SInt32 isOffline;
         status = noErr;
         status = MIDIObjectGetIntegerProperty(device, kMIDIPropertyOffline, &isOffline);
 
