@@ -277,6 +277,17 @@ ptr_t fa_buffer_write_audio(fa_string_t  path,
 }
 
 
+int16_t fa_buffer_get_int16(fa_buffer_t x, size_t y) { assert (false && "Not implemented"); }
+int32_t fa_buffer_get_int32(fa_buffer_t x, size_t y) { assert (false && "Not implemented"); }
+int64_t fa_buffer_get_int64(fa_buffer_t x, size_t y) { assert (false && "Not implemented"); }
+void fa_buffer_set_int16(fa_buffer_t x, size_t y, int16_t z) { assert (false && "Not implemented"); }
+void fa_buffer_set_int32(fa_buffer_t x, size_t y, int32_t z) { assert (false && "Not implemented"); }
+void fa_buffer_set_int64(fa_buffer_t x, size_t y, int64_t z) { assert (false && "Not implemented"); }
+fa_buffer_t fa_buffer_read_raw(fa_string_t x) { assert (false && "Not implemented"); }
+void fa_buffer_write_raw(fa_string_t x, fa_buffer_t y) { assert (false && "Not implemented"); }
+
+
+
 // --------------------------------------------------------------------------------
 
 fa_ptr_t buffer_copy(fa_ptr_t a)
