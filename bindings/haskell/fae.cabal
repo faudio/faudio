@@ -1,5 +1,5 @@
 
-name:               Fae
+name:               Faudio
 version:            0.5
 cabal-version:      >= 1.2
 author:             Hans Hoglund
@@ -18,17 +18,28 @@ library
     build-depends: 
         base >= 4 && < 5
     hs-source-dirs: src
+    default-extensions:
+        ForeignFunctionInterface,
+        EmptyDataDecls
     exposed-modules:
-        Sound.Fae
-        Sound.Fae.Signal
+        Fa
+        Fa.List
+        Fa.String
+        Fa.Fa
+        Fa.Error
+        Fa.Signal
+        Fa.Audio
     frameworks:
-        FAE
+        Faudio
 
 executable "hsfae"
     build-depends: 
         base >= 4 && < 5
     hs-source-dirs: src
+    default-extensions:
+        ForeignFunctionInterface,
+        EmptyDataDecls
     frameworks:
-        FAE
+        Faudio
     main-is:
         Main.hs
