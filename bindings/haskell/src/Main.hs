@@ -30,9 +30,9 @@ openStream' i o f = do
 sines = withSession $ \session -> do
     devs <- Audio.all session
     
-    (flip mapM_) (unFaList devs) $ \d -> do
-        putStrLn $ "    " ++ name' (castPtr d)
-        return ()
+    -- (flip mapM_) (unFaList devs) $ \d -> do
+    --     putStrLn $ "    " ++ name' (castPtr d)
+    --     return ()
     
     i <- Audio.defaultInput session
     o <- Audio.defaultOutput session
@@ -69,9 +69,9 @@ instance Fractional Signal where
     fromRational = constant' . fromRational
 
 main = do               
-    setLogStd
+    -- setLogStd
     initialize
-    putStrLn =<< unFaString =<< versionString
+    -- putStrLn =<< unFaString =<< versionString
     sines
     terminate
     return ()

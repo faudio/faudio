@@ -107,3 +107,40 @@ fix-lisp: gen-lisp
 
 clean-lisp:
 	find bindings -name '*.lisp' | xargs rm -v;
+
+haskell:
+	mkdir -p bindings/haskell/src/Fa
+	mkdir -p bindings/haskell/src/Fa/Atomic
+	mkdir -p bindings/haskell/src/Fa/Device
+	mkdir -p bindings/haskell/src/Fa/Midi
+	mkdir -p bindings/haskell/src/Fa/Processor
+	mkdir -p bindings/haskell/src/Fa/Pair
+	mkdir -p bindings/haskell/src/Fa/String
+	mkdir -p bindings/haskell/src/Fa/System
+	mkdir -p bindings/haskell/src/Fa/Thread
+	$(MODULO) -Mmodules --language=haskell <modules/Fa.module    			>bindings/haskell/src/Fa.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Fa.module    		>bindings/haskell/src/Fa/Fa.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Atomic.module    		>bindings/haskell/src/Fa/Atomic.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Atomic/Queue.module     	>bindings/haskell/src/Fa/Atomic/Queue.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Atomic/Stack.module     	>bindings/haskell/src/Fa/Atomic/Stack.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Atomic/RingBuffer.module	>bindings/haskell/src/Fa/Atomic/RingBuffer.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Thread.module    		>bindings/haskell/src/Fa/Thread.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/System.module    		>bindings/haskell/src/Fa/System.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Dynamic.module    		>bindings/haskell/src/Fa/Dynamic.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Std.module    		>bindings/haskell/src/Fa/Std.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/String.module    		>bindings/haskell/src/Fa/String.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Error.module    		>bindings/haskell/src/Fa/Error.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Buffer.module    		>bindings/haskell/src/Fa/Buffer.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Ratio.module    		>bindings/haskell/src/Fa/Ratio.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/List.module    		>bindings/haskell/src/Fa/List.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Set.module    		>bindings/haskell/src/Fa/Set.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Pair.module    		>bindings/haskell/src/Fa/Pair.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Plot.module    		>bindings/haskell/src/Fa/Plot.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Map.module    		>bindings/haskell/src/Fa/Map.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Midi/Message.module    	>bindings/haskell/src/Fa/Midi/Message.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Time.module    		>bindings/haskell/src/Fa/Time.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Clock.module			>bindings/haskell/src/Fa/Clock.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Action.module  		>bindings/haskell/src/Fa/Action.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Signal.module  		>bindings/haskell/src/Fa/Signal.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Audio.module    		>bindings/haskell/src/Fa/Audio.hs && \
+	$(MODULO) -Mmodules --language=haskell <modules/Fa/Midi.module    		>bindings/haskell/src/Fa/Midi.hs
