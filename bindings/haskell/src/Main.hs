@@ -16,6 +16,8 @@ import qualified Fa.Signal as Signal
 import Fa.String (FaString, toUtf8, fromUtf8)
 import qualified Fa.Audio as Audio
 import System.IO.Unsafe (unsafePerformIO)
+import Control.Exception as E
+import System.IO
 
 -- openStream i o p =
 
@@ -39,21 +41,28 @@ sines = withSession $ \session -> do
     
 
     -- let fmosc f r = sin' (fromRational f * sine (fromRational r))
-    let osc1 = (* 0.01) $ sum $ Prelude.take 20 $ fmap (sin' . (*5) . line' . (2**)) $ [1,2-1/9..]
-    let osc2 = (* 0.01) $ sum $ Prelude.take 20 $ fmap (sin' . (*5) . line' . (2**)) $ [1,2-3/9..]
+    let osc1 = (* 0.001) $ lsum $ Prelude.take 11 $ fmap (sin' . (*90) . line' . (2**)) $ [1,2-3/9..]
+    -- let osc2 = (* 0.001) $ lsum $ Prelude.take 105 $ fmap (sin' . (*90) . line' . (2**)) $ [1,2-5/9..]
 
-    Signal.runFile (44100*10) (faList []) osc1 (faString' "hs.wav")
+    -- Signal.runFile (44100*10) (faList []) osc1 (faString' "hs.wav")
     
-    openStream' i o (\[i1, i2] -> [osc1, osc2])
-    threadDelay $ 100 * 1000000
+    interruptible () $ do
+        -- openStream' i o (\[i1, i2] -> [osc1, osc1])
+        openStream' i o $ \[i1, i2] -> [osc1, osc1]
+            -- [delay' 44100 i1, delay' 44100 i2]
+            
+        threadDelay $ 100 * 1000000
+
     return ()
 
 
+lsum = foldl (+) 0
 
 
 sine = sin' . line'
 sin'      = unsafePerformIO . Signal.sin
 line'     = unsafePerformIO . Signal.line
+delay' n  = unsafePerformIO . Signal.delay n
 constant' = unsafePerformIO . Signal.constant
 add' x y = unsafePerformIO $ Signal.add x y
 sub' x y = unsafePerformIO $ Signal.subtract x y
@@ -69,7 +78,7 @@ instance Fractional Signal where
     fromRational = constant' . fromRational
 
 main = do               
-    -- setLogStd
+    setLogStd
     initialize
     -- putStrLn =<< unFaString =<< versionString
     sines
@@ -113,3 +122,11 @@ withSession f = do
     f session
     Audio.endSession session
 
+interruptible :: a -> IO a -> IO a
+interruptible a m
+  = E.handleJust f return m
+  where
+    f UserInterrupt
+      = Just a
+    f _
+      = Nothing
