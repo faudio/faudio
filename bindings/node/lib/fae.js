@@ -2,7 +2,8 @@
 var ffi      = require('ffi');
 var cliColor = require('cli-color');
 
-var fa_ = ffi.Library('libfa', {
+// FIXME path
+var fa_ = ffi.Library('build/Frameworks/Faudio.framework/Faudio', {
     'fa_audio_engine_version':             ['pointer', [] ],
     'fa_audio_engine_version_string':      ['pointer', [] ],
     'fa_string_to_utf8':                   ['string',  ['pointer'] ],
