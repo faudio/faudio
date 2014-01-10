@@ -118,10 +118,17 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
                     warn(string("Fluidsynth: Could not send message"));
                 break;
             case 0xe: // 14 pitch wheel
+            {
                 // TODO do we need to to call pitch_wheel_sens etc?
-                if (FLUID_OK != fluid_synth_pitch_bend(synth, channel, data1))
+                unsigned short bend;
+                bend = (unsigned short)data2;
+                bend <<= 7;
+                bend |= (unsigned short)data1;
+
+                if (FLUID_OK != fluid_synth_pitch_bend(synth, channel, bend))
                     warn(string("Fluidsynth: Could not send message"));
                 break;
+            }
             default: {
                 warn(string_dappend(string("Unknown MIDI message to Fluidsynth: <status="), fa_string_format_integral("%d>", status)));
                 assert(false && "Unknown MIDI message to Fluidsynth");
