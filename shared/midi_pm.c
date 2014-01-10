@@ -534,12 +534,20 @@ ptr_t stream_thread_callback(ptr_t x)
                     ptr_t   x = stream->message_callback_ptrs[i];
 
                     time_t time = fa_milliseconds(events[0].timestamp);
-                    midi_message_t msg = midi_message(
-                                             Pm_MessageStatus(events[0].message),
-                                             Pm_MessageData1(events[0].message),
-                                             Pm_MessageData2(events[0].message));
 
-                    f(x, pair(time, msg));
+                    if (Pm_MessageStatus(events[0].message) != 0xf0 
+                          && 
+                        Pm_MessageStatus(events[0].message) != 0xf7) {
+                        midi_message_t msg = midi_message(
+                                                 Pm_MessageStatus(events[0].message),
+                                                 Pm_MessageData1(events[0].message),
+                                                 Pm_MessageData2(events[0].message));
+
+                        f(x, pair(time, msg));
+                    } else {
+                        warn(string("PortMIDI received SysEx: ignoring"));
+                        // TODO handle sysex
+                    }
                 }
             }
         }
