@@ -37,9 +37,13 @@ fa_midi_session_t print_midi_devices(fa_ptr_t _, midi_session_t session)
 
     if (fa_midi_default_input(session)) {
         fa_print("Default input: %s\n", fa_string_to_string(fa_midi_name(fa_midi_default_input(session))));
+    } else {
+        fa_print("No default input\n", NULL);
     }
     if (fa_midi_default_output(session)) {
         fa_print("Default output: %s\n", fa_string_to_string(fa_midi_name(fa_midi_default_output(session))));
+    } else {
+        fa_print("No default output\n", NULL);
     }
 
     return session;
