@@ -16,7 +16,8 @@ pair_t fa_signal_dls()
 
 ptr_t before_(ptr_t x, fa_signal_state_t *state)
 {
-    // Nothing
+    fluid_synth_t* synth = x;
+    fluid_synth_set_sample_rate(synth, state->rate);
     return NULL;
 }
 
@@ -155,7 +156,7 @@ pair_t fa_signal_synth(string_t path2)
             warn(string("Fluidsynth: Could not load sound font"));
 			return NULL; // TODO error
         }
-		fluid_synth_set_sample_rate(synth, 44100);
+        // Sample rate is set later
 		
 		printf("%p\n", synth);
     }
