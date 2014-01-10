@@ -21,6 +21,8 @@
 
 #include <portmidi.h>
 
+#include "../shared/action_internal.h"
+
 /*
     ## Notes
 
@@ -411,8 +413,7 @@ void midi_inform_opening(device_t device)
 
 
 
-static inline
-void send_midi(midi_message_t midi, stream_t stream);
+static inline void send_midi(stream_t stream, midi_message_t midi);
 
 PmTimestamp midi_time_callback(void *data)
 {
@@ -505,7 +506,10 @@ void fa_midi_with_stream(device_t           device,
 
 
 
-void receive_midi(PmEvent *dest, stream_t stream);
+void receive_midi(stream_t stream, PmEvent *dest);
+ptr_t send_midi_action(ptr_t stream, ptr_t action);
+
+
 
 ptr_t stream_thread_callback(ptr_t x)
 {
@@ -526,7 +530,7 @@ ptr_t stream_thread_callback(ptr_t x)
 
                 // Fetch one message
                 PmEvent events[1];
-                receive_midi(events, stream);
+                receive_midi(stream, events);
 
                 // Invoke all callbacks
                 for (int i = 0; i < stream->message_callback_count; ++i) {
@@ -559,36 +563,16 @@ ptr_t stream_thread_callback(ptr_t x)
             ptr_t val;
 
             while ((val = fa_atomic_queue_read(stream->in_controls))) {
-                // inform(fa_string_show(val));
                 fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
             }
 
-            while (1) {
-                pair_t x = fa_priority_queue_peek(stream->controls);
-
-                if (!x) {
-                    break;
-                }
-
-                time_t   time   = fa_pair_first(x);
-                action_t action = fa_pair_second(x);
-
-                int timeSamp = (((double) fa_time_to_milliseconds(time)) / 1000.0) * 44100;   // TODO
-
-                if (timeSamp <= fa_clock_milliseconds(stream->clock)) {
-                    if (fa_action_is_send(action)) {
-                        string_t name = fa_action_send_name(action);
-                        ptr_t    value = fa_action_send_value(action);
-                        send_midi(value, stream); // TODO laterz
-                        mark_used(name);
-                    }
-
-                    fa_priority_queue_pop(stream->controls);
-                    // TODO reschedule
-                } else {
-                    break;
-                }
-            }
+            time_t   now    = fa_clock_time(stream->clock);
+            run_actions(stream->controls,
+                        now,
+                        send_midi_action,
+                        stream
+                       );
+            mark_used(now);
         }
 
         // Sleep
@@ -597,6 +581,20 @@ ptr_t stream_thread_callback(ptr_t x)
 
     assert(false && "Unreachable");
 }
+
+ptr_t send_midi_action(ptr_t stream, ptr_t action)
+{
+    if (fa_action_is_send(action)) {
+        // string_t name = fa_action_send_name(action);
+        ptr_t    value = fa_action_send_value(action);
+        send_midi(stream, value);
+        // mark_used_name(name);
+    }
+    // TODO other actions
+
+    return stream;
+}
+
 
 void fa_midi_add_message_callback(fa_midi_message_callback_t function,
                                   fa_ptr_t data,
@@ -625,7 +623,7 @@ void fa_midi_schedule(fa_time_t        time,
 /** Fetches one message from the given stream.
     Fails if the stream has no input.
  */
-void receive_midi(PmEvent *dest, stream_t stream)
+void receive_midi(stream_t stream, PmEvent *dest)
 {
     assert(stream->native_input && "Sending to non-input stream");
 
@@ -640,7 +638,7 @@ void receive_midi(PmEvent *dest, stream_t stream)
 /** Send a messages to the given stream.
     Fails if the stream has no output.
  */
-void send_midi(midi_message_t midi, stream_t stream)
+void send_midi(stream_t stream, midi_message_t midi)
 {
     assert(stream->native_output && "Sending to non-output stream");
 
