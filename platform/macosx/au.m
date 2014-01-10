@@ -24,6 +24,7 @@ struct au_context {
     double *outputs;
     int channels;
     int frames;
+    double sample_rate;
     
     AudioComponentInstance      Instance;
     AudioUnitRenderActionFlags  RenderFlags;
@@ -32,12 +33,13 @@ struct au_context {
     AudioBufferList*            BufferList;
 };
 
-au_context_t create_au_context(ptr_t instance, int channels, int frames)
+au_context_t create_au_context(ptr_t instance, int channels, int frames, double sample_rate)
 {
     au_context_t context = fa_new_struct(au_context);
     context->Instance = instance;
     context->channels = channels;
     context->frames = frames;
+    context->sample_rate = sample_rate;
     context->outputs = fa_malloc(sizeof(double)*channels*frames);
     return context;
 }
@@ -143,13 +145,13 @@ void delete_buffer_list(AudioBufferList* list)
     fa_free(list);
 }
 
-void au_prepare(au_context_t context)
+void au_prepare(au_context_t context, double sample_rate)
 {
     AudioComponentInstance instance = context->Instance;
 
     OSStatus err;
 
-    Float64 sampleRate       = (Float64) 44100; // TODO
+    Float64 sampleRate       = (Float64) sample_rate; // TODO
     Float64 sampleTime       = (Float64) 0;
     UInt32  numberOfChannels = (UInt32)  context->channels;
     UInt32  numberOfFrames   = (UInt32)  context->frames;

@@ -24,7 +24,7 @@ pair_t fa_signal_synth(string_t path)
 ptr_t before_(ptr_t x, fa_signal_state_t *state)
 {
     au_context_t context = x;
-    au_prepare(context);
+    au_prepare(context, state->rate);
     return x;
     mark_used(context);
 }
@@ -91,7 +91,7 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 // Pair of signals
 pair_t fa_signal_dls()
 {
-    au_context_t context = create_au_context(new_dls_music_device_instance(), 2, kAUVectorSize);
+    au_context_t context = create_au_context(new_dls_music_device_instance(), 2, kAUVectorSize, 0); // Update SR later
     // TODO destroy
 
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
