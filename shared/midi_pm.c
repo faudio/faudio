@@ -135,10 +135,10 @@ inline static void session_init_devices(session_t session)
             devices = fa_list_dcons(device, devices);
         }
         if (i == Pm_GetDefaultInputDeviceID()) {
-            input == device;
+            input = device;
         }
         if (i == Pm_GetDefaultOutputDeviceID()) {
-            input == device;
+            output = device;
         }
     }
 
