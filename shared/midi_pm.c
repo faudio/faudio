@@ -123,6 +123,7 @@ inline static void session_init_devices(session_t session)
 {
     native_index_t count;
     list_t         devices;
+    device_t       input = NULL, output = NULL;
 
     count   = Pm_CountDevices();
     devices = fa_list_empty();
@@ -133,11 +134,17 @@ inline static void session_init_devices(session_t session)
         if (device) {
             devices = fa_list_dcons(device, devices);
         }
+        if (i == Pm_GetDefaultInputDeviceID()) {
+            input == device;
+        }
+        if (i == Pm_GetDefaultOutputDeviceID()) {
+            input == device;
+        }
     }
 
     session->devices      = fa_list_dreverse(devices);
-    session->def_input    = new_device(Pm_GetDefaultInputDeviceID(), session);
-    session->def_output   = new_device(Pm_GetDefaultOutputDeviceID(), session);
+    session->def_input    = input;
+    session->def_output   = output;
 }
 
 inline static void delete_session(session_t session)
