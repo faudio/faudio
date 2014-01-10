@@ -149,10 +149,6 @@ pair_t fa_signal_synth(string_t path2)
         // fluid_settings_setsint(settings, "name", value);
         // fluid_settings_setsnum(settings, "name", value);
 
-        // TODO configure
-        // TODO hardcoded        
-        // warn(string("Using hardcoded soundfont location 'C:\\Users\\Doremir\\sf.sf2'"));
-        // char* path = "C:\\Users\\Doremir\\sf.sf2";
         char* path = unstring(path2);
 
 		fluid_settings_setnum(settings, "synth.gain", 0.6);
