@@ -58,6 +58,7 @@ struct _fa_audio_session_t {
     list_t              streams;            // All streams started on this sessiuon (list of stream_t)
 
     struct {
+        double          sample_rate;
         double          latency;
         int             vector_size;
     }                   parameters;         // Parameters, which may be updated by set_parameters
@@ -164,6 +165,7 @@ inline static void session_init_devices(session_t session)
     session->def_output   = new_device(session, Pa_GetDefaultOutputDevice());
     session->streams      = empty();
 
+    session->parameters.sample_rate = kDefSampleRate;
     session->parameters.vector_size = kDefVectorSize;
     session->parameters.latency     = kDefLatency;
 }
@@ -331,6 +333,24 @@ void fa_audio_set_parameter(string_t name,
                             ptr_t value,
                             session_t session)
 {
+    if (fa_equal(name, string("sample-rate"))) {
+        double x;
+
+        switch(fa_dynamic_get_type(value)) {
+            case i32_type_repr:
+                x = fa_peek_int32(value);  
+                break;
+            case f32_type_repr:
+                x = fa_peek_float(value);  
+                break;           
+            default:
+                warn(string("Wrong type"));
+                return;
+        }
+        
+        session->parameters.sample_rate = x;
+    }
+
     if (fa_equal(name, string("latency"))) {
         double x;
 
@@ -480,19 +500,12 @@ void fa_audio_add_status_callback(status_callback_t function,
 void audio_inform_opening(device_t input, ptr_t proc, device_t output)
 {
     inform(string("Opening real-time audio stream"));
-    inform(string_dappend(string("    Input:  "), input ? fa_string_show(input) : string("-")));
+    inform(string_dappend(    string("    Input:         "), input ? fa_string_show(input) : string("-")));
+    inform(string_dappend(    string("    Output:        "), output ? fa_string_show(output) : string("-")));
 
-    if (input) {
-        inform(fa_string_format_integral("defaultLowInputLatency: %d", Pa_GetDeviceInfo(input->index)->defaultLowInputLatency));
-        inform(fa_string_format_integral("defaultHighInputLatency: %d", Pa_GetDeviceInfo(input->index)->defaultHighInputLatency));
-    }
-
-    inform(string_dappend(string("    Output: "), output ? fa_string_show(output) : string("-")));
-
-    if (output) {
-        inform(fa_string_format_integral("defaultLowOutputLatency: %d", Pa_GetDeviceInfo(output->index)->defaultLowOutputLatency));
-        inform(fa_string_format_integral("defaultHighOutputLatency: %d", Pa_GetDeviceInfo(output->index)->defaultHighOutputLatency));
-    }
+    inform(fa_string_format_floating("    Sample Rate:   %2f", input->session->parameters.sample_rate));
+    inform(fa_string_format_floating("    Latency:       %3f", input->session->parameters.latency));
+    inform(fa_string_format_integral("    Vector Size:   %d", input->session->parameters.vector_size));
 }
 
 stream_t fa_audio_open_stream(device_t input,
@@ -503,7 +516,7 @@ stream_t fa_audio_open_stream(device_t input,
 {
     PaError         status;
     unsigned long   buffer_size = input->session->parameters.vector_size;
-    double          sample_rate = kDefSampleRate;
+    double          sample_rate = input->session->parameters.sample_rate;
 
     if (!input && !output) {
         return (stream_t) audio_device_error_with(
@@ -736,7 +749,8 @@ ptr_t audio_control_thread(ptr_t x)
 
 void before_processing(stream_t stream)
 {
-    stream->state      = new_state(kDefSampleRate); // FIXME 
+    session_t session = stream->input->session;
+    stream->state      = new_state(session->parameters.sample_rate); // FIXME 
 
     signal_t merged = fa_signal_constant(0);
 
