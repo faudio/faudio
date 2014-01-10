@@ -736,7 +736,7 @@ ptr_t audio_control_thread(ptr_t x)
 
 void before_processing(stream_t stream)
 {
-    stream->state      = new_state();
+    stream->state      = new_state(kDefSampleRate); // FIXME 
 
     signal_t merged = fa_signal_constant(0);
 

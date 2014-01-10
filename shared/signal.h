@@ -27,7 +27,7 @@ typedef struct _state_t *state_t;
 typedef struct _state_base_t *state_base_t;
 
 list_t fa_signal_get_procs(fa_signal_t signal2);
-state_t new_state();
+state_t new_state(int sample_rate);
 void add_custom_proc(fa_signal_custom_processor_t* proc, state_t state);
 void delete_state(state_t state);
 void inc_state1(state_t state);           

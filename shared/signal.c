@@ -645,7 +645,7 @@ long    kMaxInputs      = 128;
 long    kMaxBuses       = 64;
 long    kMaxDelay       = (44100 * 5);
 
-state_t new_state()
+state_t new_state(int sample_rate)
 {
     srand(time(NULL));  // TODO localize
     state_t state = fa_new_struct(_state_t);
@@ -1049,7 +1049,7 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
         fa_priority_queue_insert(fa_pair_left_from_pair(x), controls2);
     }
 
-    state_t state = new_state();
+    state_t state = new_state(kDefSampleRate); // TODO other sample rates
     fa_for_each(x, fa_signal_get_procs(a)) {
         add_custom_proc(x, state);
     }
