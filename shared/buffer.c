@@ -245,7 +245,8 @@ ptr_t fa_buffer_write_audio(fa_string_t  path,
     size_t         size   = fa_buffer_size(buffer) / sizeof(double);
 
 
-    SF_INFO         info;
+    SF_INFO         info;  
+    // FIXME other sample rates
     info.samplerate = 44100;
     info.channels   = 1;
     info.format     = SF_FORMAT_WAV | SF_FORMAT_PCM_24;
