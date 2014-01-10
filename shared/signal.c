@@ -640,24 +640,24 @@ struct _state_t {
 // typedef _state_t *state_t;
 
 
-double  kRate           = 44100;
 long    kMaxInputs      = 128;
 long    kMaxBuses       = 64;
-long    kMaxDelay       = (44100 * 5);
+
+#define max_delay(k) ((long) (k * 5))
 
 state_t new_state(int sample_rate)
 {
     srand(time(NULL));  // TODO localize
     state_t state = fa_new_struct(_state_t);
 
-    state->inputs   = fa_malloc(kMaxInputs * kMaxVectorSize * sizeof(double));
-    state->buses    = fa_malloc(kMaxBuses * kMaxDelay   * sizeof(double));
-    memset(state->inputs,   0, kMaxInputs * kMaxVectorSize * sizeof(double));
-    memset(state->buses,    0, kMaxBuses * kMaxDelay    * sizeof(double));
-
     state->count              = 0;
-    state->rate               = kRate;
+    state->rate               = sample_rate; // TODO
     state->custom_proc_count  = 0;
+
+    state->inputs   = fa_malloc(kMaxInputs * kMaxVectorSize * sizeof(double));
+    state->buses    = fa_malloc(kMaxBuses * max_delay(state->rate)   * sizeof(double));
+    memset(state->inputs,   0, kMaxInputs * kMaxVectorSize * sizeof(double));
+    memset(state->buses,    0, kMaxBuses * max_delay(state->rate)    * sizeof(double));
 
     return state;
 }
@@ -751,12 +751,12 @@ void inc_state1(state_t state)
 
 int buffer_pointer(state_t state)
 {
-    return state->count % kMaxDelay;
+    return state->count % max_delay(state->rate);
 }
 
-int index_bus(int n, int c)
+int index_bus(int n, int c, state_t state)
 {
-    return c * kMaxDelay + n;
+    return c * max_delay(state->rate) + n;
 }
 
 double read_input1(int c, state_t state)
@@ -772,13 +772,13 @@ void write_input1(int c, double x, state_t state)
 double read_bus1(int c, state_t state)
 {
     int bp = buffer_pointer(state);
-    return state->buses[index_bus(bp, c)];
+    return state->buses[index_bus(bp, c, state)];
 }
 
 void write_bus1(int n, int c, double x, state_t state)
 {
     int bp = buffer_pointer(state);
-    state->buses[index_bus((bp + n) % kMaxDelay, c)] = x;
+    state->buses[index_bus((bp + n) % max_delay(state->rate), c, state)] = x;
 }
 
 
@@ -798,13 +798,13 @@ double *write_input(int c, state_t state)
 double *read_bus(int c, state_t state)
 {
     int bp = buffer_pointer(state);
-    return state->buses + (index_bus(bp, c));
+    return state->buses + (index_bus(bp, c, state));
 }
 
 double *write_bus(int n, int c, state_t state)
 {
     int bp = buffer_pointer(state);
-    return state->buses + (index_bus((bp + n) % kMaxDelay, c));
+    return state->buses + (index_bus((bp + n) % max_delay(state->rate), c, state));
 }
 
 //----------
