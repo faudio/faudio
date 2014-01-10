@@ -1061,7 +1061,7 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
     run_custom_procs(0, state);
 
     for (int i = 0; i < n; ++ i) {
-        time_t now = fa_milliseconds(((double) state->count / 44100.0) * 1000.0);
+        time_t now = fa_milliseconds((double) state->count / (double) state->rate * 1000.0);
         run_actions(controls2, now, run_simple_action_, state);
 
         run_custom_procs(1, state);
