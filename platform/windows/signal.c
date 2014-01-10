@@ -120,7 +120,7 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
                 warn(string("Fluidsynth: Pitch wheel not supported"));
                 break;
             default: {
-                warn(string("Unknown MIDI message to Fluidsynth"));
+                warn(string_dappend(string("Unknown MIDI message to Fluidsynth: <status="), fa_string_format_integral("%d>", status)));
                 assert(false && "Unknown MIDI message to Fluidsynth");
             }
         }
