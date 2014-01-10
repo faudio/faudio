@@ -622,6 +622,8 @@ void fa_midi_schedule(fa_time_t        time,
 
 void read_in(PmEvent *dest, stream_t stream)
 {
+    assert(stream->native_input && "Sending to non-input stream");
+
     PmError result;
     result = Pm_Read(stream->native_input, dest, 1);
 
@@ -630,18 +632,19 @@ void read_in(PmEvent *dest, stream_t stream)
     }
 }
 
+/** Send a message to the output of the given stream.
+ */
 void send_out(midi_message_t midi, stream_t stream)
 {
+    assert(stream->native_output && "Sending to non-output stream");
+
     PmError result;
 
     if (fa_midi_message_is_simple(midi)) {
         // timestamp ignored
         long midi_message = fa_midi_message_simple_to_long(midi);
 
-        // printf("Sending: %s %08x\n", unstring(fa_string_show(midi)), (int) midi_message);
-
         result = Pm_WriteShort(stream->native_output, 0, midi_message);
-
         if (result != pmNoError) {
             native_error(string("Could not send midi"), result);
         }
