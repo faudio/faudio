@@ -41,11 +41,6 @@ ptr_t render_(ptr_t x, fa_signal_state_t *state)
 {
     fluid_synth_t* synth = x;
 
-	// DEBUG
-	// if ((state->count % 22050) == 0)
-		// if (FLUID_FAILED == fluid_synth_noteon(synth, 1, 60, 127))
-			// warn(string("Could not send..."));
-
 	float *left2 = left;
 	float *right2 = right;
     if (!kVectorMode) {
