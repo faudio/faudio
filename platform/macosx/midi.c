@@ -457,7 +457,7 @@ void fa_midi_initialize()
     gMidiThread         = fa_thread_create(midi_thread, NULL);
 
     while (!gMidiThreadRunLoop) {
-        fa_thread_sleep(1); // Wait for run loop to be initialized by thread
+        fa_thread_sleep(10); // Wait for run loop to be initialized by thread
     }
 }
 
@@ -497,7 +497,7 @@ session_t fa_midi_begin_session()
 
             // Wait for the MIDI thread to start the new session
             while (!gPendingSession) {
-                fa_thread_sleep(1);
+                fa_thread_sleep(10);
             }
             session             = gPendingSession;
             gMidiActive         = true;
@@ -518,8 +518,9 @@ void fa_midi_end_session(session_t session)
             inform(string("(actually terminating)"));
             CFRunLoopStop(gMidiThreadRunLoop);
 
+            // Wait for the session to end
             while (gMidiActive) {
-                fa_thread_sleep(1);
+                fa_thread_sleep(10);
             }
 
             gMidiCurrentSession = NULL;
