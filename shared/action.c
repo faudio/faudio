@@ -535,6 +535,7 @@ void run_actions(priority_queue_t controls, fa_time_t now, unary_t function, ptr
     while (1) {
         pair_t x = fa_priority_queue_peek(controls);
 
+        // Assure there is a next action
         if (!x) {
             break;
         }
@@ -542,11 +543,13 @@ void run_actions(priority_queue_t controls, fa_time_t now, unary_t function, ptr
         time_t   time        = fa_pair_first(x);
         action_t action      = fa_pair_second(x);
 
+        // Assure the next action is due
         if (fa_less_than_equal(time, now)) {
             fa_priority_queue_pop(controls);
 
             list_t resched = empty();
 
+            // Run action, generating list of actions to reschedule
             run_and_resched_action(action, time, now, &resched, function, data); // TODO
 
             fa_for_each(x, resched) {
