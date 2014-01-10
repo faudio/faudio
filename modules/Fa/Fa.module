@@ -28,7 +28,6 @@ module Fa.Fa
     import Fa.Pair;
     import Fa.Pair.Left;
     import Fa.List;
-    import Fa.Graph;
     import Fa.Audio;
     import Fa.Midi;
     import Fa.Midi.Message;
