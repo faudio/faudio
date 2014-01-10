@@ -861,6 +861,7 @@ void fa_midi_schedule(fa_time_t        time,
                       fa_midi_stream_t stream)
 {
     pair_left_t pair = pair_left(time, action);
+    // Pass to scheduler
     fa_atomic_queue_write(stream->in_controls, pair);
 }
 
@@ -869,6 +870,8 @@ void fa_midi_schedule_relative(fa_time_t        time,
                                fa_midi_stream_t  stream)
 {
     if (fa_equal(time, seconds(0)) && !fa_action_is_compound(action)) {
+        // Pass directly to output
+        // TODO is this still needed
         fa_atomic_queue_write(stream->short_controls, action);
     } else {
         time_t now = fa_clock_time(stream->clock);
