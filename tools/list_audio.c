@@ -31,15 +31,17 @@ fa_audio_session_t print_audio_devices(fa_ptr_t _, audio_session_t session)
     // fa_print_ln(string(""));
 
     fa_for_each(x, fa_audio_all(session)) {
-        print_device(x);
+        if (!fa_check(x))
+            print_device(x);
     }
 
-    if (fa_audio_default_input(session)) {
+    if (!fa_check(fa_audio_default_input(session))) {
         fa_print("Default input: %s\n", fa_string_to_string(fa_audio_name(fa_audio_default_input(session))));
     } else {
         fa_print("No default input\n", NULL);
     }
-    if (fa_audio_default_output(session)) {
+
+    if (!fa_check(fa_audio_default_output(session))) {
         fa_print("Default output: %s\n", fa_string_to_string(fa_audio_name(fa_audio_default_output(session))));
     } else {
         fa_print("No default output\n", NULL);
