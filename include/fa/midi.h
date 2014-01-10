@@ -117,7 +117,7 @@ fa_list_t fa_midi_all(fa_midi_session_t);
     @param session   The session.
     @return
         A pair of @ref fa_midi_device_t representing the default input and
-        output device, respectively.
+        output device, respectively, or an error if at least one of them is not available.
 */
 fa_pair_t fa_midi_default(fa_midi_session_t);
 

@@ -145,7 +145,7 @@ fa_list_t fa_audio_all(fa_audio_session_t);
     @param session   The session.
     @return
         A pair of @ref fa_audio_device_t representing the default input and
-        output device, respectively.
+        output device, respectively, or an error if at least one of them is not available.
 */
 fa_pair_t fa_audio_default(fa_audio_session_t);
 

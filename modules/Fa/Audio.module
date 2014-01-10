@@ -132,7 +132,7 @@ module Fa.Audio
         @param session   The session.
         @return
             A pair of @ref fa_audio_device_t representing the default input and
-            output device, respectively.
+            output device, respectively, or an error if at least one of them is not available.
      */
     default : Session -> Pair;  // (Device,Device)
     
