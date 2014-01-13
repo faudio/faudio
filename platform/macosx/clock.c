@@ -38,7 +38,7 @@ void fa_clock_terminate()
 // --------------------------------------------------------------------------------
 
 fa_time_t fa_clock_time(fa_clock_t clock)
-{                      
+{
     assert(fa_interface(fa_clock_interface_i, clock) && "Must implement Clock");
     return ((fa_clock_interface_t *) fa_interface(fa_clock_interface_i, clock))->time(clock);
 

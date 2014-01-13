@@ -50,7 +50,8 @@ list_t just(ptr_t x, list_t xs)
 #define fa_action_compose(x,y) fa_action_many(list(pair(x, time_zero), pair(y, time_zero)))
 #define fa_action_compose3(x,y,z) fa_action_many(list(pair(x, time_zero), pair(y, time_zero), pair(z, time_zero)))
 
-ptr_t _print(ptr_t x) {
+ptr_t _print(ptr_t x)
+{
     printf("Hello!\n");
     return NULL;
 }
@@ -83,7 +84,7 @@ void run_midi()
     }
 
     {
-        
+
         fa_action_t note1  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x90, 60, 127));
         fa_action_t note2  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x90, 65, 127));
 
@@ -97,41 +98,41 @@ void run_midi()
         //                                         pair(note1, fa_milliseconds(100 + 100)),
         //                                         pair(note1, fa_milliseconds(100))
         //                                     ));
-        // 
+        //
         // fa_action_t x = fa_action_repeat(fa_milliseconds(1000/5), note1);
         // fa_action_t y = fa_action_repeat(fa_milliseconds(1100/5), note2);
 
         fa_thread_sleep(1000);
         fa_midi_schedule_relative(seconds(0),
 
-            fa_action_while(pred2, NULL,
-                fa_action_many(list(
-                    pair(fa_action_if(pred1, NULL, note1), fa_milliseconds(1000)),
-                    pair(fa_action_if(pred1, NULL, note1), fa_milliseconds(1000)),
-                    pair(fa_action_if(pred1, NULL, 
-                        fa_action_while(pred2, NULL,
-                            fa_action_repeat(fa_milliseconds(1000), note2)
-                        )), fa_milliseconds(1000))
-                ))                         
-            )
+                                  fa_action_while(pred2, NULL,
+                                                  fa_action_many(list(
+                                                          pair(fa_action_if(pred1, NULL, note1), fa_milliseconds(1000)),
+                                                          pair(fa_action_if(pred1, NULL, note1), fa_milliseconds(1000)),
+                                                          pair(fa_action_if(pred1, NULL,
+                                                                  fa_action_while(pred2, NULL,
+                                                                          fa_action_repeat(fa_milliseconds(1000), note2)
+                                                                                 )), fa_milliseconds(1000))
+                                                                 ))
+                                                 )
 
-            // fa_action_repeat(fa_milliseconds(200), fa_action_if(pred1, NULL, 
-                // fa_action_compose(note1, fa_action_do(_print, NULL))
-                // ))
-            
-            // fa_action_compose3(
-                // fa_action_repeat(fa_milliseconds(3000), fa_action_do(_print, NULL))
-                // ,
-                // fa_action_while(pred1, NULL, fa_action_repeat(seconds(1), note1)) 
-                // ,
-                // fa_action_while(pred2, NULL, fa_action_repeat(seconds(1), note2))
-                // )
-            
-            , st);
+                                  // fa_action_repeat(fa_milliseconds(200), fa_action_if(pred1, NULL,
+                                  // fa_action_compose(note1, fa_action_do(_print, NULL))
+                                  // ))
+
+                                  // fa_action_compose3(
+                                  // fa_action_repeat(fa_milliseconds(3000), fa_action_do(_print, NULL))
+                                  // ,
+                                  // fa_action_while(pred1, NULL, fa_action_repeat(seconds(1), note1))
+                                  // ,
+                                  // fa_action_while(pred2, NULL, fa_action_repeat(seconds(1), note2))
+                                  // )
+
+                                  , st);
 
         fa_thread_sleep(100000);
         // mark_used(notes1);
-        // mark_used(notes2);  
+        // mark_used(notes2);
         // mark_used(x);
         // mark_used(y);
     }

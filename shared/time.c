@@ -19,8 +19,9 @@ struct _fa_time_t {
 };
 
 double to_double(fa_ratio_t x);
-static ratio_t from_double(double x) {
-    return ratio(x*10000,10000);
+static ratio_t from_double(double x)
+{
+    return ratio(x * 10000, 10000);
 }
 
 // --------------------------------------------------------------------------------

@@ -13,7 +13,7 @@ list_t just(ptr_t x, list_t xs)
 void run_dls()
 {
     if (RT) {
-		fa_midi_begin_session(); // compare test_midi_in
+        fa_midi_begin_session(); // compare test_midi_in
         fa_audio_session_t s = fa_audio_begin_session();
         fa_audio_device_t i  = fa_audio_default_input(s);
         fa_audio_device_t o  = fa_audio_default_output(s);

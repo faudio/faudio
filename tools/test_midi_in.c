@@ -15,7 +15,7 @@ list_t just(ptr_t x, list_t xs)
 }
 
 fa_ptr_t just_print(ptr_t _, ptr_t timeMessage)
-{                                     
+{
     // fa_print_ln(fa_string_show(timeMessage));
     fa_time_t time = fa_pair_first(timeMessage);
     fa_time_t msg  = fa_pair_second(timeMessage);
@@ -29,9 +29,9 @@ fa_ptr_t just_print(ptr_t _, ptr_t timeMessage)
 }
 
 fa_ptr_t print_and_echo_midi(ptr_t x, ptr_t timeMessage)
-{                                 
+{
     fa_midi_stream_t out_stream = x;
-    
+
     // fa_print_ln(fa_string_show(timeMessage));
     fa_time_t time = fa_pair_first(timeMessage);
     fa_time_t msg  = fa_pair_second(timeMessage);
@@ -47,9 +47,9 @@ fa_ptr_t print_and_echo_midi(ptr_t x, ptr_t timeMessage)
 }
 
 fa_ptr_t print_and_echo_dls(ptr_t x, ptr_t timeMessage)
-{                                 
+{
     fa_audio_stream_t out_stream = x;
-    
+
     // fa_print_ln(fa_string_show(timeMessage));
     fa_time_t time = fa_pair_first(timeMessage);
     fa_time_t msg  = fa_pair_second(timeMessage);
@@ -67,12 +67,13 @@ fa_ptr_t print_and_echo_dls(ptr_t x, ptr_t timeMessage)
     mark_used(time);
 }
 
-ptr_t times2 (ptr_t _, ptr_t x) {
+ptr_t times2(ptr_t _, ptr_t x)
+{
     return fa_multiply(x, fa_signal_constant(2.0));
 }
 
 void run_midi()
-{               
+{
     fa_midi_session_t s     = fa_midi_begin_session();
     fa_audio_session_t as   = fa_audio_begin_session();
     assert(s  && "No MIDI session");
@@ -85,27 +86,27 @@ void run_midi()
 
     fa_audio_device_t ai   = fa_audio_default_input(as);
     fa_audio_device_t ao   = fa_audio_default_output(as);
-    assert(ai && "No audio input");                     
-    assert(ao && "No audio output");                     
+    assert(ai && "No audio input");
+    assert(ao && "No audio output");
 
     fa_midi_stream_t ist = fa_midi_open_stream(i);
     fa_midi_stream_t ost = fa_midi_open_stream(o);
 
-#ifndef _WIN32    
-	fa_pair_t synth = fa_signal_dls();
+#ifndef _WIN32
+    fa_pair_t synth = fa_signal_dls();
 #else
-	fa_pair_t synth = fa_signal_synth(string("C:\\sf.sf2"));
+    fa_pair_t synth = fa_signal_synth(string("C:\\sf.sf2"));
 #endif
-    list_t out           	= fa_pair_to_list(synth);
-	fa_audio_stream_t aost 	= fa_audio_open_stream(ai, ao, just, out);
+    list_t out              = fa_pair_to_list(synth);
+    fa_audio_stream_t aost  = fa_audio_open_stream(ai, ao, just, out);
 
-    switch(kModeOfEchoing) {
-    
-    case kEchoPrint:    
+    switch (kModeOfEchoing) {
+
+    case kEchoPrint:
         fa_midi_add_message_callback(just_print, NULL, ist);
         break;
 
-    case kEchoMIDI:    
+    case kEchoMIDI:
         printf("Echoing via MIDI\n");
         fa_midi_add_message_callback(print_and_echo_midi, ost, ist);
         break;
@@ -122,7 +123,7 @@ void run_midi()
 
     while (1) {
         fa_thread_sleep(1000);
-		// fa_audio_schedule_relative(hms(0,0,0), fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 64 + ((0 % 12) * 3), 90)), aost);
+        // fa_audio_schedule_relative(hms(0,0,0), fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 64 + ((0 % 12) * 3), 90)), aost);
     }
 
     fa_destroy(ist);

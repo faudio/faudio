@@ -44,7 +44,7 @@ void test_value_references()
 
     printf("double:     %s\n", fa_type_str(f64(12372)));
     printf("double:     %f\n", tf64(f64(3.141592653589793)));
-	// Does not work on Windows
+    // Does not work on Windows
     //assert(tf64(f64(3.141592653589793D)) == 3.141592653589793D);
     //assert(tf64(f64(-1.4142135623730951D)) == -1.4142135623730951D);
 }
@@ -946,13 +946,13 @@ void test_list()
 
     {
         printf("\n");
-    
+
         list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
         list_t ys = fa_list_join_map(dup_list, 0, xs);
-    
+
         fa_print("xs                           ==> %s\n", xs);
         fa_print("joinMap(\\x -> [x,x])         ==> %s\n", ys);
-    
+
         fa_destroy(xs);
         fa_destroy(ys);
     }

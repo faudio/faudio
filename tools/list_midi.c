@@ -32,9 +32,10 @@ fa_midi_session_t print_midi_devices(fa_ptr_t _, midi_session_t session)
     // fa_print_ln(string(""));
 
     fa_for_each(x, fa_midi_all(session)) {
-        if (!fa_check(x))
+        if (!fa_check(x)) {
             print_device(x);
-    }   
+        }
+    }
 
     if (!fa_check(fa_midi_default_input(session))) {
         fa_print("Default input: %s\n", fa_string_to_string(fa_midi_name(fa_midi_default_input(session))));

@@ -853,7 +853,7 @@ void run_custom_procs(int when, state_t state)
  */
 ptr_t run_simple_action(state_t state, action_t action)
 {
-    if(fa_action_is_compound(action)) {
+    if (fa_action_is_compound(action)) {
         warn(string_dappend(string("Compound action passed to Signal.runSimpleAction: "), fa_string_show(action)));
         return NULL;
     }
@@ -876,6 +876,7 @@ ptr_t run_simple_action(state_t state, action_t action)
 
             // fa_print("  Sending to processor: %s\n", fa_string_show(value));
         }
+
         return NULL;
     }
 
@@ -1271,63 +1272,141 @@ fa_signal_t fa_signal_cos(fa_signal_t a)
 
 
 
-fa_signal_t fa_signal_power(fa_signal_t x, fa_signal_t y) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_power(fa_signal_t x, fa_signal_t y)
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_modulo(fa_signal_t x, fa_signal_t y) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_modulo(fa_signal_t x, fa_signal_t y)
+{
+    assert(false && "Not implemented");
+}
 
 // fa_signal_t fa_signal_absolute(fa_signal_t x ) { assert (false && "Not implemented"); }
 
-fa_signal_t fa_signal_not() { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_not()
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_and(fa_signal_t x, fa_signal_t y) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_and(fa_signal_t x, fa_signal_t y)
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_or(fa_signal_t x, fa_signal_t y) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_or(fa_signal_t x, fa_signal_t y)
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_xor(fa_signal_t x, fa_signal_t y) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_xor(fa_signal_t x, fa_signal_t y)
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_equal(fa_signal_t x, fa_signal_t y) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_equal(fa_signal_t x, fa_signal_t y)
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_less_than(fa_signal_t x, fa_signal_t y) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_less_than(fa_signal_t x, fa_signal_t y)
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_greater_than(fa_signal_t x, fa_signal_t y) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_greater_than(fa_signal_t x, fa_signal_t y)
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_less_than_equal(fa_signal_t x, fa_signal_t y) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_less_than_equal(fa_signal_t x, fa_signal_t y)
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_greater_than_equal(fa_signal_t x, fa_signal_t y) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_greater_than_equal(fa_signal_t x, fa_signal_t y)
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_acos(fa_signal_t x ) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_acos(fa_signal_t x)
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_asin(fa_signal_t x ) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_asin(fa_signal_t x)
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_atan(fa_signal_t x ) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_atan(fa_signal_t x)
+{
+    assert(false && "Not implemented");
+}
 
 // fa_signal_t fa_signal_cos(fa_signal_t x ) { assert (false && "Not implemented"); }
 
 // fa_signal_t fa_signal_sin(fa_signal_t x ) { assert (false && "Not implemented"); }
 
-fa_signal_t fa_signal_tan(fa_signal_t x ) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_tan(fa_signal_t x)
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_exp(fa_signal_t x ) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_exp(fa_signal_t x)
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_log(fa_signal_t x ) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_log(fa_signal_t x)
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_log10(fa_signal_t x ) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_log10(fa_signal_t x)
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_sqrt(fa_signal_t x ) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_sqrt(fa_signal_t x)
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_min(fa_signal_t x, fa_signal_t y) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_min(fa_signal_t x, fa_signal_t y)
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_max(fa_signal_t x, fa_signal_t y) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_max(fa_signal_t x, fa_signal_t y)
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_fmod(fa_signal_t x, fa_signal_t y) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_fmod(fa_signal_t x, fa_signal_t y)
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_remainder(fa_signal_t x, fa_signal_t y) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_remainder(fa_signal_t x, fa_signal_t y)
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_floor(fa_signal_t x, fa_signal_t y) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_floor(fa_signal_t x, fa_signal_t y)
+{
+    assert(false && "Not implemented");
+}
 
-fa_signal_t fa_signal_ceil(fa_signal_t x, fa_signal_t y) { assert (false && "Not implemented"); }
+fa_signal_t fa_signal_ceil(fa_signal_t x, fa_signal_t y)
+{
+    assert(false && "Not implemented");
+}
 
-fa_list_t 	fa_signal_vst (fa_string_t x, fa_string_t y, fa_list_t z) { assert (false && "Not implemented"); }
+fa_list_t   fa_signal_vst(fa_string_t x, fa_string_t y, fa_list_t z)
+{
+    assert(false && "Not implemented");
+}
 
 // --------------------------------------------------------------------------------
 

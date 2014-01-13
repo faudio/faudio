@@ -236,6 +236,7 @@ fa_pair_t compound_render(fa_action_t action)
 fa_action_t fa_action_compound_first(fa_action_t action)
 {
     fa_pair_t maybeFirstRest = compound_render(action);
+
     if (maybeFirstRest) {
         return fa_pair_first(maybeFirstRest);
     } else {
@@ -246,24 +247,30 @@ fa_action_t fa_action_compound_first(fa_action_t action)
 fa_time_t fa_action_compound_interval(fa_action_t action)
 {
     fa_pair_t maybeFirstRest = compound_render(action);
+
     if (maybeFirstRest) {
         fa_pair_t maybeRest = fa_pair_second(maybeFirstRest);
+
         if (maybeRest) {
             return fa_pair_first(maybeRest);
         }
-    }    
+    }
+
     return NULL;
 }
 
 fa_action_t fa_action_compound_rest(fa_action_t action)
 {
     fa_pair_t maybeFirstRest = compound_render(action);
+
     if (maybeFirstRest) {
         fa_pair_t maybeRest = fa_pair_second(maybeFirstRest);
+
         if (maybeRest) {
             return fa_pair_second(maybeRest);
         }
-    }    
+    }
+
     return NULL;
 }
 
@@ -285,7 +292,7 @@ fa_action_t fa_action_null()
 
 static inline ptr_t _repeat(ptr_t data, ptr_t compound)
 {
-    time_t interval; 
+    time_t interval;
     action_t simple;
     unpair(interval, simple, data);
     return pair(simple, pair(interval, compound));
@@ -305,9 +312,9 @@ static inline ptr_t _many(ptr_t data, ptr_t compound)
     if (fa_list_is_empty(timeActions)) {
         return NULL;
     } else {
-        action_t first;    
+        action_t first;
         time_t   interval;
-        unpair(first, interval, fa_list_head(timeActions)); 
+        unpair(first, interval, fa_list_head(timeActions));
 
         action_t rest = fa_action_many(fa_list_tail(timeActions));
         return pair(first, pair(interval, rest));
@@ -339,11 +346,11 @@ static inline ptr_t _if(ptr_t data, ptr_t compound)
         } else {
             return NULL;
         }
-    } else {   
+    } else {
         action_t first    = fa_action_compound_first(action);
         action_t rest     = fa_action_compound_rest(action);
-        time_t   interval = fa_action_compound_interval(action); 
-        
+        time_t   interval = fa_action_compound_interval(action);
+
         if (pred_function(pred_data, NULL)) {
             return pair(first,            pair(interval, fa_action_if(pred_function, pred_data, rest)));
         } else {
@@ -368,11 +375,11 @@ static inline ptr_t _while(ptr_t data, ptr_t compound)
         } else {
             return NULL;
         }
-    } else {   
+    } else {
         action_t first    = fa_action_compound_first(action);
         action_t rest     = fa_action_compound_rest(action);
-        time_t   interval = fa_action_compound_interval(action); 
-        
+        time_t   interval = fa_action_compound_interval(action);
+
         if (pred_function(pred_data, NULL)) {
             return pair(first,            pair(interval, fa_action_while(pred_function, pred_data, rest)));
         } else {
@@ -397,11 +404,11 @@ static inline ptr_t _until(ptr_t data, ptr_t compound)
         } else {
             return NULL;
         }
-    } else {   
+    } else {
         action_t first    = fa_action_compound_first(action);
         action_t rest     = fa_action_compound_rest(action);
-        time_t   interval = fa_action_compound_interval(action); 
-        
+        time_t   interval = fa_action_compound_interval(action);
+
         if (!pred_function(pred_data, NULL)) {
             return pair(first,            pair(interval, fa_action_until(pred_function, pred_data, rest)));
         } else {
@@ -451,7 +458,7 @@ void run_and_resched_action(action_t action, time_t time, time_t now, list_t *re
 
         if (rest && interv) {
             time_t   future = fa_add(time, interv);
-            
+
             if (fa_less_than_equal(future, now)) {
                 // Run directly
                 run_and_resched_action(rest, future, now, resched, function, data);

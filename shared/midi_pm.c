@@ -115,7 +115,7 @@ inline static session_t new_session()
 {
     session_t session = fa_new(midi_session);
     session->impl = &midi_session_impl;
-	session->streams = empty();
+    session->streams = empty();
     return session;
 }
 
@@ -134,9 +134,11 @@ inline static void session_init_devices(session_t session)
         if (device) {
             devices = fa_list_dcons(device, devices);
         }
+
         if (i == Pm_GetDefaultInputDeviceID()) {
             input = device;
         }
+
         if (i == Pm_GetDefaultOutputDeviceID()) {
             output = device;
         }
@@ -241,16 +243,15 @@ session_t fa_midi_begin_session()
     inform(string("Initializing real-time midi session"));
 
     session_t session;
-    
-    fa_with_lock(pm_mutex)
-    {
+
+    fa_with_lock(pm_mutex) {
         if (pm_status) {
             session = (session_t) midi_device_error(string("Overlapping real-time midi sessions"));
         } else {
             result = Pm_Initialize();
 
             if (result < 0) {
-                session =  (session_t) native_error(string("Could not start midi"), result);
+                session = (session_t) native_error(string("Could not start midi"), result);
             } else {
                 pm_status = true;
 
@@ -274,8 +275,7 @@ void fa_midi_end_session(session_t session)
 
     inform(string("Terminating real-time midi session"));
 
-    fa_with_lock(pm_mutex)
-    {
+    fa_with_lock(pm_mutex) {
         if (pm_status) {
             inform(string("(actually terminating)"));
 
@@ -480,6 +480,7 @@ void fa_midi_close_stream(stream_t stream)
         fa_thread_join(stream->thread);
 
         inform(string("  (Closing native streams)"));
+
         if (stream->native_input) {
             Pm_Close(stream->native_input);
         }
@@ -548,9 +549,9 @@ ptr_t stream_thread_callback(ptr_t x)
                     // We could also fetch it here, but that is probably less precise.
                     time_t time = fa_milliseconds(events[0].timestamp);
 
-                    if (Pm_MessageStatus(events[0].message) != 0xf0 
-                          && 
-                        Pm_MessageStatus(events[0].message) != 0xf7) {
+                    if (Pm_MessageStatus(events[0].message) != 0xf0
+                            &&
+                            Pm_MessageStatus(events[0].message) != 0xf7) {
                         midi_message_t msg = midi_message(
                                                  Pm_MessageStatus(events[0].message),
                                                  Pm_MessageData1(events[0].message),
@@ -597,6 +598,7 @@ ptr_t send_midi_action(ptr_t stream, ptr_t action)
         send_midi(stream, value);
         // mark_used_name(name);
     }
+
     // TODO other actions
 
     return stream;
@@ -656,6 +658,7 @@ void send_midi(stream_t stream, midi_message_t midi)
         long midi_message = fa_midi_message_simple_to_long(midi);
 
         result = Pm_WriteShort(stream->native_output, 0, midi_message);
+
         if (result != pmNoError) {
             native_error(string("Could not send midi"), result);
         }

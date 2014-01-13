@@ -268,8 +268,7 @@ session_t fa_audio_begin_session()
     inform(string("Initializing real-time audio session"));
 
     session_t session;
-    fa_with_lock(pa_mutex)
-    {
+    fa_with_lock(pa_mutex) {
         if (pa_status) {
             session = (session_t) audio_device_error(string("Overlapping real-time audio sessions"));
         } else {
@@ -293,8 +292,7 @@ void fa_audio_end_session(session_t session)
 
     inform(string("Terminating real-time audio session"));
 
-    fa_with_lock(pa_mutex)
-    {
+    fa_with_lock(pa_mutex) {
         fa_for_each(stream, session->streams) {
             // It is OK if the stream is already closed
             fa_audio_close_stream(stream);
@@ -305,6 +303,7 @@ void fa_audio_end_session(session_t session)
             Pa_Terminate();
             pa_status = false;
         }
+
         current_session = NULL;
     }
     delete_session(session);
@@ -334,63 +333,72 @@ void fa_audio_set_parameter(string_t name,
     if (fa_equal(name, string("sample-rate"))) {
         double x;
 
-        switch(fa_dynamic_get_type(value)) {
-            case i32_type_repr:
-                x = fa_peek_int32(value);  
-                break;
-            case f32_type_repr:
-                x = fa_peek_float(value);  
-                break;           
-            case f64_type_repr:
-                x = fa_peek_double(value);  
-                break;           
-            default:
-                warn(string("Wrong type"));
-                return;
+        switch (fa_dynamic_get_type(value)) {
+        case i32_type_repr:
+            x = fa_peek_int32(value);
+            break;
+
+        case f32_type_repr:
+            x = fa_peek_float(value);
+            break;
+
+        case f64_type_repr:
+            x = fa_peek_double(value);
+            break;
+
+        default:
+            warn(string("Wrong type"));
+            return;
         }
-                
+
         session->parameters.sample_rate = x;
     }
 
     if (fa_equal(name, string("latency"))) {
         double x;
 
-        switch(fa_dynamic_get_type(value)) {
-            case i32_type_repr:
-                x = fa_peek_int32(value);  
-                break;
-            case f32_type_repr:
-                x = fa_peek_float(value);  
-                break;           
-            case f64_type_repr:
-                x = fa_peek_double(value);  
-                break;           
-            default:
-                warn(string("Wrong type"));
-                return;
+        switch (fa_dynamic_get_type(value)) {
+        case i32_type_repr:
+            x = fa_peek_int32(value);
+            break;
+
+        case f32_type_repr:
+            x = fa_peek_float(value);
+            break;
+
+        case f64_type_repr:
+            x = fa_peek_double(value);
+            break;
+
+        default:
+            warn(string("Wrong type"));
+            return;
         }
-        
+
         session->parameters.latency = x;
     }
 
     if (fa_equal(name, string("vector-size"))) {
         int x;
-                
-        switch(fa_dynamic_get_type(value)) {
-            case i32_type_repr:
-                x = fa_peek_int32(value);  
-                break;
-            case f32_type_repr:
-                x = fa_peek_float(value);  
-                break;           
-            case f64_type_repr:
-                x = fa_peek_double(value);  
-                break;           
-            default:
-                warn(string("Wrong type"));
-                return;
+
+        switch (fa_dynamic_get_type(value)) {
+        case i32_type_repr:
+            x = fa_peek_int32(value);
+            break;
+
+        case f32_type_repr:
+            x = fa_peek_float(value);
+            break;
+
+        case f64_type_repr:
+            x = fa_peek_double(value);
+            break;
+
+        default:
+            warn(string("Wrong type"));
+            return;
         }
-        
+
         if (x <= kMaxVectorSize) {
             session->parameters.vector_size = x;
         } else {
@@ -514,8 +522,8 @@ double fa_audio_default_sample_rate(fa_audio_device_t device)
 void audio_inform_opening(device_t input, ptr_t proc, device_t output)
 {
     inform(string("Opening real-time audio stream"));
-    inform(string_dappend(    string("    Input:         "), input ? fa_string_show(input) : string("-")));
-    inform(string_dappend(    string("    Output:        "), output ? fa_string_show(output) : string("-")));
+    inform(string_dappend(string("    Input:         "), input ? fa_string_show(input) : string("-")));
+    inform(string_dappend(string("    Output:        "), output ? fa_string_show(output) : string("-")));
 
     inform(fa_string_format_floating("    Sample Rate:   %2f", input->session->parameters.sample_rate));
     inform(fa_string_format_floating("    Latency:       %3f", input->session->parameters.latency));
@@ -536,6 +544,7 @@ stream_t fa_audio_open_stream(device_t input,
         return (stream_t) audio_device_error_with(
                    string("Can not open a stream with no devices"), 0);
     }
+
     if (input && output && (input->session != output->session)) {
         return (stream_t) audio_device_error_with(
                    string("Can not open a stream on devices from different sessions"), 0);
@@ -612,8 +621,8 @@ stream_t fa_audio_open_stream(device_t input,
         stream->controller.thread = fa_thread_create(audio_control_thread, stream);
         stream->controller.mutex  = fa_thread_create_mutex();
         stream->controller.stop   = false;
-    }                       
-    
+    }
+
     fa_push_list(stream, input->session->streams);
     return stream;
 }
@@ -626,14 +635,15 @@ void fa_audio_close_stream(stream_t stream)
     {
         // TODO need atomic
         native_stream_t native = stream->native;
+
         if (native) {
             inform(string("  (stream->native was set, now destroying stream)"));
             stream->native = NULL;
-            Pa_CloseStream(native);            
+            Pa_CloseStream(native);
             // after_processing will be called after this
 
             inform(string("  (finished PA stream)"));
-                              
+
             stream->controller.stop = true;
             fa_thread_join(stream->controller.thread);
             fa_thread_destroy_mutex(stream->controller.mutex);
@@ -746,7 +756,7 @@ ptr_t audio_control_thread(ptr_t x)
             //  * Look for a platform-independent timing library
             //  * Write platform-specific code
             //  * Use notifications from the audio thread (might not work at startup)
-            
+
             fa_thread_sleep(kAudioSchedulerIntervalMillis);
         }
     }
@@ -764,7 +774,7 @@ ptr_t audio_control_thread(ptr_t x)
 void before_processing(stream_t stream)
 {
     session_t session = stream->input->session;
-    stream->state      = new_state(session->parameters.sample_rate); // FIXME 
+    stream->state      = new_state(session->parameters.sample_rate); // FIXME
 
     signal_t merged = fa_signal_constant(0);
 
@@ -800,12 +810,14 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
     state_base_t state = (state_base_t) stream->state;
     {
         ptr_t action;
+
         while ((action = fa_atomic_queue_read(stream->in_controls))) {
             run_simple_action2(stream->state, action);
         }
     }
     {
         ptr_t action;
+
         while ((action = fa_atomic_queue_read(stream->short_controls))) {
             run_simple_action2(stream->state, action);
         }
@@ -994,7 +1006,7 @@ int64_t audio_stream_milliseconds(ptr_t a)
     stream_t stream = (stream_t) a;
     state_base_t state = (state_base_t) stream->state;
 
-    return (int64_t) ((double) state->count / (double) state->rate * 1000.0);
+    return (int64_t)((double) state->count / (double) state->rate * 1000.0);
 }
 
 fa_time_t audio_stream_time(ptr_t a)
@@ -1042,22 +1054,22 @@ void fa_fa_log_error_from(fa_string_t msg, fa_string_t origin);
 error_t audio_device_error(string_t msg)
 {
     error_t err = fa_error_create_simple(error,
-                                  msg,
-                                  string("Doremir.Device.Audio"));
+                                         msg,
+                                         string("Doremir.Device.Audio"));
     fa_error_log(NULL, err);
     return err;
 }
 
 error_t audio_device_error_with(string_t msg, int code)
 {
-    string_t pa_error_str = string(code != 0 ? (char*) Pa_GetErrorText(code) : "");
+    string_t pa_error_str = string(code != 0 ? (char *) Pa_GetErrorText(code) : "");
 
     error_t err = fa_error_create_simple(error,
-                                  string_dappend(msg, 
-                                    string_dappend(string(": "), pa_error_str)
-                                    // format_integral(" (error code %d)", code)
-                                    ),
-                                  string("Doremir.Device.Audio"));
+                                         string_dappend(msg,
+                                                        string_dappend(string(": "), pa_error_str)
+                                                        // format_integral(" (error code %d)", code)
+                                                       ),
+                                         string("Doremir.Device.Audio"));
     fa_error_log(NULL, err);
     return err;
 }

@@ -141,7 +141,7 @@ static mutex_t                      gMidiMutex;
 static bool                         gMidiActive;
 static bool                         gMidiTerminating;
 
-static session_t                    gPendingSession; 
+static session_t                    gPendingSession;
 static session_t                    gMidiCurrentSession;
 static fa_thread_t                  gMidiThread;
 static CFRunLoopRef                 gMidiThreadRunLoop;
@@ -242,6 +242,7 @@ inline static device_t new_device(bool is_output, native_device_t native, sessio
         CFStringRef name;
 
         printf("kMIDIPropertyName is %p\n", kMIDIPropertyName);
+
         if (MIDIObjectGetStringProperty(native, kMIDIPropertyName, &name)) {
             assert(false && "Could not get name");
         }
@@ -295,7 +296,7 @@ inline static void delete_stream(stream_t stream)
         Set to false from start.
         Set to true by user thread after starting a new session.
         Set to false by MIDI thread to indicate session stopped.
-    
+
     gPendingSession
         Set to kNoSession from start.
         Set to kRequestSession by user thread when a new session should be created
@@ -355,7 +356,7 @@ ptr_t midi_thread(ptr_t x)
 
     inform(string("CoreMIDI interaction thread active"));
 
-    // Until faudio is terminated, this thread will repeatedly wait for instructions 
+    // Until faudio is terminated, this thread will repeatedly wait for instructions
     // to start a session, and act as its run loop.
 
     while (true) {
@@ -365,6 +366,7 @@ ptr_t midi_thread(ptr_t x)
         if (gPendingSession != kRequestSession) {
             continue;
         }
+
         if (gMidiTerminating) {
             break;
         }
@@ -394,7 +396,7 @@ ptr_t midi_thread(ptr_t x)
         {
             CFRunLoopTimerContext ctxt;
             ctxt.info = session;
-            
+
             printf("kCFAllocatorDefault is %p\n", kCFAllocatorDefault);
             CFRunLoopTimerRef timer = CFRunLoopTimerCreate(
                                           kCFAllocatorDefault,
@@ -485,7 +487,7 @@ session_t fa_midi_begin_session()
     inform(string("Initializing real-time midi session"));
 
     session_t session;
-    
+
     fa_with_lock(gMidiMutex);
     {
         // Assure no overlaps.
@@ -499,6 +501,7 @@ session_t fa_midi_begin_session()
             while (!gPendingSession) {
                 fa_thread_sleep(10);
             }
+
             session             = gPendingSession;
             gMidiActive         = true;
             gMidiCurrentSession = session;
@@ -720,10 +723,11 @@ ptr_t forward_action_to_midi(ptr_t x, ptr_t action)
 {
     stream_t stream = x;
 
-    if(fa_action_is_compound(action)) {
+    if (fa_action_is_compound(action)) {
         warn(string_dappend(string("Compound action passed to Midi.forwardActionToMidi: "), fa_string_show(action)));
         return NULL;
     }
+
     // fa_print("%s\n", action);
 
     if (fa_action_is_send(action)) {

@@ -63,15 +63,15 @@ bool fa_atomic_exchange(fa_atomic_t a, fa_ptr_t old, fa_ptr_t new)
 }
 
 fa_ptr_t fa_atomic_get(fa_atomic_t a)
-{                       
+{
 #ifdef __i386__
     return (ptr_t) OSAtomicAdd32Barrier(0, (ptr_t) &a->value);
 #else
-    #ifdef __x86_64__
-        return (ptr_t) OSAtomicAdd64Barrier(0, (ptr_t) &a->value);
-    #else                           
-        #error "Unknown architecture"
-    #endif
+#ifdef __x86_64__
+    return (ptr_t) OSAtomicAdd64Barrier(0, (ptr_t) &a->value);
+#else
+#error "Unknown architecture"
+#endif
 #endif
 }
 

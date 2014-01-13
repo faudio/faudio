@@ -85,7 +85,8 @@ void fa_ratio_match(fa_ratio_t x, num_t *a, denom_t *b)
 
 // --------------------------------------------------------------------------------
 
-double to_double(fa_ratio_t x) {
+double to_double(fa_ratio_t x)
+{
     return ((double) x->num) / ((double) x->denom);
 }
 
@@ -104,7 +105,7 @@ fa_ratio_t fa_ratio_add_dither(fa_ratio_t x, fa_ratio_t y)
     double x2 = to_double(x);
     double y2 = to_double(y);
     double res = x2 + y2;
-    return ratio(res*10000,10000);
+    return ratio(res * 10000, 10000);
 }
 
 fa_ratio_t fa_ratio_add_safe(fa_ratio_t x, fa_ratio_t y)

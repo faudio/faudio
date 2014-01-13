@@ -89,7 +89,7 @@ fa_buffer_t fa_buffer_wrap(fa_ptr_t   pointer,
     b->destroy_data     = destroy_data;
 
     b->meta = fa_map_empty();
-    
+
     return b;
 }
 
@@ -136,9 +136,10 @@ void fa_buffer_destroy(fa_buffer_t buffer)
     if (buffer->destroy_function) {
         buffer->destroy_function(buffer->data, buffer->destroy_data);
     }
+
     // TODO recursive (everything in here is copy)
     fa_destroy(buffer->meta);
-    
+
     fa_delete(buffer);
 }
 
@@ -254,15 +255,15 @@ fa_pair_t fa_buffer_read_audio(fa_string_t path)
         fa_buffer_set_meta(buffer, string("sample-rate"), f32(info.samplerate));
         fa_buffer_set_meta(buffer, string("channels"), i32(info.channels));
         {
-            char* str = (char*) sf_get_string(file, SF_STR_TITLE);
+            char *str = (char *) sf_get_string(file, SF_STR_TITLE);
             fa_buffer_set_meta(buffer, string("title"), string(str ? str : ""));
         }
         {
-            char* str = (char*) sf_get_string(file, SF_STR_SOFTWARE);
+            char *str = (char *) sf_get_string(file, SF_STR_SOFTWARE);
             fa_buffer_set_meta(buffer, string("software"), string(str ? str : ""));
         }
         {
-            char* str = (char*) sf_get_string(file, SF_STR_COPYRIGHT);
+            char *str = (char *) sf_get_string(file, SF_STR_COPYRIGHT);
             fa_buffer_set_meta(buffer, string("copyright"), string(str ? str : ""));
         }
 
@@ -287,7 +288,7 @@ ptr_t fa_buffer_write_audio(fa_string_t  path,
     size_t         size   = fa_buffer_size(buffer) / sizeof(double);
 
 
-    SF_INFO         info;  
+    SF_INFO         info;
     // FIXME other sample rates
     info.samplerate = 44100;
     info.channels   = 1;
@@ -315,14 +316,38 @@ ptr_t fa_buffer_write_audio(fa_string_t  path,
 }
 
 
-int16_t fa_buffer_get_int16(fa_buffer_t x, size_t y) { assert (false && "Not implemented"); }
-int32_t fa_buffer_get_int32(fa_buffer_t x, size_t y) { assert (false && "Not implemented"); }
-int64_t fa_buffer_get_int64(fa_buffer_t x, size_t y) { assert (false && "Not implemented"); }
-void fa_buffer_set_int16(fa_buffer_t x, size_t y, int16_t z) { assert (false && "Not implemented"); }
-void fa_buffer_set_int32(fa_buffer_t x, size_t y, int32_t z) { assert (false && "Not implemented"); }
-void fa_buffer_set_int64(fa_buffer_t x, size_t y, int64_t z) { assert (false && "Not implemented"); }
-fa_buffer_t fa_buffer_read_raw(fa_string_t x) { assert (false && "Not implemented"); }
-void fa_buffer_write_raw(fa_string_t x, fa_buffer_t y) { assert (false && "Not implemented"); }
+int16_t fa_buffer_get_int16(fa_buffer_t x, size_t y)
+{
+    assert(false && "Not implemented");
+}
+int32_t fa_buffer_get_int32(fa_buffer_t x, size_t y)
+{
+    assert(false && "Not implemented");
+}
+int64_t fa_buffer_get_int64(fa_buffer_t x, size_t y)
+{
+    assert(false && "Not implemented");
+}
+void fa_buffer_set_int16(fa_buffer_t x, size_t y, int16_t z)
+{
+    assert(false && "Not implemented");
+}
+void fa_buffer_set_int32(fa_buffer_t x, size_t y, int32_t z)
+{
+    assert(false && "Not implemented");
+}
+void fa_buffer_set_int64(fa_buffer_t x, size_t y, int64_t z)
+{
+    assert(false && "Not implemented");
+}
+fa_buffer_t fa_buffer_read_raw(fa_string_t x)
+{
+    assert(false && "Not implemented");
+}
+void fa_buffer_write_raw(fa_string_t x, fa_buffer_t y)
+{
+    assert(false && "Not implemented");
+}
 
 
 
