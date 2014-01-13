@@ -108,6 +108,7 @@ void fa_audio_with_session(fa_audio_session_callback_t,
     Name           | Description
     ---------------|------------------------------------------------------------------------
     `latency`      | Suggested latency in seconds (integer or floating-point).
+    `sample-rate`  | Suggested sample rate (floating-point).
     `vector-size`  | Suggested vector size (integer).
     
     @param name     Name of parameter to set.
