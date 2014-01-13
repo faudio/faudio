@@ -263,17 +263,17 @@ fa_ptr_t fa_from_double(double a)
 // --------------------------------------------------------------------------------
 
 #define GENERIC1(I,F,A,B) \
-    B fa_##F(A a)                                                      \
-    {                                                                   \
-        assert(fa_interface(fa_##I##_i, a) && "Must implement " #I);  \
-        return ((fa_##I##_t*) fa_interface(fa_##I##_i, a))->F(a);    \
+    B fa_##F(A a)                                                               \
+    {                                                                           \
+        assert(fa_interface(fa_##I##_i, a) && "Must implement " #I);            \
+        return ((fa_##I##_t*) fa_interface(fa_##I##_i, a))->F(a);               \
     }
 
 #define GENERIC2(I,F,A,B,C) \
-    C fa_##F(A a, B b)                                                 \
-    {                                                                   \
-        assert(fa_interface(fa_##I##_i, a) && "Must implement " #I);  \
-        return ((fa_##I##_t*) fa_interface(fa_##I##_i, a))->F(a, b); \
+    C fa_##F(A a, B b)                                                          \
+    {                                                                           \
+        assert(fa_interface(fa_##I##_i, a) && "Must implement " #I);            \
+        return ((fa_##I##_t*) fa_interface(fa_##I##_i, a))->F(a, b);            \
     }
 
 
@@ -400,115 +400,115 @@ bool fa_check(fa_ptr_t a)
 
 
 #define UNBOXED_WRAPPER_IMPL(T) \
-    bool T##_equal(fa_ptr_t a, fa_ptr_t b)                                  \
-    {                                                                       \
-        return (fa_to_##T(a) == fa_to_##T(b));                              \
-    }                                                                       \
-    bool T##_less_than(fa_ptr_t a, fa_ptr_t b)                              \
-    {                                                                       \
-        return (fa_to_##T(a) < fa_to_##T(b));                               \
-    }                                                                       \
-    bool T##_greater_than(fa_ptr_t a, fa_ptr_t b)                           \
-    {                                                                       \
-        return (fa_to_##T(a) > fa_to_##T(b));                               \
-    }                                                                       \
-    fa_ptr_t T##_add(fa_ptr_t a, fa_ptr_t b)                                \
-    {                                                                       \
-        return fa_from_##T(fa_to_##T(a) + fa_to_##T(b));                    \
-    }                                                                       \
-    fa_ptr_t T##_subtract(fa_ptr_t a, fa_ptr_t b)                           \
-    {                                                                       \
-        return fa_from_##T(fa_to_##T(a) - fa_to_##T(b));                    \
-    }                                                                       \
-    fa_ptr_t T##_multiply(fa_ptr_t a, fa_ptr_t b)                           \
-    {                                                                       \
-        return fa_from_##T(fa_to_##T(a) * fa_to_##T(b));                    \
-    }                                                                       \
-    fa_ptr_t T##_divide(fa_ptr_t a, fa_ptr_t b)                             \
-    {                                                                       \
-        return fa_from_##T(fa_to_##T(a) / fa_to_##T(b));                    \
-    }                                                                       \
-    fa_ptr_t T##_absolute(fa_ptr_t a)                                       \
-    {                                                                       \
-        return fa_from_##T(abs(fa_to_##T(a)));                              \
-    }                                                                       \
-    fa_ptr_t T##_copy(fa_ptr_t a)                                           \
-    {                                                                       \
-        return a;                                                           \
-    }                                                                       \
-    fa_dynamic_type_repr_t T##_get_type(fa_ptr_t a)                         \
-    {                                                                       \
-        return T##_type_repr_impl;                                          \
-    }                                                                       \
-    void T##_destroy(fa_ptr_t a)                                            \
-    {                                                                       \
-        /* nothing to do */                                                 \
-    }
-
-#define BOXED_WRAPPER_IMPL(T) \
-    bool T##_equal(fa_ptr_t a, fa_ptr_t b)                                  \
-    {                                                                       \
-        return (fa_peek_##T(a) == fa_peek_##T(b));                          \
-    }                                                                       \
-    bool T##_less_than(fa_ptr_t a, fa_ptr_t b)                              \
-    {                                                                       \
-        return (fa_peek_##T(a) < fa_peek_##T(b));                           \
-    }                                                                       \
-    bool T##_greater_than(fa_ptr_t a, fa_ptr_t b)                           \
-    {                                                                       \
-        return (fa_peek_##T(a) > fa_peek_##T(b));                           \
-    }                                                                       \
-    fa_ptr_t T##_add(fa_ptr_t a, fa_ptr_t b)                                \
-    {                                                                       \
-        return fa_from_##T(fa_peek_##T(a) + fa_peek_##T(b));                \
-    }                                                                       \
-    fa_ptr_t T##_subtract(fa_ptr_t a, fa_ptr_t b)                           \
-    {                                                                       \
-        return fa_from_##T(fa_peek_##T(a) - fa_peek_##T(b));                \
-    }                                                                       \
-    fa_ptr_t T##_multiply(fa_ptr_t a, fa_ptr_t b)                           \
-    {                                                                       \
-        return fa_from_##T(fa_peek_##T(a) * fa_peek_##T(b));                \
-    }                                                                       \
-    fa_ptr_t T##_divide(fa_ptr_t a, fa_ptr_t b)                             \
-    {                                                                       \
-        return fa_from_##T(fa_peek_##T(a) / fa_peek_##T(b));                \
-    }                                                                       \
-    fa_ptr_t T##_absolute(fa_ptr_t a)                                       \
-    {                                                                       \
-        return fa_from_##T(abs(fa_peek_##T(a))); /* TODO use tg? */         \
-    }                                                                       \
-    fa_ptr_t T##_copy(fa_ptr_t a)                                           \
-    {                                                                       \
-        return fa_copy_##T(a);                                              \
-    }                                                                       \
-    fa_dynamic_type_repr_t T##_get_type(fa_ptr_t a)                         \
-    {                                                                       \
-        return T##_type_repr_impl;                                          \
-    }                                                                       \
-    void T##_destroy(fa_ptr_t a)                                            \
-    {                                                                       \
-        fa_to_##T(a);                                                       \
-    }
-
-#define UNBOXED_SHOW_IMPL(T,F) \
-    fa_string_t T##_show(fa_ptr_t a)                                        \
-    {                                                                       \
-        int  n;                                                             \
-        char cs[16];                                                        \
-        n = snprintf(cs, 16, F, fa_to_##T(a));                              \
-        cs[n] = 0; /* terminate */                                          \
-        return fa_string_from_utf8(cs);                                     \
-    }
-
-#define BOXED_SHOW_IMPL(T,F) \
-    fa_string_t T##_show(fa_ptr_t a)                                        \
-    {                                                                       \
-        int  n;                                                             \
-        char cs[16];                                                        \
-        n = snprintf(cs, 16, F, fa_peek_##T(a));                            \
-        cs[n] = 0; /* terminate */                                          \
-        return fa_string_from_utf8(cs);                                     \
+    bool T##_equal(fa_ptr_t a, fa_ptr_t b)                                          \
+    {                                                                               \
+        return (fa_to_##T(a) == fa_to_##T(b));                                      \
+    }                                                                               \
+    bool T##_less_than(fa_ptr_t a, fa_ptr_t b)                                      \
+    {                                                                               \
+        return (fa_to_##T(a) < fa_to_##T(b));                                       \
+    }                                                                               \
+    bool T##_greater_than(fa_ptr_t a, fa_ptr_t b)                                   \
+    {                                                                               \
+        return (fa_to_##T(a) > fa_to_##T(b));                                       \
+    }                                                                               \
+    fa_ptr_t T##_add(fa_ptr_t a, fa_ptr_t b)                                        \
+    {                                                                               \
+        return fa_from_##T(fa_to_##T(a) + fa_to_##T(b));                            \
+    }                                                                               \
+    fa_ptr_t T##_subtract(fa_ptr_t a, fa_ptr_t b)                                   \
+    {                                                                               \
+        return fa_from_##T(fa_to_##T(a) - fa_to_##T(b));                            \
+    }                                                                               \
+    fa_ptr_t T##_multiply(fa_ptr_t a, fa_ptr_t b)                                   \
+    {                                                                               \
+        return fa_from_##T(fa_to_##T(a) * fa_to_##T(b));                            \
+    }                                                                               \
+    fa_ptr_t T##_divide(fa_ptr_t a, fa_ptr_t b)                                     \
+    {                                                                               \
+        return fa_from_##T(fa_to_##T(a) / fa_to_##T(b));                            \
+    }                                                                               \
+    fa_ptr_t T##_absolute(fa_ptr_t a)                                               \
+    {                                                                               \
+        return fa_from_##T(abs(fa_to_##T(a)));                                      \
+    }                                                                               \
+    fa_ptr_t T##_copy(fa_ptr_t a)                                                   \
+    {                                                                               \
+        return a;                                                                   \
+    }                                                                               \
+    fa_dynamic_type_repr_t T##_get_type(fa_ptr_t a)                                 \
+    {                                                                               \
+        return T##_type_repr_impl;                                                  \
+    }                                                                               \
+    void T##_destroy(fa_ptr_t a)                                                    \
+    {                                                                               \
+        /* nothing to do */                                                         \
+    }                                                                               
+                                                                                    
+#define BOXED_WRAPPER_IMPL(T)                                                       \
+    bool T##_equal(fa_ptr_t a, fa_ptr_t b)                                          \
+    {                                                                               \
+        return (fa_peek_##T(a) == fa_peek_##T(b));                                  \
+    }                                                                               \
+    bool T##_less_than(fa_ptr_t a, fa_ptr_t b)                                      \
+    {                                                                               \
+        return (fa_peek_##T(a) < fa_peek_##T(b));                                   \
+    }                                                                               \
+    bool T##_greater_than(fa_ptr_t a, fa_ptr_t b)                                   \
+    {                                                                               \
+        return (fa_peek_##T(a) > fa_peek_##T(b));                                   \
+    }                                                                               \
+    fa_ptr_t T##_add(fa_ptr_t a, fa_ptr_t b)                                        \
+    {                                                                               \
+        return fa_from_##T(fa_peek_##T(a) + fa_peek_##T(b));                        \
+    }                                                                               \
+    fa_ptr_t T##_subtract(fa_ptr_t a, fa_ptr_t b)                                   \
+    {                                                                               \
+        return fa_from_##T(fa_peek_##T(a) - fa_peek_##T(b));                        \
+    }                                                                               \
+    fa_ptr_t T##_multiply(fa_ptr_t a, fa_ptr_t b)                                   \
+    {                                                                               \
+        return fa_from_##T(fa_peek_##T(a) * fa_peek_##T(b));                        \
+    }                                                                               \
+    fa_ptr_t T##_divide(fa_ptr_t a, fa_ptr_t b)                                     \
+    {                                                                               \
+        return fa_from_##T(fa_peek_##T(a) / fa_peek_##T(b));                        \
+    }                                                                               \
+    fa_ptr_t T##_absolute(fa_ptr_t a)                                               \
+    {                                                                               \
+        return fa_from_##T(abs(fa_peek_##T(a))); /* TODO use tg? */                 \
+    }                                                                               \
+    fa_ptr_t T##_copy(fa_ptr_t a)                                                   \
+    {                                                                               \
+        return fa_copy_##T(a);                                                      \
+    }                                                                               \
+    fa_dynamic_type_repr_t T##_get_type(fa_ptr_t a)                                 \
+    {                                                                               \
+        return T##_type_repr_impl;                                                  \
+    }                                                                               \
+    void T##_destroy(fa_ptr_t a)                                                    \
+    {                                                                               \
+        fa_to_##T(a);                                                               \
+    }                                                                               
+                                                                                    
+#define UNBOXED_SHOW_IMPL(T,F)                                                      \
+    fa_string_t T##_show(fa_ptr_t a)                                                \
+    {                                                                               \
+        int  n;                                                                     \
+        char cs[16];                                                                \
+        n = snprintf(cs, 16, F, fa_to_##T(a));                                      \
+        cs[n] = 0; /* terminate */                                                  \
+        return fa_string_from_utf8(cs);                                             \
+    }                                                                               
+                                                                                    
+#define BOXED_SHOW_IMPL(T,F)                                                        \
+    fa_string_t T##_show(fa_ptr_t a)                                                \
+    {                                                                               \
+        int  n;                                                                     \
+        char cs[16];                                                                \
+        n = snprintf(cs, 16, F, fa_peek_##T(a));                                    \
+        cs[n] = 0; /* terminate */                                                  \
+        return fa_string_from_utf8(cs);                                             \
     }
 
 /* Generates T_impl
