@@ -400,152 +400,152 @@ bool fa_check(fa_ptr_t a)
 
 
 #define UNBOXED_WRAPPER_IMPL(T) \
-    bool T##_equal(fa_ptr_t a, fa_ptr_t b)                                \
+    bool T##_equal(fa_ptr_t a, fa_ptr_t b)                                  \
     {                                                                       \
-        return (fa_to_##T(a) == fa_to_##T(b));                            \
+        return (fa_to_##T(a) == fa_to_##T(b));                              \
     }                                                                       \
-    bool T##_less_than(fa_ptr_t a, fa_ptr_t b)                            \
+    bool T##_less_than(fa_ptr_t a, fa_ptr_t b)                              \
     {                                                                       \
-        return (fa_to_##T(a) < fa_to_##T(b));                             \
+        return (fa_to_##T(a) < fa_to_##T(b));                               \
     }                                                                       \
-    bool T##_greater_than(fa_ptr_t a, fa_ptr_t b)                         \
+    bool T##_greater_than(fa_ptr_t a, fa_ptr_t b)                           \
     {                                                                       \
-        return (fa_to_##T(a) > fa_to_##T(b));                             \
+        return (fa_to_##T(a) > fa_to_##T(b));                               \
     }                                                                       \
-    fa_ptr_t T##_add(fa_ptr_t a, fa_ptr_t b)                             \
+    fa_ptr_t T##_add(fa_ptr_t a, fa_ptr_t b)                                \
     {                                                                       \
-        return fa_from_##T(fa_to_##T(a) + fa_to_##T(b));                 \
+        return fa_from_##T(fa_to_##T(a) + fa_to_##T(b));                    \
     }                                                                       \
-    fa_ptr_t T##_subtract(fa_ptr_t a, fa_ptr_t b)                        \
+    fa_ptr_t T##_subtract(fa_ptr_t a, fa_ptr_t b)                           \
     {                                                                       \
-        return fa_from_##T(fa_to_##T(a) - fa_to_##T(b));                 \
+        return fa_from_##T(fa_to_##T(a) - fa_to_##T(b));                    \
     }                                                                       \
-    fa_ptr_t T##_multiply(fa_ptr_t a, fa_ptr_t b)                        \
+    fa_ptr_t T##_multiply(fa_ptr_t a, fa_ptr_t b)                           \
     {                                                                       \
-        return fa_from_##T(fa_to_##T(a) * fa_to_##T(b));                 \
+        return fa_from_##T(fa_to_##T(a) * fa_to_##T(b));                    \
     }                                                                       \
-    fa_ptr_t T##_divide(fa_ptr_t a, fa_ptr_t b)                          \
+    fa_ptr_t T##_divide(fa_ptr_t a, fa_ptr_t b)                             \
     {                                                                       \
-        return fa_from_##T(fa_to_##T(a) / fa_to_##T(b));                 \
+        return fa_from_##T(fa_to_##T(a) / fa_to_##T(b));                    \
     }                                                                       \
-    fa_ptr_t T##_absolute(fa_ptr_t a)                                     \
+    fa_ptr_t T##_absolute(fa_ptr_t a)                                       \
     {                                                                       \
-        return fa_from_##T(abs(fa_to_##T(a)));                            \
+        return fa_from_##T(abs(fa_to_##T(a)));                              \
     }                                                                       \
-    fa_ptr_t T##_copy(fa_ptr_t a)                                         \
+    fa_ptr_t T##_copy(fa_ptr_t a)                                           \
     {                                                                       \
         return a;                                                           \
     }                                                                       \
-    fa_dynamic_type_repr_t T##_get_type(fa_ptr_t a)                       \
+    fa_dynamic_type_repr_t T##_get_type(fa_ptr_t a)                         \
     {                                                                       \
         return T##_type_repr_impl;                                          \
     }                                                                       \
-    void T##_destroy(fa_ptr_t a)                                           \
+    void T##_destroy(fa_ptr_t a)                                            \
     {                                                                       \
         /* nothing to do */                                                 \
     }
 
 #define BOXED_WRAPPER_IMPL(T) \
-    bool T##_equal(fa_ptr_t a, fa_ptr_t b)                                \
+    bool T##_equal(fa_ptr_t a, fa_ptr_t b)                                  \
     {                                                                       \
-        return (fa_peek_##T(a) == fa_peek_##T(b));                        \
+        return (fa_peek_##T(a) == fa_peek_##T(b));                          \
     }                                                                       \
-    bool T##_less_than(fa_ptr_t a, fa_ptr_t b)                            \
+    bool T##_less_than(fa_ptr_t a, fa_ptr_t b)                              \
     {                                                                       \
-        return (fa_peek_##T(a) < fa_peek_##T(b));                         \
+        return (fa_peek_##T(a) < fa_peek_##T(b));                           \
     }                                                                       \
-    bool T##_greater_than(fa_ptr_t a, fa_ptr_t b)                         \
+    bool T##_greater_than(fa_ptr_t a, fa_ptr_t b)                           \
     {                                                                       \
-        return (fa_peek_##T(a) > fa_peek_##T(b));                         \
+        return (fa_peek_##T(a) > fa_peek_##T(b));                           \
     }                                                                       \
-    fa_ptr_t T##_add(fa_ptr_t a, fa_ptr_t b)                             \
+    fa_ptr_t T##_add(fa_ptr_t a, fa_ptr_t b)                                \
     {                                                                       \
-        return fa_from_##T(fa_peek_##T(a) + fa_peek_##T(b));             \
+        return fa_from_##T(fa_peek_##T(a) + fa_peek_##T(b));                \
     }                                                                       \
-    fa_ptr_t T##_subtract(fa_ptr_t a, fa_ptr_t b)                        \
+    fa_ptr_t T##_subtract(fa_ptr_t a, fa_ptr_t b)                           \
     {                                                                       \
-        return fa_from_##T(fa_peek_##T(a) - fa_peek_##T(b));             \
+        return fa_from_##T(fa_peek_##T(a) - fa_peek_##T(b));                \
     }                                                                       \
-    fa_ptr_t T##_multiply(fa_ptr_t a, fa_ptr_t b)                        \
+    fa_ptr_t T##_multiply(fa_ptr_t a, fa_ptr_t b)                           \
     {                                                                       \
-        return fa_from_##T(fa_peek_##T(a) * fa_peek_##T(b));             \
+        return fa_from_##T(fa_peek_##T(a) * fa_peek_##T(b));                \
     }                                                                       \
-    fa_ptr_t T##_divide(fa_ptr_t a, fa_ptr_t b)                          \
+    fa_ptr_t T##_divide(fa_ptr_t a, fa_ptr_t b)                             \
     {                                                                       \
-        return fa_from_##T(fa_peek_##T(a) / fa_peek_##T(b));             \
+        return fa_from_##T(fa_peek_##T(a) / fa_peek_##T(b));                \
     }                                                                       \
-    fa_ptr_t T##_absolute(fa_ptr_t a)                                     \
+    fa_ptr_t T##_absolute(fa_ptr_t a)                                       \
     {                                                                       \
-        return fa_from_##T(abs(fa_peek_##T(a))); /* TODO use tg? */       \
+        return fa_from_##T(abs(fa_peek_##T(a))); /* TODO use tg? */         \
     }                                                                       \
-    fa_ptr_t T##_copy(fa_ptr_t a)                                         \
+    fa_ptr_t T##_copy(fa_ptr_t a)                                           \
     {                                                                       \
-        return fa_copy_##T(a);                                             \
+        return fa_copy_##T(a);                                              \
     }                                                                       \
-    fa_dynamic_type_repr_t T##_get_type(fa_ptr_t a)                       \
+    fa_dynamic_type_repr_t T##_get_type(fa_ptr_t a)                         \
     {                                                                       \
         return T##_type_repr_impl;                                          \
     }                                                                       \
-    void T##_destroy(fa_ptr_t a)                                           \
+    void T##_destroy(fa_ptr_t a)                                            \
     {                                                                       \
-        fa_to_##T(a);                                                      \
+        fa_to_##T(a);                                                       \
     }
 
 #define UNBOXED_SHOW_IMPL(T,F) \
-    fa_string_t T##_show(fa_ptr_t a)                                      \
+    fa_string_t T##_show(fa_ptr_t a)                                        \
     {                                                                       \
         int  n;                                                             \
         char cs[16];                                                        \
-        n = snprintf(cs, 16, F, fa_to_##T(a));                             \
+        n = snprintf(cs, 16, F, fa_to_##T(a));                              \
         cs[n] = 0; /* terminate */                                          \
-        return fa_string_from_utf8(cs);                                    \
+        return fa_string_from_utf8(cs);                                     \
     }
 
 #define BOXED_SHOW_IMPL(T,F) \
-    fa_string_t T##_show(fa_ptr_t a)                                      \
+    fa_string_t T##_show(fa_ptr_t a)                                        \
     {                                                                       \
         int  n;                                                             \
         char cs[16];                                                        \
-        n = snprintf(cs, 16, F, fa_peek_##T(a));                           \
+        n = snprintf(cs, 16, F, fa_peek_##T(a));                            \
         cs[n] = 0; /* terminate */                                          \
-        return fa_string_from_utf8(cs);                                    \
+        return fa_string_from_utf8(cs);                                     \
     }
 
 /* Generates T_impl
  */
 #define IMPLEMENT_WRAPPER(T) \
-    fa_ptr_t T##_impl(fa_id_t interface)                                          \
+    fa_ptr_t T##_impl(fa_id_t interface)                                            \
     {                                                                               \
-        static fa_equal_t   T##_equal_impl   =                                     \
+        static fa_equal_t   T##_equal_impl   =                                      \
             { T##_equal };                                                          \
-        static fa_order_t   T##_order_impl   =                                     \
+        static fa_order_t   T##_order_impl   =                                      \
             { T##_less_than, T##_greater_than };                                    \
-        static fa_number_t  T##_number_impl  =                                     \
+        static fa_number_t  T##_number_impl  =                                      \
             { T##_add, T##_subtract, T##_multiply, T##_divide, T##_absolute };      \
-        static fa_string_show_t    T##_show_impl    =                              \
+        static fa_string_show_t    T##_show_impl    =                               \
             { T##_show };                                                           \
-        static fa_copy_t    T##_copy_impl    =                                     \
+        static fa_copy_t    T##_copy_impl    =                                      \
             { T##_copy };                                                           \
-        static fa_dynamic_t T##_dynamic_impl =                                     \
+        static fa_dynamic_t T##_dynamic_impl =                                      \
             { T##_get_type };                                                       \
-        static fa_destroy_t T##_destroy_impl =                                     \
+        static fa_destroy_t T##_destroy_impl =                                      \
             { T##_destroy };                                                        \
                                                                                     \
         switch (interface)                                                          \
         {                                                                           \
-        case fa_equal_i:                                                           \
+        case fa_equal_i:                                                            \
             return &T##_equal_impl;                                                 \
-        case fa_order_i:                                                           \
+        case fa_order_i:                                                            \
             return &T##_order_impl;                                                 \
-        case fa_number_i:                                                          \
+        case fa_number_i:                                                           \
             return &T##_number_impl;                                                \
-        case fa_string_show_i:                                                     \
+        case fa_string_show_i:                                                      \
             return &T##_show_impl;                                                  \
-        case fa_copy_i:                                                            \
+        case fa_copy_i:                                                             \
             return &T##_copy_impl;                                                  \
-        case fa_dynamic_i:                                                         \
+        case fa_dynamic_i:                                                          \
             return &T##_dynamic_impl;                                               \
-        case fa_destroy_i:                                                         \
+        case fa_destroy_i:                                                          \
             return &T##_destroy_impl;                                               \
         default:                                                                    \
             return NULL;                                                            \

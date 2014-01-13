@@ -312,11 +312,6 @@ ptr_t fa_buffer_write_audio(fa_string_t  path,
     }
 
     return NULL;
-
-
-    // file = 0;
-    // cpath = 0;
-    // assert(false);
 }
 
 

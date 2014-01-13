@@ -199,8 +199,6 @@ inline static device_t new_device(session_t session, native_index_t index)
     device->name        = fa_string_from_utf8((char *) info->name);         // const cast
     device->host_name   = fa_string_from_utf8((char *) host_info->name);
 #endif
-    // device->muted       = false;
-    // device->volume      = 1.0;
 
     return device;
 }
@@ -690,7 +688,7 @@ void fa_audio_add_message_callback(fa_audio_message_callback_t function,
                                    fa_ptr_t data,
                                    fa_audio_stream_t stream)
 {
-    // TODO
+    // TODO See #81
 }
 
 void fa_audio_schedule(fa_time_t time,

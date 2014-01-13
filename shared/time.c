@@ -16,7 +16,6 @@
 struct _fa_time_t {
     impl_t          impl;       //  Interface dispatcher
     double          dvalue;      // Value in seconds
-    // ratio_t         value;      //  Value in seconds
 };
 
 double to_double(fa_ratio_t x);
@@ -65,10 +64,6 @@ void fa_time_destroy(fa_time_t time)
 
 fa_ratio_t fa_time_divisions(fa_time_t time)
 {
-    // num_t   a;
-    // denom_t b;
-    // fa_ratio_match(time->value, &a, &b);
-    // return ratio(a % b, b);
     return from_double(time->dvalue);
 }
 

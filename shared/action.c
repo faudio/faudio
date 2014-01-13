@@ -226,17 +226,6 @@ bool fa_action_is_do(fa_action_t action)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 // Action -> Maybe (Maybe Action, Maybe (Time, Action))
 fa_pair_t compound_render(fa_action_t action)
 {
@@ -277,15 +266,6 @@ fa_action_t fa_action_compound_rest(fa_action_t action)
     }    
     return NULL;
 }
-
-
-
-
-
- 
-
-
-
 
 
 
@@ -344,13 +324,14 @@ fa_action_t fa_action_many(list_t timeActions)
 
 static inline ptr_t _if(ptr_t data, ptr_t compound)
 {
-    pair_t predAction = data;
-    pair_t      predClosure;
+    pair_t      pred_action = data;
+
+    pair_t      pred_closure;
     pred_t      pred_function;
     ptr_t       pred_data;
     action_t    action;
-    unpair(predClosure, action, predAction);
-    unpair(pred_function, pred_data, predClosure);
+    unpair(pred_closure, action, pred_action);
+    unpair(pred_function, pred_data, pred_closure);
 
     if (fa_action_is_simple(action)) {
         if (pred_function(pred_data, NULL)) {
@@ -373,13 +354,13 @@ static inline ptr_t _if(ptr_t data, ptr_t compound)
 
 static inline ptr_t _while(ptr_t data, ptr_t compound)
 {
-    pair_t predAction = data;
-    pair_t      predClosure;
+    pair_t pred_action = data;
+    pair_t      pred_closure;
     pred_t      pred_function;
     ptr_t       pred_data;
     action_t    action;
-    unpair(predClosure, action, predAction);
-    unpair(pred_function, pred_data, predClosure);
+    unpair(pred_closure, action, pred_action);
+    unpair(pred_function, pred_data, pred_closure);
 
     if (fa_action_is_simple(action)) {
         if (pred_function(pred_data, NULL)) {
@@ -402,13 +383,13 @@ static inline ptr_t _while(ptr_t data, ptr_t compound)
 
 static inline ptr_t _until(ptr_t data, ptr_t compound)
 {
-    pair_t predAction = data;
-    pair_t      predClosure;
+    pair_t pred_action = data;
+    pair_t      pred_closure;
     pred_t      pred_function;
     ptr_t       pred_data;
     action_t    action;
-    unpair(predClosure, action, predAction);
-    unpair(pred_function, pred_data, predClosure);
+    unpair(pred_closure, action, pred_action);
+    unpair(pred_function, pred_data, pred_closure);
 
     if (fa_action_is_simple(action)) {
         if (!pred_function(pred_data, NULL)) {
@@ -448,18 +429,6 @@ fa_action_t fa_action_until(pred_t pred, ptr_t data, fa_action_t action)
 
 
 
-
-
-
-
-
-
-
-
-
-// TODO move
-// static long long gMaxDiff = 0;
-
 /**
     Run a single or compound action, pushing to the given rescheduling list of needed.
     @param
@@ -483,11 +452,6 @@ void run_and_resched_action(action_t action, time_t time, time_t now, list_t *re
         if (rest && interv) {
             time_t   future = fa_add(time, interv);
             
-            // inform(string(""));
-            // inform(string_dappend(string("Current time               : "), fa_string_show(time)));
-            // inform(string_dappend(string("Delta time                 : "), fa_string_show(interv)));
-            // inform(string_dappend(string("Rescheduling at future time: "), fa_string_show(future)));
-
             if (fa_less_than_equal(future, now)) {
                 // Run directly
                 run_and_resched_action(rest, future, now, resched, function, data);
@@ -499,14 +463,6 @@ void run_and_resched_action(action_t action, time_t time, time_t now, list_t *re
 
         return;
     } else {
-        // fa_print("-------------------------------------------------\n", NULL);
-        // fa_print("Forwarding:     %s\n", action);
-
-        // long long diff = fa_time_to_milliseconds(now) - fa_time_to_milliseconds(time);
-        // gMaxDiff = fa_max(gMaxDiff, diff);
-        // printf("Time diff:      %lld\n", diff);
-        // printf("Max time diff:  %lld\n", gMaxDiff);
-
         // TODO should this always happen here?
         if (is_do(action)) {
             nullary_t function  = do_get(action, function);

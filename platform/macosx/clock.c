@@ -102,7 +102,6 @@ fa_time_t standard_clock_time(fa_ptr_t a)
 {
     mach_timespec_t ts;
     clock_get_time(gMachClock, &ts);
-    // clock_gettime(CLOCK_REALTIME, &ts);
 
     time_t s  = seconds(ts.tv_sec);
     time_t ds = divisions(ts.tv_nsec / 1000000, 1000);

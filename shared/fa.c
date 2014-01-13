@@ -10,7 +10,7 @@
 #include <fa/fa.h>
 #include <fa/util.h>
 
-#include <unistd.h> // isatty
+#include <unistd.h> // Needs isatty()
 #include "config.h"
 
 #define kIso8601 "%Y-%m-%d %H:%M:%S%z"

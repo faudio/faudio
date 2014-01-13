@@ -75,8 +75,6 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
     au_context_t context = x;
     assert(fa_midi_message_is_simple(msg));
 
-    // printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
-
     // TODO
     if (true /*fa_equal(n, string("DLS"))*/) {
         int status, data1, data2;
