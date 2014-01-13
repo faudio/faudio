@@ -10,9 +10,6 @@
 #include <fa/time.h>
 #include <fa/util.h>
 
-// typedef fa_ratio_numerator_t    num_t;
-// typedef fa_ratio_denominator_t  denom_t;
-
 struct _fa_time_t {
     impl_t          impl;       //  Interface dispatcher
     double          dvalue;      // Value in seconds
