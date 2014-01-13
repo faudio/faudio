@@ -29,6 +29,7 @@ void helper_function()
         fa_audio_device_t o  = fa_audio_default_output(s);
         list_t out          = list(a, a);
 
+        fa_audio_set_parameter(string("sample-rate"), f64(44100), s);
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
 
         if (fa_check(st)) {

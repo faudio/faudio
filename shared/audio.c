@@ -343,11 +343,14 @@ void fa_audio_set_parameter(string_t name,
             case f32_type_repr:
                 x = fa_peek_float(value);  
                 break;           
+            case f64_type_repr:
+                x = fa_peek_double(value);  
+                break;           
             default:
                 warn(string("Wrong type"));
                 return;
         }
-        
+                
         session->parameters.sample_rate = x;
     }
 
@@ -360,6 +363,9 @@ void fa_audio_set_parameter(string_t name,
                 break;
             case f32_type_repr:
                 x = fa_peek_float(value);  
+                break;           
+            case f64_type_repr:
+                x = fa_peek_double(value);  
                 break;           
             default:
                 warn(string("Wrong type"));
@@ -378,6 +384,9 @@ void fa_audio_set_parameter(string_t name,
                 break;
             case f32_type_repr:
                 x = fa_peek_float(value);  
+                break;           
+            case f64_type_repr:
+                x = fa_peek_double(value);  
                 break;           
             default:
                 warn(string("Wrong type"));
