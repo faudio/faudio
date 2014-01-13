@@ -43,7 +43,6 @@ c:
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Pair/Left.module    		>include/fa/pair/left.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Plot.module    			>include/fa/plot.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Map.module    			>include/fa/map.h && \
-	$(MODULO) -Mmodules --language=c    <modules/Fa/Graph.module    		>include/fa/graph.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/PriorityQueue.module		>include/fa/priority_queue.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Midi/Message.module    		>include/fa/midi/message.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Time.module    			>include/fa/time.h && \
@@ -86,7 +85,6 @@ gen-lisp:
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Pair/Left.module    		>bindings/lisp/fa/pair/left.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Plot.module    			>bindings/lisp/fa/plot.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Map.module    			>bindings/lisp/fa/map.lisp && \
-	$(MODULO) -Mmodules --language=lisp <modules/Fa/Graph.module    		>bindings/lisp/fa/graph.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/PriorityQueue.module		>bindings/lisp/fa/priority-queue.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Midi/Message.module    		>bindings/lisp/fa/midi/message.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Time.module    			>bindings/lisp/fa/time.lisp && \

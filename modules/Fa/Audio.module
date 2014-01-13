@@ -201,6 +201,11 @@ module Fa.Audio
         @param device   The device.
      */
     outputChannels : Device -> Int;
+
+    /** Return the default sample rate of the given device.
+        @param device   The device.
+    */
+    defaultSampleRate : Device -> Double;
     
     /**
         Open a stream on the given devices.

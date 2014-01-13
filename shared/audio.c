@@ -491,6 +491,13 @@ void fa_audio_add_status_callback(status_callback_t function,
     add_audio_status_listener(function, data);
 }
 
+double fa_audio_default_sample_rate(fa_audio_device_t device)
+{
+    const PaDeviceInfo *info = Pa_GetDeviceInfo(device->index);
+    return info->defaultSampleRate;
+}
+
+
 // --------------------------------------------------------------------------------
 
 #define kOutputOffset 0

@@ -217,6 +217,12 @@ int fa_audio_input_channels(fa_audio_device_t);
 */
 int fa_audio_output_channels(fa_audio_device_t);
 
+/** Return the default sample rate of the given device.
+    @param device   The device.
+    
+*/
+double fa_audio_default_sample_rate(fa_audio_device_t);
+
 /**
     Open a stream on the given devices.
 
