@@ -1052,8 +1052,13 @@ error_t audio_device_error(string_t msg)
 
 error_t audio_device_error_with(string_t msg, int code)
 {
+    string_t pa_error_str = string(code != 0 ? (char*) Pa_GetErrorText(code) : "");
+
     error_t err = fa_error_create_simple(error,
-                                  string_dappend(msg, format_integral(" (error code %d)", code)),
+                                  string_dappend(msg, 
+                                    pa_error_str
+                                    // format_integral(" (error code %d)", code)
+                                    ),
                                   string("Doremir.Device.Audio"));
     fa_error_log(NULL, err);
     return err;
