@@ -3,10 +3,9 @@
 #include <fa/util.h>
 
 /*
-    This program does ...
+    This program plays one of more sine waves on the standard audio output device.
 
  */
-// typedef fa_signal_t signal_t;
 
 #define PI  3.1415
 #define TAU (2 * PI)

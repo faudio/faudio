@@ -2,6 +2,15 @@
 #include <fa/fa.h>
 #include <fa/util.h>
 
+/*
+    This program listens for incoming MIDI notes on the default MIDI input device:
+
+        * Prints incoming notes on the standard output
+
+        * Echoes incoming notes to the standard MIDI output device
+
+        * Echoes incoming notes to the standard audio output device
+ */
 
 #define kEchoPrint 0
 #define kEchoMIDI 1

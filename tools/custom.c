@@ -3,10 +3,9 @@
 #include <fa/util.h>
 
 /*
-    This program does ...
+    This program defines a custom processor and runs it on the default audio input and output devices.
 
  */
-// typedef fa_signal_t signal_t;
 
 #define PI  3.1415
 #define TAU (2 * PI)

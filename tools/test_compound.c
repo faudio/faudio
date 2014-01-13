@@ -8,6 +8,12 @@
 #include <ApplicationServices/ApplicationServices.h> // DEBUG
 #endif
 
+/*
+    This program tests compound scheduling.
+    
+    TODO
+ */
+
 
 bool pred1(ptr_t _, ptr_t x)
 {

@@ -14,7 +14,6 @@
         Input:          2
         Output:         0
 
-    The actual output has no indentation.
  */
 void print_device(audio_device_t x)
 {
@@ -28,9 +27,6 @@ void print_device(audio_device_t x)
 
 fa_audio_session_t print_audio_devices(fa_ptr_t _, audio_session_t session)
 {
-    // fa_print("Listing audio devices:\n", 0);
-    // fa_print_ln(string(""));
-
     fa_for_each(x, fa_audio_all(session)) {
         if (!fa_check(x)) {
             print_device(x);

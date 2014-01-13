@@ -2,6 +2,11 @@
 #include <fa/fa.h>
 #include <fa/util.h>
 
+/*
+    This program plays a couple of notes on the standard audio output device using
+    DLSMusicDevice (OS X only).
+ */
+
 
 #define RT 1
 

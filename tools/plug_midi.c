@@ -4,6 +4,7 @@
 
 static int stop;
 
+
 /** Called whenever the MIDI setup changed.
  */
 ptr_t status_callback(ptr_t session)

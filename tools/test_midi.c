@@ -2,6 +2,9 @@
 #include <fa/fa.h>
 #include <fa/util.h>
 
+/*
+    This program plays a couple of notes on the standard MIDI output.
+ */
 void run_midi()
 {
     fa_midi_session_t s = fa_midi_begin_session();
