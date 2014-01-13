@@ -65,6 +65,7 @@ module Fa
 
 
     // Type predicates and conversions
+    // TODO move to dynamic (se #158)
 
     /**
         @see [Value references](@ref ValueReferences)

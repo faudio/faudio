@@ -147,6 +147,21 @@ size_t fa_buffer_size(fa_buffer_t buffer)
     return buffer->size;
 }
 
+fa_ptr_t fa_buffer_get_meta(fa_buffer_t buffer, string_t name)
+{
+    return fa_map_get(name, buffer->meta);
+}
+
+void fa_buffer_set_meta(fa_buffer_t buffer, string_t name, fa_ptr_t value)
+{
+    buffer->meta = fa_map_dset(name, value, buffer->meta);
+}
+
+fa_map_t fa_buffer_get_all_meta(fa_buffer_t buffer)
+{
+    return buffer->meta;
+}
+
 uint8_t fa_buffer_get(fa_buffer_t buffer, size_t index)
 {
     assert(index < buffer->size && "Buffer overflow");

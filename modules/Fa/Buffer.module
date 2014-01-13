@@ -28,7 +28,7 @@ module Fa.Buffer
     import Fa.Std;
     import Fa.Pair;
     import Fa.String;
-    // import Fa.Type;
+    import Fa.Map;
 
     /** @typedef fa_buffer_t
         The buffer. 
@@ -88,8 +88,22 @@ module Fa.Buffer
      */
     size    : Buffer -> Size;  
 
-    getMeta : (Buffer, Size) -> Ptr;
-    setMeta : (Buffer, Size, Ptr) -> Void;
+    /** Get the value of some meta-data attribute of the given buffer.
+        @param buffer The buffer.
+        @param string Attribute name.
+        @returns 
+            The value (implementing @ref fa_dynamic).
+     */
+    getMeta : (Buffer, String) -> Ptr;
+
+    /** Set the value of some meta-data attribute of the given buffer.
+        @param buffer The buffer.
+        @param string Attribute name.
+        @param The value (implementing @ref fa_dynamic).
+    */
+    setMeta : (Buffer, String, Ptr) -> Void;
+
+    getAllMeta : Buffer -> Map;
 
     /** Get a value from the buffer.
         @note

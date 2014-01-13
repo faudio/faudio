@@ -6,6 +6,7 @@
 #include <fa/std.h>
 #include <fa/pair.h>
 #include <fa/string.h>
+#include <fa/map.h>
 
 /** @addtogroup FaBuffer
  
@@ -94,6 +95,25 @@ void fa_buffer_destroy(fa_buffer_t);
         O(1)
 */
 size_t fa_buffer_size(fa_buffer_t);
+
+/** Get the value of some meta-data attribute of the given buffer.
+    @param buffer The buffer.
+    @param string Attribute name.
+    @returns 
+        The value (implementing @ref fa_dynamic).
+*/
+fa_ptr_t fa_buffer_get_meta(fa_buffer_t, fa_string_t);
+
+/** Set the value of some meta-data attribute of the given buffer.
+    @param buffer The buffer.
+    @param string Attribute name.
+    @param The value (implementing @ref fa_dynamic).
+    
+*/
+void fa_buffer_set_meta(fa_buffer_t, fa_string_t, fa_ptr_t);
+
+
+fa_map_t fa_buffer_get_all_meta(fa_buffer_t);
 
 /** Get a value from the buffer.
     @note
