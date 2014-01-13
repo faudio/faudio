@@ -1043,16 +1043,20 @@ void fa_fa_log_error_from(fa_string_t msg, fa_string_t origin);
 
 error_t audio_device_error(string_t msg)
 {
-    return fa_error_create_simple(error,
+    error_t err = fa_error_create_simple(error,
                                   msg,
                                   string("Doremir.Device.Audio"));
+    fa_error_log(NULL, err);
+    return err;
 }
 
 error_t audio_device_error_with(string_t msg, int code)
 {
-    return fa_error_create_simple(error,
+    error_t err = fa_error_create_simple(error,
                                   string_dappend(msg, format_integral(" (error code %d)", code)),
                                   string("Doremir.Device.Audio"));
+    fa_error_log(NULL, err);
+    return err;
 }
 
 void audio_device_fatal(string_t msg, int code)
