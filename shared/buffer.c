@@ -32,6 +32,8 @@ struct _fa_buffer_t {
 
     fa_unary_t     destroy_function;
     fa_ptr_t       destroy_data;
+
+    fa_map_t        meta;
 };
 
 
@@ -55,6 +57,8 @@ fa_buffer_t fa_buffer_create(size_t size)
 
     buffer->destroy_function = default_destroy;
     buffer->destroy_data     = NULL;
+
+    buffer->meta = fa_map_empty();
 
     memset(buffer->data, 0, buffer->size);
 
@@ -84,6 +88,8 @@ fa_buffer_t fa_buffer_wrap(fa_ptr_t   pointer,
     b->destroy_function = destroy_function;
     b->destroy_data     = destroy_data;
 
+    b->meta = fa_map_empty();
+    
     return b;
 }
 
@@ -102,6 +108,7 @@ fa_buffer_t fa_buffer_resize(size_t size, fa_buffer_t buffer)
     copy->data              = fa_malloc(size);
     copy->destroy_function  = buffer->destroy_function;
     copy->destroy_data      = buffer->destroy_data;
+    copy->meta              = fa_copy(buffer->meta);
 
     if (!copy->data) {
         if (errno == ENOMEM) {
@@ -129,7 +136,9 @@ void fa_buffer_destroy(fa_buffer_t buffer)
     if (buffer->destroy_function) {
         buffer->destroy_function(buffer->data, buffer->destroy_data);
     }
-
+    // TODO recursive (everything in here is copy)
+    fa_destroy(buffer->meta);
+    
     fa_delete(buffer);
 }
 
