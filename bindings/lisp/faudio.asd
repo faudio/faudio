@@ -33,7 +33,6 @@
         (:file "string")
         (:file "set")
         (:file "map")
-        (:file "graph")
         (:file "priority-queue")
         (:file "ratio")
         (:file "dynamic")
