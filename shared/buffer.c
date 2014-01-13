@@ -250,10 +250,28 @@ fa_pair_t fa_buffer_read_audio(fa_string_t path)
             buffer_fatal("Unknown buffer type", info.channels);
         }
 
+        // Meta-data
+        fa_buffer_set_meta(buffer, string("sample-rate"), f32(info.samplerate));
+        fa_buffer_set_meta(buffer, string("channels"), i32(info.channels));
+        {
+            char* str = (char*) sf_get_string(file, SF_STR_TITLE);
+            fa_buffer_set_meta(buffer, string("title"), string(str ? str : ""));
+        }
+        {
+            char* str = (char*) sf_get_string(file, SF_STR_SOFTWARE);
+            fa_buffer_set_meta(buffer, string("software"), string(str ? str : ""));
+        }
+        {
+            char* str = (char*) sf_get_string(file, SF_STR_COPYRIGHT);
+            fa_buffer_set_meta(buffer, string("copyright"), string(str ? str : ""));
+        }
+
         if (sf_close(file)) {
             return (pair_t) fa_error_create_simple(error, string("Could not close"), string("Doremir.Buffer"));
         }
     }
+
+
     return pair(i32(channels), buffer);
 }
 
