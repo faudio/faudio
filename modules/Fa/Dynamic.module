@@ -41,5 +41,7 @@ module Fa.Dynamic
         must implement @ref fa_dynamic_t. 
      */
     getType : Ptr -> TypeRepr;
+
+    // TODO a lot of stuff from top-level Fa module should go here
 }
 

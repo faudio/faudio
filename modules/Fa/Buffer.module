@@ -88,6 +88,9 @@ module Fa.Buffer
      */
     size    : Buffer -> Size;  
 
+    getMeta : (Buffer, Size) -> Ptr;
+    setMeta : (Buffer, Size, Ptr) -> Void;
+
     /** Get a value from the buffer.
         @note
             O(1)
