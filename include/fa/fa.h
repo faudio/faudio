@@ -23,7 +23,7 @@
 
 /** @addtogroup FaFa
 
-    Miscellaneous utilities.
+    Miscellaneous
 
     ~~~~
     #import <fa/fa.h>

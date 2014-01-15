@@ -6,7 +6,7 @@
 
 /** @addtogroup FaString
  
-    Provides Unicode strings.
+    Provides strings.
     
     A string is an immutable sequence of Unicode characters with single-ownership semantics.
     To convert a string from and to its ordinary C representation, use @ref fa_string_from_utf8,

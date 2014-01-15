@@ -6,7 +6,7 @@
 
 /** @addtogroup FaAtomicQueue
  
-    Mutable atomic (lock-free) queues.
+    Mutable lock-free queues.
 
     @par Literals
     - `atomic_queue()` 

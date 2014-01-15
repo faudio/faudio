@@ -6,7 +6,7 @@
 
 /** @addtogroup FaAtomicStack
  
-    Mutable atomic (lock-free) stacks.
+    Mutable lock-free stacks.
 
     @see 
     - [Data structures](@ref DataStructures)

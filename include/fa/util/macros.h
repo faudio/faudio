@@ -2,13 +2,6 @@
 #ifndef _FA_UTIL_MACROS
 #define _FA_UTIL_MACROS
 
-/** @defgroup Fa Fa
-    @{
-    @defgroup FaUtility Utility
-    @{
-
- */
-
 /** Execute following statement with a binding in scope.
 
     ### Syntax
