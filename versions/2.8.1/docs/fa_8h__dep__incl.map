@@ -1,0 +1,11 @@
+<map id="include/fa.h" name="include/fa.h">
+<area shape="rect" id="node3" href="$queue_8h.html" title="include/fa/atomic/queue.h" alt="" coords="4,175,205,206"/>
+<area shape="rect" id="node13" href="$ring__buffer_8h.html" title="include/fa/atomic/ring\l_buffer.h" alt="" coords="230,165,404,216"/>
+<area shape="rect" id="node16" href="$stack_8h.html" title="include/fa/atomic/stack.h" alt="" coords="193,86,388,117"/>
+<area shape="rect" id="node19" href="$left_8h.html" title="include/fa/pair/left.h" alt="" coords="412,86,576,117"/>
+<area shape="rect" id="node22" href="$directory_8h.html" title="include/fa/system/directory.h" alt="" coords="601,86,820,117"/>
+<area shape="rect" id="node5" href="$fa_2fa_8h.html" title="include/fa/fa.h" alt="" coords="381,264,504,296"/>
+<area shape="rect" id="node7" href="$action_8h.html" title="include/fa/action.h" alt="" coords="280,344,429,376"/>
+<area shape="rect" id="node10" href="$atomic_8h.html" title="include/fa/atomic.h" alt="" coords="454,344,607,376"/>
+<area shape="rect" id="node24" href="$system_8h.html" title="include/fa/system.h" alt="" coords="582,175,735,206"/>
+</map>
