@@ -121,12 +121,6 @@ void fa_fa_log_warning_from(fa_string_t, fa_string_t);
 */
 void fa_fa_log_error_from(fa_string_t, fa_string_t);
 
-
-void fa_fa_dlog(fa_ptr_t, fa_error_t);
-
-
-void fa_fa_dlog_info(fa_string_t);
-
 /** @}
     @}
     */

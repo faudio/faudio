@@ -702,15 +702,11 @@ EXCLUDE_SYMLINKS       = NO
 # for example use the pattern */test/*
 
 # Public
-EXCLUDE_PATTERNS       = */include/fa/atomic* \
-                         */include/fa/graph* \
+EXCLUDE_PATTERNS       = */include/fa/graph* \
                          */include/fa/pair/left* \
-                         */include/fa/set* \
                          */include/fa/std* \
                          */include/fa/system* \
                          */include/fa/plot* \
-                         */include/fa/priority_queue* \
-                         */include/fa/thread* \
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the

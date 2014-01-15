@@ -42,6 +42,7 @@ module Fa.Fa
         on the form `("alpha", 1, 0, 5, "")`.
      */
     version : () -> List;
+
     /** Returns the version of Fa as a string
         on the form "alpha1.0.5".
      */
@@ -54,6 +55,7 @@ module Fa.Fa
         fa_fa_initialize() may be called again and so on.
      */
     initialize : () -> Void;
+
     /** Performs global cleanup.
 
         This function may be used to reset the global state as per above. It is not necessary to
@@ -67,9 +69,11 @@ module Fa.Fa
     /** Instruct Fa to write log messages to the specific file.
      */
     setLogFile  : String -> Void;
+
     /** Instruct Fa to write log messages to the standard output.
      */
     setLogStd   : () -> Void;
+
     /** Instruct Fa to pass log messages to the given handler.
      */
     setLog      : (LogFunc,Ptr) -> Void;
@@ -82,26 +86,29 @@ module Fa.Fa
             Condition to log. Must implement [Error](@ref fa_error_interface_t).
      */
     log             : (Ptr,Error) -> Void;
+
     /** Write an informative message to the log.
      */
     logInfo         : (String) -> Void;
+
     /** Write a warning to the log.
      */
     logWarning      : (String) -> Void;
+
     /** Write an error to the log.
      */
     logError        : (String) -> Void;
+
     /** Write an informative message to the log.
      */
     logInfoFrom     : (String,String) -> Void;
+
     /** Write a warning to the log.
      */
     logWarningFrom  : (String,String) -> Void;
+
     /** Write an error to the log.
      */
     logErrorFrom    : (String,String) -> Void;
-    
-    dlog            : (Ptr,Error) -> Void;
-    dlogInfo        : (String) -> Void;
 }
 
