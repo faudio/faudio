@@ -472,6 +472,15 @@ fa_string_t fa_audio_host_name(device_t device)
     return fa_copy(device->host_name);
 }
 
+fa_string_t fa_audio_full_name(device_t device)
+{
+    string_t str = string("");
+    fa_write_string(str, fa_audio_host_name(device));
+    fa_write_string(str, string(" "));
+    fa_write_string(str, fa_audio_name(device));
+    return str;
+}
+
 int fa_audio_input_channels(device_t device)
 {
     const PaDeviceInfo *info = Pa_GetDeviceInfo(device->index);
@@ -522,8 +531,8 @@ double fa_audio_default_sample_rate(fa_audio_device_t device)
 void audio_inform_opening(device_t input, ptr_t proc, device_t output)
 {
     inform(string("Opening real-time audio stream"));
-    inform(string_dappend(string("    Input:         "), input ? fa_string_show(input) : string("-")));
-    inform(string_dappend(string("    Output:        "), output ? fa_string_show(output) : string("-")));
+    inform(string_dappend(string("    Input:         "), input ? fa_audio_full_name(input) : string("-")));
+    inform(string_dappend(string("    Output:        "), output ? fa_audio_full_name(output) : string("-")));
 
     inform(fa_string_format_floating("    Sample Rate:   %2f", input->session->parameters.sample_rate));
     inform(fa_string_format_floating("    Latency:       %3f", input->session->parameters.latency));

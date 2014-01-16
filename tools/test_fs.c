@@ -48,7 +48,7 @@ void run_dls()
                                                        hms(0, 0, 0)
                                                    )
                                                ));
-            printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
+            // printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
             fa_audio_schedule_relative(
                 hms(0, 0, 0),
                 chord,

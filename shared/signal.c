@@ -1202,7 +1202,9 @@ inline static double _play_stream(ptr_t buffer, double _)
     // Unmodified if underflowing
     // TODO report
     double x = 0; 
-    fa_atomic_ring_buffer_read_double(buffer, &x);
+    bool res = fa_atomic_ring_buffer_read_double(buffer, &x);
+    if (!res) warn(string("U"));
+    mark_used(res);
     return x;
 }
 
@@ -1215,7 +1217,9 @@ inline static double _record_stream(ptr_t buffer, double x)
 {
     // Ignored if overflowing
     // TODO report
-    fa_atomic_ring_buffer_write_double(buffer, x);
+    bool res = fa_atomic_ring_buffer_write_double(buffer, x);
+    mark_used(res);
+    if (!res) warn(string("O"));
     return x;
 }
 
