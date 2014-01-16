@@ -458,6 +458,8 @@ void fa_midi_initialize()
     gMidiThreadRunLoop  = NULL;
     gMidiThread         = fa_thread_create(midi_thread, NULL);
 
+    inform(string("Using CoreMIDI as MIDI backend."));
+
     while (!gMidiThreadRunLoop) {
         fa_thread_sleep(10); // Wait for run loop to be initialized by thread
     }

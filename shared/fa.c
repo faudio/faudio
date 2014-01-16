@@ -81,7 +81,7 @@ void fa_fa_initialize()
     fa_audio_initialize();
     fa_midi_initialize();
 
-    fa_fa_log_info(string("Initialized faudio."));
+    fa_fa_log_info(string("Initialized faudio"));
 
     gBytesAlloc = 0;
     gRegionCount = 0;
@@ -103,9 +103,9 @@ void fa_fa_terminate()
         fa_fa_log_info(fa_string_dappend(string("Regions leaked: "),
                                          fa_string_show(i32(gRegionCount))));
 
-        fa_fa_log_info(string("Terminated faudio."));
+        fa_fa_log_info(string("Terminated faudio"));
     } else {
-        fa_fa_log_warning(string("Could not terminate faudio: inconsistent state."));
+        fa_fa_log_warning(string("Could not terminate faudio: inconsistent state"));
     }
 }
 

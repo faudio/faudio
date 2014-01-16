@@ -219,9 +219,11 @@ inline static void delete_stream(stream_t stream)
 
 void fa_midi_initialize()
 {
-    pm_mutex        = fa_thread_create_mutex();
-    pm_status       = false;
+    pm_mutex             = fa_thread_create_mutex();
+    pm_status            = false;
     midi_current_session = NULL;
+    
+    inform(string("Using PortMIDI as MIDI backend."));
 }
 
 void fa_midi_terminate()
