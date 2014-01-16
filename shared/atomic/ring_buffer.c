@@ -134,7 +134,6 @@ size_t fa_atomic_ring_buffer_write_many(ring_buffer_t dst,
 }
 
 
-
 bool fa_atomic_ring_buffer_read(fa_atomic_ring_buffer_t buffer, byte_t *value)
 {
     return fa_atomic_ring_buffer_read_many((byte_t *) value, buffer, sizeof(byte_t)) > 0;

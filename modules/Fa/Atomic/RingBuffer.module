@@ -27,9 +27,6 @@ module Fa.Atomic.RingBuffer
     type RingBuffer = opaque;
 
     create : Size -> RingBuffer;
-    // copy : RingBuffer -> RingBuffer;
-    // resize : (Size, RingBuffer) -> RingBuffer;
-    // swap : (RingBuffer, RingBuffer) -> Void;
     destroy : RingBuffer -> Void;
 
     size : RingBuffer -> Size;  
