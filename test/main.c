@@ -11,10 +11,10 @@ void test_section(char *str)
 
 // --------------------------------------------------------------------------------
 
+extern char *fa_type_str(fa_ptr_t a);
+
 void test_value_references()
 {
-    extern char *fa_type_str(fa_ptr_t a);
-
     test_section("Value references");
     // FIXME leaks
 
@@ -86,7 +86,7 @@ void test_generic_functions()
 
 // --------------------------------------------------------------------------------
 
-static inline void memdump(void *s, size_t n)
+static inline void test_string_memdump(void *s, size_t n)
 {
     for (size_t i = 0; i < n; ++i) {
         printf("%x ", *((unsigned char *)(s + i)));
@@ -373,9 +373,7 @@ void test_midi_message()
 
 // --------------------------------------------------------------------------------
 
-#pragma mark -
-
-ptr_t add10(ptr_t x, ptr_t _)
+ptr_t test_atomic_add10(ptr_t x, ptr_t _)
 {
     return (ptr_t)((intptr_t) x + 10);
 }
@@ -392,7 +390,7 @@ void test_atomic()
         fa_atomic_set(a, (ptr_t) 0x5);
         fa_print("a                            ==> %s\n", a);
 
-        fa_atomic_modify(a, add10, 0);
+        fa_atomic_modify(a, test_atomic_add10, 0);
         fa_print("a                            ==> %s\n", a);
 
         // fa_atomic_add(a, (ptr_t) - 0xf);
@@ -409,14 +407,14 @@ void test_atomic()
 
 // --------------------------------------------------------------------------------
 
-struct reader_args {
+struct test_atomic_queue_reader_args {
     fa_atomic_queue_t queue;
     atomic_t active;
 };
 
-fa_ptr_t queue_reader(fa_ptr_t x)
+fa_ptr_t test_atomic_queue_reader(fa_ptr_t x)
 {
-    struct reader_args *args = x;
+    struct test_atomic_queue_reader_args *args = x;
     fa_atomic_queue_t q = args->queue;
     atomic_t               a = args->active;
     ptr_t                  v;
@@ -440,10 +438,10 @@ void test_atomic_queue(int iter, long sleepTime)
     {
         fa_atomic_queue_t q = fa_atomic_queue_create();
 
-        struct reader_args args = { q, atomic() };
+        struct test_atomic_queue_reader_args args = { q, atomic() };
         fa_atomic_set(args.active, fb(true));
 
-        thread_t t = fa_thread_create(queue_reader, &args);
+        thread_t t = fa_thread_create(test_atomic_queue_reader, &args);
 
         fa_print("q                            ==> %s\n", q);
 
@@ -463,14 +461,14 @@ void test_atomic_queue(int iter, long sleepTime)
 
 // --------------------------------------------------------------------------------
 
-struct stack_reader_args {
+struct test_atomic_stack_reader_args {
     fa_atomic_stack_t stack;
     atomic_t active;
 };
 
-fa_ptr_t stack_reader(fa_ptr_t x)
+fa_ptr_t test_atomic_stack_reader(fa_ptr_t x)
 {
-    struct stack_reader_args *args = x;
+    struct test_atomic_stack_reader_args *args = x;
     fa_atomic_stack_t q = args->stack;
     atomic_t               a = args->active;
     ptr_t                  v;
@@ -495,10 +493,10 @@ void test_atomic_stack(int iter, long sleepTime)
     {
         fa_atomic_stack_t q = fa_atomic_stack_create();
 
-        struct stack_reader_args args = { q, atomic() };
+        struct test_atomic_stack_reader_args args = { q, atomic() };
         fa_atomic_set(args.active, fb(true));
 
-        thread_t t = fa_thread_create(stack_reader, &args);
+        thread_t t = fa_thread_create(test_atomic_stack_reader, &args);
 
         fa_print("q                            ==> %s\n", q);
 
@@ -521,15 +519,67 @@ void test_atomic_stack(int iter, long sleepTime)
 
 // --------------------------------------------------------------------------------
 
-void test_atomic_ring_buffer(int inter, long sleepTime)
+// TODO move
+typedef fa_atomic_ring_buffer_t ring_buffer_t;
+#define ring_buffer(size) fa_atomic_ring_buffer_create(size)
+
+struct test_atomic_ring_buffer_reader_args {
+    fa_atomic_ring_buffer_t ring_buffer;
+    atomic_t active;
+};
+
+fa_ptr_t ring_buffer_reader(fa_ptr_t x)
 {
-    test_section("Ring buffer");
+    struct test_atomic_ring_buffer_reader_args *args = x;
+    fa_atomic_ring_buffer_t q = args->ring_buffer;
+    atomic_t                a = args->active;
+    char                    v;
+
+    fa_thread_sleep(1000);
+
+    while (true) {
+        if (!tb(fa_atomic_get(a))) {
+            return NULL;
+        }
+        if ((v = fa_atomic_ring_buffer_read(q))) {
+            printf("         |- %5d    \n", v);
+        }
+        srand(time(NULL));
+        fa_thread_sleep(rand() % 100);
+    }
 }
 
+void test_atomic_ring_buffer(int iter, long sleepTime)
+{
+    test_section("RingBuffer");
+    {
+        fa_atomic_ring_buffer_t q = fa_atomic_ring_buffer_create(1024);
+
+        struct test_atomic_ring_buffer_reader_args args = { q, atomic() };
+        fa_atomic_set(args.active, fb(true));
+
+        thread_t t = fa_thread_create(ring_buffer_reader, &args);
+
+        fa_print("q                            ==> %s\n", q);
+
+        for (int i = 0; i < iter; ++i) {
+            if (i % 10) {
+                fa_thread_sleep(rand() % 100);
+            }
+            fa_atomic_ring_buffer_write(q, i);
+            printf("  %5d -|  \n", i);
+        }
+
+        fa_thread_sleep(sleepTime);
+        fa_atomic_set(args.active, fb(false));
+        fa_thread_join(t);
+        fa_destroy(q);
+    }
+}
 
 // --------------------------------------------------------------------------------
 
-ptr_t printer(ptr_t data)
+ptr_t test_thread_printer(ptr_t data)
 {
     int n = 0;
 
@@ -547,8 +597,8 @@ void test_thread()
     test_section("Threads");
 
     fa_thread_t t, t2;
-    t  = fa_thread_create(printer, (ptr_t) 10);
-    t2 = fa_thread_create(printer, (ptr_t) 11);
+    t  = fa_thread_create(test_thread_printer, (ptr_t) 10);
+    t2 = fa_thread_create(test_thread_printer, (ptr_t) 11);
 
     fa_thread_sleep(1000);
     fa_thread_join(t);
@@ -561,11 +611,11 @@ void test_thread()
 typedef struct {
     fa_thread_mutex_t mut;
     int val;
-} lock_index;
+} test_mutex_lock_index;
 
-ptr_t locker(ptr_t x)
+ptr_t test_mutex_locker(ptr_t x)
 {
-    lock_index *i = (lock_index *) x;
+    test_mutex_lock_index *i = (test_mutex_lock_index *) x;
 
     fa_thread_lock(i->mut);
     printf("Acquired lock in thread %d\n", i->val);
@@ -583,8 +633,8 @@ void test_mutex()
     fa_thread_mutex_t m = fa_thread_create_mutex();
 
     for (int j = 0; j < 10; ++j) {
-        lock_index i = { m, j };
-        fa_thread_t t = fa_thread_create(locker, (ptr_t) &i);
+        test_mutex_lock_index i = { m, j };
+        fa_thread_t t = fa_thread_create(test_mutex_locker, (ptr_t) &i);
         fa_thread_sleep(100);
         fa_thread_detach(t);
     }
@@ -594,8 +644,6 @@ void test_mutex()
 
 
 // --------------------------------------------------------------------------------
-
-#pragma mark -
 
 void test_for_each()
 {
@@ -637,12 +685,12 @@ void test_for_each()
 
 // --------------------------------------------------------------------------------
 
-bool is_even16(ptr_t data, ptr_t p)
+bool test_list_is_even16(ptr_t data, ptr_t p)
 {
     return ti16(p) % 2 == 0;
 }
 
-bool is_odd16(ptr_t data, ptr_t p)
+bool test_list_is_odd16(ptr_t data, ptr_t p)
 {
     return ti16(p) % 2 != 0;
 }
@@ -907,10 +955,10 @@ void test_list()
         printf("\n");
 
         list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-        list_t ys = fa_list_filter(is_odd16, 0, xs);
+        list_t ys = fa_list_filter(test_list_is_odd16, 0, xs);
 
         fa_print("xs                           ==> %s\n", xs);
-        fa_print("filter(is_odd,ys)            ==> %s\n", ys);
+        fa_print("filter(test_list_is_odd,ys)            ==> %s\n", ys);
 
         fa_destroy(xs);
         fa_destroy(ys);
@@ -969,8 +1017,8 @@ void test_list()
         xs = fa_list_dmap(apply1, i16, xs);
         // fa_print("xs                           ==> %s\n", xs);
 
-        xs = fa_list_dfilter(is_odd16, 0, xs);
-        // fa_print("filter(is_odd,xs)            ==> %s\n", xs);
+        xs = fa_list_dfilter(test_list_is_odd16, 0, xs);
+        // fa_print("filter(test_list_is_odd,xs)            ==> %s\n", xs);
 
         xs = fa_list_dmap(times10, 0, xs);
         // fa_print("map(times10, xs)             ==> %s\n", xs);
@@ -1196,8 +1244,6 @@ void test_json(string_t path)
 
 // --------------------------------------------------------------------------------
 
-#pragma mark -
-
 // void test_dispatcher()
 // {
 //     test_section("Dispatcher");
@@ -1325,11 +1371,11 @@ void test_scheduler()
 
 // --------------------------------------------------------------------------------
 
-ptr_t add1234(ptr_t c, ptr_t x)
-{
-    return i8(ti8(x) + 1234);
-}
-
+// ptr_t add1234(ptr_t c, ptr_t x)
+// {
+    // return i8(ti8(x) + 1234);
+// }
+// 
 // void test_processor_graphs(string_t path)
 // {
 //     test_section("Processors");
@@ -1365,45 +1411,45 @@ ptr_t add1234(ptr_t c, ptr_t x)
 
 // --------------------------------------------------------------------------------
 
-ptr_t cont(ptr_t x)
-{
-    printf("Continuing...\n");
-    return x;
-}
-
-double f1(void *ct, int i, double t, double x)
-{
-    double pi  = 3.141592653589793;
-    double tau = 2 * pi;
-    double t0  = x;
-    // double t2  = t + x;
-    // t2 = t2;
-
-#define step(p) ((float)((int)fmod(t,p)%p))/p
-
-    switch (i) {
-    case 3:
-        return step(5);
-
-    case 2:
-        return -0.5 * cos(tau * t0 * 0.5 + pi);
-
-    case 1:
-        return  0.5 * cos(tau * t0 * 0.5 + pi);
-
-    case 0:
-        return  0.5 * cos(tau * t0 * 0.5 + pi) * sin(tau * t0 * 3);
-
-    default:
-        return 0;
-    }
-}
-
-void test_plot()
-{
-    test_section("Plot");
-    fa_plot_continous(f1, NULL, NULL, NULL);
-}
+// ptr_t cont(ptr_t x)
+// {
+//     printf("Continuing...\n");
+//     return x;
+// }
+// 
+// double f1(void *ct, int i, double t, double x)
+// {
+//     double pi  = 3.141592653589793;
+//     double tau = 2 * pi;
+//     double t0  = x;
+//     // double t2  = t + x;
+//     // t2 = t2;
+// 
+// #define step(p) ((float)((int)fmod(t,p)%p))/p
+// 
+//     switch (i) {
+//     case 3:
+//         return step(5);
+// 
+//     case 2:
+//         return -0.5 * cos(tau * t0 * 0.5 + pi);
+// 
+//     case 1:
+//         return  0.5 * cos(tau * t0 * 0.5 + pi);
+// 
+//     case 0:
+//         return  0.5 * cos(tau * t0 * 0.5 + pi) * sin(tau * t0 * 3);
+// 
+//     default:
+//         return 0;
+//     }
+// }
+// 
+// void test_plot()
+// {
+//     test_section("Plot");
+//     fa_plot_continous(f1, NULL, NULL, NULL);
+// }
 
 
 // --------------------------------------------------------------------------------
@@ -1558,26 +1604,7 @@ void test_regex()
 // }
 //
 
-// --------------------------------------------------------------------------------
-
-void print_audio_devices(audio_session_t session)
-{
-    fa_print("\n", NULL);
-    fa_print("    Listing audio devices: \n", NULL);
-    fa_for_each(x, fa_audio_all(session)) {
-        fa_print("        Device: %s\n", x);
-        fa_print("            Input:  %s\n", i32(fa_audio_input_channels(x)));
-        fa_print("            Output: %s\n", i32(fa_audio_output_channels(x)));
-    }
-    fa_print("    Default input is : %s\n", fa_audio_default_input(session));
-    fa_print("    Default output is : %s\n", fa_audio_default_output(session));
-    fa_print("\n", NULL);
-}
-
-
-// --------------------------------------------------------------------------------
-
-ptr_t status_changed(ptr_t ct)
+ptr_t test_audio_stream_status_changed(ptr_t ct)
 {
     printf("Status changed: %s!\n", unstring(ct));
     return 0;
@@ -1606,9 +1633,6 @@ void test_audio_stream()
         goto cleanup;
     }
 
-    // Session obtained, we can now access devices
-    print_audio_devices(session);
-
     input = fa_audio_default_input(session);
     output = fa_audio_default_output(session);
 
@@ -1622,7 +1646,7 @@ void test_audio_stream()
         goto cleanup;
     }
 
-    fa_audio_add_status_callback(status_changed, string("foobar"), session);
+    fa_audio_add_status_callback(test_audio_stream_status_changed, string("foobar"), session);
     fa_thread_sleep(3000);
 
 cleanup:
@@ -1719,7 +1743,7 @@ void test_midi_stream()
     }
 
     // TODO
-    // fa_midi_add_status_callback(status_changed, string("foobar"), session);
+    // fa_midi_add_status_callback(test_audio_stream_status_changed, string("foobar"), session);
 
     // event_t notes  =
     //     merge_event(later(divisions(1,10), midi(0x90, 48, 10)),
@@ -1777,7 +1801,7 @@ void test_midi_hotplug()
         goto cleanup;
     }
 
-    fa_midi_add_status_callback(status_changed, string("hello"), session);
+    fa_midi_add_status_callback(test_audio_stream_status_changed, string("hello"), session);
 
     // CFRunLoopRun();
     // fa_thread_sleep(20000);
@@ -1857,6 +1881,8 @@ int main(int argc, char const *argv[])
 
         fa_fa_initialize();
 
+        // test_atomic_ring_buffer(1024, 10000);
+
         // goto begin;
         test_value_references();
         test_generic_functions();
@@ -1910,8 +1936,7 @@ int main(int argc, char const *argv[])
 
         // test_version();
 
-// begin:
-        // test_midi_hotplug();
+        // test_midi_hotplug(); 
 
 // end:
         fa_fa_terminate();
