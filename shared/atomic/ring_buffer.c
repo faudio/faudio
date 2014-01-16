@@ -45,6 +45,11 @@ ring_buffer_t fa_atomic_ring_buffer_create(size_t size)
     b->last  = 0;                   // Next write, always < size
     b->count = 0;                   // Bytes written not yet read, always <= size
 
+    // if count == size, the buffer is full
+    // if count == 0,    the buffer is empty
+    // we can always read n bytes, where n == count
+    // we can always write n bytes, where n == (size-count)
+
     return b;
 }
 
@@ -61,10 +66,20 @@ size_t fa_atomic_ring_buffer_size(ring_buffer_t buffer)
     return buffer->size;
 }
 
+bool fa_atomic_ring_buffer_can_read(ring_buffer_t buffer, size_t n)
+{
+    return buffer->count >= n;
+}
+
+bool fa_atomic_ring_buffer_can_write(ring_buffer_t buffer, size_t n)
+{
+    return (buffer->count + n) <= buffer->size;
+}
+
 byte_t unsafe_read_byte(ring_buffer_t buffer)
 {
     byte_t x;
-    assert((buffer->count > 0) && "Underflow");
+    assert(fa_atomic_ring_buffer_can_read(buffer, 1) && "Underflow");
     {
         x = buffer->data[buffer->first];
         buffer->first = (buffer->first + 1) % buffer->size;
@@ -76,7 +91,7 @@ byte_t unsafe_read_byte(ring_buffer_t buffer)
 bool unsafe_write_byte(ring_buffer_t buffer,
                        byte_t value)
 {
-    assert((buffer->count < buffer->size) && "Overflow");
+    assert(fa_atomic_ring_buffer_can_write(buffer, 1) && "Overflow");
     {
         buffer->data[buffer->last] = value;
         buffer->last = (buffer->last + 1) % buffer->size;
