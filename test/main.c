@@ -553,7 +553,7 @@ fa_ptr_t ring_buffer_reader(fa_ptr_t x)
             return NULL;
         }
 
-        if (fa_atomic_ring_buffer_read(q, (uint8_t*) &v)) {
+        if (fa_atomic_ring_buffer_read(q, (uint8_t *) &v)) {
             printf("         |- %5d    \n", v);
         }
 
@@ -1878,7 +1878,7 @@ static const int  iterations_k = 1;
 static const bool stop_k       = false;
 
 static int  test_function_count = 0;
-static void (*test_function[2000]) ();
+static void (*test_function[2000])();
 #define add_test(name) test_function[test_function_count++] = test_##name
 
 // --------------------------------------------------------------------------------
@@ -1939,6 +1939,7 @@ int main(int argc, char const *argv[])
         for (int i = 0; i < test_function_count; ++i) {
             test_function[i]();
         }
+
 // end:
         fa_fa_terminate();
     }

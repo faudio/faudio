@@ -107,11 +107,11 @@ size_t fa_atomic_ring_buffer_read_many(byte_t *dst,
                                        ring_buffer_t src,
                                        size_t count)
 {
-    if (fa_atomic_ring_buffer_can_read(src, count))
-    {
+    if (fa_atomic_ring_buffer_can_read(src, count)) {
         for (size_t i = 0; i < count; ++i) {
             dst[i] = unsafe_read_byte(src);
         }
+
         return count;
     } else {
         return 0;
@@ -122,12 +122,12 @@ size_t fa_atomic_ring_buffer_write_many(ring_buffer_t dst,
                                         byte_t *src,
                                         size_t count)
 {
-    if (fa_atomic_ring_buffer_can_write(dst, count))
-    {
+    if (fa_atomic_ring_buffer_can_write(dst, count)) {
         for (size_t i = 0; i < count; ++i) {
             unsafe_write_byte(dst, src[i]);
         }
-        return count;        
+
+        return count;
     } else {
         return 0;
     }
@@ -135,17 +135,17 @@ size_t fa_atomic_ring_buffer_write_many(ring_buffer_t dst,
 
 
 
-bool fa_atomic_ring_buffer_read(fa_atomic_ring_buffer_t buffer, byte_t * value)
+bool fa_atomic_ring_buffer_read(fa_atomic_ring_buffer_t buffer, byte_t *value)
 {
     return fa_atomic_ring_buffer_read_many((byte_t *) value, buffer, sizeof(byte_t)) > 0;
 }
 
-bool fa_atomic_ring_buffer_read_float(fa_atomic_ring_buffer_t buffer, float * value)
+bool fa_atomic_ring_buffer_read_float(fa_atomic_ring_buffer_t buffer, float *value)
 {
     return fa_atomic_ring_buffer_read_many((byte_t *) value, buffer, sizeof(float)) > 0;
 }
 
-bool fa_atomic_ring_buffer_read_double(fa_atomic_ring_buffer_t buffer, double * value)
+bool fa_atomic_ring_buffer_read_double(fa_atomic_ring_buffer_t buffer, double *value)
 {
     return fa_atomic_ring_buffer_read_many((byte_t *) value, buffer, sizeof(double)) > 0;
 }
