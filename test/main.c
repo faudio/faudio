@@ -553,7 +553,7 @@ fa_ptr_t ring_buffer_reader(fa_ptr_t x)
             return NULL;
         }
 
-        if ((v = fa_atomic_ring_buffer_read(q))) {
+        if (fa_atomic_ring_buffer_read(q, (uint8_t*) &v)) {
             printf("         |- %5d    \n", v);
         }
 

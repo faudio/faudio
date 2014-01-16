@@ -134,43 +134,35 @@ size_t fa_atomic_ring_buffer_write_many(ring_buffer_t dst,
 }
 
 
-byte_t fa_atomic_ring_buffer_read(ring_buffer_t buffer)
+
+bool fa_atomic_ring_buffer_read(fa_atomic_ring_buffer_t buffer, byte_t * value)
 {
-    return unsafe_read_byte(buffer);
+    return fa_atomic_ring_buffer_read_many((byte_t *) value, buffer, sizeof(byte_t)) > 0;
 }
 
-bool fa_atomic_ring_buffer_write(ring_buffer_t buffer,
-                                 byte_t value)
+bool fa_atomic_ring_buffer_read_float(fa_atomic_ring_buffer_t buffer, float * value)
 {
-    return unsafe_write_byte(buffer, value);
+    return fa_atomic_ring_buffer_read_many((byte_t *) value, buffer, sizeof(float)) > 0;
 }
 
-float fa_atomic_ring_buffer_read_float(ring_buffer_t buffer)
+bool fa_atomic_ring_buffer_read_double(fa_atomic_ring_buffer_t buffer, double * value)
 {
-    float x;
-    fa_atomic_ring_buffer_read_many((byte_t *) &x, buffer, sizeof(x));
-    return x;
+    return fa_atomic_ring_buffer_read_many((byte_t *) value, buffer, sizeof(double)) > 0;
 }
 
-
-double fa_atomic_ring_buffer_read_double(ring_buffer_t  buffer)
+bool fa_atomic_ring_buffer_write(ring_buffer_t buffer, byte_t value)
 {
-    double x;
-    fa_atomic_ring_buffer_read_many((byte_t *) &x, buffer, sizeof(x));
-    return x;
+    return fa_atomic_ring_buffer_write_many(buffer, (byte_t *) &value, sizeof(byte_t)) > 0;
 }
 
-
-bool fa_atomic_ring_buffer_write_float(ring_buffer_t buffer,
-                                       float value)
+bool fa_atomic_ring_buffer_write_float(ring_buffer_t buffer, float value)
 {
-    return fa_atomic_ring_buffer_write_many(buffer, (byte_t *) &value, sizeof(value));
+    return fa_atomic_ring_buffer_write_many(buffer, (byte_t *) &value, sizeof(float)) > 0;
 }
 
-bool fa_atomic_ring_buffer_write_double(ring_buffer_t buffer,
-                                        double value)
+bool fa_atomic_ring_buffer_write_double(ring_buffer_t buffer, double value)
 {
-    return fa_atomic_ring_buffer_write_many(buffer, (byte_t *) &value, sizeof(value));
+    return fa_atomic_ring_buffer_write_many(buffer, (byte_t *) &value, sizeof(double)) > 0;
 }
 
 
