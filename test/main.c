@@ -432,7 +432,7 @@ fa_ptr_t test_atomic_queue_reader(fa_ptr_t x)
     }
 }
 
-void test_atomic_queue(int iter, long sleepTime)
+void test_atomic_queue_(int iter, long sleepTime)
 {
     test_section("Atomic queues");
     {
@@ -456,6 +456,13 @@ void test_atomic_queue(int iter, long sleepTime)
         fa_thread_join(t); // TODO how to kill?
         fa_destroy(q);
     }
+}
+
+void test_atomic_queue()
+{
+    test_atomic_queue_(5, 2);
+    test_atomic_queue_(10, 10);
+    test_atomic_queue_(50, 2);
 }
 
 
@@ -487,7 +494,7 @@ fa_ptr_t test_atomic_stack_reader(fa_ptr_t x)
     }
 }
 
-void test_atomic_stack(int iter, long sleepTime)
+void test_atomic_stack_(int iter, long sleepTime)
 {
     test_section("Atomic stacks");
     {
@@ -516,6 +523,10 @@ void test_atomic_stack(int iter, long sleepTime)
     }
 }
 
+void test_atomic_stack()
+{
+    test_atomic_stack(5, 2);
+}
 
 // --------------------------------------------------------------------------------
 
@@ -551,7 +562,7 @@ fa_ptr_t ring_buffer_reader(fa_ptr_t x)
     }
 }
 
-void test_atomic_ring_buffer(int iter, long sleepTime)
+void test_atomic_ring_buffer_(int iter, long sleepTime)
 {
     test_section("RingBuffer");
     {
@@ -578,6 +589,11 @@ void test_atomic_ring_buffer(int iter, long sleepTime)
         fa_thread_join(t);
         fa_destroy(q);
     }
+}
+
+void test_atomic_ring_buffer()
+{
+    test_atomic_ring_buffer(5, 2);
 }
 
 // --------------------------------------------------------------------------------
@@ -1861,11 +1877,14 @@ void test_version()
 static const int  iterations_k = 1;
 static const bool stop_k       = false;
 
+static int  test_function_count = 0;
+static void (*test_function[2000]) ();
+#define add_test(name) test_function[test_function_count++] = test_##name
+
 // --------------------------------------------------------------------------------
 
 int main(int argc, char const *argv[])
 {
-
     char *bits      = sizeof(void *) == 4 ? "32-bit" : "64-bit";
     printf("Fa %s v%s\n", bits, unstring(fa_fa_version_string()));
 
@@ -1884,63 +1903,42 @@ int main(int argc, char const *argv[])
 
         fa_fa_initialize();
 
-        // test_atomic_ring_buffer(1024, 10000);
-
-        // goto begin;
-        test_value_references();
-        test_generic_functions();
-        test_string();
-        test_show();
-        test_compare();
-        test_rational();
-        test_buffer();
-        test_time();
+        add_test(value_references);
+        add_test(generic_functions);
+        add_test(string);
+        add_test(show);
+        add_test(compare);
+        add_test(rational);
+        add_test(buffer);
+        add_test(time);
         // test_system_time();
         // test_type();
-        test_midi_message();
+        add_test(midi_message);
 
-        test_thread();
-        test_mutex();
+        add_test(thread);
+        add_test(mutex);
 
-        test_atomic();
-        test_atomic_queue(5, 2);
-        test_atomic_queue(10, 10);
-        test_atomic_queue(50, 2);
-        test_atomic_stack(5, 2);
-        // test_atomic_stack(10, 10);
-        // test_atomic_stack(300, 2);
-        test_atomic_ring_buffer(5, 2);
+        add_test(atomic);
+        // add_test(atomic_queue);
+        // add_test(atomic_stack);
+        // add_test(atomic_ring_buffer);
 
-        test_for_each();
-        test_list();
-        test_set();
-        test_map();
+        add_test(for_each);
+        add_test(list);
+        add_test(set);
+        add_test(map);
         // test_graph(string_dappend(fa_system_directory_current(), string("/test/gen.dot")));
-        test_priority_queue(10);
-        test_json(
-            string_dappend(fa_system_directory_current(), string("/test/example.json")));
+        // test_priority_queue(10);
+        // test_json(string_dappend(fa_system_directory_current(), string("/test/example.json")));
 
-        test_log();
-        test_error();
-        test_system_directory();
-        test_regex();
-        // test_plot(NULL, NULL);
-        // test_plot_buffer();
-        // test_plot_file(string_dappend(fa_system_directory_current(), string("/test/in.wav")));
+        add_test(log);
+        add_test(error);
+        add_test(system_directory);
+        add_test(regex);
 
-        // test_file_stream(
-        //     string_dappend(fa_system_directory_current(), string("/test/in.wav")),
-        //     string_dappend(fa_system_directory_current(), string("/test/out.wav")));
-        // test_buffer_stream();
-        // test_audio_stream();
-        // test_midi_stream();
-
-        // test_signal();
-
-        // test_version();
-
-        // test_midi_hotplug();
-
+        for (int i = 0; i < test_function_count; ++i) {
+            test_function[i]();
+        }
 // end:
         fa_fa_terminate();
     }
