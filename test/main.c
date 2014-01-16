@@ -525,7 +525,7 @@ void test_atomic_stack_(int iter, long sleepTime)
 
 void test_atomic_stack()
 {
-    test_atomic_stack(5, 2);
+    test_atomic_stack_(5, 2);
 }
 
 // --------------------------------------------------------------------------------
@@ -593,7 +593,7 @@ void test_atomic_ring_buffer_(int iter, long sleepTime)
 
 void test_atomic_ring_buffer()
 {
-    test_atomic_ring_buffer(5, 2);
+    test_atomic_ring_buffer_(5, 2);
 }
 
 // --------------------------------------------------------------------------------
@@ -1919,9 +1919,9 @@ int main(int argc, char const *argv[])
         add_test(mutex);
 
         add_test(atomic);
-        // add_test(atomic_queue);
-        // add_test(atomic_stack);
-        // add_test(atomic_ring_buffer);
+        add_test(atomic_queue);
+        add_test(atomic_stack);
+        add_test(atomic_ring_buffer);
 
         add_test(for_each);
         add_test(list);
