@@ -6,6 +6,7 @@
 #include <fa/pair.h>
 #include <fa/time.h>
 #include <fa/buffer.h>
+#include <fa/atomic/ring_buffer.h>
 
 /** @addtogroup FaSignal
 
@@ -154,14 +155,17 @@ typedef struct {
 
 /** Add a custom processor to be executed with the given signal.
     
-    A custom processor is simply a routine invoked on the audio thread during
-    audio startup, shutdown, when a message is received, or whehn the main audio 
-    callback is invoked, in which the processor can perform custom audio processing.
-    
-    Note that this does *not* affect signal input or output. The processing routine 
-    is expected to know which channels to use for input and output. Normally a custom
-    processor would be wrapped in a higher-level function which uses `fa_signal_input`
-    and `fa_signal_output` to read and write to the corresponding channels.
+    A custom processor is simply a routine invoked on the DSP thread. It has access
+    to current sampling rate, vector size and all input and output channels.
+    The *before* and *after* methods are invoked in non-realtime mode and may allocate
+    memory, perform I/O etc. The *receive* and *render* methods are invoked in realtime
+    mode, and the usual restrictions apply. If you need to do I/O or similar during 
+    processing, use the @ref fa_audio_add_input_output_callback instead.
+
+    Adding a custom processor to a signal does *not* affect its input or output, the
+    user must allocate dedicated buses for this purpose: normally a custom processor
+    would be wrapped in a higher-level function which uses `fa_signal_input` and
+    `fa_signal_output` to read and write to the corresponding channels.
     
     If a processor handles multichannel audio, simply add the processor to *one* of
     the output signals, implying that all channels of the output must always be used
@@ -262,7 +266,6 @@ fa_signal_t fa_signal_play(fa_buffer_t, fa_signal_t);
 /**
     Index a buffer at the given sample and returns the written value.
 
-
     @param buffer
         Buffer to write to.
     @param index
@@ -271,6 +274,13 @@ fa_signal_t fa_signal_play(fa_buffer_t, fa_signal_t);
         Value to write.
 */
 fa_signal_t fa_signal_record(fa_buffer_t, fa_signal_t, fa_signal_t);
+
+
+fa_signal_t fa_signal_play_stream(fa_atomic_ring_buffer_t);
+
+
+fa_signal_t fa_signal_record_stream(fa_atomic_ring_buffer_t,
+                                    fa_signal_t);
 
 /** Addition lifted to signals. 
 */

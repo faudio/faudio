@@ -1197,6 +1197,32 @@ fa_signal_t fa_signal_record(fa_buffer_t buffer, fa_signal_t i, fa_signal_t x)
     return fa_signal_lift2(string("record"), _record, buffer, i, x);
 }
 
+inline static double _play_stream(ptr_t buffer, double _)
+{
+    // Unmodified if underflowing
+    // TODO report
+    double x = 0; 
+    fa_atomic_ring_buffer_read_double(buffer, &x);
+    return x;
+}
+
+fa_signal_t fa_signal_play_stream(fa_atomic_ring_buffer_t buffer)
+{
+    return fa_signal_lift(string("playStream"), _play_stream, buffer, fa_signal_constant(0));
+}
+
+inline static double _record_stream(ptr_t buffer, double x)
+{
+    // Ignored if overflowing
+    // TODO report
+    fa_atomic_ring_buffer_write_double(buffer, x);
+    return x;
+}
+
+fa_signal_t fa_signal_record_stream(fa_atomic_ring_buffer_t buffer, fa_signal_t x)
+{
+    assert(false);
+}
 
 
 

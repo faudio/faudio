@@ -286,7 +286,7 @@ module Fa.Audio
             Experimental.
      */
     addMessageCallback : (MessageCallback, Ptr, Stream) -> Void;
-    
+
     /**
         Schedule an action on the stream.
         
