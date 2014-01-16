@@ -107,22 +107,30 @@ size_t fa_atomic_ring_buffer_read_many(byte_t *dst,
                                        ring_buffer_t src,
                                        size_t count)
 {
-    for (size_t i = 0; i < count; ++i) {
-        dst[i] = unsafe_read_byte(src);
+    if (fa_atomic_ring_buffer_can_read(src, count))
+    {
+        for (size_t i = 0; i < count; ++i) {
+            dst[i] = unsafe_read_byte(src);
+        }
+        return count;
+    } else {
+        return 0;
     }
-
-    return count;
 }
 
 size_t fa_atomic_ring_buffer_write_many(ring_buffer_t dst,
                                         byte_t *src,
                                         size_t count)
 {
-    for (size_t i = 0; i < count; ++i) {
-        unsafe_write_byte(dst, src[i]);
+    if (fa_atomic_ring_buffer_can_write(dst, count))
+    {
+        for (size_t i = 0; i < count; ++i) {
+            unsafe_write_byte(dst, src[i]);
+        }
+        return count;        
+    } else {
+        return 0;
     }
-
-    return count;
 }
 
 
