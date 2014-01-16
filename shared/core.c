@@ -443,8 +443,8 @@ bool fa_check(fa_ptr_t a)
     void T##_destroy(fa_ptr_t a)                                                    \
     {                                                                               \
         /* nothing to do */                                                         \
-    }                                                                               
-                                                                                    
+    }
+
 #define BOXED_WRAPPER_IMPL(T)                                                       \
     bool T##_equal(fa_ptr_t a, fa_ptr_t b)                                          \
     {                                                                               \
@@ -489,8 +489,8 @@ bool fa_check(fa_ptr_t a)
     void T##_destroy(fa_ptr_t a)                                                    \
     {                                                                               \
         fa_to_##T(a);                                                               \
-    }                                                                               
-                                                                                    
+    }
+
 #define UNBOXED_SHOW_IMPL(T,F)                                                      \
     fa_string_t T##_show(fa_ptr_t a)                                                \
     {                                                                               \
@@ -499,8 +499,8 @@ bool fa_check(fa_ptr_t a)
         n = snprintf(cs, 16, F, fa_to_##T(a));                                      \
         cs[n] = 0; /* terminate */                                                  \
         return fa_string_from_utf8(cs);                                             \
-    }                                                                               
-                                                                                    
+    }
+
 #define BOXED_SHOW_IMPL(T,F)                                                        \
     fa_string_t T##_show(fa_ptr_t a)                                                \
     {                                                                               \

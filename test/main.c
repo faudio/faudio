@@ -541,9 +541,11 @@ fa_ptr_t ring_buffer_reader(fa_ptr_t x)
         if (!tb(fa_atomic_get(a))) {
             return NULL;
         }
+
         if ((v = fa_atomic_ring_buffer_read(q))) {
             printf("         |- %5d    \n", v);
         }
+
         srand(time(NULL));
         fa_thread_sleep(rand() % 100);
     }
@@ -566,6 +568,7 @@ void test_atomic_ring_buffer(int iter, long sleepTime)
             if (i % 10) {
                 fa_thread_sleep(rand() % 100);
             }
+
             fa_atomic_ring_buffer_write(q, i);
             printf("  %5d -|  \n", i);
         }
@@ -1373,9 +1376,9 @@ void test_scheduler()
 
 // ptr_t add1234(ptr_t c, ptr_t x)
 // {
-    // return i8(ti8(x) + 1234);
+// return i8(ti8(x) + 1234);
 // }
-// 
+//
 // void test_processor_graphs(string_t path)
 // {
 //     test_section("Processors");
@@ -1416,7 +1419,7 @@ void test_scheduler()
 //     printf("Continuing...\n");
 //     return x;
 // }
-// 
+//
 // double f1(void *ct, int i, double t, double x)
 // {
 //     double pi  = 3.141592653589793;
@@ -1424,27 +1427,27 @@ void test_scheduler()
 //     double t0  = x;
 //     // double t2  = t + x;
 //     // t2 = t2;
-// 
+//
 // #define step(p) ((float)((int)fmod(t,p)%p))/p
-// 
+//
 //     switch (i) {
 //     case 3:
 //         return step(5);
-// 
+//
 //     case 2:
 //         return -0.5 * cos(tau * t0 * 0.5 + pi);
-// 
+//
 //     case 1:
 //         return  0.5 * cos(tau * t0 * 0.5 + pi);
-// 
+//
 //     case 0:
 //         return  0.5 * cos(tau * t0 * 0.5 + pi) * sin(tau * t0 * 3);
-// 
+//
 //     default:
 //         return 0;
 //     }
 // }
-// 
+//
 // void test_plot()
 // {
 //     test_section("Plot");
@@ -1936,7 +1939,7 @@ int main(int argc, char const *argv[])
 
         // test_version();
 
-        // test_midi_hotplug(); 
+        // test_midi_hotplug();
 
 // end:
         fa_fa_terminate();
