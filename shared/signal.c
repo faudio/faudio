@@ -1197,14 +1197,27 @@ fa_signal_t fa_signal_record(fa_buffer_t buffer, fa_signal_t i, fa_signal_t x)
     return fa_signal_lift2(string("record"), _record, buffer, i, x);
 }
 
+static bool play_started = false; // TODO debug
 inline static double _play_stream(ptr_t buffer, double _)
 {
+    double fa_atomic_ring_buffer_filled(fa_atomic_ring_buffer_t buffer);
+
     // Unmodified if underflowing
     // TODO report
-    double x = 0; 
-    bool res = fa_atomic_ring_buffer_read_double(buffer, &x);
-    if (!res) warn(string("U"));
-    mark_used(res);
+    double x = 0;
+
+    // if (play_started || (fa_atomic_ring_buffer_filled(buffer) > 1)) {
+    {
+        play_started = true;
+        bool res = fa_atomic_ring_buffer_read_double(buffer, &x);
+
+        if (!res) {
+            // warn(string("U"));
+        }
+
+        mark_used(res);
+    }
+
     return x;
 }
 
@@ -1219,7 +1232,11 @@ inline static double _record_stream(ptr_t buffer, double x)
     // TODO report
     bool res = fa_atomic_ring_buffer_write_double(buffer, x);
     mark_used(res);
-    if (!res) warn(string("O"));
+
+    if (!res) {
+        // warn(string("O"));
+    }
+
     return x;
 }
 
