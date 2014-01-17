@@ -66,6 +66,16 @@ size_t fa_atomic_ring_buffer_size(ring_buffer_t buffer)
     return buffer->size;
 }
 
+size_t fa_atomic_ring_buffer_used(ring_buffer_t buffer)
+{
+    return buffer->count;
+}
+
+double fa_atomic_ring_buffer_filled(ring_buffer_t buffer)
+{
+    return (double) buffer->count / (double) buffer->size;
+}
+
 bool fa_atomic_ring_buffer_can_read(ring_buffer_t buffer, size_t n)
 {
     return buffer->count >= n;
@@ -127,6 +137,7 @@ size_t fa_atomic_ring_buffer_write_many(ring_buffer_t dst,
         for (size_t i = 0; i < count; ++i) {
             unsafe_write_byte(dst, src[i]);
         }
+
         return count;
     } else {
         // printf("Overflow: count=%zu, size=%zu\n", dst->count, dst->size);
