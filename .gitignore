@@ -31,3 +31,5 @@ misc
 bindings/lisp/fa.lisp
 bindings/lisp/fa/*
 stop-server.sh
+
+*.raw
