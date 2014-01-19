@@ -33,7 +33,7 @@ $DLLS
     rm -rf distribute
     mkdir -p distribute
     mkdir -p distribute/bin
-    mkdir -p distribute/lib
+    # mkdir -p distribute/lib
     mkdir -p distribute/include
     mkdir -p distribute/bindings
 
