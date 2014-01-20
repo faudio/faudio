@@ -84,12 +84,13 @@ int main(int argc, char const *argv[])
     BUFFER = ring_buffer((8L * 44100L * BUFFER_SIZE_MILLIS) / 1000L);
 
     signal_t left = fa_multiply(fa_signal_play_stream(BUFFER), constant(0.8));
-    signal_t right = fa_multiply(fa_signal_random(),constant(0.0));
+    signal_t right = fa_multiply(fa_signal_random(), constant(0.0));
 
     fa_with_session_(session) {
         fa_with_default_devices(input, output, session) {
             fa_audio_set_parameter(string("sample-rate"), f64(44100), session);
             fa_audio_stream_t stream;
+
             if (fa_check(stream = fa_audio_open_output(input, output, list(left, right)))) {
                 fa_error_log(stream, NULL);
             } else {

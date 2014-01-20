@@ -20,10 +20,16 @@ list_t just(ptr_t x, list_t xs)
     return x;
 }
 
-ptr_t before_(ptr_t x, fa_signal_state_t *state) { return x; }
-ptr_t after_(ptr_t x, fa_signal_state_t *state) { return x; }
+ptr_t before_(ptr_t x, fa_signal_state_t *state)
+{
+    return x;
+}
+ptr_t after_(ptr_t x, fa_signal_state_t *state)
+{
+    return x;
+}
 ptr_t render_(ptr_t x, fa_signal_state_t *state)
-{ 
+{
     if (!kVectorMode) {
         state->buffer[(kThisPlugOffset + 0)*kMaxVectorSize] = should_click;
         state->buffer[(kThisPlugOffset + 1)*kMaxVectorSize] = should_click;
@@ -35,6 +41,7 @@ ptr_t render_(ptr_t x, fa_signal_state_t *state)
             should_click = false;
         }
     }
+
     return x;
 }
 
@@ -42,7 +49,7 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     printf("Click!\n");
     should_click = true;
-    return x; 
+    return x;
 }
 
 pair_t fa_signal_clicks()
@@ -54,7 +61,7 @@ pair_t fa_signal_clicks()
     proc->receive = receive_;
     proc->data    = NULL;
 
-    return pair(fa_signal_custom(proc, fa_signal_input(kThisPlugOffset+0)), fa_signal_input(kThisPlugOffset+1));
+    return pair(fa_signal_custom(proc, fa_signal_input(kThisPlugOffset + 0)), fa_signal_input(kThisPlugOffset + 1));
 }
 
 void run_clicks()

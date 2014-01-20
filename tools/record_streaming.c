@@ -16,14 +16,14 @@
 
     VorbisBlock
         Used to perform actual analysis (side effect that alters DSP)
-        
+
         vorbis_analysis
         vorbis_bitrate_addblock
 
     VorbisDSP
         vorbis_analysis_buffer              Get buffer to write data (array of float arrays, i.e. non-interleaved)
         vorbis_analysis_wrote               Handle data written into buffer (if any).
-        
+
         vorbis_analysis_headerout           Get the 3 header packets.
         vorbis_analysis_blockout            Get an analysis block (see above, not necessarily packets)
         vorbis_bitrate_flushpacket          Get packet from analysis.
