@@ -33,3 +33,4 @@ bindings/lisp/fa/*
 stop-server.sh
 
 *.raw
+*.ogg
