@@ -12,6 +12,8 @@
 typedef fa_atomic_ring_buffer_t ring_buffer_t;
 #define ring_buffer(size) fa_atomic_ring_buffer_create(size)
 
+#define BUFFER_SIZE_SECS 1
+
 static ring_buffer_t BUFFER;
 
 size_t _write(char *ptr, size_t size, size_t nmemb, void *userdata)
@@ -27,6 +29,10 @@ size_t _write(char *ptr, size_t size, size_t nmemb, void *userdata)
             written_bytes++;
         } else {
             // We always want to do this
+
+            // Overflows are OK, audio is simply retained in curl buffers
+            // until we are ready to receive it in the ring buffer (which is
+            // BUFFER_SIZE_SECS before playback)
             continue;
         }
     }
@@ -78,7 +84,7 @@ int main(int argc, char const *argv[])
 {
     fa_fa_set_log_std();
     fa_fa_initialize();
-    BUFFER = ring_buffer(8 * 44100 * 1);
+    BUFFER = ring_buffer(8 * 44100 * BUFFER_SIZE_SECS);
 
     signal_t left = fa_multiply(fa_signal_play_stream(BUFFER), constant(0.8));
     signal_t right = fa_multiply(fa_signal_random(),constant(0.0));
