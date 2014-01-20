@@ -20,20 +20,14 @@ size_t _write(char *ptr, size_t size, size_t nmemb, void *userdata)
     // printf("Received %f seconds\n", ((float)size*(float)nmemb)/44100);
     size_t received_bytes = size * nmemb;
     size_t written_bytes = 0;
-    int    attempts      = 0;
-    mark_used(attempts);
 
     // fa_thread_sleep(50);
     while (written_bytes < received_bytes) {
         if (fa_atomic_ring_buffer_write(BUFFER, ptr[written_bytes])) {
             written_bytes++;
         } else {
-            // if (attempts++ < 100) {
-                // fa_thread_sleep(100);
-                continue;
-            // } else {
-                // return -1; // fail
-            // }
+            // We always want to do this
+            continue;
         }
     }
 
@@ -84,7 +78,7 @@ int main(int argc, char const *argv[])
 {
     fa_fa_set_log_std();
     fa_fa_initialize();
-    BUFFER = ring_buffer(8 * 44100 * 5);
+    BUFFER = ring_buffer(8 * 44100 * 1);
 
     signal_t left = fa_multiply(fa_signal_play_stream(BUFFER), constant(0.8));
     signal_t right = fa_multiply(fa_signal_random(),constant(0.0));
@@ -93,7 +87,7 @@ int main(int argc, char const *argv[])
         fa_with_default_devices(input, output, session) {
             fa_audio_set_parameter(string("sample-rate"), f64(44100), session);
             fa_audio_stream_t stream;
-            if (fa_check(stream = stream = fa_audio_open_output(input, output, list(left, right)))) {
+            if (fa_check(stream = fa_audio_open_output(input, output, list(left, right)))) {
                 fa_error_log(stream, NULL);
             } else {
                 request_audio();
