@@ -18,6 +18,7 @@ function(add_tool name)
   add_tool2(${name} c)
 endfunction()
 
+add_tool(options)
 add_tool(list_audio)
 add_tool(list_midi)
 add_tool(plug_midi)
