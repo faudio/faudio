@@ -40,7 +40,7 @@ ptr_t render_(ptr_t x, fa_signal_state_t *state)
 
 ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
-    printf("Hello!\n");
+    printf("Click!\n");
     should_click = true;
     return x; 
 }
