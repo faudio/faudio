@@ -139,7 +139,7 @@ typedef fa_ptr_t fa_signal_message_t;
 
 
 typedef struct {
-            double * inputs; fa_ptr_t dummy; int count; double rate;
+            double * buffer; fa_ptr_t dummy; int count; double rate;
         } fa_signal_state_t;
 
 

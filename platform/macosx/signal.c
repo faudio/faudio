@@ -54,16 +54,16 @@ ptr_t render_(ptr_t x, fa_signal_state_t *state)
             au_render(context, state->count, NULL);
         }
 
-        state->inputs[(kAUOffset + 0)*kMaxVectorSize] = context->outputs[kAUVectorSize * 0 + (state->count % kAUVectorSize)];
-        state->inputs[(kAUOffset + 1)*kMaxVectorSize] = context->outputs[kAUVectorSize * 1 + (state->count % kAUVectorSize)];
+        state->buffer[(kAUOffset + 0)*kMaxVectorSize] = context->outputs[kAUVectorSize * 0 + (state->count % kAUVectorSize)];
+        state->buffer[(kAUOffset + 1)*kMaxVectorSize] = context->outputs[kAUVectorSize * 1 + (state->count % kAUVectorSize)];
 
         return x;
     } else {
         au_render(context, state->count, NULL);
 
         for (int i = 0; i < kAUVectorSize; ++i) {
-            state->inputs[(kAUOffset + 0)*kMaxVectorSize + i] = context->outputs[kAUVectorSize * 0 + i];
-            state->inputs[(kAUOffset + 1)*kMaxVectorSize + i] = context->outputs[kAUVectorSize * 1 + i];
+            state->buffer[(kAUOffset + 0)*kMaxVectorSize + i] = context->outputs[kAUVectorSize * 0 + i];
+            state->buffer[(kAUOffset + 1)*kMaxVectorSize + i] = context->outputs[kAUVectorSize * 1 + i];
         }
 
         return x;

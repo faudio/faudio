@@ -61,8 +61,8 @@ ptr_t render_(ptr_t x, fa_signal_state_t *state)
         }
 
         for (int i = 0; i < kMaxVectorSize; ++i) {
-            state->inputs[(kFluidOffset + 0)*kMaxVectorSize + i] = left[i];
-            state->inputs[(kFluidOffset + 1)*kMaxVectorSize + i] = right[i];
+            state->buffer[(kFluidOffset + 0)*kMaxVectorSize + i] = left[i];
+            state->buffer[(kFluidOffset + 1)*kMaxVectorSize + i] = right[i];
         }
 
         return x;

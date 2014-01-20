@@ -28,7 +28,7 @@ ptr_t after_(ptr_t x, fa_signal_state_t *state)
 ptr_t render_(ptr_t x, fa_signal_state_t *state)
 {
     // printf("Render!\n");
-    state->inputs[32] = 0.01 * (state->count / state->rate);
+    state->buffer[32] = 0.01 * (state->count / state->rate);
     return x;
 }
 ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)

@@ -118,7 +118,7 @@ module Fa.Signal
     type Message = Ptr;
 
     type State = struct {
-        inputs : Double*,
+        buffer : Double*,
         dummy  : Ptr,
         count  : Int,
         rate   : Double
