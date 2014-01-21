@@ -51,7 +51,8 @@ c:
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Signal.module  			>include/fa/signal.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Audio.module    		>include/fa/audio.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Midi.module    			>include/fa/midi.h && \
-	$(MODULO) -Mmodules --language=c    <modules/Fa/Option.module    		>include/fa/option.h
+	$(MODULO) -Mmodules --language=c    <modules/Fa/Option.module    		>include/fa/option.h && \
+	$(MODULO) -Mmodules --language=c    <modules/Fa/Io.module    			>include/fa/io.h
 
 lisp: fix-lisp
 gen-lisp:

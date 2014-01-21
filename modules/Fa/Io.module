@@ -1,0 +1,30 @@
+
+/**
+    @since
+        2.9
+ */
+module Fa.Io
+{
+    import Fa;
+    import Fa.Buffer;
+
+    type SourceInterface = struct {
+        read : ((Ptr, Buffer) -> Void)*,
+        more : (Ptr -> Bool)*
+    };                 
+
+    type SinkInterface = struct {
+        write : ((Ptr, Buffer) -> Void)*,
+        close : (Ptr -> Void)*
+    };                 
+
+    type Source = opaque;
+    type Sink = opaque;
+
+    read : (Source, Buffer) -> Void;
+    more : Source -> Bool;
+    write : (Sink, Buffer) -> Void;
+    close : Sink -> Void;
+
+}
+
