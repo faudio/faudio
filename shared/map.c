@@ -211,6 +211,21 @@ fa_map_t fa_map_map(unary_t func, ptr_t data, fa_map_t map)
     return result;
 }
 
+fa_map_t fa_map_sum(fa_map_t a, fa_map_t b)
+{
+    return new_map(fa_set_sum(a->entries, b->entries));
+}
+
+fa_map_t fa_map_intersection(fa_map_t a, fa_map_t b)
+{
+    return new_map(fa_set_sum(a->entries, b->entries));
+}
+
+fa_map_t fa_map_difference(fa_map_t a, fa_map_t b)
+{
+    return new_map(fa_set_sum(a->entries, b->entries));
+}
+
 
 
 // --------------------------------------------------------------------------------
