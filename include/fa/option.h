@@ -57,10 +57,17 @@ typedef struct {
             fa_ptr_t (* parser)(char *);
         } fa_option_t;
 
-
+/** Parse options according to the given specification (see example above).
+    
+    @returns
+        A pair where the first component is a @ref fa_map_t of `(name, value)`
+        pairs, and the second component is a list of remaning arguments.    
+    
+*/
 fa_pair_t fa_option_parse(int, fa_option_t [1], int, char * *);
 
-
+/** Show options according to the given specification (see example above) on the standard output.
+*/
 void fa_option_show(int, fa_option_t [1], char *);
 
 
