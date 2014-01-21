@@ -1,0 +1,26 @@
+
+/**
+    Basic options parser.
+ */
+module Fa.Option
+{
+    import Fa;
+    import Fa.Std;
+    import Fa.String;
+    import Fa.Pair;
+
+    type Option = struct {
+        shortName   : Char*,
+        longName    : Char*,
+        description : Char*,
+        parser      : (Char * -> Ptr)*
+    };
+
+    parse   : (Int, [Option x 1], Int, Char**) -> Ptr;
+    show    : (Int, [Option x 1], Char*) -> Void;
+    parseInt       : (Char *)            -> Ptr;
+    parseFloat     : (Char *)            -> Ptr;
+    parseDouble    : (Char *)            -> Ptr;
+    parseString    : (Char *)            -> Ptr;
+    parseFail      : (Char *)            -> Ptr;    
+}
