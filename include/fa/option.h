@@ -24,15 +24,14 @@ fa_option_t options[] = {
 
 int main(int argc, char const *argv[])
 {
-    fa_option_show(
-        sizeof(options) / sizeof(fa_option_t), options,
+    fa_option_show_all(
+        options,
         "Usage: fa_options\n"
         "       fa_options [FILES]\n"
-    );
+        );
                 
-    
     fa_unpair(
-        fa_option_parse(sizeof(options) / sizeof(fa_option_t), options, argc, (char**) argv), 
+        fa_option_parse_all(options, argc, (char**) argv), 
         options,
         arguments
         ) 
