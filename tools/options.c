@@ -33,7 +33,11 @@ int main(int argc, char const *argv[])
                  "       fa_options [FILES]\n"
                 );
 
-    fa_unpair(fa_option_parse_all(options, argc, (char**) argv), os, as) {
+    fa_unpair(
+        fa_option_parse_all(options, argc, (char**) argv), 
+        os, as
+    ) 
+    {
         fa_print_ln(fa_map_sum(
             // map(string("foo"), i32(7)), 
             fa_string_from_json(string("{\"foo\":7, \"bar\":false}")), 

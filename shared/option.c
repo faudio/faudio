@@ -10,8 +10,8 @@ pair_t maybe_parse(int optc, opt_t optv[], const char *short_name, const char *l
 {
     for (int i = 0; i < optc; i++) {
         opt_t option = optv[i];
-        printf("? %s %s\n", short_name, option.short_name);
-        printf("? %s %s\n", long_name, option.long_name);
+        // printf("? %s %s\n", short_name, option.short_name);
+        // printf("? %s %s\n", long_name, option.long_name);
 
         if (
             (short_name && !strcmp(short_name, option.short_name))
@@ -50,7 +50,6 @@ pair_t fa_option_parse(int optc, fa_option_t optv[1], int argc, char *argv[])
             }
         }
 
-        // TODO on last ?
         if (i == argc || elem_type != value) {
             if (prev_elem_type == short_name) {
                 string_t name = string((char *) argv[i - 1] + 1);
