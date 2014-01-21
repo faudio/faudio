@@ -30,7 +30,7 @@ pair_t maybe_parse(int optc, opt_t optv[], const char *short_name, const char *l
     return NULL;
 }
 
-ptr_t fa_option_parse(int optc, fa_option_t optv[1], int argc, char *argv[])
+pair_t fa_option_parse(int optc, fa_option_t optv[1], int argc, char *argv[])
 {
     list_t anon_args = empty();
     map_t args = fa_map_empty();
@@ -91,5 +91,12 @@ void fa_option_show(int optc, opt_t optv[], char *header)
     printf("\n");
 }
 
+
+
+ptr_t fa_option_parse_int(char *x)    { int r; sscanf(x, "%i", &r); return i32(r); }
+ptr_t fa_option_parse_float(char *x)  { int r; sscanf(x, "%f", &r); return f32(r); }
+ptr_t fa_option_parse_double(char *x) { int r; sscanf(x, "%lf", &r); return f64(r); }
+ptr_t fa_option_parse_string(char *x) { return string(x); }
+ptr_t fa_option_parse_fail(char *x)   { return NULL; }
 
 
