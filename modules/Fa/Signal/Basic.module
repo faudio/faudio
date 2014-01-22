@@ -1,0 +1,19 @@
+
+/**
+    Provides signals.
+
+    @par Implements
+    - fa_copy_t
+    - fa_string_show_t
+    - fa_number_t
+    - fa_destroy_t
+    
+ */
+module Fa.Signal.Basic
+{
+    import Fa;    
+    import Fa.Pair;
+    import Fa.Time;
+    import Fa.Buffer;
+    import Fa.Atomic.RingBuffer;
+}

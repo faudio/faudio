@@ -29,11 +29,11 @@
 
     int main (int argc, char const *argv[])
     {
-        fa_fa_initialize();
+        fa_initialize();
 
         ...
 
-        fa_fa_terminate();
+        fa_terminate();
         return 0;
     }
     ~~~~
@@ -58,8 +58,8 @@ fa_string_t fa_version_string();
 /** Performs global initialization.
 
     This function must be called exactly once before any other function in the library.
-    A call to fa_fa_terminate() will reset the global state so that
-    fa_fa_initialize() may be called again and so on.
+    A call to fa_terminate() will reset the global state so that
+    fa_initialize() may be called again and so on.
 */
 void fa_initialize();
 

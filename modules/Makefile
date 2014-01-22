@@ -22,6 +22,7 @@ c:
 	mkdir -p include/fa/processor/external
 	mkdir -p include/fa/string
 	mkdir -p include/fa/system
+	mkdir -p include/fa/signal
 	mkdir -p include/fa/thread
 	$(MODULO) -Mmodules --language=c    <modules/Fa.module    			>include/fa.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Fa.module    			>include/fa/fa.h && \
@@ -52,6 +53,11 @@ c:
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Clock.module    		>include/fa/clock.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Action.module  			>include/fa/action.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Signal.module  			>include/fa/signal.h && \
+	$(MODULO) -Mmodules --language=c    <modules/Fa/Signal/Analysis.module  			>include/fa/signal/analysis.h && \
+	$(MODULO) -Mmodules --language=c    <modules/Fa/Signal/Filter.module  			>include/fa/signal/filter.h && \
+	$(MODULO) -Mmodules --language=c    <modules/Fa/Signal/Synths.module  			>include/fa/signal/synth.h && \
+	$(MODULO) -Mmodules --language=c    <modules/Fa/Signal/External.module  			>include/fa/signal/external.h && \
+	$(MODULO) -Mmodules --language=c    <modules/Fa/Signal/Basic.module  			>include/fa/signal/basic.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Audio.module    		>include/fa/audio.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Audio/Session.module		>include/fa/audio/session.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Audio/Device.module    		>include/fa/audio/device.h && \
