@@ -83,7 +83,7 @@ void fa_action_destroy(fa_action_t action);
         Value to set.
 */
 fa_action_t fa_action_set(fa_action_channel_t channel,
-                          double double);
+                          double double_);
 
 /** The `accum` action updates a single global bus by applying
     a function to its previous value.

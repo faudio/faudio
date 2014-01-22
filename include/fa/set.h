@@ -86,22 +86,22 @@ bool fa_set_has(fa_ptr_t ptr, fa_set_t set);
 fa_ptr_t fa_set_get(fa_ptr_t ptr, fa_set_t set);
 
 
-bool fa_set_is_subset_of(fa_set_t set, fa_set_t set);
+bool fa_set_is_subset_of(fa_set_t set, fa_set_t set_);
 
 
-bool fa_set_is_proper_subset_of(fa_set_t set, fa_set_t set);
+bool fa_set_is_proper_subset_of(fa_set_t set, fa_set_t set_);
 
 
-fa_set_t fa_set_sum(fa_set_t set, fa_set_t set);
+fa_set_t fa_set_sum(fa_set_t set, fa_set_t set_);
 
 
-fa_set_t fa_set_intersection(fa_set_t set, fa_set_t set);
+fa_set_t fa_set_intersection(fa_set_t set, fa_set_t set_);
 
 
-fa_set_t fa_set_difference(fa_set_t set, fa_set_t set);
+fa_set_t fa_set_difference(fa_set_t set, fa_set_t set_);
 
 
-fa_set_t fa_set_product(fa_set_t set, fa_set_t set);
+fa_set_t fa_set_product(fa_set_t set, fa_set_t set_);
 
 
 fa_set_t fa_set_from_list(fa_list_t list);

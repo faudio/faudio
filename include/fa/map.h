@@ -99,19 +99,19 @@ bool fa_map_has_elem(fa_ptr_t ptr, fa_map_t map);
 bool fa_map_has_entry(fa_pair_t pair, fa_map_t map);
 
 
-bool fa_map_is_submap_of(fa_map_t map, fa_map_t map);
+bool fa_map_is_submap_of(fa_map_t map, fa_map_t map_);
 
 
-bool fa_map_is_proper_submap_of(fa_map_t map, fa_map_t map);
+bool fa_map_is_proper_submap_of(fa_map_t map, fa_map_t map_);
 
 
-fa_map_t fa_map_sum(fa_map_t map, fa_map_t map);
+fa_map_t fa_map_sum(fa_map_t map, fa_map_t map_);
 
 
-fa_map_t fa_map_product(fa_map_t map, fa_map_t map);
+fa_map_t fa_map_product(fa_map_t map, fa_map_t map_);
 
 
-fa_map_t fa_map_difference(fa_map_t map, fa_map_t map);
+fa_map_t fa_map_difference(fa_map_t map, fa_map_t map_);
 
 
 fa_map_t fa_map_map(fa_unary_t unary, fa_ptr_t ptr, fa_map_t map);

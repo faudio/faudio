@@ -62,7 +62,7 @@ void fa_atomic_destroy(fa_atomic_t atomic);
 */
 bool fa_atomic_exchange(fa_atomic_t atomic,
                         fa_ptr_t ptr,
-                        fa_ptr_t ptr);
+                        fa_ptr_t ptr_);
 
 /** Return the current value of the given atomic reference.
     @par Atomicity

@@ -70,7 +70,7 @@ fa_signal_t fa_signal_random();
         Constant value.
     @par Semantic $$y(c)(t) = c$$.
 */
-fa_signal_t fa_signal_constant(double double);
+fa_signal_t fa_signal_constant(double double_);
 
 /**
     Returns a signal that applies the given function to output of the given signal.
@@ -111,7 +111,7 @@ fa_signal_t fa_signal_lift2(fa_string_t string,
                             fa_signal_binary_double_t binaryDouble,
                             fa_ptr_t ptr,
                             fa_signal_t signal,
-                            fa_signal_t signal);
+                            fa_signal_t signal_);
 
 /**
     Returns a signal that closes over the given signal function in a feedback loop.
@@ -130,7 +130,7 @@ fa_signal_t fa_signal_loop(fa_signal_unary_signal_t unarySignal,
     @par Semantic $$y(n,a)(t) = \\begin{cases} 0 & \mbox{if} (t-n) < 0   \\\\   a(t-n) & \mbox{if} (t-n) \\geq 0 \\end{cases}$$.
 
 */
-fa_signal_t fa_signal_delay(int int, fa_signal_t signal);
+fa_signal_t fa_signal_delay(int int_, fa_signal_t signal);
 
 
 typedef fa_string_t fa_signal_name_t;
@@ -182,26 +182,28 @@ fa_signal_t fa_signal_custom(fa_signal_custom_processor_t *,
 
 /** The primitive input signal, reading from the bus of the given number.
 */
-fa_signal_t fa_signal_input(int int);
+fa_signal_t fa_signal_input(int int_);
 
 /** The primitive output signal, writing to the bus of the given number
     and returning the written value.
 */
-fa_signal_t fa_signal_output(int int, int int, fa_signal_t signal);
+fa_signal_t fa_signal_output(int int_,
+                             int int__,
+                             fa_signal_t signal);
 
 /** Returns a signal that evaluates both of the given signal, and the result of the first.
 */
 fa_signal_t fa_signal_former(fa_signal_t signal,
-                             fa_signal_t signal);
+                             fa_signal_t signal_);
 
 /** Returns a signal that evaluates both of the given signal, and returns the result of the second.
 */
 fa_signal_t fa_signal_latter(fa_signal_t signal,
-                             fa_signal_t signal);
+                             fa_signal_t signal_);
 
 /** Run the given signal for *n* samples, printing the values to `stdout`.
 */
-void fa_signal_print(int int, fa_list_t list, fa_signal_t signal);
+void fa_signal_print(int int_, fa_list_t list, fa_signal_t signal);
 
 /** Run the given signal for *n* samples, writing the results to the given buffer.
 
@@ -217,7 +219,7 @@ void fa_signal_print(int int, fa_list_t list, fa_signal_t signal);
     @param buffer
         Buffer to receive result.
 */
-void fa_signal_run(int int,
+void fa_signal_run(int int_,
                    fa_list_t list,
                    fa_signal_t signal,
                    double *);
@@ -233,7 +235,7 @@ void fa_signal_run(int int,
     @param signal
         Signal to run.
 */
-fa_buffer_t fa_signal_run_buffer(int int,
+fa_buffer_t fa_signal_run_buffer(int int_,
                                  fa_list_t list,
                                  fa_signal_t signal);
 
@@ -249,7 +251,7 @@ fa_buffer_t fa_signal_run_buffer(int int,
     @param path
         Name of file to write.
 */
-fa_ptr_t fa_signal_run_file(int int,
+fa_ptr_t fa_signal_run_file(int int_,
                             fa_list_t list,
                             fa_signal_t signal,
                             fa_string_t string);
@@ -283,7 +285,7 @@ fa_signal_t fa_signal_play(fa_buffer_t buffer, fa_signal_t signal);
 */
 fa_signal_t fa_signal_record(fa_buffer_t buffer,
                              fa_signal_t signal,
-                             fa_signal_t signal);
+                             fa_signal_t signal_);
 
 
 fa_signal_t fa_signal_play_stream(fa_atomic_ring_buffer_t ringBuffer);
@@ -294,31 +296,32 @@ fa_signal_t fa_signal_record_stream(fa_atomic_ring_buffer_t ringBuffer,
 
 /** Addition lifted to signals. 
 */
-fa_signal_t fa_signal_add(fa_signal_t signal, fa_signal_t signal);
+fa_signal_t fa_signal_add(fa_signal_t signal, fa_signal_t signal_);
 
 /** Subtraction lifted to signals. 
 */
 fa_signal_t fa_signal_subtract(fa_signal_t signal,
-                               fa_signal_t signal);
+                               fa_signal_t signal_);
 
 /** Multiplication lifted to signals. 
 */
 fa_signal_t fa_signal_multiply(fa_signal_t signal,
-                               fa_signal_t signal);
+                               fa_signal_t signal_);
 
 /** The exponential function lifted to signals. 
 */
-fa_signal_t fa_signal_power(fa_signal_t signal, fa_signal_t signal);
+fa_signal_t fa_signal_power(fa_signal_t signal,
+                            fa_signal_t signal_);
 
 /** Division function lifted to signals. 
 */
 fa_signal_t fa_signal_divide(fa_signal_t signal,
-                             fa_signal_t signal);
+                             fa_signal_t signal_);
 
 /** The modulo function lifted to signals. 
 */
 fa_signal_t fa_signal_modulo(fa_signal_t signal,
-                             fa_signal_t signal);
+                             fa_signal_t signal_);
 
 /** The absolute value of a signal. 
 */
@@ -330,40 +333,41 @@ fa_signal_t fa_signal_not();
 
 /** Logical *and* of two signals, treating 0 as false and all other values as true. 
 */
-fa_signal_t fa_signal_and(fa_signal_t signal, fa_signal_t signal);
+fa_signal_t fa_signal_and(fa_signal_t signal, fa_signal_t signal_);
 
 /** Logical *or* of two signals, treating 0 as false and all other values as true. 
 */
-fa_signal_t fa_signal_or(fa_signal_t signal, fa_signal_t signal);
+fa_signal_t fa_signal_or(fa_signal_t signal, fa_signal_t signal_);
 
 /** Logical *exclusive or* of two signals, treating 0 as false and all other values as true. 
 */
-fa_signal_t fa_signal_xor(fa_signal_t signal, fa_signal_t signal);
+fa_signal_t fa_signal_xor(fa_signal_t signal, fa_signal_t signal_);
 
 /** Equality of two signals, generating 1 if equal and 0 otherwise. 
     Beware of floating-point equality. You should only use small integer numbers. 
 */
-fa_signal_t fa_signal_equal(fa_signal_t signal, fa_signal_t signal);
+fa_signal_t fa_signal_equal(fa_signal_t signal,
+                            fa_signal_t signal_);
 
 /** Compare two signals `x` and `y`, generating 1 if `x < y` and 0 otherwise. 
 */
 fa_signal_t fa_signal_less_than(fa_signal_t signal,
-                                fa_signal_t signal);
+                                fa_signal_t signal_);
 
 /** Compare two signals `x` and `y`, generating 1 if `x > y` and 0 otherwise. 
 */
 fa_signal_t fa_signal_greater_than(fa_signal_t signal,
-                                   fa_signal_t signal);
+                                   fa_signal_t signal_);
 
 /** Compare two signals `x` and `y`, generating 1 if `x <= y` and 0 otherwise. 
 */
 fa_signal_t fa_signal_less_than_equal(fa_signal_t signal,
-                                      fa_signal_t signal);
+                                      fa_signal_t signal_);
 
 /** Compare two signals `x` and `y`, generating 1 if `x >= y` and 0 otherwise. 
 */
 fa_signal_t fa_signal_greater_than_equal(fa_signal_t signal,
-                                         fa_signal_t signal);
+                                         fa_signal_t signal_);
 
 /** The acos function lifted to signals. 
 */
@@ -407,28 +411,29 @@ fa_signal_t fa_signal_sqrt(fa_signal_t signal);
 
 /** The minimum of two signals. 
 */
-fa_signal_t fa_signal_min(fa_signal_t signal, fa_signal_t signal);
+fa_signal_t fa_signal_min(fa_signal_t signal, fa_signal_t signal_);
 
 /** The maximum of two signals. 
 */
-fa_signal_t fa_signal_max(fa_signal_t signal, fa_signal_t signal);
+fa_signal_t fa_signal_max(fa_signal_t signal, fa_signal_t signal_);
 
 /** The modulo of a signal. 
 */
-fa_signal_t fa_signal_fmod(fa_signal_t signal, fa_signal_t signal);
+fa_signal_t fa_signal_fmod(fa_signal_t signal, fa_signal_t signal_);
 
 /** The remainder of a signal. 
 */
 fa_signal_t fa_signal_remainder(fa_signal_t signal,
-                                fa_signal_t signal);
+                                fa_signal_t signal_);
 
 /** Round the value of a signal towards negative infinity. 
 */
-fa_signal_t fa_signal_floor(fa_signal_t signal, fa_signal_t signal);
+fa_signal_t fa_signal_floor(fa_signal_t signal,
+                            fa_signal_t signal_);
 
 /** Round the value of a signal towards positive infinity. 
 */
-fa_signal_t fa_signal_ceil(fa_signal_t signal, fa_signal_t signal);
+fa_signal_t fa_signal_ceil(fa_signal_t signal, fa_signal_t signal_);
 
 /** A signal that counts samples.
     Generates the sequence `[0,1..]`.
@@ -440,7 +445,7 @@ fa_signal_t fa_signal_counter();
     
     For example if the sample rate is 44100, `fa_signal_impulses(44100)` generates an impulse every second.
 */
-fa_signal_t fa_signal_impulses(int int);
+fa_signal_t fa_signal_impulses(int int_);
 
 /** Run a signal through an external VST plug-in.
     
@@ -456,7 +461,7 @@ fa_signal_t fa_signal_impulses(int int);
         Experimental.    
 */
 fa_list_t fa_signal_vst(fa_string_t string,
-                        fa_string_t string,
+                        fa_string_t string_,
                         fa_list_t list);
 
 /** Returns a pair of signals from the `DLSMusicDevice`.
@@ -510,7 +515,7 @@ fa_signal_t fa_signal_simplify(fa_signal_t signal);
 fa_signal_t fa_signal_impulse();
 
 
-fa_signal_t fa_signal_line(double double);
+fa_signal_t fa_signal_line(double double_);
 
 /** @}
     @}

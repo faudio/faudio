@@ -99,11 +99,11 @@ fa_list_t fa_list_dcons(fa_ptr_t ptr, fa_list_t list);
 
 /** Create a list by repeating the given element.
 */
-fa_list_t fa_list_repeat(int int, fa_ptr_t ptr);
+fa_list_t fa_list_repeat(int int_, fa_ptr_t ptr);
 
 /** Create a list from the given range.
 */
-fa_list_t fa_list_enumerate(int int, int int);
+fa_list_t fa_list_enumerate(int int_, int int__);
 
 /** Copy the given list.
 
@@ -180,13 +180,13 @@ fa_ptr_t fa_list_last(fa_list_t list);
     @par Performance
         O(n)
 */
-fa_list_t fa_list_append(fa_list_t list, fa_list_t list);
+fa_list_t fa_list_append(fa_list_t list, fa_list_t list_);
 
 /** Return the result of appending the given lists.
     @par Performance
         O(n)
 */
-fa_list_t fa_list_dappend(fa_list_t list, fa_list_t list);
+fa_list_t fa_list_dappend(fa_list_t list, fa_list_t list_);
 
 /** Return the reverse of the given list.
     @par Performance
@@ -216,25 +216,25 @@ fa_list_t fa_list_dsort(fa_list_t list);
     @par Performance
         O(n)
 */
-fa_list_t fa_list_take(int int, fa_list_t list);
+fa_list_t fa_list_take(int int_, fa_list_t list);
 
 /** Return the *n* leading elements of the given list.
     @par Performance
         O(n)
 */
-fa_list_t fa_list_dtake(int int, fa_list_t list);
+fa_list_t fa_list_dtake(int int_, fa_list_t list);
 
 /** Return the all but the *n* leading elements of the given list.
     @par Performance
         O(n)
 */
-fa_list_t fa_list_drop(int int, fa_list_t list);
+fa_list_t fa_list_drop(int int_, fa_list_t list);
 
 /** Return the all but the *n* leading elements of the given list.
     @par Performance
         O(n)
 */
-fa_list_t fa_list_ddrop(int int, fa_list_t list);
+fa_list_t fa_list_ddrop(int int_, fa_list_t list);
 
 /** List index operator.
     @returns
@@ -242,65 +242,67 @@ fa_list_t fa_list_ddrop(int int, fa_list_t list);
     @par Performance
         O(n)
 */
-fa_ptr_t fa_list_index(int int, fa_list_t list);
+fa_ptr_t fa_list_index(int int_, fa_list_t list);
 
 /** Return the given range of the given list.
     @par Performance
         O(n)
 */
-fa_list_t fa_list_range(int int, int int, fa_list_t list);
+fa_list_t fa_list_range(int int_, int int__, fa_list_t list);
 
 /** Insert the given element into the given list.
     @par Performance
         O(n)
 */
-fa_list_t fa_list_insert(int int, fa_ptr_t ptr, fa_list_t list);
+fa_list_t fa_list_insert(int int_, fa_ptr_t ptr, fa_list_t list);
 
 /** Insert the given element into the given list.
     @par Performance
         O(n)
 */
-fa_list_t fa_list_dinsert(int int, fa_ptr_t ptr, fa_list_t list);
+fa_list_t fa_list_dinsert(int int_, fa_ptr_t ptr, fa_list_t list);
 
 /** Insert the given range into the given list.
     @par Performance
         O(n)
 */
-fa_list_t fa_list_insert_range(int int,
+fa_list_t fa_list_insert_range(int int_,
                                fa_list_t list,
-                               fa_list_t list);
+                               fa_list_t list_);
 
 /** Insert the given range into the given list.
     @par Performance
         O(n)
 */
-fa_list_t fa_list_dinsert_range(int int,
+fa_list_t fa_list_dinsert_range(int int_,
                                 fa_list_t list,
+                                fa_list_t list_);
+
+/** Remove the given element from the given list.
+    @par Performance
+        O(n)
+*/
+fa_list_t fa_list_remove(int int_, fa_list_t list);
+
+/** Remove the given element from the given list.
+    @par Performance
+        O(n)
+*/
+fa_list_t fa_list_dremove(int int_, fa_list_t list);
+
+/** Remove the given range from the given list.
+    @par Performance
+        O(n)
+*/
+fa_list_t fa_list_remove_range(int int_, int int__, fa_list_t list);
+
+/** Remove the given range from the given list.
+    @par Performance
+        O(n)
+*/
+fa_list_t fa_list_dremove_range(int int_,
+                                int int__,
                                 fa_list_t list);
-
-/** Remove the given element from the given list.
-    @par Performance
-        O(n)
-*/
-fa_list_t fa_list_remove(int int, fa_list_t list);
-
-/** Remove the given element from the given list.
-    @par Performance
-        O(n)
-*/
-fa_list_t fa_list_dremove(int int, fa_list_t list);
-
-/** Remove the given range from the given list.
-    @par Performance
-        O(n)
-*/
-fa_list_t fa_list_remove_range(int int, int int, fa_list_t list);
-
-/** Remove the given range from the given list.
-    @par Performance
-        O(n)
-*/
-fa_list_t fa_list_dremove_range(int int, int int, fa_list_t list);
 
 /** Return whether the given list contains the given element.
     @par Performance
@@ -425,7 +427,7 @@ fa_list_t fa_list_djoin(fa_list_t list);
 */
 fa_ptr_t fa_list_fold_left(fa_binary_t binary,
                            fa_ptr_t ptr,
-                           fa_ptr_t ptr,
+                           fa_ptr_t ptr_,
                            fa_list_t list);
 
 /** Fold over the given list from left to right.
@@ -435,7 +437,7 @@ fa_ptr_t fa_list_fold_left(fa_binary_t binary,
 */
 fa_ptr_t fa_list_dfold_left(fa_binary_t binary,
                             fa_ptr_t ptr,
-                            fa_ptr_t ptr,
+                            fa_ptr_t ptr_,
                             fa_list_t list);
 
 

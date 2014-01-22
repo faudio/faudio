@@ -85,7 +85,7 @@ fa_string_t fa_error_origin(fa_error_t error);
 /** Convert the given error to a formated string.
     @param colored Include color escapes for terminals.
 */
-fa_string_t fa_error_format(bool bool, fa_error_t error);
+fa_string_t fa_error_format(bool bool_, fa_error_t error);
 
 /** An error handler routine.
 */
@@ -103,7 +103,7 @@ typedef void (* fa_error_callback_t)(fa_ptr_t, fa_error_t);
 */
 fa_error_t fa_error_create_simple(fa_error_severity_t severity,
                                   fa_string_t string,
-                                  fa_string_t string);
+                                  fa_string_t string_);
 
 /** @}
     @}

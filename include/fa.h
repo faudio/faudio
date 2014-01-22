@@ -144,25 +144,25 @@ float fa_peek_float(fa_ptr_t ptr);
 double fa_peek_double(fa_ptr_t ptr);
 
 
-fa_ptr_t fa_from_bool(bool bool);
+fa_ptr_t fa_from_bool(bool bool_);
 
 
-fa_ptr_t fa_from_int8(int8_t int8);
+fa_ptr_t fa_from_int8(int8_t int8_);
 
 
-fa_ptr_t fa_from_int16(int16_t int16);
+fa_ptr_t fa_from_int16(int16_t int16_);
 
 
-fa_ptr_t fa_from_int32(int32_t int32);
+fa_ptr_t fa_from_int32(int32_t int32_);
 
 
-fa_ptr_t fa_from_int64(int64_t int64);
+fa_ptr_t fa_from_int64(int64_t int64_);
 
 
-fa_ptr_t fa_from_float(float float);
+fa_ptr_t fa_from_float(float float_);
 
 
-fa_ptr_t fa_from_double(double double);
+fa_ptr_t fa_from_double(double double_);
 
 /** Unique identifier. Only used for interface lookup at the moment.
     
@@ -192,13 +192,13 @@ typedef struct {
     @see [Equal](@ref fa_equal_t)
       
 */
-bool fa_equal(fa_ptr_t ptr, fa_ptr_t ptr);
+bool fa_equal(fa_ptr_t ptr, fa_ptr_t ptr_);
 
 /** Return whether the given values are unequal.
     @see [Equal](@ref fa_equal_t)
       
 */
-bool fa_not_equal(fa_ptr_t ptr, fa_ptr_t ptr);
+bool fa_not_equal(fa_ptr_t ptr, fa_ptr_t ptr_);
 
 /** Less-than comparison interface.
     
@@ -209,22 +209,22 @@ typedef struct {
         } fa_order_t;
 
 
-bool fa_less_than(fa_ptr_t ptr, fa_ptr_t ptr);
+bool fa_less_than(fa_ptr_t ptr, fa_ptr_t ptr_);
 
 
-bool fa_greater_than(fa_ptr_t ptr, fa_ptr_t ptr);
+bool fa_greater_than(fa_ptr_t ptr, fa_ptr_t ptr_);
 
 
-bool fa_less_than_equal(fa_ptr_t ptr, fa_ptr_t ptr);
+bool fa_less_than_equal(fa_ptr_t ptr, fa_ptr_t ptr_);
 
 
-bool fa_greater_than_equal(fa_ptr_t ptr, fa_ptr_t ptr);
+bool fa_greater_than_equal(fa_ptr_t ptr, fa_ptr_t ptr_);
 
 
-fa_ptr_t fa_min(fa_ptr_t ptr, fa_ptr_t ptr);
+fa_ptr_t fa_min(fa_ptr_t ptr, fa_ptr_t ptr_);
 
 
-fa_ptr_t fa_max(fa_ptr_t ptr, fa_ptr_t ptr);
+fa_ptr_t fa_max(fa_ptr_t ptr, fa_ptr_t ptr_);
 
 /** Arithmetic operations interface.
     
@@ -238,31 +238,31 @@ typedef struct {
         } fa_number_t;
 
 
-fa_ptr_t fa_add(fa_ptr_t ptr, fa_ptr_t ptr);
+fa_ptr_t fa_add(fa_ptr_t ptr, fa_ptr_t ptr_);
 
 
-fa_ptr_t fa_subtract(fa_ptr_t ptr, fa_ptr_t ptr);
+fa_ptr_t fa_subtract(fa_ptr_t ptr, fa_ptr_t ptr_);
 
 
-fa_ptr_t fa_multiply(fa_ptr_t ptr, fa_ptr_t ptr);
+fa_ptr_t fa_multiply(fa_ptr_t ptr, fa_ptr_t ptr_);
 
 
-fa_ptr_t fa_divide(fa_ptr_t ptr, fa_ptr_t ptr);
+fa_ptr_t fa_divide(fa_ptr_t ptr, fa_ptr_t ptr_);
 
 
 fa_ptr_t fa_absolute(fa_ptr_t ptr);
 
 
-fa_ptr_t fa_dadd(fa_ptr_t ptr, fa_ptr_t ptr);
+fa_ptr_t fa_dadd(fa_ptr_t ptr, fa_ptr_t ptr_);
 
 
-fa_ptr_t fa_dsubtract(fa_ptr_t ptr, fa_ptr_t ptr);
+fa_ptr_t fa_dsubtract(fa_ptr_t ptr, fa_ptr_t ptr_);
 
 
-fa_ptr_t fa_dmultiply(fa_ptr_t ptr, fa_ptr_t ptr);
+fa_ptr_t fa_dmultiply(fa_ptr_t ptr, fa_ptr_t ptr_);
 
 
-fa_ptr_t fa_ddivide(fa_ptr_t ptr, fa_ptr_t ptr);
+fa_ptr_t fa_ddivide(fa_ptr_t ptr, fa_ptr_t ptr_);
 
 
 fa_ptr_t fa_dabsolute(fa_ptr_t ptr);

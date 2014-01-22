@@ -43,7 +43,7 @@ void fa_priority_queue_destroy(fa_priority_queue_t priorityQueue);
 /**  Merge the two given queues into the first. 
 */
 void fa_priority_queue_merge(fa_priority_queue_t priorityQueue,
-                             fa_priority_queue_t priorityQueue);
+                             fa_priority_queue_t priorityQueue_);
 
 /**  Insert the given element into the given queue. 
 */

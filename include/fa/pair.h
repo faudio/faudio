@@ -41,7 +41,7 @@ typedef struct {
 
 /** Create a new pair.
 */
-fa_pair_t fa_pair_create(fa_ptr_t ptr, fa_ptr_t ptr);
+fa_pair_t fa_pair_create(fa_ptr_t ptr, fa_ptr_t ptr_);
 
 /** Create a pair by reading the components of a structure.
 */

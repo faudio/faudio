@@ -96,7 +96,7 @@ fa_string_t fa_string_single(fa_char16_t char16);
 
     The returned string should be destroyed by the caller.
 */
-fa_string_t fa_string_repeat(int int, fa_char16_t char16);
+fa_string_t fa_string_repeat(int int_, fa_char16_t char16);
 
 /** Copy the given string.
 
@@ -109,11 +109,11 @@ fa_string_t fa_string_copy(fa_string_t string);
     The returned string should be destroyed by the caller.
 */
 fa_string_t fa_string_append(fa_string_t string,
-                             fa_string_t string);
+                             fa_string_t string_);
 
 
 fa_string_t fa_string_dappend(fa_string_t string,
-                              fa_string_t string);
+                              fa_string_t string_);
 
 /** Destroy the given string.
 */
@@ -127,7 +127,7 @@ int fa_string_length(fa_string_t string);
     @param pos
     @param str
 */
-fa_char16_t fa_string_char_at(int int, fa_string_t string);
+fa_char16_t fa_string_char_at(int int_, fa_string_t string);
 
 /** String conversion interface.
     
@@ -228,7 +228,7 @@ fa_string_t fa_string_from_native(fa_ptr_t ptr);
     @param expr   A regular expression string.
     @param string String to match.
 */
-bool fa_string_matches(fa_string_t string, fa_string_t string);
+bool fa_string_matches(fa_string_t string, fa_string_t string_);
 
 /** Format an integer.
     @param format
@@ -238,7 +238,7 @@ bool fa_string_matches(fa_string_t string, fa_string_t string);
     @return
         A new formatted string.
 */
-fa_string_t fa_string_format_integral(char *, long long);
+fa_string_t fa_string_format_integral(char *, long long_);
 
 /** Format a floating-point value.
     @param format
@@ -248,7 +248,7 @@ fa_string_t fa_string_format_integral(char *, long long);
     @return
         A new formatted string.
 */
-fa_string_t fa_string_format_floating(char *, double double);
+fa_string_t fa_string_format_floating(char *, double double_);
 
 /** @}
     @}

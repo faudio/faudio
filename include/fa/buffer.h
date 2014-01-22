@@ -47,7 +47,7 @@ typedef struct _fa_buffer_t * fa_buffer_t;
     @note
         O(n)
 */
-fa_buffer_t fa_buffer_create(size_t size);
+fa_buffer_t fa_buffer_create(size_t size_);
 
 /** Create a buffer wrapping the given memory region.
 
@@ -59,9 +59,9 @@ fa_buffer_t fa_buffer_create(size_t size);
         O(1)
 */
 fa_buffer_t fa_buffer_wrap(fa_ptr_t ptr,
-                           size_t size,
+                           size_t size_,
                            fa_unary_t unary,
-                           fa_ptr_t ptr);
+                           fa_ptr_t ptr_);
 
 /** Copy the given buffer.
     @note
@@ -74,7 +74,7 @@ fa_buffer_t fa_buffer_copy(fa_buffer_t buffer);
     @note
         O(n)
 */
-fa_buffer_t fa_buffer_resize(size_t size, fa_buffer_t buffer);
+fa_buffer_t fa_buffer_resize(size_t size_, fa_buffer_t buffer);
 
 /** Return a new buffer of the given size containing the contents
     of the given buffer padded with zero bytes at the end.
@@ -85,7 +85,7 @@ fa_buffer_t fa_buffer_resize(size_t size, fa_buffer_t buffer);
     @note
         O(n)
 */
-fa_buffer_t fa_buffer_dresize(size_t size, fa_buffer_t buffer);
+fa_buffer_t fa_buffer_dresize(size_t size_, fa_buffer_t buffer);
 
 /** Destroy the given buffer.
     @note
@@ -126,83 +126,85 @@ fa_map_t fa_buffer_meta(fa_buffer_t buffer);
     @note
         O(1)
 */
-uint8_t fa_buffer_get(fa_buffer_t buffer, size_t size);
+uint8_t fa_buffer_get(fa_buffer_t buffer, size_t size_);
 
 /** Update a value in the buffer.
     @note
         O(1)
 */
-void fa_buffer_set(fa_buffer_t buffer, size_t size, uint8_t uInt8);
+void fa_buffer_set(fa_buffer_t buffer,
+                   size_t size_,
+                   uint8_t uInt8_);
 
 /** Get a value from the buffer.
     @note
         O(1)
 */
-int16_t fa_buffer_get_int16(fa_buffer_t buffer, size_t size);
+int16_t fa_buffer_get_int16(fa_buffer_t buffer, size_t size_);
 
 /** Get a value from the buffer.
     @note
         O(1)
 */
-int32_t fa_buffer_get_int32(fa_buffer_t buffer, size_t size);
+int32_t fa_buffer_get_int32(fa_buffer_t buffer, size_t size_);
 
 /** Get a value from the buffer.
     @note
         O(1)
 */
-int64_t fa_buffer_get_int64(fa_buffer_t buffer, size_t size);
+int64_t fa_buffer_get_int64(fa_buffer_t buffer, size_t size_);
 
 /** Get a value from the buffer.
     @note
         O(1)
 */
-float fa_buffer_get_float(fa_buffer_t buffer, size_t size);
+float fa_buffer_get_float(fa_buffer_t buffer, size_t size_);
 
 /** Get a value from the buffer.
     @note
         O(1)
 */
-double fa_buffer_get_double(fa_buffer_t buffer, size_t size);
+double fa_buffer_get_double(fa_buffer_t buffer, size_t size_);
 
 /** Update a value in the buffer.
     @note
         O(1)
 */
 void fa_buffer_set_int16(fa_buffer_t buffer,
-                         size_t size,
-                         int16_t int16);
+                         size_t size_,
+                         int16_t int16_);
 
 /** Update a value in the buffer.
     @note
         O(1)
 */
 void fa_buffer_set_int32(fa_buffer_t buffer,
-                         size_t size,
-                         int32_t int32);
+                         size_t size_,
+                         int32_t int32_);
 
 /** Update a value in the buffer.
     @note
         O(1)
 */
 void fa_buffer_set_int64(fa_buffer_t buffer,
-                         size_t size,
-                         int64_t int64);
+                         size_t size_,
+                         int64_t int64_);
 
 /** Update a value in the buffer.
     @note
         O(1)
 */
 void fa_buffer_set_float(fa_buffer_t buffer,
-                         size_t size,
-                         float float);
+                         size_t size_,
+                         float float_);
 
 /** Update a value in the buffer.
     @note
         O(1)
 */
 void fa_buffer_set_double(fa_buffer_t buffer,
-                          size_t size,
-                          double double);
+                          size_t size_,
+                          double double_);
 
 /**
     Reads a buffer from a file.
@@ -245,7 +247,7 @@ fa_pair_t fa_buffer_read_audio(fa_string_t string);
         The null pointer or an error value.
 */
 fa_ptr_t fa_buffer_write_audio(fa_string_t string,
-                               int int,
+                               int int_,
                                fa_buffer_t buffer);
 
 /** Return the address of the buffer.

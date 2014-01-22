@@ -61,8 +61,8 @@ typedef struct _fa_midi_message_t * fa_midi_message_t;
     @return         A new Midi message.
 */
 fa_midi_message_t fa_midi_message_create_simple(fa_midi_message_status_t status,
-                                                int int,
-                                                int int);
+                                                int int_,
+                                                int int__);
 
 /** Creates a sysex message from the given data buffer (not including F0 and F7).
     @param data     Raw data buffer (transfered).

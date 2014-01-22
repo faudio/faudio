@@ -44,7 +44,7 @@ typedef struct {
         } fa_pair_left_struct_t;
 
 
-fa_pair_left_t fa_pair_left_create(fa_ptr_t ptr, fa_ptr_t ptr);
+fa_pair_left_t fa_pair_left_create(fa_ptr_t ptr, fa_ptr_t ptr_);
 
 
 fa_pair_left_t fa_pair_left_read(fa_pair_left_struct_t *);

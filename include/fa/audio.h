@@ -89,7 +89,7 @@ void fa_audio_end_session(fa_audio_session_t session);
 void fa_audio_with_session(fa_audio_session_callback_t sessionCallback,
                            fa_ptr_t ptr,
                            fa_error_callback_t callback,
-                           fa_ptr_t ptr);
+                           fa_ptr_t ptr_);
 
 /** Set an audio parameter value.
     
@@ -227,7 +227,7 @@ double fa_audio_default_sample_rate(fa_audio_device_t device);
         Returns an error if the session could not be started.
 */
 fa_audio_stream_t fa_audio_open_stream(fa_audio_device_t device,
-                                       fa_audio_device_t device,
+                                       fa_audio_device_t device_,
                                        fa_audio_proc_t proc,
                                        fa_ptr_t ptr);
 
@@ -258,13 +258,13 @@ void fa_audio_close_stream(fa_audio_stream_t stream);
         Pointer passed to error callback.
 */
 void fa_audio_with_stream(fa_audio_device_t device,
-                          fa_audio_device_t device,
+                          fa_audio_device_t device_,
                           fa_audio_proc_t proc,
                           fa_ptr_t ptr,
                           fa_audio_stream_callback_t streamCallback,
-                          fa_ptr_t ptr,
+                          fa_ptr_t ptr_,
                           fa_error_callback_t callback,
-                          fa_ptr_t ptr);
+                          fa_ptr_t ptr__);
 
 /** @}
     @}

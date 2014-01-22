@@ -88,7 +88,7 @@ void fa_midi_end_session(fa_midi_session_t session);
 void fa_midi_with_session(fa_midi_session_callback_t sessionCallback,
                           fa_ptr_t ptr,
                           fa_error_callback_t callback,
-                          fa_ptr_t ptr);
+                          fa_ptr_t ptr_);
 
 /** Get all currently active MIDI sessions. Note that at most one midi session
     can be active at the same time, so this function returns a list of zero or
@@ -205,7 +205,7 @@ void fa_midi_with_stream(fa_midi_device_t device,
                          fa_midi_stream_callback_t streamCallback,
                          fa_ptr_t ptr,
                          fa_error_callback_t callback,
-                         fa_ptr_t ptr);
+                         fa_ptr_t ptr_);
 
 /** Register a callback to be invoked when a message is received.
 

@@ -1,6 +1,6 @@
 
-#ifndef _FA_FA
-#define _FA_FA
+#ifndef _FA_UTILITY
+#define _FA_UTILITY
 
 #include <fa/atomic.h>
 #include <fa/atomic/queue.h>
@@ -20,7 +20,7 @@
 #include <fa/action.h>
 #include <fa/signal.h>
 
-/** @addtogroup FaFa
+/** @addtogroup FaUtility
 
     Miscellaneous
 
@@ -41,7 +41,7 @@
  
     @defgroup Fa Fa
     @{
-    @defgroup FaFa Fa
+    @defgroup FaUtility Utility
     @{
     */
 
@@ -110,19 +110,19 @@ void fa_log_error(fa_string_t string);
 
 /** Write an informative message to the log.
 */
-void fa_log_info_from(fa_string_t string, fa_string_t string);
+void fa_log_info_from(fa_string_t string, fa_string_t string_);
 
 /** Write a warning to the log.
 */
-void fa_log_warning_from(fa_string_t string, fa_string_t string);
+void fa_log_warning_from(fa_string_t string, fa_string_t string_);
 
 /** Write an error to the log.
 */
-void fa_log_error_from(fa_string_t string, fa_string_t string);
+void fa_log_error_from(fa_string_t string, fa_string_t string_);
 
 /** @}
     @}
     */
 
-#endif // _FA_FA
+#endif // _FA_UTILITY
 

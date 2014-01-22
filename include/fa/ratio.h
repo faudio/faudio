@@ -69,19 +69,19 @@ void fa_ratio_destroy(fa_ratio_t ratio);
 
 /** Add the given rational numbers.
 */
-fa_ratio_t fa_ratio_add(fa_ratio_t ratio, fa_ratio_t ratio);
+fa_ratio_t fa_ratio_add(fa_ratio_t ratio, fa_ratio_t ratio_);
 
 /** Subtract the given rational numbers.
 */
-fa_ratio_t fa_ratio_subtract(fa_ratio_t ratio, fa_ratio_t ratio);
+fa_ratio_t fa_ratio_subtract(fa_ratio_t ratio, fa_ratio_t ratio_);
 
 /** Multiply the given rational numbers.
 */
-fa_ratio_t fa_ratio_multiply(fa_ratio_t ratio, fa_ratio_t ratio);
+fa_ratio_t fa_ratio_multiply(fa_ratio_t ratio, fa_ratio_t ratio_);
 
 /** Divide the given rational numbers.
 */
-fa_ratio_t fa_ratio_divide(fa_ratio_t ratio, fa_ratio_t ratio);
+fa_ratio_t fa_ratio_divide(fa_ratio_t ratio, fa_ratio_t ratio_);
 
 /** Return the successor of the given rational number.
 */

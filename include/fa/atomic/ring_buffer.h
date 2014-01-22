@@ -38,7 +38,7 @@
 typedef struct _fa_atomic_ring_buffer_t * fa_atomic_ring_buffer_t;
 
 
-fa_atomic_ring_buffer_t fa_atomic_ring_buffer_create(size_t size);
+fa_atomic_ring_buffer_t fa_atomic_ring_buffer_create(size_t size_);
 
 
 void fa_atomic_ring_buffer_destroy(fa_atomic_ring_buffer_t ringBuffer);
@@ -60,15 +60,15 @@ bool fa_atomic_ring_buffer_read_double(fa_atomic_ring_buffer_t ringBuffer,
 
 
 bool fa_atomic_ring_buffer_write(fa_atomic_ring_buffer_t ringBuffer,
-                                 uint8_t uInt8);
+                                 uint8_t uInt8_);
 
 
 bool fa_atomic_ring_buffer_write_float(fa_atomic_ring_buffer_t ringBuffer,
-                                       float float);
+                                       float float_);
 
 
 bool fa_atomic_ring_buffer_write_double(fa_atomic_ring_buffer_t ringBuffer,
-                                        double double);
+                                        double double_);
 
 /** @}
     @}

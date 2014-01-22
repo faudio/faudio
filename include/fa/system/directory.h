@@ -34,11 +34,11 @@ fa_string_t fa_system_directory_read_file(fa_string_t string);
 
 
 void fa_system_directory_write_file(fa_string_t string,
-                                    fa_string_t string);
+                                    fa_string_t string_);
 
 
 void fa_system_directory_append_file(fa_string_t string,
-                                     fa_string_t string);
+                                     fa_string_t string_);
 
 /** @}
     @}
