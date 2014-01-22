@@ -1,12 +1,12 @@
 
-#ifndef _FA_AUDIO_SESSIONA
-#define _FA_AUDIO_SESSIONA
+#ifndef _FA_AUDIO_SESSION
+#define _FA_AUDIO_SESSION
 
 #include <fa/action.h>
 #include <fa/time.h>
 #include <fa/clock.h>
 
-/** @addtogroup FaAudioSessiona
+/** @addtogroup FaAudioSession
 
     Provides real-time audio.
     
@@ -27,7 +27,7 @@
     @{
     @defgroup FaAudio Audio
     @{
-    @defgroup FaAudioSessiona Sessiona
+    @defgroup FaAudioSession Session
     @{
     */
 
@@ -38,5 +38,5 @@
     @}
     */
 
-#endif // _FA_AUDIO_SESSIONA
+#endif // _FA_AUDIO_SESSION
 

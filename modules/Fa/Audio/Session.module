@@ -15,7 +15,7 @@
     @see
     - @ref Devices
  */
-module "transient" Fa.Audio.Sessiona
+module "transient" Fa.Audio.Session
 {
     import Fa.Action;
     import Fa.Time;
