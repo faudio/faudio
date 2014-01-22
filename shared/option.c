@@ -92,10 +92,9 @@ void fa_option_show(int optc, opt_t optv[], char *header)
 
 
 
-ptr_t fa_option_parse_int(char *x)    { int r; sscanf(x, "%i", &r); return i32(r); }
-ptr_t fa_option_parse_float(char *x)  { int r; sscanf(x, "%f", &r); return f32(r); }
-ptr_t fa_option_parse_double(char *x) { int r; sscanf(x, "%lf", &r); return f64(r); }
-ptr_t fa_option_parse_string(char *x) { return string(x); }
-ptr_t fa_option_parse_fail(char *x)   { return NULL; }
+ptr_t fa_option_integral(char *x)    { int r; sscanf(x, "%i", &r); return i32(r); }
+ptr_t fa_option_floating(char *x)  { int r; sscanf(x, "%f", &r); return f32(r); }
+ptr_t fa_option_string(char *x) { return string(x); }
+ptr_t fa_option_failure(char *x)   { return NULL; }
 
 

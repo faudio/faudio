@@ -15,17 +15,10 @@ fa_option_t options[] = {
 
 int main(int argc, char const *argv[])
 {
-    fa_option_show_all(
-        options,
-        "Usage: fa_options\n"
-        "       fa_options [FILES]\n"
-        );
+    fa_option_show_all(options, "Usage: fa_options\n"
+                                "       fa_options [FILES]\n");
                 
-    fa_unpair(
-        fa_option_parse_all(options, argc, (char**) argv), 
-        options,
-        arguments
-        ) 
+    fa_unpair(fa_option_parse_all(options, argc, (char**) argv), options, arguments) 
     {
         fa_print_ln(options);   // {"foo": 1, "bar": 2}
         fa_print_ln(arguments); // [1,2,3]
@@ -48,6 +41,17 @@ module Fa.Option
         parser      : (Char * -> Ptr)*
     };
 
+    /** Parses integers. */
+    integral       : (input : Char *)            -> Ptr;
+
+    /** Parses floating-point numbers. */
+    floating     : (input : Char *)            -> Ptr;
+
+    /** Parses strings. */
+    string    : (input : Char *)            -> Ptr;
+
+    /** Always fails. */
+    failure      : (input : Char *)            -> Ptr;    
     
     /** Parse options according to the given specification (see example above).
         
@@ -55,15 +59,26 @@ module Fa.Option
             A pair where the first component is a @ref fa_map_t of `(name, value)`
             pairs, and the second component is a list of remaning arguments.    
     */
-    parse   : (Int, Option*, Int, Char**) -> Pair;
+    parseAll : ( options    : Option*, 
+                 argc       : Int, 
+                 argv       : Char** ) -> Pair;
+
+    /** Show options according to the given specification (see example above) on the standard output.
+     */
+    showAll : ( options : Option*, header : Char*) -> Void;
+
+    /** Parse options according to the given specification (see example above).
+        
+        @returns
+            A pair where the first component is a @ref fa_map_t of `(name, value)`
+            pairs, and the second component is a list of remaning arguments.    
+    */
+    parse   : ( numOptions : Int, 
+                options    : Option*, 
+                argc       : Int, 
+                argv       : Char** ) -> Pair;
     
     /** Show options according to the given specification (see example above) on the standard output.
      */
-    show    : (Int, Option*, Char*) -> Void;
-
-    parseInt       : (Char *)            -> Ptr;
-    parseFloat     : (Char *)            -> Ptr;
-    parseDouble    : (Char *)            -> Ptr;
-    parseString    : (Char *)            -> Ptr;
-    parseFail      : (Char *)            -> Ptr;    
+    show    : ( numOptions : Int, options : Option*, header : Char*) -> Void;
 }

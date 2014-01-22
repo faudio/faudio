@@ -7,6 +7,8 @@
 
 /** @addtogroup FaStreams
 
+    Provides external streams.
+
     @since
         2.9
  

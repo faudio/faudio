@@ -26,7 +26,7 @@ list_t just(ptr_t x, list_t xs)
 #define fa_option_parse_all(A,AC,AV) fa_option_parse(fa_sizeof_array(A), A, AC, AV)
 
 fa_option_t options[] = {
-    { "f", "frequency", "Frequency (default 440)",  fa_option_parse_int },
+    { "f", "frequency", "Frequency (default 440)",  fa_option_integral },
 };
 
 void helper_function(int freq1, int freq2)

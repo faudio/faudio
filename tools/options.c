@@ -14,12 +14,12 @@
 #define fa_option_parse_all(A,AC,AV) fa_option_parse(fa_sizeof_array(A), A, AC, AV)
 
 fa_option_t options[] = {
-    { "a", "help",            "Show help info",             fa_option_parse_string },
-    { "e", "help",            "Show help info",             fa_option_parse_string },
-    { "h", "help",            "Show help info",             fa_option_parse_string },
-    { "x", "value-with-def",  "Show help info",             fa_option_parse_int    },
+    { "a", "help",            "Show help info",             fa_option_string },
+    { "e", "help",            "Show help info",             fa_option_string },
+    { "h", "help",            "Show help info",             fa_option_string },
+    { "x", "value-with-def",  "Show help info",             fa_option_integral    },
     { "n", "number-of-cores", "Number of cores\n                                   "
-                              "Very interesting parameter", fa_option_parse_int    }
+                              "Very interesting parameter", fa_option_integral    }
 };
 
 int main(int argc, char const *argv[])
