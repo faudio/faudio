@@ -158,28 +158,35 @@ fa_action_value_t fa_action_send_value(fa_action_t);
 
 /** Repeat the given action indefinitely.
 */
-fa_action_t fa_action_repeat(fa_time_t, fa_action_t);
+fa_action_t fa_action_repeat(fa_time_t interval,
+                             fa_action_t action);
 
 /** Join a list of actions into a single compond action.
 */
-fa_action_t fa_action_many(fa_list_t);
+fa_action_t fa_action_many(fa_list_t actions);
 
 /** Creates a derived action from the given action that executes íf and only given predicate holds.
     The predicate function is called for every occurence.
 */
-fa_action_t fa_action_if(fa_pred_t, fa_ptr_t, fa_action_t);
+fa_action_t fa_action_if(fa_pred_t pred,
+                         fa_ptr_t predData,
+                         fa_action_t action);
 
 /** Creates a derived action from the given action that executes as long as the given predicate holds.
     The predicate function is called for every occurence.
 */
-fa_action_t fa_action_while(fa_pred_t, fa_ptr_t, fa_action_t);
+fa_action_t fa_action_while(fa_pred_t pred,
+                            fa_ptr_t predData,
+                            fa_action_t action);
 
 /** Creates a derived action from the given action that executes as long as the given predicate
     does *not* hold.
     
     The predicate function is called for every occurence.
 */
-fa_action_t fa_action_until(fa_pred_t, fa_ptr_t, fa_action_t);
+fa_action_t fa_action_until(fa_pred_t pred,
+                            fa_ptr_t predData,
+                            fa_action_t action);
 
 /** Convert a unary function to an action.
 */

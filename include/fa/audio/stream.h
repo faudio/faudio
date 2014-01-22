@@ -58,9 +58,9 @@ fa_clock_t fa_audio_stream_clock(fa_audio_stream_t);
     @warning
         Experimental.
 */
-void fa_audio_add_message_callback(fa_audio_message_callback_t,
-                                   fa_ptr_t,
-                                   fa_audio_stream_t);
+void fa_audio_add_message_callback(fa_audio_message_callback_t callback,
+                                   fa_ptr_t callbackData,
+                                   fa_audio_stream_t session);
 
 /**
     Schedule an action on the stream.
@@ -68,7 +68,9 @@ void fa_audio_add_message_callback(fa_audio_message_callback_t,
     The action will be run as soon as the time of the stream (as
     reported by its clock) is greater than or equal to the given due time.
 */
-void fa_audio_schedule(fa_time_t, fa_action_t, fa_audio_stream_t);
+void fa_audio_schedule(fa_time_t time,
+                       fa_action_t action,
+                       fa_audio_stream_t stream);
 
 /**
     Schedule an action on the stream.
@@ -78,9 +80,9 @@ void fa_audio_schedule(fa_time_t, fa_action_t, fa_audio_stream_t);
     in terms of `fa_audio_schedule` and `fa_clock_time`, using the current
     stream clock.
 */
-void fa_audio_schedule_relative(fa_time_t,
-                                fa_action_t,
-                                fa_audio_stream_t);
+void fa_audio_schedule_relative(fa_time_t time,
+                                fa_action_t action,
+                                fa_audio_stream_t stream);
 
 /** @}
     @}

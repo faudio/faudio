@@ -144,28 +144,28 @@ module Fa.Action
     
     /** Repeat the given action indefinitely.
      */
-    repeat : (Time, Action) -> Action;
+    repeat : (interval : Time, action : Action) -> Action;
 
     /** Join a list of actions into a single compond action.
      */
-    many : (List) -> Action;
+    many : (actions : List) -> Action;
     
     /** Creates a derived action from the given action that executes íf and only given predicate holds.
         The predicate function is called for every occurence.
      */
-    if : (Pred, Ptr, Action) -> Action;
+    if : (pred : Pred, predData : Ptr, action : Action) -> Action;
 
     /** Creates a derived action from the given action that executes as long as the given predicate holds.
         The predicate function is called for every occurence.
      */
-    while : (Pred, Ptr, Action) -> Action;
+    while : (pred : Pred, predData : Ptr, action : Action) -> Action;
 
     /** Creates a derived action from the given action that executes as long as the given predicate
         does *not* hold.
         
         The predicate function is called for every occurence.
      */
-    until : (Pred, Ptr, Action) -> Action;
+    until : (pred : Pred, predData : Ptr, action : Action) -> Action;
 
     /** Convert a unary function to an action.
      */
