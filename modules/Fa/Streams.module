@@ -3,7 +3,7 @@
     @since
         2.9
  */
-module Fa.Io
+module Fa.Streams
 {
     import Fa;
     import Fa.Buffer;

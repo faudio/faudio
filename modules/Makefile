@@ -45,15 +45,20 @@ c:
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Map.module    			>include/fa/map.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/PriorityQueue.module		>include/fa/priority_queue.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Midi/Message.module    		>include/fa/midi/message.h && \
+	$(MODULO) -Mmodules --language=c    <modules/Fa/Midi/Session.module    		>include/fa/midi/session.h && \
+	$(MODULO) -Mmodules --language=c    <modules/Fa/Midi/Device.module    		>include/fa/midi/device.h && \
+	$(MODULO) -Mmodules --language=c    <modules/Fa/Midi/Stream.module    		>include/fa/midi/stream.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Time.module    			>include/fa/time.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Clock.module    		>include/fa/clock.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Action.module  			>include/fa/action.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Signal.module  			>include/fa/signal.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Audio.module    		>include/fa/audio.h && \
+	$(MODULO) -Mmodules --language=c    <modules/Fa/Audio/Session.module		>include/fa/audio/session.h && \
+	$(MODULO) -Mmodules --language=c    <modules/Fa/Audio/Device.module    		>include/fa/audio/device.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Audio/Stream.module    		>include/fa/audio/stream.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Midi.module    			>include/fa/midi.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Option.module    		>include/fa/option.h && \
-	$(MODULO) -Mmodules --language=c    <modules/Fa/Io.module    			>include/fa/io.h
+	$(MODULO) -Mmodules --language=c    <modules/Fa/Streams.module    		>include/fa/streams.h
 
 lisp: fix-lisp
 gen-lisp:
