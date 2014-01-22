@@ -8,7 +8,7 @@
     is provided by *sessions*.
 
     @par Implements
-    - fa_equal_t
+    - fa_equal_ta
     - fa_destroy_t (sessions and streams)
     - fa_string_show_t
 
@@ -20,4 +20,95 @@ module "transient" Fa.Audio.Device
     import Fa.Action;
     import Fa.Time;
     import Fa.Clock;
+    import Fa.Audio.Session;
+
+    /** An audio device.
+     */
+    type Device  = opaque;
+
+    /** An audio processor, or a function from a list of signals to a list of signals.
+     */
+    type Proc = ((Ptr,List) -> List)*;
+
+
+    /** Get the standard devices of the given session.
+
+        @param session   The session.
+        @return
+            A pair of @ref fa_audio_device_t representing the default input and
+            output device, respectively, or an error if at least one of them is not available.
+     */
+    default : Session -> Pair;  // (Device,Device)
+    
+    /** Get the standard input device of the given session.
+        @param session   The session.
+        @return
+            A device or an error if there are no input devices available.
+     */
+    defaultInput : Session -> Device;
+    
+    /** Get the standard output device of the given session.
+        @param session   The session.
+        @return
+            A device or an error if there are no output devices available.
+     */
+    defaultOutput : Session -> Device;
+    
+    /** Register a callback to be invoked when a hardware change is detected.
+
+        Note that this function will not modify the devices available from a 
+        session, you have to start a new session to get a fresh snapshot.
+        
+        Multiple callbacks can be registered this way. All registered callbacks
+        are associated with a session and will be removed when the session ends.
+
+        @param callback
+            Callback to register.
+        @param callback_data
+            Data closed over by the callback function.
+        @param session
+            Session on which to register the callback.
+     */
+    addStatusCallback : (StatusCallback, Ptr, Session) -> Void;
+
+    /** Return the session associated with the given device.
+        @param device   The device.
+     */
+    session : Device -> Session;
+
+    /** Return the name of the given device.
+        @param device   The device.
+     */
+    name : Device -> String;
+    
+    /** Return the host name of the given device.
+        @param device   The device.
+     */
+    hostName : Device -> String;
+    
+    /** Return whether the given device has input or not.
+        @param device   The device.
+     */
+    hasInput : Device -> Bool;
+    
+    /** Return whether the given device has output or not.
+        @param device   The device.
+     */
+    hasOutput : Device -> Bool;
+    
+    /** Return the number of inputs of the given device.
+        @param device   The device.
+     */
+    inputChannels : Device -> Int;
+    
+    /** Return the number of outputs of the given device.
+        @param device   The device.
+     */
+    outputChannels : Device -> Int;
+
+    /** Return the default sample rate of the given device.
+        @param device   The device.
+    */
+    defaultSampleRate : Device -> Double;
+                                               
 }

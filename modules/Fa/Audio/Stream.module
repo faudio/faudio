@@ -20,7 +20,14 @@ module "transient" Fa.Audio.Stream
     import Fa.Action;
     import Fa.Time;
     import Fa.Clock;
-    
+    import Fa.List;
+    import Fa.Pair;
+    import Fa.Error;
+    import Fa.Signal;
+    import Fa.Action;
+    import Fa.Clock;
+    import Fa.Audio.Device;
+        
     /** An audio stream.
      */
     type Stream  = opaque;
@@ -29,6 +36,52 @@ module "transient" Fa.Audio.Stream
      */
     type MessageCallback = Unary;
 
+    /** A callback to receive audio streams.
+     */
+    type StreamCallback = ((Ptr, Stream) -> Stream)*;
+
+    /**
+        Open a stream on the given devices.
+
+        @param input, output    Devices to provide data source and sink.
+        @param processor        Processor to run over the devices.
+        @return                 A new stream (errable).
+        @par Errors
+            Returns an error if the session could not be started.
+     */
+    openStream : (Device, Device, Proc, Ptr) -> Stream;
+    
+    /**
+        Close the given stream.
+        @param session          Stream to close.
+     */
+    closeStream : Stream -> Void;
+    
+    /**
+        Run a stream on the given devices.
+
+        @param input
+            Input device.
+        @param input
+            Output device.
+        @param processor_callback
+            Function to receive incoming signals and return output signals.
+        @param processor_data
+            Pointer passed to processor callback.
+        @param stream_callback
+            Function to receive the stream if successful.
+        @param stream_data
+            Pointer passed to stream callback.
+        @param error_callback
+            Function to errors if unsuccessful.
+        @param error_data
+            Pointer passed to error callback.
+     */
+    withStream : (
+        Device, Device, Proc, Ptr,
+        StreamCallback, Ptr,
+        Callback, Ptr
+        ) -> Void;
 
     /** Return the devices associated with the given stream.
         @param stream   The stream.

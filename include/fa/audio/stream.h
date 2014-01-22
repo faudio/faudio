@@ -5,6 +5,13 @@
 #include <fa/action.h>
 #include <fa/time.h>
 #include <fa/clock.h>
+#include <fa/list.h>
+#include <fa/pair.h>
+#include <fa/error.h>
+#include <fa/signal.h>
+#include <fa/action.h>
+#include <fa/clock.h>
+#include <fa/audio/device.h>
 
 /** @addtogroup FaAudioStream
 
@@ -38,6 +45,60 @@ typedef struct _fa_audio_stream_t * fa_audio_stream_t;
 /** A callback to be invoked whenever a message is received.
 */
 typedef fa_unary_t fa_audio_message_callback_t;
+
+/** A callback to receive audio streams.
+*/
+typedef fa_audio_stream_t (* fa_audio_stream_callback_t)(fa_ptr_t,
+                                                         fa_audio_stream_t);
+
+/**
+    Open a stream on the given devices.
+
+    @param input, output    Devices to provide data source and sink.
+    @param processor        Processor to run over the devices.
+    @return                 A new stream (errable).
+    @par Errors
+        Returns an error if the session could not be started.
+*/
+fa_audio_stream_t fa_audio_open_stream(fa_audio_device_t device,
+                                       fa_audio_device_t device_,
+                                       fa_audio_proc_t proc,
+                                       fa_ptr_t ptr);
+
+/**
+    Close the given stream.
+    @param session          Stream to close.
+*/
+void fa_audio_close_stream(fa_audio_stream_t stream);
+
+/**
+    Run a stream on the given devices.
+
+    @param input
+        Input device.
+    @param input
+        Output device.
+    @param processor_callback
+        Function to receive incoming signals and return output signals.
+    @param processor_data
+        Pointer passed to processor callback.
+    @param stream_callback
+        Function to receive the stream if successful.
+    @param stream_data
+        Pointer passed to stream callback.
+    @param error_callback
+        Function to errors if unsuccessful.
+    @param error_data
+        Pointer passed to error callback.
+*/
+void fa_audio_with_stream(fa_audio_device_t device,
+                          fa_audio_device_t device_,
+                          fa_audio_proc_t proc,
+                          fa_ptr_t ptr,
+                          fa_audio_stream_callback_t streamCallback,
+                          fa_ptr_t ptr_,
+                          fa_error_callback_t callback,
+                          fa_ptr_t ptr__);
 
 /** Return the devices associated with the given stream.
     @param stream   The stream.
