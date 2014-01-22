@@ -1058,7 +1058,7 @@ ptr_t audio_stream_impl(fa_id_t interface)
 
 // --------------------------------------------------------------------------------
 
-void fa_fa_log_error_from(fa_string_t msg, fa_string_t origin);
+void fa_log_error_from(fa_string_t msg, fa_string_t origin);
 
 error_t audio_device_error(string_t msg)
 {
@@ -1085,11 +1085,11 @@ error_t audio_device_error_with(string_t msg, int code)
 
 void audio_device_fatal(string_t msg, int code)
 {
-    fa_fa_log_error_from(
+    fa_log_error_from(
         string_dappend(msg, format_integral(" (error code %d)", code)),
         string("Doremir.Device.Audio"));
 
-    fa_fa_log_error(string("Terminating Fa"));
+    fa_log_error(string("Terminating Fa"));
     exit(error);
 }
 

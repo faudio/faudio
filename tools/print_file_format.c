@@ -26,7 +26,7 @@ void read_and_print(string_t path)
 
 int main(int argc, char const *argv[])
 {
-    fa_fa_initialize();
+    fa_initialize();
 
     if (argc < 2) {
         fa_print_ln(string("Usage: fa_sndfile FILE"));
@@ -34,6 +34,6 @@ int main(int argc, char const *argv[])
         read_and_print(string((fa_string_utf8_t) argv[1]));
     }
 
-    fa_fa_terminate();
+    fa_terminate();
 }
 

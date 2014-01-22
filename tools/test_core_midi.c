@@ -96,7 +96,7 @@ void midi_listener(const MIDINotification *message, void *data)
 void threaded_assert(int status, char *msg)
 {
     if (!status) {
-        fa_fa_log_error(string(msg));
+        fa_log_error(string(msg));
     }
 }
 
@@ -150,8 +150,8 @@ ptr_t run_internal_loop(ptr_t _)
 
 int main(int argc, char const *argv[])
 {
-    fa_fa_set_log_std();
-    fa_fa_initialize();
+    fa_set_log_std();
+    fa_initialize();
     fa_print_ln(fa_string_show(fa_thread_current()));
 
     // run_internal_loop(NULL);
@@ -165,7 +165,7 @@ int main(int argc, char const *argv[])
     MIDIGetNumberOfSources();
     fa_thread_sleep(1000);
 
-    fa_fa_terminate();
+    fa_terminate();
 }
 
 

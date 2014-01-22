@@ -123,15 +123,15 @@
 #define format_integral     fa_string_format_integral
 #define format_floating     fa_string_format_floating
 
-void fa_fa_log_info(fa_string_t);
-void fa_fa_log_warning(fa_string_t);
-void fa_fa_log_error(fa_string_t);
-void fa_fa_dlog_info(fa_string_t);
+void fa_log_info(fa_string_t);
+void fa_log_warning(fa_string_t);
+void fa_log_error(fa_string_t);
+void fa_dlog_info(fa_string_t);
 
-#define inform(s)           fa_fa_log_info(s)
-#define dinform(s)          fa_fa_dlog_info(s)
-#define warn(s)             fa_fa_log_warning(s)
-#define fail(s)             fa_fa_log_error(s)
+#define inform(s)           fa_log_info(s)
+#define dinform(s)          fa_dlog_info(s)
+#define warn(s)             fa_log_warning(s)
+#define fail(s)             fa_log_error(s)
 #define log_error(e)        fa_error_log(NULL,e)
 
 #define tb                  fa_to_bool

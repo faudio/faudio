@@ -15,7 +15,7 @@
 
 #define kIso8601 "%Y-%m-%d %H:%M:%S%z"
 
-typedef fa_fa_log_func_t log_func_t;
+typedef fa_log_func_t log_func_t;
 
 static unsigned       gInitCount    = 0;
 static long           gBytesAlloc   = 0;
@@ -43,7 +43,7 @@ void fa_clock_terminate();
 void fa_device_initialize();
 void fa_device_terminate();
 
-fa_list_t fa_fa_version()
+fa_list_t fa_version()
 {
     return list(
                string(version_g.pre),
@@ -53,7 +53,7 @@ fa_list_t fa_fa_version()
                string(version_g.suff));
 }
 
-fa_string_t fa_fa_version_string()
+fa_string_t fa_version_string()
 {
     char version[100];
     sprintf(version,
@@ -66,7 +66,7 @@ fa_string_t fa_fa_version_string()
     return string(version);
 }
 
-void fa_fa_initialize()
+void fa_initialize()
 {
 
     fa_thread_initialize();
@@ -81,14 +81,14 @@ void fa_fa_initialize()
     fa_audio_initialize();
     fa_midi_initialize();
 
-    fa_fa_log_info(string("Initialized faudio"));
+    fa_log_info(string("Initialized faudio"));
 
     gBytesAlloc = 0;
     gRegionCount = 0;
     gInitCount++;
 }
 
-void fa_fa_terminate()
+void fa_terminate()
 {
     if ((gInitCount--)) {
         fa_audio_terminate();
@@ -97,15 +97,15 @@ void fa_fa_terminate()
         fa_clock_terminate();
         fa_device_terminate();
 
-        fa_fa_log_info(fa_string_dappend(string("Total bytes allocated: "),
+        fa_log_info(fa_string_dappend(string("Total bytes allocated: "),
                                          fa_string_show(i32(gBytesAlloc))));
 
-        fa_fa_log_info(fa_string_dappend(string("Regions leaked: "),
+        fa_log_info(fa_string_dappend(string("Regions leaked: "),
                                          fa_string_show(i32(gRegionCount))));
 
-        fa_fa_log_info(string("Terminated faudio"));
+        fa_log_info(string("Terminated faudio"));
     } else {
-        fa_fa_log_warning(string("Could not terminate faudio: inconsistent state"));
+        fa_log_warning(string("Could not terminate faudio: inconsistent state"));
     }
 }
 
@@ -170,7 +170,7 @@ static inline void stdlog(ptr_t data, fa_time_system_t t, fa_error_t e)
     fflush(file);
 }
 
-void fa_fa_set_log_file(fa_string_t path)
+void fa_set_log_file(fa_string_t path)
 {
     char *cpath = fa_string_to_utf8(path);
     gLogData  = fopen(cpath, "a");
@@ -178,13 +178,13 @@ void fa_fa_set_log_file(fa_string_t path)
     free(cpath);
 }
 
-void fa_fa_set_log_std()
+void fa_set_log_std()
 {
     gLogData  = stdout;
     gLogFunc  = stdlog;
 }
 
-void fa_fa_set_log(fa_fa_log_func_t f, fa_ptr_t data)
+void fa_set_log(fa_log_func_t f, fa_ptr_t data)
 {
     gLogFunc  = f;
     gLogData  = data;
@@ -193,59 +193,59 @@ void fa_fa_set_log(fa_fa_log_func_t f, fa_ptr_t data)
 
 // --------------------------------------------------------------------------------
 
-void fa_fa_log(fa_ptr_t data, fa_error_t e)
+void fa_log(fa_ptr_t data, fa_error_t e)
 {
     if (gLogFunc) {
         gLogFunc(gLogData, (ptr_t) time(NULL), e);
     }
 }
 
-void fa_fa_dlog(fa_ptr_t data, fa_error_t e)
+void fa_dlog(fa_ptr_t data, fa_error_t e)
 {
-    fa_fa_log(data, e);
+    fa_log(data, e);
     fa_destroy(e);
 }
 
 
-void fa_fa_log_info(fa_string_t msg)
+void fa_log_info(fa_string_t msg)
 {
-    fa_fa_log_info_from(msg, string(""));
+    fa_log_info_from(msg, string(""));
 }
 
-void fa_fa_dlog_info(fa_string_t msg)
+void fa_dlog_info(fa_string_t msg)
 {
-    fa_fa_log_info(msg);
+    fa_log_info(msg);
     fa_destroy(msg);
 }
 
-void fa_fa_log_warning(fa_string_t msg)
+void fa_log_warning(fa_string_t msg)
 {
-    fa_fa_log_warning_from(msg, string(""));
+    fa_log_warning_from(msg, string(""));
 }
 
-void fa_fa_log_error(fa_string_t msg)
+void fa_log_error(fa_string_t msg)
 {
-    fa_fa_log_error_from(msg, string(""));
+    fa_log_error_from(msg, string(""));
 }
 
-void fa_fa_log_info_from(fa_string_t msg, fa_string_t origin)
+void fa_log_info_from(fa_string_t msg, fa_string_t origin)
 {
     error_t err = fa_error_create_simple(info, msg, origin);
-    fa_fa_log(NULL, err);
+    fa_log(NULL, err);
     fa_destroy(err);
 }
 
-void fa_fa_log_warning_from(fa_string_t msg, fa_string_t origin)
+void fa_log_warning_from(fa_string_t msg, fa_string_t origin)
 {
     error_t err = fa_error_create_simple(warning, msg, origin);
-    fa_fa_log(NULL, err);
+    fa_log(NULL, err);
     fa_destroy(err);
 }
 
-void fa_fa_log_error_from(fa_string_t msg, fa_string_t origin)
+void fa_log_error_from(fa_string_t msg, fa_string_t origin)
 {
     error_t err = fa_error_create_simple(error, msg, origin);
-    fa_fa_log(NULL, err);
+    fa_log(NULL, err);
     fa_destroy(err);
 }
 

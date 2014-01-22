@@ -152,10 +152,10 @@ void run_test()
 
 int main(int argc, char const *argv[])
 {
-    fa_fa_set_log_std();
-    fa_fa_initialize();
+    fa_set_log_std();
+    fa_initialize();
 
     run_test();
 
-    fa_fa_terminate();
+    fa_terminate();
 }

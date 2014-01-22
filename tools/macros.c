@@ -60,7 +60,7 @@ ptr_t bar(ptr_t mutex)
 
 int main(int argc, char const *argv[])
 {
-    fa_fa_initialize();
+    fa_initialize();
 
     // test_macros();
 
@@ -70,5 +70,5 @@ int main(int argc, char const *argv[])
         fa_thread_sleep(100000);
     }
 
-    fa_fa_terminate();
+    fa_terminate();
 }

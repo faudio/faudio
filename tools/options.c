@@ -24,7 +24,7 @@ fa_option_t options[] = {
 
 int main(int argc, char const *argv[])
 {
-    fa_fa_initialize();
+    fa_initialize();
     printf("Size is %zu\n", fa_sizeof_array(options));
 
 
@@ -44,5 +44,5 @@ int main(int argc, char const *argv[])
             os));
         fa_print_ln(as);
     }
-    fa_fa_terminate();
+    fa_terminate();
 }

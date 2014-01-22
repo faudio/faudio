@@ -50,11 +50,11 @@ fa_audio_session_t print_audio_devices(fa_ptr_t _, audio_session_t session)
 
 int main(int argc, char const *argv[])
 {
-    fa_fa_set_log_std();
-    fa_fa_initialize();
+    fa_set_log_std();
+    fa_initialize();
     fa_audio_with_session(
         print_audio_devices, NULL,
         fa_error_log, NULL);
-    fa_fa_terminate();
+    fa_terminate();
 }
 

@@ -60,8 +60,8 @@ void helper_function(int freq1, int freq2)
 
 int main(int argc, char const *argv[])
 {
-    fa_fa_set_log_std();
-    fa_fa_initialize();
+    fa_set_log_std();
+    fa_initialize();
 
     fa_unpair(fa_option_parse_all(options, argc, (char**) argv), opts, _)
     {
@@ -70,5 +70,5 @@ int main(int argc, char const *argv[])
         helper_function(freq,(freq*3/2));
     }
 
-    fa_fa_terminate();
+    fa_terminate();
 }

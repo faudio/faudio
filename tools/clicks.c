@@ -131,10 +131,10 @@ void run_clicks()
 
 int main(int argc, char const *argv[])
 {
-    fa_fa_set_log_std();
-    fa_fa_initialize();
+    fa_set_log_std();
+    fa_initialize();
 
     run_clicks();
 
-    fa_fa_terminate();
+    fa_terminate();
 }

@@ -410,10 +410,10 @@ fa_ptr_t buffer_impl(fa_id_t interface)
 
 void buffer_fatal(char *msg, int error)
 {
-    void fa_fa_log_error_from(fa_string_t msg, fa_string_t origin);
+    void fa_log_error_from(fa_string_t msg, fa_string_t origin);
 
-    fa_fa_log_error_from(string_dappend(string(msg), format_integral(" (error code %d)", error)), string("Doremir.Buffer"));
-    fa_fa_log_error(string("Terminating Audio Engine"));
+    fa_log_error_from(string_dappend(string(msg), format_integral(" (error code %d)", error)), string("Doremir.Buffer"));
+    fa_log_error(string("Terminating Audio Engine"));
     exit(error);
 }
 

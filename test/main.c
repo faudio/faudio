@@ -5,7 +5,7 @@
 void test_section(char *str)
 {
     printf("\n\n--------------------\n");
-    fa_fa_log_info(string_dappend(string("Running test: "), string(str)));
+    fa_log_info(string_dappend(string("Running test: "), string(str)));
 }
 
 
@@ -1522,16 +1522,16 @@ void test_error()
 void test_log()
 {
     test_section("Logging");
-    fa_fa_log_info(string("---------------"));
-    fa_fa_log_info(string("Log test: Do not take these seriously"));
+    fa_log_info(string("---------------"));
+    fa_log_info(string("Log test: Do not take these seriously"));
 
     for (int i = 0; i < 3; ++i) {
 
-        fa_fa_log_info(string("We have a problem"));
-        // fa_fa_log_warning(string("We have a problem"));
-        fa_fa_log_error(string("We have a problem"));
+        fa_log_info(string("We have a problem"));
+        // fa_log_warning(string("We have a problem"));
+        fa_log_error(string("We have a problem"));
 
-        fa_fa_log(NULL,
+        fa_log(NULL,
                   fa_error_create_simple(
                       error,
                       string("We have a problem"),
@@ -1539,7 +1539,7 @@ void test_log()
         fa_thread_sleep(50);
     }
 
-    fa_fa_log_info(string("---------------"));
+    fa_log_info(string("---------------"));
 }
 
 
@@ -1868,8 +1868,8 @@ cleanup:
 void test_version()
 {
     test_section("Versioning");
-    fa_print("%s\n", fa_fa_version());
-    fa_print("%s\n", fa_fa_version_string());
+    fa_print("%s\n", fa_version());
+    fa_print("%s\n", fa_version_string());
 }
 
 // --------------------------------------------------------------------------------
@@ -1886,7 +1886,7 @@ static void (*test_function[2000])();
 int main(int argc, char const *argv[])
 {
     char *bits      = sizeof(void *) == 4 ? "32-bit" : "64-bit";
-    printf("Fa %s v%s\n", bits, unstring(fa_fa_version_string()));
+    printf("Fa %s v%s\n", bits, unstring(fa_version_string()));
 
     printf("sizeof(fa_ptr_t) = %d\n", (unsigned int) sizeof(fa_ptr_t));
     printf("sizeof(int32_t) = %d\n", (unsigned int) sizeof(int32_t));
@@ -1898,10 +1898,10 @@ int main(int argc, char const *argv[])
             getchar();
         }
 
-        fa_fa_set_log_std();
-        // fa_fa_set_log_file(string("/Users/hans/Library/Logs/FAAudio.log"));
+        fa_set_log_std();
+        // fa_set_log_file(string("/Users/hans/Library/Logs/FAAudio.log"));
 
-        fa_fa_initialize();
+        fa_initialize();
 
         add_test(value_references);
         add_test(generic_functions);
@@ -1941,7 +1941,7 @@ int main(int argc, char const *argv[])
         }
 
 // end:
-        fa_fa_terminate();
+        fa_terminate();
     }
 
     return 0;

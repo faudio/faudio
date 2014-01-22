@@ -684,9 +684,9 @@ error_t string_error(string_t msg)
 
 void string_fatal(char *msg, int error)
 {
-    void fa_fa_log_error_from(fa_string_t msg, fa_string_t origin);
+    void fa_log_error_from(fa_string_t msg, fa_string_t origin);
 
-    fa_fa_log_error_from(string(msg), string("Doremir.String"));
+    fa_log_error_from(string(msg), string("Doremir.String"));
     exit(error);
 }
 

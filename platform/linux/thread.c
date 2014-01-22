@@ -271,11 +271,11 @@ ptr_t mutex_impl(fa_id_t interface)
 
 // --------------------------------------------------------------------------------
 
-void fa_fa_log_error_from(fa_string_t msg, fa_string_t origin);
+void fa_log_error_from(fa_string_t msg, fa_string_t origin);
 
 void fa_thread_fatal(char *msg, int error)
 {
-    fa_fa_log_error_from(string(msg), string("Doremir.Thread"));
+    fa_log_error_from(string(msg), string("Doremir.Thread"));
     exit(error);
 }
 

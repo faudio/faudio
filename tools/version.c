@@ -8,14 +8,14 @@
 
 void print_version()
 {
-    fa_print_ln(fa_fa_version_string());
+    fa_print_ln(fa_version_string());
 }
 
 int main(int argc, char const *argv[])
 {
-    fa_fa_initialize();
+    fa_initialize();
 
     print_version();
 
-    fa_fa_terminate();
+    fa_terminate();
 }

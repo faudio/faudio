@@ -16,9 +16,9 @@ void read_audio()
 
 int main(int argc, char const *argv[])
 {
-    fa_fa_initialize();
+    fa_initialize();
 
     read_audio();
 
-    fa_fa_terminate();
+    fa_terminate();
 }

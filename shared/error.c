@@ -24,7 +24,7 @@ struct simple_error {
 typedef struct simple_error       *simple_error_t;
 
 
-void fa_fa_log(fa_ptr_t data, fa_error_t error);
+void fa_log(fa_ptr_t data, fa_error_t error);
 
 fa_error_t fa_error_create_simple(
     fa_error_severity_t    severity,
@@ -89,7 +89,7 @@ bool fa_error_check(fa_ptr_t a)
 
 void fa_error_log(fa_ptr_t context, fa_error_t error)
 {
-    fa_fa_log(context, error);
+    fa_log(context, error);
 }
 
 fa_string_t fa_error_format(bool colored, fa_error_t a)

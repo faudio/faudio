@@ -79,8 +79,8 @@ list_t just(ptr_t x, list_t xs)
 
 int main(int argc, char const *argv[])
 {
-    fa_fa_set_log_std();
-    fa_fa_initialize();
+    fa_set_log_std();
+    fa_initialize();
     BUFFER = ring_buffer((8L * 44100L * BUFFER_SIZE_MILLIS) / 1000L);
 
     signal_t left = fa_multiply(fa_signal_play_stream(BUFFER), constant(0.8));
@@ -100,5 +100,5 @@ int main(int argc, char const *argv[])
             }
         }
     }
-    fa_fa_terminate();
+    fa_terminate();
 }

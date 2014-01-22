@@ -1015,7 +1015,7 @@ ptr_t midi_stream_impl(fa_id_t interface)
 
 // --------------------------------------------------------------------------------
 
-void fa_fa_log_error_from(fa_string_t msg, fa_string_t origin);
+void fa_log_error_from(fa_string_t msg, fa_string_t origin);
 
 error_t midi_device_error(string_t msg)
 {
@@ -1048,11 +1048,11 @@ error_t midi_error(string_t msg, native_error_t code)
 
 void midi_device_fatal(string_t msg, native_error_t code)
 {
-    fa_fa_log_error_from(
+    fa_log_error_from(
         string_dappend(msg, format_integral(" (error code %d)", code)),
         string("Doremir.Device.Midi"));
 
-    fa_fa_log_error(string("Terminating Fa"));
+    fa_log_error(string("Terminating Fa"));
     exit(error);
 }
 
