@@ -103,7 +103,10 @@ module Fa.Buffer
     */
     setMeta : (Buffer, String, Ptr) -> Void;
 
-    getAllMeta : Buffer -> Map;
+    /** Get all meta-data as a map from strings to values.
+        @returns A map of meta-data.
+     */
+    meta : Buffer -> Map;
 
     /** Get a value from the buffer.
         @note

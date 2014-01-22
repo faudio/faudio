@@ -112,8 +112,10 @@ fa_ptr_t fa_buffer_get_meta(fa_buffer_t, fa_string_t);
 */
 void fa_buffer_set_meta(fa_buffer_t, fa_string_t, fa_ptr_t);
 
-
-fa_map_t fa_buffer_get_all_meta(fa_buffer_t);
+/** Get all meta-data as a map from strings to values.
+    @returns A map of meta-data.
+*/
+fa_map_t fa_buffer_meta(fa_buffer_t);
 
 /** Get a value from the buffer.
     @note
