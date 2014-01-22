@@ -41,7 +41,6 @@ c:
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Set.module    			>include/fa/set.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Pair.module    			>include/fa/pair.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Pair/Left.module    		>include/fa/pair/left.h && \
-	$(MODULO) -Mmodules --language=c    <modules/Fa/Plot.module    			>include/fa/plot.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Map.module    			>include/fa/map.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/PriorityQueue.module		>include/fa/priority_queue.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Midi/Message.module    		>include/fa/midi/message.h && \
@@ -85,7 +84,6 @@ gen-lisp:
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Set.module    			>bindings/lisp/fa/set.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Pair.module    			>bindings/lisp/fa/pair.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Pair/Left.module    		>bindings/lisp/fa/pair/left.lisp && \
-	$(MODULO) -Mmodules --language=lisp <modules/Fa/Plot.module    			>bindings/lisp/fa/plot.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Map.module    			>bindings/lisp/fa/map.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/PriorityQueue.module		>bindings/lisp/fa/priority-queue.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Midi/Message.module    		>bindings/lisp/fa/midi/message.lisp && \
@@ -135,7 +133,6 @@ haskell:
 	$(MODULO) -Mmodules --language=haskell <modules/Fa/List.module    		>bindings/haskell/src/Fa/List.hs && \
 	$(MODULO) -Mmodules --language=haskell <modules/Fa/Set.module    		>bindings/haskell/src/Fa/Set.hs && \
 	$(MODULO) -Mmodules --language=haskell <modules/Fa/Pair.module    		>bindings/haskell/src/Fa/Pair.hs && \
-	$(MODULO) -Mmodules --language=haskell <modules/Fa/Plot.module    		>bindings/haskell/src/Fa/Plot.hs && \
 	$(MODULO) -Mmodules --language=haskell <modules/Fa/Map.module    		>bindings/haskell/src/Fa/Map.hs && \
 	$(MODULO) -Mmodules --language=haskell <modules/Fa/Midi/Message.module    	>bindings/haskell/src/Fa/Midi/Message.hs && \
 	$(MODULO) -Mmodules --language=haskell <modules/Fa/Time.module    		>bindings/haskell/src/Fa/Time.hs && \

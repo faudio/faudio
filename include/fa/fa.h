@@ -14,7 +14,6 @@
 #include <fa/audio.h>
 #include <fa/midi.h>
 #include <fa/midi/message.h>
-#include <fa/plot.h>
 #include <fa/thread.h>
 #include <fa/time.h>
 #include <fa/priority_queue.h>

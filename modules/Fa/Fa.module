@@ -17,8 +17,10 @@
     ~~~~
 
  */
+
 module Fa.Fa
 {
+    
     import Fa.Atomic;
     import Fa.Atomic.Queue;
     import Fa.Atomic.Stack;
@@ -31,7 +33,7 @@ module Fa.Fa
     import Fa.Audio;
     import Fa.Midi;
     import Fa.Midi.Message;
-    import Fa.Plot;
+    // import Fa.Plot;
     import Fa.Thread;
     import Fa.Time;
     import Fa.PriorityQueue;
