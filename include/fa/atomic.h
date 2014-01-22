@@ -41,13 +41,13 @@ fa_atomic_t fa_atomic_create();
     @par Atomicity
         Non-atomic
 */
-fa_atomic_t fa_atomic_copy(fa_atomic_t);
+fa_atomic_t fa_atomic_copy(fa_atomic_t atomic);
 
 /** Destroy the given atomic reference.
     @par Atomicity
         Non-atomic
 */
-void fa_atomic_destroy(fa_atomic_t);
+void fa_atomic_destroy(fa_atomic_t atomic);
 
 /** Compares the given value with the current value of the given atomic reference,
     replacing it if successful.
@@ -60,13 +60,15 @@ void fa_atomic_destroy(fa_atomic_t);
     @par Atomicity
         Atomic
 */
-bool fa_atomic_exchange(fa_atomic_t, fa_ptr_t, fa_ptr_t);
+bool fa_atomic_exchange(fa_atomic_t atomic,
+                        fa_ptr_t ptr,
+                        fa_ptr_t ptr);
 
 /** Return the current value of the given atomic reference.
     @par Atomicity
         Atomic
 */
-fa_ptr_t fa_atomic_get(fa_atomic_t);
+fa_ptr_t fa_atomic_get(fa_atomic_t atomic);
 
 /** Update the given atomic value by applying the given pure function.
 
@@ -76,13 +78,15 @@ fa_ptr_t fa_atomic_get(fa_atomic_t);
 
     @par Atomicity Atomic
 */
-void fa_atomic_modify(fa_atomic_t, fa_unary_t, fa_ptr_t);
+void fa_atomic_modify(fa_atomic_t atomic,
+                      fa_unary_t unary,
+                      fa_ptr_t ptr);
 
 /** Set the given given atomic reference.
 
     @par Atomicity Atomic
 */
-void fa_atomic_set(fa_atomic_t, fa_ptr_t);
+void fa_atomic_set(fa_atomic_t atomic, fa_ptr_t ptr);
 
 /** @}
     @}

@@ -42,13 +42,13 @@ typedef struct {
 /**
     Whether the given value supports dynamic typing.
 */
-bool fa_dynamic_check(fa_ptr_t);
+bool fa_dynamic_check(fa_ptr_t ptr);
 
 /**
     Returns a value representating the the type of the given value, which
     must implement @ref fa_dynamic_t. 
 */
-fa_dynamic_type_repr_t fa_dynamic_get_type(fa_ptr_t);
+fa_dynamic_type_repr_t fa_dynamic_get_type(fa_ptr_t ptr);
 
 /** @}
     @}

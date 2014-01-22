@@ -77,7 +77,7 @@ typedef void (* fa_log_func_t)(fa_ptr_t,
 
 /** Instruct Fa to write log messages to the specific file.
 */
-void fa_set_log_file(fa_string_t);
+void fa_set_log_file(fa_string_t string);
 
 /** Instruct Fa to write log messages to the standard output.
 */
@@ -85,7 +85,7 @@ void fa_set_log_std();
 
 /** Instruct Fa to pass log messages to the given handler.
 */
-void fa_set_log(fa_log_func_t, fa_ptr_t);
+void fa_set_log(fa_log_func_t logFunc, fa_ptr_t ptr);
 
 /** Write a log message.
 
@@ -94,31 +94,31 @@ void fa_set_log(fa_log_func_t, fa_ptr_t);
     @param error
         Condition to log. Must implement [Error](@ref fa_error_interface_t).
 */
-void fa_log(fa_ptr_t, fa_error_t);
+void fa_log(fa_ptr_t ptr, fa_error_t error);
 
 /** Write an informative message to the log.
 */
-void fa_log_info(fa_string_t);
+void fa_log_info(fa_string_t string);
 
 /** Write a warning to the log.
 */
-void fa_log_warning(fa_string_t);
+void fa_log_warning(fa_string_t string);
 
 /** Write an error to the log.
 */
-void fa_log_error(fa_string_t);
+void fa_log_error(fa_string_t string);
 
 /** Write an informative message to the log.
 */
-void fa_log_info_from(fa_string_t, fa_string_t);
+void fa_log_info_from(fa_string_t string, fa_string_t string);
 
 /** Write a warning to the log.
 */
-void fa_log_warning_from(fa_string_t, fa_string_t);
+void fa_log_warning_from(fa_string_t string, fa_string_t string);
 
 /** Write an error to the log.
 */
-void fa_log_error_from(fa_string_t, fa_string_t);
+void fa_log_error_from(fa_string_t string, fa_string_t string);
 
 /** @}
     @}

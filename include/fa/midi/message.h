@@ -60,47 +60,47 @@ typedef struct _fa_midi_message_t * fa_midi_message_t;
     @param data2    The second data byte.
     @return         A new Midi message.
 */
-fa_midi_message_t fa_midi_message_create_simple(fa_midi_message_status_t,
-                                                int,
-                                                int);
+fa_midi_message_t fa_midi_message_create_simple(fa_midi_message_status_t status,
+                                                int int,
+                                                int int);
 
 /** Creates a sysex message from the given data buffer (not including F0 and F7).
     @param data     Raw data buffer (transfered).
     @return         A new sysex message.
 */
-fa_midi_message_t fa_midi_message_create_sysex(fa_buffer_t);
+fa_midi_message_t fa_midi_message_create_sysex(fa_buffer_t buffer);
 
 /** Copy the given midi message.
 */
-fa_midi_message_t fa_midi_message_copy(fa_midi_message_t);
+fa_midi_message_t fa_midi_message_copy(fa_midi_message_t message);
 
 /** Destroy the given midi_message message.
 */
-void fa_midi_message_destroy(fa_midi_message_t);
+void fa_midi_message_destroy(fa_midi_message_t message);
 
 /** Return whether the given midi_message message is a simple message.
 */
-bool fa_midi_message_is_simple(fa_midi_message_t);
+bool fa_midi_message_is_simple(fa_midi_message_t message);
 
 /** Returns the status and channel part of a MIDI message.
 */
-fa_pair_t fa_midi_message_simple_data(fa_midi_message_t);
+fa_pair_t fa_midi_message_simple_data(fa_midi_message_t message);
 
 /** Return the status byte of given MIDI message.
 */
-fa_midi_message_status_t fa_midi_message_status(fa_midi_message_t);
+fa_midi_message_status_t fa_midi_message_status(fa_midi_message_t message);
 
 /** Return the channel byte of given MIDI message.
 */
-fa_midi_message_channel_t fa_midi_message_channel(fa_midi_message_t);
+fa_midi_message_channel_t fa_midi_message_channel(fa_midi_message_t message);
 
 /** Return whether the given MIDI message is a sysex message.
 */
-bool fa_midi_message_is_sysex(fa_midi_message_t);
+bool fa_midi_message_is_sysex(fa_midi_message_t message);
 
 /** Return the data buffer of a sysex message, except for the wrapping `F0` and `F7` bytes.
 */
-fa_buffer_t fa_midi_message_sysex_data(fa_midi_message_t);
+fa_buffer_t fa_midi_message_sysex_data(fa_midi_message_t message);
 
 /** @}
     @}

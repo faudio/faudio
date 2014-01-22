@@ -38,35 +38,37 @@
 typedef struct _fa_atomic_ring_buffer_t * fa_atomic_ring_buffer_t;
 
 
-fa_atomic_ring_buffer_t fa_atomic_ring_buffer_create(size_t);
+fa_atomic_ring_buffer_t fa_atomic_ring_buffer_create(size_t size);
 
 
-void fa_atomic_ring_buffer_destroy(fa_atomic_ring_buffer_t);
+void fa_atomic_ring_buffer_destroy(fa_atomic_ring_buffer_t ringBuffer);
 
 
-size_t fa_atomic_ring_buffer_size(fa_atomic_ring_buffer_t);
+size_t fa_atomic_ring_buffer_size(fa_atomic_ring_buffer_t ringBuffer);
 
 
-bool fa_atomic_ring_buffer_read(fa_atomic_ring_buffer_t, uint8_t *);
+bool fa_atomic_ring_buffer_read(fa_atomic_ring_buffer_t ringBuffer,
+                                uint8_t *);
 
 
-bool fa_atomic_ring_buffer_read_float(fa_atomic_ring_buffer_t,
+bool fa_atomic_ring_buffer_read_float(fa_atomic_ring_buffer_t ringBuffer,
                                       float *);
 
 
-bool fa_atomic_ring_buffer_read_double(fa_atomic_ring_buffer_t,
+bool fa_atomic_ring_buffer_read_double(fa_atomic_ring_buffer_t ringBuffer,
                                        double *);
 
 
-bool fa_atomic_ring_buffer_write(fa_atomic_ring_buffer_t, uint8_t);
+bool fa_atomic_ring_buffer_write(fa_atomic_ring_buffer_t ringBuffer,
+                                 uint8_t uInt8);
 
 
-bool fa_atomic_ring_buffer_write_float(fa_atomic_ring_buffer_t,
-                                       float);
+bool fa_atomic_ring_buffer_write_float(fa_atomic_ring_buffer_t ringBuffer,
+                                       float float);
 
 
-bool fa_atomic_ring_buffer_write_double(fa_atomic_ring_buffer_t,
-                                        double);
+bool fa_atomic_ring_buffer_write_double(fa_atomic_ring_buffer_t ringBuffer,
+                                        double double);
 
 /** @}
     @}

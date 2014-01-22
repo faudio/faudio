@@ -24,19 +24,21 @@ fa_string_t fa_system_directory_home();
 fa_string_t fa_system_directory_current();
 
 
-void fa_system_directory_create(fa_string_t);
+void fa_system_directory_create(fa_string_t string);
 
 
-void fa_system_directory_remove(fa_string_t);
+void fa_system_directory_remove(fa_string_t string);
 
 
-fa_string_t fa_system_directory_read_file(fa_string_t);
+fa_string_t fa_system_directory_read_file(fa_string_t string);
 
 
-void fa_system_directory_write_file(fa_string_t, fa_string_t);
+void fa_system_directory_write_file(fa_string_t string,
+                                    fa_string_t string);
 
 
-void fa_system_directory_append_file(fa_string_t, fa_string_t);
+void fa_system_directory_append_file(fa_string_t string,
+                                     fa_string_t string);
 
 /** @}
     @}

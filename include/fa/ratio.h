@@ -41,77 +41,77 @@ typedef struct _fa_ratio_t * fa_ratio_t;
 
 /** Create a rational number.
 */
-fa_ratio_t fa_ratio_create(fa_ratio_numerator_t,
-                           fa_ratio_denominator_t);
+fa_ratio_t fa_ratio_create(fa_ratio_numerator_t numerator,
+                           fa_ratio_denominator_t denominator);
 
 /** Return the numerator of the given rational number.
 */
-fa_ratio_numerator_t fa_ratio_num(fa_ratio_t);
+fa_ratio_numerator_t fa_ratio_num(fa_ratio_t ratio);
 
 /** Return the denominator of the given rational number.
 */
-fa_ratio_denominator_t fa_ratio_denom(fa_ratio_t);
+fa_ratio_denominator_t fa_ratio_denom(fa_ratio_t ratio);
 
 /** Destruct the given rational number, writing its numerator
     and denominator to the given locations.
 */
-void fa_ratio_match(fa_ratio_t,
+void fa_ratio_match(fa_ratio_t ratio,
                     fa_ratio_numerator_t *,
                     fa_ratio_denominator_t *);
 
 /** Copy a rational number.
 */
-fa_ratio_t fa_ratio_copy(fa_ratio_t);
+fa_ratio_t fa_ratio_copy(fa_ratio_t ratio);
 
 /** Destroy a rational number.
 */
-void fa_ratio_destroy(fa_ratio_t);
+void fa_ratio_destroy(fa_ratio_t ratio);
 
 /** Add the given rational numbers.
 */
-fa_ratio_t fa_ratio_add(fa_ratio_t, fa_ratio_t);
+fa_ratio_t fa_ratio_add(fa_ratio_t ratio, fa_ratio_t ratio);
 
 /** Subtract the given rational numbers.
 */
-fa_ratio_t fa_ratio_subtract(fa_ratio_t, fa_ratio_t);
+fa_ratio_t fa_ratio_subtract(fa_ratio_t ratio, fa_ratio_t ratio);
 
 /** Multiply the given rational numbers.
 */
-fa_ratio_t fa_ratio_multiply(fa_ratio_t, fa_ratio_t);
+fa_ratio_t fa_ratio_multiply(fa_ratio_t ratio, fa_ratio_t ratio);
 
 /** Divide the given rational numbers.
 */
-fa_ratio_t fa_ratio_divide(fa_ratio_t, fa_ratio_t);
+fa_ratio_t fa_ratio_divide(fa_ratio_t ratio, fa_ratio_t ratio);
 
 /** Return the successor of the given rational number.
 */
-fa_ratio_t fa_ratio_succ(fa_ratio_t);
+fa_ratio_t fa_ratio_succ(fa_ratio_t ratio);
 
 /** Return the predecessor of the given rational number.
 */
-fa_ratio_t fa_ratio_pred(fa_ratio_t);
+fa_ratio_t fa_ratio_pred(fa_ratio_t ratio);
 
 /** Negate the given rational number.
 */
-fa_ratio_t fa_ratio_negate(fa_ratio_t);
+fa_ratio_t fa_ratio_negate(fa_ratio_t ratio);
 
 /** Invert the given rational number.
 */
-fa_ratio_t fa_ratio_recip(fa_ratio_t);
+fa_ratio_t fa_ratio_recip(fa_ratio_t ratio);
 
 /** Return the absolute value of the given rational number.
 */
-fa_ratio_t fa_ratio_absolute(fa_ratio_t);
+fa_ratio_t fa_ratio_absolute(fa_ratio_t ratio);
 
 /** Normalize the given rational number.
 */
-fa_ratio_t fa_ratio_normalize(fa_ratio_t);
+fa_ratio_t fa_ratio_normalize(fa_ratio_t ratio);
 
 /** Convert the given rational number to mixed form.
 
     For example \f$11/3\f$ becomes \f$3+2/3\f$.
 */
-void fa_ratio_to_mixed(fa_ratio_t,
+void fa_ratio_to_mixed(fa_ratio_t ratio,
                        fa_ratio_numerator_t *,
                        fa_ratio_t *);
 

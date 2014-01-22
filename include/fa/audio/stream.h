@@ -43,20 +43,20 @@ typedef fa_unary_t fa_audio_message_callback_t;
     @param stream   The stream.
     @return A list of @ref fa_audio_device_t
 */
-fa_list_t fa_audio_devices(fa_audio_stream_t);
+fa_list_t fa_audio_devices(fa_audio_stream_t stream);
 
 /** Return the clock associated with a given stream.
     @param stream The stream.
     @return A clock.
 */
-fa_clock_t fa_audio_get_clock(fa_audio_stream_t);
+fa_clock_t fa_audio_get_clock(fa_audio_stream_t stream);
 
 /** Return the clock associated with a given stream.
     @param stream The stream.
     @return A clock.
     @deprecated Use @ref fa_audio_get_clock.
 */
-fa_clock_t fa_audio_stream_clock(fa_audio_stream_t);
+fa_clock_t fa_audio_stream_clock(fa_audio_stream_t stream);
 
 /** Register a callback to be invoked when a message is received.
 

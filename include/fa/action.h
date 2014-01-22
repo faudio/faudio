@@ -67,11 +67,11 @@ fa_action_t fa_action_null();
 
 /** Copy the given action.
 */
-fa_action_t fa_action_copy(fa_action_t);
+fa_action_t fa_action_copy(fa_action_t action);
 
 /** Destroy the given action.
 */
-void fa_action_destroy(fa_action_t);
+void fa_action_destroy(fa_action_t action);
 
 /** The `set` action updates a single global bus.
 
@@ -82,7 +82,8 @@ void fa_action_destroy(fa_action_t);
     @param value
         Value to set.
 */
-fa_action_t fa_action_set(fa_action_channel_t, double);
+fa_action_t fa_action_set(fa_action_channel_t channel,
+                          double double);
 
 /** The `accum` action updates a single global bus by applying
     a function to its previous value.
@@ -96,9 +97,9 @@ fa_action_t fa_action_set(fa_action_channel_t, double);
     @param data
         Data closed over by the function.
 */
-fa_action_t fa_action_accum(fa_action_channel_t,
-                            fa_signal_unary_double_t,
-                            fa_ptr_t);
+fa_action_t fa_action_accum(fa_action_channel_t channel,
+                            fa_signal_unary_double_t unaryDouble,
+                            fa_ptr_t ptr);
 
 /** The `send` action sends a message, the type of which depends on
     the type of receiver. Often this is @ref fa_midi_message_t or 
@@ -111,50 +112,51 @@ fa_action_t fa_action_accum(fa_action_channel_t,
     @param value
         Value to send.
 */
-fa_action_t fa_action_send(fa_action_name_t, fa_action_value_t);
+fa_action_t fa_action_send(fa_action_name_t name,
+                           fa_action_value_t value);
 
 /** Return whether the given action is a set action.
       
 */
-bool fa_action_is_set(fa_action_t);
+bool fa_action_is_set(fa_action_t action);
 
 /** Get the channel of a set action.
 */
-fa_action_channel_t fa_action_set_channel(fa_action_t);
+fa_action_channel_t fa_action_set_channel(fa_action_t action);
 
 /** Get the value of a set action.
 */
-double fa_action_set_value(fa_action_t);
+double fa_action_set_value(fa_action_t action);
 
 /** Return whether the given action is an accumulation action.
       
 */
-bool fa_action_is_accum(fa_action_t);
+bool fa_action_is_accum(fa_action_t action);
 
 /** Get the channel of an accumulation action.
 */
-fa_action_channel_t fa_action_accum_channel(fa_action_t);
+fa_action_channel_t fa_action_accum_channel(fa_action_t action);
 
 /** Get the function of an accumulation action.
 */
-fa_signal_unary_double_t fa_action_accum_function(fa_action_t);
+fa_signal_unary_double_t fa_action_accum_function(fa_action_t action);
 
 /** Get the data of an accumulation action.
 */
-fa_ptr_t fa_action_accum_data(fa_action_t);
+fa_ptr_t fa_action_accum_data(fa_action_t action);
 
 /** Return whether the given action is a send action.
       
 */
-bool fa_action_is_send(fa_action_t);
+bool fa_action_is_send(fa_action_t action);
 
 /** Get the name of an send action.
 */
-fa_action_name_t fa_action_send_name(fa_action_t);
+fa_action_name_t fa_action_send_name(fa_action_t action);
 
 /** Get the value of an send action.
 */
-fa_action_value_t fa_action_send_value(fa_action_t);
+fa_action_value_t fa_action_send_value(fa_action_t action);
 
 /** Repeat the given action indefinitely.
 */
@@ -190,27 +192,27 @@ fa_action_t fa_action_until(fa_pred_t pred,
 
 /** Convert a unary function to an action.
 */
-fa_action_t fa_action_do(fa_nullary_t, fa_ptr_t);
+fa_action_t fa_action_do(fa_nullary_t nullary, fa_ptr_t ptr);
 
 /** Returns whether the given action is simple or not.
 */
-bool fa_action_is_simple(fa_action_t);
+bool fa_action_is_simple(fa_action_t action);
 
 /** Returns whether the given action is compound or not.
 */
-bool fa_action_is_compound(fa_action_t);
+bool fa_action_is_compound(fa_action_t action);
 
 /** Given a compound action, return the minimum offset to its tail.
 */
-fa_time_t fa_action_compound_interval(fa_action_t);
+fa_time_t fa_action_compound_interval(fa_action_t action);
 
 /** Given a compound action, return its head (nullable).
 */
-fa_action_t fa_action_compound_first(fa_action_t);
+fa_action_t fa_action_compound_first(fa_action_t action);
 
 /** Given a compound action, return its tail (nullable).
 */
-fa_action_t fa_action_compound_rest(fa_action_t);
+fa_action_t fa_action_compound_rest(fa_action_t action);
 
 /** @}
     @}

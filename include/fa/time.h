@@ -93,20 +93,20 @@ typedef int64_t fa_time_milliseconds_t;
     @return
         A new time value.
 */
-fa_time_t fa_time_create(fa_time_days_t,
-                         fa_time_hours_t,
-                         fa_time_minutes_t,
-                         fa_ratio_t);
+fa_time_t fa_time_create(fa_time_days_t days,
+                         fa_time_hours_t hours,
+                         fa_time_minutes_t minutes,
+                         fa_ratio_t ratio);
 
 /**
     Copy the given time value.
 */
-fa_time_t fa_time_copy(fa_time_t);
+fa_time_t fa_time_copy(fa_time_t time);
 
 /**
     Destroy the given time value.
 */
-void fa_time_destroy(fa_time_t);
+void fa_time_destroy(fa_time_t time);
 
 /**
     Return the number of whole days in this time value.
@@ -116,7 +116,7 @@ void fa_time_destroy(fa_time_t);
     @return
         Integer representing this time in days modulo one.
 */
-int32_t fa_time_days(fa_time_t);
+int32_t fa_time_days(fa_time_t time);
 
 /**
     Return the number of whole hours in this time value.
@@ -126,7 +126,7 @@ int32_t fa_time_days(fa_time_t);
     @return
         Integer representing this time in hours modulo one.
 */
-int32_t fa_time_hours(fa_time_t);
+int32_t fa_time_hours(fa_time_t time);
 
 /**
     Return the number of whole minutes in this time value.
@@ -136,7 +136,7 @@ int32_t fa_time_hours(fa_time_t);
     @return
         Integer representing this time in minutes modulo one.
 */
-int32_t fa_time_minutes(fa_time_t);
+int32_t fa_time_minutes(fa_time_t time);
 
 /**
     Return the number of whole seconds in this time value.
@@ -146,7 +146,7 @@ int32_t fa_time_minutes(fa_time_t);
     @return
         Integer representing this time in seconds modulo one.
 */
-int32_t fa_time_seconds(fa_time_t);
+int32_t fa_time_seconds(fa_time_t time);
 
 /**
     Return the fractions of a second in this time value.
@@ -156,14 +156,14 @@ int32_t fa_time_seconds(fa_time_t);
     @return
         Rational number, representing the remainder of time in seconds over one.
 */
-fa_ratio_t fa_time_divisions(fa_time_t);
+fa_ratio_t fa_time_divisions(fa_time_t time);
 
 /** Print the time as an ISO 8601 duration.
 
     The ISO represenation use decimal fractions of a second, and may lose precision. For example
     the duration of 1 min 24 1/3 sec would be represented as `P0000-00-00T00:01:24.3333`.
 */
-fa_string_t fa_time_to_iso(fa_time_t);
+fa_string_t fa_time_to_iso(fa_time_t time);
 
 /** Convert the time to seconds.
     This may lose precision.
@@ -171,7 +171,7 @@ fa_string_t fa_time_to_iso(fa_time_t);
     @param time
         Time value.
 */
-fa_time_seconds_t fa_time_to_seconds(fa_time_t);
+fa_time_seconds_t fa_time_to_seconds(fa_time_t time);
 
 /** Convert the time to milliseconds.
     This may lose precision.
@@ -179,7 +179,7 @@ fa_time_seconds_t fa_time_to_seconds(fa_time_t);
     @param time
         Time value.
 */
-fa_time_milliseconds_t fa_time_to_milliseconds(fa_time_t);
+fa_time_milliseconds_t fa_time_to_milliseconds(fa_time_t time);
 
 /** The system time type.
 

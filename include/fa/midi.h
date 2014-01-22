@@ -73,7 +73,7 @@ fa_midi_session_t fa_midi_begin_session();
     @param session
         Session to end.
 */
-void fa_midi_end_session(fa_midi_session_t);
+void fa_midi_end_session(fa_midi_session_t session);
 
 /** Begin a new session, and retain it for the duration of a call to the given function.
 
@@ -85,10 +85,10 @@ void fa_midi_end_session(fa_midi_session_t);
     @param error_callback               Function to receive eventual errors.
     @param error_data, session_data     Data closed over by the callbacks.
 */
-void fa_midi_with_session(fa_midi_session_callback_t,
-                          fa_ptr_t,
-                          fa_error_callback_t,
-                          fa_ptr_t);
+void fa_midi_with_session(fa_midi_session_callback_t sessionCallback,
+                          fa_ptr_t ptr,
+                          fa_error_callback_t callback,
+                          fa_ptr_t ptr);
 
 /** Get all currently active MIDI sessions. Note that at most one midi session
     can be active at the same time, so this function returns a list of zero or
@@ -110,7 +110,7 @@ fa_ptr_t fa_midi_end_all_sessions();
     @return
         A list of @ref fa_midi_device_t.
 */
-fa_list_t fa_midi_all(fa_midi_session_t);
+fa_list_t fa_midi_all(fa_midi_session_t session);
 
 /** Get the standard devices of the given session.
 
@@ -119,21 +119,21 @@ fa_list_t fa_midi_all(fa_midi_session_t);
         A pair of @ref fa_midi_device_t representing the default input and
         output device, respectively, or an error if at least one of them is not available.
 */
-fa_pair_t fa_midi_default(fa_midi_session_t);
+fa_pair_t fa_midi_default(fa_midi_session_t session);
 
 /** Get the standard input device of the given session.
     @param session   The session.
     @return
         A device or an error if there are no input devices available.
 */
-fa_midi_device_t fa_midi_default_input(fa_midi_session_t);
+fa_midi_device_t fa_midi_default_input(fa_midi_session_t session);
 
 /** Get the standard output device of the given session.
     @param session   The session.
     @return
         A device or an error if there are no output devices available.
 */
-fa_midi_device_t fa_midi_default_output(fa_midi_session_t);
+fa_midi_device_t fa_midi_default_output(fa_midi_session_t session);
 
 /** Register a callback to be invoked when a hardware change is detected.
 
@@ -152,29 +152,29 @@ fa_midi_device_t fa_midi_default_output(fa_midi_session_t);
     @warning
         Experimental.
 */
-void fa_midi_add_status_callback(fa_midi_status_callback_t,
-                                 fa_ptr_t,
-                                 fa_midi_session_t);
+void fa_midi_add_status_callback(fa_midi_status_callback_t statusCallback,
+                                 fa_ptr_t ptr,
+                                 fa_midi_session_t session);
 
 /** Return the name of the given device.
     @param device   The device.
 */
-fa_string_t fa_midi_name(fa_midi_device_t);
+fa_string_t fa_midi_name(fa_midi_device_t device);
 
 /** Return the host name of the given device.
     @param device   The device.
 */
-fa_string_t fa_midi_host_name(fa_midi_device_t);
+fa_string_t fa_midi_host_name(fa_midi_device_t device);
 
 /** Return whether the given device has input or not.
     @param device   The device.
 */
-bool fa_midi_has_input(fa_midi_device_t);
+bool fa_midi_has_input(fa_midi_device_t device);
 
 /** Return whether the given device has output or not.
     @param device   The device.
 */
-bool fa_midi_has_output(fa_midi_device_t);
+bool fa_midi_has_output(fa_midi_device_t device);
 
 /**
     Open a stream on the given devices.
@@ -182,14 +182,14 @@ bool fa_midi_has_output(fa_midi_device_t);
     @param device   The device.
     @return         A new stream or an error if no stream could be opened.
 */
-fa_midi_stream_t fa_midi_open_stream(fa_midi_device_t);
+fa_midi_stream_t fa_midi_open_stream(fa_midi_device_t device);
 
 /**
     Close the given stream.
     @param session
         Stream to close.
 */
-void fa_midi_close_stream(fa_midi_stream_t);
+void fa_midi_close_stream(fa_midi_stream_t stream);
 
 /**
     Run a stream on the given devices.
@@ -201,11 +201,11 @@ void fa_midi_close_stream(fa_midi_stream_t);
     @param error_callback
         Function to receive eventual errors.
 */
-void fa_midi_with_stream(fa_midi_device_t,
-                         fa_midi_stream_callback_t,
-                         fa_ptr_t,
-                         fa_error_callback_t,
-                         fa_ptr_t);
+void fa_midi_with_stream(fa_midi_device_t device,
+                         fa_midi_stream_callback_t streamCallback,
+                         fa_ptr_t ptr,
+                         fa_error_callback_t callback,
+                         fa_ptr_t ptr);
 
 /** Register a callback to be invoked when a message is received.
 
@@ -222,21 +222,21 @@ void fa_midi_with_stream(fa_midi_device_t,
     @warning
         Experimental.
 */
-void fa_midi_add_message_callback(fa_midi_message_callback_t,
-                                  fa_ptr_t,
-                                  fa_midi_stream_t);
+void fa_midi_add_message_callback(fa_midi_message_callback_t messageCallback,
+                                  fa_ptr_t ptr,
+                                  fa_midi_stream_t stream);
 
 /** Associate the given clock with the given stream.
     @param stream The stream.
     @param The clock.
 */
-void fa_midi_set_clock(fa_midi_stream_t, fa_clock_t);
+void fa_midi_set_clock(fa_midi_stream_t stream, fa_clock_t clock);
 
 /** Return the clock associated with a given stream.
     @param stream The stream.
     @return A clock.
 */
-fa_clock_t fa_midi_get_clock(fa_midi_stream_t);
+fa_clock_t fa_midi_get_clock(fa_midi_stream_t stream);
 
 /**
     Schedule an action on the stream.
@@ -244,7 +244,9 @@ fa_clock_t fa_midi_get_clock(fa_midi_stream_t);
     The action will be run as soon as the time of the stream (as
     reported by its clock) is greater than or equal to the given due time.
 */
-void fa_midi_schedule(fa_time_t, fa_action_t, fa_midi_stream_t);
+void fa_midi_schedule(fa_time_t time,
+                      fa_action_t action,
+                      fa_midi_stream_t stream);
 
 /**
     Schedule an action on the stream.
@@ -254,9 +256,9 @@ void fa_midi_schedule(fa_time_t, fa_action_t, fa_midi_stream_t);
     in terms of `fa_audio_schedule` and `fa_clock_time`, using the current
     stream clock.
 */
-void fa_midi_schedule_relative(fa_time_t,
-                               fa_action_t,
-                               fa_midi_stream_t);
+void fa_midi_schedule_relative(fa_time_t time,
+                               fa_action_t action,
+                               fa_midi_stream_t stream);
 
 /** @}
     @}

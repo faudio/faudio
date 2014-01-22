@@ -34,32 +34,33 @@ fa_priority_queue_t fa_priority_queue_empty();
 
 /**  Create an queue containing a single element. 
 */
-fa_priority_queue_t fa_priority_queue_single(fa_ptr_t);
+fa_priority_queue_t fa_priority_queue_single(fa_ptr_t ptr);
 
 /**  Destroy the given queue. 
 */
-void fa_priority_queue_destroy(fa_priority_queue_t);
+void fa_priority_queue_destroy(fa_priority_queue_t priorityQueue);
 
 /**  Merge the two given queues into the first. 
 */
-void fa_priority_queue_merge(fa_priority_queue_t,
-                             fa_priority_queue_t);
+void fa_priority_queue_merge(fa_priority_queue_t priorityQueue,
+                             fa_priority_queue_t priorityQueue);
 
 /**  Insert the given element into the given queue. 
 */
-void fa_priority_queue_insert(fa_ptr_t, fa_priority_queue_t);
+void fa_priority_queue_insert(fa_ptr_t ptr,
+                              fa_priority_queue_t priorityQueue);
 
 /**  Returns the top-most element in the given queue, if any.
      @errors
         Returns `NULL` if the queue is empty.
 */
-fa_ptr_t fa_priority_queue_peek(fa_priority_queue_t);
+fa_ptr_t fa_priority_queue_peek(fa_priority_queue_t priorityQueue);
 
 /**  Returns the top-most element and remove it from the queue.
      @errors
         Returns `NULL` if the queue is empty.
 */
-fa_ptr_t fa_priority_queue_pop(fa_priority_queue_t);
+fa_ptr_t fa_priority_queue_pop(fa_priority_queue_t priorityQueue);
 
 /** @}
     @}

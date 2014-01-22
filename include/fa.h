@@ -78,91 +78,91 @@ typedef uint32_t fa_char32_t;
     @see [Value references](@ref ValueReferences)
       
 */
-bool fa_is_bool(fa_ptr_t);
+bool fa_is_bool(fa_ptr_t ptr);
 
 
-bool fa_is_int8(fa_ptr_t);
+bool fa_is_int8(fa_ptr_t ptr);
 
 
-bool fa_is_int16(fa_ptr_t);
+bool fa_is_int16(fa_ptr_t ptr);
 
 
-bool fa_is_int32(fa_ptr_t);
+bool fa_is_int32(fa_ptr_t ptr);
 
 
-bool fa_is_int64(fa_ptr_t);
+bool fa_is_int64(fa_ptr_t ptr);
 
 
-bool fa_is_float(fa_ptr_t);
+bool fa_is_float(fa_ptr_t ptr);
 
 
-bool fa_is_double(fa_ptr_t);
+bool fa_is_double(fa_ptr_t ptr);
 
 
-bool fa_is_ref(fa_ptr_t);
+bool fa_is_ref(fa_ptr_t ptr);
 
 
-bool fa_to_bool(fa_ptr_t);
+bool fa_to_bool(fa_ptr_t ptr);
 
 
-int8_t fa_to_int8(fa_ptr_t);
+int8_t fa_to_int8(fa_ptr_t ptr);
 
 
-int16_t fa_to_int16(fa_ptr_t);
+int16_t fa_to_int16(fa_ptr_t ptr);
 
 
-int32_t fa_to_int32(fa_ptr_t);
+int32_t fa_to_int32(fa_ptr_t ptr);
 
 
-int64_t fa_to_int64(fa_ptr_t);
+int64_t fa_to_int64(fa_ptr_t ptr);
 
 
-float fa_to_float(fa_ptr_t);
+float fa_to_float(fa_ptr_t ptr);
 
 
-double fa_to_double(fa_ptr_t);
+double fa_to_double(fa_ptr_t ptr);
 
 
-bool fa_peek_bool(fa_ptr_t);
+bool fa_peek_bool(fa_ptr_t ptr);
 
 
-int8_t fa_peek_int8(fa_ptr_t);
+int8_t fa_peek_int8(fa_ptr_t ptr);
 
 
-int16_t fa_peek_int16(fa_ptr_t);
+int16_t fa_peek_int16(fa_ptr_t ptr);
 
 
-int32_t fa_peek_int32(fa_ptr_t);
+int32_t fa_peek_int32(fa_ptr_t ptr);
 
 
-int64_t fa_peek_int64(fa_ptr_t);
+int64_t fa_peek_int64(fa_ptr_t ptr);
 
 
-float fa_peek_float(fa_ptr_t);
+float fa_peek_float(fa_ptr_t ptr);
 
 
-double fa_peek_double(fa_ptr_t);
+double fa_peek_double(fa_ptr_t ptr);
 
 
-fa_ptr_t fa_from_bool(bool);
+fa_ptr_t fa_from_bool(bool bool);
 
 
-fa_ptr_t fa_from_int8(int8_t);
+fa_ptr_t fa_from_int8(int8_t int8);
 
 
-fa_ptr_t fa_from_int16(int16_t);
+fa_ptr_t fa_from_int16(int16_t int16);
 
 
-fa_ptr_t fa_from_int32(int32_t);
+fa_ptr_t fa_from_int32(int32_t int32);
 
 
-fa_ptr_t fa_from_int64(int64_t);
+fa_ptr_t fa_from_int64(int64_t int64);
 
 
-fa_ptr_t fa_from_float(float);
+fa_ptr_t fa_from_float(float float);
 
 
-fa_ptr_t fa_from_double(double);
+fa_ptr_t fa_from_double(double double);
 
 /** Unique identifier. Only used for interface lookup at the moment.
     
@@ -179,7 +179,7 @@ typedef fa_ptr_t (* fa_impl_t)(fa_id_t);
     @see [Interfaces](@ref Interfaces)
       
 */
-fa_ptr_t fa_interface(fa_id_t, fa_ptr_t);
+fa_ptr_t fa_interface(fa_id_t id, fa_ptr_t ptr);
 
 /** Equality comparison interface.
     
@@ -192,13 +192,13 @@ typedef struct {
     @see [Equal](@ref fa_equal_t)
       
 */
-bool fa_equal(fa_ptr_t, fa_ptr_t);
+bool fa_equal(fa_ptr_t ptr, fa_ptr_t ptr);
 
 /** Return whether the given values are unequal.
     @see [Equal](@ref fa_equal_t)
       
 */
-bool fa_not_equal(fa_ptr_t, fa_ptr_t);
+bool fa_not_equal(fa_ptr_t ptr, fa_ptr_t ptr);
 
 /** Less-than comparison interface.
     
@@ -209,22 +209,22 @@ typedef struct {
         } fa_order_t;
 
 
-bool fa_less_than(fa_ptr_t, fa_ptr_t);
+bool fa_less_than(fa_ptr_t ptr, fa_ptr_t ptr);
 
 
-bool fa_greater_than(fa_ptr_t, fa_ptr_t);
+bool fa_greater_than(fa_ptr_t ptr, fa_ptr_t ptr);
 
 
-bool fa_less_than_equal(fa_ptr_t, fa_ptr_t);
+bool fa_less_than_equal(fa_ptr_t ptr, fa_ptr_t ptr);
 
 
-bool fa_greater_than_equal(fa_ptr_t, fa_ptr_t);
+bool fa_greater_than_equal(fa_ptr_t ptr, fa_ptr_t ptr);
 
 
-fa_ptr_t fa_min(fa_ptr_t, fa_ptr_t);
+fa_ptr_t fa_min(fa_ptr_t ptr, fa_ptr_t ptr);
 
 
-fa_ptr_t fa_max(fa_ptr_t, fa_ptr_t);
+fa_ptr_t fa_max(fa_ptr_t ptr, fa_ptr_t ptr);
 
 /** Arithmetic operations interface.
     
@@ -238,34 +238,34 @@ typedef struct {
         } fa_number_t;
 
 
-fa_ptr_t fa_add(fa_ptr_t, fa_ptr_t);
+fa_ptr_t fa_add(fa_ptr_t ptr, fa_ptr_t ptr);
 
 
-fa_ptr_t fa_subtract(fa_ptr_t, fa_ptr_t);
+fa_ptr_t fa_subtract(fa_ptr_t ptr, fa_ptr_t ptr);
 
 
-fa_ptr_t fa_multiply(fa_ptr_t, fa_ptr_t);
+fa_ptr_t fa_multiply(fa_ptr_t ptr, fa_ptr_t ptr);
 
 
-fa_ptr_t fa_divide(fa_ptr_t, fa_ptr_t);
+fa_ptr_t fa_divide(fa_ptr_t ptr, fa_ptr_t ptr);
 
 
-fa_ptr_t fa_absolute(fa_ptr_t);
+fa_ptr_t fa_absolute(fa_ptr_t ptr);
 
 
-fa_ptr_t fa_dadd(fa_ptr_t, fa_ptr_t);
+fa_ptr_t fa_dadd(fa_ptr_t ptr, fa_ptr_t ptr);
 
 
-fa_ptr_t fa_dsubtract(fa_ptr_t, fa_ptr_t);
+fa_ptr_t fa_dsubtract(fa_ptr_t ptr, fa_ptr_t ptr);
 
 
-fa_ptr_t fa_dmultiply(fa_ptr_t, fa_ptr_t);
+fa_ptr_t fa_dmultiply(fa_ptr_t ptr, fa_ptr_t ptr);
 
 
-fa_ptr_t fa_ddivide(fa_ptr_t, fa_ptr_t);
+fa_ptr_t fa_ddivide(fa_ptr_t ptr, fa_ptr_t ptr);
 
 
-fa_ptr_t fa_dabsolute(fa_ptr_t);
+fa_ptr_t fa_dabsolute(fa_ptr_t ptr);
 
 /** Generic copying interface.
     
@@ -285,20 +285,20 @@ typedef struct {
     @see [Copy](@ref fa_copy_t)
       
 */
-fa_ptr_t fa_copy(fa_ptr_t);
+fa_ptr_t fa_copy(fa_ptr_t ptr);
 
 /** Move the given value. This is the identity function,
     just serves as a notification.
       
 */
-fa_ptr_t fa_move(fa_ptr_t);
+fa_ptr_t fa_move(fa_ptr_t ptr);
 
 /** Destroy the given value.
     @param  Value to destroy (destroyed).
     @see [Destroy](@ref fa_destroy_t)
       
 */
-void fa_destroy(fa_ptr_t);
+void fa_destroy(fa_ptr_t ptr);
 
 /** Return whether the given value is an error or not.
 
@@ -315,23 +315,23 @@ void fa_destroy(fa_ptr_t);
     @return
       A boolean.
 */
-bool fa_check(fa_ptr_t);
+bool fa_check(fa_ptr_t ptr);
 
 /** Print the given value, using [Show](@ref fa_string_show_t).
     @param format   A printf-style format string.
     @param value    Value to print.
       
 */
-void fa_print(char *, fa_ptr_t);
+void fa_print(char *, fa_ptr_t ptr);
 
 
-void fa_dprint(char *, fa_ptr_t);
+void fa_dprint(char *, fa_ptr_t ptr);
 
 
-void fa_print_ln(fa_ptr_t);
+void fa_print_ln(fa_ptr_t ptr);
 
 
-void fa_dprint_ln(fa_ptr_t);
+void fa_dprint_ln(fa_ptr_t ptr);
 
 /** @}
     */

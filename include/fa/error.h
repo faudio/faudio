@@ -59,7 +59,7 @@ typedef struct _fa_error_t * fa_error_t;
     @return
       A boolean.
 */
-bool fa_error_check(fa_ptr_t);
+bool fa_error_check(fa_ptr_t ptr);
 
 /** Write a log message.
 
@@ -68,24 +68,24 @@ bool fa_error_check(fa_ptr_t);
     @param error
         Condition to log. Must implement [Error](@ref fa_error_interface_t).
 */
-void fa_error_log(fa_ptr_t, fa_error_t);
+void fa_error_log(fa_ptr_t ptr, fa_error_t error);
 
 /** Return the severity of the given error.
 */
-fa_error_severity_t fa_error_severity(fa_error_t);
+fa_error_severity_t fa_error_severity(fa_error_t error);
 
 /** Return the message of the given error.
 */
-fa_string_t fa_error_message(fa_error_t);
+fa_string_t fa_error_message(fa_error_t error);
 
 /** Return the origin of the given error.
 */
-fa_string_t fa_error_origin(fa_error_t);
+fa_string_t fa_error_origin(fa_error_t error);
 
 /** Convert the given error to a formated string.
     @param colored Include color escapes for terminals.
 */
-fa_string_t fa_error_format(bool, fa_error_t);
+fa_string_t fa_error_format(bool bool, fa_error_t error);
 
 /** An error handler routine.
 */
@@ -101,9 +101,9 @@ typedef void (* fa_error_callback_t)(fa_ptr_t, fa_error_t);
             [Copy](@ref fa_copy_t) and
             [Destroy](@ref fa_destroy_t)
 */
-fa_error_t fa_error_create_simple(fa_error_severity_t,
-                                  fa_string_t,
-                                  fa_string_t);
+fa_error_t fa_error_create_simple(fa_error_severity_t severity,
+                                  fa_string_t string,
+                                  fa_string_t string);
 
 /** @}
     @}

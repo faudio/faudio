@@ -44,31 +44,34 @@ typedef struct {
         } fa_pair_left_struct_t;
 
 
-fa_pair_left_t fa_pair_left_create(fa_ptr_t, fa_ptr_t);
+fa_pair_left_t fa_pair_left_create(fa_ptr_t ptr, fa_ptr_t ptr);
 
 
 fa_pair_left_t fa_pair_left_read(fa_pair_left_struct_t *);
 
 
-void fa_pair_left_write(fa_pair_left_struct_t *, fa_pair_left_t);
+void fa_pair_left_write(fa_pair_left_struct_t *,
+                        fa_pair_left_t left);
 
 
-fa_pair_left_t fa_pair_left_copy(fa_pair_left_t);
+fa_pair_left_t fa_pair_left_copy(fa_pair_left_t left);
 
 
-void fa_pair_left_destroy(fa_pair_left_t);
+void fa_pair_left_destroy(fa_pair_left_t left);
 
 
-void fa_pair_left_decons(fa_ptr_t *, fa_ptr_t *, fa_pair_left_t);
+void fa_pair_left_decons(fa_ptr_t *,
+                         fa_ptr_t *,
+                         fa_pair_left_t left);
 
 
-fa_pair_t fa_pair_left_to_pair(fa_pair_left_t);
+fa_pair_t fa_pair_left_to_pair(fa_pair_left_t left);
 
 
-fa_pair_left_t fa_pair_left_from_pair(fa_pair_t);
+fa_pair_left_t fa_pair_left_from_pair(fa_pair_t pair);
 
 
-fa_list_t fa_pair_left_to_list(fa_pair_left_t);
+fa_list_t fa_pair_left_to_list(fa_pair_left_t left);
 
 /** @}
     @}

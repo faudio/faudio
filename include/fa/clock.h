@@ -44,7 +44,7 @@ typedef struct _fa_clock_t * fa_clock_t;
     @return
         The current time.
 */
-fa_time_t fa_clock_time(fa_clock_t);
+fa_time_t fa_clock_time(fa_clock_t clock);
 
 /** Returns the current time in milliseconds according to the given clock.
     @param clock
@@ -52,7 +52,7 @@ fa_time_t fa_clock_time(fa_clock_t);
     @return
         The current time in milliseconds.
 */
-fa_time_milliseconds_t fa_clock_milliseconds(fa_clock_t);
+fa_time_milliseconds_t fa_clock_milliseconds(fa_clock_t clock);
 
 /** Returns the standard clock.
     @return

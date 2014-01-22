@@ -40,7 +40,7 @@ fa_atomic_queue_t fa_atomic_queue_create();
     @par Atomicity
         Non-atomic
 */
-void fa_atomic_queue_destroy(fa_atomic_queue_t);
+void fa_atomic_queue_destroy(fa_atomic_queue_t queue);
 
 /** Read a value from the given queue.
     @return
@@ -48,7 +48,7 @@ void fa_atomic_queue_destroy(fa_atomic_queue_t);
     @par Atomicity
         Atomic
 */
-fa_ptr_t fa_atomic_queue_read(fa_atomic_queue_t);
+fa_ptr_t fa_atomic_queue_read(fa_atomic_queue_t queue);
 
 /** Write the given value to the given queue.
     @param queuer   Queue.
@@ -56,7 +56,7 @@ fa_ptr_t fa_atomic_queue_read(fa_atomic_queue_t);
     @par Atomicity
         Atomic
 */
-bool fa_atomic_queue_write(fa_atomic_queue_t, fa_ptr_t);
+bool fa_atomic_queue_write(fa_atomic_queue_t queue, fa_ptr_t ptr);
 
 /** @}
     @}

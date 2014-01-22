@@ -90,42 +90,44 @@ fa_string_t fa_string_empty();
 
     The returned string should be destroyed by the caller.
 */
-fa_string_t fa_string_single(fa_char16_t);
+fa_string_t fa_string_single(fa_char16_t char16);
 
 /** Create a string by repeating the given character.
 
     The returned string should be destroyed by the caller.
 */
-fa_string_t fa_string_repeat(int, fa_char16_t);
+fa_string_t fa_string_repeat(int int, fa_char16_t char16);
 
 /** Copy the given string.
 
     The returned string should be destroyed by the caller.
 */
-fa_string_t fa_string_copy(fa_string_t);
+fa_string_t fa_string_copy(fa_string_t string);
 
 /** Append the given strings.
 
     The returned string should be destroyed by the caller.
 */
-fa_string_t fa_string_append(fa_string_t, fa_string_t);
+fa_string_t fa_string_append(fa_string_t string,
+                             fa_string_t string);
 
 
-fa_string_t fa_string_dappend(fa_string_t, fa_string_t);
+fa_string_t fa_string_dappend(fa_string_t string,
+                              fa_string_t string);
 
 /** Destroy the given string.
 */
-void fa_string_destroy(fa_string_t);
+void fa_string_destroy(fa_string_t string);
 
 /** Return the number of characters in the given string.
 */
-int fa_string_length(fa_string_t);
+int fa_string_length(fa_string_t string);
 
 /** Return the character at the given position in the string.
     @param pos
     @param str
 */
-fa_char16_t fa_string_char_at(int, fa_string_t);
+fa_char16_t fa_string_char_at(int int, fa_string_t string);
 
 /** String conversion interface.
     
@@ -141,26 +143,26 @@ typedef struct {
     @return
         A new string.
 */
-fa_string_t fa_string_show(fa_ptr_t);
+fa_string_t fa_string_show(fa_ptr_t ptr);
 
 /** Behaves like the identity function on strings and as [show](@ref fa_string_show)
     on all other value.
     @see [Show](@ref fa_string_show_t)
       
 */
-fa_string_t fa_string_to_string(fa_ptr_t);
+fa_string_t fa_string_to_string(fa_ptr_t ptr);
 
 /** Generic JSON conversion.
     @param a    Value implementing [Show](@ref fa_string_show_t) or [Dynamic](@ref fa_string_dynamic_t).
       
 */
-fa_string_t fa_string_to_json(fa_ptr_t);
+fa_string_t fa_string_to_json(fa_ptr_t ptr);
 
 /** Generic JSON conversion.
     @param string   A JSON string.
       
 */
-fa_ptr_t fa_string_from_json(fa_string_t);
+fa_ptr_t fa_string_from_json(fa_string_t string);
 
 /** Encode the given string as UTF-8.
 
@@ -168,7 +170,7 @@ fa_ptr_t fa_string_from_json(fa_string_t);
     @return
     qA new encoded string.
 */
-fa_string_utf8_t fa_string_to_utf8(fa_string_t);
+fa_string_utf8_t fa_string_to_utf8(fa_string_t string);
 
 /** Encode a string as CP1252, also known as the standard Windows charset.
 
@@ -176,7 +178,7 @@ fa_string_utf8_t fa_string_to_utf8(fa_string_t);
     @return
         A new encoded string.
 */
-fa_string_cp1252_t fa_string_to_cp1252(fa_string_t);
+fa_string_cp1252_t fa_string_to_cp1252(fa_string_t string);
 
 /** Encode the given string as UTF-16.
 
@@ -184,13 +186,13 @@ fa_string_cp1252_t fa_string_to_cp1252(fa_string_t);
     @return
         A heap-allocated encoded string.
 */
-fa_string_utf16_t fa_string_to_utf16(fa_string_t);
+fa_string_utf16_t fa_string_to_utf16(fa_string_t string);
 
 /** Convert a string to a the string representation used by the platform.
 
     * On Mac OS X and iOS, `CFStringRef` is used.
 */
-fa_ptr_t fa_string_to_native(fa_string_t);
+fa_ptr_t fa_string_to_native(fa_string_t string);
 
 /** Deencode a string from UTF-8.
 
@@ -198,7 +200,7 @@ fa_ptr_t fa_string_to_native(fa_string_t);
     @return
         A new string.
 */
-fa_string_t fa_string_from_utf8(fa_string_utf8_t);
+fa_string_t fa_string_from_utf8(fa_string_utf8_t utf8);
 
 /** Deencode a string from CP1252, also known as the standard Windows charset.
 
@@ -206,7 +208,7 @@ fa_string_t fa_string_from_utf8(fa_string_utf8_t);
     @return
         A new string.
 */
-fa_string_t fa_string_from_cp1252(fa_string_cp1252_t);
+fa_string_t fa_string_from_cp1252(fa_string_cp1252_t cp1252);
 
 /** Deencode a string from UTF-16.
 
@@ -214,19 +216,19 @@ fa_string_t fa_string_from_cp1252(fa_string_cp1252_t);
     @return
         A new string.
 */
-fa_string_t fa_string_from_utf16(fa_string_utf16_t);
+fa_string_t fa_string_from_utf16(fa_string_utf16_t utf16);
 
 /** Convert a value of the string representation used by the platform to a string.
 
     * On Mac OS X and iOS, `CFStringRef` is used.
 */
-fa_string_t fa_string_from_native(fa_ptr_t);
+fa_string_t fa_string_from_native(fa_ptr_t ptr);
 
 /** Return true iff the given string matches the given regular expression.
     @param expr   A regular expression string.
     @param string String to match.
 */
-bool fa_string_matches(fa_string_t, fa_string_t);
+bool fa_string_matches(fa_string_t string, fa_string_t string);
 
 /** Format an integer.
     @param format
@@ -236,7 +238,7 @@ bool fa_string_matches(fa_string_t, fa_string_t);
     @return
         A new formatted string.
 */
-fa_string_t fa_string_format_integral(char *, long);
+fa_string_t fa_string_format_integral(char *, long long);
 
 /** Format a floating-point value.
     @param format
@@ -246,7 +248,7 @@ fa_string_t fa_string_format_integral(char *, long);
     @return
         A new formatted string.
 */
-fa_string_t fa_string_format_floating(char *, double);
+fa_string_t fa_string_format_floating(char *, double double);
 
 /** @}
     @}

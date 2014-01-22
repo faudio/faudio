@@ -35,16 +35,17 @@ typedef struct _fa_streams_source_t * fa_streams_source_t;
 typedef struct _fa_streams_sink_t * fa_streams_sink_t;
 
 
-void fa_streams_read(fa_streams_source_t, fa_buffer_t);
+void fa_streams_read(fa_streams_source_t source,
+                     fa_buffer_t buffer);
 
 
-bool fa_streams_more(fa_streams_source_t);
+bool fa_streams_more(fa_streams_source_t source);
 
 
-void fa_streams_write(fa_streams_sink_t, fa_buffer_t);
+void fa_streams_write(fa_streams_sink_t sink, fa_buffer_t buffer);
 
 
-void fa_streams_close(fa_streams_sink_t);
+void fa_streams_close(fa_streams_sink_t sink);
 
 /** @}
     @}

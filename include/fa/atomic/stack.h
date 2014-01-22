@@ -33,7 +33,7 @@ fa_atomic_stack_t fa_atomic_stack_create();
     @par Atomicity
         Non-atomic
 */
-void fa_atomic_stack_destroy(fa_atomic_stack_t);
+void fa_atomic_stack_destroy(fa_atomic_stack_t stack);
 
 /** Read a value from the given stack.
     @return
@@ -41,7 +41,7 @@ void fa_atomic_stack_destroy(fa_atomic_stack_t);
     @par Atomicity
         Atomic
 */
-fa_ptr_t fa_atomic_stack_read(fa_atomic_stack_t);
+fa_ptr_t fa_atomic_stack_read(fa_atomic_stack_t stack);
 
 /** Write the given value to the given stack.
     @param stackr   Queue.
@@ -49,7 +49,7 @@ fa_ptr_t fa_atomic_stack_read(fa_atomic_stack_t);
     @par Atomicity
         Atomic
 */
-bool fa_atomic_stack_write(fa_atomic_stack_t, fa_ptr_t);
+bool fa_atomic_stack_write(fa_atomic_stack_t stack, fa_ptr_t ptr);
 
 /** @}
     @}

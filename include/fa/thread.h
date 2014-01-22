@@ -47,26 +47,26 @@ typedef struct _fa_thread_mutex_t * fa_thread_mutex_t;
     @param data Value to be passed to the function.
     @return     A new thread executing concurrently with the current thread.
 */
-fa_thread_t fa_thread_create(fa_nullary_t, fa_ptr_t);
+fa_thread_t fa_thread_create(fa_nullary_t nullary, fa_ptr_t ptr);
 
 /** Destroy a thread, and return after its associated function has returned.
     @param thread Thread to join (destroyed).
       
 */
-void fa_thread_join(fa_thread_t);
+void fa_thread_join(fa_thread_t thread);
 
 /** Destroy a thread and return directly. The associated function may continous executing
     in the background.
     @param thread Thread to detach (destroyed).
       
 */
-void fa_thread_detach(fa_thread_t);
+void fa_thread_detach(fa_thread_t thread);
 
 /** Convert a thread to a the underlying thread type used by the platform.
 
     * On Mac OS X and iOS, `pthread_t` is used.
 */
-fa_ptr_t fa_thread_to_native(fa_thread_t);
+fa_ptr_t fa_thread_to_native(fa_thread_t thread);
 
 /** Return the main thread.
       
@@ -80,7 +80,7 @@ fa_thread_t fa_thread_current();
 
 /** Sleep the current thread for the given time.
 */
-void fa_thread_sleep(fa_time_milliseconds_t);
+void fa_thread_sleep(fa_time_milliseconds_t milliseconds);
 
 /** Create a mutex.
 
@@ -91,19 +91,19 @@ fa_thread_mutex_t fa_thread_create_mutex();
 
 /** Destroy a mutex.
 */
-void fa_thread_destroy_mutex(fa_thread_mutex_t);
+void fa_thread_destroy_mutex(fa_thread_mutex_t mutex);
 
 /** Acquire the lock of a mutex.
 */
-bool fa_thread_lock(fa_thread_mutex_t);
+bool fa_thread_lock(fa_thread_mutex_t mutex);
 
 /** Try acquiring the lock of a mutex.
 */
-bool fa_thread_try_lock(fa_thread_mutex_t);
+bool fa_thread_try_lock(fa_thread_mutex_t mutex);
 
 /** Release the lock of a mutex.
 */
-bool fa_thread_unlock(fa_thread_mutex_t);
+bool fa_thread_unlock(fa_thread_mutex_t mutex);
 
 /** @}
     @}
