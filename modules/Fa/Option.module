@@ -55,11 +55,11 @@ module Fa.Option
             A pair where the first component is a @ref fa_map_t of `(name, value)`
             pairs, and the second component is a list of remaning arguments.    
     */
-    parse   : (Int, [Option x 1], Int, Char**) -> Pair;
+    parse   : (Int, Option*, Int, Char**) -> Pair;
     
     /** Show options according to the given specification (see example above) on the standard output.
      */
-    show    : (Int, [Option x 1], Char*) -> Void;
+    show    : (Int, Option*, Char*) -> Void;
 
     parseInt       : (Char *)            -> Ptr;
     parseFloat     : (Char *)            -> Ptr;
