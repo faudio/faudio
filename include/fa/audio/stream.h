@@ -1,0 +1,91 @@
+
+#ifndef _FA_AUDIO_STREAM
+#define _FA_AUDIO_STREAM
+
+#include <fa/action.h>
+#include <fa/time.h>
+#include <fa/clock.h>
+
+/** @addtogroup FaAudioStream
+
+    @defgroup Fa Fa
+    @{
+    @defgroup FaAudio Audio
+    @{
+    @defgroup FaAudioStream Stream
+    @{
+    */
+
+/** An audio stream.
+*/
+typedef struct _fa_audio_stream_t * fa_audio_stream_t;
+
+/** A callback to be invoked whenever a message is received.
+*/
+typedef fa_unary_t fa_audio_message_callback_t;
+
+/** Return the devices associated with the given stream.
+    @param stream   The stream.
+    @return A list of @ref fa_audio_device_t
+*/
+fa_list_t fa_audio_devices(fa_audio_stream_t);
+
+/** Return the clock associated with a given stream.
+    @param stream The stream.
+    @return A clock.
+*/
+fa_clock_t fa_audio_get_clock(fa_audio_stream_t);
+
+/** Return the clock associated with a given stream.
+    @param stream The stream.
+    @return A clock.
+    @deprecated Use @ref fa_audio_get_clock.
+*/
+fa_clock_t fa_audio_stream_clock(fa_audio_stream_t);
+
+/** Register a callback to be invoked when a message is received.
+
+    Multiple callbacks can be registered this way. All registered callbacks
+    are associated with a stream and will be removed when the stream is stopped
+    or its associated session ends.
+
+    @param callback
+        Callback to register.
+    @param callback_data
+        Data closed over by the callback function.
+    @param session
+        Stream on which to register the callback.
+    @warning
+        Experimental.
+*/
+void fa_audio_add_message_callback(fa_audio_message_callback_t,
+                                   fa_ptr_t,
+                                   fa_audio_stream_t);
+
+/**
+    Schedule an action on the stream.
+    
+    The action will be run as soon as the time of the stream (as
+    reported by its clock) is greater than or equal to the given due time.
+*/
+void fa_audio_schedule(fa_time_t, fa_action_t, fa_audio_stream_t);
+
+/**
+    Schedule an action on the stream.
+
+    The action will be run when the given time has passed, relative to
+    when this function was invoked. This is a convenience function implemented
+    in terms of `fa_audio_schedule` and `fa_clock_time`, using the current
+    stream clock.
+*/
+void fa_audio_schedule_relative(fa_time_t,
+                                fa_action_t,
+                                fa_audio_stream_t);
+
+/** @}
+    @}
+    @}
+    */
+
+#endif // _FA_AUDIO_STREAM
+

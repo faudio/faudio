@@ -14,6 +14,7 @@ bindings: lisp
 c:
 	mkdir -p include/fa
 	mkdir -p include/fa/atomic
+	mkdir -p include/fa/audio
 	mkdir -p include/fa/device
 	mkdir -p include/fa/midi
 	mkdir -p include/fa/pair
@@ -49,6 +50,7 @@ c:
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Action.module  			>include/fa/action.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Signal.module  			>include/fa/signal.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Audio.module    		>include/fa/audio.h && \
+	$(MODULO) -Mmodules --language=c    <modules/Fa/Audio/Stream.module    		>include/fa/audio/stream.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Midi.module    			>include/fa/midi.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Option.module    		>include/fa/option.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Io.module    			>include/fa/io.h
@@ -57,6 +59,7 @@ lisp: fix-lisp
 gen-lisp:
 	mkdir -p bindings/lisp/fa
 	mkdir -p bindings/lisp/fa/atomic
+	mkdir -p bindings/lisp/fa/audio
 	mkdir -p bindings/lisp/fa/device
 	mkdir -p bindings/lisp/fa/midi
 	mkdir -p bindings/lisp/fa/processor

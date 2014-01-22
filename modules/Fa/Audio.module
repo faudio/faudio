@@ -23,6 +23,7 @@ module Fa.Audio
     import Fa.Signal;
     import Fa.Action;
     import Fa.Clock;
+    import Fa.Audio.Stream;
     
     /** An audio session.
      */
@@ -31,10 +32,6 @@ module Fa.Audio
     /** An audio device.
      */
     type Device  = opaque;
-    
-    /** An audio stream.
-     */
-    type Stream  = opaque;
 
     /** A callback to receive audio sessions.
      */
@@ -47,10 +44,6 @@ module Fa.Audio
     /** A callback to be invoked upon changes to the audio setup.
      */
     type StatusCallback = Nullary;
-
-    /** A callback to be invoked whenever a message is received.
-     */
-    type MessageCallback = Unary;
 
     /** An audio processor, or a function from a list of signals to a list of signals.
      */
@@ -207,6 +200,8 @@ module Fa.Audio
         @param device   The device.
     */
     defaultSampleRate : Device -> Double;
+
+    
     
     /**
         Open a stream on the given devices.
@@ -251,58 +246,5 @@ module Fa.Audio
         Callback, Ptr
         ) -> Void;
 
-    /** Return the devices associated with the given stream.
-        @param stream   The stream.
-        @return A list of @ref fa_audio_device_t
-     */
-    devices : Stream -> List;
-
-    /** Return the clock associated with a given stream.
-        @param stream The stream.
-        @return A clock.
-     */
-    getClock : Stream -> Clock;
-    
-    /** Return the clock associated with a given stream.
-        @param stream The stream.
-        @return A clock.
-        @deprecated Use @ref fa_audio_get_clock.
-     */
-    streamClock : Stream -> Clock;
-
-    /** Register a callback to be invoked when a message is received.
-
-        Multiple callbacks can be registered this way. All registered callbacks
-        are associated with a stream and will be removed when the stream is stopped
-        or its associated session ends.
-
-        @param callback
-            Callback to register.
-        @param callback_data
-            Data closed over by the callback function.
-        @param session
-            Stream on which to register the callback.
-        @warning
-            Experimental.
-     */
-    addMessageCallback : (MessageCallback, Ptr, Stream) -> Void;
-
-    /**
-        Schedule an action on the stream.
-        
-        The action will be run as soon as the time of the stream (as
-        reported by its clock) is greater than or equal to the given due time.
-     */
-    schedule : (Time, Action, Stream) -> Void;
-
-    /**
-        Schedule an action on the stream.
-
-        The action will be run when the given time has passed, relative to
-        when this function was invoked. This is a convenience function implemented
-        in terms of `fa_audio_schedule` and `fa_clock_time`, using the current
-        stream clock.
-     */
-    scheduleRelative : (Time, Action, Stream) -> Void;
 }
 
