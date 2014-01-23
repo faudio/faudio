@@ -16,7 +16,7 @@ struct _state_base_t {
     #define kVectorMode false
 #endif
 
-#define kMaxVectorSize                  64
+#define kMaxVectorSize                  1024
 #define kDefVectorSize                  64
 
 #define kDefSampleRate                  48000
