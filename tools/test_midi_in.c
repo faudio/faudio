@@ -107,6 +107,8 @@ void run_midi()
     fa_pair_t synth = fa_signal_synth(string("C:\\sf.sf2"));
 #endif
     list_t out              = fa_pair_to_list(synth);
+    fa_audio_set_parameter(string("sample-rate"), f64(48000), as);
+    fa_audio_set_parameter(string("vector-size"), f64(512), as);
     fa_audio_stream_t aost  = fa_audio_open_stream(ai, ao, just, out);
 
     switch (kModeOfEchoing) {
