@@ -10,7 +10,7 @@
 /** @addtogroup FaOption
  
 
-Basic options parser.
+An option parser.
     
 Example:
 

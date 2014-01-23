@@ -21,31 +21,30 @@
 
 typedef struct {
             void (* read)(fa_ptr_t, fa_buffer_t); bool (* more)(fa_ptr_t);
-        } fa_streams_source_interface_t;
+        } fa_source_interface_t;
 
 
 typedef struct {
             void (* write)(fa_ptr_t, fa_buffer_t); void (* close)(fa_ptr_t);
-        } fa_streams_sink_interface_t;
+        } fa_sink_interface_t;
 
 
-typedef struct _fa_streams_source_t * fa_streams_source_t;
+typedef struct _fa_source_t * fa_source_t;
 
 
-typedef struct _fa_streams_sink_t * fa_streams_sink_t;
+typedef struct _fa_sink_t * fa_sink_t;
 
 
-void fa_streams_read(fa_streams_source_t source,
-                     fa_buffer_t buffer);
+void fa_source_read(fa_source_t source, fa_buffer_t buffer);
 
 
-bool fa_streams_more(fa_streams_source_t source);
+bool fa_source_more(fa_source_t source);
 
 
-void fa_streams_write(fa_streams_sink_t sink, fa_buffer_t buffer);
+void fa_sink_write(fa_sink_t sink, fa_buffer_t buffer);
 
 
-void fa_streams_close(fa_streams_sink_t sink);
+void fa_sink_close(fa_sink_t sink);
 
 /** @}
     @}

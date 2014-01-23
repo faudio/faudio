@@ -5,7 +5,7 @@
     @since
         2.9
  */
-module Fa.Streams
+module "transient" Fa.Streams
 {
     import Fa;
     import Fa.Buffer;
@@ -23,10 +23,10 @@ module Fa.Streams
     type Source = opaque;
     type Sink = opaque;
 
-    read : (Source, Buffer) -> Void;
-    more : Source -> Bool;
-    write : (Sink, Buffer) -> Void;
-    close : Sink -> Void;
+    sourceRead : (Source, Buffer) -> Void;
+    sourceMore : Source -> Bool;
+    sinkWrite : (Sink, Buffer) -> Void;
+    sinkClose : Sink -> Void;
 
 }
 
