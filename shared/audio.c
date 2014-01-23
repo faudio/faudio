@@ -402,7 +402,7 @@ void fa_audio_set_parameter(string_t name,
         if (x <= kMaxVectorSize) {
             session->parameters.vector_size = x;
         } else {
-            warn(string("Vector size to large"));
+            warn(string("Vector size too large"));
         }
     }
 }
