@@ -33,7 +33,7 @@ typedef struct {
             fa_string_t (* origin)(fa_ptr_t);
         } fa_error_interface_t;
 
-/** A type implementing the error interface.
+/** A type implementing @ref fa_error_interface_t.
 
     If you cast a value to this type, you must assure that it implements
     @ref fa_error_interface_t, conversely if you cast a value from

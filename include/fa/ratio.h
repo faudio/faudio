@@ -30,10 +30,10 @@
     */
 
 
-typedef int32_t fa_ratio_numerator_t;
+typedef int32_t fa_ratio_num_t;
 
 
-typedef int32_t fa_ratio_denominator_t;
+typedef int32_t fa_ratio_denom_t;
 
 /** A rational number.
 */
@@ -41,23 +41,23 @@ typedef struct _fa_ratio_t * fa_ratio_t;
 
 /** Create a rational number.
 */
-fa_ratio_t fa_ratio_create(fa_ratio_numerator_t numerator,
-                           fa_ratio_denominator_t denominator);
+fa_ratio_t fa_ratio_create(fa_ratio_num_t num,
+                           fa_ratio_denom_t denom);
 
 /** Return the numerator of the given rational number.
 */
-fa_ratio_numerator_t fa_ratio_num(fa_ratio_t ratio);
+fa_ratio_num_t fa_ratio_num(fa_ratio_t ratio);
 
 /** Return the denominator of the given rational number.
 */
-fa_ratio_denominator_t fa_ratio_denom(fa_ratio_t ratio);
+fa_ratio_denom_t fa_ratio_denom(fa_ratio_t ratio);
 
 /** Destruct the given rational number, writing its numerator
     and denominator to the given locations.
 */
 void fa_ratio_match(fa_ratio_t ratio,
-                    fa_ratio_numerator_t *,
-                    fa_ratio_denominator_t *);
+                    fa_ratio_num_t *,
+                    fa_ratio_denom_t *);
 
 /** Copy a rational number.
 */
@@ -112,7 +112,7 @@ fa_ratio_t fa_ratio_normalize(fa_ratio_t ratio);
     For example \f$11/3\f$ becomes \f$3+2/3\f$.
 */
 void fa_ratio_to_mixed(fa_ratio_t ratio,
-                       fa_ratio_numerator_t *,
+                       fa_ratio_num_t *,
                        fa_ratio_t *);
 
 /** @}

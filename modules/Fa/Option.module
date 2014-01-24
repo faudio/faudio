@@ -34,11 +34,13 @@ module Fa.Option
     import Fa.String;
     import Fa.Pair;
 
+    type Parser = (Char * -> Ptr)*;
+
     type Option = struct {
         shortName   : Char*,
         longName    : Char*,
         description : Char*,
-        parser      : (Char * -> Ptr)*
+        parser      : Parser
     };
 
     /** Parses integers. */

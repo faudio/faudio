@@ -9,24 +9,99 @@ module "transient" Fa.Streams
 {
     import Fa;
     import Fa.Buffer;
-
-    type SourceInterface = struct {
-        read : ((Ptr, Buffer) -> Void)*,
+    
+    type HandleInterface = struct {
         more : (Ptr -> Bool)*
     };                 
 
-    type SinkInterface = struct {
-        write : ((Ptr, Buffer) -> Void)*,
-        close : (Ptr -> Void)*
+    type SourceInterface = struct {
+        read    : ( (Ptr, Buffer) -> Void                           )*,
+        reading : ( (Source, ((Ptr, Buffer) -> Size)*, Ptr) -> Void )*
     };                 
+    
+    // type SinkInterface = struct {
+        // write : ((Ptr, Buffer) -> Void)*
+    // };                 
 
+    /** A value of an unknown type implementing @ref fa_handle_interface_t.
+     */
+    type Handle = opaque;
+
+    /** A value of an unknown type implementing @ref fa_source_interface_t.
+     */
     type Source = opaque;
-    type Sink = opaque;
 
-    sourceRead : (Source, Buffer) -> Void;
-    sourceMore : Source -> Bool;
-    sinkWrite : (Sink, Buffer) -> Void;
-    sinkClose : Sink -> Void;
+    // /** A value of an unknown type implementing @ref fa_sink_interface_t.
+     // */
+    // type Sink = opaque;
 
+    /** Whether a source or sink is open.
+        
+        If `false`, all subsequent call to `read` or `write` does nothing.
+     */
+    isOpen : Handle -> Bool;
+
+    /** Whether a source or sink is open.
+        
+        If `true`, all subsequent call to `read` or `write` does nothing.
+     */
+    isClosed : Handle -> Bool;
+
+
+    // This model makes it natural to write:
+
+    //  compressions as filters over sinks          (given buffer is large enough to contain decompressed data)
+    //  decompressions as filters over sources      (given buffer is large enough to contain decompressed data)
+
+    /** Read from a source (convenience function).
+
+        The contents of the buffer are overwritten and the number of written bytes,
+        which is at most `fa_buffer_size(buffer)` is returned.
+     */
+    sourceRead : (Source, Buffer) -> Size;
+
+    // /** Write to a sink.
+    // 
+    //     The contents of the buffer are overwritten and the number of written bytes,
+    //     which is at most `fa_buffer_size(buffer)` is returned.
+    //  */
+    // sinkWrite : (Sink, Buffer) -> Size;
+
+    //  compressions as filters over sources      (given buffer is large enough to contain decompressed data)
+    //  decompressions as filters over sinks      (given buffer is large enough to contain decompressed data)
+
+    type ReadCallback = ((Ptr, Buffer) -> Size)*;
+
+    /** Read from a source.
+
+        The contents of the buffer are overwritten and the number of written bytes,
+        which is at most `fa_buffer_size(buffer)` is returned.
+     */
+    sourceReading : (Source, ReadCallback, Ptr)-> Void;
+
+    // /** Write to a sink.
+    // 
+    //     The contents of the buffer are overwritten and the number of written bytes,
+    //     which is at most `fa_buffer_size(buffer)` is returned.
+    //  */
+    // sinkWriting : (Sink, ((Ptr, Buffer) -> Size)*, Ptr) -> Size;
+
+
+
+    // sinkWrite : (Sink, Buffer) -> Ptr;
+    // sinkClose : Sink -> Void;
+    // 
+    // 
+    // /** Return the result of applying the given function to all elements of the given list. */
+    // streamsMap : (Unary, Ptr, Source) -> Source;
+    // 
+    // /** Fold over the given source from left to right. */
+    // streamsFold : (Binary, Ptr, Ptr, Source) -> Ptr;
+    // 
+    // streamsReadFile : String -> Source;
+    // streamsWriteFile : (String, Source) -> Void;     
+
+
+    // TODO sink "adapters"
 }
 

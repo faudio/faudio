@@ -34,7 +34,7 @@ typedef struct {
             fa_time_t (* time)(fa_ptr_t); int64_t (* milliseconds)(fa_ptr_t);
         } fa_clock_interface_t;
 
-/** A value of an unknown type implementing @ref fa_clock_interface.
+/** A value of an unknown type implementing @ref fa_clock_interface_t.
 */
 typedef struct _fa_clock_t * fa_clock_t;
 

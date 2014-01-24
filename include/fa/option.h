@@ -43,11 +43,14 @@ int main(int argc, char const *argv[])
     */
 
 
+typedef fa_ptr_t (* fa_option_parser_t)(char *);
+
+
 typedef struct {
             char * short_name;
             char * long_name;
             char * description;
-            fa_ptr_t (* parser)(char *);
+            fa_option_parser_t parser;
         } fa_option_t;
 
 /** Parses integers. 

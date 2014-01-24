@@ -26,7 +26,7 @@ module Fa.Clock
         milliseconds : (Ptr -> Int64)*
     };                 
 
-    /** A value of an unknown type implementing @ref fa_clock_interface.
+    /** A value of an unknown type implementing @ref fa_clock_interface_t.
      */
     type Clock = opaque;
 
