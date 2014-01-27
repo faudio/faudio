@@ -10,7 +10,7 @@
 
 
 #define RT 1
-#define kThisPlugOffset 10 // TODO
+#define kThisPlugOffset 32 // TODO
 
 static bool should_click = false;
 
