@@ -624,9 +624,9 @@ list_t fa_signal_get_procs(fa_signal_t signal2)
 // --------------------------------------------------------------------------------
 // Running
 
-long const kMaxCustomProcs = 10;
-long const kMaxInputs      = 128;
-long const kMaxBuses       = 64;
+#define kMaxCustomProcs 10
+#define kMaxInputs      128
+#define kMaxBuses       64
 
 #define max_delay(k) ((long) (k * 5))
 
