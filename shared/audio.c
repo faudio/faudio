@@ -91,7 +91,6 @@ struct _fa_audio_stream_t {
     unsigned            input_channels, output_channels;
     double              sample_rate;
     long                max_buffer_size;
-    int32_t             sample_count;       // Monotonically increasing sample count
     PaStreamCallbackFlags pa_flags;         // Potential error messages from PortAudio
 
     struct {
@@ -225,7 +224,6 @@ inline static stream_t new_stream(device_t input, device_t output, double sample
     stream->max_buffer_size = max_buffer_size;
 
     stream->signal_count    = 0;
-    stream->sample_count    = 0;
     stream->pa_flags        = 0;
 
     stream->in_controls     = atomic_queue();
@@ -849,7 +847,7 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
             inc_state1(stream->state);
         }
     } else {
-        assert((count == kMaxVectorSize) && "Wrong vector size");
+        // assert((count == kMaxVectorSize) && "Wrong vector size");
         assert((stream->signal_count == 2) && "Wrong number of channels");
 
         for (int i = 0; i < count; ++ i) {
@@ -872,8 +870,6 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
             }
         }
     }
-
-    stream->sample_count += count; // TODO atomic incr
 }
 
 
