@@ -799,12 +799,12 @@ void before_processing(stream_t stream)
     // TODO optimize
     // TODO verify
 
-    run_custom_procs(0, stream->state);
+    run_custom_procs(custom_proc_before, stream->state);
 }
 
 void after_processing(stream_t stream)
 {
-    run_custom_procs(2, stream->state);
+    run_custom_procs(custom_proc_after, stream->state);
     delete_state(stream->state);
 }
 
@@ -858,7 +858,7 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
 
         {
             double dummy_output[count];
-            run_custom_procs(1, stream->state);
+            run_custom_procs(custom_proc_render, stream->state);
             step_vector(stream->MERGED_SIGNAL, stream->state, count, dummy_output);
         }
 
