@@ -216,9 +216,7 @@ void au_render(au_context_t context, double time, double* output)
             double x = buffer[frame]; // sample for current (channel,frame)
 
             // Non-interleaved output
-            // output[numberOfFrames*channel + frame] = x;
             context->outputs[numberOfFrames*channel + frame] = x;
-
         }
     }
 }
