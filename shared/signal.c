@@ -832,7 +832,7 @@ double *write_bus(int n, int c, state_t state)
     2 -> cleanup
 
  */
-void run_custom_procs(custom_proc_when_t when, state_t state)
+void run_custom_procs(custom_proc_when_t when, int count, state_t state)
 {
     for (int i = 0; i < state->custom_proc_count; ++i) {
 
@@ -1075,20 +1075,20 @@ void fa_signal_run(int count, list_t controls, signal_t a, double *output)
     // TODO optimize
     // TODO verify
 
-    run_custom_procs(custom_proc_before, state);
+    run_custom_procs(custom_proc_before, 0, state);
 
     for (int i = 0; i < count; ++ i) {
         time_t now = fa_milliseconds((double) state->count / (double) state->rate * 1000.0);
         run_actions(controls2, now, run_simple_action_, state);
 
-        run_custom_procs(custom_proc_render, state);
+        run_custom_procs(custom_proc_render, 1, state);
 
         output[i] = step(a2, state);
 
         inc_state1(state);
     }
 
-    run_custom_procs(custom_proc_after, state);
+    run_custom_procs(custom_proc_after, 0, state);
 
     delete_state(state);
 }
