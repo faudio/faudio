@@ -748,6 +748,11 @@ void inc_state1(state_t state)
     state->count++;
 }
 
+void inc_state(int n, state_t state)
+{
+    state->count += n;
+}
+
 
 //----------
 // Internal state stuff

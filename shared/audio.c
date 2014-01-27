@@ -858,14 +858,13 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
             }
         }
 
-        double out[count];
-        run_custom_procs(1, stream->state);
-        step_vector(stream->MERGED_SIGNAL, stream->state, count, out);
-
-        // TODO
-        for (int i = 0; i < count; ++ i) {
-            inc_state1(stream->state);
+        {
+            double dummy_output[count];
+            run_custom_procs(1, stream->state);
+            step_vector(stream->MERGED_SIGNAL, stream->state, count, dummy_output);
         }
+
+        inc_state(count, stream->state);
 
         for (int i = 0; i < count; ++ i) {
             for (int c = 0; c < stream->signal_count; ++c) {

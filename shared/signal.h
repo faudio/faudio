@@ -31,6 +31,7 @@ state_t new_state(int sample_rate);
 void add_custom_proc(fa_signal_custom_processor_t* proc, state_t state);
 void delete_state(state_t state);
 void inc_state1(state_t state);           
+void inc_state(int n, state_t state);           
 void run_custom_procs(int when, state_t state);
 ptr_t run_simple_action(state_t state, fa_action_t action);
 double step(signal_t signal, state_t state);
