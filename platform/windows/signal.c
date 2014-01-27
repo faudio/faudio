@@ -47,10 +47,12 @@ ptr_t render_(ptr_t x, fa_signal_state_t *state)
     if (!kVectorMode) {
         warn(string("Fluidsynth requires vector mode for now"));
         assert(false && "Fluidsynth requires vector mode for now");
-    } else {
+    } else {   
+        int count = kMaxVectorSize; // TODO
+        
         if (FLUID_OK != fluid_synth_nwrite_float(
                     synth,
-                    kMaxVectorSize,
+                    count, // TODO
                     &left2,
                     &right2,
                     NULL,
@@ -59,7 +61,7 @@ ptr_t render_(ptr_t x, fa_signal_state_t *state)
             warn(string("Fluidsynth: Could not render"));
         }
 
-        for (int i = 0; i < kMaxVectorSize; ++i) {
+        for (int i = 0; i < count; ++i) {
             state->buffer[(kFluidOffset + 0)*kMaxVectorSize + i] = left[i];
             state->buffer[(kFluidOffset + 1)*kMaxVectorSize + i] = right[i];
         }

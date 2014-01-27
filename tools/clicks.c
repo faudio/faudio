@@ -35,7 +35,9 @@ ptr_t render_(ptr_t x, fa_signal_state_t *state)
         state->buffer[(kThisPlugOffset + 1)*kMaxVectorSize] = should_click;
         should_click = false;
     } else {
-        for (int i = 0; i < kMaxVectorSize; ++i) {
+        int count = kMaxVectorSize; // TODO                  
+        
+        for (int i = 0; i < count; ++i) {
             state->buffer[(kThisPlugOffset + 0)*kMaxVectorSize + i] = should_click;
             state->buffer[(kThisPlugOffset + 1)*kMaxVectorSize + i] = should_click;
             should_click = false;

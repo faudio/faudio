@@ -249,6 +249,12 @@ void fa_audio_initialize()
     pa_mutex        = fa_thread_create_mutex();
     pa_status       = false;
     current_session = NULL;
+
+    if (kVectorMode) {
+        inform(string("Using vector processing"));
+    } else {
+        inform(string("Using single-step processing"));
+    }
 }
 
 void fa_audio_terminate()
@@ -567,7 +573,7 @@ stream_t fa_audio_open_stream(device_t input,
     if (proc) {
         all_signals = proc(proc_data, all_inputs);
     } else {
-        // TODO check number of channels
+        // TODO check number of channels is < kMaxSignals
         warn(string("Audio.openStream: Assuming stereo output"));
         all_signals = list(fa_signal_constant(0), fa_signal_constant(0));
     }
@@ -603,6 +609,7 @@ stream_t fa_audio_open_stream(device_t input,
         PaStreamCallback               *callback = native_audio_callback;
         ptr_t                           data     = stream;
 
+        // TODO use variable buffer size (see #168)
         status = Pa_OpenStream(&stream->native, in, out, sample_rate, buffer_size, flags, callback, data);
 
         if (status != paNoError) {
@@ -814,7 +821,7 @@ ptr_t run_simple_action2(ptr_t x, ptr_t a)
     return run_simple_action(x, a);
 }
 void during_processing(stream_t stream, unsigned count, float **input, float **output)
-{
+{       
     state_base_t state = (state_base_t) stream->state;
     {
         ptr_t action;

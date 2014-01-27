@@ -24,9 +24,8 @@ pair_t fa_signal_synth(string_t path)
 ptr_t before_(ptr_t x, fa_signal_state_t *state)
 {
     au_context_t context = x;
-    au_prepare(context, state->rate);
+    au_prepare(context, state->rate); // Set SR
     return x;
-    mark_used(context);
 }
 
 ptr_t after_(ptr_t x, fa_signal_state_t *state)
@@ -34,7 +33,6 @@ ptr_t after_(ptr_t x, fa_signal_state_t *state)
     au_context_t context = x;
     au_cleanup(context);
     return x;
-    mark_used(context);
 }
 
 struct au_context {
@@ -42,28 +40,32 @@ struct au_context {
 };
 
 #define kAUOffset 32
-#define kAUVectorSize 64 // Assumed to be same as the actual vector size
 
 
 ptr_t render_(ptr_t x, fa_signal_state_t *state)
 {
     au_context_t context = x;
 
-    if (!kVectorMode) {
-        if (state->count % kAUVectorSize == 0) {
-            au_render(context, state->count, NULL);
+    if (!kVectorMode) {     
+        int freq = 64;
+        
+        if (state->count % freq == 0) {
+            au_render(context, state->count, freq, NULL);
         }
 
-        state->buffer[(kAUOffset + 0)*kMaxVectorSize] = context->outputs[kAUVectorSize * 0 + (state->count % kAUVectorSize)];
-        state->buffer[(kAUOffset + 1)*kMaxVectorSize] = context->outputs[kAUVectorSize * 1 + (state->count % kAUVectorSize)];
+        state->buffer[(kAUOffset + 0)*kMaxVectorSize] = context->outputs[freq * 0 + (state->count % freq)];
+        state->buffer[(kAUOffset + 1)*kMaxVectorSize] = context->outputs[freq * 1 + (state->count % freq)];
 
         return x;
-    } else {
-        au_render(context, state->count, NULL);
+    } else {          
+        int count = 64; // TODO
+        // Must be the current vector size
+        
+        au_render(context, state->count, count, NULL);
 
-        for (int i = 0; i < kAUVectorSize; ++i) {
-            state->buffer[(kAUOffset + 0)*kMaxVectorSize + i] = context->outputs[kAUVectorSize * 0 + i];
-            state->buffer[(kAUOffset + 1)*kMaxVectorSize + i] = context->outputs[kAUVectorSize * 1 + i];
+        for (int i = 0; i < count; ++i) {
+            state->buffer[(kAUOffset + 0)*kMaxVectorSize + i] = context->outputs[count * 0 + i];
+            state->buffer[(kAUOffset + 1)*kMaxVectorSize + i] = context->outputs[count * 1 + i];
         }
 
         return x;
@@ -89,7 +91,7 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 // Pair of signals
 pair_t fa_signal_dls()
 {
-    au_context_t context = create_au_context(new_dls_music_device_instance(), 2, kAUVectorSize, 0); // Update SR later
+    au_context_t context = create_au_context(new_dls_music_device_instance(), 2, kMaxVectorSize, 0); // Update SR later
     // TODO destroy
 
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));

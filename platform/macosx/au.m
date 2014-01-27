@@ -190,14 +190,14 @@ void au_prepare(au_context_t context, double sample_rate)
     }
 }
 
-void au_render(au_context_t context, double time, double* output)
+void au_render(au_context_t context, double time, int count, double* output)
 {
     AudioComponentInstance instance = context->Instance;
     OSStatus err;
     
     Float64 sampleTime       = (Float64) time;
     UInt32  numberOfChannels = (UInt32)  context->channels;
-    UInt32  numberOfFrames   = (UInt32)  context->frames;
+    UInt32  numberOfFrames   = (UInt32)  count;//context->frames;
     
     context->TimeStamp.mSampleTime = sampleTime;
     

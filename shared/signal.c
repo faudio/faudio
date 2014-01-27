@@ -1059,7 +1059,7 @@ ptr_t run_simple_action_(ptr_t x, ptr_t a)
 {
     return run_simple_action(x, a);
 }
-void fa_signal_run(int n, list_t controls, signal_t a, double *output)
+void fa_signal_run(int count, list_t controls, signal_t a, double *output)
 {
     priority_queue_t controls2 = priority_queue();
     fa_for_each(x, controls) {
@@ -1077,7 +1077,7 @@ void fa_signal_run(int n, list_t controls, signal_t a, double *output)
 
     run_custom_procs(custom_proc_before, state);
 
-    for (int i = 0; i < n; ++ i) {
+    for (int i = 0; i < count; ++ i) {
         time_t now = fa_milliseconds((double) state->count / (double) state->rate * 1000.0);
         run_actions(controls2, now, run_simple_action_, state);
 
