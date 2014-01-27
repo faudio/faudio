@@ -31,7 +31,6 @@ ptr_t after_(ptr_t x, fa_signal_state_t *state)
 }
 
 #define kFluidOffset 34
-#define kFluidVectorSize 128
 
 // TODO not reentrant
 static float left[kMaxVectorSize];

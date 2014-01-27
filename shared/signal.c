@@ -624,15 +624,21 @@ list_t fa_signal_get_procs(fa_signal_t signal2)
 // --------------------------------------------------------------------------------
 // Running
 
-#define kMaxCustomProcs     10
-#define kMaxInputs          128
-#define kMaxBuses           64
-#define kMaxDelaySeconds    5
-
 #define max_delay(state) ((long) (state->rate * kMaxDelaySeconds))
 
 /*  Internal DSP state.
     Local to a real-time stream or non-real-time "run" of a signal.
+
+    Contains all "input" buffers (actually both input and output) as well as "buses", used
+    internally for loop and delay.
+    
+    The input buffer contains up to kMaxVectorSize values for each channel and are non-interleaved.
+    The bus channel contains up to max_delay(state) values for each channel and are non-interleaved.
+
+    This layout is used regardless of whether vector processing is enabled or not, so allocation and indexing
+    is unaffected by this change. In non-vector mode, only the first index of an I/O bus is used. In vector
+    mode up to kMaxVectorSize indices may be used, depending on current vector size settings and number of
+    samples being delivered by the underlying system API.
     
  */
 struct _state_t 

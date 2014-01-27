@@ -42,7 +42,7 @@ struct au_context {
 };
 
 #define kAUOffset 32
-#define kAUVectorSize 128
+#define kAUVectorSize 64 // Assumed to be same as the actual vector size
 
 
 ptr_t render_(ptr_t x, fa_signal_state_t *state)

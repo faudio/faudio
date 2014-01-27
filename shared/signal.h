@@ -5,6 +5,7 @@
 struct _state_base_t {
     double *inputs;
     void   *_;
+
     int     count;
     double  rate;
     // ...
@@ -23,9 +24,16 @@ struct _state_base_t {
 #define kDefLatency                     0.002
 #define kAudioSchedulerIntervalMillis   1
 
+#define kMaxCustomProcs                 10
+#define kMaxInputs                      128
+#define kMaxBuses                       64
+#define kMaxDelaySeconds                5
+
+
 typedef struct _state_t *state_t;
 typedef struct _state_base_t *state_base_t;
 
+// ?
 list_t fa_signal_get_procs(fa_signal_t signal2);
 state_t new_state(int sample_rate);
 void add_custom_proc(fa_signal_custom_processor_t* proc, state_t state);
