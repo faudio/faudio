@@ -125,9 +125,9 @@ module Fa.Signal
     };
 
     type CustomProcessor = struct {
-        before  : ((Ptr,State*) -> Ptr)*,
-        after   : ((Ptr,State*) -> Ptr)*,
-        render  : ((Ptr,State*) -> Ptr)*,
+        before  : ((Ptr,Int,State*) -> Ptr)*,
+        after   : ((Ptr,Int,State*) -> Ptr)*,
+        render  : ((Ptr,Int,State*) -> Ptr)*,
         receive : ((Ptr,Name,Message) -> Ptr)*,
         data : Ptr
     };

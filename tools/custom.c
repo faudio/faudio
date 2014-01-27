@@ -15,17 +15,17 @@ list_t just(ptr_t x, list_t xs)
     return x;
 }
 
-ptr_t before_(ptr_t x, fa_signal_state_t *state)
+ptr_t before_(ptr_t x, int count, fa_signal_state_t *state)
 {
     printf("Before!\n");
     return x;
 }
-ptr_t after_(ptr_t x, fa_signal_state_t *state)
+ptr_t after_(ptr_t x, int count, fa_signal_state_t *state)
 {
     printf("After!\n");
     return x;
 }
-ptr_t render_(ptr_t x, fa_signal_state_t *state)
+ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
 {
     // printf("Render!\n");
     state->buffer[32] = 0.01 * (state->count / state->rate);

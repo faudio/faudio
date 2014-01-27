@@ -145,9 +145,9 @@ typedef struct {
 
 
 typedef struct {
-            fa_ptr_t (* before)(fa_ptr_t, fa_signal_state_t *);
-            fa_ptr_t (* after)(fa_ptr_t, fa_signal_state_t *);
-            fa_ptr_t (* render)(fa_ptr_t, fa_signal_state_t *);
+            fa_ptr_t (* before)(fa_ptr_t, int, fa_signal_state_t *);
+            fa_ptr_t (* after)(fa_ptr_t, int, fa_signal_state_t *);
+            fa_ptr_t (* render)(fa_ptr_t, int, fa_signal_state_t *);
             fa_ptr_t (* receive)(fa_ptr_t,
                                  fa_signal_name_t,
                                  fa_signal_message_t);

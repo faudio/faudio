@@ -14,14 +14,14 @@ pair_t fa_signal_dls()
 }
 
 
-ptr_t before_(ptr_t x, fa_signal_state_t *state)
+ptr_t before_(ptr_t x, int count, fa_signal_state_t *state)
 {
     fluid_synth_t *synth = x;
     fluid_synth_set_sample_rate(synth, state->rate);
     return NULL;
 }
 
-ptr_t after_(ptr_t x, fa_signal_state_t *state)
+ptr_t after_(ptr_t x, int count, fa_signal_state_t *state)
 {
     fluid_synth_t *synth = x;
     fluid_settings_t *settings = fluid_synth_get_settings(synth);
@@ -37,7 +37,7 @@ static float left[kMaxVectorSize];
 static float right[kMaxVectorSize];
 
 
-ptr_t render_(ptr_t x, fa_signal_state_t *state)
+ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
 {
     fluid_synth_t *synth = x;
 
@@ -48,8 +48,6 @@ ptr_t render_(ptr_t x, fa_signal_state_t *state)
         warn(string("Fluidsynth requires vector mode for now"));
         assert(false && "Fluidsynth requires vector mode for now");
     } else {   
-        int count = kMaxVectorSize; // TODO
-        
         if (FLUID_OK != fluid_synth_nwrite_float(
                     synth,
                     count, // TODO

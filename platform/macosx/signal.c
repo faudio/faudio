@@ -21,14 +21,14 @@ pair_t fa_signal_synth(string_t path)
     assert(false && "Not available on this platform");
 }
 
-ptr_t before_(ptr_t x, fa_signal_state_t *state)
+ptr_t before_(ptr_t x, int count, fa_signal_state_t *state)
 {
     au_context_t context = x;
     au_prepare(context, state->rate); // Set SR
     return x;
 }
 
-ptr_t after_(ptr_t x, fa_signal_state_t *state)
+ptr_t after_(ptr_t x, int count, fa_signal_state_t *state)
 {
     au_context_t context = x;
     au_cleanup(context);
@@ -42,7 +42,7 @@ struct au_context {
 #define kAUOffset 32
 
 
-ptr_t render_(ptr_t x, fa_signal_state_t *state)
+ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
 {
     au_context_t context = x;
 
@@ -58,9 +58,6 @@ ptr_t render_(ptr_t x, fa_signal_state_t *state)
 
         return x;
     } else {          
-        int count = 64; // TODO
-        // Must be the current vector size
-        
         au_render(context, state->count, count, NULL);
 
         for (int i = 0; i < count; ++i) {

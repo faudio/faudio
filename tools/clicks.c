@@ -20,23 +20,21 @@ list_t just(ptr_t x, list_t xs)
     return x;
 }
 
-ptr_t before_(ptr_t x, fa_signal_state_t *state)
+ptr_t before_(ptr_t x, int count, fa_signal_state_t *state)
 {
     return x;
 }
-ptr_t after_(ptr_t x, fa_signal_state_t *state)
+ptr_t after_(ptr_t x, int count, fa_signal_state_t *state)
 {
     return x;
 }
-ptr_t render_(ptr_t x, fa_signal_state_t *state)
+ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
 {
     if (!kVectorMode) {
         state->buffer[(kThisPlugOffset + 0)*kMaxVectorSize] = should_click;
         state->buffer[(kThisPlugOffset + 1)*kMaxVectorSize] = should_click;
         should_click = false;
     } else {
-        int count = kMaxVectorSize; // TODO                  
-        
         for (int i = 0; i < count; ++i) {
             state->buffer[(kThisPlugOffset + 0)*kMaxVectorSize + i] = should_click;
             state->buffer[(kThisPlugOffset + 1)*kMaxVectorSize + i] = should_click;

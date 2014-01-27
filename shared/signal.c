@@ -841,15 +841,15 @@ void run_custom_procs(custom_proc_when_t when, int count, state_t state)
 
         switch (when) {
         case custom_proc_before:
-            proc->before(proc->data, (fa_signal_state_t *) state);
+            proc->before(proc->data, kMaxVectorSize, (fa_signal_state_t *) state);
             break;
 
         case custom_proc_render:
-            proc->render(proc->data, (fa_signal_state_t *) state);
+            proc->render(proc->data, count, (fa_signal_state_t *) state);
             break;
 
         case custom_proc_after:
-            proc->after(proc->data, (fa_signal_state_t *) state);
+            proc->after(proc->data, kMaxVectorSize, (fa_signal_state_t *) state);
             break;
 
         default:
