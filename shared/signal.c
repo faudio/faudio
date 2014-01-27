@@ -631,7 +631,12 @@ list_t fa_signal_get_procs(fa_signal_t signal2)
 
 #define max_delay(state) ((long) (state->rate * kMaxDelaySeconds))
 
-struct _state_t {
+/*  Internal DSP state.
+    Local to a real-time stream or non-real-time "run" of a signal.
+    
+ */
+struct _state_t 
+{
     double     *inputs;                 // Current input values (TODO should not be called inputs as they are also outputs...)
     double     *buses;                  // Current and future bus values
 
@@ -645,7 +650,8 @@ struct _state_t {
 
 state_t new_state(int sample_rate)
 {
-    srand(time(NULL));  // TODO localize
+    // TODO use a single random generator for whole signal, see below
+    srand(time(NULL));  
     state_t state = fa_new_struct(_state_t);
 
     state->count              = 0;
@@ -677,6 +683,7 @@ void delete_state(state_t state)
 inline static
 double state_random(state_t state)
 {
+    // TODO use a single random generator for whole signal, see above
     return ((double)rand() / (double)RAND_MAX) * 2 - 1;
 }
 
@@ -711,7 +718,6 @@ double read_samp1(int c, state_t state)
 inline static
 void write_samp1(int n, int c, double x, state_t state)
 {
-    // write_bus1(n, neg_bus(c), x, state);
     if (c >= 0) {
         write_input1(c, x, state);
     } else {
@@ -728,7 +734,6 @@ double *read_samp(int c, state_t state)
 inline static
 double *write_samp(int n, int c, state_t state)
 {
-    // write_bus1(n, neg_bus(c), x, state);
     if (c >= 0) {
         return write_input(c, state);
     } else {
