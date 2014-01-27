@@ -59,7 +59,7 @@ ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
         state->buffer[(kFluidOffset + 0)*kMaxVectorSize] = left[0];
         state->buffer[(kFluidOffset + 1)*kMaxVectorSize] = right[0];
         return x;
-    } else {   
+    } else {
         if (FLUID_OK != fluid_synth_nwrite_float(
                     synth,
                     count, // TODO

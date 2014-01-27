@@ -177,6 +177,12 @@
         fa_thread_lock(mutex), \
         fa_thread_unlock((void*) mutex + 0*((intptr_t)__mutex)))
     
+
+#define fa_unpair(P,A,B) \
+    fa_let(__p, P) \
+    fa_let(A,fa_pair_first(__p)) \
+    fa_let(B,fa_pair_second(__p))
+
 /** @}
     @}
     */

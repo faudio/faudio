@@ -2,6 +2,8 @@
 #include <fa/fa.h>
 #include <fa/util.h>
 
+#include <curl/curl.h>
+
 /*
     This program does ...
 

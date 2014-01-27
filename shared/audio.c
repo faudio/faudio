@@ -821,7 +821,7 @@ ptr_t run_simple_action2(ptr_t x, ptr_t a)
     return run_simple_action(x, a);
 }
 void during_processing(stream_t stream, unsigned count, float **input, float **output)
-{       
+{
     state_base_t state = (state_base_t) stream->state;
     {
         ptr_t action;

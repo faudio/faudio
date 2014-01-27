@@ -46,9 +46,9 @@ ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
 {
     au_context_t context = x;
 
-    if (!kVectorMode) {     
+    if (!kVectorMode) {
         int freq = 64;
-        
+
         if (state->count % freq == 0) {
             au_render(context, state->count, freq, NULL);
         }
@@ -57,7 +57,7 @@ ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
         state->buffer[(kAUOffset + 1)*kMaxVectorSize] = context->outputs[freq * 1 + (state->count % freq)];
 
         return x;
-    } else {          
+    } else {
         au_render(context, state->count, count, NULL);
 
         for (int i = 0; i < count; ++i) {

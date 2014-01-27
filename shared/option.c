@@ -19,6 +19,7 @@ pair_t maybe_parse(int optc, opt_t optv[], const char *short_name, const char *l
             (long_name && !strcmp(long_name, option.long_name))
         ) {
             ptr_t result = option.parser((char *) value);
+
             if (result) {
                 return pair(string(option.long_name), result);
             } else {
@@ -61,11 +62,13 @@ pair_t fa_option_parse(int optc, fa_option_t optv[1], int argc, char *argv[])
         } else {
             if (prev_elem_type == short_name) {
                 pair_t result = maybe_parse(optc, optv, argv[i - 1] + 1, NULL, argv[i]);
+
                 if (result) {
                     args = fa_map_add_entry(result, args);
                 }
             } else if (prev_elem_type == long_name) {
                 pair_t result = maybe_parse(optc, optv, NULL, argv[i - 2] + 1, argv[i]);
+
                 if (result) {
                     args = fa_map_add_entry(result, args);
                 }
@@ -92,9 +95,25 @@ void fa_option_show(int optc, opt_t optv[], char *header)
 
 
 
-ptr_t fa_option_integral(char *x)    { int r; sscanf(x, "%i", &r); return i32(r); }
-ptr_t fa_option_floating(char *x)  { int r; sscanf(x, "%f", &r); return f32(r); }
-ptr_t fa_option_string(char *x) { return string(x); }
-ptr_t fa_option_failure(char *x)   { return NULL; }
+ptr_t fa_option_integral(char *x)
+{
+    int r;
+    sscanf(x, "%i", &r);
+    return i32(r);
+}
+ptr_t fa_option_floating(char *x)
+{
+    int r;
+    sscanf(x, "%f", &r);
+    return f32(r);
+}
+ptr_t fa_option_string(char *x)
+{
+    return string(x);
+}
+ptr_t fa_option_failure(char *x)
+{
+    return NULL;
+}
 
 

@@ -4,7 +4,8 @@
     
     - *Sources* produce sequences of data (bytes, characters, floats etc)
     - *Sinks* consume sequences of data (bytes, characters, floats etc)
-    - Both *sources* and *sinks* accepts external buffers.
+    - *Filters* transform sequences of data in an effectful manner
+    - Both *sources* and *sinks* can be composed with filters.
     
     @since
         2.9
@@ -17,22 +18,51 @@ module Fa.Io
 
     /** Callback to receive data.
     
-        Argument is either a (possibly empty) buffer, meaning that more data is to arrive,
-        or `NULL`, indicating that the data source has been extinguished.
+        Argument is either a buffer contaning a new chunk of data or `NULL`, indicating
+        that the data source has been drained.
+        
+        The buffer may be of any size (including zero) and is valid for the duration of
+        the callback. To retain data beyond this call the buffer should be copied, or its
+        data extracted and written to some other destination.
      */
-    type BufferCallback = (Buffer -> Void)*;
+    type Callback = ((Ptr, Buffer) -> Void)*;
 
-    type FilterInterface = struct {
-        pull : (Ptr, Source, BufferCallback) -> Void
-    };
 
     /** Implements the filter interface. */
     type Filter = opaque;
-    /** Implements the filter interface (ignores the source). */
+    /** Implements the filter interface (push calls have no effect, pull ignores the source). */
     type Source = opaque;
+    /** Implements the filter interface (pull calls have no effect, push ignores the sink). */
+    type Sink = opaque;
 
-    /** Filter two filterable things.
+    /**
      */
-    filter : (Ptr, Ptr) -> Ptr;
+    type FilterInterface = struct {
+
+        pull : ((Ptr, Source, Callback, Ptr) -> Void)*,
+        push : ((Ptr, Sink, Buffer) -> Void)*
+    };
+    // Passing NULL means close stream
+    
+    pull : (Source, Callback, Ptr) -> Void;
+    push : (Sink, Buffer) -> Void;
+    pullThrough : (Filter, Source, Callback, Ptr) -> Void;
+    pushThrough : (Filter, Sink, Buffer) -> Void;
+
+    compose  : (Filter, Filter) -> Filter;
+    map       : (Source, Filter) -> Source;
+    contramap : (Filter, Sink) -> Sink;
+
+
+    split : Sink -> Filter;
+    readFile : String -> Source;
+    writeFile : String -> Sink;
+    standardIn : () -> Source;
+    standardOut : () -> Sink;
+    identity : () -> Filter;
+
+    createOggEncoder : () -> Filter;
+    
+    run : (Source, Sink) -> Void;
 }
 

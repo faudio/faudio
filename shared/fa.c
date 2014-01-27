@@ -98,10 +98,10 @@ void fa_terminate()
         fa_device_terminate();
 
         fa_log_info(fa_string_dappend(string("Total bytes allocated: "),
-                                         fa_string_show(i32(gBytesAlloc))));
+                                      fa_string_show(i32(gBytesAlloc))));
 
         fa_log_info(fa_string_dappend(string("Regions leaked: "),
-                                         fa_string_show(i32(gRegionCount))));
+                                      fa_string_show(i32(gRegionCount))));
 
         fa_log_info(string("Terminated faudio"));
     } else {

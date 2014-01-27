@@ -1476,13 +1476,13 @@ void test_scheduler()
 // void test_plot_buffer()
 // {
 //     buffer_t buf = fa_buffer_create(44100 * sizeof(double));
-// 
+//
 //     for (int i = 0; i < 44100; ++i) {
 //         double r = (double) rand() / RAND_MAX;
 //         double x = (double) i / 44100;
 //         fa_buffer_set_double(buf, i, (r * 2 - 1) * sin(x * 10));
 //     }
-// 
+//
 //     fa_plot_buffer_double(buf, NULL, NULL);
 // }
 
@@ -1492,16 +1492,16 @@ void test_scheduler()
 // void test_plot_file(string_t path)
 // {
 //     test_section("Plot file");
-// 
+//
 //     pair_t res = fa_buffer_read_audio(path);
-// 
+//
 //     if (fa_error_check(res)) {
 //         fa_error_log(NULL, (error_t) res);
 //         return;
 //     }
-// 
+//
 //     fa_print("%s\n", res);
-// 
+//
 //     buffer_t buf = fa_pair_second(res);
 //     fa_plot_buffer_double(buf, NULL, NULL);
 //     fa_destroy(buf);
@@ -1532,10 +1532,10 @@ void test_log()
         fa_log_error(string("We have a problem"));
 
         fa_log(NULL,
-                  fa_error_create_simple(
-                      error,
-                      string("We have a problem"),
-                      string("Doremir.FooBar")));
+               fa_error_create_simple(
+                   error,
+                   string("We have a problem"),
+                   string("Doremir.FooBar")));
         fa_thread_sleep(50);
     }
 

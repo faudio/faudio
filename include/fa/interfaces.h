@@ -15,6 +15,7 @@ enum fa_interfaces {
     fa_order_i,
     fa_number_i,
     fa_clock_interface_i,
+    fa_io_filter_interface_i,
     fa_string_show_i
 };
 

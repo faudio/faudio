@@ -64,7 +64,7 @@ c:
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Audio/Stream.module    		>include/fa/audio/stream.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Midi.module    			>include/fa/midi.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Option.module    		>include/fa/option.h && \
-	$(MODULO) -Mmodules --language=c    <modules/Fa/Streams.module    		>include/fa/streams.h
+	$(MODULO) -Mmodules --language=c    <modules/Fa/Streams.module    		>include/fa/io.h
 
 lisp: fix-lisp
 gen-lisp:

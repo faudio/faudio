@@ -354,8 +354,8 @@ void fa_log_error_from(fa_string_t msg, fa_string_t origin);
 void fa_thread_fatal(char *msg, int error)
 {
     fa_log_error_from(string(msg),
-                         string_dappend(string("Doremir.Thread, error code: "),
-                                        fa_string_format_integral("%d", error)));
+                      string_dappend(string("Doremir.Thread, error code: "),
+                                     fa_string_format_integral("%d", error)));
     exit(error);
 }
 

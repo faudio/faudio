@@ -632,7 +632,7 @@ list_t fa_signal_get_procs(fa_signal_t signal2)
 
     Contains all "input" buffers (actually both input and output) as well as "buses", used
     internally for loop and delay.
-    
+
     The input buffer contains up to kMaxVectorSize values for each channel and are non-interleaved.
     The bus channel contains up to max_delay(state) values for each channel and are non-interleaved.
 
@@ -640,10 +640,9 @@ list_t fa_signal_get_procs(fa_signal_t signal2)
     is unaffected by this change. In non-vector mode, only the first index of an I/O bus is used. In vector
     mode up to kMaxVectorSize indices may be used, depending on current vector size settings and number of
     samples being delivered by the underlying system API.
-    
+
  */
-struct _state_t 
-{
+struct _state_t {
     double     *inputs;                 // Current input values (TODO should not be called inputs as they are also outputs...)
     double     *buses;                  // Current and future bus values
 
@@ -658,7 +657,7 @@ struct _state_t
 state_t new_state(int sample_rate)
 {
     // TODO use a single random generator for whole signal, see below
-    srand(time(NULL));  
+    srand(time(NULL));
     state_t state = fa_new_struct(_state_t);
 
     state->count              = 0;
@@ -878,7 +877,7 @@ ptr_t run_simple_action(state_t state, action_t action)
         write_samp1(0, ch, v, state);
         return NULL;
     }
-    
+
     // TODO accum
 
     if (fa_action_is_send(action)) {

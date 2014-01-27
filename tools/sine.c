@@ -16,14 +16,11 @@ list_t just(ptr_t x, list_t xs)
     return x;
 }
 
-#define fa_unpair(P,A,B) \
-    fa_let(__p, P) \
-    fa_let(A,fa_pair_first(__p)) \
-    fa_let(B,fa_pair_second(__p))
 // TODO move
 #define fa_sizeof_array(A) sizeof(A) / sizeof(A[0])
 #define fa_option_show_all(A,S) fa_option_show(fa_sizeof_array(A),A,S)
 #define fa_option_parse_all(A,AC,AV) fa_option_parse(fa_sizeof_array(A), A, AC, AV)
+
 
 fa_option_t options[] = {
     { "f", "frequency",   "Frequency   (default 440)",    fa_option_integral },
@@ -52,7 +49,9 @@ void helper_function(int freq1, int freq2, int rate, int duration)
         }
 
         if (duration < 0) {
-            while (1) fa_thread_sleep(100);
+            while (1) {
+                fa_thread_sleep(100);
+            }
         } else {
             while (duration > 0) {
                 duration -= 100;
@@ -70,15 +69,14 @@ int main(int argc, char const *argv[])
     fa_set_log_std();
     fa_initialize();
 
-    fa_unpair(fa_option_parse_all(options, argc, (char**) argv), opts, _)
-    {
+    fa_unpair(fa_option_parse_all(options, argc, (char **) argv), opts, _) {
         mark_used(_);
         int freq = fa_map_get(string("frequency"), opts)   ? fa_peek_int32(fa_map_get(string("frequency"), opts)) : 440;
         int rate = fa_map_get(string("sample-rate"), opts) ? fa_peek_int32(fa_map_get(string("sample-rate"), opts)) : 44100;
         int duration = fa_map_get(string("duration"), opts) ? fa_peek_int32(fa_map_get(string("duration"), opts)) : 5000;
-        
+
         printf("freq=%d, rate=%d, duration=%d\n", freq, rate, duration);
-        helper_function(freq,freq*3/2,rate,duration);
+        helper_function(freq, freq * 3 / 2, rate, duration);
     }
 
     fa_terminate();
