@@ -33,8 +33,12 @@ fa_audio_session_t print_audio_devices(fa_ptr_t _, audio_session_t session)
         }
     }
 
+#define compose(F,X,N) F(X(N))
+#define default_input_name(x) compose(fa_audio_name, fa_audio_default_input, x)
+
+
     if (!fa_check(fa_audio_default_input(session))) {
-        fa_print("Default input: %s\n", fa_string_to_string(fa_audio_name(fa_audio_default_input(session))));
+        fa_print("Default input: %s\n", fa_string_to_string(default_input_name(session)));
     } else {
         fa_print("No default input\n", NULL);
     }
