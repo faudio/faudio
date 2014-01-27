@@ -1,78 +1,55 @@
 
-#ifndef _FA_STREAMS
-#define _FA_STREAMS
+#ifndef _FA_IO
+#define _FA_IO
 
 #include <fa.h>
 #include <fa/buffer.h>
+#include <fa/atomic/ring_buffer.h>
 
-/** @addtogroup FaStreams
+/** @addtogroup FaIo
 
     Provides external streams.
-
+    
+    - *Sources* produce sequences of data (bytes, characters, floats etc)
+    - *Sinks* consume sequences of data (bytes, characters, floats etc)
+    - Both *sources* and *sinks* accepts external buffers.
+    
     @since
         2.9
  
     @defgroup Fa Fa
     @{
-    @defgroup FaStreams Streams
+    @defgroup FaIo Io
     @{
     */
 
+/** Callback to receive data.
+    
+    Argument is either a (possibly empty) buffer, meaning that more data is to arrive,
+    or `NULL`, indicating that the data source has been extinguished.
+*/
+typedef void (* fa_io_buffer_callback_t)(fa_buffer_t);
+
 
 typedef struct {
-            bool (* more)(fa_ptr_t);
-        } fa_handle_interface_t;
+            void pull(fa_ptr_t, fa_io_source_t, fa_io_buffer_callback_t);
+        } fa_io_filter_interface_t;
 
-
-typedef struct {
-            void (* read)(fa_ptr_t, fa_buffer_t);
-            void (* reading)(fa_source_t,
-                             size_t (*)(fa_ptr_t, fa_buffer_t),
-                             fa_ptr_t);
-        } fa_source_interface_t;
-
-/** A value of an unknown type implementing @ref fa_handle_interface_t.
+/** Implements the filter interface. 
 */
-typedef struct _fa_handle_t * fa_handle_t;
+typedef struct _fa_io_filter_t * fa_io_filter_t;
 
-/** A value of an unknown type implementing @ref fa_source_interface_t.
+/** Implements the filter interface (ignores the source). 
 */
-typedef struct _fa_source_t * fa_source_t;
+typedef struct _fa_io_source_t * fa_io_source_t;
 
-/** Whether a source or sink is open.
-    
-    If `false`, all subsequent call to `read` or `write` does nothing.
+/** Filter two filterable things.
 */
-bool fa_is_open(fa_handle_t handle);
-
-/** Whether a source or sink is open.
-    
-    If `true`, all subsequent call to `read` or `write` does nothing.
-*/
-bool fa_is_closed(fa_handle_t handle);
-
-/** Read from a source (convenience function).
-
-    The contents of the buffer are overwritten and the number of written bytes,
-    which is at most `fa_buffer_size(buffer)` is returned.
-*/
-size_t fa_source_read(fa_source_t source, fa_buffer_t buffer);
-
-
-typedef size_t (* fa_read_callback_t)(fa_ptr_t, fa_buffer_t);
-
-/** Read from a source.
-
-    The contents of the buffer are overwritten and the number of written bytes,
-    which is at most `fa_buffer_size(buffer)` is returned.
-*/
-void fa_source_reading(fa_source_t source,
-                       fa_read_callback_t readCallback,
-                       fa_ptr_t ptr);
+fa_ptr_t fa_io_filter(fa_ptr_t ptr, fa_ptr_t ptr_);
 
 /** @}
     @}
     */
 
-#endif // _FA_STREAMS
+#endif // _FA_IO
 

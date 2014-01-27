@@ -1,107 +1,38 @@
 
 /**
     Provides external streams.
-
+    
+    - *Sources* produce sequences of data (bytes, characters, floats etc)
+    - *Sinks* consume sequences of data (bytes, characters, floats etc)
+    - Both *sources* and *sinks* accepts external buffers.
+    
     @since
         2.9
  */
-module "transient" Fa.Streams
+module Fa.Io
 {
     import Fa;
     import Fa.Buffer;
+    import Fa.Atomic.RingBuffer;
+
+    /** Callback to receive data.
     
-    type HandleInterface = struct {
-        more : (Ptr -> Bool)*
-    };                 
-
-    type SourceInterface = struct {
-        read    : ( (Ptr, Buffer) -> Void                           )*,
-        reading : ( (Source, ((Ptr, Buffer) -> Size)*, Ptr) -> Void )*
-    };                 
-    
-    // type SinkInterface = struct {
-        // write : ((Ptr, Buffer) -> Void)*
-    // };                 
-
-    /** A value of an unknown type implementing @ref fa_handle_interface_t.
+        Argument is either a (possibly empty) buffer, meaning that more data is to arrive,
+        or `NULL`, indicating that the data source has been extinguished.
      */
-    type Handle = opaque;
+    type BufferCallback = (Buffer -> Void)*;
 
-    /** A value of an unknown type implementing @ref fa_source_interface_t.
-     */
+    type FilterInterface = struct {
+        pull : (Ptr, Source, BufferCallback) -> Void
+    };
+
+    /** Implements the filter interface. */
+    type Filter = opaque;
+    /** Implements the filter interface (ignores the source). */
     type Source = opaque;
 
-    // /** A value of an unknown type implementing @ref fa_sink_interface_t.
-     // */
-    // type Sink = opaque;
-
-    /** Whether a source or sink is open.
-        
-        If `false`, all subsequent call to `read` or `write` does nothing.
+    /** Filter two filterable things.
      */
-    isOpen : Handle -> Bool;
-
-    /** Whether a source or sink is open.
-        
-        If `true`, all subsequent call to `read` or `write` does nothing.
-     */
-    isClosed : Handle -> Bool;
-
-
-    // This model makes it natural to write:
-
-    //  compressions as filters over sinks          (given buffer is large enough to contain decompressed data)
-    //  decompressions as filters over sources      (given buffer is large enough to contain decompressed data)
-
-    /** Read from a source (convenience function).
-
-        The contents of the buffer are overwritten and the number of written bytes,
-        which is at most `fa_buffer_size(buffer)` is returned.
-     */
-    sourceRead : (Source, Buffer) -> Size;
-
-    // /** Write to a sink.
-    // 
-    //     The contents of the buffer are overwritten and the number of written bytes,
-    //     which is at most `fa_buffer_size(buffer)` is returned.
-    //  */
-    // sinkWrite : (Sink, Buffer) -> Size;
-
-    //  compressions as filters over sources      (given buffer is large enough to contain decompressed data)
-    //  decompressions as filters over sinks      (given buffer is large enough to contain decompressed data)
-
-    type ReadCallback = ((Ptr, Buffer) -> Size)*;
-
-    /** Read from a source.
-
-        The contents of the buffer are overwritten and the number of written bytes,
-        which is at most `fa_buffer_size(buffer)` is returned.
-     */
-    sourceReading : (Source, ReadCallback, Ptr)-> Void;
-
-    // /** Write to a sink.
-    // 
-    //     The contents of the buffer are overwritten and the number of written bytes,
-    //     which is at most `fa_buffer_size(buffer)` is returned.
-    //  */
-    // sinkWriting : (Sink, ((Ptr, Buffer) -> Size)*, Ptr) -> Size;
-
-
-
-    // sinkWrite : (Sink, Buffer) -> Ptr;
-    // sinkClose : Sink -> Void;
-    // 
-    // 
-    // /** Return the result of applying the given function to all elements of the given list. */
-    // streamsMap : (Unary, Ptr, Source) -> Source;
-    // 
-    // /** Fold over the given source from left to right. */
-    // streamsFold : (Binary, Ptr, Ptr, Source) -> Ptr;
-    // 
-    // streamsReadFile : String -> Source;
-    // streamsWriteFile : (String, Source) -> Void;     
-
-
-    // TODO sink "adapters"
+    filter : (Ptr, Ptr) -> Ptr;
 }
 
