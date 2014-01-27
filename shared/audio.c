@@ -21,6 +21,7 @@
 
 #include <portaudio.h>
 #include "signal.h"
+#include "signal_internal.h"
 #include "action_internal.h"
 
 /*

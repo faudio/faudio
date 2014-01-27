@@ -17,6 +17,7 @@
 #include <fa/midi/message.h>
 
 #include "signal.h"
+#include "signal_internal.h"
 #include "action_internal.h"
 
 typedef fa_signal_custom_processor_t   *custom_proc_t;
