@@ -624,11 +624,12 @@ list_t fa_signal_get_procs(fa_signal_t signal2)
 // --------------------------------------------------------------------------------
 // Running
 
-#define kMaxCustomProcs 10
-#define kMaxInputs      128
-#define kMaxBuses       64
+#define kMaxCustomProcs     10
+#define kMaxInputs          128
+#define kMaxBuses           64
+#define kMaxDelaySeconds    5
 
-#define max_delay(k) ((long) (k * 5))
+#define max_delay(state) ((long) (state->rate * kMaxDelaySeconds))
 
 struct _state_t {
     double     *inputs;                 // Current input values (TODO should not be called inputs as they are also outputs...)
@@ -652,9 +653,9 @@ state_t new_state(int sample_rate)
     state->custom_proc_count  = 0;
 
     state->inputs   = fa_malloc(kMaxInputs * kMaxVectorSize * sizeof(double));
-    state->buses    = fa_malloc(kMaxBuses * max_delay(state->rate)   * sizeof(double));
+    state->buses    = fa_malloc(kMaxBuses * max_delay(state)   * sizeof(double));
     memset(state->inputs,   0, kMaxInputs * kMaxVectorSize * sizeof(double));
-    memset(state->buses,    0, kMaxBuses * max_delay(state->rate)    * sizeof(double));
+    memset(state->buses,    0, kMaxBuses * max_delay(state)    * sizeof(double));
 
     return state;
 }
@@ -746,14 +747,15 @@ void inc_state1(state_t state)
 //----------
 // Internal state stuff
 
+/* */
 int buffer_pointer(state_t state)
 {
-    return state->count % max_delay(state->rate);
+    return state->count % max_delay(state);
 }
 
 int index_bus(int n, int c, state_t state)
 {
-    return c * max_delay(state->rate) + n;
+    return c * max_delay(state) + n;
 }
 
 // a[n]  = *(a + n)
@@ -799,7 +801,7 @@ double *read_bus(int c, state_t state)
 double *write_bus(int n, int c, state_t state)
 {
     int bp = buffer_pointer(state);
-    return state->buses + (index_bus((bp + n) % max_delay(state->rate), c, state));
+    return state->buses + (index_bus((bp + n) % max_delay(state), c, state));
 }
 
 //----------
