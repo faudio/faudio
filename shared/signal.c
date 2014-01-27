@@ -624,7 +624,11 @@ list_t fa_signal_get_procs(fa_signal_t signal2)
 // --------------------------------------------------------------------------------
 // Running
 
-#define kMaxCustomProcs 10
+long const kMaxCustomProcs = 10;
+long const kMaxInputs      = 128;
+long const kMaxBuses       = 64;
+
+#define max_delay(k) ((long) (k * 5))
 
 struct _state_t {
     double     *inputs;                 // Current input values (TODO should not be called inputs as they are also outputs...)
@@ -637,13 +641,6 @@ struct _state_t {
     custom_proc_t custom_procs[kMaxCustomProcs];      // Array of custom processors
 
 };
-// typedef _state_t *state_t;
-
-
-long    kMaxInputs      = 128;
-long    kMaxBuses       = 64;
-
-#define max_delay(k) ((long) (k * 5))
 
 state_t new_state(int sample_rate)
 {
@@ -651,7 +648,7 @@ state_t new_state(int sample_rate)
     state_t state = fa_new_struct(_state_t);
 
     state->count              = 0;
-    state->rate               = sample_rate; // TODO
+    state->rate               = sample_rate;
     state->custom_proc_count  = 0;
 
     state->inputs   = fa_malloc(kMaxInputs * kMaxVectorSize * sizeof(double));
@@ -694,15 +691,15 @@ double state_time_plus(state_t state, int n)
     return (state->count + n) / state->rate;
 }
 
-double  read_input1(int c, state_t state);
-double  read_bus1(int c, state_t state);
-void    write_input1(int c, double x, state_t state);
-void    write_bus1(int n, int c, double x, state_t state);
+inline static double  read_input1(int c, state_t state);
+inline static double  read_bus1(int c, state_t state);
+inline static void    write_input1(int c, double x, state_t state);
+inline static void    write_bus1(int n, int c, double x, state_t state);
 
-double  *read_input(int c, state_t state);
-double  *read_bus(int c, state_t state);
-double  *write_input(int c, state_t state);
-double  *write_bus(int n, int c, state_t state);
+inline static double  *read_input(int c, state_t state);
+inline static double  *read_bus(int c, state_t state);
+inline static double  *write_input(int c, state_t state);
+inline static double  *write_bus(int n, int c, state_t state);
 
 inline static
 double read_samp1(int c, state_t state)
@@ -759,30 +756,28 @@ int index_bus(int n, int c, state_t state)
     return c * max_delay(state->rate) + n;
 }
 
+// a[n]  = *(a + n)
+// &a[n] = a + n
+
 double read_input1(int c, state_t state)
 {
-    return state->inputs[c * kMaxVectorSize];
+    return *read_input(c, state);
 }
 
 void write_input1(int c, double x, state_t state)
 {
-    state->inputs[c * kMaxVectorSize] = x;
+    *write_input(c, state) = x;
 }
 
 double read_bus1(int c, state_t state)
 {
-    int bp = buffer_pointer(state);
-    return state->buses[index_bus(bp, c, state)];
+    return *read_bus(c, state);
 }
 
 void write_bus1(int n, int c, double x, state_t state)
 {
-    int bp = buffer_pointer(state);
-    state->buses[index_bus((bp + n) % max_delay(state->rate), c, state)] = x;
+    *write_bus(n, c, state) = x;
 }
-
-
-
 
 
 double *read_input(int c, state_t state)
