@@ -20,6 +20,11 @@ find_library (LIBVORBIS_LIBRARY
   PATH_SUFFIXES lib
   PATHS ${CMAKE_SOURCE_DIR}/external/libvorbis/result
   )
+find_library (LIBVORBISENC_LIBRARY
+  NAMES libvorbisenc.a
+  PATH_SUFFIXES lib
+  PATHS ${CMAKE_SOURCE_DIR}/external/libvorbis/result
+  )
 endletmany (CMAKE_FIND_LIBRARY_SUFFIXES) 
 
 find_package_handle_standard_args (libvorbis 
@@ -27,7 +32,7 @@ find_package_handle_standard_args (libvorbis
   LIBVORBIS_LIBRARY
   LIBVORBIS_INCLUDE_DIR
 )                
-set(LIBVORBIS_LIBRARIES    ${LIBVORBIS_LIBRARY})
+set(LIBVORBIS_LIBRARIES    ${LIBVORBIS_LIBRARY} ${LIBVORBISENC_LIBRARY})
 set(LIBVORBIS_INCLUDE_DIRS ${LIBVORBIS_INCLUDE_DIR})
 
 
