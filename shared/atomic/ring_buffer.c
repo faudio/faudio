@@ -24,6 +24,8 @@ struct _fa_atomic_ring_buffer_t {
     byte_t             *data;                   //  Underlying buffer
     size_t              size;
     size_t              first, last, count;
+
+    bool                closed;
 };
 
 
@@ -44,11 +46,12 @@ ring_buffer_t fa_atomic_ring_buffer_create(size_t size)
     b->first = 0;                   // Next read, always < size
     b->last  = 0;                   // Next write, always < size
     b->count = 0;                   // Bytes written not yet read, always <= size
-
     // if count == size, the buffer is full
     // if count == 0,    the buffer is empty
     // we can always read n bytes, where n == count
     // we can always write n bytes, where n == (size-count)
+
+    b-> closed = false;
 
     return b;
 }
@@ -85,6 +88,16 @@ bool fa_atomic_ring_buffer_can_write(ring_buffer_t buffer, size_t n)
 {
     return (buffer->count + n) <= buffer->size;
 }
+
+void fa_atomic_ring_buffer_close(ring_buffer_t buffer)
+{
+    buffer->closed = true;
+}
+bool fa_atomic_ring_buffer_is_closed(ring_buffer_t buffer)
+{
+    return buffer->closed;
+}
+
 
 byte_t unsafe_read_byte(ring_buffer_t buffer)
 {

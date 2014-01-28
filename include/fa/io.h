@@ -141,6 +141,10 @@ fa_io_source_t fa_io_standard_in();
 */
 fa_io_sink_t fa_io_standard_out();
 
+/** Create a source from a ring buffer. 
+*/
+fa_io_source_t fa_io_from_ring_buffer(fa_atomic_ring_buffer_t ringBuffer);
+
 
 fa_io_filter_t fa_io_create_ogg_encoder();
 

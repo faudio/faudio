@@ -92,6 +92,9 @@ module Fa.Io
     /** Create source that reads to the standfard output. */
     standardOut : () -> Sink;
 
+    /** Create a source from a ring buffer. */
+    fromRingBuffer : RingBuffer -> Source;
+
     createOggEncoder : () -> Filter;
     
     run : (Source, Sink) -> Void;

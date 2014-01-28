@@ -47,6 +47,20 @@ void fa_atomic_ring_buffer_destroy(fa_atomic_ring_buffer_t ringBuffer);
 size_t fa_atomic_ring_buffer_size(fa_atomic_ring_buffer_t ringBuffer);
 
 
+void fa_atomic_ring_buffer_close(fa_atomic_ring_buffer_t ringBuffer);
+
+
+bool fa_atomic_ring_buffer_is_closed(fa_atomic_ring_buffer_t ringBuffer);
+
+
+bool fa_atomic_ring_buffer_can_read(fa_atomic_ring_buffer_t ringBuffer,
+                                    size_t size_);
+
+
+bool fa_atomic_ring_buffer_can_write(fa_atomic_ring_buffer_t ringBuffer,
+                                     size_t size_);
+
+
 bool fa_atomic_ring_buffer_read(fa_atomic_ring_buffer_t ringBuffer,
                                 uint8_t *);
 

@@ -322,7 +322,13 @@ void _simple_filter_pull1(ptr_t y, buffer_t buffer) {
 // pull from upstream, push to x, pull from x
 void simple_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t callback, ptr_t data)
 {
-    fa_io_pull(upstream, _simple_filter_pull1, pair(x, pair(callback, data)));
+    if (upstream) {
+        fa_io_pull(upstream, _simple_filter_pull1, pair(x, pair(callback, data)));
+    } else {
+        fa_io_read_callback_t pull = ((struct filter_base *) x)->data2;
+        ptr_t                 cbData = ((struct filter_base *) x)->data3;
+        pull(cbData, callback, data);
+    }
 }                             
 
 void _simple_push1(ptr_t downstream, buffer_t buffer) {
@@ -430,6 +436,42 @@ fa_io_filter_t fa_io_create_simple_filter(fa_io_callback_t callback,
     return (fa_io_filter_t) x;
 }
 
+
+void push_ringbuffer(fa_ptr_t x, fa_buffer_t buffer)
+{
+    assert(false && "Not implemented");
+}
+
+void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
+{
+    fa_atomic_ring_buffer_t rbuffer = x;
+
+    mark_used(rbuffer);
+
+    if (fa_atomic_ring_buffer_is_closed(rbuffer) && !fa_atomic_ring_buffer_can_read(rbuffer, 1)) {
+        cb(data, NULL);
+        // printf("Done\n");
+    } else {
+        if (fa_atomic_ring_buffer_can_read(rbuffer, 64)) {
+            buffer_t buf = fa_buffer_create(64);
+            for (size_t i = 0; i < 64; ++i) {  
+                fa_atomic_ring_buffer_read(
+                    rbuffer,
+                    fa_buffer_unsafe_address(buf) + i
+                );
+            }
+            cb(data, buf);
+            // printf("Reading\n");
+        } else {
+            // printf("Nothing to read\n");
+        }
+    }
+}
+
+fa_io_source_t fa_io_from_ring_buffer(fa_atomic_ring_buffer_t rbuffer)
+{
+    return (fa_io_source_t) fa_io_create_simple_filter(push_ringbuffer, pull_ringbuffer, rbuffer);
+}
 
 
 
