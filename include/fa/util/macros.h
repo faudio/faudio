@@ -183,6 +183,8 @@
     fa_let(A,fa_pair_first(__p)) \
     fa_let(B,fa_pair_second(__p))
 
+#define fa_sizeof_array(A) sizeof(A) / sizeof(A[0])
+
 /** @}
     @}
     */

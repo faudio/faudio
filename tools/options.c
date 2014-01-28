@@ -5,12 +5,7 @@
 #include <fa/io.h>
 
 
-#define fa_unpair(P,A,B) \
-    fa_let(__p, P) \
-    fa_let(A,fa_pair_first(__p)) \
-    fa_let(B,fa_pair_second(__p))
 // TODO move
-#define fa_sizeof_array(A) sizeof(A) / sizeof(A[0])
 #define fa_option_show_all(A,S) fa_option_show(fa_sizeof_array(A),A,S)
 #define fa_option_parse_all(A,AC,AV) fa_option_parse(fa_sizeof_array(A), A, AC, AV)
 
