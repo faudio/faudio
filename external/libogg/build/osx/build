@@ -1,0 +1,16 @@
+
+# TODO get submodules
+
+pushd external/libogg/source;
+
+CFLAGS="-arch i386" \
+CXXFLAGS="-arch i386" \
+LDFLAGS="-arch i386" \
+./configure \
+    --prefix=`pwd`/../result \
+	  && make \
+	  && make install
+
+# 	  && cp -R include/ ../result/include/
+
+popd;

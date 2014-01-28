@@ -1,0 +1,18 @@
+
+# TODO get submodules
+
+pushd external/libvorbis/source;
+
+make distclean; \
+CFLAGS="-arch i386" \
+CXXFLAGS="-arch i386" \
+LDFLAGS="-arch i386" \
+./configure \
+	--with-ogg=`pwd`/../../libogg/result \
+    --prefix=`pwd`/../result \
+	  && make \
+	  && make install
+
+# 	  && cp -R include/ ../result/include/
+
+popd;
