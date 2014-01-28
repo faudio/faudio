@@ -120,6 +120,18 @@ module Fa.Buffer
      */
     set     : (Buffer, Size, UInt8) -> Void;
 
+    /** Copy the first n bytes. */
+    take : (Size, Buffer) -> Buffer;
+
+    /** Copy from the given number of bytes. */
+    drop : (Size, Buffer) -> Buffer;
+
+    /** Efficient combination of take and drop. */
+    takeDrop : (Size, Buffer) -> Pair;
+    
+    /** Split into a list of buffers containing at most n bytes. */
+    split : (Buffer, Size) -> List;
+
     /** Get a value from the buffer.
         @note
             O(1)

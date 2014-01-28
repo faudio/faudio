@@ -136,6 +136,22 @@ void fa_buffer_set(fa_buffer_t buffer,
                    size_t size_,
                    uint8_t uInt8_);
 
+/** Copy the first n bytes. 
+*/
+fa_buffer_t fa_buffer_take(size_t size_, fa_buffer_t buffer);
+
+/** Copy from the given number of bytes. 
+*/
+fa_buffer_t fa_buffer_drop(size_t size_, fa_buffer_t buffer);
+
+/** Efficient combination of take and drop. 
+*/
+fa_pair_t fa_buffer_take_drop(size_t size_, fa_buffer_t buffer);
+
+/** Split into a list of buffers containing at most n bytes. 
+*/
+fa_list_t fa_buffer_split(fa_buffer_t buffer, size_t size_);
+
 /** Get a value from the buffer.
     @note
         O(1)
