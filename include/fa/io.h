@@ -35,6 +35,12 @@
 */
 typedef void (* fa_io_callback_t)(fa_ptr_t, fa_buffer_t);
 
+/** Callback to recive callback to receive data.
+*/
+typedef void (* fa_io_read_callback_t)(fa_ptr_t,
+                                       fa_io_callback_t,
+                                       fa_ptr_t);
+
 /** Implements the filter interface. 
 */
 typedef struct _fa_io_filter_t * fa_io_filter_t;
@@ -87,6 +93,13 @@ fa_io_source_t fa_io_map(fa_io_source_t source,
 
 fa_io_sink_t fa_io_contramap(fa_io_filter_t filter,
                              fa_io_sink_t sink);
+
+/** Create a simple stateful  filter.
+    The callback is invoked on push and the read callback on pull.
+*/
+fa_io_filter_t fa_io_create_simple_filter(fa_io_callback_t callback,
+                                          fa_io_read_callback_t readCallback,
+                                          fa_ptr_t ptr);
 
 
 fa_io_filter_t fa_io_split(fa_io_sink_t sink);

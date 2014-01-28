@@ -12,7 +12,7 @@
 
 struct filter_base {
     impl_t impl;
-    ptr_t data1, data2;
+    ptr_t data1, data2, data3;
 };
 
 
@@ -301,6 +301,49 @@ FILTER_IMPLEMENTATION(composed_filter);
 
 // ------------------------------------------------------------------------------------------
 
+string_t simple_filter_show(ptr_t x)
+{
+    return string("<Ref>");
+}
+
+void _simple_filter_pull1(ptr_t y, buffer_t buffer) {
+    fa_unpair(y, x, closure) {
+        fa_io_callback_t      push = ((struct filter_base *) x)->data1;
+        fa_io_read_callback_t pull = ((struct filter_base *) x)->data2;
+        ptr_t                 cbData = ((struct filter_base *) x)->data3;
+        
+        push(cbData, buffer);
+        fa_unpair(closure, callback, data) {
+            pull(cbData, callback, data);
+        }
+    }
+}
+
+// pull from upstream, push to x, pull from x
+void simple_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t callback, ptr_t data)
+{
+    fa_io_pull(upstream, _simple_filter_pull1, pair(x, pair(callback, data)));
+}                             
+
+void _simple_push1(ptr_t downstream, buffer_t buffer) {
+    fa_io_push(downstream, buffer);
+}
+
+// push to x, pull from x, push downstream
+void simple_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
+{
+    fa_io_callback_t      push = ((struct filter_base *) x)->data1;
+    fa_io_read_callback_t pull = ((struct filter_base *) x)->data2;
+    ptr_t                 cbData = ((struct filter_base *) x)->data3;
+
+    push(cbData, buffer);
+    pull(cbData, _simple_push1, downstream);
+}
+FILTER_IMPLEMENTATION(simple_filter);
+
+
+// ------------------------------------------------------------------------------------------
+
 fa_io_filter_t fa_io_split(fa_io_sink_t sink)
 {
     struct filter_base *x = fa_new_struct(filter_base);
@@ -374,6 +417,18 @@ fa_io_source_t fa_io_read_file(string_t path)
     return (fa_io_source_t) x;
 }
 
+
+fa_io_filter_t fa_io_create_simple_filter(fa_io_callback_t callback,
+                                          fa_io_read_callback_t readCallback,
+                                          ptr_t data)
+{
+    struct filter_base *x = fa_new_struct(filter_base);
+    x->impl = &simple_filter_impl;
+    x->data1 = callback;
+    x->data2 = readCallback;
+    x->data3 = data;
+    return (fa_io_filter_t) x;
+}
 
 
 
