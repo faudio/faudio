@@ -236,6 +236,8 @@ if (COMPONENTS_RESOLVED)
   include_directories(${ICU_INCLUDE_DIRS})
   include_directories(${FLUIDSYNTH_INCLUDE_DIRS}) # May be empty
   include_directories(${GLIB_INCLUDE_DIRS})       # May be empty
+  include_directories(${LIBOGG_INCLUDE_DIRS})       # May be empty
+  include_directories(${LIBVORBIS_INCLUDE_DIRS})       # May be empty
   include_directories("external/vst")
 
   ## ----------------------------------------------------------------------
@@ -251,6 +253,8 @@ if (COMPONENTS_RESOLVED)
     ${ICU_LIBRARIES}
     ${FLUIDSYNTH_LIBRARIES} # May be empty
     ${GLIB_LIBRARIES}       # May be empty
+    ${LIBOGG_LIBRARIES}       # May be empty
+    ${LIBVORBIS_LIBRARIES}       # May be empty
     "/c/mingw/lib"
     "/c/mingw"
     )
@@ -264,6 +268,8 @@ if (COMPONENTS_RESOLVED)
   list(APPEND EXTS ${GTEST_LIBRARIES})
   list(APPEND EXTS ${FLUIDSYNTH_LIBRARIES}) # May be empty
   list(APPEND EXTS ${GLIB_LIBRARIES})       # May be empty
+  list(APPEND EXTS ${LIBOGG_LIBRARIES})       # May be empty
+  list(APPEND EXTS ${LIBVORBIS_LIBRARIES})       # May be empty
 
   if (MSYS)
     find_library (MINGW32 NAMES mingw32 PATH_SUFFIXES lib PATHS "C:/MinGW")
