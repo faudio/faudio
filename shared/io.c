@@ -202,7 +202,7 @@ void read_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t call
     string_t path = ((struct filter_base *) x)->data1;
     FILE *fp = fopen(unstring(path), "r");
 
-    char raw[1024*16];
+    char raw[1024*8];
     size_t read;
 
     while (!ferror(fp) && !feof(fp)) {

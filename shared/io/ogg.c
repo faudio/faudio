@@ -23,7 +23,11 @@ struct ogg_encoder {
     struct {
         ogg_stream_state    stream;
     }                       ogg;
+    bool                    flushed;
 };
+
+#define kSR       44100
+#define kChannels 1
 
 void write_page(struct ogg_encoder* encoder, ogg_page *page, fa_io_callback_t cb, ptr_t data);
 
@@ -36,7 +40,7 @@ void prepare(fa_ptr_t x)
     
     int ret;            
     // TODO
-    ret=vorbis_encode_init_vbr(&encoder->vorbis.info, 1, 44100, 1.0f);
+    ret=vorbis_encode_init_vbr(&encoder->vorbis.info, kChannels, kSR, 1.0f);
     assert ((ret == 0) && "Unknown error");
     
     /* set up the analysis state and auxiliary encoding storage */
@@ -64,19 +68,7 @@ void prepare(fa_ptr_t x)
     ogg_stream_packetin(&encoder->ogg.stream,&header_comm);
     ogg_stream_packetin(&encoder->ogg.stream,&header_code);
     
-    ogg_page         page;
-    
-    /* This ensures the actual
-     * audio data will start on a new page, as per spec
-     */
-    while(true){
-        int result=ogg_stream_flush(&encoder->ogg.stream,&page);
-        if(result==0)break;
-
-        // FIXME
-        // write_page(encoder, &page);
-    }
-
+    encoder->flushed = false;
     vorbis_comment_clear(&comment);    
 }
 
@@ -87,21 +79,24 @@ buffer_t double2float(buffer_t x) {
     for (size_t i = 0; i < fa_buffer_size(x) / 8; ++i) {
         ry[i] = rx[i];
     }
+    printf("Converting to floats: in_size=%zu, out_size=%zu\n", fa_buffer_size(x), fa_buffer_size(y));
     return y;
 }
 
 // Convert interleaved float buffer to raw floats
 void deinterleave(float** dest, buffer_t floats, size_t channels)
 {
-    // float* raw_floats = fa_buffer_unsafe_address(floats);
-    // size_t samples = fa_buffer_size(floats) / 4;
-    // size_t frames = samples / channels;
-    // for (size_t c = 0; c < channels; ++c) {
-    //     for (size_t i = 0; i < frames; ++i) {
-    //         dest[c][i] = raw_floats[i*channels+c];
-    //     }
-    // }
-    //      
+    float* raw_floats = fa_buffer_unsafe_address(floats);
+    size_t samples = fa_buffer_size(floats) / 4;
+    size_t frames = samples / channels;
+
+    printf("Deinterleaving: samples=%zu, frames=%zu, channels=%zu\n", samples, frames, channels);
+    for (size_t c = 0; c < channels; ++c) {
+        for (size_t i = 0; i < frames; ++i) {
+            dest[c][i] = raw_floats[i*channels+c];
+        }
+    }
+         
 }
 
 void push_uncompressed(fa_ptr_t x, fa_buffer_t buffer)
@@ -113,16 +108,21 @@ void push_uncompressed(fa_ptr_t x, fa_buffer_t buffer)
     if (buffer) {
         int samples = fa_buffer_size(buffer) / (8/**2*/);     // Samples vs frames?
         
+        // This is not really documented but apparently libvorbis drops samples
+        // if the buffer size is bigger than 1024
+        assert(samples <= 1024 && "Vorbis analysis requre buffer size <= 1024");
+        
         float** buf = vorbis_analysis_buffer(
             &encoder->vorbis.dsp, 
             samples
             ); 
-        deinterleave(buf, double2float(buffer), 1);
+        deinterleave(buf, double2float(buffer), kChannels);
         vorbis_analysis_wrote(
             &encoder->vorbis.dsp,
             samples
             );
 
+        printf("Vorbis analysis: samples=%d\n", samples);
     } else {
         vorbis_analysis_wrote(&encoder->vorbis.dsp, 0);
     }
@@ -154,6 +154,21 @@ void push_uncompressed(fa_ptr_t x, fa_buffer_t buffer)
 void pull_compressed(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
 {     
     struct ogg_encoder *encoder = (struct ogg_encoder*) x;
+    
+    if (!encoder->flushed) {
+        encoder->flushed = true;
+        
+        /* This ensures the actual
+         * audio data will start on a new page, as per spec
+         */
+        while(true){
+            ogg_page page;
+            mark_used(page);
+            int result=ogg_stream_flush(&encoder->ogg.stream,&page);
+            if(result==0)break;
+            write_page(encoder, &page, cb, data);
+        }
+    }
 
     {
         ogg_packet packet;
