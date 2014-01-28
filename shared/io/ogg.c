@@ -10,15 +10,35 @@
 #include <fa/io.h>
 #include <fa/util.h>
 
+#include <vorbis/codec.h>
+#include <ogg/ogg.h>
+
 struct ogg_encoder {
-    int x;
+    int x;            
+    
+    struct {
+        vorbis_block        block;
+        vorbis_dsp_state    dsp;
+        vorbis_info         info;
+    }                       vorbis;
+    struct {
+        ogg_stream_state    stream;
+    }                       ogg;
 };
+
+void prepare(fa_ptr_t x)
+{
+    struct encoder *encoder = (struct encoder*) x;
+    mark_used(encoder);
+    
+}
 
 void push_uncompressed(fa_ptr_t x, fa_buffer_t buffer)
 {
     struct encoder *encoder = (struct encoder*) x;
     mark_used(encoder);
 }
+
 void pull_compressed(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
 {
     struct encoder *encoder = (struct encoder*) x;
