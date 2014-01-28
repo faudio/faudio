@@ -123,6 +123,8 @@ void push_uncompressed(fa_ptr_t x, fa_buffer_t buffer)
             );
 
         printf("Vorbis analysis: samples=%d\n", samples);
+
+        fa_destroy(buffer);
     } else {
         vorbis_analysis_wrote(&encoder->vorbis.dsp, 0);
     }

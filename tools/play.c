@@ -8,7 +8,7 @@
  */
 // typedef fa_signal_t signal_t;
 
-list_t just(ptr_t x, list_t xs)
+list_t just_list(ptr_t x, list_t xs)
 {
     return x;
 }
@@ -46,7 +46,7 @@ void helper_function(string_t path)
         fa_audio_session_t s = fa_audio_begin_session();
         fa_audio_device_t i  = fa_audio_default_input(s);
         fa_audio_device_t o  = fa_audio_default_output(s);
-        fa_audio_stream_t st = fa_audio_open_stream(i, o, just, list(l, r));
+        fa_audio_stream_t st = fa_audio_open_stream(i, o, just_list, list(l, r));
 
         if (fa_check(st)) {
             fa_error_log(st, NULL);

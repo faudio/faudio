@@ -183,6 +183,7 @@ void write_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
         FILE *fp = fopen(unstring(path), "a");
         fwrite(fa_buffer_unsafe_address(buffer), fa_buffer_size(buffer), 1, fp);
         fclose(fp);
+        fa_destroy(buffer);
     } else {
         // TODO close
     }

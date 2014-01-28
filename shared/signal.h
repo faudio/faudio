@@ -18,7 +18,7 @@ struct _state_base_t {
 #define kMaxVectorSize                  1024
 #define kDefVectorSize                  64
 
-#define kDefSampleRate                  48000
+#define kDefSampleRate                  44100
 #define kDefLatency                     0.002
 #define kAudioSchedulerIntervalMillis   1
 

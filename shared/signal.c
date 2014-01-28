@@ -1241,23 +1241,73 @@ fa_signal_t fa_signal_play_stream(fa_atomic_ring_buffer_t buffer)
     return fa_signal_lift(string("playStream"), _play_stream, buffer, fa_signal_constant(0));
 }
 
-inline static double _record_stream(ptr_t buffer, double x)
-{
-    // Ignored if overflowing
-    // TODO report
-    bool res = fa_atomic_ring_buffer_write_double(buffer, x);
-    mark_used(res);
-
-    if (!res) {
-        // warn(string("O"));
-    }
-
-    return x;
-}
-
 fa_signal_t fa_signal_record_stream(fa_atomic_ring_buffer_t buffer, fa_signal_t x)
 {
     assert(false);
+}
+
+
+#define kRecExternalOffset 40
+
+struct rec_external {              
+    string_t name;
+    fa_atomic_ring_buffer_t buffer;
+};
+ptr_t record_extrenal_before_(ptr_t x, int count, fa_signal_state_t *state)
+{
+    return x;
+}
+ptr_t record_extrenal_after_(ptr_t x, int count, fa_signal_state_t *state)
+{
+    return x;
+}
+ptr_t record_extrenal_render_(ptr_t x, int count, fa_signal_state_t *state)
+{
+    struct rec_external* ext = (struct rec_external*) x;
+
+    if (!kVectorMode) {
+        double x = state->buffer[(kRecExternalOffset + 0)*kMaxVectorSize];
+        if (ext->buffer) {
+            fa_atomic_ring_buffer_write_double(ext->buffer, x);
+        }
+    } else {
+        for (int i = 0; i < count; ++i) {
+            double x = state->buffer[(kRecExternalOffset + 0)*kMaxVectorSize + i];
+            if (ext->buffer) {
+                fa_atomic_ring_buffer_write_double(ext->buffer, x);
+            }
+        }
+    }
+    return x;
+}
+
+ptr_t record_extrenal_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
+{
+    struct rec_external* ext = (struct rec_external*) x;
+
+    if (fa_equal(ext->name, n)) {
+        // TODO assert it is actually a ring buffer
+        ext->buffer = msg;
+    }
+    return x;
+}
+
+
+fa_signal_t fa_signal_record_external(fa_string_t name,
+                                      fa_signal_t signal)
+{
+    struct rec_external* ext = fa_new_struct(rec_external);
+    ext->name = name;
+    ext->buffer = NULL;
+    
+    fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
+    proc->before  = record_extrenal_before_;
+    proc->after   = record_extrenal_after_;
+    proc->render  = record_extrenal_render_;
+    proc->receive = record_extrenal_receive_;
+    proc->data    = ext;
+
+    return fa_signal_custom(proc, fa_signal_output(0, kRecExternalOffset, signal));
 }
 
 

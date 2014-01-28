@@ -255,6 +255,9 @@ module Fa.Signal
      */
     record : (Buffer, Signal, Signal) -> Signal;
 
+    recordExternal : (String, Signal) -> Signal;
+    recordExternal2 : (String, Pair) -> Pair;
+
     playStream : (RingBuffer) -> Signal;
     recordStream : (RingBuffer, Signal) -> Signal;
 
