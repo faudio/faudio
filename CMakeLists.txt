@@ -51,6 +51,7 @@ option(ENABLE_REALTIME_AUDIO    "Enable real-time audio"                    True
 option(ENABLE_REALTIME_MIDI     "Enable real-time midi"                     True)
 option(ENABLE_NONREALTIME_AUDIO "Enable non-real-time audio"                True)
 option(ENABLE_FLUIDSYNTH        "Enable the Fluidsynth processor"           ${NOT_APPLE})
+option(ENABLE_OGG_VORBIS        "Enable OGG/Vorbis support"                 True)
 option(ENABLE_AUDIO_UNIT        "Enable AudioUnit processors"               ${APPLE})
 option(ENABLE_VST               "Enable VST processors"                     True)
 
@@ -174,6 +175,10 @@ if (COMPONENTS_RESOLVED)
   if(ENABLE_FLUIDSYNTH)
     find_package(Fluidsynth)
     find_package(Glib)
+  endif()
+  if(ENABLE_OGG_VORBIS)
+    find_package(Libogg)
+    find_package(Libvorbis)
   endif()
 
   ## ----------------------------------------------------------------------

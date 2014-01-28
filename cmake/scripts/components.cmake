@@ -27,11 +27,29 @@ add_standard_component(COMPONENTS Sndfile
   ${AUDIO_ENGINE_SYSTEM_NAME}
   )
 
+if (NOT APPLE)
 predicate_file_exists(fluidsynth_exists
   "external/fluidsynth/result/include/fluidsynth.h"
   )
 add_standard_component(COMPONENTS Fluidsynth
   fluidsynth_exists
+  ${AUDIO_ENGINE_SYSTEM_NAME}
+  )       
+endif()
+
+predicate_file_exists(libogg_exists
+  "external/libogg/result/include/ogg/ogg.h"
+  )
+add_standard_component(COMPONENTS Libogg
+  libogg_exists
+  ${AUDIO_ENGINE_SYSTEM_NAME}
+  )
+
+predicate_file_exists(libvorbis_exists
+  "external/libvorbis/result/include/vorbis/vorbisenc.h"
+  )
+add_standard_component(COMPONENTS Libvorbis
+  libvorbis_exists
   ${AUDIO_ENGINE_SYSTEM_NAME}
   )
 
