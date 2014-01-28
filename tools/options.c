@@ -25,6 +25,31 @@ fa_option_t options[] = {
     }
 };
 
+
+
+static buffer_t store[5];
+static int store_count = 0;
+// static int pushes = 0;
+// static int pulls = 0;
+
+void push_counter(fa_ptr_t x, fa_buffer_t buffer)
+{
+    // printf("Number of pushes: %d\n", ++pushes);
+    store[store_count++] = fa_copy(buffer);
+    // printf("Stored at index: %d\n", store_count-1);
+}
+void pull_counter(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
+{
+    // printf("Number of pulls: %d\n", ++pulls);
+    if (store_count == 4) {
+        while (store_count > 0) {
+            // printf("Fetching index: %d\n", store_count-1);
+            cb(data, store[--store_count]);
+        }
+    }
+}
+
+
 int main(int argc, char const *argv[])
 {
     fa_initialize();
@@ -41,26 +66,31 @@ int main(int argc, char const *argv[])
         os, as
     ) {
         fa_print_ln(fa_map_sum(
-                        // map(string("foo"), i32(7)),
+                        // apply(string("foo"), i32(7)),
                         fa_string_from_json(string("{\"foo\":7, \"bar\":false}")),
                         os));
         fa_print_ln(as);
 
-
         fa_io_run(
-            fa_io_map(
-                // fa_io_standard_in(),
-                fa_io_read_file(string("test/test.wav")),
-                fa_io_split(fa_io_write_file(string("foo2.wav")))
-            ),
-            fa_io_contramap(
-                fa_io_compose(
-                    // fa_io_split(fa_io_write_file(string("log.txt"))),
-                    // fa_io_split(fa_io_write_file(string("log2.txt")))
-                    fa_io_split(fa_io_write_file(string("foo.wav"))),
-                    fa_io_identity()
-                ),
-                fa_io_standard_out()));
+            fa_io_apply(
+                fa_io_standard_in(), 
+                fa_io_create_simple_filter(push_counter, pull_counter, NULL)
+                ), 
+                fa_io_standard_out());
+        // fa_io_run(
+        //     fa_io_apply(
+        //         // fa_io_standard_in(),
+        //         fa_io_read_file(string("test/test.wav")),
+        //         fa_io_split(fa_io_write_file(string("foo2.wav")))
+        //     ),
+        //     fa_io_coapply(
+        //         fa_io_compose(
+        //             // fa_io_split(fa_io_write_file(string("log.txt"))),
+        //             // fa_io_split(fa_io_write_file(string("log2.txt")))
+        //             fa_io_split(fa_io_write_file(string("foo.wav"))),
+        //             fa_io_identity()
+        //         ),
+        //         fa_io_standard_out()));
 
     }
     fa_terminate();

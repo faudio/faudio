@@ -361,12 +361,12 @@ fa_io_filter_t fa_io_compose(fa_io_filter_t f1, fa_io_filter_t f2)
     return (fa_io_filter_t) x;
 }
 
-fa_io_source_t fa_io_map(fa_io_source_t f1, fa_io_filter_t f2)
+fa_io_source_t fa_io_apply(fa_io_source_t f1, fa_io_filter_t f2)
 {
     return (fa_io_source_t) fa_io_compose((fa_io_filter_t) f1, f2);
 }
 
-fa_io_sink_t fa_io_contramap(fa_io_filter_t f1, fa_io_sink_t f2)
+fa_io_sink_t fa_io_coapply(fa_io_filter_t f1, fa_io_sink_t f2)
 {
     return (fa_io_sink_t) fa_io_compose(f1, (fa_io_filter_t) f2);
 }

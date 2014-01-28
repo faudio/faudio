@@ -48,26 +48,49 @@ module Fa.Io
     };
     // Passing NULL means close stream
     
+    /** Pull data from a source. */
     pull : (Source, Callback, Ptr) -> Void;
+    /** Push data to a sink. */
     push : (Sink, Buffer) -> Void;
+    /** Pull data from a source after passing it through the given filter. */
     pullThrough : (Filter, Source, Callback, Ptr) -> Void;
+    /** Push data to a sink after passing it through the given filter. */
     pushThrough : (Filter, Sink, Buffer) -> Void;
 
+    /** Create filter that passes through its input unchanged.
+        Forms a monoid with identity so
+        
+        ~~~
+        compose(f, compose (g, h)) = compose(compose(f, g), h)
+        compose(identity,f) = f
+        compose(g, identity) = g
+        ~~~
+        
+        */
+    identity : () -> Filter;
+    /** Compose two filters. */
     compose  : (Filter, Filter) -> Filter;
-    map       : (Source, Filter) -> Source;
-    contramap : (Filter, Sink) -> Sink;
+
+    /** Apply a filter to the output of a source. */
+    apply       : (Source, Filter) -> Source;
+    /** Apply a filter to the input of a sink. */
+    coapply : (Filter, Sink) -> Sink;
 
     /** Create a simple stateful  filter.
         The callback is invoked on push and the read callback on pull.
      */
     createSimpleFilter : (Callback, ReadCallback, Ptr) -> Filter;
 
+    /** Create a filter that writes data passed through it to the given sink. */
     split : Sink -> Filter;
+    /** Create source that reads from a file. */
     readFile : String -> Source;
+    /** Create source that writes to a file. */
     writeFile : String -> Sink;
+    /** Create source that reads from the standard input. */
     standardIn : () -> Source;
+    /** Create source that reads to the standfard output. */
     standardOut : () -> Sink;
-    identity : () -> Filter;
 
     createOggEncoder : () -> Filter;
     

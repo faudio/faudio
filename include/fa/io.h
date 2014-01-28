@@ -63,36 +63,56 @@ typedef struct {
             void (* push)(fa_ptr_t, fa_io_sink_t, fa_buffer_t);
         } fa_io_filter_interface_t;
 
-
+/** Pull data from a source. 
+*/
 void fa_io_pull(fa_io_source_t source,
                 fa_io_callback_t callback,
                 fa_ptr_t ptr);
 
-
+/** Push data to a sink. 
+*/
 void fa_io_push(fa_io_sink_t sink, fa_buffer_t buffer);
 
-
+/** Pull data from a source after passing it through the given filter. 
+*/
 void fa_io_pull_through(fa_io_filter_t filter,
                         fa_io_source_t source,
                         fa_io_callback_t callback,
                         fa_ptr_t ptr);
 
-
+/** Push data to a sink after passing it through the given filter. 
+*/
 void fa_io_push_through(fa_io_filter_t filter,
                         fa_io_sink_t sink,
                         fa_buffer_t buffer);
 
+/** Create filter that passes through its input unchanged.
+    Forms a monoid with identity so
+    
+    ~~~
+    compose(f, compose (g, h)) = compose(compose(f, g), h)
+    compose(identity,f) = f
+    compose(g, identity) = g
+    ~~~
+    
+    
+*/
+fa_io_filter_t fa_io_identity();
 
+/** Compose two filters. 
+*/
 fa_io_filter_t fa_io_compose(fa_io_filter_t filter,
                              fa_io_filter_t filter_);
 
+/** Apply a filter to the output of a source. 
+*/
+fa_io_source_t fa_io_apply(fa_io_source_t source,
+                           fa_io_filter_t filter);
 
-fa_io_source_t fa_io_map(fa_io_source_t source,
-                         fa_io_filter_t filter);
-
-
-fa_io_sink_t fa_io_contramap(fa_io_filter_t filter,
-                             fa_io_sink_t sink);
+/** Apply a filter to the input of a sink. 
+*/
+fa_io_sink_t fa_io_coapply(fa_io_filter_t filter,
+                           fa_io_sink_t sink);
 
 /** Create a simple stateful  filter.
     The callback is invoked on push and the read callback on pull.
@@ -101,23 +121,25 @@ fa_io_filter_t fa_io_create_simple_filter(fa_io_callback_t callback,
                                           fa_io_read_callback_t readCallback,
                                           fa_ptr_t ptr);
 
-
+/** Create a filter that writes data passed through it to the given sink. 
+*/
 fa_io_filter_t fa_io_split(fa_io_sink_t sink);
 
-
+/** Create source that reads from a file. 
+*/
 fa_io_source_t fa_io_read_file(fa_string_t string);
 
-
+/** Create source that writes to a file. 
+*/
 fa_io_sink_t fa_io_write_file(fa_string_t string);
 
-
+/** Create source that reads from the standard input. 
+*/
 fa_io_source_t fa_io_standard_in();
 
-
+/** Create source that reads to the standfard output. 
+*/
 fa_io_sink_t fa_io_standard_out();
-
-
-fa_io_filter_t fa_io_identity();
 
 
 fa_io_filter_t fa_io_create_ogg_encoder();
