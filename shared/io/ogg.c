@@ -25,7 +25,7 @@ struct ogg_encoder {
     }                       ogg;
 };
 
-void write_page(struct ogg_encoder* encoder, ogg_page *page);
+void write_page(struct ogg_encoder* encoder, ogg_page *page, fa_io_callback_t cb, ptr_t data);
 
 void prepare(fa_ptr_t x)
 {
@@ -34,10 +34,10 @@ void prepare(fa_ptr_t x)
 
     vorbis_info_init(encoder->vorbis.info);
     
-    // int ret;            
+    int ret;            
     // TODO
-    // ret=vorbis_encode_init_vbr(encoder->vorbis.info,1,44100,1.0f);
-    // if(ret) exit(1);
+    ret=vorbis_encode_init_vbr(encoder->vorbis.info, 1, 44100, 1.0f);
+    if(ret) exit(1);
     
     /* set up the analysis state and auxiliary encoding storage */
     vorbis_analysis_init(encoder->vorbis.dsp,encoder->vorbis.info);
@@ -73,7 +73,8 @@ void prepare(fa_ptr_t x)
         int result=ogg_stream_flush(encoder->ogg.stream,&page);
         if(result==0)break;
 
-        write_page(encoder, &page);
+        // FIXME
+        // write_page(encoder, &page);
     }
 
     vorbis_comment_clear(&comment);    
@@ -106,32 +107,30 @@ void deinterleave(float** dest, buffer_t floats, size_t channels)
 void push_uncompressed(fa_ptr_t x, fa_buffer_t buffer)
 {
     struct ogg_encoder *encoder = (struct ogg_encoder*) x;
-    warn(string("OGG encoder assumes stereo"));
-
+    warn(string("OGG encoder assumes mono 44100"));
 
     int samples = fa_buffer_size(buffer) / (8/**2*/);     // Samples vs frames?
     float** buf = vorbis_analysis_buffer(
         encoder->vorbis.dsp, 
         samples
         ); 
-    deinterleave(buf, double2float(buffer), 2);
+    deinterleave(buf, double2float(buffer), 1);
     vorbis_analysis_wrote(
         encoder->vorbis.dsp,
         samples
         );
 
     while ((vorbis_analysis_blockout(encoder->vorbis.dsp,encoder->vorbis.block) > 0)) // TODO handle errors
-    {
-        // TODO handle errors
-        vorbis_analysis(
+    {         
+        int ret;
+        ret = vorbis_analysis(
             encoder->vorbis.block, 
             NULL // we use bitrate encoding
             );
-        // TODO handle errors
-        vorbis_bitrate_addblock(encoder->vorbis.block); 
+        if (ret) exit(1);
+        ret = vorbis_bitrate_addblock(encoder->vorbis.block); 
+        if (ret) exit(1);
         // Now block is free to be reused and vorbis.dsp modified to include block (get with flushpacket)
-
-        // block
     }
 
     mark_used(encoder);
@@ -148,21 +147,30 @@ void pull_compressed(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
     }
     {
         ogg_page page;
-        ogg_stream_pageout(encoder->ogg.stream, &page);
-
-        if (ogg_page_eos(&page)) {
-            // TODO
-        } else {
-            write_page(encoder, &page);
+        while ((ogg_stream_pageout(encoder->ogg.stream, &page) != 0))
+        {
+            write_page(encoder, &page, cb, data);
+            if (ogg_page_eos(&page)) {
+                break;
+            }
         }
     }
 
     mark_used(encoder);
 }
 
-void write_page(struct ogg_encoder* encoder, ogg_page *page)
+void write_page(struct ogg_encoder* encoder, ogg_page *page, fa_io_callback_t cb, ptr_t data)
 {
-    // TODO
+    size_t headerSize = page->header_len;
+    size_t bodySize = page->body_len;
+    size_t bufferSize = headerSize + bodySize;
+    
+    char *raw = (char*) malloc(bufferSize);
+    memcpy(raw, page->header, headerSize);
+    memcpy(raw+headerSize, page->body, bodySize);
+
+    // TODO cleanup of wrapped memory
+    cb(data, fa_copy(fa_buffer_wrap(raw, bufferSize, NULL, NULL)));
 }
 
 

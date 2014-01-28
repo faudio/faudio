@@ -66,12 +66,16 @@ int main(int argc, char const *argv[])
                         os));
         fa_print_ln(as);
 
-        fa_io_run(
-            fa_io_apply(
-                fa_io_standard_in(), 
-                fa_io_create_simple_filter(push_counter, pull_counter, NULL)
-                ), 
-                fa_io_standard_out());
+        fa_io_run(fa_io_apply(fa_io_read_file(string("test/test.wav")),
+            fa_io_create_ogg_encoder()), 
+                fa_io_write_file(string("test.ogg")));
+
+        // fa_io_run(
+        //     fa_io_apply(
+        //         fa_io_standard_in(), 
+        //         fa_io_create_simple_filter(push_counter, pull_counter, NULL)
+        //         ), 
+        //         fa_io_standard_out());  
         // fa_io_run(
         //     fa_io_apply(
         //         // fa_io_standard_in(),
