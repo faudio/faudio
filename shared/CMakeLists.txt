@@ -17,6 +17,7 @@ list(APPEND SRCS
   buffer.c
   error.c
   io.c
+  io/ogg.c
   list.c
   map.c
   midi/message.c
