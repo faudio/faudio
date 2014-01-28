@@ -7,6 +7,7 @@
 
  */
 
+#include <fa/fa.h>
 #include <fa/io.h>
 #include <fa/util.h>
 
@@ -286,7 +287,9 @@ void composed_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t 
     fa_io_filter_t f1 = ((struct filter_base *) x)->data1;
     fa_io_filter_t f2 = ((struct filter_base *) x)->data2;
 
-    fa_io_pull_through(f1, upstream, _composed_pull, pair(f2, pair(callback, data)));
+    fa_with_temp (pair, pair(callback, data))
+        fa_with_temp (pair2, pair(f2, pair))
+            fa_io_pull_through(f1, upstream, _composed_pull, pair2);
 }
 void composed_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
 {
@@ -453,9 +456,10 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
         cb(data, NULL);
         // printf("Done\n");
     } else {
-        if (fa_atomic_ring_buffer_can_read(rbuffer, 64)) {
-            buffer_t buf = fa_buffer_create(64);
-            for (size_t i = 0; i < 64; ++i) {  
+        long size = 64*8; // TODO
+        if (fa_atomic_ring_buffer_can_read(rbuffer, size)) {
+            buffer_t buf = fa_buffer_create(size);
+            for (size_t i = 0; i < size; ++i) {  
                 fa_atomic_ring_buffer_read(
                     rbuffer,
                     fa_buffer_unsafe_address(buf) + i
@@ -478,12 +482,12 @@ fa_io_source_t fa_io_from_ring_buffer(fa_atomic_ring_buffer_t rbuffer)
 
 
 
-static inline void _run(fa_ptr_t x, fa_buffer_t buffer)
+static inline void _run(fa_ptr_t pair, fa_buffer_t buffer)
 {
     // fprintf(stderr, "%s\n", unstring(fa_string_show(buffer)));
     // fflush(stderr);
 
-    fa_unpair(x, sink, ok) {
+    fa_unpair(pair, sink, ok) {
         if (!buffer) *((bool*) ok) = false;
         else
         fa_io_push(sink, buffer);
@@ -491,8 +495,11 @@ static inline void _run(fa_ptr_t x, fa_buffer_t buffer)
 }
 void fa_io_run(fa_io_source_t source, fa_io_sink_t sink)
 {            
-    bool ok = true;
+    bool ok = true;                  
+    fa_pair_t pair = pair(sink, &ok);
     while (ok) { // TODO
-        fa_io_pull(source, _run, pair(sink, &ok));
+        fa_io_pull(source, _run, pair);
+        // fa_thread_sleep(10);
     }
+    fa_destroy(pair);
 }
