@@ -10,3 +10,9 @@
 [submodule "external/fluidsynth/source"]
 	path = external/fluidsynth/source
 	url = git@github.com:faudio/fluidsynth.git
+[submodule "external/libvorbis/source"]
+	path = external/libvorbis/source
+	url = git@github.com:faudio/libvorbis.git
+[submodule "external/libogg/source"]
+	path = external/libogg/source
+	url = git@github.com:faudio/libogg.git
