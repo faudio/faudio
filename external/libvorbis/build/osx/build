@@ -1,9 +1,11 @@
 
-# TODO get submodules
+git submodule init   external/libvorbis/source;
+git submodule update external/libvorbis/source;
 
 pushd external/libvorbis/source;
 
 make distclean; \
+
 CFLAGS="-arch i386" \
 CXXFLAGS="-arch i386" \
 LDFLAGS="-arch i386" \

@@ -1,0 +1,13 @@
+#!/bin/bash
+git submodule init   external/libvorbis/source;
+git submodule update external/libvorbis/source;
+
+pushd external/libvorbis/source;
+
+./configure \
+	  --prefix=`pwd`/../result \
+	  && make \
+		&& make install \
+		&& cp -R include/ ../result/
+
+popd;                                                 

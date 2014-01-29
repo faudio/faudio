@@ -1,5 +1,6 @@
 
-# TODO get submodules
+git submodule init   external/libogg/source;
+git submodule update external/libogg/source;
 
 pushd external/libogg/source;
 
