@@ -23,7 +23,7 @@ struct ogg_encoder {
     struct {
         ogg_stream_state    stream;
     }                       ogg;
-    bool                    flushed;
+    bool                    header_sent;
 };
 
 #define kSR       44100
@@ -54,25 +54,9 @@ void prepare(fa_ptr_t x)
     /* pick a random serial number; that way we can more likely build
      chained streams just by concatenation */
     ogg_stream_init(&encoder->ogg.stream,rand());
-
-    ogg_packet header;
-    ogg_packet header_comm;
-    ogg_packet header_code;
     
-    vorbis_comment   comment; /* struct that stores all the user comments */
-    
-    /* add a comment */
-    vorbis_comment_init(&comment);
-    vorbis_comment_add_tag(&comment,"ENCODER","Faudio Vorbis encoder");
-    
-    vorbis_analysis_headerout(&encoder->vorbis.dsp,&comment,&header,&header_comm,&header_code);
-    ogg_stream_packetin(&encoder->ogg.stream, &header); /* automatically placed in its own
-                                       page */
-    ogg_stream_packetin(&encoder->ogg.stream,&header_comm);
-    ogg_stream_packetin(&encoder->ogg.stream,&header_code);
-    
-    encoder->flushed = false;
-    vorbis_comment_clear(&comment);    
+    encoder->header_sent = false;
+  
 }
 
 buffer_t double2float(buffer_t x) {
@@ -139,8 +123,25 @@ void pull_compressed(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
 {     
     struct ogg_encoder *encoder = (struct ogg_encoder*) x;
     
-    if (!encoder->flushed) {
-        encoder->flushed = true;
+    if (!encoder->header_sent) {
+        encoder->header_sent = true;
+
+        ogg_packet header;
+        ogg_packet header_comm;
+        ogg_packet header_code;
+
+        vorbis_comment   comment; /* struct that stores all the user comments */
+
+        /* add a comment */
+        vorbis_comment_init(&comment);
+        vorbis_comment_add_tag(&comment,"ENCODER","Faudio Vorbis encoder");
+
+        vorbis_analysis_headerout(&encoder->vorbis.dsp,&comment,&header,&header_comm,&header_code);
+        ogg_stream_packetin(&encoder->ogg.stream, &header); /* automatically placed in its own
+                                           page */
+        ogg_stream_packetin(&encoder->ogg.stream,&header_comm);
+        ogg_stream_packetin(&encoder->ogg.stream,&header_code);
+        vorbis_comment_clear(&comment);
         
         /* This ensures the actual
          * audio data will start on a new page, as per spec

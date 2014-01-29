@@ -1252,6 +1252,9 @@ fa_signal_t fa_signal_record_stream(fa_atomic_ring_buffer_t buffer, fa_signal_t 
 struct rec_external {              
     string_t name;
     fa_atomic_ring_buffer_t buffer;
+    
+    // debug
+    size_t bytes_written;
 };
 ptr_t record_extrenal_before_(ptr_t x, int count, fa_signal_state_t *state)
 {
@@ -1269,12 +1272,14 @@ ptr_t record_extrenal_render_(ptr_t x, int count, fa_signal_state_t *state)
         double x = state->buffer[(kRecExternalOffset + 0)*kMaxVectorSize];
         if (ext->buffer) {
             fa_atomic_ring_buffer_write_double(ext->buffer, x);
+            ext->bytes_written += sizeof(double);
         }
     } else {
         for (int i = 0; i < count; ++i) {
             double x = state->buffer[(kRecExternalOffset + 0)*kMaxVectorSize + i];
             if (ext->buffer) {
                 fa_atomic_ring_buffer_write_double(ext->buffer, x);
+                ext->bytes_written += sizeof(double);
             }
         }
     }
@@ -1287,11 +1292,13 @@ ptr_t record_extrenal_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t 
 
     if (fa_equal(ext->name, n)) {
         if (ext->buffer) {
+            warn(fa_string_format_integral("Bytes written: %zu", ext->bytes_written));
             fa_atomic_ring_buffer_close(ext->buffer);
         }
         
         // TODO assert it is actually a ring buffer
         ext->buffer = msg;
+        ext->bytes_written = 0;
     }
     return x;
 }

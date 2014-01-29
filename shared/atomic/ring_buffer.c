@@ -74,6 +74,10 @@ size_t fa_atomic_ring_buffer_used(ring_buffer_t buffer)
     return buffer->count;
 }
 
+size_t fa_atomic_ring_buffer_remaining(ring_buffer_t buffer)
+{
+    return buffer->count;
+}
 double fa_atomic_ring_buffer_filled(ring_buffer_t buffer)
 {
     return (double) buffer->count / (double) buffer->size;

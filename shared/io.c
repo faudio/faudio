@@ -452,19 +452,28 @@ void push_ringbuffer(fa_ptr_t x, fa_buffer_t buffer)
     assert(false && "Not implemented");
 }
 
+// DEBUG
+size_t fa_atomic_ring_buffer_remaining(fa_atomic_ring_buffer_t buffer);
+size_t bytes_read = 0;
+
 void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
 {
     fa_atomic_ring_buffer_t rbuffer = x;
 
     mark_used(rbuffer);
 
-    if (fa_atomic_ring_buffer_is_closed(rbuffer) && !fa_atomic_ring_buffer_can_read(rbuffer, 1)) {
+    if (fa_atomic_ring_buffer_is_closed(rbuffer)) {
+        printf("Remaining bytes in buf: %zu\n", fa_atomic_ring_buffer_remaining(rbuffer));
+        // Upstream is closed and there is nothing more to read
+        // Close downstream
+        warn(fa_string_format_integral("Bytes read: %zu", bytes_read));        
         cb(data, NULL);
-        // printf("Done\n");
     } else {
-        long size = 64*8; // TODO
+        long size = 256; // TODO
+        // printf("Reading %zu bytes from buffer\n", size);
         if (fa_atomic_ring_buffer_can_read(rbuffer, size)) {
             buffer_t buf = fa_buffer_create(size);
+            bytes_read += size;
             for (size_t i = 0; i < size; ++i) {  
                 fa_atomic_ring_buffer_read(
                     rbuffer,
@@ -474,6 +483,7 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
             cb(data, buf);
             // printf("Reading\n");
         } else {
+            // fa_thread_sleep(1);
             // printf("Nothing to read\n");
         }
     }
