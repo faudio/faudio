@@ -65,8 +65,8 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
 
     // TODO send
     fa_thread_sleep(1000);
-    fa_audio_schedule_relative(fa_milliseconds(500),          fa_action_send(string("foo"), rbuffer) ,s);
-    fa_audio_schedule_relative(fa_milliseconds(20000 + 500),  fa_action_send(string("foo"), NULL) ,s);
+    fa_audio_schedule_relative(fa_milliseconds(500),         fa_action_send(string("foo"), rbuffer) ,s);
+    fa_audio_schedule_relative(fa_milliseconds(5000 + 500),  fa_action_send(string("foo"), NULL) ,s);
     // fa_thread_create(_thread, rbuffer);
     // fa_thread_sleep(7000);
     
