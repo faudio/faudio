@@ -91,7 +91,7 @@ void fa_io_push_through(fa_io_filter_t filter,
     
     ~~~
     compose(f, compose (g, h)) = compose(compose(f, g), h)
-    compose(identity,f) = f
+    compose(identity, f) = f
     compose(g, identity) = g
     ~~~
     
@@ -137,7 +137,7 @@ fa_io_sink_t fa_io_write_file(fa_string_t string);
 */
 fa_io_source_t fa_io_standard_in();
 
-/** Create source that reads to the standfard output. 
+/** Create source that reads to the standard output. 
 */
 fa_io_sink_t fa_io_standard_out();
 
@@ -145,10 +145,18 @@ fa_io_sink_t fa_io_standard_out();
 */
 fa_io_source_t fa_io_from_ring_buffer(fa_atomic_ring_buffer_t ringBuffer);
 
-
+/** Create an encoder to the `ogg/vorbis` format.
+    @warning
+        For now requires input to be mono, 44100, 64-bit floating.
+      
+*/
 fa_io_filter_t fa_io_create_ogg_encoder();
 
+/** Continously data from the given source and push it into the sink.
 
+    This function blocks until the given source is exhausted. If this
+    never happens, this function blocks forever.
+*/
 void fa_io_run(fa_io_source_t source, fa_io_sink_t sink);
 
 /** @}

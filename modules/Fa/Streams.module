@@ -62,7 +62,7 @@ module Fa.Io
         
         ~~~
         compose(f, compose (g, h)) = compose(compose(f, g), h)
-        compose(identity,f) = f
+        compose(identity, f) = f
         compose(g, identity) = g
         ~~~
         
@@ -89,14 +89,23 @@ module Fa.Io
     writeFile : String -> Sink;
     /** Create source that reads from the standard input. */
     standardIn : () -> Source;
-    /** Create source that reads to the standfard output. */
+    /** Create source that reads to the standard output. */
     standardOut : () -> Sink;
 
     /** Create a source from a ring buffer. */
     fromRingBuffer : RingBuffer -> Source;
 
+    /** Create an encoder to the `ogg/vorbis` format.
+        @warning
+            For now requires input to be mono, 44100, 64-bit floating.
+      */
     createOggEncoder : () -> Filter;
-    
+
+    /** Continously data from the given source and push it into the sink.
+
+        This function blocks until the given source is exhausted. If this
+        never happens, this function blocks forever.
+     */
     run : (Source, Sink) -> Void;
 }
 
