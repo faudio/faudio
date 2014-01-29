@@ -1,0 +1,223 @@
+\hypertarget{group___fa_audio_session}{\section{Session}
+\label{group___fa_audio_session}\index{Session@{Session}}
+}
+
+
+Provides real-\/time audio.  
+
+
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \\*
+\-\_\-fa\-\_\-audio\-\_\-session\-\_\-t $\ast$ \hyperlink{group___fa_audio_session_ga62ee22268c23f1b18447141feccc01e0}{fa\-\_\-audio\-\_\-session\-\_\-t}
+\begin{DoxyCompactList}\small\item\em An audio session. \end{DoxyCompactList}\item 
+typedef \hyperlink{group___fa_audio_session_ga62ee22268c23f1b18447141feccc01e0}{fa\-\_\-audio\-\_\-session\-\_\-t}($\ast$ \hyperlink{group___fa_audio_session_gafd8f3afd0f59b1df855bbc368c2ec419}{fa\-\_\-audio\-\_\-session\-\_\-callback\-\_\-t} )(\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t}, \hyperlink{group___fa_audio_session_ga62ee22268c23f1b18447141feccc01e0}{fa\-\_\-audio\-\_\-session\-\_\-t})
+\begin{DoxyCompactList}\small\item\em A callback to receive audio sessions. \end{DoxyCompactList}\item 
+typedef \hyperlink{group___fa_ga43b940a9294fd58a54087ef0b416e479}{fa\-\_\-nullary\-\_\-t} \hyperlink{group___fa_audio_session_gaac3fa018078a475e6c5ed48efcbdb887}{fa\-\_\-audio\-\_\-status\-\_\-callback\-\_\-t}
+\begin{DoxyCompactList}\small\item\em A callback to be invoked upon changes to the audio setup. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group___fa_audio_session_ga62ee22268c23f1b18447141feccc01e0}{fa\-\_\-audio\-\_\-session\-\_\-t} \hyperlink{group___fa_audio_session_ga0022e6e72ee2f2c4c04a6165847a50dd}{fa\-\_\-audio\-\_\-begin\-\_\-session} ()
+\begin{DoxyCompactList}\small\item\em Begin a new audio session. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_audio_session_ga2fb042b6c0cbedf65c85a0dbb38c134b}{fa\-\_\-audio\-\_\-end\-\_\-session} (\hyperlink{group___fa_audio_session_ga62ee22268c23f1b18447141feccc01e0}{fa\-\_\-audio\-\_\-session\-\_\-t} session)
+\begin{DoxyCompactList}\small\item\em End the given session. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_audio_session_gabbec6678e24f6476ac04f7d759ec7ffb}{fa\-\_\-audio\-\_\-with\-\_\-session} (\hyperlink{group___fa_audio_session_gafd8f3afd0f59b1df855bbc368c2ec419}{fa\-\_\-audio\-\_\-session\-\_\-callback\-\_\-t} session\-Callback, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_error_ga43d8d45a005130a5052ba3281a8bf33e}{fa\-\_\-error\-\_\-callback\-\_\-t} callback, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\begin{DoxyCompactList}\small\item\em Begin a new session, and retain it for the duration of a call to the given function. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_audio_session_ga82566075d8bfad3afa67fb982dc5d1a9}{fa\-\_\-audio\-\_\-set\-\_\-parameter} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string}, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_audio_session_ga62ee22268c23f1b18447141feccc01e0}{fa\-\_\-audio\-\_\-session\-\_\-t} session)
+\begin{DoxyCompactList}\small\item\em Set an audio parameter value. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_audio_session_ga4ca512f9ca05840d737cc947e278dd19}{fa\-\_\-audio\-\_\-current\-\_\-sessions} ()
+\begin{DoxyCompactList}\small\item\em Get all currently active audio sessions. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_audio_session_ga8fe894dde7fe548e4c8e20a79609919d}{fa\-\_\-audio\-\_\-end\-\_\-all\-\_\-sessions} ()
+\begin{DoxyCompactList}\small\item\em End all currently active audio sessions. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_audio_session_ga6ca6844a8e2e55157571335d5cb7a446}{fa\-\_\-audio\-\_\-all} (\hyperlink{group___fa_audio_session_ga62ee22268c23f1b18447141feccc01e0}{fa\-\_\-audio\-\_\-session\-\_\-t} session)
+\begin{DoxyCompactList}\small\item\em Get all active audio devices of the given session. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Provides real-\/time audio. These device run processors on the input and output the underlying system, typically physical audio interfaces. A running audio computation is represented by a {\itshape stream}. Access to the current device setups is provided by {\itshape sessions}.
+
+\begin{DoxyParagraph}{Implements}
+
+\begin{DoxyItemize}
+\item \hyperlink{structfa__equal__t}{fa\-\_\-equal\-\_\-t}
+\item \hyperlink{structfa__destroy__t}{fa\-\_\-destroy\-\_\-t} (sessions and streams)
+\item \hyperlink{structfa__string__show__t}{fa\-\_\-string\-\_\-show\-\_\-t}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxySeeAlso}{See Also}
+
+\begin{DoxyItemize}
+\item \hyperlink{md__devices_Devices}{Devices} 
+\end{DoxyItemize}
+\end{DoxySeeAlso}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{group___fa_audio_session_ga62ee22268c23f1b18447141feccc01e0}{\index{Session@{Session}!fa\-\_\-audio\-\_\-session\-\_\-t@{fa\-\_\-audio\-\_\-session\-\_\-t}}
+\index{fa\-\_\-audio\-\_\-session\-\_\-t@{fa\-\_\-audio\-\_\-session\-\_\-t}!Session@{Session}}
+\subsubsection[{fa\-\_\-audio\-\_\-session\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct \-\_\-fa\-\_\-audio\-\_\-session\-\_\-t$\ast$ {\bf fa\-\_\-audio\-\_\-session\-\_\-t}}}\label{group___fa_audio_session_ga62ee22268c23f1b18447141feccc01e0}
+
+
+An audio session. 
+
+\hypertarget{group___fa_audio_session_gafd8f3afd0f59b1df855bbc368c2ec419}{\index{Session@{Session}!fa\-\_\-audio\-\_\-session\-\_\-callback\-\_\-t@{fa\-\_\-audio\-\_\-session\-\_\-callback\-\_\-t}}
+\index{fa\-\_\-audio\-\_\-session\-\_\-callback\-\_\-t@{fa\-\_\-audio\-\_\-session\-\_\-callback\-\_\-t}!Session@{Session}}
+\subsubsection[{fa\-\_\-audio\-\_\-session\-\_\-callback\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf fa\-\_\-audio\-\_\-session\-\_\-t}($\ast$  fa\-\_\-audio\-\_\-session\-\_\-callback\-\_\-t)({\bf fa\-\_\-ptr\-\_\-t}, {\bf fa\-\_\-audio\-\_\-session\-\_\-t})}}\label{group___fa_audio_session_gafd8f3afd0f59b1df855bbc368c2ec419}
+
+
+A callback to receive audio sessions. 
+
+\hypertarget{group___fa_audio_session_gaac3fa018078a475e6c5ed48efcbdb887}{\index{Session@{Session}!fa\-\_\-audio\-\_\-status\-\_\-callback\-\_\-t@{fa\-\_\-audio\-\_\-status\-\_\-callback\-\_\-t}}
+\index{fa\-\_\-audio\-\_\-status\-\_\-callback\-\_\-t@{fa\-\_\-audio\-\_\-status\-\_\-callback\-\_\-t}!Session@{Session}}
+\subsubsection[{fa\-\_\-audio\-\_\-status\-\_\-callback\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf fa\-\_\-nullary\-\_\-t} {\bf fa\-\_\-audio\-\_\-status\-\_\-callback\-\_\-t}}}\label{group___fa_audio_session_gaac3fa018078a475e6c5ed48efcbdb887}
+
+
+A callback to be invoked upon changes to the audio setup. 
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group___fa_audio_session_ga0022e6e72ee2f2c4c04a6165847a50dd}{\index{Session@{Session}!fa\-\_\-audio\-\_\-begin\-\_\-session@{fa\-\_\-audio\-\_\-begin\-\_\-session}}
+\index{fa\-\_\-audio\-\_\-begin\-\_\-session@{fa\-\_\-audio\-\_\-begin\-\_\-session}!Session@{Session}}
+\subsubsection[{fa\-\_\-audio\-\_\-begin\-\_\-session}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-audio\-\_\-session\-\_\-t} fa\-\_\-audio\-\_\-begin\-\_\-session (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_audio_session_ga0022e6e72ee2f2c4c04a6165847a50dd}
+
+
+Begin a new audio session. 
+
+\begin{DoxyReturn}{Returns}
+A new session (errable). 
+\end{DoxyReturn}
+\begin{DoxyParagraph}{Errors}
+Returns an error if the session could not be started. 
+\end{DoxyParagraph}
+\hypertarget{group___fa_audio_session_ga2fb042b6c0cbedf65c85a0dbb38c134b}{\index{Session@{Session}!fa\-\_\-audio\-\_\-end\-\_\-session@{fa\-\_\-audio\-\_\-end\-\_\-session}}
+\index{fa\-\_\-audio\-\_\-end\-\_\-session@{fa\-\_\-audio\-\_\-end\-\_\-session}!Session@{Session}}
+\subsubsection[{fa\-\_\-audio\-\_\-end\-\_\-session}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-audio\-\_\-end\-\_\-session (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-audio\-\_\-session\-\_\-t}}]{session}
+\end{DoxyParamCaption}
+)}}\label{group___fa_audio_session_ga2fb042b6c0cbedf65c85a0dbb38c134b}
+
+
+End the given session. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & Session to end. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_audio_session_gabbec6678e24f6476ac04f7d759ec7ffb}{\index{Session@{Session}!fa\-\_\-audio\-\_\-with\-\_\-session@{fa\-\_\-audio\-\_\-with\-\_\-session}}
+\index{fa\-\_\-audio\-\_\-with\-\_\-session@{fa\-\_\-audio\-\_\-with\-\_\-session}!Session@{Session}}
+\subsubsection[{fa\-\_\-audio\-\_\-with\-\_\-session}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-audio\-\_\-with\-\_\-session (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-audio\-\_\-session\-\_\-callback\-\_\-t}}]{session\-Callback, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-error\-\_\-callback\-\_\-t}}]{callback, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_audio_session_gabbec6678e24f6476ac04f7d759ec7ffb}
+
+
+Begin a new session, and retain it for the duration of a call to the given function. 
+
+The given function will be called once after the session has created. The session will be ended after the callback function has returned. If an error occurs while starting the session, the error callback is invoked in place of the session callback.
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Function to receive the sesssion. \\
+\hline
+{\em error\-\_\-callback} & Function to receive eventual errors. \\
+\hline
+{\em error\-\_\-data,session\-\_\-data} & Data closed over by the callbacks. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_audio_session_ga82566075d8bfad3afa67fb982dc5d1a9}{\index{Session@{Session}!fa\-\_\-audio\-\_\-set\-\_\-parameter@{fa\-\_\-audio\-\_\-set\-\_\-parameter}}
+\index{fa\-\_\-audio\-\_\-set\-\_\-parameter@{fa\-\_\-audio\-\_\-set\-\_\-parameter}!Session@{Session}}
+\subsubsection[{fa\-\_\-audio\-\_\-set\-\_\-parameter}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-audio\-\_\-set\-\_\-parameter (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-audio\-\_\-session\-\_\-t}}]{session}
+\end{DoxyParamCaption}
+)}}\label{group___fa_audio_session_ga82566075d8bfad3afa67fb982dc5d1a9}
+
+
+Set an audio parameter value. 
+
+This function should usually be called once, directly after the session has been created, and will affect all streams created after the invocation.
+
+\paragraph*{Supported parameters}
+
+\begin{TabularC}{2}
+\hline
+\rowcolor{lightgray}{\bf Name }&{\bf Description}\\\cline{1-2}
+{\ttfamily latency} &Suggested latency in seconds (integer or floating-\/point). \\\cline{1-2}
+{\ttfamily sample-\/rate} &Suggested sample rate (floating-\/point). \\\cline{1-2}
+{\ttfamily vector-\/size} &Suggested vector size (integer). \\\cline{1-2}
+\end{TabularC}
+
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & Name of parameter to set. \\
+\hline
+{\em value} & A \hyperlink{md__data_structures_ValueReferences}{reference} to the value to set. \\
+\hline
+{\em session} & Session in which to set the parameter. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_audio_session_ga4ca512f9ca05840d737cc947e278dd19}{\index{Session@{Session}!fa\-\_\-audio\-\_\-current\-\_\-sessions@{fa\-\_\-audio\-\_\-current\-\_\-sessions}}
+\index{fa\-\_\-audio\-\_\-current\-\_\-sessions@{fa\-\_\-audio\-\_\-current\-\_\-sessions}!Session@{Session}}
+\subsubsection[{fa\-\_\-audio\-\_\-current\-\_\-sessions}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-audio\-\_\-current\-\_\-sessions (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_audio_session_ga4ca512f9ca05840d737cc947e278dd19}
+
+
+Get all currently active audio sessions. 
+
+Note that at most one audio session can be active at the same time, so this function returns a list of zero or one elements.
+
+\begin{DoxyReturn}{Returns}
+A list of \hyperlink{group___fa_audio_session_ga62ee22268c23f1b18447141feccc01e0}{fa\-\_\-audio\-\_\-session\-\_\-t}. 
+\end{DoxyReturn}
+\hypertarget{group___fa_audio_session_ga8fe894dde7fe548e4c8e20a79609919d}{\index{Session@{Session}!fa\-\_\-audio\-\_\-end\-\_\-all\-\_\-sessions@{fa\-\_\-audio\-\_\-end\-\_\-all\-\_\-sessions}}
+\index{fa\-\_\-audio\-\_\-end\-\_\-all\-\_\-sessions@{fa\-\_\-audio\-\_\-end\-\_\-all\-\_\-sessions}!Session@{Session}}
+\subsubsection[{fa\-\_\-audio\-\_\-end\-\_\-all\-\_\-sessions}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ptr\-\_\-t} fa\-\_\-audio\-\_\-end\-\_\-all\-\_\-sessions (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_audio_session_ga8fe894dde7fe548e4c8e20a79609919d}
+
+
+End all currently active audio sessions. 
+
+\begin{DoxyReturn}{Returns}
+The null pointer if successful, or an error value otherwise. 
+\end{DoxyReturn}
+\hypertarget{group___fa_audio_session_ga6ca6844a8e2e55157571335d5cb7a446}{\index{Session@{Session}!fa\-\_\-audio\-\_\-all@{fa\-\_\-audio\-\_\-all}}
+\index{fa\-\_\-audio\-\_\-all@{fa\-\_\-audio\-\_\-all}!Session@{Session}}
+\subsubsection[{fa\-\_\-audio\-\_\-all}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-audio\-\_\-all (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-audio\-\_\-session\-\_\-t}}]{session}
+\end{DoxyParamCaption}
+)}}\label{group___fa_audio_session_ga6ca6844a8e2e55157571335d5cb7a446}
+
+
+Get all active audio devices of the given session. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list of \hyperlink{group___fa_audio_device_ga03de89ee66c6465f8cedd3a0286598f4}{fa\-\_\-audio\-\_\-device\-\_\-t}. 
+\end{DoxyReturn}

@@ -1,0 +1,478 @@
+\hypertarget{group___fa_action}{\section{Action}
+\label{group___fa_action}\index{Action@{Action}}
+}
+
+
+Scheduling actions.  
+
+
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \-\_\-fa\-\_\-action\-\_\-t $\ast$ \hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t}
+\begin{DoxyCompactList}\small\item\em The abstract type of actions. \end{DoxyCompactList}\item 
+typedef int \hyperlink{group___fa_action_ga042610e7e8a7615937f5eeb3a8d789c5}{fa\-\_\-action\-\_\-channel\-\_\-t}
+\begin{DoxyCompactList}\small\item\em Channel on which to carry out the action. \end{DoxyCompactList}\item 
+typedef \hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_action_ga44e517a8d2281a0556ac109c2b639d4b}{fa\-\_\-action\-\_\-name\-\_\-t}
+\begin{DoxyCompactList}\small\item\em Name of external processor to receive the action. \end{DoxyCompactList}\item 
+typedef \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_action_gaac4d474d26b235df5826124cb43464ce}{fa\-\_\-action\-\_\-value\-\_\-t}
+\begin{DoxyCompactList}\small\item\em Value to send. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} \hyperlink{group___fa_action_ga94bd955f72ccc7f9ca6d5f7692cac4b9}{fa\-\_\-action\-\_\-null} ()
+\begin{DoxyCompactList}\small\item\em The {\ttfamily null} action that does nothing. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} \hyperlink{group___fa_action_ga91980a1205ebea92b42647d78347edc7}{fa\-\_\-action\-\_\-copy} (\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action)
+\begin{DoxyCompactList}\small\item\em Copy the given action. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_action_ga43f9d05194a02cf4ea671342783be64a}{fa\-\_\-action\-\_\-destroy} (\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action)
+\begin{DoxyCompactList}\small\item\em Destroy the given action. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} \hyperlink{group___fa_action_ga581ee60177355c84edb8bb919d4a4170}{fa\-\_\-action\-\_\-set} (\hyperlink{group___fa_action_ga042610e7e8a7615937f5eeb3a8d789c5}{fa\-\_\-action\-\_\-channel\-\_\-t} channel, double double\-\_\-)
+\begin{DoxyCompactList}\small\item\em The {\ttfamily set} action updates a single global bus. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} \hyperlink{group___fa_action_ga6f5d14e19e9042a46f751659b0672285}{fa\-\_\-action\-\_\-accum} (\hyperlink{group___fa_action_ga042610e7e8a7615937f5eeb3a8d789c5}{fa\-\_\-action\-\_\-channel\-\_\-t} channel, \hyperlink{group___fa_signal_gaced7eb8d67eb2fe39927934c4abc7255}{fa\-\_\-signal\-\_\-unary\-\_\-double\-\_\-t} unary\-Double, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em The {\ttfamily accum} action updates a single global bus by applying a function to its previous value. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} \hyperlink{group___fa_action_ga9f880ad4c24c7b3b897e5787ccaf0798}{fa\-\_\-action\-\_\-send} (\hyperlink{group___fa_action_ga44e517a8d2281a0556ac109c2b639d4b}{fa\-\_\-action\-\_\-name\-\_\-t} name, \hyperlink{group___fa_action_gaac4d474d26b235df5826124cb43464ce}{fa\-\_\-action\-\_\-value\-\_\-t} value)
+\begin{DoxyCompactList}\small\item\em The {\ttfamily send} action sends a message, the type of which depends on the type of receiver. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_action_gafa9061ff63aaadf5078eccd7b534c139}{fa\-\_\-action\-\_\-is\-\_\-set} (\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action)
+\begin{DoxyCompactList}\small\item\em Return whether the given action is a set action. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_action_ga042610e7e8a7615937f5eeb3a8d789c5}{fa\-\_\-action\-\_\-channel\-\_\-t} \hyperlink{group___fa_action_ga720fb58dfba134736c94d44aa441b59e}{fa\-\_\-action\-\_\-set\-\_\-channel} (\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action)
+\begin{DoxyCompactList}\small\item\em Get the channel of a set action. \end{DoxyCompactList}\item 
+double \hyperlink{group___fa_action_ga428cbdc66641d4404957b34b2b6789b0}{fa\-\_\-action\-\_\-set\-\_\-value} (\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action)
+\begin{DoxyCompactList}\small\item\em Get the value of a set action. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_action_ga15e38e47b12339f92906e2c16ed65c2f}{fa\-\_\-action\-\_\-is\-\_\-accum} (\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action)
+\begin{DoxyCompactList}\small\item\em Return whether the given action is an accumulation action. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_action_ga042610e7e8a7615937f5eeb3a8d789c5}{fa\-\_\-action\-\_\-channel\-\_\-t} \hyperlink{group___fa_action_ga90c8d6c961998de33f86ef37cc87d302}{fa\-\_\-action\-\_\-accum\-\_\-channel} (\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action)
+\begin{DoxyCompactList}\small\item\em Get the channel of an accumulation action. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_signal_gaced7eb8d67eb2fe39927934c4abc7255}{fa\-\_\-signal\-\_\-unary\-\_\-double\-\_\-t} \hyperlink{group___fa_action_ga3b28dc4eb7ecaade47a508fa8844bcdb}{fa\-\_\-action\-\_\-accum\-\_\-function} (\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action)
+\begin{DoxyCompactList}\small\item\em Get the function of an accumulation action. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_action_ga0ef7b3178ab057a2d6b64472b866ab9c}{fa\-\_\-action\-\_\-accum\-\_\-data} (\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action)
+\begin{DoxyCompactList}\small\item\em Get the data of an accumulation action. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_action_gacbe7fa1169a98d0c118845e79a48acd9}{fa\-\_\-action\-\_\-is\-\_\-send} (\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action)
+\begin{DoxyCompactList}\small\item\em Return whether the given action is a send action. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_action_ga44e517a8d2281a0556ac109c2b639d4b}{fa\-\_\-action\-\_\-name\-\_\-t} \hyperlink{group___fa_action_ga061500ae01495bc9cec4c2c58973fcfd}{fa\-\_\-action\-\_\-send\-\_\-name} (\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action)
+\begin{DoxyCompactList}\small\item\em Get the name of an send action. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_action_gaac4d474d26b235df5826124cb43464ce}{fa\-\_\-action\-\_\-value\-\_\-t} \hyperlink{group___fa_action_ga986a52955699094b178f850b92cb8bf0}{fa\-\_\-action\-\_\-send\-\_\-value} (\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action)
+\begin{DoxyCompactList}\small\item\em Get the value of an send action. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} \hyperlink{group___fa_action_ga6e81ed66fec37b463601b62909051d6d}{fa\-\_\-action\-\_\-repeat} (\hyperlink{group___fa_time_ga227cc693f20b4873fed11028bcade184}{fa\-\_\-time\-\_\-t} interval, \hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action)
+\begin{DoxyCompactList}\small\item\em Repeat the given action indefinitely. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} \hyperlink{group___fa_action_ga9cd15b8d36f69d4ccb4e278a6cd97a32}{fa\-\_\-action\-\_\-many} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} actions)
+\begin{DoxyCompactList}\small\item\em Join a list of actions into a single compond action. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} \hyperlink{group___fa_action_ga90164c782d5a2a1e94cebd8828f36ea3}{fa\-\_\-action\-\_\-if} (\hyperlink{group___fa_gae6b6ae9fb073db0ba0bd323d511c6a98}{fa\-\_\-pred\-\_\-t} pred, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} pred\-Data, \hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action)
+\begin{DoxyCompactList}\small\item\em Creates a derived action from the given action that executes íf and only given predicate holds. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} \hyperlink{group___fa_action_ga672d8e5edd644f5717ad4e3c3d61c382}{fa\-\_\-action\-\_\-while} (\hyperlink{group___fa_gae6b6ae9fb073db0ba0bd323d511c6a98}{fa\-\_\-pred\-\_\-t} pred, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} pred\-Data, \hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action)
+\begin{DoxyCompactList}\small\item\em Creates a derived action from the given action that executes as long as the given predicate holds. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} \hyperlink{group___fa_action_ga738040c72d7251a5e1548cc94e3ab1b4}{fa\-\_\-action\-\_\-until} (\hyperlink{group___fa_gae6b6ae9fb073db0ba0bd323d511c6a98}{fa\-\_\-pred\-\_\-t} pred, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} pred\-Data, \hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action)
+\begin{DoxyCompactList}\small\item\em Creates a derived action from the given action that executes as long as the given predicate does {\itshape not} hold. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} \hyperlink{group___fa_action_ga31bc40c290b44b342599fa0e1b8e2aa4}{fa\-\_\-action\-\_\-do} (\hyperlink{group___fa_ga43b940a9294fd58a54087ef0b416e479}{fa\-\_\-nullary\-\_\-t} nullary, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em Convert a unary function to an action. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_action_ga434510734518ad00130c2e3a3ff61e50}{fa\-\_\-action\-\_\-is\-\_\-simple} (\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action)
+\begin{DoxyCompactList}\small\item\em Returns whether the given action is simple or not. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_action_ga20bae4d808d585cd087f7c3e55afbc0e}{fa\-\_\-action\-\_\-is\-\_\-compound} (\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action)
+\begin{DoxyCompactList}\small\item\em Returns whether the given action is compound or not. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_time_ga227cc693f20b4873fed11028bcade184}{fa\-\_\-time\-\_\-t} \hyperlink{group___fa_action_gae40a7127067b85b0d72e17dea130b613}{fa\-\_\-action\-\_\-compound\-\_\-interval} (\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action)
+\begin{DoxyCompactList}\small\item\em Given a compound action, return the minimum offset to its tail. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} \hyperlink{group___fa_action_ga9f3ee907773b33a7a9eea5c6d083db3b}{fa\-\_\-action\-\_\-compound\-\_\-first} (\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action)
+\begin{DoxyCompactList}\small\item\em Given a compound action, return its head (nullable). \end{DoxyCompactList}\item 
+\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} \hyperlink{group___fa_action_ga0aa70790832784b192117ec043b34b57}{fa\-\_\-action\-\_\-compound\-\_\-rest} (\hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action)
+\begin{DoxyCompactList}\small\item\em Given a compound action, return its tail (nullable). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Scheduling actions. The action types represent a single interaction with a running stream, such as a note or a control change.
+
+Actions can be {\itshape scheduled} on both real-\/time and non-\/real-\/time devices\-: in the first case they are carried out when the internal clock of the stream reaches the scheduled time, in the latter case they are simply carried out at the appropriate time.
+
+For scheduling actions, see \hyperlink{group___fa_audio_stream_gad98527accbfa2dcd59124577eac422bc}{fa\-\_\-audio\-\_\-schedule}, \hyperlink{group___fa_midi_ga9a269b2817ba3371d5b58493e33c0229}{fa\-\_\-midi\-\_\-schedule} or \hyperlink{group___fa_signal_gacb3351ca95bcbe1706fc5bdad9cac276}{fa\-\_\-signal\-\_\-run}.
+
+\begin{DoxyParagraph}{Literals}
+
+\begin{DoxyItemize}
+\item {\ttfamily set}
+\item {\ttfamily accum}
+\item {\ttfamily send}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Implements }
+
+\begin{DoxyItemize}
+\item \hyperlink{structfa__copy__t}{fa\-\_\-copy\-\_\-t}
+\item \hyperlink{structfa__destroy__t}{fa\-\_\-destroy\-\_\-t}
+\item \hyperlink{structfa__string__show__t}{fa\-\_\-string\-\_\-show\-\_\-t}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxySeeAlso}{See Also}
+
+\end{DoxySeeAlso}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{\index{Action@{Action}!fa\-\_\-action\-\_\-t@{fa\-\_\-action\-\_\-t}}
+\index{fa\-\_\-action\-\_\-t@{fa\-\_\-action\-\_\-t}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct \-\_\-fa\-\_\-action\-\_\-t$\ast$ {\bf fa\-\_\-action\-\_\-t}}}\label{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}
+
+
+The abstract type of actions. 
+
+\hypertarget{group___fa_action_ga042610e7e8a7615937f5eeb3a8d789c5}{\index{Action@{Action}!fa\-\_\-action\-\_\-channel\-\_\-t@{fa\-\_\-action\-\_\-channel\-\_\-t}}
+\index{fa\-\_\-action\-\_\-channel\-\_\-t@{fa\-\_\-action\-\_\-channel\-\_\-t}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-channel\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef int {\bf fa\-\_\-action\-\_\-channel\-\_\-t}}}\label{group___fa_action_ga042610e7e8a7615937f5eeb3a8d789c5}
+
+
+Channel on which to carry out the action. 
+
+\hypertarget{group___fa_action_ga44e517a8d2281a0556ac109c2b639d4b}{\index{Action@{Action}!fa\-\_\-action\-\_\-name\-\_\-t@{fa\-\_\-action\-\_\-name\-\_\-t}}
+\index{fa\-\_\-action\-\_\-name\-\_\-t@{fa\-\_\-action\-\_\-name\-\_\-t}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-name\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf fa\-\_\-string\-\_\-t} {\bf fa\-\_\-action\-\_\-name\-\_\-t}}}\label{group___fa_action_ga44e517a8d2281a0556ac109c2b639d4b}
+
+
+Name of external processor to receive the action. 
+
+\hypertarget{group___fa_action_gaac4d474d26b235df5826124cb43464ce}{\index{Action@{Action}!fa\-\_\-action\-\_\-value\-\_\-t@{fa\-\_\-action\-\_\-value\-\_\-t}}
+\index{fa\-\_\-action\-\_\-value\-\_\-t@{fa\-\_\-action\-\_\-value\-\_\-t}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-value\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf fa\-\_\-ptr\-\_\-t} {\bf fa\-\_\-action\-\_\-value\-\_\-t}}}\label{group___fa_action_gaac4d474d26b235df5826124cb43464ce}
+
+
+Value to send. 
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group___fa_action_ga94bd955f72ccc7f9ca6d5f7692cac4b9}{\index{Action@{Action}!fa\-\_\-action\-\_\-null@{fa\-\_\-action\-\_\-null}}
+\index{fa\-\_\-action\-\_\-null@{fa\-\_\-action\-\_\-null}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-null}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-action\-\_\-t} fa\-\_\-action\-\_\-null (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga94bd955f72ccc7f9ca6d5f7692cac4b9}
+
+
+The {\ttfamily null} action that does nothing. 
+
+\hypertarget{group___fa_action_ga91980a1205ebea92b42647d78347edc7}{\index{Action@{Action}!fa\-\_\-action\-\_\-copy@{fa\-\_\-action\-\_\-copy}}
+\index{fa\-\_\-action\-\_\-copy@{fa\-\_\-action\-\_\-copy}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-copy}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-action\-\_\-t} fa\-\_\-action\-\_\-copy (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga91980a1205ebea92b42647d78347edc7}
+
+
+Copy the given action. 
+
+\hypertarget{group___fa_action_ga43f9d05194a02cf4ea671342783be64a}{\index{Action@{Action}!fa\-\_\-action\-\_\-destroy@{fa\-\_\-action\-\_\-destroy}}
+\index{fa\-\_\-action\-\_\-destroy@{fa\-\_\-action\-\_\-destroy}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-destroy}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-action\-\_\-destroy (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga43f9d05194a02cf4ea671342783be64a}
+
+
+Destroy the given action. 
+
+\hypertarget{group___fa_action_ga581ee60177355c84edb8bb919d4a4170}{\index{Action@{Action}!fa\-\_\-action\-\_\-set@{fa\-\_\-action\-\_\-set}}
+\index{fa\-\_\-action\-\_\-set@{fa\-\_\-action\-\_\-set}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-action\-\_\-t} fa\-\_\-action\-\_\-set (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-action\-\_\-channel\-\_\-t}}]{channel, }
+\item[{double}]{double\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga581ee60177355c84edb8bb919d4a4170}
+
+
+The {\ttfamily set} action updates a single global bus. 
+
+The resulting action must be destroyed by the caller.
+
+
+\begin{DoxyParams}{Parameters}
+{\em channel} & Channel to update. \\
+\hline
+{\em value} & Value to set. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_action_ga6f5d14e19e9042a46f751659b0672285}{\index{Action@{Action}!fa\-\_\-action\-\_\-accum@{fa\-\_\-action\-\_\-accum}}
+\index{fa\-\_\-action\-\_\-accum@{fa\-\_\-action\-\_\-accum}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-accum}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-action\-\_\-t} fa\-\_\-action\-\_\-accum (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-action\-\_\-channel\-\_\-t}}]{channel, }
+\item[{{\bf fa\-\_\-signal\-\_\-unary\-\_\-double\-\_\-t}}]{unary\-Double, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga6f5d14e19e9042a46f751659b0672285}
+
+
+The {\ttfamily accum} action updates a single global bus by applying a function to its previous value. 
+
+The resulting action must be destroyed by the caller.
+
+
+\begin{DoxyParams}{Parameters}
+{\em channel} & Channel to update. \\
+\hline
+{\em function} & Function to apply. \\
+\hline
+{\em data} & Data closed over by the function. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_action_ga9f880ad4c24c7b3b897e5787ccaf0798}{\index{Action@{Action}!fa\-\_\-action\-\_\-send@{fa\-\_\-action\-\_\-send}}
+\index{fa\-\_\-action\-\_\-send@{fa\-\_\-action\-\_\-send}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-send}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-action\-\_\-t} fa\-\_\-action\-\_\-send (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-action\-\_\-name\-\_\-t}}]{name, }
+\item[{{\bf fa\-\_\-action\-\_\-value\-\_\-t}}]{value}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga9f880ad4c24c7b3b897e5787ccaf0798}
+
+
+The {\ttfamily send} action sends a message, the type of which depends on the type of receiver. 
+
+Often this is \hyperlink{group___fa_midi_message_gaa73293eb40a2cffdc2294e3cb6dc2564}{fa\-\_\-midi\-\_\-message\-\_\-t} or a value implementing \hyperlink{structfa__dynamic__t}{fa\-\_\-dynamic\-\_\-t}.
+
+The resulting action must be destroyed by the caller.
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & Name of receiver. \\
+\hline
+{\em value} & Value to send. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_action_gafa9061ff63aaadf5078eccd7b534c139}{\index{Action@{Action}!fa\-\_\-action\-\_\-is\-\_\-set@{fa\-\_\-action\-\_\-is\-\_\-set}}
+\index{fa\-\_\-action\-\_\-is\-\_\-set@{fa\-\_\-action\-\_\-is\-\_\-set}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-is\-\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-action\-\_\-is\-\_\-set (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_gafa9061ff63aaadf5078eccd7b534c139}
+
+
+Return whether the given action is a set action. 
+
+\hypertarget{group___fa_action_ga720fb58dfba134736c94d44aa441b59e}{\index{Action@{Action}!fa\-\_\-action\-\_\-set\-\_\-channel@{fa\-\_\-action\-\_\-set\-\_\-channel}}
+\index{fa\-\_\-action\-\_\-set\-\_\-channel@{fa\-\_\-action\-\_\-set\-\_\-channel}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-set\-\_\-channel}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-action\-\_\-channel\-\_\-t} fa\-\_\-action\-\_\-set\-\_\-channel (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga720fb58dfba134736c94d44aa441b59e}
+
+
+Get the channel of a set action. 
+
+\hypertarget{group___fa_action_ga428cbdc66641d4404957b34b2b6789b0}{\index{Action@{Action}!fa\-\_\-action\-\_\-set\-\_\-value@{fa\-\_\-action\-\_\-set\-\_\-value}}
+\index{fa\-\_\-action\-\_\-set\-\_\-value@{fa\-\_\-action\-\_\-set\-\_\-value}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-set\-\_\-value}]{\setlength{\rightskip}{0pt plus 5cm}double fa\-\_\-action\-\_\-set\-\_\-value (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga428cbdc66641d4404957b34b2b6789b0}
+
+
+Get the value of a set action. 
+
+\hypertarget{group___fa_action_ga15e38e47b12339f92906e2c16ed65c2f}{\index{Action@{Action}!fa\-\_\-action\-\_\-is\-\_\-accum@{fa\-\_\-action\-\_\-is\-\_\-accum}}
+\index{fa\-\_\-action\-\_\-is\-\_\-accum@{fa\-\_\-action\-\_\-is\-\_\-accum}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-is\-\_\-accum}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-action\-\_\-is\-\_\-accum (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga15e38e47b12339f92906e2c16ed65c2f}
+
+
+Return whether the given action is an accumulation action. 
+
+\hypertarget{group___fa_action_ga90c8d6c961998de33f86ef37cc87d302}{\index{Action@{Action}!fa\-\_\-action\-\_\-accum\-\_\-channel@{fa\-\_\-action\-\_\-accum\-\_\-channel}}
+\index{fa\-\_\-action\-\_\-accum\-\_\-channel@{fa\-\_\-action\-\_\-accum\-\_\-channel}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-accum\-\_\-channel}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-action\-\_\-channel\-\_\-t} fa\-\_\-action\-\_\-accum\-\_\-channel (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga90c8d6c961998de33f86ef37cc87d302}
+
+
+Get the channel of an accumulation action. 
+
+\hypertarget{group___fa_action_ga3b28dc4eb7ecaade47a508fa8844bcdb}{\index{Action@{Action}!fa\-\_\-action\-\_\-accum\-\_\-function@{fa\-\_\-action\-\_\-accum\-\_\-function}}
+\index{fa\-\_\-action\-\_\-accum\-\_\-function@{fa\-\_\-action\-\_\-accum\-\_\-function}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-accum\-\_\-function}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-signal\-\_\-unary\-\_\-double\-\_\-t} fa\-\_\-action\-\_\-accum\-\_\-function (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga3b28dc4eb7ecaade47a508fa8844bcdb}
+
+
+Get the function of an accumulation action. 
+
+\hypertarget{group___fa_action_ga0ef7b3178ab057a2d6b64472b866ab9c}{\index{Action@{Action}!fa\-\_\-action\-\_\-accum\-\_\-data@{fa\-\_\-action\-\_\-accum\-\_\-data}}
+\index{fa\-\_\-action\-\_\-accum\-\_\-data@{fa\-\_\-action\-\_\-accum\-\_\-data}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-accum\-\_\-data}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ptr\-\_\-t} fa\-\_\-action\-\_\-accum\-\_\-data (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga0ef7b3178ab057a2d6b64472b866ab9c}
+
+
+Get the data of an accumulation action. 
+
+\hypertarget{group___fa_action_gacbe7fa1169a98d0c118845e79a48acd9}{\index{Action@{Action}!fa\-\_\-action\-\_\-is\-\_\-send@{fa\-\_\-action\-\_\-is\-\_\-send}}
+\index{fa\-\_\-action\-\_\-is\-\_\-send@{fa\-\_\-action\-\_\-is\-\_\-send}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-is\-\_\-send}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-action\-\_\-is\-\_\-send (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_gacbe7fa1169a98d0c118845e79a48acd9}
+
+
+Return whether the given action is a send action. 
+
+\hypertarget{group___fa_action_ga061500ae01495bc9cec4c2c58973fcfd}{\index{Action@{Action}!fa\-\_\-action\-\_\-send\-\_\-name@{fa\-\_\-action\-\_\-send\-\_\-name}}
+\index{fa\-\_\-action\-\_\-send\-\_\-name@{fa\-\_\-action\-\_\-send\-\_\-name}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-send\-\_\-name}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-action\-\_\-name\-\_\-t} fa\-\_\-action\-\_\-send\-\_\-name (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga061500ae01495bc9cec4c2c58973fcfd}
+
+
+Get the name of an send action. 
+
+\hypertarget{group___fa_action_ga986a52955699094b178f850b92cb8bf0}{\index{Action@{Action}!fa\-\_\-action\-\_\-send\-\_\-value@{fa\-\_\-action\-\_\-send\-\_\-value}}
+\index{fa\-\_\-action\-\_\-send\-\_\-value@{fa\-\_\-action\-\_\-send\-\_\-value}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-send\-\_\-value}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-action\-\_\-value\-\_\-t} fa\-\_\-action\-\_\-send\-\_\-value (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga986a52955699094b178f850b92cb8bf0}
+
+
+Get the value of an send action. 
+
+\hypertarget{group___fa_action_ga6e81ed66fec37b463601b62909051d6d}{\index{Action@{Action}!fa\-\_\-action\-\_\-repeat@{fa\-\_\-action\-\_\-repeat}}
+\index{fa\-\_\-action\-\_\-repeat@{fa\-\_\-action\-\_\-repeat}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-repeat}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-action\-\_\-t} fa\-\_\-action\-\_\-repeat (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-time\-\_\-t}}]{interval, }
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga6e81ed66fec37b463601b62909051d6d}
+
+
+Repeat the given action indefinitely. 
+
+\hypertarget{group___fa_action_ga9cd15b8d36f69d4ccb4e278a6cd97a32}{\index{Action@{Action}!fa\-\_\-action\-\_\-many@{fa\-\_\-action\-\_\-many}}
+\index{fa\-\_\-action\-\_\-many@{fa\-\_\-action\-\_\-many}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-many}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-action\-\_\-t} fa\-\_\-action\-\_\-many (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{actions}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga9cd15b8d36f69d4ccb4e278a6cd97a32}
+
+
+Join a list of actions into a single compond action. 
+
+\hypertarget{group___fa_action_ga90164c782d5a2a1e94cebd8828f36ea3}{\index{Action@{Action}!fa\-\_\-action\-\_\-if@{fa\-\_\-action\-\_\-if}}
+\index{fa\-\_\-action\-\_\-if@{fa\-\_\-action\-\_\-if}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-if}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-action\-\_\-t} fa\-\_\-action\-\_\-if (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-pred\-\_\-t}}]{pred, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{pred\-Data, }
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga90164c782d5a2a1e94cebd8828f36ea3}
+
+
+Creates a derived action from the given action that executes íf and only given predicate holds. 
+
+The predicate function is called for every occurence. \hypertarget{group___fa_action_ga672d8e5edd644f5717ad4e3c3d61c382}{\index{Action@{Action}!fa\-\_\-action\-\_\-while@{fa\-\_\-action\-\_\-while}}
+\index{fa\-\_\-action\-\_\-while@{fa\-\_\-action\-\_\-while}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-while}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-action\-\_\-t} fa\-\_\-action\-\_\-while (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-pred\-\_\-t}}]{pred, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{pred\-Data, }
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga672d8e5edd644f5717ad4e3c3d61c382}
+
+
+Creates a derived action from the given action that executes as long as the given predicate holds. 
+
+The predicate function is called for every occurence. \hypertarget{group___fa_action_ga738040c72d7251a5e1548cc94e3ab1b4}{\index{Action@{Action}!fa\-\_\-action\-\_\-until@{fa\-\_\-action\-\_\-until}}
+\index{fa\-\_\-action\-\_\-until@{fa\-\_\-action\-\_\-until}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-until}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-action\-\_\-t} fa\-\_\-action\-\_\-until (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-pred\-\_\-t}}]{pred, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{pred\-Data, }
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga738040c72d7251a5e1548cc94e3ab1b4}
+
+
+Creates a derived action from the given action that executes as long as the given predicate does {\itshape not} hold. 
+
+The predicate function is called for every occurence. \hypertarget{group___fa_action_ga31bc40c290b44b342599fa0e1b8e2aa4}{\index{Action@{Action}!fa\-\_\-action\-\_\-do@{fa\-\_\-action\-\_\-do}}
+\index{fa\-\_\-action\-\_\-do@{fa\-\_\-action\-\_\-do}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-do}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-action\-\_\-t} fa\-\_\-action\-\_\-do (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-nullary\-\_\-t}}]{nullary, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga31bc40c290b44b342599fa0e1b8e2aa4}
+
+
+Convert a unary function to an action. 
+
+\hypertarget{group___fa_action_ga434510734518ad00130c2e3a3ff61e50}{\index{Action@{Action}!fa\-\_\-action\-\_\-is\-\_\-simple@{fa\-\_\-action\-\_\-is\-\_\-simple}}
+\index{fa\-\_\-action\-\_\-is\-\_\-simple@{fa\-\_\-action\-\_\-is\-\_\-simple}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-is\-\_\-simple}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-action\-\_\-is\-\_\-simple (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga434510734518ad00130c2e3a3ff61e50}
+
+
+Returns whether the given action is simple or not. 
+
+\hypertarget{group___fa_action_ga20bae4d808d585cd087f7c3e55afbc0e}{\index{Action@{Action}!fa\-\_\-action\-\_\-is\-\_\-compound@{fa\-\_\-action\-\_\-is\-\_\-compound}}
+\index{fa\-\_\-action\-\_\-is\-\_\-compound@{fa\-\_\-action\-\_\-is\-\_\-compound}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-is\-\_\-compound}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-action\-\_\-is\-\_\-compound (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga20bae4d808d585cd087f7c3e55afbc0e}
+
+
+Returns whether the given action is compound or not. 
+
+\hypertarget{group___fa_action_gae40a7127067b85b0d72e17dea130b613}{\index{Action@{Action}!fa\-\_\-action\-\_\-compound\-\_\-interval@{fa\-\_\-action\-\_\-compound\-\_\-interval}}
+\index{fa\-\_\-action\-\_\-compound\-\_\-interval@{fa\-\_\-action\-\_\-compound\-\_\-interval}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-compound\-\_\-interval}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-time\-\_\-t} fa\-\_\-action\-\_\-compound\-\_\-interval (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_gae40a7127067b85b0d72e17dea130b613}
+
+
+Given a compound action, return the minimum offset to its tail. 
+
+\hypertarget{group___fa_action_ga9f3ee907773b33a7a9eea5c6d083db3b}{\index{Action@{Action}!fa\-\_\-action\-\_\-compound\-\_\-first@{fa\-\_\-action\-\_\-compound\-\_\-first}}
+\index{fa\-\_\-action\-\_\-compound\-\_\-first@{fa\-\_\-action\-\_\-compound\-\_\-first}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-compound\-\_\-first}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-action\-\_\-t} fa\-\_\-action\-\_\-compound\-\_\-first (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga9f3ee907773b33a7a9eea5c6d083db3b}
+
+
+Given a compound action, return its head (nullable). 
+
+\hypertarget{group___fa_action_ga0aa70790832784b192117ec043b34b57}{\index{Action@{Action}!fa\-\_\-action\-\_\-compound\-\_\-rest@{fa\-\_\-action\-\_\-compound\-\_\-rest}}
+\index{fa\-\_\-action\-\_\-compound\-\_\-rest@{fa\-\_\-action\-\_\-compound\-\_\-rest}!Action@{Action}}
+\subsubsection[{fa\-\_\-action\-\_\-compound\-\_\-rest}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-action\-\_\-t} fa\-\_\-action\-\_\-compound\-\_\-rest (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action}
+\end{DoxyParamCaption}
+)}}\label{group___fa_action_ga0aa70790832784b192117ec043b34b57}
+
+
+Given a compound action, return its tail (nullable). 
+

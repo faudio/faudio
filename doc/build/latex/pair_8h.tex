@@ -1,0 +1,58 @@
+\hypertarget{pair_8h}{\section{include/fa/pair.h File Reference}
+\label{pair_8h}\index{include/fa/pair.\-h@{include/fa/pair.\-h}}
+}
+{\ttfamily \#include $<$fa.\-h$>$}\\*
+{\ttfamily \#include $<$fa/list.\-h$>$}\\*
+Include dependency graph for pair.\-h\-:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{pair_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\-:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{pair_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structfa__pair__struct__t}{fa\-\_\-pair\-\_\-struct\-\_\-t}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \-\_\-fa\-\_\-pair\-\_\-t $\ast$ \hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t}
+\begin{DoxyCompactList}\small\item\em The abstract type of pairs. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{group___fa_pair_gaea210809bc766ec6aad0580f19f479ac}{fa\-\_\-pair\-\_\-create} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\begin{DoxyCompactList}\small\item\em Create a new pair. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{group___fa_pair_gaab0cee4f61bbfa9ba432a5d3b32dd1af}{fa\-\_\-pair\-\_\-read} (\hyperlink{structfa__pair__struct__t}{fa\-\_\-pair\-\_\-struct\-\_\-t} $\ast$)
+\begin{DoxyCompactList}\small\item\em Create a pair by reading the components of a structure. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_pair_gab613de74384324db6bba7ad7e6396892}{fa\-\_\-pair\-\_\-write} (\hyperlink{structfa__pair__struct__t}{fa\-\_\-pair\-\_\-struct\-\_\-t} $\ast$, \hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{util_8h_a40ed40659d2ed7f8712b0fe6ba6edebe}{pair})
+\begin{DoxyCompactList}\small\item\em Write the values of a pair to a structure. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{group___fa_pair_ga2786421b334c7a6dc71b7f25de3369e1}{fa\-\_\-pair\-\_\-copy} (\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{util_8h_a40ed40659d2ed7f8712b0fe6ba6edebe}{pair})
+\begin{DoxyCompactList}\small\item\em Copy the given pair. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_pair_ga1ac2fe345d109b9ad18335ada198d506}{fa\-\_\-pair\-\_\-destroy} (\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{util_8h_a40ed40659d2ed7f8712b0fe6ba6edebe}{pair})
+\begin{DoxyCompactList}\small\item\em Destroy the given pair. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_pair_ga7e797364d4d31cd174d974b16627cdfe}{fa\-\_\-pair\-\_\-decons} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} $\ast$, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} $\ast$, \hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{util_8h_a40ed40659d2ed7f8712b0fe6ba6edebe}{pair})
+\begin{DoxyCompactList}\small\item\em Get the first and second components of the given pair. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_pair_gaa61373d5c0648b4670ff51c483c2977d}{fa\-\_\-pair\-\_\-first} (\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{util_8h_a40ed40659d2ed7f8712b0fe6ba6edebe}{pair})
+\begin{DoxyCompactList}\small\item\em Get the first component of the given pair. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_pair_ga4c681f429b7677e05f6f5aadc0d1c18d}{fa\-\_\-pair\-\_\-second} (\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{util_8h_a40ed40659d2ed7f8712b0fe6ba6edebe}{pair})
+\begin{DoxyCompactList}\small\item\em Get the second component of the given pair. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{group___fa_pair_gaf0c419c071f484dbd09e9c33b03d1a8c}{fa\-\_\-pair\-\_\-duplicate} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em Return a pair containing the given value as both its left and right component. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{group___fa_pair_gab905200bb654bfd3cfc36c2adf4383fd}{fa\-\_\-pair\-\_\-swap} (\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{util_8h_a40ed40659d2ed7f8712b0fe6ba6edebe}{pair})
+\begin{DoxyCompactList}\small\item\em Swap the components of the given pair. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{group___fa_pair_gaa8b9eb2a799ec3993b5f9127ed511188}{fa\-\_\-pair\-\_\-assoc} (\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{util_8h_a40ed40659d2ed7f8712b0fe6ba6edebe}{pair})
+\begin{DoxyCompactList}\small\item\em Return the left-\/associated version of the given nested pair. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{group___fa_pair_gaff4d8830c9436aa7fa6b0ca0a99c06f8}{fa\-\_\-pair\-\_\-unassoc} (\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{util_8h_a40ed40659d2ed7f8712b0fe6ba6edebe}{pair})
+\begin{DoxyCompactList}\small\item\em Return the right-\/associated version of the given nested pair. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_pair_gac21e1f6a5da734bf51986b7ab413c810}{fa\-\_\-pair\-\_\-to\-\_\-list} (\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{util_8h_a40ed40659d2ed7f8712b0fe6ba6edebe}{pair})
+\begin{DoxyCompactList}\small\item\em Convert a pair to a list of two elements. \end{DoxyCompactList}\end{DoxyCompactItemize}

@@ -1,0 +1,62 @@
+\hypertarget{time_8h}{\section{include/fa/time.h File Reference}
+\label{time_8h}\index{include/fa/time.\-h@{include/fa/time.\-h}}
+}
+{\ttfamily \#include $<$fa.\-h$>$}\\*
+{\ttfamily \#include $<$fa/ratio.\-h$>$}\\*
+{\ttfamily \#include $<$fa/string.\-h$>$}\\*
+Include dependency graph for time.\-h\-:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{time_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\-:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{time_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \-\_\-fa\-\_\-time\-\_\-t $\ast$ \hyperlink{group___fa_time_ga227cc693f20b4873fed11028bcade184}{fa\-\_\-time\-\_\-t}
+\begin{DoxyCompactList}\small\item\em The abstract type of times. \end{DoxyCompactList}\item 
+typedef int32\-\_\-t \hyperlink{group___fa_time_ga126d90b34014d28bf3f4930b5e370598}{fa\-\_\-time\-\_\-days\-\_\-t}
+\begin{DoxyCompactList}\small\item\em A number of days. \end{DoxyCompactList}\item 
+typedef int32\-\_\-t \hyperlink{group___fa_time_gabb41271106b33206f546a0cb3b56a33e}{fa\-\_\-time\-\_\-hours\-\_\-t}
+\begin{DoxyCompactList}\small\item\em A number of hours. \end{DoxyCompactList}\item 
+typedef int32\-\_\-t \hyperlink{group___fa_time_ga1103d61f9fdf2839e8cc15ee5fac7b4e}{fa\-\_\-time\-\_\-minutes\-\_\-t}
+\begin{DoxyCompactList}\small\item\em A number of minutes. \end{DoxyCompactList}\item 
+typedef int32\-\_\-t \hyperlink{group___fa_time_gaa8f8fedfa6f26ed6ad00d134c2aeb6b8}{fa\-\_\-time\-\_\-seconds\-\_\-t}
+\begin{DoxyCompactList}\small\item\em A number of seconds. \end{DoxyCompactList}\item 
+typedef int64\-\_\-t \hyperlink{group___fa_time_gadebdebeab6c5ba7cd8002d0773635e61}{fa\-\_\-time\-\_\-milliseconds\-\_\-t}
+\begin{DoxyCompactList}\small\item\em A number of milliseconds. \end{DoxyCompactList}\item 
+typedef struct \-\_\-fa\-\_\-time\-\_\-system\-\_\-t $\ast$ \hyperlink{group___fa_time_ga7dd7e28574eec80380aac22be7087d2e}{fa\-\_\-time\-\_\-system\-\_\-t}
+\begin{DoxyCompactList}\small\item\em The system time type. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group___fa_time_ga227cc693f20b4873fed11028bcade184}{fa\-\_\-time\-\_\-t} \hyperlink{group___fa_time_ga4423ba1b33d4035a6b4a1f084aa31ff2}{fa\-\_\-time\-\_\-create} (\hyperlink{group___fa_time_ga126d90b34014d28bf3f4930b5e370598}{fa\-\_\-time\-\_\-days\-\_\-t} \hyperlink{util_8h_a300f263b1eae073cc0df9c2450f9b3de}{days}, \hyperlink{group___fa_time_gabb41271106b33206f546a0cb3b56a33e}{fa\-\_\-time\-\_\-hours\-\_\-t} \hyperlink{util_8h_a2538097ff7138a83801cced657c8cfbf}{hours}, \hyperlink{group___fa_time_ga1103d61f9fdf2839e8cc15ee5fac7b4e}{fa\-\_\-time\-\_\-minutes\-\_\-t} \hyperlink{util_8h_a237a482b0d534168d425b103ab35cf61}{minutes}, \hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{util_8h_a866d3cbbee2679ec3c34f27a256445de}{ratio})
+\begin{DoxyCompactList}\small\item\em Create a new time value. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_time_ga227cc693f20b4873fed11028bcade184}{fa\-\_\-time\-\_\-t} \hyperlink{group___fa_time_gabc8112d7c4c3305ceef399752d261b75}{fa\-\_\-time\-\_\-copy} (\hyperlink{group___fa_time_ga227cc693f20b4873fed11028bcade184}{fa\-\_\-time\-\_\-t} time)
+\begin{DoxyCompactList}\small\item\em Copy the given time value. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_time_gac91ac3ee6483082b7759f0c5850c9f8a}{fa\-\_\-time\-\_\-destroy} (\hyperlink{group___fa_time_ga227cc693f20b4873fed11028bcade184}{fa\-\_\-time\-\_\-t} time)
+\begin{DoxyCompactList}\small\item\em Destroy the given time value. \end{DoxyCompactList}\item 
+int32\-\_\-t \hyperlink{group___fa_time_gacb41e735f51932696ee64d464107fb4d}{fa\-\_\-time\-\_\-days} (\hyperlink{group___fa_time_ga227cc693f20b4873fed11028bcade184}{fa\-\_\-time\-\_\-t} time)
+\begin{DoxyCompactList}\small\item\em Return the number of whole days in this time value. \end{DoxyCompactList}\item 
+int32\-\_\-t \hyperlink{group___fa_time_ga80523d01e327481b6ef4821725dd06dc}{fa\-\_\-time\-\_\-hours} (\hyperlink{group___fa_time_ga227cc693f20b4873fed11028bcade184}{fa\-\_\-time\-\_\-t} time)
+\begin{DoxyCompactList}\small\item\em Return the number of whole hours in this time value. \end{DoxyCompactList}\item 
+int32\-\_\-t \hyperlink{group___fa_time_gaa98eaf9f06048f5529a5b938eba9bb82}{fa\-\_\-time\-\_\-minutes} (\hyperlink{group___fa_time_ga227cc693f20b4873fed11028bcade184}{fa\-\_\-time\-\_\-t} time)
+\begin{DoxyCompactList}\small\item\em Return the number of whole minutes in this time value. \end{DoxyCompactList}\item 
+int32\-\_\-t \hyperlink{group___fa_time_gab0b34c9051a7f4ae5c8edcc175122491}{fa\-\_\-time\-\_\-seconds} (\hyperlink{group___fa_time_ga227cc693f20b4873fed11028bcade184}{fa\-\_\-time\-\_\-t} time)
+\begin{DoxyCompactList}\small\item\em Return the number of whole seconds in this time value. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{group___fa_time_gab05866bd3628f5965f4ab1d7da47158d}{fa\-\_\-time\-\_\-divisions} (\hyperlink{group___fa_time_ga227cc693f20b4873fed11028bcade184}{fa\-\_\-time\-\_\-t} time)
+\begin{DoxyCompactList}\small\item\em Return the fractions of a second in this time value. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_time_gad9e3686bc754369402057a1c67f5803e}{fa\-\_\-time\-\_\-to\-\_\-iso} (\hyperlink{group___fa_time_ga227cc693f20b4873fed11028bcade184}{fa\-\_\-time\-\_\-t} time)
+\begin{DoxyCompactList}\small\item\em Print the time as an I\-S\-O 8601 duration. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_time_gaa8f8fedfa6f26ed6ad00d134c2aeb6b8}{fa\-\_\-time\-\_\-seconds\-\_\-t} \hyperlink{group___fa_time_ga0f26dd4a53948a84fdf0ff6000396c5e}{fa\-\_\-time\-\_\-to\-\_\-seconds} (\hyperlink{group___fa_time_ga227cc693f20b4873fed11028bcade184}{fa\-\_\-time\-\_\-t} time)
+\begin{DoxyCompactList}\small\item\em Convert the time to seconds. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_time_gadebdebeab6c5ba7cd8002d0773635e61}{fa\-\_\-time\-\_\-milliseconds\-\_\-t} \hyperlink{group___fa_time_ga99daa4bb229e91950d0c788bda5a1c86}{fa\-\_\-time\-\_\-to\-\_\-milliseconds} (\hyperlink{group___fa_time_ga227cc693f20b4873fed11028bcade184}{fa\-\_\-time\-\_\-t} time)
+\begin{DoxyCompactList}\small\item\em Convert the time to milliseconds. \end{DoxyCompactList}\end{DoxyCompactItemize}

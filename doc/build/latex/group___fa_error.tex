@@ -1,0 +1,214 @@
+\hypertarget{group___fa_error}{\section{Error}
+\label{group___fa_error}\index{Error@{Error}}
+}
+
+
+Error handling types and functions.  
+
+
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structfa__error__interface__t}{fa\-\_\-error\-\_\-interface\-\_\-t}
+\begin{DoxyCompactList}\small\item\em Error interface. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \-\_\-fa\-\_\-error\-\_\-t $\ast$ \hyperlink{group___fa_error_ga4a4feb4d3686657ac8dbd2be421cbb15}{fa\-\_\-error\-\_\-t}
+\begin{DoxyCompactList}\small\item\em A type implementing \hyperlink{structfa__error__interface__t}{fa\-\_\-error\-\_\-interface\-\_\-t}. \end{DoxyCompactList}\item 
+typedef void($\ast$ \hyperlink{group___fa_error_ga43d8d45a005130a5052ba3281a8bf33e}{fa\-\_\-error\-\_\-callback\-\_\-t} )(\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t}, \hyperlink{group___fa_error_ga4a4feb4d3686657ac8dbd2be421cbb15}{fa\-\_\-error\-\_\-t})
+\begin{DoxyCompactList}\small\item\em An error handler routine. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group___fa_error_ga5cf5c13f1e12ae6b125c0265f59f4d82}{fa\-\_\-error\-\_\-severity\-\_\-t} \{ \hyperlink{group___fa_error_gga5cf5c13f1e12ae6b125c0265f59f4d82aa4abb266e72efba828327b605b2ab0f4}{info}, 
+\hyperlink{group___fa_error_gga5cf5c13f1e12ae6b125c0265f59f4d82a8de9aef05fc85e519a0cfce33573f492}{warning}, 
+\hyperlink{group___fa_error_gga5cf5c13f1e12ae6b125c0265f59f4d82ad606e435413ea0944dd00d49e901e4ed}{error}, 
+\hyperlink{group___fa_error_gga5cf5c13f1e12ae6b125c0265f59f4d82a8e61437747405a9d1a65e5020e375e08}{misc}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{group___fa_error_gab7550192e471f82582ecb441949c8b62}{fa\-\_\-error\-\_\-check} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em Return whether the given value is an error or not. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_error_ga466e0539bedb29f68527448ed9ba11bf}{fa\-\_\-error\-\_\-log} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_error_ga4a4feb4d3686657ac8dbd2be421cbb15}{fa\-\_\-error\-\_\-t} \hyperlink{group___fa_error_gga5cf5c13f1e12ae6b125c0265f59f4d82ad606e435413ea0944dd00d49e901e4ed}{error})
+\begin{DoxyCompactList}\small\item\em Write a log message. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_error_ga5cf5c13f1e12ae6b125c0265f59f4d82}{fa\-\_\-error\-\_\-severity\-\_\-t} \hyperlink{group___fa_error_ga260bea83fbb420ad257323648c86cd15}{fa\-\_\-error\-\_\-severity} (\hyperlink{group___fa_error_ga4a4feb4d3686657ac8dbd2be421cbb15}{fa\-\_\-error\-\_\-t} \hyperlink{group___fa_error_gga5cf5c13f1e12ae6b125c0265f59f4d82ad606e435413ea0944dd00d49e901e4ed}{error})
+\begin{DoxyCompactList}\small\item\em Return the severity of the given error. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_error_ga8539a91f951952f94c4270a0f04f6ad1}{fa\-\_\-error\-\_\-message} (\hyperlink{group___fa_error_ga4a4feb4d3686657ac8dbd2be421cbb15}{fa\-\_\-error\-\_\-t} \hyperlink{group___fa_error_gga5cf5c13f1e12ae6b125c0265f59f4d82ad606e435413ea0944dd00d49e901e4ed}{error})
+\begin{DoxyCompactList}\small\item\em Return the message of the given error. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_error_ga1bb041273b8f969a8c2d7bd292141110}{fa\-\_\-error\-\_\-origin} (\hyperlink{group___fa_error_ga4a4feb4d3686657ac8dbd2be421cbb15}{fa\-\_\-error\-\_\-t} \hyperlink{group___fa_error_gga5cf5c13f1e12ae6b125c0265f59f4d82ad606e435413ea0944dd00d49e901e4ed}{error})
+\begin{DoxyCompactList}\small\item\em Return the origin of the given error. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_error_ga0ecd2e70e166904907ed98f102d1d59a}{fa\-\_\-error\-\_\-format} (bool bool\-\_\-, \hyperlink{group___fa_error_ga4a4feb4d3686657ac8dbd2be421cbb15}{fa\-\_\-error\-\_\-t} \hyperlink{group___fa_error_gga5cf5c13f1e12ae6b125c0265f59f4d82ad606e435413ea0944dd00d49e901e4ed}{error})
+\begin{DoxyCompactList}\small\item\em Convert the given error to a formated string. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_error_ga4a4feb4d3686657ac8dbd2be421cbb15}{fa\-\_\-error\-\_\-t} \hyperlink{group___fa_error_gadd811b06a5cd740039902f77efd4e661}{fa\-\_\-error\-\_\-create\-\_\-simple} (\hyperlink{group___fa_error_ga5cf5c13f1e12ae6b125c0265f59f4d82}{fa\-\_\-error\-\_\-severity\-\_\-t} severity, \hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string}, \hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} string\-\_\-)
+\begin{DoxyCompactList}\small\item\em Creates a simple error. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Error handling types and functions. 
+
+\subsection{Typedef Documentation}
+\hypertarget{group___fa_error_ga4a4feb4d3686657ac8dbd2be421cbb15}{\index{Error@{Error}!fa\-\_\-error\-\_\-t@{fa\-\_\-error\-\_\-t}}
+\index{fa\-\_\-error\-\_\-t@{fa\-\_\-error\-\_\-t}!Error@{Error}}
+\subsubsection[{fa\-\_\-error\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct \-\_\-fa\-\_\-error\-\_\-t$\ast$ {\bf fa\-\_\-error\-\_\-t}}}\label{group___fa_error_ga4a4feb4d3686657ac8dbd2be421cbb15}
+
+
+A type implementing \hyperlink{structfa__error__interface__t}{fa\-\_\-error\-\_\-interface\-\_\-t}. 
+
+If you cast a value to this type, you must assure that it implements \hyperlink{structfa__error__interface__t}{fa\-\_\-error\-\_\-interface\-\_\-t}, conversely if you cast a value from this type you can assume that it implements \hyperlink{group___fa_error_ga4a4feb4d3686657ac8dbd2be421cbb15}{fa\-\_\-error\-\_\-t}.
+
+You can check whether an arbitrary reference is an error using \hyperlink{group___fa_error_gab7550192e471f82582ecb441949c8b62}{fa\-\_\-error\-\_\-check}. \hypertarget{group___fa_error_ga43d8d45a005130a5052ba3281a8bf33e}{\index{Error@{Error}!fa\-\_\-error\-\_\-callback\-\_\-t@{fa\-\_\-error\-\_\-callback\-\_\-t}}
+\index{fa\-\_\-error\-\_\-callback\-\_\-t@{fa\-\_\-error\-\_\-callback\-\_\-t}!Error@{Error}}
+\subsubsection[{fa\-\_\-error\-\_\-callback\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef void($\ast$  fa\-\_\-error\-\_\-callback\-\_\-t)({\bf fa\-\_\-ptr\-\_\-t}, {\bf fa\-\_\-error\-\_\-t})}}\label{group___fa_error_ga43d8d45a005130a5052ba3281a8bf33e}
+
+
+An error handler routine. 
+
+
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{group___fa_error_ga5cf5c13f1e12ae6b125c0265f59f4d82}{\index{Error@{Error}!fa\-\_\-error\-\_\-severity\-\_\-t@{fa\-\_\-error\-\_\-severity\-\_\-t}}
+\index{fa\-\_\-error\-\_\-severity\-\_\-t@{fa\-\_\-error\-\_\-severity\-\_\-t}!Error@{Error}}
+\subsubsection[{fa\-\_\-error\-\_\-severity\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf fa\-\_\-error\-\_\-severity\-\_\-t}}}\label{group___fa_error_ga5cf5c13f1e12ae6b125c0265f59f4d82}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{info@{info}!Error@{Error}}\index{Error@{Error}!info@{info}}\item[{\em 
+\hypertarget{group___fa_error_gga5cf5c13f1e12ae6b125c0265f59f4d82aa4abb266e72efba828327b605b2ab0f4}{info}\label{group___fa_error_gga5cf5c13f1e12ae6b125c0265f59f4d82aa4abb266e72efba828327b605b2ab0f4}
+}]\index{warning@{warning}!Error@{Error}}\index{Error@{Error}!warning@{warning}}\item[{\em 
+\hypertarget{group___fa_error_gga5cf5c13f1e12ae6b125c0265f59f4d82a8de9aef05fc85e519a0cfce33573f492}{warning}\label{group___fa_error_gga5cf5c13f1e12ae6b125c0265f59f4d82a8de9aef05fc85e519a0cfce33573f492}
+}]\index{error@{error}!Error@{Error}}\index{Error@{Error}!error@{error}}\item[{\em 
+\hypertarget{group___fa_error_gga5cf5c13f1e12ae6b125c0265f59f4d82ad606e435413ea0944dd00d49e901e4ed}{error}\label{group___fa_error_gga5cf5c13f1e12ae6b125c0265f59f4d82ad606e435413ea0944dd00d49e901e4ed}
+}]\index{misc@{misc}!Error@{Error}}\index{Error@{Error}!misc@{misc}}\item[{\em 
+\hypertarget{group___fa_error_gga5cf5c13f1e12ae6b125c0265f59f4d82a8e61437747405a9d1a65e5020e375e08}{misc}\label{group___fa_error_gga5cf5c13f1e12ae6b125c0265f59f4d82a8e61437747405a9d1a65e5020e375e08}
+}]\end{description}
+\end{Desc}
+
+
+\subsection{Function Documentation}
+\hypertarget{group___fa_error_gab7550192e471f82582ecb441949c8b62}{\index{Error@{Error}!fa\-\_\-error\-\_\-check@{fa\-\_\-error\-\_\-check}}
+\index{fa\-\_\-error\-\_\-check@{fa\-\_\-error\-\_\-check}!Error@{Error}}
+\subsubsection[{fa\-\_\-error\-\_\-check}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-error\-\_\-check (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr}
+\end{DoxyParamCaption}
+)}}\label{group___fa_error_gab7550192e471f82582ecb441949c8b62}
+
+
+Return whether the given value is an error or not. 
+
+This function is often used with \hyperlink{group___fa_error_ga466e0539bedb29f68527448ed9ba11bf}{log} as in\-:
+
+
+\begin{DoxyCode}
+\textcolor{keywordflow}{if} (\hyperlink{group___fa_gaec61e23c174faf5e5244ae876d264eb5}{fa\_check}(value)) \{
+    \hyperlink{group___fa_error_ga466e0539bedb29f68527448ed9ba11bf}{fa\_error\_log}(NULL, value);
+    exit(-1);
+\}
+\end{DoxyCode}
+
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & Value to check (can be any type). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A boolean. 
+\end{DoxyReturn}
+\hypertarget{group___fa_error_ga466e0539bedb29f68527448ed9ba11bf}{\index{Error@{Error}!fa\-\_\-error\-\_\-log@{fa\-\_\-error\-\_\-log}}
+\index{fa\-\_\-error\-\_\-log@{fa\-\_\-error\-\_\-log}!Error@{Error}}
+\subsubsection[{fa\-\_\-error\-\_\-log}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-error\-\_\-log (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-error\-\_\-t}}]{error}
+\end{DoxyParamCaption}
+)}}\label{group___fa_error_ga466e0539bedb29f68527448ed9ba11bf}
+
+
+Write a log message. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em context} & Ignored, declared for compability with user-\/defined callbacks. \\
+\hline
+{\em error} & Condition to log. Must implement \hyperlink{structfa__error__interface__t}{Error}. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_error_ga260bea83fbb420ad257323648c86cd15}{\index{Error@{Error}!fa\-\_\-error\-\_\-severity@{fa\-\_\-error\-\_\-severity}}
+\index{fa\-\_\-error\-\_\-severity@{fa\-\_\-error\-\_\-severity}!Error@{Error}}
+\subsubsection[{fa\-\_\-error\-\_\-severity}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-error\-\_\-severity\-\_\-t} fa\-\_\-error\-\_\-severity (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-error\-\_\-t}}]{error}
+\end{DoxyParamCaption}
+)}}\label{group___fa_error_ga260bea83fbb420ad257323648c86cd15}
+
+
+Return the severity of the given error. 
+
+\hypertarget{group___fa_error_ga8539a91f951952f94c4270a0f04f6ad1}{\index{Error@{Error}!fa\-\_\-error\-\_\-message@{fa\-\_\-error\-\_\-message}}
+\index{fa\-\_\-error\-\_\-message@{fa\-\_\-error\-\_\-message}!Error@{Error}}
+\subsubsection[{fa\-\_\-error\-\_\-message}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t} fa\-\_\-error\-\_\-message (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-error\-\_\-t}}]{error}
+\end{DoxyParamCaption}
+)}}\label{group___fa_error_ga8539a91f951952f94c4270a0f04f6ad1}
+
+
+Return the message of the given error. 
+
+\hypertarget{group___fa_error_ga1bb041273b8f969a8c2d7bd292141110}{\index{Error@{Error}!fa\-\_\-error\-\_\-origin@{fa\-\_\-error\-\_\-origin}}
+\index{fa\-\_\-error\-\_\-origin@{fa\-\_\-error\-\_\-origin}!Error@{Error}}
+\subsubsection[{fa\-\_\-error\-\_\-origin}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t} fa\-\_\-error\-\_\-origin (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-error\-\_\-t}}]{error}
+\end{DoxyParamCaption}
+)}}\label{group___fa_error_ga1bb041273b8f969a8c2d7bd292141110}
+
+
+Return the origin of the given error. 
+
+\hypertarget{group___fa_error_ga0ecd2e70e166904907ed98f102d1d59a}{\index{Error@{Error}!fa\-\_\-error\-\_\-format@{fa\-\_\-error\-\_\-format}}
+\index{fa\-\_\-error\-\_\-format@{fa\-\_\-error\-\_\-format}!Error@{Error}}
+\subsubsection[{fa\-\_\-error\-\_\-format}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t} fa\-\_\-error\-\_\-format (
+\begin{DoxyParamCaption}
+\item[{bool}]{bool\-\_\-, }
+\item[{{\bf fa\-\_\-error\-\_\-t}}]{error}
+\end{DoxyParamCaption}
+)}}\label{group___fa_error_ga0ecd2e70e166904907ed98f102d1d59a}
+
+
+Convert the given error to a formated string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em colored} & Include color escapes for terminals. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_error_gadd811b06a5cd740039902f77efd4e661}{\index{Error@{Error}!fa\-\_\-error\-\_\-create\-\_\-simple@{fa\-\_\-error\-\_\-create\-\_\-simple}}
+\index{fa\-\_\-error\-\_\-create\-\_\-simple@{fa\-\_\-error\-\_\-create\-\_\-simple}!Error@{Error}}
+\subsubsection[{fa\-\_\-error\-\_\-create\-\_\-simple}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-error\-\_\-t} fa\-\_\-error\-\_\-create\-\_\-simple (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-error\-\_\-severity\-\_\-t}}]{severity, }
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string, }
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_error_gadd811b06a5cd740039902f77efd4e661}
+
+
+Creates a simple error. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em severity} & Severity of the error. \\
+\hline
+{\em message} & Error message. \\
+\hline
+{\em origin} & Error origin (typically module name). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A value of some type implementing \hyperlink{structfa__error__interface__t}{Error}, \hyperlink{structfa__copy__t}{Copy} and \hyperlink{structfa__destroy__t}{Destroy} 
+\end{DoxyReturn}

@@ -1,0 +1,101 @@
+\label{md__data_structures_DataStructures}%
+\hypertarget{md__data_structures_DataStructures}{}%
+
+
+{\itshape faudio} include a set of general purpose \href{http://en.wikipedia.org/wiki/Persistent_data_structure}{\tt persistent~data~structures}, which are primarily used for message passing between the audio thread and other threads. The fact that the data structures are persistent eliminate many of the problems commonly associated with multi-\/threaded programming.
+
+The data structures in {\itshape faudio} are somewhat different from the structures found in most languages, in that they have single-\/ownership semantics. This eliminates the need for a garbage collector while still allowing a high-\/level programming style. To understand single-\/ownership semantics, you should read the section about \hyperlink{md__data_structures_CreateCopyDestroy}{creation~and~destruction} below. All data structures are polymorphic over reference types, see the section on \hyperlink{md__data_structures_id19466}{type~safety} for more details.
+
+Note that there is no interface capturing the notion of a data structure\-: they are simply reference types obeying the conventions described below. However, all data structures support generic \hyperlink{structfa__equal__t}{equality} or \hyperlink{structfa__order__t}{ordering}, \hyperlink{structfa__copy__t}{copying} and \hyperlink{structfa__destroy__t}{destruction}.\hypertarget{md__data_structures_Overview}{}\section{Overview}\label{md__data_structures_Overview}
+The core data structures are\-:
+
+\begin{TabularC}{2}
+\hline
+\rowcolor{lightgray}{\bf Type }&{\bf Semantics}\\\cline{1-2}
+\hyperlink{group___fa_pair}{Pair} &An ordered pair \\\cline{1-2}
+\hyperlink{group___fa_list}{List} &An ordered sequence \\\cline{1-2}
+Set &An ordered set \\\cline{1-2}
+\hyperlink{group___fa_map}{Map} &A set of ordered pairs \\\cline{1-2}
+\hyperlink{group___fa_string}{String} &A sequence of Unicode characters \\\cline{1-2}
+\end{TabularC}
+
+
+There is also a set of {\itshape mutable} data structures not included in this table. These are used internally in {\itshape faudio} and need rarely be accessed by the user. For completeness, they are\-:
+
+\begin{TabularC}{2}
+\hline
+\rowcolor{lightgray}{\bf Type }&{\bf Semantics}\\\cline{1-2}
+\hyperlink{group___fa_atomic}{Atomic} &An atomic reference \\\cline{1-2}
+\hyperlink{group___fa_atomic_queue}{Atomic queue} &A first-\/in, first-\/out atomic queue \\\cline{1-2}
+\hyperlink{group___fa_atomic_stack}{Atomic stack} &A last-\/in, first-\/out atomic queue \\\cline{1-2}
+\hyperlink{group___fa_buffer}{Buffer} &A byte-\/level mutable buffer \\\cline{1-2}
+\end{TabularC}
+\hypertarget{md__data_structures_Conventions}{}\section{Using data structures}\label{md__data_structures_Conventions}
+\hypertarget{md__data_structures_CreateCopyDestroy}{}\subsection{Creation and destruction}\label{md__data_structures_CreateCopyDestroy}
+T\-O\-D\-O\hypertarget{md__data_structures_Literals}{}\subsection{Creating from strings}\label{md__data_structures_Literals}
+\subsubsection*{Show}
+
+When \hyperlink{group___fa_ga60d1e34d8101c4f20d7e5473c90766a2}{printed}, the data structures are rendered in a language-\/neutral form.
+
+
+\begin{DoxyItemize}
+\item {\ttfamily (1,2)}
+\item {\ttfamily \mbox{[}1,2,3\mbox{]}}
+\item {\ttfamily \{1,2,3\}}
+\item {\ttfamily \{foo\-:1,bar\-:2\}}
+\item {\ttfamily (\{1,2,3\},\{((1,2),\char`\"{}foo\char`\"{}),((1,3)\-:\char`\"{}bar\char`\"{})\})}
+\end{DoxyItemize}
+
+\subsubsection*{Literals}
+
+All data structures have {\itshape literals} defined in the \hyperlink{literals_8h}{utility~headers}. A literal expression always evaluate to a newly created instance of the data structure. Beware not to pass a number to the literals, you must use \hyperlink{md__data_structures_ValueReferences}{value~references}.
+
+
+\begin{DoxyItemize}
+\item {\ttfamily pair(\hyperlink{util_8h_a832509ea197065489f1d60b6d7958cbf}{i32(1)},\hyperlink{util_8h_a832509ea197065489f1d60b6d7958cbf}{i32(2)})}
+\item {\ttfamily list(\hyperlink{util_8h_a832509ea197065489f1d60b6d7958cbf}{i32(1)},\hyperlink{util_8h_a832509ea197065489f1d60b6d7958cbf}{i32(2)},\hyperlink{util_8h_a832509ea197065489f1d60b6d7958cbf}{i32(3)})}
+\item {\ttfamily set(\hyperlink{util_8h_a832509ea197065489f1d60b6d7958cbf}{i32(1)},\hyperlink{util_8h_a832509ea197065489f1d60b6d7958cbf}{i32(2)},\hyperlink{util_8h_a832509ea197065489f1d60b6d7958cbf}{i32(3)})}
+\item {\ttfamily map(string(\char`\"{}foo\char`\"{}),\hyperlink{util_8h_a832509ea197065489f1d60b6d7958cbf}{i32(1)},string(\char`\"{}bar\char`\"{}),\hyperlink{util_8h_a832509ea197065489f1d60b6d7958cbf}{i32(2)})}
+\item {\ttfamily graph(\hyperlink{util_8h_a832509ea197065489f1d60b6d7958cbf}{i32(1)},\hyperlink{util_8h_a832509ea197065489f1d60b6d7958cbf}{i32(2)},edge(\hyperlink{util_8h_a832509ea197065489f1d60b6d7958cbf}{i32(1)},\hyperlink{util_8h_a832509ea197065489f1d60b6d7958cbf}{i32(2)},\hyperlink{util_8h_a832509ea197065489f1d60b6d7958cbf}{i32(3)}))}
+\end{DoxyItemize}
+
+\subsubsection*{J\-S\-O\-N}
+
+T\-O\-D\-O\hypertarget{md__data_structures_ForEach}{}\subsection{Accessing all elements}\label{md__data_structures_ForEach}
+T\-O\-D\-O\hypertarget{md__data_structures_MapFoldFilter}{}\subsection{Mapping, folding and filtering}\label{md__data_structures_MapFoldFilter}
+T\-O\-D\-O\hypertarget{md__data_structures_ThreadSafety}{}\subsection{Thread safety}\label{md__data_structures_ThreadSafety}
+All operations on data structures are thread-\/safe except creation, copying and destruction, which are subject to the following restrictions\-:
+
+
+\begin{DoxyItemize}
+\item If a data structure {\itshape a} is created in thread {\itshape t} and used in thread {\itshape u}, an ordering must be established between the creation function returning in {\itshape t} and subsequent use of {\itshape a} in {\itshape u}.
+\end{DoxyItemize}
+
+
+\begin{DoxyItemize}
+\item If a data structure {\itshape a} is used in thread {\itshape t} and destroyed in thread {\itshape u}, an ordering must be established between the last use of {\itshape a} in {\itshape t} and the destructive function being applied in {\itshape u}.
+\end{DoxyItemize}
+
+To establish an ordering, you should either synchronize the threads {\itshape t} and {\itshape u}, or transfer the data structure in an atomic variable or queue. Note that copying is considered both {\itshape usage} of the copied value and a {\itshape creation} of the copy. Also some functions (such as \hyperlink{group___fa_list_ga29aba2e79fd9c128c05d020be5a3b254}{fa\-\_\-list\-\_\-dcons}) are both destructive on its input, and constructive on its output.\hypertarget{md__data_structures_id19466}{}\subsection{Type safety}\label{md__data_structures_id19466}
+All data structures can store all reference types, including \hyperlink{md__data_structures_ValueReferences}{value~references}. The user must rely on guarantees outside the scope of the compiler to assure that the extracted elements are of the right type. There are several ways to do this\-:
+
+
+\begin{DoxyItemize}
+\item Assure that the structure contains a specific type.
+\begin{DoxyItemize}
+\item For example, many functions in {\itshape faudio} A\-P\-I return pairs and lists, their documentation clearly stating what type of elements the list will contain.
+\end{DoxyItemize}
+\item Assure that the structure contains a generic type.
+\begin{DoxyItemize}
+\item For example, a function may require a set of values implementing \hyperlink{structfa__string__show__t}{Show}.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+In some cases, it does not matter what type a data structure contains, as the elements are not going to be inspected. For example, \hyperlink{group___fa_list_ga7b187ef70819a17992b0d787683de241}{fa\-\_\-list\-\_\-reverse} can receive a list of any type, as it operates purely on the structure of the list and does not need to use its values.\hypertarget{md__data_structures_id182783728273}{}\section{Value references}\label{md__data_structures_id182783728273}
+\label{md__data_structures_ValueReferences}%
+\hypertarget{md__data_structures_ValueReferences}{}%
+ Value types can be converted to reference types using a set of conversion functions. These functions take a non reference type and return a so called {\itshape value reference}. This reference can subsequently be destroyed and its value extracted.
+
+A value reference is a proper reference that can be safely stored in a data structure. Like other data structures, value references may be created and destroyed from any thread and have single ownership semantics. Value references are in fact tiny data structures containing a single element. They support all normal data structure operations including \hyperlink{structfa__equal__t}{equality} or \hyperlink{structfa__order__t}{ordering}, \hyperlink{structfa__copy__t}{copying} and \hyperlink{structfa__destroy__t}{destruction}. In addition, they also support \hyperlink{structfa__number__t}{arithmetic}.
+
+It is not specified exactly how value references are implemented; however the reference representation of a value typically have a different bit pattern from the represented value. It is not safe to cast a value of a primitive type, such as an integer, to a pointer and treat the resulting address as a value reference. Conversely, it is not safe to treat a value reference as a pointer by dereferencing it, or doing pointer arithmetic. It is guaranteed that the value references will never overlap with real references. 

@@ -1,0 +1,178 @@
+\hypertarget{group___fa_atomic_ring_buffer}{\section{Ring\-Buffer}
+\label{group___fa_atomic_ring_buffer}\index{Ring\-Buffer@{Ring\-Buffer}}
+}
+
+
+A byte-\/level, bounded lock-\/free queue.  
+
+
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \\*
+\-\_\-fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t $\ast$ \hyperlink{group___fa_atomic_ring_buffer_ga3482421740e66f489d94407a0d48a2d0}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group___fa_atomic_ring_buffer_ga3482421740e66f489d94407a0d48a2d0}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t} \hyperlink{group___fa_atomic_ring_buffer_ga6abb04c5ec0718605e4e24927047d4c7}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-create} (size\-\_\-t size\-\_\-)
+\item 
+void \hyperlink{group___fa_atomic_ring_buffer_gaf49af6bcd11c9ebb4c6b8554aea829b8}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-destroy} (\hyperlink{group___fa_atomic_ring_buffer_ga3482421740e66f489d94407a0d48a2d0}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t} ring\-Buffer)
+\item 
+size\-\_\-t \hyperlink{group___fa_atomic_ring_buffer_gae2ac670afafeff9b8150ae9649c83474}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-size} (\hyperlink{group___fa_atomic_ring_buffer_ga3482421740e66f489d94407a0d48a2d0}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t} ring\-Buffer)
+\item 
+void \hyperlink{group___fa_atomic_ring_buffer_ga56faff64e32a993b750380571bfb8c76}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-close} (\hyperlink{group___fa_atomic_ring_buffer_ga3482421740e66f489d94407a0d48a2d0}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t} ring\-Buffer)
+\item 
+bool \hyperlink{group___fa_atomic_ring_buffer_ga4fc04706251e284c9701b6ad95abf377}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-is\-\_\-closed} (\hyperlink{group___fa_atomic_ring_buffer_ga3482421740e66f489d94407a0d48a2d0}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t} ring\-Buffer)
+\item 
+bool \hyperlink{group___fa_atomic_ring_buffer_gace79351690263650a000919845b2ca62}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-can\-\_\-read} (\hyperlink{group___fa_atomic_ring_buffer_ga3482421740e66f489d94407a0d48a2d0}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t} ring\-Buffer, size\-\_\-t size\-\_\-)
+\item 
+bool \hyperlink{group___fa_atomic_ring_buffer_ga974e7b9a3dfb32ce44c58fbf6a25dc4f}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-can\-\_\-write} (\hyperlink{group___fa_atomic_ring_buffer_ga3482421740e66f489d94407a0d48a2d0}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t} ring\-Buffer, size\-\_\-t size\-\_\-)
+\item 
+bool \hyperlink{group___fa_atomic_ring_buffer_ga0441ea58fc6c6ceeafc94a1e2bea972c}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-read} (\hyperlink{group___fa_atomic_ring_buffer_ga3482421740e66f489d94407a0d48a2d0}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t} ring\-Buffer, uint8\-\_\-t $\ast$)
+\item 
+bool \hyperlink{group___fa_atomic_ring_buffer_ga82065e6a2a97af64680ff8baff425ee1}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-read\-\_\-float} (\hyperlink{group___fa_atomic_ring_buffer_ga3482421740e66f489d94407a0d48a2d0}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t} ring\-Buffer, float $\ast$)
+\item 
+bool \hyperlink{group___fa_atomic_ring_buffer_ga1599406f0bb153334cd10ae90ab919f1}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-read\-\_\-double} (\hyperlink{group___fa_atomic_ring_buffer_ga3482421740e66f489d94407a0d48a2d0}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t} ring\-Buffer, double $\ast$)
+\item 
+bool \hyperlink{group___fa_atomic_ring_buffer_ga18a7f61a001df0e2606280a9aead1ddf}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-write} (\hyperlink{group___fa_atomic_ring_buffer_ga3482421740e66f489d94407a0d48a2d0}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t} ring\-Buffer, uint8\-\_\-t u\-Int8\-\_\-)
+\item 
+bool \hyperlink{group___fa_atomic_ring_buffer_gade9d350cfae7b805353a3b58b9d17a7e}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-write\-\_\-float} (\hyperlink{group___fa_atomic_ring_buffer_ga3482421740e66f489d94407a0d48a2d0}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t} ring\-Buffer, float float\-\_\-)
+\item 
+bool \hyperlink{group___fa_atomic_ring_buffer_gafd68caebbb7b3f6e62f604a6e6915e90}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-write\-\_\-double} (\hyperlink{group___fa_atomic_ring_buffer_ga3482421740e66f489d94407a0d48a2d0}{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t} ring\-Buffer, double double\-\_\-)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A byte-\/level, bounded lock-\/free queue. This structure is called a buffer for historical reasons, it is more accurately a queue and does not support random accces.
+
+\begin{DoxyWarning}{Warning}
+Not fully implemented.
+\end{DoxyWarning}
+\begin{DoxyParagraph}{Literals}
+
+\begin{DoxyItemize}
+\item {\ttfamily \hyperlink{util_8h_a9d03b39b3482ef1468833e26c4dc318d}{atomic\-\_\-ring\-\_\-buffer(size)}}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Implements }
+
+\begin{DoxyItemize}
+\item \hyperlink{structfa__destroy__t}{fa\-\_\-destroy\-\_\-t}
+\item \hyperlink{structfa__string__show__t}{fa\-\_\-string\-\_\-show\-\_\-t}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxySeeAlso}{See Also}
+
+\begin{DoxyItemize}
+\item \hyperlink{md__data_structures_DataStructures}{Data structures} 
+\end{DoxyItemize}
+\end{DoxySeeAlso}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{group___fa_atomic_ring_buffer_ga3482421740e66f489d94407a0d48a2d0}{\index{Ring\-Buffer@{Ring\-Buffer}!fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t}}
+\index{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t}!RingBuffer@{Ring\-Buffer}}
+\subsubsection[{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct \-\_\-fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t$\ast$ {\bf fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t}}}\label{group___fa_atomic_ring_buffer_ga3482421740e66f489d94407a0d48a2d0}
+
+
+\subsection{Function Documentation}
+\hypertarget{group___fa_atomic_ring_buffer_ga6abb04c5ec0718605e4e24927047d4c7}{\index{Ring\-Buffer@{Ring\-Buffer}!fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-create@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-create}}
+\index{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-create@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-create}!RingBuffer@{Ring\-Buffer}}
+\subsubsection[{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t} fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-create (
+\begin{DoxyParamCaption}
+\item[{size\-\_\-t}]{size\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_atomic_ring_buffer_ga6abb04c5ec0718605e4e24927047d4c7}
+\hypertarget{group___fa_atomic_ring_buffer_gaf49af6bcd11c9ebb4c6b8554aea829b8}{\index{Ring\-Buffer@{Ring\-Buffer}!fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-destroy@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-destroy}}
+\index{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-destroy@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-destroy}!RingBuffer@{Ring\-Buffer}}
+\subsubsection[{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-destroy}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-destroy (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t}}]{ring\-Buffer}
+\end{DoxyParamCaption}
+)}}\label{group___fa_atomic_ring_buffer_gaf49af6bcd11c9ebb4c6b8554aea829b8}
+\hypertarget{group___fa_atomic_ring_buffer_gae2ac670afafeff9b8150ae9649c83474}{\index{Ring\-Buffer@{Ring\-Buffer}!fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-size@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-size}}
+\index{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-size@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-size}!RingBuffer@{Ring\-Buffer}}
+\subsubsection[{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-size}]{\setlength{\rightskip}{0pt plus 5cm}size\-\_\-t fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-size (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t}}]{ring\-Buffer}
+\end{DoxyParamCaption}
+)}}\label{group___fa_atomic_ring_buffer_gae2ac670afafeff9b8150ae9649c83474}
+\hypertarget{group___fa_atomic_ring_buffer_ga56faff64e32a993b750380571bfb8c76}{\index{Ring\-Buffer@{Ring\-Buffer}!fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-close@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-close}}
+\index{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-close@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-close}!RingBuffer@{Ring\-Buffer}}
+\subsubsection[{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-close}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-close (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t}}]{ring\-Buffer}
+\end{DoxyParamCaption}
+)}}\label{group___fa_atomic_ring_buffer_ga56faff64e32a993b750380571bfb8c76}
+\hypertarget{group___fa_atomic_ring_buffer_ga4fc04706251e284c9701b6ad95abf377}{\index{Ring\-Buffer@{Ring\-Buffer}!fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-is\-\_\-closed@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-is\-\_\-closed}}
+\index{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-is\-\_\-closed@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-is\-\_\-closed}!RingBuffer@{Ring\-Buffer}}
+\subsubsection[{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-is\-\_\-closed}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-is\-\_\-closed (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t}}]{ring\-Buffer}
+\end{DoxyParamCaption}
+)}}\label{group___fa_atomic_ring_buffer_ga4fc04706251e284c9701b6ad95abf377}
+\hypertarget{group___fa_atomic_ring_buffer_gace79351690263650a000919845b2ca62}{\index{Ring\-Buffer@{Ring\-Buffer}!fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-can\-\_\-read@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-can\-\_\-read}}
+\index{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-can\-\_\-read@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-can\-\_\-read}!RingBuffer@{Ring\-Buffer}}
+\subsubsection[{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-can\-\_\-read}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-can\-\_\-read (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t}}]{ring\-Buffer, }
+\item[{size\-\_\-t}]{size\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_atomic_ring_buffer_gace79351690263650a000919845b2ca62}
+\hypertarget{group___fa_atomic_ring_buffer_ga974e7b9a3dfb32ce44c58fbf6a25dc4f}{\index{Ring\-Buffer@{Ring\-Buffer}!fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-can\-\_\-write@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-can\-\_\-write}}
+\index{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-can\-\_\-write@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-can\-\_\-write}!RingBuffer@{Ring\-Buffer}}
+\subsubsection[{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-can\-\_\-write}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-can\-\_\-write (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t}}]{ring\-Buffer, }
+\item[{size\-\_\-t}]{size\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_atomic_ring_buffer_ga974e7b9a3dfb32ce44c58fbf6a25dc4f}
+\hypertarget{group___fa_atomic_ring_buffer_ga0441ea58fc6c6ceeafc94a1e2bea972c}{\index{Ring\-Buffer@{Ring\-Buffer}!fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-read@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-read}}
+\index{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-read@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-read}!RingBuffer@{Ring\-Buffer}}
+\subsubsection[{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-read}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-read (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t}}]{ring\-Buffer, }
+\item[{uint8\-\_\-t $\ast$}]{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_atomic_ring_buffer_ga0441ea58fc6c6ceeafc94a1e2bea972c}
+\hypertarget{group___fa_atomic_ring_buffer_ga82065e6a2a97af64680ff8baff425ee1}{\index{Ring\-Buffer@{Ring\-Buffer}!fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-read\-\_\-float@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-read\-\_\-float}}
+\index{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-read\-\_\-float@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-read\-\_\-float}!RingBuffer@{Ring\-Buffer}}
+\subsubsection[{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-read\-\_\-float}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-read\-\_\-float (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t}}]{ring\-Buffer, }
+\item[{float $\ast$}]{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_atomic_ring_buffer_ga82065e6a2a97af64680ff8baff425ee1}
+\hypertarget{group___fa_atomic_ring_buffer_ga1599406f0bb153334cd10ae90ab919f1}{\index{Ring\-Buffer@{Ring\-Buffer}!fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-read\-\_\-double@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-read\-\_\-double}}
+\index{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-read\-\_\-double@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-read\-\_\-double}!RingBuffer@{Ring\-Buffer}}
+\subsubsection[{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-read\-\_\-double}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-read\-\_\-double (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t}}]{ring\-Buffer, }
+\item[{double $\ast$}]{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_atomic_ring_buffer_ga1599406f0bb153334cd10ae90ab919f1}
+\hypertarget{group___fa_atomic_ring_buffer_ga18a7f61a001df0e2606280a9aead1ddf}{\index{Ring\-Buffer@{Ring\-Buffer}!fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-write@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-write}}
+\index{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-write@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-write}!RingBuffer@{Ring\-Buffer}}
+\subsubsection[{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-write}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-write (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t}}]{ring\-Buffer, }
+\item[{uint8\-\_\-t}]{u\-Int8\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_atomic_ring_buffer_ga18a7f61a001df0e2606280a9aead1ddf}
+\hypertarget{group___fa_atomic_ring_buffer_gade9d350cfae7b805353a3b58b9d17a7e}{\index{Ring\-Buffer@{Ring\-Buffer}!fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-write\-\_\-float@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-write\-\_\-float}}
+\index{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-write\-\_\-float@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-write\-\_\-float}!RingBuffer@{Ring\-Buffer}}
+\subsubsection[{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-write\-\_\-float}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-write\-\_\-float (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t}}]{ring\-Buffer, }
+\item[{float}]{float\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_atomic_ring_buffer_gade9d350cfae7b805353a3b58b9d17a7e}
+\hypertarget{group___fa_atomic_ring_buffer_gafd68caebbb7b3f6e62f604a6e6915e90}{\index{Ring\-Buffer@{Ring\-Buffer}!fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-write\-\_\-double@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-write\-\_\-double}}
+\index{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-write\-\_\-double@{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-write\-\_\-double}!RingBuffer@{Ring\-Buffer}}
+\subsubsection[{fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-write\-\_\-double}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-write\-\_\-double (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-atomic\-\_\-ring\-\_\-buffer\-\_\-t}}]{ring\-Buffer, }
+\item[{double}]{double\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_atomic_ring_buffer_gafd68caebbb7b3f6e62f604a6e6915e90}

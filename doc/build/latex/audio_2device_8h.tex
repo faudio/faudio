@@ -1,0 +1,55 @@
+\hypertarget{audio_2device_8h}{\section{include/fa/audio/device.h File Reference}
+\label{audio_2device_8h}\index{include/fa/audio/device.\-h@{include/fa/audio/device.\-h}}
+}
+{\ttfamily \#include $<$fa/action.\-h$>$}\\*
+{\ttfamily \#include $<$fa/time.\-h$>$}\\*
+{\ttfamily \#include $<$fa/clock.\-h$>$}\\*
+{\ttfamily \#include $<$fa/audio/session.\-h$>$}\\*
+Include dependency graph for device.\-h\-:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{audio_2device_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\-:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{audio_2device_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \-\_\-fa\-\_\-audio\-\_\-device\-\_\-t $\ast$ \hyperlink{group___fa_audio_device_ga03de89ee66c6465f8cedd3a0286598f4}{fa\-\_\-audio\-\_\-device\-\_\-t}
+\begin{DoxyCompactList}\small\item\em An audio device. \end{DoxyCompactList}\item 
+typedef \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t}($\ast$ \hyperlink{group___fa_audio_device_gae190189bb20427f20453f2e4d48ecc7b}{fa\-\_\-audio\-\_\-proc\-\_\-t} )(\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t}, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t})
+\begin{DoxyCompactList}\small\item\em An audio processor, or a function from a list of signals to a list of signals. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{group___fa_audio_device_gab51159ac7fd84af31a985e96f4f9c20f}{fa\-\_\-audio\-\_\-default} (\hyperlink{group___fa_audio_session_ga62ee22268c23f1b18447141feccc01e0}{fa\-\_\-audio\-\_\-session\-\_\-t} session)
+\begin{DoxyCompactList}\small\item\em Get the standard devices of the given session. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_audio_device_ga03de89ee66c6465f8cedd3a0286598f4}{fa\-\_\-audio\-\_\-device\-\_\-t} \hyperlink{group___fa_audio_device_ga690374b4ffcee314cb4cdad6309ef817}{fa\-\_\-audio\-\_\-default\-\_\-input} (\hyperlink{group___fa_audio_session_ga62ee22268c23f1b18447141feccc01e0}{fa\-\_\-audio\-\_\-session\-\_\-t} session)
+\begin{DoxyCompactList}\small\item\em Get the standard input device of the given session. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_audio_device_ga03de89ee66c6465f8cedd3a0286598f4}{fa\-\_\-audio\-\_\-device\-\_\-t} \hyperlink{group___fa_audio_device_ga364583565c9405e541ae52e41efa38e7}{fa\-\_\-audio\-\_\-default\-\_\-output} (\hyperlink{group___fa_audio_session_ga62ee22268c23f1b18447141feccc01e0}{fa\-\_\-audio\-\_\-session\-\_\-t} session)
+\begin{DoxyCompactList}\small\item\em Get the standard output device of the given session. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_audio_device_ga53538690e8c1eeebb470b99306fe289d}{fa\-\_\-audio\-\_\-add\-\_\-status\-\_\-callback} (\hyperlink{group___fa_audio_session_gaac3fa018078a475e6c5ed48efcbdb887}{fa\-\_\-audio\-\_\-status\-\_\-callback\-\_\-t} status\-Callback, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_audio_session_ga62ee22268c23f1b18447141feccc01e0}{fa\-\_\-audio\-\_\-session\-\_\-t} session)
+\begin{DoxyCompactList}\small\item\em Register a callback to be invoked when a hardware change is detected. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_audio_session_ga62ee22268c23f1b18447141feccc01e0}{fa\-\_\-audio\-\_\-session\-\_\-t} \hyperlink{group___fa_audio_device_ga75ce8ffa723a549c4ea41b7ead4fcb9b}{fa\-\_\-audio\-\_\-session} (\hyperlink{group___fa_audio_device_ga03de89ee66c6465f8cedd3a0286598f4}{fa\-\_\-audio\-\_\-device\-\_\-t} device)
+\begin{DoxyCompactList}\small\item\em Return the session associated with the given device. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_audio_device_ga8e04c8feea7e664d2c7de9c9e57a5f4e}{fa\-\_\-audio\-\_\-name} (\hyperlink{group___fa_audio_device_ga03de89ee66c6465f8cedd3a0286598f4}{fa\-\_\-audio\-\_\-device\-\_\-t} device)
+\begin{DoxyCompactList}\small\item\em Return the name of the given device. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_audio_device_ga3263e679dfa30fcd21042528782507d8}{fa\-\_\-audio\-\_\-host\-\_\-name} (\hyperlink{group___fa_audio_device_ga03de89ee66c6465f8cedd3a0286598f4}{fa\-\_\-audio\-\_\-device\-\_\-t} device)
+\begin{DoxyCompactList}\small\item\em Return the host name of the given device. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_audio_device_gacd32b5e58c2b79df883a64d4012302ae}{fa\-\_\-audio\-\_\-has\-\_\-input} (\hyperlink{group___fa_audio_device_ga03de89ee66c6465f8cedd3a0286598f4}{fa\-\_\-audio\-\_\-device\-\_\-t} device)
+\begin{DoxyCompactList}\small\item\em Return whether the given device has input or not. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_audio_device_ga2ca67bc0e45609675bb064849d20dba6}{fa\-\_\-audio\-\_\-has\-\_\-output} (\hyperlink{group___fa_audio_device_ga03de89ee66c6465f8cedd3a0286598f4}{fa\-\_\-audio\-\_\-device\-\_\-t} device)
+\begin{DoxyCompactList}\small\item\em Return whether the given device has output or not. \end{DoxyCompactList}\item 
+int \hyperlink{group___fa_audio_device_ga459971e7fd609eb0bb9f7ac0fffc156b}{fa\-\_\-audio\-\_\-input\-\_\-channels} (\hyperlink{group___fa_audio_device_ga03de89ee66c6465f8cedd3a0286598f4}{fa\-\_\-audio\-\_\-device\-\_\-t} device)
+\begin{DoxyCompactList}\small\item\em Return the number of inputs of the given device. \end{DoxyCompactList}\item 
+int \hyperlink{group___fa_audio_device_gae43be40282fd7dc66137eebb768bc30e}{fa\-\_\-audio\-\_\-output\-\_\-channels} (\hyperlink{group___fa_audio_device_ga03de89ee66c6465f8cedd3a0286598f4}{fa\-\_\-audio\-\_\-device\-\_\-t} device)
+\begin{DoxyCompactList}\small\item\em Return the number of outputs of the given device. \end{DoxyCompactList}\item 
+double \hyperlink{group___fa_audio_device_ga3b38715cc1c124dabb1c332f6a6f8e6d}{fa\-\_\-audio\-\_\-default\-\_\-sample\-\_\-rate} (\hyperlink{group___fa_audio_device_ga03de89ee66c6465f8cedd3a0286598f4}{fa\-\_\-audio\-\_\-device\-\_\-t} device)
+\begin{DoxyCompactList}\small\item\em Return the default sample rate of the given device. \end{DoxyCompactList}\end{DoxyCompactItemize}

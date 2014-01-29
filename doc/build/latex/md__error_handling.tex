@@ -1,0 +1,33 @@
+\label{md__error_handling_Errors}%
+\hypertarget{md__error_handling_Errors}{}%
+
+
+Generally, errors can be grouped into {\itshape recoverable} and {\itshape non-\/recoverable} errors.
+
+Non-\/recoverable errors are those that occur outside the control of the {\itshape faudio}. They will usually terminate the process. Recoverable errors are those that occur outside the control of the user, but in control of {\itshape faudio}. In most systems, such errors can be {\itshape handled} by the user by some mechanism in the A\-P\-I such as exceptions.\hypertarget{md__error_handling_id441}{}\section{Handling errors}\label{md__error_handling_id441}
+In {\itshape faudio}, recoverable errors always occur when a function is called, and must be detected by the user by inspecting the return value of the function. They are grouped into {\itshape optional} values and {\itshape error} values.\hypertarget{md__error_handling_id1152}{}\subsection{Optional values}\label{md__error_handling_id1152}
+{\itshape Optional values} simply means that a function returns null instead of an ordinary value. They are used for simple cases where no additional information about the condition is needed. Examples of functions returning optional values are ref fa\-\_\-list\-\_\-index and \hyperlink{group___fa_priority_queue_ga07dad7064b633feff9b9f8543173dcc0}{fa\-\_\-priority\-\_\-queue\-\_\-peek}.\hypertarget{md__error_handling_id24834}{}\subsection{Error values}\label{md__error_handling_id24834}
+{\itshape Error values} are used in cases where the system has access to information about the error. Error values depend on the interface mechanism\-: any value can be passed to \hyperlink{group___fa_gaec61e23c174faf5e5244ae876d264eb5}{fa\-\_\-check}, which returns true if and only if the value is an error.
+
+Functions returning errors must have their return value passed to \hyperlink{group___fa_gaec61e23c174faf5e5244ae876d264eb5}{fa\-\_\-check} before the value is used by another function. If an error has occurred, check will return true and the other methods of the \hyperlink{group___fa_error_ga4a4feb4d3686657ac8dbd2be421cbb15}{fa\-\_\-error\-\_\-t} interface can be used to obtain more information about the condition, otherwise the value can be used normally. Note that values returned from construction and copy functions must be destroyed whether an error has occured or not.\hypertarget{md__error_handling_id24103}{}\section{Logging}\label{md__error_handling_id24103}
+{\itshape faudio} provides a simple logging system.\hypertarget{md__error_handling_id30965}{}\subsection{Setting up the log handler}\label{md__error_handling_id30965}
+By default, {\itshape faudio} discards all incoming log messages. To set a different behaviour, use one of the setup functions in Fa.Fa. Typically you want to set the log handler to write to a file, or pass them to a custom handler function.\hypertarget{md__error_handling_id10103}{}\subsection{Adding log entries}\label{md__error_handling_id10103}
+Non-\/recoverable errors are always logged. The user can add recoverable errors to the log using fa\-\_\-fa\-\_\-log. Typically, this function is used with \hyperlink{group___fa_gaec61e23c174faf5e5244ae876d264eb5}{fa\-\_\-check}, as in\-:
+
+
+\begin{DoxyCode}
+\textcolor{keywordflow}{if} (\hyperlink{group___fa_gaec61e23c174faf5e5244ae876d264eb5}{fa\_check}(value)) \{
+    \hyperlink{group___fa_error_ga466e0539bedb29f68527448ed9ba11bf}{fa\_error\_log}(NULL, value);
+    exit(-1);
+\}
+\end{DoxyCode}
+
+
+There are also some convenience functions to log an arbitrary entry, for example\-:
+
+
+\begin{DoxyCode}
+fa\_fa\_log\_info(\textcolor{stringliteral}{"Are you aware of this?"});
+fa\_fa\_log\_error(\textcolor{stringliteral}{"That is an error!"});
+\end{DoxyCode}
+ 

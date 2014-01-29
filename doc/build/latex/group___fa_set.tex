@@ -1,0 +1,287 @@
+\hypertarget{group___fa_set}{\section{Set}
+\label{group___fa_set}\index{Set@{Set}}
+}
+
+
+Immutable ordered set data structure.  
+
+
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \-\_\-fa\-\_\-set\-\_\-t $\ast$ \hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t}
+\begin{DoxyCompactList}\small\item\em The abstract type of sets. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{group___fa_set_ga786a1ae6374f913191be7abea91227b3}{fa\-\_\-set\-\_\-empty} ()
+\item 
+\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{group___fa_set_gabb02cf10e50b0447a2030f9d22fd26a6}{fa\-\_\-set\-\_\-single} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{group___fa_set_ga3e2f23fc688d4293143c7806d5e4638d}{fa\-\_\-set\-\_\-add} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{literals_8h_aca648353520d62f775c6a6ee83741fe4}{set})
+\item 
+\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{group___fa_set_gac92940952fe3f242e002053339afa869}{fa\-\_\-set\-\_\-set} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{literals_8h_aca648353520d62f775c6a6ee83741fe4}{set})
+\item 
+\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{group___fa_set_ga579264726b94592d54200e8f463e3ff8}{fa\-\_\-set\-\_\-remove} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{literals_8h_aca648353520d62f775c6a6ee83741fe4}{set})
+\item 
+\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{group___fa_set_gadd42f1b8935011a577ae0bffdc11d86a}{fa\-\_\-set\-\_\-dadd} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{literals_8h_aca648353520d62f775c6a6ee83741fe4}{set})
+\item 
+\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{group___fa_set_ga8707f16fa3479fd18870186fccf75a69}{fa\-\_\-set\-\_\-dset} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{literals_8h_aca648353520d62f775c6a6ee83741fe4}{set})
+\item 
+\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{group___fa_set_gaef9cf05e4e0884b7310b8d82707caa20}{fa\-\_\-set\-\_\-dremove} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{literals_8h_aca648353520d62f775c6a6ee83741fe4}{set})
+\item 
+\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{group___fa_set_gadca4a663a92020bbc13c04d14e72e573}{fa\-\_\-set\-\_\-copy} (\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{literals_8h_aca648353520d62f775c6a6ee83741fe4}{set})
+\item 
+void \hyperlink{group___fa_set_ga0e5d2640a4f502b3701b53d7ae4834ad}{fa\-\_\-set\-\_\-destroy} (\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{literals_8h_aca648353520d62f775c6a6ee83741fe4}{set})
+\item 
+int \hyperlink{group___fa_set_ga804d66fcd232f28434113f82effd3e64}{fa\-\_\-set\-\_\-size} (\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{literals_8h_aca648353520d62f775c6a6ee83741fe4}{set})
+\item 
+bool \hyperlink{group___fa_set_ga41092bca6395500140ba24c0febfd725}{fa\-\_\-set\-\_\-is\-\_\-empty} (\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{literals_8h_aca648353520d62f775c6a6ee83741fe4}{set})
+\item 
+bool \hyperlink{group___fa_set_ga698a45fd90c57b795767c3338457a248}{fa\-\_\-set\-\_\-is\-\_\-single} (\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{literals_8h_aca648353520d62f775c6a6ee83741fe4}{set})
+\item 
+bool \hyperlink{group___fa_set_ga995be2077e350bfe7ae8373dee147497}{fa\-\_\-set\-\_\-has} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{literals_8h_aca648353520d62f775c6a6ee83741fe4}{set})
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_set_ga95a94f84bea98cbe0d6aa7754e8df91f}{fa\-\_\-set\-\_\-get} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{literals_8h_aca648353520d62f775c6a6ee83741fe4}{set})
+\item 
+bool \hyperlink{group___fa_set_ga106c6c74c8165abfd93e769dea08edc7}{fa\-\_\-set\-\_\-is\-\_\-subset\-\_\-of} (\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{literals_8h_aca648353520d62f775c6a6ee83741fe4}{set}, \hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} set\-\_\-)
+\item 
+bool \hyperlink{group___fa_set_ga4266d68660befca911828ba79b9a885f}{fa\-\_\-set\-\_\-is\-\_\-proper\-\_\-subset\-\_\-of} (\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{literals_8h_aca648353520d62f775c6a6ee83741fe4}{set}, \hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} set\-\_\-)
+\item 
+\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{group___fa_set_ga724f53affe165e8e2b9ddb1be551fa81}{fa\-\_\-set\-\_\-sum} (\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{literals_8h_aca648353520d62f775c6a6ee83741fe4}{set}, \hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} set\-\_\-)
+\item 
+\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{group___fa_set_gae7069c9a4d79f675633f6d91d7c03e4c}{fa\-\_\-set\-\_\-intersection} (\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{literals_8h_aca648353520d62f775c6a6ee83741fe4}{set}, \hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} set\-\_\-)
+\item 
+\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{group___fa_set_ga042196b172d9d81e1503b020194da04b}{fa\-\_\-set\-\_\-difference} (\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{literals_8h_aca648353520d62f775c6a6ee83741fe4}{set}, \hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} set\-\_\-)
+\item 
+\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{group___fa_set_ga39741a2947a7cda04d25be742bc78430}{fa\-\_\-set\-\_\-product} (\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{literals_8h_aca648353520d62f775c6a6ee83741fe4}{set}, \hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} set\-\_\-)
+\item 
+\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{group___fa_set_ga6d94d154eb89d3cbcc06fd76b1c9a148}{fa\-\_\-set\-\_\-from\-\_\-list} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_set_gad3f3aa6a2e1b064d285c4084f6cc6647}{fa\-\_\-set\-\_\-to\-\_\-list} (\hyperlink{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{fa\-\_\-set\-\_\-t} \hyperlink{literals_8h_aca648353520d62f775c6a6ee83741fe4}{set})
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Immutable ordered set data structure. \begin{DoxyParagraph}{Literals}
+
+\begin{DoxyItemize}
+\item {\ttfamily \hyperlink{literals_8h_aca648353520d62f775c6a6ee83741fe4}{set(1, 2, 3)}}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Display}
+
+\begin{DoxyItemize}
+\item {\ttfamily \{1,2,3\}}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Requires }
+
+\begin{DoxyItemize}
+\item \hyperlink{structfa__order__t}{fa\-\_\-order\-\_\-t}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Implements }
+
+\begin{DoxyItemize}
+\item \hyperlink{structfa__equal__t}{fa\-\_\-equal\-\_\-t}
+\item \hyperlink{structfa__string__show__t}{fa\-\_\-string\-\_\-show\-\_\-t}
+\item \hyperlink{structfa__copy__t}{fa\-\_\-copy\-\_\-t}
+\item \hyperlink{structfa__destroy__t}{fa\-\_\-destroy\-\_\-t}
+\item \hyperlink{structfa__dynamic__t}{fa\-\_\-dynamic\-\_\-t}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxySeeAlso}{See Also}
+
+\begin{DoxyItemize}
+\item \hyperlink{md__data_structures_DataStructures}{Data structures} 
+\end{DoxyItemize}
+\end{DoxySeeAlso}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}{\index{Set@{Set}!fa\-\_\-set\-\_\-t@{fa\-\_\-set\-\_\-t}}
+\index{fa\-\_\-set\-\_\-t@{fa\-\_\-set\-\_\-t}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct \-\_\-fa\-\_\-set\-\_\-t$\ast$ {\bf fa\-\_\-set\-\_\-t}}}\label{group___fa_set_ga7a64878223baf48e12857d8d5fda700c}
+
+
+The abstract type of sets. 
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group___fa_set_ga786a1ae6374f913191be7abea91227b3}{\index{Set@{Set}!fa\-\_\-set\-\_\-empty@{fa\-\_\-set\-\_\-empty}}
+\index{fa\-\_\-set\-\_\-empty@{fa\-\_\-set\-\_\-empty}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-empty}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-set\-\_\-t} fa\-\_\-set\-\_\-empty (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_ga786a1ae6374f913191be7abea91227b3}
+\hypertarget{group___fa_set_gabb02cf10e50b0447a2030f9d22fd26a6}{\index{Set@{Set}!fa\-\_\-set\-\_\-single@{fa\-\_\-set\-\_\-single}}
+\index{fa\-\_\-set\-\_\-single@{fa\-\_\-set\-\_\-single}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-single}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-set\-\_\-t} fa\-\_\-set\-\_\-single (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_gabb02cf10e50b0447a2030f9d22fd26a6}
+\hypertarget{group___fa_set_ga3e2f23fc688d4293143c7806d5e4638d}{\index{Set@{Set}!fa\-\_\-set\-\_\-add@{fa\-\_\-set\-\_\-add}}
+\index{fa\-\_\-set\-\_\-add@{fa\-\_\-set\-\_\-add}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-add}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-set\-\_\-t} fa\-\_\-set\-\_\-add (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_ga3e2f23fc688d4293143c7806d5e4638d}
+\hypertarget{group___fa_set_gac92940952fe3f242e002053339afa869}{\index{Set@{Set}!fa\-\_\-set\-\_\-set@{fa\-\_\-set\-\_\-set}}
+\index{fa\-\_\-set\-\_\-set@{fa\-\_\-set\-\_\-set}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-set\-\_\-t} fa\-\_\-set\-\_\-set (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_gac92940952fe3f242e002053339afa869}
+\hypertarget{group___fa_set_ga579264726b94592d54200e8f463e3ff8}{\index{Set@{Set}!fa\-\_\-set\-\_\-remove@{fa\-\_\-set\-\_\-remove}}
+\index{fa\-\_\-set\-\_\-remove@{fa\-\_\-set\-\_\-remove}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-remove}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-set\-\_\-t} fa\-\_\-set\-\_\-remove (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_ga579264726b94592d54200e8f463e3ff8}
+\hypertarget{group___fa_set_gadd42f1b8935011a577ae0bffdc11d86a}{\index{Set@{Set}!fa\-\_\-set\-\_\-dadd@{fa\-\_\-set\-\_\-dadd}}
+\index{fa\-\_\-set\-\_\-dadd@{fa\-\_\-set\-\_\-dadd}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-dadd}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-set\-\_\-t} fa\-\_\-set\-\_\-dadd (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_gadd42f1b8935011a577ae0bffdc11d86a}
+\hypertarget{group___fa_set_ga8707f16fa3479fd18870186fccf75a69}{\index{Set@{Set}!fa\-\_\-set\-\_\-dset@{fa\-\_\-set\-\_\-dset}}
+\index{fa\-\_\-set\-\_\-dset@{fa\-\_\-set\-\_\-dset}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-dset}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-set\-\_\-t} fa\-\_\-set\-\_\-dset (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_ga8707f16fa3479fd18870186fccf75a69}
+\hypertarget{group___fa_set_gaef9cf05e4e0884b7310b8d82707caa20}{\index{Set@{Set}!fa\-\_\-set\-\_\-dremove@{fa\-\_\-set\-\_\-dremove}}
+\index{fa\-\_\-set\-\_\-dremove@{fa\-\_\-set\-\_\-dremove}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-dremove}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-set\-\_\-t} fa\-\_\-set\-\_\-dremove (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_gaef9cf05e4e0884b7310b8d82707caa20}
+\hypertarget{group___fa_set_gadca4a663a92020bbc13c04d14e72e573}{\index{Set@{Set}!fa\-\_\-set\-\_\-copy@{fa\-\_\-set\-\_\-copy}}
+\index{fa\-\_\-set\-\_\-copy@{fa\-\_\-set\-\_\-copy}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-copy}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-set\-\_\-t} fa\-\_\-set\-\_\-copy (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_gadca4a663a92020bbc13c04d14e72e573}
+\hypertarget{group___fa_set_ga0e5d2640a4f502b3701b53d7ae4834ad}{\index{Set@{Set}!fa\-\_\-set\-\_\-destroy@{fa\-\_\-set\-\_\-destroy}}
+\index{fa\-\_\-set\-\_\-destroy@{fa\-\_\-set\-\_\-destroy}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-destroy}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-set\-\_\-destroy (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_ga0e5d2640a4f502b3701b53d7ae4834ad}
+\hypertarget{group___fa_set_ga804d66fcd232f28434113f82effd3e64}{\index{Set@{Set}!fa\-\_\-set\-\_\-size@{fa\-\_\-set\-\_\-size}}
+\index{fa\-\_\-set\-\_\-size@{fa\-\_\-set\-\_\-size}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-size}]{\setlength{\rightskip}{0pt plus 5cm}int fa\-\_\-set\-\_\-size (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_ga804d66fcd232f28434113f82effd3e64}
+\hypertarget{group___fa_set_ga41092bca6395500140ba24c0febfd725}{\index{Set@{Set}!fa\-\_\-set\-\_\-is\-\_\-empty@{fa\-\_\-set\-\_\-is\-\_\-empty}}
+\index{fa\-\_\-set\-\_\-is\-\_\-empty@{fa\-\_\-set\-\_\-is\-\_\-empty}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-is\-\_\-empty}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-set\-\_\-is\-\_\-empty (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_ga41092bca6395500140ba24c0febfd725}
+\hypertarget{group___fa_set_ga698a45fd90c57b795767c3338457a248}{\index{Set@{Set}!fa\-\_\-set\-\_\-is\-\_\-single@{fa\-\_\-set\-\_\-is\-\_\-single}}
+\index{fa\-\_\-set\-\_\-is\-\_\-single@{fa\-\_\-set\-\_\-is\-\_\-single}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-is\-\_\-single}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-set\-\_\-is\-\_\-single (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_ga698a45fd90c57b795767c3338457a248}
+\hypertarget{group___fa_set_ga995be2077e350bfe7ae8373dee147497}{\index{Set@{Set}!fa\-\_\-set\-\_\-has@{fa\-\_\-set\-\_\-has}}
+\index{fa\-\_\-set\-\_\-has@{fa\-\_\-set\-\_\-has}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-has}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-set\-\_\-has (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_ga995be2077e350bfe7ae8373dee147497}
+\hypertarget{group___fa_set_ga95a94f84bea98cbe0d6aa7754e8df91f}{\index{Set@{Set}!fa\-\_\-set\-\_\-get@{fa\-\_\-set\-\_\-get}}
+\index{fa\-\_\-set\-\_\-get@{fa\-\_\-set\-\_\-get}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ptr\-\_\-t} fa\-\_\-set\-\_\-get (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_ga95a94f84bea98cbe0d6aa7754e8df91f}
+\hypertarget{group___fa_set_ga106c6c74c8165abfd93e769dea08edc7}{\index{Set@{Set}!fa\-\_\-set\-\_\-is\-\_\-subset\-\_\-of@{fa\-\_\-set\-\_\-is\-\_\-subset\-\_\-of}}
+\index{fa\-\_\-set\-\_\-is\-\_\-subset\-\_\-of@{fa\-\_\-set\-\_\-is\-\_\-subset\-\_\-of}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-is\-\_\-subset\-\_\-of}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-set\-\_\-is\-\_\-subset\-\_\-of (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set, }
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_ga106c6c74c8165abfd93e769dea08edc7}
+\hypertarget{group___fa_set_ga4266d68660befca911828ba79b9a885f}{\index{Set@{Set}!fa\-\_\-set\-\_\-is\-\_\-proper\-\_\-subset\-\_\-of@{fa\-\_\-set\-\_\-is\-\_\-proper\-\_\-subset\-\_\-of}}
+\index{fa\-\_\-set\-\_\-is\-\_\-proper\-\_\-subset\-\_\-of@{fa\-\_\-set\-\_\-is\-\_\-proper\-\_\-subset\-\_\-of}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-is\-\_\-proper\-\_\-subset\-\_\-of}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-set\-\_\-is\-\_\-proper\-\_\-subset\-\_\-of (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set, }
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_ga4266d68660befca911828ba79b9a885f}
+\hypertarget{group___fa_set_ga724f53affe165e8e2b9ddb1be551fa81}{\index{Set@{Set}!fa\-\_\-set\-\_\-sum@{fa\-\_\-set\-\_\-sum}}
+\index{fa\-\_\-set\-\_\-sum@{fa\-\_\-set\-\_\-sum}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-sum}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-set\-\_\-t} fa\-\_\-set\-\_\-sum (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set, }
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_ga724f53affe165e8e2b9ddb1be551fa81}
+\hypertarget{group___fa_set_gae7069c9a4d79f675633f6d91d7c03e4c}{\index{Set@{Set}!fa\-\_\-set\-\_\-intersection@{fa\-\_\-set\-\_\-intersection}}
+\index{fa\-\_\-set\-\_\-intersection@{fa\-\_\-set\-\_\-intersection}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-intersection}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-set\-\_\-t} fa\-\_\-set\-\_\-intersection (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set, }
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_gae7069c9a4d79f675633f6d91d7c03e4c}
+\hypertarget{group___fa_set_ga042196b172d9d81e1503b020194da04b}{\index{Set@{Set}!fa\-\_\-set\-\_\-difference@{fa\-\_\-set\-\_\-difference}}
+\index{fa\-\_\-set\-\_\-difference@{fa\-\_\-set\-\_\-difference}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-difference}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-set\-\_\-t} fa\-\_\-set\-\_\-difference (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set, }
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_ga042196b172d9d81e1503b020194da04b}
+\hypertarget{group___fa_set_ga39741a2947a7cda04d25be742bc78430}{\index{Set@{Set}!fa\-\_\-set\-\_\-product@{fa\-\_\-set\-\_\-product}}
+\index{fa\-\_\-set\-\_\-product@{fa\-\_\-set\-\_\-product}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-product}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-set\-\_\-t} fa\-\_\-set\-\_\-product (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set, }
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_ga39741a2947a7cda04d25be742bc78430}
+\hypertarget{group___fa_set_ga6d94d154eb89d3cbcc06fd76b1c9a148}{\index{Set@{Set}!fa\-\_\-set\-\_\-from\-\_\-list@{fa\-\_\-set\-\_\-from\-\_\-list}}
+\index{fa\-\_\-set\-\_\-from\-\_\-list@{fa\-\_\-set\-\_\-from\-\_\-list}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-from\-\_\-list}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-set\-\_\-t} fa\-\_\-set\-\_\-from\-\_\-list (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_ga6d94d154eb89d3cbcc06fd76b1c9a148}
+\hypertarget{group___fa_set_gad3f3aa6a2e1b064d285c4084f6cc6647}{\index{Set@{Set}!fa\-\_\-set\-\_\-to\-\_\-list@{fa\-\_\-set\-\_\-to\-\_\-list}}
+\index{fa\-\_\-set\-\_\-to\-\_\-list@{fa\-\_\-set\-\_\-to\-\_\-list}!Set@{Set}}
+\subsubsection[{fa\-\_\-set\-\_\-to\-\_\-list}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-set\-\_\-to\-\_\-list (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-set\-\_\-t}}]{set}
+\end{DoxyParamCaption}
+)}}\label{group___fa_set_gad3f3aa6a2e1b064d285c4084f6cc6647}

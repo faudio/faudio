@@ -1,0 +1,1007 @@
+\hypertarget{group___fa_list}{\section{List}
+\label{group___fa_list}\index{List@{List}}
+}
+
+
+Immutable list data structure.  
+
+
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \-\_\-fa\-\_\-list\-\_\-t $\ast$ \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_gabf678944a2862ba07072920e37cdb23d}{fa\-\_\-list\-\_\-empty} ()
+\begin{DoxyCompactList}\small\item\em Create an empty list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga69d1eb03989a1f8349c292ceed66fd6a}{fa\-\_\-list\-\_\-single} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em Create a new list containing the given element. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga3cff1dce5051c7e1dd9ef255be911204}{fa\-\_\-list\-\_\-cons} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Create a new list by inserting the given element at the beginning of the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga29aba2e79fd9c128c05d020be5a3b254}{fa\-\_\-list\-\_\-dcons} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Create a new list by inserting the given element at the beginning of the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_gacadd05a228af713c5fe13c5baf09ce84}{fa\-\_\-list\-\_\-repeat} (int int\-\_\-, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em Create a list by repeating the given element. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga032f7d2288130530305801146e76093c}{fa\-\_\-list\-\_\-enumerate} (int int\-\_\-, int int\-\_\-\-\_\-)
+\begin{DoxyCompactList}\small\item\em Create a list from the given range. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga21ddfd967b94ffb34215a74de16fe106}{fa\-\_\-list\-\_\-copy} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Copy the given list. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_list_gafbf19f83b9ea6896be97f5bf572d61ad}{fa\-\_\-list\-\_\-destroy} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Destroy the given list. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_list_ga094f7dda2ad993812f47804f4d68dfaa}{fa\-\_\-list\-\_\-is\-\_\-empty} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return whether the given list is empty. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_list_gab7cd6228e5a29b4e07ec65c5e35780d0}{fa\-\_\-list\-\_\-is\-\_\-single} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return whether the given list has a single element. \end{DoxyCompactList}\item 
+int \hyperlink{group___fa_list_ga3c752b5fff701e2b8e40d68ca6197350}{fa\-\_\-list\-\_\-length} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return the lenght of the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_list_ga1a631bffa52d40cd55e7b92dce3ad9c4}{fa\-\_\-list\-\_\-head} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return the first element of the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_gac93acb3b5b61ccdacfe2680b6d56c286}{fa\-\_\-list\-\_\-tail} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return all elements but the first of the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga20497863c1110218c0f184ec23f960a0}{fa\-\_\-list\-\_\-dtail} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return all elements but the first of the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga32a54ff3c9f7d1741d41e6e0155e960b}{fa\-\_\-list\-\_\-init} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return all elements but the last of the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga79588d4812728fcfd260d37c2eed38a5}{fa\-\_\-list\-\_\-dinit} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return all elements but the last of the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_list_ga8e381af7983cac00ff95ad1f468dd90a}{fa\-\_\-list\-\_\-last} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return the last element of the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga5c51602ab144ef57ec504d2128066992}{fa\-\_\-list\-\_\-append} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list}, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} list\-\_\-)
+\begin{DoxyCompactList}\small\item\em Return the result of appending the given lists. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_gae17a6b6ead9c469d08f19c1a80746462}{fa\-\_\-list\-\_\-dappend} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list}, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} list\-\_\-)
+\begin{DoxyCompactList}\small\item\em Return the result of appending the given lists. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga7b187ef70819a17992b0d787683de241}{fa\-\_\-list\-\_\-reverse} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return the reverse of the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_gab949bb4c4f8c373aeddb98fbc3398245}{fa\-\_\-list\-\_\-dreverse} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return the reverse of the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_gaf80f08f28121092f5afb04c66a0ce086}{fa\-\_\-list\-\_\-sort} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return the given list sorted. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga9f51ef4df289a25cec79bbcdb995cbaa}{fa\-\_\-list\-\_\-dsort} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return the given list sorted. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga8de8978a9447cc34e1b8b474bc3abbd4}{fa\-\_\-list\-\_\-take} (int int\-\_\-, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return the {\itshape n} leading elements of the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_gae0af29b5201dcd307a8496a9063df5a8}{fa\-\_\-list\-\_\-dtake} (int int\-\_\-, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return the {\itshape n} leading elements of the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga0f0d0248dc445bf8fdb7064495f16987}{fa\-\_\-list\-\_\-drop} (int int\-\_\-, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return the all but the {\itshape n} leading elements of the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga0141f2e47e17849ca7ff058f321b0d04}{fa\-\_\-list\-\_\-ddrop} (int int\-\_\-, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return the all but the {\itshape n} leading elements of the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_list_gae3a2d1f92391f98bc683bc3c3f8c25ab}{fa\-\_\-list\-\_\-index} (int int\-\_\-, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em List index operator. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga05dc645dd5250b06e8c2957e9e04a2cc}{fa\-\_\-list\-\_\-range} (int int\-\_\-, int int\-\_\-\-\_\-, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return the given range of the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_gaf1b604aca05bc10ba88543868ea48f7a}{fa\-\_\-list\-\_\-insert} (int int\-\_\-, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Insert the given element into the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga331555c4727341fec8f2f0df6a0e2088}{fa\-\_\-list\-\_\-dinsert} (int int\-\_\-, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Insert the given element into the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_gae4f6685768da2c00dd24e4bf7c08621a}{fa\-\_\-list\-\_\-insert\-\_\-range} (int int\-\_\-, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list}, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} list\-\_\-)
+\begin{DoxyCompactList}\small\item\em Insert the given range into the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga67e7e8d689f484ded07883d135e29fae}{fa\-\_\-list\-\_\-dinsert\-\_\-range} (int int\-\_\-, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list}, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} list\-\_\-)
+\begin{DoxyCompactList}\small\item\em Insert the given range into the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga772f3587a85d9a88fca19947e15defe1}{fa\-\_\-list\-\_\-remove} (int int\-\_\-, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Remove the given element from the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga042a5ea58a8b932fa106422c672fcee2}{fa\-\_\-list\-\_\-dremove} (int int\-\_\-, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Remove the given element from the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_gab4296c34597889e6867d62f7ff0735d6}{fa\-\_\-list\-\_\-remove\-\_\-range} (int int\-\_\-, int int\-\_\-\-\_\-, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Remove the given range from the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga2a75ab270642d7023d831b7910f5d99a}{fa\-\_\-list\-\_\-dremove\-\_\-range} (int int\-\_\-, int int\-\_\-\-\_\-, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Remove the given range from the given list. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_list_gaad1e12d92d3966813ac027a2384551e2}{fa\-\_\-list\-\_\-has} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return whether the given list contains the given element. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_list_gad81ba8575ad24c4b240fa07ff4235d63}{fa\-\_\-list\-\_\-find} (\hyperlink{group___fa_gae6b6ae9fb073db0ba0bd323d511c6a98}{fa\-\_\-pred\-\_\-t} pred, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return the first element satisfying the given predicate in the list, if found. \end{DoxyCompactList}\item 
+int \hyperlink{group___fa_list_ga79ed6e493ad5865c65e42caa98ca3060}{fa\-\_\-list\-\_\-index\-\_\-of} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return the index of the first occurance given element in the list, or a negative value if no such element is found. \end{DoxyCompactList}\item 
+int \hyperlink{group___fa_list_ga9d4dc05192db05c306fc0a3826791f86}{fa\-\_\-list\-\_\-find\-\_\-index} (\hyperlink{group___fa_gae6b6ae9fb073db0ba0bd323d511c6a98}{fa\-\_\-pred\-\_\-t} pred, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return the index of the first element satisfying the given predicate in the list, or a negative value if no such element is found. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga817dc211bc381883c04642774ac6ce8b}{fa\-\_\-list\-\_\-filter} (\hyperlink{group___fa_gae6b6ae9fb073db0ba0bd323d511c6a98}{fa\-\_\-pred\-\_\-t} pred, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return the given list with all elements not satisfying the given predicate removed. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga7626d0fc79cf31d21a966f59b8ac7fc0}{fa\-\_\-list\-\_\-dfilter} (\hyperlink{group___fa_gae6b6ae9fb073db0ba0bd323d511c6a98}{fa\-\_\-pred\-\_\-t} pred, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return the given list with all elements not satisfying the given predicate removed. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga13621e91a0a85cf78916a33b9033e831}{fa\-\_\-list\-\_\-map} (\hyperlink{group___fa_gaaafae8ab9ebae9019133108e56d2d4d1}{fa\-\_\-unary\-\_\-t} unary, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return the result of applying the given function to all elements of the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga903153fb39216e230e74d1c019def2ca}{fa\-\_\-list\-\_\-dmap} (\hyperlink{group___fa_gaaafae8ab9ebae9019133108e56d2d4d1}{fa\-\_\-unary\-\_\-t} unary, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Return the result of applying the given function to all elements of the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga310dbd6b08a10265974cf514072f700b}{fa\-\_\-list\-\_\-join\-\_\-map} (\hyperlink{group___fa_gaaafae8ab9ebae9019133108e56d2d4d1}{fa\-\_\-unary\-\_\-t} unary, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Map over the given list and join the results. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga655f545f1e7f2866d50fc466af262cdd}{fa\-\_\-list\-\_\-djoin\-\_\-map} (\hyperlink{group___fa_gaaafae8ab9ebae9019133108e56d2d4d1}{fa\-\_\-unary\-\_\-t} unary, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga15bad8434d5b0f2361dbffe761da1c02}{fa\-\_\-list\-\_\-join} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Concatenate all elements of the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga746d2a947920478dbeaaa1675e17c2f8}{fa\-\_\-list\-\_\-djoin} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Concatenate all elements of the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_list_gacea56824c646fa7657ab5b7c455a15ed}{fa\-\_\-list\-\_\-fold\-\_\-left} (\hyperlink{group___fa_gab70ba406935a18c1d645d12e7abf2e63}{fa\-\_\-binary\-\_\-t} binary, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Fold over the given list from left to right. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_list_gac08d7401e20be33be4e2f1985be35a95}{fa\-\_\-list\-\_\-dfold\-\_\-left} (\hyperlink{group___fa_gab70ba406935a18c1d645d12e7abf2e63}{fa\-\_\-binary\-\_\-t} binary, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-, \hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Fold over the given list from left to right. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_list_ga80860daae8583099d5ad10cb01d0b5a0}{fa\-\_\-list\-\_\-to\-\_\-list} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Immutable list data structure. \begin{DoxyParagraph}{Literals}
+
+\begin{DoxyItemize}
+\item {\ttfamily \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list(1, 2, 3)}}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Display}
+
+\begin{DoxyItemize}
+\item {\ttfamily \mbox{[}1,2,3\mbox{]}}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Iteration}
+
+\begin{DoxyCode}
+\hyperlink{macros_8h_aebac4e787f6f51721805f57cea2ef21e}{fa\_for\_each} (x, \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list}(1,2,3))
+\{
+    \hyperlink{group___fa_ga60d1e34d8101c4f20d7e5473c90766a2}{fa\_print}(\textcolor{stringliteral}{"%s\(\backslash\)n"}, x);
+\}
+\end{DoxyCode}
+
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Implements}
+
+\begin{DoxyItemize}
+\item \hyperlink{structfa__equal__t}{fa\-\_\-equal\-\_\-t}
+\item \hyperlink{structfa__order__t}{fa\-\_\-order\-\_\-t}
+\item \hyperlink{structfa__copy__t}{fa\-\_\-copy\-\_\-t}
+\item \hyperlink{structfa__destroy__t}{fa\-\_\-destroy\-\_\-t}
+\item \hyperlink{structfa__dynamic__t}{fa\-\_\-dynamic\-\_\-t}
+\item \hyperlink{structfa__string__show__t}{fa\-\_\-string\-\_\-show\-\_\-t}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxySeeAlso}{See Also}
+
+\begin{DoxyItemize}
+\item \hyperlink{md__data_structures_DataStructures}{Data structures} 
+\end{DoxyItemize}
+\end{DoxySeeAlso}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{\index{List@{List}!fa\-\_\-list\-\_\-t@{fa\-\_\-list\-\_\-t}}
+\index{fa\-\_\-list\-\_\-t@{fa\-\_\-list\-\_\-t}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct \-\_\-fa\-\_\-list\-\_\-t$\ast$ {\bf fa\-\_\-list\-\_\-t}}}\label{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}
+
+
+\subsection{Function Documentation}
+\hypertarget{group___fa_list_gabf678944a2862ba07072920e37cdb23d}{\index{List@{List}!fa\-\_\-list\-\_\-empty@{fa\-\_\-list\-\_\-empty}}
+\index{fa\-\_\-list\-\_\-empty@{fa\-\_\-list\-\_\-empty}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-empty}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-empty (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_gabf678944a2862ba07072920e37cdb23d}
+
+
+Create an empty list. 
+
+The returned list must be destroyed by passing to a destructive function.
+
+\begin{DoxyReturn}{Returns}
+A new list. 
+\end{DoxyReturn}
+\begin{DoxyParagraph}{Performance}
+O(1) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga69d1eb03989a1f8349c292ceed66fd6a}{\index{List@{List}!fa\-\_\-list\-\_\-single@{fa\-\_\-list\-\_\-single}}
+\index{fa\-\_\-list\-\_\-single@{fa\-\_\-list\-\_\-single}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-single}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-single (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga69d1eb03989a1f8349c292ceed66fd6a}
+
+
+Create a new list containing the given element. 
+
+The returned list must be destroyed by passing to a destructive function.
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & Value to store. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new list. 
+\end{DoxyReturn}
+\begin{DoxyParagraph}{Performance}
+O(1) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga3cff1dce5051c7e1dd9ef255be911204}{\index{List@{List}!fa\-\_\-list\-\_\-cons@{fa\-\_\-list\-\_\-cons}}
+\index{fa\-\_\-list\-\_\-cons@{fa\-\_\-list\-\_\-cons}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-cons}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-cons (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga3cff1dce5051c7e1dd9ef255be911204}
+
+
+Create a new list by inserting the given element at the beginning of the given list. 
+
+The returned list must be destroyed by passing to a destructive function.
+
+
+\begin{DoxyParams}{Parameters}
+{\em head} & Value to form head of list. \\
+\hline
+{\em tail} & List to form tail of list. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new list. 
+\end{DoxyReturn}
+\begin{DoxyParagraph}{Performance}
+O(1) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga29aba2e79fd9c128c05d020be5a3b254}{\index{List@{List}!fa\-\_\-list\-\_\-dcons@{fa\-\_\-list\-\_\-dcons}}
+\index{fa\-\_\-list\-\_\-dcons@{fa\-\_\-list\-\_\-dcons}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-dcons}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-dcons (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga29aba2e79fd9c128c05d020be5a3b254}
+
+
+Create a new list by inserting the given element at the beginning of the given list. 
+
+The returned list must be destroyed by passing to a destructive function.
+
+
+\begin{DoxyParams}{Parameters}
+{\em head} & Value to form head of list. \\
+\hline
+{\em tail} & List to form tail of list. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new list. 
+\end{DoxyReturn}
+\begin{DoxyParagraph}{Performance}
+O(1) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_gacadd05a228af713c5fe13c5baf09ce84}{\index{List@{List}!fa\-\_\-list\-\_\-repeat@{fa\-\_\-list\-\_\-repeat}}
+\index{fa\-\_\-list\-\_\-repeat@{fa\-\_\-list\-\_\-repeat}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-repeat}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-repeat (
+\begin{DoxyParamCaption}
+\item[{int}]{int\-\_\-, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_gacadd05a228af713c5fe13c5baf09ce84}
+
+
+Create a list by repeating the given element. 
+
+\hypertarget{group___fa_list_ga032f7d2288130530305801146e76093c}{\index{List@{List}!fa\-\_\-list\-\_\-enumerate@{fa\-\_\-list\-\_\-enumerate}}
+\index{fa\-\_\-list\-\_\-enumerate@{fa\-\_\-list\-\_\-enumerate}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-enumerate}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-enumerate (
+\begin{DoxyParamCaption}
+\item[{int}]{int\-\_\-, }
+\item[{int}]{int\-\_\-\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga032f7d2288130530305801146e76093c}
+
+
+Create a list from the given range. 
+
+\hypertarget{group___fa_list_ga21ddfd967b94ffb34215a74de16fe106}{\index{List@{List}!fa\-\_\-list\-\_\-copy@{fa\-\_\-list\-\_\-copy}}
+\index{fa\-\_\-list\-\_\-copy@{fa\-\_\-list\-\_\-copy}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-copy}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-copy (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga21ddfd967b94ffb34215a74de16fe106}
+
+
+Copy the given list. 
+
+The returned list must be destroyed by passing to a destructive function.
+
+\begin{DoxyParagraph}{Performance}
+O(1) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_gafbf19f83b9ea6896be97f5bf572d61ad}{\index{List@{List}!fa\-\_\-list\-\_\-destroy@{fa\-\_\-list\-\_\-destroy}}
+\index{fa\-\_\-list\-\_\-destroy@{fa\-\_\-list\-\_\-destroy}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-destroy}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-list\-\_\-destroy (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_gafbf19f83b9ea6896be97f5bf572d61ad}
+
+
+Destroy the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga094f7dda2ad993812f47804f4d68dfaa}{\index{List@{List}!fa\-\_\-list\-\_\-is\-\_\-empty@{fa\-\_\-list\-\_\-is\-\_\-empty}}
+\index{fa\-\_\-list\-\_\-is\-\_\-empty@{fa\-\_\-list\-\_\-is\-\_\-empty}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-is\-\_\-empty}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-list\-\_\-is\-\_\-empty (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga094f7dda2ad993812f47804f4d68dfaa}
+
+
+Return whether the given list is empty. 
+
+\begin{DoxyParagraph}{Performance}
+O(1) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_gab7cd6228e5a29b4e07ec65c5e35780d0}{\index{List@{List}!fa\-\_\-list\-\_\-is\-\_\-single@{fa\-\_\-list\-\_\-is\-\_\-single}}
+\index{fa\-\_\-list\-\_\-is\-\_\-single@{fa\-\_\-list\-\_\-is\-\_\-single}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-is\-\_\-single}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-list\-\_\-is\-\_\-single (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_gab7cd6228e5a29b4e07ec65c5e35780d0}
+
+
+Return whether the given list has a single element. 
+
+\begin{DoxyParagraph}{Performance}
+O(1) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga3c752b5fff701e2b8e40d68ca6197350}{\index{List@{List}!fa\-\_\-list\-\_\-length@{fa\-\_\-list\-\_\-length}}
+\index{fa\-\_\-list\-\_\-length@{fa\-\_\-list\-\_\-length}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-length}]{\setlength{\rightskip}{0pt plus 5cm}int fa\-\_\-list\-\_\-length (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga3c752b5fff701e2b8e40d68ca6197350}
+
+
+Return the lenght of the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga1a631bffa52d40cd55e7b92dce3ad9c4}{\index{List@{List}!fa\-\_\-list\-\_\-head@{fa\-\_\-list\-\_\-head}}
+\index{fa\-\_\-list\-\_\-head@{fa\-\_\-list\-\_\-head}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-head}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ptr\-\_\-t} fa\-\_\-list\-\_\-head (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga1a631bffa52d40cd55e7b92dce3ad9c4}
+
+
+Return the first element of the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(1) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_gac93acb3b5b61ccdacfe2680b6d56c286}{\index{List@{List}!fa\-\_\-list\-\_\-tail@{fa\-\_\-list\-\_\-tail}}
+\index{fa\-\_\-list\-\_\-tail@{fa\-\_\-list\-\_\-tail}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-tail}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-tail (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_gac93acb3b5b61ccdacfe2680b6d56c286}
+
+
+Return all elements but the first of the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(1) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga20497863c1110218c0f184ec23f960a0}{\index{List@{List}!fa\-\_\-list\-\_\-dtail@{fa\-\_\-list\-\_\-dtail}}
+\index{fa\-\_\-list\-\_\-dtail@{fa\-\_\-list\-\_\-dtail}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-dtail}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-dtail (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga20497863c1110218c0f184ec23f960a0}
+
+
+Return all elements but the first of the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(1) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga32a54ff3c9f7d1741d41e6e0155e960b}{\index{List@{List}!fa\-\_\-list\-\_\-init@{fa\-\_\-list\-\_\-init}}
+\index{fa\-\_\-list\-\_\-init@{fa\-\_\-list\-\_\-init}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-init}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-init (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga32a54ff3c9f7d1741d41e6e0155e960b}
+
+
+Return all elements but the last of the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga79588d4812728fcfd260d37c2eed38a5}{\index{List@{List}!fa\-\_\-list\-\_\-dinit@{fa\-\_\-list\-\_\-dinit}}
+\index{fa\-\_\-list\-\_\-dinit@{fa\-\_\-list\-\_\-dinit}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-dinit}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-dinit (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga79588d4812728fcfd260d37c2eed38a5}
+
+
+Return all elements but the last of the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga8e381af7983cac00ff95ad1f468dd90a}{\index{List@{List}!fa\-\_\-list\-\_\-last@{fa\-\_\-list\-\_\-last}}
+\index{fa\-\_\-list\-\_\-last@{fa\-\_\-list\-\_\-last}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-last}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ptr\-\_\-t} fa\-\_\-list\-\_\-last (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga8e381af7983cac00ff95ad1f468dd90a}
+
+
+Return the last element of the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga5c51602ab144ef57ec504d2128066992}{\index{List@{List}!fa\-\_\-list\-\_\-append@{fa\-\_\-list\-\_\-append}}
+\index{fa\-\_\-list\-\_\-append@{fa\-\_\-list\-\_\-append}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-append}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-append (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga5c51602ab144ef57ec504d2128066992}
+
+
+Return the result of appending the given lists. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_gae17a6b6ead9c469d08f19c1a80746462}{\index{List@{List}!fa\-\_\-list\-\_\-dappend@{fa\-\_\-list\-\_\-dappend}}
+\index{fa\-\_\-list\-\_\-dappend@{fa\-\_\-list\-\_\-dappend}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-dappend}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-dappend (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_gae17a6b6ead9c469d08f19c1a80746462}
+
+
+Return the result of appending the given lists. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga7b187ef70819a17992b0d787683de241}{\index{List@{List}!fa\-\_\-list\-\_\-reverse@{fa\-\_\-list\-\_\-reverse}}
+\index{fa\-\_\-list\-\_\-reverse@{fa\-\_\-list\-\_\-reverse}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-reverse}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-reverse (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga7b187ef70819a17992b0d787683de241}
+
+
+Return the reverse of the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_gab949bb4c4f8c373aeddb98fbc3398245}{\index{List@{List}!fa\-\_\-list\-\_\-dreverse@{fa\-\_\-list\-\_\-dreverse}}
+\index{fa\-\_\-list\-\_\-dreverse@{fa\-\_\-list\-\_\-dreverse}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-dreverse}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-dreverse (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_gab949bb4c4f8c373aeddb98fbc3398245}
+
+
+Return the reverse of the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_gaf80f08f28121092f5afb04c66a0ce086}{\index{List@{List}!fa\-\_\-list\-\_\-sort@{fa\-\_\-list\-\_\-sort}}
+\index{fa\-\_\-list\-\_\-sort@{fa\-\_\-list\-\_\-sort}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-sort}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-sort (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_gaf80f08f28121092f5afb04c66a0ce086}
+
+
+Return the given list sorted. 
+
+\begin{DoxyParagraph}{Performance}
+O(n log n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga9f51ef4df289a25cec79bbcdb995cbaa}{\index{List@{List}!fa\-\_\-list\-\_\-dsort@{fa\-\_\-list\-\_\-dsort}}
+\index{fa\-\_\-list\-\_\-dsort@{fa\-\_\-list\-\_\-dsort}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-dsort}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-dsort (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga9f51ef4df289a25cec79bbcdb995cbaa}
+
+
+Return the given list sorted. 
+
+\begin{DoxyParagraph}{Performance}
+O(n log n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga8de8978a9447cc34e1b8b474bc3abbd4}{\index{List@{List}!fa\-\_\-list\-\_\-take@{fa\-\_\-list\-\_\-take}}
+\index{fa\-\_\-list\-\_\-take@{fa\-\_\-list\-\_\-take}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-take}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-take (
+\begin{DoxyParamCaption}
+\item[{int}]{int\-\_\-, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga8de8978a9447cc34e1b8b474bc3abbd4}
+
+
+Return the {\itshape n} leading elements of the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_gae0af29b5201dcd307a8496a9063df5a8}{\index{List@{List}!fa\-\_\-list\-\_\-dtake@{fa\-\_\-list\-\_\-dtake}}
+\index{fa\-\_\-list\-\_\-dtake@{fa\-\_\-list\-\_\-dtake}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-dtake}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-dtake (
+\begin{DoxyParamCaption}
+\item[{int}]{int\-\_\-, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_gae0af29b5201dcd307a8496a9063df5a8}
+
+
+Return the {\itshape n} leading elements of the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga0f0d0248dc445bf8fdb7064495f16987}{\index{List@{List}!fa\-\_\-list\-\_\-drop@{fa\-\_\-list\-\_\-drop}}
+\index{fa\-\_\-list\-\_\-drop@{fa\-\_\-list\-\_\-drop}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-drop}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-drop (
+\begin{DoxyParamCaption}
+\item[{int}]{int\-\_\-, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga0f0d0248dc445bf8fdb7064495f16987}
+
+
+Return the all but the {\itshape n} leading elements of the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga0141f2e47e17849ca7ff058f321b0d04}{\index{List@{List}!fa\-\_\-list\-\_\-ddrop@{fa\-\_\-list\-\_\-ddrop}}
+\index{fa\-\_\-list\-\_\-ddrop@{fa\-\_\-list\-\_\-ddrop}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-ddrop}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-ddrop (
+\begin{DoxyParamCaption}
+\item[{int}]{int\-\_\-, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga0141f2e47e17849ca7ff058f321b0d04}
+
+
+Return the all but the {\itshape n} leading elements of the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_gae3a2d1f92391f98bc683bc3c3f8c25ab}{\index{List@{List}!fa\-\_\-list\-\_\-index@{fa\-\_\-list\-\_\-index}}
+\index{fa\-\_\-list\-\_\-index@{fa\-\_\-list\-\_\-index}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-index}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ptr\-\_\-t} fa\-\_\-list\-\_\-index (
+\begin{DoxyParamCaption}
+\item[{int}]{int\-\_\-, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_gae3a2d1f92391f98bc683bc3c3f8c25ab}
+
+
+List index operator. 
+
+\begin{DoxyReturn}{Returns}
+The nth element of the given list. 
+\end{DoxyReturn}
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga05dc645dd5250b06e8c2957e9e04a2cc}{\index{List@{List}!fa\-\_\-list\-\_\-range@{fa\-\_\-list\-\_\-range}}
+\index{fa\-\_\-list\-\_\-range@{fa\-\_\-list\-\_\-range}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-range}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-range (
+\begin{DoxyParamCaption}
+\item[{int}]{int\-\_\-, }
+\item[{int}]{int\-\_\-\-\_\-, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga05dc645dd5250b06e8c2957e9e04a2cc}
+
+
+Return the given range of the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_gaf1b604aca05bc10ba88543868ea48f7a}{\index{List@{List}!fa\-\_\-list\-\_\-insert@{fa\-\_\-list\-\_\-insert}}
+\index{fa\-\_\-list\-\_\-insert@{fa\-\_\-list\-\_\-insert}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-insert}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-insert (
+\begin{DoxyParamCaption}
+\item[{int}]{int\-\_\-, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_gaf1b604aca05bc10ba88543868ea48f7a}
+
+
+Insert the given element into the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga331555c4727341fec8f2f0df6a0e2088}{\index{List@{List}!fa\-\_\-list\-\_\-dinsert@{fa\-\_\-list\-\_\-dinsert}}
+\index{fa\-\_\-list\-\_\-dinsert@{fa\-\_\-list\-\_\-dinsert}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-dinsert}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-dinsert (
+\begin{DoxyParamCaption}
+\item[{int}]{int\-\_\-, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga331555c4727341fec8f2f0df6a0e2088}
+
+
+Insert the given element into the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_gae4f6685768da2c00dd24e4bf7c08621a}{\index{List@{List}!fa\-\_\-list\-\_\-insert\-\_\-range@{fa\-\_\-list\-\_\-insert\-\_\-range}}
+\index{fa\-\_\-list\-\_\-insert\-\_\-range@{fa\-\_\-list\-\_\-insert\-\_\-range}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-insert\-\_\-range}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-insert\-\_\-range (
+\begin{DoxyParamCaption}
+\item[{int}]{int\-\_\-, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_gae4f6685768da2c00dd24e4bf7c08621a}
+
+
+Insert the given range into the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga67e7e8d689f484ded07883d135e29fae}{\index{List@{List}!fa\-\_\-list\-\_\-dinsert\-\_\-range@{fa\-\_\-list\-\_\-dinsert\-\_\-range}}
+\index{fa\-\_\-list\-\_\-dinsert\-\_\-range@{fa\-\_\-list\-\_\-dinsert\-\_\-range}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-dinsert\-\_\-range}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-dinsert\-\_\-range (
+\begin{DoxyParamCaption}
+\item[{int}]{int\-\_\-, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga67e7e8d689f484ded07883d135e29fae}
+
+
+Insert the given range into the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga772f3587a85d9a88fca19947e15defe1}{\index{List@{List}!fa\-\_\-list\-\_\-remove@{fa\-\_\-list\-\_\-remove}}
+\index{fa\-\_\-list\-\_\-remove@{fa\-\_\-list\-\_\-remove}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-remove}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-remove (
+\begin{DoxyParamCaption}
+\item[{int}]{int\-\_\-, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga772f3587a85d9a88fca19947e15defe1}
+
+
+Remove the given element from the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga042a5ea58a8b932fa106422c672fcee2}{\index{List@{List}!fa\-\_\-list\-\_\-dremove@{fa\-\_\-list\-\_\-dremove}}
+\index{fa\-\_\-list\-\_\-dremove@{fa\-\_\-list\-\_\-dremove}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-dremove}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-dremove (
+\begin{DoxyParamCaption}
+\item[{int}]{int\-\_\-, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga042a5ea58a8b932fa106422c672fcee2}
+
+
+Remove the given element from the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_gab4296c34597889e6867d62f7ff0735d6}{\index{List@{List}!fa\-\_\-list\-\_\-remove\-\_\-range@{fa\-\_\-list\-\_\-remove\-\_\-range}}
+\index{fa\-\_\-list\-\_\-remove\-\_\-range@{fa\-\_\-list\-\_\-remove\-\_\-range}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-remove\-\_\-range}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-remove\-\_\-range (
+\begin{DoxyParamCaption}
+\item[{int}]{int\-\_\-, }
+\item[{int}]{int\-\_\-\-\_\-, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_gab4296c34597889e6867d62f7ff0735d6}
+
+
+Remove the given range from the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga2a75ab270642d7023d831b7910f5d99a}{\index{List@{List}!fa\-\_\-list\-\_\-dremove\-\_\-range@{fa\-\_\-list\-\_\-dremove\-\_\-range}}
+\index{fa\-\_\-list\-\_\-dremove\-\_\-range@{fa\-\_\-list\-\_\-dremove\-\_\-range}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-dremove\-\_\-range}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-dremove\-\_\-range (
+\begin{DoxyParamCaption}
+\item[{int}]{int\-\_\-, }
+\item[{int}]{int\-\_\-\-\_\-, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga2a75ab270642d7023d831b7910f5d99a}
+
+
+Remove the given range from the given list. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_gaad1e12d92d3966813ac027a2384551e2}{\index{List@{List}!fa\-\_\-list\-\_\-has@{fa\-\_\-list\-\_\-has}}
+\index{fa\-\_\-list\-\_\-has@{fa\-\_\-list\-\_\-has}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-has}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-list\-\_\-has (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_gaad1e12d92d3966813ac027a2384551e2}
+
+
+Return whether the given list contains the given element. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_gad81ba8575ad24c4b240fa07ff4235d63}{\index{List@{List}!fa\-\_\-list\-\_\-find@{fa\-\_\-list\-\_\-find}}
+\index{fa\-\_\-list\-\_\-find@{fa\-\_\-list\-\_\-find}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-find}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ptr\-\_\-t} fa\-\_\-list\-\_\-find (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-pred\-\_\-t}}]{pred, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_gad81ba8575ad24c4b240fa07ff4235d63}
+
+
+Return the first element satisfying the given predicate in the list, if found. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em list} & List. \\
+\hline
+{\em value} & Value to search for. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Index of the found value (optional). 
+\end{DoxyReturn}
+\begin{DoxyParagraph}{Performance}
+O(log n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga79ed6e493ad5865c65e42caa98ca3060}{\index{List@{List}!fa\-\_\-list\-\_\-index\-\_\-of@{fa\-\_\-list\-\_\-index\-\_\-of}}
+\index{fa\-\_\-list\-\_\-index\-\_\-of@{fa\-\_\-list\-\_\-index\-\_\-of}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-index\-\_\-of}]{\setlength{\rightskip}{0pt plus 5cm}int fa\-\_\-list\-\_\-index\-\_\-of (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga79ed6e493ad5865c65e42caa98ca3060}
+
+
+Return the index of the first occurance given element in the list, or a negative value if no such element is found. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga9d4dc05192db05c306fc0a3826791f86}{\index{List@{List}!fa\-\_\-list\-\_\-find\-\_\-index@{fa\-\_\-list\-\_\-find\-\_\-index}}
+\index{fa\-\_\-list\-\_\-find\-\_\-index@{fa\-\_\-list\-\_\-find\-\_\-index}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-find\-\_\-index}]{\setlength{\rightskip}{0pt plus 5cm}int fa\-\_\-list\-\_\-find\-\_\-index (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-pred\-\_\-t}}]{pred, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga9d4dc05192db05c306fc0a3826791f86}
+
+
+Return the index of the first element satisfying the given predicate in the list, or a negative value if no such element is found. 
+
+\begin{DoxyParagraph}{Performance}
+O(log n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga817dc211bc381883c04642774ac6ce8b}{\index{List@{List}!fa\-\_\-list\-\_\-filter@{fa\-\_\-list\-\_\-filter}}
+\index{fa\-\_\-list\-\_\-filter@{fa\-\_\-list\-\_\-filter}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-filter}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-filter (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-pred\-\_\-t}}]{pred, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga817dc211bc381883c04642774ac6ce8b}
+
+
+Return the given list with all elements not satisfying the given predicate removed. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga7626d0fc79cf31d21a966f59b8ac7fc0}{\index{List@{List}!fa\-\_\-list\-\_\-dfilter@{fa\-\_\-list\-\_\-dfilter}}
+\index{fa\-\_\-list\-\_\-dfilter@{fa\-\_\-list\-\_\-dfilter}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-dfilter}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-dfilter (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-pred\-\_\-t}}]{pred, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga7626d0fc79cf31d21a966f59b8ac7fc0}
+
+
+Return the given list with all elements not satisfying the given predicate removed. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga13621e91a0a85cf78916a33b9033e831}{\index{List@{List}!fa\-\_\-list\-\_\-map@{fa\-\_\-list\-\_\-map}}
+\index{fa\-\_\-list\-\_\-map@{fa\-\_\-list\-\_\-map}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-map}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-map (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-unary\-\_\-t}}]{unary, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga13621e91a0a85cf78916a33b9033e831}
+
+
+Return the result of applying the given function to all elements of the given list. 
+
+\begin{DoxyParagraph}{Laws}
+\begin{DoxyVerb}map(apply1, id, xs)                == xs
+map(apply1, f, map(apply1, g, xs)) == map(apply1, comp(f, g), xs)
+\end{DoxyVerb}
+
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga903153fb39216e230e74d1c019def2ca}{\index{List@{List}!fa\-\_\-list\-\_\-dmap@{fa\-\_\-list\-\_\-dmap}}
+\index{fa\-\_\-list\-\_\-dmap@{fa\-\_\-list\-\_\-dmap}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-dmap}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-dmap (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-unary\-\_\-t}}]{unary, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga903153fb39216e230e74d1c019def2ca}
+
+
+Return the result of applying the given function to all elements of the given list. 
+
+\begin{DoxyParagraph}{Laws}
+\begin{DoxyVerb}map(apply1, id, xs)                == xs
+map(apply1, f, map(apply1, g, xs)) == map(apply1, comp(f, g), xs)
+\end{DoxyVerb}
+
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga310dbd6b08a10265974cf514072f700b}{\index{List@{List}!fa\-\_\-list\-\_\-join\-\_\-map@{fa\-\_\-list\-\_\-join\-\_\-map}}
+\index{fa\-\_\-list\-\_\-join\-\_\-map@{fa\-\_\-list\-\_\-join\-\_\-map}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-join\-\_\-map}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-join\-\_\-map (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-unary\-\_\-t}}]{unary, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga310dbd6b08a10265974cf514072f700b}
+
+
+Map over the given list and join the results. 
+
+This function is useful to apply functions from singletons to lists.
+
+\begin{DoxyParagraph}{Laws}
+\begin{DoxyVerb}joinMap(apply1, single, xs) == xs`
+\end{DoxyVerb}
+
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga655f545f1e7f2866d50fc466af262cdd}{\index{List@{List}!fa\-\_\-list\-\_\-djoin\-\_\-map@{fa\-\_\-list\-\_\-djoin\-\_\-map}}
+\index{fa\-\_\-list\-\_\-djoin\-\_\-map@{fa\-\_\-list\-\_\-djoin\-\_\-map}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-djoin\-\_\-map}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-djoin\-\_\-map (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-unary\-\_\-t}}]{unary, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga655f545f1e7f2866d50fc466af262cdd}
+\hypertarget{group___fa_list_ga15bad8434d5b0f2361dbffe761da1c02}{\index{List@{List}!fa\-\_\-list\-\_\-join@{fa\-\_\-list\-\_\-join}}
+\index{fa\-\_\-list\-\_\-join@{fa\-\_\-list\-\_\-join}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-join}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-join (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga15bad8434d5b0f2361dbffe761da1c02}
+
+
+Concatenate all elements of the given list. 
+
+The given list must contain lists only.
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga746d2a947920478dbeaaa1675e17c2f8}{\index{List@{List}!fa\-\_\-list\-\_\-djoin@{fa\-\_\-list\-\_\-djoin}}
+\index{fa\-\_\-list\-\_\-djoin@{fa\-\_\-list\-\_\-djoin}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-djoin}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-djoin (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga746d2a947920478dbeaaa1675e17c2f8}
+
+
+Concatenate all elements of the given list. 
+
+The given list must contain lists only.
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_gacea56824c646fa7657ab5b7c455a15ed}{\index{List@{List}!fa\-\_\-list\-\_\-fold\-\_\-left@{fa\-\_\-list\-\_\-fold\-\_\-left}}
+\index{fa\-\_\-list\-\_\-fold\-\_\-left@{fa\-\_\-list\-\_\-fold\-\_\-left}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-fold\-\_\-left}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ptr\-\_\-t} fa\-\_\-list\-\_\-fold\-\_\-left (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-binary\-\_\-t}}]{binary, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr\-\_\-, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_gacea56824c646fa7657ab5b7c455a15ed}
+
+
+Fold over the given list from left to right. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_gac08d7401e20be33be4e2f1985be35a95}{\index{List@{List}!fa\-\_\-list\-\_\-dfold\-\_\-left@{fa\-\_\-list\-\_\-dfold\-\_\-left}}
+\index{fa\-\_\-list\-\_\-dfold\-\_\-left@{fa\-\_\-list\-\_\-dfold\-\_\-left}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-dfold\-\_\-left}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ptr\-\_\-t} fa\-\_\-list\-\_\-dfold\-\_\-left (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-binary\-\_\-t}}]{binary, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr\-\_\-, }
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_gac08d7401e20be33be4e2f1985be35a95}
+
+
+Fold over the given list from left to right. 
+
+\begin{DoxyParagraph}{Performance}
+O(n) 
+\end{DoxyParagraph}
+\hypertarget{group___fa_list_ga80860daae8583099d5ad10cb01d0b5a0}{\index{List@{List}!fa\-\_\-list\-\_\-to\-\_\-list@{fa\-\_\-list\-\_\-to\-\_\-list}}
+\index{fa\-\_\-list\-\_\-to\-\_\-list@{fa\-\_\-list\-\_\-to\-\_\-list}!List@{List}}
+\subsubsection[{fa\-\_\-list\-\_\-to\-\_\-list}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-list\-\_\-to\-\_\-list (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-list\-\_\-t}}]{list}
+\end{DoxyParamCaption}
+)}}\label{group___fa_list_ga80860daae8583099d5ad10cb01d0b5a0}

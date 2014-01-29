@@ -1,0 +1,568 @@
+\hypertarget{group___fa_midi}{\section{Midi}
+\label{group___fa_midi}\index{Midi@{Midi}}
+}
+
+
+Provides real-\/time M\-I\-D\-I.  
+
+
+\subsection*{Modules}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group___fa_midi_device}{Device}
+\begin{DoxyCompactList}\small\item\em Provides real-\/time M\-I\-D\-I. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_midi_message}{Message}
+\begin{DoxyCompactList}\small\item\em Immutable M\-I\-D\-I messages. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_midi_session}{Session}
+\begin{DoxyCompactList}\small\item\em Provides real-\/time M\-I\-D\-I. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_midi_stream}{Stream}
+\begin{DoxyCompactList}\small\item\em Provides real-\/time M\-I\-D\-I. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \-\_\-fa\-\_\-midi\-\_\-device\-\_\-t $\ast$ \hyperlink{group___fa_midi_gabbbfd1ec30a186768ba2744e46bacc9b}{fa\-\_\-midi\-\_\-device\-\_\-t}
+\begin{DoxyCompactList}\small\item\em A M\-I\-D\-I device. \end{DoxyCompactList}\item 
+typedef struct \-\_\-fa\-\_\-midi\-\_\-session\-\_\-t $\ast$ \hyperlink{group___fa_midi_ga222964548b932c6f53b575b23629530e}{fa\-\_\-midi\-\_\-session\-\_\-t}
+\begin{DoxyCompactList}\small\item\em A M\-I\-D\-I session. \end{DoxyCompactList}\item 
+typedef struct \-\_\-fa\-\_\-midi\-\_\-stream\-\_\-t $\ast$ \hyperlink{group___fa_midi_ga85772039b62d8bb718a51e1ffbbb2fa2}{fa\-\_\-midi\-\_\-stream\-\_\-t}
+\begin{DoxyCompactList}\small\item\em A M\-I\-D\-I stream. \end{DoxyCompactList}\item 
+typedef \hyperlink{group___fa_midi_ga222964548b932c6f53b575b23629530e}{fa\-\_\-midi\-\_\-session\-\_\-t}($\ast$ \hyperlink{group___fa_midi_ga20fb39192d8af433b1506a529bc981e7}{fa\-\_\-midi\-\_\-session\-\_\-callback\-\_\-t} )(\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t}, \hyperlink{group___fa_midi_ga222964548b932c6f53b575b23629530e}{fa\-\_\-midi\-\_\-session\-\_\-t})
+\begin{DoxyCompactList}\small\item\em A callback to receive M\-I\-D\-I sessions. \end{DoxyCompactList}\item 
+typedef \hyperlink{group___fa_midi_ga85772039b62d8bb718a51e1ffbbb2fa2}{fa\-\_\-midi\-\_\-stream\-\_\-t}($\ast$ \hyperlink{group___fa_midi_ga8022098ffcf993ccdaed068b97ab7bfc}{fa\-\_\-midi\-\_\-stream\-\_\-callback\-\_\-t} )(\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t}, \hyperlink{group___fa_midi_ga85772039b62d8bb718a51e1ffbbb2fa2}{fa\-\_\-midi\-\_\-stream\-\_\-t})
+\begin{DoxyCompactList}\small\item\em A callback to receive M\-I\-D\-I streams. \end{DoxyCompactList}\item 
+typedef \hyperlink{group___fa_ga43b940a9294fd58a54087ef0b416e479}{fa\-\_\-nullary\-\_\-t} \hyperlink{group___fa_midi_gacc769aa23b097e8b8dc3d4807b9a066d}{fa\-\_\-midi\-\_\-status\-\_\-callback\-\_\-t}
+\begin{DoxyCompactList}\small\item\em A callback to be invoked upon changes to the M\-I\-D\-I setup. \end{DoxyCompactList}\item 
+typedef \hyperlink{group___fa_gaaafae8ab9ebae9019133108e56d2d4d1}{fa\-\_\-unary\-\_\-t} \hyperlink{group___fa_midi_ga446c3043288f44554ba1c69ab03f4a1d}{fa\-\_\-midi\-\_\-message\-\_\-callback\-\_\-t}
+\begin{DoxyCompactList}\small\item\em A callback to be invoked whenever a message is received. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group___fa_midi_ga222964548b932c6f53b575b23629530e}{fa\-\_\-midi\-\_\-session\-\_\-t} \hyperlink{group___fa_midi_ga2f1b526042c4356ce7e2adcf0d11ecad}{fa\-\_\-midi\-\_\-begin\-\_\-session} ()
+\begin{DoxyCompactList}\small\item\em Begin a new midi session. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_midi_gaa17624fa01a142329eef651bf58867ec}{fa\-\_\-midi\-\_\-end\-\_\-session} (\hyperlink{group___fa_midi_ga222964548b932c6f53b575b23629530e}{fa\-\_\-midi\-\_\-session\-\_\-t} session)
+\begin{DoxyCompactList}\small\item\em End the given session. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_midi_gaae4f24a325199a994a64d9d13023164d}{fa\-\_\-midi\-\_\-with\-\_\-session} (\hyperlink{group___fa_midi_ga20fb39192d8af433b1506a529bc981e7}{fa\-\_\-midi\-\_\-session\-\_\-callback\-\_\-t} session\-Callback, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_error_ga43d8d45a005130a5052ba3281a8bf33e}{fa\-\_\-error\-\_\-callback\-\_\-t} callback, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\begin{DoxyCompactList}\small\item\em Begin a new session, and retain it for the duration of a call to the given function. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_midi_gaf7d4af506bd8ec5194a2952346b968d7}{fa\-\_\-midi\-\_\-current\-\_\-sessions} ()
+\begin{DoxyCompactList}\small\item\em Get all currently active M\-I\-D\-I sessions. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_midi_ga7bd603a4286ddff81c1fd7c7656b4255}{fa\-\_\-midi\-\_\-end\-\_\-all\-\_\-sessions} ()
+\begin{DoxyCompactList}\small\item\em End all currently active M\-I\-D\-I sessions. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_midi_gafbb8556093f979db2a0b3483e40c6da3}{fa\-\_\-midi\-\_\-all} (\hyperlink{group___fa_midi_ga222964548b932c6f53b575b23629530e}{fa\-\_\-midi\-\_\-session\-\_\-t} session)
+\begin{DoxyCompactList}\small\item\em Get all active midi devices of the given session. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{group___fa_midi_gab20056f966f2be60bd4be8279b74c893}{fa\-\_\-midi\-\_\-default} (\hyperlink{group___fa_midi_ga222964548b932c6f53b575b23629530e}{fa\-\_\-midi\-\_\-session\-\_\-t} session)
+\begin{DoxyCompactList}\small\item\em Get the standard devices of the given session. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_midi_gabbbfd1ec30a186768ba2744e46bacc9b}{fa\-\_\-midi\-\_\-device\-\_\-t} \hyperlink{group___fa_midi_ga4e47ae817979dbce0da298466e97da75}{fa\-\_\-midi\-\_\-default\-\_\-input} (\hyperlink{group___fa_midi_ga222964548b932c6f53b575b23629530e}{fa\-\_\-midi\-\_\-session\-\_\-t} session)
+\begin{DoxyCompactList}\small\item\em Get the standard input device of the given session. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_midi_gabbbfd1ec30a186768ba2744e46bacc9b}{fa\-\_\-midi\-\_\-device\-\_\-t} \hyperlink{group___fa_midi_gad859725831a5227e58a53e867af798b3}{fa\-\_\-midi\-\_\-default\-\_\-output} (\hyperlink{group___fa_midi_ga222964548b932c6f53b575b23629530e}{fa\-\_\-midi\-\_\-session\-\_\-t} session)
+\begin{DoxyCompactList}\small\item\em Get the standard output device of the given session. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_midi_ga448ae46b23a1271b7be8fb44ae88dbc9}{fa\-\_\-midi\-\_\-add\-\_\-status\-\_\-callback} (\hyperlink{group___fa_midi_gacc769aa23b097e8b8dc3d4807b9a066d}{fa\-\_\-midi\-\_\-status\-\_\-callback\-\_\-t} status\-Callback, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_midi_ga222964548b932c6f53b575b23629530e}{fa\-\_\-midi\-\_\-session\-\_\-t} session)
+\begin{DoxyCompactList}\small\item\em Register a callback to be invoked when a hardware change is detected. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_midi_ga4ed5065817addf704612c41e2e6ec753}{fa\-\_\-midi\-\_\-name} (\hyperlink{group___fa_midi_gabbbfd1ec30a186768ba2744e46bacc9b}{fa\-\_\-midi\-\_\-device\-\_\-t} device)
+\begin{DoxyCompactList}\small\item\em Return the name of the given device. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_midi_ga370b7d98e395878426f1c91104e40489}{fa\-\_\-midi\-\_\-host\-\_\-name} (\hyperlink{group___fa_midi_gabbbfd1ec30a186768ba2744e46bacc9b}{fa\-\_\-midi\-\_\-device\-\_\-t} device)
+\begin{DoxyCompactList}\small\item\em Return the host name of the given device. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_midi_ga50b48cf8b0f607418a9c9720b3f1f50e}{fa\-\_\-midi\-\_\-has\-\_\-input} (\hyperlink{group___fa_midi_gabbbfd1ec30a186768ba2744e46bacc9b}{fa\-\_\-midi\-\_\-device\-\_\-t} device)
+\begin{DoxyCompactList}\small\item\em Return whether the given device has input or not. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_midi_gaa86f40de5a25870a92e962e45dcb43a6}{fa\-\_\-midi\-\_\-has\-\_\-output} (\hyperlink{group___fa_midi_gabbbfd1ec30a186768ba2744e46bacc9b}{fa\-\_\-midi\-\_\-device\-\_\-t} device)
+\begin{DoxyCompactList}\small\item\em Return whether the given device has output or not. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_midi_ga85772039b62d8bb718a51e1ffbbb2fa2}{fa\-\_\-midi\-\_\-stream\-\_\-t} \hyperlink{group___fa_midi_gab7b05f67b7966c706652a292bb9e7a65}{fa\-\_\-midi\-\_\-open\-\_\-stream} (\hyperlink{group___fa_midi_gabbbfd1ec30a186768ba2744e46bacc9b}{fa\-\_\-midi\-\_\-device\-\_\-t} device)
+\begin{DoxyCompactList}\small\item\em Open a stream on the given devices. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_midi_ga8a306a27cb08528a31b9fdad6b4f75ab}{fa\-\_\-midi\-\_\-close\-\_\-stream} (\hyperlink{group___fa_midi_ga85772039b62d8bb718a51e1ffbbb2fa2}{fa\-\_\-midi\-\_\-stream\-\_\-t} stream)
+\begin{DoxyCompactList}\small\item\em Close the given stream. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_midi_ga2b3813b25c03a1c609afd039e7565599}{fa\-\_\-midi\-\_\-with\-\_\-stream} (\hyperlink{group___fa_midi_gabbbfd1ec30a186768ba2744e46bacc9b}{fa\-\_\-midi\-\_\-device\-\_\-t} device, \hyperlink{group___fa_midi_ga8022098ffcf993ccdaed068b97ab7bfc}{fa\-\_\-midi\-\_\-stream\-\_\-callback\-\_\-t} stream\-Callback, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_error_ga43d8d45a005130a5052ba3281a8bf33e}{fa\-\_\-error\-\_\-callback\-\_\-t} callback, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\begin{DoxyCompactList}\small\item\em Run a stream on the given devices. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_midi_ga52859a899712bbbac285d7474f546bf0}{fa\-\_\-midi\-\_\-add\-\_\-message\-\_\-callback} (\hyperlink{group___fa_midi_ga446c3043288f44554ba1c69ab03f4a1d}{fa\-\_\-midi\-\_\-message\-\_\-callback\-\_\-t} message\-Callback, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_midi_ga85772039b62d8bb718a51e1ffbbb2fa2}{fa\-\_\-midi\-\_\-stream\-\_\-t} stream)
+\begin{DoxyCompactList}\small\item\em Register a callback to be invoked when a message is received. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_midi_gacfa36ef71f8c8d797a040e35b72aff58}{fa\-\_\-midi\-\_\-set\-\_\-clock} (\hyperlink{group___fa_midi_ga85772039b62d8bb718a51e1ffbbb2fa2}{fa\-\_\-midi\-\_\-stream\-\_\-t} stream, \hyperlink{group___fa_clock_ga20b3a0f49788fbedba140b1d315d2313}{fa\-\_\-clock\-\_\-t} clock)
+\begin{DoxyCompactList}\small\item\em Associate the given clock with the given stream. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_clock_ga20b3a0f49788fbedba140b1d315d2313}{fa\-\_\-clock\-\_\-t} \hyperlink{group___fa_midi_ga120b0e56a83ab18da64499570e22c7b7}{fa\-\_\-midi\-\_\-get\-\_\-clock} (\hyperlink{group___fa_midi_ga85772039b62d8bb718a51e1ffbbb2fa2}{fa\-\_\-midi\-\_\-stream\-\_\-t} stream)
+\begin{DoxyCompactList}\small\item\em Return the clock associated with a given stream. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_midi_ga9a269b2817ba3371d5b58493e33c0229}{fa\-\_\-midi\-\_\-schedule} (\hyperlink{group___fa_time_ga227cc693f20b4873fed11028bcade184}{fa\-\_\-time\-\_\-t} time, \hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action, \hyperlink{group___fa_midi_ga85772039b62d8bb718a51e1ffbbb2fa2}{fa\-\_\-midi\-\_\-stream\-\_\-t} stream)
+\begin{DoxyCompactList}\small\item\em Schedule an action on the stream. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_midi_ga69d4b4f30d7cb997df0ff26b61f94400}{fa\-\_\-midi\-\_\-schedule\-\_\-relative} (\hyperlink{group___fa_time_ga227cc693f20b4873fed11028bcade184}{fa\-\_\-time\-\_\-t} time, \hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action, \hyperlink{group___fa_midi_ga85772039b62d8bb718a51e1ffbbb2fa2}{fa\-\_\-midi\-\_\-stream\-\_\-t} stream)
+\begin{DoxyCompactList}\small\item\em Schedule an action on the stream. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Provides real-\/time M\-I\-D\-I. \begin{DoxyParagraph}{Sessions, devices and streams implement }
+
+\begin{DoxyItemize}
+\item \hyperlink{structfa__destroy__t}{fa\-\_\-destroy\-\_\-t}
+\item \hyperlink{structfa__string__show__t}{fa\-\_\-string\-\_\-show\-\_\-t}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Devices also implement }
+
+\begin{DoxyItemize}
+\item \hyperlink{structfa__equal__t}{fa\-\_\-equal\-\_\-t}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxySeeAlso}{See Also}
+
+\begin{DoxyItemize}
+\item \hyperlink{md__devices_Devices}{Devices} 
+\end{DoxyItemize}
+\end{DoxySeeAlso}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{group___fa_midi_gabbbfd1ec30a186768ba2744e46bacc9b}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-device\-\_\-t@{fa\-\_\-midi\-\_\-device\-\_\-t}}
+\index{fa\-\_\-midi\-\_\-device\-\_\-t@{fa\-\_\-midi\-\_\-device\-\_\-t}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-device\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct \-\_\-fa\-\_\-midi\-\_\-device\-\_\-t$\ast$ {\bf fa\-\_\-midi\-\_\-device\-\_\-t}}}\label{group___fa_midi_gabbbfd1ec30a186768ba2744e46bacc9b}
+
+
+A M\-I\-D\-I device. 
+
+\hypertarget{group___fa_midi_ga222964548b932c6f53b575b23629530e}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-session\-\_\-t@{fa\-\_\-midi\-\_\-session\-\_\-t}}
+\index{fa\-\_\-midi\-\_\-session\-\_\-t@{fa\-\_\-midi\-\_\-session\-\_\-t}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-session\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct \-\_\-fa\-\_\-midi\-\_\-session\-\_\-t$\ast$ {\bf fa\-\_\-midi\-\_\-session\-\_\-t}}}\label{group___fa_midi_ga222964548b932c6f53b575b23629530e}
+
+
+A M\-I\-D\-I session. 
+
+\hypertarget{group___fa_midi_ga85772039b62d8bb718a51e1ffbbb2fa2}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-stream\-\_\-t@{fa\-\_\-midi\-\_\-stream\-\_\-t}}
+\index{fa\-\_\-midi\-\_\-stream\-\_\-t@{fa\-\_\-midi\-\_\-stream\-\_\-t}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-stream\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct \-\_\-fa\-\_\-midi\-\_\-stream\-\_\-t$\ast$ {\bf fa\-\_\-midi\-\_\-stream\-\_\-t}}}\label{group___fa_midi_ga85772039b62d8bb718a51e1ffbbb2fa2}
+
+
+A M\-I\-D\-I stream. 
+
+\hypertarget{group___fa_midi_ga20fb39192d8af433b1506a529bc981e7}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-session\-\_\-callback\-\_\-t@{fa\-\_\-midi\-\_\-session\-\_\-callback\-\_\-t}}
+\index{fa\-\_\-midi\-\_\-session\-\_\-callback\-\_\-t@{fa\-\_\-midi\-\_\-session\-\_\-callback\-\_\-t}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-session\-\_\-callback\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf fa\-\_\-midi\-\_\-session\-\_\-t}($\ast$  fa\-\_\-midi\-\_\-session\-\_\-callback\-\_\-t)({\bf fa\-\_\-ptr\-\_\-t}, {\bf fa\-\_\-midi\-\_\-session\-\_\-t})}}\label{group___fa_midi_ga20fb39192d8af433b1506a529bc981e7}
+
+
+A callback to receive M\-I\-D\-I sessions. 
+
+\hypertarget{group___fa_midi_ga8022098ffcf993ccdaed068b97ab7bfc}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-stream\-\_\-callback\-\_\-t@{fa\-\_\-midi\-\_\-stream\-\_\-callback\-\_\-t}}
+\index{fa\-\_\-midi\-\_\-stream\-\_\-callback\-\_\-t@{fa\-\_\-midi\-\_\-stream\-\_\-callback\-\_\-t}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-stream\-\_\-callback\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf fa\-\_\-midi\-\_\-stream\-\_\-t}($\ast$  fa\-\_\-midi\-\_\-stream\-\_\-callback\-\_\-t)({\bf fa\-\_\-ptr\-\_\-t}, {\bf fa\-\_\-midi\-\_\-stream\-\_\-t})}}\label{group___fa_midi_ga8022098ffcf993ccdaed068b97ab7bfc}
+
+
+A callback to receive M\-I\-D\-I streams. 
+
+\hypertarget{group___fa_midi_gacc769aa23b097e8b8dc3d4807b9a066d}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-status\-\_\-callback\-\_\-t@{fa\-\_\-midi\-\_\-status\-\_\-callback\-\_\-t}}
+\index{fa\-\_\-midi\-\_\-status\-\_\-callback\-\_\-t@{fa\-\_\-midi\-\_\-status\-\_\-callback\-\_\-t}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-status\-\_\-callback\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf fa\-\_\-nullary\-\_\-t} {\bf fa\-\_\-midi\-\_\-status\-\_\-callback\-\_\-t}}}\label{group___fa_midi_gacc769aa23b097e8b8dc3d4807b9a066d}
+
+
+A callback to be invoked upon changes to the M\-I\-D\-I setup. 
+
+\hypertarget{group___fa_midi_ga446c3043288f44554ba1c69ab03f4a1d}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-message\-\_\-callback\-\_\-t@{fa\-\_\-midi\-\_\-message\-\_\-callback\-\_\-t}}
+\index{fa\-\_\-midi\-\_\-message\-\_\-callback\-\_\-t@{fa\-\_\-midi\-\_\-message\-\_\-callback\-\_\-t}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-message\-\_\-callback\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef {\bf fa\-\_\-unary\-\_\-t} {\bf fa\-\_\-midi\-\_\-message\-\_\-callback\-\_\-t}}}\label{group___fa_midi_ga446c3043288f44554ba1c69ab03f4a1d}
+
+
+A callback to be invoked whenever a message is received. 
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group___fa_midi_ga2f1b526042c4356ce7e2adcf0d11ecad}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-begin\-\_\-session@{fa\-\_\-midi\-\_\-begin\-\_\-session}}
+\index{fa\-\_\-midi\-\_\-begin\-\_\-session@{fa\-\_\-midi\-\_\-begin\-\_\-session}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-begin\-\_\-session}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-midi\-\_\-session\-\_\-t} fa\-\_\-midi\-\_\-begin\-\_\-session (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_ga2f1b526042c4356ce7e2adcf0d11ecad}
+
+
+Begin a new midi session. 
+
+\begin{DoxyReturn}{Returns}
+A new session. 
+\end{DoxyReturn}
+\begin{DoxyParagraph}{Errors}
+Fails if the session could not be started. 
+\end{DoxyParagraph}
+\hypertarget{group___fa_midi_gaa17624fa01a142329eef651bf58867ec}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-end\-\_\-session@{fa\-\_\-midi\-\_\-end\-\_\-session}}
+\index{fa\-\_\-midi\-\_\-end\-\_\-session@{fa\-\_\-midi\-\_\-end\-\_\-session}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-end\-\_\-session}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-midi\-\_\-end\-\_\-session (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-midi\-\_\-session\-\_\-t}}]{session}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_gaa17624fa01a142329eef651bf58867ec}
+
+
+End the given session. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & Session to end. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_midi_gaae4f24a325199a994a64d9d13023164d}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-with\-\_\-session@{fa\-\_\-midi\-\_\-with\-\_\-session}}
+\index{fa\-\_\-midi\-\_\-with\-\_\-session@{fa\-\_\-midi\-\_\-with\-\_\-session}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-with\-\_\-session}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-midi\-\_\-with\-\_\-session (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-midi\-\_\-session\-\_\-callback\-\_\-t}}]{session\-Callback, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-error\-\_\-callback\-\_\-t}}]{callback, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_gaae4f24a325199a994a64d9d13023164d}
+
+
+Begin a new session, and retain it for the duration of a call to the given function. 
+
+The given function will be called once after the session has created. The session will be ended after the callback function has returned. If an error occurs while starting the session, the error callback is invoked in place of the session callback.
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Function to receive the sesssion. \\
+\hline
+{\em error\-\_\-callback} & Function to receive eventual errors. \\
+\hline
+{\em error\-\_\-data,session\-\_\-data} & Data closed over by the callbacks. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_midi_gaf7d4af506bd8ec5194a2952346b968d7}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-current\-\_\-sessions@{fa\-\_\-midi\-\_\-current\-\_\-sessions}}
+\index{fa\-\_\-midi\-\_\-current\-\_\-sessions@{fa\-\_\-midi\-\_\-current\-\_\-sessions}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-current\-\_\-sessions}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-midi\-\_\-current\-\_\-sessions (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_gaf7d4af506bd8ec5194a2952346b968d7}
+
+
+Get all currently active M\-I\-D\-I sessions. 
+
+Note that at most one midi session can be active at the same time, so this function returns a list of zero or one elements.
+
+\begin{DoxyReturn}{Returns}
+A list of \hyperlink{group___fa_midi_ga222964548b932c6f53b575b23629530e}{fa\-\_\-midi\-\_\-session\-\_\-t}. 
+\end{DoxyReturn}
+\hypertarget{group___fa_midi_ga7bd603a4286ddff81c1fd7c7656b4255}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-end\-\_\-all\-\_\-sessions@{fa\-\_\-midi\-\_\-end\-\_\-all\-\_\-sessions}}
+\index{fa\-\_\-midi\-\_\-end\-\_\-all\-\_\-sessions@{fa\-\_\-midi\-\_\-end\-\_\-all\-\_\-sessions}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-end\-\_\-all\-\_\-sessions}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ptr\-\_\-t} fa\-\_\-midi\-\_\-end\-\_\-all\-\_\-sessions (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_ga7bd603a4286ddff81c1fd7c7656b4255}
+
+
+End all currently active M\-I\-D\-I sessions. 
+
+\begin{DoxyReturn}{Returns}
+The null pointer if successful, or an error value otherwise. 
+\end{DoxyReturn}
+\hypertarget{group___fa_midi_gafbb8556093f979db2a0b3483e40c6da3}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-all@{fa\-\_\-midi\-\_\-all}}
+\index{fa\-\_\-midi\-\_\-all@{fa\-\_\-midi\-\_\-all}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-all}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-midi\-\_\-all (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-midi\-\_\-session\-\_\-t}}]{session}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_gafbb8556093f979db2a0b3483e40c6da3}
+
+
+Get all active midi devices of the given session. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A list of \hyperlink{group___fa_midi_gabbbfd1ec30a186768ba2744e46bacc9b}{fa\-\_\-midi\-\_\-device\-\_\-t}. 
+\end{DoxyReturn}
+\hypertarget{group___fa_midi_gab20056f966f2be60bd4be8279b74c893}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-default@{fa\-\_\-midi\-\_\-default}}
+\index{fa\-\_\-midi\-\_\-default@{fa\-\_\-midi\-\_\-default}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-default}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-pair\-\_\-t} fa\-\_\-midi\-\_\-default (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-midi\-\_\-session\-\_\-t}}]{session}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_gab20056f966f2be60bd4be8279b74c893}
+
+
+Get the standard devices of the given session. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pair of \hyperlink{group___fa_midi_gabbbfd1ec30a186768ba2744e46bacc9b}{fa\-\_\-midi\-\_\-device\-\_\-t} representing the default input and output device, respectively, or an error if at least one of them is not available. 
+\end{DoxyReturn}
+\hypertarget{group___fa_midi_ga4e47ae817979dbce0da298466e97da75}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-default\-\_\-input@{fa\-\_\-midi\-\_\-default\-\_\-input}}
+\index{fa\-\_\-midi\-\_\-default\-\_\-input@{fa\-\_\-midi\-\_\-default\-\_\-input}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-default\-\_\-input}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-midi\-\_\-device\-\_\-t} fa\-\_\-midi\-\_\-default\-\_\-input (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-midi\-\_\-session\-\_\-t}}]{session}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_ga4e47ae817979dbce0da298466e97da75}
+
+
+Get the standard input device of the given session. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A device or an error if there are no input devices available. 
+\end{DoxyReturn}
+\hypertarget{group___fa_midi_gad859725831a5227e58a53e867af798b3}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-default\-\_\-output@{fa\-\_\-midi\-\_\-default\-\_\-output}}
+\index{fa\-\_\-midi\-\_\-default\-\_\-output@{fa\-\_\-midi\-\_\-default\-\_\-output}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-default\-\_\-output}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-midi\-\_\-device\-\_\-t} fa\-\_\-midi\-\_\-default\-\_\-output (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-midi\-\_\-session\-\_\-t}}]{session}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_gad859725831a5227e58a53e867af798b3}
+
+
+Get the standard output device of the given session. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & The session. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A device or an error if there are no output devices available. 
+\end{DoxyReturn}
+\hypertarget{group___fa_midi_ga448ae46b23a1271b7be8fb44ae88dbc9}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-add\-\_\-status\-\_\-callback@{fa\-\_\-midi\-\_\-add\-\_\-status\-\_\-callback}}
+\index{fa\-\_\-midi\-\_\-add\-\_\-status\-\_\-callback@{fa\-\_\-midi\-\_\-add\-\_\-status\-\_\-callback}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-add\-\_\-status\-\_\-callback}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-midi\-\_\-add\-\_\-status\-\_\-callback (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-midi\-\_\-status\-\_\-callback\-\_\-t}}]{status\-Callback, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-midi\-\_\-session\-\_\-t}}]{session}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_ga448ae46b23a1271b7be8fb44ae88dbc9}
+
+
+Register a callback to be invoked when a hardware change is detected. 
+
+Note that this function will not modify the devices available from a session, you have to start a new session to get a fresh snapshot.
+
+Multiple callbacks can be registered this way. All registered callbacks are associated with a session and will be removed when the session ends.
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback to register. \\
+\hline
+{\em callback\-\_\-data} & Data closed over by the callback function. \\
+\hline
+{\em session} & Session on which to register the callback. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyWarning}{Warning}
+Experimental. 
+\end{DoxyWarning}
+\hypertarget{group___fa_midi_ga4ed5065817addf704612c41e2e6ec753}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-name@{fa\-\_\-midi\-\_\-name}}
+\index{fa\-\_\-midi\-\_\-name@{fa\-\_\-midi\-\_\-name}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-name}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t} fa\-\_\-midi\-\_\-name (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-midi\-\_\-device\-\_\-t}}]{device}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_ga4ed5065817addf704612c41e2e6ec753}
+
+
+Return the name of the given device. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device} & The device. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_midi_ga370b7d98e395878426f1c91104e40489}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-host\-\_\-name@{fa\-\_\-midi\-\_\-host\-\_\-name}}
+\index{fa\-\_\-midi\-\_\-host\-\_\-name@{fa\-\_\-midi\-\_\-host\-\_\-name}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-host\-\_\-name}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t} fa\-\_\-midi\-\_\-host\-\_\-name (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-midi\-\_\-device\-\_\-t}}]{device}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_ga370b7d98e395878426f1c91104e40489}
+
+
+Return the host name of the given device. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device} & The device. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_midi_ga50b48cf8b0f607418a9c9720b3f1f50e}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-has\-\_\-input@{fa\-\_\-midi\-\_\-has\-\_\-input}}
+\index{fa\-\_\-midi\-\_\-has\-\_\-input@{fa\-\_\-midi\-\_\-has\-\_\-input}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-has\-\_\-input}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-midi\-\_\-has\-\_\-input (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-midi\-\_\-device\-\_\-t}}]{device}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_ga50b48cf8b0f607418a9c9720b3f1f50e}
+
+
+Return whether the given device has input or not. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device} & The device. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_midi_gaa86f40de5a25870a92e962e45dcb43a6}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-has\-\_\-output@{fa\-\_\-midi\-\_\-has\-\_\-output}}
+\index{fa\-\_\-midi\-\_\-has\-\_\-output@{fa\-\_\-midi\-\_\-has\-\_\-output}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-has\-\_\-output}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-midi\-\_\-has\-\_\-output (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-midi\-\_\-device\-\_\-t}}]{device}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_gaa86f40de5a25870a92e962e45dcb43a6}
+
+
+Return whether the given device has output or not. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device} & The device. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_midi_gab7b05f67b7966c706652a292bb9e7a65}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-open\-\_\-stream@{fa\-\_\-midi\-\_\-open\-\_\-stream}}
+\index{fa\-\_\-midi\-\_\-open\-\_\-stream@{fa\-\_\-midi\-\_\-open\-\_\-stream}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-open\-\_\-stream}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-midi\-\_\-stream\-\_\-t} fa\-\_\-midi\-\_\-open\-\_\-stream (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-midi\-\_\-device\-\_\-t}}]{device}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_gab7b05f67b7966c706652a292bb9e7a65}
+
+
+Open a stream on the given devices. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device} & The device. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new stream or an error if no stream could be opened. 
+\end{DoxyReturn}
+\hypertarget{group___fa_midi_ga8a306a27cb08528a31b9fdad6b4f75ab}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-close\-\_\-stream@{fa\-\_\-midi\-\_\-close\-\_\-stream}}
+\index{fa\-\_\-midi\-\_\-close\-\_\-stream@{fa\-\_\-midi\-\_\-close\-\_\-stream}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-close\-\_\-stream}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-midi\-\_\-close\-\_\-stream (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-midi\-\_\-stream\-\_\-t}}]{stream}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_ga8a306a27cb08528a31b9fdad6b4f75ab}
+
+
+Close the given stream. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em session} & Stream to close. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_midi_ga2b3813b25c03a1c609afd039e7565599}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-with\-\_\-stream@{fa\-\_\-midi\-\_\-with\-\_\-stream}}
+\index{fa\-\_\-midi\-\_\-with\-\_\-stream@{fa\-\_\-midi\-\_\-with\-\_\-stream}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-with\-\_\-stream}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-midi\-\_\-with\-\_\-stream (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-midi\-\_\-device\-\_\-t}}]{device, }
+\item[{{\bf fa\-\_\-midi\-\_\-stream\-\_\-callback\-\_\-t}}]{stream\-Callback, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-error\-\_\-callback\-\_\-t}}]{callback, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_ga2b3813b25c03a1c609afd039e7565599}
+
+
+Run a stream on the given devices. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em device} & The device. \\
+\hline
+{\em callback} & Function to receive the stream. \\
+\hline
+{\em error\-\_\-callback} & Function to receive eventual errors. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_midi_ga52859a899712bbbac285d7474f546bf0}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-add\-\_\-message\-\_\-callback@{fa\-\_\-midi\-\_\-add\-\_\-message\-\_\-callback}}
+\index{fa\-\_\-midi\-\_\-add\-\_\-message\-\_\-callback@{fa\-\_\-midi\-\_\-add\-\_\-message\-\_\-callback}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-add\-\_\-message\-\_\-callback}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-midi\-\_\-add\-\_\-message\-\_\-callback (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-midi\-\_\-message\-\_\-callback\-\_\-t}}]{message\-Callback, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-midi\-\_\-stream\-\_\-t}}]{stream}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_ga52859a899712bbbac285d7474f546bf0}
+
+
+Register a callback to be invoked when a message is received. 
+
+Multiple callbacks can be registered this way. All registered callbacks are associated with a stream and will be removed when the stream is stopped or its associated session ends.
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & Callback to register. \\
+\hline
+{\em callback\-\_\-data} & Data closed over by the callback function. \\
+\hline
+{\em session} & Stream on which to register the callback. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyWarning}{Warning}
+Experimental. 
+\end{DoxyWarning}
+\hypertarget{group___fa_midi_gacfa36ef71f8c8d797a040e35b72aff58}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-set\-\_\-clock@{fa\-\_\-midi\-\_\-set\-\_\-clock}}
+\index{fa\-\_\-midi\-\_\-set\-\_\-clock@{fa\-\_\-midi\-\_\-set\-\_\-clock}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-set\-\_\-clock}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-midi\-\_\-set\-\_\-clock (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-midi\-\_\-stream\-\_\-t}}]{stream, }
+\item[{{\bf fa\-\_\-clock\-\_\-t}}]{clock}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_gacfa36ef71f8c8d797a040e35b72aff58}
+
+
+Associate the given clock with the given stream. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em stream} & The stream. \\
+\hline
+{\em The} & clock. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_midi_ga120b0e56a83ab18da64499570e22c7b7}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-get\-\_\-clock@{fa\-\_\-midi\-\_\-get\-\_\-clock}}
+\index{fa\-\_\-midi\-\_\-get\-\_\-clock@{fa\-\_\-midi\-\_\-get\-\_\-clock}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-get\-\_\-clock}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-clock\-\_\-t} fa\-\_\-midi\-\_\-get\-\_\-clock (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-midi\-\_\-stream\-\_\-t}}]{stream}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_ga120b0e56a83ab18da64499570e22c7b7}
+
+
+Return the clock associated with a given stream. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em stream} & The stream. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A clock. 
+\end{DoxyReturn}
+\hypertarget{group___fa_midi_ga9a269b2817ba3371d5b58493e33c0229}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-schedule@{fa\-\_\-midi\-\_\-schedule}}
+\index{fa\-\_\-midi\-\_\-schedule@{fa\-\_\-midi\-\_\-schedule}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-schedule}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-midi\-\_\-schedule (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-time\-\_\-t}}]{time, }
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action, }
+\item[{{\bf fa\-\_\-midi\-\_\-stream\-\_\-t}}]{stream}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_ga9a269b2817ba3371d5b58493e33c0229}
+
+
+Schedule an action on the stream. 
+
+The action will be run as soon as the time of the stream (as reported by its clock) is greater than or equal to the given due time. \hypertarget{group___fa_midi_ga69d4b4f30d7cb997df0ff26b61f94400}{\index{Midi@{Midi}!fa\-\_\-midi\-\_\-schedule\-\_\-relative@{fa\-\_\-midi\-\_\-schedule\-\_\-relative}}
+\index{fa\-\_\-midi\-\_\-schedule\-\_\-relative@{fa\-\_\-midi\-\_\-schedule\-\_\-relative}!Midi@{Midi}}
+\subsubsection[{fa\-\_\-midi\-\_\-schedule\-\_\-relative}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-midi\-\_\-schedule\-\_\-relative (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-time\-\_\-t}}]{time, }
+\item[{{\bf fa\-\_\-action\-\_\-t}}]{action, }
+\item[{{\bf fa\-\_\-midi\-\_\-stream\-\_\-t}}]{stream}
+\end{DoxyParamCaption}
+)}}\label{group___fa_midi_ga69d4b4f30d7cb997df0ff26b61f94400}
+
+
+Schedule an action on the stream. 
+
+The action will be run when the given time has passed, relative to when this function was invoked. This is a convenience function implemented in terms of {\ttfamily fa\-\_\-audio\-\_\-schedule} and {\ttfamily fa\-\_\-clock\-\_\-time}, using the current stream clock. 

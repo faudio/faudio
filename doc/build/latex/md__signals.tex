@@ -1,0 +1,21 @@
+\label{md__signals_Signals}%
+\hypertarget{md__signals_Signals}{}%
+\label{md__signals_Processors}%
+\hypertarget{md__signals_Processors}{}%
+
+
+The most important concepts in {\itshape faudio} are the notion of {\itshape signals} and {\itshape processors}. Both have simple definitions\-:
+
+
+\begin{DoxyItemize}
+\item A {\itshape \hyperlink{group___fa_signal_gac5c72f160cd6e93a6783551627b166e5}{signal}} is a function of time, for example $ y(t)=sin(2\pi\,t) $.
+\end{DoxyItemize}
+
+
+\begin{DoxyItemize}
+\item A {\itshape processor} is a function from a signal to another signal.
+\end{DoxyItemize}
+
+Signals can be composed to create more complex signals.
+
+While many signals can be described by simple formulas, other signals such as real-\/world audio recordings have no simple representation, and must be sampled to be handled by a computer. {\itshape faudio} hide this complexity by representing signals as opaque types. Thus signals are conceptually {\itshape continous} and have neither sample rate or duration. 

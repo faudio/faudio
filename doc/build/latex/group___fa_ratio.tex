@@ -1,0 +1,293 @@
+\hypertarget{group___fa_ratio}{\section{Ratio}
+\label{group___fa_ratio}\index{Ratio@{Ratio}}
+}
+
+
+Rational numbers.  
+
+
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef int32\-\_\-t \hyperlink{group___fa_ratio_ga6d6962b946d96535558e341030f16e07}{fa\-\_\-ratio\-\_\-num\-\_\-t}
+\item 
+typedef int32\-\_\-t \hyperlink{group___fa_ratio_ga18626f0c26ea1666ce0725605044cfa1}{fa\-\_\-ratio\-\_\-denom\-\_\-t}
+\item 
+typedef struct \-\_\-fa\-\_\-ratio\-\_\-t $\ast$ \hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t}
+\begin{DoxyCompactList}\small\item\em A rational number. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{group___fa_ratio_ga3ab0d3fea73d05b4173e066f954389a5}{fa\-\_\-ratio\-\_\-create} (\hyperlink{group___fa_ratio_ga6d6962b946d96535558e341030f16e07}{fa\-\_\-ratio\-\_\-num\-\_\-t} num, \hyperlink{group___fa_ratio_ga18626f0c26ea1666ce0725605044cfa1}{fa\-\_\-ratio\-\_\-denom\-\_\-t} denom)
+\begin{DoxyCompactList}\small\item\em Create a rational number. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ratio_ga6d6962b946d96535558e341030f16e07}{fa\-\_\-ratio\-\_\-num\-\_\-t} \hyperlink{group___fa_ratio_gaa94661f5ff09ed1a547f870f6e1c5a9b}{fa\-\_\-ratio\-\_\-num} (\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{util_8h_a866d3cbbee2679ec3c34f27a256445de}{ratio})
+\begin{DoxyCompactList}\small\item\em Return the numerator of the given rational number. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ratio_ga18626f0c26ea1666ce0725605044cfa1}{fa\-\_\-ratio\-\_\-denom\-\_\-t} \hyperlink{group___fa_ratio_ga71fb6b16111090ebef75fce0a62eb234}{fa\-\_\-ratio\-\_\-denom} (\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{util_8h_a866d3cbbee2679ec3c34f27a256445de}{ratio})
+\begin{DoxyCompactList}\small\item\em Return the denominator of the given rational number. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_ratio_gacb1ec6f18e009d96c398f83e7a507270}{fa\-\_\-ratio\-\_\-match} (\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{util_8h_a866d3cbbee2679ec3c34f27a256445de}{ratio}, \hyperlink{group___fa_ratio_ga6d6962b946d96535558e341030f16e07}{fa\-\_\-ratio\-\_\-num\-\_\-t} $\ast$, \hyperlink{group___fa_ratio_ga18626f0c26ea1666ce0725605044cfa1}{fa\-\_\-ratio\-\_\-denom\-\_\-t} $\ast$)
+\begin{DoxyCompactList}\small\item\em Destruct the given rational number, writing its numerator and denominator to the given locations. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{group___fa_ratio_ga240d745928d4f3ea0f03930617580f62}{fa\-\_\-ratio\-\_\-copy} (\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{util_8h_a866d3cbbee2679ec3c34f27a256445de}{ratio})
+\begin{DoxyCompactList}\small\item\em Copy a rational number. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_ratio_gaa65ebd7b8a36f340bf5d54ff8d14738e}{fa\-\_\-ratio\-\_\-destroy} (\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{util_8h_a866d3cbbee2679ec3c34f27a256445de}{ratio})
+\begin{DoxyCompactList}\small\item\em Destroy a rational number. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{group___fa_ratio_ga6f21aa6cbc2216a1277f2158968ce52b}{fa\-\_\-ratio\-\_\-add} (\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{util_8h_a866d3cbbee2679ec3c34f27a256445de}{ratio}, \hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} ratio\-\_\-)
+\begin{DoxyCompactList}\small\item\em Add the given rational numbers. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{group___fa_ratio_ga4532996b003dc8a628053dd8d159cf82}{fa\-\_\-ratio\-\_\-subtract} (\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{util_8h_a866d3cbbee2679ec3c34f27a256445de}{ratio}, \hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} ratio\-\_\-)
+\begin{DoxyCompactList}\small\item\em Subtract the given rational numbers. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{group___fa_ratio_gaeeef9bb9a4a888e53e7fbe09ff5c5dd0}{fa\-\_\-ratio\-\_\-multiply} (\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{util_8h_a866d3cbbee2679ec3c34f27a256445de}{ratio}, \hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} ratio\-\_\-)
+\begin{DoxyCompactList}\small\item\em Multiply the given rational numbers. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{group___fa_ratio_ga5995de6035f8f7f95c645dfd6d1b3297}{fa\-\_\-ratio\-\_\-divide} (\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{util_8h_a866d3cbbee2679ec3c34f27a256445de}{ratio}, \hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} ratio\-\_\-)
+\begin{DoxyCompactList}\small\item\em Divide the given rational numbers. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{group___fa_ratio_ga7c72bad7eef5ca15eb888b08ed744ed0}{fa\-\_\-ratio\-\_\-succ} (\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{util_8h_a866d3cbbee2679ec3c34f27a256445de}{ratio})
+\begin{DoxyCompactList}\small\item\em Return the successor of the given rational number. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{group___fa_ratio_ga78052a323d41d5d76a526e1e19ba0eb2}{fa\-\_\-ratio\-\_\-pred} (\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{util_8h_a866d3cbbee2679ec3c34f27a256445de}{ratio})
+\begin{DoxyCompactList}\small\item\em Return the predecessor of the given rational number. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{group___fa_ratio_ga39bc43bc50d936309bf763b6903249bd}{fa\-\_\-ratio\-\_\-negate} (\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{util_8h_a866d3cbbee2679ec3c34f27a256445de}{ratio})
+\begin{DoxyCompactList}\small\item\em Negate the given rational number. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{group___fa_ratio_gae2a0b5d0ca551b62a4a8edc6b399b742}{fa\-\_\-ratio\-\_\-recip} (\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{util_8h_a866d3cbbee2679ec3c34f27a256445de}{ratio})
+\begin{DoxyCompactList}\small\item\em Invert the given rational number. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{group___fa_ratio_gae3545b10373eeba8414a490e5d9d0ec8}{fa\-\_\-ratio\-\_\-absolute} (\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{util_8h_a866d3cbbee2679ec3c34f27a256445de}{ratio})
+\begin{DoxyCompactList}\small\item\em Return the absolute value of the given rational number. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{group___fa_ratio_gad477d6485fd4e6ff3bca8bda977447ff}{fa\-\_\-ratio\-\_\-normalize} (\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{util_8h_a866d3cbbee2679ec3c34f27a256445de}{ratio})
+\begin{DoxyCompactList}\small\item\em Normalize the given rational number. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_ratio_ga13dc172c048dcd34c04aedd20f0fe1d6}{fa\-\_\-ratio\-\_\-to\-\_\-mixed} (\hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} \hyperlink{util_8h_a866d3cbbee2679ec3c34f27a256445de}{ratio}, \hyperlink{group___fa_ratio_ga6d6962b946d96535558e341030f16e07}{fa\-\_\-ratio\-\_\-num\-\_\-t} $\ast$, \hyperlink{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{fa\-\_\-ratio\-\_\-t} $\ast$)
+\begin{DoxyCompactList}\small\item\em Convert the given rational number to mixed form. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Rational numbers. \begin{DoxyParagraph}{Literals}
+
+\begin{DoxyItemize}
+\item {\ttfamily \hyperlink{util_8h_a866d3cbbee2679ec3c34f27a256445de}{ratio(1, 2)}}
+\item {\ttfamily \hyperlink{util_8h_a866d3cbbee2679ec3c34f27a256445de}{ratio(0, 1)}}
+\item {\ttfamily ratio(-\/1, 2)}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Implements }
+
+\begin{DoxyItemize}
+\item \hyperlink{structfa__equal__t}{fa\-\_\-equal\-\_\-t}
+\item \hyperlink{structfa__order__t}{fa\-\_\-order\-\_\-t}
+\item \hyperlink{structfa__string__show__t}{fa\-\_\-string\-\_\-show\-\_\-t}
+\item \hyperlink{structfa__copy__t}{fa\-\_\-copy\-\_\-t}
+\item \hyperlink{structfa__destroy__t}{fa\-\_\-destroy\-\_\-t}
+\item \hyperlink{structfa__dynamic__t}{fa\-\_\-dynamic\-\_\-t}
+\item \hyperlink{structfa__number__t}{fa\-\_\-number\-\_\-t} 
+\end{DoxyItemize}
+\end{DoxyParagraph}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{group___fa_ratio_ga6d6962b946d96535558e341030f16e07}{\index{Ratio@{Ratio}!fa\-\_\-ratio\-\_\-num\-\_\-t@{fa\-\_\-ratio\-\_\-num\-\_\-t}}
+\index{fa\-\_\-ratio\-\_\-num\-\_\-t@{fa\-\_\-ratio\-\_\-num\-\_\-t}!Ratio@{Ratio}}
+\subsubsection[{fa\-\_\-ratio\-\_\-num\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef int32\-\_\-t {\bf fa\-\_\-ratio\-\_\-num\-\_\-t}}}\label{group___fa_ratio_ga6d6962b946d96535558e341030f16e07}
+\hypertarget{group___fa_ratio_ga18626f0c26ea1666ce0725605044cfa1}{\index{Ratio@{Ratio}!fa\-\_\-ratio\-\_\-denom\-\_\-t@{fa\-\_\-ratio\-\_\-denom\-\_\-t}}
+\index{fa\-\_\-ratio\-\_\-denom\-\_\-t@{fa\-\_\-ratio\-\_\-denom\-\_\-t}!Ratio@{Ratio}}
+\subsubsection[{fa\-\_\-ratio\-\_\-denom\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef int32\-\_\-t {\bf fa\-\_\-ratio\-\_\-denom\-\_\-t}}}\label{group___fa_ratio_ga18626f0c26ea1666ce0725605044cfa1}
+\hypertarget{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}{\index{Ratio@{Ratio}!fa\-\_\-ratio\-\_\-t@{fa\-\_\-ratio\-\_\-t}}
+\index{fa\-\_\-ratio\-\_\-t@{fa\-\_\-ratio\-\_\-t}!Ratio@{Ratio}}
+\subsubsection[{fa\-\_\-ratio\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct \-\_\-fa\-\_\-ratio\-\_\-t$\ast$ {\bf fa\-\_\-ratio\-\_\-t}}}\label{group___fa_ratio_gaf3b37b5fdfcccb6283b7ac806c72b273}
+
+
+A rational number. 
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group___fa_ratio_ga3ab0d3fea73d05b4173e066f954389a5}{\index{Ratio@{Ratio}!fa\-\_\-ratio\-\_\-create@{fa\-\_\-ratio\-\_\-create}}
+\index{fa\-\_\-ratio\-\_\-create@{fa\-\_\-ratio\-\_\-create}!Ratio@{Ratio}}
+\subsubsection[{fa\-\_\-ratio\-\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ratio\-\_\-t} fa\-\_\-ratio\-\_\-create (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ratio\-\_\-num\-\_\-t}}]{num, }
+\item[{{\bf fa\-\_\-ratio\-\_\-denom\-\_\-t}}]{denom}
+\end{DoxyParamCaption}
+)}}\label{group___fa_ratio_ga3ab0d3fea73d05b4173e066f954389a5}
+
+
+Create a rational number. 
+
+\hypertarget{group___fa_ratio_gaa94661f5ff09ed1a547f870f6e1c5a9b}{\index{Ratio@{Ratio}!fa\-\_\-ratio\-\_\-num@{fa\-\_\-ratio\-\_\-num}}
+\index{fa\-\_\-ratio\-\_\-num@{fa\-\_\-ratio\-\_\-num}!Ratio@{Ratio}}
+\subsubsection[{fa\-\_\-ratio\-\_\-num}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ratio\-\_\-num\-\_\-t} fa\-\_\-ratio\-\_\-num (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ratio\-\_\-t}}]{ratio}
+\end{DoxyParamCaption}
+)}}\label{group___fa_ratio_gaa94661f5ff09ed1a547f870f6e1c5a9b}
+
+
+Return the numerator of the given rational number. 
+
+\hypertarget{group___fa_ratio_ga71fb6b16111090ebef75fce0a62eb234}{\index{Ratio@{Ratio}!fa\-\_\-ratio\-\_\-denom@{fa\-\_\-ratio\-\_\-denom}}
+\index{fa\-\_\-ratio\-\_\-denom@{fa\-\_\-ratio\-\_\-denom}!Ratio@{Ratio}}
+\subsubsection[{fa\-\_\-ratio\-\_\-denom}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ratio\-\_\-denom\-\_\-t} fa\-\_\-ratio\-\_\-denom (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ratio\-\_\-t}}]{ratio}
+\end{DoxyParamCaption}
+)}}\label{group___fa_ratio_ga71fb6b16111090ebef75fce0a62eb234}
+
+
+Return the denominator of the given rational number. 
+
+\hypertarget{group___fa_ratio_gacb1ec6f18e009d96c398f83e7a507270}{\index{Ratio@{Ratio}!fa\-\_\-ratio\-\_\-match@{fa\-\_\-ratio\-\_\-match}}
+\index{fa\-\_\-ratio\-\_\-match@{fa\-\_\-ratio\-\_\-match}!Ratio@{Ratio}}
+\subsubsection[{fa\-\_\-ratio\-\_\-match}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-ratio\-\_\-match (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ratio\-\_\-t}}]{ratio, }
+\item[{{\bf fa\-\_\-ratio\-\_\-num\-\_\-t} $\ast$}]{, }
+\item[{{\bf fa\-\_\-ratio\-\_\-denom\-\_\-t} $\ast$}]{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_ratio_gacb1ec6f18e009d96c398f83e7a507270}
+
+
+Destruct the given rational number, writing its numerator and denominator to the given locations. 
+
+\hypertarget{group___fa_ratio_ga240d745928d4f3ea0f03930617580f62}{\index{Ratio@{Ratio}!fa\-\_\-ratio\-\_\-copy@{fa\-\_\-ratio\-\_\-copy}}
+\index{fa\-\_\-ratio\-\_\-copy@{fa\-\_\-ratio\-\_\-copy}!Ratio@{Ratio}}
+\subsubsection[{fa\-\_\-ratio\-\_\-copy}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ratio\-\_\-t} fa\-\_\-ratio\-\_\-copy (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ratio\-\_\-t}}]{ratio}
+\end{DoxyParamCaption}
+)}}\label{group___fa_ratio_ga240d745928d4f3ea0f03930617580f62}
+
+
+Copy a rational number. 
+
+\hypertarget{group___fa_ratio_gaa65ebd7b8a36f340bf5d54ff8d14738e}{\index{Ratio@{Ratio}!fa\-\_\-ratio\-\_\-destroy@{fa\-\_\-ratio\-\_\-destroy}}
+\index{fa\-\_\-ratio\-\_\-destroy@{fa\-\_\-ratio\-\_\-destroy}!Ratio@{Ratio}}
+\subsubsection[{fa\-\_\-ratio\-\_\-destroy}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-ratio\-\_\-destroy (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ratio\-\_\-t}}]{ratio}
+\end{DoxyParamCaption}
+)}}\label{group___fa_ratio_gaa65ebd7b8a36f340bf5d54ff8d14738e}
+
+
+Destroy a rational number. 
+
+\hypertarget{group___fa_ratio_ga6f21aa6cbc2216a1277f2158968ce52b}{\index{Ratio@{Ratio}!fa\-\_\-ratio\-\_\-add@{fa\-\_\-ratio\-\_\-add}}
+\index{fa\-\_\-ratio\-\_\-add@{fa\-\_\-ratio\-\_\-add}!Ratio@{Ratio}}
+\subsubsection[{fa\-\_\-ratio\-\_\-add}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ratio\-\_\-t} fa\-\_\-ratio\-\_\-add (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ratio\-\_\-t}}]{ratio, }
+\item[{{\bf fa\-\_\-ratio\-\_\-t}}]{ratio\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_ratio_ga6f21aa6cbc2216a1277f2158968ce52b}
+
+
+Add the given rational numbers. 
+
+\hypertarget{group___fa_ratio_ga4532996b003dc8a628053dd8d159cf82}{\index{Ratio@{Ratio}!fa\-\_\-ratio\-\_\-subtract@{fa\-\_\-ratio\-\_\-subtract}}
+\index{fa\-\_\-ratio\-\_\-subtract@{fa\-\_\-ratio\-\_\-subtract}!Ratio@{Ratio}}
+\subsubsection[{fa\-\_\-ratio\-\_\-subtract}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ratio\-\_\-t} fa\-\_\-ratio\-\_\-subtract (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ratio\-\_\-t}}]{ratio, }
+\item[{{\bf fa\-\_\-ratio\-\_\-t}}]{ratio\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_ratio_ga4532996b003dc8a628053dd8d159cf82}
+
+
+Subtract the given rational numbers. 
+
+\hypertarget{group___fa_ratio_gaeeef9bb9a4a888e53e7fbe09ff5c5dd0}{\index{Ratio@{Ratio}!fa\-\_\-ratio\-\_\-multiply@{fa\-\_\-ratio\-\_\-multiply}}
+\index{fa\-\_\-ratio\-\_\-multiply@{fa\-\_\-ratio\-\_\-multiply}!Ratio@{Ratio}}
+\subsubsection[{fa\-\_\-ratio\-\_\-multiply}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ratio\-\_\-t} fa\-\_\-ratio\-\_\-multiply (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ratio\-\_\-t}}]{ratio, }
+\item[{{\bf fa\-\_\-ratio\-\_\-t}}]{ratio\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_ratio_gaeeef9bb9a4a888e53e7fbe09ff5c5dd0}
+
+
+Multiply the given rational numbers. 
+
+\hypertarget{group___fa_ratio_ga5995de6035f8f7f95c645dfd6d1b3297}{\index{Ratio@{Ratio}!fa\-\_\-ratio\-\_\-divide@{fa\-\_\-ratio\-\_\-divide}}
+\index{fa\-\_\-ratio\-\_\-divide@{fa\-\_\-ratio\-\_\-divide}!Ratio@{Ratio}}
+\subsubsection[{fa\-\_\-ratio\-\_\-divide}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ratio\-\_\-t} fa\-\_\-ratio\-\_\-divide (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ratio\-\_\-t}}]{ratio, }
+\item[{{\bf fa\-\_\-ratio\-\_\-t}}]{ratio\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_ratio_ga5995de6035f8f7f95c645dfd6d1b3297}
+
+
+Divide the given rational numbers. 
+
+\hypertarget{group___fa_ratio_ga7c72bad7eef5ca15eb888b08ed744ed0}{\index{Ratio@{Ratio}!fa\-\_\-ratio\-\_\-succ@{fa\-\_\-ratio\-\_\-succ}}
+\index{fa\-\_\-ratio\-\_\-succ@{fa\-\_\-ratio\-\_\-succ}!Ratio@{Ratio}}
+\subsubsection[{fa\-\_\-ratio\-\_\-succ}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ratio\-\_\-t} fa\-\_\-ratio\-\_\-succ (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ratio\-\_\-t}}]{ratio}
+\end{DoxyParamCaption}
+)}}\label{group___fa_ratio_ga7c72bad7eef5ca15eb888b08ed744ed0}
+
+
+Return the successor of the given rational number. 
+
+\hypertarget{group___fa_ratio_ga78052a323d41d5d76a526e1e19ba0eb2}{\index{Ratio@{Ratio}!fa\-\_\-ratio\-\_\-pred@{fa\-\_\-ratio\-\_\-pred}}
+\index{fa\-\_\-ratio\-\_\-pred@{fa\-\_\-ratio\-\_\-pred}!Ratio@{Ratio}}
+\subsubsection[{fa\-\_\-ratio\-\_\-pred}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ratio\-\_\-t} fa\-\_\-ratio\-\_\-pred (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ratio\-\_\-t}}]{ratio}
+\end{DoxyParamCaption}
+)}}\label{group___fa_ratio_ga78052a323d41d5d76a526e1e19ba0eb2}
+
+
+Return the predecessor of the given rational number. 
+
+\hypertarget{group___fa_ratio_ga39bc43bc50d936309bf763b6903249bd}{\index{Ratio@{Ratio}!fa\-\_\-ratio\-\_\-negate@{fa\-\_\-ratio\-\_\-negate}}
+\index{fa\-\_\-ratio\-\_\-negate@{fa\-\_\-ratio\-\_\-negate}!Ratio@{Ratio}}
+\subsubsection[{fa\-\_\-ratio\-\_\-negate}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ratio\-\_\-t} fa\-\_\-ratio\-\_\-negate (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ratio\-\_\-t}}]{ratio}
+\end{DoxyParamCaption}
+)}}\label{group___fa_ratio_ga39bc43bc50d936309bf763b6903249bd}
+
+
+Negate the given rational number. 
+
+\hypertarget{group___fa_ratio_gae2a0b5d0ca551b62a4a8edc6b399b742}{\index{Ratio@{Ratio}!fa\-\_\-ratio\-\_\-recip@{fa\-\_\-ratio\-\_\-recip}}
+\index{fa\-\_\-ratio\-\_\-recip@{fa\-\_\-ratio\-\_\-recip}!Ratio@{Ratio}}
+\subsubsection[{fa\-\_\-ratio\-\_\-recip}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ratio\-\_\-t} fa\-\_\-ratio\-\_\-recip (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ratio\-\_\-t}}]{ratio}
+\end{DoxyParamCaption}
+)}}\label{group___fa_ratio_gae2a0b5d0ca551b62a4a8edc6b399b742}
+
+
+Invert the given rational number. 
+
+\hypertarget{group___fa_ratio_gae3545b10373eeba8414a490e5d9d0ec8}{\index{Ratio@{Ratio}!fa\-\_\-ratio\-\_\-absolute@{fa\-\_\-ratio\-\_\-absolute}}
+\index{fa\-\_\-ratio\-\_\-absolute@{fa\-\_\-ratio\-\_\-absolute}!Ratio@{Ratio}}
+\subsubsection[{fa\-\_\-ratio\-\_\-absolute}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ratio\-\_\-t} fa\-\_\-ratio\-\_\-absolute (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ratio\-\_\-t}}]{ratio}
+\end{DoxyParamCaption}
+)}}\label{group___fa_ratio_gae3545b10373eeba8414a490e5d9d0ec8}
+
+
+Return the absolute value of the given rational number. 
+
+\hypertarget{group___fa_ratio_gad477d6485fd4e6ff3bca8bda977447ff}{\index{Ratio@{Ratio}!fa\-\_\-ratio\-\_\-normalize@{fa\-\_\-ratio\-\_\-normalize}}
+\index{fa\-\_\-ratio\-\_\-normalize@{fa\-\_\-ratio\-\_\-normalize}!Ratio@{Ratio}}
+\subsubsection[{fa\-\_\-ratio\-\_\-normalize}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ratio\-\_\-t} fa\-\_\-ratio\-\_\-normalize (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ratio\-\_\-t}}]{ratio}
+\end{DoxyParamCaption}
+)}}\label{group___fa_ratio_gad477d6485fd4e6ff3bca8bda977447ff}
+
+
+Normalize the given rational number. 
+
+\hypertarget{group___fa_ratio_ga13dc172c048dcd34c04aedd20f0fe1d6}{\index{Ratio@{Ratio}!fa\-\_\-ratio\-\_\-to\-\_\-mixed@{fa\-\_\-ratio\-\_\-to\-\_\-mixed}}
+\index{fa\-\_\-ratio\-\_\-to\-\_\-mixed@{fa\-\_\-ratio\-\_\-to\-\_\-mixed}!Ratio@{Ratio}}
+\subsubsection[{fa\-\_\-ratio\-\_\-to\-\_\-mixed}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-ratio\-\_\-to\-\_\-mixed (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ratio\-\_\-t}}]{ratio, }
+\item[{{\bf fa\-\_\-ratio\-\_\-num\-\_\-t} $\ast$}]{, }
+\item[{{\bf fa\-\_\-ratio\-\_\-t} $\ast$}]{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_ratio_ga13dc172c048dcd34c04aedd20f0fe1d6}
+
+
+Convert the given rational number to mixed form. 
+
+For example $11/3$ becomes $3+2/3$. 

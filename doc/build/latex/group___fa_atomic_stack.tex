@@ -1,0 +1,109 @@
+\hypertarget{group___fa_atomic_stack}{\section{Stack}
+\label{group___fa_atomic_stack}\index{Stack@{Stack}}
+}
+
+
+Mutable lock-\/free stacks.  
+
+
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \-\_\-fa\-\_\-atomic\-\_\-stack\-\_\-t $\ast$ \hyperlink{group___fa_atomic_stack_ga12448e3a1d7002a702efc2a78eebfa69}{fa\-\_\-atomic\-\_\-stack\-\_\-t}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group___fa_atomic_stack_ga12448e3a1d7002a702efc2a78eebfa69}{fa\-\_\-atomic\-\_\-stack\-\_\-t} \hyperlink{group___fa_atomic_stack_gacfb347f6def65c5207877d6dba9fbc62}{fa\-\_\-atomic\-\_\-stack\-\_\-create} ()
+\begin{DoxyCompactList}\small\item\em Create a new stack. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_atomic_stack_gafd7a22df157d016f336a304c311c0634}{fa\-\_\-atomic\-\_\-stack\-\_\-destroy} (\hyperlink{group___fa_atomic_stack_ga12448e3a1d7002a702efc2a78eebfa69}{fa\-\_\-atomic\-\_\-stack\-\_\-t} stack)
+\begin{DoxyCompactList}\small\item\em Destroy the given stack. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_atomic_stack_ga7d8023ec59ac028da1188064eff7f642}{fa\-\_\-atomic\-\_\-stack\-\_\-read} (\hyperlink{group___fa_atomic_stack_ga12448e3a1d7002a702efc2a78eebfa69}{fa\-\_\-atomic\-\_\-stack\-\_\-t} stack)
+\begin{DoxyCompactList}\small\item\em Read a value from the given stack. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_atomic_stack_gae7220769ca5217af9935f3bde86fbf75}{fa\-\_\-atomic\-\_\-stack\-\_\-write} (\hyperlink{group___fa_atomic_stack_ga12448e3a1d7002a702efc2a78eebfa69}{fa\-\_\-atomic\-\_\-stack\-\_\-t} stack, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em Write the given value to the given stack. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Mutable lock-\/free stacks. \begin{DoxySeeAlso}{See Also}
+
+\begin{DoxyItemize}
+\item \hyperlink{md__data_structures_DataStructures}{Data structures} 
+\end{DoxyItemize}
+\end{DoxySeeAlso}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{group___fa_atomic_stack_ga12448e3a1d7002a702efc2a78eebfa69}{\index{Stack@{Stack}!fa\-\_\-atomic\-\_\-stack\-\_\-t@{fa\-\_\-atomic\-\_\-stack\-\_\-t}}
+\index{fa\-\_\-atomic\-\_\-stack\-\_\-t@{fa\-\_\-atomic\-\_\-stack\-\_\-t}!Stack@{Stack}}
+\subsubsection[{fa\-\_\-atomic\-\_\-stack\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct \-\_\-fa\-\_\-atomic\-\_\-stack\-\_\-t$\ast$ {\bf fa\-\_\-atomic\-\_\-stack\-\_\-t}}}\label{group___fa_atomic_stack_ga12448e3a1d7002a702efc2a78eebfa69}
+
+
+\subsection{Function Documentation}
+\hypertarget{group___fa_atomic_stack_gacfb347f6def65c5207877d6dba9fbc62}{\index{Stack@{Stack}!fa\-\_\-atomic\-\_\-stack\-\_\-create@{fa\-\_\-atomic\-\_\-stack\-\_\-create}}
+\index{fa\-\_\-atomic\-\_\-stack\-\_\-create@{fa\-\_\-atomic\-\_\-stack\-\_\-create}!Stack@{Stack}}
+\subsubsection[{fa\-\_\-atomic\-\_\-stack\-\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-atomic\-\_\-stack\-\_\-t} fa\-\_\-atomic\-\_\-stack\-\_\-create (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_atomic_stack_gacfb347f6def65c5207877d6dba9fbc62}
+
+
+Create a new stack. 
+
+\begin{DoxyParagraph}{Atomicity}
+Non-\/atomic 
+\end{DoxyParagraph}
+\hypertarget{group___fa_atomic_stack_gafd7a22df157d016f336a304c311c0634}{\index{Stack@{Stack}!fa\-\_\-atomic\-\_\-stack\-\_\-destroy@{fa\-\_\-atomic\-\_\-stack\-\_\-destroy}}
+\index{fa\-\_\-atomic\-\_\-stack\-\_\-destroy@{fa\-\_\-atomic\-\_\-stack\-\_\-destroy}!Stack@{Stack}}
+\subsubsection[{fa\-\_\-atomic\-\_\-stack\-\_\-destroy}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-atomic\-\_\-stack\-\_\-destroy (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-atomic\-\_\-stack\-\_\-t}}]{stack}
+\end{DoxyParamCaption}
+)}}\label{group___fa_atomic_stack_gafd7a22df157d016f336a304c311c0634}
+
+
+Destroy the given stack. 
+
+\begin{DoxyParagraph}{Atomicity}
+Non-\/atomic 
+\end{DoxyParagraph}
+\hypertarget{group___fa_atomic_stack_ga7d8023ec59ac028da1188064eff7f642}{\index{Stack@{Stack}!fa\-\_\-atomic\-\_\-stack\-\_\-read@{fa\-\_\-atomic\-\_\-stack\-\_\-read}}
+\index{fa\-\_\-atomic\-\_\-stack\-\_\-read@{fa\-\_\-atomic\-\_\-stack\-\_\-read}!Stack@{Stack}}
+\subsubsection[{fa\-\_\-atomic\-\_\-stack\-\_\-read}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ptr\-\_\-t} fa\-\_\-atomic\-\_\-stack\-\_\-read (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-atomic\-\_\-stack\-\_\-t}}]{stack}
+\end{DoxyParamCaption}
+)}}\label{group___fa_atomic_stack_ga7d8023ec59ac028da1188064eff7f642}
+
+
+Read a value from the given stack. 
+
+\begin{DoxyReturn}{Returns}
+A value (optional). 
+\end{DoxyReturn}
+\begin{DoxyParagraph}{Atomicity}
+Atomic 
+\end{DoxyParagraph}
+\hypertarget{group___fa_atomic_stack_gae7220769ca5217af9935f3bde86fbf75}{\index{Stack@{Stack}!fa\-\_\-atomic\-\_\-stack\-\_\-write@{fa\-\_\-atomic\-\_\-stack\-\_\-write}}
+\index{fa\-\_\-atomic\-\_\-stack\-\_\-write@{fa\-\_\-atomic\-\_\-stack\-\_\-write}!Stack@{Stack}}
+\subsubsection[{fa\-\_\-atomic\-\_\-stack\-\_\-write}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-atomic\-\_\-stack\-\_\-write (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-atomic\-\_\-stack\-\_\-t}}]{stack, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr}
+\end{DoxyParamCaption}
+)}}\label{group___fa_atomic_stack_gae7220769ca5217af9935f3bde86fbf75}
+
+
+Write the given value to the given stack. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em stackr} & Queue. \\
+\hline
+{\em value} & Value to write (optional). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyParagraph}{Atomicity}
+Atomic 
+\end{DoxyParagraph}

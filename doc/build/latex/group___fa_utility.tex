@@ -1,0 +1,236 @@
+\hypertarget{group___fa_utility}{\section{Utility}
+\label{group___fa_utility}\index{Utility@{Utility}}
+}
+
+
+Miscellaneous.  
+
+
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef void($\ast$ \hyperlink{group___fa_utility_ga1f914d0c16f566e96a08db3a3446aab7}{fa\-\_\-log\-\_\-func\-\_\-t} )(\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t}, \hyperlink{group___fa_time_ga7dd7e28574eec80380aac22be7087d2e}{fa\-\_\-time\-\_\-system\-\_\-t}, \hyperlink{group___fa_error_ga4a4feb4d3686657ac8dbd2be421cbb15}{fa\-\_\-error\-\_\-t})
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_utility_ga10bbb957eedee5b2a3c8e91a169f9991}{fa\-\_\-version} ()
+\begin{DoxyCompactList}\small\item\em Returns the version of Fa as a list on the form {\ttfamily (\char`\"{}alpha\char`\"{}, 1, 0, 5, \char`\"{}\char`\"{})}. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_utility_ga0f32aba533df7023c5d0948d6506b94e}{fa\-\_\-version\-\_\-string} ()
+\begin{DoxyCompactList}\small\item\em Returns the version of Fa as a string on the form \char`\"{}alpha1.\-0.\-5\char`\"{}. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_utility_ga061c945c3f013c84561593911b661a44}{fa\-\_\-initialize} ()
+\begin{DoxyCompactList}\small\item\em Performs global initialization. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_utility_ga66c7af3a85045329f71966dfe40a5acf}{fa\-\_\-terminate} ()
+\begin{DoxyCompactList}\small\item\em Performs global cleanup. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_utility_ga09490b15451aa64808537eb688aa4604}{fa\-\_\-set\-\_\-log\-\_\-file} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string})
+\begin{DoxyCompactList}\small\item\em Instruct Fa to write log messages to the specific file. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_utility_gaadd396f69e7ae709c4e224d893ff90a6}{fa\-\_\-set\-\_\-log\-\_\-std} ()
+\begin{DoxyCompactList}\small\item\em Instruct Fa to write log messages to the standard output. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_utility_ga97a486eb85c974972eebfd7d69eaa8c3}{fa\-\_\-set\-\_\-log} (\hyperlink{group___fa_utility_ga1f914d0c16f566e96a08db3a3446aab7}{fa\-\_\-log\-\_\-func\-\_\-t} log\-Func, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em Instruct Fa to pass log messages to the given handler. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_utility_ga9567a792b3679742c7ab6535c368be60}{fa\-\_\-log} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_error_ga4a4feb4d3686657ac8dbd2be421cbb15}{fa\-\_\-error\-\_\-t} \hyperlink{group___fa_error_gga5cf5c13f1e12ae6b125c0265f59f4d82ad606e435413ea0944dd00d49e901e4ed}{error})
+\begin{DoxyCompactList}\small\item\em Write a log message. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_utility_ga7d0eec2d02accbcf65148ea41e680b1e}{fa\-\_\-log\-\_\-info} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string})
+\begin{DoxyCompactList}\small\item\em Write an informative message to the log. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_utility_gaadbae9a73993245706ca501b11b531ec}{fa\-\_\-log\-\_\-warning} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string})
+\begin{DoxyCompactList}\small\item\em Write a warning to the log. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_utility_gaf6025219b330102e95a473aa2450bd7f}{fa\-\_\-log\-\_\-error} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string})
+\begin{DoxyCompactList}\small\item\em Write an error to the log. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_utility_ga0c1973f20d36a9af40e69f4fb6237126}{fa\-\_\-log\-\_\-info\-\_\-from} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string}, \hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} string\-\_\-)
+\begin{DoxyCompactList}\small\item\em Write an informative message to the log. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_utility_gaa1508f7cf8794e99da97612ac76e694b}{fa\-\_\-log\-\_\-warning\-\_\-from} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string}, \hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} string\-\_\-)
+\begin{DoxyCompactList}\small\item\em Write a warning to the log. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_utility_gad90cd8e846dfbeabe3572e2e4f842204}{fa\-\_\-log\-\_\-error\-\_\-from} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string}, \hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} string\-\_\-)
+\begin{DoxyCompactList}\small\item\em Write an error to the log. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Miscellaneous. 
+\begin{DoxyCode}
+\textcolor{preprocessor}{#import <\hyperlink{fa_2fa_8h}{fa/fa.h}>}
+
+\textcolor{keywordtype}{int} main (\textcolor{keywordtype}{int} argc, \textcolor{keywordtype}{char} \textcolor{keyword}{const} *argv[])
+\{
+    \hyperlink{group___fa_utility_ga061c945c3f013c84561593911b661a44}{fa\_initialize}();
+
+    ...
+
+    \hyperlink{group___fa_utility_ga66c7af3a85045329f71966dfe40a5acf}{fa\_terminate}();
+    \textcolor{keywordflow}{return} 0;
+\}
+\end{DoxyCode}
+ 
+
+\subsection{Typedef Documentation}
+\hypertarget{group___fa_utility_ga1f914d0c16f566e96a08db3a3446aab7}{\index{Utility@{Utility}!fa\-\_\-log\-\_\-func\-\_\-t@{fa\-\_\-log\-\_\-func\-\_\-t}}
+\index{fa\-\_\-log\-\_\-func\-\_\-t@{fa\-\_\-log\-\_\-func\-\_\-t}!Utility@{Utility}}
+\subsubsection[{fa\-\_\-log\-\_\-func\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef void($\ast$  fa\-\_\-log\-\_\-func\-\_\-t)({\bf fa\-\_\-ptr\-\_\-t}, {\bf fa\-\_\-time\-\_\-system\-\_\-t}, {\bf fa\-\_\-error\-\_\-t})}}\label{group___fa_utility_ga1f914d0c16f566e96a08db3a3446aab7}
+
+
+\subsection{Function Documentation}
+\hypertarget{group___fa_utility_ga10bbb957eedee5b2a3c8e91a169f9991}{\index{Utility@{Utility}!fa\-\_\-version@{fa\-\_\-version}}
+\index{fa\-\_\-version@{fa\-\_\-version}!Utility@{Utility}}
+\subsubsection[{fa\-\_\-version}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-version (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_utility_ga10bbb957eedee5b2a3c8e91a169f9991}
+
+
+Returns the version of Fa as a list on the form {\ttfamily (\char`\"{}alpha\char`\"{}, 1, 0, 5, \char`\"{}\char`\"{})}. 
+
+\hypertarget{group___fa_utility_ga0f32aba533df7023c5d0948d6506b94e}{\index{Utility@{Utility}!fa\-\_\-version\-\_\-string@{fa\-\_\-version\-\_\-string}}
+\index{fa\-\_\-version\-\_\-string@{fa\-\_\-version\-\_\-string}!Utility@{Utility}}
+\subsubsection[{fa\-\_\-version\-\_\-string}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t} fa\-\_\-version\-\_\-string (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_utility_ga0f32aba533df7023c5d0948d6506b94e}
+
+
+Returns the version of Fa as a string on the form \char`\"{}alpha1.\-0.\-5\char`\"{}. 
+
+\hypertarget{group___fa_utility_ga061c945c3f013c84561593911b661a44}{\index{Utility@{Utility}!fa\-\_\-initialize@{fa\-\_\-initialize}}
+\index{fa\-\_\-initialize@{fa\-\_\-initialize}!Utility@{Utility}}
+\subsubsection[{fa\-\_\-initialize}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-initialize (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_utility_ga061c945c3f013c84561593911b661a44}
+
+
+Performs global initialization. 
+
+This function must be called exactly once before any other function in the library. A call to \hyperlink{group___fa_utility_ga66c7af3a85045329f71966dfe40a5acf}{fa\-\_\-terminate()} will reset the global state so that \hyperlink{group___fa_utility_ga061c945c3f013c84561593911b661a44}{fa\-\_\-initialize()} may be called again and so on. \hypertarget{group___fa_utility_ga66c7af3a85045329f71966dfe40a5acf}{\index{Utility@{Utility}!fa\-\_\-terminate@{fa\-\_\-terminate}}
+\index{fa\-\_\-terminate@{fa\-\_\-terminate}!Utility@{Utility}}
+\subsubsection[{fa\-\_\-terminate}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-terminate (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_utility_ga66c7af3a85045329f71966dfe40a5acf}
+
+
+Performs global cleanup. 
+
+This function may be used to reset the global state as per above. It is not necessary to call this function before the program finishes. \hypertarget{group___fa_utility_ga09490b15451aa64808537eb688aa4604}{\index{Utility@{Utility}!fa\-\_\-set\-\_\-log\-\_\-file@{fa\-\_\-set\-\_\-log\-\_\-file}}
+\index{fa\-\_\-set\-\_\-log\-\_\-file@{fa\-\_\-set\-\_\-log\-\_\-file}!Utility@{Utility}}
+\subsubsection[{fa\-\_\-set\-\_\-log\-\_\-file}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-set\-\_\-log\-\_\-file (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string}
+\end{DoxyParamCaption}
+)}}\label{group___fa_utility_ga09490b15451aa64808537eb688aa4604}
+
+
+Instruct Fa to write log messages to the specific file. 
+
+\hypertarget{group___fa_utility_gaadd396f69e7ae709c4e224d893ff90a6}{\index{Utility@{Utility}!fa\-\_\-set\-\_\-log\-\_\-std@{fa\-\_\-set\-\_\-log\-\_\-std}}
+\index{fa\-\_\-set\-\_\-log\-\_\-std@{fa\-\_\-set\-\_\-log\-\_\-std}!Utility@{Utility}}
+\subsubsection[{fa\-\_\-set\-\_\-log\-\_\-std}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-set\-\_\-log\-\_\-std (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_utility_gaadd396f69e7ae709c4e224d893ff90a6}
+
+
+Instruct Fa to write log messages to the standard output. 
+
+\hypertarget{group___fa_utility_ga97a486eb85c974972eebfd7d69eaa8c3}{\index{Utility@{Utility}!fa\-\_\-set\-\_\-log@{fa\-\_\-set\-\_\-log}}
+\index{fa\-\_\-set\-\_\-log@{fa\-\_\-set\-\_\-log}!Utility@{Utility}}
+\subsubsection[{fa\-\_\-set\-\_\-log}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-set\-\_\-log (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-log\-\_\-func\-\_\-t}}]{log\-Func, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr}
+\end{DoxyParamCaption}
+)}}\label{group___fa_utility_ga97a486eb85c974972eebfd7d69eaa8c3}
+
+
+Instruct Fa to pass log messages to the given handler. 
+
+\hypertarget{group___fa_utility_ga9567a792b3679742c7ab6535c368be60}{\index{Utility@{Utility}!fa\-\_\-log@{fa\-\_\-log}}
+\index{fa\-\_\-log@{fa\-\_\-log}!Utility@{Utility}}
+\subsubsection[{fa\-\_\-log}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-log (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-error\-\_\-t}}]{error}
+\end{DoxyParamCaption}
+)}}\label{group___fa_utility_ga9567a792b3679742c7ab6535c368be60}
+
+
+Write a log message. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em context} & Ignored, declared for compability with user-\/defined callbacks. \\
+\hline
+{\em error} & Condition to log. Must implement \hyperlink{structfa__error__interface__t}{Error}. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_utility_ga7d0eec2d02accbcf65148ea41e680b1e}{\index{Utility@{Utility}!fa\-\_\-log\-\_\-info@{fa\-\_\-log\-\_\-info}}
+\index{fa\-\_\-log\-\_\-info@{fa\-\_\-log\-\_\-info}!Utility@{Utility}}
+\subsubsection[{fa\-\_\-log\-\_\-info}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-log\-\_\-info (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string}
+\end{DoxyParamCaption}
+)}}\label{group___fa_utility_ga7d0eec2d02accbcf65148ea41e680b1e}
+
+
+Write an informative message to the log. 
+
+\hypertarget{group___fa_utility_gaadbae9a73993245706ca501b11b531ec}{\index{Utility@{Utility}!fa\-\_\-log\-\_\-warning@{fa\-\_\-log\-\_\-warning}}
+\index{fa\-\_\-log\-\_\-warning@{fa\-\_\-log\-\_\-warning}!Utility@{Utility}}
+\subsubsection[{fa\-\_\-log\-\_\-warning}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-log\-\_\-warning (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string}
+\end{DoxyParamCaption}
+)}}\label{group___fa_utility_gaadbae9a73993245706ca501b11b531ec}
+
+
+Write a warning to the log. 
+
+\hypertarget{group___fa_utility_gaf6025219b330102e95a473aa2450bd7f}{\index{Utility@{Utility}!fa\-\_\-log\-\_\-error@{fa\-\_\-log\-\_\-error}}
+\index{fa\-\_\-log\-\_\-error@{fa\-\_\-log\-\_\-error}!Utility@{Utility}}
+\subsubsection[{fa\-\_\-log\-\_\-error}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-log\-\_\-error (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string}
+\end{DoxyParamCaption}
+)}}\label{group___fa_utility_gaf6025219b330102e95a473aa2450bd7f}
+
+
+Write an error to the log. 
+
+\hypertarget{group___fa_utility_ga0c1973f20d36a9af40e69f4fb6237126}{\index{Utility@{Utility}!fa\-\_\-log\-\_\-info\-\_\-from@{fa\-\_\-log\-\_\-info\-\_\-from}}
+\index{fa\-\_\-log\-\_\-info\-\_\-from@{fa\-\_\-log\-\_\-info\-\_\-from}!Utility@{Utility}}
+\subsubsection[{fa\-\_\-log\-\_\-info\-\_\-from}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-log\-\_\-info\-\_\-from (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string, }
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_utility_ga0c1973f20d36a9af40e69f4fb6237126}
+
+
+Write an informative message to the log. 
+
+\hypertarget{group___fa_utility_gaa1508f7cf8794e99da97612ac76e694b}{\index{Utility@{Utility}!fa\-\_\-log\-\_\-warning\-\_\-from@{fa\-\_\-log\-\_\-warning\-\_\-from}}
+\index{fa\-\_\-log\-\_\-warning\-\_\-from@{fa\-\_\-log\-\_\-warning\-\_\-from}!Utility@{Utility}}
+\subsubsection[{fa\-\_\-log\-\_\-warning\-\_\-from}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-log\-\_\-warning\-\_\-from (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string, }
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_utility_gaa1508f7cf8794e99da97612ac76e694b}
+
+
+Write a warning to the log. 
+
+\hypertarget{group___fa_utility_gad90cd8e846dfbeabe3572e2e4f842204}{\index{Utility@{Utility}!fa\-\_\-log\-\_\-error\-\_\-from@{fa\-\_\-log\-\_\-error\-\_\-from}}
+\index{fa\-\_\-log\-\_\-error\-\_\-from@{fa\-\_\-log\-\_\-error\-\_\-from}!Utility@{Utility}}
+\subsubsection[{fa\-\_\-log\-\_\-error\-\_\-from}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-log\-\_\-error\-\_\-from (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string, }
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_utility_gad90cd8e846dfbeabe3572e2e4f842204}
+
+
+Write an error to the log. 
+

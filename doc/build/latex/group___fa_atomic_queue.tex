@@ -1,0 +1,122 @@
+\hypertarget{group___fa_atomic_queue}{\section{Queue}
+\label{group___fa_atomic_queue}\index{Queue@{Queue}}
+}
+
+
+Mutable lock-\/free queues.  
+
+
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \-\_\-fa\-\_\-atomic\-\_\-queue\-\_\-t $\ast$ \hyperlink{group___fa_atomic_queue_ga31bf61a25a3ef94a5590f863b5448be7}{fa\-\_\-atomic\-\_\-queue\-\_\-t}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group___fa_atomic_queue_ga31bf61a25a3ef94a5590f863b5448be7}{fa\-\_\-atomic\-\_\-queue\-\_\-t} \hyperlink{group___fa_atomic_queue_gab64418bd1d44abd7e744450c27013381}{fa\-\_\-atomic\-\_\-queue\-\_\-create} ()
+\begin{DoxyCompactList}\small\item\em Create a new queue. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_atomic_queue_ga348fb67019a6c3548449db7f6fdc5497}{fa\-\_\-atomic\-\_\-queue\-\_\-destroy} (\hyperlink{group___fa_atomic_queue_ga31bf61a25a3ef94a5590f863b5448be7}{fa\-\_\-atomic\-\_\-queue\-\_\-t} queue)
+\begin{DoxyCompactList}\small\item\em Destroy the given queue. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_atomic_queue_gab3d856bfd5a77e0fedf138e2c64eb239}{fa\-\_\-atomic\-\_\-queue\-\_\-read} (\hyperlink{group___fa_atomic_queue_ga31bf61a25a3ef94a5590f863b5448be7}{fa\-\_\-atomic\-\_\-queue\-\_\-t} queue)
+\begin{DoxyCompactList}\small\item\em Read a value from the given queue. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_atomic_queue_ga0f28dbe53a428bafc02662c99d71b025}{fa\-\_\-atomic\-\_\-queue\-\_\-write} (\hyperlink{group___fa_atomic_queue_ga31bf61a25a3ef94a5590f863b5448be7}{fa\-\_\-atomic\-\_\-queue\-\_\-t} queue, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em Write the given value to the given queue. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Mutable lock-\/free queues. \begin{DoxyParagraph}{Literals}
+
+\begin{DoxyItemize}
+\item {\ttfamily \hyperlink{util_8h_a1e0b7a481baccdd5493632222a87eb1c}{atomic\-\_\-queue()}}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Implements }
+
+\begin{DoxyItemize}
+\item \hyperlink{structfa__destroy__t}{fa\-\_\-destroy\-\_\-t}
+\item \hyperlink{structfa__string__show__t}{fa\-\_\-string\-\_\-show\-\_\-t}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxySeeAlso}{See Also}
+
+\begin{DoxyItemize}
+\item \hyperlink{md__data_structures_DataStructures}{Data structures} 
+\end{DoxyItemize}
+\end{DoxySeeAlso}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{group___fa_atomic_queue_ga31bf61a25a3ef94a5590f863b5448be7}{\index{Queue@{Queue}!fa\-\_\-atomic\-\_\-queue\-\_\-t@{fa\-\_\-atomic\-\_\-queue\-\_\-t}}
+\index{fa\-\_\-atomic\-\_\-queue\-\_\-t@{fa\-\_\-atomic\-\_\-queue\-\_\-t}!Queue@{Queue}}
+\subsubsection[{fa\-\_\-atomic\-\_\-queue\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct \-\_\-fa\-\_\-atomic\-\_\-queue\-\_\-t$\ast$ {\bf fa\-\_\-atomic\-\_\-queue\-\_\-t}}}\label{group___fa_atomic_queue_ga31bf61a25a3ef94a5590f863b5448be7}
+
+
+\subsection{Function Documentation}
+\hypertarget{group___fa_atomic_queue_gab64418bd1d44abd7e744450c27013381}{\index{Queue@{Queue}!fa\-\_\-atomic\-\_\-queue\-\_\-create@{fa\-\_\-atomic\-\_\-queue\-\_\-create}}
+\index{fa\-\_\-atomic\-\_\-queue\-\_\-create@{fa\-\_\-atomic\-\_\-queue\-\_\-create}!Queue@{Queue}}
+\subsubsection[{fa\-\_\-atomic\-\_\-queue\-\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-atomic\-\_\-queue\-\_\-t} fa\-\_\-atomic\-\_\-queue\-\_\-create (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_atomic_queue_gab64418bd1d44abd7e744450c27013381}
+
+
+Create a new queue. 
+
+\begin{DoxyParagraph}{Atomicity}
+Non-\/atomic 
+\end{DoxyParagraph}
+\hypertarget{group___fa_atomic_queue_ga348fb67019a6c3548449db7f6fdc5497}{\index{Queue@{Queue}!fa\-\_\-atomic\-\_\-queue\-\_\-destroy@{fa\-\_\-atomic\-\_\-queue\-\_\-destroy}}
+\index{fa\-\_\-atomic\-\_\-queue\-\_\-destroy@{fa\-\_\-atomic\-\_\-queue\-\_\-destroy}!Queue@{Queue}}
+\subsubsection[{fa\-\_\-atomic\-\_\-queue\-\_\-destroy}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-atomic\-\_\-queue\-\_\-destroy (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-atomic\-\_\-queue\-\_\-t}}]{queue}
+\end{DoxyParamCaption}
+)}}\label{group___fa_atomic_queue_ga348fb67019a6c3548449db7f6fdc5497}
+
+
+Destroy the given queue. 
+
+\begin{DoxyParagraph}{Atomicity}
+Non-\/atomic 
+\end{DoxyParagraph}
+\hypertarget{group___fa_atomic_queue_gab3d856bfd5a77e0fedf138e2c64eb239}{\index{Queue@{Queue}!fa\-\_\-atomic\-\_\-queue\-\_\-read@{fa\-\_\-atomic\-\_\-queue\-\_\-read}}
+\index{fa\-\_\-atomic\-\_\-queue\-\_\-read@{fa\-\_\-atomic\-\_\-queue\-\_\-read}!Queue@{Queue}}
+\subsubsection[{fa\-\_\-atomic\-\_\-queue\-\_\-read}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ptr\-\_\-t} fa\-\_\-atomic\-\_\-queue\-\_\-read (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-atomic\-\_\-queue\-\_\-t}}]{queue}
+\end{DoxyParamCaption}
+)}}\label{group___fa_atomic_queue_gab3d856bfd5a77e0fedf138e2c64eb239}
+
+
+Read a value from the given queue. 
+
+\begin{DoxyReturn}{Returns}
+A value (optional). 
+\end{DoxyReturn}
+\begin{DoxyParagraph}{Atomicity}
+Atomic 
+\end{DoxyParagraph}
+\hypertarget{group___fa_atomic_queue_ga0f28dbe53a428bafc02662c99d71b025}{\index{Queue@{Queue}!fa\-\_\-atomic\-\_\-queue\-\_\-write@{fa\-\_\-atomic\-\_\-queue\-\_\-write}}
+\index{fa\-\_\-atomic\-\_\-queue\-\_\-write@{fa\-\_\-atomic\-\_\-queue\-\_\-write}!Queue@{Queue}}
+\subsubsection[{fa\-\_\-atomic\-\_\-queue\-\_\-write}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-atomic\-\_\-queue\-\_\-write (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-atomic\-\_\-queue\-\_\-t}}]{queue, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr}
+\end{DoxyParamCaption}
+)}}\label{group___fa_atomic_queue_ga0f28dbe53a428bafc02662c99d71b025}
+
+
+Write the given value to the given queue. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em queuer} & Queue. \\
+\hline
+{\em value} & Value to write (optional). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyParagraph}{Atomicity}
+Atomic 
+\end{DoxyParagraph}

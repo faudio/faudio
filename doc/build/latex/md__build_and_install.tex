@@ -1,0 +1,166 @@
+\hypertarget{md__build_and_install_Prerequisites}{}\section{Prerequisites}\label{md__build_and_install_Prerequisites}
+\label{md__build_and_install_Prerequisites}%
+\hypertarget{md__build_and_install_Prerequisites}{}%
+
+
+The following tools and libraries are required to build {\itshape faudio}.\hypertarget{md__build_and_install_Platform}{}\section{Platform}\label{md__build_and_install_Platform}
+Supported platforms are\-:
+
+
+\begin{DoxyItemize}
+\item Windows X\-P or later
+\item Mac O\-S X 10.\-5 or later
+\end{DoxyItemize}
+
+Porting to Linux should be relatively easy but has not been done yet.\hypertarget{md__build_and_install_Compiler}{}\subsection{Compiler}\label{md__build_and_install_Compiler}
+A compiler supporting the C99 standard is required. Currently tested are\-:
+
+
+\begin{DoxyItemize}
+\item clang 3.\-1 or later (Apple call this compiler \char`\"{}4.\-0.\-0 based of S\-V\-N 3.\-1\char`\"{})
+\item G\-C\-C 4.\-6.\-2 or later
+\end{DoxyItemize}
+
+The default Windows compiler (Visual C/\-C++) is not well supported, the Min\-G\-W version of G\-C\-C is recommended.\hypertarget{md__build_and_install_Tools}{}\subsection{Tools}\label{md__build_and_install_Tools}
+The following tools are required to build {\itshape faudio}.
+
+\subsubsection*{C\-Make}
+
+\href{http://www.cmake.org}{\tt http\-://www.\-cmake.\-org}
+
+Required for building the libraries and binaries.
+
+At present the {\itshape only} supported generators are Makefiles on Linux O\-S X, and M\-S\-Y\-S Makefiles on Windows. Cygwin Makefiles {\itshape might} work, but is not well tested, and not recommended as the Cygwin compiler might not generate standard Windows binaries.
+
+\subsubsection*{Modulo}
+
+\href{https://github.com/hanshoglund/modulo}{\tt https\-://github.\-com/hanshoglund/modulo}
+
+Required for generating headers and low-\/level language bindings.
+
+\subsubsection*{Doxygen}
+
+\href{http://www.stack.nl/~dimitri/doxygen}{\tt http\-://www.\-stack.\-nl/$\sim$dimitri/doxygen}
+
+Required for generating the documentation.
+
+\subsubsection*{Graph\-Viz}
+
+\href{http://www.graphviz.org/}{\tt http\-://www.\-graphviz.\-org/}
+
+Optionally used for generating graphs.
+
+\subsubsection*{gnuplot}
+
+\href{http://gnuplot.sourceforge.net/}{\tt http\-://gnuplot.\-sourceforge.\-net/}
+
+Optionally used for generating plots.
+
+\subsubsection*{Image\-Magick}
+
+\href{http://www.imagemagick.org/script/index.php}{\tt http\-://www.\-imagemagick.\-org/script/index.\-php}
+
+Optionally used for converting graphs.
+
+\subsubsection*{Ghost\-Script}
+
+\href{http://pages.cs.wisc.edu/~ghost/}{\tt http\-://pages.\-cs.\-wisc.\-edu/$\sim$ghost/}
+
+Optionally used for converting plots.
+
+\subsubsection*{G\-N\-U Make}
+
+Required for building language bindings and documentation.\hypertarget{md__build_and_install_Libraries}{}\subsection{Libraries}\label{md__build_and_install_Libraries}
+\label{md__build_and_install_Libraries}%
+\hypertarget{md__build_and_install_Libraries}{}%
+ These are typically handled by the package mangager, see build and install.
+
+\subsubsection*{Portaudio}
+
+\href{http://www.portaudio.com}{\tt http\-://www.\-portaudio.\-com} \href{http://portmedia.sourceforge.net}{\tt http\-://portmedia.\-sourceforge.\-net}
+
+Required for real-\/time audio streams on all systems.
+
+\subsubsection*{Portmidi}
+
+\href{http://portmedia.sourceforge.net}{\tt http\-://portmedia.\-sourceforge.\-net}
+
+Required for real-\/time midi streams on all systems.
+
+\subsubsection*{Libsndfile}
+
+\href{http://www.mega-nerd.com/libsndfile}{\tt http\-://www.\-mega-\/nerd.\-com/libsndfile}
+
+Required for non-\/real-\/time audio streams on all systems.
+
+\subsubsection*{Fluidsynth}
+
+\href{http://sourceforge.net/apps/trac/fluidsynth}{\tt http\-://sourceforge.\-net/apps/trac/fluidsynth}
+
+Required for using the Fluidsynth audio processor.\hypertarget{md__build_and_install_BasicBuild}{}\section{Basic build}\label{md__build_and_install_BasicBuild}
+First ensure that your system meets the \hyperlink{md__build_and_install_Platform}{platform} requirements, and that the necessary \hyperlink{md__build_and_install_Compiler}{compiler} and \hyperlink{md__build_and_install_Tools}{tools} are available.
+
+The source code for {\itshape faudio} can be obtained by. \begin{DoxyVerb}$ git clone git@github.com:faudio/faudio.git
+$ cd audio-engine
+\end{DoxyVerb}
+
+
+After changing into the {\ttfamily audio-\/engine} directory, the {\ttfamily bootstrap} script should be run. This will create a standard out-\/of-\/source build in the {\ttfamily build} subdirectory. After a successful bootstrap, you can run {\ttfamily make help} to view build commands or {\ttfamily make} to perform the build.
+
+All in all, the simplest possible build session looks like this\-: \begin{DoxyVerb}$ ./bootstrap [options]
+$ make
+$ make test
+\end{DoxyVerb}
+\hypertarget{md__build_and_install_AdvancedBuild}{}\section{Advanced build}\label{md__build_and_install_AdvancedBuild}
+\hypertarget{md__build_and_install_Dependencies}{}\subsection{Building local dependencies}\label{md__build_and_install_Dependencies}
+The bootstrap script automatically downloads the \hyperlink{md__build_and_install_Libraries}{required libraries}. You can also build libraries locally, using the component commands described below.\hypertarget{md__build_and_install_SettingOptions}{}\subsection{Setting and inspecting options}\label{md__build_and_install_SettingOptions}
+Build options can be changed using any C\-Make tool, such as {\ttfamily cmake-\/gui} or {\ttfamily ccmake}.
+
+You can also change a build setting on the command line. These changes will persist until you change them again, or regenerate the build directory. \begin{DoxyVerb}$ cmake build -DMY_SETTING=0
+\end{DoxyVerb}
+\hypertarget{md__build_and_install_SeparateBuildDir}{}\subsection{Using a separate build directory}\label{md__build_and_install_SeparateBuildDir}
+If you use {\ttfamily ccmake} or {\ttfamily cmake-\/gui} you should run them on the {\ttfamily build} directory, which is the default build directory created by the bootstrap script.
+
+If you want to use another build directory, i.\-e. for maintaining multiple builds of the same source, you can rerun the bootstrap script passing the {\ttfamily B\-U\-I\-L\-D\-\_\-\-D\-I\-R\-E\-C\-T\-O\-R\-Y} flag. \begin{DoxyVerb}$ BUILD_DIRECTORY=my_build_dir ./bootstrap
+\end{DoxyVerb}
+\hypertarget{md__build_and_install_Rebuilding}{}\section{Rebuilding headers and bindings}\label{md__build_and_install_Rebuilding}
+T\-O\-D\-O\hypertarget{md__build_and_install_Running}{}\section{Running and testing}\label{md__build_and_install_Running}
+T\-O\-D\-O\hypertarget{md__build_and_install_Distributing}{}\section{Distributing the build}\label{md__build_and_install_Distributing}
+T\-O\-D\-O\hypertarget{md__build_and_install_Reference}{}\section{Reference}\label{md__build_and_install_Reference}
+\hypertarget{md__build_and_install_Options}{}\subsection{Options}\label{md__build_and_install_Options}
+\begin{TabularC}{2}
+\hline
+\rowcolor{lightgray}{\bf Name }&{\bf Description}\\\cline{1-2}
+C\-M\-A\-K\-E\-\_\-\-B\-U\-I\-L\-D\-\_\-\-T\-Y\-P\-E &Either {\ttfamily Debug}, {\ttfamily Release} or {\ttfamily Rel\-With\-Deb\-Info} \\\cline{1-2}
+E\-N\-A\-B\-L\-E\-\_\-\-R\-E\-A\-L\-T\-I\-M\-E\-\_\-\-A\-U\-D\-I\-O &Enable real-\/time audio \\\cline{1-2}
+E\-N\-A\-B\-L\-E\-\_\-\-R\-E\-A\-L\-T\-I\-M\-E\-\_\-\-M\-I\-D\-I &Enable real-\/time midi \\\cline{1-2}
+E\-N\-A\-B\-L\-E\-\_\-\-N\-O\-N\-R\-E\-A\-L\-T\-I\-M\-E\-\_\-\-A\-U\-D\-I\-O &Enable non-\/real-\/time audio \\\cline{1-2}
+E\-N\-A\-B\-L\-E\-\_\-\-F\-L\-U\-I\-D\-S\-Y\-N\-T\-H &Enable the Fluid\-Synth processor \\\cline{1-2}
+E\-N\-A\-B\-L\-E\-\_\-\-A\-U\-D\-I\-O\-\_\-\-U\-N\-I\-T &Enable Audio\-Unit processors \\\cline{1-2}
+E\-N\-A\-B\-L\-E\-\_\-\-V\-S\-T &Enable V\-S\-T processors \\\cline{1-2}
+B\-U\-I\-L\-D\-\_\-\-F\-R\-A\-M\-E\-W\-O\-R\-K &Build an O\-S X framework \\\cline{1-2}
+B\-U\-I\-L\-D\-\_\-\-S\-H\-A\-R\-E\-D &Build a shared library \\\cline{1-2}
+B\-U\-I\-L\-D\-\_\-\-T\-E\-S\-T\-S &Build unit tests \\\cline{1-2}
+P\-R\-O\-F\-I\-L\-I\-N\-G &Compile with profiler flags -\/pg set \\\cline{1-2}
+B\-U\-I\-L\-D\-\_\-\-C\-O\-M\-P\-O\-N\-E\-N\-T\-S &Build dependent components locally \\\cline{1-2}
+S\-H\-O\-W\-\_\-\-C\-O\-M\-P\-O\-N\-E\-N\-T\-\_\-\-O\-U\-T\-P\-U\-T &Show output while building components \\\cline{1-2}
+\end{TabularC}
+\hypertarget{md__build_and_install_Commands}{}\subsection{Commands}\label{md__build_and_install_Commands}
+The build commands should always be run from the top directory. They will delegate to the {\ttfamily build} directory by default. You can use the {\ttfamily B\-U\-I\-L\-D\-\_\-\-D\-I\-R\-E\-C\-T\-O\-R\-Y} flag to override. \begin{DoxyVerb}make test
+\end{DoxyVerb}
+
+
+This command builds and runs the standard test suite. This may take several minutes to complete. \begin{DoxyVerb}make modules
+\end{DoxyVerb}
+
+
+This command builds most of the headers in the {\ttfamily include/} subdirectory. \begin{DoxyVerb}make bindings
+\end{DoxyVerb}
+
+
+This command builds the external language bindings in the {\ttfamily bindings/} subdirectory. \begin{DoxyVerb}make doc
+\end{DoxyVerb}
+
+
+This command builds documentation in the {\ttfamily doc/build} subdirectory. By default both H\-T\-M\-L and P\-D\-F files are produced. \begin{DoxyVerb}make dist\end{DoxyVerb}
+ 

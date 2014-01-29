@@ -1,0 +1,79 @@
+\hypertarget{group___fa_input}{\section{Input}
+\label{group___fa_input}\index{Input@{Input}}
+}
+
+
+Provides external streams.  
+
+
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structfa__input__filter__interface__t}{fa\-\_\-input\-\_\-filter\-\_\-interface\-\_\-t}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef void($\ast$ \hyperlink{group___fa_input_gac28594faa4f5b9d2815a4dda56634282}{fa\-\_\-input\-\_\-buffer\-\_\-callback\-\_\-t} )(\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t})
+\begin{DoxyCompactList}\small\item\em Callback to receive data. \end{DoxyCompactList}\item 
+typedef struct \-\_\-fa\-\_\-input\-\_\-filter\-\_\-t $\ast$ \hyperlink{group___fa_input_ga9d81ca05f2cd813a8f8b91d3a8b59c33}{fa\-\_\-input\-\_\-filter\-\_\-t}
+\begin{DoxyCompactList}\small\item\em Implements the filter interface. \end{DoxyCompactList}\item 
+typedef struct \-\_\-fa\-\_\-input\-\_\-source\-\_\-t $\ast$ \hyperlink{group___fa_input_gad1696c209650d2d4758d2af9edefb919}{fa\-\_\-input\-\_\-source\-\_\-t}
+\begin{DoxyCompactList}\small\item\em Implements the filter interface (ignores the source). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_input_ga37bc671f36c95f15fba9aac955990e5e}{fa\-\_\-input\-\_\-filter} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\begin{DoxyCompactList}\small\item\em Filter two filterable things. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Provides external streams. 
+\begin{DoxyItemize}
+\item {\itshape Sources} produce sequences of data (bytes, characters, floats etc)
+\item {\itshape Sinks} consume sequences of data (bytes, characters, floats etc)
+\item Both {\itshape sources} and {\itshape sinks} accepts external buffers.
+\end{DoxyItemize}
+
+\begin{DoxySince}{Since}
+2.\-9 
+\end{DoxySince}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{group___fa_input_gac28594faa4f5b9d2815a4dda56634282}{\index{Input@{Input}!fa\-\_\-input\-\_\-buffer\-\_\-callback\-\_\-t@{fa\-\_\-input\-\_\-buffer\-\_\-callback\-\_\-t}}
+\index{fa\-\_\-input\-\_\-buffer\-\_\-callback\-\_\-t@{fa\-\_\-input\-\_\-buffer\-\_\-callback\-\_\-t}!Input@{Input}}
+\subsubsection[{fa\-\_\-input\-\_\-buffer\-\_\-callback\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef void($\ast$  fa\-\_\-input\-\_\-buffer\-\_\-callback\-\_\-t)({\bf fa\-\_\-buffer\-\_\-t})}}\label{group___fa_input_gac28594faa4f5b9d2815a4dda56634282}
+
+
+Callback to receive data. 
+
+Argument is either a (possibly empty) buffer, meaning that more data is to arrive, or {\ttfamily N\-U\-L\-L}, indicating that the data source has been extinguished. \hypertarget{group___fa_input_ga9d81ca05f2cd813a8f8b91d3a8b59c33}{\index{Input@{Input}!fa\-\_\-input\-\_\-filter\-\_\-t@{fa\-\_\-input\-\_\-filter\-\_\-t}}
+\index{fa\-\_\-input\-\_\-filter\-\_\-t@{fa\-\_\-input\-\_\-filter\-\_\-t}!Input@{Input}}
+\subsubsection[{fa\-\_\-input\-\_\-filter\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct \-\_\-fa\-\_\-input\-\_\-filter\-\_\-t$\ast$ {\bf fa\-\_\-input\-\_\-filter\-\_\-t}}}\label{group___fa_input_ga9d81ca05f2cd813a8f8b91d3a8b59c33}
+
+
+Implements the filter interface. 
+
+\hypertarget{group___fa_input_gad1696c209650d2d4758d2af9edefb919}{\index{Input@{Input}!fa\-\_\-input\-\_\-source\-\_\-t@{fa\-\_\-input\-\_\-source\-\_\-t}}
+\index{fa\-\_\-input\-\_\-source\-\_\-t@{fa\-\_\-input\-\_\-source\-\_\-t}!Input@{Input}}
+\subsubsection[{fa\-\_\-input\-\_\-source\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct \-\_\-fa\-\_\-input\-\_\-source\-\_\-t$\ast$ {\bf fa\-\_\-input\-\_\-source\-\_\-t}}}\label{group___fa_input_gad1696c209650d2d4758d2af9edefb919}
+
+
+Implements the filter interface (ignores the source). 
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group___fa_input_ga37bc671f36c95f15fba9aac955990e5e}{\index{Input@{Input}!fa\-\_\-input\-\_\-filter@{fa\-\_\-input\-\_\-filter}}
+\index{fa\-\_\-input\-\_\-filter@{fa\-\_\-input\-\_\-filter}!Input@{Input}}
+\subsubsection[{fa\-\_\-input\-\_\-filter}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ptr\-\_\-t} fa\-\_\-input\-\_\-filter (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_input_ga37bc671f36c95f15fba9aac955990e5e}
+
+
+Filter two filterable things. 
+

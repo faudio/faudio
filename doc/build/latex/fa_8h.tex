@@ -1,0 +1,173 @@
+\hypertarget{fa_8h}{\section{include/fa.h File Reference}
+\label{fa_8h}\index{include/fa.\-h@{include/fa.\-h}}
+}
+{\ttfamily \#include $<$fa/std.\-h$>$}\\*
+{\ttfamily \#include $<$fa/alloc.\-h$>$}\\*
+{\ttfamily \#include $<$fa/interfaces.\-h$>$}\\*
+Include dependency graph for fa.\-h\-:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{fa_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\-:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{fa_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structfa__equal__t}{fa\-\_\-equal\-\_\-t}
+\begin{DoxyCompactList}\small\item\em Equality comparison interface. \end{DoxyCompactList}\item 
+struct \hyperlink{structfa__order__t}{fa\-\_\-order\-\_\-t}
+\begin{DoxyCompactList}\small\item\em Less-\/than comparison interface. \end{DoxyCompactList}\item 
+struct \hyperlink{structfa__number__t}{fa\-\_\-number\-\_\-t}
+\begin{DoxyCompactList}\small\item\em Arithmetic operations interface. \end{DoxyCompactList}\item 
+struct \hyperlink{structfa__copy__t}{fa\-\_\-copy\-\_\-t}
+\begin{DoxyCompactList}\small\item\em Generic copying interface. \end{DoxyCompactList}\item 
+struct \hyperlink{structfa__destroy__t}{fa\-\_\-destroy\-\_\-t}
+\begin{DoxyCompactList}\small\item\em Generic destruction interface. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef void $\ast$ \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t}
+\begin{DoxyCompactList}\small\item\em Pointer type, equivalent to {\ttfamily void$\ast$}. \end{DoxyCompactList}\item 
+typedef \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t}($\ast$ \hyperlink{group___fa_ga43b940a9294fd58a54087ef0b416e479}{fa\-\_\-nullary\-\_\-t} )(\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t})
+\begin{DoxyCompactList}\small\item\em A nullary function, defined as {\ttfamily fa\-\_\-ptr\-\_\-t($\ast$fa\-\_\-nullary\-\_\-t )(fa\-\_\-ptr\-\_\-t)}. \end{DoxyCompactList}\item 
+typedef \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t}($\ast$ \hyperlink{group___fa_gaaafae8ab9ebae9019133108e56d2d4d1}{fa\-\_\-unary\-\_\-t} )(\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t}, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t})
+\begin{DoxyCompactList}\small\item\em A unary function. \end{DoxyCompactList}\item 
+typedef \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t}($\ast$ \hyperlink{group___fa_gab70ba406935a18c1d645d12e7abf2e63}{fa\-\_\-binary\-\_\-t} )(\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t}, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t}, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t})
+\begin{DoxyCompactList}\small\item\em A binary function. \end{DoxyCompactList}\item 
+typedef \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t}($\ast$ \hyperlink{group___fa_gadbab7e8e405b3d2436de1e1126cc4817}{fa\-\_\-ternary\-\_\-t} )(\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t}, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t}, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t}, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t})
+\begin{DoxyCompactList}\small\item\em A ternary function. \end{DoxyCompactList}\item 
+typedef bool($\ast$ \hyperlink{group___fa_gae6b6ae9fb073db0ba0bd323d511c6a98}{fa\-\_\-pred\-\_\-t} )(\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t}, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t})
+\begin{DoxyCompactList}\small\item\em A predicate, or boolean function. \end{DoxyCompactList}\item 
+typedef char \hyperlink{group___fa_ga98bfdb5d0438f95f3438cddeab1818e8}{fa\-\_\-char8\-\_\-t}
+\begin{DoxyCompactList}\small\item\em An 8-\/bit character. \end{DoxyCompactList}\item 
+typedef uint16\-\_\-t \hyperlink{group___fa_ga33e83372a0abc1895fdad5fb4d15eae3}{fa\-\_\-char16\-\_\-t}
+\begin{DoxyCompactList}\small\item\em A 16-\/bit character. \end{DoxyCompactList}\item 
+typedef uint32\-\_\-t \hyperlink{group___fa_gaca70e02afbba75b08b2b6531b821f67b}{fa\-\_\-char32\-\_\-t}
+\begin{DoxyCompactList}\small\item\em A 32-\/bit character. \end{DoxyCompactList}\item 
+typedef int64\-\_\-t \hyperlink{group___fa_gaeb5011c69dfea4d2c41c05a2c95899d0}{fa\-\_\-id\-\_\-t}
+\begin{DoxyCompactList}\small\item\em Unique identifier. \end{DoxyCompactList}\item 
+typedef \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t}($\ast$ \hyperlink{group___fa_gac13cc6d4ef02b8763045164333cfd763}{fa\-\_\-impl\-\_\-t} )(\hyperlink{group___fa_gaeb5011c69dfea4d2c41c05a2c95899d0}{fa\-\_\-id\-\_\-t})
+\begin{DoxyCompactList}\small\item\em Callback to lookup an interface implementation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{group___fa_gaea204b4c094f2e6fb13a91e22f3f80de}{fa\-\_\-is\-\_\-bool} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+bool \hyperlink{group___fa_gad0959793c33e61bf126ae45431cce74e}{fa\-\_\-is\-\_\-int8} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+bool \hyperlink{group___fa_gaa63a843cb966ae896513c9fa2eafc82c}{fa\-\_\-is\-\_\-int16} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+bool \hyperlink{group___fa_gaae5fd4fcfa0d1d306bb7be3a5bf3b238}{fa\-\_\-is\-\_\-int32} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+bool \hyperlink{group___fa_ga2cb6a7ad52d1cbee60fa2eaa57fde75e}{fa\-\_\-is\-\_\-int64} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+bool \hyperlink{group___fa_gaf2acf9a74b67d56c155fec11e55d6129}{fa\-\_\-is\-\_\-float} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+bool \hyperlink{group___fa_ga1faadaefa3dc646cfe78bb01b22b783e}{fa\-\_\-is\-\_\-double} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+bool \hyperlink{group___fa_gaa7ee523c4d3f4aea6d3e061d4e52c634}{fa\-\_\-is\-\_\-ref} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+bool \hyperlink{group___fa_ga55ece575ff8ef52ba6a9ba563ca02a1d}{fa\-\_\-to\-\_\-bool} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+int8\-\_\-t \hyperlink{group___fa_ga74132ccc642fd868e3dc263f7ad7f6bd}{fa\-\_\-to\-\_\-int8} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+int16\-\_\-t \hyperlink{group___fa_ga7b88b5b578f58271ba3553d1d46b5576}{fa\-\_\-to\-\_\-int16} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+int32\-\_\-t \hyperlink{group___fa_gada59a9ba6ae8d62407cc10513c4fc910}{fa\-\_\-to\-\_\-int32} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+int64\-\_\-t \hyperlink{group___fa_gab4de02370911531a08df105af43946e6}{fa\-\_\-to\-\_\-int64} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+float \hyperlink{group___fa_ga85cdcb16f8a421d6e3f5fc30588aec3d}{fa\-\_\-to\-\_\-float} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+double \hyperlink{group___fa_gaf49386f8ba2dbabf3efb756fd7a5fe4c}{fa\-\_\-to\-\_\-double} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+bool \hyperlink{group___fa_gad1076baa2a1645a19badde8c6ca1e7cf}{fa\-\_\-peek\-\_\-bool} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+int8\-\_\-t \hyperlink{group___fa_ga526128ab022aab513cd7e8497ae4b6f2}{fa\-\_\-peek\-\_\-int8} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+int16\-\_\-t \hyperlink{group___fa_ga3adefcb0ba19742209ab8961e77bb248}{fa\-\_\-peek\-\_\-int16} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+int32\-\_\-t \hyperlink{group___fa_gac8a8358c3e4a1612421e5bf09886e43b}{fa\-\_\-peek\-\_\-int32} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+int64\-\_\-t \hyperlink{group___fa_ga0206c6d3b07d79924d0f28a93df55474}{fa\-\_\-peek\-\_\-int64} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+float \hyperlink{group___fa_ga77afde306510c73fb992575d7f2fb91b}{fa\-\_\-peek\-\_\-float} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+double \hyperlink{group___fa_ga052c5abd5260669679286b36009aaf98}{fa\-\_\-peek\-\_\-double} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_ga03b9cabaaf785a88940eba17bd7ae621}{fa\-\_\-from\-\_\-bool} (bool bool\-\_\-)
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_gae59bb48493214037997a78b65814ba02}{fa\-\_\-from\-\_\-int8} (int8\-\_\-t int8\-\_\-)
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_ga2ab9996cc0d378c9c6b3b302011e09a4}{fa\-\_\-from\-\_\-int16} (int16\-\_\-t int16\-\_\-)
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_gae872f63b8860e24d21166fbabb0d6bc0}{fa\-\_\-from\-\_\-int32} (int32\-\_\-t int32\-\_\-)
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_gadb00915203c212a107f8fab09328cb39}{fa\-\_\-from\-\_\-int64} (int64\-\_\-t int64\-\_\-)
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_gae3c3ae262ec23b01ba4664899d89bbc4}{fa\-\_\-from\-\_\-float} (float float\-\_\-)
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_ga550b80dd4d78000cdd38bd7c3458fd08}{fa\-\_\-from\-\_\-double} (double double\-\_\-)
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_ga1cc4276643f3d366681ac7ff71fa8b06}{fa\-\_\-interface} (\hyperlink{group___fa_gaeb5011c69dfea4d2c41c05a2c95899d0}{fa\-\_\-id\-\_\-t} id, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em Returns an implenentation of the given interface on the given value. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_gaded838536607ac403241cde9fd5a4d02}{fa\-\_\-equal} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\begin{DoxyCompactList}\small\item\em Return whether the given values are equal. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_ga18edc1c7d73e70df4d925bbc7f125b7f}{fa\-\_\-not\-\_\-equal} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\begin{DoxyCompactList}\small\item\em Return whether the given values are unequal. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_ga4747e94dca95afaf031d6b00c36cc8fc}{fa\-\_\-less\-\_\-than} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\item 
+bool \hyperlink{group___fa_ga64d9591f70db8eb11f530b056ac90285}{fa\-\_\-greater\-\_\-than} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\item 
+bool \hyperlink{group___fa_gaf266c6271f28a83627c8ab153ba6fa23}{fa\-\_\-less\-\_\-than\-\_\-equal} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\item 
+bool \hyperlink{group___fa_ga8923b87d5ee72f9976ab4e47aa615a1b}{fa\-\_\-greater\-\_\-than\-\_\-equal} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_ga81600d57c9bde20b7e9be906b1b37447}{fa\-\_\-min} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_gafb335f162cc389f422c8e7de394de576}{fa\-\_\-max} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_ga21236d8af0847e8297347bf178ba9805}{fa\-\_\-add} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_ga5390d4e9a2cc596dc8fbebae5748611f}{fa\-\_\-subtract} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_gad41589f6e32dfd0ed95a1030c5f53b06}{fa\-\_\-multiply} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_ga0c8113eb0812e514decd680c0d80b336}{fa\-\_\-divide} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_ga1e763f8fcb97e1675db9a2ca7c8f7b91}{fa\-\_\-absolute} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_ga52e526b7e595b936d08ca9f497ac424d}{fa\-\_\-dadd} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_ga9339cf25c1ce53052d32ba131ca12caf}{fa\-\_\-dsubtract} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_gaea82bc5a9406ad309960f7d8f829320b}{fa\-\_\-dmultiply} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_ga21ba603d6c8848edec707bbfb17109b9}{fa\-\_\-ddivide} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_gacd2a5cccde5f71bf56779d86e67a8e49}{fa\-\_\-dabsolute} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_ga309916fa19d0be0ae404f6cc634f5568}{fa\-\_\-copy} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em Copy the given value. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_ga0d370d9cf88ed4111ba32164a2a7a1ec}{fa\-\_\-move} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em Move the given value. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_ga6fd6818b190b9e41a3b5f07e78638539}{fa\-\_\-destroy} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em Destroy the given value. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_gaec61e23c174faf5e5244ae876d264eb5}{fa\-\_\-check} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em Return whether the given value is an error or not. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_ga60d1e34d8101c4f20d7e5473c90766a2}{fa\-\_\-print} (char $\ast$, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em Print the given value, using \hyperlink{structfa__string__show__t}{Show}. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_gabe732002639a5e9d712240025443ff4f}{fa\-\_\-dprint} (char $\ast$, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+void \hyperlink{group___fa_gaf738240829f5d2d2352822c6974b7fc0}{fa\-\_\-print\-\_\-ln} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\item 
+void \hyperlink{group___fa_gafe811e843fadc2f035b80cca6e7c5b6c}{fa\-\_\-dprint\-\_\-ln} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\end{DoxyCompactItemize}

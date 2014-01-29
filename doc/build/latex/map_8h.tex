@@ -1,0 +1,87 @@
+\hypertarget{map_8h}{\section{include/fa/map.h File Reference}
+\label{map_8h}\index{include/fa/map.\-h@{include/fa/map.\-h}}
+}
+{\ttfamily \#include $<$fa.\-h$>$}\\*
+{\ttfamily \#include $<$fa/pair.\-h$>$}\\*
+{\ttfamily \#include $<$fa/list.\-h$>$}\\*
+{\ttfamily \#include $<$fa/string.\-h$>$}\\*
+Include dependency graph for map.\-h\-:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{map_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\-:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{map_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \-\_\-fa\-\_\-map\-\_\-t $\ast$ \hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t}
+\item 
+typedef \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_map_ga01c714699c14e805664c65b6a0ea974d}{fa\-\_\-map\-\_\-key\-\_\-t}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{group___fa_map_gab96a62b8c3900af432faa9c7fe9a06e6}{fa\-\_\-map\-\_\-empty} ()
+\begin{DoxyCompactList}\small\item\em Create an empty list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{group___fa_map_ga6431b8636b6f9de2db5eabc130607ddf}{fa\-\_\-map\-\_\-copy} (\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map})
+\begin{DoxyCompactList}\small\item\em Copy the given list. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_map_gaecb6f294fd3614f34c7308ebd8a2e25a}{fa\-\_\-map\-\_\-destroy} (\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map})
+\begin{DoxyCompactList}\small\item\em Destroy the given list. \end{DoxyCompactList}\item 
+int \hyperlink{group___fa_map_ga2b48664b3fd7e1c080c4c5f8071427f0}{fa\-\_\-map\-\_\-size} (\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map})
+\begin{DoxyCompactList}\small\item\em Return the number of elements in the given list. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_map_gae580cafd90c4447a7970096d5dff8f46}{fa\-\_\-map\-\_\-is\-\_\-empty} (\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map})
+\begin{DoxyCompactList}\small\item\em Return whether the given list is empty. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_map_gaa3f04a11ae175c8b8f9f916d05293ed3}{fa\-\_\-map\-\_\-is\-\_\-single} (\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map})
+\begin{DoxyCompactList}\small\item\em Return whether the given list has a single element. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{group___fa_map_gaf8b3b5cdac0cd00691754f0c7a0f87c6}{fa\-\_\-map\-\_\-add} (\hyperlink{group___fa_map_ga01c714699c14e805664c65b6a0ea974d}{fa\-\_\-map\-\_\-key\-\_\-t} key, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map})
+\begin{DoxyCompactList}\small\item\em Add an element to the map if not present. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{group___fa_map_ga91b515cb8f096af2f6ab3f7588ae41aa}{fa\-\_\-map\-\_\-set} (\hyperlink{group___fa_map_ga01c714699c14e805664c65b6a0ea974d}{fa\-\_\-map\-\_\-key\-\_\-t} key, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map})
+\begin{DoxyCompactList}\small\item\em Add an element to the map, replacing if already present. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{group___fa_map_ga73d68f263f542b076d0ae0cf4a62b5dd}{fa\-\_\-map\-\_\-remove} (\hyperlink{group___fa_map_ga01c714699c14e805664c65b6a0ea974d}{fa\-\_\-map\-\_\-key\-\_\-t} key, \hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map})
+\begin{DoxyCompactList}\small\item\em Remove the given key if present. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{group___fa_map_ga2597c509111f8e9d4231afda12a162bf}{fa\-\_\-map\-\_\-dadd} (\hyperlink{group___fa_map_ga01c714699c14e805664c65b6a0ea974d}{fa\-\_\-map\-\_\-key\-\_\-t} key, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map})
+\begin{DoxyCompactList}\small\item\em Add an element to the map if not present. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{group___fa_map_gab8babfab6a71dc62465932708705c604}{fa\-\_\-map\-\_\-dset} (\hyperlink{group___fa_map_ga01c714699c14e805664c65b6a0ea974d}{fa\-\_\-map\-\_\-key\-\_\-t} key, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map})
+\begin{DoxyCompactList}\small\item\em Add an element to the map, replacing if already present. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{group___fa_map_ga9dab19db8db2ae0912dca03bb326fd9f}{fa\-\_\-map\-\_\-dremove} (\hyperlink{group___fa_map_ga01c714699c14e805664c65b6a0ea974d}{fa\-\_\-map\-\_\-key\-\_\-t} key, \hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map})
+\begin{DoxyCompactList}\small\item\em Remove the given key if present. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{group___fa_map_ga8b23fc1bb5a9803e477f8075ec9f04b6}{fa\-\_\-map\-\_\-add\-\_\-entry} (\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{util_8h_a40ed40659d2ed7f8712b0fe6ba6edebe}{pair}, \hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map})
+\begin{DoxyCompactList}\small\item\em Add an element to the map if not present. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{group___fa_map_ga2f7b35137e12c3f63bf6c8492e438937}{fa\-\_\-map\-\_\-set\-\_\-entry} (\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{util_8h_a40ed40659d2ed7f8712b0fe6ba6edebe}{pair}, \hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map})
+\begin{DoxyCompactList}\small\item\em Add an element to the map, replacing if already present. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{group___fa_map_ga3b4cb5d328675f599cbbf533cdec3860}{fa\-\_\-map\-\_\-remove\-\_\-entry} (\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{util_8h_a40ed40659d2ed7f8712b0fe6ba6edebe}{pair}, \hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map})
+\begin{DoxyCompactList}\small\item\em Remove the given key if present. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_map_ga23e3bce2dfad5f3c7c2ef518dfe3ca70}{fa\-\_\-map\-\_\-get} (\hyperlink{group___fa_map_ga01c714699c14e805664c65b6a0ea974d}{fa\-\_\-map\-\_\-key\-\_\-t} key, \hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map})
+\begin{DoxyCompactList}\small\item\em Return the element stored at the given key, or {\ttfamily null} if the key does not exist. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_map_ga3bfe761e64c42dd57f7598a149b91808}{fa\-\_\-map\-\_\-has\-\_\-key} (\hyperlink{group___fa_map_ga01c714699c14e805664c65b6a0ea974d}{fa\-\_\-map\-\_\-key\-\_\-t} key, \hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map})
+\begin{DoxyCompactList}\small\item\em Return whether the given key exists in the given map. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_map_gac36e905827b6b35ce95fb8add39ec61a}{fa\-\_\-map\-\_\-has\-\_\-elem} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map})
+\begin{DoxyCompactList}\small\item\em Return whether the given element exists in the given map. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_map_ga7001e19d64d3e0a95c4f49ec07c06ea9}{fa\-\_\-map\-\_\-has\-\_\-entry} (\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{util_8h_a40ed40659d2ed7f8712b0fe6ba6edebe}{pair}, \hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map})
+\begin{DoxyCompactList}\small\item\em Return whether the given \$(key, element)\$ pair element exists in the given map. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_map_ga589cc956fd74abb3fcd05fbc96ae1874}{fa\-\_\-map\-\_\-is\-\_\-submap\-\_\-of} (\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map}, \hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} map\-\_\-)
+\begin{DoxyCompactList}\small\item\em Whether the first of the given maps is a submap of the second. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_map_ga9a003ebb1dd563e308197eede6bfd3c2}{fa\-\_\-map\-\_\-is\-\_\-proper\-\_\-submap\-\_\-of} (\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map}, \hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} map\-\_\-)
+\begin{DoxyCompactList}\small\item\em Whether the first of the given maps is a proper submap of the second. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{group___fa_map_gaf80408d1f455d54c3fd3d6a85e63850d}{fa\-\_\-map\-\_\-sum} (\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map}, \hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} map\-\_\-)
+\begin{DoxyCompactList}\small\item\em Sum or union of the given maps. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{group___fa_map_ga334ae2424a14e058580286645ee0aaf4}{fa\-\_\-map\-\_\-product} (\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map}, \hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} map\-\_\-)
+\begin{DoxyCompactList}\small\item\em Cartesian product of the given maps. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{group___fa_map_gaa957b7099132ca05f5cd719699d3117c}{fa\-\_\-map\-\_\-difference} (\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map}, \hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} map\-\_\-)
+\begin{DoxyCompactList}\small\item\em Symmetric difference of the given maps. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{group___fa_map_gaa2ddc5a471acd60dccd6b130d7bad863}{fa\-\_\-map\-\_\-map} (\hyperlink{group___fa_gaaafae8ab9ebae9019133108e56d2d4d1}{fa\-\_\-unary\-\_\-t} unary, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map})
+\begin{DoxyCompactList}\small\item\em Return the result of applying the given function to all elements of the given list. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{group___fa_map_ga8a1decfa57fb6d688155de6edc9d8dba}{fa\-\_\-map\-\_\-from\-\_\-pair} (\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{util_8h_a40ed40659d2ed7f8712b0fe6ba6edebe}{pair})
+\begin{DoxyCompactList}\small\item\em Convert the given pair to a map. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{group___fa_map_gacfe8c751a747fee0ef908c4d5e6de1d0}{fa\-\_\-map\-\_\-from\-\_\-list} (\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{literals_8h_a4ddd63dfcfec2b4d5741a56aa6003c76}{list})
+\begin{DoxyCompactList}\small\item\em Convert the given list to a map. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_map_ga37672df6747bddc854e8b3d162958335}{fa\-\_\-map\-\_\-to\-\_\-list} (\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{literals_8h_a44305f0bc81207be0dcc90650733e331}{map})
+\begin{DoxyCompactList}\small\item\em Convert the given map to a list. \end{DoxyCompactList}\end{DoxyCompactItemize}

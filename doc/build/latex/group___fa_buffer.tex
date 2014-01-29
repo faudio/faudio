@@ -1,0 +1,620 @@
+\hypertarget{group___fa_buffer}{\section{Buffer}
+\label{group___fa_buffer}\index{Buffer@{Buffer}}
+}
+
+
+Mutable buffers.  
+
+
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \-\_\-fa\-\_\-buffer\-\_\-t $\ast$ \hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t}
+\begin{DoxyCompactList}\small\item\em The buffer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{group___fa_buffer_ga67c4124d193bca81a6e21ec04d9ff832}{fa\-\_\-buffer\-\_\-create} (size\-\_\-t size\-\_\-)
+\begin{DoxyCompactList}\small\item\em Create a new buffer and initialize it to zero-\/bytes. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{group___fa_buffer_gabc24b8a0d76fcd92c1f9071c34a55704}{fa\-\_\-buffer\-\_\-wrap} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, size\-\_\-t size\-\_\-, \hyperlink{group___fa_gaaafae8ab9ebae9019133108e56d2d4d1}{fa\-\_\-unary\-\_\-t} unary, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\begin{DoxyCompactList}\small\item\em Create a buffer wrapping the given memory region. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{group___fa_buffer_ga11c1b1ce03700c52a38ff4f87cc0eeec}{fa\-\_\-buffer\-\_\-copy} (\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer})
+\begin{DoxyCompactList}\small\item\em Copy the given buffer. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{group___fa_buffer_ga2e0379c378fad447bc00890b4c55d0f9}{fa\-\_\-buffer\-\_\-resize} (size\-\_\-t size\-\_\-, \hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer})
+\begin{DoxyCompactList}\small\item\em Return a new buffer of the given size containing the contents of the given buffer padded with zero bytes at the end. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{group___fa_buffer_gab569f84162545bb4426a2d426ace8950}{fa\-\_\-buffer\-\_\-dresize} (size\-\_\-t size\-\_\-, \hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer})
+\begin{DoxyCompactList}\small\item\em Return a new buffer of the given size containing the contents of the given buffer padded with zero bytes at the end. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_buffer_ga51af4022b7ccfc33f8ee0862c8bbad5e}{fa\-\_\-buffer\-\_\-destroy} (\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer})
+\begin{DoxyCompactList}\small\item\em Destroy the given buffer. \end{DoxyCompactList}\item 
+size\-\_\-t \hyperlink{group___fa_buffer_ga412e71a916e24b101f9b8a967b4d53f8}{fa\-\_\-buffer\-\_\-size} (\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer})
+\begin{DoxyCompactList}\small\item\em Return the size of the buffer. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_buffer_gaf21b86142b1246b676f9bfbeb54011aa}{fa\-\_\-buffer\-\_\-get\-\_\-meta} (\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer}, \hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string})
+\begin{DoxyCompactList}\small\item\em Get the value of some meta-\/data attribute of the given buffer. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_buffer_gac2efb810e723accb6f7e8f0ae5651a80}{fa\-\_\-buffer\-\_\-set\-\_\-meta} (\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer}, \hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string}, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em Set the value of some meta-\/data attribute of the given buffer. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_map_gadcbb0c425af31be6aeb265159b2a7db0}{fa\-\_\-map\-\_\-t} \hyperlink{group___fa_buffer_ga8cae6305af4695da927f707f00e530bd}{fa\-\_\-buffer\-\_\-meta} (\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer})
+\begin{DoxyCompactList}\small\item\em Get all meta-\/data as a map from strings to values. \end{DoxyCompactList}\item 
+uint8\-\_\-t \hyperlink{group___fa_buffer_ga6a4d986aa6ce7023563bc9f3e3dd416f}{fa\-\_\-buffer\-\_\-get} (\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer}, size\-\_\-t size\-\_\-)
+\begin{DoxyCompactList}\small\item\em Get a value from the buffer. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_buffer_ga2ba7ad9f2ad61d4d908eedb862c99474}{fa\-\_\-buffer\-\_\-set} (\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer}, size\-\_\-t size\-\_\-, uint8\-\_\-t u\-Int8\-\_\-)
+\begin{DoxyCompactList}\small\item\em Update a value in the buffer. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{group___fa_buffer_ga3aa381eabd42a82492cec36b0f2dced4}{fa\-\_\-buffer\-\_\-take} (size\-\_\-t size\-\_\-, \hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer})
+\begin{DoxyCompactList}\small\item\em Copy the first n bytes. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{group___fa_buffer_ga0d057fff991ddc68b23635c3bef09111}{fa\-\_\-buffer\-\_\-drop} (size\-\_\-t size\-\_\-, \hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer})
+\begin{DoxyCompactList}\small\item\em Copy from the given number of bytes. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{group___fa_buffer_gac7d4196d3cdf0c3221d27f8c982e00f2}{fa\-\_\-buffer\-\_\-take\-\_\-drop} (size\-\_\-t size\-\_\-, \hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer})
+\begin{DoxyCompactList}\small\item\em Efficient combination of take and drop. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_buffer_ga270797e37d8d7b94321ee7636407a5d3}{fa\-\_\-buffer\-\_\-split} (\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer}, size\-\_\-t size\-\_\-)
+\begin{DoxyCompactList}\small\item\em Split into a list of buffers containing at most n bytes. \end{DoxyCompactList}\item 
+int16\-\_\-t \hyperlink{group___fa_buffer_ga8179fe2b2edda4927721fd5a45d2e18c}{fa\-\_\-buffer\-\_\-get\-\_\-int16} (\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer}, size\-\_\-t size\-\_\-)
+\begin{DoxyCompactList}\small\item\em Get a value from the buffer. \end{DoxyCompactList}\item 
+int32\-\_\-t \hyperlink{group___fa_buffer_ga51609720018ae6391083205b260db9a7}{fa\-\_\-buffer\-\_\-get\-\_\-int32} (\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer}, size\-\_\-t size\-\_\-)
+\begin{DoxyCompactList}\small\item\em Get a value from the buffer. \end{DoxyCompactList}\item 
+int64\-\_\-t \hyperlink{group___fa_buffer_gad596c5b40ca8ce644eff53140aa3d8c9}{fa\-\_\-buffer\-\_\-get\-\_\-int64} (\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer}, size\-\_\-t size\-\_\-)
+\begin{DoxyCompactList}\small\item\em Get a value from the buffer. \end{DoxyCompactList}\item 
+float \hyperlink{group___fa_buffer_gaf317e894970857eee2b1e315e6b341ee}{fa\-\_\-buffer\-\_\-get\-\_\-float} (\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer}, size\-\_\-t size\-\_\-)
+\begin{DoxyCompactList}\small\item\em Get a value from the buffer. \end{DoxyCompactList}\item 
+double \hyperlink{group___fa_buffer_gae6416e46d9dc795feb4dad5a45b381b5}{fa\-\_\-buffer\-\_\-get\-\_\-double} (\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer}, size\-\_\-t size\-\_\-)
+\begin{DoxyCompactList}\small\item\em Get a value from the buffer. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_buffer_gaddf42d41a14338e04f83f854dc264f2d}{fa\-\_\-buffer\-\_\-set\-\_\-int16} (\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer}, size\-\_\-t size\-\_\-, int16\-\_\-t int16\-\_\-)
+\begin{DoxyCompactList}\small\item\em Update a value in the buffer. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_buffer_gaa29344ea6962a2e728ba96e3837b7608}{fa\-\_\-buffer\-\_\-set\-\_\-int32} (\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer}, size\-\_\-t size\-\_\-, int32\-\_\-t int32\-\_\-)
+\begin{DoxyCompactList}\small\item\em Update a value in the buffer. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_buffer_gaa9703d8e4b82d5640c8fdfeb8ad5068f}{fa\-\_\-buffer\-\_\-set\-\_\-int64} (\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer}, size\-\_\-t size\-\_\-, int64\-\_\-t int64\-\_\-)
+\begin{DoxyCompactList}\small\item\em Update a value in the buffer. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_buffer_gad2df4ce0cc602042aafd794636f5abe3}{fa\-\_\-buffer\-\_\-set\-\_\-float} (\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer}, size\-\_\-t size\-\_\-, float float\-\_\-)
+\begin{DoxyCompactList}\small\item\em Update a value in the buffer. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_buffer_gaa0ebad825c6e97124c1aabeaf17e3631}{fa\-\_\-buffer\-\_\-set\-\_\-double} (\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer}, size\-\_\-t size\-\_\-, double double\-\_\-)
+\begin{DoxyCompactList}\small\item\em Update a value in the buffer. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{group___fa_buffer_gaf2ee73288b08b98a94fa831731e5b261}{fa\-\_\-buffer\-\_\-read\-\_\-raw} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string})
+\begin{DoxyCompactList}\small\item\em Reads a buffer from a file. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_buffer_gaf423ff710d861b91fe833e60c860ec7a}{fa\-\_\-buffer\-\_\-write\-\_\-raw} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string}, \hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer})
+\begin{DoxyCompactList}\small\item\em Write a buffer to a file. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_pair_gac2b2e58c230bac4f8a63ef6c05072680}{fa\-\_\-pair\-\_\-t} \hyperlink{group___fa_buffer_gadf31c6e905d0207931790f3468862940}{fa\-\_\-buffer\-\_\-read\-\_\-audio} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string})
+\begin{DoxyCompactList}\small\item\em Read an audio file. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_buffer_ga51462ff7c74f09e7ea59d80895544558}{fa\-\_\-buffer\-\_\-write\-\_\-audio} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string}, int int\-\_\-, \hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer})
+\begin{DoxyCompactList}\small\item\em Write an audio file. \end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{group___fa_buffer_gae70cd25a1633cea1ad12bc6080f3cd29}{fa\-\_\-buffer\-\_\-unsafe\-\_\-address} (\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t} \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer})
+\begin{DoxyCompactList}\small\item\em Return the address of the buffer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Mutable buffers. Each buffer is a mutable sequence of bytes with single-\/ownership semantics. The length of a buffer can never change, but its memory can be reused using \hyperlink{group___fa_buffer_gab569f84162545bb4426a2d426ace8950}{fa\-\_\-buffer\-\_\-dresize}.
+
+The contents of a buffer is {\itshape untyped}, i.\-e. it is possible to write 16-\/bit integer to a buffer and subsequently read floats. The user must assure that the correct type is being used. All {\ttfamily get} and {\ttfamily set} methods are {\itshape fail-\/fast}\-: reading or writing past the size results in assertion errors in a debug build and undefined behaviour in a release build.
+
+\begin{DoxyParagraph}{Literals}
+
+\begin{DoxyItemize}
+\item {\ttfamily \hyperlink{util_8h_ad0c623e8b04565926f5b48888327724a}{buffer(size)}}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Implements }
+
+\begin{DoxyItemize}
+\item \hyperlink{structfa__copy__t}{fa\-\_\-copy\-\_\-t}
+\item \hyperlink{structfa__destroy__t}{fa\-\_\-destroy\-\_\-t}
+\item \hyperlink{structfa__string__show__t}{fa\-\_\-string\-\_\-show\-\_\-t}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxySeeAlso}{See Also}
+
+\begin{DoxyItemize}
+\item \hyperlink{md__data_structures_DataStructures}{Data structures} 
+\end{DoxyItemize}
+\end{DoxySeeAlso}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-t@{fa\-\_\-buffer\-\_\-t}}
+\index{fa\-\_\-buffer\-\_\-t@{fa\-\_\-buffer\-\_\-t}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-buffer\-\_\-t}}}\label{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}
+
+
+The buffer. 
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group___fa_buffer_ga67c4124d193bca81a6e21ec04d9ff832}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-create@{fa\-\_\-buffer\-\_\-create}}
+\index{fa\-\_\-buffer\-\_\-create@{fa\-\_\-buffer\-\_\-create}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-buffer\-\_\-t} fa\-\_\-buffer\-\_\-create (
+\begin{DoxyParamCaption}
+\item[{size\-\_\-t}]{size\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_ga67c4124d193bca81a6e21ec04d9ff832}
+
+
+Create a new buffer and initialize it to zero-\/bytes. 
+
+\begin{DoxyNote}{Note}
+O(n) 
+\end{DoxyNote}
+\hypertarget{group___fa_buffer_gabc24b8a0d76fcd92c1f9071c34a55704}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-wrap@{fa\-\_\-buffer\-\_\-wrap}}
+\index{fa\-\_\-buffer\-\_\-wrap@{fa\-\_\-buffer\-\_\-wrap}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-wrap}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-buffer\-\_\-t} fa\-\_\-buffer\-\_\-wrap (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{size\-\_\-t}]{size\-\_\-, }
+\item[{{\bf fa\-\_\-unary\-\_\-t}}]{unary, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_gabc24b8a0d76fcd92c1f9071c34a55704}
+
+
+Create a buffer wrapping the given memory region. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ptr} & Pointer to wrap. \\
+\hline
+{\em size} & Number of bytes to wrap. \\
+\hline
+{\em destroy\-\_\-function} & Function to call upon destruction (optional). \\
+\hline
+{\em destroy\-\_\-data} & Data closed over by the destroy function. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+O(1) 
+\end{DoxyNote}
+\hypertarget{group___fa_buffer_ga11c1b1ce03700c52a38ff4f87cc0eeec}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-copy@{fa\-\_\-buffer\-\_\-copy}}
+\index{fa\-\_\-buffer\-\_\-copy@{fa\-\_\-buffer\-\_\-copy}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-copy}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-buffer\-\_\-t} fa\-\_\-buffer\-\_\-copy (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_ga11c1b1ce03700c52a38ff4f87cc0eeec}
+
+
+Copy the given buffer. 
+
+\begin{DoxyNote}{Note}
+O(n) 
+\end{DoxyNote}
+\hypertarget{group___fa_buffer_ga2e0379c378fad447bc00890b4c55d0f9}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-resize@{fa\-\_\-buffer\-\_\-resize}}
+\index{fa\-\_\-buffer\-\_\-resize@{fa\-\_\-buffer\-\_\-resize}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-resize}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-buffer\-\_\-t} fa\-\_\-buffer\-\_\-resize (
+\begin{DoxyParamCaption}
+\item[{size\-\_\-t}]{size\-\_\-, }
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_ga2e0379c378fad447bc00890b4c55d0f9}
+
+
+Return a new buffer of the given size containing the contents of the given buffer padded with zero bytes at the end. 
+
+\begin{DoxyNote}{Note}
+O(n) 
+\end{DoxyNote}
+\hypertarget{group___fa_buffer_gab569f84162545bb4426a2d426ace8950}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-dresize@{fa\-\_\-buffer\-\_\-dresize}}
+\index{fa\-\_\-buffer\-\_\-dresize@{fa\-\_\-buffer\-\_\-dresize}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-dresize}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-buffer\-\_\-t} fa\-\_\-buffer\-\_\-dresize (
+\begin{DoxyParamCaption}
+\item[{size\-\_\-t}]{size\-\_\-, }
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_gab569f84162545bb4426a2d426ace8950}
+
+
+Return a new buffer of the given size containing the contents of the given buffer padded with zero bytes at the end. 
+
+The given buffer is destroyed. This function can reuse memory from the destroyed buffer and be considerably faster than \hyperlink{group___fa_buffer_ga2e0379c378fad447bc00890b4c55d0f9}{fa\-\_\-buffer\-\_\-resize}.
+
+\begin{DoxyNote}{Note}
+O(n) 
+\end{DoxyNote}
+\hypertarget{group___fa_buffer_ga51af4022b7ccfc33f8ee0862c8bbad5e}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-destroy@{fa\-\_\-buffer\-\_\-destroy}}
+\index{fa\-\_\-buffer\-\_\-destroy@{fa\-\_\-buffer\-\_\-destroy}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-destroy}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-buffer\-\_\-destroy (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_ga51af4022b7ccfc33f8ee0862c8bbad5e}
+
+
+Destroy the given buffer. 
+
+\begin{DoxyNote}{Note}
+O(n) 
+\end{DoxyNote}
+\hypertarget{group___fa_buffer_ga412e71a916e24b101f9b8a967b4d53f8}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-size@{fa\-\_\-buffer\-\_\-size}}
+\index{fa\-\_\-buffer\-\_\-size@{fa\-\_\-buffer\-\_\-size}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-size}]{\setlength{\rightskip}{0pt plus 5cm}size\-\_\-t fa\-\_\-buffer\-\_\-size (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_ga412e71a916e24b101f9b8a967b4d53f8}
+
+
+Return the size of the buffer. 
+
+\begin{DoxyNote}{Note}
+O(1) 
+\end{DoxyNote}
+\hypertarget{group___fa_buffer_gaf21b86142b1246b676f9bfbeb54011aa}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-get\-\_\-meta@{fa\-\_\-buffer\-\_\-get\-\_\-meta}}
+\index{fa\-\_\-buffer\-\_\-get\-\_\-meta@{fa\-\_\-buffer\-\_\-get\-\_\-meta}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-get\-\_\-meta}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ptr\-\_\-t} fa\-\_\-buffer\-\_\-get\-\_\-meta (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer, }
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_gaf21b86142b1246b676f9bfbeb54011aa}
+
+
+Get the value of some meta-\/data attribute of the given buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buffer} & The buffer. \\
+\hline
+{\em string} & Attribute name. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The value (implementing fa\-\_\-dynamic). 
+\end{DoxyReturn}
+\hypertarget{group___fa_buffer_gac2efb810e723accb6f7e8f0ae5651a80}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-set\-\_\-meta@{fa\-\_\-buffer\-\_\-set\-\_\-meta}}
+\index{fa\-\_\-buffer\-\_\-set\-\_\-meta@{fa\-\_\-buffer\-\_\-set\-\_\-meta}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-set\-\_\-meta}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-buffer\-\_\-set\-\_\-meta (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer, }
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_gac2efb810e723accb6f7e8f0ae5651a80}
+
+
+Set the value of some meta-\/data attribute of the given buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em buffer} & The buffer. \\
+\hline
+{\em string} & Attribute name. \\
+\hline
+{\em The} & value (implementing fa\-\_\-dynamic). \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_buffer_ga8cae6305af4695da927f707f00e530bd}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-meta@{fa\-\_\-buffer\-\_\-meta}}
+\index{fa\-\_\-buffer\-\_\-meta@{fa\-\_\-buffer\-\_\-meta}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-meta}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-map\-\_\-t} fa\-\_\-buffer\-\_\-meta (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_ga8cae6305af4695da927f707f00e530bd}
+
+
+Get all meta-\/data as a map from strings to values. 
+
+\begin{DoxyReturn}{Returns}
+A map of meta-\/data. 
+\end{DoxyReturn}
+\hypertarget{group___fa_buffer_ga6a4d986aa6ce7023563bc9f3e3dd416f}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-get@{fa\-\_\-buffer\-\_\-get}}
+\index{fa\-\_\-buffer\-\_\-get@{fa\-\_\-buffer\-\_\-get}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-get}]{\setlength{\rightskip}{0pt plus 5cm}uint8\-\_\-t fa\-\_\-buffer\-\_\-get (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer, }
+\item[{size\-\_\-t}]{size\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_ga6a4d986aa6ce7023563bc9f3e3dd416f}
+
+
+Get a value from the buffer. 
+
+\begin{DoxyNote}{Note}
+O(1) 
+\end{DoxyNote}
+\hypertarget{group___fa_buffer_ga2ba7ad9f2ad61d4d908eedb862c99474}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-set@{fa\-\_\-buffer\-\_\-set}}
+\index{fa\-\_\-buffer\-\_\-set@{fa\-\_\-buffer\-\_\-set}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-set}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-buffer\-\_\-set (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer, }
+\item[{size\-\_\-t}]{size\-\_\-, }
+\item[{uint8\-\_\-t}]{u\-Int8\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_ga2ba7ad9f2ad61d4d908eedb862c99474}
+
+
+Update a value in the buffer. 
+
+\begin{DoxyNote}{Note}
+O(1) 
+\end{DoxyNote}
+\hypertarget{group___fa_buffer_ga3aa381eabd42a82492cec36b0f2dced4}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-take@{fa\-\_\-buffer\-\_\-take}}
+\index{fa\-\_\-buffer\-\_\-take@{fa\-\_\-buffer\-\_\-take}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-take}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-buffer\-\_\-t} fa\-\_\-buffer\-\_\-take (
+\begin{DoxyParamCaption}
+\item[{size\-\_\-t}]{size\-\_\-, }
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_ga3aa381eabd42a82492cec36b0f2dced4}
+
+
+Copy the first n bytes. 
+
+\hypertarget{group___fa_buffer_ga0d057fff991ddc68b23635c3bef09111}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-drop@{fa\-\_\-buffer\-\_\-drop}}
+\index{fa\-\_\-buffer\-\_\-drop@{fa\-\_\-buffer\-\_\-drop}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-drop}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-buffer\-\_\-t} fa\-\_\-buffer\-\_\-drop (
+\begin{DoxyParamCaption}
+\item[{size\-\_\-t}]{size\-\_\-, }
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_ga0d057fff991ddc68b23635c3bef09111}
+
+
+Copy from the given number of bytes. 
+
+\hypertarget{group___fa_buffer_gac7d4196d3cdf0c3221d27f8c982e00f2}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-take\-\_\-drop@{fa\-\_\-buffer\-\_\-take\-\_\-drop}}
+\index{fa\-\_\-buffer\-\_\-take\-\_\-drop@{fa\-\_\-buffer\-\_\-take\-\_\-drop}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-take\-\_\-drop}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-pair\-\_\-t} fa\-\_\-buffer\-\_\-take\-\_\-drop (
+\begin{DoxyParamCaption}
+\item[{size\-\_\-t}]{size\-\_\-, }
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_gac7d4196d3cdf0c3221d27f8c982e00f2}
+
+
+Efficient combination of take and drop. 
+
+\hypertarget{group___fa_buffer_ga270797e37d8d7b94321ee7636407a5d3}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-split@{fa\-\_\-buffer\-\_\-split}}
+\index{fa\-\_\-buffer\-\_\-split@{fa\-\_\-buffer\-\_\-split}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-split}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-list\-\_\-t} fa\-\_\-buffer\-\_\-split (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer, }
+\item[{size\-\_\-t}]{size\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_ga270797e37d8d7b94321ee7636407a5d3}
+
+
+Split into a list of buffers containing at most n bytes. 
+
+\hypertarget{group___fa_buffer_ga8179fe2b2edda4927721fd5a45d2e18c}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-get\-\_\-int16@{fa\-\_\-buffer\-\_\-get\-\_\-int16}}
+\index{fa\-\_\-buffer\-\_\-get\-\_\-int16@{fa\-\_\-buffer\-\_\-get\-\_\-int16}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-get\-\_\-int16}]{\setlength{\rightskip}{0pt plus 5cm}int16\-\_\-t fa\-\_\-buffer\-\_\-get\-\_\-int16 (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer, }
+\item[{size\-\_\-t}]{size\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_ga8179fe2b2edda4927721fd5a45d2e18c}
+
+
+Get a value from the buffer. 
+
+\begin{DoxyNote}{Note}
+O(1) 
+\end{DoxyNote}
+\hypertarget{group___fa_buffer_ga51609720018ae6391083205b260db9a7}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-get\-\_\-int32@{fa\-\_\-buffer\-\_\-get\-\_\-int32}}
+\index{fa\-\_\-buffer\-\_\-get\-\_\-int32@{fa\-\_\-buffer\-\_\-get\-\_\-int32}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-get\-\_\-int32}]{\setlength{\rightskip}{0pt plus 5cm}int32\-\_\-t fa\-\_\-buffer\-\_\-get\-\_\-int32 (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer, }
+\item[{size\-\_\-t}]{size\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_ga51609720018ae6391083205b260db9a7}
+
+
+Get a value from the buffer. 
+
+\begin{DoxyNote}{Note}
+O(1) 
+\end{DoxyNote}
+\hypertarget{group___fa_buffer_gad596c5b40ca8ce644eff53140aa3d8c9}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-get\-\_\-int64@{fa\-\_\-buffer\-\_\-get\-\_\-int64}}
+\index{fa\-\_\-buffer\-\_\-get\-\_\-int64@{fa\-\_\-buffer\-\_\-get\-\_\-int64}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-get\-\_\-int64}]{\setlength{\rightskip}{0pt plus 5cm}int64\-\_\-t fa\-\_\-buffer\-\_\-get\-\_\-int64 (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer, }
+\item[{size\-\_\-t}]{size\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_gad596c5b40ca8ce644eff53140aa3d8c9}
+
+
+Get a value from the buffer. 
+
+\begin{DoxyNote}{Note}
+O(1) 
+\end{DoxyNote}
+\hypertarget{group___fa_buffer_gaf317e894970857eee2b1e315e6b341ee}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-get\-\_\-float@{fa\-\_\-buffer\-\_\-get\-\_\-float}}
+\index{fa\-\_\-buffer\-\_\-get\-\_\-float@{fa\-\_\-buffer\-\_\-get\-\_\-float}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-get\-\_\-float}]{\setlength{\rightskip}{0pt plus 5cm}float fa\-\_\-buffer\-\_\-get\-\_\-float (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer, }
+\item[{size\-\_\-t}]{size\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_gaf317e894970857eee2b1e315e6b341ee}
+
+
+Get a value from the buffer. 
+
+\begin{DoxyNote}{Note}
+O(1) 
+\end{DoxyNote}
+\hypertarget{group___fa_buffer_gae6416e46d9dc795feb4dad5a45b381b5}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-get\-\_\-double@{fa\-\_\-buffer\-\_\-get\-\_\-double}}
+\index{fa\-\_\-buffer\-\_\-get\-\_\-double@{fa\-\_\-buffer\-\_\-get\-\_\-double}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-get\-\_\-double}]{\setlength{\rightskip}{0pt plus 5cm}double fa\-\_\-buffer\-\_\-get\-\_\-double (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer, }
+\item[{size\-\_\-t}]{size\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_gae6416e46d9dc795feb4dad5a45b381b5}
+
+
+Get a value from the buffer. 
+
+\begin{DoxyNote}{Note}
+O(1) 
+\end{DoxyNote}
+\hypertarget{group___fa_buffer_gaddf42d41a14338e04f83f854dc264f2d}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-set\-\_\-int16@{fa\-\_\-buffer\-\_\-set\-\_\-int16}}
+\index{fa\-\_\-buffer\-\_\-set\-\_\-int16@{fa\-\_\-buffer\-\_\-set\-\_\-int16}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-set\-\_\-int16}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-buffer\-\_\-set\-\_\-int16 (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer, }
+\item[{size\-\_\-t}]{size\-\_\-, }
+\item[{int16\-\_\-t}]{int16\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_gaddf42d41a14338e04f83f854dc264f2d}
+
+
+Update a value in the buffer. 
+
+\begin{DoxyNote}{Note}
+O(1) 
+\end{DoxyNote}
+\hypertarget{group___fa_buffer_gaa29344ea6962a2e728ba96e3837b7608}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-set\-\_\-int32@{fa\-\_\-buffer\-\_\-set\-\_\-int32}}
+\index{fa\-\_\-buffer\-\_\-set\-\_\-int32@{fa\-\_\-buffer\-\_\-set\-\_\-int32}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-set\-\_\-int32}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-buffer\-\_\-set\-\_\-int32 (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer, }
+\item[{size\-\_\-t}]{size\-\_\-, }
+\item[{int32\-\_\-t}]{int32\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_gaa29344ea6962a2e728ba96e3837b7608}
+
+
+Update a value in the buffer. 
+
+\begin{DoxyNote}{Note}
+O(1) 
+\end{DoxyNote}
+\hypertarget{group___fa_buffer_gaa9703d8e4b82d5640c8fdfeb8ad5068f}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-set\-\_\-int64@{fa\-\_\-buffer\-\_\-set\-\_\-int64}}
+\index{fa\-\_\-buffer\-\_\-set\-\_\-int64@{fa\-\_\-buffer\-\_\-set\-\_\-int64}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-set\-\_\-int64}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-buffer\-\_\-set\-\_\-int64 (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer, }
+\item[{size\-\_\-t}]{size\-\_\-, }
+\item[{int64\-\_\-t}]{int64\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_gaa9703d8e4b82d5640c8fdfeb8ad5068f}
+
+
+Update a value in the buffer. 
+
+\begin{DoxyNote}{Note}
+O(1) 
+\end{DoxyNote}
+\hypertarget{group___fa_buffer_gad2df4ce0cc602042aafd794636f5abe3}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-set\-\_\-float@{fa\-\_\-buffer\-\_\-set\-\_\-float}}
+\index{fa\-\_\-buffer\-\_\-set\-\_\-float@{fa\-\_\-buffer\-\_\-set\-\_\-float}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-set\-\_\-float}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-buffer\-\_\-set\-\_\-float (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer, }
+\item[{size\-\_\-t}]{size\-\_\-, }
+\item[{float}]{float\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_gad2df4ce0cc602042aafd794636f5abe3}
+
+
+Update a value in the buffer. 
+
+\begin{DoxyNote}{Note}
+O(1) 
+\end{DoxyNote}
+\hypertarget{group___fa_buffer_gaa0ebad825c6e97124c1aabeaf17e3631}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-set\-\_\-double@{fa\-\_\-buffer\-\_\-set\-\_\-double}}
+\index{fa\-\_\-buffer\-\_\-set\-\_\-double@{fa\-\_\-buffer\-\_\-set\-\_\-double}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-set\-\_\-double}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-buffer\-\_\-set\-\_\-double (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer, }
+\item[{size\-\_\-t}]{size\-\_\-, }
+\item[{double}]{double\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_gaa0ebad825c6e97124c1aabeaf17e3631}
+
+
+Update a value in the buffer. 
+
+\begin{DoxyNote}{Note}
+O(1) 
+\end{DoxyNote}
+\hypertarget{group___fa_buffer_gaf2ee73288b08b98a94fa831731e5b261}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-read\-\_\-raw@{fa\-\_\-buffer\-\_\-read\-\_\-raw}}
+\index{fa\-\_\-buffer\-\_\-read\-\_\-raw@{fa\-\_\-buffer\-\_\-read\-\_\-raw}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-read\-\_\-raw}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-buffer\-\_\-t} fa\-\_\-buffer\-\_\-read\-\_\-raw (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_gaf2ee73288b08b98a94fa831731e5b261}
+
+
+Reads a buffer from a file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & Path to the file to read. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new buffer. 
+\end{DoxyReturn}
+\hypertarget{group___fa_buffer_gaf423ff710d861b91fe833e60c860ec7a}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-write\-\_\-raw@{fa\-\_\-buffer\-\_\-write\-\_\-raw}}
+\index{fa\-\_\-buffer\-\_\-write\-\_\-raw@{fa\-\_\-buffer\-\_\-write\-\_\-raw}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-write\-\_\-raw}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-buffer\-\_\-write\-\_\-raw (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string, }
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_gaf423ff710d861b91fe833e60c860ec7a}
+
+
+Write a buffer to a file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & Path to the file to write. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_buffer_gadf31c6e905d0207931790f3468862940}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-read\-\_\-audio@{fa\-\_\-buffer\-\_\-read\-\_\-audio}}
+\index{fa\-\_\-buffer\-\_\-read\-\_\-audio@{fa\-\_\-buffer\-\_\-read\-\_\-audio}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-read\-\_\-audio}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-pair\-\_\-t} fa\-\_\-buffer\-\_\-read\-\_\-audio (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_gadf31c6e905d0207931790f3468862940}
+
+
+Read an audio file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & Path to the file to read. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A {\ttfamily (Channels, Buffer)} pair or an error value. 
+\end{DoxyReturn}
+\hypertarget{group___fa_buffer_ga51462ff7c74f09e7ea59d80895544558}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-write\-\_\-audio@{fa\-\_\-buffer\-\_\-write\-\_\-audio}}
+\index{fa\-\_\-buffer\-\_\-write\-\_\-audio@{fa\-\_\-buffer\-\_\-write\-\_\-audio}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-write\-\_\-audio}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ptr\-\_\-t} fa\-\_\-buffer\-\_\-write\-\_\-audio (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string, }
+\item[{int}]{int\-\_\-, }
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_ga51462ff7c74f09e7ea59d80895544558}
+
+
+Write an audio file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & Path to the file to read. \\
+\hline
+{\em channels} & Number of channels. \\
+\hline
+{\em buffer} & Buffer to write. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The null pointer or an error value. 
+\end{DoxyReturn}
+\hypertarget{group___fa_buffer_gae70cd25a1633cea1ad12bc6080f3cd29}{\index{Buffer@{Buffer}!fa\-\_\-buffer\-\_\-unsafe\-\_\-address@{fa\-\_\-buffer\-\_\-unsafe\-\_\-address}}
+\index{fa\-\_\-buffer\-\_\-unsafe\-\_\-address@{fa\-\_\-buffer\-\_\-unsafe\-\_\-address}!Buffer@{Buffer}}
+\subsubsection[{fa\-\_\-buffer\-\_\-unsafe\-\_\-address}]{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ fa\-\_\-buffer\-\_\-unsafe\-\_\-address (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-buffer\-\_\-t}}]{buffer}
+\end{DoxyParamCaption}
+)}}\label{group___fa_buffer_gae70cd25a1633cea1ad12bc6080f3cd29}
+
+
+Return the address of the buffer. 
+
+This function is unsafe as it provides access to the buffer contents without ownership semantics. \begin{DoxyNote}{Note}
+O(1) 
+\end{DoxyNote}

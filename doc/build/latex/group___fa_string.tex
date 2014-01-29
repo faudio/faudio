@@ -1,0 +1,528 @@
+\hypertarget{group___fa_string}{\section{String}
+\label{group___fa_string}\index{String@{String}}
+}
+
+
+Provides strings.  
+
+
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structfa__string__show__t}{fa\-\_\-string\-\_\-show\-\_\-t}
+\begin{DoxyCompactList}\small\item\em String conversion interface. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef \hyperlink{group___fa_ga98bfdb5d0438f95f3438cddeab1818e8}{fa\-\_\-char8\-\_\-t} $\ast$ \hyperlink{group___fa_string_ga3f817d24799e6924bc6a5186cd184fd8}{fa\-\_\-string\-\_\-utf8\-\_\-t}
+\begin{DoxyCompactList}\small\item\em A U\-T\-F-\/8 encoded raw string. \end{DoxyCompactList}\item 
+typedef \hyperlink{group___fa_ga98bfdb5d0438f95f3438cddeab1818e8}{fa\-\_\-char8\-\_\-t} $\ast$ \hyperlink{group___fa_string_ga8da3eea12a368d4c9d82c11c3dc6b9b6}{fa\-\_\-string\-\_\-cp1252\-\_\-t}
+\begin{DoxyCompactList}\small\item\em A C\-P1252 (also known as Windows-\/1252) encoded raw string. \end{DoxyCompactList}\item 
+typedef \hyperlink{group___fa_ga33e83372a0abc1895fdad5fb4d15eae3}{fa\-\_\-char16\-\_\-t} $\ast$ \hyperlink{group___fa_string_ga8187bab75e77f0bbeeaf7ec2992cf7a9}{fa\-\_\-string\-\_\-utf16\-\_\-t}
+\begin{DoxyCompactList}\small\item\em A U\-T\-F-\/16 encoded raw string. \end{DoxyCompactList}\item 
+typedef \hyperlink{group___fa_gaca70e02afbba75b08b2b6531b821f67b}{fa\-\_\-char32\-\_\-t} $\ast$ \hyperlink{group___fa_string_ga3e5927ccdebcd9dee40aa6af077662ae}{fa\-\_\-string\-\_\-utf32\-\_\-t}
+\begin{DoxyCompactList}\small\item\em A U\-T\-F-\/32 encoded raw string. \end{DoxyCompactList}\item 
+typedef struct \-\_\-fa\-\_\-string\-\_\-t $\ast$ \hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t}
+\begin{DoxyCompactList}\small\item\em An immutable Unicode string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_string_ga41b5eaaca6caf7c02b5a84724547aaaf}{fa\-\_\-string\-\_\-empty} ()
+\begin{DoxyCompactList}\small\item\em Create an empty string. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_string_ga86d1752c468e584b6681e4d288cb8540}{fa\-\_\-string\-\_\-single} (\hyperlink{group___fa_ga33e83372a0abc1895fdad5fb4d15eae3}{fa\-\_\-char16\-\_\-t} char16)
+\begin{DoxyCompactList}\small\item\em Create a single-\/char string. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_string_gae8770737e599c69eb19873a79a662342}{fa\-\_\-string\-\_\-repeat} (int int\-\_\-, \hyperlink{group___fa_ga33e83372a0abc1895fdad5fb4d15eae3}{fa\-\_\-char16\-\_\-t} char16)
+\begin{DoxyCompactList}\small\item\em Create a string by repeating the given character. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_string_ga3cfc98affae422a383f3c32d421a027e}{fa\-\_\-string\-\_\-copy} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string})
+\begin{DoxyCompactList}\small\item\em Copy the given string. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_string_gaa0c00dc6caa8ac95b39ae8763418f8f7}{fa\-\_\-string\-\_\-append} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string}, \hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} string\-\_\-)
+\begin{DoxyCompactList}\small\item\em Append the given strings. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_string_ga5d2b8bc86ca8e619b5acd8ee3ce646d1}{fa\-\_\-string\-\_\-dappend} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string}, \hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} string\-\_\-)
+\item 
+void \hyperlink{group___fa_string_ga564b75f4d9f1746aae14be49ae5ff14d}{fa\-\_\-string\-\_\-destroy} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string})
+\begin{DoxyCompactList}\small\item\em Destroy the given string. \end{DoxyCompactList}\item 
+int \hyperlink{group___fa_string_ga976152a3555291c01ee4789fd430a735}{fa\-\_\-string\-\_\-length} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string})
+\begin{DoxyCompactList}\small\item\em Return the number of characters in the given string. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ga33e83372a0abc1895fdad5fb4d15eae3}{fa\-\_\-char16\-\_\-t} \hyperlink{group___fa_string_ga65a30c7ba8710cb6c7547469a5854fe5}{fa\-\_\-string\-\_\-char\-\_\-at} (int int\-\_\-, \hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string})
+\begin{DoxyCompactList}\small\item\em Return the character at the given position in the string. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_string_ga0aefa62c17e377bdf1502d6a31c989a7}{fa\-\_\-string\-\_\-show} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em Generic string conversion. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_string_gaeada11707ff4ebc7bfbd49652dd74524}{fa\-\_\-string\-\_\-to\-\_\-string} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em Behaves like the identity function on strings and as \hyperlink{group___fa_string_ga0aefa62c17e377bdf1502d6a31c989a7}{show} on all other value. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_string_gad32198fd893b60271162c33f32d70a5e}{fa\-\_\-string\-\_\-to\-\_\-json} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em Generic J\-S\-O\-N conversion. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_string_gac9b5abd8898a76b522395b3017d1f91f}{fa\-\_\-string\-\_\-from\-\_\-json} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string})
+\begin{DoxyCompactList}\small\item\em Generic J\-S\-O\-N conversion. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_ga3f817d24799e6924bc6a5186cd184fd8}{fa\-\_\-string\-\_\-utf8\-\_\-t} \hyperlink{group___fa_string_ga001482eba39fa23052477bd72df2b330}{fa\-\_\-string\-\_\-to\-\_\-utf8} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string})
+\begin{DoxyCompactList}\small\item\em Encode the given string as U\-T\-F-\/8. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_ga8da3eea12a368d4c9d82c11c3dc6b9b6}{fa\-\_\-string\-\_\-cp1252\-\_\-t} \hyperlink{group___fa_string_ga098890a14da3285e373422d0c50f40fa}{fa\-\_\-string\-\_\-to\-\_\-cp1252} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string})
+\begin{DoxyCompactList}\small\item\em Encode a string as C\-P1252, also known as the standard Windows charset. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_ga8187bab75e77f0bbeeaf7ec2992cf7a9}{fa\-\_\-string\-\_\-utf16\-\_\-t} \hyperlink{group___fa_string_gab5d970c33bff37d051e1f8ad0c4ea3d2}{fa\-\_\-string\-\_\-to\-\_\-utf16} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string})
+\begin{DoxyCompactList}\small\item\em Encode the given string as U\-T\-F-\/16. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_string_gaa07caea7289ff0d9cba693729ede3288}{fa\-\_\-string\-\_\-to\-\_\-native} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string})
+\begin{DoxyCompactList}\small\item\em Convert a string to a the string representation used by the platform. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_string_gaecf2d7a3d99b683635cc5493033c09b7}{fa\-\_\-string\-\_\-from\-\_\-utf8} (\hyperlink{group___fa_string_ga3f817d24799e6924bc6a5186cd184fd8}{fa\-\_\-string\-\_\-utf8\-\_\-t} utf8)
+\begin{DoxyCompactList}\small\item\em Deencode a string from U\-T\-F-\/8. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_string_gacaf7053016f6fc6df5a4c7af5490525f}{fa\-\_\-string\-\_\-from\-\_\-cp1252} (\hyperlink{group___fa_string_ga8da3eea12a368d4c9d82c11c3dc6b9b6}{fa\-\_\-string\-\_\-cp1252\-\_\-t} cp1252)
+\begin{DoxyCompactList}\small\item\em Deencode a string from C\-P1252, also known as the standard Windows charset. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_string_ga782618271b1bfe2e85d8f4e3153783b7}{fa\-\_\-string\-\_\-from\-\_\-utf16} (\hyperlink{group___fa_string_ga8187bab75e77f0bbeeaf7ec2992cf7a9}{fa\-\_\-string\-\_\-utf16\-\_\-t} utf16)
+\begin{DoxyCompactList}\small\item\em Deencode a string from U\-T\-F-\/16. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_string_gad8b0ad9b3d2da3f7098587c81bf8cc0e}{fa\-\_\-string\-\_\-from\-\_\-native} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em Convert a value of the string representation used by the platform to a string. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_string_gaea2d11cbeae963c72444a7f038485487}{fa\-\_\-string\-\_\-matches} (\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string}, \hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} string\-\_\-)
+\begin{DoxyCompactList}\small\item\em Return true iff the given string matches the given regular expression. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_string_ga81a603fcf07f2313cb5cfd1816470d4b}{fa\-\_\-string\-\_\-format\-\_\-integral} (char $\ast$, long long\-\_\-)
+\begin{DoxyCompactList}\small\item\em Format an integer. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{fa\-\_\-string\-\_\-t} \hyperlink{group___fa_string_ga2be20227e1b8dba9d0b154ce225156ac}{fa\-\_\-string\-\_\-format\-\_\-floating} (char $\ast$, double double\-\_\-)
+\begin{DoxyCompactList}\small\item\em Format a floating-\/point value. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Provides strings. A string is an immutable sequence of Unicode characters with single-\/ownership semantics. To convert a string from and to its ordinary C representation, use \hyperlink{group___fa_string_gaecf2d7a3d99b683635cc5493033c09b7}{fa\-\_\-string\-\_\-from\-\_\-utf8}, \hyperlink{group___fa_string_ga001482eba39fa23052477bd72df2b330}{fa\-\_\-string\-\_\-to\-\_\-utf8}, or the utility wrappers {\ttfamily string} and {\ttfamily unstring}.
+
+For example\-:
+
+
+\begin{DoxyCode}
+\textcolor{keywordtype}{char}*       cstr  = \textcolor{stringliteral}{"Hello"};
+\hyperlink{util_8h_af27c04510837126cd3662933bc34431b}{string\_t}    str   = \hyperlink{util_8h_a41106000aac73b61e4fc2ef9dd39a603}{string}(cstr);
+\hyperlink{util_8h_af27c04510837126cd3662933bc34431b}{string\_t}    str2  = \hyperlink{group___fa_string_ga5d2b8bc86ca8e619b5acd8ee3ce646d1}{fa\_string\_dappend}(str, \textcolor{keywordtype}{string}(\textcolor{stringliteral}{" world!"}));
+
+printf(\textcolor{stringliteral}{"%s\(\backslash\)n"}, \hyperlink{util_8h_a3ebb1e1e5bc93a359c8d5778a9aa48bd}{unstring}(str2));
+\end{DoxyCode}
+
+
+\begin{DoxyParagraph}{Literals}
+
+\begin{DoxyItemize}
+\item {\ttfamily string(\char`\"{}foo\char`\"{})}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Implements }
+
+\begin{DoxyItemize}
+\item \hyperlink{structfa__equal__t}{fa\-\_\-equal\-\_\-t}
+\item \hyperlink{structfa__order__t}{fa\-\_\-order\-\_\-t}
+\item \hyperlink{structfa__copy__t}{fa\-\_\-copy\-\_\-t}
+\item \hyperlink{structfa__destroy__t}{fa\-\_\-destroy\-\_\-t}
+\item \hyperlink{structfa__dynamic__t}{fa\-\_\-dynamic\-\_\-t}
+\item \hyperlink{structfa__string__show__t}{fa\-\_\-string\-\_\-show\-\_\-t}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxySeeAlso}{See Also}
+
+\begin{DoxyItemize}
+\item \hyperlink{md__data_structures_DataStructures}{Data structures} 
+\end{DoxyItemize}
+\end{DoxySeeAlso}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{group___fa_string_ga3f817d24799e6924bc6a5186cd184fd8}{\index{String@{String}!fa\-\_\-string\-\_\-utf8\-\_\-t@{fa\-\_\-string\-\_\-utf8\-\_\-t}}
+\index{fa\-\_\-string\-\_\-utf8\-\_\-t@{fa\-\_\-string\-\_\-utf8\-\_\-t}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-utf8\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-utf8\-\_\-t}}}\label{group___fa_string_ga3f817d24799e6924bc6a5186cd184fd8}
+
+
+A U\-T\-F-\/8 encoded raw string. 
+
+This type use the endianness of the system, and is terminated by a null character. \hypertarget{group___fa_string_ga8da3eea12a368d4c9d82c11c3dc6b9b6}{\index{String@{String}!fa\-\_\-string\-\_\-cp1252\-\_\-t@{fa\-\_\-string\-\_\-cp1252\-\_\-t}}
+\index{fa\-\_\-string\-\_\-cp1252\-\_\-t@{fa\-\_\-string\-\_\-cp1252\-\_\-t}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-cp1252\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-cp1252\-\_\-t}}}\label{group___fa_string_ga8da3eea12a368d4c9d82c11c3dc6b9b6}
+
+
+A C\-P1252 (also known as Windows-\/1252) encoded raw string. 
+
+This type use the endianness of the system, and is terminated by a null character. \hypertarget{group___fa_string_ga8187bab75e77f0bbeeaf7ec2992cf7a9}{\index{String@{String}!fa\-\_\-string\-\_\-utf16\-\_\-t@{fa\-\_\-string\-\_\-utf16\-\_\-t}}
+\index{fa\-\_\-string\-\_\-utf16\-\_\-t@{fa\-\_\-string\-\_\-utf16\-\_\-t}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-utf16\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-utf16\-\_\-t}}}\label{group___fa_string_ga8187bab75e77f0bbeeaf7ec2992cf7a9}
+
+
+A U\-T\-F-\/16 encoded raw string. 
+
+This type use the endianness of the system, and is terminated by a null character. \hypertarget{group___fa_string_ga3e5927ccdebcd9dee40aa6af077662ae}{\index{String@{String}!fa\-\_\-string\-\_\-utf32\-\_\-t@{fa\-\_\-string\-\_\-utf32\-\_\-t}}
+\index{fa\-\_\-string\-\_\-utf32\-\_\-t@{fa\-\_\-string\-\_\-utf32\-\_\-t}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-utf32\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-utf32\-\_\-t}}}\label{group___fa_string_ga3e5927ccdebcd9dee40aa6af077662ae}
+
+
+A U\-T\-F-\/32 encoded raw string. 
+
+This type use the endianness of the system, and is terminated by a null character. \hypertarget{group___fa_string_gacada63033b77bc6c39fa632ae199349b}{\index{String@{String}!fa\-\_\-string\-\_\-t@{fa\-\_\-string\-\_\-t}}
+\index{fa\-\_\-string\-\_\-t@{fa\-\_\-string\-\_\-t}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t}}}\label{group___fa_string_gacada63033b77bc6c39fa632ae199349b}
+
+
+An immutable Unicode string. 
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group___fa_string_ga41b5eaaca6caf7c02b5a84724547aaaf}{\index{String@{String}!fa\-\_\-string\-\_\-empty@{fa\-\_\-string\-\_\-empty}}
+\index{fa\-\_\-string\-\_\-empty@{fa\-\_\-string\-\_\-empty}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-empty}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t} fa\-\_\-string\-\_\-empty (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_ga41b5eaaca6caf7c02b5a84724547aaaf}
+
+
+Create an empty string. 
+
+The returned string should be destroyed by the caller. \hypertarget{group___fa_string_ga86d1752c468e584b6681e4d288cb8540}{\index{String@{String}!fa\-\_\-string\-\_\-single@{fa\-\_\-string\-\_\-single}}
+\index{fa\-\_\-string\-\_\-single@{fa\-\_\-string\-\_\-single}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-single}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t} fa\-\_\-string\-\_\-single (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-char16\-\_\-t}}]{char16}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_ga86d1752c468e584b6681e4d288cb8540}
+
+
+Create a single-\/char string. 
+
+The returned string should be destroyed by the caller. \hypertarget{group___fa_string_gae8770737e599c69eb19873a79a662342}{\index{String@{String}!fa\-\_\-string\-\_\-repeat@{fa\-\_\-string\-\_\-repeat}}
+\index{fa\-\_\-string\-\_\-repeat@{fa\-\_\-string\-\_\-repeat}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-repeat}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t} fa\-\_\-string\-\_\-repeat (
+\begin{DoxyParamCaption}
+\item[{int}]{int\-\_\-, }
+\item[{{\bf fa\-\_\-char16\-\_\-t}}]{char16}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_gae8770737e599c69eb19873a79a662342}
+
+
+Create a string by repeating the given character. 
+
+The returned string should be destroyed by the caller. \hypertarget{group___fa_string_ga3cfc98affae422a383f3c32d421a027e}{\index{String@{String}!fa\-\_\-string\-\_\-copy@{fa\-\_\-string\-\_\-copy}}
+\index{fa\-\_\-string\-\_\-copy@{fa\-\_\-string\-\_\-copy}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-copy}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t} fa\-\_\-string\-\_\-copy (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_ga3cfc98affae422a383f3c32d421a027e}
+
+
+Copy the given string. 
+
+The returned string should be destroyed by the caller. \hypertarget{group___fa_string_gaa0c00dc6caa8ac95b39ae8763418f8f7}{\index{String@{String}!fa\-\_\-string\-\_\-append@{fa\-\_\-string\-\_\-append}}
+\index{fa\-\_\-string\-\_\-append@{fa\-\_\-string\-\_\-append}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-append}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t} fa\-\_\-string\-\_\-append (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string, }
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_gaa0c00dc6caa8ac95b39ae8763418f8f7}
+
+
+Append the given strings. 
+
+The returned string should be destroyed by the caller. \hypertarget{group___fa_string_ga5d2b8bc86ca8e619b5acd8ee3ce646d1}{\index{String@{String}!fa\-\_\-string\-\_\-dappend@{fa\-\_\-string\-\_\-dappend}}
+\index{fa\-\_\-string\-\_\-dappend@{fa\-\_\-string\-\_\-dappend}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-dappend}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t} fa\-\_\-string\-\_\-dappend (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string, }
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_ga5d2b8bc86ca8e619b5acd8ee3ce646d1}
+\hypertarget{group___fa_string_ga564b75f4d9f1746aae14be49ae5ff14d}{\index{String@{String}!fa\-\_\-string\-\_\-destroy@{fa\-\_\-string\-\_\-destroy}}
+\index{fa\-\_\-string\-\_\-destroy@{fa\-\_\-string\-\_\-destroy}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-destroy}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-string\-\_\-destroy (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_ga564b75f4d9f1746aae14be49ae5ff14d}
+
+
+Destroy the given string. 
+
+\hypertarget{group___fa_string_ga976152a3555291c01ee4789fd430a735}{\index{String@{String}!fa\-\_\-string\-\_\-length@{fa\-\_\-string\-\_\-length}}
+\index{fa\-\_\-string\-\_\-length@{fa\-\_\-string\-\_\-length}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-length}]{\setlength{\rightskip}{0pt plus 5cm}int fa\-\_\-string\-\_\-length (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_ga976152a3555291c01ee4789fd430a735}
+
+
+Return the number of characters in the given string. 
+
+\hypertarget{group___fa_string_ga65a30c7ba8710cb6c7547469a5854fe5}{\index{String@{String}!fa\-\_\-string\-\_\-char\-\_\-at@{fa\-\_\-string\-\_\-char\-\_\-at}}
+\index{fa\-\_\-string\-\_\-char\-\_\-at@{fa\-\_\-string\-\_\-char\-\_\-at}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-char\-\_\-at}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-char16\-\_\-t} fa\-\_\-string\-\_\-char\-\_\-at (
+\begin{DoxyParamCaption}
+\item[{int}]{int\-\_\-, }
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_ga65a30c7ba8710cb6c7547469a5854fe5}
+
+
+Return the character at the given position in the string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pos} & \\
+\hline
+{\em str} & \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_string_ga0aefa62c17e377bdf1502d6a31c989a7}{\index{String@{String}!fa\-\_\-string\-\_\-show@{fa\-\_\-string\-\_\-show}}
+\index{fa\-\_\-string\-\_\-show@{fa\-\_\-string\-\_\-show}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-show}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t} fa\-\_\-string\-\_\-show (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_ga0aefa62c17e377bdf1502d6a31c989a7}
+
+
+Generic string conversion. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & Value to convert. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new string. 
+\end{DoxyReturn}
+\hypertarget{group___fa_string_gaeada11707ff4ebc7bfbd49652dd74524}{\index{String@{String}!fa\-\_\-string\-\_\-to\-\_\-string@{fa\-\_\-string\-\_\-to\-\_\-string}}
+\index{fa\-\_\-string\-\_\-to\-\_\-string@{fa\-\_\-string\-\_\-to\-\_\-string}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-to\-\_\-string}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t} fa\-\_\-string\-\_\-to\-\_\-string (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_gaeada11707ff4ebc7bfbd49652dd74524}
+
+
+Behaves like the identity function on strings and as \hyperlink{group___fa_string_ga0aefa62c17e377bdf1502d6a31c989a7}{show} on all other value. 
+
+\begin{DoxySeeAlso}{See Also}
+\hyperlink{structfa__string__show__t}{Show} 
+\end{DoxySeeAlso}
+\hypertarget{group___fa_string_gad32198fd893b60271162c33f32d70a5e}{\index{String@{String}!fa\-\_\-string\-\_\-to\-\_\-json@{fa\-\_\-string\-\_\-to\-\_\-json}}
+\index{fa\-\_\-string\-\_\-to\-\_\-json@{fa\-\_\-string\-\_\-to\-\_\-json}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-to\-\_\-json}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t} fa\-\_\-string\-\_\-to\-\_\-json (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_gad32198fd893b60271162c33f32d70a5e}
+
+
+Generic J\-S\-O\-N conversion. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Value implementing \hyperlink{structfa__string__show__t}{Show} or Dynamic. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_string_gac9b5abd8898a76b522395b3017d1f91f}{\index{String@{String}!fa\-\_\-string\-\_\-from\-\_\-json@{fa\-\_\-string\-\_\-from\-\_\-json}}
+\index{fa\-\_\-string\-\_\-from\-\_\-json@{fa\-\_\-string\-\_\-from\-\_\-json}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-from\-\_\-json}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ptr\-\_\-t} fa\-\_\-string\-\_\-from\-\_\-json (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_gac9b5abd8898a76b522395b3017d1f91f}
+
+
+Generic J\-S\-O\-N conversion. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em string} & A J\-S\-O\-N string. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_string_ga001482eba39fa23052477bd72df2b330}{\index{String@{String}!fa\-\_\-string\-\_\-to\-\_\-utf8@{fa\-\_\-string\-\_\-to\-\_\-utf8}}
+\index{fa\-\_\-string\-\_\-to\-\_\-utf8@{fa\-\_\-string\-\_\-to\-\_\-utf8}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-to\-\_\-utf8}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-utf8\-\_\-t} fa\-\_\-string\-\_\-to\-\_\-utf8 (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_ga001482eba39fa23052477bd72df2b330}
+
+
+Encode the given string as U\-T\-F-\/8. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em str} & String to encode. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+q\-A new encoded string. 
+\end{DoxyReturn}
+\hypertarget{group___fa_string_ga098890a14da3285e373422d0c50f40fa}{\index{String@{String}!fa\-\_\-string\-\_\-to\-\_\-cp1252@{fa\-\_\-string\-\_\-to\-\_\-cp1252}}
+\index{fa\-\_\-string\-\_\-to\-\_\-cp1252@{fa\-\_\-string\-\_\-to\-\_\-cp1252}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-to\-\_\-cp1252}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-cp1252\-\_\-t} fa\-\_\-string\-\_\-to\-\_\-cp1252 (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_ga098890a14da3285e373422d0c50f40fa}
+
+
+Encode a string as C\-P1252, also known as the standard Windows charset. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em str} & String to encode. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new encoded string. 
+\end{DoxyReturn}
+\hypertarget{group___fa_string_gab5d970c33bff37d051e1f8ad0c4ea3d2}{\index{String@{String}!fa\-\_\-string\-\_\-to\-\_\-utf16@{fa\-\_\-string\-\_\-to\-\_\-utf16}}
+\index{fa\-\_\-string\-\_\-to\-\_\-utf16@{fa\-\_\-string\-\_\-to\-\_\-utf16}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-to\-\_\-utf16}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-utf16\-\_\-t} fa\-\_\-string\-\_\-to\-\_\-utf16 (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_gab5d970c33bff37d051e1f8ad0c4ea3d2}
+
+
+Encode the given string as U\-T\-F-\/16. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em str} & String to encode. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A heap-\/allocated encoded string. 
+\end{DoxyReturn}
+\hypertarget{group___fa_string_gaa07caea7289ff0d9cba693729ede3288}{\index{String@{String}!fa\-\_\-string\-\_\-to\-\_\-native@{fa\-\_\-string\-\_\-to\-\_\-native}}
+\index{fa\-\_\-string\-\_\-to\-\_\-native@{fa\-\_\-string\-\_\-to\-\_\-native}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-to\-\_\-native}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ptr\-\_\-t} fa\-\_\-string\-\_\-to\-\_\-native (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_gaa07caea7289ff0d9cba693729ede3288}
+
+
+Convert a string to a the string representation used by the platform. 
+
+On Mac O\-S X and i\-O\-S, {\ttfamily C\-F\-String\-Ref} is used. \hypertarget{group___fa_string_gaecf2d7a3d99b683635cc5493033c09b7}{\index{String@{String}!fa\-\_\-string\-\_\-from\-\_\-utf8@{fa\-\_\-string\-\_\-from\-\_\-utf8}}
+\index{fa\-\_\-string\-\_\-from\-\_\-utf8@{fa\-\_\-string\-\_\-from\-\_\-utf8}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-from\-\_\-utf8}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t} fa\-\_\-string\-\_\-from\-\_\-utf8 (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-utf8\-\_\-t}}]{utf8}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_gaecf2d7a3d99b683635cc5493033c09b7}
+
+
+Deencode a string from U\-T\-F-\/8. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em str} & Encoded string. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new string. 
+\end{DoxyReturn}
+\hypertarget{group___fa_string_gacaf7053016f6fc6df5a4c7af5490525f}{\index{String@{String}!fa\-\_\-string\-\_\-from\-\_\-cp1252@{fa\-\_\-string\-\_\-from\-\_\-cp1252}}
+\index{fa\-\_\-string\-\_\-from\-\_\-cp1252@{fa\-\_\-string\-\_\-from\-\_\-cp1252}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-from\-\_\-cp1252}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t} fa\-\_\-string\-\_\-from\-\_\-cp1252 (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-cp1252\-\_\-t}}]{cp1252}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_gacaf7053016f6fc6df5a4c7af5490525f}
+
+
+Deencode a string from C\-P1252, also known as the standard Windows charset. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em str} & Encoded string. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new string. 
+\end{DoxyReturn}
+\hypertarget{group___fa_string_ga782618271b1bfe2e85d8f4e3153783b7}{\index{String@{String}!fa\-\_\-string\-\_\-from\-\_\-utf16@{fa\-\_\-string\-\_\-from\-\_\-utf16}}
+\index{fa\-\_\-string\-\_\-from\-\_\-utf16@{fa\-\_\-string\-\_\-from\-\_\-utf16}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-from\-\_\-utf16}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t} fa\-\_\-string\-\_\-from\-\_\-utf16 (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-utf16\-\_\-t}}]{utf16}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_ga782618271b1bfe2e85d8f4e3153783b7}
+
+
+Deencode a string from U\-T\-F-\/16. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em str} & Encoded string. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new string. 
+\end{DoxyReturn}
+\hypertarget{group___fa_string_gad8b0ad9b3d2da3f7098587c81bf8cc0e}{\index{String@{String}!fa\-\_\-string\-\_\-from\-\_\-native@{fa\-\_\-string\-\_\-from\-\_\-native}}
+\index{fa\-\_\-string\-\_\-from\-\_\-native@{fa\-\_\-string\-\_\-from\-\_\-native}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-from\-\_\-native}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t} fa\-\_\-string\-\_\-from\-\_\-native (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_gad8b0ad9b3d2da3f7098587c81bf8cc0e}
+
+
+Convert a value of the string representation used by the platform to a string. 
+
+On Mac O\-S X and i\-O\-S, {\ttfamily C\-F\-String\-Ref} is used. \hypertarget{group___fa_string_gaea2d11cbeae963c72444a7f038485487}{\index{String@{String}!fa\-\_\-string\-\_\-matches@{fa\-\_\-string\-\_\-matches}}
+\index{fa\-\_\-string\-\_\-matches@{fa\-\_\-string\-\_\-matches}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-matches}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-string\-\_\-matches (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string, }
+\item[{{\bf fa\-\_\-string\-\_\-t}}]{string\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_gaea2d11cbeae963c72444a7f038485487}
+
+
+Return true iff the given string matches the given regular expression. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em expr} & A regular expression string. \\
+\hline
+{\em string} & String to match. \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_string_ga81a603fcf07f2313cb5cfd1816470d4b}{\index{String@{String}!fa\-\_\-string\-\_\-format\-\_\-integral@{fa\-\_\-string\-\_\-format\-\_\-integral}}
+\index{fa\-\_\-string\-\_\-format\-\_\-integral@{fa\-\_\-string\-\_\-format\-\_\-integral}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-format\-\_\-integral}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t} fa\-\_\-string\-\_\-format\-\_\-integral (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{, }
+\item[{long}]{long\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_ga81a603fcf07f2313cb5cfd1816470d4b}
+
+
+Format an integer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em format} & A printf-\/style format string. \\
+\hline
+{\em value} & Integer value. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new formatted string. 
+\end{DoxyReturn}
+\hypertarget{group___fa_string_ga2be20227e1b8dba9d0b154ce225156ac}{\index{String@{String}!fa\-\_\-string\-\_\-format\-\_\-floating@{fa\-\_\-string\-\_\-format\-\_\-floating}}
+\index{fa\-\_\-string\-\_\-format\-\_\-floating@{fa\-\_\-string\-\_\-format\-\_\-floating}!String@{String}}
+\subsubsection[{fa\-\_\-string\-\_\-format\-\_\-floating}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-string\-\_\-t} fa\-\_\-string\-\_\-format\-\_\-floating (
+\begin{DoxyParamCaption}
+\item[{char $\ast$}]{, }
+\item[{double}]{double\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_string_ga2be20227e1b8dba9d0b154ce225156ac}
+
+
+Format a floating-\/point value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em format} & A printf-\/style format string. \\
+\hline
+{\em value} & Numeric value. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new formatted string. 
+\end{DoxyReturn}

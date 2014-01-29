@@ -1,0 +1,55 @@
+\hypertarget{audio_2stream_8h}{\section{include/fa/audio/stream.h File Reference}
+\label{audio_2stream_8h}\index{include/fa/audio/stream.\-h@{include/fa/audio/stream.\-h}}
+}
+{\ttfamily \#include $<$fa/action.\-h$>$}\\*
+{\ttfamily \#include $<$fa/time.\-h$>$}\\*
+{\ttfamily \#include $<$fa/clock.\-h$>$}\\*
+{\ttfamily \#include $<$fa/list.\-h$>$}\\*
+{\ttfamily \#include $<$fa/pair.\-h$>$}\\*
+{\ttfamily \#include $<$fa/error.\-h$>$}\\*
+{\ttfamily \#include $<$fa/signal.\-h$>$}\\*
+{\ttfamily \#include $<$fa/audio/device.\-h$>$}\\*
+Include dependency graph for stream.\-h\-:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{audio_2stream_8h__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\-:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{audio_2stream_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \-\_\-fa\-\_\-audio\-\_\-stream\-\_\-t $\ast$ \hyperlink{group___fa_audio_stream_ga78fbee3026130ce00d8e00a4e73a84c3}{fa\-\_\-audio\-\_\-stream\-\_\-t}
+\begin{DoxyCompactList}\small\item\em An audio stream. \end{DoxyCompactList}\item 
+typedef \hyperlink{group___fa_gaaafae8ab9ebae9019133108e56d2d4d1}{fa\-\_\-unary\-\_\-t} \hyperlink{group___fa_audio_stream_gaee8c48d438acabf22f2dfa3b85a4196c}{fa\-\_\-audio\-\_\-message\-\_\-callback\-\_\-t}
+\begin{DoxyCompactList}\small\item\em A callback to be invoked whenever a message is received. \end{DoxyCompactList}\item 
+typedef \hyperlink{group___fa_audio_stream_ga78fbee3026130ce00d8e00a4e73a84c3}{fa\-\_\-audio\-\_\-stream\-\_\-t}($\ast$ \hyperlink{group___fa_audio_stream_gab6aa7a7bed246893a5cb6d20d2e53199}{fa\-\_\-audio\-\_\-stream\-\_\-callback\-\_\-t} )(\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t}, \hyperlink{group___fa_audio_stream_ga78fbee3026130ce00d8e00a4e73a84c3}{fa\-\_\-audio\-\_\-stream\-\_\-t})
+\begin{DoxyCompactList}\small\item\em A callback to receive audio streams. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group___fa_audio_stream_ga78fbee3026130ce00d8e00a4e73a84c3}{fa\-\_\-audio\-\_\-stream\-\_\-t} \hyperlink{group___fa_audio_stream_ga912f03969d6207dd40a2746e62888adb}{fa\-\_\-audio\-\_\-open\-\_\-stream} (\hyperlink{group___fa_audio_device_ga03de89ee66c6465f8cedd3a0286598f4}{fa\-\_\-audio\-\_\-device\-\_\-t} device, \hyperlink{group___fa_audio_device_ga03de89ee66c6465f8cedd3a0286598f4}{fa\-\_\-audio\-\_\-device\-\_\-t} device\-\_\-, \hyperlink{group___fa_audio_device_gae190189bb20427f20453f2e4d48ecc7b}{fa\-\_\-audio\-\_\-proc\-\_\-t} proc, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em Open a stream on the given devices. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_audio_stream_ga79df3c5ef2dd7844fe00aa24f0a53d2e}{fa\-\_\-audio\-\_\-close\-\_\-stream} (\hyperlink{group___fa_audio_stream_ga78fbee3026130ce00d8e00a4e73a84c3}{fa\-\_\-audio\-\_\-stream\-\_\-t} stream)
+\begin{DoxyCompactList}\small\item\em Close the given stream. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_audio_stream_gaa385a92b31401915477027e03a39094e}{fa\-\_\-audio\-\_\-with\-\_\-stream} (\hyperlink{group___fa_audio_device_ga03de89ee66c6465f8cedd3a0286598f4}{fa\-\_\-audio\-\_\-device\-\_\-t} device, \hyperlink{group___fa_audio_device_ga03de89ee66c6465f8cedd3a0286598f4}{fa\-\_\-audio\-\_\-device\-\_\-t} device\-\_\-, \hyperlink{group___fa_audio_device_gae190189bb20427f20453f2e4d48ecc7b}{fa\-\_\-audio\-\_\-proc\-\_\-t} proc, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_audio_stream_gab6aa7a7bed246893a5cb6d20d2e53199}{fa\-\_\-audio\-\_\-stream\-\_\-callback\-\_\-t} stream\-Callback, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-, \hyperlink{group___fa_error_ga43d8d45a005130a5052ba3281a8bf33e}{fa\-\_\-error\-\_\-callback\-\_\-t} callback, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-\-\_\-)
+\begin{DoxyCompactList}\small\item\em Run a stream on the given devices. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_list_ga35ecb12ab934ded0cce0bcf28e3bc5d2}{fa\-\_\-list\-\_\-t} \hyperlink{group___fa_audio_stream_gac4e606b56619fb93da2ad08a29124b99}{fa\-\_\-audio\-\_\-devices} (\hyperlink{group___fa_audio_stream_ga78fbee3026130ce00d8e00a4e73a84c3}{fa\-\_\-audio\-\_\-stream\-\_\-t} stream)
+\begin{DoxyCompactList}\small\item\em Return the devices associated with the given stream. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_clock_ga20b3a0f49788fbedba140b1d315d2313}{fa\-\_\-clock\-\_\-t} \hyperlink{group___fa_audio_stream_gafeddb7f975954c8d586af0d3a7043f93}{fa\-\_\-audio\-\_\-get\-\_\-clock} (\hyperlink{group___fa_audio_stream_ga78fbee3026130ce00d8e00a4e73a84c3}{fa\-\_\-audio\-\_\-stream\-\_\-t} stream)
+\begin{DoxyCompactList}\small\item\em Return the clock associated with a given stream. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_clock_ga20b3a0f49788fbedba140b1d315d2313}{fa\-\_\-clock\-\_\-t} \hyperlink{group___fa_audio_stream_ga4d3c49d217cb3e8cebea323261997840}{fa\-\_\-audio\-\_\-stream\-\_\-clock} (\hyperlink{group___fa_audio_stream_ga78fbee3026130ce00d8e00a4e73a84c3}{fa\-\_\-audio\-\_\-stream\-\_\-t} stream)
+\begin{DoxyCompactList}\small\item\em Return the clock associated with a given stream. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_audio_stream_gace71cd35b253e3891f1742667fd1be68}{fa\-\_\-audio\-\_\-add\-\_\-message\-\_\-callback} (\hyperlink{group___fa_audio_stream_gaee8c48d438acabf22f2dfa3b85a4196c}{fa\-\_\-audio\-\_\-message\-\_\-callback\-\_\-t} callback, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} callback\-Data, \hyperlink{group___fa_audio_stream_ga78fbee3026130ce00d8e00a4e73a84c3}{fa\-\_\-audio\-\_\-stream\-\_\-t} session)
+\begin{DoxyCompactList}\small\item\em Register a callback to be invoked when a message is received. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_audio_stream_gad98527accbfa2dcd59124577eac422bc}{fa\-\_\-audio\-\_\-schedule} (\hyperlink{group___fa_time_ga227cc693f20b4873fed11028bcade184}{fa\-\_\-time\-\_\-t} time, \hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action, \hyperlink{group___fa_audio_stream_ga78fbee3026130ce00d8e00a4e73a84c3}{fa\-\_\-audio\-\_\-stream\-\_\-t} stream)
+\begin{DoxyCompactList}\small\item\em Schedule an action on the stream. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_audio_stream_ga4283ce1b2c9605c1b5086e2439ae6ce4}{fa\-\_\-audio\-\_\-schedule\-\_\-relative} (\hyperlink{group___fa_time_ga227cc693f20b4873fed11028bcade184}{fa\-\_\-time\-\_\-t} time, \hyperlink{group___fa_action_gadb08ae063168671e5fedc6c23f20ae4b}{fa\-\_\-action\-\_\-t} action, \hyperlink{group___fa_audio_stream_ga78fbee3026130ce00d8e00a4e73a84c3}{fa\-\_\-audio\-\_\-stream\-\_\-t} stream)
+\begin{DoxyCompactList}\small\item\em Schedule an action on the stream. \end{DoxyCompactList}\end{DoxyCompactItemize}

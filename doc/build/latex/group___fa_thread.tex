@@ -1,0 +1,237 @@
+\hypertarget{group___fa_thread}{\section{Thread}
+\label{group___fa_thread}\index{Thread@{Thread}}
+}
+
+
+Provides threads.  
+
+
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \-\_\-fa\-\_\-thread\-\_\-t $\ast$ \hyperlink{group___fa_thread_gaec6debf84c8113cb354a7352b4e17abd}{fa\-\_\-thread\-\_\-t}
+\begin{DoxyCompactList}\small\item\em The abstract type of threads. \end{DoxyCompactList}\item 
+typedef struct \-\_\-fa\-\_\-thread\-\_\-mutex\-\_\-t $\ast$ \hyperlink{group___fa_thread_ga659c355795f6866eec71ecd8eeadbd59}{fa\-\_\-thread\-\_\-mutex\-\_\-t}
+\begin{DoxyCompactList}\small\item\em The abstract type of mutexes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group___fa_thread_gaec6debf84c8113cb354a7352b4e17abd}{fa\-\_\-thread\-\_\-t} \hyperlink{group___fa_thread_ga7edcae8080b6df6a8258b1dd20f9bf12}{fa\-\_\-thread\-\_\-create} (\hyperlink{group___fa_ga43b940a9294fd58a54087ef0b416e479}{fa\-\_\-nullary\-\_\-t} nullary, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr)
+\begin{DoxyCompactList}\small\item\em Create a new thread executing the given function asynhronously. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_thread_gade25ae0c15b35fe0c2761b101a8c0d5f}{fa\-\_\-thread\-\_\-join} (\hyperlink{group___fa_thread_gaec6debf84c8113cb354a7352b4e17abd}{fa\-\_\-thread\-\_\-t} thread)
+\begin{DoxyCompactList}\small\item\em Destroy a thread, and return after its associated function has returned. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_thread_ga9686acdb9cd173dd1e5928b129059ca9}{fa\-\_\-thread\-\_\-detach} (\hyperlink{group___fa_thread_gaec6debf84c8113cb354a7352b4e17abd}{fa\-\_\-thread\-\_\-t} thread)
+\begin{DoxyCompactList}\small\item\em Destroy a thread and return directly. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_thread_gae656f053fe04a6ce55e28fb912e03d48}{fa\-\_\-thread\-\_\-to\-\_\-native} (\hyperlink{group___fa_thread_gaec6debf84c8113cb354a7352b4e17abd}{fa\-\_\-thread\-\_\-t} thread)
+\begin{DoxyCompactList}\small\item\em Convert a thread to a the underlying thread type used by the platform. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_thread_gaec6debf84c8113cb354a7352b4e17abd}{fa\-\_\-thread\-\_\-t} \hyperlink{group___fa_thread_ga9e6021c99ac7040340ccf57c9d833895}{fa\-\_\-thread\-\_\-main} ()
+\begin{DoxyCompactList}\small\item\em Return the main thread. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_thread_gaec6debf84c8113cb354a7352b4e17abd}{fa\-\_\-thread\-\_\-t} \hyperlink{group___fa_thread_ga1fb7335a50aa9eea5c096c33fd6baec0}{fa\-\_\-thread\-\_\-current} ()
+\begin{DoxyCompactList}\small\item\em Return the current thread. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_thread_ga6a6c70317be48603d0316bdb93914f5f}{fa\-\_\-thread\-\_\-sleep} (\hyperlink{group___fa_time_gadebdebeab6c5ba7cd8002d0773635e61}{fa\-\_\-time\-\_\-milliseconds\-\_\-t} milliseconds)
+\begin{DoxyCompactList}\small\item\em Sleep the current thread for the given time. \end{DoxyCompactList}\item 
+\hyperlink{group___fa_thread_ga659c355795f6866eec71ecd8eeadbd59}{fa\-\_\-thread\-\_\-mutex\-\_\-t} \hyperlink{group___fa_thread_ga06266c98c357794d97111b15b6a8257c}{fa\-\_\-thread\-\_\-create\-\_\-mutex} ()
+\begin{DoxyCompactList}\small\item\em Create a mutex. \end{DoxyCompactList}\item 
+void \hyperlink{group___fa_thread_ga42acc6681b419516e0ab1e62af7bb0bc}{fa\-\_\-thread\-\_\-destroy\-\_\-mutex} (\hyperlink{group___fa_thread_ga659c355795f6866eec71ecd8eeadbd59}{fa\-\_\-thread\-\_\-mutex\-\_\-t} mutex)
+\begin{DoxyCompactList}\small\item\em Destroy a mutex. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_thread_ga7b5b662a66628e354da65a8a79e15b0a}{fa\-\_\-thread\-\_\-lock} (\hyperlink{group___fa_thread_ga659c355795f6866eec71ecd8eeadbd59}{fa\-\_\-thread\-\_\-mutex\-\_\-t} mutex)
+\begin{DoxyCompactList}\small\item\em Acquire the lock of a mutex. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_thread_ga5992bc1e6c5715264629a552519252b5}{fa\-\_\-thread\-\_\-try\-\_\-lock} (\hyperlink{group___fa_thread_ga659c355795f6866eec71ecd8eeadbd59}{fa\-\_\-thread\-\_\-mutex\-\_\-t} mutex)
+\begin{DoxyCompactList}\small\item\em Try acquiring the lock of a mutex. \end{DoxyCompactList}\item 
+bool \hyperlink{group___fa_thread_gae96ce639c555f06c1b22a6ba2967e124}{fa\-\_\-thread\-\_\-unlock} (\hyperlink{group___fa_thread_ga659c355795f6866eec71ecd8eeadbd59}{fa\-\_\-thread\-\_\-mutex\-\_\-t} mutex)
+\begin{DoxyCompactList}\small\item\em Release the lock of a mutex. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Provides threads. We provide threads and mutexes. For non-\/blocking constructs, see the \hyperlink{group___fa_atomic}{Atomic} modules.
+
+\begin{DoxyParagraph}{Literals}
+
+\begin{DoxyItemize}
+\item {\ttfamily thread(function, data)}
+\end{DoxyItemize}
+\end{DoxyParagraph}
+\begin{DoxyParagraph}{Implements }
+
+\begin{DoxyItemize}
+\item \hyperlink{structfa__equal__t}{fa\-\_\-equal\-\_\-t} (Thread only)
+\item \hyperlink{structfa__order__t}{fa\-\_\-order\-\_\-t} (Thread only)
+\item \hyperlink{structfa__string__show__t}{fa\-\_\-string\-\_\-show\-\_\-t} (both)
+\item \hyperlink{structfa__destroy__t}{fa\-\_\-destroy\-\_\-t} (Mutex only)
+\end{DoxyItemize}
+\end{DoxyParagraph}
+Threads do not implement destroy, use join or detach instead. 
+
+\subsection{Typedef Documentation}
+\hypertarget{group___fa_thread_gaec6debf84c8113cb354a7352b4e17abd}{\index{Thread@{Thread}!fa\-\_\-thread\-\_\-t@{fa\-\_\-thread\-\_\-t}}
+\index{fa\-\_\-thread\-\_\-t@{fa\-\_\-thread\-\_\-t}!Thread@{Thread}}
+\subsubsection[{fa\-\_\-thread\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct \-\_\-fa\-\_\-thread\-\_\-t$\ast$ {\bf fa\-\_\-thread\-\_\-t}}}\label{group___fa_thread_gaec6debf84c8113cb354a7352b4e17abd}
+
+
+The abstract type of threads. 
+
+\hypertarget{group___fa_thread_ga659c355795f6866eec71ecd8eeadbd59}{\index{Thread@{Thread}!fa\-\_\-thread\-\_\-mutex\-\_\-t@{fa\-\_\-thread\-\_\-mutex\-\_\-t}}
+\index{fa\-\_\-thread\-\_\-mutex\-\_\-t@{fa\-\_\-thread\-\_\-mutex\-\_\-t}!Thread@{Thread}}
+\subsubsection[{fa\-\_\-thread\-\_\-mutex\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct \-\_\-fa\-\_\-thread\-\_\-mutex\-\_\-t$\ast$ {\bf fa\-\_\-thread\-\_\-mutex\-\_\-t}}}\label{group___fa_thread_ga659c355795f6866eec71ecd8eeadbd59}
+
+
+The abstract type of mutexes. 
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group___fa_thread_ga7edcae8080b6df6a8258b1dd20f9bf12}{\index{Thread@{Thread}!fa\-\_\-thread\-\_\-create@{fa\-\_\-thread\-\_\-create}}
+\index{fa\-\_\-thread\-\_\-create@{fa\-\_\-thread\-\_\-create}!Thread@{Thread}}
+\subsubsection[{fa\-\_\-thread\-\_\-create}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-thread\-\_\-t} fa\-\_\-thread\-\_\-create (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-nullary\-\_\-t}}]{nullary, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr}
+\end{DoxyParamCaption}
+)}}\label{group___fa_thread_ga7edcae8080b6df6a8258b1dd20f9bf12}
+
+
+Create a new thread executing the given function asynhronously. 
+
+Threads have single-\/ownership semantics and must be finalized by passing it to a destructive function.
+
+
+\begin{DoxyParams}{Parameters}
+{\em func} & Function to execute. \\
+\hline
+{\em data} & Value to be passed to the function. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new thread executing concurrently with the current thread. 
+\end{DoxyReturn}
+\hypertarget{group___fa_thread_gade25ae0c15b35fe0c2761b101a8c0d5f}{\index{Thread@{Thread}!fa\-\_\-thread\-\_\-join@{fa\-\_\-thread\-\_\-join}}
+\index{fa\-\_\-thread\-\_\-join@{fa\-\_\-thread\-\_\-join}!Thread@{Thread}}
+\subsubsection[{fa\-\_\-thread\-\_\-join}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-thread\-\_\-join (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-thread\-\_\-t}}]{thread}
+\end{DoxyParamCaption}
+)}}\label{group___fa_thread_gade25ae0c15b35fe0c2761b101a8c0d5f}
+
+
+Destroy a thread, and return after its associated function has returned. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em thread} & Thread to join (destroyed). \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_thread_ga9686acdb9cd173dd1e5928b129059ca9}{\index{Thread@{Thread}!fa\-\_\-thread\-\_\-detach@{fa\-\_\-thread\-\_\-detach}}
+\index{fa\-\_\-thread\-\_\-detach@{fa\-\_\-thread\-\_\-detach}!Thread@{Thread}}
+\subsubsection[{fa\-\_\-thread\-\_\-detach}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-thread\-\_\-detach (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-thread\-\_\-t}}]{thread}
+\end{DoxyParamCaption}
+)}}\label{group___fa_thread_ga9686acdb9cd173dd1e5928b129059ca9}
+
+
+Destroy a thread and return directly. 
+
+The associated function may continous executing in the background. 
+\begin{DoxyParams}{Parameters}
+{\em thread} & Thread to detach (destroyed). \\
+\hline
+\end{DoxyParams}
+\hypertarget{group___fa_thread_gae656f053fe04a6ce55e28fb912e03d48}{\index{Thread@{Thread}!fa\-\_\-thread\-\_\-to\-\_\-native@{fa\-\_\-thread\-\_\-to\-\_\-native}}
+\index{fa\-\_\-thread\-\_\-to\-\_\-native@{fa\-\_\-thread\-\_\-to\-\_\-native}!Thread@{Thread}}
+\subsubsection[{fa\-\_\-thread\-\_\-to\-\_\-native}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ptr\-\_\-t} fa\-\_\-thread\-\_\-to\-\_\-native (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-thread\-\_\-t}}]{thread}
+\end{DoxyParamCaption}
+)}}\label{group___fa_thread_gae656f053fe04a6ce55e28fb912e03d48}
+
+
+Convert a thread to a the underlying thread type used by the platform. 
+
+On Mac O\-S X and i\-O\-S, {\ttfamily pthread\-\_\-t} is used. \hypertarget{group___fa_thread_ga9e6021c99ac7040340ccf57c9d833895}{\index{Thread@{Thread}!fa\-\_\-thread\-\_\-main@{fa\-\_\-thread\-\_\-main}}
+\index{fa\-\_\-thread\-\_\-main@{fa\-\_\-thread\-\_\-main}!Thread@{Thread}}
+\subsubsection[{fa\-\_\-thread\-\_\-main}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-thread\-\_\-t} fa\-\_\-thread\-\_\-main (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_thread_ga9e6021c99ac7040340ccf57c9d833895}
+
+
+Return the main thread. 
+
+\hypertarget{group___fa_thread_ga1fb7335a50aa9eea5c096c33fd6baec0}{\index{Thread@{Thread}!fa\-\_\-thread\-\_\-current@{fa\-\_\-thread\-\_\-current}}
+\index{fa\-\_\-thread\-\_\-current@{fa\-\_\-thread\-\_\-current}!Thread@{Thread}}
+\subsubsection[{fa\-\_\-thread\-\_\-current}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-thread\-\_\-t} fa\-\_\-thread\-\_\-current (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_thread_ga1fb7335a50aa9eea5c096c33fd6baec0}
+
+
+Return the current thread. 
+
+\hypertarget{group___fa_thread_ga6a6c70317be48603d0316bdb93914f5f}{\index{Thread@{Thread}!fa\-\_\-thread\-\_\-sleep@{fa\-\_\-thread\-\_\-sleep}}
+\index{fa\-\_\-thread\-\_\-sleep@{fa\-\_\-thread\-\_\-sleep}!Thread@{Thread}}
+\subsubsection[{fa\-\_\-thread\-\_\-sleep}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-thread\-\_\-sleep (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-time\-\_\-milliseconds\-\_\-t}}]{milliseconds}
+\end{DoxyParamCaption}
+)}}\label{group___fa_thread_ga6a6c70317be48603d0316bdb93914f5f}
+
+
+Sleep the current thread for the given time. 
+
+\hypertarget{group___fa_thread_ga06266c98c357794d97111b15b6a8257c}{\index{Thread@{Thread}!fa\-\_\-thread\-\_\-create\-\_\-mutex@{fa\-\_\-thread\-\_\-create\-\_\-mutex}}
+\index{fa\-\_\-thread\-\_\-create\-\_\-mutex@{fa\-\_\-thread\-\_\-create\-\_\-mutex}!Thread@{Thread}}
+\subsubsection[{fa\-\_\-thread\-\_\-create\-\_\-mutex}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-thread\-\_\-mutex\-\_\-t} fa\-\_\-thread\-\_\-create\-\_\-mutex (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{group___fa_thread_ga06266c98c357794d97111b15b6a8257c}
+
+
+Create a mutex. 
+
+Mutexes have single-\/ownership semantics and must be finalized by passing it to a destructive function. \hypertarget{group___fa_thread_ga42acc6681b419516e0ab1e62af7bb0bc}{\index{Thread@{Thread}!fa\-\_\-thread\-\_\-destroy\-\_\-mutex@{fa\-\_\-thread\-\_\-destroy\-\_\-mutex}}
+\index{fa\-\_\-thread\-\_\-destroy\-\_\-mutex@{fa\-\_\-thread\-\_\-destroy\-\_\-mutex}!Thread@{Thread}}
+\subsubsection[{fa\-\_\-thread\-\_\-destroy\-\_\-mutex}]{\setlength{\rightskip}{0pt plus 5cm}void fa\-\_\-thread\-\_\-destroy\-\_\-mutex (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-thread\-\_\-mutex\-\_\-t}}]{mutex}
+\end{DoxyParamCaption}
+)}}\label{group___fa_thread_ga42acc6681b419516e0ab1e62af7bb0bc}
+
+
+Destroy a mutex. 
+
+\hypertarget{group___fa_thread_ga7b5b662a66628e354da65a8a79e15b0a}{\index{Thread@{Thread}!fa\-\_\-thread\-\_\-lock@{fa\-\_\-thread\-\_\-lock}}
+\index{fa\-\_\-thread\-\_\-lock@{fa\-\_\-thread\-\_\-lock}!Thread@{Thread}}
+\subsubsection[{fa\-\_\-thread\-\_\-lock}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-thread\-\_\-lock (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-thread\-\_\-mutex\-\_\-t}}]{mutex}
+\end{DoxyParamCaption}
+)}}\label{group___fa_thread_ga7b5b662a66628e354da65a8a79e15b0a}
+
+
+Acquire the lock of a mutex. 
+
+\hypertarget{group___fa_thread_ga5992bc1e6c5715264629a552519252b5}{\index{Thread@{Thread}!fa\-\_\-thread\-\_\-try\-\_\-lock@{fa\-\_\-thread\-\_\-try\-\_\-lock}}
+\index{fa\-\_\-thread\-\_\-try\-\_\-lock@{fa\-\_\-thread\-\_\-try\-\_\-lock}!Thread@{Thread}}
+\subsubsection[{fa\-\_\-thread\-\_\-try\-\_\-lock}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-thread\-\_\-try\-\_\-lock (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-thread\-\_\-mutex\-\_\-t}}]{mutex}
+\end{DoxyParamCaption}
+)}}\label{group___fa_thread_ga5992bc1e6c5715264629a552519252b5}
+
+
+Try acquiring the lock of a mutex. 
+
+\hypertarget{group___fa_thread_gae96ce639c555f06c1b22a6ba2967e124}{\index{Thread@{Thread}!fa\-\_\-thread\-\_\-unlock@{fa\-\_\-thread\-\_\-unlock}}
+\index{fa\-\_\-thread\-\_\-unlock@{fa\-\_\-thread\-\_\-unlock}!Thread@{Thread}}
+\subsubsection[{fa\-\_\-thread\-\_\-unlock}]{\setlength{\rightskip}{0pt plus 5cm}bool fa\-\_\-thread\-\_\-unlock (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-thread\-\_\-mutex\-\_\-t}}]{mutex}
+\end{DoxyParamCaption}
+)}}\label{group___fa_thread_gae96ce639c555f06c1b22a6ba2967e124}
+
+
+Release the lock of a mutex. 
+

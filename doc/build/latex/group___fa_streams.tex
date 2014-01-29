@@ -1,0 +1,79 @@
+\hypertarget{group___fa_streams}{\section{Streams}
+\label{group___fa_streams}\index{Streams@{Streams}}
+}
+
+
+Provides external streams.  
+
+
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structfa__filter__interface__t}{fa\-\_\-filter\-\_\-interface\-\_\-t}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef void($\ast$ \hyperlink{group___fa_streams_ga9f9c29b1d06e16f886e1458cbf3d827f}{fa\-\_\-buffer\-\_\-callback\-\_\-t} )(\hyperlink{group___fa_buffer_ga0ed7a1d783ab322e2e8be02432d0839e}{fa\-\_\-buffer\-\_\-t})
+\begin{DoxyCompactList}\small\item\em Callback to receive data. \end{DoxyCompactList}\item 
+typedef struct \-\_\-fa\-\_\-filter\-\_\-t $\ast$ \hyperlink{group___fa_streams_ga5d565d001005952a789cb9c7b3404f7e}{fa\-\_\-filter\-\_\-t}
+\begin{DoxyCompactList}\small\item\em Implements the filter interface. \end{DoxyCompactList}\item 
+typedef struct \-\_\-fa\-\_\-source\-\_\-t $\ast$ \hyperlink{group___fa_streams_ga7c5db08c833038bdbec81bf266c7f6f4}{fa\-\_\-source\-\_\-t}
+\begin{DoxyCompactList}\small\item\em Implements the filter interface (ignores the source). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} \hyperlink{group___fa_streams_gad7bcf3fadea6d6f55bd4941c348193ff}{fa\-\_\-filter} (\hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr, \hyperlink{group___fa_ga915ddeae99ad7568b273d2b876425197}{fa\-\_\-ptr\-\_\-t} ptr\-\_\-)
+\begin{DoxyCompactList}\small\item\em Filter two filterable things. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Provides external streams. 
+\begin{DoxyItemize}
+\item {\itshape Sources} produce sequences of data (bytes, characters, floats etc)
+\item {\itshape Sinks} consume sequences of data (bytes, characters, floats etc)
+\item Both {\itshape sources} and {\itshape sinks} accepts external buffers.
+\end{DoxyItemize}
+
+\begin{DoxySince}{Since}
+2.\-9 
+\end{DoxySince}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{group___fa_streams_ga9f9c29b1d06e16f886e1458cbf3d827f}{\index{Streams@{Streams}!fa\-\_\-buffer\-\_\-callback\-\_\-t@{fa\-\_\-buffer\-\_\-callback\-\_\-t}}
+\index{fa\-\_\-buffer\-\_\-callback\-\_\-t@{fa\-\_\-buffer\-\_\-callback\-\_\-t}!Streams@{Streams}}
+\subsubsection[{fa\-\_\-buffer\-\_\-callback\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef void($\ast$  fa\-\_\-buffer\-\_\-callback\-\_\-t)({\bf fa\-\_\-buffer\-\_\-t})}}\label{group___fa_streams_ga9f9c29b1d06e16f886e1458cbf3d827f}
+
+
+Callback to receive data. 
+
+Argument is either a (possibly empty) buffer, meaning that more data is to arrive, or {\ttfamily N\-U\-L\-L}, indicating that the data source has been extinguished. \hypertarget{group___fa_streams_ga5d565d001005952a789cb9c7b3404f7e}{\index{Streams@{Streams}!fa\-\_\-filter\-\_\-t@{fa\-\_\-filter\-\_\-t}}
+\index{fa\-\_\-filter\-\_\-t@{fa\-\_\-filter\-\_\-t}!Streams@{Streams}}
+\subsubsection[{fa\-\_\-filter\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct \-\_\-fa\-\_\-filter\-\_\-t$\ast$ {\bf fa\-\_\-filter\-\_\-t}}}\label{group___fa_streams_ga5d565d001005952a789cb9c7b3404f7e}
+
+
+Implements the filter interface. 
+
+\hypertarget{group___fa_streams_ga7c5db08c833038bdbec81bf266c7f6f4}{\index{Streams@{Streams}!fa\-\_\-source\-\_\-t@{fa\-\_\-source\-\_\-t}}
+\index{fa\-\_\-source\-\_\-t@{fa\-\_\-source\-\_\-t}!Streams@{Streams}}
+\subsubsection[{fa\-\_\-source\-\_\-t}]{\setlength{\rightskip}{0pt plus 5cm}typedef struct \-\_\-fa\-\_\-source\-\_\-t$\ast$ {\bf fa\-\_\-source\-\_\-t}}}\label{group___fa_streams_ga7c5db08c833038bdbec81bf266c7f6f4}
+
+
+Implements the filter interface (ignores the source). 
+
+
+
+\subsection{Function Documentation}
+\hypertarget{group___fa_streams_gad7bcf3fadea6d6f55bd4941c348193ff}{\index{Streams@{Streams}!fa\-\_\-filter@{fa\-\_\-filter}}
+\index{fa\-\_\-filter@{fa\-\_\-filter}!Streams@{Streams}}
+\subsubsection[{fa\-\_\-filter}]{\setlength{\rightskip}{0pt plus 5cm}{\bf fa\-\_\-ptr\-\_\-t} fa\-\_\-filter (
+\begin{DoxyParamCaption}
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr, }
+\item[{{\bf fa\-\_\-ptr\-\_\-t}}]{ptr\-\_\-}
+\end{DoxyParamCaption}
+)}}\label{group___fa_streams_gad7bcf3fadea6d6f55bd4941c348193ff}
+
+
+Filter two filterable things. 
+
