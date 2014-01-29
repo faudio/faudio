@@ -3,8 +3,6 @@
 #include <fa/util.h>
 #include <fa/io.h>
 
-#include <curl/curl.h>
-
 /*
     This program does ...
 
