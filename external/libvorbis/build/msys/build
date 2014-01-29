@@ -6,6 +6,7 @@ pushd external/libvorbis/source;
 
 ./configure \
 	  --prefix=`pwd`/../result \
+	  --with-ogg=`pwd`/../../libogg/result \
 	  && make \
 		&& make install \
 		&& cp -R include/ ../result/
