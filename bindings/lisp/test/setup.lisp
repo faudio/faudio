@@ -50,9 +50,9 @@
   (push framework-path2 cffi:*darwin-framework-directories*)
   #+cocoa (setf *foreign-lib* (cffi:load-foreign-library `(:framework ,framework-name)))
   #+win32 (setf *foreign-lib* (cffi:load-foreign-library "C:\\Program Files (x86)\\LispWorks\\libfaudio.dll"))
-  (faudio::fa-set-log-file log-path)
+  (faudio::set-log-file log-path)
   ;(faudio::plot-use-gnu)
-  (faudio::fa-initialize)
+  (faudio::initialize)
   *foreign-lib*)
 
 ; Unload

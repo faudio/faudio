@@ -43,12 +43,21 @@
         (:module "midi2"
           :pathname "midi"
           :components (
+            (:file "session")
+            (:file "device")
+            (:file "stream")
             (:file "message")))
         (:file "signal")
         (:file "action")
         (:file "plot")
         (:file "midi")
         (:file "audio")
+        (:module "audio2"
+          :pathname "audio"
+          :components (
+            (:file "session")
+            (:file "device")
+            (:file "stream")))
         (:file "atomic")
         (:module "atomic2"
           :pathname "atomic"

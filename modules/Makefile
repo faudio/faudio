@@ -64,7 +64,7 @@ c:
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Audio/Stream.module    		>include/fa/audio/stream.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Midi.module    			>include/fa/midi.h && \
 	$(MODULO) -Mmodules --language=c    <modules/Fa/Option.module    		>include/fa/option.h && \
-	$(MODULO) -Mmodules --language=c    <modules/Fa/Streams.module    		>include/fa/io.h
+	$(MODULO) -Mmodules --language=c    <modules/Fa/Io.module	    		>include/fa/io.h
 
 lisp: fix-lisp
 gen-lisp:
@@ -100,13 +100,20 @@ gen-lisp:
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Pair/Left.module    		>bindings/lisp/fa/pair/left.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Map.module    			>bindings/lisp/fa/map.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/PriorityQueue.module		>bindings/lisp/fa/priority-queue.lisp && \
-	$(MODULO) -Mmodules --language=lisp <modules/Fa/Midi/Message.module    		>bindings/lisp/fa/midi/message.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Time.module    			>bindings/lisp/fa/time.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Clock.module			>bindings/lisp/fa/clock.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Action.module  			>bindings/lisp/fa/action.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Signal.module  			>bindings/lisp/fa/signal.lisp && \
 	$(MODULO) -Mmodules --language=lisp <modules/Fa/Audio.module    		>bindings/lisp/fa/audio.lisp && \
-	$(MODULO) -Mmodules --language=lisp <modules/Fa/Midi.module    			>bindings/lisp/fa/midi.lisp
+	$(MODULO) -Mmodules --language=lisp <modules/Fa/Audio/Session.module		>bindings/lisp/fa/audio/session.lisp && \
+	$(MODULO) -Mmodules --language=lisp <modules/Fa/Audio/Device.module    		>bindings/lisp/fa/audio/device.lisp && \
+	$(MODULO) -Mmodules --language=lisp <modules/Fa/Audio/Stream.module    		>bindings/lisp/fa/audio/stream.lisp && \
+	$(MODULO) -Mmodules --language=lisp <modules/Fa/Midi.module    			>bindings/lisp/fa/midi.lisp && \
+	$(MODULO) -Mmodules --language=lisp <modules/Fa/Midi/Message.module    		>bindings/lisp/fa/midi/message.lisp && \
+	$(MODULO) -Mmodules --language=lisp <modules/Fa/Midi/Session.module    		>bindings/lisp/fa/midi/session.lisp && \
+	$(MODULO) -Mmodules --language=lisp <modules/Fa/Midi/Device.module    		>bindings/lisp/fa/midi/device.lisp && \
+	$(MODULO) -Mmodules --language=lisp <modules/Fa/Midi/Stream.module    		>bindings/lisp/fa/midi/stream.lisp && \
+	$(MODULO) -Mmodules --language=lisp <modules/Fa/Io.module	    		>bindings/lisp/fa/io.lisp
 
 fix-lisp: gen-lisp
 	perl -i -pe 's/\(defctype ptr/; (defctype ptr/g' bindings/lisp/fa.lisp
