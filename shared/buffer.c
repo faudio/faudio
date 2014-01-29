@@ -214,7 +214,7 @@ void *fa_buffer_unsafe_address(fa_buffer_t buffer)
 
 typedef fa_string_t path_t;
 
-fa_pair_t fa_buffer_read_audio(fa_string_t path)
+fa_buffer_t fa_buffer_read_audio(fa_string_t path)
 {
     int             channels;
     buffer_t        buffer;
@@ -230,7 +230,7 @@ fa_pair_t fa_buffer_read_audio(fa_string_t path)
         if (sf_error(file)) {
             char err[100];
             snprintf(err, 100, "Could not read audio file '%s'", cpath);
-            return (pair_t) fa_error_create_simple(error, string(err), string("Doremir.Buffer"));
+            return (buffer_t) fa_error_create_simple(error, string(err), string("Doremir.Buffer"));
         }
 
         inform(string_append(string("Reading "), path));
@@ -268,19 +268,18 @@ fa_pair_t fa_buffer_read_audio(fa_string_t path)
         }
 
         if (sf_close(file)) {
-            return (pair_t) fa_error_create_simple(error, string("Could not close"), string("Doremir.Buffer"));
+            return (buffer_t) fa_error_create_simple(error, string("Could not close"), string("Doremir.Buffer"));
         }
     }
 
-
-    return pair(i32(channels), buffer);
+    return buffer;
 }
 
 // TODO only writes one channel etc
 ptr_t fa_buffer_write_audio(fa_string_t  path,
-                            int          channels,
                             fa_buffer_t  buffer)
 {
+    int channels = 1;
     assert(channels == 1 && "fa_buffer_write_audio: Can not write more than 1 channels");
 
     const char     *cpath = fa_string_to_utf8(path);

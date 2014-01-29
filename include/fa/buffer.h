@@ -246,24 +246,21 @@ void fa_buffer_write_raw(fa_string_t string, fa_buffer_t buffer);
     @param path
         Path to the file to read.
     @return
-        A `(Channels, Buffer)` pair or an error value.
+        A buffer or an error value.
 */
-fa_pair_t fa_buffer_read_audio(fa_string_t string);
+fa_buffer_t fa_buffer_read_audio(fa_string_t string);
 
 /**
     Write an audio file.
 
     @param path
         Path to the file to read.
-    @param channels
-        Number of channels.
     @param buffer
         Buffer to write.
     @return
         The null pointer or an error value.
 */
 fa_ptr_t fa_buffer_write_audio(fa_string_t string,
-                               int int_,
                                fa_buffer_t buffer);
 
 /** Return the address of the buffer.

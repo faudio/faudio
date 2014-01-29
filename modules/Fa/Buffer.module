@@ -218,23 +218,21 @@ module Fa.Buffer
         @param path
             Path to the file to read.
         @return
-            A `(Channels, Buffer)` pair or an error value.
+            A buffer or an error value.
      */
-    readAudio   : String -> Pair; // (Int,Buffer)
+    readAudio   : String -> Buffer;
 
     /**
         Write an audio file.
 
         @param path
             Path to the file to read.
-        @param channels
-            Number of channels.
         @param buffer
             Buffer to write.
         @return
             The null pointer or an error value.
      */
-    writeAudio  : (String,Int,Buffer) -> Ptr; // Error?
+    writeAudio  : (String,Buffer) -> Ptr; // Error?
 
     /** Return the address of the buffer.
 

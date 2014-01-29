@@ -1114,7 +1114,7 @@ void fa_signal_print(int n, list_t controls, signal_t a)
 ptr_t fa_signal_run_file(int n, list_t controls, signal_t a, string_t path)
 {
     buffer_t b = fa_signal_run_buffer(n, controls, a);
-    ptr_t res = fa_buffer_write_audio(path, 1, b); // TODO number of channels
+    ptr_t res = fa_buffer_write_audio(path, b); // TODO number of channels
     fa_destroy(b);
     return res;
 }

@@ -22,16 +22,12 @@ signal_t add1(ptr_t _, signal_t x)
 void helper_function(string_t path)
 {
     {
-        buffer_t buf;
-        pair_t res = fa_buffer_read_audio(path);
-
-        if (fa_error_check(res)) {
+        buffer_t buf = fa_buffer_read_audio(path);
+        if (fa_error_check(buf)) {
             fa_print("Error: Could not read file '%s'\n", path);
             exit(-1);
-        } else {
-            buf = fa_pair_second(res);
         }
-
+        
         signal_t j  = fa_signal_counter();
         signal_t li = fa_add(fa_multiply(j, constant(2)), constant(0));
         signal_t ri = fa_add(fa_multiply(j, constant(2)), constant(1));
