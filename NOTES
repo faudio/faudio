@@ -1,4 +1,17 @@
 
+# v2.9.0
+
+- Adds support for streaming I/O
+
+- Adds experimental ogg/vorbis encoder
+
+- Some test programs now accept options for sample-rate, vector-size and so on
+
+- Improves buffer meta-data API
+
+- Improves documentation
+
+
 # v2.8.1
 
 - Adds support for user-defined sample rates
