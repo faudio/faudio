@@ -5,7 +5,7 @@
 # To update, use
 #  find src -name '*'
 list(APPEND SRCS
-  fa.c
+  utility.c
   core.c
   action.c
   atomic/queue.c
