@@ -132,27 +132,6 @@ void push_uncompressed(fa_ptr_t x, fa_buffer_t buffer)
         vorbis_analysis_wrote(&encoder->vorbis.dsp, 0);
     }
 
-    while ((vorbis_analysis_blockout(&encoder->vorbis.dsp, &encoder->vorbis.block) > 0)) // TODO handle errors
-    {         
-        int ret;
-        ret = vorbis_analysis(
-            &encoder->vorbis.block, 
-            NULL // we use bitrate encoding
-            );
-        assert ((ret == 0) && "Unknown error");
-
-
-        ret = 0;
-        ret = vorbis_bitrate_addblock(&encoder->vorbis.block); 
-        // assert (ret != OV_EINVAL);
-        // assert (ret != OV_EFAULT);
-        // assert (ret != OV_EIMPL);
-        // assert ((ret == 0) && "Unknown error");
-        // FIXME ignoring
-
-        // Now block is free to be reused and vorbis.dsp modified to include block (get with flushpacket)
-    }
-
     mark_used(encoder);
 }
 
@@ -175,25 +154,34 @@ void pull_compressed(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
         }
     }
 
-    {
+    while(vorbis_analysis_blockout(&encoder->vorbis.dsp,&encoder->vorbis.block)==1){
+
+        /* analysis, assume we want to use bitrate management */
+        vorbis_analysis(&encoder->vorbis.block,NULL);
+        vorbis_bitrate_addblock(&encoder->vorbis.block);
+
         ogg_packet packet;
-        int ret;
-        while ((ret = vorbis_bitrate_flushpacket(&encoder->vorbis.dsp, &packet))) {
+        while (vorbis_bitrate_flushpacket(&encoder->vorbis.dsp, &packet)) {
             ogg_stream_packetin(&encoder->ogg.stream, &packet);
-        };
-    }
-    {
-        ogg_page page;
-        while ((ogg_stream_pageout(&encoder->ogg.stream, &page) != 0))
-        {
-            write_page(encoder, &page, cb, data);
-            if (ogg_page_eos(&page)) {
-                ogg_printf("Vorbis analysis finished\n");
+
+            ogg_page page;
+            while (true)
+            {
+                int result = ogg_stream_pageout(&encoder->ogg.stream, &page);
+                if (result == 0) break;
                 
-                cb(data, NULL);
-                break;
+                write_page(encoder, &page, cb, data);
+                
+                if (ogg_page_eos(&page)) {
+                    ogg_printf("Vorbis analysis finished\n");
+
+                    cb(data, NULL);
+                    break;
+                }
             }
-        }
+            
+        };
+        
     }
 
     mark_used(encoder);
