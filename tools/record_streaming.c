@@ -110,9 +110,12 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
     fa_thread_sleep(1000);
     fa_audio_schedule_relative(fa_milliseconds(500),  fa_action_send(string("foo"), rbuffer) ,s);
     
-    fa_io_run(fa_io_apply(fa_io_from_ring_buffer(rbuffer), 
+    fa_io_run(
+        fa_io_apply(
+            fa_io_from_ring_buffer(rbuffer), 
         // fa_io_identity()
-        fa_io_create_ogg_encoder()
+        fa_io_create_ogg_encoder() 
+        // DEBUG!!!
         ),
         fa_io_write_file(string("test.ogg")));
     
