@@ -204,12 +204,18 @@ void read_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t call
     string_t path = ((struct filter_base *) x)->data1;
     FILE *fp = fopen(unstring(path), "r");
 
-    char raw[1024*8];
-    size_t read;
+    if (!fp) {         
+        char msg[100];
+        sprintf(msg, "Can not read '%s', closing stream", unstring(path));
+        warn(string(msg));
+    } else {
+        char raw[1024*8];
+        size_t read;
 
-    while (!ferror(fp) && !feof(fp)) {
-        read = fread(raw, 1, sizeof(raw), fp);
-        callback(data, fa_copy(fa_buffer_wrap(raw, read, NULL, NULL)));
+        while (!ferror(fp) && !feof(fp)) {
+            read = fread(raw, 1, sizeof(raw), fp);
+            callback(data, fa_copy(fa_buffer_wrap(raw, read, NULL, NULL)));
+        }
     }
 
     callback(data, NULL);

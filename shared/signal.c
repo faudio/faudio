@@ -1286,6 +1286,10 @@ ptr_t record_extrenal_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t 
     struct rec_external* ext = (struct rec_external*) x;
 
     if (fa_equal(ext->name, n)) {
+        if (ext->buffer) {
+            fa_atomic_ring_buffer_close(ext->buffer);
+        }
+        
         // TODO assert it is actually a ring buffer
         ext->buffer = msg;
     }

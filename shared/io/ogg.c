@@ -29,6 +29,9 @@ struct ogg_encoder {
 #define kSR       44100
 #define kChannels 1
 
+// #define ogg_printf printf
+#define ogg_printf(fmt, ...) 
+
 void write_page(struct ogg_encoder* encoder, ogg_page *page, fa_io_callback_t cb, ptr_t data);
 
 void prepare(fa_ptr_t x)
@@ -79,7 +82,7 @@ buffer_t double2float(buffer_t x) {
     for (size_t i = 0; i < fa_buffer_size(x) / 8; ++i) {
         ry[i] = rx[i];
     }
-    printf("Converting to floats: in_size=%zu, out_size=%zu\n", fa_buffer_size(x), fa_buffer_size(y));
+    ogg_printf("Converting to floats: in_size=%zu, out_size=%zu\n", fa_buffer_size(x), fa_buffer_size(y));
     return y;
 }
 
@@ -90,7 +93,7 @@ void deinterleave(float** dest, buffer_t floats, size_t channels)
     size_t samples = fa_buffer_size(floats) / 4;
     size_t frames = samples / channels;
 
-    printf("Deinterleaving: samples=%zu, frames=%zu, channels=%zu\n", samples, frames, channels);
+    ogg_printf("Deinterleaving: samples=%zu, frames=%zu, channels=%zu\n", samples, frames, channels);
     for (size_t c = 0; c < channels; ++c) {
         for (size_t i = 0; i < frames; ++i) {
             dest[c][i] = raw_floats[i*channels+c];
@@ -103,7 +106,7 @@ void push_uncompressed(fa_ptr_t x, fa_buffer_t buffer)
 {
     struct ogg_encoder *encoder = (struct ogg_encoder*) x;
 
-    warn(string("OGG encoder assumes mono 44100"));
+    // warn(string("OGG encoder assumes mono 44100"));
 
     if (buffer) {
         int samples = fa_buffer_size(buffer) / (8/**2*/);     // Samples vs frames?
@@ -122,7 +125,7 @@ void push_uncompressed(fa_ptr_t x, fa_buffer_t buffer)
             samples
             );
 
-        printf("Vorbis analysis: samples=%d\n", samples);
+        ogg_printf("Vorbis analysis: samples=%d\n", samples);
 
         fa_destroy(buffer);
     } else {
@@ -185,6 +188,8 @@ void pull_compressed(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
         {
             write_page(encoder, &page, cb, data);
             if (ogg_page_eos(&page)) {
+                ogg_printf("Vorbis analysis finished\n");
+                
                 cb(data, NULL);
                 break;
             }
