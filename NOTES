@@ -1,4 +1,8 @@
 
+# v2.9.1
+
+- Fixes errors in Lisp bindings related to new transient modules
+
 # v2.9.0
 
 - Adds support for streaming I/O
