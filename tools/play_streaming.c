@@ -83,7 +83,8 @@ int main(int argc, char const *argv[])
     fa_initialize();
     BUFFER = ring_buffer((8L * 44100L * BUFFER_SIZE_MILLIS) / 1000L);
 
-    signal_t left = fa_multiply(fa_signal_play_stream(BUFFER), constant(0.8));
+    // signal_t left = fa_multiply(fa_signal_play_stream(BUFFER), constant(0.8));
+    signal_t left = fa_multiply(fa_signal_random(), constant(0.0));
     signal_t right = fa_multiply(fa_signal_random(), constant(0.0));
 
     fa_with_session_(session) {

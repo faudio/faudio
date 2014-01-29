@@ -295,13 +295,6 @@ fa_signal_t fa_signal_record_external(fa_string_t string,
 fa_pair_t fa_signal_record_external2(fa_string_t string,
                                      fa_pair_t pair);
 
-
-fa_signal_t fa_signal_play_stream(fa_atomic_ring_buffer_t ringBuffer);
-
-
-fa_signal_t fa_signal_record_stream(fa_atomic_ring_buffer_t ringBuffer,
-                                    fa_signal_t signal);
-
 /** Addition lifted to signals. 
 */
 fa_signal_t fa_signal_add(fa_signal_t signal, fa_signal_t signal_);
