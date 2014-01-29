@@ -61,7 +61,7 @@ if [[ $* != *--clean* ]]; then
 
 	    git add docs versions # -u does NOT work
 	    git commit -m "Updated docs"
-	    git push
+	    git push origin gh-pages
 	    popd
 	fi
 
