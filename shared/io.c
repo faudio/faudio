@@ -179,11 +179,21 @@ void write_filter_pull(fa_ptr_t _, fa_io_source_t upstream, fa_io_callback_t cal
 }
 void write_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
 {
+    inform(string("In write_filter push"));
+
     if (buffer) {
-        string_t path = ((struct filter_base *) x)->data1;
+        string_t path = fa_copy(((struct filter_base *) x)->data1);
+        // string_t path = string("/Users/hans/output.txt");
         FILE *fp = fopen(unstring(path), "a");
-        fwrite(fa_buffer_unsafe_address(buffer), fa_buffer_size(buffer), 1, fp);
-        fclose(fp);
+        
+        if (!fp) {
+            inform(string_dappend(string("Could not write file: "), path));
+        } else {
+            inform(string_dappend(string("Writing file: "), path));
+            fwrite(fa_buffer_unsafe_address(buffer), fa_buffer_size(buffer), 1, fp);
+            fclose(fp);
+        }
+        
         fa_destroy(buffer);
     } else {
         // TODO close
@@ -201,14 +211,17 @@ string_t  read_filter_show(ptr_t x)
 
 void read_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t callback, ptr_t data)
 {
-    string_t path = ((struct filter_base *) x)->data1;
+    inform(string("In read_filter push"));
+
+    string_t path = fa_copy(((struct filter_base *) x)->data1);
+    // string_t path = string("/Users/hans/input.txt");
     FILE *fp = fopen(unstring(path), "r");
 
     if (!fp) {         
-        char msg[100];
-        sprintf(msg, "Can not read '%s', closing stream", unstring(path));
-        warn(string(msg));
+        inform(string_dappend(string("Could not read file: "), path));
     } else {
+        inform(string_dappend(string("Reading file: "), path));
+        
         char raw[1024*8];
         size_t read;
 
@@ -421,7 +434,7 @@ fa_io_sink_t fa_io_write_file(string_t path)
 {
     struct filter_base *x = fa_new_struct(filter_base);
     x->impl = &write_filter_impl;
-    x->data1 = path;
+    x->data1 = fa_copy(path);
     return (fa_io_sink_t) x;
 }
 
@@ -429,7 +442,7 @@ fa_io_source_t fa_io_read_file(string_t path)
 {
     struct filter_base *x = fa_new_struct(filter_base);
     x->impl = &read_filter_impl;
-    x->data1 = path;
+    x->data1 = fa_copy(path);
     return (fa_io_source_t) x;
 }
 
