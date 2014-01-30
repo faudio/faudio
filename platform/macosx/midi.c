@@ -241,8 +241,13 @@ inline static device_t new_device(bool is_output, native_device_t native, sessio
     {
         CFStringRef name;
 
-        printf("kMIDIPropertyName is %p\n", kMIDIPropertyName);
-
+        printf("OTHER: %d\n", kMIDIPropertyName);
+        if(!kMIDIPropertyName)
+        {
+            printf("kMIDIPropertyName not set, aborted\n");
+            exit(-1);
+        }
+        
         if (MIDIObjectGetStringProperty(native, kMIDIPropertyName, &name)) {
             assert(false && "Could not get name");
         }
@@ -351,6 +356,8 @@ ptr_t midi_thread(ptr_t x)
     native_error_t  result  = 0;
     session_t       session = NULL;
 
+    MIDIRestart();
+
     // Save the loop so we can stop it from outside
     gMidiThreadRunLoop = CFRunLoopGetCurrent();
 
@@ -375,6 +382,8 @@ ptr_t midi_thread(ptr_t x)
             result  = 0;
             session = new_session(); // Still have to set native and devices
 
+            // MIDIRestart();
+
             // This sets native
             result = MIDIClientCreate(
                          fa_string_to_native(string("faudio")),
@@ -396,8 +405,13 @@ ptr_t midi_thread(ptr_t x)
         {
             CFRunLoopTimerContext ctxt;
             ctxt.info = session;
+            ctxt.version = 0;
+            ctxt.retain = NULL;
+            ctxt.release = NULL;
+            ctxt.copyDescription = NULL;
 
             printf("kCFAllocatorDefault is %p\n", kCFAllocatorDefault);
+            
             CFRunLoopTimerRef timer = CFRunLoopTimerCreate(
                                           kCFAllocatorDefault,
                                           0,
@@ -408,6 +422,7 @@ ptr_t midi_thread(ptr_t x)
                                           &ctxt
                                       );
             CFRunLoopAddTimer(CFRunLoopGetCurrent(), timer, kCFRunLoopCommonModes);
+            
 
             // We will be stuck here until the run loop is stopped
             // This only happen when a session is ended
@@ -445,6 +460,8 @@ void fa_midi_initialize()
     //  * Hot-plugging stops working in DEBUG build
     // Why?
 
+    printf("MAIN: %d\n", kMIDIPropertyName);
+
     // MIDIRestart();
 
     gMidiMutex          = fa_thread_create_mutex();
@@ -456,6 +473,8 @@ void fa_midi_initialize()
     gMidiCurrentSession = NULL;
 
     gMidiThreadRunLoop  = NULL;
+    // MIDIRestart();
+
     gMidiThread         = fa_thread_create(midi_thread, NULL);
 
     inform(string("Using CoreMIDI as MIDI backend."));
