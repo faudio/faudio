@@ -17,6 +17,7 @@
 #include <fa/thread.h>
 #include <fa/time.h>
 #include <fa/clock.h>
+#include <fa/util/macros.h>
 
 #define NO_THREAD_T
 #include <fa/util.h>
@@ -82,6 +83,8 @@ struct _fa_midi_session_t {
     list_t                          devices;            // Cached device list
     device_t                        def_input;          // Default devices, both possibly null
     device_t                        def_output;         // If present, these are also in the above list
+
+    list_t                          streams;            // All streams started on this sessiuon (list of stream_t)
 
     struct {
         int                         count;
@@ -174,6 +177,7 @@ inline static session_t new_session()
 
     session->callbacks.count = 0;
     session->timer_callbacks.count = 0;
+    session->streams = empty();
 
     return session;
 }
@@ -536,6 +540,14 @@ void fa_midi_end_session(session_t session)
     assert_module_initialized();
     inform(string("Terminating real-time midi session"));
 
+    inform(string("(closing streams)"));
+    fa_for_each(stream, session->streams) {
+        // It is OK if the stream is already closed
+        fa_midi_close_stream(stream);
+        delete_stream(stream);
+    }
+    inform(string("(stopping driver)"));
+
     fa_with_lock(gMidiMutex);
     {
         if (gMidiActive) {
@@ -844,6 +856,7 @@ fa_midi_stream_t fa_midi_open_stream(device_t device)
         stream->timer_id = fa_midi_add_timer_callback(midi_stream_callback, stream, stream->device->session);
     }
 
+    fa_push_list(stream, device->session->streams);
     return stream;
 }
 
