@@ -34,3 +34,4 @@ stop-server.sh
 
 *.raw
 *.ogg
+*.rawMono
