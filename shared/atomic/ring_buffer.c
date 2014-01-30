@@ -141,7 +141,7 @@ size_t fa_atomic_ring_buffer_read_many(byte_t *dst,
 
         return count;
     } else {
-        printf("Underflow: count=%zu, size=%zu\n", src->count, src->size);
+        // printf("Underflow: count=%zu, size=%zu\n", src->count, src->size);
         return 0;
     }
 }
@@ -157,7 +157,7 @@ size_t fa_atomic_ring_buffer_write_many(ring_buffer_t dst,
 
         return count;
     } else {
-        printf("Overflow: count=%zu, size=%zu\n", dst->count, dst->size);
+        // printf("Overflow: count=%zu, size=%zu\n", dst->count, dst->size);
         return 0;
     }
 }
