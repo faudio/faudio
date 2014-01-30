@@ -21,6 +21,7 @@
                 :+
                 :-
                 :*
+                :log
                 :loop
                 :set
                 :map

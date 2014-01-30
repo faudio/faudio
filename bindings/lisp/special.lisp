@@ -229,6 +229,11 @@
 (defcallback predcall1# :boolean ((f ptr) (x ptr))
   (funcall (int-to-func# f) x))
 
+(defcallback list2listcall# list ((f ptr) (x list))
+  (funcall (int-to-func# f) x))
+
+(defcallback iocall# :void ((f ptr) (x buffer))
+  (funcall (int-to-func# f) x))
 
 (defun list-map* (f xs)
   (list-map (callback funcall1#) (func-to-int# f) xs))
@@ -257,9 +262,6 @@
 (defun action-do* (f)
   (action-do (callback funcall0#) (func-to-int# f)))
 
-(defcallback list2listcall# list ((f ptr) (x list))
-  (funcall (int-to-func# f) x))
-
 (defun audio-open-stream* (i o f)
   (audio-open-stream i o (callback list2listcall#) 
     (func-to-int# 
@@ -267,6 +269,15 @@
         (export-list
           (funcall f (mapcar (lambda (x) (from-pointer 'signal x)) 
             (import-list inputs))))))))
+
+(defun io-pull* (source f)
+  (io-pull source (callback iocall#) (func-to-int# (lambda (data)
+    (if (cffi:null-pointer-p (to-pointer data))
+      (funcall f nil)
+      (funcall f data))))))
+
+(defun io-push* (sink buffer)
+  (io-push sink (if (not buffer) (from-pointer 'buffer (cffi:null-pointer)) buffer)))
 
 ; ---------------------------------------------------------------------------------------------------
 

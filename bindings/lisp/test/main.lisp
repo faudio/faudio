@@ -1,4 +1,4 @@
-
+ 
 
 (in-package :faudio)
 
@@ -684,6 +684,30 @@
 (signal-print* 10 (signal-input 64))
 
 
+; ---------------------------------------------------------------------------------------------------
+
+; IO Streams
+
+;(copy "hej")
+
+(setf x (io-read-file (copy "/Users/hans/input.txt")))
+(io-pull* x (lambda (data) 
+              (cl:print data)
+              nil))
+
+(setf x (io-write-file "/Users/hans/output.txt"))
+
+(progn 
+  (setf buf (buffer-create 5))
+  (buffer-set buf 0 104)
+  (buffer-set buf 1 97)
+  (buffer-set buf 2 110)
+  (buffer-set buf 3 115)
+  (buffer-set buf 4 10)
+  (cl:print buf))
+
+(io-push* x (from-pointer 'buffer (copy buf)))
+(io-push* x nil)
 
 
 ;;;;;;;;;

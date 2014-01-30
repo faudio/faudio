@@ -66,6 +66,7 @@
             (:file "stack")
             (:file "ring-buffer")))
         (:file "thread")
+        (:file "io")
         (:file "fa")))
     (:file "special")
     (:file "utility")))
