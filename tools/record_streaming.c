@@ -41,14 +41,9 @@ void make_test_file()
 list_t _signal(ptr_t x, list_t xs)
 {                                                                     
     signal_t i1 = fa_list_head(xs);
-    // signal_t i1 = fa_multiply(
-    //     fa_multiply(
-    //         fa_signal_sin(fa_signal_line(2)), 
-    //         fa_signal_sin(fa_signal_line(440)) 
-    //         ),
-    //     constant(0.1));
-
-    return list(constant(0), fa_multiply(constant(0), fa_signal_record_external(string("foo"), i1)));
+    return list(
+        constant(0), 
+        fa_multiply(constant(0), fa_signal_record_external(string("foo"), i1)));
 }
 
 ptr_t _print(ptr_t x)
@@ -63,10 +58,12 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
 
     // TODO send
     fa_thread_sleep(1000);
+
     fa_audio_schedule_relative(fa_milliseconds(500),         fa_action_send(string("foo"), rbuffer) ,s);
     fa_audio_schedule_relative(fa_milliseconds(500),         fa_action_do(_print, string("Started recording")) ,s);
-    fa_audio_schedule_relative(fa_milliseconds(20000 + 500),  fa_action_send(string("foo"), NULL) ,s);
-    fa_audio_schedule_relative(fa_milliseconds(20000 + 500),  fa_action_do(_print, string("Finished recording")) ,s);
+
+    fa_audio_schedule_relative(fa_milliseconds(5000 + 500),  fa_action_send(string("foo"), NULL) ,s);
+    fa_audio_schedule_relative(fa_milliseconds(5000 + 500),  fa_action_do(_print, string("Finished recording")) ,s);
     // fa_thread_create(_thread, rbuffer);
     // fa_thread_sleep(7000);
     
@@ -99,7 +96,7 @@ int main(int argc, char const *argv[])
     fa_initialize();
 
     // convert_ogg_file();
-    fa_atomic_ring_buffer_t rbuffer = atomic_ring_buffer(1024*40);
+    fa_atomic_ring_buffer_t rbuffer = atomic_ring_buffer(44100*3);
     mark_used(rbuffer);
 
     fa_audio_with_session(_session, rbuffer, fa_log, NULL);
