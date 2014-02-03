@@ -72,13 +72,19 @@ ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
 ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     au_context_t context = x;
-    assert(fa_midi_message_is_simple(msg));
+    inform(string("DLS, comparing names: "));
+    inform(n);
+    inform(string("dls"));
 
-    // TODO
-    if (true /*fa_equal(n, string("DLS"))*/) {
+    if (fa_equal(n, string("dls"))) {
+        assert(fa_midi_message_is_simple(msg));
+
         int status, data1, data2;
         fa_midi_message_decons(msg, &status, &data1, &data2);
         au_send_midi(context, status, data1, data2);
+    } else {
+        warn(string("Unknown message to DLS"));
+        // no assert!
     }
 
     return x;

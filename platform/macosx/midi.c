@@ -245,7 +245,7 @@ inline static device_t new_device(bool is_output, native_device_t native, sessio
     {
         CFStringRef name;
 
-        printf("OTHER: %d\n", kMIDIPropertyName);
+        // printf("OTHER: %d\n", kMIDIPropertyName);
         if(!kMIDIPropertyName)
         {
             printf("kMIDIPropertyName not set, aborted\n");
@@ -464,7 +464,7 @@ void fa_midi_initialize()
     //  * Hot-plugging stops working in DEBUG build
     // Why?
 
-    printf("MAIN: %d\n", kMIDIPropertyName);
+    // printf("MAIN: %d\n", kMIDIPropertyName);
 
     // MIDIRestart();
 

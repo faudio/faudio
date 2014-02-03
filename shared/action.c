@@ -114,7 +114,7 @@ fa_action_t fa_action_accum(channel_t       channel,
 fa_action_t fa_action_send(fa_action_name_t name, fa_ptr_t value)
 {
     action_t action = new_action(send_action);
-    send_get(action, name)  = name;
+    send_get(action, name)  = fa_copy(name);
     send_get(action, value) = value;
     return action;
 }

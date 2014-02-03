@@ -1290,6 +1290,10 @@ ptr_t record_extrenal_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t 
 {
     struct rec_external* ext = (struct rec_external*) x;
 
+    inform(string("Recorder, comparing names: "));
+    inform(n);
+    inform(ext->name);
+
     if (fa_equal(ext->name, n)) {
         if (ext->buffer) {
             warn(fa_string_format_integral("Bytes written: %zu", ext->bytes_written));
@@ -1299,6 +1303,9 @@ ptr_t record_extrenal_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t 
         // TODO assert it is actually a ring buffer
         ext->buffer = msg;
         ext->bytes_written = 0;
+    } else {
+        warn(fa_string_dappend(string("Unknown message to external recorder: "), fa_copy(ext->name)));
+        // no assert!
     }
     return x;
 }
@@ -1308,7 +1315,7 @@ fa_signal_t fa_signal_record_external(fa_string_t name,
                                       fa_signal_t signal)
 {
     struct rec_external* ext = fa_new_struct(rec_external);
-    ext->name = name;
+    ext->name = fa_copy(name);
     ext->buffer = NULL;
     
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
