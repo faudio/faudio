@@ -113,7 +113,7 @@ byte_t unsafe_read_byte(ring_buffer_t buffer)
     //     printf("last: %d\n",    (int) buffer->last);
     //     printf("count: %d\n",   (int) buffer->count);
     //     assert(false);
-    //  }         
+    //  }
     return x;
 }
 
@@ -142,7 +142,7 @@ size_t fa_atomic_ring_buffer_read_many(byte_t *dst,
         }
 
         return count;
-    } else {         
+    } else {
         char msg[100];
         sprintf(msg, "Underflow: count=%zu, size=%zu\n", src->count, src->size);
         warn(string(msg));

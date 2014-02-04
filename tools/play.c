@@ -23,11 +23,12 @@ void helper_function(string_t path)
 {
     {
         buffer_t buf = fa_buffer_read_audio(path);
+
         if (fa_error_check(buf)) {
             fa_print("Error: Could not read file '%s'\n", path);
             exit(-1);
         }
-        
+
         signal_t j  = fa_signal_counter();
         signal_t li = fa_add(fa_multiply(j, constant(2)), constant(0));
         signal_t ri = fa_add(fa_multiply(j, constant(2)), constant(1));

@@ -246,12 +246,11 @@ inline static device_t new_device(bool is_output, native_device_t native, sessio
         CFStringRef name;
 
         // printf("OTHER: %d\n", kMIDIPropertyName);
-        if(!kMIDIPropertyName)
-        {
+        if (!kMIDIPropertyName) {
             printf("kMIDIPropertyName not set, aborted\n");
             exit(-1);
         }
-        
+
         if (MIDIObjectGetStringProperty(native, kMIDIPropertyName, &name)) {
             assert(false && "Could not get name");
         }
@@ -415,7 +414,7 @@ ptr_t midi_thread(ptr_t x)
             ctxt.copyDescription = NULL;
 
             printf("kCFAllocatorDefault is %p\n", kCFAllocatorDefault);
-            
+
             CFRunLoopTimerRef timer = CFRunLoopTimerCreate(
                                           kCFAllocatorDefault,
                                           0,
@@ -426,7 +425,7 @@ ptr_t midi_thread(ptr_t x)
                                           &ctxt
                                       );
             CFRunLoopAddTimer(CFRunLoopGetCurrent(), timer, kCFRunLoopCommonModes);
-            
+
 
             // We will be stuck here until the run loop is stopped
             // This only happen when a session is ended

@@ -15,7 +15,7 @@
 
 void make_test_file()
 {
-    
+
 }
 
 // void convert_ogg_file()
@@ -25,30 +25,30 @@ void make_test_file()
 //             fa_io_read_file(string("test/test.rawMono")),
 //             // fa_io_create_ogg_encoder()
 //             fa_io_identity()
-//             ), 
-//         
+//             ),
+//
 //         fa_io_coapply(
 //             fa_io_identity(),
 //             // fa_io_create_ogg_encoder(),
 //             fa_io_write_file(string("test.raw"))
 //             )
 //         // fa_io_standard_out()
-//         
+//
 //         );
 // }
-//           
+//
 
 list_t _signal(ptr_t x, list_t xs)
-{                                                                     
+{
     // signal_t i1 = fa_list_head(xs);
     pair_t synth = fa_signal_dls();
 
     fa_unpair(synth, synth1, synth2) {
         return list(
-            fa_multiply(constant(0), fa_add(constant(0), synth2)), 
-            fa_multiply(constant(0), fa_signal_record_external(string("foo"), synth1)));
+                   fa_multiply(constant(0), fa_add(constant(0), synth2)),
+                   fa_multiply(constant(0), fa_signal_record_external(string("foo"), synth1)));
     }
-    
+
     assert(false);
 }
 
@@ -65,28 +65,28 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
     // TODO send
     fa_thread_sleep(1000);
 
-    fa_audio_schedule_relative(fa_milliseconds(0),         fa_action_send(string("foo"), rbuffer) ,s);
-    fa_audio_schedule_relative(fa_milliseconds(500),         fa_action_do(_print, string("Started recording")) ,s);
+    fa_audio_schedule_relative(fa_milliseconds(0),         fa_action_send(string("foo"), rbuffer) , s);
+    fa_audio_schedule_relative(fa_milliseconds(500),         fa_action_do(_print, string("Started recording")) , s);
 
-    fa_audio_schedule_relative(fa_milliseconds(4000 + 500),  fa_action_send(string("foo"), NULL) ,s);
-    fa_audio_schedule_relative(fa_milliseconds(4000 + 500),  fa_action_do(_print, string("Finished recording")) ,s);
+    fa_audio_schedule_relative(fa_milliseconds(4000 + 500),  fa_action_send(string("foo"), NULL) , s);
+    fa_audio_schedule_relative(fa_milliseconds(4000 + 500),  fa_action_do(_print, string("Finished recording")) , s);
     // fa_thread_create(_thread, rbuffer);
     // fa_thread_sleep(7000);
 
     for (int i = 0; i < 18; ++i) {
-        fa_audio_schedule_relative(fa_milliseconds(i*500 + 500),  fa_action_send(string("dls"), 
-            fa_midi_message_create_simple(0x90, 60+i, 127)
-        ) ,s);
+        fa_audio_schedule_relative(fa_milliseconds(i * 500 + 500),  fa_action_send(string("dls"),
+                                   fa_midi_message_create_simple(0x90, 60 + i, 127)
+                                                                                  ) , s);
     }
 
-    
+
     fa_io_run(
         fa_io_apply(
-            // fa_io_read_file(string("test.rawMono")), 
-            fa_io_from_ring_buffer(rbuffer), 
+            // fa_io_read_file(string("test.rawMono")),
+            fa_io_from_ring_buffer(rbuffer),
 
             fa_io_identity()
-           // fa_io_create_ogg_encoder() 
+            // fa_io_create_ogg_encoder()
 
         ),
         fa_io_write_file(string("test.raw")));
@@ -97,9 +97,9 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
 fa_audio_session_t _session(fa_ptr_t x, fa_audio_session_t s)
 {
     fa_audio_with_stream(fa_audio_default_input(s), fa_audio_default_output(s),
-        _signal, x,
-        _stream, x,
-        fa_log, NULL);
+                         _signal, x,
+                         _stream, x,
+                         fa_log, NULL);
     return s;
 }
 
@@ -109,18 +109,18 @@ int main(int argc, char const *argv[])
     fa_initialize();
 
     // convert_ogg_file();
-    fa_atomic_ring_buffer_t rbuffer = atomic_ring_buffer(44100*30);
+    fa_atomic_ring_buffer_t rbuffer = atomic_ring_buffer(44100 * 30);
     mark_used(rbuffer);
 
     fa_audio_with_session(_session, rbuffer, fa_log, NULL);
     // fa_io_run(
     //     fa_io_apply(
-    //         fa_io_read_file(string("test/test.rawMono")), 
-    //         // fa_io_from_ring_buffer(rbuffer), 
-    // 
+    //         fa_io_read_file(string("test/test.rawMono")),
+    //         // fa_io_from_ring_buffer(rbuffer),
+    //
     //         // fa_io_identity()
-    //        fa_io_create_ogg_encoder() 
-    // 
+    //        fa_io_create_ogg_encoder()
+    //
     //     ),
     //     fa_io_write_file(string("test.ogg")));
 

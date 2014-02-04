@@ -68,7 +68,7 @@ void fa_io_push_through(fa_io_filter_t filter, fa_io_sink_t downstream, fa_buffe
 // ------------------------------------------------------------------------------------------
 
 void split_filter_destroy(ptr_t x)
-{ 
+{
     warn(string("Unimplemented IO destroy"));
 }
 
@@ -110,7 +110,7 @@ FILTER_IMPLEMENTATION(split_filter);
 // ------------------------------------------------------------------------------------------
 
 void stdin_filter_destroy(ptr_t x)
-{ 
+{
     warn(string("Unimplemented IO destroy"));
 }
 
@@ -123,10 +123,12 @@ inline static
 char *read_line(char *in)
 {
     char *cptr;
+
     if ((cptr = fgets(in, 80, stdin))) {
         while (*cptr == ' ' || *cptr == '\t') {
             cptr++;
         }
+
         return cptr;
     } else {
         return 0;
@@ -148,7 +150,7 @@ FILTER_IMPLEMENTATION(stdin_filter);
 // ------------------------------------------------------------------------------------------
 
 void standardout_filter_destroy(ptr_t x)
-{ 
+{
     warn(string("Unimplemented IO destroy"));
 }
 
@@ -177,7 +179,7 @@ FILTER_IMPLEMENTATION(standardout_filter);
 // ------------------------------------------------------------------------------------------
 
 void write_filter_destroy(ptr_t x)
-{ 
+{
     warn(string("Unimplemented IO destroy"));
 }
 
@@ -196,14 +198,14 @@ void write_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
     if (buffer) {
         string_t path = fa_copy(((struct filter_base *) x)->data1);
         FILE *fp = fopen(unstring(path), "a");
-        
+
         if (!fp) {
             fail(string_dappend(string("Could not write file: "), path));
         } else {
             fwrite(fa_buffer_unsafe_address(buffer), fa_buffer_size(buffer), 1, fp);
             fclose(fp);
         }
-        
+
         fa_destroy(buffer);
     } else {
         // TODO close
@@ -215,7 +217,7 @@ FILTER_IMPLEMENTATION(write_filter);
 // ------------------------------------------------------------------------------------------
 
 void read_filter_destroy(ptr_t x)
-{ 
+{
     warn(string("Unimplemented IO destroy"));
 }
 
@@ -231,10 +233,10 @@ void read_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t call
     string_t path = fa_copy(((struct filter_base *) x)->data1);
     FILE *fp = fopen(unstring(path), "r");
 
-    if (!fp) {         
+    if (!fp) {
         fail(string_dappend(string("Could not read file: "), path));
     } else {
-        char raw[1024*8];
+        char raw[1024 * 8];
         size_t read;
 
         while (!ferror(fp) && !feof(fp)) {
@@ -257,7 +259,7 @@ FILTER_IMPLEMENTATION(read_filter);
 // ------------------------------------------------------------------------------------------
 
 void ref_filter_destroy(ptr_t x)
-{ 
+{
     warn(string("Unimplemented IO destroy"));
 }
 
@@ -282,7 +284,7 @@ FILTER_IMPLEMENTATION(ref_filter);
 // ------------------------------------------------------------------------------------------
 
 void identity_destroy(ptr_t x)
-{ 
+{
     warn(string("Unimplemented IO destroy"));
 }
 
@@ -306,7 +308,7 @@ FILTER_IMPLEMENTATION(identity);
 // ------------------------------------------------------------------------------------------
 
 void composed_filter_destroy(ptr_t x)
-{ 
+{
     warn(string("Unimplemented IO destroy"));
 }
 
@@ -333,9 +335,9 @@ void composed_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t 
     fa_io_filter_t f1 = ((struct filter_base *) x)->data1;
     fa_io_filter_t f2 = ((struct filter_base *) x)->data2;
 
-    fa_with_temp (pair, pair(callback, data))
-        fa_with_temp (pair2, pair(f2, pair))
-            fa_io_pull_through(f1, upstream, _composed_pull, pair2);
+    fa_with_temp(pair, pair(callback, data))
+    fa_with_temp(pair2, pair(f2, pair))
+    fa_io_pull_through(f1, upstream, _composed_pull, pair2);
 }
 void composed_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
 {
@@ -352,7 +354,7 @@ FILTER_IMPLEMENTATION(composed_filter);
 // ------------------------------------------------------------------------------------------
 
 void simple_filter_destroy(ptr_t x)
-{ 
+{
     warn(string("Unimplemented IO destroy"));
 }
 
@@ -361,12 +363,13 @@ string_t simple_filter_show(ptr_t x)
     return string("<Ref>");
 }
 
-void _simple_filter_pull1(ptr_t y, buffer_t buffer) {
+void _simple_filter_pull1(ptr_t y, buffer_t buffer)
+{
     fa_unpair(y, x, closure) {
         fa_io_callback_t      push = ((struct filter_base *) x)->data1;
         fa_io_read_callback_t pull = ((struct filter_base *) x)->data2;
         ptr_t                 cbData = ((struct filter_base *) x)->data3;
-        
+
         push(cbData, buffer);
         fa_unpair(closure, callback, data) {
             pull(cbData, callback, data);
@@ -384,9 +387,10 @@ void simple_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t ca
         ptr_t                 cbData = ((struct filter_base *) x)->data3;
         pull(cbData, callback, data);
     }
-}                             
+}
 
-void _simple_push1(ptr_t downstream, buffer_t buffer) {
+void _simple_push1(ptr_t downstream, buffer_t buffer)
+{
     fa_io_push(downstream, buffer);
 }
 
@@ -511,25 +515,25 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
         // printf("Remaining bytes in buf: %zu\n", fa_atomic_ring_buffer_remaining(rbuffer));
 
         // Nothing more to read, close downstream
-        warn(fa_string_format_integral("Bytes read: %zu", bytes_read));        
+        warn(fa_string_format_integral("Bytes read: %zu", bytes_read));
         cb(data, NULL);
     } else {
         size_t size = 256; // TODO gradually try smaller size
 
         if (fa_atomic_ring_buffer_can_read(rbuffer, size)) {
 
-            uint8_t* raw = fa_malloc(size);
+            uint8_t *raw = fa_malloc(size);
             buffer_t buf = fa_buffer_wrap(raw, size, NULL, NULL); // TODO free
             bytes_read += size;
 
             // printf("Size: %zu\n", size);
 
 
-            for (size_t i = 0; i < size; ++i) {  
+            for (size_t i = 0; i < size; ++i) {
                 bool res = fa_atomic_ring_buffer_read(
-                    rbuffer,
-                    raw + i
-                );
+                               rbuffer,
+                               raw + i
+                           );
                 assert(res);
             }
 
@@ -552,17 +556,21 @@ fa_io_source_t fa_io_from_ring_buffer(fa_atomic_ring_buffer_t rbuffer)
 static inline void _run(fa_ptr_t pair, fa_buffer_t buffer)
 {
     fa_unpair(pair, sink, ok) {
-        if (!buffer) *((bool*) ok) = false;
-        else
-        fa_io_push(sink, buffer);
+        if (!buffer) {
+            *((bool *) ok) = false;
+        } else {
+            fa_io_push(sink, buffer);
+        }
     }
 }
 void fa_io_run(fa_io_source_t source, fa_io_sink_t sink)
-{            
-    bool ok = true;                  
+{
+    bool ok = true;
     fa_pair_t pair = pair(sink, &ok);
+
     while (ok) {
         fa_io_pull(source, _run, pair);
     }
+
     fa_destroy(pair);
 }
