@@ -1,6 +1,7 @@
 
 #include <fa/fa.h>
 #include <fa/util.h>
+#include <fa/option.h>
 #include <fa/io.h>
 
 /*
@@ -13,10 +14,19 @@
         alpha.scorecloud.com:8080/api/2.0/analysis/recording-to-snippet
  */
 
+// TODO move
+#define fa_sizeof_array(A) sizeof(A) / sizeof(A[0])
+#define fa_option_show_all(A,S) fa_option_show(fa_sizeof_array(A),A,S)
+#define fa_option_parse_all(A,AC,AV) fa_option_parse(fa_sizeof_array(A), A, AC, AV)
+
 void make_test_file()
 {
 
 }
+
+static bool gVorbis;
+static string_t gOutput;
+
 
 // void convert_ogg_file()
 // {
@@ -63,33 +73,38 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
     mark_used(rbuffer);
 
     // TODO send
-    fa_thread_sleep(1000);
+    // fa_thread_sleep(1000);
 
-    fa_audio_schedule_relative(fa_milliseconds(0),         fa_action_send(string("foo"), rbuffer) , s);
-    fa_audio_schedule_relative(fa_milliseconds(500),         fa_action_do(_print, string("Started recording")) , s);
 
-    fa_audio_schedule_relative(fa_milliseconds(4000 + 500),  fa_action_send(string("foo"), NULL) , s);
-    fa_audio_schedule_relative(fa_milliseconds(4000 + 500),  fa_action_do(_print, string("Finished recording")) , s);
+    // Seven seconds, 5 notes starting at 1 seconds (1 second between)
+    fa_audio_schedule(fa_milliseconds(2000+0),      fa_action_send(string("foo"), rbuffer) , s);
+    fa_audio_schedule(fa_milliseconds(2000+0),      fa_action_do(_print, string("Started recording")) , s);
+
+    fa_audio_schedule(fa_milliseconds(2000+7000),  fa_action_send(string("foo"), NULL) , s);
+    fa_audio_schedule(fa_milliseconds(2000+7000),  fa_action_do(_print, string("Finished recording")) , s);
     // fa_thread_create(_thread, rbuffer);
     // fa_thread_sleep(7000);
 
-    for (int i = 0; i < 18; ++i) {
-        fa_audio_schedule_relative(fa_milliseconds(i * 500 + 500),  fa_action_send(string("dls"),
-                                   fa_midi_message_create_simple(0x90, 60 + i, 127)
-                                                                                  ) , s);
+    for (int i = 0; i < 5; ++i) {
+        fa_audio_schedule(fa_milliseconds(2000 + 1000 + i * 1000),  fa_action_send(string("dls"),
+                          fa_midi_message_create_simple(0x90, 60 + i, 127)) , s);
     }
 
-
+    
+    printf("Started listening\n");
     fa_io_run(
         fa_io_apply(
-            // fa_io_read_file(string("test.rawMono")),
             fa_io_from_ring_buffer(rbuffer),
-
-            fa_io_identity()
-            // fa_io_create_ogg_encoder()
-
+            
+            (!gVorbis ? fa_io_identity() : fa_io_create_ogg_encoder())
         ),
-        fa_io_write_file(string("test.raw")));
+        // fa_io_coapply(
+            // fa_io_identity(),
+            // fa_io_create_ogg_encoder(),
+
+            fa_io_write_file(gOutput)
+        // )
+        );
     fa_thread_sleep(2000);
     return s;
 }
@@ -103,26 +118,28 @@ fa_audio_session_t _session(fa_ptr_t x, fa_audio_session_t s)
     return s;
 }
 
+fa_option_t options[] = {
+    // { "v", "ogg-vorbis",    "Use ogg/vorbis compression",               fa_option_bool },
+    { "o", "output-file",   "Output file (i.e. test.raw, test.ogg)",    fa_option_string },
+};
+
+
 int main(int argc, char const *argv[])
 {
-    // fa_set_log_std();
+    fa_set_log_std();
     fa_initialize();
 
-    // convert_ogg_file();
-    fa_atomic_ring_buffer_t rbuffer = atomic_ring_buffer(44100 * 30);
-    mark_used(rbuffer);
+    fa_unpair(fa_option_parse_all(options, argc, (char **) argv), opts, args) {
+        mark_used(args);
+        gVorbis = fa_map_get(string("ogg-vorbis"), opts)  ? fa_to_bool(fa_map_get(string("ogg-vorbis"), opts))  : false;
+        gOutput = fa_map_get(string("output-file"), opts) ? fa_map_get(string("output-file"), opts) : string("test.raw");
+        // printf("freq=%d, rate=%d, duration=%d\n", freq, rate, duration);
 
-    fa_audio_with_session(_session, rbuffer, fa_log, NULL);
-    // fa_io_run(
-    //     fa_io_apply(
-    //         fa_io_read_file(string("test/test.rawMono")),
-    //         // fa_io_from_ring_buffer(rbuffer),
-    //
-    //         // fa_io_identity()
-    //        fa_io_create_ogg_encoder()
-    //
-    //     ),
-    //     fa_io_write_file(string("test.ogg")));
+        printf("Vorbis=%d, Output=%s\n", gVorbis, unstring(gOutput));
+        fa_atomic_ring_buffer_t rbuffer = atomic_ring_buffer(44100 * 30);
+        mark_used(rbuffer);
 
+        fa_audio_with_session(_session, rbuffer, fa_log, NULL);
+    }
     fa_terminate();
 }
