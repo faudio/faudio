@@ -523,7 +523,7 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
     mark_used(rbuffer);
 
     if (fa_atomic_ring_buffer_is_closed(rbuffer)) {
-        printf("Remaining bytes in buf: %zu\n", fa_atomic_ring_buffer_remaining(rbuffer));
+        // printf("Remaining bytes in buf: %zu\n", fa_atomic_ring_buffer_remaining(rbuffer));
         // Upstream is closed and there is nothing more to read
         // Close downstream
         warn(fa_string_format_integral("Bytes read: %zu", bytes_read));        
@@ -537,7 +537,7 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
             buffer_t buf = fa_buffer_wrap(raw, size, NULL, NULL); // TODO
             bytes_read += size;
 
-            printf("Size: %zu\n", size);
+            // printf("Size: %zu\n", size);
 
 
             for (size_t i = 0; i < size; ++i) {  
