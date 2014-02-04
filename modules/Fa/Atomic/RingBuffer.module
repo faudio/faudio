@@ -1,14 +1,12 @@
 
 /** 
-    A byte-level, bounded lock-free queue.
+    A bounded lock-free queue of raw data.
     
-    This structure is called a buffer for historical reasons, it is more accurately
-    a queue and does not support random accces.
+    Each ring buffer single-ownership semantics. The `close` method does not destroy the ring buffer,
+    but provides a way for the writer to notify the reader of the end of the sequence.
     
-    @warning
-        Not fully implemented.
-        
-
+    The *size* of a buffer can never change.
+    
     @par Literals
     - `atomic_ring_buffer(size)` 
 
@@ -26,22 +24,63 @@ module Fa.Atomic.RingBuffer
     
     type RingBuffer = opaque;
 
+    /** Create a ring buffer of the given size.
+     */
     create : Size -> RingBuffer;
+
+    /** Destroy the given ring buffer.
+     */
     destroy : RingBuffer -> Void;
 
+    /** Destroy the given ring buffer.
+     */
     size : RingBuffer -> Size;  
 
+    // remaining : (RingBuffer, Size) -> Size;
+    // filled : (RingBuffer, Size) -> Double;
+
+
+    /** Notify downstream sinks of end of data.
+        Subsequent calls to `write` will fail.
+     */
     close : RingBuffer -> Void;
+
+    /** Whether the buffer have been closed by an upstream source.
+     */
     isClosed : RingBuffer -> Bool;
+
+    /** If true, a subsequent call to `read` with a type of the given
+        size is guaranteed to succeed.
+     */
     canRead : (RingBuffer, Size) -> Bool;
+
+    /** If true, a subsequent call to `write` with a type of the given
+        size is guaranteed to succeed.
+     */
     canWrite : (RingBuffer, Size) -> Bool;
 
+    /** Read a single byte value.
+     */
     read        : (RingBuffer, UInt8*) -> Bool;
+
+    /** Read a single float value.
+     */
     readFloat   : (RingBuffer, Float*) -> Bool;
+
+    /** Read a single double value.
+     */
     readDouble  : (RingBuffer, Double*) -> Bool;
 
+    /** Write a single byte value.
+     */
     write       : (RingBuffer, UInt8) -> Bool;
+    
+    /** Write a single float value.
+     */
     writeFloat  : (RingBuffer, Float) -> Bool;
+
+    /** Write a single double value.
+     */
     writeDouble : (RingBuffer, Double) -> Bool;
 }
 
