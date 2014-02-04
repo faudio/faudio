@@ -1422,8 +1422,6 @@ fa_signal_t fa_signal_modulo(fa_signal_t x, fa_signal_t y)
     assert(false && "Not implemented");
 }
 
-// fa_signal_t fa_signal_absolute(fa_signal_t x ) { assert (false && "Not implemented"); }
-
 fa_signal_t fa_signal_not()
 {
     assert(false && "Not implemented");

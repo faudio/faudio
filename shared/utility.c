@@ -20,7 +20,6 @@ typedef fa_log_func_t log_func_t;
 static unsigned       gInitCount    = 0;
 static long           gBytesAlloc   = 0;
 static long           gRegionCount = 0;
-// static long           gBytesFreed;
 static log_func_t     gLogFunc      = NULL;
 static ptr_t          gLogData      = NULL;
 
