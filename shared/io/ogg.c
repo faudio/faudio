@@ -30,7 +30,7 @@ struct ogg_encoder {
 #define kChannels 1
 
 // #define ogg_printf printf
-#define ogg_printf(fmt, ...)
+#define ogg_printf(fmt, ...) // do nothing
 
 void write_page(struct ogg_encoder *encoder, ogg_page *page, fa_io_callback_t cb, ptr_t data);
 
