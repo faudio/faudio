@@ -179,7 +179,7 @@ void write_filter_pull(fa_ptr_t _, fa_io_source_t upstream, fa_io_callback_t cal
 }
 void write_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
 {
-    inform(string("In write_filter push"));
+    // inform(string("In write_filter push"));
 
     if (buffer) {
         string_t path = fa_copy(((struct filter_base *) x)->data1);
@@ -187,9 +187,9 @@ void write_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
         FILE *fp = fopen(unstring(path), "a");
         
         if (!fp) {
-            inform(string_dappend(string("Could not write file: "), path));
+            fail(string_dappend(string("Could not write file: "), path));
         } else {
-            inform(string_dappend(string("Writing file: "), path));
+            // inform(string_dappend(string("Writing file: "), path));
             fwrite(fa_buffer_unsafe_address(buffer), fa_buffer_size(buffer), 1, fp);
             fclose(fp);
         }
@@ -211,16 +211,16 @@ string_t  read_filter_show(ptr_t x)
 
 void read_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t callback, ptr_t data)
 {
-    inform(string("In read_filter push"));
+    // inform(string("In read_filter push"));
 
     string_t path = fa_copy(((struct filter_base *) x)->data1);
     // string_t path = string("/Users/hans/input.txt");
     FILE *fp = fopen(unstring(path), "r");
 
     if (!fp) {         
-        inform(string_dappend(string("Could not read file: "), path));
+        fail(string_dappend(string("Could not read file: "), path));
     } else {
-        inform(string_dappend(string("Reading file: "), path));
+        // inform(string_dappend(string("Reading file: "), path));
         
         char raw[1024*8];
         size_t read;
@@ -482,17 +482,33 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
         warn(fa_string_format_integral("Bytes read: %zu", bytes_read));        
         cb(data, NULL);
     } else {
-        long size = 256; // TODO
+        size_t size = 256; // TODO
         // printf("Reading %zu bytes from buffer\n", size);
         if (fa_atomic_ring_buffer_can_read(rbuffer, size)) {
-            buffer_t buf = fa_buffer_create(size);
+
+            uint8_t* raw = fa_malloc(size);
+            buffer_t buf = fa_buffer_wrap(raw, size, NULL, NULL); // TODO
             bytes_read += size;
+
+            printf("Size: %zu\n", size);
+
+
             for (size_t i = 0; i < size; ++i) {  
-                fa_atomic_ring_buffer_read(
+                bool res = fa_atomic_ring_buffer_read(
                     rbuffer,
-                    fa_buffer_unsafe_address(buf) + i
+                    raw + i
                 );
+                assert(res);
             }
+            // for (size_t i = 0; i < size/8; ++i) {
+            //     // printf("%f\n", fa_buffer_get_double(buf, i));
+            //     if (fa_buffer_get_double(buf, i) == 0.1) {
+            //         printf("Ok\n");
+            //     } else {
+            //         assert(false);
+            //     }
+            // }
+
             cb(data, buf);
             // printf("Reading\n");
         } else {

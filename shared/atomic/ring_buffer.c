@@ -112,6 +112,13 @@ byte_t unsafe_read_byte(ring_buffer_t buffer)
         buffer->first = (buffer->first + 1) % buffer->size;
         buffer->count = buffer->count - 1;
     }
+    // if (x == 0) {
+    //     printf("size: %d\n",    (int) buffer->size);
+    //     printf("first: %d\n",   (int) buffer->first);
+    //     printf("last: %d\n",    (int) buffer->last);
+    //     printf("count: %d\n",   (int) buffer->count);
+    //     assert(false);
+    //  }         
     return x;
 }
 

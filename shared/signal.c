@@ -1270,8 +1270,18 @@ ptr_t record_extrenal_render_(ptr_t x, int count, fa_signal_state_t *state)
 
     if (!kVectorMode) {
         double x = state->buffer[(kRecExternalOffset + 0)*kMaxVectorSize];
+        // double x = 0.1;
         if (ext->buffer) {
             fa_atomic_ring_buffer_write_double(ext->buffer, x);
+
+            // fa_atomic_ring_buffer_write(ext->buffer, 'h');
+            // fa_atomic_ring_buffer_write(ext->buffer, 'a');
+            // fa_atomic_ring_buffer_write(ext->buffer, 'n');
+            // fa_atomic_ring_buffer_write(ext->buffer, 's');
+            // fa_atomic_ring_buffer_write(ext->buffer, 'h');
+            // fa_atomic_ring_buffer_write(ext->buffer, 'h');
+            // fa_atomic_ring_buffer_write(ext->buffer, 'h');
+            // fa_atomic_ring_buffer_write(ext->buffer, '\n');   
             ext->bytes_written += sizeof(double);
         }
     } else {
