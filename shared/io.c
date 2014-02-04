@@ -263,7 +263,7 @@ void ref_filter_destroy(ptr_t x)
     warn(string("Unimplemented IO destroy"));
 }
 
-string_t  ref_filter_show(ptr_t x)
+string_t ref_filter_show(ptr_t x)
 {
     return string("<Ref>");
 }
@@ -508,40 +508,55 @@ size_t bytes_read = 0;
 void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
 {
     fa_atomic_ring_buffer_t rbuffer = x;
+    // mark_used(rbuffer);
 
-    mark_used(rbuffer);
+    while (true) {
+        // fa_thread_sleep(1);
+        
+        if (fa_atomic_ring_buffer_is_closed(rbuffer)) {
+            // warn(fa_string_format_integral("Bytes read: %zu", bytes_read));
 
-    if (fa_atomic_ring_buffer_is_closed(rbuffer)) {
-        // printf("Remaining bytes in buf: %zu\n", fa_atomic_ring_buffer_remaining(rbuffer));
-
-        // Nothing more to read, close downstream
-        warn(fa_string_format_integral("Bytes read: %zu", bytes_read));
-        cb(data, NULL);
-    } else {
-        size_t size = 256; // TODO gradually try smaller size
-
-        if (fa_atomic_ring_buffer_can_read(rbuffer, size)) {
-
-            uint8_t *raw = fa_malloc(size);
-            buffer_t buf = fa_buffer_wrap(raw, size, NULL, NULL); // TODO free
-            bytes_read += size;
-
-            // printf("Size: %zu\n", size);
-
-
-            for (size_t i = 0; i < size; ++i) {
-                bool res = fa_atomic_ring_buffer_read(
-                               rbuffer,
-                               raw + i
-                           );
-                assert(res);
+            for (size_t size = 256; size > 1; size /= 2) {
+                if (fa_atomic_ring_buffer_can_read(rbuffer, size)) {
+                    printf(">>>>>>>>>> End reading size: %zu\n", size);
+            
+                    uint8_t *raw = fa_malloc(size);
+                    buffer_t buf = fa_buffer_wrap(raw, size, NULL, NULL); // TODO free
+                    bytes_read += size;
+            
+                    for (size_t i = 0; i < size; ++i) {
+                        bool success = fa_atomic_ring_buffer_read(rbuffer, raw + i);
+                        assert(success && "Could not read from ring buffer");
+                    }
+                    cb(data, buf);
+                    break; // for loop
+                }
             }
 
-            cb(data, buf);
-        } else {
-            // Nothing to read
+            // Nothing more to read, close downstream and finish
+            cb(data, NULL);
+            break;
+        } else {                          
+            size_t size = 256;
+            // printf(">>>> Remaining: %zu\n", fa_atomic_ring_buffer_remaining(rbuffer));
+            if (fa_atomic_ring_buffer_can_read(rbuffer, size)) {
+                printf(">>>>>>>>>> Reading size: %zu\n", size);
+
+                uint8_t *raw = fa_malloc(size);
+                buffer_t buf = fa_buffer_wrap(raw, size, NULL, NULL); // TODO free
+                bytes_read += size;
+
+                for (size_t i = 0; i < size; ++i) {
+                    bool success = fa_atomic_ring_buffer_read(rbuffer, raw + i);
+                    assert(success && "Could not read from ring buffer");
+                }
+                cb(data, buf);
+            } else {
+                // Nothing to read
+            }
         }
     }
+
 }
 
 fa_io_source_t fa_io_from_ring_buffer(fa_atomic_ring_buffer_t rbuffer)
