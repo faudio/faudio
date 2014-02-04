@@ -135,12 +135,6 @@ char *read_line(char *in)
 
 void stdin_filter_pull(fa_ptr_t _, fa_io_source_t upstream, fa_io_callback_t callback, ptr_t data)
 {
-    // int c = getchar();
-    // if (c == EOF) {
-    //     callback(data, NULL);
-    // } else {
-    //     callback(data, fa_buffer_wrap(&c, 1, NULL, NULL));
-    // }
     char in[80];
     read_line(in);
     callback(data, fa_buffer_wrap(in, strlen(in), NULL, NULL));
@@ -169,16 +163,12 @@ void standardout_filter_pull(fa_ptr_t _, fa_io_source_t upstream, fa_io_callback
 void standardout_filter_push(fa_ptr_t _, fa_io_sink_t downstream, fa_buffer_t buffer)
 {
     if (buffer) {
-        // printf("\x1b[32m");
-
         for (int i = 0; i < fa_buffer_size(buffer); ++i) {
             int c = fa_buffer_get(buffer, i);
             putchar(c);
         }
-
-        // printf("\x1b[0m");
     } else {
-        // Can not close standardout
+        // Can not close standard out
     }
 }
 FILTER_IMPLEMENTATION(standardout_filter);
@@ -205,13 +195,11 @@ void write_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
 
     if (buffer) {
         string_t path = fa_copy(((struct filter_base *) x)->data1);
-        // string_t path = string("/Users/hans/output.txt");
         FILE *fp = fopen(unstring(path), "a");
         
         if (!fp) {
             fail(string_dappend(string("Could not write file: "), path));
         } else {
-            // inform(string_dappend(string("Writing file: "), path));
             fwrite(fa_buffer_unsafe_address(buffer), fa_buffer_size(buffer), 1, fp);
             fclose(fp);
         }
@@ -241,14 +229,11 @@ void read_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t call
     // inform(string("In read_filter push"));
 
     string_t path = fa_copy(((struct filter_base *) x)->data1);
-    // string_t path = string("/Users/hans/input.txt");
     FILE *fp = fopen(unstring(path), "r");
 
     if (!fp) {         
         fail(string_dappend(string("Could not read file: "), path));
     } else {
-        // inform(string_dappend(string("Reading file: "), path));
-        
         char raw[1024*8];
         size_t read;
 
@@ -524,17 +509,17 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
 
     if (fa_atomic_ring_buffer_is_closed(rbuffer)) {
         // printf("Remaining bytes in buf: %zu\n", fa_atomic_ring_buffer_remaining(rbuffer));
-        // Upstream is closed and there is nothing more to read
-        // Close downstream
+
+        // Nothing more to read, close downstream
         warn(fa_string_format_integral("Bytes read: %zu", bytes_read));        
         cb(data, NULL);
     } else {
-        size_t size = 256; // TODO
-        // printf("Reading %zu bytes from buffer\n", size);
+        size_t size = 256; // TODO gradually try smaller size
+
         if (fa_atomic_ring_buffer_can_read(rbuffer, size)) {
 
             uint8_t* raw = fa_malloc(size);
-            buffer_t buf = fa_buffer_wrap(raw, size, NULL, NULL); // TODO
+            buffer_t buf = fa_buffer_wrap(raw, size, NULL, NULL); // TODO free
             bytes_read += size;
 
             // printf("Size: %zu\n", size);
@@ -547,20 +532,10 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
                 );
                 assert(res);
             }
-            // for (size_t i = 0; i < size/8; ++i) {
-            //     // printf("%f\n", fa_buffer_get_double(buf, i));
-            //     if (fa_buffer_get_double(buf, i) == 0.1) {
-            //         printf("Ok\n");
-            //     } else {
-            //         assert(false);
-            //     }
-            // }
 
             cb(data, buf);
-            // printf("Reading\n");
         } else {
-            // fa_thread_sleep(1);
-            // printf("Nothing to read\n");
+            // Nothing to read
         }
     }
 }
@@ -576,9 +551,6 @@ fa_io_source_t fa_io_from_ring_buffer(fa_atomic_ring_buffer_t rbuffer)
 
 static inline void _run(fa_ptr_t pair, fa_buffer_t buffer)
 {
-    // fprintf(stderr, "%s\n", unstring(fa_string_show(buffer)));
-    // fflush(stderr);
-
     fa_unpair(pair, sink, ok) {
         if (!buffer) *((bool*) ok) = false;
         else
@@ -589,9 +561,8 @@ void fa_io_run(fa_io_source_t source, fa_io_sink_t sink)
 {            
     bool ok = true;                  
     fa_pair_t pair = pair(sink, &ok);
-    while (ok) { // TODO
+    while (ok) {
         fa_io_pull(source, _run, pair);
-        // fa_thread_sleep(10);
     }
     fa_destroy(pair);
 }
