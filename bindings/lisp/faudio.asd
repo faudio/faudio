@@ -11,9 +11,9 @@
 (in-package :faudio-asd)
 
 (defsystem :faudio
-  :version "2.9.1"
+  :version "2.9.2"
   :description "Faudio"
-  :author "hans.hoglund@doremir.com"
+  :author "support@doremir.com"
   :depends-on (:cffi)
   :serial t
   :components (

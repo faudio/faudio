@@ -1,4 +1,14 @@
 
+# v2.9.2
+
+- Fixes issue with MIDI streams not being properly stopped
+
+- Fixes issue with CoreMIDI backend in Release builds
+
+- Fixes serious bug in IO stream
+
+- Documentation improvements
+
 # v2.9.1
 
 - Fixes errors in Lisp bindings related to new transient modules
