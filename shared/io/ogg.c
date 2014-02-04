@@ -95,6 +95,7 @@ void deinterleave(float **dest, buffer_t floats, size_t channels)
 void push_uncompressed(fa_ptr_t x, fa_buffer_t buffer)
 {
     struct ogg_encoder *encoder = (struct ogg_encoder *) x;
+    if (buffer) { ogg_printf(">>> Ogg received %zu bytes\n", fa_buffer_size(buffer)); }
 
     // warn(string("OGG encoder assumes mono 44100"));
 
@@ -213,6 +214,7 @@ void write_page(struct ogg_encoder *encoder, ogg_page *page, fa_io_callback_t cb
     memcpy(raw + headerSize, page->body, bodySize);
 
     // TODO cleanup of wrapped memory
+    ogg_printf("                    <<< Ogg sending %zu bytes\n", bufferSize);
     cb(data, fa_copy(fa_buffer_wrap(raw, bufferSize, NULL, NULL)));
 }
 
