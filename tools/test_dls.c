@@ -4,7 +4,7 @@
 
 /*
     This program plays a couple of notes on the standard audio output device using
-    DLSMusicDevice (OS X only).
+    dlsMusicDevice (OS X only).
  */
 
 
@@ -40,11 +40,11 @@ void run_dls()
 
             fa_action_t chord = fa_action_many(list(
                                                    pair(
-                                                       fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 64 + ((i % 12) * 3), 90)),
+                                                       fa_action_send(string("dls"), fa_midi_message_create_simple(0x90, 64 + ((i % 12) * 3), 90)),
                                                        hms(0, 0, 0)
                                                    ),
                                                    pair(
-                                                       fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 60 + ((i % 12) * 3), 90)),
+                                                       fa_action_send(string("dls"), fa_midi_message_create_simple(0x90, 60 + ((i % 12) * 3), 90)),
                                                        hms(0, 0, 0)
                                                    )
                                                ));
@@ -62,15 +62,15 @@ void run_dls()
         fa_signal_run_file(44100 * 60, list(
                                pair(
                                    hms(0, 0, 0),
-                                   fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 60 + ((0 % 12) * 3), 90))
+                                   fa_action_send(string("dls"), fa_midi_message_create_simple(0x90, 60 + ((0 % 12) * 3), 90))
                                ),
                                pair(
                                    hms(0, 0, 1),
-                                   fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 60 + ((1 % 12) * 3), 90))
+                                   fa_action_send(string("dls"), fa_midi_message_create_simple(0x90, 60 + ((1 % 12) * 3), 90))
                                ),
                                pair(
                                    hms(0, 0, 2),
-                                   fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 60 + ((2 % 12) * 3), 90))
+                                   fa_action_send(string("dls"), fa_midi_message_create_simple(0x90, 60 + ((2 % 12) * 3), 90))
                                )
 
                            ),
