@@ -51,11 +51,13 @@ void fa_io_push_through(fa_io_filter_t filter, fa_io_sink_t downstream, fa_buffe
 #define FILTER_IMPLEMENTATION(T) \
     fa_ptr_t T##_impl(fa_id_t interface)                            \
     {                                                               \
+        static fa_destroy_t T##_destroy_impl = { T##_destroy };     \
         static fa_string_show_t T##_show_impl = { T##_show };       \
         static fa_io_filter_interface_t T##_io_filter_impl          \
             = { T##_pull, T##_push };                               \
                                                                     \
         switch (interface) {                                        \
+        case fa_destroy_i: return &T##_destroy_impl;                \
         case fa_string_show_i: return &T##_show_impl;               \
         case fa_io_filter_interface_i: return &T##_io_filter_impl;  \
         default: return NULL;                                       \
@@ -65,7 +67,12 @@ void fa_io_push_through(fa_io_filter_t filter, fa_io_sink_t downstream, fa_buffe
 
 // ------------------------------------------------------------------------------------------
 
-string_t  split_filter_show(ptr_t x)
+void split_filter_destroy(ptr_t x)
+{ 
+    warn(string("Unimplemented IO destroy"));
+}
+
+string_t split_filter_show(ptr_t x)
 {
     return string("<SplitFilter>");
 }
@@ -102,7 +109,12 @@ FILTER_IMPLEMENTATION(split_filter);
 
 // ------------------------------------------------------------------------------------------
 
-string_t  stdin_filter_show(ptr_t x)
+void stdin_filter_destroy(ptr_t x)
+{ 
+    warn(string("Unimplemented IO destroy"));
+}
+
+string_t stdin_filter_show(ptr_t x)
 {
     return string("<StdInSource>");
 }
@@ -141,7 +153,12 @@ FILTER_IMPLEMENTATION(stdin_filter);
 
 // ------------------------------------------------------------------------------------------
 
-string_t  standardout_filter_show(ptr_t x)
+void standardout_filter_destroy(ptr_t x)
+{ 
+    warn(string("Unimplemented IO destroy"));
+}
+
+string_t standardout_filter_show(ptr_t x)
 {
     return string("<StdOutSink>");
 }
@@ -168,6 +185,11 @@ FILTER_IMPLEMENTATION(standardout_filter);
 
 
 // ------------------------------------------------------------------------------------------
+
+void write_filter_destroy(ptr_t x)
+{ 
+    warn(string("Unimplemented IO destroy"));
+}
 
 string_t  write_filter_show(ptr_t x)
 {
@@ -203,6 +225,11 @@ FILTER_IMPLEMENTATION(write_filter);
 
 
 // ------------------------------------------------------------------------------------------
+
+void read_filter_destroy(ptr_t x)
+{ 
+    warn(string("Unimplemented IO destroy"));
+}
 
 string_t  read_filter_show(ptr_t x)
 {
@@ -244,6 +271,11 @@ FILTER_IMPLEMENTATION(read_filter);
 
 // ------------------------------------------------------------------------------------------
 
+void ref_filter_destroy(ptr_t x)
+{ 
+    warn(string("Unimplemented IO destroy"));
+}
+
 string_t  ref_filter_show(ptr_t x)
 {
     return string("<Ref>");
@@ -264,6 +296,11 @@ FILTER_IMPLEMENTATION(ref_filter);
 
 // ------------------------------------------------------------------------------------------
 
+void identity_destroy(ptr_t x)
+{ 
+    warn(string("Unimplemented IO destroy"));
+}
+
 string_t identity_show(ptr_t x)
 {
     return string("<Ref>");
@@ -282,6 +319,11 @@ FILTER_IMPLEMENTATION(identity);
 
 
 // ------------------------------------------------------------------------------------------
+
+void composed_filter_destroy(ptr_t x)
+{ 
+    warn(string("Unimplemented IO destroy"));
+}
 
 string_t  composed_filter_show(ptr_t x)
 {
@@ -323,6 +365,11 @@ FILTER_IMPLEMENTATION(composed_filter);
 
 
 // ------------------------------------------------------------------------------------------
+
+void simple_filter_destroy(ptr_t x)
+{ 
+    warn(string("Unimplemented IO destroy"));
+}
 
 string_t simple_filter_show(ptr_t x)
 {
