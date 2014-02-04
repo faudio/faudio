@@ -60,6 +60,8 @@ void prepare(fa_ptr_t x)
 }
 
 buffer_t double2float(buffer_t x) {
+    assert(fa_buffer_size(x) / 2);
+    
     buffer_t y = fa_buffer_create(fa_buffer_size(x) / 2);
     double* rx = fa_buffer_unsafe_address(x);
     float* ry = fa_buffer_unsafe_address(y);
