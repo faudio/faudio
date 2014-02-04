@@ -10,7 +10,7 @@ struct _state_base_t {
 };
 
 #ifdef _WIN32
-    #define kVectorMode false
+    #define kVectorMode true
 #else
     #define kVectorMode false
 #endif
