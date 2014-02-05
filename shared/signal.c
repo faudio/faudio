@@ -1317,7 +1317,7 @@ ptr_t record_extrenal_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t 
         ext->buffer = msg;
         ext->bytes_written = 0;
     } else {
-        warn(fa_string_dappend(string("Unknown message to external recorder: "), fa_copy(ext->name)));
+        // warn(fa_string_dappend(string("Unknown message to external recorder: "), fa_copy(ext->name)));
         // no assert!
     }
 

@@ -83,7 +83,7 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
         fa_midi_message_decons(msg, &status, &data1, &data2);
         au_send_midi(context, status, data1, data2);
     } else {
-        warn(string("Unknown message to DLS"));
+        // warn(string("Unknown message to DLS"));
         // no assert!
     }
 
