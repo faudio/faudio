@@ -124,8 +124,9 @@ void push_uncompressed(fa_ptr_t x, fa_buffer_t buffer)
         float **vorbis_buffers = vorbis_analysis_buffer(
             &encoder->vorbis.dsp, 
             samples
-        );
-        dfill_vorbis_buffers(vorbis_buffers, ddouble2float(buffer), kChannels);
+        );                                                
+        // Use double2float without dealloc
+        dfill_vorbis_buffers(vorbis_buffers, double2float(buffer), kChannels);
         vorbis_analysis_wrote(
             &encoder->vorbis.dsp,
             samples
@@ -222,13 +223,14 @@ void write_page(struct ogg_encoder *encoder, ogg_page *page, fa_io_callback_t cb
     size_t bodySize = page->body_len;
     size_t bufferSize = headerSize + bodySize;
 
-    char *raw = (char *) malloc(bufferSize);
+    char *raw = (char *) fa_malloc(bufferSize);
     memcpy(raw, page->header, headerSize);
     memcpy(raw + headerSize, page->body, bodySize);
 
     // TODO cleanup of wrapped memory
     ogg_printf("                    <<< Ogg sending %zu bytes\n", bufferSize);
     cb(data, fa_copy(fa_buffer_wrap(raw, bufferSize, NULL, NULL)));
+    fa_free(raw);
 }
 
 

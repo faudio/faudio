@@ -17,6 +17,9 @@ struct filter_base {
 };
 
 
+// #define io_printf printf
+#define io_printf(fmt, ...) // do nothing
+
 fa_io_filter_t fa_io_ref_filter(ptr_t r);
 
 void fa_io_pull(fa_io_source_t source,
@@ -81,7 +84,7 @@ static inline void _split_pull(fa_ptr_t x, fa_buffer_t buffer)
 {
     fa_unpair(x, sink2, closure) {
         if (buffer) {
-            fa_io_push(sink2, fa_copy(buffer));
+            fa_io_push(sink2, buffer);
             fa_unpair(closure, callback, data) {
                 ((fa_io_callback_t) callback)(data, buffer);
             }
@@ -137,9 +140,10 @@ char *read_line(char *in)
 
 void stdin_filter_pull(fa_ptr_t _, fa_io_source_t upstream, fa_io_callback_t callback, ptr_t data)
 {
-    char in[80];
+    char in[80]; // TODO max length to read_line
+    
     read_line(in);
-    callback(data, fa_buffer_wrap(in, strlen(in), NULL, NULL));
+    callback(data, fa_buffer_wrap(in, strlen(in), NULL, NULL)); // Wrap stack var, no dealloc
 }
 void stdin_filter_push(fa_ptr_t _, fa_io_sink_t downstream, fa_buffer_t buffer)
 {
@@ -205,8 +209,6 @@ void write_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
             fwrite(fa_buffer_unsafe_address(buffer), fa_buffer_size(buffer), 1, fp);
             fclose(fp);
         }
-
-        fa_destroy(buffer);
     } else {
         // TODO close
     }
@@ -242,6 +244,7 @@ void read_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t call
         while (!ferror(fp) && !feof(fp)) {
             read = fread(raw, 1, sizeof(raw), fp);
             callback(data, fa_copy(fa_buffer_wrap(raw, read, NULL, NULL)));
+            // Wrap stack, no dealloc
         }
     }
 
@@ -293,9 +296,9 @@ string_t identity_show(ptr_t x)
     return string("<Ref>");
 }
 
-void identity_pull(fa_ptr_t x, fa_io_source_t source, fa_io_callback_t callback, ptr_t data)
+void identity_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t callback, ptr_t data)
 {
-    fa_io_pull(source, callback, data);
+    fa_io_pull(upstream, callback, data);
 }
 void identity_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
 {
@@ -335,9 +338,11 @@ void composed_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t 
     fa_io_filter_t f1 = ((struct filter_base *) x)->data1;
     fa_io_filter_t f2 = ((struct filter_base *) x)->data2;
 
-    fa_with_temp(pair, pair(callback, data))
-    fa_with_temp(pair2, pair(f2, pair))
-    fa_io_pull_through(f1, upstream, _composed_pull, pair2);
+    fa_with_temp(closure, pair(callback, data)) {
+        fa_with_temp(x, pair(f2, closure)) {
+            fa_io_pull_through(f1, upstream, _composed_pull, x);
+        }        
+    }
 }
 void composed_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
 {
@@ -366,13 +371,13 @@ string_t simple_filter_show(ptr_t x)
 void _simple_filter_pull1(ptr_t y, buffer_t buffer)
 {
     fa_unpair(y, x, closure) {
-        fa_io_callback_t      push = ((struct filter_base *) x)->data1;
-        fa_io_read_callback_t pull = ((struct filter_base *) x)->data2;
+        fa_io_callback_t      simple_push = ((struct filter_base *) x)->data1;
+        fa_io_read_callback_t simple_pull = ((struct filter_base *) x)->data2;
         ptr_t                 cbData = ((struct filter_base *) x)->data3;
 
-        push(cbData, buffer);
         fa_unpair(closure, callback, data) {
-            pull(cbData, callback, data);
+            simple_push(cbData, buffer);
+            simple_pull(cbData, callback, data);
         }
     }
 }
@@ -383,9 +388,9 @@ void simple_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t ca
     if (upstream) {
         fa_io_pull(upstream, _simple_filter_pull1, pair(x, pair(callback, data)));
     } else {
-        fa_io_read_callback_t pull = ((struct filter_base *) x)->data2;
+        fa_io_read_callback_t simple_pull = ((struct filter_base *) x)->data2;
         ptr_t                 cbData = ((struct filter_base *) x)->data3;
-        pull(cbData, callback, data);
+        simple_pull(cbData, callback, data);
     }
 }
 
@@ -397,12 +402,12 @@ void _simple_push1(ptr_t downstream, buffer_t buffer)
 // push to x, pull from x, push downstream
 void simple_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
 {
-    fa_io_callback_t      push = ((struct filter_base *) x)->data1;
-    fa_io_read_callback_t pull = ((struct filter_base *) x)->data2;
+    fa_io_callback_t      simple_push = ((struct filter_base *) x)->data1;
+    fa_io_read_callback_t simple_pull = ((struct filter_base *) x)->data2;
     ptr_t                 cbData = ((struct filter_base *) x)->data3;
 
-    push(cbData, buffer);
-    pull(cbData, _simple_push1, downstream);
+    simple_push(cbData, buffer);
+    simple_pull(cbData, _simple_push1, downstream);
 }
 FILTER_IMPLEMENTATION(simple_filter);
 
@@ -505,6 +510,8 @@ void push_ringbuffer(fa_ptr_t x, fa_buffer_t buffer)
 size_t fa_atomic_ring_buffer_remaining(fa_atomic_ring_buffer_t buffer);
 size_t bytes_read = 0;
 
+
+
 void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
 {
     fa_atomic_ring_buffer_t rbuffer = x;
@@ -518,10 +525,10 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
 
             for (size_t size = 256; size > 1; size /= 2) {
                 if (fa_atomic_ring_buffer_can_read(rbuffer, size)) {
-                    printf(">>>>>>>>>> End reading size: %zu\n", size);
+                    io_printf(">>>>>>>>>> End reading size: %zu\n", size);
             
-                    uint8_t *raw = fa_malloc(size);
-                    buffer_t buf = fa_buffer_wrap(raw, size, NULL, NULL); // TODO free
+                    buffer_t buf = fa_buffer_create(size);
+                    uint8_t *raw = fa_buffer_unsafe_address(buf);
                     bytes_read += size;
             
                     for (size_t i = 0; i < size; ++i) {
@@ -529,6 +536,7 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
                         assert(success && "Could not read from ring buffer");
                     }
                     cb(data, buf);
+                    fa_destroy(buf);
                     break; // for loop
                 }
             }
@@ -538,12 +546,12 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
             break;
         } else {                          
             size_t size = 256;
-            // printf(">>>> Remaining: %zu\n", fa_atomic_ring_buffer_remaining(rbuffer));
+            // io_printf(">>>> Remaining: %zu\n", fa_atomic_ring_buffer_remaining(rbuffer));
             if (fa_atomic_ring_buffer_can_read(rbuffer, size)) {
-                printf(">>>>>>>>>> Reading size: %zu\n", size);
+                io_printf(">>>>>>>>>> Reading size: %zu\n", size);
 
-                uint8_t *raw = fa_malloc(size);
-                buffer_t buf = fa_buffer_wrap(raw, size, NULL, NULL); // TODO free
+                buffer_t buf = fa_buffer_create(size);
+                uint8_t *raw = fa_buffer_unsafe_address(buf);
                 bytes_read += size;
 
                 for (size_t i = 0; i < size; ++i) {
@@ -551,6 +559,7 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
                     assert(success && "Could not read from ring buffer");
                 }
                 cb(data, buf);
+                fa_destroy(buf);
             } else {
                 // Nothing to read
             }
@@ -581,11 +590,9 @@ static inline void _run(fa_ptr_t pair, fa_buffer_t buffer)
 void fa_io_run(fa_io_source_t source, fa_io_sink_t sink)
 {
     bool ok = true;
-    fa_pair_t pair = pair(sink, &ok);
-
-    while (ok) {
-        fa_io_pull(source, _run, pair);
+    fa_with_temp(pair, pair(sink, &ok)) {
+        while (ok) {
+            fa_io_pull(source, _run, pair);
+        }
     }
-
-    fa_destroy(pair);
 }
