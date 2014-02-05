@@ -26,6 +26,7 @@ struct _fa_atomic_ring_buffer_t {
     size_t              first, last, count;
 
     bool                closed;
+    enum { over = 1, nope = 0, under = -1 } flowed;                 // Whether we ever over/underflowed
 };
 
 
@@ -51,7 +52,8 @@ ring_buffer_t fa_atomic_ring_buffer_create(size_t size)
     // we can always read n bytes, where n == count
     // we can always write n bytes, where n == (size-count)
 
-    b-> closed = false;
+    b->closed = false;
+    b->flowed = nope;
 
     return b;
 }
@@ -143,9 +145,12 @@ size_t fa_atomic_ring_buffer_read_many(byte_t *dst,
 
         return count;
     } else {
-        char msg[100];
-        sprintf(msg, "Underflow: count=%zu, size=%zu\n", src->count, src->size);
-        warn(string(msg));
+        if (src->flowed == nope) {
+            src->flowed = under;
+            char msg[100];
+            sprintf(msg, "Underflow: count=%zu, size=%zu\n", src->count, src->size);
+            warn(string(msg));
+        }
         return 0;
     }
 }
@@ -158,12 +163,14 @@ size_t fa_atomic_ring_buffer_write_many(ring_buffer_t dst,
         for (size_t i = 0; i < count; ++i) {
             unsafe_write_byte(dst, src[i]);
         }
-
         return count;
     } else {
-        char msg[100];
-        sprintf(msg, "Overflow: count=%zu, size=%zu\n", dst->count, dst->size);
-        warn(string(msg));
+        if (dst->flowed == nope) {
+            dst->flowed = over;
+            char msg[100];
+            sprintf(msg, "Overflow: count=%zu, size=%zu\n", dst->count, dst->size);
+            warn(string(msg));
+        }
         return 0;
     }
 }
