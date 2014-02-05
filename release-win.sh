@@ -26,8 +26,15 @@ $DLLS
 
 	"
 
-    # echo "Running tests..."
-	# make modules test
+	echo "Generating headers from module files..."
+	make modules
+
+	echo "Building..."
+	cmake -DCMAKE_BUILD_TYPE=Release build
+	make
+	
+    echo "Running tests..."
+	make test
 
     echo "Setting up distribution..."
     rm -rf distribute
@@ -43,7 +50,8 @@ $DLLS
 
     echo "Generating language bindings..."
 	make bindings
-    echo "Copying language bindings..."
+    
+	echo "Copying language bindings..."
 	cp -R bindings/lisp distribute/bindings
 	find distribute/bindings/lisp -type f -name '*~' -exec rm -f '{}' \;
 	find distribute/bindings/lisp -type f -name '*.bak' -exec rm -f '{}' \;

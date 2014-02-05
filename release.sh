@@ -16,8 +16,15 @@ command -v git >/dev/null 2>&1  	|| { echo "I require git but it's not installed
 
 if [[ $* != *--clean* ]]; then
 
+	echo "Generating headers from module files..."
+	make modules
+
+	echo "Building..."
+	cmake -DCMAKE_BUILD_TYPE=Release build
+	make
+	
     echo "Running tests..."
-	make modules test
+	make test
 
     echo "Setting up distribution..."
     rm -rf distribute
