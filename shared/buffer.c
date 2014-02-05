@@ -39,9 +39,9 @@ struct _fa_buffer_t {
 
 void buffer_fatal(char *msg, int error);
 
-fa_ptr_t default_destroy(fa_ptr_t b, fa_ptr_t _)
+fa_ptr_t default_destroy(fa_ptr_t _, fa_ptr_t data)
 {
-    fa_free(b);
+    fa_free(data);
     return NULL;
 }
 
@@ -134,7 +134,7 @@ fa_buffer_t fa_buffer_dresize(size_t size, fa_buffer_t buffer)
 void fa_buffer_destroy(fa_buffer_t buffer)
 {
     if (buffer->destroy_function) {
-        buffer->destroy_function(buffer->data, buffer->destroy_data);
+        buffer->destroy_function(buffer->destroy_data, buffer->data);
     }
 
     // TODO recursive (everything in here is copy)
