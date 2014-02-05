@@ -52,6 +52,10 @@ list_t _signal(ptr_t x, list_t xs)
 {
     // signal_t i1 = fa_list_head(xs);
     pair_t synth = fa_signal_dls();
+    // pair_t synth = pair(
+        // fa_signal_sin(fa_signal_line(1.0/7.0)),
+        // fa_signal_cos(fa_signal_line(1.0/7.0))
+        // );
 
     fa_unpair(synth, synth1, synth2) {
         return list(
@@ -77,11 +81,11 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
 
 
     // Seven seconds, 5 notes starting at 1 seconds (1 second between)
-    fa_audio_schedule(fa_milliseconds(2000+0),      fa_action_send(string("foo"), rbuffer) , s);
-    fa_audio_schedule(fa_milliseconds(2000+0),      fa_action_do(_print, string("Started recording")) , s);
+    // fa_audio_schedule(fa_milliseconds(2000+0),      fa_action_send(string("foo"), rbuffer) , s);
+    // fa_audio_schedule(fa_milliseconds(2000+0),      fa_action_do(_print, string("Started recording")) , s);
 
-    fa_audio_schedule(fa_milliseconds(2000+7000),  fa_action_send(string("foo"), NULL) , s);
-    fa_audio_schedule(fa_milliseconds(2000+7000),  fa_action_do(_print, string("Finished recording")) , s);
+    fa_audio_schedule(fa_milliseconds(5000+7000),  fa_action_send(string("foo"), NULL) , s);
+    fa_audio_schedule(fa_milliseconds(5000+7000),  fa_action_do(_print, string("Finished recording")) , s);
     // fa_thread_create(_thread, rbuffer);
     // fa_thread_sleep(7000);
 
@@ -92,6 +96,7 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
 
     
     printf("Started listening\n");
+
     fa_io_run(
         fa_io_apply(
             fa_io_from_ring_buffer(rbuffer),
