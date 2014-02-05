@@ -75,14 +75,22 @@ buffer_t double2float(buffer_t x)
     return y;
 }
 
+buffer_t ddouble2float(buffer_t x)
+{
+    buffer_t y = double2float(x);
+    fa_destroy(x);
+    return y;
+}
+
 // Convert interleaved float buffer to raw floats
-void deinterleave(float **dest, buffer_t floats, size_t channels)
+static inline
+void fill_vorbis_buffers(float **dest, buffer_t floats, size_t channels)
 {
     float *raw_floats = fa_buffer_unsafe_address(floats);
     size_t samples = fa_buffer_size(floats) / 4;
     size_t frames = samples / channels;
 
-    ogg_printf("Deinterleaving: samples=%zu, frames=%zu, channels=%zu\n", samples, frames, channels);
+    ogg_printf("Filling vorbis buffers: samples=%zu, frames=%zu, channels=%zu\n", samples, frames, channels);
 
     for (size_t c = 0; c < channels; ++c) {
         for (size_t i = 0; i < frames; ++i) {
@@ -90,6 +98,13 @@ void deinterleave(float **dest, buffer_t floats, size_t channels)
         }
     }
 
+}
+
+static inline
+void dfill_vorbis_buffers(float **dest, buffer_t floats, size_t channels)
+{
+    fill_vorbis_buffers(dest, floats, channels);
+    fa_destroy(floats);
 }
 
 void push_uncompressed(fa_ptr_t x, fa_buffer_t buffer)
@@ -106,19 +121,17 @@ void push_uncompressed(fa_ptr_t x, fa_buffer_t buffer)
         // if the buffer size is bigger than 1024
         assert(samples <= 1024 && "Vorbis analysis requre buffer size <= 1024");
 
-        float **buf = vorbis_analysis_buffer(
-                          &encoder->vorbis.dsp,
-                          samples
-                      );
-        deinterleave(buf, double2float(buffer), kChannels);
+        float **vorbis_buffers = vorbis_analysis_buffer(
+            &encoder->vorbis.dsp, 
+            samples
+        );
+        dfill_vorbis_buffers(vorbis_buffers, ddouble2float(buffer), kChannels);
         vorbis_analysis_wrote(
             &encoder->vorbis.dsp,
             samples
         );
 
         ogg_printf("Vorbis analysis: samples=%d\n", samples);
-
-        fa_destroy(buffer);
     } else {
         vorbis_analysis_wrote(&encoder->vorbis.dsp, 0);
     }
