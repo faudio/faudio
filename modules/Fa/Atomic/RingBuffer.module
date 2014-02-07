@@ -37,7 +37,10 @@ module Fa.Atomic.RingBuffer
     size : RingBuffer -> Size;  
 
     // remaining : (RingBuffer, Size) -> Size;
-    // filled : (RingBuffer, Size) -> Double;
+    // 
+    /** Return `used/size` as a fraction in the range `0-1`.
+    */
+    filled : RingBuffer -> Double;
 
 
     /** Notify downstream sinks of end of data.

@@ -47,6 +47,11 @@ void fa_atomic_ring_buffer_destroy(fa_atomic_ring_buffer_t ringBuffer);
 */
 size_t fa_atomic_ring_buffer_size(fa_atomic_ring_buffer_t ringBuffer);
 
+/** Return `used/size` as a fraction in the range `0-1`.
+    
+*/
+double fa_atomic_ring_buffer_filled(fa_atomic_ring_buffer_t ringBuffer);
+
 /** Notify downstream sinks of end of data.
     Subsequent calls to `write` will fail.
 */
