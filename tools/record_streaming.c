@@ -81,8 +81,8 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
 
 
     // Seven seconds, 5 notes starting at 1 seconds (1 second between)
-    // fa_audio_schedule(fa_milliseconds(2000+0),      fa_action_send(string("foo"), rbuffer) , s);
-    // fa_audio_schedule(fa_milliseconds(2000+0),      fa_action_do(_print, string("Started recording")) , s);
+    fa_audio_schedule(fa_milliseconds(2000+0),      fa_action_send(string("foo"), rbuffer) , s);
+    fa_audio_schedule(fa_milliseconds(2000+0),      fa_action_do(_print, string("Started recording")) , s);
 
     fa_audio_schedule(fa_milliseconds(5000+7000),  fa_action_send(string("foo"), NULL) , s);
     fa_audio_schedule(fa_milliseconds(5000+7000),  fa_action_do(_print, string("Finished recording")) , s);
