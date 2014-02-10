@@ -79,23 +79,24 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
     // TODO send
     // fa_thread_sleep(1000);
 
+#define kRecOffset 2000
 
-    // Seven seconds, 5 notes starting at 1 seconds (1 second between)
-    fa_audio_schedule(fa_milliseconds(2000+0),      fa_action_send(string("foo"), rbuffer) , s);
-    fa_audio_schedule(fa_milliseconds(2000+0),      fa_action_do(_print, string("Started recording")) , s);
-
-    fa_audio_schedule(fa_milliseconds(5000+7000),  fa_action_send(string("foo"), NULL) , s);
-    fa_audio_schedule(fa_milliseconds(5000+7000),  fa_action_do(_print, string("Finished recording")) , s);
-    // fa_thread_create(_thread, rbuffer);
-    // fa_thread_sleep(7000);
+    // 10 seconds, 5 notes starting at 1 seconds (1 second between)
+    fa_audio_schedule(fa_milliseconds(kRecOffset+0),      fa_action_send(string("foo"), rbuffer) , s);
+    fa_audio_schedule(fa_milliseconds(kRecOffset+0),      fa_action_do(_print, string("Started recording")) , s);
 
     for (int i = 0; i < 5; ++i) {
-        fa_audio_schedule(fa_milliseconds(2000 + 1000 + i * 1000),  fa_action_send(string("dls"),
+        fa_audio_schedule(fa_milliseconds(kRecOffset + 1000 + (i * 1000)),  fa_action_send(string("dls"),
                           fa_midi_message_create_simple(0x90, 60 + i, 127)) , s);
     }
 
+    fa_audio_schedule(fa_milliseconds(10000+kRecOffset),  fa_action_send(string("foo"), NULL) , s);
+    fa_audio_schedule(fa_milliseconds(10000+kRecOffset),  fa_action_do(_print, string("Finished recording")) , s);
+
     
     printf("Started listening\n");
+
+    // fa_thread_sleep(10500); // DEBUG Wait until rec done to remove ring buffer contention
 
     fa_io_run(
         fa_io_apply(
@@ -110,7 +111,7 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
             fa_io_write_file(gOutput)
         // )
         );
-    fa_thread_sleep(2000);
+    // fa_thread_sleep(2000);
     return s;
 }
 
@@ -141,7 +142,7 @@ int main(int argc, char const *argv[])
         // printf("freq=%d, rate=%d, duration=%d\n", freq, rate, duration);
 
         printf("Vorbis=%d, Output=%s\n", gVorbis, unstring(gOutput));
-        fa_atomic_ring_buffer_t rbuffer = atomic_ring_buffer(44100 * 30);
+        fa_atomic_ring_buffer_t rbuffer = atomic_ring_buffer(44100 * 8 * 30);
         mark_used(rbuffer);
 
         fa_audio_with_session(_session, rbuffer, fa_log, NULL);
