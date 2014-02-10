@@ -52,8 +52,10 @@ list_t _signal(ptr_t x, list_t xs)
 {
 #ifndef _WIN32
     fa_pair_t synth = fa_signal_dls();
+    #define kSynthName "dls"
 #else
     fa_pair_t synth = fa_signal_synth(string("C:\\sf.sf2"));
+    #define kSynthName "fluid"
 #endif
 
     // signal_t i1 = fa_list_head(xs);
@@ -91,7 +93,7 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
     fa_audio_schedule(fa_milliseconds(kRecOffset+0),      fa_action_do(_print, string("Started recording")) , s);
 
     for (int i = 0; i < 5; ++i) {
-        fa_audio_schedule(fa_milliseconds(kRecOffset + 1000 + (i * 1000)),  fa_action_send(string("dls"),
+        fa_audio_schedule(fa_milliseconds(kRecOffset + 1000 + (i * 1000)),  fa_action_send(string(kSynthName),
                           fa_midi_message_create_simple(0x90, 60 + i, 127)) , s);
     }
 
