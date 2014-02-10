@@ -268,8 +268,8 @@ if (COMPONENTS_RESOLVED)
   list(APPEND EXTS ${GTEST_LIBRARIES})
   list(APPEND EXTS ${FLUIDSYNTH_LIBRARIES}) # May be empty
   list(APPEND EXTS ${GLIB_LIBRARIES})       # May be empty
-  list(APPEND EXTS ${LIBOGG_LIBRARIES})       # May be empty
   list(APPEND EXTS ${LIBVORBIS_LIBRARIES})       # May be empty
+  list(APPEND EXTS ${LIBOGG_LIBRARIES})       # May be empty
 
   if (MSYS)
     find_library (MINGW32 NAMES mingw32 PATH_SUFFIXES lib PATHS "C:/MinGW")
