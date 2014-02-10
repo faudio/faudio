@@ -69,6 +69,15 @@ module Fa.Atomic
      */
     modify  : (Atomic, Unary, Ptr) -> Void;
 
+    /** Update the given atomic value by adding the given amount.
+
+        @param atomic   Atomic reference.
+        @param value    Value to add.
+
+        @par Atomicity Atomic
+     */
+    add : (atomic : Atomic, value : Int32) -> Void;
+
     /** Set the given given atomic reference.
 
         @par Atomicity Atomic

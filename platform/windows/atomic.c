@@ -51,7 +51,7 @@ bool fa_atomic_exchange(fa_atomic_t a, fa_ptr_t pold, fa_ptr_t pnew)
     return (pold == InterlockedCompareExchangePointer((ptr_t)&a->value, pnew, pold));
 }
 
-void fa_atomic_add(fa_atomic_t a, intptr_t v)
+void fa_atomic_add(fa_atomic_t a, int32_t v)
 {
 #ifdef __MINGW32__
     InterlockedExchangeAdd((LONG *)&a->value, (LONG)v);
