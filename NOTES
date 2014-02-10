@@ -1,4 +1,8 @@
 
+# v2.9.4
+
+- Fixes generic streaming bugs (OS X)
+
 # v2.9.3
 
 - Fixes memory leaks in ring buffer (logging)
