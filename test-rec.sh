@@ -42,3 +42,4 @@ build/bin/fa_record_streaming --ogg-vorbis -o rectest/app_ogg8.ogg
 $EASY
 build/bin/fa_record_streaming --ogg-vorbis -o rectest/app_ogg9.ogg
 $EASY
+
