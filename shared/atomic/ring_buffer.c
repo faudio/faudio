@@ -66,9 +66,6 @@ ring_buffer_t fa_atomic_ring_buffer_create(size_t size)
 }
 
 #define get_size(A) ((size_t) fa_atomic_get(A))   
-// TODO add to modules
-void fa_atomic_add(fa_atomic_t atomic, int32_t x);
-
 
 void fa_atomic_ring_buffer_destroy(ring_buffer_t buffer)
 {
