@@ -13,6 +13,10 @@
 #include <fa/string.h>
 #include <fa/util.h>
 
+// DEBUG
+#include <libkern/OSAtomic.h>
+
+
 // http://www.cs.sunysb.edu/~skiena/392/programs/queue.c
 typedef uint8_t byte_t;
 typedef fa_atomic_ring_buffer_t ring_buffer_t;
@@ -23,7 +27,8 @@ struct _fa_atomic_ring_buffer_t {
 
     byte_t             *data;                   //  Underlying buffer
     size_t              size;
-    size_t              first, last, count;
+    size_t              first, last;
+    atomic_t count_;
 
     bool                closed;
     enum { over = 1, nope = 0, under = -1 } flowed;                 // Whether we ever over/underflowed
@@ -46,7 +51,9 @@ ring_buffer_t fa_atomic_ring_buffer_create(size_t size)
 
     b->first = 0;                   // Next read, always < size
     b->last  = 0;                   // Next write, always < size
-    b->count = 0;                   // Bytes written not yet read, always <= size
+    // b->count = 0;                   // Bytes written not yet read, always <= size
+    b->count_ = atomic();
+
     // if count == size, the buffer is full
     // if count == 0,    the buffer is empty
     // we can always read n bytes, where n == count
@@ -58,10 +65,16 @@ ring_buffer_t fa_atomic_ring_buffer_create(size_t size)
     return b;
 }
 
+#define get_size(A) ((size_t) fa_atomic_get(A))   
+// TODO add to modules
+void fa_atomic_add(fa_atomic_t atomic, int32_t x);
+
+
 void fa_atomic_ring_buffer_destroy(ring_buffer_t buffer)
 {
-    // fa_destroy(buffer->data);
+    fa_destroy(buffer->count_);
     fa_free(buffer->data);
+    
     fa_delete(buffer);
 }
 
@@ -73,21 +86,21 @@ size_t fa_atomic_ring_buffer_size(ring_buffer_t buffer)
 
 size_t fa_atomic_ring_buffer_remaining(ring_buffer_t buffer)
 {
-    return buffer->count;
+    return get_size(buffer->count_);
 }
 double fa_atomic_ring_buffer_filled(ring_buffer_t buffer)
 {
-    return (double) buffer->count / (double) buffer->size;
+    return (double) get_size(buffer->count_) / (double) buffer->size;
 }
 
 bool fa_atomic_ring_buffer_can_read(ring_buffer_t buffer, size_t n)
 {
-    return buffer->count >= n;
+    return get_size(buffer->count_) >= n;
 }
 
 bool fa_atomic_ring_buffer_can_write(ring_buffer_t buffer, size_t n)
 {
-    return (buffer->count + n) <= buffer->size;
+    return (get_size(buffer->count_) + n) <= buffer->size;
 }
 
 void fa_atomic_ring_buffer_close(ring_buffer_t buffer)
@@ -107,7 +120,11 @@ byte_t unsafe_read_byte(ring_buffer_t buffer)
     {
         x = buffer->data[buffer->first];
         buffer->first = (buffer->first + 1) % buffer->size;
-        buffer->count = buffer->count - 1;
+        // buffer->count = buffer->count - 1;   
+        
+        // DEBUG
+        // OSAtomicAdd32Barrier((int32_t) (-1), (int32_t*) &buffer->count);
+        fa_atomic_add(buffer->count_, -1);
     }
     // if (x == 0) {
     //     printf("size: %d\n",    (int) buffer->size);
@@ -126,7 +143,11 @@ bool unsafe_write_byte(ring_buffer_t buffer,
     {
         buffer->data[buffer->last] = value;
         buffer->last = (buffer->last + 1) % buffer->size;
-        buffer->count = buffer->count + 1;
+        // buffer->count = buffer->count + 1;
+
+        // DEBUG
+        // OSAtomicAdd32Barrier((int32_t) 1, (int32_t*) &buffer->count);
+        fa_atomic_add(buffer->count_, 1);
     }
     return true;
 }
@@ -148,7 +169,7 @@ size_t fa_atomic_ring_buffer_read_many(byte_t *dst,
         if (src->flowed == nope) {
             src->flowed = under;
             char msg[100];
-            sprintf(msg, "Underflow: count=%zu, size=%zu\n", src->count, src->size);
+            sprintf(msg, "Underflow: count=%zu, size=%zu\n", fa_atomic_ring_buffer_remaining(src), fa_atomic_ring_buffer_size(src));
             warn(string(msg));
         }
         return 0;
@@ -168,7 +189,7 @@ size_t fa_atomic_ring_buffer_write_many(ring_buffer_t dst,
         if (dst->flowed == nope) {
             dst->flowed = over;
             char msg[100];
-            sprintf(msg, "Overflow: count=%zu, size=%zu\n", dst->count, dst->size);
+            sprintf(msg, "Overflow: count=%zu, size=%zu\n", fa_atomic_ring_buffer_remaining(dst), fa_atomic_ring_buffer_size(dst));
             warn(string(msg));
         }
         return 0;
