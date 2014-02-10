@@ -50,8 +50,13 @@ static string_t gOutput;
 
 list_t _signal(ptr_t x, list_t xs)
 {
+#ifndef _WIN32
+    fa_pair_t synth = fa_signal_dls();
+#else
+    fa_pair_t synth = fa_signal_synth(string("C:\\sf.sf2"));
+#endif
+
     // signal_t i1 = fa_list_head(xs);
-    pair_t synth = fa_signal_dls();
     // pair_t synth = pair(
         // fa_signal_sin(fa_signal_line(1.0/7.0)),
         // fa_signal_cos(fa_signal_line(1.0/7.0))
