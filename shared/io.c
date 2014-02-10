@@ -517,54 +517,55 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
     fa_atomic_ring_buffer_t rbuffer = x;
     // mark_used(rbuffer);
 
-    while (true) {
-        // fa_thread_sleep(1);
-        
-        if (fa_atomic_ring_buffer_is_closed(rbuffer)) {
-            // warn(fa_string_format_integral("Bytes read: %zu", bytes_read));
+    while (!fa_atomic_ring_buffer_is_closed(rbuffer)) {
+        size_t size = 256;
+        // io_printf(">>>> Remaining: %zu\n", fa_atomic_ring_buffer_remaining(rbuffer));
+        if (fa_atomic_ring_buffer_can_read(rbuffer, size)) {
+            io_printf(">>>>>>>>>> Reading size: %zu\n", size);
 
-            for (size_t size = 256; size > 1; size /= 2) {
-                if (fa_atomic_ring_buffer_can_read(rbuffer, size)) {
-                    io_printf(">>>>>>>>>> End reading size: %zu\n", size);
-            
-                    buffer_t buf = fa_buffer_create(size);
-                    uint8_t *raw = fa_buffer_unsafe_address(buf);
-                    bytes_read += size;
-            
-                    for (size_t i = 0; i < size; ++i) {
-                        bool success = fa_atomic_ring_buffer_read(rbuffer, raw + i);
-                        assert(success && "Could not read from ring buffer");
-                    }
-                    cb(data, buf);
-                    fa_destroy(buf);
-                    break; // for loop
-                }
+            buffer_t buf = fa_buffer_create(size);
+            uint8_t *raw = fa_buffer_unsafe_address(buf);
+            bytes_read += size;
+
+            for (size_t i = 0; i < size; ++i) {
+                bool success = fa_atomic_ring_buffer_read(rbuffer, raw + i);
+                assert(success && "Could not read from ring buffer");
             }
+            cb(data, buf);
+            fa_destroy(buf);
+        }
+    }
 
-            // Nothing more to read, close downstream and finish
-            cb(data, NULL);
-            break;
-        } else {                          
-            size_t size = 256;
-            // io_printf(">>>> Remaining: %zu\n", fa_atomic_ring_buffer_remaining(rbuffer));
-            if (fa_atomic_ring_buffer_can_read(rbuffer, size)) {
-                io_printf(">>>>>>>>>> Reading size: %zu\n", size);
+    // Buffer closed
+    assert(fa_atomic_ring_buffer_is_closed(rbuffer));
+    {
+        // warn(fa_string_format_integral("Bytes read: %zu", bytes_read));
 
+// should be 1
+// we drop last frame as ogg converter (and others) expect an even number of sample
+#define kMaxDrainSpill 8
+
+        for (size_t size = 256; size >= kMaxDrainSpill; size /= 2) {
+            while (fa_atomic_ring_buffer_can_read(rbuffer, size)) {
+                io_printf(">>>>>>>>>> End reading size: %zu\n", size);
+        
                 buffer_t buf = fa_buffer_create(size);
                 uint8_t *raw = fa_buffer_unsafe_address(buf);
                 bytes_read += size;
-
+        
                 for (size_t i = 0; i < size; ++i) {
                     bool success = fa_atomic_ring_buffer_read(rbuffer, raw + i);
                     assert(success && "Could not read from ring buffer");
                 }
                 cb(data, buf);
                 fa_destroy(buf);
-            } else {
-                // Nothing to read
             }
         }
-    }
+
+        // Nothing more to read, close downstream and finish
+        cb(data, NULL);
+        assert(fa_atomic_ring_buffer_remaining(rbuffer) < kMaxDrainSpill);
+    }    
 
 }
 
