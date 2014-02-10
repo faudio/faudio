@@ -50,10 +50,10 @@
 (fa-set-log-file "/Users/hans/Library/Logs/Faudio.log")
 (fa-set-log-std)
 
-(fa-log-info "What to say?")
-(fa-log-warning "Beware!")
-(fa-log-error "Rattlesnakes!")
-(fa-log-error-from "Rattlesnakes!" "test")
+(log-info "What to say?")
+(log-warning "Beware!")
+(log-error "Rattlesnakes!")
+(log-error-from "Rattlesnakes!" "test")
 
 
 ; ---------------------------------------------------------------------------------------------------
@@ -879,11 +879,14 @@
 
 
 
+(action-send-name
+  (action-send "dls" nil))
+
 
 (let* (
-       (note1 (action-send "" (midi #x99 56 127))) ; midi channel 10
-       (note2 (action-send "" (midi #x99 35 127))) ; midi channel 10
-       (tamb (action-send "" (midi #x99 54 127))) ; midi channel 10
+       (note1 (action-send "dls" (midi #x99 56 127))) ; midi channel 10
+       (note2 (action-send "dls" (midi #x99 35 127))) ; midi channel 10
+       (tamb (action-send "dls" (midi #x99 54 127))) ; midi channel 10
        (beat (action-many (cl:list
                            (pair-create tamb (milliseconds 0))
                            (pair-create note1 (milliseconds 100))

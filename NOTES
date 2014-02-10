@@ -1,4 +1,22 @@
 
+# v2.9.3
+
+- Fixes memory leaks in ring buffer (logging)
+
+- Fixes problem with IO streams not correctly draining buffers
+
+- Fixes memory semantics of IO streams
+
+# v2.9.2
+
+- Fixes issue with MIDI streams not being properly stopped
+
+- Fixes issue with CoreMIDI backend in Release builds
+
+- Fixes serious bug in IO stream
+
+- Documentation improvements
+
 # v2.9.1
 
 - Fixes errors in Lisp bindings related to new transient modules

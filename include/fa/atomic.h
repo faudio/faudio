@@ -82,6 +82,15 @@ void fa_atomic_modify(fa_atomic_t atomic,
                       fa_unary_t unary,
                       fa_ptr_t ptr);
 
+/** Update the given atomic value by adding the given amount.
+
+    @param atomic   Atomic reference.
+    @param value    Value to add.
+
+    @par Atomicity Atomic
+*/
+void fa_atomic_add(fa_atomic_t atomic, int32_t value);
+
 /** Set the given given atomic reference.
 
     @par Atomicity Atomic

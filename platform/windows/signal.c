@@ -88,12 +88,13 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     fluid_synth_t *synth = x;
 
-    assert(fa_midi_message_is_simple(msg));
 
     // printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
 
     // TODO
-    if (true /*fa_equal(n, string("Fluid"))*/) {
+    if (fa_equal(n, string("fluid"))) {
+        assert(fa_midi_message_is_simple(msg));
+
         int status_channel, data1, data2;
         fa_midi_message_decons(msg, &status_channel, &data1, &data2);
 

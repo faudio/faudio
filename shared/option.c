@@ -10,8 +10,6 @@ pair_t maybe_parse(int optc, opt_t optv[], const char *short_name, const char *l
 {
     for (int i = 0; i < optc; i++) {
         opt_t option = optv[i];
-        // printf("? %s %s\n", short_name, option.short_name);
-        // printf("? %s %s\n", long_name, option.long_name);
 
         if (
             (short_name && !strcmp(short_name, option.short_name))

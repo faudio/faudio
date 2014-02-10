@@ -75,6 +75,20 @@ fa_ptr_t fa_atomic_get(fa_atomic_t a)
 #endif
 }
 
+void fa_atomic_add(fa_atomic_t a, int32_t x)
+{
+#ifdef __i386__
+    OSAtomicAdd32Barrier(x, (ptr_t) &a->value);
+#else
+#ifdef __x86_64__
+    OSAtomicAdd64Barrier(x, (ptr_t) &a->value);
+#else
+#error "Unknown architecture"
+#endif
+#endif    
+}
+
+
 void fa_atomic_modify(fa_atomic_t atomic, fa_unary_t func, fa_ptr_t data)
 {
     bool result = false;

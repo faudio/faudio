@@ -45,6 +45,10 @@ typedef PaDeviceIndex native_index_t;
 typedef PaStream     *native_stream_t;
 
 #define kMaxSignals 8
+#define kOutputOffset 0
+#define kInputOffset 8
+#define kControlOffset 16
+
 
 struct _fa_audio_session_t {
 
@@ -529,11 +533,8 @@ double fa_audio_default_sample_rate(fa_audio_device_t device)
 
 // --------------------------------------------------------------------------------
 
-#define kOutputOffset 0
-#define kInputOffset 8
-#define kControlOffset 16
-
-void audio_inform_opening(device_t input, ptr_t proc, device_t output)
+inline static
+void print_audio_info(device_t input, device_t output)
 {
     inform(string("Opening real-time audio stream"));
     inform(string_dappend(string("    Input:         "), input ? fa_audio_full_name(input) : string("-")));
@@ -542,6 +543,24 @@ void audio_inform_opening(device_t input, ptr_t proc, device_t output)
     inform(fa_string_format_floating("    Sample Rate:   %2f", input->session->parameters.sample_rate));
     inform(fa_string_format_floating("    Latency:       %3f", input->session->parameters.latency));
     inform(fa_string_format_integral("    Vector Size:   %d", input->session->parameters.vector_size));
+}
+
+inline static
+void print_signal_tree(ptr_t x)
+{
+    inform(fa_string_show(x));
+}
+
+inline static
+list_t apply_processor(proc_t proc, ptr_t proc_data, list_t inputs)
+{
+    if (proc) {
+        return proc(proc_data, inputs);
+    } else {
+        // TODO check number of channels is < kMaxSignals
+        warn(string("Audio.openStream: Assuming stereo output"));
+        return list(fa_signal_constant(0), fa_signal_constant(0));
+    }
 }
 
 stream_t fa_audio_open_stream(device_t input,
@@ -566,28 +585,27 @@ stream_t fa_audio_open_stream(device_t input,
 
     stream_t        stream = new_stream(input, output, sample_rate, buffer_size);
 
-    // TODO number of inputs
-    list_t all_inputs = list(fa_signal_input(kInputOffset + 0), fa_signal_input(kInputOffset + 1));
-    list_t all_signals = all_inputs;
-
-    if (proc) {
-        all_signals = proc(proc_data, all_inputs);
-    } else {
-        // TODO check number of channels is < kMaxSignals
-        warn(string("Audio.openStream: Assuming stereo output"));
-        all_signals = list(fa_signal_constant(0), fa_signal_constant(0));
-    }
-
-    stream->signal_count        = fa_list_length(all_signals);
-
-    for (int i = 0; i < stream->signal_count; ++i) {
-        stream->signals[i] = fa_list_index(i, all_signals);
-    }
-
-    audio_inform_opening(input, all_signals, output);
     {
-        // TODO test with lower latency
-        PaStreamParameters inp = {
+        // TODO number of inputs
+        list_t inputs = list(fa_signal_input(kInputOffset + 0), fa_signal_input(kInputOffset + 1));
+        list_t signals = apply_processor(proc, proc_data, inputs);
+
+        stream->signal_count = fa_list_length(signals);
+        for (int i = 0; i < stream->signal_count; ++i) {
+            stream->signals[i] = fa_list_index(i, signals);
+        }
+    }
+    {
+        /* 
+            Print info messages.
+         */
+        print_audio_info(input, output);
+    }    
+    {
+        /* 
+            Open and set native stream.
+         */
+        PaStreamParameters input_stream_parameters = {
             .suggestedLatency           = input->session->parameters.latency,
             .hostApiSpecificStreamInfo  = NULL,
             .device                     = (input ? input->index : 0),
@@ -595,7 +613,7 @@ stream_t fa_audio_open_stream(device_t input,
             .channelCount               = stream->input_channels
         };
 
-        PaStreamParameters outp = {
+        PaStreamParameters output_stream_parameters = {
             .suggestedLatency           = output->session->parameters.latency,
             .hostApiSpecificStreamInfo  = NULL,
             .device                     = (output ? output->index : 0),
@@ -603,14 +621,17 @@ stream_t fa_audio_open_stream(device_t input,
             .channelCount               = stream->output_channels
         };
 
-        const PaStreamParameters       *in       = input ? &inp : NULL;
-        const PaStreamParameters       *out      = output ? &outp : NULL;
-        PaStreamFlags                   flags    = paNoFlag;
-        PaStreamCallback               *callback = native_audio_callback;
-        ptr_t                           data     = stream;
+        PaStreamFlags    flags    = paNoFlag;
+        PaStreamCallback *callback = native_audio_callback;
+        ptr_t            data     = stream;
 
-        // TODO use variable buffer size (see #168)
-        status = Pa_OpenStream(&stream->native, in, out, sample_rate, buffer_size, flags, callback, data);
+        status = Pa_OpenStream(
+            &stream->native, 
+            input ? &input_stream_parameters : NULL, 
+            output ? &output_stream_parameters : NULL, 
+            sample_rate, buffer_size, flags, 
+            callback, data
+        );
 
         if (status != paNoError) {
             return (stream_t) audio_device_error_with(string("Could not start stream"), status);
@@ -623,6 +644,9 @@ stream_t fa_audio_open_stream(device_t input,
         }
     }
     {
+        /* 
+            Prepare and launch DSP thread.
+         */
         before_processing(stream);
 
         status = Pa_StartStream(stream->native);
@@ -632,6 +656,9 @@ stream_t fa_audio_open_stream(device_t input,
         }
     }
     {
+        /*
+            Launch control thread.
+         */
         ptr_t audio_control_thread(ptr_t data);
         stream->controller.thread = fa_thread_create(audio_control_thread, stream);
         stream->controller.mutex  = fa_thread_create_mutex();
@@ -803,7 +830,9 @@ void before_processing(stream_t stream)
         add_custom_proc(x, stream->state);
     }
     stream->MERGED_SIGNAL = fa_signal_simplify(merged);
-    fa_print_ln(stream->MERGED_SIGNAL);
+    
+    print_signal_tree(stream->MERGED_SIGNAL);
+
     // TODO optimize
     // TODO verify
 

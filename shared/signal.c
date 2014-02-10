@@ -1249,10 +1249,10 @@ fa_signal_t fa_signal_record_stream(fa_atomic_ring_buffer_t buffer, fa_signal_t 
 
 #define kRecExternalOffset 40
 
-struct rec_external {              
+struct rec_external {
     string_t name;
     fa_atomic_ring_buffer_t buffer;
-    
+
     // debug
     size_t bytes_written;
 };
@@ -1266,40 +1266,61 @@ ptr_t record_extrenal_after_(ptr_t x, int count, fa_signal_state_t *state)
 }
 ptr_t record_extrenal_render_(ptr_t x, int count, fa_signal_state_t *state)
 {
-    struct rec_external* ext = (struct rec_external*) x;
+    struct rec_external *ext = (struct rec_external *) x;
 
     if (!kVectorMode) {
-        double x = state->buffer[(kRecExternalOffset + 0)*kMaxVectorSize];
+        double x = state->buffer[(kRecExternalOffset + 0) * kMaxVectorSize];
+
+        // double x = 0.1;
         if (ext->buffer) {
             fa_atomic_ring_buffer_write_double(ext->buffer, x);
+
+            // fa_atomic_ring_buffer_write(ext->buffer, 'h');
+            // fa_atomic_ring_buffer_write(ext->buffer, 'a');
+            // fa_atomic_ring_buffer_write(ext->buffer, 'n');
+            // fa_atomic_ring_buffer_write(ext->buffer, 's');
+            // fa_atomic_ring_buffer_write(ext->buffer, 'h');
+            // fa_atomic_ring_buffer_write(ext->buffer, 'h');
+            // fa_atomic_ring_buffer_write(ext->buffer, 'h');
+            // fa_atomic_ring_buffer_write(ext->buffer, '\n');
             ext->bytes_written += sizeof(double);
         }
     } else {
         for (int i = 0; i < count; ++i) {
-            double x = state->buffer[(kRecExternalOffset + 0)*kMaxVectorSize + i];
+            double x = state->buffer[(kRecExternalOffset + 0) * kMaxVectorSize + i];
+
             if (ext->buffer) {
                 fa_atomic_ring_buffer_write_double(ext->buffer, x);
                 ext->bytes_written += sizeof(double);
             }
         }
     }
+
     return x;
 }
 
 ptr_t record_extrenal_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
-    struct rec_external* ext = (struct rec_external*) x;
+    struct rec_external *ext = (struct rec_external *) x;
+
+    inform(string("Recorder, comparing names: "));
+    inform(n);
+    inform(ext->name);
 
     if (fa_equal(ext->name, n)) {
         if (ext->buffer) {
             warn(fa_string_format_integral("Bytes written: %zu", ext->bytes_written));
             fa_atomic_ring_buffer_close(ext->buffer);
         }
-        
+
         // TODO assert it is actually a ring buffer
         ext->buffer = msg;
         ext->bytes_written = 0;
+    } else {
+        // warn(fa_string_dappend(string("Unknown message to external recorder: "), fa_copy(ext->name)));
+        // no assert!
     }
+
     return x;
 }
 
@@ -1307,10 +1328,10 @@ ptr_t record_extrenal_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t 
 fa_signal_t fa_signal_record_external(fa_string_t name,
                                       fa_signal_t signal)
 {
-    struct rec_external* ext = fa_new_struct(rec_external);
-    ext->name = name;
+    struct rec_external *ext = fa_new_struct(rec_external);
+    ext->name = fa_copy(name);
     ext->buffer = NULL;
-    
+
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
     proc->before  = record_extrenal_before_;
     proc->after   = record_extrenal_after_;
@@ -1404,8 +1425,6 @@ fa_signal_t fa_signal_modulo(fa_signal_t x, fa_signal_t y)
 {
     assert(false && "Not implemented");
 }
-
-// fa_signal_t fa_signal_absolute(fa_signal_t x ) { assert (false && "Not implemented"); }
 
 fa_signal_t fa_signal_not()
 {
