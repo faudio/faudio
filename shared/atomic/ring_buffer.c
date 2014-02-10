@@ -13,11 +13,22 @@
 #include <fa/string.h>
 #include <fa/util.h>
 
-// DEBUG
-#include <libkern/OSAtomic.h>
+/**
+    Ring buffer implementation.
+    
+    Implementation defined by the following methods:
+    
+        - size
+        - remaining
+        - canRead
+        - canWrite
+        - unsafeReadByte
+        - unsafeWriteByte
 
+    Both unsafe methods will fail with assertions if used when canRead or canWrite would return false.
+    
+ */
 
-// http://www.cs.sunysb.edu/~skiena/392/programs/queue.c
 typedef uint8_t byte_t;
 typedef fa_atomic_ring_buffer_t ring_buffer_t;
 
