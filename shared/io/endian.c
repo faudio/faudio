@@ -64,8 +64,9 @@ void deendian(buffer_t x)
                 temp[j] = raw[i + j];
             }
             for (size_t j = 0; j < 8; ++j) {
-                raw[i + j] = temp[j]; // still id
-                // raw[i + j] = 0;
+                int64_t j2 = (((int64_t) j)*(-1))+7;                
+                assert(j2 >= 0);
+                raw[i + j] = temp[j2]; 
             }
         }
     }
