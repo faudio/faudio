@@ -47,7 +47,7 @@ struct _fa_atomic_ring_buffer_t {
         buffer_overflowed, 
         buffer_alright, 
         buffer_underflowed 
-    }                   flowed;                 // Whether we ever over/underflowed
+    }                   status;                 //  This is used to prevent too many error messages
 };
 
 
@@ -75,7 +75,7 @@ ring_buffer_t fa_atomic_ring_buffer_create(size_t size)
     // we can always write n bytes, where n == (size-count)
 
     b->closed = false;
-    b->flowed = buffer_alright;
+    b->status = buffer_alright;
 
     return b;
 }
@@ -178,8 +178,8 @@ size_t fa_atomic_ring_buffer_read_many(byte_t *dst,
 
         return count;
     } else {
-        if (src->flowed == buffer_alright) {
-            src->flowed = buffer_underflowed;
+        if (src->status == buffer_alright) {
+            src->status = buffer_underflowed;
             char msg[100];
             sprintf(msg, "Underflow: count=%zu, size=%zu\n", fa_atomic_ring_buffer_remaining(src), fa_atomic_ring_buffer_size(src));
             warn(string(msg));
@@ -198,8 +198,8 @@ size_t fa_atomic_ring_buffer_write_many(ring_buffer_t dst,
         }
         return count;
     } else {
-        if (dst->flowed == buffer_alright) {
-            dst->flowed = buffer_overflowed;
+        if (dst->status == buffer_alright) {
+            dst->status = buffer_overflowed;
             char msg[100];
             sprintf(msg, "Overflow: count=%zu, size=%zu\n", fa_atomic_ring_buffer_remaining(dst), fa_atomic_ring_buffer_size(dst));
             warn(string(msg));
