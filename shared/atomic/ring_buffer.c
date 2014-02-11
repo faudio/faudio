@@ -14,10 +14,10 @@
 #include <fa/util.h>
 
 /**
-    Ring buffer implementation.
-    
+    Single-read/single-write implementation.
+
     Implementation defined by the following methods:
-    
+
         - size
         - remaining
         - canRead
@@ -26,7 +26,7 @@
         - unsafeWriteByte
 
     Both unsafe methods will fail with assertions if used when canRead or canWrite would return false.
-    
+
  */
 
 typedef uint8_t byte_t;
@@ -36,13 +36,23 @@ struct _fa_atomic_ring_buffer_t {
 
     impl_t              impl;                   //  Interface dispatcher
 
-    byte_t             *data;                   //  Underlying buffer
-    size_t              size;
-    size_t              first, last;
-    atomic_t count_;
+    size_t              size;                   //  Size (immutable)
+    size_t              first, last;            //  Next read or write, always < size
+    atomic_t            count;                  //  Bytes written not yet read, always <= size
+
+    //  if count == size, the buffer is full
+    //  if count == 0,    the buffer is empty
+    //  We can always read n bytes, where n == count
+    //  We can always write n bytes, where n == (size-count)
+
+    byte_t             *data;                   //  Memory region (data..data+size) [0,1,2,3,4]
 
     bool                closed;
-    enum { over = 1, nope = 0, under = -1 } flowed;                 // Whether we ever over/underflowed
+    enum {
+        buffer_overflowed,
+        buffer_alright,
+        buffer_underflowed
+    }                   status;                 //  This is used to prevent too many error messages
 };
 
 
@@ -52,37 +62,31 @@ struct _fa_atomic_ring_buffer_t {
  */
 ring_buffer_t fa_atomic_ring_buffer_create(size_t size)
 {
-    ringbuffer_t b = fa_new(atomic_ring_buffer);
-
     fa_ptr_t atomic_ring_buffer_impl(fa_id_t interface);
-    b->impl = &atomic_ring_buffer_impl;
 
-    b->data = fa_malloc(size/*+1*/);    // Memory region (data..data+size) [0,1,2,3,4]
-    b->size = size;
+    ringbuffer_t b = fa_new(atomic_ring_buffer);
+    b->impl     = &atomic_ring_buffer_impl;
 
-    b->first = 0;                   // Next read, always < size
-    b->last  = 0;                   // Next write, always < size
-    // b->count = 0;                   // Bytes written not yet read, always <= size
-    b->count_ = atomic();
+    b->data     = fa_malloc(size/*+1*/);
+    b->size     = size;
 
-    // if count == size, the buffer is full
-    // if count == 0,    the buffer is empty
-    // we can always read n bytes, where n == count
-    // we can always write n bytes, where n == (size-count)
+    b->first    = 0;
+    b->last     = 0;
+    b->count    = atomic();
 
-    b->closed = false;
-    b->flowed = nope;
+    b->status   = buffer_alright;
+    b->closed   = false;
 
     return b;
 }
 
-#define get_size(A) ((size_t) fa_atomic_get(A))   
+#define atomic_get_size(A) ((size_t) fa_atomic_get(A))
 
 void fa_atomic_ring_buffer_destroy(ring_buffer_t buffer)
 {
-    fa_destroy(buffer->count_);
+    fa_destroy(buffer->count);
     fa_free(buffer->data);
-    
+
     fa_delete(buffer);
 }
 
@@ -94,27 +98,32 @@ size_t fa_atomic_ring_buffer_size(ring_buffer_t buffer)
 
 size_t fa_atomic_ring_buffer_remaining(ring_buffer_t buffer)
 {
-    return get_size(buffer->count_);
+    return atomic_get_size(buffer->count);
 }
+
 double fa_atomic_ring_buffer_filled(ring_buffer_t buffer)
 {
-    return (double) get_size(buffer->count_) / (double) buffer->size;
+    size_t rem  = fa_atomic_ring_buffer_remaining(buffer);
+    size_t size = fa_atomic_ring_buffer_size(buffer);
+    return (double) rem / (double) size;
 }
+
 
 bool fa_atomic_ring_buffer_can_read(ring_buffer_t buffer, size_t n)
 {
-    return get_size(buffer->count_) >= n;
+    return atomic_get_size(buffer->count) >= n;
 }
 
 bool fa_atomic_ring_buffer_can_write(ring_buffer_t buffer, size_t n)
 {
-    return (get_size(buffer->count_) + n) <= buffer->size;
+    return (atomic_get_size(buffer->count) + n) <= buffer->size;
 }
 
 void fa_atomic_ring_buffer_close(ring_buffer_t buffer)
 {
     buffer->closed = true;
 }
+
 bool fa_atomic_ring_buffer_is_closed(ring_buffer_t buffer)
 {
     return buffer->closed;
@@ -128,19 +137,8 @@ byte_t unsafe_read_byte(ring_buffer_t buffer)
     {
         x = buffer->data[buffer->first];
         buffer->first = (buffer->first + 1) % buffer->size;
-        // buffer->count = buffer->count - 1;   
-        
-        // DEBUG
-        // OSAtomicAdd32Barrier((int32_t) (-1), (int32_t*) &buffer->count);
-        fa_atomic_add(buffer->count_, -1);
+        fa_atomic_add(buffer->count, -1);
     }
-    // if (x == 0) {
-    //     printf("size: %d\n",    (int) buffer->size);
-    //     printf("first: %d\n",   (int) buffer->first);
-    //     printf("last: %d\n",    (int) buffer->last);
-    //     printf("count: %d\n",   (int) buffer->count);
-    //     assert(false);
-    //  }
     return x;
 }
 
@@ -151,17 +149,16 @@ bool unsafe_write_byte(ring_buffer_t buffer,
     {
         buffer->data[buffer->last] = value;
         buffer->last = (buffer->last + 1) % buffer->size;
-        // buffer->count = buffer->count + 1;
-
-        // DEBUG
-        // OSAtomicAdd32Barrier((int32_t) 1, (int32_t*) &buffer->count);
-        fa_atomic_add(buffer->count_, 1);
+        fa_atomic_add(buffer->count, 1);
     }
     return true;
 }
 
-// TODO more efficient versions
-// Can using memcpy + slicing or virtual memory
+
+/*
+    TODO More efficient versions
+    Can using memcpy + slicing or virtual memory
+*/
 
 size_t fa_atomic_ring_buffer_read_many(byte_t *dst,
                                        ring_buffer_t src,
@@ -174,12 +171,17 @@ size_t fa_atomic_ring_buffer_read_many(byte_t *dst,
 
         return count;
     } else {
-        if (src->flowed == nope) {
-            src->flowed = under;
+        if (src->status == buffer_alright) {
+            src->status = buffer_underflowed;
             char msg[100];
-            sprintf(msg, "Underflow: count=%zu, size=%zu\n", fa_atomic_ring_buffer_remaining(src), fa_atomic_ring_buffer_size(src));
+            sprintf(msg,
+                    "Underflow: count=%zu, size=%zu\n",
+                    fa_atomic_ring_buffer_remaining(src),
+                    fa_atomic_ring_buffer_size(src)
+                   );
             warn(string(msg));
         }
+
         return 0;
     }
 }
@@ -192,14 +194,20 @@ size_t fa_atomic_ring_buffer_write_many(ring_buffer_t dst,
         for (size_t i = 0; i < count; ++i) {
             unsafe_write_byte(dst, src[i]);
         }
+
         return count;
     } else {
-        if (dst->flowed == nope) {
-            dst->flowed = over;
+        if (dst->status == buffer_alright) {
+            dst->status = buffer_overflowed;
             char msg[100];
-            sprintf(msg, "Overflow: count=%zu, size=%zu\n", fa_atomic_ring_buffer_remaining(dst), fa_atomic_ring_buffer_size(dst));
+            sprintf(msg,
+                    "Overflow: count=%zu, size=%zu\n",
+                    fa_atomic_ring_buffer_remaining(dst),
+                    fa_atomic_ring_buffer_size(dst)
+                   );
             warn(string(msg));
         }
+
         return 0;
     }
 }

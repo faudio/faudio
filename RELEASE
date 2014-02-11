@@ -10,7 +10,7 @@
     * bindings/lisp/faudio.asd
     * doc/Doxyfile
 
-* `make modules bindings doc test`
+* `make bindings test`
 
 * Commit
     * `git add` (changed files)

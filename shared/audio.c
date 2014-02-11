@@ -591,18 +591,19 @@ stream_t fa_audio_open_stream(device_t input,
         list_t signals = apply_processor(proc, proc_data, inputs);
 
         stream->signal_count = fa_list_length(signals);
+
         for (int i = 0; i < stream->signal_count; ++i) {
             stream->signals[i] = fa_list_index(i, signals);
         }
     }
     {
-        /* 
+        /*
             Print info messages.
          */
         print_audio_info(input, output);
-    }    
+    }
     {
-        /* 
+        /*
             Open and set native stream.
          */
         PaStreamParameters input_stream_parameters = {
@@ -626,12 +627,12 @@ stream_t fa_audio_open_stream(device_t input,
         ptr_t            data     = stream;
 
         status = Pa_OpenStream(
-            &stream->native, 
-            input ? &input_stream_parameters : NULL, 
-            output ? &output_stream_parameters : NULL, 
-            sample_rate, buffer_size, flags, 
-            callback, data
-        );
+                     &stream->native,
+                     input ? &input_stream_parameters : NULL,
+                     output ? &output_stream_parameters : NULL,
+                     sample_rate, buffer_size, flags,
+                     callback, data
+                 );
 
         if (status != paNoError) {
             return (stream_t) audio_device_error_with(string("Could not start stream"), status);
@@ -644,7 +645,7 @@ stream_t fa_audio_open_stream(device_t input,
         }
     }
     {
-        /* 
+        /*
             Prepare and launch DSP thread.
          */
         before_processing(stream);
@@ -830,7 +831,7 @@ void before_processing(stream_t stream)
         add_custom_proc(x, stream->state);
     }
     stream->MERGED_SIGNAL = fa_signal_simplify(merged);
-    
+
     print_signal_tree(stream->MERGED_SIGNAL);
 
     // TODO optimize

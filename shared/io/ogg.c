@@ -110,7 +110,10 @@ void dfill_vorbis_buffers(float **dest, buffer_t floats, size_t channels)
 void push_uncompressed(fa_ptr_t x, fa_buffer_t buffer)
 {
     struct ogg_encoder *encoder = (struct ogg_encoder *) x;
-    if (buffer) { ogg_printf(">>> Ogg received %zu bytes\n", fa_buffer_size(buffer)); }
+
+    if (buffer) {
+        ogg_printf(">>> Ogg received %zu bytes\n", fa_buffer_size(buffer));
+    }
 
     // warn(string("OGG encoder assumes mono 44100"));
 
@@ -122,9 +125,9 @@ void push_uncompressed(fa_ptr_t x, fa_buffer_t buffer)
         assert(samples <= 1024 && "Vorbis analysis requre buffer size <= 1024");
 
         float **vorbis_buffers = vorbis_analysis_buffer(
-            &encoder->vorbis.dsp, 
-            samples
-        );                                                
+                                     &encoder->vorbis.dsp,
+                                     samples
+                                 );
         // Use double2float without dealloc
         dfill_vorbis_buffers(vorbis_buffers, double2float(buffer), kChannels);
         vorbis_analysis_wrote(

@@ -16,7 +16,7 @@ project(FA C CXX)
 set(VERSION_PRE "")
 set(VERSION_X 2)
 set(VERSION_Y 9)
-set(VERSION_Z 3)
+set(VERSION_Z 5)
 set(VERSION_SUFF "")
 set(VERSION "${VERSION_PRE}${VERSION_X}.${VERSION_Y}.${VERSION_Z}${VERSION_SUFF}")
 
@@ -54,6 +54,7 @@ option(ENABLE_FLUIDSYNTH        "Enable the Fluidsynth processor"           ${NO
 option(ENABLE_OGG_VORBIS        "Enable OGG/Vorbis support"                 True)
 option(ENABLE_AUDIO_UNIT        "Enable AudioUnit processors"               ${APPLE})
 option(ENABLE_VST               "Enable VST processors"                     True)
+option(ENABLE_HTTP              "Enable HTTP-client functionality"          False)
 
 option(BUILD_FRAMEWORK          "Build an OS X framework"                   ${APPLE})
 option(BUILD_SHARED             "Build a shared library"                    ${NOT_APPLE})
@@ -168,10 +169,12 @@ if (COMPONENTS_RESOLVED)
 
   find_package(Pthreads)
   find_package(Iconv)
-  find_package(Curl)
   find_package(Portaudio)
   find_package(Portmidi)
   find_package(Sndfile)
+  if(ENABLE_HTTP)
+    find_package(Curl)
+  endif()
   if(ENABLE_FLUIDSYNTH)
     find_package(Fluidsynth)
     find_package(Glib)
@@ -208,8 +211,8 @@ if (COMPONENTS_RESOLVED)
         # -Wswitch
     add_definitions("-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
     add_definitions("-isysroot ${CMAKE_OSX_SYSROOT}")
-    add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=1)
     # add_definitions("-v")
+    
     set(STD_LINK_FLAGS "${STD_LINK_FLAGS} -mmin-macosx-version=${CMAKE_OSX_DEPLOYMENT_TARGET}")
     set(STD_LINK_FLAGS "${STD_LINK_FLAGS} -mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET}")
     set(STD_LINK_FLAGS "${STD_LINK_FLAGS} -isysroot ${CMAKE_OSX_SYSROOT}")
@@ -226,50 +229,48 @@ if (COMPONENTS_RESOLVED)
 
   include_directories("include")
   include_directories("${CMAKE_BINARY_DIR}/include") # for the conf file
-  # include_directories(${CMAKE_SOURCE_DIR})           # for scl and scl-c
   include_directories(${PTHREADS_INCLUDE_DIRS})
   include_directories(${ICONV_INCLUDE_DIRS})
   include_directories(${PORTAUDIO_INCLUDE_DIRS})
   include_directories(${PORTMIDI_INCLUDE_DIRS})
   include_directories(${SNDFILE_INCLUDE_DIRS})
-  include_directories(${GTEST_INCLUDE_DIRS})
   include_directories(${ICU_INCLUDE_DIRS})
-  include_directories(${FLUIDSYNTH_INCLUDE_DIRS}) # May be empty
-  include_directories(${GLIB_INCLUDE_DIRS})       # May be empty
-  include_directories(${LIBOGG_INCLUDE_DIRS})       # May be empty
-  include_directories(${LIBVORBIS_INCLUDE_DIRS})       # May be empty
+  include_directories(${FLUIDSYNTH_INCLUDE_DIRS})
+  include_directories(${GLIB_INCLUDE_DIRS})
+  include_directories(${LIBOGG_INCLUDE_DIRS})
+  include_directories(${LIBVORBIS_INCLUDE_DIRS})
   include_directories("external/vst")
 
   ## ----------------------------------------------------------------------
   ## Add libraries
 
+  # May be empty
   set(CMAKE_LIBRARY_PATH
     ${PTHREADS_LIBRARIES}
     ${ICONV_LIBRARIES}
     ${PORTAUDIO_LIBRARIES}
     ${PORTMIDI_LIBRARIES}
     ${SNDFILE_LIBRARIES}
-    ${GTEST_LIBRARIES}
     ${ICU_LIBRARIES}
-    ${FLUIDSYNTH_LIBRARIES} # May be empty
-    ${GLIB_LIBRARIES}       # May be empty
-    ${LIBOGG_LIBRARIES}       # May be empty
-    ${LIBVORBIS_LIBRARIES}       # May be empty
+    ${FLUIDSYNTH_LIBRARIES}
+    ${GLIB_LIBRARIES}
+    ${LIBOGG_LIBRARIES}
+    ${LIBVORBIS_LIBRARIES}
     "/c/mingw/lib"
     "/c/mingw"
     )
 
+    # May be empty
   list(APPEND EXTS ${PTHREADS_LIBRARIES})
   list(APPEND EXTS ${ICONV_LIBRARIES})
-  list(APPEND EXTS ${CURL_LIBRARIES})
   list(APPEND EXTS ${PORTAUDIO_LIBRARIES})
   list(APPEND EXTS ${PORTMIDI_LIBRARIES})
   list(APPEND EXTS ${SNDFILE_LIBRARIES})
-  list(APPEND EXTS ${GTEST_LIBRARIES})
-  list(APPEND EXTS ${FLUIDSYNTH_LIBRARIES}) # May be empty
-  list(APPEND EXTS ${GLIB_LIBRARIES})       # May be empty
-  list(APPEND EXTS ${LIBVORBIS_LIBRARIES})       # May be empty
-  list(APPEND EXTS ${LIBOGG_LIBRARIES})       # May be empty
+  list(APPEND EXTS ${FLUIDSYNTH_LIBRARIES})
+  list(APPEND EXTS ${GLIB_LIBRARIES})
+  list(APPEND EXTS ${LIBVORBIS_LIBRARIES})
+  list(APPEND EXTS ${LIBOGG_LIBRARIES})
+  list(APPEND EXTS ${CURL_LIBRARIES})
 
   if (MSYS)
     find_library (MINGW32 NAMES mingw32 PATH_SUFFIXES lib PATHS "C:/MinGW")
@@ -306,11 +307,6 @@ if (COMPONENTS_RESOLVED)
     list(APPEND EXTS ${QUARTZCORE})
   endif ()
 
-  #if(MSYS)
-    #find_library(WINMM              winmm)
-    #set(WINMM winmm.lib)
-    #list(APPEND EXTS ${WINMM})
-  #endif()
 
   ## ----------------------------------------------------------------------
   ## Add targets for source-only libraries
