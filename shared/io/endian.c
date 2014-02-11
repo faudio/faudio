@@ -51,15 +51,38 @@ void push(fa_ptr_t x, fa_buffer_t buffer)
 }
 
 static inline
+void deendian(buffer_t x)
+{
+    size_t size = fa_buffer_size(x);
+    char*  raw  = fa_buffer_unsafe_address(x);
+    if(size % 8 != 0) {
+        warn(string("Endian filter requires buffer length to be a multiple of 8"));
+    } else {
+        for (size_t i = 0; i < size; i += 8) {
+            char temp[8];
+            for (size_t j = 0; j < 8; ++j) {
+                temp[j] = raw[i + j];
+            }
+            for (size_t j = 0; j < 8; ++j) {
+                raw[i + j] = temp[j]; // still id
+                // raw[i + j] = 0;
+            }
+        }
+    }
+}
+
+static inline
 void pull(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
 {
     struct endian_filter *filter = (struct endian_filter *) x;
     if (filter->closed) {
         cb(data, NULL);
     } else {
+
         // TODO wait for 8 bytes
         fa_with_temp(transient, fa_buffer_wrap(filter->buffer, filter->count, NULL, NULL)) {
-            cb(data, transient);            
+            deendian(transient);
+            cb(data, transient);
             filter->count = 0;
         }
     }

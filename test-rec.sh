@@ -43,7 +43,7 @@ $EASY
 # build/bin/fa_record_streaming --ogg-vorbis -o rectest/app_ogg9.ogg
 # $EASY
 
-build/bin/fa_record_streaming --endian -o rectest/app_end1.ogg
+build/bin/fa_record_streaming --endian -o rectest/app_end1.raw
 $EASY
 # build/bin/fa_record_streaming --endian -o rectest/app_end2.ogg
 # $EASY
