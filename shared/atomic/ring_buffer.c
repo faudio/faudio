@@ -14,7 +14,7 @@
 #include <fa/util.h>
 
 /**
-    Ring buffer implementation.
+    Single-read/single-write implementation.
     
     Implementation defined by the following methods:
     
@@ -36,10 +36,11 @@ struct _fa_atomic_ring_buffer_t {
 
     impl_t              impl;                   //  Interface dispatcher
 
-    byte_t             *data;                   //  Underlying buffer
-    size_t              size;
-    size_t              first, last;
-    atomic_t count_;
+    size_t              size;                   //  Size (immutable)
+    size_t              first, last;            //  Next read, always < size
+                                                //  Next write, always < size
+    byte_t             *data;                   //  Memory region (data..data+size) [0,1,2,3,4] 
+    atomic_t count_;                            //  Bytes written not yet read, always <= size
 
     bool                closed;
     enum { over = 1, nope = 0, under = -1 } flowed;                 // Whether we ever over/underflowed
@@ -57,12 +58,11 @@ ring_buffer_t fa_atomic_ring_buffer_create(size_t size)
     fa_ptr_t atomic_ring_buffer_impl(fa_id_t interface);
     b->impl = &atomic_ring_buffer_impl;
 
-    b->data = fa_malloc(size/*+1*/);    // Memory region (data..data+size) [0,1,2,3,4]
+    b->data = fa_malloc(size/*+1*/);    
     b->size = size;
 
-    b->first = 0;                   // Next read, always < size
-    b->last  = 0;                   // Next write, always < size
-    // b->count = 0;                   // Bytes written not yet read, always <= size
+    b->first = 0;                   
+    b->last  = 0;
     b->count_ = atomic();
 
     // if count == size, the buffer is full
