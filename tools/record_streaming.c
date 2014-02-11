@@ -25,6 +25,7 @@ void make_test_file()
 }
 
 static bool gVorbis;
+static bool gEndian;
 static string_t gOutput;
 
 
@@ -73,6 +74,7 @@ list_t _signal(ptr_t x, list_t xs)
     assert(false);
 }
 
+fa_io_filter_t fa_io_create_endian_filter();
 ptr_t _print(ptr_t x)
 {
     fa_print_ln(x);
@@ -105,11 +107,13 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
 
     // fa_thread_sleep(10500); // DEBUG Wait until rec done to remove ring buffer contention
 
+    fa_io_filter_t ogg = (!gVorbis ? fa_io_identity() : fa_io_create_ogg_encoder());
+    fa_io_filter_t end = (!gEndian ? fa_io_identity() : fa_io_create_endian_filter());
+    fa_io_filter_t filt = fa_io_compose(ogg, end);
     fa_io_run(
         fa_io_apply(
             fa_io_from_ring_buffer(rbuffer),
-
-            (!gVorbis ? fa_io_identity() : fa_io_create_ogg_encoder())
+            filt
         ),
         // fa_io_coapply(
         // fa_io_identity(),
@@ -133,6 +137,7 @@ fa_audio_session_t _session(fa_ptr_t x, fa_audio_session_t s)
 
 fa_option_t options[] = {
     // { "v", "ogg-vorbis",    "Use ogg/vorbis compression",               fa_option_bool },
+    // { "v", "endian",    "Use ogg/vorbis compression",               fa_option_bool },
     { "o", "output-file",   "Output file (i.e. test.raw, test.ogg)",    fa_option_string },
 };
 
@@ -145,10 +150,11 @@ int main(int argc, char const *argv[])
     fa_unpair(fa_option_parse_all(options, argc, (char **) argv), opts, args) {
         mark_used(args);
         gVorbis = fa_map_get(string("ogg-vorbis"), opts)  ? fa_to_bool(fa_map_get(string("ogg-vorbis"), opts))  : false;
+        gEndian = fa_map_get(string("endian"), opts)   ? fa_to_bool(fa_map_get(string("endian"), opts))      : false;
         gOutput = fa_map_get(string("output-file"), opts) ? fa_map_get(string("output-file"), opts) : string("test.raw");
         // printf("freq=%d, rate=%d, duration=%d\n", freq, rate, duration);
 
-        printf("Vorbis=%d, Output=%s\n", gVorbis, unstring(gOutput));
+        printf("Vorbis=%d, Endian=%d, Output=%s\n", gVorbis, gEndian, unstring(gOutput));
         fa_atomic_ring_buffer_t rbuffer = atomic_ring_buffer(44100 * 8 * 30);
         mark_used(rbuffer);
 
