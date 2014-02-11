@@ -49,9 +49,9 @@ struct _fa_atomic_ring_buffer_t {
 
     bool                closed;
     enum { 
-        buffer_overflowed, 
-        buffer_alright, 
-        buffer_underflowed 
+                        buffer_overflowed, 
+                        buffer_alright, 
+                        buffer_underflowed 
     }                   status;                 //  This is used to prevent too many error messages
 };
 
