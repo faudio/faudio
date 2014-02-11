@@ -52,17 +52,17 @@ list_t _signal(ptr_t x, list_t xs)
 {
 #ifndef _WIN32
     fa_pair_t synth = fa_signal_dls();
-    #define kSynthName "dls"
+#define kSynthName "dls"
 #else
     fa_pair_t synth = fa_signal_synth(string("C:\\sf.sf2"));
-    #define kSynthName "fluid"
+#define kSynthName "fluid"
 #endif
 
     // signal_t i1 = fa_list_head(xs);
     // pair_t synth = pair(
-        // fa_signal_sin(fa_signal_line(1.0/7.0)),
-        // fa_signal_cos(fa_signal_line(1.0/7.0))
-        // );
+    // fa_signal_sin(fa_signal_line(1.0/7.0)),
+    // fa_signal_cos(fa_signal_line(1.0/7.0))
+    // );
 
     fa_unpair(synth, synth1, synth2) {
         return list(
@@ -89,18 +89,18 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
 #define kRecOffset 2000
 
     // 10 seconds, 5 notes starting at 1 seconds (1 second between)
-    fa_audio_schedule(fa_milliseconds(kRecOffset+0),      fa_action_send(string("foo"), rbuffer) , s);
-    fa_audio_schedule(fa_milliseconds(kRecOffset+0),      fa_action_do(_print, string("Started recording")) , s);
+    fa_audio_schedule(fa_milliseconds(kRecOffset + 0),      fa_action_send(string("foo"), rbuffer) , s);
+    fa_audio_schedule(fa_milliseconds(kRecOffset + 0),      fa_action_do(_print, string("Started recording")) , s);
 
     for (int i = 0; i < 5; ++i) {
         fa_audio_schedule(fa_milliseconds(kRecOffset + 1000 + (i * 1000)),  fa_action_send(string(kSynthName),
                           fa_midi_message_create_simple(0x90, 60 + i, 127)) , s);
     }
 
-    fa_audio_schedule(fa_milliseconds(10000+kRecOffset),  fa_action_send(string("foo"), NULL) , s);
-    fa_audio_schedule(fa_milliseconds(10000+kRecOffset),  fa_action_do(_print, string("Finished recording")) , s);
+    fa_audio_schedule(fa_milliseconds(10000 + kRecOffset),  fa_action_send(string("foo"), NULL) , s);
+    fa_audio_schedule(fa_milliseconds(10000 + kRecOffset),  fa_action_do(_print, string("Finished recording")) , s);
 
-    
+
     printf("Started listening\n");
 
     // fa_thread_sleep(10500); // DEBUG Wait until rec done to remove ring buffer contention
@@ -108,16 +108,16 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
     fa_io_run(
         fa_io_apply(
             fa_io_from_ring_buffer(rbuffer),
-            
+
             (!gVorbis ? fa_io_identity() : fa_io_create_ogg_encoder())
         ),
         // fa_io_coapply(
-            // fa_io_identity(),
-            // fa_io_create_ogg_encoder(),
+        // fa_io_identity(),
+        // fa_io_create_ogg_encoder(),
 
-            fa_io_write_file(gOutput)
+        fa_io_write_file(gOutput)
         // )
-        );
+    );
     // fa_thread_sleep(2000);
     return s;
 }

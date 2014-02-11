@@ -15,9 +15,9 @@
 
 /**
     Single-read/single-write implementation.
-    
+
     Implementation defined by the following methods:
-    
+
         - size
         - remaining
         - canRead
@@ -26,7 +26,7 @@
         - unsafeWriteByte
 
     Both unsafe methods will fail with assertions if used when canRead or canWrite would return false.
-    
+
  */
 
 typedef uint8_t byte_t;
@@ -40,18 +40,18 @@ struct _fa_atomic_ring_buffer_t {
     size_t              first, last;            //  Next read or write, always < size
     atomic_t            count;                  //  Bytes written not yet read, always <= size
 
-                                                //  if count == size, the buffer is full
-                                                //  if count == 0,    the buffer is empty
-                                                //  We can always read n bytes, where n == count
-                                                //  We can always write n bytes, where n == (size-count)
+    //  if count == size, the buffer is full
+    //  if count == 0,    the buffer is empty
+    //  We can always read n bytes, where n == count
+    //  We can always write n bytes, where n == (size-count)
 
-    byte_t             *data;                   //  Memory region (data..data+size) [0,1,2,3,4] 
+    byte_t             *data;                   //  Memory region (data..data+size) [0,1,2,3,4]
 
     bool                closed;
-    enum { 
-                        buffer_overflowed, 
-                        buffer_alright, 
-                        buffer_underflowed 
+    enum {
+        buffer_overflowed,
+        buffer_alright,
+        buffer_underflowed
     }                   status;                 //  This is used to prevent too many error messages
 };
 
@@ -67,10 +67,10 @@ ring_buffer_t fa_atomic_ring_buffer_create(size_t size)
     ringbuffer_t b = fa_new(atomic_ring_buffer);
     b->impl     = &atomic_ring_buffer_impl;
 
-    b->data     = fa_malloc(size/*+1*/);    
+    b->data     = fa_malloc(size/*+1*/);
     b->size     = size;
 
-    b->first    = 0;                   
+    b->first    = 0;
     b->last     = 0;
     b->count    = atomic();
 
@@ -80,13 +80,13 @@ ring_buffer_t fa_atomic_ring_buffer_create(size_t size)
     return b;
 }
 
-#define atomic_get_size(A) ((size_t) fa_atomic_get(A))   
+#define atomic_get_size(A) ((size_t) fa_atomic_get(A))
 
 void fa_atomic_ring_buffer_destroy(ring_buffer_t buffer)
 {
     fa_destroy(buffer->count);
     fa_free(buffer->data);
-    
+
     fa_delete(buffer);
 }
 
@@ -174,13 +174,14 @@ size_t fa_atomic_ring_buffer_read_many(byte_t *dst,
         if (src->status == buffer_alright) {
             src->status = buffer_underflowed;
             char msg[100];
-            sprintf(msg, 
-                "Underflow: count=%zu, size=%zu\n", 
-                fa_atomic_ring_buffer_remaining(src), 
-                fa_atomic_ring_buffer_size(src)
-                );
+            sprintf(msg,
+                    "Underflow: count=%zu, size=%zu\n",
+                    fa_atomic_ring_buffer_remaining(src),
+                    fa_atomic_ring_buffer_size(src)
+                   );
             warn(string(msg));
         }
+
         return 0;
     }
 }
@@ -193,18 +194,20 @@ size_t fa_atomic_ring_buffer_write_many(ring_buffer_t dst,
         for (size_t i = 0; i < count; ++i) {
             unsafe_write_byte(dst, src[i]);
         }
+
         return count;
     } else {
         if (dst->status == buffer_alright) {
             dst->status = buffer_overflowed;
             char msg[100];
-            sprintf(msg, 
-                "Overflow: count=%zu, size=%zu\n", 
-                fa_atomic_ring_buffer_remaining(dst), 
-                fa_atomic_ring_buffer_size(dst)
-                );
+            sprintf(msg,
+                    "Overflow: count=%zu, size=%zu\n",
+                    fa_atomic_ring_buffer_remaining(dst),
+                    fa_atomic_ring_buffer_size(dst)
+                   );
             warn(string(msg));
         }
+
         return 0;
     }
 }

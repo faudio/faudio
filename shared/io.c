@@ -141,7 +141,7 @@ char *read_line(char *in)
 void stdin_filter_pull(fa_ptr_t _, fa_io_source_t upstream, fa_io_callback_t callback, ptr_t data)
 {
     char in[80]; // TODO max length to read_line
-    
+
     read_line(in);
     callback(data, fa_buffer_wrap(in, strlen(in), NULL, NULL)); // Wrap stack var, no dealloc
 }
@@ -341,7 +341,7 @@ void composed_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t 
     fa_with_temp(closure, pair(callback, data)) {
         fa_with_temp(x, pair(f2, closure)) {
             fa_io_pull_through(f1, upstream, _composed_pull, x);
-        }        
+        }
     }
 }
 void composed_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
@@ -519,6 +519,7 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
 
     while (!fa_atomic_ring_buffer_is_closed(rbuffer)) {
         size_t size = 256;
+
         // io_printf(">>>> Remaining: %zu\n", fa_atomic_ring_buffer_remaining(rbuffer));
         if (fa_atomic_ring_buffer_can_read(rbuffer, size)) {
             io_printf(">>>>>>>>>> Reading size: %zu\n", size);
@@ -531,6 +532,7 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
                 bool success = fa_atomic_ring_buffer_read(rbuffer, raw + i);
                 assert(success && "Could not read from ring buffer");
             }
+
             cb(data, buf);
             fa_destroy(buf);
         }
@@ -548,15 +550,16 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
         for (size_t size = 256; size >= kMaxDrainSpill; size /= 2) {
             while (fa_atomic_ring_buffer_can_read(rbuffer, size)) {
                 io_printf(">>>>>>>>>> End reading size: %zu\n", size);
-        
+
                 buffer_t buf = fa_buffer_create(size);
                 uint8_t *raw = fa_buffer_unsafe_address(buf);
                 bytes_read += size;
-        
+
                 for (size_t i = 0; i < size; ++i) {
                     bool success = fa_atomic_ring_buffer_read(rbuffer, raw + i);
                     assert(success && "Could not read from ring buffer");
                 }
+
                 cb(data, buf);
                 fa_destroy(buf);
             }
@@ -565,7 +568,7 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
         // Nothing more to read, close downstream and finish
         cb(data, NULL);
         assert(fa_atomic_ring_buffer_remaining(rbuffer) < kMaxDrainSpill);
-    }    
+    }
 
 }
 

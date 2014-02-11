@@ -85,7 +85,7 @@ void fa_atomic_add(fa_atomic_t a, int32_t x)
 #else
 #error "Unknown architecture"
 #endif
-#endif    
+#endif
 }
 
 
