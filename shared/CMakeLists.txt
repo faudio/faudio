@@ -18,6 +18,7 @@ list(APPEND SRCS
   error.c
   io.c
   io/ogg.c
+  io/endian.c
   list.c
   map.c
   midi/message.c
