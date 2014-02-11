@@ -40,6 +40,11 @@ struct _fa_atomic_ring_buffer_t {
     size_t              first, last;            //  Next read or write, always < size
     atomic_t            count;                  //  Bytes written not yet read, always <= size
 
+                                                //  if count == size, the buffer is full
+                                                //  if count == 0,    the buffer is empty
+                                                //  We can always read n bytes, where n == count
+                                                //  We can always write n bytes, where n == (size-count)
+
     byte_t             *data;                   //  Memory region (data..data+size) [0,1,2,3,4] 
 
     bool                closed;
@@ -68,11 +73,6 @@ ring_buffer_t fa_atomic_ring_buffer_create(size_t size)
     b->first = 0;                   
     b->last  = 0;
     b->count = atomic();
-
-    // if count == size, the buffer is full
-    // if count == 0,    the buffer is empty
-    // we can always read n bytes, where n == count
-    // we can always write n bytes, where n == (size-count)
 
     b->closed = false;
     b->status = buffer_alright;
