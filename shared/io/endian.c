@@ -40,13 +40,14 @@ void push(fa_ptr_t x, fa_buffer_t buffer)
         filter->closed = true;
     } else {
         size_t size = fa_buffer_size(buffer);
-        void*  raw  = fa_buffer_unsafe_address(buffer);
+        void  *raw  = fa_buffer_unsafe_address(buffer);
 
         // Copy size bytes to buffer
         assert(filter->count + size < kMaxSize && "Overflow in endian buffer");
         memcpy(&filter->buffer[filter->count], raw, size);
         filter->count += size;
     }
+
     mark_used(filter);
 }
 
@@ -54,19 +55,22 @@ static inline
 void deendian(buffer_t x)
 {
     size_t size = fa_buffer_size(x);
-    char*  raw  = fa_buffer_unsafe_address(x);
-    if(size % 8 != 0) {
+    char  *raw  = fa_buffer_unsafe_address(x);
+
+    if (size % 8 != 0) {
         warn(string("Endian filter requires buffer length to be a multiple of 8"));
     } else {
         for (size_t i = 0; i < size; i += 8) {
             char temp[8];
+
             for (size_t j = 0; j < 8; ++j) {
                 temp[j] = raw[i + j];
             }
+
             for (size_t j = 0; j < 8; ++j) {
-                int64_t j2 = (((int64_t) j)*(-1))+7;                
+                int64_t j2 = (((int64_t) j) * (-1)) + 7;
                 assert(j2 >= 0);
-                raw[i + j] = temp[j2]; 
+                raw[i + j] = temp[j2];
             }
         }
     }
@@ -76,6 +80,7 @@ static inline
 void pull(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
 {
     struct endian_filter *filter = (struct endian_filter *) x;
+
     if (filter->closed) {
         cb(data, NULL);
     } else {

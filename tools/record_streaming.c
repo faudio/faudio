@@ -60,9 +60,9 @@ list_t _signal(ptr_t x, list_t xs)
     fa_pair_t synth = fa_signal_synth(string("C:\\sf.sf2"));
 #define kSynthName "fluid"
 #endif
-       
+
 // #define kSynthName "nosynth"
-// 
+//
 //     fa_pair_t synth = pair(fa_signal_sin(fa_signal_line(20)), fa_signal_sin(fa_signal_line(20)));
 
     fa_unpair(synth, synth1, synth2) {
