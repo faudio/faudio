@@ -202,7 +202,7 @@ void write_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
 
     if (buffer) {
         string_t path = fa_copy(((struct filter_base *) x)->data1);
-        FILE *fp = fopen(unstring(path), "a");
+        FILE *fp = fopen(unstring(path), "ab");
 
         if (!fp) {
             fail(string_dappend(string("Could not write file: "), path));
@@ -234,7 +234,7 @@ void read_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t call
     // inform(string("In read_filter push"));
 
     string_t path = fa_copy(((struct filter_base *) x)->data1);
-    FILE *fp = fopen(unstring(path), "r");
+    FILE *fp = fopen(unstring(path), "rb");
 
     if (!fp) {
         fail(string_dappend(string("Could not read file: "), path));
