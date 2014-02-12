@@ -29,6 +29,8 @@ struct ogg_encoder {
 #define kSR       44100
 #define kChannels 1
 
+#define byte_t uint8_t
+
 // #define ogg_printf printf
 #define ogg_printf(fmt, ...) // do nothing
 
@@ -226,7 +228,7 @@ void write_page(struct ogg_encoder *encoder, ogg_page *page, fa_io_callback_t cb
     size_t bodySize = page->body_len;
     size_t bufferSize = headerSize + bodySize;
 
-    char *raw = (char *) fa_malloc(bufferSize);
+    byte_t *raw = (byte_t *) fa_malloc(bufferSize);
     memcpy(raw, page->header, headerSize);
     memcpy(raw + headerSize, page->body, bodySize);
 

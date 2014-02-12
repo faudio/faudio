@@ -16,6 +16,7 @@ struct filter_base {
     ptr_t data1, data2, data3;
 };
 
+#define byte_t uint8_t
 
 // #define io_printf printf
 #define io_printf(fmt, ...) // do nothing
@@ -238,7 +239,7 @@ void read_filter_pull(fa_ptr_t x, fa_io_source_t upstream, fa_io_callback_t call
     if (!fp) {
         fail(string_dappend(string("Could not read file: "), path));
     } else {
-        char raw[1024 * 8];
+        byte_t raw[1024 * 8];
         size_t read;
 
         while (!ferror(fp) && !feof(fp)) {
@@ -525,7 +526,7 @@ void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
             io_printf(">>>>>>>>>> Reading size: %zu\n", size);
 
             buffer_t buf = fa_buffer_create(size);
-            uint8_t *raw = fa_buffer_unsafe_address(buf);
+            byte_t *raw = fa_buffer_unsafe_address(buf);
             bytes_read += size;
 
             for (size_t i = 0; i < size; ++i) {
