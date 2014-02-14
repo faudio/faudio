@@ -1,4 +1,8 @@
 
+# v2.9.6
+
+- Fixes issue with streaming I/O using non-binary mode
+
 # v2.9.5
 
 - Removes unnecessary Curl dependency
