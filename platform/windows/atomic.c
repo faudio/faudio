@@ -64,7 +64,7 @@ void fa_atomic_add(fa_atomic_t a, int32_t v)
 void *fa_atomic_get(fa_atomic_t a)
 {
 #ifdef __MINGW32__
-    InterlockedCompareExchange((LONG *)&a->value, 0L, 0L);
+    return InterlockedCompareExchange((LONG *)&a->value, 0L, 0L);
 #else
 #error "only 32 bit supported needs MINGW64"
     // InterlockedCompareExchange64((LONGLONG*)&a->value, 0LL, 0LL);
