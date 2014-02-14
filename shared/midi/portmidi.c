@@ -39,7 +39,7 @@ typedef fa_action_t                 action_t;
 typedef PmDeviceID                  native_index_t;
 typedef PmStream                   *native_stream_t;
 
-#define kMaxMessageCallbacks       8
+#define kMaxMessageCallbacks       64
 #define kMidiServiceThreadInterval 20
 
 struct _fa_midi_session_t {

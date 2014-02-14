@@ -71,8 +71,8 @@ typedef MIDIEndpointRef             native_device_t;
 typedef MIDIPortRef                 native_stream_t;
 typedef OSStatus                    native_error_t;
 
-#define kMaxMessageCallbacks        8
-#define kMaxStatusCallbacks         8
+#define kMaxMessageCallbacks        64
+#define kMaxStatusCallbacks         64
 #define kMaxTimerCallbacks          512     // needs to be one per stream
 #define kMidiOutIntervalSec         0.001
 
