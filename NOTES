@@ -1,4 +1,8 @@
 
+# v2.9.7
+
+- Fixes serious thread bug on Windows
+
 # v2.9.6
 
 - Fixes issue with streaming I/O using non-binary mode
