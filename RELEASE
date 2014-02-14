@@ -3,12 +3,12 @@
 
 * Write release notes in NOTES
 
+* `make test`
+
 * Bump version 
     * CMakeLists.txt
     * bindings/lisp/faudio.asd
     * doc/Doxyfile
-
-* `make bindings test`
 
 * Commit
     * `git add` (changed files)
