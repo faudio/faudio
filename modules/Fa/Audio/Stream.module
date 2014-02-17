@@ -117,7 +117,7 @@ module "transient" Fa.Audio.Stream
         @warning
             Experimental.
      */
-    addMessageCallback : (callback : MessageCallback, callbackData : Ptr, session : Stream) -> Void;
+    addMessageCallback : (callback : MessageCallback, callbackData : Ptr, stream : Stream) -> Void;
 
     /**
         Schedule an action on the stream.

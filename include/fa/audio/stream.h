@@ -136,7 +136,7 @@ fa_clock_t fa_audio_stream_clock(fa_audio_stream_t stream);
 */
 void fa_audio_add_message_callback(fa_audio_message_callback_t callback,
                                    fa_ptr_t callbackData,
-                                   fa_audio_stream_t session);
+                                   fa_audio_stream_t stream);
 
 /**
     Schedule an action on the stream.

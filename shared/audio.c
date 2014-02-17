@@ -44,10 +44,12 @@ typedef fa_signal_custom_processor_t   *custom_proc_t;
 typedef PaDeviceIndex native_index_t;
 typedef PaStream     *native_stream_t;
 
-#define kMaxSignals 32
-#define kOutputOffset 0
-#define kInputOffset 8
-#define kControlOffset 16
+#define kMaxSignals             32
+#define kOutputOffset           0
+#define kInputOffset            8
+#define kControlOffset          16
+
+#define kMaxMessageCallbacks    64
 
 
 struct _fa_audio_session_t {
@@ -102,11 +104,21 @@ struct _fa_audio_stream_t {
         thread_t        thread;
         mutex_t         mutex;
         bool            stop;
-    }                   controller;
+    }                   controller;         // Controller thread (where scheduling runs)
 
     atomic_queue_t      in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
     atomic_queue_t      short_controls;     // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
     priority_queue_t    controls;           // Scheduled controls (Time, (Channel, Ptr))
+
+    atomic_queue_t      out_controls;       // Controls from audio, (AtomicQueue, (Time, (Name, Ptr)))
+
+    struct {
+        int             count;
+        struct {
+            fa_unary_t  function;
+            fa_ptr_t    data;
+        }               elements[kMaxMessageCallbacks];
+    }                   callbacks;          // Message callbacks
 };
 
 static mutex_t   pa_mutex;
@@ -235,13 +247,19 @@ inline static stream_t new_stream(device_t input, device_t output, double sample
     stream->short_controls  = atomic_queue();
     stream->controls        = priority_queue();
 
+    stream->out_controls    = atomic_queue();
+
+    stream->callbacks.count = 0;
+
     return stream;
 }
 
 inline static void delete_stream(stream_t stream)
 {
-    // fa_destroy(stream->incoming);
-    // fa_destroy(stream->outgoing);
+    // fa_destroy(stream->in_controls);
+    // fa_destroy(stream->short_controls);
+    // fa_destroy(stream->controls);
+    // fa_destroy(stream->out_controls);
     fa_delete(stream);
 }
 
@@ -746,7 +764,10 @@ void fa_audio_add_message_callback(fa_audio_message_callback_t function,
                                    fa_ptr_t data,
                                    fa_audio_stream_t stream)
 {
-    // TODO See #81
+    int n = stream->callbacks.count++;
+    assert(n < kMaxMessageCallbacks);
+    stream->callbacks.elements[n].function = function;
+    stream->callbacks.elements[n].data     = data;
 }
 
 void fa_audio_schedule(fa_time_t time,
@@ -787,6 +808,21 @@ ptr_t audio_control_thread(ptr_t x)
     while (true) {
         if (stream->controller.stop) {
             break;
+        }
+
+        {
+            int n = stream->callbacks.count;
+
+            for (int j = 0; j < n; ++j) {
+                unary_t f = stream->callbacks.elements[j].function;
+                ptr_t   x = stream->callbacks.elements[j].data;
+
+                // TODO fetch value from out_controls
+                time_t time = fa_milliseconds(0);
+                ptr_t  msg  = string("msg");
+
+                f(x, pair(time, msg));
+            }
         }
 
         fa_with_lock(stream->controller.mutex) {
@@ -871,6 +907,12 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
         while ((action = fa_atomic_queue_read(stream->short_controls))) {
             run_simple_action2(stream->state, action);
         }
+    }
+
+    // Outgoing controls
+    {
+        // TODO fetch values from processors
+        // fa_atomic_queue_write(stream->in_controls, XXX);
     }
 
     if (!kVectorMode) {
