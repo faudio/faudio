@@ -999,7 +999,9 @@
    (* (* 0.1 (stime))
     (* (sin (line 70))  (sin (line 550)))) 
    (* (* 0.1 (stime))
-    (* (sin (line 141)) (cos (line 550)))))))
+    (* (sin (line 141)) (cos (line 550))))))
+                    :input :none
+                    )
 
 ; Additive synthesis
 (let* ((notes '(100 200 350 475 620))

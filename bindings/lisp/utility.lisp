@@ -156,13 +156,30 @@
 
 (defun duplicate (x) (cl:list x x))
 
+
+
+; TODO implement properly
+(defun audio-find-input (name s)
+  (case name ((:none nil)
+              (otherwise
+               (cl:error "audio-find-input: Not fully implemented")))))
+
+(defun audio-find-output (name s)
+  (case name ((:none nil)
+              (otherwise
+               (cl:error "audio-find-output: Not fully implemented")))))
+
+
 (defun signal-run-default (
     proc
     &key (session-callback (lambda (x) x)) 
-         (stream-callback (lambda (x) x))) 
+         (stream-callback (lambda (x) x))
+         (input nil)
+         (output nil)
+         ) 
   (let* ((s (funcall session-callback (audio-begin-session))) 
-       (i (audio-default-input s))
-       (o (audio-default-output s))
+       (i (if input (audio-find-input input s) (audio-default-input s)))
+       (o (if output (audio-find-output output s) (audio-default-output s)))
        (st (audio-open-stream* i o proc)))
   (funcall stream-callback st)
   (capi:popup-confirmer nil "Running signal..."
