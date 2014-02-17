@@ -46,6 +46,7 @@ void helper_function()
     proc.after   = after_;
     proc.render  = render_;
     proc.receive = receive_;
+    proc.send    = NULL;
     proc.data    = NULL;
 
     // printf("Sending custom proc %p!\n", &proc);

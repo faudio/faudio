@@ -144,6 +144,10 @@ typedef struct {
         } fa_signal_state_t;
 
 
+typedef void (* fa_signal_message_callback_t)(fa_signal_name_t,
+                                              fa_signal_message_t);
+
+
 typedef struct {
             fa_ptr_t (* before)(fa_ptr_t, int, fa_signal_state_t *);
             fa_ptr_t (* after)(fa_ptr_t, int, fa_signal_state_t *);
@@ -151,6 +155,7 @@ typedef struct {
             fa_ptr_t (* receive)(fa_ptr_t,
                                  fa_signal_name_t,
                                  fa_signal_message_t);
+            fa_ptr_t (* send)(fa_ptr_t, fa_signal_message_callback_t);
             fa_ptr_t data;
         } fa_signal_custom_processor_t;
 

@@ -199,6 +199,7 @@ pair_t fa_signal_synth(string_t path2)
     proc->after   = after_;
     proc->render  = render_;
     proc->receive = receive_;
+    proc->send    = NULL;
     proc->data    = synth;
 
     signal_t left  = fa_signal_input(kFluidOffset + 0);

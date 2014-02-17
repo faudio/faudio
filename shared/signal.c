@@ -1337,6 +1337,7 @@ fa_signal_t fa_signal_record_external(fa_string_t name,
     proc->after   = record_extrenal_after_;
     proc->render  = record_extrenal_render_;
     proc->receive = record_extrenal_receive_;
+    proc->send    = NULL;
     proc->data    = ext;
 
     return fa_signal_custom(proc, fa_signal_output(0, kRecExternalOffset, signal));

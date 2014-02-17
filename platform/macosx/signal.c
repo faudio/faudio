@@ -102,6 +102,7 @@ pair_t fa_signal_dls()
     proc->after   = after_;
     proc->render  = render_;
     proc->receive = receive_;
+    proc->send    = NULL;
     proc->data    = context;
 
     signal_t left  = fa_signal_input(kAUOffset + 0);
