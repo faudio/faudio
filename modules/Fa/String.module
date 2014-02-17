@@ -52,10 +52,11 @@ module Fa.String
         A UTF-32 encoded raw string.
         This type use the endianness of the system, and is terminated by a null character.
      */
-    type Utf8   = Char8*;
-    type Cp1252 = Char8*;
-    type Utf16  = Char16*;
-    type Utf32  = Char32*;
+    type Utf8     = Char8*;
+    type Cp1252   = Char8*;
+    type MacRoman = Char8*;
+    type Utf16    = Char16*;
+    type Utf32    = Char32*;
 
     /**
         @typedef fa_string_t
@@ -186,6 +187,14 @@ module Fa.String
             A new string.
      */
     fromCp1252   : Cp1252 -> String;
+
+    /** Deencode a string from Mac OS X Roman, also known as the standard Windows charset.
+
+        @param  str Encoded string.
+        @return
+            A new string.
+     */
+    fromMacRoman : MacRoman -> String;
 
     /** Deencode a string from UTF-16.
 

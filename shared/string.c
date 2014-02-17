@@ -348,6 +348,33 @@ fa_string_t fa_string_from_cp1252(fa_string_cp1252_t cstr)
     return new_string(strSize / kStandardCodeSize, (uint16_t *) str);
 }
 
+fa_string_t fa_string_from_mac_roman(fa_string_mac_roman_t cstr)
+{
+    size_t inSize, outSize, strSize;
+    char *in, *out, *str;
+
+    inSize  = raw_size(cstr);    // char count is in [inSize/4,inSize]
+    outSize = inSize * 2;        // worst case, we shrink after iconv
+    in      = cstr;
+    out     = fa_malloc(outSize);
+    str     = out;
+
+    {
+        iconv_t conv = iconv_open(kStandardCode, "macintosh");
+        size_t status = iconv(conv, &in, &inSize, &out, &outSize);
+        iconv_close(conv);
+
+        if (status == ((size_t) - 1)) {
+            iconv_fail();
+        }
+    }
+
+    strSize = out - str;
+    str     = fa_realloc(str, strSize);
+
+    return new_string(strSize / kStandardCodeSize, (uint16_t *) str);
+}
+
 fa_string_t fa_string_from_utf16(fa_string_utf16_t cstr)
 {
     size_t size = raw_size_16(cstr);

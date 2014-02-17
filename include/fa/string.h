@@ -66,6 +66,9 @@ typedef fa_char8_t * fa_string_utf8_t;
 typedef fa_char8_t * fa_string_cp1252_t;
 
 
+typedef fa_char8_t * fa_string_mac_roman_t;
+
+
 typedef fa_char16_t * fa_string_utf16_t;
 
 
@@ -209,6 +212,14 @@ fa_string_t fa_string_from_utf8(fa_string_utf8_t utf8);
         A new string.
 */
 fa_string_t fa_string_from_cp1252(fa_string_cp1252_t cp1252);
+
+/** Deencode a string from Mac OS X Roman, also known as the standard Windows charset.
+
+    @param  str Encoded string.
+    @return
+        A new string.
+*/
+fa_string_t fa_string_from_mac_roman(fa_string_mac_roman_t macRoman);
 
 /** Deencode a string from UTF-16.
 
