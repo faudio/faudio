@@ -222,8 +222,8 @@ inline static stream_t new_stream(device_t input, device_t output, double sample
 
     stream->input           = input;
     stream->output          = output;
-    stream->input_channels  = fa_audio_input_channels(input);
-    stream->output_channels = fa_audio_output_channels(output);
+    stream->input_channels  = !input ? 0 : fa_audio_input_channels(input);
+    stream->output_channels = !output ? 0 : fa_audio_output_channels(output);
 
     stream->sample_rate     = sample_rate;
     stream->max_buffer_size = max_buffer_size;
@@ -540,9 +540,11 @@ void print_audio_info(device_t input, device_t output)
     inform(string_dappend(string("    Input:         "), input ? fa_audio_full_name(input) : string("-")));
     inform(string_dappend(string("    Output:        "), output ? fa_audio_full_name(output) : string("-")));
 
-    inform(fa_string_format_floating("    Sample Rate:   %2f", input->session->parameters.sample_rate));
-    inform(fa_string_format_floating("    Latency:       %3f", input->session->parameters.latency));
-    inform(fa_string_format_integral("    Vector Size:   %d", input->session->parameters.vector_size));
+    fa_let(session, input ? input->session : output->session) {
+        inform(fa_string_format_floating("    Sample Rate:   %2f", session->parameters.sample_rate));
+        inform(fa_string_format_floating("    Latency:       %3f", session->parameters.latency));
+        inform(fa_string_format_integral("    Vector Size:   %d",  session->parameters.vector_size));
+    }
 }
 
 inline static
@@ -570,8 +572,6 @@ stream_t fa_audio_open_stream(device_t input,
                              )
 {
     PaError         status;
-    unsigned long   buffer_size = input->session->parameters.vector_size;
-    double          sample_rate = input->session->parameters.sample_rate;
 
     if (!input && !output) {
         return (stream_t) audio_device_error_with(
@@ -583,6 +583,8 @@ stream_t fa_audio_open_stream(device_t input,
                    string("Can not open a stream on devices from different sessions"), 0);
     }
 
+    unsigned long   buffer_size = (input ? input : output)->session->parameters.vector_size;
+    double          sample_rate = (input ? input : output)->session->parameters.sample_rate;
     stream_t        stream = new_stream(input, output, sample_rate, buffer_size);
 
     {
@@ -602,12 +604,12 @@ stream_t fa_audio_open_stream(device_t input,
          */
         print_audio_info(input, output);
     }
-    {
+    fa_let (session, input ? input->session : output->session) {
         /*
             Open and set native stream.
          */
         PaStreamParameters input_stream_parameters = {
-            .suggestedLatency           = input->session->parameters.latency,
+            .suggestedLatency           = session->parameters.latency,
             .hostApiSpecificStreamInfo  = NULL,
             .device                     = (input ? input->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
@@ -615,7 +617,7 @@ stream_t fa_audio_open_stream(device_t input,
         };
 
         PaStreamParameters output_stream_parameters = {
-            .suggestedLatency           = output->session->parameters.latency,
+            .suggestedLatency           = session->parameters.latency,
             .hostApiSpecificStreamInfo  = NULL,
             .device                     = (output ? output->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
@@ -666,7 +668,10 @@ stream_t fa_audio_open_stream(device_t input,
         stream->controller.stop   = false;
     }
 
-    fa_push_list(stream, input->session->streams);
+
+    fa_let (session, input ? input->session : output->session) {
+        fa_push_list(stream, session->streams);
+    }
     return stream;
 }
 
@@ -816,7 +821,7 @@ ptr_t audio_control_thread(ptr_t x)
 
 void before_processing(stream_t stream)
 {
-    session_t session = stream->input->session;
+    session_t session  = stream->input ? stream->input->session : stream->output->session;
     stream->state      = new_state(session->parameters.sample_rate); // FIXME
 
     signal_t merged = fa_signal_constant(0);
@@ -872,14 +877,18 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
         for (int i = 0; i < count; ++ i) {
             run_custom_procs(custom_proc_render, count, stream->state);
 
-            for (int c = 0; c < stream->signal_count; ++c) {
-                state->VALS[(c + kInputOffset) * kMaxVectorSize] = input[c][i];
+            if (stream->input) {
+                for (int c = 0; c < stream->signal_count; ++c) {
+                    state->VALS[(c + kInputOffset) * kMaxVectorSize] = input[c][i];
+                }
             }
 
             step(stream->MERGED_SIGNAL, stream->state);
 
-            for (int c = 0; c < stream->signal_count; ++c) {
-                output[c][i] = state->VALS[(c + kOutputOffset) * kMaxVectorSize];
+            if (stream->output) {
+                for (int c = 0; c < stream->signal_count; ++c) {
+                    output[c][i] = state->VALS[(c + kOutputOffset) * kMaxVectorSize];
+                }
             }
 
             inc_state1(stream->state);
@@ -888,9 +897,11 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
         // assert((count == kMaxVectorSize) && "Wrong vector size");
         assert((stream->signal_count == 2) && "Wrong number of channels");
 
-        for (int i = 0; i < count; ++ i) {
-            for (int c = 0; c < stream->signal_count; ++c) {
-                state->VALS[(c + kInputOffset) * kMaxVectorSize + i] = input[c][i];
+        if (stream->input) {
+            for (int i = 0; i < count; ++ i) {
+                for (int c = 0; c < stream->signal_count; ++c) {
+                    state->VALS[(c + kInputOffset) * kMaxVectorSize + i] = input[c][i];
+                }
             }
         }
 
@@ -902,9 +913,11 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
 
         inc_state(count, stream->state);
 
-        for (int i = 0; i < count; ++ i) {
-            for (int c = 0; c < stream->signal_count; ++c) {
-                output[c][i] = state->VALS[(c + kOutputOffset) * kMaxVectorSize + i];
+        if (stream->output) {
+            for (int i = 0; i < count; ++ i) {
+                for (int c = 0; c < stream->signal_count; ++c) {
+                    output[c][i] = state->VALS[(c + kOutputOffset) * kMaxVectorSize + i];
+                }
             }
         }
     }
