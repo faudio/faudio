@@ -68,6 +68,13 @@ fa_string_t fa_version_string()
 void fa_initialize()
 {
 
+    fa_log_info(string(""));
+
+    fa_log_info(string_dappend(
+        string("Initializing faudio "),
+        fa_version_string()
+        ));
+
     fa_thread_initialize();
     fa_clock_initialize();
     fa_device_initialize();
@@ -80,10 +87,7 @@ void fa_initialize()
     fa_audio_initialize();
     fa_midi_initialize();
 
-    fa_log_info(string_dappend(
-        string("Initialized faudio "),
-        fa_version_string()
-        ));
+    fa_log_info(string("Done initializing faudio"));
 
     gBytesAlloc = 0;
     gRegionCount = 0;
