@@ -80,7 +80,10 @@ void fa_initialize()
     fa_audio_initialize();
     fa_midi_initialize();
 
-    fa_log_info(string("Initialized faudio"));
+    fa_log_info(string_dappend(
+        string("Initialized faudio "),
+        fa_version_string()
+        ));
 
     gBytesAlloc = 0;
     gRegionCount = 0;
