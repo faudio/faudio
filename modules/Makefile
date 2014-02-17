@@ -3,7 +3,7 @@ UNAME=$(shell uname)
 ifeq ($(UNAME), Darwin)
 MODULO=modulo --lisp-package=faudio
 else
-MODULO=modulo --lisp-package=faudio --lisp-primitive-bool=UChar
+MODULO=modulo --lisp-package=faudio --lisp-primitive-bool=UChar --c-func-attr=dllexport
 endif
 
 
