@@ -14,9 +14,9 @@
 
 #define kEchoPrint 0
 #define kEchoMIDI 1
-#define kEchoDLS 2
+#define kEchodls 2
 
-#define kModeOfEchoing kEchoDLS
+#define kModeOfEchoing kEchodls
 
 list_t just(ptr_t x, list_t xs)
 {
@@ -66,7 +66,7 @@ fa_ptr_t print_and_echo_dls(ptr_t x, ptr_t timeMessage)
     fa_print("%s\n", msg);
 
     printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
-    fa_audio_schedule_relative(fa_milliseconds(0), fa_action_send(string("DLS"), msg), out_stream);
+    fa_audio_schedule_relative(fa_milliseconds(0), fa_action_send(string("dls"), msg), out_stream);
     // mark_used(out_stream);
 
     fa_destroy(fa_pair_first(timeMessage));
@@ -122,7 +122,7 @@ void run_midi()
         fa_midi_add_message_callback(print_and_echo_midi, ost, ist);
         break;
 
-    case kEchoDLS:
+    case kEchodls:
         printf("Echoing via DLS\n");
         fa_midi_add_message_callback(print_and_echo_dls, aost, ist);
         break;
@@ -134,7 +134,7 @@ void run_midi()
 
     while (1) {
         fa_thread_sleep(1000);
-        // fa_audio_schedule_relative(hms(0,0,0), fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 64 + ((0 % 12) * 3), 90)), aost);
+        // fa_audio_schedule_relative(hms(0,0,0), fa_action_send(string("dls"), fa_midi_message_create_simple(0x90, 64 + ((0 % 12) * 3), 90)), aost);
     }
 
     fa_destroy(ist);
