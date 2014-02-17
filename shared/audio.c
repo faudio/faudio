@@ -106,11 +106,11 @@ struct _fa_audio_stream_t {
         bool            stop;
     }                   controller;         // Controller thread (where scheduling runs)
 
-    atomic_queue_t      in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
-    atomic_queue_t      short_controls;     // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
-    priority_queue_t    controls;           // Scheduled controls (Time, (Channel, Ptr))
+    atomic_queue_t      in_controls;        // Controls for scheduling, (AtomicQueue SomeAction)
+    atomic_queue_t      short_controls;     // Controls for scheduling, (AtomicQueue SomeAction)
+    priority_queue_t    controls;           // Scheduled controls (PriorityQueue (Time, Action))
 
-    atomic_queue_t      out_controls;       // Controls from audio, (AtomicQueue, (Time, (Name, Ptr)))
+    atomic_queue_t      out_controls;       // Controls from audio, (AtomicQueue SomeAction)
 
     struct {
         int             count;
