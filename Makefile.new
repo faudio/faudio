@@ -8,15 +8,10 @@ test: bin/fa_tests
 CC = clang -fcolor-diagnostics
 
 FILES= \
-	fa/core.c \
-	fa/*.c \
-	fa/atomic/*.c \
-	fa/device/*.c \
-	fa/plot/*.c \
-	fa/string/*.c \
-	platform/macosx/fa/*.c \
-	platform/macosx/fa/plot/*.m \
-	platform/macosx/fa/system/*.c
+	shared/*.c \
+	shared/atomic/*.c \
+	shared/string/*.c \
+	platform/macosx/*.c
 
 LIBS= \
 	-lportmidi \
@@ -35,10 +30,8 @@ LIBS= \
 
 LIB_DIRS = \
 	-L external/portaudio/result/lib \
-	-L external/portmidi/result/lib
-
-	# -L external/fluidsynth/result/lib
-	# -L external/sndfile/result/lib \
+	-L external/portmidi/result/lib \
+	-L external/sndfile/result/lib
 
 MISC_OPTS      = \
 	-mmin-macosx-version=10.5 -mmacosx-version-min=10.5 \
@@ -59,7 +52,7 @@ TEST_OPTS      = \
 	-o bin/fa_tests
 
 lib/libfa.dylib: bin/config.h
-	$(CC) -arch x86_64 \
+	$(CC) -arch i386 \
 		$(SHARED_OPTS) \
 		-I include \
 		-I bin \
@@ -68,7 +61,7 @@ lib/libfa.dylib: bin/config.h
 		$(FILES)
 
 lib/libfa.a: bin/config.h
-	$(CC) -arch x86_64 \
+	$(CC) -arch i386 \
 		$(STATIC_OPTS) \
 		-I include \
 		-I bin \
@@ -78,9 +71,11 @@ lib/libfa.a: bin/config.h
 
 
 bin/fa_tests: bin/config.h
-	$(CC) -arch x86_64 \
+	$(CC) -arch i386 \
 		$(TEST_OPTS) \
 		-I include \
+		-I external/portaudio/result/include \
+		-I external/sndfile/result/include \
 		-I bin \
 		$(LIB_DIRS) \
 		$(LIBS) \
@@ -88,7 +83,7 @@ bin/fa_tests: bin/config.h
 		test/main.c
 
 bin/fa_list_midi: bin/config.h
-	$(CC) -arch x86_64 \
+	$(CC) -arch i386 \
 		-o bin/fa_list_midi \
 		-I include \
 		-I bin \
@@ -100,7 +95,7 @@ bin/fa_list_midi: bin/config.h
 
 bin/config.h:                
 	mkdir -p bin
-	cp include/config.h_ bin/config.h
+	cp include/config2.h.in bin/config.h
 
 clean:
 	rm -f bin/*
