@@ -20,6 +20,9 @@ void test_alloc()
     for (int i = 0; i < 100; ++i) {
         ptr_t p = fa_malloc(((int)(rand()*1024.0)) % 1024);
         printf("%p, %d\n", p, ((int) p) % 8);
+
+	assert(fa_is_ref(p));
+        assert(!fa_is_double(p));
     }
 }
 void test_types()
