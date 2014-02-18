@@ -1254,7 +1254,7 @@ struct rec_external {
     fa_atomic_ring_buffer_t buffer;
 
     // debug
-    size_t bytes_written;
+    // size_t bytes_written;
 };
 ptr_t record_extrenal_before_(ptr_t x, int count, fa_signal_state_t *state)
 {
@@ -1283,7 +1283,7 @@ ptr_t record_extrenal_render_(ptr_t x, int count, fa_signal_state_t *state)
             // fa_atomic_ring_buffer_write(ext->buffer, 'h');
             // fa_atomic_ring_buffer_write(ext->buffer, 'h');
             // fa_atomic_ring_buffer_write(ext->buffer, '\n');
-            ext->bytes_written += sizeof(double);
+            // ext->bytes_written += sizeof(double);
         }
     } else {
         for (int i = 0; i < count; ++i) {
@@ -1291,7 +1291,7 @@ ptr_t record_extrenal_render_(ptr_t x, int count, fa_signal_state_t *state)
 
             if (ext->buffer) {
                 fa_atomic_ring_buffer_write_double(ext->buffer, x);
-                ext->bytes_written += sizeof(double);
+                // ext->bytes_written += sizeof(double);
             }
         }
     }
@@ -1309,13 +1309,13 @@ ptr_t record_extrenal_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t 
 
     if (fa_equal(ext->name, n)) {
         if (ext->buffer) {
-            warn(fa_string_format_integral("Bytes written: %zu", ext->bytes_written));
+            // warn(fa_string_format_integral("Bytes written: %zu", ext->bytes_written));
             fa_atomic_ring_buffer_close(ext->buffer);
         }
 
         // TODO assert it is actually a ring buffer
         ext->buffer = msg;
-        ext->bytes_written = 0;
+        // ext->bytes_written = 0;
     } else {
         // warn(fa_string_dappend(string("Unknown message to external recorder: "), fa_copy(ext->name)));
         // no assert!
