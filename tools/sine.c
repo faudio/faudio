@@ -23,16 +23,15 @@ list_t just(ptr_t x, list_t xs)
 
 
 fa_option_t options[] = {
+    // { "h", "help",        "Show options",                 NULL },
     { "f", "frequency",   "Frequency   (default 440)",    fa_option_integral },
     { "d", "duration",    "Duration    (default 5000)",   fa_option_integral },
     { "r", "sample-rate", "Sample rate (default 44100)",  fa_option_integral },
 };
 
-void helper_function(int freq1, int freq2, int rate, int duration)
+void helper_function(int freq1, int rate, int duration)
 {
-    signal_t b = fa_multiply(fa_signal_sin(fa_signal_line(freq1)), constant(0.1));
-    signal_t c = fa_multiply(fa_signal_sin(fa_signal_line(freq2)), constant(0.1));
-    signal_t a = fa_add(b, c);
+    signal_t a = fa_multiply(fa_signal_sin(fa_signal_line(freq1)), constant(0.1));
     // signal_t a = fa_multiply(fa_signal_random(), constant(0.1));
 
     {
@@ -64,20 +63,34 @@ void helper_function(int freq1, int freq2, int rate, int duration)
     }
 }
 
+// TODO move
+#define fa_map_get_or(TYPE, KEY, DEFAULT, MAP) \
+    (fa_map_get(KEY, opts) ? fa_peek_##TYPE(fa_map_get(KEY, MAP)) : DEFAULT)
+
+#define fa_map_get_int32_or(KEY, DEFAULT, MAP) fa_map_get_or(int32, KEY, DEFAULT, MAP)
+#define fa_map_get_int64_or(KEY, DEFAULT, MAP) fa_map_get_or(int64, KEY, DEFAULT, MAP)
+#define fa_map_get_double_or(KEY, DEFAULT, MAP) fa_map_get_or(double, KEY, DEFAULT, MAP)
+
+
 int main(int argc, char const *argv[])
 {
     fa_set_log_std();
     fa_initialize();
 
     fa_unpair(fa_option_parse_all(options, argc, (char **) argv), opts, _) {
+        if (fa_map_has_key(string("h"), opts)) {
+            fa_option_show_all(options, (char*) argv[0]);
+            exit(0);
+        }
+
+        int duration = fa_map_get_int32_or(string("duration"), 5000, opts);
+        int frequency = fa_map_get_int32_or(string("frequency"), 440, opts);
+        int sample_rate = fa_map_get_int32_or(string("sample-rate"), 44100, opts);
+
+        printf("freq=%d, rate=%d, duration=%d\n", frequency, sample_rate, duration);
+        helper_function(frequency, sample_rate, duration);
+
         mark_used(_);
-        int freq = fa_map_get(string("frequency"), opts)   ? fa_peek_int32(fa_map_get(string("frequency"), opts)) : 440;
-        int rate = fa_map_get(string("sample-rate"), opts) ? fa_peek_int32(fa_map_get(string("sample-rate"), opts)) : 44100;
-        int duration = fa_map_get(string("duration"), opts) ? fa_peek_int32(fa_map_get(string("duration"), opts)) : 5000;
-
-        printf("freq=%d, rate=%d, duration=%d\n", freq, rate, duration);
-        helper_function(freq, freq * 3 / 2, rate, duration);
     }
-
     fa_terminate();
 }
