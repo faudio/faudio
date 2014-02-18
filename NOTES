@@ -1,4 +1,9 @@
 
+# v2.9.8
+
+- Now supports opening audio stream in input-only/output-only mode
+- Fixes issues in Lisp bindings
+
 # v2.9.7
 
 - Fixes serious thread bug on Windows
