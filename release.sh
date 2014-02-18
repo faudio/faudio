@@ -78,4 +78,5 @@ if [[ $* != *--clean* ]]; then
 else
     echo "Cleaning"
     rm -rf faudio-*.tar.gz
+    rm -rf faudio-*.zip
 fi
