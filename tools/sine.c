@@ -49,7 +49,7 @@ void helper_function(int nodes, int duration, double amplitude, int frequency, i
         list_t out          = list(a, a);
 
         fa_audio_set_parameter(string("sample-rate"), f64(sample_rate), s);
-        fa_audio_set_parameter(string("vector_size"), i32(vector_size), s);
+        fa_audio_set_parameter(string("vector-size"), i32(vector_size), s);
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
 
         if (fa_check(st)) {
