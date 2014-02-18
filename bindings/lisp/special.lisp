@@ -226,6 +226,10 @@
 (defcallback funcall1# ptr ((f ptr) (x ptr))
   (funcall (int-to-func# f) x))
 
+#+win32
+(defcallback predcall1# (:boolean :unsigned-char) ((f ptr) (x ptr))
+  (funcall (int-to-func# f) x))
+#-win32
 (defcallback predcall1# :boolean ((f ptr) (x ptr))
   (funcall (int-to-func# f) x))
 
