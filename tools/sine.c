@@ -28,10 +28,11 @@ fa_option_t options[] = {
     { "f", "frequency",   "Frequency   (default 440)",    fa_option_integral },
     { "d", "duration",    "Duration    (default 5000)",   fa_option_integral },
     { "r", "sample-rate", "Sample rate (default 44100)",  fa_option_integral },
+    { "v", "vector-size", "Vector size (default 64)",     fa_option_integral },
     { "n", "number-of-nodes", "Number of nodes (default 1)",  fa_option_integral },
 };
 
-void helper_function(int nodes, int duration, double amplitude, int frequency, int rate)
+void helper_function(int nodes, int duration, double amplitude, int frequency, int sample_rate, int vector_size)
 {
     signal_t a = constant(0);
 
@@ -47,7 +48,8 @@ void helper_function(int nodes, int duration, double amplitude, int frequency, i
         fa_audio_device_t o  = fa_audio_default_output(s);
         list_t out          = list(a, a);
 
-        fa_audio_set_parameter(string("sample-rate"), f64(rate), s);
+        fa_audio_set_parameter(string("sample-rate"), f64(sample_rate), s);
+        fa_audio_set_parameter(string("vector_size"), i32(vector_size), s);
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
 
         if (fa_check(st)) {
@@ -92,12 +94,13 @@ int main(int argc, char const *argv[])
 
         int duration = fa_map_get_int32_or(string("duration"), 5000, opts);
         int frequency = fa_map_get_int32_or(string("frequency"), 440, opts);
-        int sample_rate = fa_map_get_int32_or(string("sample-rate"), 44100, opts);
         int number_of_nodes = fa_map_get_int32_or(string("number-of-nodes"), 1, opts);
         double amplitude = fa_map_get_double_or(string("amplitude"), 0.1, opts);
+        int sample_rate = fa_map_get_int32_or(string("sample-rate"), 44100, opts);
+        int vector_size = fa_map_get_int32_or(string("vector-size"), 64, opts);
 
         printf("freq=%d, rate=%d, duration=%d, amplitude=%lf\n", frequency, sample_rate, duration, amplitude);
-        helper_function(number_of_nodes, duration, amplitude, frequency, sample_rate);
+        helper_function(number_of_nodes, duration, amplitude, frequency, sample_rate, vector_size);
 
         mark_used(_);
     }
