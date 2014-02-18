@@ -1303,9 +1303,9 @@ ptr_t record_extrenal_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t 
 {
     struct rec_external *ext = (struct rec_external *) x;
 
-    inform(string("Recorder, comparing names: "));
-    inform(n);
-    inform(ext->name);
+    // inform(string("Recorder, comparing names: "));
+    // inform(n);
+    // inform(ext->name);
 
     if (fa_equal(ext->name, n)) {
         if (ext->buffer) {

@@ -72,9 +72,9 @@ ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
 ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     au_context_t context = x;
-    inform(string("DLS, comparing names: "));
-    inform(n);
-    inform(string("dls"));
+    // inform(string("DLS, comparing names: "));
+    // inform(n);
+    // inform(string("dls"));
 
     if (fa_equal(n, string("dls"))) {
         assert(fa_midi_message_is_simple(msg));
