@@ -101,9 +101,9 @@ ptr_t fa_option_integral(char *x)
 }
 ptr_t fa_option_floating(char *x)
 {
-    int r;
-    sscanf(x, "%f", &r);
-    return f32(r);
+    double r;
+    sscanf(x, "%lf", &r);
+    return f64(r);
 }
 ptr_t fa_option_string(char *x)
 {

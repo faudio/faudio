@@ -24,14 +24,21 @@ list_t just(ptr_t x, list_t xs)
 
 fa_option_t options[] = {
     // { "h", "help",        "Show options",                 NULL },
+    { "a", "amplitude",   "Amplitude   (default 0.1)",    fa_option_floating },
     { "f", "frequency",   "Frequency   (default 440)",    fa_option_integral },
     { "d", "duration",    "Duration    (default 5000)",   fa_option_integral },
     { "r", "sample-rate", "Sample rate (default 44100)",  fa_option_integral },
+    { "n", "number-of-nodes", "Number of nodes (default 1)",  fa_option_integral },
 };
 
-void helper_function(int freq1, int rate, int duration)
+void helper_function(int nodes, int duration, double amplitude, int frequency, int rate)
 {
-    signal_t a = fa_multiply(fa_signal_sin(fa_signal_line(freq1)), constant(0.1));
+    signal_t a = constant(0);
+
+    for (int i = 0; i < nodes; ++i) {
+        a = fa_add(a, fa_multiply(fa_signal_sin(fa_signal_line(frequency)), constant(amplitude)));
+    }
+
     // signal_t a = fa_multiply(fa_signal_random(), constant(0.1));
 
     {
@@ -86,9 +93,11 @@ int main(int argc, char const *argv[])
         int duration = fa_map_get_int32_or(string("duration"), 5000, opts);
         int frequency = fa_map_get_int32_or(string("frequency"), 440, opts);
         int sample_rate = fa_map_get_int32_or(string("sample-rate"), 44100, opts);
+        int number_of_nodes = fa_map_get_int32_or(string("number-of-nodes"), 1, opts);
+        double amplitude = fa_map_get_double_or(string("amplitude"), 0.1, opts);
 
-        printf("freq=%d, rate=%d, duration=%d\n", frequency, sample_rate, duration);
-        helper_function(frequency, sample_rate, duration);
+        printf("freq=%d, rate=%d, duration=%d, amplitude=%lf\n", frequency, sample_rate, duration, amplitude);
+        helper_function(number_of_nodes, duration, amplitude, frequency, sample_rate);
 
         mark_used(_);
     }
