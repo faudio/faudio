@@ -93,73 +93,78 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 
     // TODO
     if (fa_equal(n, string("fluid"))) {
-        assert(fa_midi_message_is_simple(msg));
+        if (!fa_midi_message_is_simple(msg)) {
+            warn(string("Unknown message to Fluidsynth (not a MIDI message)"));
+        } else {
 
-        int status_channel, data1, data2;
-        fa_midi_message_decons(msg, &status_channel, &data1, &data2);
 
-        int channel = status_channel        & 0x0f;
-        int status  = (status_channel >> 4) & 0x0f;
+            int status_channel, data1, data2;
+            fa_midi_message_decons(msg, &status_channel, &data1, &data2);
 
-        // printf("%p %d %d %d %d\n", synth, status, channel, data1, data2);
-        switch (status) {
-        case 0x8: // off
-            if (FLUID_OK != fluid_synth_noteoff(synth, channel, data1)) {
-                warn(string("Fluidsynth: Could not send message"));
+            int channel = status_channel        & 0x0f;
+            int status  = (status_channel >> 4) & 0x0f;
+
+            // printf("%p %d %d %d %d\n", synth, status, channel, data1, data2);
+            switch (status) {
+            case 0x8: // off
+                if (FLUID_OK != fluid_synth_noteoff(synth, channel, data1)) {
+                    warn(string("Fluidsynth: Could not send message"));
+                }
+
+                break;
+
+            case 0x9: // 9 on
+                if (FLUID_OK != fluid_synth_noteon(synth, channel, data1, data2)) {
+                    warn(string("Fluidsynth: Could not send message"));
+                }
+
+                break;
+
+            case 0xa: // 10 polyp after
+                warn(string("Fluidsynth: Polyphonic key pressure not supported"));
+                break;
+
+            case 0xb: // 11 control
+                if (FLUID_OK != fluid_synth_cc(synth, channel, data1, data2)) {
+                    warn(string("Fluidsynth: Could not send message"));
+                }
+
+                break;
+
+            case 0xc: // 12 program
+                if (FLUID_OK != fluid_synth_program_change(synth, channel, data1)) {
+                    warn(string("Fluidsynth: Could not send message"));
+                }
+
+                break;
+
+            case 0xd: // 13 channel press
+                if (FLUID_OK != fluid_synth_channel_pressure(synth, channel, data1)) {
+                    warn(string("Fluidsynth: Could not send message"));
+                }
+
+                break;
+
+            case 0xe: { // 14 pitch wheel
+                // TODO do we need to to call pitch_wheel_sens etc?
+                unsigned short bend;
+                bend = (unsigned short)data2;
+                bend <<= 7;
+                bend |= (unsigned short)data1;
+
+                if (FLUID_OK != fluid_synth_pitch_bend(synth, channel, bend)) {
+                    warn(string("Fluidsynth: Could not send message"));
+                }
+
+                break;
             }
 
-            break;
-
-        case 0x9: // 9 on
-            if (FLUID_OK != fluid_synth_noteon(synth, channel, data1, data2)) {
-                warn(string("Fluidsynth: Could not send message"));
+            default: {
+                warn(string_dappend(string("Unknown MIDI message to Fluidsynth: <status="), fa_string_format_integral("%d>", status)));
+                // assert(false && "Unknown MIDI message to Fluidsynth");
+            }
             }
 
-            break;
-
-        case 0xa: // 10 polyp after
-            warn(string("Fluidsynth: Polyphonic key pressure not supported"));
-            break;
-
-        case 0xb: // 11 control
-            if (FLUID_OK != fluid_synth_cc(synth, channel, data1, data2)) {
-                warn(string("Fluidsynth: Could not send message"));
-            }
-
-            break;
-
-        case 0xc: // 12 program
-            if (FLUID_OK != fluid_synth_program_change(synth, channel, data1)) {
-                warn(string("Fluidsynth: Could not send message"));
-            }
-
-            break;
-
-        case 0xd: // 13 channel press
-            if (FLUID_OK != fluid_synth_channel_pressure(synth, channel, data1)) {
-                warn(string("Fluidsynth: Could not send message"));
-            }
-
-            break;
-
-        case 0xe: { // 14 pitch wheel
-            // TODO do we need to to call pitch_wheel_sens etc?
-            unsigned short bend;
-            bend = (unsigned short)data2;
-            bend <<= 7;
-            bend |= (unsigned short)data1;
-
-            if (FLUID_OK != fluid_synth_pitch_bend(synth, channel, bend)) {
-                warn(string("Fluidsynth: Could not send message"));
-            }
-
-            break;
-        }
-
-        default: {
-            warn(string_dappend(string("Unknown MIDI message to Fluidsynth: <status="), fa_string_format_integral("%d>", status)));
-            // assert(false && "Unknown MIDI message to Fluidsynth");
-        }
         }
     }
 
