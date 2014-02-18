@@ -38,6 +38,7 @@ add_tool(test_compound)
 add_tool(test_compound2)
 add_tool(record_streaming)
 add_tool(clicks)
+add_tool(level)
 
 if(APPLE)
   add_tool(test_core_midi)

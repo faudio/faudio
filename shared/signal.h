@@ -27,6 +27,9 @@ struct _state_base_t {
 #define kMaxBuses                       64
 #define kMaxDelaySeconds                5
 
+#define kOutputOffset                   0
+#define kInputOffset                    8
+#define kControlOffset                  16
 
 typedef struct _state_t *state_t;
 typedef struct _state_base_t *state_base_t;

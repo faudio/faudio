@@ -124,7 +124,7 @@ module Fa.Signal
         rate   : Double
     };
 
-    type MessageCallback = ((Name, Message) -> Void)*;
+    type MessageCallback = ((Ptr, Name, Message) -> Void)*;
 
     type CustomProcessor = struct {
         before  : ((Ptr,Int,State*) -> Ptr)*,
@@ -132,7 +132,7 @@ module Fa.Signal
         render  : ((Ptr,Int,State*) -> Ptr)*,
 
         receive : ((Ptr,Name,Message) -> Ptr)*,
-        send    : ((Ptr,MessageCallback) -> Ptr)*,
+        send    : ((Ptr,MessageCallback, Ptr) -> Ptr)*,
 
         data : Ptr
     };

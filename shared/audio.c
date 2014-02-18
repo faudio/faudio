@@ -45,10 +45,6 @@ typedef PaDeviceIndex native_index_t;
 typedef PaStream     *native_stream_t;
 
 #define kMaxSignals             32
-#define kOutputOffset           0
-#define kInputOffset            8
-#define kControlOffset          16
-
 #define kMaxMessageCallbacks    64
 
 

@@ -55,10 +55,6 @@ ptr_t send_(ptr_t x, fa_signal_message_callback_t cb, ptr_t data)
 {
     cb(data, string("foo"), i32(1));
     cb(data, string("foo"), i32(1));
-    cb(data, string("foo"), i32(1));
-    cb(data, string("foo"), i32(1));
-    cb(data, string("foo"), i32(1));
-    cb(data, string("foo"), i32(1));
     return x;
 }
 
