@@ -49,7 +49,6 @@
             (:file "message")))
         (:file "signal")
         (:file "action")
-        (:file "plot")
         (:file "midi")
         (:file "audio")
         (:module "audio2"
