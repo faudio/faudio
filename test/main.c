@@ -13,6 +13,22 @@ void test_section(char *str)
 
 extern char *fa_type_str(fa_ptr_t a);
 
+void test_types()
+{
+    test_section("Types");
+    
+    assert(fa_is_int8 (i8(123)));
+    assert(fa_is_int16(i16(1238)));
+    assert(fa_is_int32(i32(1238712)));
+    assert(fa_is_int64(i64(1238712)));
+
+    assert(fa_is_float(f32(1238712)));
+    assert(fa_is_double(f64(1238712)));
+    assert(fa_is_bool(fb(true)));
+
+    assert(fa_is_ref(NULL));
+}
+
 void test_value_references()
 {
     test_section("Value references");
@@ -1903,6 +1919,7 @@ int main(int argc, char const *argv[])
 
         fa_initialize();
 
+        add_test(types);
         add_test(value_references);
         add_test(generic_functions);
         add_test(string);
