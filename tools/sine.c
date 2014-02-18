@@ -36,8 +36,12 @@ void helper_function(int nodes, int duration, double amplitude, int frequency, i
 {
     signal_t a = constant(0);
 
+    double f = frequency;
+    double x = amplitude;
     for (int i = 0; i < nodes; ++i) {
-        a = fa_add(a, fa_multiply(fa_signal_sin(fa_signal_line(frequency)), constant(amplitude)));
+        a = fa_add(a, fa_multiply(fa_signal_sin(fa_signal_line(f)), constant(x)));
+        f *= 1.12;
+        x *= 0.84;
     }
 
     // signal_t a = fa_multiply(fa_signal_random(), constant(0.1));
