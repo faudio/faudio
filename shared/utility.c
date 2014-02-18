@@ -71,9 +71,9 @@ void fa_initialize()
     fa_log_info(string(""));
 
     fa_log_info(string_dappend(
-        string("Initializing faudio "),
-        fa_version_string()
-        ));
+                    string("Initializing faudio "),
+                    fa_version_string()
+                ));
 
     fa_thread_initialize();
     fa_clock_initialize();

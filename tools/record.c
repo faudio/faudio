@@ -52,7 +52,7 @@ void helper_function(string_t path)
         if (fa_check(st)) {
             fa_error_log(st, NULL);
         } else {
-            fa_thread_sleep(kRecTime*1000);
+            fa_thread_sleep(kRecTime * 1000);
         }
 
         fa_buffer_write_audio(path, buf);

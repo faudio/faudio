@@ -622,7 +622,7 @@ stream_t fa_audio_open_stream(device_t input,
          */
         print_audio_info(input, output);
     }
-    fa_let (session, input ? input->session : output->session) {
+    fa_let(session, input ? input->session : output->session) {
         /*
             Open and set native stream.
          */
@@ -687,7 +687,7 @@ stream_t fa_audio_open_stream(device_t input,
     }
 
 
-    fa_let (session, input ? input->session : output->session) {
+    fa_let(session, input ? input->session : output->session) {
         fa_push_list(stream, session->streams);
     }
     return stream;

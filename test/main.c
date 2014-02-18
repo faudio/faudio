@@ -18,18 +18,18 @@ void test_alloc()
     test_section("Allocation");
 
     for (int i = 0; i < 100; ++i) {
-        ptr_t p = fa_malloc(((int)(rand()*1024.0)) % 1024);
+        ptr_t p = fa_malloc(((int)(rand() * 1024.0)) % 1024);
         printf("%p, %d\n", p, ((int) p) % 8);
 
-	assert(fa_is_ref(p));
+        assert(fa_is_ref(p));
         assert(!fa_is_double(p));
     }
 }
 void test_types()
 {
     test_section("Types");
-    
-    assert(fa_is_int8 (i8(123)));
+
+    assert(fa_is_int8(i8(123)));
     assert(fa_is_int16(i16(1238)));
     assert(fa_is_int32(i32(1238712)));
     assert(fa_is_int64(i64(1238712)));
