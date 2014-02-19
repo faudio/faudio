@@ -9,11 +9,20 @@
 
 #define RT 1
 
+#fa_list_decons(LIST,A,BS) \
+    fa_let(A, fa_list_index(0, LIST)) \
+        fa_let(BS, fa_list_drop(1, LIST))
+
+#fa_list_decons2(LIST,A,B,CS) \
+    fa_let(A, fa_list_index(0, LIST)) \
+        fa_let(B, fa_list_index(1, LIST)) \
+            fa_let(CS, fa_list_drop(2, LIST))
+
 list_t processor_(ptr_t x, list_t xs)
 {
     pair_t synth = (pair_t) x;
-    fa_unpair(synth, synth1, synth2) {
-        return pair(fa_multiply(synth1, constant(1)), fa_multiply(synth1, constant(2)));
+    fa_list_decons2(synth, synth1, synth2, _) {
+        return list(fa_multiply(synth1, constant(1)), fa_multiply(synth2, constant(2)));
     }
 }
 
