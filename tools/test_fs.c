@@ -9,20 +9,20 @@
 
 #define RT 1
 
-#fa_list_decons(LIST,A,BS) \
+#define fa_list_decons(LIST,A,BS) \
     fa_let(A, fa_list_index(0, LIST)) \
         fa_let(BS, fa_list_drop(1, LIST))
 
-#fa_list_decons2(LIST,A,B,CS) \
+#define fa_list_decons2(LIST,A,B,CS) \
     fa_let(A, fa_list_index(0, LIST)) \
         fa_let(B, fa_list_index(1, LIST)) \
             fa_let(CS, fa_list_drop(2, LIST))
 
 list_t processor_(ptr_t x, list_t xs)
 {
-    pair_t synth = (pair_t) x;
+    list_t synth = (list_t) x;
     fa_list_decons2(synth, synth1, synth2, _) {
-        return list(fa_multiply(synth1, constant(1)), fa_multiply(synth2, constant(2)));
+        return list(fa_multiply(synth1, fa_signal_input(16)), fa_multiply(synth2, fa_signal_input(16+1)));
     }
 }
 
@@ -41,6 +41,7 @@ void run_dls()
             fa_error_log(st, NULL);
         }
 
+        // fa_audio_schedule_relative(hms(0,0,0), fa_action_set(16, 1), st);
         for (int i = 0; true; ++i) {
 
             // fa_clock_t cl = fa_clock_standard();
