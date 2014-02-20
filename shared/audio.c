@@ -295,8 +295,10 @@ session_t fa_audio_begin_session()
         if (pa_status) {
             session = (session_t) audio_device_error(string("Overlapping real-time audio sessions"));
         } else {
+            inform(string("Starting up PortAudio"));
             Pa_Initialize();
             pa_status = true;
+            inform(string("Started PortAudio"));
 
             session = new_session();
             session_init_devices(session);
@@ -304,6 +306,7 @@ session_t fa_audio_begin_session()
             current_session = session;
         }
     }
+    inform(string("Finished initializing session"));
     return session;
 }
 
