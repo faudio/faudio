@@ -72,7 +72,13 @@ void fa_initialize()
 
     fa_log_info(string_dappend(
                     string("Initializing faudio "),
-                    fa_version_string()
+                    string_dappend(fa_version_string(), 
+                        string_dappend(string(""), 
+#ifdef FAUDIO_DEBUG
+                            string(" (debug build)")))
+#else
+                            string(" (release build)")))
+#endif
                 ));
 
     fa_thread_initialize();

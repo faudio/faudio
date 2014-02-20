@@ -224,6 +224,8 @@ if (COMPONENTS_RESOLVED)
     add_definitions(-DFLUIDSYNTH_NOT_A_DLL=1)
   endif()
 
+  set(CMAKE_C_FLAGS_DEBUG "-DFAUDIO_DEBUG")
+
   ## ----------------------------------------------------------------------
   ## Add include directories
 
