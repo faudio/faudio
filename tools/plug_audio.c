@@ -55,7 +55,7 @@ fa_audio_session_t print_audio_devices(fa_ptr_t _, fa_audio_session_t session)
     gStop = false;
 
     while (1) {
-        // printf("Stop: %d\n", stop);
+        printf("Stop: %d\n", gStop);
         if (gStop) {
             return session;
         }
