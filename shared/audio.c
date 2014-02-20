@@ -329,6 +329,7 @@ void fa_audio_end_session(session_t session)
 
         current_session = NULL;
     }
+    inform(string("Finished terminating session"));
     delete_session(session);
 }
 
