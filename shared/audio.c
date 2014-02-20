@@ -48,7 +48,6 @@ typedef PaStream     *native_stream_t;
 #define kMaxMessageCallbacks    64
 #define kMaxStatusCallbacks     64
 
-
 struct _fa_audio_session_t {
 
     impl_t              impl;               // Dispatcher
@@ -741,7 +740,16 @@ void fa_audio_close_stream(stream_t stream)
         if (native) {
             inform(string("  (stream->native was set, now destroying stream)"));
             stream->native = NULL;
-            Pa_CloseStream(native);
+
+            PaError error;
+            if( (error = Pa_StopStream(native)) != paNoError ) {
+                warn(string("Could not stop stream: "));
+                warn(string((char*) Pa_GetErrorText(error)));
+            }
+            if( (error = Pa_CloseStream(native)) != paNoError ) {
+                warn(string("Could not close stream"));
+                warn(string((char*) Pa_GetErrorText(error)));
+            }
             // after_processing will be called after this
 
             inform(string("  (finished PA stream)"));
