@@ -23,7 +23,7 @@ typedef struct nullary_closure *closure_t;
 
 int     gInitializedOnce = 0;
 closure_t gMidiCallbackTable[1000];
-closure_t gAudioCallbackTable[1000];
+pair_t gAudioCallbackTable[1000];
 long    gMidiCallbackTableCount;
 long    gAudioCallbackTableCount;
 int     mINumDevs;
@@ -60,8 +60,11 @@ void ScheduleMidiCheck();
 void ScheduleAudioCheck();
 INT_PTR WINAPI midi_hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 INT_PTR WINAPI audio_hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-void add_audio_status_listener(audio_status_callback_t function, ptr_t data);
+void add_audio_status_listener(pair_t closure);
+void remove_audio_status_listener(pair_t closure);
 void add_midi_status_listener(midi_status_callback_t function, ptr_t data);
+
+void fa_device_initialize2();
 
 void fa_device_initialize()
 {
@@ -265,10 +268,13 @@ DWORD WINAPI check_thread_audio(LPVOID _)
 
     if (wINumDevs != waveInGetNumDevs() || wONumDevs != waveOutGetNumDevs()) {
         for (int i = 0; i < gAudioCallbackTableCount; ++i) {
-            closure_t tp = gAudioCallbackTable[i];
+            pair_t tp = gAudioCallbackTable[i];
 
             if (tp) {
-                tp->function(tp->data);
+                fa_unpair(tp, function, data) {
+                    fa_nullary_t function2 = function;
+                    function2(data);
+                }
             }
         }
 
@@ -277,10 +283,13 @@ DWORD WINAPI check_thread_audio(LPVOID _)
         audio_hash = BuildAudioHash();
     } else if (!CheckAudioHash()) {
         for (int i = 0; i < gAudioCallbackTableCount; ++i) {
-            closure_t tp = gAudioCallbackTable[i];
+            pair_t tp = gAudioCallbackTable[i];
 
             if (tp) {
-                tp->function(tp->data);
+                fa_unpair(tp, function, data) {
+                    fa_nullary_t function2 = function;
+                    function2(data);
+                }
             }
         }
 
@@ -502,12 +511,8 @@ DWORD WINAPI window_thread(LPVOID params)
 
 
 
-void add_audio_status_listener(audio_status_callback_t function, ptr_t data)
+void add_audio_status_listener(pair_t closure)
 {
-    closure_t closure = malloc(sizeof(struct nullary_closure));
-    closure->function = function;
-    closure->data     = data;
-
     // Save params in global array
     gAudioCallbackTable[gAudioCallbackTableCount++] = closure;
 }
@@ -523,12 +528,11 @@ void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
 }
 
 // TODO remove user callbacks
-void remove_audio_status_listener(audio_status_callback_t function)
+void remove_audio_status_listener(pair_t closure)
 {
     for (int i = 0; i < gAudioCallbackTableCount; i++) {
-        if (gAudioCallbackTable[i] &&
-                gAudioCallbackTable[i]->function == function) {
-            free(gAudioCallbackTable[i]);
+        if (gAudioCallbackTable[i] == closure) {
+            gAudioCallbackTable[i] = NULL;
         }
     }
 }
