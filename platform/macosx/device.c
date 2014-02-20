@@ -19,19 +19,19 @@
 typedef fa_audio_status_callback_t  audio_status_callback_t;
 typedef fa_midi_status_callback_t   midi_status_callback_t;
 
-struct nullary_closure {
-    nullary_t   function;
-    ptr_t       data;
-};
-typedef struct nullary_closure *closure_t;
+// struct nullary_closure {
+//     nullary_t   function;
+//     ptr_t       data;
+// };
+// typedef struct nullary_closure *closure_t;
 
-inline static closure_t new_closure(nullary_t function, ptr_t data)
-{
-    closure_t closure = malloc(sizeof(struct nullary_closure));
-    closure->function = function;
-    closure->data = data;
-    return closure;
-}
+// inline static closure_t new_closure(nullary_t function, ptr_t data)
+// {
+//     closure_t closure = malloc(sizeof(struct nullary_closure));
+//     closure->function = function;
+//     closure->data = data;
+//     return closure;
+// }
 
 // --------------------------------------------------------------------------------
 
@@ -56,7 +56,7 @@ OSStatus audio_listener(AudioObjectID                       id,
 {
     OSStatus result;
     UInt32 propDataSize;
-    closure_t closure = data;
+    pair_t closure = data;
 
     result = AudioObjectGetPropertyDataSize(kAudioObjectSystemObject, addresses, 0, NULL, &propDataSize);
 
@@ -66,15 +66,17 @@ OSStatus audio_listener(AudioObjectID                       id,
         count = propDataSize / sizeof(AudioDeviceID);
     }
 
-    closure->function(closure->data);
+    fa_unpair(closure, function, data) {
+        fa_nullary_t function2 = function;
+        function2(data);
+    }
     return noErr;
 }
 
-void add_audio_status_listener(audio_status_callback_t function, ptr_t data)
+void add_audio_status_listener(pair_t closure)
 {
     OSStatus result;
     CFRunLoopRef theRunLoop;
-    closure_t closure;
 
     AudioObjectPropertyAddress runLoop = {
         .mSelector = kAudioHardwarePropertyRunLoop,
@@ -88,14 +90,30 @@ void add_audio_status_listener(audio_status_callback_t function, ptr_t data)
         .mElement  = kAudioObjectPropertyElementMaster
     };
 
-    theRunLoop = NULL; // necessary?
+    // Set runLoop to NULL
+    // TODO Is this necessary?
+    theRunLoop = NULL; 
     result = AudioObjectSetPropertyData(kAudioObjectSystemObject, &runLoop, 0, NULL, sizeof(CFRunLoopRef), &theRunLoop);
     assert(result == noErr);
 
-    closure = new_closure(function, data);
     result = AudioObjectAddPropertyListener(kAudioObjectSystemObject, &devices, audio_listener, closure);
     assert(result == noErr);
 }
+
+void remove_audio_status_listener(pair_t closure)
+{
+    OSStatus result;
+
+    AudioObjectPropertyAddress devices = {
+        .mSelector = kAudioHardwarePropertyDevices,
+        .mScope    = kAudioObjectPropertyScopeGlobal,
+        .mElement  = kAudioObjectPropertyElementMaster
+    };
+
+    result = AudioObjectRemovePropertyListener(kAudioObjectSystemObject, &devices, audio_listener, closure);
+    assert(result == noErr);
+}
+
 
 void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
 {

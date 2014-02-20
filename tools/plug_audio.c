@@ -77,6 +77,8 @@ int main(int argc, char const *argv[])
         fa_audio_with_session(
             print_audio_devices, NULL,
             fa_error_log, NULL);
+        printf("Setup has changed: press any key to restart audio.\n");
+        getchar();
     }
 
     fa_terminate();

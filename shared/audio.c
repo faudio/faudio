@@ -46,6 +46,7 @@ typedef PaStream     *native_stream_t;
 
 #define kMaxSignals             32
 #define kMaxMessageCallbacks    64
+#define kMaxStatusCallbacks     64
 
 
 struct _fa_audio_session_t {
@@ -66,6 +67,15 @@ struct _fa_audio_session_t {
         int             vector_size;
     }                   parameters;         // Parameters, which may be updated by set_parameters
 
+    struct {
+        int                         count;
+        struct {
+            fa_nullary_t            function;
+            fa_ptr_t                data;
+        }                           elements[kMaxStatusCallbacks];
+    }                               callbacks;          // Status callbacks
+
+    pair_t                          status_closure;
 };
 
 struct _fa_audio_device_t {
@@ -149,10 +159,25 @@ static void native_finished_callback(void *data);
 
 // --------------------------------------------------------------------------------
 
+ptr_t _status_callback(ptr_t x) {
+    session_t session = (session_t) x;
+    
+    int n = session->callbacks.count;
+
+    for (int i = 0; i < n; ++i) {
+        nullary_t f = session->callbacks.elements[i].function;
+        ptr_t     x = session->callbacks.elements[i].data;
+        f(x);
+    }
+    
+    return x;
+}
+
 inline static session_t new_session()
 {
     session_t session = fa_new(audio_session);
     session->impl = &audio_session_impl;
+    session->callbacks.count = 0;
     return session;
 }
 
@@ -282,6 +307,9 @@ void fa_audio_terminate()
 
 // --------------------------------------------------------------------------------
 
+void add_audio_status_listener(fa_pair_t closure);
+void remove_audio_status_listener(fa_pair_t closure);
+
 session_t fa_audio_begin_session()
 {
     if (!pa_mutex) {
@@ -306,6 +334,10 @@ session_t fa_audio_begin_session()
             current_session = session;
         }
     }
+    // FIXME cache pair       
+    session->status_closure = pair(_status_callback, session);
+    add_audio_status_listener(session->status_closure);
+
     inform(string("Finished initializing session"));
     return session;
 }
@@ -332,6 +364,8 @@ void fa_audio_end_session(session_t session)
 
         current_session = NULL;
     }
+    remove_audio_status_listener(session->status_closure);
+
     inform(string("Finished terminating session"));
     delete_session(session);
 }
@@ -530,16 +564,18 @@ bool fa_audio_has_output(device_t device)
 }
 
 
-void add_audio_status_listener(status_callback_t function, ptr_t data);
+// TODO add/remove session status listener
+
 
 void fa_audio_add_status_callback(status_callback_t function,
                                   ptr_t             data,
                                   session_t         session)
 {
-    assert(session && "Not a real session");
+    int n = session->callbacks.count++;
+    assert(n < kMaxStatusCallbacks);
 
-    // See platform/*/device.c
-    add_audio_status_listener(function, data);
+    session->callbacks.elements[n].function = function;
+    session->callbacks.elements[n].data     = data;
 }
 
 double fa_audio_default_sample_rate(fa_audio_device_t device)
