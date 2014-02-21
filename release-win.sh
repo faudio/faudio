@@ -30,7 +30,8 @@ $DLLS
 	make modules
 
 	echo "Building..."
-	cmake -DCMAKE_BUILD_TYPE=Release build
+	# cmake build -DCMAKE_BUILD_TYPE=Release
+	cmake build -DCMAKE_BUILD_TYPE=Debug
 	make
 	
     echo "Running tests..."
