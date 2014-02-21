@@ -21,7 +21,9 @@ struct nullary_closure {
 };
 typedef struct nullary_closure *closure_t;
 
+static 
 int     gInitializedOnce = 0;
+
 closure_t gMidiCallbackTable[1000];
 pair_t gAudioCallbackTable[1000];
 long    gMidiCallbackTableCount;
@@ -68,9 +70,8 @@ void fa_device_initialize2();
 
 void fa_device_initialize()
 {
-    // Dummy value
-    if (gInitializedOnce != 1) {
-        gInitializedOnce = 1;
+    if (gInitializedOnce == 0) {
+        gInitializedOnce++;
         fa_device_initialize2();
     }
 }
@@ -319,6 +320,8 @@ INT_PTR WINAPI audio_hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam
     PDEV_BROADCAST_HDR pbdi;
     PDEV_BROADCAST_DEVICEINTERFACE pdi;
     static HDEVNOTIFY hDeviceNotify;
+
+    inform(string("Call to status callback"));
 
     switch (msg) {
     case WM_CREATE:
