@@ -364,7 +364,7 @@ ptr_t midi_thread(ptr_t x)
     // Save the loop so we can stop it from outside
     gMidiThreadRunLoop = CFRunLoopGetCurrent();
 
-    inform(string("CoreMIDI interaction thread active"));
+    inform(string("    CoreMIDI interaction thread active"));
 
     // Until faudio is terminated, this thread will repeatedly wait for instructions
     // to start a session, and act as its run loop.
@@ -480,7 +480,7 @@ void fa_midi_initialize()
 
     gMidiThread         = fa_thread_create(midi_thread, NULL);
 
-    inform(string("Using CoreMIDI as MIDI backend."));
+    inform(string("    Using CoreMIDI as MIDI backend."));
 
     while (!gMidiThreadRunLoop) {
         fa_thread_sleep(10); // Wait for run loop to be initialized by thread
@@ -539,18 +539,18 @@ void fa_midi_end_session(session_t session)
     assert_module_initialized();
     inform(string("Terminating real-time midi session"));
 
-    inform(string("(closing streams)"));
+    inform(string("    Closing streams"));
     fa_for_each(stream, session->streams) {
         // It is OK if the stream is already closed
         fa_midi_close_stream(stream);
         delete_stream(stream);
     }
-    inform(string("(stopping driver)"));
+    inform(string("    Stopping driver"));
 
     fa_with_lock(gMidiMutex);
     {
         if (gMidiActive) {
-            inform(string("(actually terminating)"));
+            inform(string("    Actually terminating"));
             CFRunLoopStop(gMidiThreadRunLoop);
 
             // Wait for the session to end
@@ -561,7 +561,7 @@ void fa_midi_end_session(session_t session)
             gMidiCurrentSession = NULL;
         }
     }
-    inform(string("(finished terminating)"));
+    inform(string("    Finished terminating midi session"));
 }
 
 void fa_midi_with_session(session_callback_t    session_callback,

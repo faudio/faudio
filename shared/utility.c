@@ -123,20 +123,28 @@ void fa_terminate()
 
 // --------------------------------------------------------------------------------
 
+static int reenter_malloc = 0;
+
 void print_malloc_info(size_t ba)
 {
-    // printf("Alloc!\n");
-    // printf("%ld\n", ba);
+    if (!reenter_malloc) {
+        reenter_malloc++;
+        if (ba > 500) {
+            inform(fa_string_format_integral("Allocating %d bytes", (long) ba));
+        }
+        reenter_malloc--;        
+    }
 }
+
 void print_free_info(size_t rc)
 {
-    // printf("Delloc!\n");
-    // printf("Regions: %ld\n", rc);
 }
 
 void *fa_malloc(size_t size)
 {
-    print_malloc_info(gBytesAlloc);
+#ifdef FAUDIO_DEBUG_ALLOC
+    print_malloc_info(size);
+#endif
     gBytesAlloc += size;
     gRegionCount += 1;
     return malloc(size);
@@ -147,7 +155,9 @@ void *fa_realloc(void *ptr, size_t size)
 }
 void fa_free(void *ptr)
 {
+#ifdef FAUDIO_DEBUG_ALLOC
     print_free_info(gRegionCount);
+#endif
     gRegionCount -= 1;
     free(ptr);
 }

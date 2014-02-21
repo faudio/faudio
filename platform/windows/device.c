@@ -265,8 +265,10 @@ DWORD WINAPI check_thread_audio(LPVOID _)
     and then checks for changes.
     */
     Sleep(500);
+    inform(string("  check_thread_audio"));
 
     if (wINumDevs != waveInGetNumDevs() || wONumDevs != waveOutGetNumDevs()) {
+        inform(string("  Change (number)"));
         for (int i = 0; i < gAudioCallbackTableCount; ++i) {
             pair_t tp = gAudioCallbackTable[i];
 
@@ -282,6 +284,7 @@ DWORD WINAPI check_thread_audio(LPVOID _)
         wONumDevs  = waveOutGetNumDevs();
         audio_hash = BuildAudioHash();
     } else if (!CheckAudioHash()) {
+        inform(string("  Change (hash)"));
         for (int i = 0; i < gAudioCallbackTableCount; ++i) {
             pair_t tp = gAudioCallbackTable[i];
 
@@ -306,6 +309,7 @@ void ScheduleMidiCheck()
 
 void ScheduleAudioCheck()
 {
+    inform(string("ScheduleAudioCheck"));
     CloseHandle(CreateThread(NULL, 0, check_thread_audio, (LPVOID) NULL, 0, 0));
 }
 

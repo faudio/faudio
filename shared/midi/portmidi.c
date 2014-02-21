@@ -223,7 +223,7 @@ void fa_midi_initialize()
     pm_status            = false;
     midi_current_session = NULL;
 
-    inform(string("Using PortMIDI as MIDI backend."));
+    inform(string("    Using PortMIDI as MIDI backend."));
 }
 
 void fa_midi_terminate()

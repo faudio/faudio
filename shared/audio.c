@@ -254,8 +254,8 @@ inline static stream_t new_stream(device_t input, device_t output, double sample
 
     stream->input           = input;
     stream->output          = output;
-    stream->input_channels  = !input ? 0 : fa_audio_input_channels(input);
-    stream->output_channels = !output ? 0 : fa_audio_output_channels(output);
+    stream->input_channels  = (!input) ? 0 : fa_audio_input_channels(input);
+    stream->output_channels = (!output) ? 0 : fa_audio_output_channels(output);
 
     stream->sample_rate     = sample_rate;
     stream->max_buffer_size = max_buffer_size;
@@ -293,9 +293,9 @@ void fa_audio_initialize()
     current_session = NULL;
 
     if (kVectorMode) {
-        inform(string("Using vector processing"));
+        inform(string("    Using vector processing"));
     } else {
-        inform(string("Using single-step processing"));
+        inform(string("    Using single-step processing"));
     }
 }
 
@@ -738,7 +738,7 @@ void fa_audio_close_stream(stream_t stream)
         native_stream_t native = stream->native;
 
         if (native) {
-            inform(string("  (stream->native was set, now destroying stream)"));
+            inform(string("    Closing native stream"));
             stream->native = NULL;
 
             PaError error;
@@ -752,13 +752,14 @@ void fa_audio_close_stream(stream_t stream)
             }
             // after_processing will be called after this
 
-            inform(string("  (finished PA stream)"));
+            inform(string("    Native stream closed"));
+            inform(string("    Stopping stream controller"));
 
             stream->controller.stop = true;
             fa_thread_join(stream->controller.thread);
             fa_thread_destroy_mutex(stream->controller.mutex);
 
-            inform(string("  (finished stopping stream thread, close finished)"));
+            inform(string("    Stream controller thread stopped"));
         }
     }
 
