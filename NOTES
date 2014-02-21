@@ -1,4 +1,17 @@
 
+# v2.9.9
+
+- Fixes issue with hot-plugging of ASIO devices
+
+- Fixes generic hot-plugging issues on Windows
+
+- Improves command line interface for manual tests and tools
+
+- Removes redundant logging messages
+
+- Better logging messages
+
+
 # v2.9.8
 
 - Now supports opening audio stream in input-only/output-only mode
