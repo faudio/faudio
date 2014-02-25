@@ -47,7 +47,7 @@ void helper_function(string_t path)
 
         fa_audio_session_t s = fa_audio_begin_session();
         fa_audio_device_t i  = fa_audio_default_input(s);
-        fa_audio_stream_t st = fa_audio_open_stream(i, 0, just_list, /*list(l, r)*/ list(mono));
+        fa_audio_stream_t st = fa_audio_open_stream(i, NULL, just_list, /*list(l, r)*/ list(mono));
 
         if (fa_check(st)) {
             fa_error_log(st, NULL);
