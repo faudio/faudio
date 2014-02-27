@@ -24,6 +24,7 @@ typedef enum { custom_proc_before,
 list_t fa_signal_get_procs(fa_signal_t signal2);
 void add_custom_proc(fa_signal_custom_processor_t* proc, state_t state);
 void run_custom_procs(custom_proc_when_t when, int count, state_t state);
+void custom_procs_receive(state_t state, fa_signal_message_callback_t cb, ptr_t data);
 
 /** Run a simpel action (send, set or accum) on the processing state. */
 ptr_t run_simple_action(state_t state, fa_action_t action);

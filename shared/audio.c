@@ -867,6 +867,9 @@ ptr_t audio_control_thread(ptr_t x)
             ptr_t value;
             while ((value = fa_atomic_queue_read(stream->out_controls))) {
                 int n = stream->callbacks.count;
+
+                inform(fa_string_show(value));
+                
                 for (int j = 0; j < n; ++j) {
                     unary_t cbFunc = stream->callbacks.elements[j].function;
                     ptr_t   cbData = stream->callbacks.elements[j].data;
@@ -941,6 +944,12 @@ ptr_t run_simple_action2(ptr_t x, ptr_t a)
 {
     return run_simple_action(x, a);
 }
+void handle_outgoing_message(ptr_t x, string_t name, ptr_t value)
+{
+    stream_t stream = x;
+    fa_atomic_queue_write(stream->out_controls, pair(name, value));
+}
+
 void during_processing(stream_t stream, unsigned count, float **input, float **output)
 {
     state_base_t state = (state_base_t) stream->state;
@@ -961,14 +970,7 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
 
     // Outgoing controls
     {
-        // for (int i = 0; i < state->custom_proc_count; ++i) {
-            // custom_proc_t proc = state->custom_procs[i];
-            // proc->send(proc->data, 0, 0);
-        // }
-        
-
-        // TODO fetch values from processors
-        // fa_atomic_queue_write(stream->out_controls, XXX);
+        custom_procs_receive((state_t) state, handle_outgoing_message, stream);
     }
 
     if (!kVectorMode) {

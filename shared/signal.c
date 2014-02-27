@@ -876,6 +876,14 @@ void custom_procs_send(state_t state, string_t name, ptr_t value)
     }
 }
 
+void custom_procs_receive(state_t state, fa_signal_message_callback_t cb, ptr_t data)
+{
+    for (int i = 0; i < state->custom_proc_count; ++i) {
+        custom_proc_t proc = state->custom_procs[i];
+        proc->send(proc->data, cb, data);
+    }    
+}
+
 /**
     Run a simple action.
 

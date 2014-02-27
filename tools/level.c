@@ -53,7 +53,9 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 }
 ptr_t send_(ptr_t x, fa_signal_message_callback_t cb, ptr_t data)
 {
-    cb(data, string("foo"), i32(1));
+    // TODO should not allocate here
+    // The value passed is *not* destroyed, but *will* be copied
+    // All create/destroy should happen in the setup phase
     cb(data, string("foo"), i32(1));
     return x;
 }
