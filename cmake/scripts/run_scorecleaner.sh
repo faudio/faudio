@@ -2,10 +2,10 @@
 
 if [ -z "$SCORECLEANER" ]
 then
-    SCORECLEANER="$HOME/Desktop/ScoreCleaner.app"
+    APP="/Applications/ScoreCloud.app"
+	NAME=ScoreCloud
 fi
 
-rm -rf "$SCORECLEANER/Contents/Frameworks/ScoreCleanerAudio.framework";
-cp -R  build/Frameworks/ScoreCleanerAudio.framework "$SCORECLEANER/Contents/Frameworks/";
-
-open $SCORECLEANER;
+tail -f "$HOME/Library/Logs/ScoreCloud/faudio.log" &
+$APP/Contents/MacOS/$NAME
+killall tail

@@ -151,7 +151,7 @@ add_custom_target(format
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
   )
 
-add_custom_target(run_scorecleaner
+add_custom_target(runsc
   COMMAND sh "${CMAKE_SOURCE_DIR}/cmake/scripts/run_scorecleaner.sh"
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
   )

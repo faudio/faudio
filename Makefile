@@ -68,7 +68,7 @@ test: all
 debug: all
 	$(DEBUGGER) build/bin/fa_tests;
 
-.PHONY: run_scorecleaner
-run_scorecleaner: 
-	@pushd $(BUILD_DIRECTORY); $(MAKE) run_scorecleaner; popd;
+.PHONY: runsc
+runsc: 
+	@pushd $(BUILD_DIRECTORY); $(MAKE) runsc; popd;
 
