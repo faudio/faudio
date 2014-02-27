@@ -867,6 +867,15 @@ void run_custom_procs(custom_proc_when_t when, int count, state_t state)
     }
 }
 
+// typedef void(* fa_signal_message_callback_t)(fa_ptr_t, fa_signal_name_t, fa_signal_message_t)
+void custom_procs_send(state_t state, string_t name, ptr_t value)
+{
+    for (int i = 0; i < state->custom_proc_count; ++i) {
+        custom_proc_t proc = state->custom_procs[i];
+        proc->receive(proc->data, name, value);
+    }
+}
+
 /**
     Run a simple action.
 
@@ -891,16 +900,9 @@ ptr_t run_simple_action(state_t state, action_t action)
     // TODO accum
 
     if (fa_action_is_send(action)) {
-        for (int i = 0; i < state->custom_proc_count; ++i) {
-            custom_proc_t proc = state->custom_procs[i];
-            mark_used(proc);
-
-            string_t name = fa_action_send_name(action);
-            ptr_t value = fa_action_send_value(action);
-            proc->receive(proc->data, name, value);
-
-            // fa_print("  Sending to processor: %s\n", fa_string_show(value));
-        }
+        string_t name = fa_action_send_name(action);
+        ptr_t value = fa_action_send_value(action);
+        custom_procs_send(state, name, value);
 
         return NULL;
     }

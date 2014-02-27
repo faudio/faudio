@@ -113,9 +113,8 @@ struct _fa_audio_stream_t {
 
     atomic_queue_t      in_controls;        // Controls for scheduling, (AtomicQueue SomeAction)
     atomic_queue_t      short_controls;     // Controls for scheduling, (AtomicQueue SomeAction)
-    priority_queue_t    controls;           // Scheduled controls (PriorityQueue (Time, Action))
-
     atomic_queue_t      out_controls;       // Controls from audio, (AtomicQueue SomeAction)
+    priority_queue_t    controls;           // Scheduled controls (PriorityQueue (Time, Action))
 
     struct {
         int             count;
@@ -865,17 +864,14 @@ ptr_t audio_control_thread(ptr_t x)
         }
 
         {
-            int n = stream->callbacks.count;
-
-            for (int j = 0; j < n; ++j) {
-                unary_t f = stream->callbacks.elements[j].function;
-                ptr_t   x = stream->callbacks.elements[j].data;
-
-                // TODO fetch value from out_controls
-                time_t time = fa_milliseconds(0);
-                ptr_t  msg  = string("msg");
-
-                f(x, pair(time, msg));
+            ptr_t value;
+            while ((value = fa_atomic_queue_read(stream->out_controls))) {
+                int n = stream->callbacks.count;
+                for (int j = 0; j < n; ++j) {
+                    unary_t cbFunc = stream->callbacks.elements[j].function;
+                    ptr_t   cbData = stream->callbacks.elements[j].data;
+                    cbFunc(cbData, value);
+                }
             }
         }
 
@@ -965,8 +961,14 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
 
     // Outgoing controls
     {
+        // for (int i = 0; i < state->custom_proc_count; ++i) {
+            // custom_proc_t proc = state->custom_procs[i];
+            // proc->send(proc->data, 0, 0);
+        // }
+        
+
         // TODO fetch values from processors
-        // fa_atomic_queue_write(stream->in_controls, XXX);
+        // fa_atomic_queue_write(stream->out_controls, XXX);
     }
 
     if (!kVectorMode) {
