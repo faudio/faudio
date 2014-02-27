@@ -865,7 +865,10 @@ ptr_t audio_control_thread(ptr_t x)
 
         {
             ptr_t nameValue;
-            while ((nameValue = fa_atomic_queue_read(stream->out_controls))) {
+            
+            while (0) // FIXME
+            // while ((nameValue = fa_atomic_queue_read(stream->out_controls)))
+            {
                 int n = stream->callbacks.count;
 
                 
@@ -957,7 +960,9 @@ ptr_t run_simple_action2(ptr_t x, ptr_t a)
 void handle_outgoing_message(ptr_t x, string_t name, ptr_t value)
 {
     stream_t stream = x;
-    fa_atomic_queue_write(stream->out_controls, pair(name, value));
+    mark_used(stream);                         
+    // FIXME
+    // fa_atomic_queue_write(stream->out_controls, pair(name, value));
 }
 
 void during_processing(stream_t stream, unsigned count, float **input, float **output)
