@@ -1,6 +1,7 @@
 
 (in-package :faudio)
 
+(audio-end-all-sessions)
 (setf se (audio-begin-session))
 (setf i (audio-default-input se))
 (setf o (audio-default-output se))
@@ -24,10 +25,10 @@
 ;(audio-schedule (seconds 20) (action-set 32 0.5D0) s)
 ;(audio-schedule (seconds 55) (action-set 32 0.1D0) s)
 ;(audio-schedule (seconds 0) (action-set 32 0.0D0) s)
-(destroy s)
-(destroy se)
+;(destroy s)
+;(destroy se)
 
-
+(cl:print s)
 
 (progn
   (capi:define-interface demo ()
@@ -70,9 +71,11 @@
               :callback (lambda (interf value type)
                   (setf x (cl:* (coerce value 'double-float) 0.01D0))
                   (cl:print x)
+;                  (audio-schedule (seconds 0) (action-null) s)
                   (audio-schedule
                    (seconds 0)
-                   (action-set 35 x) s)))
+                   (action-set 35 x) s)
+                  ))
      )
     (:default-initargs :title "Demo"))
   (capi:display (make-instance 'demo))
