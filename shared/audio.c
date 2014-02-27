@@ -228,7 +228,12 @@ inline static device_t new_device(session_t session, native_index_t index)
     device->index       = index;
     device->session     = session;
 
-    // Experimental fix of #96
+    /* 
+        PortAudio aspire to return UTF-8 on all platforms but this is not always the case
+        Assume native encodings for now.
+    
+        See also #96
+     */
 #ifdef _WIN32
     device->name        = fa_string_from_cp1252((char *) info->name);       // const cast
     device->host_name   = fa_string_from_cp1252((char *) host_info->name);
@@ -277,10 +282,10 @@ inline static stream_t new_stream(device_t input, device_t output, double sample
 
 inline static void delete_stream(stream_t stream)
 {
-    // fa_destroy(stream->in_controls);
-    // fa_destroy(stream->short_controls);
-    // fa_destroy(stream->controls);
-    // fa_destroy(stream->out_controls);
+    fa_destroy(stream->in_controls);
+    fa_destroy(stream->out_controls);
+    fa_destroy(stream->short_controls);
+    fa_destroy(stream->controls);
     fa_delete(stream);
 }
 
