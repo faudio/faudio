@@ -106,8 +106,19 @@ module "transient" Fa.Audio.Device
      */
     outputChannels : Device -> Int;
 
+    /** Return the current sample rate of the given device.
+        @param device   The device.
+    */
+    currentSampleRate : Device -> Double;
+
     /** Return the default sample rate of the given device.
         @param device   The device.
+        @deprecated 
+            This function was incorrectly named, it refers to
+            sample rate at the time of the device snapshot (i.e.
+            when the session starts), not to its default setting.
+            
+            Use @ref fa_audio_current_sample_rate instead.
     */
     defaultSampleRate : Device -> Double;
                                                

@@ -117,8 +117,20 @@ int fa_audio_input_channels(fa_audio_device_t device);
 */
 int fa_audio_output_channels(fa_audio_device_t device);
 
+/** Return the current sample rate of the given device.
+    @param device   The device.
+    
+*/
+double fa_audio_current_sample_rate(fa_audio_device_t device);
+
 /** Return the default sample rate of the given device.
     @param device   The device.
+    @deprecated 
+        This function was incorrectly named, it refers to
+        sample rate at the time of the device snapshot (i.e.
+        when the session starts), not to its default setting.
+        
+        Use @ref fa_audio_current_sample_rate instead.
     
 */
 double fa_audio_default_sample_rate(fa_audio_device_t device);

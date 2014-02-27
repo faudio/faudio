@@ -582,10 +582,15 @@ void fa_audio_add_status_callback(status_callback_t function,
     session->callbacks.elements[n].data     = data;
 }
 
-double fa_audio_default_sample_rate(fa_audio_device_t device)
+double fa_audio_current_sample_rate(fa_audio_device_t device)
 {
     const PaDeviceInfo *info = Pa_GetDeviceInfo(device->index);
     return info->defaultSampleRate;
+}
+
+double fa_audio_default_sample_rate(fa_audio_device_t device)
+{
+    return fa_audio_current_sample_rate(device);
 }
 
 
