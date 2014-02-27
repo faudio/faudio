@@ -45,10 +45,10 @@
 ;
 ; Fa
 
-(fa-initialize)
-(fa-terminate)
-(fa-set-log-file "/Users/hans/Library/Logs/Faudio.log")
-(fa-set-log-std)
+(initialize)
+(terminate)
+(set-log-file "/Users/hans/Library/Logs/ScoreCloud/faudio.log")
+(set-log-std)
 
 (log-info "What to say?")
 (log-warning "Beware!")
