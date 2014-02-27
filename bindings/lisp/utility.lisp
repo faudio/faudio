@@ -142,8 +142,12 @@
 (defmacro random (&rest args) `(signal-random))
 (defmacro input (n &rest args) `(signal-input ,n))
 (defmacro output (n c &rest args) `(signal-output ,n ,c ,@(mapcar 'wrap-signal args)))
-(defmacro + (&rest args) `(signal-add ,@(mapcar 'wrap-signal args)))
-(defmacro * (&rest args) `(signal-multiply ,@(mapcar 'wrap-signal args)))
+
+;(defmacro + (&rest args) `(signal-add ,@(mapcar 'wrap-signal args)))
+;(defmacro * (&rest args) `(signal-multiply ,@(mapcar 'wrap-signal args)))
+(defmacro + (&rest args) `(cl:reduce 'signal-add (mapcar 'number-or-signal (cl:list ,@args)) :initial-value (signal-constant 0.0D0)))
+(defmacro * (&rest args) `(cl:reduce 'signal-multiply (mapcar 'number-or-signal (cl:list ,@args)) :initial-value (signal-constant 1.0D0)))
+
 (defmacro sin (&rest args) `(signal-sin ,@(mapcar 'wrap-signal args)))
 (defmacro cos (&rest args) `(signal-cos ,@(mapcar 'wrap-signal args)))
 
@@ -153,6 +157,9 @@
 (defmacro input (&rest args) `(signal-input ,@args))
 
 
+
+
+(cl:reduce 'cl:+  '(1 2 3) :initial-value 0)
 
 (defun duplicate (x) (cl:list x x))
 
