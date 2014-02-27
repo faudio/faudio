@@ -22,7 +22,7 @@ list_t processor_(ptr_t x, list_t xs)
 {
     list_t synth = (list_t) x;
     fa_list_decons2(synth, synth1, synth2, _) {
-        return list(fa_multiply(synth1, fa_signal_input(16)), fa_multiply(synth2, fa_signal_input(16+1)));
+        return list(fa_multiply(synth1, fa_signal_input(16)), fa_multiply(synth2, fa_signal_input(16 + 1)));
     }
 }
 
@@ -41,7 +41,8 @@ void run_dls()
             fa_error_log(st, NULL);
         }
 
-        fa_audio_schedule_relative(hms(0,0,0), fa_action_set(16, 1), st);
+        fa_audio_schedule_relative(hms(0, 0, 0), fa_action_set(16, 1), st);
+
         for (int i = 0; true; ++i) {
 
             // fa_clock_t cl = fa_clock_standard();

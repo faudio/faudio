@@ -38,6 +38,7 @@ void helper_function(int nodes, int duration, double amplitude, int frequency, i
 
     double f = frequency;
     double x = amplitude;
+
     for (int i = 0; i < nodes; ++i) {
         a = fa_add(a, fa_multiply(fa_signal_sin(fa_signal_line(f)), constant(x)));
         f *= 1.12;
@@ -92,7 +93,7 @@ int main(int argc, char const *argv[])
 
     fa_unpair(fa_option_parse_all(options, argc, (char **) argv), opts, _) {
         if (fa_map_has_key(string("h"), opts)) {
-            fa_option_show_all(options, (char*) argv[0]);
+            fa_option_show_all(options, (char *) argv[0]);
             exit(0);
         }
 

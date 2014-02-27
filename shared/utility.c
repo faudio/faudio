@@ -72,12 +72,12 @@ void fa_initialize()
 
     fa_log_info(string_dappend(
                     string("Initializing faudio "),
-                    string_dappend(fa_version_string(), 
-                        string_dappend(string(""), 
+                    string_dappend(fa_version_string(),
+                                   string_dappend(string(""),
 #ifdef FAUDIO_DEBUG
-                            string(" (debug build)")))
+                                                  string(" (debug build)")))
 #else
-                            string(" (release build)")))
+                                                  string(" (release build)")))
 #endif
                 ));
 
@@ -129,10 +129,12 @@ void print_malloc_info(size_t ba)
 {
     if (!reenter_malloc) {
         reenter_malloc++;
+
         if (ba > 500) {
             inform(fa_string_format_integral("Allocating %d bytes", (long) ba));
         }
-        reenter_malloc--;        
+
+        reenter_malloc--;
     }
 }
 

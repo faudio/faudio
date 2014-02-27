@@ -158,9 +158,10 @@ static void native_finished_callback(void *data);
 
 // --------------------------------------------------------------------------------
 
-ptr_t _status_callback(ptr_t x) {
+ptr_t _status_callback(ptr_t x)
+{
     session_t session = (session_t) x;
-    
+
     int n = session->callbacks.count;
 
     for (int i = 0; i < n; ++i) {
@@ -168,7 +169,7 @@ ptr_t _status_callback(ptr_t x) {
         ptr_t     x = session->callbacks.elements[i].data;
         f(x);
     }
-    
+
     return x;
 }
 
@@ -333,7 +334,7 @@ session_t fa_audio_begin_session()
             current_session = session;
         }
     }
-    // FIXME cache pair       
+    // FIXME cache pair
     session->status_closure = pair(_status_callback, session);
     add_audio_status_listener(session->status_closure);
 
@@ -742,14 +743,17 @@ void fa_audio_close_stream(stream_t stream)
             stream->native = NULL;
 
             PaError error;
-            if( (error = Pa_StopStream(native)) != paNoError ) {
+
+            if ((error = Pa_StopStream(native)) != paNoError) {
                 warn(string("Could not stop stream: "));
-                warn(string((char*) Pa_GetErrorText(error)));
+                warn(string((char *) Pa_GetErrorText(error)));
             }
-            if( (error = Pa_CloseStream(native)) != paNoError ) {
+
+            if ((error = Pa_CloseStream(native)) != paNoError) {
                 warn(string("Could not close stream"));
-                warn(string((char*) Pa_GetErrorText(error)));
+                warn(string((char *) Pa_GetErrorText(error)));
             }
+
             // after_processing will be called after this
 
             inform(string("    Native stream closed"));

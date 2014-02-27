@@ -21,7 +21,7 @@ struct nullary_closure {
 };
 typedef struct nullary_closure *closure_t;
 
-static 
+static
 int     gInitializedOnce = 0;
 
 closure_t gMidiCallbackTable[1000];
@@ -270,6 +270,7 @@ DWORD WINAPI check_thread_audio(LPVOID _)
 
     if (wINumDevs != waveInGetNumDevs() || wONumDevs != waveOutGetNumDevs()) {
         inform(string("  Change (number)"));
+
         for (int i = 0; i < gAudioCallbackTableCount; ++i) {
             pair_t tp = gAudioCallbackTable[i];
 
@@ -286,6 +287,7 @@ DWORD WINAPI check_thread_audio(LPVOID _)
         audio_hash = BuildAudioHash();
     } else if (!CheckAudioHash()) {
         inform(string("  Change (hash)"));
+
         for (int i = 0; i < gAudioCallbackTableCount; ++i) {
             pair_t tp = gAudioCallbackTable[i];
 

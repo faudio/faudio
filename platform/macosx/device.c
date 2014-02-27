@@ -92,7 +92,7 @@ void add_audio_status_listener(pair_t closure)
 
     // Set runLoop to NULL
     // TODO Is this necessary?
-    theRunLoop = NULL; 
+    theRunLoop = NULL;
     result = AudioObjectSetPropertyData(kAudioObjectSystemObject, &runLoop, 0, NULL, sizeof(CFRunLoopRef), &theRunLoop);
     assert(result == noErr);
 
