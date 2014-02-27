@@ -69,6 +69,6 @@ debug: all
 	$(DEBUGGER) build/bin/fa_tests;
 
 .PHONY: runsc
-runsc: 
+runsc: all
 	@pushd $(BUILD_DIRECTORY); $(MAKE) runsc; popd;
 
