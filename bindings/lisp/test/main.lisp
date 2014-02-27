@@ -1000,7 +1000,7 @@
     (* (sin (line 70))  (sin (line 550)))) 
    (* (* 0.1 (stime))
     (* (sin (line 141)) (cos (line 550))))))
-                    :input :none
+                    :input nil
                     )
 
 ; Additive synthesis
