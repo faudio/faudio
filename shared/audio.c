@@ -119,7 +119,7 @@ struct _fa_audio_stream_t {
     struct {
         int             count;
         struct {
-            fa_unary_t  function;
+            fa_binary_t function;
             fa_ptr_t    data;
         }               elements[kMaxMessageCallbacks];
     }                   callbacks;          // Message callbacks
@@ -864,16 +864,26 @@ ptr_t audio_control_thread(ptr_t x)
         }
 
         {
-            ptr_t value;
-            while ((value = fa_atomic_queue_read(stream->out_controls))) {
+            ptr_t nameValue;
+            while ((nameValue = fa_atomic_queue_read(stream->out_controls))) {
                 int n = stream->callbacks.count;
 
-                inform(fa_string_show(value));
                 
-                for (int j = 0; j < n; ++j) {
-                    unary_t cbFunc = stream->callbacks.elements[j].function;
-                    ptr_t   cbData = stream->callbacks.elements[j].data;
-                    cbFunc(cbData, value);
+                fa_unpair(nameValue, name, value) {
+
+                    // FIXME assure that this copying can not happen after stream has been
+                    // stopped
+                    string_t name2 = fa_copy(name);
+                    ptr_t    value2 = fa_copy(value);
+                    // inform(fa_string_show(pair(name2, value2)));
+
+                    for (int j = 0; j < n; ++j) {
+                        binary_t cbFunc = stream->callbacks.elements[j].function;
+                        ptr_t    cbData = stream->callbacks.elements[j].data;
+                        cbFunc(cbData, name2, value2);
+                    }         
+                    fa_destroy(name2);
+                    fa_destroy(value2);
                 }
             }
         }

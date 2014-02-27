@@ -43,8 +43,11 @@
 typedef struct _fa_audio_stream_t * fa_audio_stream_t;
 
 /** A callback to be invoked whenever a message is received.
+    
+    Received a `(Name, Msg)` pair, where `Name` is `Action.Name` and `Msg` a
+    copyable, showable value. 
 */
-typedef fa_unary_t fa_audio_message_callback_t;
+typedef fa_binary_t fa_audio_message_callback_t;
 
 /** A callback to receive audio streams.
 */

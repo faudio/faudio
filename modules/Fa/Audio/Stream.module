@@ -33,8 +33,11 @@ module "transient" Fa.Audio.Stream
     type Stream  = opaque;
 
     /** A callback to be invoked whenever a message is received.
+        
+        Received a `(Name, Msg)` pair, where `Name` is `Action.Name` and `Msg` a
+        copyable, showable value. 
      */
-    type MessageCallback = Unary;
+    type MessageCallback = Binary;
 
     /** A callback to receive audio streams.
      */

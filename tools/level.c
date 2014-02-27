@@ -20,12 +20,18 @@ list_t just(ptr_t x, list_t _)
     return x;
 }
 
+static string_t out_name;
+static ptr_t    out_value;
 ptr_t before_(ptr_t x, int count, fa_signal_state_t *state)
 {
+    out_name  = string("foo");
+    out_value = i32(1);
     return x;
 }
 ptr_t after_(ptr_t x, int count, fa_signal_state_t *state)
 {
+    fa_destroy(out_name);
+    fa_destroy(out_value);
     return x;
 }
 ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
@@ -51,12 +57,13 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
     should_click = true;
     return x;
 }
+
 ptr_t send_(ptr_t x, fa_signal_message_callback_t cb, ptr_t data)
 {
     // TODO should not allocate here
     // The value passed is *not* destroyed, but *will* be copied
     // All create/destroy should happen in the setup phase
-    cb(data, string("foo"), i32(1));
+    cb(data, out_name, out_value);
     return x;
 }
 
@@ -74,6 +81,16 @@ pair_t fa_signal_clicks()
     return pair(fa_signal_custom(proc, fa_signal_input(kThisPlugOffset + 0)), fa_signal_input(kThisPlugOffset + 1));
 }
 
+ptr_t _message_out(ptr_t x, ptr_t name, ptr_t value)
+{
+    fa_print("Receieved 1: %s\n", pair(name, value));
+    return x;
+}
+ptr_t _message_out2(ptr_t x, ptr_t name, ptr_t value)
+{
+    fa_print("Receieved 2: %s\n", pair(name, value));
+    return x;
+}
 void run_clicks()
 {
     if (RT) {
@@ -83,12 +100,14 @@ void run_clicks()
         list_t out           = fa_pair_to_list(fa_signal_clicks());
 
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
-
+        fa_audio_add_message_callback(_message_out, NULL, st);
+        fa_audio_add_message_callback(_message_out2, NULL, st);
+           
         if (fa_check(st)) {
             fa_error_log(st, NULL);
         }
 
-        fa_thread_sleep(10000);
+        fa_thread_sleep(3000);
         fa_destroy(st);
         fa_destroy(s);
     }
