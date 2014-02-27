@@ -613,6 +613,16 @@ fa_signal_t fa_signal_simplify(fa_signal_t signal2)
     return simplify(&part, &procs, signal2);
 }
 
+fa_signal_t fa_signal_doptimize(fa_signal_t signal)
+{
+    return signal;
+}
+fa_signal_t fa_signal_dverify(fa_signal_t signal)
+{
+    // TODO assert depth <= kMaxSignalTreeDepth
+    return signal;
+}
+
 list_t fa_signal_get_procs(fa_signal_t signal2)
 {
     part_t part;
@@ -1070,9 +1080,8 @@ void fa_signal_run(int count, list_t controls, signal_t a, double *output)
         add_custom_proc(x, state);
     }
     signal_t a2 = fa_signal_simplify(a);
-
-    // TODO optimize
-    // TODO verify
+    a2 = fa_signal_doptimize(a2);
+    a2 = fa_signal_dverify(a2);
 
     run_custom_procs(custom_proc_before, 0, state);
 

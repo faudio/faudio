@@ -520,6 +520,23 @@ fa_string_t fa_signal_draw_tree(fa_pair_t pair);
 */
 fa_signal_t fa_signal_simplify(fa_signal_t signal);
 
+/** Optimize a signal (destructive).
+
+    @returns
+        A simplified signal. If the given signal was already simplified,
+        a copy of that signal (as per @ref fa_copy) is returned.
+*/
+fa_signal_t fa_signal_doptimize(fa_signal_t signal);
+
+/** Verify that the given signal can actually be run (destructive).
+    Should be called *after* simplify and optimize.
+
+    @returns
+        A simplified signal. If the given signal was already simplified,
+        a copy of that signal (as per @ref fa_copy) is returned.
+*/
+fa_signal_t fa_signal_dverify(fa_signal_t signal);
+
 
 fa_signal_t fa_signal_impulse();
 

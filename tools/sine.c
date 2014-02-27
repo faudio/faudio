@@ -40,7 +40,14 @@ void helper_function(int nodes, int duration, double amplitude, int frequency, i
     double x = amplitude;
 
     for (int i = 0; i < nodes; ++i) {
-        a = fa_add(a, fa_multiply(fa_signal_sin(fa_signal_line(f)), constant(x)));
+
+        /*
+            Build a left-leaning tree, so that the depth is equal to the number of nodes as
+            passed on the command line. We could get away with a much larger number
+            of nodes by using a balanced tree.
+        */
+
+        a = fa_add(fa_multiply(fa_signal_sin(fa_signal_line(f)), constant(x)), a);
         f *= 1.12;
         x *= 0.84;
     }

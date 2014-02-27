@@ -426,6 +426,24 @@ module Fa.Signal
      */
     simplify : Signal -> Signal;
 
+    /** Optimize a signal (destructive).
+
+        @returns
+            A simplified signal. If the given signal was already simplified,
+            a copy of that signal (as per @ref fa_copy) is returned.
+     */
+    doptimize : Signal -> Signal;
+
+    /** Verify that the given signal can actually be run (destructive).
+        Should be called *after* simplify and optimize.
+
+        @returns
+            A simplified signal. If the given signal was already simplified,
+            a copy of that signal (as per @ref fa_copy) is returned.
+     */
+    dverify : Signal -> Signal;
+    
+
     impulse : () -> Signal;
     line : Double -> Signal;
     

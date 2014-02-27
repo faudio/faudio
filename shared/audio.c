@@ -929,8 +929,8 @@ void before_processing(stream_t stream)
 
     print_signal_tree(stream->MERGED_SIGNAL);
 
-    // TODO optimize
-    // TODO verify
+    stream->MERGED_SIGNAL = fa_signal_doptimize(stream->MERGED_SIGNAL);
+    stream->MERGED_SIGNAL = fa_signal_dverify(stream->MERGED_SIGNAL);
 
     run_custom_procs(custom_proc_before, 0, stream->state);
 }

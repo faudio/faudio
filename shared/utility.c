@@ -65,6 +65,33 @@ fa_string_t fa_version_string()
     return string(version);
 }
 
+/*
+    TODO
+        - Determine a good stack size for kMaxSignalTreeDepth
+
+inline static 
+void fix_stack_size()
+{
+    const rlim_t kStackSize = (0) *(1024*1024);   // min stack size = 16 MB
+    struct rlimit rl;
+    int result;
+
+    result = getrlimit(RLIMIT_STACK, &rl);
+    if (result == 0)
+    {
+        if (rl.rlim_cur < kStackSize)
+        {
+            rl.rlim_cur = kStackSize;
+            result = setrlimit(RLIMIT_STACK, &rl);
+            if (result != 0)
+            {
+                fprintf(stderr, "setrlimit returned result = %d\n", result);
+            }
+        }
+    }
+}
+*/
+
 void fa_initialize()
 {
 
@@ -81,6 +108,8 @@ void fa_initialize()
 #endif
                 ));
 
+    // fix_stack_size();
+            
     fa_thread_initialize();
     fa_clock_initialize();
     fa_device_initialize();
