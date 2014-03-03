@@ -25,6 +25,7 @@ list_t just(ptr_t x, list_t xs)
 fa_option_t options[] = {
     // { "h", "help",        "Show options",                 NULL },
     { "a", "amplitude",   "Amplitude   (default 0.1)",    fa_option_floating },
+    { "l", "latency",     "Latency     (default 0.002)",    fa_option_floating },
     { "f", "frequency",   "Frequency   (default 440)",    fa_option_integral },
     { "d", "duration",    "Duration    (default 5000)",   fa_option_integral },
     { "r", "sample-rate", "Sample rate (default 44100)",  fa_option_integral },
@@ -32,7 +33,7 @@ fa_option_t options[] = {
     { "n", "number-of-nodes", "Number of nodes (default 1)",  fa_option_integral },
 };
 
-void helper_function(int nodes, int duration, double amplitude, int frequency, int sample_rate, int vector_size)
+void helper_function(int nodes, int duration, double amplitude, int frequency, int sample_rate, int vector_size, double latency)
 {
     signal_t a = constant(0);
 
@@ -62,6 +63,7 @@ void helper_function(int nodes, int duration, double amplitude, int frequency, i
 
         fa_audio_set_parameter(string("sample-rate"), f64(sample_rate), s);
         fa_audio_set_parameter(string("vector-size"), i32(vector_size), s);
+        fa_audio_set_parameter(string("latency"), f64(latency), s);
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
 
         if (fa_check(st)) {
@@ -110,9 +112,10 @@ int main(int argc, char const *argv[])
         double amplitude = fa_map_get_double_or(string("amplitude"), 0.1, opts);
         int sample_rate = fa_map_get_int32_or(string("sample-rate"), 44100, opts);
         int vector_size = fa_map_get_int32_or(string("vector-size"), 64, opts);
+        double latency = fa_map_get_double_or(string("latency"), 0.002, opts);
 
         printf("freq=%d, rate=%d, duration=%d, amplitude=%lf\n", frequency, sample_rate, duration, amplitude);
-        helper_function(number_of_nodes, duration, amplitude, frequency, sample_rate, vector_size);
+        helper_function(number_of_nodes, duration, amplitude, frequency, sample_rate, vector_size, latency);
 
         mark_used(_);
     }
