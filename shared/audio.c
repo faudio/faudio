@@ -998,15 +998,15 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
             run_custom_procs(custom_proc_render, count, stream->state);
 
             if (stream->input) {
-                for (int c = 0; c < stream->signal_count; ++c) {
+                for (int c = 0; c < stream->input_channels; ++c) {
                     state->VALS[(c + kInputOffset) * kMaxVectorSize] = input[c][i];
                 }
-            }
+            }      
 
             step(stream->MERGED_SIGNAL, stream->state);
 
             if (stream->output) {
-                for (int c = 0; c < stream->signal_count; ++c) {
+                for (int c = 0; c < stream->output_channels; ++c) {
                     output[c][i] = state->VALS[(c + kOutputOffset) * kMaxVectorSize];
                 }
             }
@@ -1015,15 +1015,15 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
         }
     } else {
         // assert((count == kMaxVectorSize) && "Wrong vector size");
-        assert((stream->signal_count == 2) && "Wrong number of channels");
+        // assert((stream->signal_count == 2) && "Wrong number of channels");
 
         if (stream->input) {
             for (int i = 0; i < count; ++ i) {
-                for (int c = 0; c < stream->signal_count; ++c) {
+                for (int c = 0; c < stream->input_channels; ++c) {
                     state->VALS[(c + kInputOffset) * kMaxVectorSize + i] = input[c][i];
                 }
             }
-        }
+        }   
 
         {
             double dummy_output[count];
@@ -1035,7 +1035,7 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
 
         if (stream->output) {
             for (int i = 0; i < count; ++ i) {
-                for (int c = 0; c < stream->signal_count; ++c) {
+                for (int c = 0; c < stream->output_channels; ++c) {
                     output[c][i] = state->VALS[(c + kOutputOffset) * kMaxVectorSize + i];
                 }
             }
