@@ -266,13 +266,28 @@
 (defun action-do* (f)
   (action-do (callback funcall0#) (func-to-int# f)))
 
+; TODO move
+(defun translate-nil (type x)
+ (if x
+     x
+   (from-pointer type (cffi::null-pointer))))
+
 (defun audio-open-stream* (i o f)
-  (audio-open-stream i o (callback list2listcall#) 
-    (func-to-int# 
-      (lambda (inputs) 
-        (export-list
-          (funcall f (mapcar (lambda (x) (from-pointer 'signal x)) 
-            (import-list inputs))))))))
+ (assert (or i o))
+ (audio-open-stream (translate-nil 'audio-device i) (translate-nil 'audio-device o) (callback list2listcall#) 
+   (func-to-int# 
+     (lambda (inputs) 
+       (export-list
+         (funcall f (mapcar (lambda (x) (from-pointer 'signal x)) 
+           (import-list inputs))))))))
+
+; (defun audio-open-stream* (i o f)
+;   (audio-open-stream i o (callback list2listcall#) 
+;     (func-to-int# 
+;       (lambda (inputs) 
+;         (export-list
+;           (funcall f (mapcar (lambda (x) (from-pointer 'signal x)) 
+;             (import-list inputs))))))))
 
 (defun io-pull* (source f)
   (io-pull source (callback iocall#) (func-to-int# (lambda (data)
