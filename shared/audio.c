@@ -467,7 +467,7 @@ void fa_audio_set_parameter(string_t name,
         if (x <= kMaxVectorSize) {
             session->parameters.vector_size = x;
         } else {
-            warn(fa_string_format_integral("Vector size %d too large.", x));
+            warn(fa_string_format_integral("Vector size %d too large, ignoring parameter.", x));
         }
     }
 }
@@ -543,6 +543,9 @@ fa_string_t fa_audio_full_name(device_t device)
     fa_write_string(str, fa_audio_host_name(device));
     fa_write_string(str, string(" "));
     fa_write_string(str, fa_audio_name(device));
+    fa_write_string(str, string(" "));
+    fa_write_string(str, fa_string_format_integral("(%d in, ", fa_audio_input_channels(device)));
+    fa_write_string(str, fa_string_format_integral("%d out)", fa_audio_output_channels(device)));
     return str;
 }
 
