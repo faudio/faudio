@@ -14,15 +14,20 @@
 
 ;(defun smooth (x) x)
 
+
+(setf s (audio-open-stream* i o (lambda (_) (cl:list (* (smooth (input 32)) (sin (line 440)))))))
+
 (setf s (audio-open-stream* i o (lambda (_) (cl:list
   (cl:reduce (lambda (x y) (+ x y)) 
     (cl:loop 
-      for n from 0 to 16        
+      for n from 1 to 4
       for freq = (cl:* 440 n)
       for bus  = (cl:+ 32 n)
       collect (* 
                  (smooth (input bus)) 
                  (sin (line freq)))))))))
+
+
 
 ;(audio-schedule (seconds 20) (action-set 32 0.5D0) s)
 ;(audio-schedule (seconds 55) (action-set 32 0.1D0) s)
