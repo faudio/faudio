@@ -30,34 +30,35 @@ void run_sines(map_t opts)
     const int    vector_size     = fa_map_get_int32(string("vector-size"),     opts);
     const double latency         = fa_map_get_double(string("latency"),        opts);
 
-    signal_t a = constant(0);
+    signal_t gen = constant(0);
 
-    double f = frequency;
-    double x = amplitude;
+    {
+        double f = frequency;
+        double x = amplitude;
 
-    for (int i = 0; i < number_of_nodes; ++i) {
+        for (int i = 0; i < number_of_nodes; ++i) {
 
-        /*
-            Build a left-leaning tree, so that the depth is equal to the number of nodes as
-            passed on the command line. We could get away with a much larger number
-            of nodes by using a balanced tree.
-        */
+            /*
+                Build a left-leaning tree, so that the depth is equal to the number of nodes as
+                passed on the command line. We could get away with a much larger number
+                of nodes by using a balanced tree.
+            */
 
-        a = fa_add(fa_multiply(fa_signal_sin(fa_signal_line(f)), constant(x)), a);
-        f *= 1.12;
-        x *= 0.84;
+            gen = fa_add(fa_multiply(fa_signal_sin(fa_signal_line(f)), constant(x)), gen);
+            f *= 1.12;
+            x *= 0.84;
+        }
     }
 
     // signal_t a = fa_multiply(fa_signal_random(), constant(0.1));
 
-    fa_with_session_(s) {
-        fa_with_default_out(s, o)
-        fa_let(out, list(a, a)) {
-            fa_audio_set_parameter(string("sample-rate"), f64(sample_rate), s);
-            fa_audio_set_parameter(string("vector-size"), i32(vector_size), s);
-            fa_audio_set_parameter(string("latency"),     f64(latency),     s);
+    fa_with_session_(session) {
+        fa_with_default_out(session, output) {
+            fa_audio_set_parameter(string("sample-rate"), f64(sample_rate), session);
+            fa_audio_set_parameter(string("vector-size"), i32(vector_size), session);
+            fa_audio_set_parameter(string("latency"),     f64(latency),     session);
 
-            fa_open_stereo_out(st, o, out) {
+            fa_open_stereo_out(stream, output, list(gen, gen)) {
                 if (duration < 0) {
                     while (1) {
                         fa_thread_sleep(10000);
