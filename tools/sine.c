@@ -17,6 +17,20 @@ list_t just(ptr_t x, list_t xs)
 }
 
 // TODO move
+#define fa_map_get_the(TYPE, KEY, MAP) \
+    (fa_peek_##TYPE(fa_map_get(KEY, MAP)))
+
+#define fa_map_get_int32(KEY, MAP) fa_map_get_the(int32, KEY, MAP)
+#define fa_map_get_int64(KEY, MAP) fa_map_get_the(int64, KEY, MAP)
+#define fa_map_get_double(KEY, MAP) fa_map_get_the(double, KEY, MAP)
+
+#define fa_map_get_or(TYPE, KEY, DEFAULT, MAP) \
+    (fa_map_get(KEY, opts) ? fa_peek_##TYPE(fa_map_get(KEY, MAP)) : DEFAULT)
+
+#define fa_map_get_int32_or(KEY, DEFAULT, MAP) fa_map_get_or(int32, KEY, DEFAULT, MAP)
+#define fa_map_get_int64_or(KEY, DEFAULT, MAP) fa_map_get_or(int64, KEY, DEFAULT, MAP)
+#define fa_map_get_double_or(KEY, DEFAULT, MAP) fa_map_get_or(double, KEY, DEFAULT, MAP)
+
 #define fa_sizeof_array(A) sizeof(A) / sizeof(A[0])
 #define fa_option_show_all(A,S) fa_option_show(fa_sizeof_array(A),A,S)
 #define fa_option_parse_all(A,AC,AV) fa_option_parse(fa_sizeof_array(A), A, AC, AV)
@@ -33,14 +47,23 @@ fa_option_t options[] = {
     { "n", "number-of-nodes", "Number of nodes (default 1)",  fa_option_integral, "1"       },
 };
 
-void run_sines(int nodes, int duration, double amplitude, int frequency, int sample_rate, int vector_size, double latency)
+void run_sines(map_t opts)
 {
     signal_t a = constant(0);
+
+    int    number_of_nodes = fa_map_get_int32(string("number-of-nodes"), opts);
+    int    duration        = fa_map_get_int32(string("duration"),        opts);
+    double amplitude       = fa_map_get_double(string("amplitude"),      opts);
+    int    frequency       = fa_map_get_int32(string("frequency"),       opts);
+
+    int    sample_rate     = fa_map_get_int32(string("sample-rate"),     opts);
+    int    vector_size     = fa_map_get_int32(string("vector-size"),     opts);
+    double latency         = fa_map_get_double(string("latency"),        opts);
 
     double f = frequency;
     double x = amplitude;
 
-    for (int i = 0; i < nodes; ++i) {
+    for (int i = 0; i < number_of_nodes; ++i) {
 
         /*
             Build a left-leaning tree, so that the depth is equal to the number of nodes as
@@ -89,22 +112,6 @@ void run_sines(int nodes, int duration, double amplitude, int frequency, int sam
     }
 }
 
-// TODO move
-#define fa_map_get_the(TYPE, KEY, MAP) \
-    (fa_peek_##TYPE(fa_map_get(KEY, MAP)))
-
-#define fa_map_get_int32(KEY, MAP) fa_map_get_the(int32, KEY, MAP)
-#define fa_map_get_int64(KEY, MAP) fa_map_get_the(int64, KEY, MAP)
-#define fa_map_get_double(KEY, MAP) fa_map_get_the(double, KEY, MAP)
-
-#define fa_map_get_or(TYPE, KEY, DEFAULT, MAP) \
-    (fa_map_get(KEY, opts) ? fa_peek_##TYPE(fa_map_get(KEY, MAP)) : DEFAULT)
-
-#define fa_map_get_int32_or(KEY, DEFAULT, MAP) fa_map_get_or(int32, KEY, DEFAULT, MAP)
-#define fa_map_get_int64_or(KEY, DEFAULT, MAP) fa_map_get_or(int64, KEY, DEFAULT, MAP)
-#define fa_map_get_double_or(KEY, DEFAULT, MAP) fa_map_get_or(double, KEY, DEFAULT, MAP)
-
-
 int main(int argc, char const *argv[])
 {
 #ifdef FAUDIO_DEBUG
@@ -115,19 +122,9 @@ int main(int argc, char const *argv[])
     fa_unpair(fa_option_parse_all(options, argc, (char **) argv), opts, _) {
         if (fa_map_has_key(string("h"), opts)) {
             fa_option_show_all(options, (char *) argv[0]);
-            exit(0);
+        } else {
+            run_sines(opts);
         }
-
-        int    number_of_nodes = fa_map_get_int32(string("number-of-nodes"), opts);
-        int    duration        = fa_map_get_int32(string("duration"),        opts);
-        double amplitude       = fa_map_get_double(string("amplitude"),      opts);
-        int    frequency       = fa_map_get_int32(string("frequency"),       opts);
-
-        int    sample_rate     = fa_map_get_int32(string("sample-rate"),     opts);
-        int    vector_size     = fa_map_get_int32(string("vector-size"),     opts);
-        double latency         = fa_map_get_double(string("latency"),        opts);
-
-        run_sines(number_of_nodes, duration, amplitude, frequency, sample_rate, vector_size, latency);
         mark_used(_);
     }
     fa_terminate();
