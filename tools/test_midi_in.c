@@ -123,7 +123,7 @@ void run_midi()
         break;
 
     case kEchodls:
-        printf("Echoing via DLS\n");
+        printf("Echoing via internal synth\n");
         fa_midi_add_message_callback(print_and_echo_dls, aost, ist);
         break;
     }

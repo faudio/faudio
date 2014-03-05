@@ -4,7 +4,7 @@
 
 /*
     This program plays a couple of notes on the standard audio output device using
-    dlsMusicDevice (OS X only).
+    internal synth (OS X only).
  */
 
 
@@ -17,11 +17,20 @@ list_t just(ptr_t x, list_t xs)
 
 void run_dls()
 {
+#ifndef _WIN32
+        fa_pair_t synth = fa_signal_dls();
+        string_t name   = string("dls");
+#else
+        fa_pair_t synth = fa_signal_synth(string("C:\\sf.sf2"));
+        string_t name   = string("fluid");
+#endif
+
     if (RT) {
         fa_audio_session_t s = fa_audio_begin_session();
         fa_audio_device_t i  = fa_audio_default_input(s);
         fa_audio_device_t o  = fa_audio_default_output(s);
-        list_t out           = fa_pair_to_list(fa_signal_dls());
+
+        list_t out           = fa_pair_to_list(synth);
 
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
 
@@ -40,11 +49,11 @@ void run_dls()
 
             fa_action_t chord = fa_action_many(list(
                                                    pair(
-                                                       fa_action_send(string("dls"), fa_midi_message_create_simple(0x90, 64 + ((i % 12) * 3), 90)),
+                                                       fa_action_send(name, fa_midi_message_create_simple(0x90, 64 + ((i % 12) * 3), 90)),
                                                        hms(0, 0, 0)
                                                    ),
                                                    pair(
-                                                       fa_action_send(string("dls"), fa_midi_message_create_simple(0x90, 60 + ((i % 12) * 3), 90)),
+                                                       fa_action_send(name, fa_midi_message_create_simple(0x90, 60 + ((i % 12) * 3), 90)),
                                                        hms(0, 0, 0)
                                                    )
                                                ));
@@ -62,15 +71,15 @@ void run_dls()
         fa_signal_run_file(44100 * 60, list(
                                pair(
                                    hms(0, 0, 0),
-                                   fa_action_send(string("dls"), fa_midi_message_create_simple(0x90, 60 + ((0 % 12) * 3), 90))
+                                   fa_action_send(name, fa_midi_message_create_simple(0x90, 60 + ((0 % 12) * 3), 90))
                                ),
                                pair(
                                    hms(0, 0, 1),
-                                   fa_action_send(string("dls"), fa_midi_message_create_simple(0x90, 60 + ((1 % 12) * 3), 90))
+                                   fa_action_send(name, fa_midi_message_create_simple(0x90, 60 + ((1 % 12) * 3), 90))
                                ),
                                pair(
                                    hms(0, 0, 2),
-                                   fa_action_send(string("dls"), fa_midi_message_create_simple(0x90, 60 + ((2 % 12) * 3), 90))
+                                   fa_action_send(name, fa_midi_message_create_simple(0x90, 60 + ((2 % 12) * 3), 90))
                                )
 
                            ),
