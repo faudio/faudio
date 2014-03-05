@@ -10,21 +10,23 @@
  */
 
 fa_option_t option_declaration[] = {
-    { "a", "amplitude",       "Amplitude",        fa_option_floating, "0.1"     },
-    { "l", "latency",         "Latency",          fa_option_floating, "0.040"   },
-    { "f", "frequency",       "Frequency",        fa_option_integral, "410"     },
     { "d", "duration",        "Duration",         fa_option_integral, "5000"    },
+    { "f", "frequency",       "Frequency",        fa_option_integral, "410"     },
+    { "a", "amplitude",       "Amplitude",        fa_option_floating, "0.1"     },
+    { "n", "number-of-nodes", "Number of nodes",  fa_option_integral, "1"       },
+
+    { "l", "latency",         "Latency",          fa_option_floating, "0.040"   },
     { "r", "sample-rate",     "Sample rate",      fa_option_integral, "44100"   },
     { "v", "vector-size",     "Vector size",      fa_option_integral, "64"      },
-    { "n", "number-of-nodes", "Number of nodes",  fa_option_integral, "1"       },
 };
 
 void run_sines(map_t opts)
 {
-    const int    number_of_nodes = fa_map_get_int32(string("number-of-nodes"), opts);
     const int    duration        = fa_map_get_int32(string("duration"),        opts);
-    const double amplitude       = fa_map_get_double(string("amplitude"),      opts);
+
     const int    frequency       = fa_map_get_int32(string("frequency"),       opts);
+    const double amplitude       = fa_map_get_double(string("amplitude"),      opts);
+    const int    number_of_nodes = fa_map_get_int32(string("number-of-nodes"), opts);
 
     const int    sample_rate     = fa_map_get_int32(string("sample-rate"),     opts);
     const int    vector_size     = fa_map_get_int32(string("vector-size"),     opts);
