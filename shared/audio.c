@@ -744,7 +744,7 @@ stream_t fa_audio_open_stream(device_t input,
 void fa_audio_close_stream(stream_t stream)
 {
     inform(string("Closing real-time audio stream"));
-    inform(fa_string_format_integral("  Stream: %p \n", (long) stream));
+    // inform(fa_string_format_integral("  Stream: %p \n", (long) stream));
 
     {
         // TODO need atomic
@@ -1065,7 +1065,13 @@ int native_audio_callback(const void                       *input,
 void native_finished_callback(void *data)
 {
     stream_t stream = data;
-    inform(fa_string_format_integral("Stream flag result (0 = ok): %d", stream->pa_flags));
+    if (stream->pa_flags & paInputOverflow) {
+        warn(string("Input overflow detected"));
+    }
+    if (stream->pa_flags & paOutputUnderflow) {
+        warn(string("Output underflow detected"));
+    }
+    // inform(fa_string_format_integral("Stream flag result (0 = ok): %d", stream->pa_flags));
 
     after_processing(data);
 }
