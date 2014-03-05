@@ -86,11 +86,10 @@ int main(int argc, char const *argv[])
 #endif
     fa_with_faudio() {
         fa_with_options(
-            option_declaration, 
-            argc, argv, 
-            options, args) 
-        {
+            option_declaration,
+            argc, argv,
+            options, args) {
             run_sines(options);
-        }        
+        }
     }
 }
