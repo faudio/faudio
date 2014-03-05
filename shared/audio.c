@@ -327,10 +327,10 @@ session_t fa_audio_begin_session()
         if (pa_status) {
             session = (session_t) audio_device_error(string("Overlapping real-time audio sessions"));
         } else {
-            inform(string("Starting up PortAudio"));
+            inform(string("    Starting up PortAudio"));
             Pa_Initialize();
             pa_status = true;
-            inform(string("Started PortAudio"));
+            inform(string("    Done starting PortAudio"));
 
             session = new_session();
             session_init_devices(session);
@@ -342,7 +342,7 @@ session_t fa_audio_begin_session()
     session->status_closure = pair(_status_callback, session);
     add_audio_status_listener(session->status_closure);
 
-    inform(string("Finished initializing session"));
+    inform(string("Done initializing session"));
     return session;
 }
 
@@ -542,10 +542,10 @@ fa_string_t fa_audio_full_name(device_t device)
     string_t str = string("");
     fa_write_string(str, fa_audio_host_name(device));
     fa_write_string(str, string(" "));
-    fa_write_string(str, fa_audio_name(device));
+    fa_write_string(str, fa_string_format_integral("[%d/", fa_audio_input_channels(device)));
+    fa_write_string(str, fa_string_format_integral("%d]", fa_audio_output_channels(device)));
     fa_write_string(str, string(" "));
-    fa_write_string(str, fa_string_format_integral("(%d in, ", fa_audio_input_channels(device)));
-    fa_write_string(str, fa_string_format_integral("%d out)", fa_audio_output_channels(device)));
+    fa_write_string(str, fa_audio_name(device));
     return str;
 }
 
@@ -603,8 +603,8 @@ inline static
 void print_audio_info(device_t input, device_t output)
 {
     inform(string("Opening real-time audio stream"));
-    inform(string_dappend(string("    Input:         "), input ? fa_audio_full_name(input) : string("-")));
-    inform(string_dappend(string("    Output:        "), output ? fa_audio_full_name(output) : string("-")));
+    inform(string_dappend(string("    Input:         "), input ? fa_audio_full_name(input) : string("N/A")));
+    inform(string_dappend(string("    Output:        "), output ? fa_audio_full_name(output) : string("N/A")));
 
     fa_let(session, input ? input->session : output->session) {
         inform(fa_string_format_floating("    Sample Rate:   %2f", session->parameters.sample_rate));
@@ -616,7 +616,7 @@ void print_audio_info(device_t input, device_t output)
 inline static
 void print_signal_tree(ptr_t x)
 {
-    inform(fa_string_show(x));
+    inform(string_dappend(string("    Signal Tree: \n"), fa_string_show(x)));
 }
 
 inline static
@@ -874,8 +874,8 @@ ptr_t audio_control_thread(ptr_t x)
         {
             ptr_t nameValue;
             
-            while (0) // FIXME
-            // while ((nameValue = fa_atomic_queue_read(stream->out_controls)))
+            // while (0) // FIXME
+            while ((nameValue = fa_atomic_queue_read(stream->out_controls)))
             {
                 int n = stream->callbacks.count;
 
@@ -969,8 +969,7 @@ void handle_outgoing_message(ptr_t x, string_t name, ptr_t value)
 {
     stream_t stream = x;
     mark_used(stream);                         
-    // FIXME
-    // fa_atomic_queue_write(stream->out_controls, pair(name, value));
+    fa_atomic_queue_write(stream->out_controls, pair(name, value));
 }
 
 void during_processing(stream_t stream, unsigned count, float **input, float **output)
