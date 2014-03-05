@@ -1,10 +1,10 @@
 
 # Uses EXTS, APPLE and MSYS + options and MAIN_LIBRARY
 
-function(add_tool2 name extension)
+function(add_tool2 prefix name extension)
   add_executable(${name} ${SRCS_ALL} "${name}.${extension}")
   set_target_properties(${name} PROPERTIES 
-    OUTPUT_NAME                 "fa_${name}"
+    OUTPUT_NAME                 "${prefix}${name}"
     RUNTIME_OUTPUT_DIRECTORY    "../bin"
     )
   if(APPLE)
@@ -15,8 +15,10 @@ function(add_tool2 name extension)
 endfunction()
 
 function(add_tool name)
-  add_tool2(${name} c)
+  add_tool2(faudio- ${name} c)
 endfunction()
+
+add_tool2("" faudio c)
 
 add_tool(options)
 add_tool(list_audio)
