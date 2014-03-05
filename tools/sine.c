@@ -32,8 +32,22 @@ list_t just(ptr_t x, list_t xs)
 #define fa_option_show_all(A,S) fa_option_show(fa_sizeof_array(A),A,S)
 #define fa_option_parse_all(A,AC,AV) fa_option_parse(fa_sizeof_array(A), A, AC, AV)
 
+#define fa_with_faudio() \
+    fa_with(__faudio__, fa_initialize2(), fa_terminate2(__faudio__))
 
-fa_option_t options[] = {
+#define fa_with_options(OPTIONS, ARGC, ARGV, OPTS, ARGS) \
+    fa_let(__res__, fa_option_parse_all(OPTIONS, ARGC, (char **) ARGV))   \
+        fa_let(OPTS, fa_pair_first(__res__))                              \
+            fa_let(ARGS, fa_pair_second(__res__))                         \
+                if (                                                      \
+                    (OPTS != (ARGS + 1)) && /* Use variables */           \
+                    fa_map_has_key(string("h"), OPTS)                     \
+                    )                                                     \
+                    fa_option_show_all(OPTIONS, (char *) ARGV[0]);        \
+                    else                                                  \
+
+
+fa_option_t option_declaration[] = {
     // { "h", "help",        "Show options",                 NULL },
     { "a", "amplitude",       "Amplitude   (default 0.1)",    fa_option_floating, "0.1"     },
     { "l", "latency",         "Latency     (default 0.040)",  fa_option_floating, "0.040"   },
@@ -109,20 +123,25 @@ void run_sines(map_t opts)
     }
 }
 
-int main(int argc, char const *argv[])
+
+int fa_initialize2()
+{
+    fa_initialize();
+    return 0;
+}
+void fa_terminate2(int x)
+{
+    fa_terminate();
+}
+
+int main(int ac, char const *av[])
 {
 #ifdef FAUDIO_DEBUG
     fa_set_log_std();
 #endif
-    fa_initialize();
-
-    fa_unpair(fa_option_parse_all(options, argc, (char **) argv), opts, _) {
-        if (fa_map_has_key(string("h"), opts)) {
-            fa_option_show_all(options, (char *) argv[0]);
-        } else {
-            run_sines(opts);
-        }
-        mark_used(_);
+    fa_with_faudio() {
+        fa_with_options(option_declaration, ac, av, options, args) {
+            run_sines(options);
+        }        
     }
-    fa_terminate();
 }
