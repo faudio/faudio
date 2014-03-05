@@ -114,7 +114,7 @@ int main(int argc, char const *argv[])
         int vector_size = fa_map_get_int32_or(string("vector-size"), 64, opts);
         double latency = fa_map_get_double_or(string("latency"), 0.002, opts);
 
-        printf("freq=%d, rate=%d, duration=%d, amplitude=%lf\n", frequency, sample_rate, duration, amplitude);
+        // printf("freq=%d, rate=%d, duration=%d, amplitude=%lf\n", frequency, sample_rate, duration, amplitude);
         helper_function(number_of_nodes, duration, amplitude, frequency, sample_rate, vector_size, latency);
 
         mark_used(_);

@@ -101,7 +101,7 @@ void run_clicks()
 
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
         fa_audio_add_message_callback(_message_out, NULL, st);
-        fa_audio_add_message_callback(_message_out2, NULL, st);
+        // fa_audio_add_message_callback(_message_out2, NULL, st);
            
         if (fa_check(st)) {
             fa_error_log(st, NULL);
