@@ -103,11 +103,11 @@ void fa_option_show(int optc, opt_t optv[], char *header)
     printf("Options:\n");
 
     for (int i = 0; i < optc; ++i) {
-        printf("  -%-8s --%-20s %s (default %s)\n", 
-            optv[i].short_name, 
-            optv[i].long_name, 
-            optv[i].description, 
-            optv[i].default_value);
+        printf("  -%-8s --%-20s %s (default %s)\n",
+               optv[i].short_name,
+               optv[i].long_name,
+               optv[i].description,
+               optv[i].default_value);
     }
 
     printf("\n");
