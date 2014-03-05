@@ -1,4 +1,16 @@
 
+# v2.9.10
+
+- Adds support for outgoing control values
+
+- Fixes issue leading to crashes with input devices with a number of channels != 2
+
+- Improvements to tools, names and argument standarized to `faudio` (see `faudio help`)
+
+- Changes `record` tool to record stereo files by default (compatible with the default behaviour of `play`)
+
+- Fixes problems with default sample rate
+
 # v2.9.9
 
 - Fixes issue with hot-plugging of ASIO devices
