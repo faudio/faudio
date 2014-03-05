@@ -50,32 +50,23 @@ void run_sines(map_t opts)
 
     // signal_t a = fa_multiply(fa_signal_random(), constant(0.1));
 
-    {
-        fa_audio_session_t s = fa_audio_begin_session();
-        fa_audio_device_t o  = fa_audio_default_output(s);
-        list_t out          = list(a, a);
+    fa_with_session_(s) {
+        fa_with_default_out(s, o)
+        fa_let(out, list(a, a)) {
+            fa_audio_set_parameter(string("sample-rate"), f64(sample_rate), s);
+            fa_audio_set_parameter(string("vector-size"), i32(vector_size), s);
+            fa_audio_set_parameter(string("latency"),     f64(latency),     s);
 
-        fa_audio_set_parameter(string("sample-rate"), f64(sample_rate), s);
-        fa_audio_set_parameter(string("vector-size"), i32(vector_size), s);
-        fa_audio_set_parameter(string("latency"),     f64(latency),     s);
-
-        mark_used(o);
-        fa_audio_stream_t st = fa_audio_open_stream(NULL, o, just, out);
-
-        if (fa_check(st)) {
-            fa_error_log(st, NULL);
-        }
-
-        if (duration < 0) {
-            while (1) {
-                fa_thread_sleep(10000);
+            fa_open_stereo_out(st, o, out) {
+                if (duration < 0) {
+                    while (1) {
+                        fa_thread_sleep(10000);
+                    }
+                } else {
+                    fa_thread_sleep(duration);
+                }
             }
-        } else {
-            fa_thread_sleep(duration);
         }
-
-        fa_audio_close_stream(st);
-        fa_audio_end_session(s);
     }
 }
 

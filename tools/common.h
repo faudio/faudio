@@ -52,3 +52,15 @@ void fa_terminate2(int x)
                     fa_option_show_all(OPTIONS, (char *) ARGV[0]);        \
                     else                                                  \
 
+
+#define fa_with_session_(S) \
+    fa_with_temp(S, fa_audio_begin_session())
+
+#define fa_with_default_out(S, O) \
+    fa_let(O, fa_audio_default_output(S))
+
+#define fa_open_stereo_out(ST, O, OUT) \
+    fa_with_temp(ST, fa_audio_open_stream(NULL, O, just, OUT))  \
+    if (fa_check(ST)) {                                         \
+        fa_error_log(ST, NULL);                                 \
+    } else
