@@ -1,15 +1,11 @@
 
 #include <fa/fa.h>
 #include <fa/util.h>
+#include "common.h"
 
 /*
     This program does plays alternating inpulses the left and right speaker.
  */
-
-list_t just(ptr_t x, list_t inputs)
-{
-    return x;
-}
 
 void play_impulses()
 {
@@ -40,10 +36,10 @@ void play_impulses()
 
 int main(int argc, char const *argv[])
 {
+#ifdef FAUDIO_DEBUG
     fa_set_log_std();
-    fa_initialize();
-
-    play_impulses();
-
-    fa_terminate();
+#endif
+    fa_with_faudio() {
+        play_impulses();
+    }
 }
