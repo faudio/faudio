@@ -8,9 +8,6 @@
 
  */
 
-#define PI  3.1415
-#define TAU (2 * PI)
-
 list_t just(ptr_t x, list_t xs)
 {
     return x;
