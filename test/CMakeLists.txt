@@ -7,7 +7,7 @@ if(BUILD_TESTS)
   add_executable(fa_tests ${SRCS_ALL} main.c)
   
   set_target_properties(fa_tests PROPERTIES 
-    OUTPUT_NAME                 "fa_tests"
+    OUTPUT_NAME                 "faudio-tests"
     RUNTIME_OUTPUT_DIRECTORY    "../bin"
     )
   if(APPLE)

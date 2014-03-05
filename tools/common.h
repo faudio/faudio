@@ -64,3 +64,15 @@ void fa_terminate2(int x)
     if (fa_check(ST)) {                                         \
         fa_error_log(ST, NULL);                                 \
     } else
+    
+
+inline static
+void fa_set_log_tool() {
+#ifdef FAUDIO_DEBUG
+    fa_set_log_std();
+#else
+    if(getenv("FAUDIO_DEBUG") && 0 != strcmp(getenv("FAUDIO_DEBUG"), "0")) {
+        fa_set_log_std();        
+    }
+#endif
+}

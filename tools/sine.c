@@ -73,9 +73,7 @@ void run_sines(map_t opts)
 
 int main(int argc, char const *argv[])
 {
-#ifdef FAUDIO_DEBUG
-    fa_set_log_std();
-#endif
+    fa_set_log_tool();
     fa_with_faudio() {
         fa_with_options(
             option_declaration,

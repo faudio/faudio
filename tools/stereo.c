@@ -36,9 +36,7 @@ void play_impulses()
 
 int main(int argc, char const *argv[])
 {
-#ifdef FAUDIO_DEBUG
-    fa_set_log_std();
-#endif
+    fa_set_log_tool();
     fa_with_faudio() {
         play_impulses();
     }

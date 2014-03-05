@@ -62,11 +62,11 @@ doc:
 
 .PHONY: test
 test: all
-	build/bin/fa_tests;
+	build/bin/faudio-tests;
 
 .PHONY: debug
 debug: all
-	$(DEBUGGER) build/bin/fa_tests;
+	$(DEBUGGER) build/bin/faudio-tests;
 
 .PHONY: runsc
 runsc: all

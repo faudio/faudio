@@ -60,9 +60,7 @@ void helper_function(string_t path)
 
 int main(int argc, char const *argv[])
 {
-#ifdef FAUDIO_DEBUG
-    fa_set_log_std();
-#endif
+    fa_set_log_tool();
     fa_with_faudio() {
         if (argc < 2) {
             fa_print_ln(string("Usage: fa_play [file]"));
