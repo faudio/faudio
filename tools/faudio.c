@@ -12,7 +12,18 @@ int main(int argc, char const *argv[])
     written += sprintf(&cmd[written], "faudio-");
 
     for (int i = 1; i < argc; ++i) {
-        written += sprintf(&cmd[written], "%s ", argv[i]);
+        if (0 == strcmp(argv[i], "help"))
+            written += sprintf(&cmd[written], "%s ", "version");
+        else if (0 == strcmp(argv[i], "-h"))
+            written += sprintf(&cmd[written], "%s ", "version");
+        else if (0 == strcmp(argv[i], "--help"))
+            written += sprintf(&cmd[written], "%s ", "version");
+        else if (0 == strcmp(argv[i], "-v"))
+            written += sprintf(&cmd[written], "%s ", "version");
+        else if (0 == strcmp(argv[i], "--version"))
+            written += sprintf(&cmd[written], "%s ", "version");
+        else
+            written += sprintf(&cmd[written], "%s ", argv[i]);
     }
     system(cmd);
     // printf("\n|%s|\n", cmd);

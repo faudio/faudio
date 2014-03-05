@@ -1,6 +1,7 @@
 
 #include <fa/fa.h>
 #include <fa/util.h>
+#include "common.h"
 
 /*
     This program records a 10 second stereo file from the default input device.
@@ -67,14 +68,14 @@ void helper_function(string_t path)
 
 int main(int argc, char const *argv[])
 {
+#ifdef FAUDIO_DEBUG
     fa_set_log_std();
-    fa_initialize();
-
-    if (argc < 2) {
-        fa_print_ln(string("Usage: fa_record FILE"));
-    } else {
-        helper_function(string((fa_string_utf8_t) argv[1]));
+#endif
+    fa_with_faudio() {
+        if (argc < 2) {
+            fa_print_ln(string("Usage: fa_record [file]"));
+        } else {
+            helper_function(string((fa_string_utf8_t) argv[1]));
+        }
     }
-
-    fa_terminate();
 }
