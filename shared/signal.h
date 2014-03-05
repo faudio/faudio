@@ -20,7 +20,7 @@ struct _state_base_t {
 #define kMaxSignalTreeDepth             90
 
 #define kDefSampleRate                  44100
-#define kDefLatency                     0.002
+#define kDefLatency                     0.040
 #define kAudioSchedulerIntervalMillis   1
 
 #define kMaxCustomProcs                 10
