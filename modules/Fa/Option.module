@@ -37,10 +37,11 @@ module Fa.Option
     type Parser = (Char * -> Ptr)*;
 
     type Option = struct {
-        shortName   : Char*,
-        longName    : Char*,
-        description : Char*,
-        parser      : Parser
+        shortName       : Char*,
+        longName        : Char*,
+        description     : Char*,
+        parser          : Parser,
+        defaultValue    : Char*
     };
 
     /** Parses integers. */

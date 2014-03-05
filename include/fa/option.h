@@ -51,6 +51,7 @@ typedef struct {
             char * long_name;
             char * description;
             fa_option_parser_t parser;
+            char * default_value;
         } fa_option_t;
 
 /** Parses integers. 

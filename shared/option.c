@@ -16,7 +16,7 @@ pair_t maybe_parse(int optc, opt_t optv[], const char *short_name, const char *l
             ||
             (long_name && !strcmp(long_name, option.long_name))
         ) {
-            ptr_t result = option.parser((char *) value);
+            ptr_t result  = option.parser((char *) value);
 
             if (result) {
                 return pair(string(option.long_name), result);
@@ -28,6 +28,22 @@ pair_t maybe_parse(int optc, opt_t optv[], const char *short_name, const char *l
 
     return NULL;
 }
+
+
+// Modify a map by adding defaults (if not set)
+map_t add_defaults(int optc, opt_t optv[], map_t args)
+{
+    for (int i = 0; i < optc; i++) {
+        opt_t option = optv[i];
+
+        ptr_t result = option.parser(option.default_value);
+        if (result) {
+            args = fa_map_dadd(string(option.long_name), result, args);
+        }
+    }
+    return args;
+}
+
 
 pair_t fa_option_parse(int optc, fa_option_t optv[1], int argc, char *argv[])
 {
@@ -76,7 +92,7 @@ pair_t fa_option_parse(int optc, fa_option_t optv[1], int argc, char *argv[])
         }
     }
 
-    return pair(args, anon_args); // FIXME
+    return pair(add_defaults(optc, optv, args), anon_args); // FIXME
 }
 
 void fa_option_show(int optc, opt_t optv[], char *header)

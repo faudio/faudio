@@ -24,13 +24,13 @@ list_t just(ptr_t x, list_t xs)
 
 fa_option_t options[] = {
     // { "h", "help",        "Show options",                 NULL },
-    { "a", "amplitude",       "Amplitude   (default 0.1)",    fa_option_floating },
-    { "l", "latency",         "Latency     (default 0.002)",  fa_option_floating },
-    { "f", "frequency",       "Frequency   (default 440)",    fa_option_integral },
-    { "d", "duration",        "Duration    (default 5000)",   fa_option_integral },
-    { "r", "sample-rate",     "Sample rate (default 44100)",  fa_option_integral },
-    { "v", "vector-size",     "Vector size (default 64)",     fa_option_integral },
-    { "n", "number-of-nodes", "Number of nodes (default 1)",  fa_option_integral },
+    { "a", "amplitude",       "Amplitude   (default 0.1)",    fa_option_floating, "0.1"     },
+    { "l", "latency",         "Latency     (default 0.040)",  fa_option_floating, "0.040"   },
+    { "f", "frequency",       "Frequency   (default 440)",    fa_option_integral, "410"     },
+    { "d", "duration",        "Duration    (default 5000)",   fa_option_integral, "5000"    },
+    { "r", "sample-rate",     "Sample rate (default 44100)",  fa_option_integral, "44100"   },
+    { "v", "vector-size",     "Vector size (default 64)",     fa_option_integral, "64"      },
+    { "n", "number-of-nodes", "Number of nodes (default 1)",  fa_option_integral, "1"       },
 };
 
 void run_sines(int nodes, int duration, double amplitude, int frequency, int sample_rate, int vector_size, double latency)
@@ -90,6 +90,13 @@ void run_sines(int nodes, int duration, double amplitude, int frequency, int sam
 }
 
 // TODO move
+#define fa_map_get_the(TYPE, KEY, MAP) \
+    (fa_peek_##TYPE(fa_map_get(KEY, MAP)))
+
+#define fa_map_get_int32(KEY, MAP) fa_map_get_the(int32, KEY, MAP)
+#define fa_map_get_int64(KEY, MAP) fa_map_get_the(int64, KEY, MAP)
+#define fa_map_get_double(KEY, MAP) fa_map_get_the(double, KEY, MAP)
+
 #define fa_map_get_or(TYPE, KEY, DEFAULT, MAP) \
     (fa_map_get(KEY, opts) ? fa_peek_##TYPE(fa_map_get(KEY, MAP)) : DEFAULT)
 
@@ -100,7 +107,9 @@ void run_sines(int nodes, int duration, double amplitude, int frequency, int sam
 
 int main(int argc, char const *argv[])
 {
+#ifdef FAUDIO_DEBUG
     fa_set_log_std();
+#endif
     fa_initialize();
 
     fa_unpair(fa_option_parse_all(options, argc, (char **) argv), opts, _) {
@@ -109,13 +118,14 @@ int main(int argc, char const *argv[])
             exit(0);
         }
 
-        int duration        = fa_map_get_int32_or(string("duration"),        5000, opts);
-        int frequency       = fa_map_get_int32_or(string("frequency"),       440, opts);
-        int number_of_nodes = fa_map_get_int32_or(string("number-of-nodes"), 1, opts);
-        double amplitude    = fa_map_get_double_or(string("amplitude"),      0.1, opts);
-        int sample_rate     = fa_map_get_int32_or(string("sample-rate"),     44100, opts);
-        int vector_size     = fa_map_get_int32_or(string("vector-size"),     64, opts);
-        double latency      = fa_map_get_double_or(string("latency"),        0.02, opts);
+        int    number_of_nodes = fa_map_get_int32(string("number-of-nodes"), opts);
+        int    duration        = fa_map_get_int32(string("duration"),        opts);
+        double amplitude       = fa_map_get_double(string("amplitude"),      opts);
+        int    frequency       = fa_map_get_int32(string("frequency"),       opts);
+
+        int    sample_rate     = fa_map_get_int32(string("sample-rate"),     opts);
+        int    vector_size     = fa_map_get_int32(string("vector-size"),     opts);
+        double latency         = fa_map_get_double(string("latency"),        opts);
 
         run_sines(number_of_nodes, duration, amplitude, frequency, sample_rate, vector_size, latency);
         mark_used(_);
