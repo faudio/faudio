@@ -33,7 +33,7 @@ fa_option_t options[] = {
     { "n", "number-of-nodes", "Number of nodes (default 1)",  fa_option_integral },
 };
 
-void helper_function(int nodes, int duration, double amplitude, int frequency, int sample_rate, int vector_size, double latency)
+void run_sines(int nodes, int duration, double amplitude, int frequency, int sample_rate, int vector_size, double latency)
 {
     signal_t a = constant(0);
 
@@ -117,9 +117,7 @@ int main(int argc, char const *argv[])
         int vector_size     = fa_map_get_int32_or(string("vector-size"),     64, opts);
         double latency      = fa_map_get_double_or(string("latency"),        0.02, opts);
 
-        // printf("freq=%d, rate=%d, duration=%d, amplitude=%lf\n", frequency, sample_rate, duration, amplitude);
-        helper_function(number_of_nodes, duration, amplitude, frequency, sample_rate, vector_size, latency);
-
+        run_sines(number_of_nodes, duration, amplitude, frequency, sample_rate, vector_size, latency);
         mark_used(_);
     }
     fa_terminate();
