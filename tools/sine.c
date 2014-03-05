@@ -15,9 +15,9 @@ fa_option_t option_declaration[] = {
     { "a", "amplitude",       "Amplitude",        fa_option_floating, "0.1"     },
     { "n", "number-of-nodes", "Number of nodes",  fa_option_integral, "1"       },
 
-    { "l", "latency",         "Latency",          fa_option_floating, "0.040"   },
     { "r", "sample-rate",     "Sample rate",      fa_option_integral, "44100"   },
     { "v", "vector-size",     "Vector size",      fa_option_integral, "64"      },
+    { "l", "latency",         "Latency",          fa_option_floating, "0.040"   },
 };
 
 void run_sines(map_t opts)
