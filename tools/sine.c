@@ -10,13 +10,13 @@
  */
 
 fa_option_t option_declaration[] = {
-    { "a", "amplitude",       "Amplitude   (default 0.1)",    fa_option_floating, "0.1"     },
-    { "l", "latency",         "Latency     (default 0.040)",  fa_option_floating, "0.040"   },
-    { "f", "frequency",       "Frequency   (default 440)",    fa_option_integral, "410"     },
-    { "d", "duration",        "Duration    (default 5000)",   fa_option_integral, "5000"    },
-    { "r", "sample-rate",     "Sample rate (default 44100)",  fa_option_integral, "44100"   },
-    { "v", "vector-size",     "Vector size (default 64)",     fa_option_integral, "64"      },
-    { "n", "number-of-nodes", "Number of nodes (default 1)",  fa_option_integral, "1"       },
+    { "a", "amplitude",       "Amplitude",        fa_option_floating, "0.1"     },
+    { "l", "latency",         "Latency",          fa_option_floating, "0.040"   },
+    { "f", "frequency",       "Frequency",        fa_option_integral, "410"     },
+    { "d", "duration",        "Duration",         fa_option_integral, "5000"    },
+    { "r", "sample-rate",     "Sample rate",      fa_option_integral, "44100"   },
+    { "v", "vector-size",     "Vector size",      fa_option_integral, "64"      },
+    { "n", "number-of-nodes", "Number of nodes",  fa_option_integral, "1"       },
 };
 
 void run_sines(map_t opts)

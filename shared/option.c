@@ -37,10 +37,12 @@ map_t add_defaults(int optc, opt_t optv[], map_t args)
         opt_t option = optv[i];
 
         ptr_t result = option.parser(option.default_value);
+
         if (result) {
             args = fa_map_dadd(string(option.long_name), result, args);
         }
     }
+
     return args;
 }
 
@@ -101,7 +103,11 @@ void fa_option_show(int optc, opt_t optv[], char *header)
     printf("Options:\n");
 
     for (int i = 0; i < optc; ++i) {
-        printf("  -%-8s --%-20s %s\n", optv[i].short_name, optv[i].long_name, optv[i].description);
+        printf("  -%-8s --%-20s %s (default %s)\n", 
+            optv[i].short_name, 
+            optv[i].long_name, 
+            optv[i].description, 
+            optv[i].default_value);
     }
 
     printf("\n");
