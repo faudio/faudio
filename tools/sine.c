@@ -50,8 +50,6 @@ void run_sines(map_t opts)
         }
     }
 
-    // signal_t a = fa_multiply(fa_signal_random(), constant(0.1));
-
     fa_with_session_(session) {
         fa_with_default_out(session, output) {
             fa_audio_set_parameter(string("sample-rate"), f64(sample_rate), session);
