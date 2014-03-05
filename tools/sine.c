@@ -64,6 +64,9 @@ void helper_function(int nodes, int duration, double amplitude, int frequency, i
         fa_audio_set_parameter(string("sample-rate"), f64(sample_rate), s);
         fa_audio_set_parameter(string("vector-size"), i32(vector_size), s);
         fa_audio_set_parameter(string("latency"), f64(latency), s);
+
+        mark_used(i);
+        mark_used(o);
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
 
         if (fa_check(st)) {
@@ -112,7 +115,7 @@ int main(int argc, char const *argv[])
         double amplitude = fa_map_get_double_or(string("amplitude"), 0.1, opts);
         int sample_rate = fa_map_get_int32_or(string("sample-rate"), 44100, opts);
         int vector_size = fa_map_get_int32_or(string("vector-size"), 64, opts);
-        double latency = fa_map_get_double_or(string("latency"), 0.002, opts);
+        double latency = fa_map_get_double_or(string("latency"), 0.02, opts);
 
         // printf("freq=%d, rate=%d, duration=%d, amplitude=%lf\n", frequency, sample_rate, duration, amplitude);
         helper_function(number_of_nodes, duration, amplitude, frequency, sample_rate, vector_size, latency);
