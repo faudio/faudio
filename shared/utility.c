@@ -69,7 +69,7 @@ fa_string_t fa_version_string()
     TODO
         - Determine a good stack size for kMaxSignalTreeDepth
 
-inline static 
+inline static
 void fix_stack_size()
 {
     const rlim_t kStackSize = (0) *(1024*1024);   // min stack size = 16 MB
@@ -109,7 +109,7 @@ void fa_initialize()
                 ));
 
     // fix_stack_size();
-            
+
     fa_thread_initialize();
     fa_clock_initialize();
     fa_device_initialize();

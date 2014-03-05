@@ -227,10 +227,10 @@ inline static device_t new_device(session_t session, native_index_t index)
     device->index       = index;
     device->session     = session;
 
-    /* 
+    /*
         PortAudio aspire to return UTF-8 on all platforms but this is not always the case
         Assume native encodings for now.
-    
+
         See also #96
      */
 #ifdef _WIN32
@@ -873,13 +873,12 @@ ptr_t audio_control_thread(ptr_t x)
 
         {
             ptr_t nameValue;
-            
+
             // while (0) // FIXME
-            while ((nameValue = fa_atomic_queue_read(stream->out_controls)))
-            {
+            while ((nameValue = fa_atomic_queue_read(stream->out_controls))) {
                 int n = stream->callbacks.count;
 
-                
+
                 fa_unpair(nameValue, name, value) {
 
                     // FIXME assure that this copying can not happen after stream has been
@@ -892,7 +891,8 @@ ptr_t audio_control_thread(ptr_t x)
                         binary_t cbFunc = stream->callbacks.elements[j].function;
                         ptr_t    cbData = stream->callbacks.elements[j].data;
                         cbFunc(cbData, name2, value2);
-                    }         
+                    }
+
                     fa_destroy(name2);
                     fa_destroy(value2);
                 }
@@ -968,7 +968,7 @@ ptr_t run_simple_action2(ptr_t x, ptr_t a)
 void handle_outgoing_message(ptr_t x, string_t name, ptr_t value)
 {
     stream_t stream = x;
-    mark_used(stream);                         
+    mark_used(stream);
     fa_atomic_queue_write(stream->out_controls, pair(name, value));
 }
 
@@ -1003,7 +1003,7 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
                 for (int c = 0; c < stream->input_channels; ++c) {
                     state->VALS[(c + kInputOffset) * kMaxVectorSize] = input[c][i];
                 }
-            }      
+            }
 
             step(stream->MERGED_SIGNAL, stream->state);
 
@@ -1025,7 +1025,7 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
                     state->VALS[(c + kInputOffset) * kMaxVectorSize + i] = input[c][i];
                 }
             }
-        }   
+        }
 
         {
             double dummy_output[count];

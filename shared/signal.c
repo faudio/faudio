@@ -872,7 +872,7 @@ void custom_procs_send(state_t state, string_t name, ptr_t value)
 {
     for (int i = 0; i < state->custom_proc_count; ++i) {
         custom_proc_t proc = state->custom_procs[i];
-        
+
         if (proc->receive) {
             proc->receive(proc->data, name, value);
         }
@@ -884,10 +884,11 @@ void custom_procs_receive(state_t state, fa_signal_message_callback_t cb, ptr_t 
     // FIXME
     for (int i = 0; i < state->custom_proc_count; ++i) {
         custom_proc_t proc = state->custom_procs[i];
+
         if (proc->send) {
             proc->send(proc->data, cb, data);
         }
-    }    
+    }
 }
 
 /**

@@ -30,11 +30,12 @@ void helper_function(string_t path)
             fa_print("Error: Could not read file '%s'\n", path);
             exit(-1);
         }
-        
+
         bool mono = false; // TODO
 
         signal_t j  = fa_signal_counter();
         list_t signals = NULL;
+
         if (mono) {
             signal_t x = fa_signal_record(buf, j, fa_signal_input(kInputOffset));
             signals = list(x);
@@ -44,7 +45,7 @@ void helper_function(string_t path)
             signal_t x = fa_signal_input(kInputOffset + 0);
 
             signal_t l = fa_signal_record(buf, li, x);
-            signal_t r = fa_signal_record(buf, ri, x);            
+            signal_t r = fa_signal_record(buf, ri, x);
             signals = list(l, r);
         }
 
