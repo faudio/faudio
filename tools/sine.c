@@ -32,6 +32,17 @@ list_t just(ptr_t x, list_t xs)
 #define fa_option_show_all(A,S) fa_option_show(fa_sizeof_array(A),A,S)
 #define fa_option_parse_all(A,AC,AV) fa_option_parse(fa_sizeof_array(A), A, AC, AV)
 
+int fa_initialize2()
+{
+    fa_initialize();
+    return 0;
+}
+void fa_terminate2(int x)
+{
+    fa_terminate();
+}
+
+
 #define fa_with_faudio() \
     fa_with(__faudio__, fa_initialize2(), fa_terminate2(__faudio__))
 
@@ -121,17 +132,6 @@ void run_sines(map_t opts)
         fa_audio_close_stream(st);
         fa_audio_end_session(s);
     }
-}
-
-
-int fa_initialize2()
-{
-    fa_initialize();
-    return 0;
-}
-void fa_terminate2(int x)
-{
-    fa_terminate();
 }
 
 int main(int ac, char const *av[])
