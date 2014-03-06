@@ -79,9 +79,8 @@ list_t just(ptr_t x, list_t xs)
 
 int main(int argc, char const *argv[])
 {
-    fa_set_log_std();
+    fa_set_log_tool();
     fa_with_faudio() {
-
 
         BUFFER = ring_buffer((8L * 44100L * BUFFER_SIZE_MILLIS) / 1000L);
 

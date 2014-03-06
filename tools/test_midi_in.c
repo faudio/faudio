@@ -139,7 +139,7 @@ void run_midi()
 
 int main(int argc, char const *argv[])
 {
-    fa_set_log_std();
+    fa_set_log_tool();
     fa_with_faudio() {
         run_midi();
     }

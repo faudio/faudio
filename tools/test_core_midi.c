@@ -151,7 +151,7 @@ ptr_t run_internal_loop(ptr_t _)
 
 int main(int argc, char const *argv[])
 {
-    fa_set_log_std();
+    fa_set_log_tool();
     fa_initialize();
     fa_print_ln(fa_string_show(fa_thread_current()));
 

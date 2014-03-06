@@ -145,7 +145,7 @@ fa_option_t options[] = {
 
 int main(int argc, char const *argv[])
 {
-    fa_set_log_std();
+    fa_set_log_tool();
     fa_with_faudio() {
         fa_unpair(fa_option_parse_all(options, argc, (char **) argv), opts, args) {
             mark_used(args);

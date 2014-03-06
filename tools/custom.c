@@ -91,7 +91,7 @@ void helper_function()
 
 int main(int argc, char const *argv[])
 {
-    fa_set_log_std();
+    fa_set_log_tool();
     fa_with_faudio() {
         helper_function();
     }
