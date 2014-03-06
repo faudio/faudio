@@ -1,6 +1,7 @@
 
 #include <fa/fa.h>
 #include <fa/util.h>
+#include "common.h"
 
 static int gStop;
 
@@ -68,18 +69,17 @@ fa_audio_session_t print_audio_devices(fa_ptr_t _, fa_audio_session_t session)
 
 int main(int argc, char const *argv[])
 {
-    fa_set_log_std();
-    fa_initialize();
+    fa_set_log_tool();
 
-    /** While a session ends, start a new one.
-     */
-    while (1) {
-        fa_audio_with_session(
-            print_audio_devices, NULL,
-            fa_error_log, NULL);
-        printf("Setup has changed: press any key to restart audio.\n");
-        getchar();
+    fa_with_faudio() {
+        /** While a session ends, start a new one.
+         */
+        while (1) {
+            fa_audio_with_session(
+                print_audio_devices, NULL,
+                fa_error_log, NULL);
+            printf("Setup has changed: press any key to restart audio.\n");
+            getchar();
+        }
     }
-
-    fa_terminate();
 }

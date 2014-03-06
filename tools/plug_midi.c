@@ -1,6 +1,7 @@
 
 #include <fa/fa.h>
 #include <fa/util.h>
+#include "common.h"
 
 static int stop;
 
@@ -57,16 +58,15 @@ fa_midi_session_t print_midi_devices(fa_ptr_t _, fa_midi_session_t session)
 
 int main(int argc, char const *argv[])
 {
-    fa_set_log_std();
-    fa_initialize();
+    fa_set_log_tool();
 
-    /** While a session ends, start a new one.
-     */
-    while (1) {
-        fa_midi_with_session(
-            print_midi_devices, NULL,
-            fa_error_log, NULL);
+    fa_with_faudio() {
+        /** While a session ends, start a new one.
+         */
+        while (1) {
+            fa_midi_with_session(
+                print_midi_devices, NULL,
+                fa_error_log, NULL);
+        }
     }
-
-    fa_terminate();
 }

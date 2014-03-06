@@ -2,6 +2,7 @@
 #include <fa/fa.h>
 #include <fa/util.h>
 #include "../shared/signal.h"
+#include "common.h"
 
 /*
     This program implements and plays a trivial custom processor, which generates a click
@@ -17,15 +18,10 @@ int processed = 0;
 static bool should_send = false;
 double values[2];
 
-list_t just(ptr_t x, list_t _)
-{
-    return x;
-}
-
 
 /*
     (defsignal slope (curr)
-      (recur (rec)     
+      (recur (rec)
          (max curr
            (+ (* 0.999 rec)
               (* 0.001 curr)))))
