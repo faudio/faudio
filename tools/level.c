@@ -116,21 +116,26 @@ pair_t fa_signal_level(signal_t a, signal_t b)
 
 
 
-
-
+// amp2db x = logBase (10/1) x * 10
+double amp2db(double x) {
+    // printf("%lf\n", log10(x) * 10);
+    return log10(x) * 10;
+}
 
 ptr_t _message_out(ptr_t x, ptr_t name, ptr_t value)
 {
     // fa_print("Receieved 2: %s\n", pair(name, value));
-    int bars = (int)(fa_peek_double(value) * 80);
+    int bars = (int)(((amp2db(fa_peek_double(value)) + 20) / 20) * 15);
 
-    for (int i = 0; i < 80; ++i) {
+
+    for (int i = 0; i < 15; ++i) {
         if (i < bars) {
             printf("#");
         } else {
             printf(" ");
         }
     }
+    printf("|");
 
     printf("\r");
     fflush(stdout);
@@ -152,6 +157,7 @@ void run_level()
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
         // fa_audio_add_message_callback(_message_out, NULL, st);
         fa_audio_add_message_callback(_message_out, NULL, st);
+        // printf("                                                  |     |    |    |    |\n");
 
         if (fa_check(st)) {
             fa_error_log(st, NULL);
