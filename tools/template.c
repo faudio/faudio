@@ -1,6 +1,7 @@
 
 #include <fa/fa.h>
 #include <fa/util.h>
+#include "common.h"
 
 /*
     This program does ...
@@ -14,9 +15,7 @@ void helper_function()
 
 int main(int argc, char const *argv[])
 {
-    fa_initialize();
-
-    helper_function();
-
-    fa_terminate();
+    fa_with_faudio() {
+        helper_function();
+    }
 }

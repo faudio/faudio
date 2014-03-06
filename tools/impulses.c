@@ -2,6 +2,7 @@
 #include <fa/fa.h>
 #include <fa/util.h>
 #include "../shared/signal.h"
+#include "common.h"
 
 /*
     This program implements and plays a trivial custom processor, which generates a click
@@ -14,11 +15,6 @@
 
 static bool should_click = false;
 
-
-list_t just(ptr_t x, list_t xs)
-{
-    return x;
-}
 
 ptr_t before_(ptr_t x, int count, fa_signal_state_t *state)
 {
@@ -133,9 +129,9 @@ void run_clicks()
 int main(int argc, char const *argv[])
 {
     fa_set_log_std();
-    fa_initialize();
+    fa_with_faudio() {
 
-    run_clicks();
+        run_clicks();
 
-    fa_terminate();
+    }
 }

@@ -1,6 +1,7 @@
 
 #include <fa/fa.h>
 #include <fa/util.h>
+#include "common.h"
 
 /*
     This program defines a custom processor and runs it on the default audio input and output devices.
@@ -9,11 +10,6 @@
 
 #define PI  3.1415
 #define TAU (2 * PI)
-
-list_t just(ptr_t x, list_t xs)
-{
-    return x;
-}
 
 ptr_t before_(ptr_t x, int count, fa_signal_state_t *state)
 {
@@ -96,7 +92,7 @@ void helper_function()
 int main(int argc, char const *argv[])
 {
     fa_set_log_std();
-    fa_initialize();
-    helper_function();
-    fa_terminate();
+    fa_with_faudio() {
+        helper_function();
+    }
 }

@@ -3,6 +3,7 @@
 #define NO_THREAD_T
 #include <fa/util.h>
 #undef NO_THREAD_T
+#include "common.h"
 
 #ifdef __APPLE__
 #include <ApplicationServices/ApplicationServices.h> // DEBUG
@@ -43,11 +44,6 @@ bool pred2(ptr_t _, ptr_t x)
 #else
     return true;
 #endif
-}
-
-list_t just(ptr_t x, list_t xs)
-{
-    return x;
 }
 
 void run_test()

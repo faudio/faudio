@@ -1,6 +1,7 @@
 
 #include <fa/fa.h>
 #include <fa/util.h>
+#include "common.h"
 
 /*
     This program listens for incoming MIDI notes on the default MIDI input device:
@@ -17,11 +18,6 @@
 #define kEchodls 2
 
 #define kModeOfEchoing kEchodls
-
-list_t just(ptr_t x, list_t xs)
-{
-    return x;
-}
 
 fa_ptr_t just_print(ptr_t _, ptr_t timeMessage)
 {
@@ -144,9 +140,7 @@ void run_midi()
 int main(int argc, char const *argv[])
 {
     fa_set_log_std();
-    fa_initialize();
-
-    run_midi();
-
-    fa_terminate();
+    fa_with_faudio() {
+        run_midi();
+    }
 }

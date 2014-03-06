@@ -3,6 +3,7 @@
 #include <fa/util.h>
 #include <fa/option.h>
 #include <fa/io.h>
+#include "common.h"
 
 /*
     This program does ...
@@ -145,20 +146,20 @@ fa_option_t options[] = {
 int main(int argc, char const *argv[])
 {
     fa_set_log_std();
-    fa_initialize();
+    fa_with_faudio() {
+        fa_unpair(fa_option_parse_all(options, argc, (char **) argv), opts, args) {
+            mark_used(args);
+            gVorbis = fa_map_get(string("ogg-vorbis"), opts)  ? fa_to_bool(fa_map_get(string("ogg-vorbis"), opts))  : false;
+            gEndian = fa_map_get(string("endian"), opts)   ? fa_to_bool(fa_map_get(string("endian"), opts))      : false;
+            gOutput = fa_map_get(string("output-file"), opts) ? fa_map_get(string("output-file"), opts) : string("test.raw");
+            // printf("freq=%d, rate=%d, duration=%d\n", freq, rate, duration);
 
-    fa_unpair(fa_option_parse_all(options, argc, (char **) argv), opts, args) {
-        mark_used(args);
-        gVorbis = fa_map_get(string("ogg-vorbis"), opts)  ? fa_to_bool(fa_map_get(string("ogg-vorbis"), opts))  : false;
-        gEndian = fa_map_get(string("endian"), opts)   ? fa_to_bool(fa_map_get(string("endian"), opts))      : false;
-        gOutput = fa_map_get(string("output-file"), opts) ? fa_map_get(string("output-file"), opts) : string("test.raw");
-        // printf("freq=%d, rate=%d, duration=%d\n", freq, rate, duration);
+            printf("Vorbis=%d, Endian=%d, Output=%s\n", gVorbis, gEndian, unstring(gOutput));
+            fa_atomic_ring_buffer_t rbuffer = atomic_ring_buffer(44100 * 8 * 30);
+            mark_used(rbuffer);
 
-        printf("Vorbis=%d, Endian=%d, Output=%s\n", gVorbis, gEndian, unstring(gOutput));
-        fa_atomic_ring_buffer_t rbuffer = atomic_ring_buffer(44100 * 8 * 30);
-        mark_used(rbuffer);
-
-        fa_audio_with_session(_session, rbuffer, fa_log, NULL);
+            fa_audio_with_session(_session, rbuffer, fa_log, NULL);
+        }
+        fa_terminate();
     }
-    fa_terminate();
 }

@@ -166,9 +166,8 @@ void run_level()
 int main(int argc, char const *argv[])
 {
     fa_set_log_std();
-    fa_initialize();
+    fa_with_faudio() {
 
-    run_level();
-
-    fa_terminate();
+        run_level();
+    }
 }

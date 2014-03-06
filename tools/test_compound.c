@@ -3,6 +3,7 @@
 #define NO_THREAD_T
 #include <fa/util.h>
 #undef NO_THREAD_T
+#include "common.h"
 
 #ifdef __APPLE__
 #include <ApplicationServices/ApplicationServices.h> // DEBUG
@@ -45,16 +46,6 @@ bool pred2(ptr_t _, ptr_t x)
     return true;
 #endif
 }
-
-list_t just(ptr_t x, list_t xs)
-{
-    return x;
-}
-
-
-#define time_zero fa_milliseconds(0)
-#define fa_action_compose(x,y) fa_action_many(list(pair(x, time_zero), pair(y, time_zero)))
-#define fa_action_compose3(x,y,z) fa_action_many(list(pair(x, time_zero), pair(y, time_zero), pair(z, time_zero)))
 
 ptr_t _print(ptr_t x)
 {

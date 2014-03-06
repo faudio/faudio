@@ -1,8 +1,8 @@
 
 #include <fa/fa.h>
 #include <fa/util.h>
-
 #include <curl/curl.h>
+#include "common.h"
 
 /*
     This program does ...
@@ -80,26 +80,28 @@ list_t just(ptr_t x, list_t xs)
 int main(int argc, char const *argv[])
 {
     fa_set_log_std();
-    fa_initialize();
-    BUFFER = ring_buffer((8L * 44100L * BUFFER_SIZE_MILLIS) / 1000L);
+    fa_with_faudio() {
 
-    // signal_t left = fa_multiply(fa_signal_play_stream(BUFFER), constant(0.8));
-    signal_t left = fa_multiply(fa_signal_random(), constant(0.0));
-    signal_t right = fa_multiply(fa_signal_random(), constant(0.0));
 
-    fa_with_session_(session) {
-        fa_with_default_devices(input, output, session) {
-            fa_audio_set_parameter(string("sample-rate"), f64(44100), session);
-            fa_audio_stream_t stream;
+        BUFFER = ring_buffer((8L * 44100L * BUFFER_SIZE_MILLIS) / 1000L);
 
-            if (fa_check(stream = fa_audio_open_output(input, output, list(left, right)))) {
-                fa_error_log(stream, NULL);
-            } else {
-                request_audio();
-                // TODO some way to delay or toggle DSP thread reading from stream (give it a rate argument?)
-                fa_thread_sleep(300 * 1000);
+        // signal_t left = fa_multiply(fa_signal_play_stream(BUFFER), constant(0.8));
+        signal_t left = fa_multiply(fa_signal_random(), constant(0.0));
+        signal_t right = fa_multiply(fa_signal_random(), constant(0.0));
+
+        fa_with_session_(session) {
+            fa_with_default_devices(input, output, session) {
+                fa_audio_set_parameter(string("sample-rate"), f64(44100), session);
+                fa_audio_stream_t stream;
+
+                if (fa_check(stream = fa_audio_open_output(input, output, list(left, right)))) {
+                    fa_error_log(stream, NULL);
+                } else {
+                    request_audio();
+                    // TODO some way to delay or toggle DSP thread reading from stream (give it a rate argument?)
+                    fa_thread_sleep(300 * 1000);
+                }
             }
         }
     }
-    fa_terminate();
 }

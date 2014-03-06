@@ -1,6 +1,7 @@
 
 #include <fa/fa.h>
 #include <fa/util.h>
+#include "common.h"
 
 /*
     This program plays a couple of notes on the standard audio output device using
@@ -9,11 +10,6 @@
 
 
 #define RT 1
-
-list_t just(ptr_t x, list_t xs)
-{
-    return x;
-}
 
 void run_dls()
 {
@@ -92,9 +88,7 @@ void run_dls()
 int main(int argc, char const *argv[])
 {
     fa_set_log_std();
-    fa_initialize();
-
-    run_dls();
-
-    fa_terminate();
+    fa_with_faudio() {
+        run_dls();
+    }
 }

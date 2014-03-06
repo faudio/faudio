@@ -1,6 +1,7 @@
 
 #include <fa/fa.h>
 #include <fa/util.h>
+#include "common.h"
 
 /*
     This program plays a couple of notes on the standard MIDI output.
@@ -34,9 +35,7 @@ void run_midi()
 int main(int argc, char const *argv[])
 {
     fa_set_log_std();
-    fa_initialize();
-
-    run_midi();
-
-    fa_terminate();
+    fa_with_faudio() {
+        run_midi();
+    }
 }
