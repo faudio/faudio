@@ -24,23 +24,29 @@ list_t just(ptr_t x, list_t _)
 
 
 /*
-    (defun smooth (x)
-      (signal-loop*
-       (lambda (rec)
-         (+ (* 0.999 rec)
-            (* 0.001 x)))))
-*/             
-signal_t smooth2_(ptr_t xx, signal_t r) {
-    signal_t x = xx;
-    return fa_signal_max(fa_signal_add(
-        fa_signal_multiply(constant(0.999), r),
-        fa_signal_multiply(constant(0.001), x)
-        ),
-        x);
-} 
-signal_t smooth2(signal_t x)
+    (defsignal slope (curr)
+      (recur (rec)     
+         (max curr
+           (+ (* 0.999 rec)
+              (* 0.001 curr)))))
+*/
+signal_t slope_(signal_t curr, signal_t prev)
 {
-    return fa_signal_loop(smooth2_, x);
+    return
+        fa_signal_max(
+            fa_signal_add(
+                fa_signal_multiply(
+                    constant(0.999),
+                    prev),
+                fa_signal_multiply(
+                    constant(0.001),
+                    curr)
+            ),
+            curr);
+}
+signal_t slope(signal_t x)
+{
+    return fa_signal_loop((fa_signal_unary_signal_t)slope_, x);
 }
 
 
@@ -61,12 +67,12 @@ ptr_t after_(ptr_t x, int count, fa_signal_state_t *state)
 ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
 {
     if (!kVectorMode) {
-        values[0] = state->buffer[(kThisPlugOffset + 0)*kMaxVectorSize];
-        values[1] = state->buffer[(kThisPlugOffset + 1)*kMaxVectorSize];
-        should_send = should_send || (!(state->count % (44100/100)));
+        values[0] = state->buffer[(kThisPlugOffset + 0) * kMaxVectorSize];
+        values[1] = state->buffer[(kThisPlugOffset + 1) * kMaxVectorSize];
+        should_send = should_send || (!(state->count % (44100 / 100)));
     } else {
-        values[0] = state->buffer[(kThisPlugOffset + 0)*kMaxVectorSize + 0];
-        values[1] = state->buffer[(kThisPlugOffset + 1)*kMaxVectorSize + 0];
+        values[0] = state->buffer[(kThisPlugOffset + 0) * kMaxVectorSize + 0];
+        values[1] = state->buffer[(kThisPlugOffset + 1) * kMaxVectorSize + 0];
         // TODO should_send
     }
 
@@ -87,8 +93,9 @@ ptr_t send_(ptr_t x, fa_signal_message_callback_t cb, ptr_t data)
     // All create/destroy should happen in the setup phase
     if (should_send) {
         should_send = false;
-        cb(data, out_name, f32(values[0]));        
+        cb(data, out_name, f32(values[0]));
     }
+
     return x;
 }
 
@@ -103,11 +110,11 @@ pair_t fa_signal_level(signal_t a, signal_t b)
     proc->send    = send_;
     proc->data    = NULL;
 
-    return pair(fa_signal_custom(proc, 
-        fa_signal_latter(fa_signal_output(0, kThisPlugOffset + 0, smooth2(fa_signal_absolute(a))), a)
-        ), 
-        fa_signal_latter(fa_signal_output(0, kThisPlugOffset + 1, b), b)
-        );
+    return pair(fa_signal_custom(proc,
+                                 fa_signal_latter(fa_signal_output(0, kThisPlugOffset + 0, slope(fa_signal_absolute(a))), a)
+                                ),
+                fa_signal_latter(fa_signal_output(0, kThisPlugOffset + 1, b), b)
+               );
 }
 
 ptr_t _message_out(ptr_t x, ptr_t name, ptr_t value)
@@ -119,17 +126,19 @@ ptr_t _message_out(ptr_t x, ptr_t name, ptr_t value)
 ptr_t _message_out2(ptr_t x, ptr_t name, ptr_t value)
 {
     // fa_print("Receieved 2: %s\n", pair(name, value));
-    int bars = (int) (fa_peek_double(value) * 80);
+    int bars = (int)(fa_peek_double(value) * 80);
 
     for (int i = 0; i < 80; ++i) {
-        if ( i < bars)
-            printf("#");  
-        else
-            printf (" ");
+        if (i < bars) {
+            printf("#");
+        } else {
+            printf(" ");
+        }
     }
+
     printf("\r");
     fflush(stdout);
-    
+
     return x;
 }
 void run_level()
@@ -139,10 +148,10 @@ void run_level()
         fa_audio_device_t i  = fa_audio_default_input(s);
         fa_audio_device_t o  = fa_audio_default_output(s);
         list_t out           = fa_pair_to_list(fa_signal_level(
-            // fa_signal_sin(fa_signal_line(0.1)),
-            fa_signal_input(kInputOffset + 0), 
-            
-            fa_signal_input(kInputOffset + 1)));
+                                                   // fa_signal_sin(fa_signal_line(0.1)),
+                                                   fa_signal_input(kInputOffset + 0),
+
+                                                   fa_signal_input(kInputOffset + 1)));
 
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
         // fa_audio_add_message_callback(_message_out, NULL, st);
