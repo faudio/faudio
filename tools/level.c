@@ -113,13 +113,13 @@ pair_t fa_signal_level(signal_t a, signal_t b)
                );
 }
 
-ptr_t _message_out(ptr_t x, ptr_t name, ptr_t value)
-{
-    fa_print("Receieved 1: %s\n", pair(name, value));
-    return x;
-}
 
-ptr_t _message_out2(ptr_t x, ptr_t name, ptr_t value)
+
+
+
+
+
+ptr_t _message_out(ptr_t x, ptr_t name, ptr_t value)
 {
     // fa_print("Receieved 2: %s\n", pair(name, value));
     int bars = (int)(fa_peek_double(value) * 80);
@@ -151,7 +151,7 @@ void run_level()
 
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
         // fa_audio_add_message_callback(_message_out, NULL, st);
-        fa_audio_add_message_callback(_message_out2, NULL, st);
+        fa_audio_add_message_callback(_message_out, NULL, st);
 
         if (fa_check(st)) {
             fa_error_log(st, NULL);
