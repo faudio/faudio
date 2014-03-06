@@ -147,7 +147,7 @@ void run_level()
                                                    // fa_signal_sin(fa_signal_line(0.1)),
                                                    fa_signal_input(kInputOffset + 0),
 
-                                                   fa_signal_input(kInputOffset + 1)));
+                                                   fa_signal_input(kInputOffset + 0)));
 
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
         // fa_audio_add_message_callback(_message_out, NULL, st);

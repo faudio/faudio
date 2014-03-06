@@ -7,19 +7,6 @@
     This program does plays the given audio file in the default output device.
 
  */
-// typedef fa_signal_t signal_t;
-
-list_t just_list(ptr_t x, list_t xs)
-{
-    return x;
-}
-
-signal_t add1(ptr_t _, signal_t x)
-{
-    return fa_add(x, constant(1));
-}
-
-
 void helper_function(string_t path)
 {
     {

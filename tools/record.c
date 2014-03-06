@@ -11,17 +11,6 @@
 #define kSize (44100*2*8*kRecTime)
 #define kInputOffset 8 // FIXME
 
-list_t just_list(ptr_t x, list_t xs)
-{
-    return x;
-}
-
-signal_t add1(ptr_t _, signal_t x)
-{
-    return fa_add(x, constant(1));
-}
-
-
 void helper_function(string_t path)
 {
     {
@@ -60,8 +49,10 @@ void helper_function(string_t path)
             fa_thread_sleep(kRecTime * 1000);
         }
 
+        fa_buffer_set_meta(buf, string("channels"),    i32(2));
+        fa_buffer_set_meta(buf, string("generator"),   string("faudio"));
+        fa_buffer_set_meta(buf, string("sample-rate"), f64(44100));
         fa_buffer_write_audio(path, buf);
-
         fa_audio_end_session(s);
     }
 }
