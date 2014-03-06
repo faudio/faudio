@@ -5,7 +5,7 @@
 #include "common.h"
 
 /*
-    This program plays one of more sine waves on the standard audio output device.
+    This program plays one of more sines waves on the standard audio output device.
 
  */
 
@@ -32,7 +32,7 @@ void run_sines(map_t opts)
     const int    vector_size     = fa_map_get_int32(string("vector-size"),     opts);
     const double latency         = fa_map_get_double(string("latency"),        opts);
 
-    signal_t gen = constant(0);
+    signal_t sines = constant(0);
 
     {
         double f = frequency;
@@ -46,7 +46,7 @@ void run_sines(map_t opts)
                 of nodes by using a balanced tree.
             */
 
-            gen = fa_add(fa_multiply(fa_signal_sin(fa_signal_line(f)), constant(x)), gen);
+            sines = fa_add(fa_multiply(fa_signal_sin(fa_signal_line(f)), constant(x)), sines);
             f *= 1.12;
             x *= 0.84;
         }
@@ -58,7 +58,7 @@ void run_sines(map_t opts)
             fa_audio_set_parameter(string("vector-size"), i32(vector_size), session);
             fa_audio_set_parameter(string("latency"),     f64(latency),     session);
 
-            fa_open_stereo_out(stream, output, list(gen, gen)) {
+            fa_open_stereo_out(stream, output, list(sines, sines)) {
                 if (duration < 0) {
                     while (1) {
                         fa_thread_sleep(10000);
