@@ -18,11 +18,11 @@ list_t just(ptr_t x, list_t xs)
 void run_dls()
 {
 #ifndef _WIN32
-        fa_pair_t synth = fa_signal_dls();
-        string_t name   = string("dls");
+    fa_pair_t synth = fa_signal_dls();
+    string_t name   = string("dls");
 #else
-        fa_pair_t synth = fa_signal_synth(string("C:\\sf.sf2"));
-        string_t name   = string("fluid");
+    fa_pair_t synth = fa_signal_synth(string("C:\\sf.sf2"));
+    string_t name   = string("fluid");
 #endif
 
     if (RT) {
