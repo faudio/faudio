@@ -1413,7 +1413,7 @@ fa_signal_t fa_signal_divide(fa_signal_t a, fa_signal_t b)
 
 inline static double _absolute(ptr_t _, double x)
 {
-    return abs(x);
+    return fabs(x);
 }
 fa_signal_t fa_signal_absolute(fa_signal_t a)
 {
@@ -1547,9 +1547,13 @@ fa_signal_t fa_signal_min(fa_signal_t x, fa_signal_t y)
     assert(false && "Not implemented");
 }
 
+inline static double _max(ptr_t _, double x, double y)
+{
+    return fa_max(x, y);
+}
 fa_signal_t fa_signal_max(fa_signal_t x, fa_signal_t y)
 {
-    assert(false && "Not implemented");
+    return fa_signal_lift2(string("max"), _max, NULL, x, y);
 }
 
 fa_signal_t fa_signal_fmod(fa_signal_t x, fa_signal_t y)
