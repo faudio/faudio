@@ -413,7 +413,7 @@ ptr_t midi_thread(ptr_t x)
             ctxt.release = NULL;
             ctxt.copyDescription = NULL;
 
-            printf("kCFAllocatorDefault is %p\n", kCFAllocatorDefault);
+            // printf("kCFAllocatorDefault is %p\n", kCFAllocatorDefault);
 
             CFRunLoopTimerRef timer = CFRunLoopTimerCreate(
                                           kCFAllocatorDefault,
