@@ -99,6 +99,7 @@ struct _fa_audio_stream_t {
     unsigned            signal_count;       // Number of signals (same as number of outputs)
     signal_t            signals[kMaxSignals];
     state_t             state;              // DSP state
+    int64_t             last_time;          // Cached time in milliseconds
 
     unsigned            input_channels, output_channels;
     double              sample_rate;
@@ -264,6 +265,8 @@ inline static stream_t new_stream(device_t input, device_t output, double sample
 
     stream->sample_rate     = sample_rate;
     stream->max_buffer_size = max_buffer_size;
+    stream->state           = NULL;
+    stream->last_time       = 0;
 
     stream->signal_count    = 0;
     stream->pa_flags        = 0;
@@ -1046,7 +1049,16 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
 }
 
 
-/* The callbacks */
+/*  The callbacks
+
+    We want to assume that this happens in this order fro any stream:
+        1) during_processing is called n times
+        2) after_processing is called once
+
+   With the CoreAudio backend, PortAudio sometimes violates this by calling
+   during_processing after after_processing, or calling after_processing
+   more than once. We guard against this by setting the stream to NULL.
+*/
 
 int native_audio_callback(const void                       *input,
                           void                             *output,
@@ -1055,28 +1067,35 @@ int native_audio_callback(const void                       *input,
                           PaStreamCallbackFlags             flags,
                           void                             *data)
 {
-    during_processing(data, count, (float **) input, (float **) output);
     stream_t stream = data;
-    stream->pa_flags |= flags;
 
-    return paContinue;
+    if (stream->state) {
+        during_processing(stream, count, (float **) input, (float **) output);
+        stream->pa_flags |= flags;
+        return paContinue;
+    } else {
+        return paAbort;
+    }
 }
 
 void native_finished_callback(void *data)
 {
     stream_t stream = data;
 
-    if (stream->pa_flags & paInputOverflow) {
-        warn(string("Input overflow detected"));
+    if (stream->state) {
+
+        if (stream->pa_flags & paInputOverflow) {
+            warn(string("Input overflow detected"));
+        }
+        if (stream->pa_flags & paOutputUnderflow) {
+            warn(string("Output underflow detected"));
+        }
+
+        inform(fa_string_format_integral("Stream flag result (0 = ok): %d", stream->pa_flags));
+        after_processing(data);
+
+        stream->state = NULL;
     }
-
-    if (stream->pa_flags & paOutputUnderflow) {
-        warn(string("Output underflow detected"));
-    }
-
-    // inform(fa_string_format_integral("Stream flag result (0 = ok): %d", stream->pa_flags));
-
-    after_processing(data);
 }
 
 
@@ -1190,9 +1209,14 @@ void audio_stream_destroy(ptr_t a)
 int64_t audio_stream_milliseconds(ptr_t a)
 {
     stream_t stream = (stream_t) a;
-    state_base_t state = (state_base_t) stream->state;
 
-    return (int64_t)((double) state->count / (double) state->rate * 1000.0);
+    if (stream->state) {
+        // We cache time in the stream in case the stream state has been freed
+        state_base_t state = (state_base_t) stream->state;
+        stream->last_time = ((double) state->count / (double) state->rate * 1000.0);
+    }
+
+    return stream->last_time;
 }
 
 fa_time_t audio_stream_time(ptr_t a)
