@@ -1,4 +1,11 @@
 
+# v2.11.0
+
+- Adds level monitor (experimental)
+
+- Fixes serious issue with disconnecting active output devices on OS X #186
+
+
 # v2.10.0
 
 - Adds support for outgoing control values
