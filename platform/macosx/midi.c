@@ -396,7 +396,7 @@ ptr_t midi_thread(ptr_t x)
                      );
 
             if (result) {
-                warn(fa_string_format_integral("%d", result));
+                warn(fa_string_format_integral("Could not start CoreMIDI, MIDIClientCreate failed with %d", result));
                 assert(false);
             }
 
@@ -440,7 +440,7 @@ ptr_t midi_thread(ptr_t x)
             result = MIDIClientDispose(session->native);
 
             if (result) {
-                warn(fa_string_format_integral("%d", result));
+                warn(fa_string_format_integral("Could not start CoreMIDI, MIDIClientDispose failed with %d", result));
                 assert(false);
             } else {
                 inform(string("(disposed client)"));
