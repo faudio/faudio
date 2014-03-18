@@ -111,6 +111,12 @@ module "transient" Fa.Audio.Device
     */
     currentSampleRate : Device -> Double;
 
+    /** Return the recommended latency for the given device in seconds.
+        @param device   The device.
+        @return         A pair of a pair of doubles on the form `((inputMin, inputMax), (outputMin, outputMax))`.
+    */
+    recommendedLatency : Device -> Pair;
+
     /** Return the default sample rate of the given device.
         @param device   The device.
         @deprecated 

@@ -123,6 +123,13 @@ int fa_audio_output_channels(fa_audio_device_t device);
 */
 double fa_audio_current_sample_rate(fa_audio_device_t device);
 
+/** Return the recommended latency for the given device in seconds.
+    @param device   The device.
+    @return         A pair of a pair of doubles on the form `((inputMin, inputMax), (outputMin, outputMax))`.
+    
+*/
+fa_pair_t fa_audio_recommended_latency(fa_audio_device_t device);
+
 /** Return the default sample rate of the given device.
     @param device   The device.
     @deprecated 

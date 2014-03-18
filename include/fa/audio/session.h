@@ -84,11 +84,13 @@ void fa_audio_with_session(fa_audio_session_callback_t sessionCallback,
 
     ### Supported parameters ###
     
-    Name           | Description
-    ---------------|------------------------------------------------------------------------
-    `latency`      | Suggested latency in seconds (integer or floating-point).
-    `sample-rate`  | Suggested sample rate (floating-point).
-    `vector-size`  | Suggested vector size (integer).
+    Name                | Description
+    --------------------|------------------------------------------------------------------------
+    `latency`           | Suggested latency for both input and outpu in seconds (integer or floating-point).
+    `input-latency`     | Suggested latency for both input and outpu in seconds (integer or floating-point).
+    `output-latency`    | Suggested latency for both input and outpu in seconds (integer or floating-point).
+    `sample-rate`       | Suggested sample rate (floating-point).
+    `vector-size`       | Suggested vector size (integer).
     
     @param name     Name of parameter to set.
     @param value    A [reference](@ref ValueReferences) to the value to set.

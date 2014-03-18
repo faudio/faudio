@@ -62,7 +62,7 @@ struct _fa_audio_session_t {
 
     struct {
         double          sample_rate;
-        double          latency;
+        double          latency[2];
         int             vector_size;
     }                   parameters;         // Parameters, which may be updated by set_parameters
 
@@ -204,7 +204,8 @@ inline static void session_init_devices(session_t session)
 
     session->parameters.sample_rate = kDefSampleRate;
     session->parameters.vector_size = kDefVectorSize;
-    session->parameters.latency     = kDefLatency;
+    session->parameters.latency[0] = kDefLatency;
+    session->parameters.latency[1] = kDefLatency;
 }
 
 inline static void delete_session(session_t session)
@@ -443,7 +444,56 @@ void fa_audio_set_parameter(string_t name,
             return;
         }
 
-        session->parameters.latency = x;
+        session->parameters.latency[0] = x;
+        session->parameters.latency[1] = x;
+    }
+
+    if (fa_equal(name, string("input-latency"))) {
+        double x;
+
+        switch (fa_dynamic_get_type(value)) {
+        case i32_type_repr:
+            x = fa_peek_int32(value);
+            break;
+
+        case f32_type_repr:
+            x = fa_peek_float(value);
+            break;
+
+        case f64_type_repr:
+            x = fa_peek_double(value);
+            break;
+
+        default:
+            warn(string("Wrong type"));
+            return;
+        }
+
+        session->parameters.latency[0] = x;
+    }
+
+    if (fa_equal(name, string("output-latency"))) {
+        double x;
+
+        switch (fa_dynamic_get_type(value)) {
+        case i32_type_repr:
+            x = fa_peek_int32(value);
+            break;
+
+        case f32_type_repr:
+            x = fa_peek_float(value);
+            break;
+
+        case f64_type_repr:
+            x = fa_peek_double(value);
+            break;
+
+        default:
+            warn(string("Wrong type"));
+            return;
+        }
+
+        session->parameters.latency[1] = x;
     }
 
     if (fa_equal(name, string("vector-size"))) {
@@ -599,19 +649,51 @@ double fa_audio_default_sample_rate(fa_audio_device_t device)
     return fa_audio_current_sample_rate(device);
 }
 
+fa_pair_t fa_audio_recommended_latency(fa_audio_device_t device)
+{
+    const PaDeviceInfo *info = Pa_GetDeviceInfo(device->index);
+    return pair(pair(
+        f64(info->defaultLowInputLatency),
+        f64(info->defaultHighInputLatency)
+    ), pair(
+        f64(info->defaultLowOutputLatency),
+        f64(info->defaultHighOutputLatency)
+    ));
+}
+
+
 
 // --------------------------------------------------------------------------------
+
+inline static
+string_t show_range(pair_t x) {
+    string_t str = string("");
+    fa_unpair(x, a, b) {                   
+        fa_write_string(str, string("("));
+        fa_write_string(str, fa_string_show(a));
+        fa_write_string(str, string(","));
+        fa_write_string(str, fa_string_show(b));
+        fa_write_string(str, string(")"));
+    }
+    return str;
+}
 
 inline static
 void print_audio_info(device_t input, device_t output)
 {
     inform(string("Opening real-time audio stream"));
-    inform(string_dappend(string("    Input:         "), input ? fa_audio_full_name(input) : string("N/A")));
+    inform(string_dappend(string("    Input:               "), input ? fa_audio_full_name(input) : string("N/A")));
+    if (input)
+        inform(string_dappend(string("        Default Latency: "), show_range(fa_pair_first(fa_audio_recommended_latency(input)))));
+
     inform(string_dappend(string("    Output:        "), output ? fa_audio_full_name(output) : string("N/A")));
+    if (output)
+        inform(string_dappend(string("        Default Latency: "), show_range(fa_pair_first(fa_audio_recommended_latency(output)))));
 
     fa_let(session, input ? input->session : output->session) {
         inform(fa_string_format_floating("    Sample Rate:   %2f", session->parameters.sample_rate));
-        inform(fa_string_format_floating("    Latency:       %3f", session->parameters.latency));
+        inform(fa_string_format_floating("    Input Latency: %3f", session->parameters.latency[0]));
+        inform(fa_string_format_floating("    Output Latency: %3f", session->parameters.latency[1]));
         inform(fa_string_format_integral("    Vector Size:   %d",  session->parameters.vector_size));
     }
 }
@@ -678,7 +760,7 @@ stream_t fa_audio_open_stream(device_t input,
             Open and set native stream.
          */
         PaStreamParameters input_stream_parameters = {
-            .suggestedLatency           = session->parameters.latency,
+            .suggestedLatency           = session->parameters.latency[0],
             .hostApiSpecificStreamInfo  = NULL,
             .device                     = (input ? input->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
@@ -686,7 +768,7 @@ stream_t fa_audio_open_stream(device_t input,
         };
 
         PaStreamParameters output_stream_parameters = {
-            .suggestedLatency           = session->parameters.latency,
+            .suggestedLatency           = session->parameters.latency[1],
             .hostApiSpecificStreamInfo  = NULL,
             .device                     = (output ? output->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
