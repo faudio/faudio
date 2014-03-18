@@ -1,4 +1,8 @@
 
+# v2.12.1
+
+(no changes)
+
 # v2.12.0
 
 - Adds recommeded_latency and parameters for more fine-grained configureation of I/O latency
