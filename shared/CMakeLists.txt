@@ -92,13 +92,13 @@ endif(APPLE)
 
 if(MSYS)
   if(BUILD_SHARED)
-    add_library(faudio SHARED ${SRCS_ALL})
-    set_target_properties(faudio PROPERTIES
+    add_library(faudio_shared SHARED ${SRCS_ALL})
+    set_target_properties(faudio_shared PROPERTIES
       OUTPUT_NAME                 "faudio"
       RUNTIME_OUTPUT_DIRECTORY    "../bin"
       )
-    target_link_libraries(faudio ${EXTS})
-    set(MAIN_LIBRARY faudio PARENT_SCOPE)
+    target_link_libraries(faudio_shared ${EXTS})
+    set(MAIN_LIBRARY faudio_shared PARENT_SCOPE)
   endif(BUILD_SHARED)
   if(True)
     add_library(faudio_static ${SRCS_ALL})
