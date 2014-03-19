@@ -1,4 +1,8 @@
 
+# v2.12.2
+
+- Fixes issue with SysEx MIDI messages on OS X
+
 # v2.12.1
 
 (no changes)
