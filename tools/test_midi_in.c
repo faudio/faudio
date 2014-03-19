@@ -17,7 +17,7 @@
 #define kEchoMIDI 1
 #define kEchodls 2
 
-#define kModeOfEchoing kEchodls
+#define kModeOfEchoing kEchoMIDI
 
 fa_ptr_t just_print(ptr_t _, ptr_t timeMessage)
 {

@@ -124,6 +124,8 @@ struct _fa_midi_stream_t {
     priority_queue_t                controls;           // Scheduled controls (Time, (Channel, Ptr))
     int                             timer_id;           // Used to unregister timer callbacks
 
+    bool                            in_sysex;           // Currently receiving a SysEx message
+
     struct {
         int                         count;
         struct {
@@ -282,6 +284,7 @@ inline static stream_t new_stream(device_t device)
     stream->controls        = priority_queue();
 
     stream->callbacks.count = 0;
+    stream->in_sysex = false;
 
     return stream;
 }
@@ -732,17 +735,40 @@ void message_listener(const MIDIPacketList *packetList, ptr_t x, ptr_t _)
         // TODO optionally use CoreMIDI time
         time_t time = fa_clock_time(stream->clock);
 
-        // TODO assumes simple message
-        midi_message_t msg = midi_message(
-                                 packet->data[0],
-                                 packet->data[1],
-                                 packet->data[2]);
+        // Started receiving a SysEx
+        if (packet->data[0] == 0xf0) {
+            stream->in_sysex = true;
+        }
 
+        midi_message_t msg;
+        if (stream->in_sysex) {
+
+            // DEBUG
+            // for (int i = 0; i < packet->length; ++i) {
+                // printf("%x ", packet->data[i]);
+            // }
+            // printf("\n");
+            // END DEBUG
+
+            buffer_t b = fa_copy(fa_buffer_wrap((void*) packet->data, packet->length, NULL, NULL));
+            msg = fa_midi_message_create_sysex(b);
+
+        } else {
+            msg = midi_message(
+                 packet->data[0],
+                 packet->data[1],
+                 packet->data[2]);
+        }
         for (int j = 0; j < n; ++j) {
             unary_t f = stream->callbacks.elements[j].function;
             ptr_t   x = stream->callbacks.elements[j].data;
 
             f(x, pair(time, msg));
+        }
+
+        // Finished receiving a SysEx
+        if (packet->data[0] == 0xf7) {
+            stream->in_sysex = false;
         }
     }
 }
@@ -764,33 +790,63 @@ ptr_t forward_action_to_midi(ptr_t x, ptr_t action)
 
     if (fa_action_is_send(action)) {
         // string_t name   = fa_action_send_name(action);
-        ptr_t value     = fa_action_send_value(action);
+        ptr_t message     = fa_action_send_value(action);
 
-        int sc, d1, d2;
-        fa_midi_message_decons(value, &sc, &d1, &d2);
+        if (fa_midi_message_is_simple(message)) {
+            int sc, d1, d2;
+            fa_midi_message_decons(message, &sc, &d1, &d2);
 
-        {
-            // printf("%d %d %d\n", sc, d1, d2);
+            {
+                // printf("%d %d %d\n", sc, d1, d2);
 
-            struct MIDIPacketList packetList;
+                struct MIDIPacketList packetList; // Max one packet
+                packetList.numPackets = 1;
+
+                packetList.packet[0].timeStamp = 0;
+                packetList.packet[0].length = 3;
+
+                packetList.packet[0].data[0] = sc;
+                packetList.packet[0].data[1] = d1;
+                packetList.packet[0].data[2] = d2;
+
+                native_error_t result = MIDISend(
+                                            stream->native,
+                                            stream->device->native,
+                                            &packetList
+                                        );
+
+                if (result < 0) {
+                    warn(string("Could not send MIDI"));
+                    return 0;
+                }
+            }
+        } else {
+            // warn(string("Could not send SysEx"));
+            buffer_t data = fa_midi_message_sysex_data(message);
+            if (fa_buffer_size(data) > 256) {
+                warn(string("Too large SysEx to send, ignoring!"));
+                return 0;
+            }
+
+            struct MIDIPacketList packetList; // Max one packet
             packetList.numPackets = 1;
-            packetList.packet[0].length = 3;
+            
             packetList.packet[0].timeStamp = 0;
-
-            packetList.packet[0].data[0] = sc;
-            packetList.packet[0].data[1] = d1;
-            packetList.packet[0].data[2] = d2;
-            MIDIPacketList *packetListPtr = &packetList;
+            packetList.packet[0].length = fa_buffer_size(data); // Max 256
+            
+            for (int i = 0; i < fa_buffer_size(data); ++i) {
+                uint8_t b = fa_buffer_get(data, i);
+                packetList.packet[0].data[i] = b;
+            }
 
             native_error_t result = MIDISend(
                                         stream->native,
                                         stream->device->native,
-                                        packetListPtr
+                                        &packetList
                                     );
-
             if (result < 0) {
                 warn(string("Could not send MIDI"));
-                assert(false);
+                return 0;
             }
         }
         return NULL;
