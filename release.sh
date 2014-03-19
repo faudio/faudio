@@ -74,7 +74,7 @@ if [[ $* != *--clean* ]]; then
 
 	echo "Distribution faudio-$VERSION.tar.gz created, please upload."
 	open .
-	open -a "Firefox" "https://github.com/hanshoglund/faudio/releases/new"
+	open -a "Google Chrome" "https://github.com/hanshoglund/faudio/releases/new"
 else
     echo "Cleaning"
     rm -rf faudio-*.tar.gz
