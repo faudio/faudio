@@ -56,6 +56,7 @@ pair_t fa_signal_clicks()
     proc->render  = render_;
     proc->receive = receive_;
     proc->send    = NULL;
+    proc->destroy = NULL;
     proc->data    = NULL;
 
     return pair(fa_signal_custom(proc, fa_signal_input(kThisPlugOffset + 0)), fa_signal_input(kThisPlugOffset + 1));

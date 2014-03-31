@@ -104,6 +104,7 @@ pair_t fa_signal_level(signal_t a, signal_t b)
     proc->render  = render_;
     proc->receive = receive_;
     proc->send    = send_;
+    proc->destroy = NULL;
     proc->data    = NULL;
 
     return pair(fa_signal_custom(proc,
