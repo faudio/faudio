@@ -16,7 +16,9 @@ void inc_state(int n, state_t state);
 
 typedef enum { custom_proc_before,
        custom_proc_render,
-       custom_proc_after } custom_proc_when_t;
+       custom_proc_after,
+       custom_proc_destroy
+        } custom_proc_when_t;
        
 /** Extract a list of fa_signal_custom_processor_t
     To be added with add_custom_proc

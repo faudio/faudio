@@ -1087,6 +1087,8 @@ void before_processing(stream_t stream)
 void after_processing(stream_t stream)
 {
     run_custom_procs(custom_proc_after, 0, stream->state);
+    run_custom_procs(custom_proc_destroy, 0, stream->state);
+
     delete_state(stream->state);
 }
 

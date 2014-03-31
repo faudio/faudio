@@ -34,7 +34,7 @@ void run_dls()
             fa_error_log(st, NULL);
         }
 
-        for (int i = 0; true; ++i) {
+        for (int i = 0; i < 10; ++i) {
 
             // fa_clock_t cl = fa_clock_standard();
             // fa_clock_t cl = fa_audio_stream_clock(st);
