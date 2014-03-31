@@ -171,6 +171,12 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
     return NULL;
 }
 
+ptr_t destroy_(ptr_t x)
+{
+    inform(string("Destorying FluidSynth instance"));
+    fluid_synth_destroy(x);
+}
+
 pair_t fa_signal_synth(string_t path2)
 {
     // create synth
@@ -182,12 +188,15 @@ pair_t fa_signal_synth(string_t path2)
         // fluid_settings_setsint(settings, "name", value);
         // fluid_settings_setsnum(settings, "name", value);
 
-        char *path = unstring(path2);
-
         fluid_settings_setnum(settings, "synth.gain", 0.6);
         fluid_settings_setint(settings, "synth.threadsafe-api", 0);
         fluid_settings_setint(settings, "synth.verbose", 0);
+
+        inform(string("Creating FluidSynth instance"));
         synth = new_fluid_synth(settings);
+
+        inform(fa_string_dappend(string("    Loading sound font"), fa_copy(path2)));
+        char *path = unstring(path2);
 
         if (FLUID_FAILED == fluid_synth_sfload(synth, path, true)) {
             warn(string("Fluidsynth: Could not load sound font"));
@@ -205,7 +214,7 @@ pair_t fa_signal_synth(string_t path2)
     proc->render  = render_;
     proc->receive = receive_;
     proc->send    = NULL;
-    proc->destroy = NULL;
+    proc->destroy = destroy_;
     proc->data    = synth;
 
     signal_t left  = fa_signal_input(kFluidOffset + 0);
