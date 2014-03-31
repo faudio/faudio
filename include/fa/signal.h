@@ -159,6 +159,7 @@ typedef struct {
             fa_ptr_t (* send)(fa_ptr_t,
                               fa_signal_message_callback_t,
                               fa_ptr_t);
+            fa_ptr_t (* destroy)(fa_ptr_t);
             fa_ptr_t data;
         } fa_signal_custom_processor_t;
 

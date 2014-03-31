@@ -134,7 +134,8 @@ module Fa.Signal
         receive : ((Ptr,Name,Message) -> Ptr)*,
         send    : ((Ptr,MessageCallback, Ptr) -> Ptr)*,
 
-        data : Ptr
+        destroy : (Ptr -> Ptr)*,
+        data    : Ptr
     };
     
     /** Add a custom processor to be executed with the given signal.
