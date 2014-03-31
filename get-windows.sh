@@ -8,4 +8,5 @@ else
     VERSION=$1
 fi
 
-scp hans@192.168.0.69:/c/Users/Doremir/Documents/bygge/faudio/faudio-$VERSION.zip .
+# scp hans@192.168.0.69:/c/Users/Doremir/Documents/bygge/faudio/faudio-$VERSION.zip .
+scp hans@192.168.0.27:/c/Users/Doremir/Documents/bygge/faudio/faudio-$VERSION.zip .

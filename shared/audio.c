@@ -64,6 +64,7 @@ struct _fa_audio_session_t {
         double          sample_rate;
         double          latency[2];
         int             vector_size;
+        int             scheduler_interval; // Scheduling interval in milliseconds
     }                   parameters;         // Parameters, which may be updated by set_parameters
 
     struct {
@@ -206,6 +207,7 @@ inline static void session_init_devices(session_t session)
     session->streams      = empty();
 
     session->parameters.sample_rate = kDefSampleRate;
+    session->parameters.scheduler_interval = kAudioSchedulerIntervalMillis;
     session->parameters.vector_size = kDefVectorSize;
     session->parameters.latency[0] = kDefLatency;
     session->parameters.latency[1] = kDefLatency;
@@ -426,6 +428,30 @@ void fa_audio_set_parameter(string_t name,
         }
 
         session->parameters.sample_rate = x;
+    }
+
+    if (fa_equal(name, string("scheduler-interval"))) {
+        double x;
+
+        switch (fa_dynamic_get_type(value)) {
+        case i32_type_repr:
+            x = fa_peek_int32(value);
+            break;
+
+        case f32_type_repr:
+            x = fa_peek_float(value);
+            break;
+
+        case f64_type_repr:
+            x = fa_peek_double(value);
+            break;
+
+        default:
+            warn(string("Wrong type"));
+            return;
+        }
+
+        session->parameters.scheduler_interval = x;
     }
 
     if (fa_equal(name, string("latency"))) {
@@ -1017,8 +1043,8 @@ ptr_t audio_control_thread(ptr_t x)
             //  * Look for a platform-independent timing library
             //  * Write platform-specific code
             //  * Use notifications from the audio thread (might not work at startup)
-
-            fa_thread_sleep(kAudioSchedulerIntervalMillis);
+                        
+            fa_thread_sleep((stream->input ? stream->input : stream->output)->session->parameters.scheduler_interval);
         }
     }
 
