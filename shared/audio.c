@@ -108,14 +108,17 @@ struct _fa_audio_stream_t {
 
     struct {
         thread_t        thread;
-        mutex_t         mutex;
+        // mutex_t         mutex;
         bool            stop;
     }                   controller;         // Controller thread (where scheduling runs)
 
-    atomic_queue_t      in_controls;        // Controls for scheduling, (AtomicQueue SomeAction)
-    atomic_queue_t      short_controls;     // Controls for scheduling, (AtomicQueue SomeAction)
-    atomic_queue_t      out_controls;       // Controls from audio, (AtomicQueue SomeAction)
-    priority_queue_t    controls;           // Scheduled controls (PriorityQueue (Time, Action))
+    atomic_queue_t      before_controls;    // Non-sechedyled controls
+
+    atomic_queue_t      in_controls;        // From scheduler to audio (AtomicQueue SomeAction)
+    atomic_queue_t      short_controls;     // Directly to audio (AtomicQueue SomeAction)
+    atomic_queue_t      out_controls;       // Audio to scheduler (AtomicQueue SomeAction)
+
+    priority_queue_t    controls;           // Scheduling queue (PriorityQueue (Time, Action))
 
     struct {
         int             count;
@@ -272,6 +275,7 @@ inline static stream_t new_stream(device_t input, device_t output, double sample
     stream->signal_count    = 0;
     stream->pa_flags        = 0;
 
+    stream->before_controls = atomic_queue();
     stream->in_controls     = atomic_queue();
     stream->short_controls  = atomic_queue();
     stream->controls        = priority_queue();
@@ -285,6 +289,7 @@ inline static stream_t new_stream(device_t input, device_t output, double sample
 
 inline static void delete_stream(stream_t stream)
 {
+    fa_destroy(stream->before_controls);
     fa_destroy(stream->in_controls);
     fa_destroy(stream->out_controls);
     fa_destroy(stream->short_controls);
@@ -815,7 +820,7 @@ stream_t fa_audio_open_stream(device_t input,
          */
         ptr_t audio_control_thread(ptr_t data);
         stream->controller.thread = fa_thread_create(audio_control_thread, stream);
-        stream->controller.mutex  = fa_thread_create_mutex();
+        // stream->controller.mutex  = fa_thread_create_mutex();
         stream->controller.stop   = false;
     }
 
@@ -858,7 +863,7 @@ void fa_audio_close_stream(stream_t stream)
 
             stream->controller.stop = true;
             fa_thread_join(stream->controller.thread);
-            fa_thread_destroy_mutex(stream->controller.mutex);
+            // fa_thread_destroy_mutex(stream->controller.mutex);
 
             inform(string("    Stream controller thread stopped"));
         }
@@ -921,9 +926,11 @@ void fa_audio_schedule(fa_time_t time,
                        fa_audio_stream_t stream)
 {
     pair_left_t pair = pair_left(time, action);
-    fa_with_lock(stream->controller.mutex) {
-        fa_priority_queue_insert(pair, stream->controls);
-    }
+
+    fa_atomic_queue_write(stream->before_controls, pair);
+    // fa_with_lock(stream->controller.mutex) {
+        // fa_priority_queue_insert(pair, stream->controls);
+    // }
 }
 
 void fa_audio_schedule_relative(fa_time_t         time,
@@ -984,8 +991,19 @@ ptr_t audio_control_thread(ptr_t x)
             }
         }
 
-        fa_with_lock(stream->controller.mutex) {
+        // fa_with_lock(stream->controller.mutex) 
+        {
             time_t now = fa_clock_time(fa_audio_stream_clock(stream));
+            // Write incoming actions
+            // TODO get things from before_controls to stream->controls
+            {
+                ptr_t incomingPair;
+                while ((incomingPair = fa_atomic_queue_read(stream->before_controls))) {
+                    assert(incomingPair);
+                    fa_priority_queue_insert(incomingPair, stream->controls);
+                }
+            }
+
             run_actions(stream->controls,
                         now,
                         forward_action_to_audio_thread,
