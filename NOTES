@@ -1,4 +1,10 @@
 
+# v2.12.3
+
+- Fixes performance issues related to scheduling on Windows
+
+- Adds the session parameter `scheduler-interval`
+
 # v2.12.2
 
 - Fixes issue with SysEx MIDI messages on OS X
