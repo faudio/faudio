@@ -800,7 +800,7 @@ void message_listener(const MIDIPacketList *packetList, ptr_t x, ptr_t _)
                 push_sysex_byte(stream, packet->data[j]);
                 {
                     midi_message_t msg = fa_midi_message_create_sysex(copy_sysex_to_new_buffer(stream));
-                    forward_message_to_callbacks(stream, time, msg);
+                    forward_message_to_callbacks(stream, fa_copy(time), msg);
                     reset_sysex_buffer(stream);
                 }
                 state = init;
