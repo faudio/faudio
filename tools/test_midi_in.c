@@ -15,7 +15,7 @@
 
 #define kEchoPrint 0
 #define kEchoMIDI 1
-#define kEchodls 2
+#define kEchoSynth 2
 
 #define kModeOfEchoing kEchoMIDI
 
@@ -43,7 +43,7 @@ fa_ptr_t print_and_echo_midi(ptr_t x, ptr_t timeMessage)
     printf("%lld ", fa_time_to_milliseconds(time));
     fa_print("%s\n", msg);
 
-    printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
+    // printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
     fa_midi_schedule_relative(fa_milliseconds(0), fa_action_send(string(""), msg), out_stream);
 
     fa_destroy(fa_pair_first(timeMessage));
@@ -51,17 +51,30 @@ fa_ptr_t print_and_echo_midi(ptr_t x, ptr_t timeMessage)
     return 0;
 }
 
+
+static long start_millis = -1;
+
 fa_ptr_t print_and_echo_dls(ptr_t x, ptr_t timeMessage)
 {
+    fa_print_ln(fa_thread_current());
+
     fa_audio_stream_t out_stream = x;
 
     // fa_print_ln(fa_string_show(timeMessage));
     fa_time_t time = fa_pair_first(timeMessage);
     fa_time_t msg  = fa_pair_second(timeMessage);
-    printf("%lld ", fa_time_to_milliseconds(time));
+
+    long millis = fa_time_to_milliseconds(time);
+    if (start_millis == (-1)) {
+        start_millis = millis;
+    }
+    millis -= start_millis;
+
+    printf("%-7ld ", millis);
+
     fa_print("%s\n", msg);
 
-    printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
+    // printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
     fa_audio_schedule_relative(fa_milliseconds(0), fa_action_send(string("dls"), msg), out_stream);
     // mark_used(out_stream);
 
@@ -77,6 +90,12 @@ ptr_t times2(ptr_t _, ptr_t x)
     return fa_multiply(x, fa_signal_constant(2.0));
 }
 
+inline static
+ptr_t louder(ptr_t data, ptr_t x)
+{
+    // return x*1.6;
+    return fa_multiply(fa_signal_constant(9), x);
+}
 void run_midi()
 {
     fa_midi_session_t s     = fa_midi_begin_session();
@@ -102,7 +121,7 @@ void run_midi()
 #else
     fa_pair_t synth = fa_signal_synth(string("C:\\sf.sf2"));
 #endif
-    list_t out              = fa_pair_to_list(synth);
+    list_t out              = fa_list_map(louder, NULL, fa_pair_to_list(synth));
     fa_audio_set_parameter(string("sample-rate"), f64(48000), as);
     fa_audio_set_parameter(string("vector-size"), f64(512), as);
     fa_audio_stream_t aost  = fa_audio_open_stream(ai, ao, just, out);
@@ -118,7 +137,7 @@ void run_midi()
         fa_midi_add_message_callback(print_and_echo_midi, ost, ist);
         break;
 
-    case kEchodls:
+    case kEchoSynth:
         printf("Echoing via internal synth\n");
         fa_midi_add_message_callback(print_and_echo_dls, aost, ist);
         break;
@@ -140,6 +159,10 @@ void run_midi()
 int main(int argc, char const *argv[])
 {
     fa_set_log_tool();
+
+    printf("Main thread: ");
+    fa_print_ln(fa_thread_current());
+
     fa_with_faudio() {
         run_midi();
     }
