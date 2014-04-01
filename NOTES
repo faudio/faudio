@@ -1,4 +1,8 @@
 
+# v2.12.4
+
+- Fixes issues with dropped MIDI input notes on OS X
+
 # v2.12.3
 
 - Fixes performance issues related to scheduling on Windows
