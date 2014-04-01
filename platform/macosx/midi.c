@@ -761,7 +761,7 @@ buffer_t copy_sysex_to_new_buffer(stream_t stream) {
 void message_listener(const MIDIPacketList *packetList, ptr_t x, ptr_t _)
 {
     stream_t stream = x;
-    printf("Called status_listener (if you see this, please report it as a bug)\n");
+    // printf("Called status_listener (if you see this, please report it as a bug)\n");
 
     // TODO tolerate SysEx distributed over many packets
     // Do an extra reset here just in case
@@ -811,7 +811,7 @@ void message_listener(const MIDIPacketList *packetList, ptr_t x, ptr_t _)
             }
             else 
             {        
-                printf("state=%d, data=%d\n", state, packet->data[j]);
+                // printf("state=%d, data=%d\n", state, packet->data[j]);
                 switch (state) {
                     case init:
                         status = packet->data[j];
