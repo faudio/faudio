@@ -862,7 +862,7 @@ void run_custom_procs(custom_proc_when_t when, int count, state_t state)
             break;
 
         case custom_proc_destroy: {
-            if (proc->data) {
+            if (proc->destroy && proc->data) {
                 proc->destroy(proc->data);
                 proc->data = NULL;
             }
