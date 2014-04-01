@@ -118,7 +118,8 @@ pair_t fa_signal_level(signal_t a, signal_t b)
 
 
 // amp2db x = logBase (10/1) x * 10
-double amp2db(double x) {
+double amp2db(double x)
+{
     return log10(x) * 10;
 }
 
@@ -135,6 +136,7 @@ ptr_t _message_out(ptr_t x, ptr_t name, ptr_t value)
             printf(" ");
         }
     }
+
     printf("|");
 
     printf("\r");

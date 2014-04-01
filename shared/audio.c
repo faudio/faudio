@@ -684,12 +684,12 @@ fa_pair_t fa_audio_recommended_latency(fa_audio_device_t device)
 {
     const PaDeviceInfo *info = Pa_GetDeviceInfo(device->index);
     return pair(pair(
-        f64(info->defaultLowInputLatency),
-        f64(info->defaultHighInputLatency)
-    ), pair(
-        f64(info->defaultLowOutputLatency),
-        f64(info->defaultHighOutputLatency)
-    ));
+                    f64(info->defaultLowInputLatency),
+                    f64(info->defaultHighInputLatency)
+                ), pair(
+                    f64(info->defaultLowOutputLatency),
+                    f64(info->defaultHighOutputLatency)
+                ));
 }
 
 
@@ -697,9 +697,10 @@ fa_pair_t fa_audio_recommended_latency(fa_audio_device_t device)
 // --------------------------------------------------------------------------------
 
 inline static
-string_t show_range(pair_t x) {
+string_t show_range(pair_t x)
+{
     string_t str = string("");
-    fa_unpair(x, a, b) {                   
+    fa_unpair(x, a, b) {
         fa_write_string(str, string("("));
         fa_write_string(str, fa_string_show(a));
         fa_write_string(str, string(","));
@@ -714,12 +715,16 @@ void print_audio_info(device_t input, device_t output)
 {
     inform(string("Opening real-time audio stream"));
     inform(string_dappend(string("    Input:               "), input ? fa_audio_full_name(input) : string("N/A")));
-    if (input)
+
+    if (input) {
         inform(string_dappend(string("        Default Latency: "), show_range(fa_pair_first(fa_audio_recommended_latency(input)))));
+    }
 
     inform(string_dappend(string("    Output:        "), output ? fa_audio_full_name(output) : string("N/A")));
-    if (output)
+
+    if (output) {
         inform(string_dappend(string("        Default Latency: "), show_range(fa_pair_first(fa_audio_recommended_latency(output)))));
+    }
 
     fa_let(session, input ? input->session : output->session) {
         inform(fa_string_format_floating("    Sample Rate:   %2f", session->parameters.sample_rate));
@@ -955,7 +960,7 @@ void fa_audio_schedule(fa_time_t time,
 
     fa_atomic_queue_write(stream->before_controls, pair);
     // fa_with_lock(stream->controller.mutex) {
-        // fa_priority_queue_insert(pair, stream->controls);
+    // fa_priority_queue_insert(pair, stream->controls);
     // }
 }
 
@@ -1017,13 +1022,14 @@ ptr_t audio_control_thread(ptr_t x)
             }
         }
 
-        // fa_with_lock(stream->controller.mutex) 
+        // fa_with_lock(stream->controller.mutex)
         {
             time_t now = fa_clock_time(fa_audio_stream_clock(stream));
             // Write incoming actions
             // TODO get things from before_controls to stream->controls
             {
                 ptr_t incomingPair;
+
                 while ((incomingPair = fa_atomic_queue_read(stream->before_controls))) {
                     assert(incomingPair);
                     fa_priority_queue_insert(incomingPair, stream->controls);
@@ -1043,7 +1049,7 @@ ptr_t audio_control_thread(ptr_t x)
             //  * Look for a platform-independent timing library
             //  * Write platform-specific code
             //  * Use notifications from the audio thread (might not work at startup)
-                        
+
             fa_thread_sleep((stream->input ? stream->input : stream->output)->session->parameters.scheduler_interval);
         }
     }
@@ -1215,6 +1221,7 @@ void native_finished_callback(void *data)
         if (stream->pa_flags & paInputOverflow) {
             warn(string("Input overflow detected"));
         }
+
         if (stream->pa_flags & paOutputUnderflow) {
             warn(string("Output underflow detected"));
         }

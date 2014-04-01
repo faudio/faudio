@@ -65,9 +65,11 @@ fa_ptr_t print_and_echo_dls(ptr_t x, ptr_t timeMessage)
     fa_time_t msg  = fa_pair_second(timeMessage);
 
     long millis = fa_time_to_milliseconds(time);
+
     if (start_millis == (-1)) {
         start_millis = millis;
     }
+
     millis -= start_millis;
 
     printf("%-7ld ", millis);

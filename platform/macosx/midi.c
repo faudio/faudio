@@ -731,31 +731,36 @@ void midi_inform_opening(device_t device)
 void forward_message_to_callbacks(midi_stream_t stream, time_t time, ptr_t msg)
 {
     int n = stream->callbacks.count;
+
     for (int j = 0; j < n; ++j) {
         unary_t f = stream->callbacks.elements[j].function;
         ptr_t   x = stream->callbacks.elements[j].data;
 
         f(x, pair(time, msg));
-    }    
+    }
 }
 
-void reset_sysex_buffer(stream_t stream) {
+void reset_sysex_buffer(stream_t stream)
+{
     stream->sysex_in_buffer.count = 0;
 }
 
-void push_sysex_byte(stream_t stream, uint8_t x) {
-    if(stream->sysex_in_buffer.count >= kSysexMaxSize) {
+void push_sysex_byte(stream_t stream, uint8_t x)
+{
+    if (stream->sysex_in_buffer.count >= kSysexMaxSize) {
         warn(string("Sysex overflow!"));
     }
+
     stream->sysex_in_buffer.data[stream->sysex_in_buffer.count++] = x;
 }
 
-buffer_t copy_sysex_to_new_buffer(stream_t stream) {
+buffer_t copy_sysex_to_new_buffer(stream_t stream)
+{
     // TODO do not double-allocate
-    return fa_copy(fa_buffer_wrap((void*) stream->sysex_in_buffer.data, 
-        stream->sysex_in_buffer.count, 
-        NULL, 
-        NULL));
+    return fa_copy(fa_buffer_wrap((void *) stream->sysex_in_buffer.data,
+                                  stream->sysex_in_buffer.count,
+                                  NULL,
+                                  NULL));
 }
 
 void message_listener(const MIDIPacketList *packetList, ptr_t x, ptr_t _)
@@ -780,23 +785,24 @@ void message_listener(const MIDIPacketList *packetList, ptr_t x, ptr_t _)
             await_data2,
             in_sysex
         } state = init;
-        
+
         // Iterate over every byte in the packet
         for (int j = 0; j < packet->length; ++j) {
             bool open_sysex  = packet->data[j] == 0xf0;
             bool close_sysex = packet->data[j] == 0xf7;
 
             if (open_sysex) {
-                if (state != init) { 
+                if (state != init) {
                     warn(string("Bad MIDI syntax"));
                 }
+
                 push_sysex_byte(stream, packet->data[j]);
                 state = in_sysex;
-            }  
-            else if (close_sysex) {
-                if (state != in_sysex) { 
+            } else if (close_sysex) {
+                if (state != in_sysex) {
                     warn(string("Bad MIDI syntax"));
                 }
+
                 push_sysex_byte(stream, packet->data[j]);
                 {
                     midi_message_t msg = fa_midi_message_create_sysex(copy_sysex_to_new_buffer(stream));
@@ -804,68 +810,66 @@ void message_listener(const MIDIPacketList *packetList, ptr_t x, ptr_t _)
                     reset_sysex_buffer(stream);
                 }
                 state = init;
-            }
-            else if (state == in_sysex) {
+            } else if (state == in_sysex) {
                 push_sysex_byte(stream, packet->data[j]);
                 state = in_sysex; // no change
-            }
-            else 
-            {        
+            } else {
                 // printf("state=%d, data=%d\n", state, packet->data[j]);
                 switch (state) {
-                    case init:
-                        status = packet->data[j];
-                        state = await_data1;
-                        continue;
+                case init:
+                    status = packet->data[j];
+                    state = await_data1;
+                    continue;
 
-                    case await_data1:
-                        data1 = packet->data[j];
-                        state = await_data2;
-                        continue;
+                case await_data1:
+                    data1 = packet->data[j];
+                    state = await_data2;
+                    continue;
 
-                    case await_data2:
-                        data2 = packet->data[j];
-                        forward_message_to_callbacks(stream, fa_copy(time), midi_message(status, data1, data2));
-                        state = init;
-                        continue;
+                case await_data2:
+                    data2 = packet->data[j];
+                    forward_message_to_callbacks(stream, fa_copy(time), midi_message(status, data1, data2));
+                    state = init;
+                    continue;
 
-                    default:
-                        warn(string("Bad MIDI syntax"));
-                        continue;
+                default:
+                    warn(string("Bad MIDI syntax"));
+                    continue;
                 }
-                
+
             }
-            
+
             mark_used(stream);
-            }
         }
-        fa_destroy(time);
+    }
+
+    fa_destroy(time);
 
 
-        // // TODO optionally use CoreMIDI time
-        // time_t time = fa_clock_time(stream->clock);
-        // 
-        // // Started receiving a SysEx
-        // if (packet->data[0] == 0xf0) {
-        //     stream->in_sysex = true;
-        // }
-        // 
-        // if (stream->in_sysex) {
-        //     midi_message_t msg;
-        //     buffer_t b = fa_copy(fa_buffer_wrap((void*) packet->data, packet->length, NULL, NULL));
-        //     msg = fa_midi_message_create_sysex(b);
-        //     forward_message_to_callbacks(stream, time, msg);
-        //     
-        // } else {
-        //     midi_message_t msg;
-        //     msg = midi_message(packet->data[0], packet->data[1], packet->data[2]);
-        //     forward_message_to_callbacks(stream, time, msg);
-        // }
-        // 
-        // // Finished receiving a SysEx
-        // if (packet->data[0] == 0xf7) {
-        //     stream->in_sysex = false;
-        // }
+    // // TODO optionally use CoreMIDI time
+    // time_t time = fa_clock_time(stream->clock);
+    //
+    // // Started receiving a SysEx
+    // if (packet->data[0] == 0xf0) {
+    //     stream->in_sysex = true;
+    // }
+    //
+    // if (stream->in_sysex) {
+    //     midi_message_t msg;
+    //     buffer_t b = fa_copy(fa_buffer_wrap((void*) packet->data, packet->length, NULL, NULL));
+    //     msg = fa_midi_message_create_sysex(b);
+    //     forward_message_to_callbacks(stream, time, msg);
+    //
+    // } else {
+    //     midi_message_t msg;
+    //     msg = midi_message(packet->data[0], packet->data[1], packet->data[2]);
+    //     forward_message_to_callbacks(stream, time, msg);
+    // }
+    //
+    // // Finished receiving a SysEx
+    // if (packet->data[0] == 0xf7) {
+    //     stream->in_sysex = false;
+    // }
 }
 
 void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2);
@@ -918,17 +922,20 @@ ptr_t forward_action_to_midi(ptr_t x, ptr_t action)
         } else {
             // warn(string("Could not send SysEx"));
             buffer_t data = fa_midi_message_sysex_data(message);
+
             if (fa_buffer_size(data) > 256) {
                 warn(string("Too large SysEx to send, ignoring!"));
                 return 0;
             }
 
             struct MIDIPacketList packetList; // Max one packet
+
             packetList.numPackets = 1;
-            
+
             packetList.packet[0].timeStamp = 0;
+
             packetList.packet[0].length = fa_buffer_size(data); // Max 256
-            
+
             for (int i = 0; i < fa_buffer_size(data); ++i) {
                 uint8_t b = fa_buffer_get(data, i);
                 packetList.packet[0].data[i] = b;
@@ -939,11 +946,13 @@ ptr_t forward_action_to_midi(ptr_t x, ptr_t action)
                                         stream->device->native,
                                         &packetList
                                     );
+
             if (result < 0) {
                 warn(string("Could not send MIDI"));
                 return 0;
             }
         }
+
         return NULL;
     }
 

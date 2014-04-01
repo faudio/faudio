@@ -866,7 +866,7 @@ void run_custom_procs(custom_proc_when_t when, int count, state_t state)
             //     proc->destroy(proc->data);
             //     proc->data = NULL;
             // }
-            break;            
+            break;
         }
 
         default:
