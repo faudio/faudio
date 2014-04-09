@@ -740,27 +740,40 @@ string_t show_range(pair_t x)
     return str;
 }
 
+static bool is_wasapi_device(device_t device)
+{
+    return device && (device->host == paWASAPI);
+}
+
+// static bool is_asio_device(device_t device)
+// {
+    // return device && (device->host == paASIO);
+// }
+
 inline static
 void print_audio_info(device_t input, device_t output)
 {
     inform(string("Opening real-time audio stream"));
-    inform(string_dappend(string("    Input:               "), input ? fa_audio_full_name(input) : string("N/A")));
+    inform(string_dappend(string("    Input: "), input ? fa_audio_full_name(input) : string("N/A")));
 
     if (input) {
         inform(string_dappend(string("        Default Latency: "), show_range(fa_pair_first(fa_audio_recommended_latency(input)))));
     }
 
-    inform(string_dappend(string("    Output:        "), output ? fa_audio_full_name(output) : string("N/A")));
+    inform(string_dappend(string("    Output: "), output ? fa_audio_full_name(output) : string("N/A")));
 
     if (output) {
         inform(string_dappend(string("        Default Latency: "), show_range(fa_pair_first(fa_audio_recommended_latency(output)))));
     }
 
     fa_let(session, input ? input->session : output->session) {
-        inform(fa_string_format_floating("    Sample Rate:   %2f", session->parameters.sample_rate));
-        inform(fa_string_format_floating("    Input Latency: %3f", session->parameters.latency[0]));
+        inform(fa_string_format_floating("    Sample Rate:    %2f", session->parameters.sample_rate));
+        inform(fa_string_format_floating("    Input Latency:  %3f", session->parameters.latency[0]));
         inform(fa_string_format_floating("    Output Latency: %3f", session->parameters.latency[1]));
-        inform(fa_string_format_integral("    Vector Size:   %d",  session->parameters.vector_size));
+        inform(fa_string_format_integral("    Vector Size:    %d",  session->parameters.vector_size));
+        if (is_wasapi_device(input) || is_wasapi_device(output)) {
+            inform(fa_string_dappend(string("    Exclusive Mode: "),  string(session->parameters.exclusive ? "Yes" : "No")));
+        }
     }
 }
 
@@ -780,11 +793,6 @@ list_t apply_processor(proc_t proc, ptr_t proc_data, list_t inputs)
         warn(string("Audio.openStream: Assuming stereo output"));
         return list(fa_signal_constant(0), fa_signal_constant(0));
     }
-}
-
-static bool is_wasapi_device(device_t device)
-{
-    return device->host == paWASAPI;
 }
 
 stream_t fa_audio_open_stream(device_t input,
