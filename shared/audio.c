@@ -65,6 +65,7 @@ struct _fa_audio_session_t {
         double          latency[2];
         int             vector_size;
         int             scheduler_interval; // Scheduling interval in milliseconds
+        bool            exclusive;          // Use exclusive mode (if available)
     }                   parameters;         // Parameters, which may be updated by set_parameters
 
     struct {
@@ -206,11 +207,12 @@ inline static void session_init_devices(session_t session)
     session->def_output   = new_device(session, Pa_GetDefaultOutputDevice());
     session->streams      = empty();
 
-    session->parameters.sample_rate = kDefSampleRate;
-    session->parameters.scheduler_interval = kAudioSchedulerIntervalMillis;
-    session->parameters.vector_size = kDefVectorSize;
-    session->parameters.latency[0] = kDefLatency;
-    session->parameters.latency[1] = kDefLatency;
+    session->parameters.sample_rate         = kDefSampleRate;
+    session->parameters.scheduler_interval  = kAudioSchedulerIntervalMillis;
+    session->parameters.vector_size         = kDefVectorSize;
+    session->parameters.latency[0]          = kDefLatency;
+    session->parameters.latency[1]          = kDefLatency;
+    session->parameters.exclusive           = false;
 }
 
 inline static void delete_session(session_t session)
@@ -553,6 +555,30 @@ void fa_audio_set_parameter(string_t name,
         } else {
             warn(fa_string_format_integral("Vector size %d too large, ignoring parameter.", x));
         }
+    }
+
+    if (fa_equal(name, string("exclusive"))) {
+        bool x;
+
+        switch (fa_dynamic_get_type(value)) {
+        case i32_type_repr:
+            x = fa_peek_int32(value);
+            break;
+
+        case i64_type_repr:
+            x = fa_peek_int64(value);
+            break;
+
+        case bool_type_repr:
+            x = fa_peek_bool(value);
+            break;
+
+        default:
+            warn(string("Wrong type"));
+            return;
+        }
+
+        session->parameters.exclusive = x;
     }
 }
 
