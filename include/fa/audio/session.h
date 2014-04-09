@@ -81,17 +81,21 @@ void fa_audio_with_session(fa_audio_session_callback_t sessionCallback,
     
     This function should usually be called once, directly after the session has been
     created, and will affect all streams created after the invocation.
+    
+    Note the dependency between sample-rate, latency and vector size: Normally you want
+    `(1/sr)*vs < min(inputLatency, outputLatency)` to hold.
 
     ### Supported parameters ###
     
     Name                 | Description
     ---------------------|------------------------------------------------------------------------
-    `latency`            | Suggested latency for both input and outpu in seconds (integer or floating-point).
-    `input-latency`      | Suggested latency for both input and outpu in seconds (integer or floating-point).
-    `output-latency`     | Suggested latency for both input and outpu in seconds (integer or floating-point).
-    `sample-rate`        | Suggested sample rate (floating-point).
-    `vector-size`        | Suggested vector size (integer).
+    `latency`            | Suggested latency for both input and output in seconds (integer or floating-point).
+    `input-latency`      | Suggested latency for both input and output in seconds (integer or floating-point).
+    `output-latency`     | Suggested latency for both input and output in seconds (integer or floating-point).
+    `sample-rate`        | Suggested sample rate in Hertz (floating-point).
+    `vector-size`        | Suggested internal vector size (integer).
     `scheduler-interval` | Scheduler update interval in milliseconds (integer or floating-point).
+    `exclusive`          | Use exclusive mode if available (boolean or integer). This will force `faudio` to claim exclusive access to each audio device it uses.
     
     @param name     Name of parameter to set.
     @param value    A [reference](@ref ValueReferences) to the value to set.
