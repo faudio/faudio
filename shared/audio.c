@@ -20,6 +20,7 @@
 #include <fa/time.h>
 
 #include <portaudio.h>
+#include <pa_win_wasapi.h>
 #include "signal.h"
 #include "signal_internal.h"
 #include "action_internal.h"
@@ -42,6 +43,7 @@ typedef fa_audio_status_callback_t  status_callback_t;
 typedef fa_signal_custom_processor_t   *custom_proc_t;
 
 typedef PaDeviceIndex native_index_t;
+typedef PaHostApiIndex native_host_t;
 typedef PaStream     *native_stream_t;
 
 #define kMaxSignals             32
@@ -83,6 +85,7 @@ struct _fa_audio_device_t {
 
     impl_t              impl;               // Dispatcher
     native_index_t      index;              // Native device index
+    native_host_t       host;
     session_t           session;            // Underlying session
 
     string_t            name;               // Cached names
@@ -234,6 +237,7 @@ inline static device_t new_device(session_t session, native_index_t index)
     const PaHostApiInfo *host_info = Pa_GetHostApiInfo(info->hostApi);
 
     device->index       = index;
+    device->host        = info->hostApi;
     device->session     = session;
 
     /*
@@ -570,7 +574,7 @@ void fa_audio_set_parameter(string_t name,
             break;
 
         case bool_type_repr:
-            x = fa_peek_bool(value);
+            x = fa_from_bool(value);
             break;
 
         default:
@@ -778,6 +782,11 @@ list_t apply_processor(proc_t proc, ptr_t proc_data, list_t inputs)
     }
 }
 
+static bool is_wasapi_device(device_t device)
+{
+    return device->host == paWASAPI;
+}
+
 stream_t fa_audio_open_stream(device_t input,
                               device_t output,
                               proc_t proc,
@@ -818,12 +827,24 @@ stream_t fa_audio_open_stream(device_t input,
         print_audio_info(input, output);
     }
     fa_let(session, input ? input->session : output->session) {
+
+        struct PaWasapiStreamInfo wasapiInfo = {
+            .size                       = sizeof(PaWasapiStreamInfo),
+            .hostApiType                = paWASAPI,
+            .version                    = 1,
+            .flags                      = session->parameters.exclusive,
+            .channelMask                = 0,
+            .hostProcessorOutput        = NULL,
+            .hostProcessorInput         = NULL,
+            .threadPriority             = eThreadPriorityProAudio
+        };
+
         /*
             Open and set native stream.
          */
         PaStreamParameters input_stream_parameters = {
             .suggestedLatency           = session->parameters.latency[0],
-            .hostApiSpecificStreamInfo  = NULL,
+            .hostApiSpecificStreamInfo  = ((input && is_wasapi_device(input)) ? &wasapiInfo : 0),
             .device                     = (input ? input->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
             .channelCount               = stream->input_channels
@@ -831,7 +852,7 @@ stream_t fa_audio_open_stream(device_t input,
 
         PaStreamParameters output_stream_parameters = {
             .suggestedLatency           = session->parameters.latency[1],
-            .hostApiSpecificStreamInfo  = NULL,
+            .hostApiSpecificStreamInfo  = ((output && is_wasapi_device(output)) ? &wasapiInfo : 0),
             .device                     = (output ? output->index : 0),
             .sampleFormat               = (paFloat32 | paNonInterleaved),
             .channelCount               = stream->output_channels
