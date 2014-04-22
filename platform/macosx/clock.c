@@ -22,7 +22,54 @@ static fa_clock_t   kStandardClock;
 
 // --------------------------------------------------------------------------------
 
-static fa_clock_t new_standard_clock();
+inline static
+int64_t raw_milliseconds()
+{
+    mach_timespec_t ts;
+    clock_get_time(gMachClock, &ts);
+
+    return ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
+}
+
+inline static
+fa_time_t raw_time()
+{
+    mach_timespec_t ts;
+    clock_get_time(gMachClock, &ts);
+
+    time_t s  = seconds(ts.tv_sec);
+    time_t ds = divisions(ts.tv_nsec / 1000000, 1000);
+    return fa_dadd(s, ds);
+}
+
+
+typedef struct standard_clock *standard_clock_t;
+struct standard_clock {
+    impl_t impl;
+    struct {
+        time_t time;
+        int64_t milliseconds;        
+        } origin;
+};
+
+static fa_clock_t new_standard_clock()
+{
+    fa_ptr_t standard_clock_impl(fa_id_t interface);
+    standard_clock_t c = fa_new_struct(standard_clock);
+
+    c->impl = &standard_clock_impl;
+    c->origin.milliseconds = raw_milliseconds();
+    c->origin.time         = raw_time();
+
+    return (fa_clock_t) c;
+}
+
+inline static void delete_standard_clock(standard_clock_t standard_clock)
+{
+    fa_delete(standard_clock);
+}
+
+// --------------------------------------------------------------------------------
 
 void fa_clock_initialize()
 {
@@ -50,27 +97,6 @@ fa_time_milliseconds_t fa_clock_milliseconds(fa_clock_t clock)
     return ((fa_clock_interface_t *) fa_interface(fa_clock_interface_i, clock))->milliseconds(clock);
 }
 
-
-// --------------------------------------------------------------------------------
-
-typedef struct standard_clock *standard_clock_t;
-struct standard_clock {
-    impl_t impl;
-};
-
-static fa_clock_t new_standard_clock()
-{
-    fa_ptr_t standard_clock_impl(fa_id_t interface);
-    standard_clock_t c = fa_new_struct(standard_clock);
-    c->impl = &standard_clock_impl;
-    return (fa_clock_t) c;
-}
-
-inline static void delete_standard_clock(standard_clock_t standard_clock)
-{
-    fa_delete(standard_clock);
-}
-
 fa_clock_t fa_clock_standard()
 {
     return kStandardClock; // TODO singleton
@@ -90,24 +116,17 @@ fa_string_t standard_clock_show(fa_ptr_t a)
     return str;
 }
 
-int64_t standard_clock_milliseconds(fa_ptr_t a)
+int64_t standard_clock_milliseconds(fa_ptr_t x)
 {
-    mach_timespec_t ts;
-    clock_get_time(gMachClock, &ts);
-
-    return ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
+    standard_clock_t clock = (standard_clock_t) x;
+    return raw_milliseconds() - clock->origin.milliseconds;
 }
 
-fa_time_t standard_clock_time(fa_ptr_t a)
+fa_time_t standard_clock_time(fa_ptr_t x)
 {
-    mach_timespec_t ts;
-    clock_get_time(gMachClock, &ts);
-
-    time_t s  = seconds(ts.tv_sec);
-    time_t ds = divisions(ts.tv_nsec / 1000000, 1000);
-    return fa_dadd(s, ds);
+    standard_clock_t clock = (standard_clock_t) x;
+    return fa_subtract(raw_time(), clock->origin.time);
 }
-
 
 fa_ptr_t standard_clock_impl(fa_id_t interface)
 {
