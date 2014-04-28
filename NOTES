@@ -1,4 +1,14 @@
 
+# v2.13.0
+
+- Adds WASAPI exclusive mode
+
+- Properly frees memory allocated in external processors
+
+- Fixes race condition in device detection on Windows
+
+- Changes standard clock to start counting at zero (analogous to audio clocks)
+
 # v2.12.4
 
 - Fixes issues with dropped MIDI input notes on OS X
