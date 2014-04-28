@@ -24,6 +24,8 @@ typedef struct nullary_closure *closure_t;
 static
 int     gInitializedOnce = 0;
 
+static mutex_t   windows_device_mutex;
+
 closure_t gMidiCallbackTable[1000];
 pair_t gAudioCallbackTable[1000];
 long    gMidiCallbackTableCount;
@@ -102,13 +104,14 @@ void fa_device_initialize2()
         HANDLE wt = CreateThread(NULL, 0, window_thread, kMidiDeviceType, 0, 0);
         CloseHandle(wt);
     }
+
+    windows_device_mutex = fa_thread_create_mutex();
 }
 
 void fa_device_terminate()
 {
     // TODO unregister and stop threads
-
-
+    fa_thread_destroy_mutex(windows_device_mutex);
 }
 
 // --------------------------------------------------------------------------------
@@ -230,6 +233,7 @@ DWORD WINAPI check_thread_midi(LPVOID _)
     Sleep(500);
 
     if (mINumDevs != midiInGetNumDevs() || mONumDevs != midiOutGetNumDevs()) {
+        fa_with_lock(windows_device_mutex) {
         for (int i = 0; i < gMidiCallbackTableCount; ++i) {
             closure_t tp = gMidiCallbackTable[i];
 
@@ -237,17 +241,20 @@ DWORD WINAPI check_thread_midi(LPVOID _)
                 tp->function(tp->data);
             }
         }
+        }
 
         mINumDevs = midiInGetNumDevs();
         mONumDevs = midiOutGetNumDevs();
         midi_hash = BuildMidiHash();
     } else if (!CheckMidiHash()) {
+        fa_with_lock(windows_device_mutex) {
         for (int i = 0; i < gMidiCallbackTableCount; ++i) {
             closure_t tp = gMidiCallbackTable[i];
 
             if (tp) {
                 tp->function(tp->data);
             }
+        }
         }
 
         midi_hash = BuildMidiHash();
@@ -271,6 +278,7 @@ DWORD WINAPI check_thread_audio(LPVOID _)
     if (wINumDevs != waveInGetNumDevs() || wONumDevs != waveOutGetNumDevs()) {
         inform(string("  Change (number)"));
 
+        fa_with_lock(windows_device_mutex) {
         for (int i = 0; i < gAudioCallbackTableCount; ++i) {
             pair_t tp = gAudioCallbackTable[i];
 
@@ -281,6 +289,7 @@ DWORD WINAPI check_thread_audio(LPVOID _)
                 }
             }
         }
+        }
 
         wINumDevs  = waveInGetNumDevs();
         wONumDevs  = waveOutGetNumDevs();
@@ -288,6 +297,7 @@ DWORD WINAPI check_thread_audio(LPVOID _)
     } else if (!CheckAudioHash()) {
         inform(string("  Change (hash)"));
 
+        fa_with_lock(windows_device_mutex) {
         for (int i = 0; i < gAudioCallbackTableCount; ++i) {
             pair_t tp = gAudioCallbackTable[i];
 
@@ -297,6 +307,7 @@ DWORD WINAPI check_thread_audio(LPVOID _)
                     function2(data);
                 }
             }
+        }
         }
 
         audio_hash = BuildAudioHash();
@@ -523,7 +534,9 @@ DWORD WINAPI window_thread(LPVOID params)
 void add_audio_status_listener(pair_t closure)
 {
     // Save params in global array
+    fa_with_lock(windows_device_mutex) {
     gAudioCallbackTable[gAudioCallbackTableCount++] = closure;
+    }
 }
 
 void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
@@ -532,27 +545,33 @@ void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
     closure->function = function;
     closure->data     = data;
 
+    fa_with_lock(windows_device_mutex) {
     // Save params in global array
     gMidiCallbackTable[gMidiCallbackTableCount++] = closure;
+    }
 }
 
 // TODO remove user callbacks
 void remove_audio_status_listener(pair_t closure)
 {
+    fa_with_lock(windows_device_mutex) {
     for (int i = 0; i < gAudioCallbackTableCount; i++) {
         if (gAudioCallbackTable[i] == closure) {
             gAudioCallbackTable[i] = NULL;
         }
     }
+    }
 }
 
 void remove_midi_status_listener(midi_status_callback_t function)
 {
+    fa_with_lock(windows_device_mutex) {
     for (int i = 0; i < gMidiCallbackTableCount; i++) {
         if (gMidiCallbackTable[i] &&
                 gMidiCallbackTable[i]->function == function) {
             free(gMidiCallbackTable[i]);
         }
+    }
     }
 }
 
