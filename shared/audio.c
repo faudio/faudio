@@ -747,7 +747,7 @@ static bool is_wasapi_device(device_t device)
 
 // static bool is_asio_device(device_t device)
 // {
-    // return device && (device->host == paASIO);
+// return device && (device->host == paASIO);
 // }
 
 inline static
@@ -771,6 +771,7 @@ void print_audio_info(device_t input, device_t output)
         inform(fa_string_format_floating("    Input Latency:  %3f", session->parameters.latency[0]));
         inform(fa_string_format_floating("    Output Latency: %3f", session->parameters.latency[1]));
         inform(fa_string_format_integral("    Vector Size:    %d",  session->parameters.vector_size));
+
         if (is_wasapi_device(input) || is_wasapi_device(output)) {
             inform(fa_string_dappend(string("    Exclusive Mode: "),  string(session->parameters.exclusive ? "Yes" : "No")));
         }

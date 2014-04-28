@@ -58,13 +58,15 @@ static inline convert_sr(long count, double[] inputs, double[] outputs)
     b = 8363;
 
     // upsample by a
-    for(i = z = 0; i < samplen; i++)
-        for(j = 0; j < a; j++)
+    for (i = z = 0; i < samplen; i++)
+        for (j = 0; j < a; j++) {
             cbuf[z++] = sampdata[i];
+        }
 
     // some filter goes here???
 
     // downsample by b
-    for(j = i = 0; i < z; i += b)
+    for (j = i = 0; i < z; i += b) {
         buf[j++] = cbuf[i];
+    }
 }

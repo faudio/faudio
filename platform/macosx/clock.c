@@ -48,8 +48,8 @@ struct standard_clock {
     impl_t impl;
     struct {
         time_t time;
-        int64_t milliseconds;        
-        } origin;
+        int64_t milliseconds;
+    } origin;
 };
 
 static fa_clock_t new_standard_clock()
