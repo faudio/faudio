@@ -1,4 +1,10 @@
 
+# v2.13.1
+
+- Fixes issue related to Wasapi exlusive mode
+
+- Fixes issue with Fluidsynth destruction
+
 # v2.13.0
 
 - Adds WASAPI exclusive mode
