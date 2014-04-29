@@ -1,0 +1,11 @@
+<map id="include/fa/ratio.h" name="include/fa/ratio.h">
+<area shape="rect" id="node3" href="$time_8h.html" title="include/fa/time.h" alt="" coords="419,86,555,117"/>
+<area shape="rect" id="node5" href="$audio_2device_8h.html" title="include/fa/audio/device.h" alt="" coords="42,326,239,357"/>
+<area shape="rect" id="node7" href="$audio_2stream_8h.html" title="include/fa/audio/stream.h" alt="" coords="41,406,239,437"/>
+<area shape="rect" id="node9" href="$audio_2session_8h.html" title="include/fa/audio/session.h" alt="" coords="40,246,241,277"/>
+<area shape="rect" id="node13" href="$clock_8h.html" title="include/fa/clock.h" alt="" coords="282,166,426,197"/>
+<area shape="rect" id="node18" href="$midi_8h.html" title="include/fa/midi.h" alt="" coords="419,246,555,277"/>
+<area shape="rect" id="node20" href="$fa_2fa_8h.html" title="include/fa/fa.h" alt="" coords="484,326,607,357"/>
+<area shape="rect" id="node26" href="$analysis_8h.html" title="include/fa/signal/analysis.h" alt="" coords="655,166,863,197"/>
+<area shape="rect" id="node28" href="$basic_8h.html" title="include/fa/signal/basic.h" alt="" coords="888,166,1078,197"/>
+</map>
