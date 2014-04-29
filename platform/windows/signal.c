@@ -174,7 +174,7 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 ptr_t destroy_(ptr_t x)
 {
     inform(string("Destorying FluidSynth instance"));
-    fluid_synth_destroy(x);
+    delete_fluid_synth(x);
 }
 
 pair_t fa_signal_synth(string_t path2)
