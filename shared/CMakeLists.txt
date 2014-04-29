@@ -75,6 +75,7 @@ if(APPLE)
     target_link_libraries(faudio ${EXTS})
     set(MAIN_LIBRARY faudio PARENT_SCOPE)
   endif(BUILD_SHARED)
+  set(MACOSX_FRAMEWORK_IDENTIFIER "com.doremir.Faudio")
   if(BUILD_FRAMEWORK)
     add_library(faudio_framework SHARED ${SRCS_ALL})
     set_target_properties(faudio_framework PROPERTIES
