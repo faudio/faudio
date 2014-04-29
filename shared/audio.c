@@ -837,11 +837,14 @@ stream_t fa_audio_open_stream(device_t input,
     }
     fa_let(session, input ? input->session : output->session) {
 
+        PaWasapiFlags wasapiFlags = 0;
+        wasapiFlags |= (session->parameters.exclusive ? paWinWasapiExclusive : 0);
+        
         struct PaWasapiStreamInfo wasapiInfo = {
             .size                       = sizeof(PaWasapiStreamInfo),
             .hostApiType                = paWASAPI,
             .version                    = 1,
-            .flags                      = session->parameters.exclusive,
+            .flags                      = wasapiFlags,
             .channelMask                = 0,
             .hostProcessorOutput        = NULL,
             .hostProcessorInput         = NULL,
