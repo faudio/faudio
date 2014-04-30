@@ -371,6 +371,10 @@ void fa_audio_end_session(session_t session)
 
     inform(string("Terminating real-time audio session"));
 
+    inform(string("   Unregistering hot-plug callbacks"));
+    remove_audio_status_listener(session->status_closure);
+    inform(string("   Finished unregistering hot-plug callbacks"));
+
     fa_with_lock(pa_mutex) {
         fa_for_each(stream, session->streams) {
             // It is OK if the stream is already closed
@@ -385,7 +389,6 @@ void fa_audio_end_session(session_t session)
 
         current_session = NULL;
     }
-    remove_audio_status_listener(session->status_closure);
 
     inform(string("Finished terminating session"));
     delete_session(session);

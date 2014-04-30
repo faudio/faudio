@@ -72,10 +72,10 @@ void fa_device_initialize2();
 
 void fa_device_initialize()
 {
-    // if (gInitializedOnce == 0) {
-    //     gInitializedOnce++;
-    //     fa_device_initialize2();
-    // }
+    if (gInitializedOnce == 0) {
+        gInitializedOnce++;
+        fa_device_initialize2();
+    }
 }
 
 void fa_device_initialize2()
