@@ -111,7 +111,7 @@ void fa_device_initialize2()
 void fa_device_terminate()
 {
     // TODO unregister and stop threads
-    fa_thread_destroy_mutex(windows_device_mutex);
+    // fa_thread_destroy_mutex(windows_device_mutex);
 }
 
 // --------------------------------------------------------------------------------
