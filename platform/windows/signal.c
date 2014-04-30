@@ -23,11 +23,7 @@ ptr_t before_(ptr_t x, int count, fa_signal_state_t *state)
 
 ptr_t after_(ptr_t x, int count, fa_signal_state_t *state)
 {
-    fluid_synth_t *synth = x;
-    fluid_settings_t *settings = fluid_synth_get_settings(synth);
-
-    delete_fluid_synth(synth);
-    delete_fluid_settings(settings);
+    // Nothing
 }
 
 #define kFluidOffset 34
@@ -173,8 +169,12 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 
 ptr_t destroy_(ptr_t x)
 {
-    inform(string("Destorying FluidSynth instance"));
-    delete_fluid_synth(x);
+    inform(string("Destroying FluidSynth instance"));
+    fluid_synth_t *synth = x;
+    fluid_settings_t *settings = fluid_synth_get_settings(synth);
+
+    delete_fluid_synth(synth);
+    delete_fluid_settings(settings);
 }
 
 pair_t fa_signal_synth(string_t path2)
