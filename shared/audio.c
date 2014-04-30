@@ -752,11 +752,6 @@ static bool is_wasapi_device(device_t device)
     return false;
 }
 
-// static bool is_asio_device(device_t device)
-// {
-// return device && (device->host == paASIO);
-// }
-
 inline static
 void print_audio_info(device_t input, device_t output)
 {
