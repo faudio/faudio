@@ -742,7 +742,14 @@ string_t show_range(pair_t x)
 
 static bool is_wasapi_device(device_t device)
 {
-    return device && (device->host == paWASAPI);
+    if (device) {
+        // Note that device->host is a runtime-determined index, 
+        // so we need toook up static type id here
+        if (Pa_GetHostApiInfo(device->host)->type == paWASAPI) {
+            return true;
+        }
+    }
+    return false;
 }
 
 // static bool is_asio_device(device_t device)
