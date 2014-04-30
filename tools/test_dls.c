@@ -23,12 +23,12 @@ void run_dls()
 
     if (RT) {
         fa_audio_session_t s = fa_audio_begin_session();
-        fa_audio_device_t i  = fa_audio_default_input(s);
+        // fa_audio_device_t i  = fa_audio_default_input(s);
         fa_audio_device_t o  = fa_audio_default_output(s);
 
         list_t out           = fa_pair_to_list(synth);
 
-        fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
+        fa_audio_stream_t st = fa_audio_open_stream(NULL, o, just, out);
 
         if (fa_check(st)) {
             fa_error_log(st, NULL);
