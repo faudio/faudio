@@ -1,4 +1,8 @@
 
+# v2.13.2
+
+- Fixes crash bugs related to hot-plugging and stream destruction
+
 # v2.13.1
 
 - Fixes issue related to Wasapi exlusive mode
