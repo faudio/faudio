@@ -44,6 +44,7 @@ void helper_function()
     proc.receive = receive_;
     proc.send    = NULL;
     proc.data    = NULL;
+    proc.destroy = NULL;
 
     // printf("Sending custom proc %p!\n", &proc);
 
