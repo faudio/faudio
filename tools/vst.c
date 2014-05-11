@@ -19,7 +19,8 @@
 #define kThisPlugOffset 37 // TODO
 
 #define PATH string("/Library/Audio/Plug-Ins/VST/ComboV.vst")
-// #define PATH string("/Library/Audio/Plug-Ins/VST/TAL-Chorus-60.vst")
+// #define PATH string("/Library/Audio/Plug-Ins/VST/TAL-U-No-62.vst")
+
 // #define PATH string("/Library/Audio/Plug-Ins/VST/Melodyne.vst")
 // #define PATH string("/Library/Audio/Plug-Ins/VST/Kontakt 5.vst")
 ;
@@ -198,9 +199,10 @@ pair_t fa_signal_vs(string_t path)
     //      
     //     err=CreateNewWindow(kDocumentWindowClass,kWindowStandardDocumentAttributes,&contentRect, &theWindow);
     //     if(err!=noErr)printf("Error in CreateNewWindow\n");
-    // 
     //     ShowWindow(theWindow);
-    //     openPlugin(plugin, theWindow);
+    // 
+    //     WindowRef refWindow = theWindow;    
+    //     openPlugin(plugin, refWindow);
     // }   
     
     
