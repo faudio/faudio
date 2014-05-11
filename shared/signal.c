@@ -1611,10 +1611,6 @@ ptr_t vst_before_(ptr_t x, int count, fa_signal_state_t *state)
     setPluginParams(plugin, state->rate, kMaxVectorSize);
     resumePlugin(plugin);
 
-    {
-        printf(">>>>>>>> Inputs:  %d\n", plugin->numInputs);
-        printf(">>>>>>>> Outputs: %d\n", plugin->numOutputs);
-    }
     return x;
 }
 ptr_t vst_after_(ptr_t x, int count, fa_signal_state_t *state)
