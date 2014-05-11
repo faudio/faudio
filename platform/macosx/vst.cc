@@ -63,14 +63,36 @@ VstIntPtr VSTCALLBACK hostCallback(
     float opt
     )
 {
+    // printf("%d\n", audioMasterGetTime);
+
     switch(opcode) {
       case audioMasterVersion:
         return 2400; // TODO get from vst API or sanity check
       case audioMasterIdle:
         effect->dispatcher(effect, effEditIdle, 0, 0, 0, 0);
       // TODO Handle other opcodes...
+      case audioMasterGetVendorString:
+        return (VstIntPtr) "com.doremir";
+      case audioMasterGetProductString:
+        return (VstIntPtr) "Faudio";
+      case audioMasterGetVendorVersion:
+        return 0;
+      case audioMasterCanDo:
+        return 0;
+      
+      case audioMasterUpdateDisplay: {
+          printf("Plugin requested update display\n");
+          return 0;          
+      }
+
+      // case audioMasterPinConnected:
+        // return 0;
+        
+      // case audioMasterGetLanguage:
+        // effect->dispatcher(effect, kVstLangEnglish, 0, 0, 0, 0);
+
       default:
-        printf("Plugin requested value of opcode %d\n", opcode);
+        printf("Plugin requested unknown operation with opcode %d\n", opcode);
         break;
     }
 

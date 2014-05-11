@@ -1,6 +1,7 @@
 
 #include <fa/fa.h>
 #include <fa/util.h>
+#include "../platform/macosx/vst.h"
 #include "../shared/signal.h"
 #include "common.h"
 
@@ -11,7 +12,8 @@
 
 
 #define RT 1
-#define kThisPlugOffset 32 // TODO
+#define kThisPlugOffset 37 // TODO
+#define PATH string("/Library/Audio/Plug-Ins/VST/Kontakt 5.vst")
 
 static bool should_click = false;
 
@@ -44,32 +46,36 @@ ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
 
 ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
-    printf("Click!\n");
-    should_click = true;
+    // TODO
     return x;
 }
 
-pair_t fa_signal_clicks()
+pair_t fa_signal_vs(string_t path)
 {
+    char* rpath = unstring(path);
+    AEffect* plugin = loadPlugin(rpath);
+    initPlugin(plugin);
+    resumePlugin(plugin);
+
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
     proc->before  = before_;
     proc->after   = after_;
     proc->render  = render_;
     proc->receive = receive_;
     proc->send    = NULL;
-    proc->destroy = NULL;
-    proc->data    = NULL;
+    proc->destroy = NULL; // TODO
+    proc->data    = plugin;
 
     return pair(fa_signal_custom(proc, fa_signal_input(kThisPlugOffset + 0)), fa_signal_input(kThisPlugOffset + 1));
 }
 
-void run_clicks()
+void run_vs()
 {
     if (RT) {
         fa_audio_session_t s = fa_audio_begin_session();
         fa_audio_device_t i  = fa_audio_default_input(s);
         fa_audio_device_t o  = fa_audio_default_output(s);
-        list_t out           = fa_pair_to_list(fa_signal_clicks());
+        list_t out           = fa_pair_to_list(fa_signal_vs(PATH));
 
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
 
@@ -84,6 +90,6 @@ int main(int argc, char const *argv[])
 {
     fa_set_log_tool();
     fa_with_faudio() {
-        run_clicks();
+        run_vs();
     }
 }
