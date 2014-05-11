@@ -19,6 +19,7 @@
 #include "signal.h"
 #include "signal_internal.h"
 #include "action_internal.h"
+#include "../platform/macosx/vst.h"
 
 typedef fa_signal_custom_processor_t   *custom_proc_t;
 typedef fa_signal_unary_signal_t        fixpoint_t;
@@ -1282,6 +1283,7 @@ fa_signal_t fa_signal_record_stream(fa_atomic_ring_buffer_t buffer, fa_signal_t 
 
 
 #define kRecExternalOffset 40
+#define kVstOffset         34
 
 struct rec_external {
     string_t name;
@@ -1585,9 +1587,172 @@ fa_signal_t fa_signal_ceil(fa_signal_t x, fa_signal_t y)
     assert(false && "Not implemented");
 }
 
-fa_list_t   fa_signal_vst(fa_string_t x, fa_string_t y, fa_list_t z)
+// fa_list_t   fa_signal_vst(fa_string_t x, fa_string_t y, fa_list_t z)
+// {
+//     assert(false && "Not implemented");
+// }
+struct _vst_context {
+    string_t name;
+    AEffect* plugin;
+    float** inputs;
+    float** outputs;    
+};
+typedef struct _vst_context vst_context;
+
+// TODO place in struct somewhere
+// static float** inputs = NULL;
+// static float** outputs = NULL;    
+
+ptr_t vst_before_(ptr_t x, int count, fa_signal_state_t *state)
 {
-    assert(false && "Not implemented");
+    vst_context* context = x;
+    AEffect*     plugin = context->plugin;
+
+    resumePlugin(plugin);
+
+    {
+        printf(">>>>>>>> Inputs:  %d\n", plugin->numInputs);
+        printf(">>>>>>>> Outputs: %d\n", plugin->numOutputs);
+    }
+    return x;
+}
+ptr_t vst_after_(ptr_t x, int count, fa_signal_state_t *state)
+{
+    vst_context* context = x;
+    AEffect*     plugin = context->plugin;
+
+    suspendPlugin(plugin);
+    return x;
+}
+
+ptr_t vst_render_(ptr_t x, int count, fa_signal_state_t *state)
+{
+    vst_context* context = x;
+    AEffect*     plugin = context->plugin;
+
+    assert(count == 64); // TODO (also change VST loader)
+    
+    if (kVectorMode) {
+        fail(string("Vector mode not supported!"));
+        exit(-1);
+    } else {
+        // fail(string("Non-Vector mode not supported!"));
+
+        assert(context->inputs && context->outputs);                 
+        silenceChannel(context->inputs, plugin->numInputs, count);
+        silenceChannel(context->outputs, plugin->numOutputs, count);
+        
+        // TODO inputs
+        
+        processAudio(plugin, context->inputs, context->outputs, 1);
+        
+        for (int channel = 0; channel < plugin->numOutputs; ++channel) {                                  
+            for (int sample = 0; sample < 1; ++sample) {                                  
+                if (channel < 2) {
+                    state->buffer[(kVstOffset + channel)*kMaxVectorSize + sample] = context->outputs[channel][sample];
+                }
+            }
+        }
+    }
+
+    return x;
+}
+
+
+
+void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2);
+
+ptr_t vst_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
+{
+    vst_context* context = x;
+    AEffect*     plugin = context->plugin;
+
+    if (fa_equal(n, context->name)) {
+        if (!fa_midi_message_is_simple(msg)) {
+            warn(string("Unknown message to DLS"));
+        } else {
+            int status, data1, data2;
+            fa_midi_message_decons(msg, &status, &data1, &data2);
+
+            VstMidiEvent event;
+            event.type = kVstMidiType;
+            event.byteSize = sizeof (VstMidiEvent);
+            event.deltaFrames = 0;
+            event.flags = 0;
+            event.noteLength = 100;
+            event.noteOffset = 0;
+            // event.midiData[0] = 0x90;
+            event.midiData[0] = status;
+            event.midiData[1] = data1;
+            event.midiData[2] = data2;
+            event.midiData[3] = 0;
+
+            event.detune = 0;
+            event.noteOffVelocity = 0;
+    
+            VstEvents events;
+            events.numEvents = 1;
+            events.events[0] = (VstEvent*) &event;
+    
+            processMidi(plugin, &events);
+
+        }
+    }
+    return x;
+}
+
+list_t fa_signal_vst(string_t name, string_t path, list_t inputs)
+{
+    char* rpath = unstring(path);
+    AEffect* plugin = loadPlugin(rpath);
+    initPlugin(plugin);
+    
+    // TODO
+    assert(canPluginDo(plugin, "receiveVstMidiEvent"));
+
+    // {
+    //     WindowRef theWindow;
+    //     Rect contentRect; 
+    //     contentRect.top = 200;
+    //     contentRect.left = 300;
+    //     contentRect.bottom = 400;
+    //     contentRect.right = 500;
+    //     
+    //     // SetRect(&contentRect, 100,100,100,100);
+    //     OSStatus err;
+    //      
+    //     err=CreateNewWindow(kDocumentWindowClass,kWindowStandardDocumentAttributes,&contentRect, &theWindow);
+    //     if(err!=noErr)printf("Error in CreateNewWindow\n");
+    //     ShowWindow(theWindow);
+    // 
+    //     WindowRef refWindow = theWindow;    
+    //     openPlugin(plugin, refWindow);
+    // }   
+    
+
+    vst_context* context = fa_malloc(sizeof(vst_context));
+    context->plugin = plugin;
+    context->name = name;
+    context->inputs = malloc(sizeof(ptr_t) * plugin->numInputs);
+    context->outputs = malloc(sizeof(ptr_t) * plugin->numOutputs);
+
+    for (int i = 0; i < plugin->numInputs; ++i) {
+        context->inputs[i] = malloc(sizeof(float) * kMaxVectorSize);
+    }
+    for (int i = 0; i < plugin->numOutputs; ++i) {
+        context->outputs[i] = malloc(sizeof(float) * kMaxVectorSize);
+    }
+
+    fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
+    proc->before  = vst_before_;
+    proc->after   = vst_after_;
+    proc->render  = vst_render_;
+    proc->receive = vst_receive_;
+    proc->send    = NULL;
+    proc->destroy = NULL; // TODO
+    proc->data    = context;
+
+    return list(fa_signal_custom(proc, fa_signal_input(kVstOffset + 0)), fa_signal_input(kVstOffset + 1));
 }
 
 
