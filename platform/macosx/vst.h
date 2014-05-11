@@ -74,6 +74,7 @@ extern "C" {
 
 AEffect* loadPlugin(char* pluginPath);
 int initPlugin(AEffect *plugin);
+int setPluginParams(AEffect *plugin, double sr, int vs);
 void resumePlugin(AEffect *plugin);
 void suspendPlugin(AEffect *plugin);
 bool canPluginDo(AEffect *plugin, char *canDoString);

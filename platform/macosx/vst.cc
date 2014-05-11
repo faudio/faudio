@@ -190,15 +190,19 @@ int initPlugin(AEffect *plugin) {
 
   dispatcher(plugin, effOpen, 0, 0, NULL, 0.0f);
 
- // FIXME hardcoded
-  float sampleRate = 44100.0f;
-  dispatcher(plugin, effSetSampleRate, 0, 0, NULL, sampleRate);
-  int blocksize = 64;
-  dispatcher(plugin, effSetBlockSize, 0, blocksize, NULL, 0.0f);
-
   // ?
   // resume();
   return 0;
+}
+
+int setPluginParams(AEffect *plugin, double sr, int vs) {
+    dispatcherFuncPtr dispatcher = (dispatcherFuncPtr)(plugin->dispatcher);
+
+    float sampleRate = sr;
+    dispatcher(plugin, effSetSampleRate, 0, 0, NULL, sampleRate);
+    int blocksize = vs;
+    dispatcher(plugin, effSetBlockSize, 0, blocksize, NULL, 0.0f);
+    return 0;
 }
 
 void resumePlugin(AEffect *plugin) {

@@ -1608,6 +1608,7 @@ ptr_t vst_before_(ptr_t x, int count, fa_signal_state_t *state)
     vst_context* context = x;
     AEffect*     plugin = context->plugin;
 
+    setPluginParams(plugin, state->rate, kMaxVectorSize);
     resumePlugin(plugin);
 
     {
@@ -1630,7 +1631,7 @@ ptr_t vst_render_(ptr_t x, int count, fa_signal_state_t *state)
     vst_context* context = x;
     AEffect*     plugin = context->plugin;
 
-    assert(count == 64); // TODO (also change VST loader)
+    // assert(count == 64); // TODO (also change VST loader)
     
     if (kVectorMode) {
         fail(string("Vector mode not supported!"));

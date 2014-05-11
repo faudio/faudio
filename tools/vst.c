@@ -31,7 +31,8 @@ void run_vst()
         fa_audio_device_t o  = fa_audio_default_output(s);
         list_t out           = fa_signal_vst(string("vst-test"), PATH, empty());
 
-        fa_audio_set_parameter(string("vector-size"), i32(128e), s);
+        fa_audio_set_parameter(string("sample-rate"), f32(48000), s);
+        fa_audio_set_parameter(string("vector-size"), i32(1024), s);
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
 
         if (fa_check(st)) {
