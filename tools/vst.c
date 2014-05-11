@@ -22,45 +22,46 @@
 // #define PATH string("/Library/Audio/Plug-Ins/VST/Kontakt 5.vst")
 ;
 
-
+struct _vst_context {
+    string_t name;
+    AEffect* plugin;
+    float** inputs;
+    float** outputs;    
+};
+typedef struct _vst_context vst_context;
 
 // TODO place in struct somewhere
-static float** inputs = NULL;
-static float** outputs = NULL;    
+// static float** inputs = NULL;
+// static float** outputs = NULL;    
 
 ptr_t before_(ptr_t x, int count, fa_signal_state_t *state)
 {
-    AEffect* plugin = x;
+    vst_context* context = x;
+    AEffect*     plugin = context->plugin;
+
     resumePlugin(plugin);
 
     {
         printf(">>>>>>>> Inputs:  %d\n", plugin->numInputs);
         printf(">>>>>>>> Outputs: %d\n", plugin->numOutputs);
-        
-        inputs = malloc(sizeof(ptr_t) * plugin->numInputs);
-        outputs = malloc(sizeof(ptr_t) * plugin->numOutputs);
-
-        for (int i = 0; i < plugin->numInputs; ++i) {
-            inputs[i] = malloc(sizeof(float) * kMaxVectorSize);
-        }
-        for (int i = 0; i < plugin->numOutputs; ++i) {
-            outputs[i] = malloc(sizeof(float) * kMaxVectorSize);
-        }
     }
     return x;
 }
 ptr_t after_(ptr_t x, int count, fa_signal_state_t *state)
 {
-    AEffect* plugin = x;
+    vst_context* context = x;
+    AEffect*     plugin = context->plugin;
+
     suspendPlugin(plugin);
     return x;
 }
 
 ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
 {
-    assert(count == 64); // TODO (also change VST loader)
+    vst_context* context = x;
+    AEffect*     plugin = context->plugin;
 
-    AEffect* plugin = x;
+    assert(count == 64); // TODO (also change VST loader)
     
     if (kVectorMode) {
         fail(string("Vector mode not supported!"));
@@ -68,16 +69,18 @@ ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
     } else {
         // fail(string("Non-Vector mode not supported!"));
 
-        assert(inputs && outputs);                 
-        silenceChannel(inputs, plugin->numInputs, count);
-        silenceChannel(outputs, plugin->numOutputs, count);
+        assert(context->inputs && context->outputs);                 
+        silenceChannel(context->inputs, plugin->numInputs, count);
+        silenceChannel(context->outputs, plugin->numOutputs, count);
         
-        processAudio(plugin, inputs, outputs, 1);
+        // TODO inputs
+        
+        processAudio(plugin, context->inputs, context->outputs, 1);
         
         for (int channel = 0; channel < plugin->numOutputs; ++channel) {                                  
             for (int sample = 0; sample < 1; ++sample) {                                  
                 if (channel < 2) {
-                    state->buffer[(kThisPlugOffset + channel)*kMaxVectorSize + sample] = outputs[channel][sample];
+                    state->buffer[(kThisPlugOffset + channel)*kMaxVectorSize + sample] = context->outputs[channel][sample];
                 }
             }
         }
@@ -92,10 +95,10 @@ void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *
 
 ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
-    AEffect* plugin = x;
-    // TODO
+    vst_context* context = x;
+    AEffect*     plugin = context->plugin;
 
-    if (/*fa_equal(n, string("dls"))*/true) {
+    if (fa_equal(n, context->name)) {
         if (!fa_midi_message_is_simple(msg)) {
             warn(string("Unknown message to DLS"));
         } else {
@@ -157,7 +160,19 @@ list_t fa_signal_vs(string_t name, string_t path, list_t inputs)
     //     openPlugin(plugin, refWindow);
     // }   
     
-    
+
+    vst_context* context = fa_malloc(sizeof(vst_context));
+    context->plugin = plugin;
+    context->name = name;
+    context->inputs = malloc(sizeof(ptr_t) * plugin->numInputs);
+    context->outputs = malloc(sizeof(ptr_t) * plugin->numOutputs);
+
+    for (int i = 0; i < plugin->numInputs; ++i) {
+        context->inputs[i] = malloc(sizeof(float) * kMaxVectorSize);
+    }
+    for (int i = 0; i < plugin->numOutputs; ++i) {
+        context->outputs[i] = malloc(sizeof(float) * kMaxVectorSize);
+    }
 
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
     proc->before  = before_;
@@ -166,7 +181,7 @@ list_t fa_signal_vs(string_t name, string_t path, list_t inputs)
     proc->receive = receive_;
     proc->send    = NULL;
     proc->destroy = NULL; // TODO
-    proc->data    = plugin;
+    proc->data    = context;
 
     return list(fa_signal_custom(proc, fa_signal_input(kThisPlugOffset + 0)), fa_signal_input(kThisPlugOffset + 1));
 }
