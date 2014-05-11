@@ -19,6 +19,53 @@ struct _AEffect
 	int32_t numOutputs;	    ///< number of audio outputs
 };
 
+typedef int32_t VstInt32;
+typedef intptr_t VstIntPtr;
+#define DECLARE_VST_DEPRECATED(T) T
+
+struct _VstEvent
+{
+	VstInt32 type;			///< @see VstEventTypes
+	VstInt32 byteSize;		///< size of this event, excl. type and byteSize
+	VstInt32 deltaFrames;	///< sample frames related to the current block start sample position
+	VstInt32 flags;			///< generic flags, none defined yet
+
+	char data[16];			///< data size may vary, depending on event type
+};
+
+struct _VstMidiEvent
+{
+	VstInt32 type;			///< #kVstMidiType
+	VstInt32 byteSize;		///< sizeof (VstMidiEvent)
+	VstInt32 deltaFrames;	///< sample frames related to the current block start sample position
+	VstInt32 flags;			///< @see VstMidiEventFlags
+	VstInt32 noteLength;	///< (in sample frames) of entire note, if available, else 0
+	VstInt32 noteOffset;	///< offset (in sample frames) into note from note start if available, else 0
+	char midiData[4];		///< 1 to 3 MIDI bytes; midiData[3] is reserved (zero)
+	char detune;			///< -64 to +63 cents; for scales other than 'well-tempered' ('microtuning')
+	char noteOffVelocity;	///< Note Off Velocity [0, 127]
+	char reserved1;			///< zero (Reserved for future use)
+	char reserved2;			///< zero (Reserved for future use)
+};
+typedef struct _VstMidiEvent VstMidiEvent;
+
+
+enum VstEventTypes
+{
+	kVstMidiType = 1,		///< MIDI event  @see VstMidiEvent
+	DECLARE_VST_DEPRECATED (kVstAudioType),		///< \deprecated unused event type
+	DECLARE_VST_DEPRECATED (kVstVideoType),		///< \deprecated unused event type
+	DECLARE_VST_DEPRECATED (kVstParameterType),	///< \deprecated unused event type
+	DECLARE_VST_DEPRECATED (kVstTriggerType),	///< \deprecated unused event type
+	kVstSysExType			///< MIDI system exclusive  @see VstMidiSysexEvent
+};
+
+struct _VstEvents
+{
+	VstInt32 numEvents;		///< number of Events in array
+	VstIntPtr reserved;		///< zero (Reserved for future use)
+	VstEvent* events[2];	///< event pointer array, variable size
+};
 #endif
 
 #ifdef __cplusplus
