@@ -37,6 +37,7 @@ add_tool(test_compound2)
 add_tool(record_streaming)
 add_tool(impulses)
 add_tool(level)
+add_tool(vst)
 
 if(APPLE OR ENABLE_FLUIDSYNTH)
   add_tool(test_dls)

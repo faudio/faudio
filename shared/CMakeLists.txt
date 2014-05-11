@@ -43,6 +43,7 @@ list(APPEND SRCS_OSX
   ../platform/macosx/string.c
   ../platform/macosx/device.c
   ../platform/macosx/au.m
+  ../platform/macosx/vst.cc
   ../platform/macosx/clock.c
   ../platform/macosx/system/directory.c
   # ../platform/macosx/fae/system/event.c
