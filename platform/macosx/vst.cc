@@ -217,6 +217,16 @@ bool canPluginDo(AEffect *plugin, char *canDoString) {
 }
 
 // TODO these are for GUI/editor... rename to make more clear
+/*
+    According to
+        http://www.juce.com/forum/topic/mac-64-bit
+        
+    effEditOpen:
+        the [ptr] argument is a WindowRef on 32 bit Mac.
+        On 64 bit this is a NSView pointer. The plug-in needs to add its own NSView as
+        subview of it.
+*/
+
 bool openPlugin(AEffect *plugin, void* handle) {
   dispatcherFuncPtr dispatcher = (dispatcherFuncPtr)(plugin->dispatcher);
   return (dispatcher(plugin, effEditOpen, 0, 0, handle, 0.0f) > 0);

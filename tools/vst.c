@@ -177,7 +177,7 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
     return x;
 }
 
-pair_t fa_signal_vs(string_t path)
+list_t fa_signal_vs(string_t name, string_t path, list_t inputs)
 {
     char* rpath = unstring(path);
     AEffect* plugin = loadPlugin(rpath);
@@ -216,7 +216,7 @@ pair_t fa_signal_vs(string_t path)
     proc->destroy = NULL; // TODO
     proc->data    = plugin;
 
-    return pair(fa_signal_custom(proc, fa_signal_input(kThisPlugOffset + 0)), fa_signal_input(kThisPlugOffset + 1));
+    return list(fa_signal_custom(proc, fa_signal_input(kThisPlugOffset + 0)), fa_signal_input(kThisPlugOffset + 1));
 }
 
 void run_vs()
@@ -225,7 +225,7 @@ void run_vs()
         fa_audio_session_t s = fa_audio_begin_session();
         fa_audio_device_t i  = fa_audio_default_input(s);
         fa_audio_device_t o  = fa_audio_default_output(s);
-        list_t out           = fa_pair_to_list(fa_signal_vs(PATH));
+        list_t out           = fa_signal_vs(string("vst-test"), PATH, empty());
 
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
 
@@ -234,7 +234,7 @@ void run_vs()
         }
 
         for (int i = 0; i < 24; ++i) {           
-            fa_action_t chord = fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 52 + ((i % 12) * 5), 90));
+            fa_action_t chord = fa_action_send(string("vst-test"), fa_midi_message_create_simple(0x90, 52 + ((i % 12) * 5), 90));
             fa_audio_schedule_relative(hms(0, 0, 0), chord, st);
             fa_thread_sleep(150);
         }
