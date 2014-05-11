@@ -7,6 +7,11 @@
 
  */
 
+/*
+    Based on:
+        http://teragonaudio.com/article/How-to-make-your-own-VST-host.html
+*/
+
 #include <CoreFoundation/CoreFoundation.h>
 // #include "../../external/vst/pluginterfaces/vst2.x/aeffect.h"
 #include "../../external/vst/pluginterfaces/vst2.x/aeffectx.h"
@@ -63,27 +68,29 @@ VstIntPtr VSTCALLBACK hostCallback(
     float opt
     )
 {
-    // printf("%d\n", audioMasterGetTime);
+    // printf("-----------> Plug-in called host, opcode: %d\n", opcode);
 
     switch(opcode) {
       case audioMasterVersion:
         return 2400; // TODO get from vst API or sanity check
-      case audioMasterIdle:
-        effect->dispatcher(effect, effEditIdle, 0, 0, 0, 0);
+
+      // case audioMasterIdle:
+        // effect->dispatcher(effect, effEditIdle, 0, 0, 0, 0);
       // TODO Handle other opcodes...
-      case audioMasterGetVendorString:
-        return (VstIntPtr) "com.doremir";
-      case audioMasterGetProductString:
-        return (VstIntPtr) "Faudio";
-      case audioMasterGetVendorVersion:
-        return 0;
-      case audioMasterCanDo:
-        return 0;
+
+      // case audioMasterGetVendorString:
+      //   return (VstIntPtr) "com.doremir";
+      // case audioMasterGetProductString:
+      //   return (VstIntPtr) "Faudio";
+      // case audioMasterGetVendorVersion:
+      //   return 0;
+      // case audioMasterCanDo:
+      //   return 0;
       
-      case audioMasterUpdateDisplay: {
-          printf("Plugin requested update display\n");
-          return 0;          
-      }
+      // case audioMasterUpdateDisplay: {
+          // printf("Plugin requested update display\n");
+          // return 0;          
+      // }
 
       // case audioMasterPinConnected:
         // return 0;
@@ -92,7 +99,8 @@ VstIntPtr VSTCALLBACK hostCallback(
         // effect->dispatcher(effect, kVstLangEnglish, 0, 0, 0, 0);
 
       default:
-        printf("Plugin requested unknown operation with opcode %d\n", opcode);
+        // TODO count and limit
+        // printf("Plugin requested unknown operation with opcode %d\n", opcode);
         break;
     }
 
@@ -176,16 +184,16 @@ int initPlugin(AEffect *plugin) {
   dispatcherFuncPtr dispatcher = (dispatcherFuncPtr)(plugin->dispatcher);
 
   // Set up plugin callback functions
-  plugin->getParameter = (getParameterFuncPtr)plugin->getParameter;
-  plugin->processReplacing = (processFuncPtr)plugin->processReplacing;
-  plugin->setParameter = (setParameterFuncPtr)plugin->setParameter;
+  // plugin->getParameter = (getParameterFuncPtr)plugin->getParameter;
+  // plugin->processReplacing = (processFuncPtr)plugin->processReplacing;
+  // plugin->setParameter = (setParameterFuncPtr)plugin->setParameter;
 
   dispatcher(plugin, effOpen, 0, 0, NULL, 0.0f);
 
-  // Set some default properties
+ // FIXME hardcoded
   float sampleRate = 44100.0f;
   dispatcher(plugin, effSetSampleRate, 0, 0, NULL, sampleRate);
-  int blocksize = 512;
+  int blocksize = 64;
   dispatcher(plugin, effSetBlockSize, 0, blocksize, NULL, 0.0f);
 
   // ?
@@ -206,6 +214,16 @@ void suspendPlugin(AEffect *plugin) {
 bool canPluginDo(AEffect *plugin, char *canDoString) {
   dispatcherFuncPtr dispatcher = (dispatcherFuncPtr)(plugin->dispatcher);
   return (dispatcher(plugin, effCanDo, 0, 0, (void*)canDoString, 0.0f) > 0);
+}
+
+// TODO these are for GUI/editor... rename to make more clear
+bool openPlugin(AEffect *plugin, void* handle) {
+  dispatcherFuncPtr dispatcher = (dispatcherFuncPtr)(plugin->dispatcher);
+  return (dispatcher(plugin, effEditOpen, 0, 0, handle, 0.0f) > 0);
+}
+bool closePlugin(AEffect *plugin) {
+  dispatcherFuncPtr dispatcher = (dispatcherFuncPtr)(plugin->dispatcher);
+  return (dispatcher(plugin, effEditClose, 0, 0, NULL, 0.0f) > 0);
 }
 
 void processAudio(AEffect *plugin, float **inputs, float **outputs,
