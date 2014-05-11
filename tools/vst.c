@@ -34,7 +34,7 @@ typedef struct _vst_context vst_context;
 // static float** inputs = NULL;
 // static float** outputs = NULL;    
 
-ptr_t before_(ptr_t x, int count, fa_signal_state_t *state)
+ptr_t vst_before_(ptr_t x, int count, fa_signal_state_t *state)
 {
     vst_context* context = x;
     AEffect*     plugin = context->plugin;
@@ -47,7 +47,7 @@ ptr_t before_(ptr_t x, int count, fa_signal_state_t *state)
     }
     return x;
 }
-ptr_t after_(ptr_t x, int count, fa_signal_state_t *state)
+ptr_t vst_after_(ptr_t x, int count, fa_signal_state_t *state)
 {
     vst_context* context = x;
     AEffect*     plugin = context->plugin;
@@ -56,7 +56,7 @@ ptr_t after_(ptr_t x, int count, fa_signal_state_t *state)
     return x;
 }
 
-ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
+ptr_t vst_render_(ptr_t x, int count, fa_signal_state_t *state)
 {
     vst_context* context = x;
     AEffect*     plugin = context->plugin;
@@ -93,7 +93,7 @@ ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
 
 void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2);
 
-ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
+ptr_t vst_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     vst_context* context = x;
     AEffect*     plugin = context->plugin;
@@ -175,10 +175,10 @@ list_t fa_signal_vs(string_t name, string_t path, list_t inputs)
     }
 
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
-    proc->before  = before_;
-    proc->after   = after_;
-    proc->render  = render_;
-    proc->receive = receive_;
+    proc->before  = vst_before_;
+    proc->after   = vst_after_;
+    proc->render  = vst_render_;
+    proc->receive = vst_receive_;
     proc->send    = NULL;
     proc->destroy = NULL; // TODO
     proc->data    = context;
