@@ -226,9 +226,7 @@ bool canPluginDo(AEffect *plugin, char *canDoString) {
         http://www.juce.com/forum/topic/mac-64-bit
         
     effEditOpen:
-        the [ptr] argument is a WindowRef on 32 bit Mac.
-        On 64 bit this is a NSView pointer. The plug-in needs to add its own NSView as
-        subview of it.
+        Handle is HWND (Windows) or WindowRef (Carbon?)/NSView (Cocoa?)
 */
 
 bool openPlugin(AEffect *plugin, void* handle) {
