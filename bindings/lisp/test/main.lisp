@@ -920,25 +920,39 @@
 (setf audio-session (audio-begin-session))
 (setf audio-output (audio-default-output audio-session))
 (setf audio-input (audio-default-input audio-session))
-(setf audio-stream (audio-open-stream* (lambda (_) (cl
+;(setf audio-stream (audio-open-stream* (lambda (_) (cl
 
 ;(midi-end-all-sessions)
 
 
+(defun import-list-deep (typ xs)
+  (mapcar (lambda(x) (faudio::from-pointer typ x)) (faudio::import-list xs)))
+
+(defun signal-vst-s ()
+  
+  (import-list-deep 'faudio::signal 
+                    (faudio::signal-vst 
+                     "dls" 
+                     "/Library/Audio/Plug-Ins/VST/ComboV.vst" nil)))
+
+(signal-vst-s)
+(version)
 
 
 (signal-run-default 
  (lambda (inputs) 
    (mapcar 
-    (lambda (x) (* 0.5 x)) 
-    (signal-dls*)))
+    (lambda (x) (* 1.5 x)) 
+    ;(signal-dls*)
+    (signal-vst-s)
+    ))
  :stream-callback 
  (lambda (stream)
 
 
-   (let* ((action1 (faudio::action-send "DLS "(faudio::midi #x90 60 100)))
-          (action2 (faudio::action-send "DLS "(faudio::midi #x90 62 100)))
-          (action3 (faudio::action-send "DLS "(faudio::midi #x90 64 100)))
+   (let* ((action1 (faudio::action-send "dls" (faudio::midi #x90 60 100)))
+          (action2 (faudio::action-send "dls" (faudio::midi #x90 62 100)))
+          (action3 (faudio::action-send "dls" (faudio::midi #x90 64 100)))
           (action-manyx (faudio::action-many (cl:list
                                               (faudio::pair-create action1 (faudio::milliseconds 400))
                                               (faudio::pair-create action2 (faudio::milliseconds 400))
