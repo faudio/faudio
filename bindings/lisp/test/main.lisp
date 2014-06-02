@@ -1129,3 +1129,111 @@
                                                  *foo*)
                                                (action-repeat (seconds 0.5) action))))
           (faudio::audio-schedule-relative (faudio::milliseconds 0) actionx *audio-stream*))
+
+
+
+
+
+
+
+
+
+
+(cffi::defcallback dummy-pull-callback :void ((ptr faudio::ptr) (callback :pointer) (closure-ptr faudio::ptr))
+ (declare (ignore ptr callback closure-ptr)))
+
+; TODO move to faudio
+(defun faudio-io-create-simple-sink (push-callback data-ptr)
+  (faudio::io-create-simple-filter
+   push-callback
+   (callback dummy-pull-callback)
+   data-ptr))
+ 
+(faudio-io-create-simple-sink
+ (cffi::callback push-callback)
+ (faudio::from-pointer 'faudio::ptr (cffi::null-pointer))))
+
+
+; Exempel
+(cffi:defcallback push-callback :void ((ptr faudio::ptr) (buf faudio::buffer))
+  (declare (ignorable ptr))
+  (let* (
+         (buf2 (if (cffi:null-pointer-p (to-pointer buf)) nil buf))
+         )
+       (log-info (format nil "audio-upload-push ~a ~a" ptr buf2))
+
+
+
+
+
+
+
+
+
+
+
+
+
+(defvar *drakma-audio-upload-stream*
+  (lambda (buffer)
+    (log-info "in *drakma-audio-upload-stream* BEFORE")
+    ;(funcall continuation #() nil)
+    (log-info "in *drakma-audio-upload-stream* AFTER")
+    nil))
+
+(cffi:defcallback push-callback :void ((ptr faudio::ptr) (buf faudio::buffer))
+  (declare (ignorable ptr))
+  ;(funcall *drakma-audio-upload-stream* buf)
+  (let* (
+         ;(ptr2 (if (cffi:null-pointer-p (to-pointer ptr)) nil ptr))
+         (buf2 (if (cffi:null-pointer-p (to-pointer buf)) nil buf))
+         )
+       (log-info (format nil "audio-upload-push ~a ~a" ptr buf2))
+
+    
+
+  ))
+
+;(cffi::defcallback pull-callback :void ((ptr faudio::ptr) (callback :pointer) (closure-ptr faudio::ptr))
+; (declare (ignore ptr callback closure-ptr))
+; (log-info "audio-upload-pull")
+; )
+
+(setf *filter* (faudio-io-create-simple-sink 
+                (cffi::callback push-callback)
+                ;(cffi::callback pull-callback)
+                (faudio::from-pointer 'faudio::ptr (cffi::null-pointer))
+                ;""
+                ))
+
+
+(defun faudio-coerce (type value)
+  (faudio::from-pointer type (faudio::to-pointer value))
+  )
+(setf *sink* (faudio-coerce 'faudio::io-sink *filter*))
+
+;(faudio::to-pointer *sink*)
+
+(setf *sink* (io-coapply (io-split (io-write-file "/Users/hans/audio/output.txt")) *sink*))
+
+(io-push* *sink* nil)
+(faudio::io-push* *sink* (array-to-buffer #(109 112 113 10)))
+
+
+(cl:print *filter*)
+(cl:print *sink*)
+
+;(io-push* *sink* (array-to-buffer #(1 2 3)))
+
+(io-run (io-read-file "/Users/hans/audio/README") 
+        *sink*
+        ;(io-write-file "/Users/hans/audio/output.txt")
+        )
+
+
+
+;(faudio::io-run
+; 
+; )
+
+
