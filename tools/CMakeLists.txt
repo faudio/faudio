@@ -38,6 +38,7 @@ add_tool(record_streaming)
 add_tool(impulses)
 add_tool(level)
 add_tool(vst)
+add_tool(io_simple_filter)
 
 if(APPLE OR ENABLE_FLUIDSYNTH)
   add_tool(test_dls)

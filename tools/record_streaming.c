@@ -19,6 +19,8 @@
 #define fa_sizeof_array(A) sizeof(A) / sizeof(A[0])
 #define fa_option_show_all(A,S) fa_option_show(fa_sizeof_array(A),A,S)
 #define fa_option_parse_all(A,AC,AV) fa_option_parse(fa_sizeof_array(A), A, AC, AV)
+#define kRingBufferSize (44100 * 8 * 30)
+// #define kRingBufferSize (44100 * 8)
 
 void make_test_file()
 {
@@ -100,8 +102,8 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
                           fa_midi_message_create_simple(0x90, 60 + i, 127)) , s);
     }
 
-    fa_audio_schedule(fa_milliseconds(10000 + kRecOffset),  fa_action_send(string("foo"), NULL) , s);
-    fa_audio_schedule(fa_milliseconds(10000 + kRecOffset),  fa_action_do(_print, string("Finished recording")) , s);
+    fa_audio_schedule(fa_milliseconds(45000 + kRecOffset),  fa_action_send(string("foo"), NULL) , s);
+    fa_audio_schedule(fa_milliseconds(45000 + kRecOffset),  fa_action_do(_print, string("Finished recording")) , s);
 
 
     printf("Started listening\n");
@@ -112,10 +114,12 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
     fa_io_filter_t end = (!gEndian ? fa_io_identity() : fa_io_create_endian_filter());
     fa_io_filter_t filt = fa_io_compose(ogg, end);
     fa_io_run(
-        fa_io_apply(
+        // fa_io_apply(
             fa_io_from_ring_buffer(rbuffer),
-            filt
-        ),
+            // filt
+        // ),
+    
+    
         // fa_io_coapply(
         // fa_io_identity(),
         // fa_io_create_ogg_encoder(),
@@ -123,8 +127,10 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
         fa_io_write_file(gOutput)
         // )
     );
-    // fa_thread_sleep(2000);
+    fa_thread_sleep(1000000);
     return s;
+
+    mark_used(filt);
 }
 
 fa_audio_session_t _session(fa_ptr_t x, fa_audio_session_t s)
@@ -138,7 +144,7 @@ fa_audio_session_t _session(fa_ptr_t x, fa_audio_session_t s)
 
 fa_option_t options[] = {
     // { "v", "ogg-vorbis",    "Use ogg/vorbis compression",               fa_option_bool },
-    // { "v", "endian",    "Use ogg/vorbis compression",               fa_option_bool },
+    // { "e", "endian",        "Use ogg/vorbis compression",               fa_option_bool },
     { "o", "output-file",   "Output file (i.e. test.raw, test.ogg)",    fa_option_string },
 };
 
@@ -147,15 +153,20 @@ int main(int argc, char const *argv[])
 {
     fa_set_log_tool();
     fa_with_faudio() {
-        fa_unpair(fa_option_parse_all(options, argc, (char **) argv), opts, args) {
-            mark_used(args);
-            gVorbis = fa_map_get(string("ogg-vorbis"), opts)  ? fa_to_bool(fa_map_get(string("ogg-vorbis"), opts))  : false;
-            gEndian = fa_map_get(string("endian"), opts)   ? fa_to_bool(fa_map_get(string("endian"), opts))      : false;
-            gOutput = fa_map_get(string("output-file"), opts) ? fa_map_get(string("output-file"), opts) : string("test.raw");
-            // printf("freq=%d, rate=%d, duration=%d\n", freq, rate, duration);
+
+        // fa_unpair(fa_option_parse_all(options, argc, (char **) argv), opts, args) {
+        {
+            // mark_used(args);
+            // gVorbis = fa_map_get(string("ogg-vorbis"), opts)  ? fa_to_bool(fa_map_get(string("ogg-vorbis"), opts))  : false;
+            // gEndian = fa_map_get(string("endian"), opts)      ? fa_to_bool(fa_map_get(string("endian"), opts))      : false;
+            // gOutput = fa_map_get(string("output-file"), opts) ? fa_map_get(string("output-file"), opts) : string("test.raw");
+
+            gVorbis = false;
+            gEndian = false;
+            gOutput = string("test.raw");
 
             printf("Vorbis=%d, Endian=%d, Output=%s\n", gVorbis, gEndian, unstring(gOutput));
-            fa_atomic_ring_buffer_t rbuffer = atomic_ring_buffer(44100 * 8 * 30);
+            fa_atomic_ring_buffer_t rbuffer = atomic_ring_buffer(kRingBufferSize);
             mark_used(rbuffer);
 
             fa_audio_with_session(_session, rbuffer, fa_log, NULL);
