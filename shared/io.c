@@ -201,11 +201,12 @@ void write_filter_push(fa_ptr_t x, fa_io_sink_t downstream, fa_buffer_t buffer)
     // inform(string("In write_filter push"));
 
     if (buffer) {
-        string_t path = fa_copy(((struct filter_base *) x)->data1);
+        string_t path = /*fa_copy*/(((struct filter_base *) x)->data1);
         FILE *fp = fopen(unstring(path), "ab");
 
         if (!fp) {
             fail(string_dappend(string("Could not write file: "), path));
+            fclose(fp);
         } else {
             fwrite(fa_buffer_unsafe_address(buffer), fa_buffer_size(buffer), 1, fp);
             fclose(fp);
