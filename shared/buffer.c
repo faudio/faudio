@@ -23,6 +23,7 @@
  */
 
 #define kMaxPrintSize 80
+#define buffer_warn(str) // do nothing
 
 struct _fa_buffer_t {
     impl_t          impl;
@@ -70,6 +71,7 @@ fa_buffer_t fa_buffer_create(size_t size)
         }
     }
 
+    buffer_warn(string("Buffer created"));
     return buffer;
 }
 
@@ -90,6 +92,7 @@ fa_buffer_t fa_buffer_wrap(fa_ptr_t   pointer,
 
     b->meta = fa_map_empty();
 
+    buffer_warn(string("Buffer wrapped"));
     return b;
 }
 
@@ -118,6 +121,8 @@ fa_buffer_t fa_buffer_resize(size_t size, fa_buffer_t buffer)
         }
     }
 
+    buffer_warn(string("Buffer resized/copied"));
+
     copy->data = memcpy(copy->data, buffer->data, size);
     return copy;
 }
@@ -140,6 +145,7 @@ void fa_buffer_destroy(fa_buffer_t buffer)
     // TODO recursive (everything in here is copy)
     fa_destroy(buffer->meta);
 
+    buffer_warn(string("Buffer destroyed"));
     fa_delete(buffer);
 }
 
