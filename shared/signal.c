@@ -1288,18 +1288,18 @@ fa_signal_t fa_signal_record_stream(fa_atomic_ring_buffer_t buffer, fa_signal_t 
 struct rec_external {
     string_t name;
     fa_atomic_ring_buffer_t buffer;
-
-    // debug
-    // size_t bytes_written;
 };
+
 ptr_t record_extrenal_before_(ptr_t x, int count, fa_signal_state_t *state)
 {
     return x;
 }
+
 ptr_t record_extrenal_after_(ptr_t x, int count, fa_signal_state_t *state)
 {
     return x;
 }
+
 ptr_t record_extrenal_render_(ptr_t x, int count, fa_signal_state_t *state)
 {
     struct rec_external *ext = (struct rec_external *) x;
@@ -1307,19 +1307,8 @@ ptr_t record_extrenal_render_(ptr_t x, int count, fa_signal_state_t *state)
     if (!kVectorMode) {
         double x = state->buffer[(kRecExternalOffset + 0) * kMaxVectorSize];
 
-        // double x = 0.1;
         if (ext->buffer) {
             fa_atomic_ring_buffer_write_double(ext->buffer, x);
-
-            // fa_atomic_ring_buffer_write(ext->buffer, 'h');
-            // fa_atomic_ring_buffer_write(ext->buffer, 'a');
-            // fa_atomic_ring_buffer_write(ext->buffer, 'n');
-            // fa_atomic_ring_buffer_write(ext->buffer, 's');
-            // fa_atomic_ring_buffer_write(ext->buffer, 'h');
-            // fa_atomic_ring_buffer_write(ext->buffer, 'h');
-            // fa_atomic_ring_buffer_write(ext->buffer, 'h');
-            // fa_atomic_ring_buffer_write(ext->buffer, '\n');
-            // ext->bytes_written += sizeof(double);
         }
     } else {
         for (int i = 0; i < count; ++i) {
@@ -1327,11 +1316,9 @@ ptr_t record_extrenal_render_(ptr_t x, int count, fa_signal_state_t *state)
 
             if (ext->buffer) {
                 fa_atomic_ring_buffer_write_double(ext->buffer, x);
-                // ext->bytes_written += sizeof(double);
             }
         }
     }
-
     return x;
 }
 
