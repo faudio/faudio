@@ -1132,7 +1132,7 @@ void before_processing(stream_t stream)
 {
     session_t session  = stream->input ? stream->input->session : stream->output->session;
     stream->state      = new_state(session->parameters.sample_rate); // FIXME
-
+    
     signal_t merged = fa_signal_constant(0);
 
     for (int c = 0; c < stream->signal_count; ++c) {
@@ -1144,6 +1144,8 @@ void before_processing(stream_t stream)
         // printf("Adding custom proc %p!\n", x);
         add_custom_proc(x, stream->state);
     }
+    inform(fa_string_format_integral("    Custom procs: %d", ((state_base_t) stream->state)->custom_proc_count));
+
     stream->MERGED_SIGNAL = fa_signal_simplify(merged);
 
     print_signal_tree(stream->MERGED_SIGNAL);
