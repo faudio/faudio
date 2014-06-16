@@ -1071,10 +1071,10 @@
  :stream-callback 
  (lambda (stream)
    (cl:print stream)
-   (audio-schedule (milliseconds 0)   (action-send "DLS" (midi #x91 60 127)) stream)
-   (audio-schedule (milliseconds 100) (action-send "DLS" (midi #x91 63 127)) stream)
-   (audio-schedule (milliseconds 200) (action-send "DLS" (midi #x91 65 127)) stream)
-   (audio-schedule (milliseconds 300) (action-send "DLS" (midi #x91 62 127)) stream)))
+   (audio-schedule (milliseconds 0)   (action-send "dls" (midi #x91 60 127)) stream)
+   (audio-schedule (milliseconds 100) (action-send "dls" (midi #x91 63 127)) stream)
+   (audio-schedule (milliseconds 200) (action-send "dls" (midi #x91 65 127)) stream)
+   (audio-schedule (milliseconds 300) (action-send "dls" (midi #x91 62 127)) stream)))
 
 (signal-run-file* 
  (cl:* 44100 60) 
@@ -1236,4 +1236,96 @@
 ; 
 ; )
 
+
+
+
+; (signal-vst "dls" "/Library/Audio/Plug-Ins/VST/ComboV.vst" (list-empty))
+(type-of (signal-dls*))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(defun signal-vst-input* (name path)
+; TODO optional outputs
+        (mapcar (lambda (x) (from-pointer 'signal x)) (import-list (signal-vst name path (list-empty))))
+)
+
+(defmethod nsview ((pane capi:simple-pane))
+ (slot-value (slot-value pane 'capi-internals:representation) 'capi-cocoa-library::main-view))
+(defcfun (pair-create-snd-raw "fa_pair_create") pair (a ptr) (b :pointer))
+
+(setf i (make-instance 'capi::interface
+        :visible-min-width 500
+	:visible-min-height 500
+        :title "My Interface"))
+
+;(capi:hide-interface i)
+;(capi:show-interface i)
+;(capi:redisplay-interface i)
+(capi::display i)
+; [i setNeedsDisplay:1]
+(objc:invoke (nsview i) "setNeedsDisplay:" 1)
+
+
+
+
+
+(signal-run-default-temp (lambda (inputs)
+                      ; TODO outputs
+                      (signal-vst-input* "dls" "/Library/Audio/Plug-Ins/VST/Kontakt 5.vst")
+                      ;(signal-dls)
+)
+                    :stream-callback
+
+                    (lambda (stream)
+   (cl:print stream)
+   
+   (audio-schedule-relative (milliseconds 0)   (action-send "dls" (pair-create-snd-raw "open" (nsview i))) stream)
+
+;   (audio-schedule-relative (milliseconds 0)   (action-send "dls" (midi #xc0 50 0)) stream)
+;   (audio-schedule-relative (milliseconds 0)   (action-send "dls" (midi #x90 61 127)) stream)
+#|
+   (audio-schedule-relative (milliseconds 100) (action-send "dls" (midi #x90 63 127)) stream)
+   (audio-schedule-relative (milliseconds 200) (action-send "dls" (midi #x90 65 127)) stream)
+   (audio-schedule-relative (milliseconds 300) (action-send "dls" (midi #x90 62 127)) stream)
+|#
+))
+
+#|
+(mp:schedule-timer
+ (mp:make-timer 
+  'capi:execute-with-interface
+  i
+                (lambda ()
+(audio-schedule-relative (milliseconds 0)   (action-send "dls" (pair-create-snd-raw "open" (nsview i))) *temp-st*)
+                  
+                  )) 1 1) 
+|#
+
+
+(audio-schedule-relative (milliseconds 0)   (action-repeat (milliseconds 150) (action-send "dls" (pair-create-snd-raw "open" (nsview i)))) *temp-st*)
+
+(audio-schedule-relative (milliseconds 0)   (action-send "dls" (pair-create-snd-raw "open" (nsview i))) *temp-st*)
+
+(audio-schedule-relative (milliseconds 0)   (action-send "dls" (midi #x90 61 127)) *temp-st*)
+(audio-schedule-relative (milliseconds 0)   (action-send "dls" (midi #x90 61 0)) *temp-st*)
+(signal-stop)
+
+
+(audio-current-sessions)
+
+
+(audio-end-all-sessions)
 

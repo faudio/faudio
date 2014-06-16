@@ -196,7 +196,28 @@
     :cancel-button nil 
     :value-function #'(lambda (dummy) t))
   (destroy st)
-  (destroy s))) 
+  (destroy s)))
+
+(defvar *temp-st* nil)
+(defvar *temp-s* nil)
+(defun signal-run-default-temp (
+    proc
+    &key (session-callback (lambda (x) x)) 
+         (stream-callback (lambda (x) x))
+         (input nil)
+         (output nil)
+         ) 
+  (let* ((s (funcall session-callback (audio-begin-session))) 
+       (i (if input (audio-find-input input s) (audio-default-input s)))
+       (o (if output (audio-find-output output s) (audio-default-output s)))
+       (st (audio-open-stream* i o proc)))
+  (funcall stream-callback st)
+  (setf *temp-st* st)
+  (setf *temp-s* s)))
+
+(defun signal-stop ()
+  (destroy *temp-st*)
+  (destroy *temp-s*))
 
 
 (defun signal-run-file* (n x &key (controls '()) (path "test.wav"))

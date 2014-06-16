@@ -16,8 +16,8 @@
 
 #define RT 1
 #define kThisPlugOffset 37 // TODO
-#define PATH string("/Library/Audio/Plug-Ins/VST/Alchemy.vst")
-// #define PATH string("/Library/Audio/Plug-Ins/VST/ComboV.vst")
+// #define PATH string("/Library/Audio/Plug-Ins/VST/Alchemy.vst")
+#define PATH string("/Library/Audio/Plug-Ins/VST/ComboV.vst")
 // #define PATH string("/Library/Audio/Plug-Ins/VST/Elastik 2.vst")
 // #define PATH string("/Library/Audio/Plug-Ins/VST/TAL-U-No-62.vst")
 // #define PATH string("/Library/Audio/Plug-Ins/VST/Melodyne.vst")
@@ -41,11 +41,15 @@ void run_vst()
             fa_error_log(st, NULL);
         }
 
+
+        fa_audio_schedule_relative(hms(0, 0, 0), fa_action_send(string("dls"), pair(string("open"), NULL)), st);
+
         fa_audio_schedule_relative(hms(0, 0, 0), fa_action_send(string("dls"),
             fa_midi_message_create_simple(0xc0, 50, 0)), st);
+
         for (int i = 0; i < 24; ++i) {           
             fa_action_t chord = fa_action_send(string("dls"), 
-                fa_midi_message_create_simple(0x90, 52 + ((i % 12) * 5), 90));
+                fa_midi_message_create_simple(0x90, 52 + ((i % 12) * 2), 90));
             fa_audio_schedule_relative(hms(0, 0, 0), chord, st);
             fa_thread_sleep(150);
         }
