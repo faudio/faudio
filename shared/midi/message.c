@@ -8,6 +8,7 @@
  */
 
 #include <fa/midi/message.h>
+#include <fa/dynamic.h>
 #include <fa/util.h>
 
 typedef fa_midi_message_status_t   status_t;
@@ -231,6 +232,11 @@ void midi_message_destroy(fa_ptr_t a)
     fa_midi_message_destroy(a);
 }
 
+type_repr_t midi_message_get_type(fa_ptr_t a)
+{
+    return midi_message_type_repr;
+}
+
 
 fa_ptr_t midi_message_impl(fa_id_t interface)
 {
@@ -239,6 +245,7 @@ fa_ptr_t midi_message_impl(fa_id_t interface)
     static fa_string_show_t midi_message_show_impl = { midi_message_show };
     static fa_copy_t midi_message_copy_impl = { midi_message_copy };
     static fa_destroy_t midi_message_destroy_impl = { midi_message_destroy };
+    static fa_dynamic_t midi_message_dynamic_impl = { midi_message_get_type };
 
     switch (interface) {
     case fa_equal_i:
@@ -255,6 +262,9 @@ fa_ptr_t midi_message_impl(fa_id_t interface)
 
     case fa_destroy_i:
         return &midi_message_destroy_impl;
+
+    case fa_dynamic_i:
+        return &midi_message_dynamic_impl;
 
     default:
         return NULL;

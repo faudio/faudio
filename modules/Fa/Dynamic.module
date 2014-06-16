@@ -22,7 +22,8 @@ module Fa.Dynamic
         SetTypeRepr, 
         MapTypeRepr, 
         StringTypeRepr,
-        RatioTypeRepr
+        RatioTypeRepr,
+        MidiMessageTypeRepr
     };
 
     /** Dynamic typing interface.

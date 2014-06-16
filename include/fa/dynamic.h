@@ -30,7 +30,8 @@ typedef enum {
             set_type_repr,
             map_type_repr,
             string_type_repr,
-            ratio_type_repr
+            ratio_type_repr,
+            midi_message_type_repr
         } fa_dynamic_type_repr_t;
 
 /** Dynamic typing interface.
