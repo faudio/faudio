@@ -13,6 +13,7 @@
 #include <fa/action.h>
 #include <fa/buffer.h>
 #include <fa/clock.h>
+#include <fa/dynamic.h>
 #include <fa/util.h>
 #include <fa/midi/message.h>
 
@@ -1643,17 +1644,54 @@ ptr_t vst_render_(ptr_t x, int count, fa_signal_state_t *state)
 }
 
 
+// TODO move
+#define fa_dynamic_is_string(x) (fa_dynamic_get_type(x) == string_type_repr)
+#define fa_dynamic_is_bool(x)   (fa_dynamic_get_type(x) == bool_type_repr)
+#define fa_dynamic_is_pair(x)   (fa_dynamic_get_type(x) == pair_type_repr)
 
 void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2);
+
+// Used by vst.cc
+void vst_log(const char* msg)
+{
+    warn(string_dappend(string("Error in VST: "), string((char*) msg)));
+}
+
+void vst_log_i(const char* fmt, long n)
+{
+    warn(string_dappend(string("Error in VST: "), 
+        fa_string_format_integral((char*) fmt, n)
+    ));
+}
 
 ptr_t vst_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     vst_context* context = x;
     AEffect*     plugin = context->plugin;
 
+    warn(n);
+    warn(context->name);
+    warn(fa_equal(n, context->name) ? string("t") : string ("f"));
+    warn(string(""));
+    
     if (fa_equal(n, context->name)) {
+        
+        if (fa_dynamic_is_pair(msg) && fa_dynamic_is_string(fa_pair_first(msg)) && fa_equal(fa_pair_first(msg), string("open")))
+        {
+            warn(string("Opening VST window..."));
+            if (fa_pair_second(msg)) {
+                openPlugin(plugin, fa_pair_second(msg));                
+            } else {
+                warn(string("Asked to open VST window but handle is NULL, ignoring."));
+            }
+            return x;
+        }
+        
+        // Assume this is MIDI message
+        // TODO add MIDI messags to dynamic and check this!
         if (!fa_midi_message_is_simple(msg)) {
             warn(string("Unknown message to DLS"));
+            return x;
         } else {
             int status, data1, data2;
             fa_midi_message_decons(msg, &status, &data1, &data2);
@@ -1679,14 +1717,19 @@ ptr_t vst_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
             events.events[0] = (VstEvent*) &event;
     
             processMidi(plugin, &events);
-
+            return x;
         }
+        assert(false && "Unreachable");
     }
     return x;
 }
 
-list_t fa_signal_vst(string_t name, string_t path, list_t inputs)
+list_t fa_signal_vst(string_t name1, string_t path1, list_t inputs)
 {
+    // TODO
+    string_t name = fa_copy(name1);
+    string_t path = fa_copy(path1);
+    
     char* rpath = unstring(path);
     AEffect* plugin = loadPlugin(rpath);
     initPlugin(plugin);
@@ -1717,6 +1760,9 @@ list_t fa_signal_vst(string_t name, string_t path, list_t inputs)
     vst_context* context = fa_malloc(sizeof(vst_context));
     context->plugin = plugin;
     context->name = name;
+    warn(string_append(string("Creating VST plugin\n    Name: "), name));
+    warn(string_append(string("    Path: "), path));
+    
     context->inputs = malloc(sizeof(ptr_t) * plugin->numInputs);
     context->outputs = malloc(sizeof(ptr_t) * plugin->numOutputs);
 

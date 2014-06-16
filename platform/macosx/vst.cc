@@ -19,8 +19,13 @@
 // TODO use proper error reporting etc
 
 
+
 #include "vst.h"
 extern "C" {
+
+void vst_log(const char* msg);
+void vst_log_i(const char* msg, long n);
+
 
 // Main host callback
 VstIntPtr VSTCALLBACK hostCallback(
@@ -87,10 +92,10 @@ VstIntPtr VSTCALLBACK hostCallback(
       // case audioMasterCanDo:
       //   return 0;
       
-      // case audioMasterUpdateDisplay: {
-          // printf("Plugin requested update display\n");
-          // return 0;          
-      // }
+      case audioMasterUpdateDisplay: {
+          vst_log("Plugin requested update display\n");
+          return 0;          
+      }
 
       // case audioMasterPinConnected:
         // return 0;
@@ -100,7 +105,8 @@ VstIntPtr VSTCALLBACK hostCallback(
 
       default:
         // TODO count and limit
-        // printf("Plugin requested unknown operation with opcode %d\n", opcode);
+        // vst_log("                Plugin requested unknown operation with opcode %d\n", opcode);
+      vst_log_i("                Plugin requested unknown operation %d\n", opcode);
         break;
     }
 
@@ -124,7 +130,7 @@ AEffect* loadPlugin(char* pluginPath) {
   CFURLRef bundleUrl = CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
     pluginPathStringRef, kCFURLPOSIXPathStyle, true);
   if(bundleUrl == NULL) {
-    printf("Couldn't make URL reference for plugin\n");
+    vst_log("Couldn't make URL reference for plugin\n");
     return NULL;
   }
 
@@ -132,7 +138,7 @@ AEffect* loadPlugin(char* pluginPath) {
   CFBundleRef bundle;
   bundle = CFBundleCreate(kCFAllocatorDefault, bundleUrl);
   if(bundle == NULL) {
-    printf("Couldn't create bundle reference\n");
+    vst_log("Couldn't create bundle reference\n");
     CFRelease(pluginPathStringRef);
     CFRelease(bundleUrl);
     return NULL;
@@ -148,7 +154,7 @@ AEffect* loadPlugin(char* pluginPath) {
   }
 
   if(mainEntryPoint == NULL) {
-    printf("Couldn't get a pointer to plugin's main()\n");
+    vst_log("Couldn't get a pointer to plugin's main()\n");
     CFBundleUnloadExecutable(bundle);
     CFRelease(bundle);
     return NULL;
@@ -156,7 +162,7 @@ AEffect* loadPlugin(char* pluginPath) {
 
   plugin = mainEntryPoint(hostCallback);
   if(plugin == NULL) {
-    printf("Plugin's main() returns null\n");
+    vst_log("Plugin's main() returns null\n");
     CFBundleUnloadExecutable(bundle);
     CFRelease(bundle);
     return NULL;
@@ -176,7 +182,7 @@ int initPlugin(AEffect *plugin) {
   // If incorrect, then the file either was not loaded properly, is not a
   // real VST plugin, or is otherwise corrupt.
   if(plugin->magic != kEffectMagic) {
-    printf("Plugin's magic number is bad\n");
+    vst_log("Plugin's magic number is bad\n");
     return -1;
   }
 
@@ -231,7 +237,15 @@ bool canPluginDo(AEffect *plugin, char *canDoString) {
 
 bool openPlugin(AEffect *plugin, void* handle) {
   dispatcherFuncPtr dispatcher = (dispatcherFuncPtr)(plugin->dispatcher);
-  return (dispatcher(plugin, effEditOpen, 0, 0, handle, 0.0f) > 0);
+
+  bool plugin_has_cocoa = (dispatcher(plugin,effCanDo,0,0,(void*)"hasCockosViewAsConfig",0.0f) & 0xffff0000) == 0xbeef0000;
+  if (!plugin_has_cocoa) {
+      vst_log("This plugin does not support Cocoa, ignoring open command\n");
+      return 0;
+  } else {
+      vst_log("OK, opening Window\n");
+      return (dispatcher(plugin, effEditOpen, 0, 0, handle, 0.0f) > 0);
+  }
 }
 bool closePlugin(AEffect *plugin) {
   dispatcherFuncPtr dispatcher = (dispatcherFuncPtr)(plugin->dispatcher);

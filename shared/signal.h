@@ -6,6 +6,8 @@ struct _state_base_t {
 
     int     count;
     double  rate;
+
+    int     custom_proc_count;
     // ...
 };
 
