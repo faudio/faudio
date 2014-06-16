@@ -186,6 +186,7 @@ void au_prepare(au_context_t context, double sample_rate)
     
     
     if ((err = AudioUnitInitialize(instance))) {
+        warn(string("Could not initialize Audio Unit"));
         assert(false);
     }
 }
