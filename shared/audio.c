@@ -1144,7 +1144,7 @@ void before_processing(stream_t stream)
         // printf("Adding custom proc %p!\n", x);
         add_custom_proc(x, stream->state);
     }
-    inform(fa_string_format_integral("    Custom procs: %d", ((state_base_t) stream->state)->custom_proc_count));
+    inform(fa_string_format_integral("    Custom procs:   %d", ((state_base_t) stream->state)->custom_proc_count));
 
     stream->MERGED_SIGNAL = fa_signal_simplify(merged);
 
