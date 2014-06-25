@@ -1297,6 +1297,7 @@
 
                     (lambda (stream)
    (cl:print stream)
+<<<<<<< Updated upstream
    ;(signal-show-vst-gui# "" view)
    (capi:execute-with-interface i (lambda () 
                                     (signal-show-vst-gui# "" view)
@@ -1304,6 +1305,10 @@
 
 
 ;   (audio-schedule-relative (milliseconds 0)   (action-send "dls" (pair-create-snd-raw "open" view)) stream)
+=======
+   
+   (audio-schedule-relative (milliseconds 0)   (action-send "dls" (pair-create-snd-raw "open" view)) stream)
+>>>>>>> Stashed changes
 
 ;   (audio-schedule-relative (milliseconds 0)   (action-send "dls" (midi #xc0 50 0)) stream)
 ;   (audio-schedule-relative (milliseconds 0)   (action-send "dls" (midi #x90 61 127)) stream)
