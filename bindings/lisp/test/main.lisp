@@ -1262,9 +1262,11 @@
         (mapcar (lambda (x) (from-pointer 'signal x)) (import-list (signal-vst name path (list-empty))))
 )
 
-(defmethod nsview ((pane capi:simple-pane))
- (slot-value (slot-value pane 'capi-internals:representation) 'capi-cocoa-library::main-view))
-(defcfun (pair-create-snd-raw "fa_pair_create") pair (a ptr) (b :pointer))
+
+
+;(defmethod nsview ((pane capi:simple-pane))
+; (slot-value (slot-value pane 'capi-internals:representation) 'capi-cocoa-library::main-view))
+;(defcfun (pair-create-snd-raw "fa_pair_create") pair (a ptr) (b :pointer))
 
 (setf i (make-instance 'capi::interface
         :visible-min-width 500
@@ -1275,8 +1277,10 @@
 ;(capi:show-interface i)
 ;(capi:redisplay-interface i)
 (capi::display i)
+(setf view (objc:invoke (objc:invoke "NSView" "alloc") "initWithFrame:" #(100 100 900 900))) 
+(objc:invoke (objc:invoke (slot-value (capi-internals:representation i) 'capi-cocoa-library::window) "contentView") "addSubview:" view)
 ; [i setNeedsDisplay:1]
-(objc:invoke (nsview i) "setNeedsDisplay:" 1)
+;(objc:invoke (nsview i) "setNeedsDisplay:" 1)
 
 
 
@@ -1292,7 +1296,7 @@
                     (lambda (stream)
    (cl:print stream)
    
-   (audio-schedule-relative (milliseconds 0)   (action-send "dls" (pair-create-snd-raw "open" (nsview i))) stream)
+   (audio-schedule-relative (milliseconds 0)   (action-send "dls" (pair-create-snd-raw "open" view)) stream)
 
 ;   (audio-schedule-relative (milliseconds 0)   (action-send "dls" (midi #xc0 50 0)) stream)
 ;   (audio-schedule-relative (milliseconds 0)   (action-send "dls" (midi #x90 61 127)) stream)
@@ -1317,7 +1321,7 @@
 
 (audio-schedule-relative (milliseconds 0)   (action-repeat (milliseconds 150) (action-send "dls" (pair-create-snd-raw "open" (nsview i)))) *temp-st*)
 
-(audio-schedule-relative (milliseconds 0)   (action-send "dls" (pair-create-snd-raw "open" (nsview i))) *temp-st*)
+(audio-schedule-relative (milliseconds 0)   (action-send "dls" (pair-create-snd-raw "open" view)) *temp-st*)
 
 (audio-schedule-relative (milliseconds 0)   (action-send "dls" (midi #x90 61 127)) *temp-st*)
 (audio-schedule-relative (milliseconds 0)   (action-send "dls" (midi #x90 61 0)) *temp-st*)
