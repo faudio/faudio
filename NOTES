@@ -1,4 +1,14 @@
 
+# v2.14.0
+
+- Exprimental support for VST 2 plugins
+
+- Fixes deallocation of external processors on failed stream start
+
+- Makes MIDI messages implement Dynamic
+
+- Fixes various memory leaks
+
 # v2.13.2
 
 - Fixes crash bugs related to hot-plugging and stream destruction
