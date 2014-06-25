@@ -153,6 +153,7 @@ inline static void delete_stream(stream_t stream);
 
 void before_processing(stream_t stream);
 void after_processing(stream_t stream);
+void after_failed_processing(stream_t stream);
 void during_processing(stream_t stream, unsigned count, float **input, float **output);
 
 static int native_audio_callback(const void *input_ptr,
@@ -888,12 +889,14 @@ stream_t fa_audio_open_stream(device_t input,
                  );
 
         if (status != paNoError) {
+            after_failed_processing(stream);
             return (stream_t) audio_device_error_with(string("Could not start stream"), status);
         }
 
         status = Pa_SetStreamFinishedCallback(stream->native, native_finished_callback);
 
         if (status != paNoError) {
+            after_failed_processing(stream);
             return (stream_t) audio_device_error_with(string("Could not start stream"), status);
         }
     }
@@ -906,6 +909,7 @@ stream_t fa_audio_open_stream(device_t input,
         status = Pa_StartStream(stream->native);
 
         if (status != paNoError) {
+            after_failed_processing(stream);
             return (stream_t) audio_device_error_with(string("Could not start stream"), status);
         }
     }
@@ -1162,6 +1166,12 @@ void after_processing(stream_t stream)
     run_custom_procs(custom_proc_destroy, 0, stream->state);
 
     delete_state(stream->state);
+}
+
+void after_failed_processing(stream_t stream)
+{
+    inform(string("Streams did not start, destroying external processors."));
+    run_custom_procs(custom_proc_destroy, 0, stream->state);
 }
 
 ptr_t run_simple_action2(ptr_t x, ptr_t a)
