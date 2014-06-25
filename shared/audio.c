@@ -909,7 +909,8 @@ stream_t fa_audio_open_stream(device_t input,
         status = Pa_StartStream(stream->native);
 
         if (status != paNoError) {
-            after_failed_processing(stream);
+            // TODO is finished callback invoked here
+            // after_failed_processing(stream);
             return (stream_t) audio_device_error_with(string("Could not start stream"), status);
         }
     }
@@ -1162,6 +1163,7 @@ void before_processing(stream_t stream)
 
 void after_processing(stream_t stream)
 {
+    inform(string("Stream finished normally, estroying external processors."));
     run_custom_procs(custom_proc_after, 0, stream->state);
     run_custom_procs(custom_proc_destroy, 0, stream->state);
 
@@ -1169,9 +1171,25 @@ void after_processing(stream_t stream)
 }
 
 void after_failed_processing(stream_t stream)
-{
+{         
+    // This is ugly: create a temporary state just to enumerate processors
     inform(string("Streams did not start, destroying external processors."));
+    session_t session  = stream->input ? stream->input->session : stream->output->session;
+    stream->state      = new_state(session->parameters.sample_rate); // FIXME
+
+    signal_t merged = fa_signal_constant(0);
+
+    for (int c = 0; c < stream->signal_count; ++c) {
+        signal_t withOutput = fa_signal_output(0, kOutputOffset + c, stream->signals[c]);
+        merged = fa_signal_former(merged, withOutput); // Could use any combinator here
+    }
+
+    fa_for_each(x, fa_signal_get_procs(merged)) {
+        // printf("Adding custom proc %p!\n", x);
+        add_custom_proc(x, stream->state);
+    }
     run_custom_procs(custom_proc_destroy, 0, stream->state);
+    delete_state(stream->state);
 }
 
 ptr_t run_simple_action2(ptr_t x, ptr_t a)

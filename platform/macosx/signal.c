@@ -86,6 +86,12 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
     return x;
 }
 
+ptr_t destroy_(ptr_t x)
+{
+    inform(string("Destroying DSLSynth instance (doing nothing)"));
+    return x;
+}
+
 // Pair of signals
 pair_t fa_signal_dls()
 {
@@ -98,7 +104,7 @@ pair_t fa_signal_dls()
     proc->render  = render_;
     proc->receive = receive_;
     proc->send    = NULL;
-    proc->destroy = NULL;
+    proc->destroy = destroy_;
     proc->data    = context;
 
     signal_t left  = fa_signal_input(kAUOffset + 0);
