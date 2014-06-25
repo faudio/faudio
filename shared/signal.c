@@ -20,7 +20,10 @@
 #include "signal.h"
 #include "signal_internal.h"
 #include "action_internal.h"
-#include "../platform/macosx/vst.h"
+
+#ifndef _WIN32
+    #include "../platform/macosx/vst.h"
+#endif
 
 typedef fa_signal_custom_processor_t   *custom_proc_t;
 typedef fa_signal_unary_signal_t        fixpoint_t;
@@ -1576,6 +1579,8 @@ fa_signal_t fa_signal_ceil(fa_signal_t x, fa_signal_t y)
 }
 
 
+#ifndef _WIN32
+
 struct _vst_context {
     string_t name;
     AEffect* plugin;
@@ -1791,6 +1796,17 @@ void fa_signal_show_vst_gui(fa_string_t string, void* handle)
     // TODO find correct plugin
     openPlugin(last_vst_plug->plugin, handle);
 }
+
+
+#else // _WIN32
+
+
+list_t fa_signal_vst(string_t name1, string_t path1, list_t inputs)
+{
+    fail(string("VST not supported for this platform yet."));
+}
+
+#endif // _WIN32
 
 
 // --------------------------------------------------------------------------------
