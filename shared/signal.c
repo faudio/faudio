@@ -1575,21 +1575,19 @@ fa_signal_t fa_signal_ceil(fa_signal_t x, fa_signal_t y)
     assert(false && "Not implemented");
 }
 
-// fa_list_t   fa_signal_vst(fa_string_t x, fa_string_t y, fa_list_t z)
-// {
-//     assert(false && "Not implemented");
-// }
+
 struct _vst_context {
     string_t name;
     AEffect* plugin;
     float** inputs;
     float** outputs;    
 };
+
 typedef struct _vst_context vst_context;
 
-// TODO place in struct somewhere
-// static float** inputs = NULL;
-// static float** outputs = NULL;    
+// TODO remove
+static vst_context* last_vst_plug = NULL;
+
 
 ptr_t vst_before_(ptr_t x, int count, fa_signal_state_t *state)
 {
@@ -1782,7 +1780,16 @@ list_t fa_signal_vst(string_t name1, string_t path1, list_t inputs)
     proc->destroy = NULL; // TODO
     proc->data    = context;
 
+    // TODO
+    last_vst_plug = context;
+
     return list(fa_signal_custom(proc, fa_signal_input(kVstOffset + 0)), fa_signal_input(kVstOffset + 1));
+}
+
+void fa_signal_show_vst_gui(fa_string_t string, void* handle)
+{
+    // TODO find correct plugin
+    openPlugin(last_vst_plug->plugin, handle);
 }
 
 

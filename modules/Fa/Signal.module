@@ -378,6 +378,8 @@ module Fa.Signal
             Experimental.    
      */
     vst : (String, String, List) -> List;
+    
+    showVstGui : (String, Ptr) -> Void;
 
     /** Returns a pair of signals from the `DLSMusicDevice`.
         You can send messages to it using the name `DLS`.

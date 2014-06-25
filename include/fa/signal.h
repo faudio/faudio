@@ -474,6 +474,9 @@ fa_list_t fa_signal_vst(fa_string_t string,
                         fa_string_t string_,
                         fa_list_t list);
 
+
+void fa_signal_show_vst_gui(fa_string_t string, fa_ptr_t ptr);
+
 /** Returns a pair of signals from the `DLSMusicDevice`.
     You can send messages to it using the name `DLS`.
     

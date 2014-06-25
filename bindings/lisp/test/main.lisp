@@ -1285,6 +1285,8 @@
 
 
 
+(defcfun (signal-show-vst-gui# "fa_signal_show_vst_gui") :void (a string) (b :pointer))
+
 
 (signal-run-default-temp (lambda (inputs)
                       ; TODO outputs
@@ -1295,8 +1297,13 @@
 
                     (lambda (stream)
    (cl:print stream)
-   
-   (audio-schedule-relative (milliseconds 0)   (action-send "dls" (pair-create-snd-raw "open" view)) stream)
+   ;(signal-show-vst-gui# "" view)
+   (capi:execute-with-interface i (lambda () 
+                                    (signal-show-vst-gui# "" view)
+                                ))
+
+
+;   (audio-schedule-relative (milliseconds 0)   (action-send "dls" (pair-create-snd-raw "open" view)) stream)
 
 ;   (audio-schedule-relative (milliseconds 0)   (action-send "dls" (midi #xc0 50 0)) stream)
 ;   (audio-schedule-relative (milliseconds 0)   (action-send "dls" (midi #x90 61 127)) stream)
@@ -1306,6 +1313,8 @@
    (audio-schedule-relative (milliseconds 300) (action-send "dls" (midi #x90 62 127)) stream)
 |#
 ))
+
+
 
 #|
 (mp:schedule-timer
