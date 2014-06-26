@@ -1080,10 +1080,10 @@
  (cl:* 44100 60) 
  (car (signal-dls*))
  :controls (cl:list 
-            (pair-create (milliseconds 0)   (action-send "DLS" (midi #x91 60 127)))
-            (pair-create (milliseconds 100) (action-send "DLS" (midi #x91 63 127)))
-            (pair-create (milliseconds 200) (action-send "DLS" (midi #x91 65 127)))
-            (pair-create (milliseconds 300) (action-send "DLS" (midi #x91 62 127)))
+            (pair-create (milliseconds 0)   (action-send "dls" (midi #x91 60 127)))
+            (pair-create (milliseconds 100) (action-send "dls" (midi #x91 63 127)))
+            (pair-create (milliseconds 200) (action-send "dls" (midi #x91 65 127)))
+            (pair-create (milliseconds 300) (action-send "dls" (midi #x91 62 127)))
             ) 
  :path "/Users/hans/audio/test.wav")
 
