@@ -1,4 +1,8 @@
 
+# v2.14.1
+
+- Fixes regression related to memory leak fix
+
 # v2.14.0
 
 - Exprimental support for VST 2 plugins
