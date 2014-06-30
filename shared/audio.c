@@ -1163,7 +1163,7 @@ void before_processing(stream_t stream)
 
 void after_processing(stream_t stream)
 {
-    inform(string("Stream finished normally, estroying external processors."));
+    inform(string("Stream finished normally, destroying external processors."));
     run_custom_procs(custom_proc_after, 0, stream->state);
     run_custom_procs(custom_proc_destroy, 0, stream->state);
 
@@ -1300,10 +1300,11 @@ int native_audio_callback(const void                       *input,
     if (stream->state) {
         during_processing(stream, count, (float **) input, (float **) output);
         stream->pa_flags |= flags;
-        return paContinue;
-    } else {
-        return paAbort;
     }
+    return paContinue;
+    // else {
+    //     return paAbort;
+    // }
 }
 
 void native_finished_callback(void *data)
