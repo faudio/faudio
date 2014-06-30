@@ -1,4 +1,4 @@
- 
+7
 
 (in-package :faudio)
 
@@ -1255,37 +1255,21 @@
 
 
 
-
-
 (defun signal-vst-input* (name path)
 ; TODO optional outputs
         (mapcar (lambda (x) (from-pointer 'signal x)) (import-list (signal-vst name path (list-empty))))
 )
+(defcfun (signal-show-vst-gui# "fa_signal_show_vst_gui") :void (a string) (b :pointer))
 
+
+(progn
 
 
 ;(defmethod nsview ((pane capi:simple-pane))
 ; (slot-value (slot-value pane 'capi-internals:representation) 'capi-cocoa-library::main-view))
 ;(defcfun (pair-create-snd-raw "fa_pair_create") pair (a ptr) (b :pointer))
 
-(setf i (make-instance 'capi::interface
-        :visible-min-width 500
-	:visible-min-height 500
-        :title "My Interface"))
 
-;(capi:hide-interface i)
-;(capi:show-interface i)
-;(capi:redisplay-interface i)
-(capi::display i)
-(setf view (objc:invoke (objc:invoke "NSView" "alloc") "initWithFrame:" #(100 100 900 900))) 
-(objc:invoke (objc:invoke (slot-value (capi-internals:representation i) 'capi-cocoa-library::window) "contentView") "addSubview:" view)
-; [i setNeedsDisplay:1]
-;(objc:invoke (nsview i) "setNeedsDisplay:" 1)
-
-
-
-
-(defcfun (signal-show-vst-gui# "fa_signal_show_vst_gui") :void (a string) (b :pointer))
 
 
 (signal-run-default-temp (lambda (inputs)
@@ -1297,18 +1281,29 @@
 
                     (lambda (stream)
    (cl:print stream)
-<<<<<<< Updated upstream
    ;(signal-show-vst-gui# "" view)
-   (capi:execute-with-interface i (lambda () 
-                                    (signal-show-vst-gui# "" view)
-                                ))
+
+                                       
+                                    (setf i (make-instance 'capi::interface
+                                                           :visible-min-width 500
+                                                           :visible-min-height 500
+                                                           :title "My Interface"))
+
+                                                                     (capi::display i)
+                                    (capi:execute-with-interface i (lambda ()
+                                                                     (objc:make-autorelease-pool) ; ???
+                                                                     
+                                                                     
+
+                                                                     (setf view (objc:invoke (objc:invoke "NSView" "alloc") "initWithFrame:" #(100 100 900 900))) 
+                                                                     (objc:invoke (objc:invoke (slot-value (capi-internals:representation i) 'capi-cocoa-library::window) "contentView") "addSubview:" view)
+                                                                     
+                                                                      (signal-show-vst-gui# "" view)
+                                                                     ))
 
 
 ;   (audio-schedule-relative (milliseconds 0)   (action-send "dls" (pair-create-snd-raw "open" view)) stream)
-=======
-   
-   (audio-schedule-relative (milliseconds 0)   (action-send "dls" (pair-create-snd-raw "open" view)) stream)
->>>>>>> Stashed changes
+
 
 ;   (audio-schedule-relative (milliseconds 0)   (action-send "dls" (midi #xc0 50 0)) stream)
 ;   (audio-schedule-relative (milliseconds 0)   (action-send "dls" (midi #x90 61 127)) stream)
@@ -1318,6 +1313,7 @@
    (audio-schedule-relative (milliseconds 300) (action-send "dls" (midi #x90 62 127)) stream)
 |#
 ))
+)
 
 
 
@@ -1338,6 +1334,7 @@
 (audio-schedule-relative (milliseconds 0)   (action-send "dls" (pair-create-snd-raw "open" view)) *temp-st*)
 
 (audio-schedule-relative (milliseconds 0)   (action-send "dls" (midi #x90 61 127)) *temp-st*)
+(audio-schedule-relative (milliseconds 0)   (action-send "dls" (midi #x90  127)) *temp-st*)
 (audio-schedule-relative (milliseconds 0)   (action-send "dls" (midi #x90 61 0)) *temp-st*)
 (signal-stop)
 
