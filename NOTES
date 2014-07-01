@@ -1,4 +1,8 @@
 
+# v2.14.2
+
+- Fixes regression in Lisp bindings
+
 # v2.14.1
 
 - Fixes regression related to memory leak fix
