@@ -1657,14 +1657,14 @@ void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *
 // Used by vst.cc
 void vst_log(const char* msg)
 {
-    warn(string_dappend(string("Error in VST: "), string((char*) msg)));
+    // warn(string_dappend(string("Error in VST: "), string((char*) msg)));
 }
 
 void vst_log_i(const char* fmt, long n)
 {
-    warn(string_dappend(string("Error in VST: "), 
-        fa_string_format_integral((char*) fmt, n)
-    ));
+    // warn(string_dappend(string("Error in VST: "), 
+        // fa_string_format_integral((char*) fmt, n)
+    // ));
 }
 
 ptr_t vst_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
