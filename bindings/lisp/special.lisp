@@ -157,7 +157,8 @@
     (9 (from-pointer 'set x))
     (10 (from-pointer 'map x))
     (11 (from-pointer 'string x))
-    (12 (from-pointer 'ratio x))))
+    (12 (from-pointer 'ratio x))
+    (13 (from-pointer 'midi-message x))))
 
 ; ---------------------------------------------------------------------------------------------------
 
@@ -341,7 +342,7 @@
     (callback funcall1#) 
     (func-to-int# (lambda (time-msg-pair)
       (let* ((time (from-pointer 'time (pair-first time-msg-pair)))
-             (msg  (from-pointer 'midi-message (pair-second time-msg-pair))))
+             (msg  (pair-second time-msg-pair)))
       (funcall f time msg))))
     stream))
     
