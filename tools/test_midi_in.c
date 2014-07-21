@@ -78,13 +78,13 @@ fa_ptr_t print_and_echo_dls(fa_ptr_t x, fa_ptr_t timeMessage)
 
     // printf("System time (early): %lld\n", fa_clock_milliseconds(fa_clock_standard()));
     fa_audio_schedule_relative(fa_milliseconds(0), fa_action_send(fa_string("dls"), msg), out_stream);
-    // mark_used(out_stream);
+    // fa_mark_used(out_stream);
 
     fa_destroy(fa_pair_first(timeMessage));
     fa_destroy(timeMessage);
     return 0;
 
-    mark_used(time);
+    fa_mark_used(time);
 }
 
 fa_ptr_t times2(fa_ptr_t _, fa_ptr_t x)

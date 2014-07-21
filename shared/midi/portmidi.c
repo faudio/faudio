@@ -582,7 +582,7 @@ fa_ptr_t stream_thread_callback(fa_ptr_t x)
                         send_midi_action,
                         stream
                        );
-            mark_used(now);
+            fa_mark_used(now);
         }
 
         // Sleep
@@ -598,7 +598,7 @@ fa_ptr_t send_midi_action(fa_ptr_t stream, fa_ptr_t action)
         // fa_string_t name = fa_action_send_name(action);
         fa_ptr_t    value = fa_action_send_value(action);
         send_midi(stream, value);
-        // mark_used_name(name);
+        // fa_mark_used_name(name);
     }
 
     // TODO other actions

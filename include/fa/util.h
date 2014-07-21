@@ -145,7 +145,7 @@ void fa_dlog_info(fa_string_t);
 #define f32                 fa_from_double
 #define f64                 fa_from_double
 
-#define mark_used(X) X = *(&X)
+#define fa_mark_used(X) X = *(&X)
 
 
 #endif // _FA_UTIL

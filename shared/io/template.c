@@ -22,21 +22,21 @@ static inline
 void prepare(fa_ptr_t x)
 {
     struct T_filter *filter = (struct T_filter *) x;
-    mark_used(filter);
+    fa_mark_used(filter);
 }
 
 static inline
 void push(fa_ptr_t x, fa_buffer_t buffer)
 {
     struct T_filter *filter = (struct T_filter *) x;
-    mark_used(filter);
+    fa_mark_used(filter);
 }
 
 static inline
 void pull(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
 {
     struct T_filter *filter = (struct T_filter *) x;
-    mark_used(filter);
+    fa_mark_used(filter);
 }
 
 

@@ -1208,7 +1208,7 @@ fa_ptr_t run_simple_action2(fa_ptr_t x, fa_ptr_t a)
 void handle_outgoing_message(fa_ptr_t x, fa_string_t name, fa_ptr_t value)
 {
     stream_t stream = x;
-    mark_used(stream);
+    fa_mark_used(stream);
     fa_atomic_queue_write(stream->out_controls, fa_pair_create(name, value));
 }
 
@@ -1460,7 +1460,7 @@ int64_t audio_stream_milliseconds(fa_ptr_t a)
 #else
         stream->last_time = ((double) state->count / (double) state->rate * 1000.0);
 #endif
-        mark_used(state);
+        fa_mark_used(state);
     }
 
     return stream->last_time;

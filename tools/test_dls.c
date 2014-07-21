@@ -38,7 +38,7 @@ void run_dls()
 
             // fa_clock_t cl = fa_clock_standard();
             // fa_clock_t cl = fa_audio_stream_clock(st);
-            // mark_used(cl);
+            // fa_mark_used(cl);
 
             // printf("Scheduling msec: %lld \n", fa_clock_milliseconds(cl));
             // printf("Scheduling time: %s \n", unstring(fa_string_show(fa_clock_time(cl))));

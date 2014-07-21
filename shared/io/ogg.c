@@ -39,7 +39,7 @@ void write_page(struct ogg_encoder *encoder, ogg_page *page, fa_io_callback_t cb
 void prepare(fa_ptr_t x)
 {
     struct ogg_encoder *encoder = (struct ogg_encoder *) x;
-    mark_used(encoder);
+    fa_mark_used(encoder);
 
     vorbis_info_init(&encoder->vorbis.info);
 
@@ -142,7 +142,7 @@ void push_uncompressed(fa_ptr_t x, fa_buffer_t buffer)
         vorbis_analysis_wrote(&encoder->vorbis.dsp, 0);
     }
 
-    mark_used(encoder);
+    fa_mark_used(encoder);
 }
 
 void pull_compressed(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
@@ -174,7 +174,7 @@ void pull_compressed(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
          */
         while (true) {
             ogg_page page;
-            mark_used(page);
+            fa_mark_used(page);
             int result = ogg_stream_flush(&encoder->ogg.stream, &page);
 
             if (result == 0) {
@@ -219,7 +219,7 @@ void pull_compressed(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
 
     }
 
-    mark_used(encoder);
+    fa_mark_used(encoder);
 }
 
 void write_page(struct ogg_encoder *encoder, ogg_page *page, fa_io_callback_t cb, fa_ptr_t data)

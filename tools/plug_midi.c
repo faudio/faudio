@@ -30,7 +30,7 @@ fa_midi_session_t print_midi_devices(fa_ptr_t _, fa_midi_session_t session)
         fa_print("In:   %s\n", fb(fa_midi_has_input(x)));
         fa_print("Out:  %s\n", fb(fa_midi_has_output(x)));
         fa_print_ln(fa_string(""));
-        mark_used(x);
+        fa_mark_used(x);
     }
 
     fa_for_each(x, fa_midi_all(session)) {

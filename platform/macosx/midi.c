@@ -839,7 +839,7 @@ void message_listener(const MIDIPacketList *packetList, fa_ptr_t x, fa_ptr_t _)
 
             }
 
-            mark_used(stream);
+            fa_mark_used(stream);
         }
     }
 

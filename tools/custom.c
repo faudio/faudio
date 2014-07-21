@@ -50,8 +50,8 @@ void helper_function()
 
     fa_signal_t a = fa_multiply(fa_signal_sin(fa_signal_line(440)), fa_signal_input(32));
     fa_signal_t b = fa_signal_custom(&proc, a);
-    mark_used(a);
-    mark_used(b);
+    fa_mark_used(a);
+    fa_mark_used(b);
 
     fa_signal_t r = b;
 

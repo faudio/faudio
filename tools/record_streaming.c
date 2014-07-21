@@ -86,7 +86,7 @@ fa_ptr_t _print(fa_ptr_t x)
 fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
 {
     fa_atomic_ring_buffer_t rbuffer = (fa_atomic_ring_buffer_t) x;
-    mark_used(rbuffer);
+    fa_mark_used(rbuffer);
 
     // TODO send
     // fa_thread_sleep(1000);
@@ -130,7 +130,7 @@ fa_audio_stream_t _stream(fa_ptr_t x, fa_audio_stream_t s)
     fa_thread_sleep(1000000);
     return s;
 
-    mark_used(filt);
+    fa_mark_used(filt);
 }
 
 fa_audio_session_t _session(fa_ptr_t x, fa_audio_session_t s)
@@ -156,7 +156,7 @@ int main(int argc, char const *argv[])
 
         // fa_unpair(fa_option_parse_all(options, argc, (char **) argv), opts, args) {
         {
-            // mark_used(args);
+            // fa_mark_used(args);
             // gVorbis = fa_map_get(fa_string("ogg-vorbis"), opts)  ? fa_to_bool(fa_map_get(fa_string("ogg-vorbis"), opts))  : false;
             // gEndian = fa_map_get(fa_string("endian"), opts)      ? fa_to_bool(fa_map_get(fa_string("endian"), opts))      : false;
             // gOutput = fa_map_get(fa_string("output-file"), opts) ? fa_map_get(fa_string("output-file"), opts) : fa_string("test.raw");
@@ -167,7 +167,7 @@ int main(int argc, char const *argv[])
 
             printf("Vorbis=%d, Endian=%d, Output=%s\n", gVorbis, gEndian, fa_unstring(gOutput));
             fa_atomic_ring_buffer_t rbuffer = fa_atomic_ring_buffer(kRingBufferSize);
-            mark_used(rbuffer);
+            fa_mark_used(rbuffer);
 
             fa_audio_with_session(_session, rbuffer, fa_log, NULL);
         }

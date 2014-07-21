@@ -1277,7 +1277,7 @@ inline static double _play_stream(fa_ptr_t buffer, double _)
             // fa_warn(fa_string("U"));
         }
 
-        mark_used(res);
+        fa_mark_used(res);
     }
 
     return x;

@@ -28,7 +28,7 @@ void prepare(fa_ptr_t x)
 
     filter->count = 0;
     filter->closed = false;
-    mark_used(filter);
+    fa_mark_used(filter);
 }
 
 static inline
@@ -48,7 +48,7 @@ void push(fa_ptr_t x, fa_buffer_t buffer)
         filter->count += size;
     }
 
-    mark_used(filter);
+    fa_mark_used(filter);
 }
 
 static inline
@@ -93,7 +93,7 @@ void pull(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
         }
     }
 
-    mark_used(filter);
+    fa_mark_used(filter);
 }
 
 

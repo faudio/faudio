@@ -48,7 +48,7 @@ fa_audio_session_t print_audio_devices(fa_ptr_t _, fa_audio_session_t session)
         fa_print("In:   %s\n", fb(fa_audio_has_input(x)));
         fa_print("Out:  %s\n", fb(fa_audio_has_output(x)));
         fa_print_ln(fa_string(""));
-        mark_used(x);
+        fa_mark_used(x);
     }
 
     play_sine(NULL, session);

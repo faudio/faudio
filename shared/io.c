@@ -517,7 +517,7 @@ size_t bytes_read = 0;
 void pull_ringbuffer(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
 {
     fa_atomic_ring_buffer_t rbuffer = x;
-    // mark_used(rbuffer);
+    // fa_mark_used(rbuffer);
 
     while (!fa_atomic_ring_buffer_is_closed(rbuffer)) {
         size_t size = 256;

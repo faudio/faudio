@@ -74,7 +74,7 @@ void run_midi()
         fa_audio_stream_t ast = fa_audio_open_stream(ai, ao, NULL, NULL);
         fa_print_ln(ast);
 
-        mark_used(ast);
+        fa_mark_used(ast);
 
         // Use audio clock
         // fa_audio_set_speed(0.1, ast);
@@ -130,10 +130,10 @@ void run_midi()
 
 
         fa_thread_sleep(100000);
-        // mark_used(notes1);
-        // mark_used(notes2);
-        // mark_used(x);
-        // mark_used(y);
+        // fa_mark_used(notes1);
+        // fa_mark_used(notes2);
+        // fa_mark_used(x);
+        // fa_mark_used(y);
     }
 
     // {
@@ -148,9 +148,9 @@ void run_midi()
     //     fa_midi_schedule_relative(seconds(0), notes, st);
     //     fa_midi_schedule_relative(half,       offs, st);
     //     fa_thread_sleep(100000);
-    //     mark_used(half);
-    //     mark_used(notes);
-    //     mark_used(offs);
+    //     fa_mark_used(half);
+    //     fa_mark_used(notes);
+    //     fa_mark_used(offs);
     // }
 
     fa_destroy(st);
