@@ -662,7 +662,9 @@ struct _state_t {
     double     *buses;                  // Current and future bus values
 
     int         count;                  // Number of processed samples
-    double      rate;                   // Sample rate
+    double      rate;                   // Sample rate (immutable during processing)
+    double      speed;
+    double      elapsed_time;
 
     int           custom_proc_count;
     custom_proc_t custom_procs[kMaxCustomProcs];      // Array of custom processors
@@ -677,6 +679,8 @@ state_t new_state(int sample_rate)
 
     state->count              = 0;
     state->rate               = sample_rate;
+    state->speed              = 1.0;
+    state->elapsed_time       = 0.0;
     state->custom_proc_count  = 0;
 
     state->inputs   = fa_malloc(kMaxInputs * kMaxVectorSize * sizeof(double));
@@ -711,7 +715,8 @@ double state_random(state_t state)
 inline static
 double state_time(state_t state)
 {
-    return state->count / state->rate;
+    return state->elapsed_time;
+    // return state->count / state->rate;
 }
 
 inline static
@@ -767,11 +772,13 @@ double *write_samp(int n, int c, state_t state)
 void inc_state1(state_t state)
 {
     state->count++;
+    state->elapsed_time += (1.0 / state->rate) * state->speed;
 }
 
 void inc_state(int n, state_t state)
 {
     state->count += n;
+    state->elapsed_time += ((double) n / state->rate) * state->speed;
 }
 
 

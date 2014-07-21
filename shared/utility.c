@@ -94,7 +94,6 @@ void fix_stack_size()
 
 void fa_initialize()
 {
-
     fa_log_info(fa_string(""));
 
     fa_log_info(fa_string_dappend(

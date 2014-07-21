@@ -1445,7 +1445,13 @@ int64_t audio_stream_milliseconds(ptr_t a)
     if (stream->state) {
         // We cache time in the stream in case the stream state has been freed
         state_base_t state = (state_base_t) stream->state;
+
+#ifdef ENABLE_VIRTUAL_TIME
+        stream->last_time = ((double) state->elapsed_time * 1000.0);
+#else
         stream->last_time = ((double) state->count / (double) state->rate * 1000.0);
+#endif
+        mark_used(state);
     }
 
     return stream->last_time;
