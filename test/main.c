@@ -202,9 +202,9 @@ void test_show()
     fa_dprint("%s\n", list(i8(1)));
     fa_dprint("%s\n", list(i8(1), i8(2), list(i8(1), i8(2), fb(true))));
     fa_dprint("%s\n", list(
-                  pair(string("hans"), string("höglund")),
-                  pair(string("lisa"), string("streich")),
-                  pair(string("mats"), string("erlandsson"))));
+                  fa_pair_create(string("hans"), string("höglund")),
+                  fa_pair_create(string("lisa"), string("streich")),
+                  fa_pair_create(string("mats"), string("erlandsson"))));
 }
 
 
@@ -1272,13 +1272,13 @@ void test_json(string_t path)
     fa_puts(json2);
 
     fa_puts(fa_string_to_json(
-                pair(i32(1), i32(2))));
+                fa_pair_create(i32(1), i32(2))));
 
     fa_puts(fa_string_to_json(
-                list(pair(i32(1), i32(2)), pair(i32(3), i32(4)))));
+                list(fa_pair_create(i32(1), i32(2)), fa_pair_create(i32(3), i32(4)))));
 
     fa_puts(fa_string_to_json(
-                set(pair(i32(1), i32(2)), pair(i32(1), i32(2)))));
+                set(fa_pair_create(i32(1), i32(2)), fa_pair_create(i32(1), i32(2)))));
 
     fa_puts(fa_string_to_json(
                 map(

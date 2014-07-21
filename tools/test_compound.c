@@ -86,14 +86,14 @@ void run_midi()
         fa_action_t note2  = fa_action_send(string("midi"), fa_midi_message_create_simple(0x90, 65, 127));
 
         // fa_action_t notes1 = fa_action_many(list(
-        //                                         pair(note2, fa_milliseconds(100 + 200 + 100)),
-        //                                         pair(note2, fa_milliseconds(100 + 100))
+        //                                         fa_pair_create(note2, fa_milliseconds(100 + 200 + 100)),
+        //                                         fa_pair_create(note2, fa_milliseconds(100 + 100))
         //                                     ));
         // fa_action_t notes2 = fa_action_many(list(
-        //                                         pair(fa_action_null(), fa_milliseconds(100)),
-        //                                         pair(note1, fa_milliseconds(200)),
-        //                                         pair(note1, fa_milliseconds(100 + 100)),
-        //                                         pair(note1, fa_milliseconds(100))
+        //                                         fa_pair_create(fa_action_null(), fa_milliseconds(100)),
+        //                                         fa_pair_create(note1, fa_milliseconds(200)),
+        //                                         fa_pair_create(note1, fa_milliseconds(100 + 100)),
+        //                                         fa_pair_create(note1, fa_milliseconds(100))
         //                                     ));
         //
         // fa_action_t x = fa_action_repeat(fa_milliseconds(1000/5), note1);
@@ -104,9 +104,9 @@ void run_midi()
 
                                   fa_action_while(pred2, NULL,
                                                   fa_action_many(list(
-                                                          pair(fa_action_if(pred1, NULL, note1), fa_milliseconds(1000)),
-                                                          pair(fa_action_if(pred1, NULL, note1), fa_milliseconds(1000)),
-                                                          pair(fa_action_if(pred1, NULL,
+                                                          fa_pair_create(fa_action_if(pred1, NULL, note1), fa_milliseconds(1000)),
+                                                          fa_pair_create(fa_action_if(pred1, NULL, note1), fa_milliseconds(1000)),
+                                                          fa_pair_create(fa_action_if(pred1, NULL,
                                                                   fa_action_while(pred2, NULL,
                                                                           fa_action_repeat(fa_milliseconds(1000), note2)
                                                                                  )), fa_milliseconds(1000))

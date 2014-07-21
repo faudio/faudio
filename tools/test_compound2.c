@@ -84,42 +84,42 @@ void run_test()
 
         fa_action_t notes1 = fa_action_many(fa_list_join(list(
                                                              list(
-                                                                 pair(note1,             fa_milliseconds(k)),
-                                                                 pair(note1,             fa_milliseconds(k)),
-                                                                 pair(note1,             fa_milliseconds(k - j)),
-                                                                 pair(note1,             fa_milliseconds(j))
+                                                                 fa_pair_create(note1,             fa_milliseconds(k)),
+                                                                 fa_pair_create(note1,             fa_milliseconds(k)),
+                                                                 fa_pair_create(note1,             fa_milliseconds(k - j)),
+                                                                 fa_pair_create(note1,             fa_milliseconds(j))
                                                              ),
                                                              list(
-                                                                 pair(note1,             fa_milliseconds(k)),
-                                                                 pair(note1,             fa_milliseconds(k)),
-                                                                 pair(note1,             fa_milliseconds(k - j)),
-                                                                 pair(note1,             fa_milliseconds(j))
+                                                                 fa_pair_create(note1,             fa_milliseconds(k)),
+                                                                 fa_pair_create(note1,             fa_milliseconds(k)),
+                                                                 fa_pair_create(note1,             fa_milliseconds(k - j)),
+                                                                 fa_pair_create(note1,             fa_milliseconds(j))
                                                              ),
                                                              list(
-                                                                 pair(note1,             fa_milliseconds(k)),
-                                                                 pair(note1,             fa_milliseconds(k)),
-                                                                 pair(note1,             fa_milliseconds(k - j)),
-                                                                 pair(note1,             fa_milliseconds(j))
+                                                                 fa_pair_create(note1,             fa_milliseconds(k)),
+                                                                 fa_pair_create(note1,             fa_milliseconds(k)),
+                                                                 fa_pair_create(note1,             fa_milliseconds(k - j)),
+                                                                 fa_pair_create(note1,             fa_milliseconds(j))
                                                              ),
                                                              list(
-                                                                 pair(note1,             fa_milliseconds(k)),
-                                                                 pair(note1,             fa_milliseconds(k)),
-                                                                 pair(note1,             fa_milliseconds(k - j)),
-                                                                 pair(note1,             fa_milliseconds(j))
+                                                                 fa_pair_create(note1,             fa_milliseconds(k)),
+                                                                 fa_pair_create(note1,             fa_milliseconds(k)),
+                                                                 fa_pair_create(note1,             fa_milliseconds(k - j)),
+                                                                 fa_pair_create(note1,             fa_milliseconds(j))
                                                              ),
                                                              list(
-                                                                 pair(note1,             fa_milliseconds(k)),
-                                                                 pair(note1,             fa_milliseconds(k)),
-                                                                 pair(note1,             fa_milliseconds(k - j)),
-                                                                 pair(note1,             fa_milliseconds(j))
+                                                                 fa_pair_create(note1,             fa_milliseconds(k)),
+                                                                 fa_pair_create(note1,             fa_milliseconds(k)),
+                                                                 fa_pair_create(note1,             fa_milliseconds(k - j)),
+                                                                 fa_pair_create(note1,             fa_milliseconds(j))
                                                              )
                                                          )));
         fa_action_t notes2 = fa_action_many(list(
-                                                pair(note2,             fa_milliseconds(k * 3)),
-                                                pair(note2,             fa_milliseconds(k * 3)),
-                                                pair(note2,             fa_milliseconds(k * 3)),
-                                                pair(note2,             fa_milliseconds(k * 3)),
-                                                pair(note2,             fa_milliseconds(k * 3))
+                                                fa_pair_create(note2,             fa_milliseconds(k * 3)),
+                                                fa_pair_create(note2,             fa_milliseconds(k * 3)),
+                                                fa_pair_create(note2,             fa_milliseconds(k * 3)),
+                                                fa_pair_create(note2,             fa_milliseconds(k * 3)),
+                                                fa_pair_create(note2,             fa_milliseconds(k * 3))
                                             ));
 
         // fa_audio_schedule_relative(seconds(0), notes1, ast);
@@ -127,8 +127,8 @@ void run_test()
 
         fa_audio_schedule_relative(seconds(0), fa_action_repeat(fa_milliseconds(3000),
                                                                 fa_action_many(list(
-                                                                        pair(notes1, fa_milliseconds(0)),
-                                                                        pair(notes2, fa_milliseconds(0))
+                                                                        fa_pair_create(notes1, fa_milliseconds(0)),
+                                                                        fa_pair_create(notes2, fa_milliseconds(0))
                                                                         ))), ast);
 
         // 20 BE

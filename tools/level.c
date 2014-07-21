@@ -107,7 +107,7 @@ pair_t fa_signal_level(signal_t a, signal_t b)
     proc->destroy = NULL;
     proc->data    = NULL;
 
-    return pair(fa_signal_custom(proc,
+    return fa_pair_create(fa_signal_custom(proc,
                                  fa_signal_latter(fa_signal_output(0, kThisPlugOffset + 0, slope(fa_signal_absolute(a))), a)
                                 ),
                 fa_signal_latter(fa_signal_output(0, kThisPlugOffset + 1, b), b)
@@ -125,7 +125,7 @@ double amp2db(double x)
 
 ptr_t _message_out(ptr_t x, ptr_t name, ptr_t value)
 {
-    // fa_print("Receieved 2: %s\n", pair(name, value));
+    // fa_print("Receieved 2: %s\n", fa_pair_create(name, value));
     int bars = (int)(((amp2db(fa_peek_double(value)) + 20) / 20) * 15);
 
 

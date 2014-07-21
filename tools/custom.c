@@ -82,7 +82,7 @@ void helper_function()
         fa_destroy(s);
     } else {
         fa_signal_run_file(44100 * 10, list(
-                               pair(hms(0, 0, 0), fa_action_send(string("DLS"), string("hello!")))
+                               fa_pair_create(hms(0, 0, 0), fa_action_send(string("DLS"), string("hello!")))
 
                            ),
                            r,

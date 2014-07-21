@@ -59,7 +59,7 @@ pair_t fa_signal_clicks()
     proc->destroy = NULL;
     proc->data    = NULL;
 
-    return pair(fa_signal_custom(proc, fa_signal_input(kThisPlugOffset + 0)), fa_signal_input(kThisPlugOffset + 1));
+    return fa_pair_create(fa_signal_custom(proc, fa_signal_input(kThisPlugOffset + 0)), fa_signal_input(kThisPlugOffset + 1));
 }
 
 void run_clicks()
@@ -86,11 +86,11 @@ void run_clicks()
             // printf("Scheduling time: %s \n", unstring(fa_string_show(fa_clock_time(cl))));
 
             fa_action_t chord = fa_action_many(list(
-                                                   pair(
+                                                   fa_pair_create(
                                                        fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 64 + ((i % 12) * 3), 90)),
                                                        hms(0, 0, 0)
                                                    ),
-                                                   pair(
+                                                   fa_pair_create(
                                                        fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 60 + ((i % 12) * 3), 90)),
                                                        hms(0, 0, 0)
                                                    )
@@ -107,15 +107,15 @@ void run_clicks()
         fa_destroy(s);
     } else {
         fa_signal_run_file(44100 * 60, list(
-                               pair(
+                               fa_pair_create(
                                    hms(0, 0, 0),
                                    fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 60 + ((0 % 12) * 3), 90))
                                ),
-                               pair(
+                               fa_pair_create(
                                    hms(0, 0, 1),
                                    fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 60 + ((1 % 12) * 3), 90))
                                ),
-                               pair(
+                               fa_pair_create(
                                    hms(0, 0, 2),
                                    fa_action_send(string("DLS"), fa_midi_message_create_simple(0x90, 60 + ((2 % 12) * 3), 90))
                                )
