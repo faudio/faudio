@@ -69,7 +69,7 @@ typedef fa_action_t                 action_t;
 typedef MIDIClientRef               native_session_t;
 typedef MIDIEndpointRef             native_device_t;
 typedef MIDIPortRef                 native_stream_t;
-typedef OSStatus                    native_error_t;
+typedef OSStatus                    native_fa_error_t;
 
 #define kMaxMessageCallbacks        64
 #define kMaxStatusCallbacks         64
@@ -78,7 +78,7 @@ typedef OSStatus                    native_error_t;
 #define kSysexMaxSize               1024
 
 struct _fa_midi_session_t {
-    impl_t                          impl;               // Dispatcher
+    fa_impl_t                          impl;               // Dispatcher
     native_session_t                native;
 
     list_t                          devices;            // Cached device list
@@ -105,7 +105,7 @@ struct _fa_midi_session_t {
 };
 
 struct _fa_midi_device_t {
-    impl_t                          impl;               // Dispatcher
+    fa_impl_t                          impl;               // Dispatcher
     native_device_t                 native;             // Native device
     session_t                       session;            // Enclosing session
 
@@ -115,7 +115,7 @@ struct _fa_midi_device_t {
 
 struct _fa_midi_stream_t {
 
-    impl_t                          impl;               // Dispatcher
+    fa_impl_t                          impl;               // Dispatcher
     native_stream_t                 native;             // Native stream
     device_t                        device;             // Enclosing session
 
@@ -156,13 +156,13 @@ static session_t                    gMidiCurrentSession;
 static fa_thread_t                  gMidiThread;
 static CFRunLoopRef                 gMidiThreadRunLoop;
 
-error_t midi_device_error(string_t msg);
-error_t midi_device_error_with(string_t msg, native_error_t error);
-error_t midi_error(string_t msg, native_error_t code);
-void midi_device_fatal(string_t msg, native_error_t code);
-ptr_t midi_session_impl(fa_id_t interface);
-ptr_t midi_device_impl(fa_id_t interface);
-ptr_t midi_stream_impl(fa_id_t interface);
+fa_error_t midi_device_error(string_t msg);
+fa_error_t midi_device_error_with(string_t msg, native_fa_error_t error);
+fa_error_t midi_error(string_t msg, native_fa_error_t code);
+void midi_device_fatal(string_t msg, native_fa_error_t code);
+fa_ptr_t midi_session_impl(fa_id_t interface);
+fa_ptr_t midi_device_impl(fa_id_t interface);
+fa_ptr_t midi_stream_impl(fa_id_t interface);
 inline static session_t new_session();
 inline static void session_init_devices(session_t session);
 inline static void delete_session(session_t session);
@@ -325,7 +325,7 @@ inline static void delete_stream(stream_t stream)
 #define kNoSession      ((session_t) 1)
 #define kRequestSession ((session_t) 0)
 
-void status_listener(const MIDINotification *message, ptr_t data)
+void status_listener(const MIDINotification *message, fa_ptr_t data)
 {
     session_t session = data;
     MIDINotificationMessageID id = message->messageID;
@@ -336,8 +336,8 @@ void status_listener(const MIDINotification *message, ptr_t data)
         int n = session->callbacks.count;
 
         for (int i = 0; i < n; ++i) {
-            nullary_t f = session->callbacks.elements[i].function;
-            ptr_t     x = session->callbacks.elements[i].data;
+            fa_nullary_t f = session->callbacks.elements[i].function;
+            fa_ptr_t     x = session->callbacks.elements[i].data;
             f(x);
         }
     }
@@ -352,8 +352,8 @@ static void midi_timer(CFRunLoopTimerRef timer, void *data)
     int n = session->timer_callbacks.count;
 
     for (int i = 0; i < n; ++i) {
-        nullary_t f = session->timer_callbacks.elements[i].function;
-        ptr_t     x = session->timer_callbacks.elements[i].data;
+        fa_nullary_t f = session->timer_callbacks.elements[i].function;
+        fa_ptr_t     x = session->timer_callbacks.elements[i].data;
 
         if (f && x) {
             f(x);
@@ -363,9 +363,9 @@ static void midi_timer(CFRunLoopTimerRef timer, void *data)
 
 }
 
-ptr_t midi_thread(ptr_t x)
+fa_ptr_t midi_thread(fa_ptr_t x)
 {
-    native_error_t  result  = 0;
+    native_fa_error_t  result  = 0;
     session_t       session = NULL;
 
     MIDIRestart();
@@ -575,13 +575,13 @@ void fa_midi_end_session(session_t session)
 
 void fa_midi_with_session(session_callback_t    session_callback,
                           fa_ptr_t              session_data,
-                          error_callback_t      error_callback,
+                          fa_error_callback_t      error_callback,
                           fa_ptr_t              error_data)
 {
     session_t session = fa_midi_begin_session();
 
     if (fa_check(session)) {
-        error_callback(error_data, (error_t) session);
+        error_callback(error_data, (fa_error_t) session);
     } else {
         session_callback(session_data, session);
     }
@@ -649,7 +649,7 @@ device_t fa_midi_default_output(session_t session)
 
 
 int  fa_midi_add_timer_callback(timer_callback_t function,
-                                ptr_t            data,
+                                fa_ptr_t            data,
                                 session_t        session)
 {
     int n = session->timer_callbacks.count++;
@@ -667,7 +667,7 @@ void fa_midi_remove_timer_callback(int              index,
 
 
 void fa_midi_add_status_callback(status_callback_t function,
-                                 ptr_t             data,
+                                 fa_ptr_t             data,
                                  session_t         session)
 {
     int n = session->callbacks.count++;
@@ -728,13 +728,13 @@ void midi_fa_inform_opening(device_t device)
 }
 
 
-void forward_message_to_callbacks(midi_stream_t stream, time_t time, ptr_t msg)
+void forward_message_to_callbacks(midi_stream_t stream, time_t time, fa_ptr_t msg)
 {
     int n = stream->callbacks.count;
 
     for (int j = 0; j < n; ++j) {
-        unary_t f = stream->callbacks.elements[j].function;
-        ptr_t   x = stream->callbacks.elements[j].data;
+        fa_unary_t f = stream->callbacks.elements[j].function;
+        fa_ptr_t   x = stream->callbacks.elements[j].data;
 
         f(x, fa_pair_create(time, msg));
     }
@@ -763,7 +763,7 @@ buffer_t copy_sysex_to_new_buffer(stream_t stream)
                                   NULL));
 }
 
-void message_listener(const MIDIPacketList *packetList, ptr_t x, ptr_t _)
+void message_listener(const MIDIPacketList *packetList, fa_ptr_t x, fa_ptr_t _)
 {
     stream_t stream = x;
     // printf("Called status_listener (if you see this, please report it as a bug)\n");
@@ -876,7 +876,7 @@ void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *
 
 
 
-ptr_t forward_action_to_midi(ptr_t x, ptr_t action)
+fa_ptr_t forward_action_to_midi(fa_ptr_t x, fa_ptr_t action)
 {
     stream_t stream = x;
 
@@ -889,7 +889,7 @@ ptr_t forward_action_to_midi(ptr_t x, ptr_t action)
 
     if (fa_action_is_send(action)) {
         // string_t name   = fa_action_send_name(action);
-        ptr_t message     = fa_action_send_value(action);
+        fa_ptr_t message     = fa_action_send_value(action);
 
         if (fa_midi_message_is_simple(message)) {
             int sc, d1, d2;
@@ -908,7 +908,7 @@ ptr_t forward_action_to_midi(ptr_t x, ptr_t action)
                 packetList.packet[0].data[1] = d1;
                 packetList.packet[0].data[2] = d2;
 
-                native_error_t result = MIDISend(
+                native_fa_error_t result = MIDISend(
                                             stream->native,
                                             stream->device->native,
                                             &packetList
@@ -941,7 +941,7 @@ ptr_t forward_action_to_midi(ptr_t x, ptr_t action)
                 packetList.packet[0].data[i] = b;
             }
 
-            native_error_t result = MIDISend(
+            native_fa_error_t result = MIDISend(
                                         stream->native,
                                         stream->device->native,
                                         &packetList
@@ -960,11 +960,11 @@ ptr_t forward_action_to_midi(ptr_t x, ptr_t action)
     return NULL;
 }
 
-ptr_t midi_stream_callback(ptr_t x)
+fa_ptr_t midi_stream_callback(fa_ptr_t x)
 {
     stream_t stream = x;
 
-    ptr_t val;
+    fa_ptr_t val;
 
     while ((val = fa_atomic_queue_read(stream->short_controls))) {
         forward_action_to_midi(stream, val);
@@ -1040,13 +1040,13 @@ void fa_midi_close_stream(stream_t stream)
 void fa_midi_with_stream(device_t           device,
                          stream_callback_t  stream_callback,
                          fa_ptr_t           stream_data,
-                         error_callback_t   error_callback,
+                         fa_error_callback_t   error_callback,
                          fa_ptr_t           error_data)
 {
     stream_t stream = fa_midi_open_stream(device);
 
     if (fa_check(stream)) {
-        error_callback(error_data, (error_t) stream);
+        error_callback(error_data, (fa_error_t) stream);
     } else {
         stream_callback(stream_data, stream);
     }
@@ -1092,7 +1092,7 @@ void fa_midi_set_clock(fa_midi_stream_t stream, fa_clock_t clock)
 
 // --------------------------------------------------------------------------------
 
-fa_string_t midi_session_show(ptr_t a)
+fa_string_t midi_session_show(fa_ptr_t a)
 {
     string_t str = fa_string("<MidiSession ");
     str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) a));
@@ -1100,12 +1100,12 @@ fa_string_t midi_session_show(ptr_t a)
     return str;
 }
 
-void midi_session_destroy(ptr_t a)
+void midi_session_destroy(fa_ptr_t a)
 {
     fa_midi_end_session(a);
 }
 
-ptr_t midi_session_impl(fa_id_t interface)
+fa_ptr_t midi_session_impl(fa_id_t interface)
 {
     static fa_string_show_t midi_session_show_impl
         = { midi_session_show };
@@ -1127,7 +1127,7 @@ ptr_t midi_session_impl(fa_id_t interface)
 
 // --------------------------------------------------------------------------------
 
-bool midi_device_equal(ptr_t a, ptr_t b)
+bool midi_device_equal(fa_ptr_t a, fa_ptr_t b)
 {
     device_t device1 = (device_t) a;
     device_t device2 = (device_t) b;
@@ -1135,7 +1135,7 @@ bool midi_device_equal(ptr_t a, ptr_t b)
     return fa_equal(device1->name, device2->name);
 }
 
-fa_string_t midi_device_show(ptr_t a)
+fa_string_t midi_device_show(fa_ptr_t a)
 {
     device_t device = (device_t) a;
 
@@ -1147,7 +1147,7 @@ fa_string_t midi_device_show(ptr_t a)
     return str;
 }
 
-ptr_t midi_device_impl(fa_id_t interface)
+fa_ptr_t midi_device_impl(fa_id_t interface)
 {
     static fa_equal_t midi_device_equal_impl
         = { midi_device_equal };
@@ -1169,7 +1169,7 @@ ptr_t midi_device_impl(fa_id_t interface)
 
 // --------------------------------------------------------------------------------
 
-fa_string_t midi_stream_show(ptr_t a)
+fa_string_t midi_stream_show(fa_ptr_t a)
 {
     string_t str = fa_string("<MidiStream ");
     str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) a));
@@ -1177,12 +1177,12 @@ fa_string_t midi_stream_show(ptr_t a)
     return str;
 }
 
-void midi_stream_destroy(ptr_t a)
+void midi_stream_destroy(fa_ptr_t a)
 {
     fa_midi_close_stream(a);
 }
 
-ptr_t midi_stream_impl(fa_id_t interface)
+fa_ptr_t midi_stream_impl(fa_id_t interface)
 {
     static fa_string_show_t midi_stream_show_impl
         = { midi_stream_show };
@@ -1208,14 +1208,14 @@ ptr_t midi_stream_impl(fa_id_t interface)
 
 void fa_log_error_from(fa_string_t msg, fa_string_t origin);
 
-error_t midi_device_error(string_t msg)
+fa_error_t midi_device_error(string_t msg)
 {
     return fa_error_create_simple(error,
                                   msg,
                                   fa_string("Doremir.Device.Midi"));
 }
 
-error_t midi_device_error_with(string_t msg, native_error_t code)
+fa_error_t midi_device_error_with(string_t msg, native_fa_error_t code)
 {
     return fa_error_create_simple(error,
                                   fa_string_dappend(msg, fa_string_format_integral(" (error code %d)", code)),
@@ -1228,7 +1228,7 @@ string_t from_os_status2(OSStatus err)
     return fa_string((char *) GetMacOSStatusErrorString(err));
 }
 
-error_t midi_error(string_t msg, native_error_t code)
+fa_error_t midi_error(string_t msg, native_fa_error_t code)
 {
     string_t msg2 = from_os_status2(code);
     return fa_error_create_simple(error,
@@ -1237,7 +1237,7 @@ error_t midi_error(string_t msg, native_error_t code)
 }
 
 
-void midi_device_fatal(string_t msg, native_error_t code)
+void midi_device_fatal(string_t msg, native_fa_error_t code)
 {
     fa_log_error_from(
         fa_string_dappend(msg, fa_string_format_integral(" (error code %d)", code)),

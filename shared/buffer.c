@@ -26,7 +26,7 @@
 #define buffer_warn(str) // do nothing
 
 struct _fa_buffer_t {
-    impl_t          impl;
+    fa_impl_t          impl;
 
     size_t          size;
     uint8_t        *data;
@@ -282,7 +282,7 @@ fa_buffer_t fa_buffer_read_audio(fa_string_t path)
 }
 
 // TODO only writes one channel etc
-ptr_t fa_buffer_write_audio(fa_string_t  path,
+fa_ptr_t fa_buffer_write_audio(fa_string_t  path,
                             fa_buffer_t  buffer)
 {
     int channels = 1;

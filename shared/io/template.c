@@ -33,7 +33,7 @@ void push(fa_ptr_t x, fa_buffer_t buffer)
 }
 
 static inline
-void pull(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
+void pull(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
 {
     struct T_filter *filter = (struct T_filter *) x;
     mark_used(filter);

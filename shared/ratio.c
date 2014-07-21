@@ -15,7 +15,7 @@ typedef fa_ratio_num_t    num_t;
 typedef fa_ratio_denom_t  denom_t;
 
 struct _fa_ratio_t {
-    impl_t          impl;       //  Interface dispatcher
+    fa_impl_t          impl;       //  Interface dispatcher
 
     num_t           num;        //  Components
     denom_t         denom;
@@ -26,7 +26,7 @@ struct _fa_ratio_t {
 
 fa_ratio_t new_ratio()
 {
-    ptr_t ratio_impl(fa_id_t interface);
+    fa_ptr_t ratio_impl(fa_id_t interface);
 
     ratio_t p = fa_new(ratio);
     p->impl = &ratio_impl;
@@ -232,7 +232,7 @@ void fa_ratio_to_mixed(fa_ratio_t x,
 
 // --------------------------------------------------------------------------------
 
-bool ratio_equal(ptr_t m, ptr_t n)
+bool ratio_equal(fa_ptr_t m, fa_ptr_t n)
 {
     ratio_t x = (ratio_t) m;
     ratio_t y = (ratio_t) n;
@@ -245,7 +245,7 @@ bool ratio_equal(ptr_t m, ptr_t n)
     return a * d == b * c;
 }
 
-bool ratio_less_than(ptr_t m, ptr_t n)
+bool ratio_less_than(fa_ptr_t m, fa_ptr_t n)
 {
     ratio_t x = (ratio_t) m;
     ratio_t y = (ratio_t) n;
@@ -258,7 +258,7 @@ bool ratio_less_than(ptr_t m, ptr_t n)
     return a * d < b * c;
 }
 
-bool ratio_greater_than(ptr_t m, ptr_t n)
+bool ratio_greater_than(fa_ptr_t m, fa_ptr_t n)
 {
     ratio_t x = (ratio_t) m;
     ratio_t y = (ratio_t) n;
@@ -271,32 +271,32 @@ bool ratio_greater_than(ptr_t m, ptr_t n)
     return a * d > b * c;
 }
 
-ptr_t ratio_add(ptr_t a, ptr_t b)
+fa_ptr_t ratio_add(fa_ptr_t a, fa_ptr_t b)
 {
     return fa_ratio_add(a, b);
 }
 
-ptr_t ratio_subtract(ptr_t a, ptr_t b)
+fa_ptr_t ratio_subtract(fa_ptr_t a, fa_ptr_t b)
 {
     return fa_ratio_subtract(a, b);
 }
 
-ptr_t ratio_multiply(ptr_t a, ptr_t b)
+fa_ptr_t ratio_multiply(fa_ptr_t a, fa_ptr_t b)
 {
     return fa_ratio_multiply(a, b);
 }
 
-ptr_t ratio_divide(ptr_t a, ptr_t b)
+fa_ptr_t ratio_divide(fa_ptr_t a, fa_ptr_t b)
 {
     return fa_ratio_divide(a, b);
 }
 
-ptr_t ratio_absolute(ptr_t a)
+fa_ptr_t ratio_absolute(fa_ptr_t a)
 {
     return fa_ratio_absolute(a);
 }
 
-fa_string_t ratio_show(ptr_t a)
+fa_string_t ratio_show(fa_ptr_t a)
 {
     // ratio_t b = fa_ratio_normalize(a);
     ratio_t b = a;
@@ -310,12 +310,12 @@ fa_string_t ratio_show(ptr_t a)
     return s;
 }
 
-ptr_t ratio_copy(ptr_t a)
+fa_ptr_t ratio_copy(fa_ptr_t a)
 {
     return fa_ratio_copy(a);
 }
 
-void ratio_destroy(ptr_t a)
+void ratio_destroy(fa_ptr_t a)
 {
     fa_ratio_destroy(a);
 }
@@ -325,7 +325,7 @@ type_repr_t ratio_get_type(fa_ptr_t a)
     return ratio_type_repr;
 }
 
-ptr_t ratio_impl(fa_id_t interface)
+fa_ptr_t ratio_impl(fa_id_t interface)
 {
     static fa_equal_t ratio_equal_impl
         = { ratio_equal };

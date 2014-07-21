@@ -11,7 +11,7 @@
 #include <fa/util.h>
 
 struct _fa_time_t {
-    impl_t          impl;       //  Interface dispatcher
+    fa_impl_t          impl;       //  Interface dispatcher
     double          dvalue;      // Value in seconds
 };
 

@@ -12,8 +12,8 @@
 #include <fa/util.h>
 
 struct _fa_pair_t {
-    impl_t      impl;
-    ptr_t       values[2];
+    fa_impl_t      impl;
+    fa_ptr_t       values[2];
 };
 
 // -----------------------------------------------------------------------------
@@ -91,18 +91,18 @@ fa_pair_t fa_pair_swap(fa_pair_t pair)
 
 fa_pair_t fa_pair_assoc(fa_pair_t p)
 {
-    ptr_t a = fa_copy(p->values[0]);
-    ptr_t b = fa_copy(((pair_t) p->values[1])->values[0]);
-    ptr_t c = fa_copy(((pair_t) p->values[1])->values[1]);
+    fa_ptr_t a = fa_copy(p->values[0]);
+    fa_ptr_t b = fa_copy(((pair_t) p->values[1])->values[0]);
+    fa_ptr_t c = fa_copy(((pair_t) p->values[1])->values[1]);
 
     return new_pair(new_pair(a, b), c);
 }
 
 fa_pair_t fa_pair_unassoc(fa_pair_t p)
 {
-    ptr_t a = fa_copy(((pair_t) p->values[0])->values[0]);
-    ptr_t b = fa_copy(((pair_t) p->values[0])->values[1]);
-    ptr_t c = fa_copy(p->values[1]);
+    fa_ptr_t a = fa_copy(((pair_t) p->values[0])->values[0]);
+    fa_ptr_t b = fa_copy(((pair_t) p->values[0])->values[1]);
+    fa_ptr_t c = fa_copy(p->values[1]);
     return new_pair(a, new_pair(b, c));
 }
 
@@ -111,14 +111,14 @@ fa_pair_t fa_pair_unassoc(fa_pair_t p)
 
 fa_ptr_t fa_pair_dfirst(fa_pair_t pair)
 {
-    ptr_t value = pair->values[0];
+    fa_ptr_t value = pair->values[0];
     fa_destroy(pair);
     return value;
 }
 
 fa_ptr_t fa_pair_dsecond(fa_pair_t pair)
 {
-    ptr_t value = pair->values[1];
+    fa_ptr_t value = pair->values[1];
     fa_destroy(pair);
     return value;
 }

@@ -48,20 +48,20 @@ signal_t slope(signal_t x)
 
 
 static string_t out_name;
-static ptr_t    out_value;
-ptr_t before_(ptr_t x, int count, fa_signal_state_t *state)
+static fa_ptr_t    out_value;
+fa_ptr_t before_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     out_name  = fa_string("foo");
     out_value = i32(1);
     return x;
 }
-ptr_t after_(ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t after_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     fa_destroy(out_name);
     fa_destroy(out_value);
     return x;
 }
-ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t render_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     if (!kVectorMode) {
         values[0] = state->buffer[(kThisPlugOffset + 0) * kMaxVectorSize];
@@ -77,13 +77,13 @@ ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
     return x;
 }
 
-ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
+fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     // should_send = true;
     return x;
 }
 
-ptr_t send_(ptr_t x, fa_signal_message_callback_t cb, ptr_t data)
+fa_ptr_t send_(fa_ptr_t x, fa_signal_message_callback_t cb, fa_ptr_t data)
 {
     // TODO should not allocate here
     // The value passed is *not* destroyed, but *will* be copied
@@ -124,7 +124,7 @@ double amp2db(double x)
     return log10(x) * 10;
 }
 
-ptr_t _message_out(ptr_t x, ptr_t name, ptr_t value)
+fa_ptr_t _message_out(fa_ptr_t x, fa_ptr_t name, fa_ptr_t value)
 {
     // fa_print("Receieved 2: %s\n", fa_pair_create(name, value));
     int bars = (int)(((amp2db(fa_peek_double(value)) + 20) / 20) * kBarsInMeter);

@@ -7,7 +7,7 @@ static int gStop;
 
 /** Called whenever the MIDI setup changed.
  */
-ptr_t status_callback(ptr_t session)
+fa_ptr_t status_callback(fa_ptr_t session)
 {
     printf("Audio status changed!\n");
     gStop = true;

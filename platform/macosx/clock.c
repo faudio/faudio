@@ -45,7 +45,7 @@ fa_time_t raw_time()
 
 typedef struct standard_clock *standard_clock_t;
 struct standard_clock {
-    impl_t impl;
+    fa_impl_t impl;
     struct {
         time_t time;
         int64_t milliseconds;

@@ -12,8 +12,8 @@
 #include <fa/util.h>
 
 struct _fa_pair_left_t {
-    impl_t      impl;
-    ptr_t       values[2];
+    fa_impl_t      impl;
+    fa_ptr_t       values[2];
 };
 
 // -----------------------------------------------------------------------------

@@ -34,7 +34,7 @@ typedef fa_atomic_ring_buffer_t ring_buffer_t;
 
 struct _fa_atomic_ring_buffer_t {
 
-    impl_t              impl;                   //  Interface dispatcher
+    fa_impl_t              impl;                   //  Interface dispatcher
 
     size_t              size;                   //  Size (immutable)
     size_t              first, last;            //  Next read or write, always < size

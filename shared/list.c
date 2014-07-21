@@ -34,13 +34,13 @@
 struct node {
     size_t          count;      //  Number of references
     struct node    *next;       //  Next node or null
-    ptr_t           value;      //  The value
+    fa_ptr_t           value;      //  The value
 };
 
 typedef struct node *node_t;
 
 struct _fa_list_t {
-    impl_t          impl;       //  Interface dispatcher
+    fa_impl_t          impl;       //  Interface dispatcher
     node_t          node;       //  Top-level node
 };
 
@@ -49,7 +49,7 @@ struct _fa_list_t {
 
 /** Create a new node with a single reference.
  */
-inline static node_t new_node(ptr_t value, node_t next)
+inline static node_t new_node(fa_ptr_t value, node_t next)
 {
     node_t node = fa_new_struct(node);
     node->count = 1;
@@ -86,7 +86,7 @@ inline static void release_node(node_t node)
     }
 }
 
-ptr_t list_impl(fa_id_t interface);
+fa_ptr_t list_impl(fa_id_t interface);
 
 inline static list_t new_list(node_t node)
 {
@@ -111,7 +111,7 @@ inline static void delete_list(list_t list)
     for(node_t _n = list->node; _n; _n = _n->next) \
         fa_let(var, _n)
 
-/** Iterate over the elements of a list. The variable var will be a ptr_t
+/** Iterate over the elements of a list. The variable var will be a fa_ptr_t
     referencing the value in the following block.
 
     This macro is independent from the foreach in <fa/utils.h>, which should
@@ -166,7 +166,7 @@ list_t fa_list_empty()
     return new_list(NULL);
 }
 
-list_t fa_list_single(ptr_t x)
+list_t fa_list_single(fa_ptr_t x)
 {
     return new_list(new_node(x, NULL));
 }
@@ -176,12 +176,12 @@ list_t fa_list_copy(list_t xs)
     return new_list(take_node(xs->node));
 }
 
-list_t fa_list_cons(ptr_t x, list_t xs)
+list_t fa_list_cons(fa_ptr_t x, list_t xs)
 {
     return new_list(new_node(x, take_node(xs->node)));
 }
 
-list_t fa_list_dcons(ptr_t x, list_t xs)
+list_t fa_list_dcons(fa_ptr_t x, list_t xs)
 {
     list_t ys = new_list(new_node(x, xs->node));
     delete_list(xs);
@@ -217,7 +217,7 @@ int fa_list_length(list_t xs)
 
 // --------------------------------------------------------------------------------
 
-ptr_t fa_list_head(list_t xs)
+fa_ptr_t fa_list_head(list_t xs)
 {
     if (!xs->node) {
         assert(false && "No head");
@@ -250,7 +250,7 @@ list_t fa_list_init(list_t xs)
     return new_list(node);
 }
 
-ptr_t fa_list_last(list_t xs)
+fa_ptr_t fa_list_last(list_t xs)
 {
     impl_for_each_node(xs, node) {
         if (!node->next) {
@@ -318,7 +318,7 @@ static inline list_t merge(list_t xs, list_t ys)
     begin_node(node, next);
 
     while (!fa_list_is_empty(xs) && !fa_list_is_empty(ys)) {
-        ptr_t x, y;
+        fa_ptr_t x, y;
 
         x = fa_list_head(xs);
         y = fa_list_head(ys);
@@ -429,7 +429,7 @@ list_t fa_list_drop(int n, list_t xs)
     return fa_list_ddrop(n - 1, fa_list_tail(xs));
 }
 
-ptr_t fa_list_index(int n, list_t xs)
+fa_ptr_t fa_list_index(int n, list_t xs)
 {
     int i = 0;
     impl_for_each(xs, x) {
@@ -460,7 +460,7 @@ list_t fa_list_insert_range(int m, list_t xs, list_t ys)
     return fa_list_dappend(as, fa_list_dappend(bs, cs));
 }
 
-list_t fa_list_insert(int index, ptr_t value, list_t list)
+list_t fa_list_insert(int index, fa_ptr_t value, list_t list)
 {
     list_t elem = fa_list_single(value);
     list_t res  = fa_list_insert_range(index, elem, list);
@@ -487,7 +487,7 @@ list_t fa_list_ddrop(int n, list_t xs)
     return ys;
 }
 
-list_t fa_list_dinsert(int m, ptr_t x, list_t xs)
+list_t fa_list_dinsert(int m, fa_ptr_t x, list_t xs)
 {
     list_t ys = fa_list_insert(m, x, xs);
     fa_list_destroy(xs);
@@ -519,7 +519,7 @@ list_t fa_list_dremove_range(int m, int n, list_t xs)
 
 // --------------------------------------------------------------------------------
 
-bool fa_list_has(ptr_t value, list_t list)
+bool fa_list_has(fa_ptr_t value, list_t list)
 {
     impl_for_each(list, elem) {
         if (fa_equal(value, elem)) {
@@ -529,7 +529,7 @@ bool fa_list_has(ptr_t value, list_t list)
     return false;
 }
 
-int fa_list_index_of(ptr_t value, list_t list)
+int fa_list_index_of(fa_ptr_t value, list_t list)
 {
     int index = 0;
     impl_for_each(list, elem) {
@@ -546,7 +546,7 @@ int fa_list_index_of(ptr_t value, list_t list)
     return -(index + 1);
 }
 
-ptr_t fa_list_find(pred_t pred, ptr_t data, list_t list)
+fa_ptr_t fa_list_find(fa_pred_t pred, fa_ptr_t data, list_t list)
 {
     impl_for_each(list, elem) {
         if (pred(data, elem)) {
@@ -556,7 +556,7 @@ ptr_t fa_list_find(pred_t pred, ptr_t data, list_t list)
     return NULL;
 }
 
-int fa_list_find_index(pred_t pred, ptr_t data, list_t list)
+int fa_list_find_index(fa_pred_t pred, fa_ptr_t data, list_t list)
 {
     int index = 0;
     impl_for_each(list, elem) {
@@ -572,7 +572,7 @@ int fa_list_find_index(pred_t pred, ptr_t data, list_t list)
 
 // --------------------------------------------------------------------------------
 
-list_t fa_list_map(unary_t func, ptr_t data, list_t list)
+list_t fa_list_map(fa_unary_t func, fa_ptr_t data, list_t list)
 {
     begin_node(node, next);
     impl_for_each(list, elem) {
@@ -581,7 +581,7 @@ list_t fa_list_map(unary_t func, ptr_t data, list_t list)
     return new_list(node);
 }
 
-list_t fa_list_filter(pred_t pred, ptr_t data, list_t list)
+list_t fa_list_filter(fa_pred_t pred, fa_ptr_t data, list_t list)
 {
     begin_node(node, next);
     impl_for_each(list, elem) {
@@ -592,9 +592,9 @@ list_t fa_list_filter(pred_t pred, ptr_t data, list_t list)
     return new_list(node);
 }
 
-ptr_t fa_list_fold_left(binary_t func, ptr_t data, ptr_t init, list_t list)
+fa_ptr_t fa_list_fold_left(fa_binary_t func, fa_ptr_t data, fa_ptr_t init, list_t list)
 {
-    ptr_t value = init;
+    fa_ptr_t value = init;
     impl_for_each(list, elem) {
         value = func(data, value, elem);
     }
@@ -610,27 +610,27 @@ list_t fa_list_join(list_t list)
     return result;
 }
 
-list_t fa_list_join_map(unary_t func, ptr_t data, list_t list)
+list_t fa_list_join_map(fa_unary_t func, fa_ptr_t data, list_t list)
 {
     list_t ys = fa_list_map(func, data, list);
     return fa_list_djoin(ys);
 }
 
-list_t fa_list_dmap(unary_t f, ptr_t d, list_t xs)
+list_t fa_list_dmap(fa_unary_t f, fa_ptr_t d, list_t xs)
 {
     list_t ys = fa_list_map(f, d, xs);
     fa_list_destroy(xs);
     return ys;
 }
 
-list_t fa_list_dfilter(pred_t p, ptr_t d, list_t xs)
+list_t fa_list_dfilter(fa_pred_t p, fa_ptr_t d, list_t xs)
 {
     list_t ys = fa_list_filter(p, d, xs);
     fa_list_destroy(xs);
     return ys;
 }
 
-ptr_t fa_list_dfold_left(binary_t f, ptr_t d, ptr_t  z, list_t   xs)
+fa_ptr_t fa_list_dfold_left(fa_binary_t f, fa_ptr_t d, fa_ptr_t  z, list_t   xs)
 {
     list_t ys = fa_list_fold_left(f, d, z, xs);
     fa_list_destroy(xs);
@@ -644,7 +644,7 @@ list_t fa_list_djoin(list_t list)
     return ys;
 }
 
-list_t fa_list_djoin_map(unary_t f, ptr_t d, list_t xs)
+list_t fa_list_djoin_map(fa_unary_t f, fa_ptr_t d, list_t xs)
 {
     list_t ys = fa_list_join_map(f, d, xs);
     fa_list_destroy(xs);
@@ -661,14 +661,14 @@ list_t fa_list(int count, ...)
     begin_node(node, next);
 
     for (int i = 0; i < count; ++i) {
-        append_node(next, va_arg(args, ptr_t));
+        append_node(next, va_arg(args, fa_ptr_t));
     }
 
     va_end(args);
     return new_list(node);
 }
 
-list_t fa_list_repeat(int times, ptr_t value)
+list_t fa_list_repeat(int times, fa_ptr_t value)
 {
     begin_node(node, next);
 
@@ -698,7 +698,7 @@ list_t fa_list_to_list(list_t list)
 
 // --------------------------------------------------------------------------------
 
-bool list_equal(ptr_t list1, ptr_t list2)
+bool list_equal(fa_ptr_t list1, fa_ptr_t list2)
 {
     node_t node1 = ((list_t) list1)->node;
     node_t node2 = ((list_t) list2)->node;
@@ -715,7 +715,7 @@ bool list_equal(ptr_t list1, ptr_t list2)
     return !(node1 || node2);
 }
 
-bool list_less_than(ptr_t list1, ptr_t list2)
+bool list_less_than(fa_ptr_t list1, fa_ptr_t list2)
 {
     node_t node1 = ((list_t) list1)->node;
     node_t node2 = ((list_t) list2)->node;
@@ -736,7 +736,7 @@ bool list_less_than(ptr_t list1, ptr_t list2)
     return node2 && !node1;
 }
 
-bool list_greater_than(ptr_t list1, ptr_t list2)
+bool list_greater_than(fa_ptr_t list1, fa_ptr_t list2)
 {
     node_t node1 = ((list_t) list1)->node;
     node_t node2 = ((list_t) list2)->node;
@@ -757,7 +757,7 @@ bool list_greater_than(ptr_t list1, ptr_t list2)
     return node1 && !node2;
 }
 
-fa_string_t list_show(ptr_t list)
+fa_string_t list_show(fa_ptr_t list)
 {
     string_t result  = fa_string("");
     node_t   node = ((list_t) list)->node;
@@ -777,12 +777,12 @@ fa_string_t list_show(ptr_t list)
     return result;
 }
 
-ptr_t list_copy(ptr_t a)
+fa_ptr_t list_copy(fa_ptr_t a)
 {
     return fa_list_copy(a);
 }
 
-void list_destroy(ptr_t a)
+void list_destroy(fa_ptr_t a)
 {
     fa_list_destroy(a);
 }
@@ -792,7 +792,7 @@ type_repr_t list_get_type(fa_ptr_t a)
     return list_type_repr;
 }
 
-ptr_t list_impl(fa_id_t interface)
+fa_ptr_t list_impl(fa_id_t interface)
 {
     static fa_equal_t list_equal_impl
         = { list_equal };

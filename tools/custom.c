@@ -11,23 +11,23 @@
 #define PI  3.1415
 #define TAU (2 * PI)
 
-ptr_t before_(ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t before_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     printf("Before!\n");
     return x;
 }
-ptr_t after_(ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t after_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     printf("After!\n");
     return x;
 }
-ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t render_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     // printf("Render!\n");
     state->buffer[32] = 0.01 * (state->count / state->rate);
     return x;
 }
-ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
+fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     printf("Received %s : %s!\n", fa_unstring(n), fa_unstring(fa_string_show(msg)));
     return x;

@@ -19,7 +19,7 @@
 
 #define kModeOfEchoing kEchoMIDI
 
-fa_ptr_t just_print(ptr_t _, ptr_t timeMessage)
+fa_ptr_t just_print(fa_ptr_t _, fa_ptr_t timeMessage)
 {
     // fa_print_ln(fa_string_show(timeMessage));
     fa_time_t time = fa_pair_first(timeMessage);
@@ -33,7 +33,7 @@ fa_ptr_t just_print(ptr_t _, ptr_t timeMessage)
     return 0;
 }
 
-fa_ptr_t print_and_echo_midi(ptr_t x, ptr_t timeMessage)
+fa_ptr_t print_and_echo_midi(fa_ptr_t x, fa_ptr_t timeMessage)
 {
     fa_midi_stream_t out_stream = x;
 
@@ -54,7 +54,7 @@ fa_ptr_t print_and_echo_midi(ptr_t x, ptr_t timeMessage)
 
 static long start_millis = -1;
 
-fa_ptr_t print_and_echo_dls(ptr_t x, ptr_t timeMessage)
+fa_ptr_t print_and_echo_dls(fa_ptr_t x, fa_ptr_t timeMessage)
 {
     fa_print_ln(fa_thread_current());
 
@@ -87,13 +87,13 @@ fa_ptr_t print_and_echo_dls(ptr_t x, ptr_t timeMessage)
     mark_used(time);
 }
 
-ptr_t times2(ptr_t _, ptr_t x)
+fa_ptr_t times2(fa_ptr_t _, fa_ptr_t x)
 {
     return fa_multiply(x, fa_signal_constant(2.0));
 }
 
 inline static
-ptr_t louder(ptr_t data, ptr_t x)
+fa_ptr_t louder(fa_ptr_t data, fa_ptr_t x)
 {
     // return x*1.6;
     return fa_multiply(fa_signal_constant(9), x);

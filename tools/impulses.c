@@ -16,15 +16,15 @@
 static bool should_click = false;
 
 
-ptr_t before_(ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t before_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     return x;
 }
-ptr_t after_(ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t after_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     return x;
 }
-ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t render_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     if (!kVectorMode) {
         state->buffer[(kThisPlugOffset + 0)*kMaxVectorSize] = should_click;
@@ -41,7 +41,7 @@ ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
     return x;
 }
 
-ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
+fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     printf("Click!\n");
     should_click = true;

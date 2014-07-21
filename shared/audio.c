@@ -52,7 +52,7 @@ typedef PaStream     *native_stream_t;
 
 struct _fa_audio_session_t {
 
-    impl_t              impl;               // Dispatcher
+    fa_impl_t              impl;               // Dispatcher
     system_time_t       acquired;           // Time of acquisition (not used at the moment)
 
     list_t              devices;            // Cached device list
@@ -83,7 +83,7 @@ struct _fa_audio_session_t {
 
 struct _fa_audio_device_t {
 
-    impl_t              impl;               // Dispatcher
+    fa_impl_t              impl;               // Dispatcher
     native_index_t      index;              // Native device index
     native_host_t       host;
     session_t           session;            // Underlying session
@@ -97,7 +97,7 @@ struct _fa_audio_device_t {
 
 struct _fa_audio_stream_t {
 
-    impl_t              impl;               // Dispatcher
+    fa_impl_t              impl;               // Dispatcher
     native_stream_t     native;             // Native stream, or NULL if closed
     device_t            input, output;
 
@@ -138,11 +138,11 @@ static mutex_t   pa_mutex;
 static bool      pa_status;
 static session_t current_session;
 
-error_t audio_device_error(string_t msg);
-error_t audio_device_error_with(string_t msg, int error);
-ptr_t audio_session_impl(fa_id_t interface);
-ptr_t audio_device_impl(fa_id_t interface);
-ptr_t audio_stream_impl(fa_id_t interface);
+fa_error_t audio_device_error(string_t msg);
+fa_error_t audio_device_error_with(string_t msg, int error);
+fa_ptr_t audio_session_impl(fa_id_t interface);
+fa_ptr_t audio_device_impl(fa_id_t interface);
+fa_ptr_t audio_stream_impl(fa_id_t interface);
 inline static session_t new_session();
 inline static void session_init_devices(session_t session);
 inline static void delete_session(session_t session);
@@ -167,15 +167,15 @@ static void native_finished_callback(void *data);
 
 // --------------------------------------------------------------------------------
 
-ptr_t _status_callback(ptr_t x)
+fa_ptr_t _status_callback(fa_ptr_t x)
 {
     session_t session = (session_t) x;
 
     int n = session->callbacks.count;
 
     for (int i = 0; i < n; ++i) {
-        nullary_t f = session->callbacks.elements[i].function;
-        ptr_t     x = session->callbacks.elements[i].data;
+        fa_nullary_t f = session->callbacks.elements[i].function;
+        fa_ptr_t     x = session->callbacks.elements[i].data;
         f(x);
     }
 
@@ -396,15 +396,15 @@ void fa_audio_end_session(session_t session)
 }
 
 void fa_audio_with_session(session_callback_t session_callback,
-                           ptr_t                           session_data,
-                           error_callback_t                error_callback,
-                           ptr_t                           error_data
+                           fa_ptr_t                           session_data,
+                           fa_error_callback_t                error_callback,
+                           fa_ptr_t                           error_data
                           )
 {
     session_t session = fa_audio_begin_session();
 
     if (fa_check(session)) {
-        error_callback(error_data, (error_t) session);
+        error_callback(error_data, (fa_error_t) session);
     } else {
         session_callback(session_data, session);
     }
@@ -413,7 +413,7 @@ void fa_audio_with_session(session_callback_t session_callback,
 }
 
 void fa_audio_set_parameter(string_t name,
-                            ptr_t value,
+                            fa_ptr_t value,
                             session_t session)
 {
     if (fa_equal(name, fa_string("sample-rate"))) {
@@ -693,7 +693,7 @@ bool fa_audio_has_output(device_t device)
 
 
 void fa_audio_add_status_callback(status_callback_t function,
-                                  ptr_t             data,
+                                  fa_ptr_t             data,
                                   session_t         session)
 {
     int n = session->callbacks.count++;
@@ -786,13 +786,13 @@ void print_audio_info(device_t input, device_t output)
 }
 
 inline static
-void print_signal_tree(ptr_t x)
+void print_signal_tree(fa_ptr_t x)
 {
     fa_inform(fa_string_dappend(fa_string("    Signal Tree: \n"), fa_string_show(x)));
 }
 
 inline static
-list_t apply_processor(proc_t proc, ptr_t proc_data, list_t inputs)
+list_t apply_processor(proc_t proc, fa_ptr_t proc_data, list_t inputs)
 {
     if (proc) {
         return proc(proc_data, inputs);
@@ -806,7 +806,7 @@ list_t apply_processor(proc_t proc, ptr_t proc_data, list_t inputs)
 stream_t fa_audio_open_stream(device_t input,
                               device_t output,
                               proc_t proc,
-                              ptr_t proc_data
+                              fa_ptr_t proc_data
                              )
 {
     PaError         status;
@@ -879,7 +879,7 @@ stream_t fa_audio_open_stream(device_t input,
 
         PaStreamFlags    flags    = paNoFlag;
         PaStreamCallback *callback = native_audio_callback;
-        ptr_t            data     = stream;
+        fa_ptr_t            data     = stream;
 
         status = Pa_OpenStream(
                      &stream->native,
@@ -919,7 +919,7 @@ stream_t fa_audio_open_stream(device_t input,
         /*
             Launch control thread.
          */
-        ptr_t audio_control_thread(ptr_t data);
+        fa_ptr_t audio_control_thread(fa_ptr_t data);
         stream->controller.thread = fa_thread_create(audio_control_thread, stream);
         // stream->controller.mutex  = fa_thread_create_mutex();
         stream->controller.stop   = false;
@@ -976,16 +976,16 @@ void fa_audio_close_stream(stream_t stream)
 void fa_audio_with_stream(device_t            input,
                           device_t            output,
                           proc_t              proc,
-                          ptr_t               proc_data,
+                          fa_ptr_t               proc_data,
                           stream_callback_t   stream_callback,
-                          ptr_t               stream_data,
-                          error_callback_t    error_callback,
-                          ptr_t               error_data)
+                          fa_ptr_t               stream_data,
+                          fa_error_callback_t    error_callback,
+                          fa_ptr_t               error_data)
 {
     stream_t stream = fa_audio_open_stream(input, output, proc, proc_data);
 
     if (fa_check(stream)) {
-        error_callback(error_data, (error_t) stream);
+        error_callback(error_data, (fa_error_t) stream);
     } else {
         stream_callback(stream_data, stream);
     }
@@ -1055,13 +1055,13 @@ void fa_audio_schedule_relative(fa_time_t         time,
 }
 
 
-ptr_t forward_action_to_audio_thread(ptr_t x, ptr_t action)
+fa_ptr_t forward_action_to_audio_thread(fa_ptr_t x, fa_ptr_t action)
 {
     stream_t stream = x;
     fa_atomic_queue_write(stream->in_controls, action);
     return NULL;
 }
-ptr_t audio_control_thread(ptr_t x)
+fa_ptr_t audio_control_thread(fa_ptr_t x)
 {
     stream_t stream = x;
 
@@ -1073,7 +1073,7 @@ ptr_t audio_control_thread(ptr_t x)
         }
 
         {
-            ptr_t nameValue;
+            fa_ptr_t nameValue;
 
             // while (0) // FIXME
             while ((nameValue = fa_atomic_queue_read(stream->out_controls))) {
@@ -1085,12 +1085,12 @@ ptr_t audio_control_thread(ptr_t x)
                     // FIXME assure that this copying can not happen after stream has been
                     // stopped
                     string_t name2 = fa_copy(name);
-                    ptr_t    value2 = fa_copy(value);
+                    fa_ptr_t    value2 = fa_copy(value);
                     // fa_inform(fa_string_show(fa_pair_create(name2, value2)));
 
                     for (int j = 0; j < n; ++j) {
-                        binary_t cbFunc = stream->callbacks.elements[j].function;
-                        ptr_t    cbData = stream->callbacks.elements[j].data;
+                        fa_binary_t cbFunc = stream->callbacks.elements[j].function;
+                        fa_ptr_t    cbData = stream->callbacks.elements[j].data;
                         cbFunc(cbData, name2, value2);
                     }
 
@@ -1106,7 +1106,7 @@ ptr_t audio_control_thread(ptr_t x)
             // Write incoming actions
             // TODO get things from before_controls to stream->controls
             {
-                ptr_t incomingPair;
+                fa_ptr_t incomingPair;
 
                 while ((incomingPair = fa_atomic_queue_read(stream->before_controls))) {
                     assert(incomingPair);
@@ -1201,11 +1201,11 @@ void after_failed_processing(stream_t stream)
     delete_state(stream->state);
 }
 
-ptr_t run_simple_action2(ptr_t x, ptr_t a)
+fa_ptr_t run_simple_action2(fa_ptr_t x, fa_ptr_t a)
 {
     return run_simple_action(x, a);
 }
-void handle_outgoing_message(ptr_t x, string_t name, ptr_t value)
+void handle_outgoing_message(fa_ptr_t x, string_t name, fa_ptr_t value)
 {
     stream_t stream = x;
     mark_used(stream);
@@ -1216,14 +1216,14 @@ void during_processing(stream_t stream, unsigned count, float **input, float **o
 {
     state_base_t state = (state_base_t) stream->state;
     {
-        ptr_t action;
+        fa_ptr_t action;
 
         while ((action = fa_atomic_queue_read(stream->in_controls))) {
             run_simple_action2(stream->state, action);
         }
     }
     {
-        ptr_t action;
+        fa_ptr_t action;
 
         while ((action = fa_atomic_queue_read(stream->short_controls))) {
             run_simple_action2(stream->state, action);
@@ -1341,12 +1341,12 @@ void native_finished_callback(void *data)
 
 // --------------------------------------------------------------------------------
 
-bool audio_session_equal(ptr_t a, ptr_t b)
+bool audio_session_equal(fa_ptr_t a, fa_ptr_t b)
 {
     return a == b;
 }
 
-fa_string_t audio_session_show(ptr_t a)
+fa_string_t audio_session_show(fa_ptr_t a)
 {
     string_t str = fa_string("<AudioSession ");
     str = fa_string_dappend(str, fa_string_format_integral("%p", (long) a));
@@ -1354,12 +1354,12 @@ fa_string_t audio_session_show(ptr_t a)
     return str;
 }
 
-void audio_session_destroy(ptr_t a)
+void audio_session_destroy(fa_ptr_t a)
 {
     fa_audio_end_session(a);
 }
 
-ptr_t audio_session_impl(fa_id_t interface)
+fa_ptr_t audio_session_impl(fa_id_t interface)
 {
     static fa_equal_t audio_session_equal_impl
         = { audio_session_equal };
@@ -1386,7 +1386,7 @@ ptr_t audio_session_impl(fa_id_t interface)
 
 // --------------------------------------------------------------------------------
 
-bool audio_device_equal(ptr_t a, ptr_t b)
+bool audio_device_equal(fa_ptr_t a, fa_ptr_t b)
 {
     device_t device1 = (device_t) a;
     device_t device2 = (device_t) b;
@@ -1394,7 +1394,7 @@ bool audio_device_equal(ptr_t a, ptr_t b)
     return device1->index == device2->index;
 }
 
-fa_string_t audio_device_show(ptr_t a)
+fa_string_t audio_device_show(fa_ptr_t a)
 {
     device_t device = (device_t) a;
 
@@ -1406,7 +1406,7 @@ fa_string_t audio_device_show(ptr_t a)
     return str;
 }
 
-ptr_t audio_device_impl(fa_id_t interface)
+fa_ptr_t audio_device_impl(fa_id_t interface)
 {
     static fa_equal_t audio_device_equal_impl
         = { audio_device_equal };
@@ -1428,12 +1428,12 @@ ptr_t audio_device_impl(fa_id_t interface)
 
 // --------------------------------------------------------------------------------
 
-bool audio_stream_equal(ptr_t a, ptr_t b)
+bool audio_stream_equal(fa_ptr_t a, fa_ptr_t b)
 {
     return a == b;
 }
 
-fa_string_t audio_stream_show(ptr_t a)
+fa_string_t audio_stream_show(fa_ptr_t a)
 {
     string_t str = fa_string("<AudioStream ");
     str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) a));
@@ -1441,12 +1441,12 @@ fa_string_t audio_stream_show(ptr_t a)
     return str;
 }
 
-void audio_stream_destroy(ptr_t a)
+void audio_stream_destroy(fa_ptr_t a)
 {
     fa_audio_close_stream(a);
 }
 
-int64_t audio_stream_milliseconds(ptr_t a)
+int64_t audio_stream_milliseconds(fa_ptr_t a)
 {
     stream_t stream = (stream_t) a;
 
@@ -1466,14 +1466,14 @@ int64_t audio_stream_milliseconds(ptr_t a)
     return stream->last_time;
 }
 
-fa_time_t audio_stream_time(ptr_t a)
+fa_time_t audio_stream_time(fa_ptr_t a)
 {
     int64_t ms = audio_stream_milliseconds(a);
     return fa_milliseconds(ms);
 }
 
 
-ptr_t audio_stream_impl(fa_id_t interface)
+fa_ptr_t audio_stream_impl(fa_id_t interface)
 {
     static fa_string_show_t audio_stream_show_impl
         = { audio_stream_show };
@@ -1508,20 +1508,20 @@ ptr_t audio_stream_impl(fa_id_t interface)
 
 void fa_log_error_from(fa_string_t msg, fa_string_t origin);
 
-error_t audio_device_error(string_t msg)
+fa_error_t audio_device_error(string_t msg)
 {
-    error_t err = fa_error_create_simple(error,
+    fa_error_t err = fa_error_create_simple(error,
                                          msg,
                                          fa_string("Doremir.Device.Audio"));
     fa_error_log(NULL, err);
     return err;
 }
 
-error_t audio_device_error_with(string_t msg, int code)
+fa_error_t audio_device_error_with(string_t msg, int code)
 {
     string_t pa_error_str = fa_string(code != 0 ? (char *) Pa_GetErrorText(code) : "");
 
-    error_t err = fa_error_create_simple(error,
+    fa_error_t err = fa_error_create_simple(error,
                                          fa_string_dappend(msg,
                                                            fa_string_dappend(fa_string(": "), pa_error_str)
                                                            // format_integral(" (error code %d)", code)

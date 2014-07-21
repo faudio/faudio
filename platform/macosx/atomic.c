@@ -14,8 +14,8 @@
 #include <libkern/OSAtomic.h>
 
 struct _fa_atomic_t {
-    impl_t      impl;       //  Interface dispatcher
-    ptr_t       value;      //  Memory block
+    fa_impl_t      impl;       //  Interface dispatcher
+    fa_ptr_t       value;      //  Memory block
 };
 
 
@@ -48,16 +48,16 @@ void fa_atomic_destroy(fa_atomic_t a)
 
 bool fa_atomic_exchange(fa_atomic_t a, fa_ptr_t old, fa_ptr_t new)
 {
-    return OSAtomicCompareAndSwapPtrBarrier(old, new, (ptr_t) &a->value);
+    return OSAtomicCompareAndSwapPtrBarrier(old, new, (fa_ptr_t) &a->value);
 }
 
 fa_ptr_t fa_atomic_get(fa_atomic_t a)
 {
 #ifdef __i386__
-    return (ptr_t) OSAtomicAdd32Barrier(0, (ptr_t) &a->value);
+    return (fa_ptr_t) OSAtomicAdd32Barrier(0, (fa_ptr_t) &a->value);
 #else
 #ifdef __x86_64__
-    return (ptr_t) OSAtomicAdd64Barrier(0, (ptr_t) &a->value);
+    return (fa_ptr_t) OSAtomicAdd64Barrier(0, (fa_ptr_t) &a->value);
 #else
 #error "Unknown architecture"
 #endif
@@ -67,10 +67,10 @@ fa_ptr_t fa_atomic_get(fa_atomic_t a)
 void fa_atomic_add(fa_atomic_t a, int32_t x)
 {
 #ifdef __i386__
-    OSAtomicAdd32Barrier(x, (ptr_t) &a->value);
+    OSAtomicAdd32Barrier(x, (fa_ptr_t) &a->value);
 #else
 #ifdef __x86_64__
-    OSAtomicAdd64Barrier(x, (ptr_t) &a->value);
+    OSAtomicAdd64Barrier(x, (fa_ptr_t) &a->value);
 #else
 #error "Unknown architecture"
 #endif
@@ -83,8 +83,8 @@ void fa_atomic_modify(fa_atomic_t atomic, fa_unary_t func, fa_ptr_t data)
     bool result = false;
 
     while (!result) {
-        ptr_t state = fa_atomic_get(atomic);
-        ptr_t value = func(state, data);
+        fa_ptr_t state = fa_atomic_get(atomic);
+        fa_ptr_t value = func(state, data);
         result = fa_atomic_exchange(atomic, state, value);
     }
 }
@@ -94,7 +94,7 @@ void fa_atomic_set(fa_atomic_t atomic, fa_ptr_t value)
     bool result = false;
 
     while (!result) {
-        ptr_t state = fa_atomic_get(atomic);
+        fa_ptr_t state = fa_atomic_get(atomic);
         result = fa_atomic_exchange(atomic, state, value);
     }
 }

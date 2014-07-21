@@ -16,7 +16,7 @@
  */
 
 
-bool pred1(ptr_t _, ptr_t x)
+bool pred1(fa_ptr_t _, fa_ptr_t x)
 {
 #ifdef __APPLE__
     CGEventRef event = CGEventCreate(nil);
@@ -31,7 +31,7 @@ bool pred1(ptr_t _, ptr_t x)
 #endif
 }
 
-bool pred2(ptr_t _, ptr_t x)
+bool pred2(fa_ptr_t _, fa_ptr_t x)
 {
 #ifdef __APPLE__
 
@@ -47,7 +47,7 @@ bool pred2(ptr_t _, ptr_t x)
 #endif
 }
 
-ptr_t _print(ptr_t x)
+fa_ptr_t _print(fa_ptr_t x)
 {
     printf("Hello!\n");
     return NULL;

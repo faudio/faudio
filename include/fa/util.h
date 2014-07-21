@@ -13,16 +13,16 @@
 
 #define system_time_t       time_t
 
-#define ptr_t               fa_ptr_t
-#define impl_t              fa_impl_t
-#define pred_t              fa_pred_t
-#define nullary_t           fa_nullary_t
-#define unary_t             fa_unary_t
-#define binary_t            fa_binary_t
-#define ternary_t           fa_ternary_t
-#define error_t             fa_error_t
-#define error_callback_t    fa_error_callback_t
-#define severity_t          fa_error_severity_t
+// #define ptr_t               fa_ptr_t
+// #define impl_t              fa_impl_t
+// #define pred_t              fa_pred_t
+// #define nullary_t           fa_nullary_t
+// #define unary_t             fa_unary_t
+// #define binary_t            fa_binary_t
+// #define ternary_t           fa_ternary_t
+// #define error_t             fa_error_t
+// #define error_callback_t    fa_error_callback_t
+// #define severity_t          fa_error_severity_t
 
 #define pair_t              fa_pair_t
 #define pair_left_t         fa_pair_left_t

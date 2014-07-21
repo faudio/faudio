@@ -33,7 +33,7 @@ struct au_context {
     AudioBufferList*            BufferList;
 };
 
-au_context_t create_au_context(ptr_t instance, int channels, int frames, double sample_rate)
+au_context_t create_au_context(fa_ptr_t instance, int channels, int frames, double sample_rate)
 {
     au_context_t context = fa_new_struct(au_context);
     context->Instance = instance;
@@ -287,13 +287,13 @@ list_t find_dls_music_device()
     return find_audio_components(&descr);
 }
 
-ptr_t new_dls_music_device_instance()
+fa_ptr_t new_dls_music_device_instance()
 {
     list_t components = find_dls_music_device();
     assert(fa_list_is_single(components) && "Missing or ambigous DLSMusicDevice");
     
-    ptr_t dls = fa_list_head(components);
-    ptr_t instance = NULL;
+    fa_ptr_t dls = fa_list_head(components);
+    fa_ptr_t instance = NULL;
     
     OSStatus err;
     if ((err = AudioComponentInstanceNew(dls, (AudioComponentInstance*) &instance))) {

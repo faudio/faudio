@@ -66,7 +66,7 @@ fa_time_milliseconds_t fa_clock_milliseconds(fa_clock_t clock)
 
 typedef struct standard_clock *standard_clock_t;
 struct standard_clock {
-    impl_t impl;
+    fa_impl_t impl;
 };
 
 inline static standard_clock_t new_standard_clock()

@@ -15,20 +15,20 @@
 
 
 struct _fa_thread_t {
-    impl_t                  impl;       //  Interface dispatcher
+    fa_impl_t                  impl;       //  Interface dispatcher
     pthread_t               native;
 };
 
 struct _fa_thread_mutex_t {
-    impl_t                  impl;       //  Interface dispatcher
+    fa_impl_t                  impl;       //  Interface dispatcher
     pthread_mutex_t         native;
 };
 
 static pthread_t main_thread_g = NULL;
 
 static void fa_thread_fatal(char *msg, int error);
-ptr_t thread_impl(fa_id_t interface);
-ptr_t mutex_impl(fa_id_t interface);
+fa_ptr_t thread_impl(fa_id_t interface);
+fa_ptr_t mutex_impl(fa_id_t interface);
 
 // --------------------------------------------------------------------------------
 
@@ -180,7 +180,7 @@ bool fa_thread_unlock(fa_thread_mutex_t mutex)
 
 // --------------------------------------------------------------------------------
 
-bool thread_equal(ptr_t m, ptr_t n)
+bool thread_equal(fa_ptr_t m, fa_ptr_t n)
 {
     thread_t x = (thread_t) m;
     thread_t y = (thread_t) n;
@@ -188,21 +188,21 @@ bool thread_equal(ptr_t m, ptr_t n)
     return pthread_equal(x->native, y->native);
 }
 
-bool thread_less_than(ptr_t m, ptr_t n)
+bool thread_less_than(fa_ptr_t m, fa_ptr_t n)
 {
     thread_t x = (thread_t) m;
     thread_t y = (thread_t) n;
     return x->native < y->native;
 }
 
-bool thread_greater_than(ptr_t m, ptr_t n)
+bool thread_greater_than(fa_ptr_t m, fa_ptr_t n)
 {
     thread_t x = (thread_t) m;
     thread_t y = (thread_t) n;
     return x->native > y->native;
 }
 
-fa_string_t thread_show(ptr_t a)
+fa_string_t thread_show(fa_ptr_t a)
 {
     thread_t x = (thread_t) a;
 
@@ -212,7 +212,7 @@ fa_string_t thread_show(ptr_t a)
     return str;
 }
 
-ptr_t thread_impl(fa_id_t interface)
+fa_ptr_t thread_impl(fa_id_t interface)
 {
     static fa_equal_t thread_equal_impl
         = { thread_equal };
@@ -236,7 +236,7 @@ ptr_t thread_impl(fa_id_t interface)
     }
 }
 
-fa_string_t mutex_show(ptr_t a)
+fa_string_t mutex_show(fa_ptr_t a)
 {
     string_t str = fa_string("<Mutex ");
     str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) a));
@@ -244,12 +244,12 @@ fa_string_t mutex_show(ptr_t a)
     return str;
 }
 
-void mutex_destroy(ptr_t a)
+void mutex_destroy(fa_ptr_t a)
 {
     fa_thread_unlock(a);
 }
 
-ptr_t mutex_impl(fa_id_t interface)
+fa_ptr_t mutex_impl(fa_id_t interface)
 {
     static fa_string_show_t mutex_show_impl
         = { mutex_show };

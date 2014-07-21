@@ -27,13 +27,13 @@
 
 typedef fa_signal_custom_processor_t   *custom_proc_t;
 typedef fa_signal_unary_signal_t        fixpoint_t;
-typedef fa_signal_unary_double_t        dunary_t;
-typedef fa_signal_binary_double_t       dbinary_t;
+typedef fa_signal_unary_double_t        dfa_unary_t;
+typedef fa_signal_binary_double_t       dfa_binary_t;
 typedef fa_action_t                     action_t;
 
 struct _fa_signal_t {
 
-    impl_t                  impl;
+    fa_impl_t                  impl;
 
     enum {
         time_signal,
@@ -59,22 +59,22 @@ struct _fa_signal_t {
 
         struct {
             string_t        name;
-            dunary_t        function;
-            ptr_t           data;
+            dfa_unary_t        function;
+            fa_ptr_t           data;
             signal_t        a;
         }                   lift;
 
         struct {
             string_t        name;
-            dbinary_t       function;
-            ptr_t           data;
+            dfa_binary_t       function;
+            fa_ptr_t           data;
             signal_t        a;
             signal_t        b;
         }                   lift2;
 
         struct {
             fixpoint_t      function;
-            ptr_t           data;
+            fa_ptr_t           data;
         } loop;
 
         struct {
@@ -454,7 +454,7 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
 
 string_t draw_tree(pair_t value, string_t indent, bool is_last, string_t result)
 {
-    ptr_t  label    = fa_pair_first(value);
+    fa_ptr_t  label    = fa_pair_first(value);
     list_t children = fa_pair_second(value);
 
     fa_write_string(result, indent);
@@ -535,7 +535,7 @@ fa_signal_t simplify(part_t *part, list_t *procs, fa_signal_t signal2)
 
     case loop_signal: {
         fixpoint_t fix      = loop_get(signal2, function);
-        ptr_t      fix_data = loop_get(signal2, data);
+        fa_ptr_t      fix_data = loop_get(signal2, data);
 
         int channel;
         part_t part1;
@@ -574,8 +574,8 @@ fa_signal_t simplify(part_t *part, list_t *procs, fa_signal_t signal2)
 
     case lift_signal: {
         string_t    name        = lift_get(signal2, name);
-        dunary_t    func        = lift_get(signal2, function);
-        ptr_t       func_data   = lift_get(signal2, data);
+        dfa_unary_t    func        = lift_get(signal2, function);
+        fa_ptr_t       func_data   = lift_get(signal2, data);
 
         signal_t a              = simplify(part, procs, lift_get(signal2, a));
         return fa_signal_lift(name, func, func_data, a);
@@ -583,8 +583,8 @@ fa_signal_t simplify(part_t *part, list_t *procs, fa_signal_t signal2)
 
     case lift2_signal: {
         string_t    name        = lift2_get(signal2, name);
-        dbinary_t   func        = lift2_get(signal2, function);
-        ptr_t       func_data   = lift2_get(signal2, data);
+        dfa_binary_t   func        = lift2_get(signal2, function);
+        fa_ptr_t       func_data   = lift2_get(signal2, data);
 
         part_t part1;
         part_t part2;
@@ -889,7 +889,7 @@ void run_custom_procs(custom_proc_when_t when, int count, state_t state)
 }
 
 // typedef void(* fa_signal_message_callback_t)(fa_ptr_t, fa_signal_name_t, fa_signal_message_t)
-void custom_procs_send(state_t state, string_t name, ptr_t value)
+void custom_procs_send(state_t state, string_t name, fa_ptr_t value)
 {
     for (int i = 0; i < state->custom_proc_count; ++i) {
         custom_proc_t proc = state->custom_procs[i];
@@ -900,7 +900,7 @@ void custom_procs_send(state_t state, string_t name, ptr_t value)
     }
 }
 
-void custom_procs_receive(state_t state, fa_signal_message_callback_t cb, ptr_t data)
+void custom_procs_receive(state_t state, fa_signal_message_callback_t cb, fa_ptr_t data)
 {
     // FIXME
     for (int i = 0; i < state->custom_proc_count; ++i) {
@@ -919,7 +919,7 @@ void custom_procs_receive(state_t state, fa_signal_message_callback_t cb, ptr_t 
         action  Action to run.
         state   State to run action on (for control updates and custom processor messages).
  */
-ptr_t run_simple_action(state_t state, action_t action)
+fa_ptr_t run_simple_action(state_t state, action_t action)
 {
     if (fa_action_is_compound(action)) {
         fa_warn(fa_string_dappend(fa_string("Compound action passed to Signal.runSimpleAction: "), fa_string_show(action)));
@@ -937,7 +937,7 @@ ptr_t run_simple_action(state_t state, action_t action)
 
     if (fa_action_is_send(action)) {
         string_t name = fa_action_send_name(action);
-        ptr_t value = fa_action_send_value(action);
+        fa_ptr_t value = fa_action_send_value(action);
         custom_procs_send(state, name, value);
 
         return NULL;
@@ -968,16 +968,16 @@ double step(signal_t signal, state_t state)
     }
 
     case lift_signal: {
-        dunary_t    function  = lift_get(signal, function);
-        ptr_t       data      = lift_get(signal, data);
+        dfa_unary_t    function  = lift_get(signal, function);
+        fa_ptr_t       data      = lift_get(signal, data);
         signal_t    a         = lift_get(signal, a);
         double      xa        = step(a, state);
         return function(data, xa);
     }
 
     case lift2_signal: {
-        dbinary_t   function  = lift2_get(signal, function);
-        ptr_t       data      = lift2_get(signal, data);
+        dfa_binary_t   function  = lift2_get(signal, function);
+        fa_ptr_t       data      = lift2_get(signal, data);
         signal_t    a         = lift2_get(signal, a);
         signal_t    b         = lift2_get(signal, b);
         double      xa        = step(a, state);
@@ -1039,8 +1039,8 @@ void step_vector(signal_t signal, state_t state, int count, double *out)
     }
 
     case lift_signal: {
-        dunary_t    function  = lift_get(signal, function);
-        ptr_t       data      = lift_get(signal, data);
+        dfa_unary_t    function  = lift_get(signal, function);
+        fa_ptr_t       data      = lift_get(signal, data);
         signal_t    a         = lift_get(signal, a);
         step_vector(a, state, count, out);
 
@@ -1052,8 +1052,8 @@ void step_vector(signal_t signal, state_t state, int count, double *out)
     }
 
     case lift2_signal: {
-        dbinary_t   function  = lift2_get(signal, function);
-        ptr_t       data      = lift2_get(signal, data);
+        dfa_binary_t   function  = lift2_get(signal, function);
+        fa_ptr_t       data      = lift2_get(signal, data);
         signal_t    a         = lift2_get(signal, a);
         signal_t    b         = lift2_get(signal, b);
 
@@ -1102,7 +1102,7 @@ void step_vector(signal_t signal, state_t state, int count, double *out)
     assert(false);
 }
 
-ptr_t run_simple_action_(ptr_t x, ptr_t a)
+fa_ptr_t run_simple_action_(fa_ptr_t x, fa_ptr_t a)
 {
     return run_simple_action(x, a);
 }
@@ -1158,10 +1158,10 @@ void fa_signal_print(int n, list_t controls, signal_t a)
     fa_destroy(b);
 }
 
-ptr_t fa_signal_run_file(int n, list_t controls, signal_t a, string_t path)
+fa_ptr_t fa_signal_run_file(int n, list_t controls, signal_t a, string_t path)
 {
     buffer_t b = fa_signal_run_buffer(n, controls, a);
-    ptr_t res = fa_buffer_write_audio(path, b); // TODO number of channels
+    fa_ptr_t res = fa_buffer_write_audio(path, b); // TODO number of channels
     fa_destroy(b);
     return res;
 }
@@ -1173,7 +1173,7 @@ ptr_t fa_signal_run_file(int n, list_t controls, signal_t a, string_t path)
 // Derived signals
 
 
-inline static double _former(ptr_t _, double x, double y)
+inline static double _former(fa_ptr_t _, double x, double y)
 {
     return x;
 }
@@ -1182,7 +1182,7 @@ fa_signal_t fa_signal_former(fa_signal_t a, fa_signal_t b)
     return fa_signal_lift2(fa_string("former"), _former, NULL, a, b);
 }
 
-inline static double _latter(ptr_t _, double x, double y)
+inline static double _latter(fa_ptr_t _, double x, double y)
 {
     return y;
 }
@@ -1193,7 +1193,7 @@ fa_signal_t fa_signal_latter(fa_signal_t a, fa_signal_t b)
 
 
 
-inline static double _impulse(ptr_t _, double x)
+inline static double _impulse(fa_ptr_t _, double x)
 {
     return (x == 0) ? 1 : 0;
 }
@@ -1207,7 +1207,7 @@ fa_signal_t fa_signal_impulse()
       (- (signal-loop* (lambda (x) (+ x 1))) 1))
 
 */
-inline static signal_t _fix_counter(ptr_t _, signal_t x)
+inline static signal_t _fix_counter(fa_ptr_t _, signal_t x)
 {
     return fa_signal_add(x, fa_signal_constant(1));
 }
@@ -1217,7 +1217,7 @@ fa_signal_t fa_signal_counter()
 }
 
 
-inline static double _impulses(ptr_t n, double x)
+inline static double _impulses(fa_ptr_t n, double x)
 {
     int n2 = (int) n;
     int x2 = (int) x;
@@ -1225,7 +1225,7 @@ inline static double _impulses(ptr_t n, double x)
 }
 fa_signal_t fa_signal_impulses(int n)
 {
-    return fa_signal_lift(fa_string("mkImps"), _impulses, (ptr_t) n, fa_signal_counter());
+    return fa_signal_lift(fa_string("mkImps"), _impulses, (fa_ptr_t) n, fa_signal_counter());
 }
 
 
@@ -1236,7 +1236,7 @@ fa_signal_t fa_signal_line(double x)
 }
 
 
-inline static double _play(ptr_t buffer, double i)
+inline static double _play(fa_ptr_t buffer, double i)
 {
     size_t size = fa_buffer_size(buffer);
     uint64_t j = ((uint64_t) i) % (size / sizeof(double));
@@ -1247,7 +1247,7 @@ fa_signal_t fa_signal_play(fa_buffer_t buffer, fa_signal_t i)
     return fa_signal_lift(fa_string("play"), _play, buffer, i);
 }
 
-inline static double _record(ptr_t buffer, double i, double x)
+inline static double _record(fa_ptr_t buffer, double i, double x)
 {
     size_t size = fa_buffer_size(buffer);
     uint64_t j = ((uint64_t) i) % (size / sizeof(double));
@@ -1260,7 +1260,7 @@ fa_signal_t fa_signal_record(fa_buffer_t buffer, fa_signal_t i, fa_signal_t x)
 }
 
 static bool play_started = false; // TODO debug
-inline static double _play_stream(ptr_t buffer, double _)
+inline static double _play_stream(fa_ptr_t buffer, double _)
 {
     double fa_atomic_ring_buffer_filled(fa_atomic_ring_buffer_t buffer);
 
@@ -1302,17 +1302,17 @@ struct rec_external {
     fa_atomic_ring_buffer_t buffer;
 };
 
-ptr_t record_extrenal_before_(ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t record_extrenal_before_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     return x;
 }
 
-ptr_t record_extrenal_after_(ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t record_extrenal_after_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     return x;
 }
 
-ptr_t record_extrenal_render_(ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t record_extrenal_render_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     struct rec_external *ext = (struct rec_external *) x;
 
@@ -1335,7 +1335,7 @@ ptr_t record_extrenal_render_(ptr_t x, int count, fa_signal_state_t *state)
     return x;
 }
 
-ptr_t record_extrenal_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
+fa_ptr_t record_extrenal_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     struct rec_external *ext = (struct rec_external *) x;
 
@@ -1353,7 +1353,7 @@ ptr_t record_extrenal_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t 
         ext->buffer = msg;
         // ext->bytes_written = 0;
     } else {
-        // fa_warn(fa_fa_string_dappend(fa_string("Unknown message to external recorder: "), fa_copy(ext->name)));
+        // fa_warn(fa_string_dappend(fa_string("Unknown message to external recorder: "), fa_copy(ext->name)));
         // no assert!
     }
 
@@ -1385,7 +1385,7 @@ fa_signal_t fa_signal_record_external(fa_string_t name,
 
 
 
-inline static double _add(ptr_t _, double x, double y)
+inline static double _add(fa_ptr_t _, double x, double y)
 {
     return x + y;
 }
@@ -1394,7 +1394,7 @@ fa_signal_t fa_signal_add(fa_signal_t a, fa_signal_t b)
     return fa_signal_lift2(fa_string("(+)"), _add, NULL, a, b);
 }
 
-inline static double _mul(ptr_t _, double x, double y)
+inline static double _mul(fa_ptr_t _, double x, double y)
 {
     return x * y;
 }
@@ -1403,7 +1403,7 @@ fa_signal_t fa_signal_multiply(fa_signal_t a, fa_signal_t b)
     return fa_signal_lift2(fa_string("(*)"), _mul, NULL, a, b);
 }
 
-inline static double _subtract(ptr_t _, double x, double y)
+inline static double _subtract(fa_ptr_t _, double x, double y)
 {
     return x - y;
 }
@@ -1412,7 +1412,7 @@ fa_signal_t fa_signal_subtract(fa_signal_t a, fa_signal_t b)
     return fa_signal_lift2(fa_string("(-)"), _subtract, NULL, a, b);
 }
 
-inline static double _divide(ptr_t _, double x, double y)
+inline static double _divide(fa_ptr_t _, double x, double y)
 {
     return x / y;
 }
@@ -1422,7 +1422,7 @@ fa_signal_t fa_signal_divide(fa_signal_t a, fa_signal_t b)
 }
 
 
-inline static double _absolute(ptr_t _, double x)
+inline static double _absolute(fa_ptr_t _, double x)
 {
     return fabs(x);
 }
@@ -1431,7 +1431,7 @@ fa_signal_t fa_signal_absolute(fa_signal_t a)
     return fa_signal_lift(fa_string("absolute"), _absolute, NULL, a);
 }
 
-inline static double _sin(ptr_t _, double x)
+inline static double _sin(fa_ptr_t _, double x)
 {
     return sin(x);
 }
@@ -1440,7 +1440,7 @@ fa_signal_t fa_signal_sin(fa_signal_t a)
     return fa_signal_lift(fa_string("sin"), _sin, NULL, a);
 }
 
-inline static double _cos(ptr_t _, double x)
+inline static double _cos(fa_ptr_t _, double x)
 {
     return cos(x);
 }
@@ -1558,7 +1558,7 @@ fa_signal_t fa_signal_min(fa_signal_t x, fa_signal_t y)
     assert(false && "Not implemented");
 }
 
-inline static double _max(ptr_t _, double x, double y)
+inline static double _max(fa_ptr_t _, double x, double y)
 {
     return fa_max(x, y);
 }
@@ -1603,7 +1603,7 @@ typedef struct _vst_context vst_context;
 static vst_context *last_vst_plug = NULL;
 
 
-ptr_t vst_before_(ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t vst_before_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     vst_context *context = x;
     AEffect     *plugin = context->plugin;
@@ -1613,7 +1613,7 @@ ptr_t vst_before_(ptr_t x, int count, fa_signal_state_t *state)
 
     return x;
 }
-ptr_t vst_after_(ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t vst_after_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     vst_context *context = x;
     AEffect     *plugin = context->plugin;
@@ -1622,7 +1622,7 @@ ptr_t vst_after_(ptr_t x, int count, fa_signal_state_t *state)
     return x;
 }
 
-ptr_t vst_render_(ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t vst_render_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     vst_context *context = x;
     AEffect     *plugin = context->plugin;
@@ -1676,7 +1676,7 @@ void vst_log_i(const char *fmt, long n)
     // ));
 }
 
-ptr_t vst_receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
+fa_ptr_t vst_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     vst_context *context = x;
     AEffect     *plugin = context->plugin;
@@ -1778,8 +1778,8 @@ list_t fa_signal_vst(string_t name1, string_t path1, list_t inputs)
     fa_warn(fa_string_append(fa_string("Creating VST plugin\n    Name: "), name));
     fa_warn(fa_string_append(fa_string("    Path: "), path));
 
-    context->inputs = malloc(sizeof(ptr_t) * plugin->numInputs);
-    context->outputs = malloc(sizeof(ptr_t) * plugin->numOutputs);
+    context->inputs = malloc(sizeof(fa_ptr_t) * plugin->numInputs);
+    context->outputs = malloc(sizeof(fa_ptr_t) * plugin->numOutputs);
 
     for (int i = 0; i < plugin->numInputs; ++i) {
         context->inputs[i] = malloc(sizeof(float) * kMaxVectorSize);
@@ -1824,42 +1824,42 @@ list_t fa_signal_vst(string_t name1, string_t path1, list_t inputs)
 
 // --------------------------------------------------------------------------------
 
-ptr_t signal_copy(ptr_t a)
+fa_ptr_t signal_copy(fa_ptr_t a)
 {
     return fa_signal_copy(a);
 }
 
-void signal_destroy(ptr_t a)
+void signal_destroy(fa_ptr_t a)
 {
     return fa_signal_destroy(a);
 }
 
-ptr_t signal_add(ptr_t a, ptr_t b)
+fa_ptr_t signal_add(fa_ptr_t a, fa_ptr_t b)
 {
     return fa_signal_add(a, b);
 }
 
-ptr_t signal_subtract(ptr_t a, ptr_t b)
+fa_ptr_t signal_subtract(fa_ptr_t a, fa_ptr_t b)
 {
     return fa_signal_subtract(a, b);
 }
 
-ptr_t signal_multiply(ptr_t a, ptr_t b)
+fa_ptr_t signal_multiply(fa_ptr_t a, fa_ptr_t b)
 {
     return fa_signal_multiply(a, b);
 }
 
-ptr_t signal_divide(ptr_t a, ptr_t b)
+fa_ptr_t signal_divide(fa_ptr_t a, fa_ptr_t b)
 {
     return fa_signal_divide(a, b);
 }
 
-ptr_t signal_absolute(ptr_t a)
+fa_ptr_t signal_absolute(fa_ptr_t a)
 {
     return fa_signal_absolute(a);
 }
 
-string_t signal_show(ptr_t a)
+string_t signal_show(fa_ptr_t a)
 {
     return fa_signal_draw_tree(fa_signal_to_tree(fa_signal_simplify(a)));
 }

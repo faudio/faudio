@@ -1,6 +1,6 @@
 
 inline static 
-list_t just(ptr_t x, list_t xs)
+list_t just(fa_ptr_t x, list_t xs)
 {
     return x;
 }
@@ -83,7 +83,7 @@ void fa_set_log_tool() {
 
 
 inline static
-list_t just_list(ptr_t x, list_t xs)
+list_t just_list(fa_ptr_t x, list_t xs)
 {
     return x;
 }

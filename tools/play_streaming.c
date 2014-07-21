@@ -64,7 +64,7 @@ void request_audio()
     }
 }
 
-list_t just(ptr_t x, list_t xs)
+list_t just(fa_ptr_t x, list_t xs)
 {
     return x;
 }

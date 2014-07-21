@@ -19,7 +19,7 @@ typedef fa_signal_unary_double_t    unary_double_t;
 
 struct _fa_action_t {
 
-    impl_t                      impl;
+    fa_impl_t                      impl;
 
     enum {
         set_action,
@@ -38,23 +38,23 @@ struct _fa_action_t {
         struct {
             channel_t           channel;
             unary_double_t      function;
-            ptr_t               data;
+            fa_ptr_t               data;
         }                       accum;
 
         struct {
             name_t              name;
-            ptr_t               value;
+            fa_ptr_t               value;
         }                       send;
 
         struct {
-            nullary_t           function;
-            ptr_t               data;
+            fa_nullary_t           function;
+            fa_ptr_t               data;
         }                       do_;
 
         struct {
             // Action -> NULL or (SimpleAction, (Time, Action))
-            unary_t             function;
-            ptr_t               data;
+            fa_unary_t             function;
+            fa_ptr_t               data;
         }                       compound;
 
 
@@ -127,7 +127,7 @@ fa_action_t fa_action_do(fa_nullary_t function, fa_ptr_t data)
     return action;
 }
 
-fa_action_t fa_action_compound(fa_unary_t function, ptr_t data)
+fa_action_t fa_action_compound(fa_unary_t function, fa_ptr_t data)
 {
     action_t action = new_action(compound_action);
     compound_get(action, function)  = function;
@@ -276,7 +276,7 @@ fa_action_t fa_action_compound_rest(fa_action_t action)
 
 
 
-static inline ptr_t _null(ptr_t data, ptr_t compound)
+static inline fa_ptr_t _null(fa_ptr_t data, fa_ptr_t compound)
 {
     return NULL;
 }
@@ -288,9 +288,9 @@ fa_action_t fa_action_null()
 
 
 
-#define unpair(x,y,p) fa_pair_decons((ptr_t*) &x, (ptr_t*) &y, p)
+#define unpair(x,y,p) fa_pair_decons((fa_ptr_t*) &x, (fa_ptr_t*) &y, p)
 
-static inline ptr_t _repeat(ptr_t data, ptr_t compound)
+static inline fa_ptr_t _repeat(fa_ptr_t data, fa_ptr_t compound)
 {
     time_t interval;
     action_t simple;
@@ -305,7 +305,7 @@ fa_action_t fa_action_repeat(time_t interval, fa_action_t action)
 
 
 
-static inline ptr_t _many(ptr_t data, ptr_t compound)
+static inline fa_ptr_t _many(fa_ptr_t data, fa_ptr_t compound)
 {
     list_t timeActions = data;
 
@@ -329,13 +329,13 @@ fa_action_t fa_action_many(list_t timeActions)
 
 
 
-static inline ptr_t _if(ptr_t data, ptr_t compound)
+static inline fa_ptr_t _if(fa_ptr_t data, fa_ptr_t compound)
 {
     pair_t      pred_action = data;
 
     pair_t      pred_closure;
-    pred_t      pred_function;
-    ptr_t       pred_data;
+    fa_pred_t      pred_function;
+    fa_ptr_t       pred_data;
     action_t    action;
     unpair(pred_closure, action, pred_action);
     unpair(pred_function, pred_data, pred_closure);
@@ -359,12 +359,12 @@ static inline ptr_t _if(ptr_t data, ptr_t compound)
     }
 }
 
-static inline ptr_t _while(ptr_t data, ptr_t compound)
+static inline fa_ptr_t _while(fa_ptr_t data, fa_ptr_t compound)
 {
     pair_t pred_action = data;
     pair_t      pred_closure;
-    pred_t      pred_function;
-    ptr_t       pred_data;
+    fa_pred_t      pred_function;
+    fa_ptr_t       pred_data;
     action_t    action;
     unpair(pred_closure, action, pred_action);
     unpair(pred_function, pred_data, pred_closure);
@@ -388,12 +388,12 @@ static inline ptr_t _while(ptr_t data, ptr_t compound)
     }
 }
 
-static inline ptr_t _until(ptr_t data, ptr_t compound)
+static inline fa_ptr_t _until(fa_ptr_t data, fa_ptr_t compound)
 {
     pair_t pred_action = data;
     pair_t      pred_closure;
-    pred_t      pred_function;
-    ptr_t       pred_data;
+    fa_pred_t      pred_function;
+    fa_ptr_t       pred_data;
     action_t    action;
     unpair(pred_closure, action, pred_action);
     unpair(pred_function, pred_data, pred_closure);
@@ -419,17 +419,17 @@ static inline ptr_t _until(ptr_t data, ptr_t compound)
 
 
 // [(Action, Time)] -> Action
-fa_action_t fa_action_if(pred_t pred, ptr_t data, fa_action_t action)
+fa_action_t fa_action_if(fa_pred_t pred, fa_ptr_t data, fa_action_t action)
 {
     return fa_action_compound(_if, fa_pair_create(fa_pair_create(pred, data), action));
 }
 
-fa_action_t fa_action_while(pred_t pred, ptr_t data, fa_action_t action)
+fa_action_t fa_action_while(fa_pred_t pred, fa_ptr_t data, fa_action_t action)
 {
     return fa_action_compound(_while, fa_pair_create(fa_pair_create(pred, data), action));
 }
 
-fa_action_t fa_action_until(pred_t pred, ptr_t data, fa_action_t action)
+fa_action_t fa_action_until(fa_pred_t pred, fa_ptr_t data, fa_action_t action)
 {
     return fa_action_compound(_until, fa_pair_create(fa_pair_create(pred, data), action));
 }
@@ -444,7 +444,7 @@ fa_action_t fa_action_until(pred_t pred, ptr_t data, fa_action_t action)
         resched A list to which a (time, action) values is pushed for each rescheduled action.
         state   State to run action on.
  */
-void run_and_resched_action(action_t action, time_t time, time_t now, list_t *resched, unary_t function, ptr_t data)
+void run_and_resched_action(action_t action, time_t time, time_t now, list_t *resched, fa_unary_t function, fa_ptr_t data)
 {
     if (fa_action_is_compound(action)) {
 
@@ -472,8 +472,8 @@ void run_and_resched_action(action_t action, time_t time, time_t now, list_t *re
     } else {
         // TODO should this always happen here?
         if (is_do(action)) {
-            nullary_t function  = do_get(action, function);
-            ptr_t     data      = do_get(action, data);
+            fa_nullary_t function  = do_get(action, function);
+            fa_ptr_t     data      = do_get(action, data);
             function(data);
         }
 
@@ -493,7 +493,7 @@ void run_and_resched_action(action_t action, time_t time, time_t now, list_t *re
         time        Current time (not destroyed).
         function    Function to which due actions are passed.
  */
-void run_actions(priority_queue_t controls, fa_time_t now, unary_t function, ptr_t data)
+void run_actions(priority_queue_t controls, fa_time_t now, fa_unary_t function, fa_ptr_t data)
 {
     while (1) {
         pair_t x = fa_priority_queue_peek(controls);
@@ -527,17 +527,17 @@ void run_actions(priority_queue_t controls, fa_time_t now, unary_t function, ptr
 
 // --------------------------------------------------------------------------------
 
-ptr_t action_copy(ptr_t a)
+fa_ptr_t action_copy(fa_ptr_t a)
 {
     return fa_action_copy(a);
 }
 
-void action_destroy(ptr_t a)
+void action_destroy(fa_ptr_t a)
 {
     return fa_action_destroy(a);
 }
 
-string_t action_show(ptr_t a)
+string_t action_show(fa_ptr_t a)
 {
     action_t x = (action_t) a;
 

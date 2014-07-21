@@ -15,7 +15,7 @@ typedef fa_midi_message_status_t   status_t;
 typedef fa_midi_message_data_t     data_t;
 
 struct _fa_midi_message_t {
-    impl_t              impl;           //    Interface dispatcher
+    fa_impl_t              impl;           //    Interface dispatcher
     bool                is_sysex;       //    Whether it is a sysex message
     union {                             //    Status or buffer data
         uint8_t         simple[3];

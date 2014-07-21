@@ -25,13 +25,13 @@
 
 struct node {
     struct node    *next;
-    ptr_t           value;
+    fa_ptr_t           value;
 };
 
 typedef struct node *node_t;
 
 struct _fa_atomic_queue_t {
-    impl_t      impl;               //  Interface dispatcher
+    fa_impl_t      impl;               //  Interface dispatcher
     atomic_t    first, div, last;   //  Node refs
 };
 
@@ -147,7 +147,7 @@ bool fa_atomic_queue_write(fa_atomic_queue_t queue, fa_ptr_t value)
 
 fa_ptr_t fa_atomic_queue_read(fa_atomic_queue_t queue)
 {
-    ptr_t value;
+    fa_ptr_t value;
 
     if (get_node(queue->div) == get_node(queue->last)) {
         return NULL;

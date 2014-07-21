@@ -34,7 +34,7 @@ struct ogg_encoder {
 // #define ogg_printf printf
 #define ogg_printf(fmt, ...) // do nothing
 
-void write_page(struct ogg_encoder *encoder, ogg_page *page, fa_io_callback_t cb, ptr_t data);
+void write_page(struct ogg_encoder *encoder, ogg_page *page, fa_io_callback_t cb, fa_ptr_t data);
 
 void prepare(fa_ptr_t x)
 {
@@ -145,7 +145,7 @@ void push_uncompressed(fa_ptr_t x, fa_buffer_t buffer)
     mark_used(encoder);
 }
 
-void pull_compressed(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
+void pull_compressed(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
 {
     struct ogg_encoder *encoder = (struct ogg_encoder *) x;
 
@@ -222,7 +222,7 @@ void pull_compressed(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
     mark_used(encoder);
 }
 
-void write_page(struct ogg_encoder *encoder, ogg_page *page, fa_io_callback_t cb, ptr_t data)
+void write_page(struct ogg_encoder *encoder, ogg_page *page, fa_io_callback_t cb, fa_ptr_t data)
 {
     size_t headerSize = page->header_len;
     size_t bodySize = page->body_len;

@@ -14,14 +14,14 @@ pair_t fa_signal_dls()
 }
 
 
-ptr_t before_(ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t before_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     fluid_synth_t *synth = x;
     fluid_synth_set_sample_rate(synth, state->rate);
     return NULL;
 }
 
-ptr_t after_(ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t after_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     // Nothing
 }
@@ -33,7 +33,7 @@ static float left[kMaxVectorSize];
 static float right[kMaxVectorSize];
 
 
-ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
+fa_ptr_t render_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
     fluid_synth_t *synth = x;
 
@@ -80,7 +80,7 @@ ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
 
 void fa_midi_message_decons(fa_midi_message_t midi_message, int *statusCh, int *data1, int *data2);
 
-ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
+fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
     fluid_synth_t *synth = x;
 
@@ -167,7 +167,7 @@ ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
     return NULL;
 }
 
-ptr_t destroy_(ptr_t x)
+fa_ptr_t destroy_(fa_ptr_t x)
 {
     inform(string("Destroying FluidSynth instance"));
     fluid_synth_t *synth = x;

@@ -15,13 +15,13 @@
 typedef fa_error_interface_t error_interface_t;
 
 struct simple_error {
-    impl_t              impl;           //  Interface dispatcher
-    severity_t          severity;
+    fa_impl_t              impl;           //  Interface dispatcher
+    fa_error_severity_t          severity;
     string_t            message;
     string_t            origin;
 };
 
-typedef struct simple_error       *simple_error_t;
+typedef struct simple_error       *simple_fa_error_t;
 
 
 void fa_log(fa_ptr_t data, fa_error_t error);
@@ -33,26 +33,26 @@ fa_error_t fa_error_create_simple(
 )
 {
     fa_ptr_t simple_error_impl(fa_id_t interface);
-    simple_error_t e  = fa_new_struct(simple_error);
+    simple_fa_error_t e  = fa_new_struct(simple_error);
     e->impl     = &simple_error_impl;
     e->severity = severity;
     e->message  = fa_copy(message);
     e->origin   = fa_copy(origin);
-    return (error_t) e;
+    return (fa_error_t) e;
 }
 
-fa_error_t fa_error_copy_simple(simple_error_t simple)
+fa_error_t fa_error_copy_simple(simple_fa_error_t simple)
 {
     fa_ptr_t simple_error_impl(fa_id_t interface);
-    simple_error_t e  = fa_new_struct(simple_error);
+    simple_fa_error_t e  = fa_new_struct(simple_error);
     e->impl     = &simple_error_impl;
     e->severity = simple->severity;
     e->message  = fa_copy(simple->message);
     e->origin   = fa_copy(simple->origin);
-    return (error_t) e;
+    return (fa_error_t) e;
 }
 
-void fa_error_destroy_simple(simple_error_t simple)
+void fa_error_destroy_simple(simple_fa_error_t simple)
 {
     fa_destroy(simple->message);
     fa_destroy(simple->origin);
@@ -94,7 +94,7 @@ void fa_error_log(fa_ptr_t context, fa_error_t error)
 
 fa_string_t fa_error_format(bool colored, fa_error_t a)
 {
-    simple_error_t simple = (simple_error_t) a;
+    simple_fa_error_t simple = (simple_fa_error_t) a;
     string_t str = fa_string("");
 
     string_t strs[12] = {
@@ -160,25 +160,25 @@ void simple_error_destroy(fa_ptr_t a)
 
 fa_error_severity_t simple_error_severity(fa_ptr_t a)
 {
-    simple_error_t simple = (simple_error_t) a;
+    simple_fa_error_t simple = (simple_fa_error_t) a;
     return simple->severity;
 }
 
 fa_string_t simple_error_message(fa_ptr_t a)
 {
-    simple_error_t simple = (simple_error_t) a;
+    simple_fa_error_t simple = (simple_fa_error_t) a;
     return simple->message;
 }
 
 fa_string_t simple_error_origin(fa_ptr_t a)
 {
-    simple_error_t simple = (simple_error_t) a;
+    simple_fa_error_t simple = (simple_fa_error_t) a;
     return simple->origin;
 }
 
 fa_string_t simple_error_show(fa_ptr_t a)
 {
-    simple_error_t simple = (simple_error_t) a;
+    simple_fa_error_t simple = (simple_fa_error_t) a;
     string_t result = fa_string("<");
 
     switch (simple->severity) {

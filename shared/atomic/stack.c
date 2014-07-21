@@ -25,19 +25,19 @@
 
 struct node {
     struct node    *next;
-    ptr_t           value;
+    fa_ptr_t           value;
 };
 
 typedef struct node *node_t;
 
 struct _fa_atomic_stack_t {
-    impl_t      impl;               //  Interface dispatcher
+    fa_impl_t      impl;               //  Interface dispatcher
     atomic_t    top;
 };
 
 fa_ptr_t atomic_stack_impl(fa_id_t interface);
 
-static inline node_t new_node(ptr_t value, node_t next)
+static inline node_t new_node(fa_ptr_t value, node_t next)
 {
     node_t node = fa_new_struct(node);
     node->value = value;
@@ -138,7 +138,7 @@ fa_ptr_t fa_atomic_stack_read(fa_atomic_stack_t stack)
         }
     } while (!fa_atomic_exchange(stack->top, node, node->next));
 
-    ptr_t value = node->value;
+    fa_ptr_t value = node->value;
     delete_node(node);
     return value;
 }

@@ -41,7 +41,7 @@
 #define base_to_list        fa_list_to_list
 
 struct _fa_set_t {
-    impl_t          impl;       //  Interface dispatcher
+    fa_impl_t          impl;       //  Interface dispatcher
     base_t          elems;
 };
 
@@ -148,7 +148,7 @@ bool fa_set_has(fa_ptr_t x, fa_set_t set)
     return base_index_of(x, set->elems) >= 0;
 }
 
-// bool eq(ptr_t x, ptr_t y) { return fa_equal(x, y); }
+// bool eq(fa_ptr_t x, fa_ptr_t y) { return fa_equal(x, y); }
 fa_ptr_t fa_set_get(fa_ptr_t x, fa_set_t set)
 {
     return base_find(fa_equal, x, set->elems);
@@ -239,7 +239,7 @@ set_t fa_set(int count, ...)
     va_start(args, count);
 
     for (int i = 0; i < count; ++i) {
-        s = fa_set_dadd(va_arg(args, ptr_t), s);
+        s = fa_set_dadd(va_arg(args, fa_ptr_t), s);
     }
 
     va_end(args);

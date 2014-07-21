@@ -77,7 +77,7 @@ void deendian(buffer_t x)
 }
 
 static inline
-void pull(fa_ptr_t x, fa_io_callback_t cb, ptr_t data)
+void pull(fa_ptr_t x, fa_io_callback_t cb, fa_ptr_t data)
 {
     struct endian_filter *filter = (struct endian_filter *) x;
 

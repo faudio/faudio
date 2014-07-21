@@ -16,7 +16,7 @@ pair_t maybe_parse(int optc, opt_t optv[], const char *short_name, const char *l
             ||
             (long_name && !strcmp(long_name, option.long_name))
         ) {
-            ptr_t result  = option.parser((char *) value);
+            fa_ptr_t result  = option.parser((char *) value);
 
             if (result) {
                 return fa_pair_create(fa_string(option.long_name), result);
@@ -36,7 +36,7 @@ map_t add_defaults(int optc, opt_t optv[], map_t args)
     for (int i = 0; i < optc; i++) {
         opt_t option = optv[i];
 
-        ptr_t result = option.parser(option.default_value);
+        fa_ptr_t result = option.parser(option.default_value);
 
         if (result) {
             args = fa_map_dadd(fa_string(option.long_name), result, args);
@@ -115,23 +115,23 @@ void fa_option_show(int optc, opt_t optv[], char *header)
 
 
 
-ptr_t fa_option_integral(char *x)
+fa_ptr_t fa_option_integral(char *x)
 {
     int r;
     sscanf(x, "%i", &r);
     return i32(r);
 }
-ptr_t fa_option_floating(char *x)
+fa_ptr_t fa_option_floating(char *x)
 {
     double r;
     sscanf(x, "%lf", &r);
     return f64(r);
 }
-ptr_t fa_option_string(char *x)
+fa_ptr_t fa_option_string(char *x)
 {
     return fa_string(x);
 }
-ptr_t fa_option_failure(char *x)
+fa_ptr_t fa_option_failure(char *x)
 {
     return NULL;
 }

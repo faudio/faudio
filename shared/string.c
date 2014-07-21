@@ -33,7 +33,7 @@
 #define kStandardCodeSize   sizeof(uint16_t)    // Internal char size
 
 struct _fa_string_t {
-    impl_t          impl;           // Dispatcher
+    fa_impl_t          impl;           // Dispatcher
     size_t          size;           // Character count
     uint16_t       *data;           // Payload
 };
@@ -405,7 +405,7 @@ fa_string_t fa_string_to_string(fa_ptr_t a)
 }
 
 inline static
-ptr_t jsonify(ptr_t a)
+fa_ptr_t jsonify(fa_ptr_t a)
 {
     switch (fa_dynamic_get_type(a)) {
     case pair_type_repr:
@@ -426,7 +426,7 @@ ptr_t jsonify(ptr_t a)
 }
 
 inline static
-ptr_t unjsonify(JSON_Value *a, bool *ok)
+fa_ptr_t unjsonify(JSON_Value *a, bool *ok)
 {
     switch (json_value_get_type(a)) {
     case JSONError:
@@ -451,7 +451,7 @@ ptr_t unjsonify(JSON_Value *a, bool *ok)
         list_t list     = fa_list_empty();
 
         for (size_t i = sz; i > 0; --i) {
-            ptr_t v = unjsonify(json_array_get_value(ar, i - 1), ok);
+            fa_ptr_t v = unjsonify(json_array_get_value(ar, i - 1), ok);
 
             if (!ok) {
                 return NULL;
@@ -470,7 +470,7 @@ ptr_t unjsonify(JSON_Value *a, bool *ok)
 
         for (size_t i = 0; i < sz; ++i) {
             char *name = (char *) json_object_get_name(obj, i);
-            ptr_t value = unjsonify(json_object_get_value(obj, name), ok);
+            fa_ptr_t value = unjsonify(json_object_get_value(obj, name), ok);
 
             if (!ok) {
                 return NULL;
@@ -499,7 +499,7 @@ fa_string_t fa_string_to_json(fa_ptr_t a)
 fa_ptr_t fa_string_from_json(fa_string_t string)
 {
     bool ok = true;
-    ptr_t result = unjsonify(json_parse_string(fa_unstring(string)), &ok);
+    fa_ptr_t result = unjsonify(json_parse_string(fa_unstring(string)), &ok);
 
     if (!ok) {
         return (fa_ptr_t) string_error(fa_string("Malformed JSON value."));
@@ -534,14 +534,14 @@ bool fa_string_matches(fa_string_t expr, fa_string_t string)
 }
 
 
-string_t fa_string_join_map(unary_t func, ptr_t data, string_t string)
+string_t fa_string_join_map(fa_unary_t func, fa_ptr_t data, string_t string)
 {
     string_t result = fa_string("");
 
     for (int i = 0; i < string->size; ++i) {
         result = fa_string_dappend(result,
 
-                                   func(data, (ptr_t)(long) string->data[i]));
+                                   func(data, (fa_ptr_t)(long) string->data[i]));
     }
 
     return result;
@@ -702,7 +702,7 @@ fa_ptr_t string_impl(fa_id_t interface)
     }
 }
 
-error_t string_error(string_t msg)
+fa_error_t string_error(string_t msg)
 {
     return fa_error_create_simple(error,
                                   msg,

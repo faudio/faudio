@@ -18,7 +18,7 @@ void test_alloc()
     test_section("Allocation");
 
     for (int i = 0; i < 100; ++i) {
-        ptr_t p = fa_malloc(((int)(rand() * 1024.0)) % 1024);
+        fa_ptr_t p = fa_malloc(((int)(rand() * 1024.0)) % 1024);
         printf("%p, %d\n", p, ((int) p) % 8);
 
         assert(fa_is_ref(p));
@@ -401,9 +401,9 @@ void test_midi_message()
 
 // --------------------------------------------------------------------------------
 
-ptr_t test_atomic_add10(ptr_t x, ptr_t _)
+fa_ptr_t test_atomic_add10(fa_ptr_t x, fa_ptr_t _)
 {
-    return (ptr_t)((intptr_t) x + 10);
+    return (fa_ptr_t)((intptr_t) x + 10);
 }
 
 void test_atomic()
@@ -415,19 +415,19 @@ void test_atomic()
         fa_atomic_t a = fa_atomic_create();
         fa_print("a                            ==> %s\n", a);
 
-        fa_atomic_set(a, (ptr_t) 0x5);
+        fa_atomic_set(a, (fa_ptr_t) 0x5);
         fa_print("a                            ==> %s\n", a);
 
         fa_atomic_modify(a, test_atomic_add10, 0);
         fa_print("a                            ==> %s\n", a);
 
-        // fa_atomic_add(a, (ptr_t) - 0xf);
+        // fa_atomic_add(a, (fa_ptr_t) - 0xf);
         // fa_print("a                            ==> %s\n", a);
 
-        fa_atomic_exchange(a, (ptr_t) 1, (ptr_t) 0xfe);
+        fa_atomic_exchange(a, (fa_ptr_t) 1, (fa_ptr_t) 0xfe);
         fa_print("a                            ==> %s\n", a); // fails, still 0
 
-        fa_atomic_exchange(a, (ptr_t) 0, (ptr_t) 0xff);
+        fa_atomic_exchange(a, (fa_ptr_t) 0, (fa_ptr_t) 0xff);
         fa_print("a                            ==> %s\n", a); // now ff
     }
 }
@@ -445,7 +445,7 @@ fa_ptr_t test_atomic_queue_reader(fa_ptr_t x)
     struct test_atomic_queue_reader_args *args = x;
     fa_atomic_queue_t q = args->queue;
     atomic_t               a = args->active;
-    ptr_t                  v;
+    fa_ptr_t                  v;
 
     while (true) {
         if (!tb(fa_atomic_get(a))) {
@@ -506,7 +506,7 @@ fa_ptr_t test_atomic_stack_reader(fa_ptr_t x)
     struct test_atomic_stack_reader_args *args = x;
     fa_atomic_stack_t q = args->stack;
     atomic_t               a = args->active;
-    ptr_t                  v;
+    fa_ptr_t                  v;
 
     while (true) {
         if (!tb(fa_atomic_get(a))) {
@@ -626,7 +626,7 @@ void test_atomic_ring_buffer()
 
 // --------------------------------------------------------------------------------
 
-ptr_t test_thread_printer(ptr_t data)
+fa_ptr_t test_thread_printer(fa_ptr_t data)
 {
     int n = 0;
 
@@ -644,8 +644,8 @@ void test_thread()
     test_section("Threads");
 
     fa_thread_t t, t2;
-    t  = fa_thread_create(test_thread_printer, (ptr_t) 10);
-    t2 = fa_thread_create(test_thread_printer, (ptr_t) 11);
+    t  = fa_thread_create(test_thread_printer, (fa_ptr_t) 10);
+    t2 = fa_thread_create(test_thread_printer, (fa_ptr_t) 11);
 
     fa_thread_sleep(1000);
     fa_thread_join(t);
@@ -660,7 +660,7 @@ typedef struct {
     int val;
 } test_mutex_lock_index;
 
-ptr_t test_mutex_locker(ptr_t x)
+fa_ptr_t test_mutex_locker(fa_ptr_t x)
 {
     test_mutex_lock_index *i = (test_mutex_lock_index *) x;
 
@@ -681,7 +681,7 @@ void test_mutex()
 
     for (int j = 0; j < 10; ++j) {
         test_mutex_lock_index i = { m, j };
-        fa_thread_t t = fa_thread_create(test_mutex_locker, (ptr_t) &i);
+        fa_thread_t t = fa_thread_create(test_mutex_locker, (fa_ptr_t) &i);
         fa_thread_sleep(100);
         fa_thread_detach(t);
     }
@@ -732,28 +732,28 @@ void test_for_each()
 
 // --------------------------------------------------------------------------------
 
-bool test_list_is_even16(ptr_t data, ptr_t p)
+bool test_list_is_even16(fa_ptr_t data, fa_ptr_t p)
 {
     return ti16(p) % 2 == 0;
 }
 
-bool test_list_is_odd16(ptr_t data, ptr_t p)
+bool test_list_is_odd16(fa_ptr_t data, fa_ptr_t p)
 {
     return ti16(p) % 2 != 0;
 }
 
-ptr_t times2(ptr_t data, ptr_t p)
+fa_ptr_t times2(fa_ptr_t data, fa_ptr_t p)
 {
     return i16(2 * ti16(p));
 }
 
-ptr_t times10(ptr_t data, ptr_t p)
+fa_ptr_t times10(fa_ptr_t data, fa_ptr_t p)
 {
     return i16(10 * ti16(p));
 }
 
 // x = [x,x]
-ptr_t dup_list(ptr_t ct, ptr_t x)
+fa_ptr_t dup_list(fa_ptr_t ct, fa_ptr_t x)
 {
     return list(x, x);
 }
@@ -819,7 +819,7 @@ void test_list()
         printf("\n");
 
         list_t as = list(i16(1), i16(2), i16(3));
-        ptr_t v = fa_list_last(as);
+        fa_ptr_t v = fa_list_last(as);
 
         fa_print("as                           ==> %s\n", as);
         fa_print("last(as)                     ==> %s\n", v);
@@ -895,7 +895,7 @@ void test_list()
         printf("\n");
 
         list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-        ptr_t v = fa_list_index(1, as);
+        fa_ptr_t v = fa_list_index(1, as);
 
         fa_print("as                           ==> %s\n", as);
         fa_print("index(1,as)                  ==> %s\n", v);
@@ -1079,7 +1079,7 @@ void test_list()
         xs = fa_list_dmap(apply1, i8, xs);
 
         fa_print("xs                           ==> %s\n", xs);
-        ptr_t sum = fa_list_dfold_left(apply2, fa_add, i8(0), xs);
+        fa_ptr_t sum = fa_list_dfold_left(apply2, fa_add, i8(0), xs);
         fa_print("sum(xs)                      ==> %s\n", sum);
     }
 }
@@ -1265,7 +1265,7 @@ void test_json(string_t path)
     string_t json = fa_system_directory_read_file(path);
     // printf("%s\n", fa_unstring(json));
 
-    ptr_t data = fa_string_from_json(json);
+    fa_ptr_t data = fa_string_from_json(json);
     fa_print("data                         ==> %s\n", data);
 
     string_t json2 = fa_string_to_json(data);
@@ -1297,7 +1297,7 @@ void test_json(string_t path)
 //
 //     dispatcher_t disp = lockfree_dispatcher();
 //
-//     ptr_t val = map(
+//     fa_ptr_t val = map(
 //                     fa_string("lyrics"), list(fa_string("Help"), fa_string("me"), fa_string("if"), fa_string("you"), fa_string("can")),
 //                     fa_string("pitches"), list(fa_ratio(60, 1), fa_ratio(62, 1))
 //                 );
@@ -1418,7 +1418,7 @@ void test_scheduler()
 
 // --------------------------------------------------------------------------------
 
-// ptr_t add1234(ptr_t c, ptr_t x)
+// fa_ptr_t add1234(fa_ptr_t c, fa_ptr_t x)
 // {
 // return i8(ti8(x) + 1234);
 // }
@@ -1458,7 +1458,7 @@ void test_scheduler()
 
 // --------------------------------------------------------------------------------
 
-// ptr_t cont(ptr_t x)
+// fa_ptr_t cont(fa_ptr_t x)
 // {
 //     printf("Continuing...\n");
 //     return x;
@@ -1524,7 +1524,7 @@ void test_scheduler()
 //     pair_t res = fa_buffer_read_audio(path);
 //
 //     if (fa_error_check(res)) {
-//         fa_error_log(NULL, (error_t) res);
+//         fa_error_log(NULL, (fa_error_t) res);
 //         return;
 //     }
 //
@@ -1617,13 +1617,13 @@ void test_regex()
 //
 //     // Handle possible errors
 //     if (fa_check(input)) {
-//         log_error((error_t) input);
+//         log_error((fa_error_t) input);
 //         fa_warn(fa_string("Aborting test due to error"));
 //         goto cleanup;
 //     }
 //
 //     if (fa_check(output)) {
-//         log_error((error_t) output);
+//         log_error((fa_error_t) output);
 //         fa_warn(fa_string("Aborting test due to error"));
 //         goto cleanup;
 //     }
@@ -1632,7 +1632,7 @@ void test_regex()
 //
 //     // Handle possible error
 //     if (fa_check(result)) {
-//         log_error((error_t) result);
+//         log_error((fa_error_t) result);
 //         fa_warn(fa_string("Aborting test due to error"));
 //         goto cleanup;
 //     }
@@ -1651,7 +1651,7 @@ void test_regex()
 // }
 //
 
-ptr_t test_audio_stream_status_changed(ptr_t ct)
+fa_ptr_t test_audio_stream_status_changed(fa_ptr_t ct)
 {
     printf("Status changed: %s!\n", fa_unstring(ct));
     return 0;
@@ -1675,7 +1675,7 @@ void test_audio_stream()
 
     // Handle possible error
     if (fa_check(session)) {
-        fa_error_log(NULL, (error_t) session);
+        fa_error_log(NULL, (fa_error_t) session);
         fa_warn(fa_string("Aborting test due to error"));
         goto cleanup;
     }
@@ -1688,7 +1688,7 @@ void test_audio_stream()
 
     // Handle possible error
     if (fa_check(stream)) {
-        fa_error_log(NULL, (error_t) stream);
+        fa_error_log(NULL, (fa_error_t) stream);
         fa_warn(fa_string("Aborting test due to error"));
         goto cleanup;
     }
@@ -1719,27 +1719,27 @@ void print_midi_devices(midi_session_t session)
     fa_print("\n", NULL);
 }
 
-ptr_t to_note_on(ptr_t occ)
+fa_ptr_t to_note_on(fa_ptr_t occ)
 {
     // fa_print("%s\n", occ);
     int16_t kc = ti16(fa_list_head(occ));
     return fa_midi_message(0x90, 48 + kc, 120);
 }
 
-ptr_t to_note_off(ptr_t occ)
+fa_ptr_t to_note_off(fa_ptr_t occ)
 {
     // fa_print("%s\n", occ);
     int16_t kc = ti16(fa_list_head(occ));
     return fa_midi_message(0x80, 48 + kc, 120);
 }
 
-ptr_t to_control(ptr_t occ)
+fa_ptr_t to_control(fa_ptr_t occ)
 {
     // fa_print("%s\n", occ);
     double x = tf64(fa_pair_first(occ));
     return fa_midi_message(0xb0, 7, x / 1900 * 127);
 }
-ptr_t to_control2(ptr_t occ)
+fa_ptr_t to_control2(fa_ptr_t occ)
 {
     // fa_print("%s\n", occ);
     double y = tf64(fa_pair_second(occ));
@@ -1760,7 +1760,7 @@ void test_midi_stream()
 
     // Handle possible error
     if (fa_check(session)) {
-        fa_error_log(NULL, (error_t) session);
+        fa_error_log(NULL, (fa_error_t) session);
         fa_warn(fa_string("Aborting test due to error"));
         goto cleanup;
     }
@@ -1778,13 +1778,13 @@ void test_midi_stream()
 
     // Handle possible errors
     if (fa_check(in_stream)) {
-        fa_error_log(NULL, (error_t) in_stream);
+        fa_error_log(NULL, (fa_error_t) in_stream);
         fa_warn(fa_string("Aborting test due to error"));
         goto cleanup;
     }
 
     if (fa_check(out_stream)) {
-        fa_error_log(NULL, (error_t) out_stream);
+        fa_error_log(NULL, (fa_error_t) out_stream);
         fa_warn(fa_string("Aborting test due to error"));
         goto cleanup;
     }
@@ -1843,7 +1843,7 @@ void test_midi_hotplug()
 
     // Handle possible error
     if (fa_check(session)) {
-        fa_error_log(NULL, (error_t) session);
+        fa_error_log(NULL, (fa_error_t) session);
         fa_warn(fa_string("Aborting test due to error"));
         goto cleanup;
     }
@@ -1858,12 +1858,12 @@ cleanup:
 }
 
 
-// ptr_t print_signal(ptr_t data, ptr_t value)
+// fa_ptr_t print_signal(fa_ptr_t data, fa_ptr_t value)
 // {
 //     fa_print("   %s\n", value);
 //     return value;
 // }
-// ptr_t signal_succ(ptr_t data, ptr_t value)
+// fa_ptr_t signal_succ(fa_ptr_t data, fa_ptr_t value)
 // {
 //     return fa_add(value, i16(1));
 // }

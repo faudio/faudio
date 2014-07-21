@@ -16,8 +16,8 @@ typedef fa_midi_status_callback_t  midi_status_callback_t;
 typedef WCHAR HASH;
 
 struct nullary_closure {
-    nullary_t   function;
-    ptr_t       data;
+    fa_nullary_t   function;
+    fa_ptr_t       data;
 };
 typedef struct nullary_closure *closure_t;
 
@@ -66,7 +66,7 @@ INT_PTR WINAPI midi_hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam,
 INT_PTR WINAPI audio_hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 void add_audio_status_listener(pair_t closure);
 void remove_audio_status_listener(pair_t closure);
-void add_midi_status_listener(midi_status_callback_t function, ptr_t data);
+void add_midi_status_listener(midi_status_callback_t function, fa_ptr_t data);
 
 void fa_device_initialize2();
 
@@ -539,7 +539,7 @@ void add_audio_status_listener(pair_t closure)
     }
 }
 
-void add_midi_status_listener(midi_status_callback_t function, ptr_t data)
+void add_midi_status_listener(midi_status_callback_t function, fa_ptr_t data)
 {
     closure_t closure = malloc(sizeof(struct nullary_closure));
     closure->function = function;

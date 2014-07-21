@@ -9,10 +9,10 @@ typedef struct _VstEvents VstEvents;
 struct _AEffect
 {
 	int32_t magic;			///< must be #kEffectMagic ('VstP')
-	ptr_t   dispatcher;
-	ptr_t   process;
-	ptr_t   setParameter;
-	ptr_t   getParameter;
+	fa_ptr_t   dispatcher;
+	fa_ptr_t   process;
+	fa_ptr_t   setParameter;
+	fa_ptr_t   getParameter;
 	int32_t numPrograms;    ///< number of programs
 	int32_t numParams;		///< all programs are assumed to have numParams parameters
 	int32_t numInputs;		///< number of audio inputs

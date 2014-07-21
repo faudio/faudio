@@ -24,15 +24,15 @@
  */
 
 struct entry {
-    impl_t      impl;       //  Interface dispatcher
-    ptr_t       key;        //  Values
-    ptr_t       value;
+    fa_impl_t      impl;       //  Interface dispatcher
+    fa_ptr_t       key;        //  Values
+    fa_ptr_t       value;
 };
 
 typedef struct entry *entry_t;
 
 struct _fa_map_t {
-    impl_t          impl;       //  Interface dispatcher
+    fa_impl_t          impl;       //  Interface dispatcher
     set_t           entries;    //  Set of entries
 };
 
@@ -200,12 +200,12 @@ bool fa_map_is_proper_submap_of(fa_map_t a, fa_map_t b)
     return fa_set_is_proper_subset_of(a->entries, b->entries);
 }
 
-fa_map_t fa_map_map(unary_t func, ptr_t data, fa_map_t map)
+fa_map_t fa_map_map(fa_unary_t func, fa_ptr_t data, fa_map_t map)
 {
     map_t result = fa_map_empty();
     fa_map_for_each(key_val, map) {
-        ptr_t key = fa_pair_first(key_val);
-        ptr_t val = fa_pair_second(key_val);
+        fa_ptr_t key = fa_pair_first(key_val);
+        fa_ptr_t val = fa_pair_second(key_val);
         result = fa_map_add(key, func(data, val), result);
     }
     return result;
@@ -243,8 +243,8 @@ map_t fa_map(int count, ...)
     va_start(args, count);
 
     for (int i = 0; i < count; i += 2) {
-        ptr_t key = va_arg(args, ptr_t);
-        ptr_t value = va_arg(args, ptr_t);
+        fa_ptr_t key = va_arg(args, fa_ptr_t);
+        fa_ptr_t value = va_arg(args, fa_ptr_t);
         s = fa_map_dadd(key, value, s);
     }
 
@@ -252,7 +252,7 @@ map_t fa_map(int count, ...)
     return s;
 }
 
-pair_t entry_to_pair(ptr_t data, entry_t entry)
+pair_t entry_to_pair(fa_ptr_t data, entry_t entry)
 {
     return fa_pair_create(entry->key, entry->value);
 }

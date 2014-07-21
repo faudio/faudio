@@ -21,7 +21,7 @@ static unsigned       gInitCount    = 0;
 static long           gBytesAlloc   = 0;
 static long           gRegionCount = 0;
 static log_func_t     gLogFunc      = NULL;
-static ptr_t          gLogData      = NULL;
+static fa_ptr_t          gLogData      = NULL;
 
 static struct {
     char *pre;
@@ -197,7 +197,7 @@ void fa_free(void *ptr)
 
 #define kMaxLogSize 3000
 
-static inline void stdlog(ptr_t data, fa_time_system_t t, fa_error_t e)
+static inline void stdlog(fa_ptr_t data, fa_time_system_t t, fa_error_t e)
 {
     FILE *file = data;
     char msg[kMaxLogSize + 50];
@@ -248,7 +248,7 @@ void fa_set_log(fa_log_func_t f, fa_ptr_t data)
 void fa_log(fa_ptr_t data, fa_error_t e)
 {
     if (gLogFunc) {
-        gLogFunc(gLogData, (ptr_t) time(NULL), e);
+        gLogFunc(gLogData, (fa_ptr_t) time(NULL), e);
     }
 }
 
@@ -282,21 +282,21 @@ void fa_log_error(fa_string_t msg)
 
 void fa_log_info_from(fa_string_t msg, fa_string_t origin)
 {
-    error_t err = fa_error_create_simple(info, msg, origin);
+    fa_error_t err = fa_error_create_simple(info, msg, origin);
     fa_log(NULL, err);
     fa_destroy(err);
 }
 
 void fa_log_warning_from(fa_string_t msg, fa_string_t origin)
 {
-    error_t err = fa_error_create_simple(warning, msg, origin);
+    fa_error_t err = fa_error_create_simple(warning, msg, origin);
     fa_log(NULL, err);
     fa_destroy(err);
 }
 
 void fa_log_error_from(fa_string_t msg, fa_string_t origin)
 {
-    error_t err = fa_error_create_simple(error, msg, origin);
+    fa_error_t err = fa_error_create_simple(error, msg, origin);
     fa_log(NULL, err);
     fa_destroy(err);
 }

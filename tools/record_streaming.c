@@ -52,7 +52,7 @@ static string_t gOutput;
 // }
 //
 
-list_t _signal(ptr_t x, list_t xs)
+list_t _signal(fa_ptr_t x, list_t xs)
 {
     // signal_t i1 = fa_list_head(xs);
 
@@ -78,7 +78,7 @@ list_t _signal(ptr_t x, list_t xs)
 }
 
 fa_io_filter_t fa_io_create_endian_filter();
-ptr_t _print(ptr_t x)
+fa_ptr_t _print(fa_ptr_t x)
 {
     fa_print_ln(x);
     return x;

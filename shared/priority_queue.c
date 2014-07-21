@@ -25,19 +25,19 @@ typedef struct node            *node_t;
 typedef priority_queue_t        queue_t;
 
 struct node {
-    ptr_t           value;          // Value
+    fa_ptr_t           value;          // Value
     node_t          left;           // Children
     node_t          right;
 };
 
 struct _fa_priority_queue_t {
-    impl_t          impl;           // Dispatcher
+    fa_impl_t          impl;           // Dispatcher
     node_t          node;
 };
 
 // -----------------------------------------------------------------------------
 
-inline static node_t new_node(ptr_t value, node_t left, node_t right)
+inline static node_t new_node(fa_ptr_t value, node_t left, node_t right)
 {
     node_t node = fa_new_struct(node);
     node->value = value;
@@ -51,7 +51,7 @@ inline static void delete_node(node_t node)
     fa_delete(node);
 }
 
-ptr_t priority_queue_impl(fa_id_t interface);
+fa_ptr_t priority_queue_impl(fa_id_t interface);
 
 inline static queue_t new_queue(node_t node)
 {
@@ -74,7 +74,7 @@ queue_t fa_priority_queue_empty()
     return new_queue(NULL);
 }
 
-queue_t fa_priority_queue_single(ptr_t value)
+queue_t fa_priority_queue_single(fa_ptr_t value)
 {
     return new_queue(new_node(value, NULL, NULL));
 }
@@ -117,25 +117,25 @@ void fa_priority_queue_merge(queue_t queue1, queue_t queue2)
     delete_queue(queue2);
 }
 
-void fa_priority_queue_insert(ptr_t value, queue_t queue)
+void fa_priority_queue_insert(fa_ptr_t value, queue_t queue)
 {
     queue->node = merge(queue->node, new_node(value, NULL, NULL));
 }
 
-ptr_t fa_priority_queue_peek(queue_t queue)
+fa_ptr_t fa_priority_queue_peek(queue_t queue)
 {
     node_t head = queue->node;
     return head ? head->value : NULL;
 }
 
-ptr_t fa_priority_queue_pop(queue_t queue)
+fa_ptr_t fa_priority_queue_pop(queue_t queue)
 {
     node_t head = queue->node;
 
     if (!head) {
         return NULL;
     } else {
-        ptr_t value = head->value;
+        fa_ptr_t value = head->value;
         queue->node = merge(head->left, head->right);
         delete_node(head);
         return value;

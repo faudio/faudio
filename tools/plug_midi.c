@@ -8,7 +8,7 @@ static int stop;
 
 /** Called whenever the MIDI setup changed.
  */
-ptr_t status_callback(ptr_t session)
+fa_ptr_t status_callback(fa_ptr_t session)
 {
     printf("Midi status changed!\n");
     stop = true;
