@@ -284,9 +284,9 @@ inline static stream_t new_stream(device_t device)
     stream->device          = device;
 
     stream->clock           = fa_clock_standard();
-    stream->in_controls     = atomic_queue();
-    stream->short_controls  = atomic_queue();
-    stream->controls        = priority_queue();
+    stream->in_controls     = fa_atomic_queue();
+    stream->short_controls  = fa_atomic_queue();
+    stream->controls        = fa_priority_queue();
 
     stream->callbacks.count = 0;
     stream->in_sysex = false;

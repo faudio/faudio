@@ -72,7 +72,7 @@ ring_buffer_t fa_atomic_ring_buffer_create(size_t size)
 
     b->first    = 0;
     b->last     = 0;
-    b->count    = atomic();
+    b->count    = fa_atomic();
 
     b->status   = buffer_alright;
     b->closed   = false;

@@ -52,9 +52,9 @@ static inline atomic_queue_t new_queue()
     atomic_queue_t queue = fa_new(atomic_queue);
 
     queue->impl  = &atomic_queue_impl;
-    queue->first = atomic();
-    queue->div   = atomic();
-    queue->last  = atomic();
+    queue->first = fa_atomic();
+    queue->div   = fa_atomic();
+    queue->last  = fa_atomic();
 
     return queue;
 }

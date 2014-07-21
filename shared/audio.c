@@ -284,12 +284,12 @@ inline static stream_t new_stream(device_t input, device_t output, double sample
     stream->signal_count    = 0;
     stream->pa_flags        = 0;
 
-    stream->before_controls = atomic_queue();
-    stream->in_controls     = atomic_queue();
-    stream->short_controls  = atomic_queue();
-    stream->controls        = priority_queue();
+    stream->before_controls = fa_atomic_queue();
+    stream->in_controls     = fa_atomic_queue();
+    stream->short_controls  = fa_atomic_queue();
+    stream->controls        = fa_priority_queue();
 
-    stream->out_controls    = atomic_queue();
+    stream->out_controls    = fa_atomic_queue();
 
     stream->callbacks.count = 0;
 

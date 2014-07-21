@@ -166,7 +166,7 @@ int main(int argc, char const *argv[])
             gOutput = fa_string("test.raw");
 
             printf("Vorbis=%d, Endian=%d, Output=%s\n", gVorbis, gEndian, fa_unstring(gOutput));
-            fa_atomic_ring_buffer_t rbuffer = atomic_ring_buffer(kRingBufferSize);
+            fa_atomic_ring_buffer_t rbuffer = fa_atomic_ring_buffer(kRingBufferSize);
             mark_used(rbuffer);
 
             fa_audio_with_session(_session, rbuffer, fa_log, NULL);

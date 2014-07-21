@@ -55,7 +55,7 @@ static inline fa_atomic_stack_t new_stack()
     atomic_stack_t stack = fa_new(atomic_stack);
 
     stack->impl  = &atomic_stack_impl;
-    stack->top   = atomic();
+    stack->top   = fa_atomic();
 
     return stack;
 }

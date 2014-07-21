@@ -1100,7 +1100,7 @@ ptr_t run_simple_action_(ptr_t x, ptr_t a)
 }
 void fa_signal_run(int count, list_t controls, signal_t a, double *output)
 {
-    priority_queue_t controls2 = priority_queue();
+    priority_queue_t controls2 = fa_priority_queue();
     fa_for_each(x, controls) {
         fa_priority_queue_insert(fa_pair_left_from_pair(x), controls2);
     }

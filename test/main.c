@@ -466,7 +466,7 @@ void test_atomic_queue_(int iter, long sleepTime)
     {
         fa_atomic_queue_t q = fa_atomic_queue_create();
 
-        struct test_atomic_queue_reader_args args = { q, atomic() };
+        struct test_atomic_queue_reader_args args = { q, fa_atomic() };
         fa_atomic_set(args.active, fb(true));
 
         thread_t t = fa_thread_create(test_atomic_queue_reader, &args);
@@ -528,7 +528,7 @@ void test_atomic_stack_(int iter, long sleepTime)
     {
         fa_atomic_stack_t q = fa_atomic_stack_create();
 
-        struct test_atomic_stack_reader_args args = { q, atomic() };
+        struct test_atomic_stack_reader_args args = { q, fa_atomic() };
         fa_atomic_set(args.active, fb(true));
 
         thread_t t = fa_thread_create(test_atomic_stack_reader, &args);
@@ -596,7 +596,7 @@ void test_atomic_ring_buffer_(int iter, long sleepTime)
     {
         fa_atomic_ring_buffer_t q = fa_atomic_ring_buffer_create(1024);
 
-        struct test_atomic_ring_buffer_reader_args args = { q, atomic() };
+        struct test_atomic_ring_buffer_reader_args args = { q, fa_atomic() };
         fa_atomic_set(args.active, fb(true));
 
         thread_t t = fa_thread_create(ring_buffer_reader, &args);
