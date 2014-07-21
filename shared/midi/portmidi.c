@@ -47,8 +47,8 @@ struct _fa_midi_session_t {
     fa_impl_t              impl;               // Dispatcher
     system_time_t       acquired;           // Time of acquisition (not used at the moment)
 
-    list_t              devices;            // Cached device list
-    list_t              streams;            // All streams started on this sessiuon (list of stream_t)
+    fa_list_t              devices;            // Cached device list
+    fa_list_t              streams;            // All streams started on this sessiuon (list of stream_t)
 
     device_t            def_input;          // Default devices, both possibly null
     device_t            def_output;         // If present, these are also in the above list
@@ -61,8 +61,8 @@ struct _fa_midi_device_t {
     session_t           session;            // Underlying session
 
     bool                input, output;      // Cached capabilities
-    string_t            name;               // Cached names
-    string_t            host_name;
+    fa_string_t            name;               // Cached names
+    fa_string_t            host_name;
 };
 
 struct _fa_midi_stream_t {
@@ -72,7 +72,7 @@ struct _fa_midi_stream_t {
                         native_output;      // Native stream(s)
     device_t            device;
 
-    thread_t            thread;
+    fa_thread_t            thread;
     bool                aborted;            // Set to non-zero when thread should stop (and native streams stopped)
 
     // fa_atomic_t         receivers;          // Atomic [(Unary, Ptr)]
@@ -81,20 +81,20 @@ struct _fa_midi_stream_t {
     fa_ptr_t            message_callback_ptrs[kMaxMessageCallbacks];
 
     fa_clock_t          clock;              // Clock used for scheduler and incoming events
-    atomic_queue_t      in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
-    priority_queue_t    controls;           // Scheduled controls (Time, (Channel, Ptr))
+    fa_atomic_queue_t      in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
+    fa_priority_queue_t    controls;           // Scheduled controls (Time, (Channel, Ptr))
 
-    // list_t              incoming;
+    // fa_list_t              incoming;
 };
 
-static mutex_t   pm_mutex;
+static fa_thread_mutex_t   pm_mutex;
 static bool      pm_status;
 static session_t midi_current_session;
 
-fa_error_t midi_device_error(string_t msg);
-fa_error_t midi_device_error_with(string_t msg, int error);
-fa_error_t native_error(string_t msg, int code);
-void midi_device_fatal(string_t msg, int code);
+fa_error_t midi_device_error(fa_string_t msg);
+fa_error_t midi_device_error_with(fa_string_t msg, int error);
+fa_error_t native_error(fa_string_t msg, int code);
+void midi_device_fatal(fa_string_t msg, int code);
 fa_ptr_t midi_session_impl(fa_id_t interface);
 fa_ptr_t midi_device_impl(fa_id_t interface);
 fa_ptr_t midi_stream_impl(fa_id_t interface);
@@ -122,7 +122,7 @@ inline static session_t new_session()
 inline static void session_init_devices(session_t session)
 {
     native_index_t count;
-    list_t         devices;
+    fa_list_t         devices;
     device_t       input = NULL, output = NULL;
 
     count   = Pm_CountDevices();
@@ -422,7 +422,7 @@ void midi_fa_inform_opening(device_t device)
 
 
 
-static inline void send_midi(stream_t stream, midi_message_t midi);
+static inline void send_midi(stream_t stream, fa_midi_message_t midi);
 
 PmTimestamp midi_time_callback(void *data)
 {
@@ -549,12 +549,12 @@ fa_ptr_t stream_thread_callback(fa_ptr_t x)
 
                     // This value from the stream clock, fetched by system thread
                     // We could also fetch it here, but that is probably less precise.
-                    time_t time = fa_milliseconds(events[0].timestamp);
+                    fa_time_t time = fa_milliseconds(events[0].timestamp);
 
                     if (Pm_MessageStatus(events[0].message) != 0xf0
                             &&
                             Pm_MessageStatus(events[0].message) != 0xf7) {
-                        midi_message_t msg = fa_midi_message(
+                        fa_midi_message_t msg = fa_midi_message(
                                                  Pm_MessageStatus(events[0].message),
                                                  Pm_MessageData1(events[0].message),
                                                  Pm_MessageData2(events[0].message));
@@ -576,7 +576,7 @@ fa_ptr_t stream_thread_callback(fa_ptr_t x)
                 fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
             }
 
-            time_t   now    = fa_clock_time(stream->clock);
+            fa_time_t   now    = fa_clock_time(stream->clock);
             run_actions(stream->controls,
                         now,
                         send_midi_action,
@@ -595,7 +595,7 @@ fa_ptr_t stream_thread_callback(fa_ptr_t x)
 fa_ptr_t send_midi_action(fa_ptr_t stream, fa_ptr_t action)
 {
     if (fa_action_is_send(action)) {
-        // string_t name = fa_action_send_name(action);
+        // fa_string_t name = fa_action_send_name(action);
         fa_ptr_t    value = fa_action_send_value(action);
         send_midi(stream, value);
         // mark_used_name(name);
@@ -626,7 +626,7 @@ void fa_midi_schedule(fa_time_t        time,
                       fa_action_t      action,
                       fa_midi_stream_t stream)
 {
-    pair_left_t pair = fa_pair_left_create(time, action);
+    fa_pair_left_t pair = fa_pair_left_create(time, action);
     fa_atomic_queue_write(stream->in_controls, pair);
 }
 
@@ -649,7 +649,7 @@ void receive_midi(stream_t stream, PmEvent *dest)
 /** Send a messages to the given stream.
     Fails if the stream has no output.
  */
-void send_midi(stream_t stream, midi_message_t midi)
+void send_midi(stream_t stream, fa_midi_message_t midi)
 {
     assert(stream->native_output && "Sending to non-output stream");
 
@@ -673,7 +673,7 @@ void fa_midi_schedule_relative(fa_time_t        time,
                                fa_action_t       action,
                                fa_midi_stream_t  stream)
 {
-    time_t now = fa_clock_time(stream->clock);
+    fa_time_t now = fa_clock_time(stream->clock);
     fa_midi_schedule(fa_add(now, time), action, stream);
 }
 
@@ -687,7 +687,7 @@ void fa_midi_set_clock(fa_midi_stream_t stream, fa_clock_t clock)
 
 fa_string_t midi_session_show(fa_ptr_t a)
 {
-    string_t str = fa_string("<MidiSession ");
+    fa_string_t str = fa_string("<MidiSession ");
     str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) a));
     str = fa_string_dappend(str, fa_string(">"));
     return str;
@@ -732,7 +732,7 @@ fa_string_t midi_device_show(fa_ptr_t a)
 {
     device_t device = (device_t) a;
 
-    string_t str = fa_string("<MidiDevice ");
+    fa_string_t str = fa_string("<MidiDevice ");
     str = fa_string_dappend(str, fa_midi_host_name(device));
     str = fa_string_dappend(str, fa_string(" "));
     str = fa_string_dappend(str, fa_midi_name(device));
@@ -764,7 +764,7 @@ fa_ptr_t midi_device_impl(fa_id_t interface)
 
 fa_string_t midi_stream_show(fa_ptr_t a)
 {
-    string_t str = fa_string("<MidiStream ");
+    fa_string_t str = fa_string("<MidiStream ");
     str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) a));
     str = fa_string_dappend(str, fa_string(">"));
     return str;
@@ -801,20 +801,20 @@ fa_ptr_t midi_stream_impl(fa_id_t interface)
 
 void fa_log_error_from(fa_string_t msg, fa_string_t origin);
 
-fa_error_t midi_device_error(string_t msg)
+fa_error_t midi_device_error(fa_string_t msg)
 {
     return fa_error_create_simple(error,
                                   msg,
                                   fa_string("Doremir.Device.Midi"));
 }
 
-fa_error_t midi_device_error_with(string_t msg, int code)
+fa_error_t midi_device_error_with(fa_string_t msg, int code)
 {
     return fa_error_create_simple(error,
                                   fa_string_dappend(msg, fa_format_integral(" (error code %d)", code)),
                                   fa_string("Doremir.Device.Midi"));
 }
-fa_error_t native_error(string_t msg, int code)
+fa_error_t native_error(fa_string_t msg, int code)
 {
     return fa_error_create_simple(error,
                                   fa_string_dappend(msg, fa_string((char *) Pm_GetErrorText(code))),
@@ -822,7 +822,7 @@ fa_error_t native_error(string_t msg, int code)
 }
 
 
-void midi_device_fatal(string_t msg, int code)
+void midi_device_fatal(fa_string_t msg, int code)
 {
     fa_log_error_from(
         fa_string_dappend(msg, fa_format_integral(" (error code %d)", code)),

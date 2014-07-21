@@ -24,10 +24,10 @@ typedef struct nullary_closure *closure_t;
 static
 int     gInitializedOnce = 0;
 
-static mutex_t   windows_device_mutex;
+static fa_thread_mutex_t   windows_device_mutex;
 
 closure_t gMidiCallbackTable[1000];
-pair_t gAudioCallbackTable[1000];
+fa_pair_t gAudioCallbackTable[1000];
 long    gMidiCallbackTableCount;
 long    gAudioCallbackTableCount;
 int     mINumDevs;
@@ -64,8 +64,8 @@ void ScheduleMidiCheck();
 void ScheduleAudioCheck();
 INT_PTR WINAPI midi_hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 INT_PTR WINAPI audio_hardware_status_callback(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-void add_audio_status_listener(pair_t closure);
-void remove_audio_status_listener(pair_t closure);
+void add_audio_status_listener(fa_pair_t closure);
+void remove_audio_status_listener(fa_pair_t closure);
 void add_midi_status_listener(midi_status_callback_t function, fa_ptr_t data);
 
 void fa_device_initialize2();
@@ -280,7 +280,7 @@ DWORD WINAPI check_thread_audio(LPVOID _)
 
         fa_with_lock(windows_device_mutex) {
             for (int i = 0; i < gAudioCallbackTableCount; ++i) {
-                pair_t tp = gAudioCallbackTable[i];
+                fa_pair_t tp = gAudioCallbackTable[i];
 
                 if (tp) {
                     fa_unpair(tp, function, data) {
@@ -299,7 +299,7 @@ DWORD WINAPI check_thread_audio(LPVOID _)
 
         fa_with_lock(windows_device_mutex) {
             for (int i = 0; i < gAudioCallbackTableCount; ++i) {
-                pair_t tp = gAudioCallbackTable[i];
+                fa_pair_t tp = gAudioCallbackTable[i];
 
                 if (tp) {
                     fa_unpair(tp, function, data) {
@@ -531,7 +531,7 @@ DWORD WINAPI window_thread(LPVOID params)
 
 
 
-void add_audio_status_listener(pair_t closure)
+void add_audio_status_listener(fa_pair_t closure)
 {
     // Save params in global array
     fa_with_lock(windows_device_mutex) {
@@ -552,7 +552,7 @@ void add_midi_status_listener(midi_status_callback_t function, fa_ptr_t data)
 }
 
 // TODO remove user callbacks
-void remove_audio_status_listener(pair_t closure)
+void remove_audio_status_listener(fa_pair_t closure)
 {
     fa_with_lock(windows_device_mutex) {
         for (int i = 0; i < gAudioCallbackTableCount; i++) {

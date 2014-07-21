@@ -8,7 +8,7 @@
 
 #include <fluidsynth.h>
 
-pair_t fa_signal_dls()
+fa_pair_t fa_signal_dls()
 {
     assert(false && "Not available on this platform");
 }
@@ -177,7 +177,7 @@ fa_ptr_t destroy_(fa_ptr_t x)
     delete_fluid_settings(settings);
 }
 
-pair_t fa_signal_synth(string_t path2)
+fa_pair_t fa_signal_synth(fa_string_t path2)
 {
     // create synth
     fluid_synth_t *synth = NULL;
@@ -217,8 +217,8 @@ pair_t fa_signal_synth(string_t path2)
     proc->destroy = destroy_;
     proc->data    = synth;
 
-    signal_t left  = fa_signal_input(kFluidOffset + 0);
-    signal_t right = fa_signal_input(kFluidOffset + 1);
+    fa_signal_t left  = fa_signal_input(kFluidOffset + 0);
+    fa_signal_t right = fa_signal_input(kFluidOffset + 1);
 
     // Return stereo output, embedding the custom proc (so it is actually run)
     return pair(fa_signal_custom(proc, left), right);

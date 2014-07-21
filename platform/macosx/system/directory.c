@@ -28,7 +28,7 @@ fa_string_t fa_system_directory_current()
     return fa_string(cwd);
 }
 
-void fa_system_directory_create(string_t path)
+void fa_system_directory_create(fa_string_t path)
 {
     // Assure system_directory
     mkdir(fa_unstring(path), (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH));

@@ -49,12 +49,12 @@ void destroy_au_context(au_context_t context) {
 }
 
 
-string_t from_os_status(OSStatus err)
+fa_string_t from_os_status(OSStatus err)
 {                
     return fa_string((char*) GetMacOSStatusErrorString(err));
 }
 
-string_t component_name(AudioComponent component)
+fa_string_t component_name(AudioComponent component)
 {
     CFStringRef cf_str;
     AudioComponentCopyName(component, &cf_str);
@@ -242,9 +242,9 @@ void au_cleanup(au_context_t context)
     @return 
         A list of AudioComponent
 */
-list_t find_audio_components(AudioComponentDescription* description)
+fa_list_t find_audio_components(AudioComponentDescription* description)
 {
-    list_t  all     = list();
+    fa_list_t  all     = list();
     int     count   = AudioComponentCount(description);
 
     AudioComponent component = NULL;
@@ -263,7 +263,7 @@ list_t find_audio_components(AudioComponentDescription* description)
     @return 
         A list of AudioComponent
 */
-list_t find_all_audio_components()
+fa_list_t find_all_audio_components()
 {
     AudioComponentDescription descr;
     descr.componentType         = 0;
@@ -275,7 +275,7 @@ list_t find_all_audio_components()
     return find_audio_components(&descr);
 }
 
-list_t find_dls_music_device()
+fa_list_t find_dls_music_device()
 {
     AudioComponentDescription descr;
     descr.componentType         = kAudioUnitType_MusicDevice;
@@ -289,7 +289,7 @@ list_t find_dls_music_device()
 
 fa_ptr_t new_dls_music_device_instance()
 {
-    list_t components = find_dls_music_device();
+    fa_list_t components = find_dls_music_device();
     assert(fa_list_is_single(components) && "Missing or ambigous DLSMusicDevice");
     
     fa_ptr_t dls = fa_list_head(components);

@@ -32,7 +32,7 @@ typedef struct node *node_t;
 
 struct _fa_atomic_stack_t {
     fa_impl_t      impl;               //  Interface dispatcher
-    atomic_t    top;
+    fa_atomic_t    top;
 };
 
 fa_ptr_t atomic_stack_impl(fa_id_t interface);
@@ -52,7 +52,7 @@ static inline void delete_node(node_t node)
 
 static inline fa_atomic_stack_t new_stack()
 {
-    atomic_stack_t stack = fa_new(atomic_stack);
+    fa_atomic_stack_t stack = fa_new(atomic_stack);
 
     stack->impl  = &atomic_stack_impl;
     stack->top   = fa_atomic();
@@ -60,7 +60,7 @@ static inline fa_atomic_stack_t new_stack()
     return stack;
 }
 
-static inline void delete_stack(atomic_stack_t stack)
+static inline void delete_stack(fa_atomic_stack_t stack)
 {
     fa_delete(stack->top);
     fa_delete(stack);
@@ -68,21 +68,21 @@ static inline void delete_stack(atomic_stack_t stack)
 
 /** Atomically get the node from a place.
  */
-static inline node_t get_node(atomic_t place)
+static inline node_t get_node(fa_atomic_t place)
 {
     return (node_t) fa_atomic_get(place);
 }
 
 /** Atomically set a place to a node.
  */
-static inline void set_node(atomic_t place, node_t node)
+static inline void set_node(fa_atomic_t place, node_t node)
 {
     fa_atomic_set(place, node);
 }
 
 /** Atomically forward a place to point to the next node.
  */
-static inline void forward_node(atomic_t place)
+static inline void forward_node(fa_atomic_t place)
 {
     fa_atomic_exchange(place, get_node(place), (get_node(place))->next);
 }
@@ -91,7 +91,7 @@ static inline void forward_node(atomic_t place)
 
 fa_atomic_stack_t fa_atomic_stack_create()
 {
-    atomic_stack_t stack = new_stack();
+    fa_atomic_stack_t stack = new_stack();
     return stack;
 }
 
@@ -147,7 +147,7 @@ fa_ptr_t fa_atomic_stack_read(fa_atomic_stack_t stack)
 
 fa_string_t atomic_stack_show(fa_ptr_t v)
 {
-    string_t s = fa_string("<AtomicStack ");
+    fa_string_t s = fa_string("<AtomicStack ");
     s = fa_string_dappend(s, fa_format_integral("%p", (long) v));
     s = fa_string_dappend(s, fa_string(">"));
     return s;

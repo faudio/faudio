@@ -52,7 +52,7 @@ void push(fa_ptr_t x, fa_buffer_t buffer)
 }
 
 static inline
-void deendian(buffer_t x)
+void deendian(fa_buffer_t x)
 {
     size_t size = fa_buffer_size(x);
     char  *raw  = fa_buffer_unsafe_address(x);

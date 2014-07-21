@@ -42,13 +42,13 @@ void fa_thread_terminate()
     main_thread_g = NULL;
 }
 
-inline static thread_t new_thread()
+inline static fa_thread_t new_thread()
 {
     fa_thread_t thread = fa_new(thread);
     thread->impl = &thread_impl;
     return thread;
 }
-inline static void delete_thread(thread_t thread)
+inline static void delete_thread(fa_thread_t thread)
 {
     fa_delete(thread);
 }
@@ -182,31 +182,31 @@ bool fa_thread_unlock(fa_thread_mutex_t mutex)
 
 bool thread_equal(fa_ptr_t m, fa_ptr_t n)
 {
-    thread_t x = (thread_t) m;
-    thread_t y = (thread_t) n;
+    fa_thread_t x = (fa_thread_t) m;
+    fa_thread_t y = (fa_thread_t) n;
 
     return pthread_equal(x->native, y->native);
 }
 
 bool thread_less_than(fa_ptr_t m, fa_ptr_t n)
 {
-    thread_t x = (thread_t) m;
-    thread_t y = (thread_t) n;
+    fa_thread_t x = (fa_thread_t) m;
+    fa_thread_t y = (fa_thread_t) n;
     return x->native < y->native;
 }
 
 bool thread_greater_than(fa_ptr_t m, fa_ptr_t n)
 {
-    thread_t x = (thread_t) m;
-    thread_t y = (thread_t) n;
+    fa_thread_t x = (fa_thread_t) m;
+    fa_thread_t y = (fa_thread_t) n;
     return x->native > y->native;
 }
 
 fa_string_t thread_show(fa_ptr_t a)
 {
-    thread_t x = (thread_t) a;
+    fa_thread_t x = (fa_thread_t) a;
 
-    string_t str = fa_string("<Thread ");
+    fa_string_t str = fa_string("<Thread ");
     str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) x->native));
     str = fa_string_dappend(str, fa_string(">"));
     return str;
@@ -238,7 +238,7 @@ fa_ptr_t thread_impl(fa_id_t interface)
 
 fa_string_t mutex_show(fa_ptr_t a)
 {
-    string_t str = fa_string("<Mutex ");
+    fa_string_t str = fa_string("<Mutex ");
     str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) a));
     str = fa_string_dappend(str, fa_string(">"));
     return str;

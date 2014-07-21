@@ -16,7 +16,7 @@ struct _fa_time_t {
 };
 
 double to_double(fa_ratio_t x);
-static ratio_t from_double(double x)
+static fa_ratio_t from_double(double x)
 {
     return fa_ratio(x * 10000, 10000);
 }
@@ -115,7 +115,7 @@ fa_time_milliseconds_t fa_time_to_milliseconds(fa_time_t time)
 fa_string_t fa_time_to_iso(fa_time_t time)
 {
     fa_time_t t = (fa_time_t) time;
-    string_t s = fa_string("P0000-00");
+    fa_string_t s = fa_string("P0000-00");
 
     s = fa_string_dappend(s, fa_format_integral("-%02i", fa_time_days(t)));
     s = fa_string_dappend(s, fa_format_integral("T%02i", fa_time_hours(t)));
@@ -190,7 +190,7 @@ fa_ptr_t time_absolute(fa_ptr_t a)
 fa_string_t time_show(fa_ptr_t a)
 {
     fa_time_t t = (fa_time_t) a;
-    string_t s = fa_string("<Time");
+    fa_string_t s = fa_string("<Time");
 
     s = fa_string_dappend(s, fa_format_integral(" %02id", fa_time_days(t)));
     s = fa_string_dappend(s, fa_format_integral(" %02ih", fa_time_hours(t)));

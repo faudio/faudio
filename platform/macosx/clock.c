@@ -37,17 +37,17 @@ fa_time_t raw_time()
     mach_timespec_t ts;
     clock_get_time(gMachClock, &ts);
 
-    time_t s  = fa_seconds(ts.tv_sec);
-    time_t ds = fa_divisions(ts.tv_nsec / 1000000, 1000);
+    fa_time_t s  = fa_seconds(ts.tv_sec);
+    fa_time_t ds = fa_divisions(ts.tv_nsec / 1000000, 1000);
     return fa_dadd(s, ds);
 }
 
 
-typedef struct standard_clock *standard_clock_t;
+typedef struct standard_clock *standard_fa_clock_t;
 struct standard_clock {
     fa_impl_t impl;
     struct {
-        time_t time;
+        fa_time_t time;
         int64_t milliseconds;
     } origin;
 };
@@ -55,7 +55,7 @@ struct standard_clock {
 static fa_clock_t new_standard_clock()
 {
     fa_ptr_t standard_clock_impl(fa_id_t interface);
-    standard_clock_t c = fa_new_struct(standard_clock);
+    standard_fa_clock_t c = fa_new_struct(standard_clock);
 
     c->impl = &standard_clock_impl;
     c->origin.milliseconds = raw_milliseconds();
@@ -64,7 +64,7 @@ static fa_clock_t new_standard_clock()
     return (fa_clock_t) c;
 }
 
-inline static void delete_standard_clock(standard_clock_t standard_clock)
+inline static void delete_standard_clock(standard_fa_clock_t standard_clock)
 {
     fa_delete(standard_clock);
 }
@@ -110,7 +110,7 @@ bool standard_clock_equal(fa_ptr_t a, fa_ptr_t b)
 
 fa_string_t standard_clock_show(fa_ptr_t a)
 {
-    string_t str = fa_string("<StandardClock ");
+    fa_string_t str = fa_string("<StandardClock ");
     str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) a));
     str = fa_string_dappend(str, fa_string(">"));
     return str;
@@ -118,13 +118,13 @@ fa_string_t standard_clock_show(fa_ptr_t a)
 
 int64_t standard_clock_milliseconds(fa_ptr_t x)
 {
-    standard_clock_t clock = (standard_clock_t) x;
+    standard_fa_clock_t clock = (standard_fa_clock_t) x;
     return raw_milliseconds() - clock->origin.milliseconds;
 }
 
-fa_time_t standard_clock_time(fa_ptr_t x)
+fa_time_t standard_fa_clock_time(fa_ptr_t x)
 {
-    standard_clock_t clock = (standard_clock_t) x;
+    standard_fa_clock_t clock = (standard_fa_clock_t) x;
     return fa_subtract(raw_time(), clock->origin.time);
 }
 
@@ -137,7 +137,7 @@ fa_ptr_t standard_clock_impl(fa_id_t interface)
         = { standard_clock_show };
 
     static fa_clock_interface_t standard_clock_clock_impl
-        = { standard_clock_time, standard_clock_milliseconds };
+        = { standard_fa_clock_time, standard_clock_milliseconds };
 
     switch (interface) {
 

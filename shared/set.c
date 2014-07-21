@@ -28,7 +28,7 @@
         - We really want fast size, insert, remove, indexOf
  */
 
-#define base_t              list_t
+#define base_t              fa_list_t
 #define base_empty          fa_list_empty
 #define base_copy           fa_list_copy
 #define base_destroy        fa_list_destroy
@@ -48,17 +48,17 @@ struct _fa_set_t {
 
 // --------------------------------------------------------------------------------
 
-inline static set_t new_set(base_t elems)
+inline static fa_set_t new_set(base_t elems)
 {
     fa_ptr_t set_impl(fa_id_t interface);
 
-    set_t set   = fa_new(set);
+    fa_set_t set   = fa_new(set);
     set->impl   = &set_impl;
     set->elems  = elems;
     return set;
 }
 
-inline static void delete_set(set_t set)
+inline static void delete_set(fa_set_t set)
 {
     fa_delete(set);
 }
@@ -111,21 +111,21 @@ fa_set_t fa_set_remove(fa_ptr_t x, fa_set_t set)
 
 fa_set_t fa_set_dadd(fa_ptr_t x, fa_set_t set)
 {
-    set_t set2 = fa_set_add(x, set);
+    fa_set_t set2 = fa_set_add(x, set);
     fa_set_destroy(set);
     return set2;
 }
 
 fa_set_t fa_set_dset(fa_ptr_t x, fa_set_t set)
 {
-    set_t set2 = fa_set_set(x, set);
+    fa_set_t set2 = fa_set_set(x, set);
     fa_set_destroy(set);
     return set2;
 }
 
 fa_set_t fa_set_dremove(fa_ptr_t x, fa_set_t set)
 {
-    set_t set2 = fa_set_remove(x, set);
+    fa_set_t set2 = fa_set_remove(x, set);
     fa_set_destroy(set);
     return set2;
 }
@@ -190,7 +190,7 @@ bool fa_set_is_proper_subset_of(fa_set_t a, fa_set_t b)
 
 fa_set_t fa_set_sum(fa_set_t a, fa_set_t b)
 {
-    set_t c = fa_set_copy(a);
+    fa_set_t c = fa_set_copy(a);
     fa_for_each(x, base_to_list(b->elems)) {
         c = fa_set_dadd(x, c);
     }
@@ -199,7 +199,7 @@ fa_set_t fa_set_sum(fa_set_t a, fa_set_t b)
 
 fa_set_t fa_set_intersection(fa_set_t a, fa_set_t b)
 {
-    set_t c = fa_set_empty();
+    fa_set_t c = fa_set_empty();
     fa_for_each(x, base_to_list(a->elems)) {
         if (fa_set_has(x, b)) {
             c = fa_set_dadd(x, c);
@@ -210,7 +210,7 @@ fa_set_t fa_set_intersection(fa_set_t a, fa_set_t b)
 
 fa_set_t fa_set_difference(fa_set_t a, fa_set_t b)
 {
-    set_t c = fa_set_copy(a);
+    fa_set_t c = fa_set_copy(a);
     fa_for_each(x, base_to_list(b->elems)) {
         c = fa_set_dremove(x, c);
     }
@@ -219,7 +219,7 @@ fa_set_t fa_set_difference(fa_set_t a, fa_set_t b)
 
 fa_set_t fa_set_product(fa_set_t a, fa_set_t b)
 {
-    set_t c = fa_set_empty();
+    fa_set_t c = fa_set_empty();
     fa_for_each(x, base_to_list(a->elems)) {
         fa_for_each(y, base_to_list(b->elems)) {
             c = fa_set_dadd(fa_pair_create(x, y), c);
@@ -231,9 +231,9 @@ fa_set_t fa_set_product(fa_set_t a, fa_set_t b)
 
 // --------------------------------------------------------------------------------
 
-set_t fa_set(int count, ...)
+fa_set_t fa_set(int count, ...)
 {
-    set_t s = fa_set_empty();
+    fa_set_t s = fa_set_empty();
     va_list args;
 
     va_start(args, count);
@@ -246,7 +246,7 @@ set_t fa_set(int count, ...)
     return s;
 }
 
-list_t fa_set_to_list(set_t set)
+fa_list_t fa_set_to_list(fa_set_t set)
 {
     return set->elems;
 }
@@ -255,29 +255,29 @@ list_t fa_set_to_list(set_t set)
 
 bool set_equal(fa_ptr_t a, fa_ptr_t b)
 {
-    set_t c = (set_t) a;
-    set_t d = (set_t) b;
+    fa_set_t c = (fa_set_t) a;
+    fa_set_t d = (fa_set_t) b;
     return fa_set_is_subset_of(c, d) && (fa_set_size(c) == fa_set_size(d));
 }
 
 bool set_less_than(fa_ptr_t a, fa_ptr_t b)
 {
-    set_t c = (set_t) a;
-    set_t d = (set_t) b;
+    fa_set_t c = (fa_set_t) a;
+    fa_set_t d = (fa_set_t) b;
     return fa_set_is_subset_of(c, d);
 }
 
 bool set_greater_than(fa_ptr_t a, fa_ptr_t b)
 {
-    set_t c = (set_t) a;
-    set_t d = (set_t) b;
+    fa_set_t c = (fa_set_t) a;
+    fa_set_t d = (fa_set_t) b;
     return !fa_set_is_subset_of(c, d);
 }
 
 fa_string_t set_show(fa_ptr_t x)
 {
-    set_t set = (set_t) x;
-    string_t s  = fa_string("{");
+    fa_set_t set = (fa_set_t) x;
+    fa_string_t s  = fa_string("{");
 
     fa_for_each_last(value, base_to_list(set->elems), last) {
         s = fa_string_dappend(s, fa_string_show(value));
@@ -300,7 +300,7 @@ void set_destroy(fa_ptr_t a)
     fa_set_destroy(a);
 }
 
-type_repr_t set_get_type(fa_ptr_t a)
+fa_dynamic_type_repr_t set_get_type(fa_ptr_t a)
 {
     return set_type_repr;
 }

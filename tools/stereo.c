@@ -17,7 +17,7 @@
     { "l", "latency",         "Latency",          fa_option_floating, "0.040" },
   };
 
-void play_impulses(map_t opts)
+void play_impulses(fa_map_t opts)
 {
   const int  duration        = fa_map_get_int32(fa_string("duration"),          opts);
   const int  frequency       = fa_map_get_int32(fa_string("frequency"),         opts);
@@ -27,7 +27,7 @@ void play_impulses(map_t opts)
   const int  vector_size     = fa_map_get_int32(fa_string("vector-size"),       opts);
   const double latency       = fa_map_get_double(fa_string("latency"),      opts);
 
-  signal_t /*train, */left, right;
+  fa_signal_t /*train, */left, right;
 
   // train  = fa_multiply(fa_constant(1), fa_signal_impulses(44100 / frequency));
   left   = fa_signal_delay(0,                           fa_signal_impulses(44100 / frequency));

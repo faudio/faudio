@@ -28,7 +28,7 @@ fa_string_t fa_string_from_native(void *input)
     CFStringRef cfRef = input;
     CFIndex size;
     char *cstr;
-    string_t str;
+    fa_string_t str;
 
     if ((cstr = (char *) CFStringGetCStringPtr(cfRef, kCFStringEncodingUTF8))) {
         return fa_string_from_utf8(cstr);

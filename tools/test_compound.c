@@ -138,8 +138,8 @@ void run_midi()
 
     // {
     //     float h = 99;
-    //     time_t half       = fa_milliseconds(h*2);
-    //     time_t interv     = fa_milliseconds(h);
+    //     fa_time_t half       = fa_milliseconds(h*2);
+    //     fa_time_t interv     = fa_milliseconds(h);
     //     fa_action_t note  = fa_action_send(fa_string("midi"), fa_midi_message_create_simple(0x99, 60, 90));
     //     fa_action_t notes = fa_action_repeat(interv, note);
     //     fa_action_t off   = fa_action_send(fa_string("midi"), fa_midi_message_create_simple(0x99, 61, 90));

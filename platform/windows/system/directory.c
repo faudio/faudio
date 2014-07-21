@@ -44,7 +44,7 @@ fa_string_t fa_system_directory_current()
     return string(path);
 }
 
-void fa_system_directory_create(string_t path)
+void fa_system_directory_create(fa_string_t path)
 {
     /*
         Creates a directory with default permissions.

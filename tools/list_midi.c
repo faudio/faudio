@@ -16,7 +16,7 @@
         Output:         false
 
  */
-void print_device(midi_device_t x)
+void print_device(fa_midi_device_t x)
 {
     fa_print("Name: %s\n", fa_string_to_string(fa_midi_name(x)));
     fa_print("Host: %s\n", fa_string_to_string(fa_midi_host_name(x)));
@@ -25,7 +25,7 @@ void print_device(midi_device_t x)
     fa_print_ln(fa_string(""));
 }
 
-fa_midi_session_t print_midi_devices(fa_ptr_t _, midi_session_t session)
+fa_midi_session_t print_midi_devices(fa_ptr_t _, fa_midi_session_t session)
 {
     fa_for_each(x, fa_midi_all(session)) {
         if (!fa_check(x)) {

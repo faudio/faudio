@@ -9,12 +9,12 @@
 
  */
 
-typedef fa_atomic_ring_buffer_t ring_buffer_t;
+typedef fa_atomic_ring_buffer_t ring_fa_buffer_t;
 #define ring_buffer(size) fa_atomic_ring_buffer_create(size)
 
 #define BUFFER_SIZE_MILLIS 2000
 
-static ring_buffer_t BUFFER;
+static ring_fa_buffer_t BUFFER;
 
 size_t _write(char *ptr, size_t size, size_t nmemb, void *userdata)
 {
@@ -64,7 +64,7 @@ void request_audio()
     }
 }
 
-list_t just(fa_ptr_t x, list_t xs)
+fa_list_t just(fa_ptr_t x, fa_list_t xs)
 {
     return x;
 }
@@ -84,9 +84,9 @@ int main(int argc, char const *argv[])
 
         BUFFER = ring_buffer((8L * 44100L * BUFFER_SIZE_MILLIS) / 1000L);
 
-        // signal_t left = fa_multiply(fa_signal_play_stream(BUFFER), constant(0.8));
-        signal_t left = fa_multiply(fa_signal_random(), constant(0.0));
-        signal_t right = fa_multiply(fa_signal_random(), constant(0.0));
+        // fa_signal_t left = fa_multiply(fa_signal_play_stream(BUFFER), constant(0.8));
+        fa_signal_t left = fa_multiply(fa_signal_random(), constant(0.0));
+        fa_signal_t right = fa_multiply(fa_signal_random(), constant(0.0));
 
         fa_with_session_(session) {
             fa_with_default_devices(input, output, session) {

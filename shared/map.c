@@ -33,7 +33,7 @@ typedef struct entry *entry_t;
 
 struct _fa_map_t {
     fa_impl_t          impl;       //  Interface dispatcher
-    set_t           entries;    //  Set of entries
+    fa_set_t           entries;    //  Set of entries
 };
 
 
@@ -54,21 +54,21 @@ entry_t copy_entry(entry_t entry)
     return new_entry(entry->key, entry->value);
 }
 
-void delete_entry(pair_t entry)
+void delete_entry(fa_pair_t entry)
 {
     fa_delete(entry);
 }
 
-inline static map_t new_map(set_t entries)
+inline static fa_map_t new_map(fa_set_t entries)
 {
     fa_ptr_t map_impl(fa_id_t interface);
-    map_t map       = fa_new(map);
+    fa_map_t map       = fa_new(map);
     map->impl       = &map_impl;
     map->entries    = entries;
     return map;
 }
 
-inline static void delete_map(map_t map)
+inline static void delete_map(fa_map_t map)
 {
     fa_delete(map->entries);
     fa_delete(map);
@@ -102,21 +102,21 @@ fa_map_t fa_map_remove(fa_map_key_t key, fa_map_t map)
 
 fa_map_t fa_map_dadd(fa_map_key_t key, fa_ptr_t value, fa_map_t map)
 {
-    map_t map2 = fa_map_add(key, value, map);
+    fa_map_t map2 = fa_map_add(key, value, map);
     fa_map_destroy(map);
     return map2;
 }
 
 fa_map_t fa_map_dset(fa_map_key_t key, fa_ptr_t value, fa_map_t map)
 {
-    map_t map2 = fa_map_set(key, value, map);
+    fa_map_t map2 = fa_map_set(key, value, map);
     fa_map_destroy(map);
     return map2;
 }
 
 fa_map_t fa_map_dremove(fa_map_key_t key, fa_map_t map)
 {
-    map_t map2 = fa_map_remove(key, map);
+    fa_map_t map2 = fa_map_remove(key, map);
     fa_map_destroy(map);
     return map2;
 }
@@ -202,7 +202,7 @@ bool fa_map_is_proper_submap_of(fa_map_t a, fa_map_t b)
 
 fa_map_t fa_map_map(fa_unary_t func, fa_ptr_t data, fa_map_t map)
 {
-    map_t result = fa_map_empty();
+    fa_map_t result = fa_map_empty();
     fa_map_for_each(key_val, map) {
         fa_ptr_t key = fa_pair_first(key_val);
         fa_ptr_t val = fa_pair_second(key_val);
@@ -232,12 +232,12 @@ fa_map_t fa_map_difference(fa_map_t a, fa_map_t b)
 
 /** Create a set from the given elements.
  */
-map_t fa_map(int count, ...)
+fa_map_t fa_map(int count, ...)
 {
     assert((count % 2 == 0)
            && "Map literal must have an even number of elements");
 
-    map_t s = fa_map_empty();
+    fa_map_t s = fa_map_empty();
     va_list args;
 
     va_start(args, count);
@@ -252,7 +252,7 @@ map_t fa_map(int count, ...)
     return s;
 }
 
-pair_t entry_to_pair(fa_ptr_t data, entry_t entry)
+fa_pair_t entry_to_pair(fa_ptr_t data, entry_t entry)
 {
     return fa_pair_create(entry->key, entry->value);
 }
@@ -290,7 +290,7 @@ bool entry_greater_than(fa_ptr_t a, fa_ptr_t b)
 fa_string_t entry_show(fa_ptr_t a)
 {
     entry_t b = (entry_t) a;
-    string_t s = fa_string("<Entry (");
+    fa_string_t s = fa_string("<Entry (");
     s = fa_string_dappend(s, fa_string_show(b->key));
     s = fa_string_dappend(s, fa_string(","));
 
@@ -348,29 +348,29 @@ fa_ptr_t entry_impl(fa_id_t interface)
 
 bool map_equal(fa_ptr_t a, fa_ptr_t b)
 {
-    map_t c = (map_t) a;
-    map_t d = (map_t) b;
+    fa_map_t c = (fa_map_t) a;
+    fa_map_t d = (fa_map_t) b;
     return fa_equal(c->entries, d->entries);
 }
 
 bool map_less_than(fa_ptr_t a, fa_ptr_t b)
 {
-    map_t c = (map_t) a;
-    map_t d = (map_t) b;
+    fa_map_t c = (fa_map_t) a;
+    fa_map_t d = (fa_map_t) b;
     return fa_less_than(c->entries, d->entries);
 }
 
 bool map_greater_than(fa_ptr_t a, fa_ptr_t b)
 {
-    map_t c = (map_t) a;
-    map_t d = (map_t) b;
+    fa_map_t c = (fa_map_t) a;
+    fa_map_t d = (fa_map_t) b;
     return fa_greater_than(c->entries, d->entries);
 }
 
 fa_string_t map_show(fa_ptr_t x)
 {
-    map_t map = (map_t) x;
-    string_t s  = fa_string("{");
+    fa_map_t map = (fa_map_t) x;
+    fa_string_t s  = fa_string("{");
 
     fa_for_each_last(x, fa_set_to_list(map->entries), last) {
         entry_t entry = x;
@@ -396,7 +396,7 @@ void map_destroy(fa_ptr_t a)
     fa_map_destroy(a);
 }
 
-type_repr_t map_get_type(fa_ptr_t a)
+fa_dynamic_type_repr_t map_get_type(fa_ptr_t a)
 {
     return map_type_repr;
 }

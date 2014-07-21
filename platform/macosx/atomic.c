@@ -23,7 +23,7 @@ fa_ptr_t atomic_impl(fa_id_t interface);
 
 fa_atomic_t fa_atomic_create()
 {
-    atomic_t a = fa_new(atomic);
+    fa_atomic_t a = fa_new(atomic);
 
     a->impl  = &atomic_impl;
     a->value = NULL;
@@ -33,7 +33,7 @@ fa_atomic_t fa_atomic_create()
 
 fa_atomic_t fa_atomic_copy(fa_atomic_t a)
 {
-    atomic_t b = fa_atomic_create();
+    fa_atomic_t b = fa_atomic_create();
     b->value = a->value;
     return b;
 }
@@ -120,7 +120,7 @@ bool atomic_greater_than(fa_ptr_t a, fa_ptr_t b)
 fa_string_t atomic_show(fa_ptr_t v)
 {
     fa_atomic_t a = (fa_atomic_t) v;
-    string_t s = fa_string("<Atomic");
+    fa_string_t s = fa_string("<Atomic");
     s = fa_string_dappend(s, fa_string_format_integral(" %02x", (long) a->value));
     s = fa_string_dappend(s, fa_string(">"));
     return s;

@@ -48,7 +48,7 @@ fa_ptr_t receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
     return x;
 }
 
-pair_t fa_signal_clicks()
+fa_pair_t fa_signal_clicks()
 {
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
     proc->before  = before_;
@@ -68,7 +68,7 @@ void run_clicks()
         fa_audio_session_t s = fa_audio_begin_session();
         fa_audio_device_t i  = fa_audio_default_input(s);
         fa_audio_device_t o  = fa_audio_default_output(s);
-        list_t out           = fa_pair_to_list(fa_signal_clicks());
+        fa_list_t out           = fa_pair_to_list(fa_signal_clicks());
 
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
 

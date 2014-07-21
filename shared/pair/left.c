@@ -18,18 +18,18 @@ struct _fa_pair_left_t {
 
 // -----------------------------------------------------------------------------
 
-pair_left_t new_pair_left(fa_ptr_t first, fa_ptr_t second)
+fa_pair_left_t new_pair_left(fa_ptr_t first, fa_ptr_t second)
 {
     fa_ptr_t pair_left_impl(fa_id_t interface);
 
-    pair_left_t pair_left = fa_new(pair_left);
+    fa_pair_left_t pair_left = fa_new(pair_left);
     pair_left->impl = &pair_left_impl;
     pair_left->values[0]  = first;
     pair_left->values[1]  = second;
     return pair_left;
 }
 
-void delete_pair_left(pair_left_t p)
+void delete_pair_left(fa_pair_left_t p)
 {
     fa_delete(p);
 }
@@ -90,29 +90,29 @@ fa_list_t fa_pair_left_to_list(fa_pair_left_t pair_left)
 
 bool pair_left_equal(fa_ptr_t a, fa_ptr_t b)
 {
-    pair_left_t c = (pair_left_t) a;
-    pair_left_t d = (pair_left_t) b;
+    fa_pair_left_t c = (fa_pair_left_t) a;
+    fa_pair_left_t d = (fa_pair_left_t) b;
     return fa_equal(c->values[0], d->values[0]);
 }
 
 bool pair_left_less_than(fa_ptr_t a, fa_ptr_t b)
 {
-    pair_left_t c = (pair_left_t) a;
-    pair_left_t d = (pair_left_t) b;
+    fa_pair_left_t c = (fa_pair_left_t) a;
+    fa_pair_left_t d = (fa_pair_left_t) b;
     return fa_less_than(c->values[0], d->values[0]);
 }
 
 bool pair_left_greater_than(fa_ptr_t a, fa_ptr_t b)
 {
-    pair_left_t c = (pair_left_t) a;
-    pair_left_t d = (pair_left_t) b;
+    fa_pair_left_t c = (fa_pair_left_t) a;
+    fa_pair_left_t d = (fa_pair_left_t) b;
     return fa_greater_than(c->values[0], d->values[0]);
 }
 
 fa_string_t pair_left_show(fa_ptr_t a)
 {
-    pair_left_t b = (pair_left_t) a;
-    string_t s = fa_string("~(");
+    fa_pair_left_t b = (fa_pair_left_t) a;
+    fa_string_t s = fa_string("~(");
     s = fa_string_dappend(s, fa_string_show(b->values[0]));
     s = fa_string_dappend(s, fa_string(","));
     s = fa_string_dappend(s, fa_string_show(b->values[1]));

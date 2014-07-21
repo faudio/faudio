@@ -81,11 +81,11 @@ struct _fa_midi_session_t {
     fa_impl_t                          impl;               // Dispatcher
     native_session_t                native;
 
-    list_t                          devices;            // Cached device list
+    fa_list_t                          devices;            // Cached device list
     device_t                        def_input;          // Default devices, both possibly null
     device_t                        def_output;         // If present, these are also in the above list
 
-    list_t                          streams;            // All streams started on this sessiuon (list of stream_t)
+    fa_list_t                          streams;            // All streams started on this sessiuon (list of stream_t)
 
     struct {
         int                         count;
@@ -110,7 +110,7 @@ struct _fa_midi_device_t {
     session_t                       session;            // Enclosing session
 
     bool                            input, output;      // Cached capabilities
-    string_t                        name, host;         // Cached names
+    fa_string_t                        name, host;         // Cached names
 };
 
 struct _fa_midi_stream_t {
@@ -120,9 +120,9 @@ struct _fa_midi_stream_t {
     device_t                        device;             // Enclosing session
 
     fa_clock_t                      clock;              // Clock used for scheduler and incoming events
-    atomic_queue_t                  in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
-    atomic_queue_t                  short_controls;     // Controls to run directly (optimization)
-    priority_queue_t                controls;           // Scheduled controls (Time, (Channel, Ptr))
+    fa_atomic_queue_t                  in_controls;        // Controls for scheduling, (AtomicQueue (Time, (Channel, Ptr)))
+    fa_atomic_queue_t                  short_controls;     // Controls to run directly (optimization)
+    fa_priority_queue_t                controls;           // Scheduled controls (Time, (Channel, Ptr))
     int                             timer_id;           // Used to unregister timer callbacks
 
     bool                            in_sysex;           // Currently receiving a SysEx message
@@ -146,7 +146,7 @@ struct _fa_midi_stream_t {
     The mutex is needed to prevent races in start/stop and assure that at most one session
     is active at a time.
  */
-static mutex_t                      gMidiMutex;
+static fa_thread_mutex_t                      gMidiMutex;
 
 static bool                         gMidiActive;
 static bool                         gMidiTerminating;
@@ -156,10 +156,10 @@ static session_t                    gMidiCurrentSession;
 static fa_thread_t                  gMidiThread;
 static CFRunLoopRef                 gMidiThreadRunLoop;
 
-fa_error_t midi_device_error(string_t msg);
-fa_error_t midi_device_error_with(string_t msg, native_fa_error_t error);
-fa_error_t midi_error(string_t msg, native_fa_error_t code);
-void midi_device_fatal(string_t msg, native_fa_error_t code);
+fa_error_t midi_device_error(fa_string_t msg);
+fa_error_t midi_device_error_with(fa_string_t msg, native_fa_error_t error);
+fa_error_t midi_error(fa_string_t msg, native_fa_error_t code);
+void midi_device_fatal(fa_string_t msg, native_fa_error_t code);
 fa_ptr_t midi_session_impl(fa_id_t interface);
 fa_ptr_t midi_device_impl(fa_id_t interface);
 fa_ptr_t midi_stream_impl(fa_id_t interface);
@@ -193,7 +193,7 @@ inline static session_t new_session()
  */
 inline static void session_init_devices(session_t session)
 {
-    list_t         devices = fa_empty();
+    fa_list_t         devices = fa_empty();
     device_t       input = NULL, output = NULL;
 
     /* Add outputs first, then reverse lists (as we push at front).
@@ -728,7 +728,7 @@ void midi_fa_inform_opening(device_t device)
 }
 
 
-void forward_message_to_callbacks(midi_stream_t stream, time_t time, fa_ptr_t msg)
+void forward_fa_message_to_callbacks(fa_midi_stream_t stream, fa_time_t time, fa_ptr_t msg)
 {
     int n = stream->callbacks.count;
 
@@ -754,7 +754,7 @@ void push_sysex_byte(stream_t stream, uint8_t x)
     stream->sysex_in_buffer.data[stream->sysex_in_buffer.count++] = x;
 }
 
-buffer_t copy_sysex_to_new_buffer(stream_t stream)
+fa_buffer_t copy_sysex_to_new_buffer(stream_t stream)
 {
     // TODO do not double-allocate
     return fa_copy(fa_buffer_wrap((void *) stream->sysex_in_buffer.data,
@@ -773,7 +773,7 @@ void message_listener(const MIDIPacketList *packetList, fa_ptr_t x, fa_ptr_t _)
     reset_sysex_buffer(stream);
 
     // TODO optinally get time from time stamp
-    time_t time = fa_clock_time(stream->clock);
+    fa_time_t time = fa_clock_time(stream->clock);
 
     for (int i = 0; i < packetList->numPackets; ++i) {
         const MIDIPacket *packet = &(packetList->packet[i]);
@@ -805,8 +805,8 @@ void message_listener(const MIDIPacketList *packetList, fa_ptr_t x, fa_ptr_t _)
 
                 push_sysex_byte(stream, packet->data[j]);
                 {
-                    midi_message_t msg = fa_midi_message_create_sysex(copy_sysex_to_new_buffer(stream));
-                    forward_message_to_callbacks(stream, fa_copy(time), msg);
+                    fa_midi_message_t msg = fa_midi_message_create_sysex(copy_sysex_to_new_buffer(stream));
+                    forward_fa_message_to_callbacks(stream, fa_copy(time), msg);
                     reset_sysex_buffer(stream);
                 }
                 state = init;
@@ -828,7 +828,7 @@ void message_listener(const MIDIPacketList *packetList, fa_ptr_t x, fa_ptr_t _)
 
                 case await_data2:
                     data2 = packet->data[j];
-                    forward_message_to_callbacks(stream, fa_copy(time), fa_midi_message(status, data1, data2));
+                    forward_fa_message_to_callbacks(stream, fa_copy(time), fa_midi_message(status, data1, data2));
                     state = init;
                     continue;
 
@@ -847,7 +847,7 @@ void message_listener(const MIDIPacketList *packetList, fa_ptr_t x, fa_ptr_t _)
 
 
     // // TODO optionally use CoreMIDI time
-    // time_t time = fa_clock_time(stream->clock);
+    // fa_time_t time = fa_clock_time(stream->clock);
     //
     // // Started receiving a SysEx
     // if (packet->data[0] == 0xf0) {
@@ -855,15 +855,15 @@ void message_listener(const MIDIPacketList *packetList, fa_ptr_t x, fa_ptr_t _)
     // }
     //
     // if (stream->in_sysex) {
-    //     midi_message_t msg;
-    //     buffer_t b = fa_copy(fa_buffer_wrap((void*) packet->data, packet->length, NULL, NULL));
+    //     fa_midi_message_t msg;
+    //     fa_buffer_t b = fa_copy(fa_buffer_wrap((void*) packet->data, packet->length, NULL, NULL));
     //     msg = fa_midi_message_create_sysex(b);
-    //     forward_message_to_callbacks(stream, time, msg);
+    //     forward_fa_message_to_callbacks(stream, time, msg);
     //
     // } else {
-    //     midi_message_t msg;
+    //     fa_midi_message_t msg;
     //     msg = fa_midi_message(packet->data[0], packet->data[1], packet->data[2]);
-    //     forward_message_to_callbacks(stream, time, msg);
+    //     forward_fa_message_to_callbacks(stream, time, msg);
     // }
     //
     // // Finished receiving a SysEx
@@ -888,7 +888,7 @@ fa_ptr_t forward_action_to_midi(fa_ptr_t x, fa_ptr_t action)
     // fa_print("%s\n", action);
 
     if (fa_action_is_send(action)) {
-        // string_t name   = fa_action_send_name(action);
+        // fa_string_t name   = fa_action_send_name(action);
         fa_ptr_t message     = fa_action_send_value(action);
 
         if (fa_midi_message_is_simple(message)) {
@@ -921,7 +921,7 @@ fa_ptr_t forward_action_to_midi(fa_ptr_t x, fa_ptr_t action)
             }
         } else {
             // fa_warn(fa_string("Could not send SysEx"));
-            buffer_t data = fa_midi_message_sysex_data(message);
+            fa_buffer_t data = fa_midi_message_sysex_data(message);
 
             if (fa_buffer_size(data) > 256) {
                 fa_warn(fa_string("Too large SysEx to send, ignoring!"));
@@ -974,7 +974,7 @@ fa_ptr_t midi_stream_callback(fa_ptr_t x)
         fa_priority_queue_insert(fa_pair_left_from_pair(val), stream->controls);
     }
 
-    time_t   now    = fa_clock_time(stream->clock);
+    fa_time_t   now    = fa_clock_time(stream->clock);
     run_actions(stream->controls,
                 now,
                 forward_action_to_midi,
@@ -1058,7 +1058,7 @@ void fa_midi_schedule(fa_time_t        time,
                       fa_action_t      action,
                       fa_midi_stream_t stream)
 {
-    pair_left_t pair = fa_pair_left_create(time, action);
+    fa_pair_left_t pair = fa_pair_left_create(time, action);
     // Pass to scheduler
     fa_atomic_queue_write(stream->in_controls, pair);
 }
@@ -1072,7 +1072,7 @@ void fa_midi_schedule_relative(fa_time_t        time,
         // TODO is this still needed
         fa_atomic_queue_write(stream->short_controls, action);
     } else {
-        time_t now = fa_clock_time(stream->clock);
+        fa_time_t now = fa_clock_time(stream->clock);
         fa_midi_schedule(fa_add(now, time), action, stream);
     }
 }
@@ -1094,7 +1094,7 @@ void fa_midi_set_clock(fa_midi_stream_t stream, fa_clock_t clock)
 
 fa_string_t midi_session_show(fa_ptr_t a)
 {
-    string_t str = fa_string("<MidiSession ");
+    fa_string_t str = fa_string("<MidiSession ");
     str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) a));
     str = fa_string_dappend(str, fa_string(">"));
     return str;
@@ -1139,7 +1139,7 @@ fa_string_t midi_device_show(fa_ptr_t a)
 {
     device_t device = (device_t) a;
 
-    string_t str = fa_string("<MidiDevice ");
+    fa_string_t str = fa_string("<MidiDevice ");
     str = fa_string_dappend(str, fa_midi_host_name(device));
     str = fa_string_dappend(str, fa_string(" "));
     str = fa_string_dappend(str, fa_midi_name(device));
@@ -1171,7 +1171,7 @@ fa_ptr_t midi_device_impl(fa_id_t interface)
 
 fa_string_t midi_stream_show(fa_ptr_t a)
 {
-    string_t str = fa_string("<MidiStream ");
+    fa_string_t str = fa_string("<MidiStream ");
     str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) a));
     str = fa_string_dappend(str, fa_string(">"));
     return str;
@@ -1208,14 +1208,14 @@ fa_ptr_t midi_stream_impl(fa_id_t interface)
 
 void fa_log_error_from(fa_string_t msg, fa_string_t origin);
 
-fa_error_t midi_device_error(string_t msg)
+fa_error_t midi_device_error(fa_string_t msg)
 {
     return fa_error_create_simple(error,
                                   msg,
                                   fa_string("Doremir.Device.Midi"));
 }
 
-fa_error_t midi_device_error_with(string_t msg, native_fa_error_t code)
+fa_error_t midi_device_error_with(fa_string_t msg, native_fa_error_t code)
 {
     return fa_error_create_simple(error,
                                   fa_string_dappend(msg, fa_string_format_integral(" (error code %d)", code)),
@@ -1223,21 +1223,21 @@ fa_error_t midi_device_error_with(string_t msg, native_fa_error_t code)
 }
 
 // TODO consolidate
-string_t from_os_status2(OSStatus err)
+fa_string_t from_os_status2(OSStatus err)
 {
     return fa_string((char *) GetMacOSStatusErrorString(err));
 }
 
-fa_error_t midi_error(string_t msg, native_fa_error_t code)
+fa_error_t midi_error(fa_string_t msg, native_fa_error_t code)
 {
-    string_t msg2 = from_os_status2(code);
+    fa_string_t msg2 = from_os_status2(code);
     return fa_error_create_simple(error,
                                   fa_string_dappend(msg, msg2),
                                   fa_string("Doremir.Device.Midi"));
 }
 
 
-void midi_device_fatal(string_t msg, native_fa_error_t code)
+void midi_device_fatal(fa_string_t msg, native_fa_error_t code)
 {
     fa_log_error_from(
         fa_string_dappend(msg, fa_string_format_integral(" (error code %d)", code)),

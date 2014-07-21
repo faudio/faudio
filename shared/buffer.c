@@ -50,7 +50,7 @@ fa_buffer_t fa_buffer_create(size_t size)
 {
     fa_ptr_t buffer_impl(fa_id_t interface);
 
-    buffer_t buffer = fa_new(buffer);
+    fa_buffer_t buffer = fa_new(buffer);
 
     buffer->impl = &buffer_impl;
     buffer->size = size;
@@ -82,7 +82,7 @@ fa_buffer_t fa_buffer_wrap(fa_ptr_t   pointer,
 {
     fa_ptr_t buffer_impl(fa_id_t interface);
 
-    buffer_t b = fa_new(buffer);
+    fa_buffer_t b = fa_new(buffer);
     b->impl = &buffer_impl;
     b->size = size;
     b->data = pointer;
@@ -105,7 +105,7 @@ fa_buffer_t fa_buffer_resize(size_t size, fa_buffer_t buffer)
 {
     fa_ptr_t buffer_impl(fa_id_t interface);
 
-    buffer_t copy           = fa_new(buffer);
+    fa_buffer_t copy           = fa_new(buffer);
     copy->impl              = &buffer_impl;
     copy->size              = size;
     copy->data              = fa_malloc(size);
@@ -131,7 +131,7 @@ fa_buffer_t fa_buffer_dresize(size_t size, fa_buffer_t buffer)
 {
     // TODO could use realloc and be much more efficient
 
-    buffer_t buffer2 = fa_buffer_resize(size, buffer);
+    fa_buffer_t buffer2 = fa_buffer_resize(size, buffer);
     fa_destroy(buffer);
     return buffer2;
 }
@@ -154,12 +154,12 @@ size_t fa_buffer_size(fa_buffer_t buffer)
     return buffer->size;
 }
 
-fa_ptr_t fa_buffer_get_meta(fa_buffer_t buffer, string_t name)
+fa_ptr_t fa_buffer_get_meta(fa_buffer_t buffer, fa_string_t name)
 {
     return fa_map_get(name, buffer->meta);
 }
 
-void fa_buffer_set_meta(fa_buffer_t buffer, string_t name, fa_ptr_t value)
+void fa_buffer_set_meta(fa_buffer_t buffer, fa_string_t name, fa_ptr_t value)
 {
     buffer->meta = fa_map_dset(name, value, buffer->meta);
 }
@@ -223,7 +223,7 @@ typedef fa_string_t path_t;
 fa_buffer_t fa_buffer_read_audio(fa_string_t path)
 {
     int             channels;
-    buffer_t        buffer;
+    fa_buffer_t        buffer;
 
     SNDFILE         *file;
     SF_INFO         info;
@@ -236,7 +236,7 @@ fa_buffer_t fa_buffer_read_audio(fa_string_t path)
         if (sf_error(file)) {
             char err[100];
             snprintf(err, 100, "Could not read audio file '%s'", cpath);
-            return (buffer_t) fa_error_create_simple(error, fa_string(err), fa_string("Doremir.Buffer"));
+            return (fa_buffer_t) fa_error_create_simple(error, fa_string(err), fa_string("Doremir.Buffer"));
         }
 
         fa_inform(fa_string_append(fa_string("Reading "), path));
@@ -274,7 +274,7 @@ fa_buffer_t fa_buffer_read_audio(fa_string_t path)
         }
 
         if (sf_close(file)) {
-            return (buffer_t) fa_error_create_simple(error, fa_string("Could not close"), fa_string("Doremir.Buffer"));
+            return (fa_buffer_t) fa_error_create_simple(error, fa_string("Could not close"), fa_string("Doremir.Buffer"));
         }
     }
 
@@ -303,18 +303,18 @@ fa_ptr_t fa_buffer_write_audio(fa_string_t  path,
     if (sf_error(file)) {
         char err[100];
         snprintf(err, 100, "Could not write audio file '%s' (%s)", cpath, sf_strerror(file));
-        return (pair_t) fa_error_create_simple(
+        return (fa_pair_t) fa_error_create_simple(
                    error, fa_string(err), fa_string("Doremir.Buffer"));
     }
 
     sf_count_t written = sf_write_double(file, ptr, size);
 
     if (written != size) {
-        return (pair_t) fa_error_create_simple(error, fa_string("To few bytes written"), fa_string("Doremir.Buffer"));
+        return (fa_pair_t) fa_error_create_simple(error, fa_string("To few bytes written"), fa_string("Doremir.Buffer"));
     }
 
     if (sf_close(file)) {
-        return (pair_t) fa_error_create_simple(error, fa_string("Could not close"), fa_string("Doremir.Buffer"));
+        return (fa_pair_t) fa_error_create_simple(error, fa_string("Could not close"), fa_string("Doremir.Buffer"));
     }
 
     return NULL;
@@ -370,10 +370,10 @@ void buffer_destroy(fa_ptr_t a)
 
 fa_string_t buffer_show(fa_ptr_t a)
 {
-    buffer_t buffer = (buffer_t) a;
+    fa_buffer_t buffer = (fa_buffer_t) a;
     bool     more   = fa_buffer_size(buffer) > kMaxPrintSize;
     size_t   length = more ? kMaxPrintSize : fa_buffer_size(buffer);
-    string_t str    = fa_string("<Buffer");
+    fa_string_t str    = fa_string("<Buffer");
 
     for (size_t i = 0; i < length; ++i) {
         str = fa_string_dappend(str, fa_string(" "));

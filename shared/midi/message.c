@@ -155,8 +155,8 @@ long fa_midi_message_simple_to_long(fa_midi_message_t midi_message)
 
 bool midi_message_equal(fa_ptr_t a, fa_ptr_t b)
 {
-    midi_message_t midi_message1 = (midi_message_t) a;
-    midi_message_t midi_message2 = (midi_message_t) b;
+    fa_midi_message_t midi_message1 = (fa_midi_message_t) a;
+    fa_midi_message_t midi_message2 = (fa_midi_message_t) b;
 
     if (midi_message1->is_sysex != midi_message2->is_sysex) {
         return false;
@@ -173,8 +173,8 @@ bool midi_message_equal(fa_ptr_t a, fa_ptr_t b)
 
 bool midi_message_less_than(fa_ptr_t a, fa_ptr_t b)
 {
-    midi_message_t midi_message1 = (midi_message_t) a;
-    midi_message_t midi_message2 = (midi_message_t) b;
+    fa_midi_message_t midi_message1 = (fa_midi_message_t) a;
+    fa_midi_message_t midi_message2 = (fa_midi_message_t) b;
 
     if (midi_message1->is_sysex != midi_message2->is_sysex) {
         return midi_message1->is_sysex;
@@ -189,8 +189,8 @@ bool midi_message_less_than(fa_ptr_t a, fa_ptr_t b)
 
 bool midi_message_greater_than(fa_ptr_t a, fa_ptr_t b)
 {
-    midi_message_t midi_message1 = (midi_message_t) a;
-    midi_message_t midi_message2 = (midi_message_t) b;
+    fa_midi_message_t midi_message1 = (fa_midi_message_t) a;
+    fa_midi_message_t midi_message2 = (fa_midi_message_t) b;
 
     if (midi_message1->is_sysex != midi_message2->is_sysex) {
         return midi_message2->is_sysex;
@@ -206,7 +206,7 @@ bool midi_message_greater_than(fa_ptr_t a, fa_ptr_t b)
 fa_string_t midi_message_show(fa_ptr_t a)
 {
     fa_midi_message_t midi_message = (fa_midi_message_t) a;
-    string_t s = fa_string("<Midi");
+    fa_string_t s = fa_string("<Midi");
 
     if (!midi_message->is_sysex) {
         s = fa_string_dappend(s, fa_string_format_integral(" %02x", midi_message->data.simple[0]));
@@ -232,7 +232,7 @@ void midi_message_destroy(fa_ptr_t a)
     fa_midi_message_destroy(a);
 }
 
-type_repr_t midi_message_get_type(fa_ptr_t a)
+fa_dynamic_type_repr_t midi_message_get_type(fa_ptr_t a)
 {
     return midi_message_type_repr;
 }

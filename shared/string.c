@@ -41,14 +41,14 @@ struct _fa_string_t {
 
 // --------------------------------------------------------------------------------
 
-fa_error_t string_error(string_t msg);
+fa_error_t string_error(fa_string_t msg);
 static void string_fatal(char *msg, int error);
 static fa_ptr_t string_impl(fa_id_t interface);
 
-string_t new_string(size_t size, uint16_t *data)
+fa_string_t new_string(size_t size, uint16_t *data)
 {
 
-    string_t str = fa_new(string);
+    fa_string_t str = fa_new(string);
 
     str->impl = &string_impl;
     str->size = size;
@@ -57,7 +57,7 @@ string_t new_string(size_t size, uint16_t *data)
     return str;
 }
 
-void delete_string(string_t str)
+void delete_string(fa_string_t str)
 {
     fa_delete(str);
 }
@@ -71,7 +71,7 @@ fa_string_t fa_string_empty()
 
 fa_string_t fa_string_single(fa_char16_t chr)
 {
-    string_t str = new_string(1, NULL);
+    fa_string_t str = new_string(1, NULL);
     str->data = fa_malloc(kStandardCodeSize);
     str->data[0] = chr;
 
@@ -80,7 +80,7 @@ fa_string_t fa_string_single(fa_char16_t chr)
 
 fa_string_t fa_string_repeat(int times, fa_char16_t chr)
 {
-    string_t s = fa_string("");
+    fa_string_t s = fa_string("");
 
     for (int i = 0; i < times; ++i) {
         fa_write_string(s, fa_string_single(chr));
@@ -91,7 +91,7 @@ fa_string_t fa_string_repeat(int times, fa_char16_t chr)
 
 fa_string_t fa_string_copy(fa_string_t str)
 {
-    string_t pst = new_string(str->size, NULL);
+    fa_string_t pst = new_string(str->size, NULL);
     pst->data = fa_malloc(str->size * kStandardCodeSize);
 
     memcpy(pst->data, str->data, str->size * kStandardCodeSize);
@@ -102,7 +102,7 @@ fa_string_t fa_string_copy(fa_string_t str)
 fa_string_t fa_string_append(fa_string_t str1,
                              fa_string_t str2)
 {
-    string_t cs = new_string(str1->size + str2->size, NULL);
+    fa_string_t cs = new_string(str1->size + str2->size, NULL);
     cs->data = fa_malloc(cs->size * kStandardCodeSize);
 
     memcpy(cs->data, str1->data, str1->size * kStandardCodeSize);
@@ -378,7 +378,7 @@ fa_string_t fa_string_from_mac_roman(fa_string_mac_roman_t cstr)
 fa_string_t fa_string_from_utf16(fa_string_utf16_t cstr)
 {
     size_t size = raw_size_16(cstr);
-    string_t as = new_string(size, fa_malloc(size * kStandardCodeSize));
+    fa_string_t as = new_string(size, fa_malloc(size * kStandardCodeSize));
     memcpy(cstr, as->data, as->size * kStandardCodeSize);
     return as;
 }
@@ -448,7 +448,7 @@ fa_ptr_t unjsonify(JSON_Value *a, bool *ok)
     case JSONArray: {
         JSON_Array *ar  = json_value_get_array(a);
         size_t sz       = json_array_get_count(ar);
-        list_t list     = fa_list_empty();
+        fa_list_t list     = fa_list_empty();
 
         for (size_t i = sz; i > 0; --i) {
             fa_ptr_t v = unjsonify(json_array_get_value(ar, i - 1), ok);
@@ -466,7 +466,7 @@ fa_ptr_t unjsonify(JSON_Value *a, bool *ok)
     case JSONObject: {
         JSON_Object *obj = json_value_get_object(a);
         size_t sz = json_object_get_count(obj);
-        map_t map = fa_map_empty();
+        fa_map_t map = fa_map_empty();
 
         for (size_t i = 0; i < sz; ++i) {
             char *name = (char *) json_object_get_name(obj, i);
@@ -534,9 +534,9 @@ bool fa_string_matches(fa_string_t expr, fa_string_t string)
 }
 
 
-string_t fa_string_join_map(fa_unary_t func, fa_ptr_t data, string_t string)
+fa_string_t fa_string_join_map(fa_unary_t func, fa_ptr_t data, fa_string_t string)
 {
-    string_t result = fa_string("");
+    fa_string_t result = fa_string("");
 
     for (int i = 0; i < string->size; ++i) {
         result = fa_string_dappend(result,
@@ -550,7 +550,7 @@ string_t fa_string_join_map(fa_unary_t func, fa_ptr_t data, string_t string)
 
 // --------------------------------------------------------------------------------
 
-inline static string_t escape_char(uint16_t c)
+inline static fa_string_t escape_char(uint16_t c)
 {
     switch (c) {
     case '"':
@@ -564,16 +564,16 @@ inline static string_t escape_char(uint16_t c)
     }
 }
 
-inline static string_t escape(string_t string)
+inline static fa_string_t escape(fa_string_t string)
 {
     return fa_string_join_map(apply1, escape_char, string);
 }
 
 static bool string_equal(fa_ptr_t as, fa_ptr_t bs)
 {
-    string_t cs, ds;
-    cs = (string_t) as;
-    ds = (string_t) bs;
+    fa_string_t cs, ds;
+    cs = (fa_string_t) as;
+    ds = (fa_string_t) bs;
 
     if (cs->size != ds->size) {
         return false;
@@ -595,9 +595,9 @@ static bool string_equal(fa_ptr_t as, fa_ptr_t bs)
 
 static bool string_less_than(fa_ptr_t as, fa_ptr_t bs)
 {
-    string_t cs, ds;
-    cs = (string_t) as;
-    ds = (string_t) bs;
+    fa_string_t cs, ds;
+    cs = (fa_string_t) as;
+    ds = (fa_string_t) bs;
 
     for (size_t i = 0;
             i < pred(size_min(cs->size, ds->size));
@@ -620,9 +620,9 @@ static bool string_less_than(fa_ptr_t as, fa_ptr_t bs)
 
 static bool string_greater_than(fa_ptr_t as, fa_ptr_t bs)
 {
-    string_t cs, ds;
-    cs = (string_t) as;
-    ds = (string_t) bs;
+    fa_string_t cs, ds;
+    cs = (fa_string_t) as;
+    ds = (fa_string_t) bs;
 
     for (size_t i = 0;
             i < pred(size_min(cs->size, ds->size));
@@ -646,7 +646,7 @@ static bool string_greater_than(fa_ptr_t as, fa_ptr_t bs)
 
 static fa_string_t string_show(fa_ptr_t a)
 {
-    string_t s = fa_string("");
+    fa_string_t s = fa_string("");
     s = fa_string_dappend(s, fa_string("\""));
     s = fa_string_dappend(s, escape(a));
     s = fa_string_dappend(s, fa_string("\""));
@@ -664,7 +664,7 @@ void string_destroy(fa_ptr_t a)
     fa_string_destroy(a);
 }
 
-type_repr_t string_get_type(fa_ptr_t a)
+fa_dynamic_type_repr_t string_get_type(fa_ptr_t a)
 {
     return string_type_repr;
 }
@@ -702,7 +702,7 @@ fa_ptr_t string_impl(fa_id_t interface)
     }
 }
 
-fa_error_t string_error(string_t msg)
+fa_error_t string_error(fa_string_t msg)
 {
     return fa_error_create_simple(error,
                                   msg,

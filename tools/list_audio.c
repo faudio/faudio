@@ -16,7 +16,7 @@
         Output:         0
 
  */
-void print_device(audio_device_t x)
+void print_device(fa_audio_device_t x)
 {
     fa_print("Name: %s\n", fa_audio_name(x));
     // fa_print("Name length: %d\n", fa_string_length(fa_audio_name(x)));
@@ -27,7 +27,7 @@ void print_device(audio_device_t x)
     fa_print_ln(fa_string(""));
 }
 
-fa_audio_session_t print_audio_devices(fa_ptr_t _, audio_session_t session)
+fa_audio_session_t print_audio_devices(fa_ptr_t _, fa_audio_session_t session)
 {
     fa_for_each(x, fa_audio_all(session)) {
         if (!fa_check(x)) {

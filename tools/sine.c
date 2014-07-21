@@ -28,7 +28,7 @@ fa_option_t option_declaration[] = {
   { "l", "latency",         "Latency",          fa_option_floating, "0.040" },
 };
 
-void run_sines(map_t opts)
+void run_sines(fa_map_t opts)
 {
   const int  duration        = fa_map_get_int32(fa_string("duration"),          opts);
   const int  frequency       = fa_map_get_int32(fa_string("frequency"),         opts);
@@ -38,7 +38,7 @@ void run_sines(map_t opts)
   const int  vector_size     = fa_map_get_int32(fa_string("vector-size"),       opts);
   const double latency       = fa_map_get_double(fa_string("latency"),      opts);
 
-  signal_t sines = fa_constant(0);
+  fa_signal_t sines = fa_constant(0);
 
   {
     double f = frequency;

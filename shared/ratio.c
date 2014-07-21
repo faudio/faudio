@@ -28,7 +28,7 @@ fa_ratio_t new_ratio()
 {
     fa_ptr_t ratio_impl(fa_id_t interface);
 
-    ratio_t p = fa_new(ratio);
+    fa_ratio_t p = fa_new(ratio);
     p->impl = &ratio_impl;
     return p;
 }
@@ -46,7 +46,7 @@ fa_ratio_t fa_ratio_create(num_t num, denom_t denom)
 {
     assert(denom != 0 && "Divide by zero.");
 
-    ratio_t p = new_ratio();
+    fa_ratio_t p = new_ratio();
     p->num   = num;
     p->denom = denom;
     normalize_mutable(p);
@@ -55,7 +55,7 @@ fa_ratio_t fa_ratio_create(num_t num, denom_t denom)
 
 fa_ratio_t fa_ratio_copy(fa_ratio_t p)
 {
-    ratio_t q = new_ratio();
+    fa_ratio_t q = new_ratio();
     q->num   = p->num;
     q->denom = p->denom;
     return q;
@@ -198,7 +198,7 @@ void normalize_mutable(fa_ratio_t x)
 
 fa_ratio_t fa_ratio_normalize(fa_ratio_t x)
 {
-    ratio_t y = fa_ratio_copy(x);
+    fa_ratio_t y = fa_ratio_copy(x);
     normalize_mutable(y);
     return y;
 }
@@ -234,8 +234,8 @@ void fa_ratio_to_mixed(fa_ratio_t x,
 
 bool ratio_equal(fa_ptr_t m, fa_ptr_t n)
 {
-    ratio_t x = (ratio_t) m;
-    ratio_t y = (ratio_t) n;
+    fa_ratio_t x = (fa_ratio_t) m;
+    fa_ratio_t y = (fa_ratio_t) n;
 
     num_t   a = x->num;
     denom_t b = x->denom;
@@ -247,8 +247,8 @@ bool ratio_equal(fa_ptr_t m, fa_ptr_t n)
 
 bool ratio_less_than(fa_ptr_t m, fa_ptr_t n)
 {
-    ratio_t x = (ratio_t) m;
-    ratio_t y = (ratio_t) n;
+    fa_ratio_t x = (fa_ratio_t) m;
+    fa_ratio_t y = (fa_ratio_t) n;
 
     num_t   a = x->num;
     denom_t b = x->denom;
@@ -260,8 +260,8 @@ bool ratio_less_than(fa_ptr_t m, fa_ptr_t n)
 
 bool ratio_greater_than(fa_ptr_t m, fa_ptr_t n)
 {
-    ratio_t x = (ratio_t) m;
-    ratio_t y = (ratio_t) n;
+    fa_ratio_t x = (fa_ratio_t) m;
+    fa_ratio_t y = (fa_ratio_t) n;
 
     num_t   a = x->num;
     denom_t b = x->denom;
@@ -298,9 +298,9 @@ fa_ptr_t ratio_absolute(fa_ptr_t a)
 
 fa_string_t ratio_show(fa_ptr_t a)
 {
-    // ratio_t b = fa_ratio_normalize(a);
-    ratio_t b = a;
-    string_t s = fa_string("");
+    // fa_ratio_t b = fa_ratio_normalize(a);
+    fa_ratio_t b = a;
+    fa_string_t s = fa_string("");
 
     s = fa_string_dappend(s, fa_string_show(i32(b->num)));
     s = fa_string_dappend(s, fa_string("/"));
@@ -320,7 +320,7 @@ void ratio_destroy(fa_ptr_t a)
     fa_ratio_destroy(a);
 }
 
-type_repr_t ratio_get_type(fa_ptr_t a)
+fa_dynamic_type_repr_t ratio_get_type(fa_ptr_t a)
 {
     return ratio_type_repr;
 }

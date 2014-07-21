@@ -17,8 +17,8 @@ typedef fa_error_interface_t error_interface_t;
 struct simple_error {
     fa_impl_t              impl;           //  Interface dispatcher
     fa_error_severity_t          severity;
-    string_t            message;
-    string_t            origin;
+    fa_string_t            message;
+    fa_string_t            origin;
 };
 
 typedef struct simple_error       *simple_fa_error_t;
@@ -95,9 +95,9 @@ void fa_error_log(fa_ptr_t context, fa_error_t error)
 fa_string_t fa_error_format(bool colored, fa_error_t a)
 {
     simple_fa_error_t simple = (simple_fa_error_t) a;
-    string_t str = fa_string("");
+    fa_string_t str = fa_string("");
 
-    string_t strs[12] = {
+    fa_string_t strs[12] = {
         fa_string("[INFO]    "),
         fa_string("[WARNING] "),
         fa_string("[ERROR]   "),
@@ -179,7 +179,7 @@ fa_string_t simple_error_origin(fa_ptr_t a)
 fa_string_t simple_error_show(fa_ptr_t a)
 {
     simple_fa_error_t simple = (simple_fa_error_t) a;
-    string_t result = fa_string("<");
+    fa_string_t result = fa_string("<");
 
     switch (simple->severity) {
     case info:

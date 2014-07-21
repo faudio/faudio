@@ -66,13 +66,13 @@ void fa_thread_terminate()
     main_thread_g = INVALID_HANDLE_VALUE;
 }
 
-inline static thread_t new_thread()
+inline static fa_thread_t new_thread()
 {
     fa_thread_t thread = fa_new(thread);
     thread->impl = &thread_impl;
     return thread;
 }
-inline static void delete_thread(thread_t thread)
+inline static void delete_thread(fa_thread_t thread)
 {
     fa_delete(thread);
 }
@@ -280,9 +280,9 @@ bool thread_greater_than(fa_ptr_t m, fa_ptr_t n)
 
 fa_string_t thread_show(fa_ptr_t a)
 {
-    thread_t x = (thread_t) a;
+    fa_thread_t x = (fa_thread_t) a;
 
-    string_t str = string("<Thread ");
+    fa_string_t str = string("<Thread ");
     str = string_dappend(str, fa_string_format_integral(" %p", (long) x->tId));
     str = string_dappend(str, string(">"));
     return str;
@@ -314,7 +314,7 @@ fa_ptr_t thread_impl(fa_id_t iface)
 
 fa_string_t mutex_show(fa_ptr_t a)
 {
-    string_t str = string("<Mutex ");
+    fa_string_t str = string("<Mutex ");
     str = string_dappend(str, fa_string_format_integral(" %p", (long) a));
     str = string_dappend(str, string(">"));
     return str;

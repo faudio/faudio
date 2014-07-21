@@ -64,20 +64,20 @@ fa_time_milliseconds_t fa_clock_milliseconds(fa_clock_t clock)
 
 // --------------------------------------------------------------------------------
 
-typedef struct standard_clock *standard_clock_t;
+typedef struct standard_clock *standard_fa_clock_t;
 struct standard_clock {
     fa_impl_t impl;
 };
 
-inline static standard_clock_t new_standard_clock()
+inline static standard_fa_clock_t new_standard_clock()
 {
     fa_ptr_t standard_clock_impl(fa_id_t iface);
-    standard_clock_t c = fa_new_struct(standard_clock);
+    standard_fa_clock_t c = fa_new_struct(standard_clock);
     c->impl = &standard_clock_impl;
     return c;
 }
 
-inline static void delete_standard_clock(standard_clock_t standard_clock)
+inline static void delete_standard_clock(standard_fa_clock_t standard_clock)
 {
     fa_delete(standard_clock);
 }
@@ -90,7 +90,7 @@ fa_clock_t fa_clock_standard()
 
 fa_string_t standard_clock_show(fa_ptr_t a)
 {
-    string_t str = string("<StandardClock ");
+    fa_string_t str = string("<StandardClock ");
     str = string_dappend(str, fa_string_format_integral(" %p", (long) a));
     str = string_dappend(str, string(">"));
     return str;
@@ -104,13 +104,13 @@ int64_t standard_clock_milliseconds(fa_ptr_t a)
     return (int64_t) tv.tv_sec * 1000 + tv.tv_usec / 1000;
 }
 
-fa_time_t standard_clock_time(fa_ptr_t a)
+fa_time_t standard_fa_clock_time(fa_ptr_t a)
 {
     struct timeval tv;
     clock_get_time(&tv);
 
-    time_t s  = seconds(tv.tv_sec);
-    time_t ds = divisions(tv.tv_usec / 1000, 1000);
+    fa_time_t s  = seconds(tv.tv_sec);
+    fa_time_t ds = divisions(tv.tv_usec / 1000, 1000);
     return fa_dadd(s, ds);
 }
 
@@ -121,7 +121,7 @@ fa_ptr_t standard_clock_impl(fa_id_t iface)
         = { standard_clock_show };
 
     static fa_clock_interface_t standard_clock_clock_impl
-        = { standard_clock_time, standard_clock_milliseconds };
+        = { standard_fa_clock_time, standard_clock_milliseconds };
 
     switch (iface) {
 

@@ -11,10 +11,10 @@
 #define kSize (44100*2*8*kRecTime)
 #define kInputOffset 8 // FIXME
 
-void helper_function(string_t path)
+void helper_function(fa_string_t path)
 {
     {
-        buffer_t buf = fa_buffer_create(kSize);
+        fa_buffer_t buf = fa_buffer_create(kSize);
 
         if (fa_error_check(buf)) {
             fa_print("Error: Could not read file '%s'\n", path);
@@ -23,19 +23,19 @@ void helper_function(string_t path)
 
         bool mono = false; // TODO
 
-        signal_t j  = fa_signal_counter();
-        list_t signals = NULL;
+        fa_signal_t j  = fa_signal_counter();
+        fa_list_t signals = NULL;
 
         if (mono) {
-            signal_t x = fa_signal_record(buf, j, fa_signal_input(kInputOffset));
+            fa_signal_t x = fa_signal_record(buf, j, fa_signal_input(kInputOffset));
             signals = list(x);
         } else {
-            signal_t li = fa_add(fa_multiply(j, fa_constant(2)), fa_constant(0));
-            signal_t ri = fa_add(fa_multiply(j, fa_constant(2)), fa_constant(1));
-            signal_t x = fa_signal_input(kInputOffset + 0);
+            fa_signal_t li = fa_add(fa_multiply(j, fa_constant(2)), fa_constant(0));
+            fa_signal_t ri = fa_add(fa_multiply(j, fa_constant(2)), fa_constant(1));
+            fa_signal_t x = fa_signal_input(kInputOffset + 0);
 
-            signal_t l = fa_signal_record(buf, li, x);
-            signal_t r = fa_signal_record(buf, ri, x);
+            fa_signal_t l = fa_signal_record(buf, li, x);
+            fa_signal_t r = fa_signal_record(buf, ri, x);
             signals = list(l, r);
         }
 

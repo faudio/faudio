@@ -55,12 +55,12 @@ struct _fa_audio_session_t {
     fa_impl_t              impl;               // Dispatcher
     system_time_t       acquired;           // Time of acquisition (not used at the moment)
 
-    list_t              devices;            // Cached device list
+    fa_list_t              devices;            // Cached device list
 
     device_t            def_input;          // Default devices, both possibly null
     device_t            def_output;         // If present, these are also in the above list
 
-    list_t              streams;            // All streams started on this sessiuon (list of stream_t)
+    fa_list_t              streams;            // All streams started on this sessiuon (list of stream_t)
 
     struct {
         double          sample_rate;
@@ -78,7 +78,7 @@ struct _fa_audio_session_t {
         }                           elements[kMaxStatusCallbacks];
     }                               callbacks;          // Status callbacks
 
-    pair_t                          status_closure;
+    fa_pair_t                          status_closure;
 };
 
 struct _fa_audio_device_t {
@@ -88,8 +88,8 @@ struct _fa_audio_device_t {
     native_host_t       host;
     session_t           session;            // Underlying session
 
-    string_t            name;               // Cached names
-    string_t            host_name;
+    fa_string_t            name;               // Cached names
+    fa_string_t            host_name;
 
     // bool                muted;           // Not used at the moment
     // double              volume;
@@ -102,7 +102,7 @@ struct _fa_audio_stream_t {
     device_t            input, output;
 
     unsigned            signal_count;       // Number of signals (same as number of outputs)
-    signal_t            signals[kMaxSignals];
+    fa_signal_t            signals[kMaxSignals];
     state_t             state;              // DSP state
     int64_t             last_time;          // Cached time in milliseconds
 
@@ -112,18 +112,18 @@ struct _fa_audio_stream_t {
     PaStreamCallbackFlags pa_flags;         // Potential error messages from PortAudio
 
     struct {
-        thread_t        thread;
-        // mutex_t         mutex;
+        fa_thread_t        thread;
+        // fa_thread_mutex_t         mutex;
         bool            stop;
     }                   controller;         // Controller thread (where scheduling runs)
 
-    atomic_queue_t      before_controls;    // Non-sechedyled controls
+    fa_atomic_queue_t      before_controls;    // Non-sechedyled controls
 
-    atomic_queue_t      in_controls;        // From scheduler to audio (AtomicQueue SomeAction)
-    atomic_queue_t      short_controls;     // Directly to audio (AtomicQueue SomeAction)
-    atomic_queue_t      out_controls;       // Audio to scheduler (AtomicQueue SomeAction)
+    fa_atomic_queue_t      in_controls;        // From scheduler to audio (AtomicQueue SomeAction)
+    fa_atomic_queue_t      short_controls;     // Directly to audio (AtomicQueue SomeAction)
+    fa_atomic_queue_t      out_controls;       // Audio to scheduler (AtomicQueue SomeAction)
 
-    priority_queue_t    controls;           // Scheduling queue (PriorityQueue (Time, Action))
+    fa_priority_queue_t    controls;           // Scheduling queue (PriorityQueue (Time, Action))
 
     struct {
         int             count;
@@ -134,12 +134,12 @@ struct _fa_audio_stream_t {
     }                   callbacks;          // Message callbacks
 };
 
-static mutex_t   pa_mutex;
+static fa_thread_mutex_t   pa_mutex;
 static bool      pa_status;
 static session_t current_session;
 
-fa_error_t audio_device_error(string_t msg);
-fa_error_t audio_device_error_with(string_t msg, int error);
+fa_error_t audio_device_error(fa_string_t msg);
+fa_error_t audio_device_error_with(fa_string_t msg, int error);
 fa_ptr_t audio_session_impl(fa_id_t interface);
 fa_ptr_t audio_device_impl(fa_id_t interface);
 fa_ptr_t audio_stream_impl(fa_id_t interface);
@@ -193,7 +193,7 @@ inline static session_t new_session()
 inline static void session_init_devices(session_t session)
 {
     native_index_t count;
-    list_t         devices;
+    fa_list_t         devices;
 
     count   = Pa_GetDeviceCount();
     devices = fa_empty();
@@ -412,7 +412,7 @@ void fa_audio_with_session(session_callback_t session_callback,
     fa_audio_end_session(session);
 }
 
-void fa_audio_set_parameter(string_t name,
+void fa_audio_set_parameter(fa_string_t name,
                             fa_ptr_t value,
                             session_t session)
 {
@@ -657,7 +657,7 @@ fa_string_t fa_audio_host_name(device_t device)
 
 fa_string_t fa_audio_full_name(device_t device)
 {
-    string_t str = fa_string("");
+    fa_string_t str = fa_string("");
     fa_write_string(str, fa_audio_host_name(device));
     fa_write_string(str, fa_string(" "));
     fa_write_string(str, fa_string_format_integral("[%d/", fa_audio_input_channels(device)));
@@ -731,9 +731,9 @@ fa_pair_t fa_audio_recommended_latency(fa_audio_device_t device)
 // --------------------------------------------------------------------------------
 
 inline static
-string_t show_range(pair_t x)
+fa_string_t show_range(fa_pair_t x)
 {
-    string_t str = fa_string("");
+    fa_string_t str = fa_string("");
     fa_unpair(x, a, b) {
         fa_write_string(str, fa_string("("));
         fa_write_string(str, fa_string_show(a));
@@ -786,13 +786,13 @@ void print_audio_info(device_t input, device_t output)
 }
 
 inline static
-void print_signal_tree(fa_ptr_t x)
+void print_fa_signal_tree(fa_ptr_t x)
 {
     fa_inform(fa_string_dappend(fa_string("    Signal Tree: \n"), fa_string_show(x)));
 }
 
 inline static
-list_t apply_processor(proc_t proc, fa_ptr_t proc_data, list_t inputs)
+fa_list_t apply_processor(proc_t proc, fa_ptr_t proc_data, fa_list_t inputs)
 {
     if (proc) {
         return proc(proc_data, inputs);
@@ -827,8 +827,8 @@ stream_t fa_audio_open_stream(device_t input,
 
     {
         // TODO number of inputs
-        list_t inputs = list(fa_signal_input(kInputOffset + 0), fa_signal_input(kInputOffset + 1));
-        list_t signals = apply_processor(proc, proc_data, inputs);
+        fa_list_t inputs = list(fa_signal_input(kInputOffset + 0), fa_signal_input(kInputOffset + 1));
+        fa_list_t signals = apply_processor(proc, proc_data, inputs);
 
         stream->signal_count = fa_list_length(signals);
 
@@ -993,7 +993,7 @@ void fa_audio_with_stream(device_t            input,
     fa_audio_close_stream(stream);
 }
 
-list_t fa_audio_devices(fa_audio_stream_t stream)
+fa_list_t fa_audio_devices(fa_audio_stream_t stream)
 {
     if (fa_equal(stream->input, stream->output)) {
         return list(stream->input);
@@ -1034,7 +1034,7 @@ void fa_audio_schedule(fa_time_t time,
                        fa_action_t action,
                        fa_audio_stream_t stream)
 {
-    pair_left_t pair = fa_pair_left_create(time, action);
+    fa_pair_left_t pair = fa_pair_left_create(time, action);
 
     fa_atomic_queue_write(stream->before_controls, pair);
     // fa_with_lock(stream->controller.mutex) {
@@ -1049,7 +1049,7 @@ void fa_audio_schedule_relative(fa_time_t         time,
     if (fa_equal(time, fa_seconds(0)) && !fa_action_is_compound(action)) {
         fa_atomic_queue_write(stream->short_controls, action);
     } else {
-        time_t now = fa_clock_time(fa_audio_stream_clock(stream));
+        fa_time_t now = fa_clock_time(fa_audio_stream_clock(stream));
         fa_audio_schedule(fa_add(now, time), action, stream);
     }
 }
@@ -1084,7 +1084,7 @@ fa_ptr_t audio_control_thread(fa_ptr_t x)
 
                     // FIXME assure that this copying can not happen after stream has been
                     // stopped
-                    string_t name2 = fa_copy(name);
+                    fa_string_t name2 = fa_copy(name);
                     fa_ptr_t    value2 = fa_copy(value);
                     // fa_inform(fa_string_show(fa_pair_create(name2, value2)));
 
@@ -1102,7 +1102,7 @@ fa_ptr_t audio_control_thread(fa_ptr_t x)
 
         // fa_with_lock(stream->controller.mutex)
         {
-            time_t now = fa_clock_time(fa_audio_stream_clock(stream));
+            fa_time_t now = fa_clock_time(fa_audio_stream_clock(stream));
             // Write incoming actions
             // TODO get things from before_controls to stream->controls
             {
@@ -1147,10 +1147,10 @@ void before_processing(stream_t stream)
     session_t session  = stream->input ? stream->input->session : stream->output->session;
     stream->state      = new_state(session->parameters.sample_rate); // FIXME
 
-    signal_t merged = fa_signal_constant(0);
+    fa_signal_t merged = fa_signal_constant(0);
 
     for (int c = 0; c < stream->signal_count; ++c) {
-        signal_t withOutput = fa_signal_output(0, kOutputOffset + c, stream->signals[c]);
+        fa_signal_t withOutput = fa_signal_output(0, kOutputOffset + c, stream->signals[c]);
         merged = fa_signal_former(merged, withOutput); // Could use any combinator here
     }
 
@@ -1162,7 +1162,7 @@ void before_processing(stream_t stream)
 
     stream->MERGED_SIGNAL = fa_signal_simplify(merged);
 
-    print_signal_tree(stream->MERGED_SIGNAL);
+    print_fa_signal_tree(stream->MERGED_SIGNAL);
 
     stream->MERGED_SIGNAL = fa_signal_doptimize(stream->MERGED_SIGNAL);
     stream->MERGED_SIGNAL = fa_signal_dverify(stream->MERGED_SIGNAL);
@@ -1186,10 +1186,10 @@ void after_failed_processing(stream_t stream)
     session_t session  = stream->input ? stream->input->session : stream->output->session;
     stream->state      = new_state(session->parameters.sample_rate); // FIXME
 
-    signal_t merged = fa_signal_constant(0);
+    fa_signal_t merged = fa_signal_constant(0);
 
     for (int c = 0; c < stream->signal_count; ++c) {
-        signal_t withOutput = fa_signal_output(0, kOutputOffset + c, stream->signals[c]);
+        fa_signal_t withOutput = fa_signal_output(0, kOutputOffset + c, stream->signals[c]);
         merged = fa_signal_former(merged, withOutput); // Could use any combinator here
     }
 
@@ -1205,7 +1205,7 @@ fa_ptr_t run_simple_action2(fa_ptr_t x, fa_ptr_t a)
 {
     return run_simple_action(x, a);
 }
-void handle_outgoing_message(fa_ptr_t x, string_t name, fa_ptr_t value)
+void handle_outgoing_message(fa_ptr_t x, fa_string_t name, fa_ptr_t value)
 {
     stream_t stream = x;
     mark_used(stream);
@@ -1348,7 +1348,7 @@ bool audio_session_equal(fa_ptr_t a, fa_ptr_t b)
 
 fa_string_t audio_session_show(fa_ptr_t a)
 {
-    string_t str = fa_string("<AudioSession ");
+    fa_string_t str = fa_string("<AudioSession ");
     str = fa_string_dappend(str, fa_string_format_integral("%p", (long) a));
     str = fa_string_dappend(str, fa_string(">"));
     return str;
@@ -1398,7 +1398,7 @@ fa_string_t audio_device_show(fa_ptr_t a)
 {
     device_t device = (device_t) a;
 
-    string_t str = fa_string("<AudioDevice ");
+    fa_string_t str = fa_string("<AudioDevice ");
     str = fa_string_dappend(str, fa_audio_host_name(device));
     str = fa_string_dappend(str, fa_string(" "));
     str = fa_string_dappend(str, fa_audio_name(device));
@@ -1435,7 +1435,7 @@ bool audio_stream_equal(fa_ptr_t a, fa_ptr_t b)
 
 fa_string_t audio_stream_show(fa_ptr_t a)
 {
-    string_t str = fa_string("<AudioStream ");
+    fa_string_t str = fa_string("<AudioStream ");
     str = fa_string_dappend(str, fa_string_format_integral(" %p", (long) a));
     str = fa_string_dappend(str, fa_string(">"));
     return str;
@@ -1466,7 +1466,7 @@ int64_t audio_stream_milliseconds(fa_ptr_t a)
     return stream->last_time;
 }
 
-fa_time_t audio_stream_time(fa_ptr_t a)
+fa_time_t fa_audio_stream_time(fa_ptr_t a)
 {
     int64_t ms = audio_stream_milliseconds(a);
     return fa_milliseconds(ms);
@@ -1478,7 +1478,7 @@ fa_ptr_t audio_stream_impl(fa_id_t interface)
     static fa_string_show_t audio_stream_show_impl
         = { audio_stream_show };
     static fa_clock_interface_t audio_stream_clock_impl
-        = { audio_stream_time, audio_stream_milliseconds };
+        = { fa_audio_stream_time, audio_stream_milliseconds };
     static fa_equal_t audio_stream_equal_impl
         = { audio_stream_equal };
     static fa_destroy_t audio_stream_destroy_impl
@@ -1508,7 +1508,7 @@ fa_ptr_t audio_stream_impl(fa_id_t interface)
 
 void fa_log_error_from(fa_string_t msg, fa_string_t origin);
 
-fa_error_t audio_device_error(string_t msg)
+fa_error_t audio_device_error(fa_string_t msg)
 {
     fa_error_t err = fa_error_create_simple(error,
                                          msg,
@@ -1517,9 +1517,9 @@ fa_error_t audio_device_error(string_t msg)
     return err;
 }
 
-fa_error_t audio_device_error_with(string_t msg, int code)
+fa_error_t audio_device_error_with(fa_string_t msg, int code)
 {
-    string_t pa_error_str = fa_string(code != 0 ? (char *) Pa_GetErrorText(code) : "");
+    fa_string_t pa_error_str = fa_string(code != 0 ? (char *) Pa_GetErrorText(code) : "");
 
     fa_error_t err = fa_error_create_simple(error,
                                          fa_string_dappend(msg,
@@ -1531,7 +1531,7 @@ fa_error_t audio_device_error_with(string_t msg, int code)
     return err;
 }
 
-void audio_device_fatal(string_t msg, int code)
+void audio_device_fatal(fa_string_t msg, int code)
 {
     fa_log_error_from(
         fa_string_dappend(msg, fa_format_integral(" (error code %d)", code)),

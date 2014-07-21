@@ -16,7 +16,7 @@
 #include "au.h"
 #include "../shared/signal.h"
 
-pair_t fa_signal_synth(string_t path)
+fa_pair_t fa_signal_synth(fa_string_t path)
 {
     assert(false && "Not available on this platform");
 }
@@ -93,7 +93,7 @@ fa_ptr_t destroy_(fa_ptr_t x)
 }
 
 // Pair of signals
-pair_t fa_signal_dls()
+fa_pair_t fa_signal_dls()
 {
     au_context_t context = create_au_context(new_dls_music_device_instance(), 2, kMaxVectorSize, 0); // Update SR later
     // TODO destroy
@@ -107,9 +107,9 @@ pair_t fa_signal_dls()
     proc->destroy = destroy_;
     proc->data    = context;
 
-    signal_t left  = fa_signal_input(kAUOffset + 0);
-    signal_t right = fa_signal_input(kAUOffset + 1);
-    signal_t left2 = fa_signal_custom(proc, left);
+    fa_signal_t left  = fa_signal_input(kAUOffset + 0);
+    fa_signal_t right = fa_signal_input(kAUOffset + 1);
+    fa_signal_t left2 = fa_signal_custom(proc, left);
     return fa_pair_create(left2, right);
     mark_used(left2);
 }

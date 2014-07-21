@@ -58,18 +58,18 @@ struct _fa_signal_t {
         }                   constant;
 
         struct {
-            string_t        name;
+            fa_string_t        name;
             dfa_unary_t        function;
             fa_ptr_t           data;
-            signal_t        a;
+            fa_signal_t        a;
         }                   lift;
 
         struct {
-            string_t        name;
+            fa_string_t        name;
             dfa_binary_t       function;
             fa_ptr_t           data;
-            signal_t        a;
-            signal_t        b;
+            fa_signal_t        a;
+            fa_signal_t        b;
         }                   lift2;
 
         struct {
@@ -79,12 +79,12 @@ struct _fa_signal_t {
 
         struct {
             int             n;
-            signal_t        a;
+            fa_signal_t        a;
         } delay;
 
         struct {
             custom_proc_t   proc;
-            signal_t        a;
+            fa_signal_t        a;
         }                   custom;
 
         struct {
@@ -94,23 +94,23 @@ struct _fa_signal_t {
         struct {
             int             n;
             int             c;
-            signal_t        a;
+            fa_signal_t        a;
         }                   output;
     }                       fields;
 
 };
 
-inline static signal_t new_signal(int tag)
+inline static fa_signal_t new_signal(int tag)
 {
     fa_ptr_t signal_impl(fa_id_t interface);
 
-    signal_t s = fa_new(signal);
+    fa_signal_t s = fa_new(signal);
     s->impl = &signal_impl;
     s->tag  = tag;
     return s;
 }
 
-inline static void delete_signal(signal_t signal)
+inline static void delete_signal(fa_signal_t signal)
 {
     fa_delete(signal);
 }
@@ -142,21 +142,21 @@ inline static void delete_signal(signal_t signal)
 
 // --------------------------------------------------------------------------------
 
-signal_t fa_signal_time()
+fa_signal_t fa_signal_time()
 {
-    signal_t signal = new_signal(time_signal);
+    fa_signal_t signal = new_signal(time_signal);
     return signal;
 }
 
-signal_t fa_signal_random()
+fa_signal_t fa_signal_random()
 {
-    signal_t signal = new_signal(random_signal);
+    fa_signal_t signal = new_signal(random_signal);
     return signal;
 }
 
 fa_signal_t fa_signal_constant(double x)
 {
-    signal_t signal = new_signal(constant_signal);
+    fa_signal_t signal = new_signal(constant_signal);
     constant_get(signal, value) = x;
     return signal;
 }
@@ -167,7 +167,7 @@ fa_signal_t fa_signal_lift(fa_string_t n,
                            fa_ptr_t data,
                            fa_signal_t a)
 {
-    signal_t signal = new_signal(lift_signal);
+    fa_signal_t signal = new_signal(lift_signal);
     lift_get(signal, name)      = n;
     lift_get(signal, function)  = function;
     lift_get(signal, data)      = data;
@@ -182,7 +182,7 @@ fa_signal_t fa_signal_lift2(fa_string_t n,
                             fa_signal_t a,
                             fa_signal_t b)
 {
-    signal_t signal = new_signal(lift2_signal);
+    fa_signal_t signal = new_signal(lift2_signal);
     lift2_get(signal, name)     = n;
     lift2_get(signal, function) = function;
     lift2_get(signal, data)     = data;
@@ -198,7 +198,7 @@ fa_signal_t fa_signal_loop(fa_signal_unary_signal_t function, fa_ptr_t data)
         assert(false && "Loop not supported in vector mode");
     }
 
-    signal_t signal = new_signal(loop_signal);
+    fa_signal_t signal = new_signal(loop_signal);
     loop_get(signal, function)  = function;
     loop_get(signal, data)      = data;
     return signal;
@@ -212,15 +212,15 @@ fa_signal_t fa_signal_delay(int n, fa_signal_t a)
         assert(false && "Delay not supported in vector mode");
     }
 
-    signal_t signal = new_signal(delay_signal);
+    fa_signal_t signal = new_signal(delay_signal);
     delay_get(signal, n)  = n;
     delay_get(signal, a)  = a;
     return signal;
 }
 
-fa_signal_t fa_signal_custom(custom_proc_t proc, signal_t a)
+fa_signal_t fa_signal_custom(custom_proc_t proc, fa_signal_t a)
 {
-    signal_t signal = new_signal(custom_signal);
+    fa_signal_t signal = new_signal(custom_signal);
     custom_get(signal, proc)        = proc;
     custom_get(signal, a)           = a;
     return signal;
@@ -228,30 +228,30 @@ fa_signal_t fa_signal_custom(custom_proc_t proc, signal_t a)
 
 fa_signal_t fa_signal_input(int c)
 {
-    signal_t signal = new_signal(input_signal);
+    fa_signal_t signal = new_signal(input_signal);
     input_get(signal, c)  = c;
     return signal;
 }
 
 fa_signal_t fa_signal_output(int n, int c, fa_signal_t a)
 {
-    signal_t signal = new_signal(output_signal);
+    fa_signal_t signal = new_signal(output_signal);
     output_get(signal, n)  = n;
     output_get(signal, c)  = c;
     output_get(signal, a)  = a;
     return signal;
 }
 
-signal_t copy_constant(signal_t signal2)
+fa_signal_t copy_constant(fa_signal_t signal2)
 {
-    signal_t signal = new_signal(constant_signal);
+    fa_signal_t signal = new_signal(constant_signal);
     constant_get(signal, value) = constant_get(signal2, value);
     return signal;
 }
 
-signal_t copy_lift(signal_t signal2)
+fa_signal_t copy_lift(fa_signal_t signal2)
 {
-    signal_t signal = new_signal(lift_signal);
+    fa_signal_t signal = new_signal(lift_signal);
     lift_get(signal, name)      = lift_get(signal2, name);
     lift_get(signal, function)  = lift_get(signal2, function);
     lift_get(signal, data)      = lift_get(signal2, data);
@@ -259,9 +259,9 @@ signal_t copy_lift(signal_t signal2)
     return signal;
 }
 
-signal_t copy_lift2(signal_t signal2)
+fa_signal_t copy_lift2(fa_signal_t signal2)
 {
-    signal_t signal = new_signal(lift2_signal);
+    fa_signal_t signal = new_signal(lift2_signal);
     lift2_get(signal, name)     = lift2_get(signal2, name);
     lift2_get(signal, function) = lift2_get(signal2, function);
     lift2_get(signal, data)     = lift2_get(signal2, data);
@@ -270,42 +270,42 @@ signal_t copy_lift2(signal_t signal2)
     return signal;
 }
 
-signal_t copy_loop(signal_t signal2)
+fa_signal_t copy_loop(fa_signal_t signal2)
 {
-    signal_t signal = new_signal(loop_signal);
+    fa_signal_t signal = new_signal(loop_signal);
     loop_get(signal, function)  = loop_get(signal2, function);
     loop_get(signal, data)      = loop_get(signal2, data);
     return signal;
 }
 
-signal_t copy_delay(signal_t signal2)
+fa_signal_t copy_delay(fa_signal_t signal2)
 {
-    signal_t signal = new_signal(delay_signal);
+    fa_signal_t signal = new_signal(delay_signal);
     delay_get(signal, n)  = delay_get(signal2, n);
     delay_get(signal, a)  = delay_get(signal2, a);
     return signal;
 }
 
 
-fa_signal_t copy_custom(signal_t signal2)
+fa_signal_t copy_custom(fa_signal_t signal2)
 {
-    signal_t signal = new_signal(custom_signal);
+    fa_signal_t signal = new_signal(custom_signal);
     custom_get(signal, proc)        = custom_get(signal2, proc);
     custom_get(signal, a)           = custom_get(signal2, a);
     return signal;
 }
 
 
-signal_t copy_input(signal_t signal2)
+fa_signal_t copy_input(fa_signal_t signal2)
 {
-    signal_t signal = new_signal(input_signal);
+    fa_signal_t signal = new_signal(input_signal);
     input_get(signal, c)  = input_get(signal2, c);
     return signal;
 }
 
-signal_t copy_output(signal_t signal2)
+fa_signal_t copy_output(fa_signal_t signal2)
 {
-    signal_t signal = new_signal(output_signal);
+    fa_signal_t signal = new_signal(output_signal);
     output_get(signal, n)  = output_get(signal2, n);
     output_get(signal, c)  = output_get(signal2, c);
     output_get(signal, a)  = output_get(signal2, a);
@@ -418,13 +418,13 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
     }
 
     case lift_signal: {
-        pair_t tree = fa_signal_to_tree(lift_get(signal, a));
+        fa_pair_t tree = fa_signal_to_tree(lift_get(signal, a));
         return fa_pair_create(lift_get(signal, name), list(tree));
     }
 
     case lift2_signal: {
-        pair_t tree1 = fa_signal_to_tree(lift2_get(signal, a));
-        pair_t tree2 = fa_signal_to_tree(lift2_get(signal, b));
+        fa_pair_t tree1 = fa_signal_to_tree(lift2_get(signal, a));
+        fa_pair_t tree2 = fa_signal_to_tree(lift2_get(signal, b));
         return fa_pair_create(lift_get(signal, name), list(tree1, tree2));
     }
 
@@ -452,10 +452,10 @@ fa_pair_t fa_signal_to_tree(fa_signal_t signal)
     }
 }
 
-string_t draw_tree(pair_t value, string_t indent, bool is_last, string_t result)
+fa_string_t draw_tree(fa_pair_t value, fa_string_t indent, bool is_last, fa_string_t result)
 {
     fa_ptr_t  label    = fa_pair_first(value);
-    list_t children = fa_pair_second(value);
+    fa_list_t children = fa_pair_second(value);
 
     fa_write_string(result, indent);
 
@@ -476,7 +476,7 @@ string_t draw_tree(pair_t value, string_t indent, bool is_last, string_t result)
     return result;
 }
 
-string_t fa_signal_draw_tree(fa_pair_t p)
+fa_string_t fa_signal_draw_tree(fa_pair_t p)
 {
     return draw_tree(p, fa_string(""), true, fa_string(""));
 }
@@ -519,7 +519,7 @@ void run_part_neg(struct part *p, int *r, struct part *p2)
 // TODO
 int get_buffer_range(part_t *part,
                      part_t *newPart,
-                     string_t name,
+                     fa_string_t name,
                      int is,
                      int os)
 {
@@ -529,7 +529,7 @@ int get_buffer_range(part_t *part,
 }
 
 // inline static
-fa_signal_t simplify(part_t *part, list_t *procs, fa_signal_t signal2)
+fa_signal_t simplify(part_t *part, fa_list_t *procs, fa_signal_t signal2)
 {
     switch (signal2->tag) {
 
@@ -542,14 +542,14 @@ fa_signal_t simplify(part_t *part, list_t *procs, fa_signal_t signal2)
         // Allocate one bus channel for the delay
         run_part_neg(part, &channel, &part1);
 
-        signal_t input          = fa_signal_input(channel);
-        signal_t res            = simplify(&part1, procs, fix(fix_data, input));
+        fa_signal_t input          = fa_signal_input(channel);
+        fa_signal_t res            = simplify(&part1, procs, fix(fix_data, input));
 
         return fa_signal_output(1, channel, res);
     }
 
     case delay_signal: {
-        signal_t a              = delay_get(signal2, a);
+        fa_signal_t a              = delay_get(signal2, a);
         int samples             = delay_get(signal2, n);
 
         int channel;
@@ -557,14 +557,14 @@ fa_signal_t simplify(part_t *part, list_t *procs, fa_signal_t signal2)
         // Allocate one bus channel for the delay
         run_part_neg(part, &channel, &part1);
 
-        signal_t input          = fa_signal_input(channel);
-        signal_t output         = fa_signal_output(samples, channel, simplify(&part1, procs, a));
+        fa_signal_t input          = fa_signal_input(channel);
+        fa_signal_t output         = fa_signal_output(samples, channel, simplify(&part1, procs, a));
 
         return fa_signal_former(input, output);
     }
 
     case custom_signal: {
-        signal_t a              = simplify(part, procs, custom_get(signal2, a));
+        fa_signal_t a              = simplify(part, procs, custom_get(signal2, a));
 
         custom_proc_t proc = custom_get(signal2, proc);
         // Push to processor list
@@ -573,16 +573,16 @@ fa_signal_t simplify(part_t *part, list_t *procs, fa_signal_t signal2)
     }
 
     case lift_signal: {
-        string_t    name        = lift_get(signal2, name);
+        fa_string_t    name        = lift_get(signal2, name);
         dfa_unary_t    func        = lift_get(signal2, function);
         fa_ptr_t       func_data   = lift_get(signal2, data);
 
-        signal_t a              = simplify(part, procs, lift_get(signal2, a));
+        fa_signal_t a              = simplify(part, procs, lift_get(signal2, a));
         return fa_signal_lift(name, func, func_data, a);
     }
 
     case lift2_signal: {
-        string_t    name        = lift2_get(signal2, name);
+        fa_string_t    name        = lift2_get(signal2, name);
         dfa_binary_t   func        = lift2_get(signal2, function);
         fa_ptr_t       func_data   = lift2_get(signal2, data);
 
@@ -591,8 +591,8 @@ fa_signal_t simplify(part_t *part, list_t *procs, fa_signal_t signal2)
         // Split the channel partition
         split_part(part, &part1, &part2);
 
-        signal_t a              = simplify(&part1, procs, lift2_get(signal2, a));
-        signal_t b              = simplify(&part2, procs, lift2_get(signal2, b));
+        fa_signal_t a              = simplify(&part1, procs, lift2_get(signal2, a));
+        fa_signal_t b              = simplify(&part2, procs, lift2_get(signal2, b));
 
         return fa_signal_lift2(name, func, func_data, a, b);
     }
@@ -601,7 +601,7 @@ fa_signal_t simplify(part_t *part, list_t *procs, fa_signal_t signal2)
         int samples             = output_get(signal2, n);
         int channel             = output_get(signal2, c);
 
-        signal_t a              = simplify(part, procs, output_get(signal2, a));
+        fa_signal_t a              = simplify(part, procs, output_get(signal2, a));
 
         return fa_signal_output(samples, channel, a);
     }
@@ -614,7 +614,7 @@ fa_signal_t fa_signal_simplify(fa_signal_t signal2)
 {
     part_t part;
     init_part(&part);
-    list_t procs = fa_empty();
+    fa_list_t procs = fa_empty();
     return simplify(&part, &procs, signal2);
 }
 
@@ -628,11 +628,11 @@ fa_signal_t fa_signal_dverify(fa_signal_t signal)
     return signal;
 }
 
-list_t fa_signal_get_procs(fa_signal_t signal2)
+fa_list_t fa_signal_get_procs(fa_signal_t signal2)
 {
     part_t part;
     init_part(&part);
-    list_t procs = fa_empty();
+    fa_list_t procs = fa_empty();
     simplify(&part, &procs, signal2);
     return procs;
 }
@@ -889,7 +889,7 @@ void run_custom_procs(custom_proc_when_t when, int count, state_t state)
 }
 
 // typedef void(* fa_signal_message_callback_t)(fa_ptr_t, fa_signal_name_t, fa_signal_message_t)
-void custom_procs_send(state_t state, string_t name, fa_ptr_t value)
+void custom_procs_send(state_t state, fa_string_t name, fa_ptr_t value)
 {
     for (int i = 0; i < state->custom_proc_count; ++i) {
         custom_proc_t proc = state->custom_procs[i];
@@ -936,7 +936,7 @@ fa_ptr_t run_simple_action(state_t state, action_t action)
     // TODO accum
 
     if (fa_action_is_send(action)) {
-        string_t name = fa_action_send_name(action);
+        fa_string_t name = fa_action_send_name(action);
         fa_ptr_t value = fa_action_send_value(action);
         custom_procs_send(state, name, value);
 
@@ -951,7 +951,7 @@ fa_ptr_t run_simple_action(state_t state, action_t action)
 /**
     Step over a sample.
  */
-double step(signal_t signal, state_t state)
+double step(fa_signal_t signal, state_t state)
 {
     switch (signal->tag) {
 
@@ -970,7 +970,7 @@ double step(signal_t signal, state_t state)
     case lift_signal: {
         dfa_unary_t    function  = lift_get(signal, function);
         fa_ptr_t       data      = lift_get(signal, data);
-        signal_t    a         = lift_get(signal, a);
+        fa_signal_t    a         = lift_get(signal, a);
         double      xa        = step(a, state);
         return function(data, xa);
     }
@@ -978,8 +978,8 @@ double step(signal_t signal, state_t state)
     case lift2_signal: {
         dfa_binary_t   function  = lift2_get(signal, function);
         fa_ptr_t       data      = lift2_get(signal, data);
-        signal_t    a         = lift2_get(signal, a);
-        signal_t    b         = lift2_get(signal, b);
+        fa_signal_t    a         = lift2_get(signal, a);
+        fa_signal_t    b         = lift2_get(signal, b);
         double      xa        = step(a, state);
         double      xb        = step(b, state);
         return function(data, xa, xb);
@@ -993,7 +993,7 @@ double step(signal_t signal, state_t state)
     case output_signal: {
         int         n         = output_get(signal, n);
         int         c         = output_get(signal, c);
-        signal_t    a         = output_get(signal, a);
+        fa_signal_t    a         = output_get(signal, a);
 
         double      xa        = step(a, state);
         write_samp1(n, c, xa, state);
@@ -1010,7 +1010,7 @@ double step(signal_t signal, state_t state)
 /**
     Step over a vector of samples.
  */
-void step_vector(signal_t signal, state_t state, int count, double *out)
+void step_vector(fa_signal_t signal, state_t state, int count, double *out)
 {
     switch (signal->tag) {
 
@@ -1041,7 +1041,7 @@ void step_vector(signal_t signal, state_t state, int count, double *out)
     case lift_signal: {
         dfa_unary_t    function  = lift_get(signal, function);
         fa_ptr_t       data      = lift_get(signal, data);
-        signal_t    a         = lift_get(signal, a);
+        fa_signal_t    a         = lift_get(signal, a);
         step_vector(a, state, count, out);
 
         for (int i = 0; i < count; ++i) {
@@ -1054,8 +1054,8 @@ void step_vector(signal_t signal, state_t state, int count, double *out)
     case lift2_signal: {
         dfa_binary_t   function  = lift2_get(signal, function);
         fa_ptr_t       data      = lift2_get(signal, data);
-        signal_t    a         = lift2_get(signal, a);
-        signal_t    b         = lift2_get(signal, b);
+        fa_signal_t    a         = lift2_get(signal, a);
+        fa_signal_t    b         = lift2_get(signal, b);
 
         // TODO is stack allocation efficient enough?
         double temp[count];
@@ -1083,7 +1083,7 @@ void step_vector(signal_t signal, state_t state, int count, double *out)
     case output_signal: {
         int         n         = output_get(signal, n);
         int         c         = output_get(signal, c);
-        signal_t    a         = output_get(signal, a);
+        fa_signal_t    a         = output_get(signal, a);
 
         step_vector(a, state, count, out);
         double *xs = write_samp(n, c, state);
@@ -1106,9 +1106,9 @@ fa_ptr_t run_simple_action_(fa_ptr_t x, fa_ptr_t a)
 {
     return run_simple_action(x, a);
 }
-void fa_signal_run(int count, list_t controls, signal_t a, double *output)
+void fa_signal_run(int count, fa_list_t controls, fa_signal_t a, double *output)
 {
-    priority_queue_t controls2 = fa_priority_queue();
+    fa_priority_queue_t controls2 = fa_priority_queue();
     fa_for_each(x, controls) {
         fa_priority_queue_insert(fa_pair_left_from_pair(x), controls2);
     }
@@ -1117,14 +1117,14 @@ void fa_signal_run(int count, list_t controls, signal_t a, double *output)
     fa_for_each(x, fa_signal_get_procs(a)) {
         add_custom_proc(x, state);
     }
-    signal_t a2 = fa_signal_simplify(a);
+    fa_signal_t a2 = fa_signal_simplify(a);
     a2 = fa_signal_doptimize(a2);
     a2 = fa_signal_dverify(a2);
 
     run_custom_procs(custom_proc_before, 0, state);
 
     for (int i = 0; i < count; ++ i) {
-        time_t now = fa_milliseconds((double) state->count / (double) state->rate * 1000.0);
+        fa_time_t now = fa_milliseconds((double) state->count / (double) state->rate * 1000.0);
         run_actions(controls2, now, run_simple_action_, state);
 
         run_custom_procs(custom_proc_render, 1, state);
@@ -1139,16 +1139,16 @@ void fa_signal_run(int count, list_t controls, signal_t a, double *output)
     delete_state(state);
 }
 
-buffer_t fa_signal_run_buffer(int n, list_t controls, signal_t a)
+fa_buffer_t fa_signal_run_buffer(int n, fa_list_t controls, fa_signal_t a)
 {
-    buffer_t b = fa_buffer_create(n * sizeof(double));
+    fa_buffer_t b = fa_buffer_create(n * sizeof(double));
     fa_signal_run(n, controls, a, fa_buffer_unsafe_address(b));
     return b;
 }
 
-void fa_signal_print(int n, list_t controls, signal_t a)
+void fa_signal_print(int n, fa_list_t controls, fa_signal_t a)
 {
-    buffer_t b = fa_signal_run_buffer(n, controls, a);
+    fa_buffer_t b = fa_signal_run_buffer(n, controls, a);
 
     for (size_t i = 0; i < fa_buffer_size(b); ++i) {
         double x = fa_buffer_get_double(b, i);
@@ -1158,9 +1158,9 @@ void fa_signal_print(int n, list_t controls, signal_t a)
     fa_destroy(b);
 }
 
-fa_ptr_t fa_signal_run_file(int n, list_t controls, signal_t a, string_t path)
+fa_ptr_t fa_signal_run_file(int n, fa_list_t controls, fa_signal_t a, fa_string_t path)
 {
-    buffer_t b = fa_signal_run_buffer(n, controls, a);
+    fa_buffer_t b = fa_signal_run_buffer(n, controls, a);
     fa_ptr_t res = fa_buffer_write_audio(path, b); // TODO number of channels
     fa_destroy(b);
     return res;
@@ -1207,7 +1207,7 @@ fa_signal_t fa_signal_impulse()
       (- (signal-loop* (lambda (x) (+ x 1))) 1))
 
 */
-inline static signal_t _fix_counter(fa_ptr_t _, signal_t x)
+inline static fa_signal_t _fix_counter(fa_ptr_t _, fa_signal_t x)
 {
     return fa_signal_add(x, fa_signal_constant(1));
 }
@@ -1298,7 +1298,7 @@ fa_signal_t fa_signal_record_stream(fa_atomic_ring_buffer_t buffer, fa_signal_t 
 #define kVstOffset         34
 
 struct rec_external {
-    string_t name;
+    fa_string_t name;
     fa_atomic_ring_buffer_t buffer;
 };
 
@@ -1591,7 +1591,7 @@ fa_signal_t fa_signal_ceil(fa_signal_t x, fa_signal_t y)
 #ifndef _WIN32
 
 struct _vst_context {
-    string_t name;
+    fa_string_t name;
     AEffect *plugin;
     float **inputs;
     float **outputs;
@@ -1739,11 +1739,11 @@ fa_ptr_t vst_receive_(fa_ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
     return x;
 }
 
-list_t fa_signal_vst(string_t name1, string_t path1, list_t inputs)
+fa_list_t fa_signal_vst(fa_string_t name1, fa_string_t path1, fa_list_t inputs)
 {
     // TODO
-    string_t name = fa_copy(name1);
-    string_t path = fa_copy(path1);
+    fa_string_t name = fa_copy(name1);
+    fa_string_t path = fa_copy(path1);
 
     char *rpath = fa_unstring(path);
     AEffect *plugin = loadPlugin(rpath);
@@ -1814,7 +1814,7 @@ void fa_signal_show_vst_gui(fa_string_t string, void *handle)
 #else // _WIN32
 
 
-list_t fa_signal_vst(string_t name1, string_t path1, list_t inputs)
+fa_list_t fa_signal_vst(fa_string_t name1, fa_string_t path1, fa_list_t inputs)
 {
     fa_fail(fa_string("VST not supported for this platform yet."));
 }
@@ -1859,7 +1859,7 @@ fa_ptr_t signal_absolute(fa_ptr_t a)
     return fa_signal_absolute(a);
 }
 
-string_t signal_show(fa_ptr_t a)
+fa_string_t signal_show(fa_ptr_t a)
 {
     return fa_signal_draw_tree(fa_signal_to_tree(fa_signal_simplify(a)));
 }

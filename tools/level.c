@@ -27,7 +27,7 @@ double values[2];
            (+ (* 0.999 rec)
               (* 0.001 curr)))))
 */
-signal_t slope_(signal_t curr, signal_t prev)
+fa_signal_t slope_(fa_signal_t curr, fa_signal_t prev)
 {
     return
         fa_signal_max(
@@ -41,13 +41,13 @@ signal_t slope_(signal_t curr, signal_t prev)
             ),
             curr);
 }
-signal_t slope(signal_t x)
+fa_signal_t slope(fa_signal_t x)
 {
     return fa_signal_loop((fa_signal_unary_signal_t)slope_, x);
 }
 
 
-static string_t out_name;
+static fa_string_t out_name;
 static fa_ptr_t    out_value;
 fa_ptr_t before_(fa_ptr_t x, int count, fa_signal_state_t *state)
 {
@@ -97,7 +97,7 @@ fa_ptr_t send_(fa_ptr_t x, fa_signal_message_callback_t cb, fa_ptr_t data)
 }
 
 
-pair_t fa_signal_level(signal_t a, signal_t b)
+fa_pair_t fa_signal_level(fa_signal_t a, fa_signal_t b)
 {
     fa_signal_custom_processor_t *proc = fa_malloc(sizeof(fa_signal_custom_processor_t));
     proc->before  = before_;
@@ -151,7 +151,7 @@ void run_level()
         fa_audio_session_t s = fa_audio_begin_session();
         fa_audio_device_t i  = fa_audio_default_input(s);
         fa_audio_device_t o  = fa_audio_default_output(s);
-        list_t out           = fa_pair_to_list(fa_signal_level(
+        fa_list_t out           = fa_pair_to_list(fa_signal_level(
                                                    // fa_signal_sin(fa_signal_line(0.1)),
                                                    fa_signal_input(kInputOffset + 0),
 

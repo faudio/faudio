@@ -6,7 +6,7 @@
 #define opt_t fa_option_t
 #define fa_push_back_list(xs,x) xs = fa_list_dappend(xs, fa_list_single(x))
 
-pair_t maybe_parse(int optc, opt_t optv[], const char *short_name, const char *long_name, const char *value)
+fa_pair_t maybe_parse(int optc, opt_t optv[], const char *short_name, const char *long_name, const char *value)
 {
     for (int i = 0; i < optc; i++) {
         opt_t option = optv[i];
@@ -31,7 +31,7 @@ pair_t maybe_parse(int optc, opt_t optv[], const char *short_name, const char *l
 
 
 // Modify a map by adding defaults (if not set)
-map_t add_defaults(int optc, opt_t optv[], map_t args)
+fa_map_t add_defaults(int optc, opt_t optv[], fa_map_t args)
 {
     for (int i = 0; i < optc; i++) {
         opt_t option = optv[i];
@@ -47,10 +47,10 @@ map_t add_defaults(int optc, opt_t optv[], map_t args)
 }
 
 
-pair_t fa_option_parse(int optc, fa_option_t optv[1], int argc, char *argv[])
+fa_pair_t fa_option_parse(int optc, fa_option_t optv[1], int argc, char *argv[])
 {
-    list_t anon_args = fa_list_empty();
-    map_t args = fa_map_empty();
+    fa_list_t anon_args = fa_list_empty();
+    fa_map_t args = fa_map_empty();
 
     enum {short_name, long_name, value} elem_type = value, prev_elem_type = value;
 
@@ -69,21 +69,21 @@ pair_t fa_option_parse(int optc, fa_option_t optv[1], int argc, char *argv[])
 
         if (i == argc || elem_type != value) {
             if (prev_elem_type == short_name) {
-                string_t name = fa_string((char *) argv[i - 1] + 1);
+                fa_string_t name = fa_string((char *) argv[i - 1] + 1);
                 args = fa_map_dset(name, fa_from_bool(true), args);
             } else if (prev_elem_type == long_name) {
-                string_t name = fa_string((char *) argv[i - 1] + 2);
+                fa_string_t name = fa_string((char *) argv[i - 1] + 2);
                 args = fa_map_dset(name, fa_from_bool(true), args);
             }
         } else {
             if (prev_elem_type == short_name) {
-                pair_t result = maybe_parse(optc, optv, argv[i - 1] + 1, NULL, argv[i]);
+                fa_pair_t result = maybe_parse(optc, optv, argv[i - 1] + 1, NULL, argv[i]);
 
                 if (result) {
                     args = fa_map_add_entry(result, args);
                 }
             } else if (prev_elem_type == long_name) {
-                pair_t result = maybe_parse(optc, optv, NULL, argv[i - 2] + 1, argv[i]);
+                fa_pair_t result = maybe_parse(optc, optv, NULL, argv[i - 2] + 1, argv[i]);
 
                 if (result) {
                     args = fa_map_add_entry(result, args);

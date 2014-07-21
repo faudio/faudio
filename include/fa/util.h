@@ -24,50 +24,50 @@
 // #define error_callback_t    fa_error_callback_t
 // #define severity_t          fa_error_severity_t
 
-#define pair_t              fa_pair_t
-#define pair_left_t         fa_pair_left_t
-#define list_t              fa_list_t
-#define set_t               fa_set_t
-#define map_t               fa_map_t
-#define graph_t             fa_graph_t
-#define string_t            fa_string_t
-#define type_repr_t         fa_dynamic_type_repr_t
-#define priority_queue_t    fa_priority_queue_t
-#define scheduler_t         fa_scheduler_t
-#define atomic_t            fa_atomic_t
-#define atomic_queue_t      fa_atomic_queue_t
-#define atomic_stack_t      fa_atomic_stack_t
-#define ringbuffer_t        fa_atomic_ring_buffer_t
-#ifndef NO_THREAD_T
-#define thread_t            fa_thread_t
-#endif // NO_THREAD_T
-#define mutex_t             fa_thread_mutex_t
-
-#define ratio_t             fa_ratio_t
-#define buffer_t            fa_buffer_t
-#define frames_t            fa_type_frames_t
-#define type_t              fa_type_t
-#define midi_message_t      fa_midi_message_t
-#define time_t              fa_time_t
-#define clock_t             fa_time_clock_t
-#define event_t             fa_event_t
-#define signal_t            fa_signal_t
-#define sender_t            fa_message_sender_t
-#define receiver_t          fa_message_receiver_t
-#define dispatcher_t        fa_message_dispatcher_t
-#define address_t           fa_message_address_t
-#define message_t           fa_message_t
-
-#define audio_device_t      fa_audio_device_t
-#define midi_device_t       fa_midi_device_t
-#define file_device_t       fa_device_file_t
-#define buffer_device_t     fa_device_buffer_t
-#define audio_stream_t      fa_audio_stream_t
-#define midi_stream_t       fa_midi_stream_t
-#define audio_session_t     fa_audio_session_t
-#define midi_session_t      fa_midi_session_t
-#define file_result_t       fa_device_file_result_t
-#define buffer_result_t     fa_device_buffer_result_t
+// #define pair_t              fa_pair_t
+// #define pair_left_t         fa_pair_left_t
+// #define list_t              fa_list_t
+// #define set_t               fa_set_t
+// #define map_t               fa_map_t
+// #define graph_t             fa_graph_t
+// #define string_t            fa_string_t
+// #define type_repr_t         fa_dynamic_type_repr_t
+// #define priority_queue_t    fa_priority_queue_t
+// #define scheduler_t         fa_scheduler_t
+// #define atomic_t            fa_atomic_t
+// #define atomic_queue_t      fa_atomic_queue_t
+// #define atomic_stack_t      fa_atomic_stack_t
+// #define ringbuffer_t        fa_atomic_ring_buffer_t
+// #ifndef NO_THREAD_T
+// #define thread_t            fa_thread_t
+// #endif // NO_THREAD_T
+// #define mutex_t             fa_thread_mutex_t
+// 
+// #define ratio_t             fa_ratio_t
+// #define buffer_t            fa_buffer_t
+// #define frames_t            fa_type_frames_t
+// #define type_t              fa_type_t
+// #define midi_message_t      fa_midi_message_t
+// #define time_t              fa_time_t
+// #define clock_t             fa_time_clock_t
+// #define event_t             fa_event_t
+// #define signal_t            fa_signal_t
+// #define sender_t            fa_message_sender_t
+// #define receiver_t          fa_message_receiver_t
+// #define dispatcher_t        fa_message_dispatcher_t
+// #define address_t           fa_message_address_t
+// #define message_t           fa_message_t
+// 
+// #define audio_device_t      fa_audio_device_t
+// #define midi_device_t       fa_midi_device_t
+// #define file_device_t       fa_device_file_t
+// #define buffer_device_t     fa_device_buffer_t
+// #define audio_stream_t      fa_audio_stream_t
+// #define midi_stream_t       fa_midi_stream_t
+// #define audio_session_t     fa_audio_session_t
+// #define midi_session_t      fa_midi_session_t
+// #define file_result_t       fa_device_file_result_t
+// #define buffer_result_t     fa_device_buffer_result_t
 
 // #define pair(a,b)           fa_pair_create(a,b)
 // #define pair_left(a,b)      fa_pair_left_create(a,b)

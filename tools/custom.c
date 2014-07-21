@@ -48,18 +48,18 @@ void helper_function()
 
     // printf("Sending custom proc %p!\n", &proc);
 
-    signal_t a = fa_multiply(fa_signal_sin(fa_signal_line(440)), fa_signal_input(32));
-    signal_t b = fa_signal_custom(&proc, a);
+    fa_signal_t a = fa_multiply(fa_signal_sin(fa_signal_line(440)), fa_signal_input(32));
+    fa_signal_t b = fa_signal_custom(&proc, a);
     mark_used(a);
     mark_used(b);
 
-    signal_t r = b;
+    fa_signal_t r = b;
 
     if (RT) {
         fa_audio_session_t s = fa_audio_begin_session();
         fa_audio_device_t i  = fa_audio_default_input(s);
         fa_audio_device_t o  = fa_audio_default_output(s);
-        list_t out           = list(r, a);
+        fa_list_t out           = list(r, a);
 
         fa_audio_stream_t st = fa_audio_open_stream(i, o, just, out);
 

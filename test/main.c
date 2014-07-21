@@ -127,7 +127,7 @@ void test_string()
 {
     test_section("Strings");
     {
-        string_t s = fa_string_single('v');
+        fa_string_t s = fa_string_single('v');
         fa_dprint("str: %s\n", s);
     }
 
@@ -135,7 +135,7 @@ void test_string()
         // char* cs = " 新隶体 "; // length 5
         char *cs = "höglund";
 
-        string_t s = fa_string(cs);
+        fa_string_t s = fa_string(cs);
         printf("len: %i\n", fa_string_length(s));
         fa_print("str: %s\n", s);
 
@@ -146,42 +146,42 @@ void test_string()
     }
 
     {
-        string_t s = fa_string("foo");
-        string_t t = fa_string("bar");
-        string_t u = fa_string_append(s, t);
+        fa_string_t s = fa_string("foo");
+        fa_string_t t = fa_string("bar");
+        fa_string_t u = fa_string_append(s, t);
         fa_dprint("str: %s\n", s);
         fa_dprint("str: %s\n", t);
         fa_dprint("str: %s\n", u);
     }
 
     {
-        string_t s = fa_string("foo");
-        string_t t = fa_string("bar");
+        fa_string_t s = fa_string("foo");
+        fa_string_t t = fa_string("bar");
         fa_print("str: %s\n", s);
         fa_print("str: %s\n", t);
         {
-            string_t u = fa_string_dappend(s, t);
+            fa_string_t u = fa_string_dappend(s, t);
             fa_dprint("str: %s\n", u);
         }
     }
     {
-        string_t s = fa_string("Foo, Bar, Baz");
-        string_t t = fa_string_copy(s);
+        fa_string_t s = fa_string("Foo, Bar, Baz");
+        fa_string_t t = fa_string_copy(s);
         fa_dprint("str: %s\n", s);
         fa_dprint("str: %s\n", t);
     }
 
     /*
         {
-            string_t s = fa_string("FooBarBaz");
-            string_t t = fa_string_join_map(apply1, fa_string_single, s);
+            fa_string_t s = fa_string("FooBarBaz");
+            fa_string_t t = fa_string_join_map(apply1, fa_string_single, s);
             fa_dprint("str: %s\n", s);
             fa_dprint("str: %s\n", t);
         }
     */
 
     {
-        string_t s = fa_string("A double quote: \", A backslash: \\");
+        fa_string_t s = fa_string("A double quote: \", A backslash: \\");
         fa_dprint("str: %s\n", s);
     }
 }
@@ -312,7 +312,7 @@ void test_time()
 // {
 //     test_section("System time");
 //
-//     clock_t system_clock = fa_time_get_system_prec_clock();
+//     fa_clock_t system_clock = fa_time_get_system_prec_clock();
 //
 //     for (int i = 0; i < 10; ++i) {
 //         // fa_print("system()                     ==> %s\n", fa_time_system());
@@ -367,25 +367,25 @@ void test_midi_message()
 //     // fa_dprint("align_of(1024,type(f64))  ==> %s\n", i32(fa_type_align_of(type(f64))));
 //     // printf("\n");
 //     //
-//     // type_t t = type_pair(type(i8), type(f64));
+//     // fa_type_t t = type_pair(type(i8), type(f64));
 //     // fa_dprint("t                            ==> %s\n", t);
 //     // fa_dprint("size_of(1024,t)              ==> %s\n", i32(fa_type_size_of(1024, t)));
 //     // fa_dprint("align_of(1024,t)             ==> %s\n", i32(fa_type_align_of(t)));
 //     // printf("\n");
 //     //
-//     // type_t u = type_pair(type_vector(type(i8), 10), type(f64));
+//     // fa_type_t u = type_pair(type_vector(type(i8), 10), type(f64));
 //     // fa_dprint("u                            ==> %s\n", u);
 //     // fa_dprint("size_of(1024,u)              ==> %s\n", i32(fa_type_size_of(1024, u)));
 //     // fa_dprint("align_of(1024,u)             ==> %s\n", i32(fa_type_align_of(u)));
 //     // printf("\n");
 //     //
-//     // type_t u2 = type_pair(type_frame(type(i8)), type(f64));
+//     // fa_type_t u2 = type_pair(type_frame(type(i8)), type(f64));
 //     // fa_dprint("u2                           ==> %s\n", u2);
 //     // fa_dprint("size_of(1024,u2)             ==> %s\n", i32(fa_type_size_of(1024, u2)));
 //     // fa_dprint("align_of(1024,u2)            ==> %s\n", i32(fa_type_align_of(u2)));
 //     // printf("\n");
 //
-//     type_t v = type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
+//     fa_type_t v = type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
 //                                              type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
 //                                                        type_pair(type(i8), type_pair(type(i8), type_pair(type(i8),
 //                                                                type(i8))))))))));
@@ -437,14 +437,14 @@ void test_atomic()
 
 struct test_atomic_queue_reader_args {
     fa_atomic_queue_t queue;
-    atomic_t active;
+    fa_atomic_t active;
 };
 
 fa_ptr_t test_atomic_queue_reader(fa_ptr_t x)
 {
     struct test_atomic_queue_reader_args *args = x;
     fa_atomic_queue_t q = args->queue;
-    atomic_t               a = args->active;
+    fa_atomic_t               a = args->active;
     fa_ptr_t                  v;
 
     while (true) {
@@ -469,7 +469,7 @@ void test_atomic_queue_(int iter, long sleepTime)
         struct test_atomic_queue_reader_args args = { q, fa_atomic() };
         fa_atomic_set(args.active, fb(true));
 
-        thread_t t = fa_thread_create(test_atomic_queue_reader, &args);
+        fa_thread_t t = fa_thread_create(test_atomic_queue_reader, &args);
 
         fa_print("q                            ==> %s\n", q);
 
@@ -498,14 +498,14 @@ void test_atomic_queue()
 
 struct test_atomic_stack_reader_args {
     fa_atomic_stack_t stack;
-    atomic_t active;
+    fa_atomic_t active;
 };
 
 fa_ptr_t test_atomic_stack_reader(fa_ptr_t x)
 {
     struct test_atomic_stack_reader_args *args = x;
     fa_atomic_stack_t q = args->stack;
-    atomic_t               a = args->active;
+    fa_atomic_t               a = args->active;
     fa_ptr_t                  v;
 
     while (true) {
@@ -531,7 +531,7 @@ void test_atomic_stack_(int iter, long sleepTime)
         struct test_atomic_stack_reader_args args = { q, fa_atomic() };
         fa_atomic_set(args.active, fb(true));
 
-        thread_t t = fa_thread_create(test_atomic_stack_reader, &args);
+        fa_thread_t t = fa_thread_create(test_atomic_stack_reader, &args);
 
         fa_print("q                            ==> %s\n", q);
 
@@ -559,19 +559,19 @@ void test_atomic_stack()
 // --------------------------------------------------------------------------------
 
 // TODO move
-typedef fa_atomic_ring_buffer_t ring_buffer_t;
+typedef fa_atomic_ring_buffer_t ring_fa_buffer_t;
 #define ring_buffer(size) fa_atomic_ring_buffer_create(size)
 
 struct test_atomic_ring_buffer_reader_args {
     fa_atomic_ring_buffer_t ring_buffer;
-    atomic_t active;
+    fa_atomic_t active;
 };
 
 fa_ptr_t ring_buffer_reader(fa_ptr_t x)
 {
     struct test_atomic_ring_buffer_reader_args *args = x;
     fa_atomic_ring_buffer_t q = args->ring_buffer;
-    atomic_t                a = args->active;
+    fa_atomic_t                a = args->active;
     char                    v;
 
     fa_thread_sleep(1000);
@@ -599,7 +599,7 @@ void test_atomic_ring_buffer_(int iter, long sleepTime)
         struct test_atomic_ring_buffer_reader_args args = { q, fa_atomic() };
         fa_atomic_set(args.active, fb(true));
 
-        thread_t t = fa_thread_create(ring_buffer_reader, &args);
+        fa_thread_t t = fa_thread_create(ring_buffer_reader, &args);
 
         fa_print("q                            ==> %s\n", q);
 
@@ -765,15 +765,15 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = fa_empty();
+        fa_list_t as = fa_empty();
         fa_print("fa_empty()                      ==> %s\n", as);
         fa_destroy(as);
     }
     {
         printf("\n");
 
-        list_t as = list(i16(1), i16(2), i16(3));
-        list_t bs = fa_list_cons(i16(0), as);
+        fa_list_t as = list(i16(1), i16(2), i16(3));
+        fa_list_t bs = fa_list_cons(i16(0), as);
 
         fa_print("as                           ==> %s\n", as);
         fa_print("cons(0,as)                   ==> %s\n", bs);
@@ -784,8 +784,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1), i16(2), i16(3));
-        list_t bs = fa_list_append(as, as);
+        fa_list_t as = list(i16(1), i16(2), i16(3));
+        fa_list_t bs = fa_list_append(as, as);
 
         fa_print("as                           ==> %s\n", as);
         fa_print("append(as,as)                ==> %s\n", bs);
@@ -796,8 +796,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1), i16(2), i16(3));
-        list_t bs = fa_list_copy(as);
+        fa_list_t as = list(i16(1), i16(2), i16(3));
+        fa_list_t bs = fa_list_copy(as);
         fa_print("as                           ==> %s\n", as);
         fa_print("copy(as)                     ==> %s\n", bs);
         fa_destroy(as);
@@ -806,8 +806,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1), i16(2), i16(3));
-        list_t bs = fa_list_init(as);
+        fa_list_t as = list(i16(1), i16(2), i16(3));
+        fa_list_t bs = fa_list_init(as);
 
         fa_print("as                           ==> %s\n", as);
         fa_print("init(as)                     ==> %s\n", bs);
@@ -818,7 +818,7 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1), i16(2), i16(3));
+        fa_list_t as = list(i16(1), i16(2), i16(3));
         fa_ptr_t v = fa_list_last(as);
 
         fa_print("as                           ==> %s\n", as);
@@ -830,7 +830,7 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1), i16(2), i16(3));
+        fa_list_t as = list(i16(1), i16(2), i16(3));
 
         fa_print("as                           ==> %s\n", as);
         fa_print("length(as)                   ==> %s\n", i16(fa_list_length(as)));
@@ -840,8 +840,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-        list_t bs = fa_list_reverse(as);
+        fa_list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t bs = fa_list_reverse(as);
 
         fa_print("as                           ==> %s\n", as);
         fa_print("reverse(as)                  ==> %s\n", bs);
@@ -853,12 +853,12 @@ void test_list()
     {
         printf("\n");
 
-        // list_t as = list(i16(1), i16(-2), i16(0), i16(4), i16(123));
-        list_t as = fa_list_enumerate(0, 10);
+        // fa_list_t as = list(i16(1), i16(-2), i16(0), i16(4), i16(123));
+        fa_list_t as = fa_list_enumerate(0, 10);
         as = fa_list_reverse(as);
         as = fa_list_dmap(apply1, i32, as);
 
-        list_t bs = fa_list_sort(as);
+        fa_list_t bs = fa_list_sort(as);
 
         fa_print("as                           ==> %s\n", as);
         fa_print("sort(as)                     ==> %s\n", bs);
@@ -870,8 +870,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-        list_t bs = fa_list_take(3, as);
+        fa_list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t bs = fa_list_take(3, as);
 
         fa_print("as                           ==> %s\n", as);
         fa_print("take(3,as)                   ==> %s\n", bs);
@@ -882,8 +882,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-        list_t bs = fa_list_drop(3, as);
+        fa_list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t bs = fa_list_drop(3, as);
 
         fa_print("as                           ==> %s\n", as);
         fa_print("drop(3,as)                   ==> %s\n", bs);
@@ -894,7 +894,7 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
         fa_ptr_t v = fa_list_index(1, as);
 
         fa_print("as                           ==> %s\n", as);
@@ -906,8 +906,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-        list_t bs = fa_list_range(1, 3, as);
+        fa_list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t bs = fa_list_range(1, 3, as);
 
         fa_print("as                           ==> %s\n", as);
         fa_print("range(1,3,as)                ==> %s\n", bs);
@@ -918,8 +918,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-        list_t bs = fa_list_remove_range(1, 3, as);
+        fa_list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t bs = fa_list_remove_range(1, 3, as);
 
         fa_print("as                           ==> %s\n", as);
         fa_print("removeRange(1,3,as)          ==> %s\n", bs);
@@ -931,9 +931,9 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-        list_t xs = list(i16(0), i16(0));
-        list_t bs = fa_list_insert_range(2, xs, as);
+        fa_list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t xs = list(i16(0), i16(0));
+        fa_list_t bs = fa_list_insert_range(2, xs, as);
 
         fa_print("as                           ==> %s\n", as);
         fa_print("insertRange(2,list(0,0),as)  ==> %s\n", bs);
@@ -945,8 +945,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-        list_t bs = fa_list_insert(2, i16(0), as);
+        fa_list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t bs = fa_list_insert(2, i16(0), as);
 
         fa_print("as                           ==> %s\n", as);
         fa_print("insert(2,0,as)               ==> %s\n", bs);
@@ -957,8 +957,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-        list_t bs = fa_list_insert(0, i16(0), as);
+        fa_list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t bs = fa_list_insert(0, i16(0), as);
 
         fa_print("as                           ==> %s\n", as);
         fa_print("insert(0,1,as)               ==> %s\n", bs);
@@ -969,8 +969,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-        list_t bs = fa_list_remove(2, as);
+        fa_list_t as = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t bs = fa_list_remove(2, as);
 
         fa_print("as                           ==> %s\n", as);
         fa_print("remove(2,as)                 ==> %s\n", bs);
@@ -986,7 +986,7 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = list(i16(1), i16(3), i16(5));
+        fa_list_t as = list(i16(1), i16(3), i16(5));
 
         fa_print("as                           ==> %s\n", as);
         fa_print("indexOf(0,as)                ==> %s\n", i16(fa_list_index_of(i16(0), as)));
@@ -1001,8 +1001,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-        list_t ys = fa_list_filter(test_list_is_odd16, 0, xs);
+        fa_list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t ys = fa_list_filter(test_list_is_odd16, 0, xs);
 
         fa_print("xs                           ==> %s\n", xs);
         fa_print("filter(test_list_is_odd,ys)            ==> %s\n", ys);
@@ -1014,8 +1014,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-        list_t ys = fa_list_map(times10, 0, xs);
+        fa_list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t ys = fa_list_map(times10, 0, xs);
 
         fa_print("xs                           ==> %s\n", xs);
         fa_print("map(times10,ys)              ==> %s\n", ys);
@@ -1027,9 +1027,9 @@ void test_list()
     {
         printf("\n");
 
-        list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-        list_t ys = list(i16(66), i16(77));
-        list_t zss = list(xs, ys, xs);
+        fa_list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t ys = list(i16(66), i16(77));
+        fa_list_t zss = list(xs, ys, xs);
 
         fa_print("[xs,ys]                      ==> %s\n", zss);
         fa_print("join([xs,ys])                ==> %s\n", fa_list_join(zss));
@@ -1042,8 +1042,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
-        list_t ys = fa_list_join_map(dup_list, 0, xs);
+        fa_list_t xs = list(i16(1), i16(2), i16(3), i16(4), i16(5));
+        fa_list_t ys = fa_list_join_map(dup_list, 0, xs);
 
         fa_print("xs                           ==> %s\n", xs);
         fa_print("joinMap(\\x -> [x,x])         ==> %s\n", ys);
@@ -1056,7 +1056,7 @@ void test_list()
     {
         printf("\n");
 
-        list_t xs = fa_list_enumerate(0, 50);
+        fa_list_t xs = fa_list_enumerate(0, 50);
 
         xs = fa_list_dreverse(xs);
         // fa_print("reverse(xs)                  ==> %s\n", xs);
@@ -1075,7 +1075,7 @@ void test_list()
     {
         printf("\n");
 
-        list_t xs = fa_list_enumerate(0, 12);
+        fa_list_t xs = fa_list_enumerate(0, 12);
         xs = fa_list_dmap(apply1, i8, xs);
 
         fa_print("xs                           ==> %s\n", xs);
@@ -1093,7 +1093,7 @@ void test_set()
     {
         printf("\n");
 
-        set_t a = set(i16(1), i16(3), i16(2));
+        fa_set_t a = set(i16(1), i16(3), i16(2));
 
         a = fa_set_dadd(i16(1), a);
         a = fa_set_dadd(i16(5), a);
@@ -1108,8 +1108,8 @@ void test_set()
     {
         printf("\n");
 
-        set_t a = set(i16(1), i16(2), i16(3));
-        set_t b = set(i16(3), i16(4));
+        fa_set_t a = set(i16(1), i16(2), i16(3));
+        fa_set_t b = set(i16(3), i16(4));
 
         fa_print("a                            ==> %s\n", a);
         fa_print("b                            ==> %s\n", b);
@@ -1122,8 +1122,8 @@ void test_set()
     {
         printf("\n");
 
-        set_t a = set(i16(1), i16(2), i16(3));
-        set_t b = set(i16(3), i16(4));
+        fa_set_t a = set(i16(1), i16(2), i16(3));
+        fa_set_t b = set(i16(3), i16(4));
 
         fa_print("a                            ==> %s\n", a);
         fa_print("b                            ==> %s\n", b);
@@ -1136,8 +1136,8 @@ void test_set()
     {
         printf("\n");
 
-        set_t a = set(i16(1), i16(2), i16(3));
-        set_t b = set(i16(3), i16(4));
+        fa_set_t a = set(i16(1), i16(2), i16(3));
+        fa_set_t b = set(i16(3), i16(4));
 
         fa_print("a                            ==> %s\n", a);
         fa_print("b                            ==> %s\n", b);
@@ -1150,15 +1150,15 @@ void test_set()
     {
         printf("\n");
 
-        set_t a = set(fa_string("foo"), fa_string("bar"));
-        set_t b = set(fa_string("hi"), fa_string("ho"));
-        set_t c = set(i16(0), i16(1));
+        fa_set_t a = set(fa_string("foo"), fa_string("bar"));
+        fa_set_t b = set(fa_string("hi"), fa_string("ho"));
+        fa_set_t c = set(i16(0), i16(1));
 
         fa_print("a                            ==> %s\n", a);
         fa_print("b                            ==> %s\n", b);
         fa_dprint("a x b                        ==> %s\n", fa_set_product(a, b));
 
-        set_t ab = fa_set_product(a, b);
+        fa_set_t ab = fa_set_product(a, b);
         fa_dprint("a x b x c                    ==> %s\n", fa_set_product(ab, c));
         fa_destroy(ab);
 
@@ -1177,7 +1177,7 @@ void test_map()
     {
         printf("\n");
 
-        map_t a = fa_map_empty();
+        fa_map_t a = fa_map_empty();
 
         a = fa_map_dadd(fa_string("name"), fa_string("Hans"), a);
         a = fa_map_dset(fa_string("name"), fa_string("Sven"), a);
@@ -1209,11 +1209,11 @@ void test_map()
 
 // --------------------------------------------------------------------------------
 
-// void test_graph(string_t path)
+// void test_graph(fa_string_t path)
 // {
 //     test_section("Graph");
 //     {
-//         graph_t a = fa_graph_empty();
+//         fa_graph_t a = fa_graph_empty();
 //
 //
 //         a = fa_graph_insert(fa_string("foo"), a);
@@ -1240,7 +1240,7 @@ void test_priority_queue(int iter)
 {
     test_section("Priority queue");
 
-    priority_queue_t q = fa_priority_queue_empty();
+    fa_priority_queue_t q = fa_priority_queue_empty();
     srand(time(NULL));
 
     for (int i = 0; i < iter; ++i) {
@@ -1256,19 +1256,19 @@ void test_priority_queue(int iter)
 
 // --------------------------------------------------------------------------------
 
-void test_json(string_t path)
+void test_json(fa_string_t path)
 {
     extern void fa_puts(fa_string_t string);
 
     test_section("JSON conversion");
 
-    string_t json = fa_system_directory_read_file(path);
+    fa_string_t json = fa_system_directory_read_file(path);
     // printf("%s\n", fa_unstring(json));
 
     fa_ptr_t data = fa_string_from_json(json);
     fa_print("data                         ==> %s\n", data);
 
-    string_t json2 = fa_string_to_json(data);
+    fa_string_t json2 = fa_string_to_json(data);
     fa_puts(json2);
 
     fa_puts(fa_string_to_json(
@@ -1295,24 +1295,24 @@ void test_json(string_t path)
 // {
 //     test_section("Dispatcher");
 //
-//     dispatcher_t disp = lockfree_dispatcher();
+//     fa_dispatcher_t disp = lockfree_dispatcher();
 //
 //     fa_ptr_t val = map(
 //                     fa_string("lyrics"), list(fa_string("Help"), fa_string("me"), fa_string("if"), fa_string("you"), fa_string("can")),
 //                     fa_string("pitches"), list(fa_ratio(60, 1), fa_ratio(62, 1))
 //                 );
 //
-//     fa_message_send((receiver_t) disp, i16(1), val);
-//     fa_message_send((receiver_t) disp, i16(2), fa_string("World!"));
-//     fa_message_send((receiver_t) disp, i16(2), fa_string("World!"));
-//     fa_message_send((receiver_t) disp, i16(2), fa_string("World!"));
-//     fa_message_send((receiver_t) disp, i16(2), fa_string("World!"));
+//     fa_message_send((fa_receiver_t) disp, i16(1), val);
+//     fa_message_send((fa_receiver_t) disp, i16(2), fa_string("World!"));
+//     fa_message_send((fa_receiver_t) disp, i16(2), fa_string("World!"));
+//     fa_message_send((fa_receiver_t) disp, i16(2), fa_string("World!"));
+//     fa_message_send((fa_receiver_t) disp, i16(2), fa_string("World!"));
 //
-//     list_t msgs = fa_list_empty();
+//     fa_list_t msgs = fa_list_empty();
 //
 //     while (true) {
-//         fa_message_sync((sender_t) disp);
-//         msgs = fa_message_receive((sender_t) disp, i16(1));
+//         fa_message_sync((fa_sender_t) disp);
+//         msgs = fa_message_receive((fa_sender_t) disp, i16(1));
 //
 //         if (fa_list_is_empty(msgs)) {
 //             break;
@@ -1331,7 +1331,7 @@ void test_json(string_t path)
 // {
 //     test_section("System events");
 //
-//     fa_message_sender_t s =
+//     fa_message_fa_sender_t s =
 //         fa_system_event_receive(
 //             list(
 //                 // i16(mouse_move_event)
@@ -1340,7 +1340,7 @@ void test_json(string_t path)
 //                 i16(key_up_event)
 //
 //             ));
-//     fa_message_receiver_t r =
+//     fa_message_fa_receiver_t r =
 //         fa_system_event_send_std();
 //
 //     for (int i = 0; i < 100000; ++i) {
@@ -1361,45 +1361,45 @@ void test_json(string_t path)
 //     {
 //         // fa_time_t t = seconds(0);
 //
-//         // event_t ha = now(fa_string("höglund"));
-//         // event_t ho = now(fa_string("holmgren"));
+//         // fa_event_t ha = now(fa_string("höglund"));
+//         // fa_event_t ho = now(fa_string("holmgren"));
 //
-//         // event_t a = merge_event(ha,
+//         // fa_event_t a = merge_event(ha,
 //             // delay_event(milliseconds(200*2), merge_event(ha,
 //             // delay_event(milliseconds(200*2), merge_event(ha,
 //             // delay_event(milliseconds(200*2), merge_event(ha,
 //             // delay_event(milliseconds(200*2), merge_event(ha,
 //             // delay_event(milliseconds(200*2), merge_event(ha, never())))))))))));
 //
-//         // event_t b = merge_event(ho,
+//         // fa_event_t b = merge_event(ho,
 //         //     delay_event(milliseconds(240*2), merge_event(ho,
 //         //     delay_event(milliseconds(240*2), merge_event(ho,
 //         //     delay_event(milliseconds(240*2), merge_event(ho,
 //         //     delay_event(milliseconds(240*2), merge_event(ho,
 //         //     delay_event(milliseconds(240*2), merge_event(ho, never())))))))))));
 //
-//         // event_t s1 = fa_event_later(seconds(1), NULL);
-//         // event_t s3 = fa_event_later(seconds(3), NULL);
+//         // fa_event_t s1 = fa_event_later(seconds(1), NULL);
+//         // fa_event_t s3 = fa_event_later(seconds(3), NULL);
 //
-//         event_t mm = fa_system_event_mouse_move();
-//         // event_t md = fa_system_event_mouse_down();
-//         // event_t mu = fa_system_event_mouse_up();
-//         // event_t kd = fa_system_event_key_down();
-//         // event_t ku = fa_system_event_key_up();
-//         // event_t mouseX = fa_event_map(apply1, fa_pair_first, mm);
-//         // event_t mouseY = fa_event_map(apply1, fa_pair_second, mm);
+//         fa_event_t mm = fa_system_event_mouse_move();
+//         // fa_event_t md = fa_system_event_mouse_down();
+//         // fa_event_t mu = fa_system_event_mouse_up();
+//         // fa_event_t kd = fa_system_event_key_down();
+//         // fa_event_t ku = fa_system_event_key_up();
+//         // fa_event_t mouseX = fa_event_map(apply1, fa_pair_first, mm);
+//         // fa_event_t mouseY = fa_event_map(apply1, fa_pair_second, mm);
 //
-//         // event_t y2 = merge_event(switch_event(kd, merge_event(a, mm), merge_event(b, md)), later(seconds(5), list(fa_string("flux"))));
-//         // event_t y2 = switch_event(ku, switch_event(kd,never(),mm), merge_event(delay_event(seconds(3),b),md));
-//         // event_t y2 = switch_event(kd,mm,merge_event(md,mu));
-//         // event_t y2 = fa_event_filter(fa_less_than, f64(500), mouseX);
-//         event_t y2 = mm;
+//         // fa_event_t y2 = merge_event(switch_event(kd, merge_event(a, mm), merge_event(b, md)), later(seconds(5), list(fa_string("flux"))));
+//         // fa_event_t y2 = switch_event(ku, switch_event(kd,never(),mm), merge_event(delay_event(seconds(3),b),md));
+//         // fa_event_t y2 = switch_event(kd,mm,merge_event(md,mu));
+//         // fa_event_t y2 = fa_event_filter(fa_less_than, f64(500), mouseX);
+//         fa_event_t y2 = mm;
 //         // fa_print("The event: %s\n", mouseX);
-//         event_t z  = fa_system_event_write_std(y2);
+//         fa_event_t z  = fa_system_event_write_std(y2);
 //
 //         {
-//             clock_t     clk = fa_time_get_system_prec_clock();
-//             scheduler_t sched = fa_scheduler_create(clk);
+//             fa_clock_t     clk = fa_time_get_system_prec_clock();
+//             fa_scheduler_t sched = fa_scheduler_create(clk);
 //             fa_scheduler_schedule(sched, z);
 //             fa_scheduler_loop(sched);
 //         }
@@ -1423,7 +1423,7 @@ void test_scheduler()
 // return i8(ti8(x) + 1234);
 // }
 //
-// void test_processor_graphs(string_t path)
+// void test_processor_graphs(fa_string_t path)
 // {
 //     test_section("Processors");
 //
@@ -1503,7 +1503,7 @@ void test_scheduler()
 
 // void test_plot_buffer()
 // {
-//     buffer_t buf = fa_buffer_create(44100 * sizeof(double));
+//     fa_buffer_t buf = fa_buffer_create(44100 * sizeof(double));
 //
 //     for (int i = 0; i < 44100; ++i) {
 //         double r = (double) rand() / RAND_MAX;
@@ -1517,11 +1517,11 @@ void test_scheduler()
 
 // --------------------------------------------------------------------------------
 
-// void test_plot_file(string_t path)
+// void test_plot_file(fa_string_t path)
 // {
 //     test_section("Plot file");
 //
-//     pair_t res = fa_buffer_read_audio(path);
+//     fa_pair_t res = fa_buffer_read_audio(path);
 //
 //     if (fa_error_check(res)) {
 //         fa_error_log(NULL, (fa_error_t) res);
@@ -1530,7 +1530,7 @@ void test_scheduler()
 //
 //     fa_print("%s\n", res);
 //
-//     buffer_t buf = fa_pair_second(res);
+//     fa_buffer_t buf = fa_pair_second(res);
 //     fa_plot_buffer_double(buf, NULL, NULL);
 //     fa_destroy(buf);
 //     fa_destroy(res);
@@ -1599,12 +1599,12 @@ void test_regex()
 
 // --------------------------------------------------------------------------------
 
-// void test_file_stream(string_t in_path, string_t out_path)
+// void test_file_stream(fa_string_t in_path, fa_string_t out_path)
 // {
 //     test_section("File streams");
 //
-//     file_device_t    input, output;
-//     file_result_t    result;
+//     fa_file_device_t    input, output;
+//     fa_file_result_t    result;
 //     // processor_t proc;
 //
 //     // Processor to use
@@ -1661,9 +1661,9 @@ void test_audio_stream()
 {
     test_section("Audio streams");
 
-    audio_session_t session;
-    audio_device_t  input, output;
-    audio_stream_t  stream;
+    fa_audio_session_t session;
+    fa_audio_device_t  input, output;
+    fa_audio_stream_t  stream;
     // processor_t     proc1, proc2;
 
     // Processor to use
@@ -1705,7 +1705,7 @@ cleanup:
 
 // --------------------------------------------------------------------------------
 
-void print_midi_devices(midi_session_t session)
+void print_midi_devices(fa_midi_session_t session)
 {
     fa_print("\n", NULL);
     fa_print("    Listing midi devices: \n", NULL);
@@ -1751,9 +1751,9 @@ void test_midi_stream()
 {
     test_section("Midi streams");
 
-    midi_session_t session;
-    midi_device_t  input, output;
-    midi_stream_t  in_stream, out_stream;
+    fa_midi_session_t session;
+    fa_midi_device_t  input, output;
+    fa_midi_stream_t  in_stream, out_stream;
 
     // Begin session
     session = fa_midi_begin_session();
@@ -1792,7 +1792,7 @@ void test_midi_stream()
     // TODO
     // fa_midi_add_status_callback(test_audio_stream_status_changed, fa_string("foobar"), session);
 
-    // event_t notes  =
+    // fa_event_t notes  =
     //     merge_event(later(divisions(1,10), midi(0x90, 48, 10)),
     //     merge_event(later(divisions(2,10), midi(0x90, 50, 20)),
     //     merge_event(later(divisions(3,10), midi(0x90, 52, 30)),
@@ -1803,25 +1803,25 @@ void test_midi_stream()
     //     merge_event(later(divisions(8,10), midi(0x90, 60, 80)),
     //     never()))))))));
 
-    // event_t notes =
+    // fa_event_t notes =
     //     merge_event(fa_event_map(apply1, to_note_on,  fa_system_event_key_down()),
     //     merge_event(fa_event_map(apply1, to_note_off, fa_system_event_key_up()),
     //     merge_event(fa_event_map(apply1, to_control,  fa_system_event_mouse_move()),
     //                 fa_event_map(apply1, to_control2, fa_system_event_mouse_move()))));
 
-    // event_t notes2 = fa_event_before(later(seconds(3),0), notes);
+    // fa_event_t notes2 = fa_event_before(later(seconds(3),0), notes);
 
-    // event_t notes   = fa_event_receive((sender_t) in_stream, i32(0));
-    // event_t sender  = fa_event_send((receiver_t) out_stream, i32(0), notes);
-    // event_t sender2 = fa_system_event_write_std(notes);
+    // fa_event_t notes   = fa_event_receive((fa_sender_t) in_stream, i32(0));
+    // fa_event_t sender  = fa_event_send((fa_receiver_t) out_stream, i32(0), notes);
+    // fa_event_t sender2 = fa_system_event_write_std(notes);
 
-    // scheduler_t sched = fa_scheduler_create(fa_time_get_system_prec_clock());
+    // fa_scheduler_t sched = fa_scheduler_create(fa_time_get_system_prec_clock());
     // fa_scheduler_schedule(sched, sender);
     // fa_scheduler_schedule(sched, sender2);
     // fa_scheduler_loop(sched);
 
     // for (int i = 0; i < 30; ++i) {
-    //     fa_message_send((receiver_t) out_stream, 0, midi(0x90, 48 + i * 2, 100));
+    //     fa_message_send((fa_receiver_t) out_stream, 0, midi(0x90, 48 + i * 2, 100));
     //     fa_thread_sleep(100);
     // }
 
@@ -1836,7 +1836,7 @@ void test_midi_hotplug()
 {
     test_section("Midi hot-plugging");
 
-    midi_session_t session;
+    fa_midi_session_t session;
 
     // Begin session
     session = fa_midi_begin_session();

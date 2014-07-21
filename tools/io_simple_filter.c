@@ -36,7 +36,7 @@ int main(int argc, char const *argv[])
 
 
         for (int i = 0; i < 3; ++i) {
-            buffer_t buf = fa_buffer_create(3);
+            fa_buffer_t buf = fa_buffer_create(3);
             fa_buffer_set(buf, 0, 1);
             fa_buffer_set(buf, 0, 2);
             fa_buffer_set(buf, 0, 3);

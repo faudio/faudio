@@ -23,7 +23,7 @@ fa_midi_session_t print_midi_devices(fa_ptr_t _, fa_midi_session_t session)
 
     // fa_thread_sleep(500); // FIXME why is this needed?
 
-    list_t open_streams = fa_empty();
+    fa_list_t open_streams = fa_empty();
     fa_for_each(x, fa_midi_all(session)) {
         fa_print("Name: %s\n", fa_string_to_string(fa_midi_name(x)));
         fa_print("Host: %s\n", fa_string_to_string(fa_midi_host_name(x)));

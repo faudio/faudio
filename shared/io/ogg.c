@@ -61,11 +61,11 @@ void prepare(fa_ptr_t x)
 
 }
 
-buffer_t double2float(buffer_t x)
+fa_buffer_t double2float(fa_buffer_t x)
 {
     assert(fa_buffer_size(x) / 2);
 
-    buffer_t y = fa_buffer_create(fa_buffer_size(x) / 2);
+    fa_buffer_t y = fa_buffer_create(fa_buffer_size(x) / 2);
     double *rx = fa_buffer_unsafe_address(x);
     float *ry = fa_buffer_unsafe_address(y);
 
@@ -77,16 +77,16 @@ buffer_t double2float(buffer_t x)
     return y;
 }
 
-buffer_t ddouble2float(buffer_t x)
+fa_buffer_t ddouble2float(fa_buffer_t x)
 {
-    buffer_t y = double2float(x);
+    fa_buffer_t y = double2float(x);
     fa_destroy(x);
     return y;
 }
 
 // Convert interleaved float buffer to raw floats
 static inline
-void fill_vorbis_buffers(float **dest, buffer_t floats, size_t channels)
+void fill_vorbis_buffers(float **dest, fa_buffer_t floats, size_t channels)
 {
     float *raw_floats = fa_buffer_unsafe_address(floats);
     size_t samples = fa_buffer_size(floats) / 4;
@@ -103,7 +103,7 @@ void fill_vorbis_buffers(float **dest, buffer_t floats, size_t channels)
 }
 
 static inline
-void dfill_vorbis_buffers(float **dest, buffer_t floats, size_t channels)
+void dfill_vorbis_buffers(float **dest, fa_buffer_t floats, size_t channels)
 {
     fill_vorbis_buffers(dest, floats, channels);
     fa_destroy(floats);

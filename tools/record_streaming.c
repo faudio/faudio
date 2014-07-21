@@ -29,7 +29,7 @@ void make_test_file()
 
 static bool gVorbis;
 static bool gEndian;
-static string_t gOutput;
+static fa_string_t gOutput;
 
 
 // void convert_ogg_file()
@@ -52,9 +52,9 @@ static string_t gOutput;
 // }
 //
 
-list_t _signal(fa_ptr_t x, list_t xs)
+fa_list_t _signal(fa_ptr_t x, fa_list_t xs)
 {
-    // signal_t i1 = fa_list_head(xs);
+    // fa_signal_t i1 = fa_list_head(xs);
 
 #ifndef _WIN32
     fa_pair_t synth = fa_signal_dls();

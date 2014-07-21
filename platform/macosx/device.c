@@ -56,7 +56,7 @@ OSStatus audio_listener(AudioObjectID                       id,
 {
     OSStatus result;
     UInt32 propDataSize;
-    pair_t closure = data;
+    fa_pair_t closure = data;
 
     result = AudioObjectGetPropertyDataSize(kAudioObjectSystemObject, addresses, 0, NULL, &propDataSize);
 
@@ -73,7 +73,7 @@ OSStatus audio_listener(AudioObjectID                       id,
     return noErr;
 }
 
-void add_audio_status_listener(pair_t closure)
+void add_audio_status_listener(fa_pair_t closure)
 {
     OSStatus result;
     CFRunLoopRef theRunLoop;
@@ -100,7 +100,7 @@ void add_audio_status_listener(pair_t closure)
     assert(result == noErr);
 }
 
-void remove_audio_status_listener(pair_t closure)
+void remove_audio_status_listener(fa_pair_t closure)
 {
     OSStatus result;
 

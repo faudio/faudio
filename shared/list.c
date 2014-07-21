@@ -88,15 +88,15 @@ inline static void release_node(node_t node)
 
 fa_ptr_t list_impl(fa_id_t interface);
 
-inline static list_t new_list(node_t node)
+inline static fa_list_t new_list(node_t node)
 {
-    list_t list = fa_new(list);
+    fa_list_t list = fa_new(list);
     list->impl = &list_impl;
     list->node = node;
     return list;
 }
 
-inline static void delete_list(list_t list)
+inline static void delete_list(fa_list_t list)
 {
     fa_delete(list);
 }
@@ -161,50 +161,50 @@ inline static void delete_list(list_t list)
 
 // --------------------------------------------------------------------------------
 
-list_t fa_list_empty()
+fa_list_t fa_list_empty()
 {
     return new_list(NULL);
 }
 
-list_t fa_list_single(fa_ptr_t x)
+fa_list_t fa_list_single(fa_ptr_t x)
 {
     return new_list(new_node(x, NULL));
 }
 
-list_t fa_list_copy(list_t xs)
+fa_list_t fa_list_copy(fa_list_t xs)
 {
     return new_list(take_node(xs->node));
 }
 
-list_t fa_list_cons(fa_ptr_t x, list_t xs)
+fa_list_t fa_list_cons(fa_ptr_t x, fa_list_t xs)
 {
     return new_list(new_node(x, take_node(xs->node)));
 }
 
-list_t fa_list_dcons(fa_ptr_t x, list_t xs)
+fa_list_t fa_list_dcons(fa_ptr_t x, fa_list_t xs)
 {
-    list_t ys = new_list(new_node(x, xs->node));
+    fa_list_t ys = new_list(new_node(x, xs->node));
     delete_list(xs);
     return ys;
 }
 
-void fa_list_destroy(list_t xs)
+void fa_list_destroy(fa_list_t xs)
 {
     release_node(xs->node);
     delete_list(xs);
 }
 
-bool fa_list_is_empty(list_t xs)
+bool fa_list_is_empty(fa_list_t xs)
 {
     return xs->node == NULL;
 }
 
-bool fa_list_is_single(list_t xs)
+bool fa_list_is_single(fa_list_t xs)
 {
     return xs->node && !xs->node->next;
 }
 
-int fa_list_length(list_t xs)
+int fa_list_length(fa_list_t xs)
 {
     int count = 0;
     impl_for_each(xs, value) {
@@ -217,7 +217,7 @@ int fa_list_length(list_t xs)
 
 // --------------------------------------------------------------------------------
 
-fa_ptr_t fa_list_head(list_t xs)
+fa_ptr_t fa_list_head(fa_list_t xs)
 {
     if (!xs->node) {
         assert(false && "No head");
@@ -226,7 +226,7 @@ fa_ptr_t fa_list_head(list_t xs)
     return xs->node->value;
 }
 
-list_t fa_list_tail(list_t xs)
+fa_list_t fa_list_tail(fa_list_t xs)
 {
     if (!xs->node) {
         assert(false && "No tail");
@@ -235,7 +235,7 @@ list_t fa_list_tail(list_t xs)
     return new_list(take_node(xs->node->next));
 }
 
-list_t fa_list_init(list_t xs)
+fa_list_t fa_list_init(fa_list_t xs)
 {
     if (!xs->node) {
         assert(false && "No init");
@@ -250,7 +250,7 @@ list_t fa_list_init(list_t xs)
     return new_list(node);
 }
 
-fa_ptr_t fa_list_last(list_t xs)
+fa_ptr_t fa_list_last(fa_list_t xs)
 {
     impl_for_each_node(xs, node) {
         if (!node->next) {
@@ -260,16 +260,16 @@ fa_ptr_t fa_list_last(list_t xs)
     assert(false && "No last");
 }
 
-list_t fa_list_dtail(list_t xs)
+fa_list_t fa_list_dtail(fa_list_t xs)
 {
-    list_t ys = fa_list_tail(xs);
+    fa_list_t ys = fa_list_tail(xs);
     fa_list_destroy(xs);
     return ys;
 }
 
-list_t fa_list_dinit(list_t xs)
+fa_list_t fa_list_dinit(fa_list_t xs)
 {
-    list_t ys = fa_list_init(xs);
+    fa_list_t ys = fa_list_init(xs);
     fa_list_destroy(xs);
     return ys;
 }
@@ -277,43 +277,43 @@ list_t fa_list_dinit(list_t xs)
 
 // --------------------------------------------------------------------------------
 
-static inline list_t append(list_t xs, list_t ys)
+static inline fa_list_t append(fa_list_t xs, fa_list_t ys)
 {
     if (fa_is_empty(xs)) {
         return fa_list_copy(ys);
     } else {
-        list_t xst = fa_list_tail(xs);
-        list_t r = fa_list_dcons(fa_list_head(xs), append(xst, ys));
+        fa_list_t xst = fa_list_tail(xs);
+        fa_list_t r = fa_list_dcons(fa_list_head(xs), append(xst, ys));
         fa_list_destroy(xst);
         return r;
     }
 }
 
-static inline list_t revappend(list_t xs, list_t ys)
+static inline fa_list_t revappend(fa_list_t xs, fa_list_t ys)
 {
     if (fa_is_empty(xs)) {
         return fa_list_copy(ys);
     } else {
-        list_t xst = fa_list_tail(xs);
-        list_t con = fa_list_cons(fa_list_head(xs), ys);
-        list_t r = revappend(xst, con);
+        fa_list_t xst = fa_list_tail(xs);
+        fa_list_t con = fa_list_cons(fa_list_head(xs), ys);
+        fa_list_t r = revappend(xst, con);
         fa_list_destroy(xst);
         fa_list_destroy(con);
         return r;
     }
 }
 
-list_t fa_list_append(list_t xs, list_t ys)
+fa_list_t fa_list_append(fa_list_t xs, fa_list_t ys)
 {
     return append(xs, ys);
 }
 
-list_t fa_list_reverse(list_t xs)
+fa_list_t fa_list_reverse(fa_list_t xs)
 {
     return revappend(xs, fa_list_empty());
 }
 
-static inline list_t merge(list_t xs, list_t ys)
+static inline fa_list_t merge(fa_list_t xs, fa_list_t ys)
 {
     begin_node(node, next);
 
@@ -343,19 +343,19 @@ static inline list_t merge(list_t xs, list_t ys)
     return new_list(node);
 }
 
-static inline list_t dmerge(list_t xs, list_t ys)
+static inline fa_list_t dmerge(fa_list_t xs, fa_list_t ys)
 {
-    list_t res = merge(xs, ys);
+    fa_list_t res = merge(xs, ys);
     fa_list_destroy(xs);
     fa_list_destroy(ys);
     return res;
 }
 
 
-static inline list_t dmerge_sort(list_t xs)
+static inline fa_list_t dmerge_sort(fa_list_t xs)
 {
     int len, mid;
-    list_t left, right;
+    fa_list_t left, right;
 
     len = fa_list_length(xs);
     mid = len / 2;
@@ -378,36 +378,36 @@ static inline list_t dmerge_sort(list_t xs)
     }
 }
 
-list_t fa_list_sort(list_t xs)
+fa_list_t fa_list_sort(fa_list_t xs)
 {
     return dmerge_sort(fa_list_copy(xs));
 }
 
-list_t fa_list_dappend(list_t xs, list_t ys)
+fa_list_t fa_list_dappend(fa_list_t xs, fa_list_t ys)
 {
-    list_t zs = append(xs, ys);
+    fa_list_t zs = append(xs, ys);
     fa_list_destroy(xs);
     fa_list_destroy(ys);
     return zs;
 }
 
-list_t fa_list_dreverse(list_t xs)
+fa_list_t fa_list_dreverse(fa_list_t xs)
 {
-    list_t ys = revappend(xs, fa_list_empty());
+    fa_list_t ys = revappend(xs, fa_list_empty());
     fa_list_destroy(xs);
     return ys;
 }
 
-list_t fa_list_dsort(list_t xs)
+fa_list_t fa_list_dsort(fa_list_t xs)
 {
-    list_t ys = dmerge_sort(xs);
+    fa_list_t ys = dmerge_sort(xs);
     return ys;
 }
 
 
 // --------------------------------------------------------------------------------
 
-list_t fa_list_take(int n, list_t xs)
+fa_list_t fa_list_take(int n, fa_list_t xs)
 {
     if (n <= 0 || fa_list_is_empty(xs)) {
         return fa_list_empty();
@@ -416,7 +416,7 @@ list_t fa_list_take(int n, list_t xs)
     return fa_list_dcons(fa_list_head(xs), fa_list_dtake(n - 1, fa_list_tail(xs)));
 }
 
-list_t fa_list_drop(int n, list_t xs)
+fa_list_t fa_list_drop(int n, fa_list_t xs)
 {
     if (n < 0 || fa_list_is_empty(xs)) {
         return fa_list_empty();
@@ -429,7 +429,7 @@ list_t fa_list_drop(int n, list_t xs)
     return fa_list_ddrop(n - 1, fa_list_tail(xs));
 }
 
-fa_ptr_t fa_list_index(int n, list_t xs)
+fa_ptr_t fa_list_index(int n, fa_list_t xs)
 {
     int i = 0;
     impl_for_each(xs, x) {
@@ -440,78 +440,78 @@ fa_ptr_t fa_list_index(int n, list_t xs)
     return NULL;
 }
 
-list_t fa_list_range(int m, int n, list_t xs)
+fa_list_t fa_list_range(int m, int n, fa_list_t xs)
 {
     return fa_list_dtake(n, fa_list_drop(m, xs));
 }
 
-list_t fa_list_remove_range(int m, int n, list_t xs)
+fa_list_t fa_list_remove_range(int m, int n, fa_list_t xs)
 {
-    list_t as = fa_list_take(m,     xs);
-    list_t bs = fa_list_drop(m + n, xs);
+    fa_list_t as = fa_list_take(m,     xs);
+    fa_list_t bs = fa_list_drop(m + n, xs);
     return fa_list_dappend(as, bs);
 }
 
-list_t fa_list_insert_range(int m, list_t xs, list_t ys)
+fa_list_t fa_list_insert_range(int m, fa_list_t xs, fa_list_t ys)
 {
-    list_t as = fa_list_take(m, ys);
-    list_t bs = fa_list_copy(xs);
-    list_t cs = fa_list_drop(m, ys);
+    fa_list_t as = fa_list_take(m, ys);
+    fa_list_t bs = fa_list_copy(xs);
+    fa_list_t cs = fa_list_drop(m, ys);
     return fa_list_dappend(as, fa_list_dappend(bs, cs));
 }
 
-list_t fa_list_insert(int index, fa_ptr_t value, list_t list)
+fa_list_t fa_list_insert(int index, fa_ptr_t value, fa_list_t list)
 {
-    list_t elem = fa_list_single(value);
-    list_t res  = fa_list_insert_range(index, elem, list);
+    fa_list_t elem = fa_list_single(value);
+    fa_list_t res  = fa_list_insert_range(index, elem, list);
     fa_list_destroy(elem);
     return res;
 }
 
-list_t fa_list_remove(int index, list_t list)
+fa_list_t fa_list_remove(int index, fa_list_t list)
 {
     return fa_list_remove_range(index, 1, list);
 }
 
-list_t fa_list_dtake(int n, list_t xs)
+fa_list_t fa_list_dtake(int n, fa_list_t xs)
 {
-    list_t ys = fa_list_take(n, xs);
+    fa_list_t ys = fa_list_take(n, xs);
     fa_list_destroy(xs);
     return ys;
 }
 
-list_t fa_list_ddrop(int n, list_t xs)
+fa_list_t fa_list_ddrop(int n, fa_list_t xs)
 {
-    list_t ys = fa_list_drop(n, xs);
+    fa_list_t ys = fa_list_drop(n, xs);
     fa_list_destroy(xs);
     return ys;
 }
 
-list_t fa_list_dinsert(int m, fa_ptr_t x, list_t xs)
+fa_list_t fa_list_dinsert(int m, fa_ptr_t x, fa_list_t xs)
 {
-    list_t ys = fa_list_insert(m, x, xs);
+    fa_list_t ys = fa_list_insert(m, x, xs);
     fa_list_destroy(xs);
     return ys;
 }
 
-list_t fa_list_dinsert_range(int m, list_t xs, list_t ys)
+fa_list_t fa_list_dinsert_range(int m, fa_list_t xs, fa_list_t ys)
 {
-    list_t zs = fa_list_insert_range(m, xs, ys);
+    fa_list_t zs = fa_list_insert_range(m, xs, ys);
     fa_list_destroy(xs);
     fa_list_destroy(ys);
     return zs;
 }
 
-list_t fa_list_dremove(int m, list_t xs)
+fa_list_t fa_list_dremove(int m, fa_list_t xs)
 {
-    list_t ys = fa_list_remove(m, xs);
+    fa_list_t ys = fa_list_remove(m, xs);
     fa_list_destroy(xs);
     return ys;
 }
 
-list_t fa_list_dremove_range(int m, int n, list_t xs)
+fa_list_t fa_list_dremove_range(int m, int n, fa_list_t xs)
 {
-    list_t ys = fa_list_remove_range(m, n, xs);
+    fa_list_t ys = fa_list_remove_range(m, n, xs);
     fa_list_destroy(xs);
     return ys;
 }
@@ -519,7 +519,7 @@ list_t fa_list_dremove_range(int m, int n, list_t xs)
 
 // --------------------------------------------------------------------------------
 
-bool fa_list_has(fa_ptr_t value, list_t list)
+bool fa_list_has(fa_ptr_t value, fa_list_t list)
 {
     impl_for_each(list, elem) {
         if (fa_equal(value, elem)) {
@@ -529,7 +529,7 @@ bool fa_list_has(fa_ptr_t value, list_t list)
     return false;
 }
 
-int fa_list_index_of(fa_ptr_t value, list_t list)
+int fa_list_index_of(fa_ptr_t value, fa_list_t list)
 {
     int index = 0;
     impl_for_each(list, elem) {
@@ -546,7 +546,7 @@ int fa_list_index_of(fa_ptr_t value, list_t list)
     return -(index + 1);
 }
 
-fa_ptr_t fa_list_find(fa_pred_t pred, fa_ptr_t data, list_t list)
+fa_ptr_t fa_list_find(fa_pred_t pred, fa_ptr_t data, fa_list_t list)
 {
     impl_for_each(list, elem) {
         if (pred(data, elem)) {
@@ -556,7 +556,7 @@ fa_ptr_t fa_list_find(fa_pred_t pred, fa_ptr_t data, list_t list)
     return NULL;
 }
 
-int fa_list_find_index(fa_pred_t pred, fa_ptr_t data, list_t list)
+int fa_list_find_index(fa_pred_t pred, fa_ptr_t data, fa_list_t list)
 {
     int index = 0;
     impl_for_each(list, elem) {
@@ -572,7 +572,7 @@ int fa_list_find_index(fa_pred_t pred, fa_ptr_t data, list_t list)
 
 // --------------------------------------------------------------------------------
 
-list_t fa_list_map(fa_unary_t func, fa_ptr_t data, list_t list)
+fa_list_t fa_list_map(fa_unary_t func, fa_ptr_t data, fa_list_t list)
 {
     begin_node(node, next);
     impl_for_each(list, elem) {
@@ -581,7 +581,7 @@ list_t fa_list_map(fa_unary_t func, fa_ptr_t data, list_t list)
     return new_list(node);
 }
 
-list_t fa_list_filter(fa_pred_t pred, fa_ptr_t data, list_t list)
+fa_list_t fa_list_filter(fa_pred_t pred, fa_ptr_t data, fa_list_t list)
 {
     begin_node(node, next);
     impl_for_each(list, elem) {
@@ -592,7 +592,7 @@ list_t fa_list_filter(fa_pred_t pred, fa_ptr_t data, list_t list)
     return new_list(node);
 }
 
-fa_ptr_t fa_list_fold_left(fa_binary_t func, fa_ptr_t data, fa_ptr_t init, list_t list)
+fa_ptr_t fa_list_fold_left(fa_binary_t func, fa_ptr_t data, fa_ptr_t init, fa_list_t list)
 {
     fa_ptr_t value = init;
     impl_for_each(list, elem) {
@@ -601,52 +601,52 @@ fa_ptr_t fa_list_fold_left(fa_binary_t func, fa_ptr_t data, fa_ptr_t init, list_
     return value;
 }
 
-list_t fa_list_join(list_t list)
+fa_list_t fa_list_join(fa_list_t list)
 {
-    list_t result = fa_list_empty();
+    fa_list_t result = fa_list_empty();
     impl_for_each(list, elem) {
         result = fa_list_dappend(result, fa_list_copy(elem));
     }
     return result;
 }
 
-list_t fa_list_join_map(fa_unary_t func, fa_ptr_t data, list_t list)
+fa_list_t fa_list_join_map(fa_unary_t func, fa_ptr_t data, fa_list_t list)
 {
-    list_t ys = fa_list_map(func, data, list);
+    fa_list_t ys = fa_list_map(func, data, list);
     return fa_list_djoin(ys);
 }
 
-list_t fa_list_dmap(fa_unary_t f, fa_ptr_t d, list_t xs)
+fa_list_t fa_list_dmap(fa_unary_t f, fa_ptr_t d, fa_list_t xs)
 {
-    list_t ys = fa_list_map(f, d, xs);
+    fa_list_t ys = fa_list_map(f, d, xs);
     fa_list_destroy(xs);
     return ys;
 }
 
-list_t fa_list_dfilter(fa_pred_t p, fa_ptr_t d, list_t xs)
+fa_list_t fa_list_dfilter(fa_pred_t p, fa_ptr_t d, fa_list_t xs)
 {
-    list_t ys = fa_list_filter(p, d, xs);
+    fa_list_t ys = fa_list_filter(p, d, xs);
     fa_list_destroy(xs);
     return ys;
 }
 
-fa_ptr_t fa_list_dfold_left(fa_binary_t f, fa_ptr_t d, fa_ptr_t  z, list_t   xs)
+fa_ptr_t fa_list_dfold_left(fa_binary_t f, fa_ptr_t d, fa_ptr_t  z, fa_list_t   xs)
 {
-    list_t ys = fa_list_fold_left(f, d, z, xs);
+    fa_list_t ys = fa_list_fold_left(f, d, z, xs);
     fa_list_destroy(xs);
     return ys;
 }
 
-list_t fa_list_djoin(list_t list)
+fa_list_t fa_list_djoin(fa_list_t list)
 {
-    list_t ys = fa_list_join(list);
+    fa_list_t ys = fa_list_join(list);
     fa_list_destroy(list);
     return ys;
 }
 
-list_t fa_list_djoin_map(fa_unary_t f, fa_ptr_t d, list_t xs)
+fa_list_t fa_list_djoin_map(fa_unary_t f, fa_ptr_t d, fa_list_t xs)
 {
-    list_t ys = fa_list_join_map(f, d, xs);
+    fa_list_t ys = fa_list_join_map(f, d, xs);
     fa_list_destroy(xs);
     return ys;
 }
@@ -654,7 +654,7 @@ list_t fa_list_djoin_map(fa_unary_t f, fa_ptr_t d, list_t xs)
 
 // --------------------------------------------------------------------------------
 
-list_t fa_list(int count, ...)
+fa_list_t fa_list(int count, ...)
 {
     va_list args;
     va_start(args, count);
@@ -668,7 +668,7 @@ list_t fa_list(int count, ...)
     return new_list(node);
 }
 
-list_t fa_list_repeat(int times, fa_ptr_t value)
+fa_list_t fa_list_repeat(int times, fa_ptr_t value)
 {
     begin_node(node, next);
 
@@ -679,7 +679,7 @@ list_t fa_list_repeat(int times, fa_ptr_t value)
     return new_list(node);
 }
 
-list_t fa_list_enumerate(int m, int n)
+fa_list_t fa_list_enumerate(int m, int n)
 {
     begin_node(node, next);
 
@@ -690,7 +690,7 @@ list_t fa_list_enumerate(int m, int n)
     return new_list(node);
 }
 
-list_t fa_list_to_list(list_t list)
+fa_list_t fa_list_to_list(fa_list_t list)
 {
     return fa_list_copy(list);
 }
@@ -700,8 +700,8 @@ list_t fa_list_to_list(list_t list)
 
 bool list_equal(fa_ptr_t list1, fa_ptr_t list2)
 {
-    node_t node1 = ((list_t) list1)->node;
-    node_t node2 = ((list_t) list2)->node;
+    node_t node1 = ((fa_list_t) list1)->node;
+    node_t node2 = ((fa_list_t) list2)->node;
 
     while (node1 && node2) {
         if (!fa_equal(node1->value, node2->value)) {
@@ -717,8 +717,8 @@ bool list_equal(fa_ptr_t list1, fa_ptr_t list2)
 
 bool list_less_than(fa_ptr_t list1, fa_ptr_t list2)
 {
-    node_t node1 = ((list_t) list1)->node;
-    node_t node2 = ((list_t) list2)->node;
+    node_t node1 = ((fa_list_t) list1)->node;
+    node_t node2 = ((fa_list_t) list2)->node;
 
     while (node1 && node2) {
         if (fa_less_than(node1->value, node2->value)) {
@@ -738,8 +738,8 @@ bool list_less_than(fa_ptr_t list1, fa_ptr_t list2)
 
 bool list_greater_than(fa_ptr_t list1, fa_ptr_t list2)
 {
-    node_t node1 = ((list_t) list1)->node;
-    node_t node2 = ((list_t) list2)->node;
+    node_t node1 = ((fa_list_t) list1)->node;
+    node_t node2 = ((fa_list_t) list2)->node;
 
     while (node1 && node2) {
         if (fa_greater_than(node1->value, node2->value)) {
@@ -759,8 +759,8 @@ bool list_greater_than(fa_ptr_t list1, fa_ptr_t list2)
 
 fa_string_t list_show(fa_ptr_t list)
 {
-    string_t result  = fa_string("");
-    node_t   node = ((list_t) list)->node;
+    fa_string_t result  = fa_string("");
+    node_t   node = ((fa_list_t) list)->node;
     result = fa_string_dappend(result, fa_string("["));
 
     while (node) {
@@ -787,7 +787,7 @@ void list_destroy(fa_ptr_t a)
     fa_list_destroy(a);
 }
 
-type_repr_t list_get_type(fa_ptr_t a)
+fa_dynamic_type_repr_t list_get_type(fa_ptr_t a)
 {
     return list_type_repr;
 }

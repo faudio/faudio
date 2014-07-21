@@ -22,7 +22,7 @@
  */
 
 typedef struct node            *node_t;
-typedef priority_queue_t        queue_t;
+typedef fa_priority_queue_t        queue_t;
 
 struct node {
     fa_ptr_t           value;          // Value
@@ -151,7 +151,7 @@ bool priority_queue_equal(fa_ptr_t a, fa_ptr_t b)
 
 fa_string_t priority_queue_show(fa_ptr_t v)
 {
-    string_t s = fa_string("<PriorityQueue");
+    fa_string_t s = fa_string("<PriorityQueue");
     s = fa_string_dappend(s, fa_string_format_integral(" %02x", (long) v));
     s = fa_string_dappend(s, fa_string(">"));
     return s;

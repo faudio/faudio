@@ -15,10 +15,10 @@ void run_dls()
 {
 #ifndef _WIN32
     fa_pair_t synth = fa_signal_dls();
-    string_t name   = fa_string("dls");
+    fa_string_t name   = fa_string("dls");
 #else
     fa_pair_t synth = fa_signal_synth(fa_string("C:\\sf.sf2"));
-    string_t name   = fa_string("fluid");
+    fa_string_t name   = fa_string("fluid");
 #endif
 
     if (RT) {
@@ -26,7 +26,7 @@ void run_dls()
         // fa_audio_device_t i  = fa_audio_default_input(s);
         fa_audio_device_t o  = fa_audio_default_output(s);
 
-        list_t out           = fa_pair_to_list(synth);
+        fa_list_t out           = fa_pair_to_list(synth);
 
         fa_audio_stream_t st = fa_audio_open_stream(NULL, o, just, out);
 

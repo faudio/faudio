@@ -32,7 +32,7 @@ typedef struct node *node_t;
 
 struct _fa_atomic_queue_t {
     fa_impl_t      impl;               //  Interface dispatcher
-    atomic_t    first, div, last;   //  Node refs
+    fa_atomic_t    first, div, last;   //  Node refs
 };
 
 fa_ptr_t atomic_queue_impl(fa_id_t interface);
@@ -47,9 +47,9 @@ static inline void delete_node(node_t node)
     fa_delete(node);
 }
 
-static inline atomic_queue_t new_queue()
+static inline fa_atomic_queue_t new_queue()
 {
-    atomic_queue_t queue = fa_new(atomic_queue);
+    fa_atomic_queue_t queue = fa_new(atomic_queue);
 
     queue->impl  = &atomic_queue_impl;
     queue->first = fa_atomic();
@@ -59,7 +59,7 @@ static inline atomic_queue_t new_queue()
     return queue;
 }
 
-static inline void delete_queue(atomic_queue_t queue)
+static inline void delete_queue(fa_atomic_queue_t queue)
 {
     fa_delete(queue->first);
     fa_delete(queue->div);
@@ -69,28 +69,28 @@ static inline void delete_queue(atomic_queue_t queue)
 
 /** Atomically get the node from a place.
  */
-static inline node_t get_node(atomic_t place)
+static inline node_t get_node(fa_atomic_t place)
 {
     return (node_t) fa_atomic_get(place);
 }
 
 /** Atomically set a place to a node.
  */
-static inline void set_node(atomic_t place, node_t node)
+static inline void set_node(fa_atomic_t place, node_t node)
 {
     fa_atomic_set(place, node);
 }
 
 /** Atomically forward a place to point to the next node.
  */
-static inline void forward_node(atomic_t place)
+static inline void forward_node(fa_atomic_t place)
 {
     fa_atomic_exchange(place, get_node(place), (get_node(place))->next);
 }
 
 /** Non-atomically delete [begin,end)
  */
-static inline void delete_range(atomic_t begin, atomic_t end)
+static inline void delete_range(fa_atomic_t begin, fa_atomic_t end)
 {
     while (get_node(begin) != get_node(end)) {
         node_t node = get_node(begin);
@@ -101,7 +101,7 @@ static inline void delete_range(atomic_t begin, atomic_t end)
 
 /** Non-atomically delete [begin,end]
  */
-static inline void delete_range_end(atomic_t begin, atomic_t end)
+static inline void delete_range_end(fa_atomic_t begin, fa_atomic_t end)
 {
     delete_range(begin, end);
     delete_node(get_node(end));
@@ -111,7 +111,7 @@ static inline void delete_range_end(atomic_t begin, atomic_t end)
 
 fa_atomic_queue_t fa_atomic_queue_create()
 {
-    atomic_queue_t queue = new_queue();
+    fa_atomic_queue_t queue = new_queue();
     node_t node          = new_node();
 
     set_node(queue->first, node);
@@ -162,7 +162,7 @@ fa_ptr_t fa_atomic_queue_read(fa_atomic_queue_t queue)
 
 fa_string_t atomic_queue_show(fa_ptr_t v)
 {
-    string_t s = fa_string("<AtomicQueue ");
+    fa_string_t s = fa_string("<AtomicQueue ");
     s = fa_string_dappend(s, fa_format_integral("%p", (long) v));
     s = fa_string_dappend(s, fa_string(">"));
     return s;
