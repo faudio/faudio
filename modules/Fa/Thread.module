@@ -39,29 +39,29 @@ module Fa.Thread
         @param data Value to be passed to the function.
         @return     A new thread executing concurrently with the current thread.
      */
-    create  : (Nullary, Ptr) -> Thread;
+    create : (Nullary, Ptr) -> Thread;
 
     /** Destroy a thread, and return after its associated function has returned.
         @param thread Thread to join (destroyed).
       */
-    join    : Thread -> Void;
+    join : Thread -> Void;
 
     /** Destroy a thread and return directly. The associated function may continous executing
         in the background.
         @param thread Thread to detach (destroyed).
       */
-    detach  : Thread -> Void;
+    detach : Thread -> Void;
 
     /** Convert a thread to a the underlying thread type used by the platform.
 
         * On Mac OS X and iOS, `pthread_t` is used.
      */
-    toNative     : Thread -> Ptr;
+    toNative : Thread -> Ptr;
 
     /** Return the main thread.
       */
 
-    main    : () -> Thread;
+    main : () -> Thread;
 
     /** Return the current thread.
       */
@@ -70,29 +70,29 @@ module Fa.Thread
     
     /** Sleep the current thread for the given time.
      */
-    sleep   : Milliseconds -> Void;
+    sleep : Milliseconds -> Void;
 
     /** Create a mutex.
 
         Mutexes have single-ownership semantics and must be finalized by passing it
         to a destructive function.
      */
-    createMutex     : () -> Mutex;
+    createMutex : () -> Mutex;
 
     /** Destroy a mutex.
      */
-    destroyMutex    : Mutex -> Void;
+    destroyMutex : Mutex -> Void;
 
     /** Acquire the lock of a mutex.
      */
-    lock            : Mutex -> Bool;
+    lock : Mutex -> Bool;
 
     /** Try acquiring the lock of a mutex.
      */
-    tryLock         : Mutex -> Bool;
+    tryLock : Mutex -> Bool;
 
     /** Release the lock of a mutex.
      */
-    unlock          : Mutex -> Bool;
+    unlock : Mutex -> Bool;
 }
 

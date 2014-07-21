@@ -45,7 +45,7 @@ module Fa.List
         @par Performance
             O(1)
      */
-    empty       : () -> List;
+    empty : () -> List;
 
     /** Create a new list containing the given element.
 
@@ -58,7 +58,7 @@ module Fa.List
         @par Performance
             O(1)
      */
-    single      : Ptr -> List;
+    single : Ptr -> List;
 
     /** Create a new list by inserting the given element at the beginning of the given list.
 
@@ -73,7 +73,7 @@ module Fa.List
         @par Performance
             O(1)
      */
-    cons        : (Ptr, List) -> List;
+    cons : (Ptr, List) -> List;
 
     /** Create a new list by inserting the given element at the beginning of the given list.
 
@@ -88,15 +88,15 @@ module Fa.List
         @par Performance
             O(1)
      */
-    dcons       : (Ptr, List) -> List;
+    dcons : (Ptr, List) -> List;
     
     /** Create a list by repeating the given element.
      */
-    repeat      : (Int, Ptr) -> List;
+    repeat : (Int, Ptr) -> List;
     
     /** Create a list from the given range.
      */
-    enumerate   : (Int, Int) -> List;
+    enumerate : (Int, Int) -> List;
 
     /** Copy the given list.
 
@@ -105,14 +105,14 @@ module Fa.List
         @par Performance
             O(1)
      */
-    copy        : List -> List;
+    copy : List -> List;
 
     /** Destroy the given list.
 
         @par Performance
             O(n)
      */
-    destroy     : List -> Void;
+    destroy : List -> Void;
 
 
     // Predicates
@@ -122,19 +122,19 @@ module Fa.List
         @par Performance
             O(1)
      */
-    isEmpty     : List -> Bool;
+    isEmpty : List -> Bool;
 
     /** Return whether the given list has a single element.
         @par Performance
             O(1)
      */
-    isSingle    : List -> Bool;
+    isSingle : List -> Bool;
 
     /** Return the lenght of the given list.
         @par Performance
             O(n)
      */
-    length      : List -> Int;
+    length : List -> Int;
 
 
     // Sequential access
@@ -143,37 +143,37 @@ module Fa.List
         @par Performance
             O(1)
      */
-    head        : List -> Ptr;
+    head : List -> Ptr;
 
     /** Return all elements but the first of the given list.
         @par Performance
             O(1)
      */
-    tail        : List -> List;
+    tail : List -> List;
 
     /** Return all elements but the first of the given list.
         @par Performance
             O(1)
      */
-    dtail       : List -> List;
+    dtail : List -> List;
 
     /** Return all elements but the last of the given list.
         @par Performance
             O(n)
      */
-    init        : List -> List;
+    init : List -> List;
     
     /** Return all elements but the last of the given list.
         @par Performance
             O(n)
      */
-    dinit       : List -> List;
+    dinit : List -> List;
     
     /** Return the last element of the given list.
         @par Performance
             O(n)
      */
-    last        : List -> Ptr;
+    last : List -> Ptr;
 
     
     // Misc operations
@@ -182,37 +182,37 @@ module Fa.List
         @par Performance
             O(n)
      */
-    append      : (List, List) -> List;
+    append : (List, List) -> List;
     
     /** Return the result of appending the given lists.
         @par Performance
             O(n)
      */
-    dappend     : (List, List) -> List;
+    dappend : (List, List) -> List;
     
     /** Return the reverse of the given list.
         @par Performance
             O(n)
      */
-    reverse     : List -> List;
+    reverse : List -> List;
 
     /** Return the reverse of the given list.
         @par Performance
             O(n)
      */
-    dreverse    : List -> List;
+    dreverse : List -> List;
     
     /** Return the given list sorted.
         @par Performance
             O(n log n)
      */
-    sort        : List -> List;
+    sort : List -> List;
 
     /** Return the given list sorted.
         @par Performance
             O(n log n)
      */
-    dsort       : List -> List;
+    dsort : List -> List;
 
     
     // Random access
@@ -221,25 +221,25 @@ module Fa.List
         @par Performance
             O(n)
      */
-    take         : (Int, List) -> List;
+    take : (Int, List) -> List;
     
     /** Return the *n* leading elements of the given list.
         @par Performance
             O(n)
      */
-    dtake        : (Int, List) -> List;
+    dtake : (Int, List) -> List;
     
     /** Return the all but the *n* leading elements of the given list.
         @par Performance
             O(n)
      */
-    drop         : (Int, List) -> List;
+    drop : (Int, List) -> List;
     
     /** Return the all but the *n* leading elements of the given list.
         @par Performance
             O(n)
      */
-    ddrop        : (Int, List) -> List;
+    ddrop : (Int, List) -> List;
     
     /** List index operator.
         @returns
@@ -247,31 +247,31 @@ module Fa.List
         @par Performance
             O(n)
      */
-    index        : (Int, List) -> Ptr;
+    index : (Int, List) -> Ptr;
     
     /** Return the given range of the given list.
         @par Performance
             O(n)
      */
-    range        : (Int, Int, List) -> List;
+    range : (Int, Int, List) -> List;
     
     /** Insert the given element into the given list.
         @par Performance
             O(n)
      */
-    insert       : (Int, Ptr, List) -> List;
+    insert : (Int, Ptr, List) -> List;
     
     /** Insert the given element into the given list.
         @par Performance
             O(n)
      */
-    dinsert      : (Int, Ptr, List) -> List;
+    dinsert : (Int, Ptr, List) -> List;
     
     /** Insert the given range into the given list.
         @par Performance
             O(n)
      */
-    insertRange  : (Int, List, List) -> List;
+    insertRange : (Int, List, List) -> List;
 
     /** Insert the given range into the given list.
         @par Performance
@@ -283,19 +283,19 @@ module Fa.List
         @par Performance
             O(n)
      */
-    remove       : (Int, List) -> List;
+    remove : (Int, List) -> List;
     
     /** Remove the given element from the given list.
         @par Performance
             O(n)
      */
-    dremove      : (Int, List) -> List;
+    dremove : (Int, List) -> List;
     
     /** Remove the given range from the given list.
         @par Performance
             O(n)
      */
-    removeRange  : (Int, Int, List) -> List;
+    removeRange : (Int, Int, List) -> List;
     
     /** Remove the given range from the given list.
         @par Performance
@@ -310,7 +310,7 @@ module Fa.List
         @par Performance
             O(n)
      */
-    has         : (Ptr, List) -> Bool;
+    has : (Ptr, List) -> Bool;
 
     /** Return the first element satisfying the given predicate in the
         list, if found.
@@ -320,21 +320,21 @@ module Fa.List
         @par Performance
             O(log n)
      */
-    find        : (Pred, Ptr, List) -> Ptr;
+    find : (Pred, Ptr, List) -> Ptr;
 
     /** Return the index of the first occurance given element in the
         list, or a negative value if no such element is found
         @par Performance
             O(n)
      */
-    indexOf     : (Ptr, List) -> Int;
+    indexOf : (Ptr, List) -> Int;
 
     /** Return the index of the first element satisfying the given predicate in the
         list, or a negative value if no such element is found.
         @par Performance
             O(log n)
      */
-    findIndex   : (Pred, Ptr, List) -> Int;
+    findIndex : (Pred, Ptr, List) -> Int;
 
 
     // Maps and folds
@@ -343,13 +343,13 @@ module Fa.List
         @par Performance
             O(n)
      */
-    filter      : (Pred, Ptr, List) -> List;
+    filter : (Pred, Ptr, List) -> List;
     
     /** Return the given list with all elements not satisfying the given predicate removed.
         @par Performance
             O(n)
      */
-    dfilter     : (Pred, Ptr, List) -> List;
+    dfilter : (Pred, Ptr, List) -> List;
     
     /** Return the result of applying the given function to all elements of the given list.
 
@@ -361,7 +361,7 @@ module Fa.List
         @par Performance
             O(n)
      */
-    map         : (Unary, Ptr, List) -> List;
+    map : (Unary, Ptr, List) -> List;
     
     /** Return the result of applying the given function to all elements of the given list.
 
@@ -373,7 +373,7 @@ module Fa.List
         @par Performance
             O(n)
      */
-    dmap        : (Unary, Ptr, List) -> List;
+    dmap : (Unary, Ptr, List) -> List;
     
     /**
      Map over the given list and join the results.
@@ -388,8 +388,8 @@ module Fa.List
             O(n)
      
      */
-    joinMap     : (Unary, Ptr, List) -> List;
-    djoinMap    : (Unary, Ptr, List) -> List;
+    joinMap : (Unary, Ptr, List) -> List;
+    djoinMap : (Unary, Ptr, List) -> List;
     
     /** Concatenate all elements of the given list.
 
@@ -398,7 +398,7 @@ module Fa.List
         @par Performance
             O(n)
      */
-    join        : List -> List;
+    join : List -> List;
     
     /** Concatenate all elements of the given list.
 
@@ -407,25 +407,25 @@ module Fa.List
         @par Performance
             O(n)
      */
-    djoin       : List -> List;
+    djoin : List -> List;
 
     /** Fold over the given list from left to right.
 
         @par Performance
             O(n)
      */
-    foldLeft    : (Binary, Ptr, Ptr, List) -> Ptr;
+    foldLeft : (Binary, Ptr, Ptr, List) -> Ptr;
     
     /** Fold over the given list from left to right.
 
         @par Performance
             O(n)
      */
-    dfoldLeft   : (Binary, Ptr, Ptr, List) -> Ptr;
+    dfoldLeft : (Binary, Ptr, Ptr, List) -> Ptr;
 
     
     // Conversions
     
-    toList      : List -> List;
+    toList : List -> List;
 }
 

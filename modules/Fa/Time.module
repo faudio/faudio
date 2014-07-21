@@ -73,7 +73,7 @@ module Fa.Time
      */
     type Milliseconds = Int64;
 
-
+    // -------------------------------------------------------------------------
     // Constructors
     
     /** Create a new time value.
@@ -88,20 +88,21 @@ module Fa.Time
         @return
             A new time value.
      */
-    create      : (Days, Hours, Minutes, Ratio) -> Time;
+    create : (Days, Hours, Minutes, Ratio) -> Time;
     
     /**
         Copy the given time value.
      */
-    copy        : Time -> Time;
+    copy : Time -> Time;
     
     /**
         Destroy the given time value.
      */
-    destroy     : Time -> Void;
+    destroy : Time -> Void;
 
 
-    // Introspection
+    // -------------------------------------------------------------------------
+    // Introspecting time values
 
     /**
         Return the number of whole days in this time value.
@@ -111,7 +112,7 @@ module Fa.Time
         @return
             Integer representing this time in days modulo one.
      */
-    days        : Time -> Int32;
+    days : Time -> Int32;
 
     /**
         Return the number of whole hours in this time value.
@@ -121,7 +122,7 @@ module Fa.Time
         @return
             Integer representing this time in hours modulo one.
      */
-    hours       : Time -> Int32;
+    hours : Time -> Int32;
 
     /**
         Return the number of whole minutes in this time value.
@@ -131,7 +132,7 @@ module Fa.Time
         @return
             Integer representing this time in minutes modulo one.
      */
-    minutes     : Time -> Int32;
+    minutes : Time -> Int32;
 
     /**
         Return the number of whole seconds in this time value.
@@ -141,7 +142,7 @@ module Fa.Time
         @return
             Integer representing this time in seconds modulo one.
      */
-    seconds     : Time -> Int32;
+    seconds : Time -> Int32;
 
     /**
         Return the fractions of a second in this time value.
@@ -151,14 +152,14 @@ module Fa.Time
         @return
             Rational number, representing the remainder of time in seconds over one.
      */
-    divisions   : Time -> Ratio;
+    divisions : Time -> Ratio;
 
     /** Print the time as an ISO 8601 duration.
 
         The ISO represenation use decimal fractions of a second, and may lose precision. For example
         the duration of 1 min 24 1/3 sec would be represented as `P0000-00-00T00:01:24.3333`.
      */
-    toIso           : Time -> String;
+    toIso : Time -> String;
 
     /** Convert the time to seconds.
         This may lose precision.
@@ -166,7 +167,7 @@ module Fa.Time
         @param time
             Time value.
      */
-    toSeconds       : Time -> Seconds;
+    toSeconds : Time -> Seconds;
 
     /** Convert the time to milliseconds.
         This may lose precision.
@@ -174,31 +175,12 @@ module Fa.Time
         @param time
             Time value.
      */
-    toMilliseconds  : Time -> Milliseconds;
+    toMilliseconds : Time -> Milliseconds;
 
     /** The system time type.
 
         This is the same as `time_t` in the standard C header `time.h`.
      */
     type System = opaque; 
-    
-    // /** The system CPU time type.
-    //  */
-    // type Cpu    = opaque; 
-    // 
-    // /** Convert system time to a time value.
-    //     Generally, system time is seconds since the Unix epoch.
-    //  */
-    // fromSystem  : System -> Time;
-    // /** Convert system CPU time to a time value.
-    //  */
-    // fromCpu     : Cpu -> Time;
-    // /** Get the system time.
-    //  */
-    // system      : () -> System;
-    // /** Get the system CPU time.
-    //  */
-    // cpu         : () -> Cpu;
-    //                                      
 }
 

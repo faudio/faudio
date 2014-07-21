@@ -30,24 +30,24 @@ module Fa.Ratio
 
     /** Create a rational number.
      */
-    create  : (Num, Denom) -> Ratio;
+    create : (Num, Denom) -> Ratio;
 
     /** Return the numerator of the given rational number.
      */
-    num     : Ratio -> Num;
+    num : Ratio -> Num;
 
     /** Return the denominator of the given rational number.
      */
-    denom   : Ratio -> Denom;
+    denom : Ratio -> Denom;
 
     /** Destruct the given rational number, writing its numerator
         and denominator to the given locations.
      */
-    match   : (Ratio, Num*, Denom*) -> Void;
+    match : (Ratio, Num*, Denom*) -> Void;
 
     /** Copy a rational number.
      */
-    copy    : Ratio -> Ratio;
+    copy : Ratio -> Ratio;
 
     /** Destroy a rational number.
      */
@@ -58,39 +58,39 @@ module Fa.Ratio
             
     /** Add the given rational numbers.
      */
-     add         : (Ratio, Ratio) -> Ratio;
+     add : (Ratio, Ratio) -> Ratio;
 
     /** Subtract the given rational numbers.
      */
-     subtract    : (Ratio, Ratio) -> Ratio;
+     subtract : (Ratio, Ratio) -> Ratio;
 
     /** Multiply the given rational numbers.
      */
-     multiply    : (Ratio, Ratio) -> Ratio;
+     multiply : (Ratio, Ratio) -> Ratio;
 
     /** Divide the given rational numbers.
      */
-     divide      : (Ratio, Ratio) -> Ratio;
+     divide : (Ratio, Ratio) -> Ratio;
 
     /** Return the successor of the given rational number.
      */
-     succ        : Ratio -> Ratio;
+     succ : Ratio -> Ratio;
 
     /** Return the predecessor of the given rational number.
      */
-     pred        : Ratio -> Ratio;
+     pred : Ratio -> Ratio;
 
     /** Negate the given rational number.
      */
-     negate      : Ratio -> Ratio;
+     negate : Ratio -> Ratio;
 
     /** Invert the given rational number.
      */
-    recip       : Ratio -> Ratio;
+    recip : Ratio -> Ratio;
 
     /** Return the absolute value of the given rational number.
      */
-    absolute    : Ratio -> Ratio;
+    absolute : Ratio -> Ratio;
 
     /** Normalize the given rational number.
      */

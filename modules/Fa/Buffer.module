@@ -39,7 +39,7 @@ module Fa.Buffer
         @note
             O(n)
      */
-    create  : (Size) -> Buffer;
+    create : (Size) -> Buffer;
 
     /** Create a buffer wrapping the given memory region.
 
@@ -50,20 +50,20 @@ module Fa.Buffer
         @note
             O(1)
      */
-    wrap    : (Ptr, Size, Unary, Ptr) -> Buffer;
+    wrap : (Ptr, Size, Unary, Ptr) -> Buffer;
 
     /** Copy the given buffer.
         @note
             O(n)
      */
-    copy    : Buffer -> Buffer;
+    copy : Buffer -> Buffer;
 
     /** Return a new buffer of the given size containing the contents
         of the given buffer padded with zero bytes at the end.
         @note
             O(n)
      */
-    resize  : (Size, Buffer) -> Buffer;
+    resize : (Size, Buffer) -> Buffer;
 
     /** Return a new buffer of the given size containing the contents
         of the given buffer padded with zero bytes at the end.
@@ -74,7 +74,7 @@ module Fa.Buffer
         @note
             O(n)
      */
-    dresize  : (Size, Buffer) -> Buffer;
+    dresize : (Size, Buffer) -> Buffer;
 
     /** Destroy the given buffer.
         @note
@@ -86,7 +86,7 @@ module Fa.Buffer
         @note
             O(1)
      */
-    size    : Buffer -> Size;  
+    size : Buffer -> Size;  
 
     /** Get the value of some meta-data attribute of the given buffer.
         @param buffer The buffer.
@@ -112,13 +112,13 @@ module Fa.Buffer
         @note
             O(1)
      */
-    get     : (Buffer, Size) -> UInt8;
+    get : (Buffer, Size) -> UInt8;
 
     /** Update a value in the buffer.
         @note
             O(1)
      */
-    set     : (Buffer, Size, UInt8) -> Void;
+    set : (Buffer, Size, UInt8) -> Void;
 
     /** Copy the first n bytes. */
     take : (Size, Buffer) -> Buffer;
@@ -136,25 +136,25 @@ module Fa.Buffer
         @note
             O(1)
      */
-    getInt16  : (Buffer, Size) -> Int16;
+    getInt16 : (Buffer, Size) -> Int16;
     
     /** Get a value from the buffer.
         @note
             O(1)
      */
-    getInt32  : (Buffer, Size) -> Int32;
+    getInt32 : (Buffer, Size) -> Int32;
     
     /** Get a value from the buffer.
         @note
             O(1)
      */
-    getInt64  : (Buffer, Size) -> Int64;
+    getInt64 : (Buffer, Size) -> Int64;
     
     /** Get a value from the buffer.
         @note
             O(1)
      */
-    getFloat  : (Buffer, Size) -> Float;
+    getFloat : (Buffer, Size) -> Float;
     
     /** Get a value from the buffer.
         @note
@@ -167,25 +167,25 @@ module Fa.Buffer
         @note
             O(1)
      */
-    setInt16  : (Buffer, Size, Int16) -> Void;
+    setInt16 : (Buffer, Size, Int16) -> Void;
     
     /** Update a value in the buffer.
         @note
             O(1)
      */
-    setInt32  : (Buffer, Size, Int32) -> Void;
+    setInt32 : (Buffer, Size, Int32) -> Void;
     
     /** Update a value in the buffer.
         @note
             O(1)
      */
-    setInt64  : (Buffer, Size, Int64) -> Void;    
+    setInt64 : (Buffer, Size, Int64) -> Void;    
     
     /** Update a value in the buffer.
         @note
             O(1)
      */
-    setFloat  : (Buffer, Size, Float) -> Void;
+    setFloat : (Buffer, Size, Float) -> Void;
     
     /** Update a value in the buffer.
         @note
@@ -202,7 +202,7 @@ module Fa.Buffer
         @return
             A new buffer.
      */
-    readRaw     : String -> Buffer;
+    readRaw : String -> Buffer;
     
     /**
         Write a buffer to a file.
@@ -210,7 +210,7 @@ module Fa.Buffer
         @param path
             Path to the file to write.
      */
-    writeRaw    : (String,Buffer) -> Void;    
+    writeRaw : (String,Buffer) -> Void;    
     
     /**
         Read an audio file.
@@ -220,7 +220,7 @@ module Fa.Buffer
         @return
             A buffer or an error value.
      */
-    readAudio   : String -> Buffer;
+    readAudio : String -> Buffer;
 
     /**
         Write an audio file.
@@ -232,7 +232,7 @@ module Fa.Buffer
         @return
             The null pointer or an error value.
      */
-    writeAudio  : (String,Buffer) -> Ptr; // Error?
+    writeAudio : (String,Buffer) -> Ptr; // Error?
 
     /** Return the address of the buffer.
 

@@ -12,10 +12,6 @@ module Fa.System.Directory
     current : () -> String;
     create : String -> Void;
     remove : String -> Void;          
-    // TODO isFile : String -> Bool
-    // TODO isDirectory : String -> Bool
-    // TODO enumerate : String -> [String]
-
     readFile : String -> String;
     writeFile : (String,String) -> Void;
     appendFile : (String,String) -> Void;

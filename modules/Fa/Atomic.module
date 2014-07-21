@@ -32,7 +32,7 @@ module Fa.Atomic
         @par Atomicity
             Non-atomic
      */
-    copy    : Atomic -> Atomic;
+    copy : Atomic -> Atomic;
 
     /** Destroy the given atomic reference.
         @par Atomicity
@@ -57,7 +57,7 @@ module Fa.Atomic
         @par Atomicity
             Atomic
      */
-    get     : Atomic -> Ptr;
+    get : Atomic -> Ptr;
 
     /** Update the given atomic value by applying the given pure function.
 
@@ -67,7 +67,7 @@ module Fa.Atomic
 
         @par Atomicity Atomic
      */
-    modify  : (Atomic, Unary, Ptr) -> Void;
+    modify : (Atomic, Unary, Ptr) -> Void;
 
     /** Update the given atomic value by adding the given amount.
 
@@ -82,8 +82,6 @@ module Fa.Atomic
 
         @par Atomicity Atomic
      */
-    set     : (Atomic, Ptr) -> Void;
-
-    // TODO increment : (Atomic, Int32) -> Void;
+    set : (Atomic, Ptr) -> Void;
 }
 

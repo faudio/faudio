@@ -20,28 +20,28 @@ module Fa.PriorityQueue
     type PriorityQueue = opaque;
 
     /**  Create an empty queue. */
-    empty   : () -> PriorityQueue;
+    empty : () -> PriorityQueue;
 
     /**  Create an queue containing a single element. */
-    single  : Ptr -> PriorityQueue;
+    single : Ptr -> PriorityQueue;
 
     /**  Destroy the given queue. */
     destroy : PriorityQueue -> Void;
 
     /**  Merge the two given queues into the first. */
-    merge   : (PriorityQueue, PriorityQueue) -> Void;
+    merge : (PriorityQueue, PriorityQueue) -> Void;
 
     /**  Insert the given element into the given queue. */
-    insert  : (Ptr, PriorityQueue) -> Void; 
+    insert : (Ptr, PriorityQueue) -> Void; 
     /**  Returns the top-most element in the given queue, if any.
          @errors
             Returns `NULL` if the queue is empty.
      */
-    peek    : PriorityQueue -> Ptr;
+    peek : PriorityQueue -> Ptr;
     /**  Returns the top-most element and remove it from the queue.
          @errors
             Returns `NULL` if the queue is empty.
      */
-    pop     : PriorityQueue -> Ptr;
+    pop : PriorityQueue -> Ptr;
 }
 

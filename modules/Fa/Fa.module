@@ -70,15 +70,15 @@ module "transient" Fa.Utility
 
     /** Instruct Fa to write log messages to the specific file.
      */
-    setLogFile  : String -> Void;
+    setLogFile : String -> Void;
 
     /** Instruct Fa to write log messages to the standard output.
      */
-    setLogStd   : () -> Void;
+    setLogStd : () -> Void;
 
     /** Instruct Fa to pass log messages to the given handler.
      */
-    setLog      : (LogFunc,Ptr) -> Void;
+    setLog : (LogFunc,Ptr) -> Void;
 
     /** Write a log message.
 
@@ -87,30 +87,30 @@ module "transient" Fa.Utility
         @param error
             Condition to log. Must implement [Error](@ref fa_error_interface_t).
      */
-    log             : (Ptr,Error) -> Void;
+    log : (Ptr,Error) -> Void;
 
     /** Write an informative message to the log.
      */
-    logInfo         : (String) -> Void;
+    logInfo : (String) -> Void;
 
     /** Write a warning to the log.
      */
-    logWarning      : (String) -> Void;
+    logWarning : (String) -> Void;
 
     /** Write an error to the log.
      */
-    logError        : (String) -> Void;
+    logError : (String) -> Void;
 
     /** Write an informative message to the log.
      */
-    logInfoFrom     : (String,String) -> Void;
+    logInfoFrom : (String,String) -> Void;
 
     /** Write a warning to the log.
      */
-    logWarningFrom  : (String,String) -> Void;
+    logWarningFrom : (String,String) -> Void;
 
     /** Write an error to the log.
      */
-    logErrorFrom    : (String,String) -> Void;
+    logErrorFrom : (String,String) -> Void;
 }
 

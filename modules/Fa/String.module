@@ -71,31 +71,36 @@ module Fa.String
 
         The returned string should be destroyed by the caller.
      */
-    empty   : () -> String;
+    empty : () -> String;
 
     /** Create a single-char string.
 
         The returned string should be destroyed by the caller.
      */
-    single  : Char16 -> String;
+    single : Char16 -> String;
 
     /** Create a string by repeating the given character.
 
         The returned string should be destroyed by the caller.
      */
-    repeat  : (Int, Char16) -> String;
+    repeat : (Int, Char16) -> String;
 
     /** Copy the given string.
 
         The returned string should be destroyed by the caller.
      */
-    copy    : String -> String;
+    copy : String -> String;
 
-    /** Append the given strings.
+    /** Append the given strings, which are both copied.
 
         The returned string should be destroyed by the caller.
      */
-    append  : (String, String) -> String;
+    append : (String, String) -> String;
+
+    /** Append the given strings, which are both destroyed.
+
+        The returned string should be destroyed by the caller.
+     */
     dappend : (String, String) -> String;
 
     /** Destroy the given string.
@@ -124,7 +129,7 @@ module Fa.String
         @return
             A new string.
      */
-    show     : Ptr -> String;
+    show : Ptr -> String;
     
     /** Behaves like the identity function on strings and as [show](@ref fa_string_show)
         on all other value.
@@ -135,7 +140,7 @@ module Fa.String
     /** Generic JSON conversion.
         @param a    Value implementing [Show](@ref fa_string_show_t) or [Dynamic](@ref fa_string_dynamic_t).
       */
-    toJson   : Ptr -> String;
+    toJson : Ptr -> String;
     
     /** Generic JSON conversion.
         @param string   A JSON string.
@@ -148,7 +153,7 @@ module Fa.String
         @return
         qA new encoded string.
      */
-    toUtf8       : String -> Utf8;
+    toUtf8 : String -> Utf8;
     
     /** Encode a string as CP1252, also known as the standard Windows charset.
 
@@ -156,7 +161,7 @@ module Fa.String
         @return
             A new encoded string.
      */
-    toCp1252     : String -> Cp1252;
+    toCp1252 : String -> Cp1252;
 
     /** Encode the given string as UTF-16.
 
@@ -164,13 +169,13 @@ module Fa.String
         @return
             A heap-allocated encoded string.
      */
-    toUtf16      : String -> Utf16;
+    toUtf16 : String -> Utf16;
 
     /** Convert a string to a the string representation used by the platform.
 
         * On Mac OS X and iOS, `CFStringRef` is used.
      */
-    toNative     : String -> Ptr;
+    toNative : String -> Ptr;
 
     /** Deencode a string from UTF-8.
 
@@ -178,7 +183,7 @@ module Fa.String
         @return
             A new string.
      */
-    fromUtf8     : Utf8   -> String;
+    fromUtf8 : Utf8   -> String;
 
     /** Deencode a string from CP1252, also known as the standard Windows charset.
 
@@ -186,7 +191,7 @@ module Fa.String
         @return
             A new string.
      */
-    fromCp1252   : Cp1252 -> String;
+    fromCp1252 : Cp1252 -> String;
 
     /** Deencode a string from Mac OS X Roman, also known as the standard Windows charset.
 
@@ -202,13 +207,13 @@ module Fa.String
         @return
             A new string.
      */
-    fromUtf16    : Utf16  -> String;
+    fromUtf16 : Utf16  -> String;
 
     /** Convert a value of the string representation used by the platform to a string.
 
         * On Mac OS X and iOS, `CFStringRef` is used.
      */
-    fromNative   : Ptr    -> String;
+    fromNative : Ptr    -> String;
 
     /** Return true iff the given string matches the given regular expression.
         @param expr   A regular expression string.

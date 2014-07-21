@@ -33,37 +33,37 @@ module Fa.Set
     type Set = opaque;
     
     // Constructors
-    empty            : () -> Set;
-    single           : Ptr -> Set;
-    add              : (Ptr, Set) -> Set; // add x a = a `union` single x
-    set              : (Ptr, Set) -> Set; // set x a = single x `union` a
-    remove           : (Ptr, Set) -> Set;
-    dadd             : (Ptr, Set) -> Set;
-    dset             : (Ptr, Set) -> Set;
-    dremove          : (Ptr, Set) -> Set;
-    copy             : Set -> Set;
-    destroy          : Set -> Void;    
+    empty : () -> Set;
+    single : Ptr -> Set;
+    add : (Ptr, Set) -> Set; // add x a = a `union` single x
+    set : (Ptr, Set) -> Set; // set x a = single x `union` a
+    remove : (Ptr, Set) -> Set;
+    dadd : (Ptr, Set) -> Set;
+    dset : (Ptr, Set) -> Set;
+    dremove : (Ptr, Set) -> Set;
+    copy : Set -> Set;
+    destroy : Set -> Void;    
 
     // Size
-    size             : Set -> Int;
-    isEmpty          : Set -> Bool;
-    isSingle         : Set -> Bool;
+    size : Set -> Int;
+    isEmpty : Set -> Bool;
+    isSingle : Set -> Bool;
 
     // Predicates
-    has              : (Ptr, Set) -> Bool;
-    get              : (Ptr, Set) -> Ptr;
-    isSubsetOf       : (Set, Set) -> Bool;
+    has : (Ptr, Set) -> Bool;
+    get : (Ptr, Set) -> Ptr;
+    isSubsetOf : (Set, Set) -> Bool;
     isProperSubsetOf : (Set, Set) -> Bool;
 
     // Set operations
-    sum              : (Set, Set) -> Set; // left biased
-    intersection     : (Set, Set) -> Set; // left biased
-    difference       : (Set, Set) -> Set;
-    product          : (Set, Set) -> Set;
-    // power            : Set -> Set;
+    sum : (Set, Set) -> Set; // left biased
+    intersection : (Set, Set) -> Set; // left biased
+    difference : (Set, Set) -> Set;
+    product : (Set, Set) -> Set;
+    // power : Set -> Set;
 
     // Conversions   
-    fromList         : List -> Set;
-    toList           : Set -> List;
+    fromList : List -> Set;
+    toList : Set -> List;
 }
 

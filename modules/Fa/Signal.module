@@ -41,14 +41,14 @@ module Fa.Signal
         
         @par Semantic $$y(t) = t$$.
      */
-    time        : () -> Signal;
+    time : () -> Signal;
 
     /**
         Returns a signal representing white noise.
         
         @par Semantic $$y(t) = random(-1,1)$$.
      */
-    random      : () -> Signal;
+    random : () -> Signal;
     
     /**
         Returns a signal representing the given constant value.
@@ -57,7 +57,7 @@ module Fa.Signal
             Constant value.
         @par Semantic $$y(c)(t) = c$$.
      */
-    constant    : Double -> Signal;
+    constant : Double -> Signal;
 
     /**
         Returns a signal that applies the given function to output of the given signal.
@@ -73,7 +73,7 @@ module Fa.Signal
 
         @par Semantic $$y(f,a)(t) = f(a(t))$$.
      */
-    lift        : ( String, UnaryDouble, Ptr, Signal )            -> Signal;
+    lift : ( String, UnaryDouble, Ptr, Signal )            -> Signal;
 
     /**
         Returns a signal that applies the given function to output of the given signals.
@@ -91,7 +91,7 @@ module Fa.Signal
 
         @par Semantic $$y(f,a,b)(t) = f(a(t), b(t))$$.
      */
-    lift2       : ( String, BinaryDouble, Ptr, Signal, Signal )   -> Signal;
+    lift2 : ( String, BinaryDouble, Ptr, Signal, Signal )   -> Signal;
 
     /**
         Returns a signal that closes over the given signal function in a feedback loop.
@@ -100,7 +100,7 @@ module Fa.Signal
         
         @par Semantic $$y(f)(t) = f(y(t-1))$$.
      */
-    loop        : ( UnarySignal, Ptr )                            -> Signal;
+    loop : ( UnarySignal, Ptr )                            -> Signal;
 
     /**
         Returns a signal that delays the given signal by the given number of 
@@ -109,7 +109,7 @@ module Fa.Signal
         @par Semantic $$y(n,a)(t) = \\begin{cases} 0 & \mbox{if} (t-n) < 0   \\\\   a(t-n) & \mbox{if} (t-n) \\geq 0 \\end{cases}$$.
 
      */
-    delay       : ( Int, Signal )                                 -> Signal;
+    delay : ( Int, Signal )                                 -> Signal;
 
     // insert : ( String, Int, Int, Int, Int, Signal ) -> Signal;
 
@@ -119,23 +119,23 @@ module Fa.Signal
 
     type State = struct {
         buffer : Double*,
-        dummy  : Ptr,
-        count  : Int,
-        rate   : Double
+        dummy : Ptr,
+        count : Int,
+        rate : Double
     };
 
     type MessageCallback = ((Ptr, Name, Message) -> Void)*;
 
     type CustomProcessor = struct {
-        before  : ((Ptr,Int,State*) -> Ptr)*,
-        after   : ((Ptr,Int,State*) -> Ptr)*,
-        render  : ((Ptr,Int,State*) -> Ptr)*,
+        before : ((Ptr,Int,State*) -> Ptr)*,
+        after : ((Ptr,Int,State*) -> Ptr)*,
+        render : ((Ptr,Int,State*) -> Ptr)*,
 
         receive : ((Ptr,Name,Message) -> Ptr)*,
-        send    : ((Ptr,MessageCallback, Ptr) -> Ptr)*,
+        send : ((Ptr,MessageCallback, Ptr) -> Ptr)*,
 
         destroy : (Ptr -> Ptr)*,
-        data    : Ptr
+        data : Ptr
     };
     
     /** Add a custom processor to be executed with the given signal.
@@ -161,16 +161,16 @@ module Fa.Signal
             internally in faudio for implementing new I/O backends, plug-in formats. If
             you simply want to lift a pure function into the audio thread, see `fa_signal_lift`.            
      */
-    custom      : (CustomProcessor*, Signal) -> Signal;
+    custom : (CustomProcessor*, Signal) -> Signal;
 
     /** The primitive input signal, reading from the bus of the given number.
      */
-    input       : ( Int )                                         -> Signal;
+    input : ( Int )                                         -> Signal;
 
     /** The primitive output signal, writing to the bus of the given number
         and returning the written value.
      */
-    output      : ( Int, Int, Signal )                            -> Signal;
+    output : ( Int, Int, Signal )                            -> Signal;
 
     /** Returns a signal that evaluates both of the given signal, and the result of the first.
      */
@@ -265,93 +265,93 @@ module Fa.Signal
     recordExternal2 : (String, Pair) -> Pair;
 
     /** Addition lifted to signals. */
-    add                 : (Signal, Signal) -> Signal;
+    add : (Signal, Signal) -> Signal;
 
     /** Subtraction lifted to signals. */
-    subtract            : (Signal, Signal) -> Signal;
+    subtract : (Signal, Signal) -> Signal;
 
     /** Multiplication lifted to signals. */
-    multiply            : (Signal, Signal) -> Signal;
+    multiply : (Signal, Signal) -> Signal;
     
     /** The exponential function lifted to signals. */
-    power               : (Signal, Signal) -> Signal;
+    power : (Signal, Signal) -> Signal;
 
     /** Division function lifted to signals. */
-    divide              : (Signal, Signal) -> Signal;
+    divide : (Signal, Signal) -> Signal;
     
     /** The modulo function lifted to signals. */
-    modulo              : (Signal, Signal) -> Signal;
+    modulo : (Signal, Signal) -> Signal;
     
     /** The absolute value of a signal. */
-    absolute            : Signal           -> Signal;
+    absolute : Signal           -> Signal;
     
     /** Negate a signal, treating 0 as false and all other values as true. */
-    not                 : () -> Signal;
+    not : () -> Signal;
     /** Logical *and* of two signals, treating 0 as false and all other values as true. */
-    and                 : (Signal, Signal) -> Signal;
+    and : (Signal, Signal) -> Signal;
     /** Logical *or* of two signals, treating 0 as false and all other values as true. */
-    or                  : (Signal, Signal) -> Signal;
+    or : (Signal, Signal) -> Signal;
     /** Logical *exclusive or* of two signals, treating 0 as false and all other values as true. */
-    xor                 : (Signal, Signal) -> Signal;
+    xor : (Signal, Signal) -> Signal;
     
     /** Equality of two signals, generating 1 if equal and 0 otherwise. 
         Beware of floating-point equality. You should only use small integer numbers. */
-    equal               : (Signal, Signal) -> Signal;
+    equal : (Signal, Signal) -> Signal;
     
     /** Compare two signals `x` and `y`, generating 1 if `x < y` and 0 otherwise. */
-    lessThan            : (Signal, Signal) -> Signal;    
+    lessThan : (Signal, Signal) -> Signal;    
     /** Compare two signals `x` and `y`, generating 1 if `x > y` and 0 otherwise. */
-    greaterThan         : (Signal, Signal) -> Signal;
+    greaterThan : (Signal, Signal) -> Signal;
     /** Compare two signals `x` and `y`, generating 1 if `x <= y` and 0 otherwise. */
-    lessThanEqual       : (Signal, Signal) -> Signal;
+    lessThanEqual : (Signal, Signal) -> Signal;
     /** Compare two signals `x` and `y`, generating 1 if `x >= y` and 0 otherwise. */
-    greaterThanEqual    : (Signal, Signal) -> Signal;
+    greaterThanEqual : (Signal, Signal) -> Signal;
     
     /** The acos function lifted to signals. */
-    acos                : (Signal) -> Signal;
+    acos : (Signal) -> Signal;
     /** The asin function lifted to signals. */
-    asin                : (Signal) -> Signal;
+    asin : (Signal) -> Signal;
     /** The atan function lifted to signals. */
-    atan                : (Signal) -> Signal;
+    atan : (Signal) -> Signal;
     /** The cos function lifted to signals. */
-    cos                 : (Signal) -> Signal;
+    cos : (Signal) -> Signal;
     /** The sin function lifted to signals. */
-    sin                 : (Signal) -> Signal;
+    sin : (Signal) -> Signal;
     /** The tan function lifted to signals. */
-    tan                 : (Signal) -> Signal;
+    tan : (Signal) -> Signal;
     /** The exp function lifted to signals. */
-    exp                 : (Signal) -> Signal;
+    exp : (Signal) -> Signal;
     /** The natural logarithm of a signal. */
-    log                 : (Signal) -> Signal;
+    log : (Signal) -> Signal;
     /** The common logarithm of a signal. */
-    log10               : (Signal) -> Signal;
+    log10 : (Signal) -> Signal;
 
     /** The square root of a signal. */
-    sqrt                : Signal           -> Signal;
+    sqrt : Signal           -> Signal;
     /** The minimum of two signals. */
-    min                 : (Signal, Signal) -> Signal;
+    min : (Signal, Signal) -> Signal;
     /** The maximum of two signals. */
-    max                 : (Signal, Signal) -> Signal;
+    max : (Signal, Signal) -> Signal;
     /** The modulo of a signal. */
-    fmod                : (Signal, Signal) -> Signal;
+    fmod : (Signal, Signal) -> Signal;
     /** The remainder of a signal. */
-    remainder           : (Signal, Signal) -> Signal;
+    remainder : (Signal, Signal) -> Signal;
     /** Round the value of a signal towards negative infinity. */
-    floor               : (Signal, Signal) -> Signal;
+    floor : (Signal, Signal) -> Signal;
     /** Round the value of a signal towards positive infinity. */
-    ceil                : (Signal, Signal) -> Signal;
+    ceil : (Signal, Signal) -> Signal;
 
     /** A signal that counts samples.
         Generates the sequence `[0,1..]`.
      */
-    counter             : () -> Signal;
+    counter : () -> Signal;
 
     /** A signal which is one when the number of samples is divisible by the given
         number, and zero otherwise.
         
         For example if the sample rate is 44100, `fa_signal_impulses(44100)` generates an impulse every second.
      */
-    impulses            : (Int) -> Signal;
+    impulses : (Int) -> Signal;
                            
     // isVariable : Signal -> Bool;
     // isConstant : Signal -> Bool;
