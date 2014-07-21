@@ -49,7 +49,7 @@ map_t add_defaults(int optc, opt_t optv[], map_t args)
 
 pair_t fa_option_parse(int optc, fa_option_t optv[1], int argc, char *argv[])
 {
-    list_t anon_args = empty();
+    list_t anon_args = fa_list_empty();
     map_t args = fa_map_empty();
 
     enum {short_name, long_name, value} elem_type = value, prev_elem_type = value;

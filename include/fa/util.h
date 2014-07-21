@@ -108,9 +108,9 @@
 #define fa_delay               fa_signal_delay
 #define fa_loop                fa_signal_loop
 
-#define empty               fa_list_empty
-#define cons                fa_list_cons
-#define is_empty            fa_list_is_empty
+#define fa_empty               fa_list_empty
+#define fa_cons                fa_list_cons
+#define fa_is_empty            fa_list_is_empty
 
 #define char_at             fa_string_char_at
 #define string_append       fa_string_append

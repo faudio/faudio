@@ -279,7 +279,7 @@ list_t fa_list_dinit(list_t xs)
 
 static inline list_t append(list_t xs, list_t ys)
 {
-    if (is_empty(xs)) {
+    if (fa_is_empty(xs)) {
         return fa_list_copy(ys);
     } else {
         list_t xst = fa_list_tail(xs);
@@ -291,7 +291,7 @@ static inline list_t append(list_t xs, list_t ys)
 
 static inline list_t revappend(list_t xs, list_t ys)
 {
-    if (is_empty(xs)) {
+    if (fa_is_empty(xs)) {
         return fa_list_copy(ys);
     } else {
         list_t xst = fa_list_tail(xs);
@@ -603,7 +603,7 @@ ptr_t fa_list_fold_left(binary_t func, ptr_t data, ptr_t init, list_t list)
 
 list_t fa_list_join(list_t list)
 {
-    list_t result = empty();
+    list_t result = fa_list_empty();
     impl_for_each(list, elem) {
         result = fa_list_dappend(result, fa_list_copy(elem));
     }

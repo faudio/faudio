@@ -510,7 +510,7 @@ void run_actions(priority_queue_t controls, fa_time_t now, unary_t function, ptr
         if (fa_less_than_equal(time, now)) {
             fa_priority_queue_pop(controls);
 
-            list_t resched = empty();
+            list_t resched = fa_empty();
 
             // Run action, generating list of actions to reschedule
             run_and_resched_action(action, time, now, &resched, function, data); // TODO

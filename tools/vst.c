@@ -31,7 +31,7 @@ void run_vst()
         fa_audio_session_t s = fa_audio_begin_session();
         fa_audio_device_t i  = fa_audio_default_input(s);
         fa_audio_device_t o  = fa_audio_default_output(s);
-        list_t out           = fa_signal_vst(fa_string("dls"), PATH, empty());
+        list_t out           = fa_signal_vst(fa_string("dls"), PATH, fa_empty());
 
         fa_audio_set_parameter(fa_string("sample-rate"), f32(48000), s);
         fa_audio_set_parameter(fa_string("vector-size"), i32(1024), s);

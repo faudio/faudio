@@ -198,7 +198,7 @@ void test_show()
     fa_dprint("%s\n", i16(129));
     fa_dprint("%s\n", i32(64000));
     fa_dprint("%s\n", f64(3.1415));
-    fa_dprint("%s\n", empty());
+    fa_dprint("%s\n", fa_empty());
     fa_dprint("%s\n", list(i8(1)));
     fa_dprint("%s\n", list(i8(1), i8(2), list(i8(1), i8(2), fb(true))));
     fa_dprint("%s\n", list(
@@ -765,8 +765,8 @@ void test_list()
     {
         printf("\n");
 
-        list_t as = empty();
-        fa_print("empty()                      ==> %s\n", as);
+        list_t as = fa_empty();
+        fa_print("fa_empty()                      ==> %s\n", as);
         fa_destroy(as);
     }
     {

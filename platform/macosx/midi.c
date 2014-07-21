@@ -184,7 +184,7 @@ inline static session_t new_session()
 
     session->callbacks.count = 0;
     session->timer_callbacks.count = 0;
-    session->streams = empty();
+    session->streams = fa_empty();
 
     return session;
 }
@@ -193,7 +193,7 @@ inline static session_t new_session()
  */
 inline static void session_init_devices(session_t session)
 {
-    list_t         devices = fa_list_empty();
+    list_t         devices = fa_empty();
     device_t       input = NULL, output = NULL;
 
     /* Add outputs first, then reverse lists (as we push at front).

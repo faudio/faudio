@@ -196,7 +196,7 @@ inline static void session_init_devices(session_t session)
     list_t         devices;
 
     count   = Pa_GetDeviceCount();
-    devices = fa_list_empty();
+    devices = fa_empty();
 
     for (size_t i = 0; i < count; ++i) {
         device_t device = new_device(session, i);
@@ -209,7 +209,7 @@ inline static void session_init_devices(session_t session)
     session->devices      = fa_list_dreverse(devices);
     session->def_input    = new_device(session, Pa_GetDefaultInputDevice());
     session->def_output   = new_device(session, Pa_GetDefaultOutputDevice());
-    session->streams      = empty();
+    session->streams      = fa_empty();
 
     session->parameters.sample_rate         = kDefSampleRate;
     session->parameters.scheduler_interval  = kAudioSchedulerIntervalMillis;
@@ -593,7 +593,7 @@ void fa_audio_set_parameter(string_t name,
 fa_list_t fa_audio_current_sessions()
 {
     if (!current_session) {
-        return empty();
+        return fa_empty();
     } else {
         return list(current_session);
     }
