@@ -100,7 +100,7 @@ void run_midi()
         // fa_action_t y = fa_action_repeat(fa_milliseconds(1100/5), note2);
 
         fa_thread_sleep(1000);
-        fa_midi_schedule_relative(seconds(0),
+        fa_midi_schedule_relative(fa_seconds(0),
 
                                   fa_action_while(pred2, NULL,
                                                   fa_action_many(list(

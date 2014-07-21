@@ -85,27 +85,20 @@
 #define fa_atomic_ring_buffer(s) fa_atomic_ring_buffer_create(s)
 #define fa_buffer(s)           fa_buffer_create(s)
 #define fa_midi_message(s,a,b) fa_midi_message_create_simple(s,a,b)
-#define midi_message_sysex(b) fa_midi_message_create_sysex(b)
-#define dispatcher()        fa_message_create_dispatcher()
-#define lockfree_dispatcher() fa_message_create_lockfree_dispatcher()
+#define fa_midi_message_sysex(b) fa_midi_message_create_sysex(b)
 
-#define type(a)             fa_type_simple(a##_type)
-#define type_pair(a,b)      fa_type_pair(a,b)
-#define type_vector(a,n)    fa_type_vector(a,n)
-#define type_frame(a)       fa_type_frame(a)
+#define fa_action_set          fa_action_set
+#define fa_action_accum        fa_action_accum
+#define fa_action_send         fa_action_send
 
-#define action_set          fa_action_set
-#define action_accum        fa_action_accum
-#define action_send         fa_action_send
-
-#define hms(h,m,s)          fa_time_create(0,h,m,fa_ratio(s,1))
-#define days(d)             fa_time_create(d,0,0,fa_ratio(0,1))
-#define hours(h)            fa_time_create(0,h,0,fa_ratio(0,1))
-#define minutes(m)          fa_time_create(0,0,m,fa_ratio(0,1))
-#define seconds(s)          fa_time_create(0,0,0,fa_ratio(s,1))
-#define divisions(a,b)      fa_time_create(0,0,0,fa_ratio(a,b))
-#define fa_milliseconds(s)  fa_time_create(0,0,0,fa_ratio(s,1000))
-#define microseconds(s)     fa_time_create(0,0,0,fa_ratio(s,1000000))
+#define fa_hms(h,m,s)          fa_time_create(0,h,m,fa_ratio(s,1))
+#define fa_days(d)             fa_time_create(d,0,0,fa_ratio(0,1))
+#define fa_hours(h)            fa_time_create(0,h,0,fa_ratio(0,1))
+#define fa_minutes(m)          fa_time_create(0,0,m,fa_ratio(0,1))
+#define fa_seconds(s)          fa_time_create(0,0,0,fa_ratio(s,1))
+#define fa_divisions(a,b)      fa_time_create(0,0,0,fa_ratio(a,b))
+#define fa_milliseconds(s)     fa_time_create(0,0,0,fa_ratio(s,1000))
+#define fa_microseconds(s)     fa_time_create(0,0,0,fa_ratio(s,1000000))
 
 #define stime               fa_signal_time
 #define srandom             fa_signal_random

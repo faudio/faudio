@@ -37,8 +37,8 @@ fa_time_t raw_time()
     mach_timespec_t ts;
     clock_get_time(gMachClock, &ts);
 
-    time_t s  = seconds(ts.tv_sec);
-    time_t ds = divisions(ts.tv_nsec / 1000000, 1000);
+    time_t s  = fa_seconds(ts.tv_sec);
+    time_t ds = fa_divisions(ts.tv_nsec / 1000000, 1000);
     return fa_dadd(s, ds);
 }
 

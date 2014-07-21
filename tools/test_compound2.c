@@ -125,7 +125,7 @@ void run_test()
         // fa_audio_schedule_relative(seconds(0), notes1, ast);
         // fa_audio_schedule_relative(seconds(0), notes2, ast);
 
-        fa_audio_schedule_relative(seconds(0), fa_action_repeat(fa_milliseconds(3000),
+        fa_audio_schedule_relative(fa_seconds(0), fa_action_repeat(fa_milliseconds(3000),
                                                                 fa_action_many(list(
                                                                         fa_pair_create(notes1, fa_milliseconds(0)),
                                                                         fa_pair_create(notes2, fa_milliseconds(0))

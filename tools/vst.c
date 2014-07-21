@@ -42,15 +42,15 @@ void run_vst()
         }
 
 
-        fa_audio_schedule_relative(hms(0, 0, 0), fa_action_send(fa_string("dls"), fa_pair_create(fa_string("open"), NULL)), st);
+        fa_audio_schedule_relative(fa_hms(0, 0, 0), fa_action_send(fa_string("dls"), fa_pair_create(fa_string("open"), NULL)), st);
 
-        fa_audio_schedule_relative(hms(0, 0, 0), fa_action_send(fa_string("dls"),
+        fa_audio_schedule_relative(fa_hms(0, 0, 0), fa_action_send(fa_string("dls"),
             fa_midi_message_create_simple(0xc0, 50, 0)), st);
 
         for (int i = 0; i < 24; ++i) {           
             fa_action_t chord = fa_action_send(fa_string("dls"), 
                 fa_midi_message_create_simple(0x90, 52 + ((i % 12) * 2), 90));
-            fa_audio_schedule_relative(hms(0, 0, 0), chord, st);
+            fa_audio_schedule_relative(fa_hms(0, 0, 0), chord, st);
             fa_thread_sleep(150);
         }
         fa_thread_sleep(5000);

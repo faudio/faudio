@@ -1244,7 +1244,7 @@ void test_priority_queue(int iter)
     srand(time(NULL));
 
     for (int i = 0; i < iter; ++i) {
-        fa_priority_queue_insert(fa_add(hours(rand() % 24), seconds(rand() % 3600)), q);
+        fa_priority_queue_insert(fa_add(fa_hours(rand() % 24), fa_seconds(rand() % 3600)), q);
     }
 
     while (fa_priority_queue_peek(q)) {

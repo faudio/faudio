@@ -1067,7 +1067,7 @@ void fa_midi_schedule_relative(fa_time_t        time,
                                fa_action_t       action,
                                fa_midi_stream_t  stream)
 {
-    if (fa_equal(time, seconds(0)) && !fa_action_is_compound(action)) {
+    if (fa_equal(time, fa_seconds(0)) && !fa_action_is_compound(action)) {
         // Pass directly to output
         // TODO is this still needed
         fa_atomic_queue_write(stream->short_controls, action);

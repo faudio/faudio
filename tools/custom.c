@@ -68,12 +68,12 @@ void helper_function()
         }
 
         fa_audio_schedule(
-            hms(0, 0, 0), fa_action_send(fa_string("DLS"), fa_string("hello!")), st
+            fa_hms(0, 0, 0), fa_action_send(fa_string("DLS"), fa_string("hello!")), st
         );
 
         while (1) {
             fa_audio_schedule(
-                hms(0, 0, 0), fa_action_send(fa_string("DLS"), fa_string("hello!")), st
+                fa_hms(0, 0, 0), fa_action_send(fa_string("DLS"), fa_string("hello!")), st
             );
             fa_thread_sleep(1000 * 1);
         }
@@ -82,7 +82,7 @@ void helper_function()
         fa_destroy(s);
     } else {
         fa_signal_run_file(44100 * 10, list(
-                               fa_pair_create(hms(0, 0, 0), fa_action_send(fa_string("DLS"), fa_string("hello!")))
+                               fa_pair_create(fa_hms(0, 0, 0), fa_action_send(fa_string("DLS"), fa_string("hello!")))
 
                            ),
                            r,
