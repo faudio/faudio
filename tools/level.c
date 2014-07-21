@@ -21,7 +21,7 @@ double values[2];
 
 
 /*
-    (defsignal slope (curr)
+    (defprocessor slope (curr)
       (recur (rec)
          (max curr
            (+ (* 0.999 rec)
