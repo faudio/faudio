@@ -31,7 +31,7 @@ void print_devices_with_status()
             printf("  Name: %s \n", str);
 
             // FIXME
-            // printf("  Name: %s\n", unstring(fa_string_from_native((void*) name)));
+            // printf("  Name: %s\n", fa_unstring(fa_string_from_native((void*) name)));
         }
 
         SInt32 isOffline;
@@ -181,5 +181,5 @@ int main(int argc, char const *argv[])
 char *get_cfstring(CFStringRef aString)
 {
     string_t s = fa_string_from_native((void *) aString);
-    return unstring(s);
+    return fa_unstring(s);
 }

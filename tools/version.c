@@ -13,7 +13,7 @@ int main(int argc, char const *argv[])
 
 
         // TODO split version/help
-        printf("faudio-%s\n", unstring(
+        printf("faudio-%s\n", fa_unstring(
                    string_dappend(fa_version_string(),
                                   string_dappend(fa_string(""),
 #ifdef FAUDIO_DEBUG

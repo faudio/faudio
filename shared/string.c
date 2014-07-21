@@ -499,7 +499,7 @@ fa_string_t fa_string_to_json(fa_ptr_t a)
 fa_ptr_t fa_string_from_json(fa_string_t string)
 {
     bool ok = true;
-    ptr_t result = unjsonify(json_parse_string(unstring(string)), &ok);
+    ptr_t result = unjsonify(json_parse_string(fa_unstring(string)), &ok);
 
     if (!ok) {
         return (fa_ptr_t) string_error(fa_string("Malformed JSON value."));

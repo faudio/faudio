@@ -1733,7 +1733,7 @@ list_t fa_signal_vst(string_t name1, string_t path1, list_t inputs)
     string_t name = fa_copy(name1);
     string_t path = fa_copy(path1);
     
-    char* rpath = unstring(path);
+    char* rpath = fa_unstring(path);
     AEffect* plugin = loadPlugin(rpath);
     initPlugin(plugin);
     

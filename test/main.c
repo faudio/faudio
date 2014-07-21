@@ -1263,7 +1263,7 @@ void test_json(string_t path)
     test_section("JSON conversion");
 
     string_t json = fa_system_directory_read_file(path);
-    // printf("%s\n", unstring(json));
+    // printf("%s\n", fa_unstring(json));
 
     ptr_t data = fa_string_from_json(json);
     fa_print("data                         ==> %s\n", data);
@@ -1653,7 +1653,7 @@ void test_regex()
 
 ptr_t test_audio_stream_status_changed(ptr_t ct)
 {
-    printf("Status changed: %s!\n", unstring(ct));
+    printf("Status changed: %s!\n", fa_unstring(ct));
     return 0;
 }
 
@@ -1914,7 +1914,7 @@ static void (*test_function[2000])();
 int main(int argc, char const *argv[])
 {
     char *bits      = sizeof(void *) == 4 ? "32-bit" : "64-bit";
-    printf("Fa %s v%s\n", bits, unstring(fa_version_string()));
+    printf("Fa %s v%s\n", bits, fa_unstring(fa_version_string()));
 
     printf("sizeof(fa_ptr_t) = %d\n", (unsigned int) sizeof(fa_ptr_t));
     printf("sizeof(int32_t) = %d\n", (unsigned int) sizeof(int32_t));

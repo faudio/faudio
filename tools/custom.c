@@ -29,7 +29,7 @@ ptr_t render_(ptr_t x, int count, fa_signal_state_t *state)
 }
 ptr_t receive_(ptr_t x, fa_signal_name_t n, fa_signal_message_t msg)
 {
-    printf("Received %s : %s!\n", unstring(n), unstring(fa_string_show(msg)));
+    printf("Received %s : %s!\n", fa_unstring(n), fa_unstring(fa_string_show(msg)));
     return x;
 }
 

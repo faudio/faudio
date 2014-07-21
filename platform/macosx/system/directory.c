@@ -31,7 +31,7 @@ fa_string_t fa_system_directory_current()
 void fa_system_directory_create(string_t path)
 {
     // Assure system_directory
-    mkdir(unstring(path), (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH));
+    mkdir(fa_unstring(path), (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH));
 }
 
 fa_string_t fa_system_directory_read_file(fa_string_t path)
@@ -39,7 +39,7 @@ fa_string_t fa_system_directory_read_file(fa_string_t path)
     size_t buf_size = 1000000;
     char buf[buf_size + 1];
 
-    FILE *file = fopen(unstring(path), "r");
+    FILE *file = fopen(fa_unstring(path), "r");
 
     if (!file) {
         assert(false && "Error reading file");
@@ -61,16 +61,16 @@ fa_string_t fa_system_directory_read_file(fa_string_t path)
 void fa_system_directory_write_file(fa_string_t path,
                                     fa_string_t string)
 {
-    FILE *f = fopen(unstring(path), "w+");
-    fprintf(f, "%s", unstring(string));
+    FILE *f = fopen(fa_unstring(path), "w+");
+    fprintf(f, "%s", fa_unstring(string));
     fclose(f);
 }
 
 void fa_system_directory_append_file(fa_string_t path,
                                      fa_string_t string)
 {
-    FILE *f = fopen(unstring(path), "a+");
-    fprintf(f, "%s", unstring(string));
+    FILE *f = fopen(fa_unstring(path), "a+");
+    fprintf(f, "%s", fa_unstring(string));
     fclose(f);
 }
 
